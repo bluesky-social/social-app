@@ -1,16 +1,16 @@
 diff --git a/node_modules/react-native/Libraries/Blob/RCTFileReaderModule.mm b/node_modules/react-native/Libraries/Blob/RCTFileReaderModule.mm
-index caa5540..6027825 100644
+index caa5540..c5d4e67 100644
 --- a/node_modules/react-native/Libraries/Blob/RCTFileReaderModule.mm
 +++ b/node_modules/react-native/Libraries/Blob/RCTFileReaderModule.mm
-@@ -71,7 +71,7 @@ @implementation RCTFileReaderModule
-           [NSString stringWithFormat:@"Unable to resolve data for blob: %@", [RCTConvert NSString:blob[@"blobId"]]],
-           nil);
+@@ -73,7 +73,7 @@ @implementation RCTFileReaderModule
      } else {
--      NSString *type = [RCTConvert NSString:blob[@"type"]];
-+      NSString *type = RCTNilIfNull([RCTConvert NSString:blob[@"type"]]);
+       NSString *type = [RCTConvert NSString:blob[@"type"]];
        NSString *text = [NSString stringWithFormat:@"data:%@;base64,%@",
-                                                   type != nil && [type length] > 0 ? type : @"application/octet-stream",
+-                                                  type != nil && [type length] > 0 ? type : @"application/octet-stream",
++                                                  ![type isEqual:[NSNull null]] && [type length] > 0 ? type : @"application/octet-stream",
                                                    [data base64EncodedStringWithOptions:0]];
+
+       resolve(text);
 diff --git a/node_modules/react-native/Libraries/Text/TextInput/RCTBaseTextInputView.mm b/node_modules/react-native/Libraries/Text/TextInput/RCTBaseTextInputView.mm
 index b0d71dc..41b9a0e 100644
 --- a/node_modules/react-native/Libraries/Text/TextInput/RCTBaseTextInputView.mm
