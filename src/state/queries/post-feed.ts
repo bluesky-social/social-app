@@ -138,7 +138,9 @@ export function usePostFeedQuery(
   const isDiscover = feedDesc.includes(DISCOVER_FEED_URI)
 
   const [pageSize] = React.useState(() => {
-    return gate('post_feed_lang_window') ? 100 : PAGE_SIZE
+    // add exclusions here
+    const isExcluded = isDiscover
+    return !isExcluded && gate('post_feed_lang_window') ? 100 : PAGE_SIZE
   })
 
   // Make sure this doesn't invalidate unless really needed.
