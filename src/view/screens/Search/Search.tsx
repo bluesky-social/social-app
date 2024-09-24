@@ -426,9 +426,12 @@ function useQueryManager({initialQuery}: {initialQuery: string}) {
 
   const params = React.useMemo(
     () => ({
+      // default stuff
+      ...initialParams,
+      // managed stuff
       lang,
     }),
-    [lang],
+    [lang, initialParams],
   )
   const handlers = React.useMemo(
     () => ({
@@ -436,12 +439,6 @@ function useQueryManager({initialQuery}: {initialQuery: string}) {
     }),
     [setLang],
   )
-
-  console.log({
-    query,
-    initialParams,
-    params,
-  })
 
   return React.useMemo(() => {
     return {
