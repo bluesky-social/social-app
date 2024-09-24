@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh_CN\n"
 "Project-Id-Version: zh-HK for bluesky-social-app\n"
 "Report-Msgid-Bugs-To: Frudrax Cheng <i@cynosura.one>\n"
-"PO-Revision-Date: 2024-09-24 17:33+0800\n"
+"PO-Revision-Date: 2024-09-24 17:41+0800\n"
 "Last-Translator: Frudrax Cheng <i@cynosura.one>\n"
 "Language-Team: Frudrax Cheng (auroursa)\n"
 "Plural-Forms: \n"
@@ -2574,15 +2574,15 @@ msgstr "跟住係 <0>{0}</0>"
 
 #: src/components/KnownFollowers.tsx:217
 msgid "Followed by <0>{0}</0> and {1, plural, one {# other} other {# others}}"
-msgstr "跟住係 <0>{0}</0> 同{1, plural, one {其他 # 人跟住} other {其他 # 人跟住}}"
+msgstr "係 <0>{0}</0> 同{1, plural, one {其他 # 人跟住} other {其他 # 人跟住}}"
 
 #: src/components/KnownFollowers.tsx:204
 msgid "Followed by <0>{0}</0> and <1>{1}</1>"
-msgstr "跟住係 <0>{0}</0> 同 <1>{1}</1>"
+msgstr "係 <0>{0}</0> 同 <1>{1}</1>"
 
 #: src/components/KnownFollowers.tsx:186
 msgid "Followed by <0>{0}</0>, <1>{1}</1>, and {2, plural, one {# other} other {# others}}"
-msgstr "跟住係 <0>{0}</0>, <1>{1}</1> 同{2, plural, one {其他 # 人跟住} other {其他 # 人跟住}}"
+msgstr "係 <0>{0}</0>, <1>{1}</1> 同{2, plural, one {其他 # 人跟住} other {其他 # 人跟住}}"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:403
 msgid "Followed users"
