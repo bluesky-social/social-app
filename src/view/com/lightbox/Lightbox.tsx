@@ -32,7 +32,7 @@ export function Lightbox() {
     const opts = activeLightbox as ProfileImageLightbox
     return (
       <ImageView
-        images={[{uri: opts.profile.avatar || ''}]}
+        images={[{uri: opts.profile[opts.which] || ''}]}
         initialImageIndex={0}
         visible
         onRequestClose={onClose}

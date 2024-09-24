@@ -52,7 +52,14 @@ let ProfileHeaderShell = ({
   const onPressAvi = React.useCallback(() => {
     const modui = moderation.ui('avatar')
     if (profile.avatar && !(modui.blur && modui.noOverride)) {
-      openLightbox(new ProfileImageLightbox(profile))
+      openLightbox(new ProfileImageLightbox(profile, 'avatar'))
+    }
+  }, [openLightbox, profile, moderation])
+
+  const onPressBanner = React.useCallback(() => {
+    const modui = moderation.ui('banner')
+    if (profile.banner && !(modui.blur && modui.noOverride)) {
+      openLightbox(new ProfileImageLightbox(profile, 'banner'))
     }
   }, [openLightbox, profile, moderation])
 
@@ -63,7 +70,7 @@ let ProfileHeaderShell = ({
 
   return (
     <View style={t.atoms.bg} pointerEvents={isIOS ? 'auto' : 'box-none'}>
-      <View pointerEvents={isIOS ? 'auto' : 'none'}>
+      <View pointerEvents={isIOS ? 'auto' : 'box-none'}>
         {isPlaceholderProfile ? (
           <LoadingPlaceholder
             width="100%"
@@ -71,11 +78,20 @@ let ProfileHeaderShell = ({
             style={{borderRadius: 0}}
           />
         ) : (
-          <UserBanner
-            type={profile.associated?.labeler ? 'labeler' : 'default'}
-            banner={profile.banner}
-            moderation={moderation.ui('banner')}
-          />
+          <TouchableWithoutFeedback
+            testID="profileHeaderBannerButton"
+            onPress={onPressBanner}
+            accessibilityRole="image"
+            accessibilityLabel={_(msg`View ${profile.handle}'s banner`)}
+            accessibilityHint="">
+            <View>
+              <UserBanner
+                type={profile.associated?.labeler ? 'labeler' : 'default'}
+                banner={profile.banner}
+                moderation={moderation.ui('banner')}
+              />
+            </View>
+          </TouchableWithoutFeedback>
         )}
       </View>
 

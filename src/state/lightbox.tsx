@@ -1,5 +1,6 @@
 import React from 'react'
 import {AppBskyActorDefs} from '@atproto/api'
+
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 
 interface Lightbox {
@@ -8,7 +9,10 @@ interface Lightbox {
 
 export class ProfileImageLightbox implements Lightbox {
   name = 'profile-image'
-  constructor(public profile: AppBskyActorDefs.ProfileViewDetailed) {}
+  constructor(
+    public profile: AppBskyActorDefs.ProfileViewDetailed,
+    public which: 'avatar' | 'banner',
+  ) {}
 }
 
 interface ImagesLightboxItem {
