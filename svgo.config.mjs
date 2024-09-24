@@ -1,13 +1,41 @@
+const preset = [
+  "removeDoctype",
+  "removeXMLProcInst",
+  "removeComments",
+  "removeMetadata",
+  "removeEditorsNSData",
+  "cleanupAttrs",
+  "mergeStyles",
+  "inlineStyles",
+  "minifyStyles",
+  "cleanupIds",
+  "removeUselessDefs",
+  "cleanupNumericValues",
+  "convertColors",
+  "removeUnknownsAndDefaults",
+  "removeNonInheritableGroupAttrs",
+  "removeUselessStrokeAndFill",
+  "removeDimensions",
+  "cleanupEnableBackground",
+  "removeHiddenElems",
+  "removeEmptyText",
+  "convertShapeToPath",
+  "convertEllipseToCircle",
+  "moveElemsAttrsToGroup",
+  "moveGroupAttrsToElems",
+  "collapseGroups",
+  "convertPathData",
+  "convertTransform",
+  "removeEmptyAttrs",
+  "removeEmptyContainers",
+  "removeUnusedNS",
+  "mergePaths",
+  "sortAttrs",
+  "sortDefsChildren",
+  "removeTitle",
+  "removeDesc",
+]
+
 export default {
-  plugins: [
-    {
-      name: 'preset-default',
-      params: {
-        overrides: {
-          removeViewBox: false,
-        },
-      },
-    },
-    'removeDimensions'
-  ],
+  plugins: preset.map(name => ({name, params: {numberPrecision: 3, transformPrecision: 4}}))
 };
