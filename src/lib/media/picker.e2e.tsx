@@ -22,8 +22,6 @@ async function getFile() {
   files = files.filter(file => file.endsWith('.JPG'))
   const file = `${imagesDir}/${files[0]}`
 
-  console.log(file)
-
   const fileInfo = await getInfoAsync(file)
 
   if (!fileInfo.exists) {
