@@ -12,7 +12,7 @@ import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {niceDate} from '#/lib/strings/time'
 import {precacheProfile} from '#/state/queries/profile'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, useTheme, web} from '#/alf'
 import {WebOnlyInlineLinkText} from '#/components/Link'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {Text} from '#/components/Typography'
@@ -125,9 +125,9 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
               a.text_md,
               t.atoms.text_contrast_medium,
               a.leading_tight,
-              {
+              web({
                 whiteSpace: 'nowrap',
-              },
+              }),
             ]}>
             {timeElapsed}
           </WebOnlyInlineLinkText>
