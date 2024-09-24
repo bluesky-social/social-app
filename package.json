@@ -170,6 +170,7 @@
     "react-avatar-editor": "^13.0.0",
     "react-compiler-runtime": "file:./lib/react-compiler-runtime",
     "react-dom": "^18.2.0",
+    "react-image-crop": "^11.0.7",
     "react-keyed-flatten-children": "^3.0.0",
     "react-native": "0.74.1",
     "react-native-compressor": "^1.8.24",

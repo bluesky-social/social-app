@@ -39,6 +39,8 @@ export interface CropImageModal {
   name: 'crop-image'
   uri: string
   dimensions?: {width: number; height: number}
+  aspect?: number
+  circular?: boolean
   onSelect: (img?: RNImage) => void
 }
 

@@ -21,6 +21,7 @@ import {ComposerImage, cropImage} from '#/state/gallery'
 import {Text} from '#/view/com/util/text/Text'
 import {useTheme} from '#/alf'
 import * as Dialog from '#/components/Dialog'
+import {EditImageDialog} from './EditImageDialog'
 import {ImageAltTextDialog} from './ImageAltTextDialog'
 
 const IMAGE_GAP = 8
@@ -144,12 +145,15 @@ const GalleryItem = ({
   const t = useTheme()
 
   const altTextControl = Dialog.useDialogControl()
+  const editControl = Dialog.useDialogControl()
 
   const onImageEdit = () => {
     if (isNative) {
       cropImage(image).then(next => {
         onChange(next)
       })
+    } else {
+      editControl.open()
     }
   }
 
@@ -185,21 +189,15 @@ const GalleryItem = ({
         </Text>
       </TouchableOpacity>
       <View style={imageControlsStyle}>
-        {isNative && (
-          <TouchableOpacity
-            testID="editPhotoButton"
-            accessibilityRole="button"
-            accessibilityLabel={_(msg`Edit image`)}
-            accessibilityHint=""
-            onPress={onImageEdit}
-            style={styles.imageControl}>
-            <FontAwesomeIcon
-              icon="pen"
-              size={12}
-              style={{color: colors.white}}
-            />
-          </TouchableOpacity>
-        )}
+        <TouchableOpacity
+          testID="editPhotoButton"
+          accessibilityRole="button"
+          accessibilityLabel={_(msg`Edit image`)}
+          accessibilityHint=""
+          onPress={onImageEdit}
+          style={styles.imageControl}>
+          <FontAwesomeIcon icon="pen" size={12} style={{color: colors.white}} />
+        </TouchableOpacity>
         <TouchableOpacity
           testID="removePhotoButton"
           accessibilityRole="button"
@@ -234,6 +232,12 @@ const GalleryItem = ({
 
       <ImageAltTextDialog
         control={altTextControl}
+        image={image}
+        onChange={onChange}
+      />
+
+      <EditImageDialog
+        control={editControl}
         image={image}
         onChange={onChange}
       />
