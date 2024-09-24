@@ -128,7 +128,7 @@ function useHLS({
         for (const lowQualFrag of lowQualityFragments) {
           // avoid if close to the current fragment
           if (Math.abs(frag.start - lowQualFrag.start) < 0.1) {
-            return
+            continue
           }
 
           hls.trigger(Hls.Events.BUFFER_FLUSHING, {
