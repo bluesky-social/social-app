@@ -37,5 +37,11 @@ const preset = [
 ]
 
 export default {
-  plugins: preset.map(name => ({name, params: {numberPrecision: 3, transformPrecision: 4}}))
+  plugins: preset.map(name => ({
+    name,
+    params: {
+      floatPrecision: 3,
+      transformPrecision: 5
+    }
+  }))
 };
