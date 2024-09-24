@@ -27,6 +27,7 @@ import {isNative} from 'platform/detection'
 import {ImageModel} from 'state/models/media/image'
 import {LinkMeta} from '../link-meta/link-meta'
 import {safeDeleteAsync} from '../media/manip'
+import {getServerDate} from './get-server-date'
 import {uploadBlob} from './upload-blob'
 
 export {uploadBlob}
@@ -268,6 +269,8 @@ export async function post(agent: BskyAgent, opts: PostOpts) {
   let res
   try {
     opts.onStateChange?.('Posting...')
+    const date = await getServerDate()
+
     res = await agent.post({
       text: rt.text,
       facets: rt.facets,
@@ -275,6 +278,7 @@ export async function post(agent: BskyAgent, opts: PostOpts) {
       embed,
       langs,
       labels,
+      createdAt: date,
     })
   } catch (e: any) {
     logger.error(`Failed to create post`, {
