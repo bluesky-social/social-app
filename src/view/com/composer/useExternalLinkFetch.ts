@@ -3,6 +3,7 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {logger} from '#/logger'
+import {createComposerImage} from '#/state/gallery'
 import {useFetchDid} from '#/state/queries/handle'
 import {useGetPost} from '#/state/queries/post'
 import {useAgent} from '#/state/session'
@@ -26,7 +27,6 @@ import {
   isBskyStartUrl,
   isShortLink,
 } from 'lib/strings/url-helpers'
-import {ImageModel} from 'state/models/media/image'
 import {ComposerOpts} from 'state/shell/composer'
 
 export function useExternalLinkFetch({
@@ -161,14 +161,15 @@ export function useExternalLinkFetch({
         timeout: 15e3,
       })
         .catch(() => undefined)
-        .then(localThumb => {
+        .then(thumb => (thumb ? createComposerImage(thumb) : undefined))
+        .then(thumb => {
           if (aborted) {
             return
           }
           setExtLink({
             ...extLink,
             isLoading: false, // done
-            localThumb: localThumb ? new ImageModel(localThumb) : undefined,
+            localThumb: thumb,
           })
         })
       return cleanup

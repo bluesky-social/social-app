@@ -9,7 +9,6 @@ import {FullWindowOverlay} from '#/components/FullWindowOverlay'
 import {createCustomBackdrop} from '../util/BottomSheetCustomBackdrop'
 import * as AddAppPassword from './AddAppPasswords'
 import * as AltImageModal from './AltImage'
-import * as EditImageModal from './AltImage'
 import * as ChangeEmailModal from './ChangeEmail'
 import * as ChangeHandleModal from './ChangeHandle'
 import * as ChangePasswordModal from './ChangePassword'
@@ -78,9 +77,6 @@ export function ModalsContainer() {
   } else if (activeModal?.name === 'alt-text-image') {
     snapPoints = AltImageModal.snapPoints
     element = <AltImageModal.Component {...activeModal} />
-  } else if (activeModal?.name === 'edit-image') {
-    snapPoints = AltImageModal.snapPoints
-    element = <EditImageModal.Component {...activeModal} />
   } else if (activeModal?.name === 'change-handle') {
     snapPoints = ChangeHandleModal.snapPoints
     element = <ChangeHandleModal.Component {...activeModal} />

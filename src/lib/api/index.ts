@@ -14,6 +14,7 @@ import {
 } from '@atproto/api'
 
 import {logger} from '#/logger'
+import {ComposerImage, compressImage} from '#/state/gallery'
 import {writePostgateRecord} from '#/state/queries/postgate'
 import {
   createThreadgateRecord,
@@ -23,10 +24,7 @@ import {
 } from '#/state/queries/threadgate'
 import {isNetworkError} from 'lib/strings/errors'
 import {shortenLinks, stripInvalidMentions} from 'lib/strings/rich-text-manip'
-import {isNative} from 'platform/detection'
-import {ImageModel} from 'state/models/media/image'
 import {LinkMeta} from '../link-meta/link-meta'
-import {safeDeleteAsync} from '../media/manip'
 import {uploadBlob} from './upload-blob'
 
 export {uploadBlob}
@@ -36,7 +34,7 @@ export interface ExternalEmbedDraft {
   isLoading: boolean
   meta?: LinkMeta
   embed?: AppBskyEmbedRecord.Main
-  localThumb?: ImageModel
+  localThumb?: ComposerImage
 }
 
 interface PostOpts {
@@ -53,7 +51,7 @@ interface PostOpts {
     aspectRatio?: AppBskyEmbedDefs.AspectRatio
   }
   extLink?: ExternalEmbedDraft
-  images?: ImageModel[]
+  images?: ComposerImage[]
   labels?: string[]
   threadgate: ThreadgateAllowUISetting[]
   postgate: AppBskyFeedPostgate.Record
@@ -99,18 +97,16 @@ export async function post(agent: BskyAgent, opts: PostOpts) {
     const images: AppBskyEmbedImages.Image[] = []
     for (const image of opts.images) {
       opts.onStateChange?.(`Uploading image #${images.length + 1}...`)
+
       logger.debug(`Compressing image`)
-      await image.compress()
-      const path = image.compressed?.path ?? image.path
-      const {width, height} = image.compressed || image
+      const {path, width, height, mime} = await compressImage(image)
+
       logger.debug(`Uploading image`)
-      const res = await uploadBlob(agent, path, 'image/jpeg')
-      if (isNative) {
-        safeDeleteAsync(path)
-      }
+      const res = await uploadBlob(agent, path, mime)
+
       images.push({
         image: res.data.blob,
-        alt: image.altText ?? '',
+        alt: image.alt,
         aspectRatio: {width, height},
       })
     }
@@ -175,32 +171,11 @@ export async function post(agent: BskyAgent, opts: PostOpts) {
       let thumb
       if (opts.extLink.localThumb) {
         opts.onStateChange?.('Uploading link thumbnail...')
-        let encoding
-        if (opts.extLink.localThumb.mime) {
-          encoding = opts.extLink.localThumb.mime
-        } else if (opts.extLink.localThumb.path.endsWith('.png')) {
-          encoding = 'image/png'
-        } else if (
-          opts.extLink.localThumb.path.endsWith('.jpeg') ||
-          opts.extLink.localThumb.path.endsWith('.jpg')
-        ) {
-          encoding = 'image/jpeg'
-        } else {
-          logger.warn('Unexpected image format for thumbnail, skipping', {
-            thumbnail: opts.extLink.localThumb.path,
-          })
-        }
-        if (encoding) {
-          const thumbUploadRes = await uploadBlob(
-            agent,
-            opts.extLink.localThumb.path,
-            encoding,
-          )
-          thumb = thumbUploadRes.data.blob
-          if (isNative) {
-            safeDeleteAsync(opts.extLink.localThumb.path)
-          }
-        }
+
+        const {path, mime} = opts.extLink.localThumb.source
+        const res = await uploadBlob(agent, path, mime)
+
+        thumb = res.data.blob
       }
 
       if (opts.quote) {
