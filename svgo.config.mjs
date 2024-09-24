@@ -37,7 +37,7 @@ const preset = [
 ]
 
 export default {
-  plugins: preset.map(name => ({
+  plugins: [...preset.map(name => ({
     name,
     params: {
       floatPrecision: 3,
@@ -47,5 +47,18 @@ export default {
       convertToZ: false,
       removeUseless: false,
     }
-  }))
+  })),
+  {
+    name: 'addTrailingWhitespace',
+    fn() {
+      return {
+        root: {
+          exit (root) {
+            root.children.push({ type: 'text', value: '\n' })
+            return root
+          }
+        }
+      }
+    }
+  }]
 };
