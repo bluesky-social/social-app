@@ -183,8 +183,7 @@ function useHLS({
   // purge low quality segments from buffer on next frag change
   useEffect(() => {
     if (!hlsRef.current) return
-
-    const current = hlsRef.current
+    const hls = hlsRef.current
 
     if (focused) {
       function fragChanged(
@@ -192,7 +191,7 @@ function useHLS({
         {frag}: FragChangedData,
       ) {
         // if the current quality level goes above 0, flush the low quality segments
-        if (current.nextAutoLevel > 0) {
+        if (hls.nextAutoLevel > 0) {
           const flushed: Fragment[] = []
 
           for (const lowQualFrag of lowQualityFragments) {
@@ -201,7 +200,7 @@ function useHLS({
               return
             }
 
-            current.trigger(Hls.Events.BUFFER_FLUSHING, {
+            hls.trigger(Hls.Events.BUFFER_FLUSHING, {
               startOffset: lowQualFrag.start,
               endOffset: lowQualFrag.end,
               type: 'video',
@@ -213,10 +212,10 @@ function useHLS({
           setLowQualityFragments(prev => prev.filter(f => !flushed.includes(f)))
         }
       }
-      current.on(Hls.Events.FRAG_CHANGED, fragChanged)
+      hls.on(Hls.Events.FRAG_CHANGED, fragChanged)
 
       return () => {
-        current.off(Hls.Events.FRAG_CHANGED, fragChanged)
+        hls.off(Hls.Events.FRAG_CHANGED, fragChanged)
       }
     }
   }, [focused, lowQualityFragments])
