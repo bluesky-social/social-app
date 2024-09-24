@@ -178,8 +178,9 @@ async function doResize(localUri: string, opts: DoResizeOpts): Promise<Image> {
     height: imageRes.height,
   })
 
-  for (let i = 0; i <= 9; i++) {
-    const quality = 1 - 0.1 * i
+  for (let i = 0; i < 9; i++) {
+    // nearest 10th
+    const quality = Math.round((1 - 0.1 * i) * 10) / 10
     const resizeRes = await manipulateAsync(
       localUri,
       [{resize: newDimensions}],
