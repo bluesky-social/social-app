@@ -1,8 +1,8 @@
 import React from 'react'
 import {impactAsync, ImpactFeedbackStyle} from 'expo-haptics'
 
-import {isIOS, isWeb} from 'platform/detection'
-import {useHapticsDisabled} from 'state/preferences/disable-haptics'
+import {isIOS, isWeb} from '#/platform/detection'
+import {useHapticsDisabled} from '#/state/preferences/disable-haptics'
 
 export function useHaptics() {
   const isHapticsDisabled = useHapticsDisabled()

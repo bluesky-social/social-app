@@ -1,5 +1,7 @@
-import {copyAsync, deleteAsync} from 'expo-file-system'
+import {copyAsync} from 'expo-file-system'
 import {BskyAgent, ComAtprotoRepoUploadBlob} from '@atproto/api'
+
+import {safeDeleteAsync} from '#/lib/media/manip'
 
 /**
  * @param encoding Allows overriding the blob's type
@@ -74,7 +76,7 @@ async function withSafeFile<T>(
       return await fn(newPath)
     } finally {
       // Remove the temporary file
-      await deleteAsync(newPath)
+      await safeDeleteAsync(newPath)
     }
   } else {
     return fn(uri)
