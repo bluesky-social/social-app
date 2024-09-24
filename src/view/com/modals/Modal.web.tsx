@@ -1,7 +1,8 @@
 import React from 'react'
-import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native'
+import {StyleSheet, View} from 'react-native'
 import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
 
+import {useOutsideClick} from '#/lib/hooks/useOutsideClick'
 import {useWebBodyScrollLock} from '#/lib/hooks/useWebBodyScrollLock'
 import type {Modal as ModalIface} from '#/state/modals'
 import {useModalControls, useModals} from '#/state/modals'
@@ -37,36 +38,24 @@ export function ModalsContainer() {
   return (
     <>
       {activeModals.map((modal, i) => (
-        <Modal key={`modal-${i}`} modal={modal} />
+        <Modal
+          key={`modal-${i}`}
+          modal={modal}
+          active={i === activeModals.length - 1}
+        />
       ))}
     </>
   )
 }
 
-function Modal({modal}: {modal: ModalIface}) {
-  const {isModalActive} = useModals()
+function Modal({modal, active}: {modal: ModalIface; active: boolean}) {
   const {closeModal} = useModalControls()
   const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()
 
-  if (!isModalActive) {
-    return null
-  }
+  const containerRef = React.useRef(null)
 
-  const onPressMask = () => {
-    if (
-      modal.name === 'crop-image' ||
-      modal.name === 'edit-image' ||
-      modal.name === 'alt-text-image'
-    ) {
-      return // dont close on mask presses during crop
-    }
-    closeModal()
-  }
-  const onInnerPress = () => {
-    // TODO: can we use prevent default?
-    // do nothing, we just want to stop it from bubbling
-  }
+  useOutsideClick(containerRef, closeModal, active)
 
   let element
   if (modal.name === 'edit-profile') {
@@ -110,26 +99,21 @@ function Modal({modal}: {modal: ModalIface}) {
   }
 
   return (
-    // eslint-disable-next-line react-native-a11y/has-valid-accessibility-descriptors
-    <TouchableWithoutFeedback onPress={onPressMask}>
-      <Animated.View
-        style={styles.mask}
-        entering={FadeIn.duration(150)}
-        exiting={FadeOut}>
-        {/* eslint-disable-next-line react-native-a11y/has-valid-accessibility-descriptors */}
-        <TouchableWithoutFeedback onPress={onInnerPress}>
-          <View
-            style={[
-              styles.container,
-              isMobile && styles.containerMobile,
-              pal.view,
-              pal.border,
-            ]}>
-            {element}
-          </View>
-        </TouchableWithoutFeedback>
-      </Animated.View>
-    </TouchableWithoutFeedback>
+    <Animated.View
+      style={styles.mask}
+      entering={FadeIn.duration(150)}
+      exiting={FadeOut}>
+      <View
+        ref={containerRef}
+        style={[
+          styles.container,
+          isMobile && styles.containerMobile,
+          pal.view,
+          pal.border,
+        ]}>
+        {element}
+      </View>
+    </Animated.View>
   )
 }
 
