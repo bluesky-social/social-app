@@ -15,7 +15,7 @@
     "web": "expo start --web",
     "use-build-number": "./scripts/useBuildNumberEnv.sh",
     "use-build-number-with-bump": "./scripts/useBuildNumberEnvWithBump.sh",
-    "build-web": "expo export:web && node ./scripts/post-web-build.js && cp -v ./web-build/static/js/*.* ./bskyweb/static/js/ && cp -v ./web-build/static/media/*.png ./bskyweb/static/media/",
+    "build-web": "expo export:web && node ./scripts/post-web-build.js",
     "build-all": "yarn intl:build && yarn use-build-number-with-bump eas build --platform all",
     "build-ios": "yarn use-build-number-with-bump eas build -p ios",
     "build-android": "yarn use-build-number-with-bump eas build -p android",
@@ -110,11 +110,13 @@
     "await-lock": "^2.2.2",
     "babel-plugin-transform-remove-console": "^6.9.4",
     "base64-js": "^1.5.1",
+    "bcp-47": "^2.1.0",
     "bcp-47-match": "^2.0.3",
     "date-fns": "^2.30.0",
     "deprecated-react-native-prop-types": "^5.0.0",
     "email-validator": "^2.0.4",
     "emoji-mart": "^5.5.2",
+    "emoji-regex": "^10.4.0",
     "eventemitter3": "^5.0.1",
     "expo": "^51.0.8",
     "expo-application": "^5.9.1",
@@ -124,6 +126,7 @@
     "expo-dev-client": "^4.0.14",
     "expo-device": "~6.0.2",
     "expo-file-system": "^17.0.1",
+    "expo-font": "~12.0.10",
     "expo-haptics": "^13.0.1",
     "expo-image": "~1.12.9",
     "expo-image-manipulator": "^12.0.5",
@@ -203,6 +206,7 @@
     "statsig-react-native-expo": "^4.6.1",
     "tippy.js": "^6.3.7",
     "tlds": "^1.234.0",
+    "tldts": "^6.1.46",
     "zeego": "^1.6.2",
     "zod": "^3.20.2"
   },
@@ -335,7 +339,9 @@
   },
   "lint-staged": {
     "*{.js,.jsx,.ts,.tsx}": [
-      "eslint --cache --fix",
+      "eslint --cache --fix"
+    ],
+    "*{.js,.jsx,.ts,.tsx,.css}": [
       "prettier --cache --write --ignore-unknown"
     ]
   }

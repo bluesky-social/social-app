@@ -125,7 +125,7 @@ export function WizardEditListDialog({
                   label={_(msg`Close`)}
                   variant="ghost"
                   color="primary"
-                  size="xsmall"
+                  size="small"
                   onPress={() => control.close()}>
                   <ButtonText>
                     <Trans>Close</Trans>

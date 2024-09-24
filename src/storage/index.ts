@@ -1,6 +1,9 @@
 import {MMKV} from 'react-native-mmkv'
 
+import {IS_DEV} from '#/env'
 import {Device} from '#/storage/schema'
+
+export * from '#/storage/schema'
 
 /**
  * Generic storage class. DO NOT use this directly. Instead, use the exported
@@ -69,4 +72,11 @@ export class Storage<Scopes extends unknown[], Schema> {
  *
  *   `device.set([key], true)`
  */
-export const device = new Storage<[], Device>({id: 'device'})
+export const device = new Storage<[], Device>({id: 'bsky_device'})
+
+if (IS_DEV && typeof window !== 'undefined') {
+  // @ts-ignore
+  window.bsky_storage = {
+    device,
+  }
+}

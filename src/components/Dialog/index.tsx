@@ -37,6 +37,7 @@ import {Portal} from '#/components/Portal'
 
 export {useDialogContext, useDialogControl} from '#/components/Dialog/context'
 export * from '#/components/Dialog/types'
+export * from '#/components/Dialog/utils'
 // @ts-ignore
 export const Input = createInput(BottomSheetTextInput)
 

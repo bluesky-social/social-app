@@ -230,6 +230,31 @@ module.exports = function (config) {
         './plugins/shareExtension/withShareExtensions.js',
         './plugins/notificationsExtension/withNotificationsExtension.js',
         './plugins/withAppDelegateReferrer.js',
+        [
+          'expo-font',
+          {
+            fonts: [
+              // './assets/fonts/inter/Inter-Thin.otf',
+              // './assets/fonts/inter/Inter-ThinItalic.otf',
+              // './assets/fonts/inter/Inter-ExtraLight.otf',
+              // './assets/fonts/inter/Inter-ExtraLightItalic.otf',
+              // './assets/fonts/inter/Inter-Light.otf',
+              // './assets/fonts/inter/Inter-LightItalic.otf',
+              './assets/fonts/inter/Inter-Regular.otf',
+              './assets/fonts/inter/Inter-Italic.otf',
+              './assets/fonts/inter/Inter-Medium.otf',
+              './assets/fonts/inter/Inter-MediumItalic.otf',
+              './assets/fonts/inter/Inter-SemiBold.otf',
+              './assets/fonts/inter/Inter-SemiBoldItalic.otf',
+              './assets/fonts/inter/Inter-Bold.otf',
+              './assets/fonts/inter/Inter-BoldItalic.otf',
+              './assets/fonts/inter/Inter-ExtraBold.otf',
+              './assets/fonts/inter/Inter-ExtraBoldItalic.otf',
+              './assets/fonts/inter/Inter-Black.otf',
+              './assets/fonts/inter/Inter-BlackItalic.otf',
+            ],
+          },
+        ],
       ].filter(Boolean),
       extra: {
         eas: {
