@@ -21,24 +21,41 @@ import {atoms as a} from '#/alf'
 
 const AnimatedBlurView = Animated.createAnimatedComponent(BlurView)
 
-export function GrowableBanner({children}: {children: React.ReactNode}) {
+export function GrowableBanner({
+  backButton,
+  children,
+}: {
+  backButton?: React.ReactNode
+  children: React.ReactNode
+}) {
   const pagerContext = usePagerHeaderContext()
 
   // pagerContext should only be present on iOS, but better safe than sorry
   if (!pagerContext || !isIOS) {
-    return <View style={[a.w_full, a.h_full]}>{children}</View>
+    return (
+      <View style={[a.w_full, a.h_full]}>
+        {backButton}
+        {children}
+      </View>
+    )
   }
 
   const {scrollY} = pagerContext
 
-  return <GrowableBannerInner scrollY={scrollY}>{children}</GrowableBannerInner>
+  return (
+    <GrowableBannerInner scrollY={scrollY} backButton={backButton}>
+      {children}
+    </GrowableBannerInner>
+  )
 }
 
 function GrowableBannerInner({
   scrollY,
+  backButton,
   children,
 }: {
   scrollY: SharedValue<number>
+  backButton?: React.ReactNode
   children: React.ReactNode
 }) {
   const isFetching = useIsProfileFetching()
@@ -81,6 +98,16 @@ function GrowableBannerInner({
     }
   })
 
+  const animatedBackButtonStyle = useAnimatedStyle(() => ({
+    transform: [
+      {
+        translateY: interpolate(scrollY.value, [-150, 60], [-150, 60], {
+          extrapolateRight: Extrapolation.CLAMP,
+        }),
+      },
+    ],
+  }))
+
   return (
     <>
       <Animated.View
@@ -109,6 +136,9 @@ function GrowableBannerInner({
           />
         </Animated.View>
       </View>
+      <Animated.View style={[animatedBackButtonStyle]}>
+        {backButton}
+      </Animated.View>
     </>
   )
 }

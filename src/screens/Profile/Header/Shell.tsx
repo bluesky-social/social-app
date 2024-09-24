@@ -67,7 +67,28 @@ let ProfileHeaderShell = ({
       <View
         pointerEvents={isIOS ? 'auto' : 'none'}
         style={[a.relative, {height: 150}]}>
-        <GrowableBanner>
+        <GrowableBanner
+          backButton={
+            <>
+              {!isDesktop && !hideBackButton && (
+                <TouchableWithoutFeedback
+                  testID="profileHeaderBackBtn"
+                  onPress={onPressBack}
+                  hitSlop={BACK_HITSLOP}
+                  accessibilityRole="button"
+                  accessibilityLabel={_(msg`Back`)}
+                  accessibilityHint="">
+                  <View style={styles.backBtnWrapper}>
+                    <FontAwesomeIcon
+                      size={18}
+                      icon="angle-left"
+                      color="white"
+                    />
+                  </View>
+                </TouchableWithoutFeedback>
+              )}
+            </>
+          }>
           {isPlaceholderProfile ? (
             <LoadingPlaceholder
               width="100%"
@@ -98,19 +119,6 @@ let ProfileHeaderShell = ({
         </View>
       )}
 
-      {!isDesktop && !hideBackButton && (
-        <TouchableWithoutFeedback
-          testID="profileHeaderBackBtn"
-          onPress={onPressBack}
-          hitSlop={BACK_HITSLOP}
-          accessibilityRole="button"
-          accessibilityLabel={_(msg`Back`)}
-          accessibilityHint="">
-          <View style={styles.backBtnWrapper}>
-            <FontAwesomeIcon size={18} icon="angle-left" color="white" />
-          </View>
-        </TouchableWithoutFeedback>
-      )}
       <TouchableWithoutFeedback
         testID="profileHeaderAviButton"
         onPress={onPressAvi}
