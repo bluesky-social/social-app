@@ -75,10 +75,9 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
             to={profileLink}
             label={_(msg`View profile`)}
             disableMismatchWarning
-            onPress={onBeforePressAuthor}>
-            <Text
-              emoji
-              style={[a.text_md, a.font_bold, t.atoms.text, a.leading_snug]}>
+            onPress={onBeforePressAuthor}
+            style={[t.atoms.text]}>
+            <Text emoji style={[a.text_md, a.font_bold, a.leading_snug]}>
               {forceLTR(
                 sanitizeDisplayName(
                   displayName,
