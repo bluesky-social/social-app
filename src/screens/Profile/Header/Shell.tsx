@@ -157,6 +157,9 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     // @ts-ignore web only
     cursor: 'pointer',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   backBtn: {
     width: 30,
