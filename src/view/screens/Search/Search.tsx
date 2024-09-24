@@ -453,11 +453,14 @@ function useQueryManager({initialQuery}: {initialQuery: string}) {
 }
 
 let SearchScreenInner = ({
-  query: initialQuery,
+  query,
+  queryWithParams,
+  headerHeight,
 }: {
   query: string
+  queryWithParams: string
+  headerHeight: number
 }): React.ReactNode => {
-  const t = useThemeNew()
   const pal = usePalette('default')
   const setMinimalShellMode = useSetMinimalShellMode()
   const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
@@ -465,9 +468,6 @@ let SearchScreenInner = ({
   const {isDesktop} = useWebMediaQueries()
   const [activeTab, setActiveTab] = React.useState(0)
   const {_} = useLingui()
-  const {gtMobile} = useBreakpoints()
-
-  const {params, query, queryWithParams} = useQueryManager({initialQuery})
 
   const onPageSelected = React.useCallback(
     (index: number) => {
@@ -517,40 +517,25 @@ let SearchScreenInner = ({
   }, [_, query, queryWithParams, activeTab])
 
   return query ? (
-    <>
-      <CenteredView
-        sideBorders={gtMobile}
-        style={[
-          a.pt_sm,
-          isNative && a.pb_xs,
-          a.px_md,
-          t.atoms.border_contrast_low,
-        ]}>
-        <View style={[a.flex_row, a.align_center, a.justify_between, a.gap_sm]}>
-          <View style={[{width: 140}]}>
-            <SearchLanguageDropdown
-              value={params.lang}
-              onChange={params.setLang}
-            />
-          </View>
-        </View>
-      </CenteredView>
-
-      <Pager
-        onPageSelected={onPageSelected}
-        renderTabBar={props => (
-          <CenteredView
-            sideBorders
-            style={[pal.border, pal.view, styles.tabBarContainer]}>
-            <TabBar items={sections.map(section => section.title)} {...props} />
-          </CenteredView>
-        )}
-        initialPage={0}>
-        {sections.map((section, i) => (
-          <View key={i}>{section.component}</View>
-        ))}
-      </Pager>
-    </>
+    <Pager
+      onPageSelected={onPageSelected}
+      renderTabBar={props => (
+        <CenteredView
+          sideBorders
+          style={[
+            pal.border,
+            pal.view,
+            styles.tabBarContainer,
+            {top: isWeb ? headerHeight : undefined},
+          ]}>
+          <TabBar items={sections.map(section => section.title)} {...props} />
+        </CenteredView>
+      )}
+      initialPage={0}>
+      {sections.map((section, i) => (
+        <View key={i}>{section.component}</View>
+      ))}
+    </Pager>
   ) : hasSession ? (
     <Explore />
   ) : (
@@ -819,59 +804,78 @@ export function SearchScreen(
     [selectedProfiles],
   )
 
+  const {params, query, queryWithParams} = useQueryManager({
+    initialQuery: queryParam,
+  })
+  const showFilters = Boolean(query && !showAutocomplete)
+  const headerHeight = HEADER_HEIGHT + (showFilters ? 40 : 0)
+
   return (
     <View style={isWeb ? null : {flex: 1}}>
       <CenteredView
         style={[
           a.p_md,
           a.pb_0,
-          a.flex_row,
           a.gap_sm,
           t.atoms.bg,
           web({
-            height: HEADER_HEIGHT, // TODO
+            height: headerHeight,
             position: 'sticky',
             top: 0,
             zIndex: 1,
           }),
         ]}
         sideBorders={gtMobile}>
-        {!gtMobile && (
-          <Button
-            testID="viewHeaderBackOrMenuBtn"
-            onPress={onPressMenu}
-            hitSlop={HITSLOP_10}
-            label={_(msg`Menu`)}
-            accessibilityHint={_(msg`Access navigation links and settings`)}
-            size="large"
-            variant="solid"
-            color="secondary"
-            shape="square">
-            <ButtonIcon icon={Menu} size="lg" />
-          </Button>
-        )}
-        <SearchInputBox
-          textInput={textInput}
-          searchText={searchText}
-          showAutocomplete={showAutocomplete}
-          setShowAutocomplete={setShowAutocomplete}
-          onChangeText={onChangeText}
-          onSubmit={onSubmit}
-          onPressClearQuery={onPressClearQuery}
-        />
-        {showAutocomplete && (
-          <Button
-            label={_(msg`Cancel search`)}
-            size="large"
-            variant="ghost"
-            color="secondary"
-            style={[a.px_sm]}
-            onPress={onPressCancelSearch}
-            hitSlop={HITSLOP_10}>
-            <ButtonText>
-              <Trans>Cancel</Trans>
-            </ButtonText>
-          </Button>
+        <View style={[a.flex_row, a.gap_sm]}>
+          {!gtMobile && (
+            <Button
+              testID="viewHeaderBackOrMenuBtn"
+              onPress={onPressMenu}
+              hitSlop={HITSLOP_10}
+              label={_(msg`Menu`)}
+              accessibilityHint={_(msg`Access navigation links and settings`)}
+              size="large"
+              variant="solid"
+              color="secondary"
+              shape="square">
+              <ButtonIcon icon={Menu} size="lg" />
+            </Button>
+          )}
+          <SearchInputBox
+            textInput={textInput}
+            searchText={searchText}
+            showAutocomplete={showAutocomplete}
+            setShowAutocomplete={setShowAutocomplete}
+            onChangeText={onChangeText}
+            onSubmit={onSubmit}
+            onPressClearQuery={onPressClearQuery}
+          />
+          {showAutocomplete && (
+            <Button
+              label={_(msg`Cancel search`)}
+              size="large"
+              variant="ghost"
+              color="secondary"
+              style={[a.px_sm]}
+              onPress={onPressCancelSearch}
+              hitSlop={HITSLOP_10}>
+              <ButtonText>
+                <Trans>Cancel</Trans>
+              </ButtonText>
+            </Button>
+          )}
+        </View>
+
+        {query && !showAutocomplete && (
+          <View
+            style={[a.flex_row, a.align_center, a.justify_between, a.gap_sm]}>
+            <View style={[{width: 140}]}>
+              <SearchLanguageDropdown
+                value={params.lang}
+                onChange={params.setLang}
+              />
+            </View>
+          </View>
         )}
       </CenteredView>
 
@@ -905,7 +909,12 @@ export function SearchScreen(
           display: showAutocomplete ? 'none' : 'flex',
           flex: 1,
         }}>
-        <SearchScreenInner key={queryParam} query={queryParam} />
+        <SearchScreenInner
+          key={queryParam}
+          query={query}
+          queryWithParams={queryWithParams}
+          headerHeight={headerHeight}
+        />
       </View>
     </View>
   )
@@ -1233,7 +1242,6 @@ const styles = StyleSheet.create({
   tabBarContainer: {
     // @ts-ignore web only
     position: isWeb ? 'sticky' : '',
-    top: isWeb ? HEADER_HEIGHT : 0,
     zIndex: 1,
   },
   searchHistoryContainer: {
