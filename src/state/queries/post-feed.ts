@@ -15,24 +15,25 @@ import {
   useInfiniteQuery,
 } from '@tanstack/react-query'
 
+import {AuthorFeedAPI} from '#/lib/api/feed/author'
+import {CustomFeedAPI} from '#/lib/api/feed/custom'
+import {FollowingFeedAPI} from '#/lib/api/feed/following'
 import {HomeFeedAPI} from '#/lib/api/feed/home'
+import {LikesFeedAPI} from '#/lib/api/feed/likes'
+import {ListFeedAPI} from '#/lib/api/feed/list'
+import {MergeFeedAPI} from '#/lib/api/feed/merge'
+import {FeedAPI, ReasonFeedSource} from '#/lib/api/feed/types'
 import {aggregateUserInterests} from '#/lib/api/feed/utils'
+import {FeedTuner, FeedTunerFn} from '#/lib/api/feed-manip'
 import {DISCOVER_FEED_URI} from '#/lib/constants'
+import {BSKY_FEED_OWNER_DIDS} from '#/lib/constants'
 import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
+import {useGate} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {STALE} from '#/state/queries'
 import {DEFAULT_LOGGED_OUT_PREFERENCES} from '#/state/queries/preferences/const'
 import {useAgent} from '#/state/session'
 import * as userActionHistory from '#/state/userActionHistory'
-import {AuthorFeedAPI} from 'lib/api/feed/author'
-import {CustomFeedAPI} from 'lib/api/feed/custom'
-import {FollowingFeedAPI} from 'lib/api/feed/following'
-import {LikesFeedAPI} from 'lib/api/feed/likes'
-import {ListFeedAPI} from 'lib/api/feed/list'
-import {MergeFeedAPI} from 'lib/api/feed/merge'
-import {FeedAPI, ReasonFeedSource} from 'lib/api/feed/types'
-import {FeedTuner, FeedTunerFn} from 'lib/api/feed-manip'
-import {BSKY_FEED_OWNER_DIDS} from 'lib/constants'
 import {KnownError} from '#/view/com/posts/FeedErrorMessage'
 import {useFeedTuners} from '../preferences/feed-tuners'
 import {useModerationOpts} from '../preferences/moderation-opts'
@@ -116,6 +117,7 @@ export function usePostFeedQuery(
   params?: FeedParams,
   opts?: {enabled?: boolean; ignoreFilterFor?: string},
 ) {
+  const gate = useGate()
   const feedTuners = useFeedTuners(feedDesc)
   const moderationOpts = useModerationOpts()
   const {data: preferences} = usePreferencesQuery()
@@ -134,6 +136,10 @@ export function usePostFeedQuery(
     result: InfiniteData<FeedPage>
   } | null>(null)
   const isDiscover = feedDesc.includes(DISCOVER_FEED_URI)
+
+  const [pageSize] = React.useState(() => {
+    return gate('post_feed_lang_window') ? 100 : PAGE_SIZE
+  })
 
   // Make sure this doesn't invalidate unless really needed.
   const selectArgs = React.useMemo(
@@ -175,7 +181,7 @@ export function usePostFeedQuery(
           }
 
       try {
-        const res = await api.fetch({cursor, limit: PAGE_SIZE})
+        const res = await api.fetch({cursor, limit: pageSize})
 
         /*
          * If this is a public view, we need to check if posts fail moderation.
