@@ -1,12 +1,9 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import {View} from 'react-native'
 import {ActivityIndicator} from 'react-native'
 import Animated, {
   Extrapolation,
-  FadeIn,
-  FadeOut,
   interpolate,
-  LayoutAnimationConfig,
   SharedValue,
   useAnimatedProps,
   useAnimatedStyle,
@@ -21,7 +18,6 @@ import {RQKEY_ROOT as FEEDGEN_RQKEY_ROOT} from '#/state/queries/profile-feedgens
 import {RQKEY_ROOT as LIST_RQKEY_ROOT} from '#/state/queries/profile-lists'
 import {usePagerHeaderContext} from '#/view/com/pager/PagerHeaderContext'
 import {atoms as a} from '#/alf'
-import {ArrowBottom_Stroke2_Corner0_Rounded as ArrowDownIcon} from '#/components/icons/Arrow'
 
 const AnimatedBlurView = Animated.createAnimatedComponent(BlurView)
 
@@ -46,6 +42,7 @@ function GrowableBannerInner({
   children: React.ReactNode
 }) {
   const isFetching = useIsProfileFetching()
+  const delayedIsFetching = useDelayedValue(isFetching, 500)
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [
@@ -70,6 +67,7 @@ function GrowableBannerInner({
 
   const animatedSpinnerStyle = useAnimatedStyle(() => {
     return {
+      display: scrollY.value < 0 ? 'flex' : 'none',
       opacity: interpolate(
         scrollY.value,
         [-60, -15],
@@ -78,6 +76,7 @@ function GrowableBannerInner({
       ),
       transform: [
         {translateY: interpolate(scrollY.value, [-150, 0], [-75, 0])},
+        {rotate: '90deg'},
       ],
     }
   })
@@ -101,17 +100,13 @@ function GrowableBannerInner({
       </Animated.View>
       <View style={[a.absolute, a.inset_0, a.justify_center, a.align_center]}>
         <Animated.View style={[animatedSpinnerStyle]}>
-          <LayoutAnimationConfig skipEntering skipExiting>
-            {isFetching ? (
-              <Animated.View key={1} exiting={FadeOut.delay(500).duration(50)}>
-                <ActivityIndicator size="small" color="white" />
-              </Animated.View>
-            ) : (
-              <Animated.View key={2} entering={FadeIn.delay(500).duration(50)}>
-                <ArrowDownIcon fill="white" size="lg" />
-              </Animated.View>
-            )}
-          </LayoutAnimationConfig>
+          <ActivityIndicator
+            key={delayedIsFetching ? 'spin' : 'stop'}
+            size="large"
+            color="white"
+            animating={delayedIsFetching}
+            hidesWhenStopped={false}
+          />
         </Animated.View>
       </View>
     </>
@@ -126,4 +121,29 @@ function useIsProfileFetching() {
     useIsFetching({queryKey: [LIST_RQKEY_ROOT]}),
     useIsFetching({queryKey: [STARTERPACK_RQKEY_ROOT]}),
   ].some(isFetching => isFetching)
+}
+
+// stayed true for at least `delay` ms before returning to false
+function useDelayedValue(value: boolean, delay: number) {
+  const [prevValue, setPrevValue] = useState(value)
+  const [isDelayed, setIsDelayed] = useState(false)
+  const timeoutRef = React.useRef<ReturnType<typeof setTimeout>>()
+
+  useEffect(() => {
+    if (value !== prevValue) {
+      setPrevValue(value)
+      if (!value) {
+        setIsDelayed(true)
+        timeoutRef.current = setTimeout(() => setIsDelayed(false), delay)
+      }
+    }
+  }, [value, prevValue, delay])
+
+  useEffect(() => {
+    return () => {
+      clearTimeout(timeoutRef.current)
+    }
+  }, [])
+
+  return isDelayed ? true : prevValue
 }
