@@ -6,18 +6,20 @@ import {
   copyAsync,
   deleteAsync,
   EncodingType,
+  getInfoAsync,
   makeDirectoryAsync,
   StorageAccessFramework,
   writeAsStringAsync,
 } from 'expo-file-system'
+import {manipulateAsync, SaveFormat} from 'expo-image-manipulator'
 import * as MediaLibrary from 'expo-media-library'
 import * as Sharing from 'expo-sharing'
-// import ImageResizer from '@bam.tech/react-native-image-resizer'
 import {Buffer} from 'buffer'
 import RNFetchBlob from 'rn-fetch-blob'
 
+import {POST_IMG_MAX} from '#/lib/constants'
 import {logger} from '#/logger'
-import {isAndroid, isIOS} from 'platform/detection'
+import {isAndroid, isIOS} from '#/platform/detection'
 import {Dimensions} from './types'
 
 export async function compressIfNeeded(
@@ -165,30 +167,48 @@ interface DoResizeOpts {
 }
 
 async function doResize(localUri: string, opts: DoResizeOpts): Promise<Image> {
+  // We need to get the dimensions of the image before we resize it. Previously, the library we used allowed us to enter
+  // a "max size", and it would do the "best possible size" calculation for us.
+  // Now instead, we have to supply the final dimensions to the manipulation function instead.
+  // Performing an "empty" manipulation lets us get the dimensions of the original image. React Native's Image.getSize()
+  // does not work for local files...
+  const imageRes = await manipulateAsync(localUri, [], {})
+  const newDimensions = getResizedDimensions({
+    width: imageRes.width,
+    height: imageRes.height,
+  })
+
   for (let i = 0; i < 9; i++) {
-    // const quality = 100 - i * 10
-    // const resizeRes = await ImageResizer.createResizedImage(
-    //   localUri,
-    //   opts.width,
-    //   opts.height,
-    //   'JPEG',
-    //   quality,
-    //   undefined,
-    //   undefined,
-    //   undefined,
-    //   {mode: opts.mode},
-    // )
-    // if (resizeRes.size < opts.maxSize) {
-    //   return {
-    //     path: normalizePath(resizeRes.path),
-    //     mime: 'image/jpeg',
-    //     size: resizeRes.size,
-    //     width: resizeRes.width,
-    //     height: resizeRes.height,
-    //   }
-    // } else {
-    //   safeDeleteAsync(resizeRes.path)
-    // }
+    // nearest 10th
+    const quality = Math.round((1 - 0.1 * i) * 10) / 10
+    const resizeRes = await manipulateAsync(
+      localUri,
+      [{resize: newDimensions}],
+      {
+        format: SaveFormat.JPEG,
+        compress: quality,
+      },
+    )
+
+    const fileInfo = await getInfoAsync(resizeRes.uri)
+    if (!fileInfo.exists) {
+      throw new Error(
+        'The image manipulation library failed to create a new image.',
+      )
+    }
+
+    if (fileInfo.size < opts.maxSize) {
+      safeDeleteAsync(imageRes.uri)
+      return {
+        path: normalizePath(resizeRes.uri),
+        mime: 'image/jpeg',
+        size: fileInfo.size,
+        width: resizeRes.width,
+        height: resizeRes.height,
+      }
+    } else {
+      safeDeleteAsync(resizeRes.uri)
+    }
   }
   throw new Error(
     `This image is too big! We couldn't compress it down to ${opts.maxSize} bytes`,
@@ -309,5 +329,27 @@ async function withTempFile<T>(
     return await cb(tmpFileUrl)
   } finally {
     safeDeleteAsync(tmpDirUri)
+  }
+}
+
+export function getResizedDimensions(originalDims: {
+  width: number
+  height: number
+}) {
+  if (
+    originalDims.width <= POST_IMG_MAX.width &&
+    originalDims.height <= POST_IMG_MAX.height
+  ) {
+    return originalDims
+  }
+
+  const ratio = Math.min(
+    POST_IMG_MAX.width / originalDims.width,
+    POST_IMG_MAX.height / originalDims.height,
+  )
+
+  return {
+    width: Math.round(originalDims.width * ratio),
+    height: Math.round(originalDims.height * ratio),
   }
 }

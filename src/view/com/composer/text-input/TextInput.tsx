@@ -8,7 +8,7 @@ import React, {
 } from 'react'
 import {
   NativeSyntheticEvent,
-  StyleSheet,
+  Text as RNText,
   TextInput as RNTextInput,
   TextInputSelectionChangeEventData,
   View,
@@ -20,18 +20,16 @@ import PasteInput, {
 } from '@haileyok/react-native-paste-input'
 
 import {POST_IMG_MAX} from '#/lib/constants'
-import {usePalette} from '#/lib/hooks/usePalette'
 import {downloadAndResize} from '#/lib/media/manip'
 import {isUriImage} from '#/lib/media/util'
 import {cleanError} from '#/lib/strings/errors'
 import {getMentionAt, insertMentionAt} from '#/lib/strings/mention-manip'
 import {useTheme} from '#/lib/ThemeContext'
-import {isAndroid} from '#/platform/detection'
+import {isAndroid, isNative} from '#/platform/detection'
 import {
   LinkFacetMatch,
   suggestLinkCardUri,
 } from '#/view/com/composer/text-input/text-input-util'
-import {Text} from '#/view/com/util/text/Text'
 import {atoms as a, useAlf} from '#/alf'
 import {normalizeTextStyles} from '#/components/Typography'
 import {Autocomplete} from './mobile/Autocomplete'
@@ -70,7 +68,6 @@ export const TextInput = forwardRef(function TextInputImpl(
   ref,
 ) {
   const {theme: t, fonts} = useAlf()
-  const pal = usePalette('default')
   const textInput = useRef<PasteInputRef>(null)
   const textInputSelection = useRef<Selection>({start: 0, end: 0})
   const theme = useTheme()
@@ -193,10 +190,12 @@ export const TextInput = forwardRef(function TextInputImpl(
       },
     )
 
-    /*
-     * `PasteInput` appears to prefer no `lineHeight`
+    /**
+     * PasteInput doesn't like `lineHeight`, results in jumpiness
      */
-    style.lineHeight = undefined
+    if (isNative) {
+      style.lineHeight = undefined
+    }
 
     /*
      * Android impl of `PasteInput` doesn't support the array syntax for `fontVariant`
@@ -215,17 +214,23 @@ export const TextInput = forwardRef(function TextInputImpl(
 
     return Array.from(richtext.segments()).map(segment => {
       return (
-        <Text
+        <RNText
           key={i++}
-          style={[inputTextStyle, segment.facet ? pal.link : pal.text]}>
+          style={[
+            inputTextStyle,
+            {
+              color: segment.facet ? t.palette.primary_500 : t.atoms.text.color,
+              marginTop: -1,
+            },
+          ]}>
           {segment.text}
-        </Text>
+        </RNText>
       )
     })
-  }, [richtext, pal.link, pal.text, inputTextStyle])
+  }, [t, richtext, inputTextStyle])
 
   return (
-    <View style={styles.container}>
+    <View style={[a.flex_1, a.pl_md, a.pb_2xl]}>
       <PasteInput
         testID="composerTextInput"
         ref={textInput}
@@ -233,14 +238,14 @@ export const TextInput = forwardRef(function TextInputImpl(
         onPaste={onPaste}
         onSelectionChange={onSelectionChange}
         placeholder={placeholder}
-        placeholderTextColor={pal.colors.textLight}
+        placeholderTextColor={t.atoms.text_contrast_medium.color}
         keyboardAppearance={theme.colorScheme}
         autoFocus={true}
         allowFontScaling
         multiline
         scrollEnabled={false}
         numberOfLines={4}
-        style={[inputTextStyle, styles.textInput, {textAlignVertical: 'top'}]}
+        style={[inputTextStyle, a.w_full, {textAlignVertical: 'top'}]}
         {...props}>
         {textDecorated}
       </PasteInput>
@@ -250,18 +255,4 @@ export const TextInput = forwardRef(function TextInputImpl(
       />
     </View>
   )
-})
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  textInput: {
-    flex: 1,
-    width: '100%',
-    padding: 5,
-    paddingBottom: 20,
-    marginLeft: 8,
-    alignSelf: 'flex-start',
-  },
 })

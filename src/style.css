@@ -1,7 +1,15 @@
+/**
+ * IMPORTANT
+ *
+ * Some of these styles are duplicated in the `web/index.html` and
+ * `bskyweb/templates/base.html` files. Depending on what you're updating, you
+ * may need to touch all three. Ask Eric if you aren't sure.
+ */
+
 @font-face {
   font-family: 'Inter-Regular';
   src: local('Inter-Regular'),
-    url(/static/media/Inter-Regular.1f5ed03b6dd9fd1f9982.otf) format('font/otf');
+    url(/assets/fonts/inter/Inter-Regular.otf) format('font/otf');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -9,7 +17,7 @@
 @font-face {
   font-family: 'Inter-Italic';
   src: local('Inter-Italic'),
-    url(/static/media/Inter-Italic.95778eb0c75dc956257e.otf) format('font/otf');
+    url(/assets/fonts/inter/Inter-Italic.otf) format('font/otf');
   font-weight: 400;
   font-style: italic;
   font-display: swap;
@@ -17,14 +25,14 @@
 /*
 @font-face {
   font-family: "Inter-Medium";
-  src: local("Inter-Medium"), url(/static/media/Inter-Medium.296aa2d65964269836b3.otf) format("font/otf");
+  src: local("Inter-Medium"), url(/assets/fonts/inter/Inter-Medium.otf) format("font/otf");
   font-weight: 500;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
   font-family: "Inter-MediumItalic";
-  src: local("Inter-MediumItalic"), url(/static/media/Inter-MediumItalic.0e57e17a6311368e2114.otf) format("font/otf");
+  src: local("Inter-MediumItalic"), url(/assets/fonts/inter/Inter-MediumItalic.otf) format("font/otf");
   font-weight: 500;
   font-style: italic;
   font-display: swap;
@@ -33,8 +41,7 @@
 @font-face {
   font-family: 'Inter-SemiBold';
   src: local('Inter-SemiBold'),
-    url(/static/media/Inter-SemiBold.2277990330981b8409bb.otf)
-      format('font/otf');
+    url(/assets/fonts/inter/Inter-SemiBold.otf) format('font/otf');
   font-weight: 600;
   font-style: normal;
   font-display: swap;
@@ -42,8 +49,7 @@
 @font-face {
   font-family: 'Inter-SemiBoldItalic';
   src: local('Inter-SemiBoldItalic'),
-    url(/static/media/Inter-SemiBoldItalic.f62fea3df3a521d6c8a7.otf)
-      format('font/otf');
+    url(/assets/fonts/inter/Inter-SemiBoldItalic.otf) format('font/otf');
   font-weight: 600;
   font-style: italic;
   font-display: swap;
@@ -51,14 +57,14 @@
 /*
 @font-face {
   font-family: "Inter-Bold";
-  src: local("Inter-Bold"), url(/static/media/Inter-Bold.8d330503e1d034ad68de.otf) format("font/otf");
+  src: local("Inter-Bold"), url(/assets/fonts/inter/Inter-Bold.otf) format("font/otf");
   font-weight: 700;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
   font-family: "Inter-BoldItalic";
-  src: local("Inter-BoldItalic"), url(/static/media/Inter-BoldItalic.bb17e63f9baa0d861a20.otf) format("font/otf");
+  src: local("Inter-BoldItalic"), url(/assets/fonts/inter/Inter-BoldItalic.otf) format("font/otf");
   font-weight: 700;
   font-style: italic;
   font-display: swap;
@@ -67,8 +73,7 @@
 @font-face {
   font-family: 'Inter-ExtraBold';
   src: local('Inter-ExtraBold'),
-    url(/static/media/Inter-ExtraBold.ff2581a193bf6b7e0b06.otf)
-      format('font/otf');
+    url(/assets/fonts/inter/Inter-ExtraBold.otf) format('font/otf');
   font-weight: 800;
   font-style: normal;
   font-display: swap;
@@ -76,8 +81,7 @@
 @font-face {
   font-family: 'Inter-ExtraBoldItalic';
   src: local('Inter-ExtraBoldItalic'),
-    url(/static/media/Inter-ExtraBoldItalic.0e50b40728d24d40fdf4.otf)
-      format('font/otf');
+    url(/assets/fonts/inter/Inter-ExtraBoldItalic.otf) format('font/otf');
   font-weight: 800;
   font-style: italic;
   font-display: swap;
@@ -85,14 +89,14 @@
 /*
 @font-face {
   font-family: "Inter-Black";
-  src: local("Inter-Black"), url(/static/media/Inter-Black.66e9a87f1c921e844ed4.otf) format("font/otf");
+  src: local("Inter-Black"), url(/assets/fonts/inter/Inter-Black.otf) format("font/otf");
   font-weight: 900;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
   font-family: "Inter-BlackItalic";
-  src: local("Inter-BlackItalic"), url(/static/media/Inter-BlackItalic.27b9f0ad06fd13a7b9da.otf) format("font/otf");
+  src: local("Inter-BlackItalic"), url(/assets/fonts/inter/Inter-BlackItalic.otf) format("font/otf");
   font-weight: 900;
   font-style: italic;
   font-display: swap;
@@ -100,46 +104,43 @@
 */
 
 /**
- * Extend the react-native-web reset:
- * https://github.com/necolas/react-native-web/blob/master/packages/react-native-web/src/exports/StyleSheet/initialRules.js
+ * BEGIN STYLES
+ *
+ * HTML & BODY STYLES IN `web/index.html` and `bskyweb/templates/base.html`
  */
-html,
-body,
-#root {
-  width: 100%;
-  /* To smooth any scrolling behavior */
-  -webkit-overflow-scrolling: touch;
-  margin: 0px;
-  padding: 0px;
-  /* Allows content to fill the viewport and go beyond the bottom */
-  min-height: 100%;
+:root {
+  --text: black;
+  --background: white;
+  --backgroundLight: hsl(211, 20%, 95%);
 }
-#root {
-  flex-shrink: 0;
-  flex-basis: auto;
-  flex-grow: 1;
-  display: flex;
-  flex: 1;
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --text: white;
+    --background: black;
+    --backgroundLight: hsl(211, 20%, 20%);
+  }
 }
 
-html {
-  /* Prevent text size change on orientation change https://gist.github.com/tfausak/2222823#file-ios-8-web-app-html-L138 */
-  -webkit-text-size-adjust: 100%;
-  height: calc(100% + env(safe-area-inset-top));
-  scrollbar-gutter: stable both-edges;
+html.theme--light {
+  --text: black;
+  --background: white;
+  --backgroundLight: hsl(211, 20%, 95%);
+  background-color: white;
 }
-html,
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-    'Liberation Sans', Helvetica, Arial, sans-serif;
+html.theme--dark {
+  color-scheme: dark;
+  background-color: black;
+  --text: white;
+  --background: black;
+  --backgroundLight: hsl(211, 20%, 20%);
 }
-
-#preload {
-  width: 100px;
-  position: fixed;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
+html.theme--dim {
+  color-scheme: dark;
+  background-color: hsl(211, 28%, 12%);
+  --text: white;
+  --background: hsl(211, 20%, 4%);
+  --backgroundLight: hsl(211, 20%, 10%);
 }
 
 /* Buttons and inputs have a font set by UA, so we'll have to reset that */
@@ -148,42 +149,6 @@ input,
 textarea {
   font: inherit;
   line-height: inherit;
-}
-
-/* Color theming */
-/* Default will always be white */
-:root {
-  --text: black;
-  --background: white;
-  --backgroundLight: hsl(211, 20%, 95%);
-}
-/* This gives us a black background when system is dark and we have not loaded the theme/color scheme values in JS */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: white;
-    --background: black;
-    --backgroundLight: hsl(211, 20%, 20%);
-    color-scheme: dark;
-  }
-}
-
-/* Overwrite those preferences with the selected theme */
-html.theme--light {
-  --text: black;
-  --background: white;
-  --backgroundLight: hsl(211, 20%, 95%);
-}
-html.theme--dark {
-  --text: white;
-  --background: black;
-  --backgroundLight: hsl(211, 20%, 20%);
-  color-scheme: dark;
-}
-html.theme--dim {
-  --text: white;
-  --background: hsl(211, 20%, 4%);
-  --backgroundLight: hsl(211, 20%, 10%);
-  color-scheme: dark;
 }
 
 /* Remove autofill styles on Webkit */
@@ -202,19 +167,6 @@ input:-webkit-autofill:active {
 /* Force left-align date/time inputs on iOS mobile */
 input::-webkit-date-and-time-value {
   text-align: left;
-}
-
-body {
-  display: flex;
-  /* Allows you to scroll below the viewport; default value is visible */
-  overflow-y: auto;
-  overscroll-behavior-y: none;
-  text-rendering: optimizeLegibility;
-  background-color: var(--background);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  -ms-overflow-style: scrollbar;
-  font-synthesis-weight: none;
 }
 
 /* Remove default link styling */
