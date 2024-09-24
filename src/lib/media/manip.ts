@@ -182,7 +182,7 @@ async function doResize(localUri: string, opts: DoResizeOpts): Promise<Image> {
     const quality = 1 - 0.1 * i
     const resizeRes = await manipulateAsync(
       localUri,
-      [{resize: {height: newDimensions.height, width: newDimensions.width}}],
+      [{resize: newDimensions}],
       {
         format: SaveFormat.JPEG,
         compress: quality,
