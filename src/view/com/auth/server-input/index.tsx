@@ -154,8 +154,7 @@ export function ServerInputDialog({
               ]}>
               <Trans>
                 Bluesky is an open network where you can choose your hosting
-                provider. If you're a developer, you can even host your own
-                server.
+                provider. If you're a developer, you can host your own server.
               </Trans>{' '}
               <InlineLinkText
                 label={_(msg`Learn more about self hosting your PDS.`)}
