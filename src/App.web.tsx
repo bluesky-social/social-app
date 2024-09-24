@@ -54,6 +54,9 @@ import {Provider as IntentDialogProvider} from '#/components/intents/IntentDialo
 import {Provider as PortalProvider} from '#/components/Portal'
 import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
 
+// @ts-ignore
+import('hls.js/dist/hls.min') // preload
+
 function InnerApp() {
   const [isReady, setIsReady] = React.useState(false)
   const {currentAccount} = useSession()
