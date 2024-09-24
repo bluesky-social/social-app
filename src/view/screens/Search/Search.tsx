@@ -59,6 +59,7 @@ import {Text} from '#/view/com/util/text/Text'
 import {CenteredView, ScrollView} from '#/view/com/util/Views'
 import {Explore} from '#/view/screens/Search/Explore'
 import {SearchLinkCard, SearchProfileCard} from '#/view/shell/desktop/Search'
+import {makeSearchQuery,parseSearchQuery} from '#/screens/Search/utils'
 import {atoms as a, useBreakpoints, useTheme as useThemeNew, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as FeedCard from '#/components/FeedCard'
@@ -67,7 +68,6 @@ import {ChevronBottom_Stroke2_Corner0_Rounded as ChevronDown} from '#/components
 import {MagnifyingGlass2_Stroke2_Corner0_Rounded as MagnifyingGlass} from '#/components/icons/MagnifyingGlass2'
 import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
-import {Text as NewText} from '#/components/Typography'
 
 const HEADER_HEIGHT = 56
 
@@ -261,7 +261,7 @@ let SearchScreenUserResults = ({
   const {_} = useLingui()
 
   const {data: results, isFetched} = useActorSearch({
-    query: sanitizeLangFromQuery(query),
+    query,
     enabled: active,
   })
 
@@ -299,7 +299,7 @@ let SearchScreenFeedsResults = ({
   const {_} = useLingui()
 
   const {data: results, isFetched} = usePopularFeedsSearch({
-    query: sanitizeLangFromQuery(query),
+    query,
     enabled: active,
   })
 
@@ -361,10 +361,12 @@ function SearchLanguageDropdown({
     fontSize: a.text_xs.fontSize,
     fontFamily: 'inherit',
     fontWeight: a.font_bold.fontWeight,
-    paddingHorizontal: 12,
+    paddingHorizontal: 14,
     paddingRight: 32,
-    paddingVertical: 6,
+    paddingVertical: 8,
     borderRadius: a.rounded_full.borderRadius,
+    borderWidth: a.border.borderWidth,
+    borderColor: t.atoms.border_contrast_low.borderColor,
   }
 
   return (
@@ -376,6 +378,7 @@ function SearchLanguageDropdown({
       Icon={() => (
         <ChevronDown fill={t.atoms.text_contrast_low.color} size="sm" />
       )}
+      useNativeAndroidPickerStyle={false}
       style={{
         iconContainer: {
           pointerEvents: 'none',
@@ -387,6 +390,7 @@ function SearchLanguageDropdown({
         },
         inputAndroid: {
           ...style,
+          paddingVertical: 2,
         },
         inputIOS: {
           ...style,
@@ -409,7 +413,53 @@ function SearchLanguageDropdown({
   )
 }
 
-let SearchScreenInner = ({query}: {query?: string}): React.ReactNode => {
+function useQueryManager({initialQuery}: {initialQuery: string}) {
+  const {contentLanguages} = useLanguagePrefs()
+  const {query, params: initialParams} = React.useMemo(
+    () => parseSearchQuery(initialQuery || ''),
+    [initialQuery],
+  )
+
+  const [lang, setLang] = React.useState(
+    initialParams.lang || contentLanguages[0],
+  )
+
+  const params = React.useMemo(
+    () => ({
+      lang,
+    }),
+    [lang],
+  )
+  const handlers = React.useMemo(
+    () => ({
+      setLang,
+    }),
+    [setLang],
+  )
+
+  console.log({
+    query,
+    initialParams,
+    params,
+  })
+
+  return React.useMemo(() => {
+    return {
+      query,
+      queryWithParams: makeSearchQuery(query, params),
+      params: {
+        ...params,
+        ...handlers,
+      },
+    }
+  }, [query, params, handlers])
+}
+
+let SearchScreenInner = ({
+  query: initialQuery,
+}: {
+  query: string
+}): React.ReactNode => {
   const t = useThemeNew()
   const pal = usePalette('default')
   const setMinimalShellMode = useSetMinimalShellMode()
@@ -420,12 +470,7 @@ let SearchScreenInner = ({query}: {query?: string}): React.ReactNode => {
   const {_} = useLingui()
   const {gtMobile} = useBreakpoints()
 
-  const {contentLanguages} = useLanguagePrefs()
-  const [language, setLanguage] = React.useState(
-    parseLanguageFromQuery(query || '') || contentLanguages[0],
-  )
-  const queryWithoutLang = sanitizeLangFromQuery(query || '')
-  const queryWithLang = queryWithoutLang + ` lang:${language}`
+  const {params, query, queryWithParams} = useQueryManager({initialQuery})
 
   const onPageSelected = React.useCallback(
     (index: number) => {
@@ -437,13 +482,13 @@ let SearchScreenInner = ({query}: {query?: string}): React.ReactNode => {
   )
 
   const sections = React.useMemo(() => {
-    if (!queryWithoutLang) return []
+    if (!query) return []
     return [
       {
         title: _(msg`Top`),
         component: (
           <SearchScreenPostResults
-            query={queryWithLang}
+            query={queryWithParams}
             sort="top"
             active={activeTab === 0}
           />
@@ -453,7 +498,7 @@ let SearchScreenInner = ({query}: {query?: string}): React.ReactNode => {
         title: _(msg`Latest`),
         component: (
           <SearchScreenPostResults
-            query={queryWithLang}
+            query={queryWithParams}
             sort="latest"
             active={activeTab === 1}
           />
@@ -462,40 +507,34 @@ let SearchScreenInner = ({query}: {query?: string}): React.ReactNode => {
       {
         title: _(msg`People`),
         component: (
-          <SearchScreenUserResults
-            query={queryWithoutLang}
-            active={activeTab === 2}
-          />
+          <SearchScreenUserResults query={query} active={activeTab === 2} />
         ),
       },
       {
         title: _(msg`Feeds`),
         component: (
-          <SearchScreenFeedsResults
-            query={queryWithoutLang}
-            active={activeTab === 3}
-          />
+          <SearchScreenFeedsResults query={query} active={activeTab === 3} />
         ),
       },
     ]
-  }, [_, queryWithoutLang, queryWithLang, activeTab])
+  }, [_, query, queryWithParams, activeTab])
 
-  return queryWithoutLang ? (
+  return query ? (
     <>
       <CenteredView
         sideBorders={gtMobile}
         style={[
-          isWeb && a.pt_sm,
+          a.pt_sm,
           isNative && a.pb_xs,
           a.px_md,
           t.atoms.border_contrast_low,
         ]}>
-        <View style={[a.flex_row, a.justify_end, a.align_center, a.gap_sm]}>
-          <NewText style={[a.font_bold, t.atoms.text_contrast_medium]}>
-            <Trans>Language:</Trans>
-          </NewText>
-          <View style={[{width: 120}]}>
-            <SearchLanguageDropdown value={language} onChange={setLanguage} />
+        <View style={[a.flex_row, a.align_center, a.justify_between, a.gap_sm]}>
+          <View style={[{width: 140}]}>
+            <SearchLanguageDropdown
+              value={params.lang}
+              onChange={params.setLang}
+            />
           </View>
         </View>
       </CenteredView>
@@ -563,7 +602,6 @@ let SearchScreenInner = ({query}: {query?: string}): React.ReactNode => {
     </CenteredView>
   )
 }
-SearchScreenInner = React.memo(SearchScreenInner)
 
 export function SearchScreen(
   props: NativeStackScreenProps<SearchTabNavigatorParams, 'Search'>,
@@ -809,7 +847,7 @@ export function SearchScreen(
             label={_(msg`Menu`)}
             accessibilityHint={_(msg`Access navigation links and settings`)}
             size="large"
-            variant="ghost"
+            variant="solid"
             color="secondary"
             shape="square">
             <ButtonIcon icon={Menu} size="lg" />
@@ -870,7 +908,7 @@ export function SearchScreen(
           display: showAutocomplete ? 'none' : 'flex',
           flex: 1,
         }}>
-        <SearchScreenInner query={queryParam} />
+        <SearchScreenInner key={queryParam} query={queryParam} />
       </View>
     </View>
   )
@@ -1149,18 +1187,6 @@ function scrollToTopWeb() {
   if (isWeb) {
     window.scrollTo(0, 0)
   }
-}
-
-function sanitizeLangFromQuery(query: string) {
-  return query.replace(/lang:[a-z-]+/gi, '').trim()
-}
-
-function parseLanguageFromQuery(query: string) {
-  const match = query.match(/lang:[a-z-]+/gi)
-  if (match && match[0]) {
-    return match[0].replace('lang:', '').split('-')[0]
-  }
-  return ''
 }
 
 const styles = StyleSheet.create({

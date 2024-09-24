@@ -196,8 +196,8 @@ export function createInput(Component: typeof TextInput) {
             a.px_xs,
             {
               // paddingVertical doesn't work w/multiline - esb
-              paddingTop: 10,
-              paddingBottom: 11,
+              paddingTop: 12,
+              paddingBottom: 13,
               lineHeight: a.text_md.fontSize * 1.1875,
               textAlignVertical: rest.multiline ? 'top' : undefined,
               minHeight: rest.multiline ? 80 : undefined,
@@ -211,7 +211,8 @@ export function createInput(Component: typeof TextInput) {
               marginBottom: 2,
             }),
             android({
-              paddingBottom: 16,
+              paddingTop: 8,
+              paddingBottom: 8,
             }),
             style,
           ]}
