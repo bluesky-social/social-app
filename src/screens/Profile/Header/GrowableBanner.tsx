@@ -4,8 +4,10 @@ import {ActivityIndicator} from 'react-native'
 import Animated, {
   Extrapolation,
   interpolate,
+  runOnJS,
   SharedValue,
   useAnimatedProps,
+  useAnimatedReaction,
   useAnimatedStyle,
 } from 'react-native-reanimated'
 import {BlurView} from 'expo-blur'
@@ -59,7 +61,7 @@ function GrowableBannerInner({
   children: React.ReactNode
 }) {
   const isFetching = useIsProfileFetching()
-  const delayedIsFetching = useStickyToggle(isFetching, 500)
+  const animateSpinner = useShouldAnimateSpinner({isFetching, scrollY})
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [
@@ -128,10 +130,10 @@ function GrowableBannerInner({
       <View style={[a.absolute, a.inset_0, a.justify_center, a.align_center]}>
         <Animated.View style={[animatedSpinnerStyle]}>
           <ActivityIndicator
-            key={delayedIsFetching ? 'spin' : 'stop'}
+            key={animateSpinner ? 'spin' : 'stop'}
             size="large"
             color="white"
-            animating={delayedIsFetching}
+            animating={animateSpinner}
             hidesWhenStopped={false}
           />
         </Animated.View>
@@ -153,15 +155,45 @@ function useIsProfileFetching() {
   ].some(isFetching => isFetching)
 }
 
+function useShouldAnimateSpinner({
+  isFetching,
+  scrollY,
+}: {
+  isFetching: boolean
+  scrollY: SharedValue<number>
+}) {
+  const [isOverscrolled, setIsOverscrolled] = useState(false)
+  // HACK: it reports a scroll pos of 0 for a tick when fetching finishes
+  // so paper over that by keeping it true for a bit
+  const stickyIsOverscrolled = useStickyToggle(isOverscrolled, 10)
+
+  useAnimatedReaction(
+    () => scrollY.value < -5,
+    (value, prevValue) => {
+      if (value !== prevValue) {
+        runOnJS(setIsOverscrolled)(value)
+      }
+    },
+    [scrollY],
+  )
+
+  const [isAnimating, setIsAnimating] = useState(isFetching)
+
+  if (isFetching && !isAnimating) {
+    setIsAnimating(true)
+  }
+
+  if (!isFetching && isAnimating && !stickyIsOverscrolled) {
+    setIsAnimating(false)
+  }
+
+  return isAnimating
+}
+
 // stayed true for at least `delay` ms before returning to false
 function useStickyToggle(value: boolean, delay: number) {
   const [prevValue, setPrevValue] = useState(value)
   const [isSticking, setIsSticking] = useState(false)
-
-  if (value !== prevValue) {
-    setIsSticking(prevValue) // Going true -> false should stick.
-    setPrevValue(value)
-  }
 
   useEffect(() => {
     if (isSticking) {
@@ -169,6 +201,12 @@ function useStickyToggle(value: boolean, delay: number) {
       return () => clearTimeout(timeout)
     }
   }, [isSticking, delay])
+
+  if (value !== prevValue) {
+    setIsSticking(prevValue) // Going true -> false should stick.
+    setPrevValue(value)
+    return prevValue ? true : value
+  }
 
   return isSticking ? true : value
 }
