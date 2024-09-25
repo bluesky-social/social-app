@@ -157,23 +157,19 @@ function useIsProfileFetching() {
 function useDelayedValue(value: boolean, delay: number) {
   const [prevValue, setPrevValue] = useState(value)
   const [isDelayed, setIsDelayed] = useState(false)
-  const timeoutRef = React.useRef<ReturnType<typeof setTimeout>>()
 
   useEffect(() => {
     if (value !== prevValue) {
       setPrevValue(value)
       if (!value) {
         setIsDelayed(true)
-        timeoutRef.current = setTimeout(() => setIsDelayed(false), delay)
+        const timeout = setTimeout(() => setIsDelayed(false), delay)
+        return () => {
+          clearTimeout(timeout)
+        }
       }
     }
   }, [value, prevValue, delay])
-
-  useEffect(() => {
-    return () => {
-      clearTimeout(timeoutRef.current)
-    }
-  }, [])
 
   return isDelayed ? true : prevValue
 }
