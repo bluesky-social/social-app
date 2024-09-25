@@ -21,7 +21,7 @@ export function ProfileHeaderDisplayName({
       <Text
         emoji
         testID="profileHeaderDisplayName"
-        style={[t.atoms.text, a.text_4xl, a.self_start, {fontWeight: '600'}]}>
+        style={[t.atoms.text, a.text_3xl, a.self_start, {fontWeight: '600'}]}>
         {sanitizeDisplayName(
           profile.displayName || sanitizeHandle(profile.handle),
           moderation.ui('displayName'),
