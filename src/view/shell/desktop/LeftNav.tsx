@@ -199,6 +199,7 @@ function NavItem({count, href, icon, iconFilled, label}: NavItemProps) {
         style={[
           a.align_center,
           a.justify_center,
+          a.z_10,
           {
             width: 24,
             height: 24,
