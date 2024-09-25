@@ -123,7 +123,7 @@ msgstr "第 {0} 個（共 {1} 個）"
 msgid "{0} people have used this starter pack!"
 msgstr "{0} 人已使用此入門包！"
 
-#: src/view/com/util/UserAvatar.tsx:431
+#: src/view/com/util/UserAvatar.tsx:433
 msgid "{0}'s avatar"
 msgstr "「{0}」的頭像"
 
@@ -275,7 +275,6 @@ msgstr "存取導覽連結和設定"
 msgid "Access profile and other navigation links"
 msgstr "存取個人檔案和其他導覽連結"
 
-#: src/view/com/modals/EditImage.tsx:284
 #: src/view/screens/Settings/index.tsx:463
 msgid "Accessibility"
 msgstr "無障礙"
@@ -370,9 +369,10 @@ msgstr "新增帳號"
 #: src/view/com/composer/GifAltText.tsx:69
 #: src/view/com/composer/GifAltText.tsx:135
 #: src/view/com/composer/GifAltText.tsx:175
-#: src/view/com/composer/photos/Gallery.tsx:120
-#: src/view/com/composer/photos/Gallery.tsx:187
-#: src/view/com/modals/AltImage.tsx:118
+#: src/view/com/composer/photos/Gallery.tsx:170
+#: src/view/com/composer/photos/Gallery.tsx:217
+#: src/view/com/composer/photos/ImageAltTextDialog.tsx:69
+#: src/view/com/composer/photos/ImageAltTextDialog.tsx:74
 msgid "Add alt text"
 msgstr "新增替代文字"
 
@@ -491,16 +491,16 @@ msgid "Already signed in as @{0}"
 msgstr "已以 @{0} 身份登入"
 
 #: src/view/com/composer/GifAltText.tsx:93
-#: src/view/com/composer/photos/Gallery.tsx:144
+#: src/view/com/composer/photos/Gallery.tsx:188
 #: src/view/com/util/post-embeds/GifEmbed.tsx:177
 msgid "ALT"
 msgstr "替代文字"
 
 #: src/view/com/composer/GifAltText.tsx:144
+#: src/view/com/composer/photos/ImageAltTextDialog.tsx:98
 #: src/view/com/composer/videos/SubtitleDialog.tsx:56
 #: src/view/com/composer/videos/SubtitleDialog.tsx:104
 #: src/view/com/composer/videos/SubtitleDialog.tsx:108
-#: src/view/com/modals/EditImage.tsx:300
 #: src/view/screens/AccessibilitySettings.tsx:87
 msgid "Alt text"
 msgstr "替代文字"
@@ -509,7 +509,7 @@ msgstr "替代文字"
 msgid "Alt Text"
 msgstr "替代文字"
 
-#: src/view/com/composer/photos/Gallery.tsx:224
+#: src/view/com/composer/photos/Gallery.tsx:256
 msgid "Alt text describes images for blind and low-vision users, and helps give context to everyone."
 msgstr "替代文字可為盲人和視障人士描述圖片，並有助於為每個人提供背景資訊。"
 
@@ -710,7 +710,7 @@ msgstr "您確定要從您的動態中移除 {0} 嗎？"
 msgid "Are you sure you want to remove this from your feeds?"
 msgstr "您確定要將此從您的動態源中移除嗎？"
 
-#: src/view/com/composer/Composer.tsx:838
+#: src/view/com/composer/Composer.tsx:849
 msgid "Are you sure you'd like to discard this draft?"
 msgstr "您確定要捨棄此草稿嗎？"
 
@@ -839,14 +839,18 @@ msgstr "封鎖此帳號不會阻止被貼上標記，但它會阻止此帳號在
 msgid "Blog"
 msgstr "部落格"
 
-#: src/view/com/auth/server-input/index.tsx:89
-#: src/view/com/auth/server-input/index.tsx:91
+#: src/view/com/auth/server-input/index.tsx:90
+#: src/view/com/auth/server-input/index.tsx:92
 msgid "Bluesky"
 msgstr "Bluesky"
 
 #: src/view/com/auth/server-input/index.tsx:154
-msgid "Bluesky is an open network where you can choose your hosting provider. Custom hosting is now available in beta for developers."
-msgstr "Bluesky 是一個開放的網路，您可以自行挑選託管服務供應商。自定義託管服務現已為開發人員推出測試版。"
+#~ msgid "Bluesky is an open network where you can choose your hosting provider. Custom hosting is now available in beta for developers."
+#~ msgstr "Bluesky 是一個開放的網路，您可以自行挑選託管服務供應商。自定義託管服務現已為開發人員推出測試版。"
+
+#: src/view/com/auth/server-input/index.tsx:155
+msgid "Bluesky is an open network where you can choose your hosting provider. If you're a developer, you can host your own server."
+msgstr ""
 
 #: src/components/ProgressGuide/List.tsx:55
 msgid "Bluesky is better with friends!"
@@ -935,7 +939,7 @@ msgstr "建立帳號即表示您同意 {els}。"
 msgid "by you"
 msgstr "來自您"
 
-#: src/view/com/composer/photos/OpenCameraBtn.tsx:73
+#: src/view/com/composer/photos/OpenCameraBtn.tsx:76
 msgid "Camera"
 msgstr "相機"
 
@@ -948,16 +952,15 @@ msgstr "只能包含字母、數字、空格、破折號及底線。長度必須
 #: src/components/Prompt.tsx:126
 #: src/components/TagMenu/index.tsx:282
 #: src/screens/Deactivated.tsx:161
-#: src/view/com/composer/Composer.tsx:594
-#: src/view/com/composer/Composer.tsx:609
+#: src/view/com/composer/Composer.tsx:601
+#: src/view/com/composer/Composer.tsx:616
 #: src/view/com/modals/ChangeEmail.tsx:213
 #: src/view/com/modals/ChangeEmail.tsx:215
 #: src/view/com/modals/ChangeHandle.tsx:148
 #: src/view/com/modals/ChangePassword.tsx:268
 #: src/view/com/modals/ChangePassword.tsx:271
 #: src/view/com/modals/CreateOrEditList.tsx:344
-#: src/view/com/modals/crop-image/CropImage.web.tsx:162
-#: src/view/com/modals/EditImage.tsx:308
+#: src/view/com/modals/CropImage.web.tsx:97
 #: src/view/com/modals/EditProfile.tsx:250
 #: src/view/com/modals/InAppBrowserConsent.tsx:77
 #: src/view/com/modals/InAppBrowserConsent.tsx:79
@@ -986,7 +989,7 @@ msgstr "取消刪除帳號"
 msgid "Cancel change handle"
 msgstr "取消修改帳號代碼"
 
-#: src/view/com/modals/crop-image/CropImage.web.tsx:159
+#: src/view/com/modals/CropImage.web.tsx:94
 msgid "Cancel image crop"
 msgstr "取消圖片裁剪"
 
@@ -1010,7 +1013,7 @@ msgstr "取消搜尋"
 msgid "Cancels opening the linked website"
 msgstr "取消開啟網站連結"
 
-#: src/state/shell/composer/index.tsx:70
+#: src/state/shell/composer/index.tsx:71
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:114
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:155
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:191
@@ -1120,7 +1123,7 @@ msgstr "為我選擇"
 msgid "Choose People"
 msgstr "選擇人物"
 
-#: src/view/com/auth/server-input/index.tsx:79
+#: src/view/com/auth/server-input/index.tsx:80
 msgid "Choose Service"
 msgstr "選擇服務"
 
@@ -1255,7 +1258,7 @@ msgstr "關閉底部導覽列"
 msgid "Closes password update alert"
 msgstr "關閉密碼更新警告"
 
-#: src/view/com/composer/Composer.tsx:606
+#: src/view/com/composer/Composer.tsx:613
 msgid "Closes post composer and discards post draft"
 msgstr "關閉貼文編輯頁並捨棄草稿"
 
@@ -1298,7 +1301,7 @@ msgstr "完成初始設定並開始使用您的帳號"
 msgid "Complete the challenge"
 msgstr "完成驗證"
 
-#: src/view/com/composer/Composer.tsx:714
+#: src/view/com/composer/Composer.tsx:721
 msgid "Compose posts up to {MAX_GRAPHEME_LENGTH} characters in length"
 msgstr "撰寫貼文的長度最多為 {MAX_GRAPHEME_LENGTH} 個字元"
 
@@ -1586,8 +1589,8 @@ msgstr "{0} 已建立"
 msgid "Culture"
 msgstr "文化"
 
-#: src/view/com/auth/server-input/index.tsx:97
-#: src/view/com/auth/server-input/index.tsx:99
+#: src/view/com/auth/server-input/index.tsx:98
+#: src/view/com/auth/server-input/index.tsx:100
 msgid "Custom"
 msgstr "自訂"
 
@@ -1744,6 +1747,7 @@ msgid "Description"
 msgstr "描述"
 
 #: src/view/com/composer/GifAltText.tsx:140
+#: src/view/com/composer/photos/ImageAltTextDialog.tsx:94
 msgid "Descriptive alt text"
 msgstr "生動的替代文字"
 
@@ -1760,7 +1764,7 @@ msgstr "分離這則帖文的引用？"
 msgid "Dialog: adjust who can interact with this post"
 msgstr "對話框：自訂誰可以參與這則帖文的互動"
 
-#: src/view/com/composer/Composer.tsx:355
+#: src/view/com/composer/Composer.tsx:364
 msgid "Did you want to say anything?"
 msgstr "有什麼想說的嗎？"
 
@@ -1797,11 +1801,11 @@ msgstr "停用字幕"
 msgid "Disabled"
 msgstr "停用"
 
-#: src/view/com/composer/Composer.tsx:840
+#: src/view/com/composer/Composer.tsx:851
 msgid "Discard"
 msgstr "捨棄"
 
-#: src/view/com/composer/Composer.tsx:837
+#: src/view/com/composer/Composer.tsx:848
 msgid "Discard draft?"
 msgstr "捨棄草稿？"
 
@@ -1823,7 +1827,7 @@ msgstr "探索新的動態源"
 msgid "Discover New Feeds"
 msgstr "探索新的動態源"
 
-#: src/view/com/composer/Composer.tsx:1107
+#: src/view/com/composer/Composer.tsx:1118
 msgid "Dismiss error"
 msgstr "跳過錯誤"
 
@@ -1873,20 +1877,18 @@ msgstr "網域已驗證！"
 #: src/components/forms/DateField/index.tsx:83
 #: src/screens/Onboarding/StepProfile/index.tsx:322
 #: src/screens/Onboarding/StepProfile/index.tsx:325
-#: src/view/com/auth/server-input/index.tsx:169
-#: src/view/com/auth/server-input/index.tsx:170
+#: src/view/com/auth/server-input/index.tsx:174
+#: src/view/com/auth/server-input/index.tsx:175
 #: src/view/com/composer/videos/SubtitleDialog.tsx:171
 #: src/view/com/composer/videos/SubtitleDialog.tsx:181
 #: src/view/com/modals/AddAppPasswords.tsx:243
-#: src/view/com/modals/AltImage.tsx:141
-#: src/view/com/modals/crop-image/CropImage.web.tsx:177
+#: src/view/com/modals/CropImage.web.tsx:112
 #: src/view/com/modals/InviteCodes.tsx:81
 #: src/view/com/modals/InviteCodes.tsx:124
 #: src/view/com/modals/ListAddRemoveUsers.tsx:143
 msgid "Done"
 msgstr "完成"
 
-#: src/view/com/modals/EditImage.tsx:318
 #: src/view/com/modals/ListAddRemoveUsers.tsx:145
 #: src/view/com/modals/SelfLabel.tsx:158
 #: src/view/com/modals/UserAddRemoveLists.tsx:113
@@ -1973,8 +1975,8 @@ msgctxt "action"
 msgid "Edit"
 msgstr "編輯"
 
-#: src/view/com/util/UserAvatar.tsx:340
-#: src/view/com/util/UserBanner.tsx:92
+#: src/view/com/util/UserAvatar.tsx:342
+#: src/view/com/util/UserBanner.tsx:93
 msgid "Edit avatar"
 msgstr "編輯頭像"
 
@@ -1982,8 +1984,9 @@ msgstr "編輯頭像"
 msgid "Edit Feeds"
 msgstr "編輯動態源"
 
-#: src/view/com/composer/photos/Gallery.tsx:151
-#: src/view/com/modals/EditImage.tsx:205
+#: src/view/com/composer/photos/EditImageDialog.web.tsx:57
+#: src/view/com/composer/photos/EditImageDialog.web.tsx:61
+#: src/view/com/composer/photos/Gallery.tsx:195
 msgid "Edit image"
 msgstr "編輯圖片"
 
@@ -2265,7 +2268,7 @@ msgstr "離開刪除帳號流程"
 msgid "Exits handle change process"
 msgstr "離開修改帳號代碼流程"
 
-#: src/view/com/modals/crop-image/CropImage.web.tsx:160
+#: src/view/com/modals/CropImage.web.tsx:95
 msgid "Exits image cropping process"
 msgstr "離開圖片裁剪流程"
 
@@ -2510,12 +2513,12 @@ msgid "Flexible"
 msgstr "靈活"
 
 #: src/view/com/modals/EditImage.tsx:124
-msgid "Flip horizontal"
-msgstr "水平翻轉"
+#~ msgid "Flip horizontal"
+#~ msgstr "水平翻轉"
 
 #: src/view/com/modals/EditImage.tsx:129
-msgid "Flip vertically"
-msgstr "垂直翻轉"
+#~ msgid "Flip vertically"
+#~ msgstr "垂直翻轉"
 
 #. User is not following this account, click to follow
 #: src/components/ProfileCard.tsx:358
@@ -2712,7 +2715,7 @@ msgstr "來自 <0/>"
 msgid "Fullscreen"
 msgstr "全螢幕"
 
-#: src/view/com/composer/photos/SelectPhotoBtn.tsx:39
+#: src/view/com/composer/photos/SelectPhotoBtn.tsx:50
 msgid "Gallery"
 msgstr "相簿"
 
@@ -3019,8 +3022,8 @@ msgid "Image"
 msgstr "圖片"
 
 #: src/view/com/modals/AltImage.tsx:122
-msgid "Image alt text"
-msgstr "圖片替代文字"
+#~ msgid "Image alt text"
+#~ msgstr "圖片替代文字"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:312
 #: src/components/StarterPack/ShareDialog.tsx:76
@@ -3153,7 +3156,7 @@ msgstr "這是正確的地址。"
 msgid "It's just you right now! Add more people to your starter pack by searching above."
 msgstr "現在只有您一個人！使用上面的搜尋功能，將更多人加入到您的入門包中。"
 
-#: src/view/com/composer/Composer.tsx:1126
+#: src/view/com/composer/Composer.tsx:1137
 msgid "Job ID: {0}"
 msgstr "Job ID: {0}"
 
@@ -3240,6 +3243,10 @@ msgstr "瞭解詳情"
 msgid "Learn more about Bluesky"
 msgstr "了解有關 Bluesky 的更多資訊"
 
+#: src/view/com/auth/server-input/index.tsx:160
+msgid "Learn more about self hosting your PDS."
+msgstr ""
+
 #: src/components/moderation/ContentHider.tsx:66
 #: src/components/moderation/ContentHider.tsx:131
 msgid "Learn more about the moderation applied to this content."
@@ -3256,6 +3263,7 @@ msgid "Learn more about what is public on Bluesky."
 msgstr "瞭解有關 Bluesky 上公開內容的更多資訊。"
 
 #: src/components/moderation/ContentHider.tsx:155
+#: src/view/com/auth/server-input/index.tsx:162
 msgid "Learn more."
 msgstr "瞭解詳情。"
 
@@ -3615,7 +3623,7 @@ msgstr "內容管理工具"
 msgid "Moderator has chosen to set a general warning on the content."
 msgstr "內容管理者已將此內容標記為普通警告。"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:634
+#: src/view/com/post-thread/PostThreadItem.tsx:630
 msgid "More"
 msgstr "更多"
 
@@ -4152,7 +4160,7 @@ msgstr "在<0><1/><2><3/></2></0>"
 msgid "Onboarding reset"
 msgstr "重新開始引導流程"
 
-#: src/view/com/composer/Composer.tsx:671
+#: src/view/com/composer/Composer.tsx:678
 msgid "One or more images is missing alt text."
 msgstr "至少有一張圖片缺失了替代文字。"
 
@@ -4203,8 +4211,8 @@ msgid "Open conversation options"
 msgstr "開啟對話選項"
 
 #: src/screens/Messages/Conversation/MessageInput.web.tsx:165
-#: src/view/com/composer/Composer.tsx:820
-#: src/view/com/composer/Composer.tsx:821
+#: src/view/com/composer/Composer.tsx:831
+#: src/view/com/composer/Composer.tsx:832
 msgid "Open emoji picker"
 msgstr "開啟表情符號選擇器"
 
@@ -4265,7 +4273,7 @@ msgstr "開啟除錯項目的額外詳細資訊"
 msgid "Opens appearance settings"
 msgstr "開啟外觀設定"
 
-#: src/view/com/composer/photos/OpenCameraBtn.tsx:74
+#: src/view/com/composer/photos/OpenCameraBtn.tsx:77
 msgid "Opens camera on device"
 msgstr "開啟裝置相機"
 
@@ -4281,7 +4289,7 @@ msgstr "開啟編輯器"
 msgid "Opens configurable language settings"
 msgstr "開啟可以更改的語言設定"
 
-#: src/view/com/composer/photos/SelectPhotoBtn.tsx:40
+#: src/view/com/composer/photos/SelectPhotoBtn.tsx:51
 msgid "Opens device photo gallery"
 msgstr "開啟裝置相簿"
 
@@ -4373,7 +4381,7 @@ msgid "Opens the threads preferences"
 msgstr "開啟討論串偏好"
 
 #: src/view/com/notifications/FeedItem.tsx:555
-#: src/view/com/util/UserAvatar.tsx:432
+#: src/view/com/util/UserAvatar.tsx:434
 msgid "Opens this profile"
 msgstr "開啟這個個人檔案"
 
@@ -4606,7 +4614,7 @@ msgstr "請以 @{0} 的身分登入"
 msgid "Please Verify Your Email"
 msgstr "請驗證您的電子郵件地址"
 
-#: src/view/com/composer/Composer.tsx:359
+#: src/view/com/composer/Composer.tsx:368
 msgid "Please wait for your link card to finish loading"
 msgstr "請等待您的連結預覽載入完畢"
 
@@ -4619,8 +4627,8 @@ msgstr "政治"
 msgid "Porn"
 msgstr "色情"
 
-#: src/view/com/composer/Composer.tsx:646
 #: src/view/com/composer/Composer.tsx:653
+#: src/view/com/composer/Composer.tsx:660
 msgctxt "action"
 msgid "Post"
 msgstr "發佈"
@@ -4790,11 +4798,11 @@ msgstr "公開且可共享的用戶列表，可供批量靜音或封鎖。"
 msgid "Public, shareable lists which can drive feeds."
 msgstr "公開且可共享的列表，可作為動態源使用。"
 
-#: src/view/com/composer/Composer.tsx:631
+#: src/view/com/composer/Composer.tsx:638
 msgid "Publish post"
 msgstr "發佈貼文"
 
-#: src/view/com/composer/Composer.tsx:631
+#: src/view/com/composer/Composer.tsx:638
 msgid "Publish reply"
 msgstr "發佈回覆"
 
@@ -4855,8 +4863,8 @@ msgid "Random (aka \"Poster's Roulette\")"
 msgstr "隨機顯示 (又名試試手氣)"
 
 #: src/view/com/modals/EditImage.tsx:234
-msgid "Ratios"
-msgstr "比率"
+#~ msgid "Ratios"
+#~ msgstr "比率"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:543
 #: src/view/com/util/forms/PostDropdownBtn.tsx:553
@@ -4924,15 +4932,15 @@ msgstr "移除帳號"
 msgid "Remove attachment"
 msgstr "撤銷貼文分離"
 
-#: src/view/com/util/UserAvatar.tsx:399
+#: src/view/com/util/UserAvatar.tsx:401
 msgid "Remove Avatar"
 msgstr "刪除頭像"
 
-#: src/view/com/util/UserBanner.tsx:155
+#: src/view/com/util/UserBanner.tsx:156
 msgid "Remove Banner"
 msgstr "刪除橫幅"
 
-#: src/screens/Messages/Conversation/MessageInputEmbed.tsx:207
+#: src/screens/Messages/Conversation/MessageInputEmbed.tsx:206
 msgid "Remove embed"
 msgstr "刪除嵌入"
 
@@ -4967,7 +4975,7 @@ msgstr "從快速存取中刪除？"
 msgid "Remove from saved feeds"
 msgstr "從儲存的動態源中刪除"
 
-#: src/view/com/composer/photos/Gallery.tsx:174
+#: src/view/com/composer/photos/Gallery.tsx:204
 msgid "Remove image"
 msgstr "刪除圖片"
 
@@ -4983,7 +4991,7 @@ msgstr "刪除個人檔案"
 msgid "Remove profile from search history"
 msgstr "刪除搜尋紀錄中的個人檔案"
 
-#: src/view/com/util/post-embeds/QuoteEmbed.tsx:281
+#: src/view/com/util/post-embeds/QuoteEmbed.tsx:280
 msgid "Remove quote"
 msgstr "刪除引用貼文"
 
@@ -5028,7 +5036,7 @@ msgstr "已從儲存的動態源中刪除"
 msgid "Removed from your feeds"
 msgstr "從您的動態中刪除"
 
-#: src/view/com/util/post-embeds/QuoteEmbed.tsx:282
+#: src/view/com/util/post-embeds/QuoteEmbed.tsx:281
 msgid "Removes quoted post"
 msgstr "刪除已轉貼貼文"
 
@@ -5053,7 +5061,7 @@ msgstr "回覆已被停用"
 msgid "Replies to this post are disabled."
 msgstr "這則貼文的回覆已停用。"
 
-#: src/view/com/composer/Composer.tsx:644
+#: src/view/com/composer/Composer.tsx:651
 msgctxt "action"
 msgid "Reply"
 msgstr "回覆"
@@ -5076,24 +5084,24 @@ msgstr "回覆設定"
 msgid "Reply settings are chosen by the author of the thread"
 msgstr "由此討論串的發佈者選擇的回覆設定"
 
-#: src/view/com/post/Post.tsx:196
-#: src/view/com/posts/FeedItem.tsx:528
+#: src/view/com/post/Post.tsx:195
+#: src/view/com/posts/FeedItem.tsx:527
 msgctxt "description"
 msgid "Reply to <0><1/></0>"
 msgstr "對 <0><1/></0> 回覆"
 
-#: src/view/com/posts/FeedItem.tsx:519
+#: src/view/com/posts/FeedItem.tsx:518
 msgctxt "description"
 msgid "Reply to a blocked post"
 msgstr "對已被封鎖的貼文回覆"
 
-#: src/view/com/posts/FeedItem.tsx:521
+#: src/view/com/posts/FeedItem.tsx:520
 msgctxt "description"
 msgid "Reply to a post"
 msgstr "回覆這則貼文"
 
-#: src/view/com/post/Post.tsx:194
-#: src/view/com/posts/FeedItem.tsx:525
+#: src/view/com/post/Post.tsx:193
+#: src/view/com/posts/FeedItem.tsx:524
 msgctxt "description"
 msgid "Reply to you"
 msgstr "對您回覆"
@@ -5342,6 +5350,10 @@ msgstr "返回上一頁"
 #: src/components/StarterPack/QrCodeDialog.tsx:187
 #: src/view/com/composer/GifAltText.tsx:162
 #: src/view/com/composer/GifAltText.tsx:168
+#: src/view/com/composer/photos/EditImageDialog.web.tsx:76
+#: src/view/com/composer/photos/EditImageDialog.web.tsx:82
+#: src/view/com/composer/photos/ImageAltTextDialog.tsx:108
+#: src/view/com/composer/photos/ImageAltTextDialog.tsx:115
 #: src/view/com/modals/ChangeHandle.tsx:168
 #: src/view/com/modals/CreateOrEditList.tsx:326
 #: src/view/com/modals/EditProfile.tsx:225
@@ -5355,8 +5367,8 @@ msgid "Save"
 msgstr "儲存"
 
 #: src/view/com/modals/AltImage.tsx:132
-msgid "Save alt text"
-msgstr "儲存替代文字"
+#~ msgid "Save alt text"
+#~ msgstr "儲存替代文字"
 
 #: src/components/dialogs/BirthDateSettings.tsx:119
 msgid "Save birthday"
@@ -5375,7 +5387,7 @@ msgstr "儲存帳號代碼更改"
 msgid "Save image"
 msgstr "儲存圖片"
 
-#: src/view/com/modals/crop-image/CropImage.web.tsx:169
+#: src/view/com/modals/CropImage.web.tsx:104
 msgid "Save image crop"
 msgstr "儲存圖片裁剪"
 
@@ -5409,7 +5421,7 @@ msgstr "儲存個人檔案中所做的變更"
 msgid "Saves handle change to {handle}"
 msgstr "儲存帳號代碼更改至 {handle}"
 
-#: src/view/com/modals/crop-image/CropImage.web.tsx:170
+#: src/view/com/modals/CropImage.web.tsx:105
 msgid "Saves image crop settings"
 msgstr "儲存圖片裁剪設定"
 
@@ -5579,7 +5591,7 @@ msgstr "選擇 {emojiName} 表情符號作為您的頭像"
 msgid "Select the moderation service(s) to report to"
 msgstr "選擇要向哪些內容管理服務提供者提出檢舉"
 
-#: src/view/com/auth/server-input/index.tsx:82
+#: src/view/com/auth/server-input/index.tsx:83
 msgid "Select the service that hosts your data."
 msgstr "選擇用來託管您的資料的服務商。"
 
@@ -5667,7 +5679,7 @@ msgstr "透過私人訊息發送"
 msgid "Sends email with confirmation code for account deletion"
 msgstr "發送包含帳號刪除確認碼的電子郵件"
 
-#: src/view/com/auth/server-input/index.tsx:114
+#: src/view/com/auth/server-input/index.tsx:115
 msgid "Server address"
 msgstr "伺服器地址"
 
@@ -5712,16 +5724,16 @@ msgid "Sets email for password reset"
 msgstr "設定用於重設密碼的電子郵件"
 
 #: src/view/com/modals/crop-image/CropImage.web.tsx:146
-msgid "Sets image aspect ratio to square"
-msgstr "將圖片比例設定為正方形"
+#~ msgid "Sets image aspect ratio to square"
+#~ msgstr "將圖片比例設定為正方形"
 
 #: src/view/com/modals/crop-image/CropImage.web.tsx:136
-msgid "Sets image aspect ratio to tall"
-msgstr "將圖片比例設定為高"
+#~ msgid "Sets image aspect ratio to tall"
+#~ msgstr "將圖片比例設定為高"
 
 #: src/view/com/modals/crop-image/CropImage.web.tsx:126
-msgid "Sets image aspect ratio to wide"
-msgstr "將圖片比例設定為寬"
+#~ msgid "Sets image aspect ratio to wide"
+#~ msgstr "將圖片比例設定為寬"
 
 #: src/Navigation.tsx:155
 #: src/view/screens/Settings/index.tsx:302
@@ -5863,9 +5875,9 @@ msgstr "減少顯示此類內容"
 msgid "Show list anyway"
 msgstr "仍然顯示列表"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:595
-#: src/view/com/post/Post.tsx:234
-#: src/view/com/posts/FeedItem.tsx:484
+#: src/view/com/post-thread/PostThreadItem.tsx:591
+#: src/view/com/post/Post.tsx:233
+#: src/view/com/posts/FeedItem.tsx:483
 msgid "Show More"
 msgstr "顯示更多"
 
@@ -6088,8 +6100,8 @@ msgid "Sports"
 msgstr "運動"
 
 #: src/view/com/modals/crop-image/CropImage.web.tsx:145
-msgid "Square"
-msgstr "方塊"
+#~ msgid "Square"
+#~ msgstr "方塊"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:63
 msgid "Start a new chat"
@@ -6223,8 +6235,8 @@ msgid "Tags only"
 msgstr "僅限標籤"
 
 #: src/view/com/modals/crop-image/CropImage.web.tsx:135
-msgid "Tall"
-msgstr "高"
+#~ msgid "Tall"
+#~ msgstr "高"
 
 #: src/components/ProgressGuide/Toast.tsx:150
 msgid "Tap to dismiss"
@@ -6767,13 +6779,13 @@ msgid "Top"
 msgstr "熱門"
 
 #: src/view/com/modals/EditImage.tsx:263
-msgid "Transformations"
-msgstr "轉換"
+#~ msgid "Transformations"
+#~ msgstr "轉換"
 
 #: src/components/dms/MessageMenu.tsx:103
 #: src/components/dms/MessageMenu.tsx:105
-#: src/view/com/post-thread/PostThreadItem.tsx:751
-#: src/view/com/post-thread/PostThreadItem.tsx:753
+#: src/view/com/post-thread/PostThreadItem.tsx:747
+#: src/view/com/post-thread/PostThreadItem.tsx:749
 #: src/view/com/util/forms/PostDropdownBtn.tsx:380
 #: src/view/com/util/forms/PostDropdownBtn.tsx:382
 msgid "Translate"
@@ -6984,22 +6996,22 @@ msgstr "或是上傳圖片"
 msgid "Upload a text file to:"
 msgstr "上傳文字檔案至："
 
-#: src/view/com/util/UserAvatar.tsx:367
-#: src/view/com/util/UserAvatar.tsx:370
-#: src/view/com/util/UserBanner.tsx:123
-#: src/view/com/util/UserBanner.tsx:126
+#: src/view/com/util/UserAvatar.tsx:369
+#: src/view/com/util/UserAvatar.tsx:372
+#: src/view/com/util/UserBanner.tsx:124
+#: src/view/com/util/UserBanner.tsx:127
 msgid "Upload from Camera"
 msgstr "從相機上傳"
 
-#: src/view/com/util/UserAvatar.tsx:384
-#: src/view/com/util/UserBanner.tsx:140
+#: src/view/com/util/UserAvatar.tsx:386
+#: src/view/com/util/UserBanner.tsx:141
 msgid "Upload from Files"
 msgstr "從檔案上傳"
 
-#: src/view/com/util/UserAvatar.tsx:378
-#: src/view/com/util/UserAvatar.tsx:382
-#: src/view/com/util/UserBanner.tsx:134
-#: src/view/com/util/UserBanner.tsx:138
+#: src/view/com/util/UserAvatar.tsx:380
+#: src/view/com/util/UserAvatar.tsx:384
+#: src/view/com/util/UserBanner.tsx:135
+#: src/view/com/util/UserBanner.tsx:139
 msgid "Upload from Library"
 msgstr "從圖片庫上傳"
 
@@ -7252,6 +7264,8 @@ msgstr "查看我們的貼文"
 #: src/components/ProfileHoverCard/index.web.tsx:466
 #: src/view/com/posts/AviFollowButton.tsx:56
 #: src/view/com/posts/FeedErrorMessage.tsx:175
+#: src/view/com/util/PostMeta.tsx:76
+#: src/view/com/util/PostMeta.tsx:91
 msgid "View profile"
 msgstr "查看資料"
 
@@ -7375,7 +7389,7 @@ msgstr "很抱歉，我們目前無法載入您的靜音文字。請稍後再試
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr "很抱歉，無法完成您的搜尋請求。請稍後再試。"
 
-#: src/view/com/composer/Composer.tsx:421
+#: src/view/com/composer/Composer.tsx:430
 msgid "We're sorry! The post you are replying to has been deleted."
 msgstr "很抱歉！您回覆的貼文已被刪除。"
 
@@ -7406,7 +7420,7 @@ msgstr "您想將您的入門包命名為什麼？"
 
 #: src/view/com/auth/SplashScreen.tsx:39
 #: src/view/com/auth/SplashScreen.web.tsx:82
-#: src/view/com/composer/Composer.tsx:516
+#: src/view/com/composer/Composer.tsx:523
 msgid "What's up?"
 msgstr "發生了什麼新鮮事？"
 
@@ -7465,19 +7479,19 @@ msgid "Why should this user be reviewed?"
 msgstr "為什麼應該審查這個用戶？"
 
 #: src/view/com/modals/crop-image/CropImage.web.tsx:125
-msgid "Wide"
-msgstr "寬"
+#~ msgid "Wide"
+#~ msgstr "寬"
 
 #: src/screens/Messages/Conversation/MessageInput.tsx:142
 #: src/screens/Messages/Conversation/MessageInput.web.tsx:198
 msgid "Write a message"
 msgstr "撰寫訊息"
 
-#: src/view/com/composer/Composer.tsx:712
+#: src/view/com/composer/Composer.tsx:719
 msgid "Write post"
 msgstr "撰寫貼文"
 
-#: src/view/com/composer/Composer.tsx:515
+#: src/view/com/composer/Composer.tsx:522
 #: src/view/com/post-thread/PostThreadComposePrompt.tsx:42
 msgid "Write your reply"
 msgstr "撰寫您的回覆"
@@ -7864,7 +7878,7 @@ msgstr "您的靜音文字"
 msgid "Your password has been changed successfully!"
 msgstr "您的密碼已成功更改！"
 
-#: src/view/com/composer/Composer.tsx:467
+#: src/view/com/composer/Composer.tsx:476
 msgid "Your post has been published"
 msgstr "您的貼文已發佈"
 
@@ -7880,7 +7894,7 @@ msgstr "您的個人檔案"
 msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
 msgstr "其他 Bluesky 用戶將無法再看到您的個人檔案、貼文、動態和列表。您可以隨時登入以重新啟用您的帳號。"
 
-#: src/view/com/composer/Composer.tsx:466
+#: src/view/com/composer/Composer.tsx:475
 msgid "Your reply has been published"
 msgstr "您的回覆已發佈"
 
