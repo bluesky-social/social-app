@@ -120,6 +120,7 @@
     "eventemitter3": "^5.0.1",
     "expo": "^51.0.8",
     "expo-application": "^5.9.1",
+    "expo-blur": "^13.0.2",
     "expo-build-properties": "^0.12.1",
     "expo-camera": "~15.0.9",
     "expo-clipboard": "^6.0.3",

@@ -15,24 +15,24 @@ import {
   useInfiniteQuery,
 } from '@tanstack/react-query'
 
+import {AuthorFeedAPI} from '#/lib/api/feed/author'
+import {CustomFeedAPI} from '#/lib/api/feed/custom'
+import {FollowingFeedAPI} from '#/lib/api/feed/following'
 import {HomeFeedAPI} from '#/lib/api/feed/home'
+import {LikesFeedAPI} from '#/lib/api/feed/likes'
+import {ListFeedAPI} from '#/lib/api/feed/list'
+import {MergeFeedAPI} from '#/lib/api/feed/merge'
+import {FeedAPI, ReasonFeedSource} from '#/lib/api/feed/types'
 import {aggregateUserInterests} from '#/lib/api/feed/utils'
+import {FeedTuner, FeedTunerFn} from '#/lib/api/feed-manip'
 import {DISCOVER_FEED_URI} from '#/lib/constants'
+import {BSKY_FEED_OWNER_DIDS} from '#/lib/constants'
 import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import {logger} from '#/logger'
 import {STALE} from '#/state/queries'
 import {DEFAULT_LOGGED_OUT_PREFERENCES} from '#/state/queries/preferences/const'
 import {useAgent} from '#/state/session'
 import * as userActionHistory from '#/state/userActionHistory'
-import {AuthorFeedAPI} from 'lib/api/feed/author'
-import {CustomFeedAPI} from 'lib/api/feed/custom'
-import {FollowingFeedAPI} from 'lib/api/feed/following'
-import {LikesFeedAPI} from 'lib/api/feed/likes'
-import {ListFeedAPI} from 'lib/api/feed/list'
-import {MergeFeedAPI} from 'lib/api/feed/merge'
-import {FeedAPI, ReasonFeedSource} from 'lib/api/feed/types'
-import {FeedTuner, FeedTunerFn} from 'lib/api/feed-manip'
-import {BSKY_FEED_OWNER_DIDS} from 'lib/constants'
 import {KnownError} from '#/view/com/posts/FeedErrorMessage'
 import {useFeedTuners} from '../preferences/feed-tuners'
 import {useModerationOpts} from '../preferences/moderation-opts'
@@ -65,7 +65,7 @@ export interface FeedParams {
 
 type RQPageParam = {cursor: string | undefined; api: FeedAPI} | undefined
 
-const RQKEY_ROOT = 'post-feed'
+export const RQKEY_ROOT = 'post-feed'
 export function RQKEY(feedDesc: FeedDescriptor, params?: FeedParams) {
   return [RQKEY_ROOT, feedDesc, params || {}]
 }

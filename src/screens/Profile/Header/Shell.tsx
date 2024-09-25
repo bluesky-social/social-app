@@ -6,19 +6,20 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
+import {BACK_HITSLOP} from '#/lib/constants'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {NavigationProp} from '#/lib/routes/types'
+import {isIOS} from '#/platform/detection'
 import {Shadow} from '#/state/cache/types'
 import {ProfileImageLightbox, useLightboxControls} from '#/state/lightbox'
 import {useSession} from '#/state/session'
-import {BACK_HITSLOP} from 'lib/constants'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {NavigationProp} from 'lib/routes/types'
-import {isIOS} from 'platform/detection'
-import {LoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
-import {UserAvatar} from 'view/com/util/UserAvatar'
-import {UserBanner} from 'view/com/util/UserBanner'
+import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
+import {UserAvatar} from '#/view/com/util/UserAvatar'
+import {UserBanner} from '#/view/com/util/UserBanner'
 import {atoms as a, useTheme} from '#/alf'
 import {LabelsOnMe} from '#/components/moderation/LabelsOnMe'
 import {ProfileHeaderAlerts} from '#/components/moderation/ProfileHeaderAlerts'
+import {GrowableBanner} from './GrowableBanner'
 
 interface Props {
   profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>
@@ -63,20 +64,45 @@ let ProfileHeaderShell = ({
 
   return (
     <View style={t.atoms.bg} pointerEvents={isIOS ? 'auto' : 'box-none'}>
-      <View pointerEvents={isIOS ? 'auto' : 'none'}>
-        {isPlaceholderProfile ? (
-          <LoadingPlaceholder
-            width="100%"
-            height={150}
-            style={{borderRadius: 0}}
-          />
-        ) : (
-          <UserBanner
-            type={profile.associated?.labeler ? 'labeler' : 'default'}
-            banner={profile.banner}
-            moderation={moderation.ui('banner')}
-          />
-        )}
+      <View
+        pointerEvents={isIOS ? 'auto' : 'none'}
+        style={[a.relative, {height: 150}]}>
+        <GrowableBanner
+          backButton={
+            <>
+              {!isDesktop && !hideBackButton && (
+                <TouchableWithoutFeedback
+                  testID="profileHeaderBackBtn"
+                  onPress={onPressBack}
+                  hitSlop={BACK_HITSLOP}
+                  accessibilityRole="button"
+                  accessibilityLabel={_(msg`Back`)}
+                  accessibilityHint="">
+                  <View style={styles.backBtnWrapper}>
+                    <FontAwesomeIcon
+                      size={18}
+                      icon="angle-left"
+                      color="white"
+                    />
+                  </View>
+                </TouchableWithoutFeedback>
+              )}
+            </>
+          }>
+          {isPlaceholderProfile ? (
+            <LoadingPlaceholder
+              width="100%"
+              height="100%"
+              style={{borderRadius: 0}}
+            />
+          ) : (
+            <UserBanner
+              type={profile.associated?.labeler ? 'labeler' : 'default'}
+              banner={profile.banner}
+              moderation={moderation.ui('banner')}
+            />
+          )}
+        </GrowableBanner>
       </View>
 
       {children}
@@ -93,19 +119,6 @@ let ProfileHeaderShell = ({
         </View>
       )}
 
-      {!isDesktop && !hideBackButton && (
-        <TouchableWithoutFeedback
-          testID="profileHeaderBackBtn"
-          onPress={onPressBack}
-          hitSlop={BACK_HITSLOP}
-          accessibilityRole="button"
-          accessibilityLabel={_(msg`Back`)}
-          accessibilityHint="">
-          <View style={styles.backBtnWrapper}>
-            <FontAwesomeIcon size={18} icon="angle-left" color="white" />
-          </View>
-        </TouchableWithoutFeedback>
-      )}
       <TouchableWithoutFeedback
         testID="profileHeaderAviButton"
         onPress={onPressAvi}
@@ -144,6 +157,9 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     // @ts-ignore web only
     cursor: 'pointer',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   backBtn: {
     width: 30,
