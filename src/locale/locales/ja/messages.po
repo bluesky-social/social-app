@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-09-21 17:24+0900\n"
+"PO-Revision-Date: 2024-09-25 13:18+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -844,9 +844,9 @@ msgstr "ブログ"
 msgid "Bluesky"
 msgstr "Bluesky"
 
-#: src/view/com/auth/server-input/index.tsx:154
-msgid "Bluesky is an open network where you can choose your hosting provider. Custom hosting is now available in beta for developers."
-msgstr "Bluesky は、ホスティング プロバイダーを選択できるオープン ネットワークです。 カスタムホスティングは、開発者向けのベータ版で利用できるようになりました。"
+#: src/view/com/auth/server-input/index.tsx:155
+msgid "Bluesky is an open network where you can choose your hosting provider. If you're a developer, you can host your own server."
+msgstr "Bluesky は、ホスティング プロバイダーを選択できるオープン ネットワークです。 あなたが開発者であれば、自分のサーバーをホストできます。"
 
 #: src/components/ProgressGuide/List.tsx:55
 msgid "Bluesky is better with friends!"
@@ -2514,15 +2514,6 @@ msgstr "フィットネス"
 msgid "Flexible"
 msgstr "柔軟です"
 
-#: src/view/com/modals/EditImage.tsx:116
-msgid "Flip horizontal"
-msgstr "水平方向に反転"
-
-#: src/view/com/modals/EditImage.tsx:121
-#: src/view/com/modals/EditImage.tsx:288
-msgid "Flip vertically"
-msgstr "垂直方向に反転"
-
 #. User is not following this account, click to follow
 #: src/components/ProfileCard.tsx:356
 #: src/components/ProfileHoverCard/index.web.tsx:446
@@ -3024,10 +3015,6 @@ msgstr "違法かつ緊急"
 msgid "Image"
 msgstr "画像"
 
-#: src/view/com/modals/AltImage.tsx:122
-msgid "Image alt text"
-msgstr "画像のALTテキスト"
-
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:247
 #: src/components/StarterPack/ShareDialog.tsx:76
 msgid "Image saved to your camera roll!"
@@ -3245,6 +3232,10 @@ msgstr "詳細"
 #: src/view/com/auth/SplashScreen.web.tsx:152
 msgid "Learn more about Bluesky"
 msgstr "Blueskyについての詳細"
+
+#: src/view/com/auth/server-input/index.tsx:160
+msgid "Learn more about self hosting your PDS."
+msgstr "自分用のPDSをホスティングする方法を学ぶ。"
 
 #: src/components/moderation/ContentHider.tsx:66
 #: src/components/moderation/ContentHider.tsx:131
@@ -4860,10 +4851,6 @@ msgstr "この投稿の引用"
 msgid "Random (aka \"Poster's Roulette\")"
 msgstr "ランダムな順番で表示（別名「投稿者のルーレット」）"
 
-#: src/view/com/modals/EditImage.tsx:237
-msgid "Ratios"
-msgstr "比率"
-
 #: src/view/com/util/forms/PostDropdownBtn.tsx:543
 #: src/view/com/util/forms/PostDropdownBtn.tsx:553
 msgid "Re-attach quote"
@@ -5360,10 +5347,6 @@ msgctxt "action"
 msgid "Save"
 msgstr "保存"
 
-#: src/view/com/modals/AltImage.tsx:132
-msgid "Save alt text"
-msgstr "ALTテキストを保存"
-
 #: src/components/dialogs/BirthDateSettings.tsx:119
 msgid "Save birthday"
 msgstr "生年月日を保存"
@@ -5716,18 +5699,6 @@ msgstr "Blueskyのユーザーネームを設定"
 #: src/screens/Login/ForgotPasswordForm.tsx:113
 msgid "Sets email for password reset"
 msgstr "パスワードをリセットするためのメールアドレスを入力"
-
-#: src/view/com/modals/crop-image/CropImage.web.tsx:146
-msgid "Sets image aspect ratio to square"
-msgstr "画像のアスペクト比を正方形に設定"
-
-#: src/view/com/modals/crop-image/CropImage.web.tsx:136
-msgid "Sets image aspect ratio to tall"
-msgstr "画像のアスペクト比を縦長に設定"
-
-#: src/view/com/modals/crop-image/CropImage.web.tsx:126
-msgid "Sets image aspect ratio to wide"
-msgstr "画像のアスペクト比をワイドに設定"
 
 #: src/Navigation.tsx:155
 #: src/view/screens/Settings/index.tsx:302
@@ -6093,10 +6064,6 @@ msgstr "スパム、過剰なメンションや返信"
 msgid "Sports"
 msgstr "スポーツ"
 
-#: src/view/com/modals/crop-image/CropImage.web.tsx:145
-msgid "Square"
-msgstr "正方形"
-
 #: src/components/dms/dialogs/NewChatDialog.tsx:63
 msgid "Start a new chat"
 msgstr "新しいチャットを開始"
@@ -6118,6 +6085,10 @@ msgstr "スターターパック"
 #: src/components/StarterPack/StarterPackCard.tsx:73
 msgid "Starter pack by {0}"
 msgstr "{0}によるスターターパック"
+
+#: src/components/StarterPack/StarterPackCard.tsx:74
+msgid "Starter pack by you"
+msgstr "自分のスターターパック"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:703
 msgid "Starter pack is invalid"
@@ -6222,10 +6193,6 @@ msgstr "タグメニュー：{displayTag}"
 #: src/components/dialogs/MutedWords.tsx:282
 msgid "Tags only"
 msgstr "タグのみ"
-
-#: src/view/com/modals/crop-image/CropImage.web.tsx:135
-msgid "Tall"
-msgstr "トール"
 
 #: src/components/ProgressGuide/Toast.tsx:150
 msgid "Tap to dismiss"
@@ -6766,10 +6733,6 @@ msgstr "成人向けコンテンツの有効もしくは無効の切り替え"
 msgid "Top"
 msgstr "トップ"
 
-#: src/view/com/modals/EditImage.tsx:272
-msgid "Transformations"
-msgstr "変換"
-
 #: src/components/dms/MessageMenu.tsx:103
 #: src/components/dms/MessageMenu.tsx:105
 #: src/view/com/post-thread/PostThreadItem.tsx:746
@@ -6957,8 +6920,8 @@ msgid "Unwanted Sexual Content"
 msgstr "望まない性的なコンテンツ"
 
 #: src/view/com/modals/UserAddRemoveLists.tsx:82
-msgid "Update {displayName} in Lists"
-msgstr "リストの{displayName}を更新"
+msgid "Update <0>{displayName}</0> in Lists"
+msgstr "リストの<0>{displayName}</0>を更新"
 
 #: src/view/com/modals/ChangeHandle.tsx:502
 msgid "Update to {handle}"
@@ -7463,10 +7426,6 @@ msgstr "なぜこのスターターパックをレビューする必要があり
 #: src/components/ReportDialog/SelectReportOptionView.tsx:48
 msgid "Why should this user be reviewed?"
 msgstr "なぜこのユーザーをレビューする必要がありますか？"
-
-#: src/view/com/modals/crop-image/CropImage.web.tsx:125
-msgid "Wide"
-msgstr "ワイド"
 
 #: src/screens/Messages/Conversation/MessageInput.tsx:142
 #: src/screens/Messages/Conversation/MessageInput.web.tsx:198
