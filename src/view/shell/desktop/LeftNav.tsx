@@ -468,9 +468,11 @@ const styles = StyleSheet.create({
     backgroundColor: colors.blue3,
     color: colors.white,
     fontSize: 12,
+    lineHeight: 12,
     fontWeight: '600',
     paddingHorizontal: 4,
-    borderRadius: 6,
+    paddingVertical: 1,
+    borderRadius: 100,
   },
   navItemCountTablet: {
     left: 18,
