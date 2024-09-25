@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh_CN\n"
 "Project-Id-Version: zh-CN for bluesky-social-app\n"
 "Report-Msgid-Bugs-To: Frudrax Cheng <i@cynosura.one>\n"
-"PO-Revision-Date: 2024-09-20 09:11+0800\n"
+"PO-Revision-Date: 2024-09-25 11:26+0800\n"
 "Last-Translator: Frudrax Cheng <i@cynosura.one>\n"
 "Language-Team: Frudrax Cheng (auroursa), Simon Chan (RitsukiP), U2FsdGVkX1, Mikan Harada (mitian233), IceCodeNew\n"
 "Plural-Forms: \n"
@@ -844,13 +844,9 @@ msgstr "博客"
 msgid "Bluesky"
 msgstr "Bluesky"
 
-#: src/view/com/auth/server-input/index.tsx:154
-#~ msgid "Bluesky is an open network where you can choose your hosting provider. Custom hosting is now available in beta for developers."
-#~ msgstr "Bluesky 是一个开放的公共网络，你可以选择自己的托管提供商。现在，自定义托管现在已经进入开发者测试阶段。"
-
 #: src/view/com/auth/server-input/index.tsx:155
 msgid "Bluesky is an open network where you can choose your hosting provider. If you're a developer, you can host your own server."
-msgstr ""
+msgstr "Bluesky 是一个开放网络，您可以从中选择现有的托管服务提供商。如果您是开发人员，你还可以托管自己的服务器。"
 
 #: src/components/ProgressGuide/List.tsx:55
 msgid "Bluesky is better with friends!"
@@ -2512,14 +2508,6 @@ msgstr "健康"
 msgid "Flexible"
 msgstr "灵活"
 
-#: src/view/com/modals/EditImage.tsx:124
-#~ msgid "Flip horizontal"
-#~ msgstr "水平翻转"
-
-#: src/view/com/modals/EditImage.tsx:129
-#~ msgid "Flip vertically"
-#~ msgstr "垂直翻转"
-
 #. User is not following this account, click to follow
 #: src/components/ProfileCard.tsx:358
 #: src/components/ProfileHoverCard/index.web.tsx:449
@@ -3021,10 +3009,6 @@ msgstr "违法"
 msgid "Image"
 msgstr "图片"
 
-#: src/view/com/modals/AltImage.tsx:122
-#~ msgid "Image alt text"
-#~ msgstr "图片替代文本"
-
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:312
 #: src/components/StarterPack/ShareDialog.tsx:76
 msgid "Image saved to your camera roll!"
@@ -3237,15 +3221,15 @@ msgstr "最新"
 
 #: src/components/moderation/ScreenHider.tsx:140
 msgid "Learn More"
-msgstr "了解详情"
+msgstr "了解更多"
 
 #: src/view/com/auth/SplashScreen.web.tsx:148
 msgid "Learn more about Bluesky"
-msgstr "了解更多关于 Bluesky 的详细信息"
+msgstr "了解更多有关 Bluesky 的详细信息"
 
 #: src/view/com/auth/server-input/index.tsx:160
 msgid "Learn more about self hosting your PDS."
-msgstr ""
+msgstr "了解更多有关自行托管 PDS 的详细信息。"
 
 #: src/components/moderation/ContentHider.tsx:66
 #: src/components/moderation/ContentHider.tsx:131
@@ -3255,17 +3239,17 @@ msgstr "了解更多有关审核应用于此内容的详细信息。"
 #: src/components/moderation/PostHider.tsx:100
 #: src/components/moderation/ScreenHider.tsx:127
 msgid "Learn more about this warning"
-msgstr "了解有关这个警告的更多详情"
+msgstr "了解更多有关这个警告的详细信息"
 
 #: src/screens/Moderation/index.tsx:587
 #: src/screens/Moderation/index.tsx:589
 msgid "Learn more about what is public on Bluesky."
-msgstr "了解有关 Bluesky 公开内容的更多详情。"
+msgstr "了解更多有关 Bluesky 公开内容的详细信息。"
 
 #: src/components/moderation/ContentHider.tsx:155
 #: src/view/com/auth/server-input/index.tsx:162
 msgid "Learn more."
-msgstr "了解详情。"
+msgstr "了解更多。"
 
 #: src/components/dms/LeaveConvoPrompt.tsx:50
 msgid "Leave"
@@ -4862,10 +4846,6 @@ msgstr "引用这条帖文"
 msgid "Random (aka \"Poster's Roulette\")"
 msgstr "随机显示 (手气不错)"
 
-#: src/view/com/modals/EditImage.tsx:234
-#~ msgid "Ratios"
-#~ msgstr "比率"
-
 #: src/view/com/util/forms/PostDropdownBtn.tsx:543
 #: src/view/com/util/forms/PostDropdownBtn.tsx:553
 msgid "Re-attach quote"
@@ -5366,10 +5346,6 @@ msgctxt "action"
 msgid "Save"
 msgstr "保存"
 
-#: src/view/com/modals/AltImage.tsx:132
-#~ msgid "Save alt text"
-#~ msgstr "保存替代文本"
-
 #: src/components/dialogs/BirthDateSettings.tsx:119
 msgid "Save birthday"
 msgstr "保存生日"
@@ -5722,18 +5698,6 @@ msgstr "设置 Bluesky 用户名"
 #: src/screens/Login/ForgotPasswordForm.tsx:113
 msgid "Sets email for password reset"
 msgstr "设置用于重置密码的电子邮箱"
-
-#: src/view/com/modals/crop-image/CropImage.web.tsx:146
-#~ msgid "Sets image aspect ratio to square"
-#~ msgstr "将图片纵横比设置为正方形"
-
-#: src/view/com/modals/crop-image/CropImage.web.tsx:136
-#~ msgid "Sets image aspect ratio to tall"
-#~ msgstr "将图片纵横比设置为高"
-
-#: src/view/com/modals/crop-image/CropImage.web.tsx:126
-#~ msgid "Sets image aspect ratio to wide"
-#~ msgstr "将图片纵横比设置为宽"
 
 #: src/Navigation.tsx:155
 #: src/view/screens/Settings/index.tsx:302
@@ -6099,10 +6063,6 @@ msgstr "垃圾内容；过于频繁的提及或回复"
 msgid "Sports"
 msgstr "运动"
 
-#: src/view/com/modals/crop-image/CropImage.web.tsx:145
-#~ msgid "Square"
-#~ msgstr "方块"
-
 #: src/components/dms/dialogs/NewChatDialog.tsx:63
 msgid "Start a new chat"
 msgstr "开始一个新私信"
@@ -6233,10 +6193,6 @@ msgstr "标签菜单：{displayTag}"
 #: src/components/dialogs/MutedWords.tsx:282
 msgid "Tags only"
 msgstr "仅限标签"
-
-#: src/view/com/modals/crop-image/CropImage.web.tsx:135
-#~ msgid "Tall"
-#~ msgstr "高"
 
 #: src/components/ProgressGuide/Toast.tsx:150
 msgid "Tap to dismiss"
@@ -6777,10 +6733,6 @@ msgstr "切换以启用或禁用成人内容"
 #: src/view/screens/Search/Search.tsx:349
 msgid "Top"
 msgstr "热门"
-
-#: src/view/com/modals/EditImage.tsx:263
-#~ msgid "Transformations"
-#~ msgstr "转换"
 
 #: src/components/dms/MessageMenu.tsx:103
 #: src/components/dms/MessageMenu.tsx:105
@@ -7477,10 +7429,6 @@ msgstr "为什么应该审核此入门包？"
 #: src/components/ReportDialog/SelectReportOptionView.tsx:48
 msgid "Why should this user be reviewed?"
 msgstr "为什么应该审核这个用户？"
-
-#: src/view/com/modals/crop-image/CropImage.web.tsx:125
-#~ msgid "Wide"
-#~ msgstr "宽"
 
 #: src/screens/Messages/Conversation/MessageInput.tsx:142
 #: src/screens/Messages/Conversation/MessageInput.web.tsx:198
