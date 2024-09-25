@@ -5,9 +5,9 @@ import {AppBskyFeedPostgate} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {useAnalytics} from '#/lib/analytics/analytics'
 import {isNative} from '#/platform/detection'
 import {ThreadgateAllowUISetting} from '#/state/queries/threadgate'
-import {useAnalytics} from 'lib/analytics/analytics'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -60,7 +60,7 @@ export function ThreadgateBtn({
         <Button
           variant="solid"
           color="secondary"
-          size="xsmall"
+          size="small"
           testID="openReplyGateButton"
           onPress={onPress}
           label={label}

@@ -1,4 +1,3 @@
-/* eslint-disable bsky-internal/use-exact-imports */
 const BANNED_IMPORTS = [
   '@fortawesome/free-regular-svg-icons',
   '@fortawesome/free-solid-svg-icons',
@@ -6,11 +5,12 @@ const BANNED_IMPORTS = [
 
 exports.create = function create(context) {
   return {
-    Literal(node) {
-      if (typeof node.value !== 'string') {
+    ImportDeclaration(node) {
+      const source = node.source
+      if (typeof source.value !== 'string') {
         return
       }
-      if (BANNED_IMPORTS.includes(node.value)) {
+      if (BANNED_IMPORTS.includes(source.value)) {
         context.report({
           node,
           message:

@@ -94,7 +94,7 @@ export function ContentHider({
                 a.text_left,
                 a.font_bold,
                 a.leading_snug,
-                gtMobile && [a.font_semibold],
+                gtMobile && [a.font_bold],
                 t.atoms.text_contrast_medium,
                 web({
                   marginBottom: 1,
@@ -107,7 +107,7 @@ export function ContentHider({
                 style={[
                   a.font_bold,
                   a.leading_snug,
-                  gtMobile && [a.font_semibold],
+                  gtMobile && [a.font_bold],
                   t.atoms.text_contrast_high,
                   web({
                     marginBottom: 1,

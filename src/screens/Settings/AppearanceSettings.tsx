@@ -205,7 +205,7 @@ export function AppearanceToggleButtonGroup({
 }) {
   const t = useTheme()
   return (
-    <View style={[a.gap_md]}>
+    <View style={[a.gap_sm]}>
       <View style={[a.gap_xs]}>
         <View style={[a.flex_row, a.align_center, a.gap_md]}>
           <Icon style={t.atoms.text} />

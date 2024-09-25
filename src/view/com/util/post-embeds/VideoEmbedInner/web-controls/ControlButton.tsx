@@ -1,8 +1,8 @@
 import React from 'react'
 import {SvgProps} from 'react-native-svg'
 
-import {atoms as a, useTheme} from '#/alf'
-import {Button} from '#/components/Button'
+import {atoms as a, useTheme, web} from '#/alf'
+import {PressableWithHover} from '../../../PressableWithHover'
 
 export function ControlButton({
   active,
@@ -21,19 +21,21 @@ export function ControlButton({
 }) {
   const t = useTheme()
   return (
-    <Button
-      label={active ? activeLabel : inactiveLabel}
+    <PressableWithHover
+      accessibilityRole="button"
+      accessibilityHint={active ? activeLabel : inactiveLabel}
       onPress={onPress}
-      variant="ghost"
-      shape="round"
-      size="medium"
-      style={a.p_2xs}
-      hoverStyle={{backgroundColor: 'rgba(255, 255, 255, 0.1)'}}>
+      style={[
+        a.p_xs,
+        a.rounded_full,
+        web({transition: 'background-color 0.1s'}),
+      ]}
+      hoverStyle={{backgroundColor: 'rgba(255, 255, 255, 0.2)'}}>
       {active ? (
         <ActiveIcon fill={t.palette.white} width={20} />
       ) : (
         <InactiveIcon fill={t.palette.white} width={20} />
       )}
-    </Button>
+    </PressableWithHover>
   )
 }

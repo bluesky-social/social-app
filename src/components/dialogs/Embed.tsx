@@ -106,21 +106,23 @@ function EmbedDialogInner({
       </View>
 
       <View style={[a.flex_row, a.gap_sm]}>
-        <TextField.Root>
-          <TextField.Icon icon={CodeBrackets} />
-          <TextField.Input
-            label={_(msg`Embed HTML code`)}
-            editable={false}
-            selection={{start: 0, end: snippet.length}}
-            value={snippet}
-            style={{}}
-          />
-        </TextField.Root>
+        <View style={[a.flex_1]}>
+          <TextField.Root>
+            <TextField.Icon icon={CodeBrackets} />
+            <TextField.Input
+              label={_(msg`Embed HTML code`)}
+              editable={false}
+              selection={{start: 0, end: snippet.length}}
+              value={snippet}
+              style={{}}
+            />
+          </TextField.Root>
+        </View>
         <Button
           label={_(msg`Copy code`)}
           color="primary"
           variant="solid"
-          size="medium"
+          size="large"
           onPress={() => {
             ref.current?.focus()
             ref.current?.setSelection(0, snippet.length)

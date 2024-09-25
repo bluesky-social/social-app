@@ -4,9 +4,9 @@ import Svg, {Circle, Line} from 'react-native-svg'
 import {AtUri} from '@atproto/api'
 import {Trans} from '@lingui/macro'
 
+import {usePalette} from '#/lib/hooks/usePalette'
+import {makeProfileLink} from '#/lib/routes/links'
 import {FeedPostSlice} from '#/state/queries/post-feed'
-import {usePalette} from 'lib/hooks/usePalette'
-import {makeProfileLink} from 'lib/routes/links'
 import {Link} from '../util/Link'
 import {Text} from '../util/text/Text'
 import {FeedItem} from './FeedItem'
@@ -146,7 +146,7 @@ const styles = StyleSheet.create({
     paddingLeft: 18,
   },
   viewFullThreadDots: {
-    width: 52,
+    width: 42,
     alignItems: 'center',
   },
 })

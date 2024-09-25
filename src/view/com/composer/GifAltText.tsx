@@ -43,7 +43,7 @@ export function GifAltText({
         title: linkProp.meta?.title ?? linkProp.uri,
         uri: linkProp.uri,
         description: linkProp.meta?.description ?? '',
-        thumb: linkProp.localThumb?.path,
+        thumb: linkProp.localThumb?.source.path,
       },
       params: parseEmbedPlayerFromUrl(linkProp.uri),
     }
@@ -160,7 +160,7 @@ function AltTextInner({
           </View>
           <Button
             label={_(msg`Save`)}
-            size="medium"
+            size="large"
             color="primary"
             variant="solid"
             onPress={onPressSubmit}>

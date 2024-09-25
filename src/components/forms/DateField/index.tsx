@@ -76,7 +76,7 @@ export function DateField({
             <Button
               label={_(msg`Done`)}
               onPress={() => control.close()}
-              size="medium"
+              size="large"
               color="primary"
               variant="solid">
               <ButtonText>

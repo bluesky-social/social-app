@@ -3,7 +3,7 @@ import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useAgent, useSession} from 'state/session'
+import {useAgent, useSession} from '#/state/session'
 import {atoms as a} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -112,7 +112,7 @@ function Inner({control}: {control: DialogControlProps}) {
               onPress={() => control.close()}
               variant="solid"
               color={status === 'failure' ? 'secondary' : 'primary'}
-              size="medium"
+              size="large"
               style={{marginLeft: 'auto'}}>
               <ButtonText>
                 <Trans>Close</Trans>
@@ -124,7 +124,7 @@ function Inner({control}: {control: DialogControlProps}) {
                 onPress={onPressResendEmail}
                 variant="solid"
                 color="primary"
-                size="medium"
+                size="large"
                 disabled={sending}>
                 <ButtonText>
                   <Trans>Resend Email</Trans>

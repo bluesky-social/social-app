@@ -1,10 +1,10 @@
 import React from 'react'
 import {StyleProp, View, ViewStyle} from 'react-native'
 
-import {ExternalEmbedDraft} from 'lib/api/index'
-import {Gif} from 'state/queries/tenor'
-import {ExternalEmbedRemoveBtn} from 'view/com/composer/ExternalEmbedRemoveBtn'
-import {ExternalLinkEmbed} from 'view/com/util/post-embeds/ExternalLinkEmbed'
+import {ExternalEmbedDraft} from '#/lib/api/index'
+import {Gif} from '#/state/queries/tenor'
+import {ExternalEmbedRemoveBtn} from '#/view/com/composer/ExternalEmbedRemoveBtn'
+import {ExternalLinkEmbed} from '#/view/com/util/post-embeds/ExternalLinkEmbed'
 import {atoms as a, useTheme} from '#/alf'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
@@ -26,7 +26,7 @@ export const ExternalEmbed = ({
         title: link.meta?.title ?? link.uri,
         uri: link.uri,
         description: link.meta?.description ?? '',
-        thumb: link.localThumb?.path,
+        thumb: link.localThumb?.source.path,
       },
     [link],
   )
