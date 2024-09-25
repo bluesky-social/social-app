@@ -10,9 +10,9 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
-import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {useModerationCauseDescription} from '#/lib/moderation/useModerationCauseDescription'
-import {NavigationProp} from '#/lib/routes/types'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {NavigationProp} from 'lib/routes/types'
 import {CenteredView} from '#/view/com/util/Views'
 import {atoms as a, useTheme, web} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
@@ -86,7 +86,13 @@ export function ScreenHider({
         </View>
       </View>
       <Text
-        style={[a.text_4xl, a.font_bold, a.text_center, a.mb_md, t.atoms.text]}>
+        style={[
+          a.text_4xl,
+          a.font_semibold,
+          a.text_center,
+          a.mb_md,
+          t.atoms.text,
+        ]}>
         {isNoPwi ? (
           <Trans>Sign-in Required</Trans>
         ) : (
@@ -112,7 +118,7 @@ export function ScreenHider({
             <Text
               style={[
                 a.text_lg,
-                a.font_bold,
+                a.font_semibold,
                 a.leading_snug,
                 t.atoms.text,
                 a.ml_xs,

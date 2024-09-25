@@ -66,8 +66,8 @@ export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
         {aspectRatio},
         {backgroundColor: 'black'},
         a.relative,
-        a.rounded_md,
-        a.mt_xs,
+        a.rounded_sm,
+        a.my_xs,
       ]}>
       <div
         ref={ref}

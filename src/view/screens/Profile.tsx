@@ -16,18 +16,9 @@ import {
   useQueryClient,
 } from '@tanstack/react-query'
 
-import {useAnalytics} from '#/lib/analytics/analytics'
-import {useSetTitle} from '#/lib/hooks/useSetTitle'
-import {ComposeIcon2} from '#/lib/icons'
-import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
-import {combinedDisplayName} from '#/lib/strings/display-names'
 import {cleanError} from '#/lib/strings/errors'
-import {isInvalidHandle} from '#/lib/strings/handles'
-import {colors, s} from '#/lib/styles'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
-import {listenSoftReset} from '#/state/events'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {useActorStarterPacksQuery} from '#/state/queries/actor-starter-packs'
 import {useLabelerInfoQuery} from '#/state/queries/labeler'
 import {resetProfilePostsQueries} from '#/state/queries/post-feed'
 import {useProfileQuery} from '#/state/queries/profile'
@@ -35,21 +26,29 @@ import {useResolveDidQuery} from '#/state/queries/resolve-uri'
 import {useAgent, useSession} from '#/state/session'
 import {useSetDrawerSwipeDisabled, useSetMinimalShellMode} from '#/state/shell'
 import {useComposerControls} from '#/state/shell/composer'
-import {ProfileFeedgens} from '#/view/com/feeds/ProfileFeedgens'
-import {ProfileLists} from '#/view/com/lists/ProfileLists'
-import {PagerWithHeader} from '#/view/com/pager/PagerWithHeader'
-import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
-import {FAB} from '#/view/com/util/fab/FAB'
-import {ListRef} from '#/view/com/util/List'
-import {CenteredView} from '#/view/com/util/Views'
+import {useAnalytics} from 'lib/analytics/analytics'
+import {useSetTitle} from 'lib/hooks/useSetTitle'
+import {ComposeIcon2} from 'lib/icons'
+import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
+import {combinedDisplayName} from 'lib/strings/display-names'
+import {isInvalidHandle} from 'lib/strings/handles'
+import {colors, s} from 'lib/styles'
+import {listenSoftReset} from 'state/events'
+import {useActorStarterPacksQuery} from 'state/queries/actor-starter-packs'
+import {PagerWithHeader} from 'view/com/pager/PagerWithHeader'
 import {ProfileHeader, ProfileHeaderLoading} from '#/screens/Profile/Header'
 import {ProfileFeedSection} from '#/screens/Profile/Sections/Feed'
 import {ProfileLabelsSection} from '#/screens/Profile/Sections/Labels'
-import {web} from '#/alf'
 import {ScreenHider} from '#/components/moderation/ScreenHider'
 import {ProfileStarterPacks} from '#/components/StarterPack/ProfileStarterPacks'
 import {navigate} from '#/Navigation'
 import {ExpoScrollForwarderView} from '../../../modules/expo-scroll-forwarder'
+import {ProfileFeedgens} from '../com/feeds/ProfileFeedgens'
+import {ProfileLists} from '../com/lists/ProfileLists'
+import {ErrorScreen} from '../com/util/error/ErrorScreen'
+import {FAB} from '../com/util/fab/FAB'
+import {ListRef} from '../com/util/List'
+import {CenteredView} from '../com/util/Views'
 
 interface SectionRef {
   scrollToTop: () => void
@@ -108,7 +107,7 @@ export function ProfileScreen({route}: Props) {
   // Most pushes will happen here, since we will have only placeholder data
   if (isLoadingDid || isLoadingProfile || starterPacksQuery.isLoading) {
     return (
-      <CenteredView sideBorders style={web({height: '100vh'})}>
+      <CenteredView>
         <ProfileHeaderLoading />
       </CenteredView>
     )

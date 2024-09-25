@@ -9,8 +9,8 @@ import {
   ViewStyle,
 } from 'react-native'
 
-import {HITSLOP_20} from '#/lib/constants'
 import {mergeRefs} from '#/lib/merge-refs'
+import {HITSLOP_20} from 'lib/constants'
 import {android, atoms as a, useTheme, web} from '#/alf'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {Props as SVGIconProps} from '#/components/icons/common'
@@ -73,7 +73,7 @@ export function Root({children, isInvalid = false}: RootProps) {
   return (
     <Context.Provider value={context}>
       <View
-        style={[a.flex_row, a.align_center, a.relative, a.w_full, a.px_md]}
+        style={[a.flex_row, a.align_center, a.relative, a.flex_1, a.px_md]}
         {...web({
           onClick: () => inputRef.current?.focus(),
           onMouseOver: onHoverIn,

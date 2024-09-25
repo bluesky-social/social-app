@@ -13,10 +13,10 @@ import {useLingui} from '@lingui/react'
 
 import {HITSLOP_20} from '#/lib/constants'
 import {parseAltFromGIFDescription} from '#/lib/gif-alt-text'
-import {EmbedPlayerParams} from '#/lib/strings/embed-player'
 import {isWeb} from '#/platform/detection'
-import {useAutoplayDisabled} from '#/state/preferences'
 import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
+import {EmbedPlayerParams} from 'lib/strings/embed-player'
+import {useAutoplayDisabled} from 'state/preferences'
 import {atoms as a, useTheme} from '#/alf'
 import {Fill} from '#/components/Fill'
 import {Loader} from '#/components/Loader'
@@ -53,7 +53,7 @@ function PlaybackControls({
         a.inset_0,
         a.w_full,
         a.h_full,
-        a.rounded_md,
+        a.rounded_sm,
         {
           zIndex: 2,
           backgroundColor: !isLoaded
@@ -117,10 +117,10 @@ export function GifEmbed({
   )
 
   return (
-    <View style={[a.rounded_md, a.overflow_hidden, a.mt_sm, style]}>
+    <View style={[a.rounded_sm, a.overflow_hidden, a.mt_sm, style]}>
       <View
         style={[
-          a.rounded_md,
+          a.rounded_sm,
           a.overflow_hidden,
           {aspectRatio: params.dimensions!.width / params.dimensions!.height},
         ]}>
@@ -132,7 +132,7 @@ export function GifEmbed({
         <GifView
           source={params.playerUri}
           placeholderSource={link.thumb}
-          style={[a.flex_1, a.rounded_md]}
+          style={[a.flex_1, a.rounded_sm]}
           autoplay={!autoplayDisabled}
           onPlayerStateChange={onPlayerStateChange}
           ref={playerRef}
@@ -210,6 +210,6 @@ const styles = StyleSheet.create({
   alt: {
     color: 'white',
     fontSize: isWeb ? 10 : 7,
-    fontWeight: '600',
+    fontWeight: 'bold',
   },
 })

@@ -4,13 +4,11 @@ import Animated, {useAnimatedStyle, withTiming} from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {LinearGradient} from 'expo-linear-gradient'
 
-import {useHaptics} from '#/lib/haptics'
 import {useMinimalShellFabTransform} from '#/lib/hooks/useMinimalShellTransform'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {clamp} from '#/lib/numbers'
 import {gradients} from '#/lib/styles'
 import {isWeb} from '#/platform/detection'
-import {useHapticsDisabled} from '#/state/preferences'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 
 export interface FABProps
@@ -19,11 +17,9 @@ export interface FABProps
   icon: JSX.Element
 }
 
-export function FABInner({testID, icon, onPress, ...props}: FABProps) {
+export function FABInner({testID, icon, ...props}: FABProps) {
   const insets = useSafeAreaInsets()
   const {isMobile, isTablet} = useWebMediaQueries()
-  const playHaptic = useHaptics()
-  const isHapticsDisabled = useHapticsDisabled()
   const fabMinimalShellTransform = useMinimalShellFabTransform()
   const {
     state: pressed,
@@ -46,15 +42,6 @@ export function FABInner({testID, icon, onPress, ...props}: FABProps) {
       testID={testID}
       onPressIn={onPressIn}
       onPressOut={onPressOut}
-      onPress={e => {
-        playHaptic('Light')
-        setTimeout(
-          () => {
-            onPress?.(e)
-          },
-          isHapticsDisabled ? 0 : 75,
-        )
-      }}
       {...props}>
       <Animated.View
         style={[

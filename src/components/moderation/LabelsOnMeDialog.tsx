@@ -132,10 +132,8 @@ function Label({
       ]}>
       <View style={[a.p_md, a.gap_sm, a.flex_row]}>
         <View style={[a.flex_1, a.gap_xs]}>
-          <Text emoji style={[a.font_bold, a.text_md]}>
-            {strings.name}
-          </Text>
-          <Text emoji style={[t.atoms.text_contrast_medium, a.leading_snug]}>
+          <Text style={[a.font_bold, a.text_md]}>{strings.name}</Text>
+          <Text style={[t.atoms.text_contrast_medium, a.leading_snug]}>
             {strings.description}
           </Text>
         </View>
@@ -281,7 +279,7 @@ function AppealForm({
           testID="backBtn"
           variant="solid"
           color="secondary"
-          size="large"
+          size="medium"
           onPress={onPressBack}
           label={_(msg`Back`)}>
           <ButtonText>{_(msg`Back`)}</ButtonText>
@@ -290,7 +288,7 @@ function AppealForm({
           testID="submitBtn"
           variant="solid"
           color="primary"
-          size="large"
+          size="medium"
           onPress={onSubmit}
           label={_(msg`Submit`)}>
           <ButtonText>{_(msg`Submit`)}</ButtonText>

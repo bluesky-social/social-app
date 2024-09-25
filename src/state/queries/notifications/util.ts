@@ -13,7 +13,6 @@ import {
 import {QueryClient} from '@tanstack/react-query'
 import chunk from 'lodash.chunk'
 
-import {labelIsHideableOffense} from '#/lib/moderation'
 import {precacheProfile} from '../profile'
 import {FeedNotification, FeedPage, NotificationType} from './types'
 
@@ -105,10 +104,6 @@ export function shouldFilterNotif(
   notif: AppBskyNotificationListNotifications.Notification,
   moderationOpts: ModerationOpts | undefined,
 ): boolean {
-  const containsImperative = !!notif.author.labels?.some(labelIsHideableOffense)
-  if (containsImperative) {
-    return true
-  }
   if (!moderationOpts) {
     return false
   }

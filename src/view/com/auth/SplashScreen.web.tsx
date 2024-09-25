@@ -4,11 +4,11 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {useKawaiiMode} from '#/state/preferences/kawaii'
-import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {Logo} from '#/view/icons/Logo'
 import {Logotype} from '#/view/icons/Logotype'
+import {ErrorBoundary} from 'view/com/util/ErrorBoundary'
 import {atoms as a, useTheme} from '#/alf'
 import {AppLanguageDropdown} from '#/components/AppLanguageDropdown'
 import {Button, ButtonText} from '#/components/Button'
@@ -78,7 +78,11 @@ export const SplashScreen = ({
               )}
 
               <Text
-                style={[a.text_md, a.font_bold, t.atoms.text_contrast_medium]}>
+                style={[
+                  a.text_md,
+                  a.font_semibold,
+                  t.atoms.text_contrast_medium,
+                ]}>
                 <Trans>What's up?</Trans>
               </Text>
             </View>

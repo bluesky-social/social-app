@@ -170,6 +170,6 @@ const styles = StyleSheet.create({
   alt: {
     color: 'white',
     fontSize: 7,
-    fontWeight: '600',
+    fontWeight: 'bold',
   },
 })

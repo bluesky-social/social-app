@@ -19,10 +19,10 @@ import {isIOS, isNative} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useAgent, useSession} from '#/state/session'
-import {useComposerControls} from '#/state/shell'
+import {useComposerControls} from 'state/shell'
 import {formatCount} from '#/view/com/util/numeric/format'
-import * as Toast from '#/view/com/util/Toast'
 import {Logomark} from '#/view/icons/Logomark'
+import * as Toast from 'view/com/util/Toast'
 import {
   atoms as a,
   ThemeProvider,
@@ -441,10 +441,10 @@ export function TenMillionInner({
                         allowFontScaling={false}
                         style={[
                           a.absolute,
-                          a.font_heavy,
                           {
                             color: t.palette.primary_500,
                             fontSize: 32,
+                            fontWeight: '900',
                             width: 32,
                             top: isNative ? -10 : 0,
                             left: 0,
@@ -462,11 +462,11 @@ export function TenMillionInner({
                         style={[
                           a.relative,
                           a.text_center,
-                          a.font_heavy,
                           {
                             fontStyle: 'italic',
                             fontSize: getFontSize(userNumber),
                             lineHeight: getFontSize(userNumber),
+                            fontWeight: '900',
                             letterSpacing: -2,
                           },
                         ]}>
@@ -536,7 +536,7 @@ export function TenMillionInner({
                             style={[
                               a.flex_1,
                               a.text_sm,
-                              a.font_bold,
+                              a.font_semibold,
                               a.leading_snug,
                               lightTheme.atoms.text_contrast_medium,
                             ]}>
@@ -551,7 +551,7 @@ export function TenMillionInner({
                               style={[
                                 a.flex_1,
                                 a.text_sm,
-                                a.font_bold,
+                                a.font_semibold,
                                 a.leading_snug,
                                 a.text_right,
                                 lightTheme.atoms.text_contrast_low,
@@ -643,7 +643,14 @@ export function TenMillionInner({
           <View style={[gtMobile ? a.p_2xl : a.p_xl]}>
             <Text
               allowFontScaling={false}
-              style={[a.text_5xl, a.leading_tight, a.pb_lg, a.font_heavy]}>
+              style={[
+                a.text_5xl,
+                a.leading_tight,
+                a.pb_lg,
+                {
+                  fontWeight: '900',
+                },
+              ]}>
               <Trans>Thanks for being one of our first 10 million users.</Trans>
             </Text>
 

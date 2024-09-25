@@ -1,7 +1,5 @@
-import {copyAsync} from 'expo-file-system'
+import RNFS from 'react-native-fs'
 import {BskyAgent, ComAtprotoRepoUploadBlob} from '@atproto/api'
-
-import {safeDeleteAsync} from '#/lib/media/manip'
 
 /**
  * @param encoding Allows overriding the blob's type
@@ -67,7 +65,7 @@ async function withSafeFile<T>(
     // temporary file).
     const newPath = uri.replace(/\.jpe?g$/, '.bin')
     try {
-      await copyAsync({from: uri, to: newPath})
+      await RNFS.copyFile(uri, newPath)
     } catch {
       // Failed to copy the file, just use the original
       return await fn(uri)
@@ -76,7 +74,7 @@ async function withSafeFile<T>(
       return await fn(newPath)
     } finally {
       // Remove the temporary file
-      await safeDeleteAsync(newPath)
+      await RNFS.unlink(newPath)
     }
   } else {
     return fn(uri)

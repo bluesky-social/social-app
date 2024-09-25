@@ -24,7 +24,7 @@ export function MediaInsetBorder({
   return (
     <Fill
       style={[
-        a.rounded_md,
+        a.rounded_sm,
         a.border,
         opaque
           ? [t.atoms.border_contrast_low]

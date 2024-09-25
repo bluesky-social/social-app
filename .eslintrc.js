@@ -33,7 +33,6 @@ module.exports = {
     ],
     'bsky-internal/use-exact-imports': 'error',
     'bsky-internal/use-typed-gates': 'error',
-    'bsky-internal/use-prefixed-imports': 'warn',
     'simple-import-sort/imports': [
       'warn',
       {

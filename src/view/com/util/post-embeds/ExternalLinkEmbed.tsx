@@ -5,21 +5,21 @@ import {AppBskyEmbedExternal} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {usePalette} from '#/lib/hooks/usePalette'
-import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {shareUrl} from '#/lib/sharing'
-import {parseEmbedPlayerFromUrl} from '#/lib/strings/embed-player'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {shareUrl} from 'lib/sharing'
+import {parseEmbedPlayerFromUrl} from 'lib/strings/embed-player'
 import {
   getStarterPackOgCard,
   parseStarterPackUri,
-} from '#/lib/strings/starter-pack'
-import {toNiceDomain} from '#/lib/strings/url-helpers'
-import {isNative} from '#/platform/detection'
-import {useExternalEmbedsPrefs} from '#/state/preferences'
-import {Link} from '#/view/com/util/Link'
-import {ExternalGifEmbed} from '#/view/com/util/post-embeds/ExternalGifEmbed'
-import {ExternalPlayer} from '#/view/com/util/post-embeds/ExternalPlayerEmbed'
-import {GifEmbed} from '#/view/com/util/post-embeds/GifEmbed'
+} from 'lib/strings/starter-pack'
+import {toNiceDomain} from 'lib/strings/url-helpers'
+import {isNative} from 'platform/detection'
+import {useExternalEmbedsPrefs} from 'state/preferences'
+import {Link} from 'view/com/util/Link'
+import {ExternalGifEmbed} from 'view/com/util/post-embeds/ExternalGifEmbed'
+import {ExternalPlayer} from 'view/com/util/post-embeds/ExternalPlayerEmbed'
+import {GifEmbed} from 'view/com/util/post-embeds/GifEmbed'
 import {atoms as a, useTheme} from '#/alf'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {Text} from '../text/Text'
@@ -59,15 +59,15 @@ export const ExternalLinkEmbed = ({
   }
 
   return (
-    <View style={[a.flex_col, a.rounded_md, a.w_full]}>
+    <View style={[a.flex_col, a.rounded_sm]}>
       <LinkWrapper link={link} onOpen={onOpen} style={style}>
         {imageUri && !embedPlayerParams ? (
           <View>
             <Image
               style={{
                 aspectRatio: 1.91,
-                borderTopRightRadius: a.rounded_md.borderRadius,
-                borderTopLeftRadius: a.rounded_md.borderRadius,
+                borderTopRightRadius: 8,
+                borderTopLeftRadius: 8,
               }}
               source={{uri: imageUri}}
               accessibilityIgnoresInvertColors
@@ -101,11 +101,11 @@ export const ExternalLinkEmbed = ({
             a.py_sm,
             t.atoms.border_contrast_low,
             {
-              borderBottomRightRadius: a.rounded_md.borderRadius,
-              borderBottomLeftRadius: a.rounded_md.borderRadius,
+              borderBottomRightRadius: 8,
+              borderBottomLeftRadius: 8,
               paddingHorizontal: isMobile ? 10 : 14,
             },
-            !imageUri && !embedPlayerParams && [a.border, a.rounded_md],
+            !imageUri && !embedPlayerParams && [a.border, a.rounded_sm],
           ]}>
           <Text
             type="sm"
@@ -115,13 +115,12 @@ export const ExternalLinkEmbed = ({
           </Text>
 
           {!embedPlayerParams?.isGif && !embedPlayerParams?.dimensions && (
-            <Text emoji type="lg-bold" numberOfLines={3} style={[pal.text]}>
+            <Text type="lg-bold" numberOfLines={3} style={[pal.text]}>
               {link.title || link.uri}
             </Text>
           )}
           {link.description ? (
             <Text
-              emoji
               type="md"
               numberOfLines={link.thumb ? 2 : 4}
               style={[pal.text, a.mt_xs]}>

@@ -39,7 +39,7 @@ export const PasswordUpdatedForm = ({
           accessibilityHint={_(msg`Closes password update alert`)}
           variant="solid"
           color="primary"
-          size="large">
+          size="medium">
           <ButtonText>
             <Trans>Okay</Trans>
           </ButtonText>

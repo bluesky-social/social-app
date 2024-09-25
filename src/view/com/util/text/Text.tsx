@@ -2,40 +2,27 @@ import React from 'react'
 import {StyleSheet, Text as RNText, TextProps} from 'react-native'
 import {UITextView} from 'react-native-uitextview'
 
-import {lh, s} from '#/lib/styles'
-import {TypographyVariant, useTheme} from '#/lib/ThemeContext'
-import {logger} from '#/logger'
-import {isIOS} from '#/platform/detection'
+import {lh, s} from 'lib/styles'
+import {TypographyVariant, useTheme} from 'lib/ThemeContext'
+import {isIOS, isWeb} from 'platform/detection'
 import {applyFonts, useAlf} from '#/alf'
-import {
-  childHasEmoji,
-  childIsString,
-  renderChildrenWithEmoji,
-  StringChild,
-} from '#/components/Typography'
-import {IS_DEV} from '#/env'
 
-export type CustomTextProps = Omit<TextProps, 'children'> & {
+export type CustomTextProps = TextProps & {
   type?: TypographyVariant
   lineHeight?: number
   title?: string
   dataSet?: Record<string, string | number>
   selectable?: boolean
-} & (
-    | {
-        emoji: true
-        children: StringChild
-      }
-    | {
-        emoji?: false
-        children: TextProps['children']
-      }
-  )
+}
+
+const fontFamilyStyle = {
+  fontFamily:
+    '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Liberation Sans", Helvetica, Arial, sans-serif',
+}
 
 export function Text({
   type = 'md',
   children,
-  emoji,
   lineHeight,
   style,
   title,
@@ -47,18 +34,6 @@ export function Text({
   const typography = theme.typography[type]
   const lineHeightStyle = lineHeight ? lh(theme, type, lineHeight) : undefined
   const {fonts} = useAlf()
-
-  if (IS_DEV) {
-    if (!emoji && childHasEmoji(children)) {
-      logger.warn(
-        `Text: emoji detected but emoji not enabled: "${children}"\n\nPlease add <Text emoji />'`,
-      )
-    }
-
-    if (emoji && !childIsString(children)) {
-      logger.error('Text: when <Text emoji />, children can only be strings.')
-    }
-  }
 
   if (selectable && isIOS) {
     const flattened = StyleSheet.flatten([
@@ -83,7 +58,7 @@ export function Text({
         selectable={selectable}
         uiTextView
         {...props}>
-        {isIOS && emoji ? renderChildrenWithEmoji(children) : children}
+        {children}
       </UITextView>
     )
   }
@@ -91,6 +66,7 @@ export function Text({
   const flattened = StyleSheet.flatten([
     s.black,
     typography,
+    isWeb && fontFamilyStyle,
     lineHeightStyle,
     style,
   ])
@@ -111,7 +87,7 @@ export function Text({
       dataSet={Object.assign({tooltip: title}, dataSet || {})}
       selectable={selectable}
       {...props}>
-      {isIOS && emoji ? renderChildrenWithEmoji(children) : children}
+      {children}
     </RNText>
   )
 }

@@ -117,7 +117,7 @@ export function ExternalGifEmbed({
         style={[
           {height: imageDims.height},
           styles.gifContainer,
-          a.rounded_md,
+          a.rounded_sm,
           a.overflow_hidden,
           {
             borderBottomLeftRadius: 0,

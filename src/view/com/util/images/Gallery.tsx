@@ -1,6 +1,6 @@
-import React from 'react'
-import {Pressable, StyleProp, View, ViewStyle} from 'react-native'
-import {Image, ImageStyle} from 'expo-image'
+import React, {ComponentProps, FC} from 'react'
+import {Pressable, View} from 'react-native'
+import {Image} from 'expo-image'
 import {AppBskyEmbedImages} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -13,18 +13,17 @@ import {Text} from '#/components/Typography'
 
 type EventFunction = (index: number) => void
 
-interface Props {
+interface GalleryItemProps {
   images: AppBskyEmbedImages.ViewImage[]
   index: number
   onPress?: EventFunction
   onLongPress?: EventFunction
   onPressIn?: EventFunction
-  imageStyle?: StyleProp<ImageStyle>
+  imageStyle?: ComponentProps<typeof Image>['style']
   viewContext?: PostEmbedViewContext
-  insetBorderStyle?: StyleProp<ViewStyle>
 }
 
-export function GalleryItem({
+export const GalleryItem: FC<GalleryItemProps> = ({
   images,
   index,
   imageStyle,
@@ -32,8 +31,7 @@ export function GalleryItem({
   onPressIn,
   onLongPress,
   viewContext,
-  insetBorderStyle,
-}: Props) {
+}) => {
   const t = useTheme()
   const {_} = useLingui()
   const largeAltBadge = useLargeAltBadgeEnabled()
@@ -49,6 +47,7 @@ export function GalleryItem({
         onLongPress={onLongPress ? () => onLongPress(index) : undefined}
         style={[
           a.flex_1,
+          a.rounded_sm,
           a.overflow_hidden,
           t.atoms.bg_contrast_25,
           imageStyle,
@@ -64,7 +63,7 @@ export function GalleryItem({
           accessibilityHint=""
           accessibilityIgnoresInvertColors
         />
-        <MediaInsetBorder style={insetBorderStyle} />
+        <MediaInsetBorder />
       </Pressable>
       {hasAlt && !hideBadges ? (
         <View

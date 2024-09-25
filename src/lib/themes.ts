@@ -100,12 +100,12 @@ export const defaultTheme: Theme = {
     '2xl-medium': {
       fontSize: 18,
       letterSpacing: tokens.TRACKING,
-      fontWeight: '600',
+      fontWeight: '500',
     },
     '2xl-bold': {
       fontSize: 18,
       letterSpacing: tokens.TRACKING,
-      fontWeight: '600',
+      fontWeight: '700',
     },
     '2xl-heavy': {
       fontSize: 18,
@@ -125,12 +125,12 @@ export const defaultTheme: Theme = {
     'xl-medium': {
       fontSize: 17,
       letterSpacing: tokens.TRACKING,
-      fontWeight: '600',
+      fontWeight: '500',
     },
     'xl-bold': {
       fontSize: 17,
       letterSpacing: tokens.TRACKING,
-      fontWeight: '600',
+      fontWeight: '700',
     },
     'xl-heavy': {
       fontSize: 17,
@@ -150,12 +150,12 @@ export const defaultTheme: Theme = {
     'lg-medium': {
       fontSize: 16,
       letterSpacing: tokens.TRACKING,
-      fontWeight: '600',
+      fontWeight: '500',
     },
     'lg-bold': {
       fontSize: 16,
       letterSpacing: tokens.TRACKING,
-      fontWeight: '600',
+      fontWeight: '700',
     },
     'lg-heavy': {
       fontSize: 16,
@@ -175,12 +175,12 @@ export const defaultTheme: Theme = {
     'md-medium': {
       fontSize: 15,
       letterSpacing: tokens.TRACKING,
-      fontWeight: '600',
+      fontWeight: '500',
     },
     'md-bold': {
       fontSize: 15,
       letterSpacing: tokens.TRACKING,
-      fontWeight: '600',
+      fontWeight: '700',
     },
     'md-heavy': {
       fontSize: 15,
@@ -200,12 +200,12 @@ export const defaultTheme: Theme = {
     'sm-medium': {
       fontSize: 14,
       letterSpacing: tokens.TRACKING,
-      fontWeight: '600',
+      fontWeight: '500',
     },
     'sm-bold': {
       fontSize: 14,
       letterSpacing: tokens.TRACKING,
-      fontWeight: '600',
+      fontWeight: '700',
     },
     'sm-heavy': {
       fontSize: 14,
@@ -225,12 +225,12 @@ export const defaultTheme: Theme = {
     'xs-medium': {
       fontSize: 13,
       letterSpacing: tokens.TRACKING,
-      fontWeight: '600',
+      fontWeight: '500',
     },
     'xs-bold': {
       fontSize: 13,
       letterSpacing: tokens.TRACKING,
-      fontWeight: '600',
+      fontWeight: '700',
     },
     'xs-heavy': {
       fontSize: 13,
@@ -241,24 +241,24 @@ export const defaultTheme: Theme = {
     'title-2xl': {
       fontSize: 34,
       letterSpacing: tokens.TRACKING,
-      fontWeight: '600',
+      fontWeight: '500',
     },
     'title-xl': {
       fontSize: 28,
       letterSpacing: tokens.TRACKING,
-      fontWeight: '600',
+      fontWeight: '500',
     },
     'title-lg': {
       fontSize: 22,
-      fontWeight: '600',
+      fontWeight: '500',
     },
     title: {
-      fontWeight: '600',
+      fontWeight: '500',
       fontSize: 20,
       letterSpacing: tokens.TRACKING,
     },
     'title-sm': {
-      fontWeight: '600',
+      fontWeight: 'bold',
       fontSize: 17,
       letterSpacing: tokens.TRACKING,
     },
@@ -273,12 +273,12 @@ export const defaultTheme: Theme = {
       fontWeight: '400',
     },
     'button-lg': {
-      fontWeight: '600',
+      fontWeight: '500',
       fontSize: 18,
       letterSpacing: tokens.TRACKING,
     },
     button: {
-      fontWeight: '600',
+      fontWeight: '500',
       fontSize: 14,
       letterSpacing: tokens.TRACKING,
     },
@@ -325,11 +325,11 @@ export const darkTheme: Theme = {
       textInverted: colors.green2,
     },
     inverted: {
-      background: darkPalette.white,
+      background: lightPalette.white,
       backgroundLight: lightPalette.contrast_50,
       text: lightPalette.black,
       textLight: lightPalette.contrast_700,
-      textInverted: darkPalette.white,
+      textInverted: lightPalette.white,
       link: lightPalette.primary_500,
       border: lightPalette.contrast_100,
       borderDark: lightPalette.contrast_200,

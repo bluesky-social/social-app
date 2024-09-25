@@ -229,7 +229,7 @@ export function ExternalPlayer({
         collapsable={false}
         style={[
           aspect,
-          a.rounded_md,
+          a.rounded_sm,
           a.overflow_hidden,
           {
             borderBottomLeftRadius: 0,
@@ -245,7 +245,7 @@ export function ExternalPlayer({
             />
             <Fill
               style={[
-                a.rounded_md,
+                a.rounded_sm,
                 t.name === 'light' ? t.atoms.bg_contrast_975 : t.atoms.bg,
                 {
                   borderBottomLeftRadius: 0,
@@ -267,7 +267,7 @@ export function ExternalPlayer({
         ) : (
           <Fill
             style={[
-              a.rounded_md,
+              a.rounded_sm,
               {
                 backgroundColor:
                   t.name === 'light' ? t.palette.contrast_975 : 'black',
@@ -304,8 +304,8 @@ export function ExternalPlayer({
 
 const styles = StyleSheet.create({
   topRadius: {
-    borderTopLeftRadius: a.rounded_md.borderRadius,
-    borderTopRightRadius: a.rounded_md.borderRadius,
+    borderTopLeftRadius: 8,
+    borderTopRightRadius: 8,
   },
   overlayContainer: {
     flex: 1,
@@ -319,8 +319,8 @@ const styles = StyleSheet.create({
     zIndex: 3,
   },
   webview: {
-    borderTopRightRadius: a.rounded_md.borderRadius,
-    borderTopLeftRadius: a.rounded_md.borderRadius,
+    borderTopRightRadius: 8,
+    borderTopLeftRadius: 8,
     backgroundColor: 'transparent',
   },
   gifContainer: {

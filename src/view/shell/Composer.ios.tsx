@@ -2,13 +2,16 @@ import React, {useLayoutEffect} from 'react'
 import {Modal, View} from 'react-native'
 import {StatusBar} from 'expo-status-bar'
 import * as SystemUI from 'expo-system-ui'
+import {observer} from 'mobx-react-lite'
 
 import {useComposerState} from '#/state/shell/composer'
 import {atoms as a, useTheme} from '#/alf'
 import {getBackgroundColor, useThemeName} from '#/alf/util/useColorModeTheme'
 import {ComposePost, useComposerCancelRef} from '../com/composer/Composer'
 
-export function Composer({}: {winHeight: number}) {
+export const Composer = observer(function ComposerImpl({}: {
+  winHeight: number
+}) {
   const t = useTheme()
   const state = useComposerState()
   const ref = useComposerCancelRef()
@@ -39,7 +42,7 @@ export function Composer({}: {winHeight: number}) {
       </View>
     </Modal>
   )
-}
+})
 
 function Providers({
   children,

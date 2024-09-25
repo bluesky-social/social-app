@@ -88,7 +88,7 @@ export function ConstrainedImage({
           <View
             style={[
               a.h_full,
-              a.rounded_md,
+              a.rounded_sm,
               a.overflow_hidden,
               t.atoms.bg_contrast_25,
               fullBleed ? a.w_full : {aspectRatio},
@@ -219,7 +219,7 @@ export function AutoSizedImage({
         accessibilityHint={_(msg`Tap to view full image`)}
         style={[
           a.w_full,
-          a.rounded_md,
+          a.rounded_sm,
           a.overflow_hidden,
           t.atoms.bg_contrast_25,
           {aspectRatio: max},

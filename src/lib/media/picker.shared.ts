@@ -4,7 +4,7 @@ import {
   MediaTypeOptions,
 } from 'expo-image-picker'
 
-import * as Toast from '#/view/com/util/Toast'
+import * as Toast from 'view/com/util/Toast'
 import {getDataUriSize} from './util'
 
 export async function openPicker(opts?: ImagePickerOptions) {
@@ -28,7 +28,7 @@ export async function openPicker(opts?: ImagePickerOptions) {
       return false
     })
     .map(image => ({
-      mime: image.mimeType || 'image/jpeg',
+      mime: 'image/jpeg',
       height: image.height,
       width: image.width,
       path: image.uri,

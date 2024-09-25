@@ -244,7 +244,7 @@ function ModalError({details, close}: {details?: string; close: () => void}) {
         label={_(msg`Close dialog`)}
         onPress={close}
         color="primary"
-        size="large"
+        size="medium"
         variant="solid">
         <ButtonText>
           <Trans>Close</Trans>

@@ -245,7 +245,7 @@ let FeedItemInner = ({
       onBeforePress={onBeforePress}
       dataSet={{feedContext}}>
       <View style={{flexDirection: 'row', gap: 10, paddingLeft: 8}}>
-        <View style={{width: 42}}>
+        <View style={{width: 52}}>
           {isThreadChild && (
             <View
               style={[
@@ -316,19 +316,11 @@ let FeedItemInner = ({
                         style={pal.textLight}
                         lineHeight={1.2}
                         numberOfLines={1}
-                        text={
-                          <Text
-                            emoji
-                            type="sm-bold"
-                            style={pal.textLight}
-                            lineHeight={1.2}>
-                            {sanitizeDisplayName(
-                              reason.by.displayName ||
-                                sanitizeHandle(reason.by.handle),
-                              moderation.ui('displayName'),
-                            )}
-                          </Text>
-                        }
+                        text={sanitizeDisplayName(
+                          reason.by.displayName ||
+                            sanitizeHandle(reason.by.handle),
+                          moderation.ui('displayName'),
+                        )}
                         href={makeProfileLink(reason.by)}
                         onBeforePress={onOpenReposter}
                       />
@@ -345,7 +337,7 @@ let FeedItemInner = ({
         <View style={styles.layoutAvi}>
           <AviFollowButton author={post.author} moderation={moderation}>
             <PreviewableUserAvatar
-              size={42}
+              size={52}
               profile={post.author}
               moderation={moderation.ui('avatar')}
               type={post.author.associated?.labeler ? 'labeler' : 'user'}
@@ -369,6 +361,7 @@ let FeedItemInner = ({
           <PostMeta
             author={post.author}
             moderation={moderation}
+            authorHasWarning={!!post.author.labels?.length}
             timestamp={post.indexedAt}
             postHref={href}
             onOpenAuthor={onOpenAuthor}
@@ -534,11 +527,9 @@ function ReplyToLabel({
               numberOfLines={1}
               href={makeProfileLink(profile)}
               text={
-                <Text emoji type="md" style={pal.textLight} lineHeight={1.2}>
-                  {profile.displayName
-                    ? sanitizeDisplayName(profile.displayName)
-                    : sanitizeHandle(profile.handle)}
-                </Text>
+                profile.displayName
+                  ? sanitizeDisplayName(profile.displayName)
+                  : sanitizeHandle(profile.handle)
               }
             />
           </ProfileHoverCard>

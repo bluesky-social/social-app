@@ -264,7 +264,7 @@ function DialogError({details}: {details?: string}) {
         label={_(msg`Close dialog`)}
         onPress={() => control.close()}
         color="primary"
-        size="large"
+        size="medium"
         variant="solid">
         <ButtonText>
           <Trans>Close</Trans>

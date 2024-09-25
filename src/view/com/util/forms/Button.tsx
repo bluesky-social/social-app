@@ -1,21 +1,20 @@
 import React from 'react'
 import {
-  ActivityIndicator,
   GestureResponderEvent,
-  NativeSyntheticEvent,
-  NativeTouchEvent,
-  Pressable,
-  PressableStateCallbackType,
   StyleProp,
   StyleSheet,
   TextStyle,
-  View,
+  Pressable,
   ViewStyle,
+  PressableStateCallbackType,
+  ActivityIndicator,
+  View,
+  NativeSyntheticEvent,
+  NativeTouchEvent,
 } from 'react-native'
-
-import {choose} from '#/lib/functions'
-import {useTheme} from '#/lib/ThemeContext'
 import {Text} from '../text/Text'
+import {useTheme} from 'lib/ThemeContext'
+import {choose} from 'lib/functions'
 
 export type ButtonType =
   | 'primary'
@@ -113,7 +112,7 @@ export function Button({
       },
       secondary: {
         color: theme.palette.secondary.text,
-        fontWeight: theme.palette.secondary.isLowContrast ? '600' : undefined,
+        fontWeight: theme.palette.secondary.isLowContrast ? '500' : undefined,
       },
       default: {
         color: theme.palette.default.text,
@@ -124,23 +123,23 @@ export function Button({
       },
       'primary-outline': {
         color: theme.palette.primary.textInverted,
-        fontWeight: theme.palette.primary.isLowContrast ? '600' : undefined,
+        fontWeight: theme.palette.primary.isLowContrast ? '500' : undefined,
       },
       'secondary-outline': {
         color: theme.palette.secondary.textInverted,
-        fontWeight: theme.palette.secondary.isLowContrast ? '600' : undefined,
+        fontWeight: theme.palette.secondary.isLowContrast ? '500' : undefined,
       },
       'primary-light': {
         color: theme.palette.primary.textInverted,
-        fontWeight: theme.palette.primary.isLowContrast ? '600' : undefined,
+        fontWeight: theme.palette.primary.isLowContrast ? '500' : undefined,
       },
       'secondary-light': {
         color: theme.palette.secondary.textInverted,
-        fontWeight: theme.palette.secondary.isLowContrast ? '600' : undefined,
+        fontWeight: theme.palette.secondary.isLowContrast ? '500' : undefined,
       },
       'default-light': {
         color: theme.palette.default.text,
-        fontWeight: theme.palette.default.isLowContrast ? '600' : undefined,
+        fontWeight: theme.palette.default.isLowContrast ? '500' : undefined,
       },
     },
   )

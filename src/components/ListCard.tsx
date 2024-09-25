@@ -7,14 +7,13 @@ import {
   moderateUserList,
   ModerationUI,
 } from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {sanitizeHandle} from '#/lib/strings/handles'
-import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {precacheList} from '#/state/queries/feed'
-import {useSession} from '#/state/session'
+import {sanitizeHandle} from 'lib/strings/handles'
+import {useModerationOpts} from 'state/preferences/moderation-opts'
+import {precacheList} from 'state/queries/feed'
+import {useSession} from 'state/session'
 import {atoms as a, useTheme} from '#/alf'
 import {
   Avatar,
@@ -112,7 +111,6 @@ export function TitleAndByline({
   modUi?: ModerationUI
 }) {
   const t = useTheme()
-  const {_} = useLingui()
   const {currentAccount} = useSession()
 
   return (
@@ -132,7 +130,6 @@ export function TitleAndByline({
         </Hider.Mask>
         <Hider.Content>
           <Text
-            emoji
             style={[a.text_md, a.font_bold, a.leading_snug]}
             numberOfLines={1}>
             {title}
@@ -142,12 +139,15 @@ export function TitleAndByline({
 
       {creator && (
         <Text
-          emoji
           style={[a.leading_snug, t.atoms.text_contrast_medium]}
           numberOfLines={1}>
-          {purpose === MODLIST
-            ? _(msg`Moderation list by ${sanitizeHandle(creator.handle, '@')}`)
-            : _(msg`List by ${sanitizeHandle(creator.handle, '@')}`)}
+          {purpose === MODLIST ? (
+            <Trans>
+              Moderation list by {sanitizeHandle(creator.handle, '@')}
+            </Trans>
+          ) : (
+            <Trans>List by {sanitizeHandle(creator.handle, '@')}</Trans>
+          )}
         </Text>
       )}
     </View>

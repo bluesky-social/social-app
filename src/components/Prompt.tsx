@@ -120,7 +120,7 @@ export function Cancel({
     <Button
       variant="solid"
       color="secondary"
-      size={gtMobile ? 'small' : 'large'}
+      size={gtMobile ? 'small' : 'medium'}
       label={cta || _(msg`Cancel`)}
       onPress={onPress}>
       <ButtonText>{cta || _(msg`Cancel`)}</ButtonText>
@@ -163,7 +163,7 @@ export function Action({
     <Button
       variant="solid"
       color={color}
-      size={gtMobile ? 'small' : 'large'}
+      size={gtMobile ? 'small' : 'medium'}
       label={cta || _(msg`Confirm`)}
       onPress={handleOnPress}
       testID={testID}>

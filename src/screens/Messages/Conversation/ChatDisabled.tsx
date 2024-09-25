@@ -128,7 +128,7 @@ function DialogInner() {
           testID="backBtn"
           variant="solid"
           color="secondary"
-          size="large"
+          size="medium"
           onPress={onBack}
           label={_(msg`Back`)}>
           <ButtonText>{_(msg`Back`)}</ButtonText>
@@ -137,7 +137,7 @@ function DialogInner() {
           testID="submitBtn"
           variant="solid"
           color="primary"
-          size="large"
+          size="medium"
           onPress={onSubmit}
           label={_(msg`Submit`)}>
           <ButtonText>{_(msg`Submit`)}</ButtonText>

@@ -57,7 +57,7 @@ export function SubtitleFilePicker({
         <Button
           onPress={handleClick}
           label={_('Select subtitle file (.vtt)')}
-          size="large"
+          size="medium"
           color="primary"
           variant="solid"
           disabled={disabled}>

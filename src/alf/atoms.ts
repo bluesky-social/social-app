@@ -276,13 +276,16 @@ export const atoms = {
     letterSpacing: tokens.TRACKING,
   },
   font_normal: {
-    fontWeight: tokens.fontWeight.regular,
+    fontWeight: tokens.fontWeight.normal,
   },
-  font_bold: {
+  font_semibold: {
     fontWeight: tokens.fontWeight.semibold,
   },
+  font_bold: {
+    fontWeight: tokens.fontWeight.bold,
+  },
   font_heavy: {
-    fontWeight: tokens.fontWeight.extrabold,
+    fontWeight: tokens.fontWeight.heavy,
   },
   italic: {
     fontStyle: 'italic',

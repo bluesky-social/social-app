@@ -2,18 +2,22 @@ import {useEffect, useState} from 'react'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import * as apilib from '#/lib/api/index'
-import {POST_IMG_MAX} from '#/lib/constants'
+import {logger} from '#/logger'
+import {useFetchDid} from '#/state/queries/handle'
+import {useGetPost} from '#/state/queries/post'
+import {useAgent} from '#/state/session'
+import * as apilib from 'lib/api/index'
+import {POST_IMG_MAX} from 'lib/constants'
 import {
   EmbeddingDisabledError,
   getFeedAsEmbed,
   getListAsEmbed,
   getPostAsQuote,
   getStarterPackAsEmbed,
-} from '#/lib/link-meta/bsky'
-import {getLinkMeta} from '#/lib/link-meta/link-meta'
-import {resolveShortLink} from '#/lib/link-meta/resolve-short-link'
-import {downloadAndResize} from '#/lib/media/manip'
+} from 'lib/link-meta/bsky'
+import {getLinkMeta} from 'lib/link-meta/link-meta'
+import {resolveShortLink} from 'lib/link-meta/resolve-short-link'
+import {downloadAndResize} from 'lib/media/manip'
 import {
   isBskyCustomFeedUrl,
   isBskyListUrl,
@@ -21,13 +25,9 @@ import {
   isBskyStarterPackUrl,
   isBskyStartUrl,
   isShortLink,
-} from '#/lib/strings/url-helpers'
-import {logger} from '#/logger'
-import {createComposerImage} from '#/state/gallery'
-import {useFetchDid} from '#/state/queries/handle'
-import {useGetPost} from '#/state/queries/post'
-import {useAgent} from '#/state/session'
-import {ComposerOpts} from '#/state/shell/composer'
+} from 'lib/strings/url-helpers'
+import {ImageModel} from 'state/models/media/image'
+import {ComposerOpts} from 'state/shell/composer'
 
 export function useExternalLinkFetch({
   setQuote,
@@ -161,15 +161,14 @@ export function useExternalLinkFetch({
         timeout: 15e3,
       })
         .catch(() => undefined)
-        .then(thumb => (thumb ? createComposerImage(thumb) : undefined))
-        .then(thumb => {
+        .then(localThumb => {
           if (aborted) {
             return
           }
           setExtLink({
             ...extLink,
             isLoading: false, // done
-            localThumb: thumb,
+            localThumb: localThumb ? new ImageModel(localThumb) : undefined,
           })
         })
       return cleanup

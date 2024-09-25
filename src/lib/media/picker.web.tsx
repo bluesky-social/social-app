@@ -18,11 +18,9 @@ export async function openCropper(opts: CropperOptions): Promise<RNImage> {
       name: 'crop-image',
       uri: opts.path,
       dimensions:
-        opts.width && opts.height
+        opts.height && opts.width
           ? {width: opts.width, height: opts.height}
           : undefined,
-      aspect: opts.webAspectRatio,
-      circular: opts.webCircularCrop,
       onSelect: (img?: RNImage) => {
         if (img) {
           resolve(img)

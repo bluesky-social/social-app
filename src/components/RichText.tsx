@@ -66,7 +66,6 @@ export function RichText({
         (flattenedStyle.fontSize ?? a.text_sm.fontSize) * emojiMultiplier
       return (
         <Text
-          emoji
           selectable={selectable}
           testID={testID}
           style={[plainStyles, {fontSize}]}
@@ -78,7 +77,6 @@ export function RichText({
     }
     return (
       <Text
-        emoji
         selectable={selectable}
         testID={testID}
         style={plainStyles}
@@ -150,11 +148,7 @@ export function RichText({
         />,
       )
     } else {
-      els.push(
-        <Text key={key} emoji style={plainStyles}>
-          {segment.text}
-        </Text>,
-      )
+      els.push(segment.text)
     }
     key++
   }
@@ -219,7 +213,6 @@ function RichTextTag({
     <React.Fragment>
       <TagMenu control={control} tag={tag} authorHandle={authorHandle}>
         <Text
-          emoji
           selectable={selectable}
           {...native({
             accessibilityLabel: _(msg`Hashtag: #${tag}`),

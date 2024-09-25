@@ -160,7 +160,7 @@ export const SetNewPasswordForm = ({
           label={_(msg`Back`)}
           variant="solid"
           color="secondary"
-          size="large"
+          size="medium"
           onPress={onPressBack}>
           <ButtonText>
             <Trans>Back</Trans>
@@ -174,7 +174,7 @@ export const SetNewPasswordForm = ({
             label={_(msg`Next`)}
             variant="solid"
             color="primary"
-            size="large"
+            size="medium"
             onPress={onPressNext}>
             <ButtonText>
               <Trans>Next</Trans>

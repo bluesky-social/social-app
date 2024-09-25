@@ -174,6 +174,7 @@ export function MessageInputEmbed({
             showAvatar
             author={post.author}
             moderation={moderation}
+            authorHasWarning={!!post.author.labels?.length}
             timestamp={post.indexedAt}
             postHref={itemHref}
             style={a.flex_0}

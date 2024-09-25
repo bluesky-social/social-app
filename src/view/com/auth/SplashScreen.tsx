@@ -4,9 +4,9 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {Logo} from '#/view/icons/Logo'
 import {Logotype} from '#/view/icons/Logotype'
+import {ErrorBoundary} from 'view/com/util/ErrorBoundary'
 import {atoms as a, useTheme} from '#/alf'
 import {AppLanguageDropdown} from '#/components/AppLanguageDropdown'
 import {Button, ButtonText} from '#/components/Button'
@@ -35,7 +35,8 @@ export const SplashScreen = ({
             <Logotype width={161} fill={t.atoms.text.color} />
           </View>
 
-          <Text style={[a.text_md, a.font_bold, t.atoms.text_contrast_medium]}>
+          <Text
+            style={[a.text_md, a.font_semibold, t.atoms.text_contrast_medium]}>
             <Trans>What's up?</Trans>
           </Text>
         </View>

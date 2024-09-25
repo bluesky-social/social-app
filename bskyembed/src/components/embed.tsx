@@ -158,12 +158,6 @@ export function Embed({
         return <Info>The quoted post is blocked.</Info>
       }
 
-      // Case 3.8: Detached quote post
-      if (AppBskyEmbedRecord.isViewDetached(record)) {
-        // Just don't show anything
-        return null
-      }
-
       // Unknown embed type
       return null
     }

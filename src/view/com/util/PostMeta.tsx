@@ -1,40 +1,44 @@
 import React, {memo, useCallback} from 'react'
-import {StyleProp, View, ViewStyle} from 'react-native'
+import {StyleProp, StyleSheet, TextStyle, View, ViewStyle} from 'react-native'
 import {AppBskyActorDefs, ModerationDecision, ModerationUI} from '@atproto/api'
-import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {makeProfileLink} from '#/lib/routes/links'
-import {forceLTR} from '#/lib/strings/bidi'
-import {NON_BREAKING_SPACE} from '#/lib/strings/constants'
-import {sanitizeDisplayName} from '#/lib/strings/display-names'
-import {sanitizeHandle} from '#/lib/strings/handles'
-import {niceDate} from '#/lib/strings/time'
 import {precacheProfile} from '#/state/queries/profile'
-import {atoms as a, useTheme, web} from '#/alf'
-import {WebOnlyInlineLinkText} from '#/components/Link'
+import {usePalette} from 'lib/hooks/usePalette'
+import {makeProfileLink} from 'lib/routes/links'
+import {forceLTR} from 'lib/strings/bidi'
+import {NON_BREAKING_SPACE} from 'lib/strings/constants'
+import {sanitizeDisplayName} from 'lib/strings/display-names'
+import {sanitizeHandle} from 'lib/strings/handles'
+import {niceDate} from 'lib/strings/time'
+import {TypographyVariant} from 'lib/ThemeContext'
+import {isAndroid} from 'platform/detection'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
-import {Text} from '#/components/Typography'
+import {TextLinkOnWebOnly} from './Link'
+import {Text} from './text/Text'
 import {TimeElapsed} from './TimeElapsed'
 import {PreviewableUserAvatar} from './UserAvatar'
 
 interface PostMetaOpts {
   author: AppBskyActorDefs.ProfileViewBasic
   moderation: ModerationDecision | undefined
+  authorHasWarning: boolean
   postHref: string
   timestamp: string
   showAvatar?: boolean
   avatarModeration?: ModerationUI
   avatarSize?: number
+  displayNameType?: TypographyVariant
+  displayNameStyle?: StyleProp<TextStyle>
   onOpenAuthor?: () => void
   style?: StyleProp<ViewStyle>
 }
 
 let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
-  const t = useTheme()
-  const {i18n, _} = useLingui()
+  const {i18n} = useLingui()
 
+  const pal = usePalette('default')
   const displayName = opts.author.displayName || opts.author.handle
   const handle = opts.author.handle
   const profileLink = makeProfileLink(opts.author)
@@ -49,18 +53,9 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
   }, [queryClient, opts.author])
 
   return (
-    <View
-      style={[
-        a.flex_1,
-        a.flex_row,
-        a.align_center,
-        a.pb_2xs,
-        a.gap_xs,
-        a.z_10,
-        opts.style,
-      ]}>
+    <View style={[styles.container, opts.style]}>
       {opts.showAvatar && (
-        <View style={[a.self_center, a.mr_2xs]}>
+        <View style={styles.avatar}>
           <PreviewableUserAvatar
             size={opts.avatarSize || 16}
             profile={opts.author}
@@ -70,67 +65,51 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
         </View>
       )}
       <ProfileHoverCard inline did={opts.author.did}>
-        <Text numberOfLines={1} style={[a.flex_shrink]}>
-          <WebOnlyInlineLinkText
-            to={profileLink}
-            label={_(msg`View profile`)}
+        <Text
+          numberOfLines={1}
+          style={[styles.maxWidth, pal.textLight, opts.displayNameStyle]}>
+          <TextLinkOnWebOnly
+            type={opts.displayNameType || 'lg-bold'}
+            style={[pal.text]}
+            lineHeight={1.2}
             disableMismatchWarning
-            onPress={onBeforePressAuthor}
-            style={[t.atoms.text]}>
-            <Text emoji style={[a.text_md, a.font_bold, a.leading_tight]}>
-              {forceLTR(
-                sanitizeDisplayName(
-                  displayName,
-                  opts.moderation?.ui('displayName'),
-                ),
-              )}
-            </Text>
-          </WebOnlyInlineLinkText>
-          <WebOnlyInlineLinkText
-            to={profileLink}
-            label={_(msg`View profile`)}
+            text={forceLTR(
+              sanitizeDisplayName(
+                displayName,
+                opts.moderation?.ui('displayName'),
+              ),
+            )}
+            href={profileLink}
+            onBeforePress={onBeforePressAuthor}
+          />
+          <TextLinkOnWebOnly
+            type="md"
             disableMismatchWarning
-            disableUnderline
-            onPress={onBeforePressAuthor}
-            style={[a.text_md, t.atoms.text_contrast_medium, a.leading_tight]}>
-            <Text
-              emoji
-              style={[
-                a.text_md,
-                t.atoms.text_contrast_medium,
-                a.leading_tight,
-              ]}>
-              {NON_BREAKING_SPACE + sanitizeHandle(handle, '@')}
-            </Text>
-          </WebOnlyInlineLinkText>
+            style={[pal.textLight, {flexShrink: 4}]}
+            text={NON_BREAKING_SPACE + sanitizeHandle(handle, '@')}
+            href={profileLink}
+            onBeforePress={onBeforePressAuthor}
+            anchorNoUnderline
+          />
         </Text>
       </ProfileHoverCard>
-
-      <Text
-        style={[a.text_md, t.atoms.text_contrast_medium]}
-        accessible={false}>
-        &middot;
-      </Text>
-
+      {!isAndroid && (
+        <Text type="md" style={pal.textLight} accessible={false}>
+          &middot;
+        </Text>
+      )}
       <TimeElapsed timestamp={opts.timestamp}>
         {({timeElapsed}) => (
-          <WebOnlyInlineLinkText
-            to={opts.postHref}
-            label={niceDate(i18n, opts.timestamp)}
+          <TextLinkOnWebOnly
+            type="md"
+            style={pal.textLight}
+            text={timeElapsed}
+            accessibilityLabel={niceDate(i18n, opts.timestamp)}
             title={niceDate(i18n, opts.timestamp)}
-            disableMismatchWarning
-            disableUnderline
-            onPress={onBeforePressPost}
-            style={[
-              a.text_md,
-              t.atoms.text_contrast_medium,
-              a.leading_tight,
-              web({
-                whiteSpace: 'nowrap',
-              }),
-            ]}>
-            {timeElapsed}
-          </WebOnlyInlineLinkText>
+            accessibilityHint=""
+            href={opts.postHref}
+            onBeforePress={onBeforePressPost}
+          />
         )}
       </TimeElapsed>
     </View>
@@ -138,3 +117,21 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
 }
 PostMeta = memo(PostMeta)
 export {PostMeta}
+
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    paddingBottom: 2,
+    gap: 4,
+    zIndex: 1,
+    flex: 1,
+  },
+  avatar: {
+    alignSelf: 'center',
+  },
+  maxWidth: {
+    flex: isAndroid ? 1 : undefined,
+    flexShrink: isAndroid ? undefined : 1,
+  },
+})

@@ -358,8 +358,9 @@ export function Controls({
           style={[
             a.flex_1,
             a.px_xs,
-            a.pb_sm,
-            a.gap_sm,
+            a.pt_2xs,
+            a.pb_md,
+            a.gap_md,
             a.flex_row,
             a.align_center,
           ]}>
@@ -372,11 +373,7 @@ export function Controls({
             onPress={onPressPlayPause}
           />
           <View style={a.flex_1} />
-          <Text
-            style={[
-              a.px_xs,
-              {color: t.palette.white, fontVariant: ['tabular-nums']},
-            ]}>
+          <Text style={{color: t.palette.white, fontVariant: ['tabular-nums']}}>
             {formatTime(currentTime)} / {formatTime(duration)}
           </Text>
           {hasSubtitleTrack && (

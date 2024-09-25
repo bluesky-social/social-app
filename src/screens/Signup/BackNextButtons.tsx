@@ -15,7 +15,6 @@ export interface BackNextButtonsProps {
   onBackPress: () => void
   onNextPress?: () => void
   onRetryPress?: () => void
-  overrideNextText?: string
 }
 
 export function BackNextButtons({
@@ -26,7 +25,6 @@ export function BackNextButtons({
   onBackPress,
   onNextPress,
   onRetryPress,
-  overrideNextText,
 }: BackNextButtonsProps) {
   const {_} = useLingui()
 
@@ -36,7 +34,7 @@ export function BackNextButtons({
         label={_(msg`Go back to previous step`)}
         variant="solid"
         color="secondary"
-        size="large"
+        size="medium"
         onPress={onBackPress}>
         <ButtonText>
           <Trans>Back</Trans>
@@ -48,7 +46,7 @@ export function BackNextButtons({
             label={_(msg`Press to retry`)}
             variant="solid"
             color="primary"
-            size="large"
+            size="medium"
             onPress={onRetryPress}>
             <ButtonText>
               <Trans>Retry</Trans>
@@ -61,11 +59,11 @@ export function BackNextButtons({
             label={_(msg`Continue to next step`)}
             variant="solid"
             color="primary"
-            size="large"
+            size="medium"
             disabled={isLoading || isNextDisabled}
             onPress={onNextPress}>
             <ButtonText>
-              {overrideNextText ? overrideNextText : <Trans>Next</Trans>}
+              <Trans>Next</Trans>
             </ButtonText>
             {isLoading && <ButtonIcon icon={Loader} />}
           </Button>

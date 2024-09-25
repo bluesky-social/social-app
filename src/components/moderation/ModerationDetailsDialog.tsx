@@ -118,11 +118,7 @@ function ModerationDetailsDialogInner({
       : _(msg`The author of this thread has hidden this reply.`)
   } else if (modcause.type === 'label') {
     name = desc.name
-    description = (
-      <Text emoji style={[t.atoms.text, a.text_md, a.leading_snug]}>
-        {desc.description}
-      </Text>
-    )
+    description = desc.description
   } else {
     // should never happen
     name = ''
@@ -131,7 +127,7 @@ function ModerationDetailsDialogInner({
 
   return (
     <Dialog.ScrollableInner label={_(msg`Moderation details`)}>
-      <Text emoji style={[t.atoms.text, a.text_2xl, a.font_bold, a.mb_sm]}>
+      <Text style={[t.atoms.text, a.text_2xl, a.font_bold, a.mb_sm]}>
         {name}
       </Text>
       <Text style={[t.atoms.text, a.text_md, a.leading_snug]}>

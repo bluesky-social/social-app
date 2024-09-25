@@ -1,6 +1,5 @@
-import '#/lib/sentry' // must be near top
-import '#/view/icons'
-import './style.css'
+import 'lib/sentry' // must be near top
+import 'view/icons'
 
 import React, {useEffect, useState} from 'react'
 import {KeyboardProvider} from 'react-native-keyboard-controller'
@@ -19,11 +18,6 @@ import {Provider as A11yProvider} from '#/state/a11y'
 import {Provider as MutedThreadsProvider} from '#/state/cache/thread-mutes'
 import {Provider as DialogStateProvider} from '#/state/dialogs'
 import {listenSessionDropped} from '#/state/events'
-import {
-  beginResolveGeolocation,
-  ensureGeolocationResolved,
-  Provider as GeolocationProvider,
-} from '#/state/geolocation'
 import {Provider as InvitesStateProvider} from '#/state/invites'
 import {Provider as LightboxStateProvider} from '#/state/lightbox'
 import {MessagesProvider} from '#/state/messages'
@@ -52,18 +46,13 @@ import {Provider as VideoVolumeProvider} from '#/view/com/util/post-embeds/Video
 import * as Toast from '#/view/com/util/Toast'
 import {ToastContainer} from '#/view/com/util/Toast.web'
 import {Shell} from '#/view/shell/index'
-import {ThemeProvider as Alf} from '#/alf'
+import {ThemeProvider as Alf, useFonts} from '#/alf'
 import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
 import {NuxDialogs} from '#/components/dialogs/nuxs'
 import {useStarterPackEntry} from '#/components/hooks/useStarterPackEntry'
 import {Provider as IntentDialogProvider} from '#/components/intents/IntentDialogs'
 import {Provider as PortalProvider} from '#/components/Portal'
 import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
-
-/**
- * Begin geolocation ASAP
- */
-beginResolveGeolocation()
 
 function InnerApp() {
   const [isReady, setIsReady] = React.useState(false)
@@ -107,64 +96,61 @@ function InnerApp() {
 
   return (
     <KeyboardProvider enabled={false}>
-      <Alf theme={theme}>
-        <ThemeProvider theme={theme}>
-          <RootSiblingParent>
-            <VideoVolumeProvider>
-              <ActiveVideoProvider>
-                <React.Fragment
-                  // Resets the entire tree below when it changes:
-                  key={currentAccount?.did}>
+      <StatsigProvider
+        // Resets the entire tree below when it changes:
+        key={currentAccount?.did}>
+        <Alf theme={theme}>
+          <ThemeProvider theme={theme}>
+            <RootSiblingParent>
+              <VideoVolumeProvider>
+                <ActiveVideoProvider>
                   <QueryProvider currentDid={currentAccount?.did}>
-                    <StatsigProvider>
-                      <MessagesProvider>
-                        {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
-                        <LabelDefsProvider>
-                          <ModerationOptsProvider>
-                            <LoggedOutViewProvider>
-                              <SelectedFeedProvider>
-                                <HiddenRepliesProvider>
-                                  <UnreadNotifsProvider>
-                                    <BackgroundNotificationPreferencesProvider>
-                                      <MutedThreadsProvider>
-                                        <SafeAreaProvider>
-                                          <ProgressGuideProvider>
-                                            <Shell />
-                                            <NuxDialogs />
-                                          </ProgressGuideProvider>
-                                        </SafeAreaProvider>
-                                      </MutedThreadsProvider>
-                                    </BackgroundNotificationPreferencesProvider>
-                                  </UnreadNotifsProvider>
-                                </HiddenRepliesProvider>
-                              </SelectedFeedProvider>
-                            </LoggedOutViewProvider>
-                          </ModerationOptsProvider>
-                        </LabelDefsProvider>
-                      </MessagesProvider>
-                    </StatsigProvider>
+                    <MessagesProvider>
+                      {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
+                      <LabelDefsProvider>
+                        <ModerationOptsProvider>
+                          <LoggedOutViewProvider>
+                            <SelectedFeedProvider>
+                              <HiddenRepliesProvider>
+                                <UnreadNotifsProvider>
+                                  <BackgroundNotificationPreferencesProvider>
+                                    <MutedThreadsProvider>
+                                      <SafeAreaProvider>
+                                        <ProgressGuideProvider>
+                                          <Shell />
+                                          <NuxDialogs />
+                                        </ProgressGuideProvider>
+                                      </SafeAreaProvider>
+                                    </MutedThreadsProvider>
+                                  </BackgroundNotificationPreferencesProvider>
+                                </UnreadNotifsProvider>
+                              </HiddenRepliesProvider>
+                            </SelectedFeedProvider>
+                          </LoggedOutViewProvider>
+                        </ModerationOptsProvider>
+                      </LabelDefsProvider>
+                    </MessagesProvider>
                   </QueryProvider>
                   <ToastContainer />
-                </React.Fragment>
-              </ActiveVideoProvider>
-            </VideoVolumeProvider>
-          </RootSiblingParent>
-        </ThemeProvider>
-      </Alf>
+                </ActiveVideoProvider>
+              </VideoVolumeProvider>
+            </RootSiblingParent>
+          </ThemeProvider>
+        </Alf>
+      </StatsigProvider>
     </KeyboardProvider>
   )
 }
 
 function App() {
   const [isReady, setReady] = useState(false)
+  const [loaded] = useFonts()
 
   React.useEffect(() => {
-    Promise.all([initPersistedState(), ensureGeolocationResolved()]).then(() =>
-      setReady(true),
-    )
+    initPersistedState().then(() => setReady(true))
   }, [])
 
-  if (!isReady) {
+  if (!isReady || !loaded) {
     return null
   }
 
@@ -173,33 +159,31 @@ function App() {
    * that is set up in the InnerApp component above.
    */
   return (
-    <GeolocationProvider>
-      <A11yProvider>
-        <SessionProvider>
-          <PrefsStateProvider>
-            <I18nProvider>
-              <ShellStateProvider>
-                <InvitesStateProvider>
-                  <ModalStateProvider>
-                    <DialogStateProvider>
-                      <LightboxStateProvider>
-                        <PortalProvider>
-                          <StarterPackProvider>
-                            <IntentDialogProvider>
-                              <InnerApp />
-                            </IntentDialogProvider>
-                          </StarterPackProvider>
-                        </PortalProvider>
-                      </LightboxStateProvider>
-                    </DialogStateProvider>
-                  </ModalStateProvider>
-                </InvitesStateProvider>
-              </ShellStateProvider>
-            </I18nProvider>
-          </PrefsStateProvider>
-        </SessionProvider>
-      </A11yProvider>
-    </GeolocationProvider>
+    <A11yProvider>
+      <SessionProvider>
+        <PrefsStateProvider>
+          <I18nProvider>
+            <ShellStateProvider>
+              <InvitesStateProvider>
+                <ModalStateProvider>
+                  <DialogStateProvider>
+                    <LightboxStateProvider>
+                      <PortalProvider>
+                        <StarterPackProvider>
+                          <IntentDialogProvider>
+                            <InnerApp />
+                          </IntentDialogProvider>
+                        </StarterPackProvider>
+                      </PortalProvider>
+                    </LightboxStateProvider>
+                  </DialogStateProvider>
+                </ModalStateProvider>
+              </InvitesStateProvider>
+            </ShellStateProvider>
+          </I18nProvider>
+        </PrefsStateProvider>
+      </SessionProvider>
+    </A11yProvider>
   )
 }
 
