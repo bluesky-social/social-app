@@ -558,18 +558,14 @@ let PostThreadItemLoaded = ({
               <PostMeta
                 author={post.author}
                 moderation={moderation}
-                authorHasWarning={!!post.author.labels?.length}
                 timestamp={post.indexedAt}
                 postHref={postHref}
                 showAvatar={isThreadedChild}
                 avatarModeration={moderation.ui('avatar')}
-                avatarSize={28}
-                displayNameType="md-bold"
-                displayNameStyle={isThreadedChild && s.ml2}
+                avatarSize={24}
                 style={
                   isThreadedChild && {
-                    alignItems: 'center',
-                    paddingBottom: isWeb ? 5 : 2,
+                    paddingBottom: isWeb ? 5 : 4,
                   }
                 }
               />
