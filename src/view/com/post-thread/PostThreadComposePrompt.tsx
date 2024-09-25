@@ -4,7 +4,9 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
+import {useHaptics} from '#/lib/haptics'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {useHapticsDisabled} from '#/state/preferences'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
@@ -21,6 +23,18 @@ export function PostThreadComposePrompt({
   const {_} = useLingui()
   const {isTabletOrDesktop} = useWebMediaQueries()
   const t = useTheme()
+  const playHaptics = useHaptics()
+  const isHapticsDisabled = useHapticsDisabled()
+
+  const onPress = () => {
+    playHaptics('Light')
+    setTimeout(
+      () => {
+        onPressCompose()
+      },
+      isHapticsDisabled ? 0 : 75,
+    )
+  }
 
   return (
     <PressableScale
@@ -34,7 +48,7 @@ export function PostThreadComposePrompt({
         t.atoms.border_contrast_low,
         t.atoms.bg,
       ]}
-      onPress={onPressCompose}>
+      onPress={onPress}>
       <View
         style={[
           a.flex_row,
