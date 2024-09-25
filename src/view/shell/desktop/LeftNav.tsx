@@ -302,7 +302,8 @@ function ComposeBtn() {
         onPress={onPressCompose}
         size="large"
         variant="gradient"
-        color="gradient_sky">
+        color="gradient_sky"
+        style={[a.rounded_full]}>
         <ButtonIcon icon={EditBig} position="left" />
         <ButtonText>
           <Trans context="action">New Post</Trans>

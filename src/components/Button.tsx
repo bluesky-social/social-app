@@ -444,7 +444,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
       [state, variant, color, size, disabled],
     )
 
-    const flattenedBaseStyles = flatten(baseStyles)
+    const flattenedBaseStyles = flatten([baseStyles, style])
 
     return (
       <Pressable
@@ -464,7 +464,6 @@ export const Button = React.forwardRef<View, ButtonProps>(
           a.align_center,
           a.justify_center,
           flattenedBaseStyles,
-          flatten(style),
           ...(state.hovered || state.pressed
             ? [hoverStyles, flatten(hoverStyleProp)]
             : []),
