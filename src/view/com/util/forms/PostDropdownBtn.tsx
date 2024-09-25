@@ -7,8 +7,7 @@ import {
   type ViewStyle,
 } from 'react-native'
 import * as Clipboard from 'expo-clipboard'
-import AtpAgent, {
-  AppBskyActorGetProfile,
+import {
   AppBskyFeedDefs,
   AppBskyFeedPost,
   AppBskyFeedThreadgate,
@@ -20,7 +19,6 @@ import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {until} from '#/lib/async/until'
 import {getCurrentRoute} from '#/lib/routes/helpers'
 import {makeProfileLink} from '#/lib/routes/links'
 import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
@@ -377,6 +375,10 @@ let PostDropdownBtn = ({
             : undefined
           return existing
         },
+        checkCommitted: res =>
+          pinCurrentPost
+            ? res.data.pinnedPost?.uri === postUri
+            : !res.data.pinnedPost,
       })
 
       if (pinCurrentPost) {
@@ -385,24 +387,13 @@ let PostDropdownBtn = ({
         Toast.show(_(msg`Post unpinned`))
       }
 
-      whenAppViewReady(agent, currentAccount.did, res => {
-        if (!res) return false
-        if (pinCurrentPost) {
-          return res.data.pinnedPost?.uri === postUri
-        } else {
-          return typeof res.data.pinnedPost === 'undefined'
-        }
-      }).then(() => {
-        queryClient.invalidateQueries({
-          queryKey: FEED_RQKEY(
-            `author|${currentAccount.did}|posts_and_author_threads`,
-          ),
-        })
-        queryClient.invalidateQueries({
-          queryKey: FEED_RQKEY(
-            `author|${currentAccount.did}|posts_with_replies`,
-          ),
-        })
+      queryClient.invalidateQueries({
+        queryKey: FEED_RQKEY(
+          `author|${currentAccount.did}|posts_and_author_threads`,
+        ),
+      })
+      queryClient.invalidateQueries({
+        queryKey: FEED_RQKEY(`author|${currentAccount.did}|posts_with_replies`),
       })
     } catch (e: any) {
       Toast.show(_(msg`Failed to pin post`))
@@ -812,16 +803,3 @@ let PostDropdownBtn = ({
 
 PostDropdownBtn = memo(PostDropdownBtn)
 export {PostDropdownBtn}
-
-async function whenAppViewReady(
-  agent: AtpAgent,
-  did: string,
-  fn: (res?: AppBskyActorGetProfile.Response) => boolean,
-) {
-  await until(
-    5, // 5 tries
-    1e3, // 1s delay between tries
-    fn,
-    () => agent.app.bsky.actor.getProfile({actor: did}),
-  )
-}
