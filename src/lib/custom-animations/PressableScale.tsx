@@ -1,5 +1,5 @@
 import React from 'react'
-import {Pressable, PressableProps} from 'react-native'
+import {Pressable, PressableProps, StyleProp, ViewStyle} from 'react-native'
 import Animated, {
   cancelAnimation,
   runOnJS,
@@ -16,14 +16,17 @@ const DEFAULT_TARGET_SCALE = isNative || isTouchDevice ? 0.98 : 1
 export function PressableScale({
   targetScale = DEFAULT_TARGET_SCALE,
   children,
+  contentContainerStyle,
+  onPressIn,
+  onPressOut,
   ...rest
-}: {targetScale?: number} & Exclude<
-  PressableProps,
-  'onPressIn' | 'onPressOut'
->) {
+}: {
+  targetScale?: number
+  contentContainerStyle?: StyleProp<ViewStyle>
+} & Exclude<PressableProps, 'onPressIn' | 'onPressOut'>) {
   const scale = useSharedValue(1)
 
-  const style = useAnimatedStyle(() => ({
+  const animatedStyle = useAnimatedStyle(() => ({
     transform: [{scale: scale.value}],
   }))
 
@@ -32,22 +35,24 @@ export function PressableScale({
       accessibilityRole="button"
       onPressIn={e => {
         'worklet'
-        if (rest.onPressIn) {
-          runOnJS(rest.onPressIn)(e)
+        if (onPressIn) {
+          runOnJS(onPressIn)(e)
         }
         cancelAnimation(scale)
         scale.value = withTiming(targetScale, {duration: 100})
       }}
       onPressOut={e => {
         'worklet'
-        if (rest.onPressOut) {
-          runOnJS(rest.onPressOut)(e)
+        if (onPressOut) {
+          runOnJS(onPressOut)(e)
         }
         cancelAnimation(scale)
         scale.value = withTiming(1, {duration: 100})
       }}
       {...rest}>
-      <Animated.View style={style}>{children as React.ReactNode}</Animated.View>
+      <Animated.View style={[animatedStyle, contentContainerStyle]}>
+        {children as React.ReactNode}
+      </Animated.View>
     </Pressable>
   )
 }
