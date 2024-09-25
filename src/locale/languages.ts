@@ -48,7 +48,7 @@ export const APP_LANGUAGES: AppLanguageConfig[] = [
   {code2: AppLanguage.ru, name: 'Русский – Russian'},
   {code2: AppLanguage.tr, name: 'Türkçe – Turkish'},
   {code2: AppLanguage.uk, name: 'Українська – Ukrainian'},
-  {code2: AppLanguage.zh_CN, name: '简体中文 – Simplified Chinese',},
+  {code2: AppLanguage.zh_CN, name: '简体中文 – Simplified Chinese'},
   {code2: AppLanguage.zh_TW, name: '繁體中文 – Traditional Chinese'},
   {code2: AppLanguage.zh_HK, name: '粵文 – Cantonese'},
 ]
