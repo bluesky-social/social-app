@@ -65,7 +65,7 @@ import {
 } from '#/components/icons/UserCircle'
 import {router} from '../../../routes'
 
-const NAV_ICON_WIDTH = 28
+const NAV_ICON_WIDTH = 24
 
 function ProfileCard() {
   const {currentAccount} = useSession()
@@ -450,11 +450,8 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   navItemIconWrapper: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: 28,
+    width: 24,
     height: 24,
-    marginTop: 2,
     zIndex: 1,
   },
   navItemIconWrapperTablet: {
