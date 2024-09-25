@@ -62,7 +62,8 @@ export const fontWeight = {
 export const gradients = {
   primary: {
     values: [
-      [0, '#0561FF'],
+      [0, '#054CFF'],
+      [0.4, '#1085FE'],
       [0.6, '#1085FE'],
       [1, '#59B9FF'],
     ],
