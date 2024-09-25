@@ -18,7 +18,7 @@ import {getCurrentRoute, isStateAtTabRoot, isTab} from '#/lib/routes/helpers'
 import {makeProfileLink} from '#/lib/routes/links'
 import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
 import {isInvalidHandle} from '#/lib/strings/handles'
-import {colors, s} from '#/lib/styles'
+import {colors} from '#/lib/styles'
 import {emitSoftReset} from '#/state/events'
 import {useFetchHandle} from '#/state/queries/handle'
 import {useUnreadMessageCount} from '#/state/queries/messages/list-converations'
@@ -29,9 +29,9 @@ import {useComposerControls} from '#/state/shell/composer'
 import {Link} from '#/view/com/util/Link'
 import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {PressableWithHover} from '#/view/com/util/PressableWithHover'
-import {Text} from '#/view/com/util/text/Text'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {NavSignupCard} from '#/view/shell/NavSignupCard'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {
   Bell_Filled_Corner0_Rounded as BellFilled,
   Bell_Stroke2_Corner0_Rounded as Bell,
@@ -63,9 +63,10 @@ import {
   UserCircle_Filled_Corner0_Rounded as UserCircleFilled,
   UserCircle_Stroke2_Corner0_Rounded as UserCircle,
 } from '#/components/icons/UserCircle'
+import {Text} from '#/components/Typography'
 import {router} from '../../../routes'
 
-const NAV_ICON_WIDTH = 24
+const NAV_ICON_WIDTH = 28
 
 function ProfileCard() {
   const {currentAccount} = useSession()
@@ -149,9 +150,10 @@ interface NavItemProps {
   label: string
 }
 function NavItem({count, href, icon, iconFilled, label}: NavItemProps) {
-  const pal = usePalette('default')
+  const t = useTheme()
   const {currentAccount} = useSession()
-  const {isDesktop, isTablet} = useWebMediaQueries()
+  const {gtMobile, gtTablet} = useBreakpoints()
+  const isTablet = gtMobile && !gtTablet
   const [pathName] = React.useMemo(() => router.matchPath(href), [href])
   const currentRouteInfo = useNavigationState(state => {
     if (!state) {
@@ -183,8 +185,8 @@ function NavItem({count, href, icon, iconFilled, label}: NavItemProps) {
 
   return (
     <PressableWithHover
-      style={styles.navItemWrapper}
-      hoverStyle={pal.viewLight}
+      style={[a.flex_row, a.align_center, a.p_md, a.rounded_sm, a.gap_sm]}
+      hoverStyle={t.atoms.bg_contrast_25}
       // @ts-ignore the function signature differs on web -prf
       onPress={onPressWrapped}
       // @ts-ignore web only -prf
@@ -195,23 +197,47 @@ function NavItem({count, href, icon, iconFilled, label}: NavItemProps) {
       accessibilityHint="">
       <View
         style={[
-          styles.navItemIconWrapper,
-          isTablet && styles.navItemIconWrapperTablet,
+          a.align_center,
+          a.justify_center,
+          {
+            width: 24,
+            height: 24,
+          },
+          isTablet && {
+            width: 40,
+            height: 40,
+          },
         ]}>
         {isCurrent ? iconFilled : icon}
         {typeof count === 'string' && count ? (
           <Text
-            type="button"
             style={[
-              styles.navItemCount,
-              isTablet && styles.navItemCountTablet,
+              a.absolute,
+              a.text_sm,
+              a.font_bold,
+              a.rounded_full,
+              {
+                top: '-10%',
+                left: '60%',
+                backgroundColor: t.palette.primary_500,
+                color: t.palette.white,
+                lineHeight: a.text_sm.fontSize,
+                paddingHorizontal: 4,
+                paddingVertical: 1,
+              },
+              isTablet && [
+                {
+                  top: '10%',
+                  left: '50%',
+                },
+              ],
             ]}>
             {count}
           </Text>
         ) : null}
       </View>
-      {isDesktop && (
-        <Text type="title" style={[isCurrent ? s.bold : s.normal, pal.text]}>
+      {gtTablet && (
+        <Text style={[a.text_xl, isCurrent ? a.font_heavy : a.font_normal]}>
           {label}
         </Text>
       )}
@@ -439,41 +465,6 @@ const styles = StyleSheet.create({
     right: 12,
     width: 30,
     height: 30,
-  },
-
-  navItemWrapper: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 12,
-    padding: 12,
-    borderRadius: 8,
-    gap: 10,
-  },
-  navItemIconWrapper: {
-    width: 24,
-    height: 24,
-    zIndex: 1,
-  },
-  navItemIconWrapperTablet: {
-    width: 40,
-    height: 40,
-  },
-  navItemCount: {
-    position: 'absolute',
-    top: 0,
-    left: 15,
-    backgroundColor: colors.blue3,
-    color: colors.white,
-    fontSize: 12,
-    lineHeight: 12,
-    fontWeight: '600',
-    paddingHorizontal: 4,
-    paddingVertical: 1,
-    borderRadius: 100,
-  },
-  navItemCountTablet: {
-    left: 18,
-    fontSize: 14,
   },
 
   newPostBtnContainer: {
