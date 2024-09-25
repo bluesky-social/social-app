@@ -245,7 +245,7 @@ let FeedItemInner = ({
       onBeforePress={onBeforePress}
       dataSet={{feedContext}}>
       <View style={{flexDirection: 'row', gap: 10, paddingLeft: 8}}>
-        <View style={{width: 52}}>
+        <View style={{width: 42}}>
           {isThreadChild && (
             <View
               style={[
@@ -345,7 +345,7 @@ let FeedItemInner = ({
         <View style={styles.layoutAvi}>
           <AviFollowButton author={post.author} moderation={moderation}>
             <PreviewableUserAvatar
-              size={52}
+              size={42}
               profile={post.author}
               moderation={moderation.ui('avatar')}
               type={post.author.associated?.labeler ? 'labeler' : 'user'}
@@ -369,7 +369,6 @@ let FeedItemInner = ({
           <PostMeta
             author={post.author}
             moderation={moderation}
-            authorHasWarning={!!post.author.labels?.length}
             timestamp={post.indexedAt}
             postHref={href}
             onOpenAuthor={onOpenAuthor}

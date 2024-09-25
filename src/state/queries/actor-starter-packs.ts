@@ -6,9 +6,9 @@ import {
   useInfiniteQuery,
 } from '@tanstack/react-query'
 
-import {useAgent} from 'state/session'
+import {useAgent} from '#/state/session'
 
-const RQKEY_ROOT = 'actor-starter-packs'
+export const RQKEY_ROOT = 'actor-starter-packs'
 export const RQKEY = (did?: string) => [RQKEY_ROOT, did]
 
 export function useActorStarterPacksQuery({did}: {did?: string}) {
