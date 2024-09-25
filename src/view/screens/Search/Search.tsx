@@ -742,9 +742,8 @@ export function SearchScreen(
     scrollToTopWeb()
     textInput.current?.blur()
     setShowAutocomplete(false)
-    setSearchText('')
-    navigateToItem('')
-  }, [setSearchText, navigateToItem])
+    setSearchText(queryParam)
+  }, [setShowAutocomplete, setSearchText, queryParam])
 
   const onSubmit = React.useCallback(() => {
     navigateToItem(searchText)
