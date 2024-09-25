@@ -157,7 +157,7 @@ let RepostButton = ({
               label={_(msg`Cancel quote post`)}
               onAccessibilityEscape={close}
               onPress={close}
-              size="medium"
+              size="large"
               variant="solid"
               color="primary">
               <ButtonText>{_(msg`Cancel`)}</ButtonText>

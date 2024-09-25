@@ -28,7 +28,7 @@ export async function openPicker(opts?: ImagePickerOptions) {
       return false
     })
     .map(image => ({
-      mime: 'image/jpeg',
+      mime: image.mimeType || 'image/jpeg',
       height: image.height,
       width: image.width,
       path: image.uri,

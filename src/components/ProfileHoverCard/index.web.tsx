@@ -411,6 +411,7 @@ function Inner({
     () => currentAccount?.did === profile.did,
     [currentAccount, profile],
   )
+  const isLabeler = profile.associated?.labeler
 
   return (
     <View>
@@ -419,11 +420,13 @@ function Inner({
           <UserAvatar
             size={64}
             avatar={profile.avatar}
+            type={isLabeler ? 'labeler' : 'user'}
             moderation={moderation.ui('avatar')}
           />
         </Link>
 
         {!isMe &&
+          !isLabeler &&
           (isBlockedUser ? (
             <Link
               to={profileURL}

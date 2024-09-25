@@ -15,18 +15,18 @@ import {AppBskyActorDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {useAnalytics} from '#/lib/analytics/analytics'
+import {MAX_DESCRIPTION, MAX_DISPLAY_NAME} from '#/lib/constants'
+import {usePalette} from '#/lib/hooks/usePalette'
+import {compressIfNeeded} from '#/lib/media/manip'
+import {cleanError} from '#/lib/strings/errors'
+import {enforceLen} from '#/lib/strings/helpers'
+import {colors, gradients, s} from '#/lib/styles'
+import {useTheme} from '#/lib/ThemeContext'
 import {logger} from '#/logger'
+import {isWeb} from '#/platform/detection'
 import {useModalControls} from '#/state/modals'
 import {useProfileUpdateMutation} from '#/state/queries/profile'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {MAX_DESCRIPTION, MAX_DISPLAY_NAME} from 'lib/constants'
-import {usePalette} from 'lib/hooks/usePalette'
-import {compressIfNeeded} from 'lib/media/manip'
-import {cleanError} from 'lib/strings/errors'
-import {enforceLen} from 'lib/strings/helpers'
-import {colors, gradients, s} from 'lib/styles'
-import {useTheme} from 'lib/ThemeContext'
-import {isWeb} from 'platform/detection'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {Text} from '../util/text/Text'
 import * as Toast from '../util/Toast'
@@ -261,12 +261,12 @@ export function Component({
 const styles = StyleSheet.create({
   title: {
     textAlign: 'center',
-    fontWeight: 'bold',
+    fontWeight: '600',
     fontSize: 24,
     marginBottom: 18,
   },
   label: {
-    fontWeight: 'bold',
+    fontWeight: '600',
     paddingHorizontal: 4,
     paddingBottom: 4,
     marginTop: 20,
