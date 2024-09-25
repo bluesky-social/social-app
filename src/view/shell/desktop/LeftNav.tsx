@@ -18,7 +18,6 @@ import {getCurrentRoute, isStateAtTabRoot, isTab} from '#/lib/routes/helpers'
 import {makeProfileLink} from '#/lib/routes/links'
 import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
 import {isInvalidHandle} from '#/lib/strings/handles'
-import {colors} from '#/lib/styles'
 import {emitSoftReset} from '#/state/events'
 import {useFetchHandle} from '#/state/queries/handle'
 import {useUnreadMessageCount} from '#/state/queries/messages/list-converations'
@@ -32,6 +31,7 @@ import {PressableWithHover} from '#/view/com/util/PressableWithHover'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {NavSignupCard} from '#/view/shell/NavSignupCard'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {
   Bell_Filled_Corner0_Rounded as BellFilled,
   Bell_Stroke2_Corner0_Rounded as Bell,
@@ -294,21 +294,19 @@ function ComposeBtn() {
     return null
   }
   return (
-    <View style={styles.newPostBtnContainer}>
-      <TouchableOpacity
+    <View style={[a.flex_row, a.pl_md, a.pt_xl]}>
+      <Button
         disabled={isFetchingHandle}
-        style={styles.newPostBtn}
+        label={_(msg`New post`)}
         onPress={onPressCompose}
-        accessibilityRole="button"
-        accessibilityLabel={_(msg`New post`)}
-        accessibilityHint="">
-        <View style={styles.newPostBtnIconWrapper}>
-          <EditBig width={19} style={styles.newPostBtnLabel} />
-        </View>
-        <Text type="button" style={styles.newPostBtnLabel}>
+        size="large"
+        variant="gradient"
+        color="gradient_sky">
+        <ButtonIcon icon={EditBig} position="left" />
+        <ButtonText>
           <Trans context="action">New Post</Trans>
-        </Text>
-      </TouchableOpacity>
+        </ButtonText>
+      </Button>
     </View>
   )
 }
@@ -465,32 +463,5 @@ const styles = StyleSheet.create({
     right: 12,
     width: 30,
     height: 30,
-  },
-
-  newPostBtnContainer: {
-    flexDirection: 'row',
-  },
-  newPostBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 24,
-    paddingTop: 10,
-    paddingBottom: 12, // visually aligns the text vertically inside the button
-    paddingLeft: 16,
-    paddingRight: 18, // looks nicer like this
-    backgroundColor: colors.blue3,
-    marginLeft: 12,
-    marginTop: 20,
-    marginBottom: 10,
-    gap: 8,
-  },
-  newPostBtnIconWrapper: {
-    marginTop: 2, // aligns the icon visually with the text
-  },
-  newPostBtnLabel: {
-    color: colors.white,
-    fontSize: 16,
-    fontWeight: '600',
   },
 })
