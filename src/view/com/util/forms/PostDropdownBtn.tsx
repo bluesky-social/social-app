@@ -17,7 +17,6 @@ import {
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
-import {useQueryClient} from '@tanstack/react-query'
 
 import {getCurrentRoute} from '#/lib/routes/helpers'
 import {makeProfileLink} from '#/lib/routes/links'
@@ -29,21 +28,20 @@ import {useTheme} from '#/lib/ThemeContext'
 import {getTranslatorLink} from '#/locale/helpers'
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
-import {Shadow, updatePostShadow} from '#/state/cache/post-shadow'
+import {Shadow} from '#/state/cache/post-shadow'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {useLanguagePrefs} from '#/state/preferences'
 import {useHiddenPosts, useHiddenPostsApi} from '#/state/preferences'
 import {useOpenLink} from '#/state/preferences/in-app-browser'
+import {usePinnedPostMutation} from '#/state/queries/pinned-post'
 import {
   usePostDeleteMutation,
   useThreadMuteMutationQueue,
 } from '#/state/queries/post'
-import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
 import {useToggleQuoteDetachmentMutation} from '#/state/queries/postgate'
 import {getMaybeDetachedQuoteEmbed} from '#/state/queries/postgate/util'
-import {useProfileUpdateMutation} from '#/state/queries/profile'
 import {useToggleReplyVisibilityMutation} from '#/state/queries/threadgate'
-import {useAgent, useSession} from '#/state/session'
+import {useSession} from '#/state/session'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
 import {atoms as a, useBreakpoints, useTheme as useAlf} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
@@ -110,10 +108,9 @@ let PostDropdownBtn = ({
   const {_} = useLingui()
   const defaultCtrlColor = theme.palette.default.postCtrl
   const langPrefs = useLanguagePrefs()
-  const agent = useAgent()
-  const queryClient = useQueryClient()
   const {mutateAsync: deletePostMutate} = usePostDeleteMutation()
-  const {mutateAsync: profileUpdateMutate} = useProfileUpdateMutation()
+  const {mutateAsync: pinPostMutate, isPending: isPinPending} =
+    usePinnedPostMutation()
   const hiddenPosts = useHiddenPosts()
   const {hidePost} = useHiddenPostsApi()
   const feedFeedback = useFeedFeedbackContext()
@@ -158,7 +155,7 @@ let PostDropdownBtn = ({
   const isReplyHiddenByThreadgate = threadgateHiddenReplies.has(postUri)
   const isPinned = post.viewer?.pinned
 
-  const {mutateAsync: toggleQuoteDetachment, isPending} =
+  const {mutateAsync: toggleQuoteDetachment, isPending: isDetachPending} =
     useToggleQuoteDetachmentMutation()
 
   const prefetchPostInteractionSettings = usePrefetchPostInteractionSettings({
@@ -352,70 +349,13 @@ let PostDropdownBtn = ({
     toggleReplyVisibility,
   ])
 
-  const onPressPin = useCallback(async () => {
-    const pinCurrentPost = !isPinned
-    let prevPinnedPost: string | undefined
-    try {
-      if (!currentAccount) throw new Error('Not logged in')
-      const {data: profile} = await agent.getProfile({
-        actor: currentAccount.did,
-      })
-      prevPinnedPost = profile.pinnedPost?.uri
-
-      updatePostShadow(queryClient, postUri, {pinned: pinCurrentPost})
-      if (prevPinnedPost && prevPinnedPost !== postUri) {
-        updatePostShadow(queryClient, prevPinnedPost, {pinned: false})
-      }
-
-      await profileUpdateMutate({
-        profile,
-        updates: existing => {
-          existing.pinnedPost = pinCurrentPost
-            ? {uri: postUri, cid: postCid}
-            : undefined
-          return existing
-        },
-        checkCommitted: res =>
-          pinCurrentPost
-            ? res.data.pinnedPost?.uri === postUri
-            : !res.data.pinnedPost,
-      })
-
-      if (pinCurrentPost) {
-        Toast.show(_(msg`Post pinned`))
-      } else {
-        Toast.show(_(msg`Post unpinned`))
-      }
-
-      queryClient.invalidateQueries({
-        queryKey: FEED_RQKEY(
-          `author|${currentAccount.did}|posts_and_author_threads`,
-        ),
-      })
-      queryClient.invalidateQueries({
-        queryKey: FEED_RQKEY(`author|${currentAccount.did}|posts_with_replies`),
-      })
-    } catch (e: any) {
-      Toast.show(_(msg`Failed to pin post`))
-      logger.error('Failed to update user profile', {message: String(e)})
-      // revert optimistic update
-      updatePostShadow(queryClient, postUri, {
-        pinned: !pinCurrentPost,
-      })
-      if (prevPinnedPost && prevPinnedPost !== postUri) {
-        updatePostShadow(queryClient, prevPinnedPost, {pinned: true})
-      }
-    }
-  }, [
-    _,
-    isPinned,
-    agent,
-    currentAccount,
-    profileUpdateMutate,
-    postUri,
-    postCid,
-    queryClient,
-  ])
+  const onPressPin = useCallback(() => {
+    pinPostMutate({
+      postUri,
+      postCid,
+      action: isPinned ? 'unpin' : 'pin',
+    })
+  }, [isPinned, pinPostMutate, postCid, postUri])
 
   return (
     <EventStopper onKeyDown={false}>
@@ -455,13 +395,17 @@ let PostDropdownBtn = ({
                       ? _(msg`Unpin from profile`)
                       : _(msg`Pin to your profile`)
                   }
+                  disabled={isPinPending}
                   onPress={onPressPin}>
                   <Menu.ItemText>
                     {isPinned
                       ? _(msg`Unpin from profile`)
                       : _(msg`Pin to your profile`)}
                   </Menu.ItemText>
-                  <Menu.ItemIcon icon={PinIcon} position="right" />
+                  <Menu.ItemIcon
+                    icon={isPinPending ? Loader : PinIcon}
+                    position="right"
+                  />
                 </Menu.Item>
               </Menu.Group>
               <Menu.Divider />
@@ -632,7 +576,7 @@ let PostDropdownBtn = ({
 
                   {canDetachQuote && (
                     <Menu.Item
-                      disabled={isPending}
+                      disabled={isDetachPending}
                       testID="postDropdownHideBtn"
                       label={
                         quoteEmbed.isDetached
@@ -651,7 +595,7 @@ let PostDropdownBtn = ({
                       </Menu.ItemText>
                       <Menu.ItemIcon
                         icon={
-                          isPending
+                          isDetachPending
                             ? Loader
                             : quoteEmbed.isDetached
                             ? Eye
