@@ -147,9 +147,7 @@ export function usePostFeedQuery(
    * unwanted content, we may over-fetch here to try and fill pages by
    * `MIN_POSTS`.
    */
-  const fetchLimit = React.useState(() => {
-    return gate('post_feed_lang_window') ? 100 : MIN_POSTS
-  })[0]
+  const fetchLimit = gate('post_feed_lang_window') ? 100 : MIN_POSTS
 
   // Make sure this doesn't invalidate unless really needed.
   const selectArgs = React.useMemo(
