@@ -34,4 +34,5 @@ export function isNetworkError(e: unknown) {
       return true
     }
   }
+  return false
 }
