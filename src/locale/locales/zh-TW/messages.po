@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: zh-TW for bluesky-social-app\n"
 "POT-Creation-Date: \n"
 "Report-Msgid-Bugs-To: Kuwa Lee <kuwalee1069@gmail.com>, Frudrax Cheng <i@cynosura.one>\n"
-"PO-Revision-Date: 2024-09-24 09:16+0800\n"
+"PO-Revision-Date: 2024-09-25 11:29+0800\n"
 "Last-Translator: \n"
 "Language-Team: Frudrax Cheng <i@cynosura.one>, Kuwa Lee <kuwalee1069@gmail.com>, noeFly, snowleo208, Kisaragi Hiu, Yi-Jyun Pan, toto6038, cirx1e\n"
 "Language: zh_TW\n"
@@ -844,13 +844,9 @@ msgstr "部落格"
 msgid "Bluesky"
 msgstr "Bluesky"
 
-#: src/view/com/auth/server-input/index.tsx:154
-#~ msgid "Bluesky is an open network where you can choose your hosting provider. Custom hosting is now available in beta for developers."
-#~ msgstr "Bluesky 是一個開放的網路，您可以自行挑選託管服務供應商。自定義託管服務現已為開發人員推出測試版。"
-
 #: src/view/com/auth/server-input/index.tsx:155
 msgid "Bluesky is an open network where you can choose your hosting provider. If you're a developer, you can host your own server."
-msgstr ""
+msgstr "Bluesky 是一個開放的網路，您可以自行挑選託管服務供應商。如果您是開發人員，您可以託管自己的伺服器。"
 
 #: src/components/ProgressGuide/List.tsx:55
 msgid "Bluesky is better with friends!"
@@ -2512,14 +2508,6 @@ msgstr "健康"
 msgid "Flexible"
 msgstr "靈活"
 
-#: src/view/com/modals/EditImage.tsx:124
-#~ msgid "Flip horizontal"
-#~ msgstr "水平翻轉"
-
-#: src/view/com/modals/EditImage.tsx:129
-#~ msgid "Flip vertically"
-#~ msgstr "垂直翻轉"
-
 #. User is not following this account, click to follow
 #: src/components/ProfileCard.tsx:358
 #: src/components/ProfileHoverCard/index.web.tsx:449
@@ -3021,10 +3009,6 @@ msgstr "違法"
 msgid "Image"
 msgstr "圖片"
 
-#: src/view/com/modals/AltImage.tsx:122
-#~ msgid "Image alt text"
-#~ msgstr "圖片替代文字"
-
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:312
 #: src/components/StarterPack/ShareDialog.tsx:76
 msgid "Image saved to your camera roll!"
@@ -3241,11 +3225,11 @@ msgstr "瞭解詳情"
 
 #: src/view/com/auth/SplashScreen.web.tsx:148
 msgid "Learn more about Bluesky"
-msgstr "了解有關 Bluesky 的更多資訊"
+msgstr "瞭解有關 Bluesky 的更多資訊"
 
 #: src/view/com/auth/server-input/index.tsx:160
 msgid "Learn more about self hosting your PDS."
-msgstr ""
+msgstr "瞭解有關自行託管 PDS 的更多資訊。"
 
 #: src/components/moderation/ContentHider.tsx:66
 #: src/components/moderation/ContentHider.tsx:131
@@ -4862,10 +4846,6 @@ msgstr "引用這則貼文"
 msgid "Random (aka \"Poster's Roulette\")"
 msgstr "隨機顯示 (又名試試手氣)"
 
-#: src/view/com/modals/EditImage.tsx:234
-#~ msgid "Ratios"
-#~ msgstr "比率"
-
 #: src/view/com/util/forms/PostDropdownBtn.tsx:543
 #: src/view/com/util/forms/PostDropdownBtn.tsx:553
 msgid "Re-attach quote"
@@ -5366,10 +5346,6 @@ msgctxt "action"
 msgid "Save"
 msgstr "儲存"
 
-#: src/view/com/modals/AltImage.tsx:132
-#~ msgid "Save alt text"
-#~ msgstr "儲存替代文字"
-
 #: src/components/dialogs/BirthDateSettings.tsx:119
 msgid "Save birthday"
 msgstr "儲存生日"
@@ -5722,18 +5698,6 @@ msgstr "設定 Bluesky 帳號代碼"
 #: src/screens/Login/ForgotPasswordForm.tsx:113
 msgid "Sets email for password reset"
 msgstr "設定用於重設密碼的電子郵件"
-
-#: src/view/com/modals/crop-image/CropImage.web.tsx:146
-#~ msgid "Sets image aspect ratio to square"
-#~ msgstr "將圖片比例設定為正方形"
-
-#: src/view/com/modals/crop-image/CropImage.web.tsx:136
-#~ msgid "Sets image aspect ratio to tall"
-#~ msgstr "將圖片比例設定為高"
-
-#: src/view/com/modals/crop-image/CropImage.web.tsx:126
-#~ msgid "Sets image aspect ratio to wide"
-#~ msgstr "將圖片比例設定為寬"
 
 #: src/Navigation.tsx:155
 #: src/view/screens/Settings/index.tsx:302
@@ -6099,10 +6063,6 @@ msgstr "垃圾訊息、過多的提及或回覆"
 msgid "Sports"
 msgstr "運動"
 
-#: src/view/com/modals/crop-image/CropImage.web.tsx:145
-#~ msgid "Square"
-#~ msgstr "方塊"
-
 #: src/components/dms/dialogs/NewChatDialog.tsx:63
 msgid "Start a new chat"
 msgstr "開始新對話"
@@ -6233,10 +6193,6 @@ msgstr "標籤選單：{displayTag}"
 #: src/components/dialogs/MutedWords.tsx:282
 msgid "Tags only"
 msgstr "僅限標籤"
-
-#: src/view/com/modals/crop-image/CropImage.web.tsx:135
-#~ msgid "Tall"
-#~ msgstr "高"
 
 #: src/components/ProgressGuide/Toast.tsx:150
 msgid "Tap to dismiss"
@@ -6777,10 +6733,6 @@ msgstr "切換以啟用或停用成人內容"
 #: src/view/screens/Search/Search.tsx:349
 msgid "Top"
 msgstr "熱門"
-
-#: src/view/com/modals/EditImage.tsx:263
-#~ msgid "Transformations"
-#~ msgstr "轉換"
 
 #: src/components/dms/MessageMenu.tsx:103
 #: src/components/dms/MessageMenu.tsx:105
@@ -7477,10 +7429,6 @@ msgstr "為什麼應該審查這個入門包？"
 #: src/components/ReportDialog/SelectReportOptionView.tsx:48
 msgid "Why should this user be reviewed?"
 msgstr "為什麼應該審查這個用戶？"
-
-#: src/view/com/modals/crop-image/CropImage.web.tsx:125
-#~ msgid "Wide"
-#~ msgstr "寬"
 
 #: src/screens/Messages/Conversation/MessageInput.tsx:142
 #: src/screens/Messages/Conversation/MessageInput.web.tsx:198
