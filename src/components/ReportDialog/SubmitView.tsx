@@ -256,6 +256,7 @@ function LabelerToggle({title}: {title: string}) {
           a.z_10,
         ]}>
         <Text
+          emoji
           style={[
             native({marginTop: 2}),
             t.atoms.text_contrast_medium,

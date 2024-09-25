@@ -24,15 +24,15 @@ import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {HITSLOP_20} from '#/lib/constants'
+import {usePalette} from '#/lib/hooks/usePalette'
+import {InfoCircleIcon} from '#/lib/icons'
 import {moderatePost_wrapped} from '#/lib/moderatePost_wrapped'
+import {makeProfileLink} from '#/lib/routes/links'
 import {s} from '#/lib/styles'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
+import {precacheProfile} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
-import {usePalette} from 'lib/hooks/usePalette'
-import {InfoCircleIcon} from 'lib/icons'
-import {makeProfileLink} from 'lib/routes/links'
-import {precacheProfile} from 'state/queries/profile'
-import {ComposerOptsQuote} from 'state/shell/composer'
+import {ComposerOptsQuote} from '#/state/shell/composer'
 import {atoms as a, useTheme} from '#/alf'
 import {RichText} from '#/components/RichText'
 import {ContentHider} from '../../../../components/moderation/ContentHider'
@@ -238,7 +238,6 @@ export function QuoteEmbed({
             author={quote.author}
             moderation={moderation}
             showAvatar
-            authorHasWarning={false}
             postHref={itemHref}
             timestamp={quote.indexedAt}
           />
