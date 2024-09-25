@@ -59,7 +59,7 @@ function GrowableBannerInner({
   children: React.ReactNode
 }) {
   const isFetching = useIsProfileFetching()
-  const delayedIsFetching = useDelayedValue(isFetching, 500)
+  const delayedIsFetching = useStickyToggle(isFetching, 500)
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [
@@ -154,22 +154,21 @@ function useIsProfileFetching() {
 }
 
 // stayed true for at least `delay` ms before returning to false
-function useDelayedValue(value: boolean, delay: number) {
+function useStickyToggle(value: boolean, delay: number) {
   const [prevValue, setPrevValue] = useState(value)
-  const [isDelayed, setIsDelayed] = useState(false)
+  const [isSticking, setIsSticking] = useState(false)
+
+  if (value !== prevValue) {
+    setIsSticking(prevValue) // Going true -> false should stick.
+    setPrevValue(value)
+  }
 
   useEffect(() => {
-    if (value !== prevValue) {
-      setPrevValue(value)
-      if (!value) {
-        setIsDelayed(true)
-        const timeout = setTimeout(() => setIsDelayed(false), delay)
-        return () => {
-          clearTimeout(timeout)
-        }
-      }
+    if (isSticking) {
+      const timeout = setTimeout(() => setIsSticking(false), delay)
+      return () => clearTimeout(timeout)
     }
-  }, [value, prevValue, delay])
+  }, [isSticking, delay])
 
-  return isDelayed ? true : prevValue
+  return isSticking ? true : value
 }
