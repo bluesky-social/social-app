@@ -44,17 +44,22 @@ export function Avatar({avatar}: {avatar?: string}) {
 }
 
 export function Title({value}: {value: string}) {
-  return <Text style={[a.text_md, a.font_bold, a.leading_tight]}>{value}</Text>
+  return (
+    <Text emoji style={[a.text_md, a.font_bold, a.leading_tight]}>
+      {value}
+    </Text>
+  )
 }
 
 export function Description({value, handle}: {value?: string; handle: string}) {
+  const {_} = useLingui()
   return value ? (
     <Text numberOfLines={2}>
       <RichText value={value} style={[a.leading_snug]} />
     </Text>
   ) : (
-    <Text style={[a.leading_snug]}>
-      <Trans>By {sanitizeHandle(handle, '@')}</Trans>
+    <Text emoji style={[a.leading_snug]}>
+      {_(msg`By ${sanitizeHandle(handle, '@')}`)}
     </Text>
   )
 }

@@ -7,9 +7,9 @@ import {
   ViewStyle,
 } from 'react-native'
 
-import {usePalette} from 'lib/hooks/usePalette'
-import {s} from 'lib/styles'
-import {useTheme} from 'lib/ThemeContext'
+import {usePalette} from '#/lib/hooks/usePalette'
+import {s} from '#/lib/styles'
+import {useTheme} from '#/lib/ThemeContext'
 import {atoms as a, useTheme as useTheme_NEW} from '#/alf'
 import {Bubble_Stroke2_Corner2_Rounded as Bubble} from '#/components/icons/Bubble'
 import {
@@ -53,8 +53,8 @@ export function PostLoadingPlaceholder({
   return (
     <View style={[styles.post, pal.view, style]}>
       <LoadingPlaceholder
-        width={52}
-        height={52}
+        width={42}
+        height={42}
         style={[
           styles.avatar,
           {

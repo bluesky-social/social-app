@@ -19,6 +19,7 @@ export function ProfileHeaderDisplayName({
   return (
     <View pointerEvents="none">
       <Text
+        emoji
         testID="profileHeaderDisplayName"
         style={[t.atoms.text, a.text_4xl, a.self_start, {fontWeight: '600'}]}>
         {sanitizeDisplayName(

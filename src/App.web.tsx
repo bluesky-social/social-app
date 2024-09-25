@@ -1,5 +1,6 @@
-import 'lib/sentry' // must be near top
-import 'view/icons'
+import '#/lib/sentry' // must be near top
+import '#/view/icons'
+import './style.css'
 
 import React, {useEffect, useState} from 'react'
 import {KeyboardProvider} from 'react-native-keyboard-controller'
