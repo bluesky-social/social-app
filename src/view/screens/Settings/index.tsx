@@ -94,10 +94,14 @@ function SettingsAccountCard({
         />
       </View>
       <View style={[s.flex1]}>
-        <Text type="md-bold" style={[pal.text, a.self_start]} numberOfLines={1}>
+        <Text
+          emoji
+          type="md-bold"
+          style={[pal.text, a.self_start]}
+          numberOfLines={1}>
           {profile?.displayName || account.handle}
         </Text>
-        <Text type="sm" style={pal.textLight} numberOfLines={1}>
+        <Text emoji type="sm" style={pal.textLight} numberOfLines={1}>
           {account.handle}
         </Text>
       </View>
