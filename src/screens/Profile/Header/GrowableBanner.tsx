@@ -164,7 +164,7 @@ function useShouldAnimateSpinner({
 }) {
   const [isOverscrolled, setIsOverscrolled] = useState(false)
   // HACK: it reports a scroll pos of 0 for a tick when fetching finishes
-  // so paper over that by keeping it true for a bit
+  // so paper over that by keeping it true for a bit -sfn
   const stickyIsOverscrolled = useStickyToggle(isOverscrolled, 10)
 
   useAnimatedReaction(
