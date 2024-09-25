@@ -2,6 +2,7 @@ import React, {useEffect, useId, useRef, useState} from 'react'
 import {View} from 'react-native'
 import {AppBskyEmbedVideo} from '@atproto/api'
 import type Hls from 'hls.js'
+import {type Events, type FragChangedData, type Fragment} from 'hls.js'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {atoms as a} from '#/alf'
@@ -38,6 +39,7 @@ export function VideoEmbedInnerWeb({
     setHasSubtitleTrack,
     setError,
     videoRef,
+    setHlsLoading,
   })
 
   return (
@@ -107,19 +109,26 @@ function useHLS({
   setHasSubtitleTrack,
   setError,
   videoRef,
+  setHlsLoading,
 }: {
   focused: boolean
   playlist: string
   setHasSubtitleTrack: (v: boolean) => void
   setError: (v: Error | null) => void
   videoRef: React.RefObject<HTMLVideoElement>
+  setHlsLoading: (v: boolean) => void
 }) {
   const hlsRef = useRef<Hls | undefined>(undefined)
+  const [DynamicHls, setDynamicHls] = useState<typeof Hls | undefined>(
+    undefined,
+  )
   const [lowQualityFragments, setLowQualityFragments] = useState<Fragment[]>([])
 
   // purge low quality segments from buffer on next frag change
   const handleFragChange = useNonReactiveCallback(
     (_event: Events.FRAG_CHANGED, {frag}: FragChangedData) => {
+      // If dynamic hls isn't set, then the hlsRef also has not been set
+      if (!DynamicHls) return
       if (!hlsRef.current) return
       const hls = hlsRef.current
 
@@ -133,7 +142,7 @@ function useHLS({
             continue
           }
 
-          hls.trigger(Hls.Events.BUFFER_FLUSHING, {
+          hls.trigger(DynamicHls.Events.BUFFER_FLUSHING, {
             startOffset: lowQualFrag.start,
             endOffset: lowQualFrag.end,
             type: 'video',
@@ -148,13 +157,26 @@ function useHLS({
   )
 
   useEffect(() => {
-    if (!videoRef.current) return
-    if (!Hls.isSupported()) throw new HLSUnsupportedError()
+    if (!DynamicHls) {
+      // @ts-expect-error dynamic import
+      import('hls.js/dist/hls.min').then(
+        ({default: dynamicHls}: {default: typeof Hls}) => {
+          setDynamicHls(dynamicHls)
+          setHlsLoading(false)
+        },
+      )
+      return
+    }
 
-    const hls = new Hls({
+    if (!videoRef.current) return
+    if (!DynamicHls.isSupported()) {
+      throw new HLSUnsupportedError()
+    }
+
+    const hls = new DynamicHls({
       maxMaxBufferLength: 10, // only load 10s ahead
       // note: the amount buffered is affected by both maxBufferLength and maxBufferSize
-      // it will buffer until it it's greater than *both* of those values
+      // it will buffer until it is greater than *both* of those values
       // so we use maxMaxBufferLength to set the actual maximum amount of buffering instead
     })
     hlsRef.current = hls
@@ -178,19 +200,19 @@ function useHLS({
       {signal},
     )
 
-    hls.on(Hls.Events.SUBTITLE_TRACKS_UPDATED, (_event, data) => {
+    hls.on(DynamicHls.Events.SUBTITLE_TRACKS_UPDATED, (_event, data) => {
       if (data.subtitleTracks.length > 0) {
         setHasSubtitleTrack(true)
       }
     })
 
-    hls.on(Hls.Events.FRAG_BUFFERED, (_event, {frag}) => {
+    hls.on(DynamicHls.Events.FRAG_BUFFERED, (_event, {frag}) => {
       if (frag.level === 0) {
         setLowQualityFragments(prev => [...prev, frag])
       }
     })
 
-    hls.on(Hls.Events.ERROR, (_event, data) => {
+    hls.on(DynamicHls.Events.ERROR, (_event, data) => {
       if (data.fatal) {
         if (
           data.details === 'manifestLoadError' &&
@@ -205,15 +227,23 @@ function useHLS({
       }
     })
 
-    hls.on(Hls.Events.FRAG_CHANGED, handleFragChange)
+    hls.on(DynamicHls.Events.FRAG_CHANGED, handleFragChange)
 
     return () => {
       hlsRef.current = undefined
-      hls.detachMedia()
-      hls.destroy()
+      hls?.detachMedia()
+      hls?.destroy()
       abortController.abort()
     }
-  }, [playlist, setError, setHasSubtitleTrack, videoRef, handleFragChange])
+  }, [
+    playlist,
+    setError,
+    setHasSubtitleTrack,
+    videoRef,
+    handleFragChange,
+    DynamicHls,
+    setHlsLoading,
+  ])
 
   return hlsRef
 }
