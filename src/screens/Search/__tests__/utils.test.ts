@@ -24,9 +24,20 @@ describe(`parseSearchQuery`, () => {
       input: `bluesky since:2021-01-01:00:00:00`,
       output: {query: `bluesky`, params: {since: `2021-01-01:00:00:00`}},
     },
+    {
+      input: `bluesky lang:"en"`,
+      output: {query: `bluesky`, params: {lang: `en`}},
+    },
+    {
+      input: `bluesky "literal" lang:en "from:invalid"`,
+      output: {query: `bluesky "literal" "from:invalid"`, params: {lang: `en`}},
+    },
   ]
 
-  it.each(tests)(`%p`, ({input, output}) => {
-    expect(parseSearchQuery(input)).toEqual(output)
-  })
+  it.each(tests)(
+    `$input -> $output.query $output.params`,
+    ({input, output}) => {
+      expect(parseSearchQuery(input)).toEqual(output)
+    },
+  )
 })

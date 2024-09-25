@@ -2,15 +2,15 @@ export type Params = Record<string, string>
 
 export function parseSearchQuery(rawQuery: string) {
   let base = rawQuery
-  const rawLiterals = rawQuery.match(/".+"/gi) || []
+  const rawLiterals = rawQuery.match(/[^:\w\d]".+?"/gi) || []
 
   // remove literals from base
   for (const literal of rawLiterals) {
-    base = base.replace(literal, '')
+    base = base.replace(literal.trim(), '')
   }
 
   // find remaining params in base
-  const rawParams = base.match(/[a-z]+:[a-z-\.@\d:]+/gi) || []
+  const rawParams = base.match(/[a-z]+:[a-z-\.@\d:"]+/gi) || []
 
   for (const param of rawParams) {
     base = base.replace(param, '')
@@ -20,10 +20,10 @@ export function parseSearchQuery(rawQuery: string) {
 
   const params = rawParams.reduce((params, param) => {
     const [name, ...value] = param.split(/:/)
-    params[name] = value.join(':') // dates can contain additional colons
+    params[name] = value.join(':').replace(/"/g, '') // dates can contain additional colons
     return params
   }, {} as Params)
-  const literals = rawLiterals.map(l => String(l))
+  const literals = rawLiterals.map(l => String(l).trim())
 
   return {
     query: [base, literals.join(' ')].filter(Boolean).join(' '),
