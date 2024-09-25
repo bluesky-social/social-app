@@ -370,7 +370,6 @@ function SearchLanguageDropdown({
 
   return (
     <RNPickerSelect
-      placeholder={{}}
       value={value}
       onValueChange={onChange}
       items={items}
