@@ -1,5 +1,5 @@
-import 'lib/sentry' // must be near top
-import 'view/icons'
+import '#/lib/sentry' // must be near top
+import '#/view/icons'
 import './style.css'
 
 import React, {useEffect, useState} from 'react'
@@ -59,9 +59,6 @@ import {useStarterPackEntry} from '#/components/hooks/useStarterPackEntry'
 import {Provider as IntentDialogProvider} from '#/components/intents/IntentDialogs'
 import {Provider as PortalProvider} from '#/components/Portal'
 import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
-
-// @ts-ignore
-import('hls.js/dist/hls.min') // preload
 
 /**
  * Begin geolocation ASAP

@@ -1,8 +1,7 @@
 import React, {useEffect, useId, useRef, useState} from 'react'
 import {View} from 'react-native'
 import {AppBskyEmbedVideo} from '@atproto/api'
-import type Hls from 'hls.js'
-import {type Events, type FragChangedData, type Fragment} from 'hls.js'
+import type * as HlsTypes from 'hls.js'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {atoms as a} from '#/alf'
@@ -103,6 +102,16 @@ export class VideoNotFoundError extends Error {
   }
 }
 
+type CachedPromise<T> = Promise<T> & {value: undefined | T}
+const promiseForHls = import(
+  // @ts-ignore
+  'hls.js/dist/hls.min'
+).then(mod => mod.default) as CachedPromise<typeof HlsTypes.default>
+promiseForHls.value = undefined
+promiseForHls.then(Hls => {
+  promiseForHls.value = Hls
+})
+
 function useHLS({
   focused,
   playlist,
@@ -118,23 +127,37 @@ function useHLS({
   videoRef: React.RefObject<HTMLVideoElement>
   setHlsLoading: (v: boolean) => void
 }) {
-  const hlsRef = useRef<Hls | undefined>(undefined)
-  const [DynamicHls, setDynamicHls] = useState<typeof Hls | undefined>(
-    undefined,
+  const [Hls, setHls] = useState<typeof HlsTypes.default | undefined>(
+    () => promiseForHls.value,
   )
-  const [lowQualityFragments, setLowQualityFragments] = useState<Fragment[]>([])
+  useEffect(() => {
+    if (!Hls) {
+      setHlsLoading(true)
+      promiseForHls.then(loadedHls => {
+        setHls(() => loadedHls)
+        setHlsLoading(false)
+      })
+    }
+  }, [Hls, setHlsLoading])
+
+  const hlsRef = useRef<HlsTypes.default | undefined>(undefined)
+  const [lowQualityFragments, setLowQualityFragments] = useState<
+    HlsTypes.Fragment[]
+  >([])
 
   // purge low quality segments from buffer on next frag change
   const handleFragChange = useNonReactiveCallback(
-    (_event: Events.FRAG_CHANGED, {frag}: FragChangedData) => {
-      // If dynamic hls isn't set, then the hlsRef also has not been set
-      if (!DynamicHls) return
+    (
+      _event: HlsTypes.Events.FRAG_CHANGED,
+      {frag}: HlsTypes.FragChangedData,
+    ) => {
+      if (!Hls) return
       if (!hlsRef.current) return
       const hls = hlsRef.current
 
       if (focused && hls.nextAutoLevel > 0) {
         // if the current quality level goes above 0, flush the low quality segments
-        const flushed: Fragment[] = []
+        const flushed: HlsTypes.Fragment[] = []
 
         for (const lowQualFrag of lowQualityFragments) {
           // avoid if close to the current fragment
@@ -142,7 +165,7 @@ function useHLS({
             continue
           }
 
-          hls.trigger(DynamicHls.Events.BUFFER_FLUSHING, {
+          hls.trigger(Hls.Events.BUFFER_FLUSHING, {
             startOffset: lowQualFrag.start,
             endOffset: lowQualFrag.end,
             type: 'video',
@@ -157,23 +180,13 @@ function useHLS({
   )
 
   useEffect(() => {
-    if (!DynamicHls) {
-      // @ts-expect-error dynamic import
-      import('hls.js/dist/hls.min').then(
-        ({default: dynamicHls}: {default: typeof Hls}) => {
-          setDynamicHls(dynamicHls)
-          setHlsLoading(false)
-        },
-      )
-      return
-    }
-
     if (!videoRef.current) return
-    if (!DynamicHls.isSupported()) {
+    if (!Hls) return
+    if (!Hls.isSupported()) {
       throw new HLSUnsupportedError()
     }
 
-    const hls = new DynamicHls({
+    const hls = new Hls({
       maxMaxBufferLength: 10, // only load 10s ahead
       // note: the amount buffered is affected by both maxBufferLength and maxBufferSize
       // it will buffer until it is greater than *both* of those values
@@ -200,19 +213,19 @@ function useHLS({
       {signal},
     )
 
-    hls.on(DynamicHls.Events.SUBTITLE_TRACKS_UPDATED, (_event, data) => {
+    hls.on(Hls.Events.SUBTITLE_TRACKS_UPDATED, (_event, data) => {
       if (data.subtitleTracks.length > 0) {
         setHasSubtitleTrack(true)
       }
     })
 
-    hls.on(DynamicHls.Events.FRAG_BUFFERED, (_event, {frag}) => {
+    hls.on(Hls.Events.FRAG_BUFFERED, (_event, {frag}) => {
       if (frag.level === 0) {
         setLowQualityFragments(prev => [...prev, frag])
       }
     })
 
-    hls.on(DynamicHls.Events.ERROR, (_event, data) => {
+    hls.on(Hls.Events.ERROR, (_event, data) => {
       if (data.fatal) {
         if (
           data.details === 'manifestLoadError' &&
@@ -227,7 +240,7 @@ function useHLS({
       }
     })
 
-    hls.on(DynamicHls.Events.FRAG_CHANGED, handleFragChange)
+    hls.on(Hls.Events.FRAG_CHANGED, handleFragChange)
 
     return () => {
       hlsRef.current = undefined
@@ -235,15 +248,7 @@ function useHLS({
       hls.destroy()
       abortController.abort()
     }
-  }, [
-    playlist,
-    setError,
-    setHasSubtitleTrack,
-    videoRef,
-    handleFragChange,
-    DynamicHls,
-    setHlsLoading,
-  ])
+  }, [playlist, setError, setHasSubtitleTrack, videoRef, handleFragChange, Hls])
 
   return hlsRef
 }
