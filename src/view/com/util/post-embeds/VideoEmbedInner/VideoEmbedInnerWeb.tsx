@@ -231,8 +231,8 @@ function useHLS({
 
     return () => {
       hlsRef.current = undefined
-      hls?.detachMedia()
-      hls?.destroy()
+      hls.detachMedia()
+      hls.destroy()
       abortController.abort()
     }
   }, [
