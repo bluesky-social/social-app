@@ -77,8 +77,8 @@ function GrowableBannerInner({
     return {
       intensity: interpolate(
         scrollY.value,
-        [-400, -100, -15],
-        [70, 60, 0],
+        [-300, -65, -15],
+        [50, 40, 0],
         Extrapolation.CLAMP,
       ),
     }
