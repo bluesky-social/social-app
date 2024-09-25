@@ -70,8 +70,6 @@ import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
 import {SettingsGear2_Stroke2_Corner0_Rounded as Gear} from '#/components/icons/SettingsGear2'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 
-const HEADER_HEIGHT = 56
-
 function Loader() {
   const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()
@@ -420,12 +418,12 @@ function useQueryManager({initialQuery}: {initialQuery: string}) {
     return parseSearchQuery(initialQuery || '')
   }, [initialQuery])
   const prevInitialQuery = React.useRef(initialQuery)
-
   const [lang, setLang] = React.useState(
     initialParams.lang || contentLanguages[0],
   )
 
   if (initialQuery !== prevInitialQuery.current) {
+    // handle new queryParam change (from manual search entry)
     prevInitialQuery.current = initialQuery
     setLang(initialParams.lang || contentLanguages[0])
   }
@@ -531,7 +529,10 @@ let SearchScreenInner = ({
           style={[
             pal.border,
             pal.view,
-            styles.tabBarContainer,
+            web({
+              position: isWeb ? 'sticky' : '',
+              zIndex: 1,
+            }),
             {top: isWeb ? headerHeight : undefined},
           ]}>
           <TabBar items={sections.map(section => section.title)} {...props} />
@@ -621,7 +622,11 @@ export function SearchScreen(
   })
   const showFiltersButton = Boolean(query && !showAutocomplete)
   const [showFilters, setShowFilters] = React.useState(false)
-  const headerHeight = HEADER_HEIGHT + (showFilters ? 40 : 0)
+  /*
+   * Arbitrary sizing, so guess and check, used for sticky header alignment and
+   * sizing.
+   */
+  const headerHeight = 56 + (showFilters ? 40 : 0)
 
   useFocusEffect(
     useNonReactiveCallback(() => {
@@ -1226,18 +1231,6 @@ function scrollToTopWeb() {
 }
 
 const styles = StyleSheet.create({
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 12,
-    paddingLeft: 13,
-    paddingVertical: 4,
-    height: isWeb ? HEADER_HEIGHT : undefined,
-    // @ts-ignore web only
-    position: isWeb ? 'sticky' : '',
-    top: 0,
-    zIndex: 1,
-  },
   headerMenuBtn: {
     width: 30,
     height: 30,
@@ -1268,11 +1261,6 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     zIndex: -1,
     elevation: -1, // For Android
-  },
-  tabBarContainer: {
-    // @ts-ignore web only
-    position: isWeb ? 'sticky' : '',
-    zIndex: 1,
   },
   searchHistoryContainer: {
     width: '100%',
