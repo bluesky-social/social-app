@@ -5,15 +5,15 @@ import {flip, offset, shift, size, useFloating} from '@floating-ui/react-dom'
 import {msg, plural} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {isTouchDevice} from '#/lib/browser'
 import {getModerationCauseKey} from '#/lib/moderation'
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
+import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {usePrefetchProfileQuery, useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
-import {isTouchDevice} from 'lib/browser'
-import {useProfileShadow} from 'state/cache/profile-shadow'
 import {formatCount} from '#/view/com/util/numeric/format'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {ProfileHeaderHandle} from '#/screens/Profile/Header/Handle'
@@ -411,6 +411,7 @@ function Inner({
     () => currentAccount?.did === profile.did,
     [currentAccount, profile],
   )
+  const isLabeler = profile.associated?.labeler
 
   return (
     <View>
@@ -419,11 +420,13 @@ function Inner({
           <UserAvatar
             size={64}
             avatar={profile.avatar}
+            type={isLabeler ? 'labeler' : 'user'}
             moderation={moderation.ui('avatar')}
           />
         </Link>
 
         {!isMe &&
+          !isLabeler &&
           (isBlockedUser ? (
             <Link
               to={profileURL}

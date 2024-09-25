@@ -102,7 +102,7 @@ function DeactivateAccountDialogInner({
         <Button
           variant="solid"
           color="negative"
-          size={gtMobile ? 'small' : 'medium'}
+          size={gtMobile ? 'small' : 'large'}
           label={_(msg`Yes, deactivate`)}
           onPress={handleDeactivate}>
           <ButtonText>{_(msg`Yes, deactivate`)}</ButtonText>

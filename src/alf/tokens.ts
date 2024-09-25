@@ -47,11 +47,16 @@ export const borderRadius = {
   full: 999,
 } as const
 
+/**
+ * These correspond to Inter font files we actually load.
+ */
 export const fontWeight = {
-  normal: '400',
-  semibold: '500',
-  bold: '600',
-  heavy: '700',
+  regular: '400',
+  // medium: '500',
+  semibold: '600',
+  // bold: '700',
+  extrabold: '800',
+  // black: '900',
 } as const
 
 export const gradients = {

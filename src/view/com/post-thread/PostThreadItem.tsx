@@ -12,24 +12,24 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {MAX_POST_LINES} from '#/lib/constants'
+import {usePalette} from '#/lib/hooks/usePalette'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {makeProfileLink} from '#/lib/routes/links'
+import {sanitizeDisplayName} from '#/lib/strings/display-names'
+import {sanitizeHandle} from '#/lib/strings/handles'
+import {countLines} from '#/lib/strings/helpers'
+import {niceDate} from '#/lib/strings/time'
+import {s} from '#/lib/styles'
+import {isWeb} from '#/platform/detection'
 import {POST_TOMBSTONE, Shadow, usePostShadow} from '#/state/cache/post-shadow'
 import {useLanguagePrefs} from '#/state/preferences'
 import {useOpenLink} from '#/state/preferences/in-app-browser'
 import {ThreadPost} from '#/state/queries/post-thread'
+import {useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
-import {MAX_POST_LINES} from 'lib/constants'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {makeProfileLink} from 'lib/routes/links'
-import {sanitizeDisplayName} from 'lib/strings/display-names'
-import {sanitizeHandle} from 'lib/strings/handles'
-import {countLines} from 'lib/strings/helpers'
-import {niceDate} from 'lib/strings/time'
-import {s} from 'lib/styles'
-import {isWeb} from 'platform/detection'
-import {useSession} from 'state/session'
-import {PostThreadFollowBtn} from 'view/com/post-thread/PostThreadFollowBtn'
+import {PostThreadFollowBtn} from '#/view/com/post-thread/PostThreadFollowBtn'
 import {atoms as a} from '#/alf'
 import {AppModerationCause} from '#/components/Pills'
 import {RichText} from '#/components/RichText'
@@ -308,6 +308,7 @@ let PostThreadItemLoaded = ({
                 style={[styles.meta, styles.metaExpandedLine1, {zIndex: 1}]}>
                 <Link style={s.flex1} href={authorHref} title={authorTitle}>
                   <Text
+                    emoji
                     type="xl-bold"
                     style={[pal.text, a.self_start]}
                     numberOfLines={1}
@@ -322,7 +323,11 @@ let PostThreadItemLoaded = ({
               </View>
               <View style={styles.meta}>
                 <Link style={s.flex1} href={authorHref} title={authorTitle}>
-                  <Text type="md" style={[pal.textLight]} numberOfLines={1}>
+                  <Text
+                    emoji
+                    type="md"
+                    style={[pal.textLight]}
+                    numberOfLines={1}>
                     {sanitizeHandle(post.author.handle, '@')}
                   </Text>
                 </Link>
@@ -553,18 +558,14 @@ let PostThreadItemLoaded = ({
               <PostMeta
                 author={post.author}
                 moderation={moderation}
-                authorHasWarning={!!post.author.labels?.length}
                 timestamp={post.indexedAt}
                 postHref={postHref}
                 showAvatar={isThreadedChild}
                 avatarModeration={moderation.ui('avatar')}
-                avatarSize={28}
-                displayNameType="md-bold"
-                displayNameStyle={isThreadedChild && s.ml2}
+                avatarSize={24}
                 style={
                   isThreadedChild && {
-                    alignItems: 'center',
-                    paddingBottom: isWeb ? 5 : 2,
+                    paddingBottom: isWeb ? 5 : 4,
                   }
                 }
               />

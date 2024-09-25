@@ -10,6 +10,10 @@ import {
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {useHaptics} from '#/lib/haptics'
+import {decrementBadgeCount} from '#/lib/notifications/notifications'
+import {logEvent} from '#/lib/statsig/statsig'
+import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {
   postUriToRelativePath,
   toBskyAppUrl,
@@ -19,10 +23,6 @@ import {isNative} from '#/platform/detection'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useSession} from '#/state/session'
-import {useHaptics} from 'lib/haptics'
-import {decrementBadgeCount} from 'lib/notifications/notifications'
-import {logEvent} from 'lib/statsig/statsig'
-import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {TimeElapsed} from '#/view/com/util/TimeElapsed'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
@@ -248,6 +248,7 @@ function ChatListItemReady({
                   numberOfLines={1}
                   style={[{maxWidth: '85%'}, web([a.leading_normal])]}>
                   <Text
+                    emoji
                     style={[
                       a.text_md,
                       t.atoms.text,
@@ -301,6 +302,7 @@ function ChatListItemReady({
               )}
 
               <Text
+                emoji
                 numberOfLines={2}
                 style={[
                   a.text_sm,

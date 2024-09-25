@@ -160,7 +160,7 @@ function DialogInner({
         <Button
           label={_(msg`Start chatting`)}
           accessibilityHint={_(msg`Close modal`)}
-          size="medium"
+          size="large"
           color="primary"
           variant="solid"
           onPress={() => control.close()}>

@@ -1,6 +1,6 @@
 import {StyleSheet} from 'react-native'
 
-import {colors} from 'lib/styles'
+import {colors} from '#/lib/styles'
 
 export const styles = StyleSheet.create({
   bottomBar: {
@@ -40,7 +40,7 @@ export const styles = StyleSheet.create({
   },
   notificationCountLabel: {
     fontSize: 12,
-    fontWeight: 'bold',
+    fontWeight: '600',
     color: colors.white,
     fontVariant: ['tabular-nums'],
   },

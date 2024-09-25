@@ -14,25 +14,25 @@ import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {StackActions, useNavigation} from '@react-navigation/native'
 
+import {useAnalytics} from '#/lib/analytics/analytics'
+import {FEEDBACK_FORM_URL, HELP_DESK_URL} from '#/lib/constants'
+import {useNavigationTabState} from '#/lib/hooks/useNavigationTabState'
+import {usePalette} from '#/lib/hooks/usePalette'
+import {getTabState, TabState} from '#/lib/routes/helpers'
+import {NavigationProp} from '#/lib/routes/types'
+import {colors, s} from '#/lib/styles'
+import {useTheme} from '#/lib/ThemeContext'
+import {isWeb} from '#/platform/detection'
 import {emitSoftReset} from '#/state/events'
 import {useKawaiiMode} from '#/state/preferences/kawaii'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {useProfileQuery} from '#/state/queries/profile'
 import {SessionAccount, useSession} from '#/state/session'
 import {useSetDrawerOpen} from '#/state/shell'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {FEEDBACK_FORM_URL, HELP_DESK_URL} from 'lib/constants'
-import {useNavigationTabState} from 'lib/hooks/useNavigationTabState'
-import {usePalette} from 'lib/hooks/usePalette'
-import {getTabState, TabState} from 'lib/routes/helpers'
-import {NavigationProp} from 'lib/routes/types'
-import {colors, s} from 'lib/styles'
-import {useTheme} from 'lib/ThemeContext'
-import {isWeb} from 'platform/detection'
+import {formatCount} from '#/view/com/util/numeric/format'
+import {Text} from '#/view/com/util/text/Text'
+import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {NavSignupCard} from '#/view/shell/NavSignupCard'
-import {formatCount} from 'view/com/util/numeric/format'
-import {Text} from 'view/com/util/text/Text'
-import {UserAvatar} from 'view/com/util/UserAvatar'
 import {atoms as a} from '#/alf'
 import {useTheme as useAlfTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -674,7 +674,7 @@ const styles = StyleSheet.create({
   },
   menuItemCountLabel: {
     fontSize: 12,
-    fontWeight: 'bold',
+    fontWeight: '600',
     fontVariant: ['tabular-nums'],
     color: colors.white,
   },
