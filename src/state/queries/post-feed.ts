@@ -110,7 +110,12 @@ export interface FeedPage {
   fetchedAt: number
 }
 
-const PAGE_SIZE = 30
+/**
+ * The minimum number of posts we want in a single "page" of results. Since we
+ * filter out unwanted content, we may fetch more than this number to ensure
+ * that we get _at least_ this number.
+ */
+const MIN_POSTS = 30
 
 export function usePostFeedQuery(
   feedDesc: FeedDescriptor,
@@ -137,9 +142,14 @@ export function usePostFeedQuery(
   } | null>(null)
   const isDiscover = feedDesc.includes(DISCOVER_FEED_URI)
 
-  const [pageSize] = React.useState(() => {
-    return gate('post_feed_lang_window') ? 100 : PAGE_SIZE
-  })
+  /**
+   * The number of posts to fetch in a single request. Because we filter
+   * unwanted content, we may over-fetch here to try and fill pages by
+   * `MIN_POSTS`.
+   */
+  const fetchLimit = React.useState(() => {
+    return gate('post_feed_lang_window') ? 100 : MIN_POSTS
+  })[0]
 
   // Make sure this doesn't invalidate unless really needed.
   const selectArgs = React.useMemo(
@@ -181,7 +191,7 @@ export function usePostFeedQuery(
           }
 
       try {
-        const res = await api.fetch({cursor, limit: pageSize})
+        const res = await api.fetch({cursor, limit: fetchLimit})
 
         /*
          * If this is a public view, we need to check if posts fail moderation.
@@ -379,13 +389,13 @@ export function usePostFeedQuery(
     // Now track how many items we really want, and fetch more if needed.
     if (isLoading || isRefetching) {
       // During the initial fetch, we want to get an entire page's worth of items.
-      wantedItemCount.current = PAGE_SIZE
+      wantedItemCount.current = MIN_POSTS
     } else if (isFetchingNextPage) {
       if (itemCount > wantedItemCount.current) {
         // We have more items than wantedItemCount, so wantedItemCount must be out of date.
         // Some other code must have called fetchNextPage(), for example, from onEndReached.
         // Adjust the wantedItemCount to reflect that we want one more full page of items.
-        wantedItemCount.current = itemCount + PAGE_SIZE
+        wantedItemCount.current = itemCount + MIN_POSTS
       }
     } else if (hasNextPage) {
       // At this point we're not fetching anymore, so it's time to make a decision.
