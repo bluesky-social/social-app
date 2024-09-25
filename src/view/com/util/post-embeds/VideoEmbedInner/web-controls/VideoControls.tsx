@@ -412,7 +412,7 @@ export function Controls({
           )}
         </View>
       </View>
-      {(buffering || error) && (
+      {(showSpinner || error) && (
         <View
           pointerEvents="none"
           style={[a.absolute, a.inset_0, a.justify_center, a.align_center]}>
