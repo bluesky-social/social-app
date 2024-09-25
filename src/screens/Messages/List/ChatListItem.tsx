@@ -204,9 +204,7 @@ function ChatListItemReady({
       onFocus={onFocus}
       onBlur={onMouseLeave}
       style={[a.relative]}>
-      <Link
-        to={`/messages/${convo.id}`}
-        label={displayName}
+      <View
         style={[
           a.z_10,
           a.absolute,
@@ -217,7 +215,7 @@ function ChatListItemReady({
           size={52}
           moderation={moderation.ui('avatar')}
         />
-      </Link>
+      </View>
 
       <Link
         to={`/messages/${convo.id}`}
