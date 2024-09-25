@@ -176,7 +176,6 @@ export function useProfileUpdateMutation() {
         } else if (newUserBanner === null) {
           existing.banner = undefined
         }
-        console.log(existing)
         return existing
       })
       await whenAppViewReady(
