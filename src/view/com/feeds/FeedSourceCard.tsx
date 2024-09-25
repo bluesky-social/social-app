@@ -12,6 +12,10 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {useNavigationDeduped} from '#/lib/hooks/useNavigationDeduped'
+import {usePalette} from '#/lib/hooks/usePalette'
+import {sanitizeHandle} from '#/lib/strings/handles'
+import {s} from '#/lib/styles'
 import {logger} from '#/logger'
 import {shouldClickOpenNewTab} from '#/platform/urls'
 import {FeedSourceInfo, useFeedSourceInfoQuery} from '#/state/queries/feed'
@@ -21,12 +25,8 @@ import {
   UsePreferencesQueryResponse,
   useRemoveFeedMutation,
 } from '#/state/queries/preferences'
-import {useNavigationDeduped} from 'lib/hooks/useNavigationDeduped'
-import {usePalette} from 'lib/hooks/usePalette'
-import {sanitizeHandle} from 'lib/strings/handles'
-import {s} from 'lib/styles'
 import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
-import * as Toast from 'view/com/util/Toast'
+import * as Toast from '#/view/com/util/Toast'
 import {useTheme} from '#/alf'
 import {atoms as a} from '#/alf'
 import * as Prompt from '#/components/Prompt'
@@ -242,7 +242,7 @@ export function FeedSourceCardLoaded({
             <UserAvatar type="algo" size={36} avatar={feed.avatar} />
           </View>
           <View style={[styles.headerTextContainer]}>
-            <Text style={[pal.text, s.bold]} numberOfLines={1}>
+            <Text emoji style={[pal.text, s.bold]} numberOfLines={1}>
               {feed.displayName}
             </Text>
             <Text style={[pal.textLight]} numberOfLines={1}>

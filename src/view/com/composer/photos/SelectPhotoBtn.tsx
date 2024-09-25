@@ -5,18 +5,20 @@ import {useLingui} from '@lingui/react'
 
 import {useAnalytics} from '#/lib/analytics/analytics'
 import {usePhotoLibraryPermission} from '#/lib/hooks/usePermissions'
+import {openPicker} from '#/lib/media/picker'
 import {isNative} from '#/platform/detection'
-import {GalleryModel} from '#/state/models/media/gallery'
+import {ComposerImage, createComposerImage} from '#/state/gallery'
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {Image_Stroke2_Corner0_Rounded as Image} from '#/components/icons/Image'
 
 type Props = {
-  gallery: GalleryModel
+  size: number
   disabled?: boolean
+  onAdd: (next: ComposerImage[]) => void
 }
 
-export function SelectPhotoBtn({gallery, disabled}: Props) {
+export function SelectPhotoBtn({size, disabled, onAdd}: Props) {
   const {track} = useAnalytics()
   const {_} = useLingui()
   const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
@@ -29,8 +31,17 @@ export function SelectPhotoBtn({gallery, disabled}: Props) {
       return
     }
 
-    gallery.pick()
-  }, [track, requestPhotoAccessIfNeeded, gallery])
+    const images = await openPicker({
+      selectionLimit: 4 - size,
+      allowsMultipleSelection: true,
+    })
+
+    const results = await Promise.all(
+      images.map(img => createComposerImage(img)),
+    )
+
+    onAdd(results)
+  }, [track, requestPhotoAccessIfNeeded, size, onAdd])
 
   return (
     <Button

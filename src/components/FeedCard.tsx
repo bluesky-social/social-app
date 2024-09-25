@@ -11,17 +11,17 @@ import {msg, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {sanitizeHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
+import {precacheFeedFromGeneratorView} from '#/state/queries/feed'
 import {
   useAddSavedFeedsMutation,
   usePreferencesQuery,
   useRemoveFeedMutation,
 } from '#/state/queries/preferences'
-import {sanitizeHandle} from 'lib/strings/handles'
-import {precacheFeedFromGeneratorView} from 'state/queries/feed'
-import {useSession} from 'state/session'
+import {useSession} from '#/state/session'
+import * as Toast from '#/view/com/util/Toast'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import * as Toast from 'view/com/util/Toast'
 import {useTheme} from '#/alf'
 import {atoms as a} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
@@ -121,7 +121,10 @@ export function TitleAndByline({
 
   return (
     <View style={[a.flex_1]}>
-      <Text style={[a.text_md, a.font_bold, a.leading_snug]} numberOfLines={1}>
+      <Text
+        emoji
+        style={[a.text_md, a.font_bold, a.leading_snug]}
+        numberOfLines={1}>
         {title}
       </Text>
       {creator && (

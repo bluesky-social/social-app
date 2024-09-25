@@ -29,6 +29,11 @@ import {Provider as A11yProvider} from '#/state/a11y'
 import {Provider as MutedThreadsProvider} from '#/state/cache/thread-mutes'
 import {Provider as DialogStateProvider} from '#/state/dialogs'
 import {listenSessionDropped} from '#/state/events'
+import {
+  beginResolveGeolocation,
+  ensureGeolocationResolved,
+  Provider as GeolocationProvider,
+} from '#/state/geolocation'
 import {Provider as InvitesStateProvider} from '#/state/invites'
 import {Provider as LightboxStateProvider} from '#/state/lightbox'
 import {MessagesProvider} from '#/state/messages'
@@ -55,7 +60,7 @@ import {TestCtrls} from '#/view/com/testing/TestCtrls'
 import {Provider as VideoVolumeProvider} from '#/view/com/util/post-embeds/VideoVolumeContext'
 import * as Toast from '#/view/com/util/Toast'
 import {Shell} from '#/view/shell'
-import {ThemeProvider as Alf, useFonts} from '#/alf'
+import {ThemeProvider as Alf} from '#/alf'
 import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
 import {NuxDialogs} from '#/components/dialogs/nuxs'
 import {useStarterPackEntry} from '#/components/hooks/useStarterPackEntry'
@@ -65,6 +70,11 @@ import {Splash} from '#/Splash'
 import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
 
 SplashScreen.preventAutoHideAsync()
+
+/**
+ * Begin geolocation ASAP
+ */
+beginResolveGeolocation()
 
 function InnerApp() {
   const [isReady, setIsReady] = React.useState(false)
@@ -156,13 +166,14 @@ function InnerApp() {
 
 function App() {
   const [isReady, setReady] = useState(false)
-  const [loaded] = useFonts()
 
   React.useEffect(() => {
-    initPersistedState().then(() => setReady(true))
+    Promise.all([initPersistedState(), ensureGeolocationResolved()]).then(() =>
+      setReady(true),
+    )
   }, [])
 
-  if (!isReady || !loaded) {
+  if (!isReady) {
     return null
   }
 
@@ -171,36 +182,38 @@ function App() {
    * that is set up in the InnerApp component above.
    */
   return (
-    <A11yProvider>
-      <KeyboardProvider enabled={false} statusBarTranslucent={true}>
-        <SessionProvider>
-          <PrefsStateProvider>
-            <I18nProvider>
-              <ShellStateProvider>
-                <InvitesStateProvider>
-                  <ModalStateProvider>
-                    <DialogStateProvider>
-                      <LightboxStateProvider>
-                        <PortalProvider>
-                          <StarterPackProvider>
-                            <SafeAreaProvider
-                              initialMetrics={initialWindowMetrics}>
-                              <IntentDialogProvider>
-                                <InnerApp />
-                              </IntentDialogProvider>
-                            </SafeAreaProvider>
-                          </StarterPackProvider>
-                        </PortalProvider>
-                      </LightboxStateProvider>
-                    </DialogStateProvider>
-                  </ModalStateProvider>
-                </InvitesStateProvider>
-              </ShellStateProvider>
-            </I18nProvider>
-          </PrefsStateProvider>
-        </SessionProvider>
-      </KeyboardProvider>
-    </A11yProvider>
+    <GeolocationProvider>
+      <A11yProvider>
+        <KeyboardProvider enabled={false} statusBarTranslucent={true}>
+          <SessionProvider>
+            <PrefsStateProvider>
+              <I18nProvider>
+                <ShellStateProvider>
+                  <InvitesStateProvider>
+                    <ModalStateProvider>
+                      <DialogStateProvider>
+                        <LightboxStateProvider>
+                          <PortalProvider>
+                            <StarterPackProvider>
+                              <SafeAreaProvider
+                                initialMetrics={initialWindowMetrics}>
+                                <IntentDialogProvider>
+                                  <InnerApp />
+                                </IntentDialogProvider>
+                              </SafeAreaProvider>
+                            </StarterPackProvider>
+                          </PortalProvider>
+                        </LightboxStateProvider>
+                      </DialogStateProvider>
+                    </ModalStateProvider>
+                  </InvitesStateProvider>
+                </ShellStateProvider>
+              </I18nProvider>
+            </PrefsStateProvider>
+          </SessionProvider>
+        </KeyboardProvider>
+      </A11yProvider>
+    </GeolocationProvider>
   )
 }
 

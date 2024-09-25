@@ -210,6 +210,11 @@ func serve(cctx *cli.Context) error {
 				maxAge = 7 * (60 * 60 * 24) // 1 week
 			}
 
+			// fonts can be cached for a year
+			if strings.HasSuffix(path, ".otf") {
+				maxAge = 365 * (60 * 60 * 24) // 1 year
+			}
+
 			c.Response().Header().Set("Cache-Control", fmt.Sprintf("public, max-age=%d", maxAge))
 			return next(c)
 		}
