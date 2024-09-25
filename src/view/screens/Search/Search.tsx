@@ -590,6 +590,7 @@ let SearchScreenInner = ({
     </CenteredView>
   )
 }
+SearchScreenInner = React.memo(SearchScreenInner)
 
 export function SearchScreen(
   props: NativeStackScreenProps<SearchTabNavigatorParams, 'Search'>,
@@ -950,7 +951,6 @@ export function SearchScreen(
           flex: 1,
         }}>
         <SearchScreenInner
-          key={queryParam}
           query={query}
           queryWithParams={queryWithParams}
           headerHeight={headerHeight}
