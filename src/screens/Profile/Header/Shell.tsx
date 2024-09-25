@@ -19,6 +19,7 @@ import {UserBanner} from '#/view/com/util/UserBanner'
 import {atoms as a, useTheme} from '#/alf'
 import {LabelsOnMe} from '#/components/moderation/LabelsOnMe'
 import {ProfileHeaderAlerts} from '#/components/moderation/ProfileHeaderAlerts'
+import {GrowableAvatar} from './GrowableAvatar'
 import {GrowableBanner} from './GrowableBanner'
 
 interface Props {
@@ -119,27 +120,29 @@ let ProfileHeaderShell = ({
         </View>
       )}
 
-      <TouchableWithoutFeedback
-        testID="profileHeaderAviButton"
-        onPress={onPressAvi}
-        accessibilityRole="image"
-        accessibilityLabel={_(msg`View ${profile.handle}'s avatar`)}
-        accessibilityHint="">
-        <View
-          style={[
-            t.atoms.bg,
-            {borderColor: t.atoms.bg.backgroundColor},
-            styles.avi,
-            profile.associated?.labeler && styles.aviLabeler,
-          ]}>
-          <UserAvatar
-            type={profile.associated?.labeler ? 'labeler' : 'user'}
-            size={90}
-            avatar={profile.avatar}
-            moderation={moderation.ui('avatar')}
-          />
-        </View>
-      </TouchableWithoutFeedback>
+      <GrowableAvatar style={styles.aviPosition}>
+        <TouchableWithoutFeedback
+          testID="profileHeaderAviButton"
+          onPress={onPressAvi}
+          accessibilityRole="image"
+          accessibilityLabel={_(msg`View ${profile.handle}'s avatar`)}
+          accessibilityHint="">
+          <View
+            style={[
+              t.atoms.bg,
+              {borderColor: t.atoms.bg.backgroundColor},
+              styles.avi,
+              profile.associated?.labeler && styles.aviLabeler,
+            ]}>
+            <UserAvatar
+              type={profile.associated?.labeler ? 'labeler' : 'user'}
+              size={90}
+              avatar={profile.avatar}
+              moderation={moderation.ui('avatar')}
+            />
+          </View>
+        </TouchableWithoutFeedback>
+      </GrowableAvatar>
     </View>
   )
 }
@@ -168,10 +171,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  avi: {
+  aviPosition: {
     position: 'absolute',
     top: 110,
     left: 10,
+  },
+  avi: {
     width: 94,
     height: 94,
     borderRadius: 47,
