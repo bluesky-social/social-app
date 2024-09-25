@@ -1,10 +1,22 @@
 import React from 'react'
-import {ActivityIndicator, StyleSheet, View} from 'react-native'
+import {
+  ActivityIndicator,
+  NativeScrollEvent,
+  StyleSheet,
+  View,
+} from 'react-native'
+import {useSharedValue} from 'react-native-reanimated'
 import {useFocusEffect} from '@react-navigation/native'
 
 import {PROD_DEFAULT_FEED} from '#/lib/constants'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
+import {useOTAUpdates} from '#/lib/hooks/useOTAUpdates'
 import {useSetTitle} from '#/lib/hooks/useSetTitle'
+import {useRequestNotificationsPermission} from '#/lib/notifications/notifications'
+import {
+  HomeTabNavigatorParams,
+  NativeStackScreenProps,
+} from '#/lib/routes/types'
 import {logEvent, LogEvents} from '#/lib/statsig/statsig'
 import {emitSoftReset} from '#/state/events'
 import {SavedFeedSourceInfo, usePinnedFeedsInfos} from '#/state/queries/feed'
@@ -14,16 +26,13 @@ import {UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
 import {useSession} from '#/state/session'
 import {useSetDrawerSwipeDisabled, useSetMinimalShellMode} from '#/state/shell'
 import {useSelectedFeed, useSetSelectedFeed} from '#/state/shell/selected-feed'
-import {useOTAUpdates} from 'lib/hooks/useOTAUpdates'
-import {useRequestNotificationsPermission} from 'lib/notifications/notifications'
-import {HomeTabNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
-import {FeedPage} from 'view/com/feeds/FeedPage'
-import {Pager, PagerRef, RenderTabBarFnProps} from 'view/com/pager/Pager'
-import {CustomFeedEmptyState} from 'view/com/posts/CustomFeedEmptyState'
-import {FollowingEmptyState} from 'view/com/posts/FollowingEmptyState'
-import {FollowingEndOfFeed} from 'view/com/posts/FollowingEndOfFeed'
+import {FeedPage} from '#/view/com/feeds/FeedPage'
+import {HomeHeader} from '#/view/com/home/HomeHeader'
+import {Pager, PagerRef, RenderTabBarFnProps} from '#/view/com/pager/Pager'
+import {CustomFeedEmptyState} from '#/view/com/posts/CustomFeedEmptyState'
+import {FollowingEmptyState} from '#/view/com/posts/FollowingEmptyState'
+import {FollowingEndOfFeed} from '#/view/com/posts/FollowingEndOfFeed'
 import {NoFeedsPinned} from '#/screens/Home/NoFeedsPinned'
-import {HomeHeader} from '../com/home/HomeHeader'
 
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home' | 'Start'>
 export function HomeScreen(props: Props) {
@@ -81,6 +90,7 @@ function HomeScreenReady({
   const selectedIndex = Math.max(0, maybeFoundIndex)
   const selectedFeed = allFeeds[selectedIndex]
   const requestNotificationsPermission = useRequestNotificationsPermission()
+  const scrollY = useSharedValue(0)
 
   useSetTitle(pinnedFeedInfos[selectedIndex]?.displayName)
   useOTAUpdates()
@@ -176,10 +186,11 @@ function HomeScreenReady({
           testID="homeScreenFeedTabs"
           onPressSelected={onPressSelected}
           feeds={pinnedFeedInfos}
+          scrollY={scrollY}
         />
       )
     },
-    [onPressSelected, pinnedFeedInfos],
+    [onPressSelected, pinnedFeedInfos, scrollY],
   )
 
   const renderFollowingEmptyState = React.useCallback(() => {
@@ -200,6 +211,15 @@ function HomeScreenReady({
         : [],
     }
   }, [preferences])
+
+  const onScrollWorklet = React.useCallback(
+    (e: NativeScrollEvent) => {
+      'worklet'
+      const nextScrollY = e.contentOffset.y
+      scrollY.value = nextScrollY
+    },
+    [scrollY],
+  )
 
   return hasSession ? (
     <Pager
@@ -224,6 +244,7 @@ function HomeScreenReady({
                 feedParams={homeFeedParams}
                 renderEmptyState={renderFollowingEmptyState}
                 renderEndOfFeed={FollowingEndOfFeed}
+                onScroll={onScrollWorklet}
               />
             )
           }
@@ -236,6 +257,7 @@ function HomeScreenReady({
               feed={feed}
               renderEmptyState={renderCustomFeedEmptyState}
               savedFeedConfig={savedFeedConfig}
+              onScroll={onScrollWorklet}
             />
           )
         })
@@ -254,6 +276,7 @@ function HomeScreenReady({
         isPageFocused
         feed={`feedgen|${PROD_DEFAULT_FEED('whats-hot')}`}
         renderEmptyState={renderCustomFeedEmptyState}
+        onScroll={onScrollWorklet}
       />
     </Pager>
   )
