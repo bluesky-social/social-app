@@ -85,21 +85,19 @@ export const SplashScreen = ({
 
             <View
               testID="signinOrCreateAccount"
-              style={[a.w_full, {maxWidth: 320}]}>
+              style={[a.w_full, a.px_xl, a.gap_md, a.pb_2xl, {maxWidth: 320}]}>
               <Button
                 testID="createAccountButton"
                 onPress={onPressCreateAccount}
-                accessibilityRole="button"
                 label={_(msg`Create new account`)}
                 accessibilityHint={_(
                   msg`Opens flow to create a new Bluesky account`,
                 )}
-                style={[a.mx_xl, a.mb_xl]}
                 size="large"
                 variant="solid"
                 color="primary">
                 <ButtonText>
-                  <Trans>Create a new account</Trans>
+                  <Trans>Create account</Trans>
                 </ButtonText>
               </Button>
               <Button
@@ -109,7 +107,6 @@ export const SplashScreen = ({
                 accessibilityHint={_(
                   msg`Opens flow to sign into your existing Bluesky account`,
                 )}
-                style={[a.mx_xl, a.mb_xl]}
                 size="large"
                 variant="solid"
                 color="secondary">
