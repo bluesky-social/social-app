@@ -4,11 +4,11 @@ import {runOnJS, useSharedValue} from 'react-native-reanimated'
 import {updateActiveVideoViewAsync} from '@haileyok/bluesky-video'
 
 import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
-import {usePalette} from '#/lib/hooks/usePalette'
+import {useDedupe} from '#/lib/hooks/useDedupe'
 import {useScrollHandlers} from '#/lib/ScrollContext'
-import {useDedupe} from 'lib/hooks/useDedupe'
-import {addStyle} from 'lib/styles'
-import {isIOS} from 'platform/detection'
+import {addStyle} from '#/lib/styles'
+import {isIOS} from '#/platform/detection'
+import {useTheme} from '#/alf'
 import {FlatList_INTERNAL} from './Views'
 
 export type ListMethods = FlatList_INTERNAL
@@ -44,12 +44,13 @@ function ListImpl<ItemT>(
     onItemSeen,
     headerOffset,
     style,
+    progressViewOffset,
     ...props
   }: ListProps<ItemT>,
   ref: React.Ref<ListMethods>,
 ) {
   const isScrolledDown = useSharedValue(false)
-  const pal = usePalette('default')
+  const t = useTheme()
   const dedupe = useDedupe(400)
 
   function handleScrolledDownChange(didScrollDown: boolean) {
@@ -120,9 +121,9 @@ function ListImpl<ItemT>(
       <RefreshControl
         refreshing={refreshing ?? false}
         onRefresh={onRefresh}
-        tintColor={pal.colors.text}
-        titleColor={pal.colors.text}
-        progressViewOffset={headerOffset}
+        tintColor={t.atoms.text.color}
+        titleColor={t.atoms.text.color}
+        progressViewOffset={progressViewOffset ?? headerOffset}
       />
     )
   }

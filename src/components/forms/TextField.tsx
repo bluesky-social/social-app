@@ -135,6 +135,8 @@ export function createInput(Component: typeof TextInput) {
     placeholder,
     value,
     onChangeText,
+    onFocus,
+    onBlur,
     isInvalid,
     inputRef,
     style,
@@ -173,8 +175,14 @@ export function createInput(Component: typeof TextInput) {
           ref={refs}
           value={value}
           onChangeText={onChangeText}
-          onFocus={ctx.onFocus}
-          onBlur={ctx.onBlur}
+          onFocus={e => {
+            ctx.onFocus()
+            onFocus?.(e)
+          }}
+          onBlur={e => {
+            ctx.onBlur()
+            onBlur?.(e)
+          }}
           placeholder={placeholder || label}
           placeholderTextColor={t.palette.contrast_500}
           keyboardAppearance={t.name === 'light' ? 'light' : 'dark'}
@@ -188,8 +196,8 @@ export function createInput(Component: typeof TextInput) {
             a.px_xs,
             {
               // paddingVertical doesn't work w/multiline - esb
-              paddingTop: 14,
-              paddingBottom: 14,
+              paddingTop: 12,
+              paddingBottom: 13,
               lineHeight: a.text_md.fontSize * 1.1875,
               textAlignVertical: rest.multiline ? 'top' : undefined,
               minHeight: rest.multiline ? 80 : undefined,
@@ -197,13 +205,14 @@ export function createInput(Component: typeof TextInput) {
             },
             // fix for autofill styles covering border
             web({
-              paddingTop: 12,
-              paddingBottom: 12,
+              paddingTop: 10,
+              paddingBottom: 11,
               marginTop: 2,
               marginBottom: 2,
             }),
             android({
-              paddingBottom: 16,
+              paddingTop: 8,
+              paddingBottom: 8,
             }),
             style,
           ]}
