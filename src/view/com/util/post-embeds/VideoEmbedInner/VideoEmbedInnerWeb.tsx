@@ -1,7 +1,7 @@
 import React, {useEffect, useId, useRef, useState} from 'react'
 import {View} from 'react-native'
 import {AppBskyEmbedVideo} from '@atproto/api'
-import Hls, {Events, FragChangedData, Fragment} from 'hls.js'
+import type * as HlsTypes from 'hls.js'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {atoms as a} from '#/alf'
@@ -23,6 +23,7 @@ export function VideoEmbedInnerWeb({
   const videoRef = useRef<HTMLVideoElement>(null)
   const [focused, setFocused] = useState(false)
   const [hasSubtitleTrack, setHasSubtitleTrack] = useState(false)
+  const [hlsLoading, setHlsLoading] = React.useState(false)
   const figId = useId()
 
   // send error up to error boundary
@@ -37,6 +38,7 @@ export function VideoEmbedInnerWeb({
     setHasSubtitleTrack,
     setError,
     videoRef,
+    setHlsLoading,
   })
 
   return (
@@ -77,6 +79,7 @@ export function VideoEmbedInnerWeb({
           setActive={setActive}
           focused={focused}
           setFocused={setFocused}
+          hlsLoading={hlsLoading}
           onScreen={onScreen}
           fullscreenRef={containerRef}
           hasSubtitleTrack={hasSubtitleTrack}
@@ -99,31 +102,62 @@ export class VideoNotFoundError extends Error {
   }
 }
 
+type CachedPromise<T> = Promise<T> & {value: undefined | T}
+const promiseForHls = import(
+  // @ts-ignore
+  'hls.js/dist/hls.min'
+).then(mod => mod.default) as CachedPromise<typeof HlsTypes.default>
+promiseForHls.value = undefined
+promiseForHls.then(Hls => {
+  promiseForHls.value = Hls
+})
+
 function useHLS({
   focused,
   playlist,
   setHasSubtitleTrack,
   setError,
   videoRef,
+  setHlsLoading,
 }: {
   focused: boolean
   playlist: string
   setHasSubtitleTrack: (v: boolean) => void
   setError: (v: Error | null) => void
   videoRef: React.RefObject<HTMLVideoElement>
+  setHlsLoading: (v: boolean) => void
 }) {
-  const hlsRef = useRef<Hls | undefined>(undefined)
-  const [lowQualityFragments, setLowQualityFragments] = useState<Fragment[]>([])
+  const [Hls, setHls] = useState<typeof HlsTypes.default | undefined>(
+    () => promiseForHls.value,
+  )
+  useEffect(() => {
+    if (!Hls) {
+      setHlsLoading(true)
+      promiseForHls.then(loadedHls => {
+        setHls(() => loadedHls)
+        setHlsLoading(false)
+      })
+    }
+  }, [Hls, setHlsLoading])
+
+  const hlsRef = useRef<HlsTypes.default | undefined>(undefined)
+  const [lowQualityFragments, setLowQualityFragments] = useState<
+    HlsTypes.Fragment[]
+  >([])
 
   // purge low quality segments from buffer on next frag change
   const handleFragChange = useNonReactiveCallback(
-    (_event: Events.FRAG_CHANGED, {frag}: FragChangedData) => {
+    (
+      _event: HlsTypes.Events.FRAG_CHANGED,
+      {frag}: HlsTypes.FragChangedData,
+    ) => {
+      if (!Hls) return
       if (!hlsRef.current) return
       const hls = hlsRef.current
 
       if (focused && hls.nextAutoLevel > 0) {
         // if the current quality level goes above 0, flush the low quality segments
-        const flushed: Fragment[] = []
+        const flushed: HlsTypes.Fragment[] = []
 
         for (const lowQualFrag of lowQualityFragments) {
           // avoid if close to the current fragment
@@ -147,12 +181,15 @@ function useHLS({
 
   useEffect(() => {
     if (!videoRef.current) return
-    if (!Hls.isSupported()) throw new HLSUnsupportedError()
+    if (!Hls) return
+    if (!Hls.isSupported()) {
+      throw new HLSUnsupportedError()
+    }
 
     const hls = new Hls({
       maxMaxBufferLength: 10, // only load 10s ahead
       // note: the amount buffered is affected by both maxBufferLength and maxBufferSize
-      // it will buffer until it it's greater than *both* of those values
+      // it will buffer until it is greater than *both* of those values
       // so we use maxMaxBufferLength to set the actual maximum amount of buffering instead
     })
     hlsRef.current = hls
@@ -211,7 +248,7 @@ function useHLS({
       hls.destroy()
       abortController.abort()
     }
-  }, [playlist, setError, setHasSubtitleTrack, videoRef, handleFragChange])
+  }, [playlist, setError, setHasSubtitleTrack, videoRef, handleFragChange, Hls])
 
   return hlsRef
 }
