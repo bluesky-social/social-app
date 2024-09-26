@@ -77,7 +77,7 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
             disableMismatchWarning
             onPress={onBeforePressAuthor}
             style={[t.atoms.text]}>
-            <Text emoji style={[a.text_md, a.font_bold, a.leading_tight]}>
+            <Text emoji style={[a.text_md, a.font_bold, a.leading_snug]}>
               {forceLTR(
                 sanitizeDisplayName(
                   displayName,
@@ -92,14 +92,10 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
             disableMismatchWarning
             disableUnderline
             onPress={onBeforePressAuthor}
-            style={[a.text_md, t.atoms.text_contrast_medium, a.leading_tight]}>
+            style={[a.text_md, t.atoms.text_contrast_medium, a.leading_snug]}>
             <Text
               emoji
-              style={[
-                a.text_md,
-                t.atoms.text_contrast_medium,
-                a.leading_tight,
-              ]}>
+              style={[a.text_md, t.atoms.text_contrast_medium, a.leading_snug]}>
               {NON_BREAKING_SPACE + sanitizeHandle(handle, '@')}
             </Text>
           </WebOnlyInlineLinkText>
@@ -124,7 +120,7 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
             style={[
               a.text_md,
               t.atoms.text_contrast_medium,
-              a.leading_tight,
+              a.leading_snug,
               web({
                 whiteSpace: 'nowrap',
               }),
