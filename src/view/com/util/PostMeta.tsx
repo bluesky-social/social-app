@@ -11,6 +11,7 @@ import {NON_BREAKING_SPACE} from '#/lib/strings/constants'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {niceDate} from '#/lib/strings/time'
+import {isAndroid} from '#/platform/detection'
 import {precacheProfile} from '#/state/queries/profile'
 import {atoms as a, useTheme, web} from '#/alf'
 import {WebOnlyInlineLinkText} from '#/components/Link'
@@ -70,7 +71,7 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
         </View>
       )}
       <ProfileHoverCard inline did={opts.author.did}>
-        <Text numberOfLines={1} style={[a.flex_shrink]}>
+        <Text numberOfLines={1} style={[isAndroid ? a.flex_1 : a.flex_shrink]}>
           <WebOnlyInlineLinkText
             to={profileLink}
             label={_(msg`View profile`)}
@@ -102,11 +103,13 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
         </Text>
       </ProfileHoverCard>
 
-      <Text
-        style={[a.text_md, t.atoms.text_contrast_medium]}
-        accessible={false}>
-        &middot;
-      </Text>
+      {!isAndroid && (
+        <Text
+          style={[a.text_md, t.atoms.text_contrast_medium]}
+          accessible={false}>
+          &middot;
+        </Text>
+      )}
 
       <TimeElapsed timestamp={opts.timestamp}>
         {({timeElapsed}) => (
