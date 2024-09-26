@@ -67,7 +67,7 @@ export const SplashScreen = ({
             size="large"
             variant="solid"
             color="secondary">
-            <ButtonText>
+            <ButtonText numberOfLines={1}>
               <Trans>Sign in</Trans>
             </ButtonText>
           </Button>
