@@ -217,6 +217,7 @@ function NavItem({count, href, icon, iconFilled, label}: NavItemProps) {
               a.text_xs,
               a.font_bold,
               a.rounded_full,
+              a.text_center,
               {
                 top: '-10%',
                 left: count.length === 1 ? '50%' : '40%',
@@ -225,6 +226,7 @@ function NavItem({count, href, icon, iconFilled, label}: NavItemProps) {
                 lineHeight: a.text_sm.fontSize,
                 paddingHorizontal: 4,
                 paddingVertical: 1,
+                minWidth: 16,
               },
               isTablet && [
                 {
