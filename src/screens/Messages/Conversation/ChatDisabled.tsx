@@ -66,14 +66,14 @@ function DialogInner() {
   const control = Dialog.useDialogContext()
   const [details, setDetails] = useState('')
   const {gtMobile} = useBreakpoints()
-  const {getAgent} = useAgent()
+  const agent = useAgent()
   const {currentAccount} = useSession()
 
   const {mutate, isPending} = useMutation({
     mutationFn: async () => {
       if (!currentAccount)
         throw new Error('No current account, should be unreachable')
-      await getAgent().createModerationReport({
+      await agent.createModerationReport({
         reasonType: ComAtprotoModerationDefs.REASONAPPEAL,
         subject: {
           $type: 'com.atproto.admin.defs#repoRef',
@@ -84,7 +84,7 @@ function DialogInner() {
     },
     onError: err => {
       logger.error('Failed to submit chat appeal', {message: err})
-      Toast.show(_(msg`Failed to submit appeal, please try again.`))
+      Toast.show(_(msg`Failed to submit appeal, please try again.`), 'xmark')
     },
     onSuccess: () => {
       control.close()
@@ -128,7 +128,7 @@ function DialogInner() {
           testID="backBtn"
           variant="solid"
           color="secondary"
-          size="medium"
+          size="large"
           onPress={onBack}
           label={_(msg`Back`)}>
           <ButtonText>{_(msg`Back`)}</ButtonText>
@@ -137,7 +137,7 @@ function DialogInner() {
           testID="submitBtn"
           variant="solid"
           color="primary"
-          size="medium"
+          size="large"
           onPress={onSubmit}
           label={_(msg`Submit`)}>
           <ButtonText>{_(msg`Submit`)}</ButtonText>

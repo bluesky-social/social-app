@@ -24,8 +24,8 @@ export function Provider({children}: {children: React.ReactNode}) {
   )
 
   React.useEffect(() => {
-    return persisted.onUpdate(() => {
-      setState(Boolean(persisted.get('disableAutoplay')))
+    return persisted.onUpdate('disableAutoplay', nextDisableAutoplay => {
+      setState(Boolean(nextDisableAutoplay))
     })
   }, [setStateWrapped])
 

@@ -1,37 +1,48 @@
 import {useEffect, useState} from 'react'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
+import * as apilib from '#/lib/api/index'
+import {POST_IMG_MAX} from '#/lib/constants'
+import {
+  EmbeddingDisabledError,
+  getFeedAsEmbed,
+  getListAsEmbed,
+  getPostAsQuote,
+  getStarterPackAsEmbed,
+} from '#/lib/link-meta/bsky'
+import {getLinkMeta} from '#/lib/link-meta/link-meta'
+import {resolveShortLink} from '#/lib/link-meta/resolve-short-link'
+import {downloadAndResize} from '#/lib/media/manip'
+import {
+  isBskyCustomFeedUrl,
+  isBskyListUrl,
+  isBskyPostUrl,
+  isBskyStarterPackUrl,
+  isBskyStartUrl,
+  isShortLink,
+} from '#/lib/strings/url-helpers'
 import {logger} from '#/logger'
 import {createComposerImage} from '#/state/gallery'
 import {useFetchDid} from '#/state/queries/handle'
 import {useGetPost} from '#/state/queries/post'
 import {useAgent} from '#/state/session'
-import * as apilib from 'lib/api/index'
-import {POST_IMG_MAX} from 'lib/constants'
-import {
-  getFeedAsEmbed,
-  getListAsEmbed,
-  getPostAsQuote,
-} from 'lib/link-meta/bsky'
-import {getLinkMeta} from 'lib/link-meta/link-meta'
-import {downloadAndResize} from 'lib/media/manip'
-import {
-  isBskyCustomFeedUrl,
-  isBskyListUrl,
-  isBskyPostUrl,
-} from 'lib/strings/url-helpers'
-import {ComposerOpts} from 'state/shell/composer'
+import {ComposerOpts} from '#/state/shell/composer'
 
 export function useExternalLinkFetch({
   setQuote,
+  setError,
 }: {
   setQuote: (opts: ComposerOpts['quote']) => void
+  setError: (err: string) => void
 }) {
+  const {_} = useLingui()
   const [extLink, setExtLink] = useState<apilib.ExternalEmbedDraft | undefined>(
     undefined,
   )
   const getPost = useGetPost()
   const fetchDid = useFetchDid()
-  const {getAgent} = useAgent()
+  const agent = useAgent()
 
   useEffect(() => {
     let aborted = false
@@ -52,14 +63,18 @@ export function useExternalLinkFetch({
             setExtLink(undefined)
           },
           err => {
-            logger.error('Failed to fetch post for quote embedding', {
-              message: err.toString(),
-            })
+            if (err instanceof EmbeddingDisabledError) {
+              setError(_(msg`This post's author has disabled quote posts.`))
+            } else {
+              logger.error('Failed to fetch post for quote embedding', {
+                message: err.toString(),
+              })
+            }
             setExtLink(undefined)
           },
         )
       } else if (isBskyCustomFeedUrl(extLink.uri)) {
-        getFeedAsEmbed(getAgent(), fetchDid, extLink.uri).then(
+        getFeedAsEmbed(agent, fetchDid, extLink.uri).then(
           ({embed, meta}) => {
             if (aborted) {
               return
@@ -77,7 +92,7 @@ export function useExternalLinkFetch({
           },
         )
       } else if (isBskyListUrl(extLink.uri)) {
-        getListAsEmbed(getAgent(), fetchDid, extLink.uri).then(
+        getListAsEmbed(agent, fetchDid, extLink.uri).then(
           ({embed, meta}) => {
             if (aborted) {
               return
@@ -94,8 +109,36 @@ export function useExternalLinkFetch({
             setExtLink(undefined)
           },
         )
+      } else if (
+        isBskyStartUrl(extLink.uri) ||
+        isBskyStarterPackUrl(extLink.uri)
+      ) {
+        getStarterPackAsEmbed(agent, fetchDid, extLink.uri).then(
+          ({embed, meta}) => {
+            if (aborted) {
+              return
+            }
+            setExtLink({
+              uri: extLink.uri,
+              isLoading: false,
+              meta,
+              embed,
+            })
+          },
+        )
+      } else if (isShortLink(extLink.uri)) {
+        if (isShortLink(extLink.uri)) {
+          resolveShortLink(extLink.uri).then(res => {
+            if (res && res !== extLink.uri) {
+              setExtLink({
+                uri: res,
+                isLoading: true,
+              })
+            }
+          })
+        }
       } else {
-        getLinkMeta(getAgent(), extLink.uri).then(meta => {
+        getLinkMeta(agent, extLink.uri).then(meta => {
           if (aborted) {
             return
           }
@@ -123,7 +166,6 @@ export function useExternalLinkFetch({
           if (aborted) {
             return
           }
-
           setExtLink({
             ...extLink,
             isLoading: false, // done
@@ -139,7 +181,7 @@ export function useExternalLinkFetch({
       })
     }
     return cleanup
-  }, [extLink, setQuote, getPost, fetchDid, getAgent])
+  }, [_, extLink, setQuote, getPost, fetchDid, agent, setError])
 
   return {extLink, setExtLink}
 }

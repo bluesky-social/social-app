@@ -26,7 +26,7 @@ export function useProfileFollowsQuery(
     limit: PAGE_SIZE,
   },
 ) {
-  const {getAgent} = useAgent()
+  const agent = useAgent()
   return useInfiniteQuery<
     AppBskyGraphGetFollows.OutputSchema,
     Error,
@@ -37,7 +37,7 @@ export function useProfileFollowsQuery(
     staleTime: STALE.MINUTES.ONE,
     queryKey: RQKEY(did || ''),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
-      const res = await getAgent().app.bsky.graph.getFollows({
+      const res = await agent.app.bsky.graph.getFollows({
         actor: did || '',
         limit: limit || PAGE_SIZE,
         cursor: pageParam,

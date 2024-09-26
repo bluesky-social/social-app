@@ -2,20 +2,24 @@ package expo.modules.backgroundnotificationhandler
 
 import android.content.Context
 
-val DEFAULTS = mapOf<String, Any>(
-  "playSoundChat" to true,
-  "playSoundFollow" to false,
-  "playSoundLike" to false,
-  "playSoundMention" to false,
-  "playSoundQuote" to false,
-  "playSoundReply" to false,
-  "playSoundRepost" to false,
-  "mutedThreads" to mapOf<String, List<String>>()
-)
+val DEFAULTS =
+  mapOf<String, Any>(
+    "playSoundChat" to true,
+    "playSoundFollow" to false,
+    "playSoundLike" to false,
+    "playSoundMention" to false,
+    "playSoundQuote" to false,
+    "playSoundReply" to false,
+    "playSoundRepost" to false,
+    "mutedThreads" to mapOf<String, List<String>>(),
+  )
 
-class NotificationPrefs (private val context: Context?) {
-  private val prefs = context?.getSharedPreferences("xyz.blueskyweb.app", Context.MODE_PRIVATE)
-    ?: throw Error("Context is null")
+class NotificationPrefs(
+  private val context: Context?,
+) {
+  private val prefs =
+    context?.getSharedPreferences("xyz.blueskyweb.app", Context.MODE_PRIVATE)
+      ?: throw Error("Context is null")
 
   fun initialize() {
     prefs
@@ -41,94 +45,99 @@ class NotificationPrefs (private val context: Context?) {
             }
           }
         }
-      }
-      .apply()
+      }.apply()
   }
 
-  fun getAllPrefs(): MutableMap<String, *> {
-    return prefs.all
-  }
+  fun getAllPrefs(): MutableMap<String, *> = prefs.all
 
-  fun getBoolean(key: String): Boolean {
-    return prefs.getBoolean(key, false)
-  }
+  fun getBoolean(key: String): Boolean = prefs.getBoolean(key, false)
 
-  fun getString(key: String): String? {
-    return prefs.getString(key, null)
-  }
+  fun getString(key: String): String? = prefs.getString(key, null)
 
-  fun getStringArray(key: String): Array<String>? {
-    return prefs.getStringSet(key, null)?.toTypedArray()
-  }
+  fun getStringArray(key: String): Array<String>? = prefs.getStringSet(key, null)?.toTypedArray()
 
-  fun setBoolean(key: String, value: Boolean) {
+  fun setBoolean(
+    key: String,
+    value: Boolean,
+  ) {
     prefs
       .edit()
       .apply {
         putBoolean(key, value)
-      }
-      .apply()
+      }.apply()
   }
 
-  fun setString(key: String, value: String) {
+  fun setString(
+    key: String,
+    value: String,
+  ) {
     prefs
       .edit()
       .apply {
         putString(key, value)
-      }
-      .apply()
+      }.apply()
   }
 
-  fun setStringArray(key: String, value: Array<String>) {
+  fun setStringArray(
+    key: String,
+    value: Array<String>,
+  ) {
     prefs
       .edit()
       .apply {
         putStringSet(key, value.toSet())
-      }
-      .apply()
+      }.apply()
   }
 
-  fun addToStringArray(key: String, string: String) {
+  fun addToStringArray(
+    key: String,
+    string: String,
+  ) {
     prefs
       .edit()
       .apply {
         val set = prefs.getStringSet(key, null)?.toMutableSet() ?: mutableSetOf()
         set.add(string)
         putStringSet(key, set)
-      }
-      .apply()
+      }.apply()
   }
 
-  fun removeFromStringArray(key: String, string: String) {
+  fun removeFromStringArray(
+    key: String,
+    string: String,
+  ) {
     prefs
       .edit()
       .apply {
         val set = prefs.getStringSet(key, null)?.toMutableSet() ?: mutableSetOf()
         set.remove(string)
         putStringSet(key, set)
-      }
-      .apply()
+      }.apply()
   }
 
-  fun addManyToStringArray(key: String, strings: Array<String>) {
+  fun addManyToStringArray(
+    key: String,
+    strings: Array<String>,
+  ) {
     prefs
       .edit()
       .apply {
         val set = prefs.getStringSet(key, null)?.toMutableSet() ?: mutableSetOf()
         set.addAll(strings.toSet())
         putStringSet(key, set)
-      }
-      .apply()
+      }.apply()
   }
 
-  fun removeManyFromStringArray(key: String, strings: Array<String>) {
+  fun removeManyFromStringArray(
+    key: String,
+    strings: Array<String>,
+  ) {
     prefs
       .edit()
       .apply {
         val set = prefs.getStringSet(key, null)?.toMutableSet() ?: mutableSetOf()
         set.removeAll(strings.toSet())
         putStringSet(key, set)
-      }
-      .apply()
+      }.apply()
   }
 }

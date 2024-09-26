@@ -2,6 +2,7 @@ import React, {useCallback, useState} from 'react'
 import {GestureResponderEvent, View} from 'react-native'
 import {
   AppBskyActorDefs,
+  AppBskyEmbedRecord,
   ChatBskyConvoDefs,
   moderateProfile,
   ModerationOpts,
@@ -9,20 +10,28 @@ import {
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {useHaptics} from '#/lib/haptics'
+import {decrementBadgeCount} from '#/lib/notifications/notifications'
+import {logEvent} from '#/lib/statsig/statsig'
+import {sanitizeDisplayName} from '#/lib/strings/display-names'
+import {
+  postUriToRelativePath,
+  toBskyAppUrl,
+  toShortUrl,
+} from '#/lib/strings/url-helpers'
 import {isNative} from '#/platform/detection'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useSession} from '#/state/session'
-import {useHaptics} from 'lib/haptics'
-import {logEvent} from 'lib/statsig/statsig'
-import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {TimeElapsed} from '#/view/com/util/TimeElapsed'
-import {UserAvatar} from '#/view/com/util/UserAvatar'
+import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
+import * as tokens from '#/alf/tokens'
 import {ConvoMenu} from '#/components/dms/ConvoMenu'
 import {Bell2Off_Filled_Corner0_Rounded as BellStroke} from '#/components/icons/Bell2'
 import {Link} from '#/components/Link'
 import {useMenuControl} from '#/components/Menu'
+import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {Text} from '#/components/Typography'
 
 export let ChatListItem = ({
@@ -94,19 +103,64 @@ function ChatListItemReady({
 
   const isDimStyle = convo.muted || moderation.blocked || isDeletedAccount
 
-  let lastMessage = _(msg`No messages yet`)
-  let lastMessageSentAt: string | null = null
-  if (ChatBskyConvoDefs.isMessageView(convo.lastMessage)) {
-    if (convo.lastMessage.sender?.did === currentAccount?.did) {
-      lastMessage = _(msg`You: ${convo.lastMessage.text}`)
-    } else {
-      lastMessage = convo.lastMessage.text
+  const {lastMessage, lastMessageSentAt} = React.useMemo(() => {
+    let lastMessage = _(msg`No messages yet`)
+    let lastMessageSentAt: string | null = null
+
+    if (ChatBskyConvoDefs.isMessageView(convo.lastMessage)) {
+      const isFromMe = convo.lastMessage.sender?.did === currentAccount?.did
+
+      if (convo.lastMessage.text) {
+        if (isFromMe) {
+          lastMessage = _(msg`You: ${convo.lastMessage.text}`)
+        } else {
+          lastMessage = convo.lastMessage.text
+        }
+      } else if (convo.lastMessage.embed) {
+        const defaultEmbeddedContentMessage = _(
+          msg`(contains embedded content)`,
+        )
+
+        if (AppBskyEmbedRecord.isView(convo.lastMessage.embed)) {
+          const embed = convo.lastMessage.embed
+
+          if (AppBskyEmbedRecord.isViewRecord(embed.record)) {
+            const record = embed.record
+            const path = postUriToRelativePath(record.uri, {
+              handle: record.author.handle,
+            })
+            const href = path ? toBskyAppUrl(path) : undefined
+            const short = href
+              ? toShortUrl(href)
+              : defaultEmbeddedContentMessage
+            if (isFromMe) {
+              lastMessage = _(msg`You: ${short}`)
+            } else {
+              lastMessage = short
+            }
+          }
+        } else {
+          if (isFromMe) {
+            lastMessage = _(msg`You: ${defaultEmbeddedContentMessage}`)
+          } else {
+            lastMessage = defaultEmbeddedContentMessage
+          }
+        }
+      }
+
+      lastMessageSentAt = convo.lastMessage.sentAt
     }
-    lastMessageSentAt = convo.lastMessage.sentAt
-  }
-  if (ChatBskyConvoDefs.isDeletedMessageView(convo.lastMessage)) {
-    lastMessage = _(msg`Conversation deleted`)
-  }
+    if (ChatBskyConvoDefs.isDeletedMessageView(convo.lastMessage)) {
+      lastMessage = isDeletedAccount
+        ? _(msg`Conversation deleted`)
+        : _(msg`Message deleted`)
+    }
+
+    return {
+      lastMessage,
+      lastMessageSentAt,
+    }
+  }, [_, convo.lastMessage, currentAccount?.did, isDeletedAccount])
 
   const [showActions, setShowActions] = useState(false)
 
@@ -125,14 +179,16 @@ function ChatListItemReady({
 
   const onPress = useCallback(
     (e: GestureResponderEvent) => {
+      decrementBadgeCount(convo.unreadCount)
       if (isDeletedAccount) {
         e.preventDefault()
+        menuControl.open()
         return false
       } else {
         logEvent('chat:open', {logContext: 'ChatsList'})
       }
     },
-    [isDeletedAccount],
+    [convo.unreadCount, isDeletedAccount, menuControl],
   )
 
   const onLongPress = useCallback(() => {
@@ -148,13 +204,28 @@ function ChatListItemReady({
       onFocus={onFocus}
       onBlur={onMouseLeave}
       style={[a.relative]}>
+      <View
+        style={[
+          a.z_10,
+          a.absolute,
+          {top: tokens.space.md, left: tokens.space.lg},
+        ]}>
+        <PreviewableUserAvatar
+          profile={profile}
+          size={52}
+          moderation={moderation.ui('avatar')}
+        />
+      </View>
+
       <Link
         to={`/messages/${convo.id}`}
         label={displayName}
         accessibilityHint={
           !isDeletedAccount
             ? _(msg`Go to conversation with ${profile.handle}`)
-            : undefined
+            : _(
+                msg`This conversation is with a deleted or a deactivated account. Press for options.`,
+              )
         }
         accessibilityActions={
           isNative
@@ -166,12 +237,7 @@ function ChatListItemReady({
         }
         onPress={onPress}
         onLongPress={isNative ? onLongPress : undefined}
-        onAccessibilityAction={onLongPress}
-        style={[
-          web({
-            cursor: isDeletedAccount ? 'default' : 'pointer',
-          }),
-        ]}>
+        onAccessibilityAction={onLongPress}>
         {({hovered, pressed, focused}) => (
           <View
             style={[
@@ -181,16 +247,11 @@ function ChatListItemReady({
               a.px_lg,
               a.py_md,
               a.gap_md,
-              (hovered || pressed || focused) &&
-                !isDeletedAccount &&
-                t.atoms.bg_contrast_25,
+              (hovered || pressed || focused) && t.atoms.bg_contrast_25,
               t.atoms.border_contrast_low,
             ]}>
-            <UserAvatar
-              avatar={profile.avatar}
-              size={52}
-              moderation={moderation.ui('avatar')}
-            />
+            {/* Avatar goes here */}
+            <View style={{width: 52, height: 52}} />
 
             <View style={[a.flex_1, a.justify_center, web({paddingRight: 45})]}>
               <View style={[a.w_full, a.flex_row, a.align_end, a.pb_2xs]}>
@@ -198,6 +259,7 @@ function ChatListItemReady({
                   numberOfLines={1}
                   style={[{maxWidth: '85%'}, web([a.leading_normal])]}>
                   <Text
+                    emoji
                     style={[
                       a.text_md,
                       t.atoms.text,
@@ -216,6 +278,7 @@ function ChatListItemReady({
                           a.text_sm,
                           {lineHeight: 21},
                           t.atoms.text_contrast_medium,
+                          web({whiteSpace: 'preserve nowrap'}),
                         ]}>
                         {' '}
                         &middot; {timeElapsed}
@@ -229,6 +292,7 @@ function ChatListItemReady({
                       a.text_sm,
                       {lineHeight: 21},
                       t.atoms.text_contrast_medium,
+                      web({whiteSpace: 'preserve nowrap'}),
                     ]}>
                     {' '}
                     &middot;{' '}
@@ -249,6 +313,7 @@ function ChatListItemReady({
               )}
 
               <Text
+                emoji
                 numberOfLines={2}
                 style={[
                   a.text_sm,
@@ -260,6 +325,12 @@ function ChatListItemReady({
                 ]}>
                 {lastMessage}
               </Text>
+
+              <PostAlerts
+                modui={moderation.ui('contentList')}
+                size="lg"
+                style={[a.pt_xs]}
+              />
             </View>
 
             {convo.unreadCount > 0 && (
@@ -297,7 +368,7 @@ function ChatListItemReady({
           a.self_end,
           a.justify_center,
           {
-            right: a.px_lg.paddingRight,
+            right: tokens.space.lg,
             opacity: !gtMobile || showActions || menuControl.isOpen ? 1 : 0,
           },
         ]}

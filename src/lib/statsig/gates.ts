@@ -1,5 +1,5 @@
 export type Gate =
   // Keep this alphabetic please.
-  | 'reduced_onboarding_and_home_algo_v2'
-  | 'request_notifications_permission_after_onboarding'
-  | 'show_follow_back_label_v2'
+  | 'debug_show_feedcontext'
+  | 'post_feed_lang_window'
+  | 'suggested_feeds_interstitial'

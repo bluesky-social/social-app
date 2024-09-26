@@ -174,7 +174,7 @@ export function LabelerLabelPreference({
   disabled?: boolean
   labelerDid?: string
 }) {
-  const {i18n} = useLingui()
+  const {_, i18n} = useLingui()
   const t = useTheme()
   const {gtPhone} = useBreakpoints()
 
@@ -236,14 +236,16 @@ export function LabelerLabelPreference({
           <View style={[a.flex_row, a.gap_xs, a.align_center, a.mt_xs]}>
             <CircleInfo size="sm" fill={t.atoms.text_contrast_high.color} />
 
-            <Text
-              style={[t.atoms.text_contrast_medium, a.font_semibold, a.italic]}>
+            <Text style={[t.atoms.text_contrast_medium, a.font_bold, a.italic]}>
               {adultDisabled ? (
                 <Trans>Adult content is disabled.</Trans>
               ) : isGlobalLabel ? (
                 <Trans>
                   Configured in{' '}
-                  <InlineLinkText to="/moderation" style={a.text_sm}>
+                  <InlineLinkText
+                    label={_(msg`moderation settings`)}
+                    to="/moderation"
+                    style={a.text_sm}>
                     moderation settings
                   </InlineLinkText>
                   .

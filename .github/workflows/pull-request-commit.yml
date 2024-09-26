@@ -1,7 +1,7 @@
 # Credit for fingerprint action https://github.com/expo/expo
 # https://github.com/expo/expo/blob/main/.github/workflows/pr-labeler.yml
 ---
-name: PR labeler
+name: PR Tests
 
 on:
   push:
@@ -21,7 +21,7 @@ permissions:
 jobs:
   webpack-analyzer:
     runs-on: ubuntu-22.04
-    if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
+    if: ${{ github.event.pull_request.head.repo.full_name == github.repository && github.event_name == 'pull_request'}}
     steps:
       - name: ⬇️ Checkout
         uses: actions/checkout@v4
@@ -94,10 +94,9 @@ jobs:
             | ${{ steps.get-diff.outputs.base_file_string }} | ${{ steps.get-diff.outputs.pr_file_string }} | ${{ steps.get-diff.outputs.diff_file_string }} (${{ steps.get-diff.outputs.percent }}%) |
             ---
 
-  test-suite-fingerprint:
+  fingerprint-native:
     runs-on: ubuntu-22.04
-    if: ${{ github.event.pull_request.head.repo.full_name == github.repository || github.event_name == 'push' }}
-    concurrency: fingerprint-${{ github.event_name != 'pull_request' && 'main' || github.run_id }}
+    if: ${{ github.event.pull_request.head.repo.full_name == github.repository && github.event_name == 'pull_request'}}
     steps:
       - name: ⬇️ Checkout
         uses: actions/checkout@v4
@@ -114,35 +113,23 @@ jobs:
           node-version-file: .nvmrc
           cache: yarn
 
-      - name: ⚙️ Install Dependencies
-        run: yarn install
-
-      - name: Get the base commit
-        id: base-commit
-        run: echo base-commit=$(git log -n 1 main --pretty=format:'%H') >> "$GITHUB_OUTPUT"
-
-      - name: 📷 Check fingerprint
+      - name: 📷 Check fingerprint and install dependencies
         id: fingerprint
-        uses: expo/expo-github-action/fingerprint@main
+        uses: bluesky-social/github-actions/fingerprint-native@main
         with:
-          previous-git-commit: ${{ steps.base-commit.outputs.base-commit }}
-
-      - name: 👀 Debug fingerprint
-        run: |
-          echo "previousGitCommit=${{ steps.fingerprint.outputs.previous-git-commit }} currentGitCommit=${{ steps.fingerprint.outputs.current-git-commit }}"
-          echo "isPreviousFingerprintEmpty=${{ steps.fingerprint.outputs.previous-fingerprint == '' }}"
+          profile: pull-request
 
       - name: 💬 Drop a comment
         uses: marocchino/sticky-pull-request-comment@v2
-        if: ${{ github.event_name == 'pull_request' && steps.fingerprint.outputs.fingerprint-diff != '[]' }}
+        if: ${{ steps.fingerprint.outputs.includes-changes }}
         with:
           header: fingerprint-diff
           message: |
-            The Pull Request introduced fingerprint changes against the base commit: ${{ steps.fingerprint.outputs.previous-git-commit }}
+            The Pull Request introduced fingerprint changes against the base commit:
             <details><summary>Fingerprint diff</summary>
 
             ```json
-            ${{ steps.fingerprint.outputs.fingerprint-diff }}
+            ${{ steps.fingerprint.outputs.diff }}
             ```
 
             </details>
@@ -152,7 +139,7 @@ jobs:
 
       - name: 💬 Delete comment
         uses: marocchino/sticky-pull-request-comment@v2
-        if: ${{ github.event_name == 'pull_request' && steps.fingerprint.outputs.fingerprint-diff == '[]' }}
+        if: ${{ !steps.fingerprint.outputs.includes-changes }}
         with:
           header: fingerprint-diff
           delete: true

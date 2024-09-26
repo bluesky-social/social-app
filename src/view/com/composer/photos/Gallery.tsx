@@ -1,17 +1,24 @@
 import React from 'react'
-import {ImageStyle, LayoutChangeEvent, ViewStyle} from 'react-native'
-import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import {
+  ImageStyle,
+  Keyboard,
+  LayoutChangeEvent,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  ViewStyle,
+} from 'react-native'
 import {Image} from 'expo-image'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {Dimensions} from '#/lib/media/types'
+import {colors, s} from '#/lib/styles'
+import {isNative} from '#/platform/detection'
 import {ComposerImage, cropImage} from '#/state/gallery'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {Dimensions} from 'lib/media/types'
-import {colors, s} from 'lib/styles'
-import {isNative} from 'platform/detection'
-import {Text} from 'view/com/util/text/Text'
+import {Text} from '#/view/com/util/text/Text'
 import {useTheme} from '#/alf'
 import * as Dialog from '#/components/Dialog'
 import {EditImageDialog} from './EditImageDialog'
@@ -140,7 +147,7 @@ const GalleryItem = ({
   const altTextControl = Dialog.useDialogControl()
   const editControl = Dialog.useDialogControl()
 
-  const onEdit = () => {
+  const onImageEdit = () => {
     if (isNative) {
       cropImage(image).then(next => {
         onChange(next)
@@ -150,6 +157,11 @@ const GalleryItem = ({
     }
   }
 
+  const onAltTextEdit = () => {
+    Keyboard.dismiss()
+    altTextControl.open()
+  }
+
   return (
     <View style={imageStyle}>
       <TouchableOpacity
@@ -157,7 +169,7 @@ const GalleryItem = ({
         accessibilityRole="button"
         accessibilityLabel={_(msg`Add alt text`)}
         accessibilityHint=""
-        onPress={altTextControl.open}
+        onPress={onAltTextEdit}
         style={[styles.altTextControl, altTextControlStyle]}>
         {image.alt.length !== 0 ? (
           <FontAwesomeIcon
@@ -182,7 +194,7 @@ const GalleryItem = ({
           accessibilityRole="button"
           accessibilityLabel={_(msg`Edit image`)}
           accessibilityHint=""
-          onPress={onEdit}
+          onPress={onImageEdit}
           style={styles.imageControl}>
           <FontAwesomeIcon icon="pen" size={12} style={{color: colors.white}} />
         </TouchableOpacity>
@@ -204,7 +216,7 @@ const GalleryItem = ({
         accessibilityRole="button"
         accessibilityLabel={_(msg`Add alt text`)}
         accessibilityHint=""
-        onPress={altTextControl.open}
+        onPress={onAltTextEdit}
         style={styles.altTextHiddenRegion}
       />
 
@@ -283,7 +295,7 @@ const styles = StyleSheet.create({
   altTextControlLabel: {
     color: 'white',
     fontSize: 12,
-    fontWeight: 'bold',
+    fontWeight: '600',
     letterSpacing: 1,
   },
   altTextHiddenRegion: {

@@ -1,5 +1,5 @@
 import React from 'react'
-import {View} from 'react-native'
+import {Keyboard, View} from 'react-native'
 import DatePicker from 'react-native-date-picker'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -49,7 +49,10 @@ export function DateField({
       <DateFieldButton
         label={label}
         value={value}
-        onPress={control.open}
+        onPress={() => {
+          Keyboard.dismiss()
+          control.open()
+        }}
         isInvalid={isInvalid}
         accessibilityHint={accessibilityHint}
       />
@@ -73,7 +76,7 @@ export function DateField({
             <Button
               label={_(msg`Done`)}
               onPress={() => control.close()}
-              size="medium"
+              size="large"
               color="primary"
               variant="solid">
               <ButtonText>

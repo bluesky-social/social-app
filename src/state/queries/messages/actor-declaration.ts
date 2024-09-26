@@ -14,12 +14,12 @@ export function useUpdateActorDeclaration({
 }) {
   const queryClient = useQueryClient()
   const {currentAccount} = useSession()
-  const {getAgent} = useAgent()
+  const agent = useAgent()
 
   return useMutation({
     mutationFn: async (allowIncoming: 'all' | 'none' | 'following') => {
       if (!currentAccount) throw new Error('Not logged in')
-      const result = await getAgent().api.com.atproto.repo.putRecord({
+      const result = await agent.api.com.atproto.repo.putRecord({
         repo: currentAccount.did,
         collection: 'chat.bsky.actor.declaration',
         rkey: 'self',
@@ -64,13 +64,13 @@ export function useUpdateActorDeclaration({
 // for use in the settings screen for testing
 export function useDeleteActorDeclaration() {
   const {currentAccount} = useSession()
-  const {getAgent} = useAgent()
+  const agent = useAgent()
 
   return useMutation({
     mutationFn: async () => {
       if (!currentAccount) throw new Error('Not logged in')
       // TODO(sam): remove validate: false once PDSes have the new lexicon
-      const result = await getAgent().api.com.atproto.repo.deleteRecord({
+      const result = await agent.api.com.atproto.repo.deleteRecord({
         repo: currentAccount.did,
         collection: 'chat.bsky.actor.declaration',
         rkey: 'self',

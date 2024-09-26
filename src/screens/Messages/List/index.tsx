@@ -1,24 +1,28 @@
-import React, {useCallback, useMemo, useState} from 'react'
+import React, {useCallback, useEffect, useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {ChatBskyConvoDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useFocusEffect} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
+import {useAppState} from '#/lib/hooks/useAppState'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {MessagesTabNavigatorParams} from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {isNative} from '#/platform/detection'
-import {useListConvos} from '#/state/queries/messages/list-converations'
+import {MESSAGE_SCREEN_POLL_INTERVAL} from '#/state/messages/convo/const'
+import {useMessagesEventBus} from '#/state/messages/events'
+import {useListConvosQuery} from '#/state/queries/messages/list-converations'
 import {List} from '#/view/com/util/List'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
 import {CenteredView} from '#/view/com/util/Views'
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {DialogControlProps, useDialogControl} from '#/components/Dialog'
+import {NewChat} from '#/components/dms/dialogs/NewChatDialog'
 import {MessagesNUX} from '#/components/dms/MessagesNUX'
-import {NewChat} from '#/components/dms/NewChatDialog'
 import {useRefreshOnFocus} from '#/components/hooks/useRefreshOnFocus'
 import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as Retry} from '#/components/icons/ArrowRotateCounterClockwise'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
@@ -52,7 +56,7 @@ export function MessagesScreen({navigation, route}: Props) {
   // this tab. We should immediately push to the conversation after pressing the notification.
   // After we push, reset with `setParams` so that this effect will fire next time we press a notification, even if
   // the conversation is the same as before
-  React.useEffect(() => {
+  useEffect(() => {
     if (pushToConversation) {
       navigation.navigate('MessagesConversation', {
         conversation: pushToConversation,
@@ -60,6 +64,22 @@ export function MessagesScreen({navigation, route}: Props) {
       navigation.setParams({pushToConversation: undefined})
     }
   }, [navigation, pushToConversation])
+
+  // Request the poll interval to be 10s (or whatever the MESSAGE_SCREEN_POLL_INTERVAL is set to in the future)
+  // but only when the screen is active
+  const messagesBus = useMessagesEventBus()
+  const state = useAppState()
+  const isActive = state === 'active'
+  useFocusEffect(
+    useCallback(() => {
+      if (isActive) {
+        const unsub = messagesBus.requestPollInterval(
+          MESSAGE_SCREEN_POLL_INTERVAL,
+        )
+        return () => unsub()
+      }
+    }, [messagesBus, isActive]),
+  )
 
   const renderButton = useCallback(() => {
     return (
@@ -76,7 +96,7 @@ export function MessagesScreen({navigation, route}: Props) {
     )
   }, [_, t])
 
-  const initialNumToRender = useInitialNumToRender(80)
+  const initialNumToRender = useInitialNumToRender({minItemHeight: 80})
   const [isPTRing, setIsPTRing] = useState(false)
 
   const {
@@ -88,7 +108,7 @@ export function MessagesScreen({navigation, route}: Props) {
     isError,
     error,
     refetch,
-  } = useListConvos({refetchInterval: 15_000})
+  } = useListConvosQuery()
 
   useRefreshOnFocus(refetch)
 
@@ -178,7 +198,7 @@ export function MessagesScreen({navigation, route}: Props) {
 
                     <Button
                       label={_(msg`Reload conversations`)}
-                      size="medium"
+                      size="large"
                       color="secondary"
                       variant="solid"
                       onPress={() => refetch()}>
@@ -289,7 +309,7 @@ function DesktopHeader({
         a.gap_lg,
         a.px_lg,
         a.pr_md,
-        a.py_md,
+        a.py_sm,
         a.border_b,
         t.atoms.border_contrast_low,
       ]}>

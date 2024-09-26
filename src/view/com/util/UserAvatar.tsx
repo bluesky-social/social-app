@@ -8,17 +8,17 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {logger} from '#/logger'
-import {usePalette} from 'lib/hooks/usePalette'
+import {usePalette} from '#/lib/hooks/usePalette'
 import {
   useCameraPermission,
   usePhotoLibraryPermission,
-} from 'lib/hooks/usePermissions'
-import {makeProfileLink} from 'lib/routes/links'
-import {colors} from 'lib/styles'
-import {isAndroid, isNative, isWeb} from 'platform/detection'
-import {precacheProfile} from 'state/queries/profile'
-import {HighPriorityImage} from 'view/com/util/images/Image'
+} from '#/lib/hooks/usePermissions'
+import {makeProfileLink} from '#/lib/routes/links'
+import {colors} from '#/lib/styles'
+import {logger} from '#/logger'
+import {isAndroid, isNative, isWeb} from '#/platform/detection'
+import {precacheProfile} from '#/state/queries/profile'
+import {HighPriorityImage} from '#/view/com/util/images/Image'
 import {tokens, useTheme} from '#/alf'
 import {
   Camera_Filled_Stroke2_Corner0_Rounded as CameraFilled,
@@ -27,6 +27,7 @@ import {
 import {StreamingLive_Stroke2_Corner0_Rounded as Library} from '#/components/icons/StreamingLive'
 import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
 import {Link} from '#/components/Link'
+import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import * as Menu from '#/components/Menu'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {openCamera, openCropper, openPicker} from '../../../lib/media/picker'
@@ -35,6 +36,7 @@ export type UserAvatarType = 'user' | 'algo' | 'list' | 'labeler'
 
 interface BaseUserAvatarProps {
   type?: UserAvatarType
+  shape?: 'circle' | 'square'
   size: number
   avatar?: string | null
 }
@@ -42,6 +44,7 @@ interface BaseUserAvatarProps {
 interface UserAvatarProps extends BaseUserAvatarProps {
   moderation?: ModerationUI
   usePlainRNImage?: boolean
+  onLoad?: () => void
 }
 
 interface EditableUserAvatarProps extends BaseUserAvatarProps {
@@ -59,12 +62,16 @@ const BLUR_AMOUNT = isWeb ? 5 : 100
 
 let DefaultAvatar = ({
   type,
+  shape: overrideShape,
   size,
 }: {
   type: UserAvatarType
+  shape?: 'square' | 'circle'
   size: number
 }): React.ReactNode => {
+  const finalShape = overrideShape ?? (type === 'user' ? 'circle' : 'square')
   if (type === 'algo') {
+    // TODO: shape=circle
     // Font Awesome Pro 6.4.0 by @fontawesome -https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc.
     return (
       <Svg
@@ -83,6 +90,7 @@ let DefaultAvatar = ({
     )
   }
   if (type === 'list') {
+    // TODO: shape=circle
     // Font Awesome Pro 6.4.0 by @fontawesome -https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc.
     return (
       <Svg
@@ -116,14 +124,18 @@ let DefaultAvatar = ({
         viewBox="0 0 32 32"
         fill="none"
         stroke="none">
-        <Rect
-          x="0"
-          y="0"
-          width="32"
-          height="32"
-          rx="3"
-          fill={tokens.color.temp_purple}
-        />
+        {finalShape === 'square' ? (
+          <Rect
+            x="0"
+            y="0"
+            width="32"
+            height="32"
+            rx="3"
+            fill={tokens.color.temp_purple}
+          />
+        ) : (
+          <Circle cx="16" cy="16" r="16" fill={tokens.color.temp_purple} />
+        )}
         <Path
           d="M24 9.75L16 7L8 9.75V15.9123C8 20.8848 12 23 16 25.1579C20 23 24 20.8848 24 15.9123V9.75Z"
           stroke="white"
@@ -134,6 +146,7 @@ let DefaultAvatar = ({
       </Svg>
     )
   }
+  // TODO: shape=square
   return (
     <Svg
       testID="userAvatarFallback"
@@ -158,16 +171,19 @@ export {DefaultAvatar}
 
 let UserAvatar = ({
   type = 'user',
+  shape: overrideShape,
   size,
   avatar,
   moderation,
   usePlainRNImage = false,
+  onLoad,
 }: UserAvatarProps): React.ReactNode => {
   const pal = usePalette('default')
   const backgroundColor = pal.colors.backgroundLight
+  const finalShape = overrideShape ?? (type === 'user' ? 'circle' : 'square')
 
   const aviStyle = useMemo(() => {
-    if (type === 'algo' || type === 'list' || type === 'labeler') {
+    if (finalShape === 'square') {
       return {
         width: size,
         height: size,
@@ -181,7 +197,7 @@ let UserAvatar = ({
       borderRadius: Math.floor(size / 2),
       backgroundColor,
     }
-  }, [type, size, backgroundColor])
+  }, [finalShape, size, backgroundColor])
 
   const alert = useMemo(() => {
     if (!moderation?.alert) {
@@ -207,23 +223,36 @@ let UserAvatar = ({
           testID="userAvatarImage"
           style={aviStyle}
           resizeMode="cover"
-          source={{uri: avatar}}
+          source={{
+            uri: hackModifyThumbnailPath(avatar, size < 90),
+          }}
           blurRadius={moderation?.blur ? BLUR_AMOUNT : 0}
+          onLoad={onLoad}
         />
       ) : (
         <HighPriorityImage
           testID="userAvatarImage"
           style={aviStyle}
           contentFit="cover"
-          source={{uri: avatar}}
+          source={{
+            uri: hackModifyThumbnailPath(avatar, size < 90),
+          }}
           blurRadius={moderation?.blur ? BLUR_AMOUNT : 0}
+          onLoad={onLoad}
         />
       )}
+      <MediaInsetBorder
+        style={[
+          {
+            borderRadius: aviStyle.borderRadius,
+          },
+        ]}
+      />
       {alert}
     </View>
   ) : (
     <View style={{width: size, height: size}}>
-      <DefaultAvatar type={type} size={size} />
+      <DefaultAvatar type={type} shape={finalShape} size={size} />
       {alert}
     </View>
   )
@@ -289,8 +318,8 @@ let EditableUserAvatar = ({
       const croppedImage = await openCropper({
         mediaType: 'photo',
         cropperCircleOverlay: true,
-        height: item.height,
-        width: item.width,
+        height: 1000,
+        width: 1000,
         path: item.path,
         webAspectRatio: 1,
         webCircularCrop: true,
@@ -298,7 +327,8 @@ let EditableUserAvatar = ({
 
       onSelectNewAvatar(croppedImage)
     } catch (e: any) {
-      if (!String(e).includes('Canceled')) {
+      // Don't log errors for cancelling selection to sentry on ios or android
+      if (!String(e).toLowerCase().includes('cancel')) {
         logger.error('Failed to crop banner', {error: e})
       }
     }
@@ -401,7 +431,8 @@ let PreviewableUserAvatar = ({
   return (
     <ProfileHoverCard did={profile.did} disable={disableHoverCard}>
       <Link
-        label={_(msg`See profile`)}
+        label={_(msg`${profile.displayName || profile.handle}'s avatar`)}
+        accessibilityHint={_(msg`Opens this profile`)}
         to={makeProfileLink({
           did: profile.did,
           handle: profile.handle,
@@ -414,6 +445,16 @@ let PreviewableUserAvatar = ({
 }
 PreviewableUserAvatar = memo(PreviewableUserAvatar)
 export {PreviewableUserAvatar}
+
+// HACK
+// We have started serving smaller avis but haven't updated lexicons to give the data properly
+// manually string-replace to use the smaller ones
+// -prf
+function hackModifyThumbnailPath(uri: string, isEnabled: boolean): string {
+  return isEnabled
+    ? uri.replace('/img/avatar/plain/', '/img/avatar_thumbnail/plain/')
+    : uri
+}
 
 const styles = StyleSheet.create({
   editButtonContainer: {

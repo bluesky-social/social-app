@@ -51,6 +51,7 @@ export function FeedShutdownMsg({feedUri}: {feedUri: string}) {
         _(
           msg`There was an an issue updating your feeds, please check your internet connection and try again.`,
         ),
+        'exclamation-circle',
       )
       logger.error('Failed up update feeds', {message: err})
     }
@@ -69,6 +70,7 @@ export function FeedShutdownMsg({feedUri}: {feedUri: string}) {
         _(
           msg`There was an an issue updating your feeds, please check your internet connection and try again.`,
         ),
+        'exclamation-circle',
       )
       logger.error('Failed up update feeds', {message: err})
     }
@@ -97,6 +99,7 @@ export function FeedShutdownMsg({feedUri}: {feedUri: string}) {
         <Trans>
           This feed is no longer online. We are showing{' '}
           <InlineLinkText
+            label={_(msg`The Discover feed`)}
             to="/profile/bsky.app/feed/whats-hot"
             style={[a.text_md]}>
             Discover

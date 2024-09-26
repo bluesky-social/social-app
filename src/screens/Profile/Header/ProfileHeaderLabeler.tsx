@@ -10,6 +10,8 @@ import {
 import {msg, Plural, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import {MAX_LABELERS} from '#/lib/constants'
 import {isAppLabeler} from '#/lib/moderation'
 import {logger} from '#/logger'
 import {Shadow} from '#/state/cache/types'
@@ -75,14 +77,14 @@ let ProfileHeaderLabeler = ({
     [profile, moderationOpts],
   )
   const {data: preferences} = usePreferencesQuery()
-  const {mutateAsync: toggleSubscription, variables} =
-    useLabelerSubscriptionMutation()
+  const {
+    mutateAsync: toggleSubscription,
+    variables,
+    reset,
+  } = useLabelerSubscriptionMutation()
   const isSubscribed =
     variables?.subscribe ??
     preferences?.moderationPrefs.labelers.find(l => l.did === profile.did)
-  const canSubscribe =
-    isSubscribed ||
-    (preferences ? preferences?.moderationPrefs.labelers.length < 9 : false)
   const {mutateAsync: likeMod, isPending: isLikePending} = useLikeMutation()
   const {mutateAsync: unlikeMod, isPending: isUnlikePending} =
     useUnlikeMutation()
@@ -114,6 +116,7 @@ let ProfileHeaderLabeler = ({
         _(
           msg`There was an an issue contacting the server, please check your internet connection and try again.`,
         ),
+        'xmark',
       )
       logger.error(`Failed to toggle labeler like`, {message: e.message})
     }
@@ -130,17 +133,17 @@ let ProfileHeaderLabeler = ({
   const onPressSubscribe = React.useCallback(
     () =>
       requireAuth(async (): Promise<void> => {
-        if (!canSubscribe) {
-          cantSubscribePrompt.open()
-          return
-        }
         try {
           await toggleSubscription({
             did: profile.did,
             subscribe: !isSubscribed,
           })
         } catch (e: any) {
-          // setSubscriptionError(e.message)
+          reset()
+          if (e.message === 'MAX_LABELERS') {
+            cantSubscribePrompt.open()
+            return
+          }
           logger.error(`Failed to subscribe to labeler`, {message: e.message})
         }
       }),
@@ -149,8 +152,8 @@ let ProfileHeaderLabeler = ({
       toggleSubscription,
       isSubscribed,
       profile,
-      canSubscribe,
       cantSubscribePrompt,
+      reset,
     ],
   )
 
@@ -199,14 +202,13 @@ let ProfileHeaderLabeler = ({
                     style={[
                       {
                         paddingVertical: gtMobile ? 12 : 10,
-                        backgroundColor:
-                          isSubscribed || !canSubscribe
-                            ? state.hovered || state.pressed
-                              ? t.palette.contrast_50
-                              : t.palette.contrast_25
-                            : state.hovered || state.pressed
-                            ? tokens.color.temp_purple_dark
-                            : tokens.color.temp_purple,
+                        backgroundColor: isSubscribed
+                          ? state.hovered || state.pressed
+                            ? t.palette.contrast_50
+                            : t.palette.contrast_25
+                          : state.hovered || state.pressed
+                          ? tokens.color.temp_purple_dark
+                          : tokens.color.temp_purple,
                       },
                       a.px_lg,
                       a.rounded_sm,
@@ -215,11 +217,9 @@ let ProfileHeaderLabeler = ({
                     <Text
                       style={[
                         {
-                          color: canSubscribe
-                            ? isSubscribed
-                              ? t.palette.contrast_700
-                              : t.palette.white
-                            : t.palette.contrast_400,
+                          color: isSubscribed
+                            ? t.palette.contrast_700
+                            : t.palette.white,
                         },
                         a.font_bold,
                         a.text_center,
@@ -317,6 +317,9 @@ let ProfileHeaderLabeler = ({
 ProfileHeaderLabeler = memo(ProfileHeaderLabeler)
 export {ProfileHeaderLabeler}
 
+/**
+ * Keep this in sync with the value of {@link MAX_LABELERS}
+ */
 function CantSubscribePrompt({
   control,
 }: {
@@ -328,12 +331,12 @@ function CantSubscribePrompt({
       <Prompt.TitleText>Unable to subscribe</Prompt.TitleText>
       <Prompt.DescriptionText>
         <Trans>
-          We're sorry! You can only subscribe to ten labelers, and you've
-          reached your limit of ten.
+          We're sorry! You can only subscribe to twenty labelers, and you've
+          reached your limit of twenty.
         </Trans>
       </Prompt.DescriptionText>
       <Prompt.Actions>
-        <Prompt.Action onPress={control.close} cta={_(msg`OK`)} />
+        <Prompt.Action onPress={() => control.close()} cta={_(msg`OK`)} />
       </Prompt.Actions>
     </Prompt.Outer>
   )

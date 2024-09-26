@@ -1,19 +1,29 @@
 import React from 'react'
-import {Pressable, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {
+  Pressable,
+  StyleProp,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  ViewStyle,
+} from 'react-native'
 import {AppBskyEmbedExternal} from '@atproto/api'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {HITSLOP_10} from '#/lib/constants'
+import {HITSLOP_20} from '#/lib/constants'
 import {parseAltFromGIFDescription} from '#/lib/gif-alt-text'
+import {EmbedPlayerParams} from '#/lib/strings/embed-player'
 import {isWeb} from '#/platform/detection'
-import {EmbedPlayerParams} from 'lib/strings/embed-player'
-import {useAutoplayDisabled} from 'state/preferences'
+import {useAutoplayDisabled} from '#/state/preferences'
+import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
 import {atoms as a, useTheme} from '#/alf'
+import {Fill} from '#/components/Fill'
 import {Loader} from '#/components/Loader'
+import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
+import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
 import {GifView} from '../../../../../modules/expo-bluesky-gif-view'
 import {GifViewStateChangeEvent} from '../../../../../modules/expo-bluesky-gif-view/src/GifView.types'
 
@@ -43,13 +53,11 @@ function PlaybackControls({
         a.inset_0,
         a.w_full,
         a.h_full,
-        a.rounded_sm,
+        a.rounded_md,
         {
           zIndex: 2,
           backgroundColor: !isLoaded
             ? t.atoms.bg_contrast_25.backgroundColor
-            : !isPlaying
-            ? 'rgba(0, 0, 0, 0.3)'
             : undefined,
         },
       ]}
@@ -61,24 +69,7 @@ function PlaybackControls({
           </View>
         </View>
       ) : !isPlaying ? (
-        <View
-          style={[
-            a.rounded_full,
-            a.align_center,
-            a.justify_center,
-            {
-              backgroundColor: t.palette.primary_500,
-              width: 60,
-              height: 60,
-            },
-          ]}>
-          <FontAwesomeIcon
-            icon="play"
-            size={42}
-            color="white"
-            style={{marginLeft: 8}}
-          />
-        </View>
+        <PlayButtonIcon />
       ) : undefined}
     </Pressable>
   )
@@ -88,11 +79,14 @@ export function GifEmbed({
   params,
   link,
   hideAlt,
+  style = {width: '100%'},
 }: {
   params: EmbedPlayerParams
   link: AppBskyEmbedExternal.ViewExternal
   hideAlt?: boolean
+  style?: StyleProp<ViewStyle>
 }) {
+  const t = useTheme()
   const {_} = useLingui()
   const autoplayDisabled = useAutoplayDisabled()
 
@@ -123,15 +117,12 @@ export function GifEmbed({
   )
 
   return (
-    <View
-      style={[a.rounded_sm, a.overflow_hidden, a.mt_sm, {maxWidth: '100%'}]}>
+    <View style={[a.rounded_md, a.overflow_hidden, a.mt_sm, style]}>
       <View
         style={[
-          a.rounded_sm,
+          a.rounded_md,
           a.overflow_hidden,
-          {
-            aspectRatio: params.dimensions!.width / params.dimensions!.height,
-          },
+          {aspectRatio: params.dimensions!.width / params.dimensions!.height},
         ]}>
         <PlaybackControls
           onPress={onPress}
@@ -141,14 +132,24 @@ export function GifEmbed({
         <GifView
           source={params.playerUri}
           placeholderSource={link.thumb}
-          style={[a.flex_1, a.rounded_sm]}
+          style={[a.flex_1, a.rounded_md]}
           autoplay={!autoplayDisabled}
           onPlayerStateChange={onPlayerStateChange}
           ref={playerRef}
           accessibilityHint={_(msg`Animated GIF`)}
           accessibilityLabel={parsedAlt.alt}
         />
-
+        {!playerState.isPlaying && (
+          <Fill
+            style={[
+              t.name === 'light' ? t.atoms.bg_contrast_975 : t.atoms.bg,
+              {
+                opacity: 0.3,
+              },
+            ]}
+          />
+        )}
+        <MediaInsetBorder />
         {!hideAlt && parsedAlt.isPreferred && <AltText text={parsedAlt.alt} />}
       </View>
     </View>
@@ -157,6 +158,7 @@ export function GifEmbed({
 
 function AltText({text}: {text: string}) {
   const control = Prompt.usePromptControl()
+  const largeAltBadge = useLargeAltBadgeEnabled()
 
   const {_} = useLingui()
   return (
@@ -166,14 +168,15 @@ function AltText({text}: {text: string}) {
         accessibilityRole="button"
         accessibilityLabel={_(msg`Show alt text`)}
         accessibilityHint=""
-        hitSlop={HITSLOP_10}
+        hitSlop={HITSLOP_20}
         onPress={control.open}
         style={styles.altContainer}>
-        <Text style={styles.alt} accessible={false}>
+        <Text
+          style={[styles.alt, largeAltBadge && a.text_xs]}
+          accessible={false}>
           <Trans>ALT</Trans>
         </Text>
       </TouchableOpacity>
-
       <Prompt.Outer control={control}>
         <Prompt.TitleText>
           <Trans>Alt Text</Trans>
@@ -181,7 +184,7 @@ function AltText({text}: {text: string}) {
         <Prompt.DescriptionText selectable>{text}</Prompt.DescriptionText>
         <Prompt.Actions>
           <Prompt.Action
-            onPress={control.close}
+            onPress={() => control.close()}
             cta={_(msg`Close`)}
             color="secondary"
           />
@@ -195,18 +198,18 @@ const styles = StyleSheet.create({
   altContainer: {
     backgroundColor: 'rgba(0, 0, 0, 0.75)',
     borderRadius: 6,
-    paddingHorizontal: 6,
-    paddingVertical: 3,
+    paddingHorizontal: isWeb ? 8 : 6,
+    paddingVertical: isWeb ? 6 : 3,
     position: 'absolute',
     // Related to margin/gap hack. This keeps the alt label in the same position
     // on all platforms
-    left: isWeb ? 8 : 5,
+    right: isWeb ? 8 : 5,
     bottom: isWeb ? 8 : 5,
     zIndex: 2,
   },
   alt: {
     color: 'white',
-    fontSize: 10,
-    fontWeight: 'bold',
+    fontSize: isWeb ? 10 : 7,
+    fontWeight: '600',
   },
 })

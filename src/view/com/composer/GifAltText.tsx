@@ -160,7 +160,7 @@ function AltTextInner({
           </View>
           <Button
             label={_(msg`Save`)}
-            size="medium"
+            size="large"
             color="primary"
             variant="solid"
             onPress={onPressSubmit}>
@@ -174,8 +174,13 @@ function AltTextInner({
           <Text style={[a.text_2xl, a.font_bold, a.leading_tight, a.pb_sm]}>
             <Trans>Add alt text</Trans>
           </Text>
-          <View style={[a.w_full, a.align_center, native({maxHeight: 200})]}>
-            <GifEmbed link={link} params={params} hideAlt />
+          <View style={[a.align_center]}>
+            <GifEmbed
+              link={link}
+              params={params}
+              hideAlt
+              style={[native({maxHeight: 225})]}
+            />
           </View>
         </View>
       </View>

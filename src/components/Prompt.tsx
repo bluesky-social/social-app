@@ -1,14 +1,17 @@
 import React from 'react'
-import {View} from 'react-native'
+import {GestureResponderEvent, View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
-import {Button, ButtonColor, ButtonText} from '#/components/Button'
+import {Button, ButtonColor, ButtonProps, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {Text} from '#/components/Typography'
 
-export {useDialogControl as usePromptControl} from '#/components/Dialog'
+export {
+  type DialogControlProps as PromptControlProps,
+  useDialogControl as usePromptControl,
+} from '#/components/Dialog'
 
 const Context = React.createContext<{
   titleId: string
@@ -23,7 +26,7 @@ export function Outer({
   control,
   testID,
 }: React.PropsWithChildren<{
-  control: Dialog.DialogOuterProps['control']
+  control: Dialog.DialogControlProps
   testID?: string
 }>) {
   const {gtMobile} = useBreakpoints()
@@ -56,7 +59,9 @@ export function Outer({
 export function TitleText({children}: React.PropsWithChildren<{}>) {
   const {titleId} = React.useContext(Context)
   return (
-    <Text nativeID={titleId} style={[a.text_2xl, a.font_bold, a.pb_sm]}>
+    <Text
+      nativeID={titleId}
+      style={[a.text_2xl, a.font_bold, a.pb_sm, a.leading_snug]}>
       {children}
     </Text>
   )
@@ -115,7 +120,7 @@ export function Cancel({
     <Button
       variant="solid"
       color="secondary"
-      size={gtMobile ? 'small' : 'medium'}
+      size={gtMobile ? 'small' : 'large'}
       label={cta || _(msg`Cancel`)}
       onPress={onPress}>
       <ButtonText>{cta || _(msg`Cancel`)}</ButtonText>
@@ -136,7 +141,7 @@ export function Action({
    * Note: The dialog will close automatically when the action is pressed, you
    * should NOT close the dialog as a side effect of this method.
    */
-  onPress: () => void
+  onPress: ButtonProps['onPress']
   color?: ButtonColor
   /**
    * Optional i18n string. If undefined, it will default to "Confirm".
@@ -147,15 +152,18 @@ export function Action({
   const {_} = useLingui()
   const {gtMobile} = useBreakpoints()
   const {close} = Dialog.useDialogContext()
-  const handleOnPress = React.useCallback(() => {
-    close(onPress)
-  }, [close, onPress])
+  const handleOnPress = React.useCallback(
+    (e: GestureResponderEvent) => {
+      close(() => onPress?.(e))
+    },
+    [close, onPress],
+  )
 
   return (
     <Button
       variant="solid"
       color={color}
-      size={gtMobile ? 'small' : 'medium'}
+      size={gtMobile ? 'small' : 'large'}
       label={cta || _(msg`Confirm`)}
       onPress={handleOnPress}
       testID={testID}>
@@ -186,7 +194,7 @@ export function Basic({
    * Note: The dialog will close automatically when the action is pressed, you
    * should NOT close the dialog as a side effect of this method.
    */
-  onConfirm: () => void
+  onConfirm: ButtonProps['onPress']
   confirmButtonColor?: ButtonColor
   showCancel?: boolean
 }>) {

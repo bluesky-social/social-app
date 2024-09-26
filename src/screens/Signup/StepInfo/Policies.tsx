@@ -45,14 +45,20 @@ export const Policies = ({
   const els = []
   if (tos) {
     els.push(
-      <InlineLinkText key="tos" to={tos}>
+      <InlineLinkText
+        label={_(msg`Read the Bluesky Terms of Service`)}
+        key="tos"
+        to={tos}>
         {_(msg`Terms of Service`)}
       </InlineLinkText>,
     )
   }
   if (pp) {
     els.push(
-      <InlineLinkText key="pp" to={pp}>
+      <InlineLinkText
+        label={_(msg`Read the Bluesky Privacy Policy`)}
+        key="pp"
+        to={pp}>
         {_(msg`Privacy Policy`)}
       </InlineLinkText>,
     )

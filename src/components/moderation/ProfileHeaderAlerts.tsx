@@ -1,20 +1,12 @@
 import React from 'react'
-import {StyleProp, View, ViewStyle} from 'react-native'
-import {ModerationCause, ModerationDecision} from '@atproto/api'
+import {StyleProp, ViewStyle} from 'react-native'
+import {ModerationDecision} from '@atproto/api'
 
 import {getModerationCauseKey} from 'lib/moderation'
-import {useModerationCauseDescription} from '#/lib/moderation/useModerationCauseDescription'
-
-import {atoms as a} from '#/alf'
-import {Button, ButtonText, ButtonIcon} from '#/components/Button'
-import {
-  ModerationDetailsDialog,
-  useModerationDetailsDialogControl,
-} from '#/components/moderation/ModerationDetailsDialog'
+import * as Pills from '#/components/Pills'
 
 export function ProfileHeaderAlerts({
   moderation,
-  style,
 }: {
   moderation: ModerationDecision
   style?: StyleProp<ViewStyle>
@@ -25,42 +17,21 @@ export function ProfileHeaderAlerts({
   }
 
   return (
-    <View style={[a.flex_col, a.gap_xs, style]}>
-      <View style={[a.flex_row, a.flex_wrap, a.gap_xs]}>
-        {modui.alerts.map(cause => (
-          <ProfileLabel key={getModerationCauseKey(cause)} cause={cause} />
-        ))}
-        {modui.informs.map(cause => (
-          <ProfileLabel key={getModerationCauseKey(cause)} cause={cause} />
-        ))}
-      </View>
-    </View>
-  )
-}
-
-function ProfileLabel({cause}: {cause: ModerationCause}) {
-  const control = useModerationDetailsDialogControl()
-  const desc = useModerationCauseDescription(cause)
-
-  return (
-    <>
-      <Button
-        label={desc.name}
-        variant="solid"
-        color="secondary"
-        size="small"
-        shape="default"
-        onPress={() => {
-          control.open()
-        }}
-        style={[a.px_sm, a.py_xs, a.gap_xs]}>
-        <ButtonIcon icon={desc.icon} position="left" />
-        <ButtonText style={[a.text_left, a.leading_snug]}>
-          {desc.name}
-        </ButtonText>
-      </Button>
-
-      <ModerationDetailsDialog control={control} modcause={cause} />
-    </>
+    <Pills.Row size="lg">
+      {modui.alerts.map(cause => (
+        <Pills.Label
+          size="lg"
+          key={getModerationCauseKey(cause)}
+          cause={cause}
+        />
+      ))}
+      {modui.informs.map(cause => (
+        <Pills.Label
+          size="lg"
+          key={getModerationCauseKey(cause)}
+          cause={cause}
+        />
+      ))}
+    </Pills.Row>
   )
 }

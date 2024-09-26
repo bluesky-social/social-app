@@ -39,6 +39,15 @@ module.exports = function (config) {
   const IS_TESTFLIGHT = process.env.EXPO_PUBLIC_ENV === 'testflight'
   const IS_PRODUCTION = process.env.EXPO_PUBLIC_ENV === 'production'
 
+  const ASSOCIATED_DOMAINS = [
+    'applinks:bsky.app',
+    'applinks:staging.bsky.app',
+    'appclips:bsky.app',
+    'appclips:go.bsky.app', // Allows App Clip to work when scanning QR codes
+    // When testing local services, enter an ngrok (et al) domain here. It must use a standard HTTP/HTTPS port.
+    ...(IS_DEV || IS_TESTFLIGHT ? [] : []),
+  ]
+
   const UPDATES_CHANNEL = IS_TESTFLIGHT
     ? 'testflight'
     : IS_PRODUCTION
@@ -46,6 +55,7 @@ module.exports = function (config) {
     : undefined
   const UPDATES_ENABLED = !!UPDATES_CHANNEL
 
+  const USE_SENTRY = Boolean(process.env.SENTRY_AUTH_TOKEN)
   const SENTRY_DIST = `${PLATFORM}.${VERSION}.${IS_TESTFLIGHT ? 'tf' : ''}${
     IS_DEV ? 'dev' : ''
   }`
@@ -83,7 +93,7 @@ module.exports = function (config) {
           NSPhotoLibraryUsageDescription:
             'Used for profile pictures, posts, and other kinds of content',
         },
-        associatedDomains: ['applinks:bsky.app', 'applinks:staging.bsky.app'],
+        associatedDomains: ASSOCIATED_DOMAINS,
         splash: {
           ...SPLASH_CONFIG,
           dark: DARK_SPLASH_CONFIG,
@@ -175,15 +185,22 @@ module.exports = function (config) {
         checkAutomatically: 'NEVER',
         channel: UPDATES_CHANNEL,
       },
-      assetBundlePatterns: ['**/*'],
       plugins: [
         'expo-localization',
-        Boolean(process.env.SENTRY_AUTH_TOKEN) && 'sentry-expo',
+        USE_SENTRY && [
+          '@sentry/react-native/expo',
+          {
+            organization: 'blueskyweb',
+            project: 'react-native',
+            release: VERSION,
+            dist: SENTRY_DIST,
+          },
+        ],
         [
           'expo-build-properties',
           {
             ios: {
-              deploymentTarget: '13.4',
+              deploymentTarget: '15.1',
               newArchEnabled: false,
             },
             android: {
@@ -203,6 +220,8 @@ module.exports = function (config) {
             sounds: PLATFORM === 'ios' ? ['assets/dm.aiff'] : ['assets/dm.mp3'],
           },
         ],
+        'react-native-compressor',
+        './plugins/starterPackAppClipExtension/withStarterPackAppClip.js',
         './plugins/withAndroidManifestPlugin.js',
         './plugins/withAndroidManifestFCMIconPlugin.js',
         './plugins/withAndroidStylesWindowBackgroundPlugin.js',
@@ -210,6 +229,32 @@ module.exports = function (config) {
         './plugins/withAndroidSplashScreenStatusBarTranslucentPlugin.js',
         './plugins/shareExtension/withShareExtensions.js',
         './plugins/notificationsExtension/withNotificationsExtension.js',
+        './plugins/withAppDelegateReferrer.js',
+        [
+          'expo-font',
+          {
+            fonts: [
+              // './assets/fonts/inter/Inter-Thin.otf',
+              // './assets/fonts/inter/Inter-ThinItalic.otf',
+              // './assets/fonts/inter/Inter-ExtraLight.otf',
+              // './assets/fonts/inter/Inter-ExtraLightItalic.otf',
+              // './assets/fonts/inter/Inter-Light.otf',
+              // './assets/fonts/inter/Inter-LightItalic.otf',
+              './assets/fonts/inter/Inter-Regular.otf',
+              './assets/fonts/inter/Inter-Italic.otf',
+              './assets/fonts/inter/Inter-Medium.otf',
+              './assets/fonts/inter/Inter-MediumItalic.otf',
+              './assets/fonts/inter/Inter-SemiBold.otf',
+              './assets/fonts/inter/Inter-SemiBoldItalic.otf',
+              './assets/fonts/inter/Inter-Bold.otf',
+              './assets/fonts/inter/Inter-BoldItalic.otf',
+              './assets/fonts/inter/Inter-ExtraBold.otf',
+              './assets/fonts/inter/Inter-ExtraBoldItalic.otf',
+              './assets/fonts/inter/Inter-Black.otf',
+              './assets/fonts/inter/Inter-BlackItalic.otf',
+            ],
+          },
+        ],
       ].filter(Boolean),
       extra: {
         eas: {
@@ -235,6 +280,10 @@ module.exports = function (config) {
                       ],
                     },
                   },
+                  {
+                    targetName: 'BlueskyClip',
+                    bundleIdentifier: 'xyz.blueskyweb.app.AppClip',
+                  },
                 ],
               },
             },
@@ -248,7 +297,7 @@ module.exports = function (config) {
            * @see https://docs.expo.dev/guides/using-sentry/#app-configuration
            */
           {
-            file: 'sentry-expo/upload-sourcemaps',
+            file: './postHooks/uploadSentrySourcemapsPostHook',
             config: {
               organization: 'blueskyweb',
               project: 'react-native',

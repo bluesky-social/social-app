@@ -17,6 +17,19 @@ import {Text, TextProps} from '#/components/Typography'
 
 const WORD_WRAP = {wordWrap: 1}
 
+export type RichTextProps = TextStyleProp &
+  Pick<TextProps, 'selectable'> & {
+    value: RichTextAPI | string
+    testID?: string
+    numberOfLines?: number
+    disableLinks?: boolean
+    enableTags?: boolean
+    authorHandle?: string
+    onLinkPress?: LinkProps['onPress']
+    interactiveStyle?: TextStyle
+    emojiMultiplier?: number
+  }
+
 export function RichText({
   testID,
   value,
@@ -28,17 +41,8 @@ export function RichText({
   authorHandle,
   onLinkPress,
   interactiveStyle,
-}: TextStyleProp &
-  Pick<TextProps, 'selectable'> & {
-    value: RichTextAPI | string
-    testID?: string
-    numberOfLines?: number
-    disableLinks?: boolean
-    enableTags?: boolean
-    authorHandle?: string
-    onLinkPress?: LinkProps['onPress']
-    interactiveStyle?: TextStyle
-  }) {
+  emojiMultiplier = 1.85,
+}: RichTextProps) {
   const richText = React.useMemo(
     () =>
       value instanceof RichTextAPI ? value : new RichTextAPI({text: value}),
@@ -57,17 +61,15 @@ export function RichText({
   const {text, facets} = richText
 
   if (!facets?.length) {
-    if (text.length <= 5 && /^\p{Extended_Pictographic}+$/u.test(text)) {
+    if (isOnlyEmoji(text)) {
+      const fontSize =
+        (flattenedStyle.fontSize ?? a.text_sm.fontSize) * emojiMultiplier
       return (
         <Text
+          emoji
           selectable={selectable}
           testID={testID}
-          style={[
-            {
-              fontSize: 26,
-              lineHeight: 30,
-            },
-          ]}
+          style={[plainStyles, {fontSize}]}
           // @ts-ignore web only -prf
           dataSet={WORD_WRAP}>
           {text}
@@ -76,6 +78,7 @@ export function RichText({
     }
     return (
       <Text
+        emoji
         selectable={selectable}
         testID={testID}
         style={plainStyles}
@@ -147,7 +150,11 @@ export function RichText({
         />,
       )
     } else {
-      els.push(segment.text)
+      els.push(
+        <Text key={key} emoji style={plainStyles}>
+          {segment.text}
+        </Text>,
+      )
     }
     key++
   }
@@ -212,6 +219,7 @@ function RichTextTag({
     <React.Fragment>
       <TagMenu control={control} tag={tag} authorHandle={authorHandle}>
         <Text
+          emoji
           selectable={selectable}
           {...native({
             accessibilityLabel: _(msg`Hashtag: #${tag}`),
@@ -245,5 +253,12 @@ function RichTextTag({
         </Text>
       </TagMenu>
     </React.Fragment>
+  )
+}
+
+export function isOnlyEmoji(text: string) {
+  return (
+    text.length <= 15 &&
+    /^[\p{Emoji_Presentation}\p{Extended_Pictographic}]+$/u.test(text)
   )
 }

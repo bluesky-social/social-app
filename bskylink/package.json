@@ -1,0 +1,26 @@
+{
+  "name": "bskylink",
+  "version": "0.0.0",
+  "type": "module",
+  "main": "index.ts",
+  "scripts": {
+    "test": "./tests/infra/with-test-db.sh node --loader ts-node/esm --test ./tests/index.ts",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@atproto/common": "^0.4.0",
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "http-terminator": "^3.2.0",
+    "kysely": "^0.27.3",
+    "pg": "^8.12.0",
+    "pino": "^9.2.0",
+    "uint8arrays": "^5.1.0"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/pg": "^8.11.6",
+    "typescript": "^5.4.5"
+  }
+}

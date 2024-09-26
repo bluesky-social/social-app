@@ -129,7 +129,7 @@ export const ForgotPasswordForm = ({
           label={_(msg`Back`)}
           variant="solid"
           color="secondary"
-          size="medium"
+          size="large"
           onPress={onPressBack}>
           <ButtonText>
             <Trans>Back</Trans>
@@ -143,9 +143,8 @@ export const ForgotPasswordForm = ({
             label={_(msg`Next`)}
             variant="solid"
             color={'primary'}
-            size="medium"
-            onPress={onPressNext}
-            disabled={!email}>
+            size="large"
+            onPress={onPressNext}>
             <ButtonText>
               <Trans>Next</Trans>
             </ButtonText>
@@ -171,7 +170,7 @@ export const ForgotPasswordForm = ({
           onPress={onEmailSent}
           label={_(msg`Go to next`)}
           accessibilityHint={_(msg`Navigates to the next screen`)}
-          size="medium"
+          size="large"
           variant="ghost"
           color="secondary">
           <ButtonText>

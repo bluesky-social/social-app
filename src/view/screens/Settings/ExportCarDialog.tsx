@@ -21,11 +21,10 @@ export function ExportCarDialog({
 }) {
   const {_} = useLingui()
   const t = useTheme()
-  const {getAgent} = useAgent()
+  const agent = useAgent()
   const [loading, setLoading] = React.useState(false)
 
   const download = React.useCallback(async () => {
-    const agent = getAgent()
     if (!agent.session) {
       return // shouldnt ever happen
     }
@@ -44,12 +43,12 @@ export function ExportCarDialog({
       }
     } catch (e) {
       logger.error('Error occurred while downloading CAR file', {message: e})
-      Toast.show(_(msg`Error occurred while saving file`))
+      Toast.show(_(msg`Error occurred while saving file`), 'xmark')
     } finally {
       setLoading(false)
       control.close()
     }
-  }, [_, control, getAgent])
+  }, [_, control, agent])
 
   return (
     <Dialog.Outer control={control}>
@@ -95,6 +94,7 @@ export function ExportCarDialog({
               This feature is in beta. You can read more about repository
               exports in{' '}
               <InlineLinkText
+                label={_(msg`View blogpost for more details`)}
                 to="https://docs.bsky.app/blog/repo-export"
                 style={[a.text_sm]}>
                 this blogpost

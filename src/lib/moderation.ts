@@ -1,17 +1,22 @@
+import React from 'react'
 import {
-  ModerationCause,
-  ModerationUI,
-  InterpretedLabelValueDefinition,
-  LABELS,
   AppBskyLabelerDefs,
   BskyAgent,
+  ComAtprotoLabelDefs,
+  InterpretedLabelValueDefinition,
+  LABELS,
+  ModerationCause,
   ModerationOpts,
+  ModerationUI,
 } from '@atproto/api'
 
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
+import {AppModerationCause} from '#/components/Pills'
 
-export function getModerationCauseKey(cause: ModerationCause): string {
+export function getModerationCauseKey(
+  cause: ModerationCause | AppModerationCause,
+): string {
   const source =
     cause.source.type === 'labeler'
       ? cause.source.did
@@ -26,6 +31,20 @@ export function getModerationCauseKey(cause: ModerationCause): string {
 
 export function isJustAMute(modui: ModerationUI): boolean {
   return modui.filters.length === 1 && modui.filters[0].type === 'muted'
+}
+
+export function moduiContainsHideableOffense(modui: ModerationUI): boolean {
+  const label = modui.filters.at(0)
+  if (label && label.type === 'label') {
+    return labelIsHideableOffense(label.label)
+  }
+  return false
+}
+
+export function labelIsHideableOffense(
+  label: ComAtprotoLabelDefs.Label,
+): boolean {
+  return ['!hide', '!takedown'].includes(label.val)
 }
 
 export function getLabelingServiceTitle({
@@ -78,4 +97,35 @@ export function isLabelerSubscribed(
     return true
   }
   return modOpts.prefs.labelers.find(l => l.did === labeler)
+}
+
+export type Subject =
+  | {
+      uri: string
+      cid: string
+    }
+  | {
+      did: string
+    }
+
+export function useLabelSubject({label}: {label: ComAtprotoLabelDefs.Label}): {
+  subject: Subject
+} {
+  return React.useMemo(() => {
+    const {cid, uri} = label
+    if (cid) {
+      return {
+        subject: {
+          uri,
+          cid,
+        },
+      }
+    } else {
+      return {
+        subject: {
+          did: uri,
+        },
+      }
+    }
+  }, [label])
 }

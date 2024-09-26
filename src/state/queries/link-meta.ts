@@ -21,14 +21,14 @@ export type LinkMetaReturn = {
 }
 
 export function useLinkMetaQuery(url: string) {
-  const {getAgent} = useAgent()
+  const agent = useAgent()
 
   return useQuery({
     staleTime: STALE.MINUTES.FIVE,
     queryKey: RQKEY(url),
     async queryFn(): Promise<LinkMetaReturn> {
       if (isBskyAppUrl(url)) {
-        const meta = await extractBskyMeta(getAgent(), url)
+        const meta = await extractBskyMeta(agent, url)
         return {meta: meta}
       }
 
@@ -63,7 +63,7 @@ export function useLinkMetaQuery(url: string) {
       try {
         const signal = AbortSignal.timeout(TIMEOUT)
         const proxyUrl = `${LINK_META_PROXY(
-          getAgent().service.toString() || '',
+          agent.serviceUrl.toString() || '',
         )}${encodeURIComponent(url)}`
 
         const response = await fetch(proxyUrl, {signal})

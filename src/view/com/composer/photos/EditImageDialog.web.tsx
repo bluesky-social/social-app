@@ -6,7 +6,11 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import ReactCrop, {PercentCrop} from 'react-image-crop'
 
-import {manipulateImage} from '#/state/gallery'
+import {
+  ImageSource,
+  ImageTransformation,
+  manipulateImage,
+} from '#/state/gallery'
 import {atoms as a} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -25,27 +29,8 @@ const EditImageInner = ({control, image, onChange}: EditImageDialogProps) => {
   const {_} = useLingui()
 
   const source = image.source
-  const manips = image.manips
 
-  const {initialCrop} = React.useMemo(() => {
-    const initialArea = manips?.crop
-    let crop: PercentCrop | undefined
-
-    if (initialArea) {
-      crop = {
-        unit: '%',
-        x: (initialArea.originX / source.width) * 100,
-        y: (initialArea.originY / source.height) * 100,
-        width: (initialArea.width / source.width) * 100,
-        height: (initialArea.height / source.height) * 100,
-      }
-    }
-
-    return {
-      initialCrop: crop,
-    }
-  }, [source, manips])
-
+  const initialCrop = getInitialCrop(source, image.manips)
   const [crop, setCrop] = React.useState(initialCrop)
 
   const isEmpty = !crop || (crop.width || crop.height) === 0
@@ -53,19 +38,20 @@ const EditImageInner = ({control, image, onChange}: EditImageDialogProps) => {
 
   const onPressSubmit = React.useCallback(async () => {
     const result = await manipulateImage(image, {
-      crop: !isEmpty
-        ? {
-            originX: (crop.x * source.width) / 100,
-            originY: (crop.y * source.height) / 100,
-            width: (crop.width * source.width) / 100,
-            height: (crop.height * source.height) / 100,
-          }
-        : undefined,
+      crop:
+        crop && (crop.width || crop.height) !== 0
+          ? {
+              originX: (crop.x * source.width) / 100,
+              originY: (crop.y * source.height) / 100,
+              width: (crop.width * source.width) / 100,
+              height: (crop.height * source.height) / 100,
+            }
+          : undefined,
     })
 
     onChange(result)
     control.close()
-  }, [crop, isEmpty, image, source, control, onChange])
+  }, [crop, image, source, control, onChange])
 
   return (
     <Dialog.Inner label={_(msg`Edit image`)}>
@@ -78,7 +64,7 @@ const EditImageInner = ({control, image, onChange}: EditImageDialogProps) => {
       <View style={[a.align_center]}>
         <ReactCrop
           crop={crop}
-          onChange={(_, next) => setCrop(next)}
+          onChange={(_pixelCrop, percentCrop) => setCrop(percentCrop)}
           className="ReactCrop--no-animate">
           <img src={source.path} style={{maxHeight: `50vh`}} />
         </ReactCrop>
@@ -88,7 +74,7 @@ const EditImageInner = ({control, image, onChange}: EditImageDialogProps) => {
         <Button
           disabled={!isNew}
           label={_(msg`Save`)}
-          size="medium"
+          size="large"
           color="primary"
           variant="solid"
           onPress={onPressSubmit}>
@@ -99,4 +85,21 @@ const EditImageInner = ({control, image, onChange}: EditImageDialogProps) => {
       </View>
     </Dialog.Inner>
   )
+}
+
+const getInitialCrop = (
+  source: ImageSource,
+  manips: ImageTransformation | undefined,
+): PercentCrop | undefined => {
+  const initialArea = manips?.crop
+
+  if (initialArea) {
+    return {
+      unit: '%',
+      x: (initialArea.originX / source.width) * 100,
+      y: (initialArea.originY / source.height) * 100,
+      width: (initialArea.width / source.width) * 100,
+      height: (initialArea.height / source.height) * 100,
+    }
+  }
 }

@@ -1,9 +1,15 @@
 import React from 'react'
-import {GestureResponderEvent} from 'react-native'
+import {
+  GestureResponderEvent,
+  Pressable,
+  StyleProp,
+  ViewStyle,
+} from 'react-native'
 import {sanitizeUrl} from '@braintree/sanitize-url'
 import {StackActions, useLinkProps} from '@react-navigation/native'
 
 import {BSKY_DOWNLOAD_URL} from '#/lib/constants'
+import {useNavigationDeduped} from '#/lib/hooks/useNavigationDeduped'
 import {AllNavigatorParams} from '#/lib/routes/types'
 import {shareUrl} from '#/lib/sharing'
 import {
@@ -13,9 +19,9 @@ import {
   linkRequiresWarning,
 } from '#/lib/strings/url-helpers'
 import {isNative, isWeb} from '#/platform/detection'
+import {shouldClickOpenNewTab} from '#/platform/urls'
 import {useModalControls} from '#/state/modals'
 import {useOpenLink} from '#/state/preferences/in-app-browser'
-import {useNavigationDeduped} from 'lib/hooks/useNavigationDeduped'
 import {atoms as a, flatten, TextStyleProp, useTheme, web} from '#/alf'
 import {Button, ButtonProps} from '#/components/Button'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
@@ -33,11 +39,6 @@ type BaseLinkProps = Pick<
   'to'
 > & {
   testID?: string
-
-  /**
-   * Label for a11y. Defaults to the href.
-   */
-  label?: string
 
   /**
    * The React Navigation `StackAction` to perform when the link is pressed.
@@ -116,16 +117,7 @@ export function useLink({
         if (isExternal) {
           openLink(href)
         } else {
-          /**
-           * A `GestureResponderEvent`, but cast to `any` to avoid using a bunch
-           * of @ts-ignore below.
-           */
-          const event = e as any
-          const isMiddleClick = isWeb && event.button === 1
-          const isMetaKey =
-            isWeb &&
-            (event.metaKey || event.altKey || event.ctrlKey || event.shiftKey)
-          const shouldOpenInNewTab = isMetaKey || isMiddleClick
+          const shouldOpenInNewTab = shouldClickOpenNewTab(e)
 
           if (isBskyDownloadUrl(href)) {
             shareUrl(BSKY_DOWNLOAD_URL)
@@ -200,7 +192,7 @@ export function useLink({
 }
 
 export type LinkProps = Omit<BaseLinkProps, 'disableMismatchWarning'> &
-  Omit<ButtonProps, 'onPress' | 'disabled' | 'label'>
+  Omit<ButtonProps, 'onPress' | 'disabled'>
 
 /**
  * A interactive element that renders as a `<a>` tag on the web. On mobile it
@@ -227,7 +219,6 @@ export function Link({
 
   return (
     <Button
-      label={href}
       {...rest}
       style={[a.justify_start, flatten(rest.style)]}
       role="link"
@@ -252,7 +243,11 @@ export function Link({
 
 export type InlineLinkProps = React.PropsWithChildren<
   BaseLinkProps & TextStyleProp & Pick<TextProps, 'selectable'>
->
+> &
+  Pick<ButtonProps, 'label'> & {
+    disableUnderline?: boolean
+    title?: TextProps['title']
+  }
 
 export function InlineLinkText({
   children,
@@ -265,6 +260,7 @@ export function InlineLinkText({
   selectable,
   label,
   shareOnLongPress,
+  disableUnderline,
   ...rest
 }: InlineLinkProps) {
   const t = useTheme()
@@ -294,15 +290,16 @@ export function InlineLinkText({
     <Text
       selectable={selectable}
       accessibilityHint=""
-      accessibilityLabel={label || href}
+      accessibilityLabel={label}
       {...rest}
       style={[
         {color: t.palette.primary_500},
-        (hovered || focused || pressed) && {
-          ...web({outline: 0}),
-          textDecorationLine: 'underline',
-          textDecorationColor: flattenedStyle.color ?? t.palette.primary_500,
-        },
+        (hovered || focused || pressed) &&
+          !disableUnderline && {
+            ...web({outline: 0}),
+            textDecorationLine: 'underline',
+            textDecorationColor: flattenedStyle.color ?? t.palette.primary_500,
+          },
         flattenedStyle,
       ]}
       role="link"
@@ -329,5 +326,62 @@ export function InlineLinkText({
       })}>
       {children}
     </Text>
+  )
+}
+
+/**
+ * A Pressable that uses useLink to handle navigation. It is unstyled, so can be used in cases where the Button styles
+ * in Link are not desired.
+ * @param displayText
+ * @param style
+ * @param children
+ * @param rest
+ * @constructor
+ */
+export function BaseLink({
+  displayText,
+  onPress: onPressOuter,
+  style,
+  children,
+  ...rest
+}: {
+  style?: StyleProp<ViewStyle>
+  children: React.ReactNode
+  to: string
+  action: 'push' | 'replace' | 'navigate'
+  onPress?: () => false | void
+  shareOnLongPress?: boolean
+  label: string
+  displayText?: string
+}) {
+  const {onPress, ...btnProps} = useLink({
+    displayText: displayText ?? rest.to,
+    ...rest,
+  })
+  return (
+    <Pressable
+      style={style}
+      onPress={e => {
+        onPressOuter?.()
+        onPress(e)
+      }}
+      {...btnProps}>
+      {children}
+    </Pressable>
+  )
+}
+
+export function WebOnlyInlineLinkText({
+  children,
+  to,
+  onPress,
+  ...props
+}: InlineLinkProps) {
+  return isWeb ? (
+    <InlineLinkText {...props} to={to} onPress={onPress}>
+      {children}
+    </InlineLinkText>
+  ) : (
+    <Text {...props}>{children}</Text>
   )
 }

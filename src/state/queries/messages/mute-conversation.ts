@@ -21,13 +21,11 @@ export function useMuteConvo(
   },
 ) {
   const queryClient = useQueryClient()
-  const {getAgent} = useAgent()
+  const agent = useAgent()
 
   return useMutation({
     mutationFn: async ({mute}: {mute: boolean}) => {
       if (!convoId) throw new Error('No convoId provided')
-
-      const agent = getAgent()
       if (mute) {
         const {data} = await agent.api.chat.bsky.convo.muteConvo(
           {convoId},

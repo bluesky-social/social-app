@@ -1,8 +1,4 @@
 import {Platform} from 'react-native'
-import {isReducedMotion} from 'react-native-reanimated'
-import {getLocales} from 'expo-localization'
-
-import {dedupArray} from 'lib/functions'
 
 export const isIOS = Platform.OS === 'ios'
 export const isAndroid = Platform.OS === 'android'
@@ -14,11 +10,4 @@ export const isMobileWeb =
   isWeb &&
   // @ts-ignore we know window exists -prf
   global.window.matchMedia(isMobileWebMediaQuery)?.matches
-
-export const deviceLocales = dedupArray(
-  getLocales?.()
-    .map?.(locale => locale.languageCode)
-    .filter(code => typeof code === 'string'),
-) as string[]
-
-export const prefersReducedMotion = isReducedMotion()
+export const isIPhoneWeb = isWeb && /iPhone/.test(navigator.userAgent)

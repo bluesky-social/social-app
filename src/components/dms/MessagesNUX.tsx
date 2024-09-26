@@ -57,7 +57,7 @@ function DialogInner({
   const [initialized, setInitialzed] = React.useState(false)
   const {mutate: updateDeclaration} = useUpdateActorDeclaration({
     onError: () => {
-      Toast.show(_(msg`Failed to update settings`))
+      Toast.show(_(msg`Failed to update settings`), 'xmark')
     },
   })
 
@@ -160,7 +160,7 @@ function DialogInner({
         <Button
           label={_(msg`Start chatting`)}
           accessibilityHint={_(msg`Close modal`)}
-          size="medium"
+          size="large"
           color="primary"
           variant="solid"
           onPress={() => control.close()}>

@@ -35,12 +35,12 @@ export type Props = {onChanged: () => void}
 
 export function Component(props: Props) {
   const {currentAccount} = useSession()
-  const {getAgent} = useAgent()
+  const agent = useAgent()
   const {
     isLoading,
     data: serviceInfo,
     error: serviceInfoError,
-  } = useServiceQuery(getAgent().service.toString())
+  } = useServiceQuery(agent.service.toString())
 
   return isLoading || !currentAccount ? (
     <View style={{padding: 18}}>
@@ -71,7 +71,7 @@ export function Inner({
   const {closeModal} = useModalControls()
   const {mutateAsync: updateHandle, isPending: isUpdateHandlePending} =
     useUpdateHandleMutation()
-  const {getAgent} = useAgent()
+  const agent = useAgent()
 
   const [error, setError] = useState<string>('')
 
@@ -111,7 +111,7 @@ export function Inner({
       await updateHandle({
         handle: newHandle,
       })
-      await getAgent().resumeSession(getAgent().session!)
+      await agent.resumeSession(agent.session!)
       closeModal()
       onChanged()
     } catch (err: any) {
@@ -129,7 +129,7 @@ export function Inner({
     closeModal,
     updateHandle,
     serviceInfo,
-    getAgent,
+    agent,
   ])
 
   // rendering
@@ -317,7 +317,7 @@ function CustomHandleForm({
   // =
   const onPressCopy = React.useCallback(() => {
     setStringAsync(isDNSForm ? `did=${currentAccount.did}` : currentAccount.did)
-    Toast.show(_(msg`Copied to clipboard`))
+    Toast.show(_(msg`Copied to clipboard`), 'clipboard-check')
   }, [currentAccount, isDNSForm, _])
   const onChangeHandle = React.useCallback(
     (v: string) => {

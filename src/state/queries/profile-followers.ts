@@ -15,7 +15,7 @@ const RQKEY_ROOT = 'profile-followers'
 export const RQKEY = (did: string) => [RQKEY_ROOT, did]
 
 export function useProfileFollowersQuery(did: string | undefined) {
-  const {getAgent} = useAgent()
+  const agent = useAgent()
   return useInfiniteQuery<
     AppBskyGraphGetFollowers.OutputSchema,
     Error,
@@ -25,7 +25,7 @@ export function useProfileFollowersQuery(did: string | undefined) {
   >({
     queryKey: RQKEY(did || ''),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
-      const res = await getAgent().app.bsky.graph.getFollowers({
+      const res = await agent.app.bsky.graph.getFollowers({
         actor: did || '',
         limit: PAGE_SIZE,
         cursor: pageParam,

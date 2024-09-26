@@ -1,6 +1,7 @@
 import {Dimensions, StyleProp, StyleSheet, TextStyle} from 'react-native'
+
+import {isWeb} from '#/platform/detection'
 import {Theme, TypographyVariant} from './ThemeContext'
-import {isWeb} from 'platform/detection'
 
 // 1 is lightest, 2 is light, 3 is mid, 4 is dark, 5 is darkest
 export const colors = {
@@ -78,14 +79,13 @@ export const s = StyleSheet.create({
 
   // font weights
   fw600: {fontWeight: '600'},
-  bold: {fontWeight: 'bold'},
-  fw500: {fontWeight: '500'},
-  semiBold: {fontWeight: '500'},
+  bold: {fontWeight: '600'},
+  fw500: {fontWeight: '600'},
+  semiBold: {fontWeight: '600'},
   fw400: {fontWeight: '400'},
   normal: {fontWeight: '400'},
-  fw300: {fontWeight: '300'},
-  light: {fontWeight: '300'},
-  fw200: {fontWeight: '200'},
+  fw300: {fontWeight: '400'},
+  light: {fontWeight: '400'},
 
   // text decoration
   underline: {textDecorationLine: 'underline'},

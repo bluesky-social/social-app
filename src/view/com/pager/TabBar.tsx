@@ -1,9 +1,9 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {LayoutChangeEvent, ScrollView, StyleSheet, View} from 'react-native'
 
+import {usePalette} from '#/lib/hooks/usePalette'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {isNative} from '#/platform/detection'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {PressableWithHover} from '../util/PressableWithHover'
 import {Text} from '../util/text/Text'
 import {DraggableScrollView} from './DraggableScrollView'
@@ -131,13 +131,14 @@ export function TabBar({
             <PressableWithHover
               testID={`${testID}-selector-${i}`}
               key={`${item}-${i}`}
-              ref={node => (itemRefs.current[i] = node)}
+              ref={node => (itemRefs.current[i] = node as any)}
               onLayout={e => onItemLayout(e, i)}
               style={styles.item}
               hoverStyle={pal.viewLight}
               onPress={() => onPressItem(i)}>
               <View style={[styles.itemInner, selected && indicatorStyle]}>
                 <Text
+                  emoji
                   type={isDesktop || isTablet ? 'xl-bold' : 'lg-bold'}
                   testID={testID ? `${testID}-${item}` : undefined}
                   style={[
@@ -179,8 +180,8 @@ const desktopStyles = StyleSheet.create({
     position: 'absolute',
     left: 0,
     right: 0,
-    bottom: -1,
-    borderBottomWidth: 1,
+    top: '100%',
+    borderBottomWidth: StyleSheet.hairlineWidth,
   },
 })
 
@@ -190,7 +191,7 @@ const mobileStyles = StyleSheet.create({
   },
   contentContainer: {
     backgroundColor: 'transparent',
-    paddingHorizontal: 8,
+    paddingHorizontal: 6,
   },
   item: {
     paddingTop: 10,
@@ -206,7 +207,7 @@ const mobileStyles = StyleSheet.create({
     position: 'absolute',
     left: 0,
     right: 0,
-    bottom: -1,
-    borderBottomWidth: 1,
+    top: '100%',
+    borderBottomWidth: StyleSheet.hairlineWidth,
   },
 })

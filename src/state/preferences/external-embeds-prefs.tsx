@@ -35,8 +35,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   )
 
   React.useEffect(() => {
-    return persisted.onUpdate(() => {
-      setState(persisted.get('externalEmbeds'))
+    return persisted.onUpdate('externalEmbeds', nextExternalEmbeds => {
+      setState(nextExternalEmbeds)
     })
   }, [setStateWrapped])
 

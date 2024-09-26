@@ -23,7 +23,7 @@ import {ComposerImage, pasteImage} from '#/state/gallery'
 import {useRequireAltTextEnabled} from '#/state/preferences'
 import {useProfileQuery} from '#/state/queries/profile'
 import {Gif} from '#/state/queries/tenor'
-import {ThreadgateSetting} from '#/state/queries/threadgate'
+import {ThreadgateAllowUISetting} from '#/state/queries/threadgate'
 import {useAgent, useSession} from '#/state/session'
 import {ComposerOpts, useComposerControls} from '#/state/shell/composer'
 import {atoms as a, useTheme} from '#/alf'
@@ -74,7 +74,7 @@ export const PostComposer = ({
   const {isDesktop, isMobile} = useWebMediaQueries()
 
   const {currentAccount} = useSession()
-  const {getAgent} = useAgent()
+  const agent = useAgent()
 
   const queryClient = useQueryClient()
   const {data: currentProfile} = useProfileQuery({did: currentAccount!.did})
@@ -113,7 +113,7 @@ export const PostComposer = ({
 
     try {
       await publish({
-        agent: getAgent(),
+        agent,
         queryClient: queryClient,
         state: state,
         onLog(msg) {
@@ -160,7 +160,7 @@ export const PostComposer = ({
   }, [state.posts, state.active])
 
   const onThreadgateChange = React.useCallback(
-    (next: ThreadgateSetting[]) => {
+    (next: ThreadgateAllowUISetting[]) => {
       return dispatch({type: 'set_threadgates', threadgates: next})
     },
     [dispatch],

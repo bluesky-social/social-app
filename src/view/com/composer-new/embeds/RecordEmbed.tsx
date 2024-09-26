@@ -10,7 +10,6 @@ import {useRecordMetaQuery} from '#/state/queries/record-meta'
 import {atoms as a, useTheme} from '#/alf'
 import {Loader} from '#/components/Loader'
 import {FeedSourceCardLoaded} from '../../feeds/FeedSourceCard'
-import {ListEmbed} from '../../util/post-embeds/ListEmbed'
 import {QuoteEmbed} from '../../util/post-embeds/QuoteEmbed'
 import {InertContents} from '../components/InertContents'
 import {ComposerAction, PostRecordEmbed} from '../state'
@@ -40,29 +39,27 @@ export const RecordEmbed = ({
   return (
     <View>
       {/* @todo: what to display on error? */}
-      {error ? null : !record ? (
-        <Container>
-          <Loader size="xl" />
-        </Container>
-      ) : record.kind === 'feed' ? (
-        <InertContents inert>
-          {/* @todo: set a border on <FeedSourceCardLoaded> */}
-          <FeedSourceCardLoaded
-            feedUri={record.data.uri}
-            feed={record.data}
-            preferences={preferences}
-            showLikes
-          />
-        </InertContents>
-      ) : record.kind === 'list' ? (
-        <InertContents inert>
-          <ListEmbed item={record.data} />
-        </InertContents>
-      ) : record.kind === 'post' ? (
-        <InertContents inert>
-          <QuoteEmbed quote={record.data} />
-        </InertContents>
-      ) : null}
+      {
+        error ? null : !record ? (
+          <Container>
+            <Loader size="xl" />
+          </Container>
+        ) : record.kind === 'feed' ? (
+          <InertContents inert>
+            {/* @todo: set a border on <FeedSourceCardLoaded> */}
+            <FeedSourceCardLoaded
+              feedUri={record.data.uri}
+              feed={record.data}
+              preferences={preferences}
+              showLikes
+            />
+          </InertContents>
+        ) : record.kind === 'post' ? (
+          <InertContents inert>
+            <QuoteEmbed quote={record.data} />
+          </InertContents>
+        ) : null /* TODO */
+      }
 
       {active && canRemove && (
         <TouchableOpacity

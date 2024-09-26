@@ -17,13 +17,13 @@ export function useLeaveConvo(
   },
 ) {
   const queryClient = useQueryClient()
-  const {getAgent} = useAgent()
+  const agent = useAgent()
 
   return useMutation({
     mutationFn: async () => {
       if (!convoId) throw new Error('No convoId provided')
 
-      const {data} = await getAgent().api.chat.bsky.convo.leaveConvo(
+      const {data} = await agent.api.chat.bsky.convo.leaveConvo(
         {convoId},
         {headers: DM_SERVICE_HEADERS, encoding: 'application/json'},
       )

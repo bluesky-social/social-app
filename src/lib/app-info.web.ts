@@ -1,6 +1,8 @@
 import {version} from '../../package.json'
 
+export const BUILD_ENV = process.env.EXPO_PUBLIC_ENV
 export const IS_DEV = process.env.EXPO_PUBLIC_ENV === 'development'
+export const IS_TESTFLIGHT = false
 
 // This is the commit hash that the current bundle was made from. The user can see the commit hash in the app's settings
 // along with the other version info. Useful for debugging/reporting.

@@ -19,7 +19,7 @@ type PostRecord = {kind: 'post'; data: ComposerOptsQuote}
 export type RecordReturn = FeedRecord | ListRecord | PostRecord
 
 export function useRecordMetaQuery(meta: PostRecordEmbed) {
-  const {getAgent} = useAgent()
+  const agent = useAgent()
 
   const kind = meta.kind
   const uri = meta.uri
@@ -31,14 +31,14 @@ export function useRecordMetaQuery(meta: PostRecordEmbed) {
       const urip = new AtUri(uri)
 
       if (!urip.host.startsWith('did:')) {
-        const res = await getAgent().resolveHandle({
+        const res = await agent.resolveHandle({
           handle: urip.host,
         })
         urip.host = res.data.did
       }
 
       if (kind === 'feed') {
-        const {data} = await getAgent().app.bsky.feed.getFeedGenerator({
+        const {data} = await agent.app.bsky.feed.getFeedGenerator({
           feed: urip.toString(),
         })
 
@@ -46,7 +46,7 @@ export function useRecordMetaQuery(meta: PostRecordEmbed) {
       }
 
       if (kind === 'list') {
-        const {data} = await getAgent().app.bsky.graph.getList({
+        const {data} = await agent.app.bsky.graph.getList({
           list: urip.toString(),
           limit: 1,
         })
@@ -55,7 +55,7 @@ export function useRecordMetaQuery(meta: PostRecordEmbed) {
       }
 
       if (kind === 'post') {
-        const {data} = await getAgent().app.bsky.feed.getPosts({
+        const {data} = await agent.app.bsky.feed.getPosts({
           uris: [urip.toString()],
         })
 

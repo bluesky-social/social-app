@@ -1,5 +1,5 @@
 import React from 'react'
-import {View} from 'react-native'
+import {Linking, View} from 'react-native'
 import {useSafeAreaFrame} from 'react-native-safe-area-context'
 import {ComAtprotoLabelDefs} from '@atproto/api'
 import {LABELS} from '@atproto/api'
@@ -7,9 +7,11 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
 
+import {useAnalytics} from '#/lib/analytics/analytics'
 import {getLabelingServiceTitle} from '#/lib/moderation'
 import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
 import {logger} from '#/logger'
+import {isIOS} from '#/platform/detection'
 import {
   useMyLabelersQuery,
   usePreferencesQuery,
@@ -21,8 +23,8 @@ import {
   useProfileUpdateMutation,
 } from '#/state/queries/profile'
 import {useSession} from '#/state/session'
+import {isNonConfigurableModerationAuthority} from '#/state/session/additional-moderation-authorities'
 import {useSetMinimalShellMode} from '#/state/shell'
-import {useAnalytics} from 'lib/analytics/analytics'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
 import {CenteredView} from '#/view/com/util/Views'
 import {ScrollView} from '#/view/com/util/Views'
@@ -202,6 +204,8 @@ export function ModerationScreenInner({
     [setAdultContentPref],
   )
 
+  const disabledOnIOS = isIOS && !adultContentEnabled
+
   return (
     <ScrollView
       contentContainerStyle={[
@@ -237,7 +241,10 @@ export function ModerationScreenInner({
           )}
         </Button>
         <Divider />
-        <Link testID="moderationlistsBtn" to="/moderation/modlists">
+        <Link
+          label={_(msg`View your moderation lists`)}
+          testID="moderationlistsBtn"
+          to="/moderation/modlists">
           {state => (
             <SubItem
               title={_(msg`Moderation lists`)}
@@ -249,7 +256,10 @@ export function ModerationScreenInner({
           )}
         </Link>
         <Divider />
-        <Link testID="mutedAccountsBtn" to="/moderation/muted-accounts">
+        <Link
+          label={_(msg`View your muted accounts`)}
+          testID="mutedAccountsBtn"
+          to="/moderation/muted-accounts">
           {state => (
             <SubItem
               title={_(msg`Muted accounts`)}
@@ -261,7 +271,10 @@ export function ModerationScreenInner({
           )}
         </Link>
         <Divider />
-        <Link testID="blockedAccountsBtn" to="/moderation/blocked-accounts">
+        <Link
+          label={_(msg`View your blocked accounts`)}
+          testID="blockedAccountsBtn"
+          to="/moderation/blocked-accounts">
           {state => (
             <SubItem
               title={_(msg`Blocked accounts`)}
@@ -324,12 +337,14 @@ export function ModerationScreenInner({
                   a.flex_row,
                   a.align_center,
                   a.justify_between,
+                  disabledOnIOS && {opacity: 0.5},
                 ]}>
-                <Text style={[a.font_semibold, t.atoms.text_contrast_high]}>
+                <Text style={[a.font_bold, t.atoms.text_contrast_high]}>
                   <Trans>Enable adult content</Trans>
                 </Text>
                 <Toggle.Item
                   label={_(msg`Toggle to enable or disable adult content`)}
+                  disabled={disabledOnIOS}
                   name="adultContent"
                   value={adultContentEnabled}
                   onChange={onToggleAdultContentEnabled}>
@@ -345,6 +360,26 @@ export function ModerationScreenInner({
                   </View>
                 </Toggle.Item>
               </View>
+              {disabledOnIOS && (
+                <View style={[a.pb_lg, a.px_lg]}>
+                  <Text>
+                    <Trans>
+                      Adult content can only be enabled via the Web at{' '}
+                      <InlineLinkText
+                        label={_(msg`The Bluesky web application`)}
+                        to=""
+                        onPress={evt => {
+                          evt.preventDefault()
+                          Linking.openURL('https://bsky.app/')
+                          return false
+                        }}>
+                        bsky.app
+                      </InlineLinkText>
+                      .
+                    </Trans>
+                  </Text>
+                </View>
+              )}
               <Divider />
             </>
           )}
@@ -421,6 +456,9 @@ export function ModerationScreenInner({
                           value={labeler.creator.description}
                           handle={labeler.creator.handle}
                         />
+                        {isNonConfigurableModerationAuthority(
+                          labeler.creator.did,
+                        ) && <LabelingService.RegionalNotice />}
                       </LabelingService.Content>
                     </LabelingService.Outer>
                   )}
@@ -545,7 +583,9 @@ function PwiOptOut() {
           </Trans>
         </Text>
 
-        <InlineLinkText to="https://blueskyweb.zendesk.com/hc/en-us/articles/15835264007693-Data-Privacy">
+        <InlineLinkText
+          label={_(msg`Learn more about what is public on Bluesky.`)}
+          to="https://blueskyweb.zendesk.com/hc/en-us/articles/15835264007693-Data-Privacy">
           <Trans>Learn more about what is public on Bluesky.</Trans>
         </InlineLinkText>
       </View>

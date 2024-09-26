@@ -1,20 +1,34 @@
 import React from 'react'
 import * as Linking from 'expo-linking'
-import {isNative} from 'platform/detection'
-import {useComposerControls} from 'state/shell'
-import {useSession} from 'state/session'
-import {useCloseAllActiveElements} from 'state/util'
 
-type IntentType = 'compose'
+import {logEvent} from 'lib/statsig/statsig'
+import {isNative} from 'platform/detection'
+import {useSession} from 'state/session'
+import {useComposerControls} from 'state/shell'
+import {useCloseAllActiveElements} from 'state/util'
+import {useIntentDialogs} from '#/components/intents/IntentDialogs'
+import {Referrer} from '../../../modules/expo-bluesky-swiss-army'
+
+type IntentType = 'compose' | 'verify-email'
 
 const VALID_IMAGE_REGEX = /^[\w.:\-_/]+\|\d+(\.\d+)?\|\d+(\.\d+)?$/
 
 export function useIntentHandler() {
   const incomingUrl = Linking.useURL()
   const composeIntent = useComposeIntent()
+  const verifyEmailIntent = useVerifyEmailIntent()
 
   React.useEffect(() => {
     const handleIncomingURL = (url: string) => {
+      const referrerInfo = Referrer.getReferrerInfo()
+      if (referrerInfo && referrerInfo.hostname !== 'bsky.app') {
+        logEvent('deepLink:referrerReceived', {
+          to: url,
+          referrer: referrerInfo?.referrer,
+          hostname: referrerInfo?.hostname,
+        })
+      }
+
       // We want to be able to support bluesky:// deeplinks. It's unnatural for someone to use a deeplink with three
       // slashes, like bluesky:///intent/follow. However, supporting just two slashes causes us to have to take care
       // of two cases when parsing the url. If we ensure there is a third slash, we can always ensure the first
@@ -39,15 +53,25 @@ export function useIntentHandler() {
             text: params.get('text'),
             imageUrisStr: params.get('imageUris'),
           })
+          return
+        }
+        case 'verify-email': {
+          const code = params.get('code')
+          if (!code) return
+          verifyEmailIntent(code)
+          return
+        }
+        default: {
+          return
         }
       }
     }
 
     if (incomingUrl) handleIncomingURL(incomingUrl)
-  }, [incomingUrl, composeIntent])
+  }, [incomingUrl, composeIntent, verifyEmailIntent])
 }
 
-function useComposeIntent() {
+export function useComposeIntent() {
   const closeAllActiveElements = useCloseAllActiveElements()
   const {openComposer} = useComposerControls()
   const {hasSession} = useSession()
@@ -89,5 +113,23 @@ function useComposeIntent() {
       }, 500)
     },
     [hasSession, closeAllActiveElements, openComposer],
+  )
+}
+
+function useVerifyEmailIntent() {
+  const closeAllActiveElements = useCloseAllActiveElements()
+  const {verifyEmailDialogControl: control, setVerifyEmailState: setState} =
+    useIntentDialogs()
+  return React.useCallback(
+    (code: string) => {
+      closeAllActiveElements()
+      setState({
+        code,
+      })
+      setTimeout(() => {
+        control.open()
+      }, 1000)
+    },
+    [closeAllActiveElements, control, setState],
   )
 }

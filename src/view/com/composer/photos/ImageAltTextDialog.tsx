@@ -4,6 +4,7 @@ import {Image} from 'expo-image'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {MAX_ALT_TEXT} from '#/lib/constants'
 import {isWeb} from '#/platform/detection'
 import {ComposerImage} from '#/state/gallery'
 import {atoms as a, useTheme} from '#/alf'
@@ -39,12 +40,11 @@ const ImageAltTextInner = ({
   const windim = useWindowDimensions()
 
   const [altText, setAltText] = React.useState(image.alt)
-  const trimmed = React.useMemo(() => altText.trim(), [altText])
 
   const onPressSubmit = React.useCallback(() => {
     control.close()
-    onChange({...image, alt: trimmed})
-  }, [control, image, trimmed, onChange])
+    onChange({...image, alt: altText.trim()})
+  }, [control, image, altText, onChange])
 
   const imageStyle = React.useMemo<ImageStyle>(() => {
     const maxWidth = isWeb ? 450 : windim.width
@@ -71,7 +71,7 @@ const ImageAltTextInner = ({
 
       <View>
         <Text style={[a.text_2xl, a.font_bold, a.leading_tight, a.pb_sm]}>
-          <Trans>Add ALT text</Trans>
+          <Trans>Add alt text</Trans>
         </Text>
 
         <View style={[t.atoms.bg_contrast_50, a.rounded_sm, a.overflow_hidden]}>
@@ -106,7 +106,8 @@ const ImageAltTextInner = ({
         </View>
         <Button
           label={_(msg`Save`)}
-          size="medium"
+          disabled={altText.length > MAX_ALT_TEXT || altText === image.alt}
+          size="large"
           color="primary"
           variant="solid"
           onPress={onPressSubmit}>

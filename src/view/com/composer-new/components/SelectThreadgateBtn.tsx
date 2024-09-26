@@ -5,7 +5,7 @@ import {useLingui} from '@lingui/react'
 
 import {isNative} from '#/platform/detection'
 import {useModalControls} from '#/state/modals'
-import {ThreadgateSetting} from '#/state/queries/threadgate'
+import {ThreadgateAllowUISetting} from '#/state/queries/threadgate'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {CircleBanSign_Stroke2_Corner0_Rounded as CircleBanSign} from '#/components/icons/CircleBanSign'
@@ -16,8 +16,8 @@ export function SelectThreadgateBtn({
   threadgate,
   onChange,
 }: {
-  threadgate: ThreadgateSetting[]
-  onChange: (v: ThreadgateSetting[]) => void
+  threadgate: ThreadgateAllowUISetting[]
+  onChange: (v: ThreadgateAllowUISetting[]) => void
 }) {
   const {track} = useAnalytics()
   const {_} = useLingui()

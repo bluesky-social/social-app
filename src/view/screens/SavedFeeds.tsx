@@ -92,7 +92,8 @@ export function SavedFeeds({}: Props) {
       <ViewHeader title={_(msg`Edit My Feeds`)} showOnDesktop showBorder />
       <ScrollView style={s.flex1} contentContainerStyle={[styles.noBorder]}>
         {noSavedFeedsOfAnyType && (
-          <View style={[pal.border, {borderBottomWidth: 1}]}>
+          <View
+            style={[pal.border, {borderBottomWidth: StyleSheet.hairlineWidth}]}>
             <NoSavedFeedsOfAnyType />
           </View>
         )}
@@ -134,7 +135,8 @@ export function SavedFeeds({}: Props) {
         )}
 
         {noFollowingFeed && (
-          <View style={[pal.border, {borderBottomWidth: 1}]}>
+          <View
+            style={[pal.border, {borderBottomWidth: StyleSheet.hairlineWidth}]}>
             <NoFollowingFeed />
           </View>
         )}
@@ -233,7 +235,7 @@ function ListItem({
         },
       ])
     } catch (e) {
-      Toast.show(_(msg`There was an issue contacting the server`))
+      Toast.show(_(msg`There was an issue contacting the server`), 'xmark')
       logger.error('Failed to toggle pinned feed', {message: e})
     }
   }, [_, playHaptic, feed, updateSavedFeeds, resetSaveFeedsMutationState])
@@ -259,7 +261,7 @@ function ListItem({
         index: nextIndex,
       })
     } catch (e) {
-      Toast.show(_(msg`There was an issue contacting the server`))
+      Toast.show(_(msg`There was an issue contacting the server`), 'xmark')
       logger.error('Failed to set pinned feed order', {message: e})
     }
   }, [feed, isPinned, overwriteSavedFeeds, currentFeeds, _])
@@ -285,7 +287,7 @@ function ListItem({
         index: nextIndex,
       })
     } catch (e) {
-      Toast.show(_(msg`There was an issue contacting the server`))
+      Toast.show(_(msg`There was an issue contacting the server`), 'xmark')
       logger.error('Failed to set pinned feed order', {message: e})
     }
   }, [feed, isPinned, overwriteSavedFeeds, currentFeeds, _])
@@ -298,9 +300,10 @@ function ListItem({
         <FeedSourceCard
           key={feedUri}
           feedUri={feedUri}
-          style={[styles.noTopBorder, isPinned && {paddingRight: 8}]}
+          style={[isPinned && {paddingRight: 8}]}
           showMinimalPlaceholder
           showSaveBtn={!isPinned}
+          hideTopBorder={true}
         />
       )}
       {isPinned ? (
@@ -435,15 +438,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingTop: 20,
     paddingBottom: 10,
-    borderBottomWidth: 1,
+    borderBottomWidth: StyleSheet.hairlineWidth,
   },
   itemContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderBottomWidth: 1,
-  },
-  noTopBorder: {
-    borderTopWidth: 0,
+    borderBottomWidth: StyleSheet.hairlineWidth,
   },
   footerText: {
     paddingHorizontal: 26,

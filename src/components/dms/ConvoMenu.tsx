@@ -26,9 +26,11 @@ import {ArrowBoxLeft_Stroke2_Corner0_Rounded as ArrowBoxLeft} from '#/components
 import {DotGrid_Stroke2_Corner0_Rounded as DotsHorizontal} from '#/components/icons/DotGrid'
 import {Flag_Stroke2_Corner0_Rounded as Flag} from '#/components/icons/Flag'
 import {Mute_Stroke2_Corner0_Rounded as Mute} from '#/components/icons/Mute'
-import {Person_Stroke2_Corner0_Rounded as Person} from '#/components/icons/Person'
-import {PersonCheck_Stroke2_Corner0_Rounded as PersonCheck} from '#/components/icons/PersonCheck'
-import {PersonX_Stroke2_Corner0_Rounded as PersonX} from '#/components/icons/PersonX'
+import {
+  Person_Stroke2_Corner0_Rounded as Person,
+  PersonCheck_Stroke2_Corner0_Rounded as PersonCheck,
+  PersonX_Stroke2_Corner0_Rounded as PersonX,
+} from '#/components/icons/Person'
 import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as Unmute} from '#/components/icons/Speaker'
 import * as Menu from '#/components/Menu'
 import * as Prompt from '#/components/Prompt'
@@ -83,7 +85,7 @@ let ConvoMenu = ({
       }
     },
     onError: () => {
-      Toast.show(_(msg`Could not mute chat`))
+      Toast.show(_(msg`Could not mute chat`), 'xmark')
     },
   })
 

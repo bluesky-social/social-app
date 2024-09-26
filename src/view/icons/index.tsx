@@ -1,5 +1,5 @@
 import {library} from '@fortawesome/fontawesome-svg-core'
-import {faAddressCard} from '@fortawesome/free-regular-svg-icons'
+import {faAddressCard} from '@fortawesome/free-regular-svg-icons/faAddressCard'
 import {faBell as farBell} from '@fortawesome/free-regular-svg-icons/faBell'
 import {faBookmark as farBookmark} from '@fortawesome/free-regular-svg-icons/faBookmark'
 import {faCalendar as farCalendar} from '@fortawesome/free-regular-svg-icons/faCalendar'
@@ -9,6 +9,7 @@ import {faCirclePlay} from '@fortawesome/free-regular-svg-icons/faCirclePlay'
 import {faCircleUser} from '@fortawesome/free-regular-svg-icons/faCircleUser'
 import {faClone as farClone} from '@fortawesome/free-regular-svg-icons/faClone'
 import {faComment} from '@fortawesome/free-regular-svg-icons/faComment'
+import {faCommentDots} from '@fortawesome/free-regular-svg-icons/faCommentDots'
 import {faComments} from '@fortawesome/free-regular-svg-icons/faComments'
 import {faCompass} from '@fortawesome/free-regular-svg-icons/faCompass'
 import {faEyeSlash as farEyeSlash} from '@fortawesome/free-regular-svg-icons/faEyeSlash'
@@ -24,8 +25,6 @@ import {faSquareCheck} from '@fortawesome/free-regular-svg-icons/faSquareCheck'
 import {faSquarePlus} from '@fortawesome/free-regular-svg-icons/faSquarePlus'
 import {faTrashCan} from '@fortawesome/free-regular-svg-icons/faTrashCan'
 import {faUser} from '@fortawesome/free-regular-svg-icons/faUser'
-import {faFlask} from '@fortawesome/free-solid-svg-icons'
-import {faUniversalAccess} from '@fortawesome/free-solid-svg-icons'
 import {faAngleDown} from '@fortawesome/free-solid-svg-icons/faAngleDown'
 import {faAngleLeft} from '@fortawesome/free-solid-svg-icons/faAngleLeft'
 import {faAngleRight} from '@fortawesome/free-solid-svg-icons/faAngleRight'
@@ -52,6 +51,7 @@ import {faChevronRight} from '@fortawesome/free-solid-svg-icons/faChevronRight'
 import {faCircleCheck} from '@fortawesome/free-solid-svg-icons/faCircleCheck'
 import {faCircleDot} from '@fortawesome/free-solid-svg-icons/faCircleDot'
 import {faCircleExclamation} from '@fortawesome/free-solid-svg-icons/faCircleExclamation'
+import {faClipboardCheck} from '@fortawesome/free-solid-svg-icons/faClipboardCheck'
 import {faClone} from '@fortawesome/free-solid-svg-icons/faClone'
 import {faCommentSlash} from '@fortawesome/free-solid-svg-icons/faCommentSlash'
 import {faDownload} from '@fortawesome/free-solid-svg-icons/faDownload'
@@ -61,6 +61,7 @@ import {faExclamation} from '@fortawesome/free-solid-svg-icons/faExclamation'
 import {faEye} from '@fortawesome/free-solid-svg-icons/faEye'
 import {faFilter} from '@fortawesome/free-solid-svg-icons/faFilter'
 import {faFire} from '@fortawesome/free-solid-svg-icons/faFire'
+import {faFlask} from '@fortawesome/free-solid-svg-icons/faFlask'
 import {faGear} from '@fortawesome/free-solid-svg-icons/faGear'
 import {faGlobe} from '@fortawesome/free-solid-svg-icons/faGlobe'
 import {faHand} from '@fortawesome/free-solid-svg-icons/faHand'
@@ -76,6 +77,7 @@ import {faListUl} from '@fortawesome/free-solid-svg-icons/faListUl'
 import {faLock} from '@fortawesome/free-solid-svg-icons/faLock'
 import {faMagnifyingGlass} from '@fortawesome/free-solid-svg-icons/faMagnifyingGlass'
 import {faNoteSticky} from '@fortawesome/free-solid-svg-icons/faNoteSticky'
+import {faPaintRoller} from '@fortawesome/free-solid-svg-icons/faPaintRoller'
 import {faPause} from '@fortawesome/free-solid-svg-icons/faPause'
 import {faPen} from '@fortawesome/free-solid-svg-icons/faPen'
 import {faPenNib} from '@fortawesome/free-solid-svg-icons/faPenNib'
@@ -96,6 +98,7 @@ import {faSignal} from '@fortawesome/free-solid-svg-icons/faSignal'
 import {faSliders} from '@fortawesome/free-solid-svg-icons/faSliders'
 import {faThumbtack} from '@fortawesome/free-solid-svg-icons/faThumbtack'
 import {faTicket} from '@fortawesome/free-solid-svg-icons/faTicket'
+import {faUniversalAccess} from '@fortawesome/free-solid-svg-icons/faUniversalAccess'
 import {faUserCheck} from '@fortawesome/free-solid-svg-icons/faUserCheck'
 import {faUserPlus} from '@fortawesome/free-solid-svg-icons/faUserPlus'
 import {faUsers} from '@fortawesome/free-solid-svg-icons/faUsers'
@@ -139,9 +142,11 @@ library.add(
   faCircleExclamation,
   faCirclePlay,
   faCircleUser,
+  faClipboardCheck,
   faClone,
   farClone,
   faComment,
+  faCommentDots,
   faCommentSlash,
   faComments,
   faCompass,
@@ -174,6 +179,7 @@ library.add(
   faMagnifyingGlass,
   faMessage,
   faNoteSticky,
+  faPaintRoller,
   faPaste,
   faPause,
   faPen,

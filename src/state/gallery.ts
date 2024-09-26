@@ -1,4 +1,3 @@
-import uuid from 'react-native-uuid'
 import {
   cacheDirectory,
   deleteAsync,
@@ -76,16 +75,19 @@ export async function createComposerImage(
   }
 }
 
-export function createInitialImages(
-  uris: {uri: string; width: number; height: number}[] | undefined,
-): ComposerImageWithoutTransformation[] {
-  if (uris === undefined) {
-    return []
-  }
+export type InitialImage = {
+  uri: string
+  width: number
+  height: number
+  altText?: string
+}
 
-  return uris.map(({uri, width, height}) => {
+export function createInitialImages(
+  uris: InitialImage[] = [],
+): ComposerImageWithoutTransformation[] {
+  return uris.map(({uri, width, height, altText = ''}) => {
     return {
-      alt: '',
+      alt: altText,
       source: {
         id: nanoid(),
         path: uri,
@@ -247,7 +249,7 @@ async function moveIfNecessary(from: string) {
   const cacheDir = isNative && getImageCacheDirectory()
 
   if (cacheDir && from.startsWith(cacheDir)) {
-    const to = joinPath(cacheDir, uuid.v4() + '')
+    const to = joinPath(cacheDir, nanoid(36))
 
     await makeDirectoryAsync(cacheDir, {intermediates: true})
     await moveAsync({from, to})

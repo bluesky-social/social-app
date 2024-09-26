@@ -1,20 +1,19 @@
 import React from 'react'
-import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
+import {StyleProp, View, ViewStyle} from 'react-native'
 import {ModerationUI} from '@atproto/api'
-import {useLingui} from '@lingui/react'
 import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
-import {useModerationCauseDescription} from '#/lib/moderation/useModerationCauseDescription'
 import {isJustAMute} from '#/lib/moderation'
+import {useModerationCauseDescription} from '#/lib/moderation/useModerationCauseDescription'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
-
-import {atoms as a, useTheme, useBreakpoints, web} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import {Button} from '#/components/Button'
-import {Text} from '#/components/Typography'
 import {
   ModerationDetailsDialog,
   useModerationDetailsDialogControl,
 } from '#/components/moderation/ModerationDetailsDialog'
+import {Text} from '#/components/Typography'
 
 export function ContentHider({
   testID,
@@ -41,7 +40,7 @@ export function ContentHider({
 
   if (!blur || (ignoreMute && isJustAMute(modui))) {
     return (
-      <View testID={testID} style={[styles.outer, style]}>
+      <View testID={testID} style={style}>
         {children}
       </View>
     )
@@ -52,7 +51,9 @@ export function ContentHider({
       <ModerationDetailsDialog control={control} modcause={blur} />
 
       <Button
-        onPress={() => {
+        onPress={e => {
+          e.preventDefault()
+          e.stopPropagation()
           if (!modui.noOverride) {
             setOverride(v => !v)
           } else {
@@ -93,7 +94,7 @@ export function ContentHider({
                 a.text_left,
                 a.font_bold,
                 a.leading_snug,
-                gtMobile && [a.font_semibold],
+                gtMobile && [a.font_bold],
                 t.atoms.text_contrast_medium,
                 web({
                   marginBottom: 1,
@@ -106,7 +107,7 @@ export function ContentHider({
                 style={[
                   a.font_bold,
                   a.leading_snug,
-                  gtMobile && [a.font_semibold],
+                  gtMobile && [a.font_bold],
                   t.atoms.text_contrast_high,
                   web({
                     marginBottom: 1,
@@ -121,7 +122,9 @@ export function ContentHider({
 
       {desc.source && blur.type === 'label' && !override && (
         <Button
-          onPress={() => {
+          onPress={e => {
+            e.preventDefault()
+            e.stopPropagation()
             control.open()
           }}
           label={_(
@@ -160,23 +163,3 @@ export function ContentHider({
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  outer: {
-    overflow: 'hidden',
-  },
-  cover: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    borderRadius: 8,
-    marginTop: 4,
-    paddingVertical: 14,
-    paddingLeft: 14,
-    paddingRight: 18,
-  },
-  showBtn: {
-    marginLeft: 'auto',
-    alignSelf: 'center',
-  },
-})

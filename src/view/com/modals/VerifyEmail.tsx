@@ -41,7 +41,7 @@ export function Component({
   onSuccess?: () => void
 }) {
   const pal = usePalette('default')
-  const {getAgent} = useAgent()
+  const agent = useAgent()
   const {currentAccount} = useSession()
   const {_} = useLingui()
   const [stage, setStage] = useState<Stages>(
@@ -64,7 +64,7 @@ export function Component({
     setError('')
     setIsProcessing(true)
     try {
-      await getAgent().com.atproto.server.requestEmailConfirmation()
+      await agent.com.atproto.server.requestEmailConfirmation()
       setStage(Stages.ConfirmCode)
     } catch (e) {
       setError(cleanError(String(e)))
@@ -77,11 +77,11 @@ export function Component({
     setError('')
     setIsProcessing(true)
     try {
-      await getAgent().com.atproto.server.confirmEmail({
+      await agent.com.atproto.server.confirmEmail({
         email: (currentAccount?.email || '').trim(),
         token: confirmationCode.trim(),
       })
-      await getAgent().resumeSession(getAgent().session!)
+      await agent.resumeSession(agent.session!)
       Toast.show(_(msg`Email verified`))
       closeModal()
       onSuccess?.()
@@ -173,7 +173,7 @@ export function Component({
             accessibilityLabel={_(msg`Confirmation code`)}
             accessibilityHint=""
             autoCapitalize="none"
-            autoComplete="off"
+            autoComplete="one-time-code"
             autoCorrect={false}
           />
         ) : undefined}

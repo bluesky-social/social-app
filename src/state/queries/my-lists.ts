@@ -16,7 +16,7 @@ export const RQKEY = (filter: MyListsFilter) => [RQKEY_ROOT, filter]
 
 export function useMyListsQuery(filter: MyListsFilter) {
   const {currentAccount} = useSession()
-  const {getAgent} = useAgent()
+  const agent = useAgent()
   return useQuery<AppBskyGraphDefs.ListView[]>({
     staleTime: STALE.MINUTES.ONE,
     queryKey: RQKEY(filter),
@@ -24,8 +24,8 @@ export function useMyListsQuery(filter: MyListsFilter) {
       let lists: AppBskyGraphDefs.ListView[] = []
       const promises = [
         accumulate(cursor =>
-          getAgent()
-            .app.bsky.graph.getLists({
+          agent.app.bsky.graph
+            .getLists({
               actor: currentAccount!.did,
               cursor,
               limit: 50,
@@ -39,8 +39,8 @@ export function useMyListsQuery(filter: MyListsFilter) {
       if (filter === 'all-including-subscribed' || filter === 'mod') {
         promises.push(
           accumulate(cursor =>
-            getAgent()
-              .app.bsky.graph.getListMutes({
+            agent.app.bsky.graph
+              .getListMutes({
                 cursor,
                 limit: 50,
               })
@@ -52,8 +52,8 @@ export function useMyListsQuery(filter: MyListsFilter) {
         )
         promises.push(
           accumulate(cursor =>
-            getAgent()
-              .app.bsky.graph.getListBlocks({
+            agent.app.bsky.graph
+              .getListBlocks({
                 cursor,
                 limit: 50,
               })

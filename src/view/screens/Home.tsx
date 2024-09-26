@@ -1,11 +1,10 @@
 import React from 'react'
-import {ActivityIndicator, AppState, StyleSheet, View} from 'react-native'
+import {ActivityIndicator, StyleSheet, View} from 'react-native'
 import {useFocusEffect} from '@react-navigation/native'
 
 import {PROD_DEFAULT_FEED} from '#/lib/constants'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useSetTitle} from '#/lib/hooks/useSetTitle'
-import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {logEvent, LogEvents} from '#/lib/statsig/statsig'
 import {emitSoftReset} from '#/state/events'
 import {SavedFeedSourceInfo, usePinnedFeedsInfos} from '#/state/queries/feed'
@@ -13,11 +12,7 @@ import {FeedParams} from '#/state/queries/post-feed'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
 import {useSession} from '#/state/session'
-import {
-  useMinimalShellMode,
-  useSetDrawerSwipeDisabled,
-  useSetMinimalShellMode,
-} from '#/state/shell'
+import {useSetDrawerSwipeDisabled, useSetMinimalShellMode} from '#/state/shell'
 import {useSelectedFeed, useSetSelectedFeed} from '#/state/shell/selected-feed'
 import {useOTAUpdates} from 'lib/hooks/useOTAUpdates'
 import {useRequestNotificationsPermission} from 'lib/notifications/notifications'
@@ -30,11 +25,28 @@ import {FollowingEndOfFeed} from 'view/com/posts/FollowingEndOfFeed'
 import {NoFeedsPinned} from '#/screens/Home/NoFeedsPinned'
 import {HomeHeader} from '../com/home/HomeHeader'
 
-type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home'>
+type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home' | 'Start'>
 export function HomeScreen(props: Props) {
   const {data: preferences} = usePreferencesQuery()
+  const {currentAccount} = useSession()
   const {data: pinnedFeedInfos, isLoading: isPinnedFeedsLoading} =
     usePinnedFeedsInfos()
+
+  React.useEffect(() => {
+    const params = props.route.params
+    if (
+      currentAccount &&
+      props.route.name === 'Start' &&
+      params?.name &&
+      params?.rkey
+    ) {
+      props.navigation.navigate('StarterPack', {
+        rkey: params.rkey,
+        name: params.name,
+      })
+    }
+  }, [currentAccount, props.navigation, props.route.name, props.route.params])
+
   if (preferences && pinnedFeedInfos && !isPinnedFeedsLoading) {
     return (
       <HomeScreenReady
@@ -59,8 +71,6 @@ function HomeScreenReady({
   preferences: UsePreferencesQueryResponse
   pinnedFeedInfos: SavedFeedSourceInfo[]
 }) {
-  const requestNotificationsPermission = useRequestNotificationsPermission()
-
   const allFeeds = React.useMemo(
     () => pinnedFeedInfos.map(f => f.feedDescriptor),
     [pinnedFeedInfos],
@@ -70,12 +80,13 @@ function HomeScreenReady({
   const maybeFoundIndex = allFeeds.indexOf(rawSelectedFeed)
   const selectedIndex = Math.max(0, maybeFoundIndex)
   const selectedFeed = allFeeds[selectedIndex]
+  const requestNotificationsPermission = useRequestNotificationsPermission()
 
   useSetTitle(pinnedFeedInfos[selectedIndex]?.displayName)
   useOTAUpdates()
 
   React.useEffect(() => {
-    requestNotificationsPermission('AfterOnboarding')
+    requestNotificationsPermission('Home')
   }, [requestNotificationsPermission])
 
   const pagerRef = React.useRef<PagerRef>(null)
@@ -106,7 +117,7 @@ function HomeScreenReady({
   useFocusEffect(
     useNonReactiveCallback(() => {
       if (selectedFeed) {
-        logEvent('home:feedDisplayed', {
+        logEvent('home:feedDisplayed:sampled', {
           index: selectedIndex,
           feedType: selectedFeed.split('|')[0],
           feedUrl: selectedFeed,
@@ -114,25 +125,6 @@ function HomeScreenReady({
         })
       }
     }),
-  )
-
-  const mode = useMinimalShellMode()
-  const {isMobile} = useWebMediaQueries()
-  useFocusEffect(
-    React.useCallback(() => {
-      const listener = AppState.addEventListener('change', nextAppState => {
-        if (nextAppState === 'active') {
-          if (isMobile && mode.value === 1) {
-            // Reveal the bottom bar so you don't miss notifications or messages.
-            // TODO: Experiment with only doing it when unread > 0.
-            setMinimalShellMode(false)
-          }
-        }
-      })
-      return () => {
-        listener.remove()
-      }
-    }, [setMinimalShellMode, mode, isMobile]),
   )
 
   const onPageSelected = React.useCallback(
@@ -147,9 +139,12 @@ function HomeScreenReady({
   )
 
   const onPageSelecting = React.useCallback(
-    (index: number, reason: LogEvents['home:feedDisplayed']['reason']) => {
+    (
+      index: number,
+      reason: LogEvents['home:feedDisplayed:sampled']['reason'],
+    ) => {
       const feed = allFeeds[index]
-      logEvent('home:feedDisplayed', {
+      logEvent('home:feedDisplayed:sampled', {
         index,
         feedType: feed.split('|')[0],
         feedUrl: feed,

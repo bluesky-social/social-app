@@ -1,9 +1,14 @@
-import {Platform} from 'react-native'
+import {Platform, StyleSheet, ViewStyle} from 'react-native'
 
 import * as tokens from '#/alf/tokens'
 import {native, web} from '#/alf/util/platform'
 
 export const atoms = {
+  debug: {
+    borderColor: 'red',
+    borderWidth: 1,
+  },
+
   /*
    * Positioning
    */
@@ -54,6 +59,26 @@ export const atoms = {
   h_full_vh: web({
     height: '100vh',
   }),
+
+  /**
+   * Used for the outermost components on screens, to ensure that they can fill
+   * the screen and extend beyond.
+   */
+  util_screen_outer: [
+    web({
+      minHeight: '100vh',
+    }),
+    native({
+      height: '100%',
+    }),
+  ] as ViewStyle,
+
+  /*
+   * Theme-independent bg colors
+   */
+  bg_transparent: {
+    backgroundColor: 'transparent',
+  },
 
   /*
    * Border radius
@@ -137,6 +162,9 @@ export const atoms = {
   flex_shrink: {
     flexShrink: 1,
   },
+  flex_shrink_0: {
+    flexShrink: 0,
+  },
   justify_start: {
     justifyContent: 'flex-start',
   },
@@ -197,43 +225,43 @@ export const atoms = {
   },
   text_2xs: {
     fontSize: tokens.fontSize._2xs,
-    letterSpacing: 0.25,
+    letterSpacing: tokens.TRACKING,
   },
   text_xs: {
     fontSize: tokens.fontSize.xs,
-    letterSpacing: 0.25,
+    letterSpacing: tokens.TRACKING,
   },
   text_sm: {
     fontSize: tokens.fontSize.sm,
-    letterSpacing: 0.25,
+    letterSpacing: tokens.TRACKING,
   },
   text_md: {
     fontSize: tokens.fontSize.md,
-    letterSpacing: 0.25,
+    letterSpacing: tokens.TRACKING,
   },
   text_lg: {
     fontSize: tokens.fontSize.lg,
-    letterSpacing: 0.25,
+    letterSpacing: tokens.TRACKING,
   },
   text_xl: {
     fontSize: tokens.fontSize.xl,
-    letterSpacing: 0.25,
+    letterSpacing: tokens.TRACKING,
   },
   text_2xl: {
     fontSize: tokens.fontSize._2xl,
-    letterSpacing: 0.25,
+    letterSpacing: tokens.TRACKING,
   },
   text_3xl: {
     fontSize: tokens.fontSize._3xl,
-    letterSpacing: 0.25,
+    letterSpacing: tokens.TRACKING,
   },
   text_4xl: {
     fontSize: tokens.fontSize._4xl,
-    letterSpacing: 0.25,
+    letterSpacing: tokens.TRACKING,
   },
   text_5xl: {
     fontSize: tokens.fontSize._5xl,
-    letterSpacing: 0.25,
+    letterSpacing: tokens.TRACKING,
   },
   leading_tight: {
     lineHeight: 1.15,
@@ -245,19 +273,16 @@ export const atoms = {
     lineHeight: 1.5,
   },
   tracking_normal: {
-    letterSpacing: 0,
-  },
-  tracking_wide: {
-    letterSpacing: 0.25,
+    letterSpacing: tokens.TRACKING,
   },
   font_normal: {
-    fontWeight: tokens.fontWeight.normal,
-  },
-  font_semibold: {
-    fontWeight: tokens.fontWeight.semibold,
+    fontWeight: tokens.fontWeight.regular,
   },
   font_bold: {
-    fontWeight: tokens.fontWeight.bold,
+    fontWeight: tokens.fontWeight.semibold,
+  },
+  font_heavy: {
+    fontWeight: tokens.fontWeight.extrabold,
   },
   italic: {
     fontStyle: 'italic',
@@ -270,19 +295,19 @@ export const atoms = {
     borderWidth: 0,
   },
   border: {
-    borderWidth: 1,
+    borderWidth: StyleSheet.hairlineWidth,
   },
   border_t: {
-    borderTopWidth: 1,
+    borderTopWidth: StyleSheet.hairlineWidth,
   },
   border_b: {
-    borderBottomWidth: 1,
+    borderBottomWidth: StyleSheet.hairlineWidth,
   },
   border_l: {
-    borderLeftWidth: 1,
+    borderLeftWidth: StyleSheet.hairlineWidth,
   },
   border_r: {
-    borderRightWidth: 1,
+    borderRightWidth: StyleSheet.hairlineWidth,
   },
 
   /*
@@ -840,8 +865,9 @@ export const atoms = {
   mr_auto: {
     marginRight: 'auto',
   },
+
   /*
-   * Pointer events
+   * Pointer events & user select
    */
   pointer_events_none: {
     pointerEvents: 'none',
@@ -849,6 +875,16 @@ export const atoms = {
   pointer_events_auto: {
     pointerEvents: 'auto',
   },
+  user_select_none: {
+    userSelect: 'none',
+  },
+  user_select_text: {
+    userSelect: 'text',
+  },
+  user_select_all: {
+    userSelect: 'all',
+  },
+
   /*
    * Text decoration
    */
@@ -857,5 +893,12 @@ export const atoms = {
   },
   strike_through: {
     textDecorationLine: 'line-through',
+  },
+
+  /*
+   * Display
+   */
+  hidden: {
+    display: 'none',
   },
 } as const

@@ -4,13 +4,13 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation, useNavigationState} from '@react-navigation/native'
 
+import {usePalette} from '#/lib/hooks/usePalette'
+import {getCurrentRoute} from '#/lib/routes/helpers'
+import {NavigationProp} from '#/lib/routes/types'
 import {emitSoftReset} from '#/state/events'
 import {usePinnedFeedsInfos} from '#/state/queries/feed'
 import {useSelectedFeed, useSetSelectedFeed} from '#/state/shell/selected-feed'
-import {usePalette} from 'lib/hooks/usePalette'
-import {getCurrentRoute} from 'lib/routes/helpers'
-import {NavigationProp} from 'lib/routes/types'
-import {TextLink} from 'view/com/util/Link'
+import {TextLink} from '#/view/com/util/Link'
 
 export function DesktopFeeds() {
   const pal = usePalette('default')
@@ -81,7 +81,7 @@ function FeedItem({
         onPress={onPress}
         style={[
           current ? pal.text : pal.textLight,
-          {letterSpacing: 0.15, fontWeight: current ? '500' : 'normal'},
+          {letterSpacing: 0.15, fontWeight: current ? '600' : '400'},
         ]}
       />
     </View>

@@ -4,7 +4,10 @@ import {nanoid} from 'nanoid/non-secure'
 
 import {networkRetry} from '#/lib/async/retry'
 import {logger} from '#/logger'
-import {DEFAULT_POLL_INTERVAL} from '#/state/messages/events/const'
+import {
+  BACKGROUND_POLL_INTERVAL,
+  DEFAULT_POLL_INTERVAL,
+} from '#/state/messages/events/const'
 import {
   MessagesEventBusDispatch,
   MessagesEventBusDispatchEvent,
@@ -207,6 +210,7 @@ export class MessagesEventBus {
       }
       case MessagesEventBusStatus.Error: {
         switch (action.event) {
+          case MessagesEventBusDispatchEvent.UpdatePoll:
           case MessagesEventBusDispatchEvent.Resume: {
             // basically reset
             this.status = MessagesEventBusStatus.Initializing
@@ -286,6 +290,9 @@ export class MessagesEventBus {
         const requested = Array.from(this.requestedPollIntervals.values())
         const lowest = Math.min(DEFAULT_POLL_INTERVAL, ...requested)
         return lowest
+      }
+      case MessagesEventBusStatus.Backgrounded: {
+        return BACKGROUND_POLL_INTERVAL
       }
       default:
         return DEFAULT_POLL_INTERVAL

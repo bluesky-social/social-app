@@ -3,21 +3,22 @@ import {StyleSheet, View} from 'react-native'
 import {Trans} from '@lingui/macro'
 import {useFocusEffect} from '@react-navigation/native'
 
+import {useAnalytics} from '#/lib/analytics/analytics'
+import {usePalette} from '#/lib/hooks/usePalette'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
 import {
   EmbedPlayerSource,
   externalEmbedLabels,
 } from '#/lib/strings/embed-player'
-import {useSetMinimalShellMode} from '#/state/shell'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
-import {s} from 'lib/styles'
+import {s} from '#/lib/styles'
 import {
   useExternalEmbedsPrefs,
   useSetExternalEmbedPref,
-} from 'state/preferences'
-import {ToggleButton} from 'view/com/util/forms/ToggleButton'
+} from '#/state/preferences'
+import {useSetMinimalShellMode} from '#/state/shell'
+import {ToggleButton} from '#/view/com/util/forms/ToggleButton'
+import {atoms as a} from '#/alf'
 import {SimpleViewHeader} from '../com/util/SimpleViewHeader'
 import {Text} from '../com/util/text/Text'
 import {ScrollView} from '../com/util/Views'
@@ -30,7 +31,7 @@ export function PreferencesExternalEmbeds({}: Props) {
   const pal = usePalette('default')
   const setMinimalShellMode = useSetMinimalShellMode()
   const {screen} = useAnalytics()
-  const {isMobile} = useWebMediaQueries()
+  const {isTabletOrMobile} = useWebMediaQueries()
 
   useFocusEffect(
     React.useCallback(() => {
@@ -41,26 +42,23 @@ export function PreferencesExternalEmbeds({}: Props) {
 
   return (
     <View style={s.hContentRegion} testID="preferencesExternalEmbedsScreen">
-      <SimpleViewHeader
-        showBackButton={isMobile}
-        style={[
-          pal.border,
-          {borderBottomWidth: 1},
-          !isMobile && {borderLeftWidth: 1, borderRightWidth: 1},
-        ]}>
-        <View style={{flex: 1}}>
-          <Text type="title-lg" style={[pal.text, {fontWeight: 'bold'}]}>
-            <Trans>External Media Preferences</Trans>
-          </Text>
-          <Text style={pal.textLight}>
-            <Trans>Customize media from external sites.</Trans>
-          </Text>
-        </View>
-      </SimpleViewHeader>
       <ScrollView
         // @ts-ignore web only -prf
         dataSet={{'stable-gutters': 1}}
-        contentContainerStyle={[pal.viewLight, {paddingBottom: 200}]}>
+        contentContainerStyle={[pal.viewLight, {paddingBottom: 75}]}>
+        <SimpleViewHeader
+          showBackButton={isTabletOrMobile}
+          style={[pal.border, a.border_b]}>
+          <View style={a.flex_1}>
+            <Text type="title-lg" style={[pal.text, {fontWeight: '600'}]}>
+              <Trans>External Media Preferences</Trans>
+            </Text>
+            <Text style={pal.textLight}>
+              <Trans>Customize media from external sites.</Trans>
+            </Text>
+          </View>
+        </SimpleViewHeader>
+
         <View style={[pal.view]}>
           <View style={styles.infoCard}>
             <Text style={pal.text}>

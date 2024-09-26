@@ -29,9 +29,10 @@ import {
   useLoggedOutView,
   useLoggedOutViewControls,
 } from '#/state/shell/logged-out'
-import {isWeb} from 'platform/detection'
+import {isNative, isWeb} from 'platform/detection'
 import {Deactivated} from '#/screens/Deactivated'
 import {Onboarding} from '#/screens/Onboarding'
+import {SignupQueued} from '#/screens/SignupQueued'
 import {LoggedOut} from '../com/auth/LoggedOut'
 import {BottomBarWeb} from './bottom-bar/BottomBarWeb'
 import {DesktopLeftNav} from './desktop/LeftNav'
@@ -99,14 +100,17 @@ function NativeStackNavigator({
   const {showLoggedOut} = useLoggedOutView()
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const {isMobile, isTabletOrMobile} = useWebMediaQueries()
-  if ((!PWI_ENABLED || activeRouteRequiresAuth) && !hasSession) {
+  if (!hasSession && (!PWI_ENABLED || activeRouteRequiresAuth || isNative)) {
     return <LoggedOut />
   }
-  if (hasSession && currentAccount?.deactivated) {
-    return <Deactivated />
+  if (hasSession && currentAccount?.signupQueued) {
+    return <SignupQueued />
   }
   if (showLoggedOut) {
     return <LoggedOut onDismiss={() => setShowLoggedOut(false)} />
+  }
+  if (currentAccount?.status === 'deactivated') {
+    return <Deactivated />
   }
   if (onboardingState.isActive) {
     return <Onboarding />

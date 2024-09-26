@@ -6,16 +6,16 @@ import {ModerationUI} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {logger} from '#/logger'
-import {usePalette} from 'lib/hooks/usePalette'
+import {usePalette} from '#/lib/hooks/usePalette'
 import {
   useCameraPermission,
   usePhotoLibraryPermission,
-} from 'lib/hooks/usePermissions'
-import {colors} from 'lib/styles'
-import {useTheme} from 'lib/ThemeContext'
-import {isAndroid, isNative} from 'platform/detection'
-import {EventStopper} from 'view/com/util/EventStopper'
+} from '#/lib/hooks/usePermissions'
+import {colors} from '#/lib/styles'
+import {useTheme} from '#/lib/ThemeContext'
+import {logger} from '#/logger'
+import {isAndroid, isNative} from '#/platform/detection'
+import {EventStopper} from '#/view/com/util/EventStopper'
 import {tokens, useTheme as useAlfTheme} from '#/alf'
 import {
   Camera_Filled_Stroke2_Corner0_Rounded as CameraFilled,

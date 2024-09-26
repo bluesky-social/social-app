@@ -1,27 +1,28 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
-import {Text} from '../com/util/text/Text'
-import {s} from 'lib/styles'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
-import {ViewHeader} from 'view/com/util/ViewHeader'
-import {CenteredView} from 'view/com/util/Views'
-import {Button} from 'view/com/util/forms/Button'
+import RNPickerSelect, {PickerSelectProps} from 'react-native-picker-select'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {useAnalytics} from 'lib/analytics/analytics'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
-import {APP_LANGUAGES, LANGUAGES} from 'lib/../locale/languages'
-import RNPickerSelect, {PickerSelectProps} from 'react-native-picker-select'
-import {useSetMinimalShellMode} from '#/state/shell'
+
+import {APP_LANGUAGES, LANGUAGES} from '#/lib/../locale/languages'
+import {useAnalytics} from '#/lib/analytics/analytics'
+import {usePalette} from '#/lib/hooks/usePalette'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
+import {s} from '#/lib/styles'
+import {sanitizeAppLanguageSetting} from '#/locale/helpers'
 import {useModalControls} from '#/state/modals'
 import {useLanguagePrefs, useLanguagePrefsApi} from '#/state/preferences'
-import {Trans, msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {sanitizeAppLanguageSetting} from '#/locale/helpers'
+import {useSetMinimalShellMode} from '#/state/shell'
+import {Button} from '#/view/com/util/forms/Button'
+import {ViewHeader} from '#/view/com/util/ViewHeader'
+import {CenteredView} from '#/view/com/util/Views'
+import {Text} from '../com/util/text/Text'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'LanguageSettings'>
 
@@ -117,7 +118,7 @@ export function LanguageSettingsScreen(_props: Props) {
                   color: pal.text.color,
                   fontSize: 14,
                   letterSpacing: 0.5,
-                  fontWeight: '500',
+                  fontWeight: '600',
                   paddingHorizontal: 14,
                   paddingVertical: 8,
                   borderRadius: 24,
@@ -127,14 +128,15 @@ export function LanguageSettingsScreen(_props: Props) {
                   color: pal.text.color,
                   fontSize: 14,
                   letterSpacing: 0.5,
-                  fontWeight: '500',
+                  fontWeight: '600',
                   paddingHorizontal: 14,
                   paddingVertical: 8,
                   borderRadius: 24,
                 },
+
                 inputWeb: {
-                  // @ts-ignore web only
                   cursor: 'pointer',
+                  // @ts-ignore web only
                   '-moz-appearance': 'none',
                   '-webkit-appearance': 'none',
                   appearance: 'none',
@@ -143,8 +145,9 @@ export function LanguageSettingsScreen(_props: Props) {
                   backgroundColor: pal.viewLight.backgroundColor,
                   color: pal.text.color,
                   fontSize: 14,
+                  fontFamily: 'inherit',
                   letterSpacing: 0.5,
-                  fontWeight: '500',
+                  fontWeight: '600',
                   paddingHorizontal: 14,
                   paddingVertical: 8,
                   borderRadius: 24,
@@ -208,7 +211,7 @@ export function LanguageSettingsScreen(_props: Props) {
                   color: pal.text.color,
                   fontSize: 14,
                   letterSpacing: 0.5,
-                  fontWeight: '500',
+                  fontWeight: '600',
                   paddingHorizontal: 14,
                   paddingVertical: 8,
                   borderRadius: 24,
@@ -218,14 +221,14 @@ export function LanguageSettingsScreen(_props: Props) {
                   color: pal.text.color,
                   fontSize: 14,
                   letterSpacing: 0.5,
-                  fontWeight: '500',
+                  fontWeight: '600',
                   paddingHorizontal: 14,
                   paddingVertical: 8,
                   borderRadius: 24,
                 },
                 inputWeb: {
-                  // @ts-ignore web only
                   cursor: 'pointer',
+                  // @ts-ignore web only
                   '-moz-appearance': 'none',
                   '-webkit-appearance': 'none',
                   appearance: 'none',
@@ -234,8 +237,9 @@ export function LanguageSettingsScreen(_props: Props) {
                   backgroundColor: pal.viewLight.backgroundColor,
                   color: pal.text.color,
                   fontSize: 14,
+                  fontFamily: 'inherit',
                   letterSpacing: 0.5,
-                  fontWeight: '500',
+                  fontWeight: '600',
                   paddingHorizontal: 14,
                   paddingVertical: 8,
                   borderRadius: 24,

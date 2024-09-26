@@ -1,10 +1,15 @@
 import React, {useCallback, useEffect} from 'react'
 import {NativeScrollEvent} from 'react-native'
-import {interpolate, useSharedValue} from 'react-native-reanimated'
+import {
+  cancelAnimation,
+  interpolate,
+  useSharedValue,
+  withSpring,
+} from 'react-native-reanimated'
 import EventEmitter from 'eventemitter3'
 
 import {ScrollProvider} from '#/lib/ScrollContext'
-import {useMinimalShellMode, useSetMinimalShellMode} from '#/state/shell'
+import {useMinimalShellMode} from '#/state/shell'
 import {useShellLayout} from '#/state/shell/shell-layout'
 import {isNative, isWeb} from 'platform/detection'
 
@@ -17,11 +22,21 @@ function clamp(num: number, min: number, max: number) {
 
 export function MainScrollProvider({children}: {children: React.ReactNode}) {
   const {headerHeight} = useShellLayout()
-  const mode = useMinimalShellMode()
-  const setMode = useSetMinimalShellMode()
+  const {headerMode} = useMinimalShellMode()
   const startDragOffset = useSharedValue<number | null>(null)
   const startMode = useSharedValue<number | null>(null)
   const didJustRestoreScroll = useSharedValue<boolean>(false)
+
+  const setMode = React.useCallback(
+    (v: boolean) => {
+      'worklet'
+      cancelAnimation(headerMode)
+      headerMode.value = withSpring(v ? 1 : 0, {
+        overshootClamping: true,
+      })
+    },
+    [headerMode],
+  )
 
   useEffect(() => {
     if (isWeb) {
@@ -51,11 +66,11 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
           setMode(true)
         } else {
           // Snap to whichever state is the closest.
-          setMode(Math.round(mode.value) === 1)
+          setMode(Math.round(headerMode.value) === 1)
         }
       }
     },
-    [startDragOffset, startMode, setMode, mode, headerHeight],
+    [startDragOffset, startMode, setMode, headerMode, headerHeight],
   )
 
   const onBeginDrag = useCallback(
@@ -63,10 +78,10 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
       'worklet'
       if (isNative) {
         startDragOffset.value = e.contentOffset.y
-        startMode.value = mode.value
+        startMode.value = headerMode.value
       }
     },
-    [mode, startDragOffset, startMode],
+    [headerMode, startDragOffset, startMode],
   )
 
   const onEndDrag = useCallback(
@@ -98,7 +113,10 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
       'worklet'
       if (isNative) {
         if (startDragOffset.value === null || startMode.value === null) {
-          if (mode.value !== 0 && e.contentOffset.y < headerHeight.value) {
+          if (
+            headerMode.value !== 0 &&
+            e.contentOffset.y < headerHeight.value
+          ) {
             // If we're close enough to the top, always show the shell.
             // Even if we're not dragging.
             setMode(false)
@@ -115,9 +133,11 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
           [-1, 1],
         )
         const newValue = clamp(startMode.value + dProgress, 0, 1)
-        if (newValue !== mode.value) {
+        if (newValue !== headerMode.value) {
           // Manually adjust the value. This won't be (and shouldn't be) animated.
-          mode.value = newValue
+          // Cancel any any existing animation
+          cancelAnimation(headerMode)
+          headerMode.value = newValue
         }
       } else {
         if (didJustRestoreScroll.value) {
@@ -139,7 +159,7 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
     },
     [
       headerHeight,
-      mode,
+      headerMode,
       setMode,
       startDragOffset,
       startMode,

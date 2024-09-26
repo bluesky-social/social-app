@@ -3,7 +3,7 @@ import {View} from 'react-native'
 import {AppBskyActorDefs} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useNavigation} from '@react-navigation/native'
+import {NavigationProp, useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {getRootNavigation, getTabState, TabState} from '#/lib/routes/helpers'
@@ -19,6 +19,7 @@ import {useSetMinimalShellMode} from '#/state/shell'
 import {useComposerControls} from '#/state/shell/composer'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {ComposeIcon2} from 'lib/icons'
+import {AllNavigatorParams} from 'lib/routes/types'
 import {s} from 'lib/styles'
 import {useHeaderOffset} from '#/components/hooks/useHeaderOffset'
 import {Feed} from '../posts/Feed'
@@ -48,7 +49,7 @@ export function FeedPage({
 }) {
   const {hasSession} = useSession()
   const {_} = useLingui()
-  const navigation = useNavigation()
+  const navigation = useNavigation<NavigationProp<AllNavigatorParams>>()
   const queryClient = useQueryClient()
   const {openComposer} = useComposerControls()
   const [isScrolledDown, setIsScrolledDown] = React.useState(false)
@@ -75,7 +76,7 @@ export function FeedPage({
       scrollToTop()
       truncateAndInvalidate(queryClient, FEED_RQKEY(feed))
       setHasNew(false)
-      logEvent('feed:refresh', {
+      logEvent('feed:refresh:sampled', {
         feedType: feed.split('|')[0],
         feedUrl: feed,
         reason: 'soft-reset',
@@ -101,7 +102,7 @@ export function FeedPage({
     scrollToTop()
     truncateAndInvalidate(queryClient, FEED_RQKEY(feed))
     setHasNew(false)
-    logEvent('feed:refresh', {
+    logEvent('feed:refresh:sampled', {
       feedType: feed.split('|')[0],
       feedUrl: feed,
       reason: 'load-latest',

@@ -7,12 +7,12 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import ReactCrop, {PercentCrop} from 'react-image-crop'
 
+import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {getDataUriSize} from '#/lib/media/util'
+import {gradients, s} from '#/lib/styles'
 import {useModalControls} from '#/state/modals'
-import {usePalette} from 'lib/hooks/usePalette'
-import {getDataUriSize} from 'lib/media/util'
-import {gradients, s} from 'lib/styles'
-import {Text} from 'view/com/util/text/Text'
+import {Text} from '#/view/com/util/text/Text'
 
 export const snapPoints = ['0%']
 
@@ -82,7 +82,7 @@ export function Component({
         <ReactCrop
           aspect={aspect}
           crop={crop}
-          onChange={(_, next) => setCrop(next)}
+          onChange={(_pixelCrop, percentCrop) => setCrop(percentCrop)}
           circularCrop={circular}>
           <img ref={imageRef} src={uri} style={{maxHeight: '75vh'}} />
         </ReactCrop>

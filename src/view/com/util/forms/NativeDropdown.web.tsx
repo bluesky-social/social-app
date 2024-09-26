@@ -5,9 +5,9 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import {MenuItemCommonProps} from 'zeego/lib/typescript/menu'
 
-import {HITSLOP_10} from 'lib/constants'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useTheme} from 'lib/ThemeContext'
+import {HITSLOP_10} from '#/lib/constants'
+import {usePalette} from '#/lib/hooks/usePalette'
+import {useTheme} from '#/lib/ThemeContext'
 
 // Custom Dropdown Menu Components
 // ==
@@ -267,7 +267,7 @@ const styles = StyleSheet.create({
   },
   itemTitle: {
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: '600',
     paddingRight: 10,
   },
 })

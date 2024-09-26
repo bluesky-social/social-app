@@ -14,6 +14,7 @@
 
 import React from 'react'
 import {
+  FlatList,
   FlatListProps,
   ScrollViewProps,
   StyleSheet,
@@ -30,23 +31,26 @@ interface AddedProps {
   desktopFixedHeight?: boolean | number
 }
 
-export function CenteredView({
-  style,
-  sideBorders,
-  topBorder,
-  ...props
-}: React.PropsWithChildren<
-  ViewProps & {sideBorders?: boolean; topBorder?: boolean}
->) {
+export const CenteredView = React.forwardRef(function CenteredView(
+  {
+    style,
+    sideBorders,
+    topBorder,
+    ...props
+  }: React.PropsWithChildren<
+    ViewProps & {sideBorders?: boolean; topBorder?: boolean}
+  >,
+  ref: React.Ref<View>,
+) {
   const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()
   if (!isMobile) {
     style = addStyle(style, styles.container)
   }
-  if (sideBorders) {
+  if (sideBorders && !isMobile) {
     style = addStyle(style, {
-      borderLeftWidth: 1,
-      borderRightWidth: 1,
+      borderLeftWidth: StyleSheet.hairlineWidth,
+      borderRightWidth: StyleSheet.hairlineWidth,
     })
     style = addStyle(style, pal.border)
   }
@@ -56,8 +60,8 @@ export function CenteredView({
     })
     style = addStyle(style, pal.border)
   }
-  return <View style={style} {...props} />
-}
+  return <View ref={ref} style={style} {...props} />
+})
 
 export const FlatList_INTERNAL = React.forwardRef(function FlatListImpl<ItemT>(
   {
@@ -67,7 +71,7 @@ export const FlatList_INTERNAL = React.forwardRef(function FlatListImpl<ItemT>(
     desktopFixedHeight,
     ...props
   }: React.PropsWithChildren<FlatListProps<ItemT> & AddedProps>,
-  ref: React.Ref<Animated.FlatList<ItemT>>,
+  ref: React.Ref<FlatList<ItemT>>,
 ) {
   const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()
@@ -158,8 +162,8 @@ export const ScrollView = React.forwardRef(function ScrollViewImpl(
 
 const styles = StyleSheet.create({
   contentContainer: {
-    borderLeftWidth: 1,
-    borderRightWidth: 1,
+    borderLeftWidth: StyleSheet.hairlineWidth,
+    borderRightWidth: StyleSheet.hairlineWidth,
     // @ts-ignore web only
     minHeight: '100vh',
   },

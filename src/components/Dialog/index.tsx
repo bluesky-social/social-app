@@ -1,5 +1,12 @@
 import React, {useImperativeHandle} from 'react'
-import {Dimensions, Pressable, StyleProp, View, ViewStyle} from 'react-native'
+import {
+  Dimensions,
+  Keyboard,
+  Pressable,
+  StyleProp,
+  View,
+  ViewStyle,
+} from 'react-native'
 import Animated, {useAnimatedStyle} from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import BottomSheet, {
@@ -25,10 +32,12 @@ import {
   DialogOuterProps,
 } from '#/components/Dialog/types'
 import {createInput} from '#/components/forms/TextField'
+import {FullWindowOverlay} from '#/components/FullWindowOverlay'
 import {Portal} from '#/components/Portal'
 
 export {useDialogContext, useDialogControl} from '#/components/Dialog/context'
 export * from '#/components/Dialog/types'
+export * from '#/components/Dialog/utils'
 // @ts-ignore
 export const Input = createInput(BottomSheetTextInput)
 
@@ -163,46 +172,49 @@ export function Outer({
   return (
     isOpen && (
       <Portal>
-        <View
-          // iOS
-          accessibilityViewIsModal
-          // Android
-          importantForAccessibility="yes"
-          style={[a.absolute, a.inset_0]}
-          testID={testID}>
-          <BottomSheet
-            enableDynamicSizing={!hasSnapPoints}
-            enablePanDownToClose
-            keyboardBehavior="interactive"
-            android_keyboardInputMode="adjustResize"
-            keyboardBlurBehavior="restore"
-            topInset={insets.top}
-            {...sheetOptions}
-            snapPoints={sheetOptions.snapPoints || ['100%']}
-            ref={sheet}
-            index={openIndex}
-            backgroundStyle={{backgroundColor: 'transparent'}}
-            backdropComponent={Backdrop}
-            handleIndicatorStyle={{backgroundColor: t.palette.primary_500}}
-            handleStyle={{display: 'none'}}
-            onClose={onCloseAnimationComplete}>
-            <Context.Provider value={context}>
-              <View
-                style={[
-                  a.absolute,
-                  a.inset_0,
-                  t.atoms.bg,
-                  {
-                    borderTopLeftRadius: 40,
-                    borderTopRightRadius: 40,
-                    height: Dimensions.get('window').height * 2,
-                  },
-                ]}
-              />
-              {children}
-            </Context.Provider>
-          </BottomSheet>
-        </View>
+        <FullWindowOverlay>
+          <View
+            // iOS
+            accessibilityViewIsModal
+            // Android
+            importantForAccessibility="yes"
+            style={[a.absolute, a.inset_0]}
+            testID={testID}
+            onTouchMove={() => Keyboard.dismiss()}>
+            <BottomSheet
+              enableDynamicSizing={!hasSnapPoints}
+              enablePanDownToClose
+              keyboardBehavior="interactive"
+              android_keyboardInputMode="adjustResize"
+              keyboardBlurBehavior="restore"
+              topInset={insets.top}
+              {...sheetOptions}
+              snapPoints={sheetOptions.snapPoints || ['100%']}
+              ref={sheet}
+              index={openIndex}
+              backgroundStyle={{backgroundColor: 'transparent'}}
+              backdropComponent={Backdrop}
+              handleIndicatorStyle={{backgroundColor: t.palette.primary_500}}
+              handleStyle={{display: 'none'}}
+              onClose={onCloseAnimationComplete}>
+              <Context.Provider value={context}>
+                <View
+                  style={[
+                    a.absolute,
+                    a.inset_0,
+                    t.atoms.bg,
+                    {
+                      borderTopLeftRadius: 40,
+                      borderTopRightRadius: 40,
+                      height: Dimensions.get('window').height * 2,
+                    },
+                  ]}
+                />
+                {children}
+              </Context.Provider>
+            </BottomSheet>
+          </View>
+        </FullWindowOverlay>
       </Portal>
     )
   )
@@ -245,7 +257,7 @@ export const ScrollableInner = React.forwardRef<
           borderTopLeftRadius: 40,
           borderTopRightRadius: 40,
         },
-        flatten(style),
+        style,
       ]}
       contentContainerStyle={a.pb_4xl}
       ref={ref}>

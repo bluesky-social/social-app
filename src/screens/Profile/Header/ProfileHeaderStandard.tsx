@@ -6,7 +6,6 @@ import {
   ModerationOpts,
   RichText as RichTextAPI,
 } from '@atproto/api'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -22,14 +21,17 @@ import {useRequireAuth, useSession} from '#/state/session'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {useProfileShadow} from 'state/cache/profile-shadow'
-import {ProfileHeaderSuggestedFollows} from '#/view/com/profile/ProfileHeaderSuggestedFollows'
 import {ProfileMenu} from '#/view/com/profile/ProfileMenu'
 import * as Toast from '#/view/com/util/Toast'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {MessageProfileButton} from '#/components/dms/MessageProfileButton'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
+import {
+  KnownFollowers,
+  shouldShowKnownFollowers,
+} from '#/components/KnownFollowers'
 import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
 import {ProfileHeaderDisplayName} from './DisplayName'
@@ -54,7 +56,6 @@ let ProfileHeaderStandard = ({
 }: Props): React.ReactNode => {
   const profile: Shadow<AppBskyActorDefs.ProfileViewDetailed> =
     useProfileShadow(profileUnshadowed)
-  const t = useTheme()
   const {currentAccount, hasSession} = useSession()
   const {_} = useLingui()
   const {openModal} = useModalControls()
@@ -63,7 +64,6 @@ let ProfileHeaderStandard = ({
     () => moderateProfile(profile, moderationOpts),
     [profile, moderationOpts],
   )
-  const [showSuggestedFollows, setShowSuggestedFollows] = React.useState(false)
   const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(
     profile,
     'ProfileHeader',
@@ -71,6 +71,10 @@ let ProfileHeaderStandard = ({
   const [_queueBlock, queueUnblock] = useProfileBlockMutationQueue(profile)
   const unblockPromptControl = Prompt.usePromptControl()
   const requireAuth = useRequireAuth()
+  const isBlockedUser =
+    profile.viewer?.blocking ||
+    profile.viewer?.blockedBy ||
+    profile.viewer?.blockingByList
 
   const onPressEditProfile = React.useCallback(() => {
     track('ProfileHeader:EditProfileButtonClicked')
@@ -96,7 +100,7 @@ let ProfileHeaderStandard = ({
       } catch (e: any) {
         if (e?.name !== 'AbortError') {
           logger.error('Failed to follow', {message: String(e)})
-          Toast.show(_(msg`There was an issue! ${e.toString()}`))
+          Toast.show(_(msg`There was an issue! ${e.toString()}`), 'xmark')
         }
       }
     })
@@ -118,7 +122,7 @@ let ProfileHeaderStandard = ({
       } catch (e: any) {
         if (e?.name !== 'AbortError') {
           logger.error('Failed to unfollow', {message: String(e)})
-          Toast.show(_(msg`There was an issue! ${e.toString()}`))
+          Toast.show(_(msg`There was an issue! ${e.toString()}`), 'xmark')
         }
       }
     })
@@ -132,7 +136,7 @@ let ProfileHeaderStandard = ({
     } catch (e: any) {
       if (e?.name !== 'AbortError') {
         logger.error('Failed to unblock account', {message: e})
-        Toast.show(_(msg`There was an issue! ${e.toString()}`))
+        Toast.show(_(msg`There was an issue! ${e.toString()}`), 'xmark')
       }
     }
   }, [_, queueUnblock, track])
@@ -149,7 +153,7 @@ let ProfileHeaderStandard = ({
       hideBackButton={hideBackButton}
       isPlaceholderProfile={isPlaceholderProfile}>
       <View
-        style={[a.px_lg, a.pt_md, a.pb_sm]}
+        style={[a.px_lg, a.pt_md, a.pb_sm, a.overflow_hidden]}
         pointerEvents={isIOS ? 'auto' : 'box-none'}>
         <View
           style={[
@@ -192,32 +196,7 @@ let ProfileHeaderStandard = ({
             )
           ) : !profile.viewer?.blockedBy ? (
             <>
-              {hasSession && (
-                <>
-                  <MessageProfileButton profile={profile} />
-                  <Button
-                    testID="suggestedFollowsBtn"
-                    size="small"
-                    color={showSuggestedFollows ? 'primary' : 'secondary'}
-                    variant="solid"
-                    shape="round"
-                    onPress={() =>
-                      setShowSuggestedFollows(!showSuggestedFollows)
-                    }
-                    label={_(msg`Show follows similar to ${profile.handle}`)}
-                    style={{width: 36, height: 36}}>
-                    <FontAwesomeIcon
-                      icon="user-plus"
-                      style={
-                        showSuggestedFollows
-                          ? {color: t.palette.white}
-                          : t.atoms.text
-                      }
-                      size={14}
-                    />
-                  </Button>
-                </>
-              )}
+              {hasSession && <MessageProfileButton profile={profile} />}
 
               <Button
                 testID={profile.viewer?.following ? 'unfollowBtn' : 'followBtn'}
@@ -240,6 +219,8 @@ let ProfileHeaderStandard = ({
                 <ButtonText>
                   {profile.viewer?.following ? (
                     <Trans>Following</Trans>
+                  ) : profile.viewer?.followedBy ? (
+                    <Trans>Follow Back</Trans>
                   ) : (
                     <Trans>Follow</Trans>
                   )}
@@ -253,7 +234,7 @@ let ProfileHeaderStandard = ({
           <ProfileHeaderDisplayName profile={profile} moderation={moderation} />
           <ProfileHeaderHandle profile={profile} />
         </View>
-        {!isPlaceholderProfile && (
+        {!isPlaceholderProfile && !isBlockedUser && (
           <>
             <ProfileHeaderMetrics profile={profile} />
             {descriptionRT && !moderation.ui('profileView').blur ? (
@@ -268,22 +249,20 @@ let ProfileHeaderStandard = ({
                 />
               </View>
             ) : undefined}
+
+            {!isMe &&
+              !isBlockedUser &&
+              shouldShowKnownFollowers(profile.viewer?.knownFollowers) && (
+                <View style={[a.flex_row, a.align_center, a.gap_sm, a.pt_md]}>
+                  <KnownFollowers
+                    profile={profile}
+                    moderationOpts={moderationOpts}
+                  />
+                </View>
+              )}
           </>
         )}
       </View>
-      {showSuggestedFollows && (
-        <ProfileHeaderSuggestedFollows
-          actorDid={profile.did}
-          requestDismiss={() => {
-            if (showSuggestedFollows) {
-              setShowSuggestedFollows(false)
-            } else {
-              track('ProfileHeader:SuggestedFollowsOpened')
-              setShowSuggestedFollows(true)
-            }
-          }}
-        />
-      )}
       <Prompt.Basic
         control={unblockPromptControl}
         title={_(msg`Unblock Account?`)}

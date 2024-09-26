@@ -11,6 +11,8 @@ appId: xyz.blueskyweb.app
 
 
 # Navigate to thread
+- extendedWaitUntil:
+    visible: "Thread root"
 - tapOn: "Thread root"
 - assertVisible: "Thread reply"
 
@@ -19,30 +21,20 @@ appId: xyz.blueskyweb.app
     id: "likeBtn"
     childOf:
         id: "postThreadItem-by-bob.test"
-- assertVisible:
-    id: "likeCount-expanded"
+- assertVisible: "1 like"
 - tapOn:
     id: "likeBtn"
     childOf:
         id: "postThreadItem-by-bob.test"
-- assertNotVisible:
-    id: "likeCount-expanded"
+- assertNotVisible: "1 like"
 
 # Can like a reply post
 - tapOn:
     id: "likeBtn"
     childOf:
         id: "postThreadItem-by-carla.test"
-- assertVisible:
-    id: "likeCount"
-    childOf:
-        id: "postThreadItem-by-carla.test"
 - tapOn:
     id: "likeBtn"
-    childOf:
-        id: "postThreadItem-by-carla.test"
-- assertNotVisible:
-    id: "likeCount"
     childOf:
         id: "postThreadItem-by-carla.test"
 
@@ -58,7 +50,7 @@ appId: xyz.blueskyweb.app
     id: "repostBtn"
     childOf:
         id: "postThreadItem-by-bob.test"
-- tapOn: "Undo repost"
+- tapOn: "Remove repost"
 - assertNotVisible:
     id: "repostCount-expanded"
 
@@ -77,7 +69,7 @@ appId: xyz.blueskyweb.app
     id: "repostBtn"
     childOf:
         id: "postThreadItem-by-carla.test"
-- tapOn: "Undo repost"
+- tapOn: "Remove repost"
 - assertNotVisible:
     id: "repostCount"
     childOf:

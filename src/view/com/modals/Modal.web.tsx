@@ -2,17 +2,17 @@ import React from 'react'
 import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native'
 import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
 
+import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebBodyScrollLock} from '#/lib/hooks/useWebBodyScrollLock'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import type {Modal as ModalIface} from '#/state/modals'
 import {useModalControls, useModals} from '#/state/modals'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import * as AddAppPassword from './AddAppPasswords'
 import * as ChangeEmailModal from './ChangeEmail'
 import * as ChangeHandleModal from './ChangeHandle'
 import * as ChangePasswordModal from './ChangePassword'
 import * as CreateOrEditListModal from './CreateOrEditList'
-import * as CropImage from './CropImage.web'
+import * as CropImageModal from './CropImage.web'
 import * as DeleteAccountModal from './DeleteAccount'
 import * as EditProfileModal from './EditProfile'
 import * as InviteCodesModal from './InviteCodes'
@@ -20,9 +20,7 @@ import * as ContentLanguagesSettingsModal from './lang-settings/ContentLanguages
 import * as PostLanguagesSettingsModal from './lang-settings/PostLanguagesSettings'
 import * as LinkWarningModal from './LinkWarning'
 import * as ListAddUserModal from './ListAddRemoveUsers'
-import * as RepostModal from './Repost'
 import * as SelfLabelModal from './SelfLabel'
-import * as ThreadgateModal from './Threadgate'
 import * as UserAddRemoveLists from './UserAddRemoveLists'
 import * as VerifyEmailModal from './VerifyEmail'
 
@@ -54,6 +52,9 @@ function Modal({modal}: {modal: ModalIface}) {
   }
 
   const onPressMask = () => {
+    if (modal.name === 'crop-image') {
+      return // dont close on mask presses during crop
+    }
     closeModal()
   }
   const onInnerPress = () => {
@@ -71,15 +72,11 @@ function Modal({modal}: {modal: ModalIface}) {
   } else if (modal.name === 'list-add-remove-users') {
     element = <ListAddUserModal.Component {...modal} />
   } else if (modal.name === 'crop-image') {
-    element = <CropImage.Component {...modal} />
+    element = <CropImageModal.Component {...modal} />
   } else if (modal.name === 'delete-account') {
     element = <DeleteAccountModal.Component />
-  } else if (modal.name === 'repost') {
-    element = <RepostModal.Component {...modal} />
   } else if (modal.name === 'self-label') {
     element = <SelfLabelModal.Component {...modal} />
-  } else if (modal.name === 'threadgate') {
-    element = <ThreadgateModal.Component {...modal} />
   } else if (modal.name === 'change-handle') {
     element = <ChangeHandleModal.Component {...modal} />
   } else if (modal.name === 'invite-codes') {

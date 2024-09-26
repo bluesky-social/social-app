@@ -2,7 +2,6 @@ import React from 'react'
 import {LogBox, Pressable, View} from 'react-native'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {useDangerousSetGate} from '#/lib/statsig/statsig'
 import {useModalControls} from '#/state/modals'
 import {useSessionApi} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
@@ -21,11 +20,10 @@ const BTN = {height: 1, width: 1, backgroundColor: 'red'}
 
 export function TestCtrls() {
   const queryClient = useQueryClient()
-  const {logout, login} = useSessionApi()
+  const {logoutEveryAccount, login} = useSessionApi()
   const {openModal} = useModalControls()
   const onboardingDispatch = useOnboardingDispatch()
   const {setShowLoggedOut} = useLoggedOutViewControls()
-  const setGate = useDangerousSetGate()
   const onPressSignInAlice = async () => {
     await login(
       {
@@ -35,6 +33,7 @@ export function TestCtrls() {
       },
       'LoginForm',
     )
+    setShowLoggedOut(false)
   }
   const onPressSignInBob = async () => {
     await login(
@@ -45,6 +44,7 @@ export function TestCtrls() {
       },
       'LoginForm',
     )
+    setShowLoggedOut(false)
   }
   return (
     <View style={{position: 'absolute', top: 100, right: 0, zIndex: 100}}>
@@ -62,7 +62,7 @@ export function TestCtrls() {
       />
       <Pressable
         testID="e2eSignOut"
-        onPress={() => logout('Settings')}
+        onPress={() => logoutEveryAccount('Settings')}
         accessibilityRole="button"
         style={BTN}
       />
@@ -92,7 +92,7 @@ export function TestCtrls() {
       />
       <Pressable
         testID="e2eGotoFeeds"
-        onPress={() => navigate('FeedsTab')}
+        onPress={() => navigate('Feeds')}
         accessibilityRole="button"
         style={BTN}
       />
@@ -117,8 +117,6 @@ export function TestCtrls() {
       <Pressable
         testID="e2eStartOnboarding"
         onPress={() => {
-          // TODO remove when experiment is over
-          setGate('reduced_onboarding_and_home_algo_v2', true)
           onboardingDispatch({type: 'start'})
         }}
         accessibilityRole="button"
@@ -128,8 +126,6 @@ export function TestCtrls() {
       <Pressable
         testID="e2eStartLongboarding"
         onPress={() => {
-          // TODO remove when experiment is over
-          setGate('reduced_onboarding_and_home_algo_v2', false)
           onboardingDispatch({type: 'start'})
         }}
         accessibilityRole="button"

@@ -11,17 +11,28 @@ export function cleanError(str: any): string {
   if (str.includes('Upstream Failure')) {
     return 'The server appears to be experiencing issues. Please try again in a few moments.'
   }
+  if (str.includes('Bad token scope')) {
+    return 'This feature is not available while using an App Password. Please sign in with your main password.'
+  }
   if (str.startsWith('Error: ')) {
     return str.slice('Error: '.length)
   }
   return str
 }
 
+const NETWORK_ERRORS = [
+  'Abort',
+  'Network request failed',
+  'Failed to fetch',
+  'Load failed',
+]
+
 export function isNetworkError(e: unknown) {
   const str = String(e)
-  return (
-    str.includes('Abort') ||
-    str.includes('Network request failed') ||
-    str.includes('Failed to fetch')
-  )
+  for (const err of NETWORK_ERRORS) {
+    if (str.includes(err)) {
+      return true
+    }
+  }
+  return false
 }

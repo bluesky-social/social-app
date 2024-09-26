@@ -5,32 +5,33 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {ScrollView} from 'react-native-gesture-handler'
-import {Text} from '../com/util/text/Text'
-import {Button} from '../com/util/forms/Button'
-import * as Toast from '../com/util/Toast'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {NativeStackScreenProps} from '@react-navigation/native-stack'
-import {CommonNavigatorParams} from 'lib/routes/types'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {useFocusEffect} from '@react-navigation/native'
-import {ViewHeader} from '../com/util/ViewHeader'
-import {CenteredView} from 'view/com/util/Views'
-import {Trans, msg} from '@lingui/macro'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useSetMinimalShellMode} from '#/state/shell'
-import {useModalControls} from '#/state/modals'
-import {useLanguagePrefs} from '#/state/preferences'
-import {
-  useAppPasswordsQuery,
-  useAppPasswordDeleteMutation,
-} from '#/state/queries/app-passwords'
-import {ErrorScreen} from '../com/util/error/ErrorScreen'
+import {useFocusEffect} from '@react-navigation/native'
+import {NativeStackScreenProps} from '@react-navigation/native-stack'
+
+import {useAnalytics} from '#/lib/analytics/analytics'
+import {usePalette} from '#/lib/hooks/usePalette'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {CommonNavigatorParams} from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
-import * as Prompt from '#/components/Prompt'
+import {useModalControls} from '#/state/modals'
+import {
+  useAppPasswordDeleteMutation,
+  useAppPasswordsQuery,
+} from '#/state/queries/app-passwords'
+import {useSetMinimalShellMode} from '#/state/shell'
+import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
+import {Button} from '#/view/com/util/forms/Button'
+import {Text} from '#/view/com/util/text/Text'
+import * as Toast from '#/view/com/util/Toast'
+import {ViewHeader} from '#/view/com/util/ViewHeader'
+import {CenteredView} from 'view/com/util/Views'
+import {atoms as a} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
+import * as Prompt from '#/components/Prompt'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AppPasswords'>
 export function AppPasswords({}: Props) {
@@ -135,6 +136,7 @@ export function AppPasswords({}: Props) {
               testID={`appPassword-${i}`}
               name={password.name}
               createdAt={password.createdAt}
+              privileged={password.privileged}
             />
           ))}
           {isTabletOrDesktop && (
@@ -207,15 +209,16 @@ function AppPassword({
   testID,
   name,
   createdAt,
+  privileged,
 }: {
   testID: string
   name: string
   createdAt: string
+  privileged?: boolean
 }) {
   const pal = usePalette('default')
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const control = useDialogControl()
-  const {contentLanguages} = useLanguagePrefs()
   const deleteMutation = useAppPasswordDeleteMutation()
 
   const onDelete = React.useCallback(async () => {
@@ -226,9 +229,6 @@ function AppPassword({
   const onPress = React.useCallback(() => {
     control.open()
   }, [control])
-
-  const primaryLocale =
-    contentLanguages.length > 0 ? contentLanguages[0] : 'en-US'
 
   return (
     <TouchableOpacity
@@ -245,16 +245,28 @@ function AppPassword({
         <Text type="md" style={[pal.text, styles.pr10]} numberOfLines={1}>
           <Trans>
             Created{' '}
-            {Intl.DateTimeFormat(primaryLocale, {
+            {i18n.date(createdAt, {
               year: 'numeric',
               month: 'numeric',
               day: 'numeric',
               hour: '2-digit',
               minute: '2-digit',
               second: '2-digit',
-            }).format(new Date(createdAt))}
+            })}
           </Trans>
         </Text>
+        {privileged && (
+          <View style={[a.flex_row, a.gap_sm, a.align_center, a.mt_xs]}>
+            <FontAwesomeIcon
+              icon="circle-exclamation"
+              color={pal.colors.textLight}
+              size={14}
+            />
+            <Text type="md" style={pal.textLight}>
+              <Trans>Allows access to direct messages</Trans>
+            </Text>
+          </View>
+        )}
       </View>
       <FontAwesomeIcon icon={['far', 'trash-can']} style={styles.trashIcon} />
 

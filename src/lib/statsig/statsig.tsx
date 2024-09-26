@@ -7,12 +7,14 @@ import {Statsig, StatsigProvider} from 'statsig-react-native-expo'
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
 import * as persisted from '#/state/persisted'
-import {IS_TESTFLIGHT} from 'lib/app-info'
+import {BUNDLE_DATE, BUNDLE_IDENTIFIER, IS_TESTFLIGHT} from 'lib/app-info'
 import {useSession} from '../../state/session'
 import {timeout} from '../async/timeout'
 import {useNonReactiveCallback} from '../hooks/useNonReactiveCallback'
 import {LogEvents} from './events'
 import {Gate} from './gates'
+
+const SDK_KEY = 'client-SXJakO39w9vIhl3D44u8UupyzFl4oZ2qPIkjwcvuPsV'
 
 type StatsigUser = {
   userID: string | undefined
@@ -22,6 +24,8 @@ type StatsigUser = {
     // This is the place where we can add our own stuff.
     // Fields here have to be non-optional to be visible in the UI.
     platform: 'ios' | 'android' | 'web'
+    bundleIdentifier: string
+    bundleDate: number
     refSrc: string
     refUrl: string
     appLanguage: string
@@ -85,20 +89,51 @@ export function toClout(n: number | null | undefined): number | undefined {
   }
 }
 
-const DOWNSAMPLED_EVENTS = new Set(['router:navigate:sampled'])
-const isDownsampledSession = Math.random() < 0.9 // 90% likely
+const DOWNSAMPLE_RATE = 0.95 // 95% likely
+const DOWNSAMPLED_EVENTS: Set<keyof LogEvents> = new Set([
+  'router:navigate:notifications:sampled',
+  'state:background:sampled',
+  'state:foreground:sampled',
+  'home:feedDisplayed:sampled',
+  'feed:endReached:sampled',
+  'feed:refresh:sampled',
+  'discover:clickthrough:sampled',
+  'discover:engaged:sampled',
+  'discover:seen:sampled',
+  'post:like:sampled',
+  'post:unlike:sampled',
+  'post:repost:sampled',
+  'post:unrepost:sampled',
+  'profile:follow:sampled',
+  'profile:unfollow:sampled',
+])
+const isDownsampledSession = Math.random() < DOWNSAMPLE_RATE
 
 export function logEvent<E extends keyof LogEvents>(
   eventName: E & string,
   rawMetadata: LogEvents[E] & FlatJSONRecord,
 ) {
   try {
-    if (isDownsampledSession && DOWNSAMPLED_EVENTS.has(eventName)) {
+    if (
+      process.env.NODE_ENV === 'development' &&
+      eventName.endsWith(':sampled') &&
+      !DOWNSAMPLED_EVENTS.has(eventName)
+    ) {
+      logger.error(
+        'Did you forget to add ' + eventName + ' to DOWNSAMPLED_EVENTS?',
+      )
+    }
+
+    const isDownsampledEvent = DOWNSAMPLED_EVENTS.has(eventName)
+    if (isDownsampledSession && isDownsampledEvent) {
       return
     }
     const fullMetadata = {
       ...rawMetadata,
     } as Record<string, string> // Statsig typings are unnecessarily strict here.
+    if (isDownsampledEvent) {
+      fullMetadata.downsampleRate = DOWNSAMPLE_RATE.toString()
+    }
     fullMetadata.routeName = getCurrentRouteName() ?? '(Uninitialized)'
     if (Statsig.initializeCalled()) {
       Statsig.logEvent(eventName, null, fullMetadata)
@@ -180,6 +215,8 @@ function toStatsigUser(did: string | undefined): StatsigUser {
       refSrc,
       refUrl,
       platform: Platform.OS as 'ios' | 'android' | 'web',
+      bundleIdentifier: BUNDLE_IDENTIFIER,
+      bundleDate: BUNDLE_DATE,
       appLanguage: languagePrefs.appLanguage,
       contentLanguages: languagePrefs.contentLanguages,
     },
@@ -195,21 +232,21 @@ AppState.addEventListener('change', (state: AppStateStatus) => {
   lastState = state
   if (state === 'active') {
     lastActive = performance.now()
-    logEvent('state:foreground', {})
+    logEvent('state:foreground:sampled', {})
   } else {
     let secondsActive = 0
     if (lastActive != null) {
       secondsActive = Math.round((performance.now() - lastActive) / 1e3)
+      lastActive = null
+      logEvent('state:background:sampled', {
+        secondsActive,
+      })
     }
-    lastActive = null
-    logEvent('state:background', {
-      secondsActive,
-    })
   }
 })
 
 export async function tryFetchGates(
-  did: string,
+  did: string | undefined,
   strategy: 'prefer-low-latency' | 'prefer-fresh-gates',
 ) {
   try {
@@ -231,6 +268,10 @@ export async function tryFetchGates(
     // Don't leak errors to the calling code, this is meant to be always safe.
     console.error(e)
   }
+}
+
+export function initialize() {
+  return Statsig.initialize(SDK_KEY, null, createStatsigOptions([]))
 }
 
 export function Provider({children}: {children: React.ReactNode}) {
@@ -278,7 +319,7 @@ export function Provider({children}: {children: React.ReactNode}) {
     <GateCache.Provider value={gateCache}>
       <StatsigProvider
         key={did}
-        sdkKey="client-SXJakO39w9vIhl3D44u8UupyzFl4oZ2qPIkjwcvuPsV"
+        sdkKey={SDK_KEY}
         mountKey={currentStatsigUser.userID}
         user={currentStatsigUser}
         // This isn't really blocking due to short initTimeoutMs above.

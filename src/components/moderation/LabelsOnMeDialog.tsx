@@ -5,6 +5,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useMutation} from '@tanstack/react-query'
 
+import {useLabelSubject} from '#/lib/moderation'
 import {useLabelInfo} from '#/lib/moderation/useLabelInfo'
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeHandle} from '#/lib/strings/handles'
@@ -18,21 +19,13 @@ import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {Divider} from '../Divider'
 import {Loader} from '../Loader'
-export {useDialogControl as useLabelsOnMeDialogControl} from '#/components/Dialog'
 
-type Subject =
-  | {
-      uri: string
-      cid: string
-    }
-  | {
-      did: string
-    }
+export {useDialogControl as useLabelsOnMeDialogControl} from '#/components/Dialog'
 
 export interface LabelsOnMeDialogProps {
   control: Dialog.DialogOuterProps['control']
-  subject: Subject
   labels: ComAtprotoLabelDefs.Label[]
+  type: 'account' | 'content'
 }
 
 export function LabelsOnMeDialog(props: LabelsOnMeDialogProps) {
@@ -51,8 +44,8 @@ function LabelsOnMeDialogInner(props: LabelsOnMeDialogProps) {
   const [appealingLabel, setAppealingLabel] = React.useState<
     ComAtprotoLabelDefs.Label | undefined
   >(undefined)
-  const {subject, labels} = props
-  const isAccount = 'did' in subject
+  const {labels} = props
+  const isAccount = props.type === 'account'
   const containsSelfLabel = React.useMemo(
     () => labels.some(l => l.src === currentAccount?.did),
     [currentAccount?.did, labels],
@@ -68,7 +61,6 @@ function LabelsOnMeDialogInner(props: LabelsOnMeDialogProps) {
       {appealingLabel ? (
         <AppealForm
           label={appealingLabel}
-          subject={subject}
           control={props.control}
           onPressBack={() => setAppealingLabel(undefined)}
         />
@@ -108,7 +100,6 @@ function LabelsOnMeDialogInner(props: LabelsOnMeDialogProps) {
           </View>
         </>
       )}
-
       <Dialog.Close />
     </Dialog.ScrollableInner>
   )
@@ -128,6 +119,9 @@ function Label({
   const t = useTheme()
   const {_} = useLingui()
   const {labeler, strings} = useLabelInfo(label)
+  const sourceName = labeler
+    ? sanitizeHandle(labeler.creator.handle, '@')
+    : label.src
   return (
     <View
       style={[
@@ -138,8 +132,10 @@ function Label({
       ]}>
       <View style={[a.p_md, a.gap_sm, a.flex_row]}>
         <View style={[a.flex_1, a.gap_xs]}>
-          <Text style={[a.font_bold, a.text_md]}>{strings.name}</Text>
-          <Text style={[t.atoms.text_contrast_medium, a.leading_snug]}>
+          <Text emoji style={[a.font_bold, a.text_md]}>
+            {strings.name}
+          </Text>
+          <Text emoji style={[t.atoms.text_contrast_medium, a.leading_snug]}>
             {strings.description}
           </Text>
         </View>
@@ -169,13 +165,12 @@ function Label({
             <Trans>
               Source:{' '}
               <InlineLinkText
+                label={sourceName}
                 to={makeProfileLink(
                   labeler ? labeler.creator : {did: label.src, handle: ''},
                 )}
                 onPress={() => control.close()}>
-                {labeler
-                  ? sanitizeHandle(labeler.creator.handle, '@')
-                  : label.src}
+                {sourceName}
               </InlineLinkText>
             </Trans>
           )}
@@ -187,12 +182,10 @@ function Label({
 
 function AppealForm({
   label,
-  subject,
   control,
   onPressBack,
 }: {
   label: ComAtprotoLabelDefs.Label
-  subject: Subject
   control: Dialog.DialogOuterProps['control']
   onPressBack: () => void
 }) {
@@ -200,28 +193,38 @@ function AppealForm({
   const {labeler, strings} = useLabelInfo(label)
   const {gtMobile} = useBreakpoints()
   const [details, setDetails] = React.useState('')
+  const {subject} = useLabelSubject({label})
   const isAccountReport = 'did' in subject
-  const {getAgent} = useAgent()
+  const agent = useAgent()
+  const sourceName = labeler
+    ? sanitizeHandle(labeler.creator.handle, '@')
+    : label.src
 
   const {mutate, isPending} = useMutation({
     mutationFn: async () => {
       const $type = !isAccountReport
         ? 'com.atproto.repo.strongRef'
         : 'com.atproto.admin.defs#repoRef'
-      await getAgent()
-        .withProxy('atproto_labeler', label.src)
-        .createModerationReport({
+      await agent.createModerationReport(
+        {
           reasonType: ComAtprotoModerationDefs.REASONAPPEAL,
           subject: {
             $type,
             ...subject,
           },
           reason: details,
-        })
+        },
+        {
+          encoding: 'application/json',
+          headers: {
+            'atproto-proxy': `${label.src}#atproto_labeler`,
+          },
+        },
+      )
     },
     onError: err => {
       logger.error('Failed to submit label appeal', {message: err})
-      Toast.show(_(msg`Failed to submit appeal, please try again.`))
+      Toast.show(_(msg`Failed to submit appeal, please try again.`), 'xmark')
     },
     onSuccess: () => {
       control.close()
@@ -240,12 +243,13 @@ function AppealForm({
         <Trans>
           This appeal will be sent to{' '}
           <InlineLinkText
+            label={sourceName}
             to={makeProfileLink(
               labeler ? labeler.creator : {did: label.src, handle: ''},
             )}
             onPress={() => control.close()}
             style={[a.text_md, a.leading_snug]}>
-            {labeler ? sanitizeHandle(labeler.creator.handle, '@') : label.src}
+            {sourceName}
           </InlineLinkText>
           .
         </Trans>
@@ -277,7 +281,7 @@ function AppealForm({
           testID="backBtn"
           variant="solid"
           color="secondary"
-          size="medium"
+          size="large"
           onPress={onPressBack}
           label={_(msg`Back`)}>
           <ButtonText>{_(msg`Back`)}</ButtonText>
@@ -286,7 +290,7 @@ function AppealForm({
           testID="submitBtn"
           variant="solid"
           color="primary"
-          size="medium"
+          size="large"
           onPress={onSubmit}
           label={_(msg`Submit`)}>
           <ButtonText>{_(msg`Submit`)}</ButtonText>

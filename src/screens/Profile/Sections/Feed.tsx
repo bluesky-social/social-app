@@ -4,16 +4,18 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
+import {usePalette} from '#/lib/hooks/usePalette'
 import {isNative} from '#/platform/detection'
 import {FeedDescriptor} from '#/state/queries/post-feed'
 import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
 import {truncateAndInvalidate} from '#/state/queries/util'
-import {usePalette} from 'lib/hooks/usePalette'
+import {Feed} from '#/view/com/posts/Feed'
+import {EmptyState} from '#/view/com/util/EmptyState'
+import {ListRef} from '#/view/com/util/List'
+import {LoadLatestBtn} from '#/view/com/util/load-latest/LoadLatestBtn'
 import {Text} from '#/view/com/util/text/Text'
-import {Feed} from 'view/com/posts/Feed'
-import {EmptyState} from 'view/com/util/EmptyState'
-import {ListRef} from 'view/com/util/List'
-import {LoadLatestBtn} from 'view/com/util/load-latest/LoadLatestBtn'
+import {ios} from '#/alf'
 import {SectionRef} from './types'
 
 interface FeedSectionProps {
@@ -42,6 +44,10 @@ export const ProfileFeedSection = React.forwardRef<
   const queryClient = useQueryClient()
   const [hasNew, setHasNew] = React.useState(false)
   const [isScrolledDown, setIsScrolledDown] = React.useState(false)
+  const shouldUseAdjustedNumToRender = feed.endsWith('posts_and_author_threads')
+  const adjustedInitialNumToRender = useInitialNumToRender({
+    screenHeightOffset: headerHeight,
+  })
 
   const onScrollToTop = React.useCallback(() => {
     scrollElRef.current?.scrollToOffset({
@@ -56,7 +62,7 @@ export const ProfileFeedSection = React.forwardRef<
   }))
 
   const renderPostsEmpty = React.useCallback(() => {
-    return <EmptyState icon="feed" message={_(msg`This feed is empty!`)} />
+    return <EmptyState icon="growth" message={_(msg`No posts yet.`)} />
   }, [_])
 
   React.useEffect(() => {
@@ -77,8 +83,12 @@ export const ProfileFeedSection = React.forwardRef<
         onScrolledDownChange={setIsScrolledDown}
         renderEmptyState={renderPostsEmpty}
         headerOffset={headerHeight}
+        progressViewOffset={ios(0)}
         renderEndOfFeed={ProfileEndOfFeed}
         ignoreFilterFor={ignoreFilterFor}
+        initialNumToRender={
+          shouldUseAdjustedNumToRender ? adjustedInitialNumToRender : undefined
+        }
       />
       {(isScrolledDown || hasNew) && (
         <LoadLatestBtn

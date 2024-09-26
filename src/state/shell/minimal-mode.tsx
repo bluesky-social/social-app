@@ -1,36 +1,60 @@
 import React from 'react'
 import {
-  Easing,
+  cancelAnimation,
   SharedValue,
   useSharedValue,
-  withTiming,
+  withSpring,
 } from 'react-native-reanimated'
 
-type StateContext = SharedValue<number>
+type StateContext = {
+  headerMode: SharedValue<number>
+  footerMode: SharedValue<number>
+}
 type SetContext = (v: boolean) => void
 
 const stateContext = React.createContext<StateContext>({
-  value: 0,
-  addListener() {},
-  removeListener() {},
-  modify() {},
+  headerMode: {
+    value: 0,
+    addListener() {},
+    removeListener() {},
+    modify() {},
+  },
+  footerMode: {
+    value: 0,
+    addListener() {},
+    removeListener() {},
+    modify() {},
+  },
 })
 const setContext = React.createContext<SetContext>((_: boolean) => {})
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
-  const mode = useSharedValue(0)
+  const headerMode = useSharedValue(0)
+  const footerMode = useSharedValue(0)
   const setMode = React.useCallback(
     (v: boolean) => {
       'worklet'
-      mode.value = withTiming(v ? 1 : 0, {
-        duration: 400,
-        easing: Easing.bezier(0.25, 0.1, 0.25, 1),
+      // Cancel any existing animation
+      cancelAnimation(headerMode)
+      headerMode.value = withSpring(v ? 1 : 0, {
+        overshootClamping: true,
+      })
+      cancelAnimation(footerMode)
+      footerMode.value = withSpring(v ? 1 : 0, {
+        overshootClamping: true,
       })
     },
-    [mode],
+    [headerMode, footerMode],
+  )
+  const value = React.useMemo(
+    () => ({
+      headerMode,
+      footerMode,
+    }),
+    [headerMode, footerMode],
   )
   return (
-    <stateContext.Provider value={mode}>
+    <stateContext.Provider value={value}>
       <setContext.Provider value={setMode}>{children}</setContext.Provider>
     </stateContext.Provider>
   )

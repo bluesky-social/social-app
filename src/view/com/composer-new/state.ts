@@ -12,7 +12,7 @@ import {
 } from '#/lib/strings/url-helpers'
 import {ComposerImage} from '#/state/gallery'
 import {Gif} from '#/state/queries/tenor'
-import {ThreadgateSetting} from '#/state/queries/threadgate'
+import {ThreadgateAllowUISetting} from '#/state/queries/threadgate'
 import {
   ComposerOpts,
   ComposerOptsPostRef,
@@ -95,7 +95,7 @@ export interface ComposerState {
   error?: string
   active: number
   posts: PostStateWithDerivation[]
-  threadgates: ThreadgateSetting[]
+  threadgates: ThreadgateAllowUISetting[]
 }
 
 export interface ComposerStateWithDerivation extends ComposerState {
@@ -119,7 +119,7 @@ export type ComposerAction =
   /** Set rich text to post matching `postId` */
   | {type: 'set_richtext'; postId: string; richtext: RichText}
   /** Set threadgate to the whole post */
-  | {type: 'set_threadgates'; threadgates: ThreadgateSetting[]}
+  | {type: 'set_threadgates'; threadgates: ThreadgateAllowUISetting[]}
   /** Add new images to post matching `postId` */
   | {type: 'embed_add_images'; postId: string; images: ComposerImage[]}
   /** Remove matching image from post matching `postId` */

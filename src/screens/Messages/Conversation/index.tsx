@@ -1,5 +1,6 @@
 import React, {useCallback} from 'react'
 import {View} from 'react-native'
+import {useKeyboardController} from 'react-native-keyboard-controller'
 import {AppBskyActorDefs, moderateProfile, ModerationOpts} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -33,6 +34,17 @@ export function MessagesConversationScreen({route}: Props) {
 
   const convoId = route.params.conversation
   const {setCurrentConvoId} = useCurrentConvoId()
+
+  const {setEnabled} = useKeyboardController()
+  useFocusEffect(
+    useCallback(() => {
+      if (isWeb) return
+      setEnabled(true)
+      return () => {
+        setEnabled(false)
+      }
+    }, [setEnabled]),
+  )
 
   useFocusEffect(
     useCallback(() => {
@@ -94,6 +106,7 @@ function Inner() {
           title={_(msg`Something went wrong`)}
           message={_(msg`We couldn't load this conversation`)}
           onRetry={() => convoState.error.retry()}
+          sideBorders={false}
         />
       </CenteredView>
     )

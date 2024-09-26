@@ -753,7 +753,7 @@ export class Convo {
 
   sendMessage(message: ChatBskyConvoSendMessage.InputSchema['message']) {
     // Ignore empty messages for now since they have no other purpose atm
-    if (!message.text.trim()) return
+    if (!message.text.trim() && !message.embed) return
 
     logger.debug('Convo: send message', {}, logger.DebugContext.convo)
 
@@ -830,9 +830,10 @@ export class Convo {
       if (NETWORK_FAILURE_STATUSES.includes(e.status)) {
         this.pendingMessageFailure = 'recoverable'
       } else {
+        this.pendingMessageFailure = 'unrecoverable'
+
         switch (e.message) {
           case 'block between recipient and sender':
-            this.pendingMessageFailure = 'unrecoverable'
             this.emitter.emit('event', {
               type: 'invalidate-block-state',
               accountDids: [
@@ -842,8 +843,13 @@ export class Convo {
             })
             break
           case 'Account is disabled':
-            this.pendingMessageFailure = 'unrecoverable'
             this.dispatch({event: ConvoDispatchEvent.Disable})
+            break
+          case 'Convo not found':
+          case 'Account does not exist':
+          case 'recipient does not exist':
+          case 'recipient requires incoming messages to come from someone they follow':
+          case 'recipient has disabled incoming messages':
             break
           default:
             logger.warn(
@@ -857,6 +863,7 @@ export class Convo {
         }
       }
     } else {
+      this.pendingMessageFailure = 'unrecoverable'
       logger.error(e, {
         context: `Convo handleSendMessageFailure received unknown error`,
       })
@@ -1011,6 +1018,7 @@ export class Convo {
         key: m.id,
         message: {
           ...m.message,
+          embed: undefined,
           $type: 'chat.bsky.convo.defs#messageView',
           id: nanoid(),
           rev: '__fake__',

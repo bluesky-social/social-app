@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-imports */
 import React from 'react'
 import {View} from 'react-native'
 import {
@@ -803,14 +804,18 @@ function MockPostFeedItem({
       post={post}
       record={post.record as AppBskyFeedPost.Record}
       moderation={moderation}
+      parentAuthor={undefined}
+      showReplyTo={false}
       reason={undefined}
       feedContext={''}
+      rootPost={post}
     />
   )
 }
 
 function MockPostThreadItem({
   post,
+  moderation,
   reply,
 }: {
   post: AppBskyFeedDefs.PostView
@@ -822,12 +827,14 @@ function MockPostThreadItem({
       // @ts-ignore
       post={post}
       record={post.record as AppBskyFeedPost.Record}
+      moderation={moderation}
       depth={reply ? 1 : 0}
       isHighlightedPost={!reply}
       treeView={false}
       prevPost={undefined}
       nextPost={undefined}
       hasPrecedingItem={false}
+      overrideBlur={false}
       onPostReply={() => {}}
     />
   )

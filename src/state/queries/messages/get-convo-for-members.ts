@@ -18,11 +18,11 @@ export function useGetConvoForMembers({
   onError?: (error: Error) => void
 }) {
   const queryClient = useQueryClient()
-  const {getAgent} = useAgent()
+  const agent = useAgent()
 
   return useMutation({
     mutationFn: async (members: string[]) => {
-      const {data} = await getAgent().api.chat.bsky.convo.getConvoForMembers(
+      const {data} = await agent.api.chat.bsky.convo.getConvoForMembers(
         {members: members},
         {headers: DM_SERVICE_HEADERS},
       )
@@ -44,16 +44,13 @@ export function useGetConvoForMembers({
  * Gets the conversation ID for a given DID. Returns null if it's not possible to message them.
  */
 export function useMaybeConvoForUser(did: string) {
-  const {getAgent} = useAgent()
+  const agent = useAgent()
 
   return useQuery({
     queryKey: RQKEY(did),
     queryFn: async () => {
-      const convo = await getAgent()
-        .api.chat.bsky.convo.getConvoForMembers(
-          {members: [did]},
-          {headers: DM_SERVICE_HEADERS},
-        )
+      const convo = await agent.api.chat.bsky.convo
+        .getConvoForMembers({members: [did]}, {headers: DM_SERVICE_HEADERS})
         .catch(() => ({success: null}))
 
       if (convo.success) {

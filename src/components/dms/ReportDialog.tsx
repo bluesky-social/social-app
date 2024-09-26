@@ -16,6 +16,7 @@ import {CharProgress} from '#/view/com/composer/char-progress/CharProgress'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import * as Dialog from '#/components/Dialog'
+import {KeyboardControllerPadding} from '#/components/KeyboardControllerPadding'
 import {Button, ButtonIcon, ButtonText} from '../Button'
 import {Divider} from '../Divider'
 import {ChevronLeft_Stroke2_Corner0_Rounded as Chevron} from '../icons/Chevron'
@@ -47,6 +48,7 @@ let ReportDialog = ({
       <Dialog.ScrollableInner label={_(msg`Report this message`)}>
         <DialogInner params={params} />
         <Dialog.Close />
+        <KeyboardControllerPadding />
       </Dialog.ScrollableInner>
     </Dialog.Outer>
   )
@@ -102,7 +104,7 @@ function SubmitStep({
   const t = useTheme()
   const [details, setDetails] = useState('')
   const control = Dialog.useDialogContext()
-  const {getAgent} = useAgent()
+  const agent = useAgent()
 
   const {
     mutate: submit,
@@ -124,7 +126,7 @@ function SubmitStep({
           reason: details,
         } satisfies ComAtprotoModerationCreateReport.InputSchema
 
-        await getAgent().createModerationReport(report)
+        await agent.createModerationReport(report)
       }
     },
     onSuccess: () => {

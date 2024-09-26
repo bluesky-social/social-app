@@ -11,7 +11,7 @@ import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
-import {CenteredView} from '#/view/com/util/Views'
+import {ScrollView} from '#/view/com/util/Views'
 import {atoms as a, useTheme} from '#/alf'
 import {Divider} from '#/components/Divider'
 import * as Toggle from '#/components/forms/Toggle'
@@ -32,7 +32,7 @@ export function MessagesSettingsScreen({}: Props) {
 
   const {mutate: updateDeclaration} = useUpdateActorDeclaration({
     onError: () => {
-      Toast.show(_(msg`Failed to update settings`))
+      Toast.show(_(msg`Failed to update settings`), 'xmark')
     },
   })
 
@@ -55,8 +55,8 @@ export function MessagesSettingsScreen({}: Props) {
   )
 
   return (
-    <CenteredView sideBorders style={a.h_full_vh}>
-      <ViewHeader title={_(msg`Settings`)} showOnDesktop showBorder />
+    <ScrollView stickyHeaderIndices={[0]}>
+      <ViewHeader title={_(msg`Chat Settings`)} showOnDesktop showBorder />
       <View style={[a.p_lg, a.gap_md]}>
         <Text style={[a.text_lg, a.font_bold]}>
           <Trans>Allow new messages from</Trans>
@@ -107,7 +107,7 @@ export function MessagesSettingsScreen({}: Props) {
             a.rounded_md,
             t.atoms.bg_contrast_25,
           ]}>
-          <Text style={[t.atoms.text_contrast_high]}>
+          <Text style={[t.atoms.text_contrast_high, a.leading_snug]}>
             <Trans>
               You can continue ongoing conversations regardless of which setting
               you choose.
@@ -149,6 +149,6 @@ export function MessagesSettingsScreen({}: Props) {
           </>
         )}
       </View>
-    </CenteredView>
+    </ScrollView>
   )
 }

@@ -1,11 +1,12 @@
 import * as React from 'react'
 import {FlatList, ScrollView, StyleSheet, View} from 'react-native'
 import {useAnimatedRef} from 'react-native-reanimated'
-import {Pager, PagerRef, RenderTabBarFnProps} from 'view/com/pager/Pager'
-import {TabBar} from './TabBar'
+
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {Pager, PagerRef, RenderTabBarFnProps} from '#/view/com/pager/Pager'
 import {ListMethods} from '../util/List'
+import {TabBar} from './TabBar'
 
 export interface PagerWithHeaderChildParams {
   headerHeight: number
@@ -184,8 +185,7 @@ function PagerItem({
 
 const styles = StyleSheet.create({
   headerContainerDesktop: {
-    marginLeft: 'auto',
-    marginRight: 'auto',
+    marginHorizontal: 'auto',
     width: 600,
     borderLeftWidth: 1,
     borderRightWidth: 1,
@@ -193,20 +193,17 @@ const styles = StyleSheet.create({
   tabBarContainer: {
     // @ts-ignore web-only
     position: 'sticky',
-    overflow: 'hidden',
     top: 0,
     zIndex: 1,
   },
   tabBarContainerDesktop: {
-    marginLeft: 'auto',
-    marginRight: 'auto',
+    marginHorizontal: 'auto',
     width: 600,
     borderLeftWidth: 1,
     borderRightWidth: 1,
   },
   tabBarContainerMobile: {
-    paddingLeft: 14,
-    paddingRight: 14,
+    paddingHorizontal: 0,
   },
   loadingHeader: {
     borderColor: 'transparent',

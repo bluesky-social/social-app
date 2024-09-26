@@ -6,11 +6,13 @@ import {nanoid} from 'nanoid/non-secure'
 
 import {createFullHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
+import {logEvent} from 'lib/statsig/statsig'
 import {ScreenTransition} from '#/screens/Login/ScreenTransition'
-import {useSignupContext, useSubmitSignup} from '#/screens/Signup/state'
+import {useSignupContext} from '#/screens/Signup/state'
 import {CaptchaWebView} from '#/screens/Signup/StepCaptcha/CaptchaWebView'
 import {atoms as a, useTheme} from '#/alf'
 import {FormError} from '#/components/forms/FormError'
+import {BackNextButtons} from '../BackNextButtons'
 
 const CAPTCHA_PATH = '/gate/signup'
 
@@ -18,7 +20,6 @@ export function StepCaptcha() {
   const {_} = useLingui()
   const theme = useTheme()
   const {state, dispatch} = useSignupContext()
-  const submit = useSubmitSignup({state, dispatch})
 
   const [completed, setCompleted] = React.useState(false)
 
@@ -39,9 +40,13 @@ export function StepCaptcha() {
   const onSuccess = React.useCallback(
     (code: string) => {
       setCompleted(true)
-      submit(code)
+      logEvent('signup:captchaSuccess', {})
+      dispatch({
+        type: 'submit',
+        task: {verificationCode: code, mutableProcessed: false},
+      })
     },
-    [submit],
+    [dispatch],
   )
 
   const onError = React.useCallback(
@@ -50,6 +55,7 @@ export function StepCaptcha() {
         type: 'setError',
         value: _(msg`Error receiving captcha response.`),
       })
+      logEvent('signup:captchaFailure', {})
       logger.error('Signup Flow Error', {
         registrationHandle: state.handle,
         error,
@@ -57,6 +63,16 @@ export function StepCaptcha() {
     },
     [_, dispatch, state.handle],
   )
+
+  const onBackPress = React.useCallback(() => {
+    logger.error('Signup Flow Error', {
+      errorMessage:
+        'User went back from captcha step. Possibly encountered an error.',
+      registrationHandle: state.handle,
+    })
+
+    dispatch({type: 'prev'})
+  }, [dispatch, state.handle])
 
   return (
     <ScreenTransition>
@@ -83,6 +99,11 @@ export function StepCaptcha() {
         </View>
         <FormError error={state.error} />
       </View>
+      <BackNextButtons
+        hideNext
+        isLoading={state.isLoading}
+        onBackPress={onBackPress}
+      />
     </ScreenTransition>
   )
 }

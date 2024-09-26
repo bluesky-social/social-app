@@ -8,7 +8,7 @@ const suggestedFeedsQueryKeyRoot = 'suggestedFeeds'
 export const suggestedFeedsQueryKey = [suggestedFeedsQueryKeyRoot]
 
 export function useSuggestedFeedsQuery() {
-  const {getAgent} = useAgent()
+  const agent = useAgent()
   return useInfiniteQuery<
     AppBskyFeedGetSuggestedFeeds.OutputSchema,
     Error,
@@ -19,7 +19,7 @@ export function useSuggestedFeedsQuery() {
     staleTime: STALE.HOURS.ONE,
     queryKey: suggestedFeedsQueryKey,
     queryFn: async ({pageParam}) => {
-      const res = await getAgent().app.bsky.feed.getSuggestedFeeds({
+      const res = await agent.app.bsky.feed.getSuggestedFeeds({
         limit: 10,
         cursor: pageParam,
       })

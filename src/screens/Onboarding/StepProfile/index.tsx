@@ -92,11 +92,7 @@ export function StepProfile() {
   }, [track])
 
   React.useEffect(() => {
-    // We have an experiment running for redueced onboarding, where this screen shows up as the first in onboarding.
-    // We only want to request permissions when that gate is actually active to prevent pollution
-    if (gate('reduced_onboarding_and_home_algo_v2')) {
-      requestNotificationsPermission('StartOnboarding')
-    }
+    requestNotificationsPermission('StartOnboarding')
   }, [gate, requestNotificationsPermission])
 
   const openPicker = React.useCallback(
@@ -106,6 +102,7 @@ export function StepProfile() {
         mediaTypes: MediaTypeOptions.Images,
         quality: 1,
         ...opts,
+        legacy: true,
       })
 
       return (response.assets ?? [])
@@ -184,8 +181,8 @@ export function StepProfile() {
       image = await openCropper({
         mediaType: 'photo',
         cropperCircleOverlay: true,
-        height: image.height,
-        width: image.width,
+        height: 1000,
+        width: 1000,
         path: image.path,
       })
     }
