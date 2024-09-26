@@ -166,7 +166,9 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
         // in fact, I actually can't do it, so let's just ignore those.
         // Let's only apply this hack if we've overscrolled by more than 300px
         // so that it's not a false positive from overscrolling -sfn
-        if (nextScrollY > -300 || nextScrollY !== -headerHeight) {
+        const isPossiblyInvalid =
+          headerHeight > 0 && nextScrollY === -headerHeight
+        if (!isPossiblyInvalid) {
           scrollY.value = nextScrollY
           runOnJS(queueThrottledOnScroll)()
         }
