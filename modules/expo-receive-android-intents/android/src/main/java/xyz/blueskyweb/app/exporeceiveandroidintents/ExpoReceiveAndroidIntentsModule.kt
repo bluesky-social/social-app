@@ -29,7 +29,6 @@ class ExpoReceiveAndroidIntentsModule : Module() {
 
   private fun handleIntent(intent: Intent?) {
     if (appContext.currentActivity == null) return
-
     intent?.let {
       if (it.action == Intent.ACTION_SEND && it.type == "text/plain") {
         handleTextIntent(it)
@@ -130,8 +129,16 @@ class ExpoReceiveAndroidIntentsModule : Module() {
 
   private fun handleVideoIntents(uris: List<Uri>) {
     val uri = uris[0]
-    val extension = uri.path?.substringAfterLast(".") ?: "mp4"
+    // If there is no extension for the file, substringAfterLast returns the original string - not
+    // null, so we check for that below
+    // It doesn't actually matter what the extension is, so defaulting to mp4 is fine, even if the
+    // video isn't actually an mp4
+    var extension = uri.path?.substringAfterLast(".")
+    if (extension == null || extension == uri.path) {
+      extension = "mp4"
+    }
     val file = createFile(extension)
+
     val out = FileOutputStream(file)
     appContext.currentActivity?.contentResolver?.openInputStream(uri)?.use {
       it.copyTo(out)
