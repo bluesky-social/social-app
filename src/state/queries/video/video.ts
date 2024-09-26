@@ -7,17 +7,17 @@ import {QueryClient, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {AbortError} from '#/lib/async/cancelable'
 import {SUPPORTED_MIME_TYPES, SupportedMimeTypes} from '#/lib/constants'
-import {logger} from '#/logger'
-import {isWeb} from '#/platform/detection'
 import {
   ServerError,
   UploadLimitError,
   VideoTooLargeError,
-} from 'lib/media/video/errors'
-import {CompressedVideo} from 'lib/media/video/types'
-import {useCompressVideoMutation} from 'state/queries/video/compress-video'
-import {useVideoAgent} from 'state/queries/video/util'
-import {useUploadVideoMutation} from 'state/queries/video/video-upload'
+} from '#/lib/media/video/errors'
+import {CompressedVideo} from '#/lib/media/video/types'
+import {logger} from '#/logger'
+import {isWeb} from '#/platform/detection'
+import {useCompressVideoMutation} from '#/state/queries/video/compress-video'
+import {useVideoAgent} from '#/state/queries/video/util'
+import {useUploadVideoMutation} from '#/state/queries/video/video-upload'
 
 type Status = 'idle' | 'compressing' | 'processing' | 'uploading' | 'done'
 
@@ -101,9 +101,11 @@ function reducer(queryClient: QueryClient) {
 
 export function useUploadVideo({
   setStatus,
+  initialVideoUri,
 }: {
   setStatus: (status: string) => void
   onSuccess: () => void
+  initialVideoUri?: string
 }) {
   const {_} = useLingui()
   const queryClient = useQueryClient()
@@ -237,21 +239,24 @@ export function useUploadVideo({
     signal: state.abortController.signal,
   })
 
-  const selectVideo = (asset: ImagePickerAsset) => {
-    // compression step on native converts to mp4, so no need to check there
-    if (isWeb) {
-      const mimeType = getMimeType(asset)
-      if (!SUPPORTED_MIME_TYPES.includes(mimeType as SupportedMimeTypes)) {
-        throw new Error(_(msg`Unsupported video type: ${mimeType}`))
+  const selectVideo = React.useCallback(
+    (asset: ImagePickerAsset) => {
+      // compression step on native converts to mp4, so no need to check there
+      if (isWeb) {
+        const mimeType = getMimeType(asset)
+        if (!SUPPORTED_MIME_TYPES.includes(mimeType as SupportedMimeTypes)) {
+          throw new Error(_(msg`Unsupported video type: ${mimeType}`))
+        }
       }
-    }
 
-    dispatch({
-      type: 'SetAsset',
-      asset,
-    })
-    onSelectVideo(asset)
-  }
+      dispatch({
+        type: 'SetAsset',
+        asset,
+      })
+      onSelectVideo(asset)
+    },
+    [_, onSelectVideo],
+  )
 
   const clearVideo = () => {
     dispatch({type: 'Reset'})
@@ -264,6 +269,13 @@ export function useUploadVideo({
       height,
     })
   }, [])
+
+  // Whenever we receive an initial video uri, we should immediately run compression if necessary
+  useEffect(() => {
+    if (initialVideoUri) {
+      selectVideo({uri: initialVideoUri} as ImagePickerAsset)
+    }
+  }, [initialVideoUri, selectVideo])
 
   return {
     state,

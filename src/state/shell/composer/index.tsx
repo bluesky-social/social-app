@@ -9,6 +9,7 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
+import {purgeTemporaryImageFiles} from '#/state/gallery'
 import * as Toast from '#/view/com/util/Toast'
 
 export interface ComposerOptsPostRef {
@@ -37,6 +38,7 @@ export interface ComposerOpts {
   openEmojiPicker?: (pos: DOMRect | undefined) => void
   text?: string
   imageUris?: {uri: string; width: number; height: number; altText?: string}[]
+  videoUri?: string
 }
 
 type StateContext = ComposerOpts | undefined
@@ -77,7 +79,11 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
   const closeComposer = useNonReactiveCallback(() => {
     let wasOpen = !!state
-    setState(undefined)
+    if (wasOpen) {
+      setState(undefined)
+      purgeTemporaryImageFiles()
+    }
+
     return wasOpen
   })
 

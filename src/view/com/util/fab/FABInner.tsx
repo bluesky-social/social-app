@@ -1,20 +1,16 @@
 import React, {ComponentProps} from 'react'
 import {StyleSheet, TouchableWithoutFeedback} from 'react-native'
-import Animated, {
-  Easing,
-  useAnimatedStyle,
-  withTiming,
-} from 'react-native-reanimated'
+import Animated, {useAnimatedStyle, withTiming} from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {LinearGradient} from 'expo-linear-gradient'
 
+import {useHaptics} from '#/lib/haptics'
 import {useMinimalShellFabTransform} from '#/lib/hooks/useMinimalShellTransform'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {clamp} from '#/lib/numbers'
 import {gradients} from '#/lib/styles'
 import {isWeb} from '#/platform/detection'
-import {useHaptics} from 'lib/haptics'
-import {useHapticsDisabled} from 'state/preferences'
+import {useHapticsDisabled} from '#/state/preferences'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 
 export interface FABProps
@@ -26,14 +22,14 @@ export interface FABProps
 export function FABInner({testID, icon, onPress, ...props}: FABProps) {
   const insets = useSafeAreaInsets()
   const {isMobile, isTablet} = useWebMediaQueries()
+  const playHaptic = useHaptics()
+  const isHapticsDisabled = useHapticsDisabled()
   const fabMinimalShellTransform = useMinimalShellFabTransform()
   const {
-    state: isPressed,
+    state: pressed,
     onIn: onPressIn,
     onOut: onPressOut,
   } = useInteractionState()
-  const playHaptic = useHaptics()
-  const isHapticsDisabled = useHapticsDisabled()
 
   const size = isTablet ? styles.sizeLarge : styles.sizeRegular
 
@@ -41,22 +37,17 @@ export function FABInner({testID, icon, onPress, ...props}: FABProps) {
     ? {right: 50, bottom: 50}
     : {right: 24, bottom: clamp(insets.bottom, 15, 60) + 15}
 
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [
-      {
-        scale: withTiming(isPressed ? 1.1 : 1, {
-          duration: 250,
-          easing: Easing.out(Easing.quad),
-        }),
-      },
-    ],
+  const scale = useAnimatedStyle(() => ({
+    transform: [{scale: withTiming(pressed ? 0.95 : 1)}],
   }))
 
   return (
     <TouchableWithoutFeedback
       testID={testID}
+      onPressIn={onPressIn}
+      onPressOut={onPressOut}
       onPress={e => {
-        playHaptic()
+        playHaptic('Light')
         setTimeout(
           () => {
             onPress?.(e)
@@ -64,8 +55,6 @@ export function FABInner({testID, icon, onPress, ...props}: FABProps) {
           isHapticsDisabled ? 0 : 75,
         )
       }}
-      onPressIn={onPressIn}
-      onPressOut={onPressOut}
       {...props}>
       <Animated.View
         style={[
@@ -74,7 +63,7 @@ export function FABInner({testID, icon, onPress, ...props}: FABProps) {
           tabletSpacing,
           isMobile && fabMinimalShellTransform,
         ]}>
-        <Animated.View style={animatedStyle}>
+        <Animated.View style={scale}>
           <LinearGradient
             colors={[gradients.blueLight.start, gradients.blueLight.end]}
             start={{x: 0, y: 0}}

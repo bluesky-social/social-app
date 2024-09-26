@@ -8,17 +8,17 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {logger} from '#/logger'
-import {usePalette} from 'lib/hooks/usePalette'
+import {usePalette} from '#/lib/hooks/usePalette'
 import {
   useCameraPermission,
   usePhotoLibraryPermission,
-} from 'lib/hooks/usePermissions'
-import {makeProfileLink} from 'lib/routes/links'
-import {colors} from 'lib/styles'
-import {isAndroid, isNative, isWeb} from 'platform/detection'
-import {precacheProfile} from 'state/queries/profile'
-import {HighPriorityImage} from 'view/com/util/images/Image'
+} from '#/lib/hooks/usePermissions'
+import {makeProfileLink} from '#/lib/routes/links'
+import {colors} from '#/lib/styles'
+import {logger} from '#/logger'
+import {isAndroid, isNative, isWeb} from '#/platform/detection'
+import {precacheProfile} from '#/state/queries/profile'
+import {HighPriorityImage} from '#/view/com/util/images/Image'
 import {tokens, useTheme} from '#/alf'
 import {
   Camera_Filled_Stroke2_Corner0_Rounded as CameraFilled,
@@ -321,11 +321,14 @@ let EditableUserAvatar = ({
         height: 1000,
         width: 1000,
         path: item.path,
+        webAspectRatio: 1,
+        webCircularCrop: true,
       })
 
       onSelectNewAvatar(croppedImage)
     } catch (e: any) {
-      if (!String(e).includes('Canceled')) {
+      // Don't log errors for cancelling selection to sentry on ios or android
+      if (!String(e).toLowerCase().includes('cancel')) {
         logger.error('Failed to crop banner', {error: e})
       }
     }
