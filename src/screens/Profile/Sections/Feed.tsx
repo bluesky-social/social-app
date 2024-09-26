@@ -4,17 +4,18 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
+import {usePalette} from '#/lib/hooks/usePalette'
 import {isNative} from '#/platform/detection'
 import {FeedDescriptor} from '#/state/queries/post-feed'
 import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
 import {truncateAndInvalidate} from '#/state/queries/util'
-import {useInitialNumToRender} from 'lib/hooks/useInitialNumToRender'
-import {usePalette} from 'lib/hooks/usePalette'
+import {Feed} from '#/view/com/posts/Feed'
+import {EmptyState} from '#/view/com/util/EmptyState'
+import {ListRef} from '#/view/com/util/List'
+import {LoadLatestBtn} from '#/view/com/util/load-latest/LoadLatestBtn'
 import {Text} from '#/view/com/util/text/Text'
-import {Feed} from 'view/com/posts/Feed'
-import {EmptyState} from 'view/com/util/EmptyState'
-import {ListRef} from 'view/com/util/List'
-import {LoadLatestBtn} from 'view/com/util/load-latest/LoadLatestBtn'
+import {ios} from '#/alf'
 import {SectionRef} from './types'
 
 interface FeedSectionProps {
@@ -82,6 +83,7 @@ export const ProfileFeedSection = React.forwardRef<
         onScrolledDownChange={setIsScrolledDown}
         renderEmptyState={renderPostsEmpty}
         headerOffset={headerHeight}
+        progressViewOffset={ios(0)}
         renderEndOfFeed={ProfileEndOfFeed}
         ignoreFilterFor={ignoreFilterFor}
         initialNumToRender={

@@ -9,11 +9,11 @@ describe('isNetworkError', () => {
   ]
   const outputs = [true, false, false, true]
 
-  it('correctly distinguishes network errors', () => {
-    for (let i = 0; i < inputs.length; i++) {
-      const input = inputs[i]
-      const result = isNetworkError(input)
-      expect(result).toEqual(outputs[i])
-    }
-  })
+  for (let i = 0; i < inputs.length; i++) {
+    const input = inputs[i]
+    const output = outputs[i]
+    it(`correctly distinguishes network errors for ${input}`, () => {
+      expect(isNetworkError(input)).toEqual(output)
+    })
+  }
 })
