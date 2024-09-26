@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-09-25 13:18+0900\n"
+"PO-Revision-Date: 2024-09-26 10:27+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -5807,6 +5807,10 @@ msgstr "リンクしたウェブサイトを共有"
 #: src/view/screens/Settings/index.tsx:351
 msgid "Show"
 msgstr "表示"
+
+#: src/view/screens/Search/Search.tsx:883
+msgid "Show advanced filters"
+msgstr "高度なフィルターを表示"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:169
 msgid "Show alt text"
