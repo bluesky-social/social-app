@@ -470,7 +470,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '600',
     paddingHorizontal: 4,
-    borderRadius: 6,
+    borderRadius: 8,
   },
   navItemCountTablet: {
     left: 18,
