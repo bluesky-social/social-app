@@ -247,6 +247,11 @@ let PostCtrls = ({
       a.overflow_hidden,
       {padding: 5},
       (pressed || hovered) && t.atoms.bg_contrast_25,
+      {
+        transitionProperty: 'all',
+        transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)',
+        transitionDuration: '100ms',
+      },
     ],
     [t.atoms.bg_contrast_25],
   )

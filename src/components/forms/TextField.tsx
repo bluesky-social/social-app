@@ -232,6 +232,11 @@ export function createInput(Component: typeof TextInput) {
             (ctx.isInvalid || isInvalid) && (ctx.hovered || ctx.focused)
               ? chromeErrorHover
               : {},
+            {
+              transitionProperty: 'all',
+              transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)',
+              transitionDuration: '100ms',
+            },
           ]}
         />
       </>
@@ -293,7 +298,14 @@ export function Icon({icon: Comp}: {icon: React.ComponentType<SVGIconProps>}) {
       <Comp
         size="md"
         style={[
-          {color: t.palette.contrast_500, pointerEvents: 'none', flexShrink: 0},
+          {
+            color: t.palette.contrast_500,
+            pointerEvents: 'none',
+            flexShrink: 0,
+            transitionProperty: 'all',
+            transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)',
+            transitionDuration: '100ms',
+          },
           ctx.hovered ? hover : {},
           ctx.focused ? focus : {},
           ctx.isInvalid && ctx.hovered ? errorHover : {},

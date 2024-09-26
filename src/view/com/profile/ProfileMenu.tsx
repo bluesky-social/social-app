@@ -201,6 +201,11 @@ let ProfileMenu = ({
                   (state.hovered || state.pressed) && [
                     alf.atoms.bg_contrast_50,
                   ],
+                  {
+                    transitionProperty: 'all',
+                    transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)',
+                    transitionDuration: '100ms',
+                  },
                 ]}>
                 <FontAwesomeIcon
                   icon="ellipsis"

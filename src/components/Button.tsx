@@ -185,6 +185,12 @@ export const Button = React.forwardRef<View, ButtonProps>(
       const baseStyles: ViewStyle[] = []
       const hoverStyles: ViewStyle[] = []
 
+      baseStyles.push({
+        transitionProperty: 'all',
+        transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)',
+        transitionDuration: '100ms',
+      })
+
       if (color === 'primary') {
         if (variant === 'solid') {
           if (!disabled) {
