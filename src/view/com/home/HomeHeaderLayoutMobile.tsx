@@ -111,9 +111,12 @@ export function HomeHeaderLayoutMobile({
       {
         translateY: isWeb
           ? 0
-          : interpolate(scrollY?.value ?? 0, [-2, 0], [-1, 0], {
-              extrapolateRight: Extrapolation.CLAMP,
-            }),
+          : interpolate(
+              scrollY?.value ?? -headerHeight.value,
+              [-headerHeight.value, 0],
+              [headerHeight.value / 2, 0],
+              {extrapolateRight: Extrapolation.CLAMP},
+            ),
       },
     ],
   }))
@@ -130,129 +133,125 @@ export function HomeHeaderLayoutMobile({
 
   return (
     <Animated.View
-      pointerEvents="box-none"
-      style={[styles.tabBar, animatedContainerStyle]}>
-      {native(
+      style={[
+        t.atoms.bg,
+        t.atoms.border_contrast_medium,
+        styles.tabBar,
+        headerMinimalShellTransform,
+      ]}
+      onLayout={e => {
+        headerHeight.value = e.nativeEvent.layout.height
+      }}>
+      <View style={[styles.topBar, a.z_10]}>
+        <View style={[{width: 100}]}>
+          <TouchableOpacity
+            testID="viewHeaderDrawerBtn"
+            onPress={onPressAvi}
+            accessibilityRole="button"
+            accessibilityLabel={_(msg`Open navigation`)}
+            accessibilityHint={_(
+              msg`Access profile and other navigation links`,
+            )}
+            hitSlop={HITSLOP_10}>
+            <Menu size="lg" fill={t.atoms.text_contrast_medium.color} />
+          </TouchableOpacity>
+        </View>
+        <Animated.View style={[animatedLogoContainerStyle]}>
+          <LayoutAnimationConfig skipEntering skipExiting>
+            {showSpinner ? (
+              <Animated.View
+                key={1}
+                entering={ZoomIn.delay(200)}
+                exiting={ZoomOut}
+                pointerEvents="none"
+                style={[
+                  a.absolute,
+                  a.inset_0,
+                  a.align_center,
+                  a.justify_center,
+                ]}>
+                <ActivityIndicator
+                  size="small"
+                  color={t.atoms.text_contrast_medium.color}
+                />
+              </Animated.View>
+            ) : (
+              <Animated.View
+                key={2}
+                entering={ZoomIn.delay(300)}
+                exiting={ZoomOut}
+                style={[
+                  a.absolute,
+                  a.inset_0,
+                  a.align_center,
+                  a.justify_center,
+                ]}>
+                <Animated.View style={[animatedJiggleStyle]}>
+                  <Trigger>
+                    {ctx => (
+                      <Icon
+                        width={28}
+                        style={{
+                          opacity: ctx.pressed ? 0.8 : 1,
+                        }}
+                      />
+                    )}
+                  </Trigger>
+                </Animated.View>
+                {/* <Logo width={30} /> */}
+              </Animated.View>
+            )}
+          </LayoutAnimationConfig>
+        </Animated.View>
         <View
           style={[
-            a.absolute,
-            {height: frameHeight},
-            {bottom: '100%', left: 0, right: 0},
+            a.flex_row,
+            a.justify_end,
+            a.align_center,
+            a.gap_md,
             t.atoms.bg,
-          ]}
-        />,
-      )}
-      <Animated.View
-        style={[
-          t.atoms.bg,
-          t.atoms.border_contrast_medium,
-          headerMinimalShellTransform,
-        ]}
-        onLayout={e => {
-          headerHeight.value = e.nativeEvent.layout.height
-        }}>
-        <View style={[styles.topBar]}>
-          <View style={[{width: 100}]}>
-            <TouchableOpacity
-              testID="viewHeaderDrawerBtn"
-              onPress={onPressAvi}
-              accessibilityRole="button"
-              accessibilityLabel={_(msg`Open navigation`)}
-              accessibilityHint={_(
-                msg`Access profile and other navigation links`,
-              )}
-              hitSlop={HITSLOP_10}>
-              <Menu size="lg" fill={t.atoms.text_contrast_medium.color} />
-            </TouchableOpacity>
-          </View>
-          <Animated.View style={[animatedLogoContainerStyle]}>
-            <LayoutAnimationConfig skipEntering skipExiting>
-              {showSpinner ? (
-                <Animated.View
-                  key={1}
-                  entering={ZoomIn.delay(200)}
-                  exiting={ZoomOut}
-                  pointerEvents="none"
-                  style={[
-                    a.absolute,
-                    a.inset_0,
-                    a.align_center,
-                    a.justify_center,
-                  ]}>
-                  <ActivityIndicator
-                    size="small"
-                    color={t.atoms.text_contrast_medium.color}
-                  />
-                </Animated.View>
-              ) : (
-                <Animated.View
-                  key={2}
-                  entering={ZoomIn.delay(300)}
-                  exiting={ZoomOut}
-                  style={[
-                    a.absolute,
-                    a.inset_0,
-                    a.align_center,
-                    a.justify_center,
-                  ]}>
-                  <Animated.View style={[animatedJiggleStyle]}>
-                    <Trigger>
-                      {ctx => (
-                        <Icon
-                          width={28}
-                          style={{
-                            opacity: ctx.pressed ? 0.8 : 1,
-                          }}
-                        />
-                      )}
-                    </Trigger>
-                  </Animated.View>
-                  {/* <Logo width={30} /> */}
-                </Animated.View>
-              )}
-            </LayoutAnimationConfig>
-          </Animated.View>
+            {width: 100},
+          ]}>
+          {IS_DEV && (
+            <>
+              <Link label="View storybook" to="/sys/debug">
+                <ColorPalette size="md" />
+              </Link>
+            </>
+          )}
+          {hasSession && (
+            <Link
+              testID="viewHeaderHomeFeedPrefsBtn"
+              to="/feeds"
+              hitSlop={HITSLOP_10}
+              label={_(msg`View your feeds and explore more`)}
+              size="small"
+              variant="ghost"
+              color="secondary"
+              shape="square"
+              style={[
+                a.justify_center,
+                {
+                  marginTop: 2,
+                  marginRight: -6,
+                },
+              ]}>
+              <FeedsIcon size="lg" fill={t.atoms.text_contrast_medium.color} />
+            </Link>
+          )}
+        </View>
+      </View>
+      <Animated.View style={[a.relative, animatedContainerStyle]}>
+        {native(
           <View
             style={[
-              a.flex_row,
-              a.justify_end,
-              a.align_center,
-              a.gap_md,
+              a.absolute,
+              {height: frameHeight},
+              {bottom: '100%', left: 0, right: 0},
               t.atoms.bg,
-              {width: 100},
-            ]}>
-            {IS_DEV && (
-              <>
-                <Link label="View storybook" to="/sys/debug">
-                  <ColorPalette size="md" />
-                </Link>
-              </>
-            )}
-            {hasSession && (
-              <Link
-                testID="viewHeaderHomeFeedPrefsBtn"
-                to="/feeds"
-                hitSlop={HITSLOP_10}
-                label={_(msg`View your feeds and explore more`)}
-                size="small"
-                variant="ghost"
-                color="secondary"
-                shape="square"
-                style={[
-                  a.justify_center,
-                  {
-                    marginTop: 2,
-                    marginRight: -6,
-                  },
-                ]}>
-                <FeedsIcon
-                  size="lg"
-                  fill={t.atoms.text_contrast_medium.color}
-                />
-              </Link>
-            )}
-          </View>
-        </View>
+            ]}
+          />,
+        )}
         {children}
       </Animated.View>
     </Animated.View>
