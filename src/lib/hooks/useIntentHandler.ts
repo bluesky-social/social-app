@@ -95,7 +95,7 @@ export function useComposeIntent() {
       if (videoUri) {
         openComposer({
           text: text ?? undefined,
-          videoUri: videoUri ?? undefined,
+          videoUri,
         })
         return
       }
