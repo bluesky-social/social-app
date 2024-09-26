@@ -355,8 +355,7 @@ function Btn({
     <PressableScale
       testID={testID}
       style={styles.ctrl}
-      onPress={onLongPress ? onPress : undefined}
-      onPressIn={onLongPress ? undefined : onPress}
+      onPress={onPress}
       onLongPress={onLongPress}
       accessible={accessible}
       accessibilityLabel={accessibilityLabel}
