@@ -1,13 +1,17 @@
 import React from 'react'
-import {View} from 'react-native'
+import {NativeScrollEvent, View} from 'react-native'
 import {AppBskyActorDefs} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {NavigationProp, useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {useAnalytics} from '#/lib/analytics/analytics'
+import {ComposeIcon2} from '#/lib/icons'
 import {getRootNavigation, getTabState, TabState} from '#/lib/routes/helpers'
+import {AllNavigatorParams} from '#/lib/routes/types'
 import {logEvent} from '#/lib/statsig/statsig'
+import {s} from '#/lib/styles'
 import {isNative} from '#/platform/detection'
 import {listenSoftReset} from '#/state/events'
 import {FeedFeedbackProvider, useFeedFeedback} from '#/state/feed-feedback'
@@ -17,10 +21,6 @@ import {truncateAndInvalidate} from '#/state/queries/util'
 import {useSession} from '#/state/session'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {useComposerControls} from '#/state/shell/composer'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {ComposeIcon2} from 'lib/icons'
-import {AllNavigatorParams} from 'lib/routes/types'
-import {s} from 'lib/styles'
 import {useHeaderOffset} from '#/components/hooks/useHeaderOffset'
 import {Feed} from '../posts/Feed'
 import {FAB} from '../util/fab/FAB'
@@ -38,6 +38,7 @@ export function FeedPage({
   renderEmptyState,
   renderEndOfFeed,
   savedFeedConfig,
+  onScroll,
 }: {
   testID?: string
   feed: FeedDescriptor
@@ -46,6 +47,7 @@ export function FeedPage({
   renderEmptyState: () => JSX.Element
   renderEndOfFeed?: () => JSX.Element
   savedFeedConfig?: AppBskyActorDefs.SavedFeed
+  onScroll: (e: NativeScrollEvent) => void
 }) {
   const {hasSession} = useSession()
   const {_} = useLingui()
@@ -111,7 +113,7 @@ export function FeedPage({
 
   return (
     <View testID={testID} style={s.h100pct}>
-      <MainScrollProvider>
+      <MainScrollProvider onScroll={onScroll}>
         <FeedFeedbackProvider value={feedFeedback}>
           <Feed
             testID={testID ? `${testID}-feed` : undefined}

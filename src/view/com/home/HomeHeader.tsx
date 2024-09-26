@@ -1,11 +1,12 @@
 import React from 'react'
+import {SharedValue} from 'react-native-reanimated'
 import {useNavigation} from '@react-navigation/native'
 
 import {usePalette} from '#/lib/hooks/usePalette'
+import {NavigationProp} from '#/lib/routes/types'
 import {FeedSourceInfo} from '#/state/queries/feed'
 import {useSession} from '#/state/session'
-import {NavigationProp} from 'lib/routes/types'
-import {RenderTabBarFnProps} from 'view/com/pager/Pager'
+import {RenderTabBarFnProps} from '#/view/com/pager/Pager'
 import {TabBar} from '../pager/TabBar'
 import {HomeHeaderLayout} from './HomeHeaderLayout'
 
@@ -14,9 +15,10 @@ export function HomeHeader(
     testID?: string
     onPressSelected: () => void
     feeds: FeedSourceInfo[]
+    scrollY: SharedValue<number>
   },
 ) {
-  const {feeds} = props
+  const {feeds, scrollY} = props
   const {hasSession} = useSession()
   const navigation = useNavigation<NavigationProp>()
   const pal = usePalette('default')
@@ -53,7 +55,7 @@ export function HomeHeader(
   )
 
   return (
-    <HomeHeaderLayout tabBarAnchor={props.tabBarAnchor}>
+    <HomeHeaderLayout tabBarAnchor={props.tabBarAnchor} scrollY={scrollY}>
       <TabBar
         key={items.join(',')}
         onPressSelected={props.onPressSelected}

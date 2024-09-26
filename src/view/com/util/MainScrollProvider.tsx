@@ -9,9 +9,9 @@ import {
 import EventEmitter from 'eventemitter3'
 
 import {ScrollProvider} from '#/lib/ScrollContext'
+import {isNative, isWeb} from '#/platform/detection'
 import {useMinimalShellMode} from '#/state/shell'
 import {useShellLayout} from '#/state/shell/shell-layout'
-import {isNative, isWeb} from 'platform/detection'
 
 const WEB_HIDE_SHELL_THRESHOLD = 200
 
@@ -20,7 +20,13 @@ function clamp(num: number, min: number, max: number) {
   return Math.min(Math.max(num, min), max)
 }
 
-export function MainScrollProvider({children}: {children: React.ReactNode}) {
+export function MainScrollProvider({
+  children,
+  onScroll: onScrollProp,
+}: {
+  children: React.ReactNode
+  onScroll?: (e: NativeScrollEvent) => void
+}) {
   const {headerHeight} = useShellLayout()
   const {headerMode} = useMinimalShellMode()
   const startDragOffset = useSharedValue<number | null>(null)
@@ -112,6 +118,8 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
     (e: NativeScrollEvent) => {
       'worklet'
       if (isNative) {
+        if (onScrollProp) onScrollProp(e)
+
         if (startDragOffset.value === null || startMode.value === null) {
           if (
             headerMode.value !== 0 &&
@@ -164,6 +172,7 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
       startDragOffset,
       startMode,
       didJustRestoreScroll,
+      onScrollProp,
     ],
   )
 

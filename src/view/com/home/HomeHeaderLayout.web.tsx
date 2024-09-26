@@ -13,10 +13,10 @@ import Animated, {
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {useMinimalShellHeaderTransform} from '#/lib/hooks/useMinimalShellTransform'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {useSession} from '#/state/session'
 import {useShellLayout} from '#/state/shell/shell-layout'
-import {useMinimalShellHeaderTransform} from 'lib/hooks/useMinimalShellTransform'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 // import {Logo} from '#/view/icons/Logo'
 import {atoms as a, useTheme} from '#/alf'
 import {Icon, Trigger} from '#/components/dialogs/nuxs/TenMillion/Trigger'

@@ -1,13 +1,11 @@
-import React, {useEffect, useState} from 'react'
+import React, {useState} from 'react'
 import {View} from 'react-native'
 import {ActivityIndicator} from 'react-native'
 import Animated, {
   Extrapolation,
   interpolate,
-  runOnJS,
   SharedValue,
   useAnimatedProps,
-  useAnimatedReaction,
   useAnimatedStyle,
 } from 'react-native-reanimated'
 import {BlurView} from 'expo-blur'
@@ -20,6 +18,7 @@ import {RQKEY_ROOT as FEEDGEN_RQKEY_ROOT} from '#/state/queries/profile-feedgens
 import {RQKEY_ROOT as LIST_RQKEY_ROOT} from '#/state/queries/profile-lists'
 import {usePagerHeaderContext} from '#/view/com/pager/PagerHeaderContext'
 import {atoms as a} from '#/alf'
+import {useOverscrolled} from '#/components/hooks/useOverscrolled'
 
 const AnimatedBlurView = Animated.createAnimatedComponent(BlurView)
 
@@ -61,7 +60,7 @@ function GrowableBannerInner({
   children: React.ReactNode
 }) {
   const isFetching = useIsProfileFetching()
-  const animateSpinner = useShouldAnimateSpinner({isFetching, scrollY})
+  const animateSpinner = useFetchingWhenOverscrolled({isFetching, scrollY})
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [
@@ -155,58 +154,23 @@ function useIsProfileFetching() {
   ].some(isFetching => isFetching)
 }
 
-function useShouldAnimateSpinner({
+export function useFetchingWhenOverscrolled({
   isFetching,
   scrollY,
 }: {
   isFetching: boolean
-  scrollY: SharedValue<number>
+  scrollY?: SharedValue<number>
 }) {
-  const [isOverscrolled, setIsOverscrolled] = useState(false)
-  // HACK: it reports a scroll pos of 0 for a tick when fetching finishes
-  // so paper over that by keeping it true for a bit -sfn
-  const stickyIsOverscrolled = useStickyToggle(isOverscrolled, 10)
-
-  useAnimatedReaction(
-    () => scrollY.value < -5,
-    (value, prevValue) => {
-      if (value !== prevValue) {
-        runOnJS(setIsOverscrolled)(value)
-      }
-    },
-    [scrollY],
-  )
-
+  const isOverscrolled = useOverscrolled({scrollY})
   const [isAnimating, setIsAnimating] = useState(isFetching)
 
   if (isFetching && !isAnimating) {
     setIsAnimating(true)
   }
 
-  if (!isFetching && isAnimating && !stickyIsOverscrolled) {
+  if (!isFetching && isAnimating && !isOverscrolled) {
     setIsAnimating(false)
   }
 
   return isAnimating
-}
-
-// stayed true for at least `delay` ms before returning to false
-function useStickyToggle(value: boolean, delay: number) {
-  const [prevValue, setPrevValue] = useState(value)
-  const [isSticking, setIsSticking] = useState(false)
-
-  useEffect(() => {
-    if (isSticking) {
-      const timeout = setTimeout(() => setIsSticking(false), delay)
-      return () => clearTimeout(timeout)
-    }
-  }, [isSticking, delay])
-
-  if (value !== prevValue) {
-    setIsSticking(prevValue) // Going true -> false should stick.
-    setPrevValue(value)
-    return prevValue ? true : value
-  }
-
-  return isSticking ? true : value
 }
