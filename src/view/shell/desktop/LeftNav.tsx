@@ -214,12 +214,12 @@ function NavItem({count, href, icon, iconFilled, label}: NavItemProps) {
           <Text
             style={[
               a.absolute,
-              a.text_sm,
+              a.text_xs,
               a.font_bold,
               a.rounded_full,
               {
                 top: '-10%',
-                left: '60%',
+                left: count.length === 1 ? '50%' : '40%',
                 backgroundColor: t.palette.primary_500,
                 color: t.palette.white,
                 lineHeight: a.text_sm.fontSize,
@@ -229,7 +229,7 @@ function NavItem({count, href, icon, iconFilled, label}: NavItemProps) {
               isTablet && [
                 {
                   top: '10%',
-                  left: '50%',
+                  left: count.length === 1 ? '50%' : '40%',
                 },
               ],
             ]}>
