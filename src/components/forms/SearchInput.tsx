@@ -38,11 +38,11 @@ export const SearchInput = React.forwardRef<SearchInputRef, Props>(
   ) {
     const t = useTheme()
     const {_} = useLingui()
-    const textInput = React.useRef<TextInput>(null)
+    const textInputRef = React.useRef<TextInput>(null)
 
     React.useImperativeHandle(ref, () => ({
-      focus: () => textInput.current?.focus(),
-      blur: () => textInput.current?.blur(),
+      focus: () => textInputRef.current?.focus(),
+      blur: () => textInputRef.current?.blur(),
     }))
 
     return (
@@ -50,7 +50,7 @@ export const SearchInput = React.forwardRef<SearchInputRef, Props>(
         <TextField.Root>
           <TextField.Icon icon={MagnifyingGlassIcon} />
           <TextField.Input
-            inputRef={textInput}
+            inputRef={textInputRef}
             label={_(msg`Search`)}
             value={query}
             placeholder={_(msg`Search`)}
