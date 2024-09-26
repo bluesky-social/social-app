@@ -8,12 +8,12 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-09-25 10:14+0900\n"
+"PO-Revision-Date: 2024-09-26 13:10+0900\n"
 "Last-Translator: quiple\n"
 "Language-Team: quiple, lens0021, HaruChanHeart, hazzzi, heartade\n"
 "Plural-Forms: \n"
 
-#: src/screens/Messages/List/ChatListItem.tsx:120
+#: src/screens/Messages/List/ChatListItem.tsx:121
 msgid "(contains embedded content)"
 msgstr "(임베드 콘텐츠 포함)"
 
@@ -1416,7 +1416,7 @@ msgstr "스레드 더 보기..."
 msgid "Continue to next step"
 msgstr "다음 단계로 계속하기"
 
-#: src/screens/Messages/List/ChatListItem.tsx:154
+#: src/screens/Messages/List/ChatListItem.tsx:155
 msgid "Conversation deleted"
 msgstr "대화 삭제됨"
 
@@ -2784,7 +2784,7 @@ msgstr "홈으로 이동"
 msgid "Go Home"
 msgstr "홈으로 이동"
 
-#: src/screens/Messages/List/ChatListItem.tsx:211
+#: src/screens/Messages/List/ChatListItem.tsx:225
 msgid "Go to conversation with {0}"
 msgstr "{0} 님과의 대화로 이동합니다"
 
@@ -3510,7 +3510,7 @@ msgid "Message {0}"
 msgstr "{0} 님에게 메시지 보내기"
 
 #: src/components/dms/MessageMenu.tsx:72
-#: src/screens/Messages/List/ChatListItem.tsx:155
+#: src/screens/Messages/List/ChatListItem.tsx:156
 msgid "Message deleted"
 msgstr "메시지 삭제됨"
 
@@ -3940,7 +3940,7 @@ msgstr "더 이상 {0} 님을 팔로우하지 않음"
 msgid "No longer than 253 characters"
 msgstr "253자를 초과하지 않음"
 
-#: src/screens/Messages/List/ChatListItem.tsx:106
+#: src/screens/Messages/List/ChatListItem.tsx:107
 msgid "No messages yet"
 msgstr "아직 메시지가 없습니다"
 
@@ -4190,8 +4190,8 @@ msgstr "{name} 님의 프로필 단축 메뉴 열기"
 msgid "Open avatar creator"
 msgstr "아바타 생성기 열기"
 
-#: src/screens/Messages/List/ChatListItem.tsx:219
-#: src/screens/Messages/List/ChatListItem.tsx:220
+#: src/screens/Messages/List/ChatListItem.tsx:233
+#: src/screens/Messages/List/ChatListItem.tsx:234
 msgid "Open conversation options"
 msgstr "대화 옵션 열기"
 
@@ -6536,7 +6536,7 @@ msgstr "관련 사용자 중 한 명이 다른 사용자를 차단했기 때문�
 msgid "This content is not viewable without a Bluesky account."
 msgstr "이 콘텐츠는 Bluesky 계정이 없으면 볼 수 없습니다."
 
-#: src/screens/Messages/List/ChatListItem.tsx:213
+#: src/screens/Messages/List/ChatListItem.tsx:227
 msgid "This conversation is with a deleted or a deactivated account. Press for options."
 msgstr "이 대화는 삭제되었거나 비활성화된 계정과의 대화입니다. 옵션을 보려면 누르세요."
 
@@ -7696,15 +7696,15 @@ msgstr "이제 이 스레드에 대한 알림을 받습니다"
 msgid "You will receive an email with a \"reset code.\" Enter that code here, then enter your new password."
 msgstr "\"재설정 코드\"가 포함된 이메일을 받게 되면 여기에 해당 코드를 입력한 다음 새 비밀번호를 입력하세요."
 
-#: src/screens/Messages/List/ChatListItem.tsx:114
+#: src/screens/Messages/List/ChatListItem.tsx:115
 msgid "You: {0}"
 msgstr "나: {0}"
 
-#: src/screens/Messages/List/ChatListItem.tsx:143
+#: src/screens/Messages/List/ChatListItem.tsx:144
 msgid "You: {defaultEmbeddedContentMessage}"
 msgstr "나: {defaultEmbeddedContentMessage}"
 
-#: src/screens/Messages/List/ChatListItem.tsx:136
+#: src/screens/Messages/List/ChatListItem.tsx:137
 msgid "You: {short}"
 msgstr "나: {short}"
 
