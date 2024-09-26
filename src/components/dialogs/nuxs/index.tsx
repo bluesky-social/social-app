@@ -43,7 +43,7 @@ const queuedNuxs: {
     id: Nux.NeueTypography,
     enabled(props) {
       if (props.currentProfile.createdAt) {
-        if (new Date(props.currentProfile.createdAt) < new Date('2024-09-25')) {
+        if (new Date(props.currentProfile.createdAt) < new Date('2024-10-01')) {
           return true
         }
       }
