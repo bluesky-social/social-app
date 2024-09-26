@@ -59,17 +59,24 @@ function ImageLayoutGridInner(props: ImageLayoutGridInnerProps) {
   const count = props.images.length
 
   switch (count) {
-    case 2:
+    case 2: {
+      const imageA = props.images[0]
+      const imageB = props.images[1]
+
+      const ratioA = getClampedAspectRatio(imageA)
+      const ratioB = getClampedAspectRatio(imageB)
+      const totalRatio = ratioA + ratioB
+
       return (
-        <View style={[a.flex_1, a.flex_row, gap]}>
-          <View style={[a.flex_1, {aspectRatio: 1}]}>
+        <View style={[a.flex_1, a.flex_row, gap, {aspectRatio: totalRatio}]}>
+          <View style={[a.flex_1, {flexGrow: ratioA}]}>
             <GalleryItem
               {...props}
               index={0}
               insetBorderStyle={noCorners(['topRight', 'bottomRight'])}
             />
           </View>
-          <View style={[a.flex_1, {aspectRatio: 1}]}>
+          <View style={[a.flex_1, {flexGrow: ratioB}]}>
             <GalleryItem
               {...props}
               index={1}
@@ -78,6 +85,7 @@ function ImageLayoutGridInner(props: ImageLayoutGridInnerProps) {
           </View>
         </View>
       )
+    }
 
     case 3:
       return (
@@ -192,4 +200,18 @@ function noCorners(
     styles.push({borderBottomRightRadius: 0})
   }
   return StyleSheet.flatten(styles)
+}
+
+const getClampedAspectRatio = (image: AppBskyEmbedImages.ViewImage): number => {
+  const dims = image.aspectRatio
+
+  const width = dims ? dims.width : 1
+  const height = dims ? dims.height : 1
+  const ratio = width / height
+
+  return clamp(ratio, 3 / 4, 4 / 3)
+}
+
+const clamp = (value: number, min: number, max: number): number => {
+  return Math.max(min, Math.min(max, value))
 }
