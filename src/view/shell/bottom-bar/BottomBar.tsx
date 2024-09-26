@@ -1,5 +1,5 @@
 import React, {ComponentProps} from 'react'
-import {GestureResponderEvent, TouchableOpacity, View} from 'react-native'
+import {GestureResponderEvent, View} from 'react-native'
 import Animated from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg, Trans} from '@lingui/macro'
@@ -8,6 +8,7 @@ import {BottomTabBarProps} from '@react-navigation/bottom-tabs'
 import {StackActions} from '@react-navigation/native'
 
 import {useAnalytics} from '#/lib/analytics/analytics'
+import {PressableScale} from '#/lib/custom-animations/PressableScale'
 import {useHaptics} from '#/lib/haptics'
 import {useDedupe} from '#/lib/hooks/useDedupe'
 import {useMinimalShellFooterTransform} from '#/lib/hooks/useMinimalShellTransform'
@@ -29,6 +30,7 @@ import {Text} from '#/view/com/util/text/Text'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {Logo} from '#/view/icons/Logo'
 import {Logotype} from '#/view/icons/Logotype'
+import {atoms as a} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {SwitchAccountDialog} from '#/components/dialogs/SwitchAccount'
 import {
@@ -326,7 +328,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
 
 interface BtnProps
   extends Pick<
-    ComponentProps<typeof TouchableOpacity>,
+    ComponentProps<typeof PressableScale>,
     | 'accessible'
     | 'accessibilityRole'
     | 'accessibilityHint'
@@ -350,7 +352,7 @@ function Btn({
   accessibilityLabel,
 }: BtnProps) {
   return (
-    <TouchableOpacity
+    <PressableScale
       testID={testID}
       style={styles.ctrl}
       onPress={onLongPress ? onPress : undefined}
@@ -358,13 +360,15 @@ function Btn({
       onLongPress={onLongPress}
       accessible={accessible}
       accessibilityLabel={accessibilityLabel}
-      accessibilityHint={accessibilityHint}>
+      accessibilityHint={accessibilityHint}
+      targetScale={0.8}
+      contentContainerStyle={[a.flex_1]}>
       {icon}
       {notificationCount ? (
-        <View style={[styles.notificationCount]}>
+        <View style={[styles.notificationCount, {top: -5}]}>
           <Text style={styles.notificationCountLabel}>{notificationCount}</Text>
         </View>
       ) : undefined}
-    </TouchableOpacity>
+    </PressableScale>
   )
 }

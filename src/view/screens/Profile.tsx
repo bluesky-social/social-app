@@ -363,7 +363,8 @@ function ProfileScreenLoaded({
         items={sectionTitles}
         onPageSelected={onPageSelected}
         onCurrentPageSelected={onCurrentPageSelected}
-        renderHeader={renderHeader}>
+        renderHeader={renderHeader}
+        allowHeaderOverScroll>
         {showFiltersTab
           ? ({headerHeight, isFocused, scrollElRef}) => (
               <ProfileLabelsSection

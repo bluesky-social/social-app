@@ -760,7 +760,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   layoutIcon: {
-    width: 70,
+    width: 60,
     alignItems: 'flex-end',
     paddingTop: 2,
   },
