@@ -173,10 +173,15 @@ export function HomeHeaderLayoutMobile({
                   entering={ZoomIn.delay(200)}
                   exiting={ZoomOut}
                   pointerEvents="none"
-                  style={[a.absolute, a.inset_0, a.align_center]}>
+                  style={[
+                    a.absolute,
+                    a.inset_0,
+                    a.align_center,
+                    a.justify_center,
+                  ]}>
                   <ActivityIndicator
                     size="small"
-                    color={t.atoms.text_contrast_low.color}
+                    color={t.atoms.text_contrast_medium.color}
                   />
                 </Animated.View>
               ) : (
@@ -184,7 +189,12 @@ export function HomeHeaderLayoutMobile({
                   key={2}
                   entering={ZoomIn.delay(300)}
                   exiting={ZoomOut}
-                  style={[a.absolute, a.inset_0, a.align_center]}>
+                  style={[
+                    a.absolute,
+                    a.inset_0,
+                    a.align_center,
+                    a.justify_center,
+                  ]}>
                   <Animated.View style={[animatedJiggleStyle]}>
                     <Trigger>
                       {ctx => (
