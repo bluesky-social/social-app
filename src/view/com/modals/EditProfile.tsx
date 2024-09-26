@@ -31,7 +31,6 @@ import {Text} from '#/view/com/util/text/Text'
 import * as Toast from '#/view/com/util/Toast'
 import {EditableUserAvatar} from '#/view/com/util/UserAvatar'
 import {UserBanner} from '#/view/com/util/UserBanner'
-import {atoms as a} from '#/alf'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 
 const AnimatedTouchableOpacity =
@@ -154,12 +153,10 @@ export function Component({
           <Trans>Edit my profile</Trans>
         </Text>
         <View style={styles.photos}>
-          <View style={[a.w_full, {height: 150}]}>
-            <UserBanner
-              banner={userBanner}
-              onSelectNewBanner={onSelectNewBanner}
-            />
-          </View>
+          <UserBanner
+            banner={userBanner}
+            onSelectNewBanner={onSelectNewBanner}
+          />
           <View style={[styles.avi, {borderColor: pal.colors.background}]}>
             <EditableUserAvatar
               size={80}
