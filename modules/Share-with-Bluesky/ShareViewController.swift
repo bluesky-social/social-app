@@ -101,7 +101,7 @@ class ShareViewController: UIViewController {
   private func handleVideos(items: [NSItemProvider]) async {
     let firstItem = items.first
 
-    if let dataUri = try? await firstItem?.loadItem(forTypeIdentifier: "public.video") as? URL {
+    if let dataUri = try? await firstItem?.loadItem(forTypeIdentifier: "public.movie") as? URL {
       let ext = String(dataUri.lastPathComponent.split(separator: ".").last ?? "mp4")
       if let tempUrl = getTempUrl(ext: ext) {
         let data = try? Data(contentsOf: dataUri)
