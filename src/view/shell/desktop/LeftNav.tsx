@@ -301,8 +301,8 @@ function ComposeBtn() {
         label={_(msg`New post`)}
         onPress={onPressCompose}
         size="large"
-        variant="gradient"
-        color="gradient_primary"
+        variant="solid"
+        color="primary"
         style={[a.rounded_full]}>
         <ButtonIcon icon={EditBig} position="left" />
         <ButtonText>
