@@ -985,54 +985,52 @@ let SearchInputBox = ({
   const t = useThemeNew()
 
   return (
-    <View style={[a.flex_1, a.pb_sm]}>
-      <View style={[a.relative]}>
-        <TextField.Root>
-          <TextField.Icon icon={MagnifyingGlass} />
-          <TextField.Input
-            inputRef={textInput}
-            label={_(msg`Search`)}
-            value={searchText}
-            placeholder={_(msg`Search`)}
-            returnKeyType="search"
-            onChangeText={onChangeText}
-            onSubmitEditing={onSubmit}
-            onFocus={onFocus}
-            keyboardAppearance={t.scheme}
-            selectTextOnFocus={isNative}
-            autoFocus={false}
-            accessibilityRole="search"
-            autoCorrect={false}
-            autoComplete="off"
-            autoCapitalize="none"
-          />
-        </TextField.Root>
+    <View style={[a.flex_1, a.mb_sm]}>
+      <TextField.Root>
+        <TextField.Icon icon={MagnifyingGlass} />
+        <TextField.Input
+          inputRef={textInput}
+          label={_(msg`Search`)}
+          value={searchText}
+          placeholder={_(msg`Search`)}
+          returnKeyType="search"
+          onChangeText={onChangeText}
+          onSubmitEditing={onSubmit}
+          onFocus={onFocus}
+          keyboardAppearance={t.scheme}
+          selectTextOnFocus={isNative}
+          autoFocus={false}
+          accessibilityRole="search"
+          autoCorrect={false}
+          autoComplete="off"
+          autoCapitalize="none"
+        />
+      </TextField.Root>
 
-        {showAutocomplete && searchText.length > 0 && (
-          <View
-            style={[
-              a.absolute,
-              a.z_10,
-              a.my_auto,
-              a.inset_0,
-              a.justify_center,
-              a.pr_sm,
-              {left: 'auto'},
-            ]}>
-            <Button
-              testID="searchTextInputClearBtn"
-              onPress={onPressClearQuery}
-              label={_(msg`Clear search query`)}
-              hitSlop={HITSLOP_10}
-              size="tiny"
-              shape="round"
-              variant="ghost"
-              color="secondary">
-              <ButtonIcon icon={X} size="sm" />
-            </Button>
-          </View>
-        )}
-      </View>
+      {showAutocomplete && searchText.length > 0 && (
+        <View
+          style={[
+            a.absolute,
+            a.z_10,
+            a.my_auto,
+            a.inset_0,
+            a.justify_center,
+            a.pr_sm,
+            {left: 'auto'},
+          ]}>
+          <Button
+            testID="searchTextInputClearBtn"
+            onPress={onPressClearQuery}
+            label={_(msg`Clear search query`)}
+            hitSlop={HITSLOP_10}
+            size="tiny"
+            shape="round"
+            variant="ghost"
+            color="secondary">
+            <ButtonIcon icon={X} size="sm" />
+          </Button>
+        </View>
+      )}
     </View>
   )
 }
