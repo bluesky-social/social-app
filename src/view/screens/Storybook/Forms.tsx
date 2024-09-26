@@ -32,7 +32,7 @@ export function Forms() {
           label="Text field"
         />
 
-        <View style={[a.flex_row, a.gap_sm]}>
+        <View style={[a.flex_row, a.align_start, a.gap_sm]}>
           <View
             style={[
               {
