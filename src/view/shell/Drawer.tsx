@@ -25,6 +25,7 @@ import {useTheme} from '#/lib/ThemeContext'
 import {isWeb} from '#/platform/detection'
 import {emitSoftReset} from '#/state/events'
 import {useKawaiiMode} from '#/state/preferences/kawaii'
+import {useUnreadMessageCount} from '#/state/queries/messages/list-converations'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {useProfileQuery} from '#/state/queries/profile'
 import {SessionAccount, useSession} from '#/state/session'
@@ -51,7 +52,10 @@ import {
 } from '#/components/icons/HomeOpen'
 import {MagnifyingGlass_Filled_Stroke2_Corner0_Rounded as MagnifyingGlassFilled} from '#/components/icons/MagnifyingGlass'
 import {MagnifyingGlass2_Stroke2_Corner0_Rounded as MagnifyingGlass} from '#/components/icons/MagnifyingGlass2'
-import {Message_Stroke2_Corner0_Rounded as Message} from '#/components/icons/Message'
+import {
+  Message_Stroke2_Corner0_Rounded as Message,
+  Message_Stroke2_Corner0_Rounded_Filled as MessageFilled,
+} from '#/components/icons/Message'
 import {SettingsGear2_Stroke2_Corner0_Rounded as Settings} from '#/components/icons/SettingsGear2'
 import {
   UserCircle_Filled_Corner0_Rounded as UserCircleFilled,
@@ -147,8 +151,14 @@ let DrawerContent = ({}: {}): React.ReactNode => {
   const setDrawerOpen = useSetDrawerOpen()
   const navigation = useNavigation<NavigationProp>()
   const {track} = useAnalytics()
-  const {isAtHome, isAtSearch, isAtFeeds, isAtNotifications, isAtMyProfile} =
-    useNavigationTabState()
+  const {
+    isAtHome,
+    isAtSearch,
+    isAtFeeds,
+    isAtNotifications,
+    isAtMyProfile,
+    isAtMessages,
+  } = useNavigationTabState()
   const {hasSession, currentAccount} = useSession()
   const kawaii = useKawaiiMode()
 
@@ -192,6 +202,11 @@ let DrawerContent = ({}: {}): React.ReactNode => {
 
   const onPressNotifications = React.useCallback(
     () => onPressTab('Notifications'),
+    [onPressTab],
+  )
+
+  const onPressMessages = React.useCallback(
+    () => onPressTab('Messages'),
     [onPressTab],
   )
 
@@ -265,6 +280,10 @@ let DrawerContent = ({}: {}): React.ReactNode => {
               <NotificationsMenuItem
                 isActive={isAtNotifications}
                 onPress={onPressNotifications}
+              />
+              <MessagesMenuItem
+                isActive={isAtMessages}
+                onPress={onPressMessages}
               />
               <FeedsMenuItem isActive={isAtFeeds} onPress={onPressMyFeeds} />
               <ListsMenuItem onPress={onPressLists} />
@@ -472,6 +491,43 @@ let NotificationsMenuItem = ({
   )
 }
 NotificationsMenuItem = React.memo(NotificationsMenuItem)
+
+let MessagesMenuItem = ({
+  isActive,
+  onPress,
+}: {
+  isActive: boolean
+  onPress: () => void
+}): React.ReactNode => {
+  const {_} = useLingui()
+  const pal = usePalette('default')
+  const numUnreadMessages = useUnreadMessageCount()
+  return (
+    <MenuItem
+      icon={
+        isActive ? (
+          <MessageFilled
+            style={pal.text as StyleProp<ViewStyle>}
+            width={iconWidth}
+          />
+        ) : (
+          <Message style={pal.text as StyleProp<ViewStyle>} width={iconWidth} />
+        )
+      }
+      label={_(msg`Chat`)}
+      accessibilityLabel={_(msg`Chat`)}
+      accessibilityHint={
+        numUnreadMessages.count > 0
+          ? ''
+          : _(msg`${numUnreadMessages.numUnread} unread`)
+      }
+      count={numUnreadMessages.numUnread}
+      bold={isActive}
+      onPress={onPress}
+    />
+  )
+}
+MessagesMenuItem = React.memo(MessagesMenuItem)
 
 let FeedsMenuItem = ({
   isActive,
