@@ -1,6 +1,6 @@
 import React from 'react'
 import {View} from 'react-native'
-import ViewShot from 'react-native-view-shot'
+import type ViewShot from 'react-native-view-shot'
 
 import {useAvatar} from '#/screens/Onboarding/StepProfile/index'
 import {atoms as a} from '#/alf'
