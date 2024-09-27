@@ -137,7 +137,7 @@ export function StepProfile() {
     // and the default avatar will be used. We don't want to block getting through create if this fails for some
     // reason
     if (!imageUri || avatar.useCreatedAvatar) {
-      imageUri = await canvasRef.current?.capture?.()
+      imageUri = await canvasRef.current?.capture()
     }
 
     if (imageUri) {
