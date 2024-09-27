@@ -60,12 +60,13 @@ export function Autocomplete({
           style={[
             pal.view,
             a.mt_sm,
-            a.border_t,
+            a.border,
+            a.rounded_sm,
             t.atoms.border_contrast_high,
-            {marginLeft: -50},
+            {marginLeft: -62},
           ]}>
           {suggestionsRef.current?.length ? (
-            suggestionsRef.current.slice(0, 5).map(item => {
+            suggestionsRef.current.slice(0, 5).map((item, index, arr) => {
               // Eventually use an average length
               const MAX_CHARS = 40
               const MAX_HANDLE_CHARS = 20
@@ -76,51 +77,56 @@ export function Autocomplete({
                 getGraphemeString(item.handle, MAX_HANDLE_CHARS)
 
               const {name: displayName} = getGraphemeString(
-                item.displayName ?? item.handle,
+                item.displayName || item.handle,
                 MAX_CHARS -
                   MAX_HANDLE_CHARS +
                   (remainingCharacters > 0 ? remainingCharacters : 0),
               )
 
               return (
-                <PressableScale
-                  testID="autocompleteButton"
-                  key={item.handle}
+                <View
                   style={[
-                    a.flex_row,
-                    a.gap_sm,
-                    a.justify_between,
-                    a.align_center,
-                    a.py_md,
-                    a.border_b,
+                    index !== arr.length - 1 && a.border_b,
                     t.atoms.border_contrast_high,
+                    a.px_sm,
+                    a.py_md,
                   ]}
-                  onPress={() => onSelect(item.handle)}
-                  accessibilityLabel={`Select ${item.handle}`}
-                  accessibilityHint="">
-                  <View style={[a.flex_row, a.gap_sm, a.align_center]}>
-                    <UserAvatar
-                      avatar={item.avatar ?? null}
-                      size={24}
-                      type={item.associated?.labeler ? 'labeler' : 'user'}
-                    />
+                  key={item.handle}>
+                  <PressableScale
+                    testID="autocompleteButton"
+                    style={[
+                      a.flex_row,
+                      a.gap_sm,
+                      a.justify_between,
+                      a.align_center,
+                    ]}
+                    onPress={() => onSelect(item.handle)}
+                    accessibilityLabel={`Select ${item.handle}`}
+                    accessibilityHint="">
+                    <View style={[a.flex_row, a.gap_sm, a.align_center]}>
+                      <UserAvatar
+                        avatar={item.avatar ?? null}
+                        size={24}
+                        type={item.associated?.labeler ? 'labeler' : 'user'}
+                      />
+                      <Text
+                        style={[a.text_md, a.font_bold]}
+                        emoji={true}
+                        numberOfLines={1}>
+                        {sanitizeDisplayName(displayName)}
+                      </Text>
+                    </View>
                     <Text
-                      style={[a.text_md, a.font_bold]}
-                      emoji={true}
+                      style={[t.atoms.text_contrast_medium]}
                       numberOfLines={1}>
-                      {sanitizeDisplayName(displayName)}
+                      {sanitizeHandle(displayHandle, '@')}
                     </Text>
-                  </View>
-                  <Text
-                    style={[t.atoms.text_contrast_medium]}
-                    numberOfLines={1}>
-                    {sanitizeHandle(displayHandle, '@')}
-                  </Text>
-                </PressableScale>
+                  </PressableScale>
+                </View>
               )
             })
           ) : (
-            <Text style={[a.text_md, a.pt_sm]}>
+            <Text style={[a.text_md, a.px_sm, a.py_md]}>
               {isFetching ? (
                 <Trans>Loading...</Trans>
               ) : (
