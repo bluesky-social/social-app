@@ -1,14 +1,18 @@
 import React from 'react'
 import {View} from 'react-native'
-import ViewShot from 'react-native-view-shot'
 
 import {useAvatar} from '#/screens/Onboarding/StepProfile/index'
 import {atoms as a} from '#/alf'
 
+const LazyViewShot = React.lazy(
+  // @ts-expect-error dynamic import
+  () => import('react-native-view-shot/src/index'),
+)
+
 const SIZE_MULTIPLIER = 5
 
 export interface PlaceholderCanvasRef {
-  capture: () => Promise<string>
+  capture: () => Promise<string> | undefined
 }
 
 // This component is supposed to be invisible to the user. We only need this for ViewShot to have something to
@@ -33,12 +37,12 @@ export const PlaceholderCanvas = React.forwardRef<PlaceholderCanvasRef, {}>(
 
     React.useImperativeHandle(ref, () => ({
       // @ts-ignore this library doesn't have types
-      capture: viewshotRef.current.capture,
+      capture: viewshotRef.current?.capture,
     }))
 
     return (
       <View style={styles.container}>
-        <ViewShot
+        <LazyViewShot
           // @ts-ignore this library doesn't have types
           ref={viewshotRef}
           options={{
@@ -60,7 +64,7 @@ export const PlaceholderCanvas = React.forwardRef<PlaceholderCanvasRef, {}>(
               style={{color: 'white'}}
             />
           </View>
-        </ViewShot>
+        </LazyViewShot>
       </View>
     )
   },

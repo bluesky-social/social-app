@@ -6,8 +6,8 @@ import * as EmailValidator from 'email-validator'
 import type tldts from 'tldts'
 
 import {logEvent} from '#/lib/statsig/statsig'
+import {isEmailMaybeInvalid} from '#/lib/strings/email'
 import {logger} from '#/logger'
-import {isEmailMaybeInvalid} from 'lib/strings/email'
 import {ScreenTransition} from '#/screens/Login/ScreenTransition'
 import {is13, is18, useSignupContext} from '#/screens/Signup/state'
 import {Policies} from '#/screens/Signup/StepInfo/Policies'
@@ -59,6 +59,9 @@ export function StepInfo({
     import('tldts/dist/index.cjs.min.js').then(tldts => {
       tldtsRef.current = tldts
     })
+    // This will get used in the avatar creator a few steps later, so lets preload it now
+    // @ts-expect-error - valid path
+    import('react-native-view-shot/src/index')
   }, [])
 
   const onNextPress = () => {
