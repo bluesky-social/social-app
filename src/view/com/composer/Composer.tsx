@@ -137,6 +137,7 @@ export const ComposePost = ({
   openEmojiPicker,
   text: initText,
   imageUris: initImageUris,
+  videoUri: initVideoUri,
   cancelRef,
 }: Props & {
   cancelRef?: React.RefObject<CancelRef>
@@ -199,6 +200,7 @@ export const ComposePost = ({
         onPressPublish(true)
       }
     },
+    initialVideoUri: initVideoUri,
   })
   const hasVideo = Boolean(videoUploadState.asset || videoUploadState.video)
 

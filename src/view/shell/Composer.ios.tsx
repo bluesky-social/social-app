@@ -34,6 +34,7 @@ export function Composer({}: {winHeight: number}) {
             mention={state?.mention}
             text={state?.text}
             imageUris={state?.imageUris}
+            videoUri={state?.videoUri}
           />
         </Providers>
       </View>

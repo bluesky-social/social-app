@@ -202,7 +202,7 @@ const styles = StyleSheet.create({
   },
   bannerImage: {
     width: '100%',
-    height: '100%',
+    height: 150,
   },
   defaultBanner: {
     backgroundColor: '#0070ff',

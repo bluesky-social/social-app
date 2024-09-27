@@ -1,25 +1,16 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
-import Animated, {
-  useAnimatedStyle,
-  useReducedMotion,
-  useSharedValue,
-  withDelay,
-  withRepeat,
-  withSequence,
-  withSpring,
-  withTiming,
-} from 'react-native-reanimated'
+import Animated from 'react-native-reanimated'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {useMinimalShellHeaderTransform} from '#/lib/hooks/useMinimalShellTransform'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {useKawaiiMode} from '#/state/preferences/kawaii'
 import {useSession} from '#/state/session'
 import {useShellLayout} from '#/state/shell/shell-layout'
-import {useMinimalShellHeaderTransform} from 'lib/hooks/useMinimalShellTransform'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-// import {Logo} from '#/view/icons/Logo'
+import {Logo} from '#/view/icons/Logo'
 import {atoms as a, useTheme} from '#/alf'
-import {Icon, Trigger} from '#/components/dialogs/nuxs/TenMillion/Trigger'
 import {Hashtag_Stroke2_Corner0_Rounded as FeedsIcon} from '#/components/icons/Hashtag'
 import {Link} from '#/components/Link'
 import {HomeHeaderLayoutMobile} from './HomeHeaderLayoutMobile'
@@ -48,43 +39,7 @@ function HomeHeaderLayoutDesktopAndTablet({
   const {headerHeight} = useShellLayout()
   const {hasSession} = useSession()
   const {_} = useLingui()
-
-  // TEMPORARY - REMOVE AFTER MILLY
-  // This will just cause the icon to shake a bit when the user first opens the app, drawing attention to the celebration
-  // 🎉
-  const rotate = useSharedValue(0)
-  const reducedMotion = useReducedMotion()
-
-  // Run this a single time on app mount.
-  React.useEffect(() => {
-    if (reducedMotion) return
-
-    // Waits 1500ms, then rotates 10 degrees with a spring animation. Repeats once.
-    rotate.value = withDelay(
-      1000,
-      withRepeat(
-        withSequence(
-          withTiming(10, {duration: 100}),
-          withSpring(0, {
-            mass: 1,
-            damping: 1,
-            stiffness: 200,
-            overshootClamping: false,
-          }),
-        ),
-        2,
-        false,
-      ),
-    )
-  }, [rotate, reducedMotion])
-
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [
-      {
-        rotateZ: `${rotate.value}deg`,
-      },
-    ],
-  }))
+  const kawaii = useKawaiiMode()
 
   return (
     <>
@@ -101,30 +56,21 @@ function HomeHeaderLayoutDesktopAndTablet({
             t.atoms.bg,
             t.atoms.border_contrast_low,
             styles.bar,
+            kawaii && {paddingTop: 22, paddingBottom: 16},
           ]}>
-          <Animated.View
+          <View
             style={[
               a.absolute,
               a.inset_0,
               a.pt_lg,
               a.m_auto,
+              kawaii && {paddingTop: 4, paddingBottom: 0},
               {
-                width: 28,
+                width: kawaii ? 84 : 28,
               },
-              animatedStyle,
             ]}>
-            <Trigger>
-              {ctx => (
-                <Icon
-                  width={28}
-                  style={{
-                    opacity: ctx.hovered || ctx.pressed ? 0.8 : 1,
-                  }}
-                />
-              )}
-            </Trigger>
-            {/* <Logo width={28} /> */}
-          </Animated.View>
+            <Logo width={kawaii ? 60 : 28} />
+          </View>
 
           <Link
             to="/feeds"

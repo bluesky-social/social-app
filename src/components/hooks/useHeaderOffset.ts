@@ -9,8 +9,8 @@ export function useHeaderOffset() {
     return 0
   }
   const navBarHeight = 42
-  const tabBarPad = 10 + 10 + 3 // padding + border
-  const normalLineHeight = 1.2
-  const tabBarText = 16 * normalLineHeight * fontScale
+  const tabBarPad = 10 + 10 + 6 // padding + arbitrary
+  const normalLineHeight = 20 // matches tab bar
+  const tabBarText = normalLineHeight * fontScale
   return navBarHeight + tabBarPad + tabBarText
 }
