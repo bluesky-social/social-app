@@ -1,10 +1,10 @@
 import format from 'date-fns/format'
 import {nanoid} from 'nanoid/non-secure'
 
+import {isNetworkError} from '#/lib/strings/errors'
 import {DebugContext} from '#/logger/debugContext'
 import {add} from '#/logger/logDump'
 import {Sentry} from '#/logger/sentry'
-import {isNetworkError} from 'lib/strings/errors'
 import * as env from '#/env'
 
 export enum LogLevel {

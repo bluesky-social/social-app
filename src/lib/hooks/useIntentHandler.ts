@@ -1,11 +1,11 @@
 import React from 'react'
 import * as Linking from 'expo-linking'
 
-import {logEvent} from 'lib/statsig/statsig'
-import {isNative} from 'platform/detection'
-import {useSession} from 'state/session'
-import {useComposerControls} from 'state/shell'
-import {useCloseAllActiveElements} from 'state/util'
+import {logEvent} from '#/lib/statsig/statsig'
+import {isNative} from '#/platform/detection'
+import {useSession} from '#/state/session'
+import {useComposerControls} from '#/state/shell'
+import {useCloseAllActiveElements} from '#/state/util'
 import {useIntentDialogs} from '#/components/intents/IntentDialogs'
 import {Referrer} from '../../../modules/expo-bluesky-swiss-army'
 
@@ -52,6 +52,7 @@ export function useIntentHandler() {
           composeIntent({
             text: params.get('text'),
             imageUrisStr: params.get('imageUris'),
+            videoUri: params.get('videoUri'),
           })
           return
         }
@@ -80,13 +81,24 @@ export function useComposeIntent() {
     ({
       text,
       imageUrisStr,
+      videoUri,
     }: {
       text: string | null
-      imageUrisStr: string | null // unused for right now, will be used later with intents
+      imageUrisStr: string | null
+      videoUri: string | null
     }) => {
       if (!hasSession) return
 
       closeAllActiveElements()
+
+      // Whenever a video URI is present, we don't support adding images right now.
+      if (videoUri) {
+        openComposer({
+          text: text ?? undefined,
+          videoUri,
+        })
+        return
+      }
 
       const imageUris = imageUrisStr
         ?.split(',')

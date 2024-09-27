@@ -91,7 +91,7 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
         type={replyTo.author.associated?.labeler ? 'labeler' : 'user'}
       />
       <View style={styles.replyToPost}>
-        <Text type="xl-medium" style={t.atoms.text} numberOfLines={1}>
+        <Text type="xl-medium" style={t.atoms.text} numberOfLines={1} emoji>
           {sanitizeDisplayName(
             replyTo.author.displayName || sanitizeHandle(replyTo.author.handle),
           )}
@@ -101,7 +101,8 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
             <Text
               type="post-text"
               style={t.atoms.text}
-              numberOfLines={!showFull ? 6 : undefined}>
+              numberOfLines={!showFull ? 6 : undefined}
+              emoji>
               {replyTo.text}
             </Text>
           </View>
