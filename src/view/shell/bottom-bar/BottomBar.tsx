@@ -351,17 +351,16 @@ function Btn({
   return (
     <PressableScale
       testID={testID}
-      style={styles.ctrl}
+      style={[styles.ctrl, a.flex_1]}
       onPress={onPress}
       onLongPress={onLongPress}
       accessible={accessible}
       accessibilityLabel={accessibilityLabel}
       accessibilityHint={accessibilityHint}
-      targetScale={0.8}
-      contentContainerStyle={[a.flex_1]}>
+      targetScale={0.8}>
       {icon}
       {notificationCount ? (
-        <View style={[styles.notificationCount, {top: -5}]}>
+        <View style={[styles.notificationCount]}>
           <Text style={styles.notificationCountLabel}>{notificationCount}</Text>
         </View>
       ) : undefined}
