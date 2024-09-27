@@ -10,13 +10,13 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useAnalytics} from '#/lib/analytics/analytics'
+import {usePhotoLibraryPermission} from '#/lib/hooks/usePermissions'
+import {compressIfNeeded} from '#/lib/media/manip'
+import {openCropper} from '#/lib/media/picker'
+import {getDataUriSize} from '#/lib/media/util'
+import {useRequestNotificationsPermission} from '#/lib/notifications/notifications'
 import {logEvent, useGate} from '#/lib/statsig/statsig'
-import {usePhotoLibraryPermission} from 'lib/hooks/usePermissions'
-import {compressIfNeeded} from 'lib/media/manip'
-import {openCropper} from 'lib/media/picker'
-import {getDataUriSize} from 'lib/media/util'
-import {useRequestNotificationsPermission} from 'lib/notifications/notifications'
-import {isNative, isWeb} from 'platform/detection'
+import {isNative, isWeb} from '#/platform/detection'
 import {
   DescriptionText,
   OnboardingControls,
@@ -132,6 +132,10 @@ export function StepProfile() {
 
   const onContinue = React.useCallback(async () => {
     let imageUri = avatar?.image?.path
+
+    // In the event that view-shot didn't load in time and the user pressed continue, this will just be undefined
+    // and the default avatar will be used. We don't want to block getting through create if this fails for some
+    // reason
     if (!imageUri || avatar.useCreatedAvatar) {
       imageUri = await canvasRef.current?.capture()
     }
