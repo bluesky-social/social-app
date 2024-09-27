@@ -53,7 +53,7 @@ export function PressableScale({
       }}
       style={[animatedStyle, style]}
       {...rest}>
-      {children as React.ReactNode}
+      {children}
     </AnimatedPressable>
   )
 }
