@@ -16,10 +16,11 @@ import {
 import {useProfileQuery} from '#/state/queries/profile'
 import {SessionAccount, useSession} from '#/state/session'
 import {useOnboardingState} from '#/state/shell'
+/*
+ * NUXs
+ */
 import {NeueTypography} from '#/components/dialogs/nuxs/NeueTypography'
 import {isSnoozed, snooze, unsnooze} from '#/components/dialogs/nuxs/snoozing'
-// NUXs
-import {TenMillion} from '#/components/dialogs/nuxs/TenMillion'
 import {IS_DEV} from '#/env'
 
 type Context = {
@@ -37,13 +38,10 @@ const queuedNuxs: {
   }) => boolean
 }[] = [
   {
-    id: Nux.TenMillionDialog,
-  },
-  {
     id: Nux.NeueTypography,
     enabled(props) {
       if (props.currentProfile.createdAt) {
-        if (new Date(props.currentProfile.createdAt) < new Date('2024-09-25')) {
+        if (new Date(props.currentProfile.createdAt) < new Date('2024-10-01')) {
           return true
         }
       }
@@ -176,7 +174,6 @@ function Inner({
 
   return (
     <Context.Provider value={ctx}>
-      {activeNux === Nux.TenMillionDialog && <TenMillion />}
       {activeNux === Nux.NeueTypography && <NeueTypography />}
     </Context.Provider>
   )

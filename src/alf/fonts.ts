@@ -45,15 +45,18 @@ export function applyFonts(
         // '100': 'Inter-Thin',
         // '200': 'Inter-ExtraLight',
         // '300': 'Inter-Light',
+        // '500': 'Inter-Medium',
+        // '700': 'Inter-Bold',
+        // '900': 'Inter-Black',
         '100': 'Inter-Regular',
         '200': 'Inter-Regular',
         '300': 'Inter-Regular',
         '400': 'Inter-Regular',
-        '500': 'Inter-Medium',
+        '500': 'Inter-SemiBold',
         '600': 'Inter-SemiBold',
-        '700': 'Inter-Bold',
+        '700': 'Inter-SemiBold',
         '800': 'Inter-ExtraBold',
-        '900': 'Inter-Black',
+        '900': 'Inter-ExtraBold',
       }[style.fontWeight as string] || 'Inter-Regular'
 
     if (style.fontStyle === 'italic') {
