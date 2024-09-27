@@ -12,7 +12,7 @@ const LazyViewShot = React.lazy(
 const SIZE_MULTIPLIER = 5
 
 export interface PlaceholderCanvasRef {
-  capture: () => Promise<string> | undefined
+  capture: (() => Promise<string>) | undefined
 }
 
 // This component is supposed to be invisible to the user. We only need this for ViewShot to have something to
