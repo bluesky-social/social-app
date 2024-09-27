@@ -842,14 +842,14 @@ export function SearchScreen(
           a.gap_sm,
           t.atoms.bg,
           web({
-            height: headerHeight,
+            height: headerHeight + a.mb_sm.marginBottom,
             position: 'sticky',
             top: 0,
             zIndex: 1,
           }),
         ]}
         sideBorders={gtMobile}>
-        <View style={[a.flex_row, a.gap_sm]}>
+        <View style={[a.flex_row, a.gap_sm, a.mb_sm]}>
           {!gtMobile && (
             <Button
               testID="viewHeaderBackOrMenuBtn"
@@ -982,7 +982,7 @@ let SearchInputBox = ({
   const t = useThemeNew()
 
   return (
-    <View style={[a.flex_1, a.mb_sm]}>
+    <View style={[a.flex_1]}>
       <TextField.Root>
         <TextField.Icon icon={MagnifyingGlass} />
         <TextField.Input
