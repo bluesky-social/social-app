@@ -27,11 +27,11 @@ import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
 import {useModalControls} from '#/state/modals'
 import {useProfileUpdateMutation} from '#/state/queries/profile'
+import {Text} from '#/view/com/util/text/Text'
+import * as Toast from '#/view/com/util/Toast'
+import {EditableUserAvatar} from '#/view/com/util/UserAvatar'
+import {UserBanner} from '#/view/com/util/UserBanner'
 import {ErrorMessage} from '../util/error/ErrorMessage'
-import {Text} from '../util/text/Text'
-import * as Toast from '../util/Toast'
-import {EditableUserAvatar} from '../util/UserAvatar'
-import {UserBanner} from '../util/UserBanner'
 
 const AnimatedTouchableOpacity =
   Animated.createAnimatedComponent(TouchableOpacity)
