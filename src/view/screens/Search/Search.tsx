@@ -985,7 +985,7 @@ let SearchInputBox = ({
   const t = useThemeNew()
 
   return (
-    <View style={[a.flex_1, a.relative]}>
+    <View style={[a.flex_1, a.mb_sm]}>
       <TextField.Root>
         <TextField.Icon icon={MagnifyingGlass} />
         <TextField.Input

@@ -23,7 +23,7 @@ class ShareViewController: UIViewController {
         await self.handleUrl(item: firstAttachment)
       } else if firstAttachment.hasItemConformingToTypeIdentifier("public.image") {
         await self.handleImages(items: attachments)
-      } else if firstAttachment.hasItemConformingToTypeIdentifier("public.video") {
+      } else if firstAttachment.hasItemConformingToTypeIdentifier("public.movie") {
         await self.handleVideos(items: attachments)
       } else {
         self.completeRequest()
@@ -101,13 +101,13 @@ class ShareViewController: UIViewController {
   private func handleVideos(items: [NSItemProvider]) async {
     let firstItem = items.first
 
-    if let dataUri = try? await firstItem?.loadItem(forTypeIdentifier: "public.video") as? URL {
+    if let dataUri = try? await firstItem?.loadItem(forTypeIdentifier: "public.movie") as? URL {
       let ext = String(dataUri.lastPathComponent.split(separator: ".").last ?? "mp4")
       if let tempUrl = getTempUrl(ext: ext) {
         let data = try? Data(contentsOf: dataUri)
         try? data?.write(to: tempUrl)
 
-        if let encoded = dataUri.absoluteString.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed),
+        if let encoded = tempUrl.absoluteString.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed),
            let url = URL(string: "\(self.appScheme)://intent/compose?videoUri=\(encoded)") {
           _ = self.openURL(url)
         }
@@ -150,7 +150,8 @@ class ShareViewController: UIViewController {
     var responder: UIResponder? = self
     while responder != nil {
       if let application = responder as? UIApplication {
-          return application.perform(#selector(openURL(_:)), with: url) != nil
+        application.open(url)
+        return true
       }
       responder = responder?.next
     }
