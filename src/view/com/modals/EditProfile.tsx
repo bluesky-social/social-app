@@ -15,7 +15,6 @@ import {AppBskyActorDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useAnalytics} from '#/lib/analytics/analytics'
 import {MAX_DESCRIPTION, MAX_DISPLAY_NAME} from '#/lib/constants'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {compressIfNeeded} from '#/lib/media/manip'
@@ -47,7 +46,6 @@ export function Component({
 }) {
   const pal = usePalette('default')
   const theme = useTheme()
-  const {track} = useAnalytics()
   const {_} = useLingui()
   const {closeModal} = useModalControls()
   const updateMutation = useProfileUpdateMutation()
@@ -81,7 +79,6 @@ export function Component({
         setUserAvatar(null)
         return
       }
-      track('EditProfile:AvatarSelected')
       try {
         const finalImg = await compressIfNeeded(img, 1000000)
         setNewUserAvatar(finalImg)
@@ -90,7 +87,7 @@ export function Component({
         setImageError(cleanError(e))
       }
     },
-    [track, setNewUserAvatar, setUserAvatar, setImageError],
+    [setNewUserAvatar, setUserAvatar, setImageError],
   )
 
   const onSelectNewBanner = useCallback(
@@ -101,7 +98,6 @@ export function Component({
         setUserBanner(null)
         return
       }
-      track('EditProfile:BannerSelected')
       try {
         const finalImg = await compressIfNeeded(img, 1000000)
         setNewUserBanner(finalImg)
@@ -110,11 +106,10 @@ export function Component({
         setImageError(cleanError(e))
       }
     },
-    [track, setNewUserBanner, setUserBanner, setImageError],
+    [setNewUserBanner, setUserBanner, setImageError],
   )
 
   const onPressSave = useCallback(async () => {
-    track('EditProfile:Save')
     setImageError('')
     try {
       await updateMutation.mutateAsync({
@@ -133,7 +128,6 @@ export function Component({
       logger.error('Failed to update user profile', {message: String(e)})
     }
   }, [
-    track,
     updateMutation,
     profile,
     onUpdate,

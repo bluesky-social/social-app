@@ -4,7 +4,6 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQuery} from '@tanstack/react-query'
 
-import {useAnalytics} from '#/lib/analytics/analytics'
 import {logEvent} from '#/lib/statsig/statsig'
 import {capitalize} from '#/lib/strings/capitalize'
 import {logger} from '#/logger'
@@ -36,7 +35,6 @@ export function StepInterests() {
   const {_} = useLingui()
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
-  const {track} = useAnalytics()
   const interestsDisplayNames = useInterestsDisplayNames()
 
   const {state, dispatch} = React.useContext(Context)
@@ -90,7 +88,6 @@ export function StepInterests() {
           `onboarding: getTaggedSuggestions fetch or processing failed`,
         )
         logger.error(e)
-        track('OnboardingV2:StepInterests:Error')
 
         throw new Error(`a network error occurred`)
       }
@@ -108,11 +105,6 @@ export function StepInterests() {
         selectedInterests: interests,
       })
       dispatch({type: 'next'})
-
-      track('OnboardingV2:StepInterests:End', {
-        selectedInterests: interests,
-        selectedInterestsLength: interests.length,
-      })
       logEvent('onboarding:interests:nextPressed', {
         selectedInterests: interests,
         selectedInterestsLength: interests.length,
@@ -121,18 +113,12 @@ export function StepInterests() {
       logger.info(`onboading: error saving interests`)
       logger.error(e)
     }
-  }, [interests, data, setSaving, dispatch, track])
+  }, [interests, data, setSaving, dispatch])
 
   const skipOnboarding = React.useCallback(() => {
     onboardDispatch({type: 'finish'})
     dispatch({type: 'finish'})
-    track('OnboardingV2:Skip')
-  }, [onboardDispatch, dispatch, track])
-
-  React.useEffect(() => {
-    track('OnboardingV2:Begin')
-    track('OnboardingV2:StepInterests:Start')
-  }, [track])
+  }, [onboardDispatch, dispatch])
 
   const title = isError ? (
     <Trans>Oh no! Something went wrong.</Trans>

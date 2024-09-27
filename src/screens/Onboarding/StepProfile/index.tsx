@@ -9,14 +9,13 @@ import {
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useAnalytics} from '#/lib/analytics/analytics'
+import {usePhotoLibraryPermission} from '#/lib/hooks/usePermissions'
+import {compressIfNeeded} from '#/lib/media/manip'
+import {openCropper} from '#/lib/media/picker'
+import {getDataUriSize} from '#/lib/media/util'
+import {useRequestNotificationsPermission} from '#/lib/notifications/notifications'
 import {logEvent, useGate} from '#/lib/statsig/statsig'
-import {usePhotoLibraryPermission} from 'lib/hooks/usePermissions'
-import {compressIfNeeded} from 'lib/media/manip'
-import {openCropper} from 'lib/media/picker'
-import {getDataUriSize} from 'lib/media/util'
-import {useRequestNotificationsPermission} from 'lib/notifications/notifications'
-import {isNative, isWeb} from 'platform/detection'
+import {isNative, isWeb} from '#/platform/detection'
 import {
   DescriptionText,
   OnboardingControls,
@@ -68,7 +67,6 @@ export function StepProfile() {
   const {_} = useLingui()
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
-  const {track} = useAnalytics()
   const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
   const gate = useGate()
   const requestNotificationsPermission = useRequestNotificationsPermission()
@@ -86,10 +84,6 @@ export function StepProfile() {
   })
 
   const canvasRef = React.useRef<PlaceholderCanvasRef>(null)
-
-  React.useEffect(() => {
-    track('OnboardingV2:StepProfile:Start')
-  }, [track])
 
   React.useEffect(() => {
     requestNotificationsPermission('StartOnboarding')
@@ -151,9 +145,8 @@ export function StepProfile() {
     }
 
     dispatch({type: 'next'})
-    track('OnboardingV2:StepProfile:End')
     logEvent('onboarding:profile:nextPressed', {})
-  }, [avatar, dispatch, track])
+  }, [avatar, dispatch])
 
   const onDoneCreating = React.useCallback(() => {
     setAvatar(prev => ({

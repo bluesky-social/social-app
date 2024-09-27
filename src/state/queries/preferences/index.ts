@@ -5,7 +5,6 @@ import {
 } from '@atproto/api'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
-import {track} from '#/lib/analytics/analytics'
 import {PROD_DEFAULT_FEED} from '#/lib/constants'
 import {replaceEqualDeep} from '#/lib/functions'
 import {getAge} from '#/lib/strings/time'
@@ -218,7 +217,6 @@ export function useAddSavedFeedsMutation() {
   >({
     mutationFn: async savedFeeds => {
       await agent.addSavedFeeds(savedFeeds)
-      track('CustomFeed:Save')
       // triggers a refetch
       await queryClient.invalidateQueries({
         queryKey: preferencesQueryKey,
@@ -234,7 +232,6 @@ export function useRemoveFeedMutation() {
   return useMutation<void, unknown, Pick<AppBskyActorDefs.SavedFeed, 'id'>>({
     mutationFn: async savedFeed => {
       await agent.removeSavedFeeds([savedFeed.id])
-      track('CustomFeed:Unsave')
       // triggers a refetch
       await queryClient.invalidateQueries({
         queryKey: preferencesQueryKey,

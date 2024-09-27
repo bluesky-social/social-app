@@ -3,7 +3,6 @@ import React, {useCallback} from 'react'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useAnalytics} from '#/lib/analytics/analytics'
 import {usePhotoLibraryPermission} from '#/lib/hooks/usePermissions'
 import {openPicker} from '#/lib/media/picker'
 import {isNative} from '#/platform/detection'
@@ -19,14 +18,11 @@ type Props = {
 }
 
 export function SelectPhotoBtn({size, disabled, onAdd}: Props) {
-  const {track} = useAnalytics()
   const {_} = useLingui()
   const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
   const t = useTheme()
 
   const onPressSelectPhotos = useCallback(async () => {
-    track('Composer:GalleryOpened')
-
     if (isNative && !(await requestPhotoAccessIfNeeded())) {
       return
     }
@@ -41,7 +37,7 @@ export function SelectPhotoBtn({size, disabled, onAdd}: Props) {
     )
 
     onAdd(results)
-  }, [track, requestPhotoAccessIfNeeded, size, onAdd])
+  }, [requestPhotoAccessIfNeeded, size, onAdd])
 
   return (
     <Button
