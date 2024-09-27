@@ -10,7 +10,6 @@ import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
 
 import {APP_LANGUAGES, LANGUAGES} from '#/lib/../locale/languages'
-import {useAnalytics} from '#/lib/analytics/analytics'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
@@ -32,21 +31,18 @@ export function LanguageSettingsScreen(_props: Props) {
   const langPrefs = useLanguagePrefs()
   const setLangPrefs = useLanguagePrefsApi()
   const {isTabletOrDesktop} = useWebMediaQueries()
-  const {screen, track} = useAnalytics()
   const setMinimalShellMode = useSetMinimalShellMode()
   const {openModal} = useModalControls()
 
   useFocusEffect(
     React.useCallback(() => {
-      screen('Settings')
       setMinimalShellMode(false)
-    }, [screen, setMinimalShellMode]),
+    }, [setMinimalShellMode]),
   )
 
   const onPressContentLanguages = React.useCallback(() => {
-    track('Settings:ContentlanguagesButtonClicked')
     openModal({name: 'content-languages-settings'})
-  }, [track, openModal])
+  }, [openModal])
 
   const onChangePrimaryLanguage = React.useCallback(
     (value: Parameters<PickerSelectProps['onValueChange']>[0]) => {

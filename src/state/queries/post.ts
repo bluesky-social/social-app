@@ -2,7 +2,6 @@ import {useCallback} from 'react'
 import {AppBskyActorDefs, AppBskyFeedDefs, AtUri} from '@atproto/api'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
-import {track} from '#/lib/analytics/analytics'
 import {useToggleMutationQueue} from '#/lib/hooks/useToggleMutationQueue'
 import {logEvent, LogEvents, toClout} from '#/lib/statsig/statsig'
 import {updatePostShadow} from '#/state/cache/post-shadow'
@@ -193,9 +192,6 @@ function usePostLikeMutation(
       })
       return agent.like(uri, cid)
     },
-    onSuccess() {
-      track('Post:Like')
-    },
   })
 }
 
@@ -207,9 +203,6 @@ function usePostUnlikeMutation(
     mutationFn: ({likeUri}) => {
       logEvent('post:unlike:sampled', {logContext})
       return agent.deleteLike(likeUri)
-    },
-    onSuccess() {
-      track('Post:Unlike')
     },
   })
 }
@@ -285,9 +278,6 @@ function usePostRepostMutation(
       logEvent('post:repost:sampled', {logContext})
       return agent.repost(post.uri, post.cid)
     },
-    onSuccess() {
-      track('Post:Repost')
-    },
   })
 }
 
@@ -300,9 +290,6 @@ function usePostUnrepostMutation(
       logEvent('post:unrepost:sampled', {logContext})
       return agent.deleteRepost(repostUri)
     },
-    onSuccess() {
-      track('Post:Unrepost')
-    },
   })
 }
 
@@ -313,9 +300,8 @@ export function usePostDeleteMutation() {
     mutationFn: async ({uri}) => {
       await agent.deletePost(uri)
     },
-    onSuccess(data, variables) {
+    onSuccess(_, variables) {
       updatePostShadow(queryClient, variables.uri, {isDeleted: true})
-      track('Post:Delete')
     },
   })
 }
