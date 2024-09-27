@@ -1,13 +1,18 @@
 import React, {useEffect, useRef} from 'react'
-import {Animated, TouchableOpacity, StyleSheet, View} from 'react-native'
-import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
-import {usePalette} from 'lib/hooks/usePalette'
-import {Text} from 'view/com/util/text/Text'
-import {UserAvatar} from 'view/com/util/UserAvatar'
-import {useGrapheme} from '../hooks/useGrapheme'
-import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
-import {Trans} from '@lingui/macro'
+import {Animated, View} from 'react-native'
 import {AppBskyActorDefs} from '@atproto/api'
+import {Trans} from '@lingui/macro'
+
+import {PressableScale} from '#/lib/custom-animations/PressableScale'
+import {useAnimatedValue} from '#/lib/hooks/useAnimatedValue'
+import {usePalette} from '#/lib/hooks/usePalette'
+import {sanitizeDisplayName} from '#/lib/strings/display-names'
+import {sanitizeHandle} from '#/lib/strings/handles'
+import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
+import {UserAvatar} from '#/view/com/util/UserAvatar'
+import {atoms as a, useTheme} from '#/alf'
+import {Text} from '#/components/Typography'
+import {useGrapheme} from '../hooks/useGrapheme'
 
 export function Autocomplete({
   prefix,
@@ -16,6 +21,7 @@ export function Autocomplete({
   prefix: string
   onSelect: (item: string) => void
 }) {
+  const t = useTheme()
   const pal = usePalette('default')
   const positionInterp = useAnimatedValue(0)
   const {getGraphemeString} = useGrapheme()
@@ -50,7 +56,14 @@ export function Autocomplete({
   return (
     <Animated.View style={topAnimStyle}>
       {isActive ? (
-        <View style={[pal.view, styles.container, pal.border]}>
+        <View
+          style={[
+            pal.view,
+            a.mt_sm,
+            a.border_t,
+            t.atoms.border_contrast_high,
+            {marginLeft: -50},
+          ]}>
           {suggestionsRef.current?.length ? (
             suggestionsRef.current.slice(0, 5).map(item => {
               // Eventually use an average length
@@ -70,31 +83,44 @@ export function Autocomplete({
               )
 
               return (
-                <TouchableOpacity
+                <PressableScale
                   testID="autocompleteButton"
                   key={item.handle}
-                  style={[pal.border, styles.item]}
+                  style={[
+                    a.flex_row,
+                    a.gap_sm,
+                    a.justify_between,
+                    a.align_center,
+                    a.py_md,
+                    a.border_b,
+                    t.atoms.border_contrast_high,
+                  ]}
                   onPress={() => onSelect(item.handle)}
                   accessibilityLabel={`Select ${item.handle}`}
                   accessibilityHint="">
-                  <View style={styles.avatarAndHandle}>
+                  <View style={[a.flex_row, a.gap_sm, a.align_center]}>
                     <UserAvatar
                       avatar={item.avatar ?? null}
                       size={24}
                       type={item.associated?.labeler ? 'labeler' : 'user'}
                     />
-                    <Text type="md-medium" style={pal.text}>
-                      {displayName}
+                    <Text
+                      style={[a.text_md, a.font_bold]}
+                      emoji={true}
+                      numberOfLines={1}>
+                      {sanitizeDisplayName(displayName)}
                     </Text>
                   </View>
-                  <Text type="sm" style={pal.textLight} numberOfLines={1}>
-                    @{displayHandle}
+                  <Text
+                    style={[t.atoms.text_contrast_medium]}
+                    numberOfLines={1}>
+                    {sanitizeHandle(displayHandle, '@')}
                   </Text>
-                </TouchableOpacity>
+                </PressableScale>
               )
             })
           ) : (
-            <Text type="sm" style={[pal.text, pal.border, styles.noResults]}>
+            <Text style={[a.text_md, a.pt_sm]}>
               {isFetching ? (
                 <Trans>Loading...</Trans>
               ) : (
@@ -107,29 +133,3 @@ export function Autocomplete({
     </Animated.View>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    marginLeft: -50, // Composer avatar width
-    top: 10,
-    borderTopWidth: 1,
-  },
-  item: {
-    borderBottomWidth: 1,
-    paddingVertical: 12,
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    gap: 6,
-  },
-  avatarAndHandle: {
-    display: 'flex',
-    flexDirection: 'row',
-    gap: 6,
-    alignItems: 'center',
-  },
-  noResults: {
-    paddingVertical: 12,
-  },
-})

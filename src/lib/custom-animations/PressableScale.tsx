@@ -13,17 +13,19 @@ import {isNative} from '#/platform/detection'
 
 const DEFAULT_TARGET_SCALE = isNative || isTouchDevice ? 0.98 : 1
 
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable)
+
 export function PressableScale({
   targetScale = DEFAULT_TARGET_SCALE,
   children,
-  contentContainerStyle,
+  style,
   onPressIn,
   onPressOut,
   ...rest
 }: {
   targetScale?: number
-  contentContainerStyle?: StyleProp<ViewStyle>
-} & Exclude<PressableProps, 'onPressIn' | 'onPressOut'>) {
+  style?: StyleProp<ViewStyle>
+} & Exclude<PressableProps, 'onPressIn' | 'onPressOut' | 'style'>) {
   const scale = useSharedValue(1)
 
   const animatedStyle = useAnimatedStyle(() => ({
@@ -31,7 +33,7 @@ export function PressableScale({
   }))
 
   return (
-    <Pressable
+    <AnimatedPressable
       accessibilityRole="button"
       onPressIn={e => {
         'worklet'
@@ -49,10 +51,9 @@ export function PressableScale({
         cancelAnimation(scale)
         scale.value = withTiming(1, {duration: 100})
       }}
+      style={[animatedStyle, style]}
       {...rest}>
-      <Animated.View style={[animatedStyle, contentContainerStyle]}>
-        {children as React.ReactNode}
-      </Animated.View>
-    </Pressable>
+      {children as React.ReactNode}
+    </AnimatedPressable>
   )
 }
