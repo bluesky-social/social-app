@@ -54,21 +54,6 @@ jest.mock('expo-image-manipulator', () => ({
   SaveFormat: jest.requireActual('expo-image-manipulator').SaveFormat,
 }))
 
-jest.mock('@segment/analytics-react-native', () => ({
-  createClient: () => ({
-    add: jest.fn(),
-  }),
-  useAnalytics: () => ({
-    track: jest.fn(),
-    identify: jest.fn(),
-    reset: jest.fn(),
-    group: jest.fn(),
-    screen: jest.fn(),
-    alias: jest.fn(),
-    flush: jest.fn(),
-  }),
-}))
-
 jest.mock('expo-camera', () => ({
   Camera: {
     useCameraPermissions: jest.fn(() => [true]),

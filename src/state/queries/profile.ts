@@ -16,7 +16,6 @@ import {
   useQueryClient,
 } from '@tanstack/react-query'
 
-import {track} from '#/lib/analytics/analytics'
 import {uploadBlob} from '#/lib/api'
 import {until} from '#/lib/async/until'
 import {useToggleMutationQueue} from '#/lib/hooks/useToggleMutationQueue'
@@ -316,9 +315,6 @@ function useProfileFollowMutation(
       })
       return await agent.follow(did)
     },
-    onSuccess(data, variables) {
-      track('Profile:Follow', {username: variables.did})
-    },
   })
 }
 
@@ -329,7 +325,6 @@ function useProfileUnfollowMutation(
   return useMutation<void, Error, {did: string; followUri: string}>({
     mutationFn: async ({followUri}) => {
       logEvent('profile:unfollow:sampled', {logContext})
-      track('Profile:Unfollow', {username: followUri})
       return await agent.deleteFollow(followUri)
     },
   })

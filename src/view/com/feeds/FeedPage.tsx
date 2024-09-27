@@ -6,8 +6,11 @@ import {useLingui} from '@lingui/react'
 import {NavigationProp, useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {ComposeIcon2} from '#/lib/icons'
 import {getRootNavigation, getTabState, TabState} from '#/lib/routes/helpers'
+import {AllNavigatorParams} from '#/lib/routes/types'
 import {logEvent} from '#/lib/statsig/statsig'
+import {s} from '#/lib/styles'
 import {isNative} from '#/platform/detection'
 import {listenSoftReset} from '#/state/events'
 import {FeedFeedbackProvider, useFeedFeedback} from '#/state/feed-feedback'
@@ -17,10 +20,6 @@ import {truncateAndInvalidate} from '#/state/queries/util'
 import {useSession} from '#/state/session'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {useComposerControls} from '#/state/shell/composer'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {ComposeIcon2} from 'lib/icons'
-import {AllNavigatorParams} from 'lib/routes/types'
-import {s} from 'lib/styles'
 import {useHeaderOffset} from '#/components/hooks/useHeaderOffset'
 import {Feed} from '../posts/Feed'
 import {FAB} from '../util/fab/FAB'
@@ -54,7 +53,6 @@ export function FeedPage({
   const {openComposer} = useComposerControls()
   const [isScrolledDown, setIsScrolledDown] = React.useState(false)
   const setMinimalShellMode = useSetMinimalShellMode()
-  const {screen, track} = useAnalytics()
   const headerOffset = useHeaderOffset()
   const feedFeedback = useFeedFeedback(feed, hasSession)
   const scrollElRef = React.useRef<ListMethods>(null)
@@ -89,14 +87,12 @@ export function FeedPage({
     if (!isPageFocused) {
       return
     }
-    screen('Feed')
     return listenSoftReset(onSoftReset)
-  }, [onSoftReset, screen, isPageFocused])
+  }, [onSoftReset, isPageFocused])
 
   const onPressCompose = React.useCallback(() => {
-    track('HomeScreen:PressCompose')
     openComposer({})
-  }, [openComposer, track])
+  }, [openComposer])
 
   const onPressLoadLatest = React.useCallback(() => {
     scrollToTop()

@@ -23,7 +23,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 
 import {LANGUAGES} from '#/lib/../locale/languages'
-import {useAnalytics} from '#/lib/analytics/analytics'
 import {createHitslop} from '#/lib/constants'
 import {HITSLOP_10} from '#/lib/constants'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
@@ -601,7 +600,6 @@ export function SearchScreen(
   const navigation = useNavigation<NavigationProp>()
   const textInput = React.useRef<TextInput>(null)
   const {_} = useLingui()
-  const {track} = useAnalytics()
   const setDrawerOpen = useSetDrawerOpen()
   const setMinimalShellMode = useSetMinimalShellMode()
 
@@ -656,9 +654,8 @@ export function SearchScreen(
   }, [])
 
   const onPressMenu = React.useCallback(() => {
-    track('ViewHeader:MenuButtonClicked')
     setDrawerOpen(true)
-  }, [track, setDrawerOpen])
+  }, [setDrawerOpen])
 
   const onPressClearQuery = React.useCallback(() => {
     scrollToTopWeb()

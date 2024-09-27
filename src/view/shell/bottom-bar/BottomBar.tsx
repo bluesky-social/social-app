@@ -7,7 +7,6 @@ import {useLingui} from '@lingui/react'
 import {BottomTabBarProps} from '@react-navigation/bottom-tabs'
 import {StackActions} from '@react-navigation/native'
 
-import {useAnalytics} from '#/lib/analytics/analytics'
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
 import {useHaptics} from '#/lib/haptics'
 import {useDedupe} from '#/lib/hooks/useDedupe'
@@ -62,7 +61,6 @@ export function BottomBar({navigation}: BottomTabBarProps) {
   const pal = usePalette('default')
   const {_} = useLingui()
   const safeAreaInsets = useSafeAreaInsets()
-  const {track} = useAnalytics()
   const {footerHeight} = useShellLayout()
   const {isAtHome, isAtSearch, isAtNotifications, isAtMyProfile, isAtMessages} =
     useNavigationTabState()
@@ -90,7 +88,6 @@ export function BottomBar({navigation}: BottomTabBarProps) {
 
   const onPressTab = React.useCallback(
     (tab: TabOptions) => {
-      track(`MobileShell:${tab}ButtonPressed`)
       const state = navigation.getState()
       const tabState = getTabState(state, tab)
       if (tabState === TabState.InsideAtRoot) {
@@ -101,7 +98,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
         dedupe(() => navigation.navigate(`${tab}Tab`))
       }
     },
-    [track, navigation, dedupe],
+    [navigation, dedupe],
   )
   const onPressHome = React.useCallback(() => onPressTab('Home'), [onPressTab])
   const onPressSearch = React.useCallback(

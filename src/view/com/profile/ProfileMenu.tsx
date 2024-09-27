@@ -6,23 +6,22 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {HITSLOP_10} from '#/lib/constants'
+import {makeProfileLink} from '#/lib/routes/links'
+import {shareUrl} from '#/lib/sharing'
+import {toShareUrl} from '#/lib/strings/url-helpers'
 import {logger} from '#/logger'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {HITSLOP_10} from 'lib/constants'
-import {makeProfileLink} from 'lib/routes/links'
-import {shareUrl} from 'lib/sharing'
-import {toShareUrl} from 'lib/strings/url-helpers'
-import {Shadow} from 'state/cache/types'
-import {useModalControls} from 'state/modals'
+import {Shadow} from '#/state/cache/types'
+import {useModalControls} from '#/state/modals'
 import {
   RQKEY as profileQueryKey,
   useProfileBlockMutationQueue,
   useProfileFollowMutationQueue,
   useProfileMuteMutationQueue,
-} from 'state/queries/profile'
-import {useSession} from 'state/session'
-import {EventStopper} from 'view/com/util/EventStopper'
-import * as Toast from 'view/com/util/Toast'
+} from '#/state/queries/profile'
+import {useSession} from '#/state/session'
+import {EventStopper} from '#/view/com/util/EventStopper'
+import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded as Share} from '#/components/icons/ArrowOutOfBox'
 import {Flag_Stroke2_Corner0_Rounded as Flag} from '#/components/icons/Flag'
@@ -49,7 +48,6 @@ let ProfileMenu = ({
   const t = useTheme()
   // TODO ALF this
   const alf = useTheme()
-  const {track} = useAnalytics()
   const {openModal} = useModalControls()
   const reportDialogControl = useReportDialogControl()
   const queryClient = useQueryClient()
@@ -83,12 +81,10 @@ let ProfileMenu = ({
   }, [queryClient, profile.did])
 
   const onPressShare = React.useCallback(() => {
-    track('ProfileHeader:ShareButtonClicked')
     shareUrl(toShareUrl(makeProfileLink(profile)))
-  }, [track, profile])
+  }, [profile])
 
   const onPressAddRemoveLists = React.useCallback(() => {
-    track('ProfileHeader:AddToListsButtonClicked')
     openModal({
       name: 'user-add-remove-lists',
       subject: profile.did,
@@ -97,11 +93,10 @@ let ProfileMenu = ({
       onAdd: invalidateProfileQuery,
       onRemove: invalidateProfileQuery,
     })
-  }, [track, profile, openModal, invalidateProfileQuery])
+  }, [profile, openModal, invalidateProfileQuery])
 
   const onPressMuteAccount = React.useCallback(async () => {
     if (profile.viewer?.muted) {
-      track('ProfileHeader:UnmuteAccountButtonClicked')
       try {
         await queueUnmute()
         Toast.show(_(msg`Account unmuted`))
@@ -112,7 +107,6 @@ let ProfileMenu = ({
         }
       }
     } else {
-      track('ProfileHeader:MuteAccountButtonClicked')
       try {
         await queueMute()
         Toast.show(_(msg`Account muted`))
@@ -123,11 +117,10 @@ let ProfileMenu = ({
         }
       }
     }
-  }, [profile.viewer?.muted, track, queueUnmute, _, queueMute])
+  }, [profile.viewer?.muted, queueUnmute, _, queueMute])
 
   const blockAccount = React.useCallback(async () => {
     if (profile.viewer?.blocking) {
-      track('ProfileHeader:UnblockAccountButtonClicked')
       try {
         await queueUnblock()
         Toast.show(_(msg`Account unblocked`))
@@ -138,7 +131,6 @@ let ProfileMenu = ({
         }
       }
     } else {
-      track('ProfileHeader:BlockAccountButtonClicked')
       try {
         await queueBlock()
         Toast.show(_(msg`Account blocked`))
@@ -149,10 +141,9 @@ let ProfileMenu = ({
         }
       }
     }
-  }, [profile.viewer?.blocking, track, _, queueUnblock, queueBlock])
+  }, [profile.viewer?.blocking, _, queueUnblock, queueBlock])
 
   const onPressFollowAccount = React.useCallback(async () => {
-    track('ProfileHeader:FollowButtonClicked')
     try {
       await queueFollow()
       Toast.show(_(msg`Account followed`))
@@ -162,10 +153,9 @@ let ProfileMenu = ({
         Toast.show(_(msg`There was an issue! ${e.toString()}`), 'xmark')
       }
     }
-  }, [_, queueFollow, track])
+  }, [_, queueFollow])
 
   const onPressUnfollowAccount = React.useCallback(async () => {
-    track('ProfileHeader:UnfollowButtonClicked')
     try {
       await queueUnfollow()
       Toast.show(_(msg`Account unfollowed`))
@@ -175,12 +165,11 @@ let ProfileMenu = ({
         Toast.show(_(msg`There was an issue! ${e.toString()}`), 'xmark')
       }
     }
-  }, [_, queueUnfollow, track])
+  }, [_, queueUnfollow])
 
   const onPressReportAccount = React.useCallback(() => {
-    track('ProfileHeader:ReportAccountButtonClicked')
     reportDialogControl.open()
-  }, [track, reportDialogControl])
+  }, [reportDialogControl])
 
   return (
     <EventStopper onKeyDown={false}>
