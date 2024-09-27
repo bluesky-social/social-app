@@ -180,12 +180,12 @@ class ShareViewController: UIViewController {
 extension URL {
   var type: URLType {
     get {
-      let urlStr = self.absoluteString
-      let ext = self.pathComponents.last?.split(separator: ".").last?.lowercased() ?? ""
-
-      if !urlStr.starts(with: "file://") {
+      guard self.absoluteString.starts(with: "file://"),
+            let ext = self.pathComponents.last?.split(separator: ".").last?.lowercased() else {
         return .other
-      } else if IMAGE_EXTENSIONS.contains(ext) {
+      }
+
+      if IMAGE_EXTENSIONS.contains(ext) {
         return .image
       } else if MOVIE_EXTENSIONS.contains(ext) {
         return .movie
