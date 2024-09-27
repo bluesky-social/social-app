@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-09-26 10:27+0900\n"
+"PO-Revision-Date: 2024-09-27 10:09+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -261,10 +261,6 @@ msgstr "30日"
 #: src/components/dialogs/MutedWords.tsx:217
 msgid "7 days"
 msgstr "７日"
-
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:266
-msgid "A virtual certificate with text \"Celebrating 10M users on Bluesky, #{0}, {displayName} {handle}, joined on {joinedDate}\""
-msgstr "「Blueskyの1,000万ユーザーを祝福し、{0} 番目に、{displayName} {handle} が {joinedDate} に 参加した」というテキストが書かれた仮想証明書"
 
 #: src/view/com/util/ViewHeader.tsx:92
 #: src/view/screens/Search/Search.tsx:684
@@ -545,10 +541,6 @@ msgstr "ビデオの読み込み時にエラーが発生しました。時間を
 #: src/view/com/util/post-embeds/VideoEmbed.web.tsx:174
 msgid "An error occurred while loading the video. Please try again."
 msgstr "ビデオの読み込み時にエラーが発生しました。もう一度お試しください。"
-
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:250
-msgid "An error occurred while saving the image!"
-msgstr "画像の保存中にエラーが発生しました！"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:71
 #: src/components/StarterPack/ShareDialog.tsx:79
@@ -852,15 +844,6 @@ msgstr "Bluesky は、ホスティング プロバイダーを選択できるオ
 msgid "Bluesky is better with friends!"
 msgstr "Blueskyは友達と一緒のほうが楽しい！"
 
-#: src/components/dialogs/nuxs/TenMillion/Trigger.tsx:43
-#: src/components/dialogs/nuxs/TenMillion/Trigger.tsx:59
-msgid "Bluesky is celebrating 10 million users!"
-msgstr "Blueskyは1,000万ユーザーを祝っています！"
-
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:206
-msgid "Bluesky now has over 10 million users, and I was #{0}!"
-msgstr "Bluesky のユーザー数は現在 1,000 万人を超えており、私は {0} 番目でした。"
-
 #: src/components/StarterPack/ProfileStarterPacks.tsx:282
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
 msgstr "Blueskyはあなたのつながっているユーザーからおすすめのアカウントを選びます。"
@@ -881,10 +864,6 @@ msgstr "画像のぼかしとフィードからのフィルタリング"
 #: src/screens/Onboarding/state.ts:81
 msgid "Books"
 msgstr "書籍"
-
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:614
-msgid "Brag a little!"
-msgstr "ちょっと自慢してみよう！"
 
 #: src/components/FeedInterstitials.tsx:350
 msgid "Browse more accounts on the Explore page"
@@ -1024,10 +1003,6 @@ msgstr "キャプション（.vtt）"
 #: src/view/com/composer/videos/SubtitleDialog.tsx:56
 msgid "Captions & alt text"
 msgstr "キャプション＆ALTテキスト"
-
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:368
-msgid "Celebrating {0} users"
-msgstr "{0} 人のユーザーを祝福"
 
 #: src/view/com/modals/VerifyEmail.tsx:160
 msgid "Change"
@@ -1524,11 +1499,6 @@ msgstr "ビデオを処理できませんでした"
 msgid "Create"
 msgstr "作成"
 
-#: src/view/com/auth/SplashScreen.tsx:57
-#: src/view/com/auth/SplashScreen.web.tsx:106
-msgid "Create a new account"
-msgstr "新しいアカウントを作成"
-
 #: src/view/screens/Settings/index.tsx:402
 msgid "Create a new Bluesky account"
 msgstr "新しいBlueskyアカウントを作成"
@@ -1546,6 +1516,11 @@ msgstr "スターターパックを作成"
 #: src/components/StarterPack/ProfileStarterPacks.tsx:246
 msgid "Create a starter pack for me"
 msgstr "私向けのスターターパックを作成"
+
+#: src/view/com/auth/SplashScreen.tsx:56
+#: src/view/com/auth/SplashScreen.web.tsx:100
+msgid "Create account"
+msgstr "アカウントを作成"
 
 #: src/screens/Signup/index.tsx:99
 msgid "Create Account"
@@ -1912,10 +1887,6 @@ msgstr "Blueskyをダウンロード"
 #: src/view/screens/Settings/ExportCarDialog.tsx:81
 msgid "Download CAR file"
 msgstr "CARファイルをダウンロード"
-
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:622
-msgid "Download image"
-msgstr "画像をダウンロード"
 
 #: src/view/com/composer/text-input/TextInput.web.tsx:269
 msgid "Drop to add images"
@@ -3165,10 +3136,6 @@ msgstr "Blueskyに参加"
 msgid "Join the conversation"
 msgstr "会話に参加"
 
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:559
-msgid "Joined on {joinedDate}"
-msgstr "{joinedDate} に参加"
-
 #: src/screens/Onboarding/index.tsx:21
 #: src/screens/Onboarding/state.ts:89
 msgid "Journalism"
@@ -4124,10 +4091,6 @@ msgstr "ちょっと！"
 #: src/screens/Onboarding/StepInterests/index.tsx:138
 msgid "Oh no! Something went wrong."
 msgstr "ちょっと！何らかの問題が発生したようです。"
-
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:175
-msgid "Oh no! We weren't able to generate an image for you to share. Rest assured, we're glad you're here 🦋"
-msgstr "ああ、残念！共有するための画像を生成できませんでした。ご安心ください、ここに来てくれて嬉しいです🦋"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:339
 msgid "OK"
@@ -5753,14 +5716,6 @@ msgstr "とにかく共有"
 msgid "Share feed"
 msgstr "フィードを共有"
 
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:621
-msgid "Share image externally"
-msgstr "画像を外部に共有する"
-
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:639
-msgid "Share image in post"
-msgstr "投稿で画像を共有"
-
 #: src/components/StarterPack/ShareDialog.tsx:124
 #: src/components/StarterPack/ShareDialog.tsx:131
 #: src/screens/StarterPack/StarterPackScreen.tsx:586
@@ -6240,10 +6195,6 @@ msgstr "ジョークを言って！"
 msgid "Tell us a little more"
 msgstr "もう少し教えて"
 
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:518
-msgid "Ten Million"
-msgstr "1,000万"
-
 #: src/view/shell/desktop/RightNav.tsx:90
 msgid "Terms"
 msgstr "条件"
@@ -6276,10 +6227,6 @@ msgstr "テキストの入力フィールド"
 #: src/components/ReportDialog/SubmitView.tsx:81
 msgid "Thank you. Your report has been sent."
 msgstr "ありがとうございます。あなたの報告は送信されました。"
-
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:593
-msgid "Thanks for being one of our first 10 million users."
-msgstr "最初の 1,000 万人のユーザーの 1 人になっていただきありがとうございます。"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:74
 msgid "Thanks, you have successfully verified your email address."
@@ -6704,10 +6651,6 @@ msgstr "スレッドの設定"
 msgid "To disable the email 2FA method, please verify your access to the email address."
 msgstr "メールでの２要素認証を無効にするには、メールアドレスにアクセスできるか確認してください。"
 
-#: src/components/dialogs/nuxs/TenMillion/Trigger.tsx:69
-msgid "To learn more, <0>check out our post.</0>"
-msgstr "詳しくは、<0>私達のこの投稿をチェックしてください。</0>"
-
 #: src/components/dms/ReportConversationPrompt.tsx:20
 msgid "To report a conversation, please report one of its messages via the conversation screen. This lets our moderators understand the context of your issue."
 msgstr "会話を報告するには、会話の画面からメッセージのうちの一つを報告してください。それによって問題の文脈をモデレーターが理解できるようになります。"
@@ -6719,10 +6662,6 @@ msgstr "Blueskyにビデオをアップロードするには、まずメール�
 #: src/components/ReportDialog/SelectLabelerView.tsx:33
 msgid "To whom would you like to send this report?"
 msgstr "この報告を誰に送りたいですか？"
-
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:597
-msgid "Together, we're rebuilding the social internet. We're glad you're here."
-msgstr "私たちは一緒にソーシャル インターネットを再構築しています。ご参加いただきありがとうございます。"
 
 #: src/view/com/util/forms/DropdownButton.tsx:255
 msgid "Toggle dropdown"
@@ -7209,10 +7148,6 @@ msgstr "スレッドをすべて表示"
 #: src/components/moderation/LabelsOnMe.tsx:47
 msgid "View information about these labels"
 msgstr "これらのラベルに関する情報を見る"
-
-#: src/components/dialogs/nuxs/TenMillion/Trigger.tsx:72
-msgid "View our post"
-msgstr "投稿を表示"
 
 #: src/components/ProfileHoverCard/index.web.tsx:418
 #: src/components/ProfileHoverCard/index.web.tsx:436
