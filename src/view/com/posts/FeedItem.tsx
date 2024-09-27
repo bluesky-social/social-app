@@ -53,6 +53,7 @@ interface FeedItemProps {
   record: AppBskyFeedPost.Record
   reason:
     | AppBskyFeedDefs.ReasonRepost
+    | AppBskyFeedDefs.ReasonPin
     | ReasonFeedSource
     | {[k: string]: unknown; $type: string}
     | undefined
