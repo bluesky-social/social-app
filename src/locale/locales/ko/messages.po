@@ -8,7 +8,7 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-09-27 09:02+0900\n"
+"PO-Revision-Date: 2024-09-27 15:35+0900\n"
 "Last-Translator: quiple\n"
 "Language-Team: quiple, lens0021, HaruChanHeart, hazzzi, heartade\n"
 "Plural-Forms: \n"
@@ -597,7 +597,7 @@ msgid "and"
 msgstr "및"
 
 #: src/screens/Onboarding/index.tsx:29
-#: src/screens/Onboarding/state.ts:79
+#: src/screens/Onboarding/state.ts:81
 msgid "Animals"
 msgstr "동물"
 
@@ -715,7 +715,7 @@ msgid "Are you writing in <0>{0}</0>?"
 msgstr "{0}(으)로 쓰고 있나요?"
 
 #: src/screens/Onboarding/index.tsx:23
-#: src/screens/Onboarding/state.ts:80
+#: src/screens/Onboarding/state.ts:82
 msgid "Art"
 msgstr "예술"
 
@@ -861,7 +861,7 @@ msgid "Blur images and filter from feeds"
 msgstr "이미지 흐리게 및 피드에서 필터링"
 
 #: src/screens/Onboarding/index.tsx:30
-#: src/screens/Onboarding/state.ts:81
+#: src/screens/Onboarding/state.ts:83
 msgid "Books"
 msgstr "책"
 
@@ -1107,7 +1107,7 @@ msgstr "맞춤 피드를 구동할 알고리즘을 선택하세요."
 msgid "Choose this color as your avatar"
 msgstr "이 색상을 아바타로 선택"
 
-#: src/screens/Signup/StepInfo/index.tsx:198
+#: src/screens/Signup/StepInfo/index.tsx:201
 msgid "Choose your password"
 msgstr "비밀번호를 입력하세요"
 
@@ -1251,12 +1251,12 @@ msgid "Color mode"
 msgstr "색상 모드"
 
 #: src/screens/Onboarding/index.tsx:38
-#: src/screens/Onboarding/state.ts:82
+#: src/screens/Onboarding/state.ts:84
 msgid "Comedy"
 msgstr "코미디"
 
 #: src/screens/Onboarding/index.tsx:24
-#: src/screens/Onboarding/state.ts:83
+#: src/screens/Onboarding/state.ts:85
 msgid "Comics"
 msgstr "만화"
 
@@ -1373,7 +1373,7 @@ msgid "Context menu backdrop, click to close the menu."
 msgstr "컨텍스트 메뉴 배경을 클릭하여 메뉴를 닫습니다."
 
 #: src/screens/Onboarding/StepInterests/index.tsx:258
-#: src/screens/Onboarding/StepProfile/index.tsx:269
+#: src/screens/Onboarding/StepProfile/index.tsx:273
 msgid "Continue"
 msgstr "계속"
 
@@ -1386,7 +1386,7 @@ msgid "Continue thread..."
 msgstr "스레드 더 보기..."
 
 #: src/screens/Onboarding/StepInterests/index.tsx:255
-#: src/screens/Onboarding/StepProfile/index.tsx:266
+#: src/screens/Onboarding/StepProfile/index.tsx:270
 #: src/screens/Signup/BackNextButtons.tsx:61
 msgid "Continue to next step"
 msgstr "다음 단계로 계속하기"
@@ -1425,7 +1425,7 @@ msgstr "복사했습니다!"
 msgid "Copies app password"
 msgstr "앱 비밀번호를 복사합니다"
 
-#: src/components/StarterPack/QrCodeDialog.tsx:177
+#: src/components/StarterPack/QrCodeDialog.tsx:176
 #: src/view/com/modals/AddAppPasswords.tsx:214
 msgid "Copy"
 msgstr "복사"
@@ -1466,7 +1466,7 @@ msgstr "메시지 텍스트 복사"
 msgid "Copy post text"
 msgstr "게시물 텍스트 복사"
 
-#: src/components/StarterPack/QrCodeDialog.tsx:171
+#: src/components/StarterPack/QrCodeDialog.tsx:170
 msgid "Copy QR code"
 msgstr "QR 코드 복사"
 
@@ -1531,7 +1531,7 @@ msgstr "계정 만들기"
 msgid "Create an account"
 msgstr "계정 만들기"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:283
+#: src/screens/Onboarding/StepProfile/index.tsx:287
 msgid "Create an avatar instead"
 msgstr "대신 아바타 만들기"
 
@@ -1557,7 +1557,7 @@ msgid "Created {0}"
 msgstr "{0}에 생성됨"
 
 #: src/screens/Onboarding/index.tsx:26
-#: src/screens/Onboarding/state.ts:84
+#: src/screens/Onboarding/state.ts:86
 msgid "Culture"
 msgstr "문화"
 
@@ -1596,7 +1596,7 @@ msgstr "어두운 모드"
 msgid "Dark theme"
 msgstr "어두운 테마"
 
-#: src/screens/Signup/StepInfo/index.tsx:219
+#: src/screens/Signup/StepInfo/index.tsx:222
 msgid "Date of birth"
 msgstr "생년월일"
 
@@ -1847,8 +1847,8 @@ msgstr "도메인을 확인했습니다."
 #: src/components/dialogs/BirthDateSettings.tsx:125
 #: src/components/forms/DateField/index.tsx:77
 #: src/components/forms/DateField/index.tsx:83
-#: src/screens/Onboarding/StepProfile/index.tsx:322
-#: src/screens/Onboarding/StepProfile/index.tsx:325
+#: src/screens/Onboarding/StepProfile/index.tsx:326
+#: src/screens/Onboarding/StepProfile/index.tsx:329
 #: src/view/com/auth/server-input/index.tsx:174
 #: src/view/com/auth/server-input/index.tsx:175
 #: src/view/com/composer/videos/SubtitleDialog.tsx:171
@@ -2026,11 +2026,11 @@ msgid "Edit your starter pack"
 msgstr "스타터 팩 편집"
 
 #: src/screens/Onboarding/index.tsx:31
-#: src/screens/Onboarding/state.ts:86
+#: src/screens/Onboarding/state.ts:88
 msgid "Education"
 msgstr "교육"
 
-#: src/screens/Signup/StepInfo/index.tsx:167
+#: src/screens/Signup/StepInfo/index.tsx:170
 #: src/view/com/modals/ChangeEmail.tsx:136
 msgid "Email"
 msgstr "이메일"
@@ -2160,7 +2160,7 @@ msgid "Enter your birth date"
 msgstr "생년월일을 입력하세요"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:105
-#: src/screens/Signup/StepInfo/index.tsx:179
+#: src/screens/Signup/StepInfo/index.tsx:182
 msgid "Enter your email address"
 msgstr "이메일 주소를 입력하세요"
 
@@ -2624,7 +2624,7 @@ msgid "Font size"
 msgstr "글꼴 크기"
 
 #: src/screens/Onboarding/index.tsx:40
-#: src/screens/Onboarding/state.ts:87
+#: src/screens/Onboarding/state.ts:89
 msgid "Food"
 msgstr "음식"
 
@@ -2704,7 +2704,7 @@ msgstr "시작하기"
 msgid "GIF"
 msgstr "GIF"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:225
+#: src/screens/Onboarding/StepProfile/index.tsx:229
 msgid "Give your profile a face"
 msgstr "프로필에 얼굴 달기"
 
@@ -2809,7 +2809,7 @@ msgstr "문제가 있나요?"
 msgid "Help"
 msgstr "도움말"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:228
+#: src/screens/Onboarding/StepProfile/index.tsx:232
 msgid "Help people know you're not a bot by uploading a picture or creating an avatar."
 msgstr "사진을 업로드하거나 아바타를 만들어 사람들이 내가 봇이 아니라는 사실을 알 수 있도록 하세요."
 
@@ -2917,7 +2917,7 @@ msgstr "호스트:"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:89
 #: src/screens/Login/LoginForm.tsx:169
-#: src/screens/Signup/StepInfo/index.tsx:130
+#: src/screens/Signup/StepInfo/index.tsx:133
 #: src/view/com/modals/ChangeHandle.tsx:275
 msgid "Hosting provider"
 msgstr "호스팅 제공자"
@@ -3071,7 +3071,7 @@ msgstr "잘못된 인증 코드"
 msgid "Invite a Friend"
 msgstr "친구 초대하기"
 
-#: src/screens/Signup/StepInfo/index.tsx:148
+#: src/screens/Signup/StepInfo/index.tsx:151
 msgid "Invite code"
 msgstr "초대 코드"
 
@@ -3099,11 +3099,11 @@ msgstr "친구를 초대하여 좋아하는 피드와 사람들을 팔로우할 
 msgid "Invites, but personal"
 msgstr "개인적인 초대"
 
-#: src/screens/Signup/StepInfo/index.tsx:77
+#: src/screens/Signup/StepInfo/index.tsx:80
 msgid "It looks like you may have entered your email address incorrectly. Are you sure it's right?"
 msgstr "이메일 주소를 잘못 입력한 것 같습니다. 올바른 주소가 맞나요?"
 
-#: src/screens/Signup/StepInfo/index.tsx:238
+#: src/screens/Signup/StepInfo/index.tsx:241
 msgid "It's correct"
 msgstr "올바른 주소입니다"
 
@@ -3126,12 +3126,12 @@ msgstr "채용"
 msgid "Join Bluesky"
 msgstr "Bluesky 가입하기"
 
-#: src/components/StarterPack/QrCode.tsx:56
+#: src/components/StarterPack/QrCode.tsx:61
 msgid "Join the conversation"
 msgstr "대화에 참여하기"
 
 #: src/screens/Onboarding/index.tsx:21
-#: src/screens/Onboarding/state.ts:89
+#: src/screens/Onboarding/state.ts:91
 msgid "Journalism"
 msgstr "저널리즘"
 
@@ -3590,11 +3590,11 @@ msgstr "옵션 더 보기"
 msgid "Most-liked replies first"
 msgstr "좋아요 많은 순"
 
-#: src/screens/Onboarding/state.ts:90
+#: src/screens/Onboarding/state.ts:92
 msgid "Movies"
 msgstr "영화"
 
-#: src/screens/Onboarding/state.ts:91
+#: src/screens/Onboarding/state.ts:93
 msgid "Music"
 msgstr "음악"
 
@@ -3739,7 +3739,7 @@ msgid "Name or Description Violates Community Standards"
 msgstr "이름 또는 설명이 커뮤니티 기준을 위반함"
 
 #: src/screens/Onboarding/index.tsx:22
-#: src/screens/Onboarding/state.ts:92
+#: src/screens/Onboarding/state.ts:94
 msgid "Nature"
 msgstr "자연"
 
@@ -3841,7 +3841,7 @@ msgid "Newest replies first"
 msgstr "새로운 순"
 
 #: src/screens/Onboarding/index.tsx:20
-#: src/screens/Onboarding/state.ts:93
+#: src/screens/Onboarding/state.ts:95
 msgid "News"
 msgstr "뉴스"
 
@@ -4099,7 +4099,7 @@ msgstr "확인"
 msgid "Oldest replies first"
 msgstr "오래된 순"
 
-#: src/components/StarterPack/QrCode.tsx:70
+#: src/components/StarterPack/QrCode.tsx:75
 msgid "on<0><1/><2><3/></2></0>"
 msgstr "<0><1/><2><3/></2></0>"
 
@@ -4148,7 +4148,7 @@ msgstr "공개성"
 msgid "Open {name} profile shortcut menu"
 msgstr "{name} 님의 프로필 단축 메뉴 열기"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:277
+#: src/screens/Onboarding/StepProfile/index.tsx:281
 msgid "Open avatar creator"
 msgstr "아바타 생성기 열기"
 
@@ -4391,7 +4391,7 @@ msgid "Page Not Found"
 msgstr "페이지를 찾을 수 없음"
 
 #: src/screens/Login/LoginForm.tsx:213
-#: src/screens/Signup/StepInfo/index.tsx:189
+#: src/screens/Signup/StepInfo/index.tsx:192
 #: src/view/com/modals/DeleteAccount.tsx:257
 #: src/view/com/modals/DeleteAccount.tsx:264
 msgid "Password"
@@ -4445,11 +4445,11 @@ msgid "Person toggle"
 msgstr "사람 켜기/끄기"
 
 #: src/screens/Onboarding/index.tsx:28
-#: src/screens/Onboarding/state.ts:94
+#: src/screens/Onboarding/state.ts:96
 msgid "Pets"
 msgstr "반려동물"
 
-#: src/screens/Onboarding/state.ts:95
+#: src/screens/Onboarding/state.ts:97
 msgid "Photography"
 msgstr "사진"
 
@@ -4507,7 +4507,7 @@ msgid "Please choose your handle."
 msgstr "핸들을 입력하세요."
 
 #: src/screens/Signup/state.ts:210
-#: src/screens/Signup/StepInfo/index.tsx:111
+#: src/screens/Signup/StepInfo/index.tsx:114
 msgid "Please choose your password."
 msgstr "비밀번호를 입력하세요."
 
@@ -4532,11 +4532,11 @@ msgid "Please enter a valid word, tag, or phrase to mute"
 msgstr "뮤트할 단어나 태그 또는 문구를 입력하세요"
 
 #: src/screens/Signup/state.ts:196
-#: src/screens/Signup/StepInfo/index.tsx:99
+#: src/screens/Signup/StepInfo/index.tsx:102
 msgid "Please enter your email."
 msgstr "이메일을 입력하세요."
 
-#: src/screens/Signup/StepInfo/index.tsx:93
+#: src/screens/Signup/StepInfo/index.tsx:96
 msgid "Please enter your invite code."
 msgstr "초대 코드를 입력하세요."
 
@@ -4566,7 +4566,7 @@ msgid "Please wait for your link card to finish loading"
 msgstr "링크 카드를 완전히 불러올 때까지 기다려주세요"
 
 #: src/screens/Onboarding/index.tsx:34
-#: src/screens/Onboarding/state.ts:96
+#: src/screens/Onboarding/state.ts:98
 msgid "Politics"
 msgstr "정치"
 
@@ -5194,7 +5194,7 @@ msgstr "게시하기 전 대체 텍스트 필수"
 msgid "Require email code to log into your account"
 msgstr "계정에 로그인할 때 이메일 코드 필수"
 
-#: src/screens/Signup/StepInfo/index.tsx:156
+#: src/screens/Signup/StepInfo/index.tsx:159
 msgid "Required for this provider"
 msgstr "이 제공자에서 필수"
 
@@ -5290,7 +5290,7 @@ msgstr "이전 페이지로 돌아갑니다"
 #: src/components/dialogs/BirthDateSettings.tsx:125
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:438
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:445
-#: src/components/StarterPack/QrCodeDialog.tsx:187
+#: src/components/StarterPack/QrCodeDialog.tsx:186
 #: src/view/com/composer/GifAltText.tsx:162
 #: src/view/com/composer/GifAltText.tsx:168
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:76
@@ -5330,7 +5330,7 @@ msgstr "이미지 저장"
 msgid "Save image crop"
 msgstr "이미지 자르기 저장"
 
-#: src/components/StarterPack/QrCodeDialog.tsx:181
+#: src/components/StarterPack/QrCodeDialog.tsx:180
 msgid "Save QR code"
 msgstr "QR 코드 저장"
 
@@ -5372,7 +5372,7 @@ msgid "Say hello!"
 msgstr "인사해 보세요!"
 
 #: src/screens/Onboarding/index.tsx:33
-#: src/screens/Onboarding/state.ts:97
+#: src/screens/Onboarding/state.ts:99
 msgid "Science"
 msgstr "과학"
 
@@ -5550,7 +5550,7 @@ msgstr "구독하는 피드에 포함할 언어를 선택합니다. 선택하지
 msgid "Select your app language for the default text to display in the app."
 msgstr "앱에 표시되는 기본 텍스트 언어를 선택합니다."
 
-#: src/screens/Signup/StepInfo/index.tsx:220
+#: src/screens/Signup/StepInfo/index.tsx:223
 msgid "Select your date of birth"
 msgstr "생년월일을 선택하세요"
 
@@ -5678,7 +5678,7 @@ msgstr "성행위 또는 선정적인 노출."
 msgid "Sexually Suggestive"
 msgstr "외설적"
 
-#: src/components/StarterPack/QrCodeDialog.tsx:177
+#: src/components/StarterPack/QrCodeDialog.tsx:176
 #: src/screens/StarterPack/StarterPackScreen.tsx:411
 #: src/screens/StarterPack/StarterPackScreen.tsx:582
 #: src/view/com/profile/ProfileMenu.tsx:219
@@ -5958,7 +5958,7 @@ msgid "Smaller"
 msgstr "작음"
 
 #: src/screens/Onboarding/index.tsx:37
-#: src/screens/Onboarding/state.ts:85
+#: src/screens/Onboarding/state.ts:87
 msgid "Software Dev"
 msgstr "소프트웨어 개발"
 
@@ -6017,7 +6017,7 @@ msgid "Spam; excessive mentions or replies"
 msgstr "스팸, 과도한 멘션 또는 답글"
 
 #: src/screens/Onboarding/index.tsx:27
-#: src/screens/Onboarding/state.ts:98
+#: src/screens/Onboarding/state.ts:100
 msgid "Sports"
 msgstr "스포츠"
 
@@ -6182,7 +6182,7 @@ msgid "Teach our algorithm what you like"
 msgstr "무엇을 좋아하는지 알고리즘에게 알려주세요"
 
 #: src/screens/Onboarding/index.tsx:36
-#: src/screens/Onboarding/state.ts:99
+#: src/screens/Onboarding/state.ts:101
 msgid "Tech"
 msgstr "기술"
 
@@ -6689,7 +6689,7 @@ msgctxt "action"
 msgid "Try again"
 msgstr "다시 시도"
 
-#: src/screens/Onboarding/state.ts:100
+#: src/screens/Onboarding/state.ts:102
 msgid "TV"
 msgstr "TV"
 
@@ -6881,7 +6881,7 @@ msgstr "답글 표시 여부 업데이트 실패"
 msgid "Updating..."
 msgstr "업데이트 중…"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:281
+#: src/screens/Onboarding/StepProfile/index.tsx:285
 msgid "Upload a photo instead"
 msgstr "대신 사진 업로드하기"
 
@@ -7086,7 +7086,7 @@ msgid "Video failed to process"
 msgstr "동영상을 처리하지 못했습니다"
 
 #: src/screens/Onboarding/index.tsx:39
-#: src/screens/Onboarding/state.ts:88
+#: src/screens/Onboarding/state.ts:90
 msgid "Video Games"
 msgstr "비디오 게임"
 
@@ -7377,12 +7377,12 @@ msgid "Write post"
 msgstr "게시물 작성"
 
 #: src/view/com/composer/Composer.tsx:524
-#: src/view/com/post-thread/PostThreadComposePrompt.tsx:71
+#: src/view/com/post-thread/PostThreadComposePrompt.tsx:67
 msgid "Write your reply"
 msgstr "답글 작성하기"
 
 #: src/screens/Onboarding/index.tsx:25
-#: src/screens/Onboarding/state.ts:101
+#: src/screens/Onboarding/state.ts:103
 msgid "Writers"
 msgstr "작가"
 
@@ -7707,7 +7707,7 @@ msgstr "내 계정은 아직 동영상을 업로드할 수 없습니다. 나중�
 msgid "Your account repository, containing all public data records, can be downloaded as a \"CAR\" file. This file does not include media embeds, such as images, or your private data, which must be fetched separately."
 msgstr "모든 공개 데이터 레코드가 포함된 계정 저장소를 \"CAR\" 파일로 다운로드할 수 있습니다. 이 파일에는 이미지와 같은 미디어 임베드나 별도로 가져와야 하는 비공개 데이터는 포함되지 않습니다."
 
-#: src/screens/Signup/StepInfo/index.tsx:208
+#: src/screens/Signup/StepInfo/index.tsx:211
 msgid "Your birth date"
 msgstr "생년월일"
 
@@ -7725,7 +7725,7 @@ msgstr "선택 사항은 저장되며 나중에 설정에서 변경할 수 있�
 
 #: src/screens/Login/ForgotPasswordForm.tsx:57
 #: src/screens/Signup/state.ts:203
-#: src/screens/Signup/StepInfo/index.tsx:105
+#: src/screens/Signup/StepInfo/index.tsx:108
 #: src/view/com/modals/ChangePassword.tsx:55
 msgid "Your email appears to be invalid."
 msgstr "이메일이 잘못된 것 같습니다."
