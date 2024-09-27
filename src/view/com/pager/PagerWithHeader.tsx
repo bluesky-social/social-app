@@ -163,11 +163,9 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
         const nextScrollY = e.contentOffset.y
         // HACK: onScroll is reporting some strange values on load (negative header height).
         // Highly improbable that you'd be overscrolled by over 400px -
-        // in fact, I actually can't do it, so let's just ignore those.
-        // Let's only apply this hack if we've overscrolled by more than 300px
-        // so that it's not a false positive from overscrolling -sfn
+        // in fact, I actually can't do it, so let's just ignore those. -sfn
         const isPossiblyInvalid =
-          headerHeight > 0 && nextScrollY === -headerHeight
+          headerHeight > 0 && Math.round(nextScrollY * 2) / 2 === -headerHeight
         if (!isPossiblyInvalid) {
           scrollY.value = nextScrollY
           runOnJS(queueThrottledOnScroll)()
