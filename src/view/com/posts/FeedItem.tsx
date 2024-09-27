@@ -38,7 +38,8 @@ import {PostMeta} from '#/view/com/util/PostMeta'
 import {Text} from '#/view/com/util/text/Text'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a} from '#/alf'
-import {Repost_Stroke2_Corner2_Rounded as Repost} from '#/components/icons/Repost'
+import {Pin_Stroke2_Corner0_Rounded as PinIcon} from '#/components/icons/Pin'
+import {Repost_Stroke2_Corner2_Rounded as RepostIcon} from '#/components/icons/Repost'
 import {ContentHider} from '#/components/moderation/ContentHider'
 import {LabelsOnMyPost} from '#/components/moderation/LabelsOnMe'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
@@ -52,6 +53,7 @@ interface FeedItemProps {
   record: AppBskyFeedPost.Record
   reason:
     | AppBskyFeedDefs.ReasonRepost
+    | AppBskyFeedDefs.ReasonPin
     | ReasonFeedSource
     | {[k: string]: unknown; $type: string}
     | undefined
@@ -295,7 +297,7 @@ let FeedItemInner = ({
                     )
               }
               onBeforePress={onOpenReposter}>
-              <Repost
+              <RepostIcon
                 style={{color: pal.colors.textLight, marginRight: 3}}
                 width={14}
                 height={14}
@@ -337,6 +339,21 @@ let FeedItemInner = ({
                 )}
               </Text>
             </Link>
+          ) : AppBskyFeedDefs.isReasonPin(reason) ? (
+            <View style={styles.includeReason}>
+              <PinIcon
+                style={{color: pal.colors.textLight, marginRight: 3}}
+                width={14}
+                height={14}
+              />
+              <Text
+                type="sm-bold"
+                style={pal.textLight}
+                lineHeight={1.2}
+                numberOfLines={1}>
+                <Trans>Pinned</Trans>
+              </Text>
+            </View>
           ) : null}
         </View>
       </View>

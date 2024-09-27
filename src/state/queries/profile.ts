@@ -159,6 +159,9 @@ export function useProfileUpdateMutation() {
         } else {
           existing.displayName = updates.displayName
           existing.description = updates.description
+          if ('pinnedPost' in updates) {
+            existing.pinnedPost = updates.pinnedPost
+          }
         }
         if (newUserAvatarPromise) {
           const res = await newUserAvatarPromise
