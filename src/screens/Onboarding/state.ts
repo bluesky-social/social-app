@@ -51,13 +51,15 @@ export type OnboardingAction =
   | {
       type: 'setProfileStepResults'
       isCreatedAvatar: boolean
-      image?: OnboardingState['profileStepResults']['image']
-      imageUri: string
+      image: OnboardingState['profileStepResults']['image'] | undefined
+      imageUri: string | undefined
       imageMime: string
-      creatorState?: {
-        emoji: Emoji
-        backgroundColor: AvatarColor
-      }
+      creatorState:
+        | {
+            emoji: Emoji
+            backgroundColor: AvatarColor
+          }
+        | undefined
     }
 
 export type ApiResponseMap = {
