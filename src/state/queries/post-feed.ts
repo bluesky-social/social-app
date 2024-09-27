@@ -91,6 +91,7 @@ export interface FeedPostSlice {
   feedContext: string | undefined
   reason?:
     | AppBskyFeedDefs.ReasonRepost
+    | AppBskyFeedDefs.ReasonPin
     | ReasonFeedSource
     | {[k: string]: unknown; $type: string}
 }
