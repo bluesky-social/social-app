@@ -14,7 +14,6 @@ import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {StackActions, useNavigation} from '@react-navigation/native'
 
-import {useAnalytics} from '#/lib/analytics/analytics'
 import {FEEDBACK_FORM_URL, HELP_DESK_URL} from '#/lib/constants'
 import {useNavigationTabState} from '#/lib/hooks/useNavigationTabState'
 import {usePalette} from '#/lib/hooks/usePalette'
@@ -146,7 +145,6 @@ let DrawerContent = ({}: {}): React.ReactNode => {
   const {_} = useLingui()
   const setDrawerOpen = useSetDrawerOpen()
   const navigation = useNavigation<NavigationProp>()
-  const {track} = useAnalytics()
   const {isAtHome, isAtSearch, isAtFeeds, isAtNotifications, isAtMyProfile} =
     useNavigationTabState()
   const {hasSession, currentAccount} = useSession()
@@ -157,7 +155,6 @@ let DrawerContent = ({}: {}): React.ReactNode => {
 
   const onPressTab = React.useCallback(
     (tab: string) => {
-      track('Menu:ItemClicked', {url: tab})
       const state = navigation.getState()
       setDrawerOpen(false)
       if (isWeb) {
@@ -180,7 +177,7 @@ let DrawerContent = ({}: {}): React.ReactNode => {
         }
       }
     },
-    [track, navigation, setDrawerOpen, currentAccount],
+    [navigation, setDrawerOpen, currentAccount],
   )
 
   const onPressHome = React.useCallback(() => onPressTab('Home'), [onPressTab])
@@ -200,37 +197,32 @@ let DrawerContent = ({}: {}): React.ReactNode => {
   }, [onPressTab])
 
   const onPressMyFeeds = React.useCallback(() => {
-    track('Menu:ItemClicked', {url: 'Feeds'})
     navigation.navigate('Feeds')
     setDrawerOpen(false)
-  }, [navigation, setDrawerOpen, track])
+  }, [navigation, setDrawerOpen])
 
   const onPressLists = React.useCallback(() => {
-    track('Menu:ItemClicked', {url: 'Lists'})
     navigation.navigate('Lists')
     setDrawerOpen(false)
-  }, [navigation, track, setDrawerOpen])
+  }, [navigation, setDrawerOpen])
 
   const onPressSettings = React.useCallback(() => {
-    track('Menu:ItemClicked', {url: 'Settings'})
     navigation.navigate('Settings')
     setDrawerOpen(false)
-  }, [navigation, track, setDrawerOpen])
+  }, [navigation, setDrawerOpen])
 
   const onPressFeedback = React.useCallback(() => {
-    track('Menu:FeedbackClicked')
     Linking.openURL(
       FEEDBACK_FORM_URL({
         email: currentAccount?.email,
         handle: currentAccount?.handle,
       }),
     )
-  }, [track, currentAccount])
+  }, [currentAccount])
 
   const onPressHelp = React.useCallback(() => {
-    track('Menu:HelpClicked')
     Linking.openURL(HELP_DESK_URL)
-  }, [track])
+  }, [])
 
   // rendering
   // =

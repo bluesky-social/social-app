@@ -14,7 +14,6 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {useAnalytics} from '#/lib/analytics/analytics'
 import {DISCOVER_FEED_URI, KNOWN_SHUTDOWN_FEEDS} from '#/lib/constants'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {logEvent, useGate} from '#/lib/statsig/statsig'
@@ -196,7 +195,6 @@ let Feed = ({
   initialNumToRender?: number
 }): React.ReactNode => {
   const theme = useTheme()
-  const {track} = useAnalytics()
   const {_} = useLingui()
   const queryClient = useQueryClient()
   const {currentAccount, hasSession} = useSession()
@@ -405,7 +403,6 @@ let Feed = ({
   // =
 
   const onRefresh = React.useCallback(async () => {
-    track('Feed:onRefresh')
     logEvent('feed:refresh:sampled', {
       feedType: feedType,
       feedUrl: feed,
@@ -419,7 +416,7 @@ let Feed = ({
       logger.error('Failed to refresh posts feed', {message: err})
     }
     setIsPTRing(false)
-  }, [refetch, track, setIsPTRing, onHasNew, feed, feedType])
+  }, [refetch, setIsPTRing, onHasNew, feed, feedType])
 
   const onEndReached = React.useCallback(async () => {
     if (isFetching || !hasNextPage || isError) return
@@ -429,7 +426,6 @@ let Feed = ({
       feedUrl: feed,
       itemCount: feedItems.length,
     })
-    track('Feed:onEndReached')
     try {
       await fetchNextPage()
     } catch (err) {
@@ -440,7 +436,6 @@ let Feed = ({
     hasNextPage,
     isError,
     fetchNextPage,
-    track,
     feed,
     feedType,
     feedItems.length,

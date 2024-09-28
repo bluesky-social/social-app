@@ -45,7 +45,6 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useAnalytics} from '#/lib/analytics/analytics'
 import * as apilib from '#/lib/api/index'
 import {until} from '#/lib/async/until'
 import {MAX_GRAPHEME_LENGTH} from '#/lib/constants'
@@ -147,7 +146,6 @@ export const ComposePost = ({
   const {data: currentProfile} = useProfileQuery({did: currentAccount!.did})
   const {isModalActive} = useModals()
   const {closeComposer} = useComposerControls()
-  const {track} = useAnalytics()
   const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()
   const {_} = useLingui()
@@ -310,7 +308,6 @@ export const ComposePost = ({
 
   const onPhotoPasted = useCallback(
     async (uri: string) => {
-      track('Composer:PastedPhotos')
       if (uri.startsWith('data:video/')) {
         selectVideo({uri, type: 'video', height: 0, width: 0})
       } else {
@@ -318,7 +315,7 @@ export const ComposePost = ({
         onImageAdd([res])
       }
     },
-    [track, selectVideo, onImageAdd],
+    [selectVideo, onImageAdd],
   )
 
   const isAltTextRequiredAndMissing = useMemo(() => {
@@ -446,10 +443,6 @@ export const ComposePost = ({
             logContext: 'Composer',
           })
         }
-        track('Create Post', {
-          imageCount: images.length,
-        })
-        if (replyTo && replyTo.uri) track('Post:Reply')
       }
       if (postUri && !replyTo) {
         emitPostCreated()
@@ -499,7 +492,6 @@ export const ComposePost = ({
       setExtLink,
       setLangPrefs,
       threadgateAllowUISettings,
-      track,
       videoAltText,
       videoUploadState.asset,
       videoUploadState.pendingPublish,

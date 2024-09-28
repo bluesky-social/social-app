@@ -4,7 +4,6 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useAnalytics} from '#/lib/analytics/analytics'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {logEvent} from '#/lib/statsig/statsig'
 import {s} from '#/lib/styles'
@@ -32,7 +31,6 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
   const {_} = useLingui()
   const pal = usePalette('default')
   const setMinimalShellMode = useSetMinimalShellMode()
-  const {screen} = useAnalytics()
   const {requestedAccountSwitchTo} = useLoggedOutView()
   const [screenState, setScreenState] = React.useState<ScreenState>(() => {
     if (requestedAccountSwitchTo === 'new') {
@@ -48,9 +46,8 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
   const {clearRequestedAccount} = useLoggedOutViewControls()
 
   React.useEffect(() => {
-    screen('Login')
     setMinimalShellMode(true)
-  }, [screen, setMinimalShellMode])
+  }, [setMinimalShellMode])
 
   const onPressDismiss = React.useCallback(() => {
     if (onDismiss) {
