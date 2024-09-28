@@ -7,7 +7,6 @@ import {useLingui} from '@lingui/react'
 
 import {isNative} from '#/platform/detection'
 import {ThreadgateAllowUISetting} from '#/state/queries/threadgate'
-import {useAnalytics} from 'lib/analytics/analytics'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -30,13 +29,11 @@ export function ThreadgateBtn({
 
   style?: StyleProp<AnimatedStyle<ViewStyle>>
 }) {
-  const {track} = useAnalytics()
   const {_} = useLingui()
   const t = useTheme()
   const control = Dialog.useDialogControl()
 
   const onPress = () => {
-    track('Composer:ThreadgateOpened')
     if (isNative && Keyboard.isVisible()) {
       Keyboard.dismiss()
     }

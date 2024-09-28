@@ -21,6 +21,7 @@ export interface PostShadow {
   repostUri: string | undefined
   isDeleted: boolean
   embed: AppBskyEmbedRecord.View | AppBskyEmbedRecordWithMedia.View | undefined
+  pinned: boolean
 }
 
 export const POST_TOMBSTONE = Symbol('PostTombstone')
@@ -113,6 +114,7 @@ function mergeShadow(
       ...(post.viewer || {}),
       like: 'likeUri' in shadow ? shadow.likeUri : post.viewer?.like,
       repost: 'repostUri' in shadow ? shadow.repostUri : post.viewer?.repost,
+      pinned: 'pinned' in shadow ? shadow.pinned : post.viewer?.pinned,
     },
   })
 }

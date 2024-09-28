@@ -1,5 +1,5 @@
 import React, {ComponentProps} from 'react'
-import {GestureResponderEvent, TouchableOpacity, View} from 'react-native'
+import {GestureResponderEvent, View} from 'react-native'
 import Animated from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg, Trans} from '@lingui/macro'
@@ -7,7 +7,7 @@ import {useLingui} from '@lingui/react'
 import {BottomTabBarProps} from '@react-navigation/bottom-tabs'
 import {StackActions} from '@react-navigation/native'
 
-import {useAnalytics} from '#/lib/analytics/analytics'
+import {PressableScale} from '#/lib/custom-animations/PressableScale'
 import {useHaptics} from '#/lib/haptics'
 import {useDedupe} from '#/lib/hooks/useDedupe'
 import {useMinimalShellFooterTransform} from '#/lib/hooks/useMinimalShellTransform'
@@ -29,6 +29,7 @@ import {Text} from '#/view/com/util/text/Text'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {Logo} from '#/view/icons/Logo'
 import {Logotype} from '#/view/icons/Logotype'
+import {atoms as a} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {SwitchAccountDialog} from '#/components/dialogs/SwitchAccount'
 import {
@@ -60,7 +61,6 @@ export function BottomBar({navigation}: BottomTabBarProps) {
   const pal = usePalette('default')
   const {_} = useLingui()
   const safeAreaInsets = useSafeAreaInsets()
-  const {track} = useAnalytics()
   const {footerHeight} = useShellLayout()
   const {isAtHome, isAtSearch, isAtNotifications, isAtMyProfile, isAtMessages} =
     useNavigationTabState()
@@ -88,7 +88,6 @@ export function BottomBar({navigation}: BottomTabBarProps) {
 
   const onPressTab = React.useCallback(
     (tab: TabOptions) => {
-      track(`MobileShell:${tab}ButtonPressed`)
       const state = navigation.getState()
       const tabState = getTabState(state, tab)
       if (tabState === TabState.InsideAtRoot) {
@@ -99,7 +98,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
         dedupe(() => navigation.navigate(`${tab}Tab`))
       }
     },
-    [track, navigation, dedupe],
+    [navigation, dedupe],
   )
   const onPressHome = React.useCallback(() => onPressTab('Home'), [onPressTab])
   const onPressSearch = React.useCallback(
@@ -326,7 +325,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
 
 interface BtnProps
   extends Pick<
-    ComponentProps<typeof TouchableOpacity>,
+    ComponentProps<typeof PressableScale>,
     | 'accessible'
     | 'accessibilityRole'
     | 'accessibilityHint'
@@ -350,21 +349,21 @@ function Btn({
   accessibilityLabel,
 }: BtnProps) {
   return (
-    <TouchableOpacity
+    <PressableScale
       testID={testID}
-      style={styles.ctrl}
-      onPress={onLongPress ? onPress : undefined}
-      onPressIn={onLongPress ? undefined : onPress}
+      style={[styles.ctrl, a.flex_1]}
+      onPress={onPress}
       onLongPress={onLongPress}
       accessible={accessible}
       accessibilityLabel={accessibilityLabel}
-      accessibilityHint={accessibilityHint}>
+      accessibilityHint={accessibilityHint}
+      targetScale={0.8}>
       {icon}
       {notificationCount ? (
         <View style={[styles.notificationCount]}>
           <Text style={styles.notificationCountLabel}>{notificationCount}</Text>
         </View>
       ) : undefined}
-    </TouchableOpacity>
+    </PressableScale>
   )
 }

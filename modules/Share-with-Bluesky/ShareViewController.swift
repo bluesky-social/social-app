@@ -1,5 +1,14 @@
 import UIKit
 
+let IMAGE_EXTENSIONS: [String] = ["png", "jpg", "jpeg", "gif", "heic"]
+let MOVIE_EXTENSIONS: [String] = ["mov", "mp4", "m4v"]
+
+enum URLType: String, CaseIterable {
+  case image
+  case movie
+  case other
+}
+
 class ShareViewController: UIViewController {
   // This allows other forks to use this extension while also changing their
   // scheme.
@@ -23,7 +32,7 @@ class ShareViewController: UIViewController {
         await self.handleUrl(item: firstAttachment)
       } else if firstAttachment.hasItemConformingToTypeIdentifier("public.image") {
         await self.handleImages(items: attachments)
-      } else if firstAttachment.hasItemConformingToTypeIdentifier("public.video") {
+      } else if firstAttachment.hasItemConformingToTypeIdentifier("public.movie") {
         await self.handleVideos(items: attachments)
       } else {
         self.completeRequest()
@@ -43,9 +52,18 @@ class ShareViewController: UIViewController {
 
   private func handleUrl(item: NSItemProvider) async {
     if let data = try? await item.loadItem(forTypeIdentifier: "public.url") as? URL {
-      if let encoded = data.absoluteString.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed),
-         let url = URL(string: "\(self.appScheme)://intent/compose?text=\(encoded)") {
-        _ = self.openURL(url)
+      switch data.type {
+      case .image:
+        await handleImages(items: [item])
+        return
+      case .movie:
+        await handleVideos(items: [item])
+        return
+      case .other:
+        if let encoded = data.absoluteString.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed),
+           let url = URL(string: "\(self.appScheme)://intent/compose?text=\(encoded)") {
+          _ = self.openURL(url)
+        }
       }
     }
     self.completeRequest()
@@ -101,13 +119,13 @@ class ShareViewController: UIViewController {
   private func handleVideos(items: [NSItemProvider]) async {
     let firstItem = items.first
 
-    if let dataUri = try? await firstItem?.loadItem(forTypeIdentifier: "public.video") as? URL {
+    if let dataUri = try? await firstItem?.loadItem(forTypeIdentifier: "public.movie") as? URL {
       let ext = String(dataUri.lastPathComponent.split(separator: ".").last ?? "mp4")
       if let tempUrl = getTempUrl(ext: ext) {
         let data = try? Data(contentsOf: dataUri)
         try? data?.write(to: tempUrl)
 
-        if let encoded = dataUri.absoluteString.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed),
+        if let encoded = tempUrl.absoluteString.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed),
            let url = URL(string: "\(self.appScheme)://intent/compose?videoUri=\(encoded)") {
           _ = self.openURL(url)
         }
@@ -150,10 +168,29 @@ class ShareViewController: UIViewController {
     var responder: UIResponder? = self
     while responder != nil {
       if let application = responder as? UIApplication {
-          return application.perform(#selector(openURL(_:)), with: url) != nil
+        application.open(url)
+        return true
       }
       responder = responder?.next
     }
     return false
+  }
+}
+
+extension URL {
+  var type: URLType {
+    get {
+      guard self.absoluteString.starts(with: "file://"),
+            let ext = self.pathComponents.last?.split(separator: ".").last?.lowercased() else {
+        return .other
+      }
+
+      if IMAGE_EXTENSIONS.contains(ext) {
+        return .image
+      } else if MOVIE_EXTENSIONS.contains(ext) {
+        return .movie
+      }
+      return .other
+    }
   }
 }
