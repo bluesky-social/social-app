@@ -5118,18 +5118,6 @@
     "@babel/runtime" "^7.20.13"
     "@lingui/core" "4.5.0"
 
-"@lukeed/csprng@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@lukeed/csprng/-/csprng-1.1.0.tgz#1e3e4bd05c1cc7a0b2ddbd8a03f39f6e4b5e6cfe"
-  integrity sha512-Z7C/xXCiGWsg0KuKsHTKJxbWhpI3Vs5GwLfOean7MGyVFGqdRgBbAjOCh6u4bbjPc/8MJ2pZmK/0DLdCbivLDA==
-
-"@lukeed/uuid@^2.0.0":
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/@lukeed/uuid/-/uuid-2.0.1.tgz#4f6c34259ee0982a455e1797d56ac27bb040fd74"
-  integrity sha512-qC72D4+CDdjGqJvkFMMEAtancHUQ7/d/tAiHf64z8MopFDmcrtbcJuerDtFceuAfQJ2pDSfCKCtbqoGBNnwg0w==
-  dependencies:
-    "@lukeed/csprng" "^1.1.0"
-
 "@messageformat/parser@^5.0.0":
   version "5.1.0"
   resolved "https://registry.yarnpkg.com/@messageformat/parser/-/parser-5.1.0.tgz#05e4851c782d633ad735791dd0a68ee65d2a7201"
@@ -11464,10 +11452,10 @@ expo-asset@11.0.0-canary-20240912-1059f85:
     invariant "^2.2.4"
     md5-file "^3.2.3"
 
-expo-blur@^13.0.2:
-  version "13.0.2"
-  resolved "https://registry.yarnpkg.com/expo-blur/-/expo-blur-13.0.2.tgz#c2d179b19b13830db1d8b90c51373235f462e958"
-  integrity sha512-t2p7BChO3Reykued++QJRMZ/og6J3aXtSQ+bU31YcBeXhZLkHwjWEhiPKPnJka7J2/yTs4+jOCNDY0kCZmcE3w==
+expo-blur@^14.0.0-canary-20240927-ab8a962:
+  version "14.0.0-canary-20240927-ab8a962"
+  resolved "https://registry.yarnpkg.com/expo-blur/-/expo-blur-14.0.0-canary-20240927-ab8a962.tgz#86178815a95531d10f525ca5786dc908e046bea3"
+  integrity sha512-0N0KJ85av6vFzlb5JTOwqznH84zhYxsTNNskHqdPQUkdEDjgSFRBIQWN1wDZF/Nxwu3PUtw7jdAMcAauXezNDQ==
 
 expo-build-properties@^1.0.0-canary-20240912-1059f85:
   version "1.0.0-canary-20240912-1059f85"
@@ -20863,16 +20851,6 @@ undici@^6.18.2:
   version "6.19.8"
   resolved "https://registry.yarnpkg.com/undici/-/undici-6.19.8.tgz#002d7c8a28f8cc3a44ff33c3d4be4d85e15d40e1"
   integrity sha512-U8uCCl2x9TK3WANvmBavymRzxbfFYG+tAu+fgx3zxQy3qdagQqBLwJVrdyO1TBfUXvfKveMKJZhpvUYoOjM+4g==
-
-unfetch@^3.1.1:
-  version "3.1.2"
-  resolved "https://registry.yarnpkg.com/unfetch/-/unfetch-3.1.2.tgz#dc271ef77a2800768f7b459673c5604b5101ef77"
-  integrity sha512-L0qrK7ZeAudGiKYw6nzFjnJ2D5WHblUBwmHIqtPS6oKUd+Hcpk7/hKsSmcHsTlpd1TbTNsiRBUKRq3bHLNIqIw==
-
-unfetch@^4.1.0:
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/unfetch/-/unfetch-4.2.0.tgz#7e21b0ef7d363d8d9af0fb929a5555f6ef97a3be"
-  integrity sha512-F9p7yYCn6cIW9El1zi0HI6vqpeIvBsr3dSuRO6Xuppb1u5rXpCPmMvLSyECLhybr9isec8Ohl0hPekMVrEinDA==
 
 unicode-canonical-property-names-ecmascript@^2.0.0:
   version "2.0.0"
