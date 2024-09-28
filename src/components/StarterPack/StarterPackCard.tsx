@@ -66,13 +66,19 @@ export function Card({
       <View style={[a.flex_row, a.gap_sm]}>
         {!noIcon ? <StarterPack width={40} gradient="sky" /> : null}
         <View>
-          <Text emoji style={[a.text_md, a.font_bold, a.leading_snug]}>
+          <Text
+            emoji
+            style={[a.text_md, a.font_bold, a.leading_snug]}
+            numberOfLines={1}>
             {record.name}
           </Text>
-          <Text emoji style={[a.leading_snug, t.atoms.text_contrast_medium]}>
+          <Text
+            emoji
+            style={[a.leading_snug, t.atoms.text_contrast_medium]}
+            numberOfLines={1}>
             {creator?.did === currentAccount?.did
-              ? _(msg`Starter pack by you`)
-              : _(msg`Starter pack by ${sanitizeHandle(creator.handle, '@')}`)}
+              ? _(msg`Created by you`)
+              : _(msg`Created by ${sanitizeHandle(creator.handle, '@')}`)}
           </Text>
         </View>
       </View>
