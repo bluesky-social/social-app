@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh_CN\n"
 "Project-Id-Version: zh-CN for bluesky-social-app\n"
 "Report-Msgid-Bugs-To: Frudrax Cheng <i@cynosura.one>\n"
-"PO-Revision-Date: 2024-09-27 10:58+0800\n"
+"PO-Revision-Date: 2024-09-27 09:14+0800\n"
 "Last-Translator: Frudrax Cheng <i@cynosura.one>\n"
 "Language-Team: Frudrax Cheng (auroursa), Simon Chan (RitsukiP), U2FsdGVkX1, Mikan Harada (mitian233), IceCodeNew\n"
 "Plural-Forms: \n"
@@ -2361,7 +2361,7 @@ msgstr "无法加载建议关注"
 
 #: src/state/queries/pinned-post.ts:75
 msgid "Failed to pin post"
-msgstr ""
+msgstr "无法固定这条贴文"
 
 #: src/view/com/lightbox/Lightbox.tsx:90
 msgid "Failed to save image: {0}"
@@ -4473,11 +4473,11 @@ msgstr "固定到主页"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:396
 #: src/view/com/util/forms/PostDropdownBtn.tsx:403
 msgid "Pin to your profile"
-msgstr ""
+msgstr "固定到你的个人资料"
 
 #: src/view/com/posts/FeedItem.tsx:354
 msgid "Pinned"
-msgstr ""
+msgstr "已固定"
 
 #: src/view/screens/SavedFeeds.tsx:99
 msgid "Pinned Feeds"
@@ -4646,11 +4646,11 @@ msgstr "无法找到帖文"
 
 #: src/state/queries/pinned-post.ts:59
 msgid "Post pinned"
-msgstr ""
+msgstr "贴文已固定"
 
 #: src/state/queries/pinned-post.ts:61
 msgid "Post unpinned"
-msgstr ""
+msgstr "贴文已取消固定"
 
 #: src/components/TagMenu/index.tsx:267
 msgid "posts"
@@ -6851,7 +6851,7 @@ msgstr "从主页取消固定"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:395
 #: src/view/com/util/forms/PostDropdownBtn.tsx:402
 msgid "Unpin from profile"
-msgstr ""
+msgstr "从个人资料取消固定"
 
 #: src/view/screens/ProfileList.tsx:550
 msgid "Unpin moderation list"

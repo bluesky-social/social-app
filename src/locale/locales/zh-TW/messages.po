@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: zh-TW for bluesky-social-app\n"
 "POT-Creation-Date: \n"
 "Report-Msgid-Bugs-To: Kuwa Lee <kuwalee1069@gmail.com>, Frudrax Cheng <i@cynosura.one>\n"
-"PO-Revision-Date: 2024-09-27 10:59+0800\n"
+"PO-Revision-Date: 2024-09-28 09:18+0800\n"
 "Last-Translator: \n"
 "Language-Team: Frudrax Cheng <i@cynosura.one>, Kuwa Lee <kuwalee1069@gmail.com>, noeFly, snowleo208, Kisaragi Hiu, Yi-Jyun Pan, toto6038, cirx1e\n"
 "Language: zh_TW\n"
@@ -2361,7 +2361,7 @@ msgstr "無法載入建議的跟隨者"
 
 #: src/state/queries/pinned-post.ts:75
 msgid "Failed to pin post"
-msgstr ""
+msgstr "無法釘選貼文"
 
 #: src/view/com/lightbox/Lightbox.tsx:90
 msgid "Failed to save image: {0}"
@@ -4473,11 +4473,11 @@ msgstr "釘選到首頁"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:396
 #: src/view/com/util/forms/PostDropdownBtn.tsx:403
 msgid "Pin to your profile"
-msgstr ""
+msgstr "釘選到您的個人檔案"
 
 #: src/view/com/posts/FeedItem.tsx:354
 msgid "Pinned"
-msgstr ""
+msgstr "已釘選"
 
 #: src/view/screens/SavedFeeds.tsx:99
 msgid "Pinned Feeds"
@@ -4485,7 +4485,7 @@ msgstr "釘選的動態源列表"
 
 #: src/view/screens/ProfileList.tsx:346
 msgid "Pinned to your feeds"
-msgstr "從您的動態中取消釘選"
+msgstr "釘選到您的動態源"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:46
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:141
@@ -4646,11 +4646,11 @@ msgstr "找不到貼文"
 
 #: src/state/queries/pinned-post.ts:59
 msgid "Post pinned"
-msgstr ""
+msgstr "貼文已釘選"
 
 #: src/state/queries/pinned-post.ts:61
 msgid "Post unpinned"
-msgstr ""
+msgstr "貼文已取消釘選"
 
 #: src/components/TagMenu/index.tsx:267
 msgid "posts"
@@ -6851,7 +6851,7 @@ msgstr "自首頁取消釘選"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:395
 #: src/view/com/util/forms/PostDropdownBtn.tsx:402
 msgid "Unpin from profile"
-msgstr ""
+msgstr "已從您的個人檔案中取消釘選"
 
 #: src/view/screens/ProfileList.tsx:550
 msgid "Unpin moderation list"
@@ -6859,7 +6859,7 @@ msgstr "取消釘選內容管理列表"
 
 #: src/view/screens/ProfileList.tsx:347
 msgid "Unpinned from your feeds"
-msgstr "已從您的動態源取消釘選"
+msgstr "已從您的動態源中取消釘選"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:223
 msgid "Unsubscribe"
