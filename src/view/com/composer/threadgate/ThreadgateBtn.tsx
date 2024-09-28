@@ -5,7 +5,6 @@ import {AppBskyFeedPostgate} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useAnalytics} from '#/lib/analytics/analytics'
 import {isNative} from '#/platform/detection'
 import {ThreadgateAllowUISetting} from '#/state/queries/threadgate'
 import {atoms as a, useTheme} from '#/alf'
