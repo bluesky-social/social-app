@@ -11,17 +11,16 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {usePalette} from '#/lib/hooks/usePalette'
+import {cleanError} from '#/lib/strings/errors'
+import {createFullHandle, makeValidHandle} from '#/lib/strings/handles'
+import {s} from '#/lib/styles'
+import {useTheme} from '#/lib/ThemeContext'
 import {logger} from '#/logger'
 import {useModalControls} from '#/state/modals'
 import {useFetchDid, useUpdateHandleMutation} from '#/state/queries/handle'
 import {useServiceQuery} from '#/state/queries/service'
 import {SessionAccount, useAgent, useSession} from '#/state/session'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {usePalette} from 'lib/hooks/usePalette'
-import {cleanError} from 'lib/strings/errors'
-import {createFullHandle, makeValidHandle} from 'lib/strings/handles'
-import {s} from 'lib/styles'
-import {useTheme} from 'lib/ThemeContext'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {Button} from '../util/forms/Button'
 import {SelectableBtn} from '../util/forms/SelectableBtn'
@@ -67,7 +66,6 @@ export function Inner({
 }) {
   const {_} = useLingui()
   const pal = usePalette('default')
-  const {track} = useAnalytics()
   const {closeModal} = useModalControls()
   const {mutateAsync: updateHandle, isPending: isUpdateHandlePending} =
     useUpdateHandleMutation()
@@ -91,10 +89,7 @@ export function Inner({
     setHandle('')
     setCanSave(false)
     setCustom(!isCustom)
-    track(
-      isCustom ? 'EditHandle:ViewCustomForm' : 'EditHandle:ViewProvidedForm',
-    )
-  }, [setCustom, isCustom, track])
+  }, [setCustom, isCustom])
   const onPressSave = React.useCallback(async () => {
     if (!userDomain) {
       logger.error(`ChangeHandle: userDomain is undefined`, {
@@ -105,7 +100,6 @@ export function Inner({
     }
 
     try {
-      track('EditHandle:SetNewHandle')
       const newHandle = isCustom ? handle : createFullHandle(handle, userDomain)
       logger.debug(`Updating handle to ${newHandle}`)
       await updateHandle({
@@ -125,7 +119,6 @@ export function Inner({
     userDomain,
     isCustom,
     onChanged,
-    track,
     closeModal,
     updateHandle,
     serviceInfo,

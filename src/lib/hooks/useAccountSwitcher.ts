@@ -2,7 +2,6 @@ import {useCallback, useState} from 'react'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useAnalytics} from '#/lib/analytics/analytics'
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
 import {SessionAccount, useSessionApi} from '#/state/session'
@@ -14,7 +13,6 @@ import {LogEvents} from '../statsig/statsig'
 export function useAccountSwitcher() {
   const [pendingDid, setPendingDid] = useState<string | null>(null)
   const {_} = useLingui()
-  const {track} = useAnalytics()
   const {resumeSession} = useSessionApi()
   const {requestSwitchToAccount} = useLoggedOutViewControls()
 
@@ -23,7 +21,6 @@ export function useAccountSwitcher() {
       account: SessionAccount,
       logContext: LogEvents['account:loggedIn']['logContext'],
     ) => {
-      track('Settings:SwitchAccountButtonClicked')
       if (pendingDid) {
         // The session API isn't resilient to race conditions so let's just ignore this.
         return
@@ -62,7 +59,7 @@ export function useAccountSwitcher() {
         setPendingDid(null)
       }
     },
-    [_, track, resumeSession, requestSwitchToAccount, pendingDid],
+    [_, resumeSession, requestSwitchToAccount, pendingDid],
   )
 
   return {onPressSwitchAccount, pendingDid}

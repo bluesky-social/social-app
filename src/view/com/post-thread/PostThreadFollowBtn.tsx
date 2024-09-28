@@ -6,19 +6,18 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
+import {usePalette} from '#/lib/hooks/usePalette'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {s} from '#/lib/styles'
 import {logger} from '#/logger'
-import {track} from 'lib/analytics/analytics'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {s} from 'lib/styles'
-import {Shadow, useProfileShadow} from 'state/cache/profile-shadow'
+import {Shadow, useProfileShadow} from '#/state/cache/profile-shadow'
 import {
   useProfileFollowMutationQueue,
   useProfileQuery,
-} from 'state/queries/profile'
-import {useRequireAuth} from 'state/session'
-import {Text} from 'view/com/util/text/Text'
-import * as Toast from 'view/com/util/Toast'
+} from '#/state/queries/profile'
+import {useRequireAuth} from '#/state/session'
+import {Text} from '#/view/com/util/text/Text'
+import * as Toast from '#/view/com/util/Toast'
 
 export function PostThreadFollowBtn({did}: {did: string}) {
   const {data: profile, isLoading} = useProfileQuery({did})
@@ -89,7 +88,6 @@ function PostThreadFollowBtnLoaded({
     if (!isFollowing) {
       requireAuth(async () => {
         try {
-          track('ProfileHeader:FollowButtonClicked')
           await queueFollow()
         } catch (e: any) {
           if (e?.name !== 'AbortError') {
@@ -101,7 +99,6 @@ function PostThreadFollowBtnLoaded({
     } else {
       requireAuth(async () => {
         try {
-          track('ProfileHeader:UnfollowButtonClicked')
           await queueUnfollow()
         } catch (e: any) {
           if (e?.name !== 'AbortError') {
