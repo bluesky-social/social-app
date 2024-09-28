@@ -6859,7 +6859,7 @@ msgstr "取消固定限制列表"
 
 #: src/view/screens/ProfileList.tsx:347
 msgid "Unpinned from your feeds"
-msgstr "从你的资讯源中取消固定"
+msgstr "从你的资讯源取消固定"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:223
 msgid "Unsubscribe"

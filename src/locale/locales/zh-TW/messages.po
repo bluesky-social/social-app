@@ -6851,7 +6851,7 @@ msgstr "自首頁取消釘選"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:395
 #: src/view/com/util/forms/PostDropdownBtn.tsx:402
 msgid "Unpin from profile"
-msgstr "已從您的個人檔案中取消釘選"
+msgstr "從您的個人檔案中取消釘選"
 
 #: src/view/screens/ProfileList.tsx:550
 msgid "Unpin moderation list"
@@ -6859,7 +6859,7 @@ msgstr "取消釘選內容管理列表"
 
 #: src/view/screens/ProfileList.tsx:347
 msgid "Unpinned from your feeds"
-msgstr "已從您的動態源中取消釘選"
+msgstr "從您的動態源中取消釘選"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:223
 msgid "Unsubscribe"
