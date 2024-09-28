@@ -53,7 +53,7 @@
     "icons:optimize": "svgo -f ./assets/icons"
   },
   "dependencies": {
-    "@atproto/api": "^0.13.7",
+    "@atproto/api": "^0.13.8",
     "@braintree/sanitize-url": "^6.0.2",
     "@discord/bottom-sheet": "bluesky-social/react-native-bottom-sheet",
     "@emoji-mart/react": "^1.1.1",
@@ -81,10 +81,6 @@
     "@react-navigation/drawer": "^6.6.15",
     "@react-navigation/native": "^6.1.17",
     "@react-navigation/native-stack": "^6.9.26",
-    "@segment/analytics-next": "^1.51.3",
-    "@segment/analytics-react": "^1.0.0-rc1",
-    "@segment/analytics-react-native": "^2.10.1",
-    "@segment/sovran-react-native": "^0.4.5",
     "@sentry/react-native": "5.32.0",
     "@tamagui/focus-scope": "^1.84.1",
     "@tanstack/query-async-storage-persister": "^5.25.0",

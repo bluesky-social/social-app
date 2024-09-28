@@ -18,7 +18,6 @@ import {useLingui} from '@lingui/react'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {useAnalytics} from '#/lib/analytics/analytics'
 import {appVersion, BUNDLE_DATE, bundleInfo} from '#/lib/app-info'
 import {STATUS_PAGE_URL} from '#/lib/constants'
 import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
@@ -146,7 +145,6 @@ export function SettingsScreen({}: Props) {
   const onboardingDispatch = useOnboardingDispatch()
   const navigation = useNavigation<NavigationProp>()
   const {isMobile} = useWebMediaQueries()
-  const {screen, track} = useAnalytics()
   const {openModal} = useModalControls()
   const {accounts, currentAccount} = useSession()
   const {mutate: clearPreferences} = useClearPreferencesMutation()
@@ -178,19 +176,16 @@ export function SettingsScreen({}: Props) {
 
   useFocusEffect(
     React.useCallback(() => {
-      screen('Settings')
       setMinimalShellMode(false)
-    }, [screen, setMinimalShellMode]),
+    }, [setMinimalShellMode]),
   )
 
   const onPressAddAccount = React.useCallback(() => {
-    track('Settings:AddAccountButtonClicked')
     setShowLoggedOut(true)
     closeAllActiveElements()
-  }, [track, setShowLoggedOut, closeAllActiveElements])
+  }, [setShowLoggedOut, closeAllActiveElements])
 
   const onPressChangeHandle = React.useCallback(() => {
-    track('Settings:ChangeHandleButtonClicked')
     openModal({
       name: 'change-handle',
       onChanged() {
@@ -202,7 +197,7 @@ export function SettingsScreen({}: Props) {
         }
       },
     })
-  }, [track, queryClient, openModal, currentAccount])
+  }, [queryClient, openModal, currentAccount])
 
   const onPressExportRepository = React.useCallback(() => {
     exportCarControl.open()

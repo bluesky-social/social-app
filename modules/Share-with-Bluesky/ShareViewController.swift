@@ -1,5 +1,14 @@
 import UIKit
 
+let IMAGE_EXTENSIONS: [String] = ["png", "jpg", "jpeg", "gif", "heic"]
+let MOVIE_EXTENSIONS: [String] = ["mov", "mp4", "m4v"]
+
+enum URLType: String, CaseIterable {
+  case image
+  case movie
+  case other
+}
+
 class ShareViewController: UIViewController {
   // This allows other forks to use this extension while also changing their
   // scheme.
@@ -43,9 +52,18 @@ class ShareViewController: UIViewController {
 
   private func handleUrl(item: NSItemProvider) async {
     if let data = try? await item.loadItem(forTypeIdentifier: "public.url") as? URL {
-      if let encoded = data.absoluteString.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed),
-         let url = URL(string: "\(self.appScheme)://intent/compose?text=\(encoded)") {
-        _ = self.openURL(url)
+      switch data.type {
+      case .image:
+        await handleImages(items: [item])
+        return
+      case .movie:
+        await handleVideos(items: [item])
+        return
+      case .other:
+        if let encoded = data.absoluteString.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed),
+           let url = URL(string: "\(self.appScheme)://intent/compose?text=\(encoded)") {
+          _ = self.openURL(url)
+        }
       }
     }
     self.completeRequest()
@@ -156,5 +174,23 @@ class ShareViewController: UIViewController {
       responder = responder?.next
     }
     return false
+  }
+}
+
+extension URL {
+  var type: URLType {
+    get {
+      guard self.absoluteString.starts(with: "file://"),
+            let ext = self.pathComponents.last?.split(separator: ".").last?.lowercased() else {
+        return .other
+      }
+
+      if IMAGE_EXTENSIONS.contains(ext) {
+        return .image
+      } else if MOVIE_EXTENSIONS.contains(ext) {
+        return .movie
+      }
+      return .other
+    }
   }
 }

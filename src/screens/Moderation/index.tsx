@@ -7,7 +7,6 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
 
-import {useAnalytics} from '#/lib/analytics/analytics'
 import {getLabelingServiceTitle} from '#/lib/moderation'
 import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
 import {logger} from '#/logger'
@@ -163,7 +162,6 @@ export function ModerationScreenInner({
   const {_} = useLingui()
   const t = useTheme()
   const setMinimalShellMode = useSetMinimalShellMode()
-  const {screen} = useAnalytics()
   const {gtMobile} = useBreakpoints()
   const {mutedWordsDialogControl} = useGlobalDialogsControlContext()
   const birthdateDialogControl = Dialog.useDialogControl()
@@ -175,9 +173,8 @@ export function ModerationScreenInner({
 
   useFocusEffect(
     React.useCallback(() => {
-      screen('Moderation')
       setMinimalShellMode(false)
-    }, [screen, setMinimalShellMode]),
+    }, [setMinimalShellMode]),
   )
 
   const {mutateAsync: setAdultContentPref, variables: optimisticAdultContent} =

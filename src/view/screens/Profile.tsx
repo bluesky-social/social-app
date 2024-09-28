@@ -16,7 +16,6 @@ import {
   useQueryClient,
 } from '@tanstack/react-query'
 
-import {useAnalytics} from '#/lib/analytics/analytics'
 import {useSetTitle} from '#/lib/hooks/useSetTitle'
 import {ComposeIcon2} from '#/lib/icons'
 import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
@@ -167,7 +166,6 @@ function ProfileScreenLoaded({
   const {hasSession, currentAccount} = useSession()
   const setMinimalShellMode = useSetMinimalShellMode()
   const {openComposer} = useComposerControls()
-  const {screen, track} = useAnalytics()
   const {
     data: labelerInfo,
     error: labelerError,
@@ -296,11 +294,10 @@ function ProfileScreenLoaded({
   useFocusEffect(
     React.useCallback(() => {
       setMinimalShellMode(false)
-      screen('Profile')
       return listenSoftReset(() => {
         scrollSectionToTop(currentPage)
       })
-    }, [setMinimalShellMode, screen, currentPage, scrollSectionToTop]),
+    }, [setMinimalShellMode, currentPage, scrollSectionToTop]),
   )
 
   useFocusEffect(
@@ -316,7 +313,6 @@ function ProfileScreenLoaded({
   // =
 
   const onPressCompose = () => {
-    track('ProfileScreen:PressCompose')
     const mention =
       profile.handle === currentAccount?.handle ||
       isInvalidHandle(profile.handle)

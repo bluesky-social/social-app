@@ -1,4 +1,4 @@
-import React, {memo} from 'react'
+import React, {memo, useCallback} from 'react'
 import {
   Platform,
   Pressable,
@@ -18,9 +18,13 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
+import {getCurrentRoute} from '#/lib/routes/helpers'
 import {makeProfileLink} from '#/lib/routes/links'
 import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
+import {shareUrl} from '#/lib/sharing'
 import {richTextToString} from '#/lib/strings/rich-text-helpers'
+import {toShareUrl} from '#/lib/strings/url-helpers'
+import {useTheme} from '#/lib/ThemeContext'
 import {getTranslatorLink} from '#/locale/helpers'
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
@@ -29,6 +33,7 @@ import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {useLanguagePrefs} from '#/state/preferences'
 import {useHiddenPosts, useHiddenPostsApi} from '#/state/preferences'
 import {useOpenLink} from '#/state/preferences/in-app-browser'
+import {usePinnedPostMutation} from '#/state/queries/pinned-post'
 import {
   usePostDeleteMutation,
   useThreadMuteMutationQueue,
@@ -38,10 +43,6 @@ import {getMaybeDetachedQuoteEmbed} from '#/state/queries/postgate/util'
 import {useToggleReplyVisibilityMutation} from '#/state/queries/threadgate'
 import {useSession} from '#/state/session'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
-import {getCurrentRoute} from 'lib/routes/helpers'
-import {shareUrl} from 'lib/sharing'
-import {toShareUrl} from 'lib/strings/url-helpers'
-import {useTheme} from 'lib/ThemeContext'
 import {atoms as a, useBreakpoints, useTheme as useAlf} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
@@ -65,6 +66,7 @@ import {EyeSlash_Stroke2_Corner0_Rounded as EyeSlash} from '#/components/icons/E
 import {Filter_Stroke2_Corner0_Rounded as Filter} from '#/components/icons/Filter'
 import {Mute_Stroke2_Corner0_Rounded as Mute} from '#/components/icons/Mute'
 import {PaperPlane_Stroke2_Corner0_Rounded as Send} from '#/components/icons/PaperPlane'
+import {Pin_Stroke2_Corner0_Rounded as PinIcon} from '#/components/icons/Pin'
 import {SettingsGear2_Stroke2_Corner0_Rounded as Gear} from '#/components/icons/SettingsGear2'
 import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as Unmute} from '#/components/icons/Speaker'
 import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
@@ -106,7 +108,9 @@ let PostDropdownBtn = ({
   const {_} = useLingui()
   const defaultCtrlColor = theme.palette.default.postCtrl
   const langPrefs = useLanguagePrefs()
-  const postDeleteMutation = usePostDeleteMutation()
+  const {mutateAsync: deletePostMutate} = usePostDeleteMutation()
+  const {mutateAsync: pinPostMutate, isPending: isPinPending} =
+    usePinnedPostMutation()
   const hiddenPosts = useHiddenPosts()
   const {hidePost} = useHiddenPostsApi()
   const feedFeedback = useFeedFeedbackContext()
@@ -149,8 +153,9 @@ let PostDropdownBtn = ({
     threadgateRecord,
   })
   const isReplyHiddenByThreadgate = threadgateHiddenReplies.has(postUri)
+  const isPinned = post.viewer?.pinned
 
-  const {mutateAsync: toggleQuoteDetachment, isPending} =
+  const {mutateAsync: toggleQuoteDetachment, isPending: isDetachPending} =
     useToggleQuoteDetachmentMutation()
 
   const prefetchPostInteractionSettings = usePrefetchPostInteractionSettings({
@@ -169,7 +174,7 @@ let PostDropdownBtn = ({
   )
 
   const onDeletePost = React.useCallback(() => {
-    postDeleteMutation.mutateAsync({uri: postUri}).then(
+    deletePostMutate({uri: postUri}).then(
       () => {
         Toast.show(_(msg`Post deleted`))
 
@@ -197,7 +202,7 @@ let PostDropdownBtn = ({
   }, [
     navigation,
     postUri,
-    postDeleteMutation,
+    deletePostMutate,
     postAuthor,
     currentAccount,
     isAuthor,
@@ -344,6 +349,14 @@ let PostDropdownBtn = ({
     toggleReplyVisibility,
   ])
 
+  const onPressPin = useCallback(() => {
+    pinPostMutate({
+      postUri,
+      postCid,
+      action: isPinned ? 'unpin' : 'pin',
+    })
+  }, [isPinned, pinPostMutate, postCid, postUri])
+
   return (
     <EventStopper onKeyDown={false}>
       <Menu.Root>
@@ -372,6 +385,33 @@ let PostDropdownBtn = ({
         </Menu.Trigger>
 
         <Menu.Outer>
+          {isAuthor && (
+            <>
+              <Menu.Group>
+                <Menu.Item
+                  testID="pinPostBtn"
+                  label={
+                    isPinned
+                      ? _(msg`Unpin from profile`)
+                      : _(msg`Pin to your profile`)
+                  }
+                  disabled={isPinPending}
+                  onPress={onPressPin}>
+                  <Menu.ItemText>
+                    {isPinned
+                      ? _(msg`Unpin from profile`)
+                      : _(msg`Pin to your profile`)}
+                  </Menu.ItemText>
+                  <Menu.ItemIcon
+                    icon={isPinPending ? Loader : PinIcon}
+                    position="right"
+                  />
+                </Menu.Item>
+              </Menu.Group>
+              <Menu.Divider />
+            </>
+          )}
+
           <Menu.Group>
             {(!hideInPWI || hasSession) && (
               <>
@@ -536,7 +576,7 @@ let PostDropdownBtn = ({
 
                   {canDetachQuote && (
                     <Menu.Item
-                      disabled={isPending}
+                      disabled={isDetachPending}
                       testID="postDropdownHideBtn"
                       label={
                         quoteEmbed.isDetached
@@ -555,7 +595,7 @@ let PostDropdownBtn = ({
                       </Menu.ItemText>
                       <Menu.ItemIcon
                         icon={
-                          isPending
+                          isDetachPending
                             ? Loader
                             : quoteEmbed.isDetached
                             ? Eye
