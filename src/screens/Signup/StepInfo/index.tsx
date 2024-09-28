@@ -59,6 +59,9 @@ export function StepInfo({
     import('tldts/dist/index.cjs.min.js').then(tldts => {
       tldtsRef.current = tldts
     })
+    // This will get used in the avatar creator a few steps later, so lets preload it now
+    // @ts-expect-error - valid path
+    import('react-native-view-shot/src/index')
   }, [])
 
   const onNextPress = () => {

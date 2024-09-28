@@ -30,13 +30,11 @@ export function ThreadgateBtn({
 
   style?: StyleProp<AnimatedStyle<ViewStyle>>
 }) {
-  const {track} = useAnalytics()
   const {_} = useLingui()
   const t = useTheme()
   const control = Dialog.useDialogControl()
 
   const onPress = () => {
-    track('Composer:ThreadgateOpened')
     if (isNative && Keyboard.isVisible()) {
       Keyboard.dismiss()
     }

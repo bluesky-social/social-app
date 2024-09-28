@@ -15,7 +15,6 @@ import {
   StackActions,
 } from '@react-navigation/native'
 
-import {init as initAnalytics} from '#/lib/analytics/analytics'
 import {timeout} from '#/lib/async/timeout'
 import {useColorSchemeStyle} from '#/lib/hooks/useColorSchemeStyle'
 import {usePalette} from '#/lib/hooks/usePalette'
@@ -647,8 +646,6 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
 
   function onReady() {
     prevLoggedRouteName.current = getCurrentRouteName()
-    initAnalytics(currentAccount)
-
     if (currentAccount && shouldRequestEmailConfirmation(currentAccount)) {
       openModal({name: 'verify-email', showReminder: true})
       snoozeEmailConfirmationPrompt()

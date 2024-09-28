@@ -3,7 +3,6 @@ import {StyleSheet, View} from 'react-native'
 import {Trans} from '@lingui/macro'
 import {useFocusEffect} from '@react-navigation/native'
 
-import {useAnalytics} from '#/lib/analytics/analytics'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
@@ -30,14 +29,12 @@ type Props = NativeStackScreenProps<
 export function PreferencesExternalEmbeds({}: Props) {
   const pal = usePalette('default')
   const setMinimalShellMode = useSetMinimalShellMode()
-  const {screen} = useAnalytics()
   const {isTabletOrMobile} = useWebMediaQueries()
 
   useFocusEffect(
     React.useCallback(() => {
-      screen('PreferencesExternalEmbeds')
       setMinimalShellMode(false)
-    }, [screen, setMinimalShellMode]),
+    }, [setMinimalShellMode]),
   )
 
   return (
