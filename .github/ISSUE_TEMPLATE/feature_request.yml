@@ -1,4 +1,4 @@
-name: "Bug Report"
+name: "Feature Request"
 description: "Suggest an idea for the Bluesky app."
 labels: ["feature-request"]
 body:
