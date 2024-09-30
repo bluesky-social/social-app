@@ -80,7 +80,7 @@
         "autoIncrement": true
       },
       "android": {
-        "autoIncrement": true
+        "autoIncrement": false
       },
       "channel": "testflight",
       "env": {
