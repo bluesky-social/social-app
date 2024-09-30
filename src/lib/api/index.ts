@@ -60,13 +60,6 @@ interface PostOpts {
 }
 
 export async function post(agent: BskyAgent, opts: PostOpts) {
-  let embed:
-    | AppBskyEmbedImages.Main
-    | AppBskyEmbedExternal.Main
-    | AppBskyEmbedRecord.Main
-    | AppBskyEmbedVideo.Main
-    | AppBskyEmbedRecordWithMedia.Main
-    | undefined
   let reply
   let rt = new RichText({text: opts.rawText.trimEnd()}, {cleanNewlines: true})
 
@@ -77,7 +70,125 @@ export async function post(agent: BskyAgent, opts: PostOpts) {
   rt = shortenLinks(rt)
   rt = stripInvalidMentions(rt)
 
-  // add quote embed if present
+  const embed = await resolveEmbed(agent, opts)
+
+  // add replyTo if post is a reply to another post
+  if (opts.replyTo) {
+    const replyToUrip = new AtUri(opts.replyTo)
+    const parentPost = await agent.getPost({
+      repo: replyToUrip.host,
+      rkey: replyToUrip.rkey,
+    })
+    if (parentPost) {
+      const parentRef = {
+        uri: parentPost.uri,
+        cid: parentPost.cid,
+      }
+      reply = {
+        root: parentPost.value.reply?.root || parentRef,
+        parent: parentRef,
+      }
+    }
+  }
+
+  // set labels
+  let labels: ComAtprotoLabelDefs.SelfLabels | undefined
+  if (opts.labels?.length) {
+    labels = {
+      $type: 'com.atproto.label.defs#selfLabels',
+      values: opts.labels.map(val => ({val})),
+    }
+  }
+
+  // add top 3 languages from user preferences if langs is provided
+  let langs = opts.langs
+  if (opts.langs) {
+    langs = opts.langs.slice(0, 3)
+  }
+
+  let res
+  try {
+    opts.onStateChange?.('Posting...')
+    res = await agent.post({
+      text: rt.text,
+      facets: rt.facets,
+      reply,
+      embed,
+      langs,
+      labels,
+    })
+  } catch (e: any) {
+    logger.error(`Failed to create post`, {
+      safeMessage: e.message,
+    })
+    if (isNetworkError(e)) {
+      throw new Error(
+        'Post failed to upload. Please check your Internet connection and try again.',
+      )
+    } else {
+      throw e
+    }
+  }
+
+  if (opts.threadgate.some(tg => tg.type !== 'everybody')) {
+    try {
+      // TODO: this needs to be batch-created with the post!
+      await writeThreadgateRecord({
+        agent,
+        postUri: res.uri,
+        threadgate: createThreadgateRecord({
+          post: res.uri,
+          allow: threadgateAllowUISettingToAllowRecordValue(opts.threadgate),
+        }),
+      })
+    } catch (e: any) {
+      logger.error(`Failed to create threadgate`, {
+        context: 'composer',
+        safeMessage: e.message,
+      })
+      throw new Error(
+        'Failed to save post interaction settings. Your post was created but users may be able to interact with it.',
+      )
+    }
+  }
+
+  if (
+    opts.postgate.embeddingRules?.length ||
+    opts.postgate.detachedEmbeddingUris?.length
+  ) {
+    try {
+      // TODO: this needs to be batch-created with the post!
+      await writePostgateRecord({
+        agent,
+        postUri: res.uri,
+        postgate: {
+          ...opts.postgate,
+          post: res.uri,
+        },
+      })
+    } catch (e: any) {
+      logger.error(`Failed to create postgate`, {
+        context: 'composer',
+        safeMessage: e.message,
+      })
+      throw new Error(
+        'Failed to save post interaction settings. Your post was created but users may be able to interact with it.',
+      )
+    }
+  }
+
+  return res
+}
+
+async function resolveEmbed(agent: BskyAgent, opts: PostOpts) {
+  let embed:
+    | AppBskyEmbedImages.Main
+    | AppBskyEmbedExternal.Main
+    | AppBskyEmbedRecord.Main
+    | AppBskyEmbedVideo.Main
+    | AppBskyEmbedRecordWithMedia.Main
+    | undefined
+
   let recordEmbed: AppBskyEmbedRecord.Main | undefined
   if (opts.quote) {
     recordEmbed = {
@@ -207,111 +318,5 @@ export async function post(agent: BskyAgent, opts: PostOpts) {
       }
     }
   }
-
-  // add replyTo if post is a reply to another post
-  if (opts.replyTo) {
-    const replyToUrip = new AtUri(opts.replyTo)
-    const parentPost = await agent.getPost({
-      repo: replyToUrip.host,
-      rkey: replyToUrip.rkey,
-    })
-    if (parentPost) {
-      const parentRef = {
-        uri: parentPost.uri,
-        cid: parentPost.cid,
-      }
-      reply = {
-        root: parentPost.value.reply?.root || parentRef,
-        parent: parentRef,
-      }
-    }
-  }
-
-  // set labels
-  let labels: ComAtprotoLabelDefs.SelfLabels | undefined
-  if (opts.labels?.length) {
-    labels = {
-      $type: 'com.atproto.label.defs#selfLabels',
-      values: opts.labels.map(val => ({val})),
-    }
-  }
-
-  // add top 3 languages from user preferences if langs is provided
-  let langs = opts.langs
-  if (opts.langs) {
-    langs = opts.langs.slice(0, 3)
-  }
-
-  let res
-  try {
-    opts.onStateChange?.('Posting...')
-    res = await agent.post({
-      text: rt.text,
-      facets: rt.facets,
-      reply,
-      embed,
-      langs,
-      labels,
-    })
-  } catch (e: any) {
-    logger.error(`Failed to create post`, {
-      safeMessage: e.message,
-    })
-    if (isNetworkError(e)) {
-      throw new Error(
-        'Post failed to upload. Please check your Internet connection and try again.',
-      )
-    } else {
-      throw e
-    }
-  }
-
-  if (opts.threadgate.some(tg => tg.type !== 'everybody')) {
-    try {
-      // TODO: this needs to be batch-created with the post!
-      await writeThreadgateRecord({
-        agent,
-        postUri: res.uri,
-        threadgate: createThreadgateRecord({
-          post: res.uri,
-          allow: threadgateAllowUISettingToAllowRecordValue(opts.threadgate),
-        }),
-      })
-    } catch (e: any) {
-      logger.error(`Failed to create threadgate`, {
-        context: 'composer',
-        safeMessage: e.message,
-      })
-      throw new Error(
-        'Failed to save post interaction settings. Your post was created but users may be able to interact with it.',
-      )
-    }
-  }
-
-  if (
-    opts.postgate.embeddingRules?.length ||
-    opts.postgate.detachedEmbeddingUris?.length
-  ) {
-    try {
-      // TODO: this needs to be batch-created with the post!
-      await writePostgateRecord({
-        agent,
-        postUri: res.uri,
-        postgate: {
-          ...opts.postgate,
-          post: res.uri,
-        },
-      })
-    } catch (e: any) {
-      logger.error(`Failed to create postgate`, {
-        context: 'composer',
-        safeMessage: e.message,
-      })
-      throw new Error(
-        'Failed to save post interaction settings. Your post was created but users may be able to interact with it.',
-      )
-    }
-  }
-
-  return res
+  return embed
 }
