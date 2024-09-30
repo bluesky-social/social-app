@@ -14,6 +14,7 @@ import {
 import {enforceLen} from '#/lib/strings/helpers'
 import {isAndroid} from '#/platform/detection'
 import {Gif} from '#/state/queries/tenor'
+import {GifEmbed} from '#/view/com/util/post-embeds/GifEmbed'
 import {atoms as a, native, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -21,8 +22,7 @@ import * as TextField from '#/components/forms/TextField'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {PlusSmall_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {Text} from '#/components/Typography'
-import {GifEmbed} from '../util/post-embeds/GifEmbed'
-import {AltTextReminder} from './photos/Gallery'
+import {AltTextReminder} from './Gallery'
 
 export function GifAltText({
   link: linkProp,
