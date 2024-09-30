@@ -31,12 +31,12 @@ import {GifPreview} from './GifSelect.shared'
 
 export function GifSelectDialog({
   controlRef,
-  onClose,
   onSelectGif: onSelectGifProp,
+  onClose,
 }: {
   controlRef: React.RefObject<{open: () => void}>
-  onClose: () => void
   onSelectGif: (gif: Gif) => void
+  onClose?: () => void
 }) {
   const control = Dialog.useDialogControl()
 
