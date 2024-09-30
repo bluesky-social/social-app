@@ -57,7 +57,7 @@ body:
     attributes:
       label: What version of the app are you using?
       description: |
-        You can easily find this infomration by visting the Settings screen in the app, and tapping on the version info
+        You can easily find this information by visting the Settings screen in the app, and tapping on the version info
         at the bottom of the screen. All the relevant information will be copied to your clipboard, and you will be
         able to share it here.
     validations:
