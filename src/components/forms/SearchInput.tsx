@@ -17,46 +17,12 @@ type SearchInputProps = Omit<TextField.InputProps, 'label'> & {
    * Called when the user presses the (X) button
    */
   onClearText?: () => void
-  /**
-   * @deprecated use `value`
-   */
-  query?: string
-  /**
-   * @deprecated use `onFocus`
-   */
-  setIsInputFocused?: (v: boolean) => void
-  /**
-   * @deprecated use `onChangeText`
-   */
-  onChangeQuery?: (v: string) => void
-  /**
-   * @deprecated use `onClearText`
-   */
-  onPressCancelSearch?: () => void
-  /**
-   * @deprecated use `onSubmitEditing`
-   */
-  onSubmitQuery?: () => void
 }
 
 export const SearchInput = React.forwardRef<TextInput, SearchInputProps>(
-  function SearchInput(
-    {
-      query,
-      setIsInputFocused,
-      onChangeQuery,
-      onPressCancelSearch,
-      onSubmitQuery,
-      value,
-      label,
-      onClearText,
-      ...rest
-    },
-    ref,
-  ) {
+  function SearchInput({value, label, onClearText, ...rest}, ref) {
     const t = useTheme()
     const {_} = useLingui()
-    const q = value || query || ''
 
     return (
       <View style={[a.w_full, a.relative]}>
@@ -65,13 +31,9 @@ export const SearchInput = React.forwardRef<TextInput, SearchInputProps>(
           <TextField.Input
             inputRef={ref}
             label={label || _(msg`Search`)}
-            value={q}
+            value={value}
             placeholder={_(msg`Search`)}
             returnKeyType="search"
-            onChangeText={onChangeQuery}
-            onSubmitEditing={onSubmitQuery}
-            onFocus={() => setIsInputFocused?.(true)}
-            onBlur={() => setIsInputFocused?.(false)}
             keyboardAppearance={t.scheme}
             selectTextOnFocus={isNative}
             autoFocus={false}
@@ -83,7 +45,7 @@ export const SearchInput = React.forwardRef<TextInput, SearchInputProps>(
           />
         </TextField.Root>
 
-        {q.length > 0 && (
+        {value && value.length > 0 && (
           <View
             style={[
               a.absolute,
@@ -96,7 +58,7 @@ export const SearchInput = React.forwardRef<TextInput, SearchInputProps>(
             ]}>
             <Button
               testID="searchTextInputClearBtn"
-              onPress={onClearText || onPressCancelSearch}
+              onPress={onClearText}
               label={_(msg`Clear search query`)}
               hitSlop={HITSLOP_10}
               size="tiny"
