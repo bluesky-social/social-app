@@ -232,19 +232,20 @@ async function resolveMedia(
     logger.debug(`Uploading images`, {
       count: opts.images.length,
     })
-    const images: AppBskyEmbedImages.Image[] = []
-    for (const image of opts.images) {
-      opts.onStateChange?.(`Uploading image #${images.length + 1}...`)
-      logger.debug(`Compressing image`)
-      const {path, width, height, mime} = await compressImage(image)
-      logger.debug(`Uploading image`)
-      const res = await uploadBlob(agent, path, mime)
-      images.push({
-        image: res.data.blob,
-        alt: image.alt,
-        aspectRatio: {width, height},
-      })
-    }
+    opts.onStateChange?.(`Uploading images...`)
+    const images: AppBskyEmbedImages.Image[] = await Promise.all(
+      opts.images.map(async (image, i) => {
+        logger.debug(`Compressing image #${i}`)
+        const {path, width, height, mime} = await compressImage(image)
+        logger.debug(`Uploading image #${i}`)
+        const res = await uploadBlob(agent, path, mime)
+        return {
+          image: res.data.blob,
+          alt: image.alt,
+          aspectRatio: {width, height},
+        }
+      }),
+    )
     return {
       $type: 'app.bsky.embed.images',
       images,
