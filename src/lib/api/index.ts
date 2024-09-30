@@ -201,7 +201,6 @@ async function resolveEmbed(agent: BskyAgent, opts: PostOpts) {
     embed = recordEmbed
   }
 
-  // add image embed if present
   if (opts.images?.length) {
     logger.debug(`Uploading images`, {
       count: opts.images.length,
@@ -239,10 +238,7 @@ async function resolveEmbed(agent: BskyAgent, opts: PostOpts) {
         images,
       }
     }
-  }
-
-  // add video embed if present
-  if (opts.video) {
+  } else if (opts.video) {
     const captions = await Promise.all(
       opts.video.captions
         .filter(caption => caption.lang !== '')
@@ -274,10 +270,7 @@ async function resolveEmbed(agent: BskyAgent, opts: PostOpts) {
         aspectRatio: opts.video.aspectRatio,
       }
     }
-  }
-
-  // add external embed if present
-  if (opts.extLink && !opts.images?.length) {
+  } else if (opts.extLink) {
     if (opts.extLink.embed) {
       embed = opts.extLink.embed
     } else {
