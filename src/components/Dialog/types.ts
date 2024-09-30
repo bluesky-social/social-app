@@ -66,10 +66,12 @@ export type DialogInnerProps =
       accessibilityLabelledBy: A11yProps['aria-labelledby']
       accessibilityDescribedBy: string
       keyboardDismissMode?: ScrollViewProps['keyboardDismissMode']
+      keyboardShouldPersistTaps?: ScrollViewProps['keyboardShouldPersistTaps']
     }>
   | DialogInnerPropsBase<{
       label: string
       accessibilityLabelledBy?: undefined
       accessibilityDescribedBy?: undefined
       keyboardDismissMode?: ScrollViewProps['keyboardDismissMode']
+      keyboardShouldPersistTaps?: ScrollViewProps['keyboardShouldPersistTaps']
     }>

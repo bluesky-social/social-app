@@ -1,9 +1,8 @@
 import React, {useImperativeHandle} from 'react'
 import {
-  Dimensions,
-  Keyboard,
   Pressable,
   StyleProp,
+  useWindowDimensions,
   View,
   ViewStyle,
 } from 'react-native'
@@ -96,6 +95,7 @@ export function Outer({
   const insets = useSafeAreaInsets()
   const closeCallbacks = React.useRef<(() => void)[]>([])
   const {setDialogIsOpen} = useDialogStateControlContext()
+  const {height: windowHeight} = useWindowDimensions()
 
   /*
    * Used to manage open/closed, but index is otherwise handled internally by `BottomSheet`
@@ -179,8 +179,7 @@ export function Outer({
             // Android
             importantForAccessibility="yes"
             style={[a.absolute, a.inset_0]}
-            testID={testID}
-            onTouchMove={() => Keyboard.dismiss()}>
+            testID={testID}>
             <BottomSheet
               enableDynamicSizing={!hasSnapPoints}
               enablePanDownToClose
@@ -206,7 +205,7 @@ export function Outer({
                     {
                       borderTopLeftRadius: 40,
                       borderTopRightRadius: 40,
-                      height: Dimensions.get('window').height * 2,
+                      height: windowHeight * 2,
                     },
                   ]}
                 />
@@ -243,11 +242,20 @@ export function Inner({children, style}: DialogInnerProps) {
 export const ScrollableInner = React.forwardRef<
   BottomSheetScrollViewMethods,
   DialogInnerProps
->(function ScrollableInner({children, style}, ref) {
+>(function ScrollableInner(
+  {
+    children,
+    style,
+    keyboardShouldPersistTaps = 'handled',
+    keyboardDismissMode = 'on-drag',
+  },
+  ref,
+) {
   const insets = useSafeAreaInsets()
   return (
     <BottomSheetScrollView
-      keyboardShouldPersistTaps="handled"
+      keyboardShouldPersistTaps={keyboardShouldPersistTaps}
+      keyboardDismissMode={keyboardDismissMode}
       style={[
         a.flex_1, // main diff is this
         a.p_xl,
