@@ -60,11 +60,12 @@ jobs:
 
       - name: ✏️ Write environment variables
         run: |
-          export json='${{ secrets.GOOGLE_SERVICES_TOKEN }}'
-          echo "${{ secrets.ENV_TOKEN }}" > .env
-          echo "EXPO_PUBLIC_BUNDLE_IDENTIFIER=$(git rev-parse --short HEAD)" >> .env
-          echo "EXPO_PUBLIC_BUNDLE_DATE=$(date -u +"%y%m%d%H")" >> .env
-          echo "$json" > google-services.json
+          cp google-services.json.example google-services.json
+#          export json='${{ secrets.GOOGLE_SERVICES_TOKEN }}'
+#          echo "${{ secrets.ENV_TOKEN }}" > .env
+#          echo "EXPO_PUBLIC_BUNDLE_IDENTIFIER=$(git rev-parse --short HEAD)" >> .env
+#          echo "EXPO_PUBLIC_BUNDLE_DATE=$(date -u +"%y%m%d%H")" >> .env
+#          echo "$json" > google-services.json
 
       - name: 🏗️ EAS Build
         run: yarn use-build-number-with-bump eas build -p android --profile ${{ inputs.profile || 'testflight-android' }} --local --output build.aab --non-interactive

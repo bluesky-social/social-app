@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:123456789000:android:f1bf012572b04063",
         "android_client_info": {
-          "package_name": "xyz.blueskyweb.app"
+          "package_name": "xyz.blueskyweb.app.fabric"
         }
       },
       "oauth_client": [
