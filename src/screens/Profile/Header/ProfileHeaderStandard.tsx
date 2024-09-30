@@ -9,8 +9,10 @@ import {
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {logger} from '#/logger'
 import {isIOS} from '#/platform/detection'
+import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {Shadow} from '#/state/cache/types'
 import {useModalControls} from '#/state/modals'
 import {
@@ -18,9 +20,6 @@ import {
   useProfileFollowMutationQueue,
 } from '#/state/queries/profile'
 import {useRequireAuth, useSession} from '#/state/session'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {sanitizeDisplayName} from 'lib/strings/display-names'
-import {useProfileShadow} from 'state/cache/profile-shadow'
 import {ProfileMenu} from '#/view/com/profile/ProfileMenu'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a} from '#/alf'
@@ -59,7 +58,6 @@ let ProfileHeaderStandard = ({
   const {currentAccount, hasSession} = useSession()
   const {_} = useLingui()
   const {openModal} = useModalControls()
-  const {track} = useAnalytics()
   const moderation = useMemo(
     () => moderateProfile(profile, moderationOpts),
     [profile, moderationOpts],
@@ -77,17 +75,15 @@ let ProfileHeaderStandard = ({
     profile.viewer?.blockingByList
 
   const onPressEditProfile = React.useCallback(() => {
-    track('ProfileHeader:EditProfileButtonClicked')
     openModal({
       name: 'edit-profile',
       profile,
     })
-  }, [track, openModal, profile])
+  }, [openModal, profile])
 
   const onPressFollow = () => {
     requireAuth(async () => {
       try {
-        track('ProfileHeader:FollowButtonClicked')
         await queueFollow()
         Toast.show(
           _(
@@ -109,7 +105,6 @@ let ProfileHeaderStandard = ({
   const onPressUnfollow = () => {
     requireAuth(async () => {
       try {
-        track('ProfileHeader:UnfollowButtonClicked')
         await queueUnfollow()
         Toast.show(
           _(
@@ -129,7 +124,6 @@ let ProfileHeaderStandard = ({
   }
 
   const unblockAccount = React.useCallback(async () => {
-    track('ProfileHeader:UnblockAccountButtonClicked')
     try {
       await queueUnblock()
       Toast.show(_(msg`Account unblocked`))
@@ -139,7 +133,7 @@ let ProfileHeaderStandard = ({
         Toast.show(_(msg`There was an issue! ${e.toString()}`), 'xmark')
       }
     }
-  }, [_, queueUnblock, track])
+  }, [_, queueUnblock])
 
   const isMe = React.useMemo(
     () => currentAccount?.did === profile.did,

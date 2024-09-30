@@ -38,6 +38,7 @@ export interface ComposerOpts {
   openEmojiPicker?: (pos: DOMRect | undefined) => void
   text?: string
   imageUris?: {uri: string; width: number; height: number; altText?: string}[]
+  videoUri?: string
 }
 
 type StateContext = ComposerOpts | undefined

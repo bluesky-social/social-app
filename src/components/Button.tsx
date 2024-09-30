@@ -24,6 +24,7 @@ export type ButtonColor =
   | 'secondary'
   | 'secondary_inverted'
   | 'negative'
+  | 'gradient_primary'
   | 'gradient_sky'
   | 'gradient_midnight'
   | 'gradient_sunrise'
@@ -412,6 +413,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
           secondary: tokens.gradients.sky,
           secondary_inverted: tokens.gradients.sky,
           negative: tokens.gradients.sky,
+          gradient_primary: tokens.gradients.primary,
           gradient_sky: tokens.gradients.sky,
           gradient_midnight: tokens.gradients.midnight,
           gradient_sunrise: tokens.gradients.sunrise,
@@ -444,7 +446,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
       [state, variant, color, size, disabled],
     )
 
-    const flattenedBaseStyles = flatten(baseStyles)
+    const flattenedBaseStyles = flatten([baseStyles, style])
 
     return (
       <Pressable
@@ -464,7 +466,6 @@ export const Button = React.forwardRef<View, ButtonProps>(
           a.align_center,
           a.justify_center,
           flattenedBaseStyles,
-          flatten(style),
           ...(state.hovered || state.pressed
             ? [hoverStyles, flatten(hoverStyleProp)]
             : []),
@@ -626,9 +627,9 @@ export function useSharedButtonTextStyles() {
     }
 
     if (size === 'large') {
-      baseStyles.push(a.text_md, a.leading_tight, web({paddingTop: 1}))
+      baseStyles.push(a.text_md, a.leading_tight, web({top: -0.4}))
     } else if (size === 'small') {
-      baseStyles.push(a.text_sm, a.leading_tight, web({paddingTop: 1}))
+      baseStyles.push(a.text_sm, a.leading_tight, web({top: -0.4}))
     } else if (size === 'tiny') {
       baseStyles.push(a.text_xs, a.leading_tight)
     }

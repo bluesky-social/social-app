@@ -9,7 +9,7 @@
 @font-face {
   font-family: 'Inter-Regular';
   src: local('Inter-Regular'),
-    url(/assets/fonts/inter/Inter-Regular.otf) format('font/otf');
+    url(/assets/fonts/inter/Inter-Regular.otf) format('opentype');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -17,7 +17,7 @@
 @font-face {
   font-family: 'Inter-Italic';
   src: local('Inter-Italic'),
-    url(/assets/fonts/inter/Inter-Italic.otf) format('font/otf');
+    url(/assets/fonts/inter/Inter-Italic.otf) format('opentype');
   font-weight: 400;
   font-style: italic;
   font-display: swap;
@@ -25,14 +25,14 @@
 /*
 @font-face {
   font-family: "Inter-Medium";
-  src: local("Inter-Medium"), url(/assets/fonts/inter/Inter-Medium.otf) format("font/otf");
+  src: local("Inter-Medium"), url(/assets/fonts/inter/Inter-Medium.otf) format("opentype");
   font-weight: 500;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
   font-family: "Inter-MediumItalic";
-  src: local("Inter-MediumItalic"), url(/assets/fonts/inter/Inter-MediumItalic.otf) format("font/otf");
+  src: local("Inter-MediumItalic"), url(/assets/fonts/inter/Inter-MediumItalic.otf) format("opentype");
   font-weight: 500;
   font-style: italic;
   font-display: swap;
@@ -41,7 +41,7 @@
 @font-face {
   font-family: 'Inter-SemiBold';
   src: local('Inter-SemiBold'),
-    url(/assets/fonts/inter/Inter-SemiBold.otf) format('font/otf');
+    url(/assets/fonts/inter/Inter-SemiBold.otf) format('opentype');
   font-weight: 600;
   font-style: normal;
   font-display: swap;
@@ -49,7 +49,7 @@
 @font-face {
   font-family: 'Inter-SemiBoldItalic';
   src: local('Inter-SemiBoldItalic'),
-    url(/assets/fonts/inter/Inter-SemiBoldItalic.otf) format('font/otf');
+    url(/assets/fonts/inter/Inter-SemiBoldItalic.otf) format('opentype');
   font-weight: 600;
   font-style: italic;
   font-display: swap;
@@ -57,14 +57,14 @@
 /*
 @font-face {
   font-family: "Inter-Bold";
-  src: local("Inter-Bold"), url(/assets/fonts/inter/Inter-Bold.otf) format("font/otf");
+  src: local("Inter-Bold"), url(/assets/fonts/inter/Inter-Bold.otf) format("opentype");
   font-weight: 700;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
   font-family: "Inter-BoldItalic";
-  src: local("Inter-BoldItalic"), url(/assets/fonts/inter/Inter-BoldItalic.otf) format("font/otf");
+  src: local("Inter-BoldItalic"), url(/assets/fonts/inter/Inter-BoldItalic.otf) format("opentype");
   font-weight: 700;
   font-style: italic;
   font-display: swap;
@@ -73,7 +73,7 @@
 @font-face {
   font-family: 'Inter-ExtraBold';
   src: local('Inter-ExtraBold'),
-    url(/assets/fonts/inter/Inter-ExtraBold.otf) format('font/otf');
+    url(/assets/fonts/inter/Inter-ExtraBold.otf) format('opentype');
   font-weight: 800;
   font-style: normal;
   font-display: swap;
@@ -81,7 +81,7 @@
 @font-face {
   font-family: 'Inter-ExtraBoldItalic';
   src: local('Inter-ExtraBoldItalic'),
-    url(/assets/fonts/inter/Inter-ExtraBoldItalic.otf) format('font/otf');
+    url(/assets/fonts/inter/Inter-ExtraBoldItalic.otf) format('opentype');
   font-weight: 800;
   font-style: italic;
   font-display: swap;
@@ -89,14 +89,14 @@
 /*
 @font-face {
   font-family: "Inter-Black";
-  src: local("Inter-Black"), url(/assets/fonts/inter/Inter-Black.otf) format("font/otf");
+  src: local("Inter-Black"), url(/assets/fonts/inter/Inter-Black.otf) format("opentype");
   font-weight: 900;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
   font-family: "Inter-BlackItalic";
-  src: local("Inter-BlackItalic"), url(/assets/fonts/inter/Inter-BlackItalic.otf) format("font/otf");
+  src: local("Inter-BlackItalic"), url(/assets/fonts/inter/Inter-BlackItalic.otf) format("opentype");
   font-weight: 900;
   font-style: italic;
   font-display: swap;

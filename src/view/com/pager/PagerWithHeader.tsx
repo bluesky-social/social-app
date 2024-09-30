@@ -161,10 +161,17 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
       (e: NativeScrollEvent) => {
         'worklet'
         const nextScrollY = e.contentOffset.y
-        scrollY.value = nextScrollY
-        runOnJS(queueThrottledOnScroll)()
+        // HACK: onScroll is reporting some strange values on load (negative header height).
+        // Highly improbable that you'd be overscrolled by over 400px -
+        // in fact, I actually can't do it, so let's just ignore those. -sfn
+        const isPossiblyInvalid =
+          headerHeight > 0 && Math.round(nextScrollY * 2) / 2 === -headerHeight
+        if (!isPossiblyInvalid) {
+          scrollY.value = nextScrollY
+          runOnJS(queueThrottledOnScroll)()
+        }
       },
-      [scrollY, queueThrottledOnScroll],
+      [scrollY, queueThrottledOnScroll, headerHeight],
     )
 
     const onPageSelectedInner = React.useCallback(

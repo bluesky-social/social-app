@@ -1,7 +1,6 @@
 import React from 'react'
 import {AtpSessionEvent, BskyAgent} from '@atproto/api'
 
-import {track} from '#/lib/analytics/analytics'
 import {logEvent} from '#/lib/statsig/statsig'
 import {isWeb} from '#/platform/detection'
 import * as persisted from '#/state/persisted'
@@ -70,7 +69,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     async params => {
       addSessionDebugLog({type: 'method:start', method: 'createAccount'})
       const signal = cancelPendingTask()
-      track('Try Create Account')
       logEvent('account:create:begin', {})
       const {agent, account} = await createAgentAndCreateAccount(
         params,
@@ -85,7 +83,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         newAgent: agent,
         newAccount: account,
       })
-      track('Create Account')
       logEvent('account:create:success', {})
       addSessionDebugLog({type: 'method:end', method: 'createAccount', account})
     },
@@ -109,7 +106,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         newAgent: agent,
         newAccount: account,
       })
-      track('Sign In', {resumedSession: false})
       logEvent('account:loggedIn', {logContext, withPassword: true})
       addSessionDebugLog({type: 'method:end', method: 'login', account})
     },
