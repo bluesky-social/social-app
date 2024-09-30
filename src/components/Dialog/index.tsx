@@ -284,6 +284,7 @@ export const InnerFlatList = React.forwardRef<
   return (
     <BottomSheetFlatList
       keyboardShouldPersistTaps="handled"
+      keyboardDismissMode="on-drag"
       contentContainerStyle={[a.pb_4xl, flatten(contentContainerStyle)]}
       ListFooterComponent={
         <View style={{height: insets.bottom + a.pt_5xl.paddingTop}} />
