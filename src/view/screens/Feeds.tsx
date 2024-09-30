@@ -481,11 +481,12 @@ export function FeedsScreen(_props: Props) {
             <FeedsAboutHeader />
             <View style={{paddingHorizontal: 12, paddingBottom: 4}}>
               <SearchInput
-                query={query}
-                onChangeQuery={onChangeQuery}
-                onPressCancelSearch={onPressCancelSearch}
-                onSubmitQuery={onSubmitQuery}
-                setIsInputFocused={onChangeSearchFocus}
+                value={query}
+                onChangeText={onChangeQuery}
+                onClearText={onPressCancelSearch}
+                onSubmitEditing={onSubmitQuery}
+                onFocus={() => onChangeSearchFocus(true)}
+                onBlur={() => onChangeSearchFocus(false)}
               />
             </View>
           </>
