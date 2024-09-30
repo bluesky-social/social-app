@@ -8,16 +8,14 @@
 
 @font-face {
   font-family: 'InterVariable';
-  src: local('InterVariable'),
-    url(/assets/fonts/inter/InterVariable.ttf) format('truetype');
+  src: url(/assets/fonts/inter/InterVariable.ttf) format('truetype');
   font-weight: 300 1000;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
   font-family: 'InterVariableItalic';
-  src: local('InterVariableItalic'),
-    url(/assets/fonts/inter/InterVariable-Italic.ttf) format('truetype');
+  src: url(/assets/fonts/inter/InterVariable-Italic.ttf) format('truetype');
   font-weight: 300 1000;
   font-style: italic;
   font-display: swap;
