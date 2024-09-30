@@ -624,7 +624,7 @@ export function SearchScreen(
    * Arbitrary sizing, so guess and check, used for sticky header alignment and
    * sizing.
    */
-  const headerHeight = 56 + (showFilters ? 40 : 0)
+  const headerHeight = 64 + (showFilters ? 40 : 0)
 
   useFocusEffect(
     useNonReactiveCallback(() => {
@@ -838,18 +838,18 @@ export function SearchScreen(
       <CenteredView
         style={[
           a.p_md,
-          a.pb_0,
+          a.pb_sm,
           a.gap_sm,
           t.atoms.bg,
           web({
-            height: headerHeight + a.mb_sm.marginBottom,
+            height: headerHeight,
             position: 'sticky',
             top: 0,
             zIndex: 1,
           }),
         ]}
         sideBorders={gtMobile}>
-        <View style={[a.flex_row, a.gap_sm, a.mb_sm]}>
+        <View style={[a.flex_row, a.gap_sm]}>
           {!gtMobile && (
             <Button
               testID="viewHeaderBackOrMenuBtn"
@@ -887,7 +887,7 @@ export function SearchScreen(
                 fill={
                   showFilters
                     ? t.palette.primary_500
-                    : t.atoms.text_contrast_low.color
+                    : t.atoms.text_contrast_medium.color
                 }
               />
             </Button>
