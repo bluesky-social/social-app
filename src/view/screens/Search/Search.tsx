@@ -23,7 +23,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 
 import {LANGUAGES} from '#/lib/../locale/languages'
-import {useAnalytics} from '#/lib/analytics/analytics'
 import {createHitslop} from '#/lib/constants'
 import {HITSLOP_10} from '#/lib/constants'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
@@ -601,7 +600,6 @@ export function SearchScreen(
   const navigation = useNavigation<NavigationProp>()
   const textInput = React.useRef<TextInput>(null)
   const {_} = useLingui()
-  const {track} = useAnalytics()
   const setDrawerOpen = useSetDrawerOpen()
   const setMinimalShellMode = useSetMinimalShellMode()
 
@@ -626,7 +624,7 @@ export function SearchScreen(
    * Arbitrary sizing, so guess and check, used for sticky header alignment and
    * sizing.
    */
-  const headerHeight = 56 + (showFilters ? 40 : 0)
+  const headerHeight = 64 + (showFilters ? 40 : 0)
 
   useFocusEffect(
     useNonReactiveCallback(() => {
@@ -656,9 +654,8 @@ export function SearchScreen(
   }, [])
 
   const onPressMenu = React.useCallback(() => {
-    track('ViewHeader:MenuButtonClicked')
     setDrawerOpen(true)
-  }, [track, setDrawerOpen])
+  }, [setDrawerOpen])
 
   const onPressClearQuery = React.useCallback(() => {
     scrollToTopWeb()
@@ -841,7 +838,7 @@ export function SearchScreen(
       <CenteredView
         style={[
           a.p_md,
-          a.pb_0,
+          a.pb_sm,
           a.gap_sm,
           t.atoms.bg,
           web({
@@ -890,7 +887,7 @@ export function SearchScreen(
                 fill={
                   showFilters
                     ? t.palette.primary_500
-                    : t.atoms.text_contrast_low.color
+                    : t.atoms.text_contrast_medium.color
                 }
               />
             </Button>
@@ -985,7 +982,7 @@ let SearchInputBox = ({
   const t = useThemeNew()
 
   return (
-    <View style={[a.flex_1, a.mb_sm]}>
+    <View style={[a.flex_1]}>
       <TextField.Root>
         <TextField.Icon icon={MagnifyingGlass} />
         <TextField.Input

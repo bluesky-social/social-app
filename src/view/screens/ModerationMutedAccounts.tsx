@@ -12,16 +12,15 @@ import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
+import {usePalette} from '#/lib/hooks/usePalette'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {CommonNavigatorParams} from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {useMyMutedAccountsQuery} from '#/state/queries/my-muted-accounts'
 import {useSetMinimalShellMode} from '#/state/shell'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {CommonNavigatorParams} from 'lib/routes/types'
-import {ProfileCard} from 'view/com/profile/ProfileCard'
-import {CenteredView} from 'view/com/util/Views'
+import {ProfileCard} from '#/view/com/profile/ProfileCard'
+import {CenteredView} from '#/view/com/util/Views'
 import {ErrorScreen} from '../com/util/error/ErrorScreen'
 import {Text} from '../com/util/text/Text'
 import {ViewHeader} from '../com/util/ViewHeader'
@@ -35,7 +34,6 @@ export function ModerationMutedAccounts({}: Props) {
   const {_} = useLingui()
   const setMinimalShellMode = useSetMinimalShellMode()
   const {isTabletOrDesktop} = useWebMediaQueries()
-  const {screen} = useAnalytics()
 
   const [isPTRing, setIsPTRing] = React.useState(false)
   const {
@@ -58,9 +56,8 @@ export function ModerationMutedAccounts({}: Props) {
 
   useFocusEffect(
     React.useCallback(() => {
-      screen('MutedAccounts')
       setMinimalShellMode(false)
-    }, [screen, setMinimalShellMode]),
+    }, [setMinimalShellMode]),
   )
 
   const onRefresh = React.useCallback(async () => {

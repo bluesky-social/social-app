@@ -14,7 +14,6 @@ import {AppBskyGraphDefs, RichText as RichTextAPI} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useAnalytics} from '#/lib/analytics/analytics'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {compressIfNeeded} from '#/lib/media/manip'
@@ -54,7 +53,6 @@ export function Component({
   const [error, setError] = useState<string>('')
   const pal = usePalette('default')
   const theme = useTheme()
-  const {track} = useAnalytics()
   const {_} = useLingui()
   const listCreateMutation = useListCreateMutation()
   const listMetadataMutation = useListMetadataMutation()
@@ -120,7 +118,6 @@ export function Component({
         setAvatar(undefined)
         return
       }
-      track('CreateList:AvatarSelected')
       try {
         const finalImg = await compressIfNeeded(img, 1000000)
         setNewAvatar(finalImg)
@@ -129,15 +126,10 @@ export function Component({
         setError(cleanError(e))
       }
     },
-    [track, setNewAvatar, setAvatar, setError],
+    [setNewAvatar, setAvatar, setError],
   )
 
   const onPressSave = useCallback(async () => {
-    if (isCurateList) {
-      track('CreateList:SaveCurateList')
-    } else {
-      track('CreateList:SaveModList')
-    }
     const nameTrimmed = name.trim()
     if (!nameTrimmed) {
       setError(_(msg`Name is required`))
@@ -200,7 +192,6 @@ export function Component({
     }
     setProcessing(false)
   }, [
-    track,
     setProcessing,
     setError,
     error,

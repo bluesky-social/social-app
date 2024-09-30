@@ -4,7 +4,6 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
 
-import {useAnalytics} from '#/lib/analytics/analytics'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
@@ -36,7 +35,6 @@ type Props = NativeStackScreenProps<
 export function AccessibilitySettingsScreen({}: Props) {
   const pal = usePalette('default')
   const setMinimalShellMode = useSetMinimalShellMode()
-  const {screen} = useAnalytics()
   const {isMobile, isTabletOrMobile} = useWebMediaQueries()
   const {_} = useLingui()
 
@@ -51,9 +49,8 @@ export function AccessibilitySettingsScreen({}: Props) {
 
   useFocusEffect(
     React.useCallback(() => {
-      screen('PreferencesExternalEmbeds')
       setMinimalShellMode(false)
-    }, [screen, setMinimalShellMode]),
+    }, [setMinimalShellMode]),
   )
 
   return (

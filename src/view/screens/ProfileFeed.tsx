@@ -8,6 +8,17 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {HITSLOP_20} from '#/lib/constants'
+import {useHaptics} from '#/lib/haptics'
+import {usePalette} from '#/lib/hooks/usePalette'
+import {useSetTitle} from '#/lib/hooks/useSetTitle'
+import {ComposeIcon2} from '#/lib/icons'
+import {makeCustomFeedLink} from '#/lib/routes/links'
+import {CommonNavigatorParams} from '#/lib/routes/types'
+import {NavigationProp} from '#/lib/routes/types'
+import {shareUrl} from '#/lib/sharing'
+import {makeRecordUri} from '#/lib/strings/url-helpers'
+import {toShareUrl} from '#/lib/strings/url-helpers'
+import {s} from '#/lib/styles'
 import {logger} from '#/logger'
 import {isNative} from '#/platform/detection'
 import {listenSoftReset} from '#/state/events'
@@ -27,30 +38,18 @@ import {useResolveUriQuery} from '#/state/queries/resolve-uri'
 import {truncateAndInvalidate} from '#/state/queries/util'
 import {useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {useHaptics} from 'lib/haptics'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useSetTitle} from 'lib/hooks/useSetTitle'
-import {ComposeIcon2} from 'lib/icons'
-import {makeCustomFeedLink} from 'lib/routes/links'
-import {CommonNavigatorParams} from 'lib/routes/types'
-import {NavigationProp} from 'lib/routes/types'
-import {shareUrl} from 'lib/sharing'
-import {makeRecordUri} from 'lib/strings/url-helpers'
-import {toShareUrl} from 'lib/strings/url-helpers'
-import {s} from 'lib/styles'
-import {PagerWithHeader} from 'view/com/pager/PagerWithHeader'
-import {Feed} from 'view/com/posts/Feed'
-import {ProfileSubpageHeader} from 'view/com/profile/ProfileSubpageHeader'
-import {EmptyState} from 'view/com/util/EmptyState'
-import {FAB} from 'view/com/util/fab/FAB'
-import {Button} from 'view/com/util/forms/Button'
-import {ListRef} from 'view/com/util/List'
-import {LoadLatestBtn} from 'view/com/util/load-latest/LoadLatestBtn'
-import {LoadingScreen} from 'view/com/util/LoadingScreen'
-import {Text} from 'view/com/util/text/Text'
-import * as Toast from 'view/com/util/Toast'
-import {CenteredView} from 'view/com/util/Views'
+import {PagerWithHeader} from '#/view/com/pager/PagerWithHeader'
+import {Feed} from '#/view/com/posts/Feed'
+import {ProfileSubpageHeader} from '#/view/com/profile/ProfileSubpageHeader'
+import {EmptyState} from '#/view/com/util/EmptyState'
+import {FAB} from '#/view/com/util/fab/FAB'
+import {Button} from '#/view/com/util/forms/Button'
+import {ListRef} from '#/view/com/util/List'
+import {LoadLatestBtn} from '#/view/com/util/load-latest/LoadLatestBtn'
+import {LoadingScreen} from '#/view/com/util/LoadingScreen'
+import {Text} from '#/view/com/util/text/Text'
+import * as Toast from '#/view/com/util/Toast'
+import {CenteredView} from '#/view/com/util/Views'
 import {atoms as a, useTheme} from '#/alf'
 import {Button as NewButton, ButtonText} from '#/components/Button'
 import {useRichText} from '#/components/hooks/useRichText'
@@ -158,7 +157,6 @@ export function ProfileFeedScreenInner({
   const {hasSession, currentAccount} = useSession()
   const reportDialogControl = useReportDialogControl()
   const {openComposer} = useComposerControls()
-  const {track} = useAnalytics()
   const playHaptic = useHaptics()
   const feedSectionRef = React.useRef<SectionRef>(null)
   const isScreenFocused = useIsFocused()
@@ -247,8 +245,7 @@ export function ProfileFeedScreenInner({
   const onPressShare = React.useCallback(() => {
     const url = toShareUrl(feedInfo.route.href)
     shareUrl(url)
-    track('CustomFeed:Share')
-  }, [feedInfo, track])
+  }, [feedInfo])
 
   const onPressReport = React.useCallback(() => {
     reportDialogControl.open()
@@ -515,7 +512,6 @@ function AboutSection({
   const {_} = useLingui()
   const [likeUri, setLikeUri] = React.useState(feedInfo.likeUri)
   const {hasSession} = useSession()
-  const {track} = useAnalytics()
   const playHaptic = useHaptics()
   const {mutateAsync: likeFeed, isPending: isLikePending} = useLikeMutation()
   const {mutateAsync: unlikeFeed, isPending: isUnlikePending} =
@@ -532,11 +528,9 @@ function AboutSection({
 
       if (isLiked && likeUri) {
         await unlikeFeed({uri: likeUri})
-        track('CustomFeed:Unlike')
         setLikeUri('')
       } else {
         const res = await likeFeed({uri: feedInfo.uri, cid: feedInfo.cid})
-        track('CustomFeed:Like')
         setLikeUri(res.uri)
       }
     } catch (err) {
@@ -548,7 +542,7 @@ function AboutSection({
       )
       logger.error('Failed up toggle like', {message: err})
     }
-  }, [playHaptic, isLiked, likeUri, unlikeFeed, track, likeFeed, feedInfo, _])
+  }, [playHaptic, isLiked, likeUri, unlikeFeed, likeFeed, feedInfo, _])
 
   return (
     <View style={[styles.aboutSectionContainer]}>

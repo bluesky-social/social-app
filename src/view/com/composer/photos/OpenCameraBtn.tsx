@@ -3,7 +3,6 @@ import * as MediaLibrary from 'expo-media-library'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useAnalytics} from '#/lib/analytics/analytics'
 import {POST_IMG_MAX} from '#/lib/constants'
 import {useCameraPermission} from '#/lib/hooks/usePermissions'
 import {openCamera} from '#/lib/media/picker'
@@ -20,7 +19,6 @@ type Props = {
 }
 
 export function OpenCameraBtn({disabled, onAdd}: Props) {
-  const {track} = useAnalytics()
   const {_} = useLingui()
   const {requestCameraAccessIfNeeded} = useCameraPermission()
   const [mediaPermissionRes, requestMediaPermission] =
@@ -28,7 +26,6 @@ export function OpenCameraBtn({disabled, onAdd}: Props) {
   const t = useTheme()
 
   const onPressTakePicture = useCallback(async () => {
-    track('Composer:CameraOpened')
     try {
       if (!(await requestCameraAccessIfNeeded())) {
         return
@@ -58,7 +55,6 @@ export function OpenCameraBtn({disabled, onAdd}: Props) {
     }
   }, [
     onAdd,
-    track,
     requestCameraAccessIfNeeded,
     mediaPermissionRes,
     requestMediaPermission,
