@@ -21,7 +21,9 @@ type Props = {
 
 export const ImageAltTextDialog = (props: Props): React.ReactNode => {
   return (
-    <Dialog.Outer control={props.control}>
+    <Dialog.Outer
+      control={props.control}
+      nativeOptions={{sheet: {snapPoints: ['100%']}}}>
       <Dialog.Handle />
 
       <ImageAltTextInner {...props} />
@@ -66,13 +68,15 @@ const ImageAltTextInner = ({
   }, [image, windim])
 
   return (
-    <Dialog.ScrollableInner label={_(msg`Add alt text`)}>
+    <Dialog.ScrollableInner
+      label={_(msg`Add alt text`)}
+      keyboardDismissMode="none">
       <View>
         <Text style={[a.text_2xl, a.font_bold, a.leading_tight, a.pb_sm]}>
           <Trans>Add alt text</Trans>
         </Text>
 
-        <View style={[t.atoms.bg_contrast_50, a.rounded_sm, a.overflow_hidden]}>
+        <View style={[t.atoms.bg_contrast_50, a.rounded_md, a.overflow_hidden]}>
           <Image
             style={imageStyle}
             source={{
@@ -114,6 +118,7 @@ const ImageAltTextInner = ({
           </ButtonText>
         </Button>
       </View>
+
       <Dialog.Close />
     </Dialog.ScrollableInner>
   )

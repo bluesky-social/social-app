@@ -12,7 +12,6 @@ import {
   parseEmbedPlayerFromUrl,
 } from '#/lib/strings/embed-player'
 import {enforceLen} from '#/lib/strings/helpers'
-import {isAndroid} from '#/platform/detection'
 import {Gif} from '#/state/queries/tenor'
 import {GifEmbed} from '#/view/com/util/post-embeds/GifEmbed'
 import {atoms as a, native, useTheme} from '#/alf'
@@ -98,7 +97,7 @@ export function GifAltText({
 
       <Dialog.Outer
         control={control}
-        nativeOptions={isAndroid ? {sheet: {snapPoints: ['100%']}} : {}}>
+        nativeOptions={{sheet: {snapPoints: ['100%']}}}>
         <Dialog.Handle />
         <AltTextInner
           onSubmit={onPressSubmit}
@@ -132,7 +131,9 @@ function AltTextInner({
   }, [onSubmit, altText])
 
   return (
-    <Dialog.ScrollableInner label={_(msg`Add alt text`)}>
+    <Dialog.ScrollableInner
+      label={_(msg`Add alt text`)}
+      keyboardDismissMode="none">
       <View style={a.flex_col_reverse}>
         <View style={[a.mt_md, a.gap_md]}>
           <View>
