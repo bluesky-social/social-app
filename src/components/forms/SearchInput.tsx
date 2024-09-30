@@ -1,5 +1,5 @@
 import React from 'react'
-import {StyleProp, TextInput, View, ViewStyle} from 'react-native'
+import {TextInput, View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -11,20 +11,35 @@ import * as TextField from '#/components/forms/TextField'
 import {MagnifyingGlass2_Stroke2_Corner0_Rounded as MagnifyingGlassIcon} from '#/components/icons/MagnifyingGlass2'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 
-interface Props {
-  query: string
+type SearchInputProps = Omit<TextField.InputProps, 'label'> & {
+  label?: TextField.InputProps['label']
+  /**
+   * Called when the user presses the (X) button
+   */
+  onClearText?: () => void
+  /**
+   * @deprecated use `value`
+   */
+  query?: string
+  /**
+   * @deprecated use `onFocus`
+   */
   setIsInputFocused?: (v: boolean) => void
-  onChangeQuery: (v: string) => void
-  onPressCancelSearch: () => void
-  onSubmitQuery: () => void
-  style?: StyleProp<ViewStyle>
+  /**
+   * @deprecated use `onChangeText`
+   */
+  onChangeQuery?: (v: string) => void
+  /**
+   * @deprecated use `onClearText`
+   */
+  onPressCancelSearch?: () => void
+  /**
+   * @deprecated use `onSubmitEditing`
+   */
+  onSubmitQuery?: () => void
 }
 
-export interface SearchInputRef {
-  focus?: () => void
-}
-
-export const SearchInput = React.forwardRef<SearchInputRef, Props>(
+export const SearchInput = React.forwardRef<TextInput, SearchInputProps>(
   function SearchInput(
     {
       query,
@@ -32,27 +47,25 @@ export const SearchInput = React.forwardRef<SearchInputRef, Props>(
       onChangeQuery,
       onPressCancelSearch,
       onSubmitQuery,
-      style,
+      value,
+      label,
+      onClearText,
+      ...rest
     },
     ref,
   ) {
     const t = useTheme()
     const {_} = useLingui()
-    const textInputRef = React.useRef<TextInput>(null)
-
-    React.useImperativeHandle(ref, () => ({
-      focus: () => textInputRef.current?.focus(),
-      blur: () => textInputRef.current?.blur(),
-    }))
+    const q = value || query || ''
 
     return (
-      <View style={[a.flex_1, a.relative, style]}>
+      <View style={[a.w_full, a.relative]}>
         <TextField.Root>
           <TextField.Icon icon={MagnifyingGlassIcon} />
           <TextField.Input
-            inputRef={textInputRef}
-            label={_(msg`Search`)}
-            value={query}
+            inputRef={ref}
+            label={label || _(msg`Search`)}
+            value={q}
             placeholder={_(msg`Search`)}
             returnKeyType="search"
             onChangeText={onChangeQuery}
@@ -66,10 +79,11 @@ export const SearchInput = React.forwardRef<SearchInputRef, Props>(
             autoCorrect={false}
             autoComplete="off"
             autoCapitalize="none"
+            {...rest}
           />
         </TextField.Root>
 
-        {query.length > 0 && (
+        {q.length > 0 && (
           <View
             style={[
               a.absolute,
@@ -82,14 +96,14 @@ export const SearchInput = React.forwardRef<SearchInputRef, Props>(
             ]}>
             <Button
               testID="searchTextInputClearBtn"
-              onPress={onPressCancelSearch}
+              onPress={onClearText || onPressCancelSearch}
               label={_(msg`Clear search query`)}
               hitSlop={HITSLOP_10}
               size="tiny"
               shape="round"
               variant="ghost"
               color="secondary">
-              <ButtonIcon icon={X} size="sm" />
+              <ButtonIcon icon={X} size="xs" />
             </Button>
           </View>
         )}

@@ -126,7 +126,7 @@ export type InputProps = Omit<TextInputProps, 'value' | 'onChangeText'> & {
   value?: string
   onChangeText?: (value: string) => void
   isInvalid?: boolean
-  inputRef?: React.RefObject<TextInput>
+  inputRef?: React.RefObject<TextInput> | React.ForwardedRef<TextInput>
 }
 
 export function createInput(Component: typeof TextInput) {
