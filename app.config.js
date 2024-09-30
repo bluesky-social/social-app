@@ -143,7 +143,7 @@ module.exports = function (config) {
           backgroundColor: '#1185FE',
         },
         googleServicesFile: './google-services.json',
-        package: 'xyz.blueskyweb.app',
+        package: 'xyz.blueskyweb.app.fabric',
         intentFilters: [
           {
             action: 'VIEW',
