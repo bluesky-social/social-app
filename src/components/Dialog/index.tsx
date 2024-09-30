@@ -13,8 +13,6 @@ import BottomSheet, {
   BottomSheetBackdropProps,
   BottomSheetFlatList,
   BottomSheetFlatListMethods,
-  BottomSheetScrollView,
-  BottomSheetScrollViewMethods,
   BottomSheetTextInput,
   BottomSheetView,
   useBottomSheet,
@@ -240,32 +238,34 @@ export function Inner({children, style}: DialogInnerProps) {
   )
 }
 
-export const ScrollableInner = React.forwardRef<
-  BottomSheetScrollViewMethods,
-  DialogInnerProps
->(function ScrollableInner({children, style}, ref) {
-  const insets = useSafeAreaInsets()
-  return (
-    <BottomSheetScrollView
-      keyboardShouldPersistTaps="handled"
-      style={[
-        a.flex_1, // main diff is this
-        a.p_xl,
-        a.h_full,
-        {
-          paddingTop: 40,
-          borderTopLeftRadius: 40,
-          borderTopRightRadius: 40,
-        },
-        style,
-      ]}
-      contentContainerStyle={a.pb_4xl}
-      ref={ref}>
-      {children}
-      <View style={{height: insets.bottom + a.pt_5xl.paddingTop}} />
-    </BottomSheetScrollView>
-  )
-})
+export const ScrollableInner = Inner
+
+// export const ScrollableInner = React.forwardRef<
+//   BottomSheetScrollViewMethods,
+//   DialogInnerProps
+// >(function ScrollableInner({children, style}, ref) {
+//   const insets = useSafeAreaInsets()
+//   return (
+//     <BottomSheetScrollView
+//       keyboardShouldPersistTaps="handled"
+//       style={[
+//         a.flex_1, // main diff is this
+//         a.p_xl,
+//         a.h_full,
+//         {
+//           paddingTop: 40,
+//           borderTopLeftRadius: 40,
+//           borderTopRightRadius: 40,
+//         },
+//         style,
+//       ]}
+//       contentContainerStyle={a.pb_4xl}
+//       ref={ref}>
+//       {children}
+//       <View style={{height: insets.bottom + a.pt_5xl.paddingTop}} />
+//     </BottomSheetScrollView>
+//   )
+// })
 
 export const InnerFlatList = React.forwardRef<
   BottomSheetFlatListMethods,
