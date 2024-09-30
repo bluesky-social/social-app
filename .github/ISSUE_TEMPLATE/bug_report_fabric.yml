@@ -1,5 +1,5 @@
 name: "Bug Report - Fabric/New Architecture"
-description: "Create a report for an issue you have experience in the app. Note: this template is for issues related to builds using the React Native New Architecture. If you are not sure what that means, this probably is not relevant to you, and you should use the default Bug Report template."
+description: "Create a bug report for builds using the New Architecture. If you are not sure what that means, don't use this template, and instead use the default bug report template."
 labels: ["bug", "fabric"]
 body:
   - type: checkboxes
