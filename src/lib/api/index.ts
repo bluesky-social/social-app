@@ -1,7 +1,10 @@
 import {
   AppBskyEmbedDefs,
+  AppBskyEmbedExternal,
   AppBskyEmbedImages,
   AppBskyEmbedRecord,
+  AppBskyEmbedRecordWithMedia,
+  AppBskyEmbedVideo,
   AppBskyFeedPostgate,
   AtUri,
   BlobRef,
@@ -177,51 +180,76 @@ export async function post(agent: BskyAgent, opts: PostOpts) {
   return res
 }
 
-async function resolveEmbed(agent: BskyAgent, opts: PostOpts) {
+async function resolveEmbed(
+  agent: BskyAgent,
+  opts: PostOpts,
+): Promise<
+  | AppBskyEmbedImages.Main
+  | AppBskyEmbedVideo.Main
+  | AppBskyEmbedExternal.Main
+  | AppBskyEmbedRecord.Main
+  | AppBskyEmbedRecordWithMedia.Main
+  | undefined
+> {
+  if (opts.extLink?.embed) {
+    return opts.extLink.embed
+  }
+  const media = await resolveMedia(agent, opts)
+  if (opts.quote) {
+    const quoteRecord = {
+      $type: 'app.bsky.embed.record',
+      record: {
+        uri: opts.quote.uri,
+        cid: opts.quote.cid,
+      },
+    }
+    if (media) {
+      return {
+        $type: 'app.bsky.embed.recordWithMedia',
+        record: quoteRecord,
+        media,
+      }
+    } else {
+      return quoteRecord
+    }
+  }
+  if (media) {
+    return media
+  }
+  return undefined
+}
+
+async function resolveMedia(
+  agent: BskyAgent,
+  opts: PostOpts,
+): Promise<
+  | AppBskyEmbedExternal.Main
+  | AppBskyEmbedImages.Main
+  | AppBskyEmbedVideo.Main
+  | undefined
+> {
   if (opts.images?.length) {
     logger.debug(`Uploading images`, {
       count: opts.images.length,
     })
-
     const images: AppBskyEmbedImages.Image[] = []
     for (const image of opts.images) {
       opts.onStateChange?.(`Uploading image #${images.length + 1}...`)
-
       logger.debug(`Compressing image`)
       const {path, width, height, mime} = await compressImage(image)
-
       logger.debug(`Uploading image`)
       const res = await uploadBlob(agent, path, mime)
-
       images.push({
         image: res.data.blob,
         alt: image.alt,
         aspectRatio: {width, height},
       })
     }
-
-    if (opts.quote) {
-      return {
-        $type: 'app.bsky.embed.recordWithMedia',
-        record: {
-          $type: 'app.bsky.embed.record',
-          record: {
-            uri: opts.quote.uri,
-            cid: opts.quote.cid,
-          },
-        },
-        media: {
-          $type: 'app.bsky.embed.images',
-          images,
-        },
-      }
-    }
     return {
       $type: 'app.bsky.embed.images',
       images,
     }
   }
-
   if (opts.video) {
     const captions = await Promise.all(
       opts.video.captions
@@ -233,25 +261,6 @@ async function resolveEmbed(agent: BskyAgent, opts: PostOpts) {
           return {lang: caption.lang, file: data.blob}
         }),
     )
-    if (opts.quote) {
-      return {
-        $type: 'app.bsky.embed.recordWithMedia',
-        record: {
-          $type: 'app.bsky.embed.record',
-          record: {
-            uri: opts.quote.uri,
-            cid: opts.quote.cid,
-          },
-        },
-        media: {
-          $type: 'app.bsky.embed.video',
-          video: opts.video.blobRef,
-          alt: opts.video.altText || undefined,
-          captions: captions.length === 0 ? undefined : captions,
-          aspectRatio: opts.video.aspectRatio,
-        },
-      }
-    }
     return {
       $type: 'app.bsky.embed.video',
       video: opts.video.blobRef,
@@ -260,41 +269,16 @@ async function resolveEmbed(agent: BskyAgent, opts: PostOpts) {
       aspectRatio: opts.video.aspectRatio,
     }
   }
-
   if (opts.extLink) {
     if (opts.extLink.embed) {
-      return opts.extLink.embed
+      return undefined
     }
     let thumb
     if (opts.extLink.localThumb) {
       opts.onStateChange?.('Uploading link thumbnail...')
-
       const {path, mime} = opts.extLink.localThumb.source
       const res = await uploadBlob(agent, path, mime)
-
       thumb = res.data.blob
-    }
-
-    if (opts.quote) {
-      return {
-        $type: 'app.bsky.embed.recordWithMedia',
-        record: {
-          $type: 'app.bsky.embed.record',
-          record: {
-            uri: opts.quote.uri,
-            cid: opts.quote.cid,
-          },
-        },
-        media: {
-          $type: 'app.bsky.embed.external',
-          external: {
-            uri: opts.extLink.uri,
-            title: opts.extLink.meta?.title || '',
-            description: opts.extLink.meta?.description || '',
-            thumb,
-          },
-        },
-      }
     }
     return {
       $type: 'app.bsky.embed.external',
@@ -306,16 +290,5 @@ async function resolveEmbed(agent: BskyAgent, opts: PostOpts) {
       },
     }
   }
-
-  if (opts.quote) {
-    return {
-      $type: 'app.bsky.embed.record',
-      record: {
-        uri: opts.quote.uri,
-        cid: opts.quote.cid,
-      },
-    }
-  }
-
   return undefined
 }
