@@ -184,10 +184,10 @@ export function DesktopSearch() {
   return (
     <View style={[styles.container, pal.view]}>
       <SearchInput
-        query={query}
-        onChangeQuery={onChangeText}
-        onPressCancelSearch={onPressCancelSearch}
-        onSubmitQuery={onSubmit}
+        value={query}
+        onChangeText={onChangeText}
+        onClearText={onPressCancelSearch}
+        onSubmitEditing={onSubmit}
       />
       {query !== '' && isActive && moderationOpts && (
         <View style={[pal.view, pal.borderDark, styles.resultsContainer]}>
