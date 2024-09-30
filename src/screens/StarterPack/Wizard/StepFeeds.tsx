@@ -81,12 +81,11 @@ export function StepFeeds({moderationOpts}: {moderationOpts: ModerationOpts}) {
   return (
     <ScreenTransition style={[a.flex_1]} direction={state.transitionDirection}>
       <View style={[a.border_b, t.atoms.border_contrast_medium]}>
-        <View style={[a.my_sm, a.px_md, {height: 40}]}>
+        <View style={[a.py_sm, a.px_md, {height: 60}]}>
           <SearchInput
-            query={query}
-            onChangeQuery={t => setQuery(t)}
-            onPressCancelSearch={() => setQuery('')}
-            onSubmitQuery={() => {}}
+            value={query}
+            onChangeText={t => setQuery(t)}
+            onClearText={() => setQuery('')}
           />
         </View>
       </View>
@@ -94,7 +93,6 @@ export function StepFeeds({moderationOpts}: {moderationOpts: ModerationOpts}) {
         data={query ? searchedFeeds : suggestedFeeds}
         renderItem={renderItem}
         keyExtractor={keyExtractor}
-        contentContainerStyle={{paddingTop: 6}}
         onEndReached={
           !query && !screenReaderEnabled ? () => fetchNextPage() : undefined
         }
