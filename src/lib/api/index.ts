@@ -13,6 +13,8 @@ import {
   RichText,
 } from '@atproto/api'
 
+import {isNetworkError} from '#/lib/strings/errors'
+import {shortenLinks, stripInvalidMentions} from '#/lib/strings/rich-text-manip'
 import {logger} from '#/logger'
 import {ComposerImage, compressImage} from '#/state/gallery'
 import {writePostgateRecord} from '#/state/queries/postgate'
@@ -22,8 +24,6 @@ import {
   threadgateAllowUISettingToAllowRecordValue,
   writeThreadgateRecord,
 } from '#/state/queries/threadgate'
-import {isNetworkError} from 'lib/strings/errors'
-import {shortenLinks, stripInvalidMentions} from 'lib/strings/rich-text-manip'
 import {LinkMeta} from '../link-meta/link-meta'
 import {uploadBlob} from './upload-blob'
 
@@ -78,14 +78,16 @@ export async function post(agent: BskyAgent, opts: PostOpts) {
   rt = stripInvalidMentions(rt)
 
   // add quote embed if present
+  let recordEmbed: AppBskyEmbedRecord.Main | undefined
   if (opts.quote) {
-    embed = {
+    recordEmbed = {
       $type: 'app.bsky.embed.record',
       record: {
         uri: opts.quote.uri,
         cid: opts.quote.cid,
       },
-    } as AppBskyEmbedRecord.Main
+    }
+    embed = recordEmbed
   }
 
   // add image embed if present
@@ -111,20 +113,20 @@ export async function post(agent: BskyAgent, opts: PostOpts) {
       })
     }
 
-    if (opts.quote) {
+    if (recordEmbed) {
       embed = {
         $type: 'app.bsky.embed.recordWithMedia',
-        record: embed,
+        record: recordEmbed,
         media: {
           $type: 'app.bsky.embed.images',
           images,
         },
-      } as AppBskyEmbedRecordWithMedia.Main
+      }
     } else {
       embed = {
         $type: 'app.bsky.embed.images',
         images,
-      } as AppBskyEmbedImages.Main
+      }
     }
   }
 
@@ -140,18 +142,18 @@ export async function post(agent: BskyAgent, opts: PostOpts) {
           return {lang: caption.lang, file: data.blob}
         }),
     )
-    if (opts.quote) {
+    if (recordEmbed) {
       embed = {
         $type: 'app.bsky.embed.recordWithMedia',
-        record: embed,
+        record: recordEmbed,
         media: {
           $type: 'app.bsky.embed.video',
           video: opts.video.blobRef,
           alt: opts.video.altText || undefined,
           captions: captions.length === 0 ? undefined : captions,
           aspectRatio: opts.video.aspectRatio,
-        } as AppBskyEmbedVideo.Main,
-      } as AppBskyEmbedRecordWithMedia.Main
+        },
+      }
     } else {
       embed = {
         $type: 'app.bsky.embed.video',
@@ -159,7 +161,7 @@ export async function post(agent: BskyAgent, opts: PostOpts) {
         alt: opts.video.altText || undefined,
         captions: captions.length === 0 ? undefined : captions,
         aspectRatio: opts.video.aspectRatio,
-      } as AppBskyEmbedVideo.Main
+      }
     }
   }
 
@@ -178,10 +180,10 @@ export async function post(agent: BskyAgent, opts: PostOpts) {
         thumb = res.data.blob
       }
 
-      if (opts.quote) {
+      if (recordEmbed) {
         embed = {
           $type: 'app.bsky.embed.recordWithMedia',
-          record: embed,
+          record: recordEmbed,
           media: {
             $type: 'app.bsky.embed.external',
             external: {
@@ -190,8 +192,8 @@ export async function post(agent: BskyAgent, opts: PostOpts) {
               description: opts.extLink.meta?.description || '',
               thumb,
             },
-          } as AppBskyEmbedExternal.Main,
-        } as AppBskyEmbedRecordWithMedia.Main
+          },
+        }
       } else {
         embed = {
           $type: 'app.bsky.embed.external',
@@ -201,7 +203,7 @@ export async function post(agent: BskyAgent, opts: PostOpts) {
             description: opts.extLink.meta?.description || '',
             thumb,
           },
-        } as AppBskyEmbedExternal.Main
+        }
       }
     }
   }
