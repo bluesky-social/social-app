@@ -1,5 +1,5 @@
 import React, {useImperativeHandle} from 'react'
-import {ScrollView, StyleProp, View, ViewStyle} from 'react-native'
+import {StyleProp, View, ViewStyle} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {
   BottomSheetFlatList,
@@ -12,6 +12,7 @@ import {BlueskyBottomSheetView} from '@haileyok/bluesky-bottom-sheet'
 
 import {logger} from '#/logger'
 import {useDialogStateControlContext} from '#/state/dialogs'
+import {ScrollView} from '#/view/com/util/Views'
 import {atoms as a, flatten, useTheme} from '#/alf'
 import {Context} from '#/components/Dialog/context'
 import {
@@ -41,7 +42,6 @@ export function Outer({
   const closeCallbacks = React.useRef<(() => void)[]>([])
   const {setDialogIsOpen} = useDialogStateControlContext()
   // @TODO DIALOG REFACTOR - can i get rid of this? seems pointless tbh
-  const [isOpen, setIsOpen] = React.useState(false)
 
   const callQueuedCallbacks = React.useCallback(() => {
     for (const cb of closeCallbacks.current) {
@@ -58,14 +58,12 @@ export function Outer({
   const open = React.useCallback<DialogControlProps['open']>(() => {
     // Run any leftover callbacks that might have been queued up before calling `.open()`
     callQueuedCallbacks()
-    setIsOpen(true)
     setDialogIsOpen(control.id, true)
     ref.current?.present()
   }, [setDialogIsOpen, control.id, callQueuedCallbacks])
 
   // This is the function that we call when we want to dismiss the dialog.
   const close = React.useCallback<DialogControlProps['close']>(cb => {
-    setIsOpen(false)
     if (typeof cb === 'function') {
       closeCallbacks.current.push(cb)
     }
@@ -106,26 +104,15 @@ export function Outer({
         <BlueskyBottomSheetView
           // handleIndicatorStyle={{backgroundColor: t.palette.primary_500}} // @TODO DIALOG REFACTOR need to add this to lib!*/
           ref={ref}
-          topInset={insets.top}
+          topInset={30}
           bottomInset={insets.bottom}
           onStateChange={e => {
             if (e.nativeEvent.state === 'closed') {
               onCloseAnimationComplete()
             }
-          }}>
+          }}
+          cornerRadius={20}>
           <View testID={testID} style={[t.atoms.bg]}>
-            {/*<View*/}
-            {/*  style={[*/}
-            {/*    a.absolute,*/}
-            {/*    a.inset_0,*/}
-            {/*    t.atoms.bg,*/}
-            {/*    {*/}
-            {/*      borderTopLeftRadius: 40,*/}
-            {/*      borderTopRightRadius: 40,*/}
-            {/*      height: Dimensions.get('window').height * 2,*/}
-            {/*    },*/}
-            {/*  ]}*/}
-            {/*/>*/}
             {children}
           </View>
         </BlueskyBottomSheetView>
@@ -158,22 +145,10 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
   function ScrollableInner({children, style}, ref) {
     const insets = useSafeAreaInsets()
     return (
-      <View
-      // style={[
-      //   a.p_xl,
-      //   a.h_full,
-      //   {
-      //     paddingTop: 40,
-      //     borderTopLeftRadius: 40,
-      //     borderTopRightRadius: 40,
-      //   },
-      //   style,
-      // ]}
-      // ref={ref}
-      >
+      <ScrollView style={[a.px_xl, style]} ref={ref}>
         {children}
         <View style={{height: insets.bottom + a.pt_5xl.paddingTop}} />
-      </View>
+      </ScrollView>
     )
   },
 )
