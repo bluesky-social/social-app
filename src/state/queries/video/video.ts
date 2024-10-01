@@ -22,7 +22,7 @@ import {useUploadVideoMutation} from '#/state/queries/video/video-upload'
 type Status = 'idle' | 'compressing' | 'processing' | 'uploading' | 'done'
 
 type Action =
-  | {type: 'SetProcessing'}
+  | {type: 'SetProcessing'; jobId: string}
   | {type: 'SetProgress'; progress: number}
   | {type: 'SetError'; error: string | undefined}
   | {type: 'Reset'}
@@ -37,6 +37,7 @@ export interface State {
   progress: number
   asset?: ImagePickerAsset
   video: CompressedVideo | null
+  jobId?: string
   jobStatus?: AppBskyVideoDefs.JobStatus
   error?: string
   abortController: AbortController
@@ -46,7 +47,7 @@ export interface State {
 function reducer(state: State, action: Action): State {
   let updatedState = state
   if (action.type === 'SetProcessing') {
-    updatedState = {...state, status: 'processing'}
+    updatedState = {...state, status: 'processing', jobId: action.jobId}
   } else if (action.type === 'SetProgress') {
     updatedState = {...state, progress: action.progress}
   } else if (action.type === 'SetError') {
@@ -106,9 +107,8 @@ export function useUploadVideo({
     abortController: new AbortController(),
   })
 
-  const [jobId, setJobId] = React.useState<string | undefined>(undefined)
   useUploadStatusQuery({
-    jobId,
+    jobId: state.jobId,
     onStatusChange: (status: AppBskyVideoDefs.JobStatus) => {
       // This might prove unuseful, most of the job status steps happen too quickly to even be displayed to the user
       // Leaving it for now though
@@ -140,8 +140,8 @@ export function useUploadVideo({
     onSuccess: response => {
       dispatch({
         type: 'SetProcessing',
+        jobId: response.jobId,
       })
-      setJobId(response.jobId)
     },
     onError: e => {
       if (e instanceof AbortError) {
