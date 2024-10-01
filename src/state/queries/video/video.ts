@@ -106,7 +106,9 @@ export function useUploadVideo({
     abortController: new AbortController(),
   })
 
-  const {setJobId} = useUploadStatusQuery({
+  const [jobId, setJobId] = React.useState<string | undefined>(undefined)
+  useUploadStatusQuery({
+    jobId,
     onStatusChange: (status: AppBskyVideoDefs.JobStatus) => {
       // This might prove unuseful, most of the job status steps happen too quickly to even be displayed to the user
       // Leaving it for now though
@@ -280,22 +282,29 @@ export function useUploadVideo({
 }
 
 const useUploadStatusQuery = ({
+  jobId,
   onStatusChange,
   onSuccess,
   onError,
 }: {
+  jobId: string | undefined
   onStatusChange: (status: AppBskyVideoDefs.JobStatus) => void
   onSuccess: (blobRef: BlobRef) => void
   onError: (error: Error) => void
 }) => {
   const videoAgent = useVideoAgent()
-  const [enabled, setEnabled] = React.useState(true)
-  const [jobId, setJobId] = React.useState<string>()
+  const [enabled, setEnabled] = React.useState(!!jobId)
+
+  const [prevJobId, setPrevJobId] = React.useState(jobId)
+  if (jobId !== prevJobId) {
+    setPrevJobId(jobId)
+    setEnabled(!!jobId)
+  }
 
   const {error} = useQuery({
     queryKey: ['video', 'upload status', jobId],
     queryFn: async () => {
-      if (!jobId) return // this won't happen, can ignore
+      if (!jobId) return
 
       const {data} = await videoAgent.app.bsky.video.getJobStatus({jobId})
       const status = data.jobStatus
@@ -310,7 +319,7 @@ const useUploadStatusQuery = ({
       onStatusChange(status)
       return status
     },
-    enabled: Boolean(jobId && enabled),
+    enabled,
     refetchInterval: 1500,
   })
 
@@ -320,13 +329,6 @@ const useUploadStatusQuery = ({
       setEnabled(false)
     }
   }, [error, onError])
-
-  return {
-    setJobId: (_jobId: string) => {
-      setJobId(_jobId)
-      setEnabled(true)
-    },
-  }
 }
 
 function getMimeType(asset: ImagePickerAsset) {
