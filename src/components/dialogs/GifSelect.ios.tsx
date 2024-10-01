@@ -22,7 +22,6 @@ import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import * as TextField from '#/components/forms/TextField'
 import {MagnifyingGlass2_Stroke2_Corner0_Rounded as Search} from '#/components/icons/MagnifyingGlass2'
 import {Button, ButtonText} from '../Button'
-import {Handle} from '../Dialog'
 import {useThrottledValue} from '../hooks/useThrottledValue'
 import {ListFooter, ListMaybePlaceholder} from '../Lists'
 import {GifPreview} from './GifSelect.shared'
@@ -70,7 +69,6 @@ export function GifSelectDialog({
       aria-modal
       accessibilityViewIsModal>
       <View style={[a.flex_1, t.atoms.bg]}>
-        <Handle />
         <ErrorBoundary renderError={renderErrorBoundary}>
           <GifList onSelectGif={onSelectGif} close={close} />
         </ErrorBoundary>
