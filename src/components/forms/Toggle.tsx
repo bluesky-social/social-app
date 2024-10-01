@@ -2,8 +2,8 @@ import React from 'react'
 import {Pressable, View, ViewStyle} from 'react-native'
 import Animated, {LinearTransition} from 'react-native-reanimated'
 
-import {HITSLOP_10} from '#/lib/constants'
 import {isNative} from '#/platform/detection'
+import {HITSLOP_10} from 'lib/constants'
 import {
   atoms as a,
   flatten,
