@@ -1,23 +1,23 @@
 import React from 'react'
-import {Pressable, StyleProp, View, ViewStyle} from 'react-native'
+import {StyleProp, View, ViewStyle} from 'react-native'
+import {BlueskyBottomSheetView, Pressable} from '@haileyok/bluesky-bottom-sheet'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import flattenReactChildren from 'react-keyed-flatten-children'
 
-import {isNative} from 'platform/detection'
+import {isNative} from '#/platform/detection'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
-import * as Dialog from '#/components/Dialog'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
-import {Context, ItemContext} from '#/components/Menu/context'
+import {ItemContext} from '#/components/Menu/context'
 import {
-  ContextType,
   GroupProps,
   ItemIconProps,
   ItemProps,
   ItemTextProps,
   TriggerProps,
 } from '#/components/Menu/types'
+import {Portal} from '#/components/Portal'
 import {Text} from '#/components/Typography'
 
 export {
@@ -25,29 +25,23 @@ export {
   useDialogControl as useMenuControl,
 } from '#/components/Dialog'
 
-export function useMemoControlContext() {
-  return React.useContext(Context)
+interface IContext {
+  dialogRef: React.RefObject<BlueskyBottomSheetView>
 }
 
-export function Root({
-  children,
-  control,
-}: React.PropsWithChildren<{
-  control?: Dialog.DialogOuterProps['control']
-}>) {
-  const defaultControl = Dialog.useDialogControl()
-  const context = React.useMemo<ContextType>(
-    () => ({
-      control: control || defaultControl,
-    }),
-    [control, defaultControl],
-  )
+const Context = React.createContext({} as IContext)
+const useContext = () => React.useContext(Context)
 
-  return <Context.Provider value={context}>{children}</Context.Provider>
+export function Root({children}: React.PropsWithChildren<{}>) {
+  const dialogRef = React.useRef<BlueskyBottomSheetView>(null)
+  const value = React.useMemo(() => {
+    return {dialogRef}
+  }, [dialogRef])
+  return <Context.Provider value={value}>{children}</Context.Provider>
 }
 
 export function Trigger({children, label}: TriggerProps) {
-  const {control} = React.useContext(Context)
+  const {dialogRef} = useContext()
   const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
   const {
     state: pressed,
@@ -57,14 +51,14 @@ export function Trigger({children, label}: TriggerProps) {
 
   return children({
     isNative: true,
-    control,
+    dialogRef,
     state: {
       hovered: false,
       focused,
       pressed,
     },
     props: {
-      onPress: control.open,
+      onPress: () => dialogRef.current?.present(),
       onFocus,
       onBlur,
       onPressIn,
@@ -81,30 +75,29 @@ export function Outer({
   showCancel?: boolean
   style?: StyleProp<ViewStyle>
 }>) {
-  const context = React.useContext(Context)
+  const t = useTheme()
+  const {dialogRef} = useContext()
 
   return (
-    <Dialog.Outer control={context.control}>
-      <Dialog.Handle />
-
-      {/* Re-wrap with context since Dialogs are portal-ed to root */}
-      <Context.Provider value={context}>
-        <Dialog.ScrollableInner label="Menu TODO">
-          <View style={[a.gap_lg]}>
-            {children}
-            {isNative && showCancel && <Cancel />}
+    <Portal>
+      <Context.Provider value={{dialogRef}}>
+        <BlueskyBottomSheetView ref={dialogRef} cornerRadius={30}>
+          <View style={[a.px_xl, a.pb_3xl, t.atoms.bg]}>
+            <View style={[a.gap_lg]}>
+              {children}
+              {isNative && showCancel && <Cancel />}
+            </View>
           </View>
-          <View style={{height: a.gap_lg.gap}} />
-        </Dialog.ScrollableInner>
+        </BlueskyBottomSheetView>
       </Context.Provider>
-    </Dialog.Outer>
+    </Portal>
   )
 }
 
 export function Item({children, label, style, onPress, ...rest}: ItemProps) {
   const t = useTheme()
-  const {control} = React.useContext(Context)
-  const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
+  const {dialogRef} = useContext()
+  const {state: focused} = useInteractionState()
   const {
     state: pressed,
     onIn: onPressIn,
@@ -113,18 +106,13 @@ export function Item({children, label, style, onPress, ...rest}: ItemProps) {
 
   return (
     <Pressable
-      {...rest}
       accessibilityHint=""
       accessibilityLabel={label}
       onPress={e => {
+        console.log('hi')
         onPress(e)
-
-        if (!e.defaultPrevented) {
-          control?.close()
-        }
+        dialogRef?.current?.dismiss()
       }}
-      onFocus={onFocus}
-      onBlur={onBlur}
       onPressIn={e => {
         onPressIn()
         rest.onPressIn?.(e)
@@ -222,7 +210,7 @@ export function Group({children, style}: GroupProps) {
 
 function Cancel() {
   const {_} = useLingui()
-  const {control} = React.useContext(Context)
+  const {dialogRef} = useContext()
 
   return (
     <Button
@@ -230,7 +218,7 @@ function Cancel() {
       size="small"
       variant="ghost"
       color="secondary"
-      onPress={() => control.close()}>
+      onPress={() => dialogRef.current?.dismiss()}>
       <ButtonText>
         <Trans>Cancel</Trans>
       </ButtonText>

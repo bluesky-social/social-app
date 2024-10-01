@@ -13,8 +13,6 @@ import BottomSheet, {
   BottomSheetBackdropProps,
   BottomSheetFlatList,
   BottomSheetFlatListMethods,
-  BottomSheetScrollView,
-  BottomSheetScrollViewMethods,
   BottomSheetTextInput,
   BottomSheetView,
   useBottomSheet,
@@ -24,6 +22,7 @@ import {BottomSheetFlatListProps} from '@discord/bottom-sheet/src/components/bot
 
 import {logger} from '#/logger'
 import {useDialogStateControlContext} from '#/state/dialogs'
+import {ScrollView} from '#/view/com/util/Views'
 import {atoms as a, flatten, useTheme} from '#/alf'
 import {Context} from '#/components/Dialog/context'
 import {
@@ -240,32 +239,21 @@ export function Inner({children, style}: DialogInnerProps) {
   )
 }
 
-export const ScrollableInner = React.forwardRef<
-  BottomSheetScrollViewMethods,
-  DialogInnerProps
->(function ScrollableInner({children, style}, ref) {
-  const insets = useSafeAreaInsets()
-  return (
-    <BottomSheetScrollView
-      keyboardShouldPersistTaps="handled"
-      style={[
-        a.flex_1, // main diff is this
-        a.p_xl,
-        a.h_full,
-        {
-          paddingTop: 40,
-          borderTopLeftRadius: 40,
-          borderTopRightRadius: 40,
-        },
-        style,
-      ]}
-      contentContainerStyle={a.pb_4xl}
-      ref={ref}>
-      {children}
-      <View style={{height: insets.bottom + a.pt_5xl.paddingTop}} />
-    </BottomSheetScrollView>
-  )
-})
+export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
+  function ScrollableInner({children, style}, ref) {
+    const insets = useSafeAreaInsets()
+    return (
+      <ScrollView
+        keyboardShouldPersistTaps="handled"
+        style={[a.p_xl, style]}
+        contentContainerStyle={a.pb_4xl}
+        ref={ref}>
+        {children}
+        <View style={{height: insets.bottom + a.pt_5xl.paddingTop}} />
+      </ScrollView>
+    )
+  },
+)
 
 export const InnerFlatList = React.forwardRef<
   BottomSheetFlatListMethods,

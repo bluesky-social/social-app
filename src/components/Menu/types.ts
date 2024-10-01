@@ -1,9 +1,8 @@
 import React from 'react'
-import {
-  AccessibilityProps,
-  GestureResponderEvent,
-  PressableProps,
-} from 'react-native'
+import {AccessibilityProps} from 'react-native'
+import {PressableProps} from 'react-native-gesture-handler'
+import {PressableEvent} from 'react-native-gesture-handler/lib/typescript/components/Pressable/PressableProps'
+import {BlueskyBottomSheetView} from '@haileyok/bluesky-bottom-sheet'
 
 import {TextStyleProp, ViewStyleProp} from '#/alf'
 import * as Dialog from '#/components/Dialog'
@@ -40,7 +39,7 @@ export type TriggerProps = {
 export type TriggerChildProps =
   | {
       isNative: true
-      control: Dialog.DialogOuterProps['control']
+      dialogRef: React.RefObject<BlueskyBottomSheetView>
       state: {
         /**
          * Web only, `false` on native
@@ -90,7 +89,7 @@ export type ItemProps = React.PropsWithChildren<
   Omit<PressableProps, 'style'> &
     ViewStyleProp & {
       label: string
-      onPress: (e: GestureResponderEvent) => void
+      onPress: (e: PressableEvent) => void
     }
 >
 
