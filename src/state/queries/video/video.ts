@@ -38,7 +38,6 @@ export interface State {
   asset?: ImagePickerAsset
   video: CompressedVideo | null
   jobStatus?: AppBskyVideoDefs.JobStatus
-  blobRef?: BlobRef
   error?: string
   abortController: AbortController
   pendingPublish?: {blobRef: BlobRef; mutableProcessed: boolean}
@@ -64,7 +63,6 @@ function reducer(queryClient: QueryClient) {
         status: 'idle',
         progress: 0,
         video: null,
-        blobRef: undefined,
         abortController: new AbortController(),
       }
     } else if (action.type === 'SetAsset') {
