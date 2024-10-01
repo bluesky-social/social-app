@@ -1,14 +1,7 @@
 import React from 'react'
-import {
-  BackHandler,
-  DimensionValue,
-  StyleSheet,
-  useWindowDimensions,
-  View,
-} from 'react-native'
+import {BackHandler, StyleSheet, useWindowDimensions, View} from 'react-native'
 import {Drawer} from 'react-native-drawer-layout'
 import Animated from 'react-native-reanimated'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import * as NavigationBar from 'expo-navigation-bar'
 import {StatusBar} from 'expo-status-bar'
 import {useNavigation, useNavigationState} from '@react-navigation/native'
@@ -22,6 +15,7 @@ import {isStateAtTabRoot} from '#/lib/routes/helpers'
 import {useTheme} from '#/lib/ThemeContext'
 import {isAndroid, isIOS} from '#/platform/detection'
 import {useDialogStateControlContext} from '#/state/dialogs'
+import {useDialogStateContext} from '#/state/dialogs'
 import {useSession} from '#/state/session'
 import {
   useIsDrawerOpen,
@@ -32,6 +26,7 @@ import {useCloseAnyActiveElement} from '#/state/util'
 import {Lightbox} from '#/view/com/lightbox/Lightbox'
 import {ModalsContainer} from '#/view/com/modals/Modal'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
+import {atoms as a} from '#/alf'
 import {MutedWordsDialog} from '#/components/dialogs/MutedWords'
 import {SigninDialog} from '#/components/dialogs/Signin'
 import {Outlet as PortalOutlet} from '#/components/Portal'
@@ -46,11 +41,7 @@ function ShellInner() {
   const isDrawerSwipeDisabled = useIsDrawerSwipeDisabled()
   const setIsDrawerOpen = useSetDrawerOpen()
   const winDim = useWindowDimensions()
-  const safeAreaInsets = useSafeAreaInsets()
-  const containerPadding = React.useMemo(
-    () => ({height: '100%' as DimensionValue, paddingTop: safeAreaInsets.top}),
-    [safeAreaInsets],
-  )
+
   const renderDrawerContent = React.useCallback(() => <DrawerContent />, [])
   const onOpenDrawer = React.useCallback(
     () => setIsDrawerOpen(true),
@@ -68,14 +59,14 @@ function ShellInner() {
   useNotificationsHandler()
 
   React.useEffect(() => {
-    let listener = {remove() {}}
     if (isAndroid) {
-      listener = BackHandler.addEventListener('hardwareBackPress', () => {
+      const listener = BackHandler.addEventListener('hardwareBackPress', () => {
         return closeAnyActiveElement()
       })
-    }
-    return () => {
-      listener.remove()
+
+      return () => {
+        listener.remove()
+      }
     }
   }, [closeAnyActiveElement])
 
@@ -102,7 +93,7 @@ function ShellInner() {
 
   return (
     <>
-      <Animated.View style={containerPadding}>
+      <Animated.View style={[a.h_full]}>
         <ErrorBoundary>
           <Drawer
             renderDrawerContent={renderDrawerContent}
