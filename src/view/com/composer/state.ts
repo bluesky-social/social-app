@@ -1,10 +1,12 @@
-import {ComposerImage} from '#/state/gallery'
+import {ComposerImage, createInitialImages} from '#/state/gallery'
+import {ComposerOpts} from '#/state/shell/composer'
 
 type PostRecord = {
   uri: string
 }
 
 type ImagesMedia = {
+  type: 'images'
   images: ComposerImage[]
   labels: string[]
 }
@@ -21,22 +23,60 @@ export type ComposerState = {
   embed: ComposerEmbed
 }
 
-// TODO: Actual actions.
-export type ComposerAction = {type: 'todo'}
+export type ComposerAction = {type: 'embed_add_images'; images: ComposerImage[]}
+
+const MAX_IMAGES = 4
 
 export function composerReducer(
   state: ComposerState,
-  _action: ComposerAction,
+  action: ComposerAction,
 ): ComposerState {
-  return state
+  switch (action.type) {
+    case 'embed_add_images': {
+      const prevMedia = state.embed.media
+      let nextMedia = prevMedia
+      if (!prevMedia) {
+        nextMedia = {
+          type: 'images',
+          images: action.images.slice(0, MAX_IMAGES),
+          labels: [],
+        }
+      } else if (prevMedia.type === 'images') {
+        nextMedia = {
+          ...prevMedia,
+          images: [...prevMedia.images, ...action.images].slice(0, MAX_IMAGES),
+        }
+      }
+      return {
+        ...state,
+        embed: {
+          ...state.embed,
+          media: nextMedia,
+        },
+      }
+    }
+    default:
+      return state
+  }
 }
 
-export function createComposerState(): ComposerState {
-  // TODO: Initial data like images from intent.
+export function createComposerState({
+  initImageUris,
+}: {
+  initImageUris: ComposerOpts['imageUris']
+}): ComposerState {
+  let media: ImagesMedia | undefined
+  if (initImageUris?.length) {
+    media = {
+      type: 'images',
+      images: createInitialImages(initImageUris),
+      labels: [],
+    }
+  }
   return {
     embed: {
       record: undefined,
-      media: undefined,
+      media,
     },
   }
 }

@@ -120,7 +120,7 @@ import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmile} from '#/components/icons
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import * as Prompt from '#/components/Prompt'
 import {Text as NewText} from '#/components/Typography'
-import {composerReducer,createComposerState} from './state'
+import {composerReducer, createComposerState} from './state'
 
 const MAX_IMAGES = 4
 
@@ -220,9 +220,9 @@ export const ComposePost = ({
   )
 
   // Not used yet.
-  const [composerState, _dispatch] = useReducer(
+  const [composerState, dispatch] = useReducer(
     composerReducer,
-    null,
+    {initImageUris},
     createComposerState,
   )
 
@@ -312,8 +312,12 @@ export const ComposePost = ({
   const onImageAdd = useCallback(
     (next: ComposerImage[]) => {
       setImages(prev => prev.concat(next.slice(0, MAX_IMAGES - prev.length)))
+      dispatch({
+        type: 'embed_add_images',
+        images: next,
+      })
     },
-    [setImages],
+    [setImages, dispatch],
   )
 
   const onPhotoPasted = useCallback(
