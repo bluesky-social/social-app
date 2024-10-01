@@ -3,6 +3,7 @@ import React, {
   useEffect,
   useImperativeHandle,
   useMemo,
+  useReducer,
   useRef,
   useState,
 } from 'react'
@@ -119,6 +120,7 @@ import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmile} from '#/components/icons
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import * as Prompt from '#/components/Prompt'
 import {Text as NewText} from '#/components/Typography'
+import {composerReducer,createComposerState} from './state'
 
 const MAX_IMAGES = 4
 
@@ -216,6 +218,14 @@ export const ComposePost = ({
   const [images, setImages] = useState<ComposerImage[]>(() =>
     createInitialImages(initImageUris),
   )
+
+  // Not used yet.
+  const [composerState, _dispatch] = useReducer(
+    composerReducer,
+    null,
+    createComposerState,
+  )
+
   const onClose = useCallback(() => {
     closeComposer()
   }, [closeComposer])
@@ -374,6 +384,7 @@ export const ComposePost = ({
       try {
         postUri = (
           await apilib.post(agent, {
+            composerState, // TODO: not used yet.
             rawText: richtext.text,
             replyTo: replyTo?.uri,
             images,
@@ -475,6 +486,7 @@ export const ComposePost = ({
       _,
       agent,
       captions,
+      composerState,
       extLink,
       images,
       graphemeLength,
