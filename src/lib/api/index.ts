@@ -191,9 +191,6 @@ async function resolveEmbed(
   | AppBskyEmbedRecordWithMedia.Main
   | undefined
 > {
-  if (opts.extLink?.embed) {
-    return opts.extLink.embed
-  }
   const media = await resolveMedia(agent, opts)
   if (opts.quote) {
     const quoteRecord = {
@@ -215,6 +212,9 @@ async function resolveEmbed(
   }
   if (media) {
     return media
+  }
+  if (opts.extLink?.embed) {
+    return opts.extLink.embed
   }
   return undefined
 }
