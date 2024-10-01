@@ -1,5 +1,6 @@
 import React from 'react'
 
+import {isWeb} from '#/platform/detection'
 import {DialogControlRefProps} from '#/components/Dialog'
 import {Provider as GlobalDialogsProvider} from '#/components/dialogs/Context'
 
@@ -42,11 +43,18 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const openDialogs = React.useRef<Set<string>>(new Set())
 
   const closeAllDialogs = React.useCallback(() => {
-    openDialogs.current.forEach(id => {
-      const dialog = activeDialogs.current.get(id)
-      if (dialog) dialog.current.close()
-    })
-    return openDialogs.current.size > 0
+    if (isWeb) {
+      openDialogs.current.forEach(id => {
+        const dialog = activeDialogs.current.get(id)
+        if (dialog) dialog.current.close()
+      })
+
+      return openDialogs.current.size > 0
+    } else {
+      // @TODO DIALOGS REFACTOR
+      console.error('HAILEY FIX THIS 🥺📋')
+      return false
+    }
   }, [])
 
   const setDialogIsOpen = React.useCallback((id: string, isOpen: boolean) => {
