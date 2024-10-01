@@ -10,7 +10,6 @@ import {useLingui} from '@lingui/react'
 
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
-import {s} from '#/lib/styles'
 import {useSetThemePrefs, useThemePrefs} from '#/state/shell'
 import {SimpleViewHeader} from '#/view/com/util/SimpleViewHeader'
 import {ScrollView} from '#/view/com/util/Views'
@@ -21,6 +20,7 @@ import {Moon_Stroke2_Corner0_Rounded as MoonIcon} from '#/components/icons/Moon'
 import {Phone_Stroke2_Corner0_Rounded as PhoneIcon} from '#/components/icons/Phone'
 import {TextSize_Stroke2_Corner0_Rounded as TextSize} from '#/components/icons/TextSize'
 import {TitleCase_Stroke2_Corner0_Rounded as Aa} from '#/components/icons/TitleCase'
+import * as Layout from '#/components/Layout'
 import {Text} from '#/components/Typography'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AppearanceSettings'>
@@ -76,7 +76,7 @@ export function AppearanceSettingsScreen({}: Props) {
 
   return (
     <LayoutAnimationConfig skipExiting skipEntering>
-      <View testID="preferencesThreadsScreen" style={s.hContentRegion}>
+      <Layout.Screen testID="preferencesThreadsScreen">
         <ScrollView
           // @ts-ignore web only -prf
           dataSet={{'stable-gutters': 1}}
@@ -180,7 +180,7 @@ export function AppearanceSettingsScreen({}: Props) {
             </View>
           </View>
         </ScrollView>
-      </View>
+      </Layout.Screen>
     </LayoutAnimationConfig>
   )
 }

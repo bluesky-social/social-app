@@ -8,20 +8,21 @@ import {useFocusEffect} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {CommonNavigatorParams} from '#/lib/routes/types'
+import {isWeb} from '#/platform/detection'
+import {useProfileShadow} from '#/state/cache/profile-shadow'
+import {ConvoProvider, isConvoActive, useConvo} from '#/state/messages/convo'
+import {ConvoStatus} from '#/state/messages/convo/types'
 import {useCurrentConvoId} from '#/state/messages/current-convo-id'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useProfileQuery} from '#/state/queries/profile'
-import {isWeb} from 'platform/detection'
-import {useProfileShadow} from 'state/cache/profile-shadow'
-import {ConvoProvider, isConvoActive, useConvo} from 'state/messages/convo'
-import {ConvoStatus} from 'state/messages/convo/types'
-import {useSetMinimalShellMode} from 'state/shell'
-import {CenteredView} from 'view/com/util/Views'
+import {useSetMinimalShellMode} from '#/state/shell'
+import {CenteredView} from '#/view/com/util/Views'
 import {MessagesList} from '#/screens/Messages/Conversation/MessagesList'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {MessagesListBlockedFooter} from '#/components/dms/MessagesListBlockedFooter'
 import {MessagesListHeader} from '#/components/dms/MessagesListHeader'
 import {Error} from '#/components/Error'
+import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
 
 type Props = NativeStackScreenProps<
@@ -64,9 +65,11 @@ export function MessagesConversationScreen({route}: Props) {
   )
 
   return (
-    <ConvoProvider key={convoId} convoId={convoId}>
-      <Inner />
-    </ConvoProvider>
+    <Layout.Screen testID="convoScreen">
+      <ConvoProvider key={convoId} convoId={convoId}>
+        <Inner />
+      </ConvoProvider>
+    </Layout.Screen>
   )
 }
 

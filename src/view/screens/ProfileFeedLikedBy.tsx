@@ -1,14 +1,14 @@
 import React from 'react'
-import {View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
 
+import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
+import {makeRecordUri} from '#/lib/strings/url-helpers'
 import {useSetMinimalShellMode} from '#/state/shell'
-import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
-import {makeRecordUri} from 'lib/strings/url-helpers'
-import {PostLikedBy as PostLikedByComponent} from '../com/post-thread/PostLikedBy'
-import {ViewHeader} from '../com/util/ViewHeader'
+import {PostLikedBy as PostLikedByComponent} from '#/view/com/post-thread/PostLikedBy'
+import {ViewHeader} from '#/view/com/util/ViewHeader'
+import * as Layout from '#/components/Layout'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileFeedLikedBy'>
 export const ProfileFeedLikedByScreen = ({route}: Props) => {
@@ -24,9 +24,9 @@ export const ProfileFeedLikedByScreen = ({route}: Props) => {
   )
 
   return (
-    <View style={{flex: 1}}>
+    <Layout.Screen testID="postLikedByScreen">
       <ViewHeader title={_(msg`Liked By`)} />
       <PostLikedByComponent uri={uri} />
-    </View>
+    </Layout.Screen>
   )
 }

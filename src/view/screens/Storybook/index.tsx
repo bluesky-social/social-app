@@ -7,6 +7,7 @@ import {CenteredView} from '#/view/com/util/Views'
 import {ListContained} from '#/view/screens/Storybook/ListContained'
 import {atoms as a, ThemeProvider, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
+import * as Layout from '#/components/Layout'
 import {Breakpoints} from './Breakpoints'
 import {Buttons} from './Buttons'
 import {Dialogs} from './Dialogs'
@@ -20,12 +21,16 @@ import {Theming} from './Theming'
 import {Typography} from './Typography'
 
 export function Storybook() {
-  if (isWeb) return <StorybookInner />
-
   return (
-    <ScrollView>
-      <StorybookInner />
-    </ScrollView>
+    <Layout.Screen>
+      {isWeb ? (
+        <StorybookInner />
+      ) : (
+        <ScrollView>
+          <StorybookInner />
+        </ScrollView>
+      )}
+    </Layout.Screen>
   )
 }
 

@@ -56,6 +56,7 @@ import {DeactivateAccountDialog} from '#/screens/Settings/components/DeactivateA
 import {atoms as a, useTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {BirthDateSettingsDialog} from '#/components/dialogs/BirthDateSettings'
+import * as Layout from '#/components/Layout'
 import {Email2FAToggle} from './Email2FAToggle'
 import {ExportCarDialog} from './ExportCarDialog'
 
@@ -285,7 +286,7 @@ export function SettingsScreen({}: Props) {
   const {mutate: onPressDeleteChatDeclaration} = useDeleteActorDeclaration()
 
   return (
-    <View style={s.hContentRegion} testID="settingsScreen">
+    <Layout.Screen testID="settingsScreen">
       <ExportCarDialog control={exportCarControl} />
       <BirthDateSettingsDialog control={birthdayControl} />
 
@@ -918,7 +919,7 @@ export function SettingsScreen({}: Props) {
         </View>
         <View style={s.footerSpacer} />
       </ScrollView>
-    </View>
+    </Layout.Screen>
   )
 }
 
