@@ -1,15 +1,14 @@
 import React, {useImperativeHandle} from 'react'
-import {Dimensions, Keyboard, StyleProp, View, ViewStyle} from 'react-native'
+import {ScrollView, StyleProp, View, ViewStyle} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import BottomSheet, {
+import {
   BottomSheetFlatList,
   BottomSheetFlatListMethods,
-  BottomSheetScrollView,
-  BottomSheetScrollViewMethods,
   BottomSheetTextInput,
   BottomSheetView,
 } from '@discord/bottom-sheet/src'
 import {BottomSheetFlatListProps} from '@discord/bottom-sheet/src/components/bottomSheetScrollable/types'
+import {BlueskyBottomSheetView} from '@haileyok/bluesky-bottom-sheet'
 
 import {logger} from '#/logger'
 import {useDialogStateControlContext} from '#/state/dialogs'
@@ -37,7 +36,7 @@ export function Outer({
   testID,
 }: React.PropsWithChildren<DialogOuterProps>) {
   const t = useTheme()
-  const sheet = React.useRef<BottomSheet>(null)
+  const ref = React.useRef<BlueskyBottomSheetView>(null)
   const insets = useSafeAreaInsets()
   const closeCallbacks = React.useRef<(() => void)[]>([])
   const {setDialogIsOpen} = useDialogStateControlContext()
@@ -61,7 +60,7 @@ export function Outer({
     callQueuedCallbacks()
     setIsOpen(true)
     setDialogIsOpen(control.id, true)
-    // sheet.current?.open() // @TODO DIALOG REFACTOR
+    ref.current?.present()
   }, [setDialogIsOpen, control.id, callQueuedCallbacks])
 
   // This is the function that we call when we want to dismiss the dialog.
@@ -70,7 +69,7 @@ export function Outer({
     if (typeof cb === 'function') {
       closeCallbacks.current.push(cb)
     }
-    // sheet.current?.close() // @TODO DIALOG REFACTOR
+    ref.current?.dismiss()
   }, [])
 
   // This is the actual thing we are doing once we "confirm" the dialog. We want the dialog's close animation to
@@ -102,39 +101,36 @@ export function Outer({
   const context = React.useMemo(() => ({close}), [close])
 
   return (
-    isOpen && (
-      <Portal>
-        <View
-          // iOS
-          accessibilityViewIsModal
-          style={[a.absolute, a.inset_0]}
-          testID={testID}
-          onTouchMove={() => Keyboard.dismiss()}>
-          <BottomSheet
-            topInset={insets.top}
-            bottomInset={insets.bottom}
-            ref={sheet}
-            // handleIndicatorStyle={{backgroundColor: t.palette.primary_500}} // @TODO DIALOG REFACTOR need to add this to lib!
-            onClose={onCloseAnimationComplete}>
-            <Context.Provider value={context}>
-              <View
-                style={[
-                  a.absolute,
-                  a.inset_0,
-                  t.atoms.bg,
-                  {
-                    borderTopLeftRadius: 40,
-                    borderTopRightRadius: 40,
-                    height: Dimensions.get('window').height * 2,
-                  },
-                ]}
-              />
-              {children}
-            </Context.Provider>
-          </BottomSheet>
-        </View>
-      </Portal>
-    )
+    <Portal>
+      <Context.Provider value={context}>
+        <BlueskyBottomSheetView
+          // handleIndicatorStyle={{backgroundColor: t.palette.primary_500}} // @TODO DIALOG REFACTOR need to add this to lib!*/
+          ref={ref}
+          topInset={insets.top}
+          bottomInset={insets.bottom}
+          onStateChange={e => {
+            if (e.nativeEvent.state === 'closed') {
+              onCloseAnimationComplete()
+            }
+          }}>
+          <View testID={testID} style={[t.atoms.bg]}>
+            {/*<View*/}
+            {/*  style={[*/}
+            {/*    a.absolute,*/}
+            {/*    a.inset_0,*/}
+            {/*    t.atoms.bg,*/}
+            {/*    {*/}
+            {/*      borderTopLeftRadius: 40,*/}
+            {/*      borderTopRightRadius: 40,*/}
+            {/*      height: Dimensions.get('window').height * 2,*/}
+            {/*    },*/}
+            {/*  ]}*/}
+            {/*/>*/}
+            {children}
+          </View>
+        </BlueskyBottomSheetView>
+      </Context.Provider>
+    </Portal>
   )
 }
 
@@ -158,32 +154,29 @@ export function Inner({children, style}: DialogInnerProps) {
   )
 }
 
-export const ScrollableInner = React.forwardRef<
-  BottomSheetScrollViewMethods,
-  DialogInnerProps
->(function ScrollableInner({children, style}, ref) {
-  const insets = useSafeAreaInsets()
-  return (
-    <BottomSheetScrollView
-      keyboardShouldPersistTaps="handled"
-      style={[
-        a.flex_1, // main diff is this
-        a.p_xl,
-        a.h_full,
-        {
-          paddingTop: 40,
-          borderTopLeftRadius: 40,
-          borderTopRightRadius: 40,
-        },
-        style,
-      ]}
-      contentContainerStyle={a.pb_4xl}
-      ref={ref}>
-      {children}
-      <View style={{height: insets.bottom + a.pt_5xl.paddingTop}} />
-    </BottomSheetScrollView>
-  )
-})
+export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
+  function ScrollableInner({children, style}, ref) {
+    const insets = useSafeAreaInsets()
+    return (
+      <View
+      // style={[
+      //   a.p_xl,
+      //   a.h_full,
+      //   {
+      //     paddingTop: 40,
+      //     borderTopLeftRadius: 40,
+      //     borderTopRightRadius: 40,
+      //   },
+      //   style,
+      // ]}
+      // ref={ref}
+      >
+        {children}
+        <View style={{height: insets.bottom + a.pt_5xl.paddingTop}} />
+      </View>
+    )
+  },
+)
 
 export const InnerFlatList = React.forwardRef<
   BottomSheetFlatListMethods,
