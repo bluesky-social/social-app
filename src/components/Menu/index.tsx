@@ -1,5 +1,6 @@
 import React from 'react'
-import {Pressable, StyleProp, View, ViewStyle} from 'react-native'
+import {StyleProp, View, ViewStyle} from 'react-native'
+import {Pressable} from 'react-native-gesture-handler'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import flattenReactChildren from 'react-keyed-flatten-children'
