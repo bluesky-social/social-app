@@ -62,12 +62,10 @@ import {makeSearchQuery, parseSearchQuery} from '#/screens/Search/utils'
 import {atoms as a, useBreakpoints, useTheme as useThemeNew, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as FeedCard from '#/components/FeedCard'
-import * as TextField from '#/components/forms/TextField'
+import {SearchInput} from '#/components/forms/SearchInput'
 import {ChevronBottom_Stroke2_Corner0_Rounded as ChevronDown} from '#/components/icons/Chevron'
-import {MagnifyingGlass2_Stroke2_Corner0_Rounded as MagnifyingGlass} from '#/components/icons/MagnifyingGlass2'
 import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
 import {SettingsGear2_Stroke2_Corner0_Rounded as Gear} from '#/components/icons/SettingsGear2'
-import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 
 function Loader() {
   const pal = usePalette('default')
@@ -624,7 +622,7 @@ export function SearchScreen(
    * Arbitrary sizing, so guess and check, used for sticky header alignment and
    * sizing.
    */
-  const headerHeight = 56 + (showFilters ? 40 : 0)
+  const headerHeight = 64 + (showFilters ? 40 : 0)
 
   useFocusEffect(
     useNonReactiveCallback(() => {
@@ -838,18 +836,18 @@ export function SearchScreen(
       <CenteredView
         style={[
           a.p_md,
-          a.pb_0,
+          a.pb_sm,
           a.gap_sm,
           t.atoms.bg,
           web({
-            height: headerHeight + a.mb_sm.marginBottom,
+            height: headerHeight,
             position: 'sticky',
             top: 0,
             zIndex: 1,
           }),
         ]}
         sideBorders={gtMobile}>
-        <View style={[a.flex_row, a.gap_sm, a.mb_sm]}>
+        <View style={[a.flex_row, a.gap_sm]}>
           {!gtMobile && (
             <Button
               testID="viewHeaderBackOrMenuBtn"
@@ -864,15 +862,16 @@ export function SearchScreen(
               <ButtonIcon icon={Menu} size="lg" />
             </Button>
           )}
-          <SearchInputBox
-            textInput={textInput}
-            searchText={searchText}
-            showAutocomplete={showAutocomplete}
-            onFocus={onSearchInputFocus}
-            onChangeText={onChangeText}
-            onSubmit={onSubmit}
-            onPressClearQuery={onPressClearQuery}
-          />
+          <View style={[a.flex_1]}>
+            <SearchInput
+              ref={textInput}
+              value={searchText}
+              onFocus={onSearchInputFocus}
+              onChangeText={onChangeText}
+              onClearText={onPressClearQuery}
+              onSubmitEditing={onSubmit}
+            />
+          </View>
           {showFiltersButton && (
             <Button
               onPress={() => setShowFilters(!showFilters)}
@@ -887,7 +886,7 @@ export function SearchScreen(
                 fill={
                   showFilters
                     ? t.palette.primary_500
-                    : t.atoms.text_contrast_low.color
+                    : t.atoms.text_contrast_medium.color
                 }
               />
             </Button>
@@ -960,78 +959,6 @@ export function SearchScreen(
     </View>
   )
 }
-
-let SearchInputBox = ({
-  textInput,
-  searchText,
-  showAutocomplete,
-  onFocus,
-  onChangeText,
-  onSubmit,
-  onPressClearQuery,
-}: {
-  textInput: React.RefObject<TextInput>
-  searchText: string
-  showAutocomplete: boolean
-  onFocus: () => void
-  onChangeText: (text: string) => void
-  onSubmit: () => void
-  onPressClearQuery: () => void
-}): React.ReactNode => {
-  const {_} = useLingui()
-  const t = useThemeNew()
-
-  return (
-    <View style={[a.flex_1]}>
-      <TextField.Root>
-        <TextField.Icon icon={MagnifyingGlass} />
-        <TextField.Input
-          inputRef={textInput}
-          label={_(msg`Search`)}
-          value={searchText}
-          placeholder={_(msg`Search`)}
-          returnKeyType="search"
-          onChangeText={onChangeText}
-          onSubmitEditing={onSubmit}
-          onFocus={onFocus}
-          keyboardAppearance={t.scheme}
-          selectTextOnFocus={isNative}
-          autoFocus={false}
-          accessibilityRole="search"
-          autoCorrect={false}
-          autoComplete="off"
-          autoCapitalize="none"
-        />
-      </TextField.Root>
-
-      {showAutocomplete && searchText.length > 0 && (
-        <View
-          style={[
-            a.absolute,
-            a.z_10,
-            a.my_auto,
-            a.inset_0,
-            a.justify_center,
-            a.pr_sm,
-            {left: 'auto'},
-          ]}>
-          <Button
-            testID="searchTextInputClearBtn"
-            onPress={onPressClearQuery}
-            label={_(msg`Clear search query`)}
-            hitSlop={HITSLOP_10}
-            size="tiny"
-            shape="round"
-            variant="ghost"
-            color="secondary">
-            <ButtonIcon icon={X} size="sm" />
-          </Button>
-        </View>
-      )}
-    </View>
-  )
-}
-SearchInputBox = React.memo(SearchInputBox)
 
 let AutocompleteResults = ({
   isAutocompleteFetching,
