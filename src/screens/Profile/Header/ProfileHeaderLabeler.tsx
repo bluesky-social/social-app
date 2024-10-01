@@ -25,7 +25,7 @@ import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useRequireAuth, useSession} from '#/state/session'
 import {ProfileMenu} from '#/view/com/profile/ProfileMenu'
 import * as Toast from '#/view/com/util/Toast'
-import {atoms as a, tokens, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, tokens, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {DialogOuterProps} from '#/components/Dialog'
 import {
@@ -61,7 +61,6 @@ let ProfileHeaderLabeler = ({
   const profile: Shadow<AppBskyActorDefs.ProfileViewDetailed> =
     useProfileShadow(profileUnshadowed)
   const t = useTheme()
-  const {gtMobile} = useBreakpoints()
   const {_} = useLingui()
   const {currentAccount, hasSession} = useSession()
   const {openModal} = useModalControls()
@@ -167,7 +166,7 @@ let ProfileHeaderLabeler = ({
         style={[a.px_lg, a.pt_md, a.pb_sm]}
         pointerEvents={isIOS ? 'auto' : 'box-none'}>
         <View
-          style={[a.flex_row, a.justify_end, a.gap_sm, a.pb_lg]}
+          style={[a.flex_row, a.justify_end, a.align_center, a.gap_xs, a.pb_lg]}
           pointerEvents={isIOS ? 'auto' : 'box-none'}>
           {isMe ? (
             <Button
@@ -196,7 +195,10 @@ let ProfileHeaderLabeler = ({
                   <View
                     style={[
                       {
-                        paddingVertical: gtMobile ? 12 : 10,
+                        paddingVertical: 9,
+                        paddingHorizontal: 12,
+                        borderRadius: 6,
+                        gap: 6,
                         backgroundColor: isSubscribed
                           ? state.hovered || state.pressed
                             ? t.palette.contrast_50
@@ -205,9 +207,6 @@ let ProfileHeaderLabeler = ({
                           ? tokens.color.temp_purple_dark
                           : tokens.color.temp_purple,
                       },
-                      a.px_lg,
-                      a.rounded_sm,
-                      a.gap_sm,
                     ]}>
                     <Text
                       style={[
@@ -218,6 +217,7 @@ let ProfileHeaderLabeler = ({
                         },
                         a.font_bold,
                         a.text_center,
+                        a.leading_tight,
                       ]}>
                       {isSubscribed ? (
                         <Trans>Unsubscribe</Trans>
