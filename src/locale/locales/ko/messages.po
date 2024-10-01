@@ -263,7 +263,7 @@ msgid "7 days"
 msgstr "7일"
 
 #: src/view/com/util/ViewHeader.tsx:89
-#: src/view/screens/Search/Search.tsx:859
+#: src/view/screens/Search/Search.tsx:857
 msgid "Access navigation links and settings"
 msgstr "탐색 링크 및 설정으로 이동합니다"
 
@@ -455,7 +455,7 @@ msgstr "알고리즘 훈련 완료!"
 msgid "All accounts have been followed!"
 msgstr "모든 계정을 팔로우했습니다"
 
-#: src/view/screens/Feeds.tsx:733
+#: src/view/screens/Feeds.tsx:734
 msgid "All the feeds you've saved, right in one place."
 msgstr "저장한 모든 피드를 한 곳에서 확인하세요."
 
@@ -944,7 +944,7 @@ msgstr "글자, 숫자, 공백, 대시, 밑줄만 포함할 수 있습니다. �
 #: src/view/com/modals/VerifyEmail.tsx:255
 #: src/view/com/modals/VerifyEmail.tsx:261
 #: src/view/com/util/post-ctrls/RepostButton.tsx:163
-#: src/view/screens/Search/Search.tsx:905
+#: src/view/screens/Search/Search.tsx:904
 msgid "Cancel"
 msgstr "취소"
 
@@ -981,7 +981,7 @@ msgid "Cancel reactivation and log out"
 msgstr "재활성화 취소 및 로그아웃"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:88
-#: src/view/screens/Search/Search.tsx:897
+#: src/view/screens/Search/Search.tsx:896
 msgid "Cancel search"
 msgstr "검색 취소"
 
@@ -1119,8 +1119,7 @@ msgstr "모든 스토리지 데이터 지우기"
 msgid "Clear all storage data (restart after this)"
 msgstr "모든 스토리지 데이터 지우기 (이후 다시 시작)"
 
-#: src/view/com/util/forms/SearchInput.tsx:88
-#: src/view/screens/Search/Search.tsx:1021
+#: src/components/forms/SearchInput.tsx:62
 msgid "Clear search query"
 msgstr "검색어 지우기"
 
@@ -1570,7 +1569,7 @@ msgstr "사용자 지정"
 msgid "Custom domain"
 msgstr "사용자 지정 도메인"
 
-#: src/view/screens/Feeds.tsx:759
+#: src/view/screens/Feeds.tsx:760
 #: src/view/screens/Search/Explore.tsx:391
 msgid "Custom feeds built by the community bring you new experiences and help you find the content you love."
 msgstr "커뮤니티에서 구축한 맞춤 피드는 새로운 경험을 제공하고 좋아하는 콘텐츠를 찾을 수 있도록 도와줍니다."
@@ -1795,7 +1794,7 @@ msgstr "새로운 맞춤 피드 찾아보기"
 msgid "Discover new feeds"
 msgstr "새 피드 발견하기"
 
-#: src/view/screens/Feeds.tsx:756
+#: src/view/screens/Feeds.tsx:757
 msgid "Discover New Feeds"
 msgstr "새 피드 발견하기"
 
@@ -2185,7 +2184,7 @@ msgid "Error receiving captcha response."
 msgstr "캡차 응답을 수신하는 동안 오류가 발생했습니다."
 
 #: src/screens/Onboarding/StepInterests/index.tsx:183
-#: src/view/screens/Search/Search.tsx:124
+#: src/view/screens/Search/Search.tsx:122
 msgid "Error:"
 msgstr "오류:"
 
@@ -2421,9 +2420,9 @@ msgstr "피드백"
 #: src/Navigation.tsx:352
 #: src/screens/StarterPack/StarterPackScreen.tsx:172
 #: src/view/screens/Feeds.tsx:445
-#: src/view/screens/Feeds.tsx:550
+#: src/view/screens/Feeds.tsx:551
 #: src/view/screens/Profile.tsx:223
-#: src/view/screens/Search/Search.tsx:514
+#: src/view/screens/Search/Search.tsx:512
 #: src/view/shell/desktop/LeftNav.tsx:401
 #: src/view/shell/Drawer.tsx:489
 #: src/view/shell/Drawer.tsx:490
@@ -2460,7 +2459,7 @@ msgstr "마무리 중"
 msgid "Find accounts to follow"
 msgstr "팔로우할 계정 찾아보기"
 
-#: src/view/screens/Search/Search.tsx:586
+#: src/view/screens/Search/Search.tsx:584
 msgid "Find posts and users on Bluesky"
 msgstr "Bluesky에서 게시물 및 사용자 찾기"
 
@@ -2583,7 +2582,7 @@ msgstr "내가 아는 팔로워"
 #: src/components/ProfileHoverCard/index.web.tsx:459
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:215
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:144
-#: src/view/screens/Feeds.tsx:630
+#: src/view/screens/Feeds.tsx:631
 #: src/view/screens/ProfileFollows.tsx:29
 #: src/view/screens/ProfileFollows.tsx:30
 #: src/view/screens/SavedFeeds.tsx:404
@@ -3186,7 +3185,7 @@ msgid "Larger"
 msgstr "큼"
 
 #: src/screens/Hashtag.tsx:97
-#: src/view/screens/Search/Search.tsx:498
+#: src/view/screens/Search/Search.tsx:496
 msgid "Latest"
 msgstr "최신"
 
@@ -3471,7 +3470,7 @@ msgid "Mentioned users"
 msgstr "멘션한 사용자"
 
 #: src/view/com/util/ViewHeader.tsx:87
-#: src/view/screens/Search/Search.tsx:858
+#: src/view/screens/Search/Search.tsx:856
 msgid "Menu"
 msgstr "메뉴"
 
@@ -3710,7 +3709,7 @@ msgstr "뮤트 목록은 비공개입니다. 뮤트한 계정은 나와 상호�
 msgid "My Birthday"
 msgstr "내 생년월일"
 
-#: src/view/screens/Feeds.tsx:730
+#: src/view/screens/Feeds.tsx:731
 msgid "My Feeds"
 msgstr "내 피드"
 
@@ -3817,7 +3816,7 @@ msgctxt "action"
 msgid "New post"
 msgstr "새 게시물"
 
-#: src/view/screens/Feeds.tsx:580
+#: src/view/screens/Feeds.tsx:581
 #: src/view/screens/Notifications.tsx:225
 #: src/view/screens/Profile.tsx:487
 #: src/view/screens/ProfileFeed.tsx:426
@@ -3892,7 +3891,7 @@ msgstr "DNS 패널 없음"
 msgid "No featured GIFs found. There may be an issue with Tenor."
 msgstr "인기 GIF를 찾을 수 없습니다. Tenor에 문제가 있을 수 있습니다."
 
-#: src/screens/StarterPack/Wizard/StepFeeds.tsx:120
+#: src/screens/StarterPack/Wizard/StepFeeds.tsx:118
 msgid "No feeds found. Try searching for something else."
 msgstr "피드를 찾을 수 없습니다. 다른 피드를 검색해 보세요."
 
@@ -3958,14 +3957,14 @@ msgstr "결과 없음"
 msgid "No results found"
 msgstr "결과를 찾을 수 없음"
 
-#: src/view/screens/Feeds.tsx:511
+#: src/view/screens/Feeds.tsx:512
 msgid "No results found for \"{query}\""
 msgstr "\"{query}\"에 대한 결과를 찾을 수 없습니다"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:128
-#: src/view/screens/Search/Search.tsx:241
-#: src/view/screens/Search/Search.tsx:280
-#: src/view/screens/Search/Search.tsx:326
+#: src/view/screens/Search/Search.tsx:239
+#: src/view/screens/Search/Search.tsx:278
+#: src/view/screens/Search/Search.tsx:324
 msgid "No results found for {query}"
 msgstr "{query}에 대한 결과를 찾을 수 없습니다"
 
@@ -3997,7 +3996,7 @@ msgstr "아직 아무도 인용하지 않았습니다. 첫 번째가 되어 보�
 msgid "Nobody has reposted this yet. Maybe you should be the first!"
 msgstr "아직 아무도 재게시하지 않았습니다. 첫 번째가 되어 보세요!"
 
-#: src/screens/StarterPack/Wizard/StepProfiles.tsx:103
+#: src/screens/StarterPack/Wizard/StepProfiles.tsx:102
 msgid "Nobody was found. Try searching for someone else."
 msgstr "아무도 찾을 수 없습니다. 다른 사용자를 검색해 보세요."
 
@@ -4424,7 +4423,7 @@ msgid "Pause video"
 msgstr "동영상 일시 정지"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:171
-#: src/view/screens/Search/Search.tsx:508
+#: src/view/screens/Search/Search.tsx:506
 msgid "People"
 msgstr "사람들"
 
@@ -4855,7 +4854,7 @@ msgstr "Bluesky 서비스 이용약관 읽기"
 msgid "Reason:"
 msgstr "이유:"
 
-#: src/view/screens/Search/Search.tsx:1123
+#: src/view/screens/Search/Search.tsx:1050
 msgid "Recent Searches"
 msgstr "최근 검색"
 
@@ -4947,11 +4946,11 @@ msgstr "이미지 제거"
 msgid "Remove mute word from your list"
 msgstr "목록에서 뮤트한 단어 제거"
 
-#: src/view/screens/Search/Search.tsx:1167
+#: src/view/screens/Search/Search.tsx:1094
 msgid "Remove profile"
 msgstr "프로필 제거"
 
-#: src/view/screens/Search/Search.tsx:1169
+#: src/view/screens/Search/Search.tsx:1096
 msgid "Remove profile from search history"
 msgstr "검색 기록에서 프로필을 제거합니다"
 
@@ -5402,13 +5401,11 @@ msgid "Scroll to top"
 msgstr "맨 위로 스크롤"
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:504
+#: src/components/forms/SearchInput.tsx:33
+#: src/components/forms/SearchInput.tsx:35
 #: src/Navigation.tsx:554
 #: src/view/com/modals/ListAddRemoveUsers.tsx:76
-#: src/view/com/util/forms/SearchInput.tsx:67
-#: src/view/com/util/forms/SearchInput.tsx:79
-#: src/view/screens/Search/Search.tsx:568
-#: src/view/screens/Search/Search.tsx:990
-#: src/view/screens/Search/Search.tsx:992
+#: src/view/screens/Search/Search.tsx:566
 #: src/view/shell/bottom-bar/BottomBar.tsx:178
 #: src/view/shell/desktop/LeftNav.tsx:377
 #: src/view/shell/Drawer.tsx:390
@@ -5420,7 +5417,7 @@ msgstr "검색"
 msgid "Search for \"{query}\""
 msgstr "\"{query}\"에 대한 검색 결과"
 
-#: src/view/screens/Search/Search.tsx:1066
+#: src/view/screens/Search/Search.tsx:993
 msgid "Search for \"{searchText}\""
 msgstr "\"{searchText}\"에 대한 검색 결과"
 
@@ -5782,7 +5779,7 @@ msgstr "연결된 웹사이트를 공유합니다"
 msgid "Show"
 msgstr "표시"
 
-#: src/view/screens/Search/Search.tsx:880
+#: src/view/screens/Search/Search.tsx:879
 msgid "Show advanced filters"
 msgstr "고급 필터 표시"
 
@@ -6692,7 +6689,7 @@ msgid "Toggle to enable or disable adult content"
 msgstr "성인 콘텐츠 활성화 또는 비활성화 전환"
 
 #: src/screens/Hashtag.tsx:86
-#: src/view/screens/Search/Search.tsx:488
+#: src/view/screens/Search/Search.tsx:486
 msgid "Top"
 msgstr "인기"
 
@@ -7300,7 +7297,7 @@ msgstr "죄송하지만 이 리스트를 불러올 수 없습니다. 이 문제�
 msgid "We're sorry, but we weren't able to load your muted words at this time. Please try again."
 msgstr "죄송하지만 현재 뮤트한 단어를 불러올 수 없습니다. 다시 시도해 주세요."
 
-#: src/view/screens/Search/Search.tsx:214
+#: src/view/screens/Search/Search.tsx:212
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr "죄송하지만 검색을 완료할 수 없습니다. 몇 분 후에 다시 시도해 주세요."
 
