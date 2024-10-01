@@ -1,6 +1,6 @@
 import React from 'react'
 import {StyleProp, View, ViewStyle} from 'react-native'
-import {} from 'react-native-gesture-handler'
+import {BlueskyBottomSheetPressable as Pressable} from '@haileyok/bluesky-bottom-sheet'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import flattenReactChildren from 'react-keyed-flatten-children'
@@ -103,7 +103,7 @@ export function Outer({
 export function Item({children, label, style, onPress, ...rest}: ItemProps) {
   const t = useTheme()
   const {control} = React.useContext(Context)
-  const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
+  const {state: focused} = useInteractionState()
   const {
     state: pressed,
     onIn: onPressIn,
@@ -116,14 +116,11 @@ export function Item({children, label, style, onPress, ...rest}: ItemProps) {
       accessibilityHint=""
       accessibilityLabel={label}
       onPress={e => {
+        control?.close()
         onPress(e)
-
-        if (!e.defaultPrevented) {
-          control?.close()
-        }
       }}
-      onFocus={onFocus}
-      onBlur={onBlur}
+      // onFocus={onFocus}
+      // onBlur={onBlur}
       onPressIn={e => {
         onPressIn()
         rest.onPressIn?.(e)
