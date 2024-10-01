@@ -3,6 +3,7 @@ import React, {
   useEffect,
   useImperativeHandle,
   useMemo,
+  useReducer,
   useRef,
   useState,
 } from 'react'
@@ -66,7 +67,7 @@ import {logger} from '#/logger'
 import {isAndroid, isIOS, isNative, isWeb} from '#/platform/detection'
 import {useDialogStateControlContext} from '#/state/dialogs'
 import {emitPostCreated} from '#/state/events'
-import {ComposerImage, createInitialImages, pasteImage} from '#/state/gallery'
+import {ComposerImage, pasteImage} from '#/state/gallery'
 import {useModalControls} from '#/state/modals'
 import {useModals} from '#/state/modals'
 import {useRequireAltTextEnabled} from '#/state/preferences'
@@ -119,12 +120,15 @@ import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmile} from '#/components/icons
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import * as Prompt from '#/components/Prompt'
 import {Text as NewText} from '#/components/Typography'
+import {composerReducer, createComposerState} from './state'
 
 const MAX_IMAGES = 4
 
 type CancelRef = {
   onPressCancel: () => void
 }
+
+const NO_IMAGES: ComposerImage[] = []
 
 type Props = ComposerOpts
 export const ComposePost = ({
@@ -213,9 +217,17 @@ export const ComposePost = ({
     )
   const [postgate, setPostgate] = useState(createPostgateRecord({post: ''}))
 
-  const [images, setImages] = useState<ComposerImage[]>(() =>
-    createInitialImages(initImageUris),
+  // TODO: Move more state here.
+  const [composerState, dispatch] = useReducer(
+    composerReducer,
+    {initImageUris},
+    createComposerState,
   )
+  let images = NO_IMAGES
+  if (composerState.embed.media?.type === 'images') {
+    images = composerState.embed.media.images
+  }
+
   const onClose = useCallback(() => {
     closeComposer()
   }, [closeComposer])
@@ -301,9 +313,12 @@ export const ComposePost = ({
 
   const onImageAdd = useCallback(
     (next: ComposerImage[]) => {
-      setImages(prev => prev.concat(next.slice(0, MAX_IMAGES - prev.length)))
+      dispatch({
+        type: 'embed_add_images',
+        images: next,
+      })
     },
-    [setImages],
+    [dispatch],
   )
 
   const onPhotoPasted = useCallback(
@@ -374,6 +389,7 @@ export const ComposePost = ({
       try {
         postUri = (
           await apilib.post(agent, {
+            composerState, // TODO: not used yet.
             rawText: richtext.text,
             replyTo: replyTo?.uri,
             images,
@@ -475,6 +491,7 @@ export const ComposePost = ({
       _,
       agent,
       captions,
+      composerState,
       extLink,
       images,
       graphemeLength,
@@ -717,7 +734,7 @@ export const ComposePost = ({
             />
           </View>
 
-          <Gallery images={images} onChange={setImages} />
+          <Gallery images={images} dispatch={dispatch} />
           {images.length === 0 && extLink && (
             <View style={a.relative}>
               <ExternalEmbed
