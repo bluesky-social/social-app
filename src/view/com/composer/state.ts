@@ -23,7 +23,10 @@ export type ComposerState = {
   embed: ComposerEmbed
 }
 
-export type ComposerAction = {type: 'embed_add_images'; images: ComposerImage[]}
+export type ComposerAction =
+  | {type: 'embed_add_images'; images: ComposerImage[]}
+  | {type: 'embed_update_image'; image: ComposerImage}
+  | {type: 'embed_remove_image'; image: ComposerImage}
 
 const MAX_IMAGES = 4
 
@@ -54,6 +57,52 @@ export function composerReducer(
           media: nextMedia,
         },
       }
+    }
+    case 'embed_update_image': {
+      const prevMedia = state.embed.media
+      if (prevMedia?.type === 'images') {
+        const updatedImage = action.image
+        const nextMedia = {
+          ...prevMedia,
+          images: prevMedia.images.map(img => {
+            if (img.source.id === updatedImage.source.id) {
+              return updatedImage
+            }
+            return img
+          }),
+        }
+        return {
+          ...state,
+          embed: {
+            ...state.embed,
+            media: nextMedia,
+          },
+        }
+      }
+      return state
+    }
+    case 'embed_remove_image': {
+      const prevMedia = state.embed.media
+      if (prevMedia?.type === 'images') {
+        const removedImage = action.image
+        let nextMedia: ImagesMedia | undefined = {
+          ...prevMedia,
+          images: prevMedia.images.filter(img => {
+            return img.source.id !== removedImage.source.id
+          }),
+        }
+        if (nextMedia.images.length === 0) {
+          nextMedia = undefined
+        }
+        return {
+          ...state,
+          embed: {
+            ...state.embed,
+            media: nextMedia,
+          },
+        }
+      }
+      return state
     }
     default:
       return state

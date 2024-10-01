@@ -733,7 +733,7 @@ export const ComposePost = ({
             />
           </View>
 
-          <Gallery images={images} onChange={setImages} />
+          <Gallery images={images} onChange={setImages} dispatch={dispatch} />
           {images.length === 0 && extLink && (
             <View style={a.relative}>
               <ExternalEmbed
