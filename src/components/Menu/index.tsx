@@ -103,7 +103,11 @@ export function Outer({
 export function Item({children, label, style, onPress, ...rest}: ItemProps) {
   const t = useTheme()
   const {control} = React.useContext(Context)
-  const {state: focused} = useInteractionState()
+  const {
+    state: focused,
+    onIn: onHoverIn,
+    onOut: onHoverOut,
+  } = useInteractionState()
   const {
     state: pressed,
     onIn: onPressIn,
@@ -119,8 +123,6 @@ export function Item({children, label, style, onPress, ...rest}: ItemProps) {
         control?.close()
         onPress(e)
       }}
-      // onFocus={onFocus}
-      // onBlur={onBlur}
       onPressIn={e => {
         onPressIn()
         rest.onPressIn?.(e)
@@ -129,6 +131,8 @@ export function Item({children, label, style, onPress, ...rest}: ItemProps) {
         onPressOut()
         rest.onPressOut?.(e)
       }}
+      onHoverIn={onHoverIn}
+      onHoverOut={onHoverOut}
       style={[
         a.flex_row,
         a.align_center,
