@@ -90,6 +90,10 @@ function reducer(state: State, action: Action): State {
   return updatedState
 }
 
+function RQKEY(jobId: string | undefined) {
+  return ['video-status', jobId || '']
+}
+
 export function useUploadVideo({
   setStatus,
   initialVideoUri,
@@ -251,9 +255,11 @@ export function useUploadVideo({
 
   const clearVideo = () => {
     state.abortController.abort()
-    queryClient.cancelQueries({
-      queryKey: ['video'],
-    })
+    if (state.jobId) {
+      queryClient.cancelQueries({
+        queryKey: RQKEY(state.jobId),
+      })
+    }
     dispatch({type: 'Reset'})
   }
 
@@ -301,7 +307,7 @@ const useUploadStatusQuery = ({
   }
 
   const {error} = useQuery({
-    queryKey: ['video', 'upload status', jobId],
+    queryKey: RQKEY(jobId),
     queryFn: async () => {
       if (!jobId) return
 
