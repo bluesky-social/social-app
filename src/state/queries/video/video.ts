@@ -3,7 +3,7 @@ import {ImagePickerAsset} from 'expo-image-picker'
 import {AppBskyVideoDefs, BlobRef} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {QueryClient, useQuery, useQueryClient} from '@tanstack/react-query'
+import {useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {AbortError} from '#/lib/async/cancelable'
 import {SUPPORTED_MIME_TYPES, SupportedMimeTypes} from '#/lib/constants'
@@ -43,56 +43,50 @@ export interface State {
   pendingPublish?: {blobRef: BlobRef; mutableProcessed: boolean}
 }
 
-function reducer(queryClient: QueryClient) {
-  return (state: State, action: Action): State => {
-    let updatedState = state
-    if (action.type === 'SetStatus') {
-      updatedState = {...state, status: action.status}
-    } else if (action.type === 'SetProgress') {
-      updatedState = {...state, progress: action.progress}
-    } else if (action.type === 'SetError') {
-      updatedState = {...state, error: action.error}
-    } else if (action.type === 'Reset') {
-      state.abortController.abort()
-      queryClient.cancelQueries({
-        queryKey: ['video'],
-      })
-      updatedState = {
-        status: 'idle',
-        progress: 0,
-        video: null,
-        abortController: new AbortController(),
-      }
-    } else if (action.type === 'SetAsset') {
-      updatedState = {
-        ...state,
-        asset: action.asset,
-        status: 'compressing',
-        error: undefined,
-      }
-    } else if (action.type === 'SetDimensions') {
-      updatedState = {
-        ...state,
-        asset: state.asset
-          ? {...state.asset, width: action.width, height: action.height}
-          : undefined,
-      }
-    } else if (action.type === 'SetVideo') {
-      updatedState = {...state, video: action.video, status: 'uploading'}
-    } else if (action.type === 'SetJobStatus') {
-      updatedState = {...state, jobStatus: action.jobStatus}
-    } else if (action.type === 'SetComplete') {
-      updatedState = {
-        ...state,
-        pendingPublish: {
-          blobRef: action.blobRef,
-          mutableProcessed: false,
-        },
-        status: 'done',
-      }
+function reducer(state: State, action: Action): State {
+  let updatedState = state
+  if (action.type === 'SetStatus') {
+    updatedState = {...state, status: action.status}
+  } else if (action.type === 'SetProgress') {
+    updatedState = {...state, progress: action.progress}
+  } else if (action.type === 'SetError') {
+    updatedState = {...state, error: action.error}
+  } else if (action.type === 'Reset') {
+    updatedState = {
+      status: 'idle',
+      progress: 0,
+      video: null,
+      abortController: new AbortController(),
     }
-    return updatedState
+  } else if (action.type === 'SetAsset') {
+    updatedState = {
+      ...state,
+      asset: action.asset,
+      status: 'compressing',
+      error: undefined,
+    }
+  } else if (action.type === 'SetDimensions') {
+    updatedState = {
+      ...state,
+      asset: state.asset
+        ? {...state.asset, width: action.width, height: action.height}
+        : undefined,
+    }
+  } else if (action.type === 'SetVideo') {
+    updatedState = {...state, video: action.video, status: 'uploading'}
+  } else if (action.type === 'SetJobStatus') {
+    updatedState = {...state, jobStatus: action.jobStatus}
+  } else if (action.type === 'SetComplete') {
+    updatedState = {
+      ...state,
+      pendingPublish: {
+        blobRef: action.blobRef,
+        mutableProcessed: false,
+      },
+      status: 'done',
+    }
   }
+  return updatedState
 }
 
 export function useUploadVideo({
@@ -105,7 +99,7 @@ export function useUploadVideo({
 }) {
   const {_} = useLingui()
   const queryClient = useQueryClient()
-  const [state, dispatch] = React.useReducer(reducer(queryClient), {
+  const [state, dispatch] = React.useReducer(reducer, {
     status: 'idle',
     progress: 0,
     video: null,
@@ -255,6 +249,10 @@ export function useUploadVideo({
   )
 
   const clearVideo = () => {
+    state.abortController.abort()
+    queryClient.cancelQueries({
+      queryKey: ['video'],
+    })
     dispatch({type: 'Reset'})
   }
 
