@@ -1,4 +1,10 @@
-import React, {memo, useEffect, useMemo, useState} from 'react'
+import React, {
+  memo,
+  type ReactElement,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react'
 import {
   Animated,
   Pressable,
@@ -17,7 +23,7 @@ import {
 } from '@atproto/api'
 import {AtUri} from '@atproto/api'
 import {TID} from '@atproto/common-web'
-import {msg, plural, Trans} from '@lingui/macro'
+import {msg, Plural, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
@@ -164,7 +170,30 @@ let FeedItem = ({
     )
   }
 
-  let action = ''
+  const formattedCount =
+    authors.length > 1 ? formatCount(i18n, authors.length - 1) : ''
+  const firstAuthorName = sanitizeDisplayName(
+    authors[0].profile.displayName || authors[0].profile.handle,
+  )
+  const niceTimestamp = niceDate(i18n, item.notification.indexedAt)
+
+  let a11yAuthor = firstAuthorName
+  let author = (
+    <TextLink
+      key={authors[0].href}
+      style={[pal.text, s.bold]}
+      href={authors[0].href}
+      text={
+        <Text emoji style={[pal.text, s.bold]}>
+          {forceLTR(firstAuthorName)}
+        </Text>
+      }
+      disableMismatchWarning
+    />
+  )
+
+  let a11yLabel = ''
+  let action: ReactElement
   let icon = (
     <HeartIconFilled
       size="xl"
@@ -174,10 +203,59 @@ let FeedItem = ({
       ]}
     />
   )
+
   if (item.type === 'post-like') {
-    action = _(msg`liked your post`)
+    a11yLabel =
+      authors.length > 1
+        ? _(
+            msg`${a11yAuthor} and ${plural(authors.length - 1, {
+              one: `${formattedCount} other`,
+              other: `${formattedCount} others`,
+            })} liked your post`,
+          )
+        : _(msg`${a11yAuthor} liked your post`)
+    action =
+      authors.length > 1 ? (
+        <Trans>
+          {author} and{' '}
+          <Text style={[pal.text, s.bold]}>
+            <Plural
+              value={authors.length - 1}
+              one={`${formattedCount} other`}
+              other={`${formattedCount} others`}
+            />
+          </Text>{' '}
+          liked your post
+        </Trans>
+      ) : (
+        <Trans>{author} liked your post</Trans>
+      )
   } else if (item.type === 'repost') {
-    action = _(msg`reposted your post`)
+    a11yLabel =
+      authors.length > 1
+        ? _(
+            msg`${a11yAuthor} and ${plural(authors.length - 1, {
+              one: `${formattedCount} other`,
+              other: `${formattedCount} others`,
+            })} reposted your post`,
+          )
+        : _(msg`${a11yAuthor} reposted your post`)
+    action =
+      authors.length > 1 ? (
+        <Trans>
+          {author} and{' '}
+          <Text style={[pal.text, s.bold]}>
+            <Plural
+              value={authors.length - 1}
+              one={`${formattedCount} other`}
+              other={`${formattedCount} others`}
+            />
+          </Text>{' '}
+          reposted your post
+        </Trans>
+      ) : (
+        <Trans>{author} reposted your post</Trans>
+      )
     icon = <RepostIcon size="xl" style={{color: t.palette.positive_600}} />
   } else if (item.type === 'follow') {
     let isFollowBack = false
@@ -202,39 +280,120 @@ let FeedItem = ({
     }
 
     if (isFollowBack) {
-      action = _(msg`followed you back`)
+      a11yLabel =
+        authors.length > 1
+          ? _(
+              msg`${a11yAuthor} and ${plural(authors.length - 1, {
+                one: `${formattedCount} other`,
+                other: `${formattedCount} others`,
+              })} followed you back`,
+            )
+          : _(msg`${a11yAuthor} followed you back`)
+      action =
+        authors.length > 1 ? (
+          <Trans>
+            {author} and{' '}
+            <Text style={[pal.text, s.bold]}>
+              <Plural
+                value={authors.length - 1}
+                one={`${formattedCount} other`}
+                other={`${formattedCount} others`}
+              />
+            </Text>{' '}
+            followed you back
+          </Trans>
+        ) : (
+          <Trans>{author} followed you back</Trans>
+        )
     } else {
-      action = _(msg`followed you`)
+      a11yLabel =
+        authors.length > 1
+          ? _(
+              msg`${a11yAuthor} and ${plural(authors.length - 1, {
+                one: `${formattedCount} other`,
+                other: `${formattedCount} others`,
+              })} followed you`,
+            )
+          : _(msg`${a11yAuthor} followed you`)
+      action =
+        authors.length > 1 ? (
+          <Trans>
+            {author} and{' '}
+            <Text style={[pal.text, s.bold]}>
+              <Plural
+                value={authors.length - 1}
+                one={`${formattedCount} other`}
+                other={`${formattedCount} others`}
+              />
+            </Text>{' '}
+            followed you
+          </Trans>
+        ) : (
+          <Trans>{author} followed you</Trans>
+        )
     }
     icon = <PersonPlusIcon size="xl" style={{color: t.palette.primary_500}} />
   } else if (item.type === 'feedgen-like') {
-    action = _(msg`liked your custom feed`)
+    a11yLabel =
+      authors.length > 1
+        ? _(
+            msg`${a11yAuthor} and ${plural(authors.length - 1, {
+              one: `${formattedCount} other`,
+              other: `${formattedCount} others`,
+            })} liked your custom feed`,
+          )
+        : _(msg`${a11yAuthor} liked your custom feed`)
+    action =
+      authors.length > 1 ? (
+        <Trans>
+          {author} and{' '}
+          <Text style={[pal.text, s.bold]}>
+            <Plural
+              value={authors.length - 1}
+              one={`${formattedCount} other`}
+              other={`${formattedCount} others`}
+            />
+          </Text>{' '}
+          liked your custom feed
+        </Trans>
+      ) : (
+        <Trans>{author} liked your custom feed</Trans>
+      )
   } else if (item.type === 'starterpack-joined') {
+    a11yLabel =
+      authors.length > 1
+        ? _(
+            msg`${a11yAuthor} and ${plural(authors.length - 1, {
+              one: `${formattedCount} other`,
+              other: `${formattedCount} others`,
+            })} signed up with your starter pack`,
+          )
+        : _(msg`${a11yAuthor} signed up with your starter pack`)
+    action =
+      authors.length > 1 ? (
+        <Trans>
+          {author} and{' '}
+          <Text style={[pal.text, s.bold]}>
+            <Plural
+              value={authors.length - 1}
+              one={`${formattedCount} other`}
+              other={`${formattedCount} others`}
+            />
+          </Text>{' '}
+          signed up with your starter pack
+        </Trans>
+      ) : (
+        <Trans>{author} signed up with your starter pack</Trans>
+      )
     icon = (
       <View style={{height: 30, width: 30}}>
         <StarterPack width={30} gradient="sky" />
       </View>
     )
-    action = _(msg`signed up with your starter pack`)
   } else {
     return null
   }
-
-  const formattedCount =
-    authors.length > 1 ? formatCount(i18n, authors.length - 1) : ''
-  const firstAuthorName = sanitizeDisplayName(
-    authors[0].profile.displayName || authors[0].profile.handle,
-  )
-  const niceTimestamp = niceDate(i18n, item.notification.indexedAt)
-  const a11yLabelUsers =
-    authors.length > 1
-      ? _(msg` and `) +
-        plural(authors.length - 1, {
-          one: `${formattedCount} other`,
-          other: `${formattedCount} others`,
-        })
-      : ''
-  const a11yLabel = `${firstAuthorName}${a11yLabelUsers} ${action} ${niceTimestamp}`
+  a11yLabel += ` · ${niceTimestamp}`
 
   return (
     <Link
@@ -303,42 +462,18 @@ let FeedItem = ({
           />
           <ExpandedAuthorsList visible={isAuthorsExpanded} authors={authors} />
           <Text
-            style={[styles.meta, a.self_start]}
+            style={[styles.meta, a.self_start, pal.text]}
             accessibilityHint=""
             accessibilityLabel={a11yLabel}>
-            <TextLink
-              key={authors[0].href}
-              style={[pal.text, s.bold]}
-              href={authors[0].href}
-              text={
-                <Text emoji style={[pal.text, s.bold]}>
-                  {forceLTR(firstAuthorName)}
-                </Text>
-              }
-              disableMismatchWarning
-            />
-            {authors.length > 1 ? (
-              <>
-                <Text style={[pal.text]}>
-                  {' '}
-                  <Trans>and</Trans>{' '}
-                </Text>
-                <Text style={[pal.text, s.bold]}>
-                  {plural(authors.length - 1, {
-                    one: `${formattedCount} other`,
-                    other: `${formattedCount} others`,
-                  })}
-                </Text>
-              </>
-            ) : undefined}
-            <Text style={[pal.text]}> {action}</Text>
+            {action}
             <TimeElapsed timestamp={item.notification.indexedAt}>
               {({timeElapsed}) => (
-                <Text
-                  style={[pal.textLight, styles.pointer]}
-                  title={niceTimestamp}>
-                  {' ' + timeElapsed}
-                </Text>
+                <>
+                  <Text style={[a.ml_xs, pal.textLight]}>&middot;</Text>
+                  <Text style={[a.ml_xs, pal.textLight]} title={niceTimestamp}>
+                    {timeElapsed}
+                  </Text>
+                </>
               )}
             </TimeElapsed>
           </Text>

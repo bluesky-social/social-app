@@ -1,7 +1,7 @@
 import React from 'react'
 import {View} from 'react-native'
 
-import {ScrollView} from 'view/com/util/Views'
+import {ScrollView} from '#/view/com/util/Views'
 import {atoms as a} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {Text} from '#/components/Typography'

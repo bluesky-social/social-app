@@ -13,6 +13,8 @@ import {
   RichText,
 } from '@atproto/api'
 
+import {isNetworkError} from '#/lib/strings/errors'
+import {shortenLinks, stripInvalidMentions} from '#/lib/strings/rich-text-manip'
 import {logger} from '#/logger'
 import {ComposerImage, compressImage} from '#/state/gallery'
 import {writePostgateRecord} from '#/state/queries/postgate'
@@ -22,8 +24,6 @@ import {
   threadgateAllowUISettingToAllowRecordValue,
   writeThreadgateRecord,
 } from '#/state/queries/threadgate'
-import {isNetworkError} from 'lib/strings/errors'
-import {shortenLinks, stripInvalidMentions} from 'lib/strings/rich-text-manip'
 import {LinkMeta} from '../link-meta/link-meta'
 import {uploadBlob} from './upload-blob'
 
