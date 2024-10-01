@@ -1134,7 +1134,7 @@ function ErrorBanner({
             <ButtonIcon icon={X} />
           </Button>
         </View>
-        {videoError && videoUploadState.jobStatus?.jobId && (
+        {videoError && videoUploadState.jobId && (
           <NewText
             style={[
               {paddingLeft: 28},
@@ -1143,7 +1143,7 @@ function ErrorBanner({
               a.leading_snug,
               t.atoms.text_contrast_low,
             ]}>
-            <Trans>Job ID: {videoUploadState.jobStatus.jobId}</Trans>
+            <Trans>Job ID: {videoUploadState.jobId}</Trans>
           </NewText>
         )}
       </View>
