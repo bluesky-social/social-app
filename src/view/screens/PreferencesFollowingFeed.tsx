@@ -17,6 +17,7 @@ import {SimpleViewHeader} from '#/view/com/util/SimpleViewHeader'
 import {Text} from '#/view/com/util/text/Text'
 import {ScrollView} from '#/view/com/util/Views'
 import {atoms as a} from '#/alf'
+import * as Layout from '#/components/Layout'
 
 type Props = NativeStackScreenProps<
   CommonNavigatorParams,
@@ -35,7 +36,7 @@ export function PreferencesFollowingFeed({}: Props) {
   )
 
   return (
-    <View testID="preferencesHomeFeedScreen" style={s.hContentRegion}>
+    <Layout.Screen testID="preferencesHomeFeedScreen">
       <ScrollView
         // @ts-ignore web only -sfn
         dataSet={{'stable-gutters': 1}}
@@ -185,7 +186,7 @@ export function PreferencesFollowingFeed({}: Props) {
           </View>
         </View>
       </ScrollView>
-    </View>
+    </Layout.Screen>
   )
 }
 

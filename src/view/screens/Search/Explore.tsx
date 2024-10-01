@@ -10,20 +10,20 @@ import {
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useGetPopularFeedsQuery} from '#/state/queries/feed'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useSuggestedFollowsQuery} from '#/state/queries/suggested-follows'
-import {cleanError} from 'lib/strings/errors'
 import {ProfileCardWithFollowBtn} from '#/view/com/profile/ProfileCard'
 import {List} from '#/view/com/util/List'
-import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {
   FeedFeedLoadingPlaceholder,
   ProfileCardFeedLoadingPlaceholder,
-} from 'view/com/util/LoadingPlaceholder'
+} from '#/view/com/util/LoadingPlaceholder'
+import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme, ViewStyleProp} from '#/alf'
 import {Button} from '#/components/Button'
 import * as FeedCard from '#/components/FeedCard'
@@ -564,6 +564,8 @@ export function Explore() {
     [t, moderationOpts],
   )
 
+  // note: actually not a screen, instead it's nested within
+  // the search screen. so we don't need Layout.Screen
   return (
     <List
       data={items}

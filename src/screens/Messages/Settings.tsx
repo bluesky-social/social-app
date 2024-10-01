@@ -16,6 +16,7 @@ import {atoms as a} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Divider} from '#/components/Divider'
 import * as Toggle from '#/components/forms/Toggle'
+import * as Layout from '#/components/Layout'
 import {Text} from '#/components/Typography'
 import {useBackgroundNotificationPreferences} from '../../../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
 
@@ -55,91 +56,93 @@ export function MessagesSettingsScreen({}: Props) {
   )
 
   return (
-    <ScrollView stickyHeaderIndices={[0]}>
-      <ViewHeader title={_(msg`Chat Settings`)} showOnDesktop showBorder />
-      <View style={[a.p_lg, a.gap_md]}>
-        <Text style={[a.text_lg, a.font_bold]}>
-          <Trans>Allow new messages from</Trans>
-        </Text>
-        <Toggle.Group
-          label={_(msg`Allow new messages from`)}
-          type="radio"
-          values={[
-            (profile?.associated?.chat?.allowIncoming as AllowIncoming) ??
-              'following',
-          ]}
-          onChange={onSelectMessagesFrom}>
-          <View>
-            <Toggle.Item
-              name="all"
-              label={_(msg`Everyone`)}
-              style={[a.justify_between, a.py_sm]}>
-              <Toggle.LabelText>
-                <Trans>Everyone</Trans>
-              </Toggle.LabelText>
-              <Toggle.Radio />
-            </Toggle.Item>
-            <Toggle.Item
-              name="following"
-              label={_(msg`Users I follow`)}
-              style={[a.justify_between, a.py_sm]}>
-              <Toggle.LabelText>
-                <Trans>Users I follow</Trans>
-              </Toggle.LabelText>
-              <Toggle.Radio />
-            </Toggle.Item>
-            <Toggle.Item
-              name="none"
-              label={_(msg`No one`)}
-              style={[a.justify_between, a.py_sm]}>
-              <Toggle.LabelText>
-                <Trans>No one</Trans>
-              </Toggle.LabelText>
-              <Toggle.Radio />
-            </Toggle.Item>
-          </View>
-        </Toggle.Group>
-        <Admonition type="tip">
-          <Trans>
-            You can continue ongoing conversations regardless of which setting
-            you choose.
-          </Trans>
-        </Admonition>
-        {isNative && (
-          <>
-            <Divider style={a.my_md} />
-            <Text style={[a.text_lg, a.font_bold]}>
-              <Trans>Notification Sounds</Trans>
-            </Text>
-            <Toggle.Group
-              label={_(msg`Notification sounds`)}
-              type="radio"
-              values={[preferences.playSoundChat ? 'enabled' : 'disabled']}
-              onChange={onSelectSoundSetting}>
-              <View>
-                <Toggle.Item
-                  name="enabled"
-                  label={_(msg`Enabled`)}
-                  style={[a.justify_between, a.py_sm]}>
-                  <Toggle.LabelText>
-                    <Trans>Enabled</Trans>
-                  </Toggle.LabelText>
-                  <Toggle.Radio />
-                </Toggle.Item>
-                <Toggle.Item
-                  name="disabled"
-                  label={_(msg`Disabled`)}
-                  style={[a.justify_between, a.py_sm]}>
-                  <Toggle.LabelText>
-                    <Trans>Disabled</Trans>
-                  </Toggle.LabelText>
-                  <Toggle.Radio />
-                </Toggle.Item>
-              </View>
-            </Toggle.Group>
-          </>
-        )}
-      </View>
-    </ScrollView>
+    <Layout.Screen testID="messagesSettingsScreen">
+      <ScrollView stickyHeaderIndices={[0]}>
+        <ViewHeader title={_(msg`Chat Settings`)} showOnDesktop showBorder />
+        <View style={[a.p_lg, a.gap_md]}>
+          <Text style={[a.text_lg, a.font_bold]}>
+            <Trans>Allow new messages from</Trans>
+          </Text>
+          <Toggle.Group
+            label={_(msg`Allow new messages from`)}
+            type="radio"
+            values={[
+              (profile?.associated?.chat?.allowIncoming as AllowIncoming) ??
+                'following',
+            ]}
+            onChange={onSelectMessagesFrom}>
+            <View>
+              <Toggle.Item
+                name="all"
+                label={_(msg`Everyone`)}
+                style={[a.justify_between, a.py_sm]}>
+                <Toggle.LabelText>
+                  <Trans>Everyone</Trans>
+                </Toggle.LabelText>
+                <Toggle.Radio />
+              </Toggle.Item>
+              <Toggle.Item
+                name="following"
+                label={_(msg`Users I follow`)}
+                style={[a.justify_between, a.py_sm]}>
+                <Toggle.LabelText>
+                  <Trans>Users I follow</Trans>
+                </Toggle.LabelText>
+                <Toggle.Radio />
+              </Toggle.Item>
+              <Toggle.Item
+                name="none"
+                label={_(msg`No one`)}
+                style={[a.justify_between, a.py_sm]}>
+                <Toggle.LabelText>
+                  <Trans>No one</Trans>
+                </Toggle.LabelText>
+                <Toggle.Radio />
+              </Toggle.Item>
+            </View>
+          </Toggle.Group>
+          <Admonition type="tip">
+            <Trans>
+              You can continue ongoing conversations regardless of which setting
+              you choose.
+            </Trans>
+          </Admonition>
+          {isNative && (
+            <>
+              <Divider style={a.my_md} />
+              <Text style={[a.text_lg, a.font_bold]}>
+                <Trans>Notification Sounds</Trans>
+              </Text>
+              <Toggle.Group
+                label={_(msg`Notification sounds`)}
+                type="radio"
+                values={[preferences.playSoundChat ? 'enabled' : 'disabled']}
+                onChange={onSelectSoundSetting}>
+                <View>
+                  <Toggle.Item
+                    name="enabled"
+                    label={_(msg`Enabled`)}
+                    style={[a.justify_between, a.py_sm]}>
+                    <Toggle.LabelText>
+                      <Trans>Enabled</Trans>
+                    </Toggle.LabelText>
+                    <Toggle.Radio />
+                  </Toggle.Item>
+                  <Toggle.Item
+                    name="disabled"
+                    label={_(msg`Disabled`)}
+                    style={[a.justify_between, a.py_sm]}>
+                    <Toggle.LabelText>
+                      <Trans>Disabled</Trans>
+                    </Toggle.LabelText>
+                    <Toggle.Radio />
+                  </Toggle.Item>
+                </View>
+              </Toggle.Group>
+            </>
+          )}
+        </View>
+      </ScrollView>
+    </Layout.Screen>
   )
 }

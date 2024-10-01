@@ -16,6 +16,7 @@ import {MyLists} from '#/view/com/lists/MyLists'
 import {Button} from '#/view/com/util/forms/Button'
 import {SimpleViewHeader} from '#/view/com/util/SimpleViewHeader'
 import {Text} from '#/view/com/util/text/Text'
+import * as Layout from '#/components/Layout'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ModerationModlists'>
 export function ModerationModlistsScreen({}: Props) {
@@ -48,7 +49,7 @@ export function ModerationModlistsScreen({}: Props) {
   }, [openModal, navigation])
 
   return (
-    <View style={s.hContentRegion} testID="moderationModlistsScreen">
+    <Layout.Screen testID="moderationModlistsScreen">
       <SimpleViewHeader
         showBackButton={isMobile}
         style={
@@ -82,6 +83,6 @@ export function ModerationModlistsScreen({}: Props) {
         </View>
       </SimpleViewHeader>
       <MyLists filter="mod" style={s.flexGrow1} />
-    </View>
+    </Layout.Screen>
   )
 }

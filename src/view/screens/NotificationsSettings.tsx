@@ -13,6 +13,7 @@ import {atoms as a, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Error} from '#/components/Error'
 import * as Toggle from '#/components/forms/Toggle'
+import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 
@@ -35,52 +36,54 @@ export function NotificationsSettingsScreen({}: Props) {
     : serverPriority
 
   return (
-    <ScrollView stickyHeaderIndices={[0]}>
-      <ViewHeader
-        title={_(msg`Notification Settings`)}
-        showOnDesktop
-        showBorder
-      />
-      {isQueryError ? (
-        <Error
-          title={_(msg`Oops!`)}
-          message={_(msg`Something went wrong!`)}
-          onRetry={refetch}
-          sideBorders={false}
+    <Layout.Screen>
+      <ScrollView stickyHeaderIndices={[0]}>
+        <ViewHeader
+          title={_(msg`Notification Settings`)}
+          showOnDesktop
+          showBorder
         />
-      ) : (
-        <View style={[a.p_lg, a.gap_md]}>
-          <Text style={[a.text_lg, a.font_bold]}>
-            <FontAwesomeIcon icon="flask" style={t.atoms.text} />{' '}
-            <Trans>Notification filters</Trans>
-          </Text>
-          <Toggle.Group
-            label={_(msg`Priority notifications`)}
-            type="checkbox"
-            values={priority ? ['enabled'] : []}
-            onChange={onChangePriority}
-            disabled={typeof priority !== 'boolean' || isMutationPending}>
-            <View>
-              <Toggle.Item
-                name="enabled"
-                label={_(msg`Enable priority notifications`)}
-                style={[a.justify_between, a.py_sm]}>
-                <Toggle.LabelText>
-                  <Trans>Enable priority notifications</Trans>
-                </Toggle.LabelText>
-                {!data ? <Loader size="md" /> : <Toggle.Platform />}
-              </Toggle.Item>
-            </View>
-          </Toggle.Group>
-          <Admonition type="warning" style={[a.mt_sm]}>
-            <Trans>
-              Experimental: When this preference is enabled, you'll only receive
-              reply and quote notifications from users you follow. We'll
-              continue to add more controls here over time.
-            </Trans>
-          </Admonition>
-        </View>
-      )}
-    </ScrollView>
+        {isQueryError ? (
+          <Error
+            title={_(msg`Oops!`)}
+            message={_(msg`Something went wrong!`)}
+            onRetry={refetch}
+            sideBorders={false}
+          />
+        ) : (
+          <View style={[a.p_lg, a.gap_md]}>
+            <Text style={[a.text_lg, a.font_bold]}>
+              <FontAwesomeIcon icon="flask" style={t.atoms.text} />{' '}
+              <Trans>Notification filters</Trans>
+            </Text>
+            <Toggle.Group
+              label={_(msg`Priority notifications`)}
+              type="checkbox"
+              values={priority ? ['enabled'] : []}
+              onChange={onChangePriority}
+              disabled={typeof priority !== 'boolean' || isMutationPending}>
+              <View>
+                <Toggle.Item
+                  name="enabled"
+                  label={_(msg`Enable priority notifications`)}
+                  style={[a.justify_between, a.py_sm]}>
+                  <Toggle.LabelText>
+                    <Trans>Enable priority notifications</Trans>
+                  </Toggle.LabelText>
+                  {!data ? <Loader size="md" /> : <Toggle.Platform />}
+                </Toggle.Item>
+              </View>
+            </Toggle.Group>
+            <Admonition type="warning" style={[a.mt_sm]}>
+              <Trans>
+                Experimental: When this preference is enabled, you'll only
+                receive reply and quote notifications from users you follow.
+                We'll continue to add more controls here over time.
+              </Trans>
+            </Admonition>
+          </View>
+        )}
+      </ScrollView>
+    </Layout.Screen>
   )
 }
