@@ -22,7 +22,7 @@ import {useUploadVideoMutation} from '#/state/queries/video/video-upload'
 type Status = 'idle' | 'compressing' | 'processing' | 'uploading' | 'done'
 
 type Action =
-  | {type: 'SetStatus'; status: Status}
+  | {type: 'SetProcessing'}
   | {type: 'SetProgress'; progress: number}
   | {type: 'SetError'; error: string | undefined}
   | {type: 'Reset'}
@@ -45,8 +45,8 @@ export interface State {
 
 function reducer(state: State, action: Action): State {
   let updatedState = state
-  if (action.type === 'SetStatus') {
-    updatedState = {...state, status: action.status}
+  if (action.type === 'SetProcessing') {
+    updatedState = {...state, status: 'processing'}
   } else if (action.type === 'SetProgress') {
     updatedState = {...state, progress: action.progress}
   } else if (action.type === 'SetError') {
@@ -139,8 +139,7 @@ export function useUploadVideo({
   const {mutate: onVideoCompressed} = useUploadVideoMutation({
     onSuccess: response => {
       dispatch({
-        type: 'SetStatus',
-        status: 'processing',
+        type: 'SetProcessing',
       })
       setJobId(response.jobId)
     },
