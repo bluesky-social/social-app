@@ -214,28 +214,6 @@ export const InnerFlatList = React.forwardRef<
   )
 })
 
-export function Handle() {
-  const t = useTheme()
-
-  return (
-    <View style={[a.absolute, a.w_full, a.align_center, a.z_10, {height: 40}]}>
-      <View
-        style={[
-          a.rounded_sm,
-          {
-            top: a.pt_lg.paddingTop,
-            width: 35,
-            height: 4,
-            alignSelf: 'center',
-            backgroundColor: t.palette.contrast_900,
-            opacity: 0.5,
-          },
-        ]}
-      />
-    </View>
-  )
-}
-
 export function Close() {
   return null
 }
