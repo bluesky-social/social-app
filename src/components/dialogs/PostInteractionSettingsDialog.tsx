@@ -61,7 +61,6 @@ export function PostInteractionSettingsControlledDialog({
   const {_} = useLingui()
   return (
     <Dialog.Outer control={control}>
-      <Dialog.Handle />
       <Dialog.ScrollableInner
         label={_(msg`Edit post interaction settings`)}
         style={[{maxWidth: 500}, a.w_full]}>
@@ -96,7 +95,6 @@ export function PostInteractionSettingsDialog(
 ) {
   return (
     <Dialog.Outer control={props.control}>
-      <Dialog.Handle />
       <PostInteractionSettingsDialogControlledInner {...props} />
     </Dialog.Outer>
   )

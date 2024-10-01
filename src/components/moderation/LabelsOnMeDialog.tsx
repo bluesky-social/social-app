@@ -31,8 +31,6 @@ export interface LabelsOnMeDialogProps {
 export function LabelsOnMeDialog(props: LabelsOnMeDialogProps) {
   return (
     <Dialog.Outer control={props.control}>
-      <Dialog.Handle />
-
       <LabelsOnMeDialogInner {...props} />
     </Dialog.Outer>
   )

@@ -21,7 +21,6 @@ import {
   DialogOuterProps,
 } from '#/components/Dialog/types'
 import {createInput} from '#/components/forms/TextField'
-import {FullWindowOverlay} from '#/components/FullWindowOverlay'
 import {Portal} from '#/components/Portal'
 
 export {useDialogContext, useDialogControl} from '#/components/Dialog/context'
@@ -93,53 +92,47 @@ export function Outer({
     [open, close],
   )
 
-  React.useEffect(() => {
-    return () => {
-      setDialogIsOpen(control.id, false)
-    }
-  }, [control.id, setDialogIsOpen])
+  // @TODO DIALOG REFACTOR - what is this? rm i think?
+  // React.useEffect(() => {
+  //   return () => {
+  //     setDialogIsOpen(control.id, false)
+  //   }
+  // }, [control.id, setDialogIsOpen])
 
   const context = React.useMemo(() => ({close}), [close])
 
   return (
     isOpen && (
       <Portal>
-        <FullWindowOverlay>
-          <View
-            // iOS
-            accessibilityViewIsModal
-            style={[a.absolute, a.inset_0]}
-            testID={testID}
-            onTouchMove={() => Keyboard.dismiss()}>
-            <BottomSheet
-              enablePanDownToClose
-              keyboardBehavior="interactive"
-              android_keyboardInputMode="adjustResize"
-              keyboardBlurBehavior="restore"
-              topInset={insets.top}
-              ref={sheet}
-              backgroundStyle={{backgroundColor: 'transparent'}}
-              handleIndicatorStyle={{backgroundColor: t.palette.primary_500}}
-              handleStyle={{display: 'none'}}
-              onClose={onCloseAnimationComplete}>
-              <Context.Provider value={context}>
-                <View
-                  style={[
-                    a.absolute,
-                    a.inset_0,
-                    t.atoms.bg,
-                    {
-                      borderTopLeftRadius: 40,
-                      borderTopRightRadius: 40,
-                      height: Dimensions.get('window').height * 2,
-                    },
-                  ]}
-                />
-                {children}
-              </Context.Provider>
-            </BottomSheet>
-          </View>
-        </FullWindowOverlay>
+        <View
+          // iOS
+          accessibilityViewIsModal
+          style={[a.absolute, a.inset_0]}
+          testID={testID}
+          onTouchMove={() => Keyboard.dismiss()}>
+          <BottomSheet
+            topInset={insets.top}
+            bottomInset={insets.bottom}
+            ref={sheet}
+            // handleIndicatorStyle={{backgroundColor: t.palette.primary_500}} // @TODO DIALOG REFACTOR need to add this to lib!
+            onClose={onCloseAnimationComplete}>
+            <Context.Provider value={context}>
+              <View
+                style={[
+                  a.absolute,
+                  a.inset_0,
+                  t.atoms.bg,
+                  {
+                    borderTopLeftRadius: 40,
+                    borderTopRightRadius: 40,
+                    height: Dimensions.get('window').height * 2,
+                  },
+                ]}
+              />
+              {children}
+            </Context.Provider>
+          </BottomSheet>
+        </View>
       </Portal>
     )
   )

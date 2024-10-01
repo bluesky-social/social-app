@@ -54,7 +54,6 @@ function AppealDialog() {
       </Button>
 
       <Dialog.Outer control={control}>
-        <Dialog.Handle />
         <DialogInner />
       </Dialog.Outer>
     </>

@@ -59,7 +59,6 @@ export function SubtitleDialogBtn(props: Props) {
       <Dialog.Outer
         control={control}
         nativeOptions={isAndroid ? {sheet: {snapPoints: ['60%']}} : {}}>
-        <Dialog.Handle />
         <SubtitleDialogInner {...props} />
       </Dialog.Outer>
     </View>

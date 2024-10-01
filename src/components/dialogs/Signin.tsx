@@ -18,7 +18,6 @@ export function SigninDialog() {
   const {signinDialogControl: control} = useGlobalDialogsControlContext()
   return (
     <Dialog.Outer control={control}>
-      <Dialog.Handle />
       <SigninDialogInner control={control} />
     </Dialog.Outer>
   )

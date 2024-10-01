@@ -2,8 +2,8 @@ import React from 'react'
 import {View} from 'react-native'
 import {useNavigation} from '@react-navigation/native'
 
+import {NavigationProp} from '#/lib/routes/types'
 import {useDialogStateControlContext} from '#/state/dialogs'
-import {NavigationProp} from 'lib/routes/types'
 import {atoms as a} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -179,8 +179,6 @@ export function Dialogs() {
       </Prompt.Outer>
 
       <Dialog.Outer control={basic}>
-        <Dialog.Handle />
-
         <Dialog.Inner label="test">
           <H3 nativeID="dialog-title">Dialog</H3>
           <P nativeID="dialog-description">A basic dialog</P>
@@ -190,8 +188,6 @@ export function Dialogs() {
       <Dialog.Outer
         control={scrollable}
         nativeOptions={{sheet: {snapPoints: ['100%']}}}>
-        <Dialog.Handle />
-
         <Dialog.ScrollableInner
           accessibilityDescribedBy="dialog-description"
           accessibilityLabelledBy="dialog-title">
@@ -230,8 +226,6 @@ export function Dialogs() {
       </Dialog.Outer>
 
       <Dialog.Outer control={testDialog}>
-        <Dialog.Handle />
-
         <Dialog.ScrollableInner
           accessibilityDescribedBy="dialog-description"
           accessibilityLabelledBy="dialog-title">
@@ -356,8 +350,6 @@ export function Dialogs() {
 
       {shouldRenderUnmountTest && (
         <Dialog.Outer control={unmountTestDialog}>
-          <Dialog.Handle />
-
           <Dialog.Inner label="test">
             <H3 nativeID="dialog-title">Unmount Test Dialog</H3>
             <P nativeID="dialog-description">Will unmount in about 5 seconds</P>

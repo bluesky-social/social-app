@@ -41,8 +41,6 @@ export function Outer({
   return (
     <Dialog.Outer control={control} testID={testID}>
       <Context.Provider value={context}>
-        <Dialog.Handle />
-
         <Dialog.ScrollableInner
           accessibilityLabelledBy={titleId}
           accessibilityDescribedBy={descriptionId}

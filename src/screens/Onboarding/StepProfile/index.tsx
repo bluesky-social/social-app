@@ -286,7 +286,6 @@ export function StepProfile() {
       </View>
 
       <Dialog.Outer control={creatorControl}>
-        <Dialog.Handle />
         <Dialog.Inner
           label="Avatar creator"
           style={[

@@ -39,7 +39,6 @@ export function MessagesNUX() {
 
   return (
     <Dialog.Outer control={control}>
-      <Dialog.Handle />
       <DialogInner chatDeclation={profile.associated?.chat} />
     </Dialog.Outer>
   )
