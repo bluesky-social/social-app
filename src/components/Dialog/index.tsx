@@ -176,8 +176,6 @@ export function Outer({
           <View
             // iOS
             accessibilityViewIsModal
-            // Android
-            importantForAccessibility="yes"
             style={[a.absolute, a.inset_0]}
             testID={testID}
             onTouchMove={() => Keyboard.dismiss()}>
