@@ -67,7 +67,7 @@ import {logger} from '#/logger'
 import {isAndroid, isIOS, isNative, isWeb} from '#/platform/detection'
 import {useDialogStateControlContext} from '#/state/dialogs'
 import {emitPostCreated} from '#/state/events'
-import {ComposerImage, createInitialImages, pasteImage} from '#/state/gallery'
+import {ComposerImage, pasteImage} from '#/state/gallery'
 import {useModalControls} from '#/state/modals'
 import {useModals} from '#/state/modals'
 import {useRequireAltTextEnabled} from '#/state/preferences'
@@ -127,6 +127,8 @@ const MAX_IMAGES = 4
 type CancelRef = {
   onPressCancel: () => void
 }
+
+const NO_IMAGES: ComposerImage[] = []
 
 type Props = ComposerOpts
 export const ComposePost = ({
@@ -215,16 +217,16 @@ export const ComposePost = ({
     )
   const [postgate, setPostgate] = useState(createPostgateRecord({post: ''}))
 
-  const [images, setImages] = useState<ComposerImage[]>(() =>
-    createInitialImages(initImageUris),
-  )
-
-  // Not used yet.
+  // TODO: Move more state here.
   const [composerState, dispatch] = useReducer(
     composerReducer,
     {initImageUris},
     createComposerState,
   )
+  let images = NO_IMAGES
+  if (composerState.embed.media?.type === 'images') {
+    images = composerState.embed.media.images
+  }
 
   const onClose = useCallback(() => {
     closeComposer()
@@ -311,13 +313,12 @@ export const ComposePost = ({
 
   const onImageAdd = useCallback(
     (next: ComposerImage[]) => {
-      setImages(prev => prev.concat(next.slice(0, MAX_IMAGES - prev.length)))
       dispatch({
         type: 'embed_add_images',
         images: next,
       })
     },
-    [setImages, dispatch],
+    [dispatch],
   )
 
   const onPhotoPasted = useCallback(
@@ -733,7 +734,7 @@ export const ComposePost = ({
             />
           </View>
 
-          <Gallery images={images} onChange={setImages} dispatch={dispatch} />
+          <Gallery images={images} dispatch={dispatch} />
           {images.length === 0 && extLink && (
             <View style={a.relative}>
               <ExternalEmbed

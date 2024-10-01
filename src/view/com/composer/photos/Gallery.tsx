@@ -29,7 +29,6 @@ const IMAGE_GAP = 8
 
 interface GalleryProps {
   images: ComposerImage[]
-  onChange: (next: ComposerImage[]) => void
   dispatch: (action: ComposerAction) => void
 }
 
@@ -58,12 +57,7 @@ interface GalleryInnerProps extends GalleryProps {
   containerInfo: Dimensions
 }
 
-const GalleryInner = ({
-  images,
-  containerInfo,
-  onChange,
-  dispatch,
-}: GalleryInnerProps) => {
+const GalleryInner = ({images, containerInfo, dispatch}: GalleryInnerProps) => {
   const {isMobile} = useWebMediaQueries()
 
   const {altTextControlStyle, imageControlsStyle, imageStyle} =
@@ -103,7 +97,7 @@ const GalleryInner = ({
   return images.length !== 0 ? (
     <>
       <View testID="selectedPhotosView" style={styles.gallery}>
-        {images.map((image, index) => {
+        {images.map(image => {
           return (
             <GalleryItem
               key={image.source.id}
@@ -113,16 +107,9 @@ const GalleryInner = ({
               imageStyle={imageStyle}
               onChange={next => {
                 dispatch({type: 'embed_update_image', image: next})
-                onChange(
-                  images.map(i => (i.source === image.source ? next : i)),
-                )
               }}
               onRemove={() => {
-                const next = images.slice()
-                next.splice(index, 1)
-
                 dispatch({type: 'embed_remove_image', image})
-                onChange(next)
               }}
             />
           )
