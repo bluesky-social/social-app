@@ -84,7 +84,6 @@ import {threadgateViewToAllowUISetting} from '#/state/queries/threadgate/util'
 import {
   State as VideoUploadState,
   useUploadVideo,
-  VideoUploadDispatch,
 } from '#/state/queries/video/video'
 import {useAgent, useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
@@ -194,7 +193,6 @@ export const ComposePost = ({
     clearVideo,
     state: videoUploadState,
     updateVideoDimensions,
-    dispatch: videoUploadDispatch,
   } = useUploadVideo({
     setStatus: setProcessingState,
     onSuccess: () => {
@@ -694,7 +692,7 @@ export const ComposePost = ({
             error={error}
             videoUploadState={videoUploadState}
             clearError={() => setError('')}
-            videoUploadDispatch={videoUploadDispatch}
+            clearVideo={clearVideo}
           />
         </Animated.View>
         <Animated.ScrollView
@@ -1083,12 +1081,12 @@ function ErrorBanner({
   error: standardError,
   videoUploadState,
   clearError,
-  videoUploadDispatch,
+  clearVideo,
 }: {
   error: string
   videoUploadState: VideoUploadState
   clearError: () => void
-  videoUploadDispatch: VideoUploadDispatch
+  clearVideo: () => void
 }) {
   const t = useTheme()
   const {_} = useLingui()
@@ -1101,7 +1099,7 @@ function ErrorBanner({
     if (standardError) {
       clearError()
     } else {
-      videoUploadDispatch({type: 'Reset'})
+      clearVideo()
     }
   }
 

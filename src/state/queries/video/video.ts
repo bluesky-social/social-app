@@ -43,8 +43,6 @@ export interface State {
   pendingPublish?: {blobRef: BlobRef; mutableProcessed: boolean}
 }
 
-export type VideoUploadDispatch = (action: Action) => void
-
 function reducer(queryClient: QueryClient) {
   return (state: State, action: Action): State => {
     let updatedState = state
@@ -277,7 +275,6 @@ export function useUploadVideo({
 
   return {
     state,
-    dispatch,
     selectVideo,
     clearVideo,
     updateVideoDimensions,
