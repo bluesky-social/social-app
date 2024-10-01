@@ -7,7 +7,7 @@ import {atoms as a} from '#/alf'
 
 // Every screen should have a Layout component wrapping it.
 // This component provides a default padding for the top of the screen.
-// This allows certain screens to avoid
+// This allows certain screens to avoid the top padding if they want to.
 //
 // In a future PR I will add a unified header component to this file and
 // things like a preconfigured scrollview.
