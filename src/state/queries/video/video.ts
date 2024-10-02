@@ -1,6 +1,7 @@
 import React, {useCallback, useEffect} from 'react'
 import {ImagePickerAsset} from 'expo-image-picker'
 import {AppBskyVideoDefs, BlobRef} from '@atproto/api'
+import {I18n} from '@lingui/core'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQuery, useQueryClient} from '@tanstack/react-query'
@@ -206,59 +207,12 @@ export function useUploadVideo({
 
   const selectVideo = React.useCallback(
     (asset: ImagePickerAsset) => {
-      // compression step on native converts to mp4, so no need to check there
-      if (isWeb) {
-        const mimeType = getMimeType(asset)
-        if (!SUPPORTED_MIME_TYPES.includes(mimeType as SupportedMimeTypes)) {
-          throw new Error(_(msg`Unsupported video type: ${mimeType}`))
-        }
-      }
-
-      dispatch({
-        type: 'SetAsset',
+      processVideo(
         asset,
-      })
-      dispatch({type: 'SetProgress', progress: 0})
-
-      const signal = state.abortController.signal
-      compressVideo(asset, {
-        onProgress: num => {
-          if (signal.aborted) {
-            return
-          }
-          dispatch({type: 'SetProgress', progress: trunc2dp(num)})
-        },
-        signal,
-      }).then(
-        (video: CompressedVideo) => {
-          if (signal.aborted) {
-            return
-          }
-          dispatch({
-            type: 'SetVideo',
-            video,
-          })
-          onVideoCompressed(video)
-        },
-        (e: any) => {
-          if (signal.aborted) {
-            return
-          }
-          if (e instanceof AbortError) {
-            return
-          } else if (e instanceof VideoTooLargeError) {
-            dispatch({
-              type: 'SetError',
-              error: _(msg`The selected video is larger than 50MB.`),
-            })
-          } else {
-            dispatch({
-              type: 'SetError',
-              error: _(msg`An error occurred while compressing the video.`),
-            })
-            logger.error('Error compressing video', {safeMessage: e})
-          }
-        },
+        dispatch,
+        onVideoCompressed,
+        state.abortController.signal,
+        _,
       )
     },
     [_, state.abortController, dispatch, onVideoCompressed],
@@ -363,4 +317,66 @@ function getMimeType(asset: ImagePickerAsset) {
 
 function trunc2dp(num: number) {
   return Math.trunc(num * 100) / 100
+}
+
+async function processVideo(
+  asset: ImagePickerAsset,
+  dispatch: (action: Action) => void,
+  onVideoCompressed: (video: CompressedVideo) => void,
+  signal: AbortSignal,
+  _: I18n['_'],
+) {
+  // compression step on native converts to mp4, so no need to check there
+  if (isWeb) {
+    const mimeType = getMimeType(asset)
+    if (!SUPPORTED_MIME_TYPES.includes(mimeType as SupportedMimeTypes)) {
+      throw new Error(_(msg`Unsupported video type: ${mimeType}`))
+    }
+  }
+
+  dispatch({
+    type: 'SetAsset',
+    asset,
+  })
+  dispatch({type: 'SetProgress', progress: 0})
+
+  compressVideo(asset, {
+    onProgress: num => {
+      if (signal.aborted) {
+        return
+      }
+      dispatch({type: 'SetProgress', progress: trunc2dp(num)})
+    },
+    signal,
+  }).then(
+    (video: CompressedVideo) => {
+      if (signal.aborted) {
+        return
+      }
+      dispatch({
+        type: 'SetVideo',
+        video,
+      })
+      onVideoCompressed(video)
+    },
+    (e: any) => {
+      if (signal.aborted) {
+        return
+      }
+      if (e instanceof AbortError) {
+        return
+      } else if (e instanceof VideoTooLargeError) {
+        dispatch({
+          type: 'SetError',
+          error: _(msg`The selected video is larger than 50MB.`),
+        })
+      } else {
+        dispatch({
+          type: 'SetError',
+          error: _(msg`An error occurred while compressing the video.`),
+        })
+        logger.error('Error compressing video', {safeMessage: e})
+      }
+    },
+  )
 }
