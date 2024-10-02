@@ -495,9 +495,8 @@ let PostThreadItemLoaded = ({
           testID={`postThreadItem-by-${post.author.handle}`}
           href={postHref}
           disabled={overrideBlur}
-          style={[pal.view]}
           modui={moderation.ui('contentList')}
-          iconSize={isThreadedChild ? 26 : 42}
+          iconSize={isThreadedChild ? 24 : 42}
           iconStyles={
             isThreadedChild ? {marginRight: 4} : {marginLeft: 2, marginRight: 2}
           }
@@ -528,7 +527,9 @@ let PostThreadItemLoaded = ({
 
           <View
             style={[
-              styles.layout,
+              a.flex_row,
+              a.px_sm,
+              a.gap_md,
               {
                 paddingBottom:
                   showChildReplyLine && !isThreadedChild
@@ -540,7 +541,7 @@ let PostThreadItemLoaded = ({
             ]}>
             {/* If we are in threaded mode, the avatar is rendered in PostMeta */}
             {!isThreadedChild && (
-              <View style={styles.layoutAvi}>
+              <View>
                 <PreviewableUserAvatar
                   size={42}
                   profile={post.author}
@@ -563,12 +564,7 @@ let PostThreadItemLoaded = ({
               </View>
             )}
 
-            <View
-              style={
-                isThreadedChild
-                  ? styles.layoutContentThreaded
-                  : styles.layoutContent
-              }>
+            <View style={[a.flex_1]}>
               <PostMeta
                 author={post.author}
                 moderation={moderation}
@@ -586,7 +582,7 @@ let PostThreadItemLoaded = ({
               <LabelsOnMyPost post={post} />
               <PostAlerts
                 modui={moderation.ui('contentList')}
-                style={[a.pt_2xs, a.pb_2xs]}
+                style={[a.pb_2xs]}
                 additionalCauses={additionalPostAlerts}
               />
               {richText?.text ? (
@@ -600,6 +596,7 @@ let PostThreadItemLoaded = ({
                   />
                 </View>
               ) : undefined}
+              {/* TODO */}
               {limitLines ? (
                 <TextLink
                   text={_(msg`Show More`)}
