@@ -5,10 +5,8 @@ import React, {
   useRef,
   useState,
 } from 'react'
-import type {TextInput as TextInputType} from 'react-native'
-import {View} from 'react-native'
+import {TextInput, View} from 'react-native'
 import {AppBskyActorDefs, moderateProfile, ModerationOpts} from '@atproto/api'
-import {BottomSheetFlatListMethods} from '@discord/bottom-sheet'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -16,15 +14,15 @@ import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {isWeb} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
+import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
 import {useListConvosQuery} from '#/state/queries/messages/list-converations'
 import {useProfileFollowsQuery} from '#/state/queries/profile-follows'
 import {useSession} from '#/state/session'
-import {useActorAutocompleteQuery} from 'state/queries/actor-autocomplete'
+import {ListMethods} from '#/view/com/util/List'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, native, useTheme, web} from '#/alf'
 import {Button} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
-import {TextInput} from '#/components/dms/dialogs/TextInput'
 import {canBeMessaged} from '#/components/dms/util'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {ChevronLeft_Stroke2_Corner0_Rounded as ChevronLeft} from '#/components/icons/Chevron'
@@ -66,9 +64,9 @@ export function SearchablePeopleList({
   const {_} = useLingui()
   const moderationOpts = useModerationOpts()
   const control = Dialog.useDialogContext()
-  const listRef = useRef<BottomSheetFlatListMethods>(null)
+  const listRef = useRef<ListMethods>(null)
   const {currentAccount} = useSession()
-  const inputRef = useRef<TextInputType>(null)
+  const inputRef = useRef<TextInput>(null)
 
   const [searchText, setSearchText] = useState('')
 
@@ -242,13 +240,12 @@ export function SearchablePeopleList({
       <View
         style={[
           a.relative,
-          a.pt_md,
+          web(a.pt_md),
           a.pb_xs,
           a.px_lg,
           a.border_b,
           t.atoms.border_contrast_low,
           t.atoms.bg,
-          native([a.pt_lg]),
         ]}>
         <View
           style={[
@@ -474,7 +471,7 @@ function SearchInput({
   value: string
   onChangeText: (text: string) => void
   onEscape: () => void
-  inputRef: React.RefObject<TextInputType>
+  inputRef: React.RefObject<TextInput>
 }) {
   const t = useTheme()
   const {_} = useLingui()

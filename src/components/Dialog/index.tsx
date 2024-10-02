@@ -1,17 +1,11 @@
 import React, {useImperativeHandle} from 'react'
-import {StyleProp, View, ViewStyle} from 'react-native'
+import {StyleProp, TextInput, View, ViewStyle} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {
-  BottomSheetFlatList,
-  BottomSheetFlatListMethods,
-  BottomSheetTextInput,
-  BottomSheetView,
-} from '@discord/bottom-sheet/src'
-import {BottomSheetFlatListProps} from '@discord/bottom-sheet/src/components/bottomSheetScrollable/types'
 import {BlueskyBottomSheetView} from '@haileyok/bluesky-bottom-sheet'
 
 import {logger} from '#/logger'
 import {useDialogStateControlContext} from '#/state/dialogs'
+import {List, ListMethods, ListProps} from '#/view/com/util/List'
 import {ScrollView} from '#/view/com/util/Views'
 import {atoms as a, flatten, useTheme} from '#/alf'
 import {Context} from '#/components/Dialog/context'
@@ -27,7 +21,7 @@ export {useDialogContext, useDialogControl} from '#/components/Dialog/context'
 export * from '#/components/Dialog/types'
 export * from '#/components/Dialog/utils'
 // @ts-ignore
-export const Input = createInput(BottomSheetTextInput)
+export const Input = createInput(TextInput)
 
 export function Outer({
   children,
@@ -125,20 +119,16 @@ export function Outer({
 export function Inner({children, style}: DialogInnerProps) {
   const insets = useSafeAreaInsets()
   return (
-    <BottomSheetView
+    <View
       style={[
-        a.py_xl,
         a.px_xl,
         {
-          paddingTop: 40,
-          borderTopLeftRadius: 40,
-          borderTopRightRadius: 40,
           paddingBottom: insets.bottom + a.pb_5xl.paddingBottom,
         },
-        flatten(style),
+        style,
       ]}>
       {children}
-    </BottomSheetView>
+    </View>
   )
 }
 
@@ -155,13 +145,12 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
 )
 
 export const InnerFlatList = React.forwardRef<
-  BottomSheetFlatListMethods,
-  BottomSheetFlatListProps<any> & {webInnerStyle?: StyleProp<ViewStyle>}
+  ListMethods,
+  ListProps<any> & {webInnerStyle?: StyleProp<ViewStyle>}
 >(function InnerFlatList({style, contentContainerStyle, ...props}, ref) {
   const insets = useSafeAreaInsets()
-
   return (
-    <BottomSheetFlatList
+    <List
       keyboardShouldPersistTaps="handled"
       contentContainerStyle={[a.pb_4xl, flatten(contentContainerStyle)]}
       ListFooterComponent={
@@ -169,16 +158,7 @@ export const InnerFlatList = React.forwardRef<
       }
       ref={ref}
       {...props}
-      style={[
-        a.flex_1,
-        a.p_xl,
-        a.pt_0,
-        a.h_full,
-        {
-          marginTop: 40,
-        },
-        flatten(style),
-      ]}
+      style={style}
     />
   )
 })
