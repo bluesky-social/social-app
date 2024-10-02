@@ -18,7 +18,8 @@ import {CompressedVideo} from '#/lib/media/video/types'
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
 import {createVideoAgent} from '#/state/queries/video/util'
-import {useUploadVideoMutation} from '#/state/queries/video/video-upload'
+import {uploadVideo} from '#/state/queries/video/video-upload'
+import {useAgent, useSession} from '#/state/session'
 
 type Status = 'idle' | 'compressing' | 'processing' | 'uploading' | 'done'
 
@@ -103,6 +104,8 @@ export function useUploadVideo({
   onSuccess: () => void
   initialVideoUri?: string
 }) {
+  const {currentAccount} = useSession()
+  const agent = useAgent()
   const {_} = useLingui()
   const queryClient = useQueryClient()
   const [state, dispatch] = React.useReducer(reducer, {
@@ -141,35 +144,56 @@ export function useUploadVideo({
     ),
   })
 
-  const {mutate: onVideoCompressed} = useUploadVideoMutation({
-    onSuccess: response => {
-      dispatch({
-        type: 'SetProcessing',
-        jobId: response.jobId,
-      })
+  const did = currentAccount!.did
+  const onVideoCompressed = useCallback(
+    (video: CompressedVideo) => {
+      const signal = state.abortController.signal
+      uploadVideo({
+        video,
+        agent,
+        did,
+        signal,
+        _,
+        setProgress: p => {
+          dispatch({type: 'SetProgress', progress: p})
+        },
+      }).then(
+        response => {
+          if (signal.aborted) {
+            return
+          }
+          dispatch({
+            type: 'SetProcessing',
+            jobId: response.jobId,
+          })
+        },
+        e => {
+          if (signal.aborted) {
+            return
+          }
+          if (e instanceof AbortError) {
+            return
+          } else if (
+            e instanceof ServerError ||
+            e instanceof UploadLimitError
+          ) {
+            const message = getErrorMessage(e, _)
+            dispatch({
+              type: 'SetError',
+              error: message,
+            })
+          } else {
+            dispatch({
+              type: 'SetError',
+              error: _(msg`An error occurred while uploading the video.`),
+            })
+          }
+          logger.error('Error uploading video', {safeMessage: e})
+        },
+      )
     },
-    onError: e => {
-      if (e instanceof AbortError) {
-        return
-      } else if (e instanceof ServerError || e instanceof UploadLimitError) {
-        const message = getErrorMessage(e, _)
-        dispatch({
-          type: 'SetError',
-          error: message,
-        })
-      } else {
-        dispatch({
-          type: 'SetError',
-          error: _(msg`An error occurred while uploading the video.`),
-        })
-      }
-      logger.error('Error uploading video', {safeMessage: e})
-    },
-    setProgress: p => {
-      dispatch({type: 'SetProgress', progress: p})
-    },
-    signal: state.abortController.signal,
-  })
+    [agent, did, state.abortController, _],
+  )
 
   const selectVideo = React.useCallback(
     (asset: ImagePickerAsset) => {
