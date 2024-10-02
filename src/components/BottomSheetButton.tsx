@@ -5,7 +5,7 @@ import {NormalizedRNGHPressable} from '#/components/NormalizedRNGHPressable'
 
 export function BottomSheetButton({children, ...rest}: ButtonProps) {
   return (
-    <Button {...rest} Component={NormalizedRNGHPressable}>
+    <Button {...rest} PressableComponent={NormalizedRNGHPressable}>
       {children}
     </Button>
   )

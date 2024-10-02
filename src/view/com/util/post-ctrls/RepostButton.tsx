@@ -157,7 +157,6 @@ let RepostButton = ({
             </View>
             <BottomSheetButton
               label={_(msg`Cancel quote post`)}
-              onAccessibilityEscape={close}
               onPress={close}
               size="large"
               variant="solid"
