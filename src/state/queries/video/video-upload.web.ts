@@ -8,8 +8,8 @@ import {cancelable} from '#/lib/async/cancelable'
 import {ServerError} from '#/lib/media/video/errors'
 import {CompressedVideo} from '#/lib/media/video/types'
 import {createVideoEndpointUrl, mimeToExt} from '#/state/queries/video/util'
-import {useAgent,useSession} from '#/state/session'
-import {getServiceAuthToken, useVideoUploadLimits} from './video-upload.shared'
+import {useAgent, useSession} from '#/state/session'
+import {getServiceAuthToken, getVideoUploadLimits} from './video-upload.shared'
 
 export const useUploadVideoMutation = ({
   onSuccess,
@@ -24,13 +24,12 @@ export const useUploadVideoMutation = ({
 }) => {
   const agent = useAgent()
   const {currentAccount} = useSession()
-  const checkLimits = useVideoUploadLimits()
   const {_} = useLingui()
 
   return useMutation({
     mutationKey: ['video', 'upload'],
     mutationFn: cancelable(async (video: CompressedVideo) => {
-      await checkLimits()
+      await getVideoUploadLimits(agent, _)
 
       const uri = createVideoEndpointUrl('/xrpc/app.bsky.video.uploadVideo', {
         did: currentAccount!.did,

@@ -1,12 +1,10 @@
-import {useCallback} from 'react'
 import {BskyAgent} from '@atproto/api'
+import {I18n} from '@lingui/core'
 import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
 
 import {VIDEO_SERVICE_DID} from '#/lib/constants'
 import {UploadLimitError} from '#/lib/media/video/errors'
 import {getServiceAuthAudFromUrl} from '#/lib/strings/url-helpers'
-import {useAgent} from '#/state/session'
 import {createVideoAgent} from './util'
 
 export async function getServiceAuthToken({
@@ -32,37 +30,32 @@ export async function getServiceAuthToken({
   return serviceAuth.token
 }
 
-export function useVideoUploadLimits() {
-  const agent = useAgent()
-  const {_} = useLingui()
-
-  return useCallback(async () => {
-    const token = await getServiceAuthToken({
-      agent,
-      lxm: 'app.bsky.video.getUploadLimits',
-      aud: VIDEO_SERVICE_DID,
-    })
-    const videoAgent = createVideoAgent()
-    const {data: limits} = await videoAgent.app.bsky.video
-      .getUploadLimits({}, {headers: {Authorization: `Bearer ${token}`}})
-      .catch(err => {
-        if (err instanceof Error) {
-          throw new UploadLimitError(err.message)
-        } else {
-          throw err
-        }
-      })
-
-    if (!limits.canUpload) {
-      if (limits.message) {
-        throw new UploadLimitError(limits.message)
+export async function getVideoUploadLimits(agent: BskyAgent, _: I18n['_']) {
+  const token = await getServiceAuthToken({
+    agent,
+    lxm: 'app.bsky.video.getUploadLimits',
+    aud: VIDEO_SERVICE_DID,
+  })
+  const videoAgent = createVideoAgent()
+  const {data: limits} = await videoAgent.app.bsky.video
+    .getUploadLimits({}, {headers: {Authorization: `Bearer ${token}`}})
+    .catch(err => {
+      if (err instanceof Error) {
+        throw new UploadLimitError(err.message)
       } else {
-        throw new UploadLimitError(
-          _(
-            msg`You have temporarily reached the limit for video uploads. Please try again later.`,
-          ),
-        )
+        throw err
       }
+    })
+
+  if (!limits.canUpload) {
+    if (limits.message) {
+      throw new UploadLimitError(limits.message)
+    } else {
+      throw new UploadLimitError(
+        _(
+          msg`You have temporarily reached the limit for video uploads. Please try again later.`,
+        ),
+      )
     }
-  }, [agent, _])
+  }
 }
