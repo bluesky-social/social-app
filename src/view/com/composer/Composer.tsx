@@ -866,7 +866,7 @@ export const ComposePost = ({
               />
               <SelectVideoBtn
                 onSelectVideo={selectVideo}
-                disabled={!canSelectImages}
+                disabled={!canSelectImages || images?.length > 0}
                 setError={setError}
               />
               <OpenCameraBtn disabled={!canSelectImages} onAdd={onImageAdd} />
