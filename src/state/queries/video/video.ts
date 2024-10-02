@@ -281,10 +281,12 @@ async function processVideo(
         throw new Error(status.error ?? 'Job failed to process')
       }
     } catch (e) {
-      pollFailures++
-      if (!status && pollFailures < 50) {
-        await new Promise(resolve => setTimeout(resolve, 5000))
-        continue // Continue async loop
+      if (!status) {
+        pollFailures++
+        if (pollFailures < 50) {
+          await new Promise(resolve => setTimeout(resolve, 5000))
+          continue // Continue async loop
+        }
       }
 
       logger.error('Error processing video', {safeMessage: e})
