@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect} from 'react'
 import {ImagePickerAsset} from 'expo-image-picker'
-import {AppBskyVideoDefs, BlobRef} from '@atproto/api'
+import {AppBskyVideoDefs, BlobRef, BskyAgent} from '@atproto/api'
 import {I18n} from '@lingui/core'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -145,67 +145,11 @@ export function useUploadVideo({
   })
 
   const did = currentAccount!.did
-  const onVideoCompressed = useCallback(
-    (video: CompressedVideo) => {
-      const signal = state.abortController.signal
-      uploadVideo({
-        video,
-        agent,
-        did,
-        signal,
-        _,
-        setProgress: p => {
-          dispatch({type: 'SetProgress', progress: p})
-        },
-      }).then(
-        response => {
-          if (signal.aborted) {
-            return
-          }
-          dispatch({
-            type: 'SetProcessing',
-            jobId: response.jobId,
-          })
-        },
-        e => {
-          if (signal.aborted) {
-            return
-          }
-          if (e instanceof AbortError) {
-            return
-          } else if (
-            e instanceof ServerError ||
-            e instanceof UploadLimitError
-          ) {
-            const message = getErrorMessage(e, _)
-            dispatch({
-              type: 'SetError',
-              error: message,
-            })
-          } else {
-            dispatch({
-              type: 'SetError',
-              error: _(msg`An error occurred while uploading the video.`),
-            })
-          }
-          logger.error('Error uploading video', {safeMessage: e})
-        },
-      )
-    },
-    [agent, did, state.abortController, _],
-  )
-
   const selectVideo = React.useCallback(
     (asset: ImagePickerAsset) => {
-      processVideo(
-        asset,
-        dispatch,
-        onVideoCompressed,
-        state.abortController.signal,
-        _,
-      )
+      processVideo(asset, dispatch, agent, did, state.abortController.signal, _)
     },
-    [_, state.abortController, dispatch, onVideoCompressed],
+    [_, state.abortController, dispatch, agent, did],
   )
 
   const clearVideo = () => {
@@ -312,7 +256,8 @@ function trunc2dp(num: number) {
 async function processVideo(
   asset: ImagePickerAsset,
   dispatch: (action: Action) => void,
-  onVideoCompressed: (video: CompressedVideo) => void,
+  agent: BskyAgent,
+  did: string,
   signal: AbortSignal,
   _: I18n['_'],
 ) {
@@ -368,7 +313,47 @@ async function processVideo(
     type: 'SetVideo',
     video,
   })
-  onVideoCompressed(video)
+
+  return uploadVideo({
+    video,
+    agent,
+    did,
+    signal,
+    _,
+    setProgress: p => {
+      dispatch({type: 'SetProgress', progress: p})
+    },
+  }).then(
+    response => {
+      if (signal.aborted) {
+        return
+      }
+      dispatch({
+        type: 'SetProcessing',
+        jobId: response.jobId,
+      })
+    },
+    e => {
+      if (signal.aborted) {
+        return
+      }
+      if (e instanceof AbortError) {
+        return
+      } else if (e instanceof ServerError || e instanceof UploadLimitError) {
+        const message = getErrorMessage(e, _)
+        dispatch({
+          type: 'SetError',
+          error: message,
+        })
+      } else {
+        dispatch({
+          type: 'SetError',
+          error: _(msg`An error occurred while uploading the video.`),
+        })
+      }
+      logger.error('Error uploading video', {safeMessage: e})
+    },
+  )
 }
 
 function getErrorMessage(e: Error, _: I18n['_']): string {
