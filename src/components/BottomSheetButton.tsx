@@ -1,11 +1,11 @@
 import React from 'react'
 
 import {Button, ButtonProps} from '#/components/Button'
-import {NormalizedPressable} from '#/components/NormalizedPressable'
+import {NormalizedRNGHPressable} from '#/components/NormalizedRNGHPressable'
 
 export function BottomSheetButton({children, ...rest}: ButtonProps) {
   return (
-    <Button {...rest} Component={NormalizedPressable}>
+    <Button {...rest} Component={NormalizedRNGHPressable}>
       {children}
     </Button>
   )
