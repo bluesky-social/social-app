@@ -2,9 +2,7 @@ import type {I18n} from '@lingui/core'
 
 import {isWeb} from '#/platform/detection'
 
-// `@formatjs/intl-numberformat/polyfill` doesn't support `roundingMode`, and
-// we'd ideally want `roundingMode: trunc` to properly display shortened counts
-// without it being rounded up, which can be misleading for follower count.
+// `@formatjs/intl-numberformat/polyfill` doesn't support `roundingMode`
 const truncateRounding = (num: number): number => {
   if (num < 1_000) {
     return num
@@ -21,6 +19,8 @@ export const formatCount = (i18n: I18n, num: number) => {
     notation: 'compact',
     maximumFractionDigits: 1,
     // `1,953` shouldn't be rounded up to 2k, it should be truncated.
+    // @ts-expect-error: `roundingMode` doesn't seem to be in the typings yet
+    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat/NumberFormat#roundingmode
     roundingMode: 'trunc',
   })
 }
