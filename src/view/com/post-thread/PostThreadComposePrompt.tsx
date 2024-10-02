@@ -48,7 +48,7 @@ export function PostThreadComposePrompt({
       accessibilityHint={_(msg`Opens composer`)}
       style={[
         gtMobile ? a.py_xs : {paddingTop: 8, paddingBottom: 11},
-        gtMobile ? a.px_sm : {paddingLeft: 6, paddingRight: 6},
+        gtMobile ? {paddingLeft: 6, paddingRight: 6} : a.px_sm,
         a.border_t,
         t.atoms.border_contrast_low,
         t.atoms.bg,
