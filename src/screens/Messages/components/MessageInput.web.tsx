@@ -5,13 +5,13 @@ import {useLingui} from '@lingui/react'
 import Graphemer from 'graphemer'
 import TextareaAutosize from 'react-textarea-autosize'
 
+import {isSafari, isTouchDevice} from '#/lib/browser'
 import {MAX_DM_GRAPHEME_LENGTH} from '#/lib/constants'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {
   useMessageDraft,
   useSaveMessageDraft,
 } from '#/state/messages/message-drafts'
-import {isSafari, isTouchDevice} from 'lib/browser'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {textInputWebEmitter} from '#/view/com/composer/text-input/textInputWebEmitter'
 import {
   Emoji,
