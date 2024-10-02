@@ -16,7 +16,7 @@ import {logger} from '#/logger'
 import {createVideoAgent} from '#/state/queries/video/util'
 import {uploadVideo} from '#/state/queries/video/video-upload'
 
-type Action =
+export type VideoAction =
   | {type: 'to_idle'; nextController: AbortController}
   | {
       type: 'idle_to_compressing'
@@ -114,7 +114,7 @@ type DoneState = {
   pendingPublish: {blobRef: BlobRef; mutableProcessed: boolean}
 }
 
-export type State =
+export type VideoState =
   | IdleState
   | ErrorState
   | CompressingState
@@ -132,7 +132,10 @@ export function createVideoState(
   }
 }
 
-export function videoReducer(state: State, action: Action): State {
+export function videoReducer(
+  state: VideoState,
+  action: VideoAction,
+): VideoState {
   if (action.type === 'to_idle') {
     return createVideoState(action.nextController)
   }
@@ -238,7 +241,7 @@ function trunc2dp(num: number) {
 
 export async function processVideo(
   asset: ImagePickerAsset,
-  dispatch: (action: Action) => void,
+  dispatch: (action: VideoAction) => void,
   agent: BskyAgent,
   did: string,
   signal: AbortSignal,

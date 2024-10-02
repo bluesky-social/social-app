@@ -1,4 +1,10 @@
 import {ComposerImage, createInitialImages} from '#/state/gallery'
+import {
+  createVideoState,
+  VideoAction,
+  videoReducer,
+  VideoState,
+} from '#/state/queries/video/video'
 import {ComposerOpts} from '#/state/shell/composer'
 
 type PostRecord = {
@@ -21,12 +27,14 @@ type ComposerEmbed = {
 export type ComposerState = {
   // TODO: Other draft data.
   embed: ComposerEmbed
+  video: VideoState // TODO: Move into embed.
 }
 
 export type ComposerAction =
   | {type: 'embed_add_images'; images: ComposerImage[]}
   | {type: 'embed_update_image'; image: ComposerImage}
   | {type: 'embed_remove_image'; image: ComposerImage}
+  | {type: 'video_action'; videoAction: VideoAction}
 
 const MAX_IMAGES = 4
 
@@ -104,6 +112,13 @@ export function composerReducer(
       }
       return state
     }
+    case 'video_action': {
+      const videoAction = action.videoAction
+      return {
+        ...state,
+        video: videoReducer(state.video, videoAction),
+      }
+    }
     default:
       return state
   }
@@ -123,6 +138,7 @@ export function createComposerState({
     }
   }
   return {
+    video: createVideoState(), // TODO: Move into embed.
     embed: {
       record: undefined,
       media,
