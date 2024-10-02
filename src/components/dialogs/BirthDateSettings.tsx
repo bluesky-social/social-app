@@ -14,9 +14,10 @@ import {
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {DateInput} from '#/view/com/util/forms/DateInput'
 import {atoms as a, useTheme} from '#/alf'
+import {BottomSheetButton} from '#/components/BottomSheetButton'
 import * as Dialog from '#/components/Dialog'
 import {Loader} from '#/components/Loader'
-import {Button, ButtonIcon, ButtonText} from '../Button'
+import {ButtonIcon, ButtonText} from '../Button'
 import {Text} from '../Typography'
 
 export function BirthDateSettingsDialog({
@@ -113,7 +114,7 @@ function BirthdayInner({
       ) : undefined}
 
       <View style={isWeb && [a.flex_row, a.justify_end]}>
-        <Button
+        <BottomSheetButton
           label={hasChanged ? _(msg`Save birthday`) : _(msg`Done`)}
           size="large"
           onPress={onSave}
@@ -123,7 +124,7 @@ function BirthdayInner({
             {hasChanged ? <Trans>Save</Trans> : <Trans>Done</Trans>}
           </ButtonText>
           {isPending && <ButtonIcon icon={Loader} />}
-        </Button>
+        </BottomSheetButton>
       </View>
     </View>
   )

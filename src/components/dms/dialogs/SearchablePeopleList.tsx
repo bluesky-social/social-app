@@ -21,7 +21,7 @@ import {useSession} from '#/state/session'
 import {ListMethods} from '#/view/com/util/List'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, native, useTheme, web} from '#/alf'
-import {Button} from '#/components/Button'
+import {BottomSheetButton} from '#/components/BottomSheetButton'
 import * as Dialog from '#/components/Dialog'
 import {canBeMessaged} from '#/components/dms/util'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
@@ -254,7 +254,7 @@ export function SearchablePeopleList({
             a.justify_center,
             {height: 32},
           ]}>
-          <Button
+          <BottomSheetButton
             label={_(msg`Close`)}
             size="small"
             shape="round"
@@ -264,6 +264,7 @@ export function SearchablePeopleList({
               a.absolute,
               a.z_20,
               native({
+                top: 2,
                 left: -7,
               }),
               web({
@@ -276,7 +277,7 @@ export function SearchablePeopleList({
             ) : (
               <ChevronLeft size="md" fill={t.palette.contrast_500} />
             )}
-          </Button>
+          </BottomSheetButton>
           <Text
             style={[
               a.z_10,
@@ -363,11 +364,11 @@ function ProfileCard({
   }, [onPress, profile.did])
 
   return (
-    <Button
+    <BottomSheetButton
       disabled={!enabled}
       label={_(msg`Start chat with ${displayName}`)}
       onPress={handleOnPress}>
-      {({hovered, pressed, focused}) => (
+      {({pressed}) => (
         <View
           style={[
             a.flex_1,
@@ -376,12 +377,11 @@ function ProfileCard({
             a.gap_md,
             a.align_center,
             a.flex_row,
+            // @TODO DIALOG REFACTOR focused hovered
             !enabled
               ? {opacity: 0.5}
-              : pressed || focused
+              : pressed
               ? t.atoms.bg_contrast_25
-              : hovered
-              ? t.atoms.bg_contrast_50
               : t.atoms.bg,
           ]}>
           <UserAvatar
@@ -404,7 +404,7 @@ function ProfileCard({
           </View>
         </View>
       )}
-    </Button>
+    </BottomSheetButton>
   )
 }
 

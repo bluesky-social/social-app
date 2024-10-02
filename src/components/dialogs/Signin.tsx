@@ -9,7 +9,8 @@ import {useCloseAllActiveElements} from '#/state/util'
 import {Logo} from '#/view/icons/Logo'
 import {Logotype} from '#/view/icons/Logotype'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
+import {BottomSheetButton} from '#/components/BottomSheetButton'
+import {ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 import {Text} from '#/components/Typography'
@@ -77,7 +78,7 @@ function SigninDialogInner({}: {control: Dialog.DialogOuterProps['control']}) {
         </Text>
 
         <View style={[a.flex_col, a.gap_md]}>
-          <Button
+          <BottomSheetButton
             variant="solid"
             color="primary"
             size="large"
@@ -86,9 +87,9 @@ function SigninDialogInner({}: {control: Dialog.DialogOuterProps['control']}) {
             <ButtonText>
               <Trans>Create an account</Trans>
             </ButtonText>
-          </Button>
+          </BottomSheetButton>
 
-          <Button
+          <BottomSheetButton
             variant="solid"
             color="secondary"
             size="large"
@@ -97,7 +98,7 @@ function SigninDialogInner({}: {control: Dialog.DialogOuterProps['control']}) {
             <ButtonText>
               <Trans>Sign in</Trans>
             </ButtonText>
-          </Button>
+          </BottomSheetButton>
         </View>
 
         {isNative && <View style={{height: 10}} />}

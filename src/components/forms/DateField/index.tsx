@@ -5,7 +5,8 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {atoms as a, useTheme} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
+import {BottomSheetButton} from '#/components/BottomSheetButton'
+import {ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {DateFieldProps} from '#/components/forms/DateField/types'
 import {toSimpleDateString} from '#/components/forms/DateField/utils'
@@ -72,7 +73,7 @@ export function DateField({
                 accessibilityHint={accessibilityHint}
               />
             </View>
-            <Button
+            <BottomSheetButton
               label={_(msg`Done`)}
               onPress={() => control.close()}
               size="large"
@@ -81,7 +82,7 @@ export function DateField({
               <ButtonText>
                 <Trans>Done</Trans>
               </ButtonText>
-            </Button>
+            </BottomSheetButton>
           </View>
         </Dialog.Inner>
       </Dialog.Outer>

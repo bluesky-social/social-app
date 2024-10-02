@@ -5,7 +5,8 @@ import {useLingui} from '@lingui/react'
 
 import {useAgent, useSession} from '#/state/session'
 import {atoms as a} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
+import {BottomSheetButton} from '#/components/BottomSheetButton'
+import {ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {DialogControlProps} from '#/components/Dialog'
 import {useIntentDialogs} from '#/components/intents/IntentDialogs'
@@ -106,7 +107,7 @@ function Inner({control}: {control: DialogControlProps}) {
         )}
         {status !== 'loading' ? (
           <View style={[a.w_full, a.flex_row, a.gap_sm, {marginLeft: 'auto'}]}>
-            <Button
+            <BottomSheetButton
               label={_(msg`Close`)}
               onPress={() => control.close()}
               variant="solid"
@@ -116,9 +117,9 @@ function Inner({control}: {control: DialogControlProps}) {
               <ButtonText>
                 <Trans>Close</Trans>
               </ButtonText>
-            </Button>
+            </BottomSheetButton>
             {status === 'failure' ? (
-              <Button
+              <BottomSheetButton
                 label={_(msg`Resend Verification Email`)}
                 onPress={onPressResendEmail}
                 variant="solid"
@@ -129,7 +130,7 @@ function Inner({control}: {control: DialogControlProps}) {
                   <Trans>Resend Email</Trans>
                 </ButtonText>
                 {sending ? <Loader size="sm" style={{color: 'white'}} /> : null}
-              </Button>
+              </BottomSheetButton>
             ) : null}
           </View>
         ) : null}

@@ -30,7 +30,8 @@ import {
 import {useAgent, useSession} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {BottomSheetButton} from '#/components/BottomSheetButton'
+import {ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {Divider} from '#/components/Divider'
 import * as Toggle from '#/components/forms/Toggle'
@@ -432,7 +433,7 @@ export function PostInteractionSettingsForm({
         </View>
       </View>
 
-      <Button
+      <BottomSheetButton
         label={_(msg`Save`)}
         onPress={onSave}
         onAccessibilityEscape={control.close}
@@ -442,7 +443,7 @@ export function PostInteractionSettingsForm({
         style={a.mt_xl}>
         <ButtonText>{_(msg`Save`)}</ButtonText>
         {isSaving && <ButtonIcon icon={Loader} position="right" />}
-      </Button>
+      </BottomSheetButton>
     </View>
   )
 }
@@ -462,7 +463,7 @@ function Selectable({
 }) {
   const t = useTheme()
   return (
-    <Button
+    <BottomSheetButton
       disabled={disabled}
       onPress={onPress}
       label={label}
@@ -472,7 +473,8 @@ function Selectable({
         checked: isSelected,
       }}
       style={a.flex_1}>
-      {({hovered, focused}) => (
+      {/* @TODO DIALOG REFACTOR hovered focused */}
+      {({pressed}) => (
         <View
           style={[
             a.flex_1,
@@ -483,7 +485,7 @@ function Selectable({
             a.p_md,
             {height: 40}, // for consistency with checkmark icon visible or not
             t.atoms.bg_contrast_50,
-            (hovered || focused) && t.atoms.bg_contrast_100,
+            pressed && t.atoms.bg_contrast_100,
             isSelected && {
               backgroundColor: t.palette.primary_100,
             },
@@ -497,7 +499,7 @@ function Selectable({
           )}
         </View>
       )}
-    </Button>
+    </BottomSheetButton>
   )
 }
 

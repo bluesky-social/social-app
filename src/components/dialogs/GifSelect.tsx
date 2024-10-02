@@ -20,12 +20,13 @@ import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {ListMethods} from '#/view/com/util/List'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {BottomSheetButton} from '#/components/BottomSheetButton'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
 import {useThrottledValue} from '#/components/hooks/useThrottledValue'
 import {ArrowLeft_Stroke2_Corner0_Rounded as Arrow} from '#/components/icons/Arrow'
 import {MagnifyingGlass2_Stroke2_Corner0_Rounded as Search} from '#/components/icons/MagnifyingGlass2'
-import {Button, ButtonIcon, ButtonText} from '../Button'
+import {ButtonIcon, ButtonText} from '../Button'
 import {ListFooter, ListMaybePlaceholder} from '../Lists'
 import {GifPreview} from './GifSelect.shared'
 
@@ -148,7 +149,7 @@ function GifList({
         />
 
         {!gtMobile && isWeb && (
-          <Button
+          <BottomSheetButton
             size="small"
             variant="ghost"
             color="secondary"
@@ -156,7 +157,7 @@ function GifList({
             onPress={() => control.close()}
             label={_(msg`Close GIF dialog`)}>
             <ButtonIcon icon={Arrow} size="md" />
-          </Button>
+          </BottomSheetButton>
         )}
 
         <TextField.Root>
@@ -256,7 +257,7 @@ function DialogError({details}: {details?: string}) {
         )}
         details={details}
       />
-      <Button
+      <BottomSheetButton
         label={_(msg`Close dialog`)}
         onPress={() => control.close()}
         color="primary"
@@ -265,7 +266,7 @@ function DialogError({details}: {details?: string}) {
         <ButtonText>
           <Trans>Close</Trans>
         </ButtonText>
-      </Button>
+      </BottomSheetButton>
     </Dialog.ScrollableInner>
   )
 }

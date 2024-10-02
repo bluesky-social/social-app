@@ -8,7 +8,8 @@ import {logger} from '#/logger'
 import {useAgent} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {BottomSheetButton} from '#/components/BottomSheetButton'
+import {ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
@@ -68,7 +69,7 @@ export function ExportCarDialog({
             </Trans>
           </Text>
 
-          <Button
+          <BottomSheetButton
             variant="solid"
             color="primary"
             size="large"
@@ -79,7 +80,7 @@ export function ExportCarDialog({
               <Trans>Download CAR file</Trans>
             </ButtonText>
             {loading && <ButtonIcon icon={Loader} />}
-          </Button>
+          </BottomSheetButton>
 
           <Text
             style={[

@@ -9,7 +9,8 @@ import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme, web} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
+import {BottomSheetButton} from '#/components/BottomSheetButton'
+import {ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as Toggle from '#/components/forms/Toggle'
 import {Message_Stroke2_Corner0_Rounded} from '#/components/icons/Message'
@@ -156,7 +157,7 @@ function DialogInner({
             </Toggle.Group>
           </View>
         </View>
-        <Button
+        <BottomSheetButton
           label={_(msg`Start chatting`)}
           accessibilityHint={_(msg`Close modal`)}
           size="large"
@@ -166,7 +167,7 @@ function DialogInner({
           <ButtonText>
             <Trans>Get started</Trans>
           </ButtonText>
-        </Button>
+        </BottomSheetButton>
       </View>
       <Dialog.Close />
     </Dialog.ScrollableInner>

@@ -8,12 +8,13 @@ import {EMBED_SCRIPT} from '#/lib/constants'
 import {niceDate} from '#/lib/strings/time'
 import {toShareUrl} from '#/lib/strings/url-helpers'
 import {atoms as a, useTheme} from '#/alf'
+import {BottomSheetButton} from '#/components/BottomSheetButton'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {CodeBrackets_Stroke2_Corner0_Rounded as CodeBrackets} from '#/components/icons/CodeBrackets'
 import {Text} from '#/components/Typography'
-import {Button, ButtonIcon, ButtonText} from '../Button'
+import {ButtonIcon, ButtonText} from '../Button'
 
 type EmbedDialogProps = {
   control: Dialog.DialogControlProps
@@ -117,7 +118,7 @@ function EmbedDialogInner({
             />
           </TextField.Root>
         </View>
-        <Button
+        <BottomSheetButton
           label={_(msg`Copy code`)}
           color="primary"
           variant="solid"
@@ -140,7 +141,7 @@ function EmbedDialogInner({
               <Trans>Copy code</Trans>
             </ButtonText>
           )}
-        </Button>
+        </BottomSheetButton>
       </View>
       <Dialog.Close />
     </Dialog.Inner>

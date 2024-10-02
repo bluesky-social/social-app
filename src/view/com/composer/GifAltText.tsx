@@ -14,7 +14,8 @@ import {
 import {enforceLen} from '#/lib/strings/helpers'
 import {Gif} from '#/state/queries/tenor'
 import {atoms as a, native, useTheme} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
+import {BottomSheetButton} from '#/components/BottomSheetButton'
+import {ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
@@ -154,7 +155,7 @@ function AltTextInner({
               />
             </TextField.Root>
           </View>
-          <Button
+          <BottomSheetButton
             label={_(msg`Save`)}
             size="large"
             color="primary"
@@ -163,7 +164,7 @@ function AltTextInner({
             <ButtonText>
               <Trans>Save</Trans>
             </ButtonText>
-          </Button>
+          </BottomSheetButton>
         </View>
         {/* below the text input to force tab order */}
         <View>

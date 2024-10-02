@@ -10,12 +10,8 @@ import {DMCA_LINK} from '#/components/ReportDialog/const'
 export {useDialogControl as useReportDialogControl} from '#/components/Dialog'
 
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
-import {
-  Button,
-  ButtonIcon,
-  ButtonText,
-  useButtonContext,
-} from '#/components/Button'
+import {BottomSheetButton} from '#/components/BottomSheetButton'
+import {ButtonIcon, ButtonText, useButtonContext} from '#/components/Button'
 import {Divider} from '#/components/Divider'
 import {
   ChevronLeft_Stroke2_Corner0_Rounded as ChevronLeft,
@@ -72,7 +68,7 @@ export function SelectReportOptionView({
   return (
     <View style={[a.gap_lg]}>
       {props.labelers?.length > 1 ? (
-        <Button
+        <BottomSheetButton
           size="small"
           variant="solid"
           color="secondary"
@@ -80,7 +76,7 @@ export function SelectReportOptionView({
           label={_(msg`Go back to previous step`)}
           onPress={props.goBack}>
           <ButtonIcon icon={ChevronLeft} />
-        </Button>
+        </BottomSheetButton>
       ) : null}
 
       <View style={[a.justify_center, gtMobile ? a.gap_sm : a.gap_xs]}>
@@ -95,7 +91,7 @@ export function SelectReportOptionView({
       <View style={[a.gap_sm]}>
         {reportOptions.map(reportOption => {
           return (
-            <Button
+            <BottomSheetButton
               key={reportOption.reason}
               testID={reportOption.reason}
               label={_(msg`Create report for ${reportOption.title}`)}
@@ -104,7 +100,7 @@ export function SelectReportOptionView({
                 title={reportOption.title}
                 description={reportOption.description}
               />
-            </Button>
+            </BottomSheetButton>
           )
         })}
 

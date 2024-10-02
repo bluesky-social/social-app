@@ -89,7 +89,8 @@ export type ButtonProps = Pick<
     children: NonTextElements | ((context: ButtonContext) => NonTextElements)
   }
 
-export type ButtonTextProps = TextProps & VariantProps & {disabled?: boolean}
+export type ButtonTextProps = TextProps &
+  VariantProps & {disabled?: boolean | null}
 
 const Context = React.createContext<VariantProps & ButtonState>({
   hovered: false,
@@ -97,6 +98,7 @@ const Context = React.createContext<VariantProps & ButtonState>({
   pressed: false,
   disabled: false,
 })
+export const ButtonContext = Context
 
 export function useButtonContext() {
   return React.useContext(Context)
@@ -118,7 +120,6 @@ export const Button = React.forwardRef<View, ButtonProps>(
     },
     ref,
   ) => {
-    const t = useTheme()
     const [state, setState] = React.useState({
       pressed: false,
       hovered: false,
@@ -182,226 +183,13 @@ export const Button = React.forwardRef<View, ButtonProps>(
       }))
     }, [setState])
 
-    const {baseStyles, hoverStyles} = React.useMemo(() => {
-      const baseStyles: ViewStyle[] = []
-      const hoverStyles: ViewStyle[] = []
-
-      if (color === 'primary') {
-        if (variant === 'solid') {
-          if (!disabled) {
-            baseStyles.push({
-              backgroundColor: t.palette.primary_500,
-            })
-            hoverStyles.push({
-              backgroundColor: t.palette.primary_600,
-            })
-          } else {
-            baseStyles.push({
-              backgroundColor: select(t.name, {
-                light: t.palette.primary_700,
-                dim: t.palette.primary_300,
-                dark: t.palette.primary_300,
-              }),
-            })
-          }
-        } else if (variant === 'outline') {
-          baseStyles.push(a.border, t.atoms.bg, {
-            borderWidth: 1,
-          })
-
-          if (!disabled) {
-            baseStyles.push(a.border, {
-              borderColor: t.palette.primary_500,
-            })
-            hoverStyles.push(a.border, {
-              backgroundColor: t.palette.primary_50,
-            })
-          } else {
-            baseStyles.push(a.border, {
-              borderColor: t.palette.primary_200,
-            })
-          }
-        } else if (variant === 'ghost') {
-          if (!disabled) {
-            baseStyles.push(t.atoms.bg)
-            hoverStyles.push({
-              backgroundColor: t.palette.primary_100,
-            })
-          }
-        }
-      } else if (color === 'secondary') {
-        if (variant === 'solid') {
-          if (!disabled) {
-            baseStyles.push(t.atoms.bg_contrast_25)
-            hoverStyles.push(t.atoms.bg_contrast_50)
-          } else {
-            baseStyles.push(t.atoms.bg_contrast_100)
-          }
-        } else if (variant === 'outline') {
-          baseStyles.push(a.border, t.atoms.bg, {
-            borderWidth: 1,
-          })
-
-          if (!disabled) {
-            baseStyles.push(a.border, {
-              borderColor: t.palette.contrast_300,
-            })
-            hoverStyles.push(t.atoms.bg_contrast_50)
-          } else {
-            baseStyles.push(a.border, {
-              borderColor: t.palette.contrast_200,
-            })
-          }
-        } else if (variant === 'ghost') {
-          if (!disabled) {
-            baseStyles.push(t.atoms.bg)
-            hoverStyles.push({
-              backgroundColor: t.palette.contrast_25,
-            })
-          }
-        }
-      } else if (color === 'secondary_inverted') {
-        if (variant === 'solid') {
-          if (!disabled) {
-            baseStyles.push({
-              backgroundColor: t.palette.contrast_900,
-            })
-            hoverStyles.push({
-              backgroundColor: t.palette.contrast_950,
-            })
-          } else {
-            baseStyles.push({
-              backgroundColor: t.palette.contrast_600,
-            })
-          }
-        } else if (variant === 'outline') {
-          baseStyles.push(a.border, t.atoms.bg, {
-            borderWidth: 1,
-          })
-
-          if (!disabled) {
-            baseStyles.push(a.border, {
-              borderColor: t.palette.contrast_300,
-            })
-            hoverStyles.push(t.atoms.bg_contrast_50)
-          } else {
-            baseStyles.push(a.border, {
-              borderColor: t.palette.contrast_200,
-            })
-          }
-        } else if (variant === 'ghost') {
-          if (!disabled) {
-            baseStyles.push(t.atoms.bg)
-            hoverStyles.push({
-              backgroundColor: t.palette.contrast_25,
-            })
-          }
-        }
-      } else if (color === 'negative') {
-        if (variant === 'solid') {
-          if (!disabled) {
-            baseStyles.push({
-              backgroundColor: t.palette.negative_500,
-            })
-            hoverStyles.push({
-              backgroundColor: t.palette.negative_600,
-            })
-          } else {
-            baseStyles.push({
-              backgroundColor: select(t.name, {
-                light: t.palette.negative_700,
-                dim: t.palette.negative_300,
-                dark: t.palette.negative_300,
-              }),
-            })
-          }
-        } else if (variant === 'outline') {
-          baseStyles.push(a.border, t.atoms.bg, {
-            borderWidth: 1,
-          })
-
-          if (!disabled) {
-            baseStyles.push(a.border, {
-              borderColor: t.palette.negative_500,
-            })
-            hoverStyles.push(a.border, {
-              backgroundColor: t.palette.negative_50,
-            })
-          } else {
-            baseStyles.push(a.border, {
-              borderColor: t.palette.negative_200,
-            })
-          }
-        } else if (variant === 'ghost') {
-          if (!disabled) {
-            baseStyles.push(t.atoms.bg)
-            hoverStyles.push({
-              backgroundColor: t.palette.negative_100,
-            })
-          }
-        }
-      }
-
-      if (shape === 'default') {
-        if (size === 'large') {
-          baseStyles.push({
-            paddingVertical: 13,
-            paddingHorizontal: 20,
-            borderRadius: 8,
-            gap: 8,
-          })
-        } else if (size === 'small') {
-          baseStyles.push({
-            paddingVertical: 8,
-            paddingHorizontal: 12,
-            borderRadius: 6,
-            gap: 6,
-          })
-        } else if (size === 'tiny') {
-          baseStyles.push({
-            paddingVertical: 4,
-            paddingHorizontal: 8,
-            borderRadius: 4,
-            gap: 4,
-          })
-        }
-      } else if (shape === 'round' || shape === 'square') {
-        if (size === 'large') {
-          if (shape === 'round') {
-            baseStyles.push({height: 46, width: 46})
-          } else {
-            baseStyles.push({height: 44, width: 44})
-          }
-        } else if (size === 'small') {
-          if (shape === 'round') {
-            baseStyles.push({height: 36, width: 36})
-          } else {
-            baseStyles.push({height: 34, width: 34})
-          }
-        } else if (size === 'tiny') {
-          if (shape === 'round') {
-            baseStyles.push({height: 22, width: 22})
-          } else {
-            baseStyles.push({height: 21, width: 21})
-          }
-        }
-
-        if (shape === 'round') {
-          baseStyles.push(a.rounded_full)
-        } else if (shape === 'square') {
-          if (size === 'tiny') {
-            baseStyles.push(a.rounded_xs)
-          } else {
-            baseStyles.push(a.rounded_sm)
-          }
-        }
-      }
-
-      return {
-        baseStyles,
-        hoverStyles,
-      }
-    }, [t, variant, color, size, shape, disabled])
+    const {baseStyles, hoverStyles} = useSharedButtonStyles({
+      color,
+      variant,
+      disabled,
+      shape,
+      size,
+    })
 
     const {gradientColors, gradientHoverColors, gradientLocations} =
       React.useMemo(() => {
@@ -505,6 +293,239 @@ export const Button = React.forwardRef<View, ButtonProps>(
   },
 )
 Button.displayName = 'Button'
+
+export function useSharedButtonStyles({
+  color,
+  variant,
+  disabled,
+  shape,
+  size,
+}: VariantProps & {disabled?: boolean | null}) {
+  const t = useTheme()
+
+  const {baseStyles, hoverStyles} = React.useMemo(() => {
+    const baseStyles: ViewStyle[] = []
+    const hoverStyles: ViewStyle[] = []
+
+    if (color === 'primary') {
+      if (variant === 'solid') {
+        if (!disabled) {
+          baseStyles.push({
+            backgroundColor: t.palette.primary_500,
+          })
+          hoverStyles.push({
+            backgroundColor: t.palette.primary_600,
+          })
+        } else {
+          baseStyles.push({
+            backgroundColor: select(t.name, {
+              light: t.palette.primary_700,
+              dim: t.palette.primary_300,
+              dark: t.palette.primary_300,
+            }),
+          })
+        }
+      } else if (variant === 'outline') {
+        baseStyles.push(a.border, t.atoms.bg, {
+          borderWidth: 1,
+        })
+
+        if (!disabled) {
+          baseStyles.push(a.border, {
+            borderColor: t.palette.primary_500,
+          })
+          hoverStyles.push(a.border, {
+            backgroundColor: t.palette.primary_50,
+          })
+        } else {
+          baseStyles.push(a.border, {
+            borderColor: t.palette.primary_200,
+          })
+        }
+      } else if (variant === 'ghost') {
+        if (!disabled) {
+          baseStyles.push(t.atoms.bg)
+          hoverStyles.push({
+            backgroundColor: t.palette.primary_100,
+          })
+        }
+      }
+    } else if (color === 'secondary') {
+      if (variant === 'solid') {
+        if (!disabled) {
+          baseStyles.push(t.atoms.bg_contrast_25)
+          hoverStyles.push(t.atoms.bg_contrast_50)
+        } else {
+          baseStyles.push(t.atoms.bg_contrast_100)
+        }
+      } else if (variant === 'outline') {
+        baseStyles.push(a.border, t.atoms.bg, {
+          borderWidth: 1,
+        })
+
+        if (!disabled) {
+          baseStyles.push(a.border, {
+            borderColor: t.palette.contrast_300,
+          })
+          hoverStyles.push(t.atoms.bg_contrast_50)
+        } else {
+          baseStyles.push(a.border, {
+            borderColor: t.palette.contrast_200,
+          })
+        }
+      } else if (variant === 'ghost') {
+        if (!disabled) {
+          baseStyles.push(t.atoms.bg)
+          hoverStyles.push({
+            backgroundColor: t.palette.contrast_25,
+          })
+        }
+      }
+    } else if (color === 'secondary_inverted') {
+      if (variant === 'solid') {
+        if (!disabled) {
+          baseStyles.push({
+            backgroundColor: t.palette.contrast_900,
+          })
+          hoverStyles.push({
+            backgroundColor: t.palette.contrast_950,
+          })
+        } else {
+          baseStyles.push({
+            backgroundColor: t.palette.contrast_600,
+          })
+        }
+      } else if (variant === 'outline') {
+        baseStyles.push(a.border, t.atoms.bg, {
+          borderWidth: 1,
+        })
+
+        if (!disabled) {
+          baseStyles.push(a.border, {
+            borderColor: t.palette.contrast_300,
+          })
+          hoverStyles.push(t.atoms.bg_contrast_50)
+        } else {
+          baseStyles.push(a.border, {
+            borderColor: t.palette.contrast_200,
+          })
+        }
+      } else if (variant === 'ghost') {
+        if (!disabled) {
+          baseStyles.push(t.atoms.bg)
+          hoverStyles.push({
+            backgroundColor: t.palette.contrast_25,
+          })
+        }
+      }
+    } else if (color === 'negative') {
+      if (variant === 'solid') {
+        if (!disabled) {
+          baseStyles.push({
+            backgroundColor: t.palette.negative_500,
+          })
+          hoverStyles.push({
+            backgroundColor: t.palette.negative_600,
+          })
+        } else {
+          baseStyles.push({
+            backgroundColor: select(t.name, {
+              light: t.palette.negative_700,
+              dim: t.palette.negative_300,
+              dark: t.palette.negative_300,
+            }),
+          })
+        }
+      } else if (variant === 'outline') {
+        baseStyles.push(a.border, t.atoms.bg, {
+          borderWidth: 1,
+        })
+
+        if (!disabled) {
+          baseStyles.push(a.border, {
+            borderColor: t.palette.negative_500,
+          })
+          hoverStyles.push(a.border, {
+            backgroundColor: t.palette.negative_50,
+          })
+        } else {
+          baseStyles.push(a.border, {
+            borderColor: t.palette.negative_200,
+          })
+        }
+      } else if (variant === 'ghost') {
+        if (!disabled) {
+          baseStyles.push(t.atoms.bg)
+          hoverStyles.push({
+            backgroundColor: t.palette.negative_100,
+          })
+        }
+      }
+    }
+
+    if (shape === 'default') {
+      if (size === 'large') {
+        baseStyles.push({
+          paddingVertical: 13,
+          paddingHorizontal: 20,
+          borderRadius: 8,
+          gap: 8,
+        })
+      } else if (size === 'small') {
+        baseStyles.push({
+          paddingVertical: 8,
+          paddingHorizontal: 12,
+          borderRadius: 6,
+          gap: 6,
+        })
+      } else if (size === 'tiny') {
+        baseStyles.push({
+          paddingVertical: 4,
+          paddingHorizontal: 8,
+          borderRadius: 4,
+          gap: 4,
+        })
+      }
+    } else if (shape === 'round' || shape === 'square') {
+      if (size === 'large') {
+        if (shape === 'round') {
+          baseStyles.push({height: 46, width: 46})
+        } else {
+          baseStyles.push({height: 44, width: 44})
+        }
+      } else if (size === 'small') {
+        if (shape === 'round') {
+          baseStyles.push({height: 36, width: 36})
+        } else {
+          baseStyles.push({height: 34, width: 34})
+        }
+      } else if (size === 'tiny') {
+        if (shape === 'round') {
+          baseStyles.push({height: 22, width: 22})
+        } else {
+          baseStyles.push({height: 21, width: 21})
+        }
+      }
+
+      if (shape === 'round') {
+        baseStyles.push(a.rounded_full)
+      } else if (shape === 'square') {
+        if (size === 'tiny') {
+          baseStyles.push(a.rounded_xs)
+        } else {
+          baseStyles.push(a.rounded_sm)
+        }
+      }
+    }
+
+    return {
+      baseStyles,
+      hoverStyles,
+    }
+  }, [t, variant, color, size, shape, disabled])
+
+  return {baseStyles, hoverStyles}
+}
 
 export function useSharedButtonTextStyles() {
   const t = useTheme()

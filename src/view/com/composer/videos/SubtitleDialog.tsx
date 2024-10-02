@@ -10,6 +10,7 @@ import {LANGUAGES} from '#/locale/languages'
 import {isWeb} from '#/platform/detection'
 import {useLanguagePrefs} from '#/state/preferences'
 import {atoms as a, useTheme, web} from '#/alf'
+import {BottomSheetButton} from '#/components/BottomSheetButton'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
@@ -164,7 +165,7 @@ function SubtitleDialogInner({
         )}
 
         <View style={web([a.flex_row, a.justify_end])}>
-          <Button
+          <BottomSheetButton
             label={_(msg`Done`)}
             size={isWeb ? 'small' : 'large'}
             color="primary"
@@ -177,7 +178,7 @@ function SubtitleDialogInner({
             <ButtonText>
               <Trans>Done</Trans>
             </ButtonText>
-          </Button>
+          </BottomSheetButton>
         </View>
       </View>
       <Dialog.Close />
@@ -257,7 +258,7 @@ function SubtitleFileRow({
         </View>
       </View>
 
-      <Button
+      <BottomSheetButton
         label={_(msg`Remove subtitle file`)}
         size="tiny"
         shape="round"
@@ -268,7 +269,7 @@ function SubtitleFileRow({
         }
         style={[a.ml_sm]}>
         <ButtonIcon icon={X} />
-      </Button>
+      </BottomSheetButton>
     </View>
   )
 }

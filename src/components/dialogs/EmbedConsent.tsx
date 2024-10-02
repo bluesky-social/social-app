@@ -10,8 +10,9 @@ import {
 } from '#/lib/strings/embed-player'
 import {useSetExternalEmbedPref} from '#/state/preferences'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {BottomSheetButton} from '#/components/BottomSheetButton'
 import * as Dialog from '#/components/Dialog'
-import {Button, ButtonText} from '../Button'
+import {ButtonText} from '../Button'
 import {Text} from '../Typography'
 
 export function EmbedConsentDialog({
@@ -75,7 +76,7 @@ export function EmbedConsentDialog({
           </View>
         </View>
         <View style={a.gap_md}>
-          <Button
+          <BottomSheetButton
             style={gtMobile && a.flex_1}
             label={_(msg`Enable external media`)}
             onPress={onShowAllPress}
@@ -86,8 +87,8 @@ export function EmbedConsentDialog({
             <ButtonText>
               <Trans>Enable external media</Trans>
             </ButtonText>
-          </Button>
-          <Button
+          </BottomSheetButton>
+          <BottomSheetButton
             style={gtMobile && a.flex_1}
             label={_(msg`Enable this source only`)}
             onPress={onShowPress}
@@ -98,8 +99,8 @@ export function EmbedConsentDialog({
             <ButtonText>
               <Trans>Enable {externalEmbedLabels[source]} only</Trans>
             </ButtonText>
-          </Button>
-          <Button
+          </BottomSheetButton>
+          <BottomSheetButton
             label={_(msg`No thanks`)}
             onAccessibilityEscape={control.close}
             onPress={onHidePress}
@@ -109,7 +110,7 @@ export function EmbedConsentDialog({
             <ButtonText>
               <Trans>No thanks</Trans>
             </ButtonText>
-          </Button>
+          </BottomSheetButton>
         </View>
         <Dialog.Close />
       </Dialog.ScrollableInner>

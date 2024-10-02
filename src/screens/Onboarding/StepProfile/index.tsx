@@ -30,6 +30,7 @@ import {
   PlaceholderCanvasRef,
 } from '#/screens/Onboarding/StepProfile/PlaceholderCanvas'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {BottomSheetButton} from '#/components/BottomSheetButton'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {IconCircle} from '#/components/IconCircle'
@@ -311,7 +312,7 @@ export function StepProfile() {
             />
           </View>
           <View style={[a.pt_4xl]}>
-            <Button
+            <BottomSheetButton
               variant="solid"
               color="primary"
               size="large"
@@ -320,7 +321,7 @@ export function StepProfile() {
               <ButtonText>
                 <Trans>Done</Trans>
               </ButtonText>
-            </Button>
+            </BottomSheetButton>
           </View>
         </Dialog.Inner>
       </Dialog.Outer>

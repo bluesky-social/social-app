@@ -13,7 +13,8 @@ import {logger} from '#/logger'
 import {useAgent, useSession} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {BottomSheetButton} from '#/components/BottomSheetButton'
+import {ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
@@ -139,7 +140,7 @@ function Label({
         </View>
         {!isSelfLabel && (
           <View>
-            <Button
+            <BottomSheetButton
               variant="solid"
               color="secondary"
               size="small"
@@ -148,7 +149,7 @@ function Label({
               <ButtonText>
                 <Trans>Appeal</Trans>
               </ButtonText>
-            </Button>
+            </BottomSheetButton>
           </View>
         )}
       </View>
@@ -275,7 +276,7 @@ function AppealForm({
             ? [a.flex_row, a.justify_between]
             : [{flexDirection: 'column-reverse'}, a.gap_sm]
         }>
-        <Button
+        <BottomSheetButton
           testID="backBtn"
           variant="solid"
           color="secondary"
@@ -283,8 +284,8 @@ function AppealForm({
           onPress={onPressBack}
           label={_(msg`Back`)}>
           <ButtonText>{_(msg`Back`)}</ButtonText>
-        </Button>
-        <Button
+        </BottomSheetButton>
+        <BottomSheetButton
           testID="submitBtn"
           variant="solid"
           color="primary"
@@ -293,7 +294,7 @@ function AppealForm({
           label={_(msg`Submit`)}>
           <ButtonText>{_(msg`Submit`)}</ButtonText>
           {isPending && <ButtonIcon icon={Loader} />}
-        </Button>
+        </BottomSheetButton>
       </View>
     </>
   )

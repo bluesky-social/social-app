@@ -1,10 +1,12 @@
 import React from 'react'
-import {GestureResponderEvent, View} from 'react-native'
+import {View} from 'react-native'
+import {PressableEvent} from 'react-native-gesture-handler/lib/typescript/components/Pressable/PressableProps'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
-import {Button, ButtonColor, ButtonProps, ButtonText} from '#/components/Button'
+import {BottomSheetButton} from '#/components/BottomSheetButton'
+import {ButtonColor, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {Text} from '#/components/Typography'
 
@@ -115,14 +117,14 @@ export function Cancel({
   }, [close])
 
   return (
-    <Button
+    <BottomSheetButton
       variant="solid"
       color="secondary"
       size={gtMobile ? 'small' : 'large'}
       label={cta || _(msg`Cancel`)}
       onPress={onPress}>
       <ButtonText>{cta || _(msg`Cancel`)}</ButtonText>
-    </Button>
+    </BottomSheetButton>
   )
 }
 
@@ -139,7 +141,7 @@ export function Action({
    * Note: The dialog will close automatically when the action is pressed, you
    * should NOT close the dialog as a side effect of this method.
    */
-  onPress: ButtonProps['onPress']
+  onPress: (e: PressableEvent) => void
   color?: ButtonColor
   /**
    * Optional i18n string. If undefined, it will default to "Confirm".
@@ -151,14 +153,14 @@ export function Action({
   const {gtMobile} = useBreakpoints()
   const {close} = Dialog.useDialogContext()
   const handleOnPress = React.useCallback(
-    (e: GestureResponderEvent) => {
+    (e: PressableEvent) => {
       close(() => onPress?.(e))
     },
     [close, onPress],
   )
 
   return (
-    <Button
+    <BottomSheetButton
       variant="solid"
       color={color}
       size={gtMobile ? 'small' : 'large'}
@@ -166,7 +168,7 @@ export function Action({
       onPress={handleOnPress}
       testID={testID}>
       <ButtonText>{cta || _(msg`Confirm`)}</ButtonText>
-    </Button>
+    </BottomSheetButton>
   )
 }
 
@@ -192,7 +194,7 @@ export function Basic({
    * Note: The dialog will close automatically when the action is pressed, you
    * should NOT close the dialog as a side effect of this method.
    */
-  onConfirm: ButtonProps['onPress']
+  onConfirm: (e: PressableEvent) => void
   confirmButtonColor?: ButtonColor
   showCancel?: boolean
 }>) {
