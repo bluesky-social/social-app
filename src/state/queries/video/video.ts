@@ -17,7 +17,7 @@ import {
 import {CompressedVideo} from '#/lib/media/video/types'
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
-import {useVideoAgent} from '#/state/queries/video/util'
+import {createVideoAgent} from '#/state/queries/video/util'
 import {useUploadVideoMutation} from '#/state/queries/video/video-upload'
 
 type Status = 'idle' | 'compressing' | 'processing' | 'uploading' | 'done'
@@ -228,7 +228,6 @@ const useUploadStatusQuery = ({
   onSuccess: (blobRef: BlobRef) => void
   onError: (error: Error) => void
 }) => {
-  const videoAgent = useVideoAgent()
   const [enabled, setEnabled] = React.useState(!!jobId)
 
   const [prevJobId, setPrevJobId] = React.useState(jobId)
@@ -242,6 +241,7 @@ const useUploadStatusQuery = ({
     queryFn: async () => {
       if (!jobId) return
 
+      const videoAgent = createVideoAgent()
       const {data} = await videoAgent.app.bsky.video.getJobStatus({jobId})
       const status = data.jobStatus
       if (status.state === 'JOB_STATE_COMPLETED') {

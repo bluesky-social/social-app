@@ -7,7 +7,7 @@ import {VIDEO_SERVICE_DID} from '#/lib/constants'
 import {UploadLimitError} from '#/lib/media/video/errors'
 import {getServiceAuthAudFromUrl} from '#/lib/strings/url-helpers'
 import {useAgent} from '#/state/session'
-import {useVideoAgent} from './util'
+import {createVideoAgent} from './util'
 
 export async function getServiceAuthToken({
   agent,
@@ -34,7 +34,6 @@ export async function getServiceAuthToken({
 
 export function useVideoUploadLimits() {
   const agent = useAgent()
-  const videoAgent = useVideoAgent()
   const {_} = useLingui()
 
   return useCallback(async () => {
@@ -43,6 +42,7 @@ export function useVideoUploadLimits() {
       lxm: 'app.bsky.video.getUploadLimits',
       aud: VIDEO_SERVICE_DID,
     })
+    const videoAgent = createVideoAgent()
     const {data: limits} = await videoAgent.app.bsky.video
       .getUploadLimits({}, {headers: {Authorization: `Bearer ${token}`}})
       .catch(err => {
@@ -64,5 +64,5 @@ export function useVideoUploadLimits() {
         )
       }
     }
-  }, [agent, videoAgent, _])
+  }, [agent, _])
 }
