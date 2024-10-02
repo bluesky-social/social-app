@@ -1,16 +1,17 @@
 import React from 'react'
 import {
   GestureResponderEvent,
+  MeasureOnSuccessCallback,
   NativeMouseEvent,
   NativeSyntheticEvent,
   PressableProps,
-  View,
 } from 'react-native'
 import {Pressable as BSPressable} from 'react-native-gesture-handler'
 import {PressableEvent} from 'react-native-gesture-handler/lib/typescript/components/Pressable/PressableProps'
 
 function pressableEventToGestureResponderEvent(
   event: PressableEvent,
+  target: NormalizedRNGHPressable,
 ): GestureResponderEvent {
   return {
     nativeEvent: {
@@ -20,8 +21,10 @@ function pressableEventToGestureResponderEvent(
       identifier: event.nativeEvent.identifier.toString(),
       target: event.nativeEvent.target.toString(),
     },
-    target: null,
-    currentTarget: null,
+    // @ts-expect-error
+    target: target,
+    // @ts-expect-error
+    currentTarget: target,
     preventDefault() {},
     stopPropagation() {},
     cancelable: false,
@@ -43,11 +46,14 @@ function pressableEventToGestureResponderEvent(
 
 function pressableEventToMouseEvent(
   event: PressableEvent,
+  target: NormalizedRNGHPressable,
 ): MouseEvent & NativeSyntheticEvent<NativeMouseEvent> {
   return {
     ...event.nativeEvent,
-    target: null,
-    currentTarget: null,
+    // @ts-expect-error
+    target: target,
+    // @ts-expect-error
+    currentTarget: target,
     preventDefault() {},
     stopPropagation() {},
     cancelable: false,
@@ -59,62 +65,64 @@ function pressableEventToMouseEvent(
   }
 }
 
-export const NormalizedRNGHPressable = React.forwardRef<View, PressableProps>(
-  function NormalizedPressable(
-    {
-      onPress,
-      onLongPress,
-      onPressIn,
-      onPressOut,
-      onHoverIn,
-      onHoverOut,
-      onFocus: _onFocus,
-      ...rest
-    },
-    ref,
-  ) {
-    const onNormalizedPress = (event: PressableEvent) => {
-      if (!onPress) return
-      onPress(pressableEventToGestureResponderEvent(event))
-    }
+export class NormalizedRNGHPressable extends React.Component<PressableProps> {
+  static displayName = 'Pressable'
 
-    const onNormalizedLongPress = (event: PressableEvent) => {
-      if (!onLongPress) return
-      onLongPress(pressableEventToGestureResponderEvent(event))
-    }
+  measure = (_: MeasureOnSuccessCallback) => {}
 
-    const onNormalizedPressIn = (event: PressableEvent) => {
-      if (!onPressIn) return
-      onPressIn(pressableEventToGestureResponderEvent(event))
-    }
+  measureLayout = (_: number) => {}
 
-    const onNormalizedPressOut = (event: PressableEvent) => {
-      if (!onPressOut) return
-      onPressOut(pressableEventToGestureResponderEvent(event))
-    }
+  measureInWindow = (
+    _: (x: number, y: number, width: number, height: number) => void,
+  ) => {}
 
-    const onNormalizedHoverIn = (event: PressableEvent) => {
-      if (!onHoverIn) return
-      onHoverIn(pressableEventToMouseEvent(event))
-    }
+  setNativeProps = (_: PressableProps) => {}
 
-    const onNormalizedHoverOut = (event: PressableEvent) => {
-      if (!onHoverOut) return
-      onHoverOut(pressableEventToMouseEvent(event))
-    }
+  focus = () => {}
 
+  blur = () => {}
+
+  onPress = (event: PressableEvent) => {
+    if (!this.props.onPress) return
+    this.props.onPress(pressableEventToGestureResponderEvent(event, this))
+  }
+
+  onLongPress = (event: PressableEvent) => {
+    if (!this.props.onLongPress) return
+    this.props.onLongPress(pressableEventToGestureResponderEvent(event, this))
+  }
+
+  onPressIn = (event: PressableEvent) => {
+    if (!this.props.onPressIn) return
+    this.props.onPressIn(pressableEventToGestureResponderEvent(event, this))
+  }
+
+  onPressOut = (event: PressableEvent) => {
+    if (!this.props.onPressOut) return
+    this.props.onPressOut(pressableEventToGestureResponderEvent(event, this))
+  }
+
+  onHoverIn = (event: PressableEvent) => {
+    if (!this.props.onHoverIn) return
+    this.props.onHoverIn(pressableEventToMouseEvent(event, this))
+  }
+
+  onHoverOut = (event: PressableEvent) => {
+    if (!this.props.onHoverOut) return
+    this.props.onHoverOut(pressableEventToMouseEvent(event, this))
+  }
+
+  render() {
     return (
-      <View ref={ref}>
-        <BSPressable
-          onPress={onNormalizedPress}
-          onLongPress={onNormalizedLongPress}
-          onPressIn={onNormalizedPressIn}
-          onPressOut={onNormalizedPressOut}
-          onHoverIn={onNormalizedHoverIn}
-          onHoverOut={onNormalizedHoverOut}
-          {...rest}
-        />
-      </View>
+      <BSPressable
+        {...this.props}
+        onPress={this.onPress}
+        onLongPress={this.onLongPress}
+        onPressIn={this.onPressIn}
+        onPressOut={this.onPressOut}
+        onHoverIn={this.onHoverIn}
+        onHoverOut={this.onHoverOut}
+      />
     )
-  },
-)
+  }
+}
