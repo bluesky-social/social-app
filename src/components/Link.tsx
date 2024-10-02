@@ -23,6 +23,7 @@ import {shouldClickOpenNewTab} from '#/platform/urls'
 import {useModalControls} from '#/state/modals'
 import {useOpenLink} from '#/state/preferences/in-app-browser'
 import {atoms as a, flatten, TextStyleProp, useTheme, web} from '#/alf'
+import {BottomSheetButton} from '#/components/BottomSheetButton'
 import {Button, ButtonProps} from '#/components/Button'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {Text, TextProps} from '#/components/Typography'
@@ -103,17 +104,17 @@ export function useLink({
           linkRequiresWarning(href, displayText),
       )
 
-      if (requiresWarning) {
+      if (isWeb) {
         e.preventDefault()
+      }
 
+      if (requiresWarning) {
         openModal({
           name: 'link-warning',
           text: displayText,
           href: href,
         })
       } else {
-        e.preventDefault()
-
         if (isExternal) {
           openLink(href)
         } else {
@@ -238,6 +239,45 @@ export function Link({
       })}>
       {children}
     </Button>
+  )
+}
+
+export function BottomSheetLink({
+  children,
+  to,
+  action = 'push',
+  onPress: outerOnPress,
+  download,
+  ...rest
+}: LinkProps) {
+  const {href, isExternal, onPress} = useLink({
+    to,
+    displayText: typeof children === 'string' ? children : '',
+    action,
+    onPress: outerOnPress,
+  })
+
+  return (
+    <BottomSheetButton
+      {...rest}
+      style={[a.justify_start, flatten(rest.style)]}
+      role="link"
+      accessibilityRole="link"
+      href={href}
+      onPress={download ? undefined : onPress}
+      {...web({
+        hrefAttrs: {
+          target: download ? undefined : isExternal ? 'blank' : undefined,
+          rel: isExternal ? 'noopener noreferrer' : undefined,
+          download,
+        },
+        dataSet: {
+          // no underline, only `InlineLink` has underlines
+          noUnderline: '1',
+        },
+      })}>
+      {children}
+    </BottomSheetButton>
   )
 }
 
