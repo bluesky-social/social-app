@@ -8,7 +8,7 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-09-28 18:51+0900\n"
+"PO-Revision-Date: 2024-10-02 10:29+0900\n"
 "Last-Translator: quiple\n"
 "Language-Team: quiple, lens0021, HaruChanHeart, hazzzi, heartade\n"
 "Plural-Forms: \n"
@@ -365,8 +365,8 @@ msgstr "계정 추가"
 #: src/view/com/composer/GifAltText.tsx:69
 #: src/view/com/composer/GifAltText.tsx:135
 #: src/view/com/composer/GifAltText.tsx:175
-#: src/view/com/composer/photos/Gallery.tsx:170
-#: src/view/com/composer/photos/Gallery.tsx:217
+#: src/view/com/composer/photos/Gallery.tsx:166
+#: src/view/com/composer/photos/Gallery.tsx:213
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:69
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:74
 msgid "Add alt text"
@@ -487,7 +487,7 @@ msgid "Already signed in as @{0}"
 msgstr "이미 @{0}(으)로 로그인했습니다"
 
 #: src/view/com/composer/GifAltText.tsx:93
-#: src/view/com/composer/photos/Gallery.tsx:188
+#: src/view/com/composer/photos/Gallery.tsx:184
 #: src/view/com/util/post-embeds/GifEmbed.tsx:177
 msgid "ALT"
 msgstr "ALT"
@@ -505,7 +505,7 @@ msgstr "대체 텍스트"
 msgid "Alt Text"
 msgstr "대체 텍스트"
 
-#: src/view/com/composer/photos/Gallery.tsx:256
+#: src/view/com/composer/photos/Gallery.tsx:252
 msgid "Alt text describes images for blind and low-vision users, and helps give context to everyone."
 msgstr "대체 텍스트는 시각장애인과 저시력 사용자를 위해 이미지를 설명하며 모든 사용자의 이해를 돕습니다."
 
@@ -702,7 +702,7 @@ msgstr "피드에서 {0}을(를) 제거하시겠습니까?"
 msgid "Are you sure you want to remove this from your feeds?"
 msgstr "내 피드에서 이 피드를 삭제하시겠습니까?"
 
-#: src/view/com/composer/Composer.tsx:843
+#: src/view/com/composer/Composer.tsx:860
 msgid "Are you sure you'd like to discard this draft?"
 msgstr "이 초안을 삭제하시겠습니까?"
 
@@ -927,8 +927,8 @@ msgstr "글자, 숫자, 공백, 대시, 밑줄만 포함할 수 있습니다. �
 #: src/components/Prompt.tsx:126
 #: src/components/TagMenu/index.tsx:282
 #: src/screens/Deactivated.tsx:161
-#: src/view/com/composer/Composer.tsx:595
-#: src/view/com/composer/Composer.tsx:610
+#: src/view/com/composer/Composer.tsx:612
+#: src/view/com/composer/Composer.tsx:627
 #: src/view/com/modals/ChangeEmail.tsx:213
 #: src/view/com/modals/ChangeEmail.tsx:215
 #: src/view/com/modals/ChangeHandle.tsx:141
@@ -1229,7 +1229,7 @@ msgstr "하단 탐색 막대를 닫습니다"
 msgid "Closes password update alert"
 msgstr "비밀번호 변경 알림을 닫습니다"
 
-#: src/view/com/composer/Composer.tsx:607
+#: src/view/com/composer/Composer.tsx:624
 msgid "Closes post composer and discards post draft"
 msgstr "게시물 작성 상자를 닫고 게시물 초안을 삭제합니다"
 
@@ -1272,7 +1272,7 @@ msgstr "온보딩 완료 후 계정 사용 시작"
 msgid "Complete the challenge"
 msgstr "챌린지 완료하기"
 
-#: src/view/com/composer/Composer.tsx:715
+#: src/view/com/composer/Composer.tsx:732
 msgid "Compose posts up to {MAX_GRAPHEME_LENGTH} characters in length"
 msgstr "최대 {MAX_GRAPHEME_LENGTH}자 길이까지 글을 작성할 수 있습니다"
 
@@ -1735,7 +1735,7 @@ msgstr "인용을 해제하시겠습니까?"
 msgid "Dialog: adjust who can interact with this post"
 msgstr "대화 상자: 이 게시물과 상호작용할 수 있는 사람 조정하기"
 
-#: src/view/com/composer/Composer.tsx:363
+#: src/view/com/composer/Composer.tsx:378
 msgid "Did you want to say anything?"
 msgstr "하고 싶은 말이 없나요?"
 
@@ -1772,11 +1772,11 @@ msgstr "자막 사용 안 함"
 msgid "Disabled"
 msgstr "사용 안 함"
 
-#: src/view/com/composer/Composer.tsx:845
+#: src/view/com/composer/Composer.tsx:862
 msgid "Discard"
 msgstr "삭제"
 
-#: src/view/com/composer/Composer.tsx:842
+#: src/view/com/composer/Composer.tsx:859
 msgid "Discard draft?"
 msgstr "초안 삭제"
 
@@ -1798,7 +1798,7 @@ msgstr "새 피드 발견하기"
 msgid "Discover New Feeds"
 msgstr "새 피드 발견하기"
 
-#: src/view/com/composer/Composer.tsx:1112
+#: src/view/com/composer/Composer.tsx:1129
 msgid "Dismiss error"
 msgstr "오류 무시"
 
@@ -1953,7 +1953,7 @@ msgstr "피드 편집하기"
 
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:57
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:61
-#: src/view/com/composer/photos/Gallery.tsx:195
+#: src/view/com/composer/photos/Gallery.tsx:191
 msgid "Edit image"
 msgstr "이미지 편집하기"
 
@@ -3114,7 +3114,7 @@ msgstr "올바른 주소입니다"
 msgid "It's just you right now! Add more people to your starter pack by searching above."
 msgstr "아직은 나밖에 없습니다. 위에서 검색하여 스타터 팩에 더 많은 사람을 추가하세요."
 
-#: src/view/com/composer/Composer.tsx:1131
+#: src/view/com/composer/Composer.tsx:1148
 msgid "Job ID: {0}"
 msgstr "작업 ID: {0}"
 
@@ -4110,7 +4110,7 @@ msgstr "<0><1/><2><3/></2></0>"
 msgid "Onboarding reset"
 msgstr "온보딩 재설정"
 
-#: src/view/com/composer/Composer.tsx:672
+#: src/view/com/composer/Composer.tsx:689
 msgid "One or more images is missing alt text."
 msgstr "하나 이상의 이미지에 대체 텍스트가 누락되었습니다."
 
@@ -4161,8 +4161,8 @@ msgid "Open conversation options"
 msgstr "대화 옵션 열기"
 
 #: src/screens/Messages/Conversation/MessageInput.web.tsx:165
-#: src/view/com/composer/Composer.tsx:825
-#: src/view/com/composer/Composer.tsx:826
+#: src/view/com/composer/Composer.tsx:842
+#: src/view/com/composer/Composer.tsx:843
 msgid "Open emoji picker"
 msgstr "이모티콘 선택기 열기"
 
@@ -4573,7 +4573,7 @@ msgstr "@{0}(으)로 로그인하세요"
 msgid "Please Verify Your Email"
 msgstr "이메일 인증하기"
 
-#: src/view/com/composer/Composer.tsx:367
+#: src/view/com/composer/Composer.tsx:382
 msgid "Please wait for your link card to finish loading"
 msgstr "링크 카드를 완전히 불러올 때까지 기다려주세요"
 
@@ -4586,8 +4586,8 @@ msgstr "정치"
 msgid "Porn"
 msgstr "음란물"
 
-#: src/view/com/composer/Composer.tsx:647
-#: src/view/com/composer/Composer.tsx:654
+#: src/view/com/composer/Composer.tsx:664
+#: src/view/com/composer/Composer.tsx:671
 msgctxt "action"
 msgid "Post"
 msgstr "게시하기"
@@ -4765,11 +4765,11 @@ msgstr "일괄 뮤트하거나 차단할 수 있는 공개적이고 공유 가�
 msgid "Public, shareable lists which can drive feeds."
 msgstr "피드를 탐색할 수 있는 공개적이고 공유 가능한 목록입니다."
 
-#: src/view/com/composer/Composer.tsx:632
+#: src/view/com/composer/Composer.tsx:649
 msgid "Publish post"
 msgstr "게시물 게시하기"
 
-#: src/view/com/composer/Composer.tsx:632
+#: src/view/com/composer/Composer.tsx:649
 msgid "Publish reply"
 msgstr "답글 게시하기"
 
@@ -4938,7 +4938,7 @@ msgstr "빠른 액세스에서 제거하시겠습니까?"
 msgid "Remove from saved feeds"
 msgstr "저장한 피드에서 제거"
 
-#: src/view/com/composer/photos/Gallery.tsx:204
+#: src/view/com/composer/photos/Gallery.tsx:200
 msgid "Remove image"
 msgstr "이미지 제거"
 
@@ -5024,7 +5024,7 @@ msgstr "답글 비활성화됨"
 msgid "Replies to this post are disabled."
 msgstr "이 게시물에 대한 답글은 비활성화되어 있습니다."
 
-#: src/view/com/composer/Composer.tsx:645
+#: src/view/com/composer/Composer.tsx:662
 msgctxt "action"
 msgid "Reply"
 msgstr "답글"
@@ -7301,7 +7301,7 @@ msgstr "죄송하지만 현재 뮤트한 단어를 불러올 수 없습니다. �
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr "죄송하지만 검색을 완료할 수 없습니다. 몇 분 후에 다시 시도해 주세요."
 
-#: src/view/com/composer/Composer.tsx:429
+#: src/view/com/composer/Composer.tsx:445
 msgid "We're sorry! The post you are replying to has been deleted."
 msgstr "죄송하지만 답글을 달려는 게시물이 삭제되었습니다."
 
@@ -7332,7 +7332,7 @@ msgstr "스타터 팩의 이름을 무엇으로 할까요?"
 
 #: src/view/com/auth/SplashScreen.tsx:39
 #: src/view/com/auth/SplashScreen.web.tsx:82
-#: src/view/com/composer/Composer.tsx:517
+#: src/view/com/composer/Composer.tsx:534
 msgid "What's up?"
 msgstr "무슨 일이 일어나고 있나요?"
 
@@ -7395,11 +7395,11 @@ msgstr "이 사용자를 검토해야 하는 이유는 무엇인가요?"
 msgid "Write a message"
 msgstr "메시지를 입력하세요"
 
-#: src/view/com/composer/Composer.tsx:713
+#: src/view/com/composer/Composer.tsx:730
 msgid "Write post"
 msgstr "게시물 작성"
 
-#: src/view/com/composer/Composer.tsx:516
+#: src/view/com/composer/Composer.tsx:533
 #: src/view/com/post-thread/PostThreadComposePrompt.tsx:67
 msgid "Write your reply"
 msgstr "답글 작성하기"
@@ -7785,7 +7785,7 @@ msgstr "뮤트한 단어"
 msgid "Your password has been changed successfully!"
 msgstr "비밀번호를 성공적으로 변경했습니다."
 
-#: src/view/com/composer/Composer.tsx:471
+#: src/view/com/composer/Composer.tsx:487
 msgid "Your post has been published"
 msgstr "게시물을 게시했습니다"
 
@@ -7801,7 +7801,7 @@ msgstr "내 프로필"
 msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
 msgstr "내 프로필, 글, 피드 및 리스트가 더 이상 다른 Bluesky 사용자에게 표시되지 않습니다. 언제든지 로그인하여 계정을 재활성화할 수 있습니다."
 
-#: src/view/com/composer/Composer.tsx:470
+#: src/view/com/composer/Composer.tsx:486
 msgid "Your reply has been published"
 msgstr "내 답글을 게시했습니다"
 
