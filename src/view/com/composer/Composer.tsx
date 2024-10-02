@@ -36,6 +36,7 @@ import Animated, {
   ZoomOut,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {ImagePickerAsset} from 'expo-image-picker'
 import {
   AppBskyFeedDefs,
   AppBskyFeedGetPostThread,
@@ -200,9 +201,15 @@ export const ComposePost = ({
         onPressPublish(true)
       }
     },
-    initialVideoUri: initVideoUri,
   })
   const hasVideo = Boolean(videoUploadState.asset || videoUploadState.video)
+
+  // Whenever we receive an initial video uri, we should immediately run compression if necessary
+  useEffect(() => {
+    if (initVideoUri) {
+      selectVideo({uri: initVideoUri} as ImagePickerAsset)
+    }
+  }, [initVideoUri, selectVideo])
 
   const [publishOnUpload, setPublishOnUpload] = useState(false)
 

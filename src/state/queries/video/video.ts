@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect} from 'react'
+import React, {useCallback} from 'react'
 import {ImagePickerAsset} from 'expo-image-picker'
 import {AppBskyVideoDefs, BlobRef, BskyAgent} from '@atproto/api'
 import {JobStatus} from '@atproto/api/dist/client/types/app/bsky/video/defs'
@@ -94,11 +94,9 @@ function reducer(state: State, action: Action): State {
 
 export function useUploadVideo({
   setStatus,
-  initialVideoUri,
 }: {
   setStatus: (status: string) => void
   onSuccess: () => void
-  initialVideoUri?: string
 }) {
   const {currentAccount} = useSession()
   const agent = useAgent()
@@ -149,13 +147,6 @@ export function useUploadVideo({
       height,
     })
   }, [])
-
-  // Whenever we receive an initial video uri, we should immediately run compression if necessary
-  useEffect(() => {
-    if (initialVideoUri) {
-      selectVideo({uri: initialVideoUri} as ImagePickerAsset)
-    }
-  }, [initialVideoUri, selectVideo])
 
   return {
     state,
