@@ -124,9 +124,9 @@ export const Button = React.forwardRef<View, ButtonProps>(
   ) => {
     // This will pick the correct default pressable to use. If we are inside a dialog, we need to use the RNGH
     // pressable so that it is usable inside the dialog.
-    const dialogContext = useDialogContext()
+    const {insideDialog} = useDialogContext()
     if (!Component) {
-      if (dialogContext) {
+      if (insideDialog) {
         Component = NormalizedRNGHPressable
       } else {
         Component = Pressable
