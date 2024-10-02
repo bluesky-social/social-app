@@ -14,6 +14,7 @@ import {useAgent, useSession} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {BottomSheetButton} from '#/components/BottomSheetButton'
+import {BottomSheetInlineLinkText} from '#/components/BottomSheetLink'
 import {ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {InlineLinkText} from '#/components/Link'
@@ -157,23 +158,25 @@ function Label({
       <Divider />
 
       <View style={[a.px_md, a.py_sm, t.atoms.bg_contrast_25]}>
-        <Text style={[t.atoms.text_contrast_medium]}>
-          {isSelfLabel ? (
+        {isSelfLabel ? (
+          <Text style={[t.atoms.text_contrast_medium]}>
             <Trans>This label was applied by you.</Trans>
-          ) : (
-            <Trans>
-              Source:{' '}
-              <InlineLinkText
-                label={sourceName}
-                to={makeProfileLink(
-                  labeler ? labeler.creator : {did: label.src, handle: ''},
-                )}
-                onPress={() => control.close()}>
-                {sourceName}
-              </InlineLinkText>
-            </Trans>
-          )}
-        </Text>
+          </Text>
+        ) : (
+          <View style={{flexDirection: 'row'}}>
+            <Text style={[t.atoms.text_contrast_medium]}>
+              <Trans>Source: </Trans>{' '}
+            </Text>
+            <BottomSheetInlineLinkText
+              label={sourceName}
+              to={makeProfileLink(
+                labeler ? labeler.creator : {did: label.src, handle: ''},
+              )}
+              onPress={() => control.close()}>
+              {sourceName}
+            </BottomSheetInlineLinkText>
+          </View>
+        )}
       </View>
     </View>
   )
