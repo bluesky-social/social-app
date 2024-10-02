@@ -47,8 +47,8 @@ export function PostThreadComposePrompt({
       accessibilityLabel={_(msg`Compose reply`)}
       accessibilityHint={_(msg`Opens composer`)}
       style={[
-        gtMobile ? a.py_xs : {paddingTop: 8, paddingBottom: 11},
-        gtMobile ? {paddingLeft: 6, paddingRight: 6} : a.px_sm,
+        gtMobile ? a.py_xs : {paddingTop: 8, paddingBottom: 11}, // TODO test with scaled text
+        a.px_sm,
         a.border_t,
         t.atoms.border_contrast_low,
         t.atoms.bg,
