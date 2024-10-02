@@ -4120,10 +4120,10 @@
   resolved "https://registry.yarnpkg.com/@graphql-typed-document-node/core/-/core-3.2.0.tgz#5f3d96ec6b2354ad6d8a28bf216a1d97b5426861"
   integrity sha512-mB9oAsNCm9aM3/SOv4YtBMqZbYj10R7dkq8byBqxGY/ncFwhf2oQzMV+LCRlWoDSEBJ3COiR1yeDvMtsoOsuFQ==
 
-"@haileyok/bluesky-bottom-sheet@^0.1.1-alpha.7":
-  version "0.1.1-alpha.7"
-  resolved "https://registry.yarnpkg.com/@haileyok/bluesky-bottom-sheet/-/bluesky-bottom-sheet-0.1.1-alpha.7.tgz#a5845cd2ac386b78716db5940b65b3e78b392042"
-  integrity sha512-Ps2nsNmfjqUmP/LPAM94/2dWZerwZEjnvSUfi/ipFNHlNp/McIYIObxDaPJaZ0ZLxUcRXxdhmC3UonK25sJKSw==
+"@haileyok/bluesky-bottom-sheet@^0.1.1-alpha.8":
+  version "0.1.1-alpha.8"
+  resolved "https://registry.yarnpkg.com/@haileyok/bluesky-bottom-sheet/-/bluesky-bottom-sheet-0.1.1-alpha.8.tgz#c5fd503cdd5556a686a1f5c0974b1527fceda900"
+  integrity sha512-305MSNscniLZpxd80QO4OCuMXkm+U/v/YW/x0fVQtBilVTikOOPIkiYge+kCUdryFPD3LU/GdrsQZL+y8qAiMQ==
 
 "@haileyok/bluesky-video@0.1.10":
   version "0.1.10"
@@ -18068,15 +18068,14 @@ react-native-drawer-layout@^4.0.0-alpha.3:
   dependencies:
     use-latest-callback "^0.1.9"
 
-react-native-gesture-handler@~2.16.2:
-  version "2.16.2"
-  resolved "https://registry.yarnpkg.com/react-native-gesture-handler/-/react-native-gesture-handler-2.16.2.tgz#032bd2a07334292d7f6cff1dc9d1ec928f72e26d"
-  integrity sha512-vGFlrDKlmyI+BT+FemqVxmvO7nqxU33cgXVsn6IKAFishvlG3oV2Ds67D5nPkHMea8T+s1IcuMm0bF8ntZtAyg==
+react-native-gesture-handler@2.20.0:
+  version "2.20.0"
+  resolved "https://registry.yarnpkg.com/react-native-gesture-handler/-/react-native-gesture-handler-2.20.0.tgz#2d9ec4e9bd22619ebe36269dda3ecb1173928276"
+  integrity sha512-rFKqgHRfxQ7uSAivk8vxCiW4SB3G0U7jnv7kZD4Y90K5kp6YrU8Q3tWhxe3Rx55BIvSd3mBe9ZWbWVJ0FsSHPA==
   dependencies:
     "@egjs/hammerjs" "^2.0.17"
     hoist-non-react-statics "^3.3.0"
     invariant "^2.2.4"
-    lodash "^4.17.21"
     prop-types "^15.7.2"
 
 react-native-get-random-values@^1.6.0:
