@@ -33,7 +33,7 @@ import {Link} from '#/components/Link'
 import {ListFooter} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
-import {ChatListItem} from './ChatListItem'
+import {ChatListItem} from './components/ChatListItem'
 
 type Props = NativeStackScreenProps<MessagesTabNavigatorParams, 'Messages'>
 
