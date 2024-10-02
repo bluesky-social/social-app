@@ -386,6 +386,7 @@ let PostThreadItemLoaded = ({
                 style={[
                   a.flex_row,
                   a.align_center,
+                  a.gap_md,
                   a.border_t,
                   a.border_b,
                   a.mt_md,
@@ -393,10 +394,7 @@ let PostThreadItemLoaded = ({
                   t.atoms.border_contrast_low,
                 ]}>
                 {post.repostCount != null && post.repostCount !== 0 ? (
-                  <Link
-                    style={styles.expandedInfoItem}
-                    href={repostsHref}
-                    title={repostsTitle}>
+                  <Link href={repostsHref} title={repostsTitle}>
                     <Text
                       testID="repostCount-expanded"
                       type="lg"
@@ -415,10 +413,7 @@ let PostThreadItemLoaded = ({
                 {post.quoteCount != null &&
                 post.quoteCount !== 0 &&
                 !post.viewer?.embeddingDisabled ? (
-                  <Link
-                    style={styles.expandedInfoItem}
-                    href={quotesHref}
-                    title={quotesTitle}>
+                  <Link href={quotesHref} title={quotesTitle}>
                     <Text
                       testID="quoteCount-expanded"
                       type="lg"
@@ -435,10 +430,7 @@ let PostThreadItemLoaded = ({
                   </Link>
                 ) : null}
                 {post.likeCount != null && post.likeCount !== 0 ? (
-                  <Link
-                    style={styles.expandedInfoItem}
-                    href={likesHref}
-                    title={likesTitle}>
+                  <Link href={likesHref} title={likesTitle}>
                     <Text
                       testID="likeCount-expanded"
                       type="lg"
@@ -781,9 +773,6 @@ const styles = StyleSheet.create({
   },
   metaExpandedLine1: {
     paddingVertical: 0,
-  },
-  expandedInfoItem: {
-    marginRight: 10,
   },
   loadMore: {
     flexDirection: 'row',
