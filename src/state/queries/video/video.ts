@@ -264,6 +264,7 @@ async function processVideo(
     jobId,
   })
 
+  let pollFailures = 0
   while (true) {
     if (signal.aborted) {
       return // Exit async loop
@@ -275,6 +276,7 @@ async function processVideo(
     try {
       const response = await videoAgent.app.bsky.video.getJobStatus({jobId})
       status = response.data.jobStatus
+      pollFailures = 0
 
       if (status.state === 'JOB_STATE_COMPLETED') {
         blob = status.blob
@@ -285,6 +287,12 @@ async function processVideo(
         throw new Error(status.error ?? 'Job failed to process')
       }
     } catch (e) {
+      pollFailures++
+      if (!status && pollFailures < 50) {
+        await new Promise(resolve => setTimeout(resolve, 5000))
+        continue // Continue async loop
+      }
+
       logger.error('Error processing video', {safeMessage: e})
       dispatch({
         type: 'SetError',
