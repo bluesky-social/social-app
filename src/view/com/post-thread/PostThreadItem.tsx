@@ -31,6 +31,7 @@ import {PostThreadFollowBtn} from '#/view/com/post-thread/PostThreadFollowBtn'
 import {atoms as a, useTheme} from '#/alf'
 import {AppModerationCause} from '#/components/Pills'
 import {RichText} from '#/components/RichText'
+import {Text as NewText} from '#/components/Typography'
 import {ContentHider} from '../../../components/moderation/ContentHider'
 import {LabelsOnMyPost} from '../../../components/moderation/LabelsOnMe'
 import {PostAlerts} from '../../../components/moderation/PostAlerts'
@@ -292,12 +293,9 @@ let PostThreadItemLoaded = ({
           testID={`postThreadItem-by-${post.author.handle}`}
           style={[
             a.px_lg,
-            //gtMobile && [a.px_xl],
             t.atoms.border_contrast_low,
             // root post styles
             rootUri === post.uri && [a.pt_lg],
-            // root post styles on desktop
-            //rootUri === post.uri && gtMobile && [a.pt_xl],
           ]}>
           <View style={[a.flex_row, a.gap_md, a.pb_md]}>
             <PreviewableUserAvatar
@@ -307,34 +305,30 @@ let PostThreadItemLoaded = ({
               type={post.author.associated?.labeler ? 'labeler' : 'user'}
             />
             <View style={[a.flex_1]}>
-              <View
-                style={[styles.meta, styles.metaExpandedLine1, {zIndex: 1}]}>
-                <Link style={s.flex1} href={authorHref} title={authorTitle}>
-                  <Text
-                    emoji
-                    type="xl-bold"
-                    style={[pal.text, a.self_start]}
-                    numberOfLines={1}
-                    lineHeight={1.2}>
-                    {sanitizeDisplayName(
-                      post.author.displayName ||
-                        sanitizeHandle(post.author.handle),
-                      moderation.ui('displayName'),
-                    )}
-                  </Text>
-                </Link>
-              </View>
-              <View style={styles.meta}>
-                <Link style={s.flex1} href={authorHref} title={authorTitle}>
-                  <Text
-                    emoji
-                    type="md"
-                    style={[pal.textLight]}
-                    numberOfLines={1}>
-                    {sanitizeHandle(post.author.handle, '@')}
-                  </Text>
-                </Link>
-              </View>
+              <Link style={s.flex1} href={authorHref} title={authorTitle}>
+                <NewText
+                  emoji
+                  style={[a.text_lg, a.font_bold, a.leading_snug, a.self_start]}
+                  numberOfLines={1}>
+                  {sanitizeDisplayName(
+                    post.author.displayName ||
+                      sanitizeHandle(post.author.handle),
+                    moderation.ui('displayName'),
+                  )}
+                </NewText>
+              </Link>
+              <Link style={s.flex1} href={authorHref} title={authorTitle}>
+                <NewText
+                  emoji
+                  style={[
+                    a.text_md,
+                    a.leading_snug,
+                    t.atoms.text_contrast_medium,
+                  ]}
+                  numberOfLines={1}>
+                  {sanitizeHandle(post.author.handle, '@')}
+                </NewText>
+              </Link>
             </View>
             {currentAccount?.did !== post.author.did && (
               <PostThreadFollowBtn did={post.author.did} />
