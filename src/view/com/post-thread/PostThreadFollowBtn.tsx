@@ -1,14 +1,9 @@
 import React from 'react'
-import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {AppBskyActorDefs} from '@atproto/api'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
-import {usePalette} from '#/lib/hooks/usePalette'
-import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {s} from '#/lib/styles'
 import {logger} from '#/logger'
 import {Shadow, useProfileShadow} from '#/state/cache/profile-shadow'
 import {
@@ -16,8 +11,11 @@ import {
   useProfileQuery,
 } from '#/state/queries/profile'
 import {useRequireAuth} from '#/state/session'
-import {Text} from '#/view/com/util/text/Text'
 import * as Toast from '#/view/com/util/Toast'
+import {atoms as a, useBreakpoints} from '#/alf'
+import {Button, ButtonIcon,ButtonText} from '#/components/Button'
+import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
+import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 
 export function PostThreadFollowBtn({did}: {did: string}) {
   const {data: profile, isLoading} = useProfileQuery({did})
@@ -36,9 +34,7 @@ function PostThreadFollowBtnLoaded({
 }) {
   const navigation = useNavigation()
   const {_} = useLingui()
-  const pal = usePalette('default')
-  const palInverted = usePalette('inverted')
-  const {isTabletOrDesktop} = useWebMediaQueries()
+  const {gtMobile} = useBreakpoints()
   const profile: Shadow<AppBskyActorDefs.ProfileViewBasic> =
     useProfileShadow(profileUnshadowed)
   const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(
@@ -113,51 +109,32 @@ function PostThreadFollowBtnLoaded({
   if (!showFollowBtn) return null
 
   return (
-    <View style={{width: isTabletOrDesktop ? 130 : 120}}>
-      <View style={styles.btnOuter}>
-        <TouchableOpacity
-          testID="followBtn"
-          onPress={onPress}
-          style={[styles.btn, !isFollowing ? palInverted.view : pal.viewLight]}
-          accessibilityRole="button"
-          accessibilityLabel={_(msg`Follow ${profile.handle}`)}
-          accessibilityHint={_(
-            msg`Shows posts from ${profile.handle} in your feed`,
-          )}>
-          {isTabletOrDesktop && (
-            <FontAwesomeIcon
-              icon={!isFollowing ? 'plus' : 'check'}
-              style={[!isFollowing ? palInverted.text : pal.text, s.mr5]}
-            />
-          )}
-          <Text
-            type="button"
-            style={[!isFollowing ? palInverted.text : pal.text, s.bold]}
-            numberOfLines={1}>
-            {!isFollowing ? (
-              isFollowedBy ? (
-                <Trans>Follow Back</Trans>
-              ) : (
-                <Trans>Follow</Trans>
-              )
-            ) : (
-              <Trans>Following</Trans>
-            )}
-          </Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+    <Button
+      testID="followBtn"
+      label={_(msg`Follow ${profile.handle}`)}
+      onPress={onPress}
+      size="small"
+      variant="solid"
+      color="secondary_inverted"
+      style={[a.rounded_full]}>
+      {gtMobile && (
+        <ButtonIcon
+          icon={isFollowing ? Check : Plus}
+          position="left"
+          size="sm"
+        />
+      )}
+      <ButtonText>
+        {!isFollowing ? (
+          isFollowedBy ? (
+            <Trans>Follow Back</Trans>
+          ) : (
+            <Trans>Follow</Trans>
+          )
+        ) : (
+          <Trans>Following</Trans>
+        )}
+      </ButtonText>
+    </Button>
   )
 }
-
-const styles = StyleSheet.create({
-  btnOuter: {
-    marginLeft: 'auto',
-  },
-  btn: {
-    flexDirection: 'row',
-    borderRadius: 50,
-    paddingVertical: 8,
-    paddingHorizontal: 14,
-  },
-})

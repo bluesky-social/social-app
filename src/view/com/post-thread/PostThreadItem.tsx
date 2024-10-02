@@ -331,7 +331,9 @@ let PostThreadItemLoaded = ({
               </Link>
             </View>
             {currentAccount?.did !== post.author.did && (
-              <PostThreadFollowBtn did={post.author.did} />
+              <View>
+                <PostThreadFollowBtn did={post.author.did} />
+              </View>
             )}
           </View>
           <View style={[a.pb_sm]}>
