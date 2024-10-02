@@ -380,7 +380,7 @@ let PostThreadItemLoaded = ({
                 style={[
                   a.flex_row,
                   a.align_center,
-                  a.gap_md,
+                  a.gap_lg,
                   a.border_t,
                   a.border_b,
                   a.mt_md,
@@ -389,51 +389,48 @@ let PostThreadItemLoaded = ({
                 ]}>
                 {post.repostCount != null && post.repostCount !== 0 ? (
                   <Link href={repostsHref} title={repostsTitle}>
-                    <Text
+                    <NewText
                       testID="repostCount-expanded"
-                      type="lg"
-                      style={pal.textLight}>
-                      <Text type="xl-bold" style={pal.text}>
+                      style={[a.text_md, t.atoms.text_contrast_medium]}>
+                      <NewText style={[a.text_md, a.font_bold, t.atoms.text]}>
                         {formatCount(i18n, post.repostCount)}
-                      </Text>{' '}
+                      </NewText>{' '}
                       <Plural
                         value={post.repostCount}
                         one="repost"
                         other="reposts"
                       />
-                    </Text>
+                    </NewText>
                   </Link>
                 ) : null}
                 {post.quoteCount != null &&
                 post.quoteCount !== 0 &&
                 !post.viewer?.embeddingDisabled ? (
                   <Link href={quotesHref} title={quotesTitle}>
-                    <Text
+                    <NewText
                       testID="quoteCount-expanded"
-                      type="lg"
-                      style={pal.textLight}>
-                      <Text type="xl-bold" style={pal.text}>
+                      style={[a.text_md, t.atoms.text_contrast_medium]}>
+                      <NewText style={[a.text_md, a.font_bold, t.atoms.text]}>
                         {formatCount(i18n, post.quoteCount)}
-                      </Text>{' '}
+                      </NewText>{' '}
                       <Plural
                         value={post.quoteCount}
                         one="quote"
                         other="quotes"
                       />
-                    </Text>
+                    </NewText>
                   </Link>
                 ) : null}
                 {post.likeCount != null && post.likeCount !== 0 ? (
                   <Link href={likesHref} title={likesTitle}>
-                    <Text
+                    <NewText
                       testID="likeCount-expanded"
-                      type="lg"
-                      style={pal.textLight}>
-                      <Text type="xl-bold" style={pal.text}>
+                      style={[a.text_md, t.atoms.text_contrast_medium]}>
+                      <NewText style={[a.text_md, a.font_bold, t.atoms.text]}>
                         {formatCount(i18n, post.likeCount)}
-                      </Text>{' '}
+                      </NewText>{' '}
                       <Plural value={post.likeCount} one="like" other="likes" />
-                    </Text>
+                    </NewText>
                   </Link>
                 ) : null}
               </View>
