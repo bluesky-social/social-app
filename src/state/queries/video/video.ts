@@ -18,11 +18,6 @@ import {uploadVideo} from '#/state/queries/video/video-upload'
 
 export type VideoAction =
   | {
-      type: 'idle_to_compressing'
-      asset: ImagePickerAsset
-      signal: AbortSignal
-    }
-  | {
       type: 'compressing_to_uploading'
       video: CompressedVideo
       signal: AbortSignal
@@ -51,15 +46,20 @@ export type VideoAction =
       signal: AbortSignal
     }
 
-type IdleState = {
-  status: 'idle'
-  progress: 0
-  abortController: AbortController
-  asset?: undefined
-  video?: undefined
-  jobId?: undefined
-  pendingPublish?: undefined
-}
+const noopController = new AbortController()
+noopController.abort()
+
+export const NO_VIDEO = Object.freeze({
+  status: 'idle',
+  progress: 0,
+  abortController: noopController,
+  asset: undefined,
+  video: undefined,
+  jobId: undefined,
+  pendingPublish: undefined,
+})
+
+export type NoVideoState = typeof NO_VIDEO
 
 type ErrorState = {
   status: 'error'
@@ -114,7 +114,6 @@ type DoneState = {
 }
 
 export type VideoState =
-  | IdleState
   | ErrorState
   | CompressingState
   | UploadingState
@@ -122,12 +121,14 @@ export type VideoState =
   | DoneState
 
 export function createVideoState(
-  abortController: AbortController = new AbortController(),
-): IdleState {
+  asset: ImagePickerAsset,
+  abortController: AbortController,
+): CompressingState {
   return {
-    status: 'idle',
+    status: 'compressing',
     progress: 0,
     abortController,
+    asset,
   }
 }
 
@@ -154,15 +155,6 @@ export function videoReducer(
       return {
         ...state,
         progress: action.progress,
-      }
-    }
-  } else if (action.type === 'idle_to_compressing') {
-    if (state.status === 'idle') {
-      return {
-        status: 'compressing',
-        progress: 0,
-        abortController: state.abortController,
-        asset: action.asset,
       }
     }
   } else if (action.type === 'update_dimensions') {
@@ -243,12 +235,6 @@ export async function processVideo(
   signal: AbortSignal,
   _: I18n['_'],
 ) {
-  dispatch({
-    type: 'idle_to_compressing',
-    asset,
-    signal,
-  })
-
   let video: CompressedVideo | undefined
   try {
     video = await compressVideo(asset, {

@@ -46,7 +46,6 @@ import {RichText} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {createVideoState} from '#/state/queries/video/video'
 
 import * as apilib from '#/lib/api/index'
 import {until} from '#/lib/async/until'
@@ -83,6 +82,7 @@ import {useProfileQuery} from '#/state/queries/profile'
 import {Gif} from '#/state/queries/tenor'
 import {ThreadgateAllowUISetting} from '#/state/queries/threadgate'
 import {threadgateViewToAllowUISetting} from '#/state/queries/threadgate/util'
+import {NO_VIDEO, NoVideoState} from '#/state/queries/video/video'
 import {
   processVideo,
   VideoAction,
@@ -132,7 +132,6 @@ type CancelRef = {
 }
 
 const NO_IMAGES: ComposerImage[] = []
-const NO_VIDEO = createVideoState()
 
 type Props = ComposerOpts
 export const ComposePost = ({
@@ -201,7 +200,7 @@ export const ComposePost = ({
     createComposerState,
   )
 
-  let videoUploadState: VideoState = NO_VIDEO
+  let videoUploadState: VideoState | NoVideoState = NO_VIDEO
   if (composerState.embed.media?.type === 'video') {
     videoUploadState = composerState.embed.media.video
   }
@@ -214,16 +213,18 @@ export const ComposePost = ({
 
   const selectVideo = React.useCallback(
     (asset: ImagePickerAsset) => {
+      const abortController = new AbortController()
+      dispatch({type: 'embed_add_video', asset, abortController})
       processVideo(
         asset,
         videoDispatch,
         agent,
         currentDid,
-        videoUploadState.abortController.signal,
+        abortController.signal,
         _,
       )
     },
-    [_, videoUploadState.abortController, videoDispatch, agent, currentDid],
+    [_, videoDispatch, agent, currentDid],
   )
 
   // Whenever we receive an initial video uri, we should immediately run compression if necessary
@@ -235,8 +236,8 @@ export const ComposePost = ({
 
   const clearVideo = React.useCallback(() => {
     videoUploadState.abortController.abort()
-    videoDispatch({type: 'to_idle', nextController: new AbortController()})
-  }, [videoUploadState.abortController, videoDispatch])
+    dispatch({type: 'embed_remove_video'})
+  }, [videoUploadState.abortController, dispatch])
 
   const updateVideoDimensions = useCallback(
     (width: number, height: number) => {
@@ -1125,7 +1126,7 @@ function ErrorBanner({
   clearVideo,
 }: {
   error: string
-  videoUploadState: VideoUploadState
+  videoUploadState: VideoUploadState | NoVideoState
   clearError: () => void
   clearVideo: () => void
 }) {
