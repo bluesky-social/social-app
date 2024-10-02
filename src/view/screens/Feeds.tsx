@@ -40,6 +40,7 @@ import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components
 import {FilterTimeline_Stroke2_Corner0_Rounded as FilterTimeline} from '#/components/icons/FilterTimeline'
 import {ListMagnifyingGlass_Stroke2_Corner0_Rounded} from '#/components/icons/ListMagnifyingGlass'
 import {ListSparkle_Stroke2_Corner0_Rounded} from '#/components/icons/ListSparkle'
+import * as Layout from '#/components/Layout'
 import * as ListCard from '#/components/ListCard'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Feeds'>
@@ -545,7 +546,7 @@ export function FeedsScreen(_props: Props) {
   )
 
   return (
-    <View style={[pal.view, styles.container]}>
+    <Layout.Screen testID="FeedsScreen">
       {isMobile && (
         <ViewHeader
           title={_(msg`Feeds`)}
@@ -582,7 +583,7 @@ export function FeedsScreen(_props: Props) {
           accessibilityHint=""
         />
       )}
-    </View>
+    </Layout.Screen>
   )
 }
 
@@ -768,9 +769,6 @@ function FeedsAboutHeader() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   list: {
     height: '100%',
   },

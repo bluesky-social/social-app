@@ -1,20 +1,20 @@
 import React from 'react'
-import {View} from 'react-native'
 import {AppBskyActorDefs} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
 
+import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
+import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {useProfileKnownFollowersQuery} from '#/state/queries/known-followers'
 import {useResolveDidQuery} from '#/state/queries/resolve-uri'
 import {useSetMinimalShellMode} from '#/state/shell'
-import {useInitialNumToRender} from 'lib/hooks/useInitialNumToRender'
-import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
 import {ProfileCardWithFollowBtn} from '#/view/com/profile/ProfileCard'
 import {List} from '#/view/com/util/List'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
+import * as Layout from '#/components/Layout'
 import {
   ListFooter,
   ListHeaderDesktop,
@@ -92,19 +92,21 @@ export const ProfileKnownFollowersScreen = ({route}: Props) => {
 
   if (followers.length < 1) {
     return (
-      <ListMaybePlaceholder
-        isLoading={isDidLoading || isFollowersLoading}
-        isError={isError}
-        emptyType="results"
-        emptyMessage={_(msg`You don't follow any users who follow @${name}.`)}
-        errorMessage={cleanError(resolveError || error)}
-        onRetry={isError ? refetch : undefined}
-      />
+      <Layout.Screen>
+        <ListMaybePlaceholder
+          isLoading={isDidLoading || isFollowersLoading}
+          isError={isError}
+          emptyType="results"
+          emptyMessage={_(msg`You don't follow any users who follow @${name}.`)}
+          errorMessage={cleanError(resolveError || error)}
+          onRetry={isError ? refetch : undefined}
+        />
+      </Layout.Screen>
     )
   }
 
   return (
-    <View style={{flex: 1}}>
+    <Layout.Screen>
       <ViewHeader title={_(msg`Followers you know`)} />
       <List
         data={followers}
@@ -129,6 +131,6 @@ export const ProfileKnownFollowersScreen = ({route}: Props) => {
         initialNumToRender={initialNumToRender}
         windowSize={11}
       />
-    </View>
+    </Layout.Screen>
   )
 }

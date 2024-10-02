@@ -30,6 +30,7 @@ import {NoFollowingFeed} from '#/screens/Feeds/NoFollowingFeed'
 import {NoSavedFeedsOfAnyType} from '#/screens/Feeds/NoSavedFeedsOfAnyType'
 import {atoms as a, useTheme} from '#/alf'
 import {FilterTimeline_Stroke2_Corner0_Rounded as FilterTimeline} from '#/components/icons/FilterTimeline'
+import * as Layout from '#/components/Layout'
 
 const HITSLOP_TOP = {
   top: 20,
@@ -79,117 +80,125 @@ export function SavedFeeds({}: Props) {
   )
 
   return (
-    <CenteredView
-      style={[
-        s.hContentRegion,
-        pal.border,
-        isTabletOrDesktop && styles.desktopContainer,
-      ]}>
-      <ViewHeader title={_(msg`Edit My Feeds`)} showOnDesktop showBorder />
-      <ScrollView style={s.flex1} contentContainerStyle={[styles.noBorder]}>
-        {noSavedFeedsOfAnyType && (
-          <View
-            style={[pal.border, {borderBottomWidth: StyleSheet.hairlineWidth}]}>
-            <NoSavedFeedsOfAnyType />
-          </View>
-        )}
-
-        <View style={[pal.text, pal.border, styles.title]}>
-          <Text type="title" style={pal.text}>
-            <Trans>Pinned Feeds</Trans>
-          </Text>
-        </View>
-
-        {preferences ? (
-          !pinnedFeeds.length ? (
+    <Layout.Screen>
+      <CenteredView
+        style={[
+          s.hContentRegion,
+          pal.border,
+          isTabletOrDesktop && styles.desktopContainer,
+        ]}>
+        <ViewHeader title={_(msg`Edit My Feeds`)} showOnDesktop showBorder />
+        <ScrollView style={s.flex1} contentContainerStyle={[styles.noBorder]}>
+          {noSavedFeedsOfAnyType && (
             <View
               style={[
                 pal.border,
-                isMobile && s.flex1,
-                pal.viewLight,
-                styles.empty,
+                {borderBottomWidth: StyleSheet.hairlineWidth},
               ]}>
-              <Text type="lg" style={[pal.text]}>
-                <Trans>You don't have any pinned feeds.</Trans>
-              </Text>
+              <NoSavedFeedsOfAnyType />
             </View>
-          ) : (
-            pinnedFeeds.map(f => (
-              <ListItem
-                key={f.id}
-                feed={f}
-                isPinned
-                overwriteSavedFeeds={overwriteSavedFeeds}
-                resetSaveFeedsMutationState={resetSaveFeedsMutationState}
-                currentFeeds={currentFeeds}
-                preferences={preferences}
-              />
-            ))
-          )
-        ) : (
-          <ActivityIndicator style={{marginTop: 20}} />
-        )}
+          )}
 
-        {noFollowingFeed && (
-          <View
-            style={[pal.border, {borderBottomWidth: StyleSheet.hairlineWidth}]}>
-            <NoFollowingFeed />
+          <View style={[pal.text, pal.border, styles.title]}>
+            <Text type="title" style={pal.text}>
+              <Trans>Pinned Feeds</Trans>
+            </Text>
           </View>
-        )}
 
-        <View style={[pal.text, pal.border, styles.title]}>
-          <Text type="title" style={pal.text}>
-            <Trans>Saved Feeds</Trans>
-          </Text>
-        </View>
-        {preferences ? (
-          !unpinnedFeeds.length ? (
+          {preferences ? (
+            !pinnedFeeds.length ? (
+              <View
+                style={[
+                  pal.border,
+                  isMobile && s.flex1,
+                  pal.viewLight,
+                  styles.empty,
+                ]}>
+                <Text type="lg" style={[pal.text]}>
+                  <Trans>You don't have any pinned feeds.</Trans>
+                </Text>
+              </View>
+            ) : (
+              pinnedFeeds.map(f => (
+                <ListItem
+                  key={f.id}
+                  feed={f}
+                  isPinned
+                  overwriteSavedFeeds={overwriteSavedFeeds}
+                  resetSaveFeedsMutationState={resetSaveFeedsMutationState}
+                  currentFeeds={currentFeeds}
+                  preferences={preferences}
+                />
+              ))
+            )
+          ) : (
+            <ActivityIndicator style={{marginTop: 20}} />
+          )}
+
+          {noFollowingFeed && (
             <View
               style={[
                 pal.border,
-                isMobile && s.flex1,
-                pal.viewLight,
-                styles.empty,
+                {borderBottomWidth: StyleSheet.hairlineWidth},
               ]}>
-              <Text type="lg" style={[pal.text]}>
-                <Trans>You don't have any saved feeds.</Trans>
-              </Text>
+              <NoFollowingFeed />
             </View>
-          ) : (
-            unpinnedFeeds.map(f => (
-              <ListItem
-                key={f.id}
-                feed={f}
-                isPinned={false}
-                overwriteSavedFeeds={overwriteSavedFeeds}
-                resetSaveFeedsMutationState={resetSaveFeedsMutationState}
-                currentFeeds={currentFeeds}
-                preferences={preferences}
-              />
-            ))
-          )
-        ) : (
-          <ActivityIndicator style={{marginTop: 20}} />
-        )}
+          )}
 
-        <View style={styles.footerText}>
-          <Text type="sm" style={pal.textLight}>
-            <Trans>
-              Feeds are custom algorithms that users build with a little coding
-              expertise.{' '}
-              <TextLink
-                type="sm"
-                style={pal.link}
-                href="https://github.com/bluesky-social/feed-generator"
-                text={_(msg`See this guide`)}
-              />{' '}
-              for more information.
-            </Trans>
-          </Text>
-        </View>
-        <View style={{height: 100}} />
-      </ScrollView>
-    </CenteredView>
+          <View style={[pal.text, pal.border, styles.title]}>
+            <Text type="title" style={pal.text}>
+              <Trans>Saved Feeds</Trans>
+            </Text>
+          </View>
+          {preferences ? (
+            !unpinnedFeeds.length ? (
+              <View
+                style={[
+                  pal.border,
+                  isMobile && s.flex1,
+                  pal.viewLight,
+                  styles.empty,
+                ]}>
+                <Text type="lg" style={[pal.text]}>
+                  <Trans>You don't have any saved feeds.</Trans>
+                </Text>
+              </View>
+            ) : (
+              unpinnedFeeds.map(f => (
+                <ListItem
+                  key={f.id}
+                  feed={f}
+                  isPinned={false}
+                  overwriteSavedFeeds={overwriteSavedFeeds}
+                  resetSaveFeedsMutationState={resetSaveFeedsMutationState}
+                  currentFeeds={currentFeeds}
+                  preferences={preferences}
+                />
+              ))
+            )
+          ) : (
+            <ActivityIndicator style={{marginTop: 20}} />
+          )}
+
+          <View style={styles.footerText}>
+            <Text type="sm" style={pal.textLight}>
+              <Trans>
+                Feeds are custom algorithms that users build with a little
+                coding expertise.{' '}
+                <TextLink
+                  type="sm"
+                  style={pal.link}
+                  href="https://github.com/bluesky-social/feed-generator"
+                  text={_(msg`See this guide`)}
+                />{' '}
+                for more information.
+              </Trans>
+            </Text>
+          </View>
+          <View style={{height: 100}} />
+        </ScrollView>
+      </CenteredView>
+    </Layout.Screen>
   )
 }
 

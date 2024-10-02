@@ -45,6 +45,7 @@ import {ProfileHeader, ProfileHeaderLoading} from '#/screens/Profile/Header'
 import {ProfileFeedSection} from '#/screens/Profile/Sections/Feed'
 import {ProfileLabelsSection} from '#/screens/Profile/Sections/Labels'
 import {web} from '#/alf'
+import * as Layout from '#/components/Layout'
 import {ScreenHider} from '#/components/moderation/ScreenHider'
 import {ProfileStarterPacks} from '#/components/StarterPack/ProfileStarterPacks'
 import {navigate} from '#/Navigation'
@@ -55,7 +56,15 @@ interface SectionRef {
 }
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Profile'>
-export function ProfileScreen({route}: Props) {
+export function ProfileScreen(props: Props) {
+  return (
+    <Layout.Screen testID="profileScreen">
+      <ProfileScreenInner {...props} />
+    </Layout.Screen>
+  )
+}
+
+function ProfileScreenInner({route}: Props) {
   const {_} = useLingui()
   const {currentAccount} = useSession()
   const queryClient = useQueryClient()

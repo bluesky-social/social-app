@@ -66,6 +66,7 @@ import {SearchInput} from '#/components/forms/SearchInput'
 import {ChevronBottom_Stroke2_Corner0_Rounded as ChevronDown} from '#/components/icons/Chevron'
 import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
 import {SettingsGear2_Stroke2_Corner0_Rounded as Gear} from '#/components/icons/SettingsGear2'
+import * as Layout from '#/components/Layout'
 
 function Loader() {
   const pal = usePalette('default')
@@ -832,7 +833,7 @@ export function SearchScreen(
   }, [setShowAutocomplete])
 
   return (
-    <View style={isWeb ? null : {flex: 1}}>
+    <Layout.Screen testID="searchScreen">
       <CenteredView
         style={[
           a.p_md,
@@ -956,7 +957,7 @@ export function SearchScreen(
           headerHeight={headerHeight}
         />
       </View>
-    </View>
+    </Layout.Screen>
   )
 }
 

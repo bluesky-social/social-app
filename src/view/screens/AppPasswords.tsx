@@ -30,10 +30,19 @@ import {ViewHeader} from '#/view/com/util/ViewHeader'
 import {CenteredView} from '#/view/com/util/Views'
 import {atoms as a} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
+import * as Layout from '#/components/Layout'
 import * as Prompt from '#/components/Prompt'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AppPasswords'>
 export function AppPasswords({}: Props) {
+  return (
+    <Layout.Screen testID="AppPasswordsScreen">
+      <AppPasswordsInner />
+    </Layout.Screen>
+  )
+}
+
+function AppPasswordsInner() {
   const pal = usePalette('default')
   const {_} = useLingui()
   const setMinimalShellMode = useSetMinimalShellMode()

@@ -29,6 +29,7 @@ import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/ico
 import {Message_Stroke2_Corner0_Rounded as Message} from '#/components/icons/Message'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {SettingsSliderVertical_Stroke2_Corner0_Rounded as SettingsSlider} from '#/components/icons/SettingsSlider'
+import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
 import {ListFooter} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
@@ -150,7 +151,7 @@ export function MessagesScreen({navigation, route}: Props) {
 
   if (conversations.length < 1) {
     return (
-      <View style={a.flex_1}>
+      <Layout.Screen>
         <MessagesNUX />
 
         <CenteredView sideBorders={gtMobile} style={[a.h_full_vh]}>
@@ -234,12 +235,12 @@ export function MessagesScreen({navigation, route}: Props) {
         {!isLoading && !isError && (
           <NewChat onNewChat={onNewChat} control={newChatControl} />
         )}
-      </View>
+      </Layout.Screen>
     )
   }
 
   return (
-    <View style={a.flex_1}>
+    <Layout.Screen testID="messagesScreen">
       <MessagesNUX />
       {!gtMobile && (
         <ViewHeader
@@ -280,7 +281,7 @@ export function MessagesScreen({navigation, route}: Props) {
         // @ts-ignore our .web version only -sfn
         desktopFixedHeight
       />
-    </View>
+    </Layout.Screen>
   )
 }
 

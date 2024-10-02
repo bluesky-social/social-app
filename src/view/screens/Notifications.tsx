@@ -34,6 +34,7 @@ import {CenteredView} from '#/view/com/util/Views'
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {SettingsGear2_Stroke2_Corner0_Rounded as SettingsIcon} from '#/components/icons/SettingsGear2'
+import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
@@ -192,39 +193,38 @@ export function NotificationsScreen({route: {params}}: Props) {
   }, [renderButton, isLoadingLatest])
 
   return (
-    <CenteredView
-      testID="notificationsScreen"
-      style={[s.hContentRegion, {paddingTop: 2}]}
-      sideBorders={true}>
-      <ViewHeader
-        title={_(msg`Notifications`)}
-        canGoBack={false}
-        showBorder={true}
-        renderButton={renderHeaderSpinner}
-      />
-      <MainScrollProvider>
-        <Feed
-          onScrolledDownChange={setIsScrolledDown}
-          scrollElRef={scrollElRef}
-          ListHeaderComponent={ListHeaderComponent}
-          overridePriorityNotifications={params?.show === 'all'}
+    <Layout.Screen testID="notificationsScreen">
+      <CenteredView style={[a.flex_1, {paddingTop: 2}]} sideBorders={true}>
+        <ViewHeader
+          title={_(msg`Notifications`)}
+          canGoBack={false}
+          showBorder={true}
+          renderButton={renderHeaderSpinner}
         />
-      </MainScrollProvider>
-      {(isScrolledDown || hasNew) && (
-        <LoadLatestBtn
-          onPress={onPressLoadLatest}
-          label={_(msg`Load new notifications`)}
-          showIndicator={hasNew}
+        <MainScrollProvider>
+          <Feed
+            onScrolledDownChange={setIsScrolledDown}
+            scrollElRef={scrollElRef}
+            ListHeaderComponent={ListHeaderComponent}
+            overridePriorityNotifications={params?.show === 'all'}
+          />
+        </MainScrollProvider>
+        {(isScrolledDown || hasNew) && (
+          <LoadLatestBtn
+            onPress={onPressLoadLatest}
+            label={_(msg`Load new notifications`)}
+            showIndicator={hasNew}
+          />
+        )}
+        <FAB
+          testID="composeFAB"
+          onPress={() => openComposer({})}
+          icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
+          accessibilityRole="button"
+          accessibilityLabel={_(msg`New post`)}
+          accessibilityHint=""
         />
-      )}
-      <FAB
-        testID="composeFAB"
-        onPress={() => openComposer({})}
-        icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
-        accessibilityRole="button"
-        accessibilityLabel={_(msg`New post`)}
-        accessibilityHint=""
-      />
-    </CenteredView>
+      </CenteredView>
+    </Layout.Screen>
   )
 }

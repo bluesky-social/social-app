@@ -73,6 +73,7 @@ import {CenteredView} from '#/view/com/util/Views'
 import {ListHiddenScreen} from '#/screens/List/ListHiddenScreen'
 import {atoms as a, useTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
+import * as Layout from '#/components/Layout'
 import * as Hider from '#/components/moderation/Hider'
 import * as Prompt from '#/components/Prompt'
 import {ReportDialog, useReportDialogControl} from '#/components/ReportDialog'
@@ -87,6 +88,14 @@ interface SectionRef {
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileList'>
 export function ProfileListScreen(props: Props) {
+  return (
+    <Layout.Screen testID="profileListScreen">
+      <ProfileListScreenInner {...props} />
+    </Layout.Screen>
+  )
+}
+
+function ProfileListScreenInner(props: Props) {
   const {_} = useLingui()
   const {name: handleOrDid, rkey} = props.route.params
   const {data: resolvedUri, error: resolveError} = useResolveUriQuery(
