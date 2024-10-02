@@ -703,6 +703,7 @@ function ExpandedPostDetails({
   needsTranslation: boolean
   translatorUrl: string
 }) {
+  const t = useTheme()
   const pal = usePalette('default')
   const {_, i18n} = useLingui()
   const openLink = useOpenLink()
@@ -713,23 +714,25 @@ function ExpandedPostDetails({
   }, [openLink, translatorUrl])
 
   return (
-    <View style={[a.flex_row, a.align_center, a.flex_wrap, a.gap_xs, a.pt_md]}>
-      <Text style={[a.text_sm, pal.textLight]}>
+    <View style={[a.flex_row, a.align_center, a.flex_wrap, a.gap_sm, a.pt_md]}>
+      <NewText style={[a.text_sm, t.atoms.text_contrast_medium]}>
         {niceDate(i18n, post.indexedAt)}
-      </Text>
+      </NewText>
       {isRootPost && (
         <WhoCanReply post={post} isThreadAuthor={isThreadAuthor} />
       )}
       {needsTranslation && (
         <>
-          <Text style={[a.text_sm, pal.textLight]}>&middot;</Text>
+          <NewText style={[a.text_sm, t.atoms.text_contrast_medium]}>
+            &middot;
+          </NewText>
 
-          <Text
+          <NewText
             style={[a.text_sm, pal.link]}
             title={_(msg`Translate`)}
             onPress={onTranslatePress}>
             <Trans>Translate</Trans>
-          </Text>
+          </NewText>
         </>
       )}
     </View>
