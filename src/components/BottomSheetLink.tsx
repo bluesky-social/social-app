@@ -6,7 +6,7 @@ import {flatten, useTheme} from '#/alf'
 import {useDialogContext} from '#/components/Dialog'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {InlineLinkProps, useLink} from '#/components/Link'
-import {NormalizedPressable} from '#/components/NormalizedPressable'
+import {NormalizedRNGHPressable} from '#/components/NormalizedRNGHPressable'
 import {Text} from '#/components/Typography'
 import {router} from '#/routes'
 
@@ -64,7 +64,7 @@ export function BottomSheetInlineLinkText({
 
   // eslint-disable-next-line bsky-internal/avoid-unwrapped-text
   return (
-    <NormalizedPressable
+    <NormalizedRNGHPressable
       onPress={onPress}
       onLongPress={onLongPress}
       onPressIn={onPressIn}
@@ -87,6 +87,6 @@ export function BottomSheetInlineLinkText({
         ]}>
         {children}
       </Text>
-    </NormalizedPressable>
+    </NormalizedRNGHPressable>
   )
 }

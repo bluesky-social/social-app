@@ -18,7 +18,7 @@ import {
   ItemTextProps,
   TriggerProps,
 } from '#/components/Menu/types'
-import {NormalizedPressable} from '#/components/NormalizedPressable'
+import {NormalizedRNGHPressable} from '#/components/NormalizedRNGHPressable'
 import {Text} from '#/components/Typography'
 
 export {
@@ -117,7 +117,7 @@ export function Item({children, label, style, onPress, ...rest}: ItemProps) {
   } = useInteractionState()
 
   return (
-    <NormalizedPressable
+    <NormalizedRNGHPressable
       {...rest}
       accessibilityHint=""
       accessibilityLabel={label}
@@ -151,7 +151,7 @@ export function Item({children, label, style, onPress, ...rest}: ItemProps) {
       <ItemContext.Provider value={{disabled: Boolean(rest.disabled)}}>
         {children}
       </ItemContext.Provider>
-    </NormalizedPressable>
+    </NormalizedRNGHPressable>
   )
 }
 

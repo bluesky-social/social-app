@@ -59,7 +59,7 @@ function pressableEventToMouseEvent(
   }
 }
 
-export const NormalizedPressable = React.forwardRef<View, PressableProps>(
+export const NormalizedRNGHPressable = React.forwardRef<View, PressableProps>(
   function NormalizedPressable(
     {
       onPress,
