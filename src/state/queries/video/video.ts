@@ -5,7 +5,6 @@ import {I18n} from '@lingui/core'
 import {msg} from '@lingui/macro'
 
 import {AbortError} from '#/lib/async/cancelable'
-import {SUPPORTED_MIME_TYPES, SupportedMimeTypes} from '#/lib/constants'
 import {compressVideo} from '#/lib/media/video/compress'
 import {
   ServerError,
@@ -14,7 +13,6 @@ import {
 } from '#/lib/media/video/errors'
 import {CompressedVideo} from '#/lib/media/video/types'
 import {logger} from '#/logger'
-import {isWeb} from '#/platform/detection'
 import {createVideoAgent} from '#/state/queries/video/util'
 import {uploadVideo} from '#/state/queries/video/video-upload'
 
@@ -234,20 +232,6 @@ export function videoReducer(state: State, action: Action): State {
   return state
 }
 
-function getMimeType(asset: ImagePickerAsset) {
-  if (isWeb) {
-    const [mimeType] = asset.uri.slice('data:'.length).split(';base64,')
-    if (!mimeType) {
-      throw new Error('Could not determine mime type')
-    }
-    return mimeType
-  }
-  if (!asset.mimeType) {
-    throw new Error('Could not determine mime type')
-  }
-  return asset.mimeType
-}
-
 function trunc2dp(num: number) {
   return Math.trunc(num * 100) / 100
 }
@@ -260,14 +244,6 @@ export async function processVideo(
   signal: AbortSignal,
   _: I18n['_'],
 ) {
-  // compression step on native converts to mp4, so no need to check there
-  if (isWeb) {
-    const mimeType = getMimeType(asset)
-    if (!SUPPORTED_MIME_TYPES.includes(mimeType as SupportedMimeTypes)) {
-      throw new Error(_(msg`Unsupported video type: ${mimeType}`))
-    }
-  }
-
   dispatch({
     type: 'idle_to_compressing',
     asset,
