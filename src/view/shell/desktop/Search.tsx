@@ -25,11 +25,11 @@ import {s} from '#/lib/styles'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
 import {precacheProfile} from '#/state/queries/profile'
-import {SearchInput} from '#/view/com/util/forms/SearchInput'
 import {Link} from '#/view/com/util/Link'
 import {Text} from '#/view/com/util/text/Text'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a} from '#/alf'
+import {SearchInput} from '#/components/forms/SearchInput'
 
 let SearchLinkCard = ({
   label,
@@ -184,10 +184,10 @@ export function DesktopSearch() {
   return (
     <View style={[styles.container, pal.view]}>
       <SearchInput
-        query={query}
-        onChangeQuery={onChangeText}
-        onPressCancelSearch={onPressCancelSearch}
-        onSubmitQuery={onSubmit}
+        value={query}
+        onChangeText={onChangeText}
+        onClearText={onPressCancelSearch}
+        onSubmitEditing={onSubmit}
       />
       {query !== '' && isActive && moderationOpts && (
         <View style={[pal.view, pal.borderDark, styles.resultsContainer]}>
