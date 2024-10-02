@@ -16,11 +16,12 @@ import {useSession} from '#/state/session'
 import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {UserBanner} from '#/view/com/util/UserBanner'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, native, useTheme} from '#/alf'
 import {LabelsOnMe} from '#/components/moderation/LabelsOnMe'
 import {ProfileHeaderAlerts} from '#/components/moderation/ProfileHeaderAlerts'
 import {GrowableAvatar} from './GrowableAvatar'
 import {GrowableBanner} from './GrowableBanner'
+import {NavHeaderScrollLinked} from './NavHeader'
 
 interface Props {
   profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>
@@ -69,6 +70,8 @@ let ProfileHeaderShell = ({
         pointerEvents={isIOS ? 'auto' : 'none'}
         style={[a.relative, {height: 150}]}>
         <GrowableBanner
+          profile={profile}
+          moderation={moderation}
           backButton={
             <>
               {!isDesktop && !hideBackButton && (
@@ -105,9 +108,7 @@ let ProfileHeaderShell = ({
           )}
         </GrowableBanner>
       </View>
-
       {children}
-
       {!isPlaceholderProfile && (
         <View
           style={[a.px_lg, a.py_xs]}
@@ -119,7 +120,6 @@ let ProfileHeaderShell = ({
           )}
         </View>
       )}
-
       <GrowableAvatar style={styles.aviPosition}>
         <TouchableWithoutFeedback
           testID="profileHeaderAviButton"
@@ -143,6 +143,9 @@ let ProfileHeaderShell = ({
           </View>
         </TouchableWithoutFeedback>
       </GrowableAvatar>
+      {native(
+        <NavHeaderScrollLinked profile={profile} moderation={moderation} />,
+      )}
     </View>
   )
 }

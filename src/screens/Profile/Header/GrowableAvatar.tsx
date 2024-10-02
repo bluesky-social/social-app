@@ -19,7 +19,7 @@ export function GrowableAvatar({
 }) {
   const pagerContext = usePagerHeaderContext()
 
-  // pagerContext should only be present on iOS, but better safe than sorry
+  // iOS only
   if (!pagerContext || !isIOS) {
     return <View style={style}>{children}</View>
   }

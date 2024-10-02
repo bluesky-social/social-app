@@ -43,6 +43,7 @@ export interface PagerWithHeaderProps {
   onPageSelected?: (index: number) => void
   onCurrentPageSelected?: (index: number) => void
   allowHeaderOverScroll?: boolean
+  headerMinHeight?: number
 }
 export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
   function PageWithHeaderImpl(
@@ -56,6 +57,7 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
       onPageSelected,
       onCurrentPageSelected,
       allowHeaderOverScroll,
+      headerMinHeight,
     }: PagerWithHeaderProps,
     ref,
   ) {
@@ -83,7 +85,10 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
     const renderTabBar = React.useCallback(
       (props: RenderTabBarFnProps) => {
         return (
-          <PagerHeaderProvider scrollY={scrollY}>
+          <PagerHeaderProvider
+            scrollY={scrollY}
+            headerHeight={headerOnlyHeight}
+            tabBarHeight={tabBarHeight}>
             <PagerTabBar
               headerOnlyHeight={headerOnlyHeight}
               items={items}
@@ -97,6 +102,7 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
               scrollY={scrollY}
               testID={testID}
               allowHeaderOverScroll={allowHeaderOverScroll}
+              headerMinHeight={headerMinHeight}
             />
           </PagerHeaderProvider>
         )
@@ -113,6 +119,8 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
         scrollY,
         testID,
         allowHeaderOverScroll,
+        headerMinHeight,
+        tabBarHeight,
       ],
     )
 
@@ -231,6 +239,7 @@ let PagerTabBar = ({
   onCurrentPageSelected,
   onSelect,
   allowHeaderOverScroll,
+  headerMinHeight = 0,
 }: {
   currentPage: number
   headerOnlyHeight: number
@@ -244,9 +253,11 @@ let PagerTabBar = ({
   onCurrentPageSelected?: (index: number) => void
   onSelect?: (index: number) => void
   allowHeaderOverScroll?: boolean
+  headerMinHeight?: number
 }): React.ReactNode => {
   const headerTransform = useAnimatedStyle(() => {
-    const translateY = Math.min(scrollY.value, headerOnlyHeight) * -1
+    const translateY =
+      Math.min(scrollY.value, headerOnlyHeight - headerMinHeight) * -1
     return {
       transform: [
         {

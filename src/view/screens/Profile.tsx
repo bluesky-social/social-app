@@ -1,5 +1,6 @@
 import React, {useCallback, useMemo} from 'react'
 import {StyleSheet} from 'react-native'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {
   AppBskyActorDefs,
   AppBskyGraphGetActorStarterPacks,
@@ -42,6 +43,7 @@ import {FAB} from '#/view/com/util/fab/FAB'
 import {ListRef} from '#/view/com/util/List'
 import {CenteredView} from '#/view/com/util/Views'
 import {ProfileHeader, ProfileHeaderLoading} from '#/screens/Profile/Header'
+import {PROFILE_NAV_HEADER_HEIGHT} from '#/screens/Profile/Header/NavHeader'
 import {ProfileFeedSection} from '#/screens/Profile/Sections/Feed'
 import {ProfileLabelsSection} from '#/screens/Profile/Sections/Labels'
 import {web} from '#/alf'
@@ -58,7 +60,7 @@ interface SectionRef {
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Profile'>
 export function ProfileScreen(props: Props) {
   return (
-    <Layout.Screen testID="profileScreen">
+    <Layout.Screen testID="profileScreen" disableTopPadding>
       <ProfileScreenInner {...props} />
     </Layout.Screen>
   )
@@ -186,6 +188,7 @@ function ProfileScreenLoaded({
   const [currentPage, setCurrentPage] = React.useState(0)
   const {_} = useLingui()
   const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
+  const insets = useSafeAreaInsets()
 
   const [scrollViewTag, setScrollViewTag] = React.useState<number | null>(null)
 
@@ -369,7 +372,8 @@ function ProfileScreenLoaded({
         onPageSelected={onPageSelected}
         onCurrentPageSelected={onCurrentPageSelected}
         renderHeader={renderHeader}
-        allowHeaderOverScroll>
+        allowHeaderOverScroll
+        headerMinHeight={insets.top + PROFILE_NAV_HEADER_HEIGHT}>
         {showFiltersTab
           ? ({headerHeight, isFocused, scrollElRef}) => (
               <ProfileLabelsSection

@@ -1,40 +1,51 @@
-import React, {useContext} from 'react'
+import React, {useContext, useMemo} from 'react'
 import {SharedValue} from 'react-native-reanimated'
 
-import {isIOS} from '#/platform/detection'
+import {isNative} from '#/platform/detection'
 
-export const PagerHeaderContext =
-  React.createContext<SharedValue<number> | null>(null)
+export const PagerHeaderContext = React.createContext<{
+  scrollY: SharedValue<number>
+  headerHeight: number
+  tabBarHeight: number
+} | null>(null)
 
 /**
  * Passes the scrollY value to the pager header's banner, so it can grow on
- * overscroll on iOS. Not necessary to use this context provider on other platforms.
+ * overscroll on iOS, and handle the status bar. Not necessary to use this context provider on web.
  *
- * @platform ios
+ * @platform ios, android
  */
 export function PagerHeaderProvider({
   scrollY,
   children,
+  headerHeight,
+  tabBarHeight,
 }: {
   scrollY: SharedValue<number>
+  headerHeight: number
+  tabBarHeight: number
   children: React.ReactNode
 }) {
+  const value = useMemo(
+    () => ({scrollY, headerHeight, tabBarHeight}),
+    [scrollY, headerHeight, tabBarHeight],
+  )
   return (
-    <PagerHeaderContext.Provider value={scrollY}>
+    <PagerHeaderContext.Provider value={value}>
       {children}
     </PagerHeaderContext.Provider>
   )
 }
 
 export function usePagerHeaderContext() {
-  const scrollY = useContext(PagerHeaderContext)
-  if (isIOS) {
-    if (!scrollY) {
+  const context = useContext(PagerHeaderContext)
+  if (isNative) {
+    if (!context) {
       throw new Error(
         'usePagerHeaderContext must be used within a HeaderProvider',
       )
     }
-    return {scrollY}
+    return context
   } else {
     return null
   }

@@ -4,41 +4,55 @@ import {ActivityIndicator} from 'react-native'
 import Animated, {
   Extrapolation,
   interpolate,
+  LayoutAnimationConfig,
   runOnJS,
   SharedValue,
   useAnimatedProps,
   useAnimatedReaction,
   useAnimatedStyle,
 } from 'react-native-reanimated'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {BlurView} from 'expo-blur'
+import {AppBskyActorDefs, ModerationDecision} from '@atproto/api'
 import {useIsFetching} from '@tanstack/react-query'
 
 import {isIOS} from '#/platform/detection'
+import {Shadow} from '#/state/cache/types'
 import {RQKEY_ROOT as STARTERPACK_RQKEY_ROOT} from '#/state/queries/actor-starter-packs'
 import {RQKEY_ROOT as FEED_RQKEY_ROOT} from '#/state/queries/post-feed'
 import {RQKEY_ROOT as FEEDGEN_RQKEY_ROOT} from '#/state/queries/profile-feedgens'
 import {RQKEY_ROOT as LIST_RQKEY_ROOT} from '#/state/queries/profile-lists'
 import {usePagerHeaderContext} from '#/view/com/pager/PagerHeaderContext'
 import {atoms as a} from '#/alf'
+import {NavHeader} from './NavHeader'
 
 const AnimatedBlurView = Animated.createAnimatedComponent(BlurView)
 
 export function GrowableBanner({
   backButton,
+  profile,
+  moderation,
   children,
 }: {
   backButton?: React.ReactNode
+  profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>
+  moderation: ModerationDecision
   children: React.ReactNode
 }) {
   const pagerContext = usePagerHeaderContext()
 
-  // pagerContext should only be present on iOS, but better safe than sorry
   if (!pagerContext || !isIOS) {
     return (
-      <View style={[a.w_full, a.h_full]}>
-        {backButton}
-        {children}
-      </View>
+      <>
+        <LayoutAnimationConfig skipExiting skipEntering>
+          <NavHeader
+            profile={profile}
+            moderation={moderation}
+            backButton={backButton}
+          />
+        </LayoutAnimationConfig>
+        <View style={[a.w_full, a.h_full]}>{children}</View>
+      </>
     )
   }
 
@@ -62,6 +76,7 @@ function GrowableBannerInner({
 }) {
   const isFetching = useIsProfileFetching()
   const animateSpinner = useShouldAnimateSpinner({isFetching, scrollY})
+  const {top: topInset} = useSafeAreaInsets()
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [
@@ -103,7 +118,7 @@ function GrowableBannerInner({
   const animatedBackButtonStyle = useAnimatedStyle(() => ({
     transform: [
       {
-        translateY: interpolate(scrollY.value, [-150, 60], [-150, 60], {
+        translateY: interpolate(scrollY.value, [-150, 0], [-150, 0], {
           extrapolateRight: Extrapolation.CLAMP,
         }),
       },
@@ -127,7 +142,14 @@ function GrowableBannerInner({
           animatedProps={animatedBlurViewProps}
         />
       </Animated.View>
-      <View style={[a.absolute, a.inset_0, a.justify_center, a.align_center]}>
+      <View
+        style={[
+          a.absolute,
+          a.inset_0,
+          a.justify_center,
+          a.align_center,
+          {paddingTop: topInset},
+        ]}>
         <Animated.View style={[animatedSpinnerStyle]}>
           <ActivityIndicator
             key={animateSpinner ? 'spin' : 'stop'}
@@ -138,7 +160,8 @@ function GrowableBannerInner({
           />
         </Animated.View>
       </View>
-      <Animated.View style={[animatedBackButtonStyle]}>
+      <Animated.View
+        style={[animatedBackButtonStyle, a.absolute, {top: topInset}]}>
         {backButton}
       </Animated.View>
     </>
