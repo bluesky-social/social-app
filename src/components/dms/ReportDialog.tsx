@@ -44,7 +44,6 @@ let ReportDialog = ({
     <Dialog.Outer
       control={control}
       nativeOptions={isAndroid ? {sheet: {snapPoints: ['100%']}} : {}}>
-      <Dialog.Handle />
       <Dialog.ScrollableInner label={_(msg`Report this message`)}>
         <DialogInner params={params} />
         <Dialog.Close />

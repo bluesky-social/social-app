@@ -70,8 +70,6 @@ export function ServerInputDialog({
       control={control}
       nativeOptions={{sheet: {snapPoints: ['100%']}}}
       onClose={onClose}>
-      <Dialog.Handle />
-
       <Dialog.ScrollableInner
         accessibilityDescribedBy="dialog-description"
         accessibilityLabelledBy="dialog-title">

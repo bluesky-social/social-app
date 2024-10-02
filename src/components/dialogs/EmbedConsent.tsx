@@ -49,8 +49,6 @@ export function EmbedConsentDialog({
 
   return (
     <Dialog.Outer control={control}>
-      <Dialog.Handle />
-
       <Dialog.ScrollableInner
         label={_(msg`External Media`)}
         style={[gtMobile ? {width: 'auto', maxWidth: 400} : a.w_full]}>

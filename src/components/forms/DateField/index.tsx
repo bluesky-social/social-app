@@ -57,7 +57,6 @@ export function DateField({
         accessibilityHint={accessibilityHint}
       />
       <Dialog.Outer control={control} testID={testID}>
-        <Dialog.Handle />
         <Dialog.Inner label={label}>
           <View style={a.gap_lg}>
             <View style={[a.relative, a.w_full, a.align_center]}>

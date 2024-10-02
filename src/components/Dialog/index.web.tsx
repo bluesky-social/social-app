@@ -229,10 +229,6 @@ export const InnerFlatList = React.forwardRef<
   )
 })
 
-export function Handle() {
-  return null
-}
-
 export function Close() {
   const {_} = useLingui()
   const {close} = React.useContext(Context)

@@ -170,7 +170,6 @@ function WhoCanReplyDialog({
   const {_} = useLingui()
   return (
     <Dialog.Outer control={control}>
-      <Dialog.Handle />
       <Dialog.ScrollableInner
         label={_(msg`Dialog: adjust who can interact with this post`)}
         style={[{width: 'auto', maxWidth: 400, minWidth: 200}]}>

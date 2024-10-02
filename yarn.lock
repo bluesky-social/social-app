@@ -4120,6 +4120,11 @@
   resolved "https://registry.yarnpkg.com/@graphql-typed-document-node/core/-/core-3.2.0.tgz#5f3d96ec6b2354ad6d8a28bf216a1d97b5426861"
   integrity sha512-mB9oAsNCm9aM3/SOv4YtBMqZbYj10R7dkq8byBqxGY/ncFwhf2oQzMV+LCRlWoDSEBJ3COiR1yeDvMtsoOsuFQ==
 
+"@haileyok/bluesky-bottom-sheet@^0.1.1-alpha.4":
+  version "0.1.1-alpha.4"
+  resolved "https://registry.yarnpkg.com/@haileyok/bluesky-bottom-sheet/-/bluesky-bottom-sheet-0.1.1-alpha.4.tgz#19717e57e63d70e79b8bd86984903c448deb83bc"
+  integrity sha512-bEZRbErsI6OJCgmFolbr9Ta5LxNvyaltzRPFOVtwsykIwL8tqNJeNlmfxP8EdJa5lSu2kK1MauQcygmCIouzwg==
+
 "@haileyok/bluesky-video@0.1.10":
   version "0.1.10"
   resolved "https://registry.yarnpkg.com/@haileyok/bluesky-video/-/bluesky-video-0.1.10.tgz#2756e8c83a78caeb6b120a175578eac1eb6889a9"

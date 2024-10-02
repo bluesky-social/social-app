@@ -99,7 +99,6 @@ export function GifAltText({
       <Dialog.Outer
         control={control}
         nativeOptions={isAndroid ? {sheet: {snapPoints: ['100%']}} : {}}>
-        <Dialog.Handle />
         <AltTextInner
           onSubmit={onPressSubmit}
           link={link}

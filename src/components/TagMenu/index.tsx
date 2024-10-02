@@ -84,8 +84,6 @@ export function TagMenu({
       {children}
 
       <Dialog.Outer control={control}>
-        <Dialog.Handle />
-
         <Dialog.Inner label={_(msg`Tag menu: ${displayTag}`)}>
           {isPreferencesLoading ? (
             <View style={[a.w_full, a.align_center]}>

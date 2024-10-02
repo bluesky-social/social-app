@@ -4,7 +4,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import flattenReactChildren from 'react-keyed-flatten-children'
 
-import {isNative} from 'platform/detection'
+import {isNative} from '#/platform/detection'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -85,8 +85,6 @@ export function Outer({
 
   return (
     <Dialog.Outer control={context.control}>
-      <Dialog.Handle />
-
       {/* Re-wrap with context since Dialogs are portal-ed to root */}
       <Context.Provider value={context}>
         <Dialog.ScrollableInner label="Menu TODO">

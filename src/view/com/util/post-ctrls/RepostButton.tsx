@@ -87,7 +87,6 @@ let RepostButton = ({
         ) : undefined}
       </Button>
       <Dialog.Outer control={dialogControl}>
-        <Dialog.Handle />
         <Dialog.Inner label={_(msg`Repost or quote post`)}>
           <View style={a.gap_xl}>
             <View style={a.gap_xs}>
