@@ -4485,7 +4485,7 @@ msgstr "釘選的動態源列表"
 
 #: src/view/screens/ProfileList.tsx:346
 msgid "Pinned to your feeds"
-msgstr "釘選到您的動態源"
+msgstr "已釘選到您的動態源中"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:46
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:141
