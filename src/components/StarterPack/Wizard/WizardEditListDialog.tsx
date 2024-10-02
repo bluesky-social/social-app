@@ -3,13 +3,13 @@ import type {ListRenderItemInfo} from 'react-native'
 import {View} from 'react-native'
 import {AppBskyActorDefs, ModerationOpts} from '@atproto/api'
 import {GeneratorView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
-import {BottomSheetFlatListMethods} from '@discord/bottom-sheet'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {isWeb} from '#/platform/detection'
 import {useSession} from '#/state/session'
+import {ListMethods} from '#/view/com/util/List'
 import {WizardAction, WizardState} from '#/screens/StarterPack/Wizard/State'
 import {atoms as a, native, useTheme, web} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
@@ -45,7 +45,7 @@ export function WizardEditListDialog({
   const {currentAccount} = useSession()
   const initialNumToRender = useInitialNumToRender()
 
-  const listRef = useRef<BottomSheetFlatListMethods>(null)
+  const listRef = useRef<ListMethods>(null)
 
   const getData = () => {
     if (state.currentStep === 'Feeds') return state.feeds
@@ -99,13 +99,7 @@ export function WizardEditListDialog({
                       height: 48,
                     },
                   ]
-                : [
-                    a.pb_sm,
-                    a.align_end,
-                    {
-                      height: 68,
-                    },
-                  ],
+                : [a.pb_sm, a.align_end],
             ]}>
             <View style={{width: 60}} />
             <Text style={[a.font_bold, a.text_xl]}>
@@ -139,8 +133,6 @@ export function WizardEditListDialog({
             paddingHorizontal: 0,
             marginTop: 0,
             paddingTop: 0,
-            borderTopLeftRadius: 40,
-            borderTopRightRadius: 40,
           }),
         ]}
         webInnerStyle={[a.py_0, {maxWidth: 500, minWidth: 200}]}

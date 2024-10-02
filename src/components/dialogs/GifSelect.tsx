@@ -6,7 +6,6 @@ import React, {
   useState,
 } from 'react'
 import {TextInput, View} from 'react-native'
-import {BottomSheetFlatListMethods} from '@discord/bottom-sheet'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -19,6 +18,7 @@ import {
 } from '#/state/queries/tenor'
 import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
+import {ListMethods} from '#/view/com/util/List'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
@@ -76,7 +76,7 @@ function GifList({
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
   const textInputRef = useRef<TextInput>(null)
-  const listRef = useRef<BottomSheetFlatListMethods>(null)
+  const listRef = useRef<ListMethods>(null)
   const [undeferredSearch, setSearch] = useState('')
   const search = useThrottledValue(undeferredSearch, 500)
 
