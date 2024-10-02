@@ -194,9 +194,7 @@ export const ComposePost = ({
     clearVideo,
     state: videoUploadState,
     updateVideoDimensions,
-  } = useUploadVideo({
-    setStatus: setProcessingState,
-  })
+  } = useUploadVideo()
   const hasVideo = Boolean(videoUploadState.asset || videoUploadState.video)
 
   // Whenever we receive an initial video uri, we should immediately run compression if necessary

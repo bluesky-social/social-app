@@ -92,11 +92,7 @@ function reducer(state: State, action: Action): State {
   return updatedState
 }
 
-export function useUploadVideo({
-  setStatus,
-}: {
-  setStatus: (status: string) => void
-}) {
+export function useUploadVideo() {
   const {currentAccount} = useSession()
   const agent = useAgent()
   const {_} = useLingui()
@@ -116,22 +112,16 @@ export function useUploadVideo({
           dispatch(action)
         }
       }
-      function guardedSetStatus(status: string) {
-        if (!signal.aborted) {
-          setStatus(status)
-        }
-      }
       processVideo(
         asset,
         guardedDispatch,
-        guardedSetStatus,
         agent,
         did,
         state.abortController.signal,
         _,
       )
     },
-    [_, state.abortController, dispatch, setStatus, agent, did],
+    [_, state.abortController, dispatch, agent, did],
   )
 
   const clearVideo = () => {
@@ -176,7 +166,6 @@ function trunc2dp(num: number) {
 async function processVideo(
   asset: ImagePickerAsset,
   dispatch: (action: Action) => void,
-  setStatus: (status: string) => void,
   agent: BskyAgent,
   did: string,
   signal: AbortSignal,
@@ -293,7 +282,6 @@ async function processVideo(
         blobRef: blob,
       })
     } else {
-      setStatus(status.state.toString())
       dispatch({
         type: 'SetJobStatus',
         jobStatus: status,
