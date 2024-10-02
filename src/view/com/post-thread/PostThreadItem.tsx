@@ -14,7 +14,6 @@ import {useLingui} from '@lingui/react'
 
 import {MAX_POST_LINES} from '#/lib/constants'
 import {usePalette} from '#/lib/hooks/usePalette'
-import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
@@ -674,29 +673,31 @@ function PostOuterWrapper({
   hasPrecedingItem: boolean
   hideTopBorder?: boolean
 }>) {
-  const {isMobile} = useWebMediaQueries()
-  const pal = usePalette('default')
+  const t = useTheme()
   if (treeView && depth > 0) {
     return (
       <View
         style={[
-          pal.border,
+          a.flex_row,
+          a.px_sm,
+          t.atoms.border_contrast_low,
           styles.cursor,
           {
             flexDirection: 'row',
-            paddingHorizontal: isMobile ? 10 : 6,
-            borderTopWidth: depth === 1 ? StyleSheet.hairlineWidth : 0,
+            borderTopWidth: depth === 1 ? a.border_t.borderTopWidth : 0,
           },
         ]}>
         {Array.from(Array(depth - 1)).map((_, n: number) => (
           <View
             key={`${post.uri}-padding-${n}`}
-            style={{
-              borderLeftWidth: 2,
-              borderLeftColor: pal.colors.border,
-              marginLeft: isMobile ? 6 : 12,
-              paddingLeft: isMobile ? 6 : 8,
-            }}
+            style={[
+              a.ml_sm,
+              t.atoms.border_contrast_low,
+              {
+                borderLeftWidth: 2,
+                paddingLeft: a.pl_sm.paddingLeft - 2, // minus border
+              },
+            ]}
           />
         ))}
         <View style={{flex: 1}}>{children}</View>
@@ -706,8 +707,9 @@ function PostOuterWrapper({
   return (
     <View
       style={[
-        styles.outer,
-        pal.border,
+        a.border_t,
+        a.px_sm,
+        t.atoms.border_contrast_low,
         showParentReplyLine && hasPrecedingItem && styles.noTopBorder,
         hideTopBorder && styles.noTopBorder,
         styles.cursor,
