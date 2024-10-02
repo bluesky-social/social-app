@@ -269,7 +269,7 @@ let PostThreadItemLoaded = ({
       <>
         {rootUri !== post.uri && (
           <View style={{paddingLeft: 16, flexDirection: 'row', height: 16}}>
-            <View style={{width: 38}}>
+            <View style={{width: 42}}>
               <View
                 style={[
                   styles.replyLine,
@@ -483,7 +483,7 @@ let PostThreadItemLoaded = ({
           disabled={overrideBlur}
           style={[pal.view]}
           modui={moderation.ui('contentList')}
-          iconSize={isThreadedChild ? 26 : 38}
+          iconSize={isThreadedChild ? 26 : 42}
           iconStyles={
             isThreadedChild ? {marginRight: 4} : {marginLeft: 2, marginRight: 2}
           }
@@ -496,7 +496,7 @@ let PostThreadItemLoaded = ({
               paddingLeft: 8,
               height: isThreadedChildAdjacentTop ? 8 : 16,
             }}>
-            <View style={{width: 38}}>
+            <View style={{width: 42}}>
               {!isThreadedChild && showParentReplyLine && (
                 <View
                   style={[
@@ -528,7 +528,7 @@ let PostThreadItemLoaded = ({
             {!isThreadedChild && (
               <View style={styles.layoutAvi}>
                 <PreviewableUserAvatar
-                  size={38}
+                  size={42}
                   profile={post.author}
                   moderation={moderation.ui('avatar')}
                   type={post.author.associated?.labeler ? 'labeler' : 'user'}
