@@ -22,19 +22,40 @@ import {uploadVideo} from '#/state/queries/video/video-upload'
 import {useAgent, useSession} from '#/state/session'
 
 type Action =
-  | {type: 'Reset'; nextController: AbortController}
-  | {type: 'SetProcessing'; jobId: string; signal: AbortSignal}
-  | {type: 'SetProgress'; progress: number; signal: AbortSignal}
-  | {type: 'SetError'; error: string; signal: AbortSignal}
-  | {type: 'SetAsset'; asset: ImagePickerAsset; signal: AbortSignal}
-  | {type: 'SetDimensions'; width: number; height: number; signal: AbortSignal}
-  | {type: 'SetVideo'; video: CompressedVideo; signal: AbortSignal}
+  | {type: 'to_idle'; nextController: AbortController}
   | {
-      type: 'SetJobStatus'
+      type: 'idle_to_compressing'
+      asset: ImagePickerAsset
+      signal: AbortSignal
+    }
+  | {
+      type: 'compressing_to_uploading'
+      video: CompressedVideo
+      signal: AbortSignal
+    }
+  | {
+      type: 'uploading_to_processing'
+      jobId: string
+      signal: AbortSignal
+    }
+  | {type: 'to_error'; error: string; signal: AbortSignal}
+  | {
+      type: 'to_done'
+      blobRef: BlobRef
+      signal: AbortSignal
+    }
+  | {type: 'update_progress'; progress: number; signal: AbortSignal}
+  | {
+      type: 'update_dimensions'
+      width: number
+      height: number
+      signal: AbortSignal
+    }
+  | {
+      type: 'update_job_status'
       jobStatus: AppBskyVideoDefs.JobStatus
       signal: AbortSignal
     }
-  | {type: 'SetComplete'; blobRef: BlobRef; signal: AbortSignal}
 
 type IdleState = {
   status: 'idle'
@@ -115,14 +136,14 @@ function createInitialState(abortController: AbortController): IdleState {
 }
 
 function reducer(state: State, action: Action): State {
-  if (action.type === 'Reset') {
+  if (action.type === 'to_idle') {
     return createInitialState(action.nextController)
   }
   if (action.signal.aborted || action.signal !== state.abortController.signal) {
     // This action is stale and the process that spawned it is no longer relevant.
     return state
   }
-  if (action.type === 'SetError') {
+  if (action.type === 'to_error') {
     return {
       status: 'error',
       progress: 100,
@@ -132,14 +153,14 @@ function reducer(state: State, action: Action): State {
       video: state.video ?? null,
       jobId: state.jobId ?? null,
     }
-  } else if (action.type === 'SetProgress') {
+  } else if (action.type === 'update_progress') {
     if (state.status === 'compressing' || state.status === 'uploading') {
       return {
         ...state,
         progress: action.progress,
       }
     }
-  } else if (action.type === 'SetAsset') {
+  } else if (action.type === 'idle_to_compressing') {
     if (state.status === 'idle') {
       return {
         status: 'compressing',
@@ -148,14 +169,14 @@ function reducer(state: State, action: Action): State {
         asset: action.asset,
       }
     }
-  } else if (action.type === 'SetDimensions') {
+  } else if (action.type === 'update_dimensions') {
     if (state.asset) {
       return {
         ...state,
         asset: {...state.asset, width: action.width, height: action.height},
       }
     }
-  } else if (action.type === 'SetVideo') {
+  } else if (action.type === 'compressing_to_uploading') {
     if (state.status === 'compressing') {
       return {
         status: 'uploading',
@@ -166,7 +187,7 @@ function reducer(state: State, action: Action): State {
       }
     }
     return state
-  } else if (action.type === 'SetProcessing') {
+  } else if (action.type === 'uploading_to_processing') {
     if (state.status === 'uploading') {
       return {
         status: 'processing',
@@ -178,7 +199,7 @@ function reducer(state: State, action: Action): State {
         jobStatus: null,
       }
     }
-  } else if (action.type === 'SetJobStatus') {
+  } else if (action.type === 'update_job_status') {
     if (state.status === 'processing') {
       return {
         ...state,
@@ -189,7 +210,7 @@ function reducer(state: State, action: Action): State {
             : state.progress,
       }
     }
-  } else if (action.type === 'SetComplete') {
+  } else if (action.type === 'to_done') {
     if (state.status === 'processing') {
       return {
         status: 'done',
@@ -234,13 +255,13 @@ export function useUploadVideo() {
 
   const clearVideo = () => {
     state.abortController.abort()
-    dispatch({type: 'Reset', nextController: new AbortController()})
+    dispatch({type: 'to_idle', nextController: new AbortController()})
   }
 
   const updateVideoDimensions = useCallback(
     (width: number, height: number) => {
       dispatch({
-        type: 'SetDimensions',
+        type: 'update_dimensions',
         width,
         height,
         signal: state.abortController.signal,
@@ -292,7 +313,7 @@ async function processVideo(
   }
 
   dispatch({
-    type: 'SetAsset',
+    type: 'idle_to_compressing',
     asset,
     signal,
   })
@@ -301,7 +322,7 @@ async function processVideo(
   try {
     video = await compressVideo(asset, {
       onProgress: num => {
-        dispatch({type: 'SetProgress', progress: trunc2dp(num), signal})
+        dispatch({type: 'update_progress', progress: trunc2dp(num), signal})
       },
       signal,
     })
@@ -309,7 +330,7 @@ async function processVideo(
     const message = getCompressErrorMessage(e, _)
     if (message !== null) {
       dispatch({
-        type: 'SetError',
+        type: 'to_error',
         error: message,
         signal,
       })
@@ -317,7 +338,7 @@ async function processVideo(
     return
   }
   dispatch({
-    type: 'SetVideo',
+    type: 'compressing_to_uploading',
     video,
     signal,
   })
@@ -331,14 +352,14 @@ async function processVideo(
       signal,
       _,
       setProgress: p => {
-        dispatch({type: 'SetProgress', progress: p, signal})
+        dispatch({type: 'update_progress', progress: p, signal})
       },
     })
   } catch (e) {
     const message = getUploadErrorMessage(e, _)
     if (message !== null) {
       dispatch({
-        type: 'SetError',
+        type: 'to_error',
         error: message,
         signal,
       })
@@ -348,7 +369,7 @@ async function processVideo(
 
   const jobId = uploadResponse.jobId
   dispatch({
-    type: 'SetProcessing',
+    type: 'uploading_to_processing',
     jobId,
     signal,
   })
@@ -386,7 +407,7 @@ async function processVideo(
 
       logger.error('Error processing video', {safeMessage: e})
       dispatch({
-        type: 'SetError',
+        type: 'to_error',
         error: _(msg`Video failed to process`),
         signal,
       })
@@ -395,13 +416,13 @@ async function processVideo(
 
     if (blob) {
       dispatch({
-        type: 'SetComplete',
+        type: 'to_done',
         blobRef: blob,
         signal,
       })
     } else {
       dispatch({
-        type: 'SetJobStatus',
+        type: 'update_job_status',
         jobStatus: status,
         signal,
       })
