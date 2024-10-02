@@ -17,24 +17,28 @@ type ImagesMedia = {
   labels: string[]
 }
 
+type VideoMedia = {
+  type: 'video'
+  video: VideoState
+}
+
 type ComposerEmbed = {
   // TODO: Other record types.
   record: PostRecord | undefined
   // TODO: Other media types.
-  media: ImagesMedia | undefined
+  media: ImagesMedia | VideoMedia | undefined
 }
 
 export type ComposerState = {
   // TODO: Other draft data.
   embed: ComposerEmbed
-  video: VideoState // TODO: Move into embed.
 }
 
 export type ComposerAction =
   | {type: 'embed_add_images'; images: ComposerImage[]}
   | {type: 'embed_update_image'; image: ComposerImage}
   | {type: 'embed_remove_image'; image: ComposerImage}
-  | {type: 'video_action'; videoAction: VideoAction}
+  | {type: 'embed_update_video'; videoAction: VideoAction}
 
 const MAX_IMAGES = 4
 
@@ -112,11 +116,28 @@ export function composerReducer(
       }
       return state
     }
-    case 'video_action': {
+    case 'embed_update_video': {
       const videoAction = action.videoAction
+      const prevMedia = state.embed.media
+      let nextMedia = prevMedia
+      // TODO: Remove embed on removing video.
+      if (!prevMedia) {
+        nextMedia = {
+          type: 'video',
+          video: videoReducer(createVideoState(), videoAction),
+        }
+      } else if (prevMedia.type === 'video') {
+        nextMedia = {
+          ...prevMedia,
+          video: videoReducer(prevMedia.video, videoAction),
+        }
+      }
       return {
         ...state,
-        video: videoReducer(state.video, videoAction),
+        embed: {
+          ...state.embed,
+          media: nextMedia,
+        },
       }
     }
     default:
@@ -137,8 +158,8 @@ export function createComposerState({
       labels: [],
     }
   }
+  // TODO: initial video.
   return {
-    video: createVideoState(), // TODO: Move into embed.
     embed: {
       record: undefined,
       media,

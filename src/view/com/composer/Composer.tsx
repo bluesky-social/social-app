@@ -46,6 +46,7 @@ import {RichText} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {createVideoState} from '#/state/queries/video/video'
 
 import * as apilib from '#/lib/api/index'
 import {until} from '#/lib/async/until'
@@ -85,6 +86,7 @@ import {threadgateViewToAllowUISetting} from '#/state/queries/threadgate/util'
 import {
   processVideo,
   VideoAction,
+  VideoState,
   VideoState as VideoUploadState,
 } from '#/state/queries/video/video'
 import {useAgent, useSession} from '#/state/session'
@@ -130,6 +132,7 @@ type CancelRef = {
 }
 
 const NO_IMAGES: ComposerImage[] = []
+const NO_VIDEO = createVideoState()
 
 type Props = ComposerOpts
 export const ComposePost = ({
@@ -198,10 +201,13 @@ export const ComposePost = ({
     createComposerState,
   )
 
-  const videoUploadState = composerState.video
+  let videoUploadState: VideoState = NO_VIDEO
+  if (composerState.embed.media?.type === 'video') {
+    videoUploadState = composerState.embed.media.video
+  }
   const videoDispatch = useCallback(
     (videoAction: VideoAction) => {
-      dispatch({type: 'video_action', videoAction})
+      dispatch({type: 'embed_update_video', videoAction})
     },
     [dispatch],
   )

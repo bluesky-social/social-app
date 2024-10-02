@@ -17,7 +17,6 @@ import {createVideoAgent} from '#/state/queries/video/util'
 import {uploadVideo} from '#/state/queries/video/video-upload'
 
 export type VideoAction =
-  | {type: 'to_idle'; nextController: AbortController}
   | {
       type: 'idle_to_compressing'
       asset: ImagePickerAsset
@@ -136,9 +135,6 @@ export function videoReducer(
   state: VideoState,
   action: VideoAction,
 ): VideoState {
-  if (action.type === 'to_idle') {
-    return createVideoState(action.nextController)
-  }
   if (action.signal.aborted || action.signal !== state.abortController.signal) {
     // This action is stale and the process that spawned it is no longer relevant.
     return state
