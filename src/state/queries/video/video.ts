@@ -96,7 +96,6 @@ export function useUploadVideo({
   setStatus,
 }: {
   setStatus: (status: string) => void
-  onSuccess: () => void
 }) {
   const {currentAccount} = useSession()
   const agent = useAgent()

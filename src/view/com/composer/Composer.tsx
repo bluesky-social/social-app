@@ -196,11 +196,6 @@ export const ComposePost = ({
     updateVideoDimensions,
   } = useUploadVideo({
     setStatus: setProcessingState,
-    onSuccess: () => {
-      if (publishOnUpload) {
-        onPressPublish(true)
-      }
-    },
   })
   const hasVideo = Boolean(videoUploadState.asset || videoUploadState.video)
 
