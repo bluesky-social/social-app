@@ -398,19 +398,18 @@ export const ComposePost = ({
             postgate,
             onStateChange: setProcessingState,
             langs: toPostLanguages(langPrefs.postLanguage),
-            video: videoUploadState.pendingPublish?.blobRef
-              ? {
-                  blobRef: videoUploadState.pendingPublish.blobRef,
-                  altText: videoAltText,
-                  captions: captions,
-                  aspectRatio: videoUploadState.asset
-                    ? {
-                        width: videoUploadState.asset?.width,
-                        height: videoUploadState.asset?.height,
-                      }
-                    : undefined,
-                }
-              : undefined,
+            video:
+              videoUploadState.status === 'done'
+                ? {
+                    blobRef: videoUploadState.pendingPublish.blobRef,
+                    altText: videoAltText,
+                    captions: captions,
+                    aspectRatio: {
+                      width: videoUploadState.asset.width,
+                      height: videoUploadState.asset.height,
+                    },
+                  }
+                : undefined,
           })
         ).uri
         try {
@@ -1092,7 +1091,7 @@ function ErrorBanner({
   const {_} = useLingui()
 
   const videoError =
-    videoUploadState.status !== 'idle' ? videoUploadState.error : undefined
+    videoUploadState.status === 'error' ? videoUploadState.error : undefined
   const error = standardError || videoError
 
   const onClearError = () => {
@@ -1172,9 +1171,7 @@ function ToolbarWrapper({
 function VideoUploadToolbar({state}: {state: VideoUploadState}) {
   const t = useTheme()
   const {_} = useLingui()
-  const progress = state.jobStatus?.progress
-    ? state.jobStatus.progress / 100
-    : state.progress
+  const progress = state.progress
   const shouldRotate =
     state.status === 'processing' && (progress === 0 || progress === 1)
   let wheelProgress = shouldRotate ? 0.33 : progress
@@ -1210,14 +1207,13 @@ function VideoUploadToolbar({state}: {state: VideoUploadState}) {
     case 'processing':
       text = _('Processing video...')
       break
+    case 'error':
+      text = _('Error')
+      wheelProgress = 100
+      break
     case 'done':
       text = _('Video uploaded')
       break
-  }
-
-  if (state.error) {
-    text = _('Error')
-    wheelProgress = 100
   }
 
   return (
@@ -1227,7 +1223,11 @@ function VideoUploadToolbar({state}: {state: VideoUploadState}) {
           size={30}
           borderWidth={1}
           borderColor={t.atoms.border_contrast_low.borderColor}
-          color={state.error ? t.palette.negative_500 : t.palette.primary_500}
+          color={
+            state.status === 'error'
+              ? t.palette.negative_500
+              : t.palette.primary_500
+          }
           progress={wheelProgress}
         />
       </Animated.View>

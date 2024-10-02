@@ -21,12 +21,10 @@ import {createVideoAgent} from '#/state/queries/video/util'
 import {uploadVideo} from '#/state/queries/video/video-upload'
 import {useAgent, useSession} from '#/state/session'
 
-type Status = 'idle' | 'compressing' | 'processing' | 'uploading' | 'done'
-
 type Action =
   | {type: 'SetProcessing'; jobId: string}
   | {type: 'SetProgress'; progress: number}
-  | {type: 'SetError'; error: string | undefined}
+  | {type: 'SetError'; error: string}
   | {type: 'Reset'}
   | {type: 'SetAsset'; asset: ImagePickerAsset}
   | {type: 'SetDimensions'; width: number; height: number}
@@ -34,74 +32,182 @@ type Action =
   | {type: 'SetJobStatus'; jobStatus: AppBskyVideoDefs.JobStatus}
   | {type: 'SetComplete'; blobRef: BlobRef}
 
-export interface State {
-  status: Status
-  progress: number
-  asset?: ImagePickerAsset
-  video: CompressedVideo | null
-  jobId?: string
-  jobStatus?: AppBskyVideoDefs.JobStatus
-  error?: string
+type IdleState = {
+  status: 'idle'
+  progress: 0
   abortController: AbortController
-  pendingPublish?: {blobRef: BlobRef; mutableProcessed: boolean}
+  asset?: undefined
+  video?: undefined
+  jobId?: undefined
+  pendingPublish?: undefined
+}
+
+type ErrorState = {
+  status: 'error'
+  progress: 100
+  abortController: AbortController
+  asset?: undefined
+  video?: undefined
+  jobId: string | null
+  error: string
+  pendingPublish?: undefined
+}
+
+type CompressingState = {
+  status: 'compressing'
+  progress: number
+  abortController: AbortController
+  asset: ImagePickerAsset
+  video?: undefined
+  jobId?: undefined
+  pendingPublish?: undefined
+}
+
+type UploadingState = {
+  status: 'uploading'
+  progress: number
+  abortController: AbortController
+  asset: ImagePickerAsset
+  video: CompressedVideo
+  jobId?: undefined
+  pendingPublish?: undefined
+}
+
+type ProcessingState = {
+  status: 'processing'
+  progress: number
+  abortController: AbortController
+  asset: ImagePickerAsset
+  video: CompressedVideo
+  jobId: string
+  jobStatus: AppBskyVideoDefs.JobStatus | null
+  pendingPublish?: undefined
+}
+
+type DoneState = {
+  status: 'done'
+  progress: 100
+  abortController: AbortController
+  asset: ImagePickerAsset
+  video: CompressedVideo
+  jobId?: undefined
+  pendingPublish: {blobRef: BlobRef; mutableProcessed: boolean}
+}
+
+export type State =
+  | IdleState
+  | ErrorState
+  | CompressingState
+  | UploadingState
+  | ProcessingState
+  | DoneState
+
+function createInitialState(): IdleState {
+  return {
+    status: 'idle',
+    progress: 0,
+    abortController: new AbortController(),
+  }
 }
 
 function reducer(state: State, action: Action): State {
-  let updatedState = state
-  if (action.type === 'SetProcessing') {
-    updatedState = {...state, status: 'processing', jobId: action.jobId}
-  } else if (action.type === 'SetProgress') {
-    updatedState = {...state, progress: action.progress}
+  if (action.type === 'Reset') {
+    return createInitialState()
   } else if (action.type === 'SetError') {
-    updatedState = {...state, error: action.error}
-  } else if (action.type === 'Reset') {
-    updatedState = {
-      status: 'idle',
-      progress: 0,
-      video: null,
-      abortController: new AbortController(),
+    return {
+      status: 'error',
+      progress: 100,
+      abortController: state.abortController,
+      error: action.error,
+      jobId: state.status === 'processing' ? state.jobId : null,
+    }
+  } else if (action.type === 'SetProgress') {
+    if (state.status === 'compressing' || state.status === 'uploading') {
+      return {
+        ...state,
+        progress: action.progress,
+      }
     }
   } else if (action.type === 'SetAsset') {
-    updatedState = {
-      ...state,
-      asset: action.asset,
-      status: 'compressing',
-      error: undefined,
+    if (state.status === 'idle') {
+      return {
+        status: 'compressing',
+        progress: 0,
+        abortController: state.abortController,
+        asset: action.asset,
+      }
     }
   } else if (action.type === 'SetDimensions') {
-    updatedState = {
-      ...state,
-      asset: state.asset
-        ? {...state.asset, width: action.width, height: action.height}
-        : undefined,
+    if (state.asset) {
+      return {
+        ...state,
+        asset: {...state.asset, width: action.width, height: action.height},
+      }
     }
   } else if (action.type === 'SetVideo') {
-    updatedState = {...state, video: action.video, status: 'uploading'}
+    if (state.status === 'compressing') {
+      return {
+        status: 'uploading',
+        progress: 0,
+        abortController: state.abortController,
+        asset: state.asset,
+        video: action.video,
+      }
+    }
+    return state
+  } else if (action.type === 'SetProcessing') {
+    if (state.status === 'uploading') {
+      return {
+        status: 'processing',
+        progress: 0,
+        abortController: state.abortController,
+        asset: state.asset,
+        video: state.video,
+        jobId: action.jobId,
+        jobStatus: null,
+      }
+    }
   } else if (action.type === 'SetJobStatus') {
-    updatedState = {...state, jobStatus: action.jobStatus}
+    if (state.status === 'processing') {
+      return {
+        ...state,
+        jobStatus: action.jobStatus,
+        progress:
+          action.jobStatus.progress !== undefined
+            ? action.jobStatus.progress / 100
+            : state.progress,
+      }
+    }
   } else if (action.type === 'SetComplete') {
-    updatedState = {
-      ...state,
-      pendingPublish: {
-        blobRef: action.blobRef,
-        mutableProcessed: false,
-      },
-      status: 'done',
+    if (state.status === 'processing') {
+      return {
+        status: 'done',
+        progress: 100,
+        abortController: state.abortController,
+        asset: state.asset,
+        video: state.video,
+        pendingPublish: {
+          blobRef: action.blobRef,
+          mutableProcessed: false,
+        },
+      }
     }
   }
-  return updatedState
+  console.error(
+    'Unexpected video action (' +
+      action.type +
+      ') while in ' +
+      state.status +
+      ' state',
+  )
+  return state
 }
 
 export function useUploadVideo() {
   const {currentAccount} = useSession()
   const agent = useAgent()
   const {_} = useLingui()
-  const [state, dispatch] = React.useReducer(reducer, {
-    status: 'idle',
-    progress: 0,
-    video: null,
-    abortController: new AbortController(),
-  })
+  const [state, dispatch] = React.useReducer(reducer, null, createInitialState)
 
   const did = currentAccount!.did
   const selectVideo = React.useCallback(
@@ -183,7 +289,6 @@ async function processVideo(
     type: 'SetAsset',
     asset,
   })
-  dispatch({type: 'SetProgress', progress: 0})
 
   let video: CompressedVideo | undefined
   try {
