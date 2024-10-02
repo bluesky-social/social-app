@@ -901,4 +901,32 @@ export const atoms = {
   hidden: {
     display: 'none',
   },
+
+  /*
+   * Transition
+   */
+  transition_none: web({
+    transitionProperty: 'none',
+  }),
+  transition_all: web({
+    transitionProperty: 'all',
+    transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)',
+    transitionDuration: '150ms',
+  }),
+  transition_color: web({
+    transitionProperty:
+      'color, background-color, border-color, text-decoration-color, fill, stroke',
+    transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)',
+    transitionDuration: '150ms',
+  }),
+  transition_opacity: web({
+    transitionProperty: 'opacity',
+    transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)',
+    transitionDuration: '150ms',
+  }),
+  transition_transform: web({
+    transitionProperty: 'transform',
+    transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)',
+    transitionDuration: '150ms',
+  }),
 } as const
