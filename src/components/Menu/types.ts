@@ -5,7 +5,7 @@ import {
   PressableProps,
 } from 'react-native'
 import {PressableEvent} from 'react-native-gesture-handler/lib/typescript/components/Pressable/PressableProps'
-import {BueskyBottomSheetPressableProps} from '@haileyok/bluesky-bottom-sheet'
+import {BlueskyBottomSheetPressableProps} from '@haileyok/bluesky-bottom-sheet'
 
 import {TextStyleProp, ViewStyleProp} from '#/alf'
 import * as Dialog from '#/components/Dialog'
@@ -89,7 +89,7 @@ export type TriggerChildProps =
     }
 
 export type ItemProps = React.PropsWithChildren<
-  Omit<BueskyBottomSheetPressableProps, 'style'> &
+  Omit<BlueskyBottomSheetPressableProps, 'style'> &
     ViewStyleProp & {
       label: string
       onPress: (e: PressableEvent | GestureResponderEvent) => void

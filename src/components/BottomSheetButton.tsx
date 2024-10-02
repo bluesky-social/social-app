@@ -3,7 +3,7 @@ import {AccessibilityProps, ViewStyle} from 'react-native'
 import {PressableEvent} from 'react-native-gesture-handler/lib/typescript/components/Pressable/PressableProps'
 import {
   BlueskyBottomSheetPressable,
-  BueskyBottomSheetPressableProps,
+  BlueskyBottomSheetPressableProps,
 } from '@haileyok/bluesky-bottom-sheet'
 
 import {atoms as a} from '#/alf'
@@ -23,7 +23,7 @@ export function BottomSheetButton({
   disabled,
   style,
   ...rest
-}: BueskyBottomSheetPressableProps &
+}: BlueskyBottomSheetPressableProps &
   AccessibilityProps &
   VariantProps & {
     /**
