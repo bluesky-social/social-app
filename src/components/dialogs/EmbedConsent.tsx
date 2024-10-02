@@ -80,7 +80,6 @@ export function EmbedConsentDialog({
             style={gtMobile && a.flex_1}
             label={_(msg`Enable external media`)}
             onPress={onShowAllPress}
-            onAccessibilityEscape={control.close}
             color="primary"
             size="large"
             variant="solid">
@@ -92,7 +91,6 @@ export function EmbedConsentDialog({
             style={gtMobile && a.flex_1}
             label={_(msg`Enable this source only`)}
             onPress={onShowPress}
-            onAccessibilityEscape={control.close}
             color="secondary"
             size="large"
             variant="solid">
@@ -102,7 +100,6 @@ export function EmbedConsentDialog({
           </BottomSheetButton>
           <BottomSheetButton
             label={_(msg`No thanks`)}
-            onAccessibilityEscape={control.close}
             onPress={onHidePress}
             color="secondary"
             size="large"
