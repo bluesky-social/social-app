@@ -269,7 +269,13 @@ let PostThreadItemLoaded = ({
     return (
       <>
         {rootUri !== post.uri && (
-          <View style={{paddingLeft: 16, flexDirection: 'row', height: 16}}>
+          <View
+            style={[
+              a.pl_lg,
+              a.flex_row,
+              a.pb_xs,
+              {height: a.pt_lg.paddingTop},
+            ]}>
             <View style={{width: 42}}>
               <View
                 style={[
@@ -287,24 +293,22 @@ let PostThreadItemLoaded = ({
         <View
           testID={`postThreadItem-by-${post.author.handle}`}
           style={[
-            styles.outer,
-            styles.outerHighlighted,
-            pal.border,
-            pal.view,
-            rootUri === post.uri && styles.outerHighlightedRoot,
-            hideTopBorder && styles.noTopBorder,
-          ]}
-          accessible={false}>
-          <View style={[styles.layout]}>
-            <View style={[styles.layoutAvi, {paddingBottom: 8}]}>
-              <PreviewableUserAvatar
-                size={42}
-                profile={post.author}
-                moderation={moderation.ui('avatar')}
-                type={post.author.associated?.labeler ? 'labeler' : 'user'}
-              />
-            </View>
-            <View style={styles.layoutContent}>
+            a.px_lg,
+            //gtMobile && [a.px_xl],
+            t.atoms.border_contrast_low,
+            // root post styles
+            rootUri === post.uri && [a.pt_lg],
+            // root post styles on desktop
+            //rootUri === post.uri && gtMobile && [a.pt_xl],
+          ]}>
+          <View style={[a.flex_row, a.gap_md, a.pb_md]}>
+            <PreviewableUserAvatar
+              size={42}
+              profile={post.author}
+              moderation={moderation.ui('avatar')}
+              type={post.author.associated?.labeler ? 'labeler' : 'user'}
+            />
+            <View style={[a.flex_1]}>
               <View
                 style={[styles.meta, styles.metaExpandedLine1, {zIndex: 1}]}>
                 <Link style={s.flex1} href={authorHref} title={authorTitle}>
@@ -338,7 +342,8 @@ let PostThreadItemLoaded = ({
               <PostThreadFollowBtn did={post.author.did} />
             )}
           </View>
-          <View style={[s.pl10, s.pr10, s.pb10]}>
+          <View style={[a.pb_sm]}>
+            {/* TODO */}
             <LabelsOnMyPost post={post} />
             <ContentHider
               modui={moderation.ui('contentView')}
@@ -348,7 +353,7 @@ let PostThreadItemLoaded = ({
                 modui={moderation.ui('contentView')}
                 size="lg"
                 includeMute
-                style={[a.pt_2xs, a.pb_sm]}
+                style={[a.pb_sm]}
                 additionalCauses={additionalPostAlerts}
               />
               {richText?.text ? (
@@ -386,6 +391,7 @@ let PostThreadItemLoaded = ({
                   a.align_center,
                   a.border_t,
                   a.border_b,
+                  a.mt_md,
                   a.py_md,
                   t.atoms.border_contrast_low,
                 ]}>
@@ -732,15 +738,7 @@ function ExpandedPostDetails({
   }, [openLink, translatorUrl])
 
   return (
-    <View
-      style={[
-        a.flex_row,
-        a.align_center,
-        a.flex_wrap,
-        a.gap_xs,
-        a.pb_md,
-        a.pt_md,
-      ]}>
+    <View style={[a.flex_row, a.align_center, a.flex_wrap, a.gap_xs, a.pt_md]}>
       <Text style={[a.text_sm, pal.textLight]}>
         {niceDate(i18n, post.indexedAt)}
       </Text>
