@@ -290,19 +290,12 @@ async function processVideo(
     if (signal.aborted) {
       return
     }
-    if (e instanceof AbortError) {
-      return
-    } else if (e instanceof VideoTooLargeError) {
+    const message = getCompressErrorMessage(e, _)
+    if (message !== null) {
       dispatch({
         type: 'SetError',
-        error: _(msg`The selected video is larger than 50MB.`),
+        error: message,
       })
-    } else {
-      dispatch({
-        type: 'SetError',
-        error: _(msg`An error occurred while compressing the video.`),
-      })
-      logger.error('Error compressing video', {safeMessage: e})
     }
     return
   }
@@ -333,21 +326,13 @@ async function processVideo(
     if (signal.aborted) {
       return
     }
-    if (e instanceof AbortError) {
-      return
-    } else if (e instanceof ServerError || e instanceof UploadLimitError) {
-      const message = getErrorMessage(e, _)
+    const message = getUploadErrorMessage(e, _)
+    if (message !== null) {
       dispatch({
         type: 'SetError',
         error: message,
       })
-    } else {
-      dispatch({
-        type: 'SetError',
-        error: _(msg`An error occurred while uploading the video.`),
-      })
     }
-    logger.error('Error uploading video', {safeMessage: e})
     return
   }
   if (signal.aborted) {
@@ -359,32 +344,50 @@ async function processVideo(
   })
 }
 
-function getErrorMessage(e: Error, _: I18n['_']): string {
-  // https://github.com/bluesky-social/tango/blob/lumi/lumi/worker/permissions.go#L77
-  switch (e.message) {
-    case 'User is not allowed to upload videos':
-      return _(msg`You are not allowed to upload videos.`)
-    case 'Uploading is disabled at the moment':
-      return _(
-        msg`Hold up! We’re gradually giving access to video, and you’re still waiting in line. Check back soon!`,
-      )
-    case "Failed to get user's upload stats":
-      return _(
-        msg`We were unable to determine if you are allowed to upload videos. Please try again.`,
-      )
-    case 'User has exceeded daily upload bytes limit':
-      return _(
-        msg`You've reached your daily limit for video uploads (too many bytes)`,
-      )
-    case 'User has exceeded daily upload videos limit':
-      return _(
-        msg`You've reached your daily limit for video uploads (too many videos)`,
-      )
-    case 'Account is not old enough to upload videos':
-      return _(
-        msg`Your account is not yet old enough to upload videos. Please try again later.`,
-      )
-    default:
-      return e.message
+function getCompressErrorMessage(e: unknown, _: I18n['_']): string | null {
+  if (e instanceof AbortError) {
+    return null
   }
+  if (e instanceof VideoTooLargeError) {
+    return _(msg`The selected video is larger than 50MB.`)
+  }
+  logger.error('Error compressing video', {safeMessage: e})
+  return _(msg`An error occurred while compressing the video.`)
+}
+
+function getUploadErrorMessage(e: unknown, _: I18n['_']): string | null {
+  if (e instanceof AbortError) {
+    return null
+  }
+  logger.error('Error uploading video', {safeMessage: e})
+  if (e instanceof ServerError || e instanceof UploadLimitError) {
+    // https://github.com/bluesky-social/tango/blob/lumi/lumi/worker/permissions.go#L77
+    switch (e.message) {
+      case 'User is not allowed to upload videos':
+        return _(msg`You are not allowed to upload videos.`)
+      case 'Uploading is disabled at the moment':
+        return _(
+          msg`Hold up! We’re gradually giving access to video, and you’re still waiting in line. Check back soon!`,
+        )
+      case "Failed to get user's upload stats":
+        return _(
+          msg`We were unable to determine if you are allowed to upload videos. Please try again.`,
+        )
+      case 'User has exceeded daily upload bytes limit':
+        return _(
+          msg`You've reached your daily limit for video uploads (too many bytes)`,
+        )
+      case 'User has exceeded daily upload videos limit':
+        return _(
+          msg`You've reached your daily limit for video uploads (too many videos)`,
+        )
+      case 'Account is not old enough to upload videos':
+        return _(
+          msg`Your account is not yet old enough to upload videos. Please try again later.`,
+        )
+      default:
+        return e.message
+    }
+  }
+  return _(msg`An error occurred while uploading the video.`)
 }
