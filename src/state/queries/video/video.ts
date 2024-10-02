@@ -314,46 +314,49 @@ async function processVideo(
     video,
   })
 
-  return uploadVideo({
-    video,
-    agent,
-    did,
-    signal,
-    _,
-    setProgress: p => {
-      dispatch({type: 'SetProgress', progress: p})
-    },
-  }).then(
-    response => {
-      if (signal.aborted) {
-        return
-      }
+  let response: AppBskyVideoDefs.JobStatus | undefined
+  try {
+    response = await uploadVideo({
+      video,
+      agent,
+      did,
+      signal,
+      _,
+      setProgress: p => {
+        if (signal.aborted) {
+          return
+        }
+        dispatch({type: 'SetProgress', progress: p})
+      },
+    })
+  } catch (e) {
+    if (signal.aborted) {
+      return
+    }
+    if (e instanceof AbortError) {
+      return
+    } else if (e instanceof ServerError || e instanceof UploadLimitError) {
+      const message = getErrorMessage(e, _)
       dispatch({
-        type: 'SetProcessing',
-        jobId: response.jobId,
+        type: 'SetError',
+        error: message,
       })
-    },
-    e => {
-      if (signal.aborted) {
-        return
-      }
-      if (e instanceof AbortError) {
-        return
-      } else if (e instanceof ServerError || e instanceof UploadLimitError) {
-        const message = getErrorMessage(e, _)
-        dispatch({
-          type: 'SetError',
-          error: message,
-        })
-      } else {
-        dispatch({
-          type: 'SetError',
-          error: _(msg`An error occurred while uploading the video.`),
-        })
-      }
-      logger.error('Error uploading video', {safeMessage: e})
-    },
-  )
+    } else {
+      dispatch({
+        type: 'SetError',
+        error: _(msg`An error occurred while uploading the video.`),
+      })
+    }
+    logger.error('Error uploading video', {safeMessage: e})
+    return
+  }
+  if (signal.aborted) {
+    return
+  }
+  dispatch({
+    type: 'SetProcessing',
+    jobId: response.jobId,
+  })
 }
 
 function getErrorMessage(e: Error, _: I18n['_']): string {
