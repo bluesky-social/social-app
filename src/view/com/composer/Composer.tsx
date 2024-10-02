@@ -45,8 +45,10 @@ import {RichText} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useQueryClient} from '@tanstack/react-query'
 
 import * as apilib from '#/lib/api/index'
+import {invalidateAuthorFeeds} from '#/lib/api/invalidate-author-feeds'
 import {until} from '#/lib/async/until'
 import {MAX_GRAPHEME_LENGTH} from '#/lib/constants'
 import {
@@ -161,6 +163,7 @@ export const ComposePost = ({
   const {closeAllDialogs} = useDialogStateControlContext()
   const {closeAllModals} = useModalControls()
   const t = useTheme()
+  const queryClient = useQueryClient()
 
   const [isKeyboardVisible] = useIsKeyboardVisible({iosUseWillEvents: true})
   const [isProcessing, setIsProcessing] = useState(false)
@@ -420,6 +423,7 @@ export const ComposePost = ({
             const thread = res.data.thread
             return AppBskyFeedDefs.isThreadViewPost(thread)
           })
+          invalidateAuthorFeeds(currentAccount?.did ?? '', queryClient)
         } catch (waitErr: any) {
           logger.error(waitErr, {
             message: `Waiting for app view failed`,
@@ -513,6 +517,8 @@ export const ComposePost = ({
       videoUploadState.asset,
       videoUploadState.pendingPublish,
       videoUploadState.status,
+      queryClient,
+      currentAccount?.did,
     ],
   )
 
