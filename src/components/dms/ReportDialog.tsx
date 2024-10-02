@@ -10,7 +10,6 @@ import {useLingui} from '@lingui/react'
 import {useMutation} from '@tanstack/react-query'
 
 import {ReportOption} from '#/lib/moderation/useReportOptions'
-import {isAndroid} from '#/platform/detection'
 import {useAgent} from '#/state/session'
 import {CharProgress} from '#/view/com/composer/char-progress/CharProgress'
 import * as Toast from '#/view/com/util/Toast'
@@ -41,9 +40,7 @@ let ReportDialog = ({
 }): React.ReactNode => {
   const {_} = useLingui()
   return (
-    <Dialog.Outer
-      control={control}
-      nativeOptions={isAndroid ? {sheet: {snapPoints: ['100%']}} : {}}>
+    <Dialog.Outer control={control}>
       <Dialog.ScrollableInner label={_(msg`Report this message`)}>
         <DialogInner params={params} />
         <Dialog.Close />

@@ -76,10 +76,7 @@ export function WizardEditListDialog({
     )
 
   return (
-    <Dialog.Outer
-      control={control}
-      testID="newChatDialog"
-      nativeOptions={{sheet: {snapPoints: ['95%']}}}>
+    <Dialog.Outer control={control} testID="newChatDialog">
       <Dialog.InnerFlatList
         ref={listRef}
         data={getData()}

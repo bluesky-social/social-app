@@ -1,5 +1,5 @@
 import React from 'react'
-import {Pressable, View} from 'react-native'
+import {Pressable, ScrollView, View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -8,7 +8,6 @@ import {useMyLabelersQuery} from '#/state/queries/preferences'
 export {useDialogControl as useReportDialogControl} from '#/components/Dialog'
 
 import {AppBskyLabelerDefs} from '@atproto/api'
-import {BottomSheetScrollViewMethods} from '@discord/bottom-sheet/src'
 
 import {atoms as a} from '#/alf'
 import * as Dialog from '#/components/Dialog'
@@ -38,7 +37,7 @@ function ReportDialogInner(props: ReportDialogProps) {
   } = useMyLabelersQuery()
   const isLoading = useDelayedLoading(500, isLabelerLoading)
 
-  const ref = React.useRef<BottomSheetScrollViewMethods>(null)
+  const ref = React.useRef<ScrollView>(null)
   useOnKeyboardDidShow(() => {
     ref.current?.scrollToEnd({animated: true})
   })

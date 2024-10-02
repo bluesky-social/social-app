@@ -437,7 +437,7 @@ let PostDropdownBtn = ({
               <Menu.Item
                 testID="postDropdownSendViaDMBtn"
                 label={_(msg`Send via direct message`)}
-                onPress={sendViaChatControl.open}>
+                onPress={() => sendViaChatControl.open()}>
                 <Menu.ItemText>
                   <Trans>Send via direct message</Trans>
                 </Menu.ItemText>
@@ -465,7 +465,7 @@ let PostDropdownBtn = ({
               <Menu.Item
                 testID="postDropdownEmbedBtn"
                 label={_(msg`Embed post`)}
-                onPress={embedPostControl.open}>
+                onPress={() => embedPostControl.open()}>
                 <Menu.ItemText>{_(msg`Embed post`)}</Menu.ItemText>
                 <Menu.ItemIcon icon={CodeBrackets} position="right" />
               </Menu.Item>
@@ -540,7 +540,7 @@ let PostDropdownBtn = ({
                           ? _(msg`Hide reply for me`)
                           : _(msg`Hide post for me`)
                       }
-                      onPress={hidePromptControl.open}>
+                      onPress={() => hidePromptControl.open()}>
                       <Menu.ItemText>
                         {isReply
                           ? _(msg`Hide reply for me`)
@@ -628,7 +628,9 @@ let PostDropdownBtn = ({
                     <Menu.Item
                       testID="postDropdownEditPostInteractions"
                       label={_(msg`Edit interaction settings`)}
-                      onPress={postInteractionSettingsDialogControl.open}
+                      onPress={() =>
+                        postInteractionSettingsDialogControl.open()
+                      }
                       {...(isAuthor
                         ? Platform.select({
                             web: {
@@ -647,7 +649,7 @@ let PostDropdownBtn = ({
                     <Menu.Item
                       testID="postDropdownDeleteBtn"
                       label={_(msg`Delete post`)}
-                      onPress={deletePromptControl.open}>
+                      onPress={() => deletePromptControl.open()}>
                       <Menu.ItemText>{_(msg`Delete post`)}</Menu.ItemText>
                       <Menu.ItemIcon icon={Trash} position="right" />
                     </Menu.Item>

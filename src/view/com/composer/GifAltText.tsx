@@ -12,7 +12,6 @@ import {
   parseEmbedPlayerFromUrl,
 } from '#/lib/strings/embed-player'
 import {enforceLen} from '#/lib/strings/helpers'
-import {isAndroid} from '#/platform/detection'
 import {Gif} from '#/state/queries/tenor'
 import {atoms as a, native, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
@@ -96,9 +95,7 @@ export function GifAltText({
 
       <AltTextReminder />
 
-      <Dialog.Outer
-        control={control}
-        nativeOptions={isAndroid ? {sheet: {snapPoints: ['100%']}} : {}}>
+      <Dialog.Outer control={control}>
         <AltTextInner
           onSubmit={onPressSubmit}
           link={link}

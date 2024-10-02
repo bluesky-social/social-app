@@ -185,9 +185,7 @@ export function Dialogs() {
         </Dialog.Inner>
       </Dialog.Outer>
 
-      <Dialog.Outer
-        control={scrollable}
-        nativeOptions={{sheet: {snapPoints: ['100%']}}}>
+      <Dialog.Outer control={scrollable}>
         <Dialog.ScrollableInner
           accessibilityDescribedBy="dialog-description"
           accessibilityLabelledBy="dialog-title">
