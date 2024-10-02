@@ -580,7 +580,7 @@ let PostThreadItemLoaded = ({
                 additionalCauses={additionalPostAlerts}
               />
               {richText?.text ? (
-                <View style={styles.postTextContainer}>
+                <View style={[a.pb_2xs, a.pr_sm]}>
                   <RichText
                     enableTags
                     value={richText}
@@ -772,30 +772,8 @@ const styles = StyleSheet.create({
     borderTopWidth: StyleSheet.hairlineWidth,
     paddingLeft: 8,
   },
-  outerHighlighted: {
-    borderTopWidth: 0,
-    paddingTop: 4,
-    paddingLeft: 8,
-    paddingRight: 8,
-  },
-  outerHighlightedRoot: {
-    borderTopWidth: StyleSheet.hairlineWidth,
-    paddingTop: 16,
-  },
   noTopBorder: {
     borderTopWidth: 0,
-  },
-  layout: {
-    flexDirection: 'row',
-    paddingHorizontal: 8,
-  },
-  layoutAvi: {},
-  layoutContent: {
-    flex: 1,
-    marginLeft: 10,
-  },
-  layoutContentThreaded: {
-    flex: 1,
   },
   meta: {
     flexDirection: 'row',
@@ -803,23 +781,6 @@ const styles = StyleSheet.create({
   },
   metaExpandedLine1: {
     paddingVertical: 0,
-  },
-  alert: {
-    marginBottom: 6,
-  },
-  postTextContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flexWrap: 'wrap',
-    paddingBottom: 4,
-    paddingRight: 10,
-    overflow: 'hidden',
-  },
-  translateLink: {
-    marginBottom: 6,
-  },
-  contentHiderChild: {
-    marginTop: 6,
   },
   expandedInfoItem: {
     marginRight: 10,
