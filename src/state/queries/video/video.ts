@@ -1,10 +1,10 @@
 import React, {useCallback, useEffect} from 'react'
 import {ImagePickerAsset} from 'expo-image-picker'
 import {AppBskyVideoDefs, BlobRef, BskyAgent} from '@atproto/api'
+import {JobStatus} from '@atproto/api/dist/client/types/app/bsky/video/defs'
 import {I18n} from '@lingui/core'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {AbortError} from '#/lib/async/cancelable'
 import {SUPPORTED_MIME_TYPES, SupportedMimeTypes} from '#/lib/constants'
@@ -92,10 +92,6 @@ function reducer(state: State, action: Action): State {
   return updatedState
 }
 
-function RQKEY(jobId: string | undefined) {
-  return ['video-status', jobId || '']
-}
-
 export function useUploadVideo({
   setStatus,
   initialVideoUri,
@@ -107,41 +103,11 @@ export function useUploadVideo({
   const {currentAccount} = useSession()
   const agent = useAgent()
   const {_} = useLingui()
-  const queryClient = useQueryClient()
   const [state, dispatch] = React.useReducer(reducer, {
     status: 'idle',
     progress: 0,
     video: null,
     abortController: new AbortController(),
-  })
-
-  useUploadStatusQuery({
-    jobId: state.jobId,
-    onStatusChange: (status: AppBskyVideoDefs.JobStatus) => {
-      // This might prove unuseful, most of the job status steps happen too quickly to even be displayed to the user
-      // Leaving it for now though
-      dispatch({
-        type: 'SetJobStatus',
-        jobStatus: status,
-      })
-      setStatus(status.state.toString())
-    },
-    onSuccess: blobRef => {
-      dispatch({
-        type: 'SetComplete',
-        blobRef,
-      })
-    },
-    onError: useCallback(
-      error => {
-        logger.error('Error processing video', {safeMessage: error})
-        dispatch({
-          type: 'SetError',
-          error: _(msg`Video failed to process`),
-        })
-      },
-      [_],
-    ),
   })
 
   const did = currentAccount!.did
@@ -153,25 +119,26 @@ export function useUploadVideo({
           dispatch(action)
         }
       }
+      function guardedSetStatus(status: string) {
+        if (!signal.aborted) {
+          setStatus(status)
+        }
+      }
       processVideo(
         asset,
         guardedDispatch,
+        guardedSetStatus,
         agent,
         did,
         state.abortController.signal,
         _,
       )
     },
-    [_, state.abortController, dispatch, agent, did],
+    [_, state.abortController, dispatch, setStatus, agent, did],
   )
 
   const clearVideo = () => {
     state.abortController.abort()
-    if (state.jobId) {
-      queryClient.cancelQueries({
-        queryKey: RQKEY(state.jobId),
-      })
-    }
     dispatch({type: 'Reset'})
   }
 
@@ -198,56 +165,6 @@ export function useUploadVideo({
   }
 }
 
-const useUploadStatusQuery = ({
-  jobId,
-  onStatusChange,
-  onSuccess,
-  onError,
-}: {
-  jobId: string | undefined
-  onStatusChange: (status: AppBskyVideoDefs.JobStatus) => void
-  onSuccess: (blobRef: BlobRef) => void
-  onError: (error: Error) => void
-}) => {
-  const [enabled, setEnabled] = React.useState(!!jobId)
-
-  const [prevJobId, setPrevJobId] = React.useState(jobId)
-  if (jobId !== prevJobId) {
-    setPrevJobId(jobId)
-    setEnabled(!!jobId)
-  }
-
-  const {error} = useQuery({
-    queryKey: RQKEY(jobId),
-    queryFn: async () => {
-      if (!jobId) return
-
-      const videoAgent = createVideoAgent()
-      const {data} = await videoAgent.app.bsky.video.getJobStatus({jobId})
-      const status = data.jobStatus
-      if (status.state === 'JOB_STATE_COMPLETED') {
-        setEnabled(false)
-        if (!status.blob)
-          throw new Error('Job completed, but did not return a blob')
-        onSuccess(status.blob)
-      } else if (status.state === 'JOB_STATE_FAILED') {
-        throw new Error(status.error ?? 'Job failed to process')
-      }
-      onStatusChange(status)
-      return status
-    },
-    enabled,
-    refetchInterval: 1500,
-  })
-
-  useEffect(() => {
-    if (error) {
-      onError(error)
-      setEnabled(false)
-    }
-  }, [error, onError])
-}
-
 function getMimeType(asset: ImagePickerAsset) {
   if (isWeb) {
     const [mimeType] = asset.uri.slice('data:'.length).split(';base64,')
@@ -269,6 +186,7 @@ function trunc2dp(num: number) {
 async function processVideo(
   asset: ImagePickerAsset,
   dispatch: (action: Action) => void,
+  setStatus: (status: string) => void,
   agent: BskyAgent,
   did: string,
   signal: AbortSignal,
@@ -314,9 +232,9 @@ async function processVideo(
     video,
   })
 
-  let response: AppBskyVideoDefs.JobStatus | undefined
+  let uploadResponse: AppBskyVideoDefs.JobStatus | undefined
   try {
-    response = await uploadVideo({
+    uploadResponse = await uploadVideo({
       video,
       agent,
       did,
@@ -340,10 +258,64 @@ async function processVideo(
     return
   }
 
+  const jobId = uploadResponse.jobId
   dispatch({
     type: 'SetProcessing',
-    jobId: response.jobId,
+    jobId,
   })
+
+  while (true) {
+    if (signal.aborted) {
+      return // Exit async loop
+    }
+
+    const videoAgent = createVideoAgent()
+    let status: JobStatus | undefined
+    let blob: BlobRef | undefined
+    try {
+      const response = await videoAgent.app.bsky.video.getJobStatus({jobId})
+      status = response.data.jobStatus
+
+      if (status.state === 'JOB_STATE_COMPLETED') {
+        blob = status.blob
+        if (!blob) {
+          throw new Error('Job completed, but did not return a blob')
+        }
+      } else if (status.state === 'JOB_STATE_FAILED') {
+        throw new Error(status.error ?? 'Job failed to process')
+      }
+    } catch (e) {
+      logger.error('Error processing video', {safeMessage: e})
+      dispatch({
+        type: 'SetError',
+        error: _(msg`Video failed to process`),
+      })
+      return // Exit async loop
+    }
+
+    if (blob) {
+      dispatch({
+        type: 'SetComplete',
+        blobRef: blob,
+      })
+    } else {
+      setStatus(status.state.toString())
+      dispatch({
+        type: 'SetJobStatus',
+        jobStatus: status,
+      })
+    }
+
+    if (
+      status.state !== 'JOB_STATE_COMPLETED' &&
+      status.state !== 'JOB_STATE_FAILED'
+    ) {
+      await new Promise(resolve => setTimeout(resolve, 1500))
+      continue // Continue async loop
+    }
+
+    return // Exit async loop
+  }
 }
 
 function getCompressErrorMessage(e: unknown, _: I18n['_']): string | null {
