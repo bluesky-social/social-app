@@ -33,7 +33,7 @@ export function Outer({
   children,
   control,
   onClose,
-  nativeOptions,
+  nativeOptions: _nativeOptions, // @TODO DIALOG REFACTOR
   testID,
 }: React.PropsWithChildren<DialogOuterProps>) {
   const t = useTheme()
@@ -89,20 +89,12 @@ export function Outer({
     [open, close],
   )
 
-  // @TODO DIALOG REFACTOR - what is this? rm i think?
-  // React.useEffect(() => {
-  //   return () => {
-  //     setDialogIsOpen(control.id, false)
-  //   }
-  // }, [control.id, setDialogIsOpen])
-
   const context = React.useMemo(() => ({close}), [close])
 
   return (
     <Portal>
       <Context.Provider value={context}>
         <BlueskyBottomSheetView
-          // handleIndicatorStyle={{backgroundColor: t.palette.primary_500}} // @TODO DIALOG REFACTOR need to add this to lib!*/
           ref={ref}
           topInset={30}
           bottomInset={insets.bottom}
