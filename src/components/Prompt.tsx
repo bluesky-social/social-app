@@ -4,6 +4,7 @@ import {PressableEvent} from 'react-native-gesture-handler/lib/typescript/compon
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {isNative} from '#/platform/detection'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {BottomSheetButton} from '#/components/BottomSheetButton'
 import {ButtonColor, ButtonText} from '#/components/Button'
@@ -27,9 +28,11 @@ export function Outer({
   children,
   control,
   testID,
+  withoutPortal,
 }: React.PropsWithChildren<{
   control: Dialog.DialogControlProps
   testID?: string
+  withoutPortal?: boolean
 }>) {
   const {gtMobile} = useBreakpoints()
   const titleId = React.useId()
@@ -40,8 +43,11 @@ export function Outer({
     [titleId, descriptionId],
   )
 
+  const Wrapper =
+    withoutPortal && isNative ? Dialog.OuterWithoutPortal : Dialog.Outer
+
   return (
-    <Dialog.Outer control={control} testID={testID}>
+    <Wrapper control={control} testID={testID}>
       <Context.Provider value={context}>
         <Dialog.ScrollableInner
           accessibilityLabelledBy={titleId}
@@ -52,7 +58,7 @@ export function Outer({
           {children}
         </Dialog.ScrollableInner>
       </Context.Provider>
-    </Dialog.Outer>
+    </Wrapper>
   )
 }
 
@@ -181,6 +187,7 @@ export function Basic({
   onConfirm,
   confirmButtonColor,
   showCancel = true,
+  withoutPortal,
 }: React.PropsWithChildren<{
   control: Dialog.DialogOuterProps['control']
   title: string
@@ -197,9 +204,13 @@ export function Basic({
   onConfirm: (e: PressableEvent) => void
   confirmButtonColor?: ButtonColor
   showCancel?: boolean
+  withoutPortal?: boolean
 }>) {
   return (
-    <Outer control={control} testID="confirmModal">
+    <Outer
+      control={control}
+      testID="confirmModal"
+      withoutPortal={withoutPortal}>
       <TitleText>{title}</TitleText>
       <DescriptionText>{description}</DescriptionText>
       <Actions>

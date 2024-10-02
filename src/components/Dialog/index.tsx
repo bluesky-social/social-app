@@ -30,6 +30,26 @@ export function Outer({
   nativeOptions,
   testID,
 }: React.PropsWithChildren<DialogOuterProps>) {
+  return (
+    <Portal>
+      <OuterWithoutPortal
+        control={control}
+        onClose={onClose}
+        nativeOptions={nativeOptions}
+        testID={testID}>
+        {children}
+      </OuterWithoutPortal>
+    </Portal>
+  )
+}
+
+export function OuterWithoutPortal({
+  children,
+  control,
+  onClose,
+  nativeOptions,
+  testID,
+}: React.PropsWithChildren<DialogOuterProps>) {
   const t = useTheme()
   const ref = React.useRef<BlueskyBottomSheetView>(null)
   const insets = useSafeAreaInsets()
@@ -93,26 +113,24 @@ export function Outer({
   const context = React.useMemo(() => ({close}), [close])
 
   return (
-    <Portal>
-      <Context.Provider value={context}>
-        <BlueskyBottomSheetView
-          // handleIndicatorStyle={{backgroundColor: t.palette.primary_500}} // @TODO DIALOG REFACTOR need to add this to lib!*/
-          ref={ref}
-          topInset={30}
-          bottomInset={insets.bottom}
-          onStateChange={e => {
-            if (e.nativeEvent.state === 'closed') {
-              onCloseAnimationComplete()
-            }
-          }}
-          cornerRadius={20}
-          {...nativeOptions}>
-          <View testID={testID} style={[t.atoms.bg]}>
-            {children}
-          </View>
-        </BlueskyBottomSheetView>
-      </Context.Provider>
-    </Portal>
+    <Context.Provider value={context}>
+      <BlueskyBottomSheetView
+        // handleIndicatorStyle={{backgroundColor: t.palette.primary_500}} // @TODO DIALOG REFACTOR need to add this to lib!*/
+        ref={ref}
+        topInset={30}
+        bottomInset={insets.bottom}
+        onStateChange={e => {
+          if (e.nativeEvent.state === 'closed') {
+            onCloseAnimationComplete()
+          }
+        }}
+        cornerRadius={20}
+        {...nativeOptions}>
+        <View testID={testID} style={[t.atoms.bg]}>
+          {children}
+        </View>
+      </BlueskyBottomSheetView>
+    </Context.Provider>
   )
 }
 
