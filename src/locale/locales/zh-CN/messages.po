@@ -4485,7 +4485,7 @@ msgstr "固定资讯源列表"
 
 #: src/view/screens/ProfileList.tsx:346
 msgid "Pinned to your feeds"
-msgstr "固定到你的资讯源"
+msgstr "已固定到你的资讯源中"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:46
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:141
