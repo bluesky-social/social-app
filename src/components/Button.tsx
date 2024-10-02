@@ -87,6 +87,7 @@ export type ButtonProps = Pick<
     style?: StyleProp<ViewStyle>
     hoverStyle?: StyleProp<ViewStyle>
     children: NonTextElements | ((context: ButtonContext) => NonTextElements)
+    Component?: React.ComponentType<PressableProps>
   }
 
 export type ButtonTextProps = TextProps &
@@ -116,6 +117,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
       disabled = false,
       style,
       hoverStyle: hoverStyleProp,
+      Component = Pressable,
       ...rest
     },
     ref,
@@ -237,7 +239,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
     const flattenedBaseStyles = flatten([baseStyles, style])
 
     return (
-      <Pressable
+      <Component
         role="button"
         accessibilityHint={undefined} // optional
         {...rest}
@@ -288,7 +290,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
         <Context.Provider value={context}>
           {typeof children === 'function' ? children(context) : children}
         </Context.Provider>
-      </Pressable>
+      </Component>
     )
   },
 )
