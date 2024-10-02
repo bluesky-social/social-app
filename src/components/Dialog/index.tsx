@@ -1,12 +1,13 @@
 import React, {useImperativeHandle} from 'react'
 import {StyleProp, TextInput, View, ViewStyle} from 'react-native'
+import {GestureHandlerRootView, ScrollView} from 'react-native-gesture-handler'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {BlueskyBottomSheetView} from '@haileyok/bluesky-bottom-sheet'
 
 import {logger} from '#/logger'
+import {isIOS} from '#/platform/detection'
 import {useDialogStateControlContext} from '#/state/dialogs'
 import {List, ListMethods, ListProps} from '#/view/com/util/List'
-import {ScrollView} from '#/view/com/util/Views'
 import {atoms as a, flatten, useTheme} from '#/alf'
 import {Context} from '#/components/Dialog/context'
 import {
@@ -112,6 +113,8 @@ export function OuterWithoutPortal({
 
   const context = React.useMemo(() => ({close}), [close])
 
+  const Wrapper = isIOS ? View : GestureHandlerRootView
+
   return (
     <Context.Provider value={context}>
       <BlueskyBottomSheetView
@@ -126,9 +129,9 @@ export function OuterWithoutPortal({
         }}
         cornerRadius={20}
         {...nativeOptions}>
-        <View testID={testID} style={[t.atoms.bg]}>
+        <Wrapper testID={testID} style={[t.atoms.bg]}>
           {children}
-        </View>
+        </Wrapper>
       </BlueskyBottomSheetView>
     </Context.Provider>
   )
