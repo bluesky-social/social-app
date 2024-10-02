@@ -25,6 +25,9 @@ export async function uploadVideo({
   signal: AbortSignal
   _: I18n['_']
 }) {
+  if (signal.aborted) {
+    throw new AbortError()
+  }
   await getVideoUploadLimits(agent, _)
 
   const uri = createVideoEndpointUrl('/xrpc/app.bsky.video.uploadVideo', {

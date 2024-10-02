@@ -147,7 +147,20 @@ export function useUploadVideo({
   const did = currentAccount!.did
   const selectVideo = React.useCallback(
     (asset: ImagePickerAsset) => {
-      processVideo(asset, dispatch, agent, did, state.abortController.signal, _)
+      const signal = state.abortController.signal
+      function guardedDispatch(action: Action) {
+        if (!signal.aborted) {
+          dispatch(action)
+        }
+      }
+      processVideo(
+        asset,
+        guardedDispatch,
+        agent,
+        did,
+        state.abortController.signal,
+        _,
+      )
     },
     [_, state.abortController, dispatch, agent, did],
   )
@@ -287,9 +300,6 @@ async function processVideo(
       signal,
     })
   } catch (e) {
-    if (signal.aborted) {
-      return
-    }
     const message = getCompressErrorMessage(e, _)
     if (message !== null) {
       dispatch({
@@ -297,9 +307,6 @@ async function processVideo(
         error: message,
       })
     }
-    return
-  }
-  if (signal.aborted) {
     return
   }
   dispatch({
@@ -323,9 +330,6 @@ async function processVideo(
       },
     })
   } catch (e) {
-    if (signal.aborted) {
-      return
-    }
     const message = getUploadErrorMessage(e, _)
     if (message !== null) {
       dispatch({
@@ -335,9 +339,7 @@ async function processVideo(
     }
     return
   }
-  if (signal.aborted) {
-    return
-  }
+
   dispatch({
     type: 'SetProcessing',
     jobId: response.jobId,
