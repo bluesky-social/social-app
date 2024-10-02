@@ -1,10 +1,8 @@
-import React, {useCallback} from 'react'
 import {ImagePickerAsset} from 'expo-image-picker'
 import {AppBskyVideoDefs, BlobRef, BskyAgent} from '@atproto/api'
 import {JobStatus} from '@atproto/api/dist/client/types/app/bsky/video/defs'
 import {I18n} from '@lingui/core'
 import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
 
 import {AbortError} from '#/lib/async/cancelable'
 import {SUPPORTED_MIME_TYPES, SupportedMimeTypes} from '#/lib/constants'
@@ -19,7 +17,6 @@ import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
 import {createVideoAgent} from '#/state/queries/video/util'
 import {uploadVideo} from '#/state/queries/video/video-upload'
-import {useAgent, useSession} from '#/state/session'
 
 type Action =
   | {type: 'to_idle'; nextController: AbortController}
@@ -127,7 +124,9 @@ export type State =
   | ProcessingState
   | DoneState
 
-function createInitialState(abortController: AbortController): IdleState {
+export function createVideoState(
+  abortController: AbortController = new AbortController(),
+): IdleState {
   return {
     status: 'idle',
     progress: 0,
@@ -135,9 +134,9 @@ function createInitialState(abortController: AbortController): IdleState {
   }
 }
 
-function reducer(state: State, action: Action): State {
+export function videoReducer(state: State, action: Action): State {
   if (action.type === 'to_idle') {
-    return createInitialState(action.nextController)
+    return createVideoState(action.nextController)
   }
   if (action.signal.aborted || action.signal !== state.abortController.signal) {
     // This action is stale and the process that spawned it is no longer relevant.
@@ -235,49 +234,6 @@ function reducer(state: State, action: Action): State {
   return state
 }
 
-export function useUploadVideo() {
-  const {currentAccount} = useSession()
-  const agent = useAgent()
-  const {_} = useLingui()
-  const [state, dispatch] = React.useReducer(
-    reducer,
-    new AbortController(),
-    createInitialState,
-  )
-
-  const did = currentAccount!.did
-  const selectVideo = React.useCallback(
-    (asset: ImagePickerAsset) => {
-      processVideo(asset, dispatch, agent, did, state.abortController.signal, _)
-    },
-    [_, state.abortController, dispatch, agent, did],
-  )
-
-  const clearVideo = () => {
-    state.abortController.abort()
-    dispatch({type: 'to_idle', nextController: new AbortController()})
-  }
-
-  const updateVideoDimensions = useCallback(
-    (width: number, height: number) => {
-      dispatch({
-        type: 'update_dimensions',
-        width,
-        height,
-        signal: state.abortController.signal,
-      })
-    },
-    [state.abortController],
-  )
-
-  return {
-    state,
-    selectVideo,
-    clearVideo,
-    updateVideoDimensions,
-  }
-}
-
 function getMimeType(asset: ImagePickerAsset) {
   if (isWeb) {
     const [mimeType] = asset.uri.slice('data:'.length).split(';base64,')
@@ -296,7 +252,7 @@ function trunc2dp(num: number) {
   return Math.trunc(num * 100) / 100
 }
 
-async function processVideo(
+export async function processVideo(
   asset: ImagePickerAsset,
   dispatch: (action: Action) => void,
   agent: BskyAgent,

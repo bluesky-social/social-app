@@ -83,8 +83,10 @@ import {Gif} from '#/state/queries/tenor'
 import {ThreadgateAllowUISetting} from '#/state/queries/threadgate'
 import {threadgateViewToAllowUISetting} from '#/state/queries/threadgate/util'
 import {
+  createVideoState,
+  processVideo,
   State as VideoUploadState,
-  useUploadVideo,
+  videoReducer,
 } from '#/state/queries/video/video'
 import {useAgent, useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
@@ -147,7 +149,8 @@ export const ComposePost = ({
 }) => {
   const {currentAccount} = useSession()
   const agent = useAgent()
-  const {data: currentProfile} = useProfileQuery({did: currentAccount!.did})
+  const currentDid = currentAccount!.did
+  const {data: currentProfile} = useProfileQuery({did: currentDid})
   const {isModalActive} = useModals()
   const {closeComposer} = useComposerControls()
   const pal = usePalette('default')
@@ -189,13 +192,25 @@ export const ComposePost = ({
   const [videoAltText, setVideoAltText] = useState('')
   const [captions, setCaptions] = useState<{lang: string; file: File}[]>([])
 
-  const {
-    selectVideo,
-    clearVideo,
-    state: videoUploadState,
-    updateVideoDimensions,
-  } = useUploadVideo()
-  const hasVideo = Boolean(videoUploadState.asset || videoUploadState.video)
+  const [videoUploadState, videoDispatch] = useReducer(
+    videoReducer,
+    undefined,
+    createVideoState,
+  )
+
+  const selectVideo = React.useCallback(
+    (asset: ImagePickerAsset) => {
+      processVideo(
+        asset,
+        videoDispatch,
+        agent,
+        currentDid,
+        videoUploadState.abortController.signal,
+        _,
+      )
+    },
+    [_, videoUploadState.abortController, videoDispatch, agent, currentDid],
+  )
 
   // Whenever we receive an initial video uri, we should immediately run compression if necessary
   useEffect(() => {
@@ -203,6 +218,25 @@ export const ComposePost = ({
       selectVideo({uri: initVideoUri} as ImagePickerAsset)
     }
   }, [initVideoUri, selectVideo])
+
+  const clearVideo = React.useCallback(() => {
+    videoUploadState.abortController.abort()
+    videoDispatch({type: 'to_idle', nextController: new AbortController()})
+  }, [videoUploadState.abortController, videoDispatch])
+
+  const updateVideoDimensions = useCallback(
+    (width: number, height: number) => {
+      videoDispatch({
+        type: 'update_dimensions',
+        width,
+        height,
+        signal: videoUploadState.abortController.signal,
+      })
+    },
+    [videoUploadState.abortController],
+  )
+
+  const hasVideo = Boolean(videoUploadState.asset || videoUploadState.video)
 
   const [publishOnUpload, setPublishOnUpload] = useState(false)
 
