@@ -210,9 +210,6 @@ async function processVideo(
   try {
     video = await compressVideo(asset, {
       onProgress: num => {
-        if (signal.aborted) {
-          return
-        }
         dispatch({type: 'SetProgress', progress: trunc2dp(num)})
       },
       signal,
@@ -241,9 +238,6 @@ async function processVideo(
       signal,
       _,
       setProgress: p => {
-        if (signal.aborted) {
-          return
-        }
         dispatch({type: 'SetProgress', progress: p})
       },
     })
