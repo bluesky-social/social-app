@@ -330,45 +330,45 @@ async function processVideo(
   })
   dispatch({type: 'SetProgress', progress: 0})
 
-  compressVideo(asset, {
-    onProgress: num => {
-      if (signal.aborted) {
-        return
-      }
-      dispatch({type: 'SetProgress', progress: trunc2dp(num)})
-    },
-    signal,
-  }).then(
-    (video: CompressedVideo) => {
-      if (signal.aborted) {
-        return
-      }
+  let video: CompressedVideo | undefined
+  try {
+    video = await compressVideo(asset, {
+      onProgress: num => {
+        if (signal.aborted) {
+          return
+        }
+        dispatch({type: 'SetProgress', progress: trunc2dp(num)})
+      },
+      signal,
+    })
+  } catch (e) {
+    if (signal.aborted) {
+      return
+    }
+    if (e instanceof AbortError) {
+      return
+    } else if (e instanceof VideoTooLargeError) {
       dispatch({
-        type: 'SetVideo',
-        video,
+        type: 'SetError',
+        error: _(msg`The selected video is larger than 50MB.`),
       })
-      onVideoCompressed(video)
-    },
-    (e: any) => {
-      if (signal.aborted) {
-        return
-      }
-      if (e instanceof AbortError) {
-        return
-      } else if (e instanceof VideoTooLargeError) {
-        dispatch({
-          type: 'SetError',
-          error: _(msg`The selected video is larger than 50MB.`),
-        })
-      } else {
-        dispatch({
-          type: 'SetError',
-          error: _(msg`An error occurred while compressing the video.`),
-        })
-        logger.error('Error compressing video', {safeMessage: e})
-      }
-    },
-  )
+    } else {
+      dispatch({
+        type: 'SetError',
+        error: _(msg`An error occurred while compressing the video.`),
+      })
+      logger.error('Error compressing video', {safeMessage: e})
+    }
+    return
+  }
+  if (signal.aborted) {
+    return
+  }
+  dispatch({
+    type: 'SetVideo',
+    video,
+  })
+  onVideoCompressed(video)
 }
 
 function getErrorMessage(e: Error, _: I18n['_']): string {
