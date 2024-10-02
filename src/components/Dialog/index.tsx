@@ -33,7 +33,7 @@ export function Outer({
   children,
   control,
   onClose,
-  nativeOptions: _nativeOptions, // @TODO DIALOG REFACTOR
+  nativeOptions,
   testID,
 }: React.PropsWithChildren<DialogOuterProps>) {
   const t = useTheme()
@@ -41,7 +41,6 @@ export function Outer({
   const insets = useSafeAreaInsets()
   const closeCallbacks = React.useRef<(() => void)[]>([])
   const {setDialogIsOpen} = useDialogStateControlContext()
-  // @TODO DIALOG REFACTOR - can i get rid of this? seems pointless tbh
 
   const callQueuedCallbacks = React.useCallback(() => {
     for (const cb of closeCallbacks.current) {
