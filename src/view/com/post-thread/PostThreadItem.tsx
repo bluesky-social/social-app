@@ -30,7 +30,7 @@ import {useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
 import {PostThreadFollowBtn} from '#/view/com/post-thread/PostThreadFollowBtn'
-import {atoms as a} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {AppModerationCause} from '#/components/Pills'
 import {RichText} from '#/components/RichText'
 import {ContentHider} from '../../../components/moderation/ContentHider'
@@ -180,6 +180,7 @@ let PostThreadItemLoaded = ({
   hideTopBorder?: boolean
   threadgateRecord?: AppBskyFeedThreadgate.Record
 }): React.ReactNode => {
+  const t = useTheme()
   const pal = usePalette('default')
   const {_, i18n} = useLingui()
   const langPrefs = useLanguagePrefs()
@@ -342,8 +343,7 @@ let PostThreadItemLoaded = ({
             <ContentHider
               modui={moderation.ui('contentView')}
               ignoreMute
-              style={styles.contentHider}
-              childContainerStyle={styles.contentHiderChild}>
+              childContainerStyle={[a.pt_sm]}>
               <PostAlerts
                 modui={moderation.ui('contentView')}
                 size="lg"
@@ -352,19 +352,13 @@ let PostThreadItemLoaded = ({
                 additionalCauses={additionalPostAlerts}
               />
               {richText?.text ? (
-                <View
-                  style={[
-                    styles.postTextContainer,
-                    styles.postTextLargeContainer,
-                  ]}>
-                  <RichText
-                    enableTags
-                    selectable
-                    value={richText}
-                    style={[a.flex_1, a.text_xl]}
-                    authorHandle={post.author.handle}
-                  />
-                </View>
+                <RichText
+                  enableTags
+                  selectable
+                  value={richText}
+                  style={[a.flex_1, a.text_xl]}
+                  authorHandle={post.author.handle}
+                />
               ) : undefined}
               {post.embed && (
                 <View style={[a.pb_sm]}>
@@ -386,7 +380,15 @@ let PostThreadItemLoaded = ({
             post.likeCount !== 0 ||
             post.quoteCount !== 0 ? (
               // Show this section unless we're *sure* it has no engagement.
-              <View style={[styles.expandedInfo, pal.border]}>
+              <View
+                style={[
+                  a.flex_row,
+                  a.align_center,
+                  a.border_t,
+                  a.border_b,
+                  a.py_md,
+                  t.atoms.border_contrast_low,
+                ]}>
                 {post.repostCount != null && post.repostCount !== 0 ? (
                   <Link
                     style={styles.expandedInfoItem}
@@ -447,7 +449,14 @@ let PostThreadItemLoaded = ({
                 ) : null}
               </View>
             ) : null}
-            <View style={[s.pl10, s.pr10]}>
+            <View
+              style={[
+                a.pt_sm,
+                a.pb_2xs,
+                {
+                  marginLeft: -5,
+                },
+              ]}>
               <PostCtrls
                 big
                 post={post}
@@ -729,8 +738,8 @@ function ExpandedPostDetails({
         a.align_center,
         a.flex_wrap,
         a.gap_xs,
-        s.mt2,
-        s.mb10,
+        a.pb_md,
+        a.pt_md,
       ]}>
       <Text style={[a.text_sm, pal.textLight]}>
         {niceDate(i18n, post.indexedAt)}
@@ -816,27 +825,11 @@ const styles = StyleSheet.create({
     paddingRight: 10,
     overflow: 'hidden',
   },
-  postTextLargeContainer: {
-    paddingHorizontal: 0,
-    paddingRight: 0,
-    paddingBottom: 10,
-  },
   translateLink: {
-    marginBottom: 6,
-  },
-  contentHider: {
     marginBottom: 6,
   },
   contentHiderChild: {
     marginTop: 6,
-  },
-  expandedInfo: {
-    flexDirection: 'row',
-    padding: 10,
-    borderTopWidth: StyleSheet.hairlineWidth,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    marginTop: 5,
-    marginBottom: 10,
   },
   expandedInfoItem: {
     marginRight: 10,
