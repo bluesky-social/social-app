@@ -20,7 +20,6 @@ import {sanitizeHandle} from '#/lib/strings/handles'
 import {countLines} from '#/lib/strings/helpers'
 import {niceDate} from '#/lib/strings/time'
 import {s} from '#/lib/styles'
-import {isWeb} from '#/platform/detection'
 import {POST_TOMBSTONE, Shadow, usePostShadow} from '#/state/cache/post-shadow'
 import {useLanguagePrefs} from '#/state/preferences'
 import {useOpenLink} from '#/state/preferences/in-app-browser'
@@ -342,8 +341,7 @@ let PostThreadItemLoaded = ({
             )}
           </View>
           <View style={[a.pb_sm]}>
-            {/* TODO */}
-            <LabelsOnMyPost post={post} />
+            <LabelsOnMyPost post={post} style={[a.pb_sm]} />
             <ContentHider
               modui={moderation.ui('contentView')}
               ignoreMute
@@ -365,7 +363,7 @@ let PostThreadItemLoaded = ({
                 />
               ) : undefined}
               {post.embed && (
-                <View style={[a.pb_sm]}>
+                <View style={[a.py_xs]}>
                   <PostEmbeds
                     embed={post.embed}
                     moderation={moderation}
@@ -573,13 +571,9 @@ let PostThreadItemLoaded = ({
                 showAvatar={isThreadedChild}
                 avatarModeration={moderation.ui('avatar')}
                 avatarSize={24}
-                style={
-                  isThreadedChild && {
-                    paddingBottom: isWeb ? 5 : 4,
-                  }
-                }
+                style={[a.pb_xs]}
               />
-              <LabelsOnMyPost post={post} />
+              <LabelsOnMyPost post={post} style={[a.pb_xs]} />
               <PostAlerts
                 modui={moderation.ui('contentList')}
                 style={[a.pb_2xs]}
@@ -596,7 +590,6 @@ let PostThreadItemLoaded = ({
                   />
                 </View>
               ) : undefined}
-              {/* TODO */}
               {limitLines ? (
                 <TextLink
                   text={_(msg`Show More`)}
