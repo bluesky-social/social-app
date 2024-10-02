@@ -8,8 +8,8 @@ import {cancelable} from '#/lib/async/cancelable'
 import {ServerError} from '#/lib/media/video/errors'
 import {CompressedVideo} from '#/lib/media/video/types'
 import {createVideoEndpointUrl, mimeToExt} from '#/state/queries/video/util'
-import {useSession} from '#/state/session'
-import {useServiceAuthToken, useVideoUploadLimits} from './video-upload.shared'
+import {useAgent,useSession} from '#/state/session'
+import {getServiceAuthToken, useVideoUploadLimits} from './video-upload.shared'
 
 export const useUploadVideoMutation = ({
   onSuccess,
@@ -22,11 +22,8 @@ export const useUploadVideoMutation = ({
   setProgress: (progress: number) => void
   signal: AbortSignal
 }) => {
+  const agent = useAgent()
   const {currentAccount} = useSession()
-  const getToken = useServiceAuthToken({
-    lxm: 'com.atproto.repo.uploadBlob',
-    exp: Date.now() / 1000 + 60 * 30, // 30 minutes
-  })
   const checkLimits = useVideoUploadLimits()
   const {_} = useLingui()
 
@@ -45,7 +42,11 @@ export const useUploadVideoMutation = ({
         bytes = await fetch(video.uri).then(res => res.arrayBuffer())
       }
 
-      const token = await getToken()
+      const token = await getServiceAuthToken({
+        agent,
+        lxm: 'com.atproto.repo.uploadBlob',
+        exp: Date.now() / 1000 + 60 * 30, // 30 minutes
+      })
 
       const xhr = new XMLHttpRequest()
       const res = await new Promise<AppBskyVideoDefs.JobStatus>(

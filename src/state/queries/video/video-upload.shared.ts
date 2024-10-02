@@ -1,4 +1,5 @@
 import {useCallback} from 'react'
+import {BskyAgent} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -8,48 +9,42 @@ import {getServiceAuthAudFromUrl} from '#/lib/strings/url-helpers'
 import {useAgent} from '#/state/session'
 import {useVideoAgent} from './util'
 
-export function useServiceAuthToken({
+export async function getServiceAuthToken({
+  agent,
   aud,
   lxm,
   exp,
 }: {
+  agent: BskyAgent
   aud?: string
   lxm: string
   exp?: number
 }) {
-  const agent = useAgent()
-
-  return useCallback(async () => {
-    const pdsAud = getServiceAuthAudFromUrl(agent.dispatchUrl)
-
-    if (!pdsAud) {
-      throw new Error('Agent does not have a PDS URL')
-    }
-
-    const {data: serviceAuth} = await agent.com.atproto.server.getServiceAuth({
-      aud: aud ?? pdsAud,
-      lxm,
-      exp,
-    })
-
-    return serviceAuth.token
-  }, [agent, aud, lxm, exp])
+  const pdsAud = getServiceAuthAudFromUrl(agent.dispatchUrl)
+  if (!pdsAud) {
+    throw new Error('Agent does not have a PDS URL')
+  }
+  const {data: serviceAuth} = await agent.com.atproto.server.getServiceAuth({
+    aud: aud ?? pdsAud,
+    lxm,
+    exp,
+  })
+  return serviceAuth.token
 }
 
 export function useVideoUploadLimits() {
-  const agent = useVideoAgent()
-  const getToken = useServiceAuthToken({
-    lxm: 'app.bsky.video.getUploadLimits',
-    aud: VIDEO_SERVICE_DID,
-  })
+  const agent = useAgent()
+  const videoAgent = useVideoAgent()
   const {_} = useLingui()
 
   return useCallback(async () => {
-    const {data: limits} = await agent.app.bsky.video
-      .getUploadLimits(
-        {},
-        {headers: {Authorization: `Bearer ${await getToken()}`}},
-      )
+    const token = await getServiceAuthToken({
+      agent,
+      lxm: 'app.bsky.video.getUploadLimits',
+      aud: VIDEO_SERVICE_DID,
+    })
+    const {data: limits} = await videoAgent.app.bsky.video
+      .getUploadLimits({}, {headers: {Authorization: `Bearer ${token}`}})
       .catch(err => {
         if (err instanceof Error) {
           throw new UploadLimitError(err.message)
@@ -69,5 +64,5 @@ export function useVideoUploadLimits() {
         )
       }
     }
-  }, [agent, _, getToken])
+  }, [agent, videoAgent, _])
 }
