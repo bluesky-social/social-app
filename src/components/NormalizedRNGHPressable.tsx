@@ -71,7 +71,7 @@ export const NormalizedRNGHPressable = React.forwardRef<View, PressableProps>(
       onFocus: _onFocus,
       ...rest
     },
-    ref,
+    _ref,
   ) {
     const onNormalizedPress = (event: PressableEvent) => {
       if (!onPress) return
@@ -104,17 +104,15 @@ export const NormalizedRNGHPressable = React.forwardRef<View, PressableProps>(
     }
 
     return (
-      <View ref={ref}>
-        <BSPressable
-          onPress={onNormalizedPress}
-          onLongPress={onNormalizedLongPress}
-          onPressIn={onNormalizedPressIn}
-          onPressOut={onNormalizedPressOut}
-          onHoverIn={onNormalizedHoverIn}
-          onHoverOut={onNormalizedHoverOut}
-          {...rest}
-        />
-      </View>
+      <BSPressable
+        onPress={onNormalizedPress}
+        onLongPress={onNormalizedLongPress}
+        onPressIn={onNormalizedPressIn}
+        onPressOut={onNormalizedPressOut}
+        onHoverIn={onNormalizedHoverIn}
+        onHoverOut={onNormalizedHoverOut}
+        {...rest}
+      />
     )
   },
 )
