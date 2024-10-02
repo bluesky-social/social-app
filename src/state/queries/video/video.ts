@@ -22,15 +22,19 @@ import {uploadVideo} from '#/state/queries/video/video-upload'
 import {useAgent, useSession} from '#/state/session'
 
 type Action =
-  | {type: 'SetProcessing'; jobId: string}
-  | {type: 'SetProgress'; progress: number}
-  | {type: 'SetError'; error: string}
-  | {type: 'Reset'}
-  | {type: 'SetAsset'; asset: ImagePickerAsset}
-  | {type: 'SetDimensions'; width: number; height: number}
-  | {type: 'SetVideo'; video: CompressedVideo}
-  | {type: 'SetJobStatus'; jobStatus: AppBskyVideoDefs.JobStatus}
-  | {type: 'SetComplete'; blobRef: BlobRef}
+  | {type: 'Reset'; nextController: AbortController}
+  | {type: 'SetProcessing'; jobId: string; signal: AbortSignal}
+  | {type: 'SetProgress'; progress: number; signal: AbortSignal}
+  | {type: 'SetError'; error: string; signal: AbortSignal}
+  | {type: 'SetAsset'; asset: ImagePickerAsset; signal: AbortSignal}
+  | {type: 'SetDimensions'; width: number; height: number; signal: AbortSignal}
+  | {type: 'SetVideo'; video: CompressedVideo; signal: AbortSignal}
+  | {
+      type: 'SetJobStatus'
+      jobStatus: AppBskyVideoDefs.JobStatus
+      signal: AbortSignal
+    }
+  | {type: 'SetComplete'; blobRef: BlobRef; signal: AbortSignal}
 
 type IdleState = {
   status: 'idle'
@@ -102,18 +106,23 @@ export type State =
   | ProcessingState
   | DoneState
 
-function createInitialState(): IdleState {
+function createInitialState(abortController: AbortController): IdleState {
   return {
     status: 'idle',
     progress: 0,
-    abortController: new AbortController(),
+    abortController,
   }
 }
 
 function reducer(state: State, action: Action): State {
   if (action.type === 'Reset') {
-    return createInitialState()
-  } else if (action.type === 'SetError') {
+    return createInitialState(action.nextController)
+  }
+  if (action.signal.aborted || action.signal !== state.abortController.signal) {
+    // This action is stale and the process that spawned it is no longer relevant.
+    return state
+  }
+  if (action.type === 'SetError') {
     return {
       status: 'error',
       progress: 100,
@@ -207,41 +216,36 @@ export function useUploadVideo() {
   const {currentAccount} = useSession()
   const agent = useAgent()
   const {_} = useLingui()
-  const [state, dispatch] = React.useReducer(reducer, null, createInitialState)
+  const [state, dispatch] = React.useReducer(
+    reducer,
+    new AbortController(),
+    createInitialState,
+  )
 
   const did = currentAccount!.did
   const selectVideo = React.useCallback(
     (asset: ImagePickerAsset) => {
-      const signal = state.abortController.signal
-      function guardedDispatch(action: Action) {
-        if (!signal.aborted) {
-          dispatch(action)
-        }
-      }
-      processVideo(
-        asset,
-        guardedDispatch,
-        agent,
-        did,
-        state.abortController.signal,
-        _,
-      )
+      processVideo(asset, dispatch, agent, did, state.abortController.signal, _)
     },
     [_, state.abortController, dispatch, agent, did],
   )
 
   const clearVideo = () => {
     state.abortController.abort()
-    dispatch({type: 'Reset'})
+    dispatch({type: 'Reset', nextController: new AbortController()})
   }
 
-  const updateVideoDimensions = useCallback((width: number, height: number) => {
-    dispatch({
-      type: 'SetDimensions',
-      width,
-      height,
-    })
-  }, [])
+  const updateVideoDimensions = useCallback(
+    (width: number, height: number) => {
+      dispatch({
+        type: 'SetDimensions',
+        width,
+        height,
+        signal: state.abortController.signal,
+      })
+    },
+    [state.abortController],
+  )
 
   return {
     state,
@@ -288,13 +292,14 @@ async function processVideo(
   dispatch({
     type: 'SetAsset',
     asset,
+    signal,
   })
 
   let video: CompressedVideo | undefined
   try {
     video = await compressVideo(asset, {
       onProgress: num => {
-        dispatch({type: 'SetProgress', progress: trunc2dp(num)})
+        dispatch({type: 'SetProgress', progress: trunc2dp(num), signal})
       },
       signal,
     })
@@ -304,6 +309,7 @@ async function processVideo(
       dispatch({
         type: 'SetError',
         error: message,
+        signal,
       })
     }
     return
@@ -311,6 +317,7 @@ async function processVideo(
   dispatch({
     type: 'SetVideo',
     video,
+    signal,
   })
 
   let uploadResponse: AppBskyVideoDefs.JobStatus | undefined
@@ -322,7 +329,7 @@ async function processVideo(
       signal,
       _,
       setProgress: p => {
-        dispatch({type: 'SetProgress', progress: p})
+        dispatch({type: 'SetProgress', progress: p, signal})
       },
     })
   } catch (e) {
@@ -331,6 +338,7 @@ async function processVideo(
       dispatch({
         type: 'SetError',
         error: message,
+        signal,
       })
     }
     return
@@ -340,6 +348,7 @@ async function processVideo(
   dispatch({
     type: 'SetProcessing',
     jobId,
+    signal,
   })
 
   let pollFailures = 0
@@ -377,6 +386,7 @@ async function processVideo(
       dispatch({
         type: 'SetError',
         error: _(msg`Video failed to process`),
+        signal,
       })
       return // Exit async loop
     }
@@ -385,11 +395,13 @@ async function processVideo(
       dispatch({
         type: 'SetComplete',
         blobRef: blob,
+        signal,
       })
     } else {
       dispatch({
         type: 'SetJobStatus',
         jobStatus: status,
+        signal,
       })
     }
 
