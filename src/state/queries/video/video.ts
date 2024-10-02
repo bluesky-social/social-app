@@ -50,8 +50,8 @@ type ErrorState = {
   status: 'error'
   progress: 100
   abortController: AbortController
-  asset?: undefined
-  video?: undefined
+  asset: ImagePickerAsset | null
+  video: CompressedVideo | null
   jobId: string | null
   error: string
   pendingPublish?: undefined
@@ -128,7 +128,9 @@ function reducer(state: State, action: Action): State {
       progress: 100,
       abortController: state.abortController,
       error: action.error,
-      jobId: state.status === 'processing' ? state.jobId : null,
+      asset: state.asset ?? null,
+      video: state.video ?? null,
+      jobId: state.jobId ?? null,
     }
   } else if (action.type === 'SetProgress') {
     if (state.status === 'compressing' || state.status === 'uploading') {
