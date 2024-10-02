@@ -230,7 +230,6 @@ export function PostInteractionSettingsForm({
 }: PostInteractionSettingsFormProps) {
   const t = useTheme()
   const {_} = useLingui()
-  const control = Dialog.useDialogContext()
   const {data: lists} = useMyListsQuery('curate')
   const [quotesEnabled, setQuotesEnabled] = React.useState(
     !(
@@ -436,7 +435,6 @@ export function PostInteractionSettingsForm({
       <BottomSheetButton
         label={_(msg`Save`)}
         onPress={onSave}
-        onAccessibilityEscape={control.close}
         color="primary"
         size="large"
         variant="solid"
