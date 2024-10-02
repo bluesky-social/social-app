@@ -85,7 +85,9 @@ export function Outer({
   const context = React.useContext(Context)
 
   return (
-    <Dialog.Outer control={context.control}>
+    <Dialog.Outer
+      control={context.control}
+      nativeOptions={{preventExpansion: true}}>
       {/* Re-wrap with context since Dialogs are portal-ed to root */}
       <Context.Provider value={context}>
         <Dialog.ScrollableInner label="Menu TODO">

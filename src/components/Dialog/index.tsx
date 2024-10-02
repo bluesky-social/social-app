@@ -33,7 +33,7 @@ export function Outer({
   children,
   control,
   onClose,
-  nativeOptions: _nativeOptions, // @TODO DIALOG REFACTOR
+  nativeOptions,
   testID,
 }: React.PropsWithChildren<DialogOuterProps>) {
   const t = useTheme()
@@ -111,7 +111,8 @@ export function Outer({
               onCloseAnimationComplete()
             }
           }}
-          cornerRadius={20}>
+          cornerRadius={20}
+          {...nativeOptions}>
           <View testID={testID} style={[t.atoms.bg]}>
             {children}
           </View>

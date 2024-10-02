@@ -7,7 +7,7 @@ import {useLingui} from '@lingui/react'
 import {MAX_ALT_TEXT} from '#/lib/constants'
 import {useEnforceMaxGraphemeCount} from '#/lib/strings/helpers'
 import {LANGUAGES} from '#/locale/languages'
-import {isAndroid, isWeb} from '#/platform/detection'
+import {isWeb} from '#/platform/detection'
 import {useLanguagePrefs} from '#/state/preferences'
 import {atoms as a, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -56,9 +56,7 @@ export function SubtitleDialogBtn(props: Props) {
           {isWeb ? <Trans>Captions & alt text</Trans> : <Trans>Alt text</Trans>}
         </ButtonText>
       </Button>
-      <Dialog.Outer
-        control={control}
-        nativeOptions={isAndroid ? {sheet: {snapPoints: ['60%']}} : {}}>
+      <Dialog.Outer control={control}>
         <SubtitleDialogInner {...props} />
       </Dialog.Outer>
     </View>

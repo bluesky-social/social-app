@@ -4,7 +4,7 @@ import type {
   GestureResponderEvent,
   ScrollViewProps,
 } from 'react-native'
-import {BottomSheetProps} from '@discord/bottom-sheet/src'
+import {BlueskyBottomSheetViewProps} from '@haileyok/bluesky-bottom-sheet'
 
 import {ViewStyleProp} from '#/alf'
 
@@ -52,9 +52,7 @@ export type DialogControlOpenOptions = {
 export type DialogOuterProps = {
   control: DialogControlProps
   onClose?: () => void
-  nativeOptions?: {
-    sheet?: Omit<BottomSheetProps, 'children'>
-  }
+  nativeOptions?: Omit<BlueskyBottomSheetViewProps, 'children'>
   webOptions?: {}
   testID?: string
 }

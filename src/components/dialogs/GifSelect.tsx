@@ -57,10 +57,7 @@ export function GifSelectDialog({
   )
 
   return (
-    <Dialog.Outer
-      control={control}
-      nativeOptions={{sheet: {snapPoints: ['100%']}}}
-      onClose={onClose}>
+    <Dialog.Outer control={control} onClose={onClose}>
       <ErrorBoundary renderError={renderErrorBoundary}>
         <GifList control={control} onSelectGif={onSelectGif} />
       </ErrorBoundary>
