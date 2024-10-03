@@ -184,9 +184,6 @@ export const ComposePost = ({
     initQuote,
   )
 
-  const [videoAltText, setVideoAltText] = useState('')
-  const [captions, setCaptions] = useState<{lang: string; file: File}[]>([])
-
   // TODO: Move more state here.
   const [composerState, dispatch] = useReducer(
     composerReducer,
@@ -437,8 +434,8 @@ export const ComposePost = ({
               videoState.status === 'done'
                 ? {
                     blobRef: videoState.pendingPublish.blobRef,
-                    altText: videoAltText,
-                    captions: captions,
+                    altText: videoState.altText,
+                    captions: videoState.captions,
                     aspectRatio: {
                       width: videoState.asset.width,
                       height: videoState.asset.height,
@@ -522,7 +519,6 @@ export const ComposePost = ({
     [
       _,
       agent,
-      captions,
       composerState,
       extLink,
       images,
@@ -541,10 +537,11 @@ export const ComposePost = ({
       setExtLink,
       setLangPrefs,
       threadgateAllowUISettings,
-      videoAltText,
       videoState.asset,
       videoState.pendingPublish,
       videoState.status,
+      videoState.altText,
+      videoState.captions,
     ],
   )
 
@@ -811,10 +808,28 @@ export const ComposePost = ({
                     />
                   ) : null)}
                 <SubtitleDialogBtn
-                  defaultAltText={videoAltText}
-                  saveAltText={setVideoAltText}
-                  captions={captions}
-                  setCaptions={setCaptions}
+                  defaultAltText={videoState.altText}
+                  saveAltText={altText =>
+                    dispatch({
+                      type: 'embed_update_video',
+                      videoAction: {
+                        type: 'update_alt_text',
+                        altText,
+                        signal: videoState.abortController.signal,
+                      },
+                    })
+                  }
+                  captions={videoState.captions}
+                  setCaptions={updater => {
+                    dispatch({
+                      type: 'embed_update_video',
+                      videoAction: {
+                        type: 'update_captions',
+                        updater,
+                        signal: videoState.abortController.signal,
+                      },
+                    })
+                  }}
                 />
               </Animated.View>
             )}
