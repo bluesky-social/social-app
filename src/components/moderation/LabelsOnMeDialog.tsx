@@ -252,6 +252,7 @@ function AppealForm({
           style={[a.text_md, a.leading_snug]}>
           {sourceName}
         </BottomSheetInlineLinkText>
+        <Text style={[a.text_md, a.leading_snug]}>.</Text>
       </View>
       <View style={[a.my_md]}>
         <Dialog.Input
