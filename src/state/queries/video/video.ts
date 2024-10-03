@@ -16,13 +16,7 @@ import {logger} from '#/logger'
 import {createVideoAgent} from '#/state/queries/video/util'
 import {uploadVideo} from '#/state/queries/video/video-upload'
 
-type Action =
-  | {type: 'to_idle'; nextController: AbortController}
-  | {
-      type: 'idle_to_compressing'
-      asset: ImagePickerAsset
-      signal: AbortSignal
-    }
+export type VideoAction =
   | {
       type: 'compressing_to_uploading'
       video: CompressedVideo
@@ -52,15 +46,20 @@ type Action =
       signal: AbortSignal
     }
 
-type IdleState = {
-  status: 'idle'
-  progress: 0
-  abortController: AbortController
-  asset?: undefined
-  video?: undefined
-  jobId?: undefined
-  pendingPublish?: undefined
-}
+const noopController = new AbortController()
+noopController.abort()
+
+export const NO_VIDEO = Object.freeze({
+  status: 'idle',
+  progress: 0,
+  abortController: noopController,
+  asset: undefined,
+  video: undefined,
+  jobId: undefined,
+  pendingPublish: undefined,
+})
+
+export type NoVideoState = typeof NO_VIDEO
 
 type ErrorState = {
   status: 'error'
@@ -114,8 +113,7 @@ type DoneState = {
   pendingPublish: {blobRef: BlobRef; mutableProcessed: boolean}
 }
 
-export type State =
-  | IdleState
+export type VideoState =
   | ErrorState
   | CompressingState
   | UploadingState
@@ -123,19 +121,21 @@ export type State =
   | DoneState
 
 export function createVideoState(
-  abortController: AbortController = new AbortController(),
-): IdleState {
+  asset: ImagePickerAsset,
+  abortController: AbortController,
+): CompressingState {
   return {
-    status: 'idle',
+    status: 'compressing',
     progress: 0,
     abortController,
+    asset,
   }
 }
 
-export function videoReducer(state: State, action: Action): State {
-  if (action.type === 'to_idle') {
-    return createVideoState(action.nextController)
-  }
+export function videoReducer(
+  state: VideoState,
+  action: VideoAction,
+): VideoState {
   if (action.signal.aborted || action.signal !== state.abortController.signal) {
     // This action is stale and the process that spawned it is no longer relevant.
     return state
@@ -155,15 +155,6 @@ export function videoReducer(state: State, action: Action): State {
       return {
         ...state,
         progress: action.progress,
-      }
-    }
-  } else if (action.type === 'idle_to_compressing') {
-    if (state.status === 'idle') {
-      return {
-        status: 'compressing',
-        progress: 0,
-        abortController: state.abortController,
-        asset: action.asset,
       }
     }
   } else if (action.type === 'update_dimensions') {
@@ -238,18 +229,12 @@ function trunc2dp(num: number) {
 
 export async function processVideo(
   asset: ImagePickerAsset,
-  dispatch: (action: Action) => void,
+  dispatch: (action: VideoAction) => void,
   agent: BskyAgent,
   did: string,
   signal: AbortSignal,
   _: I18n['_'],
 ) {
-  dispatch({
-    type: 'idle_to_compressing',
-    asset,
-    signal,
-  })
-
   let video: CompressedVideo | undefined
   try {
     video = await compressVideo(asset, {
