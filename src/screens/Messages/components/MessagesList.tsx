@@ -15,6 +15,8 @@ import {ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript/rean
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {AppBskyEmbedRecord, AppBskyRichtextFacet, RichText} from '@atproto/api'
 
+import {clamp} from '#/lib/numbers'
+import {ScrollProvider} from '#/lib/ScrollContext'
 import {shortenLinks, stripInvalidMentions} from '#/lib/strings/rich-text-manip'
 import {
   convertBskyAppUrlIfNeeded,
@@ -22,21 +24,19 @@ import {
 } from '#/lib/strings/url-helpers'
 import {logger} from '#/logger'
 import {isNative} from '#/platform/detection'
+import {isWeb} from '#/platform/detection'
 import {isConvoActive, useConvoActive} from '#/state/messages/convo'
 import {ConvoItem, ConvoStatus} from '#/state/messages/convo/types'
 import {useGetPost} from '#/state/queries/post'
 import {useAgent} from '#/state/session'
-import {clamp} from 'lib/numbers'
-import {ScrollProvider} from 'lib/ScrollContext'
-import {isWeb} from 'platform/detection'
 import {
   EmojiPicker,
   EmojiPickerState,
 } from '#/view/com/composer/text-input/web/EmojiPicker.web'
-import {List} from 'view/com/util/List'
-import {ChatDisabled} from '#/screens/Messages/Conversation/ChatDisabled'
-import {MessageInput} from '#/screens/Messages/Conversation/MessageInput'
-import {MessageListError} from '#/screens/Messages/Conversation/MessageListError'
+import {List} from '#/view/com/util/List'
+import {ChatDisabled} from '#/screens/Messages/components/ChatDisabled'
+import {MessageInput} from '#/screens/Messages/components/MessageInput'
+import {MessageListError} from '#/screens/Messages/components/MessageListError'
 import {ChatEmptyPill} from '#/components/dms/ChatEmptyPill'
 import {MessageItem} from '#/components/dms/MessageItem'
 import {NewMessagesPill} from '#/components/dms/NewMessagesPill'
