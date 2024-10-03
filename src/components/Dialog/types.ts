@@ -38,8 +38,8 @@ export type DialogControlProps = DialogControlRefProps & {
 
 export type DialogContextProps = {
   close: DialogControlProps['close']
-  insideDialog: boolean
-  snapPoint: BottomSheetSnapPoint
+  isNativeDialog: boolean
+  nativeSnapPoint: BottomSheetSnapPoint
 }
 
 export type DialogControlOpenOptions = {
