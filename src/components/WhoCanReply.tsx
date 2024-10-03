@@ -17,7 +17,7 @@ import {
   threadgateViewToAllowUISetting,
 } from '#/state/queries/threadgate'
 import {atoms as a, useTheme} from '#/alf'
-import {BottomSheetButton} from '#/components/BottomSheetButton'
+import {Button} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {useDialogControl} from '#/components/Dialog'
 import {
@@ -82,7 +82,7 @@ export function WhoCanReply({post, isThreadAuthor, style}: WhoCanReplyProps) {
 
   return (
     <>
-      <BottomSheetButton
+      <Button
         label={
           isThreadAuthor ? _(msg`Edit who can reply`) : _(msg`Who can reply`)
         }
@@ -98,8 +98,7 @@ export function WhoCanReply({post, isThreadAuthor, style}: WhoCanReplyProps) {
             })
           : {})}
         hitSlop={HITSLOP_10}>
-        {/* @TODO DIALOG REFACTOR hovered */}
-        {({pressed}) => (
+        {({hovered}) => (
           <View style={[a.flex_row, a.align_center, a.gap_xs, style]}>
             <Icon
               color={t.palette.contrast_400}
@@ -111,7 +110,7 @@ export function WhoCanReply({post, isThreadAuthor, style}: WhoCanReplyProps) {
                 a.text_sm,
                 a.leading_tight,
                 t.atoms.text_contrast_medium,
-                pressed && a.underline,
+                hovered && a.underline,
               ]}>
               {description}
             </Text>
@@ -121,7 +120,7 @@ export function WhoCanReply({post, isThreadAuthor, style}: WhoCanReplyProps) {
             )}
           </View>
         )}
-      </BottomSheetButton>
+      </Button>
 
       {isThreadAuthor ? (
         <PostInteractionSettingsDialog

@@ -15,8 +15,7 @@ import {logger} from '#/logger'
 import {isNative, isWeb} from '#/platform/detection'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
-import {BottomSheetButton} from '#/components/BottomSheetButton'
-import {ButtonText} from '#/components/Button'
+import {Button, ButtonText} from '#/components/Button'
 import {DialogControlProps} from '#/components/Dialog'
 import * as Dialog from '#/components/Dialog'
 import {Loader} from '#/components/Loader'
@@ -120,7 +119,7 @@ function ShareDialogInner({
                 a.gap_md,
                 isWeb && [a.gap_sm, a.flex_row_reverse, {marginLeft: 'auto'}],
               ]}>
-              <BottomSheetButton
+              <Button
                 label={isWeb ? _(msg`Copy link`) : _(msg`Share link`)}
                 variant="solid"
                 color="secondary"
@@ -130,8 +129,8 @@ function ShareDialogInner({
                 <ButtonText>
                   {isWeb ? <Trans>Copy Link</Trans> : <Trans>Share link</Trans>}
                 </ButtonText>
-              </BottomSheetButton>
-              <BottomSheetButton
+              </Button>
+              <Button
                 label={_(msg`Share QR code`)}
                 variant="solid"
                 color="secondary"
@@ -145,9 +144,9 @@ function ShareDialogInner({
                 <ButtonText>
                   <Trans>Share QR code</Trans>
                 </ButtonText>
-              </BottomSheetButton>
+              </Button>
               {isNative && (
-                <BottomSheetButton
+                <Button
                   label={_(msg`Save image`)}
                   variant="ghost"
                   color="secondary"
@@ -157,7 +156,7 @@ function ShareDialogInner({
                   <ButtonText>
                     <Trans>Save image</Trans>
                   </ButtonText>
-                </BottomSheetButton>
+                </Button>
               )}
             </View>
           </View>

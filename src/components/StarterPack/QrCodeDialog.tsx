@@ -13,8 +13,7 @@ import {logger} from '#/logger'
 import {isNative, isWeb} from '#/platform/detection'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a} from '#/alf'
-import {BottomSheetButton} from '#/components/BottomSheetButton'
-import {ButtonText} from '#/components/Button'
+import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {DialogControlProps} from '#/components/Dialog'
 import {Loader} from '#/components/Loader'
@@ -166,7 +165,7 @@ export function QrCodeDialog({
                 ) : (
                   <View
                     style={[a.w_full, a.gap_md, isWeb && [a.flex_row_reverse]]}>
-                    <BottomSheetButton
+                    <Button
                       label={_(msg`Copy QR code`)}
                       variant="solid"
                       color="secondary"
@@ -175,8 +174,8 @@ export function QrCodeDialog({
                       <ButtonText>
                         {isWeb ? <Trans>Copy</Trans> : <Trans>Share</Trans>}
                       </ButtonText>
-                    </BottomSheetButton>
-                    <BottomSheetButton
+                    </Button>
+                    <Button
                       label={_(msg`Save QR code`)}
                       variant="solid"
                       color="secondary"
@@ -185,7 +184,7 @@ export function QrCodeDialog({
                       <ButtonText>
                         <Trans>Save</Trans>
                       </ButtonText>
-                    </BottomSheetButton>
+                    </Button>
                   </View>
                 )}
               </>

@@ -6,8 +6,7 @@ import {useLingui} from '@lingui/react'
 import {BSKY_SERVICE} from '#/lib/constants'
 import * as persisted from '#/state/persisted'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
-import {BottomSheetButton} from '#/components/BottomSheetButton'
-import {ButtonText} from '#/components/Button'
+import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
 import * as ToggleButton from '#/components/forms/ToggleButton'
@@ -125,7 +124,7 @@ export function ServerInputDialog({
               {pdsAddressHistory.length > 0 && (
                 <View style={[a.flex_row, a.flex_wrap, a.mt_xs]}>
                   {pdsAddressHistory.map(uri => (
-                    <BottomSheetButton
+                    <Button
                       key={uri}
                       variant="ghost"
                       color="primary"
@@ -133,7 +132,7 @@ export function ServerInputDialog({
                       style={[a.px_sm, a.py_xs, a.rounded_sm, a.gap_sm]}
                       onPress={() => setCustomAddress(uri)}>
                       <ButtonText>{uri}</ButtonText>
-                    </BottomSheetButton>
+                    </Button>
                   ))}
                 </View>
               )}
@@ -161,7 +160,7 @@ export function ServerInputDialog({
           </View>
 
           <View style={gtMobile && [a.flex_row, a.justify_end]}>
-            <BottomSheetButton
+            <Button
               testID="doneBtn"
               variant="outline"
               color="primary"
@@ -169,7 +168,7 @@ export function ServerInputDialog({
               onPress={() => control.close()}
               label={_(msg`Done`)}>
               <ButtonText>{_(msg`Done`)}</ButtonText>
-            </BottomSheetButton>
+            </Button>
           </View>
         </View>
       </Dialog.ScrollableInner>

@@ -12,8 +12,7 @@ import {useSession} from '#/state/session'
 import {ListMethods} from '#/view/com/util/List'
 import {WizardAction, WizardState} from '#/screens/StarterPack/Wizard/State'
 import {atoms as a, native, useTheme, web} from '#/alf'
-import {BottomSheetButton} from '#/components/BottomSheetButton'
-import {ButtonText} from '#/components/Button'
+import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {
   WizardFeedCard,
@@ -112,7 +111,7 @@ export function WizardEditListDialog({
             </Text>
             <View style={{width: 60}}>
               {isWeb && (
-                <BottomSheetButton
+                <Button
                   label={_(msg`Close`)}
                   variant="ghost"
                   color="primary"
@@ -121,7 +120,7 @@ export function WizardEditListDialog({
                   <ButtonText>
                     <Trans>Close</Trans>
                   </ButtonText>
-                </BottomSheetButton>
+                </Button>
               )}
             </View>
           </View>

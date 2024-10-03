@@ -10,8 +10,7 @@ import {useAgent} from '#/state/session'
 import {CharProgress} from '#/view/com/composer/char-progress/CharProgress'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, native, useTheme} from '#/alf'
-import {BottomSheetButton} from '#/components/BottomSheetButton'
-import {ButtonIcon, ButtonText} from '#/components/Button'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as Toggle from '#/components/forms/Toggle'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
@@ -101,7 +100,7 @@ export function SubmitView({
 
   return (
     <View style={[a.gap_2xl]}>
-      <BottomSheetButton
+      <Button
         size="small"
         variant="solid"
         color="secondary"
@@ -109,7 +108,7 @@ export function SubmitView({
         label={_(msg`Go back to previous step`)}
         onPress={goBack}>
         <ButtonIcon icon={ChevronLeft} />
-      </BottomSheetButton>
+      </Button>
 
       <View
         style={[
@@ -212,7 +211,7 @@ export function SubmitView({
             </Text>
           ))}
 
-        <BottomSheetButton
+        <Button
           testID="sendReportBtn"
           size="large"
           variant="solid"
@@ -224,7 +223,7 @@ export function SubmitView({
             <Trans>Send report</Trans>
           </ButtonText>
           {submitting && <ButtonIcon icon={Loader} />}
-        </BottomSheetButton>
+        </Button>
       </View>
     </View>
   )

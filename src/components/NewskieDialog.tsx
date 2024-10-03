@@ -12,7 +12,6 @@ import {isNative} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useSession} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
-import {BottomSheetButton} from '#/components/BottomSheetButton'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {useDialogControl} from '#/components/Dialog'
@@ -142,7 +141,7 @@ export function NewskieDialog({
             ) : null}
 
             {isNative && (
-              <BottomSheetButton
+              <Button
                 label={_(msg`Close`)}
                 variant="solid"
                 color="secondary"
@@ -152,7 +151,7 @@ export function NewskieDialog({
                 <ButtonText>
                   <Trans>Close</Trans>
                 </ButtonText>
-              </BottomSheetButton>
+              </Button>
             )}
           </View>
 

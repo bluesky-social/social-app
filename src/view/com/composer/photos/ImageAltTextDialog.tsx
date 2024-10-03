@@ -8,8 +8,7 @@ import {MAX_ALT_TEXT} from '#/lib/constants'
 import {isWeb} from '#/platform/detection'
 import {ComposerImage} from '#/state/gallery'
 import {atoms as a, useTheme} from '#/alf'
-import {BottomSheetButton} from '#/components/BottomSheetButton'
-import {ButtonText} from '#/components/Button'
+import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
 import {Text} from '#/components/Typography'
@@ -103,7 +102,7 @@ const ImageAltTextInner = ({
             />
           </TextField.Root>
         </View>
-        <BottomSheetButton
+        <Button
           label={_(msg`Save`)}
           disabled={altText.length > MAX_ALT_TEXT || altText === image.alt}
           size="large"
@@ -113,7 +112,7 @@ const ImageAltTextInner = ({
           <ButtonText>
             <Trans>Save</Trans>
           </ButtonText>
-        </BottomSheetButton>
+        </Button>
       </View>
     </Dialog.ScrollableInner>
   )
