@@ -22,7 +22,6 @@ import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {DialogControlProps, useDialogControl} from '#/components/Dialog'
 import {NewChat} from '#/components/dms/dialogs/NewChatDialog'
-import {MessagesNUX} from '#/components/dms/MessagesNUX'
 import {useRefreshOnFocus} from '#/components/hooks/useRefreshOnFocus'
 import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as Retry} from '#/components/icons/ArrowRotateCounterClockwise'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
@@ -33,7 +32,7 @@ import {Link} from '#/components/Link'
 import {ListFooter} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
-import {ChatListItem} from './ChatListItem'
+import {ChatListItem} from './components/ChatListItem'
 
 type Props = NativeStackScreenProps<MessagesTabNavigatorParams, 'Messages'>
 
@@ -151,8 +150,6 @@ export function MessagesScreen({navigation, route}: Props) {
   if (conversations.length < 1) {
     return (
       <View style={a.flex_1}>
-        <MessagesNUX />
-
         <CenteredView sideBorders={gtMobile} style={[a.h_full_vh]}>
           {gtMobile ? (
             <DesktopHeader
@@ -240,7 +237,6 @@ export function MessagesScreen({navigation, route}: Props) {
 
   return (
     <View style={a.flex_1}>
-      <MessagesNUX />
       {!gtMobile && (
         <ViewHeader
           title={_(msg`Messages`)}

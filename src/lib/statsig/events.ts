@@ -145,6 +145,8 @@ export type LogEvents = {
   }
   'post:mute': {}
   'post:unmute': {}
+  'post:pin': {}
+  'post:unpin': {}
   'profile:follow:sampled': {
     didBecomeMutual: boolean | undefined
     followeeClout: number | undefined
