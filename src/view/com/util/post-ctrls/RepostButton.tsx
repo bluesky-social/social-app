@@ -7,7 +7,6 @@ import {POST_CTRL_HITSLOP} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
 import {useRequireAuth} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
-import {BottomSheetButton} from '#/components/BottomSheetButton'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {CloseQuote_Stroke2_Corner1_Rounded as Quote} from '#/components/icons/Quote'
@@ -93,7 +92,7 @@ let RepostButton = ({
         <Dialog.Inner label={_(msg`Repost or quote post`)}>
           <View style={a.gap_xl}>
             <View style={a.gap_xs}>
-              <BottomSheetButton
+              <Button
                 style={[a.justify_start, a.px_md]}
                 label={
                   isReposted
@@ -116,8 +115,8 @@ let RepostButton = ({
                     ? _(msg`Remove repost`)
                     : _(msg({message: `Repost`, context: 'action'}))}
                 </Text>
-              </BottomSheetButton>
-              <BottomSheetButton
+              </Button>
+              <Button
                 disabled={embeddingDisabled}
                 testID="quoteBtn"
                 style={[a.justify_start, a.px_md]}
@@ -153,16 +152,16 @@ let RepostButton = ({
                     ? _(msg`Quote posts disabled`)
                     : _(msg`Quote post`)}
                 </Text>
-              </BottomSheetButton>
+              </Button>
             </View>
-            <BottomSheetButton
+            <Button
               label={_(msg`Cancel quote post`)}
               onPress={close}
               size="large"
               variant="solid"
               color="primary">
               <ButtonText>{_(msg`Cancel`)}</ButtonText>
-            </BottomSheetButton>
+            </Button>
           </View>
         </Dialog.Inner>
       </Dialog.Outer>

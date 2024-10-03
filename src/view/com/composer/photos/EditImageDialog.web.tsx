@@ -12,8 +12,7 @@ import {
   manipulateImage,
 } from '#/state/gallery'
 import {atoms as a} from '#/alf'
-import {BottomSheetButton} from '#/components/BottomSheetButton'
-import {ButtonText} from '#/components/Button'
+import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {Text} from '#/components/Typography'
 import {EditImageDialogProps} from './EditImageDialog'
@@ -72,7 +71,7 @@ const EditImageInner = ({control, image, onChange}: EditImageDialogProps) => {
       </View>
 
       <View style={[a.mt_md, a.gap_md]}>
-        <BottomSheetButton
+        <Button
           disabled={!isNew}
           label={_(msg`Save`)}
           size="large"
@@ -82,7 +81,7 @@ const EditImageInner = ({control, image, onChange}: EditImageDialogProps) => {
           <ButtonText>
             <Trans>Save</Trans>
           </ButtonText>
-        </BottomSheetButton>
+        </Button>
       </View>
     </Dialog.Inner>
   )

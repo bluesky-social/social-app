@@ -1,3 +1,3 @@
-import {Pressable as NormalizedPressable} from 'react-native'
+import {Pressable as NormalizedRNGHPressable} from 'react-native'
 
-export {NormalizedPressable}
+export {NormalizedRNGHPressable}

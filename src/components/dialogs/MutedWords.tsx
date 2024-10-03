@@ -19,8 +19,7 @@ import {
   ViewStyleProp,
   web,
 } from '#/alf'
-import {BottomSheetButton} from '#/components/BottomSheetButton'
-import {ButtonIcon, ButtonText} from '#/components/Button'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 import {Divider} from '#/components/Divider'
@@ -324,7 +323,7 @@ function MutedWordsInner() {
           </View>
 
           <View style={[a.pt_xs]}>
-            <BottomSheetButton
+            <Button
               disabled={isPending || !field}
               label={_(msg`Add mute word for configured settings`)}
               size="large"
@@ -336,7 +335,7 @@ function MutedWordsInner() {
                 <Trans>Add</Trans>
               </ButtonText>
               <ButtonIcon icon={isPending ? Loader : Plus} position="right" />
-            </BottomSheetButton>
+            </Button>
           </View>
 
           {error && (
@@ -527,7 +526,7 @@ function MutedWordRow({
           )}
         </View>
 
-        <BottomSheetButton
+        <Button
           label={_(msg`Remove mute word from your list`)}
           size="tiny"
           shape="round"
@@ -536,7 +535,7 @@ function MutedWordRow({
           onPress={() => control.open()}
           style={[a.ml_sm]}>
           <ButtonIcon icon={isPending ? Loader : X} />
-        </BottomSheetButton>
+        </Button>
       </View>
     </>
   )

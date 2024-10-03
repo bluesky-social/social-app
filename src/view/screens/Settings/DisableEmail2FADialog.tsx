@@ -9,8 +9,7 @@ import {useAgent, useSession} from '#/state/session'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
-import {BottomSheetButton} from '#/components/BottomSheetButton'
-import {ButtonIcon, ButtonText} from '#/components/Button'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
 import {Lock_Stroke2_Corner0_Rounded as Lock} from '#/components/icons/Lock'
@@ -109,7 +108,7 @@ export function DisableEmail2FADialog({
 
           {stage === Stages.Email ? (
             <View style={gtMobile && [a.flex_row, a.justify_end, a.gap_md]}>
-              <BottomSheetButton
+              <Button
                 testID="sendEmailButton"
                 variant="solid"
                 color="primary"
@@ -121,8 +120,8 @@ export function DisableEmail2FADialog({
                   <Trans>Send verification email</Trans>
                 </ButtonText>
                 {isProcessing && <ButtonIcon icon={Loader} />}
-              </BottomSheetButton>
-              <BottomSheetButton
+              </Button>
+              <Button
                 testID="haveCodeButton"
                 variant="ghost"
                 color="primary"
@@ -133,7 +132,7 @@ export function DisableEmail2FADialog({
                 <ButtonText>
                   <Trans>I have a code</Trans>
                 </ButtonText>
-              </BottomSheetButton>
+              </Button>
             </View>
           ) : stage === Stages.ConfirmCode ? (
             <View>
@@ -158,7 +157,7 @@ export function DisableEmail2FADialog({
                 </TextField.Root>
               </View>
               <View style={gtMobile && [a.flex_row, a.justify_end]}>
-                <BottomSheetButton
+                <Button
                   testID="resendCodeBtn"
                   variant="ghost"
                   color="primary"
@@ -169,8 +168,8 @@ export function DisableEmail2FADialog({
                   <ButtonText>
                     <Trans>Resend email</Trans>
                   </ButtonText>
-                </BottomSheetButton>
-                <BottomSheetButton
+                </Button>
+                <Button
                   testID="confirmBtn"
                   variant="solid"
                   color="primary"
@@ -182,7 +181,7 @@ export function DisableEmail2FADialog({
                     <Trans>Confirm</Trans>
                   </ButtonText>
                   {isProcessing && <ButtonIcon icon={Loader} />}
-                </BottomSheetButton>
+                </Button>
               </View>
             </View>
           ) : undefined}

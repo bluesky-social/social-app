@@ -1,13 +1,11 @@
 import React from 'react'
-import {View} from 'react-native'
-import {PressableEvent} from 'react-native-gesture-handler/lib/typescript/components/Pressable/PressableProps'
+import {GestureResponderEvent, View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {isNative} from '#/platform/detection'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
-import {BottomSheetButton} from '#/components/BottomSheetButton'
-import {ButtonColor, ButtonText} from '#/components/Button'
+import {Button, ButtonColor, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {Text} from '#/components/Typography'
 
@@ -123,14 +121,14 @@ export function Cancel({
   }, [close])
 
   return (
-    <BottomSheetButton
+    <Button
       variant="solid"
       color="secondary"
       size={gtMobile ? 'small' : 'large'}
       label={cta || _(msg`Cancel`)}
       onPress={onPress}>
       <ButtonText>{cta || _(msg`Cancel`)}</ButtonText>
-    </BottomSheetButton>
+    </Button>
   )
 }
 
@@ -147,7 +145,7 @@ export function Action({
    * Note: The dialog will close automatically when the action is pressed, you
    * should NOT close the dialog as a side effect of this method.
    */
-  onPress: (e: PressableEvent) => void
+  onPress: (e: GestureResponderEvent) => void
   color?: ButtonColor
   /**
    * Optional i18n string. If undefined, it will default to "Confirm".
@@ -159,14 +157,14 @@ export function Action({
   const {gtMobile} = useBreakpoints()
   const {close} = Dialog.useDialogContext()
   const handleOnPress = React.useCallback(
-    (e: PressableEvent) => {
+    (e: GestureResponderEvent) => {
       close(() => onPress?.(e))
     },
     [close, onPress],
   )
 
   return (
-    <BottomSheetButton
+    <Button
       variant="solid"
       color={color}
       size={gtMobile ? 'small' : 'large'}
@@ -174,7 +172,7 @@ export function Action({
       onPress={handleOnPress}
       testID={testID}>
       <ButtonText>{cta || _(msg`Confirm`)}</ButtonText>
-    </BottomSheetButton>
+    </Button>
   )
 }
 
@@ -201,7 +199,7 @@ export function Basic({
    * Note: The dialog will close automatically when the action is pressed, you
    * should NOT close the dialog as a side effect of this method.
    */
-  onConfirm: (e: PressableEvent) => void
+  onConfirm: (e: GestureResponderEvent) => void
   confirmButtonColor?: ButtonColor
   showCancel?: boolean
   withoutPortal?: boolean
