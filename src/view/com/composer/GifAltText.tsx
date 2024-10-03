@@ -19,6 +19,7 @@ import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {PlusSmall_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
+import {PortalComponent} from '#/components/Portal'
 import {Text} from '#/components/Typography'
 import {GifEmbed} from '../util/post-embeds/GifEmbed'
 import {AltTextReminder} from './photos/Gallery'
@@ -27,10 +28,12 @@ export function GifAltText({
   link: linkProp,
   gif,
   onSubmit,
+  Portal,
 }: {
   link: ExternalEmbedDraft
   gif?: Gif
   onSubmit: (alt: string) => void
+  Portal: PortalComponent
 }) {
   const control = Dialog.useDialogControl()
   const {_} = useLingui()
@@ -95,7 +98,7 @@ export function GifAltText({
 
       <AltTextReminder />
 
-      <Dialog.Outer control={control}>
+      <Dialog.Outer control={control} Portal={Portal}>
         <AltTextInner
           onSubmit={onPressSubmit}
           link={link}

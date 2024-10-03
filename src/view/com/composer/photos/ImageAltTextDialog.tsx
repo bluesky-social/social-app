@@ -11,17 +11,19 @@ import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
+import {PortalComponent} from '#/components/Portal'
 import {Text} from '#/components/Typography'
 
 type Props = {
   control: Dialog.DialogOuterProps['control']
   image: ComposerImage
   onChange: (next: ComposerImage) => void
+  Portal: PortalComponent
 }
 
 export const ImageAltTextDialog = (props: Props): React.ReactNode => {
   return (
-    <Dialog.Outer control={props.control}>
+    <Dialog.Outer control={props.control} Portal={props.Portal}>
       <ImageAltTextInner {...props} />
     </Dialog.Outer>
   )
