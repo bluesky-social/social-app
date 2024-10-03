@@ -36,6 +36,7 @@ import Animated, {
   ZoomOut,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {ImagePickerAsset} from 'expo-image-picker'
 import {
   AppBskyFeedDefs,
   AppBskyFeedGetPostThread,
@@ -82,9 +83,10 @@ import {Gif} from '#/state/queries/tenor'
 import {ThreadgateAllowUISetting} from '#/state/queries/threadgate'
 import {threadgateViewToAllowUISetting} from '#/state/queries/threadgate/util'
 import {
+  createVideoState,
+  processVideo,
   State as VideoUploadState,
-  useUploadVideo,
-  VideoUploadDispatch,
+  videoReducer,
 } from '#/state/queries/video/video'
 import {useAgent, useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
@@ -150,7 +152,8 @@ export const ComposePost = ({
 }) => {
   const {currentAccount} = useSession()
   const agent = useAgent()
-  const {data: currentProfile} = useProfileQuery({did: currentAccount!.did})
+  const currentDid = currentAccount!.did
+  const {data: currentProfile} = useProfileQuery({did: currentDid})
   const {isModalActive} = useModals()
   const {closeComposer} = useComposerControls()
   const pal = usePalette('default')
@@ -192,21 +195,50 @@ export const ComposePost = ({
   const [videoAltText, setVideoAltText] = useState('')
   const [captions, setCaptions] = useState<{lang: string; file: File}[]>([])
 
-  const {
-    selectVideo,
-    clearVideo,
-    state: videoUploadState,
-    updateVideoDimensions,
-    dispatch: videoUploadDispatch,
-  } = useUploadVideo({
-    setStatus: setProcessingState,
-    onSuccess: () => {
-      if (publishOnUpload) {
-        onPressPublish(true)
-      }
+  const [videoUploadState, videoDispatch] = useReducer(
+    videoReducer,
+    undefined,
+    createVideoState,
+  )
+
+  const selectVideo = React.useCallback(
+    (asset: ImagePickerAsset) => {
+      processVideo(
+        asset,
+        videoDispatch,
+        agent,
+        currentDid,
+        videoUploadState.abortController.signal,
+        _,
+      )
     },
-    initialVideoUri: initVideoUri,
-  })
+    [_, videoUploadState.abortController, videoDispatch, agent, currentDid],
+  )
+
+  // Whenever we receive an initial video uri, we should immediately run compression if necessary
+  useEffect(() => {
+    if (initVideoUri) {
+      selectVideo({uri: initVideoUri} as ImagePickerAsset)
+    }
+  }, [initVideoUri, selectVideo])
+
+  const clearVideo = React.useCallback(() => {
+    videoUploadState.abortController.abort()
+    videoDispatch({type: 'to_idle', nextController: new AbortController()})
+  }, [videoUploadState.abortController, videoDispatch])
+
+  const updateVideoDimensions = useCallback(
+    (width: number, height: number) => {
+      videoDispatch({
+        type: 'update_dimensions',
+        width,
+        height,
+        signal: videoUploadState.abortController.signal,
+      })
+    },
+    [videoUploadState.abortController],
+  )
+
   const hasVideo = Boolean(videoUploadState.asset || videoUploadState.video)
 
   const [publishOnUpload, setPublishOnUpload] = useState(false)
@@ -403,19 +435,18 @@ export const ComposePost = ({
             postgate,
             onStateChange: setProcessingState,
             langs: toPostLanguages(langPrefs.postLanguage),
-            video: videoUploadState.pendingPublish?.blobRef
-              ? {
-                  blobRef: videoUploadState.pendingPublish.blobRef,
-                  altText: videoAltText,
-                  captions: captions,
-                  aspectRatio: videoUploadState.asset
-                    ? {
-                        width: videoUploadState.asset?.width,
-                        height: videoUploadState.asset?.height,
-                      }
-                    : undefined,
-                }
-              : undefined,
+            video:
+              videoUploadState.status === 'done'
+                ? {
+                    blobRef: videoUploadState.pendingPublish.blobRef,
+                    altText: videoAltText,
+                    captions: captions,
+                    aspectRatio: {
+                      width: videoUploadState.asset.width,
+                      height: videoUploadState.asset.height,
+                    },
+                  }
+                : undefined,
           })
         ).uri
         try {
@@ -701,7 +732,7 @@ export const ComposePost = ({
               error={error}
               videoUploadState={videoUploadState}
               clearError={() => setError('')}
-              videoUploadDispatch={videoUploadDispatch}
+              clearVideo={clearVideo}
             />
           </Animated.View>
           <Animated.ScrollView
@@ -1100,25 +1131,25 @@ function ErrorBanner({
   error: standardError,
   videoUploadState,
   clearError,
-  videoUploadDispatch,
+  clearVideo,
 }: {
   error: string
   videoUploadState: VideoUploadState
   clearError: () => void
-  videoUploadDispatch: VideoUploadDispatch
+  clearVideo: () => void
 }) {
   const t = useTheme()
   const {_} = useLingui()
 
   const videoError =
-    videoUploadState.status !== 'idle' ? videoUploadState.error : undefined
+    videoUploadState.status === 'error' ? videoUploadState.error : undefined
   const error = standardError || videoError
 
   const onClearError = () => {
     if (standardError) {
       clearError()
     } else {
-      videoUploadDispatch({type: 'Reset'})
+      clearVideo()
     }
   }
 
@@ -1153,7 +1184,7 @@ function ErrorBanner({
             <ButtonIcon icon={X} />
           </Button>
         </View>
-        {videoError && videoUploadState.jobStatus?.jobId && (
+        {videoError && videoUploadState.jobId && (
           <NewText
             style={[
               {paddingLeft: 28},
@@ -1162,7 +1193,7 @@ function ErrorBanner({
               a.leading_snug,
               t.atoms.text_contrast_low,
             ]}>
-            <Trans>Job ID: {videoUploadState.jobStatus.jobId}</Trans>
+            <Trans>Job ID: {videoUploadState.jobId}</Trans>
           </NewText>
         )}
       </View>
@@ -1191,9 +1222,7 @@ function ToolbarWrapper({
 function VideoUploadToolbar({state}: {state: VideoUploadState}) {
   const t = useTheme()
   const {_} = useLingui()
-  const progress = state.jobStatus?.progress
-    ? state.jobStatus.progress / 100
-    : state.progress
+  const progress = state.progress
   const shouldRotate =
     state.status === 'processing' && (progress === 0 || progress === 1)
   let wheelProgress = shouldRotate ? 0.33 : progress
@@ -1229,14 +1258,13 @@ function VideoUploadToolbar({state}: {state: VideoUploadState}) {
     case 'processing':
       text = _('Processing video...')
       break
+    case 'error':
+      text = _('Error')
+      wheelProgress = 100
+      break
     case 'done':
       text = _('Video uploaded')
       break
-  }
-
-  if (state.error) {
-    text = _('Error')
-    wheelProgress = 100
   }
 
   return (
@@ -1246,7 +1274,11 @@ function VideoUploadToolbar({state}: {state: VideoUploadState}) {
           size={30}
           borderWidth={1}
           borderColor={t.atoms.border_contrast_low.borderColor}
-          color={state.error ? t.palette.negative_500 : t.palette.primary_500}
+          color={
+            state.status === 'error'
+              ? t.palette.negative_500
+              : t.palette.primary_500
+          }
           progress={wheelProgress}
         />
       </Animated.View>
