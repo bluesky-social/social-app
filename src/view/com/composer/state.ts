@@ -56,6 +56,9 @@ export function composerReducer(
 ): ComposerState {
   switch (action.type) {
     case 'embed_add_images': {
+      if (action.images.length === 0) {
+        return state
+      }
       const prevMedia = state.embed.media
       let nextMedia = prevMedia
       if (!prevMedia) {
