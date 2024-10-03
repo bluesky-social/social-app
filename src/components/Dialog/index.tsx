@@ -165,10 +165,12 @@ export const InnerFlatList = React.forwardRef<
   ListProps<any> & {webInnerStyle?: StyleProp<ViewStyle>}
 >(function InnerFlatList({style, contentContainerStyle, ...props}, ref) {
   const insets = useSafeAreaInsets()
+  const {nativeSnapPoint} = useDialogContext()
   return (
     <List
       keyboardShouldPersistTaps="handled"
-      contentContainerStyle={[a.pb_4xl, flatten(contentContainerStyle)]}
+      bounces={nativeSnapPoint === BottomSheetSnapPoint.Full}
+      contentContainerStyle={[a.px_xl, flatten(contentContainerStyle)]}
       ListFooterComponent={
         <View style={{height: insets.bottom + a.pt_5xl.paddingTop}} />
       }

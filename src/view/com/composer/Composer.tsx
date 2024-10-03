@@ -888,6 +888,7 @@ export const ComposePost = ({
                   onClose={focusTextInput}
                   onSelectGif={onSelectGif}
                   disabled={hasMedia}
+                  Portal={Portal.Portal}
                 />
                 {!isMobile ? (
                   <Button
