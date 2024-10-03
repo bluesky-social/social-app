@@ -240,8 +240,8 @@ let PostDropdownBtn = ({
     Toast.show(_(msg`Copied to clipboard`), 'clipboard-check')
   }, [_, richText])
 
-  const onPressTranslate = React.useCallback(() => {
-    openLink(translatorUrl)
+  const onPressTranslate = React.useCallback(async () => {
+    await openLink(translatorUrl)
   }, [openLink, translatorUrl])
 
   const onHidePost = React.useCallback(() => {

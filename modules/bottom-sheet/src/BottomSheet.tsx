@@ -3,6 +3,7 @@ import {
   ColorValue,
   Dimensions,
   NativeSyntheticEvent,
+  Platform,
   StyleProp,
   StyleSheet,
   View,
@@ -79,6 +80,7 @@ export class BottomSheet extends React.Component<
     const {children, ...rest} = this.props
     const topInset = rest.topInset ?? 0
     const bottomInset = rest.bottomInset ?? 0
+    const cornerRadius = rest.cornerRadius ?? 0
 
     if (!this.state.open) {
       return null
@@ -92,17 +94,23 @@ export class BottomSheet extends React.Component<
         ref={this.ref}
         style={{
           position: 'absolute',
-          height: screenHeight - topInset - bottomInset,
+          height: screenHeight,
           width: '100%',
         }}
         containerBackgroundColor={backgroundColor}>
         <View
-          style={{
-            flex: 1,
-            backgroundColor,
-            paddingTop: topInset,
-            paddingBottom: bottomInset,
-          }}>
+          style={[
+            {
+              flex: 1,
+              backgroundColor,
+              paddingTop: topInset,
+              paddingBottom: bottomInset,
+            },
+            Platform.OS === 'android' && {
+              borderTopLeftRadius: cornerRadius,
+              borderTopRightRadius: cornerRadius,
+            },
+          ]}>
           <View onLayout={this.updateLayout}>{children}</View>
         </View>
       </NativeView>

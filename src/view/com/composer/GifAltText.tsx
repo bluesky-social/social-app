@@ -12,6 +12,7 @@ import {
   parseEmbedPlayerFromUrl,
 } from '#/lib/strings/embed-player'
 import {enforceLen} from '#/lib/strings/helpers'
+import {isAndroid} from '#/platform/detection'
 import {Gif} from '#/state/queries/tenor'
 import {atoms as a, native, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
@@ -184,6 +185,8 @@ function AltTextInner({
         </View>
       </View>
       <Dialog.Close />
+      {/* Maybe fix this later -h */}
+      {isAndroid ? <View style={{height: 300}} /> : null}
     </Dialog.ScrollableInner>
   )
 }

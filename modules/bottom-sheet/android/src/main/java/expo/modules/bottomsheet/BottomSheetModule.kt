@@ -31,11 +31,11 @@ class BottomSheetModule : Module() {
         }
 
         Prop("containerBackgroundColor") { view: BottomSheetView, prop: String ->
-          view.sheetState.value.containerBackgroundColor = Color.parseColor(prop)
+//          view.sheetState.value.containerBackgroundColor = Color.parseColor(prop)
         }
 
         Prop("cornerRadius") { view: BottomSheetView, prop: Float ->
-          view.sheetState.value.cornerRadius = prop
+//          view.sheetState.value.cornerRadius = prop
         }
 
         Prop("minHeight") { view: BottomSheetView, prop: Float ->
@@ -51,7 +51,7 @@ class BottomSheetModule : Module() {
         }
 
         Prop("preventExpansion") { view: BottomSheetView, prop: Boolean ->
-          view.sheetState.value.preventExpansion = prop
+          view.preventExpansion = prop
         }
       }
     }

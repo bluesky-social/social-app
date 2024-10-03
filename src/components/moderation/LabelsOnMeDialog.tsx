@@ -16,7 +16,6 @@ import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {BottomSheetInlineLinkText} from '#/components/BottomSheetLink'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
-import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {Divider} from '../Divider'
 import {Loader} from '../Loader'
@@ -237,24 +236,24 @@ function AppealForm({
 
   return (
     <>
-      <Text style={[a.text_2xl, a.font_bold, a.pb_xs, a.leading_tight]}>
-        <Trans>Appeal "{strings.name}" label</Trans>
-      </Text>
-      <Text style={[a.text_md, a.leading_snug]}>
-        <Trans>
-          This appeal will be sent to{' '}
-          <InlineLinkText
-            label={sourceName}
-            to={makeProfileLink(
-              labeler ? labeler.creator : {did: label.src, handle: ''},
-            )}
-            onPress={() => control.close()}
-            style={[a.text_md, a.leading_snug]}>
-            {sourceName}
-          </InlineLinkText>
-          .
-        </Trans>
-      </Text>
+      <View style={{flexWrap: 'wrap', flexDirection: 'row'}}>
+        <Text style={[a.text_2xl, a.font_bold, a.pb_xs, a.leading_tight]}>
+          <Trans>Appeal "{strings.name}" label</Trans>
+        </Text>
+        <Text style={[a.text_md, a.leading_snug]}>
+          <Trans>This appeal will be sent to</Trans>{' '}
+        </Text>
+        <BottomSheetInlineLinkText
+          label={sourceName}
+          to={makeProfileLink(
+            labeler ? labeler.creator : {did: label.src, handle: ''},
+          )}
+          onPress={() => control.close()}
+          style={[a.text_md, a.leading_snug]}>
+          {sourceName}
+        </BottomSheetInlineLinkText>
+        <Text style={[a.text_md, a.leading_snug]}>.</Text>
+      </View>
       <View style={[a.my_md]}>
         <Dialog.Input
           label={_(msg`Text input field`)}

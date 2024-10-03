@@ -5,7 +5,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {MAX_ALT_TEXT} from '#/lib/constants'
-import {isWeb} from '#/platform/detection'
+import {isAndroid, isWeb} from '#/platform/detection'
 import {ComposerImage} from '#/state/gallery'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
@@ -116,6 +116,8 @@ const ImageAltTextInner = ({
           </ButtonText>
         </Button>
       </View>
+      {/* Maybe fix this later -h */}
+      {isAndroid ? <View style={{height: 300}} /> : null}
     </Dialog.ScrollableInner>
   )
 }
