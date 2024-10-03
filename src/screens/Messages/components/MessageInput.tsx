@@ -18,11 +18,11 @@ import Graphemer from 'graphemer'
 
 import {HITSLOP_10, MAX_DM_GRAPHEME_LENGTH} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
+import {isIOS} from '#/platform/detection'
 import {
   useMessageDraft,
   useSaveMessageDraft,
 } from '#/state/messages/message-drafts'
-import {isIOS} from 'platform/detection'
 import {EmojiPickerPosition} from '#/view/com/composer/text-input/web/EmojiPicker.web'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
