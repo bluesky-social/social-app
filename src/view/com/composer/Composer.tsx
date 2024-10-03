@@ -82,11 +82,12 @@ import {useProfileQuery} from '#/state/queries/profile'
 import {Gif} from '#/state/queries/tenor'
 import {ThreadgateAllowUISetting} from '#/state/queries/threadgate'
 import {threadgateViewToAllowUISetting} from '#/state/queries/threadgate/util'
+import {NO_VIDEO, NoVideoState} from '#/state/queries/video/video'
 import {
-  createVideoState,
   processVideo,
-  State as VideoUploadState,
-  videoReducer,
+  VideoAction,
+  VideoState,
+  VideoState as VideoUploadState,
 } from '#/state/queries/video/video'
 import {useAgent, useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
@@ -192,24 +193,38 @@ export const ComposePost = ({
   const [videoAltText, setVideoAltText] = useState('')
   const [captions, setCaptions] = useState<{lang: string; file: File}[]>([])
 
-  const [videoUploadState, videoDispatch] = useReducer(
-    videoReducer,
-    undefined,
-    createVideoState,
+  // TODO: Move more state here.
+  const [composerState, dispatch] = useReducer(
+    composerReducer,
+    {initImageUris},
+    createComposerState,
+  )
+
+  let videoUploadState: VideoState | NoVideoState = NO_VIDEO
+  if (composerState.embed.media?.type === 'video') {
+    videoUploadState = composerState.embed.media.video
+  }
+  const videoDispatch = useCallback(
+    (videoAction: VideoAction) => {
+      dispatch({type: 'embed_update_video', videoAction})
+    },
+    [dispatch],
   )
 
   const selectVideo = React.useCallback(
     (asset: ImagePickerAsset) => {
+      const abortController = new AbortController()
+      dispatch({type: 'embed_add_video', asset, abortController})
       processVideo(
         asset,
         videoDispatch,
         agent,
         currentDid,
-        videoUploadState.abortController.signal,
+        abortController.signal,
         _,
       )
     },
-    [_, videoUploadState.abortController, videoDispatch, agent, currentDid],
+    [_, videoDispatch, agent, currentDid],
   )
 
   // Whenever we receive an initial video uri, we should immediately run compression if necessary
@@ -221,8 +236,8 @@ export const ComposePost = ({
 
   const clearVideo = React.useCallback(() => {
     videoUploadState.abortController.abort()
-    videoDispatch({type: 'to_idle', nextController: new AbortController()})
-  }, [videoUploadState.abortController, videoDispatch])
+    dispatch({type: 'embed_remove_video'})
+  }, [videoUploadState.abortController, dispatch])
 
   const updateVideoDimensions = useCallback(
     (width: number, height: number) => {
@@ -233,7 +248,7 @@ export const ComposePost = ({
         signal: videoUploadState.abortController.signal,
       })
     },
-    [videoUploadState.abortController],
+    [videoUploadState.abortController, videoDispatch],
   )
 
   const hasVideo = Boolean(videoUploadState.asset || videoUploadState.video)
@@ -249,12 +264,6 @@ export const ComposePost = ({
     )
   const [postgate, setPostgate] = useState(createPostgateRecord({post: ''}))
 
-  // TODO: Move more state here.
-  const [composerState, dispatch] = useReducer(
-    composerReducer,
-    {initImageUris},
-    createComposerState,
-  )
   let images = NO_IMAGES
   if (composerState.embed.media?.type === 'images') {
     images = composerState.embed.media.images
@@ -857,7 +866,7 @@ export const ComposePost = ({
               />
               <SelectVideoBtn
                 onSelectVideo={selectVideo}
-                disabled={!canSelectImages}
+                disabled={!canSelectImages || images?.length > 0}
                 setError={setError}
               />
               <OpenCameraBtn disabled={!canSelectImages} onAdd={onImageAdd} />
@@ -1117,7 +1126,7 @@ function ErrorBanner({
   clearVideo,
 }: {
   error: string
-  videoUploadState: VideoUploadState
+  videoUploadState: VideoUploadState | NoVideoState
   clearError: () => void
   clearVideo: () => void
 }) {
