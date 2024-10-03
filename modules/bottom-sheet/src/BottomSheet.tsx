@@ -94,7 +94,7 @@ export class BottomSheet extends React.Component<
         ref={this.ref}
         style={{
           position: 'absolute',
-          height: screenHeight - topInset - bottomInset,
+          height: screenHeight,
           width: '100%',
         }}
         containerBackgroundColor={backgroundColor}>
