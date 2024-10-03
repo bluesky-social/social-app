@@ -1,3 +1,1 @@
-import {Link as BottomSheetLink} from './Link'
-
-export {BottomSheetLink}
+export {Link as BottomSheetInlineLinkText} from './Link'
