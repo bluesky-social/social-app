@@ -304,7 +304,7 @@ export function PostInteractionSettingsForm({
               }
               value={quotesEnabled}
               onChange={onChangeQuotesEnabled}
-              style={[, a.justify_between, a.pt_xs]}
+              style={[a.justify_between, a.pt_xs]}
               PressableComponent={NormalizedRNGHPressable}>
               <Text style={[t.atoms.text_contrast_medium]}>
                 {quotesEnabled ? (
