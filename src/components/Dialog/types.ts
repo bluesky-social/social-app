@@ -37,6 +37,7 @@ export type DialogControlProps = DialogControlRefProps & {
 
 export type DialogContextProps = {
   close: DialogControlProps['close']
+  insideDialog: boolean
 }
 
 export type DialogControlOpenOptions = {

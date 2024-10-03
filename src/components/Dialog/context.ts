@@ -9,6 +9,7 @@ import {
 
 export const Context = React.createContext<DialogContextProps>({
   close: () => {},
+  insideDialog: false,
 })
 
 export function useDialogContext() {

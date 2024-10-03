@@ -82,7 +82,7 @@ export function Outer({
     [open, close],
   )
 
-  const context = React.useMemo(() => ({close}), [close])
+  const context = React.useMemo(() => ({close, insideDialog: true}), [close])
 
   return (
     <Portal>

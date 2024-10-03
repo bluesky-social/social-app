@@ -13,7 +13,9 @@ import {logger} from '#/logger'
 import {useAgent, useSession} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {BottomSheetButton} from '#/components/BottomSheetButton'
+import {BottomSheetInlineLinkText} from '#/components/BottomSheetLink'
+import {ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
@@ -139,7 +141,7 @@ function Label({
         </View>
         {!isSelfLabel && (
           <View>
-            <Button
+            <BottomSheetButton
               variant="solid"
               color="secondary"
               size="small"
@@ -148,7 +150,7 @@ function Label({
               <ButtonText>
                 <Trans>Appeal</Trans>
               </ButtonText>
-            </Button>
+            </BottomSheetButton>
           </View>
         )}
       </View>
@@ -156,23 +158,25 @@ function Label({
       <Divider />
 
       <View style={[a.px_md, a.py_sm, t.atoms.bg_contrast_25]}>
-        <Text style={[t.atoms.text_contrast_medium]}>
-          {isSelfLabel ? (
+        {isSelfLabel ? (
+          <Text style={[t.atoms.text_contrast_medium]}>
             <Trans>This label was applied by you.</Trans>
-          ) : (
-            <Trans>
-              Source:{' '}
-              <InlineLinkText
-                label={sourceName}
-                to={makeProfileLink(
-                  labeler ? labeler.creator : {did: label.src, handle: ''},
-                )}
-                onPress={() => control.close()}>
-                {sourceName}
-              </InlineLinkText>
-            </Trans>
-          )}
-        </Text>
+          </Text>
+        ) : (
+          <View style={{flexDirection: 'row'}}>
+            <Text style={[t.atoms.text_contrast_medium]}>
+              <Trans>Source: </Trans>{' '}
+            </Text>
+            <BottomSheetInlineLinkText
+              label={sourceName}
+              to={makeProfileLink(
+                labeler ? labeler.creator : {did: label.src, handle: ''},
+              )}
+              onPress={() => control.close()}>
+              {sourceName}
+            </BottomSheetInlineLinkText>
+          </View>
+        )}
       </View>
     </View>
   )
@@ -275,7 +279,7 @@ function AppealForm({
             ? [a.flex_row, a.justify_between]
             : [{flexDirection: 'column-reverse'}, a.gap_sm]
         }>
-        <Button
+        <BottomSheetButton
           testID="backBtn"
           variant="solid"
           color="secondary"
@@ -283,8 +287,8 @@ function AppealForm({
           onPress={onPressBack}
           label={_(msg`Back`)}>
           <ButtonText>{_(msg`Back`)}</ButtonText>
-        </Button>
-        <Button
+        </BottomSheetButton>
+        <BottomSheetButton
           testID="submitBtn"
           variant="solid"
           color="primary"
@@ -293,7 +297,7 @@ function AppealForm({
           label={_(msg`Submit`)}>
           <ButtonText>{_(msg`Submit`)}</ButtonText>
           {isPending && <ButtonIcon icon={Loader} />}
-        </Button>
+        </BottomSheetButton>
       </View>
     </>
   )
