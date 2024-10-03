@@ -1,12 +1,13 @@
 import React, {useImperativeHandle} from 'react'
 import {StyleProp, TextInput, View, ViewStyle} from 'react-native'
+import {GestureHandlerRootView, ScrollView} from 'react-native-gesture-handler'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {BlueskyBottomSheetView} from '@haileyok/bluesky-bottom-sheet'
 
 import {logger} from '#/logger'
+import {isIOS} from '#/platform/detection'
 import {useDialogStateControlContext} from '#/state/dialogs'
 import {List, ListMethods, ListProps} from '#/view/com/util/List'
-import {ScrollView} from '#/view/com/util/Views'
 import {atoms as a, flatten, useTheme} from '#/alf'
 import {Context} from '#/components/Dialog/context'
 import {
@@ -24,6 +25,26 @@ export * from '#/components/Dialog/utils'
 export const Input = createInput(TextInput)
 
 export function Outer({
+  children,
+  control,
+  onClose,
+  nativeOptions,
+  testID,
+}: React.PropsWithChildren<DialogOuterProps>) {
+  return (
+    <Portal>
+      <OuterWithoutPortal
+        control={control}
+        onClose={onClose}
+        nativeOptions={nativeOptions}
+        testID={testID}>
+        {children}
+      </OuterWithoutPortal>
+    </Portal>
+  )
+}
+
+export function OuterWithoutPortal({
   children,
   control,
   onClose,
@@ -84,26 +105,26 @@ export function Outer({
 
   const context = React.useMemo(() => ({close, insideDialog: true}), [close])
 
+  const Wrapper = isIOS ? View : GestureHandlerRootView
+
   return (
-    <Portal>
-      <Context.Provider value={context}>
-        <BlueskyBottomSheetView
-          ref={ref}
-          topInset={30}
-          bottomInset={insets.bottom}
-          onStateChange={e => {
-            if (e.nativeEvent.state === 'closed') {
-              onCloseAnimationComplete()
-            }
-          }}
-          cornerRadius={20}
-          {...nativeOptions}>
-          <View testID={testID} style={[t.atoms.bg]}>
-            {children}
-          </View>
-        </BlueskyBottomSheetView>
-      </Context.Provider>
-    </Portal>
+    <Context.Provider value={context}>
+      <BlueskyBottomSheetView
+        ref={ref}
+        topInset={30}
+        bottomInset={insets.bottom}
+        onStateChange={e => {
+          if (e.nativeEvent.state === 'closed') {
+            onCloseAnimationComplete()
+          }
+        }}
+        cornerRadius={20}
+        {...nativeOptions}>
+        <Wrapper testID={testID} style={[t.atoms.bg]}>
+          {children}
+        </Wrapper>
+      </BlueskyBottomSheetView>
+    </Context.Provider>
   )
 }
 
