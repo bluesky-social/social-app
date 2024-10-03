@@ -117,13 +117,7 @@ import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import * as Prompt from '#/components/Prompt'
 import {Text as NewText} from '#/components/Typography'
 import {composerReducer, createComposerState} from './state/composer'
-import {
-  NO_VIDEO,
-  NoVideoState,
-  processVideo,
-  VideoAction,
-  VideoState,
-} from './state/video'
+import {NO_VIDEO, NoVideoState, processVideo, VideoState} from './state/video'
 
 const MAX_IMAGES = 4
 
@@ -204,12 +198,6 @@ export const ComposePost = ({
   if (composerState.embed.media?.type === 'video') {
     videoState = composerState.embed.media.video
   }
-  const videoDispatch = useCallback(
-    (videoAction: VideoAction) => {
-      dispatch({type: 'embed_update_video', videoAction})
-    },
-    [dispatch],
-  )
 
   const selectVideo = React.useCallback(
     (asset: ImagePickerAsset) => {
@@ -217,14 +205,14 @@ export const ComposePost = ({
       dispatch({type: 'embed_add_video', asset, abortController})
       processVideo(
         asset,
-        videoDispatch,
+        videoAction => dispatch({type: 'embed_update_video', videoAction}),
         agent,
         currentDid,
         abortController.signal,
         _,
       )
     },
-    [_, videoDispatch, agent, currentDid],
+    [_, agent, currentDid],
   )
 
   // Whenever we receive an initial video uri, we should immediately run compression if necessary
@@ -241,14 +229,17 @@ export const ComposePost = ({
 
   const updateVideoDimensions = useCallback(
     (width: number, height: number) => {
-      videoDispatch({
-        type: 'update_dimensions',
-        width,
-        height,
-        signal: videoState.abortController.signal,
+      dispatch({
+        type: 'embed_update_video',
+        videoAction: {
+          type: 'update_dimensions',
+          width,
+          height,
+          signal: videoState.abortController.signal,
+        },
       })
     },
-    [videoState.abortController, videoDispatch],
+    [videoState.abortController],
   )
 
   const hasVideo = Boolean(videoState.asset || videoState.video)
