@@ -861,7 +861,6 @@ export const ComposePost = ({
         onConfirm={onClose}
         confirmButtonCta={_(msg`Discard`)}
         confirmButtonColor="negative"
-        withoutPortal={true}
       />
     </KeyboardAvoidingView>
   )

@@ -58,6 +58,7 @@ export type DialogOuterProps = {
   nativeOptions?: Omit<BottomSheetViewProps, 'children'>
   webOptions?: {}
   testID?: string
+  Portal?: ({children}: {children?: React.ReactNode}) => null
 }
 
 type DialogInnerPropsBase<T> = React.PropsWithChildren<ViewStyleProp> & T
