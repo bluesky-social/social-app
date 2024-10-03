@@ -150,6 +150,9 @@ let ProfileHeaderStandard = ({
         style={[a.px_lg, a.pt_md, a.pb_sm, a.overflow_hidden]}
         pointerEvents={isIOS ? 'auto' : 'box-none'}>
         <View
+          onLayout={e => {
+            console.log('height', e.nativeEvent.layout.height)
+          }}
           style={[
             {paddingLeft: 90},
             a.flex_row,

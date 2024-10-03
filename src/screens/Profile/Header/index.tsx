@@ -27,7 +27,7 @@ let ProfileHeaderLoading = (_props: {}): React.ReactNode => {
       </View>
       <View style={styles.content}>
         <View style={[styles.buttonsLine]}>
-          <LoadingPlaceholder width={167} height={36} style={styles.br50} />
+          <LoadingPlaceholder width={120} height={34} style={styles.br50} />
         </View>
       </View>
     </View>
@@ -69,13 +69,12 @@ const styles = StyleSheet.create({
   },
   content: {
     paddingTop: 12,
-    paddingHorizontal: 14,
-    paddingBottom: 4,
+    paddingHorizontal: 16,
+    paddingBottom: 8,
   },
   buttonsLine: {
     flexDirection: 'row',
     marginLeft: 'auto',
-    marginBottom: 12,
   },
   br45: {borderRadius: 45},
   br50: {borderRadius: 50},

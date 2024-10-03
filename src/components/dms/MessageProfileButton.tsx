@@ -41,15 +41,9 @@ export function MessageProfileButton({
             a.align_center,
             t.atoms.bg_contrast_25,
             a.rounded_full,
-            {width: 36, height: 36},
+            {width: 34, height: 34},
           ]}>
-          <Message
-            style={[
-              t.atoms.text,
-              {marginLeft: 1, marginBottom: 1, opacity: 0.3},
-            ]}
-            size="md"
-          />
+          <Message style={[t.atoms.text, {opacity: 0.3}]} size="md" />
         </View>
       )
     } else {
