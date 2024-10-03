@@ -54,9 +54,6 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
   }
   private var selectedDetentIdentifier: UISheetPresentationController.Detent.Identifier? {
     didSet {
-      guard let selectedDetentIdentifier else {
-        return
-      }
       if selectedDetentIdentifier == .large {
         onSnapPointChange([
           "snapPoint": 2
