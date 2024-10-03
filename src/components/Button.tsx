@@ -117,7 +117,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
       disabled = false,
       style,
       hoverStyle: hoverStyleProp,
-      PressableComponent = Pressable,
+      PressableComponent,
       ...rest
     },
     ref,
