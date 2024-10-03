@@ -1,6 +1,10 @@
 import React, {useImperativeHandle} from 'react'
-import {StyleProp, TextInput, View, ViewStyle} from 'react-native'
-import {GestureHandlerRootView, ScrollView} from 'react-native-gesture-handler'
+import {StyleProp, View, ViewStyle} from 'react-native'
+import {
+  GestureHandlerRootView,
+  ScrollView,
+  TextInput as RNGHTextInput,
+} from 'react-native-gesture-handler'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-controller'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
@@ -23,7 +27,7 @@ export {useDialogContext, useDialogControl} from '#/components/Dialog/context'
 export * from '#/components/Dialog/types'
 export * from '#/components/Dialog/utils'
 // @ts-ignore
-export const Input = createInput(TextInput)
+export const Input = createInput(RNGHTextInput)
 
 export function Outer({
   children,
