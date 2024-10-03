@@ -37,6 +37,7 @@ import * as Toggle from '#/components/forms/Toggle'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {Loader} from '#/components/Loader'
+import {NormalizedRNGHPressable} from '#/components/NormalizedRNGHPressable'
 import {Text} from '#/components/Typography'
 
 export type PostInteractionSettingsFormProps = {
@@ -303,7 +304,8 @@ export function PostInteractionSettingsForm({
               }
               value={quotesEnabled}
               onChange={onChangeQuotesEnabled}
-              style={[, a.justify_between, a.pt_xs]}>
+              style={[a.justify_between, a.pt_xs]}
+              PressableComponent={NormalizedRNGHPressable}>
               <Text style={[t.atoms.text_contrast_medium]}>
                 {quotesEnabled ? (
                   <Trans>Quote posts enabled</Trans>
