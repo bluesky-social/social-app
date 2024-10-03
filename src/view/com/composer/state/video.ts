@@ -12,9 +12,9 @@ import {
   VideoTooLargeError,
 } from '#/lib/media/video/errors'
 import {CompressedVideo} from '#/lib/media/video/types'
+import {uploadVideo} from '#/lib/media/video/upload'
+import {createVideoAgent} from '#/lib/media/video/util'
 import {logger} from '#/logger'
-import {createVideoAgent} from '#/state/queries/video/util'
-import {uploadVideo} from '#/state/queries/video/video-upload'
 
 export type VideoAction =
   | {
