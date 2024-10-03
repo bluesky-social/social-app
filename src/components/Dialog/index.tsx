@@ -124,7 +124,6 @@ export function OuterWithoutPortal({
         topInset={30}
         bottomInset={insets.bottom}
         onSnapPointChange={e => {
-          console.log(e.nativeEvent)
           setSnapPoint(e.nativeEvent.snapPoint)
         }}
         onStateChange={e => {
