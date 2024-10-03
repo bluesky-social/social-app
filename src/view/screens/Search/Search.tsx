@@ -338,18 +338,28 @@ function SearchLanguageDropdown({
   onChange(value: string): void
 }) {
   const t = useThemeNew()
+  const {_} = useLingui()
   const {contentLanguages} = useLanguagePrefs()
 
   const items = React.useMemo(() => {
-    return LANGUAGES.filter(l => Boolean(l.code2))
-      .map(l => ({
-        label: l.name,
-        inputLabel: l.name,
-        value: l.code2,
-        key: l.code2 + l.code3,
-      }))
-      .sort(a => (contentLanguages.includes(a.value) ? -1 : 1))
-  }, [contentLanguages])
+    return [
+      {
+        label: _(msg`Any language`),
+        inputLabel: _(msg`Any language`),
+        value: '',
+        key: '*',
+      },
+    ].concat(
+      LANGUAGES.filter(l => Boolean(l.code2))
+        .map(l => ({
+          label: l.name,
+          inputLabel: l.name,
+          value: l.code2,
+          key: l.code2 + l.code3,
+        }))
+        .sort(a => (contentLanguages.includes(a.value) ? -1 : 1)),
+    )
+  }, [_, contentLanguages])
 
   const style = {
     backgroundColor: t.atoms.bg_contrast_25.backgroundColor,
