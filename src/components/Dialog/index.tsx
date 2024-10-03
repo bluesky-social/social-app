@@ -1,10 +1,6 @@
 import React, {useImperativeHandle} from 'react'
-import {StyleProp, View, ViewStyle} from 'react-native'
-import {
-  GestureHandlerRootView,
-  ScrollView,
-  TextInput as RNGHTextInput,
-} from 'react-native-gesture-handler'
+import {Platform, StyleProp, View, ViewStyle} from 'react-native'
+import {GestureHandlerRootView, ScrollView} from 'react-native-gesture-handler'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-controller'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
@@ -14,6 +10,7 @@ import {useDialogStateControlContext} from '#/state/dialogs'
 import {List, ListMethods, ListProps} from '#/view/com/util/List'
 import {atoms as a, flatten, useTheme} from '#/alf'
 import {Context, useDialogContext} from '#/components/Dialog/context'
+import {DialogTextInput} from '#/components/Dialog/DialogTextInput'
 import {
   DialogControlProps,
   DialogInnerProps,
@@ -27,7 +24,7 @@ export {useDialogContext, useDialogControl} from '#/components/Dialog/context'
 export * from '#/components/Dialog/types'
 export * from '#/components/Dialog/utils'
 // @ts-ignore
-export const Input = createInput(RNGHTextInput)
+export const Input = createInput(DialogTextInput)
 
 export function Outer({
   children,
@@ -151,10 +148,12 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
         style={[a.px_xl, style]}
         ref={ref}
         {...props}
-        bounces={nativeSnapPoint === BottomSheetSnapPoint.Full}
+        bounces={
+          Platform.OS !== 'ios' || nativeSnapPoint === BottomSheetSnapPoint.Full
+        }
+        overScrollMode="always"
         nestedScrollEnabled={true}
-        bottomOffset={30}
-        ScrollViewComponent={ScrollView}>
+        bottomOffset={30}>
         {children}
         <View style={{height: insets.bottom + a.pt_5xl.paddingTop}} />
       </KeyboardAwareScrollView>
