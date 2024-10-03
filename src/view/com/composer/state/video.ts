@@ -4,6 +4,8 @@ import {JobStatus} from '@atproto/api/dist/client/types/app/bsky/video/defs'
 import {I18n} from '@lingui/core'
 import {msg} from '@lingui/macro'
 
+import {createVideoAgent} from '#/lib/media/video/util'
+import {uploadVideo} from '#/lib/media/video/upload'
 import {AbortError} from '#/lib/async/cancelable'
 import {compressVideo} from '#/lib/media/video/compress'
 import {
@@ -13,8 +15,6 @@ import {
 } from '#/lib/media/video/errors'
 import {CompressedVideo} from '#/lib/media/video/types'
 import {logger} from '#/logger'
-import {createVideoAgent} from '#/state/queries/video/util'
-import {uploadVideo} from '#/state/queries/video/video-upload'
 
 export type VideoAction =
   | {

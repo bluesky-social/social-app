@@ -1,13 +1,8 @@
 import {ImagePickerAsset} from 'expo-image-picker'
 
 import {ComposerImage, createInitialImages} from '#/state/gallery'
-import {
-  createVideoState,
-  VideoAction,
-  videoReducer,
-  VideoState,
-} from '#/state/queries/video/video'
 import {ComposerOpts} from '#/state/shell/composer'
+import {createVideoState, VideoAction, videoReducer, VideoState} from './video'
 
 type PostRecord = {
   uri: string

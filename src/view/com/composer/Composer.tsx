@@ -82,13 +82,6 @@ import {useProfileQuery} from '#/state/queries/profile'
 import {Gif} from '#/state/queries/tenor'
 import {ThreadgateAllowUISetting} from '#/state/queries/threadgate'
 import {threadgateViewToAllowUISetting} from '#/state/queries/threadgate/util'
-import {NO_VIDEO, NoVideoState} from '#/state/queries/video/video'
-import {
-  processVideo,
-  VideoAction,
-  VideoState,
-  VideoState as VideoUploadState,
-} from '#/state/queries/video/video'
 import {useAgent, useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
 import {ComposerOpts} from '#/state/shell/composer'
@@ -123,7 +116,15 @@ import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmile} from '#/components/icons
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import * as Prompt from '#/components/Prompt'
 import {Text as NewText} from '#/components/Typography'
-import {composerReducer, createComposerState} from './state'
+import {composerReducer, createComposerState} from './state/composer'
+import {
+  NO_VIDEO,
+  NoVideoState,
+  processVideo,
+  VideoAction,
+  VideoState,
+  VideoState as VideoUploadState,
+} from './state/video'
 
 const MAX_IMAGES = 4
 
