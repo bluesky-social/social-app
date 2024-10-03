@@ -6,7 +6,8 @@ import {useLingui} from '@lingui/react'
 
 import {getLabelingServiceTitle} from '#/lib/moderation'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
-import {Button, useButtonContext} from '#/components/Button'
+import {BottomSheetButton} from '#/components/BottomSheetButton'
+import {useButtonContext} from '#/components/Button'
 import {Divider} from '#/components/Divider'
 import * as LabelingServiceCard from '#/components/LabelingServiceCard'
 import {Text} from '#/components/Typography'
@@ -38,12 +39,12 @@ export function SelectLabelerView({
       <View style={[a.gap_sm]}>
         {props.labelers.map(labeler => {
           return (
-            <Button
+            <BottomSheetButton
               key={labeler.creator.did}
               label={_(msg`Send report to ${labeler.creator.displayName}`)}
               onPress={() => props.onSelectLabeler(labeler.creator.did)}>
               <LabelerButton labeler={labeler} />
-            </Button>
+            </BottomSheetButton>
           )
         })}
       </View>

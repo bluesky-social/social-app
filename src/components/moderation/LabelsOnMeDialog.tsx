@@ -278,7 +278,7 @@ function AppealForm({
             ? [a.flex_row, a.justify_between]
             : [{flexDirection: 'column-reverse'}, a.gap_sm]
         }>
-        <Button
+        <BottomSheetButton
           testID="backBtn"
           variant="solid"
           color="secondary"
@@ -286,8 +286,8 @@ function AppealForm({
           onPress={onPressBack}
           label={_(msg`Back`)}>
           <ButtonText>{_(msg`Back`)}</ButtonText>
-        </Button>
-        <Button
+        </BottomSheetButton>
+        <BottomSheetButton
           testID="submitBtn"
           variant="solid"
           color="primary"
@@ -296,7 +296,7 @@ function AppealForm({
           label={_(msg`Submit`)}>
           <ButtonText>{_(msg`Submit`)}</ButtonText>
           {isPending && <ButtonIcon icon={Loader} />}
-        </Button>
+        </BottomSheetButton>
       </View>
     </>
   )
