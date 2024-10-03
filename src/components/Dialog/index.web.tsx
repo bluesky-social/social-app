@@ -103,7 +103,8 @@ export function Outer({
   const context = React.useMemo(
     () => ({
       close,
-      insideDialog: true,
+      isNativeDialog: false,
+      nativeSnapPoint: 0,
     }),
     [close],
   )

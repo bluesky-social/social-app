@@ -34,7 +34,7 @@ public class BottomSheetModule: Module {
       Prop("maxHeight") { (view: SheetView, prop: Double) in
         view.maxHeight = prop
       }
-      
+
       Prop("preventDismiss") { (view: SheetView, prop: Bool) in
         view.preventDismiss = prop
       }
