@@ -103,6 +103,7 @@ export function Outer({
   const context = React.useMemo(
     () => ({
       close,
+      insideDialog: true,
     }),
     [close],
   )
@@ -228,10 +229,6 @@ export const InnerFlatList = React.forwardRef<
     </Inner>
   )
 })
-
-export function Handle() {
-  return null
-}
 
 export function Close() {
   const {_} = useLingui()

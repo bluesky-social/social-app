@@ -10,9 +10,8 @@ import {
 } from '#/lib/strings/embed-player'
 import {useSetExternalEmbedPref} from '#/state/preferences'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
-import {BottomSheetButton} from '#/components/BottomSheetButton'
 import * as Dialog from '#/components/Dialog'
-import {ButtonText} from '../Button'
+import {Button, ButtonText} from '../Button'
 import {Text} from '../Typography'
 
 export function EmbedConsentDialog({
@@ -76,30 +75,33 @@ export function EmbedConsentDialog({
           </View>
         </View>
         <View style={a.gap_md}>
-          <BottomSheetButton
+          <Button
             style={gtMobile && a.flex_1}
             label={_(msg`Enable external media`)}
             onPress={onShowAllPress}
+            onAccessibilityEscape={control.close}
             color="primary"
             size="large"
             variant="solid">
             <ButtonText>
               <Trans>Enable external media</Trans>
             </ButtonText>
-          </BottomSheetButton>
-          <BottomSheetButton
+          </Button>
+          <Button
             style={gtMobile && a.flex_1}
             label={_(msg`Enable this source only`)}
             onPress={onShowPress}
+            onAccessibilityEscape={control.close}
             color="secondary"
             size="large"
             variant="solid">
             <ButtonText>
               <Trans>Enable {externalEmbedLabels[source]} only</Trans>
             </ButtonText>
-          </BottomSheetButton>
-          <BottomSheetButton
+          </Button>
+          <Button
             label={_(msg`No thanks`)}
+            onAccessibilityEscape={control.close}
             onPress={onHidePress}
             color="secondary"
             size="large"
@@ -107,7 +109,7 @@ export function EmbedConsentDialog({
             <ButtonText>
               <Trans>No thanks</Trans>
             </ButtonText>
-          </BottomSheetButton>
+          </Button>
         </View>
         <Dialog.Close />
       </Dialog.ScrollableInner>

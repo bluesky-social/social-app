@@ -7,9 +7,9 @@ import {useProfileQuery} from '#/state/queries/profile'
 import {type SessionAccount, useSession} from '#/state/session'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
-import {BottomSheetButton} from '#/components/BottomSheetButton'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {ChevronRight_Stroke2_Corner0_Rounded as Chevron} from '#/components/icons/Chevron'
+import {Button} from './Button'
 import {Text} from './Typography'
 
 export function AccountList({
@@ -51,19 +51,19 @@ export function AccountList({
           <View style={[{borderBottomWidth: 1}, t.atoms.border_contrast_low]} />
         </React.Fragment>
       ))}
-      <BottomSheetButton
+      <Button
         testID="chooseAddAccountBtn"
         style={[a.flex_1]}
         onPress={pendingDid ? undefined : onPressAddAccount}
         label={_(msg`Login to account that is not listed`)}>
-        {({pressed}) => (
+        {({hovered, pressed}) => (
           <View
             style={[
               a.flex_1,
               a.flex_row,
               a.align_center,
               {height: 48},
-              pressed && t.atoms.bg_contrast_25,
+              (hovered || pressed) && t.atoms.bg_contrast_25,
             ]}>
             <Text
               style={[
@@ -78,7 +78,7 @@ export function AccountList({
             <Chevron size="sm" style={[t.atoms.text, a.mr_md]} />
           </View>
         )}
-      </BottomSheetButton>
+      </Button>
     </View>
   )
 }
@@ -103,7 +103,7 @@ function AccountItem({
   }, [account, onSelect])
 
   return (
-    <BottomSheetButton
+    <Button
       testID={`chooseAccountBtn-${account.handle}`}
       key={account.did}
       style={[a.flex_1]}
@@ -113,14 +113,14 @@ function AccountItem({
           ? _(msg`Continue as ${account.handle} (currently signed in)`)
           : _(msg`Sign in as ${account.handle}`)
       }>
-      {({pressed}) => (
+      {({hovered, pressed}) => (
         <View
           style={[
             a.flex_1,
             a.flex_row,
             a.align_center,
             {height: 48},
-            (pressed || isPendingAccount) && t.atoms.bg_contrast_25,
+            (hovered || pressed || isPendingAccount) && t.atoms.bg_contrast_25,
           ]}>
           <View style={a.p_md}>
             <UserAvatar avatar={profile?.avatar} size={24} />
@@ -143,6 +143,6 @@ function AccountItem({
           )}
         </View>
       )}
-    </BottomSheetButton>
+    </Button>
   )
 }

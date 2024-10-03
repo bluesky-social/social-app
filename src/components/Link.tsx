@@ -23,7 +23,6 @@ import {shouldClickOpenNewTab} from '#/platform/urls'
 import {useModalControls} from '#/state/modals'
 import {useOpenLink} from '#/state/preferences/in-app-browser'
 import {atoms as a, flatten, TextStyleProp, useTheme, web} from '#/alf'
-import {BottomSheetButton} from '#/components/BottomSheetButton'
 import {Button, ButtonProps} from '#/components/Button'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {Text, TextProps} from '#/components/Typography'
@@ -258,7 +257,7 @@ export function BottomSheetLink({
   })
 
   return (
-    <BottomSheetButton
+    <Button
       {...rest}
       style={[a.justify_start, flatten(rest.style)]}
       role="link"
@@ -277,7 +276,7 @@ export function BottomSheetLink({
         },
       })}>
       {children}
-    </BottomSheetButton>
+    </Button>
   )
 }
 

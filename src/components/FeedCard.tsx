@@ -1,6 +1,5 @@
 import React from 'react'
 import {GestureResponderEvent, View} from 'react-native'
-import {PressableEvent} from 'react-native-gesture-handler/lib/typescript/components/Pressable/PressableProps'
 import {
   AppBskyActorDefs,
   AppBskyFeedDefs,
@@ -14,7 +13,6 @@ import {useQueryClient} from '@tanstack/react-query'
 
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
-import {isWeb} from '#/platform/detection'
 import {precacheFeedFromGeneratorView} from '#/state/queries/feed'
 import {
   useAddSavedFeedsMutation,
@@ -256,13 +254,9 @@ function SaveButtonInner({
   const isPending = isAddSavedFeedPending || isRemovePending
 
   const toggleSave = React.useCallback(
-    async (e: GestureResponderEvent | PressableEvent) => {
-      // WEB ONLY - this is okay. See `BottomSheetPressable.web.tsx`
-      if (isWeb) {
-        e = e as GestureResponderEvent
-        e.preventDefault()
-        e.stopPropagation()
-      }
+    async (e: GestureResponderEvent) => {
+      e.preventDefault()
+      e.stopPropagation()
 
       try {
         if (savedFeedConfig) {

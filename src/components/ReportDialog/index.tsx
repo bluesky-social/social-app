@@ -1,5 +1,6 @@
 import React from 'react'
-import {Pressable, ScrollView, View} from 'react-native'
+import {Pressable, View} from 'react-native'
+import {ScrollView} from 'react-native-gesture-handler'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 

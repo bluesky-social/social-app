@@ -30,8 +30,7 @@ import {
 import {useAgent, useSession} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
-import {BottomSheetButton} from '#/components/BottomSheetButton'
-import {ButtonIcon, ButtonText} from '#/components/Button'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {Divider} from '#/components/Divider'
 import * as Toggle from '#/components/forms/Toggle'
@@ -231,6 +230,7 @@ export function PostInteractionSettingsForm({
 }: PostInteractionSettingsFormProps) {
   const t = useTheme()
   const {_} = useLingui()
+  const control = Dialog.useDialogContext()
   const {data: lists} = useMyListsQuery('curate')
   const [quotesEnabled, setQuotesEnabled] = React.useState(
     !(
@@ -434,16 +434,17 @@ export function PostInteractionSettingsForm({
         </View>
       </View>
 
-      <BottomSheetButton
+      <Button
         label={_(msg`Save`)}
         onPress={onSave}
+        onAccessibilityEscape={control.close}
         color="primary"
         size="large"
         variant="solid"
         style={a.mt_xl}>
         <ButtonText>{_(msg`Save`)}</ButtonText>
         {isSaving && <ButtonIcon icon={Loader} position="right" />}
-      </BottomSheetButton>
+      </Button>
     </View>
   )
 }
@@ -463,7 +464,7 @@ function Selectable({
 }) {
   const t = useTheme()
   return (
-    <BottomSheetButton
+    <Button
       disabled={disabled}
       onPress={onPress}
       label={label}
@@ -473,8 +474,7 @@ function Selectable({
         checked: isSelected,
       }}
       style={a.flex_1}>
-      {/* @TODO DIALOG REFACTOR hovered focused */}
-      {({pressed}) => (
+      {({hovered, focused}) => (
         <View
           style={[
             a.flex_1,
@@ -485,7 +485,7 @@ function Selectable({
             a.p_md,
             {height: 40}, // for consistency with checkmark icon visible or not
             t.atoms.bg_contrast_50,
-            pressed && t.atoms.bg_contrast_100,
+            (hovered || focused) && t.atoms.bg_contrast_100,
             isSelected && {
               backgroundColor: t.palette.primary_100,
             },
@@ -499,7 +499,7 @@ function Selectable({
           )}
         </View>
       )}
-    </BottomSheetButton>
+    </Button>
   )
 }
 

@@ -19,8 +19,7 @@ import {useSession} from '#/state/session'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {WizardAction, WizardState} from '#/screens/StarterPack/Wizard/State'
 import {atoms as a, useTheme} from '#/alf'
-import {BottomSheetButton} from '#/components/BottomSheetButton'
-import {ButtonText} from '#/components/Button'
+import {Button, ButtonText} from '#/components/Button'
 import * as Toggle from '#/components/forms/Toggle'
 import {Checkbox} from '#/components/forms/Toggle'
 import {Text} from '#/components/Typography'
@@ -99,7 +98,7 @@ function WizardListCard({
       {btnType === 'checkbox' ? (
         <Checkbox />
       ) : !disabled ? (
-        <BottomSheetButton
+        <Button
           label={_(msg`Remove`)}
           variant="solid"
           color="secondary"
@@ -109,7 +108,7 @@ function WizardListCard({
           <ButtonText>
             <Trans>Remove</Trans>
           </ButtonText>
-        </BottomSheetButton>
+        </Button>
       ) : null}
     </Toggle.Item>
   )

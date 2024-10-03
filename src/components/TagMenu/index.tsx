@@ -13,8 +13,7 @@ import {
   useUpsertMutedWordsMutation,
 } from '#/state/queries/preferences'
 import {atoms as a, native, useTheme} from '#/alf'
-import {BottomSheetButton} from '#/components/BottomSheetButton'
-import {ButtonText} from '#/components/Button'
+import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {Divider} from '#/components/Divider'
 import {MagnifyingGlass2_Stroke2_Corner0_Rounded as Search} from '#/components/icons/MagnifyingGlass2'
@@ -212,7 +211,7 @@ export function TagMenu({
                   <>
                     <Divider />
 
-                    <BottomSheetButton
+                    <Button
                       label={
                         isMuted
                           ? _(msg`Unmute all ${displayTag} posts`)
@@ -266,12 +265,12 @@ export function TagMenu({
                           <Trans>posts</Trans>
                         </Text>
                       </View>
-                    </BottomSheetButton>
+                    </Button>
                   </>
                 ) : null}
               </View>
 
-              <BottomSheetButton
+              <Button
                 label={_(msg`Close this dialog`)}
                 size="small"
                 variant="ghost"
@@ -280,7 +279,7 @@ export function TagMenu({
                 <ButtonText>
                   <Trans>Cancel</Trans>
                 </ButtonText>
-              </BottomSheetButton>
+              </Button>
             </>
           )}
         </Dialog.Inner>

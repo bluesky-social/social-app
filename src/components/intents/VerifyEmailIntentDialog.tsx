@@ -6,8 +6,7 @@ import {useLingui} from '@lingui/react'
 import {isNative} from '#/platform/detection'
 import {useAgent, useSession} from '#/state/session'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
-import {BottomSheetButton} from '#/components/BottomSheetButton'
-import {ButtonIcon, ButtonText} from '#/components/Button'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {DialogControlProps} from '#/components/Dialog'
 import {Divider} from '#/components/Divider'
@@ -118,7 +117,7 @@ function Inner({}: {control: DialogControlProps}) {
         {status === 'failure' && (
           <>
             <Divider />
-            <BottomSheetButton
+            <Button
               label={_(msg`Resend Verification Email`)}
               onPress={onPressResendEmail}
               variant="solid"
@@ -129,7 +128,7 @@ function Inner({}: {control: DialogControlProps}) {
               <ButtonText>
                 <Trans>Resend Email</Trans>
               </ButtonText>
-            </BottomSheetButton>
+            </Button>
           </>
         )}
       </View>
