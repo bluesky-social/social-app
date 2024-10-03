@@ -52,6 +52,22 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
       }
     }
   }
+  private var selectedDetentIdentifier: UISheetPresentationController.Detent.Identifier? {
+    didSet {
+      guard let selectedDetentIdentifier else {
+        return
+      }
+      if selectedDetentIdentifier == .large {
+        onSnapPointChange([
+          "snapPoint": 2
+        ])
+      } else {
+        onSnapPointChange([
+          "snapPoint": 1
+        ])
+      }
+    }
+  }
 
   // MARK: - Lifecycle
 
@@ -104,11 +120,12 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
     }
 
     let sheetVc = SheetViewController()
+    sheetVc.setDetents(contentHeight: self.clampHeight(contentHeight), preventExpansion: self.preventExpansion)
     if let sheet = sheetVc.sheetPresentationController {
       sheet.delegate = self
       sheet.preferredCornerRadius = self.cornerRadius
+      self.selectedDetentIdentifier = sheet.selectedDetentIdentifier
     }
-    sheetVc.setDetents(contentHeight: self.clampHeight(contentHeight), preventExpansion: self.preventExpansion)
     sheetVc.view.addSubview(innerView)
 
     self.sheetVc = sheetVc
@@ -161,16 +178,6 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
   }
   
   func sheetPresentationControllerDidChangeSelectedDetentIdentifier(_ sheetPresentationController: UISheetPresentationController) {
-    let identifier = sheetPresentationController.selectedDetentIdentifier
-    
-    if identifier == .large {
-      onSnapPointChange([
-        "snapPoint": 2,
-      ])
-    } else {
-      onSnapPointChange([
-        "snapPoint": 1,
-      ])
-    }
+    self.selectedDetentIdentifier = sheetPresentationController.selectedDetentIdentifier
   }
 }
