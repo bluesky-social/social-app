@@ -117,11 +117,6 @@ class BottomSheetView(
     this.present()
   }
 
-  override fun onDetachedFromWindow() {
-    super.onDetachedFromWindow()
-    this.destroy()
-  }
-
   private fun destroy() {
     this.isClosing = false
     this.isOpen = false
