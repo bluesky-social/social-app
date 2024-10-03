@@ -1,76 +1,79 @@
 import {createUploadTask, FileSystemUploadType} from 'expo-file-system'
-import {AppBskyVideoDefs} from '@atproto/api'
+import {AppBskyVideoDefs, BskyAgent} from '@atproto/api'
+import {I18n} from '@lingui/core'
 import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useMutation} from '@tanstack/react-query'
 import {nanoid} from 'nanoid/non-secure'
 
-import {cancelable} from '#/lib/async/cancelable'
+import {AbortError} from '#/lib/async/cancelable'
 import {ServerError} from '#/lib/media/video/errors'
 import {CompressedVideo} from '#/lib/media/video/types'
 import {createVideoEndpointUrl, mimeToExt} from '#/state/queries/video/util'
-import {useSession} from '#/state/session'
-import {useServiceAuthToken, useVideoUploadLimits} from './video-upload.shared'
+import {getServiceAuthToken, getVideoUploadLimits} from './video-upload.shared'
 
-export const useUploadVideoMutation = ({
-  onSuccess,
-  onError,
+export async function uploadVideo({
+  video,
+  agent,
+  did,
   setProgress,
   signal,
+  _,
 }: {
-  onSuccess: (response: AppBskyVideoDefs.JobStatus) => void
-  onError: (e: any) => void
+  video: CompressedVideo
+  agent: BskyAgent
+  did: string
   setProgress: (progress: number) => void
   signal: AbortSignal
-}) => {
-  const {currentAccount} = useSession()
-  const getToken = useServiceAuthToken({
+  _: I18n['_']
+}) {
+  if (signal.aborted) {
+    throw new AbortError()
+  }
+  await getVideoUploadLimits(agent, _)
+
+  const uri = createVideoEndpointUrl('/xrpc/app.bsky.video.uploadVideo', {
+    did,
+    name: `${nanoid(12)}.${mimeToExt(video.mimeType)}`,
+  })
+
+  if (signal.aborted) {
+    throw new AbortError()
+  }
+  const token = await getServiceAuthToken({
+    agent,
     lxm: 'com.atproto.repo.uploadBlob',
     exp: Date.now() / 1000 + 60 * 30, // 30 minutes
   })
-  const checkLimits = useVideoUploadLimits()
-  const {_} = useLingui()
+  const uploadTask = createUploadTask(
+    uri,
+    video.uri,
+    {
+      headers: {
+        'content-type': video.mimeType,
+        Authorization: `Bearer ${token}`,
+      },
+      httpMethod: 'POST',
+      uploadType: FileSystemUploadType.BINARY_CONTENT,
+    },
+    p => setProgress(p.totalBytesSent / p.totalBytesExpectedToSend),
+  )
 
-  return useMutation({
-    mutationKey: ['video', 'upload'],
-    mutationFn: cancelable(async (video: CompressedVideo) => {
-      await checkLimits()
+  if (signal.aborted) {
+    throw new AbortError()
+  }
+  const res = await uploadTask.uploadAsync()
 
-      const uri = createVideoEndpointUrl('/xrpc/app.bsky.video.uploadVideo', {
-        did: currentAccount!.did,
-        name: `${nanoid(12)}.${mimeToExt(video.mimeType)}`,
-      })
+  if (!res?.body) {
+    throw new Error('No response')
+  }
 
-      const uploadTask = createUploadTask(
-        uri,
-        video.uri,
-        {
-          headers: {
-            'content-type': video.mimeType,
-            Authorization: `Bearer ${await getToken()}`,
-          },
-          httpMethod: 'POST',
-          uploadType: FileSystemUploadType.BINARY_CONTENT,
-        },
-        p => setProgress(p.totalBytesSent / p.totalBytesExpectedToSend),
-      )
-      const res = await uploadTask.uploadAsync()
+  const responseBody = JSON.parse(res.body) as AppBskyVideoDefs.JobStatus
 
-      if (!res?.body) {
-        throw new Error('No response')
-      }
+  if (!responseBody.jobId) {
+    throw new ServerError(responseBody.error || _(msg`Failed to upload video`))
+  }
 
-      const responseBody = JSON.parse(res.body) as AppBskyVideoDefs.JobStatus
-
-      if (!responseBody.jobId) {
-        throw new ServerError(
-          responseBody.error || _(msg`Failed to upload video`),
-        )
-      }
-
-      return responseBody
-    }, signal),
-    onError,
-    onSuccess,
-  })
+  if (signal.aborted) {
+    throw new AbortError()
+  }
+  return responseBody
 }

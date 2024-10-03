@@ -1,12 +1,11 @@
-import React, {useCallback, useEffect} from 'react'
 import {ImagePickerAsset} from 'expo-image-picker'
-import {AppBskyVideoDefs, BlobRef} from '@atproto/api'
+import {AppBskyVideoDefs, BlobRef, BskyAgent} from '@atproto/api'
+import {JobStatus} from '@atproto/api/dist/client/types/app/bsky/video/defs'
+import {I18n} from '@lingui/core'
 import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {QueryClient, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {AbortError} from '#/lib/async/cancelable'
-import {SUPPORTED_MIME_TYPES, SupportedMimeTypes} from '#/lib/constants'
+import {compressVideo} from '#/lib/media/video/compress'
 import {
   ServerError,
   UploadLimitError,
@@ -14,338 +13,409 @@ import {
 } from '#/lib/media/video/errors'
 import {CompressedVideo} from '#/lib/media/video/types'
 import {logger} from '#/logger'
-import {isWeb} from '#/platform/detection'
-import {useCompressVideoMutation} from '#/state/queries/video/compress-video'
-import {useVideoAgent} from '#/state/queries/video/util'
-import {useUploadVideoMutation} from '#/state/queries/video/video-upload'
-
-type Status = 'idle' | 'compressing' | 'processing' | 'uploading' | 'done'
+import {createVideoAgent} from '#/state/queries/video/util'
+import {uploadVideo} from '#/state/queries/video/video-upload'
 
 type Action =
-  | {type: 'SetStatus'; status: Status}
-  | {type: 'SetProgress'; progress: number}
-  | {type: 'SetError'; error: string | undefined}
-  | {type: 'Reset'}
-  | {type: 'SetAsset'; asset: ImagePickerAsset}
-  | {type: 'SetDimensions'; width: number; height: number}
-  | {type: 'SetVideo'; video: CompressedVideo}
-  | {type: 'SetJobStatus'; jobStatus: AppBskyVideoDefs.JobStatus}
-  | {type: 'SetComplete'; blobRef: BlobRef}
+  | {type: 'to_idle'; nextController: AbortController}
+  | {
+      type: 'idle_to_compressing'
+      asset: ImagePickerAsset
+      signal: AbortSignal
+    }
+  | {
+      type: 'compressing_to_uploading'
+      video: CompressedVideo
+      signal: AbortSignal
+    }
+  | {
+      type: 'uploading_to_processing'
+      jobId: string
+      signal: AbortSignal
+    }
+  | {type: 'to_error'; error: string; signal: AbortSignal}
+  | {
+      type: 'to_done'
+      blobRef: BlobRef
+      signal: AbortSignal
+    }
+  | {type: 'update_progress'; progress: number; signal: AbortSignal}
+  | {
+      type: 'update_dimensions'
+      width: number
+      height: number
+      signal: AbortSignal
+    }
+  | {
+      type: 'update_job_status'
+      jobStatus: AppBskyVideoDefs.JobStatus
+      signal: AbortSignal
+    }
 
-export interface State {
-  status: Status
-  progress: number
-  asset?: ImagePickerAsset
-  video: CompressedVideo | null
-  jobStatus?: AppBskyVideoDefs.JobStatus
-  blobRef?: BlobRef
-  error?: string
+type IdleState = {
+  status: 'idle'
+  progress: 0
   abortController: AbortController
-  pendingPublish?: {blobRef: BlobRef; mutableProcessed: boolean}
+  asset?: undefined
+  video?: undefined
+  jobId?: undefined
+  pendingPublish?: undefined
 }
 
-export type VideoUploadDispatch = (action: Action) => void
+type ErrorState = {
+  status: 'error'
+  progress: 100
+  abortController: AbortController
+  asset: ImagePickerAsset | null
+  video: CompressedVideo | null
+  jobId: string | null
+  error: string
+  pendingPublish?: undefined
+}
 
-function reducer(queryClient: QueryClient) {
-  return (state: State, action: Action): State => {
-    let updatedState = state
-    if (action.type === 'SetStatus') {
-      updatedState = {...state, status: action.status}
-    } else if (action.type === 'SetProgress') {
-      updatedState = {...state, progress: action.progress}
-    } else if (action.type === 'SetError') {
-      updatedState = {...state, error: action.error}
-    } else if (action.type === 'Reset') {
-      state.abortController.abort()
-      queryClient.cancelQueries({
-        queryKey: ['video'],
-      })
-      updatedState = {
-        status: 'idle',
-        progress: 0,
-        video: null,
-        blobRef: undefined,
-        abortController: new AbortController(),
-      }
-    } else if (action.type === 'SetAsset') {
-      updatedState = {
+type CompressingState = {
+  status: 'compressing'
+  progress: number
+  abortController: AbortController
+  asset: ImagePickerAsset
+  video?: undefined
+  jobId?: undefined
+  pendingPublish?: undefined
+}
+
+type UploadingState = {
+  status: 'uploading'
+  progress: number
+  abortController: AbortController
+  asset: ImagePickerAsset
+  video: CompressedVideo
+  jobId?: undefined
+  pendingPublish?: undefined
+}
+
+type ProcessingState = {
+  status: 'processing'
+  progress: number
+  abortController: AbortController
+  asset: ImagePickerAsset
+  video: CompressedVideo
+  jobId: string
+  jobStatus: AppBskyVideoDefs.JobStatus | null
+  pendingPublish?: undefined
+}
+
+type DoneState = {
+  status: 'done'
+  progress: 100
+  abortController: AbortController
+  asset: ImagePickerAsset
+  video: CompressedVideo
+  jobId?: undefined
+  pendingPublish: {blobRef: BlobRef; mutableProcessed: boolean}
+}
+
+export type State =
+  | IdleState
+  | ErrorState
+  | CompressingState
+  | UploadingState
+  | ProcessingState
+  | DoneState
+
+export function createVideoState(
+  abortController: AbortController = new AbortController(),
+): IdleState {
+  return {
+    status: 'idle',
+    progress: 0,
+    abortController,
+  }
+}
+
+export function videoReducer(state: State, action: Action): State {
+  if (action.type === 'to_idle') {
+    return createVideoState(action.nextController)
+  }
+  if (action.signal.aborted || action.signal !== state.abortController.signal) {
+    // This action is stale and the process that spawned it is no longer relevant.
+    return state
+  }
+  if (action.type === 'to_error') {
+    return {
+      status: 'error',
+      progress: 100,
+      abortController: state.abortController,
+      error: action.error,
+      asset: state.asset ?? null,
+      video: state.video ?? null,
+      jobId: state.jobId ?? null,
+    }
+  } else if (action.type === 'update_progress') {
+    if (state.status === 'compressing' || state.status === 'uploading') {
+      return {
         ...state,
-        asset: action.asset,
+        progress: action.progress,
+      }
+    }
+  } else if (action.type === 'idle_to_compressing') {
+    if (state.status === 'idle') {
+      return {
         status: 'compressing',
-        error: undefined,
+        progress: 0,
+        abortController: state.abortController,
+        asset: action.asset,
       }
-    } else if (action.type === 'SetDimensions') {
-      updatedState = {
+    }
+  } else if (action.type === 'update_dimensions') {
+    if (state.asset) {
+      return {
         ...state,
-        asset: state.asset
-          ? {...state.asset, width: action.width, height: action.height}
-          : undefined,
+        asset: {...state.asset, width: action.width, height: action.height},
       }
-    } else if (action.type === 'SetVideo') {
-      updatedState = {...state, video: action.video, status: 'uploading'}
-    } else if (action.type === 'SetJobStatus') {
-      updatedState = {...state, jobStatus: action.jobStatus}
-    } else if (action.type === 'SetComplete') {
-      updatedState = {
+    }
+  } else if (action.type === 'compressing_to_uploading') {
+    if (state.status === 'compressing') {
+      return {
+        status: 'uploading',
+        progress: 0,
+        abortController: state.abortController,
+        asset: state.asset,
+        video: action.video,
+      }
+    }
+    return state
+  } else if (action.type === 'uploading_to_processing') {
+    if (state.status === 'uploading') {
+      return {
+        status: 'processing',
+        progress: 0,
+        abortController: state.abortController,
+        asset: state.asset,
+        video: state.video,
+        jobId: action.jobId,
+        jobStatus: null,
+      }
+    }
+  } else if (action.type === 'update_job_status') {
+    if (state.status === 'processing') {
+      return {
         ...state,
+        jobStatus: action.jobStatus,
+        progress:
+          action.jobStatus.progress !== undefined
+            ? action.jobStatus.progress / 100
+            : state.progress,
+      }
+    }
+  } else if (action.type === 'to_done') {
+    if (state.status === 'processing') {
+      return {
+        status: 'done',
+        progress: 100,
+        abortController: state.abortController,
+        asset: state.asset,
+        video: state.video,
         pendingPublish: {
           blobRef: action.blobRef,
           mutableProcessed: false,
         },
-        status: 'done',
       }
     }
-    return updatedState
   }
-}
-
-export function useUploadVideo({
-  setStatus,
-  initialVideoUri,
-}: {
-  setStatus: (status: string) => void
-  onSuccess: () => void
-  initialVideoUri?: string
-}) {
-  const {_} = useLingui()
-  const queryClient = useQueryClient()
-  const [state, dispatch] = React.useReducer(reducer(queryClient), {
-    status: 'idle',
-    progress: 0,
-    video: null,
-    abortController: new AbortController(),
-  })
-
-  const {setJobId} = useUploadStatusQuery({
-    onStatusChange: (status: AppBskyVideoDefs.JobStatus) => {
-      // This might prove unuseful, most of the job status steps happen too quickly to even be displayed to the user
-      // Leaving it for now though
-      dispatch({
-        type: 'SetJobStatus',
-        jobStatus: status,
-      })
-      setStatus(status.state.toString())
-    },
-    onSuccess: blobRef => {
-      dispatch({
-        type: 'SetComplete',
-        blobRef,
-      })
-    },
-    onError: useCallback(
-      error => {
-        logger.error('Error processing video', {safeMessage: error})
-        dispatch({
-          type: 'SetError',
-          error: _(msg`Video failed to process`),
-        })
-      },
-      [_],
-    ),
-  })
-
-  const {mutate: onVideoCompressed} = useUploadVideoMutation({
-    onSuccess: response => {
-      dispatch({
-        type: 'SetStatus',
-        status: 'processing',
-      })
-      setJobId(response.jobId)
-    },
-    onError: e => {
-      if (e instanceof AbortError) {
-        return
-      } else if (e instanceof ServerError || e instanceof UploadLimitError) {
-        let message
-        // https://github.com/bluesky-social/tango/blob/lumi/lumi/worker/permissions.go#L77
-        switch (e.message) {
-          case 'User is not allowed to upload videos':
-            message = _(msg`You are not allowed to upload videos.`)
-            break
-          case 'Uploading is disabled at the moment':
-            message = _(
-              msg`Hold up! We’re gradually giving access to video, and you’re still waiting in line. Check back soon!`,
-            )
-            break
-          case "Failed to get user's upload stats":
-            message = _(
-              msg`We were unable to determine if you are allowed to upload videos. Please try again.`,
-            )
-            break
-          case 'User has exceeded daily upload bytes limit':
-            message = _(
-              msg`You've reached your daily limit for video uploads (too many bytes)`,
-            )
-            break
-          case 'User has exceeded daily upload videos limit':
-            message = _(
-              msg`You've reached your daily limit for video uploads (too many videos)`,
-            )
-            break
-          case 'Account is not old enough to upload videos':
-            message = _(
-              msg`Your account is not yet old enough to upload videos. Please try again later.`,
-            )
-            break
-          default:
-            message = e.message
-            break
-        }
-        dispatch({
-          type: 'SetError',
-          error: message,
-        })
-      } else {
-        dispatch({
-          type: 'SetError',
-          error: _(msg`An error occurred while uploading the video.`),
-        })
-      }
-      logger.error('Error uploading video', {safeMessage: e})
-    },
-    setProgress: p => {
-      dispatch({type: 'SetProgress', progress: p})
-    },
-    signal: state.abortController.signal,
-  })
-
-  const {mutate: onSelectVideo} = useCompressVideoMutation({
-    onProgress: p => {
-      dispatch({type: 'SetProgress', progress: p})
-    },
-    onSuccess: (video: CompressedVideo) => {
-      dispatch({
-        type: 'SetVideo',
-        video,
-      })
-      onVideoCompressed(video)
-    },
-    onError: e => {
-      if (e instanceof AbortError) {
-        return
-      } else if (e instanceof VideoTooLargeError) {
-        dispatch({
-          type: 'SetError',
-          error: _(msg`The selected video is larger than 50MB.`),
-        })
-      } else {
-        dispatch({
-          type: 'SetError',
-          error: _(msg`An error occurred while compressing the video.`),
-        })
-        logger.error('Error compressing video', {safeMessage: e})
-      }
-    },
-    signal: state.abortController.signal,
-  })
-
-  const selectVideo = React.useCallback(
-    (asset: ImagePickerAsset) => {
-      // compression step on native converts to mp4, so no need to check there
-      if (isWeb) {
-        const mimeType = getMimeType(asset)
-        if (!SUPPORTED_MIME_TYPES.includes(mimeType as SupportedMimeTypes)) {
-          throw new Error(_(msg`Unsupported video type: ${mimeType}`))
-        }
-      }
-
-      dispatch({
-        type: 'SetAsset',
-        asset,
-      })
-      onSelectVideo(asset)
-    },
-    [_, onSelectVideo],
+  console.error(
+    'Unexpected video action (' +
+      action.type +
+      ') while in ' +
+      state.status +
+      ' state',
   )
-
-  const clearVideo = () => {
-    dispatch({type: 'Reset'})
-  }
-
-  const updateVideoDimensions = useCallback((width: number, height: number) => {
-    dispatch({
-      type: 'SetDimensions',
-      width,
-      height,
-    })
-  }, [])
-
-  // Whenever we receive an initial video uri, we should immediately run compression if necessary
-  useEffect(() => {
-    if (initialVideoUri) {
-      selectVideo({uri: initialVideoUri} as ImagePickerAsset)
-    }
-  }, [initialVideoUri, selectVideo])
-
-  return {
-    state,
-    dispatch,
-    selectVideo,
-    clearVideo,
-    updateVideoDimensions,
-  }
+  return state
 }
 
-const useUploadStatusQuery = ({
-  onStatusChange,
-  onSuccess,
-  onError,
-}: {
-  onStatusChange: (status: AppBskyVideoDefs.JobStatus) => void
-  onSuccess: (blobRef: BlobRef) => void
-  onError: (error: Error) => void
-}) => {
-  const videoAgent = useVideoAgent()
-  const [enabled, setEnabled] = React.useState(true)
-  const [jobId, setJobId] = React.useState<string>()
+function trunc2dp(num: number) {
+  return Math.trunc(num * 100) / 100
+}
 
-  const {error} = useQuery({
-    queryKey: ['video', 'upload status', jobId],
-    queryFn: async () => {
-      if (!jobId) return // this won't happen, can ignore
+export async function processVideo(
+  asset: ImagePickerAsset,
+  dispatch: (action: Action) => void,
+  agent: BskyAgent,
+  did: string,
+  signal: AbortSignal,
+  _: I18n['_'],
+) {
+  dispatch({
+    type: 'idle_to_compressing',
+    asset,
+    signal,
+  })
 
-      const {data} = await videoAgent.app.bsky.video.getJobStatus({jobId})
-      const status = data.jobStatus
+  let video: CompressedVideo | undefined
+  try {
+    video = await compressVideo(asset, {
+      onProgress: num => {
+        dispatch({type: 'update_progress', progress: trunc2dp(num), signal})
+      },
+      signal,
+    })
+  } catch (e) {
+    const message = getCompressErrorMessage(e, _)
+    if (message !== null) {
+      dispatch({
+        type: 'to_error',
+        error: message,
+        signal,
+      })
+    }
+    return
+  }
+  dispatch({
+    type: 'compressing_to_uploading',
+    video,
+    signal,
+  })
+
+  let uploadResponse: AppBskyVideoDefs.JobStatus | undefined
+  try {
+    uploadResponse = await uploadVideo({
+      video,
+      agent,
+      did,
+      signal,
+      _,
+      setProgress: p => {
+        dispatch({type: 'update_progress', progress: p, signal})
+      },
+    })
+  } catch (e) {
+    const message = getUploadErrorMessage(e, _)
+    if (message !== null) {
+      dispatch({
+        type: 'to_error',
+        error: message,
+        signal,
+      })
+    }
+    return
+  }
+
+  const jobId = uploadResponse.jobId
+  dispatch({
+    type: 'uploading_to_processing',
+    jobId,
+    signal,
+  })
+
+  let pollFailures = 0
+  while (true) {
+    if (signal.aborted) {
+      return // Exit async loop
+    }
+
+    const videoAgent = createVideoAgent()
+    let status: JobStatus | undefined
+    let blob: BlobRef | undefined
+    try {
+      const response = await videoAgent.app.bsky.video.getJobStatus({jobId})
+      status = response.data.jobStatus
+      pollFailures = 0
+
       if (status.state === 'JOB_STATE_COMPLETED') {
-        setEnabled(false)
-        if (!status.blob)
+        blob = status.blob
+        if (!blob) {
           throw new Error('Job completed, but did not return a blob')
-        onSuccess(status.blob)
+        }
       } else if (status.state === 'JOB_STATE_FAILED') {
         throw new Error(status.error ?? 'Job failed to process')
       }
-      onStatusChange(status)
-      return status
-    },
-    enabled: Boolean(jobId && enabled),
-    refetchInterval: 1500,
-  })
+    } catch (e) {
+      if (!status) {
+        pollFailures++
+        if (pollFailures < 50) {
+          await new Promise(resolve => setTimeout(resolve, 5000))
+          continue // Continue async loop
+        }
+      }
 
-  useEffect(() => {
-    if (error) {
-      onError(error)
-      setEnabled(false)
+      logger.error('Error processing video', {safeMessage: e})
+      dispatch({
+        type: 'to_error',
+        error: _(msg`Video failed to process`),
+        signal,
+      })
+      return // Exit async loop
     }
-  }, [error, onError])
 
-  return {
-    setJobId: (_jobId: string) => {
-      setJobId(_jobId)
-      setEnabled(true)
-    },
+    if (blob) {
+      dispatch({
+        type: 'to_done',
+        blobRef: blob,
+        signal,
+      })
+    } else {
+      dispatch({
+        type: 'update_job_status',
+        jobStatus: status,
+        signal,
+      })
+    }
+
+    if (
+      status.state !== 'JOB_STATE_COMPLETED' &&
+      status.state !== 'JOB_STATE_FAILED'
+    ) {
+      await new Promise(resolve => setTimeout(resolve, 1500))
+      continue // Continue async loop
+    }
+
+    return // Exit async loop
   }
 }
 
-function getMimeType(asset: ImagePickerAsset) {
-  if (isWeb) {
-    const [mimeType] = asset.uri.slice('data:'.length).split(';base64,')
-    if (!mimeType) {
-      throw new Error('Could not determine mime type')
+function getCompressErrorMessage(e: unknown, _: I18n['_']): string | null {
+  if (e instanceof AbortError) {
+    return null
+  }
+  if (e instanceof VideoTooLargeError) {
+    return _(msg`The selected video is larger than 50MB.`)
+  }
+  logger.error('Error compressing video', {safeMessage: e})
+  return _(msg`An error occurred while compressing the video.`)
+}
+
+function getUploadErrorMessage(e: unknown, _: I18n['_']): string | null {
+  if (e instanceof AbortError) {
+    return null
+  }
+  logger.error('Error uploading video', {safeMessage: e})
+  if (e instanceof ServerError || e instanceof UploadLimitError) {
+    // https://github.com/bluesky-social/tango/blob/lumi/lumi/worker/permissions.go#L77
+    switch (e.message) {
+      case 'User is not allowed to upload videos':
+        return _(msg`You are not allowed to upload videos.`)
+      case 'Uploading is disabled at the moment':
+        return _(
+          msg`Hold up! We’re gradually giving access to video, and you’re still waiting in line. Check back soon!`,
+        )
+      case "Failed to get user's upload stats":
+        return _(
+          msg`We were unable to determine if you are allowed to upload videos. Please try again.`,
+        )
+      case 'User has exceeded daily upload bytes limit':
+        return _(
+          msg`You've reached your daily limit for video uploads (too many bytes)`,
+        )
+      case 'User has exceeded daily upload videos limit':
+        return _(
+          msg`You've reached your daily limit for video uploads (too many videos)`,
+        )
+      case 'Account is not old enough to upload videos':
+        return _(
+          msg`Your account is not yet old enough to upload videos. Please try again later.`,
+        )
+      default:
+        return e.message
     }
-    return mimeType
   }
-  if (!asset.mimeType) {
-    throw new Error('Could not determine mime type')
-  }
-  return asset.mimeType
+  return _(msg`An error occurred while uploading the video.`)
 }

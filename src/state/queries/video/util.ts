@@ -1,4 +1,3 @@
-import {useMemo} from 'react'
 import {AtpAgent} from '@atproto/api'
 
 import {SupportedMimeTypes, VIDEO_SERVICE} from '#/lib/constants'
@@ -17,12 +16,10 @@ export const createVideoEndpointUrl = (
   return url.href
 }
 
-export function useVideoAgent() {
-  return useMemo(() => {
-    return new AtpAgent({
-      service: VIDEO_SERVICE,
-    })
-  }, [])
+export function createVideoAgent() {
+  return new AtpAgent({
+    service: VIDEO_SERVICE,
+  })
 }
 
 export function mimeToExt(mimeType: SupportedMimeTypes | (string & {})) {
