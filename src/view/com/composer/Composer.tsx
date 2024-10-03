@@ -123,7 +123,6 @@ import {
   processVideo,
   VideoAction,
   VideoState,
-  VideoState as VideoUploadState,
 } from './state/video'
 
 const MAX_IMAGES = 4
@@ -201,9 +200,9 @@ export const ComposePost = ({
     createComposerState,
   )
 
-  let videoUploadState: VideoState | NoVideoState = NO_VIDEO
+  let videoState: VideoState | NoVideoState = NO_VIDEO
   if (composerState.embed.media?.type === 'video') {
-    videoUploadState = composerState.embed.media.video
+    videoState = composerState.embed.media.video
   }
   const videoDispatch = useCallback(
     (videoAction: VideoAction) => {
@@ -236,9 +235,9 @@ export const ComposePost = ({
   }, [initVideoUri, selectVideo])
 
   const clearVideo = React.useCallback(() => {
-    videoUploadState.abortController.abort()
+    videoState.abortController.abort()
     dispatch({type: 'embed_remove_video'})
-  }, [videoUploadState.abortController, dispatch])
+  }, [videoState.abortController, dispatch])
 
   const updateVideoDimensions = useCallback(
     (width: number, height: number) => {
@@ -246,13 +245,13 @@ export const ComposePost = ({
         type: 'update_dimensions',
         width,
         height,
-        signal: videoUploadState.abortController.signal,
+        signal: videoState.abortController.signal,
       })
     },
-    [videoUploadState.abortController, videoDispatch],
+    [videoState.abortController, videoDispatch],
   )
 
-  const hasVideo = Boolean(videoUploadState.asset || videoUploadState.video)
+  const hasVideo = Boolean(videoState.asset || videoState.video)
 
   const [publishOnUpload, setPublishOnUpload] = useState(false)
 
@@ -289,7 +288,7 @@ export const ComposePost = ({
       graphemeLength > 0 ||
       images.length !== 0 ||
       extGif ||
-      videoUploadState.status !== 'idle'
+      videoState.status !== 'idle'
     ) {
       closeAllDialogs()
       Keyboard.dismiss()
@@ -304,7 +303,7 @@ export const ComposePost = ({
     closeAllDialogs,
     discardPromptControl,
     onClose,
-    videoUploadState.status,
+    videoState.status,
   ])
 
   useImperativeHandle(cancelRef, () => ({onPressCancel}))
@@ -401,8 +400,8 @@ export const ComposePost = ({
 
       if (
         !finishedUploading &&
-        videoUploadState.asset &&
-        videoUploadState.status !== 'done'
+        videoState.asset &&
+        videoState.status !== 'done'
       ) {
         setPublishOnUpload(true)
         return
@@ -415,7 +414,7 @@ export const ComposePost = ({
         images.length === 0 &&
         !extLink &&
         !quote &&
-        videoUploadState.status === 'idle'
+        videoState.status === 'idle'
       ) {
         setError(_(msg`Did you want to say anything?`))
         return
@@ -443,14 +442,14 @@ export const ComposePost = ({
             onStateChange: setProcessingState,
             langs: toPostLanguages(langPrefs.postLanguage),
             video:
-              videoUploadState.status === 'done'
+              videoState.status === 'done'
                 ? {
-                    blobRef: videoUploadState.pendingPublish.blobRef,
+                    blobRef: videoState.pendingPublish.blobRef,
                     altText: videoAltText,
                     captions: captions,
                     aspectRatio: {
-                      width: videoUploadState.asset.width,
-                      height: videoUploadState.asset.height,
+                      width: videoState.asset.width,
+                      height: videoState.asset.height,
                     },
                   }
                 : undefined,
@@ -551,20 +550,20 @@ export const ComposePost = ({
       setLangPrefs,
       threadgateAllowUISettings,
       videoAltText,
-      videoUploadState.asset,
-      videoUploadState.pendingPublish,
-      videoUploadState.status,
+      videoState.asset,
+      videoState.pendingPublish,
+      videoState.status,
     ],
   )
 
   React.useEffect(() => {
-    if (videoUploadState.pendingPublish && publishOnUpload) {
-      if (!videoUploadState.pendingPublish.mutableProcessed) {
-        videoUploadState.pendingPublish.mutableProcessed = true
+    if (videoState.pendingPublish && publishOnUpload) {
+      if (!videoState.pendingPublish.mutableProcessed) {
+        videoState.pendingPublish.mutableProcessed = true
         onPressPublish(true)
       }
     }
-  }, [onPressPublish, publishOnUpload, videoUploadState.pendingPublish])
+  }, [onPressPublish, publishOnUpload, videoState.pendingPublish])
 
   const canPost = useMemo(
     () => graphemeLength <= MAX_GRAPHEME_LENGTH && !isAltTextRequiredAndMissing,
@@ -577,10 +576,10 @@ export const ComposePost = ({
   const canSelectImages =
     images.length < MAX_IMAGES &&
     !extLink &&
-    videoUploadState.status === 'idle' &&
-    !videoUploadState.video
+    videoState.status === 'idle' &&
+    !videoState.video
   const hasMedia =
-    images.length > 0 || Boolean(extLink) || Boolean(videoUploadState.video)
+    images.length > 0 || Boolean(extLink) || Boolean(videoState.video)
 
   const onEmojiButtonPress = useCallback(() => {
     openEmojiPicker?.(textInput.current?.getCursorPosition())
@@ -695,9 +694,7 @@ export const ComposePost = ({
                     size="small"
                     style={[a.rounded_full, a.py_sm]}
                     onPress={() => onPressPublish()}
-                    disabled={
-                      videoUploadState.status !== 'idle' && publishOnUpload
-                    }>
+                    disabled={videoState.status !== 'idle' && publishOnUpload}>
                     <ButtonText style={[a.text_md]}>
                       {replyTo ? (
                         <Trans context="action">Reply</Trans>
@@ -733,7 +730,7 @@ export const ComposePost = ({
           )}
           <ErrorBanner
             error={error}
-            videoUploadState={videoUploadState}
+            videoState={videoState}
             clearError={() => setError('')}
             clearVideo={clearVideo}
           />
@@ -799,17 +796,17 @@ export const ComposePost = ({
                 style={[a.w_full, a.mt_lg]}
                 entering={native(ZoomIn)}
                 exiting={native(ZoomOut)}>
-                {videoUploadState.asset &&
-                  (videoUploadState.status === 'compressing' ? (
+                {videoState.asset &&
+                  (videoState.status === 'compressing' ? (
                     <VideoTranscodeProgress
-                      asset={videoUploadState.asset}
-                      progress={videoUploadState.progress}
+                      asset={videoState.asset}
+                      progress={videoState.progress}
                       clear={clearVideo}
                     />
-                  ) : videoUploadState.video ? (
+                  ) : videoState.video ? (
                     <VideoPreview
-                      asset={videoUploadState.asset}
-                      video={videoUploadState.video}
+                      asset={videoState.asset}
+                      video={videoState.video}
                       setDimensions={updateVideoDimensions}
                       clear={clearVideo}
                     />
@@ -855,9 +852,8 @@ export const ComposePost = ({
             t.atoms.border_contrast_medium,
             styles.bottomBar,
           ]}>
-          {videoUploadState.status !== 'idle' &&
-          videoUploadState.status !== 'done' ? (
-            <VideoUploadToolbar state={videoUploadState} />
+          {videoState.status !== 'idle' && videoState.status !== 'done' ? (
+            <VideoUploadToolbar state={videoState} />
           ) : (
             <ToolbarWrapper style={[a.flex_row, a.align_center, a.gap_xs]}>
               <SelectPhotoBtn
@@ -1122,12 +1118,12 @@ const styles = StyleSheet.create({
 
 function ErrorBanner({
   error: standardError,
-  videoUploadState,
+  videoState,
   clearError,
   clearVideo,
 }: {
   error: string
-  videoUploadState: VideoUploadState | NoVideoState
+  videoState: VideoState | NoVideoState
   clearError: () => void
   clearVideo: () => void
 }) {
@@ -1135,7 +1131,7 @@ function ErrorBanner({
   const {_} = useLingui()
 
   const videoError =
-    videoUploadState.status === 'error' ? videoUploadState.error : undefined
+    videoState.status === 'error' ? videoState.error : undefined
   const error = standardError || videoError
 
   const onClearError = () => {
@@ -1177,7 +1173,7 @@ function ErrorBanner({
             <ButtonIcon icon={X} />
           </Button>
         </View>
-        {videoError && videoUploadState.jobId && (
+        {videoError && videoState.jobId && (
           <NewText
             style={[
               {paddingLeft: 28},
@@ -1186,7 +1182,7 @@ function ErrorBanner({
               a.leading_snug,
               t.atoms.text_contrast_low,
             ]}>
-            <Trans>Job ID: {videoUploadState.jobId}</Trans>
+            <Trans>Job ID: {videoState.jobId}</Trans>
           </NewText>
         )}
       </View>
@@ -1212,7 +1208,7 @@ function ToolbarWrapper({
   )
 }
 
-function VideoUploadToolbar({state}: {state: VideoUploadState}) {
+function VideoUploadToolbar({state}: {state: VideoState}) {
   const t = useTheme()
   const {_} = useLingui()
   const progress = state.progress
