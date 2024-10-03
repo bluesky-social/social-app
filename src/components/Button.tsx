@@ -89,7 +89,7 @@ export type ButtonProps = Pick<
     style?: StyleProp<ViewStyle>
     hoverStyle?: StyleProp<ViewStyle>
     children: NonTextElements | ((context: ButtonContext) => NonTextElements)
-    Component?: React.ComponentType<PressableProps>
+    PressableComponent?: React.ComponentType<PressableProps>
   }
 
 export type ButtonTextProps = TextProps & VariantProps & {disabled?: boolean}
@@ -117,7 +117,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
       disabled = false,
       style,
       hoverStyle: hoverStyleProp,
-      Component,
+      PressableComponent,
       ...rest
     },
     ref,
@@ -125,11 +125,11 @@ export const Button = React.forwardRef<View, ButtonProps>(
     // This will pick the correct default pressable to use. If we are inside a dialog, we need to use the RNGH
     // pressable so that it is usable inside the dialog.
     const {insideDialog} = useDialogContext()
-    if (!Component) {
+    if (!PressableComponent) {
       if (insideDialog) {
-        Component = NormalizedRNGHPressable
+        PressableComponent = NormalizedRNGHPressable
       } else {
-        Component = Pressable
+        PressableComponent = Pressable
       }
     }
 
@@ -464,7 +464,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
     const flattenedBaseStyles = flatten([baseStyles, style])
 
     return (
-      <Component
+      <PressableComponent
         role="button"
         accessibilityHint={undefined} // optional
         {...rest}
@@ -516,7 +516,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
         <Context.Provider value={context}>
           {typeof children === 'function' ? children(context) : children}
         </Context.Provider>
-      </Component>
+      </PressableComponent>
     )
   },
 )

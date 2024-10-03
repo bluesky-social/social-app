@@ -16,6 +16,7 @@ import * as Toggle from '#/components/forms/Toggle'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {ChevronLeft_Stroke2_Corner0_Rounded as ChevronLeft} from '#/components/icons/Chevron'
 import {Loader} from '#/components/Loader'
+import {NormalizedRNGHPressable} from '#/components/NormalizedRNGHPressable'
 import {Text} from '#/components/Typography'
 import {ReportDialogProps} from './types'
 
@@ -153,7 +154,8 @@ export function SubmitView({
                 <Toggle.Item
                   key={labeler.creator.did}
                   name={labeler.creator.did}
-                  label={title}>
+                  label={title}
+                  PressableComponent={NormalizedRNGHPressable}>
                   <LabelerToggle title={title} />
                 </Toggle.Item>
               )

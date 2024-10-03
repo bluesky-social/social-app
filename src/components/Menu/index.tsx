@@ -105,11 +105,7 @@ export function Outer({
 export function Item({children, label, style, onPress, ...rest}: ItemProps) {
   const t = useTheme()
   const {control} = React.useContext(Context)
-  const {
-    state: focused,
-    onIn: onHoverIn,
-    onOut: onHoverOut,
-  } = useInteractionState()
+  const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
   const {
     state: pressed,
     onIn: onPressIn,
@@ -121,9 +117,15 @@ export function Item({children, label, style, onPress, ...rest}: ItemProps) {
       {...rest}
       accessibilityHint=""
       accessibilityLabel={label}
+      onFocus={onFocus}
+      onBlur={onBlur}
       onPress={e => {
         control?.close()
         onPress(e)
+
+        if (!e.defaultPrevented) {
+          control?.close()
+        }
       }}
       onPressIn={e => {
         onPressIn()
@@ -133,8 +135,6 @@ export function Item({children, label, style, onPress, ...rest}: ItemProps) {
         onPressOut()
         rest.onPressOut?.(e)
       }}
-      onHoverIn={onHoverIn}
-      onHoverOut={onHoverOut}
       style={[
         a.flex_row,
         a.align_center,
