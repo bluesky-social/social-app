@@ -119,10 +119,8 @@ export function Item({children, label, style, onPress, ...rest}: ItemProps) {
       accessibilityLabel={label}
       onFocus={onFocus}
       onBlur={onBlur}
-      onPress={e => {
-        control?.close()
-        onPress(e)
-
+      onPress={async e => {
+        await onPress(e)
         if (!e.defaultPrevented) {
           control?.close()
         }
