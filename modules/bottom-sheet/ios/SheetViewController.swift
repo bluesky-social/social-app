@@ -43,7 +43,7 @@ class SheetViewController: UIViewController {
           .medium()
         ]
       }
-      
+
       if !preventExpansion {
         sheet.detents.append(.large())
       }

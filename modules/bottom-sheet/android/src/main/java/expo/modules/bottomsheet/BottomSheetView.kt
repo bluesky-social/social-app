@@ -15,12 +15,13 @@ class BottomSheetView(
   context: Context,
   appContext: AppContext,
 ) : ExpoView(context, appContext) {
-
   private var reactRootView: ReactRootView? = null
   private var innerView: View? = null
   private var dialog: BottomSheetDialog? = null
 
-  private val screenHeight = context.resources.displayMetrics.heightPixels.toFloat()
+  private val screenHeight =
+    context.resources.displayMetrics.heightPixels
+      .toFloat()
 
   private val onAttemptDismiss by EventDispatcher()
   private val onSnapPointChange by EventDispatcher()
@@ -35,21 +36,23 @@ class BottomSheetView(
   var preventExpansion = false
 
   var minHeight = 0f
-    set (value) {
-      field = if (value < 0) {
-        0f
-      } else {
-        value
-      }
+    set(value) {
+      field =
+        if (value < 0) {
+          0f
+        } else {
+          value
+        }
     }
 
   var maxHeight = this.screenHeight
-    set (value) {
-      field = if (value > this.screenHeight) {
-        this.screenHeight.toFloat()
-      } else {
-        value
-      }
+    set(value) {
+      field =
+        if (value > this.screenHeight) {
+          this.screenHeight.toFloat()
+        } else {
+          value
+        }
     }
 
   private var isOpen: Boolean = false
@@ -66,9 +69,11 @@ class BottomSheetView(
     set(value) {
       field = value
       if (value) {
-        onStateChange(mapOf(
-          "state" to "opening"
-        ))
+        onStateChange(
+          mapOf(
+            "state" to "opening",
+          ),
+        )
       }
     }
 
@@ -76,9 +81,11 @@ class BottomSheetView(
     set(value) {
       field = value
       if (value) {
-        onStateChange(mapOf(
-          "state" to "closing"
-        ))
+        onStateChange(
+          mapOf(
+            "state" to "closing",
+          ),
+        )
       }
     }
 
@@ -164,26 +171,34 @@ class BottomSheetView(
         behavior.isDraggable = true
         behavior.isHideable = true
 
-        behavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
-          override fun onStateChanged(bottomSheet: View, newState: Int) {
-            when (newState) {
-              BottomSheetBehavior.STATE_EXPANDED -> {
-                selectedSnapPoint = 2
-              }
-              BottomSheetBehavior.STATE_COLLAPSED -> {
-                selectedSnapPoint = 1
-              }
-              BottomSheetBehavior.STATE_HALF_EXPANDED -> {
-                selectedSnapPoint = 1
-              }
-              BottomSheetBehavior.STATE_HIDDEN -> {
-                selectedSnapPoint = 0
+        behavior.addBottomSheetCallback(
+          object : BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(
+              bottomSheet: View,
+              newState: Int,
+            ) {
+              when (newState) {
+                BottomSheetBehavior.STATE_EXPANDED -> {
+                  selectedSnapPoint = 2
+                }
+                BottomSheetBehavior.STATE_COLLAPSED -> {
+                  selectedSnapPoint = 1
+                }
+                BottomSheetBehavior.STATE_HALF_EXPANDED -> {
+                  selectedSnapPoint = 1
+                }
+                BottomSheetBehavior.STATE_HIDDEN -> {
+                  selectedSnapPoint = 0
+                }
               }
             }
-          }
 
-          override fun onSlide(bottomSheet: View, slideOffset: Float) { }
-        })
+            override fun onSlide(
+              bottomSheet: View,
+              slideOffset: Float,
+            ) { }
+          },
+        )
       }
     }
     dialog.setOnDismissListener {
@@ -232,13 +247,14 @@ class BottomSheetView(
 
   private fun getTargetHeight(): Float {
     val contentHeight = this.getContentHeight()
-    val height = if (contentHeight > maxHeight) {
-      maxHeight
-    } else if (contentHeight < minHeight) {
-      minHeight
-    } else {
-      contentHeight
-    }
+    val height =
+      if (contentHeight > maxHeight) {
+        maxHeight
+      } else if (contentHeight < minHeight) {
+        minHeight
+      } else {
+        contentHeight
+      }
     return height
   }
 

@@ -1,6 +1,5 @@
 package expo.modules.bottomsheet
 
-import android.graphics.Color
 import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
 
@@ -28,14 +27,6 @@ class BottomSheetModule : Module() {
 
         AsyncFunction("updateLayout") { view: BottomSheetView ->
           view.updateLayout()
-        }
-
-        Prop("containerBackgroundColor") { view: BottomSheetView, prop: String ->
-//          view.sheetState.value.containerBackgroundColor = Color.parseColor(prop)
-        }
-
-        Prop("cornerRadius") { view: BottomSheetView, prop: Float ->
-//          view.sheetState.value.cornerRadius = prop
         }
 
         Prop("minHeight") { view: BottomSheetView, prop: Float ->
