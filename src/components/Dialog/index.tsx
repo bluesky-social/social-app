@@ -7,6 +7,7 @@ import {
 } from 'react-native-gesture-handler'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-controller'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {StatusBar} from 'expo-status-bar'
 
 import {logger} from '#/logger'
 import {isIOS} from '#/platform/detection'
@@ -98,31 +99,36 @@ export function Outer({
     [close, snapPoint],
   )
 
+  const isFullHeightIOS = isIOS && snapPoint === BottomSheetSnapPoint.Full
+
   const Wrapper = isIOS ? View : GestureHandlerRootView
 
   return (
-    <Portal>
-      <Context.Provider value={context}>
-        <BottomSheet
-          ref={ref}
-          topInset={30}
-          bottomInset={insets.bottom}
-          onSnapPointChange={e => {
-            setSnapPoint(e.nativeEvent.snapPoint)
-          }}
-          onStateChange={e => {
-            if (e.nativeEvent.state === 'closed') {
-              onCloseAnimationComplete()
-            }
-          }}
-          cornerRadius={20}
-          {...nativeOptions}>
-          <Wrapper testID={testID} style={[t.atoms.bg]}>
-            {children}
-          </Wrapper>
-        </BottomSheet>
-      </Context.Provider>
-    </Portal>
+    <>
+      <Portal>
+        <Context.Provider value={context}>
+          <BottomSheet
+            ref={ref}
+            topInset={30}
+            bottomInset={insets.bottom}
+            onSnapPointChange={e => {
+              setSnapPoint(e.nativeEvent.snapPoint)
+            }}
+            onStateChange={e => {
+              if (e.nativeEvent.state === 'closed') {
+                onCloseAnimationComplete()
+              }
+            }}
+            cornerRadius={20}
+            {...nativeOptions}>
+            <Wrapper testID={testID} style={[t.atoms.bg]}>
+              {children}
+            </Wrapper>
+          </BottomSheet>
+        </Context.Provider>
+      </Portal>
+      {isFullHeightIOS && <StatusBar style="light" />}
+    </>
   )
 }
 
