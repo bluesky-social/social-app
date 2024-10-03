@@ -13,7 +13,6 @@ import {AppBskyLabelerDefs} from '@atproto/api'
 import {atoms as a} from '#/alf'
 import * as Dialog from '#/components/Dialog'
 import {useDelayedLoading} from '#/components/hooks/useDelayedLoading'
-import {useOnKeyboardDidShow} from '#/components/hooks/useOnKeyboard'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {SelectLabelerView} from './SelectLabelerView'
@@ -39,9 +38,6 @@ function ReportDialogInner(props: ReportDialogProps) {
   const isLoading = useDelayedLoading(500, isLabelerLoading)
 
   const ref = React.useRef<ScrollView>(null)
-  useOnKeyboardDidShow(() => {
-    ref.current?.scrollToEnd({animated: true})
-  })
 
   return (
     <Dialog.ScrollableInner label={_(msg`Report dialog`)} ref={ref}>
