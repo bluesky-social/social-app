@@ -38,6 +38,7 @@ import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {Loader} from '#/components/Loader'
 import {NormalizedRNGHPressable} from '#/components/NormalizedRNGHPressable'
+import {PortalComponent} from '#/components/Portal'
 import {Text} from '#/components/Typography'
 
 export type PostInteractionSettingsFormProps = {
@@ -55,13 +56,15 @@ export type PostInteractionSettingsFormProps = {
 
 export function PostInteractionSettingsControlledDialog({
   control,
+  Portal,
   ...rest
 }: PostInteractionSettingsFormProps & {
   control: Dialog.DialogControlProps
+  Portal?: PortalComponent
 }) {
   const {_} = useLingui()
   return (
-    <Dialog.Outer control={control}>
+    <Dialog.Outer control={control} Portal={Portal}>
       <Dialog.ScrollableInner
         label={_(msg`Edit post interaction settings`)}
         style={[{maxWidth: 500}, a.w_full]}>
@@ -230,7 +233,6 @@ export function PostInteractionSettingsForm({
 }: PostInteractionSettingsFormProps) {
   const t = useTheme()
   const {_} = useLingui()
-  const control = Dialog.useDialogContext()
   const {data: lists} = useMyListsQuery('curate')
   const [quotesEnabled, setQuotesEnabled] = React.useState(
     !(
@@ -437,7 +439,6 @@ export function PostInteractionSettingsForm({
       <Button
         label={_(msg`Save`)}
         onPress={onSave}
-        onAccessibilityEscape={control.close}
         color="primary"
         size="large"
         variant="solid"
