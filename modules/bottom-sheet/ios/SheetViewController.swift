@@ -27,7 +27,7 @@ class SheetViewController: UIViewController {
       return
     }
 
-    if contentHeight > screenHeight {
+    if contentHeight > screenHeight - 100 {
       sheet.detents = [
         .large()
       ]
@@ -43,10 +43,10 @@ class SheetViewController: UIViewController {
           .medium()
         ]
       }
-    }
-
-    if !preventExpansion {
-      sheet.detents.append(.large())
+      
+      if !preventExpansion {
+        sheet.detents.append(.large())
+      }
     }
   }
 

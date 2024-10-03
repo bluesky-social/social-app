@@ -149,7 +149,8 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
         ref={ref}
         {...props}
         bounces={nativeSnapPoint === BottomSheetSnapPoint.Full}
-        bottomOffset={30}>
+        bottomOffset={30}
+        ScrollViewComponent={ScrollView}>
         {children}
         <View
           style={{
