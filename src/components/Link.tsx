@@ -5,6 +5,7 @@ import {
   StyleProp,
   ViewStyle,
 } from 'react-native'
+import {TouchableWithoutFeedback} from 'react-native-gesture-handler'
 import {sanitizeUrl} from '@braintree/sanitize-url'
 import {StackActions, useLinkProps} from '@react-navigation/native'
 
@@ -24,6 +25,7 @@ import {useModalControls} from '#/state/modals'
 import {useOpenLink} from '#/state/preferences/in-app-browser'
 import {atoms as a, flatten, TextStyleProp, useTheme, web} from '#/alf'
 import {Button, ButtonProps} from '#/components/Button'
+import {useDialogContext} from '#/components/Dialog'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {Text, TextProps} from '#/components/Typography'
 import {router} from '#/routes'
@@ -285,13 +287,49 @@ export function InlineLinkText({
     onOut: onPressOut,
   } = useInteractionState()
   const flattenedStyle = flatten(style) || {}
+  const {isNativeDialog} = useDialogContext()
+
+  const pressableProps = {
+    accessibilityLabel: label,
+    accessibilityHint: '',
+    accessibilityRole: 'link',
+    role: 'link',
+    onPress: download ? undefined : onPress,
+    onLongPress: onLongPress,
+    onPressIn: onPressIn,
+    onPressOut: onPressOut,
+  } as const
+
+  if (isNativeDialog) {
+    /* eslint-disable-next-line bsky-internal/avoid-unwrapped-text */
+    return (
+      <TouchableWithoutFeedback {...pressableProps}>
+        <Text
+          {...rest}
+          selectable={selectable}
+          style={[
+            {color: t.palette.primary_500},
+            (hovered || focused || pressed) &&
+              !disableUnderline && {
+                ...web({outline: 0}),
+                textDecorationLine: 'underline',
+                textDecorationColor:
+                  flattenedStyle.color ?? t.palette.primary_500,
+              },
+            flattenedStyle,
+            {lineHeight: 20},
+          ]}>
+          {children}
+        </Text>
+      </TouchableWithoutFeedback>
+    )
+  }
 
   return (
     <Text
       selectable={selectable}
-      accessibilityHint=""
-      accessibilityLabel={label}
       {...rest}
+      {...pressableProps}
       style={[
         {color: t.palette.primary_500},
         (hovered || focused || pressed) &&
@@ -302,16 +340,10 @@ export function InlineLinkText({
           },
         flattenedStyle,
       ]}
-      role="link"
-      onPress={download ? undefined : onPress}
-      onLongPress={onLongPress}
-      onPressIn={onPressIn}
-      onPressOut={onPressOut}
       onFocus={onFocus}
       onBlur={onBlur}
       onMouseEnter={onHoverIn}
       onMouseLeave={onHoverOut}
-      accessibilityRole="link"
       href={href}
       {...web({
         hrefAttrs: {
