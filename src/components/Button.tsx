@@ -14,7 +14,7 @@ import {
 } from 'react-native'
 import {LinearGradient} from 'expo-linear-gradient'
 
-import {atoms as a, flatten, select, tokens, useTheme, web} from '#/alf'
+import {atoms as a, flatten, select, tokens, useTheme} from '#/alf'
 import {useDialogContext} from '#/components/Dialog'
 import {Props as SVGIconProps} from '#/components/icons/common'
 import {NormalizedRNGHPressable} from '#/components/NormalizedRNGHPressable'
@@ -369,7 +369,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
           })
         } else if (size === 'small') {
           baseStyles.push({
-            paddingVertical: 8,
+            paddingVertical: 9,
             paddingHorizontal: 12,
             borderRadius: 6,
             gap: 6,
@@ -391,7 +391,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
           }
         } else if (size === 'small') {
           if (shape === 'round') {
-            baseStyles.push({height: 36, width: 36})
+            baseStyles.push({height: 34, width: 34})
           } else {
             baseStyles.push({height: 34, width: 34})
           }
@@ -645,9 +645,9 @@ export function useSharedButtonTextStyles() {
     }
 
     if (size === 'large') {
-      baseStyles.push(a.text_md, a.leading_tight, web({top: -0.4}))
+      baseStyles.push(a.text_md, a.leading_tight)
     } else if (size === 'small') {
-      baseStyles.push(a.text_sm, a.leading_tight, web({top: -0.4}))
+      baseStyles.push(a.text_sm, a.leading_tight)
     } else if (size === 'tiny') {
       baseStyles.push(a.text_xs, a.leading_tight)
     }
