@@ -112,7 +112,7 @@ export function OuterWithoutPortal({
   )
 
   const context = React.useMemo(
-    () => ({close, insideDialog: true, snapPoint}),
+    () => ({close, isNativeDialog: true, nativeSnapPoint: snapPoint}),
     [close, snapPoint],
   )
 
@@ -161,12 +161,12 @@ export function Inner({children, style}: DialogInnerProps) {
 export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
   function ScrollableInner({children, style}, ref) {
     const insets = useSafeAreaInsets()
-    const {snapPoint} = useDialogContext()
+    const {nativeSnapPoint} = useDialogContext()
     return (
       <KeyboardAwareScrollView
         style={[a.px_xl, style]}
         ref={ref}
-        bounces={snapPoint === BottomSheetSnapPoint.Full}
+        bounces={nativeSnapPoint === BottomSheetSnapPoint.Full}
         bottomOffset={30}
         ScrollViewComponent={ScrollView}>
         {children}
