@@ -111,6 +111,8 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
 
   func present() {
     guard !self.isOpen,
+          !self.isOpening,
+          !self.isClosing,
           let innerView = self.innerView,
           let contentHeight = innerView.subviews.first?.frame.height,
           let rvc = self.reactViewController() else {

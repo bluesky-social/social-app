@@ -1,6 +1,7 @@
 package expo.modules.bottomsheet
 
 import android.content.Context
+import android.util.Log
 import android.view.View
 import android.widget.FrameLayout
 import androidx.core.view.allViews
@@ -20,6 +21,8 @@ class BottomSheetView(
   private var innerView: View? = null
   private var dialog: BottomSheetDialog? = null
 
+  private val screenHeight = context.resources.displayMetrics.heightPixels.toFloat()
+
   private val onAttemptDismiss by EventDispatcher()
   private val onSnapPointChange by EventDispatcher()
   private val onStateChange by EventDispatcher()
@@ -31,8 +34,24 @@ class BottomSheetView(
       this.dialog?.setCancelable(!value)
     }
   var preventExpansion = false
+
   var minHeight = 0f
+    set (value) {
+      field = if (value < 0) {
+        0f
+      } else {
+        value
+      }
+    }
+
   var maxHeight = 0f
+    set (value) {
+      field = if (value > this.screenHeight) {
+        this.screenHeight.toFloat()
+      } else {
+        value
+      }
+    }
 
   private var isOpen: Boolean = false
     set(value) {
@@ -99,30 +118,38 @@ class BottomSheetView(
     this.present()
   }
 
+  override fun onDetachedFromWindow() {
+    super.onDetachedFromWindow()
+    this.destroy()
+  }
+
   private fun destroy() {
     this.isClosing = false
     this.isOpen = false
     this.dialog = null
     this.reactRootView = null
     this.innerView = null
+    SheetManager.remove(this)
   }
 
   // Presentation
 
   private fun present() {
+    if (this.isOpen || this.isOpening || this.isClosing) return
+
     val innerView = this.innerView ?: return
-    val contentHeight = innerView.allViews.first().height.toFloat()
+    val contentHeight = this.getContentHeight()
 
     // Needs to be a react root view for RNGH to work
     val rootView = ReactRootView(context)
     rootView.addView(innerView)
     this.reactRootView = rootView
 
-    this.isOpening = true
-
     val dialog = BottomSheetDialog(context)
     dialog.setContentView(rootView)
     dialog.setCancelable(!preventDismiss)
+    Log.d("BottomSheetView", "contentHeight: $contentHeight")
+    Log.d("BottomSheetView", "screenHeight: $screenHeight")
     dialog.setOnShowListener {
       val bottomSheet = dialog.findViewById<FrameLayout>(com.google.android.material.R.id.design_bottom_sheet)
       bottomSheet?.let {
@@ -132,8 +159,20 @@ class BottomSheetView(
 
         val behavior = BottomSheetBehavior.from(it)
 
-        behavior.isFitToContents = false
-        behavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+        behavior.isFitToContents = true
+        if (contentHeight > this.screenHeight) {
+          behavior.halfExpandedRatio = 0.99f
+          behavior.state = BottomSheetBehavior.STATE_EXPANDED
+        } else {
+          val targetHeight = if (contentHeight < this.minHeight) {
+            this.minHeight
+          } else {
+            contentHeight
+          }
+          // the sheet needs a percentage for the "middle detent" size, rather than a pixel value
+          behavior.halfExpandedRatio = targetHeight / screenHeight
+          behavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+        }
         behavior.skipCollapsed = true
         behavior.isDraggable = true
         behavior.isHideable = true
@@ -164,9 +203,8 @@ class BottomSheetView(
       this.isClosing = true
       this.destroy()
     }
-    dialog.setOnCancelListener {
-      it.cancel()
-    }
+
+    this.isOpening = true
     dialog.show()
     this.dialog = dialog
   }
@@ -179,7 +217,19 @@ class BottomSheetView(
 
   fun dismiss() {
     this.dialog?.dismiss()
-    this.isClosing = true
-    this.destroy()
+  }
+
+  // Util
+
+  fun getContentHeight(): Float {
+    val innerView = this.innerView ?: return 0f
+
+    innerView.allViews.forEach {
+      if (it.javaClass.simpleName == "RNGestureHandlerRootView") {
+        return it.height.toFloat() + 20f
+      }
+    }
+
+    return 0f
   }
 }
