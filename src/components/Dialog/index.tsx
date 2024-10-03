@@ -151,7 +151,11 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
         bounces={nativeSnapPoint === BottomSheetSnapPoint.Full}
         bottomOffset={30}>
         {children}
-        <View style={{height: insets.bottom + a.pt_5xl.paddingTop * 2}} />
+        <View
+          style={{
+            height: insets.bottom + a.pt_5xl.paddingTop * (isIOS ? 1 : 2.5),
+          }}
+        />
       </KeyboardAwareScrollView>
     )
   },
