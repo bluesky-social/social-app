@@ -40,7 +40,6 @@ export function Outer({
 }: React.PropsWithChildren<DialogOuterProps>) {
   const t = useTheme()
   const ref = React.useRef<BottomSheet>(null)
-  const insets = useSafeAreaInsets()
   const closeCallbacks = React.useRef<(() => void)[]>([])
   const {setDialogIsOpen} = useDialogStateControlContext()
 
@@ -110,7 +109,6 @@ export function Outer({
           <BottomSheet
             ref={ref}
             topInset={30}
-            bottomInset={insets.bottom}
             onSnapPointChange={e => {
               setSnapPoint(e.nativeEvent.snapPoint)
             }}
