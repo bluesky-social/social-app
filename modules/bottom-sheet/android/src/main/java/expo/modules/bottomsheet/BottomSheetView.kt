@@ -219,6 +219,22 @@ class BottomSheetView(
     }
   }
 
+  fun dismiss() {
+    this.dialog?.dismiss()
+  }
+
+  // Util
+
+  private fun getContentHeight(): Float {
+    val innerView = this.innerView ?: return 0f
+    innerView.allViews.forEach {
+      if (it.javaClass.simpleName == "RNGestureHandlerRootView") {
+        return it.height.toFloat() + 50f
+      }
+    }
+    return 0f
+  }
+
   private fun getTargetHeight(): Float {
     val contentHeight = this.getContentHeight()
     val height = if (contentHeight > maxHeight) {
@@ -238,21 +254,5 @@ class BottomSheetView(
       return 0.99f
     }
     return ratio
-  }
-
-  fun dismiss() {
-    this.dialog?.dismiss()
-  }
-
-  // Util
-
-  private fun getContentHeight(): Float {
-    val innerView = this.innerView ?: return 0f
-    innerView.allViews.forEach {
-      if (it.javaClass.simpleName == "RNGestureHandlerRootView") {
-        return it.height.toFloat() + 50f
-      }
-    }
-    return 0f
   }
 }
