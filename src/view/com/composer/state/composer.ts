@@ -1,5 +1,6 @@
 import {ImagePickerAsset} from 'expo-image-picker'
 
+import {isBskyPostUrl} from '#/lib/strings/url-helpers'
 import {ComposerImage, createInitialImages} from '#/state/gallery'
 import {Gif} from '#/state/queries/tenor'
 import {ComposerOpts} from '#/state/shell/composer'
@@ -187,28 +188,100 @@ export function composerReducer(
       }
     }
     case 'embed_add_uri': {
-      // TODO
-      return state
+      const prevQuote = state.embed.quote
+      const prevLink = state.embed.link
+      let nextQuote = prevQuote
+      let nextLink = prevLink
+      if (isBskyPostUrl(action.uri)) {
+        if (!prevQuote) {
+          nextQuote = {
+            type: 'link',
+            uri: action.uri,
+          }
+        }
+      } else {
+        if (!prevLink) {
+          nextLink = {
+            type: 'link',
+            uri: action.uri,
+          }
+        }
+      }
+      return {
+        ...state,
+        embed: {
+          ...state.embed,
+          quote: nextQuote,
+          link: nextLink,
+        },
+      }
     }
     case 'embed_remove_link': {
-      // TODO
-      return state
+      return {
+        ...state,
+        embed: {
+          ...state.embed,
+          link: undefined,
+        },
+      }
     }
     case 'embed_remove_quote': {
-      // TODO
-      return state
+      return {
+        ...state,
+        embed: {
+          ...state.embed,
+          quote: undefined,
+        },
+      }
     }
     case 'embed_add_gif': {
-      // TODO
-      return state
+      const prevMedia = state.embed.media
+      let nextMedia = prevMedia
+      if (!prevMedia) {
+        nextMedia = {
+          type: 'gif',
+          gif: action.gif,
+          alt: '',
+        }
+      }
+      return {
+        ...state,
+        embed: {
+          ...state.embed,
+          media: nextMedia,
+        },
+      }
     }
     case 'embed_update_gif': {
-      // TODO
-      return state
+      const prevMedia = state.embed.media
+      let nextMedia = prevMedia
+      if (prevMedia?.type === 'gif') {
+        nextMedia = {
+          ...prevMedia,
+          alt: action.alt,
+        }
+      }
+      return {
+        ...state,
+        embed: {
+          ...state.embed,
+          media: nextMedia,
+        },
+      }
     }
     case 'embed_remove_gif': {
-      // TODO
-      return state
+      const prevMedia = state.embed.media
+      let nextMedia = prevMedia
+      if (prevMedia?.type === 'gif') {
+        nextMedia = undefined
+      }
+      return {
+        ...state,
+        embed: {
+          ...state.embed,
+          media: nextMedia,
+        },
+      }
     }
     default:
       return state

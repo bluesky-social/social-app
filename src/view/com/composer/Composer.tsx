@@ -337,9 +337,9 @@ export const ComposePost = ({
 
   const onNewLink = useCallback(
     (uri: string) => {
+      dispatch({type: 'embed_add_uri', uri})
       if (extLink != null) return
       setExtLink({uri, isLoading: true})
-      dispatch({type: 'embed_add_uri', uri})
     },
     [extLink, setExtLink],
   )
