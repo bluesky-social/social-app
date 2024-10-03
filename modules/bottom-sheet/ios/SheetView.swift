@@ -7,8 +7,9 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
   private var innerView: UIView?
 
   // Events
-  private let onStateChange = EventDispatcher()
   private let onAttemptDismiss = EventDispatcher()
+  private let onSnapPointChange = EventDispatcher()
+  private let onStateChange = EventDispatcher()
 
   // Open event firing
   private var isOpen: Bool = false {
@@ -157,5 +158,19 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
 
   func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
     self.destroy()
+  }
+  
+  func sheetPresentationControllerDidChangeSelectedDetentIdentifier(_ sheetPresentationController: UISheetPresentationController) {
+    let identifier = sheetPresentationController.selectedDetentIdentifier
+    
+    if identifier == .large {
+      onSnapPointChange([
+        "snapPoint": 2,
+      ])
+    } else {
+      onSnapPointChange([
+        "snapPoint": 1,
+      ])
+    }
   }
 }
