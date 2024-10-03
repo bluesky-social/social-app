@@ -190,7 +190,7 @@ export const ComposePost = ({
   // TODO: Move more state here.
   const [composerState, dispatch] = useReducer(
     composerReducer,
-    {initImageUris},
+    {initImageUris, initQuoteUri: initQuote?.uri},
     createComposerState,
   )
 

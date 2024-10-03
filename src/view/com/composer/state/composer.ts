@@ -217,8 +217,10 @@ export function composerReducer(
 
 export function createComposerState({
   initImageUris,
+  initQuoteUri,
 }: {
   initImageUris: ComposerOpts['imageUris']
+  initQuoteUri: string | undefined
 }): ComposerState {
   let media: ImagesMedia | undefined
   if (initImageUris?.length) {
@@ -227,12 +229,19 @@ export function createComposerState({
       images: createInitialImages(initImageUris),
     }
   }
+  let quote: Link | undefined
+  if (initQuoteUri) {
+    quote = {
+      type: 'link',
+      uri: initQuoteUri,
+    }
+  }
   // TODO: Other initial content.
   return {
     embed: {
-      quote: undefined,
-      link: undefined,
+      quote,
       media,
+      link: undefined,
     },
   }
 }
