@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-09-28 08:43+0900\n"
+"PO-Revision-Date: 2024-10-03 10:49+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -6249,9 +6249,9 @@ msgstr "テキストの入力フィールド"
 msgid "Thank you. Your report has been sent."
 msgstr "ありがとうございます。あなたの報告は送信されました。"
 
-#: src/components/intents/VerifyEmailIntentDialog.tsx:74
-msgid "Thanks, you have successfully verified your email address."
-msgstr "ありがとう、メールアドレスの確認に成功しました。"
+#: src/components/intents/VerifyEmailIntentDialog.tsx:82
+msgid "Thanks, you have successfully verified your email address. You can close this dialog."
+msgstr "ありがとう、メールアドレスの確認に成功しました。このダイアログを閉じても大丈夫です。"
 
 #: src/view/com/modals/ChangeHandle.tsx:459
 msgid "That contains the following:"
