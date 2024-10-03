@@ -12,7 +12,7 @@ import {logger} from '#/logger'
 import {isIOS} from '#/platform/detection'
 import {useDialogStateControlContext} from '#/state/dialogs'
 import {List, ListMethods, ListProps} from '#/view/com/util/List'
-import {atoms as a, flatten, useTheme} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {Context, useDialogContext} from '#/components/Dialog/context'
 import {
   DialogControlProps,
@@ -163,14 +163,13 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
 export const InnerFlatList = React.forwardRef<
   ListMethods,
   ListProps<any> & {webInnerStyle?: StyleProp<ViewStyle>}
->(function InnerFlatList({style, contentContainerStyle, ...props}, ref) {
+>(function InnerFlatList({style, ...props}, ref) {
   const insets = useSafeAreaInsets()
   const {nativeSnapPoint} = useDialogContext()
   return (
     <List
       keyboardShouldPersistTaps="handled"
       bounces={nativeSnapPoint === BottomSheetSnapPoint.Full}
-      contentContainerStyle={[a.px_xl, flatten(contentContainerStyle)]}
       ListFooterComponent={
         <View style={{height: insets.bottom + a.pt_5xl.paddingTop}} />
       }

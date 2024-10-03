@@ -207,7 +207,7 @@ function GifList({
         renderItem={renderItem}
         numColumns={gtMobile ? 3 : 2}
         columnWrapperStyle={[a.gap_sm]}
-        contentContainerStyle={[native({minHeight: height})]}
+        contentContainerStyle={[native([a.px_xl, {minHeight: height}])]}
         ListHeaderComponent={
           <>
             {listHeader}

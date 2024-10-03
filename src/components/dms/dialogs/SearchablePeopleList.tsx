@@ -21,11 +21,10 @@ import {useSession} from '#/state/session'
 import {ListMethods} from '#/view/com/util/List'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, native, useTheme, web} from '#/alf'
-import {Button} from '#/components/Button'
+import {Button, ButtonIcon} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {canBeMessaged} from '#/components/dms/util'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
-import {ChevronLeft_Stroke2_Corner0_Rounded as ChevronLeft} from '#/components/icons/Chevron'
 import {MagnifyingGlass2_Stroke2_Corner0_Rounded as Search} from '#/components/icons/MagnifyingGlass2'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import {Text} from '#/components/Typography'
@@ -99,15 +98,15 @@ export function SearchablePeopleList({
           })
         }
 
-        _items = _items.sort(a => {
+        _items = _items.sort(item => {
           // @ts-ignore
-          return a.enabled ? -1 : 1
+          return item.enabled ? -1 : 1
         })
       }
     } else {
       const placeholders: Item[] = Array(10)
         .fill(0)
-        .map((_, i) => ({
+        .map((__, i) => ({
           type: 'placeholder',
           key: i + '',
         }))
@@ -153,9 +152,9 @@ export function SearchablePeopleList({
           }
 
           // only sort follows
-          followsItems = followsItems.sort(a => {
+          followsItems = followsItems.sort(item => {
             // @ts-ignore
-            return a.enabled ? -1 : 1
+            return item.enabled ? -1 : 1
           })
 
           // then append
@@ -175,9 +174,9 @@ export function SearchablePeopleList({
           }
         }
 
-        _items = _items.sort(a => {
+        _items = _items.sort(item => {
           // @ts-ignore
-          return a.enabled ? -1 : 1
+          return item.enabled ? -1 : 1
         })
       } else {
         _items.push(...placeholders)
@@ -254,29 +253,6 @@ export function SearchablePeopleList({
             a.justify_center,
             {height: 32},
           ]}>
-          <Button
-            label={_(msg`Close`)}
-            size="small"
-            shape="round"
-            variant="ghost"
-            color="secondary"
-            style={[
-              a.absolute,
-              a.z_20,
-              native({
-                left: -7,
-              }),
-              web({
-                right: -4,
-              }),
-            ]}
-            onPress={() => control.close()}>
-            {isWeb ? (
-              <X size="md" fill={t.palette.contrast_500} />
-            ) : (
-              <ChevronLeft size="md" fill={t.palette.contrast_500} />
-            )}
-          </Button>
           <Text
             style={[
               a.z_10,
@@ -287,6 +263,22 @@ export function SearchablePeopleList({
             ]}>
             {title}
           </Text>
+          <Button
+            label={_(msg`Close`)}
+            size="small"
+            shape="round"
+            variant={isWeb ? 'ghost' : 'solid'}
+            color="secondary"
+            style={[
+              a.absolute,
+              a.z_20,
+              web({right: -4}),
+              native({right: 0}),
+              native({height: 32, width: 32, borderRadius: 16}),
+            ]}
+            onPress={() => control.close()}>
+            <ButtonIcon icon={X} size="md" />
+          </Button>
         </View>
 
         <View style={[native([a.pt_sm]), web([a.pt_xs])]}>
@@ -306,7 +298,6 @@ export function SearchablePeopleList({
     t.atoms.border_contrast_low,
     t.atoms.bg,
     t.atoms.text_contrast_high,
-    t.palette.contrast_500,
     _,
     title,
     searchText,
@@ -323,14 +314,7 @@ export function SearchablePeopleList({
       keyExtractor={(item: Item) => item.key}
       style={[
         web([a.py_0, {height: '100vh', maxHeight: 600}, a.px_0]),
-        native({
-          height: '100%',
-          paddingHorizontal: 0,
-          marginTop: 0,
-          paddingTop: 0,
-          borderTopLeftRadius: 40,
-          borderTopRightRadius: 40,
-        }),
+        native({height: '100%'}),
       ]}
       webInnerStyle={[a.py_0, {maxWidth: 500, minWidth: 200}]}
       keyboardDismissMode="on-drag"
@@ -393,7 +377,8 @@ function ProfileCard({
           <View style={[a.flex_1, a.gap_2xs]}>
             <Text
               style={[t.atoms.text, a.font_bold, a.leading_tight, a.self_start]}
-              numberOfLines={1}>
+              numberOfLines={1}
+              emoji>
               {displayName}
             </Text>
             <Text
