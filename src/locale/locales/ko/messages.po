@@ -8,12 +8,12 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-10-02 10:29+0900\n"
+"PO-Revision-Date: 2024-10-03 14:19+0900\n"
 "Last-Translator: quiple\n"
 "Language-Team: quiple, lens0021, HaruChanHeart, hazzzi, heartade\n"
 "Plural-Forms: \n"
 
-#: src/screens/Messages/List/ChatListItem.tsx:121
+#: src/screens/Messages/components/ChatListItem.tsx:121
 msgid "(contains embedded content)"
 msgstr "(임베드 콘텐츠 포함)"
 
@@ -526,7 +526,7 @@ msgstr "오류 발생"
 msgid "An error occurred"
 msgstr "오류 발생"
 
-#: src/state/queries/video/video.ts:234
+#: src/state/queries/video/video.ts:383
 msgid "An error occurred while compressing the video."
 msgstr "동영상을 압축하는 동안 오류가 발생했습니다."
 
@@ -547,7 +547,7 @@ msgstr "동영상을 불러오는 동안 오류가 발생했습니다. 다시 �
 msgid "An error occurred while saving the QR code!"
 msgstr "QR 코드를 저장하는 동안 오류가 발생했습니다"
 
-#: src/view/com/composer/videos/SelectVideoBtn.tsx:75
+#: src/view/com/composer/videos/SelectVideoBtn.tsx:86
 msgid "An error occurred while selecting the video"
 msgstr "동영상을 선택하는 동안 오류가 발생했습니다"
 
@@ -556,7 +556,7 @@ msgstr "동영상을 선택하는 동안 오류가 발생했습니다"
 msgid "An error occurred while trying to follow all"
 msgstr "모두 팔로우하려고 하는 동안 오류가 발생했습니다"
 
-#: src/state/queries/video/video.ts:201
+#: src/state/queries/video/video.ts:420
 msgid "An error occurred while uploading the video."
 msgstr "동영상을 업로드하는 동안 오류가 발생했습니다."
 
@@ -649,14 +649,14 @@ msgid "Appeal \"{0}\" label"
 msgstr "\"{0}\" 라벨 이의신청"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:231
-#: src/screens/Messages/Conversation/ChatDisabled.tsx:91
+#: src/screens/Messages/components/ChatDisabled.tsx:91
 msgid "Appeal submitted"
 msgstr "이의신청 제출함"
 
-#: src/screens/Messages/Conversation/ChatDisabled.tsx:51
-#: src/screens/Messages/Conversation/ChatDisabled.tsx:53
-#: src/screens/Messages/Conversation/ChatDisabled.tsx:99
-#: src/screens/Messages/Conversation/ChatDisabled.tsx:101
+#: src/screens/Messages/components/ChatDisabled.tsx:51
+#: src/screens/Messages/components/ChatDisabled.tsx:53
+#: src/screens/Messages/components/ChatDisabled.tsx:99
+#: src/screens/Messages/components/ChatDisabled.tsx:101
 msgid "Appeal this decision"
 msgstr "이 결정에 이의신청"
 
@@ -702,7 +702,7 @@ msgstr "피드에서 {0}을(를) 제거하시겠습니까?"
 msgid "Are you sure you want to remove this from your feeds?"
 msgstr "내 피드에서 이 피드를 삭제하시겠습니까?"
 
-#: src/view/com/composer/Composer.tsx:860
+#: src/view/com/composer/Composer.tsx:891
 msgid "Are you sure you'd like to discard this draft?"
 msgstr "이 초안을 삭제하시겠습니까?"
 
@@ -738,8 +738,8 @@ msgstr "3자 이상"
 #: src/screens/Login/LoginForm.tsx:288
 #: src/screens/Login/SetNewPasswordForm.tsx:154
 #: src/screens/Login/SetNewPasswordForm.tsx:160
-#: src/screens/Messages/Conversation/ChatDisabled.tsx:133
-#: src/screens/Messages/Conversation/ChatDisabled.tsx:134
+#: src/screens/Messages/components/ChatDisabled.tsx:133
+#: src/screens/Messages/components/ChatDisabled.tsx:134
 #: src/screens/Profile/Header/Shell.tsx:80
 #: src/screens/Signup/BackNextButtons.tsx:42
 #: src/screens/StarterPack/Wizard/index.tsx:298
@@ -927,8 +927,8 @@ msgstr "글자, 숫자, 공백, 대시, 밑줄만 포함할 수 있습니다. �
 #: src/components/Prompt.tsx:126
 #: src/components/TagMenu/index.tsx:282
 #: src/screens/Deactivated.tsx:161
-#: src/view/com/composer/Composer.tsx:612
-#: src/view/com/composer/Composer.tsx:627
+#: src/view/com/composer/Composer.tsx:643
+#: src/view/com/composer/Composer.tsx:658
 #: src/view/com/modals/ChangeEmail.tsx:213
 #: src/view/com/modals/ChangeEmail.tsx:215
 #: src/view/com/modals/ChangeHandle.tsx:141
@@ -1056,7 +1056,7 @@ msgstr "대화 뮤트됨"
 #: src/components/dms/ConvoMenu.tsx:112
 #: src/components/dms/MessageMenu.tsx:81
 #: src/Navigation.tsx:342
-#: src/screens/Messages/List/index.tsx:88
+#: src/screens/Messages/ChatList.tsx:87
 #: src/view/screens/Settings/index.tsx:603
 msgid "Chat settings"
 msgstr "대화 설정"
@@ -1166,8 +1166,6 @@ msgstr "다그닥 🐴 다그닥 🐴"
 #: src/components/dialogs/GifSelect.ios.tsx:250
 #: src/components/dialogs/GifSelect.tsx:270
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:261
-#: src/components/intents/VerifyEmailIntentDialog.tsx:111
-#: src/components/intents/VerifyEmailIntentDialog.tsx:118
 #: src/components/NewskieDialog.tsx:146
 #: src/components/NewskieDialog.tsx:153
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:125
@@ -1208,10 +1206,6 @@ msgstr "이미지 닫기"
 msgid "Close image viewer"
 msgstr "이미지 뷰어 닫기"
 
-#: src/components/dms/MessagesNUX.tsx:162
-msgid "Close modal"
-msgstr "대화 상자 닫기"
-
 #: src/view/shell/index.web.tsx:61
 msgid "Close navigation footer"
 msgstr "탐색 푸터 닫기"
@@ -1229,7 +1223,7 @@ msgstr "하단 탐색 막대를 닫습니다"
 msgid "Closes password update alert"
 msgstr "비밀번호 변경 알림을 닫습니다"
 
-#: src/view/com/composer/Composer.tsx:624
+#: src/view/com/composer/Composer.tsx:655
 msgid "Closes post composer and discards post draft"
 msgstr "게시물 작성 상자를 닫고 게시물 초안을 삭제합니다"
 
@@ -1272,11 +1266,11 @@ msgstr "온보딩 완료 후 계정 사용 시작"
 msgid "Complete the challenge"
 msgstr "챌린지 완료하기"
 
-#: src/view/com/composer/Composer.tsx:732
+#: src/view/com/composer/Composer.tsx:763
 msgid "Compose posts up to {MAX_GRAPHEME_LENGTH} characters in length"
 msgstr "최대 {MAX_GRAPHEME_LENGTH}자 길이까지 글을 작성할 수 있습니다"
 
-#: src/view/com/post-thread/PostThreadComposePrompt.tsx:42
+#: src/view/com/post-thread/PostThreadComposePrompt.tsx:47
 msgid "Compose reply"
 msgstr "답글 작성하기"
 
@@ -1390,7 +1384,7 @@ msgstr "스레드 더 보기..."
 msgid "Continue to next step"
 msgstr "다음 단계로 계속하기"
 
-#: src/screens/Messages/List/ChatListItem.tsx:155
+#: src/screens/Messages/components/ChatListItem.tsx:155
 msgid "Conversation deleted"
 msgstr "대화 삭제됨"
 
@@ -1735,17 +1729,13 @@ msgstr "인용을 해제하시겠습니까?"
 msgid "Dialog: adjust who can interact with this post"
 msgstr "대화 상자: 이 게시물과 상호작용할 수 있는 사람 조정하기"
 
-#: src/view/com/composer/Composer.tsx:378
+#: src/view/com/composer/Composer.tsx:410
 msgid "Did you want to say anything?"
 msgstr "하고 싶은 말이 없나요?"
 
 #: src/screens/Settings/AppearanceSettings.tsx:126
 msgid "Dim"
 msgstr "어둑함"
-
-#: src/components/dms/MessagesNUX.tsx:88
-msgid "Direct messages are here!"
-msgstr "다이렉트 메시지가 생겼습니다!"
 
 #: src/view/screens/AccessibilitySettings.tsx:108
 msgid "Disable autoplay for videos and GIFs"
@@ -1772,11 +1762,11 @@ msgstr "자막 사용 안 함"
 msgid "Disabled"
 msgstr "사용 안 함"
 
-#: src/view/com/composer/Composer.tsx:862
+#: src/view/com/composer/Composer.tsx:893
 msgid "Discard"
 msgstr "삭제"
 
-#: src/view/com/composer/Composer.tsx:859
+#: src/view/com/composer/Composer.tsx:890
 msgid "Discard draft?"
 msgstr "초안 삭제"
 
@@ -1798,7 +1788,7 @@ msgstr "새 피드 발견하기"
 msgid "Discover New Feeds"
 msgstr "새 피드 발견하기"
 
-#: src/view/com/composer/Composer.tsx:1129
+#: src/view/com/composer/Composer.tsx:1160
 msgid "Dismiss error"
 msgstr "오류 무시"
 
@@ -2042,7 +2032,7 @@ msgstr "이메일 2단계 인증을 비활성화했습니다"
 msgid "Email address"
 msgstr "이메일 주소"
 
-#: src/components/intents/VerifyEmailIntentDialog.tsx:95
+#: src/components/intents/VerifyEmailIntentDialog.tsx:104
 msgid "Email Resent"
 msgstr "이메일 다시 전송됨"
 
@@ -2059,7 +2049,7 @@ msgstr "이메일 변경됨"
 msgid "Email verified"
 msgstr "이메일 인증됨"
 
-#: src/components/intents/VerifyEmailIntentDialog.tsx:71
+#: src/components/intents/VerifyEmailIntentDialog.tsx:79
 msgid "Email Verified"
 msgstr "이메일 인증됨"
 
@@ -2200,8 +2190,6 @@ msgstr "누구나 답글을 달 수 있음"
 msgid "Everybody can reply to this post."
 msgstr "누구나 이 게시물에 답글을 달 수 있습니다."
 
-#: src/components/dms/MessagesNUX.tsx:131
-#: src/components/dms/MessagesNUX.tsx:134
 #: src/screens/Messages/Settings.tsx:75
 #: src/screens/Messages/Settings.tsx:78
 msgid "Everyone"
@@ -2345,7 +2333,7 @@ msgstr "피드 환경설정을 불러오지 못했습니다"
 msgid "Failed to load GIFs"
 msgstr "GIF를 불러오지 못했습니다"
 
-#: src/screens/Messages/Conversation/MessageListError.tsx:23
+#: src/screens/Messages/components/MessageListError.tsx:23
 msgid "Failed to load past messages"
 msgstr "지난 메시지를 불러오지 못했습니다"
 
@@ -2375,7 +2363,7 @@ msgid "Failed to send"
 msgstr "전송 실패"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:227
-#: src/screens/Messages/Conversation/ChatDisabled.tsx:87
+#: src/screens/Messages/components/ChatDisabled.tsx:87
 msgid "Failed to submit appeal, please try again."
 msgstr "이의신청을 제출하지 못했습니다. 다시 시도해 주세요."
 
@@ -2387,15 +2375,14 @@ msgstr "스레드 뮤트를 전환하지 못했습니다. 다시 시도해 주�
 msgid "Failed to update feeds"
 msgstr "피드를 업데이트하지 못했습니다"
 
-#: src/components/dms/MessagesNUX.tsx:60
 #: src/screens/Messages/Settings.tsx:35
 msgid "Failed to update settings"
 msgstr "설정을 업데이트하지 못했습니다"
 
-#: src/state/queries/video/video-upload.ts:67
-#: src/state/queries/video/video-upload.web.ts:64
-#: src/state/queries/video/video-upload.web.ts:68
+#: src/state/queries/video/video-upload.ts:72
+#: src/state/queries/video/video-upload.web.ts:74
 #: src/state/queries/video/video-upload.web.ts:78
+#: src/state/queries/video/video-upload.web.ts:88
 msgid "Failed to upload video"
 msgstr "동영상을 업로드하지 못했습니다"
 
@@ -2690,10 +2677,6 @@ msgstr "스타터 팩 만들기"
 msgid "Get help"
 msgstr "도움말"
 
-#: src/components/dms/MessagesNUX.tsx:168
-msgid "Get started"
-msgstr "시작하기"
-
 #: src/view/com/modals/VerifyEmail.tsx:197
 #: src/view/com/modals/VerifyEmail.tsx:199
 msgid "Get Started"
@@ -2758,7 +2741,7 @@ msgstr "홈으로 이동"
 msgid "Go Home"
 msgstr "홈으로 이동"
 
-#: src/screens/Messages/List/ChatListItem.tsx:225
+#: src/screens/Messages/components/ChatListItem.tsx:225
 msgid "Go to conversation with {0}"
 msgstr "{0} 님과의 대화로 이동합니다"
 
@@ -2901,7 +2884,7 @@ msgstr "이 데이터를 불러오는 데 문제가 있는 것 같습니다. 자
 msgid "Hmmmm, we couldn't load that moderation service."
 msgstr "검토 서비스를 불러올 수 없습니다."
 
-#: src/state/queries/video/video.ts:167
+#: src/state/queries/video/video.ts:398
 msgid "Hold up! We’re gradually giving access to video, and you’re still waiting in line. Check back soon!"
 msgstr "잠깐! 동영상에 대한 접근 권한이 점차적으로 제공되고 있지만 아직은 기다려야 합니다. 나중에 다시 확인해 주세요!"
 
@@ -3044,10 +3027,6 @@ msgstr "사용자 핸들을 입력합니다"
 msgid "Interaction limited"
 msgstr "상호작용 제한됨"
 
-#: src/components/dms/MessagesNUX.tsx:82
-msgid "Introducing Direct Messages"
-msgstr "다이렉트 메시지 소개"
-
 #: src/components/dialogs/nuxs/NeueTypography.tsx:48
 msgid "Introducing new font settings"
 msgstr "새 글꼴 설정을 소개합니다"
@@ -3066,7 +3045,7 @@ msgstr "유효하지 않거나 지원되지 않는 게시물 기록"
 msgid "Invalid username or password"
 msgstr "잘못된 사용자 이름 또는 비밀번호"
 
-#: src/components/intents/VerifyEmailIntentDialog.tsx:82
+#: src/components/intents/VerifyEmailIntentDialog.tsx:91
 msgid "Invalid Verification Code"
 msgstr "잘못된 인증 코드"
 
@@ -3114,7 +3093,7 @@ msgstr "올바른 주소입니다"
 msgid "It's just you right now! Add more people to your starter pack by searching above."
 msgstr "아직은 나밖에 없습니다. 위에서 검색하여 스타터 팩에 더 많은 사람을 추가하세요."
 
-#: src/view/com/composer/Composer.tsx:1148
+#: src/view/com/composer/Composer.tsx:1179
 msgid "Job ID: {0}"
 msgstr "작업 ID: {0}"
 
@@ -3479,7 +3458,7 @@ msgid "Message {0}"
 msgstr "{0} 님에게 메시지 보내기"
 
 #: src/components/dms/MessageMenu.tsx:72
-#: src/screens/Messages/List/ChatListItem.tsx:156
+#: src/screens/Messages/components/ChatListItem.tsx:156
 msgid "Message deleted"
 msgstr "메시지 삭제됨"
 
@@ -3487,23 +3466,23 @@ msgstr "메시지 삭제됨"
 msgid "Message from server: {0}"
 msgstr "서버에서 보낸 메시지: {0}"
 
-#: src/screens/Messages/Conversation/MessageInput.tsx:140
+#: src/screens/Messages/components/MessageInput.tsx:140
 msgid "Message input field"
 msgstr "메시지 입력 필드"
 
-#: src/screens/Messages/Conversation/MessageInput.tsx:72
-#: src/screens/Messages/Conversation/MessageInput.web.tsx:59
+#: src/screens/Messages/components/MessageInput.tsx:72
+#: src/screens/Messages/components/MessageInput.web.tsx:59
 msgid "Message is too long"
 msgstr "메시지가 너무 깁니다"
 
-#: src/screens/Messages/List/index.tsx:321
+#: src/screens/Messages/ChatList.tsx:317
 msgid "Message settings"
 msgstr "메시지 설정"
 
 #: src/Navigation.tsx:564
-#: src/screens/Messages/List/index.tsx:164
-#: src/screens/Messages/List/index.tsx:246
-#: src/screens/Messages/List/index.tsx:317
+#: src/screens/Messages/ChatList.tsx:161
+#: src/screens/Messages/ChatList.tsx:242
+#: src/screens/Messages/ChatList.tsx:313
 msgid "Messages"
 msgstr "메시지"
 
@@ -3786,8 +3765,8 @@ msgid "New"
 msgstr "새로 만들기"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:54
-#: src/screens/Messages/List/index.tsx:331
-#: src/screens/Messages/List/index.tsx:338
+#: src/screens/Messages/ChatList.tsx:327
+#: src/screens/Messages/ChatList.tsx:334
 msgid "New chat"
 msgstr "새 대화"
 
@@ -3909,11 +3888,11 @@ msgstr "더 이상 {0} 님을 팔로우하지 않음"
 msgid "No longer than 253 characters"
 msgstr "253자를 초과하지 않음"
 
-#: src/screens/Messages/List/ChatListItem.tsx:107
+#: src/screens/Messages/components/ChatListItem.tsx:107
 msgid "No messages yet"
 msgstr "아직 메시지가 없습니다"
 
-#: src/screens/Messages/List/index.tsx:274
+#: src/screens/Messages/ChatList.tsx:270
 msgid "No more conversations to show"
 msgstr "더 이상 표시할 대화가 없습니다"
 
@@ -3921,8 +3900,6 @@ msgstr "더 이상 표시할 대화가 없습니다"
 msgid "No notifications yet!"
 msgstr "아직 알림이 없습니다"
 
-#: src/components/dms/MessagesNUX.tsx:149
-#: src/components/dms/MessagesNUX.tsx:152
 #: src/screens/Messages/Settings.tsx:93
 #: src/screens/Messages/Settings.tsx:96
 msgid "No one"
@@ -4024,7 +4001,7 @@ msgstr "공유 관련 참고 사항"
 msgid "Note: Bluesky is an open and public network. This setting only limits the visibility of your content on the Bluesky app and website, and other apps may not respect this setting. Your content may still be shown to logged-out users by other apps and websites."
 msgstr "참고: Bluesky는 개방형 공개 네트워크입니다. 이 설정은 Bluesky 앱과 웹사이트에서만 내 콘텐츠가 표시되는 것을 제한하며, 다른 앱에서는 이 설정을 준수하지 않을 수 있습니다. 다른 앱과 웹사이트에서는 로그아웃한 사용자에게 내 콘텐츠가 계속 표시될 수 있습니다."
 
-#: src/screens/Messages/List/index.tsx:215
+#: src/screens/Messages/ChatList.tsx:212
 msgid "Nothing here"
 msgstr "빈 페이지"
 
@@ -4110,7 +4087,7 @@ msgstr "<0><1/><2><3/></2></0>"
 msgid "Onboarding reset"
 msgstr "온보딩 재설정"
 
-#: src/view/com/composer/Composer.tsx:689
+#: src/view/com/composer/Composer.tsx:720
 msgid "One or more images is missing alt text."
 msgstr "하나 이상의 이미지에 대체 텍스트가 누락되었습니다."
 
@@ -4155,14 +4132,14 @@ msgstr "{name} 님의 프로필 단축 메뉴 열기"
 msgid "Open avatar creator"
 msgstr "아바타 생성기 열기"
 
-#: src/screens/Messages/List/ChatListItem.tsx:233
-#: src/screens/Messages/List/ChatListItem.tsx:234
+#: src/screens/Messages/components/ChatListItem.tsx:233
+#: src/screens/Messages/components/ChatListItem.tsx:234
 msgid "Open conversation options"
 msgstr "대화 옵션 열기"
 
-#: src/screens/Messages/Conversation/MessageInput.web.tsx:165
-#: src/view/com/composer/Composer.tsx:842
-#: src/view/com/composer/Composer.tsx:843
+#: src/screens/Messages/components/MessageInput.web.tsx:165
+#: src/view/com/composer/Composer.tsx:873
+#: src/view/com/composer/Composer.tsx:874
 msgid "Open emoji picker"
 msgstr "이모티콘 선택기 열기"
 
@@ -4231,7 +4208,7 @@ msgstr "기기에서 카메라를 엽니다"
 msgid "Opens chat settings"
 msgstr "대화 설정을 엽니다"
 
-#: src/view/com/post-thread/PostThreadComposePrompt.tsx:43
+#: src/view/com/post-thread/PostThreadComposePrompt.tsx:48
 msgid "Opens composer"
 msgstr "답글 작성 상자를 엽니다"
 
@@ -4335,7 +4312,7 @@ msgstr "스레드 설정을 엽니다"
 msgid "Opens this profile"
 msgstr "이 프로필을 엽니다"
 
-#: src/view/com/composer/videos/SelectVideoBtn.tsx:95
+#: src/view/com/composer/videos/SelectVideoBtn.tsx:106
 msgid "Opens video picker"
 msgstr "동영상 선택기를 엽니다"
 
@@ -4380,7 +4357,7 @@ msgstr "다른 계정"
 msgid "Other..."
 msgstr "기타…"
 
-#: src/screens/Messages/Conversation/ChatDisabled.tsx:28
+#: src/screens/Messages/components/ChatDisabled.tsx:28
 msgid "Our moderators have reviewed reports and decided to disable your access to chats on Bluesky."
 msgstr "Bluesky 운영진이 신고를 검토한 결과, 귀하의 Bluesky 대화 접속을 비활성화하기로 결정했습니다."
 
@@ -4560,7 +4537,7 @@ msgstr "비밀번호를 입력하세요."
 msgid "Please explain why you think this label was incorrectly applied by {0}"
 msgstr "{0} 님이 이 라벨을 잘못 적용했다고 생각하는 이유를 설명해 주세요"
 
-#: src/screens/Messages/Conversation/ChatDisabled.tsx:110
+#: src/screens/Messages/components/ChatDisabled.tsx:110
 msgid "Please explain why you think your chats were incorrectly disabled"
 msgstr "대화가 잘못 비활성화되었다고 생각하는 이유를 설명해 주세요"
 
@@ -4573,7 +4550,7 @@ msgstr "@{0}(으)로 로그인하세요"
 msgid "Please Verify Your Email"
 msgstr "이메일 인증하기"
 
-#: src/view/com/composer/Composer.tsx:382
+#: src/view/com/composer/Composer.tsx:414
 msgid "Please wait for your link card to finish loading"
 msgstr "링크 카드를 완전히 불러올 때까지 기다려주세요"
 
@@ -4586,8 +4563,8 @@ msgstr "정치"
 msgid "Porn"
 msgstr "음란물"
 
-#: src/view/com/composer/Composer.tsx:664
-#: src/view/com/composer/Composer.tsx:671
+#: src/view/com/composer/Composer.tsx:695
+#: src/view/com/composer/Composer.tsx:702
 msgctxt "action"
 msgid "Post"
 msgstr "게시하기"
@@ -4676,7 +4653,7 @@ msgstr "오해의 소지가 있는 링크"
 msgid "Preference saved"
 msgstr "설정 저장됨"
 
-#: src/screens/Messages/Conversation/MessageListError.tsx:19
+#: src/screens/Messages/components/MessageListError.tsx:19
 msgid "Press to attempt reconnection"
 msgstr "다시 연결을 시도하려면 누르기"
 
@@ -4686,7 +4663,7 @@ msgstr "호스팅 제공자를 변경하려면 누릅니다"
 
 #: src/components/Error.tsx:61
 #: src/components/Lists.tsx:93
-#: src/screens/Messages/Conversation/MessageListError.tsx:24
+#: src/screens/Messages/components/MessageListError.tsx:24
 #: src/screens/Signup/BackNextButtons.tsx:48
 msgid "Press to retry"
 msgstr "다시 시도하려면 누르기"
@@ -4723,10 +4700,6 @@ msgstr "개인정보"
 #: src/view/shell/Drawer.tsx:290
 msgid "Privacy Policy"
 msgstr "개인정보 처리방침"
-
-#: src/components/dms/MessagesNUX.tsx:91
-msgid "Privately chat with other users."
-msgstr "다른 사용자와 비공개로 대화하세요."
 
 #: src/screens/Login/ForgotPasswordForm.tsx:149
 msgid "Processing..."
@@ -4765,11 +4738,11 @@ msgstr "일괄 뮤트하거나 차단할 수 있는 공개적이고 공유 가�
 msgid "Public, shareable lists which can drive feeds."
 msgstr "피드를 탐색할 수 있는 공개적이고 공유 가능한 목록입니다."
 
-#: src/view/com/composer/Composer.tsx:649
+#: src/view/com/composer/Composer.tsx:680
 msgid "Publish post"
 msgstr "게시물 게시하기"
 
-#: src/view/com/composer/Composer.tsx:649
+#: src/view/com/composer/Composer.tsx:680
 msgid "Publish reply"
 msgstr "답글 게시하기"
 
@@ -4858,7 +4831,7 @@ msgstr "이유:"
 msgid "Recent Searches"
 msgstr "최근 검색"
 
-#: src/screens/Messages/Conversation/MessageListError.tsx:20
+#: src/screens/Messages/components/MessageListError.tsx:20
 msgid "Reconnect"
 msgstr "다시 연결"
 
@@ -4866,7 +4839,7 @@ msgstr "다시 연결"
 msgid "Refresh notifications"
 msgstr "알림 새로 고침"
 
-#: src/screens/Messages/List/index.tsx:200
+#: src/screens/Messages/ChatList.tsx:197
 msgid "Reload conversations"
 msgstr "대화 다시 불러오기"
 
@@ -4903,7 +4876,7 @@ msgstr "아바타 제거"
 msgid "Remove Banner"
 msgstr "배너 제거"
 
-#: src/screens/Messages/Conversation/MessageInputEmbed.tsx:206
+#: src/screens/Messages/components/MessageInputEmbed.tsx:206
 msgid "Remove embed"
 msgstr "임베드 제거"
 
@@ -5024,7 +4997,7 @@ msgstr "답글 비활성화됨"
 msgid "Replies to this post are disabled."
 msgstr "이 게시물에 대한 답글은 비활성화되어 있습니다."
 
-#: src/view/com/composer/Composer.tsx:662
+#: src/view/com/composer/Composer.tsx:693
 msgctxt "action"
 msgid "Reply"
 msgstr "답글"
@@ -5231,7 +5204,7 @@ msgstr "이메일 다시 전송"
 msgid "Resend Email"
 msgstr "이메일 다시 전송"
 
-#: src/components/intents/VerifyEmailIntentDialog.tsx:123
+#: src/components/intents/VerifyEmailIntentDialog.tsx:122
 msgid "Resend Verification Email"
 msgstr "인증 이메일 다시 전송하기"
 
@@ -5280,7 +5253,7 @@ msgstr "오류가 발생한 마지막 작업을 다시 시도합니다"
 #: src/components/StarterPack/ProfileStarterPacks.tsx:319
 #: src/screens/Login/LoginForm.tsx:295
 #: src/screens/Login/LoginForm.tsx:302
-#: src/screens/Messages/Conversation/MessageListError.tsx:25
+#: src/screens/Messages/components/MessageListError.tsx:25
 #: src/screens/Onboarding/StepInterests/index.tsx:217
 #: src/screens/Onboarding/StepInterests/index.tsx:220
 #: src/screens/Signup/BackNextButtons.tsx:54
@@ -5552,7 +5525,7 @@ msgstr "신고할 검토 서비스를 선택하세요."
 msgid "Select the service that hosts your data."
 msgstr "데이터를 호스팅할 서비스를 선택하세요."
 
-#: src/view/com/composer/videos/SelectVideoBtn.tsx:94
+#: src/view/com/composer/videos/SelectVideoBtn.tsx:105
 msgid "Select video"
 msgstr "동영상 선택"
 
@@ -5602,8 +5575,8 @@ msgstr "이메일 보내기"
 msgid "Send feedback"
 msgstr "피드백 보내기"
 
-#: src/screens/Messages/Conversation/MessageInput.tsx:165
-#: src/screens/Messages/Conversation/MessageInput.web.tsx:219
+#: src/screens/Messages/components/MessageInput.tsx:165
+#: src/screens/Messages/components/MessageInput.web.tsx:219
 msgid "Send message"
 msgstr "메시지 보내기"
 
@@ -5988,7 +5961,7 @@ msgstr "좋아할 만한 다른 피드"
 msgid "Some people can reply"
 msgstr "일부 사람들이 답글을 달 수 있음"
 
-#: src/screens/Messages/Conversation/index.tsx:106
+#: src/screens/Messages/Conversation.tsx:106
 msgid "Something went wrong"
 msgstr "알 수 없는 오류가 발생했습니다"
 
@@ -6047,10 +6020,6 @@ msgstr "새 대화 시작하기"
 msgid "Start chat with {displayName}"
 msgstr "{displayName} 님과 대화 시작하기"
 
-#: src/components/dms/MessagesNUX.tsx:161
-msgid "Start chatting"
-msgstr "대화 시작하기"
-
 #: src/Navigation.tsx:357
 #: src/Navigation.tsx:362
 #: src/screens/StarterPack/Wizard/index.tsx:182
@@ -6096,8 +6065,8 @@ msgstr "스토리북"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:295
 #: src/components/moderation/LabelsOnMeDialog.tsx:296
-#: src/screens/Messages/Conversation/ChatDisabled.tsx:142
-#: src/screens/Messages/Conversation/ChatDisabled.tsx:143
+#: src/screens/Messages/components/ChatDisabled.tsx:142
+#: src/screens/Messages/components/ChatDisabled.tsx:143
 msgid "Submit"
 msgstr "확인"
 
@@ -6236,7 +6205,7 @@ msgid "Text & tags"
 msgstr "텍스트 및 태그"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:259
-#: src/screens/Messages/Conversation/ChatDisabled.tsx:108
+#: src/screens/Messages/components/ChatDisabled.tsx:108
 msgid "Text input field"
 msgstr "텍스트 입력 필드"
 
@@ -6245,9 +6214,9 @@ msgstr "텍스트 입력 필드"
 msgid "Thank you. Your report has been sent."
 msgstr "감사합니다. 신고를 전송했습니다."
 
-#: src/components/intents/VerifyEmailIntentDialog.tsx:74
-msgid "Thanks, you have successfully verified your email address."
-msgstr "이메일 주소를 성공적으로 인증했습니다."
+#: src/components/intents/VerifyEmailIntentDialog.tsx:82
+msgid "Thanks, you have successfully verified your email address. You can close this dialog."
+msgstr "이메일 주소를 성공적으로 인증했습니다. 이 대화 상자를 닫아도 됩니다."
 
 #: src/view/com/modals/ChangeHandle.tsx:452
 msgid "That contains the following:"
@@ -6330,7 +6299,7 @@ msgstr "게시물이 삭제되었을 수 있습니다."
 msgid "The Privacy Policy has been moved to <0/>"
 msgstr "개인정보 처리방침을 <0/>(으)로 이동했습니다"
 
-#: src/state/queries/video/video.ts:229
+#: src/state/queries/video/video.ts:380
 msgid "The selected video is larger than 50MB."
 msgstr "선택한 동영상이 50MB를 초과합니다."
 
@@ -6346,7 +6315,7 @@ msgstr "지원 양식을 이동했습니다. 도움이 필요하다면 <0/>하�
 msgid "The Terms of Service have been moved to"
 msgstr "서비스 이용약관을 다음으로 이동했습니다:"
 
-#: src/components/intents/VerifyEmailIntentDialog.tsx:85
+#: src/components/intents/VerifyEmailIntentDialog.tsx:94
 msgid "The verification code you have provided is invalid. Please make sure that you have used the correct verification link or request a new one."
 msgstr "입력한 인증 코드가 올바르지 않습니다. 올바른 인증 링크를 사용했는지 확인하거나 새 인증 링크를 요청하세요."
 
@@ -6470,11 +6439,11 @@ msgstr "이 계정은 하나 이상의 검토 리스트에 의해 차단되었�
 msgid "This appeal will be sent to <0>{sourceName}</0>."
 msgstr "이 이의신청은 <0>{sourceName}</0>에게 보내집니다."
 
-#: src/screens/Messages/Conversation/ChatDisabled.tsx:104
+#: src/screens/Messages/components/ChatDisabled.tsx:104
 msgid "This appeal will be sent to Bluesky's moderation service."
 msgstr "이 이의신청은 Bluesky Moderation Service로 보내집니다."
 
-#: src/screens/Messages/Conversation/MessageListError.tsx:18
+#: src/screens/Messages/components/MessageListError.tsx:18
 msgid "This chat was disconnected"
 msgstr "이 대화는 연결이 끊어졌습니다"
 
@@ -6499,7 +6468,7 @@ msgstr "관련 사용자 중 한 명이 다른 사용자를 차단했기 때문�
 msgid "This content is not viewable without a Bluesky account."
 msgstr "이 콘텐츠는 Bluesky 계정이 없으면 볼 수 없습니다."
 
-#: src/screens/Messages/List/ChatListItem.tsx:227
+#: src/screens/Messages/components/ChatListItem.tsx:227
 msgid "This conversation is with a deleted or a deactivated account. Press for options."
 msgstr "이 대화는 삭제되었거나 비활성화된 계정과의 대화입니다. 옵션을 보려면 누르세요."
 
@@ -6672,7 +6641,7 @@ msgstr "이메일 2단계 인증을 비활성화하려면 이메일 주소에 �
 msgid "To report a conversation, please report one of its messages via the conversation screen. This lets our moderators understand the context of your issue."
 msgstr "대화를 신고하려면 대화 화면에서 해당 메시지 중 하나를 신고하세요. 이렇게 하면 운영진이 문제의 맥락을 파악할 수 있습니다."
 
-#: src/view/com/composer/videos/SelectVideoBtn.tsx:120
+#: src/view/com/composer/videos/SelectVideoBtn.tsx:131
 msgid "To upload videos to Bluesky, you must first verify your email."
 msgstr "Bluesky에 동영상을 업로드하려면 먼저 이메일을 인증해야 합니다."
 
@@ -6715,7 +6684,7 @@ msgstr "TV"
 msgid "Two-factor authentication"
 msgstr "2단계 인증"
 
-#: src/screens/Messages/Conversation/MessageInput.tsx:141
+#: src/screens/Messages/components/MessageInput.tsx:141
 msgid "Type your message here"
 msgstr "메시지를 입력하세요"
 
@@ -6875,7 +6844,7 @@ msgstr "이 라벨러 구독 취소하기"
 msgid "Unsubscribed from list"
 msgstr "리스트 구독 취소됨"
 
-#: src/state/queries/video/video.ts:248
+#: src/view/com/composer/videos/SelectVideoBtn.tsx:71
 msgid "Unsupported video type: {mimeType}"
 msgstr "지원되지 않는 동영상 유형: {mimeType}"
 
@@ -7035,8 +7004,6 @@ msgstr "사용자"
 msgid "users followed by <0>@{0}</0>"
 msgstr "<0>@{0}</0> 님이 팔로우한 사용자"
 
-#: src/components/dms/MessagesNUX.tsx:140
-#: src/components/dms/MessagesNUX.tsx:143
 #: src/screens/Messages/Settings.tsx:84
 #: src/screens/Messages/Settings.tsx:87
 msgid "Users I follow"
@@ -7054,7 +7021,7 @@ msgstr "이 콘텐츠 또는 프로필을 좋아하는 사용자"
 msgid "Value:"
 msgstr "값:"
 
-#: src/view/com/composer/videos/SelectVideoBtn.tsx:118
+#: src/view/com/composer/videos/SelectVideoBtn.tsx:129
 msgid "Verified email required"
 msgstr "이메일 인증 필요"
 
@@ -7066,7 +7033,7 @@ msgstr "DNS 레코드 인증"
 msgid "Verify email"
 msgstr "이메일 인증"
 
-#: src/components/intents/VerifyEmailIntentDialog.tsx:61
+#: src/components/intents/VerifyEmailIntentDialog.tsx:67
 msgid "Verify email dialog"
 msgstr "이메일 인증 대화 상자"
 
@@ -7083,7 +7050,7 @@ msgstr "내 이메일 인증하기"
 msgid "Verify New Email"
 msgstr "새 이메일 인증"
 
-#: src/view/com/composer/videos/SelectVideoBtn.tsx:122
+#: src/view/com/composer/videos/SelectVideoBtn.tsx:133
 msgid "Verify now"
 msgstr "지금 인증하기"
 
@@ -7104,7 +7071,7 @@ msgstr "버전 {appVersion} {bundleInfo}"
 msgid "Video"
 msgstr "동영상"
 
-#: src/state/queries/video/video.ts:140
+#: src/state/queries/video/video.ts:343
 msgid "Video failed to process"
 msgstr "동영상을 처리하지 못했습니다"
 
@@ -7125,7 +7092,7 @@ msgstr "동영상 설정"
 msgid "Video: {0}"
 msgstr "동영상: {0}"
 
-#: src/view/com/composer/videos/SelectVideoBtn.tsx:65
+#: src/view/com/composer/videos/SelectVideoBtn.tsx:78
 #: src/view/com/composer/videos/VideoPreview.web.tsx:44
 msgid "Videos must be less than 60 seconds long"
 msgstr "동영상 길이는 60초 미만이어야 합니다."
@@ -7233,7 +7200,7 @@ msgstr "콘텐츠 경고 및 피드에서 필터링"
 msgid "We couldn't find any results for that hashtag."
 msgstr "해당 해시태그에 대한 결과를 찾을 수 없습니다."
 
-#: src/screens/Messages/Conversation/index.tsx:107
+#: src/screens/Messages/Conversation.tsx:107
 msgid "We couldn't load this conversation"
 msgstr "이 대화를 불러올 수 없습니다"
 
@@ -7241,7 +7208,7 @@ msgstr "이 대화를 불러올 수 없습니다"
 msgid "We estimate {estimatedTime} until your account is ready."
 msgstr "계정이 준비될 때까지 {estimatedTime}이(가) 걸릴 것으로 예상됩니다."
 
-#: src/components/intents/VerifyEmailIntentDialog.tsx:98
+#: src/components/intents/VerifyEmailIntentDialog.tsx:107
 msgid "We have sent another verification email to <0>{0}</0>."
 msgstr "<0>{0}</0>(으)로 또 다른 인증 이메일을 보냈습니다."
 
@@ -7253,7 +7220,7 @@ msgstr "즐거운 시간 되시기 바랍니다. Bluesky의 다음 특징을 기
 msgid "We ran out of posts from your follows. Here's the latest from <0/>."
 msgstr "팔로우한 사용자의 게시물이 부족합니다. 대신 <0/>의 최신 게시물을 표시합니다."
 
-#: src/state/queries/video/video.ts:172
+#: src/state/queries/video/video.ts:402
 msgid "We were unable to determine if you are allowed to upload videos. Please try again."
 msgstr "동영상을 업로드할 수 있는지 확인할 수 없습니다. 다시 시도해 주세요."
 
@@ -7301,7 +7268,7 @@ msgstr "죄송하지만 현재 뮤트한 단어를 불러올 수 없습니다. �
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr "죄송하지만 검색을 완료할 수 없습니다. 몇 분 후에 다시 시도해 주세요."
 
-#: src/view/com/composer/Composer.tsx:445
+#: src/view/com/composer/Composer.tsx:476
 msgid "We're sorry! The post you are replying to has been deleted."
 msgstr "죄송하지만 답글을 달려는 게시물이 삭제되었습니다."
 
@@ -7332,7 +7299,7 @@ msgstr "스타터 팩의 이름을 무엇으로 할까요?"
 
 #: src/view/com/auth/SplashScreen.tsx:39
 #: src/view/com/auth/SplashScreen.web.tsx:82
-#: src/view/com/composer/Composer.tsx:534
+#: src/view/com/composer/Composer.tsx:565
 msgid "What's up?"
 msgstr "무슨 일이 일어나고 있나요?"
 
@@ -7348,17 +7315,12 @@ msgstr "알고리즘 피드에 어떤 언어를 표시하시겠습니까?"
 msgid "Who can interact with this post?"
 msgstr "누가 이 게시물과 상호작용할 수 있나요?"
 
-#: src/components/dms/MessagesNUX.tsx:110
-#: src/components/dms/MessagesNUX.tsx:124
-msgid "Who can message you?"
-msgstr "누구의 메시지를 허용하시겠습니까?"
-
 #: src/components/WhoCanReply.tsx:87
 msgid "Who can reply"
 msgstr "답글을 달 수 있는 사람"
 
 #: src/screens/Home/NoFeedsPinned.tsx:79
-#: src/screens/Messages/List/index.tsx:185
+#: src/screens/Messages/ChatList.tsx:182
 msgid "Whoops!"
 msgstr "이런!"
 
@@ -7390,17 +7352,17 @@ msgstr "이 스타터 팩을 검토해야 하는 이유는 무엇인가요?"
 msgid "Why should this user be reviewed?"
 msgstr "이 사용자를 검토해야 하는 이유는 무엇인가요?"
 
-#: src/screens/Messages/Conversation/MessageInput.tsx:142
-#: src/screens/Messages/Conversation/MessageInput.web.tsx:198
+#: src/screens/Messages/components/MessageInput.tsx:142
+#: src/screens/Messages/components/MessageInput.web.tsx:198
 msgid "Write a message"
 msgstr "메시지를 입력하세요"
 
-#: src/view/com/composer/Composer.tsx:730
+#: src/view/com/composer/Composer.tsx:761
 msgid "Write post"
 msgstr "게시물 작성"
 
-#: src/view/com/composer/Composer.tsx:533
-#: src/view/com/post-thread/PostThreadComposePrompt.tsx:67
+#: src/view/com/composer/Composer.tsx:564
+#: src/view/com/post-thread/PostThreadComposePrompt.tsx:75
 msgid "Write your reply"
 msgstr "답글 작성하기"
 
@@ -7456,7 +7418,7 @@ msgstr "나"
 msgid "You are in line."
 msgstr "대기 중입니다."
 
-#: src/state/queries/video/video.ts:163
+#: src/state/queries/video/video.ts:395
 msgid "You are not allowed to upload videos."
 msgstr "동영상을 업로드할 수 없습니다."
 
@@ -7476,10 +7438,6 @@ msgstr "팔로우할 새로운 맞춤 피드를 찾을 수도 있습니다."
 #: src/view/com/modals/DeleteAccount.tsx:202
 msgid "You can also temporarily deactivate your account instead, and reactivate it at any time."
 msgstr "대신 계정을 일시적으로 비활성화한 후 언제든지 재활성화할 수도 있습니다."
-
-#: src/components/dms/MessagesNUX.tsx:119
-msgid "You can change this at any time."
-msgstr "언제든지 변경할 수 있습니다."
 
 #: src/screens/Messages/Settings.tsx:111
 msgid "You can continue ongoing conversations regardless of which setting you choose."
@@ -7552,7 +7510,7 @@ msgstr "내가 이 계정을 뮤트했습니다."
 msgid "You have muted this user"
 msgstr "내가 이 사용자를 뮤트했습니다"
 
-#: src/screens/Messages/List/index.tsx:225
+#: src/screens/Messages/ChatList.tsx:222
 msgid "You have no conversations yet. Start one!"
 msgstr "아직 대화가 없습니다. 시작해 보세요!"
 
@@ -7581,7 +7539,7 @@ msgstr "아직 어떤 계정도 뮤트하지 않았습니다. 계정을 뮤트�
 msgid "You have reached the end"
 msgstr "끝에 도달했습니다"
 
-#: src/state/queries/video/video-upload.shared.ts:67
+#: src/state/queries/video/video-upload.shared.ts:56
 msgid "You have temporarily reached the limit for video uploads. Please try again later."
 msgstr "일시적으로 동영상 업로드 한도에 도달했습니다. 나중에 다시 시도해 주세요."
 
@@ -7650,15 +7608,15 @@ msgstr "이제 이 스레드에 대한 알림을 받습니다"
 msgid "You will receive an email with a \"reset code.\" Enter that code here, then enter your new password."
 msgstr "\"재설정 코드\"가 포함된 이메일을 받게 되면 여기에 해당 코드를 입력한 다음 새 비밀번호를 입력하세요."
 
-#: src/screens/Messages/List/ChatListItem.tsx:115
+#: src/screens/Messages/components/ChatListItem.tsx:115
 msgid "You: {0}"
 msgstr "나: {0}"
 
-#: src/screens/Messages/List/ChatListItem.tsx:144
+#: src/screens/Messages/components/ChatListItem.tsx:144
 msgid "You: {defaultEmbeddedContentMessage}"
 msgstr "나: {defaultEmbeddedContentMessage}"
 
-#: src/screens/Messages/List/ChatListItem.tsx:137
+#: src/screens/Messages/components/ChatListItem.tsx:137
 msgid "You: {short}"
 msgstr "나: {short}"
 
@@ -7706,11 +7664,11 @@ msgstr "이 글에서 단어 또는 태그를 숨기도록 설정했습니다."
 msgid "You've reached the end of your feed! Find some more accounts to follow."
 msgstr "피드 끝에 도달했습니다! 팔로우할 계정을 더 찾아보세요."
 
-#: src/state/queries/video/video.ts:177
+#: src/state/queries/video/video.ts:406
 msgid "You've reached your daily limit for video uploads (too many bytes)"
 msgstr "동영상 업로드 일일 한도에 도달했습니다 (용량이 너무 큼)"
 
-#: src/state/queries/video/video.ts:182
+#: src/state/queries/video/video.ts:410
 msgid "You've reached your daily limit for video uploads (too many videos)"
 msgstr "동영상 업로드 일일 한도에 도달했습니다 (동영상 수가 너무 많음)"
 
@@ -7722,7 +7680,7 @@ msgstr "내 계정"
 msgid "Your account has been deleted"
 msgstr "계정을 삭제했습니다"
 
-#: src/state/queries/video/video.ts:187
+#: src/state/queries/video/video.ts:414
 msgid "Your account is not yet old enough to upload videos. Please try again later."
 msgstr "내 계정은 아직 동영상을 업로드할 수 없습니다. 나중에 다시 시도해 주세요."
 
@@ -7738,7 +7696,7 @@ msgstr "생년월일"
 msgid "Your browser does not support the video format. Please try a different browser."
 msgstr "브라우저가 이 동영상 형식을 지원하지 않습니다. 다른 브라우저를 사용하세요."
 
-#: src/screens/Messages/Conversation/ChatDisabled.tsx:25
+#: src/screens/Messages/components/ChatDisabled.tsx:25
 msgid "Your chats have been disabled"
 msgstr "대화가 사용 중지되었습니다"
 
@@ -7785,7 +7743,7 @@ msgstr "뮤트한 단어"
 msgid "Your password has been changed successfully!"
 msgstr "비밀번호를 성공적으로 변경했습니다."
 
-#: src/view/com/composer/Composer.tsx:487
+#: src/view/com/composer/Composer.tsx:518
 msgid "Your post has been published"
 msgstr "게시물을 게시했습니다"
 
@@ -7801,7 +7759,7 @@ msgstr "내 프로필"
 msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
 msgstr "내 프로필, 글, 피드 및 리스트가 더 이상 다른 Bluesky 사용자에게 표시되지 않습니다. 언제든지 로그인하여 계정을 재활성화할 수 있습니다."
 
-#: src/view/com/composer/Composer.tsx:486
+#: src/view/com/composer/Composer.tsx:517
 msgid "Your reply has been published"
 msgstr "내 답글을 게시했습니다"
 
