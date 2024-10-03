@@ -96,7 +96,7 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
       return
     }
 
-    self.present(contentHeight: innerView.subviews[0].frame.size.height)
+    self.present()
   }
 
   private func destroy() {
@@ -109,9 +109,10 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
 
   // MARK: - Presentation
 
-  func present(contentHeight: CGFloat) {
+  func present() {
     guard !self.isOpen,
           let innerView = self.innerView,
+          let contentHeight = innerView.subviews.first?.frame.height,
           let rvc = self.reactViewController() else {
       return
     }
@@ -135,7 +136,7 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
   }
 
   func updateLayout() {
-    if let contentHeight = self.innerView?.subviews[0].frame.size.height {
+    if let contentHeight = self.innerView?.subviews.first?.frame.size.height {
       self.sheetVc?.updateDetents(contentHeight: self.clampHeight(contentHeight),
                                preventExpansion: self.preventExpansion)
     }

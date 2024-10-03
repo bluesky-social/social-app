@@ -7,17 +7,18 @@ import expo.modules.kotlin.modules.ModuleDefinition
 class BottomSheetModule : Module() {
   override fun definition() =
     ModuleDefinition {
-      Name("BlueskyBottomSheet")
+      Name("BottomSheet")
 
-      Function("getSafeAreaInset") {
-        return@Function 10 // @TODO
+      AsyncFunction("dismissAll") {
+        SheetManager.dismissAll()
       }
 
       View(BottomSheetView::class) {
         Events(
           arrayOf(
-            "onStateChange",
             "onAttemptDismiss",
+            "onSnapPointChange",
+            "onStateChange",
           ),
         )
 
@@ -25,8 +26,16 @@ class BottomSheetModule : Module() {
           view.dismiss()
         }
 
-        Prop("preventDismiss") { view: BottomSheetView, prop: Boolean ->
-          view.preventDismiss = prop
+        AsyncFunction("updateLayout") { view: BottomSheetView ->
+          view.updateLayout()
+        }
+
+        Prop("containerBackgroundColor") { view: BottomSheetView, prop: String ->
+          view.sheetState.value.containerBackgroundColor = Color.parseColor(prop)
+        }
+
+        Prop("cornerRadius") { view: BottomSheetView, prop: Float ->
+          view.sheetState.value.cornerRadius = prop
         }
 
         Prop("minHeight") { view: BottomSheetView, prop: Float ->
@@ -37,12 +46,8 @@ class BottomSheetModule : Module() {
           view.maxHeight = prop
         }
 
-        Prop("cornerRadius") { view: BottomSheetView, prop: Float ->
-          view.sheetState.value.cornerRadius = prop
-        }
-
-        Prop("containerBackgroundColor") { view: BottomSheetView, prop: String ->
-          view.sheetState.value.containerBackgroundColor = Color.parseColor(prop)
+        Prop("preventDismiss") { view: BottomSheetView, prop: Boolean ->
+          view.preventDismiss = prop
         }
 
         Prop("preventExpansion") { view: BottomSheetView, prop: Boolean ->
