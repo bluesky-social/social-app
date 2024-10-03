@@ -173,7 +173,7 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
   func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
     self.destroy()
   }
-  
+
   func sheetPresentationControllerDidChangeSelectedDetentIdentifier(_ sheetPresentationController: UISheetPresentationController) {
     self.selectedDetentIdentifier = sheetPresentationController.selectedDetentIdentifier
   }
