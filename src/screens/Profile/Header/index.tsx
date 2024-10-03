@@ -27,7 +27,7 @@ let ProfileHeaderLoading = (_props: {}): React.ReactNode => {
       </View>
       <View style={styles.content}>
         <View style={[styles.buttonsLine]}>
-          <LoadingPlaceholder width={120} height={34} style={styles.br50} />
+          <LoadingPlaceholder width={140} height={34} style={styles.br50} />
         </View>
       </View>
     </View>
