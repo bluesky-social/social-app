@@ -8,6 +8,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
+import {requireNativeModule} from 'expo'
 import {requireNativeViewManager} from 'expo-modules-core'
 
 import {BottomSheetState, BottomSheetViewProps} from './BottomSheet.types'
@@ -21,7 +22,9 @@ const NativeView: React.ComponentType<
   }
 > = requireNativeViewManager('BottomSheet')
 
-export class BottomSheetView extends React.Component<
+const NativeModule = requireNativeModule('BottomSheet')
+
+export class BottomSheet extends React.Component<
   BottomSheetViewProps,
   {
     open: boolean
@@ -66,6 +69,10 @@ export class BottomSheetView extends React.Component<
 
   private updateLayout = () => {
     this.ref.current?.updateLayout()
+  }
+
+  static dismissAll = async () => {
+    await NativeModule.dismissAll()
   }
 
   render() {

@@ -17,10 +17,7 @@ import {
 } from '#/components/Dialog/types'
 import {createInput} from '#/components/forms/TextField'
 import {Portal as DefaultPortal} from '#/components/Portal'
-import {
-  BottomSheetSnapPoint,
-  BottomSheetView,
-} from '../../../modules/bottom-sheet'
+import {BottomSheet, BottomSheetSnapPoint} from '../../../modules/bottom-sheet'
 
 export {useDialogContext, useDialogControl} from '#/components/Dialog/context'
 export * from '#/components/Dialog/types'
@@ -37,7 +34,7 @@ export function Outer({
   Portal = DefaultPortal,
 }: React.PropsWithChildren<DialogOuterProps>) {
   const t = useTheme()
-  const ref = React.useRef<BottomSheetView>(null)
+  const ref = React.useRef<BottomSheet>(null)
   const insets = useSafeAreaInsets()
   const closeCallbacks = React.useRef<(() => void)[]>([])
   const {setDialogIsOpen} = useDialogStateControlContext()
@@ -102,7 +99,7 @@ export function Outer({
   return (
     <Portal>
       <Context.Provider value={context}>
-        <BottomSheetView
+        <BottomSheet
           ref={ref}
           topInset={30}
           bottomInset={insets.bottom}
@@ -119,7 +116,7 @@ export function Outer({
           <Wrapper testID={testID} style={[t.atoms.bg]}>
             {children}
           </Wrapper>
-        </BottomSheetView>
+        </BottomSheet>
       </Context.Provider>
     </Portal>
   )

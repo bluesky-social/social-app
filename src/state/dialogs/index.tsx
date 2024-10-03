@@ -3,6 +3,7 @@ import React from 'react'
 import {isWeb} from '#/platform/detection'
 import {DialogControlRefProps} from '#/components/Dialog'
 import {Provider as GlobalDialogsProvider} from '#/components/dialogs/Context'
+import {BottomSheet} from '../../../modules/bottom-sheet'
 
 interface IDialogContext {
   /**
@@ -51,8 +52,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
       return openDialogs.current.size > 0
     } else {
-      // @TODO DIALOGS REFACTOR
-      console.error('HAILEY FIX THIS 🥺📋')
+      BottomSheet.dismissAll()
       return false
     }
   }, [])

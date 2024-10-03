@@ -1,13 +1,13 @@
+import {BottomSheet} from './src/BottomSheet'
 import {
   BottomSheetSnapPoint,
   BottomSheetState,
   BottomSheetViewProps,
 } from './src/BottomSheet.types'
-import {BottomSheetView} from './src/BottomSheetView'
 
 export {
+  BottomSheet,
   BottomSheetSnapPoint,
   type BottomSheetState,
-  BottomSheetView,
   type BottomSheetViewProps,
 }
