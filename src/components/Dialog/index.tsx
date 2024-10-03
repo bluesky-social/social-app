@@ -1,5 +1,5 @@
 import React, {useImperativeHandle} from 'react'
-import {Platform, StyleProp, View, ViewStyle} from 'react-native'
+import {StyleProp, View, ViewStyle} from 'react-native'
 import {GestureHandlerRootView, ScrollView} from 'react-native-gesture-handler'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-controller'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
@@ -148,12 +148,10 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
         style={[a.px_xl, style]}
         ref={ref}
         {...props}
-        bounces={
-          Platform.OS !== 'ios' || nativeSnapPoint === BottomSheetSnapPoint.Full
-        }
+        bounces={nativeSnapPoint === BottomSheetSnapPoint.Full}
         bottomOffset={30}>
         {children}
-        <View style={{height: insets.bottom + a.pt_5xl.paddingTop}} />
+        <View style={{height: insets.bottom + a.pt_5xl.paddingTop * 2}} />
       </KeyboardAwareScrollView>
     )
   },
