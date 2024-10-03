@@ -5,7 +5,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {ReportOption, useReportOptions} from '#/lib/moderation/useReportOptions'
-import {BottomSheetLink} from '#/components/Link'
+import {Link} from '#/components/Link'
 import {DMCA_LINK} from '#/components/ReportDialog/const'
 export {useDialogControl as useReportDialogControl} from '#/components/Dialog'
 
@@ -129,7 +129,7 @@ export function SelectReportOptionView({
               ]}>
               <Trans>Need to report a copyright violation?</Trans>
             </Text>
-            <BottomSheetLink
+            <Link
               to={DMCA_LINK}
               label={_(msg`View details for reporting a copyright violation`)}
               size="small"
@@ -139,7 +139,7 @@ export function SelectReportOptionView({
                 <Trans>View details</Trans>
               </ButtonText>
               <ButtonIcon position="right" icon={SquareArrowTopRight} />
-            </BottomSheetLink>
+            </Link>
           </View>
         )}
       </View>

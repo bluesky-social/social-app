@@ -241,45 +241,6 @@ export function Link({
   )
 }
 
-export function BottomSheetLink({
-  children,
-  to,
-  action = 'push',
-  onPress: outerOnPress,
-  download,
-  ...rest
-}: LinkProps) {
-  const {href, isExternal, onPress} = useLink({
-    to,
-    displayText: typeof children === 'string' ? children : '',
-    action,
-    onPress: outerOnPress,
-  })
-
-  return (
-    <Button
-      {...rest}
-      style={[a.justify_start, flatten(rest.style)]}
-      role="link"
-      accessibilityRole="link"
-      href={href}
-      onPress={download ? undefined : onPress}
-      {...web({
-        hrefAttrs: {
-          target: download ? undefined : isExternal ? 'blank' : undefined,
-          rel: isExternal ? 'noopener noreferrer' : undefined,
-          download,
-        },
-        dataSet: {
-          // no underline, only `InlineLink` has underlines
-          noUnderline: '1',
-        },
-      })}>
-      {children}
-    </Button>
-  )
-}
-
 export type InlineLinkProps = React.PropsWithChildren<
   BaseLinkProps & TextStyleProp & Pick<TextProps, 'selectable'>
 > &
