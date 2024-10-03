@@ -19,7 +19,7 @@ const NativeView: React.ComponentType<
     ref: React.RefObject<any>
     style: StyleProp<ViewStyle>
   }
-> = requireNativeViewManager('BlueskyBottomSheet')
+> = requireNativeViewManager('BottomSheet')
 
 export class BottomSheetView extends React.Component<
   BottomSheetViewProps,
