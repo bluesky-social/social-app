@@ -419,10 +419,9 @@ export const ComposePost = ({
       try {
         postUri = (
           await apilib.post(agent, {
-            composerState, // TODO: not used yet.
+            composerState, // TODO: move more state here.
             rawText: richtext.text,
             replyTo: replyTo?.uri,
-            images,
             quote,
             extLink,
             labels,
@@ -430,18 +429,6 @@ export const ComposePost = ({
             postgate,
             onStateChange: setProcessingState,
             langs: toPostLanguages(langPrefs.postLanguage),
-            video:
-              videoState.status === 'done'
-                ? {
-                    blobRef: videoState.pendingPublish.blobRef,
-                    altText: videoState.altText,
-                    captions: videoState.captions,
-                    aspectRatio: {
-                      width: videoState.asset.width,
-                      height: videoState.asset.height,
-                    },
-                  }
-                : undefined,
           })
         ).uri
         try {
@@ -538,10 +525,7 @@ export const ComposePost = ({
       setLangPrefs,
       threadgateAllowUISettings,
       videoState.asset,
-      videoState.pendingPublish,
       videoState.status,
-      videoState.altText,
-      videoState.captions,
     ],
   )
 
