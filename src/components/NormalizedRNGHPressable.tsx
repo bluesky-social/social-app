@@ -122,6 +122,8 @@ export class NormalizedRNGHPressable extends React.Component<PressableProps> {
         onPressOut={this.onPressOut}
         onHoverIn={this.onHoverIn}
         onHoverOut={this.onHoverOut}
+        accessible={true}
+        accessibilityRole="button"
       />
     )
   }
