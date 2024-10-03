@@ -250,7 +250,7 @@ class BottomSheetView(
     val innerView = this.innerView ?: return 0f
     innerView.allViews.forEach {
       if (it.javaClass.simpleName == "RNGestureHandlerRootView") {
-        return it.height.toFloat() + 20f
+        return it.height.toFloat() + 50f
       }
     }
     return 0f
