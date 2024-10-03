@@ -2,6 +2,7 @@ import React from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {subDays} from 'date-fns'
 
 import {atoms as a, useTheme} from '#/alf'
 import {Text} from '../Typography'
@@ -36,17 +37,15 @@ let DateDivider = ({date: dateStr}: {date: string}): React.ReactNode => {
   const timestamp = new Date(dateStr)
 
   const today = new Date()
-  const yesterday = new Date()
-  yesterday.setDate(today.getDate() - 1)
-  const oneWeekAgo = new Date()
-  oneWeekAgo.setDate(today.getDate() - 7)
+  const yesterday = subDays(today, 1)
+  const oneWeekAgo = subDays(today, 7)
 
   if (localDateString(today) === localDateString(timestamp)) {
     date = _(msg`Today`)
   } else if (localDateString(yesterday) === localDateString(timestamp)) {
     date = _(msg`Yesterday`)
   } else {
-    if (timestamp > oneWeekAgo) {
+    if (timestamp < oneWeekAgo) {
       if (timestamp.getFullYear() === today.getFullYear()) {
         date = longDateFormatter.format(timestamp)
       } else {
