@@ -21,7 +21,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 data class SheetState(
   var isOpen: Boolean = false,
   var cornerRadius: Float? = null,
-  var containerBackgroundColor: Int ? = null,
+  var containerBackgroundColor: Int? = null,
   var preventExpansion: Boolean = false,
 )
 
@@ -40,20 +40,22 @@ fun SheetView(
   ModalBottomSheet(
     sheetState = sheetState,
     onDismissRequest = onDismissRequest,
-    shape = RoundedCornerShape(
-      topStart = state.value.cornerRadius ?: 0f,
-      topEnd = state.value.cornerRadius ?: 0f,
-    ),
+    shape =
+      RoundedCornerShape(
+        topStart = state.value.cornerRadius ?: 0f,
+        topEnd = state.value.cornerRadius ?: 0f,
+      ),
     containerColor = Color(state.value.containerBackgroundColor ?: android.graphics.Color.TRANSPARENT),
   ) {
     Column(
-      Modifier.fillMaxWidth()
+      Modifier
+        .fillMaxWidth()
         .height(contentHeight.dp)
         // Prevent covering up the handle
-        .padding(top = 34.dp)
+        .padding(top = 34.dp),
     ) {
       AndroidView(
-        factory = { innerView }
+        factory = { innerView },
       )
     }
   }

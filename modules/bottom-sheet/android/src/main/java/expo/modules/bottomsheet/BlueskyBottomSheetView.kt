@@ -11,7 +11,10 @@ import expo.modules.kotlin.AppContext
 import expo.modules.kotlin.viewevent.EventDispatcher
 import expo.modules.kotlin.views.ExpoView
 
-class BottomSheetView(context: Context, appContext: AppContext) : ExpoView(context, appContext) {
+class BottomSheetView(
+  context: Context,
+  appContext: AppContext,
+) : ExpoView(context, appContext) {
   val sheetState = mutableStateOf(SheetState())
 
   private var reactRootView: ReactRootView? = null
@@ -33,9 +36,11 @@ class BottomSheetView(context: Context, appContext: AppContext) : ExpoView(conte
 
       field = value
       this.sheetState.value.isOpen = value
-      onStateChange(mapOf(
-        "state" to if (value) "open" else "closed"
-      ))
+      onStateChange(
+        mapOf(
+          "state" to if (value) "open" else "closed",
+        ),
+      )
     }
 
   private var isOpening: Boolean = false
@@ -58,13 +63,26 @@ class BottomSheetView(context: Context, appContext: AppContext) : ExpoView(conte
 
   // Lifecycle
 
-  override fun addView(child: View?, index: Int) {
+  override fun addView(
+    child: View?,
+    index: Int,
+  ) {
     this.innerView = child
   }
 
-  override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
+  override fun onLayout(
+    changed: Boolean,
+    l: Int,
+    t: Int,
+    r: Int,
+    b: Int,
+  ) {
     this.innerView?.let {
-      val height = it.allViews.last().measuredHeight.toFloat()
+      val height =
+        it.allViews
+          .last()
+          .measuredHeight
+          .toFloat()
       this.present(height)
     }
   }
@@ -92,32 +110,33 @@ class BottomSheetView(context: Context, appContext: AppContext) : ExpoView(conte
     this.reactRootView = reactRootView
 
     this.isOpening = true
-    this.sheetView = ComposeView(context).also {
-      it.setContent {
-        SheetView(
-          state = sheetState,
-          innerView = reactRootView,
-          contentHeight = innerView.height.toFloat(),
-          onDismissRequest = {
-            onAttemptDismiss(mapOf())
-            if (!preventDismiss) {
-              dismiss()
-            }
-          },
-          onExpanded = {
-            isOpening = false
-            isOpen = true
-            hasInitiallyOpened = true
-          },
-          onHidden = {
-            if (hasInitiallyOpened) {
-              destroy()
-            }
-          }
-        )
+    this.sheetView =
+      ComposeView(context).also {
+        it.setContent {
+          SheetView(
+            state = sheetState,
+            innerView = reactRootView,
+            contentHeight = innerView.height.toFloat(),
+            onDismissRequest = {
+              onAttemptDismiss(mapOf())
+              if (!preventDismiss) {
+                dismiss()
+              }
+            },
+            onExpanded = {
+              isOpening = false
+              isOpen = true
+              hasInitiallyOpened = true
+            },
+            onHidden = {
+              if (hasInitiallyOpened) {
+                destroy()
+              }
+            },
+          )
+        }
+        getRootLayout().addView(it)
       }
-      getRootLayout().addView(it)
-    }
   }
 
   fun dismiss() {
@@ -127,7 +146,5 @@ class BottomSheetView(context: Context, appContext: AppContext) : ExpoView(conte
 
   // Utils
 
-  private fun getRootLayout(): FrameLayout {
-    return appContext.currentActivity!!.findViewById(android.R.id.content)
-  }
+  private fun getRootLayout(): FrameLayout = appContext.currentActivity!!.findViewById(android.R.id.content)
 }
