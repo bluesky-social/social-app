@@ -27,16 +27,16 @@ public class BottomSheetModule: Module {
         view.cornerRadius = CGFloat(prop)
       }
 
-      Prop("preventDismiss") { (view: SheetView, prop: Bool) in
-        view.preventDismiss = prop
-      }
-
       Prop("minHeight") { (view: SheetView, prop: Double) in
         view.minHeight = prop
       }
 
       Prop("maxHeight") { (view: SheetView, prop: Double) in
         view.maxHeight = prop
+      }
+      
+      Prop("preventDismiss") { (view: SheetView, prop: Bool) in
+        view.preventDismiss = prop
       }
 
       Prop("preventExpansion") { (view: SheetView, prop: Bool) in
