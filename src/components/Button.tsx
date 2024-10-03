@@ -117,7 +117,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
       disabled = false,
       style,
       hoverStyle: hoverStyleProp,
-      PressableComponent = Pressable,
+      PressableComponent,
       ...rest
     },
     ref,
@@ -468,6 +468,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
         role="button"
         accessibilityHint={undefined} // optional
         {...rest}
+        // @ts-expect-error ref type
         ref={ref}
         aria-label={label}
         aria-pressed={state.pressed}
