@@ -16,7 +16,7 @@ import {
   DialogOuterProps,
 } from '#/components/Dialog/types'
 import {createInput} from '#/components/forms/TextField'
-import {Portal} from '#/components/Portal'
+import {Portal as DefaultPortal} from '#/components/Portal'
 import {
   BottomSheetSnapPoint,
   BottomSheetView,
@@ -34,26 +34,7 @@ export function Outer({
   onClose,
   nativeOptions,
   testID,
-}: React.PropsWithChildren<DialogOuterProps>) {
-  return (
-    <Portal>
-      <OuterWithoutPortal
-        control={control}
-        onClose={onClose}
-        nativeOptions={nativeOptions}
-        testID={testID}>
-        {children}
-      </OuterWithoutPortal>
-    </Portal>
-  )
-}
-
-export function OuterWithoutPortal({
-  children,
-  control,
-  onClose,
-  nativeOptions,
-  testID,
+  Portal = DefaultPortal,
 }: React.PropsWithChildren<DialogOuterProps>) {
   const t = useTheme()
   const ref = React.useRef<BottomSheetView>(null)
@@ -119,26 +100,28 @@ export function OuterWithoutPortal({
   const Wrapper = isIOS ? View : GestureHandlerRootView
 
   return (
-    <Context.Provider value={context}>
-      <BottomSheetView
-        ref={ref}
-        topInset={30}
-        bottomInset={insets.bottom}
-        onSnapPointChange={e => {
-          setSnapPoint(e.nativeEvent.snapPoint)
-        }}
-        onStateChange={e => {
-          if (e.nativeEvent.state === 'closed') {
-            onCloseAnimationComplete()
-          }
-        }}
-        cornerRadius={20}
-        {...nativeOptions}>
-        <Wrapper testID={testID} style={[t.atoms.bg]}>
-          {children}
-        </Wrapper>
-      </BottomSheetView>
-    </Context.Provider>
+    <Portal>
+      <Context.Provider value={context}>
+        <BottomSheetView
+          ref={ref}
+          topInset={30}
+          bottomInset={insets.bottom}
+          onSnapPointChange={e => {
+            setSnapPoint(e.nativeEvent.snapPoint)
+          }}
+          onStateChange={e => {
+            if (e.nativeEvent.state === 'closed') {
+              onCloseAnimationComplete()
+            }
+          }}
+          cornerRadius={20}
+          {...nativeOptions}>
+          <Wrapper testID={testID} style={[t.atoms.bg]}>
+            {children}
+          </Wrapper>
+        </BottomSheetView>
+      </Context.Provider>
+    </Portal>
   )
 }
 

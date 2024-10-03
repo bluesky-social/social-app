@@ -6,6 +6,7 @@ import type {
 } from 'react-native'
 
 import {ViewStyleProp} from '#/alf'
+import {PortalComponent} from '#/components/Portal'
 import {BottomSheetViewProps} from '../../../modules/bottom-sheet'
 import {BottomSheetSnapPoint} from '../../../modules/bottom-sheet/src/BottomSheet.types'
 
@@ -58,6 +59,7 @@ export type DialogOuterProps = {
   nativeOptions?: Omit<BottomSheetViewProps, 'children'>
   webOptions?: {}
   testID?: string
+  Portal?: PortalComponent
 }
 
 type DialogInnerPropsBase<T> = React.PropsWithChildren<ViewStyleProp> & T
