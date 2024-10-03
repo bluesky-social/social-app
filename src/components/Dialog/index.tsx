@@ -8,7 +8,7 @@ import {isIOS} from '#/platform/detection'
 import {useDialogStateControlContext} from '#/state/dialogs'
 import {List, ListMethods, ListProps} from '#/view/com/util/List'
 import {atoms as a, flatten, useTheme} from '#/alf'
-import {Context} from '#/components/Dialog/context'
+import {Context, useDialogContext} from '#/components/Dialog/context'
 import {
   DialogControlProps,
   DialogInnerProps,
@@ -16,7 +16,10 @@ import {
 } from '#/components/Dialog/types'
 import {createInput} from '#/components/forms/TextField'
 import {Portal} from '#/components/Portal'
-import {BottomSheetView} from '../../../modules/bottom-sheet'
+import {
+  BottomSheetSnapPoint,
+  BottomSheetView,
+} from '../../../modules/bottom-sheet'
 
 export {useDialogContext, useDialogControl} from '#/components/Dialog/context'
 export * from '#/components/Dialog/types'
@@ -56,6 +59,10 @@ export function OuterWithoutPortal({
   const insets = useSafeAreaInsets()
   const closeCallbacks = React.useRef<(() => void)[]>([])
   const {setDialogIsOpen} = useDialogStateControlContext()
+
+  const [snapPoint, setSnapPoint] = React.useState<BottomSheetSnapPoint>(
+    BottomSheetSnapPoint.Partial,
+  )
 
   const callQueuedCallbacks = React.useCallback(() => {
     for (const cb of closeCallbacks.current) {
@@ -103,7 +110,10 @@ export function OuterWithoutPortal({
     [open, close],
   )
 
-  const context = React.useMemo(() => ({close, insideDialog: true}), [close])
+  const context = React.useMemo(
+    () => ({close, isNativeDialog: true, nativeSnapPoint: snapPoint}),
+    [close, snapPoint],
+  )
 
   const Wrapper = isIOS ? View : GestureHandlerRootView
 
@@ -113,6 +123,9 @@ export function OuterWithoutPortal({
         ref={ref}
         topInset={30}
         bottomInset={insets.bottom}
+        onSnapPointChange={e => {
+          setSnapPoint(e.nativeEvent.snapPoint)
+        }}
         onStateChange={e => {
           if (e.nativeEvent.state === 'closed') {
             onCloseAnimationComplete()
@@ -147,8 +160,12 @@ export function Inner({children, style}: DialogInnerProps) {
 export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
   function ScrollableInner({children, style}, ref) {
     const insets = useSafeAreaInsets()
+    const {nativeSnapPoint} = useDialogContext()
     return (
-      <ScrollView style={[a.px_xl, style]} ref={ref}>
+      <ScrollView
+        style={[a.px_xl, style]}
+        ref={ref}
+        bounces={nativeSnapPoint === BottomSheetSnapPoint.Full}>
         {children}
         <View style={{height: insets.bottom + a.pt_5xl.paddingTop}} />
       </ScrollView>

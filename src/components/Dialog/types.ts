@@ -7,6 +7,7 @@ import type {
 
 import {ViewStyleProp} from '#/alf'
 import {BottomSheetViewProps} from '../../../modules/bottom-sheet'
+import {BottomSheetSnapPoint} from '../../../modules/bottom-sheet/src/BottomSheet.types'
 
 type A11yProps = Required<AccessibilityProps>
 
@@ -37,7 +38,8 @@ export type DialogControlProps = DialogControlRefProps & {
 
 export type DialogContextProps = {
   close: DialogControlProps['close']
-  insideDialog: boolean
+  isNativeDialog: boolean
+  nativeSnapPoint: BottomSheetSnapPoint
 }
 
 export type DialogControlOpenOptions = {

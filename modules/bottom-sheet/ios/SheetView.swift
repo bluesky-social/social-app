@@ -7,8 +7,9 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
   private var innerView: UIView?
 
   // Events
-  private let onStateChange = EventDispatcher()
   private let onAttemptDismiss = EventDispatcher()
+  private let onSnapPointChange = EventDispatcher()
+  private let onStateChange = EventDispatcher()
 
   // Open event firing
   private var isOpen: Bool = false {
@@ -47,6 +48,19 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
       if isClosing {
         onStateChange([
           "state": "closing"
+        ])
+      }
+    }
+  }
+  private var selectedDetentIdentifier: UISheetPresentationController.Detent.Identifier? {
+    didSet {
+      if selectedDetentIdentifier == .large {
+        onSnapPointChange([
+          "snapPoint": 2
+        ])
+      } else {
+        onSnapPointChange([
+          "snapPoint": 1
         ])
       }
     }
@@ -103,11 +117,12 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
     }
 
     let sheetVc = SheetViewController()
+    sheetVc.setDetents(contentHeight: self.clampHeight(contentHeight), preventExpansion: self.preventExpansion)
     if let sheet = sheetVc.sheetPresentationController {
       sheet.delegate = self
       sheet.preferredCornerRadius = self.cornerRadius
+      self.selectedDetentIdentifier = sheet.selectedDetentIdentifier
     }
-    sheetVc.setDetents(contentHeight: self.clampHeight(contentHeight), preventExpansion: self.preventExpansion)
     sheetVc.view.addSubview(innerView)
 
     self.sheetVc = sheetVc
@@ -157,5 +172,9 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
 
   func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
     self.destroy()
+  }
+
+  func sheetPresentationControllerDidChangeSelectedDetentIdentifier(_ sheetPresentationController: UISheetPresentationController) {
+    self.selectedDetentIdentifier = sheetPresentationController.selectedDetentIdentifier
   }
 }
