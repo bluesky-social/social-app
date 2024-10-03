@@ -143,14 +143,16 @@ export function Inner({children, style}: DialogInnerProps) {
 }
 
 export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
-  function ScrollableInner({children, style}, ref) {
+  function ScrollableInner({children, style, ...props}, ref) {
     const insets = useSafeAreaInsets()
     const {nativeSnapPoint} = useDialogContext()
     return (
       <KeyboardAwareScrollView
         style={[a.px_xl, style]}
         ref={ref}
+        {...props}
         bounces={nativeSnapPoint === BottomSheetSnapPoint.Full}
+        nestedScrollEnabled={true}
         bottomOffset={30}
         ScrollViewComponent={ScrollView}>
         {children}
