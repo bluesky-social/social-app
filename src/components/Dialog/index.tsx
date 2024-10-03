@@ -2,7 +2,6 @@ import React, {useImperativeHandle} from 'react'
 import {StyleProp, TextInput, View, ViewStyle} from 'react-native'
 import {GestureHandlerRootView, ScrollView} from 'react-native-gesture-handler'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {BlueskyBottomSheetView} from '@haileyok/bluesky-bottom-sheet'
 
 import {logger} from '#/logger'
 import {isIOS} from '#/platform/detection'
@@ -17,6 +16,7 @@ import {
 } from '#/components/Dialog/types'
 import {createInput} from '#/components/forms/TextField'
 import {Portal} from '#/components/Portal'
+import {BottomSheetView} from '../../../modules/bottom-sheet'
 
 export {useDialogContext, useDialogControl} from '#/components/Dialog/context'
 export * from '#/components/Dialog/types'
@@ -52,7 +52,7 @@ export function OuterWithoutPortal({
   testID,
 }: React.PropsWithChildren<DialogOuterProps>) {
   const t = useTheme()
-  const ref = React.useRef<BlueskyBottomSheetView>(null)
+  const ref = React.useRef<BottomSheetView>(null)
   const insets = useSafeAreaInsets()
   const closeCallbacks = React.useRef<(() => void)[]>([])
   const {setDialogIsOpen} = useDialogStateControlContext()
@@ -109,7 +109,7 @@ export function OuterWithoutPortal({
 
   return (
     <Context.Provider value={context}>
-      <BlueskyBottomSheetView
+      <BottomSheetView
         ref={ref}
         topInset={30}
         bottomInset={insets.bottom}
@@ -123,7 +123,7 @@ export function OuterWithoutPortal({
         <Wrapper testID={testID} style={[t.atoms.bg]}>
           {children}
         </Wrapper>
-      </BlueskyBottomSheetView>
+      </BottomSheetView>
     </Context.Provider>
   )
 }

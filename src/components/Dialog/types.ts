@@ -4,9 +4,9 @@ import type {
   GestureResponderEvent,
   ScrollViewProps,
 } from 'react-native'
-import {BlueskyBottomSheetViewProps} from '@haileyok/bluesky-bottom-sheet'
 
 import {ViewStyleProp} from '#/alf'
+import {BottomSheetViewProps} from '../../../modules/bottom-sheet'
 
 type A11yProps = Required<AccessibilityProps>
 
@@ -53,7 +53,7 @@ export type DialogControlOpenOptions = {
 export type DialogOuterProps = {
   control: DialogControlProps
   onClose?: () => void
-  nativeOptions?: Omit<BlueskyBottomSheetViewProps, 'children'>
+  nativeOptions?: Omit<BottomSheetViewProps, 'children'>
   webOptions?: {}
   testID?: string
 }
