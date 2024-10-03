@@ -175,7 +175,7 @@
     "react-native-get-random-values": "~1.11.0",
     "react-native-image-crop-picker": "0.41.2",
     "react-native-ios-context-menu": "^1.15.3",
-    "react-native-keyboard-controller": "^1.12.1",
+    "react-native-keyboard-controller": "^1.14.0",
     "react-native-mmkv": "^2.12.2",
     "react-native-pager-view": "6.2.3",
     "react-native-picker-select": "^9.1.3",

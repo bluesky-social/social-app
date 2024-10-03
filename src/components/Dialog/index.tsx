@@ -1,6 +1,7 @@
 import React, {useImperativeHandle} from 'react'
 import {StyleProp, TextInput, View, ViewStyle} from 'react-native'
 import {GestureHandlerRootView, ScrollView} from 'react-native-gesture-handler'
+import {KeyboardAwareScrollView} from 'react-native-keyboard-controller'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
 import {logger} from '#/logger'
@@ -162,13 +163,15 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
     const insets = useSafeAreaInsets()
     const {nativeSnapPoint} = useDialogContext()
     return (
-      <ScrollView
+      <KeyboardAwareScrollView
         style={[a.px_xl, style]}
         ref={ref}
-        bounces={nativeSnapPoint === BottomSheetSnapPoint.Full}>
+        bounces={nativeSnapPoint === BottomSheetSnapPoint.Full}
+        bottomOffset={30}
+        ScrollViewComponent={ScrollView}>
         {children}
         <View style={{height: insets.bottom + a.pt_5xl.paddingTop}} />
-      </ScrollView>
+      </KeyboardAwareScrollView>
     )
   },
 )

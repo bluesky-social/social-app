@@ -28,5 +28,4 @@ export interface BottomSheetViewProps {
   onStateChange?: (
     event: NativeSyntheticEvent<{state: BottomSheetState}>,
   ) => void
-  onAttemptDismiss?: (event: NativeSyntheticEvent<object>) => void
 }
