@@ -151,8 +151,6 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
         bounces={
           Platform.OS !== 'ios' || nativeSnapPoint === BottomSheetSnapPoint.Full
         }
-        overScrollMode="always"
-        nestedScrollEnabled={true}
         bottomOffset={30}>
         {children}
         <View style={{height: insets.bottom + a.pt_5xl.paddingTop}} />
