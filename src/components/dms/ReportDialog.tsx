@@ -14,7 +14,6 @@ import {useAgent} from '#/state/session'
 import {CharProgress} from '#/view/com/composer/char-progress/CharProgress'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
-import {BottomSheetButton} from '#/components/BottomSheetButton'
 import * as Dialog from '#/components/Dialog'
 import {KeyboardControllerPadding} from '#/components/KeyboardControllerPadding'
 import {Button, ButtonIcon, ButtonText} from '../Button'
@@ -143,7 +142,7 @@ function SubmitStep({
 
   return (
     <View style={a.gap_lg}>
-      <BottomSheetButton
+      <Button
         size="small"
         variant="solid"
         color="secondary"
@@ -151,7 +150,7 @@ function SubmitStep({
         label={_(msg`Go back to previous step`)}
         onPress={goBack}>
         <ButtonIcon icon={Chevron} />
-      </BottomSheetButton>
+      </Button>
 
       <View style={[a.justify_center, gtMobile ? a.gap_sm : a.gap_xs]}>
         <Text style={[a.text_2xl, a.font_bold]}>{copy.title}</Text>
