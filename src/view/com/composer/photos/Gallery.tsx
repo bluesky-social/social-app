@@ -21,6 +21,7 @@ import {ComposerImage, cropImage} from '#/state/gallery'
 import {Text} from '#/view/com/util/text/Text'
 import {useTheme} from '#/alf'
 import * as Dialog from '#/components/Dialog'
+import {ComposerAction} from '../state'
 import {EditImageDialog} from './EditImageDialog'
 import {ImageAltTextDialog} from './ImageAltTextDialog'
 
@@ -28,7 +29,7 @@ const IMAGE_GAP = 8
 
 interface GalleryProps {
   images: ComposerImage[]
-  onChange: (next: ComposerImage[]) => void
+  dispatch: (action: ComposerAction) => void
 }
 
 export let Gallery = (props: GalleryProps): React.ReactNode => {
@@ -56,7 +57,7 @@ interface GalleryInnerProps extends GalleryProps {
   containerInfo: Dimensions
 }
 
-const GalleryInner = ({images, containerInfo, onChange}: GalleryInnerProps) => {
+const GalleryInner = ({images, containerInfo, dispatch}: GalleryInnerProps) => {
   const {isMobile} = useWebMediaQueries()
 
   const {altTextControlStyle, imageControlsStyle, imageStyle} =
@@ -96,7 +97,7 @@ const GalleryInner = ({images, containerInfo, onChange}: GalleryInnerProps) => {
   return images.length !== 0 ? (
     <>
       <View testID="selectedPhotosView" style={styles.gallery}>
-        {images.map((image, index) => {
+        {images.map(image => {
           return (
             <GalleryItem
               key={image.source.id}
@@ -105,15 +106,10 @@ const GalleryInner = ({images, containerInfo, onChange}: GalleryInnerProps) => {
               imageControlsStyle={imageControlsStyle}
               imageStyle={imageStyle}
               onChange={next => {
-                onChange(
-                  images.map(i => (i.source === image.source ? next : i)),
-                )
+                dispatch({type: 'embed_update_image', image: next})
               }}
               onRemove={() => {
-                const next = images.slice()
-                next.splice(index, 1)
-
-                onChange(next)
+                dispatch({type: 'embed_remove_image', image})
               }}
             />
           )

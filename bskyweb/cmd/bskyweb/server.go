@@ -255,6 +255,7 @@ func serve(cctx *cli.Context) error {
 	e.GET("/support/community-guidelines", server.WebGeneric)
 	e.GET("/support/copyright", server.WebGeneric)
 	e.GET("/intent/compose", server.WebGeneric)
+	e.GET("/intent/verify-email", server.WebGeneric)
 	e.GET("/messages", server.WebGeneric)
 	e.GET("/messages/:conversation", server.WebGeneric)
 
@@ -279,6 +280,7 @@ func serve(cctx *cli.Context) error {
 
 	// starter packs
 	e.GET("/starter-pack/:handleOrDID/:rkey", server.WebStarterPack)
+	e.GET("/starter-pack-short/:code", server.WebGeneric)
 	e.GET("/start/:handleOrDID/:rkey", server.WebStarterPack)
 
 	// ipcc
