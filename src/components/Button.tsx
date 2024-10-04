@@ -376,7 +376,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
           }
         } else if (size === 'small') {
           if (shape === 'round') {
-            baseStyles.push({height: 34, width: 34})
+            baseStyles.push({height: 36, width: 36})
           } else {
             baseStyles.push({height: 34, width: 34})
           }
