@@ -41,12 +41,13 @@ type Server struct {
 }
 
 type Config struct {
-	debug       bool
-	httpAddress string
-	appviewHost string
-	ogcardHost  string
-	linkHost    string
-	ipccHost    string
+	debug         bool
+	httpAddress   string
+	appviewHost   string
+	ogcardHost    string
+	linkHost      string
+	ipccHost      string
+	staticCDNHost string
 }
 
 func serve(cctx *cli.Context) error {
@@ -58,6 +59,7 @@ func serve(cctx *cli.Context) error {
 	ipccHost := cctx.String("ipcc-host")
 	basicAuthPassword := cctx.String("basic-auth-password")
 	corsOrigins := cctx.StringSlice("cors-allowed-origins")
+	staticCDNHost := cctx.String("static-cdn-host")
 
 	// Echo
 	e := echo.New()
@@ -94,12 +96,13 @@ func serve(cctx *cli.Context) error {
 		echo:  e,
 		xrpcc: xrpcc,
 		cfg: &Config{
-			debug:       debug,
-			httpAddress: httpAddress,
-			appviewHost: appviewHost,
-			ogcardHost:  ogcardHost,
-			linkHost:    linkHost,
-			ipccHost:    ipccHost,
+			debug:         debug,
+			httpAddress:   httpAddress,
+			appviewHost:   appviewHost,
+			ogcardHost:    ogcardHost,
+			linkHost:      linkHost,
+			ipccHost:      ipccHost,
+			staticCDNHost: staticCDNHost,
 		},
 	}
 
@@ -333,15 +336,21 @@ func (srv *Server) Shutdown() error {
 	return srv.httpd.Shutdown(ctx)
 }
 
+// NewTemplateContext returns a new pongo2 context with some default values.
+func (srv *Server) NewTemplateContext() pongo2.Context {
+	return pongo2.Context{
+		"staticCDNHost": srv.cfg.staticCDNHost,
+	}
+}
+
 func (srv *Server) errorHandler(err error, c echo.Context) {
 	code := http.StatusInternalServerError
 	if he, ok := err.(*echo.HTTPError); ok {
 		code = he.Code
 	}
 	c.Logger().Error(err)
-	data := pongo2.Context{
-		"statusCode": code,
-	}
+	data := srv.NewTemplateContext()
+	data["statusCode"] = code
 	c.Render(code, "error.html", data)
 }
 
@@ -385,18 +394,18 @@ func (srv *Server) LinkProxyMiddleware(url *url.URL) echo.MiddlewareFunc {
 
 // handler for endpoint that have no specific server-side handling
 func (srv *Server) WebGeneric(c echo.Context) error {
-	data := pongo2.Context{}
+	data := srv.NewTemplateContext()
 	return c.Render(http.StatusOK, "base.html", data)
 }
 
 func (srv *Server) WebHome(c echo.Context) error {
-	data := pongo2.Context{}
+	data := srv.NewTemplateContext()
 	return c.Render(http.StatusOK, "home.html", data)
 }
 
 func (srv *Server) WebPost(c echo.Context) error {
 	ctx := c.Request().Context()
-	data := pongo2.Context{}
+	data := srv.NewTemplateContext()
 
 	// sanity check arguments. don't 4xx, just let app handle if not expected format
 	rkeyParam := c.Param("rkey")
@@ -471,7 +480,7 @@ func (srv *Server) WebPost(c echo.Context) error {
 func (srv *Server) WebStarterPack(c echo.Context) error {
 	req := c.Request()
 	ctx := req.Context()
-	data := pongo2.Context{}
+	data := srv.NewTemplateContext()
 	data["requestURI"] = fmt.Sprintf("https://%s%s", req.Host, req.URL.Path)
 	// sanity check arguments. don't 4xx, just let app handle if not expected format
 	rkeyParam := c.Param("rkey")
@@ -509,7 +518,7 @@ func (srv *Server) WebStarterPack(c echo.Context) error {
 
 func (srv *Server) WebProfile(c echo.Context) error {
 	ctx := c.Request().Context()
-	data := pongo2.Context{}
+	data := srv.NewTemplateContext()
 
 	// sanity check arguments. don't 4xx, just let app handle if not expected format
 	handleOrDIDParam := c.Param("handleOrDID")
