@@ -194,8 +194,6 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
       },
     })
 
-    console.log('kb:', keyboardHeight)
-
     const basePading =
       (isIOS ? 30 : 50) + (isIOS ? keyboardHeight / 4 : keyboardHeight)
     const fullPaddingBase = insets.bottom + insets.top + basePading
@@ -206,8 +204,8 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
 
     return (
       <KeyboardAwareScrollView
-        style={[a.pt_2xl, a.px_xl, style]}
-        contentContainerStyle={[{paddingBottom}]}
+        style={[style]}
+        contentContainerStyle={[a.pt_2xl, a.px_xl, {paddingBottom}]}
         ref={ref}
         {...props}
         bounces={nativeSnapPoint === BottomSheetSnapPoint.Full}
