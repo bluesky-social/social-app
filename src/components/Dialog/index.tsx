@@ -27,6 +27,10 @@ import {
 import {createInput} from '#/components/forms/TextField'
 import {Portal as DefaultPortal} from '#/components/Portal'
 import {BottomSheet, BottomSheetSnapPoint} from '../../../modules/bottom-sheet'
+import {
+  BottomSheetSnapPointChangeEvent,
+  BottomSheetStateChangeEvent,
+} from '../../../modules/bottom-sheet/src/BottomSheet.types'
 
 export {useDialogContext, useDialogControl} from '#/components/Dialog/context'
 export * from '#/components/Dialog/types'
@@ -46,7 +50,12 @@ export function Outer({
   const ref = React.useRef<BottomSheet>(null)
   const insets = useSafeAreaInsets()
   const closeCallbacks = React.useRef<(() => void)[]>([])
-  const {setDialogIsOpen} = useDialogStateControlContext()
+  const {setDialogIsOpen, setFullyExpandedCount} =
+    useDialogStateControlContext()
+
+  const prevSnapPoint = React.useRef<BottomSheetSnapPoint>(
+    BottomSheetSnapPoint.Hidden,
+  )
 
   const [snapPoint, setSnapPoint] = React.useState<BottomSheetSnapPoint>(
     BottomSheetSnapPoint.Partial,
@@ -89,6 +98,35 @@ export function Outer({
     onClose?.()
   }, [callQueuedCallbacks, control.id, onClose, setDialogIsOpen])
 
+  const onSnapPointChange = (e: BottomSheetSnapPointChangeEvent) => {
+    const {snapPoint} = e.nativeEvent
+    setSnapPoint(snapPoint)
+
+    if (
+      snapPoint === BottomSheetSnapPoint.Full &&
+      prevSnapPoint.current !== BottomSheetSnapPoint.Full
+    ) {
+      setFullyExpandedCount(c => c + 1)
+    } else if (
+      snapPoint !== BottomSheetSnapPoint.Full &&
+      prevSnapPoint.current === BottomSheetSnapPoint.Full
+    ) {
+      setFullyExpandedCount(c => c - 1)
+    }
+    prevSnapPoint.current = snapPoint
+  }
+
+  const onStateChange = (e: BottomSheetStateChangeEvent) => {
+    if (e.nativeEvent.state === 'closed') {
+      onCloseAnimationComplete()
+
+      if (prevSnapPoint.current === BottomSheetSnapPoint.Full) {
+        setFullyExpandedCount(c => c - 1)
+      }
+      prevSnapPoint.current = BottomSheetSnapPoint.Hidden
+    }
+  }
+
   useImperativeHandle(
     control.ref,
     () => ({
@@ -109,14 +147,8 @@ export function Outer({
         <BottomSheet
           ref={ref}
           bottomInset={insets.bottom}
-          onSnapPointChange={e => {
-            setSnapPoint(e.nativeEvent.snapPoint)
-          }}
-          onStateChange={e => {
-            if (e.nativeEvent.state === 'closed') {
-              onCloseAnimationComplete()
-            }
-          }}
+          onSnapPointChange={onSnapPointChange}
+          onStateChange={onStateChange}
           cornerRadius={20}
           {...nativeOptions}>
           <View testID={testID} style={[t.atoms.bg]}>

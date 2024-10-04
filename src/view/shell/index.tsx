@@ -20,6 +20,7 @@ import {useNotificationsRegistration} from '#/lib/notifications/notifications'
 import {isStateAtTabRoot} from '#/lib/routes/helpers'
 import {useTheme} from '#/lib/ThemeContext'
 import {isAndroid} from '#/platform/detection'
+import {useDialogStateControlContext} from '#/state/dialogs'
 import {useSession} from '#/state/session'
 import {
   useIsDrawerOpen,
@@ -123,6 +124,8 @@ function ShellInner() {
 }
 
 export const Shell: React.FC = function ShellImpl() {
+  const {fullyExpandedCount} = useDialogStateControlContext()
+  console.log(fullyExpandedCount)
   const pal = usePalette('default')
   const theme = useTheme()
   React.useEffect(() => {
@@ -136,7 +139,14 @@ export const Shell: React.FC = function ShellImpl() {
   }, [theme])
   return (
     <View testID="mobileShellView" style={[styles.outerContainer, pal.view]}>
-      <StatusBar style={theme.colorScheme === 'dark' ? 'light' : 'dark'} />
+      <StatusBar
+        style={
+          theme.colorScheme === 'dark' || fullyExpandedCount > 0
+            ? 'light'
+            : 'dark'
+        }
+        animated
+      />
       <RoutesContainer>
         <ShellInner />
       </RoutesContainer>

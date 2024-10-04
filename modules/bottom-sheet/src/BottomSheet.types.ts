@@ -9,6 +9,14 @@ export enum BottomSheetSnapPoint {
   Full,
 }
 
+export type BottomSheetAttemptDismissEvent = NativeSyntheticEvent<object>
+export type BottomSheetSnapPointChangeEvent = NativeSyntheticEvent<{
+  snapPoint: BottomSheetSnapPoint
+}>
+export type BottomSheetStateChangeEvent = NativeSyntheticEvent<{
+  state: BottomSheetState
+}>
+
 export interface BottomSheetViewProps {
   children: React.ReactNode
   cornerRadius?: number
@@ -21,11 +29,7 @@ export interface BottomSheetViewProps {
   minHeight?: number
   maxHeight?: number
 
-  onAttemptDismiss?: (event: NativeSyntheticEvent<object>) => void
-  onSnapPointChange?: (
-    event: NativeSyntheticEvent<{snapPoint: BottomSheetSnapPoint}>,
-  ) => void
-  onStateChange?: (
-    event: NativeSyntheticEvent<{state: BottomSheetState}>,
-  ) => void
+  onAttemptDismiss?: (event: BottomSheetAttemptDismissEvent) => void
+  onSnapPointChange?: (event: BottomSheetSnapPointChangeEvent) => void
+  onStateChange?: (event: BottomSheetStateChangeEvent) => void
 }
