@@ -100,7 +100,7 @@ export function ViewHeader({
               </TouchableOpacity>
             ) : null}
             <View style={styles.titleContainer} pointerEvents="none">
-              <Text type="title" style={[pal.text, styles.title]}>
+              <Text emoji type="title" style={[pal.text, styles.title]}>
                 {title}
               </Text>
             </View>
