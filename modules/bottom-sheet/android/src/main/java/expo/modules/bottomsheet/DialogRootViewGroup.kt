@@ -27,8 +27,9 @@ import com.facebook.react.views.view.ReactViewGroup
  * styleHeight on the LayoutShadowNode to be the window size. This is done through the
  * UIManagerModule, and will then cause the children to layout as if they can fill the window.
  */
-class DialogRootViewGroup(private val context: Context?) :
-  ReactViewGroup(context),
+class DialogRootViewGroup(
+  private val context: Context?,
+) : ReactViewGroup(context),
   RootView {
   private var hasAdjustedSize = false
   private var viewWidth = 0
@@ -41,7 +42,10 @@ class DialogRootViewGroup(private val context: Context?) :
   var eventDispatcher: EventDispatcher? = null
 
   interface OnSizeChangeListener {
-    fun onSizeChange(width: Int, height: Int)
+    fun onSizeChange(
+      width: Int,
+      height: Int,
+    )
   }
 
   init {
@@ -50,7 +54,12 @@ class DialogRootViewGroup(private val context: Context?) :
     }
   }
 
-  override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+  override fun onSizeChanged(
+    w: Int,
+    h: Int,
+    oldw: Int,
+    oldh: Int,
+  ) {
     super.onSizeChanged(w, h, oldw, oldh)
 
     viewWidth = w
@@ -78,14 +87,18 @@ class DialogRootViewGroup(private val context: Context?) :
 
             uiManager.updateNodeSize(viewTag, viewWidth, viewHeight)
           }
-        }
+        },
       )
     } else {
       hasAdjustedSize = true
     }
   }
 
-  override fun addView(child: View, index: Int, params: LayoutParams) {
+  override fun addView(
+    child: View,
+    index: Int,
+    params: LayoutParams,
+  ) {
     super.addView(child, index, params)
     if (hasAdjustedSize) {
       updateFirstChildView()
@@ -135,12 +148,18 @@ class DialogRootViewGroup(private val context: Context?) :
     }
   }
 
-  override fun onChildStartedNativeGesture(childView: View, ev: MotionEvent) {
+  override fun onChildStartedNativeGesture(
+    childView: View,
+    ev: MotionEvent,
+  ) {
     eventDispatcher?.let { jSTouchDispatcher.onChildStartedNativeGesture(ev, it) }
     jSPointerDispatcher?.onChildStartedNativeGesture(childView, ev, eventDispatcher)
   }
 
-  override fun onChildEndedNativeGesture(childView: View, ev: MotionEvent) {
+  override fun onChildEndedNativeGesture(
+    childView: View,
+    ev: MotionEvent,
+  ) {
     eventDispatcher?.let { jSTouchDispatcher.onChildEndedNativeGesture(ev, it) }
     jSPointerDispatcher?.onChildEndedNativeGesture()
   }

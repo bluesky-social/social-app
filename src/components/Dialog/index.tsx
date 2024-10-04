@@ -1,6 +1,5 @@
 import React, {useImperativeHandle} from 'react'
-import {StyleProp, View, ViewStyle} from 'react-native'
-import {GestureHandlerRootView, ScrollView} from 'react-native-gesture-handler'
+import {ScrollView, StyleProp, TextInput, View, ViewStyle} from 'react-native'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-controller'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
@@ -10,7 +9,6 @@ import {useDialogStateControlContext} from '#/state/dialogs'
 import {List, ListMethods, ListProps} from '#/view/com/util/List'
 import {atoms as a, flatten, useTheme} from '#/alf'
 import {Context, useDialogContext} from '#/components/Dialog/context'
-import {DialogTextInput} from '#/components/Dialog/DialogTextInput'
 import {
   DialogControlProps,
   DialogInnerProps,
@@ -24,7 +22,7 @@ export {useDialogContext, useDialogControl} from '#/components/Dialog/context'
 export * from '#/components/Dialog/types'
 export * from '#/components/Dialog/utils'
 // @ts-ignore
-export const Input = createInput(DialogTextInput)
+export const Input = createInput(TextInput)
 
 export function Outer({
   children,
@@ -95,8 +93,6 @@ export function Outer({
     [close, snapPoint],
   )
 
-  const Wrapper = isIOS ? View : GestureHandlerRootView
-
   return (
     <Portal>
       <Context.Provider value={context}>
@@ -114,9 +110,9 @@ export function Outer({
           }}
           cornerRadius={20}
           {...nativeOptions}>
-          <Wrapper testID={testID} style={[t.atoms.bg]}>
+          <View testID={testID} style={[t.atoms.bg]}>
             {children}
-          </Wrapper>
+          </View>
         </BottomSheet>
       </Context.Provider>
     </Portal>
@@ -149,8 +145,7 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
         ref={ref}
         {...props}
         bounces={nativeSnapPoint === BottomSheetSnapPoint.Full}
-        bottomOffset={30}
-        ScrollViewComponent={ScrollView}>
+        bottomOffset={30}>
         {children}
         <View
           style={{

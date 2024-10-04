@@ -1,6 +1,5 @@
 package expo.modules.bottomsheet
 
-import android.graphics.Color
 import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
 

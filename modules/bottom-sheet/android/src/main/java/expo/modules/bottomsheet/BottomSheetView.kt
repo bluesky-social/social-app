@@ -1,16 +1,15 @@
 package expo.modules.bottomsheet
 
 import android.content.Context
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewStructure
 import android.view.accessibility.AccessibilityEvent
 import android.widget.FrameLayout
 import androidx.core.view.allViews
-import com.facebook.react.ReactRootView
 import com.facebook.react.bridge.LifecycleEventListener
 import com.facebook.react.bridge.ReactContext
-import com.facebook.react.bridge.UIManager
 import com.facebook.react.bridge.UiThreadUtil
 import com.facebook.react.uimanager.UIManagerHelper
 import com.facebook.react.uimanager.events.EventDispatcher
@@ -24,14 +23,17 @@ import java.util.ArrayList
 class BottomSheetView(
   context: Context,
   appContext: AppContext,
-) : ExpoView(context, appContext), LifecycleEventListener {
+) : ExpoView(context, appContext),
+  LifecycleEventListener {
   private var innerView: View? = null
   private var dialog: BottomSheetDialog? = null
 
   private lateinit var dialogRootViewGroup: DialogRootViewGroup
   private var eventDispatcher: EventDispatcher? = null
 
-  private val screenHeight = context.resources.displayMetrics.heightPixels.toFloat()
+  private val screenHeight =
+    context.resources.displayMetrics.heightPixels
+      .toFloat()
 
   private val onAttemptDismiss by EventDispatcher()
   private val onSnapPointChange by EventDispatcher()
@@ -46,21 +48,23 @@ class BottomSheetView(
   var preventExpansion = false
 
   var minHeight = 0f
-    set (value) {
-      field = if (value < 0) {
-        0f
-      } else {
-        value
-      }
+    set(value) {
+      field =
+        if (value < 0) {
+          0f
+        } else {
+          value
+        }
     }
 
   var maxHeight = this.screenHeight
-    set (value) {
-      field = if (value > this.screenHeight) {
-        this.screenHeight.toFloat()
-      } else {
-        value
-      }
+    set(value) {
+      field =
+        if (value > this.screenHeight) {
+          this.screenHeight.toFloat()
+        } else {
+          value
+        }
     }
 
   private var isOpen: Boolean = false
@@ -77,9 +81,11 @@ class BottomSheetView(
     set(value) {
       field = value
       if (value) {
-        onStateChange(mapOf(
-          "state" to "opening"
-        ))
+        onStateChange(
+          mapOf(
+            "state" to "opening",
+          ),
+        )
       }
     }
 
@@ -87,9 +93,11 @@ class BottomSheetView(
     set(value) {
       field = value
       if (value) {
-        onStateChange(mapOf(
-          "state" to "closing"
-        ))
+        onStateChange(
+          mapOf(
+            "state" to "closing",
+          ),
+        )
       }
     }
 
@@ -168,26 +176,34 @@ class BottomSheetView(
         behavior.isDraggable = true
         behavior.isHideable = true
 
-        behavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
-          override fun onStateChanged(bottomSheet: View, newState: Int) {
-            when (newState) {
-              BottomSheetBehavior.STATE_EXPANDED -> {
-                selectedSnapPoint = 2
-              }
-              BottomSheetBehavior.STATE_COLLAPSED -> {
-                selectedSnapPoint = 1
-              }
-              BottomSheetBehavior.STATE_HALF_EXPANDED -> {
-                selectedSnapPoint = 1
-              }
-              BottomSheetBehavior.STATE_HIDDEN -> {
-                selectedSnapPoint = 0
+        behavior.addBottomSheetCallback(
+          object : BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(
+              bottomSheet: View,
+              newState: Int,
+            ) {
+              when (newState) {
+                BottomSheetBehavior.STATE_EXPANDED -> {
+                  selectedSnapPoint = 2
+                }
+                BottomSheetBehavior.STATE_COLLAPSED -> {
+                  selectedSnapPoint = 1
+                }
+                BottomSheetBehavior.STATE_HALF_EXPANDED -> {
+                  selectedSnapPoint = 1
+                }
+                BottomSheetBehavior.STATE_HIDDEN -> {
+                  selectedSnapPoint = 0
+                }
               }
             }
-          }
 
-          override fun onSlide(bottomSheet: View, slideOffset: Float) { }
-        })
+            override fun onSlide(
+              bottomSheet: View,
+              slideOffset: Float,
+            ) { }
+          },
+        )
       }
     }
     dialog.setOnDismissListener {
@@ -226,23 +242,27 @@ class BottomSheetView(
 
   private fun getContentHeight(): Float {
     val innerView = this.innerView ?: return 0f
+    var index = 0
     innerView.allViews.forEach {
-      if (it.javaClass.simpleName == "RNGestureHandlerRootView") {
-        return it.height.toFloat() + 50f
+      if (index == 1) {
+        Log.d("BottomSheetView", it.javaClass.simpleName)
+        return it.height.toFloat()
       }
+      index++
     }
     return 0f
   }
 
   private fun getTargetHeight(): Float {
     val contentHeight = this.getContentHeight()
-    val height = if (contentHeight > maxHeight) {
-      maxHeight
-    } else if (contentHeight < minHeight) {
-      minHeight
-    } else {
-      contentHeight
-    }
+    val height =
+      if (contentHeight > maxHeight) {
+        maxHeight
+      } else if (contentHeight < minHeight) {
+        minHeight
+      } else {
+        contentHeight
+      }
     return height
   }
 
@@ -254,8 +274,6 @@ class BottomSheetView(
     }
     return ratio
   }
-
-
 
   override fun onHostResume() { }
 
@@ -304,8 +322,5 @@ class BottomSheetView(
 
   override fun addChildrenForAccessibility(outChildren: ArrayList<View>?) { }
 
-  override fun dispatchPopulateAccessibilityEvent(event: AccessibilityEvent?): Boolean {
-    return false
-  }
-
+  override fun dispatchPopulateAccessibilityEvent(event: AccessibilityEvent?): Boolean = false
 }

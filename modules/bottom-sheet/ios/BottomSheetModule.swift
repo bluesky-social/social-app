@@ -12,7 +12,7 @@ public class BottomSheetModule: Module {
       Events([
         "onAttemptDismiss",
         "onSnapPointChange",
-        "onStateChange",
+        "onStateChange"
       ])
 
       AsyncFunction("dismiss") { (view: SheetView) in
