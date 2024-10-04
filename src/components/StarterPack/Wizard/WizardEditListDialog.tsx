@@ -86,6 +86,7 @@ export function WizardEditListDialog({
         ListHeaderComponent={
           <View
             style={[
+              native(a.pt_4xl),
               a.flex_row,
               a.justify_between,
               a.border_b,

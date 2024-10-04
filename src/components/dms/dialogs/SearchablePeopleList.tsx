@@ -239,7 +239,8 @@ export function SearchablePeopleList({
       <View
         style={[
           a.relative,
-          web(a.pt_md),
+          web(a.pt_lg),
+          native(a.pt_4xl),
           a.pb_xs,
           a.px_lg,
           a.border_b,
@@ -251,7 +252,7 @@ export function SearchablePeopleList({
             style={[
               a.z_10,
               a.text_lg,
-              a.font_bold,
+              a.font_heavy,
               a.leading_tight,
               t.atoms.text_contrast_high,
             ]}>
@@ -277,7 +278,7 @@ export function SearchablePeopleList({
           ) : null}
         </View>
 
-        <View style={[native([a.pt_sm]), web([a.pt_xs])]}>
+        <View style={[, web([a.pt_xs])]}>
           <SearchInput
             inputRef={inputRef}
             value={searchText}

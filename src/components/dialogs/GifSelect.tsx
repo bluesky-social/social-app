@@ -143,6 +143,7 @@ function GifList({
     return (
       <View
         style={[
+          native(a.pt_4xl),
           a.relative,
           a.mb_lg,
           a.flex_row,
