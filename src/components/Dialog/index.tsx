@@ -249,7 +249,14 @@ export function Handle() {
   const {close} = useDialogContext()
 
   return (
-    <View style={[a.w_full, a.align_center, a.z_10, {height: 20}]}>
+    <View
+      style={[
+        a.absolute,
+        a.w_full,
+        a.align_center,
+        a.z_10,
+        {height: 20},
+      ]}>
       <Pressable
         accessible={screenReaderEnabled}
         onPress={() => close()}
