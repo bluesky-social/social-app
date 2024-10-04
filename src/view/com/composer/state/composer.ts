@@ -1,6 +1,10 @@
 import {ImagePickerAsset} from 'expo-image-picker'
 
-import {isBskyPostUrl} from '#/lib/strings/url-helpers'
+import {
+  isBskyPostUrl,
+  postUriToRelativePath,
+  toBskyAppUrl,
+} from '#/lib/strings/url-helpers'
 import {ComposerImage, createInitialImages} from '#/state/gallery'
 import {Gif} from '#/state/queries/tenor'
 import {ComposerOpts} from '#/state/shell/composer'
@@ -304,9 +308,13 @@ export function createComposerState({
   }
   let quote: Link | undefined
   if (initQuoteUri) {
-    quote = {
-      type: 'link',
-      uri: initQuoteUri,
+    // TODO: Consider passing the app url directly.
+    const path = postUriToRelativePath(initQuoteUri)
+    if (path) {
+      quote = {
+        type: 'link',
+        uri: toBskyAppUrl(path),
+      }
     }
   }
   // TODO: Other initial content.
