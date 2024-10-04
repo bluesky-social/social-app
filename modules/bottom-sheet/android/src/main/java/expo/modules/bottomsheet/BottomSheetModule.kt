@@ -29,14 +29,6 @@ class BottomSheetModule : Module() {
           view.updateLayout()
         }
 
-        Prop("containerBackgroundColor") { view: BottomSheetView, prop: String ->
-//          view.sheetState.value.containerBackgroundColor = Color.parseColor(prop)
-        }
-
-        Prop("cornerRadius") { view: BottomSheetView, prop: Float ->
-//          view.sheetState.value.cornerRadius = prop
-        }
-
         Prop("minHeight") { view: BottomSheetView, prop: Float ->
           view.minHeight = prop
         }
