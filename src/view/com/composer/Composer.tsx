@@ -184,13 +184,10 @@ export const ComposePost = ({
     initQuote,
   )
 
-  const [videoAltText, setVideoAltText] = useState('')
-  const [captions, setCaptions] = useState<{lang: string; file: File}[]>([])
-
   // TODO: Move more state here.
   const [composerState, dispatch] = useReducer(
     composerReducer,
-    {initImageUris},
+    {initImageUris, initQuoteUri: initQuote?.uri},
     createComposerState,
   )
 
@@ -337,6 +334,7 @@ export const ComposePost = ({
 
   const onNewLink = useCallback(
     (uri: string) => {
+      dispatch({type: 'embed_add_uri', uri})
       if (extLink != null) return
       setExtLink({uri, isLoading: true})
     },
@@ -421,10 +419,9 @@ export const ComposePost = ({
       try {
         postUri = (
           await apilib.post(agent, {
-            composerState, // TODO: not used yet.
+            composerState, // TODO: move more state here.
             rawText: richtext.text,
             replyTo: replyTo?.uri,
-            images,
             quote,
             extLink,
             labels,
@@ -432,18 +429,6 @@ export const ComposePost = ({
             postgate,
             onStateChange: setProcessingState,
             langs: toPostLanguages(langPrefs.postLanguage),
-            video:
-              videoState.status === 'done'
-                ? {
-                    blobRef: videoState.pendingPublish.blobRef,
-                    altText: videoAltText,
-                    captions: captions,
-                    aspectRatio: {
-                      width: videoState.asset.width,
-                      height: videoState.asset.height,
-                    },
-                  }
-                : undefined,
           })
         ).uri
         try {
@@ -521,7 +506,6 @@ export const ComposePost = ({
     [
       _,
       agent,
-      captions,
       composerState,
       extLink,
       images,
@@ -540,9 +524,7 @@ export const ComposePost = ({
       setExtLink,
       setLangPrefs,
       threadgateAllowUISettings,
-      videoAltText,
       videoState.asset,
-      videoState.pendingPublish,
       videoState.status,
     ],
   )
@@ -582,6 +564,7 @@ export const ComposePost = ({
 
   const onSelectGif = useCallback(
     (gif: Gif) => {
+      dispatch({type: 'embed_add_gif', gif})
       setExtLink({
         uri: `${gif.media_formats.gif.url}?hh=${gif.media_formats.gif.dims[1]}&ww=${gif.media_formats.gif.dims[0]}`,
         isLoading: true,
@@ -600,6 +583,7 @@ export const ComposePost = ({
 
   const handleChangeGifAltText = useCallback(
     (altText: string) => {
+      dispatch({type: 'embed_update_gif', alt: altText})
       setExtLink(ext =>
         ext && ext.meta
           ? {
@@ -770,6 +754,11 @@ export const ComposePost = ({
                 link={extLink}
                 gif={extGif}
                 onRemove={() => {
+                  if (extGif) {
+                    dispatch({type: 'embed_remove_gif'})
+                  } else {
+                    dispatch({type: 'embed_remove_link'})
+                  }
                   setExtLink(undefined)
                   setExtGif(undefined)
                 }}
@@ -803,10 +792,28 @@ export const ComposePost = ({
                     />
                   ) : null)}
                 <SubtitleDialogBtn
-                  defaultAltText={videoAltText}
-                  saveAltText={setVideoAltText}
-                  captions={captions}
-                  setCaptions={setCaptions}
+                  defaultAltText={videoState.altText}
+                  saveAltText={altText =>
+                    dispatch({
+                      type: 'embed_update_video',
+                      videoAction: {
+                        type: 'update_alt_text',
+                        altText,
+                        signal: videoState.abortController.signal,
+                      },
+                    })
+                  }
+                  captions={videoState.captions}
+                  setCaptions={updater => {
+                    dispatch({
+                      type: 'embed_update_video',
+                      videoAction: {
+                        type: 'update_captions',
+                        updater,
+                        signal: videoState.abortController.signal,
+                      },
+                    })
+                  }}
                 />
               </Animated.View>
             )}
@@ -818,7 +825,12 @@ export const ComposePost = ({
                   <QuoteEmbed quote={quote} />
                 </View>
                 {quote.uri !== initQuote?.uri && (
-                  <QuoteX onRemove={() => setQuote(undefined)} />
+                  <QuoteX
+                    onRemove={() => {
+                      dispatch({type: 'embed_remove_quote'})
+                      setQuote(undefined)
+                    }}
+                  />
                 )}
               </View>
             ) : null}
