@@ -1,5 +1,5 @@
 import React from 'react'
-import {Pressable, PressableProps, View, ViewStyle} from 'react-native'
+import {Pressable, View, ViewStyle} from 'react-native'
 import Animated, {LinearTransition} from 'react-native-reanimated'
 
 import {HITSLOP_10} from '#/lib/constants'
@@ -68,7 +68,6 @@ export type ItemProps = ViewStyleProp & {
   onChange?: (selected: boolean) => void
   isInvalid?: boolean
   children: ((props: ItemState) => React.ReactNode) | React.ReactNode
-  PressableComponent?: React.ComponentType<PressableProps>
 }
 
 export function useItemContext() {
@@ -160,7 +159,6 @@ export function Item({
   style,
   type = 'checkbox',
   label,
-  PressableComponent = Pressable,
   ...rest
 }: ItemProps) {
   const {
@@ -208,7 +206,7 @@ export function Item({
 
   return (
     <ItemContext.Provider value={state}>
-      <PressableComponent
+      <Pressable
         accessibilityHint={undefined} // optional
         hitSlop={HITSLOP_10}
         {...rest}
@@ -233,7 +231,7 @@ export function Item({
         onBlur={onBlur}
         style={[a.flex_row, a.align_center, a.gap_sm, flatten(style)]}>
         {typeof children === 'function' ? children(state) : children}
-      </PressableComponent>
+      </Pressable>
     </ItemContext.Provider>
   )
 }
