@@ -95,7 +95,6 @@ export function Outer({
             {children}
             {isNative && showCancel && <Cancel />}
           </View>
-          <View style={{height: a.gap_lg.gap}} />
         </Dialog.ScrollableInner>
       </Context.Provider>
     </Dialog.Outer>
