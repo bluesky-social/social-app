@@ -94,6 +94,7 @@ export function Outer({
           <View style={[a.gap_lg]}>
             {children}
             {isNative && showCancel && <Cancel />}
+            <View style={[{height: a.pb_lg.paddingBottom}]} />
           </View>
         </Dialog.ScrollableInner>
       </Context.Provider>
