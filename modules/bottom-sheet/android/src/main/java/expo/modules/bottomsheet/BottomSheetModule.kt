@@ -29,6 +29,10 @@ class BottomSheetModule : Module() {
           view.updateLayout()
         }
 
+        Prop("disableDrag") { view: BottomSheetView, prop: Boolean ->
+          view.disableDrag = prop
+        }
+
         Prop("minHeight") { view: BottomSheetView, prop: Float ->
           view.minHeight = prop
         }

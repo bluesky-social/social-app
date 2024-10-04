@@ -24,6 +24,7 @@ export interface BottomSheetViewProps {
   preventExpansion?: boolean
   backgroundColor?: ColorValue
   containerBackgroundColor?: ColorValue
+  disableDrag?: boolean
 
   minHeight?: number
   maxHeight?: number

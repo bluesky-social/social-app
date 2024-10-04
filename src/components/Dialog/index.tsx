@@ -1,5 +1,7 @@
 import React, {useImperativeHandle} from 'react'
 import {
+  NativeScrollEvent,
+  NativeSyntheticEvent,
   Pressable,
   ScrollView,
   StyleProp,
@@ -17,7 +19,7 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {logger} from '#/logger'
-import {isIOS} from '#/platform/detection'
+import {isAndroid, isIOS} from '#/platform/detection'
 import {useA11y} from '#/state/a11y'
 import {useDialogStateControlContext} from '#/state/dialogs'
 import {List, ListMethods, ListProps} from '#/view/com/util/List'
@@ -60,6 +62,7 @@ export function Outer({
     BottomSheetSnapPoint.Hidden,
   )
 
+  const [disableDrag, setDisableDrag] = React.useState(false)
   const [snapPoint, setSnapPoint] = React.useState<BottomSheetSnapPoint>(
     BottomSheetSnapPoint.Partial,
   )
@@ -140,8 +143,14 @@ export function Outer({
   )
 
   const context = React.useMemo(
-    () => ({close, isNativeDialog: true, nativeSnapPoint: snapPoint}),
-    [close, snapPoint],
+    () => ({
+      close,
+      isNativeDialog: true,
+      nativeSnapPoint: snapPoint,
+      disableDrag,
+      setDisableDrag,
+    }),
+    [close, snapPoint, disableDrag, setDisableDrag],
   )
 
   return (
@@ -149,11 +158,12 @@ export function Outer({
       <Context.Provider value={context}>
         <BottomSheet
           ref={ref}
-          onSnapPointChange={onSnapPointChange}
-          onStateChange={onStateChange}
           cornerRadius={20}
           backgroundColor={t.atoms.bg.backgroundColor}
-          {...nativeOptions}>
+          {...nativeOptions}
+          onSnapPointChange={onSnapPointChange}
+          onStateChange={onStateChange}
+          disableDrag={disableDrag}>
           <View testID={testID}>{children}</View>
         </BottomSheet>
       </Context.Provider>
@@ -180,7 +190,7 @@ export function Inner({children, style}: DialogInnerProps) {
 
 export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
   function ScrollableInner({children, style, ...props}, ref) {
-    const {nativeSnapPoint} = useDialogContext()
+    const {nativeSnapPoint, disableDrag, setDisableDrag} = useDialogContext()
     const insets = useSafeAreaInsets()
     const [keyboardHeight, setKeyboardHeight] = React.useState(0)
     useKeyboardHandler({
@@ -198,6 +208,15 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
     const paddingBottom =
       nativeSnapPoint === BottomSheetSnapPoint.Full ? fullPadding : basePading
 
+    const onScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+      const {contentOffset} = e.nativeEvent
+      if (contentOffset.y > 0 && !disableDrag) {
+        setDisableDrag(true)
+      } else if (contentOffset.y <= 1 && disableDrag) {
+        setDisableDrag(false)
+      }
+    }
+
     return (
       <KeyboardAwareScrollView
         style={[style]}
@@ -205,7 +224,9 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
         ref={ref}
         {...props}
         bounces={nativeSnapPoint === BottomSheetSnapPoint.Full}
-        bottomOffset={30}>
+        bottomOffset={30}
+        scrollEventThrottle={50}
+        onScroll={isAndroid ? onScroll : undefined}>
         {children}
       </KeyboardAwareScrollView>
     )

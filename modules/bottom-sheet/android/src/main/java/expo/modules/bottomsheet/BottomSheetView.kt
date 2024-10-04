@@ -39,6 +39,12 @@ class BottomSheetView(
   private val onStateChange by EventDispatcher()
 
   // Props
+  var disableDrag = false
+    set (value) {
+      field = value
+      this.setDraggable(!value)
+    }
+
   var preventDismiss = false
     set(value) {
       field = value
@@ -271,6 +277,15 @@ class BottomSheetView(
       return 0.99f
     }
     return ratio
+  }
+
+  private fun setDraggable(draggable: Boolean) {
+    val dialog = this.dialog ?: return
+    val bottomSheet = dialog.findViewById<FrameLayout>(com.google.android.material.R.id.design_bottom_sheet)
+    bottomSheet?.let {
+      val behavior = BottomSheetBehavior.from(it)
+      behavior.isDraggable = draggable
+    }
   }
 
   override fun onHostResume() { }

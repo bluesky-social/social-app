@@ -41,6 +41,8 @@ export type DialogContextProps = {
   close: DialogControlProps['close']
   isNativeDialog: boolean
   nativeSnapPoint: BottomSheetSnapPoint
+  disableDrag: boolean
+  setDisableDrag: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export type DialogControlOpenOptions = {
