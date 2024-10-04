@@ -2,8 +2,8 @@ import {getVideoMetaData, Video} from 'react-native-compressor'
 import {ImagePickerAsset} from 'expo-image-picker'
 
 import {SUPPORTED_MIME_TYPES, SupportedMimeTypes} from '#/lib/constants'
+import {extToMime} from '#/state/queries/video/util'
 import {CompressedVideo} from './types'
-import {extToMime} from './util'
 
 const MIN_SIZE_FOR_COMPRESSION = 25 // 25mb
 

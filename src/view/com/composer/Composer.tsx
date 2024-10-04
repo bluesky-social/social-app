@@ -82,6 +82,13 @@ import {useProfileQuery} from '#/state/queries/profile'
 import {Gif} from '#/state/queries/tenor'
 import {ThreadgateAllowUISetting} from '#/state/queries/threadgate'
 import {threadgateViewToAllowUISetting} from '#/state/queries/threadgate/util'
+import {NO_VIDEO, NoVideoState} from '#/state/queries/video/video'
+import {
+  processVideo,
+  VideoAction,
+  VideoState,
+  VideoState as VideoUploadState,
+} from '#/state/queries/video/video'
 import {useAgent, useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
 import {ComposerOpts} from '#/state/shell/composer'
@@ -116,8 +123,7 @@ import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmile} from '#/components/icons
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import * as Prompt from '#/components/Prompt'
 import {Text as NewText} from '#/components/Typography'
-import {composerReducer, createComposerState} from './state/composer'
-import {NO_VIDEO, NoVideoState, processVideo, VideoState} from './state/video'
+import {composerReducer, createComposerState} from './state'
 
 const MAX_IMAGES = 4
 
@@ -194,10 +200,16 @@ export const ComposePost = ({
     createComposerState,
   )
 
-  let videoState: VideoState | NoVideoState = NO_VIDEO
+  let videoUploadState: VideoState | NoVideoState = NO_VIDEO
   if (composerState.embed.media?.type === 'video') {
-    videoState = composerState.embed.media.video
+    videoUploadState = composerState.embed.media.video
   }
+  const videoDispatch = useCallback(
+    (videoAction: VideoAction) => {
+      dispatch({type: 'embed_update_video', videoAction})
+    },
+    [dispatch],
+  )
 
   const selectVideo = React.useCallback(
     (asset: ImagePickerAsset) => {
@@ -205,14 +217,14 @@ export const ComposePost = ({
       dispatch({type: 'embed_add_video', asset, abortController})
       processVideo(
         asset,
-        videoAction => dispatch({type: 'embed_update_video', videoAction}),
+        videoDispatch,
         agent,
         currentDid,
         abortController.signal,
         _,
       )
     },
-    [_, agent, currentDid],
+    [_, videoDispatch, agent, currentDid],
   )
 
   // Whenever we receive an initial video uri, we should immediately run compression if necessary
@@ -223,26 +235,23 @@ export const ComposePost = ({
   }, [initVideoUri, selectVideo])
 
   const clearVideo = React.useCallback(() => {
-    videoState.abortController.abort()
+    videoUploadState.abortController.abort()
     dispatch({type: 'embed_remove_video'})
-  }, [videoState.abortController, dispatch])
+  }, [videoUploadState.abortController, dispatch])
 
   const updateVideoDimensions = useCallback(
     (width: number, height: number) => {
-      dispatch({
-        type: 'embed_update_video',
-        videoAction: {
-          type: 'update_dimensions',
-          width,
-          height,
-          signal: videoState.abortController.signal,
-        },
+      videoDispatch({
+        type: 'update_dimensions',
+        width,
+        height,
+        signal: videoUploadState.abortController.signal,
       })
     },
-    [videoState.abortController],
+    [videoUploadState.abortController, videoDispatch],
   )
 
-  const hasVideo = Boolean(videoState.asset || videoState.video)
+  const hasVideo = Boolean(videoUploadState.asset || videoUploadState.video)
 
   const [publishOnUpload, setPublishOnUpload] = useState(false)
 
@@ -279,7 +288,7 @@ export const ComposePost = ({
       graphemeLength > 0 ||
       images.length !== 0 ||
       extGif ||
-      videoState.status !== 'idle'
+      videoUploadState.status !== 'idle'
     ) {
       closeAllDialogs()
       Keyboard.dismiss()
@@ -294,7 +303,7 @@ export const ComposePost = ({
     closeAllDialogs,
     discardPromptControl,
     onClose,
-    videoState.status,
+    videoUploadState.status,
   ])
 
   useImperativeHandle(cancelRef, () => ({onPressCancel}))
@@ -391,8 +400,8 @@ export const ComposePost = ({
 
       if (
         !finishedUploading &&
-        videoState.asset &&
-        videoState.status !== 'done'
+        videoUploadState.asset &&
+        videoUploadState.status !== 'done'
       ) {
         setPublishOnUpload(true)
         return
@@ -405,7 +414,7 @@ export const ComposePost = ({
         images.length === 0 &&
         !extLink &&
         !quote &&
-        videoState.status === 'idle'
+        videoUploadState.status === 'idle'
       ) {
         setError(_(msg`Did you want to say anything?`))
         return
@@ -433,14 +442,14 @@ export const ComposePost = ({
             onStateChange: setProcessingState,
             langs: toPostLanguages(langPrefs.postLanguage),
             video:
-              videoState.status === 'done'
+              videoUploadState.status === 'done'
                 ? {
-                    blobRef: videoState.pendingPublish.blobRef,
+                    blobRef: videoUploadState.pendingPublish.blobRef,
                     altText: videoAltText,
                     captions: captions,
                     aspectRatio: {
-                      width: videoState.asset.width,
-                      height: videoState.asset.height,
+                      width: videoUploadState.asset.width,
+                      height: videoUploadState.asset.height,
                     },
                   }
                 : undefined,
@@ -541,20 +550,20 @@ export const ComposePost = ({
       setLangPrefs,
       threadgateAllowUISettings,
       videoAltText,
-      videoState.asset,
-      videoState.pendingPublish,
-      videoState.status,
+      videoUploadState.asset,
+      videoUploadState.pendingPublish,
+      videoUploadState.status,
     ],
   )
 
   React.useEffect(() => {
-    if (videoState.pendingPublish && publishOnUpload) {
-      if (!videoState.pendingPublish.mutableProcessed) {
-        videoState.pendingPublish.mutableProcessed = true
+    if (videoUploadState.pendingPublish && publishOnUpload) {
+      if (!videoUploadState.pendingPublish.mutableProcessed) {
+        videoUploadState.pendingPublish.mutableProcessed = true
         onPressPublish(true)
       }
     }
-  }, [onPressPublish, publishOnUpload, videoState.pendingPublish])
+  }, [onPressPublish, publishOnUpload, videoUploadState.pendingPublish])
 
   const canPost = useMemo(
     () => graphemeLength <= MAX_GRAPHEME_LENGTH && !isAltTextRequiredAndMissing,
@@ -567,10 +576,10 @@ export const ComposePost = ({
   const canSelectImages =
     images.length < MAX_IMAGES &&
     !extLink &&
-    videoState.status === 'idle' &&
-    !videoState.video
+    videoUploadState.status === 'idle' &&
+    !videoUploadState.video
   const hasMedia =
-    images.length > 0 || Boolean(extLink) || Boolean(videoState.video)
+    images.length > 0 || Boolean(extLink) || Boolean(videoUploadState.video)
 
   const onEmojiButtonPress = useCallback(() => {
     openEmojiPicker?.(textInput.current?.getCursorPosition())
@@ -685,7 +694,9 @@ export const ComposePost = ({
                     size="small"
                     style={[a.rounded_full, a.py_sm]}
                     onPress={() => onPressPublish()}
-                    disabled={videoState.status !== 'idle' && publishOnUpload}>
+                    disabled={
+                      videoUploadState.status !== 'idle' && publishOnUpload
+                    }>
                     <ButtonText style={[a.text_md]}>
                       {replyTo ? (
                         <Trans context="action">Reply</Trans>
@@ -721,7 +732,7 @@ export const ComposePost = ({
           )}
           <ErrorBanner
             error={error}
-            videoState={videoState}
+            videoUploadState={videoUploadState}
             clearError={() => setError('')}
             clearVideo={clearVideo}
           />
@@ -787,17 +798,17 @@ export const ComposePost = ({
                 style={[a.w_full, a.mt_lg]}
                 entering={native(ZoomIn)}
                 exiting={native(ZoomOut)}>
-                {videoState.asset &&
-                  (videoState.status === 'compressing' ? (
+                {videoUploadState.asset &&
+                  (videoUploadState.status === 'compressing' ? (
                     <VideoTranscodeProgress
-                      asset={videoState.asset}
-                      progress={videoState.progress}
+                      asset={videoUploadState.asset}
+                      progress={videoUploadState.progress}
                       clear={clearVideo}
                     />
-                  ) : videoState.video ? (
+                  ) : videoUploadState.video ? (
                     <VideoPreview
-                      asset={videoState.asset}
-                      video={videoState.video}
+                      asset={videoUploadState.asset}
+                      video={videoUploadState.video}
                       setDimensions={updateVideoDimensions}
                       clear={clearVideo}
                     />
@@ -843,8 +854,9 @@ export const ComposePost = ({
             t.atoms.border_contrast_medium,
             styles.bottomBar,
           ]}>
-          {videoState.status !== 'idle' && videoState.status !== 'done' ? (
-            <VideoUploadToolbar state={videoState} />
+          {videoUploadState.status !== 'idle' &&
+          videoUploadState.status !== 'done' ? (
+            <VideoUploadToolbar state={videoUploadState} />
           ) : (
             <ToolbarWrapper style={[a.flex_row, a.align_center, a.gap_xs]}>
               <SelectPhotoBtn
@@ -1109,12 +1121,12 @@ const styles = StyleSheet.create({
 
 function ErrorBanner({
   error: standardError,
-  videoState,
+  videoUploadState,
   clearError,
   clearVideo,
 }: {
   error: string
-  videoState: VideoState | NoVideoState
+  videoUploadState: VideoUploadState | NoVideoState
   clearError: () => void
   clearVideo: () => void
 }) {
@@ -1122,7 +1134,7 @@ function ErrorBanner({
   const {_} = useLingui()
 
   const videoError =
-    videoState.status === 'error' ? videoState.error : undefined
+    videoUploadState.status === 'error' ? videoUploadState.error : undefined
   const error = standardError || videoError
 
   const onClearError = () => {
@@ -1164,7 +1176,7 @@ function ErrorBanner({
             <ButtonIcon icon={X} />
           </Button>
         </View>
-        {videoError && videoState.jobId && (
+        {videoError && videoUploadState.jobId && (
           <NewText
             style={[
               {paddingLeft: 28},
@@ -1173,7 +1185,7 @@ function ErrorBanner({
               a.leading_snug,
               t.atoms.text_contrast_low,
             ]}>
-            <Trans>Job ID: {videoState.jobId}</Trans>
+            <Trans>Job ID: {videoUploadState.jobId}</Trans>
           </NewText>
         )}
       </View>
@@ -1199,7 +1211,7 @@ function ToolbarWrapper({
   )
 }
 
-function VideoUploadToolbar({state}: {state: VideoState}) {
+function VideoUploadToolbar({state}: {state: VideoUploadState}) {
   const t = useTheme()
   const {_} = useLingui()
   const progress = state.progress
