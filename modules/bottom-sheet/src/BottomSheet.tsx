@@ -65,8 +65,6 @@ export class BottomSheet extends React.Component<
 
   render() {
     const {children, backgroundColor, ...rest} = this.props
-    const topInset = rest.topInset ?? 0
-    const bottomInset = rest.bottomInset ?? 0
     const cornerRadius = rest.cornerRadius ?? 0
 
     if (!this.state.open) {
@@ -80,7 +78,7 @@ export class BottomSheet extends React.Component<
         ref={this.ref}
         style={{
           position: 'absolute',
-          height: screenHeight - topInset - bottomInset,
+          height: screenHeight,
           width: '100%',
         }}
         containerBackgroundColor={backgroundColor}>

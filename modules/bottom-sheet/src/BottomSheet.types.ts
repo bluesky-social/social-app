@@ -24,8 +24,6 @@ export interface BottomSheetViewProps {
   preventExpansion?: boolean
   backgroundColor?: ColorValue
   containerBackgroundColor?: ColorValue
-  topInset?: number
-  bottomInset?: number
 
   minHeight?: number
   maxHeight?: number

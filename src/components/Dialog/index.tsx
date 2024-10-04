@@ -52,7 +52,6 @@ export function Outer({
 }: React.PropsWithChildren<DialogOuterProps>) {
   const t = useTheme()
   const ref = React.useRef<BottomSheet>(null)
-  const insets = useSafeAreaInsets()
   const closeCallbacks = React.useRef<(() => void)[]>([])
   const {setDialogIsOpen, setFullyExpandedCount} =
     useDialogStateControlContext()
@@ -105,6 +104,7 @@ export function Outer({
   const onSnapPointChange = (e: BottomSheetSnapPointChangeEvent) => {
     const {snapPoint} = e.nativeEvent
     setSnapPoint(snapPoint)
+
     if (
       snapPoint === BottomSheetSnapPoint.Full &&
       prevSnapPoint.current !== BottomSheetSnapPoint.Full
@@ -152,8 +152,6 @@ export function Outer({
           onSnapPointChange={onSnapPointChange}
           onStateChange={onStateChange}
           cornerRadius={20}
-          topInset={insets.top}
-          bottomInset={insets.bottom}
           backgroundColor={t.atoms.bg.backgroundColor}
           {...nativeOptions}>
           <View testID={testID}>{children}</View>
