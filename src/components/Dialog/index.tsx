@@ -7,7 +7,11 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
-import {KeyboardAwareScrollView} from 'react-native-keyboard-controller'
+import {
+  KeyboardAwareScrollView,
+  useKeyboardHandler,
+} from 'react-native-keyboard-controller'
+import {runOnJS} from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -181,14 +185,23 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
   function ScrollableInner({children, style, ...props}, ref) {
     const {nativeSnapPoint} = useDialogContext()
     const insets = useSafeAreaInsets()
+    const [keyboardHeight, setKeyboardHeight] = React.useState(0)
+    useKeyboardHandler({
+      onEnd: e => {
+        'worklet'
+        runOnJS(setKeyboardHeight)(e.height)
+      },
+    })
+    const basePading = 30 + keyboardHeight / 2
+
     return (
       <KeyboardAwareScrollView
         style={[a.pt_2xl, a.px_xl, style]}
-        contentContainerStyle={
-          nativeSnapPoint === BottomSheetSnapPoint.Full && [
-            {paddingBottom: insets.bottom + insets.top},
-          ]
-        }
+        contentContainerStyle={[
+          nativeSnapPoint === BottomSheetSnapPoint.Full
+            ? {paddingBottom: insets.bottom + insets.top + basePading}
+            : {paddingBottom: basePading},
+        ]}
         ref={ref}
         {...props}
         bounces={nativeSnapPoint === BottomSheetSnapPoint.Full}
