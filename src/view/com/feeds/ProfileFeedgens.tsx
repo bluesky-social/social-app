@@ -15,9 +15,9 @@ import {logger} from '#/logger'
 import {isNative, isWeb} from '#/platform/detection'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {RQKEY, useProfileFeedgensQuery} from '#/state/queries/profile-feedgens'
+import {EmptyState} from '#/view/com/util/EmptyState'
 import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
-import {EmptyState} from 'view/com/util/EmptyState'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, ios, useTheme} from '#/alf'
 import * as FeedCard from '#/components/FeedCard'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {List, ListRef} from '../util/List'
@@ -129,46 +129,49 @@ export const ProfileFeedgens = React.forwardRef<
   // rendering
   // =
 
-  const renderItem = ({item, index}: ListRenderItemInfo<any>) => {
-    if (item === EMPTY) {
-      return (
-        <EmptyState
-          icon="hashtag"
-          message={_(msg`You have no feeds.`)}
-          testID="listsEmpty"
-        />
-      )
-    } else if (item === ERROR_ITEM) {
-      return (
-        <ErrorMessage message={cleanError(error)} onPressTryAgain={refetch} />
-      )
-    } else if (item === LOAD_MORE_ERROR_ITEM) {
-      return (
-        <LoadMoreRetryBtn
-          label={_(
-            msg`There was an issue fetching your lists. Tap here to try again.`,
-          )}
-          onPress={onPressRetryLoadMore}
-        />
-      )
-    } else if (item === LOADING) {
-      return <FeedLoadingPlaceholder />
-    }
-    if (preferences) {
-      return (
-        <View
-          style={[
-            (index !== 0 || isWeb) && a.border_t,
-            t.atoms.border_contrast_low,
-            a.px_lg,
-            a.py_lg,
-          ]}>
-          <FeedCard.Default view={item} />
-        </View>
-      )
-    }
-    return null
-  }
+  const renderItem = React.useCallback(
+    ({item, index}: ListRenderItemInfo<any>) => {
+      if (item === EMPTY) {
+        return (
+          <EmptyState
+            icon="hashtag"
+            message={_(msg`You have no feeds.`)}
+            testID="listsEmpty"
+          />
+        )
+      } else if (item === ERROR_ITEM) {
+        return (
+          <ErrorMessage message={cleanError(error)} onPressTryAgain={refetch} />
+        )
+      } else if (item === LOAD_MORE_ERROR_ITEM) {
+        return (
+          <LoadMoreRetryBtn
+            label={_(
+              msg`There was an issue fetching your lists. Tap here to try again.`,
+            )}
+            onPress={onPressRetryLoadMore}
+          />
+        )
+      } else if (item === LOADING) {
+        return <FeedLoadingPlaceholder />
+      }
+      if (preferences) {
+        return (
+          <View
+            style={[
+              (index !== 0 || isWeb) && a.border_t,
+              t.atoms.border_contrast_low,
+              a.px_lg,
+              a.py_lg,
+            ]}>
+            <FeedCard.Default view={item} />
+          </View>
+        )
+      }
+      return null
+    },
+    [_, t, error, refetch, onPressRetryLoadMore, preferences],
+  )
 
   React.useEffect(() => {
     if (enabled && scrollElRef.current) {
@@ -188,6 +191,7 @@ export const ProfileFeedgens = React.forwardRef<
         refreshing={isPTRing}
         onRefresh={onRefresh}
         headerOffset={headerOffset}
+        progressViewOffset={ios(0)}
         contentContainerStyle={isNative && {paddingBottom: headerOffset + 100}}
         indicatorStyle={t.name === 'light' ? 'black' : 'white'}
         removeClippedSubviews={true}

@@ -7,7 +7,11 @@ import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
-import {track} from '#/lib/analytics/analytics'
+import {useHaptics} from '#/lib/haptics'
+import {usePalette} from '#/lib/hooks/usePalette'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {CommonNavigatorParams} from '#/lib/routes/types'
+import {colors, s} from '#/lib/styles'
 import {logger} from '#/logger'
 import {
   useOverwriteSavedFeedsMutation,
@@ -16,23 +20,16 @@ import {
 } from '#/state/queries/preferences'
 import {UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
 import {useSetMinimalShellMode} from '#/state/shell'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {useHaptics} from 'lib/haptics'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {CommonNavigatorParams} from 'lib/routes/types'
-import {colors, s} from 'lib/styles'
-import {FeedSourceCard} from 'view/com/feeds/FeedSourceCard'
-import {TextLink} from 'view/com/util/Link'
-import {Text} from 'view/com/util/text/Text'
-import * as Toast from 'view/com/util/Toast'
-import {ViewHeader} from 'view/com/util/ViewHeader'
-import {CenteredView, ScrollView} from 'view/com/util/Views'
+import {FeedSourceCard} from '#/view/com/feeds/FeedSourceCard'
+import {TextLink} from '#/view/com/util/Link'
+import {Text} from '#/view/com/util/text/Text'
+import * as Toast from '#/view/com/util/Toast'
+import {ViewHeader} from '#/view/com/util/ViewHeader'
+import {CenteredView, ScrollView} from '#/view/com/util/Views'
 import {NoFollowingFeed} from '#/screens/Feeds/NoFollowingFeed'
 import {NoSavedFeedsOfAnyType} from '#/screens/Feeds/NoSavedFeedsOfAnyType'
 import {atoms as a, useTheme} from '#/alf'
 import {FilterTimeline_Stroke2_Corner0_Rounded as FilterTimeline} from '#/components/icons/FilterTimeline'
-import hairlineWidth = StyleSheet.hairlineWidth
 
 const HITSLOP_TOP = {
   top: 20,
@@ -52,7 +49,6 @@ export function SavedFeeds({}: Props) {
   const pal = usePalette('default')
   const {_} = useLingui()
   const {isMobile, isTabletOrDesktop} = useWebMediaQueries()
-  const {screen} = useAnalytics()
   const setMinimalShellMode = useSetMinimalShellMode()
   const {data: preferences} = usePreferencesQuery()
   const {
@@ -78,9 +74,8 @@ export function SavedFeeds({}: Props) {
 
   useFocusEffect(
     React.useCallback(() => {
-      screen('SavedFeeds')
       setMinimalShellMode(false)
-    }, [screen, setMinimalShellMode]),
+    }, [setMinimalShellMode]),
   )
 
   return (
@@ -93,7 +88,8 @@ export function SavedFeeds({}: Props) {
       <ViewHeader title={_(msg`Edit My Feeds`)} showOnDesktop showBorder />
       <ScrollView style={s.flex1} contentContainerStyle={[styles.noBorder]}>
         {noSavedFeedsOfAnyType && (
-          <View style={[pal.border, {borderBottomWidth: hairlineWidth}]}>
+          <View
+            style={[pal.border, {borderBottomWidth: StyleSheet.hairlineWidth}]}>
             <NoSavedFeedsOfAnyType />
           </View>
         )}
@@ -135,7 +131,8 @@ export function SavedFeeds({}: Props) {
         )}
 
         {noFollowingFeed && (
-          <View style={[pal.border, {borderBottomWidth: hairlineWidth}]}>
+          <View
+            style={[pal.border, {borderBottomWidth: StyleSheet.hairlineWidth}]}>
             <NoFollowingFeed />
           </View>
         )}
@@ -234,7 +231,7 @@ function ListItem({
         },
       ])
     } catch (e) {
-      Toast.show(_(msg`There was an issue contacting the server`))
+      Toast.show(_(msg`There was an issue contacting the server`), 'xmark')
       logger.error('Failed to toggle pinned feed', {message: e})
     }
   }, [_, playHaptic, feed, updateSavedFeeds, resetSaveFeedsMutationState])
@@ -255,12 +252,8 @@ function ListItem({
 
     try {
       await overwriteSavedFeeds(nextFeeds)
-      track('CustomFeed:Reorder', {
-        uri: feed.value,
-        index: nextIndex,
-      })
     } catch (e) {
-      Toast.show(_(msg`There was an issue contacting the server`))
+      Toast.show(_(msg`There was an issue contacting the server`), 'xmark')
       logger.error('Failed to set pinned feed order', {message: e})
     }
   }, [feed, isPinned, overwriteSavedFeeds, currentFeeds, _])
@@ -281,12 +274,8 @@ function ListItem({
 
     try {
       await overwriteSavedFeeds(nextFeeds)
-      track('CustomFeed:Reorder', {
-        uri: feed.value,
-        index: nextIndex,
-      })
     } catch (e) {
-      Toast.show(_(msg`There was an issue contacting the server`))
+      Toast.show(_(msg`There was an issue contacting the server`), 'xmark')
       logger.error('Failed to set pinned feed order', {message: e})
     }
   }, [feed, isPinned, overwriteSavedFeeds, currentFeeds, _])
@@ -437,12 +426,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingTop: 20,
     paddingBottom: 10,
-    borderBottomWidth: hairlineWidth,
+    borderBottomWidth: StyleSheet.hairlineWidth,
   },
   itemContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderBottomWidth: hairlineWidth,
+    borderBottomWidth: StyleSheet.hairlineWidth,
   },
   footerText: {
     paddingHorizontal: 26,

@@ -20,6 +20,7 @@ export type CommonNavigatorParams = {
   PostThread: {name: string; rkey: string}
   PostLikedBy: {name: string; rkey: string}
   PostRepostedBy: {name: string; rkey: string}
+  PostQuotes: {name: string; rkey: string}
   ProfileFeed: {name: string; rkey: string}
   ProfileFeedLikedBy: {name: string; rkey: string}
   ProfileLabelerLikedBy: {name: string}
@@ -38,18 +39,18 @@ export type CommonNavigatorParams = {
   PreferencesThreads: undefined
   PreferencesExternalEmbeds: undefined
   AccessibilitySettings: undefined
+  AppearanceSettings: undefined
   Search: {q?: string}
   Hashtag: {tag: string; author?: string}
   MessagesConversation: {conversation: string; embed?: string}
   MessagesSettings: undefined
+  NotificationsSettings: undefined
   Feeds: undefined
   Start: {name: string; rkey: string}
   StarterPack: {name: string; rkey: string; new?: boolean}
   StarterPackShort: {code: string}
   StarterPackWizard: undefined
-  StarterPackEdit: {
-    rkey?: string
-  }
+  StarterPackEdit: {rkey?: string}
 }
 
 export type BottomTabNavigatorParams = CommonNavigatorParams & {
@@ -69,7 +70,7 @@ export type SearchTabNavigatorParams = CommonNavigatorParams & {
 }
 
 export type NotificationsTabNavigatorParams = CommonNavigatorParams & {
-  Notifications: undefined
+  Notifications: {show?: 'all'}
 }
 
 export type MyProfileTabNavigatorParams = CommonNavigatorParams & {
@@ -84,7 +85,7 @@ export type FlatNavigatorParams = CommonNavigatorParams & {
   Home: undefined
   Search: {q?: string}
   Feeds: undefined
-  Notifications: undefined
+  Notifications: {show?: 'all'}
   Hashtag: {tag: string; author?: string}
   Messages: {pushToConversation?: string; animation?: 'push' | 'pop'}
 }
@@ -96,7 +97,7 @@ export type AllNavigatorParams = CommonNavigatorParams & {
   Search: {q?: string}
   Feeds: undefined
   NotificationsTab: undefined
-  Notifications: undefined
+  Notifications: {show?: 'all'}
   MyProfileTab: undefined
   Hashtag: {tag: string; author?: string}
   MessagesTab: undefined
@@ -105,9 +106,7 @@ export type AllNavigatorParams = CommonNavigatorParams & {
   StarterPack: {name: string; rkey: string; new?: boolean}
   StarterPackShort: {code: string}
   StarterPackWizard: undefined
-  StarterPackEdit: {
-    rkey?: string
-  }
+  StarterPackEdit: {rkey?: string}
 }
 
 // NOTE

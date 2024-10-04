@@ -26,9 +26,12 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   )
 
   React.useEffect(() => {
-    return persisted.onUpdate(() => {
-      setState(persisted.get('requireAltTextEnabled'))
-    })
+    return persisted.onUpdate(
+      'requireAltTextEnabled',
+      nextRequireAltTextEnabled => {
+        setState(nextRequireAltTextEnabled)
+      },
+    )
   }, [setStateWrapped])
 
   return (

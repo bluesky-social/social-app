@@ -193,12 +193,6 @@ class MergeFeedSource {
     return this.hasMore && this.queue.length === 0
   }
 
-  reset() {
-    this.cursor = undefined
-    this.queue = []
-    this.hasMore = true
-  }
-
   take(n: number): AppBskyFeedDefs.FeedViewPost[] {
     return this.queue.splice(0, n)
   }
@@ -232,11 +226,6 @@ class MergeFeedSource {
 class MergeFeedSource_Following extends MergeFeedSource {
   tuner = new FeedTuner(this.feedTuners)
 
-  reset() {
-    super.reset()
-    this.tuner.reset()
-  }
-
   async fetchNext(n: number) {
     return this._fetchNextInner(n)
   }
@@ -249,9 +238,8 @@ class MergeFeedSource_Following extends MergeFeedSource {
     // run the tuner pre-emptively to ensure better mixing
     const slices = this.tuner.tune(res.data.feed, {
       dryRun: false,
-      maintainOrder: true,
     })
-    res.data.feed = slices.map(slice => slice.rootItem)
+    res.data.feed = slices.map(slice => slice._feedPost)
     return res
   }
 }

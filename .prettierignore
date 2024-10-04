@@ -1,4 +1,4 @@
-# Ignore everything except JS-ey code.
+# Ignore everything except JS-ey or CSS code.
 # Based on https://stackoverflow.com/a/70715829/458193
 *
 !**/*.js
@@ -7,9 +7,14 @@
 !**/*.tsx
 !*/
 
+!**/*.css
+
 # More specific ignores go below.
 .expo
 android
 ios
 src/locale/locales
 lib/react-compiler-runtime
+bskyweb/static
+coverage
+web-build

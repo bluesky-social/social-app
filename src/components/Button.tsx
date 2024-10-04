@@ -1,11 +1,12 @@
 import React from 'react'
 import {
   AccessibilityProps,
+  GestureResponderEvent,
+  MouseEvent,
   Pressable,
   PressableProps,
   StyleProp,
   StyleSheet,
-  Text,
   TextProps,
   TextStyle,
   View,
@@ -13,9 +14,9 @@ import {
 } from 'react-native'
 import {LinearGradient} from 'expo-linear-gradient'
 
-import {android, atoms as a, flatten, select, tokens, useTheme} from '#/alf'
+import {atoms as a, flatten, select, tokens, useTheme} from '#/alf'
 import {Props as SVGIconProps} from '#/components/icons/common'
-import {normalizeTextStyles} from '#/components/Typography'
+import {Text} from '#/components/Typography'
 
 export type ButtonVariant = 'solid' | 'outline' | 'ghost' | 'gradient'
 export type ButtonColor =
@@ -23,13 +24,14 @@ export type ButtonColor =
   | 'secondary'
   | 'secondary_inverted'
   | 'negative'
+  | 'gradient_primary'
   | 'gradient_sky'
   | 'gradient_midnight'
   | 'gradient_sunrise'
   | 'gradient_sunset'
   | 'gradient_nordic'
   | 'gradient_bonfire'
-export type ButtonSize = 'tiny' | 'xsmall' | 'small' | 'medium' | 'large'
+export type ButtonSize = 'tiny' | 'small' | 'large'
 export type ButtonShape = 'round' | 'square' | 'default'
 export type VariantProps = {
   /**
@@ -65,15 +67,27 @@ type NonTextElements =
 
 export type ButtonProps = Pick<
   PressableProps,
-  'disabled' | 'onPress' | 'testID' | 'onLongPress' | 'hitSlop'
+  | 'disabled'
+  | 'onPress'
+  | 'testID'
+  | 'onLongPress'
+  | 'hitSlop'
+  | 'onHoverIn'
+  | 'onHoverOut'
+  | 'onPressIn'
+  | 'onPressOut'
 > &
   AccessibilityProps &
   VariantProps & {
     testID?: string
+    /**
+     * For a11y, try to make this descriptive and clear
+     */
     label: string
     style?: StyleProp<ViewStyle>
     hoverStyle?: StyleProp<ViewStyle>
     children: NonTextElements | ((context: ButtonContext) => NonTextElements)
+    PressableComponent?: React.ComponentType<PressableProps>
   }
 
 export type ButtonTextProps = TextProps & VariantProps & {disabled?: boolean}
@@ -101,6 +115,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
       disabled = false,
       style,
       hoverStyle: hoverStyleProp,
+      PressableComponent = Pressable,
       ...rest
     },
     ref,
@@ -112,30 +127,50 @@ export const Button = React.forwardRef<View, ButtonProps>(
       focused: false,
     })
 
-    const onPressIn = React.useCallback(() => {
-      setState(s => ({
-        ...s,
-        pressed: true,
-      }))
-    }, [setState])
-    const onPressOut = React.useCallback(() => {
-      setState(s => ({
-        ...s,
-        pressed: false,
-      }))
-    }, [setState])
-    const onHoverIn = React.useCallback(() => {
-      setState(s => ({
-        ...s,
-        hovered: true,
-      }))
-    }, [setState])
-    const onHoverOut = React.useCallback(() => {
-      setState(s => ({
-        ...s,
-        hovered: false,
-      }))
-    }, [setState])
+    const onPressInOuter = rest.onPressIn
+    const onPressIn = React.useCallback(
+      (e: GestureResponderEvent) => {
+        setState(s => ({
+          ...s,
+          pressed: true,
+        }))
+        onPressInOuter?.(e)
+      },
+      [setState, onPressInOuter],
+    )
+    const onPressOutOuter = rest.onPressOut
+    const onPressOut = React.useCallback(
+      (e: GestureResponderEvent) => {
+        setState(s => ({
+          ...s,
+          pressed: false,
+        }))
+        onPressOutOuter?.(e)
+      },
+      [setState, onPressOutOuter],
+    )
+    const onHoverInOuter = rest.onHoverIn
+    const onHoverIn = React.useCallback(
+      (e: MouseEvent) => {
+        setState(s => ({
+          ...s,
+          hovered: true,
+        }))
+        onHoverInOuter?.(e)
+      },
+      [setState, onHoverInOuter],
+    )
+    const onHoverOutOuter = rest.onHoverOut
+    const onHoverOut = React.useCallback(
+      (e: MouseEvent) => {
+        setState(s => ({
+          ...s,
+          hovered: false,
+        }))
+        onHoverOutOuter?.(e)
+      },
+      [setState, onHoverOutOuter],
+    )
     const onFocus = React.useCallback(() => {
       setState(s => ({
         ...s,
@@ -199,28 +234,10 @@ export const Button = React.forwardRef<View, ButtonProps>(
       } else if (color === 'secondary') {
         if (variant === 'solid') {
           if (!disabled) {
-            baseStyles.push({
-              backgroundColor: select(t.name, {
-                light: t.palette.contrast_25,
-                dim: t.palette.contrast_100,
-                dark: t.palette.contrast_100,
-              }),
-            })
-            hoverStyles.push({
-              backgroundColor: select(t.name, {
-                light: t.palette.contrast_50,
-                dim: t.palette.contrast_200,
-                dark: t.palette.contrast_200,
-              }),
-            })
+            baseStyles.push(t.atoms.bg_contrast_25)
+            hoverStyles.push(t.atoms.bg_contrast_50)
           } else {
-            baseStyles.push({
-              backgroundColor: select(t.name, {
-                light: t.palette.contrast_100,
-                dim: t.palette.contrast_25,
-                dark: t.palette.contrast_25,
-              }),
-            })
+            baseStyles.push(t.atoms.bg_contrast_100)
           }
         } else if (variant === 'outline') {
           baseStyles.push(a.border, t.atoms.bg, {
@@ -329,39 +346,46 @@ export const Button = React.forwardRef<View, ButtonProps>(
 
       if (shape === 'default') {
         if (size === 'large') {
-          baseStyles.push(
-            {paddingVertical: 15},
-            a.px_2xl,
-            a.rounded_sm,
-            a.gap_md,
-          )
-        } else if (size === 'medium') {
-          baseStyles.push(
-            {paddingVertical: 12},
-            a.px_2xl,
-            a.rounded_sm,
-            a.gap_md,
-          )
+          baseStyles.push({
+            paddingVertical: 13,
+            paddingHorizontal: 20,
+            borderRadius: 8,
+            gap: 8,
+          })
         } else if (size === 'small') {
-          baseStyles.push({paddingVertical: 9}, a.px_lg, a.rounded_sm, a.gap_sm)
-        } else if (size === 'xsmall') {
-          baseStyles.push({paddingVertical: 6}, a.px_sm, a.rounded_sm, a.gap_sm)
+          baseStyles.push({
+            paddingVertical: 9,
+            paddingHorizontal: 12,
+            borderRadius: 6,
+            gap: 6,
+          })
         } else if (size === 'tiny') {
-          baseStyles.push({paddingVertical: 4}, a.px_sm, a.rounded_xs, a.gap_xs)
+          baseStyles.push({
+            paddingVertical: 4,
+            paddingHorizontal: 8,
+            borderRadius: 4,
+            gap: 4,
+          })
         }
       } else if (shape === 'round' || shape === 'square') {
         if (size === 'large') {
           if (shape === 'round') {
-            baseStyles.push({height: 54, width: 54})
+            baseStyles.push({height: 46, width: 46})
           } else {
-            baseStyles.push({height: 50, width: 50})
+            baseStyles.push({height: 44, width: 44})
           }
         } else if (size === 'small') {
-          baseStyles.push({height: 34, width: 34})
-        } else if (size === 'xsmall') {
-          baseStyles.push({height: 28, width: 28})
+          if (shape === 'round') {
+            baseStyles.push({height: 34, width: 34})
+          } else {
+            baseStyles.push({height: 34, width: 34})
+          }
         } else if (size === 'tiny') {
-          baseStyles.push({height: 20, width: 20})
+          if (shape === 'round') {
+            baseStyles.push({height: 22, width: 22})
+          } else {
+            baseStyles.push({height: 21, width: 21})
+          }
         }
 
         if (shape === 'round') {
@@ -391,6 +415,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
           secondary: tokens.gradients.sky,
           secondary_inverted: tokens.gradients.sky,
           negative: tokens.gradients.sky,
+          gradient_primary: tokens.gradients.primary,
           gradient_sky: tokens.gradients.sky,
           gradient_midnight: tokens.gradients.midnight,
           gradient_sunrise: tokens.gradients.sunrise,
@@ -423,13 +448,14 @@ export const Button = React.forwardRef<View, ButtonProps>(
       [state, variant, color, size, disabled],
     )
 
-    const flattenedBaseStyles = flatten(baseStyles)
+    const flattenedBaseStyles = flatten([baseStyles, style])
 
     return (
-      <Pressable
+      <PressableComponent
         role="button"
         accessibilityHint={undefined} // optional
         {...rest}
+        // @ts-ignore - this will always be a pressable
         ref={ref}
         aria-label={label}
         aria-pressed={state.pressed}
@@ -443,7 +469,6 @@ export const Button = React.forwardRef<View, ButtonProps>(
           a.align_center,
           a.justify_center,
           flattenedBaseStyles,
-          flatten(style),
           ...(state.hovered || state.pressed
             ? [hoverStyles, flatten(hoverStyleProp)]
             : []),
@@ -478,7 +503,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
         <Context.Provider value={context}>
           {typeof children === 'function' ? children(context) : children}
         </Context.Provider>
-      </Pressable>
+      </PressableComponent>
     )
   },
 )
@@ -605,11 +630,11 @@ export function useSharedButtonTextStyles() {
     }
 
     if (size === 'large') {
-      baseStyles.push(a.text_md, android({paddingBottom: 1}))
+      baseStyles.push(a.text_md, a.leading_tight)
+    } else if (size === 'small') {
+      baseStyles.push(a.text_sm, a.leading_tight)
     } else if (size === 'tiny') {
-      baseStyles.push(a.text_xs, android({paddingBottom: 1}))
-    } else {
-      baseStyles.push(a.text_sm, android({paddingBottom: 1}))
+      baseStyles.push(a.text_xs, a.leading_tight)
     }
 
     return StyleSheet.flatten(baseStyles)
@@ -620,14 +645,7 @@ export function ButtonText({children, style, ...rest}: ButtonTextProps) {
   const textStyles = useSharedButtonTextStyles()
 
   return (
-    <Text
-      {...rest}
-      style={normalizeTextStyles([
-        a.font_bold,
-        a.text_center,
-        textStyles,
-        style,
-      ])}>
+    <Text {...rest} style={[a.font_bold, a.text_center, textStyles, style]}>
       {children}
     </Text>
   )
@@ -636,31 +654,98 @@ export function ButtonText({children, style, ...rest}: ButtonTextProps) {
 export function ButtonIcon({
   icon: Comp,
   position,
-  size: iconSize,
+  size,
 }: {
   icon: React.ComponentType<SVGIconProps>
   position?: 'left' | 'right'
   size?: SVGIconProps['size']
 }) {
-  const {size, disabled} = useButtonContext()
+  const {size: buttonSize, disabled} = useButtonContext()
   const textStyles = useSharedButtonTextStyles()
+  const {iconSize, iconContainerSize} = React.useMemo(() => {
+    /**
+     * Pre-set icon sizes for different button sizes
+     */
+    const iconSizeShorthand =
+      size ??
+      (({
+        large: 'sm',
+        small: 'xs',
+        tiny: 'xs',
+      }[buttonSize || 'small'] || 'sm') as Exclude<
+        SVGIconProps['size'],
+        undefined
+      >)
+
+    /*
+     * Copied here from icons/common.tsx so we can tweak if we need to, but
+     * also so that we can calculate transforms.
+     */
+    const iconSize = {
+      xs: 12,
+      sm: 16,
+      md: 20,
+      lg: 24,
+      xl: 28,
+      '2xl': 32,
+    }[iconSizeShorthand]
+
+    /*
+     * Goal here is to match rendered text size so that different size icons
+     * don't increase button size
+     */
+    const iconContainerSize = {
+      large: 18,
+      small: 16,
+      tiny: 13,
+    }[buttonSize || 'small']
+
+    return {
+      iconSize,
+      iconContainerSize,
+    }
+  }, [buttonSize, size])
 
   return (
     <View
       style={[
         a.z_20,
         {
+          width: iconContainerSize,
+          height: iconContainerSize,
           opacity: disabled ? 0.7 : 1,
           marginLeft: position === 'left' ? -2 : 0,
           marginRight: position === 'right' ? -2 : 0,
         },
       ]}>
-      <Comp
-        size={
-          iconSize ?? (size === 'large' ? 'md' : size === 'tiny' ? 'xs' : 'sm')
-        }
-        style={[{color: textStyles.color, pointerEvents: 'none'}]}
-      />
+      <View
+        style={[
+          a.absolute,
+          {
+            width: iconSize,
+            height: iconSize,
+            top: '50%',
+            left: '50%',
+            transform: [
+              {
+                translateX: (iconSize / 2) * -1,
+              },
+              {
+                translateY: (iconSize / 2) * -1,
+              },
+            ],
+          },
+        ]}>
+        <Comp
+          width={iconSize}
+          style={[
+            {
+              color: textStyles.color,
+              pointerEvents: 'none',
+            },
+          ]}
+        />
+      </View>
     </View>
   )
 }

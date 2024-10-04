@@ -1,6 +1,6 @@
 import React from 'react'
+
 import * as persisted from '#/state/persisted'
-import {track} from '#/lib/analytics/analytics'
 
 export const OnboardingScreenSteps = {
   Welcome: 'Welcome',
@@ -54,17 +54,14 @@ function reducer(state: StateContext, action: Action): StateContext {
       return compute({...state, step: nextStep})
     }
     case 'start': {
-      track('Onboarding:Begin')
       persisted.write('onboarding', {step: 'Welcome'})
       return compute({...state, step: 'Welcome'})
     }
     case 'finish': {
-      track('Onboarding:Complete')
       persisted.write('onboarding', {step: 'Home'})
       return compute({...state, step: 'Home'})
     }
     case 'skip': {
-      track('Onboarding:Skipped')
       persisted.write('onboarding', {step: 'Home'})
       return compute({...state, step: 'Home'})
     }
@@ -81,13 +78,13 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   )
 
   React.useEffect(() => {
-    return persisted.onUpdate(() => {
-      const next = persisted.get('onboarding').step
+    return persisted.onUpdate('onboarding', nextOnboarding => {
+      const next = nextOnboarding.step
       // TODO we've introduced a footgun
       if (state.step !== next) {
         dispatch({
           type: 'set',
-          step: persisted.get('onboarding').step as OnboardingStep,
+          step: nextOnboarding.step as OnboardingStep,
         })
       }
     })

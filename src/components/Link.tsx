@@ -9,6 +9,7 @@ import {sanitizeUrl} from '@braintree/sanitize-url'
 import {StackActions, useLinkProps} from '@react-navigation/native'
 
 import {BSKY_DOWNLOAD_URL} from '#/lib/constants'
+import {useNavigationDeduped} from '#/lib/hooks/useNavigationDeduped'
 import {AllNavigatorParams} from '#/lib/routes/types'
 import {shareUrl} from '#/lib/sharing'
 import {
@@ -17,11 +18,10 @@ import {
   isExternalUrl,
   linkRequiresWarning,
 } from '#/lib/strings/url-helpers'
-import {isNative} from '#/platform/detection'
+import {isNative, isWeb} from '#/platform/detection'
 import {shouldClickOpenNewTab} from '#/platform/urls'
 import {useModalControls} from '#/state/modals'
 import {useOpenLink} from '#/state/preferences/in-app-browser'
-import {useNavigationDeduped} from 'lib/hooks/useNavigationDeduped'
 import {atoms as a, flatten, TextStyleProp, useTheme, web} from '#/alf'
 import {Button, ButtonProps} from '#/components/Button'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
@@ -39,11 +39,6 @@ type BaseLinkProps = Pick<
   'to'
 > & {
   testID?: string
-
-  /**
-   * Label for a11y. Defaults to the href.
-   */
-  label?: string
 
   /**
    * The React Navigation `StackAction` to perform when the link is pressed.
@@ -108,17 +103,17 @@ export function useLink({
           linkRequiresWarning(href, displayText),
       )
 
-      if (requiresWarning) {
+      if (isWeb) {
         e.preventDefault()
+      }
 
+      if (requiresWarning) {
         openModal({
           name: 'link-warning',
           text: displayText,
           href: href,
         })
       } else {
-        e.preventDefault()
-
         if (isExternal) {
           openLink(href)
         } else {
@@ -197,7 +192,7 @@ export function useLink({
 }
 
 export type LinkProps = Omit<BaseLinkProps, 'disableMismatchWarning'> &
-  Omit<ButtonProps, 'onPress' | 'disabled' | 'label'>
+  Omit<ButtonProps, 'onPress' | 'disabled'>
 
 /**
  * A interactive element that renders as a `<a>` tag on the web. On mobile it
@@ -224,7 +219,6 @@ export function Link({
 
   return (
     <Button
-      label={href}
       {...rest}
       style={[a.justify_start, flatten(rest.style)]}
       role="link"
@@ -249,7 +243,11 @@ export function Link({
 
 export type InlineLinkProps = React.PropsWithChildren<
   BaseLinkProps & TextStyleProp & Pick<TextProps, 'selectable'>
->
+> &
+  Pick<ButtonProps, 'label'> & {
+    disableUnderline?: boolean
+    title?: TextProps['title']
+  }
 
 export function InlineLinkText({
   children,
@@ -262,6 +260,7 @@ export function InlineLinkText({
   selectable,
   label,
   shareOnLongPress,
+  disableUnderline,
   ...rest
 }: InlineLinkProps) {
   const t = useTheme()
@@ -291,15 +290,16 @@ export function InlineLinkText({
     <Text
       selectable={selectable}
       accessibilityHint=""
-      accessibilityLabel={label || href}
+      accessibilityLabel={label}
       {...rest}
       style={[
         {color: t.palette.primary_500},
-        (hovered || focused || pressed) && {
-          ...web({outline: 0}),
-          textDecorationLine: 'underline',
-          textDecorationColor: flattenedStyle.color ?? t.palette.primary_500,
-        },
+        (hovered || focused || pressed) &&
+          !disableUnderline && {
+            ...web({outline: 0}),
+            textDecorationLine: 'underline',
+            textDecorationColor: flattenedStyle.color ?? t.palette.primary_500,
+          },
         flattenedStyle,
       ]}
       role="link"
@@ -368,5 +368,20 @@ export function BaseLink({
       {...btnProps}>
       {children}
     </Pressable>
+  )
+}
+
+export function WebOnlyInlineLinkText({
+  children,
+  to,
+  onPress,
+  ...props
+}: InlineLinkProps) {
+  return isWeb ? (
+    <InlineLinkText {...props} to={to} onPress={onPress}>
+      {children}
+    </InlineLinkText>
+  ) : (
+    <Text {...props}>{children}</Text>
   )
 }

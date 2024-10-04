@@ -20,7 +20,7 @@ import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {logger} from '#/logger'
-import {HITSLOP_10} from 'lib/constants'
+import {HITSLOP_10, STARTER_PACK_MAX_SIZE} from 'lib/constants'
 import {createSanitizedDisplayName} from 'lib/moderation/create-sanitized-display-name'
 import {CommonNavigatorParams, NavigationProp} from 'lib/routes/types'
 import {logEvent} from 'lib/statsig/statsig'
@@ -33,7 +33,7 @@ import {
 } from 'lib/strings/starter-pack'
 import {isAndroid, isNative, isWeb} from 'platform/detection'
 import {useModerationOpts} from 'state/preferences/moderation-opts'
-import {useListMembersQuery} from 'state/queries/list-members'
+import {useAllListMembersQuery} from 'state/queries/list-members'
 import {useProfileQuery} from 'state/queries/profile'
 import {
   useCreateStarterPackMutation,
@@ -78,11 +78,10 @@ export function Wizard({
   const listUri = starterPack?.list?.uri
 
   const {
-    data: profilesData,
+    data: listItems,
     isLoading: isLoadingProfiles,
     isError: isErrorProfiles,
-  } = useListMembersQuery(listUri, 50)
-  const listItems = profilesData?.pages.flatMap(p => p.items)
+  } = useAllListMembersQuery(listUri)
 
   const {
     data: profile,
@@ -227,7 +226,7 @@ function WizardInner({
     onError: e => {
       logger.error('Failed to create starter pack', {safeMessage: e})
       dispatch({type: 'SetProcessing', processing: false})
-      Toast.show(_(msg`Failed to create starter pack`))
+      Toast.show(_(msg`Failed to create starter pack`), 'xmark')
     },
   })
   const {mutate: editStarterPack} = useEditStarterPackMutation({
@@ -235,7 +234,7 @@ function WizardInner({
     onError: e => {
       logger.error('Failed to edit starter pack', {safeMessage: e})
       dispatch({type: 'SetProcessing', processing: false})
-      Toast.show(_(msg`Failed to create starter pack`))
+      Toast.show(_(msg`Failed to create starter pack`), 'xmark')
     },
   })
 
@@ -359,7 +358,7 @@ function Container({children}: {children: React.ReactNode}) {
             label={_(msg`Next`)}
             variant="solid"
             color="primary"
-            size="medium"
+            size="large"
             style={[a.mx_xl, a.mb_lg, {marginTop: 35}]}
             onPress={() => dispatch({type: 'Next'})}>
             <ButtonText>
@@ -428,7 +427,8 @@ function Footer({
       {items.length > minimumItems && (
         <View style={[a.absolute, {right: 14, top: 31}]}>
           <Text style={[a.font_bold]}>
-            {items.length}/{state.currentStep === 'Profiles' ? 50 : 3}
+            {items.length}/
+            {state.currentStep === 'Profiles' ? STARTER_PACK_MAX_SIZE : 3}
           </Text>
         </View>
       )}

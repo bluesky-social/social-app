@@ -9,6 +9,7 @@ import {Provider as InAppBrowserProvider} from './in-app-browser'
 import {Provider as KawaiiProvider} from './kawaii'
 import {Provider as LanguagesProvider} from './languages'
 import {Provider as LargeAltBadgeProvider} from './large-alt-badge'
+import {Provider as SubtitlesProvider} from './subtitles'
 import {Provider as UsedStarterPacksProvider} from './used-starter-packs'
 
 export {
@@ -24,6 +25,7 @@ export {
 export * from './hidden-posts'
 export {useLabelDefinitions} from './label-defs'
 export {useLanguagePrefs, useLanguagePrefsApi} from './languages'
+export {useSetSubtitlesEnabled, useSubtitlesEnabled} from './subtitles'
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
   return (
@@ -36,7 +38,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
                 <DisableHapticsProvider>
                   <AutoplayProvider>
                     <UsedStarterPacksProvider>
-                      <KawaiiProvider>{children}</KawaiiProvider>
+                      <SubtitlesProvider>
+                        <KawaiiProvider>{children}</KawaiiProvider>
+                      </SubtitlesProvider>
                     </UsedStarterPacksProvider>
                   </AutoplayProvider>
                 </DisableHapticsProvider>

@@ -5,7 +5,7 @@ import {BskyAgent} from '@atproto/api'
 
 import {logger} from '#/logger'
 import {SessionAccount, useAgent, useSession} from '#/state/session'
-import {logEvent, useGate} from 'lib/statsig/statsig'
+import {logEvent} from 'lib/statsig/statsig'
 import {devicePlatform, isAndroid, isNative} from 'platform/detection'
 import {BackgroundNotifications} from '../../../modules/expo-background-notification-handler'
 
@@ -86,7 +86,6 @@ export function useNotificationsRegistration() {
 }
 
 export function useRequestNotificationsPermission() {
-  const gate = useGate()
   const {currentAccount} = useSession()
   const agent = useAgent()
 
@@ -102,16 +101,7 @@ export function useRequestNotificationsPermission() {
     ) {
       return
     }
-    if (
-      context === 'StartOnboarding' &&
-      gate('request_notifications_permission_after_onboarding_v2')
-    ) {
-      return
-    }
-    if (
-      context === 'AfterOnboarding' &&
-      !gate('request_notifications_permission_after_onboarding_v2')
-    ) {
+    if (context === 'AfterOnboarding') {
       return
     }
     if (context === 'Home' && !currentAccount) {

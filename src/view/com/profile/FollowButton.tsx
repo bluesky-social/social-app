@@ -33,7 +33,7 @@ export function FollowButton({
       await queueFollow()
     } catch (e: any) {
       if (e?.name !== 'AbortError') {
-        Toast.show(_(msg`An issue occurred, please try again.`))
+        Toast.show(_(msg`An issue occurred, please try again.`), 'xmark')
       }
     }
   }
@@ -43,7 +43,7 @@ export function FollowButton({
       await queueUnfollow()
     } catch (e: any) {
       if (e?.name !== 'AbortError') {
-        Toast.show(_(msg`An issue occurred, please try again.`))
+        Toast.show(_(msg`An issue occurred, please try again.`), 'xmark')
       }
     }
   }
@@ -61,13 +61,22 @@ export function FollowButton({
         label={_(msg({message: 'Unfollow', context: 'action'}))}
       />
     )
-  } else {
+  } else if (!profile.viewer.followedBy) {
     return (
       <Button
         type={unfollowedType}
         labelStyle={labelStyle}
         onPress={onPressFollow}
         label={_(msg({message: 'Follow', context: 'action'}))}
+      />
+    )
+  } else {
+    return (
+      <Button
+        type={unfollowedType}
+        labelStyle={labelStyle}
+        onPress={onPressFollow}
+        label={_(msg({message: 'Follow Back', context: 'action'}))}
       />
     )
   }

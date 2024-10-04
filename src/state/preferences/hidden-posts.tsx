@@ -44,8 +44,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   )
 
   React.useEffect(() => {
-    return persisted.onUpdate(() => {
-      setState(persisted.get('hiddenPosts'))
+    return persisted.onUpdate('hiddenPosts', nextHiddenPosts => {
+      setState(nextHiddenPosts)
     })
   }, [setStateWrapped])
 

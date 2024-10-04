@@ -2,6 +2,7 @@ import React from 'react'
 
 const LIKE_WINDOW = 100
 const FOLLOW_WINDOW = 100
+const FOLLOW_SUGGESTION_WINDOW = 100
 const SEEN_WINDOW = 100
 
 export type SeenPost = {
@@ -22,6 +23,10 @@ export type UserActionHistory = {
    * The last 100 DIDs the user has followed
    */
   follows: string[]
+  /*
+   * The last 100 DIDs of suggested follows based on last follows
+   */
+  followSuggestions: string[]
   /**
    * The last 100 post URIs the user has seen from the Discover feed only
    */
@@ -31,6 +36,7 @@ export type UserActionHistory = {
 const userActionHistory: UserActionHistory = {
   likes: [],
   follows: [],
+  followSuggestions: [],
   seen: [],
 }
 
@@ -58,6 +64,13 @@ export function follow(dids: string[]) {
     .concat(dids)
     .slice(-FOLLOW_WINDOW)
 }
+
+export function followSuggestion(dids: string[]) {
+  userActionHistory.followSuggestions = userActionHistory.followSuggestions
+    .concat(dids)
+    .slice(-FOLLOW_SUGGESTION_WINDOW)
+}
+
 export function unfollow(dids: string[]) {
   userActionHistory.follows = userActionHistory.follows.filter(
     uri => !dids.includes(uri),

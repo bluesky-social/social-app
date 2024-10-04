@@ -35,7 +35,7 @@ function DeactivateAccountDialogInner({
   const {gtMobile} = useBreakpoints()
   const {_} = useLingui()
   const agent = useAgent()
-  const {logout} = useSessionApi()
+  const {logoutCurrentAccount} = useSessionApi()
   const [pending, setPending] = React.useState(false)
   const [error, setError] = React.useState<string | undefined>()
 
@@ -44,7 +44,7 @@ function DeactivateAccountDialogInner({
       setPending(true)
       await agent.com.atproto.server.deactivateAccount({})
       control.close(() => {
-        logout('Deactivated')
+        logoutCurrentAccount('Deactivated')
       })
     } catch (e: any) {
       switch (e.message) {
@@ -66,7 +66,7 @@ function DeactivateAccountDialogInner({
     } finally {
       setPending(false)
     }
-  }, [agent, control, logout, _, setPending])
+  }, [agent, control, logoutCurrentAccount, _, setPending])
 
   return (
     <>
@@ -102,7 +102,7 @@ function DeactivateAccountDialogInner({
         <Button
           variant="solid"
           color="negative"
-          size={gtMobile ? 'small' : 'medium'}
+          size={gtMobile ? 'small' : 'large'}
           label={_(msg`Yes, deactivate`)}
           onPress={handleDeactivate}>
           <ButtonText>{_(msg`Yes, deactivate`)}</ButtonText>

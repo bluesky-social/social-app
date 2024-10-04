@@ -5,10 +5,8 @@ import React, {
   useRef,
   useState,
 } from 'react'
-import type {TextInput as TextInputType} from 'react-native'
-import {View} from 'react-native'
+import {TextInput, View} from 'react-native'
 import {AppBskyActorDefs, moderateProfile, ModerationOpts} from '@atproto/api'
-import {BottomSheetFlatListMethods} from '@discord/bottom-sheet'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -16,18 +14,17 @@ import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {isWeb} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
+import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
 import {useListConvosQuery} from '#/state/queries/messages/list-converations'
 import {useProfileFollowsQuery} from '#/state/queries/profile-follows'
 import {useSession} from '#/state/session'
-import {useActorAutocompleteQuery} from 'state/queries/actor-autocomplete'
+import {ListMethods} from '#/view/com/util/List'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, native, useTheme, web} from '#/alf'
-import {Button} from '#/components/Button'
+import {Button, ButtonIcon} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
-import {TextInput} from '#/components/dms/dialogs/TextInput'
 import {canBeMessaged} from '#/components/dms/util'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
-import {ChevronLeft_Stroke2_Corner0_Rounded as ChevronLeft} from '#/components/icons/Chevron'
 import {MagnifyingGlass2_Stroke2_Corner0_Rounded as Search} from '#/components/icons/MagnifyingGlass2'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import {Text} from '#/components/Typography'
@@ -66,9 +63,9 @@ export function SearchablePeopleList({
   const {_} = useLingui()
   const moderationOpts = useModerationOpts()
   const control = Dialog.useDialogContext()
-  const listRef = useRef<BottomSheetFlatListMethods>(null)
+  const listRef = useRef<ListMethods>(null)
   const {currentAccount} = useSession()
-  const inputRef = useRef<TextInputType>(null)
+  const inputRef = useRef<TextInput>(null)
 
   const [searchText, setSearchText] = useState('')
 
@@ -101,15 +98,15 @@ export function SearchablePeopleList({
           })
         }
 
-        _items = _items.sort(a => {
+        _items = _items.sort(item => {
           // @ts-ignore
-          return a.enabled ? -1 : 1
+          return item.enabled ? -1 : 1
         })
       }
     } else {
       const placeholders: Item[] = Array(10)
         .fill(0)
-        .map((_, i) => ({
+        .map((__, i) => ({
           type: 'placeholder',
           key: i + '',
         }))
@@ -155,9 +152,9 @@ export function SearchablePeopleList({
           }
 
           // only sort follows
-          followsItems = followsItems.sort(a => {
+          followsItems = followsItems.sort(item => {
             // @ts-ignore
-            return a.enabled ? -1 : 1
+            return item.enabled ? -1 : 1
           })
 
           // then append
@@ -177,9 +174,9 @@ export function SearchablePeopleList({
           }
         }
 
-        _items = _items.sort(a => {
+        _items = _items.sort(item => {
           // @ts-ignore
-          return a.enabled ? -1 : 1
+          return item.enabled ? -1 : 1
         })
       } else {
         _items.push(...placeholders)
@@ -242,57 +239,46 @@ export function SearchablePeopleList({
       <View
         style={[
           a.relative,
-          a.pt_md,
+          web(a.pt_lg),
+          native(a.pt_4xl),
           a.pb_xs,
           a.px_lg,
           a.border_b,
           t.atoms.border_contrast_low,
           t.atoms.bg,
-          native([a.pt_lg]),
         ]}>
-        <View
-          style={[
-            a.relative,
-            native(a.align_center),
-            a.justify_center,
-            {height: 32},
-          ]}>
-          <Button
-            label={_(msg`Close`)}
-            size="small"
-            shape="round"
-            variant="ghost"
-            color="secondary"
-            style={[
-              a.absolute,
-              a.z_20,
-              native({
-                left: -7,
-              }),
-              web({
-                right: -4,
-              }),
-            ]}
-            onPress={() => control.close()}>
-            {isWeb ? (
-              <X size="md" fill={t.palette.contrast_500} />
-            ) : (
-              <ChevronLeft size="md" fill={t.palette.contrast_500} />
-            )}
-          </Button>
+        <View style={[a.relative, native(a.align_center), a.justify_center]}>
           <Text
             style={[
               a.z_10,
               a.text_lg,
-              a.font_bold,
+              a.font_heavy,
               a.leading_tight,
               t.atoms.text_contrast_high,
             ]}>
             {title}
           </Text>
+          {isWeb ? (
+            <Button
+              label={_(msg`Close`)}
+              size="small"
+              shape="round"
+              variant={isWeb ? 'ghost' : 'solid'}
+              color="secondary"
+              style={[
+                a.absolute,
+                a.z_20,
+                web({right: -4}),
+                native({right: 0}),
+                native({height: 32, width: 32, borderRadius: 16}),
+              ]}
+              onPress={() => control.close()}>
+              <ButtonIcon icon={X} size="md" />
+            </Button>
+          ) : null}
         </View>
 
-        <View style={[native([a.pt_sm]), web([a.pt_xs])]}>
+        <View style={[, web([a.pt_xs])]}>
           <SearchInput
             inputRef={inputRef}
             value={searchText}
@@ -309,7 +295,6 @@ export function SearchablePeopleList({
     t.atoms.border_contrast_low,
     t.atoms.bg,
     t.atoms.text_contrast_high,
-    t.palette.contrast_500,
     _,
     title,
     searchText,
@@ -326,14 +311,7 @@ export function SearchablePeopleList({
       keyExtractor={(item: Item) => item.key}
       style={[
         web([a.py_0, {height: '100vh', maxHeight: 600}, a.px_0]),
-        native({
-          height: '100%',
-          paddingHorizontal: 0,
-          marginTop: 0,
-          paddingTop: 0,
-          borderTopLeftRadius: 40,
-          borderTopRightRadius: 40,
-        }),
+        native({height: '100%'}),
       ]}
       webInnerStyle={[a.py_0, {maxWidth: 500, minWidth: 200}]}
       keyboardDismissMode="on-drag"
@@ -396,7 +374,8 @@ function ProfileCard({
           <View style={[a.flex_1, a.gap_2xs]}>
             <Text
               style={[t.atoms.text, a.font_bold, a.leading_tight, a.self_start]}
-              numberOfLines={1}>
+              numberOfLines={1}
+              emoji>
               {displayName}
             </Text>
             <Text
@@ -474,7 +453,7 @@ function SearchInput({
   value: string
   onChangeText: (text: string) => void
   onEscape: () => void
-  inputRef: React.RefObject<TextInputType>
+  inputRef: React.RefObject<TextInput>
 }) {
   const t = useTheme()
   const {_} = useLingui()

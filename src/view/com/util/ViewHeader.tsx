@@ -6,17 +6,15 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
+import {useMinimalShellHeaderTransform} from '#/lib/hooks/useMinimalShellTransform'
+import {usePalette} from '#/lib/hooks/usePalette'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {NavigationProp} from '#/lib/routes/types'
 import {useSetDrawerOpen} from '#/state/shell'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {useMinimalShellHeaderTransform} from 'lib/hooks/useMinimalShellTransform'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {NavigationProp} from 'lib/routes/types'
 import {useTheme} from '#/alf'
+import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
 import {Text} from './text/Text'
 import {CenteredView} from './Views'
-import hairlineWidth = StyleSheet.hairlineWidth
-import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
 
 const BACK_HITSLOP = {left: 20, top: 20, right: 50, bottom: 20}
 
@@ -43,7 +41,6 @@ export function ViewHeader({
   const {_} = useLingui()
   const setDrawerOpen = useSetDrawerOpen()
   const navigation = useNavigation<NavigationProp>()
-  const {track} = useAnalytics()
   const {isDesktop, isTablet} = useWebMediaQueries()
   const t = useTheme()
 
@@ -56,9 +53,8 @@ export function ViewHeader({
   }, [navigation])
 
   const onPressMenu = React.useCallback(() => {
-    track('ViewHeader:MenuButtonClicked')
     setDrawerOpen(true)
-  }, [track, setDrawerOpen])
+  }, [setDrawerOpen])
 
   if (isDesktop) {
     if (showOnDesktop) {
@@ -104,7 +100,7 @@ export function ViewHeader({
               </TouchableOpacity>
             ) : null}
             <View style={styles.titleContainer} pointerEvents="none">
-              <Text type="title" style={[pal.text, styles.title]}>
+              <Text emoji type="title" style={[pal.text, styles.title]}>
                 {title}
               </Text>
             </View>
@@ -154,7 +150,7 @@ function DesktopWebHeader({
         styles.desktopHeader,
         pal.border,
         {
-          borderBottomWidth: showBorder ? hairlineWidth : 0,
+          borderBottomWidth: showBorder ? StyleSheet.hairlineWidth : 0,
         },
         {display: 'flex', flexDirection: 'column'},
       ]}>
@@ -243,7 +239,7 @@ const styles = StyleSheet.create({
     marginRight: 'auto',
   },
   border: {
-    borderBottomWidth: hairlineWidth,
+    borderBottomWidth: StyleSheet.hairlineWidth,
   },
   titleContainer: {
     marginLeft: 'auto',
@@ -251,7 +247,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    fontWeight: 'bold',
+    fontWeight: '600',
   },
   subtitle: {
     fontSize: 13,

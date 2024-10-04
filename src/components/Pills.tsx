@@ -13,6 +13,15 @@ import {
 } from '#/components/moderation/ModerationDetailsDialog'
 import {Text} from '#/components/Typography'
 
+export type AppModerationCause =
+  | ModerationCause
+  | {
+      type: 'reply-hidden'
+      source: {type: 'user'; did: string}
+      priority: 6
+      downgraded?: boolean
+    }
+
 export type CommonProps = {
   size?: 'sm' | 'lg'
 }
@@ -40,7 +49,7 @@ export function Row({
 }
 
 export type LabelProps = {
-  cause: ModerationCause
+  cause: AppModerationCause
   disableDetailsDialog?: boolean
   noBg?: boolean
 } & CommonProps
@@ -121,9 +130,10 @@ export function Label({
             )}
 
             <Text
+              emoji
               style={[
                 text,
-                a.font_semibold,
+                a.font_bold,
                 a.leading_tight,
                 t.atoms.text_contrast_medium,
                 {paddingRight: 3},

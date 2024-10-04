@@ -33,6 +33,7 @@ module.exports = {
     ],
     'bsky-internal/use-exact-imports': 'error',
     'bsky-internal/use-typed-gates': 'error',
+    'bsky-internal/use-prefixed-imports': 'warn',
     'simple-import-sort/imports': [
       'warn',
       {
@@ -71,6 +72,19 @@ module.exports = {
     'simple-import-sort/exports': 'warn',
     // TODO: Reenable when we figure out why it gets stuck on CI.
     // 'react-compiler/react-compiler': 'error',
+    'no-restricted-imports': [
+      'error',
+      {
+        paths: [
+          {
+            name: '@atproto/api',
+            importNames: ['moderatePost'],
+            message:
+              'Please use `moderatePost_wrapped` from `#/lib/moderatePost_wrapped` instead.',
+          },
+        ],
+      },
+    ],
   },
   ignorePatterns: [
     '**/__mocks__/*.ts',

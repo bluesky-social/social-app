@@ -14,25 +14,25 @@ import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {StackActions, useNavigation} from '@react-navigation/native'
 
+import {FEEDBACK_FORM_URL, HELP_DESK_URL} from '#/lib/constants'
+import {useNavigationTabState} from '#/lib/hooks/useNavigationTabState'
+import {usePalette} from '#/lib/hooks/usePalette'
+import {getTabState, TabState} from '#/lib/routes/helpers'
+import {NavigationProp} from '#/lib/routes/types'
+import {colors, s} from '#/lib/styles'
+import {useTheme} from '#/lib/ThemeContext'
+import {isWeb} from '#/platform/detection'
 import {emitSoftReset} from '#/state/events'
 import {useKawaiiMode} from '#/state/preferences/kawaii'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {useProfileQuery} from '#/state/queries/profile'
 import {SessionAccount, useSession} from '#/state/session'
 import {useSetDrawerOpen} from '#/state/shell'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {FEEDBACK_FORM_URL, HELP_DESK_URL} from 'lib/constants'
-import {useNavigationTabState} from 'lib/hooks/useNavigationTabState'
-import {usePalette} from 'lib/hooks/usePalette'
-import {getTabState, TabState} from 'lib/routes/helpers'
-import {NavigationProp} from 'lib/routes/types'
-import {colors, s} from 'lib/styles'
-import {useTheme} from 'lib/ThemeContext'
-import {isWeb} from 'platform/detection'
+import {formatCount} from '#/view/com/util/numeric/format'
+import {Text} from '#/view/com/util/text/Text'
+import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {NavSignupCard} from '#/view/shell/NavSignupCard'
-import {formatCountShortOnly} from 'view/com/util/numeric/format'
-import {Text} from 'view/com/util/text/Text'
-import {UserAvatar} from 'view/com/util/UserAvatar'
+import {atoms as a} from '#/alf'
 import {useTheme as useAlfTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {
@@ -67,7 +67,7 @@ let DrawerProfileCard = ({
   account: SessionAccount
   onPressProfile: () => void
 }): React.ReactNode => {
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const pal = usePalette('default')
   const {data: profile} = useProfileQuery({did: account.did})
 
@@ -96,29 +96,42 @@ let DrawerProfileCard = ({
         numberOfLines={1}>
         @{account.handle}
       </Text>
-      <Text type="xl" style={[pal.textLight, styles.profileCardFollowers]}>
-        <Trans>
-          <Text type="xl-medium" style={pal.text}>
-            {formatCountShortOnly(profile?.followersCount ?? 0)}
-          </Text>{' '}
-          <Plural
-            value={profile?.followersCount || 0}
-            one="follower"
-            other="followers"
-          />
-        </Trans>{' '}
-        &middot;{' '}
-        <Trans>
-          <Text type="xl-medium" style={pal.text}>
-            {formatCountShortOnly(profile?.followsCount ?? 0)}
-          </Text>{' '}
-          <Plural
-            value={profile?.followsCount || 0}
-            one="following"
-            other="following"
-          />
-        </Trans>
-      </Text>
+      <View
+        style={[
+          styles.profileCardFollowers,
+          a.gap_xs,
+          a.flex_row,
+          a.align_center,
+          a.flex_wrap,
+        ]}>
+        <Text type="xl" style={pal.textLight}>
+          <Trans>
+            <Text type="xl-medium" style={pal.text}>
+              {formatCount(i18n, profile?.followersCount ?? 0)}
+            </Text>{' '}
+            <Plural
+              value={profile?.followersCount || 0}
+              one="follower"
+              other="followers"
+            />
+          </Trans>
+        </Text>
+        <Text type="xl" style={pal.textLight}>
+          &middot;
+        </Text>
+        <Text type="xl" style={pal.textLight}>
+          <Trans>
+            <Text type="xl-medium" style={pal.text}>
+              {formatCount(i18n, profile?.followsCount ?? 0)}
+            </Text>{' '}
+            <Plural
+              value={profile?.followsCount || 0}
+              one="following"
+              other="following"
+            />
+          </Trans>
+        </Text>
+      </View>
     </TouchableOpacity>
   )
 }
@@ -132,7 +145,6 @@ let DrawerContent = ({}: {}): React.ReactNode => {
   const {_} = useLingui()
   const setDrawerOpen = useSetDrawerOpen()
   const navigation = useNavigation<NavigationProp>()
-  const {track} = useAnalytics()
   const {isAtHome, isAtSearch, isAtFeeds, isAtNotifications, isAtMyProfile} =
     useNavigationTabState()
   const {hasSession, currentAccount} = useSession()
@@ -143,7 +155,6 @@ let DrawerContent = ({}: {}): React.ReactNode => {
 
   const onPressTab = React.useCallback(
     (tab: string) => {
-      track('Menu:ItemClicked', {url: tab})
       const state = navigation.getState()
       setDrawerOpen(false)
       if (isWeb) {
@@ -166,7 +177,7 @@ let DrawerContent = ({}: {}): React.ReactNode => {
         }
       }
     },
-    [track, navigation, setDrawerOpen, currentAccount],
+    [navigation, setDrawerOpen, currentAccount],
   )
 
   const onPressHome = React.useCallback(() => onPressTab('Home'), [onPressTab])
@@ -186,37 +197,32 @@ let DrawerContent = ({}: {}): React.ReactNode => {
   }, [onPressTab])
 
   const onPressMyFeeds = React.useCallback(() => {
-    track('Menu:ItemClicked', {url: 'Feeds'})
     navigation.navigate('Feeds')
     setDrawerOpen(false)
-  }, [navigation, setDrawerOpen, track])
+  }, [navigation, setDrawerOpen])
 
   const onPressLists = React.useCallback(() => {
-    track('Menu:ItemClicked', {url: 'Lists'})
     navigation.navigate('Lists')
     setDrawerOpen(false)
-  }, [navigation, track, setDrawerOpen])
+  }, [navigation, setDrawerOpen])
 
   const onPressSettings = React.useCallback(() => {
-    track('Menu:ItemClicked', {url: 'Settings'})
     navigation.navigate('Settings')
     setDrawerOpen(false)
-  }, [navigation, track, setDrawerOpen])
+  }, [navigation, setDrawerOpen])
 
   const onPressFeedback = React.useCallback(() => {
-    track('Menu:FeedbackClicked')
     Linking.openURL(
       FEEDBACK_FORM_URL({
         email: currentAccount?.email,
         handle: currentAccount?.handle,
       }),
     )
-  }, [track, currentAccount])
+  }, [currentAccount])
 
   const onPressHelp = React.useCallback(() => {
-    track('Menu:HelpClicked')
     Linking.openURL(HELP_DESK_URL)
-  }, [track])
+  }, [])
 
   // rendering
   // =
@@ -584,7 +590,9 @@ function MenuItem({
                 ? styles.menuItemCountTens
                 : undefined,
             ]}>
-            <Text style={styles.menuItemCountLabel} numberOfLines={1}>
+            <Text
+              style={[styles.menuItemCountLabel, a.font_bold]}
+              numberOfLines={1}>
               {count}
             </Text>
           </View>
@@ -610,7 +618,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#1B1919',
   },
   main: {
-    paddingLeft: 20,
+    paddingHorizontal: 20,
     paddingTop: 20,
   },
   smallSpacer: {
@@ -627,14 +635,12 @@ const styles = StyleSheet.create({
   },
   profileCardFollowers: {
     marginTop: 16,
-    paddingRight: 10,
   },
 
   menuItem: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: 16,
-    paddingRight: 10,
   },
   menuItemIconWrapper: {
     width: 24,
@@ -662,7 +668,6 @@ const styles = StyleSheet.create({
   },
   menuItemCountLabel: {
     fontSize: 12,
-    fontWeight: 'bold',
     fontVariant: ['tabular-nums'],
     color: colors.white,
   },

@@ -11,13 +11,13 @@ import {useLingui} from '@lingui/react'
 
 import {LogEvents} from '#/lib/statsig/statsig'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
+import {sanitizeHandle} from '#/lib/strings/handles'
+import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useProfileFollowMutationQueue} from '#/state/queries/profile'
-import {sanitizeHandle} from 'lib/strings/handles'
-import {useProfileShadow} from 'state/cache/profile-shadow'
-import {useSession} from 'state/session'
+import {useSession} from '#/state/session'
+import {ProfileCardPills} from '#/view/com/profile/ProfileCard'
 import * as Toast from '#/view/com/util/Toast'
-import {ProfileCardPills} from 'view/com/profile/ProfileCard'
-import {UserAvatar} from 'view/com/util/UserAvatar'
+import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonProps, ButtonText} from '#/components/Button'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
@@ -36,7 +36,7 @@ export function Default({
   logContext?: 'ProfileCard' | 'StarterPackProfilesList'
 }) {
   return (
-    <Link did={profile.did}>
+    <Link profile={profile}>
       <Card
         profile={profile}
         moderationOpts={moderationOpts}
@@ -96,16 +96,24 @@ export function Header({
 }
 
 export function Link({
-  did,
+  profile,
   children,
   style,
   ...rest
-}: {did: string} & Omit<LinkProps, 'to'>) {
+}: {
+  profile: AppBskyActorDefs.ProfileViewDetailed
+} & Omit<LinkProps, 'to' | 'label'>) {
+  const {_} = useLingui()
   return (
     <InternalLink
+      label={_(
+        msg`View ${
+          profile.displayName || sanitizeHandle(profile.handle)
+        }'s profile`,
+      )}
       to={{
         screen: 'Profile',
-        params: {name: did},
+        params: {name: profile.did},
       }}
       style={[a.flex_col, style]}
       {...rest}>
@@ -167,11 +175,13 @@ export function NameAndHandle({
   return (
     <View style={[a.flex_1]}>
       <Text
+        emoji
         style={[a.text_md, a.font_bold, a.leading_snug, a.self_start]}
         numberOfLines={1}>
         {name}
       </Text>
       <Text
+        emoji
         style={[a.leading_snug, t.atoms.text_contrast_medium]}
         numberOfLines={1}>
         {handle}
@@ -212,8 +222,10 @@ export function NameAndHandlePlaceholder() {
 
 export function Description({
   profile: profileUnshadowed,
+  numberOfLines = 3,
 }: {
   profile: AppBskyActorDefs.ProfileViewDetailed
+  numberOfLines?: number
 }) {
   const profile = useProfileShadow(profileUnshadowed)
   const {description} = profile
@@ -236,31 +248,34 @@ export function Description({
       <RichText
         value={rt}
         style={[a.leading_snug]}
-        numberOfLines={3}
+        numberOfLines={numberOfLines}
         disableLinks
       />
     </View>
   )
 }
 
-export function DescriptionPlaceholder() {
+export function DescriptionPlaceholder({
+  numberOfLines = 3,
+}: {
+  numberOfLines?: number
+}) {
   const t = useTheme()
   return (
-    <View style={[a.gap_xs]}>
-      <View
-        style={[a.rounded_xs, a.w_full, t.atoms.bg_contrast_50, {height: 12}]}
-      />
-      <View
-        style={[a.rounded_xs, a.w_full, t.atoms.bg_contrast_50, {height: 12}]}
-      />
-      <View
-        style={[
-          a.rounded_xs,
-          a.w_full,
-          t.atoms.bg_contrast_50,
-          {height: 12, width: 100},
-        ]}
-      />
+    <View style={[{gap: 8}]}>
+      {Array(numberOfLines)
+        .fill(0)
+        .map((_, i) => (
+          <View
+            key={i}
+            style={[
+              a.rounded_xs,
+              a.w_full,
+              t.atoms.bg_contrast_50,
+              {height: 12, width: i + 1 === numberOfLines ? '60%' : '100%'},
+            ]}
+          />
+        ))}
     </View>
   )
 }
@@ -268,8 +283,8 @@ export function DescriptionPlaceholder() {
 export type FollowButtonProps = {
   profile: AppBskyActorDefs.ProfileViewBasic
   moderationOpts: ModerationOpts
-  logContext: LogEvents['profile:follow']['logContext'] &
-    LogEvents['profile:unfollow']['logContext']
+  logContext: LogEvents['profile:follow:sampled']['logContext'] &
+    LogEvents['profile:unfollow:sampled']['logContext']
 } & Partial<ButtonProps>
 
 export function FollowButton(props: FollowButtonProps) {
@@ -306,9 +321,9 @@ export function FollowButtonInner({
           )}`,
         ),
       )
-    } catch (e: any) {
-      if (e?.name !== 'AbortError') {
-        Toast.show(_(msg`An issue occurred, please try again.`))
+    } catch (err: any) {
+      if (err?.name !== 'AbortError') {
+        Toast.show(_(msg`An issue occurred, please try again.`), 'xmark')
       }
     }
   }
@@ -326,9 +341,9 @@ export function FollowButtonInner({
           )}`,
         ),
       )
-    } catch (e: any) {
-      if (e?.name !== 'AbortError') {
-        Toast.show(_(msg`An issue occurred, please try again.`))
+    } catch (err: any) {
+      if (err?.name !== 'AbortError') {
+        Toast.show(_(msg`An issue occurred, please try again.`), 'xmark')
       }
     }
   }

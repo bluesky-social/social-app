@@ -12,7 +12,12 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {useNavigationDeduped} from '#/lib/hooks/useNavigationDeduped'
+import {usePalette} from '#/lib/hooks/usePalette'
+import {sanitizeHandle} from '#/lib/strings/handles'
+import {s} from '#/lib/styles'
 import {logger} from '#/logger'
+import {shouldClickOpenNewTab} from '#/platform/urls'
 import {FeedSourceInfo, useFeedSourceInfoQuery} from '#/state/queries/feed'
 import {
   useAddSavedFeedsMutation,
@@ -20,20 +25,14 @@ import {
   UsePreferencesQueryResponse,
   useRemoveFeedMutation,
 } from '#/state/queries/preferences'
-import {useNavigationDeduped} from 'lib/hooks/useNavigationDeduped'
-import {usePalette} from 'lib/hooks/usePalette'
-import {sanitizeHandle} from 'lib/strings/handles'
-import {s} from 'lib/styles'
 import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
-import * as Toast from 'view/com/util/Toast'
+import * as Toast from '#/view/com/util/Toast'
 import {useTheme} from '#/alf'
 import {atoms as a} from '#/alf'
 import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
 import {Text} from '../util/text/Text'
 import {UserAvatar} from '../util/UserAvatar'
-import hairlineWidth = StyleSheet.hairlineWidth
-import {shouldClickOpenNewTab} from '#/platform/urls'
 
 export function FeedSourceCard({
   feedUri,
@@ -125,7 +124,7 @@ export function FeedSourceCardLoaded({
       ])
       Toast.show(_(msg`Added to my feeds`))
     } catch (e) {
-      Toast.show(_(msg`There was an issue contacting your server`))
+      Toast.show(_(msg`There was an issue contacting your server`), 'xmark')
       logger.error('Failed to save feed', {message: e})
     }
   }, [_, feed, pinOnSave, addSavedFeeds, isSaved])
@@ -138,7 +137,7 @@ export function FeedSourceCardLoaded({
       // await item.unsave()
       Toast.show(_(msg`Removed from my feeds`))
     } catch (e) {
-      Toast.show(_(msg`There was an issue contacting your server`))
+      Toast.show(_(msg`There was an issue contacting your server`), 'xmark')
       logger.error('Failed to unsave feed', {message: e})
     }
   }, [_, removeFeed, savedFeedConfig])
@@ -209,7 +208,7 @@ export function FeedSourceCardLoaded({
           styles.container,
           pal.border,
           style,
-          {borderTopWidth: hideTopBorder ? 0 : hairlineWidth},
+          {borderTopWidth: hideTopBorder ? 0 : StyleSheet.hairlineWidth},
         ]}
         onPress={e => {
           const shouldOpenInNewTab = shouldClickOpenNewTab(e)
@@ -243,7 +242,7 @@ export function FeedSourceCardLoaded({
             <UserAvatar type="algo" size={36} avatar={feed.avatar} />
           </View>
           <View style={[styles.headerTextContainer]}>
-            <Text style={[pal.text, s.bold]} numberOfLines={1}>
+            <Text emoji style={[pal.text, s.bold]} numberOfLines={1}>
               {feed.displayName}
             </Text>
             <Text style={[pal.textLight]} numberOfLines={1}>
@@ -330,7 +329,7 @@ const styles = StyleSheet.create({
     gap: 14,
   },
   border: {
-    borderTopWidth: hairlineWidth,
+    borderTopWidth: StyleSheet.hairlineWidth,
   },
   headerContainer: {
     flexDirection: 'row',

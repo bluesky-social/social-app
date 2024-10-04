@@ -24,7 +24,6 @@ import {NotificationFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceho
 import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
 import {CenteredView} from '#/view/com/util/Views'
 import {FeedItem} from './FeedItem'
-import hairlineWidth = StyleSheet.hairlineWidth
 
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
 const LOAD_MORE_ERROR_ITEM = {_reactKey: '__load_more_error__'}
@@ -35,11 +34,13 @@ export function Feed({
   onPressTryAgain,
   onScrolledDownChange,
   ListHeaderComponent,
+  overridePriorityNotifications,
 }: {
   scrollElRef?: ListRef
   onPressTryAgain?: () => void
   onScrolledDownChange: (isScrolledDown: boolean) => void
   ListHeaderComponent?: () => JSX.Element
+  overridePriorityNotifications?: boolean
 }) {
   const initialNumToRender = useInitialNumToRender()
 
@@ -59,7 +60,10 @@ export function Feed({
     hasNextPage,
     isFetchingNextPage,
     fetchNextPage,
-  } = useNotificationFeedQuery({enabled: !!moderationOpts})
+  } = useNotificationFeedQuery({
+    enabled: !!moderationOpts,
+    overridePriorityNotifications,
+  })
   const isEmpty = !isFetching && !data?.pages[0]?.items.length
 
   const items = React.useMemo(() => {
@@ -132,7 +136,7 @@ export function Feed({
           <View
             style={[
               pal.border,
-              !isTabletOrMobile && {borderTopWidth: hairlineWidth},
+              !isTabletOrMobile && {borderTopWidth: StyleSheet.hairlineWidth},
             ]}>
             <NotificationFeedLoadingPlaceholder />
           </View>
@@ -190,6 +194,7 @@ export function Feed({
         initialNumToRender={initialNumToRender}
         windowSize={11}
         sideBorders={false}
+        removeClippedSubviews={true}
       />
     </View>
   )

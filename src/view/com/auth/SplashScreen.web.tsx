@@ -4,11 +4,11 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {useKawaiiMode} from '#/state/preferences/kawaii'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {Logo} from '#/view/icons/Logo'
 import {Logotype} from '#/view/icons/Logotype'
-import {ErrorBoundary} from 'view/com/util/ErrorBoundary'
 import {atoms as a, useTheme} from '#/alf'
 import {AppLanguageDropdown} from '#/components/AppLanguageDropdown'
 import {Button, ButtonText} from '#/components/Button'
@@ -78,32 +78,26 @@ export const SplashScreen = ({
               )}
 
               <Text
-                style={[
-                  a.text_md,
-                  a.font_semibold,
-                  t.atoms.text_contrast_medium,
-                ]}>
+                style={[a.text_md, a.font_bold, t.atoms.text_contrast_medium]}>
                 <Trans>What's up?</Trans>
               </Text>
             </View>
 
             <View
               testID="signinOrCreateAccount"
-              style={[a.w_full, {maxWidth: 320}]}>
+              style={[a.w_full, a.px_xl, a.gap_md, a.pb_2xl, {maxWidth: 320}]}>
               <Button
                 testID="createAccountButton"
                 onPress={onPressCreateAccount}
-                accessibilityRole="button"
                 label={_(msg`Create new account`)}
                 accessibilityHint={_(
                   msg`Opens flow to create a new Bluesky account`,
                 )}
-                style={[a.mx_xl, a.mb_xl]}
                 size="large"
                 variant="solid"
                 color="primary">
                 <ButtonText>
-                  <Trans>Create a new account</Trans>
+                  <Trans>Create account</Trans>
                 </ButtonText>
               </Button>
               <Button
@@ -113,7 +107,6 @@ export const SplashScreen = ({
                 accessibilityHint={_(
                   msg`Opens flow to sign into your existing Bluesky account`,
                 )}
-                style={[a.mx_xl, a.mb_xl]}
                 size="large"
                 variant="solid"
                 color="secondary">
@@ -132,6 +125,7 @@ export const SplashScreen = ({
 
 function Footer() {
   const t = useTheme()
+  const {_} = useLingui()
 
   return (
     <View
@@ -147,13 +141,19 @@ function Footer() {
         a.flex_1,
         t.atoms.border_contrast_medium,
       ]}>
-      <InlineLinkText to="https://bsky.social">
+      <InlineLinkText
+        label={_(msg`Learn more about Bluesky`)}
+        to="https://bsky.social">
         <Trans>Business</Trans>
       </InlineLinkText>
-      <InlineLinkText to="https://bsky.social/about/blog">
+      <InlineLinkText
+        label={_(msg`Read the Bluesky blog`)}
+        to="https://bsky.social/about/blog">
         <Trans>Blog</Trans>
       </InlineLinkText>
-      <InlineLinkText to="https://bsky.social/about/join">
+      <InlineLinkText
+        label={_(msg`See jobs at Bluesky`)}
+        to="https://bsky.social/about/join">
         <Trans>Jobs</Trans>
       </InlineLinkText>
 

@@ -9,14 +9,13 @@ import {
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useAnalytics} from '#/lib/analytics/analytics'
+import {usePhotoLibraryPermission} from '#/lib/hooks/usePermissions'
+import {compressIfNeeded} from '#/lib/media/manip'
+import {openCropper} from '#/lib/media/picker'
+import {getDataUriSize} from '#/lib/media/util'
+import {useRequestNotificationsPermission} from '#/lib/notifications/notifications'
 import {logEvent, useGate} from '#/lib/statsig/statsig'
-import {usePhotoLibraryPermission} from 'lib/hooks/usePermissions'
-import {compressIfNeeded} from 'lib/media/manip'
-import {openCropper} from 'lib/media/picker'
-import {getDataUriSize} from 'lib/media/util'
-import {useRequestNotificationsPermission} from 'lib/notifications/notifications'
-import {isNative, isWeb} from 'platform/detection'
+import {isNative, isWeb} from '#/platform/detection'
 import {
   DescriptionText,
   OnboardingControls,
@@ -33,6 +32,7 @@ import {
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
+import {useSheetWrapper} from '#/components/Dialog/sheet-wrapper'
 import {IconCircle} from '#/components/IconCircle'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
 import {CircleInfo_Stroke2_Corner0_Rounded} from '#/components/icons/CircleInfo'
@@ -68,7 +68,6 @@ export function StepProfile() {
   const {_} = useLingui()
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
-  const {track} = useAnalytics()
   const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
   const gate = useGate()
   const requestNotificationsPermission = useRequestNotificationsPermission()
@@ -88,22 +87,21 @@ export function StepProfile() {
   const canvasRef = React.useRef<PlaceholderCanvasRef>(null)
 
   React.useEffect(() => {
-    track('OnboardingV2:StepProfile:Start')
-  }, [track])
-
-  React.useEffect(() => {
     requestNotificationsPermission('StartOnboarding')
   }, [gate, requestNotificationsPermission])
 
+  const sheetWrapper = useSheetWrapper()
   const openPicker = React.useCallback(
     async (opts?: ImagePickerOptions) => {
-      const response = await launchImageLibraryAsync({
-        exif: false,
-        mediaTypes: MediaTypeOptions.Images,
-        quality: 1,
-        ...opts,
-        legacy: true,
-      })
+      const response = await sheetWrapper(
+        launchImageLibraryAsync({
+          exif: false,
+          mediaTypes: MediaTypeOptions.Images,
+          quality: 1,
+          ...opts,
+          legacy: true,
+        }),
+      )
 
       return (response.assets ?? [])
         .slice(0, 1)
@@ -127,11 +125,15 @@ export function StepProfile() {
           size: getDataUriSize(image.uri),
         }))
     },
-    [_, setError],
+    [_, setError, sheetWrapper],
   )
 
   const onContinue = React.useCallback(async () => {
     let imageUri = avatar?.image?.path
+
+    // In the event that view-shot didn't load in time and the user pressed continue, this will just be undefined
+    // and the default avatar will be used. We don't want to block getting through create if this fails for some
+    // reason
     if (!imageUri || avatar.useCreatedAvatar) {
       imageUri = await canvasRef.current?.capture()
     }
@@ -151,9 +153,8 @@ export function StepProfile() {
     }
 
     dispatch({type: 'next'})
-    track('OnboardingV2:StepProfile:End')
     logEvent('onboarding:profile:nextPressed', {})
-  }, [avatar, dispatch, track])
+  }, [avatar, dispatch])
 
   const onDoneCreating = React.useCallback(() => {
     setAvatar(prev => ({
@@ -171,9 +172,11 @@ export function StepProfile() {
 
     setError('')
 
-    const items = await openPicker({
-      aspect: [1, 1],
-    })
+    const items = await sheetWrapper(
+      openPicker({
+        aspect: [1, 1],
+      }),
+    )
     let image = items[0]
     if (!image) return
 
@@ -199,7 +202,13 @@ export function StepProfile() {
       image,
       useCreatedAvatar: false,
     }))
-  }, [requestPhotoAccessIfNeeded, setAvatar, openPicker, setError])
+  }, [
+    requestPhotoAccessIfNeeded,
+    setAvatar,
+    openPicker,
+    setError,
+    sheetWrapper,
+  ])
 
   const onSecondaryPress = React.useCallback(() => {
     if (avatar.useCreatedAvatar) {
@@ -289,7 +298,6 @@ export function StepProfile() {
       </View>
 
       <Dialog.Outer control={creatorControl}>
-        <Dialog.Handle />
         <Dialog.Inner
           label="Avatar creator"
           style={[

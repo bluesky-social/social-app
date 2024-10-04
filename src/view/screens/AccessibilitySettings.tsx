@@ -4,7 +4,6 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
 
-import {useAnalytics} from '#/lib/analytics/analytics'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
@@ -27,6 +26,7 @@ import {ToggleButton} from '#/view/com/util/forms/ToggleButton'
 import {SimpleViewHeader} from '#/view/com/util/SimpleViewHeader'
 import {Text} from '#/view/com/util/text/Text'
 import {ScrollView} from '#/view/com/util/Views'
+import {atoms as a} from '#/alf'
 
 type Props = NativeStackScreenProps<
   CommonNavigatorParams,
@@ -35,8 +35,7 @@ type Props = NativeStackScreenProps<
 export function AccessibilitySettingsScreen({}: Props) {
   const pal = usePalette('default')
   const setMinimalShellMode = useSetMinimalShellMode()
-  const {screen} = useAnalytics()
-  const {isMobile} = useWebMediaQueries()
+  const {isMobile, isTabletOrMobile} = useWebMediaQueries()
   const {_} = useLingui()
 
   const requireAltTextEnabled = useRequireAltTextEnabled()
@@ -50,22 +49,24 @@ export function AccessibilitySettingsScreen({}: Props) {
 
   useFocusEffect(
     React.useCallback(() => {
-      screen('PreferencesExternalEmbeds')
       setMinimalShellMode(false)
-    }, [screen, setMinimalShellMode]),
+    }, [setMinimalShellMode]),
   )
 
   return (
     <View style={s.hContentRegion} testID="accessibilitySettingsScreen">
       <SimpleViewHeader
-        showBackButton={isMobile}
+        showBackButton={isTabletOrMobile}
         style={[
           pal.border,
-          {borderBottomWidth: 1},
-          !isMobile && {borderLeftWidth: 1, borderRightWidth: 1},
+          a.border_b,
+          !isMobile && {
+            borderLeftWidth: StyleSheet.hairlineWidth,
+            borderRightWidth: StyleSheet.hairlineWidth,
+          },
         ]}>
-        <View style={{flex: 1}}>
-          <Text type="title-lg" style={[pal.text, {fontWeight: 'bold'}]}>
+        <View style={a.flex_1}>
+          <Text type="title-lg" style={[pal.text, {fontWeight: '600'}]}>
             <Trans>Accessibility Settings</Trans>
           </Text>
         </View>
@@ -76,7 +77,7 @@ export function AccessibilitySettingsScreen({}: Props) {
         style={s.flex1}
         contentContainerStyle={[
           s.flex1,
-          {paddingBottom: 200},
+          {paddingBottom: 100},
           isMobile && pal.viewLight,
         ]}>
         <Text type="xl-bold" style={[pal.text, styles.heading]}>
@@ -104,7 +105,7 @@ export function AccessibilitySettingsScreen({}: Props) {
         <View style={[pal.view, styles.toggleCard]}>
           <ToggleButton
             type="default-light"
-            label={_(msg`Disable autoplay for GIFs`)}
+            label={_(msg`Disable autoplay for videos and GIFs`)}
             labelType="lg"
             isSelected={autoplayDisabled}
             onPress={() => setAutoplayDisabled(!autoplayDisabled)}

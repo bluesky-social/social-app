@@ -13,6 +13,7 @@ import {
 import {QueryClient} from '@tanstack/react-query'
 import chunk from 'lodash.chunk'
 
+import {labelIsHideableOffense} from '#/lib/moderation'
 import {precacheProfile} from '../profile'
 import {FeedNotification, FeedPage, NotificationType} from './types'
 
@@ -30,7 +31,6 @@ export async function fetchPage({
   queryClient,
   moderationOpts,
   fetchAdditionalData,
-  shouldUngroupFollowBacks,
 }: {
   agent: BskyAgent
   cursor: string | undefined
@@ -38,11 +38,15 @@ export async function fetchPage({
   queryClient: QueryClient
   moderationOpts: ModerationOpts | undefined
   fetchAdditionalData: boolean
-  shouldUngroupFollowBacks?: () => boolean
-}): Promise<{page: FeedPage; indexedAt: string | undefined}> {
+  priority?: boolean
+}): Promise<{
+  page: FeedPage
+  indexedAt: string | undefined
+}> {
   const res = await agent.listNotifications({
     limit,
     cursor,
+    // priority,
   })
 
   const indexedAt = res.data.notifications[0]?.indexedAt
@@ -53,7 +57,7 @@ export async function fetchPage({
   )
 
   // group notifications which are essentially similar (follows, likes on a post)
-  let notifsGrouped = groupNotifications(notifs, {shouldUngroupFollowBacks})
+  let notifsGrouped = groupNotifications(notifs)
 
   // we fetch subjects of notifications (usually posts) now instead of lazily
   // in the UI to avoid relayouts
@@ -88,6 +92,7 @@ export async function fetchPage({
       cursor: res.data.cursor,
       seenAt,
       items: notifsGrouped,
+      priority: res.data.priority ?? false,
     },
     indexedAt,
   }
@@ -100,6 +105,10 @@ export function shouldFilterNotif(
   notif: AppBskyNotificationListNotifications.Notification,
   moderationOpts: ModerationOpts | undefined,
 ): boolean {
+  const containsImperative = !!notif.author.labels?.some(labelIsHideableOffense)
+  if (containsImperative) {
+    return true
+  }
   if (!moderationOpts) {
     return false
   }
@@ -111,7 +120,6 @@ export function shouldFilterNotif(
 
 export function groupNotifications(
   notifs: AppBskyNotificationListNotifications.Notification[],
-  options?: {shouldUngroupFollowBacks?: () => boolean},
 ): FeedNotification[] {
   const groupedNotifs: FeedNotification[] = []
   for (const notif of notifs) {
@@ -131,9 +139,7 @@ export function groupNotifications(
           const prevIsFollowBack =
             groupedNotif.notification.reason === 'follow' &&
             groupedNotif.notification.author.viewer?.following
-          const shouldUngroup =
-            (nextIsFollowBack || prevIsFollowBack) &&
-            options?.shouldUngroupFollowBacks?.()
+          const shouldUngroup = nextIsFollowBack || prevIsFollowBack
           if (!shouldUngroup) {
             groupedNotif.additional = groupedNotif.additional || []
             groupedNotif.additional.push(notif)

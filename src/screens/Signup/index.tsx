@@ -5,17 +5,17 @@ import {AppBskyGraphStarterpack} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useAnalytics} from '#/lib/analytics/analytics'
 import {FEEDBACK_FORM_URL} from '#/lib/constants'
 import {useServiceQuery} from '#/state/queries/service'
-import {useStarterPackQuery} from 'state/queries/starter-packs'
-import {useActiveStarterPack} from 'state/shell/starter-pack'
+import {useStarterPackQuery} from '#/state/queries/starter-packs'
+import {useActiveStarterPack} from '#/state/shell/starter-pack'
 import {LoggedOutLayout} from '#/view/com/util/layouts/LoggedOutLayout'
 import {
   initialState,
   reducer,
   SignupContext,
   SignupStep,
+  useSubmitSignup,
 } from '#/screens/Signup/state'
 import {StepCaptcha} from '#/screens/Signup/StepCaptcha'
 import {StepHandle} from '#/screens/Signup/StepHandle'
@@ -30,9 +30,9 @@ import {Text} from '#/components/Typography'
 export function Signup({onPressBack}: {onPressBack: () => void}) {
   const {_} = useLingui()
   const t = useTheme()
-  const {screen} = useAnalytics()
   const [state, dispatch] = React.useReducer(reducer, initialState)
   const {gtMobile} = useBreakpoints()
+  const submit = useSubmitSignup()
 
   const activeStarterPack = useActiveStarterPack()
   const {
@@ -53,10 +53,6 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
     isError,
     refetch,
   } = useServiceQuery(state.serviceUrl)
-
-  React.useEffect(() => {
-    screen('CreateAccount')
-  }, [screen])
 
   React.useEffect(() => {
     if (isFetching) {
@@ -80,6 +76,15 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
       dispatch({type: 'setError', value: ''})
     }
   }, [_, serviceInfo, isError])
+
+  React.useEffect(() => {
+    if (state.pendingSubmit) {
+      if (!state.pendingSubmit.mutableProcessed) {
+        state.pendingSubmit.mutableProcessed = true
+        submit(state, dispatch)
+      }
+    }
+  }, [state, dispatch, submit])
 
   return (
     <SignupContext.Provider value={{state, dispatch}}>
@@ -121,7 +126,7 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
               !gtMobile && {paddingBottom: 100},
             ]}>
             <View style={[a.gap_sm, a.pb_3xl]}>
-              <Text style={[a.font_semibold, t.atoms.text_contrast_medium]}>
+              <Text style={[a.font_bold, t.atoms.text_contrast_medium]}>
                 <Trans>
                   Step {state.activeStep + 1} of{' '}
                   {state.serviceDescription &&
@@ -166,6 +171,7 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
               <Text style={[t.atoms.text, !gtMobile && a.text_md]}>
                 <Trans>Having trouble?</Trans>{' '}
                 <InlineLinkText
+                  label={_(msg`Contact support`)}
                   to={FEEDBACK_FORM_URL({email: state.email})}
                   style={[!gtMobile && a.text_md]}>
                   <Trans>Contact support</Trans>

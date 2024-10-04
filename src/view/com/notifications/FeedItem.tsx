@@ -8,32 +8,37 @@ import {
 } from 'react-native'
 import {
   AppBskyActorDefs,
-  AppBskyEmbedExternal,
-  AppBskyEmbedImages,
-  AppBskyEmbedRecordWithMedia,
   AppBskyFeedDefs,
   AppBskyFeedPost,
+  AppBskyGraphFollow,
   moderateProfile,
   ModerationDecision,
   ModerationOpts,
 } from '@atproto/api'
 import {AtUri} from '@atproto/api'
+import {TID} from '@atproto/common-web'
 import {msg, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {useGate} from '#/lib/statsig/statsig'
+import {useAnimatedValue} from '#/lib/hooks/useAnimatedValue'
+import {usePalette} from '#/lib/hooks/usePalette'
+import {makeProfileLink} from '#/lib/routes/links'
+import {NavigationProp} from '#/lib/routes/types'
+import {forceLTR} from '#/lib/strings/bidi'
+import {sanitizeDisplayName} from '#/lib/strings/display-names'
+import {sanitizeHandle} from '#/lib/strings/handles'
+import {niceDate} from '#/lib/strings/time'
+import {colors, s} from '#/lib/styles'
+import {logger} from '#/logger'
+import {isWeb} from '#/platform/detection'
+import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
 import {FeedNotification} from '#/state/queries/notifications/feed'
-import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
-import {usePalette} from 'lib/hooks/usePalette'
-import {makeProfileLink} from 'lib/routes/links'
-import {sanitizeDisplayName} from 'lib/strings/display-names'
-import {sanitizeHandle} from 'lib/strings/handles'
-import {niceDate} from 'lib/strings/time'
-import {colors, s} from 'lib/styles'
-import {isWeb} from 'platform/detection'
-import {precacheProfile} from 'state/queries/profile'
+import {precacheProfile} from '#/state/queries/profile'
+import {useAgent} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
+import {Button, ButtonText} from '#/components/Button'
 import {
   ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon,
   ChevronTop_Stroke2_Corner0_Rounded as ChevronUpIcon,
@@ -41,29 +46,18 @@ import {
 import {Heart2_Filled_Stroke2_Corner0_Rounded as HeartIconFilled} from '#/components/icons/Heart2'
 import {PersonPlus_Filled_Stroke2_Corner0_Rounded as PersonPlusIcon} from '#/components/icons/Person'
 import {Repost_Stroke2_Corner2_Rounded as RepostIcon} from '#/components/icons/Repost'
+import {StarterPack} from '#/components/icons/StarterPack'
 import {Link as NewLink} from '#/components/Link'
+import * as MediaPreview from '#/components/MediaPreview'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
+import {Notification as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
 import {FeedSourceCard} from '../feeds/FeedSourceCard'
 import {Post} from '../post/Post'
-import {ImageHorzList} from '../util/images/ImageHorzList'
 import {Link, TextLink} from '../util/Link'
 import {formatCount} from '../util/numeric/format'
 import {Text} from '../util/text/Text'
 import {TimeElapsed} from '../util/TimeElapsed'
 import {PreviewableUserAvatar, UserAvatar} from '../util/UserAvatar'
-
-import hairlineWidth = StyleSheet.hairlineWidth
-import {useNavigation} from '@react-navigation/native'
-
-import {parseTenorGif} from '#/lib/strings/embed-player'
-import {logger} from '#/logger'
-import {NavigationProp} from 'lib/routes/types'
-import {forceLTR} from 'lib/strings/bidi'
-import {DM_SERVICE_HEADERS} from 'state/queries/messages/const'
-import {useAgent} from 'state/session'
-import {Button, ButtonText} from '#/components/Button'
-import {StarterPack} from '#/components/icons/StarterPack'
-import {Notification as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
 
 const MAX_AUTHORS = 5
 
@@ -86,9 +80,8 @@ let FeedItem = ({
 }): React.ReactNode => {
   const queryClient = useQueryClient()
   const pal = usePalette('default')
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const t = useTheme()
-  const gate = useGate()
   const [isAuthorsExpanded, setAuthorsExpanded] = useState<boolean>(false)
   const itemHref = useMemo(() => {
     if (item.type === 'post-like' || item.type === 'repost') {
@@ -171,7 +164,6 @@ let FeedItem = ({
     )
   }
 
-  let isFollowBack = false
   let action = ''
   let icon = (
     <HeartIconFilled
@@ -188,11 +180,28 @@ let FeedItem = ({
     action = _(msg`reposted your post`)
     icon = <RepostIcon size="xl" style={{color: t.palette.positive_600}} />
   } else if (item.type === 'follow') {
+    let isFollowBack = false
+
     if (
       item.notification.author.viewer?.following &&
-      gate('ungroup_follow_backs')
+      AppBskyGraphFollow.isRecord(item.notification.record)
     ) {
-      isFollowBack = true
+      let followingTimestamp
+      try {
+        const rkey = new AtUri(item.notification.author.viewer.following).rkey
+        followingTimestamp = TID.fromStr(rkey).timestamp()
+      } catch (e) {
+        // For some reason the following URI was invalid. Default to it not being a follow back.
+        console.error('Invalid following URI')
+      }
+      if (followingTimestamp) {
+        const followedTimestamp =
+          new Date(item.notification.record.createdAt).getTime() * 1000
+        isFollowBack = followedTimestamp > followingTimestamp
+      }
+    }
+
+    if (isFollowBack) {
       action = _(msg`followed you back`)
     } else {
       action = _(msg`followed you`)
@@ -211,7 +220,22 @@ let FeedItem = ({
     return null
   }
 
-  let formattedCount = authors.length > 1 ? formatCount(authors.length - 1) : ''
+  const formattedCount =
+    authors.length > 1 ? formatCount(i18n, authors.length - 1) : ''
+  const firstAuthorName = sanitizeDisplayName(
+    authors[0].profile.displayName || authors[0].profile.handle,
+  )
+  const niceTimestamp = niceDate(i18n, item.notification.indexedAt)
+  const a11yLabelUsers =
+    authors.length > 1
+      ? _(msg` and `) +
+        plural(authors.length - 1, {
+          one: `${formattedCount} other`,
+          other: `${formattedCount} others`,
+        })
+      : ''
+  const a11yLabel = `${firstAuthorName}${a11yLabelUsers} ${action} ${niceTimestamp}`
+
   return (
     <Link
       testID={`feedItem-by-${item.notification.author.handle}`}
@@ -224,10 +248,13 @@ let FeedItem = ({
               backgroundColor: pal.colors.unreadNotifBg,
               borderColor: pal.colors.unreadNotifBorder,
             },
-        {borderTopWidth: hideTopBorder ? 0 : hairlineWidth},
+        {borderTopWidth: hideTopBorder ? 0 : StyleSheet.hairlineWidth},
+        a.overflow_hidden,
       ]}
       href={itemHref}
       noFeedback
+      accessibilityHint=""
+      accessibilityLabel={a11yLabel}
       accessible={!isAuthorsExpanded}
       accessibilityActions={
         authors.length > 1
@@ -272,24 +299,27 @@ let FeedItem = ({
             visible={!isAuthorsExpanded}
             authors={authors}
             onToggleAuthorsExpanded={onToggleAuthorsExpanded}
-            showDmButton={item.type === 'starterpack-joined' || isFollowBack}
+            showDmButton={item.type === 'starterpack-joined'}
           />
           <ExpandedAuthorsList visible={isAuthorsExpanded} authors={authors} />
-          <Text style={[styles.meta, a.self_start]}>
+          <Text
+            style={[styles.meta, a.self_start]}
+            accessibilityHint=""
+            accessibilityLabel={a11yLabel}>
             <TextLink
               key={authors[0].href}
               style={[pal.text, s.bold]}
               href={authors[0].href}
-              text={forceLTR(
-                sanitizeDisplayName(
-                  authors[0].profile.displayName || authors[0].profile.handle,
-                ),
-              )}
+              text={
+                <Text emoji style={[pal.text, s.bold]}>
+                  {forceLTR(firstAuthorName)}
+                </Text>
+              }
               disableMismatchWarning
             />
             {authors.length > 1 ? (
               <>
-                <Text style={[pal.text, s.mr5, s.ml5]}>
+                <Text style={[pal.text]}>
                   {' '}
                   <Trans>and</Trans>{' '}
                 </Text>
@@ -306,7 +336,7 @@ let FeedItem = ({
               {({timeElapsed}) => (
                 <Text
                   style={[pal.textLight, styles.pointer]}
-                  title={niceDate(item.notification.indexedAt)}>
+                  title={niceTimestamp}>
                   {' ' + timeElapsed}
                 </Text>
               )}
@@ -386,7 +416,7 @@ function SayHelloBtn({profile}: {profile: AppBskyActorDefs.ProfileViewBasic}) {
       label={_(msg`Say hello!`)}
       variant="ghost"
       color="primary"
-      size="xsmall"
+      size="small"
       style={[a.self_center, {marginLeft: 'auto'}]}
       disabled={isLoading}
       onPress={async () => {
@@ -458,7 +488,6 @@ function CondensedAuthorsList({
           profile={authors[0].profile}
           moderation={authors[0].moderation.ui('avatar')}
           type={authors[0].profile.associated?.labeler ? 'labeler' : 'user'}
-          accessible={false}
         />
         {showDmButton ? <SayHelloBtn profile={authors[0].profile} /> : null}
       </View>
@@ -476,7 +505,6 @@ function CondensedAuthorsList({
               profile={author.profile}
               moderation={author.moderation.ui('avatar')}
               type={author.profile.associated?.labeler ? 'labeler' : 'user'}
-              accessible={false}
             />
           </View>
         ))}
@@ -518,7 +546,7 @@ function ExpandedAuthorsList({
   }, [heightInterp, visible])
 
   return (
-    <Animated.View style={[heightStyle, styles.overflowHidden]}>
+    <Animated.View style={[a.overflow_hidden, heightStyle]}>
       {visible &&
         authors.map(author => (
           <NewLink
@@ -546,12 +574,13 @@ function ExpandedAuthorsList({
                 numberOfLines={1}
                 style={pal.text}
                 lineHeight={1.2}>
-                {sanitizeDisplayName(
-                  author.profile.displayName || author.profile.handle,
-                )}
-                &nbsp;
+                <Text emoji type="lg-bold" style={pal.text} lineHeight={1.2}>
+                  {sanitizeDisplayName(
+                    author.profile.displayName || author.profile.handle,
+                  )}
+                </Text>{' '}
                 <Text style={[pal.textLight]} lineHeight={1.2}>
-                  {sanitizeHandle(author.profile.handle)}
+                  {sanitizeHandle(author.profile.handle, '@')}
                 </Text>
               </Text>
             </View>
@@ -565,58 +594,24 @@ function AdditionalPostText({post}: {post?: AppBskyFeedDefs.PostView}) {
   const pal = usePalette('default')
   if (post && AppBskyFeedPost.isRecord(post?.record)) {
     const text = post.record.text
-    let images
-    let isGif = false
-
-    if (AppBskyEmbedImages.isView(post.embed)) {
-      images = post.embed.images
-    } else if (
-      AppBskyEmbedRecordWithMedia.isView(post.embed) &&
-      AppBskyEmbedImages.isView(post.embed.media)
-    ) {
-      images = post.embed.media.images
-    } else if (
-      AppBskyEmbedExternal.isView(post.embed) &&
-      post.embed.external.thumb
-    ) {
-      let url: URL | undefined
-      try {
-        url = new URL(post.embed.external.uri)
-      } catch {}
-      if (url) {
-        const {success} = parseTenorGif(url)
-        if (success) {
-          isGif = true
-          images = [
-            {
-              thumb: post.embed.external.thumb,
-              alt: post.embed.external.title,
-              fullsize: post.embed.external.thumb,
-            },
-          ]
-        }
-      }
-    }
 
     return (
       <>
-        {text?.length > 0 && <Text style={pal.textLight}>{text}</Text>}
-        {images && images.length > 0 && (
-          <ImageHorzList
-            images={images}
-            style={styles.additionalPostImages}
-            gif={isGif}
-          />
+        {text?.length > 0 && (
+          <Text emoji style={pal.textLight}>
+            {text}
+          </Text>
         )}
+        <MediaPreview.Embed
+          embed={post.embed}
+          style={styles.additionalPostImages}
+        />
       </>
     )
   }
 }
 
 const styles = StyleSheet.create({
-  overflowHidden: {
-    overflow: 'hidden',
-  },
   pointer: isWeb
     ? {
         // @ts-ignore web only
@@ -630,7 +625,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   layoutIcon: {
-    width: 70,
+    width: 60,
     alignItems: 'flex-end',
     paddingTop: 2,
   },
@@ -646,7 +641,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   aviExtraCount: {
-    fontWeight: 'bold',
+    fontWeight: '600',
     paddingLeft: 6,
   },
   meta: {

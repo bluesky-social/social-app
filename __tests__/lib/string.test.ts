@@ -340,12 +340,14 @@ describe('parseEmbedPlayerFromUrl', () => {
     'https://youtube.com/watch?v=videoId',
     'https://youtube.com/watch?v=videoId&feature=share',
     'https://youtube.com/shorts/videoId',
+    'https://youtube.com/live/videoId',
     'https://m.youtube.com/watch?v=videoId',
     'https://music.youtube.com/watch?v=videoId',
 
     'https://youtube.com/shorts/',
     'https://youtube.com/',
     'https://youtube.com/random',
+    'https://youtube.com/live/',
 
     'https://twitch.tv/channelName',
     'https://www.twitch.tv/channelName',
@@ -475,7 +477,13 @@ describe('parseEmbedPlayerFromUrl', () => {
       source: 'youtube',
       playerUri: 'https://bsky.app/iframe/youtube.html?videoId=videoId&start=0',
     },
+    {
+      type: 'youtube_video',
+      source: 'youtube',
+      playerUri: 'https://bsky.app/iframe/youtube.html?videoId=videoId&start=0',
+    },
 
+    undefined,
     undefined,
     undefined,
     undefined,

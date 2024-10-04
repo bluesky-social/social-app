@@ -5,25 +5,23 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
+import {BACK_HITSLOP} from '#/lib/constants'
+import {usePalette} from '#/lib/hooks/usePalette'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {makeProfileLink} from '#/lib/routes/links'
+import {NavigationProp} from '#/lib/routes/types'
+import {sanitizeHandle} from '#/lib/strings/handles'
+import {isNative} from '#/platform/detection'
 import {emitSoftReset} from '#/state/events'
 import {ImagesLightbox, useLightboxControls} from '#/state/lightbox'
 import {useSetDrawerOpen} from '#/state/shell'
-import {BACK_HITSLOP} from 'lib/constants'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {makeProfileLink} from 'lib/routes/links'
-import {NavigationProp} from 'lib/routes/types'
-import {sanitizeHandle} from 'lib/strings/handles'
-import {isNative} from 'platform/detection'
+import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
+import {StarterPack} from '#/components/icons/StarterPack'
 import {TextLink} from '../util/Link'
 import {LoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {Text} from '../util/text/Text'
 import {UserAvatar, UserAvatarType} from '../util/UserAvatar'
 import {CenteredView} from '../util/Views'
-import hairlineWidth = StyleSheet.hairlineWidth
-
-import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
-import {StarterPack} from '#/components/icons/StarterPack'
 
 export function ProfileSubpageHeader({
   isLoading,
@@ -84,7 +82,7 @@ export function ProfileSubpageHeader({
             {
               flexDirection: 'row',
               alignItems: 'center',
-              borderBottomWidth: hairlineWidth,
+              borderBottomWidth: StyleSheet.hairlineWidth,
               paddingTop: isNative ? 0 : 8,
               paddingBottom: 8,
               paddingHorizontal: isMobile ? 12 : 14,
@@ -147,7 +145,7 @@ export function ProfileSubpageHeader({
               testID="headerTitle"
               type="title-xl"
               href={href}
-              style={[pal.text, {fontWeight: 'bold'}]}
+              style={[pal.text, {fontWeight: '600'}]}
               text={title || ''}
               onPress={emitSoftReset}
               numberOfLines={4}

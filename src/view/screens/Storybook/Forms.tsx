@@ -32,6 +32,27 @@ export function Forms() {
           label="Text field"
         />
 
+        <View style={[a.flex_row, a.align_start, a.gap_sm]}>
+          <View
+            style={[
+              {
+                width: '50%',
+              },
+            ]}>
+            <TextField.Root>
+              <TextField.Icon icon={Globe} />
+              <TextField.Input
+                value={value}
+                onChangeText={setValue}
+                label="Text field"
+              />
+            </TextField.Root>
+          </View>
+          <Button label="Submit" size="large" variant="solid" color="primary">
+            <ButtonText>Submit</ButtonText>
+          </Button>
+        </View>
+
         <TextField.Root>
           <TextField.Icon icon={Globe} />
           <TextField.Input

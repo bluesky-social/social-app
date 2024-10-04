@@ -1,17 +1,22 @@
 import React from 'react'
 import {View} from 'react-native'
 import QRCode from 'react-native-qrcode-styled'
-import ViewShot from 'react-native-view-shot'
+import type ViewShot from 'react-native-view-shot'
 import {AppBskyGraphDefs, AppBskyGraphStarterpack} from '@atproto/api'
 import {Trans} from '@lingui/macro'
 
-import {isWeb} from 'platform/detection'
-import {Logo} from 'view/icons/Logo'
-import {Logotype} from 'view/icons/Logotype'
+import {isWeb} from '#/platform/detection'
+import {Logo} from '#/view/icons/Logo'
+import {Logotype} from '#/view/icons/Logotype'
 import {useTheme} from '#/alf'
 import {atoms as a} from '#/alf'
 import {LinearGradientBackground} from '#/components/LinearGradientBackground'
 import {Text} from '#/components/Typography'
+
+const LazyViewShot = React.lazy(
+  // @ts-expect-error dynamic import
+  () => import('react-native-view-shot/src/index'),
+)
 
 interface Props {
   starterPack: AppBskyGraphDefs.StarterPackView
@@ -29,7 +34,7 @@ export const QrCode = React.forwardRef<ViewShot, Props>(function QrCode(
   }
 
   return (
-    <ViewShot ref={ref}>
+    <LazyViewShot ref={ref}>
       <LinearGradientBackground
         style={[
           {width: 300, minHeight: 390},
@@ -59,23 +64,27 @@ export const QrCode = React.forwardRef<ViewShot, Props>(function QrCode(
             <QrCodeInner link={link} />
           </View>
 
-          <View style={[a.flex_row, a.align_center, {gap: 5}]}>
-            <Text
-              style={[
-                a.font_bold,
-                a.text_center,
-                {color: 'white', fontSize: 18},
-              ]}>
-              <Trans>on</Trans>
-            </Text>
-            <Logo width={26} fill="white" />
-            <View style={[{marginTop: 5, marginLeft: 2.5}]}>
-              <Logotype width={68} fill="white" />
-            </View>
-          </View>
+          <Text
+            style={[
+              a.flex,
+              a.flex_row,
+              a.align_center,
+              a.font_bold,
+              {color: 'white', fontSize: 18, gap: 6},
+            ]}>
+            <Trans>
+              on
+              <View style={[a.flex_row, a.align_center, {gap: 6}]}>
+                <Logo width={25} fill="white" />
+                <View style={[{marginTop: 3.5}]}>
+                  <Logotype width={72} fill="white" />
+                </View>
+              </View>
+            </Trans>
+          </Text>
         </View>
       </LinearGradientBackground>
-    </ViewShot>
+    </LazyViewShot>
   )
 })
 

@@ -26,7 +26,6 @@ import Animated from 'react-native-reanimated'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {addStyle} from 'lib/styles'
-import hairlineWidth = StyleSheet.hairlineWidth
 
 interface AddedProps {
   desktopFixedHeight?: boolean | number
@@ -48,10 +47,10 @@ export const CenteredView = React.forwardRef(function CenteredView(
   if (!isMobile) {
     style = addStyle(style, styles.container)
   }
-  if (sideBorders) {
+  if (sideBorders && !isMobile) {
     style = addStyle(style, {
-      borderLeftWidth: hairlineWidth,
-      borderRightWidth: hairlineWidth,
+      borderLeftWidth: StyleSheet.hairlineWidth,
+      borderRightWidth: StyleSheet.hairlineWidth,
     })
     style = addStyle(style, pal.border)
   }
@@ -163,8 +162,8 @@ export const ScrollView = React.forwardRef(function ScrollViewImpl(
 
 const styles = StyleSheet.create({
   contentContainer: {
-    borderLeftWidth: hairlineWidth,
-    borderRightWidth: hairlineWidth,
+    borderLeftWidth: StyleSheet.hairlineWidth,
+    borderRightWidth: StyleSheet.hairlineWidth,
     // @ts-ignore web only
     minHeight: '100vh',
   },

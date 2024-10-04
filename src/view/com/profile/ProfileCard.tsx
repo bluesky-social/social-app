@@ -7,28 +7,27 @@ import {
 } from '@atproto/api'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {usePalette} from '#/lib/hooks/usePalette'
+import {getModerationCauseKey, isJustAMute} from '#/lib/moderation'
+import {makeProfileLink} from '#/lib/routes/links'
+import {sanitizeDisplayName} from '#/lib/strings/display-names'
+import {sanitizeHandle} from '#/lib/strings/handles'
+import {s} from '#/lib/styles'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {Shadow} from '#/state/cache/types'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
+import {precacheProfile} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
-import {usePalette} from 'lib/hooks/usePalette'
-import {getModerationCauseKey, isJustAMute} from 'lib/moderation'
-import {makeProfileLink} from 'lib/routes/links'
-import {sanitizeDisplayName} from 'lib/strings/display-names'
-import {sanitizeHandle} from 'lib/strings/handles'
-import {s} from 'lib/styles'
-import {precacheProfile} from 'state/queries/profile'
 import {atoms as a} from '#/alf'
 import {
   KnownFollowers,
   shouldShowKnownFollowers,
 } from '#/components/KnownFollowers'
+import * as Pills from '#/components/Pills'
 import {Link} from '../util/Link'
 import {Text} from '../util/text/Text'
 import {PreviewableUserAvatar} from '../util/UserAvatar'
 import {FollowButton} from './FollowButton'
-import hairlineWidth = StyleSheet.hairlineWidth
-import * as Pills from '#/components/Pills'
 
 export function ProfileCard({
   testID,
@@ -104,6 +103,7 @@ export function ProfileCard({
         </View>
         <View style={styles.layoutContent}>
           <Text
+            emoji
             type="lg"
             style={[s.bold, pal.text, a.self_start]}
             numberOfLines={1}
@@ -113,7 +113,7 @@ export function ProfileCard({
               moderation.ui('displayName'),
             )}
           </Text>
-          <Text type="md" style={[pal.textLight]} numberOfLines={1}>
+          <Text emoji type="md" style={[pal.textLight]} numberOfLines={1}>
             {sanitizeHandle(profile.handle, '@')}
           </Text>
           <ProfileCardPills
@@ -129,7 +129,7 @@ export function ProfileCard({
       {profile.description || knownFollowersVisible ? (
         <View style={styles.details}>
           {profile.description ? (
-            <Text style={pal.text} numberOfLines={4}>
+            <Text emoji style={pal.text} numberOfLines={4}>
               {profile.description as string}
             </Text>
           ) : null}
@@ -217,7 +217,7 @@ export function ProfileCardWithFollowBtn({
 
 const styles = StyleSheet.create({
   outer: {
-    borderTopWidth: hairlineWidth,
+    borderTopWidth: StyleSheet.hairlineWidth,
     paddingHorizontal: 6,
     paddingVertical: 4,
   },

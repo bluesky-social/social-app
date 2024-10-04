@@ -144,6 +144,7 @@ function FeedgenErrorMessage({
         _l(
           msgLingui`There was an an issue removing this feed. Please check your internet connection and try again.`,
         ),
+        'exclamation-circle',
       )
       logger.error('Failed to remove feed', {message: err})
     }

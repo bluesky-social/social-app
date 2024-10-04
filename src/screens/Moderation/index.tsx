@@ -22,8 +22,8 @@ import {
   useProfileUpdateMutation,
 } from '#/state/queries/profile'
 import {useSession} from '#/state/session'
+import {isNonConfigurableModerationAuthority} from '#/state/session/additional-moderation-authorities'
 import {useSetMinimalShellMode} from '#/state/shell'
-import {useAnalytics} from 'lib/analytics/analytics'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
 import {CenteredView} from '#/view/com/util/Views'
 import {ScrollView} from '#/view/com/util/Views'
@@ -162,7 +162,6 @@ export function ModerationScreenInner({
   const {_} = useLingui()
   const t = useTheme()
   const setMinimalShellMode = useSetMinimalShellMode()
-  const {screen} = useAnalytics()
   const {gtMobile} = useBreakpoints()
   const {mutedWordsDialogControl} = useGlobalDialogsControlContext()
   const birthdateDialogControl = Dialog.useDialogControl()
@@ -174,9 +173,8 @@ export function ModerationScreenInner({
 
   useFocusEffect(
     React.useCallback(() => {
-      screen('Moderation')
       setMinimalShellMode(false)
-    }, [screen, setMinimalShellMode]),
+    }, [setMinimalShellMode]),
   )
 
   const {mutateAsync: setAdultContentPref, variables: optimisticAdultContent} =
@@ -240,7 +238,10 @@ export function ModerationScreenInner({
           )}
         </Button>
         <Divider />
-        <Link testID="moderationlistsBtn" to="/moderation/modlists">
+        <Link
+          label={_(msg`View your moderation lists`)}
+          testID="moderationlistsBtn"
+          to="/moderation/modlists">
           {state => (
             <SubItem
               title={_(msg`Moderation lists`)}
@@ -252,7 +253,10 @@ export function ModerationScreenInner({
           )}
         </Link>
         <Divider />
-        <Link testID="mutedAccountsBtn" to="/moderation/muted-accounts">
+        <Link
+          label={_(msg`View your muted accounts`)}
+          testID="mutedAccountsBtn"
+          to="/moderation/muted-accounts">
           {state => (
             <SubItem
               title={_(msg`Muted accounts`)}
@@ -264,7 +268,10 @@ export function ModerationScreenInner({
           )}
         </Link>
         <Divider />
-        <Link testID="blockedAccountsBtn" to="/moderation/blocked-accounts">
+        <Link
+          label={_(msg`View your blocked accounts`)}
+          testID="blockedAccountsBtn"
+          to="/moderation/blocked-accounts">
           {state => (
             <SubItem
               title={_(msg`Blocked accounts`)}
@@ -329,7 +336,7 @@ export function ModerationScreenInner({
                   a.justify_between,
                   disabledOnIOS && {opacity: 0.5},
                 ]}>
-                <Text style={[a.font_semibold, t.atoms.text_contrast_high]}>
+                <Text style={[a.font_bold, t.atoms.text_contrast_high]}>
                   <Trans>Enable adult content</Trans>
                 </Text>
                 <Toggle.Item
@@ -356,6 +363,7 @@ export function ModerationScreenInner({
                     <Trans>
                       Adult content can only be enabled via the Web at{' '}
                       <InlineLinkText
+                        label={_(msg`The Bluesky web application`)}
                         to=""
                         onPress={evt => {
                           evt.preventDefault()
@@ -445,6 +453,9 @@ export function ModerationScreenInner({
                           value={labeler.creator.description}
                           handle={labeler.creator.handle}
                         />
+                        {isNonConfigurableModerationAuthority(
+                          labeler.creator.did,
+                        ) && <LabelingService.RegionalNotice />}
                       </LabelingService.Content>
                     </LabelingService.Outer>
                   )}
@@ -569,7 +580,9 @@ function PwiOptOut() {
           </Trans>
         </Text>
 
-        <InlineLinkText to="https://blueskyweb.zendesk.com/hc/en-us/articles/15835264007693-Data-Privacy">
+        <InlineLinkText
+          label={_(msg`Learn more about what is public on Bluesky.`)}
+          to="https://blueskyweb.zendesk.com/hc/en-us/articles/15835264007693-Data-Privacy">
           <Trans>Learn more about what is public on Bluesky.</Trans>
         </InlineLinkText>
       </View>

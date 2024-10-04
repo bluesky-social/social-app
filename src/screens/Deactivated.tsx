@@ -38,7 +38,7 @@ export function Deactivated() {
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const hasOtherAccounts = accounts.length > 1
   const setMinimalShellMode = useSetMinimalShellMode()
-  const {logout} = useSessionApi()
+  const {logoutCurrentAccount} = useSessionApi()
   const agent = useAgent()
   const [pending, setPending] = React.useState(false)
   const [error, setError] = React.useState<string | undefined>()
@@ -72,8 +72,8 @@ export function Deactivated() {
       // So we change the URL ourselves. The navigator will pick it up on remount.
       history.pushState(null, '', '/')
     }
-    logout('Deactivated')
-  }, [logout])
+    logoutCurrentAccount('Deactivated')
+  }, [logoutCurrentAccount])
 
   const handleActivate = React.useCallback(async () => {
     try {
@@ -142,7 +142,7 @@ export function Deactivated() {
                 <View style={[a.gap_sm]}>
                   <Button
                     label={_(msg`Reactivate your account`)}
-                    size="medium"
+                    size="large"
                     variant="solid"
                     color="primary"
                     onPress={handleActivate}>
@@ -153,7 +153,7 @@ export function Deactivated() {
                   </Button>
                   <Button
                     label={_(msg`Cancel reactivation and log out`)}
-                    size="medium"
+                    size="large"
                     variant="solid"
                     color="secondary"
                     onPress={onPressLogout}>
@@ -212,7 +212,7 @@ export function Deactivated() {
                   </Text>
                   <Button
                     label={_(msg`Log in or sign up`)}
-                    size="medium"
+                    size="large"
                     variant="solid"
                     color="secondary"
                     onPress={() => setShowLoggedOut(true)}>

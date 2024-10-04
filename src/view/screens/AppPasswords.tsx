@@ -12,13 +12,11 @@ import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
-import {useAnalytics} from '#/lib/analytics/analytics'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {CommonNavigatorParams} from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
 import {useModalControls} from '#/state/modals'
-import {useLanguagePrefs} from '#/state/preferences'
 import {
   useAppPasswordDeleteMutation,
   useAppPasswordsQuery,
@@ -29,7 +27,7 @@ import {Button} from '#/view/com/util/forms/Button'
 import {Text} from '#/view/com/util/text/Text'
 import * as Toast from '#/view/com/util/Toast'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
-import {CenteredView} from 'view/com/util/Views'
+import {CenteredView} from '#/view/com/util/Views'
 import {atoms as a} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import * as Prompt from '#/components/Prompt'
@@ -39,16 +37,14 @@ export function AppPasswords({}: Props) {
   const pal = usePalette('default')
   const {_} = useLingui()
   const setMinimalShellMode = useSetMinimalShellMode()
-  const {screen} = useAnalytics()
   const {isTabletOrDesktop} = useWebMediaQueries()
   const {openModal} = useModalControls()
   const {data: appPasswords, error} = useAppPasswordsQuery()
 
   useFocusEffect(
     React.useCallback(() => {
-      screen('AppPasswords')
       setMinimalShellMode(false)
-    }, [screen, setMinimalShellMode]),
+    }, [setMinimalShellMode]),
   )
 
   const onAdd = React.useCallback(async () => {
@@ -218,9 +214,8 @@ function AppPassword({
   privileged?: boolean
 }) {
   const pal = usePalette('default')
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const control = useDialogControl()
-  const {contentLanguages} = useLanguagePrefs()
   const deleteMutation = useAppPasswordDeleteMutation()
 
   const onDelete = React.useCallback(async () => {
@@ -231,9 +226,6 @@ function AppPassword({
   const onPress = React.useCallback(() => {
     control.open()
   }, [control])
-
-  const primaryLocale =
-    contentLanguages.length > 0 ? contentLanguages[0] : 'en-US'
 
   return (
     <TouchableOpacity
@@ -250,14 +242,14 @@ function AppPassword({
         <Text type="md" style={[pal.text, styles.pr10]} numberOfLines={1}>
           <Trans>
             Created{' '}
-            {Intl.DateTimeFormat(primaryLocale, {
+            {i18n.date(createdAt, {
               year: 'numeric',
               month: 'numeric',
               day: 'numeric',
               hour: '2-digit',
               minute: '2-digit',
               second: '2-digit',
-            }).format(new Date(createdAt))}
+            })}
           </Trans>
         </Text>
         {privileged && (
@@ -268,7 +260,7 @@ function AppPassword({
               size={14}
             />
             <Text type="md" style={pal.textLight}>
-              Allows access to direct messages
+              <Trans>Allows access to direct messages</Trans>
             </Text>
           </View>
         )}

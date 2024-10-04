@@ -1,13 +1,21 @@
 import React from 'react'
 import {View} from 'react-native'
-import {AppBskyActorDefs, AppBskyGraphDefs, AtUri} from '@atproto/api'
-import {Trans} from '@lingui/macro'
+import {
+  AppBskyActorDefs,
+  AppBskyGraphDefs,
+  AtUri,
+  moderateUserList,
+  ModerationUI,
+} from '@atproto/api'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {sanitizeHandle} from 'lib/strings/handles'
-import {precacheList} from 'state/queries/feed'
-import {useTheme} from '#/alf'
-import {atoms as a} from '#/alf'
+import {sanitizeHandle} from '#/lib/strings/handles'
+import {useModerationOpts} from '#/state/preferences/moderation-opts'
+import {precacheList} from '#/state/queries/feed'
+import {useSession} from '#/state/session'
+import {atoms as a, useTheme} from '#/alf'
 import {
   Avatar,
   Description,
@@ -16,6 +24,7 @@ import {
   SaveButton,
 } from '#/components/FeedCard'
 import {Link as InternalLink, LinkProps} from '#/components/Link'
+import * as Hider from '#/components/moderation/Hider'
 import {Text} from '#/components/Typography'
 
 /*
@@ -43,8 +52,13 @@ type Props = {
 
 export function Default(props: Props) {
   const {view, showPinButton} = props
+  const moderationOpts = useModerationOpts()
+  const moderation = moderationOpts
+    ? moderateUserList(view, moderationOpts)
+    : undefined
+
   return (
-    <Link label={view.name} {...props}>
+    <Link {...props}>
       <Outer>
         <Header>
           <Avatar src={view.avatar} />
@@ -52,6 +66,7 @@ export function Default(props: Props) {
             title={view.name}
             creator={view.creator}
             purpose={view.purpose}
+            modUi={moderation?.ui('contentView')}
           />
           {showPinButton && view.purpose === CURATELIST && (
             <SaveButton view={view} pin />
@@ -67,7 +82,7 @@ export function Link({
   view,
   children,
   ...props
-}: Props & Omit<LinkProps, 'to'>) {
+}: Props & Omit<LinkProps, 'to' | 'label'>) {
   const queryClient = useQueryClient()
 
   const href = React.useMemo(() => {
@@ -79,7 +94,7 @@ export function Link({
   }, [view, queryClient])
 
   return (
-    <InternalLink to={href} {...props}>
+    <InternalLink label={view.name} to={href} {...props}>
       {children}
     </InternalLink>
   )
@@ -89,29 +104,50 @@ export function TitleAndByline({
   title,
   creator,
   purpose = CURATELIST,
+  modUi,
 }: {
   title: string
   creator?: AppBskyActorDefs.ProfileViewBasic
   purpose?: AppBskyGraphDefs.ListView['purpose']
+  modUi?: ModerationUI
 }) {
   const t = useTheme()
+  const {_} = useLingui()
+  const {currentAccount} = useSession()
 
   return (
     <View style={[a.flex_1]}>
-      <Text style={[a.text_md, a.font_bold, a.leading_snug]} numberOfLines={1}>
-        {title}
-      </Text>
+      <Hider.Outer
+        modui={modUi}
+        isContentVisibleInitialState={
+          creator && currentAccount?.did === creator.did
+        }
+        allowOverride={creator && currentAccount?.did === creator.did}>
+        <Hider.Mask>
+          <Text
+            style={[a.text_md, a.font_bold, a.leading_snug, a.italic]}
+            numberOfLines={1}>
+            <Trans>Hidden list</Trans>
+          </Text>
+        </Hider.Mask>
+        <Hider.Content>
+          <Text
+            emoji
+            style={[a.text_md, a.font_bold, a.leading_snug]}
+            numberOfLines={1}>
+            {title}
+          </Text>
+        </Hider.Content>
+      </Hider.Outer>
+
       {creator && (
         <Text
+          emoji
           style={[a.leading_snug, t.atoms.text_contrast_medium]}
           numberOfLines={1}>
-          {purpose === MODLIST ? (
-            <Trans>
-              Moderation list by {sanitizeHandle(creator.handle, '@')}
-            </Trans>
-          ) : (
-            <Trans>List by {sanitizeHandle(creator.handle, '@')}</Trans>
-          )}
+          {purpose === MODLIST
+            ? _(msg`Moderation list by ${sanitizeHandle(creator.handle, '@')}`)
+            : _(msg`List by ${sanitizeHandle(creator.handle, '@')}`)}
         </Text>
       )}
     </View>

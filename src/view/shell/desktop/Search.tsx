@@ -2,7 +2,6 @@ import React from 'react'
 import {
   ActivityIndicator,
   StyleSheet,
-  TextInput,
   TouchableOpacity,
   View,
   ViewStyle,
@@ -12,25 +11,25 @@ import {
   moderateProfile,
   ModerationDecision,
 } from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {StackActions, useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {usePalette} from '#/lib/hooks/usePalette'
 import {makeProfileLink} from '#/lib/routes/links'
+import {NavigationProp} from '#/lib/routes/types'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {s} from '#/lib/styles'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
-import {usePalette} from 'lib/hooks/usePalette'
-import {MagnifyingGlassIcon2} from 'lib/icons'
-import {NavigationProp} from 'lib/routes/types'
-import {precacheProfile} from 'state/queries/profile'
+import {precacheProfile} from '#/state/queries/profile'
 import {Link} from '#/view/com/util/Link'
+import {Text} from '#/view/com/util/text/Text'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {Text} from 'view/com/util/text/Text'
 import {atoms as a} from '#/alf'
+import {SearchInput} from '#/components/forms/SearchInput'
 
 let SearchLinkCard = ({
   label,
@@ -127,6 +126,7 @@ let SearchProfileCard = ({
         />
         <View style={{flex: 1}}>
           <Text
+            emoji
             type="lg"
             style={[s.bold, pal.text, a.self_start]}
             numberOfLines={1}
@@ -183,47 +183,12 @@ export function DesktopSearch() {
 
   return (
     <View style={[styles.container, pal.view]}>
-      <View
-        style={[{backgroundColor: pal.colors.backgroundLight}, styles.search]}>
-        <View style={[styles.inputContainer]}>
-          <MagnifyingGlassIcon2
-            size={18}
-            style={[pal.textLight, styles.iconWrapper]}
-          />
-          <TextInput
-            testID="searchTextInput"
-            placeholder={_(msg`Search`)}
-            placeholderTextColor={pal.colors.textLight}
-            selectTextOnFocus
-            returnKeyType="search"
-            value={query}
-            style={[pal.textLight, styles.input]}
-            onChangeText={onChangeText}
-            onSubmitEditing={onSubmit}
-            accessibilityRole="search"
-            accessibilityLabel={_(msg`Search`)}
-            accessibilityHint=""
-            autoCorrect={false}
-            autoComplete="off"
-            autoCapitalize="none"
-          />
-          {query ? (
-            <View style={styles.cancelBtn}>
-              <TouchableOpacity
-                onPress={onPressCancelSearch}
-                accessibilityRole="button"
-                accessibilityLabel={_(msg`Cancel search`)}
-                accessibilityHint={_(msg`Exits inputting search query`)}
-                onAccessibilityEscape={onPressCancelSearch}>
-                <Text type="lg" style={[pal.link]}>
-                  <Trans>Cancel</Trans>
-                </Text>
-              </TouchableOpacity>
-            </View>
-          ) : undefined}
-        </View>
-      </View>
-
+      <SearchInput
+        value={query}
+        onChangeText={onChangeText}
+        onClearText={onPressCancelSearch}
+        onSubmitEditing={onSubmit}
+      />
       {query !== '' && isActive && moderationOpts && (
         <View style={[pal.view, pal.borderDark, styles.resultsContainer]}>
           {isFetching && !autocompleteData?.length ? (
@@ -262,42 +227,11 @@ const styles = StyleSheet.create({
     position: 'relative',
     width: 300,
   },
-  search: {
-    paddingHorizontal: 16,
-    paddingVertical: 2,
-    width: 300,
-    borderRadius: 20,
-  },
-  inputContainer: {
-    flexDirection: 'row',
-  },
-  iconWrapper: {
-    position: 'relative',
-    top: 2,
-    paddingVertical: 7,
-    marginRight: 8,
-  },
-  input: {
-    flex: 1,
-    fontSize: 18,
-    width: '100%',
-    paddingTop: 7,
-    paddingBottom: 7,
-  },
-  cancelBtn: {
-    paddingRight: 4,
-    paddingLeft: 10,
-    paddingVertical: 7,
-  },
   resultsContainer: {
     marginTop: 10,
     flexDirection: 'column',
     width: 300,
     borderWidth: 1,
     borderRadius: 6,
-  },
-  noResults: {
-    textAlign: 'center',
-    paddingVertical: 10,
   },
 })

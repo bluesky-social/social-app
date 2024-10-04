@@ -9,14 +9,15 @@ import {
 import {InfiniteData, UseInfiniteQueryResult} from '@tanstack/react-query'
 
 import {useBottomBarOffset} from 'lib/hooks/useBottomBarOffset'
+import {useInitialNumToRender} from 'lib/hooks/useInitialNumToRender'
 import {isBlockedOrBlocking} from 'lib/moderation/blocked-and-muted'
 import {isNative, isWeb} from 'platform/detection'
-import {useListMembersQuery} from 'state/queries/list-members'
+import {useAllListMembersQuery} from 'state/queries/list-members'
 import {useSession} from 'state/session'
 import {List, ListRef} from 'view/com/util/List'
 import {SectionRef} from '#/screens/Profile/Sections/types'
 import {atoms as a, useTheme} from '#/alf'
-import {ListMaybePlaceholder} from '#/components/Lists'
+import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
 import {Default as ProfileCard} from '#/components/ProfileCard'
 
 function keyExtractor(item: AppBskyActorDefs.ProfileViewBasic, index: number) {
@@ -39,17 +40,20 @@ export const ProfilesList = React.forwardRef<SectionRef, ProfilesListProps>(
     ref,
   ) {
     const t = useTheme()
-    const [initialHeaderHeight] = React.useState(headerHeight)
-    const bottomBarOffset = useBottomBarOffset(20)
+    const bottomBarOffset = useBottomBarOffset(300)
+    const initialNumToRender = useInitialNumToRender()
     const {currentAccount} = useSession()
-    const {data, refetch, isError} = useListMembersQuery(listUri, 50)
+    const {data, refetch, isError} = useAllListMembersQuery(listUri)
 
     const [isPTRing, setIsPTRing] = React.useState(false)
 
     // The server returns these sorted by descending creation date, so we want to invert
-    const profiles = data?.pages
-      .flatMap(p => p.items.map(i => i.subject))
-      .filter(p => !isBlockedOrBlocking(p) && !p.associated?.labeler)
+
+    const profiles = data
+      ?.filter(
+        p => !isBlockedOrBlocking(p.subject) && !p.subject.associated?.labeler,
+      )
+      .map(p => p.subject)
       .reverse()
     const isOwn = new AtUri(listUri).host === currentAccount?.did
 
@@ -99,7 +103,11 @@ export const ProfilesList = React.forwardRef<SectionRef, ProfilesListProps>(
 
     if (!data) {
       return (
-        <View style={{marginTop: headerHeight, marginBottom: bottomBarOffset}}>
+        <View
+          style={[
+            a.h_full_vh,
+            {marginTop: headerHeight, marginBottom: bottomBarOffset},
+          ]}>
           <ListMaybePlaceholder
             isLoading={true}
             isError={isError}
@@ -118,10 +126,13 @@ export const ProfilesList = React.forwardRef<SectionRef, ProfilesListProps>(
           ref={scrollElRef}
           headerOffset={headerHeight}
           ListFooterComponent={
-            <View style={[{height: initialHeaderHeight + bottomBarOffset}]} />
+            <ListFooter
+              style={{paddingBottom: bottomBarOffset, borderTopWidth: 0}}
+            />
           }
           showsVerticalScrollIndicator={false}
           desktopFixedHeight
+          initialNumToRender={initialNumToRender}
           refreshing={isPTRing}
           onRefresh={async () => {
             setIsPTRing(true)

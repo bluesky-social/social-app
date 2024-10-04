@@ -1,6 +1,9 @@
 import {z} from 'zod'
 
-import {deviceLocales, prefersReducedMotion} from '#/platform/detection'
+import {deviceLanguageCodes, deviceLocales} from '#/locale/deviceLocales'
+import {findSupportedAppLanguage} from '#/locale/helpers'
+import {logger} from '#/logger'
+import {PlatformInfo} from '../../../modules/expo-bluesky-swiss-army'
 
 const externalEmbedOptions = ['show', 'hide'] as const
 
@@ -42,7 +45,7 @@ const currentAccountSchema = accountSchema.extend({
 })
 export type PersistedCurrentAccount = z.infer<typeof currentAccountSchema>
 
-export const schema = z.object({
+const schema = z.object({
   colorMode: z.enum(['system', 'light', 'dark']),
   darkTheme: z.enum(['dim', 'dark']).optional(),
   session: z.object({
@@ -53,10 +56,39 @@ export const schema = z.object({
     lastEmailConfirm: z.string().optional(),
   }),
   languagePrefs: z.object({
-    primaryLanguage: z.string(), // should move to server
-    contentLanguages: z.array(z.string()), // should move to server
-    postLanguage: z.string(), // should move to server
+    /**
+     * The target language for translating posts.
+     *
+     * BCP-47 2-letter language code without region.
+     */
+    primaryLanguage: z.string(),
+    /**
+     * The languages the user can read, passed to feeds.
+     *
+     * BCP-47 2-letter language codes without region.
+     */
+    contentLanguages: z.array(z.string()),
+    /**
+     * The language(s) the user is currently posting in, configured within the
+     * composer. Multiple languages are psearate by commas.
+     *
+     * BCP-47 2-letter language code without region.
+     */
+    postLanguage: z.string(),
+    /**
+     * The user's post language history, used to pre-populate the post language
+     * selector in the composer. Within each value, multiple languages are
+     * separated by values.
+     *
+     * BCP-47 2-letter language codes without region.
+     */
     postLanguageHistory: z.array(z.string()),
+    /**
+     * The language for UI translations in the app.
+     *
+     * BCP-47 2-letter language code with or without region,
+     * to match with {@link AppLanguage}.
+     */
     appLanguage: z.string(),
   }),
   requireAltTextEnabled: z.boolean(), // should move to server
@@ -89,6 +121,7 @@ export const schema = z.object({
   disableAutoplay: z.boolean().optional(),
   kawaii: z.boolean().optional(),
   hasCheckedForStarterPack: z.boolean().optional(),
+  subtitlesEnabled: z.boolean().optional(),
   /** @deprecated */
   mutedThreads: z.array(z.string()),
 })
@@ -105,13 +138,17 @@ export const defaults: Schema = {
     lastEmailConfirm: undefined,
   },
   languagePrefs: {
-    primaryLanguage: deviceLocales[0] || 'en',
-    contentLanguages: deviceLocales || [],
-    postLanguage: deviceLocales[0] || 'en',
-    postLanguageHistory: (deviceLocales || [])
+    primaryLanguage: deviceLanguageCodes[0] || 'en',
+    contentLanguages: deviceLanguageCodes || [],
+    postLanguage: deviceLanguageCodes[0] || 'en',
+    postLanguageHistory: (deviceLanguageCodes || [])
       .concat(['en', 'ja', 'pt', 'de'])
       .slice(0, 6),
-    appLanguage: deviceLocales[0] || 'en',
+    // try full language tag first, then fallback to language code
+    appLanguage: findSupportedAppLanguage([
+      deviceLocales.at(0)?.languageTag,
+      deviceLanguageCodes[0],
+    ]),
   },
   requireAltTextEnabled: false,
   largeAltBadgeEnabled: false,
@@ -128,7 +165,48 @@ export const defaults: Schema = {
   lastSelectedHomeFeed: undefined,
   pdsAddressHistory: [],
   disableHaptics: false,
-  disableAutoplay: prefersReducedMotion,
+  disableAutoplay: PlatformInfo.getIsReducedMotionEnabled(),
   kawaii: false,
   hasCheckedForStarterPack: false,
+  subtitlesEnabled: true,
+}
+
+export function tryParse(rawData: string): Schema | undefined {
+  let objData
+  try {
+    objData = JSON.parse(rawData)
+  } catch (e) {
+    logger.error('persisted state: failed to parse root state from storage', {
+      message: e,
+    })
+  }
+  if (!objData) {
+    return undefined
+  }
+  const parsed = schema.safeParse(objData)
+  if (parsed.success) {
+    return objData
+  } else {
+    const errors =
+      parsed.error?.errors?.map(e => ({
+        code: e.code,
+        // @ts-ignore exists on some types
+        expected: e?.expected,
+        path: e.path?.join('.'),
+      })) || []
+    logger.error(`persisted store: data failed validation on read`, {errors})
+    return undefined
+  }
+}
+
+export function tryStringify(value: Schema): string | undefined {
+  try {
+    schema.parse(value)
+    return JSON.stringify(value)
+  } catch (e) {
+    logger.error(`persisted state: failed stringifying root state`, {
+      message: e,
+    })
+    return undefined
+  }
 }

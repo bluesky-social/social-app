@@ -1,11 +1,12 @@
 import React from 'react'
 import {View} from 'react-native'
 import {AppBskyActorDefs} from '@atproto/api'
-import {Trans} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
+import {isInvalidHandle} from '#/lib/strings/handles'
+import {isIOS} from '#/platform/detection'
 import {Shadow} from '#/state/cache/types'
-import {isInvalidHandle} from 'lib/strings/handles'
-import {isIOS} from 'platform/detection'
 import {atoms as a, useTheme, web} from '#/alf'
 import {NewskieDialog} from '#/components/NewskieDialog'
 import {Text} from '#/components/Typography'
@@ -18,6 +19,7 @@ export function ProfileHeaderHandle({
   disableTaps?: boolean
 }) {
   const t = useTheme()
+  const {_} = useLingui()
   const invalidHandle = isInvalidHandle(profile.handle)
   const blockHide = profile.viewer?.blocking || profile.viewer?.blockedBy
   return (
@@ -33,6 +35,7 @@ export function ProfileHeaderHandle({
         </View>
       ) : undefined}
       <Text
+        emoji
         numberOfLines={1}
         style={[
           invalidHandle
@@ -47,7 +50,7 @@ export function ProfileHeaderHandle({
             : [a.text_md, a.leading_tight, t.atoms.text_contrast_medium],
           web({wordBreak: 'break-all'}),
         ]}>
-        {invalidHandle ? <Trans>⚠Invalid Handle</Trans> : `@${profile.handle}`}
+        {invalidHandle ? _(msg`⚠Invalid Handle`) : `@${profile.handle}`}
       </Text>
     </View>
   )

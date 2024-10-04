@@ -51,6 +51,7 @@ import {faChevronRight} from '@fortawesome/free-solid-svg-icons/faChevronRight'
 import {faCircleCheck} from '@fortawesome/free-solid-svg-icons/faCircleCheck'
 import {faCircleDot} from '@fortawesome/free-solid-svg-icons/faCircleDot'
 import {faCircleExclamation} from '@fortawesome/free-solid-svg-icons/faCircleExclamation'
+import {faClipboardCheck} from '@fortawesome/free-solid-svg-icons/faClipboardCheck'
 import {faClone} from '@fortawesome/free-solid-svg-icons/faClone'
 import {faCommentSlash} from '@fortawesome/free-solid-svg-icons/faCommentSlash'
 import {faDownload} from '@fortawesome/free-solid-svg-icons/faDownload'
@@ -76,6 +77,7 @@ import {faListUl} from '@fortawesome/free-solid-svg-icons/faListUl'
 import {faLock} from '@fortawesome/free-solid-svg-icons/faLock'
 import {faMagnifyingGlass} from '@fortawesome/free-solid-svg-icons/faMagnifyingGlass'
 import {faNoteSticky} from '@fortawesome/free-solid-svg-icons/faNoteSticky'
+import {faPaintRoller} from '@fortawesome/free-solid-svg-icons/faPaintRoller'
 import {faPause} from '@fortawesome/free-solid-svg-icons/faPause'
 import {faPen} from '@fortawesome/free-solid-svg-icons/faPen'
 import {faPenNib} from '@fortawesome/free-solid-svg-icons/faPenNib'
@@ -140,6 +142,7 @@ library.add(
   faCircleExclamation,
   faCirclePlay,
   faCircleUser,
+  faClipboardCheck,
   faClone,
   farClone,
   faComment,
@@ -176,6 +179,7 @@ library.add(
   faMagnifyingGlass,
   faMessage,
   faNoteSticky,
+  faPaintRoller,
   faPaste,
   faPause,
   faPen,

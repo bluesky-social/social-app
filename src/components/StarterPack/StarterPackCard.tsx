@@ -1,23 +1,26 @@
 import React from 'react'
 import {View} from 'react-native'
 import {Image} from 'expo-image'
-import {AppBskyGraphStarterpack, AtUri} from '@atproto/api'
-import {StarterPackViewBasic} from '@atproto/api/dist/client/types/app/bsky/graph/defs'
-import {msg, Trans} from '@lingui/macro'
+import {AppBskyGraphDefs, AppBskyGraphStarterpack, AtUri} from '@atproto/api'
+import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {sanitizeHandle} from 'lib/strings/handles'
-import {getStarterPackOgCard} from 'lib/strings/starter-pack'
-import {precacheResolvedUri} from 'state/queries/resolve-uri'
-import {precacheStarterPack} from 'state/queries/starter-packs'
-import {useSession} from 'state/session'
+import {sanitizeHandle} from '#/lib/strings/handles'
+import {getStarterPackOgCard} from '#/lib/strings/starter-pack'
+import {precacheResolvedUri} from '#/state/queries/resolve-uri'
+import {precacheStarterPack} from '#/state/queries/starter-packs'
+import {useSession} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
 import {StarterPack} from '#/components/icons/StarterPack'
 import {BaseLink} from '#/components/Link'
 import {Text} from '#/components/Typography'
 
-export function Default({starterPack}: {starterPack?: StarterPackViewBasic}) {
+export function Default({
+  starterPack,
+}: {
+  starterPack?: AppBskyGraphDefs.StarterPackViewBasic
+}) {
   if (!starterPack) return null
   return (
     <Link starterPack={starterPack}>
@@ -29,7 +32,7 @@ export function Default({starterPack}: {starterPack?: StarterPackViewBasic}) {
 export function Notification({
   starterPack,
 }: {
-  starterPack?: StarterPackViewBasic
+  starterPack?: AppBskyGraphDefs.StarterPackViewBasic
 }) {
   if (!starterPack) return null
   return (
@@ -44,7 +47,7 @@ export function Card({
   noIcon,
   noDescription,
 }: {
-  starterPack: StarterPackViewBasic
+  starterPack: AppBskyGraphDefs.StarterPackViewBasic
   noIcon?: boolean
   noDescription?: boolean
 }) {
@@ -63,21 +66,18 @@ export function Card({
       <View style={[a.flex_row, a.gap_sm]}>
         {!noIcon ? <StarterPack width={40} gradient="sky" /> : null}
         <View>
-          <Text style={[a.text_md, a.font_bold, a.leading_snug]}>
+          <Text emoji style={[a.text_md, a.font_bold, a.leading_snug]}>
             {record.name}
           </Text>
-          <Text style={[a.leading_snug, t.atoms.text_contrast_medium]}>
-            <Trans>
-              Starter pack by{' '}
-              {creator?.did === currentAccount?.did
-                ? _(msg`you`)
-                : `@${sanitizeHandle(creator.handle)}`}
-            </Trans>
+          <Text emoji style={[a.leading_snug, t.atoms.text_contrast_medium]}>
+            {creator?.did === currentAccount?.did
+              ? _(msg`Starter pack by you`)
+              : _(msg`Starter pack by ${sanitizeHandle(creator.handle, '@')}`)}
           </Text>
         </View>
       </View>
       {!noDescription && record.description ? (
-        <Text numberOfLines={3} style={[a.leading_snug]}>
+        <Text emoji numberOfLines={3} style={[a.leading_snug]}>
           {record.description}
         </Text>
       ) : null}
@@ -94,7 +94,7 @@ export function Link({
   starterPack,
   children,
 }: {
-  starterPack: StarterPackViewBasic
+  starterPack: AppBskyGraphDefs.StarterPackViewBasic
   onPress?: () => void
   children: React.ReactNode
 }) {
@@ -129,7 +129,11 @@ export function Link({
   )
 }
 
-export function Embed({starterPack}: {starterPack: StarterPackViewBasic}) {
+export function Embed({
+  starterPack,
+}: {
+  starterPack: AppBskyGraphDefs.StarterPackViewBasic
+}) {
   const t = useTheme()
   const imageUri = getStarterPackOgCard(starterPack)
 

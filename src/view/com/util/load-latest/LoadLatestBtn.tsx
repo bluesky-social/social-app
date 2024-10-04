@@ -13,7 +13,6 @@ import {clamp} from '#/lib/numbers'
 import {colors} from '#/lib/styles'
 import {isWeb} from '#/platform/detection'
 import {useSession} from '#/state/session'
-import hairlineWidth = StyleSheet.hairlineWidth
 
 const AnimatedTouchableOpacity =
   Animated.createAnimatedComponent(TouchableOpacity)
@@ -74,7 +73,7 @@ const styles = StyleSheet.create({
     // @ts-ignore 'fixed' is web only -prf
     position: isWeb ? 'fixed' : 'absolute',
     left: 18,
-    borderWidth: hairlineWidth,
+    borderWidth: StyleSheet.hairlineWidth,
     width: 52,
     height: 52,
     borderRadius: 26,

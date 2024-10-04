@@ -8,7 +8,6 @@ import {useQueryClient} from '@tanstack/react-query'
 import EventEmitter from 'eventemitter3'
 
 import BroadcastChannel from '#/lib/broadcast'
-import {useGate} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {useAgent, useSession} from '#/state/session'
 import {resetGenericBadgeCount} from 'lib/notifications/notifications'
@@ -48,7 +47,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const agent = useAgent()
   const queryClient = useQueryClient()
   const moderationOpts = useModerationOpts()
-  const gate = useGate()
 
   const [numUnread, setNumUnread] = React.useState('')
 
@@ -151,7 +149,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
             // only fetch subjects when the page is going to be used
             // in the notifications query, otherwise skip it
             fetchAdditionalData: !!invalidate,
-            shouldUngroupFollowBacks: () => gate('ungroup_follow_backs'),
           })
           const unreadCount = countUnread(page)
           const unreadCountStr =
@@ -192,7 +189,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         }
       },
     }
-  }, [setNumUnread, queryClient, moderationOpts, agent, gate])
+  }, [setNumUnread, queryClient, moderationOpts, agent])
   checkUnreadRef.current = api.checkUnread
 
   return (

@@ -8,18 +8,19 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {logger} from '#/logger'
-import {usePalette} from 'lib/hooks/usePalette'
+import {usePalette} from '#/lib/hooks/usePalette'
 import {
   useCameraPermission,
   usePhotoLibraryPermission,
-} from 'lib/hooks/usePermissions'
-import {makeProfileLink} from 'lib/routes/links'
-import {colors} from 'lib/styles'
-import {isAndroid, isNative, isWeb} from 'platform/detection'
-import {precacheProfile} from 'state/queries/profile'
-import {HighPriorityImage} from 'view/com/util/images/Image'
+} from '#/lib/hooks/usePermissions'
+import {makeProfileLink} from '#/lib/routes/links'
+import {colors} from '#/lib/styles'
+import {logger} from '#/logger'
+import {isAndroid, isNative, isWeb} from '#/platform/detection'
+import {precacheProfile} from '#/state/queries/profile'
+import {HighPriorityImage} from '#/view/com/util/images/Image'
 import {tokens, useTheme} from '#/alf'
+import {useSheetWrapper} from '#/components/Dialog/sheet-wrapper'
 import {
   Camera_Filled_Stroke2_Corner0_Rounded as CameraFilled,
   Camera_Stroke2_Corner0_Rounded as Camera,
@@ -27,6 +28,7 @@ import {
 import {StreamingLive_Stroke2_Corner0_Rounded as Library} from '#/components/icons/StreamingLive'
 import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
 import {Link} from '#/components/Link'
+import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import * as Menu from '#/components/Menu'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {openCamera, openCropper, openPicker} from '../../../lib/media/picker'
@@ -43,6 +45,7 @@ interface BaseUserAvatarProps {
 interface UserAvatarProps extends BaseUserAvatarProps {
   moderation?: ModerationUI
   usePlainRNImage?: boolean
+  onLoad?: () => void
 }
 
 interface EditableUserAvatarProps extends BaseUserAvatarProps {
@@ -54,7 +57,6 @@ interface PreviewableUserAvatarProps extends BaseUserAvatarProps {
   profile: AppBskyActorDefs.ProfileViewBasic
   disableHoverCard?: boolean
   onBeforePress?: () => void
-  accessible?: boolean
 }
 
 const BLUR_AMOUNT = isWeb ? 5 : 100
@@ -175,6 +177,7 @@ let UserAvatar = ({
   avatar,
   moderation,
   usePlainRNImage = false,
+  onLoad,
 }: UserAvatarProps): React.ReactNode => {
   const pal = usePalette('default')
   const backgroundColor = pal.colors.backgroundLight
@@ -221,18 +224,31 @@ let UserAvatar = ({
           testID="userAvatarImage"
           style={aviStyle}
           resizeMode="cover"
-          source={{uri: avatar}}
+          source={{
+            uri: hackModifyThumbnailPath(avatar, size < 90),
+          }}
           blurRadius={moderation?.blur ? BLUR_AMOUNT : 0}
+          onLoad={onLoad}
         />
       ) : (
         <HighPriorityImage
           testID="userAvatarImage"
           style={aviStyle}
           contentFit="cover"
-          source={{uri: avatar}}
+          source={{
+            uri: hackModifyThumbnailPath(avatar, size < 90),
+          }}
           blurRadius={moderation?.blur ? BLUR_AMOUNT : 0}
+          onLoad={onLoad}
         />
       )}
+      <MediaInsetBorder
+        style={[
+          {
+            borderRadius: aviStyle.borderRadius,
+          },
+        ]}
+      />
       {alert}
     </View>
   ) : (
@@ -256,6 +272,7 @@ let EditableUserAvatar = ({
   const {_} = useLingui()
   const {requestCameraAccessIfNeeded} = useCameraPermission()
   const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
+  const sheetWrapper = useSheetWrapper()
 
   const aviStyle = useMemo(() => {
     if (type === 'algo' || type === 'list') {
@@ -291,9 +308,11 @@ let EditableUserAvatar = ({
       return
     }
 
-    const items = await openPicker({
-      aspect: [1, 1],
-    })
+    const items = await sheetWrapper(
+      openPicker({
+        aspect: [1, 1],
+      }),
+    )
     const item = items[0]
     if (!item) {
       return
@@ -306,15 +325,18 @@ let EditableUserAvatar = ({
         height: 1000,
         width: 1000,
         path: item.path,
+        webAspectRatio: 1,
+        webCircularCrop: true,
       })
 
       onSelectNewAvatar(croppedImage)
     } catch (e: any) {
-      if (!String(e).includes('Canceled')) {
+      // Don't log errors for cancelling selection to sentry on ios or android
+      if (!String(e).toLowerCase().includes('cancel')) {
         logger.error('Failed to crop banner', {error: e})
       }
     }
-  }, [onSelectNewAvatar, requestPhotoAccessIfNeeded])
+  }, [onSelectNewAvatar, requestPhotoAccessIfNeeded, sheetWrapper])
 
   const onRemoveAvatar = React.useCallback(() => {
     onSelectNewAvatar(null)
@@ -400,7 +422,6 @@ let PreviewableUserAvatar = ({
   profile,
   disableHoverCard,
   onBeforePress,
-  accessible = true,
   ...rest
 }: PreviewableUserAvatarProps): React.ReactNode => {
   const {_} = useLingui()
@@ -414,12 +435,8 @@ let PreviewableUserAvatar = ({
   return (
     <ProfileHoverCard did={profile.did} disable={disableHoverCard}>
       <Link
-        label={
-          accessible
-            ? _(msg`${profile.displayName || profile.handle}'s avatar`)
-            : undefined
-        }
-        accessibilityHint={accessible ? _(msg`Opens this profile`) : undefined}
+        label={_(msg`${profile.displayName || profile.handle}'s avatar`)}
+        accessibilityHint={_(msg`Opens this profile`)}
         to={makeProfileLink({
           did: profile.did,
           handle: profile.handle,
@@ -432,6 +449,16 @@ let PreviewableUserAvatar = ({
 }
 PreviewableUserAvatar = memo(PreviewableUserAvatar)
 export {PreviewableUserAvatar}
+
+// HACK
+// We have started serving smaller avis but haven't updated lexicons to give the data properly
+// manually string-replace to use the smaller ones
+// -prf
+function hackModifyThumbnailPath(uri: string, isEnabled: boolean): string {
+  return isEnabled
+    ? uri.replace('/img/avatar/plain/', '/img/avatar_thumbnail/plain/')
+    : uri
+}
 
 const styles = StyleSheet.create({
   editButtonContainer: {

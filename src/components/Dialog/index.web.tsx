@@ -27,6 +27,7 @@ import {Portal} from '#/components/Portal'
 
 export {useDialogContext, useDialogControl} from '#/components/Dialog/context'
 export * from '#/components/Dialog/types'
+export * from '#/components/Dialog/utils'
 export {Input} from '#/components/forms/TextField'
 
 const stopPropagation = (e: any) => e.stopPropagation()
@@ -102,6 +103,10 @@ export function Outer({
   const context = React.useMemo(
     () => ({
       close,
+      isNativeDialog: false,
+      nativeSnapPoint: 0,
+      disableDrag: false,
+      setDisableDrag: () => {},
     }),
     [close],
   )
@@ -228,10 +233,6 @@ export const InnerFlatList = React.forwardRef<
   )
 })
 
-export function Handle() {
-  return null
-}
-
 export function Close() {
   const {_} = useLingui()
   const {close} = React.useContext(Context)
@@ -256,4 +257,8 @@ export function Close() {
       </Button>
     </View>
   )
+}
+
+export function Handle() {
+  return null
 }

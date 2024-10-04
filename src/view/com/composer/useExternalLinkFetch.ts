@@ -1,20 +1,19 @@
 import {useEffect, useState} from 'react'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
-import {logger} from '#/logger'
-import {useFetchDid} from '#/state/queries/handle'
-import {useGetPost} from '#/state/queries/post'
-import {useAgent} from '#/state/session'
-import * as apilib from 'lib/api/index'
-import {POST_IMG_MAX} from 'lib/constants'
+import * as apilib from '#/lib/api/index'
+import {POST_IMG_MAX} from '#/lib/constants'
 import {
+  EmbeddingDisabledError,
   getFeedAsEmbed,
   getListAsEmbed,
   getPostAsQuote,
   getStarterPackAsEmbed,
-} from 'lib/link-meta/bsky'
-import {getLinkMeta} from 'lib/link-meta/link-meta'
-import {resolveShortLink} from 'lib/link-meta/resolve-short-link'
-import {downloadAndResize} from 'lib/media/manip'
+} from '#/lib/link-meta/bsky'
+import {getLinkMeta} from '#/lib/link-meta/link-meta'
+import {resolveShortLink} from '#/lib/link-meta/resolve-short-link'
+import {downloadAndResize} from '#/lib/media/manip'
 import {
   isBskyCustomFeedUrl,
   isBskyListUrl,
@@ -22,15 +21,22 @@ import {
   isBskyStarterPackUrl,
   isBskyStartUrl,
   isShortLink,
-} from 'lib/strings/url-helpers'
-import {ImageModel} from 'state/models/media/image'
-import {ComposerOpts} from 'state/shell/composer'
+} from '#/lib/strings/url-helpers'
+import {logger} from '#/logger'
+import {createComposerImage} from '#/state/gallery'
+import {useFetchDid} from '#/state/queries/handle'
+import {useGetPost} from '#/state/queries/post'
+import {useAgent} from '#/state/session'
+import {ComposerOpts} from '#/state/shell/composer'
 
 export function useExternalLinkFetch({
   setQuote,
+  setError,
 }: {
   setQuote: (opts: ComposerOpts['quote']) => void
+  setError: (err: string) => void
 }) {
+  const {_} = useLingui()
   const [extLink, setExtLink] = useState<apilib.ExternalEmbedDraft | undefined>(
     undefined,
   )
@@ -57,9 +63,13 @@ export function useExternalLinkFetch({
             setExtLink(undefined)
           },
           err => {
-            logger.error('Failed to fetch post for quote embedding', {
-              message: err.toString(),
-            })
+            if (err instanceof EmbeddingDisabledError) {
+              setError(_(msg`This post's author has disabled quote posts.`))
+            } else {
+              logger.error('Failed to fetch post for quote embedding', {
+                message: err.toString(),
+              })
+            }
             setExtLink(undefined)
           },
         )
@@ -151,14 +161,15 @@ export function useExternalLinkFetch({
         timeout: 15e3,
       })
         .catch(() => undefined)
-        .then(localThumb => {
+        .then(thumb => (thumb ? createComposerImage(thumb) : undefined))
+        .then(thumb => {
           if (aborted) {
             return
           }
           setExtLink({
             ...extLink,
             isLoading: false, // done
-            localThumb: localThumb ? new ImageModel(localThumb) : undefined,
+            localThumb: thumb,
           })
         })
       return cleanup
@@ -170,7 +181,7 @@ export function useExternalLinkFetch({
       })
     }
     return cleanup
-  }, [extLink, setQuote, getPost, fetchDid, agent])
+  }, [_, extLink, setQuote, getPost, fetchDid, agent, setError])
 
   return {extLink, setExtLink}
 }

@@ -4,7 +4,6 @@ import {
   FlatList as RNFlatList,
   RefreshControl,
   StyleProp,
-  StyleSheet,
   View,
   ViewStyle,
 } from 'react-native'
@@ -12,16 +11,18 @@ import {AppBskyGraphDefs as GraphDefs} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {usePalette} from '#/lib/hooks/usePalette'
 import {cleanError} from '#/lib/strings/errors'
+import {s} from '#/lib/styles'
 import {logger} from '#/logger'
+import {isWeb} from '#/platform/detection'
+import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {MyListsFilter, useMyListsQuery} from '#/state/queries/my-lists'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {usePalette} from 'lib/hooks/usePalette'
-import {s} from 'lib/styles'
-import {EmptyState} from 'view/com/util/EmptyState'
+import {EmptyState} from '#/view/com/util/EmptyState'
+import {atoms as a, useTheme} from '#/alf'
+import * as ListCard from '#/components/ListCard'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {List} from '../util/List'
-import {ListCard} from './ListCard'
 
 const LOADING = {_reactKey: '__loading__'}
 const EMPTY = {_reactKey: '__empty__'}
@@ -41,8 +42,9 @@ export function MyLists({
   testID?: string
 }) {
   const pal = usePalette('default')
-  const {track} = useAnalytics()
+  const t = useTheme()
   const {_} = useLingui()
+  const moderationOpts = useModerationOpts()
   const [isPTRing, setIsPTRing] = React.useState(false)
   const {data, isFetching, isFetched, isError, error, refetch} =
     useMyListsQuery(filter)
@@ -53,7 +55,7 @@ export function MyLists({
     if (isError && isEmpty) {
       items = items.concat([ERROR_ITEM])
     }
-    if (!isFetched && isFetching) {
+    if ((!isFetched && isFetching) || !moderationOpts) {
       items = items.concat([LOADING])
     } else if (isEmpty) {
       items = items.concat([EMPTY])
@@ -61,13 +63,12 @@ export function MyLists({
       items = items.concat(data)
     }
     return items
-  }, [isError, isEmpty, isFetched, isFetching, data])
+  }, [isError, isEmpty, isFetched, isFetching, moderationOpts, data])
 
   // events
   // =
 
   const onRefresh = React.useCallback(async () => {
-    track('Lists:onRefresh')
     setIsPTRing(true)
     try {
       await refetch()
@@ -75,7 +76,7 @@ export function MyLists({
       logger.error('Failed to refresh lists', {message: err})
     }
     setIsPTRing(false)
-  }, [refetch, track, setIsPTRing])
+  }, [refetch, setIsPTRing])
 
   // rendering
   // =
@@ -85,7 +86,6 @@ export function MyLists({
       if (item === EMPTY) {
         return (
           <EmptyState
-            key={item._reactKey}
             icon="list-ul"
             message={_(msg`You have no lists.`)}
             testID="listsEmpty"
@@ -94,14 +94,13 @@ export function MyLists({
       } else if (item === ERROR_ITEM) {
         return (
           <ErrorMessage
-            key={item._reactKey}
             message={cleanError(error)}
             onPressTryAgain={onRefresh}
           />
         )
       } else if (item === LOADING) {
         return (
-          <View key={item._reactKey} style={{padding: 20}}>
+          <View style={{padding: 20}}>
             <ActivityIndicator />
           </View>
         )
@@ -109,15 +108,18 @@ export function MyLists({
       return renderItem ? (
         renderItem(item, index)
       ) : (
-        <ListCard
-          key={item.uri}
-          list={item}
-          testID={`list-${item.name}`}
-          style={styles.item}
-        />
+        <View
+          style={[
+            (index !== 0 || isWeb) && a.border_t,
+            t.atoms.border_contrast_low,
+            a.px_lg,
+            a.py_lg,
+          ]}>
+          <ListCard.Default view={item} />
+        </View>
       )
     },
-    [error, onRefresh, renderItem, _],
+    [renderItem, t.atoms.border_contrast_low, _, error, onRefresh],
   )
 
   if (inline) {
@@ -166,10 +168,3 @@ export function MyLists({
     )
   }
 }
-
-const styles = StyleSheet.create({
-  item: {
-    paddingHorizontal: 18,
-    paddingVertical: 4,
-  },
-})

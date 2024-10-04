@@ -10,11 +10,11 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {useModerationCauseDescription} from '#/lib/moderation/useModerationCauseDescription'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {NavigationProp} from 'lib/routes/types'
+import {NavigationProp} from '#/lib/routes/types'
 import {CenteredView} from '#/view/com/util/Views'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, useTheme, web} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {
   ModerationDetailsDialog,
@@ -86,13 +86,7 @@ export function ScreenHider({
         </View>
       </View>
       <Text
-        style={[
-          a.text_4xl,
-          a.font_semibold,
-          a.text_center,
-          a.mb_md,
-          t.atoms.text,
-        ]}>
+        style={[a.text_4xl, a.font_bold, a.text_center, a.mb_md, t.atoms.text]}>
         {isNoPwi ? (
           <Trans>Sign-in Required</Trans>
         ) : (
@@ -105,6 +99,7 @@ export function ScreenHider({
           a.mb_md,
           a.px_lg,
           a.text_center,
+          a.leading_snug,
           t.atoms.text_contrast_medium,
         ]}>
         {isNoPwi ? (
@@ -113,8 +108,15 @@ export function ScreenHider({
           </Trans>
         ) : (
           <>
-            <Trans>This {screenDescription} has been flagged:</Trans>
-            <Text style={[a.text_lg, a.font_semibold, t.atoms.text, a.ml_xs]}>
+            <Trans>This {screenDescription} has been flagged:</Trans>{' '}
+            <Text
+              style={[
+                a.text_lg,
+                a.font_bold,
+                a.leading_snug,
+                t.atoms.text,
+                a.ml_xs,
+              ]}>
               {desc.name}.{' '}
             </Text>
             <TouchableWithoutFeedback
@@ -127,16 +129,17 @@ export function ScreenHider({
               <Text
                 style={[
                   a.text_lg,
+                  a.leading_snug,
                   {
                     color: t.palette.primary_500,
-                    // @ts-ignore web only -prf
-                    cursor: 'pointer',
                   },
+                  web({
+                    cursor: 'pointer',
+                  }),
                 ]}>
                 <Trans>Learn More</Trans>
               </Text>
             </TouchableWithoutFeedback>
-
             <ModerationDetailsDialog control={control} modcause={blur} />
           </>
         )}{' '}

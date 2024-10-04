@@ -16,7 +16,7 @@
  * 3. Don't call this query's `refetch()` if you're trying to sync latest; call `checkUnread()` instead.
  */
 
-import {useEffect, useRef} from 'react'
+import {useCallback, useEffect, useMemo, useRef} from 'react'
 import {AppBskyActorDefs, AppBskyFeedDefs, AtUri} from '@atproto/api'
 import {
   InfiniteData,
@@ -26,8 +26,8 @@ import {
   useQueryClient,
 } from '@tanstack/react-query'
 
-import {useGate} from '#/lib/statsig/statsig'
 import {useAgent} from '#/state/session'
+import {useThreadgateHiddenReplyUris} from '#/state/threadgate-hidden-replies'
 import {useModerationOpts} from '../../preferences/moderation-opts'
 import {STALE} from '..'
 import {
@@ -46,18 +46,30 @@ const PAGE_SIZE = 30
 type RQPageParam = string | undefined
 
 const RQKEY_ROOT = 'notification-feed'
-export function RQKEY() {
-  return [RQKEY_ROOT]
+export function RQKEY(priority?: false) {
+  return [RQKEY_ROOT, priority]
 }
 
-export function useNotificationFeedQuery(opts?: {enabled?: boolean}) {
+export function useNotificationFeedQuery(opts?: {
+  enabled?: boolean
+  overridePriorityNotifications?: boolean
+}) {
   const agent = useAgent()
   const queryClient = useQueryClient()
   const moderationOpts = useModerationOpts()
   const unreads = useUnreadNotificationsApi()
   const enabled = opts?.enabled !== false
-  const lastPageCountRef = useRef(0)
-  const gate = useGate()
+  const {uris: hiddenReplyUris} = useThreadgateHiddenReplyUris()
+
+  // false: force showing all notifications
+  // undefined: let the server decide
+  const priority = opts?.overridePriorityNotifications ? false : undefined
+
+  const selectArgs = useMemo(() => {
+    return {
+      hiddenReplyUris,
+    }
+  }, [hiddenReplyUris])
 
   const query = useInfiniteQuery<
     FeedPage,
@@ -67,7 +79,7 @@ export function useNotificationFeedQuery(opts?: {enabled?: boolean}) {
     RQPageParam
   >({
     staleTime: STALE.INFINITY,
-    queryKey: RQKEY(),
+    queryKey: RQKEY(priority),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
       let page
       if (!pageParam) {
@@ -75,17 +87,16 @@ export function useNotificationFeedQuery(opts?: {enabled?: boolean}) {
         page = unreads.getCachedUnreadPage()
       }
       if (!page) {
-        page = (
-          await fetchPage({
-            agent,
-            limit: PAGE_SIZE,
-            cursor: pageParam,
-            queryClient,
-            moderationOpts,
-            fetchAdditionalData: true,
-            shouldUngroupFollowBacks: () => gate('ungroup_follow_backs'),
-          })
-        ).page
+        const {page: fetchedPage} = await fetchPage({
+          agent,
+          limit: PAGE_SIZE,
+          cursor: pageParam,
+          queryClient,
+          moderationOpts,
+          fetchAdditionalData: true,
+          priority,
+        })
+        page = fetchedPage
       }
 
       // if the first page has an unread, mark all read
@@ -98,44 +109,89 @@ export function useNotificationFeedQuery(opts?: {enabled?: boolean}) {
     initialPageParam: undefined,
     getNextPageParam: lastPage => lastPage.cursor,
     enabled,
-    select(data: InfiniteData<FeedPage>) {
-      // override 'isRead' using the first page's returned seenAt
-      // we do this because the `markAllRead()` call above will
-      // mark subsequent pages as read prematurely
-      const seenAt = data.pages[0]?.seenAt || new Date()
-      for (const page of data.pages) {
-        for (const item of page.items) {
-          item.notification.isRead =
-            seenAt > new Date(item.notification.indexedAt)
-        }
-      }
+    select: useCallback(
+      (data: InfiniteData<FeedPage>) => {
+        const {hiddenReplyUris} = selectArgs
 
-      return data
-    },
+        // override 'isRead' using the first page's returned seenAt
+        // we do this because the `markAllRead()` call above will
+        // mark subsequent pages as read prematurely
+        const seenAt = data.pages[0]?.seenAt || new Date()
+        for (const page of data.pages) {
+          for (const item of page.items) {
+            item.notification.isRead =
+              seenAt > new Date(item.notification.indexedAt)
+          }
+        }
+
+        data = {
+          ...data,
+          pages: data.pages.map(page => {
+            return {
+              ...page,
+              items: page.items.filter(item => {
+                const isHiddenReply =
+                  item.type === 'reply' &&
+                  item.subjectUri &&
+                  hiddenReplyUris.has(item.subjectUri)
+                return !isHiddenReply
+              }),
+            }
+          }),
+        }
+
+        return data
+      },
+      [selectArgs],
+    ),
   })
 
+  // The server may end up returning an empty page, a page with too few items,
+  // or a page with items that end up getting filtered out. When we fetch pages,
+  // we'll keep track of how many items we actually hope to see. If the server
+  // doesn't return enough items, we're going to continue asking for more items.
+  const lastItemCount = useRef(0)
+  const wantedItemCount = useRef(0)
+  const autoPaginationAttemptCount = useRef(0)
   useEffect(() => {
-    const {isFetching, hasNextPage, data} = query
-    if (isFetching || !hasNextPage) {
-      return
-    }
-
-    // avoid double-fires of fetchNextPage()
-    if (
-      lastPageCountRef.current !== 0 &&
-      lastPageCountRef.current === data?.pages?.length
-    ) {
-      return
-    }
-
-    // fetch next page if we haven't gotten a full page of content
-    let count = 0
+    const {data, isLoading, isRefetching, isFetchingNextPage, hasNextPage} =
+      query
+    // Count the items that we already have.
+    let itemCount = 0
     for (const page of data?.pages || []) {
-      count += page.items.length
+      itemCount += page.items.length
     }
-    if (count < PAGE_SIZE && (data?.pages.length || 0) < 6) {
-      query.fetchNextPage()
-      lastPageCountRef.current = data?.pages?.length || 0
+
+    // If items got truncated, reset the state we're tracking below.
+    if (itemCount !== lastItemCount.current) {
+      if (itemCount < lastItemCount.current) {
+        wantedItemCount.current = itemCount
+      }
+      lastItemCount.current = itemCount
+    }
+
+    // Now track how many items we really want, and fetch more if needed.
+    if (isLoading || isRefetching) {
+      // During the initial fetch, we want to get an entire page's worth of items.
+      wantedItemCount.current = PAGE_SIZE
+    } else if (isFetchingNextPage) {
+      if (itemCount > wantedItemCount.current) {
+        // We have more items than wantedItemCount, so wantedItemCount must be out of date.
+        // Some other code must have called fetchNextPage(), for example, from onEndReached.
+        // Adjust the wantedItemCount to reflect that we want one more full page of items.
+        wantedItemCount.current = itemCount + PAGE_SIZE
+      }
+    } else if (hasNextPage) {
+      // At this point we're not fetching anymore, so it's time to make a decision.
+      // If we didn't receive enough items from the server, paginate again until we do.
+      if (itemCount < wantedItemCount.current) {
+        autoPaginationAttemptCount.current++
+        if (autoPaginationAttemptCount.current < 50 /* failsafe */) {
+          query.fetchNextPage()
+        }
+      } else {
+        autoPaginationAttemptCount.current = 0
+      }
     }
   }, [query])
 

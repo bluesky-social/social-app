@@ -1,7 +1,7 @@
 import {Dimensions} from 'react-native'
 
-import {isSafari} from 'lib/browser'
-import {isWeb} from 'platform/detection'
+import {isSafari} from '#/lib/browser'
+import {isWeb} from '#/platform/detection'
 
 const {height: SCREEN_HEIGHT} = Dimensions.get('window')
 
@@ -103,16 +103,21 @@ export function parseEmbedPlayerFromUrl(
     urlp.hostname === 'm.youtube.com' ||
     urlp.hostname === 'music.youtube.com'
   ) {
-    const [_, page, shortVideoId] = urlp.pathname.split('/')
+    const [_, page, shortOrLiveVideoId] = urlp.pathname.split('/')
+
+    const isShorts = page === 'shorts'
+    const isLive = page === 'live'
     const videoId =
-      page === 'shorts' ? shortVideoId : (urlp.searchParams.get('v') as string)
+      isShorts || isLive
+        ? shortOrLiveVideoId
+        : (urlp.searchParams.get('v') as string)
     const seek = encodeURIComponent(urlp.searchParams.get('t') ?? 0)
 
     if (videoId) {
       return {
-        type: page === 'shorts' ? 'youtube_short' : 'youtube_video',
-        source: page === 'shorts' ? 'youtubeShorts' : 'youtube',
-        hideDetails: page === 'shorts' ? true : undefined,
+        type: isShorts ? 'youtube_short' : 'youtube_video',
+        source: isShorts ? 'youtubeShorts' : 'youtube',
+        hideDetails: isShorts ? true : undefined,
         playerUri: `${IFRAME_HOST}/iframe/youtube.html?videoId=${videoId}&start=${seek}`,
       }
     }
@@ -178,6 +183,20 @@ export function parseEmbedPlayerFromUrl(
           type: 'spotify_song',
           source: 'spotify',
           playerUri: `https://open.spotify.com/embed/track/${id ?? idOrType}`,
+        }
+      }
+      if (typeOrLocale === 'episode' || idOrType === 'episode') {
+        return {
+          type: 'spotify_song',
+          source: 'spotify',
+          playerUri: `https://open.spotify.com/embed/episode/${id ?? idOrType}`,
+        }
+      }
+      if (typeOrLocale === 'show' || idOrType === 'show') {
+        return {
+          type: 'spotify_song',
+          source: 'spotify',
+          playerUri: `https://open.spotify.com/embed/show/${id ?? idOrType}`,
         }
       }
     }

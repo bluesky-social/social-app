@@ -4,7 +4,7 @@ import {useAnimatedRef} from 'react-native-reanimated'
 
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {Pager, PagerRef, RenderTabBarFnProps} from 'view/com/pager/Pager'
+import {Pager, PagerRef, RenderTabBarFnProps} from '#/view/com/pager/Pager'
 import {ListMethods} from '../util/List'
 import {TabBar} from './TabBar'
 
@@ -193,13 +193,11 @@ const styles = StyleSheet.create({
   tabBarContainer: {
     // @ts-ignore web-only
     position: 'sticky',
-    overflow: 'hidden',
     top: 0,
     zIndex: 1,
   },
   tabBarContainerDesktop: {
     marginHorizontal: 'auto',
-    paddingHorizontal: 2,
     width: 600,
     borderLeftWidth: 1,
     borderRightWidth: 1,

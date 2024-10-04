@@ -20,11 +20,19 @@ export function cleanError(str: any): string {
   return str
 }
 
+const NETWORK_ERRORS = [
+  'Abort',
+  'Network request failed',
+  'Failed to fetch',
+  'Load failed',
+]
+
 export function isNetworkError(e: unknown) {
   const str = String(e)
-  return (
-    str.includes('Abort') ||
-    str.includes('Network request failed') ||
-    str.includes('Failed to fetch')
-  )
+  for (const err of NETWORK_ERRORS) {
+    if (str.includes(err)) {
+      return true
+    }
+  }
+  return false
 }

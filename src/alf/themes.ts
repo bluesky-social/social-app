@@ -183,22 +183,22 @@ export function createThemes({
   } as const
 
   const darkPalette: Palette = {
-    white: color.gray_0,
+    white: color.gray_25,
     black: color.trueBlack,
 
-    contrast_25: color.gray_1000,
-    contrast_50: color.gray_975,
-    contrast_100: color.gray_950,
-    contrast_200: color.gray_900,
-    contrast_300: color.gray_800,
-    contrast_400: color.gray_700,
-    contrast_500: color.gray_600,
-    contrast_600: color.gray_500,
-    contrast_700: color.gray_400,
-    contrast_800: color.gray_300,
-    contrast_900: color.gray_200,
-    contrast_950: color.gray_100,
-    contrast_975: color.gray_50,
+    contrast_25: color.gray_975,
+    contrast_50: color.gray_950,
+    contrast_100: color.gray_900,
+    contrast_200: color.gray_800,
+    contrast_300: color.gray_700,
+    contrast_400: color.gray_600,
+    contrast_500: color.gray_500,
+    contrast_600: color.gray_400,
+    contrast_700: color.gray_300,
+    contrast_800: color.gray_200,
+    contrast_900: color.gray_100,
+    contrast_950: color.gray_50,
+    contrast_975: color.gray_25,
 
     primary_25: color.primary_975,
     primary_50: color.primary_950,
@@ -305,6 +305,7 @@ export function createThemes({
   } as const
 
   const light: Theme = {
+    scheme: 'light',
     name: 'light',
     palette: lightPalette,
     atoms: {
@@ -390,6 +391,7 @@ export function createThemes({
   }
 
   const dark: Theme = {
+    scheme: 'dark',
     name: 'dark',
     palette: darkPalette,
     atoms: {
@@ -400,7 +402,7 @@ export function createThemes({
         color: darkPalette.contrast_400,
       },
       text_contrast_medium: {
-        color: darkPalette.contrast_700,
+        color: darkPalette.contrast_600,
       },
       text_contrast_high: {
         color: darkPalette.contrast_900,
@@ -479,6 +481,7 @@ export function createThemes({
 
   const dim: Theme = {
     ...dark,
+    scheme: 'dark',
     name: 'dim',
     palette: dimPalette,
     atoms: {

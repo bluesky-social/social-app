@@ -5,18 +5,17 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Trans} from '@lingui/macro'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 
+import {usePalette} from '#/lib/hooks/usePalette'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
+import {NavigationProp} from '#/lib/routes/types'
+import {s} from '#/lib/styles'
 import {useModalControls} from '#/state/modals'
 import {useSetMinimalShellMode} from '#/state/shell'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
-import {NavigationProp} from 'lib/routes/types'
-import {s} from 'lib/styles'
 import {MyLists} from '#/view/com/lists/MyLists'
-import {Button} from 'view/com/util/forms/Button'
-import {SimpleViewHeader} from 'view/com/util/SimpleViewHeader'
-import {Text} from 'view/com/util/text/Text'
-import hairlineWidth = StyleSheet.hairlineWidth
+import {Button} from '#/view/com/util/forms/Button'
+import {SimpleViewHeader} from '#/view/com/util/SimpleViewHeader'
+import {Text} from '#/view/com/util/text/Text'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Lists'>
 export function ListsScreen({}: Props) {
@@ -55,11 +54,14 @@ export function ListsScreen({}: Props) {
         style={[
           pal.border,
           isMobile
-            ? {borderBottomWidth: hairlineWidth}
-            : {borderLeftWidth: hairlineWidth, borderRightWidth: hairlineWidth},
+            ? {borderBottomWidth: StyleSheet.hairlineWidth}
+            : {
+                borderLeftWidth: StyleSheet.hairlineWidth,
+                borderRightWidth: StyleSheet.hairlineWidth,
+              },
         ]}>
         <View style={{flex: 1}}>
-          <Text type="title-lg" style={[pal.text, {fontWeight: 'bold'}]}>
+          <Text type="title-lg" style={[pal.text, {fontWeight: '600'}]}>
             <Trans>User Lists</Trans>
           </Text>
           <Text style={pal.textLight}>

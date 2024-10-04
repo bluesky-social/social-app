@@ -74,8 +74,7 @@ appId: xyz.blueskyweb.app
 - tapOn: "Delete List"
 - tapOn:
     id: "confirmBtn"
-- assertVisible:
-    id: "listsEmpty"
+- assertVisible: "This list is empty!"
 
 - tapOn:
     label: "Create a new curatelist"
@@ -132,7 +131,8 @@ appId: xyz.blueskyweb.app
     id: "feedItem-by-bob.test"
 - tapOn:
     id: "e2eGotoFeeds"
-- tapOn: "Good Ppl"
+- tapOn:
+    id: "saved-feed-Good Ppl"
 - assertVisible:
     id: "feedItem-by-bob.test"
 - tapOn:
@@ -159,17 +159,6 @@ appId: xyz.blueskyweb.app
     id: "doneBtn"
 - assertNotVisible:
     id: "userAddRemoveListsModal"
-
-- tapOn:
-    label: "Shows the curatelist on my profile"
-    id: "bottomBarProfileBtn"
-- swipe:
-    from:
-        id: "profilePager-selector"
-    direction: LEFT
-- tapOn:
-    id: "profilePager-selector-5"
-- tapOn: "Good Ppl"
 
 - tapOn:
     label: "Adds and removes users on curatelists from the profile"

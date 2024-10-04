@@ -1,5 +1,6 @@
-import React, {memo} from 'react'
+import React, {memo, useCallback} from 'react'
 import {
+  Platform,
   Pressable,
   type PressableProps,
   type StyleProp,
@@ -9,6 +10,7 @@ import * as Clipboard from 'expo-clipboard'
 import {
   AppBskyFeedDefs,
   AppBskyFeedPost,
+  AppBskyFeedThreadgate,
   AtUri,
   RichText as RichTextAPI,
 } from '@atproto/api'
@@ -16,9 +18,14 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
+import {getCurrentRoute} from '#/lib/routes/helpers'
 import {makeProfileLink} from '#/lib/routes/links'
 import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
+import {shareUrl} from '#/lib/sharing'
+import {logEvent} from '#/lib/statsig/statsig'
 import {richTextToString} from '#/lib/strings/rich-text-helpers'
+import {toShareUrl} from '#/lib/strings/url-helpers'
+import {useTheme} from '#/lib/ThemeContext'
 import {getTranslatorLink} from '#/locale/helpers'
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
@@ -27,19 +34,24 @@ import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {useLanguagePrefs} from '#/state/preferences'
 import {useHiddenPosts, useHiddenPostsApi} from '#/state/preferences'
 import {useOpenLink} from '#/state/preferences/in-app-browser'
+import {usePinnedPostMutation} from '#/state/queries/pinned-post'
 import {
   usePostDeleteMutation,
   useThreadMuteMutationQueue,
 } from '#/state/queries/post'
+import {useToggleQuoteDetachmentMutation} from '#/state/queries/postgate'
+import {getMaybeDetachedQuoteEmbed} from '#/state/queries/postgate/util'
+import {useToggleReplyVisibilityMutation} from '#/state/queries/threadgate'
 import {useSession} from '#/state/session'
-import {getCurrentRoute} from 'lib/routes/helpers'
-import {shareUrl} from 'lib/sharing'
-import {toShareUrl} from 'lib/strings/url-helpers'
-import {useTheme} from 'lib/ThemeContext'
+import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
 import {atoms as a, useBreakpoints, useTheme as useAlf} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 import {EmbedDialog} from '#/components/dialogs/Embed'
+import {
+  PostInteractionSettingsDialog,
+  usePrefetchPostInteractionSettings,
+} from '#/components/dialogs/PostInteractionSettingsDialog'
 import {SendViaChatDialog} from '#/components/dms/dialogs/ShareViaChatDialog'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded as Share} from '#/components/icons/ArrowOutOfBox'
 import {BubbleQuestion_Stroke2_Corner0_Rounded as Translate} from '#/components/icons/Bubble'
@@ -50,13 +62,17 @@ import {
   EmojiSad_Stroke2_Corner0_Rounded as EmojiSad,
   EmojiSmile_Stroke2_Corner0_Rounded as EmojiSmile,
 } from '#/components/icons/Emoji'
+import {Eye_Stroke2_Corner0_Rounded as Eye} from '#/components/icons/Eye'
 import {EyeSlash_Stroke2_Corner0_Rounded as EyeSlash} from '#/components/icons/EyeSlash'
 import {Filter_Stroke2_Corner0_Rounded as Filter} from '#/components/icons/Filter'
 import {Mute_Stroke2_Corner0_Rounded as Mute} from '#/components/icons/Mute'
 import {PaperPlane_Stroke2_Corner0_Rounded as Send} from '#/components/icons/PaperPlane'
+import {Pin_Stroke2_Corner0_Rounded as PinIcon} from '#/components/icons/Pin'
+import {SettingsGear2_Stroke2_Corner0_Rounded as Gear} from '#/components/icons/SettingsGear2'
 import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as Unmute} from '#/components/icons/Speaker'
 import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
 import {Warning_Stroke2_Corner0_Rounded as Warning} from '#/components/icons/Warning'
+import {Loader} from '#/components/Loader'
 import * as Menu from '#/components/Menu'
 import * as Prompt from '#/components/Prompt'
 import {ReportDialog, useReportDialogControl} from '#/components/ReportDialog'
@@ -73,6 +89,7 @@ let PostDropdownBtn = ({
   hitSlop,
   size,
   timestamp,
+  threadgateRecord,
 }: {
   testID: string
   post: Shadow<AppBskyFeedDefs.PostView>
@@ -83,6 +100,7 @@ let PostDropdownBtn = ({
   hitSlop?: PressableProps['hitSlop']
   size?: 'lg' | 'md' | 'sm'
   timestamp: string
+  threadgateRecord?: AppBskyFeedThreadgate.Record
 }): React.ReactNode => {
   const {hasSession, currentAccount} = useSession()
   const theme = useTheme()
@@ -91,7 +109,9 @@ let PostDropdownBtn = ({
   const {_} = useLingui()
   const defaultCtrlColor = theme.palette.default.postCtrl
   const langPrefs = useLanguagePrefs()
-  const postDeleteMutation = usePostDeleteMutation()
+  const {mutateAsync: deletePostMutate} = usePostDeleteMutation()
+  const {mutateAsync: pinPostMutate, isPending: isPinPending} =
+    usePinnedPostMutation()
   const hiddenPosts = useHiddenPosts()
   const {hidePost} = useHiddenPostsApi()
   const feedFeedback = useFeedFeedbackContext()
@@ -104,17 +124,45 @@ let PostDropdownBtn = ({
   const loggedOutWarningPromptControl = useDialogControl()
   const embedPostControl = useDialogControl()
   const sendViaChatControl = useDialogControl()
+  const postInteractionSettingsDialogControl = useDialogControl()
+  const quotePostDetachConfirmControl = useDialogControl()
+  const hideReplyConfirmControl = useDialogControl()
+  const {mutateAsync: toggleReplyVisibility} =
+    useToggleReplyVisibilityMutation()
+
   const postUri = post.uri
   const postCid = post.cid
   const postAuthor = post.author
+  const quoteEmbed = React.useMemo(() => {
+    if (!currentAccount || !post.embed) return
+    return getMaybeDetachedQuoteEmbed({
+      viewerDid: currentAccount.did,
+      post,
+    })
+  }, [post, currentAccount])
 
   const rootUri = record.reply?.root?.uri || postUri
+  const isReply = Boolean(record.reply)
   const [isThreadMuted, muteThread, unmuteThread] = useThreadMuteMutationQueue(
     post,
     rootUri,
   )
   const isPostHidden = hiddenPosts && hiddenPosts.includes(postUri)
   const isAuthor = postAuthor.did === currentAccount?.did
+  const isRootPostAuthor = new AtUri(rootUri).host === currentAccount?.did
+  const threadgateHiddenReplies = useMergedThreadgateHiddenReplies({
+    threadgateRecord,
+  })
+  const isReplyHiddenByThreadgate = threadgateHiddenReplies.has(postUri)
+  const isPinned = post.viewer?.pinned
+
+  const {mutateAsync: toggleQuoteDetachment, isPending: isDetachPending} =
+    useToggleQuoteDetachmentMutation()
+
+  const prefetchPostInteractionSettings = usePrefetchPostInteractionSettings({
+    postUri: post.uri,
+    rootPostUri: rootUri,
+  })
 
   const href = React.useMemo(() => {
     const urip = new AtUri(postUri)
@@ -127,7 +175,7 @@ let PostDropdownBtn = ({
   )
 
   const onDeletePost = React.useCallback(() => {
-    postDeleteMutation.mutateAsync({uri: postUri}).then(
+    deletePostMutate({uri: postUri}).then(
       () => {
         Toast.show(_(msg`Post deleted`))
 
@@ -149,13 +197,13 @@ let PostDropdownBtn = ({
       },
       e => {
         logger.error('Failed to delete post', {message: e})
-        Toast.show(_(msg`Failed to delete post, please try again`))
+        Toast.show(_(msg`Failed to delete post, please try again`), 'xmark')
       },
     )
   }, [
     navigation,
     postUri,
-    postDeleteMutation,
+    deletePostMutate,
     postAuthor,
     currentAccount,
     isAuthor,
@@ -177,7 +225,10 @@ let PostDropdownBtn = ({
     } catch (e: any) {
       if (e?.name !== 'AbortError') {
         logger.error('Failed to toggle thread mute', {message: e})
-        Toast.show(_(msg`Failed to toggle thread mute, please try again`))
+        Toast.show(
+          _(msg`Failed to toggle thread mute, please try again`),
+          'xmark',
+        )
       }
     }
   }, [isThreadMuted, unmuteThread, _, muteThread])
@@ -186,11 +237,11 @@ let PostDropdownBtn = ({
     const str = richTextToString(richText, true)
 
     Clipboard.setStringAsync(str)
-    Toast.show(_(msg`Copied to clipboard`))
+    Toast.show(_(msg`Copied to clipboard`), 'clipboard-check')
   }, [_, richText])
 
-  const onPressTranslate = React.useCallback(() => {
-    openLink(translatorUrl)
+  const onPressTranslate = React.useCallback(async () => {
+    await openLink(translatorUrl)
   }, [openLink, translatorUrl])
 
   const onHidePost = React.useCallback(() => {
@@ -239,7 +290,74 @@ let PostDropdownBtn = ({
     [navigation, postUri],
   )
 
+  const onToggleQuotePostAttachment = React.useCallback(async () => {
+    if (!quoteEmbed) return
+
+    const action = quoteEmbed.isDetached ? 'reattach' : 'detach'
+    const isDetach = action === 'detach'
+
+    try {
+      await toggleQuoteDetachment({
+        post,
+        quoteUri: quoteEmbed.uri,
+        action: quoteEmbed.isDetached ? 'reattach' : 'detach',
+      })
+      Toast.show(
+        isDetach
+          ? _(msg`Quote post was successfully detached`)
+          : _(msg`Quote post was re-attached`),
+      )
+    } catch (e: any) {
+      Toast.show(_(msg`Updating quote attachment failed`))
+      logger.error(`Failed to ${action} quote`, {safeMessage: e.message})
+    }
+  }, [_, quoteEmbed, post, toggleQuoteDetachment])
+
+  const canHidePostForMe = !isAuthor && !isPostHidden
   const canEmbed = isWeb && gtMobile && !hideInPWI
+  const canHideReplyForEveryone =
+    !isAuthor && isRootPostAuthor && !isPostHidden && isReply
+  const canDetachQuote = quoteEmbed && quoteEmbed.isOwnedByViewer
+
+  const onToggleReplyVisibility = React.useCallback(async () => {
+    // TODO no threadgate?
+    if (!canHideReplyForEveryone) return
+
+    const action = isReplyHiddenByThreadgate ? 'show' : 'hide'
+    const isHide = action === 'hide'
+
+    try {
+      await toggleReplyVisibility({
+        postUri: rootUri,
+        replyUri: postUri,
+        action,
+      })
+      Toast.show(
+        isHide
+          ? _(msg`Reply was successfully hidden`)
+          : _(msg`Reply visibility updated`),
+      )
+    } catch (e: any) {
+      Toast.show(_(msg`Updating reply visibility failed`))
+      logger.error(`Failed to ${action} reply`, {safeMessage: e.message})
+    }
+  }, [
+    _,
+    isReplyHiddenByThreadgate,
+    rootUri,
+    postUri,
+    canHideReplyForEveryone,
+    toggleReplyVisibility,
+  ])
+
+  const onPressPin = useCallback(() => {
+    logEvent(isPinned ? 'post:unpin' : 'post:pin', {})
+    pinPostMutate({
+      postUri,
+      postCid,
+      action: isPinned ? 'unpin' : 'pin',
+    })
+  }, [isPinned, pinPostMutate, postCid, postUri])
 
   return (
     <EventStopper onKeyDown={false}>
@@ -269,6 +387,33 @@ let PostDropdownBtn = ({
         </Menu.Trigger>
 
         <Menu.Outer>
+          {isAuthor && (
+            <>
+              <Menu.Group>
+                <Menu.Item
+                  testID="pinPostBtn"
+                  label={
+                    isPinned
+                      ? _(msg`Unpin from profile`)
+                      : _(msg`Pin to your profile`)
+                  }
+                  disabled={isPinPending}
+                  onPress={onPressPin}>
+                  <Menu.ItemText>
+                    {isPinned
+                      ? _(msg`Unpin from profile`)
+                      : _(msg`Pin to your profile`)}
+                  </Menu.ItemText>
+                  <Menu.ItemIcon
+                    icon={isPinPending ? Loader : PinIcon}
+                    position="right"
+                  />
+                </Menu.Item>
+              </Menu.Group>
+              <Menu.Divider />
+            </>
+          )}
+
           <Menu.Group>
             {(!hideInPWI || hasSession) && (
               <>
@@ -294,7 +439,7 @@ let PostDropdownBtn = ({
               <Menu.Item
                 testID="postDropdownSendViaDMBtn"
                 label={_(msg`Send via direct message`)}
-                onPress={sendViaChatControl.open}>
+                onPress={() => sendViaChatControl.open()}>
                 <Menu.ItemText>
                   <Trans>Send via direct message</Trans>
                 </Menu.ItemText>
@@ -322,7 +467,7 @@ let PostDropdownBtn = ({
               <Menu.Item
                 testID="postDropdownEmbedBtn"
                 label={_(msg`Embed post`)}
-                onPress={embedPostControl.open}>
+                onPress={() => embedPostControl.open()}>
                 <Menu.ItemText>{_(msg`Embed post`)}</Menu.ItemText>
                 <Menu.ItemIcon icon={CodeBrackets} position="right" />
               </Menu.Item>
@@ -380,19 +525,91 @@ let PostDropdownBtn = ({
                   <Menu.ItemText>{_(msg`Mute words & tags`)}</Menu.ItemText>
                   <Menu.ItemIcon icon={Filter} position="right" />
                 </Menu.Item>
-
-                {!isAuthor && !isPostHidden && (
-                  <Menu.Item
-                    testID="postDropdownHideBtn"
-                    label={_(msg`Hide post`)}
-                    onPress={hidePromptControl.open}>
-                    <Menu.ItemText>{_(msg`Hide post`)}</Menu.ItemText>
-                    <Menu.ItemIcon icon={EyeSlash} position="right" />
-                  </Menu.Item>
-                )}
               </Menu.Group>
             </>
           )}
+
+          {hasSession &&
+            (canHideReplyForEveryone || canDetachQuote || canHidePostForMe) && (
+              <>
+                <Menu.Divider />
+                <Menu.Group>
+                  {canHidePostForMe && (
+                    <Menu.Item
+                      testID="postDropdownHideBtn"
+                      label={
+                        isReply
+                          ? _(msg`Hide reply for me`)
+                          : _(msg`Hide post for me`)
+                      }
+                      onPress={() => hidePromptControl.open()}>
+                      <Menu.ItemText>
+                        {isReply
+                          ? _(msg`Hide reply for me`)
+                          : _(msg`Hide post for me`)}
+                      </Menu.ItemText>
+                      <Menu.ItemIcon icon={EyeSlash} position="right" />
+                    </Menu.Item>
+                  )}
+                  {canHideReplyForEveryone && (
+                    <Menu.Item
+                      testID="postDropdownHideBtn"
+                      label={
+                        isReplyHiddenByThreadgate
+                          ? _(msg`Show reply for everyone`)
+                          : _(msg`Hide reply for everyone`)
+                      }
+                      onPress={
+                        isReplyHiddenByThreadgate
+                          ? onToggleReplyVisibility
+                          : () => hideReplyConfirmControl.open()
+                      }>
+                      <Menu.ItemText>
+                        {isReplyHiddenByThreadgate
+                          ? _(msg`Show reply for everyone`)
+                          : _(msg`Hide reply for everyone`)}
+                      </Menu.ItemText>
+                      <Menu.ItemIcon
+                        icon={isReplyHiddenByThreadgate ? Eye : EyeSlash}
+                        position="right"
+                      />
+                    </Menu.Item>
+                  )}
+
+                  {canDetachQuote && (
+                    <Menu.Item
+                      disabled={isDetachPending}
+                      testID="postDropdownHideBtn"
+                      label={
+                        quoteEmbed.isDetached
+                          ? _(msg`Re-attach quote`)
+                          : _(msg`Detach quote`)
+                      }
+                      onPress={
+                        quoteEmbed.isDetached
+                          ? onToggleQuotePostAttachment
+                          : () => quotePostDetachConfirmControl.open()
+                      }>
+                      <Menu.ItemText>
+                        {quoteEmbed.isDetached
+                          ? _(msg`Re-attach quote`)
+                          : _(msg`Detach quote`)}
+                      </Menu.ItemText>
+                      <Menu.ItemIcon
+                        icon={
+                          isDetachPending
+                            ? Loader
+                            : quoteEmbed.isDetached
+                            ? Eye
+                            : EyeSlash
+                        }
+                        position="right"
+                      />
+                    </Menu.Item>
+                  )}
+                </Menu.Group>
+              </>
+            )}
 
           {hasSession && (
             <>
@@ -409,13 +626,36 @@ let PostDropdownBtn = ({
                 )}
 
                 {isAuthor && (
-                  <Menu.Item
-                    testID="postDropdownDeleteBtn"
-                    label={_(msg`Delete post`)}
-                    onPress={deletePromptControl.open}>
-                    <Menu.ItemText>{_(msg`Delete post`)}</Menu.ItemText>
-                    <Menu.ItemIcon icon={Trash} position="right" />
-                  </Menu.Item>
+                  <>
+                    <Menu.Item
+                      testID="postDropdownEditPostInteractions"
+                      label={_(msg`Edit interaction settings`)}
+                      onPress={() =>
+                        postInteractionSettingsDialogControl.open()
+                      }
+                      {...(isAuthor
+                        ? Platform.select({
+                            web: {
+                              onHoverIn: prefetchPostInteractionSettings,
+                            },
+                            native: {
+                              onPressIn: prefetchPostInteractionSettings,
+                            },
+                          })
+                        : {})}>
+                      <Menu.ItemText>
+                        {_(msg`Edit interaction settings`)}
+                      </Menu.ItemText>
+                      <Menu.ItemIcon icon={Gear} position="right" />
+                    </Menu.Item>
+                    <Menu.Item
+                      testID="postDropdownDeleteBtn"
+                      label={_(msg`Delete post`)}
+                      onPress={() => deletePromptControl.open()}>
+                      <Menu.ItemText>{_(msg`Delete post`)}</Menu.ItemText>
+                      <Menu.ItemIcon icon={Trash} position="right" />
+                    </Menu.Item>
+                  </>
                 )}
               </Menu.Group>
             </>
@@ -436,8 +676,10 @@ let PostDropdownBtn = ({
 
       <Prompt.Basic
         control={hidePromptControl}
-        title={_(msg`Hide this post?`)}
-        description={_(msg`This post will be hidden from feeds.`)}
+        title={isReply ? _(msg`Hide this reply?`) : _(msg`Hide this post?`)}
+        description={_(
+          msg`This post will be hidden from feeds and threads. This cannot be undone.`,
+        )}
         onConfirm={onHidePost}
         confirmButtonCta={_(msg`Hide`)}
       />
@@ -475,6 +717,33 @@ let PostDropdownBtn = ({
       <SendViaChatDialog
         control={sendViaChatControl}
         onSelectChat={onSelectChatToShareTo}
+      />
+
+      <PostInteractionSettingsDialog
+        control={postInteractionSettingsDialogControl}
+        postUri={post.uri}
+        rootPostUri={rootUri}
+        initialThreadgateView={post.threadgate}
+      />
+
+      <Prompt.Basic
+        control={quotePostDetachConfirmControl}
+        title={_(msg`Detach quote post?`)}
+        description={_(
+          msg`This will remove your post from this quote post for all users, and replace it with a placeholder.`,
+        )}
+        onConfirm={onToggleQuotePostAttachment}
+        confirmButtonCta={_(msg`Yes, detach`)}
+      />
+
+      <Prompt.Basic
+        control={hideReplyConfirmControl}
+        title={_(msg`Hide this reply?`)}
+        description={_(
+          msg`This reply will be sorted into a hidden section at the bottom of your thread and will mute notifications for subsequent replies - both for yourself and others.`,
+        )}
+        onConfirm={onToggleReplyVisibility}
+        confirmButtonCta={_(msg`Yes, hide`)}
       />
     </EventStopper>
   )

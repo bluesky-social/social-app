@@ -17,7 +17,7 @@ import {useAgent, useSession} from '../session'
 import {invalidate as invalidateMyLists} from './my-lists'
 import {RQKEY as PROFILE_LISTS_RQKEY} from './profile-lists'
 
-const RQKEY_ROOT = 'list'
+export const RQKEY_ROOT = 'list'
 export const RQKEY = (uri: string) => [RQKEY_ROOT, uri]
 
 export function useListQuery(uri?: string) {

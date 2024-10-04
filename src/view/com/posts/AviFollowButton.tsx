@@ -7,7 +7,6 @@ import {useNavigation} from '@react-navigation/native'
 
 import {createHitslop} from '#/lib/constants'
 import {NavigationProp} from '#/lib/routes/types'
-import {useGate} from '#/lib/statsig/statsig'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useSession} from '#/state/session'
@@ -37,7 +36,6 @@ export function AviFollowButton({
     profile: profile,
     logContext: 'AvatarButton',
   })
-  const gate = useGate()
   const {currentAccount, hasSession} = useSession()
   const navigation = useNavigation<NavigationProp>()
 
@@ -80,7 +78,7 @@ export function AviFollowButton({
     },
   ]
 
-  return hasSession && gate('show_avi_follow_button') ? (
+  return hasSession ? (
     <View style={a.relative}>
       {children}
 

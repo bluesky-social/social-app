@@ -6,14 +6,14 @@ import {AppBskyGraphDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {saveImageToMediaLibrary} from '#/lib/media/manip'
+import {shareUrl} from '#/lib/sharing'
+import {logEvent} from '#/lib/statsig/statsig'
+import {getStarterPackOgCard} from '#/lib/strings/starter-pack'
 import {logger} from '#/logger'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {saveImageToMediaLibrary} from 'lib/media/manip'
-import {shareUrl} from 'lib/sharing'
-import {logEvent} from 'lib/statsig/statsig'
-import {getStarterPackOgCard} from 'lib/strings/starter-pack'
-import {isNative, isWeb} from 'platform/detection'
-import * as Toast from 'view/com/util/Toast'
+import {isNative, isWeb} from '#/platform/detection'
+import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {DialogControlProps} from '#/components/Dialog'
@@ -32,6 +32,7 @@ interface Props {
 export function ShareDialog(props: Props) {
   return (
     <Dialog.Outer control={props.control}>
+      <Dialog.Handle />
       <ShareDialogInner {...props} />
     </Dialog.Outer>
   )
@@ -66,6 +67,7 @@ function ShareDialogInner({
     if (!res) {
       Toast.show(
         _(msg`You must grant access to your photo library to save the image.`),
+        'xmark',
       )
       return
     }
@@ -75,7 +77,7 @@ function ShareDialogInner({
       Toast.show(_(msg`Image saved to your camera roll!`))
       control.close()
     } catch (e: unknown) {
-      Toast.show(_(msg`An error occurred while saving the QR code!`))
+      Toast.show(_(msg`An error occurred while saving the QR code!`), 'xmark')
       logger.error('Failed to save QR code', {error: e})
       return
     }
@@ -83,7 +85,6 @@ function ShareDialogInner({
 
   return (
     <>
-      <Dialog.Handle />
       <Dialog.ScrollableInner label={_(msg`Share link dialog`)}>
         {!imageLoaded || !link ? (
           <View style={[a.p_xl, a.align_center]}>
