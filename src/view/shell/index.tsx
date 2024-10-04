@@ -125,7 +125,6 @@ function ShellInner() {
 
 export const Shell: React.FC = function ShellImpl() {
   const {fullyExpandedCount} = useDialogStateControlContext()
-  console.log(fullyExpandedCount)
   const pal = usePalette('default')
   const theme = useTheme()
   React.useEffect(() => {
