@@ -19,7 +19,7 @@ import {usePalette} from '#/lib/hooks/usePalette'
 import {useNotificationsRegistration} from '#/lib/notifications/notifications'
 import {isStateAtTabRoot} from '#/lib/routes/helpers'
 import {useTheme} from '#/lib/ThemeContext'
-import {isAndroid} from '#/platform/detection'
+import {isAndroid, isIOS} from '#/platform/detection'
 import {useDialogStateControlContext} from '#/state/dialogs'
 import {useSession} from '#/state/session'
 import {
@@ -140,7 +140,7 @@ export const Shell: React.FC = function ShellImpl() {
     <View testID="mobileShellView" style={[styles.outerContainer, pal.view]}>
       <StatusBar
         style={
-          theme.colorScheme === 'dark' || fullyExpandedCount > 0
+          theme.colorScheme === 'dark' || (isIOS && fullyExpandedCount > 0)
             ? 'light'
             : 'dark'
         }

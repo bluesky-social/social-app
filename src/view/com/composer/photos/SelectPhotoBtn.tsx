@@ -9,6 +9,7 @@ import {isNative} from '#/platform/detection'
 import {ComposerImage, createComposerImage} from '#/state/gallery'
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
+import {useSheetWrapper} from '#/components/Dialog/sheet-wrapper'
 import {Image_Stroke2_Corner0_Rounded as Image} from '#/components/icons/Image'
 
 type Props = {
@@ -21,23 +22,26 @@ export function SelectPhotoBtn({size, disabled, onAdd}: Props) {
   const {_} = useLingui()
   const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
   const t = useTheme()
+  const sheetWrapper = useSheetWrapper()
 
   const onPressSelectPhotos = useCallback(async () => {
     if (isNative && !(await requestPhotoAccessIfNeeded())) {
       return
     }
 
-    const images = await openPicker({
-      selectionLimit: 4 - size,
-      allowsMultipleSelection: true,
-    })
+    const images = await sheetWrapper(
+      openPicker({
+        selectionLimit: 4 - size,
+        allowsMultipleSelection: true,
+      }),
+    )
 
     const results = await Promise.all(
       images.map(img => createComposerImage(img)),
     )
 
     onAdd(results)
-  }, [requestPhotoAccessIfNeeded, size, onAdd])
+  }, [requestPhotoAccessIfNeeded, size, onAdd, sheetWrapper])
 
   return (
     <Button
