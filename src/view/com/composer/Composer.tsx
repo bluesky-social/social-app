@@ -46,6 +46,7 @@ import {RichText} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useQueryClient} from '@tanstack/react-query'
 
 import * as apilib from '#/lib/api/index'
 import {until} from '#/lib/async/until'
@@ -147,6 +148,7 @@ export const ComposePost = ({
 }) => {
   const {currentAccount} = useSession()
   const agent = useAgent()
+  const queryClient = useQueryClient()
   const currentDid = currentAccount!.did
   const {data: currentProfile} = useProfileQuery({did: currentDid})
   const {isModalActive} = useModals()
@@ -421,7 +423,7 @@ export const ComposePost = ({
       let postUri
       try {
         postUri = (
-          await apilib.post(agent, {
+          await apilib.post(agent, queryClient, {
             composerState, // TODO: move more state here.
             rawText: richtext.text,
             replyTo: replyTo?.uri,
@@ -527,6 +529,7 @@ export const ComposePost = ({
       threadgateAllowUISettings,
       videoState.asset,
       videoState.status,
+      queryClient,
     ],
   )
 

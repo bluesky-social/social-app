@@ -85,7 +85,6 @@ export async function resolveLink(
   }
   return resolveExternal(agent, uri)
 
-  // Forked from useGetPost. TODO: move into RQ.
   async function getPost({uri}: {uri: string}) {
     const urip = new AtUri(uri)
     if (!urip.host.startsWith('did:')) {
@@ -103,7 +102,6 @@ export async function resolveLink(
     throw new Error('getPost: post not found')
   }
 
-  // Forked from useFetchDid. TODO: move into RQ.
   async function fetchDid(handleOrDid: string) {
     let identifier = handleOrDid
     if (!identifier.startsWith('did:')) {
