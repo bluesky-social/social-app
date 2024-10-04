@@ -43,11 +43,6 @@ interface PostOpts {
   composerState: ComposerState // TODO: Not used yet.
   rawText: string
   replyTo?: string
-  quote?: {
-    uri: string
-    cid: string
-  }
-  extLink?: ExternalEmbedDraft
   labels?: string[]
   threadgate: ThreadgateAllowUISetting[]
   postgate: AppBskyFeedPostgate.Record
