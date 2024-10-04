@@ -5,12 +5,15 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {MAX_ALT_TEXT} from '#/lib/constants'
+import {enforceLen} from '#/lib/strings/helpers'
 import {isAndroid, isWeb} from '#/platform/detection'
 import {ComposerImage} from '#/state/gallery'
+import {CharProgress} from '#/view/com/composer/char-progress/CharProgress'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
+import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {PortalComponent} from '#/components/Portal'
 import {Text} from '#/components/Typography'
 
@@ -35,7 +38,7 @@ const ImageAltTextInner = ({
   image,
   onChange,
 }: Props): React.ReactNode => {
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const t = useTheme()
 
   const windim = useWindowDimensions()
@@ -44,7 +47,7 @@ const ImageAltTextInner = ({
 
   const onPressSubmit = React.useCallback(() => {
     control.close()
-    onChange({...image, alt: altText.trim()})
+    onChange({...image, alt: enforceLen(altText.trim(), MAX_ALT_TEXT, true)})
   }, [control, image, altText, onChange])
 
   const imageStyle = React.useMemo<ImageStyle>(() => {
@@ -90,24 +93,59 @@ const ImageAltTextInner = ({
       </View>
 
       <View style={[a.mt_md, a.gap_md]}>
-        <View>
-          <TextField.LabelText>
-            <Trans>Descriptive alt text</Trans>
-          </TextField.LabelText>
-          <TextField.Root>
-            <Dialog.Input
-              label={_(msg`Alt text`)}
-              onChangeText={text => setAltText(text)}
-              value={altText}
-              multiline
-              numberOfLines={3}
-              autoFocus
-            />
-          </TextField.Root>
+        <View style={[a.gap_sm]}>
+          <View style={[a.relative]}>
+            <TextField.LabelText>
+              <Trans>Descriptive alt text</Trans>
+            </TextField.LabelText>
+            <TextField.Root>
+              <Dialog.Input
+                label={_(msg`Alt text`)}
+                onChangeText={text => setAltText(text)}
+                value={altText}
+                multiline
+                numberOfLines={3}
+                autoFocus
+              />
+            </TextField.Root>
+
+            <View
+              style={[
+                a.absolute,
+                a.flex_row,
+                a.align_center,
+                a.pr_md,
+                a.pb_sm,
+                {
+                  bottom: 0,
+                  right: 0,
+                },
+              ]}>
+              <CharProgress count={altText?.length || 0} max={MAX_ALT_TEXT} />
+            </View>
+          </View>
+
+          {altText.length > MAX_ALT_TEXT && (
+            <View style={[a.pb_sm, a.flex_row, a.gap_xs]}>
+              <CircleInfo fill={t.palette.negative_500} />
+              <Text
+                style={[
+                  a.italic,
+                  a.leading_snug,
+                  t.atoms.text_contrast_medium,
+                ]}>
+                <Trans>
+                  Alt text will be truncated. Limit: {i18n.number(MAX_ALT_TEXT)}{' '}
+                  characters.
+                </Trans>
+              </Text>
+            </View>
+          )}
         </View>
+
         <Button
           label={_(msg`Save`)}
-          disabled={altText.length > MAX_ALT_TEXT || altText === image.alt}
+          disabled={altText === image.alt}
           size="large"
           color="primary"
           variant="solid"
