@@ -190,7 +190,7 @@ export const ComposePost = ({
   // TODO: Move more state here.
   const [composerState, dispatch] = useReducer(
     composerReducer,
-    {initImageUris},
+    {initImageUris, initQuoteUri: initQuote?.uri},
     createComposerState,
   )
 
@@ -337,6 +337,7 @@ export const ComposePost = ({
 
   const onNewLink = useCallback(
     (uri: string) => {
+      dispatch({type: 'embed_add_uri', uri})
       if (extLink != null) return
       setExtLink({uri, isLoading: true})
     },
@@ -582,6 +583,7 @@ export const ComposePost = ({
 
   const onSelectGif = useCallback(
     (gif: Gif) => {
+      dispatch({type: 'embed_add_gif', gif})
       setExtLink({
         uri: `${gif.media_formats.gif.url}?hh=${gif.media_formats.gif.dims[1]}&ww=${gif.media_formats.gif.dims[0]}`,
         isLoading: true,
@@ -600,6 +602,7 @@ export const ComposePost = ({
 
   const handleChangeGifAltText = useCallback(
     (altText: string) => {
+      dispatch({type: 'embed_update_gif', alt: altText})
       setExtLink(ext =>
         ext && ext.meta
           ? {
@@ -770,6 +773,11 @@ export const ComposePost = ({
                 link={extLink}
                 gif={extGif}
                 onRemove={() => {
+                  if (extGif) {
+                    dispatch({type: 'embed_remove_gif'})
+                  } else {
+                    dispatch({type: 'embed_remove_link'})
+                  }
                   setExtLink(undefined)
                   setExtGif(undefined)
                 }}
@@ -818,7 +826,12 @@ export const ComposePost = ({
                   <QuoteEmbed quote={quote} />
                 </View>
                 {quote.uri !== initQuote?.uri && (
-                  <QuoteX onRemove={() => setQuote(undefined)} />
+                  <QuoteX
+                    onRemove={() => {
+                      dispatch({type: 'embed_remove_quote'})
+                      setQuote(undefined)
+                    }}
+                  />
                 )}
               </View>
             ) : null}
