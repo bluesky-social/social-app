@@ -1,7 +1,6 @@
 import React from 'react'
 import {StyleProp, View, ViewStyle} from 'react-native'
 
-import {ExternalEmbedDraft} from '#/lib/api/index'
 import {cleanError} from '#/lib/strings/errors'
 import {
   useResolveGifQuery,
@@ -65,30 +64,26 @@ export const ExternalEmbedGif = ({
 }
 
 export const ExternalEmbedLink = ({
-  link,
+  uri,
   onRemove,
 }: {
-  link: ExternalEmbedDraft
+  uri: string
   onRemove: () => void
 }) => {
   const t = useTheme()
-  const {data, error} = useResolveLinkQuery(link.uri)
-  const externalData = data?.type === 'external' ? data : null
+  const {data, error} = useResolveLinkQuery(uri)
   const linkInfo = React.useMemo(
     () =>
-      externalData && {
-        title: externalData.title ?? externalData.uri,
-        uri: externalData.uri,
-        description: externalData.description ?? '',
-        thumb: externalData.thumb?.source.path,
+      data && {
+        title:
+          (data.type === 'external' ? data.title : data.title_deprecated) ??
+          uri,
+        uri,
+        description: data.type === 'external' ? data.description : '',
+        thumb: data.type === 'external' ? data.thumb?.source.path : undefined,
       },
-    [externalData],
+    [data, uri],
   )
-
-  if (data?.type === 'record') {
-    return null // TODO: Display record embeds.
-  }
-
   return (
     <View style={[a.mb_xl, a.overflow_hidden, t.atoms.border_contrast_medium]}>
       {linkInfo ? (
@@ -98,7 +93,7 @@ export const ExternalEmbedLink = ({
       ) : error ? (
         <Container style={[a.align_start, a.p_md, a.gap_xs]}>
           <Text numberOfLines={1} style={t.atoms.text_contrast_high}>
-            {link.uri}
+            {uri}
           </Text>
           <Text numberOfLines={2} style={[{color: t.palette.negative_400}]}>
             {cleanError(error)}

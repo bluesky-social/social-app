@@ -36,6 +36,9 @@ type ResolvedExternalLink = {
 type ResolvedRecord = {
   type: 'record'
   record: ComAtprotoRepoStrongRef.Main
+  // We should replace this with a hydrated record (e.g. feed, list, starter pack)
+  // and change the composer preview to use the actual post embed components:
+  title_deprecated: string | undefined
 }
 
 type ResolvedLink = ResolvedExternalLink | ResolvedRecord
@@ -48,8 +51,6 @@ export async function resolveLink(
     uri = await resolveShortLink(uri)
   }
   if (isBskyPostUrl(uri)) {
-    // TODO: Remove this abstraction.
-    // TODO: Nice error messages (e.g. EmbeddingDisabledError).
     const result = await getPostAsQuote(getPost, uri)
     return {
       type: 'record',
@@ -57,30 +58,35 @@ export async function resolveLink(
         cid: result.cid,
         uri: result.uri,
       },
+      // TODO: Include hydrated content instead.
+      title_deprecated: undefined,
     }
   }
   if (isBskyCustomFeedUrl(uri)) {
-    // TODO: Remove this abstraction.
     const result = await getFeedAsEmbed(agent, fetchDid, uri)
     return {
       type: 'record',
-      record: result.embed!.record, // TODO: Fix types.
+      record: result.embed!.record,
+      // TODO: Include hydrated content instead.
+      title_deprecated: result.meta!.title,
     }
   }
   if (isBskyListUrl(uri)) {
-    // TODO: Remove this abstraction.
     const result = await getListAsEmbed(agent, fetchDid, uri)
     return {
       type: 'record',
-      record: result.embed!.record, // TODO: Fix types.
+      record: result.embed!.record,
+      // TODO: Include hydrated content instead.
+      title_deprecated: result.meta!.title,
     }
   }
   if (isBskyStartUrl(uri) || isBskyStarterPackUrl(uri)) {
-    // TODO: Remove this abstraction.
     const result = await getStarterPackAsEmbed(agent, fetchDid, uri)
     return {
       type: 'record',
-      record: result.embed!.record, // TODO: Fix types.
+      record: result.embed!.record,
+      // TODO: Include hydrated content instead.
+      title_deprecated: result.meta!.title,
     }
   }
   return resolveExternal(agent, uri)

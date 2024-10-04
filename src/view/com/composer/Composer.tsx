@@ -786,7 +786,7 @@ export const ComposePost = ({
                   </>
                 ) : (
                   <ExternalEmbedLink
-                    link={extLink}
+                    uri={extLink.uri}
                     onRemove={() => {
                       dispatch({type: 'embed_remove_link'})
                       setExtLink(undefined)
