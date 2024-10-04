@@ -16,7 +16,7 @@ class SheetViewController: UIViewController {
     self.isModalInPresentation = false
 
     if let sheet = self.sheetPresentationController {
-      sheet.prefersGrabberVisible = true
+      sheet.prefersGrabberVisible = false
     }
   }
 
