@@ -55,7 +55,7 @@ export function childIsString(
 
 export function renderChildrenWithEmoji(
   children: StringChild,
-  props: Omit<TextProps, 'children'>,
+  props: Omit<TextProps, 'children'> = {},
 ) {
   const normalized = Array.isArray(children) ? children : [children]
 
