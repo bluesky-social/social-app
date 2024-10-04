@@ -1,5 +1,4 @@
 import {
-  AppBskyEmbedDefs,
   AppBskyEmbedExternal,
   AppBskyEmbedImages,
   AppBskyEmbedRecord,
@@ -7,7 +6,6 @@ import {
   AppBskyEmbedVideo,
   AppBskyFeedPostgate,
   AtUri,
-  BlobRef,
   BskyAgent,
   ComAtprotoLabelDefs,
   RichText,
@@ -46,14 +44,7 @@ interface PostOpts {
     uri: string
     cid: string
   }
-  video?: {
-    blobRef: BlobRef
-    altText: string
-    captions: {lang: string; file: File}[]
-    aspectRatio?: AppBskyEmbedDefs.AspectRatio
-  }
   extLink?: ExternalEmbedDraft
-  images?: ComposerImage[]
   labels?: string[]
   threadgate: ThreadgateAllowUISetting[]
   postgate: AppBskyFeedPostgate.Record
@@ -230,13 +221,15 @@ async function resolveMedia(
   | AppBskyEmbedVideo.Main
   | undefined
 > {
-  if (opts.images?.length) {
+  const state = opts.composerState
+  const media = state.embed.media
+  if (media?.type === 'images') {
     logger.debug(`Uploading images`, {
-      count: opts.images.length,
+      count: media.images.length,
     })
     opts.onStateChange?.(`Uploading images...`)
     const images: AppBskyEmbedImages.Image[] = await Promise.all(
-      opts.images.map(async (image, i) => {
+      media.images.map(async (image, i) => {
         logger.debug(`Compressing image #${i}`)
         const {path, width, height, mime} = await compressImage(image)
         logger.debug(`Uploading image #${i}`)
@@ -253,9 +246,10 @@ async function resolveMedia(
       images,
     }
   }
-  if (opts.video) {
+  if (media?.type === 'video' && media.video.status === 'done') {
+    const video = media.video
     const captions = await Promise.all(
-      opts.video.captions
+      video.captions
         .filter(caption => caption.lang !== '')
         .map(async caption => {
           const {data} = await agent.uploadBlob(caption.file, {
@@ -266,13 +260,17 @@ async function resolveMedia(
     )
     return {
       $type: 'app.bsky.embed.video',
-      video: opts.video.blobRef,
-      alt: opts.video.altText || undefined,
+      video: video.pendingPublish.blobRef,
+      alt: video.altText || undefined,
       captions: captions.length === 0 ? undefined : captions,
-      aspectRatio: opts.video.aspectRatio,
+      aspectRatio: {
+        width: video.asset.width,
+        height: video.asset.height,
+      },
     }
   }
   if (opts.extLink) {
+    // TODO: Read this from composer state as well.
     if (opts.extLink.embed) {
       return undefined
     }

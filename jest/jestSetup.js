@@ -96,6 +96,11 @@ jest.mock('expo-modules-core', () => ({
         getIsReducedMotionEnabled: () => false,
       }
     }
+    if (moduleName === 'BottomSheet') {
+      return {
+        dismissAll: () => {},
+      }
+    }
   }),
   requireNativeViewManager: jest.fn().mockImplementation(moduleName => {
     return () => null

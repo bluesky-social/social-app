@@ -4,9 +4,11 @@ import type {
   GestureResponderEvent,
   ScrollViewProps,
 } from 'react-native'
-import {BottomSheetProps} from '@discord/bottom-sheet/src'
 
 import {ViewStyleProp} from '#/alf'
+import {PortalComponent} from '#/components/Portal'
+import {BottomSheetViewProps} from '../../../modules/bottom-sheet'
+import {BottomSheetSnapPoint} from '../../../modules/bottom-sheet/src/BottomSheet.types'
 
 type A11yProps = Required<AccessibilityProps>
 
@@ -37,6 +39,10 @@ export type DialogControlProps = DialogControlRefProps & {
 
 export type DialogContextProps = {
   close: DialogControlProps['close']
+  isNativeDialog: boolean
+  nativeSnapPoint: BottomSheetSnapPoint
+  disableDrag: boolean
+  setDisableDrag: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export type DialogControlOpenOptions = {
@@ -52,11 +58,10 @@ export type DialogControlOpenOptions = {
 export type DialogOuterProps = {
   control: DialogControlProps
   onClose?: () => void
-  nativeOptions?: {
-    sheet?: Omit<BottomSheetProps, 'children'>
-  }
+  nativeOptions?: Omit<BottomSheetViewProps, 'children'>
   webOptions?: {}
   testID?: string
+  Portal?: PortalComponent
 }
 
 type DialogInnerPropsBase<T> = React.PropsWithChildren<ViewStyleProp> & T

@@ -4,8 +4,6 @@ import {JobStatus} from '@atproto/api/dist/client/types/app/bsky/video/defs'
 import {I18n} from '@lingui/core'
 import {msg} from '@lingui/macro'
 
-import {createVideoAgent} from '#/lib/media/video/util'
-import {uploadVideo} from '#/lib/media/video/upload'
 import {AbortError} from '#/lib/async/cancelable'
 import {compressVideo} from '#/lib/media/video/compress'
 import {
@@ -14,7 +12,11 @@ import {
   VideoTooLargeError,
 } from '#/lib/media/video/errors'
 import {CompressedVideo} from '#/lib/media/video/types'
+import {uploadVideo} from '#/lib/media/video/upload'
+import {createVideoAgent} from '#/lib/media/video/util'
 import {logger} from '#/logger'
+
+type CaptionsTrack = {lang: string; file: File}
 
 export type VideoAction =
   | {
@@ -41,6 +43,16 @@ export type VideoAction =
       signal: AbortSignal
     }
   | {
+      type: 'update_alt_text'
+      altText: string
+      signal: AbortSignal
+    }
+  | {
+      type: 'update_captions'
+      updater: (prev: CaptionsTrack[]) => CaptionsTrack[]
+      signal: AbortSignal
+    }
+  | {
       type: 'update_job_status'
       jobStatus: AppBskyVideoDefs.JobStatus
       signal: AbortSignal
@@ -57,6 +69,8 @@ export const NO_VIDEO = Object.freeze({
   video: undefined,
   jobId: undefined,
   pendingPublish: undefined,
+  altText: '',
+  captions: [],
 })
 
 export type NoVideoState = typeof NO_VIDEO
@@ -70,6 +84,8 @@ type ErrorState = {
   jobId: string | null
   error: string
   pendingPublish?: undefined
+  altText: string
+  captions: CaptionsTrack[]
 }
 
 type CompressingState = {
@@ -80,6 +96,8 @@ type CompressingState = {
   video?: undefined
   jobId?: undefined
   pendingPublish?: undefined
+  altText: string
+  captions: CaptionsTrack[]
 }
 
 type UploadingState = {
@@ -90,6 +108,8 @@ type UploadingState = {
   video: CompressedVideo
   jobId?: undefined
   pendingPublish?: undefined
+  altText: string
+  captions: CaptionsTrack[]
 }
 
 type ProcessingState = {
@@ -101,6 +121,8 @@ type ProcessingState = {
   jobId: string
   jobStatus: AppBskyVideoDefs.JobStatus | null
   pendingPublish?: undefined
+  altText: string
+  captions: CaptionsTrack[]
 }
 
 type DoneState = {
@@ -111,6 +133,8 @@ type DoneState = {
   video: CompressedVideo
   jobId?: undefined
   pendingPublish: {blobRef: BlobRef; mutableProcessed: boolean}
+  altText: string
+  captions: CaptionsTrack[]
 }
 
 export type VideoState =
@@ -129,6 +153,8 @@ export function createVideoState(
     progress: 0,
     abortController,
     asset,
+    altText: '',
+    captions: [],
   }
 }
 
@@ -149,6 +175,8 @@ export function videoReducer(
       asset: state.asset ?? null,
       video: state.video ?? null,
       jobId: state.jobId ?? null,
+      altText: state.altText,
+      captions: state.captions,
     }
   } else if (action.type === 'update_progress') {
     if (state.status === 'compressing' || state.status === 'uploading') {
@@ -164,6 +192,16 @@ export function videoReducer(
         asset: {...state.asset, width: action.width, height: action.height},
       }
     }
+  } else if (action.type === 'update_alt_text') {
+    return {
+      ...state,
+      altText: action.altText,
+    }
+  } else if (action.type === 'update_captions') {
+    return {
+      ...state,
+      captions: action.updater(state.captions),
+    }
   } else if (action.type === 'compressing_to_uploading') {
     if (state.status === 'compressing') {
       return {
@@ -172,6 +210,8 @@ export function videoReducer(
         abortController: state.abortController,
         asset: state.asset,
         video: action.video,
+        altText: state.altText,
+        captions: state.captions,
       }
     }
     return state
@@ -185,6 +225,8 @@ export function videoReducer(
         video: state.video,
         jobId: action.jobId,
         jobStatus: null,
+        altText: state.altText,
+        captions: state.captions,
       }
     }
   } else if (action.type === 'update_job_status') {
@@ -210,6 +252,8 @@ export function videoReducer(
           blobRef: action.blobRef,
           mutableProcessed: false,
         },
+        altText: state.altText,
+        captions: state.captions,
       }
     }
   }

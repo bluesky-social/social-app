@@ -5,25 +5,26 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {MAX_ALT_TEXT} from '#/lib/constants'
-import {isWeb} from '#/platform/detection'
+import {isAndroid, isWeb} from '#/platform/detection'
 import {ComposerImage} from '#/state/gallery'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
+import {PortalComponent} from '#/components/Portal'
 import {Text} from '#/components/Typography'
 
 type Props = {
   control: Dialog.DialogOuterProps['control']
   image: ComposerImage
   onChange: (next: ComposerImage) => void
+  Portal: PortalComponent
 }
 
 export const ImageAltTextDialog = (props: Props): React.ReactNode => {
   return (
-    <Dialog.Outer control={props.control}>
+    <Dialog.Outer control={props.control} Portal={props.Portal}>
       <Dialog.Handle />
-
       <ImageAltTextInner {...props} />
     </Dialog.Outer>
   )
@@ -116,6 +117,8 @@ const ImageAltTextInner = ({
           </ButtonText>
         </Button>
       </View>
+      {/* Maybe fix this later -h */}
+      {isAndroid ? <View style={{height: 300}} /> : null}
     </Dialog.ScrollableInner>
   )
 }
