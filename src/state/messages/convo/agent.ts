@@ -972,7 +972,6 @@ export class Convo {
           key: m.id,
           message: m,
           nextMessage: null,
-          prevMessage: null,
         })
       } else if (ChatBskyConvoDefs.isDeletedMessageView(m)) {
         items.unshift({
@@ -980,7 +979,6 @@ export class Convo {
           key: m.id,
           message: m,
           nextMessage: null,
-          prevMessage: null,
         })
       }
     })
@@ -1003,7 +1001,6 @@ export class Convo {
           key: m.id,
           message: m,
           nextMessage: null,
-          prevMessage: null,
         })
       } else if (ChatBskyConvoDefs.isDeletedMessageView(m)) {
         items.push({
@@ -1011,7 +1008,6 @@ export class Convo {
           key: m.id,
           message: m,
           nextMessage: null,
-          prevMessage: null,
         })
       }
     })
@@ -1034,7 +1030,6 @@ export class Convo {
           sender: this.sender!,
         },
         nextMessage: null,
-        prevMessage: null,
         failed: this.pendingMessageFailure !== null,
         retry:
           this.pendingMessageFailure === 'recoverable'
@@ -1065,39 +1060,29 @@ export class Convo {
       })
       .map((item, i, arr) => {
         let nextMessage = null
-        let prevMessage = null
         const isMessage = isConvoItemMessage(item)
 
         if (isMessage) {
           if (
-            ChatBskyConvoDefs.isMessageView(item.message) ||
-            ChatBskyConvoDefs.isDeletedMessageView(item.message)
+            isMessage &&
+            (ChatBskyConvoDefs.isMessageView(item.message) ||
+              ChatBskyConvoDefs.isDeletedMessageView(item.message))
           ) {
             const next = arr[i + 1]
 
             if (
               isConvoItemMessage(next) &&
+              next &&
               (ChatBskyConvoDefs.isMessageView(next.message) ||
                 ChatBskyConvoDefs.isDeletedMessageView(next.message))
             ) {
               nextMessage = next.message
-            }
-
-            const prev = arr[i - 1]
-
-            if (
-              isConvoItemMessage(prev) &&
-              (ChatBskyConvoDefs.isMessageView(prev.message) ||
-                ChatBskyConvoDefs.isDeletedMessageView(prev.message))
-            ) {
-              prevMessage = prev.message
             }
           }
 
           return {
             ...item,
             nextMessage,
-            prevMessage,
           }
         }
 
