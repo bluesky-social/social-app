@@ -10,6 +10,7 @@ import {
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {GestureActionView} from '#/lib/custom-animations/GestureActionView'
 import {useHaptics} from '#/lib/haptics'
 import {decrementBadgeCount} from '#/lib/notifications/notifications'
 import {logEvent} from '#/lib/statsig/statsig'
@@ -31,11 +32,11 @@ import {useDialogControl} from '#/components/Dialog'
 import {ConvoMenu} from '#/components/dms/ConvoMenu'
 import {LeaveConvoPrompt} from '#/components/dms/LeaveConvoPrompt'
 import {Bell2Off_Filled_Corner0_Rounded as BellStroke} from '#/components/icons/Bell2'
+import {Trash_Stroke2_Corner0_Rounded} from '#/components/icons/Trash'
 import {Link} from '#/components/Link'
 import {useMenuControl} from '#/components/Menu'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {Text} from '#/components/Typography'
-import {SwipeableRow} from './SwipeableRow'
 
 export let ChatListItem = ({
   convo,
@@ -201,7 +202,17 @@ function ChatListItemReady({
   }, [playHaptic, menuControl])
 
   return (
-    <SwipeableRow onDelete={leaveConvoControl.open}>
+    <GestureActionView
+      actions={{
+        leftFirst: {
+          threshold: 150,
+          color: t.palette.negative_500,
+          icon: Trash_Stroke2_Corner0_Rounded,
+          action: () => {
+            leaveConvoControl.open()
+          },
+        },
+      }}>
       <View
         // @ts-expect-error web only
         onMouseEnter={onMouseEnter}
@@ -385,6 +396,6 @@ function ChatListItemReady({
           currentScreen="list"
         />
       </View>
-    </SwipeableRow>
+    </GestureActionView>
   )
 }

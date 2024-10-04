@@ -32,7 +32,7 @@ interface GestureActions {
 }
 
 const MAX_WIDTH = Dimensions.get('screen').width
-const ICON_SIZE = 42
+const ICON_SIZE = 38
 
 export function GestureActionView({
   children,
