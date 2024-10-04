@@ -172,18 +172,22 @@ export const InnerFlatList = React.forwardRef<
   ListProps<any> & {webInnerStyle?: StyleProp<ViewStyle>}
 >(function InnerFlatList({style, ...props}, ref) {
   const insets = useSafeAreaInsets()
+  const t = useTheme()
   const {nativeSnapPoint} = useDialogContext()
   return (
-    <List
-      keyboardShouldPersistTaps="handled"
-      bounces={nativeSnapPoint === BottomSheetSnapPoint.Full}
-      ListFooterComponent={
-        <View style={{height: insets.bottom + a.pt_5xl.paddingTop}} />
-      }
-      ref={ref}
-      {...props}
-      style={[a.pt_2xl, style]}
-    />
+    <>
+      <View style={[a.w_full, t.atoms.bg, {height: a.pt_sm.paddingTop}]} />
+      <List
+        keyboardShouldPersistTaps="handled"
+        bounces={nativeSnapPoint === BottomSheetSnapPoint.Full}
+        ListFooterComponent={
+          <View style={{height: insets.bottom + a.pt_5xl.paddingTop}} />
+        }
+        ref={ref}
+        {...props}
+        style={[style]}
+      />
+    </>
   )
 })
 
@@ -194,7 +198,7 @@ export function Handle() {
   const {close} = useDialogContext()
 
   return (
-    <View style={[a.absolute, a.w_full, a.align_center, a.z_10, {height: 20}]}>
+    <View style={[a.w_full, a.align_center, a.z_10, t.atoms.bg, {height: 20}]}>
       <Pressable
         accessible={screenReaderEnabled}
         onPress={() => close()}

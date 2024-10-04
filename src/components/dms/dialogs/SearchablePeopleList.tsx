@@ -246,13 +246,7 @@ export function SearchablePeopleList({
           t.atoms.border_contrast_low,
           t.atoms.bg,
         ]}>
-        <View
-          style={[
-            a.relative,
-            native(a.align_center),
-            a.justify_center,
-            {height: 32},
-          ]}>
+        <View style={[a.relative, native(a.align_center), a.justify_center]}>
           <Text
             style={[
               a.z_10,
@@ -263,22 +257,24 @@ export function SearchablePeopleList({
             ]}>
             {title}
           </Text>
-          <Button
-            label={_(msg`Close`)}
-            size="small"
-            shape="round"
-            variant={isWeb ? 'ghost' : 'solid'}
-            color="secondary"
-            style={[
-              a.absolute,
-              a.z_20,
-              web({right: -4}),
-              native({right: 0}),
-              native({height: 32, width: 32, borderRadius: 16}),
-            ]}
-            onPress={() => control.close()}>
-            <ButtonIcon icon={X} size="md" />
-          </Button>
+          {isWeb ? (
+            <Button
+              label={_(msg`Close`)}
+              size="small"
+              shape="round"
+              variant={isWeb ? 'ghost' : 'solid'}
+              color="secondary"
+              style={[
+                a.absolute,
+                a.z_20,
+                web({right: -4}),
+                native({right: 0}),
+                native({height: 32, width: 32, borderRadius: 16}),
+              ]}
+              onPress={() => control.close()}>
+              <ButtonIcon icon={X} size="md" />
+            </Button>
+          ) : null}
         </View>
 
         <View style={[native([a.pt_sm]), web([a.pt_xs])]}>
