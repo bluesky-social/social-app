@@ -55,10 +55,7 @@ export function NewChat({
         accessibilityHint=""
       />
 
-      <Dialog.Outer
-        control={control}
-        testID="newChatDialog"
-        nativeOptions={{topInset: 16}}>
+      <Dialog.Outer control={control} testID="newChatDialog">
         <Dialog.Handle />
         <SearchablePeopleList
           title={_(msg`Start a new chat`)}
