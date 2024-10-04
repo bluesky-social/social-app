@@ -1,7 +1,6 @@
 import React, {useCallback} from 'react'
 import {View} from 'react-native'
-// TODO: replace with ReanimatedSwipeable when we next upgrade RNGH -sfn
-import Swipeable from 'react-native-gesture-handler/Swipeable'
+import Swipeable from 'react-native-gesture-handler/ReanimatedSwipeable'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
