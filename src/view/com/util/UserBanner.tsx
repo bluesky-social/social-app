@@ -17,6 +17,7 @@ import {logger} from '#/logger'
 import {isAndroid, isNative} from '#/platform/detection'
 import {EventStopper} from '#/view/com/util/EventStopper'
 import {tokens, useTheme as useAlfTheme} from '#/alf'
+import {useSheetWrapper} from '#/components/Dialog/sheet-wrapper'
 import {
   Camera_Filled_Stroke2_Corner0_Rounded as CameraFilled,
   Camera_Stroke2_Corner0_Rounded as Camera,
@@ -43,6 +44,7 @@ export function UserBanner({
   const {_} = useLingui()
   const {requestCameraAccessIfNeeded} = useCameraPermission()
   const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
+  const sheetWrapper = useSheetWrapper()
 
   const onOpenCamera = React.useCallback(async () => {
     if (!(await requestCameraAccessIfNeeded())) {
@@ -60,7 +62,7 @@ export function UserBanner({
     if (!(await requestPhotoAccessIfNeeded())) {
       return
     }
-    const items = await openPicker()
+    const items = await sheetWrapper(openPicker())
     if (!items[0]) {
       return
     }
@@ -80,7 +82,7 @@ export function UserBanner({
         logger.error('Failed to crop banner', {error: e})
       }
     }
-  }, [onSelectNewBanner, requestPhotoAccessIfNeeded])
+  }, [onSelectNewBanner, requestPhotoAccessIfNeeded, sheetWrapper])
 
   const onRemoveBanner = React.useCallback(() => {
     onSelectNewBanner?.(null)

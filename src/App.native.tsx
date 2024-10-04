@@ -11,7 +11,6 @@ import {
   SafeAreaProvider,
 } from 'react-native-safe-area-context'
 import * as SplashScreen from 'expo-splash-screen'
-import {setBackgroundColorAsync} from 'expo-system-ui'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -169,7 +168,6 @@ function App() {
   const [isReady, setReady] = useState(false)
 
   React.useEffect(() => {
-    setBackgroundColorAsync('#000')
     Promise.all([initPersistedState(), ensureGeolocationResolved()]).then(() =>
       setReady(true),
     )
