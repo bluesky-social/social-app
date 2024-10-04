@@ -31,6 +31,7 @@ class SheetViewController: UIViewController {
       sheet.detents = [
         .large()
       ]
+      sheet.selectedDetentIdentifier = .large
     } else {
       if #available(iOS 16.0, *) {
         sheet.detents = [
@@ -47,6 +48,7 @@ class SheetViewController: UIViewController {
       if !preventExpansion {
         sheet.detents.append(.large())
       }
+      sheet.selectedDetentIdentifier = .medium
     }
   }
 

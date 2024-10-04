@@ -129,11 +129,7 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
     if let sheet = sheetVc.sheetPresentationController {
       sheet.delegate = self
       sheet.preferredCornerRadius = self.cornerRadius
-      if sheet.detents.count == 1 {
-        self.selectedDetentIdentifier = .large
-      } else {
-        self.selectedDetentIdentifier = sheet.selectedDetentIdentifier
-      }
+      self.selectedDetentIdentifier = sheet.selectedDetentIdentifier
     }
     sheetVc.view.addSubview(innerView)
 

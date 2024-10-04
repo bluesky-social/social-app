@@ -1,11 +1,9 @@
 import * as React from 'react'
 import {
-  ColorValue,
   Dimensions,
   NativeSyntheticEvent,
   Platform,
   StyleProp,
-  StyleSheet,
   View,
   ViewStyle,
 } from 'react-native'
@@ -57,17 +55,6 @@ export class BottomSheet extends React.Component<
     this.props.onStateChange?.(event)
   }
 
-  private getBackgroundColor = (): ColorValue | undefined => {
-    const parent = React.Children.toArray(
-      this.props.children,
-    )[0] as React.ReactElement
-    if (parent?.props?.style) {
-      const parentStyle = StyleSheet.flatten(parent.props.style) as ViewStyle
-      return parentStyle.backgroundColor ?? 'transparent'
-    }
-    return undefined
-  }
-
   private updateLayout = () => {
     this.ref.current?.updateLayout()
   }
@@ -77,7 +64,7 @@ export class BottomSheet extends React.Component<
   }
 
   render() {
-    const {children, ...rest} = this.props
+    const {children, backgroundColor, ...rest} = this.props
     const topInset = rest.topInset ?? 0
     const bottomInset = rest.bottomInset ?? 0
     const cornerRadius = rest.cornerRadius ?? 0
@@ -86,7 +73,6 @@ export class BottomSheet extends React.Component<
       return null
     }
 
-    const backgroundColor = this.getBackgroundColor()
     return (
       <NativeView
         {...rest}

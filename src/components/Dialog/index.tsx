@@ -7,12 +7,17 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
-import {KeyboardAwareScrollView} from 'react-native-keyboard-controller'
+import {
+  KeyboardAwareScrollView,
+  useKeyboardHandler,
+} from 'react-native-keyboard-controller'
+import {runOnJS} from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {logger} from '#/logger'
+import {isIOS} from '#/platform/detection'
 import {useA11y} from '#/state/a11y'
 import {useDialogStateControlContext} from '#/state/dialogs'
 import {List, ListMethods, ListProps} from '#/view/com/util/List'
@@ -26,6 +31,10 @@ import {
 import {createInput} from '#/components/forms/TextField'
 import {Portal as DefaultPortal} from '#/components/Portal'
 import {BottomSheet, BottomSheetSnapPoint} from '../../../modules/bottom-sheet'
+import {
+  BottomSheetSnapPointChangeEvent,
+  BottomSheetStateChangeEvent,
+} from '../../../modules/bottom-sheet/src/BottomSheet.types'
 
 export {useDialogContext, useDialogControl} from '#/components/Dialog/context'
 export * from '#/components/Dialog/types'
@@ -45,7 +54,12 @@ export function Outer({
   const ref = React.useRef<BottomSheet>(null)
   const insets = useSafeAreaInsets()
   const closeCallbacks = React.useRef<(() => void)[]>([])
-  const {setDialogIsOpen} = useDialogStateControlContext()
+  const {setDialogIsOpen, setFullyExpandedCount} =
+    useDialogStateControlContext()
+
+  const prevSnapPoint = React.useRef<BottomSheetSnapPoint>(
+    BottomSheetSnapPoint.Hidden,
+  )
 
   const [snapPoint, setSnapPoint] = React.useState<BottomSheetSnapPoint>(
     BottomSheetSnapPoint.Partial,
@@ -88,6 +102,36 @@ export function Outer({
     onClose?.()
   }, [callQueuedCallbacks, control.id, onClose, setDialogIsOpen])
 
+  const onSnapPointChange = (e: BottomSheetSnapPointChangeEvent) => {
+    const {snapPoint} = e.nativeEvent
+    setSnapPoint(snapPoint)
+    console.log(e.nativeEvent)
+
+    if (
+      snapPoint === BottomSheetSnapPoint.Full &&
+      prevSnapPoint.current !== BottomSheetSnapPoint.Full
+    ) {
+      setFullyExpandedCount(c => c + 1)
+    } else if (
+      snapPoint !== BottomSheetSnapPoint.Full &&
+      prevSnapPoint.current === BottomSheetSnapPoint.Full
+    ) {
+      setFullyExpandedCount(c => c - 1)
+    }
+    prevSnapPoint.current = snapPoint
+  }
+
+  const onStateChange = (e: BottomSheetStateChangeEvent) => {
+    if (e.nativeEvent.state === 'closed') {
+      onCloseAnimationComplete()
+
+      if (prevSnapPoint.current === BottomSheetSnapPoint.Full) {
+        setFullyExpandedCount(c => c - 1)
+      }
+      prevSnapPoint.current = BottomSheetSnapPoint.Hidden
+    }
+  }
+
   useImperativeHandle(
     control.ref,
     () => ({
@@ -107,21 +151,14 @@ export function Outer({
       <Context.Provider value={context}>
         <BottomSheet
           ref={ref}
-          onSnapPointChange={e => {
-            setSnapPoint(e.nativeEvent.snapPoint)
-          }}
-          onStateChange={e => {
-            if (e.nativeEvent.state === 'closed') {
-              onCloseAnimationComplete()
-            }
-          }}
+          onSnapPointChange={onSnapPointChange}
+          onStateChange={onStateChange}
           cornerRadius={20}
           topInset={insets.top}
           bottomInset={insets.bottom}
+          backgroundColor={t.atoms.bg.backgroundColor}
           {...nativeOptions}>
-          <View testID={testID} style={[t.atoms.bg]}>
-            {children}
-          </View>
+          <View testID={testID}>{children}</View>
         </BottomSheet>
       </Context.Provider>
     </Portal>
@@ -149,14 +186,28 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
   function ScrollableInner({children, style, ...props}, ref) {
     const {nativeSnapPoint} = useDialogContext()
     const insets = useSafeAreaInsets()
+    const [keyboardHeight, setKeyboardHeight] = React.useState(0)
+    useKeyboardHandler({
+      onEnd: e => {
+        'worklet'
+        runOnJS(setKeyboardHeight)(e.height)
+      },
+    })
+
+    console.log('kb:', keyboardHeight)
+
+    const basePading =
+      (isIOS ? 30 : 50) + (isIOS ? keyboardHeight / 4 : keyboardHeight)
+    const fullPaddingBase = insets.bottom + insets.top + basePading
+    const fullPadding = isIOS ? fullPaddingBase : fullPaddingBase + 50
+
+    const paddingBottom =
+      nativeSnapPoint === BottomSheetSnapPoint.Full ? fullPadding : basePading
+
     return (
       <KeyboardAwareScrollView
         style={[a.pt_2xl, a.px_xl, style]}
-        contentContainerStyle={
-          nativeSnapPoint === BottomSheetSnapPoint.Full && [
-            {paddingBottom: insets.bottom + insets.top},
-          ]
-        }
+        contentContainerStyle={[{paddingBottom}]}
         ref={ref}
         {...props}
         bounces={nativeSnapPoint === BottomSheetSnapPoint.Full}
@@ -198,7 +249,7 @@ export function Handle() {
   const {close} = useDialogContext()
 
   return (
-    <View style={[a.w_full, a.align_center, a.z_10, t.atoms.bg, {height: 20}]}>
+    <View style={[a.w_full, a.align_center, a.z_10, {height: 20}]}>
       <Pressable
         accessible={screenReaderEnabled}
         onPress={() => close()}
