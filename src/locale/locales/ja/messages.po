@@ -234,10 +234,6 @@ msgstr "<0>{0}</0>はあなたのスターターパックに含まれていま�
 msgid "<0>{0}</0> members"
 msgstr "<0>{0}</0>のメンバー"
 
-#: src/components/dms/DateDivider.tsx:69
-msgid "<0>{date}</0> at {time}"
-msgstr "<0>{date}</0> {time}"
-
 #: src/view/com/modals/SelfLabel.tsx:135
 msgid "<0>Not Applicable.</0> This warning is only available for posts with media attached."
 msgstr "<0>適用できません。</0> この警告はメディアが添付された投稿にのみ利用可能です。"
@@ -6688,10 +6684,6 @@ msgstr "Blueskyにビデオをアップロードするには、まずメール�
 msgid "To whom would you like to send this report?"
 msgstr "この報告を誰に送りたいですか？"
 
-#: src/components/dms/DateDivider.tsx:44
-msgid "Today"
-msgstr "今日"
-
 #: src/view/com/util/forms/DropdownButton.tsx:255
 msgid "Toggle dropdown"
 msgstr "ドロップダウンを切り替え"
@@ -7450,9 +7442,9 @@ msgstr "はい、非表示にします"
 msgid "Yes, reactivate my account"
 msgstr "はい、アカウントを再有効化します"
 
-#: src/components/dms/DateDivider.tsx:46
-msgid "Yesterday"
-msgstr "昨日"
+#: src/components/dms/MessageItem.tsx:183
+msgid "Yesterday, {time}"
+msgstr "昨日、{time}"
 
 #: src/components/StarterPack/StarterPackCard.tsx:76
 #: src/screens/List/ListHiddenScreen.tsx:140
