@@ -10,7 +10,6 @@ import {listUriToHref} from '#/lib/strings/url-helpers'
 import {isNative} from '#/platform/detection'
 import {useSession} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
-import {BottomSheetInlineLinkText} from '#/components/BottomSheetLink'
 import * as Dialog from '#/components/Dialog'
 import {Divider} from '#/components/Divider'
 import {InlineLinkText} from '#/components/Link'
@@ -150,13 +149,13 @@ function ModerationDetailsDialogInner({
               <Text style={[t.atoms.text, a.text_md, a.leading_snug, a.mt_lg]}>
                 <Trans>This label was applied by </Trans>
               </Text>
-              <BottomSheetInlineLinkText
+              <InlineLinkText
                 label={desc.source || _(msg`an unknown labeler`)}
                 to={makeProfileLink({did: modcause.label.src, handle: ''})}
                 onPress={() => control.close()}
                 style={a.text_md}>
                 {desc.source || _(msg`an unknown labeler`)}
-              </BottomSheetInlineLinkText>
+              </InlineLinkText>
             </>
           )}
         </View>

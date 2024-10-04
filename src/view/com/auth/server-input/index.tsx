@@ -12,7 +12,6 @@ import * as TextField from '#/components/forms/TextField'
 import * as ToggleButton from '#/components/forms/ToggleButton'
 import {Globe_Stroke2_Corner0_Rounded as Globe} from '#/components/icons/Globe'
 import {InlineLinkText} from '#/components/Link'
-import {NormalizedRNGHPressable} from '#/components/NormalizedRNGHPressable'
 import {P, Text} from '#/components/Typography'
 
 export function ServerInputDialog({
@@ -83,10 +82,7 @@ export function ServerInputDialog({
             label="Preferences"
             values={fixedOption}
             onChange={setFixedOption}>
-            <ToggleButton.Button
-              name={BSKY_SERVICE}
-              label={_(msg`Bluesky`)}
-              PressableComponent={NormalizedRNGHPressable}>
+            <ToggleButton.Button name={BSKY_SERVICE} label={_(msg`Bluesky`)}>
               <ToggleButton.ButtonText>
                 {_(msg`Bluesky`)}
               </ToggleButton.ButtonText>
@@ -94,8 +90,7 @@ export function ServerInputDialog({
             <ToggleButton.Button
               testID="customSelectBtn"
               name="custom"
-              label={_(msg`Custom`)}
-              PressableComponent={NormalizedRNGHPressable}>
+              label={_(msg`Custom`)}>
               <ToggleButton.ButtonText>
                 {_(msg`Custom`)}
               </ToggleButton.ButtonText>

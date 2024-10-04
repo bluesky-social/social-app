@@ -15,9 +15,7 @@ import {
 import {LinearGradient} from 'expo-linear-gradient'
 
 import {atoms as a, flatten, select, tokens, useTheme} from '#/alf'
-import {useDialogContext} from '#/components/Dialog'
 import {Props as SVGIconProps} from '#/components/icons/common'
-import {NormalizedRNGHPressable} from '#/components/NormalizedRNGHPressable'
 import {Text} from '#/components/Typography'
 
 export type ButtonVariant = 'solid' | 'outline' | 'ghost' | 'gradient'
@@ -117,24 +115,11 @@ export const Button = React.forwardRef<View, ButtonProps>(
       disabled = false,
       style,
       hoverStyle: hoverStyleProp,
-      PressableComponent,
+      PressableComponent = Pressable,
       ...rest
     },
     ref,
   ) => {
-    /*
-     * This will pick the correct default pressable to use. If we are inside a
-     * native dialog, we need to use the RNGH pressable.
-     */
-    const {isNativeDialog} = useDialogContext()
-    if (!PressableComponent) {
-      if (isNativeDialog) {
-        PressableComponent = NormalizedRNGHPressable
-      } else {
-        PressableComponent = Pressable
-      }
-    }
-
     const t = useTheme()
     const [state, setState] = React.useState({
       pressed: false,

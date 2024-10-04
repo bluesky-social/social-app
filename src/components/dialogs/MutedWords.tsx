@@ -30,7 +30,6 @@ import {PageText_Stroke2_Corner0_Rounded as PageText} from '#/components/icons/P
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import {Loader} from '#/components/Loader'
-import {NormalizedRNGHPressable} from '#/components/NormalizedRNGHPressable'
 import {createPortalGroup} from '#/components/Portal'
 import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
@@ -178,8 +177,7 @@ function MutedWordsInner() {
                   <Toggle.Item
                     label={_(msg`Mute this word until you unmute it`)}
                     name="forever"
-                    style={[a.flex_1]}
-                    PressableComponent={NormalizedRNGHPressable}>
+                    style={[a.flex_1]}>
                     <TargetToggle>
                       <View
                         style={[
@@ -199,8 +197,7 @@ function MutedWordsInner() {
                   <Toggle.Item
                     label={_(msg`Mute this word for 24 hours`)}
                     name="24_hours"
-                    style={[a.flex_1]}
-                    PressableComponent={NormalizedRNGHPressable}>
+                    style={[a.flex_1]}>
                     <TargetToggle>
                       <View
                         style={[
@@ -229,8 +226,7 @@ function MutedWordsInner() {
                   <Toggle.Item
                     label={_(msg`Mute this word for 7 days`)}
                     name="7_days"
-                    style={[a.flex_1]}
-                    PressableComponent={NormalizedRNGHPressable}>
+                    style={[a.flex_1]}>
                     <TargetToggle>
                       <View
                         style={[
@@ -250,8 +246,7 @@ function MutedWordsInner() {
                   <Toggle.Item
                     label={_(msg`Mute this word for 30 days`)}
                     name="30_days"
-                    style={[a.flex_1]}
-                    PressableComponent={NormalizedRNGHPressable}>
+                    style={[a.flex_1]}>
                     <TargetToggle>
                       <View
                         style={[
@@ -292,8 +287,7 @@ function MutedWordsInner() {
                 <Toggle.Item
                   label={_(msg`Mute this word in post text and tags`)}
                   name="content"
-                  style={[a.flex_1]}
-                  PressableComponent={NormalizedRNGHPressable}>
+                  style={[a.flex_1]}>
                   <TargetToggle>
                     <View
                       style={[a.flex_1, a.flex_row, a.align_center, a.gap_sm]}>
@@ -309,8 +303,7 @@ function MutedWordsInner() {
                 <Toggle.Item
                   label={_(msg`Mute this word in tags only`)}
                   name="tag"
-                  style={[a.flex_1]}
-                  PressableComponent={NormalizedRNGHPressable}>
+                  style={[a.flex_1]}>
                   <TargetToggle>
                     <View
                       style={[a.flex_1, a.flex_row, a.align_center, a.gap_sm]}>
@@ -340,8 +333,7 @@ function MutedWordsInner() {
                 name="exclude_following"
                 style={[a.flex_row, a.justify_between]}
                 value={excludeFollowing}
-                onChange={setExcludeFollowing}
-                PressableComponent={NormalizedRNGHPressable}>
+                onChange={setExcludeFollowing}>
                 <TargetToggle>
                   <View
                     style={[a.flex_1, a.flex_row, a.align_center, a.gap_sm]}>

@@ -2,22 +2,33 @@ package expo.modules.bottomsheet
 
 import android.content.Context
 import android.view.View
+import android.view.ViewGroup
+import android.view.ViewStructure
+import android.view.accessibility.AccessibilityEvent
 import android.widget.FrameLayout
 import androidx.core.view.allViews
-import com.facebook.react.ReactRootView
+import com.facebook.react.bridge.LifecycleEventListener
+import com.facebook.react.bridge.ReactContext
+import com.facebook.react.bridge.UiThreadUtil
+import com.facebook.react.uimanager.UIManagerHelper
+import com.facebook.react.uimanager.events.EventDispatcher
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import expo.modules.kotlin.AppContext
 import expo.modules.kotlin.viewevent.EventDispatcher
 import expo.modules.kotlin.views.ExpoView
+import java.util.ArrayList
 
 class BottomSheetView(
   context: Context,
   appContext: AppContext,
-) : ExpoView(context, appContext) {
-  private var reactRootView: ReactRootView? = null
+) : ExpoView(context, appContext),
+  LifecycleEventListener {
   private var innerView: View? = null
   private var dialog: BottomSheetDialog? = null
+
+  private lateinit var dialogRootViewGroup: DialogRootViewGroup
+  private var eventDispatcher: EventDispatcher? = null
 
   private val screenHeight =
     context.resources.displayMetrics.heightPixels
@@ -104,14 +115,14 @@ class BottomSheetView(
   // Lifecycle
 
   init {
-    SheetManager.add(this)
-  }
+    (appContext.reactContext as? ReactContext)?.let {
+      it.addLifecycleEventListener(this)
+      this.eventDispatcher = UIManagerHelper.getEventDispatcherForReactTag(it, this.id)
 
-  override fun addView(
-    child: View?,
-    index: Int,
-  ) {
-    this.innerView = child
+      this.dialogRootViewGroup = DialogRootViewGroup(context)
+      this.dialogRootViewGroup.eventDispatcher = this.eventDispatcher
+    }
+    SheetManager.add(this)
   }
 
   override fun onLayout(
@@ -128,7 +139,6 @@ class BottomSheetView(
     this.isClosing = false
     this.isOpen = false
     this.dialog = null
-    this.reactRootView = null
     this.innerView = null
     SheetManager.remove(this)
   }
@@ -138,16 +148,10 @@ class BottomSheetView(
   private fun present() {
     if (this.isOpen || this.isOpening || this.isClosing) return
 
-    val innerView = this.innerView ?: return
     val contentHeight = this.getContentHeight()
 
-    // Needs to be a react root view for RNGH to work
-    val rootView = ReactRootView(context)
-    rootView.addView(innerView)
-    this.reactRootView = rootView
-
     val dialog = BottomSheetDialog(context)
-    dialog.setContentView(rootView)
+    dialog.setContentView(dialogRootViewGroup)
     dialog.setCancelable(!preventDismiss)
     dialog.setOnShowListener {
       val bottomSheet = dialog.findViewById<FrameLayout>(com.google.android.material.R.id.design_bottom_sheet)
@@ -237,10 +241,12 @@ class BottomSheetView(
 
   private fun getContentHeight(): Float {
     val innerView = this.innerView ?: return 0f
+    var index = 0
     innerView.allViews.forEach {
-      if (it.javaClass.simpleName == "RNGestureHandlerRootView") {
-        return it.height.toFloat() + 50f
+      if (index == 1) {
+        return it.height.toFloat()
       }
+      index++
     }
     return 0f
   }
@@ -266,4 +272,53 @@ class BottomSheetView(
     }
     return ratio
   }
+
+  override fun onHostResume() { }
+
+  override fun onHostPause() { }
+
+  override fun onHostDestroy() {
+    (appContext.reactContext as? ReactContext)?.let {
+      it.removeLifecycleEventListener(this)
+      this.destroy()
+    }
+  }
+
+  // View overrides to pass to DialogRootViewGroup instead
+
+  override fun dispatchProvideStructure(structure: ViewStructure?) {
+    dialogRootViewGroup.dispatchProvideStructure(structure)
+  }
+
+  override fun setId(id: Int) {
+    super.setId(id)
+    dialogRootViewGroup.id = id
+  }
+
+  override fun addView(
+    child: View?,
+    index: Int,
+  ) {
+    this.innerView = child
+    (child as ViewGroup).let {
+      dialogRootViewGroup.addView(child, index)
+    }
+  }
+
+  override fun removeView(view: View?) {
+    UiThreadUtil.assertOnUiThread()
+    if (view != null) {
+      dialogRootViewGroup.removeView(view)
+    }
+  }
+
+  override fun removeViewAt(index: Int) {
+    UiThreadUtil.assertOnUiThread()
+    val child = getChildAt(index)
+    dialogRootViewGroup.removeView(child)
+  }
+
+  override fun addChildrenForAccessibility(outChildren: ArrayList<View>?) { }
+
+  override fun dispatchPopulateAccessibilityEvent(event: AccessibilityEvent?): Boolean = false
 }

@@ -1,5 +1,5 @@
 import React from 'react'
-import {StyleProp, View, ViewStyle} from 'react-native'
+import {Pressable, StyleProp, View, ViewStyle} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import flattenReactChildren from 'react-keyed-flatten-children'
@@ -18,7 +18,6 @@ import {
   ItemTextProps,
   TriggerProps,
 } from '#/components/Menu/types'
-import {NormalizedRNGHPressable} from '#/components/NormalizedRNGHPressable'
 import {Text} from '#/components/Typography'
 
 export {
@@ -113,7 +112,7 @@ export function Item({children, label, style, onPress, ...rest}: ItemProps) {
   } = useInteractionState()
 
   return (
-    <NormalizedRNGHPressable
+    <Pressable
       {...rest}
       accessibilityHint=""
       accessibilityLabel={label}
@@ -149,7 +148,7 @@ export function Item({children, label, style, onPress, ...rest}: ItemProps) {
       <ItemContext.Provider value={{disabled: Boolean(rest.disabled)}}>
         {children}
       </ItemContext.Provider>
-    </NormalizedRNGHPressable>
+    </Pressable>
   )
 }
 

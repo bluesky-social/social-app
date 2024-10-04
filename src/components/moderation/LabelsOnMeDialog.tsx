@@ -13,9 +13,9 @@ import {logger} from '#/logger'
 import {useAgent, useSession} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
-import {BottomSheetInlineLinkText} from '#/components/BottomSheetLink'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
+import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {Divider} from '../Divider'
 import {Loader} from '../Loader'
@@ -165,14 +165,14 @@ function Label({
             <Text style={[t.atoms.text_contrast_medium]}>
               <Trans>Source: </Trans>{' '}
             </Text>
-            <BottomSheetInlineLinkText
+            <InlineLinkText
               label={sourceName}
               to={makeProfileLink(
                 labeler ? labeler.creator : {did: label.src, handle: ''},
               )}
               onPress={() => control.close()}>
               {sourceName}
-            </BottomSheetInlineLinkText>
+            </InlineLinkText>
           </View>
         )}
       </View>
@@ -243,7 +243,7 @@ function AppealForm({
         <Text style={[a.text_md, a.leading_snug]}>
           <Trans>This appeal will be sent to</Trans>{' '}
         </Text>
-        <BottomSheetInlineLinkText
+        <InlineLinkText
           label={sourceName}
           to={makeProfileLink(
             labeler ? labeler.creator : {did: label.src, handle: ''},
@@ -251,7 +251,7 @@ function AppealForm({
           onPress={() => control.close()}
           style={[a.text_md, a.leading_snug]}>
           {sourceName}
-        </BottomSheetInlineLinkText>
+        </InlineLinkText>
         <Text style={[a.text_md, a.leading_snug]}>.</Text>
       </View>
       <View style={[a.my_md]}>
