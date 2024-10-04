@@ -132,7 +132,7 @@ function AltTextInner({
   const control = Dialog.useDialogContext()
 
   const onPressSubmit = useCallback(() => {
-    onSubmit(altText)
+    onSubmit(enforceLen(altText, MAX_ALT_TEXT, true))
   }, [onSubmit, altText])
 
   return (
@@ -148,9 +148,7 @@ function AltTextInner({
                 <Dialog.Input
                   label={_(msg`Alt text`)}
                   placeholder={link.title}
-                  onChangeText={text =>
-                    setAltText(enforceLen(text, MAX_ALT_TEXT))
-                  }
+                  onChangeText={text => setAltText(text)}
                   value={altText}
                   multiline
                   numberOfLines={3}
