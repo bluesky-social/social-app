@@ -41,9 +41,10 @@ export function useSearchPostsQuery({
   const moderationOpts = useModerationOpts()
   const selectArgs = React.useMemo(
     () => ({
+      isSearchingSpecificUser: /from:(\w+)/.test(query),
       moderationOpts,
     }),
-    [moderationOpts],
+    [query, moderationOpts],
   )
   const lastRun = React.useRef<{
     data: InfiniteData<AppBskyFeedSearchPosts.OutputSchema>
@@ -73,7 +74,16 @@ export function useSearchPostsQuery({
     enabled: enabled ?? !!moderationOpts,
     select: React.useCallback(
       (data: InfiniteData<AppBskyFeedSearchPosts.OutputSchema>) => {
-        const {moderationOpts} = selectArgs
+        const {moderationOpts, isSearchingSpecificUser} = selectArgs
+
+        /*
+         * If a user applies the `from:<user>` filter, don't apply any
+         * moderation. Note that if we add any more filtering logic below, we
+         * may need to adjust this.
+         */
+        if (isSearchingSpecificUser) {
+          return data
+        }
 
         // Keep track of the last run and whether we can reuse
         // some already selected pages from there.
