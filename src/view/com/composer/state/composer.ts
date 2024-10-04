@@ -29,7 +29,7 @@ type Link = {
 
 // This structure doesn't exactly correspond to the data model.
 // Instead, it maps to how the UI is organized, and how we present a post.
-type EmbedDraft = {
+export type EmbedDraft = {
   // We'll always submit quote and actual media (images, video, gifs) chosen by the user.
   quote: Link | undefined
   media: ImagesMedia | VideoMedia | GifMedia | undefined
