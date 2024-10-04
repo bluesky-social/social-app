@@ -85,10 +85,10 @@
     multiformats "^9.9.0"
     tlds "^1.234.0"
 
-"@atproto/api@^0.13.8":
-  version "0.13.8"
-  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.13.8.tgz#44aa4992442812604bccf9eebe4d1db9ed64c179"
-  integrity sha512-1RlvMg8iAT5k3F0U3549ct9+jXthlXtfFXIfTXLyXXFe9Exfvmr7ZJ1ra41vU1nXGsoouCoTxj7kdzC4MY8JZg==
+"@atproto/api@^0.13.11":
+  version "0.13.11"
+  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.13.11.tgz#936664d9b57686840231fbab222e19abbe3f93c9"
+  integrity sha512-YW+4WzZEGGj/SDYo9w+S2PkSaeSS+8Dosk21GFm4EFYq1eq7G0cxuMgvdcq6fov7f9zqsaTFQL2fA6cAgMA0ow==
   dependencies:
     "@atproto/common-web" "^0.3.1"
     "@atproto/lexicon" "^0.4.2"
