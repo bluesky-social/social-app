@@ -130,7 +130,7 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
       sheet.delegate = self
       sheet.preferredCornerRadius = self.cornerRadius
       if sheet.detents.count == 1 {
-        sheet.selectedDetentIdentifier = .large
+        self.selectedDetentIdentifier = .large
       } else {
         self.selectedDetentIdentifier = sheet.selectedDetentIdentifier
       }
