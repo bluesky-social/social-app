@@ -22,7 +22,6 @@ import {getCurrentRoute} from '#/lib/routes/helpers'
 import {makeProfileLink} from '#/lib/routes/links'
 import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
 import {shareUrl} from '#/lib/sharing'
-import {logEvent} from '#/lib/statsig/statsig'
 import {richTextToString} from '#/lib/strings/rich-text-helpers'
 import {toShareUrl} from '#/lib/strings/url-helpers'
 import {useTheme} from '#/lib/ThemeContext'
@@ -351,7 +350,6 @@ let PostDropdownBtn = ({
   ])
 
   const onPressPin = useCallback(() => {
-    logEvent(isPinned ? 'post:unpin' : 'post:pin', {})
     pinPostMutate({
       postUri,
       postCid,
