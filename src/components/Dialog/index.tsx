@@ -13,7 +13,6 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {logger} from '#/logger'
-import {isIOS} from '#/platform/detection'
 import {useA11y} from '#/state/a11y'
 import {useDialogStateControlContext} from '#/state/dialogs'
 import {List, ListMethods, ListProps} from '#/view/com/util/List'
@@ -146,10 +145,11 @@ export function Outer({
       <Context.Provider value={context}>
         <BottomSheet
           ref={ref}
-          bottomInset={insets.bottom}
           onSnapPointChange={onSnapPointChange}
           onStateChange={onStateChange}
           cornerRadius={20}
+          topInset={insets.top}
+          bottomInset={insets.bottom}
           {...nativeOptions}>
           <View testID={testID} style={[t.atoms.bg]}>
             {children}
@@ -168,7 +168,7 @@ export function Inner({children, style}: DialogInnerProps) {
         a.pt_2xl,
         a.px_xl,
         {
-          paddingBottom: insets.bottom + a.pb_5xl.paddingBottom,
+          paddingBottom: insets.bottom + insets.top,
         },
         style,
       ]}>
@@ -179,21 +179,21 @@ export function Inner({children, style}: DialogInnerProps) {
 
 export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
   function ScrollableInner({children, style, ...props}, ref) {
-    const insets = useSafeAreaInsets()
     const {nativeSnapPoint} = useDialogContext()
+    const insets = useSafeAreaInsets()
     return (
       <KeyboardAwareScrollView
         style={[a.pt_2xl, a.px_xl, style]}
+        contentContainerStyle={
+          nativeSnapPoint === BottomSheetSnapPoint.Full && [
+            {paddingBottom: insets.bottom + insets.top},
+          ]
+        }
         ref={ref}
         {...props}
         bounces={nativeSnapPoint === BottomSheetSnapPoint.Full}
         bottomOffset={30}>
         {children}
-        <View
-          style={{
-            height: insets.bottom + a.pt_5xl.paddingTop * (isIOS ? 1 : 2.5),
-          }}
-        />
       </KeyboardAwareScrollView>
     )
   },
