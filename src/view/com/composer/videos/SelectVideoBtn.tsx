@@ -9,14 +9,12 @@ import {
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {SUPPORTED_MIME_TYPES, SupportedMimeTypes} from '#/lib/constants'
-import {BSKY_SERVICE} from '#/lib/constants'
 import {useVideoLibraryPermission} from '#/lib/hooks/usePermissions'
-import {getHostnameFromUrl} from '#/lib/strings/url-helpers'
-import {isWeb} from '#/platform/detection'
 import {isNative} from '#/platform/detection'
 import {useModalControls} from '#/state/modals'
 import {useSession} from '#/state/session'
+import {BSKY_SERVICE} from 'lib/constants'
+import {getHostnameFromUrl} from 'lib/strings/url-helpers'
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {VideoClip_Stroke2_Corner0_Rounded as VideoClipIcon} from '#/components/icons/VideoClip'
@@ -60,25 +58,16 @@ export function SelectVideoBtn({onSelectVideo, disabled, setError}: Props) {
           UIImagePickerPreferredAssetRepresentationMode.Current,
       })
       if (response.assets && response.assets.length > 0) {
-        const asset = response.assets[0]
-        try {
-          if (isWeb) {
-            // compression step on native converts to mp4, so no need to check there
-            const mimeType = getMimeType(asset)
-            if (
-              !SUPPORTED_MIME_TYPES.includes(mimeType as SupportedMimeTypes)
-            ) {
-              throw Error(_(msg`Unsupported video type: ${mimeType}`))
-            }
-          } else {
-            if (typeof asset.duration !== 'number') {
-              throw Error('Asset is not a video')
-            }
-            if (asset.duration > VIDEO_MAX_DURATION) {
-              throw Error(_(msg`Videos must be less than 60 seconds long`))
-            }
+        if (isNative) {
+          if (typeof response.assets[0].duration !== 'number')
+            throw Error('Asset is not a video')
+          if (response.assets[0].duration > VIDEO_MAX_DURATION) {
+            setError(_(msg`Videos must be less than 60 seconds long`))
+            return
           }
-          onSelectVideo(asset)
+        }
+        try {
+          onSelectVideo(response.assets[0])
         } catch (err) {
           if (err instanceof Error) {
             setError(err.message)
@@ -142,18 +131,4 @@ function VerifyEmailPrompt({control}: {control: Prompt.PromptControlProps}) {
       }}
     />
   )
-}
-
-function getMimeType(asset: ImagePickerAsset) {
-  if (isWeb) {
-    const [mimeType] = asset.uri.slice('data:'.length).split(';base64,')
-    if (!mimeType) {
-      throw new Error('Could not determine mime type')
-    }
-    return mimeType
-  }
-  if (!asset.mimeType) {
-    throw new Error('Could not determine mime type')
-  }
-  return asset.mimeType
 }

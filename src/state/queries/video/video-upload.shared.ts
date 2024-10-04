@@ -1,61 +1,73 @@
-import {BskyAgent} from '@atproto/api'
-import {I18n} from '@lingui/core'
+import {useCallback} from 'react'
 import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 import {VIDEO_SERVICE_DID} from '#/lib/constants'
 import {UploadLimitError} from '#/lib/media/video/errors'
 import {getServiceAuthAudFromUrl} from '#/lib/strings/url-helpers'
-import {createVideoAgent} from './util'
+import {useAgent} from '#/state/session'
+import {useVideoAgent} from './util'
 
-export async function getServiceAuthToken({
-  agent,
+export function useServiceAuthToken({
   aud,
   lxm,
   exp,
 }: {
-  agent: BskyAgent
   aud?: string
   lxm: string
   exp?: number
 }) {
-  const pdsAud = getServiceAuthAudFromUrl(agent.dispatchUrl)
-  if (!pdsAud) {
-    throw new Error('Agent does not have a PDS URL')
-  }
-  const {data: serviceAuth} = await agent.com.atproto.server.getServiceAuth({
-    aud: aud ?? pdsAud,
-    lxm,
-    exp,
-  })
-  return serviceAuth.token
+  const agent = useAgent()
+
+  return useCallback(async () => {
+    const pdsAud = getServiceAuthAudFromUrl(agent.dispatchUrl)
+
+    if (!pdsAud) {
+      throw new Error('Agent does not have a PDS URL')
+    }
+
+    const {data: serviceAuth} = await agent.com.atproto.server.getServiceAuth({
+      aud: aud ?? pdsAud,
+      lxm,
+      exp,
+    })
+
+    return serviceAuth.token
+  }, [agent, aud, lxm, exp])
 }
 
-export async function getVideoUploadLimits(agent: BskyAgent, _: I18n['_']) {
-  const token = await getServiceAuthToken({
-    agent,
+export function useVideoUploadLimits() {
+  const agent = useVideoAgent()
+  const getToken = useServiceAuthToken({
     lxm: 'app.bsky.video.getUploadLimits',
     aud: VIDEO_SERVICE_DID,
   })
-  const videoAgent = createVideoAgent()
-  const {data: limits} = await videoAgent.app.bsky.video
-    .getUploadLimits({}, {headers: {Authorization: `Bearer ${token}`}})
-    .catch(err => {
-      if (err instanceof Error) {
-        throw new UploadLimitError(err.message)
-      } else {
-        throw err
-      }
-    })
+  const {_} = useLingui()
 
-  if (!limits.canUpload) {
-    if (limits.message) {
-      throw new UploadLimitError(limits.message)
-    } else {
-      throw new UploadLimitError(
-        _(
-          msg`You have temporarily reached the limit for video uploads. Please try again later.`,
-        ),
+  return useCallback(async () => {
+    const {data: limits} = await agent.app.bsky.video
+      .getUploadLimits(
+        {},
+        {headers: {Authorization: `Bearer ${await getToken()}`}},
       )
+      .catch(err => {
+        if (err instanceof Error) {
+          throw new UploadLimitError(err.message)
+        } else {
+          throw err
+        }
+      })
+
+    if (!limits.canUpload) {
+      if (limits.message) {
+        throw new UploadLimitError(limits.message)
+      } else {
+        throw new UploadLimitError(
+          _(
+            msg`You have temporarily reached the limit for video uploads. Please try again later.`,
+          ),
+        )
+      }
     }
-  }
+  }, [agent, _, getToken])
 }
