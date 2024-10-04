@@ -11456,14 +11456,6 @@ expo-structured-headers@~3.8.0:
   resolved "https://registry.yarnpkg.com/expo-structured-headers/-/expo-structured-headers-3.8.0.tgz#11797a4c3a7a6770b21126cecffcda148030e361"
   integrity sha512-R+gFGn0x5CWl4OVlk2j1bJTJIz4KO8mPoCHpRHmfqMjmrMvrOM0qQSY3V5NHXwp1yT/L2v8aUmFQsBRIdvi1XA==
 
-expo-system-ui@~3.0.4:
-  version "3.0.4"
-  resolved "https://registry.yarnpkg.com/expo-system-ui/-/expo-system-ui-3.0.4.tgz#5ace49d38eb03c09a8041b3b82c581a6b974741a"
-  integrity sha512-v1n6hBO30k9qw6RE8/au4yNoovs71ExGuXizJUlR5KSo4Ruogpb+0/2q3uRZMDIYWWCANvms8L0UOh6fQJ5TXg==
-  dependencies:
-    "@react-native/normalize-colors" "~0.74.83"
-    debug "^4.3.2"
-
 expo-task-manager@~11.8.1:
   version "11.8.1"
   resolved "https://registry.yarnpkg.com/expo-task-manager/-/expo-task-manager-11.8.1.tgz#33089e78ee3fbd83327fb403bce12d69baf7d21b"
