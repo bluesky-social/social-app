@@ -1,7 +1,6 @@
 package expo.modules.bottomsheet
 
 import android.content.Context
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewStructure
@@ -245,7 +244,6 @@ class BottomSheetView(
     var index = 0
     innerView.allViews.forEach {
       if (index == 1) {
-        Log.d("BottomSheetView", it.javaClass.simpleName)
         return it.height.toFloat()
       }
       index++
