@@ -16,7 +16,13 @@ import {logger} from '#/logger'
 import {createVideoAgent} from '#/state/queries/video/util'
 import {uploadVideo} from '#/state/queries/video/video-upload'
 
-export type VideoAction =
+type Action =
+  | {type: 'to_idle'; nextController: AbortController}
+  | {
+      type: 'idle_to_compressing'
+      asset: ImagePickerAsset
+      signal: AbortSignal
+    }
   | {
       type: 'compressing_to_uploading'
       video: CompressedVideo
@@ -46,20 +52,15 @@ export type VideoAction =
       signal: AbortSignal
     }
 
-const noopController = new AbortController()
-noopController.abort()
-
-export const NO_VIDEO = Object.freeze({
-  status: 'idle',
-  progress: 0,
-  abortController: noopController,
-  asset: undefined,
-  video: undefined,
-  jobId: undefined,
-  pendingPublish: undefined,
-})
-
-export type NoVideoState = typeof NO_VIDEO
+type IdleState = {
+  status: 'idle'
+  progress: 0
+  abortController: AbortController
+  asset?: undefined
+  video?: undefined
+  jobId?: undefined
+  pendingPublish?: undefined
+}
 
 type ErrorState = {
   status: 'error'
@@ -113,7 +114,8 @@ type DoneState = {
   pendingPublish: {blobRef: BlobRef; mutableProcessed: boolean}
 }
 
-export type VideoState =
+export type State =
+  | IdleState
   | ErrorState
   | CompressingState
   | UploadingState
@@ -121,21 +123,19 @@ export type VideoState =
   | DoneState
 
 export function createVideoState(
-  asset: ImagePickerAsset,
-  abortController: AbortController,
-): CompressingState {
+  abortController: AbortController = new AbortController(),
+): IdleState {
   return {
-    status: 'compressing',
+    status: 'idle',
     progress: 0,
     abortController,
-    asset,
   }
 }
 
-export function videoReducer(
-  state: VideoState,
-  action: VideoAction,
-): VideoState {
+export function videoReducer(state: State, action: Action): State {
+  if (action.type === 'to_idle') {
+    return createVideoState(action.nextController)
+  }
   if (action.signal.aborted || action.signal !== state.abortController.signal) {
     // This action is stale and the process that spawned it is no longer relevant.
     return state
@@ -155,6 +155,15 @@ export function videoReducer(
       return {
         ...state,
         progress: action.progress,
+      }
+    }
+  } else if (action.type === 'idle_to_compressing') {
+    if (state.status === 'idle') {
+      return {
+        status: 'compressing',
+        progress: 0,
+        abortController: state.abortController,
+        asset: action.asset,
       }
     }
   } else if (action.type === 'update_dimensions') {
@@ -229,12 +238,18 @@ function trunc2dp(num: number) {
 
 export async function processVideo(
   asset: ImagePickerAsset,
-  dispatch: (action: VideoAction) => void,
+  dispatch: (action: Action) => void,
   agent: BskyAgent,
   did: string,
   signal: AbortSignal,
   _: I18n['_'],
 ) {
+  dispatch({
+    type: 'idle_to_compressing',
+    asset,
+    signal,
+  })
+
   let video: CompressedVideo | undefined
   try {
     video = await compressVideo(asset, {
