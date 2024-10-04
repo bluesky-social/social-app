@@ -55,7 +55,7 @@ export function childIsString(
 
 export function renderChildrenWithEmoji(
   children: StringChild,
-  props: TextProps,
+  props: Omit<TextProps, 'children'>,
 ) {
   const normalized = Array.isArray(children) ? children : [children]
 
@@ -169,6 +169,7 @@ export function Text({
   }
 
   const shared = {
+    uiTextView: true,
     selectable,
     style: s,
     dataSet: Object.assign({tooltip: title}, dataSet || {}),
@@ -176,7 +177,7 @@ export function Text({
   }
 
   return (
-    <UITextView uiTextView {...shared}>
+    <UITextView {...shared}>
       {isIOS && emoji ? renderChildrenWithEmoji(children, shared) : children}
     </UITextView>
   )
