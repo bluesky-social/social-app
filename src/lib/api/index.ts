@@ -24,8 +24,9 @@ import {
   writeThreadgateRecord,
 } from '#/state/queries/threadgate'
 import {ComposerState, EmbedDraft} from '#/view/com/composer/state/composer'
+import {createGIFDescription} from '../gif-alt-text'
 import {LinkMeta} from '../link-meta/link-meta'
-import {resolveGif,resolveLink, resolveRecord} from './resolve'
+import {resolveGif, resolveLink, resolveRecord} from './resolve'
 import {uploadBlob} from './upload-blob'
 
 export {uploadBlob}
@@ -194,7 +195,7 @@ async function resolveEmbed(
   if (draft.embed.quote) {
     const [resolvedMedia, resolvedQuote] = await Promise.all([
       resolveMedia(agent, draft.embed, onStateChange),
-      resolveRecord(draft.embed.quote.uri),
+      resolveRecord(agent, draft.embed.quote.uri),
     ])
     if (resolvedMedia) {
       return {
@@ -216,7 +217,7 @@ async function resolveEmbed(
     return resolvedMedia
   }
   if (draft.embed.link) {
-    const resolvedLink = await resolveLink(draft.embed.link.uri)
+    const resolvedLink = await resolveLink(agent, draft.embed.link.uri)
     if (resolvedLink.type === 'record') {
       return {
         $type: 'app.bsky.embed.record',
@@ -288,7 +289,8 @@ async function resolveMedia(
     }
   }
   if (embedDraft.media?.type === 'gif') {
-    const resolvedGif = await resolveGif(embedDraft.media.gif)
+    const gifDraft = embedDraft.media
+    const resolvedGif = await resolveGif(agent, gifDraft.gif)
     let blob: BlobRef | undefined
     if (resolvedGif.thumb) {
       onStateChange?.('Uploading link thumbnail...')
@@ -301,13 +303,13 @@ async function resolveMedia(
       external: {
         uri: resolvedGif.uri,
         title: resolvedGif.title,
-        description: resolvedGif.description,
+        description: createGIFDescription(resolvedGif.title, gifDraft.alt),
         thumb: blob,
       },
     }
   }
   if (embedDraft.link) {
-    const resolvedLink = await resolveLink(embedDraft.link.uri)
+    const resolvedLink = await resolveLink(agent, embedDraft.link.uri)
     if (resolvedLink.type === 'external') {
       let blob: BlobRef | undefined
       if (resolvedLink.thumb) {
