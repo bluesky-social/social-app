@@ -146,6 +146,7 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
     if let contentHeight = self.innerView?.subviews.first?.frame.size.height {
       self.sheetVc?.updateDetents(contentHeight: self.clampHeight(contentHeight),
                                preventExpansion: self.preventExpansion)
+      self.selectedDetentIdentifier = self.sheetVc?.getCurrentDetentIdentifier()
     }
   }
 

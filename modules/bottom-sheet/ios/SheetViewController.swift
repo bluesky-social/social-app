@@ -62,6 +62,13 @@ class SheetViewController: UIViewController {
       }
     }
   }
+  
+  func getCurrentDetentIdentifier() -> UISheetPresentationController.Detent.Identifier? {
+    guard let sheet = self.sheetPresentationController else {
+      return nil
+    }
+    return sheet.selectedDetentIdentifier
+  }
 
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
