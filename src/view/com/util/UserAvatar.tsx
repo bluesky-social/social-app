@@ -20,6 +20,7 @@ import {isAndroid, isNative, isWeb} from '#/platform/detection'
 import {precacheProfile} from '#/state/queries/profile'
 import {HighPriorityImage} from '#/view/com/util/images/Image'
 import {tokens, useTheme} from '#/alf'
+import {useSheetWrapper} from '#/components/Dialog/sheet-wrapper'
 import {
   Camera_Filled_Stroke2_Corner0_Rounded as CameraFilled,
   Camera_Stroke2_Corner0_Rounded as Camera,
@@ -271,6 +272,7 @@ let EditableUserAvatar = ({
   const {_} = useLingui()
   const {requestCameraAccessIfNeeded} = useCameraPermission()
   const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
+  const sheetWrapper = useSheetWrapper()
 
   const aviStyle = useMemo(() => {
     if (type === 'algo' || type === 'list') {
@@ -306,9 +308,11 @@ let EditableUserAvatar = ({
       return
     }
 
-    const items = await openPicker({
-      aspect: [1, 1],
-    })
+    const items = await sheetWrapper(
+      openPicker({
+        aspect: [1, 1],
+      }),
+    )
     const item = items[0]
     if (!item) {
       return
@@ -332,7 +336,7 @@ let EditableUserAvatar = ({
         logger.error('Failed to crop banner', {error: e})
       }
     }
-  }, [onSelectNewAvatar, requestPhotoAccessIfNeeded])
+  }, [onSelectNewAvatar, requestPhotoAccessIfNeeded, sheetWrapper])
 
   const onRemoveAvatar = React.useCallback(() => {
     onSelectNewAvatar(null)

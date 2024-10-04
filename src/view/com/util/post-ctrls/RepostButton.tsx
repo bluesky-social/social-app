@@ -86,7 +86,9 @@ let RepostButton = ({
           </Text>
         ) : undefined}
       </Button>
-      <Dialog.Outer control={dialogControl}>
+      <Dialog.Outer
+        control={dialogControl}
+        nativeOptions={{preventExpansion: true}}>
         <Dialog.Handle />
         <Dialog.Inner label={_(msg`Repost or quote post`)}>
           <View style={a.gap_xl}>
@@ -155,7 +157,6 @@ let RepostButton = ({
             </View>
             <Button
               label={_(msg`Cancel quote post`)}
-              onAccessibilityEscape={close}
               onPress={close}
               size="large"
               variant="solid"

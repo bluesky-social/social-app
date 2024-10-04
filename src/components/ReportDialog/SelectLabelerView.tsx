@@ -4,7 +4,6 @@ import {AppBskyLabelerDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-export {useDialogControl as useReportDialogControl} from '#/components/Dialog'
 import {getLabelingServiceTitle} from '#/lib/moderation'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, useButtonContext} from '#/components/Button'

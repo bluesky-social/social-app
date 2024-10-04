@@ -7,7 +7,7 @@ import {useLingui} from '@lingui/react'
 import {MAX_ALT_TEXT} from '#/lib/constants'
 import {useEnforceMaxGraphemeCount} from '#/lib/strings/helpers'
 import {LANGUAGES} from '#/locale/languages'
-import {isAndroid, isWeb} from '#/platform/detection'
+import {isWeb} from '#/platform/detection'
 import {useLanguagePrefs} from '#/state/preferences'
 import {atoms as a, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -17,6 +17,7 @@ import {CC_Stroke2_Corner0_Rounded as CCIcon} from '#/components/icons/CC'
 import {PageText_Stroke2_Corner0_Rounded as PageTextIcon} from '#/components/icons/PageText'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import {Warning_Stroke2_Corner0_Rounded as WarningIcon} from '#/components/icons/Warning'
+import {PortalComponent} from '#/components/Portal'
 import {Text} from '#/components/Typography'
 import {SubtitleFilePicker} from './SubtitleFilePicker'
 
@@ -29,6 +30,7 @@ interface Props {
   captions: CaptionsTrack[]
   saveAltText: (altText: string) => void
   setCaptions: (updater: (prev: CaptionsTrack[]) => CaptionsTrack[]) => void
+  Portal: PortalComponent
 }
 
 export function SubtitleDialogBtn(props: Props) {
@@ -56,9 +58,7 @@ export function SubtitleDialogBtn(props: Props) {
           {isWeb ? <Trans>Captions & alt text</Trans> : <Trans>Alt text</Trans>}
         </ButtonText>
       </Button>
-      <Dialog.Outer
-        control={control}
-        nativeOptions={isAndroid ? {sheet: {snapPoints: ['60%']}} : {}}>
+      <Dialog.Outer control={control} Portal={props.Portal}>
         <Dialog.Handle />
         <SubtitleDialogInner {...props} />
       </Dialog.Outer>
