@@ -204,14 +204,8 @@ func serve(cctx *cli.Context) error {
 			path := c.Request().URL.Path
 			maxAge := 1 * (60 * 60) // default is 1 hour
 
-			// Cache javascript and images files for 1 week, which works because
-			// they're always versioned (e.g. /static/js/main.64c14927.js)
-			if strings.HasPrefix(path, "/static/js/") || strings.HasPrefix(path, "/static/images/") || strings.HasPrefix(path, "/static/media/") {
-				maxAge = 7 * (60 * 60 * 24) // 1 week
-			}
-
-			// fonts can be cached for a year
-			if strings.HasSuffix(path, ".otf") {
+			// all assets in /static/js, /static/css, /static/media are content-hashed and can be cached for a long time
+			if strings.HasPrefix(path, "/static/js/") || strings.HasPrefix(path, "/static/css/") || strings.HasPrefix(path, "/static/media/") {
 				maxAge = 365 * (60 * 60 * 24) // 1 year
 			}
 
