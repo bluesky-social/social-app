@@ -67,6 +67,7 @@ export function ServerInputDialog({
 
   return (
     <Dialog.Outer control={control} onClose={onClose}>
+      <Dialog.Handle />
       <Dialog.ScrollableInner
         accessibilityDescribedBy="dialog-description"
         accessibilityLabelledBy="dialog-title">

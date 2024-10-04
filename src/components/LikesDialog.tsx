@@ -23,6 +23,7 @@ interface LikesDialogProps {
 export function LikesDialog(props: LikesDialogProps) {
   return (
     <Dialog.Outer control={props.control}>
+      <Dialog.Handle />
       <LikesDialogInner {...props} />
     </Dialog.Outer>
   )

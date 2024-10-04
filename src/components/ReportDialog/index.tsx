@@ -23,6 +23,7 @@ import {ReportDialogProps} from './types'
 export function ReportDialog(props: ReportDialogProps) {
   return (
     <Dialog.Outer control={props.control}>
+      <Dialog.Handle />
       <ReportDialogInner {...props} />
     </Dialog.Outer>
   )

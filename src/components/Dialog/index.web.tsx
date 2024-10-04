@@ -256,3 +256,7 @@ export function Close() {
     </View>
   )
 }
+
+export function Handle() {
+  return null
+}

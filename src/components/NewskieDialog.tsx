@@ -78,6 +78,7 @@ export function NewskieDialog({
       </Button>
 
       <Dialog.Outer control={control}>
+        <Dialog.Handle />
         <Dialog.ScrollableInner
           label={_(msg`New user info dialog`)}
           style={[{width: 'auto', maxWidth: 400, minWidth: 200}]}>

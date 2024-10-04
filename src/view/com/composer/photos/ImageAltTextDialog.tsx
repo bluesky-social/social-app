@@ -24,6 +24,7 @@ type Props = {
 export const ImageAltTextDialog = (props: Props): React.ReactNode => {
   return (
     <Dialog.Outer control={props.control} Portal={props.Portal}>
+      <Dialog.Handle />
       <ImageAltTextInner {...props} />
     </Dialog.Outer>
   )

@@ -26,6 +26,7 @@ export interface ModerationDetailsDialogProps {
 export function ModerationDetailsDialog(props: ModerationDetailsDialogProps) {
   return (
     <Dialog.Outer control={props.control}>
+      <Dialog.Handle />
       <ModerationDetailsDialogInner {...props} />
     </Dialog.Outer>
   )

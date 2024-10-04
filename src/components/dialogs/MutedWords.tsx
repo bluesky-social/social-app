@@ -42,6 +42,7 @@ export function MutedWordsDialog() {
   const {mutedWordsDialogControl: control} = useGlobalDialogsControlContext()
   return (
     <Dialog.Outer control={control}>
+      <Dialog.Handle />
       <MutedWordsInner />
     </Dialog.Outer>
   )

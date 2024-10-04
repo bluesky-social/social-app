@@ -42,6 +42,7 @@ export function SwitchAccountDialog({
 
   return (
     <Dialog.Outer control={control}>
+      <Dialog.Handle />
       <Dialog.ScrollableInner label={_(msg`Switch Account`)}>
         <View style={[a.gap_lg]}>
           <Text style={[a.text_2xl, a.font_bold]}>

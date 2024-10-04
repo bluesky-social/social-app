@@ -43,6 +43,7 @@ export function NeueTypography() {
 
   return (
     <Dialog.Outer control={control} onClose={onClose}>
+      <Dialog.Handle />
       <Dialog.ScrollableInner label={_(msg`Introducing new font settings`)}>
         <View style={[a.gap_xl]}>
           <View style={[a.gap_md]}>

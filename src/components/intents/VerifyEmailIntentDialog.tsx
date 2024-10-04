@@ -20,6 +20,7 @@ export function VerifyEmailIntentDialog() {
 
   return (
     <Dialog.Outer control={control}>
+      <Dialog.Handle />
       <Inner control={control} />
     </Dialog.Outer>
   )

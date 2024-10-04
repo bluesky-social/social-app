@@ -40,6 +40,7 @@ let ReportDialog = ({
   const {_} = useLingui()
   return (
     <Dialog.Outer control={control}>
+      <Dialog.Handle />
       <Dialog.ScrollableInner label={_(msg`Report this message`)}>
         <DialogInner params={params} />
         <Dialog.Close />

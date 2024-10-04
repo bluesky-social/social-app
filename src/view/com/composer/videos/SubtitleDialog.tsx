@@ -59,6 +59,7 @@ export function SubtitleDialogBtn(props: Props) {
         </ButtonText>
       </Button>
       <Dialog.Outer control={control} Portal={props.Portal}>
+        <Dialog.Handle />
         <SubtitleDialogInner {...props} />
       </Dialog.Outer>
     </View>

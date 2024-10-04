@@ -27,6 +27,7 @@ type EmbedDialogProps = {
 let EmbedDialog = ({control, ...rest}: EmbedDialogProps): React.ReactNode => {
   return (
     <Dialog.Outer control={control}>
+      <Dialog.Handle />
       <EmbedDialogInner {...rest} />
     </Dialog.Outer>
   )

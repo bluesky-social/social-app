@@ -21,6 +21,7 @@ export function SendViaChatDialog({
       control={control}
       testID="sendViaChatChatDialog"
       nativeOptions={{topInset: 16}}>
+      <Dialog.Handle />
       <SendViaChatDialogInner control={control} onSelectChat={onSelectChat} />
     </Dialog.Outer>
   )

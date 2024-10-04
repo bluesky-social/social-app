@@ -1,10 +1,20 @@
 import React, {useImperativeHandle} from 'react'
-import {ScrollView, StyleProp, TextInput, View, ViewStyle} from 'react-native'
+import {
+  Pressable,
+  ScrollView,
+  StyleProp,
+  TextInput,
+  View,
+  ViewStyle,
+} from 'react-native'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-controller'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 import {logger} from '#/logger'
 import {isIOS} from '#/platform/detection'
+import {useA11y} from '#/state/a11y'
 import {useDialogStateControlContext} from '#/state/dialogs'
 import {List, ListMethods, ListProps} from '#/view/com/util/List'
 import {atoms as a, useTheme} from '#/alf'
@@ -98,7 +108,6 @@ export function Outer({
       <Context.Provider value={context}>
         <BottomSheet
           ref={ref}
-          topInset={30}
           bottomInset={insets.bottom}
           onSnapPointChange={e => {
             setSnapPoint(e.nativeEvent.snapPoint)
@@ -124,6 +133,7 @@ export function Inner({children, style}: DialogInnerProps) {
   return (
     <View
       style={[
+        a.pt_2xl,
         a.px_xl,
         {
           paddingBottom: insets.bottom + a.pb_5xl.paddingBottom,
@@ -141,7 +151,7 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
     const {nativeSnapPoint} = useDialogContext()
     return (
       <KeyboardAwareScrollView
-        style={[a.px_xl, style]}
+        style={[a.pt_2xl, a.px_xl, style]}
         ref={ref}
         {...props}
         bounces={nativeSnapPoint === BottomSheetSnapPoint.Full}
@@ -172,10 +182,41 @@ export const InnerFlatList = React.forwardRef<
       }
       ref={ref}
       {...props}
-      style={style}
+      style={[a.pt_2xl, style]}
     />
   )
 })
+
+export function Handle() {
+  const t = useTheme()
+  const {_} = useLingui()
+  const {screenReaderEnabled} = useA11y()
+  const {close} = useDialogContext()
+
+  return (
+    <View style={[a.absolute, a.w_full, a.align_center, a.z_10, {height: 20}]}>
+      <Pressable
+        accessible={screenReaderEnabled}
+        onPress={() => close()}
+        accessibilityLabel={_(msg`Dismiss`)}
+        accessibilityHint={_(msg`Double tap to close the dialog`)}>
+        <View
+          style={[
+            a.rounded_sm,
+            {
+              top: 10,
+              width: 35,
+              height: 5,
+              alignSelf: 'center',
+              backgroundColor: t.palette.contrast_975,
+              opacity: 0.5,
+            },
+          ]}
+        />
+      </Pressable>
+    </View>
+  )
+}
 
 export function Close() {
   return null

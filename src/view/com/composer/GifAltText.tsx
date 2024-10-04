@@ -100,6 +100,7 @@ export function GifAltText({
       <AltTextReminder />
 
       <Dialog.Outer control={control} Portal={Portal}>
+        <Dialog.Handle />
         <AltTextInner
           onSubmit={onPressSubmit}
           link={link}

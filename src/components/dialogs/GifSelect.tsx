@@ -71,6 +71,7 @@ export function GifSelectDialog({
         // use system corner radius on iOS
         ...ios({cornerRadius: undefined}),
       }}>
+      <Dialog.Handle />
       <ErrorBoundary renderError={renderErrorBoundary}>
         <GifList control={control} onSelectGif={onSelectGif} />
       </ErrorBoundary>

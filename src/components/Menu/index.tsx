@@ -87,6 +87,7 @@ export function Outer({
     <Dialog.Outer
       control={context.control}
       nativeOptions={{preventExpansion: true}}>
+      <Dialog.Handle />
       {/* Re-wrap with context since Dialogs are portal-ed to root */}
       <Context.Provider value={context}>
         <Dialog.ScrollableInner label="Menu TODO">
