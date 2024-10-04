@@ -90,7 +90,7 @@ export function Outer({
       <Dialog.Handle />
       {/* Re-wrap with context since Dialogs are portal-ed to root */}
       <Context.Provider value={context}>
-        <Dialog.ScrollableInner label="Menu TODO">
+        <Dialog.ScrollableInner label="Menu TODO" style={[a.pt_sm]}>
           <View style={[a.gap_lg]}>
             {children}
             {isNative && showCancel && <Cancel />}
