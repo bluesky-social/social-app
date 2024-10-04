@@ -9,6 +9,7 @@ import {
   BlobRef,
   BskyAgent,
   ComAtprotoLabelDefs,
+  ComAtprotoRepoStrongRef,
   RichText,
 } from '@atproto/api'
 
@@ -26,7 +27,7 @@ import {
 import {ComposerState, EmbedDraft} from '#/view/com/composer/state/composer'
 import {createGIFDescription} from '../gif-alt-text'
 import {LinkMeta} from '../link-meta/link-meta'
-import {resolveGif, resolveLink, resolveRecord} from './resolve'
+import {resolveGif, resolveLink} from './resolve'
 import {uploadBlob} from './upload-blob'
 
 export {uploadBlob}
@@ -325,4 +326,15 @@ async function resolveMedia(
     }
   }
   return undefined
+}
+
+async function resolveRecord(
+  agent: BskyAgent,
+  uri: string,
+): Promise<ComAtprotoRepoStrongRef.Main> {
+  const resolvedLink = await resolveLink(agent, uri)
+  if (resolvedLink.type !== 'record') {
+    throw Error('Expected uri to resolve to a record')
+  }
+  return resolvedLink.record
 }

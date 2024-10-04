@@ -40,17 +40,6 @@ type ResolvedRecord = {
 
 type ResolvedLink = ResolvedExternalLink | ResolvedRecord
 
-export async function resolveRecord(
-  agent: BskyAgent,
-  uri: string,
-): Promise<ComAtprotoRepoStrongRef.Main> {
-  const resolvedLink = await resolveLink(agent, uri)
-  if (resolvedLink.type !== 'record') {
-    throw Error('Expected uri to resolve to a record')
-  }
-  return resolvedLink.record
-}
-
 export async function resolveLink(
   agent: BskyAgent,
   uri: string,
