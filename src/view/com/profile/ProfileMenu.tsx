@@ -1,10 +1,12 @@
 import React, {memo} from 'react'
+import {TouchableOpacity} from 'react-native'
 import {AppBskyActorDefs} from '@atproto/api'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {HITSLOP_20} from '#/lib/constants'
+import {HITSLOP_10} from '#/lib/constants'
 import {makeProfileLink} from '#/lib/routes/links'
 import {shareUrl} from '#/lib/sharing'
 import {toShareUrl} from '#/lib/strings/url-helpers'
@@ -20,9 +22,8 @@ import {
 import {useSession} from '#/state/session'
 import {EventStopper} from '#/view/com/util/EventStopper'
 import * as Toast from '#/view/com/util/Toast'
-import {Button, ButtonIcon} from '#/components/Button'
+import {atoms as a, useTheme} from '#/alf'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded as Share} from '#/components/icons/ArrowOutOfBox'
-import {DotGrid_Stroke2_Corner0_Rounded as Ellipsis} from '#/components/icons/DotGrid'
 import {Flag_Stroke2_Corner0_Rounded as Flag} from '#/components/icons/Flag'
 import {ListSparkle_Stroke2_Corner0_Rounded as List} from '#/components/icons/ListSparkle'
 import {Mute_Stroke2_Corner0_Rounded as Mute} from '#/components/icons/Mute'
@@ -44,6 +45,9 @@ let ProfileMenu = ({
 }): React.ReactNode => {
   const {_} = useLingui()
   const {currentAccount, hasSession} = useSession()
+  const t = useTheme()
+  // TODO ALF this
+  const alf = useTheme()
   const {openModal} = useModalControls()
   const reportDialogControl = useReportDialogControl()
   const queryClient = useQueryClient()
@@ -171,19 +175,28 @@ let ProfileMenu = ({
     <EventStopper onKeyDown={false}>
       <Menu.Root>
         <Menu.Trigger label={_(`More options`)}>
-          {({props}) => {
+          {({props, state}) => {
             return (
-              <Button
+              <TouchableOpacity
                 {...props}
+                hitSlop={HITSLOP_10}
                 testID="profileHeaderDropdownBtn"
-                label={_(msg`More options`)}
-                hitSlop={HITSLOP_20}
-                variant="solid"
-                color="secondary"
-                size="small"
-                shape="round">
-                <ButtonIcon icon={Ellipsis} size="sm" />
-              </Button>
+                style={[
+                  a.rounded_full,
+                  a.justify_center,
+                  a.align_center,
+                  {width: 36, height: 36},
+                  alf.atoms.bg_contrast_25,
+                  (state.hovered || state.pressed) && [
+                    alf.atoms.bg_contrast_50,
+                  ],
+                ]}>
+                <FontAwesomeIcon
+                  icon="ellipsis"
+                  size={20}
+                  style={t.atoms.text}
+                />
+              </TouchableOpacity>
             )
           }}
         </Menu.Trigger>

@@ -4,13 +4,12 @@ import {AppBskyActorDefs} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {logEvent} from '#/lib/statsig/statsig'
 import {useMaybeConvoForUser} from '#/state/queries/messages/get-convo-for-members'
+import {logEvent} from 'lib/statsig/statsig'
 import {atoms as a, useTheme} from '#/alf'
-import {ButtonIcon} from '#/components/Button'
-import {canBeMessaged} from '#/components/dms/util'
-import {Message_Stroke2_Corner0_Rounded as Message} from '#/components/icons/Message'
-import {Link} from '#/components/Link'
+import {Message_Stroke2_Corner0_Rounded as Message} from '../icons/Message'
+import {Link} from '../Link'
+import {canBeMessaged} from './util'
 
 export function MessageProfileButton({
   profile,
@@ -41,9 +40,15 @@ export function MessageProfileButton({
             a.align_center,
             t.atoms.bg_contrast_25,
             a.rounded_full,
-            {width: 34, height: 34},
+            {width: 36, height: 36},
           ]}>
-          <Message style={[t.atoms.text, {opacity: 0.3}]} size="md" />
+          <Message
+            style={[
+              t.atoms.text,
+              {marginLeft: 1, marginBottom: 1, opacity: 0.3},
+            ]}
+            size="md"
+          />
         </View>
       )
     } else {
@@ -61,9 +66,12 @@ export function MessageProfileButton({
         shape="round"
         label={_(msg`Message ${profile.handle}`)}
         to={`/messages/${convo.id}`}
-        style={[a.justify_center]}
+        style={[a.justify_center, {width: 36, height: 36}]}
         onPress={onPress}>
-        <ButtonIcon icon={Message} size="md" />
+        <Message
+          style={[t.atoms.text, {marginLeft: 1, marginBottom: 1}]}
+          size="md"
+        />
       </Link>
     )
   } else {
