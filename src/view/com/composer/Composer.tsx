@@ -184,9 +184,6 @@ export const ComposePost = ({
     initQuote,
   )
 
-  const [videoAltText, setVideoAltText] = useState('')
-  const [captions, setCaptions] = useState<{lang: string; file: File}[]>([])
-
   // TODO: Move more state here.
   const [composerState, dispatch] = useReducer(
     composerReducer,
@@ -422,10 +419,9 @@ export const ComposePost = ({
       try {
         postUri = (
           await apilib.post(agent, {
-            composerState, // TODO: not used yet.
+            composerState, // TODO: move more state here.
             rawText: richtext.text,
             replyTo: replyTo?.uri,
-            images,
             quote,
             extLink,
             labels,
@@ -433,18 +429,6 @@ export const ComposePost = ({
             postgate,
             onStateChange: setProcessingState,
             langs: toPostLanguages(langPrefs.postLanguage),
-            video:
-              videoState.status === 'done'
-                ? {
-                    blobRef: videoState.pendingPublish.blobRef,
-                    altText: videoAltText,
-                    captions: captions,
-                    aspectRatio: {
-                      width: videoState.asset.width,
-                      height: videoState.asset.height,
-                    },
-                  }
-                : undefined,
           })
         ).uri
         try {
@@ -522,7 +506,6 @@ export const ComposePost = ({
     [
       _,
       agent,
-      captions,
       composerState,
       extLink,
       images,
@@ -541,9 +524,7 @@ export const ComposePost = ({
       setExtLink,
       setLangPrefs,
       threadgateAllowUISettings,
-      videoAltText,
       videoState.asset,
-      videoState.pendingPublish,
       videoState.status,
     ],
   )
@@ -811,10 +792,28 @@ export const ComposePost = ({
                     />
                   ) : null)}
                 <SubtitleDialogBtn
-                  defaultAltText={videoAltText}
-                  saveAltText={setVideoAltText}
-                  captions={captions}
-                  setCaptions={setCaptions}
+                  defaultAltText={videoState.altText}
+                  saveAltText={altText =>
+                    dispatch({
+                      type: 'embed_update_video',
+                      videoAction: {
+                        type: 'update_alt_text',
+                        altText,
+                        signal: videoState.abortController.signal,
+                      },
+                    })
+                  }
+                  captions={videoState.captions}
+                  setCaptions={updater => {
+                    dispatch({
+                      type: 'embed_update_video',
+                      videoAction: {
+                        type: 'update_captions',
+                        updater,
+                        signal: videoState.abortController.signal,
+                      },
+                    })
+                  }}
                 />
               </Animated.View>
             )}

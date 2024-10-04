@@ -22,13 +22,13 @@ import {SubtitleFilePicker} from './SubtitleFilePicker'
 
 const MAX_NUM_CAPTIONS = 1
 
+type CaptionsTrack = {lang: string; file: File}
+
 interface Props {
   defaultAltText: string
-  captions: {lang: string; file: File}[]
+  captions: CaptionsTrack[]
   saveAltText: (altText: string) => void
-  setCaptions: React.Dispatch<
-    React.SetStateAction<{lang: string; file: File}[]>
-  >
+  setCaptions: (updater: (prev: CaptionsTrack[]) => CaptionsTrack[]) => void
 }
 
 export function SubtitleDialogBtn(props: Props) {
@@ -198,9 +198,7 @@ function SubtitleFileRow({
   language: string
   file: File
   otherLanguages: {code2: string; code3: string; name: string}[]
-  setCaptions: React.Dispatch<
-    React.SetStateAction<{lang: string; file: File}[]>
-  >
+  setCaptions: (updater: (prev: CaptionsTrack[]) => CaptionsTrack[]) => void
   style: StyleProp<ViewStyle>
 }) {
   const {_} = useLingui()
