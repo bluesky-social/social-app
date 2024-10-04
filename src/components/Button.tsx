@@ -370,31 +370,26 @@ export const Button = React.forwardRef<View, ButtonProps>(
       } else if (shape === 'round' || shape === 'square') {
         if (size === 'large') {
           if (shape === 'round') {
-            baseStyles.push({height: 46, width: 46, borderRadius: 23})
+            baseStyles.push({height: 46, width: 46})
           } else {
             baseStyles.push({height: 44, width: 44})
           }
         } else if (size === 'small') {
           if (shape === 'round') {
-            baseStyles.push({height: 36, width: 36, borderRadius: 18})
+            baseStyles.push({height: 36, width: 36})
           } else {
             baseStyles.push({height: 34, width: 34})
           }
         } else if (size === 'tiny') {
           if (shape === 'round') {
-            baseStyles.push({height: 22, width: 22, borderRadius: 11})
+            baseStyles.push({height: 22, width: 22})
           } else {
             baseStyles.push({height: 21, width: 21})
           }
         }
 
         if (shape === 'round') {
-          // NOTE: rounded_full does not work with RNGH - it causes the background
-          // to shrivel up and disappear. I've move it to above where we set the
-          // height/width so it can be exactly the right value. Undo this when
-          // RNGH fixes this -sfn
-          //
-          // baseStyles.push(a.rounded_full)
+          baseStyles.push(a.rounded_full)
         } else if (shape === 'square') {
           if (size === 'tiny') {
             baseStyles.push(a.rounded_xs)
