@@ -60,6 +60,7 @@ func serve(cctx *cli.Context) error {
 	basicAuthPassword := cctx.String("basic-auth-password")
 	corsOrigins := cctx.StringSlice("cors-allowed-origins")
 	staticCDNHost := cctx.String("static-cdn-host")
+	staticCDNHost = strings.TrimSuffix(staticCDNHost, "/")
 
 	// Echo
 	e := echo.New()
