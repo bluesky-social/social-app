@@ -7,8 +7,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
-import {requireNativeModule} from 'expo'
-import {requireNativeViewManager} from 'expo-modules-core'
+import {requireNativeModule, requireNativeViewManager} from 'expo-modules-core'
 
 import {BottomSheetState, BottomSheetViewProps} from './BottomSheet.types'
 
