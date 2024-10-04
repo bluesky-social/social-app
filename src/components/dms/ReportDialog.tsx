@@ -277,6 +277,7 @@ function PreviewMessage({message}: {message: ChatBskyConvoDefs.MessageView}) {
           message,
           key: '',
           nextMessage: null,
+          prevMessage: null,
         }}
         style={[a.text_left, a.mb_0]}
       />

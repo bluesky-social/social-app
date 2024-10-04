@@ -24,7 +24,7 @@ import {
   threadgateAllowUISettingToAllowRecordValue,
   writeThreadgateRecord,
 } from '#/state/queries/threadgate'
-import {ComposerState} from '#/view/com/composer/state'
+import {ComposerState} from '#/view/com/composer/state/composer'
 import {LinkMeta} from '../link-meta/link-meta'
 import {uploadBlob} from './upload-blob'
 
