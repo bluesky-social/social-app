@@ -590,7 +590,9 @@ function MenuItem({
                 ? styles.menuItemCountTens
                 : undefined,
             ]}>
-            <Text style={styles.menuItemCountLabel} numberOfLines={1}>
+            <Text
+              style={[styles.menuItemCountLabel, a.font_bold]}
+              numberOfLines={1}>
               {count}
             </Text>
           </View>
@@ -666,7 +668,6 @@ const styles = StyleSheet.create({
   },
   menuItemCountLabel: {
     fontSize: 12,
-    fontWeight: '600',
     fontVariant: ['tabular-nums'],
     color: colors.white,
   },
