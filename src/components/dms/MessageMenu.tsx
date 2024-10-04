@@ -7,11 +7,11 @@ import {useLingui} from '@lingui/react'
 
 import {richTextToString} from '#/lib/strings/rich-text-helpers'
 import {getTranslatorLink} from '#/locale/helpers'
+import {isWeb} from '#/platform/detection'
+import {useConvoActive} from '#/state/messages/convo'
 import {useLanguagePrefs} from '#/state/preferences'
 import {useOpenLink} from '#/state/preferences/in-app-browser'
-import {isWeb} from 'platform/detection'
-import {useConvoActive} from 'state/messages/convo'
-import {useSession} from 'state/session'
+import {useSession} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
 import {ReportDialog} from '#/components/dms/ReportDialog'
@@ -120,7 +120,7 @@ export let MessageMenu = ({
             <Menu.Item
               testID="messageDropdownDeleteBtn"
               label={_(msg`Delete message for me`)}
-              onPress={deleteControl.open}>
+              onPress={() => deleteControl.open()}>
               <Menu.ItemText>{_(msg`Delete for me`)}</Menu.ItemText>
               <Menu.ItemIcon icon={Trash} position="right" />
             </Menu.Item>
@@ -128,7 +128,7 @@ export let MessageMenu = ({
               <Menu.Item
                 testID="messageDropdownReportBtn"
                 label={_(msg`Report message`)}
-                onPress={reportControl.open}>
+                onPress={() => reportControl.open()}>
                 <Menu.ItemText>{_(msg`Report`)}</Menu.ItemText>
                 <Menu.ItemIcon icon={Warning} position="right" />
               </Menu.Item>

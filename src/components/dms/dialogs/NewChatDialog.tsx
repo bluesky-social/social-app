@@ -2,9 +2,9 @@ import React, {useCallback} from 'react'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {useGetConvoForMembers} from '#/state/queries/messages/get-convo-for-members'
-import {logEvent} from 'lib/statsig/statsig'
 import {FAB} from '#/view/com/util/fab/FAB'
 import * as Toast from '#/view/com/util/Toast'
 import {useTheme} from '#/alf'
@@ -55,10 +55,8 @@ export function NewChat({
         accessibilityHint=""
       />
 
-      <Dialog.Outer
-        control={control}
-        testID="newChatDialog"
-        nativeOptions={{sheet: {snapPoints: ['100%']}}}>
+      <Dialog.Outer control={control} testID="newChatDialog">
+        <Dialog.Handle />
         <SearchablePeopleList
           title={_(msg`Start a new chat`)}
           onSelectChat={onCreateChat}

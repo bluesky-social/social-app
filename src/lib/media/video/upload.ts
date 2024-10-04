@@ -7,8 +7,8 @@ import {nanoid} from 'nanoid/non-secure'
 import {AbortError} from '#/lib/async/cancelable'
 import {ServerError} from '#/lib/media/video/errors'
 import {CompressedVideo} from '#/lib/media/video/types'
-import {createVideoEndpointUrl, mimeToExt} from './util'
 import {getServiceAuthToken, getVideoUploadLimits} from './upload.shared'
+import {createVideoEndpointUrl, mimeToExt} from './util'
 
 export async function uploadVideo({
   video,

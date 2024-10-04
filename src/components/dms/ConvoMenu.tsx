@@ -136,7 +136,7 @@ let ConvoMenu = ({
           <Menu.Outer>
             <Menu.Item
               label={_(msg`Leave conversation`)}
-              onPress={leaveConvoControl.open}>
+              onPress={() => leaveConvoControl.open()}>
               <Menu.ItemText>
                 <Trans>Leave conversation</Trans>
               </Menu.ItemText>
@@ -195,7 +195,7 @@ let ConvoMenu = ({
               </Menu.Item>
               <Menu.Item
                 label={_(msg`Report conversation`)}
-                onPress={reportControl.open}>
+                onPress={() => reportControl.open()}>
                 <Menu.ItemText>
                   <Trans>Report conversation</Trans>
                 </Menu.ItemText>
@@ -206,7 +206,7 @@ let ConvoMenu = ({
             <Menu.Group>
               <Menu.Item
                 label={_(msg`Leave conversation`)}
-                onPress={leaveConvoControl.open}>
+                onPress={() => leaveConvoControl.open()}>
                 <Menu.ItemText>
                   <Trans>Leave conversation</Trans>
                 </Menu.ItemText>

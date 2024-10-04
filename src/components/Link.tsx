@@ -103,17 +103,17 @@ export function useLink({
           linkRequiresWarning(href, displayText),
       )
 
-      if (requiresWarning) {
+      if (isWeb) {
         e.preventDefault()
+      }
 
+      if (requiresWarning) {
         openModal({
           name: 'link-warning',
           text: displayText,
           href: href,
         })
       } else {
-        e.preventDefault()
-
         if (isExternal) {
           openLink(href)
         } else {
