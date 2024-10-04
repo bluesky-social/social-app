@@ -51,7 +51,7 @@ index e9b330f..ec5f58c 100644
 
  @end
 diff --git a/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.m b/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.m
-index b09e653..3ad7140 100644
+index b09e653..288e60c 100644
 --- a/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.m
 +++ b/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.m
 @@ -22,6 +22,7 @@ @implementation RCTRefreshControl {
@@ -69,7 +69,7 @@ index b09e653..3ad7140 100644
 +- (void)didMoveToSuperview
 +{
 +  [super didMoveToSuperview];
-+  [self setCustomTintColorIfNeeded];
++  [self setTintColor:_customTintColor];
 +}
 +
  - (void)beginRefreshingProgrammatically
@@ -82,7 +82,7 @@ index b09e653..3ad7140 100644
 +- (void)setCustomTintColor:(UIColor *)customTintColor
 +{
 +  _customTintColor = customTintColor;
-+  [self setCustomTintColorIfNeeded];
++  [self setTintColor:customTintColor];
 +}
 +
 +// Fix for https://github.com/facebook/react-native/issues/43388
@@ -90,10 +90,10 @@ index b09e653..3ad7140 100644
 +// is set before the refresh control gets added to the scrollview. We'll call this
 +// function whenever the superview changes. We'll also call it if the value of customTintColor
 +// changes.
-+- (void)setCustomTintColorIfNeeded
++- (void)setTintColor:(UIColor *)tintColor
 +{
-+  if ([self.superview isKindOfClass:[UIScrollView class]] && self.tintColor != _customTintColor) {
-+    self.tintColor = _customTintColor;
++  if ([self.superview isKindOfClass:[UIScrollView class]] && self.tintColor != tintColor) {
++    [super setTintColor:tintColor];
 +  }
 +}
 +
