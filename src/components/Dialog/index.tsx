@@ -105,8 +105,6 @@ export function Outer({
   const onSnapPointChange = (e: BottomSheetSnapPointChangeEvent) => {
     const {snapPoint} = e.nativeEvent
     setSnapPoint(snapPoint)
-    console.log(e.nativeEvent)
-
     if (
       snapPoint === BottomSheetSnapPoint.Full &&
       prevSnapPoint.current !== BottomSheetSnapPoint.Full
