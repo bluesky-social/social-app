@@ -17,6 +17,7 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {logger} from '#/logger'
+import {isIOS} from '#/platform/detection'
 import {useA11y} from '#/state/a11y'
 import {useDialogStateControlContext} from '#/state/dialogs'
 import {List, ListMethods, ListProps} from '#/view/com/util/List'
@@ -104,6 +105,7 @@ export function Outer({
   const onSnapPointChange = (e: BottomSheetSnapPointChangeEvent) => {
     const {snapPoint} = e.nativeEvent
     setSnapPoint(snapPoint)
+    console.log(e.nativeEvent)
 
     if (
       snapPoint === BottomSheetSnapPoint.Full &&
@@ -154,10 +156,9 @@ export function Outer({
           cornerRadius={20}
           topInset={insets.top}
           bottomInset={insets.bottom}
+          backgroundColor={t.atoms.bg.backgroundColor}
           {...nativeOptions}>
-          <View testID={testID} style={[t.atoms.bg]}>
-            {children}
-          </View>
+          <View testID={testID}>{children}</View>
         </BottomSheet>
       </Context.Provider>
     </Portal>
@@ -192,16 +193,21 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
         runOnJS(setKeyboardHeight)(e.height)
       },
     })
-    const basePading = 30 + keyboardHeight / 2
+
+    console.log('kb:', keyboardHeight)
+
+    const basePading =
+      (isIOS ? 30 : 50) + (isIOS ? keyboardHeight / 4 : keyboardHeight)
+    const fullPaddingBase = insets.bottom + insets.top + basePading
+    const fullPadding = isIOS ? fullPaddingBase : fullPaddingBase + 50
+
+    const paddingBottom =
+      nativeSnapPoint === BottomSheetSnapPoint.Full ? fullPadding : basePading
 
     return (
       <KeyboardAwareScrollView
         style={[a.pt_2xl, a.px_xl, style]}
-        contentContainerStyle={[
-          nativeSnapPoint === BottomSheetSnapPoint.Full
-            ? {paddingBottom: insets.bottom + insets.top + basePading}
-            : {paddingBottom: basePading},
-        ]}
+        contentContainerStyle={[{paddingBottom}]}
         ref={ref}
         {...props}
         bounces={nativeSnapPoint === BottomSheetSnapPoint.Full}
@@ -243,7 +249,7 @@ export function Handle() {
   const {close} = useDialogContext()
 
   return (
-    <View style={[a.w_full, a.align_center, a.z_10, t.atoms.bg, {height: 20}]}>
+    <View style={[a.w_full, a.align_center, a.z_10, {height: 20}]}>
       <Pressable
         accessible={screenReaderEnabled}
         onPress={() => close()}

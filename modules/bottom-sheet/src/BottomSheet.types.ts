@@ -22,6 +22,7 @@ export interface BottomSheetViewProps {
   cornerRadius?: number
   preventDismiss?: boolean
   preventExpansion?: boolean
+  backgroundColor?: ColorValue
   containerBackgroundColor?: ColorValue
   topInset?: number
   bottomInset?: number
