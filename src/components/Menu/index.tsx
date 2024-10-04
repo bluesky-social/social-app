@@ -82,6 +82,7 @@ export function Outer({
   style?: StyleProp<ViewStyle>
 }>) {
   const context = React.useContext(Context)
+  const {_} = useLingui()
 
   return (
     <Dialog.Outer
@@ -90,7 +91,7 @@ export function Outer({
       <Dialog.Handle />
       {/* Re-wrap with context since Dialogs are portal-ed to root */}
       <Context.Provider value={context}>
-        <Dialog.ScrollableInner label="Menu TODO" style={[a.pt_sm]}>
+        <Dialog.ScrollableInner label={_(msg`Menu`)} style={[a.pt_sm]}>
           <View style={[a.gap_lg]}>
             {children}
             {isNative && showCancel && <Cancel />}
