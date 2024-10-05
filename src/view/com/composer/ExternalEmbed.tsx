@@ -2,6 +2,8 @@ import React from 'react'
 import {StyleProp, View, ViewStyle} from 'react-native'
 
 import {ExternalEmbedDraft} from '#/lib/api/index'
+import {cleanError} from '#/lib/strings/errors'
+import {useResolveGifQuery} from '#/state/queries/resolve-link'
 import {Gif} from '#/state/queries/tenor'
 import {ExternalEmbedRemoveBtn} from '#/view/com/composer/ExternalEmbedRemoveBtn'
 import {ExternalLinkEmbed} from '#/view/com/util/post-embeds/ExternalLinkEmbed'
@@ -10,25 +12,23 @@ import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 
 export const ExternalEmbedGif = ({
-  link,
   onRemove,
   gif,
 }: {
-  link: ExternalEmbedDraft
   onRemove: () => void
   gif: Gif
 }) => {
   const t = useTheme()
-
+  const {data, error} = useResolveGifQuery(gif)
   const linkInfo = React.useMemo(
     () =>
-      link && {
-        title: link.meta?.title ?? link.uri,
-        uri: link.uri,
-        description: link.meta?.description ?? '',
-        thumb: link.localThumb?.source.path,
+      data && {
+        title: data.title ?? data.uri,
+        uri: data.uri,
+        description: data.description ?? '',
+        thumb: data.thumb?.source.path,
       },
-    [link],
+    [data],
   )
 
   const loadingStyle: ViewStyle = {
@@ -38,24 +38,24 @@ export const ExternalEmbedGif = ({
 
   return (
     <View style={[a.overflow_hidden, t.atoms.border_contrast_medium]}>
-      {link.isLoading ? (
-        <Container style={loadingStyle}>
-          <Loader size="xl" />
-        </Container>
-      ) : link.meta?.error ? (
-        <Container style={[a.align_start, a.p_md, a.gap_xs]}>
-          <Text numberOfLines={1} style={t.atoms.text_contrast_high}>
-            {link.uri}
-          </Text>
-          <Text numberOfLines={2} style={[{color: t.palette.negative_400}]}>
-            {link.meta?.error}
-          </Text>
-        </Container>
-      ) : linkInfo ? (
+      {linkInfo ? (
         <View style={{pointerEvents: 'auto'}}>
           <ExternalLinkEmbed link={linkInfo} hideAlt />
         </View>
-      ) : null}
+      ) : error ? (
+        <Container style={[a.align_start, a.p_md, a.gap_xs]}>
+          <Text numberOfLines={1} style={t.atoms.text_contrast_high}>
+            {gif.url}
+          </Text>
+          <Text numberOfLines={2} style={[{color: t.palette.negative_400}]}>
+            {cleanError(error)}
+          </Text>
+        </Container>
+      ) : (
+        <Container style={loadingStyle}>
+          <Loader size="xl" />
+        </Container>
+      )}
       <ExternalEmbedRemoveBtn onRemove={onRemove} />
     </View>
   )

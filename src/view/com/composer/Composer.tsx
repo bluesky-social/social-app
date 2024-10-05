@@ -770,7 +770,6 @@ export const ComposePost = ({
                 {extGif ? (
                   <>
                     <ExternalEmbedGif
-                      link={extLink}
                       gif={extGif}
                       onRemove={() => {
                         dispatch({type: 'embed_remove_gif'})
