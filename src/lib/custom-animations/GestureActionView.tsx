@@ -62,8 +62,8 @@ export function GestureActionView({
     const max = actions.rightFirst ? MAX_WIDTH : 0
     return clamp(transX.value, min, max)
   })
-  const iconScale = useSharedValue(1)
 
+  const iconScale = useSharedValue(1)
   const isActive = useSharedValue(false)
   const hitFirst = useSharedValue(false)
   const hitSecond = useSharedValue(false)
