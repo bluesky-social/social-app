@@ -14,9 +14,9 @@ export const ExternalEmbedGif = ({
   onRemove,
   gif,
 }: {
-  link?: ExternalEmbedDraft
+  link: ExternalEmbedDraft
   onRemove: () => void
-  gif?: Gif
+  gif: Gif
 }) => {
   const t = useTheme()
 
@@ -31,23 +31,13 @@ export const ExternalEmbedGif = ({
     [link],
   )
 
-  if (!link) return null
-
-  const loadingStyle: ViewStyle | undefined = gif
-    ? {
-        aspectRatio:
-          gif.media_formats.gif.dims[0] / gif.media_formats.gif.dims[1],
-        width: '100%',
-      }
-    : undefined
+  const loadingStyle: ViewStyle = {
+    aspectRatio: gif.media_formats.gif.dims[0] / gif.media_formats.gif.dims[1],
+    width: '100%',
+  }
 
   return (
-    <View
-      style={[
-        !gif && a.mb_xl,
-        a.overflow_hidden,
-        t.atoms.border_contrast_medium,
-      ]}>
+    <View style={[a.overflow_hidden, t.atoms.border_contrast_medium]}>
       {link.isLoading ? (
         <Container style={loadingStyle}>
           <Loader size="xl" />
@@ -62,7 +52,7 @@ export const ExternalEmbedGif = ({
           </Text>
         </Container>
       ) : linkInfo ? (
-        <View style={{pointerEvents: !gif ? 'none' : 'auto'}}>
+        <View style={{pointerEvents: 'auto'}}>
           <ExternalLinkEmbed link={linkInfo} hideAlt />
         </View>
       ) : null}
@@ -74,11 +64,9 @@ export const ExternalEmbedGif = ({
 export const ExternalEmbedLink = ({
   link,
   onRemove,
-  gif,
 }: {
-  link?: ExternalEmbedDraft
+  link: ExternalEmbedDraft
   onRemove: () => void
-  gif?: Gif
 }) => {
   const t = useTheme()
 
@@ -93,25 +81,10 @@ export const ExternalEmbedLink = ({
     [link],
   )
 
-  if (!link) return null
-
-  const loadingStyle: ViewStyle | undefined = gif
-    ? {
-        aspectRatio:
-          gif.media_formats.gif.dims[0] / gif.media_formats.gif.dims[1],
-        width: '100%',
-      }
-    : undefined
-
   return (
-    <View
-      style={[
-        !gif && a.mb_xl,
-        a.overflow_hidden,
-        t.atoms.border_contrast_medium,
-      ]}>
+    <View style={[a.mb_xl, a.overflow_hidden, t.atoms.border_contrast_medium]}>
       {link.isLoading ? (
-        <Container style={loadingStyle}>
+        <Container>
           <Loader size="xl" />
         </Container>
       ) : link.meta?.error ? (
@@ -124,7 +97,7 @@ export const ExternalEmbedLink = ({
           </Text>
         </Container>
       ) : linkInfo ? (
-        <View style={{pointerEvents: !gif ? 'none' : 'auto'}}>
+        <View style={{pointerEvents: 'none'}}>
           <ExternalLinkEmbed link={linkInfo} hideAlt />
         </View>
       ) : null}
