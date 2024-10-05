@@ -77,13 +77,16 @@ export function Text({
       flattened.fontSize = flattened.fontSize * fonts.scaleMultiplier
     }
 
+    const shared = {
+      uiTextView: true,
+      selectable,
+      style: flattened,
+      ...props,
+    }
+
     return (
-      <UITextView
-        style={flattened}
-        selectable={selectable}
-        uiTextView
-        {...props}>
-        {isIOS && emoji ? renderChildrenWithEmoji(children) : children}
+      <UITextView {...shared}>
+        {isIOS && emoji ? renderChildrenWithEmoji(children, shared) : children}
       </UITextView>
     )
   }
@@ -104,14 +107,16 @@ export function Text({
     flattened.fontSize = flattened.fontSize * fonts.scaleMultiplier
   }
 
+  const shared = {
+    selectable,
+    style: flattened,
+    dataSet: Object.assign({tooltip: title}, dataSet || {}),
+    ...props,
+  }
+
   return (
-    <RNText
-      style={flattened}
-      // @ts-ignore web only -esb
-      dataSet={Object.assign({tooltip: title}, dataSet || {})}
-      selectable={selectable}
-      {...props}>
-      {isIOS && emoji ? renderChildrenWithEmoji(children) : children}
+    <RNText {...shared}>
+      {isIOS && emoji ? renderChildrenWithEmoji(children, shared) : children}
     </RNText>
   )
 }

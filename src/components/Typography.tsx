@@ -53,11 +53,14 @@ export function childIsString(
   )
 }
 
-export function renderChildrenWithEmoji(children: StringChild) {
+export function renderChildrenWithEmoji(
+  children: StringChild,
+  props: Omit<TextProps, 'children'> = {},
+) {
   const normalized = Array.isArray(children) ? children : [children]
 
   return (
-    <UITextView>
+    <UITextView {...props}>
       {normalized.map(child => {
         if (typeof child !== 'string') return child
 
@@ -68,10 +71,12 @@ export function renderChildrenWithEmoji(children: StringChild) {
         }
 
         return child.split(EMOJI).map((stringPart, index) => (
-          <UITextView key={index}>
+          <UITextView key={index} {...props}>
             {stringPart}
             {emojis[index] ? (
-              <UITextView style={{color: 'black', fontFamily: 'System'}}>
+              <UITextView
+                {...props}
+                style={[props?.style, {color: 'black', fontFamily: 'System'}]}>
                 {emojis[index]}
               </UITextView>
             ) : null}
@@ -163,15 +168,17 @@ export function Text({
     }
   }
 
+  const shared = {
+    uiTextView: true,
+    selectable,
+    style: s,
+    dataSet: Object.assign({tooltip: title}, dataSet || {}),
+    ...rest,
+  }
+
   return (
-    <UITextView
-      selectable={selectable}
-      uiTextView
-      style={s}
-      {...rest}
-      // @ts-ignore
-      dataSet={Object.assign({tooltip: title}, dataSet || {})}>
-      {isIOS && emoji ? renderChildrenWithEmoji(children) : children}
+    <UITextView {...shared}>
+      {isIOS && emoji ? renderChildrenWithEmoji(children, shared) : children}
     </UITextView>
   )
 }
