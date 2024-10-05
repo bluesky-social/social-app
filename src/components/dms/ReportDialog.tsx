@@ -10,13 +10,11 @@ import {useLingui} from '@lingui/react'
 import {useMutation} from '@tanstack/react-query'
 
 import {ReportOption} from '#/lib/moderation/useReportOptions'
-import {isAndroid} from '#/platform/detection'
 import {useAgent} from '#/state/session'
 import {CharProgress} from '#/view/com/composer/char-progress/CharProgress'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import * as Dialog from '#/components/Dialog'
-import {KeyboardControllerPadding} from '#/components/KeyboardControllerPadding'
 import {Button, ButtonIcon, ButtonText} from '../Button'
 import {Divider} from '../Divider'
 import {ChevronLeft_Stroke2_Corner0_Rounded as Chevron} from '../icons/Chevron'
@@ -41,14 +39,11 @@ let ReportDialog = ({
 }): React.ReactNode => {
   const {_} = useLingui()
   return (
-    <Dialog.Outer
-      control={control}
-      nativeOptions={isAndroid ? {sheet: {snapPoints: ['100%']}} : {}}>
+    <Dialog.Outer control={control}>
       <Dialog.Handle />
       <Dialog.ScrollableInner label={_(msg`Report this message`)}>
         <DialogInner params={params} />
         <Dialog.Close />
-        <KeyboardControllerPadding />
       </Dialog.ScrollableInner>
     </Dialog.Outer>
   )
@@ -277,6 +272,7 @@ function PreviewMessage({message}: {message: ChatBskyConvoDefs.MessageView}) {
           message,
           key: '',
           nextMessage: null,
+          prevMessage: null,
         }}
         style={[a.text_left, a.mb_0]}
       />

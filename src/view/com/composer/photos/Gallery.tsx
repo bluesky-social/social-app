@@ -21,6 +21,8 @@ import {ComposerImage, cropImage} from '#/state/gallery'
 import {Text} from '#/view/com/util/text/Text'
 import {useTheme} from '#/alf'
 import * as Dialog from '#/components/Dialog'
+import {PortalComponent} from '#/components/Portal'
+import {ComposerAction} from '../state/composer'
 import {EditImageDialog} from './EditImageDialog'
 import {ImageAltTextDialog} from './ImageAltTextDialog'
 
@@ -28,7 +30,8 @@ const IMAGE_GAP = 8
 
 interface GalleryProps {
   images: ComposerImage[]
-  onChange: (next: ComposerImage[]) => void
+  dispatch: (action: ComposerAction) => void
+  Portal: PortalComponent
 }
 
 export let Gallery = (props: GalleryProps): React.ReactNode => {
@@ -56,7 +59,12 @@ interface GalleryInnerProps extends GalleryProps {
   containerInfo: Dimensions
 }
 
-const GalleryInner = ({images, containerInfo, onChange}: GalleryInnerProps) => {
+const GalleryInner = ({
+  images,
+  containerInfo,
+  dispatch,
+  Portal,
+}: GalleryInnerProps) => {
   const {isMobile} = useWebMediaQueries()
 
   const {altTextControlStyle, imageControlsStyle, imageStyle} =
@@ -96,7 +104,7 @@ const GalleryInner = ({images, containerInfo, onChange}: GalleryInnerProps) => {
   return images.length !== 0 ? (
     <>
       <View testID="selectedPhotosView" style={styles.gallery}>
-        {images.map((image, index) => {
+        {images.map(image => {
           return (
             <GalleryItem
               key={image.source.id}
@@ -105,16 +113,12 @@ const GalleryInner = ({images, containerInfo, onChange}: GalleryInnerProps) => {
               imageControlsStyle={imageControlsStyle}
               imageStyle={imageStyle}
               onChange={next => {
-                onChange(
-                  images.map(i => (i.source === image.source ? next : i)),
-                )
+                dispatch({type: 'embed_update_image', image: next})
               }}
               onRemove={() => {
-                const next = images.slice()
-                next.splice(index, 1)
-
-                onChange(next)
+                dispatch({type: 'embed_remove_image', image})
               }}
+              Portal={Portal}
             />
           )
         })}
@@ -131,6 +135,7 @@ type GalleryItemProps = {
   imageStyle?: ViewStyle
   onChange: (next: ComposerImage) => void
   onRemove: () => void
+  Portal: PortalComponent
 }
 
 const GalleryItem = ({
@@ -140,6 +145,7 @@ const GalleryItem = ({
   imageStyle,
   onChange,
   onRemove,
+  Portal,
 }: GalleryItemProps): React.ReactNode => {
   const {_} = useLingui()
   const t = useTheme()
@@ -234,6 +240,7 @@ const GalleryItem = ({
         control={altTextControl}
         image={image}
         onChange={onChange}
+        Portal={Portal}
       />
 
       <EditImageDialog
