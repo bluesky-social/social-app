@@ -1,10 +1,8 @@
 import React, {useState} from 'react'
 import {TouchableOpacity, View} from 'react-native'
-import {AppBskyEmbedExternal} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {ExternalEmbedDraft} from '#/lib/api'
 import {HITSLOP_10, MAX_ALT_TEXT} from '#/lib/constants'
 import {parseAltFromGIFDescription} from '#/lib/gif-alt-text'
 import {
@@ -12,6 +10,7 @@ import {
   parseEmbedPlayerFromUrl,
 } from '#/lib/strings/embed-player'
 import {isAndroid} from '#/platform/detection'
+import {useResolveGifQuery} from '#/state/queries/resolve-link'
 import {Gif} from '#/state/queries/tenor'
 import {AltTextCounterWrapper} from '#/view/com/composer/AltTextCounterWrapper'
 import {atoms as a, native, useTheme} from '#/alf'
@@ -27,38 +26,54 @@ import {Text} from '#/components/Typography'
 import {GifEmbed} from '../util/post-embeds/GifEmbed'
 import {AltTextReminder} from './photos/Gallery'
 
-export function GifAltText({
-  link: linkProp,
+export function GifAltTextDialog({
   gif,
+  altText,
   onSubmit,
   Portal,
 }: {
-  link: ExternalEmbedDraft
   gif: Gif
+  altText: string
   onSubmit: (alt: string) => void
+  Portal: PortalComponent
+}) {
+  const {data} = useResolveGifQuery(gif)
+  const vendorAltText = parseAltFromGIFDescription(data?.description ?? '').alt
+  const params = data ? parseEmbedPlayerFromUrl(data.uri) : undefined
+  if (!data || !params) {
+    return null
+  }
+  return (
+    <GifAltTextDialogLoaded
+      altText={altText}
+      vendorAltText={vendorAltText}
+      thumb={data.thumb?.source.path}
+      params={params}
+      onSubmit={onSubmit}
+      Portal={Portal}
+    />
+  )
+}
+
+export function GifAltTextDialogLoaded({
+  vendorAltText,
+  altText,
+  onSubmit,
+  params,
+  thumb,
+  Portal,
+}: {
+  vendorAltText: string
+  altText: string
+  onSubmit: (alt: string) => void
+  params: EmbedPlayerParams
+  thumb: string | undefined
   Portal: PortalComponent
 }) {
   const control = Dialog.useDialogControl()
   const {_} = useLingui()
   const t = useTheme()
-
-  const {link, params} = React.useMemo(() => {
-    return {
-      link: {
-        title: linkProp.meta?.title ?? linkProp.uri,
-        uri: linkProp.uri,
-        description: linkProp.meta?.description ?? '',
-        thumb: linkProp.localThumb?.source.path,
-      },
-      params: parseEmbedPlayerFromUrl(linkProp.uri),
-    }
-  }, [linkProp])
-
-  const parsedAlt = parseAltFromGIFDescription(link.description)
-  const [altText, setAltText] = useState(parsedAlt.alt)
-
-  if (!gif || !params) return null
-
+  const [altTextDraft, setAltTextDraft] = useState(altText || vendorAltText)
   return (
     <>
       <TouchableOpacity
@@ -80,7 +95,7 @@ export function GifAltText({
           a.align_center,
           {backgroundColor: 'rgba(0, 0, 0, 0.75)'},
         ]}>
-        {parsedAlt.isPreferred ? (
+        {altText ? (
           <Check size="xs" fill={t.palette.white} style={a.ml_xs} />
         ) : (
           <Plus size="sm" fill={t.palette.white} />
@@ -97,17 +112,17 @@ export function GifAltText({
       <Dialog.Outer
         control={control}
         onClose={() => {
-          onSubmit(altText)
+          onSubmit(altTextDraft)
         }}
         Portal={Portal}>
         <Dialog.Handle />
         <AltTextInner
-          altText={altText}
-          setAltText={setAltText}
+          vendorAltText={vendorAltText}
+          altText={altTextDraft}
+          onChange={setAltTextDraft}
+          thumb={thumb}
           control={control}
-          link={link}
           params={params}
-          key={link.uri}
         />
       </Dialog.Outer>
     </>
@@ -115,17 +130,19 @@ export function GifAltText({
 }
 
 function AltTextInner({
+  vendorAltText,
   altText,
-  setAltText,
+  onChange,
   control,
-  link,
   params,
+  thumb,
 }: {
+  vendorAltText: string
   altText: string
-  setAltText: (text: string) => void
+  onChange: (text: string) => void
   control: DialogControlProps
-  link: AppBskyEmbedExternal.ViewExternal
   params: EmbedPlayerParams
+  thumb: string | undefined
 }) {
   const t = useTheme()
   const {_, i18n} = useLingui()
@@ -142,10 +159,8 @@ function AltTextInner({
               <TextField.Root>
                 <Dialog.Input
                   label={_(msg`Alt text`)}
-                  placeholder={link.title}
-                  onChangeText={text => {
-                    setAltText(text)
-                  }}
+                  placeholder={vendorAltText}
+                  onChangeText={onChange}
                   defaultValue={altText}
                   multiline
                   numberOfLines={3}
@@ -200,7 +215,7 @@ function AltTextInner({
           </Text>
           <View style={[a.align_center]}>
             <GifEmbed
-              thumb={link.thumb}
+              thumb={thumb}
               altText={altText}
               isPreferredAltText={true}
               params={params}

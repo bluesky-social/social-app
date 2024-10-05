@@ -89,7 +89,7 @@ import {
   ExternalEmbedGif,
   ExternalEmbedLink,
 } from '#/view/com/composer/ExternalEmbed'
-import {GifAltText} from '#/view/com/composer/GifAltText'
+import {GifAltTextDialog} from '#/view/com/composer/GifAltText'
 import {LabelsBtn} from '#/view/com/composer/labels/LabelsBtn'
 import {Gallery} from '#/view/com/composer/photos/Gallery'
 import {OpenCameraBtn} from '#/view/com/composer/photos/OpenCameraBtn'
@@ -763,7 +763,7 @@ export const ComposePost = ({
               Portal={Portal.Portal}
             />
             {images.length === 0 && extLink && (
-              <View style={a.relative}>
+              <View style={a.relative} key={extLink.uri}>
                 {extGif ? (
                   <>
                     <ExternalEmbedGif
@@ -773,9 +773,9 @@ export const ComposePost = ({
                         setExtLink(undefined)
                       }}
                     />
-                    <GifAltText
-                      link={extLink}
+                    <GifAltTextDialog
                       gif={extGif}
+                      altText={extGifAlt ?? ''}
                       onSubmit={handleChangeGifAltText}
                       Portal={Portal.Portal}
                     />
