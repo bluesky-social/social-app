@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react'
+import React, {useState} from 'react'
 import {TouchableOpacity, View} from 'react-native'
 import {AppBskyEmbedExternal} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
@@ -11,13 +11,13 @@ import {
   EmbedPlayerParams,
   parseEmbedPlayerFromUrl,
 } from '#/lib/strings/embed-player'
-import {enforceLen} from '#/lib/strings/helpers'
 import {isAndroid} from '#/platform/detection'
 import {Gif} from '#/state/queries/tenor'
 import {AltTextCounterWrapper} from '#/view/com/composer/AltTextCounterWrapper'
 import {atoms as a, native, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
+import {DialogControlProps} from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
@@ -53,15 +53,6 @@ export function GifAltText({
       params: parseEmbedPlayerFromUrl(linkProp.uri),
     }
   }, [linkProp])
-
-  const onPressSubmit = useCallback(
-    (alt: string) => {
-      control.close(() => {
-        onSubmit(alt)
-      })
-    },
-    [onSubmit, control],
-  )
 
   const parsedAlt = parseAltFromGIFDescription(link.description)
   const altTextRef = React.useRef<string>('')
@@ -112,10 +103,9 @@ export function GifAltText({
         <Dialog.Handle />
         <AltTextInner
           altTextRef={altTextRef}
-          onSubmit={onPressSubmit}
+          control={control}
           link={link}
           params={params}
-          initialValue={parsedAlt.isPreferred ? parsedAlt.alt : ''}
           key={link.uri}
         />
       </Dialog.Outer>
@@ -125,25 +115,18 @@ export function GifAltText({
 
 function AltTextInner({
   altTextRef,
-  onSubmit,
+  control,
   link,
   params,
-  initialValue: initalValue,
 }: {
   altTextRef: React.MutableRefObject<string>
-  onSubmit: (text: string) => void
+  control: DialogControlProps
   link: AppBskyEmbedExternal.ViewExternal
   params: EmbedPlayerParams
-  initialValue: string
 }) {
   const t = useTheme()
   const {_, i18n} = useLingui()
-  const [altText, setAltText] = useState(initalValue)
-  const control = Dialog.useDialogContext()
-
-  const onPressSubmit = useCallback(() => {
-    onSubmit(enforceLen(altText, MAX_ALT_TEXT, true))
-  }, [onSubmit, altText])
+  const [altText, setAltText] = useState(altTextRef.current)
 
   return (
     <Dialog.ScrollableInner label={_(msg`Add alt text`)}>
@@ -199,7 +182,9 @@ function AltTextInner({
               size="large"
               color="primary"
               variant="solid"
-              onPress={onPressSubmit}
+              onPress={() => {
+                control.close()
+              }}
               style={[a.flex_grow]}>
               <ButtonText>
                 <Trans>Save</Trans>

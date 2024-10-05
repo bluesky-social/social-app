@@ -12,6 +12,7 @@ import {AltTextCounterWrapper} from '#/view/com/composer/AltTextCounterWrapper'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
+import {DialogControlProps} from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {PortalComponent} from '#/components/Portal'
@@ -32,48 +33,39 @@ export const ImageAltTextDialog = ({
 }: Props): React.ReactNode => {
   const altTextRef = React.useRef<string>(image.alt)
 
-  const onSubmit = (text: string) => {
-    control.close()
-    onChange({
-      ...image,
-      alt: enforceLen(text, MAX_ALT_TEXT, true),
-    })
-  }
-
   return (
     <Dialog.Outer
       control={control}
       onClose={() => {
-        onSubmit(altTextRef.current)
+        onChange({
+          ...image,
+          alt: enforceLen(altTextRef.current, MAX_ALT_TEXT, true),
+        })
       }}
       Portal={Portal}>
       <Dialog.Handle />
       <ImageAltTextInner
+        control={control}
         image={image}
         altTextRef={altTextRef}
-        onSubmit={onSubmit}
       />
     </Dialog.Outer>
   )
 }
 
 const ImageAltTextInner = ({
-  image,
   altTextRef,
-  onSubmit,
+  control,
+  image,
 }: {
-  image: Props['image']
   altTextRef: React.MutableRefObject<string>
-  onSubmit: (text: string) => void
+  control: DialogControlProps
+  image: Props['image']
 }): React.ReactNode => {
   const {_, i18n} = useLingui()
   const t = useTheme()
   const windim = useWindowDimensions()
   const [altText, setAltText] = React.useState(image.alt)
-
-  const onPressSubmit = () => {
-    onSubmit(altText)
-  }
 
   const imageStyle = React.useMemo<ImageStyle>(() => {
     const maxWidth = isWeb ? 450 : windim.width
@@ -163,7 +155,9 @@ const ImageAltTextInner = ({
             size="large"
             color="primary"
             variant="solid"
-            onPress={onPressSubmit}
+            onPress={() => {
+              control.close()
+            }}
             style={[a.flex_grow]}>
             <ButtonText>
               <Trans>Save</Trans>
