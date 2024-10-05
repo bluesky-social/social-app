@@ -115,11 +115,7 @@ import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import {createPortalGroup} from '#/components/Portal'
 import * as Prompt from '#/components/Prompt'
 import {Text as NewText} from '#/components/Typography'
-import {
-  composerReducer,
-  createComposerState,
-  Link as ComposerLink,
-} from './state/composer'
+import {composerReducer, createComposerState} from './state/composer'
 import {NO_VIDEO, NoVideoState, processVideo, VideoState} from './state/video'
 
 const Portal = createPortalGroup()
@@ -266,9 +262,9 @@ export const ComposePost = ({
     extGif = composerState.embed.media.gif
     extGifAlt = composerState.embed.media.alt
   }
-  let extLink: ComposerLink | undefined
+  let extLink: string | undefined
   if (composerState.embed.link) {
-    extLink = composerState.embed.link
+    extLink = composerState.embed.link.uri
   }
 
   const onClose = useCallback(() => {
@@ -735,9 +731,9 @@ export const ComposePost = ({
             )}
 
             {!composerState.embed.media && extLink && (
-              <View style={a.relative} key={extLink.uri}>
+              <View style={a.relative} key={extLink}>
                 <ExternalEmbedLink
-                  uri={extLink.uri}
+                  uri={extLink}
                   onRemove={() => {
                     dispatch({type: 'embed_remove_link'})
                   }}
