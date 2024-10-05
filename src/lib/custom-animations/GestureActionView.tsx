@@ -366,7 +366,7 @@ function createInterpolation({
     }
   }
 
-  const offset = side === 'left' ? -15 : 15
+  const offset = side === 'left' ? -20 : 20
 
   if (side === 'left') {
     firstThreshold = -firstThreshold
