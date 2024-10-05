@@ -5852,10 +5852,6 @@ msgstr "경고 표시"
 msgid "Show warning and filter from feeds"
 msgstr "경고 표시 및 피드에서 필터링"
 
-#: src/view/com/post-thread/PostThreadFollowBtn.tsx:125
-#~ msgid "Shows posts from {0} in your feed"
-#~ msgstr "피드에 {0} 님의 게시물을 표시합니다"
-
 #: src/components/dialogs/Signin.tsx:97
 #: src/components/dialogs/Signin.tsx:99
 #: src/screens/Login/index.tsx:97
