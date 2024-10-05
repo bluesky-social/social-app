@@ -3,7 +3,10 @@ import {StyleProp, View, ViewStyle} from 'react-native'
 
 import {ExternalEmbedDraft} from '#/lib/api/index'
 import {cleanError} from '#/lib/strings/errors'
-import {useResolveGifQuery} from '#/state/queries/resolve-link'
+import {
+  useResolveGifQuery,
+  useResolveLinkQuery,
+} from '#/state/queries/resolve-link'
 import {Gif} from '#/state/queries/tenor'
 import {ExternalEmbedRemoveBtn} from '#/view/com/composer/ExternalEmbedRemoveBtn'
 import {ExternalLinkEmbed} from '#/view/com/util/post-embeds/ExternalLinkEmbed'
@@ -69,38 +72,43 @@ export const ExternalEmbedLink = ({
   onRemove: () => void
 }) => {
   const t = useTheme()
-
+  const {data, error} = useResolveLinkQuery(link.uri)
+  const externalData = data?.type === 'external' ? data : null
   const linkInfo = React.useMemo(
     () =>
-      link && {
-        title: link.meta?.title ?? link.uri,
-        uri: link.uri,
-        description: link.meta?.description ?? '',
-        thumb: link.localThumb?.source.path,
+      externalData && {
+        title: externalData.title ?? externalData.uri,
+        uri: externalData.uri,
+        description: externalData.description ?? '',
+        thumb: externalData.thumb?.source.path,
       },
-    [link],
+    [externalData],
   )
+
+  if (data?.type === 'record') {
+    return null // TODO: Display record embeds.
+  }
 
   return (
     <View style={[a.mb_xl, a.overflow_hidden, t.atoms.border_contrast_medium]}>
-      {link.isLoading ? (
-        <Container>
-          <Loader size="xl" />
-        </Container>
-      ) : link.meta?.error ? (
+      {linkInfo ? (
+        <View style={{pointerEvents: 'none'}}>
+          <ExternalLinkEmbed link={linkInfo} hideAlt />
+        </View>
+      ) : error ? (
         <Container style={[a.align_start, a.p_md, a.gap_xs]}>
           <Text numberOfLines={1} style={t.atoms.text_contrast_high}>
             {link.uri}
           </Text>
           <Text numberOfLines={2} style={[{color: t.palette.negative_400}]}>
-            {link.meta?.error}
+            {cleanError(error)}
           </Text>
         </Container>
-      ) : linkInfo ? (
-        <View style={{pointerEvents: 'none'}}>
-          <ExternalLinkEmbed link={linkInfo} hideAlt />
-        </View>
-      ) : null}
+      ) : (
+        <Container>
+          <Loader size="xl" />
+        </Container>
+      )}
       <ExternalEmbedRemoveBtn onRemove={onRemove} />
     </View>
   )
