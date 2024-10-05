@@ -764,25 +764,51 @@ export const ComposePost = ({
             />
             {images.length === 0 && extLink && (
               <View style={a.relative}>
-                <ExternalEmbed
-                  link={extLink}
-                  gif={extGif}
-                  onRemove={() => {
-                    if (extGif) {
-                      dispatch({type: 'embed_remove_gif'})
-                    } else {
-                      dispatch({type: 'embed_remove_link'})
-                    }
-                    setExtLink(undefined)
-                    setExtGif(undefined)
-                  }}
-                />
-                <GifAltText
-                  link={extLink}
-                  gif={extGif}
-                  onSubmit={handleChangeGifAltText}
-                  Portal={Portal.Portal}
-                />
+                {extGif ? (
+                  <>
+                    <ExternalEmbed
+                      link={extLink}
+                      gif={extGif}
+                      onRemove={() => {
+                        if (extGif) {
+                          dispatch({type: 'embed_remove_gif'})
+                        } else {
+                          dispatch({type: 'embed_remove_link'})
+                        }
+                        setExtLink(undefined)
+                        setExtGif(undefined)
+                      }}
+                    />
+                    <GifAltText
+                      link={extLink}
+                      gif={extGif}
+                      onSubmit={handleChangeGifAltText}
+                      Portal={Portal.Portal}
+                    />
+                  </>
+                ) : (
+                  <>
+                    <ExternalEmbed
+                      link={extLink}
+                      gif={extGif}
+                      onRemove={() => {
+                        if (extGif) {
+                          dispatch({type: 'embed_remove_gif'})
+                        } else {
+                          dispatch({type: 'embed_remove_link'})
+                        }
+                        setExtLink(undefined)
+                        setExtGif(undefined)
+                      }}
+                    />
+                    <GifAltText
+                      link={extLink}
+                      gif={extGif}
+                      onSubmit={handleChangeGifAltText}
+                      Portal={Portal.Portal}
+                    />
+                  </>
+                )}
               </View>
             )}
             <LayoutAnimationConfig skipExiting>
