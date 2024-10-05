@@ -387,10 +387,9 @@ function createInterpolation({
   }
 
   if (side === 'left') {
-    res = {
-      inputRange: res.inputRange.toReversed(),
-      outputRange: res.outputRange.toReversed(),
-    }
+    // Reverse the input/output ranges
+    res.inputRange.reverse()
+    res.outputRange.reverse()
   }
 
   return res
