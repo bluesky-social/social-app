@@ -31,7 +31,7 @@ export const ImageAltTextDialog = ({
   onChange,
   Portal,
 }: Props): React.ReactNode => {
-  const altTextRef = React.useRef<string>(image.alt)
+  const [altText, setAltText] = React.useState(image.alt)
 
   return (
     <Dialog.Outer
@@ -39,7 +39,7 @@ export const ImageAltTextDialog = ({
       onClose={() => {
         onChange({
           ...image,
-          alt: enforceLen(altTextRef.current, MAX_ALT_TEXT, true),
+          alt: enforceLen(altText, MAX_ALT_TEXT, true),
         })
       }}
       Portal={Portal}>
@@ -47,25 +47,27 @@ export const ImageAltTextDialog = ({
       <ImageAltTextInner
         control={control}
         image={image}
-        altTextRef={altTextRef}
+        altText={altText}
+        setAltText={setAltText}
       />
     </Dialog.Outer>
   )
 }
 
 const ImageAltTextInner = ({
-  altTextRef,
+  altText,
+  setAltText,
   control,
   image,
 }: {
-  altTextRef: React.MutableRefObject<string>
+  altText: string
+  setAltText: (text: string) => void
   control: DialogControlProps
   image: Props['image']
 }): React.ReactNode => {
   const {_, i18n} = useLingui()
   const t = useTheme()
   const windim = useWindowDimensions()
-  const [altText, setAltText] = React.useState(image.alt)
 
   const imageStyle = React.useMemo<ImageStyle>(() => {
     const maxWidth = isWeb ? 450 : windim.width
@@ -119,10 +121,9 @@ const ImageAltTextInner = ({
               <Dialog.Input
                 label={_(msg`Alt text`)}
                 onChangeText={text => {
-                  altTextRef.current = text
                   setAltText(text)
                 }}
-                value={altText}
+                defaultValue={altText}
                 multiline
                 numberOfLines={3}
                 autoFocus
