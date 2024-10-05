@@ -26,7 +26,7 @@ type GifMedia = {
   alt: string
 }
 
-type Link = {
+export type Link = {
   type: 'link'
   uri: string
 }

@@ -51,12 +51,10 @@ import {useQueryClient} from '@tanstack/react-query'
 import * as apilib from '#/lib/api/index'
 import {until} from '#/lib/async/until'
 import {MAX_GRAPHEME_LENGTH} from '#/lib/constants'
-import {createGIFDescription} from '#/lib/gif-alt-text'
 import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
 import {useIsKeyboardVisible} from '#/lib/hooks/useIsKeyboardVisible'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {LikelyType} from '#/lib/link-meta/link-meta'
 import {logEvent} from '#/lib/statsig/statsig'
 import {cleanError} from '#/lib/strings/errors'
 import {insertMentionAt} from '#/lib/strings/mention-manip'
@@ -101,7 +99,6 @@ import {SuggestedLanguage} from '#/view/com/composer/select-language/SuggestedLa
 // due to linting false positives
 import {TextInput, TextInputRef} from '#/view/com/composer/text-input/TextInput'
 import {ThreadgateBtn} from '#/view/com/composer/threadgate/ThreadgateBtn'
-import {useExternalLinkFetch} from '#/view/com/composer/useExternalLinkFetch'
 import {SelectVideoBtn} from '#/view/com/composer/videos/SelectVideoBtn'
 import {SubtitleDialogBtn} from '#/view/com/composer/videos/SubtitleDialog'
 import {VideoPreview} from '#/view/com/composer/videos/VideoPreview'
@@ -118,7 +115,11 @@ import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import {createPortalGroup} from '#/components/Portal'
 import * as Prompt from '#/components/Prompt'
 import {Text as NewText} from '#/components/Typography'
-import {composerReducer, createComposerState} from './state/composer'
+import {
+  composerReducer,
+  createComposerState,
+  Link as ComposerLink,
+} from './state/composer'
 import {NO_VIDEO, NoVideoState, processVideo, VideoState} from './state/video'
 
 const Portal = createPortalGroup()
@@ -248,7 +249,6 @@ export const ComposePost = ({
 
   const [publishOnUpload, setPublishOnUpload] = useState(false)
 
-  const {extLink, setExtLink} = useExternalLinkFetch({setQuote, setError})
   const [labels, setLabels] = useState<string[]>([])
   const [threadgateAllowUISettings, onChangeThreadgateAllowUISettings] =
     useState<ThreadgateAllowUISetting[]>(
@@ -265,6 +265,10 @@ export const ComposePost = ({
   if (composerState.embed.media?.type === 'gif') {
     extGif = composerState.embed.media.gif
     extGifAlt = composerState.embed.media.alt
+  }
+  let extLink: ComposerLink | undefined
+  if (composerState.embed.link) {
+    extLink = composerState.embed.link
   }
 
   const onClose = useCallback(() => {
@@ -342,14 +346,9 @@ export const ComposePost = ({
     }
   }, [onEscape, isModalActive])
 
-  const onNewLink = useCallback(
-    (uri: string) => {
-      dispatch({type: 'embed_add_uri', uri})
-      if (extLink != null) return
-      setExtLink({uri, isLoading: true})
-    },
-    [extLink, setExtLink],
-  )
+  const onNewLink = useCallback((uri: string) => {
+    dispatch({type: 'embed_add_uri', uri})
+  }, [])
 
   const onImageAdd = useCallback(
     (next: ComposerImage[]) => {
@@ -414,10 +413,6 @@ export const ComposePost = ({
         setError(_(msg`Did you want to say anything?`))
         return
       }
-      if (extLink?.isLoading) {
-        setError(_(msg`Please wait for your link card to finish loading`))
-        return
-      }
 
       setIsProcessing(true)
 
@@ -452,13 +447,6 @@ export const ComposePost = ({
           hasImages: images.length > 0,
         })
 
-        if (extLink) {
-          setExtLink({
-            ...extLink,
-            isLoading: true,
-            localThumb: undefined,
-          } as apilib.ExternalEmbedDraft)
-        }
         let err = cleanError(e.message)
         if (err.includes('not locate record')) {
           err = _(
@@ -525,7 +513,6 @@ export const ComposePost = ({
       quoteCount,
       replyTo,
       richtext.text,
-      setExtLink,
       setLangPrefs,
       threadgateAllowUISettings,
       videoState.asset,
@@ -553,11 +540,9 @@ export const ComposePost = ({
 
   const canSelectImages =
     images.length < MAX_IMAGES &&
-    !extLink &&
     videoState.status === 'idle' &&
     !videoState.video
-  const hasMedia =
-    images.length > 0 || Boolean(extLink) || Boolean(videoState.video)
+  const hasMedia = images.length > 0 || Boolean(videoState.video)
 
   const onEmojiButtonPress = useCallback(() => {
     openEmojiPicker?.(textInput.current?.getCursorPosition())
@@ -567,44 +552,13 @@ export const ComposePost = ({
     textInput.current?.focus()
   }, [])
 
-  const onSelectGif = useCallback(
-    (gif: Gif) => {
-      dispatch({type: 'embed_add_gif', gif})
-      setExtLink({
-        uri: `${gif.media_formats.gif.url}?hh=${gif.media_formats.gif.dims[1]}&ww=${gif.media_formats.gif.dims[0]}`,
-        isLoading: true,
-        meta: {
-          url: gif.media_formats.gif.url,
-          image: gif.media_formats.preview.url,
-          likelyType: LikelyType.HTML,
-          title: gif.content_description,
-          description: createGIFDescription(gif.content_description),
-        },
-      })
-    },
-    [setExtLink],
-  )
+  const onSelectGif = useCallback((gif: Gif) => {
+    dispatch({type: 'embed_add_gif', gif})
+  }, [])
 
-  const handleChangeGifAltText = useCallback(
-    (altText: string) => {
-      dispatch({type: 'embed_update_gif', alt: altText})
-      setExtLink(ext =>
-        ext && ext.meta
-          ? {
-              ...ext,
-              meta: {
-                ...ext.meta,
-                description: createGIFDescription(
-                  ext.meta.title ?? '',
-                  altText,
-                ),
-              },
-            }
-          : ext,
-      )
-    },
-    [setExtLink],
-  )
+  const handleChangeGifAltText = useCallback((altText: string) => {
+    dispatch({type: 'embed_update_gif', alt: altText})
+  }, [])
 
   const {
     scrollHandler,
@@ -663,7 +617,7 @@ export const ComposePost = ({
                   <LabelsBtn
                     labels={labels}
                     onChange={setLabels}
-                    hasMedia={hasMedia}
+                    hasMedia={hasMedia || Boolean(extLink)}
                   />
                   {canPost ? (
                     <Button
@@ -770,7 +724,6 @@ export const ComposePost = ({
                       gif={extGif}
                       onRemove={() => {
                         dispatch({type: 'embed_remove_gif'})
-                        setExtLink(undefined)
                       }}
                     />
                     <GifAltTextDialog
@@ -785,7 +738,6 @@ export const ComposePost = ({
                     uri={extLink.uri}
                     onRemove={() => {
                       dispatch({type: 'embed_remove_link'})
-                      setExtLink(undefined)
                     }}
                   />
                 )}
