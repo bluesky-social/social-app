@@ -716,33 +716,35 @@ export const ComposePost = ({
               dispatch={dispatch}
               Portal={Portal.Portal}
             />
-            {images.length === 0 && extLink && (
-              <View style={a.relative} key={extLink.uri}>
-                {extGif ? (
-                  <>
-                    <ExternalEmbedGif
-                      gif={extGif}
-                      onRemove={() => {
-                        dispatch({type: 'embed_remove_gif'})
-                      }}
-                    />
-                    <GifAltTextDialog
-                      gif={extGif}
-                      altText={extGifAlt ?? ''}
-                      onSubmit={handleChangeGifAltText}
-                      Portal={Portal.Portal}
-                    />
-                  </>
-                ) : (
-                  <ExternalEmbedLink
-                    uri={extLink.uri}
-                    onRemove={() => {
-                      dispatch({type: 'embed_remove_link'})
-                    }}
-                  />
-                )}
+
+            {extGif && (
+              <View style={a.relative} key={extGif.url}>
+                <ExternalEmbedGif
+                  gif={extGif}
+                  onRemove={() => {
+                    dispatch({type: 'embed_remove_gif'})
+                  }}
+                />
+                <GifAltTextDialog
+                  gif={extGif}
+                  altText={extGifAlt ?? ''}
+                  onSubmit={handleChangeGifAltText}
+                  Portal={Portal.Portal}
+                />
               </View>
             )}
+
+            {!composerState.embed.media && extLink && (
+              <View style={a.relative} key={extLink.uri}>
+                <ExternalEmbedLink
+                  uri={extLink.uri}
+                  onRemove={() => {
+                    dispatch({type: 'embed_remove_link'})
+                  }}
+                />
+              </View>
+            )}
+
             <LayoutAnimationConfig skipExiting>
               {hasVideo && (
                 <Animated.View
