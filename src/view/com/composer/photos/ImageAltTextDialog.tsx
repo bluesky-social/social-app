@@ -8,7 +8,7 @@ import {MAX_ALT_TEXT} from '#/lib/constants'
 import {enforceLen} from '#/lib/strings/helpers'
 import {isAndroid, isWeb} from '#/platform/detection'
 import {ComposerImage} from '#/state/gallery'
-import {CharProgress} from '#/view/com/composer/char-progress/CharProgress'
+import {AltTextCounterWrapper} from '#/view/com/composer/AltTextCounterWrapper'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -24,31 +24,56 @@ type Props = {
   Portal: PortalComponent
 }
 
-export const ImageAltTextDialog = (props: Props): React.ReactNode => {
+export const ImageAltTextDialog = ({
+  control,
+  image,
+  onChange,
+  Portal,
+}: Props): React.ReactNode => {
+  const altTextRef = React.useRef<string>(image.alt)
+
+  const onSubmit = (text: string) => {
+    control.close()
+    onChange({
+      ...image,
+      alt: enforceLen(text, MAX_ALT_TEXT, true),
+    })
+  }
+
   return (
-    <Dialog.Outer control={props.control} Portal={props.Portal}>
+    <Dialog.Outer
+      control={control}
+      onClose={() => {
+        onSubmit(altTextRef.current)
+      }}
+      Portal={Portal}>
       <Dialog.Handle />
-      <ImageAltTextInner {...props} />
+      <ImageAltTextInner
+        image={image}
+        altTextRef={altTextRef}
+        onSubmit={onSubmit}
+      />
     </Dialog.Outer>
   )
 }
 
 const ImageAltTextInner = ({
-  control,
   image,
-  onChange,
-}: Props): React.ReactNode => {
+  altTextRef,
+  onSubmit,
+}: {
+  image: Props['image']
+  altTextRef: React.MutableRefObject<string>
+  onSubmit: (text: string) => void
+}): React.ReactNode => {
   const {_, i18n} = useLingui()
   const t = useTheme()
-
   const windim = useWindowDimensions()
-
   const [altText, setAltText] = React.useState(image.alt)
 
-  const onPressSubmit = React.useCallback(() => {
-    control.close()
-    onChange({...image, alt: enforceLen(altText.trim(), MAX_ALT_TEXT, true)})
-  }, [control, image, altText, onChange])
+  const onPressSubmit = () => {
+    onSubmit(altText)
+  }
 
   const imageStyle = React.useMemo<ImageStyle>(() => {
     const maxWidth = isWeb ? 450 : windim.width
@@ -94,35 +119,23 @@ const ImageAltTextInner = ({
 
       <View style={[a.mt_md, a.gap_md]}>
         <View style={[a.gap_sm]}>
-          <View style={[a.relative]}>
+          <View style={[a.relative, {width: '100%'}]}>
             <TextField.LabelText>
               <Trans>Descriptive alt text</Trans>
             </TextField.LabelText>
             <TextField.Root>
               <Dialog.Input
                 label={_(msg`Alt text`)}
-                onChangeText={text => setAltText(text)}
+                onChangeText={text => {
+                  altTextRef.current = text
+                  setAltText(text)
+                }}
                 value={altText}
                 multiline
                 numberOfLines={3}
                 autoFocus
               />
             </TextField.Root>
-
-            <View
-              style={[
-                a.absolute,
-                a.flex_row,
-                a.align_center,
-                a.pr_md,
-                a.pb_sm,
-                {
-                  bottom: 0,
-                  right: 0,
-                },
-              ]}>
-              <CharProgress count={altText?.length || 0} max={MAX_ALT_TEXT} />
-            </View>
           </View>
 
           {altText.length > MAX_ALT_TEXT && (
@@ -143,17 +156,20 @@ const ImageAltTextInner = ({
           )}
         </View>
 
-        <Button
-          label={_(msg`Save`)}
-          disabled={altText === image.alt}
-          size="large"
-          color="primary"
-          variant="solid"
-          onPress={onPressSubmit}>
-          <ButtonText>
-            <Trans>Save</Trans>
-          </ButtonText>
-        </Button>
+        <AltTextCounterWrapper altText={altText}>
+          <Button
+            label={_(msg`Save`)}
+            disabled={altText === image.alt}
+            size="large"
+            color="primary"
+            variant="solid"
+            onPress={onPressSubmit}
+            style={[a.flex_grow]}>
+            <ButtonText>
+              <Trans>Save</Trans>
+            </ButtonText>
+          </Button>
+        </AltTextCounterWrapper>
       </View>
       {/* Maybe fix this later -h */}
       {isAndroid ? <View style={{height: 300}} /> : null}

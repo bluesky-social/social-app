@@ -14,7 +14,7 @@ import {
 import {enforceLen} from '#/lib/strings/helpers'
 import {isAndroid} from '#/platform/detection'
 import {Gif} from '#/state/queries/tenor'
-import {CharProgress} from '#/view/com/composer/char-progress/CharProgress'
+import {AltTextCounterWrapper} from '#/view/com/composer/AltTextCounterWrapper'
 import {atoms as a, native, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -63,9 +63,11 @@ export function GifAltText({
     [onSubmit, control],
   )
 
+  const parsedAlt = parseAltFromGIFDescription(link.description)
+  const altTextRef = React.useRef<string>('')
+
   if (!gif || !params) return null
 
-  const parsedAlt = parseAltFromGIFDescription(link.description)
   return (
     <>
       <TouchableOpacity
@@ -101,9 +103,15 @@ export function GifAltText({
 
       <AltTextReminder />
 
-      <Dialog.Outer control={control} Portal={Portal}>
+      <Dialog.Outer
+        control={control}
+        onClose={() => {
+          onSubmit(altTextRef.current)
+        }}
+        Portal={Portal}>
         <Dialog.Handle />
         <AltTextInner
+          altTextRef={altTextRef}
           onSubmit={onPressSubmit}
           link={link}
           params={params}
@@ -116,11 +124,13 @@ export function GifAltText({
 }
 
 function AltTextInner({
+  altTextRef,
   onSubmit,
   link,
   params,
   initialValue: initalValue,
 }: {
+  altTextRef: React.MutableRefObject<string>
   onSubmit: (text: string) => void
   link: AppBskyEmbedExternal.ViewExternal
   params: EmbedPlayerParams
@@ -148,7 +158,10 @@ function AltTextInner({
                 <Dialog.Input
                   label={_(msg`Alt text`)}
                   placeholder={link.title}
-                  onChangeText={text => setAltText(text)}
+                  onChangeText={text => {
+                    altTextRef.current = text
+                    setAltText(text)
+                  }}
                   value={altText}
                   multiline
                   numberOfLines={3}
@@ -160,21 +173,6 @@ function AltTextInner({
                   }}
                 />
               </TextField.Root>
-
-              <View
-                style={[
-                  a.absolute,
-                  a.flex_row,
-                  a.align_center,
-                  a.pr_md,
-                  a.pb_sm,
-                  {
-                    bottom: 0,
-                    right: 0,
-                  },
-                ]}>
-                <CharProgress count={altText?.length || 0} max={MAX_ALT_TEXT} />
-              </View>
             </View>
 
             {altText.length > MAX_ALT_TEXT && (
@@ -195,16 +193,19 @@ function AltTextInner({
             )}
           </View>
 
-          <Button
-            label={_(msg`Save`)}
-            size="large"
-            color="primary"
-            variant="solid"
-            onPress={onPressSubmit}>
-            <ButtonText>
-              <Trans>Save</Trans>
-            </ButtonText>
-          </Button>
+          <AltTextCounterWrapper altText={altText}>
+            <Button
+              label={_(msg`Save`)}
+              size="large"
+              color="primary"
+              variant="solid"
+              onPress={onPressSubmit}
+              style={[a.flex_grow]}>
+              <ButtonText>
+                <Trans>Save</Trans>
+              </ButtonText>
+            </Button>
+          </AltTextCounterWrapper>
         </View>
         {/* below the text input to force tab order */}
         <View>
