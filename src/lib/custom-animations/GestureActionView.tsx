@@ -32,7 +32,7 @@ interface GestureActions {
 }
 
 const MAX_WIDTH = Dimensions.get('screen').width
-const ICON_SIZE = 38
+const ICON_SIZE = 32
 
 export function GestureActionView({
   children,
@@ -113,9 +113,11 @@ export function GestureActionView({
     // reanimated doesn't offer great support for disabling y/x axes :/
     .activeOffsetY([-200, 200])
     .onStart(() => {
+      'worklet'
       isActive.value = true
     })
     .onChange(e => {
+      'worklet'
       transX.value = e.translationX
 
       if (e.translationX < 0) {
@@ -189,6 +191,7 @@ export function GestureActionView({
       }
     })
     .onEnd(e => {
+      'worklet'
       if (e.translationX < 0) {
         if (hitSecond.value && actions.leftSecond) {
           runOnJS(actions.leftSecond.action)()
