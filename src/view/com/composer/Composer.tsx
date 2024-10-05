@@ -103,7 +103,7 @@ import {SelectVideoBtn} from '#/view/com/composer/videos/SelectVideoBtn'
 import {SubtitleDialogBtn} from '#/view/com/composer/videos/SubtitleDialog'
 import {VideoPreview} from '#/view/com/composer/videos/VideoPreview'
 import {VideoTranscodeProgress} from '#/view/com/composer/videos/VideoTranscodeProgress'
-import {QuoteEmbed, QuoteX} from '#/view/com/util/post-embeds/QuoteEmbed'
+import {LazyQuoteEmbed, QuoteX} from '#/view/com/util/post-embeds/QuoteEmbed'
 import {Text} from '#/view/com/util/text/Text'
 import * as Toast from '#/view/com/util/Toast'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
@@ -135,7 +135,7 @@ export const ComposePost = ({
   replyTo,
   onPost,
   quote: initQuote,
-  quoteCount,
+  quoteCount: _quoteCount, // TODO
   mention: initMention,
   openEmojiPicker,
   text: initText,
@@ -184,9 +184,6 @@ export const ComposePost = ({
   const graphemeLength = useMemo(() => {
     return shortenLinks(richtext).graphemeLength
   }, [richtext])
-  const [quote, setQuote] = useState<ComposerOpts['quote'] | undefined>(
-    initQuote,
-  )
 
   // TODO: Move more state here.
   const [composerState, dispatch] = useReducer(
@@ -254,6 +251,10 @@ export const ComposePost = ({
     )
   const [postgate, setPostgate] = useState(createPostgateRecord({post: ''}))
 
+  let quote: string | undefined
+  if (composerState.embed.quote) {
+    quote = composerState.embed.quote.uri
+  }
   let images = NO_IMAGES
   if (composerState.embed.media?.type === 'images') {
     images = composerState.embed.media.images
@@ -471,18 +472,21 @@ export const ComposePost = ({
       }
       setLangPrefs.savePostLanguageToHistory()
       if (quote) {
+        onPost?.(postUri)
+        // TODO: Reenable this after figuring out how/when to get quote data.
+        //
         // We want to wait for the quote count to update before we call `onPost`, which will refetch data
-        whenAppViewReady(agent, quote.uri, res => {
-          const thread = res.data.thread
-          if (
-            AppBskyFeedDefs.isThreadViewPost(thread) &&
-            thread.post.quoteCount !== quoteCount
-          ) {
-            onPost?.(postUri)
-            return true
-          }
-          return false
-        })
+        // whenAppViewReady(agent, quote, res => {
+        //   const thread = res.data.thread
+        //   if (
+        //     AppBskyFeedDefs.isThreadViewPost(thread) &&
+        //     thread.post.quoteCount !== quoteCount
+        //   ) {
+        //     onPost?.(postUri)
+        //     return true
+        //   }
+        //   return false
+        // })
       } else {
         onPost?.(postUri)
       }
@@ -508,7 +512,6 @@ export const ComposePost = ({
       onPost,
       postgate,
       quote,
-      quoteCount,
       replyTo,
       richtext.text,
       setLangPrefs,
@@ -796,13 +799,12 @@ export const ComposePost = ({
               {quote ? (
                 <View style={[s.mt5, s.mb2, isWeb && s.mb10]}>
                   <View style={{pointerEvents: 'none'}}>
-                    <QuoteEmbed quote={quote} />
+                    <LazyQuoteEmbed uri={quote} />
                   </View>
-                  {quote.uri !== initQuote?.uri && (
+                  {!initQuote && (
                     <QuoteX
                       onRemove={() => {
                         dispatch({type: 'embed_remove_quote'})
-                        setQuote(undefined)
                       }}
                     />
                   )}

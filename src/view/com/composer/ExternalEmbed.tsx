@@ -76,8 +76,11 @@ export const ExternalEmbedLink = ({
     () =>
       data && {
         title:
-          (data.type === 'external' ? data.title : data.title_deprecated) ??
-          uri,
+          data.type === 'external'
+            ? data.title
+            : data.kind === 'other'
+            ? data.meta.title
+            : uri,
         uri,
         description: data.type === 'external' ? data.description : '',
         thumb: data.type === 'external' ? data.thumb?.source.path : undefined,
