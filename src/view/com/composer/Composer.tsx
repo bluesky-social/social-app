@@ -88,7 +88,10 @@ import {useComposerControls} from '#/state/shell/composer'
 import {ComposerOpts} from '#/state/shell/composer'
 import {CharProgress} from '#/view/com/composer/char-progress/CharProgress'
 import {ComposerReplyTo} from '#/view/com/composer/ComposerReplyTo'
-import {ExternalEmbed} from '#/view/com/composer/ExternalEmbed'
+import {
+  ExternalEmbedGif,
+  ExternalEmbedLink,
+} from '#/view/com/composer/ExternalEmbed'
 import {GifAltText} from '#/view/com/composer/GifAltText'
 import {LabelsBtn} from '#/view/com/composer/labels/LabelsBtn'
 import {Gallery} from '#/view/com/composer/photos/Gallery'
@@ -766,7 +769,7 @@ export const ComposePost = ({
               <View style={a.relative}>
                 {extGif ? (
                   <>
-                    <ExternalEmbed
+                    <ExternalEmbedGif
                       link={extLink}
                       gif={extGif}
                       onRemove={() => {
@@ -783,7 +786,7 @@ export const ComposePost = ({
                     />
                   </>
                 ) : (
-                  <ExternalEmbed
+                  <ExternalEmbedLink
                     link={extLink}
                     onRemove={() => {
                       dispatch({type: 'embed_remove_link'})
