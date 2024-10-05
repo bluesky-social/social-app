@@ -908,7 +908,7 @@ export const ComposePost = ({
             )}
             <View style={a.flex_1} />
             <SelectLangBtn />
-            <CharProgress count={graphemeLength} />
+            <CharProgress count={graphemeLength} style={{width: 65}} />
           </View>
         </View>
         <Prompt.Basic
