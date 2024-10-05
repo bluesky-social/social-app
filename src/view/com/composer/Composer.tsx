@@ -51,10 +51,7 @@ import {useQueryClient} from '@tanstack/react-query'
 import * as apilib from '#/lib/api/index'
 import {until} from '#/lib/async/until'
 import {MAX_GRAPHEME_LENGTH} from '#/lib/constants'
-import {
-  createGIFDescription,
-  parseAltFromGIFDescription,
-} from '#/lib/gif-alt-text'
+import {createGIFDescription} from '#/lib/gif-alt-text'
 import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
 import {useIsKeyboardVisible} from '#/lib/hooks/useIsKeyboardVisible'
 import {usePalette} from '#/lib/hooks/usePalette'
@@ -264,8 +261,10 @@ export const ComposePost = ({
     images = composerState.embed.media.images
   }
   let extGif: Gif | undefined
+  let extGifAlt: string | undefined
   if (composerState.embed.media?.type === 'gif') {
     extGif = composerState.embed.media.gif
+    extGifAlt = composerState.embed.media.alt
   }
 
   const onClose = useCallback(() => {
@@ -379,14 +378,10 @@ export const ComposePost = ({
 
     if (images.some(img => img.alt === '')) return true
 
-    if (extGif) {
-      if (!extLink?.meta?.description) return true
+    if (extGif && !extGifAlt) return true
 
-      const parsedAlt = parseAltFromGIFDescription(extLink.meta.description)
-      if (!parsedAlt.isPreferred) return true
-    }
     return false
-  }, [images, extLink, extGif, requireAltTextEnabled])
+  }, [images, extGifAlt, extGif, requireAltTextEnabled])
 
   const onPressPublish = React.useCallback(
     async (finishedUploading?: boolean) => {
