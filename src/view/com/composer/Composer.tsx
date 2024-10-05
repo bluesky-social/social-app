@@ -115,12 +115,14 @@ import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import {createPortalGroup} from '#/components/Portal'
 import * as Prompt from '#/components/Prompt'
 import {Text as NewText} from '#/components/Typography'
-import {composerReducer, createComposerState} from './state/composer'
+import {
+  composerReducer,
+  createComposerState,
+  MAX_IMAGES,
+} from './state/composer'
 import {NO_VIDEO, NoVideoState, processVideo, VideoState} from './state/video'
 
 const Portal = createPortalGroup()
-
-const MAX_IMAGES = 4
 
 type CancelRef = {
   onPressCancel: () => void
