@@ -55,7 +55,7 @@ export function GifAltText({
   }, [linkProp])
 
   const parsedAlt = parseAltFromGIFDescription(link.description)
-  const altTextRef = React.useRef<string>('')
+  const [altText, setAltText] = useState(parsedAlt.alt)
 
   if (!gif || !params) return null
 
@@ -97,12 +97,13 @@ export function GifAltText({
       <Dialog.Outer
         control={control}
         onClose={() => {
-          onSubmit(altTextRef.current)
+          onSubmit(altText)
         }}
         Portal={Portal}>
         <Dialog.Handle />
         <AltTextInner
-          altTextRef={altTextRef}
+          altText={altText}
+          setAltText={setAltText}
           control={control}
           link={link}
           params={params}
@@ -114,19 +115,20 @@ export function GifAltText({
 }
 
 function AltTextInner({
-  altTextRef,
+  altText,
+  setAltText,
   control,
   link,
   params,
 }: {
-  altTextRef: React.MutableRefObject<string>
+  altText: string
+  setAltText: (text: string) => void
   control: DialogControlProps
   link: AppBskyEmbedExternal.ViewExternal
   params: EmbedPlayerParams
 }) {
   const t = useTheme()
   const {_, i18n} = useLingui()
-  const [altText, setAltText] = useState(altTextRef.current)
 
   return (
     <Dialog.ScrollableInner label={_(msg`Add alt text`)}>
@@ -142,7 +144,6 @@ function AltTextInner({
                   label={_(msg`Alt text`)}
                   placeholder={link.title}
                   onChangeText={text => {
-                    altTextRef.current = text
                     setAltText(text)
                   }}
                   value={altText}
