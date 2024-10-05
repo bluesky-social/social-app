@@ -5,6 +5,7 @@ import {AppBskyEmbedExternal} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {parseAltFromGIFDescription} from '#/lib/gif-alt-text'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {shareUrl} from '#/lib/sharing'
@@ -55,7 +56,16 @@ export const ExternalLinkEmbed = ({
   }, [link.uri, externalEmbedPrefs])
 
   if (embedPlayerParams?.source === 'tenor') {
-    return <GifEmbed params={embedPlayerParams} link={link} hideAlt={hideAlt} />
+    const parsedAlt = parseAltFromGIFDescription(link.description)
+    return (
+      <GifEmbed
+        params={embedPlayerParams}
+        thumb={link.thumb}
+        altText={parsedAlt.alt}
+        isPreferredAltText={parsedAlt.isPreferred}
+        hideAlt={hideAlt}
+      />
+    )
   }
 
   return (

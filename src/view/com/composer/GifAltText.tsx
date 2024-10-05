@@ -200,7 +200,9 @@ function AltTextInner({
           </Text>
           <View style={[a.align_center]}>
             <GifEmbed
-              link={link}
+              thumb={link.thumb}
+              altText={altText}
+              isPreferredAltText={true}
               params={params}
               hideAlt
               style={[native({maxHeight: 225})]}
