@@ -770,11 +770,7 @@ export const ComposePost = ({
                       link={extLink}
                       gif={extGif}
                       onRemove={() => {
-                        if (extGif) {
-                          dispatch({type: 'embed_remove_gif'})
-                        } else {
-                          dispatch({type: 'embed_remove_link'})
-                        }
+                        dispatch({type: 'embed_remove_gif'})
                         setExtLink(undefined)
                         setExtGif(undefined)
                       }}
@@ -787,27 +783,14 @@ export const ComposePost = ({
                     />
                   </>
                 ) : (
-                  <>
-                    <ExternalEmbed
-                      link={extLink}
-                      gif={extGif}
-                      onRemove={() => {
-                        if (extGif) {
-                          dispatch({type: 'embed_remove_gif'})
-                        } else {
-                          dispatch({type: 'embed_remove_link'})
-                        }
-                        setExtLink(undefined)
-                        setExtGif(undefined)
-                      }}
-                    />
-                    <GifAltText
-                      link={extLink}
-                      gif={extGif}
-                      onSubmit={handleChangeGifAltText}
-                      Portal={Portal.Portal}
-                    />
-                  </>
+                  <ExternalEmbed
+                    link={extLink}
+                    onRemove={() => {
+                      dispatch({type: 'embed_remove_link'})
+                      setExtLink(undefined)
+                      setExtGif(undefined)
+                    }}
+                  />
                 )}
               </View>
             )}

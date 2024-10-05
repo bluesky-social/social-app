@@ -34,7 +34,7 @@ export function GifAltText({
   Portal,
 }: {
   link: ExternalEmbedDraft
-  gif?: Gif
+  gif: Gif
   onSubmit: (alt: string) => void
   Portal: PortalComponent
 }) {
