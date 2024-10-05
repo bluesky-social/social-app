@@ -2,14 +2,14 @@ import React from 'react'
 import {Linking} from 'react-native'
 import * as WebBrowser from 'expo-web-browser'
 
-import {isNative} from '#/platform/detection'
-import * as persisted from '#/state/persisted'
-import {usePalette} from 'lib/hooks/usePalette'
+import {usePalette} from '#/lib/hooks/usePalette'
 import {
   createBskyAppAbsoluteUrl,
   isBskyRSSUrl,
   isRelativeUrl,
-} from 'lib/strings/url-helpers'
+} from '#/lib/strings/url-helpers'
+import {isNative} from '#/platform/detection'
+import * as persisted from '#/state/persisted'
 import {useModalControls} from '../modals'
 
 type StateContext = persisted.Schema['useInAppBrowser']
@@ -62,7 +62,7 @@ export function useOpenLink() {
   const pal = usePalette('default')
 
   const openLink = React.useCallback(
-    (url: string, override?: boolean) => {
+    async (url: string, override?: boolean) => {
       if (isBskyRSSUrl(url) && isRelativeUrl(url)) {
         url = createBskyAppAbsoluteUrl(url)
       }
@@ -75,7 +75,7 @@ export function useOpenLink() {
           })
           return
         } else if (override ?? enabled) {
-          WebBrowser.openBrowserAsync(url, {
+          await WebBrowser.openBrowserAsync(url, {
             presentationStyle:
               WebBrowser.WebBrowserPresentationStyle.FULL_SCREEN,
             toolbarColor: pal.colors.backgroundLight,

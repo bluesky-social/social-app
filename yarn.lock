@@ -85,10 +85,10 @@
     multiformats "^9.9.0"
     tlds "^1.234.0"
 
-"@atproto/api@^0.13.8":
-  version "0.13.8"
-  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.13.8.tgz#44aa4992442812604bccf9eebe4d1db9ed64c179"
-  integrity sha512-1RlvMg8iAT5k3F0U3549ct9+jXthlXtfFXIfTXLyXXFe9Exfvmr7ZJ1ra41vU1nXGsoouCoTxj7kdzC4MY8JZg==
+"@atproto/api@^0.13.11":
+  version "0.13.11"
+  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.13.11.tgz#936664d9b57686840231fbab222e19abbe3f93c9"
+  integrity sha512-YW+4WzZEGGj/SDYo9w+S2PkSaeSS+8Dosk21GFm4EFYq1eq7G0cxuMgvdcq6fov7f9zqsaTFQL2fA6cAgMA0ow==
   dependencies:
     "@atproto/common-web" "^0.3.1"
     "@atproto/lexicon" "^0.4.2"
@@ -11450,14 +11450,6 @@ expo-structured-headers@~3.8.0:
   resolved "https://registry.yarnpkg.com/expo-structured-headers/-/expo-structured-headers-3.8.0.tgz#11797a4c3a7a6770b21126cecffcda148030e361"
   integrity sha512-R+gFGn0x5CWl4OVlk2j1bJTJIz4KO8mPoCHpRHmfqMjmrMvrOM0qQSY3V5NHXwp1yT/L2v8aUmFQsBRIdvi1XA==
 
-expo-system-ui@~3.0.4:
-  version "3.0.4"
-  resolved "https://registry.yarnpkg.com/expo-system-ui/-/expo-system-ui-3.0.4.tgz#5ace49d38eb03c09a8041b3b82c581a6b974741a"
-  integrity sha512-v1n6hBO30k9qw6RE8/au4yNoovs71ExGuXizJUlR5KSo4Ruogpb+0/2q3uRZMDIYWWCANvms8L0UOh6fQJ5TXg==
-  dependencies:
-    "@react-native/normalize-colors" "~0.74.83"
-    debug "^4.3.2"
-
 expo-task-manager@~11.8.1:
   version "11.8.1"
   resolved "https://registry.yarnpkg.com/expo-task-manager/-/expo-task-manager-11.8.1.tgz#33089e78ee3fbd83327fb403bce12d69baf7d21b"
@@ -18057,15 +18049,14 @@ react-native-drawer-layout@^4.0.0-alpha.3:
   dependencies:
     use-latest-callback "^0.1.9"
 
-react-native-gesture-handler@~2.16.2:
-  version "2.16.2"
-  resolved "https://registry.yarnpkg.com/react-native-gesture-handler/-/react-native-gesture-handler-2.16.2.tgz#032bd2a07334292d7f6cff1dc9d1ec928f72e26d"
-  integrity sha512-vGFlrDKlmyI+BT+FemqVxmvO7nqxU33cgXVsn6IKAFishvlG3oV2Ds67D5nPkHMea8T+s1IcuMm0bF8ntZtAyg==
+react-native-gesture-handler@2.20.0:
+  version "2.20.0"
+  resolved "https://registry.yarnpkg.com/react-native-gesture-handler/-/react-native-gesture-handler-2.20.0.tgz#2d9ec4e9bd22619ebe36269dda3ecb1173928276"
+  integrity sha512-rFKqgHRfxQ7uSAivk8vxCiW4SB3G0U7jnv7kZD4Y90K5kp6YrU8Q3tWhxe3Rx55BIvSd3mBe9ZWbWVJ0FsSHPA==
   dependencies:
     "@egjs/hammerjs" "^2.0.17"
     hoist-non-react-statics "^3.3.0"
     invariant "^2.2.4"
-    lodash "^4.17.21"
     prop-types "^15.7.2"
 
 react-native-get-random-values@^1.6.0:
@@ -18094,10 +18085,10 @@ react-native-ios-context-menu@^1.15.3:
   dependencies:
     "@dominicstop/ts-event-emitter" "^1.1.0"
 
-react-native-keyboard-controller@^1.12.1:
-  version "1.12.1"
-  resolved "https://registry.yarnpkg.com/react-native-keyboard-controller/-/react-native-keyboard-controller-1.12.1.tgz#6de22ed4d060528a0dd25621eeaa7f71772ce35f"
-  integrity sha512-2OpQcesiYsMilrTzgcTafSGexd9UryRQRuHudIcOn0YaqvvzNpnhVZMVuJMH93fJv/iaZYp3138rgUKOdHhtSw==
+react-native-keyboard-controller@^1.14.0:
+  version "1.14.0"
+  resolved "https://registry.yarnpkg.com/react-native-keyboard-controller/-/react-native-keyboard-controller-1.14.0.tgz#f6faaa12b3736a10f4eec4236ed5b0343508b9a1"
+  integrity sha512-JW9k2fehFXOpvLWh1YcgyubLodg/HPi6bR11sCZB/BOawf1tnbGnqk967B8XkxDOKHH6mg+z82quCvv8ALh1rg==
 
 react-native-mmkv@^2.12.2:
   version "2.12.2"
