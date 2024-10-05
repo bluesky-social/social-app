@@ -379,12 +379,17 @@ function createInterpolation({
   let res
   if (secondThreshold) {
     res = {
-      inputRange: [0, firstThreshold + offset, secondThreshold + offset],
-      outputRange: ['transparent', firstColor!, secondColor!],
+      inputRange: [
+        0,
+        firstThreshold,
+        firstThreshold + offset - 20,
+        secondThreshold,
+      ],
+      outputRange: ['transparent', firstColor!, firstColor!, secondColor!],
     }
   } else {
     res = {
-      inputRange: [0, firstThreshold + offset],
+      inputRange: [0, firstThreshold],
       outputRange: ['transparent', firstColor!],
     }
   }

@@ -32,6 +32,7 @@ import {useDialogControl} from '#/components/Dialog'
 import {ConvoMenu} from '#/components/dms/ConvoMenu'
 import {LeaveConvoPrompt} from '#/components/dms/LeaveConvoPrompt'
 import {Bell2Off_Filled_Corner0_Rounded as BellStroke} from '#/components/icons/Bell2'
+import {Envelope_Filled_Stroke2_Corner0_Rounded} from '#/components/icons/Envelope'
 import {Trash_Stroke2_Corner0_Rounded} from '#/components/icons/Trash'
 import {Link} from '#/components/Link'
 import {useMenuControl} from '#/components/Menu'
@@ -205,7 +206,13 @@ function ChatListItemReady({
     <GestureActionView
       actions={{
         leftFirst: {
-          threshold: 150,
+          threshold: 120,
+          color: t.palette.primary_500,
+          icon: Envelope_Filled_Stroke2_Corner0_Rounded,
+          action: () => {},
+        },
+        leftSecond: {
+          threshold: 225,
           color: t.palette.negative_500,
           icon: Trash_Stroke2_Corner0_Rounded,
           action: () => {
