@@ -7,12 +7,10 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
-import {AppBskyEmbedExternal} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {HITSLOP_20} from '#/lib/constants'
-import {parseAltFromGIFDescription} from '#/lib/gif-alt-text'
 import {EmbedPlayerParams} from '#/lib/strings/embed-player'
 import {isWeb} from '#/platform/detection'
 import {useAutoplayDisabled} from '#/state/preferences'
@@ -77,12 +75,16 @@ function PlaybackControls({
 
 export function GifEmbed({
   params,
-  link,
+  thumb,
+  altText,
+  isPreferredAltText,
   hideAlt,
   style = {width: '100%'},
 }: {
   params: EmbedPlayerParams
-  link: AppBskyEmbedExternal.ViewExternal
+  thumb: string | undefined
+  altText: string
+  isPreferredAltText: boolean
   hideAlt?: boolean
   style?: StyleProp<ViewStyle>
 }) {
@@ -111,11 +113,6 @@ export function GifEmbed({
     playerRef.current?.toggleAsync()
   }, [])
 
-  const parsedAlt = React.useMemo(
-    () => parseAltFromGIFDescription(link.description),
-    [link],
-  )
-
   return (
     <View style={[a.rounded_md, a.overflow_hidden, a.mt_sm, style]}>
       <View
@@ -131,13 +128,13 @@ export function GifEmbed({
         />
         <GifView
           source={params.playerUri}
-          placeholderSource={link.thumb}
+          placeholderSource={thumb}
           style={[a.flex_1, a.rounded_md]}
           autoplay={!autoplayDisabled}
           onPlayerStateChange={onPlayerStateChange}
           ref={playerRef}
           accessibilityHint={_(msg`Animated GIF`)}
-          accessibilityLabel={parsedAlt.alt}
+          accessibilityLabel={altText}
         />
         {!playerState.isPlaying && (
           <Fill
@@ -150,7 +147,7 @@ export function GifEmbed({
           />
         )}
         <MediaInsetBorder />
-        {!hideAlt && parsedAlt.isPreferred && <AltText text={parsedAlt.alt} />}
+        {!hideAlt && isPreferredAltText && <AltText text={altText} />}
       </View>
     </View>
   )
