@@ -95,7 +95,11 @@ export const Policies = ({
 
   return (
     <View style={[a.gap_sm]}>
-      <Text style={[a.leading_snug, t.atoms.text_contrast_medium]}>{els}</Text>
+      {els ? (
+        <Text style={[a.leading_snug, t.atoms.text_contrast_medium]}>
+          {els}
+        </Text>
+      ) : null}
 
       {under13 ? (
         <Text style={[a.font_bold, a.leading_snug, t.atoms.text_contrast_high]}>
