@@ -252,7 +252,6 @@ export const ComposePost = ({
   const [publishOnUpload, setPublishOnUpload] = useState(false)
 
   const {extLink, setExtLink} = useExternalLinkFetch({setQuote, setError})
-  const [extGif, setExtGif] = useState<Gif>()
   const [labels, setLabels] = useState<string[]>([])
   const [threadgateAllowUISettings, onChangeThreadgateAllowUISettings] =
     useState<ThreadgateAllowUISetting[]>(
@@ -263,6 +262,10 @@ export const ComposePost = ({
   let images = NO_IMAGES
   if (composerState.embed.media?.type === 'images') {
     images = composerState.embed.media.images
+  }
+  let extGif: Gif | undefined
+  if (composerState.embed.media?.type === 'gif') {
+    extGif = composerState.embed.media.gif
   }
 
   const onClose = useCallback(() => {
@@ -583,7 +586,6 @@ export const ComposePost = ({
           description: createGIFDescription(gif.content_description),
         },
       })
-      setExtGif(gif)
     },
     [setExtLink],
   )
@@ -774,7 +776,6 @@ export const ComposePost = ({
                       onRemove={() => {
                         dispatch({type: 'embed_remove_gif'})
                         setExtLink(undefined)
-                        setExtGif(undefined)
                       }}
                     />
                     <GifAltText
@@ -790,7 +791,6 @@ export const ComposePost = ({
                     onRemove={() => {
                       dispatch({type: 'embed_remove_link'})
                       setExtLink(undefined)
-                      setExtGif(undefined)
                     }}
                   />
                 )}
