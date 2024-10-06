@@ -242,18 +242,20 @@ function AppealForm({
           <Trans>Appeal "{strings.name}" label</Trans>
         </Text>
         <Text style={[a.text_md, a.leading_snug]}>
-          <Trans>This appeal will be sent to</Trans>{' '}
+          <Trans>
+            This appeal will be sent to{' '}
+            <InlineLinkText
+              label={sourceName}
+              to={makeProfileLink(
+                labeler ? labeler.creator : {did: label.src, handle: ''},
+              )}
+              onPress={() => control.close()}
+              style={[a.text_md, a.leading_snug]}>
+              {sourceName}
+            </InlineLinkText>
+            .
+          </Trans>
         </Text>
-        <InlineLinkText
-          label={sourceName}
-          to={makeProfileLink(
-            labeler ? labeler.creator : {did: label.src, handle: ''},
-          )}
-          onPress={() => control.close()}
-          style={[a.text_md, a.leading_snug]}>
-          {sourceName}
-        </InlineLinkText>
-        <Text style={[a.text_md, a.leading_snug]}>.</Text>
       </View>
       <View style={[a.my_md]}>
         <Dialog.Input
