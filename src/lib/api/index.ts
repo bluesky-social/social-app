@@ -4,7 +4,6 @@ import {
   AppBskyEmbedRecord,
   AppBskyEmbedRecordWithMedia,
   AppBskyEmbedVideo,
-  AppBskyFeedPostgate,
   AtUri,
   BlobRef,
   BskyAgent,
@@ -48,7 +47,6 @@ interface PostOpts {
   composerState: ComposerState // TODO: Not used yet.
   replyTo?: string
   threadgate: ThreadgateAllowUISetting[]
-  postgate: AppBskyFeedPostgate.Record
   onStateChange?: (state: string) => void
   langs?: string[]
 }
@@ -160,8 +158,8 @@ export async function post(
   }
 
   if (
-    opts.postgate.embeddingRules?.length ||
-    opts.postgate.detachedEmbeddingUris?.length
+    draft.postgate.embeddingRules?.length ||
+    draft.postgate.detachedEmbeddingUris?.length
   ) {
     try {
       // TODO: this needs to be batch-created with the post!
@@ -169,7 +167,7 @@ export async function post(
         agent,
         postUri: res.uri,
         postgate: {
-          ...opts.postgate,
+          ...draft.postgate,
           post: res.uri,
         },
       })

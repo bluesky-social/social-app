@@ -1,5 +1,5 @@
 import {ImagePickerAsset} from 'expo-image-picker'
-import {RichText} from '@atproto/api'
+import {AppBskyFeedPostgate,RichText} from '@atproto/api'
 
 import {insertMentionAt} from '#/lib/strings/mention-manip'
 import {
@@ -8,6 +8,7 @@ import {
   toBskyAppUrl,
 } from '#/lib/strings/url-helpers'
 import {ComposerImage, createInitialImages} from '#/state/gallery'
+import {createPostgateRecord} from '#/state/queries/postgate/util'
 import {Gif} from '#/state/queries/tenor'
 import {ComposerOpts} from '#/state/shell/composer'
 import {createVideoState, VideoAction, videoReducer, VideoState} from './video'
@@ -46,12 +47,14 @@ export type EmbedDraft = {
 export type ComposerState = {
   richtext: RichText
   labels: string[]
+  postgate: AppBskyFeedPostgate.Record
   embed: EmbedDraft
 }
 
 export type ComposerAction =
   | {type: 'update_richtext'; richtext: RichText}
   | {type: 'update_labels'; labels: string[]}
+  | {type: 'update_postgate'; postgate: AppBskyFeedPostgate.Record}
   | {type: 'embed_add_images'; images: ComposerImage[]}
   | {type: 'embed_update_image'; image: ComposerImage}
   | {type: 'embed_remove_image'; image: ComposerImage}
@@ -86,6 +89,12 @@ export function composerReducer(
       return {
         ...state,
         labels: action.labels,
+      }
+    }
+    case 'update_postgate': {
+      return {
+        ...state,
+        postgate: action.postgate,
       }
     }
     case 'embed_add_images': {
@@ -352,6 +361,7 @@ export function createComposerState({
   return {
     richtext: initRichText,
     labels: [],
+    postgate: createPostgateRecord({post: ''}),
     embed: {
       quote,
       media,

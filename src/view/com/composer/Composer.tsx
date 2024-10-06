@@ -71,7 +71,6 @@ import {
   useLanguagePrefs,
   useLanguagePrefsApi,
 } from '#/state/preferences/languages'
-import {createPostgateRecord} from '#/state/queries/postgate/util'
 import {useProfileQuery} from '#/state/queries/profile'
 import {Gif} from '#/state/queries/tenor'
 import {ThreadgateAllowUISetting} from '#/state/queries/threadgate'
@@ -234,7 +233,6 @@ export const ComposePost = ({
     useState<ThreadgateAllowUISetting[]>(
       threadgateViewToAllowUISetting(undefined),
     )
-  const [postgate, setPostgate] = useState(createPostgateRecord({post: ''}))
 
   let quote: string | undefined
   if (composerState.embed.quote) {
@@ -407,7 +405,6 @@ export const ComposePost = ({
             composerState, // TODO: move more state here.
             replyTo: replyTo?.uri,
             threadgate: threadgateAllowUISettings,
-            postgate,
             onStateChange: setProcessingState,
             langs: toPostLanguages(langPrefs.postLanguage),
           })
@@ -489,7 +486,6 @@ export const ComposePost = ({
       langPrefs.postLanguage,
       onClose,
       onPost,
-      postgate,
       quote,
       initQuote,
       initQuoteCount,
@@ -801,8 +797,10 @@ export const ComposePost = ({
 
           {replyTo ? null : (
             <ThreadgateBtn
-              postgate={postgate}
-              onChangePostgate={setPostgate}
+              postgate={composerState.postgate}
+              onChangePostgate={nextPostgate => {
+                dispatch({type: 'update_postgate', postgate: nextPostgate})
+              }}
               threadgateAllowUISettings={threadgateAllowUISettings}
               onChangeThreadgateAllowUISettings={
                 onChangeThreadgateAllowUISettings
