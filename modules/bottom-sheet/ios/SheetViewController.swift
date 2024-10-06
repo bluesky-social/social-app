@@ -62,7 +62,7 @@ class SheetViewController: UIViewController {
       }
     }
   }
-  
+
   func getCurrentDetentIdentifier() -> UISheetPresentationController.Detent.Identifier? {
     guard let sheet = self.sheetPresentationController else {
       return nil
