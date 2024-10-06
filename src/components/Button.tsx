@@ -87,6 +87,7 @@ export type ButtonProps = Pick<
     style?: StyleProp<ViewStyle>
     hoverStyle?: StyleProp<ViewStyle>
     children: NonTextElements | ((context: ButtonContext) => NonTextElements)
+    PressableComponent?: React.ComponentType<PressableProps>
   }
 
 export type ButtonTextProps = TextProps & VariantProps & {disabled?: boolean}
@@ -114,6 +115,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
       disabled = false,
       style,
       hoverStyle: hoverStyleProp,
+      PressableComponent = Pressable,
       ...rest
     },
     ref,
@@ -449,10 +451,11 @@ export const Button = React.forwardRef<View, ButtonProps>(
     const flattenedBaseStyles = flatten([baseStyles, style])
 
     return (
-      <Pressable
+      <PressableComponent
         role="button"
         accessibilityHint={undefined} // optional
         {...rest}
+        // @ts-ignore - this will always be a pressable
         ref={ref}
         aria-label={label}
         aria-pressed={state.pressed}
@@ -500,7 +503,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
         <Context.Provider value={context}>
           {typeof children === 'function' ? children(context) : children}
         </Context.Provider>
-      </Pressable>
+      </PressableComponent>
     )
   },
 )
