@@ -8,15 +8,15 @@ import {Provider as OnboardingProvider} from './onboarding'
 import {Provider as ShellLayoutProvder} from './shell-layout'
 import {Provider as TickEveryMinuteProvider} from './tick-every-minute'
 
-export {useSetThemePrefs,useThemePrefs} from './color-mode'
-export {useComposerControls,useComposerState} from './composer'
+export {useSetThemePrefs, useThemePrefs} from './color-mode'
+export {useComposerControls, useComposerState} from './composer'
 export {useIsDrawerOpen, useSetDrawerOpen} from './drawer-open'
 export {
   useIsDrawerSwipeDisabled,
   useSetDrawerSwipeDisabled,
 } from './drawer-swipe-disabled'
 export {useMinimalShellMode, useSetMinimalShellMode} from './minimal-mode'
-export {useOnboardingDispatch,useOnboardingState} from './onboarding'
+export {useOnboardingDispatch, useOnboardingState} from './onboarding'
 export {useTickEveryMinute} from './tick-every-minute'
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
