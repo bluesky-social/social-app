@@ -304,7 +304,7 @@ let FeedItemInner = ({
               />
               <Text
                 type="sm-bold"
-                style={pal.textLight}
+                style={[pal.textLight, {display: 'flex', flexDirection: 'row'}]}
                 lineHeight={1.2}
                 numberOfLines={1}>
                 {isOwner ? (
