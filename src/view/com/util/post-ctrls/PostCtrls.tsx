@@ -208,7 +208,6 @@ let PostCtrls = ({
         author: post.author,
         indexedAt: post.indexedAt,
       },
-      quoteCount: post.quoteCount,
       onPost: onPostReply,
     })
   }, [
@@ -218,7 +217,6 @@ let PostCtrls = ({
     post.cid,
     post.author,
     post.indexedAt,
-    post.quoteCount,
     feedContext,
     openComposer,
     record.text,
