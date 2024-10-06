@@ -366,13 +366,13 @@ msgstr "이 리스트에 사용자 추가"
 msgid "Add account"
 msgstr "계정 추가"
 
-#: src/view/com/composer/GifAltText.tsx:72
-#: src/view/com/composer/GifAltText.tsx:136
-#: src/view/com/composer/GifAltText.tsx:176
+#: src/view/com/composer/GifAltText.tsx:67
+#: src/view/com/composer/GifAltText.tsx:134
+#: src/view/com/composer/GifAltText.tsx:199
 #: src/view/com/composer/photos/Gallery.tsx:176
 #: src/view/com/composer/photos/Gallery.tsx:223
-#: src/view/com/composer/photos/ImageAltTextDialog.tsx:70
-#: src/view/com/composer/photos/ImageAltTextDialog.tsx:75
+#: src/view/com/composer/photos/ImageAltTextDialog.tsx:92
+#: src/view/com/composer/photos/ImageAltTextDialog.tsx:97
 msgid "Add alt text"
 msgstr "대체 텍스트 추가"
 
@@ -490,14 +490,14 @@ msgstr "이미 코드가 있나요?"
 msgid "Already signed in as @{0}"
 msgstr "이미 @{0}(으)로 로그인했습니다"
 
-#: src/view/com/composer/GifAltText.tsx:96
+#: src/view/com/composer/GifAltText.tsx:91
 #: src/view/com/composer/photos/Gallery.tsx:194
 #: src/view/com/util/post-embeds/GifEmbed.tsx:177
 msgid "ALT"
 msgstr "ALT"
 
-#: src/view/com/composer/GifAltText.tsx:145
-#: src/view/com/composer/photos/ImageAltTextDialog.tsx:99
+#: src/view/com/composer/GifAltText.tsx:144
+#: src/view/com/composer/photos/ImageAltTextDialog.tsx:122
 #: src/view/com/composer/videos/SubtitleDialog.tsx:58
 #: src/view/com/composer/videos/SubtitleDialog.tsx:104
 #: src/view/com/composer/videos/SubtitleDialog.tsx:108
@@ -512,6 +512,11 @@ msgstr "대체 텍스트"
 #: src/view/com/composer/photos/Gallery.tsx:263
 msgid "Alt text describes images for blind and low-vision users, and helps give context to everyone."
 msgstr "대체 텍스트는 시각장애인과 저시력 사용자를 위해 이미지를 설명하며 모든 사용자의 이해를 돕습니다."
+
+#: src/view/com/composer/GifAltText.tsx:171
+#: src/view/com/composer/photos/ImageAltTextDialog.tsx:143
+msgid "Alt text will be truncated. Limit: {0} characters."
+msgstr "대체 텍스트를 자릅니다. 제한: {0}자."
 
 #: src/view/com/modals/VerifyEmail.tsx:132
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:95
@@ -589,8 +594,8 @@ msgstr "문제가 발생했습니다. 다시 시도해 주세요."
 msgid "an unknown error occurred"
 msgstr "알 수 없는 오류가 발생했습니다"
 
-#: src/components/moderation/ModerationDetailsDialog.tsx:154
 #: src/components/moderation/ModerationDetailsDialog.tsx:158
+#: src/components/moderation/ModerationDetailsDialog.tsx:154
 msgid "an unknown labeler"
 msgstr "알 수 없는 라벨러"
 
@@ -737,8 +742,8 @@ msgid "At least 3 characters"
 msgstr "3자 이상"
 
 #: src/components/dms/MessagesListHeader.tsx:75
-#: src/components/moderation/LabelsOnMeDialog.tsx:287
-#: src/components/moderation/LabelsOnMeDialog.tsx:288
+#: src/components/moderation/LabelsOnMeDialog.tsx:289
+#: src/components/moderation/LabelsOnMeDialog.tsx:290
 #: src/screens/Login/ChooseAccountForm.tsx:90
 #: src/screens/Login/ChooseAccountForm.tsx:95
 #: src/screens/Login/ForgotPasswordForm.tsx:123
@@ -915,9 +920,17 @@ msgstr "{0} 님이 만듦"
 msgid "by <0/>"
 msgstr "<0/> 님이 만듦"
 
-#: src/screens/Signup/StepInfo/Policies.tsx:80
-msgid "By creating an account you agree to the {els}."
-msgstr "계정을 만들면 {els}에 동의하는 것입니다."
+#: src/screens/Signup/StepInfo/Policies.tsx:81
+msgid "By creating an account you agree to the <0>Privacy Policy</0>."
+msgstr "계정을 만들면 <0>개인정보 처리방침</0>에 동의하는 것입니다."
+
+#: src/screens/Signup/StepInfo/Policies.tsx:48
+msgid "By creating an account you agree to the <0>Terms of Service</0> and <1>Privacy Policy</1>."
+msgstr "계정을 만들면 <0>서비스 이용약관</0> 및 <1>개인정보 처리방침</1>에 동의하는 것입니다."
+
+#: src/screens/Signup/StepInfo/Policies.tsx:68
+msgid "By creating an account you agree to the <0>Terms of Service</0>."
+msgstr "계정을 만들면 <0>서비스 이용약관</0>에 동의하는 것입니다."
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:162
 msgid "by you"
@@ -1334,8 +1347,8 @@ msgstr "인증 코드"
 msgid "Connecting..."
 msgstr "연결 중…"
 
-#: src/screens/Signup/index.tsx:174
-#: src/screens/Signup/index.tsx:177
+#: src/screens/Signup/index.tsx:175
+#: src/screens/Signup/index.tsx:178
 msgid "Contact support"
 msgstr "지원에 연락하기"
 
@@ -1718,8 +1731,8 @@ msgstr "대화 신고 기록을 삭제합니다"
 msgid "Description"
 msgstr "설명"
 
-#: src/view/com/composer/GifAltText.tsx:141
-#: src/view/com/composer/photos/ImageAltTextDialog.tsx:95
+#: src/view/com/composer/GifAltText.tsx:140
+#: src/view/com/composer/photos/ImageAltTextDialog.tsx:118
 msgid "Descriptive alt text"
 msgstr "설명이 포함된 대체 텍스트"
 
@@ -2800,7 +2813,7 @@ msgstr "해시태그"
 msgid "Hashtag: #{tag}"
 msgstr "해시태그: #{tag}"
 
-#: src/screens/Signup/index.tsx:172
+#: src/screens/Signup/index.tsx:173
 msgid "Having trouble?"
 msgstr "문제가 있나요?"
 
@@ -2953,7 +2966,7 @@ msgstr "대체 텍스트가 긴 경우 대체 텍스트 확장 상태를 전환�
 msgid "If none are selected, suitable for all ages."
 msgstr "아무것도 선택하지 않으면 모든 연령대에 적합하다는 뜻입니다."
 
-#: src/screens/Signup/StepInfo/Policies.tsx:89
+#: src/screens/Signup/StepInfo/Policies.tsx:110
 msgid "If you are not yet an adult according to the laws of your country, your parent or legal guardian must read these Terms on your behalf."
 msgstr "해당 국가의 법률에 따라 아직 성인이 아닌 경우 부모 또는 법적 보호자가 대신 이 약관을 읽어야 합니다."
 
@@ -4546,7 +4559,7 @@ msgstr "초대 코드를 입력하세요."
 msgid "Please enter your password as well:"
 msgstr "비밀번호를 입력하세요."
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:262
+#: src/components/moderation/LabelsOnMeDialog.tsx:264
 msgid "Please explain why you think this label was incorrectly applied by {0}"
 msgstr "{0} 님이 이 라벨을 잘못 적용했다고 생각하는 이유를 설명해 주세요"
 
@@ -4707,7 +4720,6 @@ msgid "Privacy"
 msgstr "개인정보"
 
 #: src/Navigation.tsx:265
-#: src/screens/Signup/StepInfo/Policies.tsx:62
 #: src/view/screens/PrivacyPolicy.tsx:29
 #: src/view/screens/Settings/index.tsx:910
 #: src/view/shell/Drawer.tsx:290
@@ -4828,11 +4840,13 @@ msgstr "계정 재활성화"
 msgid "Read the Bluesky blog"
 msgstr "Bluesky 블로그 읽기"
 
-#: src/screens/Signup/StepInfo/Policies.tsx:59
+#: src/screens/Signup/StepInfo/Policies.tsx:58
+#: src/screens/Signup/StepInfo/Policies.tsx:84
 msgid "Read the Bluesky Privacy Policy"
 msgstr "Bluesky 개인정보 처리방침 읽기"
 
-#: src/screens/Signup/StepInfo/Policies.tsx:49
+#: src/screens/Signup/StepInfo/Policies.tsx:51
+#: src/screens/Signup/StepInfo/Policies.tsx:71
 msgid "Read the Bluesky Terms of Service"
 msgstr "Bluesky 서비스 이용약관 읽기"
 
@@ -5297,12 +5311,12 @@ msgstr "이전 페이지로 돌아갑니다"
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:440
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:446
 #: src/components/StarterPack/QrCodeDialog.tsx:185
-#: src/view/com/composer/GifAltText.tsx:163
-#: src/view/com/composer/GifAltText.tsx:169
+#: src/view/com/composer/GifAltText.tsx:182
+#: src/view/com/composer/GifAltText.tsx:191
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:77
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:83
-#: src/view/com/composer/photos/ImageAltTextDialog.tsx:109
-#: src/view/com/composer/photos/ImageAltTextDialog.tsx:116
+#: src/view/com/composer/photos/ImageAltTextDialog.tsx:154
+#: src/view/com/composer/photos/ImageAltTextDialog.tsx:164
 #: src/view/com/modals/ChangeHandle.tsx:161
 #: src/view/com/modals/CreateOrEditList.tsx:317
 #: src/view/com/modals/EditProfile.tsx:219
@@ -6070,8 +6084,8 @@ msgstr "스토리지가 지워졌으며 지금 앱을 다시 시작해야 합니
 msgid "Storybook"
 msgstr "스토리북"
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:296
-#: src/components/moderation/LabelsOnMeDialog.tsx:297
+#: src/components/moderation/LabelsOnMeDialog.tsx:298
+#: src/components/moderation/LabelsOnMeDialog.tsx:299
 #: src/screens/Messages/components/ChatDisabled.tsx:142
 #: src/screens/Messages/components/ChatDisabled.tsx:143
 msgid "Submit"
@@ -6193,7 +6207,6 @@ msgid "Terms"
 msgstr "이용약관"
 
 #: src/Navigation.tsx:270
-#: src/screens/Signup/StepInfo/Policies.tsx:52
 #: src/view/screens/Settings/index.tsx:904
 #: src/view/screens/TermsOfService.tsx:29
 #: src/view/shell/Drawer.tsx:284
@@ -6211,7 +6224,7 @@ msgstr "커뮤니티 기준을 위반하는 용어 사용"
 msgid "Text & tags"
 msgstr "텍스트 및 태그"
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:260
+#: src/components/moderation/LabelsOnMeDialog.tsx:262
 #: src/screens/Messages/components/ChatDisabled.tsx:108
 msgid "Text input field"
 msgstr "텍스트 입력 필드"
@@ -6441,12 +6454,8 @@ msgid "This account is blocked by one or more of your moderation lists. To unblo
 msgstr "이 계정은 하나 이상의 검토 리스트에 의해 차단되었습니다. 차단을 해제하려면 해당 리스트로 직접 이동하여 이 사용자를 제거하세요."
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:245
-msgid "This appeal will be sent to"
-msgstr ""
-
-#: src/components/moderation/LabelsOnMeDialog.tsx:243
-#~ msgid "This appeal will be sent to <0>{sourceName}</0>."
-#~ msgstr "이 이의신청은 <0>{sourceName}</0>에게 보내집니다."
+msgid "This appeal will be sent to <0>{sourceName}</0>."
+msgstr "이 이의신청은 <0>{sourceName}</0>에게 보내집니다."
 
 #: src/screens/Messages/components/ChatDisabled.tsx:104
 msgid "This appeal will be sent to Bluesky's moderation service."
@@ -6512,7 +6521,7 @@ msgid "This is important in case you ever need to change your email or reset you
 msgstr "이는 이메일을 변경하거나 비밀번호를 재설정해야 할 때 중요한 정보입니다."
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:151
-msgid "This label was applied by"
+msgid "This label was applied by <0>{0}</0>"
 msgstr ""
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:148
@@ -7589,7 +7598,7 @@ msgstr "프로필은 최대 {STARTER_PACK_MAX_SIZE}개까지 추가할 수 있�
 msgid "You may only add up to 3 feeds"
 msgstr "피드는 최대 3개까지 추가할 수 있습니다"
 
-#: src/screens/Signup/StepInfo/Policies.tsx:85
+#: src/screens/Signup/StepInfo/Policies.tsx:106
 msgid "You must be 13 years of age or older to sign up."
 msgstr "가입하려면 만 13세 이상이어야 합니다."
 
