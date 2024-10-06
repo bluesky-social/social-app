@@ -311,7 +311,7 @@ let FeedItemInner = ({
                   <Trans>Reposted by you</Trans>
                 ) : (
                   <Trans>
-                    Reposted by{' '}
+                    Reposted by&nbsp;
                     <ProfileHoverCard inline did={reason.by.did}>
                       <TextLinkOnWebOnly
                         type="sm-bold"
