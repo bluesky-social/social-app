@@ -55,7 +55,7 @@ type ResolvedOtherRecord = {
   }
 }
 
-type ResolvedLink =
+export type ResolvedLink =
   | ResolvedExternalLink
   | ResolvedPostRecord
   | ResolvedOtherRecord

@@ -11,7 +11,7 @@ export const RQKEY_GIF = (url: string) => [RQKEY_GIF_ROOT, url]
 
 import {BskyAgent} from '@atproto/api'
 
-import {resolveGif, resolveLink} from '#/lib/api/resolve'
+import {ResolvedLink,resolveGif, resolveLink} from '#/lib/api/resolve'
 import {Gif} from './tenor'
 
 export function useResolveLinkQuery(url: string) {
@@ -36,6 +36,13 @@ export function fetchResolveLinkQuery(
       return await resolveLink(agent, url)
     },
   })
+}
+export function precacheResolveLinkQuery(
+  queryClient: QueryClient,
+  url: string,
+  resolvedLink: ResolvedLink,
+) {
+  queryClient.setQueryData(RQKEY_LINK(url), resolvedLink)
 }
 
 export function useResolveGifQuery(gif: Gif) {

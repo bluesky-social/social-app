@@ -199,7 +199,6 @@ let PostCtrls = ({
       event: 'app.bsky.feed.defs#interactionQuote',
       feedContext,
     })
-    // TODO: Preload resolution in RQ
     openComposer({
       quote: {
         uri: post.uri,
