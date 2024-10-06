@@ -1,3 +1,5 @@
+import {useFonts} from 'expo-font'
+
 import {isWeb} from '#/platform/detection'
 import {Device, device} from '#/storage'
 
@@ -40,31 +42,10 @@ export function applyFonts(
   fontFamily: 'system' | 'theme',
 ) {
   if (fontFamily === 'theme') {
-    style.fontFamily =
-      {
-        // '100': 'Inter-Thin',
-        // '200': 'Inter-ExtraLight',
-        // '300': 'Inter-Light',
-        // '500': 'Inter-Medium',
-        // '700': 'Inter-Bold',
-        // '900': 'Inter-Black',
-        '100': 'Inter-Regular',
-        '200': 'Inter-Regular',
-        '300': 'Inter-Regular',
-        '400': 'Inter-Regular',
-        '500': 'Inter-SemiBold',
-        '600': 'Inter-SemiBold',
-        '700': 'Inter-SemiBold',
-        '800': 'Inter-ExtraBold',
-        '900': 'Inter-ExtraBold',
-      }[style.fontWeight as string] || 'Inter-Regular'
+    style.fontFamily = 'InterVariable'
 
     if (style.fontStyle === 'italic') {
-      if (style.fontFamily === 'Inter-Regular') {
-        style.fontFamily = 'Inter-Italic'
-      } else {
-        style.fontFamily += 'Italic'
-      }
+      style.fontFamily += 'Italic'
     }
 
     // fallback families only supported on web
@@ -83,4 +64,18 @@ export function applyFonts(
    * {@link https://developer.mozilla.org/en-US/docs/Web/CSS/font-variant}
    */
   style.fontVariant = ['no-contextual']
+}
+
+/*
+ * IMPORTANT: This is unused. Expo statically extracts these fonts.
+ *
+ * All used fonts MUST be configured here. Unused fonts can be commented out.
+ *
+ * This is used for both web fonts and native fonts.
+ */
+export function DO_NOT_USE() {
+  return useFonts({
+    InterVariable: require('../../assets/fonts/inter/InterVariable.ttf'),
+    'InterVariable-Italic': require('../../assets/fonts/inter/InterVariable-Italic.ttf'),
+  })
 }

@@ -13,24 +13,8 @@
 
   <!-- Hello Humans! API docs at https://atproto.com -->
 
-  <link rel="preload" as="font" type="font/otf" href="/static/media/Inter-Regular.1f5ed03b6dd9fd1f9982.otf">
-  <link rel="preload" as="font" type="font/otf" href="/static/media/Inter-Italic.95778eb0c75dc956257e.otf">
-  <!--
-  <link rel="preload" as="font" type="font/otf" href="/static/media/Inter-Medium.296aa2d65964269836b3.otf">
-  <link rel="preload" as="font" type="font/otf" href="/static/media/Inter-MediumItalic.0e57e17a6311368e2114.otf">
-  -->
-  <link rel="preload" as="font" type="font/otf" href="/static/media/Inter-SemiBold.2277990330981b8409bb.otf">
-  <link rel="preload" as="font" type="font/otf" href="/static/media/Inter-SemiBoldItalic.f62fea3df3a521d6c8a7.otf">
-  <!--
-  <link rel="preload" as="font" type="font/otf" href="/static/media/Inter-Bold.8d330503e1d034ad68de.otf">
-  <link rel="preload" as="font" type="font/otf" href="/static/media/Inter-BoldItalic.bb17e63f9baa0d861a20.otf">
-  -->
-  <link rel="preload" as="font" type="font/otf" href="/static/media/Inter-ExtraBold.ff2581a193bf6b7e0b06.otf">
-  <link rel="preload" as="font" type="font/otf" href="/static/media/Inter-ExtraBoldItalic.0e50b40728d24d40fdf4.otf">
-  <!--
-  <link rel="preload" as="font" type="font/otf" href="/static/media/Inter-Black.66e9a87f1c921e844ed4.otf">
-  <link rel="preload" as="font" type="font/otf" href="/static/media/Inter-BlackItalic.27b9f0ad06fd13a7b9da.otf">
-  -->
+  <link rel="preload" as="font" type="font/ttf" href="{{ staticCDNHost }}/static/media/InterVariable.c9f788f6e7ebaec75d7c.ttf">
+  <link rel="preload" as="font" type="font/ttf" href="{{ staticCDNHost }}/static/media/InterVariable-Italic.55d6a3f35e9b605ba6f4.ttf">
 
   <style>
     /**
@@ -40,6 +24,20 @@
      *
      * THIS NEEDS TO BE DUPLICATED IN `bskyweb/templates/base.html`
      */
+    @font-face {
+      font-family: 'InterVariable';
+      src: url("{{ staticCDNHost }}/static/media/InterVariable.c9f788f6e7ebaec75d7c.ttf") format('truetype');
+      font-weight: 300 1000;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'InterVariableItalic';
+      src: url("{{ staticCDNHost }}/static/media/InterVariable-Italic.55d6a3f35e9b605ba6f4.ttf") format('truetype');
+      font-weight: 300 1000;
+      font-style: italic;
+      font-display: swap;
+    }
     html {
       background-color: white;
       scrollbar-gutter: stable both-edges;
@@ -53,7 +51,7 @@
     body {
       margin: 0px;
       padding: 0px;
-      font-family: 'Inter-Regular', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Liberation Sans', Helvetica, Arial, sans-serif;
+      font-family: InterVariable, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Liberation Sans', Helvetica, Arial, sans-serif;
       text-rendering: optimizeLegibility;
       /* Platform-specific reset */
       -webkit-overflow-scrolling: touch;
@@ -80,10 +78,10 @@
   </style>
 
   {% include "scripts.html" %}
-  <link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon-16x16.png">
-  <link rel="mask-icon" href="/static/safari-pinned-tab.svg" color="#1185fe">
+  <link rel="apple-touch-icon" sizes="180x180" href="{{ staticCDNHost }}/static/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ staticCDNHost }}/static/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="{{ staticCDNHost }}/static/favicon-16x16.png">
+  <link rel="mask-icon" href="{{ staticCDNHost }}/static/safari-pinned-tab.svg" color="#1185fe">
   <meta name="theme-color">
   <meta name="application-name" content="Bluesky">
   <meta name="generator" content="bskyweb">

@@ -3,6 +3,7 @@ import React, {
   useEffect,
   useImperativeHandle,
   useMemo,
+  useReducer,
   useRef,
   useState,
 } from 'react'
@@ -35,6 +36,7 @@ import Animated, {
   ZoomOut,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {ImagePickerAsset} from 'expo-image-picker'
 import {
   AppBskyFeedDefs,
   AppBskyFeedGetPostThread,
@@ -66,7 +68,7 @@ import {logger} from '#/logger'
 import {isAndroid, isIOS, isNative, isWeb} from '#/platform/detection'
 import {useDialogStateControlContext} from '#/state/dialogs'
 import {emitPostCreated} from '#/state/events'
-import {ComposerImage, createInitialImages, pasteImage} from '#/state/gallery'
+import {ComposerImage, pasteImage} from '#/state/gallery'
 import {useModalControls} from '#/state/modals'
 import {useModals} from '#/state/modals'
 import {useRequireAltTextEnabled} from '#/state/preferences'
@@ -80,11 +82,6 @@ import {useProfileQuery} from '#/state/queries/profile'
 import {Gif} from '#/state/queries/tenor'
 import {ThreadgateAllowUISetting} from '#/state/queries/threadgate'
 import {threadgateViewToAllowUISetting} from '#/state/queries/threadgate/util'
-import {
-  State as VideoUploadState,
-  useUploadVideo,
-  VideoUploadDispatch,
-} from '#/state/queries/video/video'
 import {useAgent, useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
 import {ComposerOpts} from '#/state/shell/composer'
@@ -117,14 +114,21 @@ import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmile} from '#/components/icons/Emoji'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
+import {createPortalGroup} from '#/components/Portal'
 import * as Prompt from '#/components/Prompt'
 import {Text as NewText} from '#/components/Typography'
+import {composerReducer, createComposerState} from './state/composer'
+import {NO_VIDEO, NoVideoState, processVideo, VideoState} from './state/video'
+
+const Portal = createPortalGroup()
 
 const MAX_IMAGES = 4
 
 type CancelRef = {
   onPressCancel: () => void
 }
+
+const NO_IMAGES: ComposerImage[] = []
 
 type Props = ComposerOpts
 export const ComposePost = ({
@@ -143,7 +147,8 @@ export const ComposePost = ({
 }) => {
   const {currentAccount} = useSession()
   const agent = useAgent()
-  const {data: currentProfile} = useProfileQuery({did: currentAccount!.did})
+  const currentDid = currentAccount!.did
+  const {data: currentProfile} = useProfileQuery({did: currentDid})
   const {isModalActive} = useModals()
   const {closeComposer} = useComposerControls()
   const pal = usePalette('default')
@@ -182,25 +187,62 @@ export const ComposePost = ({
     initQuote,
   )
 
-  const [videoAltText, setVideoAltText] = useState('')
-  const [captions, setCaptions] = useState<{lang: string; file: File}[]>([])
+  // TODO: Move more state here.
+  const [composerState, dispatch] = useReducer(
+    composerReducer,
+    {initImageUris, initQuoteUri: initQuote?.uri},
+    createComposerState,
+  )
 
-  const {
-    selectVideo,
-    clearVideo,
-    state: videoUploadState,
-    updateVideoDimensions,
-    dispatch: videoUploadDispatch,
-  } = useUploadVideo({
-    setStatus: setProcessingState,
-    onSuccess: () => {
-      if (publishOnUpload) {
-        onPressPublish(true)
-      }
+  let videoState: VideoState | NoVideoState = NO_VIDEO
+  if (composerState.embed.media?.type === 'video') {
+    videoState = composerState.embed.media.video
+  }
+
+  const selectVideo = React.useCallback(
+    (asset: ImagePickerAsset) => {
+      const abortController = new AbortController()
+      dispatch({type: 'embed_add_video', asset, abortController})
+      processVideo(
+        asset,
+        videoAction => dispatch({type: 'embed_update_video', videoAction}),
+        agent,
+        currentDid,
+        abortController.signal,
+        _,
+      )
     },
-    initialVideoUri: initVideoUri,
-  })
-  const hasVideo = Boolean(videoUploadState.asset || videoUploadState.video)
+    [_, agent, currentDid],
+  )
+
+  // Whenever we receive an initial video uri, we should immediately run compression if necessary
+  useEffect(() => {
+    if (initVideoUri) {
+      selectVideo({uri: initVideoUri} as ImagePickerAsset)
+    }
+  }, [initVideoUri, selectVideo])
+
+  const clearVideo = React.useCallback(() => {
+    videoState.abortController.abort()
+    dispatch({type: 'embed_remove_video'})
+  }, [videoState.abortController, dispatch])
+
+  const updateVideoDimensions = useCallback(
+    (width: number, height: number) => {
+      dispatch({
+        type: 'embed_update_video',
+        videoAction: {
+          type: 'update_dimensions',
+          width,
+          height,
+          signal: videoState.abortController.signal,
+        },
+      })
+    },
+    [videoState.abortController],
+  )
+
+  const hasVideo = Boolean(videoState.asset || videoState.video)
 
   const [publishOnUpload, setPublishOnUpload] = useState(false)
 
@@ -213,9 +255,11 @@ export const ComposePost = ({
     )
   const [postgate, setPostgate] = useState(createPostgateRecord({post: ''}))
 
-  const [images, setImages] = useState<ComposerImage[]>(() =>
-    createInitialImages(initImageUris),
-  )
+  let images = NO_IMAGES
+  if (composerState.embed.media?.type === 'images') {
+    images = composerState.embed.media.images
+  }
+
   const onClose = useCallback(() => {
     closeComposer()
   }, [closeComposer])
@@ -235,7 +279,7 @@ export const ComposePost = ({
       graphemeLength > 0 ||
       images.length !== 0 ||
       extGif ||
-      videoUploadState.status !== 'idle'
+      videoState.status !== 'idle'
     ) {
       closeAllDialogs()
       Keyboard.dismiss()
@@ -250,7 +294,7 @@ export const ComposePost = ({
     closeAllDialogs,
     discardPromptControl,
     onClose,
-    videoUploadState.status,
+    videoState.status,
   ])
 
   useImperativeHandle(cancelRef, () => ({onPressCancel}))
@@ -293,6 +337,7 @@ export const ComposePost = ({
 
   const onNewLink = useCallback(
     (uri: string) => {
+      dispatch({type: 'embed_add_uri', uri})
       if (extLink != null) return
       setExtLink({uri, isLoading: true})
     },
@@ -301,9 +346,12 @@ export const ComposePost = ({
 
   const onImageAdd = useCallback(
     (next: ComposerImage[]) => {
-      setImages(prev => prev.concat(next.slice(0, MAX_IMAGES - prev.length)))
+      dispatch({
+        type: 'embed_add_images',
+        images: next,
+      })
     },
-    [setImages],
+    [dispatch],
   )
 
   const onPhotoPasted = useCallback(
@@ -344,8 +392,8 @@ export const ComposePost = ({
 
       if (
         !finishedUploading &&
-        videoUploadState.asset &&
-        videoUploadState.status !== 'done'
+        videoState.asset &&
+        videoState.status !== 'done'
       ) {
         setPublishOnUpload(true)
         return
@@ -358,7 +406,7 @@ export const ComposePost = ({
         images.length === 0 &&
         !extLink &&
         !quote &&
-        videoUploadState.status === 'idle'
+        videoState.status === 'idle'
       ) {
         setError(_(msg`Did you want to say anything?`))
         return
@@ -374,9 +422,9 @@ export const ComposePost = ({
       try {
         postUri = (
           await apilib.post(agent, {
+            composerState, // TODO: move more state here.
             rawText: richtext.text,
             replyTo: replyTo?.uri,
-            images,
             quote,
             extLink,
             labels,
@@ -384,19 +432,6 @@ export const ComposePost = ({
             postgate,
             onStateChange: setProcessingState,
             langs: toPostLanguages(langPrefs.postLanguage),
-            video: videoUploadState.pendingPublish?.blobRef
-              ? {
-                  blobRef: videoUploadState.pendingPublish.blobRef,
-                  altText: videoAltText,
-                  captions: captions,
-                  aspectRatio: videoUploadState.asset
-                    ? {
-                        width: videoUploadState.asset?.width,
-                        height: videoUploadState.asset?.height,
-                      }
-                    : undefined,
-                }
-              : undefined,
           })
         ).uri
         try {
@@ -474,7 +509,7 @@ export const ComposePost = ({
     [
       _,
       agent,
-      captions,
+      composerState,
       extLink,
       images,
       graphemeLength,
@@ -492,21 +527,19 @@ export const ComposePost = ({
       setExtLink,
       setLangPrefs,
       threadgateAllowUISettings,
-      videoAltText,
-      videoUploadState.asset,
-      videoUploadState.pendingPublish,
-      videoUploadState.status,
+      videoState.asset,
+      videoState.status,
     ],
   )
 
   React.useEffect(() => {
-    if (videoUploadState.pendingPublish && publishOnUpload) {
-      if (!videoUploadState.pendingPublish.mutableProcessed) {
-        videoUploadState.pendingPublish.mutableProcessed = true
+    if (videoState.pendingPublish && publishOnUpload) {
+      if (!videoState.pendingPublish.mutableProcessed) {
+        videoState.pendingPublish.mutableProcessed = true
         onPressPublish(true)
       }
     }
-  }, [onPressPublish, publishOnUpload, videoUploadState.pendingPublish])
+  }, [onPressPublish, publishOnUpload, videoState.pendingPublish])
 
   const canPost = useMemo(
     () => graphemeLength <= MAX_GRAPHEME_LENGTH && !isAltTextRequiredAndMissing,
@@ -519,10 +552,10 @@ export const ComposePost = ({
   const canSelectImages =
     images.length < MAX_IMAGES &&
     !extLink &&
-    videoUploadState.status === 'idle' &&
-    !videoUploadState.video
+    videoState.status === 'idle' &&
+    !videoState.video
   const hasMedia =
-    images.length > 0 || Boolean(extLink) || Boolean(videoUploadState.video)
+    images.length > 0 || Boolean(extLink) || Boolean(videoState.video)
 
   const onEmojiButtonPress = useCallback(() => {
     openEmojiPicker?.(textInput.current?.getCursorPosition())
@@ -534,6 +567,7 @@ export const ComposePost = ({
 
   const onSelectGif = useCallback(
     (gif: Gif) => {
+      dispatch({type: 'embed_add_gif', gif})
       setExtLink({
         uri: `${gif.media_formats.gif.url}?hh=${gif.media_formats.gif.dims[1]}&ww=${gif.media_formats.gif.dims[0]}`,
         isLoading: true,
@@ -552,6 +586,7 @@ export const ComposePost = ({
 
   const handleChangeGifAltText = useCallback(
     (altText: string) => {
+      dispatch({type: 'embed_update_gif', alt: altText})
       setExtLink(ext =>
         ext && ext.meta
           ? {
@@ -581,271 +616,324 @@ export const ComposePost = ({
   const keyboardVerticalOffset = useKeyboardVerticalOffset()
 
   return (
-    <KeyboardAvoidingView
-      testID="composePostView"
-      behavior={isIOS ? 'padding' : 'height'}
-      keyboardVerticalOffset={keyboardVerticalOffset}
-      style={a.flex_1}>
-      <View style={[a.flex_1, viewStyles]} aria-modal accessibilityViewIsModal>
-        <Animated.View
-          style={topBarAnimatedStyle}
-          layout={native(LinearTransition)}>
-          <View style={styles.topbarInner}>
-            <Button
-              label={_(msg`Cancel`)}
-              variant="ghost"
-              color="primary"
-              shape="default"
-              size="small"
-              style={[
-                a.rounded_full,
-                a.py_sm,
-                {paddingLeft: 7, paddingRight: 7},
-              ]}
-              onPress={onPressCancel}
-              accessibilityHint={_(
-                msg`Closes post composer and discards post draft`,
-              )}>
-              <ButtonText style={[a.text_md]}>
-                <Trans>Cancel</Trans>
-              </ButtonText>
-            </Button>
-            <View style={a.flex_1} />
-            {isProcessing ? (
-              <>
-                <Text style={pal.textLight}>{processingState}</Text>
-                <View style={styles.postBtn}>
-                  <ActivityIndicator />
-                </View>
-              </>
-            ) : (
-              <View style={[styles.postBtnWrapper]}>
-                <LabelsBtn
-                  labels={labels}
-                  onChange={setLabels}
-                  hasMedia={hasMedia}
-                />
-                {canPost ? (
-                  <Button
-                    testID="composerPublishBtn"
-                    label={
-                      replyTo ? _(msg`Publish reply`) : _(msg`Publish post`)
-                    }
-                    variant="solid"
-                    color="primary"
-                    shape="default"
-                    size="small"
-                    style={[a.rounded_full, a.py_sm]}
-                    onPress={() => onPressPublish()}
-                    disabled={
-                      videoUploadState.status !== 'idle' && publishOnUpload
-                    }>
-                    <ButtonText style={[a.text_md]}>
-                      {replyTo ? (
-                        <Trans context="action">Reply</Trans>
-                      ) : (
-                        <Trans context="action">Post</Trans>
-                      )}
-                    </ButtonText>
-                  </Button>
-                ) : (
-                  <View style={[styles.postBtn, pal.btn]}>
-                    <Text style={[pal.textLight, s.f16, s.bold]}>
-                      <Trans context="action">Post</Trans>
-                    </Text>
+    <Portal.Provider>
+      <KeyboardAvoidingView
+        testID="composePostView"
+        behavior={isIOS ? 'padding' : 'height'}
+        keyboardVerticalOffset={keyboardVerticalOffset}
+        style={a.flex_1}>
+        <View
+          style={[a.flex_1, viewStyles]}
+          aria-modal
+          accessibilityViewIsModal>
+          <Animated.View
+            style={topBarAnimatedStyle}
+            layout={native(LinearTransition)}>
+            <View style={styles.topbarInner}>
+              <Button
+                label={_(msg`Cancel`)}
+                variant="ghost"
+                color="primary"
+                shape="default"
+                size="small"
+                style={[
+                  a.rounded_full,
+                  a.py_sm,
+                  {paddingLeft: 7, paddingRight: 7},
+                ]}
+                onPress={onPressCancel}
+                accessibilityHint={_(
+                  msg`Closes post composer and discards post draft`,
+                )}>
+                <ButtonText style={[a.text_md]}>
+                  <Trans>Cancel</Trans>
+                </ButtonText>
+              </Button>
+              <View style={a.flex_1} />
+              {isProcessing ? (
+                <>
+                  <Text style={pal.textLight}>{processingState}</Text>
+                  <View style={styles.postBtn}>
+                    <ActivityIndicator />
                   </View>
-                )}
+                </>
+              ) : (
+                <View style={[styles.postBtnWrapper]}>
+                  <LabelsBtn
+                    labels={labels}
+                    onChange={setLabels}
+                    hasMedia={hasMedia}
+                  />
+                  {canPost ? (
+                    <Button
+                      testID="composerPublishBtn"
+                      label={
+                        replyTo ? _(msg`Publish reply`) : _(msg`Publish post`)
+                      }
+                      variant="solid"
+                      color="primary"
+                      shape="default"
+                      size="small"
+                      style={[a.rounded_full, a.py_sm]}
+                      onPress={() => onPressPublish()}
+                      disabled={
+                        videoState.status !== 'idle' && publishOnUpload
+                      }>
+                      <ButtonText style={[a.text_md]}>
+                        {replyTo ? (
+                          <Trans context="action">Reply</Trans>
+                        ) : (
+                          <Trans context="action">Post</Trans>
+                        )}
+                      </ButtonText>
+                    </Button>
+                  ) : (
+                    <View style={[styles.postBtn, pal.btn]}>
+                      <Text style={[pal.textLight, s.f16, s.bold]}>
+                        <Trans context="action">Post</Trans>
+                      </Text>
+                    </View>
+                  )}
+                </View>
+              )}
+            </View>
+
+            {isAltTextRequiredAndMissing && (
+              <View style={[styles.reminderLine, pal.viewLight]}>
+                <View style={styles.errorIcon}>
+                  <FontAwesomeIcon
+                    icon="exclamation"
+                    style={{color: colors.red4}}
+                    size={10}
+                  />
+                </View>
+                <Text style={[pal.text, a.flex_1]}>
+                  <Trans>One or more images is missing alt text.</Trans>
+                </Text>
               </View>
             )}
-          </View>
+            <ErrorBanner
+              error={error}
+              videoState={videoState}
+              clearError={() => setError('')}
+              clearVideo={clearVideo}
+            />
+          </Animated.View>
+          <Animated.ScrollView
+            layout={native(LinearTransition)}
+            onScroll={scrollHandler}
+            style={styles.scrollView}
+            keyboardShouldPersistTaps="always"
+            onContentSizeChange={onScrollViewContentSizeChange}
+            onLayout={onScrollViewLayout}>
+            {replyTo ? <ComposerReplyTo replyTo={replyTo} /> : undefined}
 
-          {isAltTextRequiredAndMissing && (
-            <View style={[styles.reminderLine, pal.viewLight]}>
-              <View style={styles.errorIcon}>
-                <FontAwesomeIcon
-                  icon="exclamation"
-                  style={{color: colors.red4}}
-                  size={10}
+            <View
+              style={[
+                styles.textInputLayout,
+                isNative && styles.textInputLayoutMobile,
+              ]}>
+              <UserAvatar
+                avatar={currentProfile?.avatar}
+                size={50}
+                type={currentProfile?.associated?.labeler ? 'labeler' : 'user'}
+              />
+              <TextInput
+                ref={textInput}
+                richtext={richtext}
+                placeholder={selectTextInputPlaceholder}
+                autoFocus
+                setRichText={setRichText}
+                onPhotoPasted={onPhotoPasted}
+                onPressPublish={() => onPressPublish()}
+                onNewLink={onNewLink}
+                onError={setError}
+                accessible={true}
+                accessibilityLabel={_(msg`Write post`)}
+                accessibilityHint={_(
+                  msg`Compose posts up to ${MAX_GRAPHEME_LENGTH} characters in length`,
+                )}
+              />
+            </View>
+
+            <Gallery
+              images={images}
+              dispatch={dispatch}
+              Portal={Portal.Portal}
+            />
+            {images.length === 0 && extLink && (
+              <View style={a.relative}>
+                <ExternalEmbed
+                  link={extLink}
+                  gif={extGif}
+                  onRemove={() => {
+                    if (extGif) {
+                      dispatch({type: 'embed_remove_gif'})
+                    } else {
+                      dispatch({type: 'embed_remove_link'})
+                    }
+                    setExtLink(undefined)
+                    setExtGif(undefined)
+                  }}
+                />
+                <GifAltText
+                  link={extLink}
+                  gif={extGif}
+                  onSubmit={handleChangeGifAltText}
+                  Portal={Portal.Portal}
                 />
               </View>
-              <Text style={[pal.text, a.flex_1]}>
-                <Trans>One or more images is missing alt text.</Trans>
-              </Text>
+            )}
+            <LayoutAnimationConfig skipExiting>
+              {hasVideo && (
+                <Animated.View
+                  style={[a.w_full, a.mt_lg]}
+                  entering={native(ZoomIn)}
+                  exiting={native(ZoomOut)}>
+                  {videoState.asset &&
+                    (videoState.status === 'compressing' ? (
+                      <VideoTranscodeProgress
+                        asset={videoState.asset}
+                        progress={videoState.progress}
+                        clear={clearVideo}
+                      />
+                    ) : videoState.video ? (
+                      <VideoPreview
+                        asset={videoState.asset}
+                        video={videoState.video}
+                        setDimensions={updateVideoDimensions}
+                        clear={clearVideo}
+                      />
+                    ) : null)}
+                  <SubtitleDialogBtn
+                    defaultAltText={videoState.altText}
+                    saveAltText={altText =>
+                      dispatch({
+                        type: 'embed_update_video',
+                        videoAction: {
+                          type: 'update_alt_text',
+                          altText,
+                          signal: videoState.abortController.signal,
+                        },
+                      })
+                    }
+                    captions={videoState.captions}
+                    setCaptions={updater => {
+                      dispatch({
+                        type: 'embed_update_video',
+                        videoAction: {
+                          type: 'update_captions',
+                          updater,
+                          signal: videoState.abortController.signal,
+                        },
+                      })
+                    }}
+                    Portal={Portal.Portal}
+                  />
+                </Animated.View>
+              )}
+            </LayoutAnimationConfig>
+            <View style={!hasVideo ? [a.mt_md] : []}>
+              {quote ? (
+                <View style={[s.mt5, s.mb2, isWeb && s.mb10]}>
+                  <View style={{pointerEvents: 'none'}}>
+                    <QuoteEmbed quote={quote} />
+                  </View>
+                  {quote.uri !== initQuote?.uri && (
+                    <QuoteX
+                      onRemove={() => {
+                        dispatch({type: 'embed_remove_quote'})
+                        setQuote(undefined)
+                      }}
+                    />
+                  )}
+                </View>
+              ) : null}
             </View>
-          )}
-          <ErrorBanner
-            error={error}
-            videoUploadState={videoUploadState}
-            clearError={() => setError('')}
-            videoUploadDispatch={videoUploadDispatch}
-          />
-        </Animated.View>
-        <Animated.ScrollView
-          layout={native(LinearTransition)}
-          onScroll={scrollHandler}
-          style={styles.scrollView}
-          keyboardShouldPersistTaps="always"
-          onContentSizeChange={onScrollViewContentSizeChange}
-          onLayout={onScrollViewLayout}>
-          {replyTo ? <ComposerReplyTo replyTo={replyTo} /> : undefined}
+          </Animated.ScrollView>
+          <SuggestedLanguage text={richtext.text} />
 
+          {replyTo ? null : (
+            <ThreadgateBtn
+              postgate={postgate}
+              onChangePostgate={setPostgate}
+              threadgateAllowUISettings={threadgateAllowUISettings}
+              onChangeThreadgateAllowUISettings={
+                onChangeThreadgateAllowUISettings
+              }
+              style={bottomBarAnimatedStyle}
+              Portal={Portal.Portal}
+            />
+          )}
           <View
             style={[
-              styles.textInputLayout,
-              isNative && styles.textInputLayoutMobile,
+              a.flex_row,
+              a.py_xs,
+              {paddingLeft: 7, paddingRight: 16},
+              a.align_center,
+              a.border_t,
+              t.atoms.bg,
+              t.atoms.border_contrast_medium,
+              a.justify_between,
             ]}>
-            <UserAvatar
-              avatar={currentProfile?.avatar}
-              size={50}
-              type={currentProfile?.associated?.labeler ? 'labeler' : 'user'}
-            />
-            <TextInput
-              ref={textInput}
-              richtext={richtext}
-              placeholder={selectTextInputPlaceholder}
-              autoFocus
-              setRichText={setRichText}
-              onPhotoPasted={onPhotoPasted}
-              onPressPublish={() => onPressPublish()}
-              onNewLink={onNewLink}
-              onError={setError}
-              accessible={true}
-              accessibilityLabel={_(msg`Write post`)}
-              accessibilityHint={_(
-                msg`Compose posts up to ${MAX_GRAPHEME_LENGTH} characters in length`,
+            <View style={[a.flex_row, a.align_center]}>
+              {videoState.status !== 'idle' && videoState.status !== 'done' ? (
+                <VideoUploadToolbar state={videoState} />
+              ) : (
+                <ToolbarWrapper style={[a.flex_row, a.align_center, a.gap_xs]}>
+                  <SelectPhotoBtn
+                    size={images.length}
+                    disabled={!canSelectImages}
+                    onAdd={onImageAdd}
+                  />
+                  <SelectVideoBtn
+                    onSelectVideo={selectVideo}
+                    disabled={!canSelectImages || images?.length > 0}
+                    setError={setError}
+                  />
+                  <OpenCameraBtn
+                    disabled={!canSelectImages}
+                    onAdd={onImageAdd}
+                  />
+                  <SelectGifBtn
+                    onClose={focusTextInput}
+                    onSelectGif={onSelectGif}
+                    disabled={hasMedia}
+                    Portal={Portal.Portal}
+                  />
+                  {!isMobile ? (
+                    <Button
+                      onPress={onEmojiButtonPress}
+                      style={a.p_sm}
+                      label={_(msg`Open emoji picker`)}
+                      accessibilityHint={_(msg`Open emoji picker`)}
+                      variant="ghost"
+                      shape="round"
+                      color="primary">
+                      <EmojiSmile size="lg" />
+                    </Button>
+                  ) : null}
+                </ToolbarWrapper>
               )}
-            />
-          </View>
-
-          <Gallery images={images} onChange={setImages} />
-          {images.length === 0 && extLink && (
-            <View style={a.relative}>
-              <ExternalEmbed
-                link={extLink}
-                gif={extGif}
-                onRemove={() => {
-                  setExtLink(undefined)
-                  setExtGif(undefined)
-                }}
-              />
-              <GifAltText
-                link={extLink}
-                gif={extGif}
-                onSubmit={handleChangeGifAltText}
-              />
             </View>
-          )}
-          <LayoutAnimationConfig skipExiting>
-            {hasVideo && (
-              <Animated.View
-                style={[a.w_full, a.mt_lg]}
-                entering={native(ZoomIn)}
-                exiting={native(ZoomOut)}>
-                {videoUploadState.asset &&
-                  (videoUploadState.status === 'compressing' ? (
-                    <VideoTranscodeProgress
-                      asset={videoUploadState.asset}
-                      progress={videoUploadState.progress}
-                      clear={clearVideo}
-                    />
-                  ) : videoUploadState.video ? (
-                    <VideoPreview
-                      asset={videoUploadState.asset}
-                      video={videoUploadState.video}
-                      setDimensions={updateVideoDimensions}
-                      clear={clearVideo}
-                    />
-                  ) : null)}
-                <SubtitleDialogBtn
-                  defaultAltText={videoAltText}
-                  saveAltText={setVideoAltText}
-                  captions={captions}
-                  setCaptions={setCaptions}
-                />
-              </Animated.View>
-            )}
-          </LayoutAnimationConfig>
-          <View style={!hasVideo ? [a.mt_md] : []}>
-            {quote ? (
-              <View style={[s.mt5, s.mb2, isWeb && s.mb10]}>
-                <View style={{pointerEvents: 'none'}}>
-                  <QuoteEmbed quote={quote} />
-                </View>
-                {quote.uri !== initQuote?.uri && (
-                  <QuoteX onRemove={() => setQuote(undefined)} />
-                )}
-              </View>
-            ) : null}
+            <View style={[a.flex_row, a.align_center, a.justify_between]}>
+              <SelectLangBtn />
+              <CharProgress count={graphemeLength} style={{width: 65}} />
+            </View>
           </View>
-        </Animated.ScrollView>
-        <SuggestedLanguage text={richtext.text} />
-
-        {replyTo ? null : (
-          <ThreadgateBtn
-            postgate={postgate}
-            onChangePostgate={setPostgate}
-            threadgateAllowUISettings={threadgateAllowUISettings}
-            onChangeThreadgateAllowUISettings={
-              onChangeThreadgateAllowUISettings
-            }
-            style={bottomBarAnimatedStyle}
-          />
-        )}
-        <View
-          style={[
-            t.atoms.bg,
-            t.atoms.border_contrast_medium,
-            styles.bottomBar,
-          ]}>
-          {videoUploadState.status !== 'idle' &&
-          videoUploadState.status !== 'done' ? (
-            <VideoUploadToolbar state={videoUploadState} />
-          ) : (
-            <ToolbarWrapper style={[a.flex_row, a.align_center, a.gap_xs]}>
-              <SelectPhotoBtn
-                size={images.length}
-                disabled={!canSelectImages}
-                onAdd={onImageAdd}
-              />
-              <SelectVideoBtn
-                onSelectVideo={selectVideo}
-                disabled={!canSelectImages}
-                setError={setError}
-              />
-              <OpenCameraBtn disabled={!canSelectImages} onAdd={onImageAdd} />
-              <SelectGifBtn
-                onClose={focusTextInput}
-                onSelectGif={onSelectGif}
-                disabled={hasMedia}
-              />
-              {!isMobile ? (
-                <Button
-                  onPress={onEmojiButtonPress}
-                  style={a.p_sm}
-                  label={_(msg`Open emoji picker`)}
-                  accessibilityHint={_(msg`Open emoji picker`)}
-                  variant="ghost"
-                  shape="round"
-                  color="primary">
-                  <EmojiSmile size="lg" />
-                </Button>
-              ) : null}
-            </ToolbarWrapper>
-          )}
-          <View style={a.flex_1} />
-          <SelectLangBtn />
-          <CharProgress count={graphemeLength} />
         </View>
-      </View>
-      <Prompt.Basic
-        control={discardPromptControl}
-        title={_(msg`Discard draft?`)}
-        description={_(msg`Are you sure you'd like to discard this draft?`)}
-        onConfirm={onClose}
-        confirmButtonCta={_(msg`Discard`)}
-        confirmButtonColor="negative"
-      />
-    </KeyboardAvoidingView>
+        <Prompt.Basic
+          control={discardPromptControl}
+          title={_(msg`Discard draft?`)}
+          description={_(msg`Are you sure you'd like to discard this draft?`)}
+          onConfirm={onClose}
+          confirmButtonCta={_(msg`Discard`)}
+          confirmButtonColor="negative"
+          Portal={Portal.Portal}
+        />
+      </KeyboardAvoidingView>
+      <Portal.Outlet />
+    </Portal.Provider>
   )
 }
 
@@ -1051,40 +1139,31 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     marginBottom: 4,
   },
-  bottomBar: {
-    flexDirection: 'row',
-    paddingVertical: 4,
-    // should be 8 but due to visual alignment we have to fudge it
-    paddingLeft: 7,
-    paddingRight: 16,
-    alignItems: 'center',
-    borderTopWidth: StyleSheet.hairlineWidth,
-  },
 })
 
 function ErrorBanner({
   error: standardError,
-  videoUploadState,
+  videoState,
   clearError,
-  videoUploadDispatch,
+  clearVideo,
 }: {
   error: string
-  videoUploadState: VideoUploadState
+  videoState: VideoState | NoVideoState
   clearError: () => void
-  videoUploadDispatch: VideoUploadDispatch
+  clearVideo: () => void
 }) {
   const t = useTheme()
   const {_} = useLingui()
 
   const videoError =
-    videoUploadState.status !== 'idle' ? videoUploadState.error : undefined
+    videoState.status === 'error' ? videoState.error : undefined
   const error = standardError || videoError
 
   const onClearError = () => {
     if (standardError) {
       clearError()
     } else {
-      videoUploadDispatch({type: 'Reset'})
+      clearVideo()
     }
   }
 
@@ -1119,7 +1198,7 @@ function ErrorBanner({
             <ButtonIcon icon={X} />
           </Button>
         </View>
-        {videoError && videoUploadState.jobStatus?.jobId && (
+        {videoError && videoState.jobId && (
           <NewText
             style={[
               {paddingLeft: 28},
@@ -1128,7 +1207,7 @@ function ErrorBanner({
               a.leading_snug,
               t.atoms.text_contrast_low,
             ]}>
-            <Trans>Job ID: {videoUploadState.jobStatus.jobId}</Trans>
+            <Trans>Job ID: {videoState.jobId}</Trans>
           </NewText>
         )}
       </View>
@@ -1154,12 +1233,10 @@ function ToolbarWrapper({
   )
 }
 
-function VideoUploadToolbar({state}: {state: VideoUploadState}) {
+function VideoUploadToolbar({state}: {state: VideoState}) {
   const t = useTheme()
   const {_} = useLingui()
-  const progress = state.jobStatus?.progress
-    ? state.jobStatus.progress / 100
-    : state.progress
+  const progress = state.progress
   const shouldRotate =
     state.status === 'processing' && (progress === 0 || progress === 1)
   let wheelProgress = shouldRotate ? 0.33 : progress
@@ -1195,14 +1272,13 @@ function VideoUploadToolbar({state}: {state: VideoUploadState}) {
     case 'processing':
       text = _('Processing video...')
       break
+    case 'error':
+      text = _('Error')
+      wheelProgress = 100
+      break
     case 'done':
       text = _('Video uploaded')
       break
-  }
-
-  if (state.error) {
-    text = _('Error')
-    wheelProgress = 100
   }
 
   return (
@@ -1212,7 +1288,11 @@ function VideoUploadToolbar({state}: {state: VideoUploadState}) {
           size={30}
           borderWidth={1}
           borderColor={t.atoms.border_contrast_low.borderColor}
-          color={state.error ? t.palette.negative_500 : t.palette.primary_500}
+          color={
+            state.status === 'error'
+              ? t.palette.negative_500
+              : t.palette.primary_500
+          }
           progress={wheelProgress}
         />
       </Animated.View>

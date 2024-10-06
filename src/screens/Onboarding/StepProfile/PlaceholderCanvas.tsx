@@ -46,29 +46,31 @@ export const PlaceholderCanvas = React.forwardRef<PlaceholderCanvasRef, {}>(
 
     return (
       <View style={styles.container}>
-        <LazyViewShot
-          // @ts-ignore this library doesn't have types
-          ref={viewshotRef}
-          options={{
-            fileName: 'placeholderAvatar',
-            format: 'jpg',
-            quality: 0.8,
-            height: 150 * SIZE_MULTIPLIER,
-            width: 150 * SIZE_MULTIPLIER,
-          }}>
-          <View
-            style={[
-              styles.imageContainer,
-              {backgroundColor: avatar.backgroundColor},
-            ]}
-            collapsable={false}>
-            <Icon
-              height={85 * SIZE_MULTIPLIER}
-              width={85 * SIZE_MULTIPLIER}
-              style={{color: 'white'}}
-            />
-          </View>
-        </LazyViewShot>
+        <React.Suspense fallback={null}>
+          <LazyViewShot
+            // @ts-ignore this library doesn't have types
+            ref={viewshotRef}
+            options={{
+              fileName: 'placeholderAvatar',
+              format: 'jpg',
+              quality: 0.8,
+              height: 150 * SIZE_MULTIPLIER,
+              width: 150 * SIZE_MULTIPLIER,
+            }}>
+            <View
+              style={[
+                styles.imageContainer,
+                {backgroundColor: avatar.backgroundColor},
+              ]}
+              collapsable={false}>
+              <Icon
+                height={85 * SIZE_MULTIPLIER}
+                width={85 * SIZE_MULTIPLIER}
+                style={{color: 'white'}}
+              />
+            </View>
+          </LazyViewShot>
+        </React.Suspense>
       </View>
     )
   },
