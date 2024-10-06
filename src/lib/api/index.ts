@@ -27,7 +27,7 @@ import {
   threadgateAllowUISettingToAllowRecordValue,
   writeThreadgateRecord,
 } from '#/state/queries/threadgate'
-import {ComposerState, EmbedDraft} from '#/view/com/composer/state/composer'
+import {ComposerDraft, EmbedDraft} from '#/view/com/composer/state/composer'
 import {createGIFDescription} from '../gif-alt-text'
 import {LinkMeta} from '../link-meta/link-meta'
 import {uploadBlob} from './upload-blob'
@@ -43,7 +43,7 @@ export interface ExternalEmbedDraft {
 }
 
 interface PostOpts {
-  composerState: ComposerState // TODO: Not used yet.
+  draft: ComposerDraft
   replyTo?: string
   onStateChange?: (state: string) => void
   langs?: string[]
@@ -54,7 +54,7 @@ export async function post(
   queryClient: QueryClient,
   opts: PostOpts,
 ) {
-  const draft = opts.composerState
+  const draft = opts.draft
   let reply
   let rt = new RichText(
     {text: draft.richtext.text.trimEnd()},
@@ -186,7 +186,7 @@ export async function post(
 async function resolveEmbed(
   agent: BskyAgent,
   queryClient: QueryClient,
-  draft: ComposerState,
+  draft: ComposerDraft,
   onStateChange: ((state: string) => void) | undefined,
 ): Promise<
   | AppBskyEmbedImages.Main

@@ -46,7 +46,7 @@ export type EmbedDraft = {
   link: Link | undefined
 }
 
-export type ComposerState = {
+export type ComposerDraft = {
   richtext: RichText
   labels: string[]
   postgate: AppBskyFeedPostgate.Record
@@ -79,9 +79,9 @@ export type ComposerAction =
 export const MAX_IMAGES = 4
 
 export function composerReducer(
-  state: ComposerState,
+  state: ComposerDraft,
   action: ComposerAction,
-): ComposerState {
+): ComposerDraft {
   switch (action.type) {
     case 'update_richtext': {
       return {
@@ -338,7 +338,7 @@ export function createComposerState({
   initMention: string | undefined
   initImageUris: ComposerOpts['imageUris']
   initQuoteUri: string | undefined
-}): ComposerState {
+}): ComposerDraft {
   let media: ImagesMedia | undefined
   if (initImageUris?.length) {
     media = {

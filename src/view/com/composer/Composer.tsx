@@ -164,21 +164,38 @@ export const ComposePost = ({
   const [processingState, setProcessingState] = useState('')
   const [error, setError] = useState('')
 
-  const [composerState, dispatch] = useReducer(
+  const [draft, dispatch] = useReducer(
     composerReducer,
     {initImageUris, initQuoteUri: initQuote?.uri, initText, initMention},
     createComposerState,
   )
-  const richtext = composerState.richtext
+  const richtext = draft.richtext
+  let quote: string | undefined
+  if (draft.embed.quote) {
+    quote = draft.embed.quote.uri
+  }
+  let images = NO_IMAGES
+  if (draft.embed.media?.type === 'images') {
+    images = draft.embed.media.images
+  }
+  let videoState: VideoState | NoVideoState = NO_VIDEO
+  if (draft.embed.media?.type === 'video') {
+    videoState = draft.embed.media.video
+  }
+  let extGif: Gif | undefined
+  let extGifAlt: string | undefined
+  if (draft.embed.media?.type === 'gif') {
+    extGif = draft.embed.media.gif
+    extGifAlt = draft.embed.media.alt
+  }
+  let extLink: string | undefined
+  if (draft.embed.link) {
+    extLink = draft.embed.link.uri
+  }
 
   const graphemeLength = useMemo(() => {
     return shortenLinks(richtext).graphemeLength
   }, [richtext])
-
-  let videoState: VideoState | NoVideoState = NO_VIDEO
-  if (composerState.embed.media?.type === 'video') {
-    videoState = composerState.embed.media.video
-  }
 
   const selectVideo = React.useCallback(
     (asset: ImagePickerAsset) => {
@@ -224,27 +241,7 @@ export const ComposePost = ({
   )
 
   const hasVideo = Boolean(videoState.asset || videoState.video)
-
   const [publishOnUpload, setPublishOnUpload] = useState(false)
-
-  let quote: string | undefined
-  if (composerState.embed.quote) {
-    quote = composerState.embed.quote.uri
-  }
-  let images = NO_IMAGES
-  if (composerState.embed.media?.type === 'images') {
-    images = composerState.embed.media.images
-  }
-  let extGif: Gif | undefined
-  let extGifAlt: string | undefined
-  if (composerState.embed.media?.type === 'gif') {
-    extGif = composerState.embed.media.gif
-    extGifAlt = composerState.embed.media.alt
-  }
-  let extLink: string | undefined
-  if (composerState.embed.link) {
-    extLink = composerState.embed.link.uri
-  }
 
   const onClose = useCallback(() => {
     closeComposer()
@@ -395,7 +392,7 @@ export const ComposePost = ({
       try {
         postUri = (
           await apilib.post(agent, queryClient, {
-            composerState,
+            draft: draft,
             replyTo: replyTo?.uri,
             onStateChange: setProcessingState,
             langs: toPostLanguages(langPrefs.postLanguage),
@@ -469,7 +466,7 @@ export const ComposePost = ({
     [
       _,
       agent,
-      composerState,
+      draft,
       extLink,
       images,
       graphemeLength,
@@ -584,7 +581,7 @@ export const ComposePost = ({
               ) : (
                 <View style={[styles.postBtnWrapper]}>
                   <LabelsBtn
-                    labels={composerState.labels}
+                    labels={draft.labels}
                     onChange={nextLabels => {
                       dispatch({type: 'update_labels', labels: nextLabels})
                     }}
@@ -707,7 +704,7 @@ export const ComposePost = ({
               </View>
             )}
 
-            {!composerState.embed.media && extLink && (
+            {!draft.embed.media && extLink && (
               <View style={a.relative} key={extLink}>
                 <ExternalEmbedLink
                   uri={extLink}
@@ -788,11 +785,11 @@ export const ComposePost = ({
 
           {replyTo ? null : (
             <ThreadgateBtn
-              postgate={composerState.postgate}
+              postgate={draft.postgate}
               onChangePostgate={nextPostgate => {
                 dispatch({type: 'update_postgate', postgate: nextPostgate})
               }}
-              threadgateAllowUISettings={composerState.threadgate}
+              threadgateAllowUISettings={draft.threadgate}
               onChangeThreadgateAllowUISettings={nextThreadgate => {
                 dispatch({
                   type: 'update_threadgate',
