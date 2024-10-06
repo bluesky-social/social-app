@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-10-06 09:43+0900\n"
+"PO-Revision-Date: 2024-10-06 09:51+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -1231,10 +1231,6 @@ msgstr "画像を閉じる"
 msgid "Close image viewer"
 msgstr "画像ビューアを閉じる"
 
-#: src/components/dms/MessagesNUX.tsx:162
-msgid "Close modal"
-msgstr "モーダルを閉じる"
-
 #: src/view/shell/index.web.tsx:61
 msgid "Close navigation footer"
 msgstr "ナビゲーションフッターを閉じる"
@@ -1769,10 +1765,6 @@ msgstr "なにか言いたいことはあった？"
 #: src/screens/Settings/AppearanceSettings.tsx:119
 msgid "Dim"
 msgstr "グレー"
-
-#: src/components/dms/MessagesNUX.tsx:88
-msgid "Direct messages are here!"
-msgstr "ダイレクトメッセージはこちら！"
 
 #: src/view/screens/AccessibilitySettings.tsx:111
 msgid "Disable autoplay for videos and GIFs"
@@ -2726,10 +2718,6 @@ msgstr "スターターパックを生成"
 msgid "Get help"
 msgstr "ヘルプを表示"
 
-#: src/components/dms/MessagesNUX.tsx:168
-msgid "Get started"
-msgstr "始める"
-
 #: src/view/com/modals/VerifyEmail.tsx:197
 #: src/view/com/modals/VerifyEmail.tsx:199
 msgid "Get Started"
@@ -3080,10 +3068,6 @@ msgstr "あなたのユーザーハンドルを入力"
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:55
 msgid "Interaction limited"
 msgstr "反応が制限されています"
-
-#: src/components/dms/MessagesNUX.tsx:82
-msgid "Introducing Direct Messages"
-msgstr "ダイレクトメッセージの紹介"
 
 #: src/components/dialogs/nuxs/NeueTypography.tsx:48
 msgid "Introducing new font settings"
@@ -4760,10 +4744,6 @@ msgstr "プライバシー"
 msgid "Privacy Policy"
 msgstr "プライバシーポリシー"
 
-#: src/components/dms/MessagesNUX.tsx:91
-msgid "Privately chat with other users."
-msgstr "他のユーザーとプライベートにチャットします。"
-
 #: src/screens/Login/ForgotPasswordForm.tsx:155
 msgid "Processing..."
 msgstr "処理中…"
@@ -5903,10 +5883,6 @@ msgstr "警告を表示"
 msgid "Show warning and filter from feeds"
 msgstr "警告の表示とフィードからのフィルタリング"
 
-#: src/view/com/post-thread/PostThreadFollowBtn.tsx:128
-msgid "Shows posts from {0} in your feed"
-msgstr "マイフィード内の{0}からの投稿を表示します"
-
 #: src/components/dialogs/Signin.tsx:97
 #: src/components/dialogs/Signin.tsx:99
 #: src/screens/Login/index.tsx:100
@@ -6081,10 +6057,6 @@ msgstr "新しいチャットを開始"
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:371
 msgid "Start chat with {displayName}"
 msgstr "{displayName}とのチャットを開始"
-
-#: src/components/dms/MessagesNUX.tsx:161
-msgid "Start chatting"
-msgstr "チャットを開始"
 
 #: src/Navigation.tsx:358
 #: src/Navigation.tsx:363
@@ -7384,11 +7356,6 @@ msgstr "アルゴリズムによるフィードにはどの言語を使用しま
 msgid "Who can interact with this post?"
 msgstr "誰がこの投稿に反応できますか？"
 
-#: src/components/dms/MessagesNUX.tsx:110
-#: src/components/dms/MessagesNUX.tsx:124
-msgid "Who can message you?"
-msgstr "誰があなたへメッセージを送れるか？"
-
 #: src/components/WhoCanReply.tsx:87
 msgid "Who can reply"
 msgstr "返信できるユーザー"
@@ -7513,10 +7480,6 @@ msgstr "また、あなたはフォローすべき新しいカスタムフィー
 #: src/view/com/modals/DeleteAccount.tsx:202
 msgid "You can also temporarily deactivate your account instead, and reactivate it at any time."
 msgstr "代わりにアカウントを一時的に無効化して、いつでも再有効化することもできます。"
-
-#: src/components/dms/MessagesNUX.tsx:119
-msgid "You can change this at any time."
-msgstr "これはいつでも変更できます。"
 
 #: src/screens/Messages/Settings.tsx:111
 msgid "You can continue ongoing conversations regardless of which setting you choose."
