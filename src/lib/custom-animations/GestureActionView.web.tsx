@@ -1,5 +1,5 @@
 import React from 'react'
 
-export function SwipeActionItem({children}: {children: React.ReactNode}) {
+export function GestureActionView({children}: {children: React.ReactNode}) {
   return children
 }
