@@ -135,7 +135,7 @@ export const ComposePost = ({
   replyTo,
   onPost,
   quote: initQuote,
-  quoteCount: _quoteCount, // TODO
+  quoteCount: initQuoteCount,
   mention: initMention,
   openEmojiPicker,
   text: initText,
@@ -471,22 +471,19 @@ export const ComposePost = ({
         emitPostCreated()
       }
       setLangPrefs.savePostLanguageToHistory()
-      if (quote) {
-        onPost?.(postUri)
-        // TODO: Reenable this after figuring out how/when to get quote data.
-        //
+      if (initQuote && initQuoteCount !== undefined) {
         // We want to wait for the quote count to update before we call `onPost`, which will refetch data
-        // whenAppViewReady(agent, quote, res => {
-        //   const thread = res.data.thread
-        //   if (
-        //     AppBskyFeedDefs.isThreadViewPost(thread) &&
-        //     thread.post.quoteCount !== quoteCount
-        //   ) {
-        //     onPost?.(postUri)
-        //     return true
-        //   }
-        //   return false
-        // })
+        whenAppViewReady(agent, initQuote.uri, res => {
+          const thread = res.data.thread
+          if (
+            AppBskyFeedDefs.isThreadViewPost(thread) &&
+            thread.post.quoteCount !== initQuoteCount
+          ) {
+            onPost?.(postUri)
+            return true
+          }
+          return false
+        })
       } else {
         onPost?.(postUri)
       }
@@ -512,6 +509,8 @@ export const ComposePost = ({
       onPost,
       postgate,
       quote,
+      initQuote,
+      initQuoteCount,
       replyTo,
       richtext.text,
       setLangPrefs,
