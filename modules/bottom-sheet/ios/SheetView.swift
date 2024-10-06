@@ -66,6 +66,7 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
       }
     }
   }
+  private var prevLayoutDetentIdentifier: UISheetPresentationController.Detent.Identifier?
 
   // MARK: - Lifecycle
 
@@ -143,11 +144,13 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
   }
 
   func updateLayout() {
-    if let contentHeight = self.innerView?.subviews.first?.frame.size.height {
+    if self.prevLayoutDetentIdentifier == self.selectedDetentIdentifier,
+       let contentHeight = self.innerView?.subviews.first?.frame.size.height {
       self.sheetVc?.updateDetents(contentHeight: self.clampHeight(contentHeight),
-                               preventExpansion: self.preventExpansion)
+                                  preventExpansion: self.preventExpansion)
       self.selectedDetentIdentifier = self.sheetVc?.getCurrentDetentIdentifier()
     }
+    self.prevLayoutDetentIdentifier = self.selectedDetentIdentifier
   }
 
   func dismiss() {
