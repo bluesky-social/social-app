@@ -6521,12 +6521,8 @@ msgid "This is important in case you ever need to change your email or reset you
 msgstr "이는 이메일을 변경하거나 비밀번호를 재설정해야 할 때 중요한 정보입니다."
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:151
-msgid "This label was applied by <0>{0}</0>"
-msgstr ""
-
-#: src/components/moderation/ModerationDetailsDialog.tsx:148
-#~ msgid "This label was applied by <0>{0}</0>."
-#~ msgstr "이 라벨은 {0}이(가) 적용했습니다."
+msgid "This label was applied by <0>{0}</0>."
+msgstr "이 라벨은 <0>{0}</0>이(가) 적용했습니다."
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:146
 msgid "This label was applied by the author."
