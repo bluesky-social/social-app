@@ -46,7 +46,6 @@ export interface ExternalEmbedDraft {
 
 interface PostOpts {
   composerState: ComposerState // TODO: Not used yet.
-  rawText: string
   replyTo?: string
   labels?: string[]
   threadgate: ThreadgateAllowUISetting[]
@@ -60,8 +59,12 @@ export async function post(
   queryClient: QueryClient,
   opts: PostOpts,
 ) {
+  const draft = opts.composerState
   let reply
-  let rt = new RichText({text: opts.rawText.trimEnd()}, {cleanNewlines: true})
+  let rt = new RichText(
+    {text: draft.richtext.text.trimEnd()},
+    {cleanNewlines: true},
+  )
 
   opts.onStateChange?.('Processing...')
 
@@ -73,7 +76,7 @@ export async function post(
   const embed = await resolveEmbed(
     agent,
     queryClient,
-    opts.composerState,
+    draft,
     opts.onStateChange,
   )
 

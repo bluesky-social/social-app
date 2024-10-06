@@ -1,5 +1,7 @@
 import {ImagePickerAsset} from 'expo-image-picker'
+import {RichText} from '@atproto/api'
 
+import {insertMentionAt} from '#/lib/strings/mention-manip'
 import {
   isBskyPostUrl,
   postUriToRelativePath,
@@ -42,11 +44,12 @@ export type EmbedDraft = {
 }
 
 export type ComposerState = {
-  // TODO: Other draft data.
+  richtext: RichText
   embed: EmbedDraft
 }
 
 export type ComposerAction =
+  | {type: 'update_richtext'; richtext: RichText}
   | {type: 'embed_add_images'; images: ComposerImage[]}
   | {type: 'embed_update_image'; image: ComposerImage}
   | {type: 'embed_remove_image'; image: ComposerImage}
@@ -71,6 +74,12 @@ export function composerReducer(
   action: ComposerAction,
 ): ComposerState {
   switch (action.type) {
+    case 'update_richtext': {
+      return {
+        ...state,
+        richtext: action.richtext,
+      }
+    }
     case 'embed_add_images': {
       if (action.images.length === 0) {
         return state
@@ -293,9 +302,13 @@ export function composerReducer(
 }
 
 export function createComposerState({
+  initText,
+  initMention,
   initImageUris,
   initQuoteUri,
 }: {
+  initText: string | undefined
+  initMention: string | undefined
   initImageUris: ComposerOpts['imageUris']
   initQuoteUri: string | undefined
 }): ComposerState {
@@ -317,7 +330,19 @@ export function createComposerState({
       }
     }
   }
+  const initRichText = new RichText({
+    text: initText
+      ? initText
+      : initMention
+      ? insertMentionAt(
+          `@${initMention}`,
+          initMention.length + 1,
+          `${initMention}`,
+        )
+      : '',
+  })
   return {
+    richtext: initRichText,
     embed: {
       quote,
       media,

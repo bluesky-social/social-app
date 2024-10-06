@@ -43,7 +43,7 @@ export interface TextInputRef {
 interface TextInputProps extends ComponentProps<typeof RNTextInput> {
   richtext: RichText
   placeholder: string
-  setRichText: (v: RichText | ((v: RichText) => RichText)) => void
+  setRichText: (v: RichText) => void
   onPhotoPasted: (uri: string) => void
   onPressPublish: (richtext: RichText) => Promise<void>
   onNewLink: (uri: string) => void

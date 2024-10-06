@@ -42,7 +42,6 @@ import {
   AppBskyFeedGetPostThread,
   BskyAgent,
 } from '@atproto/api'
-import {RichText} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -57,7 +56,6 @@ import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {logEvent} from '#/lib/statsig/statsig'
 import {cleanError} from '#/lib/strings/errors'
-import {insertMentionAt} from '#/lib/strings/mention-manip'
 import {shortenLinks} from '#/lib/strings/rich-text-manip'
 import {colors, s} from '#/lib/styles'
 import {logger} from '#/logger'
@@ -168,29 +166,17 @@ export const ComposePost = ({
   const [isProcessing, setIsProcessing] = useState(false)
   const [processingState, setProcessingState] = useState('')
   const [error, setError] = useState('')
-  const [richtext, setRichText] = useState(
-    new RichText({
-      text: initText
-        ? initText
-        : initMention
-        ? insertMentionAt(
-            `@${initMention}`,
-            initMention.length + 1,
-            `${initMention}`,
-          ) // insert mention if passed in
-        : '',
-    }),
+
+  const [composerState, dispatch] = useReducer(
+    composerReducer,
+    {initImageUris, initQuoteUri: initQuote?.uri, initText, initMention},
+    createComposerState,
   )
+  const richtext = composerState.richtext
+
   const graphemeLength = useMemo(() => {
     return shortenLinks(richtext).graphemeLength
   }, [richtext])
-
-  // TODO: Move more state here.
-  const [composerState, dispatch] = useReducer(
-    composerReducer,
-    {initImageUris, initQuoteUri: initQuote?.uri},
-    createComposerState,
-  )
 
   let videoState: VideoState | NoVideoState = NO_VIDEO
   if (composerState.embed.media?.type === 'video') {
@@ -420,7 +406,6 @@ export const ComposePost = ({
         postUri = (
           await apilib.post(agent, queryClient, {
             composerState, // TODO: move more state here.
-            rawText: richtext.text,
             replyTo: replyTo?.uri,
             labels,
             threadgate: threadgateAllowUISettings,
@@ -698,7 +683,9 @@ export const ComposePost = ({
                 richtext={richtext}
                 placeholder={selectTextInputPlaceholder}
                 autoFocus
-                setRichText={setRichText}
+                setRichText={rt => {
+                  dispatch({type: 'update_richtext', richtext: rt})
+                }}
                 onPhotoPasted={onPhotoPasted}
                 onPressPublish={() => onPressPublish()}
                 onNewLink={onNewLink}
