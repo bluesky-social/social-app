@@ -45,11 +45,13 @@ export type EmbedDraft = {
 
 export type ComposerState = {
   richtext: RichText
+  labels: string[]
   embed: EmbedDraft
 }
 
 export type ComposerAction =
   | {type: 'update_richtext'; richtext: RichText}
+  | {type: 'update_labels'; labels: string[]}
   | {type: 'embed_add_images'; images: ComposerImage[]}
   | {type: 'embed_update_image'; image: ComposerImage}
   | {type: 'embed_remove_image'; image: ComposerImage}
@@ -78,6 +80,12 @@ export function composerReducer(
       return {
         ...state,
         richtext: action.richtext,
+      }
+    }
+    case 'update_labels': {
+      return {
+        ...state,
+        labels: action.labels,
       }
     }
     case 'embed_add_images': {
@@ -343,6 +351,7 @@ export function createComposerState({
   })
   return {
     richtext: initRichText,
+    labels: [],
     embed: {
       quote,
       media,

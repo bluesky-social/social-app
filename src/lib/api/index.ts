@@ -47,7 +47,6 @@ export interface ExternalEmbedDraft {
 interface PostOpts {
   composerState: ComposerState // TODO: Not used yet.
   replyTo?: string
-  labels?: string[]
   threadgate: ThreadgateAllowUISetting[]
   postgate: AppBskyFeedPostgate.Record
   onStateChange?: (state: string) => void
@@ -101,10 +100,10 @@ export async function post(
 
   // set labels
   let labels: ComAtprotoLabelDefs.SelfLabels | undefined
-  if (opts.labels?.length) {
+  if (draft.labels.length) {
     labels = {
       $type: 'com.atproto.label.defs#selfLabels',
-      values: opts.labels.map(val => ({val})),
+      values: draft.labels.map(val => ({val})),
     }
   }
 

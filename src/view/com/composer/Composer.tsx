@@ -230,7 +230,6 @@ export const ComposePost = ({
 
   const [publishOnUpload, setPublishOnUpload] = useState(false)
 
-  const [labels, setLabels] = useState<string[]>([])
   const [threadgateAllowUISettings, onChangeThreadgateAllowUISettings] =
     useState<ThreadgateAllowUISetting[]>(
       threadgateViewToAllowUISetting(undefined),
@@ -407,7 +406,6 @@ export const ComposePost = ({
           await apilib.post(agent, queryClient, {
             composerState, // TODO: move more state here.
             replyTo: replyTo?.uri,
-            labels,
             threadgate: threadgateAllowUISettings,
             postgate,
             onStateChange: setProcessingState,
@@ -488,7 +486,6 @@ export const ComposePost = ({
       graphemeLength,
       isAltTextRequiredAndMissing,
       isProcessing,
-      labels,
       langPrefs.postLanguage,
       onClose,
       onPost,
@@ -600,8 +597,10 @@ export const ComposePost = ({
               ) : (
                 <View style={[styles.postBtnWrapper]}>
                   <LabelsBtn
-                    labels={labels}
-                    onChange={setLabels}
+                    labels={composerState.labels}
+                    onChange={nextLabels => {
+                      dispatch({type: 'update_labels', labels: nextLabels})
+                    }}
                     hasMedia={hasMedia || Boolean(extLink)}
                   />
                   {canPost ? (
