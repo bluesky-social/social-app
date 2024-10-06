@@ -141,7 +141,7 @@ export async function resolveLink(
     const parsed = parseStarterPackUri(uri)
     if (!parsed) {
       throw new Error(
-        'Unexepectedly called getStarterPackAsEmbed with a non-starterpack url',
+        'Unexpectedly called getStarterPackAsEmbed with a non-starterpack url',
       )
     }
     const did = await fetchDid(parsed.name)
