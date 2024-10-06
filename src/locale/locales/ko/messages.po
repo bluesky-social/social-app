@@ -8,7 +8,7 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-10-04 11:19+0900\n"
+"PO-Revision-Date: 2024-10-06 15:41+0900\n"
 "Last-Translator: quiple\n"
 "Language-Team: quiple, lens0021, HaruChanHeart, hazzzi, heartade\n"
 "Plural-Forms: \n"
@@ -716,7 +716,7 @@ msgstr "피드에서 {0}을(를) 제거하시겠습니까?"
 msgid "Are you sure you want to remove this from your feeds?"
 msgstr "내 피드에서 이 피드를 삭제하시겠습니까?"
 
-#: src/view/com/composer/Composer.tsx:917
+#: src/view/com/composer/Composer.tsx:928
 msgid "Are you sure you'd like to discard this draft?"
 msgstr "이 초안을 삭제하시겠습니까?"
 
@@ -1782,11 +1782,11 @@ msgstr "자막 사용 안 함"
 msgid "Disabled"
 msgstr "사용 안 함"
 
-#: src/view/com/composer/Composer.tsx:919
+#: src/view/com/composer/Composer.tsx:930
 msgid "Discard"
 msgstr "삭제"
 
-#: src/view/com/composer/Composer.tsx:916
+#: src/view/com/composer/Composer.tsx:927
 msgid "Discard draft?"
 msgstr "초안 삭제"
 
@@ -1812,7 +1812,7 @@ msgstr "새 피드 발견하기"
 msgid "Dismiss"
 msgstr "닫기"
 
-#: src/view/com/composer/Composer.tsx:1189
+#: src/view/com/composer/Composer.tsx:1191
 msgid "Dismiss error"
 msgstr "오류 무시"
 
@@ -3120,7 +3120,7 @@ msgstr "올바른 주소입니다"
 msgid "It's just you right now! Add more people to your starter pack by searching above."
 msgstr "아직은 나밖에 없습니다. 위에서 검색하여 스타터 팩에 더 많은 사람을 추가하세요."
 
-#: src/view/com/composer/Composer.tsx:1208
+#: src/view/com/composer/Composer.tsx:1210
 msgid "Job ID: {0}"
 msgstr "작업 ID: {0}"
 
@@ -4164,8 +4164,8 @@ msgid "Open conversation options"
 msgstr "대화 옵션 열기"
 
 #: src/screens/Messages/components/MessageInput.web.tsx:165
-#: src/view/com/composer/Composer.tsx:899
-#: src/view/com/composer/Composer.tsx:900
+#: src/view/com/composer/Composer.tsx:908
+#: src/view/com/composer/Composer.tsx:909
 msgid "Open emoji picker"
 msgstr "이모티콘 선택기 열기"
 
