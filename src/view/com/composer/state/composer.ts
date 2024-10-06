@@ -317,7 +317,6 @@ export function createComposerState({
       }
     }
   }
-  // TODO: Other initial content.
   return {
     embed: {
       quote,
