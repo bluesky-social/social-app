@@ -16,7 +16,7 @@ import {QueryClient} from '@tanstack/react-query'
 import {isNetworkError} from '#/lib/strings/errors'
 import {shortenLinks, stripInvalidMentions} from '#/lib/strings/rich-text-manip'
 import {logger} from '#/logger'
-import {ComposerImage, compressImage} from '#/state/gallery'
+import {compressImage} from '#/state/gallery'
 import {writePostgateRecord} from '#/state/queries/postgate'
 import {
   fetchResolveGifQuery,
@@ -29,18 +29,9 @@ import {
 } from '#/state/queries/threadgate'
 import {ComposerDraft, EmbedDraft} from '#/view/com/composer/state/composer'
 import {createGIFDescription} from '../gif-alt-text'
-import {LinkMeta} from '../link-meta/link-meta'
 import {uploadBlob} from './upload-blob'
 
 export {uploadBlob}
-
-export interface ExternalEmbedDraft {
-  uri: string
-  isLoading: boolean
-  meta?: LinkMeta
-  embed?: AppBskyEmbedRecord.Main
-  localThumb?: ComposerImage
-}
 
 interface PostOpts {
   draft: ComposerDraft
