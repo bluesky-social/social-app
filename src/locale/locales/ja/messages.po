@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-10-04 10:40+0900\n"
+"PO-Revision-Date: 2024-10-06 09:43+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -513,6 +513,11 @@ msgstr "ALTテキスト"
 msgid "Alt text describes images for blind and low-vision users, and helps give context to everyone."
 msgstr "ALTテキストは、すべての人が文脈を理解できるようにするために、視覚障害者や低視力者向けに提供する画像の説明文です。"
 
+#: src/view/com/composer/GifAltText.tsx:171
+#: src/view/com/composer/photos/ImageAltTextDialog.tsx:143
+msgid "Alt text will be truncated. Limit: {0} characters."
+msgstr "ALTテキストは切り詰められます。上限：{0}文字。"
+
 #: src/view/com/modals/VerifyEmail.tsx:132
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:96
 msgid "An email has been sent to {0}. It includes a confirmation code which you can enter below."
@@ -915,9 +920,17 @@ msgstr "作成者：{0}"
 msgid "by <0/>"
 msgstr "作成者：<0/>"
 
-#: src/screens/Signup/StepInfo/Policies.tsx:80
-msgid "By creating an account you agree to the {els}."
-msgstr "アカウントを作成することで、{els}に同意したものとみなされます。"
+#: src/screens/Signup/StepInfo/Policies.tsx:81
+msgid "By creating an account you agree to the <0>Privacy Policy</0>."
+msgstr "アカウントを作成することで、<0>プライバシーポリシー</0>に同意したものとみなされます。"
+
+#: src/screens/Signup/StepInfo/Policies.tsx:48
+msgid "By creating an account you agree to the <0>Terms of Service</0> and <1>Privacy Policy</1>."
+msgstr "アカウントを作成することで、<0>利用規約</0>と<1>プライバシーポリシー</1>に同意したものとみなされます。"
+
+#: src/screens/Signup/StepInfo/Policies.tsx:68
+msgid "By creating an account you agree to the <0>Terms of Service</0>."
+msgstr "アカウントを作成することで、<0>利用規約</0>に同意したものとみなされます。"
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:162
 msgid "by you"
@@ -1812,6 +1825,10 @@ msgstr "新しいフィードを探す"
 msgid "Discover New Feeds"
 msgstr "新しいフィードを探す"
 
+#: src/components/Dialog/index.tsx:267
+msgid "Dismiss"
+msgstr "消す"
+
 #: src/view/com/composer/Composer.tsx:1107
 msgid "Dismiss error"
 msgstr "エラーを消す"
@@ -1887,6 +1904,10 @@ msgstr "完了"
 #: src/view/com/modals/lang-settings/ConfirmLanguagesButton.tsx:43
 msgid "Done{extraText}"
 msgstr "完了{extraText}"
+
+#: src/components/Dialog/index.tsx:268
+msgid "Double tap to close the dialog"
+msgstr "ダブルタップでダイアログを閉じる"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:326
 msgid "Download Bluesky"
@@ -6035,9 +6056,9 @@ msgstr "返信を並び替える"
 msgid "Sort replies to the same post by:"
 msgstr "次の方法で同じ投稿への返信を並び替えます。"
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:163
-msgid "Source: <0>{sourceName}</0>"
-msgstr "ソース：<0>{sourceName}</0>"
+#: src/components/moderation/LabelsOnMeDialog.tsx:167
+msgid "Source:"
+msgstr "ソース："
 
 #: src/lib/moderation/useReportOptions.ts:72
 #: src/lib/moderation/useReportOptions.ts:85
@@ -6547,7 +6568,7 @@ msgid "This is important in case you ever need to change your email or reset you
 msgstr "これは、メールアドレスの変更やパスワードのリセットが必要な場合に重要です。"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:144
-msgid "This label was applied by <0>{0}</0>."
+msgid "This label was applied by <0>{0}</0>"
 msgstr "<0>{0}</0>によって適用されたラベルです。"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:142
