@@ -21,6 +21,7 @@ import {isReasonFeedSource, ReasonFeedSource} from '#/lib/api/feed/types'
 import {MAX_POST_LINES} from '#/lib/constants'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {makeProfileLink} from '#/lib/routes/links'
+import {NON_BREAKING_SPACE} from '#/lib/strings/constants'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {countLines} from '#/lib/strings/helpers'
@@ -311,7 +312,7 @@ let FeedItemInner = ({
                   <Trans>Reposted by you</Trans>
                 ) : (
                   <Trans>
-                    Reposted by&nbsp;
+                    Reposted by{NON_BREAKING_SPACE}
                     <ProfileHoverCard inline did={reason.by.did}>
                       <TextLinkOnWebOnly
                         type="sm-bold"
