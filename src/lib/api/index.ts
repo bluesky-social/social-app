@@ -24,7 +24,6 @@ import {
 } from '#/state/queries/resolve-link'
 import {
   createThreadgateRecord,
-  ThreadgateAllowUISetting,
   threadgateAllowUISettingToAllowRecordValue,
   writeThreadgateRecord,
 } from '#/state/queries/threadgate'
@@ -46,7 +45,6 @@ export interface ExternalEmbedDraft {
 interface PostOpts {
   composerState: ComposerState // TODO: Not used yet.
   replyTo?: string
-  threadgate: ThreadgateAllowUISetting[]
   onStateChange?: (state: string) => void
   langs?: string[]
 }
@@ -135,7 +133,7 @@ export async function post(
     }
   }
 
-  if (opts.threadgate.some(tg => tg.type !== 'everybody')) {
+  if (draft.threadgate.some(tg => tg.type !== 'everybody')) {
     try {
       // TODO: this needs to be batch-created with the post!
       await writeThreadgateRecord({
@@ -143,7 +141,7 @@ export async function post(
         postUri: res.uri,
         threadgate: createThreadgateRecord({
           post: res.uri,
-          allow: threadgateAllowUISettingToAllowRecordValue(opts.threadgate),
+          allow: threadgateAllowUISettingToAllowRecordValue(draft.threadgate),
         }),
       })
     } catch (e: any) {

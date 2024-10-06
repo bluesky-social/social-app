@@ -1,5 +1,5 @@
 import {ImagePickerAsset} from 'expo-image-picker'
-import {AppBskyFeedPostgate,RichText} from '@atproto/api'
+import {AppBskyFeedPostgate, RichText} from '@atproto/api'
 
 import {insertMentionAt} from '#/lib/strings/mention-manip'
 import {
@@ -10,6 +10,8 @@ import {
 import {ComposerImage, createInitialImages} from '#/state/gallery'
 import {createPostgateRecord} from '#/state/queries/postgate/util'
 import {Gif} from '#/state/queries/tenor'
+import {threadgateViewToAllowUISetting} from '#/state/queries/threadgate'
+import {ThreadgateAllowUISetting} from '#/state/queries/threadgate'
 import {ComposerOpts} from '#/state/shell/composer'
 import {createVideoState, VideoAction, videoReducer, VideoState} from './video'
 
@@ -48,6 +50,7 @@ export type ComposerState = {
   richtext: RichText
   labels: string[]
   postgate: AppBskyFeedPostgate.Record
+  threadgate: ThreadgateAllowUISetting[]
   embed: EmbedDraft
 }
 
@@ -55,6 +58,7 @@ export type ComposerAction =
   | {type: 'update_richtext'; richtext: RichText}
   | {type: 'update_labels'; labels: string[]}
   | {type: 'update_postgate'; postgate: AppBskyFeedPostgate.Record}
+  | {type: 'update_threadgate'; threadgate: ThreadgateAllowUISetting[]}
   | {type: 'embed_add_images'; images: ComposerImage[]}
   | {type: 'embed_update_image'; image: ComposerImage}
   | {type: 'embed_remove_image'; image: ComposerImage}
@@ -95,6 +99,12 @@ export function composerReducer(
       return {
         ...state,
         postgate: action.postgate,
+      }
+    }
+    case 'update_threadgate': {
+      return {
+        ...state,
+        threadgate: action.threadgate,
       }
     }
     case 'embed_add_images': {
@@ -362,6 +372,7 @@ export function createComposerState({
     richtext: initRichText,
     labels: [],
     postgate: createPostgateRecord({post: ''}),
+    threadgate: threadgateViewToAllowUISetting(undefined),
     embed: {
       quote,
       media,

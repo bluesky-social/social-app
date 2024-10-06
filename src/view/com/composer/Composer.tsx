@@ -73,8 +73,6 @@ import {
 } from '#/state/preferences/languages'
 import {useProfileQuery} from '#/state/queries/profile'
 import {Gif} from '#/state/queries/tenor'
-import {ThreadgateAllowUISetting} from '#/state/queries/threadgate'
-import {threadgateViewToAllowUISetting} from '#/state/queries/threadgate/util'
 import {useAgent, useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
 import {ComposerOpts} from '#/state/shell/composer'
@@ -228,11 +226,6 @@ export const ComposePost = ({
   const hasVideo = Boolean(videoState.asset || videoState.video)
 
   const [publishOnUpload, setPublishOnUpload] = useState(false)
-
-  const [threadgateAllowUISettings, onChangeThreadgateAllowUISettings] =
-    useState<ThreadgateAllowUISetting[]>(
-      threadgateViewToAllowUISetting(undefined),
-    )
 
   let quote: string | undefined
   if (composerState.embed.quote) {
@@ -402,9 +395,8 @@ export const ComposePost = ({
       try {
         postUri = (
           await apilib.post(agent, queryClient, {
-            composerState, // TODO: move more state here.
+            composerState,
             replyTo: replyTo?.uri,
-            threadgate: threadgateAllowUISettings,
             onStateChange: setProcessingState,
             langs: toPostLanguages(langPrefs.postLanguage),
           })
@@ -492,7 +484,6 @@ export const ComposePost = ({
       replyTo,
       richtext.text,
       setLangPrefs,
-      threadgateAllowUISettings,
       videoState.asset,
       videoState.status,
       queryClient,
@@ -801,10 +792,13 @@ export const ComposePost = ({
               onChangePostgate={nextPostgate => {
                 dispatch({type: 'update_postgate', postgate: nextPostgate})
               }}
-              threadgateAllowUISettings={threadgateAllowUISettings}
-              onChangeThreadgateAllowUISettings={
-                onChangeThreadgateAllowUISettings
-              }
+              threadgateAllowUISettings={composerState.threadgate}
+              onChangeThreadgateAllowUISettings={nextThreadgate => {
+                dispatch({
+                  type: 'update_threadgate',
+                  threadgate: nextThreadgate,
+                })
+              }}
               style={bottomBarAnimatedStyle}
               Portal={Portal.Portal}
             />
