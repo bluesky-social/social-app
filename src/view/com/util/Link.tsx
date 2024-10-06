@@ -23,7 +23,7 @@ import {
   linkRequiresWarning,
 } from '#/lib/strings/url-helpers'
 import {TypographyVariant} from '#/lib/ThemeContext'
-import {isWeb} from '#/platform/detection'
+import {isAndroid, isWeb} from '#/platform/detection'
 import {useModalControls} from '#/state/modals'
 import {useOpenLink} from '#/state/preferences/in-app-browser'
 import {WebAuxClickWrapper} from '#/view/com/util/WebAuxClickWrapper'
@@ -115,7 +115,8 @@ export const Link = memo(function Link({
           {...props}
           android_ripple={{
             color: t.atoms.bg_contrast_25.backgroundColor,
-          }}>
+          }}
+          unstable_pressDelay={isAndroid ? 20 : undefined}>
           {/* @ts-ignore web only -prf */}
           <View style={style} href={anchorHref}>
             {children ? children : <Text>{title || 'link'}</Text>}
