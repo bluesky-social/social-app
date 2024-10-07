@@ -20,6 +20,7 @@ import {EditImageDialogProps} from './EditImageDialog'
 export const EditImageDialog = (props: EditImageDialogProps) => {
   return (
     <Dialog.Outer control={props.control}>
+      <Dialog.Handle />
       <EditImageInner key={props.image.source.id} {...props} />
     </Dialog.Outer>
   )

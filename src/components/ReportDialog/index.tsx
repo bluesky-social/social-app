@@ -1,5 +1,6 @@
 import React from 'react'
 import {Pressable, View} from 'react-native'
+import {ScrollView} from 'react-native-gesture-handler'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -8,12 +9,10 @@ import {useMyLabelersQuery} from '#/state/queries/preferences'
 export {useDialogControl as useReportDialogControl} from '#/components/Dialog'
 
 import {AppBskyLabelerDefs} from '@atproto/api'
-import {BottomSheetScrollViewMethods} from '@discord/bottom-sheet/src'
 
 import {atoms as a} from '#/alf'
 import * as Dialog from '#/components/Dialog'
 import {useDelayedLoading} from '#/components/hooks/useDelayedLoading'
-import {useOnKeyboardDidShow} from '#/components/hooks/useOnKeyboard'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {SelectLabelerView} from './SelectLabelerView'
@@ -25,7 +24,6 @@ export function ReportDialog(props: ReportDialogProps) {
   return (
     <Dialog.Outer control={props.control}>
       <Dialog.Handle />
-
       <ReportDialogInner {...props} />
     </Dialog.Outer>
   )
@@ -40,10 +38,7 @@ function ReportDialogInner(props: ReportDialogProps) {
   } = useMyLabelersQuery()
   const isLoading = useDelayedLoading(500, isLabelerLoading)
 
-  const ref = React.useRef<BottomSheetScrollViewMethods>(null)
-  useOnKeyboardDidShow(() => {
-    ref.current?.scrollToEnd({animated: true})
-  })
+  const ref = React.useRef<ScrollView>(null)
 
   return (
     <Dialog.ScrollableInner label={_(msg`Report dialog`)} ref={ref}>

@@ -50,7 +50,7 @@ export const MAX_DM_GRAPHEME_LENGTH = 1000
 
 // Recommended is 100 per: https://www.w3.org/WAI/GL/WCAG20/tests/test3.html
 // but increasing limit per user feedback
-export const MAX_ALT_TEXT = 1000
+export const MAX_ALT_TEXT = 2000
 
 export function IS_TEST_USER(handle?: string) {
   return handle && handle?.endsWith('.test')

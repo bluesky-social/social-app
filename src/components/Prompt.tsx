@@ -4,8 +4,9 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
-import {Button, ButtonColor, ButtonProps, ButtonText} from '#/components/Button'
+import {Button, ButtonColor, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
+import {PortalComponent} from '#/components/Portal'
 import {Text} from '#/components/Typography'
 
 export {
@@ -25,9 +26,11 @@ export function Outer({
   children,
   control,
   testID,
+  Portal,
 }: React.PropsWithChildren<{
   control: Dialog.DialogControlProps
   testID?: string
+  Portal?: PortalComponent
 }>) {
   const {gtMobile} = useBreakpoints()
   const titleId = React.useId()
@@ -39,10 +42,9 @@ export function Outer({
   )
 
   return (
-    <Dialog.Outer control={control} testID={testID}>
+    <Dialog.Outer control={control} testID={testID} Portal={Portal}>
+      <Dialog.Handle />
       <Context.Provider value={context}>
-        <Dialog.Handle />
-
         <Dialog.ScrollableInner
           accessibilityLabelledBy={titleId}
           accessibilityDescribedBy={descriptionId}
@@ -141,7 +143,7 @@ export function Action({
    * Note: The dialog will close automatically when the action is pressed, you
    * should NOT close the dialog as a side effect of this method.
    */
-  onPress: ButtonProps['onPress']
+  onPress: (e: GestureResponderEvent) => void
   color?: ButtonColor
   /**
    * Optional i18n string. If undefined, it will default to "Confirm".
@@ -181,6 +183,7 @@ export function Basic({
   onConfirm,
   confirmButtonColor,
   showCancel = true,
+  Portal,
 }: React.PropsWithChildren<{
   control: Dialog.DialogOuterProps['control']
   title: string
@@ -194,12 +197,13 @@ export function Basic({
    * Note: The dialog will close automatically when the action is pressed, you
    * should NOT close the dialog as a side effect of this method.
    */
-  onConfirm: ButtonProps['onPress']
+  onConfirm: (e: GestureResponderEvent) => void
   confirmButtonColor?: ButtonColor
   showCancel?: boolean
+  Portal?: PortalComponent
 }>) {
   return (
-    <Outer control={control} testID="confirmModal">
+    <Outer control={control} testID="confirmModal" Portal={Portal}>
       <TitleText>{title}</TitleText>
       <DescriptionText>{description}</DescriptionText>
       <Actions>
