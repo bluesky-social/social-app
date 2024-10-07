@@ -148,16 +148,16 @@ class ShareViewController: UIViewController {
     } catch {}
     return nil
   }
-  
+
   private func saveVideoWithInfo(_ dataUrl: URL) -> String? {
     let ext = String(dataUrl.lastPathComponent.split(separator: ".").last ?? "mp4")
     guard let tempUrl = getTempUrl(ext: ext) else {
       return nil
     }
-    
+
     let data = try? Data(contentsOf: dataUrl)
     try? data?.write(to: tempUrl)
-    
+
     guard let track = AVURLAsset(url: dataUrl).tracks(withMediaType: AVMediaType.video).first else {
       _ = try? FileManager().removeItem(at: tempUrl)
       return nil
