@@ -44,18 +44,14 @@ export function EditProfileDialog({
 
   // 'You might lose unsaved changes' warning
   useEffect(() => {
-    if (isWeb) {
-      if (dirty) {
-        const abortController = new AbortController()
-        const {signal} = abortController
-        window.addEventListener(
-          'beforeunload',
-          event => event.preventDefault(),
-          {signal},
-        )
-        return () => {
-          abortController.abort()
-        }
+    if (isWeb && dirty) {
+      const abortController = new AbortController()
+      const {signal} = abortController
+      window.addEventListener('beforeunload', evt => evt.preventDefault(), {
+        signal,
+      })
+      return () => {
+        abortController.abort()
       }
     }
   }, [dirty])
