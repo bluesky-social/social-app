@@ -425,8 +425,6 @@ export const ComposePost = ({
             composerState, // TODO: move more state here.
             rawText: richtext.text,
             replyTo: replyTo?.uri,
-            quote,
-            extLink,
             labels,
             threadgate: threadgateAllowUISettings,
             postgate,

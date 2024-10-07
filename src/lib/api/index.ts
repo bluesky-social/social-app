@@ -6,8 +6,10 @@ import {
   AppBskyEmbedVideo,
   AppBskyFeedPostgate,
   AtUri,
+  BlobRef,
   BskyAgent,
   ComAtprotoLabelDefs,
+  ComAtprotoRepoStrongRef,
   RichText,
 } from '@atproto/api'
 
@@ -22,8 +24,10 @@ import {
   threadgateAllowUISettingToAllowRecordValue,
   writeThreadgateRecord,
 } from '#/state/queries/threadgate'
-import {ComposerState} from '#/view/com/composer/state/composer'
+import {ComposerState, EmbedDraft} from '#/view/com/composer/state/composer'
+import {createGIFDescription} from '../gif-alt-text'
 import {LinkMeta} from '../link-meta/link-meta'
+import {resolveGif, resolveLink} from './resolve'
 import {uploadBlob} from './upload-blob'
 
 export {uploadBlob}
@@ -40,11 +44,6 @@ interface PostOpts {
   composerState: ComposerState // TODO: Not used yet.
   rawText: string
   replyTo?: string
-  quote?: {
-    uri: string
-    cid: string
-  }
-  extLink?: ExternalEmbedDraft
   labels?: string[]
   threadgate: ThreadgateAllowUISetting[]
   postgate: AppBskyFeedPostgate.Record
@@ -63,7 +62,11 @@ export async function post(agent: BskyAgent, opts: PostOpts) {
   rt = shortenLinks(rt)
   rt = stripInvalidMentions(rt)
 
-  const embed = await resolveEmbed(agent, opts)
+  const embed = await resolveEmbed(
+    agent,
+    opts.composerState,
+    opts.onStateChange,
+  )
 
   // add replyTo if post is a reply to another post
   if (opts.replyTo) {
@@ -175,7 +178,8 @@ export async function post(agent: BskyAgent, opts: PostOpts) {
 
 async function resolveEmbed(
   agent: BskyAgent,
-  opts: PostOpts,
+  draft: ComposerState,
+  onStateChange: ((state: string) => void) | undefined,
 ): Promise<
   | AppBskyEmbedImages.Main
   | AppBskyEmbedVideo.Main
@@ -184,52 +188,60 @@ async function resolveEmbed(
   | AppBskyEmbedRecordWithMedia.Main
   | undefined
 > {
-  const media = await resolveMedia(agent, opts)
-  if (opts.quote) {
-    const quoteRecord = {
-      $type: 'app.bsky.embed.record',
-      record: {
-        uri: opts.quote.uri,
-        cid: opts.quote.cid,
-      },
-    }
-    if (media) {
+  if (draft.embed.quote) {
+    const [resolvedMedia, resolvedQuote] = await Promise.all([
+      resolveMedia(agent, draft.embed, onStateChange),
+      resolveRecord(agent, draft.embed.quote.uri),
+    ])
+    if (resolvedMedia) {
       return {
         $type: 'app.bsky.embed.recordWithMedia',
-        record: quoteRecord,
-        media,
+        record: {
+          $type: 'app.bsky.embed.record',
+          record: resolvedQuote,
+        },
+        media: resolvedMedia,
       }
-    } else {
-      return quoteRecord
+    }
+    return {
+      $type: 'app.bsky.embed.record',
+      record: resolvedQuote,
     }
   }
-  if (media) {
-    return media
+  const resolvedMedia = await resolveMedia(agent, draft.embed, onStateChange)
+  if (resolvedMedia) {
+    return resolvedMedia
   }
-  if (opts.extLink?.embed) {
-    return opts.extLink.embed
+  if (draft.embed.link) {
+    const resolvedLink = await resolveLink(agent, draft.embed.link.uri)
+    if (resolvedLink.type === 'record') {
+      return {
+        $type: 'app.bsky.embed.record',
+        record: resolvedLink.record,
+      }
+    }
   }
   return undefined
 }
 
 async function resolveMedia(
   agent: BskyAgent,
-  opts: PostOpts,
+  embedDraft: EmbedDraft,
+  onStateChange: ((state: string) => void) | undefined,
 ): Promise<
   | AppBskyEmbedExternal.Main
   | AppBskyEmbedImages.Main
   | AppBskyEmbedVideo.Main
   | undefined
 > {
-  const state = opts.composerState
-  const media = state.embed.media
-  if (media?.type === 'images') {
+  if (embedDraft.media?.type === 'images') {
+    const imagesDraft = embedDraft.media.images
     logger.debug(`Uploading images`, {
-      count: media.images.length,
+      count: imagesDraft.length,
     })
-    opts.onStateChange?.(`Uploading images...`)
+    onStateChange?.(`Uploading images...`)
     const images: AppBskyEmbedImages.Image[] = await Promise.all(
-      media.images.map(async (image, i) => {
+      imagesDraft.map(async (image, i) => {
         logger.debug(`Compressing image #${i}`)
         const {path, width, height, mime} = await compressImage(image)
         logger.debug(`Uploading image #${i}`)
@@ -246,10 +258,13 @@ async function resolveMedia(
       images,
     }
   }
-  if (media?.type === 'video' && media.video.status === 'done') {
-    const video = media.video
+  if (
+    embedDraft.media?.type === 'video' &&
+    embedDraft.media.video.status === 'done'
+  ) {
+    const videoDraft = embedDraft.media.video
     const captions = await Promise.all(
-      video.captions
+      videoDraft.captions
         .filter(caption => caption.lang !== '')
         .map(async caption => {
           const {data} = await agent.uploadBlob(caption.file, {
@@ -260,36 +275,66 @@ async function resolveMedia(
     )
     return {
       $type: 'app.bsky.embed.video',
-      video: video.pendingPublish.blobRef,
-      alt: video.altText || undefined,
+      video: videoDraft.pendingPublish.blobRef,
+      alt: videoDraft.altText || undefined,
       captions: captions.length === 0 ? undefined : captions,
       aspectRatio: {
-        width: video.asset.width,
-        height: video.asset.height,
+        width: videoDraft.asset.width,
+        height: videoDraft.asset.height,
       },
     }
   }
-  if (opts.extLink) {
-    // TODO: Read this from composer state as well.
-    if (opts.extLink.embed) {
-      return undefined
-    }
-    let thumb
-    if (opts.extLink.localThumb) {
-      opts.onStateChange?.('Uploading link thumbnail...')
-      const {path, mime} = opts.extLink.localThumb.source
-      const res = await uploadBlob(agent, path, mime)
-      thumb = res.data.blob
+  if (embedDraft.media?.type === 'gif') {
+    const gifDraft = embedDraft.media
+    const resolvedGif = await resolveGif(agent, gifDraft.gif)
+    let blob: BlobRef | undefined
+    if (resolvedGif.thumb) {
+      onStateChange?.('Uploading link thumbnail...')
+      const {path, mime} = resolvedGif.thumb.source
+      const response = await uploadBlob(agent, path, mime)
+      blob = response.data.blob
     }
     return {
       $type: 'app.bsky.embed.external',
       external: {
-        uri: opts.extLink.uri,
-        title: opts.extLink.meta?.title || '',
-        description: opts.extLink.meta?.description || '',
-        thumb,
+        uri: resolvedGif.uri,
+        title: resolvedGif.title,
+        description: createGIFDescription(resolvedGif.title, gifDraft.alt),
+        thumb: blob,
       },
     }
   }
+  if (embedDraft.link) {
+    const resolvedLink = await resolveLink(agent, embedDraft.link.uri)
+    if (resolvedLink.type === 'external') {
+      let blob: BlobRef | undefined
+      if (resolvedLink.thumb) {
+        onStateChange?.('Uploading link thumbnail...')
+        const {path, mime} = resolvedLink.thumb.source
+        const response = await uploadBlob(agent, path, mime)
+        blob = response.data.blob
+      }
+      return {
+        $type: 'app.bsky.embed.external',
+        external: {
+          uri: resolvedLink.uri,
+          title: resolvedLink.title,
+          description: resolvedLink.description,
+          thumb: blob,
+        },
+      }
+    }
+  }
   return undefined
+}
+
+async function resolveRecord(
+  agent: BskyAgent,
+  uri: string,
+): Promise<ComAtprotoRepoStrongRef.Main> {
+  const resolvedLink = await resolveLink(agent, uri)
+  if (resolvedLink.type !== 'record') {
+    throw Error('Expected uri to resolve to a record')
+  }
+  return resolvedLink.record
 }
