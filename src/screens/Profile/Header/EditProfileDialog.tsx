@@ -9,6 +9,7 @@ import {compressIfNeeded} from '#/lib/media/manip'
 import {cleanError} from '#/lib/strings/errors'
 import {useWarnMaxGraphemeCount} from '#/lib/strings/helpers'
 import {logger} from '#/logger'
+import {isWeb} from '#/platform/detection'
 import {useProfileUpdateMutation} from '#/state/queries/profile'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import * as Toast from '#/view/com/util/Toast'
@@ -40,6 +41,24 @@ export function EditProfileDialog({
   const cancelControl = Dialog.useDialogControl()
   const [dirty, setDirty] = useState(false)
   const {height} = useWindowDimensions()
+
+  // 'You might lose unsaved changes' warning
+  useEffect(() => {
+    if (isWeb) {
+      if (dirty) {
+        const abortController = new AbortController()
+        const {signal} = abortController
+        window.addEventListener(
+          'beforeunload',
+          event => event.preventDefault(),
+          {signal},
+        )
+        return () => {
+          abortController.abort()
+        }
+      }
+    }
+  }, [dirty])
 
   const onPressCancel = useCallback(() => {
     if (dirty) {
