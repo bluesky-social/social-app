@@ -10,7 +10,7 @@ import {
 import Animated, {FadeIn, FadeInDown} from 'react-native-reanimated'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {FocusScope} from '@tamagui/focus-scope'
+import {FocusScope} from '@radix-ui/react-focus-scope'
 
 import {logger} from '#/logger'
 import {useDialogStateControlContext} from '#/state/dialogs'
@@ -172,7 +172,7 @@ export function Inner({
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
   return (
-    <FocusScope loop enabled trapped>
+    <FocusScope loop asChild trapped>
       <Animated.View
         role="dialog"
         aria-role="dialog"
@@ -185,7 +185,7 @@ export function Inner({
         onTouchEnd={stopPropagation}
         entering={FadeInDown.duration(100)}
         // exiting={FadeOut.duration(100)}
-        style={[
+        style={flatten([
           a.relative,
           a.rounded_md,
           a.w_full,
@@ -198,8 +198,8 @@ export function Inner({
             shadowOpacity: t.name === 'light' ? 0.1 : 0.4,
             shadowRadius: 30,
           },
-          flatten(style),
-        ]}>
+          style,
+        ])}>
         {header}
         <View style={[gtMobile ? a.p_2xl : a.p_xl, contentContainerStyle]}>
           {children}
