@@ -232,7 +232,7 @@ let ProfileHeaderLabeler = ({
           ) : null}
           <ProfileMenu profile={profile} />
         </View>
-        <View style={[a.flex_col, a.gap_xs, a.pb_md]}>
+        <View style={[a.flex_col, a.gap_2xs, a.pt_2xs, a.pb_md]}>
           <ProfileHeaderDisplayName profile={profile} moderation={moderation} />
           <ProfileHeaderHandle profile={profile} />
         </View>
