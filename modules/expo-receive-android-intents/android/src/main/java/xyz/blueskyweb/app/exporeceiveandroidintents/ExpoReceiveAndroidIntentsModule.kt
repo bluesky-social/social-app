@@ -2,6 +2,7 @@ package xyz.blueskyweb.app.exporeceiveandroidintents
 
 import android.content.Intent
 import android.graphics.Bitmap
+import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
@@ -143,7 +144,10 @@ class ExpoReceiveAndroidIntentsModule : Module() {
     appContext.currentActivity?.contentResolver?.openInputStream(uri)?.use {
       it.copyTo(out)
     }
-    "bluesky://intent/compose?videoUri=${URLEncoder.encode(file.path, "UTF-8")}".toUri().let {
+
+    val info = getVideoInfo(uri) ?: return
+
+    "bluesky://intent/compose?videoUri=${URLEncoder.encode(file.path, "UTF-8")}|${info["width"]}|${info["height"]}".toUri().let {
       val newIntent = Intent(Intent.ACTION_VIEW, it)
       appContext.currentActivity?.startActivity(newIntent)
     }
@@ -163,6 +167,24 @@ class ExpoReceiveAndroidIntentsModule : Module() {
       "width" to bitmap.width,
       "height" to bitmap.height,
       "path" to file.path.toString(),
+    )
+  }
+
+  private fun getVideoInfo(uri: Uri): Map<String, Any>? {
+    val retriever = MediaMetadataRetriever()
+    retriever.setDataSource(appContext.currentActivity, uri)
+
+    val width = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH)?.toIntOrNull()
+    val height = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT)?.toIntOrNull()
+
+    if (width == null || height == null) {
+      return null
+    }
+
+    return mapOf(
+      "width" to width,
+      "height" to height,
+      "path" to uri.path.toString(),
     )
   }
 

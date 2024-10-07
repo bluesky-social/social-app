@@ -30,7 +30,13 @@ export function CharProgress({
   return (
     <View
       style={[a.flex_row, a.align_center, a.justify_between, a.gap_sm, style]}>
-      <Text style={[{color: textColor}, a.flex_grow, a.text_right, textStyle]}>
+      <Text
+        style={[
+          {color: textColor, fontVariant: ['tabular-nums']},
+          a.flex_grow,
+          a.text_right,
+          textStyle,
+        ]}>
         {maxLength - count}
       </Text>
       {count > maxLength ? (
