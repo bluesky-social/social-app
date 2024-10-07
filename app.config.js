@@ -55,6 +55,7 @@ module.exports = function (config) {
     : undefined
   const UPDATES_ENABLED = !!UPDATES_CHANNEL
 
+  const USE_SENTRY = Boolean(process.env.SENTRY_AUTH_TOKEN)
   const SENTRY_DIST = `${PLATFORM}.${VERSION}.${IS_TESTFLIGHT ? 'tf' : ''}${
     IS_DEV ? 'dev' : ''
   }`
@@ -186,12 +187,20 @@ module.exports = function (config) {
       },
       plugins: [
         'expo-localization',
-        Boolean(process.env.SENTRY_AUTH_TOKEN) && 'sentry-expo',
+        USE_SENTRY && [
+          '@sentry/react-native/expo',
+          {
+            organization: 'blueskyweb',
+            project: 'react-native',
+            release: VERSION,
+            dist: SENTRY_DIST,
+          },
+        ],
         [
           'expo-build-properties',
           {
             ios: {
-              deploymentTarget: '14.0',
+              deploymentTarget: '15.1',
               newArchEnabled: false,
             },
             android: {
@@ -211,7 +220,6 @@ module.exports = function (config) {
             sounds: PLATFORM === 'ios' ? ['assets/dm.aiff'] : ['assets/dm.mp3'],
           },
         ],
-        'expo-video',
         'react-native-compressor',
         './plugins/starterPackAppClipExtension/withStarterPackAppClip.js',
         './plugins/withAndroidManifestPlugin.js',
@@ -222,6 +230,15 @@ module.exports = function (config) {
         './plugins/shareExtension/withShareExtensions.js',
         './plugins/notificationsExtension/withNotificationsExtension.js',
         './plugins/withAppDelegateReferrer.js',
+        [
+          'expo-font',
+          {
+            fonts: [
+              './assets/fonts/inter/InterVariable.ttf',
+              './assets/fonts/inter/InterVariable-Italic.ttf',
+            ],
+          },
+        ],
       ].filter(Boolean),
       extra: {
         eas: {
@@ -264,7 +281,7 @@ module.exports = function (config) {
            * @see https://docs.expo.dev/guides/using-sentry/#app-configuration
            */
           {
-            file: 'sentry-expo/upload-sourcemaps',
+            file: './postHooks/uploadSentrySourcemapsPostHook',
             config: {
               organization: 'blueskyweb',
               project: 'react-native',

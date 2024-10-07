@@ -1,8 +1,9 @@
 import React from 'react'
-import {SharedValue, useSharedValue} from 'react-native-reanimated'
 
+import {isWeb} from '#/platform/detection'
 import {DialogControlRefProps} from '#/components/Dialog'
 import {Provider as GlobalDialogsProvider} from '#/components/dialogs/Context'
+import {BottomSheet} from '../../../modules/bottom-sheet'
 
 interface IDialogContext {
   /**
@@ -16,25 +17,24 @@ interface IDialogContext {
    * `useId`.
    */
   openDialogs: React.MutableRefObject<Set<string>>
+}
+
+interface IDialogControlContext {
+  closeAllDialogs(): boolean
+  setDialogIsOpen(id: string, isOpen: boolean): void
   /**
-   * The counterpart to `accessibilityViewIsModal` for Android. This property
-   * applies to the parent of all non-modal views, and prevents TalkBack from
-   * navigating within content beneath an open dialog.
-   *
-   * @see https://reactnative.dev/docs/accessibility#importantforaccessibility-android
+   * The number of dialogs that are fully expanded. This is used to determine the backgground color of the status bar
+   * on iOS.
    */
-  importantForAccessibility: SharedValue<'auto' | 'no-hide-descendants'>
+  fullyExpandedCount: number
+  setFullyExpandedCount: React.Dispatch<React.SetStateAction<number>>
 }
 
 const DialogContext = React.createContext<IDialogContext>({} as IDialogContext)
 
-const DialogControlContext = React.createContext<{
-  closeAllDialogs(): boolean
-  setDialogIsOpen(id: string, isOpen: boolean): void
-}>({
-  closeAllDialogs: () => false,
-  setDialogIsOpen: () => {},
-})
+const DialogControlContext = React.createContext<IDialogControlContext>(
+  {} as IDialogControlContext,
+)
 
 export function useDialogStateContext() {
   return React.useContext(DialogContext)
@@ -45,48 +45,55 @@ export function useDialogStateControlContext() {
 }
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
+  const [fullyExpandedCount, setFullyExpandedCount] = React.useState(0)
+
   const activeDialogs = React.useRef<
     Map<string, React.MutableRefObject<DialogControlRefProps>>
   >(new Map())
   const openDialogs = React.useRef<Set<string>>(new Set())
-  const importantForAccessibility = useSharedValue<
-    'auto' | 'no-hide-descendants'
-  >('auto')
 
   const closeAllDialogs = React.useCallback(() => {
-    openDialogs.current.forEach(id => {
-      const dialog = activeDialogs.current.get(id)
-      if (dialog) dialog.current.close()
-    })
-    return openDialogs.current.size > 0
+    if (isWeb) {
+      openDialogs.current.forEach(id => {
+        const dialog = activeDialogs.current.get(id)
+        if (dialog) dialog.current.close()
+      })
+
+      return openDialogs.current.size > 0
+    } else {
+      BottomSheet.dismissAll()
+      return false
+    }
   }, [])
 
-  const setDialogIsOpen = React.useCallback(
-    (id: string, isOpen: boolean) => {
-      if (isOpen) {
-        openDialogs.current.add(id)
-        importantForAccessibility.value = 'no-hide-descendants'
-      } else {
-        openDialogs.current.delete(id)
-        if (openDialogs.current.size < 1) {
-          importantForAccessibility.value = 'auto'
-        }
-      }
-    },
-    [importantForAccessibility],
-  )
+  const setDialogIsOpen = React.useCallback((id: string, isOpen: boolean) => {
+    if (isOpen) {
+      openDialogs.current.add(id)
+    } else {
+      openDialogs.current.delete(id)
+    }
+  }, [])
 
   const context = React.useMemo<IDialogContext>(
     () => ({
       activeDialogs,
       openDialogs,
-      importantForAccessibility,
     }),
-    [importantForAccessibility, activeDialogs, openDialogs],
+    [activeDialogs, openDialogs],
   )
   const controls = React.useMemo(
-    () => ({closeAllDialogs, setDialogIsOpen}),
-    [closeAllDialogs, setDialogIsOpen],
+    () => ({
+      closeAllDialogs,
+      setDialogIsOpen,
+      fullyExpandedCount,
+      setFullyExpandedCount,
+    }),
+    [
+      closeAllDialogs,
+      setDialogIsOpen,
+      fullyExpandedCount,
+      setFullyExpandedCount,
+    ],
   )
 
   return (

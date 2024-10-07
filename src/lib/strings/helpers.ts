@@ -1,3 +1,6 @@
+import {useCallback, useMemo} from 'react'
+import Graphemer from 'graphemer'
+
 export function enforceLen(
   str: string,
   len: number,
@@ -21,6 +24,21 @@ export function enforceLen(
     }
   }
   return str
+}
+
+export function useEnforceMaxGraphemeCount() {
+  const splitter = useMemo(() => new Graphemer(), [])
+
+  return useCallback(
+    (text: string, maxCount: number) => {
+      if (splitter.countGraphemes(text) > maxCount) {
+        return splitter.splitGraphemes(text).slice(0, maxCount).join('')
+      } else {
+        return text
+      }
+    },
+    [splitter],
+  )
 }
 
 // https://stackoverflow.com/a/52171480

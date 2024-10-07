@@ -7,7 +7,11 @@ import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
-import {track} from '#/lib/analytics/analytics'
+import {useHaptics} from '#/lib/haptics'
+import {usePalette} from '#/lib/hooks/usePalette'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {CommonNavigatorParams} from '#/lib/routes/types'
+import {colors, s} from '#/lib/styles'
 import {logger} from '#/logger'
 import {
   useOverwriteSavedFeedsMutation,
@@ -16,18 +20,12 @@ import {
 } from '#/state/queries/preferences'
 import {UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
 import {useSetMinimalShellMode} from '#/state/shell'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {useHaptics} from 'lib/haptics'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {CommonNavigatorParams} from 'lib/routes/types'
-import {colors, s} from 'lib/styles'
-import {FeedSourceCard} from 'view/com/feeds/FeedSourceCard'
-import {TextLink} from 'view/com/util/Link'
-import {Text} from 'view/com/util/text/Text'
-import * as Toast from 'view/com/util/Toast'
-import {ViewHeader} from 'view/com/util/ViewHeader'
-import {CenteredView, ScrollView} from 'view/com/util/Views'
+import {FeedSourceCard} from '#/view/com/feeds/FeedSourceCard'
+import {TextLink} from '#/view/com/util/Link'
+import {Text} from '#/view/com/util/text/Text'
+import * as Toast from '#/view/com/util/Toast'
+import {ViewHeader} from '#/view/com/util/ViewHeader'
+import {CenteredView, ScrollView} from '#/view/com/util/Views'
 import {NoFollowingFeed} from '#/screens/Feeds/NoFollowingFeed'
 import {NoSavedFeedsOfAnyType} from '#/screens/Feeds/NoSavedFeedsOfAnyType'
 import {atoms as a, useTheme} from '#/alf'
@@ -51,7 +49,6 @@ export function SavedFeeds({}: Props) {
   const pal = usePalette('default')
   const {_} = useLingui()
   const {isMobile, isTabletOrDesktop} = useWebMediaQueries()
-  const {screen} = useAnalytics()
   const setMinimalShellMode = useSetMinimalShellMode()
   const {data: preferences} = usePreferencesQuery()
   const {
@@ -77,9 +74,8 @@ export function SavedFeeds({}: Props) {
 
   useFocusEffect(
     React.useCallback(() => {
-      screen('SavedFeeds')
       setMinimalShellMode(false)
-    }, [screen, setMinimalShellMode]),
+    }, [setMinimalShellMode]),
   )
 
   return (
@@ -256,10 +252,6 @@ function ListItem({
 
     try {
       await overwriteSavedFeeds(nextFeeds)
-      track('CustomFeed:Reorder', {
-        uri: feed.value,
-        index: nextIndex,
-      })
     } catch (e) {
       Toast.show(_(msg`There was an issue contacting the server`), 'xmark')
       logger.error('Failed to set pinned feed order', {message: e})
@@ -282,10 +274,6 @@ function ListItem({
 
     try {
       await overwriteSavedFeeds(nextFeeds)
-      track('CustomFeed:Reorder', {
-        uri: feed.value,
-        index: nextIndex,
-      })
     } catch (e) {
       Toast.show(_(msg`There was an issue contacting the server`), 'xmark')
       logger.error('Failed to set pinned feed order', {message: e})

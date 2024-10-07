@@ -8,7 +8,7 @@ const PAGE_SIZE = 50
 type RQPageParam = string | undefined
 
 // TODO refactor invalidate on mutate?
-const RQKEY_ROOT = 'profile-feedgens'
+export const RQKEY_ROOT = 'profile-feedgens'
 export const RQKEY = (did: string) => [RQKEY_ROOT, did]
 
 export function useProfileFeedgensQuery(

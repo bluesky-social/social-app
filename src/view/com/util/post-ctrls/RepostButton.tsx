@@ -32,7 +32,7 @@ let RepostButton = ({
   embeddingDisabled,
 }: Props): React.ReactNode => {
   const t = useTheme()
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const requireAuth = useRequireAuth()
   const dialogControl = Dialog.useDialogControl()
   const playHaptic = useHaptics()
@@ -52,6 +52,9 @@ let RepostButton = ({
         testID="repostBtn"
         onPress={() => {
           requireAuth(() => dialogControl.open())
+        }}
+        onLongPress={() => {
+          requireAuth(() => onQuote())
         }}
         style={[
           a.flex_row,
@@ -79,13 +82,15 @@ let RepostButton = ({
               big ? a.text_md : {fontSize: 15},
               isReposted && a.font_bold,
             ]}>
-            {formatCount(repostCount)}
+            {formatCount(i18n, repostCount)}
           </Text>
         ) : undefined}
       </Button>
-      <Dialog.Outer control={dialogControl}>
+      <Dialog.Outer
+        control={dialogControl}
+        nativeOptions={{preventExpansion: true}}>
         <Dialog.Handle />
-        <Dialog.Inner label={_(msg`Repost or quote post`)}>
+        <Dialog.ScrollableInner label={_(msg`Repost or quote post`)}>
           <View style={a.gap_xl}>
             <View style={a.gap_xs}>
               <Button
@@ -152,15 +157,14 @@ let RepostButton = ({
             </View>
             <Button
               label={_(msg`Cancel quote post`)}
-              onAccessibilityEscape={close}
               onPress={close}
-              size="medium"
+              size="large"
               variant="solid"
               color="primary">
               <ButtonText>{_(msg`Cancel`)}</ButtonText>
             </Button>
           </View>
-        </Dialog.Inner>
+        </Dialog.ScrollableInner>
       </Dialog.Outer>
     </>
   )

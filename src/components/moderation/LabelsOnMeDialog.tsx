@@ -5,6 +5,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useMutation} from '@tanstack/react-query'
 
+import {useLabelSubject} from '#/lib/moderation'
 import {useLabelInfo} from '#/lib/moderation/useLabelInfo'
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeHandle} from '#/lib/strings/handles'
@@ -18,28 +19,19 @@ import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {Divider} from '../Divider'
 import {Loader} from '../Loader'
-export {useDialogControl as useLabelsOnMeDialogControl} from '#/components/Dialog'
 
-type Subject =
-  | {
-      uri: string
-      cid: string
-    }
-  | {
-      did: string
-    }
+export {useDialogControl as useLabelsOnMeDialogControl} from '#/components/Dialog'
 
 export interface LabelsOnMeDialogProps {
   control: Dialog.DialogOuterProps['control']
-  subject: Subject
   labels: ComAtprotoLabelDefs.Label[]
+  type: 'account' | 'content'
 }
 
 export function LabelsOnMeDialog(props: LabelsOnMeDialogProps) {
   return (
     <Dialog.Outer control={props.control}>
       <Dialog.Handle />
-
       <LabelsOnMeDialogInner {...props} />
     </Dialog.Outer>
   )
@@ -51,8 +43,8 @@ function LabelsOnMeDialogInner(props: LabelsOnMeDialogProps) {
   const [appealingLabel, setAppealingLabel] = React.useState<
     ComAtprotoLabelDefs.Label | undefined
   >(undefined)
-  const {subject, labels} = props
-  const isAccount = 'did' in subject
+  const {labels} = props
+  const isAccount = props.type === 'account'
   const containsSelfLabel = React.useMemo(
     () => labels.some(l => l.src === currentAccount?.did),
     [currentAccount?.did, labels],
@@ -68,7 +60,6 @@ function LabelsOnMeDialogInner(props: LabelsOnMeDialogProps) {
       {appealingLabel ? (
         <AppealForm
           label={appealingLabel}
-          subject={subject}
           control={props.control}
           onPressBack={() => setAppealingLabel(undefined)}
         />
@@ -140,8 +131,10 @@ function Label({
       ]}>
       <View style={[a.p_md, a.gap_sm, a.flex_row]}>
         <View style={[a.flex_1, a.gap_xs]}>
-          <Text style={[a.font_bold, a.text_md]}>{strings.name}</Text>
-          <Text style={[t.atoms.text_contrast_medium, a.leading_snug]}>
+          <Text emoji style={[a.font_bold, a.text_md]}>
+            {strings.name}
+          </Text>
+          <Text emoji style={[t.atoms.text_contrast_medium, a.leading_snug]}>
             {strings.description}
           </Text>
         </View>
@@ -164,23 +157,25 @@ function Label({
       <Divider />
 
       <View style={[a.px_md, a.py_sm, t.atoms.bg_contrast_25]}>
-        <Text style={[t.atoms.text_contrast_medium]}>
-          {isSelfLabel ? (
+        {isSelfLabel ? (
+          <Text style={[t.atoms.text_contrast_medium]}>
             <Trans>This label was applied by you.</Trans>
-          ) : (
-            <Trans>
-              Source:{' '}
-              <InlineLinkText
-                label={sourceName}
-                to={makeProfileLink(
-                  labeler ? labeler.creator : {did: label.src, handle: ''},
-                )}
-                onPress={() => control.close()}>
-                {sourceName}
-              </InlineLinkText>
-            </Trans>
-          )}
-        </Text>
+          </Text>
+        ) : (
+          <View style={{flexDirection: 'row'}}>
+            <Text style={[t.atoms.text_contrast_medium]}>
+              <Trans>Source: </Trans>{' '}
+            </Text>
+            <InlineLinkText
+              label={sourceName}
+              to={makeProfileLink(
+                labeler ? labeler.creator : {did: label.src, handle: ''},
+              )}
+              onPress={() => control.close()}>
+              {sourceName}
+            </InlineLinkText>
+          </View>
+        )}
       </View>
     </View>
   )
@@ -188,12 +183,10 @@ function Label({
 
 function AppealForm({
   label,
-  subject,
   control,
   onPressBack,
 }: {
   label: ComAtprotoLabelDefs.Label
-  subject: Subject
   control: Dialog.DialogOuterProps['control']
   onPressBack: () => void
 }) {
@@ -201,6 +194,7 @@ function AppealForm({
   const {labeler, strings} = useLabelInfo(label)
   const {gtMobile} = useBreakpoints()
   const [details, setDetails] = React.useState('')
+  const {subject} = useLabelSubject({label})
   const isAccountReport = 'did' in subject
   const agent = useAgent()
   const sourceName = labeler
@@ -243,24 +237,26 @@ function AppealForm({
 
   return (
     <>
-      <Text style={[a.text_2xl, a.font_bold, a.pb_xs, a.leading_tight]}>
-        <Trans>Appeal "{strings.name}" label</Trans>
-      </Text>
-      <Text style={[a.text_md, a.leading_snug]}>
-        <Trans>
-          This appeal will be sent to{' '}
-          <InlineLinkText
-            label={sourceName}
-            to={makeProfileLink(
-              labeler ? labeler.creator : {did: label.src, handle: ''},
-            )}
-            onPress={() => control.close()}
-            style={[a.text_md, a.leading_snug]}>
-            {sourceName}
-          </InlineLinkText>
-          .
-        </Trans>
-      </Text>
+      <View style={{flexWrap: 'wrap', flexDirection: 'row'}}>
+        <Text style={[a.text_2xl, a.font_bold, a.pb_xs, a.leading_tight]}>
+          <Trans>Appeal "{strings.name}" label</Trans>
+        </Text>
+        <Text style={[a.text_md, a.leading_snug]}>
+          <Trans>
+            This appeal will be sent to{' '}
+            <InlineLinkText
+              label={sourceName}
+              to={makeProfileLink(
+                labeler ? labeler.creator : {did: label.src, handle: ''},
+              )}
+              onPress={() => control.close()}
+              style={[a.text_md, a.leading_snug]}>
+              {sourceName}
+            </InlineLinkText>
+            .
+          </Trans>
+        </Text>
+      </View>
       <View style={[a.my_md]}>
         <Dialog.Input
           label={_(msg`Text input field`)}
@@ -288,7 +284,7 @@ function AppealForm({
           testID="backBtn"
           variant="solid"
           color="secondary"
-          size="medium"
+          size="large"
           onPress={onPressBack}
           label={_(msg`Back`)}>
           <ButtonText>{_(msg`Back`)}</ButtonText>
@@ -297,7 +293,7 @@ function AppealForm({
           testID="submitBtn"
           variant="solid"
           color="primary"
-          size="medium"
+          size="large"
           onPress={onSubmit}
           label={_(msg`Submit`)}>
           <ButtonText>{_(msg`Submit`)}</ButtonText>

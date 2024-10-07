@@ -173,7 +173,7 @@ export function Component({
             accessibilityLabel={_(msg`Confirmation code`)}
             accessibilityHint=""
             autoCapitalize="none"
-            autoComplete="off"
+            autoComplete="one-time-code"
             autoCorrect={false}
           />
         ) : undefined}

@@ -126,10 +126,12 @@ function AccountItem({
             <UserAvatar avatar={profile?.avatar} size={24} />
           </View>
           <Text style={[a.align_baseline, a.flex_1, a.flex_row, a.py_sm]}>
-            <Text style={[a.font_bold]}>
+            <Text emoji style={[a.font_bold]}>
               {profile?.displayName || account.handle}{' '}
             </Text>
-            <Text style={[t.atoms.text_contrast_medium]}>{account.handle}</Text>
+            <Text emoji style={[t.atoms.text_contrast_medium]}>
+              {account.handle}
+            </Text>
           </Text>
           {isCurrentAccount ? (
             <Check

@@ -377,7 +377,7 @@ function Inner({
   hide: () => void
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const {currentAccount} = useSession()
   const moderation = React.useMemo(
     () => moderateProfile(profile, moderationOpts),
@@ -393,8 +393,8 @@ function Inner({
     profile.viewer?.blocking ||
     profile.viewer?.blockedBy ||
     profile.viewer?.blockingByList
-  const following = formatCount(profile.followsCount || 0)
-  const followers = formatCount(profile.followersCount || 0)
+  const following = formatCount(i18n, profile.followsCount || 0)
+  const followers = formatCount(i18n, profile.followersCount || 0)
   const pluralizedFollowers = plural(profile.followersCount || 0, {
     one: 'follower',
     other: 'followers',
@@ -411,6 +411,7 @@ function Inner({
     () => currentAccount?.did === profile.did,
     [currentAccount, profile],
   )
+  const isLabeler = profile.associated?.labeler
 
   return (
     <View>
@@ -419,11 +420,13 @@ function Inner({
           <UserAvatar
             size={64}
             avatar={profile.avatar}
+            type={isLabeler ? 'labeler' : 'user'}
             moderation={moderation.ui('avatar')}
           />
         </Link>
 
         {!isMe &&
+          !isLabeler &&
           (isBlockedUser ? (
             <Link
               to={profileURL}

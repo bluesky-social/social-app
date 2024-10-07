@@ -1,10 +1,11 @@
 import format from 'date-fns/format'
 import {nanoid} from 'nanoid/non-secure'
 
-import {Sentry} from '#/logger/sentry'
-import * as env from '#/env'
+import {isNetworkError} from '#/lib/strings/errors'
 import {DebugContext} from '#/logger/debugContext'
 import {add} from '#/logger/logDump'
+import {Sentry} from '#/logger/sentry'
+import * as env from '#/env'
 
 export enum LogLevel {
   Debug = 'debug',
@@ -159,6 +160,11 @@ export const sentryTransport: Transport = (
       level: severity,
       timestamp: timestamp / 1000, // Sentry expects seconds
     })
+
+    // We don't want to send any network errors to sentry
+    if (isNetworkError(message)) {
+      return
+    }
 
     /**
      * Send all higher levels with `captureMessage`, with appropriate severity

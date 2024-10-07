@@ -1,5 +1,4 @@
 import React from 'react'
-import {View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
@@ -7,9 +6,12 @@ import {useFocusEffect} from '@react-navigation/native'
 import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
 import {makeRecordUri} from '#/lib/strings/url-helpers'
 import {useSetMinimalShellMode} from '#/state/shell'
+import {isWeb} from 'platform/detection'
 import {PostLikedBy as PostLikedByComponent} from '#/view/com/post-thread/PostLikedBy'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
+import {CenteredView} from 'view/com/util/Views'
 import {atoms as a} from '#/alf'
+import {ListHeaderDesktop} from '#/components/Lists'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'PostLikedBy'>
 export const PostLikedByScreen = ({route}: Props) => {
@@ -25,9 +27,10 @@ export const PostLikedByScreen = ({route}: Props) => {
   )
 
   return (
-    <View style={a.flex_1}>
-      <ViewHeader title={_(msg`Liked By`)} />
+    <CenteredView style={a.util_screen_outer} sideBorders={true}>
+      <ListHeaderDesktop title={_(msg`Liked By`)} />
+      <ViewHeader title={_(msg`Liked By`)} showBorder={!isWeb} />
       <PostLikedByComponent uri={uri} />
-    </View>
+    </CenteredView>
   )
 }

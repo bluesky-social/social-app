@@ -7,27 +7,26 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {useAnalytics} from '#/lib/analytics/analytics'
+import {uploadBlob} from '#/lib/api'
 import {
   BSKY_APP_ACCOUNT_DID,
   DISCOVER_SAVED_FEED,
   TIMELINE_SAVED_FEED,
 } from '#/lib/constants'
+import {useRequestNotificationsPermission} from '#/lib/notifications/notifications'
 import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
+import {useSetHasCheckedForStarterPack} from '#/state/preferences/used-starter-packs'
+import {getAllListMembers} from '#/state/queries/list-members'
 import {preferencesQueryKey} from '#/state/queries/preferences'
 import {RQKEY as profileRQKey} from '#/state/queries/profile'
 import {useAgent} from '#/state/session'
 import {useOnboardingDispatch} from '#/state/shell'
 import {useProgressGuideControls} from '#/state/shell/progress-guide'
-import {uploadBlob} from 'lib/api'
-import {useRequestNotificationsPermission} from 'lib/notifications/notifications'
-import {useSetHasCheckedForStarterPack} from 'state/preferences/used-starter-packs'
-import {getAllListMembers} from 'state/queries/list-members'
 import {
   useActiveStarterPack,
   useSetActiveStarterPack,
-} from 'state/shell/starter-pack'
+} from '#/state/shell/starter-pack'
 import {
   DescriptionText,
   OnboardingControls,
@@ -44,12 +43,10 @@ import {News2_Stroke2_Corner0_Rounded as News} from '#/components/icons/News2'
 import {Trending2_Stroke2_Corner2_Rounded as Trending} from '#/components/icons/Trending2'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
-import {TOURS, useSetQueuedTour} from '#/tours'
 
 export function StepFinished() {
   const {_} = useLingui()
   const t = useTheme()
-  const {track} = useAnalytics()
   const {state, dispatch} = React.useContext(Context)
   const onboardDispatch = useOnboardingDispatch()
   const [saving, setSaving] = React.useState(false)
@@ -59,7 +56,6 @@ export function StepFinished() {
   const activeStarterPack = useActiveStarterPack()
   const setActiveStarterPack = useSetActiveStarterPack()
   const setHasCheckedForStarterPack = useSetHasCheckedForStarterPack()
-  const setQueuedTour = useSetQueuedTour()
   const {startProgressGuide} = useProgressGuideControls()
 
   const finishOnboarding = React.useCallback(async () => {
@@ -189,12 +185,9 @@ export function StepFinished() {
     setSaving(false)
     setActiveStarterPack(undefined)
     setHasCheckedForStarterPack(true)
-    setQueuedTour(TOURS.HOME)
     startProgressGuide('like-10-and-follow-7')
     dispatch({type: 'finish'})
     onboardDispatch({type: 'finish'})
-    track('OnboardingV2:StepFinished:End')
-    track('OnboardingV2:Complete')
     logEvent('onboarding:finished:nextPressed', {
       usedStarterPack: Boolean(starterPack),
       starterPackName: AppBskyGraphStarterpack.isRecord(starterPack?.record)
@@ -217,19 +210,13 @@ export function StepFinished() {
     agent,
     dispatch,
     onboardDispatch,
-    track,
     activeStarterPack,
     state,
     requestNotificationsPermission,
     setActiveStarterPack,
     setHasCheckedForStarterPack,
-    setQueuedTour,
     startProgressGuide,
   ])
-
-  React.useEffect(() => {
-    track('OnboardingV2:StepFinished:Start')
-  }, [track])
 
   return (
     <View style={[a.align_start]}>

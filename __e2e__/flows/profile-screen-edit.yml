@@ -11,6 +11,9 @@ appId: xyz.blueskyweb.app
 
 
 # Navigate to my profile
+- extendedWaitUntil:
+    visible:
+        id: "bottomBarSearchBtn"
 - tapOn:
     id: "bottomBarProfileBtn"
 

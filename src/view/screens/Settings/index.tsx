@@ -18,6 +18,17 @@ import {useLingui} from '@lingui/react'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {appVersion, BUNDLE_DATE, bundleInfo} from '#/lib/app-info'
+import {STATUS_PAGE_URL} from '#/lib/constants'
+import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
+import {useCustomPalette} from '#/lib/hooks/useCustomPalette'
+import {usePalette} from '#/lib/hooks/usePalette'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {HandIcon, HashtagIcon} from '#/lib/icons'
+import {makeProfileLink} from '#/lib/routes/links'
+import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
+import {NavigationProp} from '#/lib/routes/types'
+import {colors, s} from '#/lib/styles'
 import {isNative} from '#/platform/detection'
 import {useModalControls} from '#/state/modals'
 import {clearStorage} from '#/state/persisted'
@@ -33,26 +44,14 @@ import {SessionAccount, useSession, useSessionApi} from '#/state/session'
 import {useOnboardingDispatch, useSetMinimalShellMode} from '#/state/shell'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {appVersion, BUNDLE_DATE, bundleInfo} from 'lib/app-info'
-import {STATUS_PAGE_URL} from 'lib/constants'
-import {useAccountSwitcher} from 'lib/hooks/useAccountSwitcher'
-import {useCustomPalette} from 'lib/hooks/useCustomPalette'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {HandIcon, HashtagIcon} from 'lib/icons'
-import {makeProfileLink} from 'lib/routes/links'
-import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
-import {NavigationProp} from 'lib/routes/types'
-import {colors, s} from 'lib/styles'
-import {AccountDropdownBtn} from 'view/com/util/AccountDropdownBtn'
-import {ToggleButton} from 'view/com/util/forms/ToggleButton'
-import {Link, TextLink} from 'view/com/util/Link'
-import {SimpleViewHeader} from 'view/com/util/SimpleViewHeader'
-import {Text} from 'view/com/util/text/Text'
-import * as Toast from 'view/com/util/Toast'
-import {UserAvatar} from 'view/com/util/UserAvatar'
-import {ScrollView} from 'view/com/util/Views'
+import {AccountDropdownBtn} from '#/view/com/util/AccountDropdownBtn'
+import {ToggleButton} from '#/view/com/util/forms/ToggleButton'
+import {Link, TextLink} from '#/view/com/util/Link'
+import {SimpleViewHeader} from '#/view/com/util/SimpleViewHeader'
+import {Text} from '#/view/com/util/text/Text'
+import * as Toast from '#/view/com/util/Toast'
+import {UserAvatar} from '#/view/com/util/UserAvatar'
+import {ScrollView} from '#/view/com/util/Views'
 import {DeactivateAccountDialog} from '#/screens/Settings/components/DeactivateAccountDialog'
 import {atoms as a, useTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
@@ -94,10 +93,14 @@ function SettingsAccountCard({
         />
       </View>
       <View style={[s.flex1]}>
-        <Text type="md-bold" style={[pal.text, a.self_start]} numberOfLines={1}>
+        <Text
+          emoji
+          type="md-bold"
+          style={[pal.text, a.self_start]}
+          numberOfLines={1}>
           {profile?.displayName || account.handle}
         </Text>
-        <Text type="sm" style={pal.textLight} numberOfLines={1}>
+        <Text emoji type="sm" style={pal.textLight} numberOfLines={1}>
           {account.handle}
         </Text>
       </View>
@@ -142,7 +145,6 @@ export function SettingsScreen({}: Props) {
   const onboardingDispatch = useOnboardingDispatch()
   const navigation = useNavigation<NavigationProp>()
   const {isMobile} = useWebMediaQueries()
-  const {screen, track} = useAnalytics()
   const {openModal} = useModalControls()
   const {accounts, currentAccount} = useSession()
   const {mutate: clearPreferences} = useClearPreferencesMutation()
@@ -174,19 +176,16 @@ export function SettingsScreen({}: Props) {
 
   useFocusEffect(
     React.useCallback(() => {
-      screen('Settings')
       setMinimalShellMode(false)
-    }, [screen, setMinimalShellMode]),
+    }, [setMinimalShellMode]),
   )
 
   const onPressAddAccount = React.useCallback(() => {
-    track('Settings:AddAccountButtonClicked')
     setShowLoggedOut(true)
     closeAllActiveElements()
-  }, [track, setShowLoggedOut, closeAllActiveElements])
+  }, [setShowLoggedOut, closeAllActiveElements])
 
   const onPressChangeHandle = React.useCallback(() => {
-    track('Settings:ChangeHandleButtonClicked')
     openModal({
       name: 'change-handle',
       onChanged() {
@@ -198,7 +197,7 @@ export function SettingsScreen({}: Props) {
         }
       },
     })
-  }, [track, queryClient, openModal, currentAccount])
+  }, [queryClient, openModal, currentAccount])
 
   const onPressExportRepository = React.useCallback(() => {
     exportCarControl.open()
@@ -298,7 +297,7 @@ export function SettingsScreen({}: Props) {
           !isMobile && {borderLeftWidth: 1, borderRightWidth: 1},
         ]}>
         <View style={{flex: 1}}>
-          <Text type="title-lg" style={[pal.text, {fontWeight: 'bold'}]}>
+          <Text type="title-lg" style={[pal.text, {fontWeight: '600'}]}>
             <Trans>Settings</Trans>
           </Text>
         </View>

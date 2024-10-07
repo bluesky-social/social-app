@@ -37,6 +37,7 @@ import * as Toggle from '#/components/forms/Toggle'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {Loader} from '#/components/Loader'
+import {PortalComponent} from '#/components/Portal'
 import {Text} from '#/components/Typography'
 
 export type PostInteractionSettingsFormProps = {
@@ -54,13 +55,15 @@ export type PostInteractionSettingsFormProps = {
 
 export function PostInteractionSettingsControlledDialog({
   control,
+  Portal,
   ...rest
 }: PostInteractionSettingsFormProps & {
   control: Dialog.DialogControlProps
+  Portal?: PortalComponent
 }) {
   const {_} = useLingui()
   return (
-    <Dialog.Outer control={control}>
+    <Dialog.Outer control={control} Portal={Portal}>
       <Dialog.Handle />
       <Dialog.ScrollableInner
         label={_(msg`Edit post interaction settings`)}
@@ -231,7 +234,6 @@ export function PostInteractionSettingsForm({
 }: PostInteractionSettingsFormProps) {
   const t = useTheme()
   const {_} = useLingui()
-  const control = Dialog.useDialogContext()
   const {data: lists} = useMyListsQuery('curate')
   const [quotesEnabled, setQuotesEnabled] = React.useState(
     !(
@@ -437,9 +439,8 @@ export function PostInteractionSettingsForm({
       <Button
         label={_(msg`Save`)}
         onPress={onSave}
-        onAccessibilityEscape={control.close}
         color="primary"
-        size="medium"
+        size="large"
         variant="solid"
         style={a.mt_xl}>
         <ButtonText>{_(msg`Save`)}</ButtonText>
@@ -491,9 +492,7 @@ function Selectable({
             },
             style,
           ]}>
-          <Text style={[a.text_sm, isSelected && a.font_semibold]}>
-            {label}
-          </Text>
+          <Text style={[a.text_sm, isSelected && a.font_bold]}>{label}</Text>
           {isSelected ? (
             <Check size="sm" fill={t.palette.primary_500} />
           ) : (

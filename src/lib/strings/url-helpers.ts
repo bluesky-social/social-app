@@ -339,3 +339,21 @@ export function shortLinkToHref(url: string): string {
     return url
   }
 }
+
+export function getHostnameFromUrl(url: string | URL): string | null {
+  let urlp
+  try {
+    urlp = new URL(url)
+  } catch (e) {
+    return null
+  }
+  return urlp.hostname
+}
+
+export function getServiceAuthAudFromUrl(url: string | URL): string | null {
+  const hostname = getHostnameFromUrl(url)
+  if (!hostname) {
+    return null
+  }
+  return `did:web:${hostname}`
+}

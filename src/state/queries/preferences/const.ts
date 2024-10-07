@@ -37,5 +37,6 @@ export const DEFAULT_LOGGED_OUT_PREFERENCES: UsePreferencesQueryResponse = {
   bskyAppState: {
     queuedNudges: [],
     activeProgressGuide: undefined,
+    nuxs: [],
   },
 }

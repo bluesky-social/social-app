@@ -3,14 +3,18 @@ import {
   AppBskyEmbedImages,
   AppBskyEmbedRecord,
   AppBskyEmbedRecordWithMedia,
+  AppBskyEmbedVideo,
   AppBskyFeedPostgate,
+  AtUri,
   BskyAgent,
   ComAtprotoLabelDefs,
   RichText,
 } from '@atproto/api'
-import {AtUri} from '@atproto/api'
 
+import {isNetworkError} from '#/lib/strings/errors'
+import {shortenLinks, stripInvalidMentions} from '#/lib/strings/rich-text-manip'
 import {logger} from '#/logger'
+import {ComposerImage, compressImage} from '#/state/gallery'
 import {writePostgateRecord} from '#/state/queries/postgate'
 import {
   createThreadgateRecord,
@@ -18,12 +22,8 @@ import {
   threadgateAllowUISettingToAllowRecordValue,
   writeThreadgateRecord,
 } from '#/state/queries/threadgate'
-import {isNetworkError} from 'lib/strings/errors'
-import {shortenLinks, stripInvalidMentions} from 'lib/strings/rich-text-manip'
-import {isNative} from 'platform/detection'
-import {ImageModel} from 'state/models/media/image'
+import {ComposerState} from '#/view/com/composer/state/composer'
 import {LinkMeta} from '../link-meta/link-meta'
-import {safeDeleteAsync} from '../media/manip'
 import {uploadBlob} from './upload-blob'
 
 export {uploadBlob}
@@ -33,22 +33,18 @@ export interface ExternalEmbedDraft {
   isLoading: boolean
   meta?: LinkMeta
   embed?: AppBskyEmbedRecord.Main
-  localThumb?: ImageModel
+  localThumb?: ComposerImage
 }
 
 interface PostOpts {
+  composerState: ComposerState // TODO: Not used yet.
   rawText: string
   replyTo?: string
   quote?: {
     uri: string
     cid: string
   }
-  video?: {
-    uri: string
-    cid: string
-  }
   extLink?: ExternalEmbedDraft
-  images?: ImageModel[]
   labels?: string[]
   threadgate: ThreadgateAllowUISetting[]
   postgate: AppBskyFeedPostgate.Record
@@ -57,141 +53,17 @@ interface PostOpts {
 }
 
 export async function post(agent: BskyAgent, opts: PostOpts) {
-  let embed:
-    | AppBskyEmbedImages.Main
-    | AppBskyEmbedExternal.Main
-    | AppBskyEmbedRecord.Main
-    | AppBskyEmbedRecordWithMedia.Main
-    | undefined
   let reply
-  let rt = new RichText(
-    {text: opts.rawText.trimEnd()},
-    {
-      cleanNewlines: true,
-    },
-  )
+  let rt = new RichText({text: opts.rawText.trimEnd()}, {cleanNewlines: true})
 
   opts.onStateChange?.('Processing...')
+
   await rt.detectFacets(agent)
+
   rt = shortenLinks(rt)
   rt = stripInvalidMentions(rt)
 
-  // add quote embed if present
-  if (opts.quote) {
-    embed = {
-      $type: 'app.bsky.embed.record',
-      record: {
-        uri: opts.quote.uri,
-        cid: opts.quote.cid,
-      },
-    } as AppBskyEmbedRecord.Main
-  }
-
-  // add image embed if present
-  if (opts.images?.length) {
-    logger.debug(`Uploading images`, {
-      count: opts.images.length,
-    })
-
-    const images: AppBskyEmbedImages.Image[] = []
-    for (const image of opts.images) {
-      opts.onStateChange?.(`Uploading image #${images.length + 1}...`)
-      logger.debug(`Compressing image`)
-      await image.compress()
-      const path = image.compressed?.path ?? image.path
-      const {width, height} = image.compressed || image
-      logger.debug(`Uploading image`)
-      const res = await uploadBlob(agent, path, 'image/jpeg')
-      if (isNative) {
-        safeDeleteAsync(path)
-      }
-      images.push({
-        image: res.data.blob,
-        alt: image.altText ?? '',
-        aspectRatio: {width, height},
-      })
-    }
-
-    if (opts.quote) {
-      embed = {
-        $type: 'app.bsky.embed.recordWithMedia',
-        record: embed,
-        media: {
-          $type: 'app.bsky.embed.images',
-          images,
-        },
-      } as AppBskyEmbedRecordWithMedia.Main
-    } else {
-      embed = {
-        $type: 'app.bsky.embed.images',
-        images,
-      } as AppBskyEmbedImages.Main
-    }
-  }
-
-  // add external embed if present
-  if (opts.extLink && !opts.images?.length) {
-    if (opts.extLink.embed) {
-      embed = opts.extLink.embed
-    } else {
-      let thumb
-      if (opts.extLink.localThumb) {
-        opts.onStateChange?.('Uploading link thumbnail...')
-        let encoding
-        if (opts.extLink.localThumb.mime) {
-          encoding = opts.extLink.localThumb.mime
-        } else if (opts.extLink.localThumb.path.endsWith('.png')) {
-          encoding = 'image/png'
-        } else if (
-          opts.extLink.localThumb.path.endsWith('.jpeg') ||
-          opts.extLink.localThumb.path.endsWith('.jpg')
-        ) {
-          encoding = 'image/jpeg'
-        } else {
-          logger.warn('Unexpected image format for thumbnail, skipping', {
-            thumbnail: opts.extLink.localThumb.path,
-          })
-        }
-        if (encoding) {
-          const thumbUploadRes = await uploadBlob(
-            agent,
-            opts.extLink.localThumb.path,
-            encoding,
-          )
-          thumb = thumbUploadRes.data.blob
-          if (isNative) {
-            safeDeleteAsync(opts.extLink.localThumb.path)
-          }
-        }
-      }
-
-      if (opts.quote) {
-        embed = {
-          $type: 'app.bsky.embed.recordWithMedia',
-          record: embed,
-          media: {
-            $type: 'app.bsky.embed.external',
-            external: {
-              uri: opts.extLink.uri,
-              title: opts.extLink.meta?.title || '',
-              description: opts.extLink.meta?.description || '',
-              thumb,
-            },
-          } as AppBskyEmbedExternal.Main,
-        } as AppBskyEmbedRecordWithMedia.Main
-      } else {
-        embed = {
-          $type: 'app.bsky.embed.external',
-          external: {
-            uri: opts.extLink.uri,
-            title: opts.extLink.meta?.title || '',
-            description: opts.extLink.meta?.description || '',
-            thumb,
-          },
-        } as AppBskyEmbedExternal.Main
-      }
-    }
-  }
+  const embed = await resolveEmbed(agent, opts)
 
   // add replyTo if post is a reply to another post
   if (opts.replyTo) {
@@ -299,4 +171,125 @@ export async function post(agent: BskyAgent, opts: PostOpts) {
   }
 
   return res
+}
+
+async function resolveEmbed(
+  agent: BskyAgent,
+  opts: PostOpts,
+): Promise<
+  | AppBskyEmbedImages.Main
+  | AppBskyEmbedVideo.Main
+  | AppBskyEmbedExternal.Main
+  | AppBskyEmbedRecord.Main
+  | AppBskyEmbedRecordWithMedia.Main
+  | undefined
+> {
+  const media = await resolveMedia(agent, opts)
+  if (opts.quote) {
+    const quoteRecord = {
+      $type: 'app.bsky.embed.record',
+      record: {
+        uri: opts.quote.uri,
+        cid: opts.quote.cid,
+      },
+    }
+    if (media) {
+      return {
+        $type: 'app.bsky.embed.recordWithMedia',
+        record: quoteRecord,
+        media,
+      }
+    } else {
+      return quoteRecord
+    }
+  }
+  if (media) {
+    return media
+  }
+  if (opts.extLink?.embed) {
+    return opts.extLink.embed
+  }
+  return undefined
+}
+
+async function resolveMedia(
+  agent: BskyAgent,
+  opts: PostOpts,
+): Promise<
+  | AppBskyEmbedExternal.Main
+  | AppBskyEmbedImages.Main
+  | AppBskyEmbedVideo.Main
+  | undefined
+> {
+  const state = opts.composerState
+  const media = state.embed.media
+  if (media?.type === 'images') {
+    logger.debug(`Uploading images`, {
+      count: media.images.length,
+    })
+    opts.onStateChange?.(`Uploading images...`)
+    const images: AppBskyEmbedImages.Image[] = await Promise.all(
+      media.images.map(async (image, i) => {
+        logger.debug(`Compressing image #${i}`)
+        const {path, width, height, mime} = await compressImage(image)
+        logger.debug(`Uploading image #${i}`)
+        const res = await uploadBlob(agent, path, mime)
+        return {
+          image: res.data.blob,
+          alt: image.alt,
+          aspectRatio: {width, height},
+        }
+      }),
+    )
+    return {
+      $type: 'app.bsky.embed.images',
+      images,
+    }
+  }
+  if (media?.type === 'video' && media.video.status === 'done') {
+    const video = media.video
+    const captions = await Promise.all(
+      video.captions
+        .filter(caption => caption.lang !== '')
+        .map(async caption => {
+          const {data} = await agent.uploadBlob(caption.file, {
+            encoding: 'text/vtt',
+          })
+          return {lang: caption.lang, file: data.blob}
+        }),
+    )
+    return {
+      $type: 'app.bsky.embed.video',
+      video: video.pendingPublish.blobRef,
+      alt: video.altText || undefined,
+      captions: captions.length === 0 ? undefined : captions,
+      aspectRatio: {
+        width: video.asset.width,
+        height: video.asset.height,
+      },
+    }
+  }
+  if (opts.extLink) {
+    // TODO: Read this from composer state as well.
+    if (opts.extLink.embed) {
+      return undefined
+    }
+    let thumb
+    if (opts.extLink.localThumb) {
+      opts.onStateChange?.('Uploading link thumbnail...')
+      const {path, mime} = opts.extLink.localThumb.source
+      const res = await uploadBlob(agent, path, mime)
+      thumb = res.data.blob
+    }
+    return {
+      $type: 'app.bsky.embed.external',
+      external: {
+        uri: opts.extLink.uri,
+        title: opts.extLink.meta?.title || '',
+        description: opts.extLink.meta?.description || '',
+        thumb,
+      },
+    }
+  }
+  return undefined
 }

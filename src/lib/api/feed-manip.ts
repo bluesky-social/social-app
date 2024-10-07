@@ -81,7 +81,15 @@ export class FeedViewPostsSlice {
       isParentBlocked,
       isParentNotFound,
     })
-    if (!reply || reason) {
+    if (!reply) {
+      if (post.record.reply) {
+        // This reply wasn't properly hydrated by the AppView.
+        this.isOrphan = true
+        this.items[0].isParentNotFound = true
+      }
+      return
+    }
+    if (reason) {
       return
     }
     if (
@@ -263,7 +271,12 @@ export class FeedTuner {
           }
         } else {
           if (!dryRun) {
-            this.seenUris.add(item.post.uri)
+            // Reposting a reply elevates it to top-level, so its parent/root won't be displayed.
+            // Disable in-thread dedupe for this case since we don't want to miss them later.
+            const disableDedupe = slice.isReply && slice.isRepost
+            if (!disableDedupe) {
+              this.seenUris.add(item.post.uri)
+            }
           }
         }
       }
@@ -392,27 +405,20 @@ export class FeedTuner {
       slices: FeedViewPostsSlice[],
       _dryRun: boolean,
     ): FeedViewPostsSlice[] => {
-      const candidateSlices = slices.slice()
-
       // early return if no languages have been specified
       if (!preferredLangsCode2.length || preferredLangsCode2.length === 0) {
         return slices
       }
 
-      for (let i = 0; i < slices.length; i++) {
-        let hasPreferredLang = false
-        for (const item of slices[i].items) {
+      const candidateSlices = slices.filter(slice => {
+        for (const item of slice.items) {
           if (isPostInLanguage(item.post, preferredLangsCode2)) {
-            hasPreferredLang = true
-            break
+            return true
           }
         }
-
         // if item does not fit preferred language, remove it
-        if (!hasPreferredLang) {
-          candidateSlices.splice(i, 1)
-        }
-      }
+        return false
+      })
 
       // if the language filter cleared out the entire page, return the original set
       // so that something always shows

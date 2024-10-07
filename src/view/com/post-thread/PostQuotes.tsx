@@ -14,24 +14,23 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {usePostQuotesQuery} from '#/state/queries/post-quotes'
 import {useResolveUriQuery} from '#/state/queries/resolve-uri'
 import {useInitialNumToRender} from 'lib/hooks/useInitialNumToRender'
+import {isWeb} from 'platform/detection'
 import {Post} from 'view/com/post/Post'
-import {
-  ListFooter,
-  ListHeaderDesktop,
-  ListMaybePlaceholder,
-} from '#/components/Lists'
+import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
 import {List} from '../util/List'
 
 function renderItem({
   item,
+  index,
 }: {
   item: {
     post: AppBskyFeedDefs.PostView
     moderation: ModerationDecision
     record: AppBskyFeedPost.Record
   }
+  index: number
 }) {
-  return <Post post={item.post} />
+  return <Post post={item.post} hideTopBorder={index === 0 && !isWeb} />
 }
 
 function keyExtractor(item: {
@@ -45,7 +44,6 @@ function keyExtractor(item: {
 export function PostQuotes({uri}: {uri: string}) {
   const {_} = useLingui()
   const initialNumToRender = useInitialNumToRender()
-
   const [isPTRing, setIsPTRing] = useState(false)
 
   const {
@@ -99,11 +97,18 @@ export function PostQuotes({uri}: {uri: string}) {
     }
   }, [isFetchingNextPage, hasNextPage, isError, fetchNextPage])
 
-  if (isLoadingUri || isLoadingQuotes || isError) {
+  if (quotes.length < 1) {
     return (
       <ListMaybePlaceholder
         isLoading={isLoadingUri || isLoadingQuotes}
         isError={isError}
+        emptyType="results"
+        emptyTitle={_(msg`No quotes yet`)}
+        emptyMessage={_(
+          msg`Nobody has quoted this yet. Maybe you should be the first!`,
+        )}
+        errorMessage={cleanError(resolveError || error)}
+        sideBorders={false}
       />
     )
   }
@@ -119,7 +124,6 @@ export function PostQuotes({uri}: {uri: string}) {
       onRefresh={onRefresh}
       onEndReached={onEndReached}
       onEndReachedThreshold={4}
-      ListHeaderComponent={<ListHeaderDesktop title={_(msg`Quotes`)} />}
       ListFooterComponent={
         <ListFooter
           isFetchingNextPage={isFetchingNextPage}
@@ -133,6 +137,7 @@ export function PostQuotes({uri}: {uri: string}) {
       desktopFixedHeight
       initialNumToRender={initialNumToRender}
       windowSize={11}
+      sideBorders={false}
     />
   )
 }

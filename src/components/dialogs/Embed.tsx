@@ -43,7 +43,7 @@ function EmbedDialogInner({
   timestamp,
 }: Omit<EmbedDialogProps, 'control'>) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const ref = useRef<TextInput>(null)
   const [copied, setCopied] = useState(false)
 
@@ -86,9 +86,9 @@ function EmbedDialogInner({
     )} (<a href="${escapeHtml(profileHref)}">@${escapeHtml(
       postAuthor.handle,
     )}</a>) <a href="${escapeHtml(href)}">${escapeHtml(
-      niceDate(timestamp),
+      niceDate(i18n, timestamp),
     )}</a></blockquote><script async src="${EMBED_SCRIPT}" charset="utf-8"></script>`
-  }, [postUri, postCid, record, timestamp, postAuthor])
+  }, [i18n, postUri, postCid, record, timestamp, postAuthor])
 
   return (
     <Dialog.Inner label="Embed post" style={[a.gap_md, {maxWidth: 500}]}>
@@ -106,21 +106,23 @@ function EmbedDialogInner({
       </View>
 
       <View style={[a.flex_row, a.gap_sm]}>
-        <TextField.Root>
-          <TextField.Icon icon={CodeBrackets} />
-          <TextField.Input
-            label={_(msg`Embed HTML code`)}
-            editable={false}
-            selection={{start: 0, end: snippet.length}}
-            value={snippet}
-            style={{}}
-          />
-        </TextField.Root>
+        <View style={[a.flex_1]}>
+          <TextField.Root>
+            <TextField.Icon icon={CodeBrackets} />
+            <TextField.Input
+              label={_(msg`Embed HTML code`)}
+              editable={false}
+              selection={{start: 0, end: snippet.length}}
+              value={snippet}
+              style={{}}
+            />
+          </TextField.Root>
+        </View>
         <Button
           label={_(msg`Copy code`)}
           color="primary"
           variant="solid"
-          size="medium"
+          size="large"
           onPress={() => {
             ref.current?.focus()
             ref.current?.setSelection(0, snippet.length)

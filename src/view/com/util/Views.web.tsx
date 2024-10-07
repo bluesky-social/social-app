@@ -47,7 +47,7 @@ export const CenteredView = React.forwardRef(function CenteredView(
   if (!isMobile) {
     style = addStyle(style, styles.container)
   }
-  if (sideBorders) {
+  if (sideBorders && !isMobile) {
     style = addStyle(style, {
       borderLeftWidth: StyleSheet.hairlineWidth,
       borderRightWidth: StyleSheet.hairlineWidth,

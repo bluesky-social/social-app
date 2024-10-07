@@ -17,7 +17,6 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {WebView} from 'react-native-webview'
 import {Image} from 'expo-image'
 import {AppBskyEmbedExternal} from '@atproto/api'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
@@ -26,9 +25,12 @@ import {NavigationProp} from '#/lib/routes/types'
 import {EmbedPlayerParams, getPlayerAspect} from '#/lib/strings/embed-player'
 import {isNative} from '#/platform/detection'
 import {useExternalEmbedsPrefs} from '#/state/preferences'
-import {atoms as a} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {EmbedConsentDialog} from '#/components/dialogs/EmbedConsent'
+import {Fill} from '#/components/Fill'
+import {MediaInsetBorder} from '#/components/MediaInsetBorder'
+import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
 import {EventStopper} from '../EventStopper'
 
 interface ShouldStartLoadRequest {
@@ -59,7 +61,7 @@ function PlaceholderOverlay({
         onPress={onPress}
         style={[styles.overlayContainer, styles.topRadius]}>
         {!isPlayerActive ? (
-          <FontAwesomeIcon icon="play" size={42} color="white" />
+          <PlayButtonIcon />
         ) : (
           <ActivityIndicator size="large" color="white" />
         )}
@@ -106,6 +108,16 @@ function Player({
         style={styles.webview}
         setSupportMultipleWindows={false} // Prevent any redirects from opening a new window (ads)
       />
+
+      <MediaInsetBorder
+        opaque
+        style={[
+          {
+            borderBottomLeftRadius: 0,
+            borderBottomRightRadius: 0,
+          },
+        ]}
+      />
     </EventStopper>
   )
 }
@@ -118,6 +130,7 @@ export function ExternalPlayer({
   link: AppBskyEmbedExternal.ViewExternal
   params: EmbedPlayerParams
 }) {
+  const t = useTheme()
   const navigation = useNavigation<NavigationProp>()
   const insets = useSafeAreaInsets()
   const windowDims = useWindowDimensions()
@@ -211,14 +224,69 @@ export function ExternalPlayer({
         onAccept={onAcceptConsent}
       />
 
-      <Animated.View ref={viewRef} collapsable={false} style={[aspect]}>
-        {link.thumb && (!isPlayerActive || isLoading) && (
-          <Image
-            style={[a.flex_1, styles.topRadius]}
-            source={{uri: link.thumb}}
-            accessibilityIgnoresInvertColors
+      <Animated.View
+        ref={viewRef}
+        collapsable={false}
+        style={[
+          aspect,
+          a.rounded_md,
+          a.overflow_hidden,
+          {
+            borderBottomLeftRadius: 0,
+            borderBottomRightRadius: 0,
+          },
+        ]}>
+        {link.thumb && (!isPlayerActive || isLoading) ? (
+          <>
+            <Image
+              style={[a.flex_1, styles.topRadius]}
+              source={{uri: link.thumb}}
+              accessibilityIgnoresInvertColors
+            />
+            <Fill
+              style={[
+                a.rounded_md,
+                t.name === 'light' ? t.atoms.bg_contrast_975 : t.atoms.bg,
+                {
+                  borderBottomLeftRadius: 0,
+                  borderBottomRightRadius: 0,
+                  opacity: 0.3,
+                },
+              ]}
+            />
+            <MediaInsetBorder
+              opaque
+              style={[
+                {
+                  borderBottomLeftRadius: 0,
+                  borderBottomRightRadius: 0,
+                },
+              ]}
+            />
+          </>
+        ) : (
+          <Fill
+            style={[
+              a.rounded_md,
+              {
+                backgroundColor:
+                  t.name === 'light' ? t.palette.contrast_975 : 'black',
+                borderBottomLeftRadius: 0,
+                borderBottomRightRadius: 0,
+                opacity: 0.3,
+              },
+            ]}
           />
         )}
+        <MediaInsetBorder
+          opaque
+          style={[
+            {
+              borderBottomLeftRadius: 0,
+              borderBottomRightRadius: 0,
+            },
+          ]}
+        />
         <PlaceholderOverlay
           isLoading={isLoading}
           isPlayerActive={isPlayerActive}
@@ -236,14 +304,13 @@ export function ExternalPlayer({
 
 const styles = StyleSheet.create({
   topRadius: {
-    borderTopLeftRadius: 6,
-    borderTopRightRadius: 6,
+    borderTopLeftRadius: a.rounded_md.borderRadius,
+    borderTopRightRadius: a.rounded_md.borderRadius,
   },
   overlayContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.5)',
   },
   overlayLayer: {
     zIndex: 2,
@@ -252,6 +319,8 @@ const styles = StyleSheet.create({
     zIndex: 3,
   },
   webview: {
+    borderTopRightRadius: a.rounded_md.borderRadius,
+    borderTopLeftRadius: a.rounded_md.borderRadius,
     backgroundColor: 'transparent',
   },
   gifContainer: {
