@@ -123,6 +123,11 @@ export function useSharedInputStyles() {
 
 export type InputProps = Omit<TextInputProps, 'value' | 'onChangeText'> & {
   label: string
+  /**
+   * @deprecated Controlled inputs are *strongly* discouraged. Use `initialValue` instead where possible.
+   *
+   * See https://github.com/facebook/react-native-website/pull/4247
+   */
   value?: string
   onChangeText?: (value: string) => void
   isInvalid?: boolean
