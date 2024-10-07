@@ -254,110 +254,111 @@ function DialogInner({
   )
 
   return (
-    <>
-      <DialogHeader renderLeft={cancelButton} renderRight={saveButton} />
-      <Dialog.ScrollableInner
-        label={_(msg`Edit profile`)}
-        contentContainerStyle={[a.px_0, a.pt_0]}>
-        <View style={[a.relative]}>
-          <UserBanner
-            banner={userBanner}
-            onSelectNewBanner={onSelectNewBanner}
+    <Dialog.ScrollableInner
+      label={_(msg`Edit profile`)}
+      style={[a.overflow_hidden]}
+      contentContainerStyle={[a.px_0, a.pt_0]}
+      header={
+        <DialogHeader renderLeft={cancelButton} renderRight={saveButton} />
+      }>
+      <View style={[a.relative]}>
+        <UserBanner
+          banner={userBanner}
+          onSelectNewBanner={onSelectNewBanner}
+          Portal={Portal.Portal}
+        />
+        <View
+          style={[
+            a.absolute,
+            {
+              top: 80,
+              left: 20,
+              width: 84,
+              height: 84,
+              borderWidth: 2,
+              borderRadius: 42,
+              borderColor: t.atoms.bg.backgroundColor,
+            },
+          ]}>
+          <EditableUserAvatar
+            size={80}
+            avatar={userAvatar}
+            onSelectNewAvatar={onSelectNewAvatar}
             Portal={Portal.Portal}
           />
-          <View
-            style={[
-              a.absolute,
-              {
-                top: 80,
-                left: 20,
-                width: 84,
-                height: 84,
-                borderWidth: 2,
-                borderRadius: 42,
-                borderColor: t.atoms.bg.backgroundColor,
-              },
-            ]}>
-            <EditableUserAvatar
-              size={80}
-              avatar={userAvatar}
-              onSelectNewAvatar={onSelectNewAvatar}
-              Portal={Portal.Portal}
+        </View>
+      </View>
+      {isUpdateProfileError && (
+        <View style={[a.mt_xl]}>
+          <ErrorMessage message={cleanError(updateProfileError)} />
+        </View>
+      )}
+      {imageError !== '' && (
+        <View style={[a.mt_xl]}>
+          <ErrorMessage message={imageError} />
+        </View>
+      )}
+      <View style={[a.mt_4xl, a.px_xl, a.gap_xl]}>
+        <View>
+          <TextField.LabelText>
+            <Trans>Display name</Trans>
+          </TextField.LabelText>
+          <TextField.Root isInvalid={displayNameTooLong}>
+            <Dialog.Input
+              defaultValue={displayName}
+              onChangeText={setDisplayName}
+              label={_(msg`Display name`)}
+              placeholder={_(msg`e.g. Alice Lastname`)}
             />
-          </View>
+          </TextField.Root>
+          {displayNameTooLong && (
+            <TextField.SuffixText
+              style={[
+                a.text_sm,
+                a.mt_xs,
+                a.font_bold,
+                {color: t.palette.negative_400},
+              ]}
+              label={_(msg`Display name is too long`)}>
+              <Trans>
+                Display name is too long. The maximum number of characters is{' '}
+                {DISPLAY_NAME_MAX_GRAPHEMES}.
+              </Trans>
+            </TextField.SuffixText>
+          )}
         </View>
-        {isUpdateProfileError && (
-          <View style={[a.mt_xl]}>
-            <ErrorMessage message={cleanError(updateProfileError)} />
-          </View>
-        )}
-        {imageError !== '' && (
-          <View style={[a.mt_xl]}>
-            <ErrorMessage message={imageError} />
-          </View>
-        )}
-        <View style={[a.mt_4xl, a.px_xl, a.gap_xl]}>
-          <View>
-            <TextField.LabelText>
-              <Trans>Display name</Trans>
-            </TextField.LabelText>
-            <TextField.Root isInvalid={displayNameTooLong}>
-              <Dialog.Input
-                defaultValue={displayName}
-                onChangeText={setDisplayName}
-                label={_(msg`Display name`)}
-                placeholder={_(msg`e.g. Alice Lastname`)}
-              />
-            </TextField.Root>
-            {displayNameTooLong && (
-              <TextField.SuffixText
-                style={[
-                  a.text_sm,
-                  a.mt_xs,
-                  a.font_bold,
-                  {color: t.palette.negative_400},
-                ]}
-                label={_(msg`Display name is too long`)}>
-                <Trans>
-                  Display name is too long. The maximum number of characters is{' '}
-                  {DISPLAY_NAME_MAX_GRAPHEMES}.
-                </Trans>
-              </TextField.SuffixText>
-            )}
-          </View>
 
-          <View>
-            <TextField.LabelText>
-              <Trans>Description</Trans>
-            </TextField.LabelText>
-            <TextField.Root isInvalid={descriptionTooLong}>
-              <Dialog.Input
-                defaultValue={description}
-                onChangeText={setDescription}
-                multiline
-                label={_(msg`Display name`)}
-                placeholder={_(msg`Tell us a bit about yourself`)}
-              />
-            </TextField.Root>
-            {descriptionTooLong && (
-              <TextField.SuffixText
-                style={[
-                  a.text_sm,
-                  a.mt_xs,
-                  a.font_bold,
-                  {color: t.palette.negative_400},
-                ]}
-                label={_(msg`Description is too long`)}>
-                <Trans>
-                  Description is too long. The maximum number of characters is{' '}
-                  {DESCRIPTION_MAX_GRAPHEMES}.
-                </Trans>
-              </TextField.SuffixText>
-            )}
-          </View>
+        <View>
+          <TextField.LabelText>
+            <Trans>Description</Trans>
+          </TextField.LabelText>
+          <TextField.Root isInvalid={descriptionTooLong}>
+            <Dialog.Input
+              defaultValue={description}
+              onChangeText={setDescription}
+              multiline
+              label={_(msg`Display name`)}
+              placeholder={_(msg`Tell us a bit about yourself`)}
+            />
+          </TextField.Root>
+          {descriptionTooLong && (
+            <TextField.SuffixText
+              style={[
+                a.text_sm,
+                a.mt_xs,
+                a.font_bold,
+                {color: t.palette.negative_400},
+              ]}
+              label={_(msg`Description is too long`)}>
+              <Trans>
+                Description is too long. The maximum number of characters is{' '}
+                {DESCRIPTION_MAX_GRAPHEMES}.
+              </Trans>
+            </TextField.SuffixText>
+          )}
         </View>
-      </Dialog.ScrollableInner>
-    </>
+      </View>
+    </Dialog.ScrollableInner>
   )
 }
 
@@ -381,6 +382,7 @@ function DialogHeader({
         {minHeight: 50},
         a.border_b,
         t.atoms.border_contrast_medium,
+        t.atoms.bg,
       ]}>
       {renderLeft && (
         <View style={[a.absolute, {left: 6}]}>{renderLeft()}</View>
