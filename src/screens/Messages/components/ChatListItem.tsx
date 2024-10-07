@@ -23,6 +23,7 @@ import {
 import {isNative} from '#/platform/detection'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
+import {useMarkAsReadMutation} from '#/state/queries/messages/conversation'
 import {useSession} from '#/state/session'
 import {TimeElapsed} from '#/view/com/util/TimeElapsed'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
@@ -32,7 +33,7 @@ import {useDialogControl} from '#/components/Dialog'
 import {ConvoMenu} from '#/components/dms/ConvoMenu'
 import {LeaveConvoPrompt} from '#/components/dms/LeaveConvoPrompt'
 import {Bell2Off_Filled_Corner0_Rounded as BellStroke} from '#/components/icons/Bell2'
-import {Envelope_Filled_Stroke2_Corner0_Rounded} from '#/components/icons/Envelope'
+import {Envelope_Open_Stroke2_Corner0_Rounded as EnvelopeOpen} from '#/components/icons/EnveopeOpen'
 import {Trash_Stroke2_Corner0_Rounded} from '#/components/icons/Trash'
 import {Link} from '#/components/Link'
 import {useMenuControl} from '#/components/Menu'
@@ -82,11 +83,13 @@ function ChatListItemReady({
   const leaveConvoControl = useDialogControl()
   const {gtMobile} = useBreakpoints()
   const profile = useProfileShadow(profileUnshadowed)
+  const {mutate: markAsRead} = useMarkAsReadMutation()
   const moderation = React.useMemo(
     () => moderateProfile(profile, moderationOpts),
     [profile, moderationOpts],
   )
   const playHaptic = useHaptics()
+  const isUnread = convo.unreadCount > 0
 
   const blockInfo = useMemo(() => {
     const modui = moderation.ui('profileView')
@@ -202,24 +205,37 @@ function ChatListItemReady({
     menuControl.open()
   }, [playHaptic, menuControl])
 
+  const markReadAction = {
+    threshold: 120,
+    color: t.palette.primary_500,
+    icon: EnvelopeOpen,
+    action: () => {
+      markAsRead({
+        convoId: convo.id,
+      })
+    },
+  }
+
+  const deleteAction = {
+    threshold: 225,
+    color: t.palette.negative_500,
+    icon: Trash_Stroke2_Corner0_Rounded,
+    action: () => {
+      leaveConvoControl.open()
+    },
+  }
+
+  const actions = isUnread
+    ? {
+        leftFirst: markReadAction,
+        leftSecond: deleteAction,
+      }
+    : {
+        leftFirst: deleteAction,
+      }
+
   return (
-    <GestureActionView
-      actions={{
-        leftFirst: {
-          threshold: 120,
-          color: t.palette.primary_500,
-          icon: Envelope_Filled_Stroke2_Corner0_Rounded,
-          action: () => {},
-        },
-        leftSecond: {
-          threshold: 225,
-          color: t.palette.negative_500,
-          icon: Trash_Stroke2_Corner0_Rounded,
-          action: () => {
-            leaveConvoControl.open()
-          },
-        },
-      }}>
+    <GestureActionView actions={actions}>
       <View
         // @ts-expect-error web only
         onMouseEnter={onMouseEnter}

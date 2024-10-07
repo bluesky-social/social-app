@@ -9,6 +9,7 @@ import Animated, {
   useAnimatedReaction,
   useAnimatedStyle,
   useDerivedValue,
+  useReducedMotion,
   useSharedValue,
   withSequence,
   withTiming,
@@ -55,6 +56,7 @@ export function GestureActionView({
   >(null)
 
   const haptic = useHaptics()
+  const isReducedMotion = useReducedMotion()
 
   const transX = useSharedValue(0)
   const clampedTransX = useDerivedValue(() => {
@@ -70,6 +72,10 @@ export function GestureActionView({
 
   const runPopAnimation = () => {
     'worklet'
+    if (isReducedMotion) {
+      return
+    }
+
     iconScale.value = withSequence(
       withTiming(1.2, {duration: 175}),
       withTiming(1, {duration: 100}),
