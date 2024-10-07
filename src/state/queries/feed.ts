@@ -82,7 +82,7 @@ const feedSourceNSIDs = {
 
 export function hydrateFeedGenerator(
   view: AppBskyFeedDefs.GeneratorView,
-): FeedSourceInfo {
+): FeedSourceFeedInfo {
   const urip = new AtUri(view.uri)
   const collection =
     urip.collection === 'app.bsky.feed.generator' ? 'feed' : 'lists'
@@ -114,7 +114,9 @@ export function hydrateFeedGenerator(
   }
 }
 
-export function hydrateList(view: AppBskyGraphDefs.ListView): FeedSourceInfo {
+export function hydrateList(
+  view: AppBskyGraphDefs.ListView,
+): FeedSourceListInfo {
   const urip = new AtUri(view.uri)
   const collection =
     urip.collection === 'app.bsky.feed.generator' ? 'feed' : 'lists'

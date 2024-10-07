@@ -8,7 +8,8 @@ import {
   EmojiPickerState,
 } from 'view/com/composer/text-input/web/EmojiPicker.web'
 import {useBreakpoints, useTheme} from '#/alf'
-import {ComposePost} from '../com/composer/Composer'
+// import {ComposePost} from '../com/composer/Composer'
+import {PostComposer} from '../com/composer-new/NewComposer'
 
 const BOTTOM_BAR_HEIGHT = 61
 
@@ -55,16 +56,7 @@ export function Composer({}: {winHeight: number}) {
           t.atoms.bg,
           t.atoms.border_contrast_medium,
         ]}>
-        <ComposePost
-          replyTo={state.replyTo}
-          quote={state.quote}
-          quoteCount={state?.quoteCount}
-          onPost={state.onPost}
-          mention={state.mention}
-          openEmojiPicker={onOpenPicker}
-          text={state.text}
-          imageUris={state.imageUris}
-        />
+        <PostComposer data={state} openEmojiPicker={onOpenPicker} />
       </View>
       <EmojiPicker state={pickerState} close={onClosePicker} />
     </View>

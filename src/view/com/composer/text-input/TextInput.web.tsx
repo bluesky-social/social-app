@@ -12,44 +12,30 @@ import {Placeholder} from '@tiptap/extension-placeholder'
 import {Text as TiptapText} from '@tiptap/extension-text'
 import {generateJSON} from '@tiptap/html'
 import {EditorContent, JSONContent, useEditor} from '@tiptap/react'
+import EventEmitter from 'eventemitter3'
 
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useActorAutocompleteFn} from '#/state/queries/actor-autocomplete'
 import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
 import {blobToDataUri, isUriImage} from 'lib/media/util'
-import {textInputWebEmitter} from '#/view/com/composer/text-input/textInputWebEmitter'
 import {
   LinkFacetMatch,
   suggestLinkCardUri,
 } from 'view/com/composer/text-input/text-input-util'
-import {atoms as a, useAlf} from '#/alf'
 import {Portal} from '#/components/Portal'
-import {normalizeTextStyles} from '#/components/Typography'
 import {Text} from '../../util/text/Text'
+import type {TextInputProps} from './TextInput'
 import {createSuggestion} from './web/Autocomplete'
 import {Emoji} from './web/EmojiPicker.web'
 import {LinkDecorator} from './web/LinkDecorator'
 import {TagDecorator} from './web/TagDecorator'
 
-export interface TextInputRef {
-  focus: () => void
-  blur: () => void
-  getCursorPosition: () => DOMRect | undefined
-}
-
-interface TextInputProps {
-  richtext: RichText
-  placeholder: string
-  suggestedLinks: Set<string>
-  setRichText: (v: RichText | ((v: RichText) => RichText)) => void
-  onPhotoPasted: (uri: string) => void
-  onPressPublish: (richtext: RichText) => Promise<void>
-  onNewLink: (uri: string) => void
-  onError: (err: string) => void
-}
+export const textInputWebEmitter = new EventEmitter()
 
 export const TextInput = React.forwardRef(function TextInputImpl(
   {
+    grow,
+    disabled,
     richtext,
     placeholder,
     setRichText,
@@ -60,7 +46,6 @@ export const TextInput = React.forwardRef(function TextInputImpl(
   TextInputProps,
   ref,
 ) {
-  const {theme: t, fonts} = useAlf()
   const autocomplete = useActorAutocompleteFn()
   const pal = usePalette('default')
   const modeClass = useColorSchemeStyle('ProseMirror-light', 'ProseMirror-dark')
@@ -81,6 +66,7 @@ export const TextInput = React.forwardRef(function TextInputImpl(
       Paragraph,
       Placeholder.configure({
         placeholder,
+        showOnlyWhenEditable: false,
       }),
       TiptapText,
       History,
@@ -90,26 +76,34 @@ export const TextInput = React.forwardRef(function TextInputImpl(
   )
 
   React.useEffect(() => {
-    textInputWebEmitter.addListener('publish', onPressPublish)
-    return () => {
-      textInputWebEmitter.removeListener('publish', onPressPublish)
+    if (!disabled && onPressPublish) {
+      textInputWebEmitter.addListener('publish', onPressPublish)
+      return () => {
+        textInputWebEmitter.removeListener('publish', onPressPublish)
+      }
     }
-  }, [onPressPublish])
+  }, [disabled, onPressPublish])
   React.useEffect(() => {
-    textInputWebEmitter.addListener('media-pasted', onPhotoPasted)
-    return () => {
-      textInputWebEmitter.removeListener('media-pasted', onPhotoPasted)
+    if (!disabled) {
+      textInputWebEmitter.addListener('photo-pasted', onPhotoPasted)
+      return () => {
+        textInputWebEmitter.removeListener('photo-pasted', onPhotoPasted)
+      }
     }
-  }, [onPhotoPasted])
+  }, [disabled, onPhotoPasted])
 
   React.useEffect(() => {
+    if (disabled) {
+      return
+    }
+
     const handleDrop = (event: DragEvent) => {
       const transfer = event.dataTransfer
       if (transfer) {
         const items = transfer.items
 
-        getImageOrVideoFromUri(items, (uri: string) => {
-          textInputWebEmitter.emit('media-pasted', uri)
+        getImageFromUri(items, (uri: string) => {
+          textInputWebEmitter.emit('photo-pasted', uri)
         })
       }
 
@@ -140,10 +134,10 @@ export const TextInput = React.forwardRef(function TextInputImpl(
       document.body.removeEventListener('dragover', handleDragEnter)
       document.body.removeEventListener('dragleave', handleDragLeave)
     }
-  }, [setIsDropping])
+  }, [disabled, setIsDropping])
 
-  const pastSuggestedUris = useRef(new Set<string>())
-  const prevDetectedUris = useRef(new Map<string, LinkFacetMatch>())
+  const pastSuggestedUris = useRef<Set<string>>()
+  const prevDetectedUris = useRef<Map<string, LinkFacetMatch>>()
   const editor = useEditor(
     {
       extensions,
@@ -151,26 +145,16 @@ export const TextInput = React.forwardRef(function TextInputImpl(
         attributes: {
           class: modeClass,
         },
-        handlePaste: (view, event) => {
-          const clipboardData = event.clipboardData
-          let preventDefault = false
+        handlePaste: (_, event) => {
+          const items = event.clipboardData?.items
 
-          if (clipboardData) {
-            if (clipboardData.types.includes('text/html')) {
-              // Rich-text formatting is pasted, try retrieving plain text
-              const text = clipboardData.getData('text/plain')
-              // `pasteText` will invoke this handler again, but `clipboardData` will be null.
-              view.pasteText(text)
-              preventDefault = true
-            }
-            getImageOrVideoFromUri(clipboardData.items, (uri: string) => {
-              textInputWebEmitter.emit('media-pasted', uri)
-            })
-            if (preventDefault) {
-              // Return `true` to prevent ProseMirror's default paste behavior.
-              return true
-            }
+          if (items === undefined) {
+            return
           }
+
+          getImageFromUri(items, (uri: string) => {
+            textInputWebEmitter.emit('photo-pasted', uri)
+          })
         },
         handleKeyDown: (_, event) => {
           if ((event.metaKey || event.ctrlKey) && event.code === 'Enter') {
@@ -179,7 +163,12 @@ export const TextInput = React.forwardRef(function TextInputImpl(
           }
         },
       },
-      content: generateJSON(richtext.text.toString(), extensions),
+      content: generateJSON(
+        richtext.text
+          .toString()
+          .replace(/^[^\n]*$/gm, line => `<p>${escapeHTML(line)}</p>`),
+        extensions,
+      ),
       autofocus: 'end',
       editable: true,
       injectCSS: true,
@@ -217,7 +206,7 @@ export const TextInput = React.forwardRef(function TextInputImpl(
           isPaste,
           nextDetectedUris,
           prevDetectedUris.current,
-          pastSuggestedUris.current,
+          (pastSuggestedUris.current ||= new Set()),
         )
         prevDetectedUris.current = nextDetectedUris
         if (suggestedUri) {
@@ -225,7 +214,7 @@ export const TextInput = React.forwardRef(function TextInputImpl(
         }
       },
     },
-    [modeClass],
+    [modeClass, extensions],
   )
 
   const onEmojiInserted = React.useCallback(
@@ -241,8 +230,18 @@ export const TextInput = React.forwardRef(function TextInputImpl(
     }
   }, [onEmojiInserted])
 
+  React.useLayoutEffect(() => {
+    if (editor) {
+      editor.setEditable(!disabled)
+      // `editable` doesn't control whether it can be tabbed-into or not
+      editor.view.dom.tabIndex = !disabled ? 0 : -1
+    }
+  }, [editor, disabled])
+
   React.useImperativeHandle(ref, () => ({
-    focus: () => {}, // TODO
+    focus: () => {
+      editor?.view.focus()
+    },
     blur: () => {}, // TODO
     getCursorPosition: () => {
       const pos = editor?.state.selection.$anchor.pos
@@ -250,32 +249,14 @@ export const TextInput = React.forwardRef(function TextInputImpl(
     },
   }))
 
-  const inputStyle = React.useMemo(() => {
-    const style = normalizeTextStyles(
-      [a.text_lg, a.leading_snug, t.atoms.text],
-      {
-        fontScale: fonts.scaleMultiplier,
-        fontFamily: fonts.family,
-        flags: {},
-      },
-    )
-    /*
-     * TipTap component isn't a RN View and while it seems to convert
-     * `fontSize` to `px`, it doesn't convert `lineHeight`.
-     *
-     * `lineHeight` should always be defined here, this is defensive.
-     */
-    style.lineHeight = style.lineHeight
-      ? ((style.lineHeight + 'px') as unknown as number)
-      : undefined
-    return style
-  }, [t, fonts])
-
   return (
     <>
       <View style={styles.container}>
-        {/* @ts-ignore inputStyle is fine */}
-        <EditorContent editor={editor} style={inputStyle} />
+        <EditorContent
+          editor={editor}
+          className={'post-composer' + (grow ? ' can-grow' : '')}
+          style={{color: pal.text.color as string}}
+        />
       </View>
 
       {isDropping && (
@@ -334,10 +315,7 @@ function editorJsonToText(
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignSelf: 'flex-start',
-    padding: 5,
-    marginLeft: 8,
-    marginBottom: 10,
+    alignSelf: 'stretch',
   },
   dropContainer: {
     backgroundColor: '#0007',
@@ -368,7 +346,7 @@ const styles = StyleSheet.create({
   },
 })
 
-function getImageOrVideoFromUri(
+function getImageFromUri(
   items: DataTransferItemList,
   callback: (uri: string) => void,
 ) {
@@ -385,10 +363,6 @@ function getImageOrVideoFromUri(
           if (blob.type.startsWith('image/')) {
             blobToDataUri(blob).then(callback, err => console.error(err))
           }
-
-          if (blob.type.startsWith('video/')) {
-            blobToDataUri(blob).then(callback, err => console.error(err))
-          }
         }
       })
     } else if (type.startsWith('image/')) {
@@ -397,12 +371,12 @@ function getImageOrVideoFromUri(
       if (file) {
         blobToDataUri(file).then(callback, err => console.error(err))
       }
-    } else if (type.startsWith('video/')) {
-      const file = item.getAsFile()
-
-      if (file) {
-        blobToDataUri(file).then(callback, err => console.error(err))
-      }
     }
   }
+}
+
+// generateJSON expects HTML content
+const escapeHTML = (str: string) => {
+  // We're only escaping text content, so we only need to deal with these 2
+  return str.replace(/[&<]/g, c => `&#${c.charCodeAt(0)};`)
 }

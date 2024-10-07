@@ -1,0 +1,81 @@
+import React, {useCallback} from 'react'
+import * as MediaLibrary from 'expo-media-library'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+
+import {useAnalytics} from '#/lib/analytics/analytics'
+import {POST_IMG_MAX} from '#/lib/constants'
+import {useCameraPermission} from '#/lib/hooks/usePermissions'
+import {openCamera} from '#/lib/media/picker'
+import {logger} from '#/logger'
+import {ComposerImage, createComposerImage} from '#/state/gallery'
+import {atoms as a, useTheme} from '#/alf'
+import {Button} from '#/components/Button'
+import {Camera_Stroke2_Corner0_Rounded as Camera} from '#/components/icons/Camera'
+
+export const OpenCameraBtn = ({
+  disabled,
+  onAdd,
+}: {
+  disabled?: boolean
+  onAdd: (next: ComposerImage[]) => void
+}) => {
+  const {track} = useAnalytics()
+  const {_} = useLingui()
+  const {requestCameraAccessIfNeeded} = useCameraPermission()
+  const [mediaPermissionRes, requestMediaPermission] =
+    MediaLibrary.usePermissions()
+  const t = useTheme()
+
+  const onPressTakePicture = useCallback(async () => {
+    track('Composer:CameraOpened')
+    try {
+      if (!(await requestCameraAccessIfNeeded())) {
+        return
+      }
+      if (!mediaPermissionRes?.granted && mediaPermissionRes?.canAskAgain) {
+        await requestMediaPermission()
+      }
+
+      const img = await openCamera({
+        width: POST_IMG_MAX.width,
+        height: POST_IMG_MAX.height,
+        freeStyleCropEnabled: true,
+      })
+
+      // If we don't have permissions it's fine, we just wont save it. The post itself will still have access to
+      // the image even without these permissions
+      if (mediaPermissionRes) {
+        await MediaLibrary.createAssetAsync(img.path)
+      }
+
+      const res = await createComposerImage(img)
+
+      onAdd([res])
+    } catch (err: any) {
+      // ignore
+      logger.warn('Error using camera', {error: err})
+    }
+  }, [
+    onAdd,
+    track,
+    requestCameraAccessIfNeeded,
+    mediaPermissionRes,
+    requestMediaPermission,
+  ])
+
+  return (
+    <Button
+      testID="openCameraButton"
+      label={_(msg`Camera`)}
+      accessibilityHint={_(msg`Opens camera on device`)}
+      style={a.p_sm}
+      variant="ghost"
+      shape="round"
+      color="primary"
+      disabled={disabled}
+      onPress={onPressTakePicture}>
+      <Camera size="lg" style={disabled && t.atoms.text_contrast_low} />
+    </Button>
+  )
+}
