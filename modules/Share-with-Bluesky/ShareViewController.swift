@@ -1,4 +1,5 @@
 import UIKit
+import AVKit
 
 let IMAGE_EXTENSIONS: [String] = ["png", "jpg", "jpeg", "gif", "heic"]
 let MOVIE_EXTENSIONS: [String] = ["mov", "mp4", "m4v"]
@@ -119,16 +120,11 @@ class ShareViewController: UIViewController {
   private func handleVideos(items: [NSItemProvider]) async {
     let firstItem = items.first
 
-    if let dataUri = try? await firstItem?.loadItem(forTypeIdentifier: "public.movie") as? URL {
-      let ext = String(dataUri.lastPathComponent.split(separator: ".").last ?? "mp4")
-      if let tempUrl = getTempUrl(ext: ext) {
-        let data = try? Data(contentsOf: dataUri)
-        try? data?.write(to: tempUrl)
-
-        if let encoded = tempUrl.absoluteString.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed),
-           let url = URL(string: "\(self.appScheme)://intent/compose?videoUri=\(encoded)") {
-          _ = self.openURL(url)
-        }
+    if let dataUrl = try? await firstItem?.loadItem(forTypeIdentifier: "public.movie") as? URL {
+      let ext = String(dataUrl.lastPathComponent.split(separator: ".").last ?? "mp4")
+      if let videoUriInfo = saveVideoWithInfo(dataUrl),
+         let url = URL(string: "\(self.appScheme)://intent/compose?videoUri=\(videoUriInfo)") {
+        _ = self.openURL(url)
       }
     }
 
@@ -151,6 +147,20 @@ class ShareViewController: UIViewController {
       }
     } catch {}
     return nil
+  }
+  
+  private func saveVideoWithInfo(_ dataUrl: URL) -> String? {
+    let ext = String(dataUrl.lastPathComponent.split(separator: ".").last ?? "mp4")
+    guard let tempUrl = getTempUrl(ext: ext),
+          let track = AVURLAsset(url: dataUrl).tracks(withMediaType: AVMediaType.video).first else {
+      return nil
+    }
+    let size = track.naturalSize.applying(track.preferredTransform)
+    
+    let data = try? Data(contentsOf: dataUrl)
+    try? data?.write(to: tempUrl)
+    
+    return "\(tempUrl.absoluteString)|\(size.width)||\(size.height)"
   }
 
   private func completeRequest() {
