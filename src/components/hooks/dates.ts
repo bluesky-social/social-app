@@ -25,6 +25,7 @@ import {
   tr,
   uk,
   zhCN,
+  zhHK,
   zhTW,
 } from 'date-fns/locale'
 
@@ -52,6 +53,7 @@ const locales: Record<AppLanguage, Locale | undefined> = {
   tr,
   uk,
   ['zh-CN']: zhCN,
+  ['zh-HK']: zhHK,
   ['zh-TW']: zhTW,
 }
 
