@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-10-06 09:51+0900\n"
+"PO-Revision-Date: 2024-10-07 22:22+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -6540,7 +6540,7 @@ msgid "This is important in case you ever need to change your email or reset you
 msgstr "これは、メールアドレスの変更やパスワードのリセットが必要な場合に重要です。"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:144
-msgid "This label was applied by <0>{0}</0>"
+msgid "This label was applied by <0>{0}</0>."
 msgstr "<0>{0}</0>によって適用されたラベルです。"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:142
