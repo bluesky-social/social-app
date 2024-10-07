@@ -166,6 +166,12 @@ class ExpoReceiveAndroidIntentsModule : Module() {
     )
   }
 
+  private fun getVideoInfo(uri: Uri): Map<String, Any> {
+    var extension = uri.path?.substring
+    val file = createFile("mp4")
+    val out
+  }
+
   private fun createFile(extension: String): File = File.createTempFile(extension, "temp.$extension", appContext.currentActivity?.cacheDir)
 
   // We will pas the width and height to the app here, since getting measurements
