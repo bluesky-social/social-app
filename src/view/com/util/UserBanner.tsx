@@ -25,6 +25,7 @@ import {
 import {StreamingLive_Stroke2_Corner0_Rounded as Library} from '#/components/icons/StreamingLive'
 import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
 import * as Menu from '#/components/Menu'
+import {PortalComponent} from '#/components/Portal'
 import {openCamera, openCropper, openPicker} from '../../../lib/media/picker'
 
 export function UserBanner({
@@ -32,11 +33,13 @@ export function UserBanner({
   banner,
   moderation,
   onSelectNewBanner,
+  Portal,
 }: {
   type?: 'labeler' | 'default'
   banner?: string | null
   moderation?: ModerationUI
   onSelectNewBanner?: (img: RNImage | null) => void
+  Portal?: PortalComponent
 }) {
   const pal = usePalette('default')
   const theme = useTheme()
@@ -118,7 +121,7 @@ export function UserBanner({
             </TouchableOpacity>
           )}
         </Menu.Trigger>
-        <Menu.Outer showCancel>
+        <Menu.Outer showCancel Portal={Portal}>
           <Menu.Group>
             {isNative && (
               <Menu.Item
