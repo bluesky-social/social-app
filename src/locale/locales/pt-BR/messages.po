@@ -8,8 +8,8 @@ msgstr ""
 "Language: pt-BR\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-09-16 17:30+01:00\n"
-"Last-Translator: fabiohcnobre\n"
+"PO-Revision-Date: 2024-09-20 10:25:00\n"
+"Last-Translator: Felps3000\n"
 "Language-Team: maisondasilva, MightyLoggor, gildaswise, gleydson, faeriarum, fabiohcnobre, garccez\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
@@ -107,7 +107,7 @@ msgstr "{0, plural, one {Responder (# resposta)} other {Responder (# respostas)}
 
 #: src/view/com/post-thread/PostThreadItem.tsx:397
 msgid "{0, plural, one {repost} other {reposts}}"
-msgstr "{0, plural, one {repost} other {reposts}}"
+msgstr "{0, plural, one {repostagem} other {repostagens}}"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:308
 msgid "{0, plural, one {Unlike (# like)} other {Unlike (# likes)}}"
@@ -1645,15 +1645,15 @@ msgstr "Continuar o tópico..."
 #: src/screens/Onboarding/StepProfile/index.tsx:266
 #: src/screens/Signup/BackNextButtons.tsx:59
 msgid "Continue to next step"
-msgstr "Continuar para o próximo passo"
+msgstr "Continuar para a próxima etapa"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:158
 #~ msgid "Continue to the next step"
-#~ msgstr "Continuar para o próximo passo"
+#~ msgstr "Continuar para a próxima etapa"
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:199
 #~ msgid "Continue to the next step without following any accounts"
-#~ msgstr "Continuar para o próximo passo sem seguir contas"
+#~ msgstr "Continuar para a próxima etapa sem seguir contas"
 
 #: src/screens/Messages/List/ChatListItem.tsx:154
 msgid "Conversation deleted"
@@ -1728,7 +1728,7 @@ msgstr "Copiar texto da mensagem"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:388
 #: src/view/com/util/forms/PostDropdownBtn.tsx:390
 msgid "Copy post text"
-msgstr "Copiar texto do post"
+msgstr "Copiar texto da postagem"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:171
 msgid "Copy QR code"
@@ -2405,11 +2405,11 @@ msgstr "Código HTML para incorporação"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:427
 #: src/view/com/util/forms/PostDropdownBtn.tsx:429
 msgid "Embed post"
-msgstr "Incorporar post"
+msgstr "Incorporar postagem"
 
 #: src/components/dialogs/Embed.tsx:101
 msgid "Embed this post in your website. Simply copy the following snippet and paste it into the HTML code of your website."
-msgstr "Incorpore este post no seu site. Basta copiar o trecho abaixo e colar no código HTML do seu site."
+msgstr "Incorpore esta postagem no seu site. Basta copiar o trecho abaixo e colar no código HTML do seu site."
 
 #: src/components/dialogs/EmbedConsent.tsx:101
 msgid "Enable {0} only"
@@ -2609,7 +2609,7 @@ msgstr "Expandir lista de usuário"
 #: src/view/com/composer/ComposerReplyTo.tsx:82
 #: src/view/com/composer/ComposerReplyTo.tsx:85
 msgid "Expand or collapse the full post you are replying to"
-msgstr "Mostrar ou esconder o post a que você está respondendo"
+msgstr "Mostrar ou esconder a postagem a que você está respondendo"
 
 #: src/view/screens/NotificationsSettings.tsx:83
 msgid "Experimental: When this preference is enabled, you'll only receive reply and quote notifications from users you follow. We'll continue to add more controls here over time."
@@ -2680,7 +2680,7 @@ msgstr "Não foi possível excluir esta mensagem"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:194
 msgid "Failed to delete post, please try again"
-msgstr "Não foi possível excluir o post, por favor tente novamente."
+msgstr "Não foi possível excluir a postagem, por favor tente novamente."
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:686
 msgid "Failed to delete starter pack"
@@ -2837,7 +2837,7 @@ msgstr "Encontre contas para seguir"
 
 #: src/view/screens/Search/Search.tsx:439
 msgid "Find posts and users on Bluesky"
-msgstr "Encontre posts e usuários no Bluesky"
+msgstr "Encontre postagens e usuários no Bluesky"
 
 #: src/view/screens/Search/Search.tsx:589
 #~ msgid "Find users on Bluesky"
@@ -2937,7 +2937,7 @@ msgstr "Siga mais contas para se conectar aos seus interesses e construir sua re
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:182
 #~ msgid "Follow selected accounts and continue to the next step"
-#~ msgstr "Siga algumas contas e continue para o próximo passo"
+#~ msgstr "Siga algumas contas e continue para a próxima etapa"
 
 #: src/view/com/auth/onboarding/RecommendedFollows.tsx:65
 #~ msgid "Follow some users to get started. We can recommend you more users based on who you find interesting."
@@ -3158,7 +3158,7 @@ msgstr "Voltar"
 #: src/screens/Onboarding/Layout.tsx:191
 #: src/screens/Signup/BackNextButtons.tsx:34
 msgid "Go back to previous step"
-msgstr "Voltar para o passo anterior"
+msgstr "Voltar para a etapa anterior"
 
 #: src/screens/StarterPack/Wizard/index.tsx:299
 msgid "Go back to the previous step"
@@ -3278,7 +3278,7 @@ msgstr "Esconder"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:390
 #: src/view/com/util/forms/PostDropdownBtn.tsx:392
 #~ msgid "Hide post"
-#~ msgstr "Ocultar post"
+#~ msgstr "Ocultar postagem"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:501
 #: src/view/com/util/forms/PostDropdownBtn.tsx:507
@@ -3302,7 +3302,7 @@ msgstr "Esconder o conteúdo"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:635
 msgid "Hide this post?"
-msgstr "Ocultar este post?"
+msgstr "Ocultar esta postagem?"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:635
 #: src/view/com/util/forms/PostDropdownBtn.tsx:697
@@ -3406,15 +3406,15 @@ msgstr "Se você deletar esta lista, você não poderá recuperá-la."
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:626
 msgid "If you remove this post, you won't be able to recover it."
-msgstr "Se você remover este post, você não poderá recuperá-la."
+msgstr "Se você remover esta postagem, você não poderá recuperá-lo."
 
 #: src/view/com/modals/ChangePassword.tsx:149
 msgid "If you want to change your password, we will send you a code to verify that this is your account."
-msgstr "Se você quiser alterar sua senha, enviaremos um código que para verificar sua identidade."
+msgstr "Se você quiser alterar sua senha, enviaremos um código para verificar sua identidade."
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:92
 msgid "If you're trying to change your handle or email, do so before you deactivate."
-msgstr "Se você estiver tentando alterar seu endereço ou e-mail, faça isso antes de desativar."
+msgstr "Se você estiver tentando alterar seu usuário ou e-mail, faça isso antes de desativar."
 
 #: src/lib/moderation/useReportOptions.ts:38
 msgid "Illegal and Urgent"
@@ -3500,11 +3500,11 @@ msgstr "Apresentando Mensagens Diretas"
 #: src/screens/Login/LoginForm.tsx:145
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:70
 msgid "Invalid 2FA confirmation code."
-msgstr "Código de confirmação inválido."
+msgstr "Código de confirmação da autenticação de dois fatores inválido."
 
 #: src/view/com/post-thread/PostThreadItem.tsx:264
 msgid "Invalid or unsupported post record"
-msgstr "Post inválido"
+msgstr "Postagem inválida"
 
 #: src/screens/Login/LoginForm.tsx:91
 #: src/screens/Login/LoginForm.tsx:150
@@ -3549,7 +3549,7 @@ msgstr "Convites, mas pessoais"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:65
 #~ msgid "It shows posts from the people you follow as they happen."
-#~ msgstr "Mostra os posts de quem você segue conforme acontecem."
+#~ msgstr "Mostra as postagens de quem você segue conforme acontecem."
 
 #: src/screens/StarterPack/Wizard/index.tsx:452
 msgid "It's just you right now! Add more people to your starter pack by searching above."
@@ -3625,7 +3625,7 @@ msgstr "Seleção de idioma"
 
 #: src/view/screens/Settings/index.tsx:496
 msgid "Language settings"
-msgstr "Configuração de Idioma"
+msgstr "Configuração de idioma"
 
 #: src/Navigation.tsx:160
 #: src/view/screens/LanguageSettings.tsx:90
@@ -3647,7 +3647,7 @@ msgstr "Saiba Mais"
 
 #: src/view/com/auth/SplashScreen.web.tsx:152
 msgid "Learn more about Bluesky"
-msgstr "Saiba mais sobre Bluesky"
+msgstr "Saiba mais sobre o Bluesky"
 
 #: src/components/moderation/ContentHider.tsx:66
 #: src/components/moderation/ContentHider.tsx:131
@@ -3730,7 +3730,7 @@ msgstr "Curtir 10 postagens"
 #: src/state/shell/progress-guide.tsx:157
 #: src/state/shell/progress-guide.tsx:162
 msgid "Like 10 posts to train the Discover feed"
-msgstr "Curtir 10 posts para treinar o feed de Descobertas"
+msgstr "Curtir 10 postagens para treinar o feed de Descobertas"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:267
 #: src/view/screens/ProfileFeed.tsx:575
@@ -3770,7 +3770,7 @@ msgstr "curtiram seu feed"
 
 #: src/view/com/notifications/FeedItem.tsx:178
 msgid "liked your post"
-msgstr "curtiu seu post"
+msgstr "curtiu sua postagem"
 
 #: src/view/screens/Profile.tsx:223
 msgid "Likes"
@@ -3778,7 +3778,7 @@ msgstr "Curtidas"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:204
 msgid "Likes on this post"
-msgstr "Curtidas neste post"
+msgstr "Curtidas nesta postagem"
 
 #: src/Navigation.tsx:193
 msgid "List"
@@ -3859,7 +3859,7 @@ msgstr "Carregar novas notificações"
 #: src/view/screens/ProfileFeed.tsx:495
 #: src/view/screens/ProfileList.tsx:805
 msgid "Load new posts"
-msgstr "Carregar novos posts"
+msgstr "Carregar novas postagens"
 
 #: src/view/com/composer/text-input/mobile/Autocomplete.tsx:99
 msgid "Loading..."
@@ -3907,7 +3907,7 @@ msgstr "Parece que você desafixou todos os seus feeds, mas não esquenta, dá u
 
 #: src/screens/Feeds/NoFollowingFeed.tsx:38
 #~ msgid "Looks like you're missing a following feed."
-#~ msgstr "Parece que você está sem seu feed principal."
+#~ msgstr "Parece que você não está seguindo nenhum feed."
 
 #: src/screens/Feeds/NoFollowingFeed.tsx:37
 msgid "Looks like you're missing a following feed. <0>Click here to add one.</0>"
@@ -4108,7 +4108,7 @@ msgstr "Silenciar contas"
 
 #: src/components/TagMenu/index.tsx:220
 msgid "Mute all {displayTag} posts"
-msgstr "Silenciar posts com {displayTag}"
+msgstr "Silenciar postagens com {displayTag}"
 
 #: src/components/dms/ConvoMenu.tsx:172
 #: src/components/dms/ConvoMenu.tsx:178
@@ -4154,15 +4154,15 @@ msgstr "Silencie esta palavra por 7 dias"
 
 #: src/components/dialogs/MutedWords.tsx:258
 msgid "Mute this word in post text and tags"
-msgstr "Silenciar esta palavra no conteúdo de um post e tags"
+msgstr "Silenciar esta palavra nas postagens e tags"
 
 #: src/components/dialogs/MutedWords.tsx:274
 msgid "Mute this word in tags only"
-msgstr "Silenciar esta palavra apenas nas tags de um post"
+msgstr "Silenciar esta palavra apenas nas tags de uma postagem"
 
 #: src/components/dialogs/MutedWords.tsx:170
 msgid "Mute this word until you unmute it"
-msgstr "Oculte esta palavra até que você a reative"
+msgstr "Silenciar esta palavra até que você a reative"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:465
 #: src/view/com/util/forms/PostDropdownBtn.tsx:471
@@ -4403,7 +4403,7 @@ msgstr "Nenhum feed encontrado. Tente pesquisar por outra coisa."
 #: src/components/LikedByList.tsx:78
 #: src/view/com/post-thread/PostLikedBy.tsx:85
 msgid "No likes yet"
-msgstr ""
+msgstr "Sem curtidas ainda"
 
 #: src/components/ProfileCard.tsx:336
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:116
@@ -4443,11 +4443,11 @@ msgstr "Nenhuma postagem ainda."
 
 #: src/view/com/post-thread/PostQuotes.tsx:106
 msgid "No quotes yet"
-msgstr ""
+msgstr "Sem citações ainda"
 
 #: src/view/com/post-thread/PostRepostedBy.tsx:78
 msgid "No reposts yet"
-msgstr ""
+msgstr "Sem repostagens ainda"
 
 #: src/view/com/composer/text-input/mobile/Autocomplete.tsx:101
 #: src/view/com/composer/text-input/web/Autocomplete.tsx:195
@@ -4507,7 +4507,7 @@ msgstr ""
 
 #: src/view/com/post-thread/PostRepostedBy.tsx:80
 msgid "Nobody has reposted this yet. Maybe you should be the first!"
-msgstr ""
+msgstr "Ninguém repostou isso ainda. Talvez você devesse ser o primeiro!"
 
 #: src/screens/StarterPack/Wizard/StepProfiles.tsx:103
 msgid "Nobody was found. Try searching for someone else."
@@ -4591,7 +4591,7 @@ msgstr "Nudez"
 
 #: src/lib/moderation/useReportOptions.ts:78
 msgid "Nudity or adult content not labeled as such"
-msgstr "Nudez ou pornografia sem aviso aplicado"
+msgstr "Nudez ou conteúdo adulto sem rótulo aplicado"
 
 #: src/screens/Signup/index.tsx:145
 #~ msgid "of"
@@ -4721,7 +4721,7 @@ msgstr "Abrir navegação"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:350
 msgid "Open post options menu"
-msgstr "Abrir opções do post"
+msgstr "Abrir opções da postagem"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:540
 msgid "Open starter pack menu"
@@ -4770,7 +4770,7 @@ msgstr "Abre as configurações de chat"
 
 #: src/view/com/post-thread/PostThreadComposePrompt.tsx:30
 msgid "Opens composer"
-msgstr "Abre o editor de post"
+msgstr "Abre o editor de postagem"
 
 #: src/view/screens/Settings/index.tsx:497
 msgid "Opens configurable language settings"
@@ -5174,7 +5174,7 @@ msgstr "Configurações de interação de postagem"
 
 #: src/view/com/composer/select-language/SelectLangBtn.tsx:88
 msgid "Post language"
-msgstr "Idioma do post"
+msgstr "Idioma da postagem"
 
 #: src/view/com/modals/lang-settings/PostLanguagesSettings.tsx:75
 msgid "Post Languages"
@@ -5310,7 +5310,7 @@ msgstr "Listas públicas e compartilháveis que geram feeds."
 
 #: src/view/com/composer/Composer.tsx:631
 msgid "Publish post"
-msgstr "Publicar post"
+msgstr "Publicar postagem"
 
 #: src/view/com/composer/Composer.tsx:631
 msgid "Publish reply"
@@ -5337,12 +5337,12 @@ msgstr "QR code salvo no rolo da sua câmera!"
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:85
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:92
 msgid "Quote post"
-msgstr "Citar post"
+msgstr "Citar postagem"
 
 #: src/view/com/modals/Repost.tsx:66
 #~ msgctxt "action"
 #~ msgid "Quote post"
-#~ msgstr "Citar post"
+#~ msgstr "Citar postagem"
 
 #: src/view/com/modals/Repost.tsx:71
 #~ msgctxt "action"
@@ -5538,7 +5538,7 @@ msgstr "Remover citação"
 #: src/view/com/util/post-ctrls/RepostButton.tsx:98
 #: src/view/com/util/post-ctrls/RepostButton.tsx:114
 msgid "Remove repost"
-msgstr "Desfazer repost"
+msgstr "Desfazer repostagem"
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:264
 msgid "Remove subtitle file"
@@ -5582,7 +5582,7 @@ msgstr "Removido dos feeds salvos"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:275
 msgid "Removes quoted post"
-msgstr "Remove o post citado"
+msgstr "Remove a postagem citada"
 
 #: src/view/com/composer/ExternalEmbedRemoveBtn.tsx:29
 msgid "Removes the attachment"
@@ -5664,7 +5664,7 @@ msgstr "Responder a uma postagem bloqueada"
 #: src/view/com/posts/FeedItem.tsx:513
 msgctxt "description"
 msgid "Reply to a post"
-msgstr "Responder a uma postagem"
+msgstr "Responder à uma postagem"
 
 #: src/view/com/post/Post.tsx:194
 #: src/view/com/posts/FeedItem.tsx:517
@@ -5722,7 +5722,7 @@ msgstr "Denunciar mensagem"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:579
 #: src/view/com/util/forms/PostDropdownBtn.tsx:581
 msgid "Report post"
-msgstr "Denunciar post"
+msgstr "Denunciar postagem"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:593
 #: src/screens/StarterPack/StarterPackScreen.tsx:596
@@ -5749,7 +5749,7 @@ msgstr "Denunciar esta mensagem"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:50
 msgid "Report this post"
-msgstr "Denunciar este post"
+msgstr "Denunciar esta postagem"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:59
 msgid "Report this starter pack"
@@ -5776,7 +5776,7 @@ msgstr "Repostar"
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:49
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:104
 msgid "Repost or quote post"
-msgstr "Repostar ou citar um post"
+msgstr "Repostar ou citar uma postagem"
 
 #: src/screens/Post/PostRepostedBy.tsx:31
 #: src/screens/Post/PostRepostedBy.tsx:32
@@ -5806,7 +5806,7 @@ msgstr "repostou seu post"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:209
 msgid "Reposts of this post"
-msgstr "Reposts"
+msgstr "Repostagens"
 
 #: src/view/com/modals/ChangeEmail.tsx:176
 #: src/view/com/modals/ChangeEmail.tsx:178
@@ -6041,11 +6041,11 @@ msgstr "Pesquisar por \"{searchText}\""
 
 #: src/components/TagMenu/index.tsx:156
 msgid "Search for all posts by @{authorHandle} with tag {displayTag}"
-msgstr "Pesquisar por posts de @{authorHandle} com a tag {displayTag}"
+msgstr "Pesquisar por postagens de @{authorHandle} com a tag {displayTag}"
 
 #: src/components/TagMenu/index.tsx:105
 msgid "Search for all posts with tag {displayTag}"
-msgstr "Pesquisar por posts com a tag {displayTag}"
+msgstr "Pesquisar por postagens com a tag {displayTag}"
 
 #: src/screens/StarterPack/Wizard/index.tsx:491
 msgid "Search for feeds that you want to suggest to others."
@@ -6076,23 +6076,23 @@ msgstr "Pesquisar via Tenor"
 
 #: src/view/com/modals/ChangeEmail.tsx:105
 msgid "Security Step Required"
-msgstr "Passo de Segurança Necessário"
+msgstr "Etapa de Segurança Necessária"
 
 #: src/components/TagMenu/index.web.tsx:77
 msgid "See {truncatedTag} posts"
-msgstr "Ver posts com {truncatedTag}"
+msgstr "Ver postagens com {truncatedTag}"
 
 #: src/components/TagMenu/index.web.tsx:94
 msgid "See {truncatedTag} posts by user"
-msgstr "Ver posts com {truncatedTag} deste usuário"
+msgstr "Ver postagens com {truncatedTag} deste usuário"
 
 #: src/components/TagMenu/index.tsx:139
 msgid "See <0>{displayTag}</0> posts"
-msgstr "Ver posts com <0>{displayTag}</0>"
+msgstr "Ver postagens com <0>{displayTag}</0>"
 
 #: src/components/TagMenu/index.tsx:198
 msgid "See <0>{displayTag}</0> posts by this user"
-msgstr "Ver posts com <0>{displayTag}</0> deste usuário"
+msgstr "Ver postagens com <0>{displayTag}</0> deste usuário"
 
 #: src/view/com/auth/SplashScreen.web.tsx:162
 msgid "See jobs at Bluesky"
@@ -6301,7 +6301,7 @@ msgstr "Definir uma nova senha"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:121
 msgid "Set this setting to \"No\" to hide all quote posts from your feed. Reposts will still be visible."
-msgstr "Defina esta configuração como \"Não\" para ocultar todas as citações do seu feed. Reposts ainda serão visíveis."
+msgstr "Defina esta configuração como \"Não\" para ocultar todas as citações do seu feed. Repostagens ainda serão visíveis."
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:63
 msgid "Set this setting to \"No\" to hide all replies from your feed."
@@ -6309,7 +6309,7 @@ msgstr "Defina esta configuração como \"Não\" para ocultar todas as respostas
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:87
 msgid "Set this setting to \"No\" to hide all reposts from your feed."
-msgstr "Defina esta configuração como \"Não\" para ocultar todos os reposts do seu feed."
+msgstr "Defina esta configuração como \"Não\" para ocultar todos os repostagens do seu feed."
 
 #: src/view/screens/PreferencesThreads.tsx:116
 msgid "Set this setting to \"Yes\" to show replies in a threaded view. This is an experimental feature."
@@ -6544,7 +6544,7 @@ msgstr "Mostrar Citações"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:95
 #~ msgid "Show re-posts in Following feed"
-#~ msgstr "Mostrar reposts no feed Seguindo"
+#~ msgstr "Mostrar repostagens no feed Seguindo"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:60
 msgid "Show Replies"
@@ -6573,11 +6573,11 @@ msgstr "Mostrar resposta para todos"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:84
 msgid "Show Reposts"
-msgstr "Mostrar Reposts"
+msgstr "Mostrar Repostagens"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:111
 #~ msgid "Show reposts in Following"
-#~ msgstr "Mostrar reposts no Seguindo"
+#~ msgstr "Mostrar repostagens no Seguindo"
 
 #: src/components/moderation/ContentHider.tsx:69
 #: src/components/moderation/PostHider.tsx:79
@@ -6598,7 +6598,7 @@ msgstr "Mostrar aviso e filtrar dos feeds"
 
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:128
 msgid "Shows posts from {0} in your feed"
-msgstr "Mostra posts de {0} no seu feed"
+msgstr "Mostra postagens de {0} no seu feed"
 
 #: src/components/dialogs/Signin.tsx:97
 #: src/components/dialogs/Signin.tsx:99
@@ -6742,7 +6742,7 @@ msgstr "Classificar Respostas"
 
 #: src/view/screens/PreferencesThreads.tsx:66
 msgid "Sort replies to the same post by:"
-msgstr "Classificar respostas de um post por:"
+msgstr "Classificar respostas de uma postagem por:"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:163
 msgid "Source: <0>{sourceName}</0>"
@@ -6814,11 +6814,11 @@ msgstr "Página de status"
 
 #: src/screens/Signup/index.tsx:145
 #~ msgid "Step"
-#~ msgstr "Passo"
+#~ msgstr "Etapa"
 
 #: src/screens/Signup/index.tsx:136
 msgid "Step {0} of {1}"
-msgstr "Passo {0} de {1}"
+msgstr "Etapa {0} de {1}"
 
 #: src/view/screens/Settings/index.tsx:278
 msgid "Storage cleared, you need to restart the app now."
@@ -7094,12 +7094,12 @@ msgstr "Os seguintes rótulos foram aplicados sobre seu conteúdo."
 
 #: src/screens/Onboarding/Layout.tsx:58
 msgid "The following steps will help customize your Bluesky experience."
-msgstr "Os seguintes passos vão ajudar a customizar sua experiência no Bluesky."
+msgstr "As seguintes etapas vão ajudar a customizar sua experiência no Bluesky."
 
 #: src/view/com/post-thread/PostThread.tsx:208
 #: src/view/com/post-thread/PostThread.tsx:220
 msgid "The post may have been deleted."
-msgstr "O post pode ter sido excluído."
+msgstr "A postagem pode ter sido excluída."
 
 #: src/view/screens/PrivacyPolicy.tsx:33
 msgid "The Privacy Policy has been moved to <0/>"
@@ -7177,7 +7177,7 @@ msgstr "Tivemos um problema ao carregar notificações. Toque aqui para tentar d
 
 #: src/view/com/posts/Feed.tsx:476
 msgid "There was an issue fetching posts. Tap here to try again."
-msgstr "Tivemos um problema ao carregar posts. Toque aqui para tentar de novo."
+msgstr "Tivemos um problema ao carregar as postagens. Toque aqui para tentar de novo."
 
 #: src/view/com/lists/ListMembers.tsx:172
 msgid "There was an issue fetching the list. Tap here to try again."
@@ -7379,20 +7379,20 @@ msgstr "Você já tem uma senha com esse nome"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:140
 msgid "This post has been deleted."
-msgstr "Este post foi excluído."
+msgstr "Esta postagem foi excluída."
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:656
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:358
 msgid "This post is only visible to logged-in users. It won't be visible to people who aren't logged in."
-msgstr "Este post só pode ser visto por usuários autenticados e não aparecerá para pessoas que não estão autenticadas."
+msgstr "Esta postagem só pode ser vista por usuários autenticados e não aparecerá para pessoas que não estão autenticadas."
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:637
 msgid "This post will be hidden from feeds and threads. This cannot be undone."
-msgstr "Este post será ocultado de feeds e threads. Isso não pode ser desfeito."
+msgstr "Esta postagem será ocultada de feeds e threads. Isso não pode ser desfeito."
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:443
 #~ msgid "This post will be hidden from feeds."
-#~ msgstr "Este post será escondido de todos os feeds."
+#~ msgstr "Esta postagem será escondida de todos os feeds."
 
 #: src/view/com/composer/useExternalLinkFetch.ts:67
 msgid "This post's author has disabled quote posts."
@@ -7400,7 +7400,7 @@ msgstr "O autor desta postagem desabilitou as postagens de citação."
 
 #: src/view/com/profile/ProfileMenu.tsx:374
 msgid "This profile is only visible to logged-in users. It won't be visible to people who aren't logged in."
-msgstr "Este post só pode ser visto por usuários autenticados e não aparecerá para pessoas que não estão autenticadas."
+msgstr "Esta postagem só pode ser vista por usuários autenticados e não aparecerá para pessoas que não estão autenticadas."
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:699
 msgid "This reply will be sorted into a hidden section at the bottom of your thread and will mute notifications for subsequent replies - both for yourself and others."
@@ -7449,7 +7449,7 @@ msgstr "Este usuário não segue ninguém ainda."
 
 #: src/view/com/modals/SelfLabel.tsx:137
 #~ msgid "This warning is only available for posts with media attached."
-#~ msgstr "Este aviso só está disponível para publicações com mídia anexada."
+#~ msgstr "Este aviso só está disponível para postagens com mídia anexada."
 
 #: src/components/dialogs/MutedWords.tsx:435
 msgid "This will delete \"{0}\" from your muted words. You can always add it back later."
@@ -7494,7 +7494,7 @@ msgstr "Para desabilitar o 2FA via e-mail, por favor verifique seu acesso a este
 
 #: src/components/dialogs/nuxs/TenMillion/Trigger.tsx:69
 msgid "To learn more, <0>check out our post.</0>"
-msgstr ""
+msgstr "Para aprender mais, <0>cheque nossa postagem.</0>"
 
 #: src/components/dms/ReportConversationPrompt.tsx:20
 msgid "To report a conversation, please report one of its messages via the conversation screen. This lets our moderators understand the context of your issue."
@@ -7620,7 +7620,7 @@ msgstr "Desbloquear Conta?"
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:72
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:76
 msgid "Undo repost"
-msgstr "Desfazer repost"
+msgstr "Desfazer repostagem"
 
 #: src/view/com/profile/FollowButton.tsx:61
 msgctxt "action"
@@ -7670,7 +7670,7 @@ msgstr "Dessilenciar conta"
 
 #: src/components/TagMenu/index.tsx:219
 msgid "Unmute all {displayTag} posts"
-msgstr "Dessilenciar posts com {displayTag}"
+msgstr "Dessilenciar postagens com {displayTag}"
 
 #: src/components/dms/ConvoMenu.tsx:176
 msgid "Unmute conversation"
@@ -8041,7 +8041,7 @@ msgstr "Ver informações sobre estes rótulos"
 
 #: src/components/dialogs/nuxs/TenMillion/Trigger.tsx:72
 msgid "View our post"
-msgstr ""
+msgstr "Ver nossa postagem"
 
 #: src/components/ProfileHoverCard/index.web.tsx:418
 #: src/components/ProfileHoverCard/index.web.tsx:436
@@ -8101,7 +8101,7 @@ msgstr "Avisar e filtrar dos feeds"
 
 #: src/screens/Hashtag.tsx:217
 msgid "We couldn't find any results for that hashtag."
-msgstr "Não encontramos nenhum post com esta hashtag."
+msgstr "Não encontramos nenhuma postagem com esta hashtag."
 
 #: src/screens/Messages/Conversation/index.tsx:107
 msgid "We couldn't load this conversation"
@@ -8121,11 +8121,11 @@ msgstr "Esperamos que você se divirta. Lembre-se, o Bluesky é:"
 
 #: src/view/com/posts/DiscoverFallbackHeader.tsx:29
 msgid "We ran out of posts from your follows. Here's the latest from <0/>."
-msgstr "Não temos mais posts de quem você segue. Aqui estão os mais novos de <0/>."
+msgstr "Não temos mais postagens de quem você segue. Aqui estão os mais novos de <0/>."
 
 #: src/components/dialogs/MutedWords.tsx:203
 #~ msgid "We recommend avoiding common words that appear in many posts, since it can result in no posts being shown."
-#~ msgstr "Não recomendamos utilizar palavras comuns que aparecem em muitos posts, já que isso pode resultar em filtrar todos eles."
+#~ msgstr "Não recomendamos utilizar palavras comuns que aparecem em muitas postagens, já que isso pode resultar em postagens não sendo exibidas."
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:125
 #~ msgid "We recommend our \"Discover\" feed:"
@@ -8220,7 +8220,7 @@ msgstr "E aí?"
 
 #: src/view/com/modals/lang-settings/PostLanguagesSettings.tsx:78
 msgid "Which languages are used in this post?"
-msgstr "Quais idiomas são usados neste post?"
+msgstr "Quais idiomas são usados nesta postagem?"
 
 #: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:77
 msgid "Which languages would you like to see in your algorithmic feeds?"
@@ -8270,7 +8270,7 @@ msgstr "Por que esta mensagem deve ser analisada?"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:51
 msgid "Why should this post be reviewed?"
-msgstr "Por que este post deve ser analisado?"
+msgstr "Por que esta postagem deve ser analisada?"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:60
 msgid "Why should this starter pack be reviewed?"
@@ -8291,7 +8291,7 @@ msgstr "Escreva uma mensagem"
 
 #: src/view/com/composer/Composer.tsx:712
 msgid "Write post"
-msgstr "Escrever post"
+msgstr "Escrever postagem"
 
 #: src/view/com/composer/Composer.tsx:515
 #: src/view/com/post-thread/PostThreadComposePrompt.tsx:42
@@ -8436,11 +8436,11 @@ msgstr "Você utilizou um código inválido. O código segue este padrão: XXXXX
 
 #: src/lib/moderation/useModerationCauseDescription.ts:114
 msgid "You have hidden this post"
-msgstr "Você escondeu este post"
+msgstr "Você escondeu esta postagem"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:110
 msgid "You have hidden this post."
-msgstr "Você escondeu este post."
+msgstr "Você escondeu esta postagem."
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:103
 #: src/lib/moderation/useModerationCauseDescription.ts:97
@@ -8620,7 +8620,7 @@ msgstr "Tudo pronto!"
 #: src/components/moderation/ModerationDetailsDialog.tsx:107
 #: src/lib/moderation/useModerationCauseDescription.ts:106
 msgid "You've chosen to hide a word or tag within this post."
-msgstr "Você escolheu esconder uma palavra ou tag deste post."
+msgstr "Você escolheu esconder uma palavra ou tag desta postagem."
 
 #: src/view/com/posts/FollowingEndOfFeed.tsx:44
 msgid "You've reached the end of your feed! Find some more accounts to follow."
@@ -8679,7 +8679,7 @@ msgstr "Seu e-mail parece ser inválido."
 
 #: src/view/com/modals/ChangeEmail.tsx:120
 msgid "Your email has been updated but not verified. As a next step, please verify your new email."
-msgstr "Seu e-mail foi atualizado mas não foi verificado. Como próximo passo, por favor verifique seu novo e-mail."
+msgstr "Seu e-mail foi atualizado mas não foi verificado. Como próxima etapa, por favor verifique seu novo e-mail."
 
 #: src/view/com/modals/VerifyEmail.tsx:122
 msgid "Your email has not yet been verified. This is an important security step which we recommend."
@@ -8711,7 +8711,7 @@ msgstr "Sua senha foi alterada com sucesso!"
 
 #: src/view/com/composer/Composer.tsx:467
 msgid "Your post has been published"
-msgstr "Seu post foi publicado"
+msgstr "Sua postagem foi publicada"
 
 #: src/screens/Onboarding/StepFinished.tsx:250
 msgid "Your posts, likes, and blocks are public. Mutes are private."
