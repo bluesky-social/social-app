@@ -68,7 +68,7 @@
     "@fortawesome/free-regular-svg-icons": "^6.1.1",
     "@fortawesome/free-solid-svg-icons": "^6.1.1",
     "@fortawesome/react-native-fontawesome": "^0.3.2",
-    "@haileyok/bluesky-video": "0.2.1",
+    "@haileyok/bluesky-video": "0.2.2",
     "@lingui/react": "^4.5.0",
     "@mattermost/react-native-paste-input": "^0.7.1",
     "@miblanchard/react-native-slider": "^2.3.1",
