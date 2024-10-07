@@ -4318,10 +4318,10 @@
   resolved "https://registry.yarnpkg.com/@haileyok/bluesky-video/-/bluesky-video-0.1.10.tgz#2756e8c83a78caeb6b120a175578eac1eb6889a9"
   integrity sha512-W8+DNdek+xjAqTO1zmuuSrkVFxDepcP8+Gs8MvIcYSgXEJlpQimZpcMwAduiDI/jZMn/2U6cnMahx7YuiZlZ7g==
 
-"@haileyok/react-native-paste-input@^0.8.1-rc.3":
-  version "0.8.1-rc.3"
-  resolved "https://registry.yarnpkg.com/@haileyok/react-native-paste-input/-/react-native-paste-input-0.8.1-rc.3.tgz#59f87e829a56416703a8f9e2dc0cc9746b9d4315"
-  integrity sha512-u2vieFxDbpnC4I0Qdt1MGcS8+k8aG9LzwkLS5Z1td4bRz0SoHXiB0EkF8eItRyzHgBF8HckC1eiKfPHxbgqQ4g==
+"@haileyok/react-native-paste-input@^0.8.1-rc.4":
+  version "0.8.1-rc.4"
+  resolved "https://registry.yarnpkg.com/@haileyok/react-native-paste-input/-/react-native-paste-input-0.8.1-rc.4.tgz#6f66220db018b833636e026b36ad241b9b35fd6f"
+  integrity sha512-MtmIICSq1eWTAHhzVA/+6DOwCFybOMJOXgq6vJzQL5C/bLLe06jEII5bPCcz/+V96LNRWySxLuWGBbvpP7nzXQ==
   dependencies:
     semver "7.6.0"
 
