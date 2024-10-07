@@ -70,7 +70,7 @@
     "@fortawesome/react-native-fontawesome": "^0.3.2",
     "@haileyok/bluesky-video": "0.1.10",
     "@lingui/react": "^4.5.0",
-    "@haileyok/react-native-paste-input": "^0.8.1-rc.4",
+    "@haileyok/react-native-paste-input": "^0.8.1-rc.6",
     "@miblanchard/react-native-slider": "^2.3.1",
     "@radix-ui/react-dropdown-menu": "^2.0.6",
     "@react-native-async-storage/async-storage": "1.23.1",

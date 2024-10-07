@@ -244,12 +244,12 @@ export const TextInput = forwardRef(function TextInputImpl(
         allowFontScaling
         multiline
         scrollEnabled={false}
-        numberOfLines={4}
         style={[
           inputTextStyle,
           a.w_full,
           {textAlignVertical: 'top', minHeight: 60},
         ]}
+        numberOfLines={100}
         {...props}>
         {textDecorated}
       </PasteInput>
