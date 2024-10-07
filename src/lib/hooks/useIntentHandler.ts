@@ -93,9 +93,10 @@ export function useComposeIntent() {
 
       // Whenever a video URI is present, we don't support adding images right now.
       if (videoUri) {
+        const [uri, width, height] = videoUri.split('|')
         openComposer({
           text: text ?? undefined,
-          videoUri,
+          videoUri: {uri, width: Number(width), height: Number(height)},
         })
         return
       }
