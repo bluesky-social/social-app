@@ -14,17 +14,21 @@ import {s} from '#/lib/styles'
 import {useSetThemePrefs, useThemePrefs} from '#/state/shell'
 import {SimpleViewHeader} from '#/view/com/util/SimpleViewHeader'
 import {ScrollView} from '#/view/com/util/Views'
-import {atoms as a, native, useTheme} from '#/alf'
+import {atoms as a, native, useAlf, useTheme} from '#/alf'
 import * as ToggleButton from '#/components/forms/ToggleButton'
+import {Props as SVGIconProps} from '#/components/icons/common'
 import {Moon_Stroke2_Corner0_Rounded as MoonIcon} from '#/components/icons/Moon'
 import {Phone_Stroke2_Corner0_Rounded as PhoneIcon} from '#/components/icons/Phone'
+import {TextSize_Stroke2_Corner0_Rounded as TextSize} from '#/components/icons/TextSize'
+import {TitleCase_Stroke2_Corner0_Rounded as Aa} from '#/components/icons/TitleCase'
 import {Text} from '#/components/Typography'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AppearanceSettings'>
 export function AppearanceSettingsScreen({}: Props) {
-  const {_} = useLingui()
   const t = useTheme()
+  const {_} = useLingui()
   const {isTabletOrMobile} = useWebMediaQueries()
+  const {fonts} = useAlf()
 
   const {colorMode, darkTheme} = useThemePrefs()
   const {setColorMode, setDarkTheme} = useSetThemePrefs()
@@ -54,6 +58,22 @@ export function AppearanceSettingsScreen({}: Props) {
     [setDarkTheme, darkTheme],
   )
 
+  const onChangeFontFamily = useCallback(
+    (values: string[]) => {
+      const next = values[0] === 'system' ? 'system' : 'theme'
+      fonts.setFontFamily(next)
+    },
+    [fonts],
+  )
+
+  const onChangeFontScale = useCallback(
+    (values: string[]) => {
+      const next = values[0] || ('0' as any)
+      fonts.setFontScale(next)
+    },
+    [fonts],
+  )
+
   return (
     <LayoutAnimationConfig skipExiting skipEntering>
       <View testID="preferencesThreadsScreen" style={s.hContentRegion}>
@@ -71,65 +91,143 @@ export function AppearanceSettingsScreen({}: Props) {
             </View>
           </SimpleViewHeader>
 
-          <View style={[a.p_xl, a.gap_lg]}>
-            <View style={[a.flex_row, a.align_center, a.gap_md]}>
-              <PhoneIcon style={t.atoms.text} />
-              <Text style={a.text_md}>
-                <Trans>Mode</Trans>
-              </Text>
-            </View>
-            <ToggleButton.Group
-              label={_(msg`Dark mode`)}
-              values={[colorMode]}
-              onChange={onChangeAppearance}>
-              <ToggleButton.Button label={_(msg`System`)} name="system">
-                <ToggleButton.ButtonText>
-                  <Trans>System</Trans>
-                </ToggleButton.ButtonText>
-              </ToggleButton.Button>
-              <ToggleButton.Button label={_(msg`Light`)} name="light">
-                <ToggleButton.ButtonText>
-                  <Trans>Light</Trans>
-                </ToggleButton.ButtonText>
-              </ToggleButton.Button>
-              <ToggleButton.Button label={_(msg`Dark`)} name="dark">
-                <ToggleButton.ButtonText>
-                  <Trans>Dark</Trans>
-                </ToggleButton.ButtonText>
-              </ToggleButton.Button>
-            </ToggleButton.Group>
-            {colorMode !== 'light' && (
-              <Animated.View
-                entering={native(FadeInDown)}
-                exiting={native(FadeOutDown)}
-                style={[a.mt_md, a.gap_lg]}>
-                <View style={[a.flex_row, a.align_center, a.gap_md]}>
-                  <MoonIcon style={t.atoms.text} />
-                  <Text style={a.text_md}>
-                    <Trans>Dark theme</Trans>
-                  </Text>
-                </View>
+          <View style={[a.gap_3xl, a.pt_xl, a.px_xl]}>
+            <View style={[a.gap_lg]}>
+              <AppearanceToggleButtonGroup
+                title={_(msg`Color mode`)}
+                icon={PhoneIcon}
+                items={[
+                  {
+                    label: _(msg`System`),
+                    name: 'system',
+                  },
+                  {
+                    label: _(msg`Light`),
+                    name: 'light',
+                  },
+                  {
+                    label: _(msg`Dark`),
+                    name: 'dark',
+                  },
+                ]}
+                values={[colorMode]}
+                onChange={onChangeAppearance}
+              />
 
-                <ToggleButton.Group
-                  label={_(msg`Dark theme`)}
-                  values={[darkTheme ?? 'dim']}
-                  onChange={onChangeDarkTheme}>
-                  <ToggleButton.Button label={_(msg`Dim`)} name="dim">
-                    <ToggleButton.ButtonText>
-                      <Trans>Dim</Trans>
-                    </ToggleButton.ButtonText>
-                  </ToggleButton.Button>
-                  <ToggleButton.Button label={_(msg`Dark`)} name="dark">
-                    <ToggleButton.ButtonText>
-                      <Trans>Dark</Trans>
-                    </ToggleButton.ButtonText>
-                  </ToggleButton.Button>
-                </ToggleButton.Group>
-              </Animated.View>
-            )}
+              {colorMode !== 'light' && (
+                <Animated.View
+                  entering={native(FadeInDown)}
+                  exiting={native(FadeOutDown)}>
+                  <AppearanceToggleButtonGroup
+                    title={_(msg`Dark theme`)}
+                    icon={MoonIcon}
+                    items={[
+                      {
+                        label: _(msg`Dim`),
+                        name: 'dim',
+                      },
+                      {
+                        label: _(msg`Dark`),
+                        name: 'dark',
+                      },
+                    ]}
+                    values={[darkTheme ?? 'dim']}
+                    onChange={onChangeDarkTheme}
+                  />
+                </Animated.View>
+              )}
+
+              <AppearanceToggleButtonGroup
+                title={_(msg`Font`)}
+                description={_(
+                  msg`For the best experience, we recommend using the theme font.`,
+                )}
+                icon={Aa}
+                items={[
+                  {
+                    label: _(msg`System`),
+                    name: 'system',
+                  },
+                  {
+                    label: _(msg`Theme`),
+                    name: 'theme',
+                  },
+                ]}
+                values={[fonts.family]}
+                onChange={onChangeFontFamily}
+              />
+
+              <AppearanceToggleButtonGroup
+                title={_(msg`Font size`)}
+                icon={TextSize}
+                items={[
+                  {
+                    label: _(msg`Smaller`),
+                    name: '-1',
+                  },
+                  {
+                    label: _(msg`Default`),
+                    name: '0',
+                  },
+                  {
+                    label: _(msg`Larger`),
+                    name: '1',
+                  },
+                ]}
+                values={[fonts.scale]}
+                onChange={onChangeFontScale}
+              />
+            </View>
           </View>
         </ScrollView>
       </View>
     </LayoutAnimationConfig>
+  )
+}
+
+export function AppearanceToggleButtonGroup({
+  title,
+  description,
+  icon: Icon,
+  items,
+  values,
+  onChange,
+}: {
+  title: string
+  description?: string
+  icon: React.ComponentType<SVGIconProps>
+  items: {
+    label: string
+    name: string
+  }[]
+  values: string[]
+  onChange: (values: string[]) => void
+}) {
+  const t = useTheme()
+  return (
+    <View style={[a.gap_sm]}>
+      <View style={[a.gap_xs]}>
+        <View style={[a.flex_row, a.align_center, a.gap_md]}>
+          <Icon style={t.atoms.text} />
+          <Text style={[a.text_md, a.font_bold]}>{title}</Text>
+        </View>
+        {description && (
+          <Text
+            style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}>
+            {description}
+          </Text>
+        )}
+      </View>
+      <ToggleButton.Group label={title} values={values} onChange={onChange}>
+        {items.map(item => (
+          <ToggleButton.Button
+            key={item.name}
+            label={item.label}
+            name={item.name}>
+            <ToggleButton.ButtonText>{item.label}</ToggleButton.ButtonText>
+          </ToggleButton.Button>
+        ))}
+      </ToggleButton.Group>
+    </View>
   )
 }

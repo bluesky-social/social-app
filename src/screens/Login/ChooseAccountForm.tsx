@@ -3,7 +3,6 @@ import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useAnalytics} from '#/lib/analytics/analytics'
 import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {SessionAccount, useSession, useSessionApi} from '#/state/session'
@@ -23,15 +22,10 @@ export const ChooseAccountForm = ({
   onPressBack: () => void
 }) => {
   const [pendingDid, setPendingDid] = React.useState<string | null>(null)
-  const {track, screen} = useAnalytics()
   const {_} = useLingui()
   const {currentAccount} = useSession()
   const {resumeSession} = useSessionApi()
   const {setShowLoggedOut} = useLoggedOutViewControls()
-
-  React.useEffect(() => {
-    screen('Choose Account')
-  }, [screen])
 
   const onSelect = React.useCallback(
     async (account: SessionAccount) => {
@@ -56,7 +50,6 @@ export const ChooseAccountForm = ({
           logContext: 'ChooseAccountForm',
           withPassword: false,
         })
-        track('Sign In', {resumedSession: true})
         Toast.show(_(msg`Signed in as @${account.handle}`))
       } catch (e: any) {
         logger.error('choose account: initSession failed', {
@@ -70,7 +63,6 @@ export const ChooseAccountForm = ({
     },
     [
       currentAccount,
-      track,
       resumeSession,
       pendingDid,
       onSelectAccount,
@@ -98,7 +90,7 @@ export const ChooseAccountForm = ({
           label={_(msg`Back`)}
           variant="solid"
           color="secondary"
-          size="medium"
+          size="large"
           onPress={onPressBack}>
           <ButtonText>{_(msg`Back`)}</ButtonText>
         </Button>

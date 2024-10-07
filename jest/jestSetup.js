@@ -42,23 +42,16 @@ jest.mock('rn-fetch-blob', () => ({
   fetch: jest.fn(),
 }))
 
-jest.mock('@bam.tech/react-native-image-resizer', () => ({
-  createResizedImage: jest.fn(),
+jest.mock('expo-file-system', () => ({
+  getInfoAsync: jest.fn().mockResolvedValue({exists: true, size: 100}),
+  deleteAsync: jest.fn(),
 }))
 
-jest.mock('@segment/analytics-react-native', () => ({
-  createClient: () => ({
-    add: jest.fn(),
+jest.mock('expo-image-manipulator', () => ({
+  manipulateAsync: jest.fn().mockResolvedValue({
+    uri: 'file://resized-image',
   }),
-  useAnalytics: () => ({
-    track: jest.fn(),
-    identify: jest.fn(),
-    reset: jest.fn(),
-    group: jest.fn(),
-    screen: jest.fn(),
-    alias: jest.fn(),
-    flush: jest.fn(),
-  }),
+  SaveFormat: jest.requireActual('expo-image-manipulator').SaveFormat,
 }))
 
 jest.mock('expo-camera', () => ({
@@ -101,6 +94,11 @@ jest.mock('expo-modules-core', () => ({
     if (moduleName === 'ExpoPlatformInfo') {
       return {
         getIsReducedMotionEnabled: () => false,
+      }
+    }
+    if (moduleName === 'BottomSheet') {
+      return {
+        dismissAll: () => {},
       }
     }
   }),

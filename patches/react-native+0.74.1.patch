@@ -1,5 +1,18 @@
+diff --git a/node_modules/react-native/Libraries/Blob/RCTFileReaderModule.mm b/node_modules/react-native/Libraries/Blob/RCTFileReaderModule.mm
+index caa5540..c5d4e67 100644
+--- a/node_modules/react-native/Libraries/Blob/RCTFileReaderModule.mm
++++ b/node_modules/react-native/Libraries/Blob/RCTFileReaderModule.mm
+@@ -73,7 +73,7 @@ @implementation RCTFileReaderModule
+     } else {
+       NSString *type = [RCTConvert NSString:blob[@"type"]];
+       NSString *text = [NSString stringWithFormat:@"data:%@;base64,%@",
+-                                                  type != nil && [type length] > 0 ? type : @"application/octet-stream",
++                                                  ![type isEqual:[NSNull null]] && [type length] > 0 ? type : @"application/octet-stream",
+                                                   [data base64EncodedStringWithOptions:0]];
+
+       resolve(text);
 diff --git a/node_modules/react-native/Libraries/Text/TextInput/RCTBaseTextInputView.mm b/node_modules/react-native/Libraries/Text/TextInput/RCTBaseTextInputView.mm
-index b0d71dc..9974932 100644
+index b0d71dc..41b9a0e 100644
 --- a/node_modules/react-native/Libraries/Text/TextInput/RCTBaseTextInputView.mm
 +++ b/node_modules/react-native/Libraries/Text/TextInput/RCTBaseTextInputView.mm
 @@ -377,10 +377,6 @@ - (void)textInputDidBeginEditing
@@ -25,37 +38,65 @@ index b0d71dc..9974932 100644
 
  - (void)reactBlur
 diff --git a/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.h b/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.h
-index e9b330f..1ecdf0a 100644
+index e9b330f..ec5f58c 100644
 --- a/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.h
 +++ b/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.h
-@@ -16,4 +16,6 @@
+@@ -15,5 +15,8 @@
+ @property (nonatomic, copy) NSString *title;
  @property (nonatomic, copy) RCTDirectEventBlock onRefresh;
  @property (nonatomic, weak) UIScrollView *scrollView;
-
-+- (void)forwarderBeginRefreshing;
++@property (nonatomic, copy) UIColor *customTintColor;
 +
++- (void)forwarderBeginRefreshing;
+
  @end
 diff --git a/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.m b/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.m
-index b09e653..4c32b31 100644
+index b09e653..288e60c 100644
 --- a/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.m
 +++ b/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.m
-@@ -198,9 +198,53 @@ - (void)refreshControlValueChanged
-   [self setCurrentRefreshingState:super.refreshing];
-   _refreshingProgrammatically = NO;
+@@ -22,6 +22,7 @@ @implementation RCTRefreshControl {
+   NSString *_title;
+   UIColor *_titleColor;
+   CGFloat _progressViewOffset;
++  UIColor *_customTintColor;
+ }
 
-+  if (@available(iOS 17.4, *)) {
-+    if (_currentRefreshingState) {
-+      UIImpactFeedbackGenerator *feedbackGenerator = [[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleLight];
-+      [feedbackGenerator prepare];
-+      [feedbackGenerator impactOccurred];
-+    }
-+  }
+ - (instancetype)init
+@@ -56,6 +57,12 @@ - (void)layoutSubviews
+   _isInitialRender = false;
+ }
+
++- (void)didMoveToSuperview
++{
++  [super didMoveToSuperview];
++  [self setTintColor:_customTintColor];
++}
 +
-   if (_onRefresh) {
-     _onRefresh(nil);
+ - (void)beginRefreshingProgrammatically
+ {
+   UInt64 beginRefreshingTimestamp = _currentRefreshingStateTimestamp;
+@@ -203,4 +210,58 @@ - (void)refreshControlValueChanged
    }
  }
 
++- (void)setCustomTintColor:(UIColor *)customTintColor
++{
++  _customTintColor = customTintColor;
++  [self setTintColor:customTintColor];
++}
++
++// Fix for https://github.com/facebook/react-native/issues/43388
++// A bug in iOS 17.4 causes the haptic to not play when refreshing if the tintColor
++// is set before the refresh control gets added to the scrollview. We'll call this
++// function whenever the superview changes. We'll also call it if the value of customTintColor
++// changes.
++- (void)setTintColor:(UIColor *)tintColor
++{
++  if ([self.superview isKindOfClass:[UIScrollView class]] && self.tintColor != tintColor) {
++    [super setTintColor:tintColor];
++  }
++}
++
 +/*
 + This method is used by Bluesky's ExpoScrollForwarder. This allows other React Native
 + libraries to perform a refresh of a scrollview and access the refresh control's onRefresh
@@ -93,6 +134,24 @@ index b09e653..4c32b31 100644
 +}
 +
  @end
+diff --git a/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControlManager.m b/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControlManager.m
+index 40aaf9c..1c60164 100644
+--- a/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControlManager.m
++++ b/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControlManager.m
+@@ -22,11 +22,12 @@ - (UIView *)view
+
+ RCT_EXPORT_VIEW_PROPERTY(onRefresh, RCTDirectEventBlock)
+ RCT_EXPORT_VIEW_PROPERTY(refreshing, BOOL)
+-RCT_EXPORT_VIEW_PROPERTY(tintColor, UIColor)
+ RCT_EXPORT_VIEW_PROPERTY(title, NSString)
+ RCT_EXPORT_VIEW_PROPERTY(titleColor, UIColor)
+ RCT_EXPORT_VIEW_PROPERTY(progressViewOffset, CGFloat)
+
++RCT_REMAP_VIEW_PROPERTY(tintColor, customTintColor, UIColor)
++
+ RCT_EXPORT_METHOD(setNativeRefreshing : (nonnull NSNumber *)viewTag toRefreshing : (BOOL)refreshing)
+ {
+   [self.bridge.uiManager addUIBlock:^(RCTUIManager *uiManager, NSDictionary<NSNumber *, UIView *> *viewRegistry) {
 diff --git a/node_modules/react-native/ReactAndroid/src/main/java/com/facebook/react/modules/core/JavaTimerManager.java b/node_modules/react-native/ReactAndroid/src/main/java/com/facebook/react/modules/core/JavaTimerManager.java
 index 5f5e1ab..aac00b6 100644
 --- a/node_modules/react-native/ReactAndroid/src/main/java/com/facebook/react/modules/core/JavaTimerManager.java

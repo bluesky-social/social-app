@@ -22,8 +22,8 @@ import {
   useProfileUpdateMutation,
 } from '#/state/queries/profile'
 import {useSession} from '#/state/session'
+import {isNonConfigurableModerationAuthority} from '#/state/session/additional-moderation-authorities'
 import {useSetMinimalShellMode} from '#/state/shell'
-import {useAnalytics} from 'lib/analytics/analytics'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
 import {CenteredView} from '#/view/com/util/Views'
 import {ScrollView} from '#/view/com/util/Views'
@@ -162,7 +162,6 @@ export function ModerationScreenInner({
   const {_} = useLingui()
   const t = useTheme()
   const setMinimalShellMode = useSetMinimalShellMode()
-  const {screen} = useAnalytics()
   const {gtMobile} = useBreakpoints()
   const {mutedWordsDialogControl} = useGlobalDialogsControlContext()
   const birthdateDialogControl = Dialog.useDialogControl()
@@ -174,9 +173,8 @@ export function ModerationScreenInner({
 
   useFocusEffect(
     React.useCallback(() => {
-      screen('Moderation')
       setMinimalShellMode(false)
-    }, [screen, setMinimalShellMode]),
+    }, [setMinimalShellMode]),
   )
 
   const {mutateAsync: setAdultContentPref, variables: optimisticAdultContent} =
@@ -338,7 +336,7 @@ export function ModerationScreenInner({
                   a.justify_between,
                   disabledOnIOS && {opacity: 0.5},
                 ]}>
-                <Text style={[a.font_semibold, t.atoms.text_contrast_high]}>
+                <Text style={[a.font_bold, t.atoms.text_contrast_high]}>
                   <Trans>Enable adult content</Trans>
                 </Text>
                 <Toggle.Item
@@ -455,6 +453,9 @@ export function ModerationScreenInner({
                           value={labeler.creator.description}
                           handle={labeler.creator.handle}
                         />
+                        {isNonConfigurableModerationAuthority(
+                          labeler.creator.did,
+                        ) && <LabelingService.RegionalNotice />}
                       </LabelingService.Content>
                     </LabelingService.Outer>
                   )}

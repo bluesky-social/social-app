@@ -25,7 +25,7 @@ export type LogEvents = {
     secondsActive: number
   }
   'state:foreground:sampled': {}
-  'router:navigate:sampled': {}
+  'router:navigate:notifications:sampled': {}
   'deepLink:referrerReceived': {
     to: string
     referrer: string
@@ -127,25 +127,27 @@ export type LogEvents = {
     langs: string
     logContext: 'Composer'
   }
-  'post:like': {
+  'post:like:sampled': {
     doesLikerFollowPoster: boolean | undefined
     doesPosterFollowLiker: boolean | undefined
     likerClout: number | undefined
     postClout: number | undefined
     logContext: 'FeedItem' | 'PostThreadItem' | 'Post'
   }
-  'post:repost': {
+  'post:repost:sampled': {
     logContext: 'FeedItem' | 'PostThreadItem' | 'Post'
   }
-  'post:unlike': {
+  'post:unlike:sampled': {
     logContext: 'FeedItem' | 'PostThreadItem' | 'Post'
   }
-  'post:unrepost': {
+  'post:unrepost:sampled': {
     logContext: 'FeedItem' | 'PostThreadItem' | 'Post'
   }
   'post:mute': {}
   'post:unmute': {}
-  'profile:follow': {
+  'post:pin': {}
+  'post:unpin': {}
+  'profile:follow:sampled': {
     didBecomeMutual: boolean | undefined
     followeeClout: number | undefined
     followerClout: number | undefined
@@ -162,7 +164,7 @@ export type LogEvents = {
       | 'FeedInterstitial'
       | 'ProfileHeaderSuggestedFollows'
   }
-  'profile:unfollow': {
+  'profile:unfollow:sampled': {
     logContext:
       | 'RecommendedFollowsItem'
       | 'PostThreadItem'
@@ -216,12 +218,6 @@ export type LogEvents = {
 
   'profile:header:suggestedFollowsCard:press': {}
 
-  'debug:followingPrefs': {
-    followingShowRepliesFromPref: 'all' | 'following' | 'off'
-    followingRepliesMinLikePref: number
-  }
-  'debug:followingDisplayed': {}
-
   'test:all:always': {}
   'test:all:sometimes': {}
   'test:all:boosted_by_gate1': {reason: 'base' | 'gate1'}
@@ -231,4 +227,8 @@ export type LogEvents = {
   'test:gate1:sometimes': {}
   'test:gate2:always': {}
   'test:gate2:sometimes': {}
+
+  'tmd:share': {}
+  'tmd:download': {}
+  'tmd:post': {}
 }

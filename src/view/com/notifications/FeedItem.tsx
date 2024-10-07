@@ -8,9 +8,6 @@ import {
 } from 'react-native'
 import {
   AppBskyActorDefs,
-  AppBskyEmbedExternal,
-  AppBskyEmbedImages,
-  AppBskyEmbedRecordWithMedia,
   AppBskyFeedDefs,
   AppBskyFeedPost,
   AppBskyGraphFollow,
@@ -25,22 +22,21 @@ import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {parseTenorGif} from '#/lib/strings/embed-player'
+import {useAnimatedValue} from '#/lib/hooks/useAnimatedValue'
+import {usePalette} from '#/lib/hooks/usePalette'
+import {makeProfileLink} from '#/lib/routes/links'
+import {NavigationProp} from '#/lib/routes/types'
+import {forceLTR} from '#/lib/strings/bidi'
+import {sanitizeDisplayName} from '#/lib/strings/display-names'
+import {sanitizeHandle} from '#/lib/strings/handles'
+import {niceDate} from '#/lib/strings/time'
+import {colors, s} from '#/lib/styles'
 import {logger} from '#/logger'
+import {isWeb} from '#/platform/detection'
+import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
 import {FeedNotification} from '#/state/queries/notifications/feed'
-import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
-import {usePalette} from 'lib/hooks/usePalette'
-import {makeProfileLink} from 'lib/routes/links'
-import {NavigationProp} from 'lib/routes/types'
-import {forceLTR} from 'lib/strings/bidi'
-import {sanitizeDisplayName} from 'lib/strings/display-names'
-import {sanitizeHandle} from 'lib/strings/handles'
-import {niceDate} from 'lib/strings/time'
-import {colors, s} from 'lib/styles'
-import {isWeb} from 'platform/detection'
-import {DM_SERVICE_HEADERS} from 'state/queries/messages/const'
-import {precacheProfile} from 'state/queries/profile'
-import {useAgent} from 'state/session'
+import {precacheProfile} from '#/state/queries/profile'
+import {useAgent} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {
@@ -52,11 +48,11 @@ import {PersonPlus_Filled_Stroke2_Corner0_Rounded as PersonPlusIcon} from '#/com
 import {Repost_Stroke2_Corner2_Rounded as RepostIcon} from '#/components/icons/Repost'
 import {StarterPack} from '#/components/icons/StarterPack'
 import {Link as NewLink} from '#/components/Link'
+import * as MediaPreview from '#/components/MediaPreview'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {Notification as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
 import {FeedSourceCard} from '../feeds/FeedSourceCard'
 import {Post} from '../post/Post'
-import {ImageHorzList} from '../util/images/ImageHorzList'
 import {Link, TextLink} from '../util/Link'
 import {formatCount} from '../util/numeric/format'
 import {Text} from '../util/text/Text'
@@ -84,7 +80,7 @@ let FeedItem = ({
 }): React.ReactNode => {
   const queryClient = useQueryClient()
   const pal = usePalette('default')
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const t = useTheme()
   const [isAuthorsExpanded, setAuthorsExpanded] = useState<boolean>(false)
   const itemHref = useMemo(() => {
@@ -225,11 +221,11 @@ let FeedItem = ({
   }
 
   const formattedCount =
-    authors.length > 1 ? formatCount(authors.length - 1) : ''
+    authors.length > 1 ? formatCount(i18n, authors.length - 1) : ''
   const firstAuthorName = sanitizeDisplayName(
     authors[0].profile.displayName || authors[0].profile.handle,
   )
-  const niceTimestamp = niceDate(item.notification.indexedAt)
+  const niceTimestamp = niceDate(i18n, item.notification.indexedAt)
   const a11yLabelUsers =
     authors.length > 1
       ? _(msg` and `) +
@@ -314,12 +310,16 @@ let FeedItem = ({
               key={authors[0].href}
               style={[pal.text, s.bold]}
               href={authors[0].href}
-              text={forceLTR(firstAuthorName)}
+              text={
+                <Text emoji style={[pal.text, s.bold]}>
+                  {forceLTR(firstAuthorName)}
+                </Text>
+              }
               disableMismatchWarning
             />
             {authors.length > 1 ? (
               <>
-                <Text style={[pal.text, s.mr5, s.ml5]}>
+                <Text style={[pal.text]}>
                   {' '}
                   <Trans>and</Trans>{' '}
                 </Text>
@@ -416,7 +416,7 @@ function SayHelloBtn({profile}: {profile: AppBskyActorDefs.ProfileViewBasic}) {
       label={_(msg`Say hello!`)}
       variant="ghost"
       color="primary"
-      size="xsmall"
+      size="small"
       style={[a.self_center, {marginLeft: 'auto'}]}
       disabled={isLoading}
       onPress={async () => {
@@ -574,12 +574,13 @@ function ExpandedAuthorsList({
                 numberOfLines={1}
                 style={pal.text}
                 lineHeight={1.2}>
-                {sanitizeDisplayName(
-                  author.profile.displayName || author.profile.handle,
-                )}
-                &nbsp;
+                <Text emoji type="lg-bold" style={pal.text} lineHeight={1.2}>
+                  {sanitizeDisplayName(
+                    author.profile.displayName || author.profile.handle,
+                  )}
+                </Text>{' '}
                 <Text style={[pal.textLight]} lineHeight={1.2}>
-                  {sanitizeHandle(author.profile.handle)}
+                  {sanitizeHandle(author.profile.handle, '@')}
                 </Text>
               </Text>
             </View>
@@ -593,49 +594,18 @@ function AdditionalPostText({post}: {post?: AppBskyFeedDefs.PostView}) {
   const pal = usePalette('default')
   if (post && AppBskyFeedPost.isRecord(post?.record)) {
     const text = post.record.text
-    let images
-    let isGif = false
-
-    if (AppBskyEmbedImages.isView(post.embed)) {
-      images = post.embed.images
-    } else if (
-      AppBskyEmbedRecordWithMedia.isView(post.embed) &&
-      AppBskyEmbedImages.isView(post.embed.media)
-    ) {
-      images = post.embed.media.images
-    } else if (
-      AppBskyEmbedExternal.isView(post.embed) &&
-      post.embed.external.thumb
-    ) {
-      let url: URL | undefined
-      try {
-        url = new URL(post.embed.external.uri)
-      } catch {}
-      if (url) {
-        const {success} = parseTenorGif(url)
-        if (success) {
-          isGif = true
-          images = [
-            {
-              thumb: post.embed.external.thumb,
-              alt: post.embed.external.title,
-              fullsize: post.embed.external.thumb,
-            },
-          ]
-        }
-      }
-    }
 
     return (
       <>
-        {text?.length > 0 && <Text style={pal.textLight}>{text}</Text>}
-        {images && images.length > 0 && (
-          <ImageHorzList
-            images={images}
-            style={styles.additionalPostImages}
-            gif={isGif}
-          />
+        {text?.length > 0 && (
+          <Text emoji style={pal.textLight}>
+            {text}
+          </Text>
         )}
+        <MediaPreview.Embed
+          embed={post.embed}
+          style={styles.additionalPostImages}
+        />
       </>
     )
   }
@@ -655,7 +625,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   layoutIcon: {
-    width: 70,
+    width: 60,
     alignItems: 'flex-end',
     paddingTop: 2,
   },
@@ -671,7 +641,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   aviExtraCount: {
-    fontWeight: 'bold',
+    fontWeight: '600',
     paddingLeft: 6,
   },
   meta: {

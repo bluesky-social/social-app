@@ -14,19 +14,18 @@ import {
 } from '#/components/moderation/LabelsOnMeDialog'
 
 export function LabelsOnMe({
-  details,
+  type,
   labels,
   size,
   style,
 }: {
-  details: {did: string} | {uri: string; cid: string}
+  type: 'account' | 'content'
   labels: ComAtprotoLabelDefs.Label[] | undefined
   size?: ButtonSize
   style?: StyleProp<ViewStyle>
 }) {
   const {_} = useLingui()
   const {currentAccount} = useSession()
-  const isAccount = 'did' in details
   const control = useLabelsOnMeDialogControl()
 
   if (!labels || !currentAccount) {
@@ -39,7 +38,7 @@ export function LabelsOnMe({
 
   return (
     <View style={[a.flex_row, style]}>
-      <LabelsOnMeDialog control={control} subject={details} labels={labels} />
+      <LabelsOnMeDialog control={control} labels={labels} type={type} />
 
       <Button
         variant="solid"
@@ -51,7 +50,7 @@ export function LabelsOnMe({
         }}>
         <ButtonIcon position="left" icon={CircleInfo} />
         <ButtonText style={[a.leading_snug]}>
-          {isAccount ? (
+          {type === 'account' ? (
             <Plural
               value={labels.length}
               one="# label has been placed on this account"
@@ -82,6 +81,6 @@ export function LabelsOnMyPost({
     return null
   }
   return (
-    <LabelsOnMe details={post} labels={post.labels} size="tiny" style={style} />
+    <LabelsOnMe type="content" labels={post.labels} size="tiny" style={style} />
   )
 }

@@ -9,19 +9,18 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
 
+import {APP_LANGUAGES, LANGUAGES} from '#/lib/../locale/languages'
+import {usePalette} from '#/lib/hooks/usePalette'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
+import {s} from '#/lib/styles'
 import {sanitizeAppLanguageSetting} from '#/locale/helpers'
 import {useModalControls} from '#/state/modals'
 import {useLanguagePrefs, useLanguagePrefsApi} from '#/state/preferences'
 import {useSetMinimalShellMode} from '#/state/shell'
-import {APP_LANGUAGES, LANGUAGES} from 'lib/../locale/languages'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
-import {s} from 'lib/styles'
-import {Button} from 'view/com/util/forms/Button'
-import {ViewHeader} from 'view/com/util/ViewHeader'
-import {CenteredView} from 'view/com/util/Views'
+import {Button} from '#/view/com/util/forms/Button'
+import {ViewHeader} from '#/view/com/util/ViewHeader'
+import {CenteredView} from '#/view/com/util/Views'
 import {Text} from '../com/util/text/Text'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'LanguageSettings'>
@@ -32,21 +31,18 @@ export function LanguageSettingsScreen(_props: Props) {
   const langPrefs = useLanguagePrefs()
   const setLangPrefs = useLanguagePrefsApi()
   const {isTabletOrDesktop} = useWebMediaQueries()
-  const {screen, track} = useAnalytics()
   const setMinimalShellMode = useSetMinimalShellMode()
   const {openModal} = useModalControls()
 
   useFocusEffect(
     React.useCallback(() => {
-      screen('Settings')
       setMinimalShellMode(false)
-    }, [screen, setMinimalShellMode]),
+    }, [setMinimalShellMode]),
   )
 
   const onPressContentLanguages = React.useCallback(() => {
-    track('Settings:ContentlanguagesButtonClicked')
     openModal({name: 'content-languages-settings'})
-  }, [track, openModal])
+  }, [openModal])
 
   const onChangePrimaryLanguage = React.useCallback(
     (value: Parameters<PickerSelectProps['onValueChange']>[0]) => {
@@ -118,7 +114,7 @@ export function LanguageSettingsScreen(_props: Props) {
                   color: pal.text.color,
                   fontSize: 14,
                   letterSpacing: 0.5,
-                  fontWeight: '500',
+                  fontWeight: '600',
                   paddingHorizontal: 14,
                   paddingVertical: 8,
                   borderRadius: 24,
@@ -128,7 +124,7 @@ export function LanguageSettingsScreen(_props: Props) {
                   color: pal.text.color,
                   fontSize: 14,
                   letterSpacing: 0.5,
-                  fontWeight: '500',
+                  fontWeight: '600',
                   paddingHorizontal: 14,
                   paddingVertical: 8,
                   borderRadius: 24,
@@ -147,7 +143,7 @@ export function LanguageSettingsScreen(_props: Props) {
                   fontSize: 14,
                   fontFamily: 'inherit',
                   letterSpacing: 0.5,
-                  fontWeight: '500',
+                  fontWeight: '600',
                   paddingHorizontal: 14,
                   paddingVertical: 8,
                   borderRadius: 24,
@@ -211,7 +207,7 @@ export function LanguageSettingsScreen(_props: Props) {
                   color: pal.text.color,
                   fontSize: 14,
                   letterSpacing: 0.5,
-                  fontWeight: '500',
+                  fontWeight: '600',
                   paddingHorizontal: 14,
                   paddingVertical: 8,
                   borderRadius: 24,
@@ -221,7 +217,7 @@ export function LanguageSettingsScreen(_props: Props) {
                   color: pal.text.color,
                   fontSize: 14,
                   letterSpacing: 0.5,
-                  fontWeight: '500',
+                  fontWeight: '600',
                   paddingHorizontal: 14,
                   paddingVertical: 8,
                   borderRadius: 24,
@@ -239,7 +235,7 @@ export function LanguageSettingsScreen(_props: Props) {
                   fontSize: 14,
                   fontFamily: 'inherit',
                   letterSpacing: 0.5,
-                  fontWeight: '500',
+                  fontWeight: '600',
                   paddingHorizontal: 14,
                   paddingVertical: 8,
                   borderRadius: 24,

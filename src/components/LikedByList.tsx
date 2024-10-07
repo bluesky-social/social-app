@@ -75,6 +75,7 @@ export function LikedByList({uri}: {uri: string}) {
         isLoading={isUriLoading || isLikedByLoading}
         isError={isError}
         emptyType="results"
+        emptyTitle={_(msg`No likes yet`)}
         emptyMessage={_(
           msg`Nobody has liked this yet. Maybe you should be the first!`,
         )}

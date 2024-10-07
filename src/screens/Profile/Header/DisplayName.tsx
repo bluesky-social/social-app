@@ -2,10 +2,10 @@ import React from 'react'
 import {View} from 'react-native'
 import {AppBskyActorDefs, ModerationDecision} from '@atproto/api'
 
+import {sanitizeDisplayName} from '#/lib/strings/display-names'
+import {sanitizeHandle} from '#/lib/strings/handles'
 import {Shadow} from '#/state/cache/types'
-import {sanitizeDisplayName} from 'lib/strings/display-names'
-import {sanitizeHandle} from 'lib/strings/handles'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
 
 export function ProfileHeaderDisplayName({
@@ -16,11 +16,19 @@ export function ProfileHeaderDisplayName({
   moderation: ModerationDecision
 }) {
   const t = useTheme()
+  const {gtMobile} = useBreakpoints()
+
   return (
     <View pointerEvents="none">
       <Text
+        emoji
         testID="profileHeaderDisplayName"
-        style={[t.atoms.text, a.text_4xl, a.self_start, {fontWeight: '500'}]}>
+        style={[
+          t.atoms.text,
+          gtMobile ? a.text_4xl : a.text_3xl,
+          a.self_start,
+          a.font_heavy,
+        ]}>
         {sanitizeDisplayName(
           profile.displayName || sanitizeHandle(profile.handle),
           moderation.ui('displayName'),

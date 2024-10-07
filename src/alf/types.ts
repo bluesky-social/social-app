@@ -156,6 +156,7 @@ export type ThemedAtoms = {
   }
 }
 export type Theme = {
+  scheme: 'light' | 'dark' // for library support
   name: ThemeName
   palette: Palette
   atoms: ThemedAtoms

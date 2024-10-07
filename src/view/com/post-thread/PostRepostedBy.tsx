@@ -10,11 +10,7 @@ import {useResolveUriQuery} from '#/state/queries/resolve-uri'
 import {useInitialNumToRender} from 'lib/hooks/useInitialNumToRender'
 import {ProfileCardWithFollowBtn} from '#/view/com/profile/ProfileCard'
 import {List} from '#/view/com/util/List'
-import {
-  ListFooter,
-  ListHeaderDesktop,
-  ListMaybePlaceholder,
-} from '#/components/Lists'
+import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
 
 function renderItem({item}: {item: ActorDefs.ProfileViewBasic}) {
   return <ProfileCardWithFollowBtn key={item.did} profile={item} />
@@ -78,6 +74,13 @@ export function PostRepostedBy({uri}: {uri: string}) {
       <ListMaybePlaceholder
         isLoading={isLoadingUri || isLoadingRepostedBy}
         isError={isError}
+        emptyType="results"
+        emptyTitle={_(msg`No reposts yet`)}
+        emptyMessage={_(
+          msg`Nobody has reposted this yet. Maybe you should be the first!`,
+        )}
+        errorMessage={cleanError(resolveError || error)}
+        sideBorders={false}
       />
     )
   }
@@ -93,7 +96,6 @@ export function PostRepostedBy({uri}: {uri: string}) {
       onRefresh={onRefresh}
       onEndReached={onEndReached}
       onEndReachedThreshold={4}
-      ListHeaderComponent={<ListHeaderDesktop title={_(msg`Reposted By`)} />}
       ListFooterComponent={
         <ListFooter
           isFetchingNextPage={isFetchingNextPage}
@@ -105,6 +107,7 @@ export function PostRepostedBy({uri}: {uri: string}) {
       desktopFixedHeight
       initialNumToRender={initialNumToRender}
       windowSize={11}
+      sideBorders={false}
     />
   )
 }

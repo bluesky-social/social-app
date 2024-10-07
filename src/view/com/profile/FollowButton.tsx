@@ -61,13 +61,22 @@ export function FollowButton({
         label={_(msg({message: 'Unfollow', context: 'action'}))}
       />
     )
-  } else {
+  } else if (!profile.viewer.followedBy) {
     return (
       <Button
         type={unfollowedType}
         labelStyle={labelStyle}
         onPress={onPressFollow}
         label={_(msg({message: 'Follow', context: 'action'}))}
+      />
+    )
+  } else {
+    return (
+      <Button
+        type={unfollowedType}
+        labelStyle={labelStyle}
+        onPress={onPressFollow}
+        label={_(msg({message: 'Follow Back', context: 'action'}))}
       />
     )
   }

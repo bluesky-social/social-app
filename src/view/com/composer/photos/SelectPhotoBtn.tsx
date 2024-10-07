@@ -3,34 +3,45 @@ import React, {useCallback} from 'react'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useAnalytics} from '#/lib/analytics/analytics'
 import {usePhotoLibraryPermission} from '#/lib/hooks/usePermissions'
+import {openPicker} from '#/lib/media/picker'
 import {isNative} from '#/platform/detection'
-import {GalleryModel} from '#/state/models/media/gallery'
+import {ComposerImage, createComposerImage} from '#/state/gallery'
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
+import {useSheetWrapper} from '#/components/Dialog/sheet-wrapper'
 import {Image_Stroke2_Corner0_Rounded as Image} from '#/components/icons/Image'
 
 type Props = {
-  gallery: GalleryModel
+  size: number
   disabled?: boolean
+  onAdd: (next: ComposerImage[]) => void
 }
 
-export function SelectPhotoBtn({gallery, disabled}: Props) {
-  const {track} = useAnalytics()
+export function SelectPhotoBtn({size, disabled, onAdd}: Props) {
   const {_} = useLingui()
   const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
   const t = useTheme()
+  const sheetWrapper = useSheetWrapper()
 
   const onPressSelectPhotos = useCallback(async () => {
-    track('Composer:GalleryOpened')
-
     if (isNative && !(await requestPhotoAccessIfNeeded())) {
       return
     }
 
-    gallery.pick()
-  }, [track, requestPhotoAccessIfNeeded, gallery])
+    const images = await sheetWrapper(
+      openPicker({
+        selectionLimit: 4 - size,
+        allowsMultipleSelection: true,
+      }),
+    )
+
+    const results = await Promise.all(
+      images.map(img => createComposerImage(img)),
+    )
+
+    onAdd(results)
+  }, [requestPhotoAccessIfNeeded, size, onAdd, sheetWrapper])
 
   return (
     <Button

@@ -4,7 +4,6 @@ import {AppBskyLabelerDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-export {useDialogControl as useReportDialogControl} from '#/components/Dialog'
 import {getLabelingServiceTitle} from '#/lib/moderation'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, useButtonContext} from '#/components/Button'
@@ -77,8 +76,7 @@ function LabelerButton({
             handle: labeler.creator.handle,
           })}
         />
-        <Text
-          style={[t.atoms.text_contrast_medium, a.text_sm, a.font_semibold]}>
+        <Text style={[t.atoms.text_contrast_medium, a.text_sm, a.font_bold]}>
           @{labeler.creator.handle}
         </Text>
       </LabelingServiceCard.Content>

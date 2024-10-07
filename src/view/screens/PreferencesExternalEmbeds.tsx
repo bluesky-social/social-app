@@ -3,21 +3,20 @@ import {StyleSheet, View} from 'react-native'
 import {Trans} from '@lingui/macro'
 import {useFocusEffect} from '@react-navigation/native'
 
+import {usePalette} from '#/lib/hooks/usePalette'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
 import {
   EmbedPlayerSource,
   externalEmbedLabels,
 } from '#/lib/strings/embed-player'
-import {useSetMinimalShellMode} from '#/state/shell'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
-import {s} from 'lib/styles'
+import {s} from '#/lib/styles'
 import {
   useExternalEmbedsPrefs,
   useSetExternalEmbedPref,
-} from 'state/preferences'
-import {ToggleButton} from 'view/com/util/forms/ToggleButton'
+} from '#/state/preferences'
+import {useSetMinimalShellMode} from '#/state/shell'
+import {ToggleButton} from '#/view/com/util/forms/ToggleButton'
 import {atoms as a} from '#/alf'
 import {SimpleViewHeader} from '../com/util/SimpleViewHeader'
 import {Text} from '../com/util/text/Text'
@@ -30,14 +29,12 @@ type Props = NativeStackScreenProps<
 export function PreferencesExternalEmbeds({}: Props) {
   const pal = usePalette('default')
   const setMinimalShellMode = useSetMinimalShellMode()
-  const {screen} = useAnalytics()
   const {isTabletOrMobile} = useWebMediaQueries()
 
   useFocusEffect(
     React.useCallback(() => {
-      screen('PreferencesExternalEmbeds')
       setMinimalShellMode(false)
-    }, [screen, setMinimalShellMode]),
+    }, [setMinimalShellMode]),
   )
 
   return (
@@ -50,7 +47,7 @@ export function PreferencesExternalEmbeds({}: Props) {
           showBackButton={isTabletOrMobile}
           style={[pal.border, a.border_b]}>
           <View style={a.flex_1}>
-            <Text type="title-lg" style={[pal.text, {fontWeight: 'bold'}]}>
+            <Text type="title-lg" style={[pal.text, {fontWeight: '600'}]}>
               <Trans>External Media Preferences</Trans>
             </Text>
             <Text style={pal.textLight}>

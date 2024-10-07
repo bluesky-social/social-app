@@ -3,8 +3,10 @@ import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import * as EmailValidator from 'email-validator'
+import type tldts from 'tldts'
 
 import {logEvent} from '#/lib/statsig/statsig'
+import {isEmailMaybeInvalid} from '#/lib/strings/email'
 import {logger} from '#/logger'
 import {ScreenTransition} from '#/screens/Login/ScreenTransition'
 import {is13, is18, useSignupContext} from '#/screens/Signup/state'
@@ -46,12 +48,43 @@ export function StepInfo({
 
   const inviteCodeValueRef = useRef<string>(state.inviteCode)
   const emailValueRef = useRef<string>(state.email)
+  const prevEmailValueRef = useRef<string>(state.email)
   const passwordValueRef = useRef<string>(state.password)
 
-  const onNextPress = React.useCallback(async () => {
+  const [hasWarnedEmail, setHasWarnedEmail] = React.useState<boolean>(false)
+
+  const tldtsRef = React.useRef<typeof tldts>()
+  React.useEffect(() => {
+    // @ts-expect-error - valid path
+    import('tldts/dist/index.cjs.min.js').then(tldts => {
+      tldtsRef.current = tldts
+    })
+    // This will get used in the avatar creator a few steps later, so lets preload it now
+    // @ts-expect-error - valid path
+    import('react-native-view-shot/src/index')
+  }, [])
+
+  const onNextPress = () => {
     const inviteCode = inviteCodeValueRef.current
     const email = emailValueRef.current
+    const emailChanged = prevEmailValueRef.current !== email
     const password = passwordValueRef.current
+
+    if (emailChanged && tldtsRef.current) {
+      if (isEmailMaybeInvalid(email, tldtsRef.current)) {
+        prevEmailValueRef.current = email
+        setHasWarnedEmail(true)
+        return dispatch({
+          type: 'setError',
+          value: _(
+            msg`It looks like you may have entered your email address incorrectly. Are you sure it's right?`,
+          ),
+        })
+      }
+    } else if (hasWarnedEmail) {
+      setHasWarnedEmail(false)
+    }
+    prevEmailValueRef.current = email
 
     if (!is13(state.dateOfBirth)) {
       return
@@ -89,13 +122,7 @@ export function StepInfo({
     logEvent('signup:nextPressed', {
       activeStep: state.activeStep,
     })
-  }, [
-    _,
-    dispatch,
-    state.activeStep,
-    state.dateOfBirth,
-    state.serviceDescription?.inviteCodeRequired,
-  ])
+  }
 
   return (
     <ScreenTransition>
@@ -148,6 +175,9 @@ export function StepInfo({
                   testID="emailInput"
                   onChangeText={value => {
                     emailValueRef.current = value.trim()
+                    if (hasWarnedEmail) {
+                      setHasWarnedEmail(false)
+                    }
                   }}
                   label={_(msg`Enter your email address`)}
                   defaultValue={state.email}
@@ -172,6 +202,7 @@ export function StepInfo({
                   defaultValue={state.password}
                   secureTextEntry
                   autoComplete="new-password"
+                  autoCapitalize="none"
                 />
               </TextField.Root>
             </View>
@@ -207,6 +238,7 @@ export function StepInfo({
         onBackPress={onPressBack}
         onNextPress={onNextPress}
         onRetryPress={refetchServer}
+        overrideNextText={hasWarnedEmail ? _(msg`It's correct`) : undefined}
       />
     </ScreenTransition>
   )

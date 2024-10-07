@@ -79,7 +79,6 @@ export function DisableEmail2FADialog({
   return (
     <Dialog.Outer control={control}>
       <Dialog.Handle />
-
       <Dialog.ScrollableInner
         accessibilityDescribedBy="dialog-description"
         accessibilityLabelledBy="dialog-title">

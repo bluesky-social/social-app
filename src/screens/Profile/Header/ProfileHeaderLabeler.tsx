@@ -12,21 +12,20 @@ import {useLingui} from '@lingui/react'
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import {MAX_LABELERS} from '#/lib/constants'
+import {useHaptics} from '#/lib/haptics'
 import {isAppLabeler} from '#/lib/moderation'
 import {logger} from '#/logger'
+import {isIOS} from '#/platform/detection'
+import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {Shadow} from '#/state/cache/types'
 import {useModalControls} from '#/state/modals'
 import {useLabelerSubscriptionMutation} from '#/state/queries/labeler'
 import {useLikeMutation, useUnlikeMutation} from '#/state/queries/like'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useRequireAuth, useSession} from '#/state/session'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {useHaptics} from 'lib/haptics'
-import {isIOS} from 'platform/detection'
-import {useProfileShadow} from 'state/cache/profile-shadow'
 import {ProfileMenu} from '#/view/com/profile/ProfileMenu'
 import * as Toast from '#/view/com/util/Toast'
-import {atoms as a, tokens, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, tokens, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {DialogOuterProps} from '#/components/Dialog'
 import {
@@ -62,11 +61,9 @@ let ProfileHeaderLabeler = ({
   const profile: Shadow<AppBskyActorDefs.ProfileViewDetailed> =
     useProfileShadow(profileUnshadowed)
   const t = useTheme()
-  const {gtMobile} = useBreakpoints()
   const {_} = useLingui()
   const {currentAccount, hasSession} = useSession()
   const {openModal} = useModalControls()
-  const {track} = useAnalytics()
   const requireAuth = useRequireAuth()
   const playHaptic = useHaptics()
   const cantSubscribePrompt = Prompt.usePromptControl()
@@ -102,12 +99,10 @@ let ProfileHeaderLabeler = ({
 
       if (likeUri) {
         await unlikeMod({uri: likeUri})
-        track('CustomFeed:Unlike')
         setLikeCount(c => c - 1)
         setLikeUri('')
       } else {
         const res = await likeMod({uri: labeler.uri, cid: labeler.cid})
-        track('CustomFeed:Like')
         setLikeCount(c => c + 1)
         setLikeUri(res.uri)
       }
@@ -120,15 +115,14 @@ let ProfileHeaderLabeler = ({
       )
       logger.error(`Failed to toggle labeler like`, {message: e.message})
     }
-  }, [labeler, playHaptic, likeUri, unlikeMod, track, likeMod, _])
+  }, [labeler, playHaptic, likeUri, unlikeMod, likeMod, _])
 
   const onPressEditProfile = React.useCallback(() => {
-    track('ProfileHeader:EditProfileButtonClicked')
     openModal({
       name: 'edit-profile',
       profile,
     })
-  }, [track, openModal, profile])
+  }, [openModal, profile])
 
   const onPressSubscribe = React.useCallback(
     () =>
@@ -172,7 +166,7 @@ let ProfileHeaderLabeler = ({
         style={[a.px_lg, a.pt_md, a.pb_sm]}
         pointerEvents={isIOS ? 'auto' : 'box-none'}>
         <View
-          style={[a.flex_row, a.justify_end, a.gap_sm, a.pb_lg]}
+          style={[a.flex_row, a.justify_end, a.align_center, a.gap_xs, a.pb_lg]}
           pointerEvents={isIOS ? 'auto' : 'box-none'}>
           {isMe ? (
             <Button
@@ -201,7 +195,10 @@ let ProfileHeaderLabeler = ({
                   <View
                     style={[
                       {
-                        paddingVertical: gtMobile ? 12 : 10,
+                        paddingVertical: 9,
+                        paddingHorizontal: 12,
+                        borderRadius: 6,
+                        gap: 6,
                         backgroundColor: isSubscribed
                           ? state.hovered || state.pressed
                             ? t.palette.contrast_50
@@ -210,9 +207,6 @@ let ProfileHeaderLabeler = ({
                           ? tokens.color.temp_purple_dark
                           : tokens.color.temp_purple,
                       },
-                      a.px_lg,
-                      a.rounded_sm,
-                      a.gap_sm,
                     ]}>
                     <Text
                       style={[
@@ -223,6 +217,7 @@ let ProfileHeaderLabeler = ({
                         },
                         a.font_bold,
                         a.text_center,
+                        a.leading_tight,
                       ]}>
                       {isSubscribed ? (
                         <Trans>Unsubscribe</Trans>

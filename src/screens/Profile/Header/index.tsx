@@ -7,23 +7,27 @@ import {
   RichText as RichTextAPI,
 } from '@atproto/api'
 
-import {usePalette} from 'lib/hooks/usePalette'
-import {LoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
+import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
+import {useTheme} from '#/alf'
 import {ProfileHeaderLabeler} from './ProfileHeaderLabeler'
 import {ProfileHeaderStandard} from './ProfileHeaderStandard'
 
 let ProfileHeaderLoading = (_props: {}): React.ReactNode => {
-  const pal = usePalette('default')
+  const t = useTheme()
   return (
-    <View style={pal.view}>
+    <View style={t.atoms.bg}>
       <LoadingPlaceholder width="100%" height={150} style={{borderRadius: 0}} />
       <View
-        style={[pal.view, {borderColor: pal.colors.background}, styles.avi]}>
+        style={[
+          t.atoms.bg,
+          {borderColor: t.atoms.bg.backgroundColor},
+          styles.avi,
+        ]}>
         <LoadingPlaceholder width={90} height={90} style={styles.br45} />
       </View>
       <View style={styles.content}>
         <View style={[styles.buttonsLine]}>
-          <LoadingPlaceholder width={167} height={36} style={styles.br50} />
+          <LoadingPlaceholder width={140} height={34} style={styles.br50} />
         </View>
       </View>
     </View>
@@ -65,13 +69,12 @@ const styles = StyleSheet.create({
   },
   content: {
     paddingTop: 12,
-    paddingHorizontal: 14,
-    paddingBottom: 4,
+    paddingHorizontal: 16,
+    paddingBottom: 8,
   },
   buttonsLine: {
     flexDirection: 'row',
     marginLeft: 'auto',
-    marginBottom: 12,
   },
   br45: {borderRadius: 45},
   br50: {borderRadius: 50},

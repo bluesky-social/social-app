@@ -15,35 +15,35 @@ import {useNavigation} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {batchedUpdates} from '#/lib/batchedUpdates'
+import {HITSLOP_20} from '#/lib/constants'
+import {isBlockedOrBlocking, isMuted} from '#/lib/moderation/blocked-and-muted'
+import {makeProfileLink, makeStarterPackLink} from '#/lib/routes/links'
+import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
+import {logEvent} from '#/lib/statsig/statsig'
 import {cleanError} from '#/lib/strings/errors'
+import {getStarterPackOgCard} from '#/lib/strings/starter-pack'
 import {logger} from '#/logger'
+import {isWeb} from '#/platform/detection'
+import {updateProfileShadow} from '#/state/cache/profile-shadow'
+import {useModerationOpts} from '#/state/preferences/moderation-opts'
+import {getAllListMembers} from '#/state/queries/list-members'
+import {useResolvedStarterPackShortLink} from '#/state/queries/resolve-short-link'
+import {useResolveDidQuery} from '#/state/queries/resolve-uri'
+import {useShortenLink} from '#/state/queries/shorten-link'
 import {useDeleteStarterPackMutation} from '#/state/queries/starter-packs'
+import {useStarterPackQuery} from '#/state/queries/starter-packs'
+import {useAgent, useSession} from '#/state/session'
+import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {
   ProgressGuideAction,
   useProgressGuideControls,
 } from '#/state/shell/progress-guide'
-import {batchedUpdates} from 'lib/batchedUpdates'
-import {HITSLOP_20} from 'lib/constants'
-import {isBlockedOrBlocking, isMuted} from 'lib/moderation/blocked-and-muted'
-import {makeProfileLink, makeStarterPackLink} from 'lib/routes/links'
-import {CommonNavigatorParams, NavigationProp} from 'lib/routes/types'
-import {logEvent} from 'lib/statsig/statsig'
-import {getStarterPackOgCard} from 'lib/strings/starter-pack'
-import {isWeb} from 'platform/detection'
-import {updateProfileShadow} from 'state/cache/profile-shadow'
-import {useModerationOpts} from 'state/preferences/moderation-opts'
-import {getAllListMembers} from 'state/queries/list-members'
-import {useResolvedStarterPackShortLink} from 'state/queries/resolve-short-link'
-import {useResolveDidQuery} from 'state/queries/resolve-uri'
-import {useShortenLink} from 'state/queries/shorten-link'
-import {useStarterPackQuery} from 'state/queries/starter-packs'
-import {useAgent, useSession} from 'state/session'
-import {useLoggedOutViewControls} from 'state/shell/logged-out'
-import {useSetActiveStarterPack} from 'state/shell/starter-pack'
+import {useSetActiveStarterPack} from '#/state/shell/starter-pack'
+import {PagerWithHeader} from '#/view/com/pager/PagerWithHeader'
+import {ProfileSubpageHeader} from '#/view/com/profile/ProfileSubpageHeader'
 import * as Toast from '#/view/com/util/Toast'
-import {PagerWithHeader} from 'view/com/pager/PagerWithHeader'
-import {ProfileSubpageHeader} from 'view/com/profile/ProfileSubpageHeader'
-import {CenteredView} from 'view/com/util/Views'
+import {CenteredView} from '#/view/com/util/Views'
 import {bulkWriteFollows} from '#/screens/Onboarding/util'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -449,7 +449,7 @@ function Header({
               }}
               variant="solid"
               color="primary"
-              size="medium">
+              size="large">
               <ButtonText style={[a.text_lg]}>
                 <Trans>Join Bluesky</Trans>
               </ButtonText>
@@ -591,7 +591,7 @@ function OverflowMenu({
 
               <Menu.Item
                 label={_(msg`Report starter pack`)}
-                onPress={reportDialogControl.open}>
+                onPress={() => reportDialogControl.open()}>
                 <Menu.ItemText>
                   <Trans>Report starter pack</Trans>
                 </Menu.ItemText>
@@ -645,7 +645,7 @@ function OverflowMenu({
           <Button
             variant="solid"
             color="negative"
-            size={gtMobile ? 'small' : 'medium'}
+            size={gtMobile ? 'small' : 'large'}
             label={_(msg`Yes, delete this starter pack`)}
             onPress={onDeleteStarterPack}>
             <ButtonText>

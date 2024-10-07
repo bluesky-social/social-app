@@ -1,10 +1,9 @@
-import React, {useEffect, useState} from 'react'
+import React, {useState} from 'react'
 import {ActivityIndicator, View} from 'react-native'
 import {BskyAgent} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useAnalytics} from '#/lib/analytics/analytics'
 import {isNetworkError} from '#/lib/strings/errors'
 import {cleanError} from '#/lib/strings/errors'
 import {checkAndFormatResetCode} from '#/lib/strings/password'
@@ -31,13 +30,8 @@ export const SetNewPasswordForm = ({
   onPressBack: () => void
   onPasswordSet: () => void
 }) => {
-  const {screen} = useAnalytics()
   const {_} = useLingui()
   const t = useTheme()
-
-  useEffect(() => {
-    screen('Signin:SetNewPasswordForm')
-  }, [screen])
 
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
   const [resetCode, setResetCode] = useState<string>('')
@@ -160,7 +154,7 @@ export const SetNewPasswordForm = ({
           label={_(msg`Back`)}
           variant="solid"
           color="secondary"
-          size="medium"
+          size="large"
           onPress={onPressBack}>
           <ButtonText>
             <Trans>Back</Trans>
@@ -174,7 +168,7 @@ export const SetNewPasswordForm = ({
             label={_(msg`Next`)}
             variant="solid"
             color="primary"
-            size="medium"
+            size="large"
             onPress={onPressNext}>
             <ButtonText>
               <Trans>Next</Trans>
