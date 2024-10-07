@@ -246,6 +246,8 @@ class BottomSheetView(
   // Util
 
   private fun getContentHeight(): Float {
+    return this.height.toFloat()
+
     val innerView = this.innerView ?: return 0f
     var index = 0
     innerView.allViews.forEach {

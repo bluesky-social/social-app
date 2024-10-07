@@ -143,7 +143,7 @@ module.exports = function (config) {
           backgroundColor: '#1185FE',
         },
         googleServicesFile: './google-services.json',
-        package: 'xyz.blueskyweb.app',
+        package: 'xyz.blueskyweb.app.fabric',
         intentFilters: [
           {
             action: 'VIEW',
@@ -201,14 +201,14 @@ module.exports = function (config) {
           {
             ios: {
               deploymentTarget: '15.1',
-              newArchEnabled: false,
+              newArchEnabled: true,
             },
             android: {
               compileSdkVersion: 34,
               targetSdkVersion: 34,
               buildToolsVersion: '34.0.0',
-              kotlinVersion: '1.8.0',
-              newArchEnabled: false,
+              kotlinVersion: '1.9.24',
+              newArchEnabled: true,
             },
           },
         ],

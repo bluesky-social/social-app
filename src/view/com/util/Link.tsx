@@ -13,20 +13,20 @@ import {
 import {sanitizeUrl} from '@braintree/sanitize-url'
 import {StackActions, useLinkProps} from '@react-navigation/native'
 
-import {useModalControls} from '#/state/modals'
-import {useOpenLink} from '#/state/preferences/in-app-browser'
 import {
   DebouncedNavigationProp,
   useNavigationDeduped,
-} from 'lib/hooks/useNavigationDeduped'
+} from '#/lib/hooks/useNavigationDeduped'
 import {
   convertBskyAppUrlIfNeeded,
   isExternalUrl,
   linkRequiresWarning,
-} from 'lib/strings/url-helpers'
-import {TypographyVariant} from 'lib/ThemeContext'
-import {isAndroid, isWeb} from 'platform/detection'
-import {WebAuxClickWrapper} from 'view/com/util/WebAuxClickWrapper'
+} from '#/lib/strings/url-helpers'
+import {TypographyVariant} from '#/lib/ThemeContext'
+import {isAndroid, isWeb} from '#/platform/detection'
+import {useModalControls} from '#/state/modals'
+import {useOpenLink} from '#/state/preferences/in-app-browser'
+import {WebAuxClickWrapper} from '#/view/com/util/WebAuxClickWrapper'
 import {useTheme} from '#/alf'
 import {router} from '../../../routes'
 import {PressableWithHover} from './PressableWithHover'
@@ -116,7 +116,7 @@ export const Link = memo(function Link({
           android_ripple={{
             color: t.atoms.bg_contrast_25.backgroundColor,
           }}
-          unstable_pressDelay={isAndroid ? 90 : undefined}>
+          unstable_pressDelay={isAndroid ? 20 : undefined}>
           {/* @ts-ignore web only -prf */}
           <View style={style} href={anchorHref}>
             {children ? children : <Text>{title || 'link'}</Text>}

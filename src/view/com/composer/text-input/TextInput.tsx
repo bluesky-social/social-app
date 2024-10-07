@@ -17,7 +17,7 @@ import {AppBskyRichtextFacet, RichText} from '@atproto/api'
 import PasteInput, {
   PastedFile,
   PasteInputRef,
-} from '@mattermost/react-native-paste-input'
+} from '@haileyok/react-native-paste-input'
 
 import {POST_IMG_MAX} from '#/lib/constants'
 import {downloadAndResize} from '#/lib/media/manip'
@@ -244,12 +244,12 @@ export const TextInput = forwardRef(function TextInputImpl(
         allowFontScaling
         multiline
         scrollEnabled={false}
-        numberOfLines={4}
         style={[
           inputTextStyle,
           a.w_full,
           {textAlignVertical: 'top', minHeight: 60},
         ]}
+        numberOfLines={100}
         {...props}>
         {textDecorated}
       </PasteInput>
