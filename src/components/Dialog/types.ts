@@ -4,6 +4,8 @@ import type {
   GestureResponderEvent,
   ScrollViewProps,
 } from 'react-native'
+import {ViewStyle} from 'react-native'
+import {StyleProp} from 'react-native'
 
 import {ViewStyleProp} from '#/alf'
 import {BottomSheetViewProps} from '../../../modules/bottom-sheet'
@@ -69,10 +71,12 @@ export type DialogInnerProps =
       accessibilityLabelledBy: A11yProps['aria-labelledby']
       accessibilityDescribedBy: string
       keyboardDismissMode?: ScrollViewProps['keyboardDismissMode']
+      contentContainerStyle?: StyleProp<ViewStyle>
     }>
   | DialogInnerPropsBase<{
       label: string
       accessibilityLabelledBy?: undefined
       accessibilityDescribedBy?: undefined
       keyboardDismissMode?: ScrollViewProps['keyboardDismissMode']
+      contentContainerStyle?: StyleProp<ViewStyle>
     }>
