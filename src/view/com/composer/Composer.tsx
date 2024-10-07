@@ -218,7 +218,7 @@ export const ComposePost = ({
   // Whenever we receive an initial video uri, we should immediately run compression if necessary
   useEffect(() => {
     if (initVideoUri) {
-      selectVideo({uri: initVideoUri} as ImagePickerAsset)
+      selectVideo(initVideoUri)
     }
   }, [initVideoUri, selectVideo])
 
