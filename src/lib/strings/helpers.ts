@@ -41,6 +41,20 @@ export function useEnforceMaxGraphemeCount() {
   )
 }
 
+export function useWarnMaxGraphemeCount({
+  text,
+  maxCount,
+}: {
+  text: string
+  maxCount: number
+}) {
+  const splitter = useMemo(() => new Graphemer(), [])
+
+  return useMemo(() => {
+    return splitter.countGraphemes(text) > maxCount
+  }, [splitter, maxCount, text])
+}
+
 // https://stackoverflow.com/a/52171480
 export function toHashCode(str: string, seed = 0): number {
   let h1 = 0xdeadbeef ^ seed,

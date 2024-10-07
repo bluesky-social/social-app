@@ -11,7 +11,7 @@ import {
 
 import {HITSLOP_20} from '#/lib/constants'
 import {mergeRefs} from '#/lib/merge-refs'
-import {android, atoms as a, useTheme, web} from '#/alf'
+import {android, atoms as a, TextStyleProp, useTheme, web} from '#/alf'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {Props as SVGIconProps} from '#/components/icons/common'
 import {Text} from '#/components/Typography'
@@ -313,10 +313,13 @@ export function SuffixText({
   children,
   label,
   accessibilityHint,
-}: React.PropsWithChildren<{
-  label: string
-  accessibilityHint?: AccessibilityProps['accessibilityHint']
-}>) {
+  style,
+}: React.PropsWithChildren<
+  TextStyleProp & {
+    label: string
+    accessibilityHint?: AccessibilityProps['accessibilityHint']
+  }
+>) {
   const t = useTheme()
   const ctx = React.useContext(Context)
   return (
@@ -339,6 +342,7 @@ export function SuffixText({
               color: t.palette.contrast_800,
             }
           : {},
+        style,
       ]}>
       {children}
     </Text>
