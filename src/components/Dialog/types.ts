@@ -72,6 +72,7 @@ export type DialogInnerProps =
       accessibilityDescribedBy: string
       keyboardDismissMode?: ScrollViewProps['keyboardDismissMode']
       contentContainerStyle?: StyleProp<ViewStyle>
+      header?: React.ReactNode
     }>
   | DialogInnerPropsBase<{
       label: string
@@ -79,4 +80,5 @@ export type DialogInnerProps =
       accessibilityDescribedBy?: undefined
       keyboardDismissMode?: ScrollViewProps['keyboardDismissMode']
       contentContainerStyle?: StyleProp<ViewStyle>
+      header?: React.ReactNode
     }>
