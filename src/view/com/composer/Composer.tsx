@@ -867,48 +867,59 @@ export const ComposePost = ({
           )}
           <View
             style={[
+              a.flex_row,
+              a.py_xs,
+              {paddingLeft: 7, paddingRight: 16},
+              a.align_center,
+              a.border_t,
               t.atoms.bg,
               t.atoms.border_contrast_medium,
-              styles.bottomBar,
+              a.justify_between,
             ]}>
-            {videoState.status !== 'idle' && videoState.status !== 'done' ? (
-              <VideoUploadToolbar state={videoState} />
-            ) : (
-              <ToolbarWrapper style={[a.flex_row, a.align_center, a.gap_xs]}>
-                <SelectPhotoBtn
-                  size={images.length}
-                  disabled={!canSelectImages}
-                  onAdd={onImageAdd}
-                />
-                <SelectVideoBtn
-                  onSelectVideo={selectVideo}
-                  disabled={!canSelectImages || images?.length > 0}
-                  setError={setError}
-                />
-                <OpenCameraBtn disabled={!canSelectImages} onAdd={onImageAdd} />
-                <SelectGifBtn
-                  onClose={focusTextInput}
-                  onSelectGif={onSelectGif}
-                  disabled={hasMedia}
-                  Portal={Portal.Portal}
-                />
-                {!isMobile ? (
-                  <Button
-                    onPress={onEmojiButtonPress}
-                    style={a.p_sm}
-                    label={_(msg`Open emoji picker`)}
-                    accessibilityHint={_(msg`Open emoji picker`)}
-                    variant="ghost"
-                    shape="round"
-                    color="primary">
-                    <EmojiSmile size="lg" />
-                  </Button>
-                ) : null}
-              </ToolbarWrapper>
-            )}
-            <View style={a.flex_1} />
-            <SelectLangBtn />
-            <CharProgress count={graphemeLength} />
+            <View style={[a.flex_row, a.align_center]}>
+              {videoState.status !== 'idle' && videoState.status !== 'done' ? (
+                <VideoUploadToolbar state={videoState} />
+              ) : (
+                <ToolbarWrapper style={[a.flex_row, a.align_center, a.gap_xs]}>
+                  <SelectPhotoBtn
+                    size={images.length}
+                    disabled={!canSelectImages}
+                    onAdd={onImageAdd}
+                  />
+                  <SelectVideoBtn
+                    onSelectVideo={selectVideo}
+                    disabled={!canSelectImages || images?.length > 0}
+                    setError={setError}
+                  />
+                  <OpenCameraBtn
+                    disabled={!canSelectImages}
+                    onAdd={onImageAdd}
+                  />
+                  <SelectGifBtn
+                    onClose={focusTextInput}
+                    onSelectGif={onSelectGif}
+                    disabled={hasMedia}
+                    Portal={Portal.Portal}
+                  />
+                  {!isMobile ? (
+                    <Button
+                      onPress={onEmojiButtonPress}
+                      style={a.p_sm}
+                      label={_(msg`Open emoji picker`)}
+                      accessibilityHint={_(msg`Open emoji picker`)}
+                      variant="ghost"
+                      shape="round"
+                      color="primary">
+                      <EmojiSmile size="lg" />
+                    </Button>
+                  ) : null}
+                </ToolbarWrapper>
+              )}
+            </View>
+            <View style={[a.flex_row, a.align_center, a.justify_between]}>
+              <SelectLangBtn />
+              <CharProgress count={graphemeLength} style={{width: 65}} />
+            </View>
           </View>
         </View>
         <Prompt.Basic
@@ -1127,15 +1138,6 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     marginHorizontal: 10,
     marginBottom: 4,
-  },
-  bottomBar: {
-    flexDirection: 'row',
-    paddingVertical: 4,
-    // should be 8 but due to visual alignment we have to fudge it
-    paddingLeft: 7,
-    paddingRight: 16,
-    alignItems: 'center',
-    borderTopWidth: StyleSheet.hairlineWidth,
   },
 })
 

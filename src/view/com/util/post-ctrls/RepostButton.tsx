@@ -90,7 +90,7 @@ let RepostButton = ({
         control={dialogControl}
         nativeOptions={{preventExpansion: true}}>
         <Dialog.Handle />
-        <Dialog.Inner label={_(msg`Repost or quote post`)}>
+        <Dialog.ScrollableInner label={_(msg`Repost or quote post`)}>
           <View style={a.gap_xl}>
             <View style={a.gap_xs}>
               <Button
@@ -164,7 +164,7 @@ let RepostButton = ({
               <ButtonText>{_(msg`Cancel`)}</ButtonText>
             </Button>
           </View>
-        </Dialog.Inner>
+        </Dialog.ScrollableInner>
       </Dialog.Outer>
     </>
   )
