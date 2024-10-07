@@ -171,26 +171,29 @@ export function Outer({
   )
 }
 
-export function Inner({children, style}: DialogInnerProps) {
+export function Inner({children, style, header}: DialogInnerProps) {
   const insets = useSafeAreaInsets()
   return (
-    <View
-      style={[
-        a.pt_2xl,
-        a.px_xl,
-        {
-          paddingBottom: insets.bottom + insets.top,
-        },
-        style,
-      ]}>
-      {children}
-    </View>
+    <>
+      {header}
+      <View
+        style={[
+          a.pt_2xl,
+          a.px_xl,
+          {
+            paddingBottom: insets.bottom + insets.top,
+          },
+          style,
+        ]}>
+        {children}
+      </View>
+    </>
   )
 }
 
 export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
   function ScrollableInner(
-    {children, style, contentContainerStyle, ...props},
+    {children, style, contentContainerStyle, header, ...props},
     ref,
   ) {
     const {nativeSnapPoint, disableDrag, setDisableDrag} = useDialogContext()
@@ -234,7 +237,9 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
         bounces={nativeSnapPoint === BottomSheetSnapPoint.Full}
         bottomOffset={30}
         scrollEventThrottle={50}
-        onScroll={isAndroid ? onScroll : undefined}>
+        onScroll={isAndroid ? onScroll : undefined}
+        stickyHeaderIndices={header ? [0] : undefined}>
+        {header}
         {children}
       </KeyboardAwareScrollView>
     )

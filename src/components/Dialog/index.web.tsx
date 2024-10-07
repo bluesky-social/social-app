@@ -166,6 +166,8 @@ export function Inner({
   label,
   accessibilityLabelledBy,
   accessibilityDescribedBy,
+  header,
+  contentContainerStyle,
 }: DialogInnerProps) {
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
@@ -188,7 +190,6 @@ export function Inner({
           a.rounded_md,
           a.w_full,
           a.border,
-          gtMobile ? a.p_2xl : a.p_xl,
           t.atoms.bg,
           {
             maxWidth: 600,
@@ -199,7 +200,10 @@ export function Inner({
           },
           flatten(style),
         ]}>
-        {children}
+        {header}
+        <View style={[gtMobile ? a.p_2xl : a.p_xl, contentContainerStyle]}>
+          {children}
+        </View>
       </Animated.View>
     </FocusScope>
   )
