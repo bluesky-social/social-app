@@ -20,15 +20,15 @@
     "@jridgewell/gen-mapping" "^0.3.5"
     "@jridgewell/trace-mapping" "^0.3.24"
 
-"@atproto/api@0.13.1":
-  version "0.13.1"
-  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.13.1.tgz#fbf4306e4465d5467aaf031308c1b47dcc8039d0"
-  integrity sha512-DL3iBfavn8Nnl48FmnAreQB0k0cIkW531DJ5JAHUCQZo10Nq0ZLk2/WFxcs0KuBG5wuLnGUdo+Y6/GQPVq8dYw==
+"@atproto/api@0.13.6":
+  version "0.13.6"
+  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.13.6.tgz#2500e9d7143e6718089632300c42ce50149f8cd5"
+  integrity sha512-58emFFZhqY8nVWD3xFWK0yYqAmJ2un+NaTtZxBbRo00mGq1rz9VXTpVmfoHFcuXL1hoDQN3WyJfsub8r6xGOgg==
   dependencies:
     "@atproto/common-web" "^0.3.0"
     "@atproto/lexicon" "^0.4.1"
     "@atproto/syntax" "^0.3.0"
-    "@atproto/xrpc" "^0.6.0"
+    "@atproto/xrpc" "^0.6.1"
     await-lock "^2.2.2"
     multiformats "^9.9.0"
     tlds "^1.234.0"
@@ -59,10 +59,10 @@
   resolved "https://registry.yarnpkg.com/@atproto/syntax/-/syntax-0.3.0.tgz#fafa2dbea9add37253005cb663e7373e05e618b3"
   integrity sha512-Weq0ZBxffGHDXHl9U7BQc2BFJi/e23AL+k+i5+D9hUq/bzT4yjGsrCejkjq0xt82xXDjmhhvQSZ0LqxyZ5woxA==
 
-"@atproto/xrpc@^0.6.0":
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/@atproto/xrpc/-/xrpc-0.6.0.tgz#668c3262e67e2afa65951ea79a03bfe3720ddf5c"
-  integrity sha512-5BbhBTv5j6MC3iIQ4+vYxQE7nLy2dDGQ+LYJrH8PptOCUdq0Pwg6aRccQ3y52kUZlhE/mzOTZ8Ngiy9pSAyfVQ==
+"@atproto/xrpc@^0.6.1":
+  version "0.6.1"
+  resolved "https://registry.yarnpkg.com/@atproto/xrpc/-/xrpc-0.6.1.tgz#dcd1315c8c60eef5af2db7fa4e35a38ebc6d79d5"
+  integrity sha512-Zy5ydXEdk6sY7FDUZcEVfCL1jvbL4tXu5CcdPqbEaW6LQtk9GLds/DK1bCX9kswTGaBC88EMuqQMfkxOhp2t4A==
   dependencies:
     "@atproto/lexicon" "^0.4.1"
     zod "^3.23.8"
@@ -4024,10 +4024,10 @@ typed-array-length@^1.0.6:
     is-typed-array "^1.1.13"
     possible-typed-array-names "^1.0.0"
 
-typescript@^4.0.5:
-  version "4.9.5"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.9.5.tgz#095979f9bcc0d09da324d58d03ce8f8374cbe65a"
-  integrity sha512-1FXk9E2Hm+QzZQ7z+McJiHL4NW1F2EzMu9Nq9i3zAaGqibafqYwCVU6WyWAuyQRRzOlxou8xZSyXLEN8oKj24g==
+typescript@^5.5.4:
+  version "5.5.4"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.5.4.tgz#d9852d6c82bad2d2eda4fd74a5762a8f5909e9ba"
+  integrity sha512-Mtq29sKDAEYP7aljRgtPOpTvOfbwRWlS6dPRzwjdE+C0R4brX/GUyhHSecbHMFLNBLcJIPt9nl9yG5TZ1weH+Q==
 
 uint8arrays@3.0.0:
   version "3.0.0"

@@ -7,7 +7,7 @@ import {useModerationOpts} from '../preferences/moderation-opts'
 const PAGE_SIZE = 30
 type RQPageParam = string | undefined
 
-const RQKEY_ROOT = 'profile-lists'
+export const RQKEY_ROOT = 'profile-lists'
 export const RQKEY = (did: string) => [RQKEY_ROOT, did]
 
 export function useProfileListsQuery(did: string, opts?: {enabled?: boolean}) {

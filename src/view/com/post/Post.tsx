@@ -32,7 +32,7 @@ import {LabelsOnMyPost} from '../../../components/moderation/LabelsOnMe'
 import {PostAlerts} from '../../../components/moderation/PostAlerts'
 import {Link, TextLink} from '../util/Link'
 import {PostCtrls} from '../util/post-ctrls/PostCtrls'
-import {PostEmbeds} from '../util/post-embeds'
+import {PostEmbeds, PostEmbedViewContext} from '../util/post-embeds'
 import {PostMeta} from '../util/PostMeta'
 import {Text} from '../util/text/Text'
 import {PreviewableUserAvatar} from '../util/UserAvatar'
@@ -163,7 +163,7 @@ function PostInner({
         <View style={styles.layoutAvi}>
           <AviFollowButton author={post.author} moderation={moderation}>
             <PreviewableUserAvatar
-              size={52}
+              size={42}
               profile={post.author}
               moderation={moderation.ui('avatar')}
               type={post.author.associated?.labeler ? 'labeler' : 'user'}
@@ -174,7 +174,6 @@ function PostInner({
           <PostMeta
             author={post.author}
             moderation={moderation}
-            authorHasWarning={!!post.author.labels?.length}
             timestamp={post.indexedAt}
             postHref={itemHref}
           />
@@ -238,7 +237,11 @@ function PostInner({
               />
             ) : undefined}
             {post.embed ? (
-              <PostEmbeds embed={post.embed} moderation={moderation} />
+              <PostEmbeds
+                embed={post.embed}
+                moderation={moderation}
+                viewContext={PostEmbedViewContext.Feed}
+              />
             ) : null}
           </ContentHider>
           <PostCtrls

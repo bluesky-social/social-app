@@ -2,8 +2,8 @@ import React from 'react'
 import {Pressable, View, ViewStyle} from 'react-native'
 import Animated, {LinearTransition} from 'react-native-reanimated'
 
+import {HITSLOP_10} from '#/lib/constants'
 import {isNative} from '#/platform/detection'
-import {HITSLOP_10} from 'lib/constants'
 import {
   atoms as a,
   flatten,
@@ -351,8 +351,8 @@ export function Checkbox() {
         t.atoms.border_contrast_high,
         {
           borderWidth: 1,
-          height: 20,
-          width: 20,
+          height: 24,
+          width: 24,
         },
         baseStyles,
         hovered ? baseHoverStyles : {},
@@ -383,9 +383,9 @@ export function Switch() {
         t.atoms.border_contrast_high,
         {
           borderWidth: 1,
-          height: 20,
-          width: 32,
-          padding: 2,
+          height: 24,
+          width: 36,
+          padding: 3,
         },
         baseStyles,
         hovered ? baseHoverStyles : {},
@@ -395,8 +395,8 @@ export function Switch() {
         style={[
           a.rounded_full,
           {
-            height: 14,
-            width: 14,
+            height: 16,
+            width: 16,
           },
           selected
             ? {
@@ -436,8 +436,8 @@ export function Radio() {
         t.atoms.border_contrast_high,
         {
           borderWidth: 1,
-          height: 20,
-          width: 20,
+          height: 24,
+          width: 24,
         },
         baseStyles,
         hovered ? baseHoverStyles : {},
@@ -447,7 +447,7 @@ export function Radio() {
           style={[
             a.absolute,
             a.rounded_full,
-            {height: 12, width: 12},
+            {height: 16, width: 16},
             selected
               ? {
                   backgroundColor: t.palette.primary_500,

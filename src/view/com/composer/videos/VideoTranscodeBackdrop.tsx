@@ -21,8 +21,8 @@ export function VideoTranscodeBackdrop({uri}: {uri: string}) {
   }, [])
 
   return (
-    <Animated.View style={a.flex_1} entering={FadeIn}>
-      {thumbnail && (
+    thumbnail && (
+      <Animated.View style={a.flex_1} entering={FadeIn}>
         <Image
           style={a.flex_1}
           source={thumbnail.path}
@@ -31,7 +31,7 @@ export function VideoTranscodeBackdrop({uri}: {uri: string}) {
           blurRadius={15}
           contentFit="cover"
         />
-      )}
-    </Animated.View>
+      </Animated.View>
+    )
   )
 }

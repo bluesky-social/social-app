@@ -15,7 +15,6 @@ import {
   StackActions,
 } from '@react-navigation/native'
 
-import {init as initAnalytics} from '#/lib/analytics/analytics'
 import {timeout} from '#/lib/async/timeout'
 import {useColorSchemeStyle} from '#/lib/hooks/useColorSchemeStyle'
 import {usePalette} from '#/lib/hooks/usePalette'
@@ -79,8 +78,8 @@ import {BottomBar} from '#/view/shell/bottom-bar/BottomBar'
 import {createNativeStackNavigatorWithAuth} from '#/view/shell/createNativeStackNavigatorWithAuth'
 import {SharedPreferencesTesterScreen} from '#/screens/E2E/SharedPreferencesTesterScreen'
 import HashtagScreen from '#/screens/Hashtag'
+import {MessagesScreen} from '#/screens/Messages/ChatList'
 import {MessagesConversationScreen} from '#/screens/Messages/Conversation'
-import {MessagesScreen} from '#/screens/Messages/List'
 import {MessagesSettingsScreen} from '#/screens/Messages/Settings'
 import {ModerationScreen} from '#/screens/Moderation'
 import {PostLikedByScreen} from '#/screens/Post/PostLikedBy'
@@ -490,6 +489,7 @@ function MyProfileTabNavigator() {
         getComponent={() => ProfileScreen}
         initialParams={{
           name: 'me',
+          hideBackButton: true,
         }}
       />
       {commonScreens(MyProfileTab as typeof HomeTab)}
@@ -646,8 +646,6 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
 
   function onReady() {
     prevLoggedRouteName.current = getCurrentRouteName()
-    initAnalytics(currentAccount)
-
     if (currentAccount && shouldRequestEmailConfirmation(currentAccount)) {
       openModal({name: 'verify-email', showReminder: true})
       snoozeEmailConfirmationPrompt()
@@ -660,16 +658,15 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
       linking={LINKING}
       theme={theme}
       onStateChange={() => {
-        logEvent('router:navigate:sampled', {
-          from: prevLoggedRouteName.current,
-        })
-        prevLoggedRouteName.current = getCurrentRouteName()
+        const routeName = getCurrentRouteName()
+        if (routeName === 'Notifications') {
+          logEvent('router:navigate:notifications:sampled', {})
+        }
       }}
       onReady={() => {
         attachRouteToLogEvents(getCurrentRouteName)
         logModuleInitTime()
         onReady()
-        logEvent('router:navigate:sampled', {})
       }}>
       {children}
     </NavigationContainer>

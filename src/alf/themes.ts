@@ -183,7 +183,7 @@ export function createThemes({
   } as const
 
   const darkPalette: Palette = {
-    white: color.gray_0,
+    white: color.gray_25,
     black: color.trueBlack,
 
     contrast_25: color.gray_975,
@@ -305,6 +305,7 @@ export function createThemes({
   } as const
 
   const light: Theme = {
+    scheme: 'light',
     name: 'light',
     palette: lightPalette,
     atoms: {
@@ -390,6 +391,7 @@ export function createThemes({
   }
 
   const dark: Theme = {
+    scheme: 'dark',
     name: 'dark',
     palette: darkPalette,
     atoms: {
@@ -479,6 +481,7 @@ export function createThemes({
 
   const dim: Theme = {
     ...dark,
+    scheme: 'dark',
     name: 'dim',
     palette: dimPalette,
     atoms: {

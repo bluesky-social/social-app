@@ -408,10 +408,14 @@ export function* findAllPostsInQueryData(
       }
     }
   }
-  for (let post of findAllPostsInFeedQueryData(queryClient, uri)) {
+  for (let post of findAllPostsInNotifsQueryData(queryClient, uri)) {
+    // Check notifications first. If you have a post in notifications,
+    // it's often due to a like or a repost, and we want to prioritize
+    // a post object with >0 likes/reposts over a stale version with no
+    // metrics in order to avoid a notification->post scroll jump.
     yield postViewToPlaceholderThread(post)
   }
-  for (let post of findAllPostsInNotifsQueryData(queryClient, uri)) {
+  for (let post of findAllPostsInFeedQueryData(queryClient, uri)) {
     yield postViewToPlaceholderThread(post)
   }
   for (let post of findAllPostsInQuoteQueryData(queryClient, uri)) {

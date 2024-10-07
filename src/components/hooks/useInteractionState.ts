@@ -5,10 +5,10 @@ export function useInteractionState() {
 
   const onIn = React.useCallback(() => {
     setState(true)
-  }, [setState])
+  }, [])
   const onOut = React.useCallback(() => {
     setState(false)
-  }, [setState])
+  }, [])
 
   return React.useMemo(
     () => ({

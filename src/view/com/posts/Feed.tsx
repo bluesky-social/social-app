@@ -15,7 +15,9 @@ import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {DISCOVER_FEED_URI, KNOWN_SHUTDOWN_FEEDS} from '#/lib/constants'
+import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {logEvent, useGate} from '#/lib/statsig/statsig'
+import {useTheme} from '#/lib/ThemeContext'
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
 import {listenPostCreated} from '#/state/events'
@@ -30,9 +32,6 @@ import {
   usePostFeedQuery,
 } from '#/state/queries/post-feed'
 import {useSession} from '#/state/session'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {useInitialNumToRender} from 'lib/hooks/useInitialNumToRender'
-import {useTheme} from 'lib/ThemeContext'
 import {
   ProgressGuide,
   SuggestedFeeds,
@@ -101,7 +100,7 @@ const feedInterstitialType = 'interstitialFeeds'
 const followInterstitialType = 'interstitialFollows'
 const progressGuideInterstitialType = 'interstitialProgressGuide'
 const interstials: Record<
-  'following' | 'discover',
+  'following' | 'discover' | 'profile',
   (FeedItem & {
     type:
       | 'interstitialFeeds'
@@ -126,6 +125,16 @@ const interstials: Record<
       },
       key: followInterstitialType,
       slot: 20,
+    },
+  ],
+  profile: [
+    {
+      type: followInterstitialType,
+      params: {
+        variant: 'default',
+      },
+      key: followInterstitialType,
+      slot: 5,
     },
   ],
 }
@@ -157,10 +166,12 @@ let Feed = ({
   renderEndOfFeed,
   testID,
   headerOffset = 0,
+  progressViewOffset,
   desktopFixedHeightOffset,
   ListHeaderComponent,
   extraData,
   savedFeedConfig,
+  initialNumToRender: initialNumToRenderOverride,
 }: {
   feed: FeedDescriptor
   feedParams?: FeedParams
@@ -176,14 +187,14 @@ let Feed = ({
   renderEndOfFeed?: () => JSX.Element
   testID?: string
   headerOffset?: number
+  progressViewOffset?: number
   desktopFixedHeightOffset?: number
   ListHeaderComponent?: () => JSX.Element
   extraData?: any
   savedFeedConfig?: AppBskyActorDefs.SavedFeed
-  outsideHeaderOffset?: number
+  initialNumToRender?: number
 }): React.ReactNode => {
   const theme = useTheme()
-  const {track} = useAnalytics()
   const {_} = useLingui()
   const queryClient = useQueryClient()
   const {currentAccount, hasSession} = useSession()
@@ -192,9 +203,7 @@ let Feed = ({
   const [isPTRing, setIsPTRing] = React.useState(false)
   const checkForNewRef = React.useRef<(() => void) | null>(null)
   const lastFetchRef = React.useRef<number>(Date.now())
-  const [feedType, feedUri] = feed.split('|')
-  const feedIsDiscover = feedUri === DISCOVER_FEED_URI
-  const feedIsFollowing = feedType === 'following'
+  const [feedType, feedUri, feedTab] = feed.split('|')
   const gate = useGate()
 
   const opts = React.useMemo(
@@ -338,14 +347,21 @@ let Feed = ({
     }
 
     if (hasSession) {
-      const feedType = feedIsFollowing
-        ? 'following'
-        : feedIsDiscover
-        ? 'discover'
-        : undefined
+      let feedKind: 'following' | 'discover' | 'profile' | undefined
+      if (feedType === 'following') {
+        feedKind = 'following'
+      } else if (feedUri === DISCOVER_FEED_URI) {
+        feedKind = 'discover'
+      } else if (
+        feedType === 'author' &&
+        (feedTab === 'posts_and_author_threads' ||
+          feedTab === 'posts_with_replies')
+      ) {
+        feedKind = 'profile'
+      }
 
-      if (feedType) {
-        for (const interstitial of interstials[feedType]) {
+      if (feedKind) {
+        for (const interstitial of interstials[feedKind]) {
           const shouldShow =
             (interstitial.type === feedInterstitialType &&
               gate('suggested_feeds_interstitial')) ||
@@ -376,9 +392,9 @@ let Feed = ({
     isEmpty,
     lastFetchedAt,
     data,
+    feedType,
     feedUri,
-    feedIsDiscover,
-    feedIsFollowing,
+    feedTab,
     gate,
     hasSession,
   ])
@@ -387,7 +403,6 @@ let Feed = ({
   // =
 
   const onRefresh = React.useCallback(async () => {
-    track('Feed:onRefresh')
     logEvent('feed:refresh:sampled', {
       feedType: feedType,
       feedUrl: feed,
@@ -401,7 +416,7 @@ let Feed = ({
       logger.error('Failed to refresh posts feed', {message: err})
     }
     setIsPTRing(false)
-  }, [refetch, track, setIsPTRing, onHasNew, feed, feedType])
+  }, [refetch, setIsPTRing, onHasNew, feed, feedType])
 
   const onEndReached = React.useCallback(async () => {
     if (isFetching || !hasNextPage || isError) return
@@ -411,7 +426,6 @@ let Feed = ({
       feedUrl: feed,
       itemCount: feedItems.length,
     })
-    track('Feed:onEndReached')
     try {
       await fetchNextPage()
     } catch (err) {
@@ -422,7 +436,6 @@ let Feed = ({
     hasNextPage,
     isError,
     fetchNextPage,
-    track,
     feed,
     feedType,
     feedItems.length,
@@ -469,7 +482,7 @@ let Feed = ({
       } else if (item.type === feedInterstitialType) {
         return <SuggestedFeeds />
       } else if (item.type === followInterstitialType) {
-        return <SuggestedFollows />
+        return <SuggestedFollows feed={feed} />
       } else if (item.type === progressGuideInterstitialType) {
         return <ProgressGuide />
       } else if (item.type === 'slice') {
@@ -532,6 +545,7 @@ let Feed = ({
         refreshing={isPTRing}
         onRefresh={onRefresh}
         headerOffset={headerOffset}
+        progressViewOffset={progressViewOffset}
         contentContainerStyle={{
           minHeight: Dimensions.get('window').height * 1.5,
         }}
@@ -545,8 +559,10 @@ let Feed = ({
         desktopFixedHeight={
           desktopFixedHeightOffset ? desktopFixedHeightOffset : true
         }
-        initialNumToRender={initialNumToRender}
-        windowSize={11}
+        initialNumToRender={initialNumToRenderOverride ?? initialNumToRender}
+        windowSize={9}
+        maxToRenderPerBatch={5}
+        updateCellsBatchingPeriod={40}
         onItemSeen={feedFeedback.onItemSeen}
       />
     </View>

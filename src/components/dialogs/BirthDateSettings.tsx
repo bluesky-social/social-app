@@ -31,7 +31,6 @@ export function BirthDateSettingsDialog({
   return (
     <Dialog.Outer control={control}>
       <Dialog.Handle />
-
       <Dialog.ScrollableInner label={_(msg`My Birthday`)}>
         <View style={[a.gap_sm, a.pb_lg]}>
           <Text style={[a.text_2xl, a.font_bold]}>
@@ -117,7 +116,7 @@ function BirthdayInner({
       <View style={isWeb && [a.flex_row, a.justify_end]}>
         <Button
           label={hasChanged ? _(msg`Save birthday`) : _(msg`Done`)}
-          size="medium"
+          size="large"
           onPress={onSave}
           variant="solid"
           color="primary">

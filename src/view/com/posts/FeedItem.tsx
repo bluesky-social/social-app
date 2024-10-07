@@ -1,4 +1,4 @@
-import React, {memo, useId, useMemo, useState} from 'react'
+import React, {memo, useMemo, useState} from 'react'
 import {StyleSheet, View} from 'react-native'
 import {
   AppBskyActorDefs,
@@ -17,43 +17,43 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {useGate} from '#/lib/statsig/statsig'
+import {isReasonFeedSource, ReasonFeedSource} from '#/lib/api/feed/types'
+import {MAX_POST_LINES} from '#/lib/constants'
+import {usePalette} from '#/lib/hooks/usePalette'
+import {makeProfileLink} from '#/lib/routes/links'
+import {sanitizeDisplayName} from '#/lib/strings/display-names'
+import {sanitizeHandle} from '#/lib/strings/handles'
+import {countLines} from '#/lib/strings/helpers'
+import {s} from '#/lib/styles'
 import {POST_TOMBSTONE, Shadow, usePostShadow} from '#/state/cache/post-shadow'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
+import {precacheProfile} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
-import {isReasonFeedSource, ReasonFeedSource} from 'lib/api/feed/types'
-import {MAX_POST_LINES} from 'lib/constants'
-import {usePalette} from 'lib/hooks/usePalette'
-import {makeProfileLink} from 'lib/routes/links'
-import {sanitizeDisplayName} from 'lib/strings/display-names'
-import {sanitizeHandle} from 'lib/strings/handles'
-import {countLines} from 'lib/strings/helpers'
-import {s} from 'lib/styles'
-import {precacheProfile} from 'state/queries/profile'
+import {FeedNameText} from '#/view/com/util/FeedInfoText'
+import {PostCtrls} from '#/view/com/util/post-ctrls/PostCtrls'
+import {PostEmbeds, PostEmbedViewContext} from '#/view/com/util/post-embeds'
+import {PostMeta} from '#/view/com/util/PostMeta'
+import {Text} from '#/view/com/util/text/Text'
+import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a} from '#/alf'
-import {Repost_Stroke2_Corner2_Rounded as Repost} from '#/components/icons/Repost'
+import {Pin_Stroke2_Corner0_Rounded as PinIcon} from '#/components/icons/Pin'
+import {Repost_Stroke2_Corner2_Rounded as RepostIcon} from '#/components/icons/Repost'
 import {ContentHider} from '#/components/moderation/ContentHider'
+import {LabelsOnMyPost} from '#/components/moderation/LabelsOnMe'
+import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {AppModerationCause} from '#/components/Pills'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {RichText} from '#/components/RichText'
-import {LabelsOnMyPost} from '../../../components/moderation/LabelsOnMe'
-import {PostAlerts} from '../../../components/moderation/PostAlerts'
-import {FeedNameText} from '../util/FeedInfoText'
 import {Link, TextLink, TextLinkOnWebOnly} from '../util/Link'
-import {PostCtrls} from '../util/post-ctrls/PostCtrls'
-import {PostEmbeds} from '../util/post-embeds'
-import {VideoEmbed} from '../util/post-embeds/VideoEmbed'
-import {PostMeta} from '../util/PostMeta'
-import {Text} from '../util/text/Text'
-import {PreviewableUserAvatar} from '../util/UserAvatar'
 import {AviFollowButton} from './AviFollowButton'
 
 interface FeedItemProps {
   record: AppBskyFeedPost.Record
   reason:
     | AppBskyFeedDefs.ReasonRepost
+    | AppBskyFeedDefs.ReasonPin
     | ReasonFeedSource
     | {[k: string]: unknown; $type: string}
     | undefined
@@ -247,7 +247,7 @@ let FeedItemInner = ({
       onBeforePress={onBeforePress}
       dataSet={{feedContext}}>
       <View style={{flexDirection: 'row', gap: 10, paddingLeft: 8}}>
-        <View style={{width: 52}}>
+        <View style={{width: 42}}>
           {isThreadChild && (
             <View
               style={[
@@ -297,7 +297,7 @@ let FeedItemInner = ({
                     )
               }
               onBeforePress={onOpenReposter}>
-              <Repost
+              <RepostIcon
                 style={{color: pal.colors.textLight, marginRight: 3}}
                 width={14}
                 height={14}
@@ -318,11 +318,19 @@ let FeedItemInner = ({
                         style={pal.textLight}
                         lineHeight={1.2}
                         numberOfLines={1}
-                        text={sanitizeDisplayName(
-                          reason.by.displayName ||
-                            sanitizeHandle(reason.by.handle),
-                          moderation.ui('displayName'),
-                        )}
+                        text={
+                          <Text
+                            emoji
+                            type="sm-bold"
+                            style={pal.textLight}
+                            lineHeight={1.2}>
+                            {sanitizeDisplayName(
+                              reason.by.displayName ||
+                                sanitizeHandle(reason.by.handle),
+                              moderation.ui('displayName'),
+                            )}
+                          </Text>
+                        }
                         href={makeProfileLink(reason.by)}
                         onBeforePress={onOpenReposter}
                       />
@@ -331,6 +339,21 @@ let FeedItemInner = ({
                 )}
               </Text>
             </Link>
+          ) : AppBskyFeedDefs.isReasonPin(reason) ? (
+            <View style={styles.includeReason}>
+              <PinIcon
+                style={{color: pal.colors.textLight, marginRight: 3}}
+                width={14}
+                height={14}
+              />
+              <Text
+                type="sm-bold"
+                style={pal.textLight}
+                lineHeight={1.2}
+                numberOfLines={1}>
+                <Trans>Pinned</Trans>
+              </Text>
+            </View>
           ) : null}
         </View>
       </View>
@@ -339,7 +362,7 @@ let FeedItemInner = ({
         <View style={styles.layoutAvi}>
           <AviFollowButton author={post.author} moderation={moderation}>
             <PreviewableUserAvatar
-              size={52}
+              size={42}
               profile={post.author}
               moderation={moderation.ui('avatar')}
               type={post.author.associated?.labeler ? 'labeler' : 'user'}
@@ -363,7 +386,6 @@ let FeedItemInner = ({
           <PostMeta
             author={post.author}
             moderation={moderation}
-            authorHasWarning={!!post.author.labels?.length}
             timestamp={post.indexedAt}
             postHref={href}
             onOpenAuthor={onOpenAuthor}
@@ -386,7 +408,6 @@ let FeedItemInner = ({
             post={post}
             threadgateRecord={threadgateRecord}
           />
-          <VideoDebug />
           <PostCtrls
             post={post}
             record={record}
@@ -488,6 +509,7 @@ let PostContent = ({
             embed={postEmbed}
             moderation={moderation}
             onOpen={onOpenEmbed}
+            viewContext={PostEmbedViewContext.Feed}
           />
         </View>
       ) : null}
@@ -529,9 +551,11 @@ function ReplyToLabel({
               numberOfLines={1}
               href={makeProfileLink(profile)}
               text={
-                profile.displayName
-                  ? sanitizeDisplayName(profile.displayName)
-                  : sanitizeHandle(profile.handle)
+                <Text emoji type="md" style={pal.textLight} lineHeight={1.2}>
+                  {profile.displayName
+                    ? sanitizeDisplayName(profile.displayName)
+                    : sanitizeHandle(profile.handle)}
+                </Text>
               }
             />
           </ProfileHoverCard>
@@ -560,19 +584,6 @@ function ReplyToLabel({
         {label}
       </Text>
     </View>
-  )
-}
-
-function VideoDebug() {
-  const gate = useGate()
-  const id = useId()
-
-  if (!gate('video_debug')) return null
-
-  return (
-    <VideoEmbed
-      source={`https://lumi.jazco.dev/watch/did:plc:q6gjnaw2blty4crticxkmujt/Qmc8w93UpTa2adJHg4ZhnDPrBs1EsbzrekzPcqF5SwusuZ/playlist.m3u8?ignore_me_just_testing_frontend_stuff=${id}`}
-    />
   )
 }
 

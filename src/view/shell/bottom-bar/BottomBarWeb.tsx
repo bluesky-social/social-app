@@ -41,7 +41,6 @@ import {
   UserCircle_Filled_Corner0_Rounded as UserCircleFilled,
   UserCircle_Stroke2_Corner0_Rounded as UserCircle,
 } from '#/components/icons/UserCircle'
-import {HomeTourExploreWrapper} from '#/tours/HomeTour'
 import {styles} from './BottomBarStyles'
 
 export function BottomBarWeb() {
@@ -95,12 +94,10 @@ export function BottomBarWeb() {
             {({isActive}) => {
               const Icon = isActive ? MagnifyingGlassFilled : MagnifyingGlass
               return (
-                <HomeTourExploreWrapper>
-                  <Icon
-                    width={iconWidth + 2}
-                    style={[styles.ctrlIcon, pal.text, styles.searchIcon]}
-                  />
-                </HomeTourExploreWrapper>
+                <Icon
+                  width={iconWidth + 2}
+                  style={[styles.ctrlIcon, pal.text, styles.searchIcon]}
+                />
               )
             }}
           </NavItem>

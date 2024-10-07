@@ -4,7 +4,7 @@ import {useAnimatedRef} from 'react-native-reanimated'
 
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {Pager, PagerRef, RenderTabBarFnProps} from 'view/com/pager/Pager'
+import {Pager, PagerRef, RenderTabBarFnProps} from '#/view/com/pager/Pager'
 import {ListMethods} from '../util/List'
 import {TabBar} from './TabBar'
 

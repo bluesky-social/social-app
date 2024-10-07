@@ -6,10 +6,12 @@ import React, {
   useState,
 } from 'react'
 import {TextInput, View} from 'react-native'
-import {BottomSheetFlatListMethods} from '@discord/bottom-sheet'
+import {useWindowDimensions} from 'react-native'
+import {Image} from 'expo-image'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {logEvent} from '#/lib/statsig/statsig'
 import {cleanError} from '#/lib/strings/errors'
 import {isWeb} from '#/platform/detection'
 import {
@@ -19,7 +21,8 @@ import {
 } from '#/state/queries/tenor'
 import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {ListMethods} from '#/view/com/util/List'
+import {atoms as a, ios, native, useBreakpoints, useTheme} from '#/alf'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
 import {useThrottledValue} from '#/components/hooks/useThrottledValue'
@@ -27,16 +30,18 @@ import {ArrowLeft_Stroke2_Corner0_Rounded as Arrow} from '#/components/icons/Arr
 import {MagnifyingGlass2_Stroke2_Corner0_Rounded as Search} from '#/components/icons/MagnifyingGlass2'
 import {Button, ButtonIcon, ButtonText} from '../Button'
 import {ListFooter, ListMaybePlaceholder} from '../Lists'
-import {GifPreview} from './GifSelect.shared'
+import {PortalComponent} from '../Portal'
 
 export function GifSelectDialog({
   controlRef,
   onClose,
   onSelectGif: onSelectGifProp,
+  Portal,
 }: {
   controlRef: React.RefObject<{open: () => void}>
   onClose: () => void
   onSelectGif: (gif: Gif) => void
+  Portal?: PortalComponent
 }) {
   const control = Dialog.useDialogControl()
 
@@ -59,8 +64,13 @@ export function GifSelectDialog({
   return (
     <Dialog.Outer
       control={control}
-      nativeOptions={{sheet: {snapPoints: ['100%']}}}
-      onClose={onClose}>
+      onClose={onClose}
+      Portal={Portal}
+      nativeOptions={{
+        bottomInset: 0,
+        // use system corner radius on iOS
+        ...ios({cornerRadius: undefined}),
+      }}>
       <Dialog.Handle />
       <ErrorBoundary renderError={renderErrorBoundary}>
         <GifList control={control} onSelectGif={onSelectGif} />
@@ -80,9 +90,10 @@ function GifList({
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
   const textInputRef = useRef<TextInput>(null)
-  const listRef = useRef<BottomSheetFlatListMethods>(null)
+  const listRef = useRef<ListMethods>(null)
   const [undeferredSearch, setSearch] = useState('')
   const search = useThrottledValue(undeferredSearch, 500)
+  const {height} = useWindowDimensions()
 
   const isSearching = search.length > 0
 
@@ -95,7 +106,7 @@ function GifList({
     isFetchingNextPage,
     hasNextPage,
     error,
-    isLoading,
+    isPending,
     isError,
     refetch,
   } = isSearching ? searchQuery : trendingQuery
@@ -132,6 +143,7 @@ function GifList({
     return (
       <View
         style={[
+          native(a.pt_4xl),
           a.relative,
           a.mb_lg,
           a.flex_row,
@@ -196,13 +208,14 @@ function GifList({
         data={flattenedData}
         renderItem={renderItem}
         numColumns={gtMobile ? 3 : 2}
-        columnWrapperStyle={a.gap_sm}
+        columnWrapperStyle={[a.gap_sm]}
+        contentContainerStyle={[native([a.px_xl, {minHeight: height}])]}
         ListHeaderComponent={
           <>
             {listHeader}
             {!hasData && (
               <ListMaybePlaceholder
-                isLoading={isLoading}
+                isLoading={isPending}
                 isError={isError}
                 onRetry={refetch}
                 onGoBack={onGoBack}
@@ -264,12 +277,56 @@ function DialogError({details}: {details?: string}) {
         label={_(msg`Close dialog`)}
         onPress={() => control.close()}
         color="primary"
-        size="medium"
+        size="large"
         variant="solid">
         <ButtonText>
           <Trans>Close</Trans>
         </ButtonText>
       </Button>
     </Dialog.ScrollableInner>
+  )
+}
+
+export function GifPreview({
+  gif,
+  onSelectGif,
+}: {
+  gif: Gif
+  onSelectGif: (gif: Gif) => void
+}) {
+  const {gtTablet} = useBreakpoints()
+  const {_} = useLingui()
+  const t = useTheme()
+
+  const onPress = useCallback(() => {
+    logEvent('composer:gif:select', {})
+    onSelectGif(gif)
+  }, [onSelectGif, gif])
+
+  return (
+    <Button
+      label={_(msg`Select GIF "${gif.title}"`)}
+      style={[a.flex_1, gtTablet ? {maxWidth: '33%'} : {maxWidth: '50%'}]}
+      onPress={onPress}>
+      {({pressed}) => (
+        <Image
+          style={[
+            a.flex_1,
+            a.mb_sm,
+            a.rounded_sm,
+            {aspectRatio: 1, opacity: pressed ? 0.8 : 1},
+            t.atoms.bg_contrast_25,
+          ]}
+          source={{
+            uri: gif.media_formats.tinygif.url,
+          }}
+          contentFit="cover"
+          accessibilityLabel={gif.title}
+          accessibilityHint=""
+          cachePolicy="none"
+          accessibilityIgnoresInvertColors
+        />
+      )}
+    </Button>
   )
 }

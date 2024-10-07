@@ -7,13 +7,13 @@ import {useLingui} from '@lingui/react'
 
 import {isNative} from '#/platform/detection'
 import {ThreadgateAllowUISetting} from '#/state/queries/threadgate'
-import {useAnalytics} from 'lib/analytics/analytics'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {PostInteractionSettingsControlledDialog} from '#/components/dialogs/PostInteractionSettingsDialog'
 import {Earth_Stroke2_Corner0_Rounded as Earth} from '#/components/icons/Globe'
 import {Group3_Stroke2_Corner0_Rounded as Group} from '#/components/icons/Group'
+import {PortalComponent} from '#/components/Portal'
 
 export function ThreadgateBtn({
   postgate,
@@ -21,6 +21,7 @@ export function ThreadgateBtn({
   threadgateAllowUISettings,
   onChangeThreadgateAllowUISettings,
   style,
+  Portal,
 }: {
   postgate: AppBskyFeedPostgate.Record
   onChangePostgate: (v: AppBskyFeedPostgate.Record) => void
@@ -29,14 +30,14 @@ export function ThreadgateBtn({
   onChangeThreadgateAllowUISettings: (v: ThreadgateAllowUISetting[]) => void
 
   style?: StyleProp<AnimatedStyle<ViewStyle>>
+
+  Portal: PortalComponent
 }) {
-  const {track} = useAnalytics()
   const {_} = useLingui()
   const t = useTheme()
   const control = Dialog.useDialogControl()
 
   const onPress = () => {
-    track('Composer:ThreadgateOpened')
     if (isNative && Keyboard.isVisible()) {
       Keyboard.dismiss()
     }
@@ -60,7 +61,7 @@ export function ThreadgateBtn({
         <Button
           variant="solid"
           color="secondary"
-          size="xsmall"
+          size="small"
           testID="openReplyGateButton"
           onPress={onPress}
           label={label}
@@ -80,6 +81,7 @@ export function ThreadgateBtn({
         onChangePostgate={onChangePostgate}
         threadgateAllowUISettings={threadgateAllowUISettings}
         onChangeThreadgateAllowUISettings={onChangeThreadgateAllowUISettings}
+        Portal={Portal}
       />
     </>
   )

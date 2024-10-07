@@ -11,6 +11,7 @@ import {
   View,
 } from 'react-native'
 import {ScrollView as RNGHScrollView} from 'react-native-gesture-handler'
+import RNPickerSelect from 'react-native-picker-select'
 import {AppBskyActorDefs, AppBskyFeedDefs, moderateProfile} from '@atproto/api'
 import {
   FontAwesomeIcon,
@@ -21,17 +22,24 @@ import {useLingui} from '@lingui/react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 
-import {useAnalytics} from '#/lib/analytics/analytics'
+import {LANGUAGES} from '#/lib/../locale/languages'
 import {createHitslop} from '#/lib/constants'
 import {HITSLOP_10} from '#/lib/constants'
+import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {usePalette} from '#/lib/hooks/usePalette'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {MagnifyingGlassIcon} from '#/lib/icons'
 import {makeProfileLink} from '#/lib/routes/links'
 import {NavigationProp} from '#/lib/routes/types'
+import {
+  NativeStackScreenProps,
+  SearchTabNavigatorParams,
+} from '#/lib/routes/types'
 import {augmentSearchQuery} from '#/lib/strings/helpers'
 import {logger} from '#/logger'
 import {isNative, isWeb} from '#/platform/detection'
 import {listenSoftReset} from '#/state/events'
+import {useLanguagePrefs} from '#/state/preferences/languages'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
 import {useActorSearch} from '#/state/queries/actor-search'
@@ -40,13 +48,6 @@ import {useSearchPostsQuery} from '#/state/queries/search-posts'
 import {useSession} from '#/state/session'
 import {useSetDrawerOpen} from '#/state/shell'
 import {useSetDrawerSwipeDisabled, useSetMinimalShellMode} from '#/state/shell'
-import {useNonReactiveCallback} from 'lib/hooks/useNonReactiveCallback'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {
-  NativeStackScreenProps,
-  SearchTabNavigatorParams,
-} from 'lib/routes/types'
-import {useTheme} from 'lib/ThemeContext'
 import {Pager} from '#/view/com/pager/Pager'
 import {TabBar} from '#/view/com/pager/TabBar'
 import {Post} from '#/view/com/post/Post'
@@ -57,9 +58,14 @@ import {Text} from '#/view/com/util/text/Text'
 import {CenteredView, ScrollView} from '#/view/com/util/Views'
 import {Explore} from '#/view/screens/Search/Explore'
 import {SearchLinkCard, SearchProfileCard} from '#/view/shell/desktop/Search'
-import {atoms as a, useTheme as useThemeNew} from '#/alf'
+import {makeSearchQuery, parseSearchQuery} from '#/screens/Search/utils'
+import {atoms as a, useBreakpoints, useTheme as useThemeNew, web} from '#/alf'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as FeedCard from '#/components/FeedCard'
+import {SearchInput} from '#/components/forms/SearchInput'
+import {ChevronBottom_Stroke2_Corner0_Rounded as ChevronDown} from '#/components/icons/Chevron'
 import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
+import {SettingsGear2_Stroke2_Corner0_Rounded as Gear} from '#/components/icons/SettingsGear2'
 
 function Loader() {
   const pal = usePalette('default')
@@ -251,7 +257,7 @@ let SearchScreenUserResults = ({
   const {_} = useLingui()
 
   const {data: results, isFetched} = useActorSearch({
-    query: query,
+    query,
     enabled: active,
   })
 
@@ -324,7 +330,148 @@ let SearchScreenFeedsResults = ({
 }
 SearchScreenFeedsResults = React.memo(SearchScreenFeedsResults)
 
-let SearchScreenInner = ({query}: {query?: string}): React.ReactNode => {
+function SearchLanguageDropdown({
+  value,
+  onChange,
+}: {
+  value: string
+  onChange(value: string): void
+}) {
+  const t = useThemeNew()
+  const {_} = useLingui()
+  const {contentLanguages} = useLanguagePrefs()
+
+  const items = React.useMemo(() => {
+    return [
+      {
+        label: _(msg`Any language`),
+        inputLabel: _(msg`Any language`),
+        value: '',
+        key: '*',
+      },
+    ].concat(
+      LANGUAGES.filter(l => Boolean(l.code2))
+        .map(l => ({
+          label: l.name,
+          inputLabel: l.name,
+          value: l.code2,
+          key: l.code2 + l.code3,
+        }))
+        .sort(a => (contentLanguages.includes(a.value) ? -1 : 1)),
+    )
+  }, [_, contentLanguages])
+
+  const style = {
+    backgroundColor: t.atoms.bg_contrast_25.backgroundColor,
+    color: t.atoms.text.color,
+    fontSize: a.text_xs.fontSize,
+    fontFamily: 'inherit',
+    fontWeight: a.font_bold.fontWeight,
+    paddingHorizontal: 14,
+    paddingRight: 32,
+    paddingVertical: 8,
+    borderRadius: a.rounded_full.borderRadius,
+    borderWidth: a.border.borderWidth,
+    borderColor: t.atoms.border_contrast_low.borderColor,
+  }
+
+  return (
+    <RNPickerSelect
+      placeholder={{}}
+      value={value}
+      onValueChange={onChange}
+      items={items}
+      Icon={() => (
+        <ChevronDown fill={t.atoms.text_contrast_low.color} size="sm" />
+      )}
+      useNativeAndroidPickerStyle={false}
+      style={{
+        iconContainer: {
+          pointerEvents: 'none',
+          right: a.px_sm.paddingRight,
+          top: 0,
+          bottom: 0,
+          display: 'flex',
+          justifyContent: 'center',
+        },
+        inputAndroid: {
+          ...style,
+          paddingVertical: 2,
+        },
+        inputIOS: {
+          ...style,
+        },
+        inputWeb: web({
+          ...style,
+          cursor: 'pointer',
+          // @ts-ignore web only
+          '-moz-appearance': 'none',
+          '-webkit-appearance': 'none',
+          appearance: 'none',
+          outline: 0,
+          borderWidth: 0,
+          overflow: 'hidden',
+          whiteSpace: 'nowrap',
+          textOverflow: 'ellipsis',
+        }),
+      }}
+    />
+  )
+}
+
+function useQueryManager({initialQuery}: {initialQuery: string}) {
+  const {contentLanguages} = useLanguagePrefs()
+  const {query, params: initialParams} = React.useMemo(() => {
+    return parseSearchQuery(initialQuery || '')
+  }, [initialQuery])
+  const prevInitialQuery = React.useRef(initialQuery)
+  const [lang, setLang] = React.useState(
+    initialParams.lang || contentLanguages[0],
+  )
+
+  if (initialQuery !== prevInitialQuery.current) {
+    // handle new queryParam change (from manual search entry)
+    prevInitialQuery.current = initialQuery
+    setLang(initialParams.lang || contentLanguages[0])
+  }
+
+  const params = React.useMemo(
+    () => ({
+      // default stuff
+      ...initialParams,
+      // managed stuff
+      lang,
+    }),
+    [lang, initialParams],
+  )
+  const handlers = React.useMemo(
+    () => ({
+      setLang,
+    }),
+    [setLang],
+  )
+
+  return React.useMemo(() => {
+    return {
+      query,
+      queryWithParams: makeSearchQuery(query, params),
+      params: {
+        ...params,
+        ...handlers,
+      },
+    }
+  }, [query, params, handlers])
+}
+
+let SearchScreenInner = ({
+  query,
+  queryWithParams,
+  headerHeight,
+}: {
+  query: string
+  queryWithParams: string
+  headerHeight: number
+}): React.ReactNode => {
   const pal = usePalette('default')
   const setMinimalShellMode = useSetMinimalShellMode()
   const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
@@ -349,7 +496,7 @@ let SearchScreenInner = ({query}: {query?: string}): React.ReactNode => {
         title: _(msg`Top`),
         component: (
           <SearchScreenPostResults
-            query={query}
+            query={queryWithParams}
             sort="top"
             active={activeTab === 0}
           />
@@ -359,7 +506,7 @@ let SearchScreenInner = ({query}: {query?: string}): React.ReactNode => {
         title: _(msg`Latest`),
         component: (
           <SearchScreenPostResults
-            query={query}
+            query={queryWithParams}
             sort="latest"
             active={activeTab === 1}
           />
@@ -378,7 +525,7 @@ let SearchScreenInner = ({query}: {query?: string}): React.ReactNode => {
         ),
       },
     ]
-  }, [_, query, activeTab])
+  }, [_, query, queryWithParams, activeTab])
 
   return query ? (
     <Pager
@@ -386,7 +533,15 @@ let SearchScreenInner = ({query}: {query?: string}): React.ReactNode => {
       renderTabBar={props => (
         <CenteredView
           sideBorders
-          style={[pal.border, pal.view, styles.tabBarContainer]}>
+          style={[
+            pal.border,
+            pal.view,
+            web({
+              position: isWeb ? 'sticky' : '',
+              zIndex: 1,
+            }),
+            {top: isWeb ? headerHeight : undefined},
+          ]}>
           <TabBar items={sections.map(section => section.title)} {...props} />
         </CenteredView>
       )}
@@ -414,7 +569,7 @@ let SearchScreenInner = ({query}: {query?: string}): React.ReactNode => {
                 display: 'flex',
                 paddingVertical: 12,
                 paddingHorizontal: 18,
-                fontWeight: 'bold',
+                fontWeight: '600',
                 borderBottomWidth: 1,
               },
             ]}>
@@ -448,14 +603,13 @@ SearchScreenInner = React.memo(SearchScreenInner)
 export function SearchScreen(
   props: NativeStackScreenProps<SearchTabNavigatorParams, 'Search'>,
 ) {
+  const t = useThemeNew()
+  const {gtMobile} = useBreakpoints()
   const navigation = useNavigation<NavigationProp>()
   const textInput = React.useRef<TextInput>(null)
   const {_} = useLingui()
-  const pal = usePalette('default')
-  const {track} = useAnalytics()
   const setDrawerOpen = useSetDrawerOpen()
   const setMinimalShellMode = useSetMinimalShellMode()
-  const {isTabletOrDesktop, isTabletOrMobile} = useWebMediaQueries()
 
   // Query terms
   const queryParam = props.route?.params?.q ?? ''
@@ -468,6 +622,17 @@ export function SearchScreen(
   const [selectedProfiles, setSelectedProfiles] = React.useState<
     AppBskyActorDefs.ProfileViewBasic[]
   >([])
+
+  const {params, query, queryWithParams} = useQueryManager({
+    initialQuery: queryParam,
+  })
+  const showFiltersButton = Boolean(query && !showAutocomplete)
+  const [showFilters, setShowFilters] = React.useState(false)
+  /*
+   * Arbitrary sizing, so guess and check, used for sticky header alignment and
+   * sizing.
+   */
+  const headerHeight = 64 + (showFilters ? 40 : 0)
 
   useFocusEffect(
     useNonReactiveCallback(() => {
@@ -497,22 +662,14 @@ export function SearchScreen(
   }, [])
 
   const onPressMenu = React.useCallback(() => {
-    track('ViewHeader:MenuButtonClicked')
     setDrawerOpen(true)
-  }, [track, setDrawerOpen])
+  }, [setDrawerOpen])
 
   const onPressClearQuery = React.useCallback(() => {
     scrollToTopWeb()
     setSearchText('')
     textInput.current?.focus()
   }, [])
-
-  const onPressCancelSearch = React.useCallback(() => {
-    scrollToTopWeb()
-    textInput.current?.blur()
-    setShowAutocomplete(false)
-    setSearchText(queryParam)
-  }, [queryParam])
 
   const onChangeText = React.useCallback(async (text: string) => {
     scrollToTopWeb()
@@ -586,6 +743,13 @@ export function SearchScreen(
     [updateSearchHistory, navigation],
   )
 
+  const onPressCancelSearch = React.useCallback(() => {
+    scrollToTopWeb()
+    textInput.current?.blur()
+    setShowAutocomplete(false)
+    setSearchText(queryParam)
+  }, [setShowAutocomplete, setSearchText, queryParam])
+
   const onSubmit = React.useCallback(() => {
     navigateToItem(searchText)
   }, [navigateToItem, searchText])
@@ -624,6 +788,7 @@ export function SearchScreen(
       setSearchText('')
       navigation.setParams({q: ''})
     }
+    setShowFilters(false)
   }, [navigation])
 
   useFocusEffect(
@@ -663,50 +828,108 @@ export function SearchScreen(
     [selectedProfiles],
   )
 
+  const onSearchInputFocus = React.useCallback(() => {
+    if (isWeb) {
+      // Prevent a jump on iPad by ensuring that
+      // the initial focused render has no result list.
+      requestAnimationFrame(() => {
+        setShowAutocomplete(true)
+      })
+    } else {
+      setShowAutocomplete(true)
+    }
+    setShowFilters(false)
+  }, [setShowAutocomplete])
+
   return (
     <View style={isWeb ? null : {flex: 1}}>
       <CenteredView
         style={[
-          styles.header,
-          pal.border,
-          pal.view,
-          isTabletOrDesktop && {paddingTop: 10},
+          a.p_md,
+          a.pb_sm,
+          a.gap_sm,
+          t.atoms.bg,
+          web({
+            height: headerHeight,
+            position: 'sticky',
+            top: 0,
+            zIndex: 1,
+          }),
         ]}
-        sideBorders={isTabletOrDesktop}>
-        {isTabletOrMobile && (
-          <Pressable
-            testID="viewHeaderBackOrMenuBtn"
-            onPress={onPressMenu}
-            hitSlop={HITSLOP_10}
-            style={styles.headerMenuBtn}
-            accessibilityRole="button"
-            accessibilityLabel={_(msg`Menu`)}
-            accessibilityHint={_(msg`Access navigation links and settings`)}>
-            <Menu size="lg" fill={pal.colors.textLight} />
-          </Pressable>
-        )}
-        <SearchInputBox
-          textInput={textInput}
-          searchText={searchText}
-          showAutocomplete={showAutocomplete}
-          setShowAutocomplete={setShowAutocomplete}
-          onChangeText={onChangeText}
-          onSubmit={onSubmit}
-          onPressClearQuery={onPressClearQuery}
-        />
-        {showAutocomplete && (
-          <View style={[styles.headerCancelBtn]}>
-            <Pressable
+        sideBorders={gtMobile}>
+        <View style={[a.flex_row, a.gap_sm]}>
+          {!gtMobile && (
+            <Button
+              testID="viewHeaderBackOrMenuBtn"
+              onPress={onPressMenu}
+              hitSlop={HITSLOP_10}
+              label={_(msg`Menu`)}
+              accessibilityHint={_(msg`Access navigation links and settings`)}
+              size="large"
+              variant="solid"
+              color="secondary"
+              shape="square">
+              <ButtonIcon icon={Menu} size="lg" />
+            </Button>
+          )}
+          <View style={[a.flex_1]}>
+            <SearchInput
+              ref={textInput}
+              value={searchText}
+              onFocus={onSearchInputFocus}
+              onChangeText={onChangeText}
+              onClearText={onPressClearQuery}
+              onSubmitEditing={onSubmit}
+            />
+          </View>
+          {showFiltersButton && (
+            <Button
+              onPress={() => setShowFilters(!showFilters)}
+              hitSlop={HITSLOP_10}
+              label={_(msg`Show advanced filters`)}
+              size="large"
+              variant="solid"
+              color="secondary"
+              shape="square">
+              <Gear
+                size="md"
+                fill={
+                  showFilters
+                    ? t.palette.primary_500
+                    : t.atoms.text_contrast_medium.color
+                }
+              />
+            </Button>
+          )}
+          {showAutocomplete && (
+            <Button
+              label={_(msg`Cancel search`)}
+              size="large"
+              variant="ghost"
+              color="secondary"
+              style={[a.px_sm]}
               onPress={onPressCancelSearch}
-              accessibilityRole="button"
               hitSlop={HITSLOP_10}>
-              <Text style={pal.text}>
+              <ButtonText>
                 <Trans>Cancel</Trans>
-              </Text>
-            </Pressable>
+              </ButtonText>
+            </Button>
+          )}
+        </View>
+
+        {showFilters && (
+          <View
+            style={[a.flex_row, a.align_center, a.justify_between, a.gap_sm]}>
+            <View style={[{width: 140}]}>
+              <SearchLanguageDropdown
+                value={params.lang}
+                onChange={params.setLang}
+              />
+            </View>
           </View>
         )}
       </CenteredView>
+
       <View
         style={{
           display: showAutocomplete ? 'flex' : 'none',
@@ -737,104 +960,15 @@ export function SearchScreen(
           display: showAutocomplete ? 'none' : 'flex',
           flex: 1,
         }}>
-        <SearchScreenInner query={queryParam} />
+        <SearchScreenInner
+          query={query}
+          queryWithParams={queryWithParams}
+          headerHeight={headerHeight}
+        />
       </View>
     </View>
   )
 }
-
-let SearchInputBox = ({
-  textInput,
-  searchText,
-  showAutocomplete,
-  setShowAutocomplete,
-  onChangeText,
-  onSubmit,
-  onPressClearQuery,
-}: {
-  textInput: React.RefObject<TextInput>
-  searchText: string
-  showAutocomplete: boolean
-  setShowAutocomplete: (show: boolean) => void
-  onChangeText: (text: string) => void
-  onSubmit: () => void
-  onPressClearQuery: () => void
-}): React.ReactNode => {
-  const pal = usePalette('default')
-  const {_} = useLingui()
-  const theme = useTheme()
-  return (
-    <Pressable
-      // This only exists only for extra hitslop so don't expose it to the a11y tree.
-      accessible={false}
-      focusable={false}
-      // @ts-ignore web-only
-      tabIndex={-1}
-      style={[
-        {backgroundColor: pal.colors.backgroundLight},
-        styles.headerSearchContainer,
-        // @ts-expect-error web only
-        isWeb && {
-          cursor: 'default',
-        },
-      ]}
-      onPress={() => {
-        textInput.current?.focus()
-      }}>
-      <MagnifyingGlassIcon
-        style={[pal.icon, styles.headerSearchIcon]}
-        size={20}
-      />
-      <TextInput
-        testID="searchTextInput"
-        ref={textInput}
-        placeholder={_(msg`Search`)}
-        placeholderTextColor={pal.colors.textLight}
-        returnKeyType="search"
-        value={searchText}
-        style={[pal.text, styles.headerSearchInput]}
-        keyboardAppearance={theme.colorScheme}
-        selectTextOnFocus={isNative}
-        onFocus={() => {
-          if (isWeb) {
-            // Prevent a jump on iPad by ensuring that
-            // the initial focused render has no result list.
-            requestAnimationFrame(() => {
-              setShowAutocomplete(true)
-            })
-          } else {
-            setShowAutocomplete(true)
-          }
-        }}
-        onChangeText={onChangeText}
-        onSubmitEditing={onSubmit}
-        autoFocus={false}
-        accessibilityRole="search"
-        accessibilityLabel={_(msg`Search`)}
-        accessibilityHint=""
-        autoCorrect={false}
-        autoComplete="off"
-        autoCapitalize="none"
-      />
-      {showAutocomplete && searchText.length > 0 && (
-        <Pressable
-          testID="searchTextInputClearBtn"
-          onPress={onPressClearQuery}
-          accessibilityRole="button"
-          accessibilityLabel={_(msg`Clear search query`)}
-          accessibilityHint=""
-          hitSlop={HITSLOP_10}>
-          <FontAwesomeIcon
-            icon="xmark"
-            size={16}
-            style={pal.textLight as FontAwesomeIconStyle}
-          />
-        </Pressable>
-      )}
-    </Pressable>
-  )
-}
-SearchInputBox = React.memo(SearchInputBox)
 
 let AutocompleteResults = ({
   isAutocompleteFetching,
@@ -959,6 +1093,7 @@ function SearchHistory({
                       accessibilityIgnoresInvertColors
                     />
                     <Text
+                      emoji
                       style={[pal.text, styles.profileName]}
                       numberOfLines={1}>
                       {profile.displayName || profile.handle}
@@ -1028,21 +1163,7 @@ function scrollToTopWeb() {
   }
 }
 
-const HEADER_HEIGHT = 46
-
 const styles = StyleSheet.create({
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 12,
-    paddingLeft: 13,
-    paddingVertical: 4,
-    height: HEADER_HEIGHT,
-    // @ts-ignore web only
-    position: isWeb ? 'sticky' : '',
-    top: 0,
-    zIndex: 1,
-  },
   headerMenuBtn: {
     width: 30,
     height: 30,
@@ -1073,12 +1194,6 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     zIndex: -1,
     elevation: -1, // For Android
-  },
-  tabBarContainer: {
-    // @ts-ignore web only
-    position: isWeb ? 'sticky' : '',
-    top: isWeb ? HEADER_HEIGHT : 0,
-    zIndex: 1,
   },
   searchHistoryContainer: {
     width: '100%',
@@ -1134,7 +1249,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   searchHistoryTitle: {
-    fontWeight: 'bold',
+    fontWeight: '600',
     paddingVertical: 12,
     paddingHorizontal: 10,
   },
