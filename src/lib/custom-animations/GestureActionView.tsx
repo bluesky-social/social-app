@@ -16,7 +16,6 @@ import Animated, {
 } from 'react-native-reanimated'
 
 import {useHaptics} from '#/lib/haptics'
-import absoluteFill = StyleSheet.absoluteFill
 
 interface GestureAction {
   color: ColorValue
@@ -294,7 +293,8 @@ export function GestureActionView({
   return (
     <GestureDetector gesture={composedGesture}>
       <View>
-        <Animated.View style={[absoluteFill, animatedBackgroundStyle]}>
+        <Animated.View
+          style={[StyleSheet.absoluteFill, animatedBackgroundStyle]}>
           <View
             style={{
               flex: 1,
