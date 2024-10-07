@@ -8,7 +8,7 @@ import {useLingui} from '@lingui/react'
 
 import {HITSLOP_30} from '#/lib/constants'
 import {useAutoplayDisabled} from '#/state/preferences'
-import {useVideoMuteState} from 'view/com/util/post-embeds/VideoVolumeContext'
+import {useVideoMuteState} from '#/view/com/util/post-embeds/VideoVolumeContext'
 import {atoms as a, useTheme} from '#/alf'
 import {useIsWithinMessage} from '#/components/dms/MessageContext'
 import {Mute_Stroke2_Corner0_Rounded as MuteIcon} from '#/components/icons/Mute'
@@ -87,7 +87,7 @@ export const VideoEmbedInnerNative = React.forwardRef(
         />
         <VideoControls
           enterFullscreen={() => {
-            videoRef.current?.enterFullscreen()
+            videoRef.current?.enterFullscreen(true)
           }}
           toggleMuted={() => {
             videoRef.current?.toggleMuted()
