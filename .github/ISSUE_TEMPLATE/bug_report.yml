@@ -5,10 +5,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thanks for taking the time to report an issue you've found in the app! Before you submit this issue, please make
-        sure you've searched for similar issues that are already open and being tracked. If you find an open issue that
-        seems relevant to yours, it is best to leave a response there with your information instead of opening a new
-        issue, since it helps to consolidate the info in one place.
+        Thanks for taking the time to report an issue you've found in the app! Before you submit this issue, please make sure you've searched for similar issues that are already open and being tracked. If you find an open issue that seems relevant to yours, it is best to leave a response there with your information instead of opening a new issue, since it helps to consolidate the info in one place.
   - type: textarea
     attributes:
       label: Steps to Reproduce

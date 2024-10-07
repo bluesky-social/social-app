@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-09-14 17:17+0900\n"
+"PO-Revision-Date: 2024-10-07 22:22+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -233,6 +233,10 @@ msgstr "<0>{0}</0>はあなたのスターターパックに含まれていま�
 #: src/components/WhoCanReply.tsx:274
 msgid "<0>{0}</0> members"
 msgstr "<0>{0}</0>のメンバー"
+
+#: src/components/dms/DateDivider.tsx:69
+msgid "<0>{date}</0> at {time}"
+msgstr "<0>{date}</0> {time}"
 
 #: src/view/com/modals/SelfLabel.tsx:135
 msgid "<0>Not Applicable.</0> This warning is only available for posts with media attached."
@@ -509,6 +513,11 @@ msgstr "ALTテキスト"
 msgid "Alt text describes images for blind and low-vision users, and helps give context to everyone."
 msgstr "ALTテキストは、すべての人が文脈を理解できるようにするために、視覚障害者や低視力者向けに提供する画像の説明文です。"
 
+#: src/view/com/composer/GifAltText.tsx:171
+#: src/view/com/composer/photos/ImageAltTextDialog.tsx:143
+msgid "Alt text will be truncated. Limit: {0} characters."
+msgstr "ALTテキストは切り詰められます。上限：{0}文字。"
+
 #: src/view/com/modals/VerifyEmail.tsx:132
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:96
 msgid "An email has been sent to {0}. It includes a confirmation code which you can enter below."
@@ -541,10 +550,6 @@ msgstr "ビデオの読み込み時にエラーが発生しました。時間を
 #: src/view/com/util/post-embeds/VideoEmbed.web.tsx:174
 msgid "An error occurred while loading the video. Please try again."
 msgstr "ビデオの読み込み時にエラーが発生しました。もう一度お試しください。"
-
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:250
-msgid "An error occurred while saving the image!"
-msgstr "画像の保存中にエラーが発生しました！"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:71
 #: src/components/StarterPack/ShareDialog.tsx:79
@@ -613,6 +618,11 @@ msgstr "アニメーションGIF"
 msgid "Anti-Social Behavior"
 msgstr "反社会的な行動"
 
+#: src/view/screens/Search/Search.tsx:347
+#: src/view/screens/Search/Search.tsx:348
+msgid "Any language"
+msgstr "全言語"
+
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:54
 msgid "Anybody can interact"
 msgstr "誰でも反応可能"
@@ -667,15 +677,15 @@ msgstr "この決定に異議を申し立てる"
 #: src/screens/Settings/AppearanceSettings.tsx:69
 #: src/view/screens/Settings/index.tsx:484
 msgid "Appearance"
-msgstr "背景"
+msgstr "外観"
 
 #: src/view/screens/Settings/index.tsx:475
 msgid "Appearance settings"
-msgstr "背景の設定"
+msgstr "外観の設定"
 
 #: src/Navigation.tsx:326
 msgid "Appearance Settings"
-msgstr "背景の設定"
+msgstr "外観の設定"
 
 #: src/screens/Feeds/NoSavedFeedsOfAnyType.tsx:47
 #: src/screens/Home/NoFeedsPinned.tsx:93
@@ -840,17 +850,13 @@ msgstr "ブログ"
 msgid "Bluesky"
 msgstr "Bluesky"
 
-#: src/view/com/auth/server-input/index.tsx:154
-msgid "Bluesky is an open network where you can choose your hosting provider. Custom hosting is now available in beta for developers."
-msgstr "Bluesky は、ホスティング プロバイダーを選択できるオープン ネットワークです。 カスタムホスティングは、開発者向けのベータ版で利用できるようになりました。"
+#: src/view/com/auth/server-input/index.tsx:155
+msgid "Bluesky is an open network where you can choose your hosting provider. If you're a developer, you can host your own server."
+msgstr "Bluesky は、ホスティング プロバイダーを選択できるオープン ネットワークです。 あなたが開発者であれば、自分のサーバーをホストできます。"
 
 #: src/components/ProgressGuide/List.tsx:55
 msgid "Bluesky is better with friends!"
 msgstr "Blueskyは友達と一緒のほうが楽しい！"
-
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:206
-msgid "Bluesky now has over 10 million users, and I was #{0}!"
-msgstr "Bluesky のユーザー数は現在 1,000 万人を超えており、私は #{0} 番目でした。"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:282
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
@@ -872,10 +878,6 @@ msgstr "画像のぼかしとフィードからのフィルタリング"
 #: src/screens/Onboarding/state.ts:81
 msgid "Books"
 msgstr "書籍"
-
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:614
-msgid "Brag a little!"
-msgstr "ちょっと自慢してみよう！"
 
 #: src/components/FeedInterstitials.tsx:350
 msgid "Browse more accounts on the Explore page"
@@ -918,9 +920,17 @@ msgstr "作成者：{0}"
 msgid "by <0/>"
 msgstr "作成者：<0/>"
 
-#: src/screens/Signup/StepInfo/Policies.tsx:80
-msgid "By creating an account you agree to the {els}."
-msgstr "アカウントを作成することで、{els}に同意したものとみなされます。"
+#: src/screens/Signup/StepInfo/Policies.tsx:81
+msgid "By creating an account you agree to the <0>Privacy Policy</0>."
+msgstr "アカウントを作成することで、<0>プライバシーポリシー</0>に同意したものとみなされます。"
+
+#: src/screens/Signup/StepInfo/Policies.tsx:48
+msgid "By creating an account you agree to the <0>Terms of Service</0> and <1>Privacy Policy</1>."
+msgstr "アカウントを作成することで、<0>利用規約</0>と<1>プライバシーポリシー</1>に同意したものとみなされます。"
+
+#: src/screens/Signup/StepInfo/Policies.tsx:68
+msgid "By creating an account you agree to the <0>Terms of Service</0>."
+msgstr "アカウントを作成することで、<0>利用規約</0>に同意したものとみなされます。"
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:162
 msgid "by you"
@@ -1015,10 +1025,6 @@ msgstr "キャプション（.vtt）"
 #: src/view/com/composer/videos/SubtitleDialog.tsx:56
 msgid "Captions & alt text"
 msgstr "キャプション＆ALTテキスト"
-
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:368
-msgid "Celebrating {0} users"
-msgstr "{0} 人のユーザーを祝福"
 
 #: src/view/com/modals/VerifyEmail.tsx:160
 msgid "Change"
@@ -1225,10 +1231,6 @@ msgstr "画像を閉じる"
 msgid "Close image viewer"
 msgstr "画像ビューアを閉じる"
 
-#: src/components/dms/MessagesNUX.tsx:162
-msgid "Close modal"
-msgstr "モーダルを閉じる"
-
 #: src/view/shell/index.web.tsx:61
 msgid "Close navigation footer"
 msgstr "ナビゲーションフッターを閉じる"
@@ -1261,6 +1263,10 @@ msgstr "ユーザーリストを折りたたむ"
 #: src/view/com/notifications/FeedItem.tsx:466
 msgid "Collapses list of users for a given notification"
 msgstr "指定した通知のユーザーリストを折りたたむ"
+
+#: src/screens/Settings/AppearanceSettings.tsx:97
+msgid "Color mode"
+msgstr "カラーモード"
 
 #: src/screens/Onboarding/index.tsx:38
 #: src/screens/Onboarding/state.ts:82
@@ -1511,11 +1517,6 @@ msgstr "ビデオを処理できませんでした"
 msgid "Create"
 msgstr "作成"
 
-#: src/view/com/auth/SplashScreen.tsx:57
-#: src/view/com/auth/SplashScreen.web.tsx:106
-msgid "Create a new account"
-msgstr "新しいアカウントを作成"
-
 #: src/view/screens/Settings/index.tsx:402
 msgid "Create a new Bluesky account"
 msgstr "新しいBlueskyアカウントを作成"
@@ -1533,6 +1534,11 @@ msgstr "スターターパックを作成"
 #: src/components/StarterPack/ProfileStarterPacks.tsx:246
 msgid "Create a starter pack for me"
 msgstr "私向けのスターターパックを作成"
+
+#: src/view/com/auth/SplashScreen.tsx:56
+#: src/view/com/auth/SplashScreen.web.tsx:100
+msgid "Create account"
+msgstr "アカウントを作成"
 
 #: src/screens/Signup/index.tsx:99
 msgid "Create Account"
@@ -1632,6 +1638,11 @@ msgstr "モデレーションをデバッグ"
 #: src/view/screens/Debug.tsx:83
 msgid "Debug panel"
 msgstr "デバッグパネル"
+
+#: src/components/dialogs/nuxs/NeueTypography.tsx:101
+#: src/screens/Settings/AppearanceSettings.tsx:169
+msgid "Default"
+msgstr "デフォルト"
 
 #: src/components/dms/MessageMenu.tsx:151
 #: src/screens/StarterPack/StarterPackScreen.tsx:573
@@ -1755,10 +1766,6 @@ msgstr "なにか言いたいことはあった？"
 msgid "Dim"
 msgstr "グレー"
 
-#: src/components/dms/MessagesNUX.tsx:88
-msgid "Direct messages are here!"
-msgstr "ダイレクトメッセージはこちら！"
-
 #: src/view/screens/AccessibilitySettings.tsx:111
 msgid "Disable autoplay for videos and GIFs"
 msgstr "ビデオやGIFを自動再生しない"
@@ -1809,6 +1816,10 @@ msgstr "新しいフィードを探す"
 #: src/view/screens/Feeds.tsx:756
 msgid "Discover New Feeds"
 msgstr "新しいフィードを探す"
+
+#: src/components/Dialog/index.tsx:267
+msgid "Dismiss"
+msgstr "消す"
 
 #: src/view/com/composer/Composer.tsx:1107
 msgid "Dismiss error"
@@ -1886,6 +1897,10 @@ msgstr "完了"
 msgid "Done{extraText}"
 msgstr "完了{extraText}"
 
+#: src/components/Dialog/index.tsx:268
+msgid "Double tap to close the dialog"
+msgstr "ダブルタップでダイアログを閉じる"
+
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:326
 msgid "Download Bluesky"
 msgstr "Blueskyをダウンロード"
@@ -1894,10 +1909,6 @@ msgstr "Blueskyをダウンロード"
 #: src/view/screens/Settings/ExportCarDialog.tsx:81
 msgid "Download CAR file"
 msgstr "CARファイルをダウンロード"
-
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:622
-msgid "Download image"
-msgstr "画像をダウンロード"
 
 #: src/view/com/composer/text-input/TextInput.web.tsx:269
 msgid "Drop to add images"
@@ -2375,6 +2386,10 @@ msgstr "おすすめのフィードの読み込みに失敗しました"
 msgid "Failed to load suggested follows"
 msgstr "おすすめのフォローの読み込みに失敗しました"
 
+#: src/state/queries/pinned-post.ts:75
+msgid "Failed to pin post"
+msgstr "投稿の固定に失敗しました"
+
 #: src/view/com/lightbox/Lightbox.tsx:90
 msgid "Failed to save image: {0}"
 msgstr "画像の保存に失敗しました：{0}"
@@ -2495,15 +2510,6 @@ msgstr "フィットネス"
 #: src/screens/Onboarding/StepFinished.tsx:276
 msgid "Flexible"
 msgstr "柔軟です"
-
-#: src/view/com/modals/EditImage.tsx:116
-msgid "Flip horizontal"
-msgstr "水平方向に反転"
-
-#: src/view/com/modals/EditImage.tsx:121
-#: src/view/com/modals/EditImage.tsx:288
-msgid "Flip vertically"
-msgstr "垂直方向に反転"
 
 #. User is not following this account, click to follow
 #: src/components/ProfileCard.tsx:356
@@ -2638,6 +2644,16 @@ msgstr "あなたをフォロー"
 msgid "Follows You"
 msgstr "あなたをフォロー"
 
+#: src/components/dialogs/nuxs/NeueTypography.tsx:73
+#: src/screens/Settings/AppearanceSettings.tsx:141
+msgid "Font"
+msgstr "フォント"
+
+#: src/components/dialogs/nuxs/NeueTypography.tsx:93
+#: src/screens/Settings/AppearanceSettings.tsx:161
+msgid "Font size"
+msgstr "フォントサイズ"
+
 #: src/screens/Onboarding/index.tsx:40
 #: src/screens/Onboarding/state.ts:87
 msgid "Food"
@@ -2650,6 +2666,11 @@ msgstr "セキュリティ上の理由から、あなたのメールアドレス
 #: src/view/com/modals/AddAppPasswords.tsx:233
 msgid "For security reasons, you won't be able to view this again. If you lose this password, you'll need to generate a new one."
 msgstr "セキュリティ上の理由から、これを再度表示することはできません。このパスワードを紛失した場合は、新しいパスワードを生成する必要があります。"
+
+#: src/components/dialogs/nuxs/NeueTypography.tsx:75
+#: src/screens/Settings/AppearanceSettings.tsx:143
+msgid "For the best experience, we recommend using the theme font."
+msgstr "ベストな体験のために、テーマフォントの使用をお勧めします。"
 
 #: src/components/dialogs/MutedWords.tsx:178
 msgid "Forever"
@@ -2696,10 +2717,6 @@ msgstr "スターターパックを生成"
 #: src/view/shell/Drawer.tsx:350
 msgid "Get help"
 msgstr "ヘルプを表示"
-
-#: src/components/dms/MessagesNUX.tsx:168
-msgid "Get started"
-msgstr "始める"
 
 #: src/view/com/modals/VerifyEmail.tsx:197
 #: src/view/com/modals/VerifyEmail.tsx:199
@@ -2991,10 +3008,6 @@ msgstr "違法かつ緊急"
 msgid "Image"
 msgstr "画像"
 
-#: src/view/com/modals/AltImage.tsx:122
-msgid "Image alt text"
-msgstr "画像のALTテキスト"
-
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:247
 #: src/components/StarterPack/ShareDialog.tsx:76
 msgid "Image saved to your camera roll!"
@@ -3056,9 +3069,9 @@ msgstr "あなたのユーザーハンドルを入力"
 msgid "Interaction limited"
 msgstr "反応が制限されています"
 
-#: src/components/dms/MessagesNUX.tsx:82
-msgid "Introducing Direct Messages"
-msgstr "ダイレクトメッセージの紹介"
+#: src/components/dialogs/nuxs/NeueTypography.tsx:48
+msgid "Introducing new font settings"
+msgstr "新しいフォント設定の紹介"
 
 #: src/screens/Login/LoginForm.tsx:145
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:70
@@ -3110,6 +3123,14 @@ msgstr "お気に入りのフィードやユーザーをフォローするよう
 msgid "Invites, but personal"
 msgstr "招待、ただし個人的なもの"
 
+#: src/screens/Signup/StepInfo/index.tsx:77
+msgid "It looks like you may have entered your email address incorrectly. Are you sure it's right?"
+msgstr "入力したメールアドレスは間違ってるようです。本当にそれで合ってますか？"
+
+#: src/screens/Signup/StepInfo/index.tsx:238
+msgid "It's correct"
+msgstr "合ってます"
+
 #: src/screens/StarterPack/Wizard/index.tsx:452
 msgid "It's just you right now! Add more people to your starter pack by searching above."
 msgstr "今はあなただけ！上で検索してスターターパックにより多くのユーザーを追加してください。"
@@ -3132,10 +3153,6 @@ msgstr "Blueskyに参加"
 #: src/components/StarterPack/QrCode.tsx:56
 msgid "Join the conversation"
 msgstr "会話に参加"
-
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:492
-msgid "Joined {0}"
-msgstr "{0} に参加"
 
 #: src/screens/Onboarding/index.tsx:21
 #: src/screens/Onboarding/state.ts:89
@@ -3183,6 +3200,11 @@ msgstr "言語の設定"
 msgid "Languages"
 msgstr "言語"
 
+#: src/components/dialogs/nuxs/NeueTypography.tsx:105
+#: src/screens/Settings/AppearanceSettings.tsx:173
+msgid "Larger"
+msgstr "大きい"
+
 #: src/screens/Hashtag.tsx:97
 #: src/view/screens/Search/Search.tsx:359
 msgid "Latest"
@@ -3195,6 +3217,10 @@ msgstr "詳細"
 #: src/view/com/auth/SplashScreen.web.tsx:152
 msgid "Learn more about Bluesky"
 msgstr "Blueskyについての詳細"
+
+#: src/view/com/auth/server-input/index.tsx:160
+msgid "Learn more about self hosting your PDS."
+msgstr "自分用のPDSをホスティングする方法を学ぶ。"
 
 #: src/components/moderation/ContentHider.tsx:66
 #: src/components/moderation/ContentHider.tsx:131
@@ -3510,10 +3536,6 @@ msgstr "誤解を招くアカウント"
 msgid "Misleading Post"
 msgstr "誤解を招く投稿"
 
-#: src/screens/Settings/AppearanceSettings.tsx:78
-msgid "Mode"
-msgstr "モード"
-
 #: src/Navigation.tsx:135
 #: src/screens/Moderation/index.tsx:105
 #: src/view/screens/Settings/index.tsx:527
@@ -3790,6 +3812,10 @@ msgstr "新規"
 msgid "New chat"
 msgstr "新しいチャット"
 
+#: src/components/dialogs/nuxs/NeueTypography.tsx:52
+msgid "New font settings ✨"
+msgstr "新しいフォント設定 ✨"
+
 #: src/components/dms/NewMessagesPill.tsx:92
 msgid "New messages"
 msgstr "新しいメッセージ"
@@ -3890,6 +3916,11 @@ msgstr "おすすめのGIFが見つかりません。Tenorに問題があるか�
 msgid "No feeds found. Try searching for something else."
 msgstr "フィードが見つかりませんでした。他を探してみて。"
 
+#: src/components/LikedByList.tsx:78
+#: src/view/com/post-thread/PostLikedBy.tsx:85
+msgid "No likes yet"
+msgstr "いいねはありません"
+
 #: src/components/ProfileCard.tsx:336
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:116
 msgid "No longer following {0}"
@@ -3925,6 +3956,14 @@ msgstr "投稿主だけがこの投稿を引用できます。"
 #: src/screens/Profile/Sections/Feed.tsx:64
 msgid "No posts yet."
 msgstr "まだ投稿がありません。"
+
+#: src/view/com/post-thread/PostQuotes.tsx:106
+msgid "No quotes yet"
+msgstr "まだ引用がありません"
+
+#: src/view/com/post-thread/PostRepostedBy.tsx:78
+msgid "No reposts yet"
+msgstr "まだリポストがありません"
 
 #: src/view/com/composer/text-input/mobile/Autocomplete.tsx:101
 #: src/view/com/composer/text-input/web/Autocomplete.tsx:195
@@ -3968,6 +4007,14 @@ msgstr "返信不可"
 #: src/components/LikesDialog.tsx:99
 msgid "Nobody has liked this yet. Maybe you should be the first!"
 msgstr "まだ誰もこれをいいねしていません。あなたが最初になるべきかもしれません！"
+
+#: src/view/com/post-thread/PostQuotes.tsx:108
+msgid "Nobody has quoted this yet. Maybe you should be the first!"
+msgstr "まだ誰もこれを引用していません。あなたが最初になるべきかもしれません！"
+
+#: src/view/com/post-thread/PostRepostedBy.tsx:80
+msgid "Nobody has reposted this yet. Maybe you should be the first!"
+msgstr "まだ誰もこれをリポストしていません。あなたが最初になるべきかもしれません！"
 
 #: src/screens/StarterPack/Wizard/StepProfiles.tsx:103
 msgid "Nobody was found. Try searching for someone else."
@@ -4062,10 +4109,6 @@ msgstr "ちょっと！"
 #: src/screens/Onboarding/StepInterests/index.tsx:138
 msgid "Oh no! Something went wrong."
 msgstr "ちょっと！何らかの問題が発生したようです。"
-
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:175
-msgid "Oh no! We weren't able to generate an image for you to share. Rest assured, we're glad you're here 🦋"
-msgstr "ああ、残念！共有するための画像を生成できませんでした。ご安心ください、ここに来てくれて嬉しいです🦋"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:339
 msgid "OK"
@@ -4198,7 +4241,7 @@ msgstr "デバッグエントリーの追加詳細を開く"
 
 #: src/view/screens/Settings/index.tsx:476
 msgid "Opens appearance settings"
-msgstr "背景の設定を開く"
+msgstr "外観の設定を開く"
 
 #: src/view/com/composer/photos/OpenCameraBtn.tsx:74
 msgid "Opens camera on device"
@@ -4446,6 +4489,15 @@ msgstr "ホームにピン留め"
 msgid "Pin to Home"
 msgstr "ホームにピン留め"
 
+#: src/view/com/util/forms/PostDropdownBtn.tsx:396
+#: src/view/com/util/forms/PostDropdownBtn.tsx:403
+msgid "Pin to your profile"
+msgstr "プロフィールに固定"
+
+#: src/view/com/posts/FeedItem.tsx:354
+msgid "Pinned"
+msgstr "固定"
+
 #: src/view/screens/SavedFeeds.tsx:103
 msgid "Pinned Feeds"
 msgstr "ピン留めされたフィード"
@@ -4611,6 +4663,14 @@ msgstr "投稿の言語"
 msgid "Post not found"
 msgstr "投稿が見つかりません"
 
+#: src/state/queries/pinned-post.ts:59
+msgid "Post pinned"
+msgstr "投稿を固定しました"
+
+#: src/state/queries/pinned-post.ts:61
+msgid "Post unpinned"
+msgstr "投稿の固定を解除しました"
+
 #: src/components/TagMenu/index.tsx:267
 msgid "posts"
 msgstr "投稿"
@@ -4683,10 +4743,6 @@ msgstr "プライバシー"
 #: src/view/shell/Drawer.tsx:298
 msgid "Privacy Policy"
 msgstr "プライバシーポリシー"
-
-#: src/components/dms/MessagesNUX.tsx:91
-msgid "Privately chat with other users."
-msgstr "他のユーザーとプライベートにチャットします。"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:155
 msgid "Processing..."
@@ -4788,10 +4844,6 @@ msgstr "この投稿の引用"
 #: src/view/screens/PreferencesThreads.tsx:80
 msgid "Random (aka \"Poster's Roulette\")"
 msgstr "ランダムな順番で表示（別名「投稿者のルーレット」）"
-
-#: src/view/com/modals/EditImage.tsx:237
-msgid "Ratios"
-msgstr "比率"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:543
 #: src/view/com/util/forms/PostDropdownBtn.tsx:553
@@ -5182,6 +5234,10 @@ msgstr "アカウントにログインする時にメールのコードを必須
 msgid "Required for this provider"
 msgstr "このプロバイダーに必要"
 
+#: src/components/LabelingServiceCard/index.tsx:75
+msgid "Required in your region"
+msgstr "あなたの地域では必要"
+
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:168
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:171
 msgid "Resend email"
@@ -5284,10 +5340,6 @@ msgstr "保存"
 msgctxt "action"
 msgid "Save"
 msgstr "保存"
-
-#: src/view/com/modals/AltImage.tsx:132
-msgid "Save alt text"
-msgstr "ALTテキストを保存"
 
 #: src/components/dialogs/BirthDateSettings.tsx:119
 msgid "Save birthday"
@@ -5642,18 +5694,6 @@ msgstr "Blueskyのユーザーネームを設定"
 msgid "Sets email for password reset"
 msgstr "パスワードをリセットするためのメールアドレスを入力"
 
-#: src/view/com/modals/crop-image/CropImage.web.tsx:146
-msgid "Sets image aspect ratio to square"
-msgstr "画像のアスペクト比を正方形に設定"
-
-#: src/view/com/modals/crop-image/CropImage.web.tsx:136
-msgid "Sets image aspect ratio to tall"
-msgstr "画像のアスペクト比を縦長に設定"
-
-#: src/view/com/modals/crop-image/CropImage.web.tsx:126
-msgid "Sets image aspect ratio to wide"
-msgstr "画像のアスペクト比をワイドに設定"
-
 #: src/Navigation.tsx:155
 #: src/view/screens/Settings/index.tsx:302
 #: src/view/shell/desktop/LeftNav.tsx:395
@@ -5707,14 +5747,6 @@ msgstr "とにかく共有"
 msgid "Share feed"
 msgstr "フィードを共有"
 
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:621
-msgid "Share image externally"
-msgstr "画像を外部に共有する"
-
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:639
-msgid "Share image in post"
-msgstr "投稿で画像を共有"
-
 #: src/components/StarterPack/ShareDialog.tsx:124
 #: src/components/StarterPack/ShareDialog.tsx:131
 #: src/screens/StarterPack/StarterPackScreen.tsx:586
@@ -5761,6 +5793,10 @@ msgstr "リンクしたウェブサイトを共有"
 #: src/view/screens/Settings/index.tsx:351
 msgid "Show"
 msgstr "表示"
+
+#: src/view/screens/Search/Search.tsx:883
+msgid "Show advanced filters"
+msgstr "高度なフィルターを表示"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:169
 msgid "Show alt text"
@@ -5846,10 +5882,6 @@ msgstr "警告を表示"
 #: src/lib/moderation/useLabelBehaviorDescription.ts:56
 msgid "Show warning and filter from feeds"
 msgstr "警告の表示とフィードからのフィルタリング"
-
-#: src/view/com/post-thread/PostThreadFollowBtn.tsx:128
-msgid "Shows posts from {0} in your feed"
-msgstr "マイフィード内の{0}からの投稿を表示します"
 
 #: src/components/dialogs/Signin.tsx:97
 #: src/components/dialogs/Signin.tsx:99
@@ -5949,6 +5981,11 @@ msgstr "スキップ"
 msgid "Skip this flow"
 msgstr "この手順をスキップする"
 
+#: src/components/dialogs/nuxs/NeueTypography.tsx:97
+#: src/screens/Settings/AppearanceSettings.tsx:165
+msgid "Smaller"
+msgstr "小さい"
+
 #: src/screens/Onboarding/index.tsx:37
 #: src/screens/Onboarding/state.ts:85
 msgid "Software Dev"
@@ -5995,9 +6032,9 @@ msgstr "返信を並び替える"
 msgid "Sort replies to the same post by:"
 msgstr "次の方法で同じ投稿への返信を並び替えます。"
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:163
-msgid "Source: <0>{sourceName}</0>"
-msgstr "ソース：<0>{sourceName}</0>"
+#: src/components/moderation/LabelsOnMeDialog.tsx:167
+msgid "Source:"
+msgstr "ソース："
 
 #: src/lib/moderation/useReportOptions.ts:72
 #: src/lib/moderation/useReportOptions.ts:85
@@ -6013,10 +6050,6 @@ msgstr "スパム、過剰なメンションや返信"
 msgid "Sports"
 msgstr "スポーツ"
 
-#: src/view/com/modals/crop-image/CropImage.web.tsx:145
-msgid "Square"
-msgstr "正方形"
-
 #: src/components/dms/dialogs/NewChatDialog.tsx:63
 msgid "Start a new chat"
 msgstr "新しいチャットを開始"
@@ -6024,10 +6057,6 @@ msgstr "新しいチャットを開始"
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:371
 msgid "Start chat with {displayName}"
 msgstr "{displayName}とのチャットを開始"
-
-#: src/components/dms/MessagesNUX.tsx:161
-msgid "Start chatting"
-msgstr "チャットを開始"
 
 #: src/Navigation.tsx:358
 #: src/Navigation.tsx:363
@@ -6038,6 +6067,10 @@ msgstr "スターターパック"
 #: src/components/StarterPack/StarterPackCard.tsx:73
 msgid "Starter pack by {0}"
 msgstr "{0}によるスターターパック"
+
+#: src/components/StarterPack/StarterPackCard.tsx:74
+msgid "Starter pack by you"
+msgstr "自分のスターターパック"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:703
 msgid "Starter pack is invalid"
@@ -6143,10 +6176,6 @@ msgstr "タグメニュー：{displayTag}"
 msgid "Tags only"
 msgstr "タグのみ"
 
-#: src/view/com/modals/crop-image/CropImage.web.tsx:135
-msgid "Tall"
-msgstr "トール"
-
 #: src/components/ProgressGuide/Toast.tsx:150
 msgid "Tap to dismiss"
 msgstr "タップして消す"
@@ -6189,10 +6218,6 @@ msgstr "ジョークを言って！"
 msgid "Tell us a little more"
 msgstr "もう少し教えて"
 
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:518
-msgid "Ten Million"
-msgstr "1,000万"
-
 #: src/view/shell/desktop/RightNav.tsx:90
 msgid "Terms"
 msgstr "条件"
@@ -6226,13 +6251,9 @@ msgstr "テキストの入力フィールド"
 msgid "Thank you. Your report has been sent."
 msgstr "ありがとうございます。あなたの報告は送信されました。"
 
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:593
-msgid "Thanks for being one of our first 10 million users."
-msgstr "最初の 1,000 万人のユーザーの 1 人になっていただきありがとうございます。"
-
-#: src/components/intents/VerifyEmailIntentDialog.tsx:74
-msgid "Thanks, you have successfully verified your email address."
-msgstr "ありがとう、メールアドレスの確認に成功しました。"
+#: src/components/intents/VerifyEmailIntentDialog.tsx:82
+msgid "Thanks, you have successfully verified your email address. You can close this dialog."
+msgstr "ありがとう、メールアドレスの確認に成功しました。このダイアログを閉じても大丈夫です。"
 
 #: src/view/com/modals/ChangeHandle.tsx:459
 msgid "That contains the following:"
@@ -6334,6 +6355,11 @@ msgstr "サービス規約は移動しました"
 #: src/components/intents/VerifyEmailIntentDialog.tsx:85
 msgid "The verification code you have provided is invalid. Please make sure that you have used the correct verification link or request a new one."
 msgstr "入力された確認コードが正しくありません。正しいリンクを使用したかを確認するか、新しい確認コードを要求してください。"
+
+#: src/components/dialogs/nuxs/NeueTypography.tsx:84
+#: src/screens/Settings/AppearanceSettings.tsx:152
+msgid "Theme"
+msgstr "テーマ"
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:86
 msgid "There is no time limit for account deactivation, come back any time."
@@ -6660,9 +6686,9 @@ msgstr "Blueskyにビデオをアップロードするには、まずメール�
 msgid "To whom would you like to send this report?"
 msgstr "この報告を誰に送りたいですか？"
 
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:597
-msgid "Together, we're rebuilding the social internet. We're glad you're here."
-msgstr "私たちは一緒にソーシャル インターネットを再構築しています。ご参加いただきありがとうございます。"
+#: src/components/dms/DateDivider.tsx:44
+msgid "Today"
+msgstr "今日"
 
 #: src/view/com/util/forms/DropdownButton.tsx:255
 msgid "Toggle dropdown"
@@ -6676,10 +6702,6 @@ msgstr "成人向けコンテンツの有効もしくは無効の切り替え"
 #: src/view/screens/Search/Search.tsx:349
 msgid "Top"
 msgstr "トップ"
-
-#: src/view/com/modals/EditImage.tsx:272
-msgid "Transformations"
-msgstr "変換"
 
 #: src/components/dms/MessageMenu.tsx:103
 #: src/components/dms/MessageMenu.tsx:105
@@ -6833,6 +6855,11 @@ msgstr "ピン留めを解除"
 msgid "Unpin from home"
 msgstr "ホームからピン留めを解除"
 
+#: src/view/com/util/forms/PostDropdownBtn.tsx:395
+#: src/view/com/util/forms/PostDropdownBtn.tsx:402
+msgid "Unpin from profile"
+msgstr "プロフィールから固定を解除"
+
 #: src/view/screens/ProfileList.tsx:556
 msgid "Unpin moderation list"
 msgstr "モデレーションリストのピン留めを解除"
@@ -6868,8 +6895,8 @@ msgid "Unwanted Sexual Content"
 msgstr "望まない性的なコンテンツ"
 
 #: src/view/com/modals/UserAddRemoveLists.tsx:82
-msgid "Update {displayName} in Lists"
-msgstr "リストの{displayName}を更新"
+msgid "Update <0>{displayName}</0> in Lists"
+msgstr "リストの<0>{displayName}</0>を更新"
 
 #: src/view/com/modals/ChangeHandle.tsx:502
 msgid "Update to {handle}"
@@ -7262,6 +7289,10 @@ msgstr "これはあなたの体験をカスタマイズするために使用さ
 msgid "We're having network issues, try again"
 msgstr "ネットワークで問題が発生しています。もう一度試してください"
 
+#: src/components/dialogs/nuxs/NeueTypography.tsx:55
+msgid "We're introducing a new theme font, along with adjustable font sizing."
+msgstr "新しいテーマフォントを導入し、フォントサイズを調整可能にしました。"
+
 #: src/screens/Signup/index.tsx:100
 msgid "We're so excited to have you join us!"
 msgstr "私たちはあなたが参加してくれることをとても楽しみにしています！"
@@ -7325,11 +7356,6 @@ msgstr "アルゴリズムによるフィードにはどの言語を使用しま
 msgid "Who can interact with this post?"
 msgstr "誰がこの投稿に反応できますか？"
 
-#: src/components/dms/MessagesNUX.tsx:110
-#: src/components/dms/MessagesNUX.tsx:124
-msgid "Who can message you?"
-msgstr "誰があなたへメッセージを送れるか？"
-
 #: src/components/WhoCanReply.tsx:87
 msgid "Who can reply"
 msgstr "返信できるユーザー"
@@ -7366,10 +7392,6 @@ msgstr "なぜこのスターターパックをレビューする必要があり
 #: src/components/ReportDialog/SelectReportOptionView.tsx:48
 msgid "Why should this user be reviewed?"
 msgstr "なぜこのユーザーをレビューする必要がありますか？"
-
-#: src/view/com/modals/crop-image/CropImage.web.tsx:125
-msgid "Wide"
-msgstr "ワイド"
 
 #: src/screens/Messages/Conversation/MessageInput.tsx:142
 #: src/screens/Messages/Conversation/MessageInput.web.tsx:198
@@ -7421,9 +7443,9 @@ msgstr "はい、非表示にします"
 msgid "Yes, reactivate my account"
 msgstr "はい、アカウントを再有効化します"
 
-#: src/components/dms/MessageItem.tsx:183
-msgid "Yesterday, {time}"
-msgstr "昨日、{time}"
+#: src/components/dms/DateDivider.tsx:46
+msgid "Yesterday"
+msgstr "昨日"
 
 #: src/components/StarterPack/StarterPackCard.tsx:76
 #: src/screens/List/ListHiddenScreen.tsx:140
@@ -7446,6 +7468,10 @@ msgstr "あなたはビデオのアップロードを許可されていません
 msgid "You are not following anyone."
 msgstr "あなたはまだだれもフォローしていません。"
 
+#: src/components/dialogs/nuxs/NeueTypography.tsx:62
+msgid "You can adjust these in your Appearance Settings later."
+msgstr "これらは後で外観の設定で調整できます。"
+
 #: src/view/com/posts/FollowingEmptyState.tsx:63
 #: src/view/com/posts/FollowingEndOfFeed.tsx:64
 msgid "You can also discover new Custom Feeds to follow."
@@ -7454,10 +7480,6 @@ msgstr "また、あなたはフォローすべき新しいカスタムフィー
 #: src/view/com/modals/DeleteAccount.tsx:202
 msgid "You can also temporarily deactivate your account instead, and reactivate it at any time."
 msgstr "代わりにアカウントを一時的に無効化して、いつでも再有効化することもできます。"
-
-#: src/components/dms/MessagesNUX.tsx:119
-msgid "You can change this at any time."
-msgstr "これはいつでも変更できます。"
 
 #: src/screens/Messages/Settings.tsx:111
 msgid "You can continue ongoing conversations regardless of which setting you choose."

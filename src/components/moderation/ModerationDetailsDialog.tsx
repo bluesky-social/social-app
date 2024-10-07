@@ -148,15 +148,18 @@ function ModerationDetailsDialogInner({
           ) : (
             <>
               <Text style={[t.atoms.text, a.text_md, a.leading_snug, a.mt_lg]}>
-                <Trans>This label was applied by </Trans>
+                <Trans>
+                  This label was applied by{' '}
+                  <InlineLinkText
+                    label={desc.source || _(msg`an unknown labeler`)}
+                    to={makeProfileLink({did: modcause.label.src, handle: ''})}
+                    onPress={() => control.close()}
+                    style={a.text_md}>
+                    {desc.source || _(msg`an unknown labeler`)}
+                  </InlineLinkText>
+                  .
+                </Trans>
               </Text>
-              <InlineLinkText
-                label={desc.source || _(msg`an unknown labeler`)}
-                to={makeProfileLink({did: modcause.label.src, handle: ''})}
-                onPress={() => control.close()}
-                style={a.text_md}>
-                {desc.source || _(msg`an unknown labeler`)}
-              </InlineLinkText>
             </>
           )}
         </View>
