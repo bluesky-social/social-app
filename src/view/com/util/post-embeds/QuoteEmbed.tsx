@@ -284,7 +284,7 @@ export function LazyQuoteEmbed({uri}: {uri: string}) {
   if (!data || data.type !== 'record' || data.kind !== 'post') {
     return null
   }
-  return <QuoteEmbed quote={data.meta} />
+  return <QuoteEmbed quote={data.view} />
 }
 
 function viewRecordToPostView(

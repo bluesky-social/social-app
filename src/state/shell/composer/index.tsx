@@ -66,7 +66,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
             cid: opts.quote.cid,
             uri: opts.quote.uri,
           },
-          meta: opts.quote,
+          view: opts.quote,
         })
       }
     }
