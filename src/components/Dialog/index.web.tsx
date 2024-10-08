@@ -10,7 +10,9 @@ import {
 import Animated, {FadeIn, FadeInDown} from 'react-native-reanimated'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {FocusScope} from '@tamagui/focus-scope'
+import {DismissableLayer} from '@radix-ui/react-dismissable-layer'
+import {useFocusGuards} from '@radix-ui/react-focus-guards'
+import {FocusScope} from '@radix-ui/react-focus-scope'
 
 import {logger} from '#/logger'
 import {useDialogStateControlContext} from '#/state/dialogs'
@@ -31,6 +33,7 @@ export * from '#/components/Dialog/utils'
 export {Input} from '#/components/forms/TextField'
 
 const stopPropagation = (e: any) => e.stopPropagation()
+const preventDefault = (e: any) => e.preventDefault()
 
 export function Outer({
   children,
@@ -84,21 +87,6 @@ export function Outer({
     }),
     [close, open],
   )
-
-  React.useEffect(() => {
-    if (!isOpen) return
-
-    function handler(e: KeyboardEvent) {
-      if (e.key === 'Escape') {
-        e.stopPropagation()
-        close()
-      }
-    }
-
-    document.addEventListener('keydown', handler)
-
-    return () => document.removeEventListener('keydown', handler)
-  }, [close, isOpen])
 
   const context = React.useMemo(
     () => ({
@@ -168,9 +156,11 @@ export function Inner({
   accessibilityDescribedBy,
 }: DialogInnerProps) {
   const t = useTheme()
+  const {close} = React.useContext(Context)
   const {gtMobile} = useBreakpoints()
+  useFocusGuards()
   return (
-    <FocusScope loop enabled trapped>
+    <FocusScope loop asChild trapped>
       <Animated.View
         role="dialog"
         aria-role="dialog"
@@ -183,7 +173,7 @@ export function Inner({
         onTouchEnd={stopPropagation}
         entering={FadeInDown.duration(100)}
         // exiting={FadeOut.duration(100)}
-        style={[
+        style={flatten([
           a.relative,
           a.rounded_md,
           a.w_full,
@@ -198,8 +188,10 @@ export function Inner({
             shadowRadius: 30,
           },
           flatten(style),
-        ]}>
-        {children}
+        ])}>
+        <DismissableLayer onFocusOutside={preventDefault} onDismiss={close}>
+          {children}
+        </DismissableLayer>
       </Animated.View>
     </FocusScope>
   )
