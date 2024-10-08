@@ -64,7 +64,7 @@ export type ResolvedLink =
   | ResolvedPostRecord
   | ResolvedOtherRecord
 
-class EmbeddingDisabledError extends Error {
+export class EmbeddingDisabledError extends Error {
   constructor() {
     super('Embedding is disabled for this record')
   }
