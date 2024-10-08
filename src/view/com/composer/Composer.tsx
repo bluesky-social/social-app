@@ -48,6 +48,7 @@ import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
 import * as apilib from '#/lib/api/index'
+import {EmbeddingDisabledError} from '#/lib/api/resolve'
 import {until} from '#/lib/async/until'
 import {MAX_GRAPHEME_LENGTH} from '#/lib/constants'
 import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
@@ -420,6 +421,8 @@ export const ComposePost = ({
           err = _(
             msg`We're sorry! The post you are replying to has been deleted.`,
           )
+        } else if (e instanceof EmbeddingDisabledError) {
+          err = _(msg`This post's author has disabled quote posts.`)
         }
         setError(err)
         setIsProcessing(false)
