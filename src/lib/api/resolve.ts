@@ -1,4 +1,4 @@
-import {ComAtprotoRepoStrongRef} from '@atproto/api'
+import {AppBskyActorDefs, ComAtprotoRepoStrongRef} from '@atproto/api'
 import {AtUri} from '@atproto/api'
 import {BskyAgent} from '@atproto/api'
 
@@ -33,12 +33,32 @@ type ResolvedExternalLink = {
   thumb: ComposerImage | undefined
 }
 
-type ResolvedRecord = {
+type ResolvedPostRecord = {
   type: 'record'
   record: ComAtprotoRepoStrongRef.Main
+  kind: 'post'
+  meta: {
+    text: string
+    indexedAt: string
+    author: AppBskyActorDefs.ProfileViewBasic
+  }
 }
 
-type ResolvedLink = ResolvedExternalLink | ResolvedRecord
+type ResolvedOtherRecord = {
+  type: 'record'
+  record: ComAtprotoRepoStrongRef.Main
+  kind: 'other'
+  meta: {
+    // We should replace this with a hydrated record (e.g. feed, list, starter pack)
+    // and change the composer preview to use the actual post embed components:
+    title: string
+  }
+}
+
+export type ResolvedLink =
+  | ResolvedExternalLink
+  | ResolvedPostRecord
+  | ResolvedOtherRecord
 
 export async function resolveLink(
   agent: BskyAgent,
@@ -57,6 +77,8 @@ export async function resolveLink(
         cid: result.cid,
         uri: result.uri,
       },
+      kind: 'post',
+      meta: result,
     }
   }
   if (isBskyCustomFeedUrl(uri)) {
@@ -64,7 +86,12 @@ export async function resolveLink(
     const result = await getFeedAsEmbed(agent, fetchDid, uri)
     return {
       type: 'record',
-      record: result.embed!.record, // TODO: Fix types.
+      record: result.embed!.record,
+      kind: 'other',
+      meta: {
+        // TODO: Include hydrated content instead.
+        title: result.meta!.title!,
+      },
     }
   }
   if (isBskyListUrl(uri)) {
@@ -72,7 +99,12 @@ export async function resolveLink(
     const result = await getListAsEmbed(agent, fetchDid, uri)
     return {
       type: 'record',
-      record: result.embed!.record, // TODO: Fix types.
+      record: result.embed!.record,
+      kind: 'other',
+      meta: {
+        // TODO: Include hydrated content instead.
+        title: result.meta!.title!,
+      },
     }
   }
   if (isBskyStartUrl(uri) || isBskyStarterPackUrl(uri)) {
@@ -80,7 +112,12 @@ export async function resolveLink(
     const result = await getStarterPackAsEmbed(agent, fetchDid, uri)
     return {
       type: 'record',
-      record: result.embed!.record, // TODO: Fix types.
+      record: result.embed!.record,
+      kind: 'other',
+      meta: {
+        // TODO: Include hydrated content instead.
+        title: result.meta!.title!,
+      },
     }
   }
   return resolveExternal(agent, uri)

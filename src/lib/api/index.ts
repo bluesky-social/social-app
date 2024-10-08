@@ -12,12 +12,17 @@ import {
   ComAtprotoRepoStrongRef,
   RichText,
 } from '@atproto/api'
+import {QueryClient} from '@tanstack/react-query'
 
 import {isNetworkError} from '#/lib/strings/errors'
 import {shortenLinks, stripInvalidMentions} from '#/lib/strings/rich-text-manip'
 import {logger} from '#/logger'
 import {ComposerImage, compressImage} from '#/state/gallery'
 import {writePostgateRecord} from '#/state/queries/postgate'
+import {
+  fetchResolveGifQuery,
+  fetchResolveLinkQuery,
+} from '#/state/queries/resolve-link'
 import {
   createThreadgateRecord,
   ThreadgateAllowUISetting,
@@ -27,7 +32,6 @@ import {
 import {ComposerState, EmbedDraft} from '#/view/com/composer/state/composer'
 import {createGIFDescription} from '../gif-alt-text'
 import {LinkMeta} from '../link-meta/link-meta'
-import {resolveGif, resolveLink} from './resolve'
 import {uploadBlob} from './upload-blob'
 
 export {uploadBlob}
@@ -51,7 +55,11 @@ interface PostOpts {
   langs?: string[]
 }
 
-export async function post(agent: BskyAgent, opts: PostOpts) {
+export async function post(
+  agent: BskyAgent,
+  queryClient: QueryClient,
+  opts: PostOpts,
+) {
   let reply
   let rt = new RichText({text: opts.rawText.trimEnd()}, {cleanNewlines: true})
 
@@ -64,6 +72,7 @@ export async function post(agent: BskyAgent, opts: PostOpts) {
 
   const embed = await resolveEmbed(
     agent,
+    queryClient,
     opts.composerState,
     opts.onStateChange,
   )
@@ -178,6 +187,7 @@ export async function post(agent: BskyAgent, opts: PostOpts) {
 
 async function resolveEmbed(
   agent: BskyAgent,
+  queryClient: QueryClient,
   draft: ComposerState,
   onStateChange: ((state: string) => void) | undefined,
 ): Promise<
@@ -190,8 +200,8 @@ async function resolveEmbed(
 > {
   if (draft.embed.quote) {
     const [resolvedMedia, resolvedQuote] = await Promise.all([
-      resolveMedia(agent, draft.embed, onStateChange),
-      resolveRecord(agent, draft.embed.quote.uri),
+      resolveMedia(agent, queryClient, draft.embed, onStateChange),
+      resolveRecord(agent, queryClient, draft.embed.quote.uri),
     ])
     if (resolvedMedia) {
       return {
@@ -208,12 +218,21 @@ async function resolveEmbed(
       record: resolvedQuote,
     }
   }
-  const resolvedMedia = await resolveMedia(agent, draft.embed, onStateChange)
+  const resolvedMedia = await resolveMedia(
+    agent,
+    queryClient,
+    draft.embed,
+    onStateChange,
+  )
   if (resolvedMedia) {
     return resolvedMedia
   }
   if (draft.embed.link) {
-    const resolvedLink = await resolveLink(agent, draft.embed.link.uri)
+    const resolvedLink = await fetchResolveLinkQuery(
+      queryClient,
+      agent,
+      draft.embed.link.uri,
+    )
     if (resolvedLink.type === 'record') {
       return {
         $type: 'app.bsky.embed.record',
@@ -226,6 +245,7 @@ async function resolveEmbed(
 
 async function resolveMedia(
   agent: BskyAgent,
+  queryClient: QueryClient,
   embedDraft: EmbedDraft,
   onStateChange: ((state: string) => void) | undefined,
 ): Promise<
@@ -286,7 +306,11 @@ async function resolveMedia(
   }
   if (embedDraft.media?.type === 'gif') {
     const gifDraft = embedDraft.media
-    const resolvedGif = await resolveGif(agent, gifDraft.gif)
+    const resolvedGif = await fetchResolveGifQuery(
+      queryClient,
+      agent,
+      gifDraft.gif,
+    )
     let blob: BlobRef | undefined
     if (resolvedGif.thumb) {
       onStateChange?.('Uploading link thumbnail...')
@@ -305,7 +329,11 @@ async function resolveMedia(
     }
   }
   if (embedDraft.link) {
-    const resolvedLink = await resolveLink(agent, embedDraft.link.uri)
+    const resolvedLink = await fetchResolveLinkQuery(
+      queryClient,
+      agent,
+      embedDraft.link.uri,
+    )
     if (resolvedLink.type === 'external') {
       let blob: BlobRef | undefined
       if (resolvedLink.thumb) {
@@ -330,9 +358,10 @@ async function resolveMedia(
 
 async function resolveRecord(
   agent: BskyAgent,
+  queryClient: QueryClient,
   uri: string,
 ): Promise<ComAtprotoRepoStrongRef.Main> {
-  const resolvedLink = await resolveLink(agent, uri)
+  const resolvedLink = await fetchResolveLinkQuery(queryClient, agent, uri)
   if (resolvedLink.type !== 'record') {
     throw Error('Expected uri to resolve to a record')
   }

@@ -18,6 +18,8 @@ import {msg, plural} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {POST_CTRL_HITSLOP} from '#/lib/constants'
+import {CountWheel} from '#/lib/custom-animations/CountWheel'
+import {AnimatedLikeIcon} from '#/lib/custom-animations/LikeIcon'
 import {useHaptics} from '#/lib/haptics'
 import {makeProfileLink} from '#/lib/routes/links'
 import {shareUrl} from '#/lib/sharing'
@@ -35,8 +37,6 @@ import {
   ProgressGuideAction,
   useProgressGuideControls,
 } from '#/state/shell/progress-guide'
-import {CountWheel} from 'lib/custom-animations/CountWheel'
-import {AnimatedLikeIcon} from 'lib/custom-animations/LikeIcon'
 import {atoms as a, useTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded as ArrowOutOfBox} from '#/components/icons/ArrowOutOfBox'

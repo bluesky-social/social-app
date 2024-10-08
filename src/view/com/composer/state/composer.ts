@@ -64,7 +64,7 @@ export type ComposerAction =
   | {type: 'embed_update_gif'; alt: string}
   | {type: 'embed_remove_gif'}
 
-const MAX_IMAGES = 4
+export const MAX_IMAGES = 4
 
 export function composerReducer(
   state: ComposerState,
@@ -317,7 +317,6 @@ export function createComposerState({
       }
     }
   }
-  // TODO: Other initial content.
   return {
     embed: {
       quote,
