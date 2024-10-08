@@ -3406,7 +3406,7 @@ msgstr "Se você deletar esta lista, você não poderá recuperá-la."
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:626
 msgid "If you remove this post, you won't be able to recover it."
-msgstr "Se você remover esta postagem, você não poderá recuperá-lo."
+msgstr "Se você remover esta postagem, você não poderá recuperá-la."
 
 #: src/view/com/modals/ChangePassword.tsx:149
 msgid "If you want to change your password, we will send you a code to verify that this is your account."
