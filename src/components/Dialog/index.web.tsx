@@ -10,6 +10,7 @@ import {
 import Animated, {FadeIn, FadeInDown} from 'react-native-reanimated'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {DismissableLayer} from '@radix-ui/react-dismissable-layer'
 import {useFocusGuards} from '@radix-ui/react-focus-guards'
 import {FocusScope} from '@radix-ui/react-focus-scope'
 
@@ -32,6 +33,7 @@ export * from '#/components/Dialog/utils'
 export {Input} from '#/components/forms/TextField'
 
 const stopPropagation = (e: any) => e.stopPropagation()
+const preventDefault = (e: any) => e.preventDefault()
 
 export function Outer({
   children,
@@ -85,21 +87,6 @@ export function Outer({
     }),
     [close, open],
   )
-
-  React.useEffect(() => {
-    if (!isOpen) return
-
-    function handler(e: KeyboardEvent) {
-      if (e.key === 'Escape') {
-        e.stopPropagation()
-        close()
-      }
-    }
-
-    document.addEventListener('keydown', handler)
-
-    return () => document.removeEventListener('keydown', handler)
-  }, [close, isOpen])
 
   const context = React.useMemo(
     () => ({
@@ -171,6 +158,7 @@ export function Inner({
   contentContainerStyle,
 }: DialogInnerProps) {
   const t = useTheme()
+  const {close} = React.useContext(Context)
   const {gtMobile} = useBreakpoints()
   useFocusGuards()
   return (
@@ -202,10 +190,12 @@ export function Inner({
           },
           style,
         ])}>
-        {header}
-        <View style={[gtMobile ? a.p_2xl : a.p_xl, contentContainerStyle]}>
-          {children}
-        </View>
+        <DismissableLayer onFocusOutside={preventDefault} onDismiss={close}>
+          {header}
+          <View style={[gtMobile ? a.p_2xl : a.p_xl, contentContainerStyle]}>
+            {children}
+          </View>
+        </DismissableLayer>
       </Animated.View>
     </FocusScope>
   )
