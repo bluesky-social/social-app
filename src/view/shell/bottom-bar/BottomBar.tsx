@@ -360,7 +360,7 @@ function Btn({
       targetScale={0.8}>
       {icon}
       {notificationCount ? (
-        <View style={[styles.notificationCount]}>
+        <View style={[styles.notificationCount, a.rounded_full]}>
           <Text style={styles.notificationCountLabel}>{notificationCount}</Text>
         </View>
       ) : undefined}
