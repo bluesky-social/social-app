@@ -706,6 +706,7 @@ export const ComposePost = ({
               <View style={a.relative} key={extLink}>
                 <ExternalEmbedLink
                   uri={extLink}
+                  hasQuote={!!quote}
                   onRemove={() => {
                     dispatch({type: 'embed_remove_link'})
                   }}

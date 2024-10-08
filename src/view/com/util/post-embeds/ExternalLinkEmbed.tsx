@@ -2,18 +2,12 @@ import React, {useCallback} from 'react'
 import {StyleProp, View, ViewStyle} from 'react-native'
 import {Image} from 'expo-image'
 import {AppBskyEmbedExternal} from '@atproto/api'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
 
 import {parseAltFromGIFDescription} from '#/lib/gif-alt-text'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {shareUrl} from '#/lib/sharing'
 import {parseEmbedPlayerFromUrl} from '#/lib/strings/embed-player'
-import {
-  getStarterPackOgCard,
-  parseStarterPackUri,
-} from '#/lib/strings/starter-pack'
 import {toNiceDomain} from '#/lib/strings/url-helpers'
 import {isNative} from '#/platform/detection'
 import {useExternalEmbedsPrefs} from '#/state/preferences'
@@ -36,16 +30,11 @@ export const ExternalLinkEmbed = ({
   style?: StyleProp<ViewStyle>
   hideAlt?: boolean
 }) => {
-  const {_} = useLingui()
   const pal = usePalette('default')
   const t = useTheme()
   const {isMobile} = useWebMediaQueries()
   const externalEmbedPrefs = useExternalEmbedsPrefs()
-
-  const starterPackParsed = parseStarterPackUri(link.uri)
-  const imageUri = starterPackParsed
-    ? getStarterPackOgCard(starterPackParsed.name, starterPackParsed.rkey)
-    : link.thumb
+  const imageUri = link.thumb
 
   const embedPlayerParams = React.useMemo(() => {
     const params = parseEmbedPlayerFromUrl(link.uri)
@@ -81,10 +70,8 @@ export const ExternalLinkEmbed = ({
               }}
               source={{uri: imageUri}}
               accessibilityIgnoresInvertColors
-              accessibilityLabel={starterPackParsed ? link.title : undefined}
-              accessibilityHint={
-                starterPackParsed ? _(msg`Navigate to starter pack`) : undefined
-              }
+              accessibilityLabel={undefined}
+              accessibilityHint={undefined}
             />
             <MediaInsetBorder
               opaque
