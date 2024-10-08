@@ -9,28 +9,32 @@ import {
 import tippy, {Instance as TippyInstance} from 'tippy.js'
 
 // import {TagsAutocompleteModel} from 'state/models/ui/tags-autocomplete'
-import {usePalette} from 'lib/hooks/usePalette'
-import {Text} from 'view/com/util/text/Text'
+import {usePalette} from '#/lib/hooks/usePalette'
+import {
+  Model,
+  Result,
+} from '#/view/com/composer/text-input/tagsAutocompleteState'
+import {Text} from '#/view/com/util/text/Text'
 import {parsePunctuationFromTag} from './utils'
 
-type AutocompleteResult = string
-type ListProps = SuggestionProps<AutocompleteResult> & {
-  // autocompleteModel: TagsAutocompleteModel
+type ListProps = SuggestionProps<Result> & {
+  model: Model
 }
 type AutocompleteRef = {
   onKeyDown: (props: SuggestionKeyDownProps) => boolean
 }
 
-export function createTagsAutocomplete({}: // autocompleteModel,
-{
-  // autocompleteModel: TagsAutocompleteModel
+export function createTagsAutocomplete({
+  model,
+}: {
+  model: Model
 }): Omit<SuggestionOptions, 'editor'> {
   return {
     /**
      * This `query` param comes from the result of `findSuggestionMatch`
      */
     async items({query}) {
-      return [query, 'javascript']
+      return await model.search(query)
     },
     render() {
       let component: ReactRenderer<AutocompleteRef> | undefined
@@ -41,6 +45,7 @@ export function createTagsAutocomplete({}: // autocompleteModel,
           component = new ReactRenderer(Autocomplete, {
             props: {
               ...props,
+              model,
             },
             editor: props.editor,
           })
@@ -113,7 +118,7 @@ const Autocomplete = forwardRef<AutocompleteRef, ListProps>(
     const selectItem = React.useCallback(
       (index: number) => {
         const item = items[index]
-        if (item) commit(item)
+        if (item) commit(item.value)
       },
       [items, commit],
     )
@@ -157,7 +162,8 @@ const Autocomplete = forwardRef<AutocompleteRef, ListProps>(
     return (
       <div className="items">
         <View style={[pal.borderDark, pal.view, styles.container]}>
-          {items.map((tag, index) => {
+          {items.map(({value}, index) => {
+            const {tag} = parsePunctuationFromTag(value)
             const isSelected = selectedIndex === index
             const isFirst = index === 0
             const isLast = index === items.length - 1
