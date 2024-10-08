@@ -203,7 +203,7 @@ export function PostEmbeds({
   return <View />
 }
 
-function MaybeFeedCard({view}: {view: AppBskyFeedDefs.GeneratorView}) {
+export function MaybeFeedCard({view}: {view: AppBskyFeedDefs.GeneratorView}) {
   const pal = usePalette('default')
   const moderationOpts = useModerationOpts()
   const moderation = React.useMemo(() => {
@@ -223,7 +223,7 @@ function MaybeFeedCard({view}: {view: AppBskyFeedDefs.GeneratorView}) {
   )
 }
 
-function MaybeListCard({view}: {view: AppBskyGraphDefs.ListView}) {
+export function MaybeListCard({view}: {view: AppBskyGraphDefs.ListView}) {
   const moderationOpts = useModerationOpts()
   const moderation = React.useMemo(() => {
     return moderationOpts ? moderateUserList(view, moderationOpts) : undefined

@@ -1,8 +1,6 @@
 import React from 'react'
 import {StyleProp, View, ViewStyle} from 'react-native'
-import {AppBskyGraphStarterpack} from '@atproto/api'
 
-import {ResolvedLink} from '#/lib/api/resolve'
 import {cleanError} from '#/lib/strings/errors'
 import {
   useResolveGifQuery,
@@ -13,7 +11,9 @@ import {ExternalEmbedRemoveBtn} from '#/view/com/composer/ExternalEmbedRemoveBtn
 import {ExternalLinkEmbed} from '#/view/com/util/post-embeds/ExternalLinkEmbed'
 import {atoms as a, useTheme} from '#/alf'
 import {Loader} from '#/components/Loader'
+import {Embed as StarterPackEmbed} from '#/components/StarterPack/StarterPackCard'
 import {Text} from '#/components/Typography'
+import {MaybeFeedCard, MaybeListCard} from '../util/post-embeds'
 
 export const ExternalEmbedGif = ({
   onRemove,
@@ -74,22 +74,34 @@ export const ExternalEmbedLink = ({
 }) => {
   const t = useTheme()
   const {data, error} = useResolveLinkQuery(uri)
-  const linkInfo = React.useMemo(
-    () =>
-      data && {
-        title: getExternalLinkTitle(data) ?? uri,
-        uri,
-        description: data.type === 'external' ? data.description : '',
-        thumb: data.type === 'external' ? data.thumb?.source.path : undefined,
-      },
-    [data, uri],
-  )
+  const linkComponent = React.useMemo(() => {
+    if (data) {
+      if (data.type === 'external') {
+        return (
+          <ExternalLinkEmbed
+            link={{
+              title: data.title || uri,
+              uri,
+              description: data.description,
+              thumb: data.thumb?.source.path,
+            }}
+            hideAlt
+          />
+        )
+      } else if (data.kind === 'feed') {
+        return <MaybeFeedCard view={data.view} />
+      } else if (data.kind === 'list') {
+        return <MaybeListCard view={data.view} />
+      } else if (data.kind === 'starter-pack') {
+        return <StarterPackEmbed starterPack={data.view} />
+      }
+    }
+  }, [data, uri])
+
   return (
     <View style={[a.mb_xl, a.overflow_hidden, t.atoms.border_contrast_medium]}>
-      {linkInfo ? (
-        <View style={{pointerEvents: 'none'}}>
-          <ExternalLinkEmbed link={linkInfo} hideAlt />
-        </View>
+      {linkComponent ? (
+        <View style={{pointerEvents: 'none'}}>{linkComponent}</View>
       ) : error ? (
         <Container style={[a.align_start, a.p_md, a.gap_xs]}>
           <Text numberOfLines={1} style={t.atoms.text_contrast_high}>
@@ -133,23 +145,4 @@ function Container({
       {children}
     </View>
   )
-}
-
-function getExternalLinkTitle(link: ResolvedLink): string | undefined {
-  if (link.type === 'external') {
-    return link.title
-  }
-  switch (link.kind) {
-    // These are currently treated as external.
-    // TODO: Display them as embeds instead.
-    case 'feed':
-      return link.view.displayName
-    case 'list':
-      return link.view.name
-    case 'starter-pack':
-      const record = link.view.record
-      return AppBskyGraphStarterpack.isRecord(record)
-        ? record.name
-        : 'Starter Pack'
-  }
 }
