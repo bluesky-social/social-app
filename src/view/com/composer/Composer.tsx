@@ -42,7 +42,6 @@ import {
   AppBskyFeedGetPostThread,
   BskyAgent,
 } from '@atproto/api'
-import {RichText} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -57,7 +56,6 @@ import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {logEvent} from '#/lib/statsig/statsig'
 import {cleanError} from '#/lib/strings/errors'
-import {insertMentionAt} from '#/lib/strings/mention-manip'
 import {shortenLinks} from '#/lib/strings/rich-text-manip'
 import {colors, s} from '#/lib/styles'
 import {logger} from '#/logger'
@@ -73,11 +71,8 @@ import {
   useLanguagePrefs,
   useLanguagePrefsApi,
 } from '#/state/preferences/languages'
-import {createPostgateRecord} from '#/state/queries/postgate/util'
 import {useProfileQuery} from '#/state/queries/profile'
 import {Gif} from '#/state/queries/tenor'
-import {ThreadgateAllowUISetting} from '#/state/queries/threadgate'
-import {threadgateViewToAllowUISetting} from '#/state/queries/threadgate/util'
 import {useAgent, useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
 import {ComposerOpts} from '#/state/shell/composer'
@@ -168,34 +163,39 @@ export const ComposePost = ({
   const [isProcessing, setIsProcessing] = useState(false)
   const [processingState, setProcessingState] = useState('')
   const [error, setError] = useState('')
-  const [richtext, setRichText] = useState(
-    new RichText({
-      text: initText
-        ? initText
-        : initMention
-        ? insertMentionAt(
-            `@${initMention}`,
-            initMention.length + 1,
-            `${initMention}`,
-          ) // insert mention if passed in
-        : '',
-    }),
+
+  const [draft, dispatch] = useReducer(
+    composerReducer,
+    {initImageUris, initQuoteUri: initQuote?.uri, initText, initMention},
+    createComposerState,
   )
+  const richtext = draft.richtext
+  let quote: string | undefined
+  if (draft.embed.quote) {
+    quote = draft.embed.quote.uri
+  }
+  let images = NO_IMAGES
+  if (draft.embed.media?.type === 'images') {
+    images = draft.embed.media.images
+  }
+  let videoState: VideoState | NoVideoState = NO_VIDEO
+  if (draft.embed.media?.type === 'video') {
+    videoState = draft.embed.media.video
+  }
+  let extGif: Gif | undefined
+  let extGifAlt: string | undefined
+  if (draft.embed.media?.type === 'gif') {
+    extGif = draft.embed.media.gif
+    extGifAlt = draft.embed.media.alt
+  }
+  let extLink: string | undefined
+  if (draft.embed.link) {
+    extLink = draft.embed.link.uri
+  }
+
   const graphemeLength = useMemo(() => {
     return shortenLinks(richtext).graphemeLength
   }, [richtext])
-
-  // TODO: Move more state here.
-  const [composerState, dispatch] = useReducer(
-    composerReducer,
-    {initImageUris, initQuoteUri: initQuote?.uri},
-    createComposerState,
-  )
-
-  let videoState: VideoState | NoVideoState = NO_VIDEO
-  if (composerState.embed.media?.type === 'video') {
-    videoState = composerState.embed.media.video
-  }
 
   const selectVideo = React.useCallback(
     (asset: ImagePickerAsset) => {
@@ -241,34 +241,7 @@ export const ComposePost = ({
   )
 
   const hasVideo = Boolean(videoState.asset || videoState.video)
-
   const [publishOnUpload, setPublishOnUpload] = useState(false)
-
-  const [labels, setLabels] = useState<string[]>([])
-  const [threadgateAllowUISettings, onChangeThreadgateAllowUISettings] =
-    useState<ThreadgateAllowUISetting[]>(
-      threadgateViewToAllowUISetting(undefined),
-    )
-  const [postgate, setPostgate] = useState(createPostgateRecord({post: ''}))
-
-  let quote: string | undefined
-  if (composerState.embed.quote) {
-    quote = composerState.embed.quote.uri
-  }
-  let images = NO_IMAGES
-  if (composerState.embed.media?.type === 'images') {
-    images = composerState.embed.media.images
-  }
-  let extGif: Gif | undefined
-  let extGifAlt: string | undefined
-  if (composerState.embed.media?.type === 'gif') {
-    extGif = composerState.embed.media.gif
-    extGifAlt = composerState.embed.media.alt
-  }
-  let extLink: string | undefined
-  if (composerState.embed.link) {
-    extLink = composerState.embed.link.uri
-  }
 
   const onClose = useCallback(() => {
     closeComposer()
@@ -419,12 +392,8 @@ export const ComposePost = ({
       try {
         postUri = (
           await apilib.post(agent, queryClient, {
-            composerState, // TODO: move more state here.
-            rawText: richtext.text,
+            draft: draft,
             replyTo: replyTo?.uri,
-            labels,
-            threadgate: threadgateAllowUISettings,
-            postgate,
             onStateChange: setProcessingState,
             langs: toPostLanguages(langPrefs.postLanguage),
           })
@@ -497,24 +466,21 @@ export const ComposePost = ({
     [
       _,
       agent,
-      composerState,
+      draft,
       extLink,
       images,
       graphemeLength,
       isAltTextRequiredAndMissing,
       isProcessing,
-      labels,
       langPrefs.postLanguage,
       onClose,
       onPost,
-      postgate,
       quote,
       initQuote,
       initQuoteCount,
       replyTo,
       richtext.text,
       setLangPrefs,
-      threadgateAllowUISettings,
       videoState.asset,
       videoState.status,
       queryClient,
@@ -615,8 +581,10 @@ export const ComposePost = ({
               ) : (
                 <View style={[styles.postBtnWrapper]}>
                   <LabelsBtn
-                    labels={labels}
-                    onChange={setLabels}
+                    labels={draft.labels}
+                    onChange={nextLabels => {
+                      dispatch({type: 'update_labels', labels: nextLabels})
+                    }}
                     hasMedia={hasMedia || Boolean(extLink)}
                   />
                   {canPost ? (
@@ -698,7 +666,9 @@ export const ComposePost = ({
                 richtext={richtext}
                 placeholder={selectTextInputPlaceholder}
                 autoFocus
-                setRichText={setRichText}
+                setRichText={rt => {
+                  dispatch({type: 'update_richtext', richtext: rt})
+                }}
                 onPhotoPasted={onPhotoPasted}
                 onPressPublish={() => onPressPublish()}
                 onNewLink={onNewLink}
@@ -734,7 +704,7 @@ export const ComposePost = ({
               </View>
             )}
 
-            {!composerState.embed.media && extLink && (
+            {!draft.embed.media && extLink && (
               <View style={a.relative} key={extLink}>
                 <ExternalEmbedLink
                   uri={extLink}
@@ -815,12 +785,17 @@ export const ComposePost = ({
 
           {replyTo ? null : (
             <ThreadgateBtn
-              postgate={postgate}
-              onChangePostgate={setPostgate}
-              threadgateAllowUISettings={threadgateAllowUISettings}
-              onChangeThreadgateAllowUISettings={
-                onChangeThreadgateAllowUISettings
-              }
+              postgate={draft.postgate}
+              onChangePostgate={nextPostgate => {
+                dispatch({type: 'update_postgate', postgate: nextPostgate})
+              }}
+              threadgateAllowUISettings={draft.threadgate}
+              onChangeThreadgateAllowUISettings={nextThreadgate => {
+                dispatch({
+                  type: 'update_threadgate',
+                  threadgate: nextThreadgate,
+                })
+              }}
               style={bottomBarAnimatedStyle}
               Portal={Portal.Portal}
             />

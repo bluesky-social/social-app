@@ -1,17 +1,20 @@
-import {AppBskyActorDefs, ComAtprotoRepoStrongRef} from '@atproto/api'
+import {
+  AppBskyActorDefs,
+  AppBskyFeedPost,
+  AppBskyGraphStarterpack,
+  ComAtprotoRepoStrongRef,
+} from '@atproto/api'
 import {AtUri} from '@atproto/api'
 import {BskyAgent} from '@atproto/api'
 
 import {POST_IMG_MAX} from '#/lib/constants'
-import {
-  getFeedAsEmbed,
-  getListAsEmbed,
-  getPostAsQuote,
-  getStarterPackAsEmbed,
-} from '#/lib/link-meta/bsky'
 import {getLinkMeta} from '#/lib/link-meta/link-meta'
 import {resolveShortLink} from '#/lib/link-meta/resolve-short-link'
 import {downloadAndResize} from '#/lib/media/manip'
+import {
+  createStarterPackUri,
+  parseStarterPackUri,
+} from '#/lib/strings/starter-pack'
 import {
   isBskyCustomFeedUrl,
   isBskyListUrl,
@@ -24,6 +27,7 @@ import {ComposerImage} from '#/state/gallery'
 import {createComposerImage} from '#/state/gallery'
 import {Gif} from '#/state/queries/tenor'
 import {createGIFDescription} from '../gif-alt-text'
+import {convertBskyAppUrlIfNeeded, makeRecordUri} from '../strings/url-helpers'
 
 type ResolvedExternalLink = {
   type: 'external'
@@ -60,6 +64,12 @@ export type ResolvedLink =
   | ResolvedPostRecord
   | ResolvedOtherRecord
 
+class EmbeddingDisabledError extends Error {
+  constructor() {
+    super('Embedding is disabled for this record')
+  }
+}
+
 export async function resolveLink(
   agent: BskyAgent,
   uri: string,
@@ -68,55 +78,88 @@ export async function resolveLink(
     uri = await resolveShortLink(uri)
   }
   if (isBskyPostUrl(uri)) {
-    // TODO: Remove this abstraction.
-    // TODO: Nice error messages (e.g. EmbeddingDisabledError).
-    const result = await getPostAsQuote(getPost, uri)
+    uri = convertBskyAppUrlIfNeeded(uri)
+    const [_0, user, _1, rkey] = uri.split('/').filter(Boolean)
+    const recordUri = makeRecordUri(user, 'app.bsky.feed.post', rkey)
+    const post = await getPost({uri: recordUri})
+    if (post.viewer?.embeddingDisabled) {
+      throw new EmbeddingDisabledError()
+    }
     return {
       type: 'record',
       record: {
-        cid: result.cid,
-        uri: result.uri,
+        cid: post.cid,
+        uri: post.uri,
       },
       kind: 'post',
-      meta: result,
+      meta: {
+        text: AppBskyFeedPost.isRecord(post.record) ? post.record.text : '',
+        indexedAt: post.indexedAt,
+        author: post.author,
+      },
     }
   }
   if (isBskyCustomFeedUrl(uri)) {
-    // TODO: Remove this abstraction.
-    const result = await getFeedAsEmbed(agent, fetchDid, uri)
+    uri = convertBskyAppUrlIfNeeded(uri)
+    const [_0, handleOrDid, _1, rkey] = uri.split('/').filter(Boolean)
+    const did = await fetchDid(handleOrDid)
+    const feed = makeRecordUri(did, 'app.bsky.feed.generator', rkey)
+    const res = await agent.app.bsky.feed.getFeedGenerator({feed})
     return {
       type: 'record',
-      record: result.embed!.record,
+      record: {
+        uri: res.data.view.uri,
+        cid: res.data.view.cid,
+      },
       kind: 'other',
       meta: {
         // TODO: Include hydrated content instead.
-        title: result.meta!.title!,
+        title: res.data.view.displayName,
       },
     }
   }
   if (isBskyListUrl(uri)) {
-    // TODO: Remove this abstraction.
-    const result = await getListAsEmbed(agent, fetchDid, uri)
+    uri = convertBskyAppUrlIfNeeded(uri)
+    const [_0, handleOrDid, _1, rkey] = uri.split('/').filter(Boolean)
+    const did = await fetchDid(handleOrDid)
+    const list = makeRecordUri(did, 'app.bsky.graph.list', rkey)
+    const res = await agent.app.bsky.graph.getList({list})
     return {
       type: 'record',
-      record: result.embed!.record,
+      record: {
+        uri: res.data.list.uri,
+        cid: res.data.list.cid,
+      },
       kind: 'other',
       meta: {
         // TODO: Include hydrated content instead.
-        title: result.meta!.title!,
+        title: res.data.list.name,
       },
     }
   }
   if (isBskyStartUrl(uri) || isBskyStarterPackUrl(uri)) {
-    // TODO: Remove this abstraction.
-    const result = await getStarterPackAsEmbed(agent, fetchDid, uri)
+    const parsed = parseStarterPackUri(uri)
+    if (!parsed) {
+      throw new Error(
+        'Unexpectedly called getStarterPackAsEmbed with a non-starterpack url',
+      )
+    }
+    const did = await fetchDid(parsed.name)
+    const starterPack = createStarterPackUri({did, rkey: parsed.rkey})
+    const res = await agent.app.bsky.graph.getStarterPack({starterPack})
+    const record = res.data.starterPack.record
     return {
       type: 'record',
-      record: result.embed!.record,
+      record: {
+        uri: res.data.starterPack.uri,
+        cid: res.data.starterPack.cid,
+      },
       kind: 'other',
       meta: {
         // TODO: Include hydrated content instead.
-        title: result.meta!.title!,
+        title: AppBskyGraphStarterpack.isRecord(record)
+          ? record.name
+          : 'Starter Pack',
       },
     }
   }

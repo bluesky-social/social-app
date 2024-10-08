@@ -4,7 +4,6 @@ import {
   AppBskyEmbedRecord,
   AppBskyEmbedRecordWithMedia,
   AppBskyEmbedVideo,
-  AppBskyFeedPostgate,
   AtUri,
   BlobRef,
   BskyAgent,
@@ -17,7 +16,7 @@ import {QueryClient} from '@tanstack/react-query'
 import {isNetworkError} from '#/lib/strings/errors'
 import {shortenLinks, stripInvalidMentions} from '#/lib/strings/rich-text-manip'
 import {logger} from '#/logger'
-import {ComposerImage, compressImage} from '#/state/gallery'
+import {compressImage} from '#/state/gallery'
 import {writePostgateRecord} from '#/state/queries/postgate'
 import {
   fetchResolveGifQuery,
@@ -25,32 +24,18 @@ import {
 } from '#/state/queries/resolve-link'
 import {
   createThreadgateRecord,
-  ThreadgateAllowUISetting,
   threadgateAllowUISettingToAllowRecordValue,
   writeThreadgateRecord,
 } from '#/state/queries/threadgate'
-import {ComposerState, EmbedDraft} from '#/view/com/composer/state/composer'
+import {ComposerDraft, EmbedDraft} from '#/view/com/composer/state/composer'
 import {createGIFDescription} from '../gif-alt-text'
-import {LinkMeta} from '../link-meta/link-meta'
 import {uploadBlob} from './upload-blob'
 
 export {uploadBlob}
 
-export interface ExternalEmbedDraft {
-  uri: string
-  isLoading: boolean
-  meta?: LinkMeta
-  embed?: AppBskyEmbedRecord.Main
-  localThumb?: ComposerImage
-}
-
 interface PostOpts {
-  composerState: ComposerState // TODO: Not used yet.
-  rawText: string
+  draft: ComposerDraft
   replyTo?: string
-  labels?: string[]
-  threadgate: ThreadgateAllowUISetting[]
-  postgate: AppBskyFeedPostgate.Record
   onStateChange?: (state: string) => void
   langs?: string[]
 }
@@ -60,8 +45,12 @@ export async function post(
   queryClient: QueryClient,
   opts: PostOpts,
 ) {
+  const draft = opts.draft
   let reply
-  let rt = new RichText({text: opts.rawText.trimEnd()}, {cleanNewlines: true})
+  let rt = new RichText(
+    {text: draft.richtext.text.trimEnd()},
+    {cleanNewlines: true},
+  )
 
   opts.onStateChange?.('Processing...')
 
@@ -73,7 +62,7 @@ export async function post(
   const embed = await resolveEmbed(
     agent,
     queryClient,
-    opts.composerState,
+    draft,
     opts.onStateChange,
   )
 
@@ -98,10 +87,10 @@ export async function post(
 
   // set labels
   let labels: ComAtprotoLabelDefs.SelfLabels | undefined
-  if (opts.labels?.length) {
+  if (draft.labels.length) {
     labels = {
       $type: 'com.atproto.label.defs#selfLabels',
-      values: opts.labels.map(val => ({val})),
+      values: draft.labels.map(val => ({val})),
     }
   }
 
@@ -135,7 +124,7 @@ export async function post(
     }
   }
 
-  if (opts.threadgate.some(tg => tg.type !== 'everybody')) {
+  if (draft.threadgate.some(tg => tg.type !== 'everybody')) {
     try {
       // TODO: this needs to be batch-created with the post!
       await writeThreadgateRecord({
@@ -143,7 +132,7 @@ export async function post(
         postUri: res.uri,
         threadgate: createThreadgateRecord({
           post: res.uri,
-          allow: threadgateAllowUISettingToAllowRecordValue(opts.threadgate),
+          allow: threadgateAllowUISettingToAllowRecordValue(draft.threadgate),
         }),
       })
     } catch (e: any) {
@@ -158,8 +147,8 @@ export async function post(
   }
 
   if (
-    opts.postgate.embeddingRules?.length ||
-    opts.postgate.detachedEmbeddingUris?.length
+    draft.postgate.embeddingRules?.length ||
+    draft.postgate.detachedEmbeddingUris?.length
   ) {
     try {
       // TODO: this needs to be batch-created with the post!
@@ -167,7 +156,7 @@ export async function post(
         agent,
         postUri: res.uri,
         postgate: {
-          ...opts.postgate,
+          ...draft.postgate,
           post: res.uri,
         },
       })
@@ -188,7 +177,7 @@ export async function post(
 async function resolveEmbed(
   agent: BskyAgent,
   queryClient: QueryClient,
-  draft: ComposerState,
+  draft: ComposerDraft,
   onStateChange: ((state: string) => void) | undefined,
 ): Promise<
   | AppBskyEmbedImages.Main
