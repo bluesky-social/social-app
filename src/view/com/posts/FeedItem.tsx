@@ -543,7 +543,7 @@ function ReplyToLabel({
     } else {
       label = (
         <Trans context="description">
-          Reply to{' '}
+          Reply to{NON_BREAKING_SPACE}
           <ProfileHoverCard inline did={profile.did}>
             <TextLinkOnWebOnly
               type="md"
@@ -579,7 +579,7 @@ function ReplyToLabel({
       />
       <Text
         type="md"
-        style={[pal.textLight, s.mr2]}
+        style={[pal.textLight, s.mr2, {display: 'flex', flexDirection: 'row'}]}
         lineHeight={1.2}
         numberOfLines={1}>
         {label}
