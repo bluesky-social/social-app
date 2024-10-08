@@ -21,7 +21,6 @@ import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
 import {createPortalGroup} from '#/components/Portal'
 import * as Prompt from '#/components/Prompt'
-import {Text} from '#/components/Typography'
 
 const DISPLAY_NAME_MAX_GRAPHEMES = 64
 const DESCRIPTION_MAX_GRAPHEMES = 256
@@ -274,7 +273,11 @@ function DialogInner({
       style={[a.overflow_hidden]}
       contentContainerStyle={[a.px_0, a.pt_0]}
       header={
-        <DialogHeader renderLeft={cancelButton} renderRight={saveButton} />
+        <Dialog.Header renderLeft={cancelButton} renderRight={saveButton}>
+          <Dialog.HeaderText>
+            <Trans>Edit profile</Trans>
+          </Dialog.HeaderText>
+        </Dialog.Header>
       }>
       <View style={[a.relative]}>
         <UserBanner
@@ -374,40 +377,5 @@ function DialogInner({
         </View>
       </View>
     </Dialog.ScrollableInner>
-  )
-}
-
-function DialogHeader({
-  renderLeft,
-  renderRight,
-}: {
-  renderLeft?: () => React.ReactNode
-  renderRight?: () => React.ReactNode
-}) {
-  const t = useTheme()
-  return (
-    <View
-      style={[
-        a.relative,
-        a.w_full,
-        a.py_sm,
-        a.flex_row,
-        a.justify_center,
-        a.align_center,
-        {minHeight: 50},
-        a.border_b,
-        t.atoms.border_contrast_medium,
-        t.atoms.bg,
-      ]}>
-      {renderLeft && (
-        <View style={[a.absolute, {left: 6}]}>{renderLeft()}</View>
-      )}
-      <Text style={[a.text_lg, a.text_center, a.font_bold]}>
-        <Trans>Edit profile</Trans>
-      </Text>
-      {renderRight && (
-        <View style={[a.absolute, {right: 6}]}>{renderRight()}</View>
-      )}
-    </View>
   )
 }
