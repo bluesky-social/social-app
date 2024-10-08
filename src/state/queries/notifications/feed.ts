@@ -17,7 +17,12 @@
  */
 
 import {useCallback, useEffect, useMemo, useRef} from 'react'
-import {AppBskyActorDefs, AppBskyFeedDefs, AtUri} from '@atproto/api'
+import {
+  AppBskyActorDefs,
+  AppBskyFeedDefs,
+  AppBskyFeedPost,
+  AtUri,
+} from '@atproto/api'
 import {
   InfiniteData,
   QueryClient,
@@ -26,6 +31,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query'
 
+import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import {useAgent} from '#/state/session'
 import {useThreadgateHiddenReplyUris} from '#/state/threadgate-hidden-replies'
 import {useModerationOpts} from '../../preferences/moderation-opts'
@@ -67,9 +73,15 @@ export function useNotificationFeedQuery(opts?: {
 
   const selectArgs = useMemo(() => {
     return {
+      moderationOpts,
       hiddenReplyUris,
     }
-  }, [hiddenReplyUris])
+  }, [moderationOpts, hiddenReplyUris])
+  const lastRun = useRef<{
+    data: InfiniteData<FeedPage>
+    args: typeof selectArgs
+    result: InfiniteData<FeedPage>
+  } | null>(null)
 
   const query = useInfiniteQuery<
     FeedPage,
@@ -111,7 +123,38 @@ export function useNotificationFeedQuery(opts?: {
     enabled,
     select: useCallback(
       (data: InfiniteData<FeedPage>) => {
-        const {hiddenReplyUris} = selectArgs
+        const {moderationOpts, hiddenReplyUris} = selectArgs
+
+        // Keep track of the last run and whether we can reuse
+        // some already selected pages from there.
+        let reusedPages = []
+        if (lastRun.current) {
+          const {
+            data: lastData,
+            args: lastArgs,
+            result: lastResult,
+          } = lastRun.current
+          let canReuse = true
+          for (let key in selectArgs) {
+            if (selectArgs.hasOwnProperty(key)) {
+              if ((selectArgs as any)[key] !== (lastArgs as any)[key]) {
+                // Can't do reuse anything if any input has changed.
+                canReuse = false
+                break
+              }
+            }
+          }
+          if (canReuse) {
+            for (let i = 0; i < data.pages.length; i++) {
+              if (data.pages[i] && lastData.pages[i] === data.pages[i]) {
+                reusedPages.push(lastResult.pages[i])
+                continue
+              }
+              // Stop as soon as pages stop matching up.
+              break
+            }
+          }
+        }
 
         // override 'isRead' using the first page's returned seenAt
         // we do this because the `markAllRead()` call above will
@@ -124,23 +167,49 @@ export function useNotificationFeedQuery(opts?: {
           }
         }
 
-        data = {
+        const result = {
           ...data,
-          pages: data.pages.map(page => {
-            return {
-              ...page,
-              items: page.items.filter(item => {
-                const isHiddenReply =
-                  item.type === 'reply' &&
-                  item.subjectUri &&
-                  hiddenReplyUris.has(item.subjectUri)
-                return !isHiddenReply
-              }),
-            }
-          }),
+          pages: [
+            ...reusedPages,
+            ...data.pages.slice(reusedPages.length).map(page => {
+              return {
+                ...page,
+                items: page.items
+                  .filter(item => {
+                    const isHiddenReply =
+                      item.type === 'reply' &&
+                      item.subjectUri &&
+                      hiddenReplyUris.has(item.subjectUri)
+                    return !isHiddenReply
+                  })
+                  .filter(item => {
+                    if (
+                      item.type === 'reply' ||
+                      item.type === 'mention' ||
+                      item.type === 'quote'
+                    ) {
+                      /*
+                       * The `isPostView` check will fail here bc we don't have
+                       * a `$type` field on the `subject`. But if the nested
+                       * `record` is a post, we know it's a post view.
+                       */
+                      if (AppBskyFeedPost.isRecord(item.subject?.record)) {
+                        const mod = moderatePost(item.subject, moderationOpts!)
+                        if (mod.ui('contentList').filter) {
+                          return false
+                        }
+                      }
+                    }
+                    return true
+                  }),
+              }
+            }),
+          ],
         }
 
-        return data
+        lastRun.current = {data, result, args: selectArgs}
+
+        return result
       },
       [selectArgs],
     ),
