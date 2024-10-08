@@ -40,28 +40,28 @@ type ResolvedPostRecord = {
   type: 'record'
   record: ComAtprotoRepoStrongRef.Main
   kind: 'post'
-  meta: AppBskyFeedDefs.PostView
+  view: AppBskyFeedDefs.PostView
 }
 
 type ResolvedFeedRecord = {
   type: 'record'
   record: ComAtprotoRepoStrongRef.Main
   kind: 'feed'
-  meta: AppBskyFeedDefs.GeneratorView
+  view: AppBskyFeedDefs.GeneratorView
 }
 
 type ResolvedListRecord = {
   type: 'record'
   record: ComAtprotoRepoStrongRef.Main
   kind: 'list'
-  meta: AppBskyGraphDefs.ListView
+  view: AppBskyGraphDefs.ListView
 }
 
 type ResolvedStarterPackRecord = {
   type: 'record'
   record: ComAtprotoRepoStrongRef.Main
   kind: 'starter-pack'
-  meta: AppBskyGraphDefs.StarterPackView
+  view: AppBskyGraphDefs.StarterPackView
 }
 
 export type ResolvedLink =
@@ -99,7 +99,7 @@ export async function resolveLink(
         uri: post.uri,
       },
       kind: 'post',
-      meta: post,
+      view: post,
     }
   }
   if (isBskyCustomFeedUrl(uri)) {
@@ -115,7 +115,7 @@ export async function resolveLink(
         cid: res.data.view.cid,
       },
       kind: 'feed',
-      meta: res.data.view,
+      view: res.data.view,
     }
   }
   if (isBskyListUrl(uri)) {
@@ -131,7 +131,7 @@ export async function resolveLink(
         cid: res.data.list.cid,
       },
       kind: 'list',
-      meta: res.data.list,
+      view: res.data.list,
     }
   }
   if (isBskyStartUrl(uri) || isBskyStarterPackUrl(uri)) {
@@ -151,7 +151,7 @@ export async function resolveLink(
         cid: res.data.starterPack.cid,
       },
       kind: 'starter-pack',
-      meta: res.data.starterPack,
+      view: res.data.starterPack,
     }
   }
   return resolveExternal(agent, uri)

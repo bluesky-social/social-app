@@ -143,11 +143,11 @@ function getExternalLinkTitle(link: ResolvedLink): string | undefined {
     // These are currently treated as external.
     // TODO: Display them as embeds instead.
     case 'feed':
-      return link.meta.displayName
+      return link.view.displayName
     case 'list':
-      return link.meta.name
+      return link.view.name
     case 'starter-pack':
-      const record = link.meta.record
+      const record = link.view.record
       return AppBskyGraphStarterpack.isRecord(record)
         ? record.name
         : 'Starter Pack'
