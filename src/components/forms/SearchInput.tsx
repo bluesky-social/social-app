@@ -43,32 +43,22 @@ export const SearchInput = React.forwardRef<TextInput, SearchInputProps>(
             autoCapitalize="none"
             {...rest}
           />
+          {value && value.length > 0 && (
+            <View style={[a.z_10, a.justify_center]}>
+              <Button
+                testID="searchTextInputClearBtn"
+                onPress={onClearText}
+                label={_(msg`Clear search query`)}
+                hitSlop={HITSLOP_10}
+                size="tiny"
+                shape="round"
+                variant="ghost"
+                color="secondary">
+                <ButtonIcon icon={X} size="xs" />
+              </Button>
+            </View>
+          )}
         </TextField.Root>
-
-        {value && value.length > 0 && (
-          <View
-            style={[
-              a.absolute,
-              a.z_10,
-              a.my_auto,
-              a.inset_0,
-              a.justify_center,
-              a.pr_sm,
-              {left: 'auto'},
-            ]}>
-            <Button
-              testID="searchTextInputClearBtn"
-              onPress={onClearText}
-              label={_(msg`Clear search query`)}
-              hitSlop={HITSLOP_10}
-              size="tiny"
-              shape="round"
-              variant="ghost"
-              color="secondary">
-              <ButtonIcon icon={X} size="xs" />
-            </Button>
-          </View>
-        )}
       </View>
     )
   },
