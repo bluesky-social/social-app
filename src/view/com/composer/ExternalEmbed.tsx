@@ -67,9 +67,11 @@ export const ExternalEmbedGif = ({
 
 export const ExternalEmbedLink = ({
   uri,
+  hasQuote,
   onRemove,
 }: {
   uri: string
+  hasQuote: boolean
   onRemove: () => void
 }) => {
   const t = useTheme()
@@ -97,6 +99,11 @@ export const ExternalEmbedLink = ({
       }
     }
   }, [data, uri])
+
+  if (data?.type === 'record' && hasQuote) {
+    // This is not currently supported by the data model so don't preview it.
+    return null
+  }
 
   return (
     <View style={[a.mb_xl, a.overflow_hidden, t.atoms.border_contrast_medium]}>
