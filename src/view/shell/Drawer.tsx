@@ -584,6 +584,7 @@ function MenuItem({
           <View
             style={[
               styles.menuItemCount,
+              a.rounded_full,
               count.length > 2
                 ? styles.menuItemCountHundreds
                 : count.length > 1
