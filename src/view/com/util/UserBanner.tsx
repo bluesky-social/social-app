@@ -1,5 +1,5 @@
 import React from 'react'
-import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import {Pressable, StyleSheet, View} from 'react-native'
 import {Image as RNImage} from 'react-native-image-crop-picker'
 import {Image} from 'expo-image'
 import {ModerationUI} from '@atproto/api'
@@ -93,14 +93,11 @@ export function UserBanner({
 
   // setUserBanner is only passed as prop on the EditProfile component
   return onSelectNewBanner ? (
-    <EventStopper onKeyDown={false}>
+    <EventStopper onKeyDown={true}>
       <Menu.Root>
         <Menu.Trigger label={_(msg`Edit avatar`)}>
           {({props}) => (
-            <TouchableOpacity
-              {...props}
-              activeOpacity={0.8}
-              testID="changeBannerBtn">
+            <Pressable {...props} testID="changeBannerBtn">
               {banner ? (
                 <Image
                   testID="userBannerImage"
@@ -118,7 +115,7 @@ export function UserBanner({
               <View style={[styles.editButtonContainer, pal.btn]}>
                 <CameraFilled height={14} width={14} style={t.atoms.text} />
               </View>
-            </TouchableOpacity>
+            </Pressable>
           )}
         </Menu.Trigger>
         <Menu.Outer showCancel Portal={Portal}>
