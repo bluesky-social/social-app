@@ -50,12 +50,12 @@ export const SearchInput = React.forwardRef<TextInput, SearchInputProps>(
               accessibilityHint={undefined}
               hitSlop={HITSLOP_10}
               style={[
+                a.z_20,
                 a.rounded_full,
                 a.align_center,
                 a.justify_center,
                 native(a.ml_xs),
                 web(a.ml_sm),
-                a.z_20,
                 {width: 20, height: 20},
                 t.name === 'light'
                   ? {backgroundColor: 'rgba(0, 0, 0, 0.1)'}
