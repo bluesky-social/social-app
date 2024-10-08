@@ -200,27 +200,15 @@ let PostCtrls = ({
       feedContext,
     })
     openComposer({
-      quote: {
-        uri: post.uri,
-        cid: post.cid,
-        text: record.text,
-        author: post.author,
-        indexedAt: post.indexedAt,
-      },
-      quoteCount: post.quoteCount,
+      quote: post,
       onPost: onPostReply,
     })
   }, [
     _,
     sendInteraction,
-    post.uri,
-    post.cid,
-    post.author,
-    post.indexedAt,
-    post.quoteCount,
+    post,
     feedContext,
     openComposer,
-    record.text,
     onPostReply,
     isBlocked,
   ])

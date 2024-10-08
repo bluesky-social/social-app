@@ -2,11 +2,11 @@ import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
 import {useWebBodyScrollLock} from '#/lib/hooks/useWebBodyScrollLock'
-import {useComposerState} from 'state/shell/composer'
+import {useComposerState} from '#/state/shell/composer'
 import {
   EmojiPicker,
   EmojiPickerState,
-} from 'view/com/composer/text-input/web/EmojiPicker.web'
+} from '#/view/com/composer/text-input/web/EmojiPicker.web'
 import {useBreakpoints, useTheme} from '#/alf'
 import {ComposePost} from '../com/composer/Composer'
 
@@ -58,7 +58,6 @@ export function Composer({}: {winHeight: number}) {
         <ComposePost
           replyTo={state.replyTo}
           quote={state.quote}
-          quoteCount={state?.quoteCount}
           onPost={state.onPost}
           mention={state.mention}
           openEmojiPicker={onOpenPicker}
