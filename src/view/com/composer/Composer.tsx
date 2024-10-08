@@ -65,7 +65,6 @@ import {useDialogStateControlContext} from '#/state/dialogs'
 import {emitPostCreated} from '#/state/events'
 import {ComposerImage, pasteImage} from '#/state/gallery'
 import {useModalControls} from '#/state/modals'
-import {useModals} from '#/state/modals'
 import {useRequireAltTextEnabled} from '#/state/preferences'
 import {
   toPostLanguages,
@@ -146,7 +145,6 @@ export const ComposePost = ({
   const queryClient = useQueryClient()
   const currentDid = currentAccount!.did
   const {data: currentProfile} = useProfileQuery({did: currentDid})
-  const {isModalActive} = useModals()
   const {closeComposer} = useComposerControls()
   const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()
@@ -302,22 +300,6 @@ export const ComposePost = ({
       backHandler.remove()
     }
   }, [onPressCancel, closeAllDialogs, closeAllModals])
-
-  // listen to escape key on desktop web
-  const onEscape = useCallback(
-    (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        onPressCancel()
-      }
-    },
-    [onPressCancel],
-  )
-  useEffect(() => {
-    if (isWeb && !isModalActive) {
-      window.addEventListener('keydown', onEscape)
-      return () => window.removeEventListener('keydown', onEscape)
-    }
-  }, [onEscape, isModalActive])
 
   const onNewLink = useCallback((uri: string) => {
     dispatch({type: 'embed_add_uri', uri})

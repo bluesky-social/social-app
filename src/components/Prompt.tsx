@@ -8,6 +8,7 @@ import {Button, ButtonColor, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {PortalComponent} from '#/components/Portal'
 import {Text} from '#/components/Typography'
+import {BottomSheetViewProps} from '../../modules/bottom-sheet'
 
 export {
   type DialogControlProps as PromptControlProps,
@@ -27,10 +28,12 @@ export function Outer({
   control,
   testID,
   Portal,
+  nativeOptions,
 }: React.PropsWithChildren<{
   control: Dialog.DialogControlProps
   testID?: string
   Portal?: PortalComponent
+  nativeOptions?: Omit<BottomSheetViewProps, 'children'>
 }>) {
   const {gtMobile} = useBreakpoints()
   const titleId = React.useId()
@@ -42,7 +45,11 @@ export function Outer({
   )
 
   return (
-    <Dialog.Outer control={control} testID={testID} Portal={Portal}>
+    <Dialog.Outer
+      control={control}
+      testID={testID}
+      Portal={Portal}
+      nativeOptions={{preventExpansion: true, ...nativeOptions}}>
       <Dialog.Handle />
       <Context.Provider value={context}>
         <Dialog.ScrollableInner

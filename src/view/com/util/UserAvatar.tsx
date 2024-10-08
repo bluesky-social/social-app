@@ -1,5 +1,5 @@
 import React, {memo, useMemo} from 'react'
-import {Image, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {Image, Pressable, StyleSheet, View} from 'react-native'
 import {Image as RNImage} from 'react-native-image-crop-picker'
 import Svg, {Circle, Path, Rect} from 'react-native-svg'
 import {AppBskyActorDefs, ModerationUI} from '@atproto/api'
@@ -30,6 +30,7 @@ import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
 import {Link} from '#/components/Link'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import * as Menu from '#/components/Menu'
+import {PortalComponent} from '#/components/Portal'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {openCamera, openCropper, openPicker} from '../../../lib/media/picker'
 
@@ -50,6 +51,7 @@ interface UserAvatarProps extends BaseUserAvatarProps {
 
 interface EditableUserAvatarProps extends BaseUserAvatarProps {
   onSelectNewAvatar: (img: RNImage | null) => void
+  Portal?: PortalComponent
 }
 
 interface PreviewableUserAvatarProps extends BaseUserAvatarProps {
@@ -266,6 +268,7 @@ let EditableUserAvatar = ({
   size,
   avatar,
   onSelectNewAvatar,
+  Portal,
 }: EditableUserAvatarProps): React.ReactNode => {
   const t = useTheme()
   const pal = usePalette('default')
@@ -346,10 +349,7 @@ let EditableUserAvatar = ({
     <Menu.Root>
       <Menu.Trigger label={_(msg`Edit avatar`)}>
         {({props}) => (
-          <TouchableOpacity
-            {...props}
-            activeOpacity={0.8}
-            testID="changeAvatarBtn">
+          <Pressable {...props} testID="changeAvatarBtn">
             {avatar ? (
               <HighPriorityImage
                 testID="userAvatarImage"
@@ -363,10 +363,10 @@ let EditableUserAvatar = ({
             <View style={[styles.editButtonContainer, pal.btn]}>
               <CameraFilled height={14} width={14} style={t.atoms.text} />
             </View>
-          </TouchableOpacity>
+          </Pressable>
         )}
       </Menu.Trigger>
-      <Menu.Outer showCancel>
+      <Menu.Outer showCancel Portal={Portal}>
         <Menu.Group>
           {isNative && (
             <Menu.Item
