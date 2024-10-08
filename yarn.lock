@@ -6572,31 +6572,6 @@
     "@svgr/plugin-svgo" "^5.5.0"
     loader-utils "^2.0.0"
 
-"@tamagui/compose-refs@1.84.1":
-  version "1.84.1"
-  resolved "https://registry.yarnpkg.com/@tamagui/compose-refs/-/compose-refs-1.84.1.tgz#244735edc3ac2e617389297f005d5bc25872465f"
-  integrity sha512-oZ0rUmQABlGm/QKQITxAW9WLV3qjyq1ehgoWcZVmtc1Kc/hkFQe2J+wRQV726CmTAnuUgUXi3eoNMwBVoZksfQ==
-
-"@tamagui/constants@1.84.1":
-  version "1.84.1"
-  resolved "https://registry.yarnpkg.com/@tamagui/constants/-/constants-1.84.1.tgz#62e41837dbe844d14e255f3eea9c2583044d2509"
-  integrity sha512-QmvyCqtEIugqXutQI35GJQ1hlpSapYCdOHx9QlgsOWjAY34pu55MaY/tDrQeQ0AUmI/qx30vy7TsCJxB4QFEoQ==
-
-"@tamagui/focus-scope@^1.84.1":
-  version "1.84.1"
-  resolved "https://registry.yarnpkg.com/@tamagui/focus-scope/-/focus-scope-1.84.1.tgz#e9f061184048c75f87da023f54b9c5abccdd460d"
-  integrity sha512-0E1Wc3jmKhafETfH1dUuJYmGK1bDNA/9TySbOeTjTToxUoL3V0G2W5JSwSMCDqR1Bl+xrGlGwzXTUhouw8qSog==
-  dependencies:
-    "@tamagui/compose-refs" "1.84.1"
-    "@tamagui/use-event" "1.84.1"
-
-"@tamagui/use-event@1.84.1":
-  version "1.84.1"
-  resolved "https://registry.yarnpkg.com/@tamagui/use-event/-/use-event-1.84.1.tgz#a095a1bde9c40c4a397226c57c3fa32f6018f504"
-  integrity sha512-U88WCxvMz7ZSfMFMJEFbG3tJjK/Lf+PHlmtYvlx1V+YiqRBoj5+milzoM8PclENn5vZMiJW0ozYRgzI/cdE7Eg==
-  dependencies:
-    "@tamagui/constants" "1.84.1"
-
 "@tanstack/query-async-storage-persister@^5.25.0":
   version "5.25.0"
   resolved "https://registry.yarnpkg.com/@tanstack/query-async-storage-persister/-/query-async-storage-persister-5.25.0.tgz#0e8a2a781b8e32a81a5d02a688d6fcdfd055235b"
