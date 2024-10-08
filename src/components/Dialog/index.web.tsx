@@ -10,6 +10,7 @@ import {
 import Animated, {FadeIn, FadeInDown} from 'react-native-reanimated'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useFocusGuards} from '@radix-ui/react-focus-guards'
 import {FocusScope} from '@radix-ui/react-focus-scope'
 
 import {logger} from '#/logger'
@@ -171,6 +172,7 @@ export function Inner({
 }: DialogInnerProps) {
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
+  useFocusGuards()
   return (
     <FocusScope loop asChild trapped>
       <Animated.View

@@ -73,6 +73,7 @@
     "@mattermost/react-native-paste-input": "^0.7.1",
     "@miblanchard/react-native-slider": "^2.3.1",
     "@radix-ui/react-dropdown-menu": "^2.1.2",
+    "@radix-ui/react-focus-guards": "^1.1.1",
     "@radix-ui/react-focus-scope": "^1.1.0",
     "@react-native-async-storage/async-storage": "1.23.1",
     "@react-native-masked-view/masked-view": "0.3.0",
