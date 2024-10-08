@@ -1,6 +1,6 @@
 import {
   AppBskyFeedDefs,
-  AppBskyGraphStarterpack,
+  AppBskyGraphDefs,
   ComAtprotoRepoStrongRef,
 } from '@atproto/api'
 import {AtUri} from '@atproto/api'
@@ -43,21 +43,33 @@ type ResolvedPostRecord = {
   meta: AppBskyFeedDefs.PostView
 }
 
-type ResolvedOtherRecord = {
+type ResolvedFeedRecord = {
   type: 'record'
   record: ComAtprotoRepoStrongRef.Main
-  kind: 'other'
-  meta: {
-    // We should replace this with a hydrated record (e.g. feed, list, starter pack)
-    // and change the composer preview to use the actual post embed components:
-    title: string
-  }
+  kind: 'feed'
+  meta: AppBskyFeedDefs.GeneratorView
+}
+
+type ResolvedListRecord = {
+  type: 'record'
+  record: ComAtprotoRepoStrongRef.Main
+  kind: 'list'
+  meta: AppBskyGraphDefs.ListView
+}
+
+type ResolvedStarterPackRecord = {
+  type: 'record'
+  record: ComAtprotoRepoStrongRef.Main
+  kind: 'starter-pack'
+  meta: AppBskyGraphDefs.StarterPackView
 }
 
 export type ResolvedLink =
   | ResolvedExternalLink
   | ResolvedPostRecord
-  | ResolvedOtherRecord
+  | ResolvedFeedRecord
+  | ResolvedListRecord
+  | ResolvedStarterPackRecord
 
 export class EmbeddingDisabledError extends Error {
   constructor() {
@@ -102,11 +114,8 @@ export async function resolveLink(
         uri: res.data.view.uri,
         cid: res.data.view.cid,
       },
-      kind: 'other',
-      meta: {
-        // TODO: Include hydrated content instead.
-        title: res.data.view.displayName,
-      },
+      kind: 'feed',
+      meta: res.data.view,
     }
   }
   if (isBskyListUrl(uri)) {
@@ -121,11 +130,8 @@ export async function resolveLink(
         uri: res.data.list.uri,
         cid: res.data.list.cid,
       },
-      kind: 'other',
-      meta: {
-        // TODO: Include hydrated content instead.
-        title: res.data.list.name,
-      },
+      kind: 'list',
+      meta: res.data.list,
     }
   }
   if (isBskyStartUrl(uri) || isBskyStarterPackUrl(uri)) {
@@ -138,20 +144,14 @@ export async function resolveLink(
     const did = await fetchDid(parsed.name)
     const starterPack = createStarterPackUri({did, rkey: parsed.rkey})
     const res = await agent.app.bsky.graph.getStarterPack({starterPack})
-    const record = res.data.starterPack.record
     return {
       type: 'record',
       record: {
         uri: res.data.starterPack.uri,
         cid: res.data.starterPack.cid,
       },
-      kind: 'other',
-      meta: {
-        // TODO: Include hydrated content instead.
-        title: AppBskyGraphStarterpack.isRecord(record)
-          ? record.name
-          : 'Starter Pack',
-      },
+      kind: 'starter-pack',
+      meta: res.data.starterPack,
     }
   }
   return resolveExternal(agent, uri)

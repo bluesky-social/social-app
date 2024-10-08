@@ -1,6 +1,8 @@
 import React from 'react'
 import {StyleProp, View, ViewStyle} from 'react-native'
+import {AppBskyGraphStarterpack} from '@atproto/api'
 
+import {ResolvedLink} from '#/lib/api/resolve'
 import {cleanError} from '#/lib/strings/errors'
 import {
   useResolveGifQuery,
@@ -75,12 +77,7 @@ export const ExternalEmbedLink = ({
   const linkInfo = React.useMemo(
     () =>
       data && {
-        title:
-          data.type === 'external'
-            ? data.title
-            : data.kind === 'other'
-            ? data.meta.title
-            : uri,
+        title: getExternalLinkTitle(data) ?? uri,
         uri,
         description: data.type === 'external' ? data.description : '',
         thumb: data.type === 'external' ? data.thumb?.source.path : undefined,
@@ -136,4 +133,23 @@ function Container({
       {children}
     </View>
   )
+}
+
+function getExternalLinkTitle(link: ResolvedLink): string | undefined {
+  if (link.type === 'external') {
+    return link.title
+  }
+  switch (link.kind) {
+    // These are currently treated as external.
+    // TODO: Display them as embeds instead.
+    case 'feed':
+      return link.meta.displayName
+    case 'list':
+      return link.meta.name
+    case 'starter-pack':
+      const record = link.meta.record
+      return AppBskyGraphStarterpack.isRecord(record)
+        ? record.name
+        : 'Starter Pack'
+  }
 }
