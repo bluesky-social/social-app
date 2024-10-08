@@ -63,7 +63,7 @@ export function applyFonts(
    * Disable contextual ligatures
    * {@link https://developer.mozilla.org/en-US/docs/Web/CSS/font-variant}
    */
-  style.fontVariant = ['no-contextual']
+  style.fontVariant = (style.fontVariant || []).concat('no-contextual')
 }
 
 /*
