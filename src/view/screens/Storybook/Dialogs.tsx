@@ -201,8 +201,8 @@ export function Dialogs() {
       </Dialog.Outer>
 
       <Dialog.Outer control={withMenu}>
-        <Dialog.Inner label="test">
-          <Portal.Provider>
+        <Portal.Provider>
+          <Dialog.Inner label="test">
             <H3 nativeID="dialog-title">Dialog with Menu</H3>
             <Menu.Root>
               <Menu.Trigger label="Open menu">
@@ -233,10 +233,9 @@ export function Dialogs() {
                 </Menu.Group>
               </Menu.Outer>
             </Menu.Root>
-
-            <Portal.Outlet />
-          </Portal.Provider>
-        </Dialog.Inner>
+          </Dialog.Inner>
+          <Portal.Outlet />
+        </Portal.Provider>
       </Dialog.Outer>
 
       <Dialog.Outer control={scrollable}>
