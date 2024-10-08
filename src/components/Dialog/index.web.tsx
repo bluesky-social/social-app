@@ -189,7 +189,11 @@ export function Inner({
           },
           flatten(style),
         ])}>
-        <DismissableLayer onFocusOutside={preventDefault} onDismiss={close}>
+        <DismissableLayer
+          onInteractOutside={preventDefault}
+          onFocusOutside={preventDefault}
+          onDismiss={close}
+          style={{display: 'flex', flexDirection: 'column'}}>
           {children}
         </DismissableLayer>
       </Animated.View>
