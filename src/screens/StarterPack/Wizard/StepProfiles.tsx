@@ -66,11 +66,7 @@ export function StepProfiles({
     <ScreenTransition style={[a.flex_1]} direction={state.transitionDirection}>
       <View style={[a.border_b, t.atoms.border_contrast_medium]}>
         <View style={[a.py_sm, a.px_md, {height: 60}]}>
-          <SearchInput
-            value={query}
-            onChangeText={setQuery}
-            onClearText={() => setQuery('')}
-          />
+          <SearchInput defaultValue={query} onChangeText={setQuery} />
         </View>
       </View>
       <List

@@ -82,11 +82,7 @@ export function StepFeeds({moderationOpts}: {moderationOpts: ModerationOpts}) {
     <ScreenTransition style={[a.flex_1]} direction={state.transitionDirection}>
       <View style={[a.border_b, t.atoms.border_contrast_medium]}>
         <View style={[a.py_sm, a.px_md, {height: 60}]}>
-          <SearchInput
-            value={query}
-            onChangeText={t => setQuery(t)}
-            onClearText={() => setQuery('')}
-          />
+          <SearchInput defaultValue={query} onChangeText={setQuery} />
         </View>
       </View>
       <List
