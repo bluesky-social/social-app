@@ -311,6 +311,9 @@ let FeedItemInner = ({
                 {isOwner ? (
                   <Trans>Reposted by you</Trans>
                 ) : (
+                  // Due to display: flex and implicit white-space-collapse: collapse,
+                  // trailing spaces get trimmed during layout. A nbsp isn't affected,
+                  // and is required in translation strings as well.
                   <Trans>
                     Reposted by{NON_BREAKING_SPACE}
                     <ProfileHoverCard inline did={reason.by.did}>
@@ -542,6 +545,8 @@ function ReplyToLabel({
       label = <Trans context="description">Reply to you</Trans>
     } else {
       label = (
+        // A nbsp is required to prevent trailing whitespace trimming during layout.
+        // See the "Reposted by" case higher up
         <Trans context="description">
           Reply to{NON_BREAKING_SPACE}
           <ProfileHoverCard inline did={profile.did}>
