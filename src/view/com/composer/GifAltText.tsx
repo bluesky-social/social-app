@@ -21,7 +21,6 @@ import * as TextField from '#/components/forms/TextField'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {PlusSmall_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
-import {PortalComponent} from '#/components/Portal'
 import {Text} from '#/components/Typography'
 import {GifEmbed} from '../util/post-embeds/GifEmbed'
 import {AltTextReminder} from './photos/Gallery'
@@ -34,7 +33,6 @@ export function GifAltTextDialog({
   gif: Gif
   altText: string
   onSubmit: (alt: string) => void
-  Portal: PortalComponent
 }) {
   const {data} = useResolveGifQuery(gif)
   const vendorAltText = parseAltFromGIFDescription(data?.description ?? '').alt
