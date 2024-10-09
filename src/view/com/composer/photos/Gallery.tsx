@@ -21,7 +21,6 @@ import {ComposerImage, cropImage} from '#/state/gallery'
 import {Text} from '#/view/com/util/text/Text'
 import {useTheme} from '#/alf'
 import * as Dialog from '#/components/Dialog'
-import {PortalComponent} from '#/components/Portal'
 import {ComposerAction} from '../state/composer'
 import {EditImageDialog} from './EditImageDialog'
 import {ImageAltTextDialog} from './ImageAltTextDialog'
@@ -31,7 +30,6 @@ const IMAGE_GAP = 8
 interface GalleryProps {
   images: ComposerImage[]
   dispatch: (action: ComposerAction) => void
-  Portal: PortalComponent
 }
 
 export let Gallery = (props: GalleryProps): React.ReactNode => {
@@ -59,12 +57,7 @@ interface GalleryInnerProps extends GalleryProps {
   containerInfo: Dimensions
 }
 
-const GalleryInner = ({
-  images,
-  containerInfo,
-  dispatch,
-  Portal,
-}: GalleryInnerProps) => {
+const GalleryInner = ({images, containerInfo, dispatch}: GalleryInnerProps) => {
   const {isMobile} = useWebMediaQueries()
 
   const {altTextControlStyle, imageControlsStyle, imageStyle} =
@@ -118,7 +111,6 @@ const GalleryInner = ({
               onRemove={() => {
                 dispatch({type: 'embed_remove_image', image})
               }}
-              Portal={Portal}
             />
           )
         })}
@@ -135,7 +127,6 @@ type GalleryItemProps = {
   imageStyle?: ViewStyle
   onChange: (next: ComposerImage) => void
   onRemove: () => void
-  Portal: PortalComponent
 }
 
 const GalleryItem = ({
@@ -145,7 +136,6 @@ const GalleryItem = ({
   imageStyle,
   onChange,
   onRemove,
-  Portal,
 }: GalleryItemProps): React.ReactNode => {
   const {_} = useLingui()
   const t = useTheme()
@@ -240,7 +230,6 @@ const GalleryItem = ({
         control={altTextControl}
         image={image}
         onChange={onChange}
-        Portal={Portal}
       />
 
       <EditImageDialog

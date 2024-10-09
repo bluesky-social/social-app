@@ -21,7 +21,6 @@ import * as TextField from '#/components/forms/TextField'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {PlusSmall_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
-import {PortalComponent} from '#/components/Portal'
 import {Text} from '#/components/Typography'
 import {GifEmbed} from '../util/post-embeds/GifEmbed'
 import {AltTextReminder} from './photos/Gallery'
@@ -30,12 +29,10 @@ export function GifAltTextDialog({
   gif,
   altText,
   onSubmit,
-  Portal,
 }: {
   gif: Gif
   altText: string
   onSubmit: (alt: string) => void
-  Portal: PortalComponent
 }) {
   const {data} = useResolveGifQuery(gif)
   const vendorAltText = parseAltFromGIFDescription(data?.description ?? '').alt
@@ -50,7 +47,6 @@ export function GifAltTextDialog({
       thumb={data.thumb?.source.path}
       params={params}
       onSubmit={onSubmit}
-      Portal={Portal}
     />
   )
 }
@@ -61,14 +57,12 @@ export function GifAltTextDialogLoaded({
   onSubmit,
   params,
   thumb,
-  Portal,
 }: {
   vendorAltText: string
   altText: string
   onSubmit: (alt: string) => void
   params: EmbedPlayerParams
   thumb: string | undefined
-  Portal: PortalComponent
 }) {
   const control = Dialog.useDialogControl()
   const {_} = useLingui()
@@ -113,8 +107,7 @@ export function GifAltTextDialogLoaded({
         control={control}
         onClose={() => {
           onSubmit(altTextDraft)
-        }}
-        Portal={Portal}>
+        }}>
         <Dialog.Handle />
         <AltTextInner
           vendorAltText={vendorAltText}

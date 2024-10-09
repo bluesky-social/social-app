@@ -15,21 +15,18 @@ import * as Dialog from '#/components/Dialog'
 import {DialogControlProps} from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
-import {PortalComponent} from '#/components/Portal'
 import {Text} from '#/components/Typography'
 
 type Props = {
   control: Dialog.DialogOuterProps['control']
   image: ComposerImage
   onChange: (next: ComposerImage) => void
-  Portal: PortalComponent
 }
 
 export const ImageAltTextDialog = ({
   control,
   image,
   onChange,
-  Portal,
 }: Props): React.ReactNode => {
   const [altText, setAltText] = React.useState(image.alt)
 
@@ -41,8 +38,7 @@ export const ImageAltTextDialog = ({
           ...image,
           alt: enforceLen(altText, MAX_ALT_TEXT, true),
         })
-      }}
-      Portal={Portal}>
+      }}>
       <Dialog.Handle />
       <ImageAltTextInner
         control={control}

@@ -9,16 +9,14 @@ import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {GifSelectDialog} from '#/components/dialogs/GifSelect'
 import {GifSquare_Stroke2_Corner0_Rounded as GifIcon} from '#/components/icons/Gif'
-import {PortalComponent} from '#/components/Portal'
 
 type Props = {
   onClose: () => void
   onSelectGif: (gif: Gif) => void
   disabled?: boolean
-  Portal?: PortalComponent
 }
 
-export function SelectGifBtn({onClose, onSelectGif, disabled, Portal}: Props) {
+export function SelectGifBtn({onClose, onSelectGif, disabled}: Props) {
   const {_} = useLingui()
   const ref = useRef<{open: () => void}>(null)
   const t = useTheme()
@@ -48,7 +46,6 @@ export function SelectGifBtn({onClose, onSelectGif, disabled, Portal}: Props) {
         controlRef={ref}
         onClose={onClose}
         onSelectGif={onSelectGif}
-        Portal={Portal}
       />
     </>
   )
