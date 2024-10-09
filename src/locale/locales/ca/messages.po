@@ -716,7 +716,7 @@ msgstr "Hi ha hagut un error mentre es carregava el vídeo. Prova-ho més tard."
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:250
 msgid "An error occurred while saving the image!"
-msgstr ""
+msgstr "S'ha produït un error en desar la imatge!"
 
 #: src/components/StarterPack/ShareDialog.tsx:79
 #~ msgid "An error occurred while saving the image."
@@ -1098,7 +1098,7 @@ msgstr "Bluesky és millor amb col·legues!"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:206
 msgid "Bluesky now has over 10 million users, and I was #{0}!"
-msgstr ""
+msgstr "Bluesky té més de 10 milions d'usuaris ara, i jo he estat el #{0}!"
 
 #: src/view/com/modals/Waitlist.tsx:70
 #~ msgid "Bluesky uses invites to build a healthier community. If you don't know anybody with an invite, you can sign up for the waitlist and we'll send one soon."
@@ -1131,7 +1131,7 @@ msgstr "Llibres"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:614
 msgid "Brag a little!"
-msgstr ""
+msgstr "Presumeix-ne una mica!"
 
 #: src/components/FeedInterstitials.tsx:350
 msgid "Browse more accounts on the Explore page"
@@ -1298,7 +1298,7 @@ msgstr "Subtítols i text alternatiu"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:368
 msgid "Celebrating {0} users"
-msgstr ""
+msgstr "Celebrant {0} usuaris"
 
 #: src/view/com/modals/VerifyEmail.tsx:160
 msgid "Change"
@@ -2381,7 +2381,7 @@ msgstr "Descarrega el fitxer CAR"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:622
 msgid "Download image"
-msgstr ""
+msgstr "Descarrega la imatge"
 
 #: src/view/com/composer/text-input/TextInput.web.tsx:269
 msgid "Drop to add images"
@@ -3140,7 +3140,7 @@ msgstr "Segueix-los a tots"
 #: src/view/com/profile/FollowButton.tsx:79
 msgctxt "action"
 msgid "Follow Back"
-msgstr ""
+msgstr "Segueix"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:223
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:142
@@ -3870,7 +3870,7 @@ msgstr "Uneix-te a la conversa"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:492
 msgid "Joined {0}"
-msgstr ""
+msgstr "Es va unir el {0}"
 
 #: src/screens/Onboarding/index.tsx:21
 #: src/screens/Onboarding/state.ts:89
@@ -4425,7 +4425,7 @@ msgstr "Música"
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:389
 msgctxt "video"
 msgid "Mute"
-msgstr ""
+msgstr "Silencia"
 
 #: src/components/TagMenu/index.tsx:263
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:163
@@ -4959,7 +4959,7 @@ msgstr "Ostres! Alguna cosa ha fallat."
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:175
 msgid "Oh no! We weren't able to generate an image for you to share. Rest assured, we're glad you're here 🦋"
-msgstr ""
+msgstr "Oh no! No hem pogut generar una imatge per compartir. Tingues present que ens alegrem que siguis aquí 🦋"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:339
 msgid "OK"
@@ -6978,11 +6978,11 @@ msgstr "Comparteix el canal"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:621
 msgid "Share image externally"
-msgstr ""
+msgstr "Comparteix la imatge externament"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:639
 msgid "Share image in post"
-msgstr ""
+msgstr "Comparteix la imatge en una publicació"
 
 #: src/components/StarterPack/ShareDialog.tsx:124
 #: src/components/StarterPack/ShareDialog.tsx:131
@@ -7557,7 +7557,7 @@ msgstr "Toca per entrar a pantalla completa"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:151
 msgid "Tap to play or pause"
-msgstr ""
+msgstr "Toca per a reproduir o pausar"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:164
 msgid "Tap to toggle sound"
@@ -7595,7 +7595,7 @@ msgstr "Explica'ns una mica més"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:518
 msgid "Ten Million"
-msgstr ""
+msgstr "Deu milions"
 
 #: src/view/shell/desktop/RightNav.tsx:90
 msgid "Terms"
@@ -7636,7 +7636,7 @@ msgstr "Gràcies. El teu informe s'ha enviat."
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:593
 msgid "Thanks for being one of our first 10 million users."
-msgstr ""
+msgstr "Gràcies per ser un dels nostres primers 10 milions d'usuaris."
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:74
 msgid "Thanks, you have successfully verified your email address."
@@ -8163,7 +8163,7 @@ msgstr "A qui vols enviar aquest informe?"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:597
 msgid "Together, we're rebuilding the social internet. We're glad you're here."
-msgstr ""
+msgstr "Junts, estem reconstruint l'Internet social. Ens alegrem que siguis aquí."
 
 #: src/components/dialogs/MutedWords.tsx:112
 #~ msgid "Toggle between muted word options."
@@ -8311,7 +8311,7 @@ msgstr "Desfés el m'agrada a aquest canal"
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:388
 msgctxt "video"
 msgid "Unmute"
-msgstr ""
+msgstr "Deixa de silenciar"
 
 #: src/components/TagMenu/index.tsx:263
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:163
@@ -8684,7 +8684,7 @@ msgstr "Vídeo: {0}"
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:65
 #: src/view/com/composer/videos/VideoPreview.web.tsx:44
 msgid "Videos must be less than 60 seconds long"
-msgstr ""
+msgstr "Els vídeos han de ser de menys de 60 segons"
 
 #: src/screens/Profile/Header/Shell.tsx:113
 msgid "View {0}'s avatar"
@@ -9367,7 +9367,7 @@ msgstr "El teu compte s'ha eliminat"
 
 #: src/state/queries/video/video.ts:185
 msgid "Your account is not yet old enough to upload videos. Please try again later."
-msgstr ""
+msgstr "El teu compte encara no té l'edat suficient per penjar vídeos. Torna-ho a provar més tard."
 
 #: src/view/screens/Settings/ExportCarDialog.tsx:65
 msgid "Your account repository, containing all public data records, can be downloaded as a \"CAR\" file. This file does not include media embeds, such as images, or your private data, which must be fetched separately."

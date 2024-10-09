@@ -300,8 +300,8 @@ let FeedItemInner = ({
               onBeforePress={onOpenReposter}>
               <RepostIcon
                 style={{color: pal.colors.textLight, marginRight: 3}}
-                width={14}
-                height={14}
+                width={13}
+                height={13}
               />
               <Text
                 type="sm-bold"
@@ -344,8 +344,8 @@ let FeedItemInner = ({
             <View style={styles.includeReason}>
               <PinIcon
                 style={{color: pal.colors.textLight, marginRight: 3}}
-                width={14}
-                height={14}
+                width={13}
+                height={13}
               />
               <Text
                 type="sm-bold"
@@ -605,7 +605,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 2,
     marginBottom: 2,
-    marginLeft: -18,
+    marginLeft: -16,
   },
   layout: {
     flexDirection: 'row',

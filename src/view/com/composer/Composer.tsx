@@ -42,26 +42,21 @@ import {
   AppBskyFeedGetPostThread,
   BskyAgent,
 } from '@atproto/api'
-import {RichText} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useQueryClient} from '@tanstack/react-query'
 
 import * as apilib from '#/lib/api/index'
+import {EmbeddingDisabledError} from '#/lib/api/resolve'
 import {until} from '#/lib/async/until'
 import {MAX_GRAPHEME_LENGTH} from '#/lib/constants'
-import {
-  createGIFDescription,
-  parseAltFromGIFDescription,
-} from '#/lib/gif-alt-text'
 import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
 import {useIsKeyboardVisible} from '#/lib/hooks/useIsKeyboardVisible'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {LikelyType} from '#/lib/link-meta/link-meta'
 import {logEvent} from '#/lib/statsig/statsig'
 import {cleanError} from '#/lib/strings/errors'
-import {insertMentionAt} from '#/lib/strings/mention-manip'
 import {shortenLinks} from '#/lib/strings/rich-text-manip'
 import {colors, s} from '#/lib/styles'
 import {logger} from '#/logger'
@@ -70,25 +65,24 @@ import {useDialogStateControlContext} from '#/state/dialogs'
 import {emitPostCreated} from '#/state/events'
 import {ComposerImage, pasteImage} from '#/state/gallery'
 import {useModalControls} from '#/state/modals'
-import {useModals} from '#/state/modals'
 import {useRequireAltTextEnabled} from '#/state/preferences'
 import {
   toPostLanguages,
   useLanguagePrefs,
   useLanguagePrefsApi,
 } from '#/state/preferences/languages'
-import {createPostgateRecord} from '#/state/queries/postgate/util'
 import {useProfileQuery} from '#/state/queries/profile'
 import {Gif} from '#/state/queries/tenor'
-import {ThreadgateAllowUISetting} from '#/state/queries/threadgate'
-import {threadgateViewToAllowUISetting} from '#/state/queries/threadgate/util'
 import {useAgent, useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
 import {ComposerOpts} from '#/state/shell/composer'
 import {CharProgress} from '#/view/com/composer/char-progress/CharProgress'
 import {ComposerReplyTo} from '#/view/com/composer/ComposerReplyTo'
-import {ExternalEmbed} from '#/view/com/composer/ExternalEmbed'
-import {GifAltText} from '#/view/com/composer/GifAltText'
+import {
+  ExternalEmbedGif,
+  ExternalEmbedLink,
+} from '#/view/com/composer/ExternalEmbed'
+import {GifAltTextDialog} from '#/view/com/composer/GifAltText'
 import {LabelsBtn} from '#/view/com/composer/labels/LabelsBtn'
 import {Gallery} from '#/view/com/composer/photos/Gallery'
 import {OpenCameraBtn} from '#/view/com/composer/photos/OpenCameraBtn'
@@ -100,12 +94,11 @@ import {SuggestedLanguage} from '#/view/com/composer/select-language/SuggestedLa
 // due to linting false positives
 import {TextInput, TextInputRef} from '#/view/com/composer/text-input/TextInput'
 import {ThreadgateBtn} from '#/view/com/composer/threadgate/ThreadgateBtn'
-import {useExternalLinkFetch} from '#/view/com/composer/useExternalLinkFetch'
 import {SelectVideoBtn} from '#/view/com/composer/videos/SelectVideoBtn'
 import {SubtitleDialogBtn} from '#/view/com/composer/videos/SubtitleDialog'
 import {VideoPreview} from '#/view/com/composer/videos/VideoPreview'
 import {VideoTranscodeProgress} from '#/view/com/composer/videos/VideoTranscodeProgress'
-import {QuoteEmbed, QuoteX} from '#/view/com/util/post-embeds/QuoteEmbed'
+import {LazyQuoteEmbed, QuoteX} from '#/view/com/util/post-embeds/QuoteEmbed'
 import {Text} from '#/view/com/util/text/Text'
 import * as Toast from '#/view/com/util/Toast'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
@@ -117,12 +110,14 @@ import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import {createPortalGroup} from '#/components/Portal'
 import * as Prompt from '#/components/Prompt'
 import {Text as NewText} from '#/components/Typography'
-import {composerReducer, createComposerState} from './state/composer'
+import {
+  composerReducer,
+  createComposerState,
+  MAX_IMAGES,
+} from './state/composer'
 import {NO_VIDEO, NoVideoState, processVideo, VideoState} from './state/video'
 
 const Portal = createPortalGroup()
-
-const MAX_IMAGES = 4
 
 type CancelRef = {
   onPressCancel: () => void
@@ -135,7 +130,7 @@ export const ComposePost = ({
   replyTo,
   onPost,
   quote: initQuote,
-  quoteCount,
+  quoteCount: initQuoteCount,
   mention: initMention,
   openEmojiPicker,
   text: initText,
@@ -147,9 +142,9 @@ export const ComposePost = ({
 }) => {
   const {currentAccount} = useSession()
   const agent = useAgent()
+  const queryClient = useQueryClient()
   const currentDid = currentAccount!.did
   const {data: currentProfile} = useProfileQuery({did: currentDid})
-  const {isModalActive} = useModals()
   const {closeComposer} = useComposerControls()
   const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()
@@ -167,37 +162,39 @@ export const ComposePost = ({
   const [isProcessing, setIsProcessing] = useState(false)
   const [processingState, setProcessingState] = useState('')
   const [error, setError] = useState('')
-  const [richtext, setRichText] = useState(
-    new RichText({
-      text: initText
-        ? initText
-        : initMention
-        ? insertMentionAt(
-            `@${initMention}`,
-            initMention.length + 1,
-            `${initMention}`,
-          ) // insert mention if passed in
-        : '',
-    }),
+
+  const [draft, dispatch] = useReducer(
+    composerReducer,
+    {initImageUris, initQuoteUri: initQuote?.uri, initText, initMention},
+    createComposerState,
   )
+  const richtext = draft.richtext
+  let quote: string | undefined
+  if (draft.embed.quote) {
+    quote = draft.embed.quote.uri
+  }
+  let images = NO_IMAGES
+  if (draft.embed.media?.type === 'images') {
+    images = draft.embed.media.images
+  }
+  let videoState: VideoState | NoVideoState = NO_VIDEO
+  if (draft.embed.media?.type === 'video') {
+    videoState = draft.embed.media.video
+  }
+  let extGif: Gif | undefined
+  let extGifAlt: string | undefined
+  if (draft.embed.media?.type === 'gif') {
+    extGif = draft.embed.media.gif
+    extGifAlt = draft.embed.media.alt
+  }
+  let extLink: string | undefined
+  if (draft.embed.link) {
+    extLink = draft.embed.link.uri
+  }
+
   const graphemeLength = useMemo(() => {
     return shortenLinks(richtext).graphemeLength
   }, [richtext])
-  const [quote, setQuote] = useState<ComposerOpts['quote'] | undefined>(
-    initQuote,
-  )
-
-  // TODO: Move more state here.
-  const [composerState, dispatch] = useReducer(
-    composerReducer,
-    {initImageUris, initQuoteUri: initQuote?.uri},
-    createComposerState,
-  )
-
-  let videoState: VideoState | NoVideoState = NO_VIDEO
-  if (composerState.embed.media?.type === 'video') {
-    videoState = composerState.embed.media.video
-  }
 
   const selectVideo = React.useCallback(
     (asset: ImagePickerAsset) => {
@@ -218,7 +215,7 @@ export const ComposePost = ({
   // Whenever we receive an initial video uri, we should immediately run compression if necessary
   useEffect(() => {
     if (initVideoUri) {
-      selectVideo({uri: initVideoUri} as ImagePickerAsset)
+      selectVideo(initVideoUri)
     }
   }, [initVideoUri, selectVideo])
 
@@ -243,22 +240,7 @@ export const ComposePost = ({
   )
 
   const hasVideo = Boolean(videoState.asset || videoState.video)
-
   const [publishOnUpload, setPublishOnUpload] = useState(false)
-
-  const {extLink, setExtLink} = useExternalLinkFetch({setQuote, setError})
-  const [extGif, setExtGif] = useState<Gif>()
-  const [labels, setLabels] = useState<string[]>([])
-  const [threadgateAllowUISettings, onChangeThreadgateAllowUISettings] =
-    useState<ThreadgateAllowUISetting[]>(
-      threadgateViewToAllowUISetting(undefined),
-    )
-  const [postgate, setPostgate] = useState(createPostgateRecord({post: ''}))
-
-  let images = NO_IMAGES
-  if (composerState.embed.media?.type === 'images') {
-    images = composerState.embed.media.images
-  }
 
   const onClose = useCallback(() => {
     closeComposer()
@@ -319,30 +301,9 @@ export const ComposePost = ({
     }
   }, [onPressCancel, closeAllDialogs, closeAllModals])
 
-  // listen to escape key on desktop web
-  const onEscape = useCallback(
-    (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        onPressCancel()
-      }
-    },
-    [onPressCancel],
-  )
-  useEffect(() => {
-    if (isWeb && !isModalActive) {
-      window.addEventListener('keydown', onEscape)
-      return () => window.removeEventListener('keydown', onEscape)
-    }
-  }, [onEscape, isModalActive])
-
-  const onNewLink = useCallback(
-    (uri: string) => {
-      dispatch({type: 'embed_add_uri', uri})
-      if (extLink != null) return
-      setExtLink({uri, isLoading: true})
-    },
-    [extLink, setExtLink],
-  )
+  const onNewLink = useCallback((uri: string) => {
+    dispatch({type: 'embed_add_uri', uri})
+  }, [])
 
   const onImageAdd = useCallback(
     (next: ComposerImage[]) => {
@@ -371,14 +332,10 @@ export const ComposePost = ({
 
     if (images.some(img => img.alt === '')) return true
 
-    if (extGif) {
-      if (!extLink?.meta?.description) return true
+    if (extGif && !extGifAlt) return true
 
-      const parsedAlt = parseAltFromGIFDescription(extLink.meta.description)
-      if (!parsedAlt.isPreferred) return true
-    }
     return false
-  }, [images, extLink, extGif, requireAltTextEnabled])
+  }, [images, extGifAlt, extGif, requireAltTextEnabled])
 
   const onPressPublish = React.useCallback(
     async (finishedUploading?: boolean) => {
@@ -411,25 +368,15 @@ export const ComposePost = ({
         setError(_(msg`Did you want to say anything?`))
         return
       }
-      if (extLink?.isLoading) {
-        setError(_(msg`Please wait for your link card to finish loading`))
-        return
-      }
 
       setIsProcessing(true)
 
       let postUri
       try {
         postUri = (
-          await apilib.post(agent, {
-            composerState, // TODO: move more state here.
-            rawText: richtext.text,
+          await apilib.post(agent, queryClient, {
+            draft: draft,
             replyTo: replyTo?.uri,
-            quote,
-            extLink,
-            labels,
-            threadgate: threadgateAllowUISettings,
-            postgate,
             onStateChange: setProcessingState,
             langs: toPostLanguages(langPrefs.postLanguage),
           })
@@ -451,18 +398,13 @@ export const ComposePost = ({
           hasImages: images.length > 0,
         })
 
-        if (extLink) {
-          setExtLink({
-            ...extLink,
-            isLoading: true,
-            localThumb: undefined,
-          } as apilib.ExternalEmbedDraft)
-        }
         let err = cleanError(e.message)
         if (err.includes('not locate record')) {
           err = _(
             msg`We're sorry! The post you are replying to has been deleted.`,
           )
+        } else if (e instanceof EmbeddingDisabledError) {
+          err = _(msg`This post's author has disabled quote posts.`)
         }
         setError(err)
         setIsProcessing(false)
@@ -483,13 +425,13 @@ export const ComposePost = ({
         emitPostCreated()
       }
       setLangPrefs.savePostLanguageToHistory()
-      if (quote) {
+      if (initQuote && initQuoteCount !== undefined) {
         // We want to wait for the quote count to update before we call `onPost`, which will refetch data
-        whenAppViewReady(agent, quote.uri, res => {
+        whenAppViewReady(agent, initQuote.uri, res => {
           const thread = res.data.thread
           if (
             AppBskyFeedDefs.isThreadViewPost(thread) &&
-            thread.post.quoteCount !== quoteCount
+            thread.post.quoteCount !== initQuoteCount
           ) {
             onPost?.(postUri)
             return true
@@ -509,26 +451,24 @@ export const ComposePost = ({
     [
       _,
       agent,
-      composerState,
+      draft,
       extLink,
       images,
       graphemeLength,
       isAltTextRequiredAndMissing,
       isProcessing,
-      labels,
       langPrefs.postLanguage,
       onClose,
       onPost,
-      postgate,
       quote,
-      quoteCount,
+      initQuote,
+      initQuoteCount,
       replyTo,
       richtext.text,
-      setExtLink,
       setLangPrefs,
-      threadgateAllowUISettings,
       videoState.asset,
       videoState.status,
+      queryClient,
     ],
   )
 
@@ -551,11 +491,9 @@ export const ComposePost = ({
 
   const canSelectImages =
     images.length < MAX_IMAGES &&
-    !extLink &&
     videoState.status === 'idle' &&
     !videoState.video
-  const hasMedia =
-    images.length > 0 || Boolean(extLink) || Boolean(videoState.video)
+  const hasMedia = images.length > 0 || Boolean(videoState.video)
 
   const onEmojiButtonPress = useCallback(() => {
     openEmojiPicker?.(textInput.current?.getCursorPosition())
@@ -565,45 +503,13 @@ export const ComposePost = ({
     textInput.current?.focus()
   }, [])
 
-  const onSelectGif = useCallback(
-    (gif: Gif) => {
-      dispatch({type: 'embed_add_gif', gif})
-      setExtLink({
-        uri: `${gif.media_formats.gif.url}?hh=${gif.media_formats.gif.dims[1]}&ww=${gif.media_formats.gif.dims[0]}`,
-        isLoading: true,
-        meta: {
-          url: gif.media_formats.gif.url,
-          image: gif.media_formats.preview.url,
-          likelyType: LikelyType.HTML,
-          title: gif.content_description,
-          description: createGIFDescription(gif.content_description),
-        },
-      })
-      setExtGif(gif)
-    },
-    [setExtLink],
-  )
+  const onSelectGif = useCallback((gif: Gif) => {
+    dispatch({type: 'embed_add_gif', gif})
+  }, [])
 
-  const handleChangeGifAltText = useCallback(
-    (altText: string) => {
-      dispatch({type: 'embed_update_gif', alt: altText})
-      setExtLink(ext =>
-        ext && ext.meta
-          ? {
-              ...ext,
-              meta: {
-                ...ext.meta,
-                description: createGIFDescription(
-                  ext.meta.title ?? '',
-                  altText,
-                ),
-              },
-            }
-          : ext,
-      )
-    },
-    [setExtLink],
-  )
+  const handleChangeGifAltText = useCallback((altText: string) => {
+    dispatch({type: 'embed_update_gif', alt: altText})
+  }, [])
 
   const {
     scrollHandler,
@@ -660,9 +566,11 @@ export const ComposePost = ({
               ) : (
                 <View style={[styles.postBtnWrapper]}>
                   <LabelsBtn
-                    labels={labels}
-                    onChange={setLabels}
-                    hasMedia={hasMedia}
+                    labels={draft.labels}
+                    onChange={nextLabels => {
+                      dispatch({type: 'update_labels', labels: nextLabels})
+                    }}
+                    hasMedia={hasMedia || Boolean(extLink)}
                   />
                   {canPost ? (
                     <Button
@@ -743,7 +651,9 @@ export const ComposePost = ({
                 richtext={richtext}
                 placeholder={selectTextInputPlaceholder}
                 autoFocus
-                setRichText={setRichText}
+                setRichText={rt => {
+                  dispatch({type: 'update_richtext', richtext: rt})
+                }}
                 onPhotoPasted={onPhotoPasted}
                 onPressPublish={() => onPressPublish()}
                 onNewLink={onNewLink}
@@ -761,29 +671,35 @@ export const ComposePost = ({
               dispatch={dispatch}
               Portal={Portal.Portal}
             />
-            {images.length === 0 && extLink && (
-              <View style={a.relative}>
-                <ExternalEmbed
-                  link={extLink}
+
+            {extGif && (
+              <View style={a.relative} key={extGif.url}>
+                <ExternalEmbedGif
                   gif={extGif}
                   onRemove={() => {
-                    if (extGif) {
-                      dispatch({type: 'embed_remove_gif'})
-                    } else {
-                      dispatch({type: 'embed_remove_link'})
-                    }
-                    setExtLink(undefined)
-                    setExtGif(undefined)
+                    dispatch({type: 'embed_remove_gif'})
                   }}
                 />
-                <GifAltText
-                  link={extLink}
+                <GifAltTextDialog
                   gif={extGif}
+                  altText={extGifAlt ?? ''}
                   onSubmit={handleChangeGifAltText}
                   Portal={Portal.Portal}
                 />
               </View>
             )}
+
+            {!draft.embed.media && extLink && (
+              <View style={a.relative} key={extLink}>
+                <ExternalEmbedLink
+                  uri={extLink}
+                  onRemove={() => {
+                    dispatch({type: 'embed_remove_link'})
+                  }}
+                />
+              </View>
+            )}
+
             <LayoutAnimationConfig skipExiting>
               {hasVideo && (
                 <Animated.View
@@ -837,13 +753,12 @@ export const ComposePost = ({
               {quote ? (
                 <View style={[s.mt5, s.mb2, isWeb && s.mb10]}>
                   <View style={{pointerEvents: 'none'}}>
-                    <QuoteEmbed quote={quote} />
+                    <LazyQuoteEmbed uri={quote} />
                   </View>
-                  {quote.uri !== initQuote?.uri && (
+                  {!initQuote && (
                     <QuoteX
                       onRemove={() => {
                         dispatch({type: 'embed_remove_quote'})
-                        setQuote(undefined)
                       }}
                     />
                   )}
@@ -855,12 +770,17 @@ export const ComposePost = ({
 
           {replyTo ? null : (
             <ThreadgateBtn
-              postgate={postgate}
-              onChangePostgate={setPostgate}
-              threadgateAllowUISettings={threadgateAllowUISettings}
-              onChangeThreadgateAllowUISettings={
-                onChangeThreadgateAllowUISettings
-              }
+              postgate={draft.postgate}
+              onChangePostgate={nextPostgate => {
+                dispatch({type: 'update_postgate', postgate: nextPostgate})
+              }}
+              threadgateAllowUISettings={draft.threadgate}
+              onChangeThreadgateAllowUISettings={nextThreadgate => {
+                dispatch({
+                  type: 'update_threadgate',
+                  threadgate: nextThreadgate,
+                })
+              }}
               style={bottomBarAnimatedStyle}
               Portal={Portal.Portal}
             />

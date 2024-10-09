@@ -157,6 +157,7 @@ function ModerationDetailsDialogInner({
                     style={a.text_md}>
                     {desc.source || _(msg`an unknown labeler`)}
                   </InlineLinkText>
+                  .
                 </Trans>
               </Text>
             </>

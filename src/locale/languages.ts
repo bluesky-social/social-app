@@ -22,6 +22,7 @@ export enum AppLanguage {
   tr = 'tr',
   uk = 'uk',
   zh_CN = 'zh-CN',
+  zh_HK = 'zh-HK',
   zh_TW = 'zh-TW',
 }
 
@@ -47,8 +48,9 @@ export const APP_LANGUAGES: AppLanguageConfig[] = [
   {code2: AppLanguage.ru, name: 'Русский – Russian'},
   {code2: AppLanguage.tr, name: 'Türkçe – Turkish'},
   {code2: AppLanguage.uk, name: 'Українська – Ukrainian'},
-  {code2: AppLanguage.zh_CN, name: '简体中文（中国）– Chinese (Simplified)'},
-  {code2: AppLanguage.zh_TW, name: '繁體中文（臺灣）– Chinese (Traditional)'},
+  {code2: AppLanguage.zh_CN, name: '简体中文 – Simplified Chinese'},
+  {code2: AppLanguage.zh_TW, name: '繁體中文 – Traditional Chinese'},
+  {code2: AppLanguage.zh_HK, name: '粵文 – Cantonese'},
 ]
 
 export const LANGUAGES: Language[] = [

@@ -31,6 +31,7 @@ import {makeProfileLink} from '#/lib/routes/links'
 import {s} from '#/lib/styles'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {precacheProfile} from '#/state/queries/profile'
+import {useResolveLinkQuery} from '#/state/queries/resolve-link'
 import {useSession} from '#/state/session'
 import {ComposerOptsQuote} from '#/state/shell/composer'
 import {atoms as a, useTheme} from '#/alf'
@@ -283,6 +284,24 @@ export function QuoteX({onRemove}: {onRemove: () => void}) {
       hitSlop={HITSLOP_20}>
       <FontAwesomeIcon size={12} icon="xmark" style={s.white} />
     </TouchableOpacity>
+  )
+}
+
+export function LazyQuoteEmbed({uri}: {uri: string}) {
+  const {data} = useResolveLinkQuery(uri)
+  if (!data || data.type !== 'record' || data.kind !== 'post') {
+    return null
+  }
+  return (
+    <QuoteEmbed
+      quote={{
+        cid: data.record.cid,
+        uri: data.record.uri,
+        author: data.meta.author,
+        indexedAt: data.meta.indexedAt,
+        text: data.meta.text,
+      }}
+    />
   )
 }
 

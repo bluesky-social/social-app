@@ -1,8 +1,17 @@
 import {ImagePickerAsset} from 'expo-image-picker'
+import {AppBskyFeedPostgate, RichText} from '@atproto/api'
 
-import {isBskyPostUrl} from '#/lib/strings/url-helpers'
+import {insertMentionAt} from '#/lib/strings/mention-manip'
+import {
+  isBskyPostUrl,
+  postUriToRelativePath,
+  toBskyAppUrl,
+} from '#/lib/strings/url-helpers'
 import {ComposerImage, createInitialImages} from '#/state/gallery'
+import {createPostgateRecord} from '#/state/queries/postgate/util'
 import {Gif} from '#/state/queries/tenor'
+import {threadgateViewToAllowUISetting} from '#/state/queries/threadgate'
+import {ThreadgateAllowUISetting} from '#/state/queries/threadgate'
 import {ComposerOpts} from '#/state/shell/composer'
 import {createVideoState, VideoAction, videoReducer, VideoState} from './video'
 
@@ -29,7 +38,7 @@ type Link = {
 
 // This structure doesn't exactly correspond to the data model.
 // Instead, it maps to how the UI is organized, and how we present a post.
-type EmbedDraft = {
+export type EmbedDraft = {
   // We'll always submit quote and actual media (images, video, gifs) chosen by the user.
   quote: Link | undefined
   media: ImagesMedia | VideoMedia | GifMedia | undefined
@@ -37,12 +46,19 @@ type EmbedDraft = {
   link: Link | undefined
 }
 
-export type ComposerState = {
-  // TODO: Other draft data.
+export type ComposerDraft = {
+  richtext: RichText
+  labels: string[]
+  postgate: AppBskyFeedPostgate.Record
+  threadgate: ThreadgateAllowUISetting[]
   embed: EmbedDraft
 }
 
 export type ComposerAction =
+  | {type: 'update_richtext'; richtext: RichText}
+  | {type: 'update_labels'; labels: string[]}
+  | {type: 'update_postgate'; postgate: AppBskyFeedPostgate.Record}
+  | {type: 'update_threadgate'; threadgate: ThreadgateAllowUISetting[]}
   | {type: 'embed_add_images'; images: ComposerImage[]}
   | {type: 'embed_update_image'; image: ComposerImage}
   | {type: 'embed_remove_image'; image: ComposerImage}
@@ -60,13 +76,37 @@ export type ComposerAction =
   | {type: 'embed_update_gif'; alt: string}
   | {type: 'embed_remove_gif'}
 
-const MAX_IMAGES = 4
+export const MAX_IMAGES = 4
 
 export function composerReducer(
-  state: ComposerState,
+  state: ComposerDraft,
   action: ComposerAction,
-): ComposerState {
+): ComposerDraft {
   switch (action.type) {
+    case 'update_richtext': {
+      return {
+        ...state,
+        richtext: action.richtext,
+      }
+    }
+    case 'update_labels': {
+      return {
+        ...state,
+        labels: action.labels,
+      }
+    }
+    case 'update_postgate': {
+      return {
+        ...state,
+        postgate: action.postgate,
+      }
+    }
+    case 'update_threadgate': {
+      return {
+        ...state,
+        threadgate: action.threadgate,
+      }
+    }
     case 'embed_add_images': {
       if (action.images.length === 0) {
         return state
@@ -289,12 +329,16 @@ export function composerReducer(
 }
 
 export function createComposerState({
+  initText,
+  initMention,
   initImageUris,
   initQuoteUri,
 }: {
+  initText: string | undefined
+  initMention: string | undefined
   initImageUris: ComposerOpts['imageUris']
   initQuoteUri: string | undefined
-}): ComposerState {
+}): ComposerDraft {
   let media: ImagesMedia | undefined
   if (initImageUris?.length) {
     media = {
@@ -304,13 +348,31 @@ export function createComposerState({
   }
   let quote: Link | undefined
   if (initQuoteUri) {
-    quote = {
-      type: 'link',
-      uri: initQuoteUri,
+    // TODO: Consider passing the app url directly.
+    const path = postUriToRelativePath(initQuoteUri)
+    if (path) {
+      quote = {
+        type: 'link',
+        uri: toBskyAppUrl(path),
+      }
     }
   }
-  // TODO: Other initial content.
+  const initRichText = new RichText({
+    text: initText
+      ? initText
+      : initMention
+      ? insertMentionAt(
+          `@${initMention}`,
+          initMention.length + 1,
+          `${initMention}`,
+        )
+      : '',
+  })
   return {
+    richtext: initRichText,
+    labels: [],
+    postgate: createPostgateRecord({post: ''}),
+    threadgate: threadgateViewToAllowUISetting(undefined),
     embed: {
       quote,
       media,

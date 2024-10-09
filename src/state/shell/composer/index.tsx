@@ -7,9 +7,12 @@ import {
 } from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useQueryClient} from '@tanstack/react-query'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
+import {postUriToRelativePath, toBskyAppUrl} from '#/lib/strings/url-helpers'
 import {purgeTemporaryImageFiles} from '#/state/gallery'
+import {precacheResolveLinkQuery} from '#/state/queries/resolve-link'
 import * as Toast from '#/view/com/util/Toast'
 
 export interface ComposerOptsPostRef {
@@ -38,7 +41,7 @@ export interface ComposerOpts {
   openEmojiPicker?: (pos: DOMRect | undefined) => void
   text?: string
   imageUris?: {uri: string; width: number; height: number; altText?: string}[]
-  videoUri?: string
+  videoUri?: {uri: string; width: number; height: number}
 }
 
 type StateContext = ComposerOpts | undefined
@@ -58,8 +61,28 @@ const controlsContext = React.createContext<ControlsContext>({
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const {_} = useLingui()
   const [state, setState] = React.useState<StateContext>()
+  const queryClient = useQueryClient()
 
   const openComposer = useNonReactiveCallback((opts: ComposerOpts) => {
+    if (opts.quote) {
+      const path = postUriToRelativePath(opts.quote.uri)
+      if (path) {
+        const appUrl = toBskyAppUrl(path)
+        precacheResolveLinkQuery(queryClient, appUrl, {
+          type: 'record',
+          kind: 'post',
+          record: {
+            cid: opts.quote.cid,
+            uri: opts.quote.uri,
+          },
+          meta: {
+            author: opts.quote.author,
+            indexedAt: opts.quote.indexedAt,
+            text: opts.quote.text,
+          },
+        })
+      }
+    }
     const author = opts.replyTo?.author || opts.quote?.author
     const isBlocked = Boolean(
       author &&
