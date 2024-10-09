@@ -10,6 +10,7 @@ import {
 import {requireNativeModule, requireNativeViewManager} from 'expo-modules-core'
 
 import {BottomSheetState, BottomSheetViewProps} from './BottomSheet.types'
+import {BottomSheetPortalProvider} from './BottomSheetPortal'
 
 const screenHeight = Dimensions.get('screen').height
 
@@ -92,7 +93,9 @@ export class BottomSheetNativeComponent extends React.Component<
               borderTopRightRadius: cornerRadius,
             },
           ]}>
-          <View onLayout={this.updateLayout}>{children}</View>
+          <View onLayout={this.updateLayout}>
+            <BottomSheetPortalProvider>{children}</BottomSheetPortalProvider>
+          </View>
         </View>
       </NativeView>
     )
