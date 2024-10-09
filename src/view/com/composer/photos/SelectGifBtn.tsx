@@ -12,7 +12,7 @@ import {GifSquare_Stroke2_Corner0_Rounded as GifIcon} from '#/components/icons/G
 import {PortalComponent} from '#/components/Portal'
 
 type Props = {
-  onClose: () => void
+  onClose?: () => void
   onSelectGif: (gif: Gif) => void
   disabled?: boolean
   Portal?: PortalComponent

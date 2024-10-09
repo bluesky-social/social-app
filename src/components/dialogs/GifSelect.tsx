@@ -39,7 +39,7 @@ export function GifSelectDialog({
   Portal,
 }: {
   controlRef: React.RefObject<{open: () => void}>
-  onClose: () => void
+  onClose?: () => void
   onSelectGif: (gif: Gif) => void
   Portal?: PortalComponent
 }) {
