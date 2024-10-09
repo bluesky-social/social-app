@@ -31,7 +31,7 @@ import {
   DialogOuterProps,
 } from '#/components/Dialog/types'
 import {createInput} from '#/components/forms/TextField'
-import {Portal as DefaultPortal} from '#/components/Portal'
+import {DefaultPortalOverride, useDefaultPortal} from '#/components/Portal'
 import {BottomSheet, BottomSheetSnapPoint} from '../../../modules/bottom-sheet'
 import {
   BottomSheetSnapPointChangeEvent,
@@ -50,8 +50,10 @@ export function Outer({
   onClose,
   nativeOptions,
   testID,
-  Portal = DefaultPortal,
+  Portal: PortalProp,
 }: React.PropsWithChildren<DialogOuterProps>) {
+  const DefaultPortal = useDefaultPortal()
+  const Portal = PortalProp ?? DefaultPortal
   const t = useTheme()
   const ref = React.useRef<BottomSheet>(null)
   const closeCallbacks = React.useRef<(() => void)[]>([])
@@ -164,7 +166,9 @@ export function Outer({
           onSnapPointChange={onSnapPointChange}
           onStateChange={onStateChange}
           disableDrag={disableDrag}>
-          <View testID={testID}>{children}</View>
+          <DefaultPortalOverride>
+            <View testID={testID}>{children}</View>
+          </DefaultPortalOverride>
         </BottomSheet>
       </Context.Provider>
     </Portal>

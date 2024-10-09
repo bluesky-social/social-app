@@ -8,12 +8,9 @@ import {atoms as a} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as Menu from '#/components/Menu'
-import {createPortalGroup} from '#/components/Portal'
 import * as Prompt from '#/components/Prompt'
 import {H3, P, Text} from '#/components/Typography'
 import {PlatformInfo} from '../../../../modules/expo-bluesky-swiss-army'
-
-const Portal = createPortalGroup()
 
 export function Dialogs() {
   const scrollable = Dialog.useDialogControl()
@@ -201,41 +198,34 @@ export function Dialogs() {
       </Dialog.Outer>
 
       <Dialog.Outer control={withMenu}>
-        <Portal.Provider>
-          <Dialog.Inner label="test">
-            <H3 nativeID="dialog-title">Dialog with Menu</H3>
-            <Menu.Root>
-              <Menu.Trigger label="Open menu">
-                {({props}) => (
-                  <Button
-                    style={a.mt_2xl}
-                    label="Open menu"
-                    color="primary"
-                    variant="solid"
-                    size="large"
-                    {...props}>
-                    <ButtonText>Open Menu</ButtonText>
-                  </Button>
-                )}
-              </Menu.Trigger>
-              <Menu.Outer Portal={Portal.Portal}>
-                <Menu.Group>
-                  <Menu.Item
-                    label="Item 1"
-                    onPress={() => console.log('item 1')}>
-                    <Menu.ItemText>Item 1</Menu.ItemText>
-                  </Menu.Item>
-                  <Menu.Item
-                    label="Item 2"
-                    onPress={() => console.log('item 2')}>
-                    <Menu.ItemText>Item 2</Menu.ItemText>
-                  </Menu.Item>
-                </Menu.Group>
-              </Menu.Outer>
-            </Menu.Root>
-          </Dialog.Inner>
-          <Portal.Outlet />
-        </Portal.Provider>
+        <Dialog.Inner label="test">
+          <H3 nativeID="dialog-title">Dialog with Menu</H3>
+          <Menu.Root>
+            <Menu.Trigger label="Open menu">
+              {({props}) => (
+                <Button
+                  style={a.mt_2xl}
+                  label="Open menu"
+                  color="primary"
+                  variant="solid"
+                  size="large"
+                  {...props}>
+                  <ButtonText>Open Menu</ButtonText>
+                </Button>
+              )}
+            </Menu.Trigger>
+            <Menu.Outer>
+              <Menu.Group>
+                <Menu.Item label="Item 1" onPress={() => console.log('item 1')}>
+                  <Menu.ItemText>Item 1</Menu.ItemText>
+                </Menu.Item>
+                <Menu.Item label="Item 2" onPress={() => console.log('item 2')}>
+                  <Menu.ItemText>Item 2</Menu.ItemText>
+                </Menu.Item>
+              </Menu.Group>
+            </Menu.Outer>
+          </Menu.Root>
+        </Dialog.Inner>
       </Dialog.Outer>
 
       <Dialog.Outer control={scrollable}>
