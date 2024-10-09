@@ -4576,10 +4576,6 @@ msgstr "请以 @{0} 身份登录"
 msgid "Please Verify Your Email"
 msgstr "请验证你的电子邮箱"
 
-#: src/view/com/composer/Composer.tsx:415
-#~ msgid "Please wait for your link card to finish loading"
-#~ msgstr "请等待你的链接卡片加载完毕"
-
 #: src/screens/Onboarding/index.tsx:34
 #: src/screens/Onboarding/state.ts:98
 msgid "Politics"

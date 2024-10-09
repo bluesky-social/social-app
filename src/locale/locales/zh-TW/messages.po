@@ -4576,10 +4576,6 @@ msgstr "請以 @{0} 的身分登入"
 msgid "Please Verify Your Email"
 msgstr "請驗證您的電子郵件地址"
 
-#: src/view/com/composer/Composer.tsx:415
-#~ msgid "Please wait for your link card to finish loading"
-#~ msgstr "請等待您的連結預覽載入完畢"
-
 #: src/screens/Onboarding/index.tsx:34
 #: src/screens/Onboarding/state.ts:98
 msgid "Politics"
