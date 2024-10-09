@@ -30,7 +30,6 @@ import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
 import {Link} from '#/components/Link'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import * as Menu from '#/components/Menu'
-import {PortalComponent} from '#/components/Portal'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {openCamera, openCropper, openPicker} from '../../../lib/media/picker'
 
@@ -51,7 +50,6 @@ interface UserAvatarProps extends BaseUserAvatarProps {
 
 interface EditableUserAvatarProps extends BaseUserAvatarProps {
   onSelectNewAvatar: (img: RNImage | null) => void
-  Portal?: PortalComponent
 }
 
 interface PreviewableUserAvatarProps extends BaseUserAvatarProps {
@@ -268,7 +266,6 @@ let EditableUserAvatar = ({
   size,
   avatar,
   onSelectNewAvatar,
-  Portal,
 }: EditableUserAvatarProps): React.ReactNode => {
   const t = useTheme()
   const pal = usePalette('default')
@@ -366,7 +363,7 @@ let EditableUserAvatar = ({
           </Pressable>
         )}
       </Menu.Trigger>
-      <Menu.Outer showCancel Portal={Portal}>
+      <Menu.Outer showCancel>
         <Menu.Group>
           {isNative && (
             <Menu.Item
