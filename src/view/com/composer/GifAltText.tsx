@@ -30,7 +30,6 @@ export function GifAltTextDialog({
   gif,
   altText,
   onSubmit,
-  Portal,
 }: {
   gif: Gif
   altText: string
@@ -50,7 +49,6 @@ export function GifAltTextDialog({
       thumb={data.thumb?.source.path}
       params={params}
       onSubmit={onSubmit}
-      Portal={Portal}
     />
   )
 }
@@ -61,14 +59,12 @@ export function GifAltTextDialogLoaded({
   onSubmit,
   params,
   thumb,
-  Portal,
 }: {
   vendorAltText: string
   altText: string
   onSubmit: (alt: string) => void
   params: EmbedPlayerParams
   thumb: string | undefined
-  Portal: PortalComponent
 }) {
   const control = Dialog.useDialogControl()
   const {_} = useLingui()
@@ -113,8 +109,7 @@ export function GifAltTextDialogLoaded({
         control={control}
         onClose={() => {
           onSubmit(altTextDraft)
-        }}
-        Portal={Portal}>
+        }}>
         <Dialog.Handle />
         <AltTextInner
           vendorAltText={vendorAltText}
