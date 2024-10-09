@@ -18,7 +18,6 @@ import {
   ItemTextProps,
   TriggerProps,
 } from '#/components/Menu/types'
-import {PortalComponent} from '#/components/Portal'
 import {Text} from '#/components/Typography'
 
 export {
@@ -78,11 +77,9 @@ export function Trigger({children, label}: TriggerProps) {
 export function Outer({
   children,
   showCancel,
-  Portal,
 }: React.PropsWithChildren<{
   showCancel?: boolean
   style?: StyleProp<ViewStyle>
-  Portal?: PortalComponent
 }>) {
   const context = React.useContext(Context)
   const {_} = useLingui()
@@ -90,8 +87,7 @@ export function Outer({
   return (
     <Dialog.Outer
       control={context.control}
-      nativeOptions={{preventExpansion: true}}
-      Portal={Portal}>
+      nativeOptions={{preventExpansion: true}}>
       <Dialog.Handle />
       {/* Re-wrap with context since Dialogs are portal-ed to root */}
       <Context.Provider value={context}>
