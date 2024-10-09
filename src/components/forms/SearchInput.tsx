@@ -18,7 +18,10 @@ type SearchInputProps = Omit<TextField.InputProps, 'label'> & {
 }
 
 export const SearchInput = React.forwardRef<TextInput, SearchInputProps>(
-  function SearchInput({label, onChangeText: onChangeTextProp, ...rest}, ref) {
+  function SearchInput(
+    {label, onChangeText: onChangeTextProp, onClearText, ...rest},
+    ref,
+  ) {
     const t = useTheme()
     const {_} = useLingui()
     const [showClear, setShowClear] = useState(false)
@@ -33,6 +36,7 @@ export const SearchInput = React.forwardRef<TextInput, SearchInputProps>(
       inputRef.current?.clear()
       setShowClear(false)
       onChangeTextProp?.('')
+      onClearText?.()
     }
 
     return (
