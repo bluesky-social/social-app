@@ -32,7 +32,10 @@ import {
 } from '#/components/Dialog/types'
 import {createInput} from '#/components/forms/TextField'
 import {DefaultPortalOverride, useDefaultPortal} from '#/components/Portal'
-import {BottomSheet, BottomSheetSnapPoint} from '../../../modules/bottom-sheet'
+import {
+  BottomSheetNativeComponent,
+  BottomSheetSnapPoint,
+} from '../../../modules/bottom-sheet'
 import {
   BottomSheetSnapPointChangeEvent,
   BottomSheetStateChangeEvent,
@@ -55,7 +58,7 @@ export function Outer({
   const DefaultPortal = useDefaultPortal()
   const Portal = PortalProp ?? DefaultPortal
   const t = useTheme()
-  const ref = React.useRef<BottomSheet>(null)
+  const ref = React.useRef<BottomSheetNativeComponent>(null)
   const closeCallbacks = React.useRef<(() => void)[]>([])
   const {setDialogIsOpen, setFullyExpandedCount} =
     useDialogStateControlContext()
@@ -158,7 +161,7 @@ export function Outer({
   return (
     <Portal>
       <Context.Provider value={context}>
-        <BottomSheet
+        <BottomSheetNativeComponent
           ref={ref}
           cornerRadius={20}
           backgroundColor={t.atoms.bg.backgroundColor}
@@ -169,7 +172,7 @@ export function Outer({
           <DefaultPortalOverride>
             <View testID={testID}>{children}</View>
           </DefaultPortalOverride>
-        </BottomSheet>
+        </BottomSheetNativeComponent>
       </Context.Provider>
     </Portal>
   )

@@ -68,6 +68,7 @@ import {useStarterPackEntry} from '#/components/hooks/useStarterPackEntry'
 import {Provider as IntentDialogProvider} from '#/components/intents/IntentDialogs'
 import {Provider as PortalProvider} from '#/components/Portal'
 import {Splash} from '#/Splash'
+import {BottomSheetPortalProvider} from '../modules/bottom-sheet/src/BottomSheetPortal'
 import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
 
 SplashScreen.preventAutoHideAsync()
@@ -197,14 +198,16 @@ function App() {
                       <DialogStateProvider>
                         <LightboxStateProvider>
                           <PortalProvider>
-                            <StarterPackProvider>
-                              <SafeAreaProvider
-                                initialMetrics={initialWindowMetrics}>
-                                <IntentDialogProvider>
-                                  <InnerApp />
-                                </IntentDialogProvider>
-                              </SafeAreaProvider>
-                            </StarterPackProvider>
+                            <BottomSheetPortalProvider>
+                              <StarterPackProvider>
+                                <SafeAreaProvider
+                                  initialMetrics={initialWindowMetrics}>
+                                  <IntentDialogProvider>
+                                    <InnerApp />
+                                  </IntentDialogProvider>
+                                </SafeAreaProvider>
+                              </StarterPackProvider>
+                            </BottomSheetPortalProvider>
                           </PortalProvider>
                         </LightboxStateProvider>
                       </DialogStateProvider>
