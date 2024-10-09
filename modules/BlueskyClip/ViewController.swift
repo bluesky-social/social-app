@@ -42,7 +42,7 @@ class ViewController: UIViewController, WKScriptMessageHandler, WKNavigationDele
           let payload = try? JSONDecoder().decode(WebViewActionPayload.self, from: data) else {
       return
     }
-
+    
     switch payload.action {
     case .present:
       guard let url = self.starterPackUrl else {
@@ -72,7 +72,7 @@ class ViewController: UIViewController, WKScriptMessageHandler, WKNavigationDele
     // pathComponents starts with "/" as the first component, then each path name. so...
     // ["/", "start", "name", "rkey"]
     if url.pathComponents.count == 4,
-       url.pathComponents[1] == "start" {
+       (url.pathComponents[1] == "start" || url.pathComponents[1] == "starter-pack") {
       self.starterPackUrl = url
     }
 
