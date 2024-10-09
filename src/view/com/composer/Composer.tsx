@@ -109,7 +109,7 @@ import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmile} from '#/components/icons
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import * as Prompt from '#/components/Prompt'
 import {Text as NewText} from '#/components/Typography'
-import {BottomSheetPortalProvider} from '../../../../modules/bottom-sheet/src/BottomSheetPortal'
+import {BottomSheetPortalProvider} from '../../../../modules/bottom-sheet'
 import {
   composerReducer,
   createComposerState,
