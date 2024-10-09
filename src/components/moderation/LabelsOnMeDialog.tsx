@@ -238,7 +238,7 @@ function AppealForm({
 
   return (
     <>
-      <View style={{flexWrap: 'wrap', flexDirection: 'row'}}>
+      <View>
         <Text style={[a.text_2xl, a.font_bold, a.pb_xs, a.leading_tight]}>
           <Trans>Appeal "{strings.name}" label</Trans>
         </Text>
