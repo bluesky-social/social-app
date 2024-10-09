@@ -12,8 +12,7 @@ appId: xyz.blueskyweb.app
 # Navigate to another user profile via autocomplete
 - tapOn:
     id: "bottomBarSearchBtn"
-- tapOn:
-    id: "searchTextInput"
+- tapOn: "Search"
 - inputText: "b"
 - tapOn:
     id: "searchAutoCompleteResult-bob.test"
