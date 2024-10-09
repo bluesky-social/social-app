@@ -6,7 +6,6 @@ import {useLingui} from '@lingui/react'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonColor, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
-import {PortalComponent} from '#/components/Portal'
 import {Text} from '#/components/Typography'
 import {BottomSheetViewProps} from '../../modules/bottom-sheet'
 
@@ -27,12 +26,10 @@ export function Outer({
   children,
   control,
   testID,
-  Portal,
   nativeOptions,
 }: React.PropsWithChildren<{
   control: Dialog.DialogControlProps
   testID?: string
-  Portal?: PortalComponent
   nativeOptions?: Omit<BottomSheetViewProps, 'children'>
 }>) {
   const {gtMobile} = useBreakpoints()
@@ -48,7 +45,6 @@ export function Outer({
     <Dialog.Outer
       control={control}
       testID={testID}
-      Portal={Portal}
       nativeOptions={{preventExpansion: true, ...nativeOptions}}>
       <Dialog.Handle />
       <Context.Provider value={context}>
@@ -190,7 +186,6 @@ export function Basic({
   onConfirm,
   confirmButtonColor,
   showCancel = true,
-  Portal,
 }: React.PropsWithChildren<{
   control: Dialog.DialogOuterProps['control']
   title: string
@@ -207,10 +202,9 @@ export function Basic({
   onConfirm: (e: GestureResponderEvent) => void
   confirmButtonColor?: ButtonColor
   showCancel?: boolean
-  Portal?: PortalComponent
 }>) {
   return (
-    <Outer control={control} testID="confirmModal" Portal={Portal}>
+    <Outer control={control} testID="confirmModal">
       <TitleText>{title}</TitleText>
       <DescriptionText>{description}</DescriptionText>
       <Actions>
