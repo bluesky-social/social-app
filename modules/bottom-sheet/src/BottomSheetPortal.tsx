@@ -1,8 +1,6 @@
 import React from 'react'
 
-import {createPortalGroup} from './lib/Portal'
-
-createPortalGroup()
+import {createPortalGroup_INTERNAL} from './lib/Portal'
 
 type PortalContext = React.ElementType<{children: React.ReactNode}>
 
@@ -16,7 +14,7 @@ export function BottomSheetPortalProvider({
   children: React.ReactNode
 }) {
   const portal = React.useMemo(() => {
-    return createPortalGroup()
+    return createPortalGroup_INTERNAL()
   }, [])
 
   return (
