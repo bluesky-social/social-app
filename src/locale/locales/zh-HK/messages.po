@@ -8,7 +8,7 @@ msgstr ""
 "Language: yue\n"
 "Project-Id-Version: Yue for bluesky-social-app\n"
 "Report-Msgid-Bugs-To: Frudrax Cheng <i@cynosura.one>\n"
-"PO-Revision-Date: 2024-10-09 11:37+0800\n"
+"PO-Revision-Date: 2024-10-09 11:40+0800\n"
 "Last-Translator: Frudrax Cheng <i@cynosura.one>\n"
 "Language-Team: Frudrax Cheng (auroursa), Quicpasta (quicpasta.bsky.social)\n"
 "Plural-Forms: \n"
@@ -236,7 +236,7 @@ msgstr "<0>{0}</0> 個成員"
 
 #: src/components/dms/DateDivider.tsx:69
 msgid "<0>{date}</0> at {time}"
-msgstr ""
+msgstr "<0>{date}</0> {time}"
 
 #: src/view/com/modals/SelfLabel.tsx:135
 msgid "<0>Not Applicable.</0> This warning is only available for posts with media attached."
