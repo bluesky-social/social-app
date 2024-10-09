@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react'
+import React from 'react'
 
 type Component = React.ReactElement
 
@@ -72,23 +72,3 @@ const DefaultPortal = createPortalGroup()
 export const Provider = DefaultPortal.Provider
 export const Outlet = DefaultPortal.Outlet
 export const Portal = DefaultPortal.Portal
-
-// when in native sheets, we want the default Portal to move to inside the sheet for children of the sheet
-export const DefaultPortalContext = React.createContext(DefaultPortal.Portal)
-
-export function DefaultPortalOverride({children}: React.PropsWithChildren<{}>) {
-  const [OverridePortal] = useState(() => createPortalGroup())
-
-  return (
-    <DefaultPortalContext.Provider value={OverridePortal.Portal}>
-      <OverridePortal.Provider>
-        {children}
-        <OverridePortal.Outlet />
-      </OverridePortal.Provider>
-    </DefaultPortalContext.Provider>
-  )
-}
-
-export function useDefaultPortal() {
-  return useContext(DefaultPortalContext)
-}
