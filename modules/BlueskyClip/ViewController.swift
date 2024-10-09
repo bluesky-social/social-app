@@ -81,7 +81,7 @@ class ViewController: UIViewController, WKScriptMessageHandler, WKNavigationDele
   func isStarterPackUrl(_ url: URL) -> Bool {
     var host: String?
     if #available(iOS 16.0, *) {
-      host = url.host() ?? ""
+      host = url.host()
     } else {
       host = url.host
     }
