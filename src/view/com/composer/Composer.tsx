@@ -107,9 +107,9 @@ import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmile} from '#/components/icons/Emoji'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
-import {DefaultPortalOverride} from '#/components/Portal'
 import * as Prompt from '#/components/Prompt'
 import {Text as NewText} from '#/components/Typography'
+import {BottomSheetPortalProvider} from '../../../../modules/bottom-sheet/src/BottomSheetPortal'
 import {
   composerReducer,
   createComposerState,
@@ -520,7 +520,7 @@ export const ComposePost = ({
   const keyboardVerticalOffset = useKeyboardVerticalOffset()
 
   return (
-    <DefaultPortalOverride>
+    <BottomSheetPortalProvider>
       <KeyboardAvoidingView
         testID="composePostView"
         behavior={isIOS ? 'padding' : 'height'}
@@ -841,7 +841,7 @@ export const ComposePost = ({
           confirmButtonColor="negative"
         />
       </KeyboardAvoidingView>
-    </DefaultPortalOverride>
+    </BottomSheetPortalProvider>
   )
 }
 
