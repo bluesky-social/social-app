@@ -8,7 +8,7 @@ msgstr ""
 "Language: yue\n"
 "Project-Id-Version: Yue for bluesky-social-app\n"
 "Report-Msgid-Bugs-To: Frudrax Cheng <i@cynosura.one>\n"
-"PO-Revision-Date: 2024-10-04 00:28+0800\n"
+"PO-Revision-Date: 2024-10-09 11:37+0800\n"
 "Last-Translator: Frudrax Cheng <i@cynosura.one>\n"
 "Language-Team: Frudrax Cheng (auroursa), Quicpasta (quicpasta.bsky.social)\n"
 "Plural-Forms: \n"
@@ -5714,15 +5714,15 @@ msgstr "設定新密碼"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:121
 msgid "Set this setting to \"No\" to hide all quote posts from your feed. Reposts will still be visible."
-msgstr "將呢個設定為「禁用」就可以喺你嘅資訊提供入面隱藏所有引文帖文。轉發仍然會顯示。"
+msgstr "將呢個設定為「停用」就可以喺你嘅資訊提供入面隱藏所有引文帖文。轉發仍然會顯示。"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:63
 msgid "Set this setting to \"No\" to hide all replies from your feed."
-msgstr "將呢個設定為「禁用」就可以隱藏所有喺你嘅資訊提供入面嘅回覆。"
+msgstr "將呢個設定為「停用」就可以隱藏所有喺你嘅資訊提供入面嘅回覆。"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:87
 msgid "Set this setting to \"No\" to hide all reposts from your feed."
-msgstr "將呢個設定為「禁用」就可以隱藏你嘅資訊提供入面嘅所有轉發。"
+msgstr "將呢個設定為「停用」就可以隱藏你嘅資訊提供入面嘅所有轉發。"
 
 #: src/view/screens/PreferencesThreads.tsx:116
 msgid "Set this setting to \"Yes\" to show replies in a threaded view. This is an experimental feature."
