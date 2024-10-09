@@ -13,7 +13,7 @@ msgstr ""
 "Language-Team: Frudrax Cheng (auroursa), Simon Chan (RitsukiP), U2FsdGVkX1, Mikan Harada (mitian233), IceCodeNew\n"
 "Plural-Forms: \n"
 
-#: src/screens/Messages/components/ChatListItem.tsx:121
+#: src/screens/Messages/components/ChatListItem.tsx:130
 msgid "(contains embedded content)"
 msgstr "（包含嵌入内容）"
 
@@ -366,9 +366,9 @@ msgstr "将用户添加至列表"
 msgid "Add account"
 msgstr "添加账户"
 
-#: src/view/com/composer/GifAltText.tsx:67
-#: src/view/com/composer/GifAltText.tsx:134
-#: src/view/com/composer/GifAltText.tsx:199
+#: src/view/com/composer/GifAltText.tsx:82
+#: src/view/com/composer/GifAltText.tsx:151
+#: src/view/com/composer/GifAltText.tsx:214
 #: src/view/com/composer/photos/Gallery.tsx:176
 #: src/view/com/composer/photos/Gallery.tsx:223
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:92
@@ -490,13 +490,13 @@ msgstr "已经有验证码了？"
 msgid "Already signed in as @{0}"
 msgstr "已以@{0}身份登录"
 
-#: src/view/com/composer/GifAltText.tsx:91
+#: src/view/com/composer/GifAltText.tsx:106
 #: src/view/com/composer/photos/Gallery.tsx:194
-#: src/view/com/util/post-embeds/GifEmbed.tsx:177
+#: src/view/com/util/post-embeds/GifEmbed.tsx:174
 msgid "ALT"
 msgstr "ALT"
 
-#: src/view/com/composer/GifAltText.tsx:144
+#: src/view/com/composer/GifAltText.tsx:161
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:122
 #: src/view/com/composer/videos/SubtitleDialog.tsx:58
 #: src/view/com/composer/videos/SubtitleDialog.tsx:104
@@ -505,7 +505,7 @@ msgstr "ALT"
 msgid "Alt text"
 msgstr "替代文本"
 
-#: src/view/com/util/post-embeds/GifEmbed.tsx:182
+#: src/view/com/util/post-embeds/GifEmbed.tsx:179
 msgid "Alt Text"
 msgstr "替代文本"
 
@@ -513,7 +513,7 @@ msgstr "替代文本"
 msgid "Alt text describes images for blind and low-vision users, and helps give context to everyone."
 msgstr "为图片新增替代文本，以帮助盲人及视障群体了解图片内容。"
 
-#: src/view/com/composer/GifAltText.tsx:171
+#: src/view/com/composer/GifAltText.tsx:186
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:143
 msgid "Alt text will be truncated. Limit: {0} characters."
 msgstr "替代文本过长将被截断，限制长度：{0}个字符。"
@@ -610,7 +610,7 @@ msgstr "和"
 msgid "Animals"
 msgstr "动物"
 
-#: src/view/com/util/post-embeds/GifEmbed.tsx:139
+#: src/view/com/util/post-embeds/GifEmbed.tsx:136
 msgid "Animated GIF"
 msgstr "GIF 动画"
 
@@ -716,7 +716,7 @@ msgstr "你确定要从你的资讯源中删除 {0} 吗？"
 msgid "Are you sure you want to remove this from your feeds?"
 msgstr "你确定要从自定义资讯源列表中删除此资讯源吗？"
 
-#: src/view/com/composer/Composer.tsx:928
+#: src/view/com/composer/Composer.tsx:848
 msgid "Are you sure you'd like to discard this draft?"
 msgstr "你确定要丢弃这段草稿吗？"
 
@@ -804,7 +804,7 @@ msgstr "屏蔽列表"
 msgid "Block these accounts?"
 msgstr "屏蔽这些账户？"
 
-#: src/view/com/util/post-embeds/QuoteEmbed.tsx:83
+#: src/view/com/util/post-embeds/QuoteEmbed.tsx:84
 msgid "Blocked"
 msgstr "已屏蔽"
 
@@ -944,13 +944,13 @@ msgstr "相机"
 msgid "Can only contain letters, numbers, spaces, dashes, and underscores. Must be at least 4 characters long, but no more than 32 characters long."
 msgstr "只能包含字母、数字、空格、破折号及下划线。 长度必须至少 4 个字符，但不超过 32 个字符。"
 
-#: src/components/Menu/index.tsx:236
-#: src/components/Prompt.tsx:126
-#: src/components/Prompt.tsx:128
+#: src/components/Menu/index.tsx:239
+#: src/components/Prompt.tsx:133
+#: src/components/Prompt.tsx:135
 #: src/components/TagMenu/index.tsx:281
 #: src/screens/Deactivated.tsx:161
-#: src/view/com/composer/Composer.tsx:634
-#: src/view/com/composer/Composer.tsx:649
+#: src/view/com/composer/Composer.tsx:540
+#: src/view/com/composer/Composer.tsx:555
 #: src/view/com/modals/ChangeEmail.tsx:213
 #: src/view/com/modals/ChangeEmail.tsx:215
 #: src/view/com/modals/ChangeHandle.tsx:141
@@ -1011,7 +1011,7 @@ msgstr "取消搜索"
 msgid "Cancels opening the linked website"
 msgstr "取消打开链接的网站"
 
-#: src/state/shell/composer/index.tsx:72
+#: src/state/shell/composer/index.tsx:95
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:114
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:155
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:191
@@ -1141,7 +1141,7 @@ msgstr "清除所有数据"
 msgid "Clear all storage data (restart after this)"
 msgstr "清除所有数据（并重启）"
 
-#: src/components/forms/SearchInput.tsx:62
+#: src/components/forms/SearchInput.tsx:70
 msgid "Clear search query"
 msgstr "清除搜索历史记录"
 
@@ -1193,12 +1193,12 @@ msgstr "哒哒🐴哒哒🐴"
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:123
 #: src/view/com/modals/ChangePassword.tsx:268
 #: src/view/com/modals/ChangePassword.tsx:271
-#: src/view/com/util/post-embeds/GifEmbed.tsx:188
+#: src/view/com/util/post-embeds/GifEmbed.tsx:185
 msgid "Close"
 msgstr "关闭"
 
-#: src/components/Dialog/index.web.tsx:121
-#: src/components/Dialog/index.web.tsx:255
+#: src/components/Dialog/index.web.tsx:109
+#: src/components/Dialog/index.web.tsx:251
 msgid "Close active dialog"
 msgstr "关闭活动对话框"
 
@@ -1230,7 +1230,7 @@ msgstr "关闭图片查看器"
 msgid "Close navigation footer"
 msgstr "关闭导航页脚"
 
-#: src/components/Menu/index.tsx:230
+#: src/components/Menu/index.tsx:233
 #: src/components/TagMenu/index.tsx:275
 msgid "Close this dialog"
 msgstr "关闭该窗口"
@@ -1243,7 +1243,7 @@ msgstr "关闭底部导航栏"
 msgid "Closes password update alert"
 msgstr "关闭密码更新警告"
 
-#: src/view/com/composer/Composer.tsx:646
+#: src/view/com/composer/Composer.tsx:552
 msgid "Closes post composer and discards post draft"
 msgstr "关闭帖文编辑页并丢弃草稿"
 
@@ -1286,7 +1286,7 @@ msgstr "完成引导并开始使用你的账户"
 msgid "Complete the challenge"
 msgstr "完成验证"
 
-#: src/view/com/composer/Composer.tsx:754
+#: src/view/com/composer/Composer.tsx:664
 msgid "Compose posts up to {MAX_GRAPHEME_LENGTH} characters in length"
 msgstr "撰写帖文的长度最多为 {MAX_GRAPHEME_LENGTH} 个字符"
 
@@ -1302,8 +1302,8 @@ msgstr "为类别 {name} 配置内容过滤设置"
 msgid "Configured in <0>moderation settings</0>."
 msgstr "在 <0>内容审核设置</0> 中配置。"
 
-#: src/components/Prompt.tsx:169
-#: src/components/Prompt.tsx:172
+#: src/components/Prompt.tsx:176
+#: src/components/Prompt.tsx:179
 #: src/view/com/modals/SelfLabel.tsx:155
 #: src/view/com/modals/VerifyEmail.tsx:239
 #: src/view/com/modals/VerifyEmail.tsx:241
@@ -1404,7 +1404,7 @@ msgstr "加载更多帖文串..."
 msgid "Continue to next step"
 msgstr "继续下一步"
 
-#: src/screens/Messages/components/ChatListItem.tsx:155
+#: src/screens/Messages/components/ChatListItem.tsx:164
 msgid "Conversation deleted"
 msgstr "对话已删除"
 
@@ -1712,7 +1712,7 @@ msgstr "删除这个列表？"
 msgid "Delete this post?"
 msgstr "删除这条帖文？"
 
-#: src/view/com/util/post-embeds/QuoteEmbed.tsx:93
+#: src/view/com/util/post-embeds/QuoteEmbed.tsx:94
 msgid "Deleted"
 msgstr "已删除"
 
@@ -1731,7 +1731,7 @@ msgstr "删除聊天记录"
 msgid "Description"
 msgstr "描述"
 
-#: src/view/com/composer/GifAltText.tsx:140
+#: src/view/com/composer/GifAltText.tsx:157
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:118
 msgid "Descriptive alt text"
 msgstr "描述替代文本"
@@ -1749,7 +1749,7 @@ msgstr "分离引用帖文？"
 msgid "Dialog: adjust who can interact with this post"
 msgstr "对话框：调整谁可以参与这条帖文的互动"
 
-#: src/view/com/composer/Composer.tsx:411
+#: src/view/com/composer/Composer.tsx:368
 msgid "Did you want to say anything?"
 msgstr "有什么想说的吗？"
 
@@ -1782,11 +1782,11 @@ msgstr "禁用字幕"
 msgid "Disabled"
 msgstr "关闭"
 
-#: src/view/com/composer/Composer.tsx:930
+#: src/view/com/composer/Composer.tsx:850
 msgid "Discard"
 msgstr "丢弃"
 
-#: src/view/com/composer/Composer.tsx:927
+#: src/view/com/composer/Composer.tsx:847
 msgid "Discard draft?"
 msgstr "丢弃草稿？"
 
@@ -1812,7 +1812,7 @@ msgstr "探索新的资讯源"
 msgid "Dismiss"
 msgstr "关闭"
 
-#: src/view/com/composer/Composer.tsx:1191
+#: src/view/com/composer/Composer.tsx:1111
 msgid "Dismiss error"
 msgstr "关闭错误"
 
@@ -1960,8 +1960,8 @@ msgctxt "action"
 msgid "Edit"
 msgstr "编辑"
 
-#: src/view/com/util/UserAvatar.tsx:347
-#: src/view/com/util/UserBanner.tsx:95
+#: src/view/com/util/UserAvatar.tsx:350
+#: src/view/com/util/UserBanner.tsx:98
 msgid "Edit avatar"
 msgstr "编辑头像"
 
@@ -2377,7 +2377,7 @@ msgstr "无法加载建议关注"
 msgid "Failed to pin post"
 msgstr "无法固定这条贴文"
 
-#: src/view/com/lightbox/Lightbox.tsx:90
+#: src/view/com/lightbox/Lightbox.tsx:97
 msgid "Failed to save image: {0}"
 msgstr "无法保存这张图片：{0}"
 
@@ -2768,7 +2768,7 @@ msgstr "返回主页"
 msgid "Go Home"
 msgstr "返回主页"
 
-#: src/screens/Messages/components/ChatListItem.tsx:225
+#: src/screens/Messages/components/ChatListItem.tsx:264
 msgid "Go to conversation with {0}"
 msgstr "转到与 {0} 的对话"
 
@@ -3120,7 +3120,7 @@ msgstr "输入正确"
 msgid "It's just you right now! Add more people to your starter pack by searching above."
 msgstr "现在就只有你了！通过上面的搜索将更多人添加到你的入门包中。"
 
-#: src/view/com/composer/Composer.tsx:1210
+#: src/view/com/composer/Composer.tsx:1130
 msgid "Job ID: {0}"
 msgstr "工作编号：{0}"
 
@@ -3475,7 +3475,7 @@ msgstr "提到的用户"
 msgid "Mentioned users"
 msgstr "提到的用户"
 
-#: src/components/Menu/index.tsx:94
+#: src/components/Menu/index.tsx:98
 #: src/view/com/util/ViewHeader.tsx:87
 #: src/view/screens/Search/Search.tsx:866
 msgid "Menu"
@@ -3486,7 +3486,7 @@ msgid "Message {0}"
 msgstr "私信 {0}"
 
 #: src/components/dms/MessageMenu.tsx:72
-#: src/screens/Messages/components/ChatListItem.tsx:156
+#: src/screens/Messages/components/ChatListItem.tsx:165
 msgid "Message deleted"
 msgstr "私信已删除"
 
@@ -3758,7 +3758,7 @@ msgstr "自然"
 msgid "Navigate to {0}"
 msgstr "转到 {0}"
 
-#: src/view/com/util/post-embeds/ExternalLinkEmbed.tsx:76
+#: src/view/com/util/post-embeds/ExternalLinkEmbed.tsx:86
 msgid "Navigate to starter pack"
 msgstr "转到入门包"
 
@@ -3916,7 +3916,7 @@ msgstr "不再关注 {0}"
 msgid "No longer than 253 characters"
 msgstr "不超过 253 个字符"
 
-#: src/screens/Messages/components/ChatListItem.tsx:107
+#: src/screens/Messages/components/ChatListItem.tsx:116
 msgid "No messages yet"
 msgstr "目前还没有任何私信"
 
@@ -4113,7 +4113,7 @@ msgstr "于<0><1/><2><3/></2></0>"
 msgid "Onboarding reset"
 msgstr "重新开始引导流程"
 
-#: src/view/com/composer/Composer.tsx:711
+#: src/view/com/composer/Composer.tsx:619
 msgid "One or more images is missing alt text."
 msgstr "至少有一张图片缺失了替代文本。"
 
@@ -4158,14 +4158,14 @@ msgstr "开启 {name} 个人资料快捷菜单"
 msgid "Open avatar creator"
 msgstr "开启头像创建工具"
 
-#: src/screens/Messages/components/ChatListItem.tsx:233
-#: src/screens/Messages/components/ChatListItem.tsx:234
+#: src/screens/Messages/components/ChatListItem.tsx:272
+#: src/screens/Messages/components/ChatListItem.tsx:273
 msgid "Open conversation options"
 msgstr "开启对话选项"
 
 #: src/screens/Messages/components/MessageInput.web.tsx:165
-#: src/view/com/composer/Composer.tsx:908
-#: src/view/com/composer/Composer.tsx:909
+#: src/view/com/composer/Composer.tsx:828
+#: src/view/com/composer/Composer.tsx:829
 msgid "Open emoji picker"
 msgstr "开启表情符号选择器"
 
@@ -4415,7 +4415,7 @@ msgstr "密码已更新"
 msgid "Password updated!"
 msgstr "密码已更新！"
 
-#: src/view/com/util/post-embeds/GifEmbed.tsx:46
+#: src/view/com/util/post-embeds/GifEmbed.tsx:44
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:141
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:371
 msgid "Pause"
@@ -4438,11 +4438,11 @@ msgstr "@{0} 关注的用户"
 msgid "People following @{0}"
 msgstr "关注 @{0} 的用户"
 
-#: src/view/com/lightbox/Lightbox.tsx:70
+#: src/view/com/lightbox/Lightbox.tsx:77
 msgid "Permission to access camera roll is required."
 msgstr "需要照片图库的访问权限。"
 
-#: src/view/com/lightbox/Lightbox.tsx:78
+#: src/view/com/lightbox/Lightbox.tsx:85
 msgid "Permission to access camera roll was denied. Please enable it in your system settings."
 msgstr "照片图库的访问权限已被拒绝，请在系统设置中启用。"
 
@@ -4489,7 +4489,7 @@ msgstr "固定资讯源列表"
 msgid "Pinned to your feeds"
 msgstr "已固定到你的资讯源中"
 
-#: src/view/com/util/post-embeds/GifEmbed.tsx:46
+#: src/view/com/util/post-embeds/GifEmbed.tsx:44
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:141
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:372
 msgid "Play"
@@ -4499,7 +4499,7 @@ msgstr "播放"
 msgid "Play {0}"
 msgstr "播放 {0}"
 
-#: src/view/com/util/post-embeds/GifEmbed.tsx:45
+#: src/view/com/util/post-embeds/GifEmbed.tsx:43
 msgid "Play or pause the GIF"
 msgstr "播放或暂停 GIF"
 
@@ -4577,8 +4577,8 @@ msgid "Please Verify Your Email"
 msgstr "请验证你的电子邮箱"
 
 #: src/view/com/composer/Composer.tsx:415
-msgid "Please wait for your link card to finish loading"
-msgstr "请等待你的链接卡片加载完毕"
+#~ msgid "Please wait for your link card to finish loading"
+#~ msgstr "请等待你的链接卡片加载完毕"
 
 #: src/screens/Onboarding/index.tsx:34
 #: src/screens/Onboarding/state.ts:98
@@ -4589,8 +4589,8 @@ msgstr "政治"
 msgid "Porn"
 msgstr "色情内容"
 
-#: src/view/com/composer/Composer.tsx:686
-#: src/view/com/composer/Composer.tsx:693
+#: src/view/com/composer/Composer.tsx:594
+#: src/view/com/composer/Composer.tsx:601
 msgctxt "action"
 msgid "Post"
 msgstr "发布"
@@ -4763,11 +4763,11 @@ msgstr "公开且可共享的批量隐藏或屏蔽列表。"
 msgid "Public, shareable lists which can drive feeds."
 msgstr "公开且可共享的列表，可作为资讯源使用。"
 
-#: src/view/com/composer/Composer.tsx:671
+#: src/view/com/composer/Composer.tsx:579
 msgid "Publish post"
 msgstr "发布帖文"
 
-#: src/view/com/composer/Composer.tsx:671
+#: src/view/com/composer/Composer.tsx:579
 msgid "Publish reply"
 msgstr "发布回复"
 
@@ -4954,7 +4954,7 @@ msgstr "删除个人资料"
 msgid "Remove profile from search history"
 msgstr "从搜索历史中删除个人资料"
 
-#: src/view/com/util/post-embeds/QuoteEmbed.tsx:280
+#: src/view/com/util/post-embeds/QuoteEmbed.tsx:281
 msgid "Remove quote"
 msgstr "删除引用"
 
@@ -4971,11 +4971,11 @@ msgstr "删除字幕文件"
 msgid "Remove this feed from your saved feeds"
 msgstr "从保存的资讯源列表中删除这个资讯源"
 
-#: src/view/com/util/post-embeds/QuoteEmbed.tsx:109
+#: src/view/com/util/post-embeds/QuoteEmbed.tsx:110
 msgid "Removed by author"
 msgstr "已被作者删除"
 
-#: src/view/com/util/post-embeds/QuoteEmbed.tsx:107
+#: src/view/com/util/post-embeds/QuoteEmbed.tsx:108
 msgid "Removed by you"
 msgstr "已被你删除"
 
@@ -4999,7 +4999,7 @@ msgstr "已从保存的资讯源中删除"
 msgid "Removed from your feeds"
 msgstr "从你的自定义资讯源中删除"
 
-#: src/view/com/util/post-embeds/QuoteEmbed.tsx:281
+#: src/view/com/util/post-embeds/QuoteEmbed.tsx:282
 msgid "Removes quoted post"
 msgstr "删除引用的帖文"
 
@@ -5024,7 +5024,7 @@ msgstr "回复已被禁用"
 msgid "Replies to this post are disabled."
 msgstr "这条帖文的回复已被关闭。"
 
-#: src/view/com/composer/Composer.tsx:684
+#: src/view/com/composer/Composer.tsx:592
 msgctxt "action"
 msgid "Reply"
 msgstr "回复"
@@ -5311,8 +5311,8 @@ msgstr "回到上一页"
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:440
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:446
 #: src/components/StarterPack/QrCodeDialog.tsx:185
-#: src/view/com/composer/GifAltText.tsx:182
-#: src/view/com/composer/GifAltText.tsx:191
+#: src/view/com/composer/GifAltText.tsx:197
+#: src/view/com/composer/GifAltText.tsx:206
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:77
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:83
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:154
@@ -5323,7 +5323,7 @@ msgstr "回到上一页"
 msgid "Save"
 msgstr "保存"
 
-#: src/view/com/lightbox/Lightbox.tsx:139
+#: src/view/com/lightbox/Lightbox.tsx:167
 #: src/view/com/modals/CreateOrEditList.tsx:325
 msgctxt "action"
 msgid "Save"
@@ -5363,7 +5363,7 @@ msgstr "保存到自定义资讯源"
 msgid "Saved Feeds"
 msgstr "已保存资讯源"
 
-#: src/view/com/lightbox/Lightbox.tsx:88
+#: src/view/com/lightbox/Lightbox.tsx:95
 msgid "Saved to your camera roll"
 msgstr "保存到你的照片图库"
 
@@ -5401,8 +5401,8 @@ msgid "Scroll to top"
 msgstr "滚动到顶部"
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:483
-#: src/components/forms/SearchInput.tsx:33
-#: src/components/forms/SearchInput.tsx:35
+#: src/components/forms/SearchInput.tsx:34
+#: src/components/forms/SearchInput.tsx:36
 #: src/Navigation.tsx:554
 #: src/view/com/modals/ListAddRemoveUsers.tsx:76
 #: src/view/screens/Search/Search.tsx:576
@@ -5706,7 +5706,7 @@ msgstr "性暗示"
 msgid "Share"
 msgstr "分享"
 
-#: src/view/com/lightbox/Lightbox.tsx:148
+#: src/view/com/lightbox/Lightbox.tsx:176
 msgctxt "action"
 msgid "Share"
 msgstr "分享"
@@ -5781,7 +5781,7 @@ msgstr "显示"
 msgid "Show advanced filters"
 msgstr "显示高级搜索"
 
-#: src/view/com/util/post-embeds/GifEmbed.tsx:169
+#: src/view/com/util/post-embeds/GifEmbed.tsx:166
 msgid "Show alt text"
 msgstr "显示替代文本"
 
@@ -6002,8 +6002,8 @@ msgstr "出了点问题，请重试。"
 msgid "Something went wrong!"
 msgstr "出了点问题！"
 
-#: src/App.native.tsx:112
-#: src/App.web.tsx:99
+#: src/App.native.tsx:113
+#: src/App.web.tsx:100
 msgid "Sorry! Your session expired. Please log in again."
 msgstr "很抱歉，你的登录会话已过期，请重新登录。"
 
@@ -6486,7 +6486,7 @@ msgstr "由于其中一个用户屏蔽了另一个用户，此内容不可用。
 msgid "This content is not viewable without a Bluesky account."
 msgstr "没有 Bluesky 账户，无法查看此内容。"
 
-#: src/screens/Messages/components/ChatListItem.tsx:227
+#: src/screens/Messages/components/ChatListItem.tsx:266
 msgid "This conversation is with a deleted or a deactivated account. Press for options."
 msgstr "此对话的参与者已停用或删除账户，点击以获取更多详情。"
 
@@ -6569,7 +6569,7 @@ msgstr "这条帖文只对已登录用户可见，未登录的用户将无法看
 msgid "This post will be hidden from feeds and threads. This cannot be undone."
 msgstr "这条帖文将从资讯源和讨论串中隐藏。注意此操作无法撤消。"
 
-#: src/view/com/composer/useExternalLinkFetch.ts:67
+#: src/view/com/composer/Composer.tsx:407
 msgid "This post's author has disabled quote posts."
 msgstr "这条帖文的作者已关闭引用帖文。"
 
@@ -7290,7 +7290,7 @@ msgstr "很抱歉，我们无法加载你的隐藏词汇列表。请重试。"
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr "很抱歉，无法完成你的搜索。请稍后再试。"
 
-#: src/view/com/composer/Composer.tsx:464
+#: src/view/com/composer/Composer.tsx:404
 msgid "We're sorry! The post you are replying to has been deleted."
 msgstr "很抱歉！你所回复的帖文已被删除。"
 
@@ -7321,7 +7321,7 @@ msgstr "你想如何命名你的入门包？"
 
 #: src/view/com/auth/SplashScreen.tsx:39
 #: src/view/com/auth/SplashScreen.web.tsx:82
-#: src/view/com/composer/Composer.tsx:550
+#: src/view/com/composer/Composer.tsx:490
 msgid "What's up?"
 msgstr "发生了什么新鲜事？"
 
@@ -7379,11 +7379,11 @@ msgstr "为什么应该审核这个用户？"
 msgid "Write a message"
 msgstr "编写私信"
 
-#: src/view/com/composer/Composer.tsx:752
+#: src/view/com/composer/Composer.tsx:662
 msgid "Write post"
 msgstr "撰写帖文"
 
-#: src/view/com/composer/Composer.tsx:549
+#: src/view/com/composer/Composer.tsx:489
 #: src/view/com/post-thread/PostThreadComposePrompt.tsx:75
 msgid "Write your reply"
 msgstr "撰写你的回复"
@@ -7630,15 +7630,15 @@ msgstr "你将收到这条讨论串的通知"
 msgid "You will receive an email with a \"reset code.\" Enter that code here, then enter your new password."
 msgstr "你将收到一封带有确认码的电子邮件。请在此输入该确认码，然后输入你的新密码。"
 
-#: src/screens/Messages/components/ChatListItem.tsx:115
+#: src/screens/Messages/components/ChatListItem.tsx:124
 msgid "You: {0}"
 msgstr "你：{0}"
 
-#: src/screens/Messages/components/ChatListItem.tsx:144
+#: src/screens/Messages/components/ChatListItem.tsx:153
 msgid "You: {defaultEmbeddedContentMessage}"
 msgstr "你：{defaultEmbeddedContentMessage}"
 
-#: src/screens/Messages/components/ChatListItem.tsx:137
+#: src/screens/Messages/components/ChatListItem.tsx:146
 msgid "You: {short}"
 msgstr "你：{short}"
 
@@ -7765,7 +7765,7 @@ msgstr "你的隐藏词汇"
 msgid "Your password has been changed successfully!"
 msgstr "你的密码已成功更改！"
 
-#: src/view/com/composer/Composer.tsx:506
+#: src/view/com/composer/Composer.tsx:448
 msgid "Your post has been published"
 msgstr "你的帖文已发布"
 
@@ -7781,7 +7781,7 @@ msgstr "你的个人资料"
 msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
 msgstr "其他 Bluesky 用户将无法再看到你的个人资料、帖文、列表与其他相关信息，你可以随时登录以重新激活你的账户。"
 
-#: src/view/com/composer/Composer.tsx:505
+#: src/view/com/composer/Composer.tsx:447
 msgid "Your reply has been published"
 msgstr "你的回复已发布"
 

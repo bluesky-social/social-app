@@ -17,10 +17,6 @@ appId: xyz.blueskyweb.app
     id: "viewHeaderDrawerBtn"
 - tapOn:
     id: "profileCardButton"
-- swipe:
-    from:
-        id: "profilePager-selector"
-    direction: LEFT
 - tapOn:
     id: "profilePager-selector-4"
 - tapOn: "alice-favs"
