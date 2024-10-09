@@ -356,7 +356,7 @@ function LandingScreenLoaded({
   )
 }
 
-function AppClipOverlay({
+export function AppClipOverlay({
   visible,
   setIsVisible,
 }: {
