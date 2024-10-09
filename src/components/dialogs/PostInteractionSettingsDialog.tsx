@@ -37,7 +37,6 @@ import * as Toggle from '#/components/forms/Toggle'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {Loader} from '#/components/Loader'
-import {PortalComponent} from '#/components/Portal'
 import {Text} from '#/components/Typography'
 
 export type PostInteractionSettingsFormProps = {
@@ -55,15 +54,13 @@ export type PostInteractionSettingsFormProps = {
 
 export function PostInteractionSettingsControlledDialog({
   control,
-  Portal,
   ...rest
 }: PostInteractionSettingsFormProps & {
   control: Dialog.DialogControlProps
-  Portal?: PortalComponent
 }) {
   const {_} = useLingui()
   return (
-    <Dialog.Outer control={control} Portal={Portal}>
+    <Dialog.Outer control={control}>
       <Dialog.Handle />
       <Dialog.ScrollableInner
         label={_(msg`Edit post interaction settings`)}
@@ -207,7 +204,9 @@ export function PostInteractionSettingsDialogControlledInner(
       label={_(msg`Edit post interaction settings`)}
       style={[{maxWidth: 500}, a.w_full]}>
       {isLoading ? (
-        <Loader size="xl" />
+        <View style={[a.flex_1, a.py_4xl, a.align_center, a.justify_center]}>
+          <Loader size="xl" />
+        </View>
       ) : (
         <PostInteractionSettingsForm
           replySettingsDisabled={!isThreadgateOwnedByViewer}

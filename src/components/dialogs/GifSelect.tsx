@@ -30,18 +30,15 @@ import {useThrottledValue} from '#/components/hooks/useThrottledValue'
 import {ArrowLeft_Stroke2_Corner0_Rounded as Arrow} from '#/components/icons/Arrow'
 import {MagnifyingGlass2_Stroke2_Corner0_Rounded as Search} from '#/components/icons/MagnifyingGlass2'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
-import {PortalComponent} from '#/components/Portal'
 
 export function GifSelectDialog({
   controlRef,
   onClose,
   onSelectGif: onSelectGifProp,
-  Portal,
 }: {
   controlRef: React.RefObject<{open: () => void}>
   onClose: () => void
   onSelectGif: (gif: Gif) => void
-  Portal?: PortalComponent
 }) {
   const control = Dialog.useDialogControl()
 
@@ -65,7 +62,6 @@ export function GifSelectDialog({
     <Dialog.Outer
       control={control}
       onClose={onClose}
-      Portal={Portal}
       nativeOptions={{
         bottomInset: 0,
         // use system corner radius on iOS
