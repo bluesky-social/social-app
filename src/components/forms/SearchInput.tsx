@@ -1,9 +1,10 @@
-import React from 'react'
+import React, {useRef, useState} from 'react'
 import {TextInput, View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {HITSLOP_10} from '#/lib/constants'
+import {mergeRefs} from '#/lib/merge-refs'
 import {isNative} from '#/platform/detection'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
@@ -13,26 +14,35 @@ import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 
 type SearchInputProps = Omit<TextField.InputProps, 'label'> & {
   label?: TextField.InputProps['label']
-  /**
-   * Called when the user presses the (X) button
-   */
   onClearText?: () => void
 }
 
 export const SearchInput = React.forwardRef<TextInput, SearchInputProps>(
-  function SearchInput({value, label, onClearText, ...rest}, ref) {
+  function SearchInput({label, onChangeText: onChangeTextProp, ...rest}, ref) {
     const t = useTheme()
     const {_} = useLingui()
-    const showClear = value && value.length > 0
+    const [showClear, setShowClear] = useState(false)
+    const inputRef = useRef<TextInput>()
+
+    const handleChangeText = (text: string) => {
+      setShowClear(text.length > 0)
+      onChangeTextProp?.(text)
+    }
+
+    const handleClear = () => {
+      inputRef.current?.clear()
+      setShowClear(false)
+      onChangeTextProp?.('')
+    }
 
     return (
       <View style={[a.w_full, a.relative]}>
         <TextField.Root>
           <TextField.Icon icon={MagnifyingGlassIcon} />
           <TextField.Input
-            inputRef={ref}
+            inputRef={mergeRefs([ref, inputRef])}
+            onChangeText={handleChangeText}
             label={label || _(msg`Search`)}
-            value={value}
             placeholder={_(msg`Search`)}
             returnKeyType="search"
             keyboardAppearance={t.scheme}
@@ -42,13 +52,7 @@ export const SearchInput = React.forwardRef<TextInput, SearchInputProps>(
             autoCorrect={false}
             autoComplete="off"
             autoCapitalize="none"
-            style={[
-              showClear
-                ? {
-                    paddingRight: 24,
-                  }
-                : {},
-            ]}
+            style={[showClear && {paddingRight: 24}]}
             {...rest}
           />
         </TextField.Root>
@@ -66,7 +70,7 @@ export const SearchInput = React.forwardRef<TextInput, SearchInputProps>(
             ]}>
             <Button
               testID="searchTextInputClearBtn"
-              onPress={onClearText}
+              onPress={handleClear}
               label={_(msg`Clear search query`)}
               hitSlop={HITSLOP_10}
               size="tiny"
