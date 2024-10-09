@@ -5888,6 +5888,10 @@ msgstr "Athphostáilte ag"
 msgid "Reposted by {0}"
 msgstr "Athphostáilte ag {0}"
 
+#: src/view/com/posts/FeedItem.tsx:214
+#~ msgid "Reposted by <0/>"
+#~ msgstr "Athphostáilte ag <0/>"
+
 #: src/view/com/posts/FeedItem.tsx:313
 msgid "Reposted by{NON_BREAKING_SPACE}<0><1/></0>"
 msgstr "Athphostáilte ag{NON_BREAKING_SPACE}<0><1/></0>"
