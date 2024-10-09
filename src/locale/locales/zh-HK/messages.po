@@ -8,7 +8,7 @@ msgstr ""
 "Language: yue\n"
 "Project-Id-Version: Yue for bluesky-social-app\n"
 "Report-Msgid-Bugs-To: Frudrax Cheng <i@cynosura.one>\n"
-"PO-Revision-Date: 2024-10-09 11:40+0800\n"
+"PO-Revision-Date: 2024-10-09 13:04+0800\n"
 "Last-Translator: Frudrax Cheng <i@cynosura.one>\n"
 "Language-Team: Frudrax Cheng (auroursa), Quicpasta (quicpasta.bsky.social)\n"
 "Plural-Forms: \n"
@@ -266,10 +266,6 @@ msgstr "30 日"
 msgid "7 days"
 msgstr "7 日"
 
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:266
-#~ msgid "A virtual certificate with text \"Celebrating 10M users on Bluesky, #{0}, {displayName} {handle}, joined on {joinedDate}\""
-#~ msgstr "一張虛擬證書，上面寫住「慶祝 Bluesky 達到 1000 萬用戶，#{0}，{displayName} {handle}，於 {joinedDate} 加入」"
-
 #: src/view/com/util/ViewHeader.tsx:89
 #: src/view/screens/Search/Search.tsx:867
 msgid "Access navigation links and settings"
@@ -520,7 +516,7 @@ msgstr "ALT 文字會為盲人同低視力用戶描述圖片，同埋有助為�
 #: src/view/com/composer/GifAltText.tsx:186
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:143
 msgid "Alt text will be truncated. Limit: {0} characters."
-msgstr ""
+msgstr "ALT 文字會被截斷，限制：{0} 個字元。"
 
 #: src/view/com/modals/VerifyEmail.tsx:132
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:95
@@ -554,10 +550,6 @@ msgstr "載入影片嗰陣發生錯誤。請稍後再試。"
 #: src/view/com/util/post-embeds/VideoEmbed.web.tsx:174
 msgid "An error occurred while loading the video. Please try again."
 msgstr "載入影片嗰陣發生錯誤。請再試一次。"
-
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:315
-#~ msgid "An error occurred while saving the image!"
-#~ msgstr "儲存圖片嗰陣發生錯誤！"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:71
 #: src/components/StarterPack/ShareDialog.tsx:80
@@ -629,7 +621,7 @@ msgstr "反社會行為"
 #: src/view/screens/Search/Search.tsx:347
 #: src/view/screens/Search/Search.tsx:348
 msgid "Any language"
-msgstr ""
+msgstr "任何語言"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:55
 msgid "Anybody can interact"
@@ -866,15 +858,6 @@ msgstr "Bluesky 係一個開放嘅網絡，你可以喺嗰度揀你嘅 hosting �
 msgid "Bluesky is better with friends!"
 msgstr "Bluesky 同朋友一齊好啲！"
 
-#: src/components/dialogs/nuxs/TenMillion/Trigger.tsx:43
-#: src/components/dialogs/nuxs/TenMillion/Trigger.tsx:59
-#~ msgid "Bluesky is celebrating 10 million users!"
-#~ msgstr "Bluesky 慶祝緊有 1000 萬用戶！"
-
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:256
-#~ msgid "Bluesky now has over 10 million users, and I was #{0}!"
-#~ msgstr "Bluesky 而家已經有超過 1000 萬用戶，而我係 #{0}！"
-
 #: src/components/StarterPack/ProfileStarterPacks.tsx:283
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
 msgstr "Bluesky 會喺你網絡入面嘅人入面揀一組推薦嘅帳戶。"
@@ -895,10 +878,6 @@ msgstr "模糊圖片同埋喺資訊提供入面篩選"
 #: src/screens/Onboarding/state.ts:83
 msgid "Books"
 msgstr "書"
-
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:670
-#~ msgid "Brag a little!"
-#~ msgstr "吹噓少少！"
 
 #: src/components/FeedInterstitials.tsx:350
 msgid "Browse more accounts on the Explore page"
@@ -941,21 +920,17 @@ msgstr "由 {0}"
 msgid "by <0/>"
 msgstr "由 <0/>"
 
-#: src/screens/Signup/StepInfo/Policies.tsx:80
-#~ msgid "By creating an account you agree to the {els}."
-#~ msgstr "建立帳戶就代表你同意 {els}。"
-
 #: src/screens/Signup/StepInfo/Policies.tsx:81
 msgid "By creating an account you agree to the <0>Privacy Policy</0>."
-msgstr ""
+msgstr "建立帳戶，即係你同意<0>私隱政策</0>。"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:48
 msgid "By creating an account you agree to the <0>Terms of Service</0> and <1>Privacy Policy</1>."
-msgstr ""
+msgstr "建立帳戶，即係你同意<0>服務條款</0>同<1>私隱政策</1>。"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:68
 msgid "By creating an account you agree to the <0>Terms of Service</0>."
-msgstr ""
+msgstr "建立帳戶，即係你同意<0>服務條款</0>。"
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:162
 msgid "by you"
@@ -1050,10 +1025,6 @@ msgstr "字幕（.vtt）"
 #: src/view/com/composer/videos/SubtitleDialog.tsx:58
 msgid "Captions & alt text"
 msgstr "字幕同 ALT 文字"
-
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:434
-#~ msgid "Celebrating {0} users"
-#~ msgstr "慶祝緊有 {0} 用戶"
 
 #: src/view/com/modals/VerifyEmail.tsx:160
 msgid "Change"
@@ -1254,10 +1225,6 @@ msgstr "閂咗圖片"
 #: src/view/com/lightbox/Lightbox.web.tsx:129
 msgid "Close image viewer"
 msgstr "閂咗圖片檢視器"
-
-#: src/components/dms/MessagesNUX.tsx:162
-#~ msgid "Close modal"
-#~ msgstr "閂咗模式"
 
 #: src/view/shell/index.web.tsx:61
 msgid "Close navigation footer"
@@ -1545,11 +1512,6 @@ msgstr "處理唔到你嘅影片"
 msgid "Create"
 msgstr "建立"
 
-#: src/view/com/auth/SplashScreen.tsx:56
-#: src/view/com/auth/SplashScreen.web.tsx:102
-#~ msgid "Create a new account"
-#~ msgstr "建立一個新帳戶"
-
 #: src/view/screens/Settings/index.tsx:401
 msgid "Create a new Bluesky account"
 msgstr "建立一個 Bluesky 新帳戶"
@@ -1571,7 +1533,7 @@ msgstr "為我建立一個新手包"
 #: src/view/com/auth/SplashScreen.tsx:56
 #: src/view/com/auth/SplashScreen.web.tsx:100
 msgid "Create account"
-msgstr ""
+msgstr "建立帳戶"
 
 #: src/screens/Signup/index.tsx:93
 msgid "Create Account"
@@ -1795,10 +1757,6 @@ msgstr "你想唔想講啲咩？"
 msgid "Dim"
 msgstr "暗淡"
 
-#: src/components/dms/MessagesNUX.tsx:88
-#~ msgid "Direct messages are here!"
-#~ msgstr "傾偈喺呢度！"
-
 #: src/view/screens/AccessibilitySettings.tsx:108
 msgid "Disable autoplay for videos and GIFs"
 msgstr "停用影片同 GIF 嘅自動播放功能"
@@ -1852,7 +1810,7 @@ msgstr "發掘新嘅資訊提供"
 
 #: src/components/Dialog/index.tsx:267
 msgid "Dismiss"
-msgstr ""
+msgstr "跳過"
 
 #: src/view/com/composer/Composer.tsx:1111
 msgid "Dismiss error"
@@ -1930,7 +1888,7 @@ msgstr "搞掂 {extraText}"
 
 #: src/components/Dialog/index.tsx:268
 msgid "Double tap to close the dialog"
-msgstr ""
+msgstr "撳兩下就可以閂呢個對話框"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:317
 msgid "Download Bluesky"
@@ -1940,10 +1898,6 @@ msgstr "下載 Bluesky"
 #: src/view/screens/Settings/ExportCarDialog.tsx:80
 msgid "Download CAR file"
 msgstr "下載 CAR 檔案"
-
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:679
-#~ msgid "Download image"
-#~ msgstr "下載圖片"
 
 #: src/view/com/composer/text-input/TextInput.web.tsx:291
 msgid "Drop to add images"
@@ -2421,7 +2375,7 @@ msgstr "載入唔到建議追蹤"
 
 #: src/state/queries/pinned-post.ts:75
 msgid "Failed to pin post"
-msgstr ""
+msgstr "固定唔到帖文"
 
 #: src/view/com/lightbox/Lightbox.tsx:97
 msgid "Failed to save image: {0}"
@@ -2749,10 +2703,6 @@ msgstr "生成一個新手包"
 #: src/view/shell/Drawer.tsx:342
 msgid "Get help"
 msgstr "搵人幫手"
-
-#: src/components/dms/MessagesNUX.tsx:168
-#~ msgid "Get started"
-#~ msgstr "開始啦"
 
 #: src/view/com/modals/VerifyEmail.tsx:197
 #: src/view/com/modals/VerifyEmail.tsx:199
@@ -3104,10 +3054,6 @@ msgstr "輸入你嘅帳戶頭銜"
 msgid "Interaction limited"
 msgstr "互動受到限制"
 
-#: src/components/dms/MessagesNUX.tsx:82
-#~ msgid "Introducing Direct Messages"
-#~ msgstr "介紹傾偈"
-
 #: src/components/dialogs/nuxs/NeueTypography.tsx:47
 msgid "Introducing new font settings"
 msgstr "介紹緊新嘅字體設定"
@@ -3192,10 +3138,6 @@ msgstr "加入 Bluesky"
 #: src/components/StarterPack/QrCode.tsx:61
 msgid "Join the conversation"
 msgstr "加入對話"
-
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:559
-#~ msgid "Joined on {joinedDate}"
-#~ msgstr "喺 {joinedDate} 加入"
 
 #: src/screens/Onboarding/index.tsx:21
 #: src/screens/Onboarding/state.ts:91
@@ -3368,7 +3310,7 @@ msgstr "讚你個帖文"
 
 #: src/view/screens/Profile.tsx:222
 msgid "Likes"
-msgstr "讚"
+msgstr "讚好"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:204
 msgid "Likes on this post"
@@ -3497,7 +3439,7 @@ msgstr "你好似冇儲存任何資訊提供！用我哋嘅建議或者喺下面
 
 #: src/screens/Home/NoFeedsPinned.tsx:83
 msgid "Looks like you unpinned all your feeds. But don't worry, you can add some below 😄"
-msgstr "你好似解除咗所有資訊提供嘅固定。但唔使擔心，你可以喺下面加啲 😄"
+msgstr "你好似取消咗所有資訊提供嘅固定。但唔使擔心，你可以喺下面加啲 😄"
 
 #: src/screens/Feeds/NoFollowingFeed.tsx:37
 msgid "Looks like you're missing a following feed. <0>Click here to add one.</0>"
@@ -4151,10 +4093,6 @@ msgstr "哎吔！"
 msgid "Oh no! Something went wrong."
 msgstr "哎吔！有啲嘢出錯咗。"
 
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:224
-#~ msgid "Oh no! We weren't able to generate an image for you to share. Rest assured, we're glad you're here 🦋"
-#~ msgstr "哎吔！我哋產生唔到畀你分享嘅圖片。不過，我哋仍然好高興你願意持續使用 Bluesky 🦋"
-
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:334
 msgid "OK"
 msgstr "好嘅"
@@ -4537,11 +4475,11 @@ msgstr "固定到首頁"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:398
 #: src/view/com/util/forms/PostDropdownBtn.tsx:405
 msgid "Pin to your profile"
-msgstr ""
+msgstr "固定到你嘅個人檔案"
 
 #: src/view/com/posts/FeedItem.tsx:354
 msgid "Pinned"
-msgstr ""
+msgstr "固定咗"
 
 #: src/view/screens/SavedFeeds.tsx:99
 msgid "Pinned Feeds"
@@ -4638,10 +4576,6 @@ msgstr "請以 @{0} 身份登入"
 msgid "Please Verify Your Email"
 msgstr "請驗證你嘅電郵"
 
-#: src/view/com/composer/Composer.tsx:368
-#~ msgid "Please wait for your link card to finish loading"
-#~ msgstr "請等你嘅連結卡載入完"
-
 #: src/screens/Onboarding/index.tsx:34
 #: src/screens/Onboarding/state.ts:98
 msgid "Politics"
@@ -4710,11 +4644,11 @@ msgstr "搵唔到帖文"
 
 #: src/state/queries/pinned-post.ts:59
 msgid "Post pinned"
-msgstr ""
+msgstr "帖文固定咗"
 
 #: src/state/queries/pinned-post.ts:61
 msgid "Post unpinned"
-msgstr ""
+msgstr "帖文已經取消固定"
 
 #: src/components/TagMenu/index.tsx:266
 msgid "posts"
@@ -4787,10 +4721,6 @@ msgstr "私隱"
 #: src/view/shell/Drawer.tsx:290
 msgid "Privacy Policy"
 msgstr "私隱政策"
-
-#: src/components/dms/MessagesNUX.tsx:91
-#~ msgid "Privately chat with other users."
-#~ msgstr "同其他用戶私下傾偈。"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:149
 msgid "Processing..."
@@ -5796,14 +5726,6 @@ msgstr "點都要分享"
 msgid "Share feed"
 msgstr "分享資訊提供"
 
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:678
-#~ msgid "Share image externally"
-#~ msgstr "喺外部分享圖片"
-
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:696
-#~ msgid "Share image in post"
-#~ msgstr "喺帖文入面分享圖片"
-
 #: src/components/StarterPack/ShareDialog.tsx:124
 #: src/components/StarterPack/ShareDialog.tsx:131
 #: src/screens/StarterPack/StarterPackScreen.tsx:586
@@ -5853,7 +5775,7 @@ msgstr "顯示"
 
 #: src/view/screens/Search/Search.tsx:889
 msgid "Show advanced filters"
-msgstr ""
+msgstr "顯示進階篩選器"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:166
 msgid "Show alt text"
@@ -5939,10 +5861,6 @@ msgstr "顯示警告"
 #: src/lib/moderation/useLabelBehaviorDescription.ts:56
 msgid "Show warning and filter from feeds"
 msgstr "喺資訊提供入面顯示警告同埋篩選器"
-
-#: src/view/com/post-thread/PostThreadFollowBtn.tsx:128
-#~ msgid "Shows posts from {0} in your feed"
-#~ msgstr "喺你嘅資訊提供入面顯示 {0} 嘅帖文"
 
 #: src/components/dialogs/Signin.tsx:97
 #: src/components/dialogs/Signin.tsx:99
@@ -6095,11 +6013,7 @@ msgstr "排序同一個帖文嘅回覆："
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:168
 msgid "Source:"
-msgstr ""
-
-#: src/components/moderation/LabelsOnMeDialog.tsx:165
-#~ msgid "Source: <0>{sourceName}</0>"
-#~ msgstr "來源：<0>{sourceName}</0>"
+msgstr "來源："
 
 #: src/lib/moderation/useReportOptions.ts:72
 #: src/lib/moderation/useReportOptions.ts:85
@@ -6122,10 +6036,6 @@ msgstr "開始新嘅傾偈"
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:349
 msgid "Start chat with {displayName}"
 msgstr "開始同 {displayName} 傾偈"
-
-#: src/components/dms/MessagesNUX.tsx:161
-#~ msgid "Start chatting"
-#~ msgstr "開始新嘅傾偈"
 
 #: src/Navigation.tsx:357
 #: src/Navigation.tsx:362
@@ -6288,10 +6198,6 @@ msgstr "講個笑話！"
 msgid "Tell us a little more"
 msgstr "講多少少畀我哋聽"
 
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:578
-#~ msgid "Ten Million"
-#~ msgstr "1000萬"
-
 #: src/view/shell/desktop/RightNav.tsx:90
 msgid "Terms"
 msgstr "條款"
@@ -6324,17 +6230,9 @@ msgstr "文字輸入欄位"
 msgid "Thank you. Your report has been sent."
 msgstr "多謝，你嘅上報已經寄出。"
 
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:647
-#~ msgid "Thanks for being one of our first 10 million users."
-#~ msgstr "多謝你成為我哋首批1000萬用戶之一。"
-
-#: src/components/intents/VerifyEmailIntentDialog.tsx:74
-#~ msgid "Thanks, you have successfully verified your email address."
-#~ msgstr "多謝，你已經成功驗證咗你嘅電郵地址。"
-
 #: src/components/intents/VerifyEmailIntentDialog.tsx:82
 msgid "Thanks, you have successfully verified your email address. You can close this dialog."
-msgstr ""
+msgstr "多謝，你已經成功驗證咗你嘅電郵地址。而家你可以閂呢個對話框。"
 
 #: src/view/com/modals/ChangeHandle.tsx:452
 msgid "That contains the following:"
@@ -6753,10 +6651,6 @@ msgstr "討論串設定"
 msgid "To disable the email 2FA method, please verify your access to the email address."
 msgstr "如果要停用電郵雙重驗證，請驗證你對電郵地址嘅存取權。"
 
-#: src/components/dialogs/nuxs/TenMillion/Trigger.tsx:69
-#~ msgid "To learn more, <0>check out our post.</0>"
-#~ msgstr "如果想知多啲，<0>睇下我哋嘅帖文。</0>"
-
 #: src/components/dms/ReportConversationPrompt.tsx:20
 msgid "To report a conversation, please report one of its messages via the conversation screen. This lets our moderators understand the context of your issue."
 msgstr "如果要上報對話，請透過對話畫面報告其中一個訊息。噉樣我哋嘅審核服務提供者就可以明白你嘅問題嘅背景。"
@@ -6771,12 +6665,7 @@ msgstr "你想將呢份上報寄畀邊個？"
 
 #: src/components/dms/DateDivider.tsx:44
 msgid "Today"
-msgstr ""
-
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:651
-#: src/components/dialogs/nuxs/TenMillion/Trigger.tsx:63
-#~ msgid "Together, we're rebuilding the social internet. We're glad you're here."
-#~ msgstr "好高興你加入 Bluesky，我哋一齊建立緊全新嘅社交互聯網。"
+msgstr "今日"
 
 #: src/view/com/util/forms/DropdownButton.tsx:255
 msgid "Toggle dropdown"
@@ -6946,7 +6835,7 @@ msgstr "喺首頁取消固定"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:397
 #: src/view/com/util/forms/PostDropdownBtn.tsx:404
 msgid "Unpin from profile"
-msgstr ""
+msgstr "喺個人檔案取消固定"
 
 #: src/view/screens/ProfileList.tsx:550
 msgid "Unpin moderation list"
@@ -7267,10 +7156,6 @@ msgstr "睇下完整嘅討論串"
 msgid "View information about these labels"
 msgstr "睇下有關呢啲標籤嘅資料"
 
-#: src/components/dialogs/nuxs/TenMillion/Trigger.tsx:72
-#~ msgid "View our post"
-#~ msgstr "睇下我哋嘅帖文"
-
 #: src/components/ProfileHoverCard/index.web.tsx:419
 #: src/components/ProfileHoverCard/index.web.tsx:439
 #: src/components/ProfileHoverCard/index.web.tsx:466
@@ -7448,11 +7333,6 @@ msgstr "你想喺你嘅算法資訊提供入面睇到邊啲語言？"
 msgid "Who can interact with this post?"
 msgstr "邊個可以同呢個帖文互動？"
 
-#: src/components/dms/MessagesNUX.tsx:110
-#: src/components/dms/MessagesNUX.tsx:124
-#~ msgid "Who can message you?"
-#~ msgstr "邊個可以同你傾偈？"
-
 #: src/components/WhoCanReply.tsx:87
 msgid "Who can reply"
 msgstr "邊個可以回覆"
@@ -7542,11 +7422,7 @@ msgstr "係，重新啟動我嘅帳戶"
 
 #: src/components/dms/DateDivider.tsx:46
 msgid "Yesterday"
-msgstr ""
-
-#: src/components/dms/MessageItem.tsx:183
-#~ msgid "Yesterday, {time}"
-#~ msgstr "尋日，{time}"
+msgstr "尋日"
 
 #: src/screens/List/ListHiddenScreen.tsx:140
 msgid "you"
@@ -7580,10 +7456,6 @@ msgstr "你亦可以發現新嘅自訂資訊提供嚟追蹤。"
 #: src/view/com/modals/DeleteAccount.tsx:202
 msgid "You can also temporarily deactivate your account instead, and reactivate it at any time."
 msgstr "你亦可以暫時停用你嘅帳戶，同埋隨時重新啟動佢。"
-
-#: src/components/dms/MessagesNUX.tsx:119
-#~ msgid "You can change this at any time."
-#~ msgstr "你可以隨時改呢個。"
 
 #: src/screens/Messages/Settings.tsx:111
 msgid "You can continue ongoing conversations regardless of which setting you choose."
