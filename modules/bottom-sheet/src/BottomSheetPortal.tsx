@@ -26,3 +26,15 @@ export function BottomSheetPortalProvider({
     </Context.Provider>
   )
 }
+
+const defaultPortal = createPortalGroup_INTERNAL()
+
+export const BottomSheetOutlet = defaultPortal.Outlet
+
+export function BottomSheetProvider({children}: {children: React.ReactNode}) {
+  return (
+    <Context.Provider value={defaultPortal.Portal}>
+      <defaultPortal.Provider>{children}</defaultPortal.Provider>
+    </Context.Provider>
+  )
+}

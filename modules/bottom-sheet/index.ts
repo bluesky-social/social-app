@@ -5,12 +5,13 @@ import {
   BottomSheetViewProps,
 } from './src/BottomSheet.types'
 import {BottomSheetNativeComponent} from './src/BottomSheetNativeComponent'
-import {BottomSheetPortalProvider} from './src/BottomSheetPortal'
+import {BottomSheetOutlet, BottomSheetProvider} from './src/BottomSheetPortal'
 
 export {
   BottomSheet,
   BottomSheetNativeComponent,
-  BottomSheetPortalProvider,
+  BottomSheetOutlet,
+  BottomSheetProvider,
   BottomSheetSnapPoint,
   type BottomSheetState,
   type BottomSheetViewProps,

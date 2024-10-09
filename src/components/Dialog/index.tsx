@@ -31,7 +31,7 @@ import {
   DialogOuterProps,
 } from '#/components/Dialog/types'
 import {createInput} from '#/components/forms/TextField'
-import {BottomSheetSnapPoint} from '../../../modules/bottom-sheet'
+import {BottomSheet, BottomSheetSnapPoint} from '../../../modules/bottom-sheet'
 import {
   BottomSheetSnapPointChangeEvent,
   BottomSheetStateChangeEvent,
@@ -154,7 +154,7 @@ export function Outer({
 
   return (
     <Context.Provider value={context}>
-      <BottomSheetNativeComponent
+      <BottomSheet
         ref={ref}
         cornerRadius={20}
         backgroundColor={t.atoms.bg.backgroundColor}
@@ -163,7 +163,7 @@ export function Outer({
         onStateChange={onStateChange}
         disableDrag={disableDrag}>
         <View testID={testID}>{children}</View>
-      </BottomSheetNativeComponent>
+      </BottomSheet>
     </Context.Provider>
   )
 }
