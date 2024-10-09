@@ -17,21 +17,6 @@ appId: xyz.blueskyweb.app
 - tapOn:
     id: "bottomBarProfileBtn"
 
-# Can see feeds
-- swipe:
-    from:
-        id: "profilePager-selector"
-    direction: LEFT
-- tapOn:
-    id: "profilePager-selector-4"
-- assertVisible: "alice-favs"
-- swipe:
-    from:
-        id: "profilePager-selector"
-    direction: RIGHT
-- tapOn:
-    id: "profilePager-selector-0"
-
 # Open and close edit profile modal
 - tapOn:
     id: "profileHeaderEditProfileButton"
