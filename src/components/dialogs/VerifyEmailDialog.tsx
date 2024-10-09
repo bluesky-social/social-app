@@ -8,7 +8,7 @@ import {logger} from '#/logger'
 import {useModalControls} from '#/state/modals'
 import {useAgent, useSession} from '#/state/session'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
-import {atoms as a} from '#/alf'
+import {atoms as a, useBreakpoints} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
@@ -33,6 +33,7 @@ export function Inner({control}: {control: Dialog.DialogControlProps}) {
   const {currentAccount} = useSession()
   const agent = useAgent()
   const {openModal} = useModalControls()
+  const {gtTablet} = useBreakpoints()
 
   const [currentStep, setCurrentStep] = React.useState<
     'StepOne' | 'StepTwo' | 'StepThree'
@@ -138,7 +139,7 @@ export function Inner({control}: {control: Dialog.DialogControlProps}) {
             </TextField.Root>
           </View>
         ) : null}
-        <View style={[a.gap_sm]}>
+        <View style={[a.gap_sm, gtTablet && [a.flex_row_reverse, a.ml_auto]]}>
           {currentStep === 'StepOne' ? (
             <>
               <Button
@@ -154,6 +155,17 @@ export function Inner({control}: {control: Dialog.DialogControlProps}) {
                 {isProcessing ? (
                   <Loader size="sm" style={[{color: 'white'}]} />
                 ) : null}
+              </Button>
+              <Button
+                label={_(msg`I Have a Code`)}
+                variant="ghost"
+                color="primary"
+                size="large"
+                disabled={isProcessing}
+                onPress={() => setCurrentStep('StepTwo')}>
+                <ButtonText>
+                  <Trans>I Have a Code</Trans>
+                </ButtonText>
               </Button>
               <Button
                 label={_(msg`Send confirmation email`)}
