@@ -3,7 +3,7 @@ import React from 'react'
 import {isWeb} from '#/platform/detection'
 import {DialogControlRefProps} from '#/components/Dialog'
 import {Provider as GlobalDialogsProvider} from '#/components/dialogs/Context'
-import {BottomSheet} from '../../../modules/bottom-sheet'
+import {BottomSheetNativeComponent} from '../../../modules/bottom-sheet'
 
 interface IDialogContext {
   /**
@@ -61,7 +61,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
       return openDialogs.current.size > 0
     } else {
-      BottomSheet.dismissAll()
+      BottomSheetNativeComponent.dismissAll()
       return false
     }
   }, [])

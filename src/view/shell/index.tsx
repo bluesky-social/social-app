@@ -34,6 +34,7 @@ import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {MutedWordsDialog} from '#/components/dialogs/MutedWords'
 import {SigninDialog} from '#/components/dialogs/Signin'
 import {Outlet as PortalOutlet} from '#/components/Portal'
+import {BottomSheetOutlet} from '../../../modules/bottom-sheet'
 import {updateActiveViewAsync} from '../../../modules/expo-bluesky-swiss-army/src/VisibilityView'
 import {RoutesContainer, TabsNavigator} from '../../Navigation'
 import {Composer} from './Composer'
@@ -119,6 +120,7 @@ function ShellInner() {
       <SigninDialog />
       <Lightbox />
       <PortalOutlet />
+      <BottomSheetOutlet />
     </>
   )
 }
