@@ -10,6 +10,7 @@ import {useLabelInfo} from '#/lib/moderation/useLabelInfo'
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
+import {isAndroid} from '#/platform/detection'
 import {useAgent, useSession} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
@@ -237,7 +238,7 @@ function AppealForm({
 
   return (
     <>
-      <View style={{flexWrap: 'wrap', flexDirection: 'row'}}>
+      <View>
         <Text style={[a.text_2xl, a.font_bold, a.pb_xs, a.leading_tight]}>
           <Trans>Appeal "{strings.name}" label</Trans>
         </Text>
@@ -300,6 +301,7 @@ function AppealForm({
           {isPending && <ButtonIcon icon={Loader} />}
         </Button>
       </View>
+      {isAndroid && <View style={{height: 300}} />}
     </>
   )
 }
