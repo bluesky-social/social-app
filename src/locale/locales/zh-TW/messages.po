@@ -5022,8 +5022,8 @@ msgstr "由此討論串的發佈者選擇的回覆設定"
 #: src/view/com/post/Post.tsx:196
 #: src/view/com/posts/FeedItem.tsx:520
 msgctxt "description"
-msgid "Reply to <0><1/></0>"
-msgstr "對 <0><1/></0> 回覆"
+msgid "Reply to{NON_BREAKING_SPACE}<0><1/></0>"
+msgstr "對{NON_BREAKING_SPACE}<0><1/></0>{NON_BREAKING_SPACE}回覆"
 
 #: src/view/com/posts/FeedItem.tsx:511
 msgctxt "description"
@@ -5152,8 +5152,8 @@ msgid "Reposted by {0}"
 msgstr "由 {0} 轉貼"
 
 #: src/view/com/posts/FeedItem.tsx:311
-msgid "Reposted by <0><1/></0>"
-msgstr "由 <0><1/></0> 轉貼"
+msgid "Reposted by{NON_BREAKING_SPACE}<0><1/></0>"
+msgstr "由{NON_BREAKING_SPACE}<0><1/></0>{NON_BREAKING_SPACE}轉貼"
 
 #: src/view/com/posts/FeedItem.tsx:290
 #: src/view/com/posts/FeedItem.tsx:309

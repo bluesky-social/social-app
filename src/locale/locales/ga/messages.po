@@ -4452,8 +4452,8 @@ msgstr "Is é údar an tsnáithe a roghnaíonn socruithe a bhaineann le freagra�
 
 #: src/view/com/post/Post.tsx:196 src/view/com/posts/FeedItem.tsx:520
 msgctxt "description"
-msgid "Reply to <0><1/></0>"
-msgstr "Freagra ar <0><1/></0>"
+msgid "Reply to{NON_BREAKING_SPACE}<0><1/></0>"
+msgstr "Freagra ar{NON_BREAKING_SPACE}<0><1/></0>"
 
 #: src/view/com/posts/FeedItem.tsx:511
 msgctxt "description"
@@ -4564,8 +4564,8 @@ msgid "Reposted by {0}"
 msgstr "Athphostáilte ag {0}"
 
 #: src/view/com/posts/FeedItem.tsx:311
-msgid "Reposted by <0><1/></0>"
-msgstr "Athphostáilte ag <0><1/></0>"
+msgid "Reposted by{NON_BREAKING_SPACE}<0><1/></0>"
+msgstr "Athphostáilte ag{NON_BREAKING_SPACE}<0><1/></0>"
 
 #: src/view/com/posts/FeedItem.tsx:290 src/view/com/posts/FeedItem.tsx:309
 msgid "Reposted by you"

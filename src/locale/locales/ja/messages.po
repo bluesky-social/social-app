@@ -5014,7 +5014,7 @@ msgstr "返信の設定はスレッドの投稿者によって選択されてい
 #: src/view/com/post/Post.tsx:196
 #: src/view/com/posts/FeedItem.tsx:520
 msgctxt "description"
-msgid "Reply to <0><1/></0>"
+msgid "Reply to{NON_BREAKING_SPACE}<0><1/></0>"
 msgstr "<0><1/></0>に返信"
 
 #: src/view/com/posts/FeedItem.tsx:511
@@ -5144,7 +5144,7 @@ msgid "Reposted by {0}"
 msgstr "{0}にリポストされた"
 
 #: src/view/com/posts/FeedItem.tsx:311
-msgid "Reposted by <0><1/></0>"
+msgid "Reposted by{NON_BREAKING_SPACE}<0><1/></0>"
 msgstr "<0><1/></0>がリポスト"
 
 #: src/view/com/posts/FeedItem.tsx:290
