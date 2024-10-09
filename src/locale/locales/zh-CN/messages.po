@@ -653,16 +653,16 @@ msgstr "应用专用密码设置"
 msgid "App Passwords"
 msgstr "应用专用密码"
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:147
-#: src/components/moderation/LabelsOnMeDialog.tsx:150
+#: src/components/moderation/LabelsOnMeDialog.tsx:148
+#: src/components/moderation/LabelsOnMeDialog.tsx:151
 msgid "Appeal"
 msgstr "申诉"
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:242
+#: src/components/moderation/LabelsOnMeDialog.tsx:243
 msgid "Appeal \"{0}\" label"
 msgstr "申诉 \"{0}\" 标记"
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:232
+#: src/components/moderation/LabelsOnMeDialog.tsx:233
 #: src/screens/Messages/components/ChatDisabled.tsx:91
 msgid "Appeal submitted"
 msgstr "申诉已提交"
@@ -742,8 +742,8 @@ msgid "At least 3 characters"
 msgstr "至少 3 个字符"
 
 #: src/components/dms/MessagesListHeader.tsx:75
-#: src/components/moderation/LabelsOnMeDialog.tsx:289
 #: src/components/moderation/LabelsOnMeDialog.tsx:290
+#: src/components/moderation/LabelsOnMeDialog.tsx:291
 #: src/screens/Login/ChooseAccountForm.tsx:90
 #: src/screens/Login/ChooseAccountForm.tsx:95
 #: src/screens/Login/ForgotPasswordForm.tsx:123
@@ -2389,7 +2389,7 @@ msgstr "无法保存通知首选项，请再试一次"
 msgid "Failed to send"
 msgstr "无法发送私信"
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:228
+#: src/components/moderation/LabelsOnMeDialog.tsx:229
 #: src/screens/Messages/components/ChatDisabled.tsx:87
 msgid "Failed to submit appeal, please try again."
 msgstr "无法提交申诉，请再试一次。"
@@ -3160,11 +3160,11 @@ msgstr "标记"
 msgid "Labels are annotations on users and content. They can be used to hide, warn, and categorize the network."
 msgstr "标记是对特定内容及用户的提示。可以针对特定内容默认隐藏内容、显示警告或直接显示。"
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:70
+#: src/components/moderation/LabelsOnMeDialog.tsx:71
 msgid "Labels on your account"
 msgstr "你账户上的标记"
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:72
+#: src/components/moderation/LabelsOnMeDialog.tsx:73
 msgid "Labels on your content"
 msgstr "你内容上的标记"
 
@@ -4559,7 +4559,7 @@ msgstr "请输入你的邀请码。"
 msgid "Please enter your password as well:"
 msgstr "请输入你的密码："
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:264
+#: src/components/moderation/LabelsOnMeDialog.tsx:265
 msgid "Please explain why you think this label was incorrectly applied by {0}"
 msgstr "请解释为什么你认为这个标记是由 {0} 错误应用的"
 
@@ -6015,7 +6015,7 @@ msgstr "回复排序"
 msgid "Sort replies to the same post by:"
 msgstr "对同一帖文的回复进行排序："
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:167
+#: src/components/moderation/LabelsOnMeDialog.tsx:168
 msgid "Source:"
 msgstr "来源："
 
@@ -6084,8 +6084,8 @@ msgstr "已清除存储，请立即重启应用。"
 msgid "Storybook"
 msgstr "Storybook"
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:298
 #: src/components/moderation/LabelsOnMeDialog.tsx:299
+#: src/components/moderation/LabelsOnMeDialog.tsx:300
 #: src/screens/Messages/components/ChatDisabled.tsx:142
 #: src/screens/Messages/components/ChatDisabled.tsx:143
 msgid "Submit"
@@ -6224,7 +6224,7 @@ msgstr "用词违反了社群准则"
 msgid "Text & tags"
 msgstr "文本及标签"
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:262
+#: src/components/moderation/LabelsOnMeDialog.tsx:263
 #: src/screens/Messages/components/ChatDisabled.tsx:108
 msgid "Text input field"
 msgstr "文本输入框"
@@ -6298,11 +6298,11 @@ msgstr "使用 App 的体验更好。立即下载 Bluesky，我们将从你上�
 msgid "The feed has been replaced with Discover."
 msgstr "资讯源已替换为 \"Discover\"。"
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:57
+#: src/components/moderation/LabelsOnMeDialog.tsx:58
 msgid "The following labels were applied to your account."
 msgstr "以下标记已应用到你的账户。"
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:58
+#: src/components/moderation/LabelsOnMeDialog.tsx:59
 msgid "The following labels were applied to your content."
 msgstr "以下标记已应用到你的内容。"
 
@@ -6453,7 +6453,7 @@ msgstr "这个账户要求登录后才能查看其个人资料。"
 msgid "This account is blocked by one or more of your moderation lists. To unblock, please visit the lists directly and remove this user."
 msgstr "这个账户已被你的一个或多个内容审核列表所屏蔽。要解除屏蔽，请从内容审核列表中删除这个账户。"
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:245
+#: src/components/moderation/LabelsOnMeDialog.tsx:246
 msgid "This appeal will be sent to <0>{sourceName}</0>."
 msgstr "这条申诉将提交给 <0>{sourceName}</0>。"
 
@@ -6528,7 +6528,7 @@ msgstr "这个标签是由 <0>{0}</0> 标记的。"
 msgid "This label was applied by the author."
 msgstr "这个标签是由该作者标记的。"
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:162
+#: src/components/moderation/LabelsOnMeDialog.tsx:163
 msgid "This label was applied by you."
 msgstr "这个标签是由你标记的。"
 
@@ -7578,11 +7578,11 @@ msgstr "你还没有隐藏任何词或标签"
 msgid "You hid this reply."
 msgstr "你隐藏了这条回复。"
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:77
+#: src/components/moderation/LabelsOnMeDialog.tsx:78
 msgid "You may appeal non-self labels if you feel they were placed in error."
 msgstr "如果你认为由他人放置标签的标记信息有误，你可以提出申诉。"
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:82
+#: src/components/moderation/LabelsOnMeDialog.tsx:83
 msgid "You may appeal these labels if you feel they were placed in error."
 msgstr "如果你认为标签的标记信息有误，你可以提出申诉。"
 
