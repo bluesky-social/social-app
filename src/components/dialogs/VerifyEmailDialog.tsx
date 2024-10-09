@@ -8,7 +8,7 @@ import {logger} from '#/logger'
 import {useModalControls} from '#/state/modals'
 import {useAgent, useSession} from '#/state/session'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
-import {atoms as a, useBreakpoints} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
@@ -32,6 +32,7 @@ export function Inner({control}: {control: Dialog.DialogControlProps}) {
   const {_} = useLingui()
   const {currentAccount} = useSession()
   const agent = useAgent()
+  const t = useTheme()
   const {openModal} = useModalControls()
   const {gtTablet} = useBreakpoints()
 
@@ -118,7 +119,20 @@ export function Inner({control}: {control: Dialog.DialogControlProps}) {
                 <Text style={[a.text_md, a.leading_snug, a.font_bold]}>
                   {currentAccount?.email}
                 </Text>{' '}
-                to verify it is you.
+                to verify it is you.{' '}
+                <Text
+                  onPress={() => {
+                    control.close(() => {
+                      openModal({name: 'change-email'})
+                    })
+                  }}
+                  style={[
+                    a.text_md,
+                    a.leading_snug,
+                    {color: t.palette.primary_500},
+                  ]}>
+                  <Trans>Need to change it?</Trans>
+                </Text>
               </Trans>
             ) : (
               uiStrings[currentStep].message
@@ -165,21 +179,6 @@ export function Inner({control}: {control: Dialog.DialogControlProps}) {
                 onPress={() => setCurrentStep('StepTwo')}>
                 <ButtonText>
                   <Trans>I Have a Code</Trans>
-                </ButtonText>
-              </Button>
-              <Button
-                label={_(msg`Send confirmation email`)}
-                variant="ghost"
-                color="primary"
-                size="large"
-                disabled={isProcessing}
-                onPress={() => {
-                  control.close(() => {
-                    openModal({name: 'change-email'})
-                  })
-                }}>
-                <ButtonText>
-                  <Trans>Change Email</Trans>
                 </ButtonText>
               </Button>
             </>
