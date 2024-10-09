@@ -4,9 +4,11 @@ import {
   BottomSheetState,
   BottomSheetViewProps,
 } from './src/BottomSheet.types'
+import {BottomSheetNativeComponent} from './src/BottomSheetNativeComponent'
 
 export {
   BottomSheet,
+  BottomSheetNativeComponent,
   BottomSheetSnapPoint,
   type BottomSheetState,
   type BottomSheetViewProps,
