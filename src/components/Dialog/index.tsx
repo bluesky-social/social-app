@@ -31,15 +31,12 @@ import {
   DialogOuterProps,
 } from '#/components/Dialog/types'
 import {createInput} from '#/components/forms/TextField'
-import {DefaultPortalOverride, useDefaultPortal} from '#/components/Portal'
-import {
-  BottomSheetNativeComponent,
-  BottomSheetSnapPoint,
-} from '../../../modules/bottom-sheet'
+import {BottomSheetSnapPoint} from '../../../modules/bottom-sheet'
 import {
   BottomSheetSnapPointChangeEvent,
   BottomSheetStateChangeEvent,
 } from '../../../modules/bottom-sheet/src/BottomSheet.types'
+import {BottomSheetNativeComponent} from '../../../modules/bottom-sheet/src/BottomSheetNativeComponent'
 
 export {useDialogContext, useDialogControl} from '#/components/Dialog/context'
 export * from '#/components/Dialog/types'
@@ -53,10 +50,7 @@ export function Outer({
   onClose,
   nativeOptions,
   testID,
-  Portal: PortalProp,
 }: React.PropsWithChildren<DialogOuterProps>) {
-  const DefaultPortal = useDefaultPortal()
-  const Portal = PortalProp ?? DefaultPortal
   const t = useTheme()
   const ref = React.useRef<BottomSheetNativeComponent>(null)
   const closeCallbacks = React.useRef<(() => void)[]>([])
@@ -159,22 +153,18 @@ export function Outer({
   )
 
   return (
-    <Portal>
-      <Context.Provider value={context}>
-        <BottomSheetNativeComponent
-          ref={ref}
-          cornerRadius={20}
-          backgroundColor={t.atoms.bg.backgroundColor}
-          {...nativeOptions}
-          onSnapPointChange={onSnapPointChange}
-          onStateChange={onStateChange}
-          disableDrag={disableDrag}>
-          <DefaultPortalOverride>
-            <View testID={testID}>{children}</View>
-          </DefaultPortalOverride>
-        </BottomSheetNativeComponent>
-      </Context.Provider>
-    </Portal>
+    <Context.Provider value={context}>
+      <BottomSheetNativeComponent
+        ref={ref}
+        cornerRadius={20}
+        backgroundColor={t.atoms.bg.backgroundColor}
+        {...nativeOptions}
+        onSnapPointChange={onSnapPointChange}
+        onStateChange={onStateChange}
+        disableDrag={disableDrag}>
+        <View testID={testID}>{children}</View>
+      </BottomSheetNativeComponent>
+    </Context.Provider>
   )
 }
 
