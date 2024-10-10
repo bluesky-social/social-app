@@ -34,7 +34,7 @@ export function Inner({control}: {control: Dialog.DialogControlProps}) {
   const agent = useAgent()
   const t = useTheme()
   const {openModal} = useModalControls()
-  const {gtTablet} = useBreakpoints()
+  const {gtMobile} = useBreakpoints()
 
   const [currentStep, setCurrentStep] = React.useState<
     'StepOne' | 'StepTwo' | 'StepThree'
@@ -153,7 +153,7 @@ export function Inner({control}: {control: Dialog.DialogControlProps}) {
             </TextField.Root>
           </View>
         ) : null}
-        <View style={[a.gap_sm, gtTablet && [a.flex_row_reverse, a.ml_auto]]}>
+        <View style={[a.gap_sm, gtMobile && [a.flex_row_reverse, a.ml_auto]]}>
           {currentStep === 'StepOne' ? (
             <>
               <Button
@@ -208,6 +208,9 @@ export function Inner({control}: {control: Dialog.DialogControlProps}) {
                 <ButtonText>
                   <Trans>Resend Email</Trans>
                 </ButtonText>
+                {isProcessing ? (
+                  <Loader size="sm" style={[{color: 'white'}]} />
+                ) : null}
               </Button>
             </>
           ) : currentStep === 'StepThree' ? (
