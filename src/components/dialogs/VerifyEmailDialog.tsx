@@ -146,6 +146,7 @@ export function Inner({
                     control.close(() => {
                       openModal({name: 'change-email'})
                     })
+                    return false
                   }}>
                   <Trans>Need to change it?</Trans>
                 </InlineLinkText>
