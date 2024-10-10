@@ -10,7 +10,11 @@
 
 {% block html_head_extra -%}
 {%- if postView -%}
+  {%- if videoUrl %}
+  <meta property="og:type" content="video.other">
+  {% else %}
   <meta property="og:type" content="article">
+  {% endif %}
   <meta property="profile:username" content="{{ profileView.Handle }}">
   {%- if requestURI %}
   <meta property="og:url" content="{{ requestURI }}">
@@ -32,6 +36,15 @@
   {%- elif postView.Author.Avatar %}
   {# Don't use avatar image in cards; usually looks bad #}
   <meta name="twitter:card" content="summary">
+  {% endif %}
+  {%- if videoUrl %}
+  <meta property="og:video:type" content="video/mp4">
+  <meta property="og:video:height" content="{{ height }}">
+  <meta property="og:video:width" content="{{ width }}">
+  <meta property="og:image:height" content="{{ height }}">
+  <meta property="og:image:width" content="{{ width }}">
+  <meta property="og:video:secure_url" content="{{ videoUrl }}">
+  <meta property="og:video:url" content="{{ videoUrl }}">
   {% endif %}
   <meta name="twitter:label1" content="Posted At">
   <meta name="twitter:value1" content="{{ postView.IndexedAt }}">
