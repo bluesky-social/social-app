@@ -13,7 +13,7 @@ import {isAndroid} from '#/platform/detection'
 import {useResolveGifQuery} from '#/state/queries/resolve-link'
 import {Gif} from '#/state/queries/tenor'
 import {AltTextCounterWrapper} from '#/view/com/composer/AltTextCounterWrapper'
-import {atoms as a, native, useTheme} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {DialogControlProps} from '#/components/Dialog'
@@ -213,7 +213,7 @@ function AltTextInner({
               isPreferredAltText={true}
               params={params}
               hideAlt
-              style={[native({maxHeight: 225})]}
+              style={[{height: 225}]}
             />
           </View>
         </View>

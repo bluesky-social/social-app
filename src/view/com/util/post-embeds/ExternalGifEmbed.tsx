@@ -4,7 +4,6 @@ import {
   GestureResponderEvent,
   LayoutChangeEvent,
   Pressable,
-  StyleSheet,
 } from 'react-native'
 import {Image, ImageLoadEventData} from 'expo-image'
 import {AppBskyEmbedExternal} from '@atproto/api'
@@ -18,7 +17,6 @@ import {atoms as a, useTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {EmbedConsentDialog} from '#/components/dialogs/EmbedConsent'
 import {Fill} from '#/components/Fill'
-import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
 
 export function ExternalGifEmbed({
@@ -116,8 +114,7 @@ export function ExternalGifEmbed({
       <Pressable
         style={[
           {height: imageDims.height},
-          styles.gifContainer,
-          a.rounded_md,
+          a.w_full,
           a.overflow_hidden,
           {
             borderBottomLeftRadius: 0,
@@ -166,42 +163,7 @@ export function ExternalGifEmbed({
             )}
           </Fill>
         )}
-        <MediaInsetBorder
-          opaque
-          style={[
-            {
-              borderBottomLeftRadius: 0,
-              borderBottomRightRadius: 0,
-            },
-          ]}
-        />
       </Pressable>
     </>
   )
 }
-
-const styles = StyleSheet.create({
-  topRadius: {
-    borderTopLeftRadius: 6,
-    borderTopRightRadius: 6,
-  },
-  layer: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-  },
-  overlayContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  overlayLayer: {
-    zIndex: 2,
-  },
-  gifContainer: {
-    width: '100%',
-    overflow: 'hidden',
-  },
-})
