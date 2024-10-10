@@ -169,7 +169,7 @@ export function ModerationScreenInner({
     isLoading: isLabelersLoading,
     data: labelers,
     error: labelersError,
-  } = useMyLabelersQuery()
+  } = useMyLabelersQuery({includeNonConfigurable: true})
 
   useFocusEffect(
     React.useCallback(() => {
