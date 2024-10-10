@@ -114,7 +114,6 @@ export function GifEmbed({
   return (
     <View
       style={[
-        a.w_full,
         a.rounded_md,
         a.overflow_hidden,
         a.mt_sm,
