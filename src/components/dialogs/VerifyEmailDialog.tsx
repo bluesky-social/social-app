@@ -14,6 +14,7 @@ import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
 import {InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
+import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
 
 export function VerifyEmailDialog({
@@ -26,7 +27,7 @@ export function VerifyEmailDialog({
   const [didVerify, setDidVerify] = React.useState(false)
 
   return (
-    <Dialog.Outer
+    <Prompt.Outer
       control={control}
       onClose={async () => {
         if (!didVerify) {
@@ -41,8 +42,9 @@ export function VerifyEmailDialog({
         }
       }}>
       <Dialog.Handle />
+      <Dialog.Close />
       <Inner control={control} setDidVerify={setDidVerify} />
-    </Dialog.Outer>
+    </Prompt.Outer>
   )
 }
 
@@ -116,135 +118,132 @@ export function Inner({
   }
 
   return (
-    <Dialog.ScrollableInner label={_(msg`Verify email dialog`)}>
-      <Dialog.Close />
-      <View style={[a.gap_xl]}>
-        <View style={[a.gap_sm]}>
-          <Text style={[a.font_heavy, a.text_2xl]}>
-            {uiStrings[currentStep].title}
-          </Text>
-          {error ? (
-            <View style={[a.rounded_sm, a.overflow_hidden]}>
-              <ErrorMessage message={error} />
-            </View>
-          ) : null}
-          <Text style={[a.text_md, a.leading_snug]}>
-            {currentStep === 'StepOne' ? (
-              <>
-                <Trans>
-                  You'll receive an email at{' '}
-                  <Text style={[a.text_md, a.leading_snug, a.font_bold]}>
-                    {currentAccount?.email}
-                  </Text>{' '}
-                  to verify it's you.
-                </Trans>{' '}
-                <InlineLinkText
-                  to="#"
-                  label={_(msg`Change email address`)}
-                  style={[a.text_md, a.leading_snug]}
-                  onPress={e => {
-                    e.preventDefault()
-                    control.close(() => {
-                      openModal({name: 'change-email'})
-                    })
-                    return false
-                  }}>
-                  <Trans>Need to change it?</Trans>
-                </InlineLinkText>
-              </>
-            ) : (
-              uiStrings[currentStep].message
-            )}
-          </Text>
-        </View>
-        {currentStep === 'StepTwo' ? (
-          <View>
-            <TextField.LabelText>
-              <Trans>Confirmation Code</Trans>
-            </TextField.LabelText>
-            <TextField.Root>
-              <TextField.Input
-                label={_(msg`Confirmation code`)}
-                placeholder="XXXXX-XXXXX"
-                onChangeText={setConfirmationCode}
-              />
-            </TextField.Root>
+    <View style={[a.gap_xl]}>
+      <View style={[a.gap_sm]}>
+        <Text style={[a.font_heavy, a.text_2xl]}>
+          {uiStrings[currentStep].title}
+        </Text>
+        {error ? (
+          <View style={[a.rounded_sm, a.overflow_hidden]}>
+            <ErrorMessage message={error} />
           </View>
         ) : null}
-        <View style={[a.gap_sm, gtMobile && [a.flex_row_reverse, a.ml_auto]]}>
+        <Text style={[a.text_md, a.leading_snug]}>
           {currentStep === 'StepOne' ? (
             <>
-              <Button
-                label={_(msg`Send confirmation email`)}
-                variant="solid"
-                color="primary"
-                size="large"
-                disabled={isProcessing}
-                onPress={onSendEmail}>
-                <ButtonText>
-                  <Trans>Send Confirmation</Trans>
-                </ButtonText>
-                {isProcessing ? (
-                  <Loader size="sm" style={[{color: 'white'}]} />
-                ) : null}
-              </Button>
-              <Button
-                label={_(msg`I Have a Code`)}
-                variant="solid"
-                color="secondary"
-                size="large"
-                disabled={isProcessing}
-                onPress={() => setCurrentStep('StepTwo')}>
-                <ButtonText>
-                  <Trans>I Have a Code</Trans>
-                </ButtonText>
-              </Button>
-            </>
-          ) : currentStep === 'StepTwo' ? (
-            <>
-              <Button
-                label={_(msg`Confirm`)}
-                variant="solid"
-                color="primary"
-                size="large"
-                disabled={isProcessing}
-                onPress={onVerifyEmail}>
-                <ButtonText>
-                  <Trans>Confirm</Trans>
-                </ButtonText>
-                {isProcessing ? (
-                  <Loader size="sm" style={[{color: 'white'}]} />
-                ) : null}
-              </Button>
-              <Button
-                label={_(msg`Resend Email`)}
-                variant="solid"
-                color="secondary"
-                size="large"
-                disabled={isProcessing}
-                onPress={() => {
-                  setConfirmationCode('')
-                  setCurrentStep('StepOne')
+              <Trans>
+                You'll receive an email at{' '}
+                <Text style={[a.text_md, a.leading_snug, a.font_bold]}>
+                  {currentAccount?.email}
+                </Text>{' '}
+                to verify it's you.
+              </Trans>{' '}
+              <InlineLinkText
+                to="#"
+                label={_(msg`Change email address`)}
+                style={[a.text_md, a.leading_snug]}
+                onPress={e => {
+                  e.preventDefault()
+                  control.close(() => {
+                    openModal({name: 'change-email'})
+                  })
+                  return false
                 }}>
-                <ButtonText>
-                  <Trans>Resend Email</Trans>
-                </ButtonText>
-              </Button>
+                <Trans>Need to change it?</Trans>
+              </InlineLinkText>
             </>
-          ) : currentStep === 'StepThree' ? (
+          ) : (
+            uiStrings[currentStep].message
+          )}
+        </Text>
+      </View>
+      {currentStep === 'StepTwo' ? (
+        <View>
+          <TextField.LabelText>
+            <Trans>Confirmation Code</Trans>
+          </TextField.LabelText>
+          <TextField.Root>
+            <TextField.Input
+              label={_(msg`Confirmation code`)}
+              placeholder="XXXXX-XXXXX"
+              onChangeText={setConfirmationCode}
+            />
+          </TextField.Root>
+        </View>
+      ) : null}
+      <View style={[a.gap_sm, gtMobile && [a.flex_row_reverse, a.ml_auto]]}>
+        {currentStep === 'StepOne' ? (
+          <>
+            <Button
+              label={_(msg`Send confirmation email`)}
+              variant="solid"
+              color="primary"
+              size="large"
+              disabled={isProcessing}
+              onPress={onSendEmail}>
+              <ButtonText>
+                <Trans>Send Confirmation</Trans>
+              </ButtonText>
+              {isProcessing ? (
+                <Loader size="sm" style={[{color: 'white'}]} />
+              ) : null}
+            </Button>
+            <Button
+              label={_(msg`I Have a Code`)}
+              variant="solid"
+              color="secondary"
+              size="large"
+              disabled={isProcessing}
+              onPress={() => setCurrentStep('StepTwo')}>
+              <ButtonText>
+                <Trans>I Have a Code</Trans>
+              </ButtonText>
+            </Button>
+          </>
+        ) : currentStep === 'StepTwo' ? (
+          <>
             <Button
               label={_(msg`Confirm`)}
               variant="solid"
               color="primary"
               size="large"
-              onPress={() => control.close()}>
+              disabled={isProcessing}
+              onPress={onVerifyEmail}>
               <ButtonText>
-                <Trans>Close</Trans>
+                <Trans>Confirm</Trans>
+              </ButtonText>
+              {isProcessing ? (
+                <Loader size="sm" style={[{color: 'white'}]} />
+              ) : null}
+            </Button>
+            <Button
+              label={_(msg`Resend Email`)}
+              variant="solid"
+              color="secondary"
+              size="large"
+              disabled={isProcessing}
+              onPress={() => {
+                setConfirmationCode('')
+                setCurrentStep('StepOne')
+              }}>
+              <ButtonText>
+                <Trans>Resend Email</Trans>
               </ButtonText>
             </Button>
-          ) : null}
-        </View>
+          </>
+        ) : currentStep === 'StepThree' ? (
+          <Button
+            label={_(msg`Confirm`)}
+            variant="solid"
+            color="primary"
+            size="large"
+            onPress={() => control.close()}>
+            <ButtonText>
+              <Trans>Close</Trans>
+            </ButtonText>
+          </Button>
+        ) : null}
       </View>
-    </Dialog.ScrollableInner>
+    </View>
   )
 }
