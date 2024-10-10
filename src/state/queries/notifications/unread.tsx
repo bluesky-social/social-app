@@ -10,7 +10,7 @@ import EventEmitter from 'eventemitter3'
 import BroadcastChannel from '#/lib/broadcast'
 import {logger} from '#/logger'
 import {useAgent, useSession} from '#/state/session'
-import {resetBadgeCount} from 'lib/notifications/notifications'
+import {resetGenericBadgeCount} from 'lib/notifications/notifications'
 import {useModerationOpts} from '../../preferences/moderation-opts'
 import {truncateAndInvalidate} from '../util'
 import {RQKEY as RQKEY_NOTIFS} from './feed'
@@ -117,7 +117,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         // update & broadcast
         setNumUnread('')
         broadcast.postMessage({event: ''})
-        resetBadgeCount()
+        resetGenericBadgeCount()
       },
 
       async checkUnread({
