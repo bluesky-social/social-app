@@ -10,7 +10,7 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
   private var scrollView: RCTScrollView?
   
   // Touch handler
-  private var touchHandler: RCTTouchHandler!
+  private var touchHandler: RCTTouchHandler?
 
   // Events
   private let onAttemptDismiss = EventDispatcher()
@@ -79,10 +79,7 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
   required init (appContext: AppContext? = nil) {
     super.init(appContext: appContext)
     
-    self.touchHandler = RCTTouchHandler(bridge: self.appContext?.reactBridge)
-    
     self.sheetVc = SheetViewController()
-    self.touchHandler.attach(to: self.sheetVc.view)
     if let sheet = self.sheetVc.sheetPresentationController {
       sheet.delegate = self
     }
@@ -97,6 +94,10 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
   // We don't want this view to actually get added to the tree, so we'll simply store it for adding
   // to the SheetViewController
   override func insertReactSubview(_ subview: UIView!, at atIndex: Int) {
+    let touchHandler = RCTTouchHandler(bridge: self.appContext?.reactBridge)
+    touchHandler?.attach(to: subview)
+    
+    self.touchHandler = touchHandler
     self.innerView = subview
   }
 
@@ -119,6 +120,7 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
     self.isClosing = false
     self.isOpen = false
     self.touchHandler?.detach(from: self.innerView)
+    self.touchHandler = nil
     SheetManager.shared.remove(self)
   }
 

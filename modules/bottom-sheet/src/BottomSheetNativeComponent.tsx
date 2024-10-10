@@ -3,6 +3,7 @@ import {
   Dimensions,
   NativeSyntheticEvent,
   Platform,
+  ScrollView,
   StyleProp,
   View,
   ViewStyle,
@@ -93,9 +94,9 @@ export class BottomSheetNativeComponent extends React.Component<
               borderTopRightRadius: cornerRadius,
             },
           ]}>
-          <View onLayout={this.updateLayout}>
+          <ScrollView>
             <BottomSheetPortalProvider>{children}</BottomSheetPortalProvider>
-          </View>
+          </ScrollView>
         </View>
       </NativeView>
     )
