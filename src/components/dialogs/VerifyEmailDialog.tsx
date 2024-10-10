@@ -8,10 +8,11 @@ import {logger} from '#/logger'
 import {useModalControls} from '#/state/modals'
 import {useAgent, useSession} from '#/state/session'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, useBreakpoints} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
+import {InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 
@@ -55,7 +56,6 @@ export function Inner({
   const {_} = useLingui()
   const {currentAccount} = useSession()
   const agent = useAgent()
-  const t = useTheme()
   const {openModal} = useModalControls()
   const {gtMobile} = useBreakpoints()
 
@@ -129,26 +129,27 @@ export function Inner({
           ) : null}
           <Text style={[a.text_md, a.leading_snug]}>
             {currentStep === 'StepOne' ? (
-              <Trans>
-                You'll receive an email at{' '}
-                <Text style={[a.text_md, a.leading_snug, a.font_bold]}>
-                  {currentAccount?.email}
-                </Text>{' '}
-                to verify it's you.{' '}
-                <Text
-                  onPress={() => {
+              <>
+                <Trans>
+                  You'll receive an email at{' '}
+                  <Text style={[a.text_md, a.leading_snug, a.font_bold]}>
+                    {currentAccount?.email}
+                  </Text>{' '}
+                  to verify it's you.
+                </Trans>{' '}
+                <InlineLinkText
+                  to="#"
+                  label={_(msg`Change email address`)}
+                  style={[a.text_md, a.leading_snug]}
+                  onPress={e => {
+                    e.preventDefault()
                     control.close(() => {
                       openModal({name: 'change-email'})
                     })
-                  }}
-                  style={[
-                    a.text_md,
-                    a.leading_snug,
-                    {color: t.palette.primary_500},
-                  ]}>
+                  }}>
                   <Trans>Need to change it?</Trans>
-                </Text>
-              </Trans>
+                </InlineLinkText>
+              </>
             ) : (
               uiStrings[currentStep].message
             )}
