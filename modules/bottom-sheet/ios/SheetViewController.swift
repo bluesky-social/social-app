@@ -20,9 +20,9 @@ class SheetViewController: UIViewController {
     }
   }
 
-  func setDetents(contentHeight: CGFloat, preventExpansion: Bool) {
+  func setDetents(contentHeight: CGFloat, preventExpansion: Bool) -> UISheetPresentationController.Detent.Identifier? {
     guard let sheet = self.sheetPresentationController else {
-      return
+      return nil
     }
 
     if contentHeight > Util.getScreenHeight() - 100 {
@@ -48,17 +48,20 @@ class SheetViewController: UIViewController {
       }
       sheet.selectedDetentIdentifier = .medium
     }
+    return sheet.selectedDetentIdentifier
   }
 
-  func updateDetents(contentHeight: CGFloat, preventExpansion: Bool) {
+  func updateDetents(contentHeight: CGFloat, preventExpansion: Bool) -> UISheetPresentationController.Detent.Identifier? {
+    var newDetent: UISheetPresentationController.Detent.Identifier?
     if let sheet = self.sheetPresentationController {
       sheet.animateChanges {
-        self.setDetents(contentHeight: contentHeight, preventExpansion: preventExpansion)
+        newDetent = self.setDetents(contentHeight: contentHeight, preventExpansion: preventExpansion)
         if #available(iOS 16.0, *) {
           sheet.invalidateDetents()
         }
       }
     }
+    return newDetent
   }
 
   func getCurrentDetentIdentifier() -> UISheetPresentationController.Detent.Identifier? {

@@ -20,7 +20,6 @@ public class BottomSheetModule: Module {
       }
 
       AsyncFunction("updateLayout") { (view: SheetView) in
-        view.updateLayout()
       }
 
       Prop("containerBackgroundColor") { (view: SheetView, prop: UIColor) in

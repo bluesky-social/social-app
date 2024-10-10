@@ -3,13 +3,8 @@ import UIKit
 
 class SheetView: ExpoView, UISheetPresentationControllerDelegate {
   // Views
-  private var sheetVc: SheetViewController!
+  var sheetVc: SheetViewController!
   private var innerView: UIView?
-  private var contentHeight: CGFloat? {
-    get {
-      self.innerView?.frame.height
-    }
-  }
   
   // Scroll view
   private var scrollView: BottomSheetScrollView!
@@ -59,6 +54,7 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
       }
     }
   }
+  
   private var isClosing = false {
     didSet {
       if isClosing {
@@ -68,7 +64,8 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
       }
     }
   }
-  private var selectedDetentIdentifier: UISheetPresentationController.Detent.Identifier? {
+  
+  var selectedDetentIdentifier: UISheetPresentationController.Detent.Identifier? {
     didSet {
       if selectedDetentIdentifier == .large {
         onSnapPointChange([
@@ -89,12 +86,12 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
   required init (appContext: AppContext? = nil) {
     super.init(appContext: appContext)
     
-    self.scrollView = BottomSheetScrollView()
-    
     self.sheetVc = SheetViewController()
     if let sheet = self.sheetVc.sheetPresentationController {
       sheet.delegate = self
     }
+    
+    self.scrollView = BottomSheetScrollView(sheetView: self)
     self.sheetVc.view.addSubview(self.scrollView)
     
     self.touchHandler = RCTTouchHandler(bridge: appContext?.reactBridge)
@@ -132,12 +129,10 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
     guard !self.isOpen,
           !self.isOpening,
           !self.isClosing,
-          let contentHeight = self.contentHeight,
           let rvc = self.reactViewController() else {
       return
     }
 
-    self.sheetVc.setDetents(contentHeight: self.clampHeight(contentHeight), preventExpansion: self.preventExpansion)
     if let sheet = sheetVc.sheetPresentationController {
       sheet.preferredCornerRadius = self.cornerRadius
       self.selectedDetentIdentifier = sheet.selectedDetentIdentifier
@@ -151,16 +146,6 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
     }
   }
 
-  func updateLayout() {
-    if self.prevLayoutDetentIdentifier == self.selectedDetentIdentifier,
-       let contentHeight = self.contentHeight {
-      self.sheetVc.updateDetents(contentHeight: self.clampHeight(contentHeight),
-                                  preventExpansion: self.preventExpansion)
-      self.selectedDetentIdentifier = self.sheetVc.getCurrentDetentIdentifier()
-    }
-    self.prevLayoutDetentIdentifier = self.selectedDetentIdentifier
-  }
-
   func dismiss() {
     self.isClosing = true
     self.sheetVc.dismiss(animated: true) { [weak self] in
@@ -170,7 +155,7 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
 
   // MARK: - Utils
 
-  private func clampHeight(_ height: CGFloat) -> CGFloat {
+  func clampHeight(_ height: CGFloat) -> CGFloat {
     if height < self.minHeight {
       return self.minHeight
     } else if height > self.maxHeight {

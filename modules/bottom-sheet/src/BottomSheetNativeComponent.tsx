@@ -2,10 +2,7 @@ import * as React from 'react'
 import {
   Dimensions,
   NativeSyntheticEvent,
-  Platform,
-  ScrollView,
   StyleProp,
-  View,
   ViewStyle,
 } from 'react-native'
 import {requireNativeModule, requireNativeViewManager} from 'expo-modules-core'
@@ -66,7 +63,6 @@ export class BottomSheetNativeComponent extends React.Component<
 
   render() {
     const {children, ...rest} = this.props
-    const cornerRadius = rest.cornerRadius ?? 0
 
     if (!this.state.open) {
       return null
@@ -82,19 +78,7 @@ export class BottomSheetNativeComponent extends React.Component<
           height: screenHeight,
           width: '100%',
         }}>
-        {/*<View*/}
-        {/*  style={[*/}
-        {/*    {*/}
-        {/*      flex: 1,*/}
-        {/*      backgroundColor,*/}
-        {/*    },*/}
-        {/*    Platform.OS === 'android' && {*/}
-        {/*      borderTopLeftRadius: cornerRadius,*/}
-        {/*      borderTopRightRadius: cornerRadius,*/}
-        {/*    },*/}
-        {/*  ]}>*/}
         <BottomSheetPortalProvider>{children}</BottomSheetPortalProvider>
-        {/*</View>*/}
       </NativeView>
     )
   }
