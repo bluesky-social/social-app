@@ -2,9 +2,7 @@ import * as React from 'react'
 import {
   Dimensions,
   NativeSyntheticEvent,
-  Platform,
   StyleProp,
-  View,
   ViewStyle,
 } from 'react-native'
 import {requireNativeModule, requireNativeViewManager} from 'expo-modules-core'
@@ -55,17 +53,12 @@ export class BottomSheetNativeComponent extends React.Component<
     this.props.onStateChange?.(event)
   }
 
-  private updateLayout = () => {
-    this.ref.current?.updateLayout()
-  }
-
   static dismissAll = async () => {
     await NativeModule.dismissAll()
   }
 
   render() {
-    const {children, backgroundColor, ...rest} = this.props
-    const cornerRadius = rest.cornerRadius ?? 0
+    const {children, ...rest} = this.props
 
     if (!this.state.open) {
       return null
@@ -80,23 +73,8 @@ export class BottomSheetNativeComponent extends React.Component<
           position: 'absolute',
           height: screenHeight,
           width: '100%',
-        }}
-        containerBackgroundColor={backgroundColor}>
-        <View
-          style={[
-            {
-              flex: 1,
-              backgroundColor,
-            },
-            Platform.OS === 'android' && {
-              borderTopLeftRadius: cornerRadius,
-              borderTopRightRadius: cornerRadius,
-            },
-          ]}>
-          <View onLayout={this.updateLayout}>
-            <BottomSheetPortalProvider>{children}</BottomSheetPortalProvider>
-          </View>
-        </View>
+        }}>
+        <BottomSheetPortalProvider>{children}</BottomSheetPortalProvider>
       </NativeView>
     )
   }

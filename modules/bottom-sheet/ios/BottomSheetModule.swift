@@ -19,8 +19,8 @@ public class BottomSheetModule: Module {
         view.dismiss()
       }
 
-      AsyncFunction("updateLayout") { (view: SheetView) in
-        view.updateLayout()
+      Prop("containerBackgroundColor") { (view: SheetView, prop: UIColor) in
+        view.containerBackgroundColor = prop
       }
 
       Prop("cornerRadius") { (view: SheetView, prop: Float) in

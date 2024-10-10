@@ -10,7 +10,7 @@ export const BottomSheet = React.forwardRef<
 >(function BottomSheet(props, ref) {
   const Portal = useBottomSheetPortal_INTERNAL()
 
-  if (__DEV__ && !Portal) {
+  if (!Portal) {
     throw new Error(
       'BottomSheet: You need to wrap your component tree with a <BottomSheetPortalProvider> to use the bottom sheet.',
     )
