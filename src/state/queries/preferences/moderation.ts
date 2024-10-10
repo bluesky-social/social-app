@@ -18,9 +18,9 @@ export const DEFAULT_LOGGED_OUT_LABEL_PREFERENCES: typeof DEFAULT_LABEL_SETTINGS
   )
 
 export function useMyLabelersQuery({
-  includeNonConfigurable = true,
+  excludeNonConfigurableLabelers = false,
 }: {
-  includeNonConfigurable?: boolean
+  excludeNonConfigurableLabelers?: boolean
 } = {}) {
   const prefs = usePreferencesQuery()
   let dids = Array.from(
@@ -34,7 +34,7 @@ export function useMyLabelersQuery({
   /*
    * By default, remove non-configurable moderation authorities
    */
-  if (!includeNonConfigurable) {
+  if (excludeNonConfigurableLabelers) {
     dids = dids.filter(did => !isNonConfigurableModerationAuthority(did))
   }
 
