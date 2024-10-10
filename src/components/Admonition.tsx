@@ -1,7 +1,7 @@
 import React from 'react'
 import {View} from 'react-native'
 
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, useBreakpoints,useTheme} from '#/alf'
 import {CircleInfo_Stroke2_Corner0_Rounded as ErrorIcon} from '#/components/icons/CircleInfo'
 import {Eye_Stroke2_Corner0_Rounded as InfoIcon} from '#/components/icons/Eye'
 import {Leaf_Stroke2_Corner0_Rounded as TipIcon} from '#/components/icons/Leaf'
@@ -75,6 +75,7 @@ export function Outer({
   type?: Context['type']
 }) {
   const t = useTheme()
+  const {gtMobile} = useBreakpoints()
   const borderColor = {
     info: t.atoms.border_contrast_low.borderColor,
     tip: t.atoms.border_contrast_low.borderColor,
@@ -85,7 +86,7 @@ export function Outer({
     <Context.Provider value={{type}}>
       <View
         style={[
-          a.p_md,
+          gtMobile ? a.p_md : a.p_sm,
           a.rounded_sm,
           a.border,
           t.atoms.bg_contrast_25,
