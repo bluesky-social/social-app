@@ -670,7 +670,7 @@ export function ButtonIcon({
       size ??
       (({
         large: 'sm',
-        small: 'xs',
+        small: 'sm',
         tiny: 'xs',
       }[buttonSize || 'small'] || 'sm') as Exclude<
         SVGIconProps['size'],
