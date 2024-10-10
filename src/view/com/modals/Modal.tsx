@@ -20,7 +20,6 @@ import * as ContentLanguagesSettingsModal from './lang-settings/ContentLanguages
 import * as PostLanguagesSettingsModal from './lang-settings/PostLanguagesSettings'
 import * as LinkWarningModal from './LinkWarning'
 import * as ListAddUserModal from './ListAddRemoveUsers'
-import * as SelfLabelModal from './SelfLabel'
 import * as UserAddRemoveListsModal from './UserAddRemoveLists'
 import * as VerifyEmailModal from './VerifyEmail'
 
@@ -70,9 +69,6 @@ export function ModalsContainer() {
   } else if (activeModal?.name === 'delete-account') {
     snapPoints = DeleteAccountModal.snapPoints
     element = <DeleteAccountModal.Component />
-  } else if (activeModal?.name === 'self-label') {
-    snapPoints = SelfLabelModal.snapPoints
-    element = <SelfLabelModal.Component {...activeModal} />
   } else if (activeModal?.name === 'change-handle') {
     snapPoints = ChangeHandleModal.snapPoints
     element = <ChangeHandleModal.Component {...activeModal} />

@@ -37,7 +37,7 @@ export function GifSelectDialog({
   onSelectGif: onSelectGifProp,
 }: {
   controlRef: React.RefObject<{open: () => void}>
-  onClose: () => void
+  onClose?: () => void
   onSelectGif: (gif: Gif) => void
 }) {
   const control = Dialog.useDialogControl()
