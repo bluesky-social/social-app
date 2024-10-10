@@ -2657,7 +2657,7 @@ msgstr "Expirado"
 
 #: src/components/dialogs/MutedWords.tsx:548
 msgid "Expires {0}"
-msgstr "Expirada {0}"
+msgstr "Expira {0}"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:47
 msgid "Explicit or potentially disturbing media."
