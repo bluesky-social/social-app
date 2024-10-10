@@ -25,6 +25,7 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
   var preventDismiss = false
   var preventExpansion = false
   var cornerRadius: CGFloat?
+  var initialHeight: String?
   var minHeight = 0.0
   var maxHeight: CGFloat! {
     didSet {
@@ -70,7 +71,7 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
 
   // MARK: - Lifecycle
 
-  required init (appContext: AppContext? = nil) {
+  required init(appContext: AppContext? = nil) {
     super.init(appContext: appContext)
     self.maxHeight = Util.getScreenHeight()
     self.touchHandler = RCTTouchHandler(bridge: appContext?.reactBridge)
@@ -117,16 +118,20 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
 
   func present() {
     guard !self.isOpen,
-          !self.isOpening,
-          !self.isClosing,
-          let innerView = self.innerView,
-          let contentHeight = innerView.subviews.first?.frame.height,
-          let rvc = self.reactViewController() else {
+      !self.isOpening,
+      !self.isClosing,
+      let innerView = self.innerView,
+      let contentHeight = innerView.subviews.first?.frame.height,
+      let rvc = self.reactViewController()
+    else {
       return
     }
 
     let sheetVc = SheetViewController()
-    sheetVc.setDetents(contentHeight: self.clampHeight(contentHeight), preventExpansion: self.preventExpansion)
+    sheetVc.setDetents(
+      initialHeight: self.initialHeight,
+      contentHeight: self.clampHeight(contentHeight),
+      preventExpansion: self.preventExpansion)
     if let sheet = sheetVc.sheetPresentationController {
       sheet.delegate = self
       sheet.preferredCornerRadius = self.cornerRadius
@@ -145,9 +150,12 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
 
   func updateLayout() {
     if self.prevLayoutDetentIdentifier == self.selectedDetentIdentifier,
-       let contentHeight = self.innerView?.subviews.first?.frame.size.height {
-      self.sheetVc?.updateDetents(contentHeight: self.clampHeight(contentHeight),
-                                  preventExpansion: self.preventExpansion)
+      let contentHeight = self.innerView?.subviews.first?.frame.size.height
+    {
+      self.sheetVc?.updateDetents(
+        initialHeight: self.initialHeight,
+        contentHeight: self.clampHeight(contentHeight),
+        preventExpansion: self.preventExpansion)
       self.selectedDetentIdentifier = self.sheetVc?.getCurrentDetentIdentifier()
     }
     self.prevLayoutDetentIdentifier = self.selectedDetentIdentifier
@@ -173,7 +181,9 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
 
   // MARK: - UISheetPresentationControllerDelegate
 
-  func presentationControllerShouldDismiss(_ presentationController: UIPresentationController) -> Bool {
+  func presentationControllerShouldDismiss(_ presentationController: UIPresentationController)
+    -> Bool
+  {
     self.onAttemptDismiss()
     return !self.preventDismiss
   }
@@ -186,7 +196,9 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
     self.destroy()
   }
 
-  func sheetPresentationControllerDidChangeSelectedDetentIdentifier(_ sheetPresentationController: UISheetPresentationController) {
+  func sheetPresentationControllerDidChangeSelectedDetentIdentifier(
+    _ sheetPresentationController: UISheetPresentationController
+  ) {
     self.selectedDetentIdentifier = sheetPresentationController.selectedDetentIdentifier
   }
 }

@@ -20,42 +20,68 @@ class SheetViewController: UIViewController {
     }
   }
 
-  func setDetents(contentHeight: CGFloat, preventExpansion: Bool) {
+  func setDetents(initialHeight: String, contentHeight: CGFloat, preventExpansion: Bool) {
     guard let sheet = self.sheetPresentationController,
-          let screenHeight = Util.getScreenHeight()
+      let screenHeight = Util.getScreenHeight()
     else {
       return
     }
 
     if contentHeight > screenHeight - 100 {
-      sheet.detents = [
-        .large()
-      ]
-      sheet.selectedDetentIdentifier = .large
-    } else {
-      if #available(iOS 16.0, *) {
+      if initialHeight == "half" {
         sheet.detents = [
-          .custom { _ in
-            return contentHeight
-          }
+          .medium(),
+          .large(),
         ]
+        sheet.selectedDetentIdentifier = .medium
       } else {
         sheet.detents = [
-          .medium()
+          .large()
         ]
+        sheet.selectedDetentIdentifier = .large
       }
+    } else {
+      if initialHeight == "full" {
+        sheet.detents = [
+          .large()
+        ]
+        sheet.selectedDetentIdentifier = .large
+      } else {
+        if #available(iOS 16.0, *) {
+          sheet.detents = [
+            .custom { _ in
+              return contentHeight
+            }
+          ]
 
-      if !preventExpansion {
-        sheet.detents.append(.large())
+          if initialHeight == "half" {
+            if (screenHeight - 100) / 2 > contentHeight {
+              sheet.detents.insert(.medium(), at: 0)
+            } else {
+              sheet.detents.append(.medium())
+            }
+          }
+        } else {
+          sheet.detents = [
+            .medium()
+          ]
+        }
+
+        if !preventExpansion {
+          sheet.detents.append(.large())
+        }
+
+        sheet.selectedDetentIdentifier = .medium
       }
-      sheet.selectedDetentIdentifier = .medium
     }
   }
 
-  func updateDetents(contentHeight: CGFloat, preventExpansion: Bool) {
+  func updateDetents(initialHeight: String, contentHeight: CGFloat, preventExpansion: Bool) {
     if let sheet = self.sheetPresentationController {
       sheet.animateChanges {
-        self.setDetents(contentHeight: contentHeight, preventExpansion: preventExpansion)
+        self.setDetents(
+          initialHeight: initialHeight, contentHeight: contentHeight,
+          preventExpansion: preventExpansion)
         if #available(iOS 16.0, *) {
           sheet.invalidateDetents()
         }

@@ -27,6 +27,10 @@ public class BottomSheetModule: Module {
         view.cornerRadius = CGFloat(prop)
       }
 
+      Prop("initialHeight") { (view: SheetView, prop: String) in
+        view.initialHeight = prop
+      }
+
       Prop("minHeight") { (view: SheetView, prop: Double) in
         view.minHeight = prop
       }
