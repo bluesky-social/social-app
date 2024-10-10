@@ -34,7 +34,7 @@ class ViewController: UIViewController, WKScriptMessageHandler, WKNavigationDele
     webView.navigationDelegate = self
     self.view.addSubview(webView)
     self.webView = webView
-    self.webView?.load(URLRequest(url: URL("https://bsky.app/?splash=true&clip=true")!))
+    self.webView?.load(URLRequest(url: URL(string: "https://bsky.app/?splash=true&clip=true")!))
   }
 
   func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
