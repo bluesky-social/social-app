@@ -116,7 +116,6 @@ export function ExternalGifEmbed({
           {height: imageDims.height},
           a.w_full,
           a.overflow_hidden,
-          a.overflow_hidden,
           {
             borderBottomLeftRadius: 0,
             borderBottomRightRadius: 0,
