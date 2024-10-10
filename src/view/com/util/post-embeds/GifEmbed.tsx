@@ -116,7 +116,6 @@ export function GifEmbed({
       style={[
         a.rounded_md,
         a.overflow_hidden,
-        a.mt_sm,
         a.border,
         t.atoms.border_contrast_low,
         {aspectRatio: params.dimensions!.width / params.dimensions!.height},

@@ -61,13 +61,15 @@ export const ExternalLinkEmbed = ({
   if (embedPlayerParams?.source === 'tenor') {
     const parsedAlt = parseAltFromGIFDescription(link.description)
     return (
-      <GifEmbed
-        params={embedPlayerParams}
-        thumb={link.thumb}
-        altText={parsedAlt.alt}
-        isPreferredAltText={parsedAlt.isPreferred}
-        hideAlt={hideAlt}
-      />
+      <View style={style}>
+        <GifEmbed
+          params={embedPlayerParams}
+          thumb={link.thumb}
+          altText={parsedAlt.alt}
+          isPreferredAltText={parsedAlt.isPreferred}
+          hideAlt={hideAlt}
+        />
+      </View>
     )
   }
 
