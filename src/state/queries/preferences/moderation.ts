@@ -51,7 +51,7 @@ export function useMyLabelersQuery({
 }
 
 export function useLabelDefinitionsQuery() {
-  const labelers = useMyLabelersQuery()
+  const labelers = useMyLabelersQuery({includeNonConfigurable: true})
   return React.useMemo(() => {
     return {
       labelDefs: Object.fromEntries(
