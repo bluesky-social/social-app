@@ -155,67 +155,63 @@ class BottomSheetView(
     if (this.isOpen || this.isOpening || this.isClosing) return
 
     val contentHeight = this.getContentHeight()
-
     val dialog = BottomSheetDialog(context)
     dialog.setContentView(dialogRootViewGroup)
     dialog.setCancelable(!preventDismiss)
-    dialog.setOnShowListener {
-      val bottomSheet = dialog.findViewById<FrameLayout>(com.google.android.material.R.id.design_bottom_sheet)
-      bottomSheet?.let {
-        // Let the outside view handle the background color on its own, the default for this is
-        // white and we don't want that.
-        it.setBackgroundColor(0)
-
-        val behavior = BottomSheetBehavior.from(it)
-
-        behavior.isFitToContents = true
-        behavior.halfExpandedRatio = this.clampRatio(this.getTargetHeight() / this.screenHeight)
-        if (contentHeight > this.screenHeight) {
-          behavior.state = BottomSheetBehavior.STATE_EXPANDED
-          this.selectedSnapPoint = 2
-        } else {
-          behavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
-          this.selectedSnapPoint = 1
-        }
-        behavior.skipCollapsed = true
-        behavior.isDraggable = true
-        behavior.isHideable = true
-
-        behavior.addBottomSheetCallback(
-          object : BottomSheetBehavior.BottomSheetCallback() {
-            override fun onStateChanged(
-              bottomSheet: View,
-              newState: Int,
-            ) {
-              when (newState) {
-                BottomSheetBehavior.STATE_EXPANDED -> {
-                  selectedSnapPoint = 2
-                }
-                BottomSheetBehavior.STATE_COLLAPSED -> {
-                  selectedSnapPoint = 1
-                }
-                BottomSheetBehavior.STATE_HALF_EXPANDED -> {
-                  selectedSnapPoint = 1
-                }
-                BottomSheetBehavior.STATE_HIDDEN -> {
-                  selectedSnapPoint = 0
-                }
-              }
-            }
-
-            override fun onSlide(
-              bottomSheet: View,
-              slideOffset: Float,
-            ) { }
-          },
-        )
-      }
-    }
     dialog.setOnDismissListener {
       this.isClosing = true
       this.destroy()
     }
 
+    val bottomSheet = dialog.findViewById<FrameLayout>(com.google.android.material.R.id.design_bottom_sheet)
+    bottomSheet?.let {
+      it.setBackgroundColor(0)
+
+      val behavior = BottomSheetBehavior.from(it)
+      behavior.state = BottomSheetBehavior.STATE_HIDDEN
+      behavior.isFitToContents = true
+      behavior.halfExpandedRatio = this.clampRatio(this.getTargetHeight() / this.screenHeight)
+      behavior.skipCollapsed = true
+      behavior.isDraggable = true
+      behavior.isHideable = true
+
+      if (contentHeight > this.screenHeight) {
+        behavior.state = BottomSheetBehavior.STATE_EXPANDED
+        this.selectedSnapPoint = 2
+      } else {
+        behavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+        this.selectedSnapPoint = 1
+      }
+
+      behavior.addBottomSheetCallback(
+        object : BottomSheetBehavior.BottomSheetCallback() {
+          override fun onStateChanged(
+            bottomSheet: View,
+            newState: Int,
+          ) {
+            when (newState) {
+              BottomSheetBehavior.STATE_EXPANDED -> {
+                selectedSnapPoint = 2
+              }
+              BottomSheetBehavior.STATE_COLLAPSED -> {
+                selectedSnapPoint = 1
+              }
+              BottomSheetBehavior.STATE_HALF_EXPANDED -> {
+                selectedSnapPoint = 1
+              }
+              BottomSheetBehavior.STATE_HIDDEN -> {
+                selectedSnapPoint = 0
+              }
+            }
+          }
+
+          override fun onSlide(
+            bottomSheet: View,
+            slideOffset: Float,
+          ) { }
+        },
+      )
+    }
     this.isOpening = true
     dialog.show()
     this.dialog = dialog
