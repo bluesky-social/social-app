@@ -65,7 +65,7 @@ export class BottomSheetNativeComponent extends React.Component<
   }
 
   render() {
-    const {children, backgroundColor, ...rest} = this.props
+    const {children, ...rest} = this.props
     const cornerRadius = rest.cornerRadius ?? 0
 
     if (!this.state.open) {
@@ -81,23 +81,20 @@ export class BottomSheetNativeComponent extends React.Component<
           position: 'absolute',
           height: screenHeight,
           width: '100%',
-        }}
-        containerBackgroundColor={backgroundColor}>
-        <View
-          style={[
-            {
-              flex: 1,
-              backgroundColor,
-            },
-            Platform.OS === 'android' && {
-              borderTopLeftRadius: cornerRadius,
-              borderTopRightRadius: cornerRadius,
-            },
-          ]}>
-          <ScrollView>
-            <BottomSheetPortalProvider>{children}</BottomSheetPortalProvider>
-          </ScrollView>
-        </View>
+        }}>
+        {/*<View*/}
+        {/*  style={[*/}
+        {/*    {*/}
+        {/*      flex: 1,*/}
+        {/*      backgroundColor,*/}
+        {/*    },*/}
+        {/*    Platform.OS === 'android' && {*/}
+        {/*      borderTopLeftRadius: cornerRadius,*/}
+        {/*      borderTopRightRadius: cornerRadius,*/}
+        {/*    },*/}
+        {/*  ]}>*/}
+        <BottomSheetPortalProvider>{children}</BottomSheetPortalProvider>
+        {/*</View>*/}
       </NativeView>
     )
   }

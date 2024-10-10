@@ -3,6 +3,7 @@ import {
   NativeScrollEvent,
   NativeSyntheticEvent,
   Pressable,
+  processColor,
   ScrollView,
   StyleProp,
   TextInput,
@@ -156,11 +157,11 @@ export function Outer({
     <BottomSheet
       ref={ref}
       cornerRadius={20}
-      backgroundColor={t.atoms.bg.backgroundColor}
       {...nativeOptions}
       onSnapPointChange={onSnapPointChange}
       onStateChange={onStateChange}
-      disableDrag={disableDrag}>
+      disableDrag={disableDrag}
+      containerBackgroundColor={processColor(t.atoms.bg.backgroundColor)}>
       <Context.Provider value={context}>
         <View testID={testID}>{children}</View>
       </Context.Provider>
@@ -213,6 +214,8 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
         setDisableDrag(false)
       }
     }
+
+    return children
 
     return (
       <KeyboardAwareScrollView

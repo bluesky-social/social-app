@@ -5,9 +5,14 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
   // Views
   private var sheetVc: SheetViewController!
   private var innerView: UIView?
+  private var contentHeight: CGFloat? {
+    get {
+      self.innerView?.frame.height
+    }
+  }
   
   // Scroll view
-  private var scrollView: RCTScrollView?
+  private var scrollView: BottomSheetScrollView!
   
   // Touch handler
   private var touchHandler: RCTTouchHandler?
@@ -29,6 +34,11 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
   // React view props
   var preventDismiss = false
   var preventExpansion = false
+  var containerBackgroundColor: UIColor? {
+    didSet {
+      self.scrollView.backgroundColor = containerBackgroundColor
+    }
+  }
   var cornerRadius: CGFloat?
   var minHeight = 0.0
   var maxHeight: CGFloat = Util.getScreenHeight() {
@@ -79,11 +89,16 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
   required init (appContext: AppContext? = nil) {
     super.init(appContext: appContext)
     
+    self.scrollView = BottomSheetScrollView()
+    
     self.sheetVc = SheetViewController()
     if let sheet = self.sheetVc.sheetPresentationController {
       sheet.delegate = self
     }
+    self.sheetVc.view.addSubview(self.scrollView)
     
+    self.touchHandler = RCTTouchHandler(bridge: appContext?.reactBridge)
+        
     SheetManager.shared.add(self)
   }
 
@@ -91,36 +106,23 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
     self.destroy()
   }
 
-  // We don't want this view to actually get added to the tree, so we'll simply store it for adding
-  // to the SheetViewController
   override func insertReactSubview(_ subview: UIView!, at atIndex: Int) {
-    let touchHandler = RCTTouchHandler(bridge: self.appContext?.reactBridge)
-    touchHandler?.attach(to: subview)
-    
-    self.touchHandler = touchHandler
+    self.touchHandler?.attach(to: subview)
+    self.scrollView.addSubview(subview)
     self.innerView = subview
+    self.present()
   }
 
-  // We'll grab the content height from here so we know the initial detent to set
   override func layoutSubviews() {
     super.layoutSubviews()
-
-    guard let innerView = self.innerView else {
-      return
-    }
-
-    if innerView.subviews.count != 1 {
-      return
-    }
-
     self.present()
   }
 
   private func destroy() {
-    self.isClosing = false
-    self.isOpen = false
     self.touchHandler?.detach(from: self.innerView)
     self.touchHandler = nil
+    self.isClosing = false
+    self.isOpen = false
     SheetManager.shared.remove(self)
   }
 
@@ -130,13 +132,11 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
     guard !self.isOpen,
           !self.isOpening,
           !self.isClosing,
-          let innerView = self.innerView,
-          let contentHeight = innerView.subviews.first?.frame.height,
+          let contentHeight = self.contentHeight,
           let rvc = self.reactViewController() else {
       return
     }
 
-    self.sheetVc.view.addSubview(innerView)
     self.sheetVc.setDetents(contentHeight: self.clampHeight(contentHeight), preventExpansion: self.preventExpansion)
     if let sheet = sheetVc.sheetPresentationController {
       sheet.preferredCornerRadius = self.cornerRadius
@@ -153,7 +153,7 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
 
   func updateLayout() {
     if self.prevLayoutDetentIdentifier == self.selectedDetentIdentifier,
-       let contentHeight = self.innerView?.subviews.first?.frame.size.height {
+       let contentHeight = self.contentHeight {
       self.sheetVc.updateDetents(contentHeight: self.clampHeight(contentHeight),
                                   preventExpansion: self.preventExpansion)
       self.selectedDetentIdentifier = self.sheetVc.getCurrentDetentIdentifier()
