@@ -116,7 +116,11 @@ export function Inner({
   }
 
   return (
-    <Dialog.ScrollableInner label={_(msg`Verify email dialog`)}>
+    <Dialog.ScrollableInner
+      label={_(msg`Verify email dialog`)}
+      style={[
+        gtMobile ? {width: 'auto', maxWidth: 400, minWidth: 200} : a.w_full,
+      ]}>
       <Dialog.Close />
       <View style={[a.gap_xl]}>
         <View style={[a.gap_sm]}>
