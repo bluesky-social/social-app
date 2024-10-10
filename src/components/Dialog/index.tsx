@@ -153,18 +153,18 @@ export function Outer({
   )
 
   return (
-    <Context.Provider value={context}>
-      <BottomSheet
-        ref={ref}
-        cornerRadius={20}
-        backgroundColor={t.atoms.bg.backgroundColor}
-        {...nativeOptions}
-        onSnapPointChange={onSnapPointChange}
-        onStateChange={onStateChange}
-        disableDrag={disableDrag}>
+    <BottomSheet
+      ref={ref}
+      cornerRadius={20}
+      backgroundColor={t.atoms.bg.backgroundColor}
+      {...nativeOptions}
+      onSnapPointChange={onSnapPointChange}
+      onStateChange={onStateChange}
+      disableDrag={disableDrag}>
+      <Context.Provider value={context}>
         <View testID={testID}>{children}</View>
-      </BottomSheet>
-    </Context.Provider>
+      </Context.Provider>
+    </BottomSheet>
   )
 }
 
