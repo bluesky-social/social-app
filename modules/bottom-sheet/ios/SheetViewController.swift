@@ -21,13 +21,11 @@ class SheetViewController: UIViewController {
   }
 
   func setDetents(contentHeight: CGFloat, preventExpansion: Bool) {
-    guard let sheet = self.sheetPresentationController,
-          let screenHeight = Util.getScreenHeight()
-    else {
+    guard let sheet = self.sheetPresentationController else {
       return
     }
 
-    if contentHeight > screenHeight - 100 {
+    if contentHeight > Util.getScreenHeight() - 100 {
       sheet.detents = [
         .large()
       ]
