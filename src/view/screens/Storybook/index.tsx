@@ -7,6 +7,7 @@ import {CenteredView} from '#/view/com/util/Views'
 import {ListContained} from '#/view/screens/Storybook/ListContained'
 import {atoms as a, ThemeProvider, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
+import {Admonitions} from './Admonitions'
 import {Breakpoints} from './Breakpoints'
 import {Buttons} from './Buttons'
 import {Dialogs} from './Dialogs'
@@ -80,7 +81,7 @@ function StorybookInner() {
               </Button>
             </View>
 
-            <Forms />
+            <Admonitions />
 
             <ThemeProvider theme="light">
               <Theming />
@@ -92,6 +93,7 @@ function StorybookInner() {
               <Theming />
             </ThemeProvider>
 
+            <Forms />
             <Buttons />
             <Typography />
             <Spacing />
