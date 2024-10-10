@@ -15,10 +15,11 @@ import {useVideoLibraryPermission} from '#/lib/hooks/usePermissions'
 import {getHostnameFromUrl} from '#/lib/strings/url-helpers'
 import {isWeb} from '#/platform/detection'
 import {isNative} from '#/platform/detection'
-import {useModalControls} from '#/state/modals'
 import {useSession} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
+import {useDialogControl} from '#/components/Dialog'
+import {VerifyEmailDialog} from '#/components/dialogs/VerifyEmailDialog'
 import {VideoClip_Stroke2_Corner0_Rounded as VideoClipIcon} from '#/components/icons/VideoClip'
 import * as Prompt from '#/components/Prompt'
 
@@ -121,26 +122,24 @@ export function SelectVideoBtn({onSelectVideo, disabled, setError}: Props) {
 
 function VerifyEmailPrompt({control}: {control: Prompt.PromptControlProps}) {
   const {_} = useLingui()
-  const {openModal} = useModalControls()
+  const verifyEmailDialogControl = useDialogControl()
 
   return (
-    <Prompt.Basic
-      control={control}
-      title={_(msg`Verified email required`)}
-      description={_(
-        msg`To upload videos to Bluesky, you must first verify your email.`,
-      )}
-      confirmButtonCta={_(msg`Verify now`)}
-      confirmButtonColor="primary"
-      onConfirm={() => {
-        control.close(() => {
-          openModal({
-            name: 'verify-email',
-            showReminder: false,
-          })
-        })
-      }}
-    />
+    <>
+      <Prompt.Basic
+        control={control}
+        title={_(msg`Verified email required`)}
+        description={_(
+          msg`To upload videos to Bluesky, you must first verify your email.`,
+        )}
+        confirmButtonCta={_(msg`Verify now`)}
+        confirmButtonColor="primary"
+        onConfirm={() => {
+          verifyEmailDialogControl.open()
+        }}
+      />
+      <VerifyEmailDialog control={verifyEmailDialogControl} />
+    </>
   )
 }
 
