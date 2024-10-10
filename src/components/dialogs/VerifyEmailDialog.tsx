@@ -20,15 +20,38 @@ export function VerifyEmailDialog({
 }: {
   control: Dialog.DialogControlProps
 }) {
+  const agent = useAgent()
+
+  const [didVerify, setDidVerify] = React.useState(false)
+
   return (
-    <Dialog.Outer control={control}>
+    <Dialog.Outer
+      control={control}
+      onClose={async () => {
+        if (!didVerify) {
+          return
+        }
+
+        try {
+          await agent.resumeSession(agent.session!)
+        } catch (e: unknown) {
+          logger.error(String(e))
+          return
+        }
+      }}>
       <Dialog.Handle />
-      <Inner control={control} />
+      <Inner control={control} setDidVerify={setDidVerify} />
     </Dialog.Outer>
   )
 }
 
-export function Inner({control}: {control: Dialog.DialogControlProps}) {
+export function Inner({
+  control,
+  setDidVerify,
+}: {
+  control: Dialog.DialogControlProps
+  setDidVerify: (value: boolean) => void
+}) {
   const {_} = useLingui()
   const {currentAccount} = useSession()
   const agent = useAgent()
@@ -87,16 +110,8 @@ export function Inner({control}: {control: Dialog.DialogControlProps}) {
       return
     }
 
-    try {
-      await agent.resumeSession(agent.session!)
-    } catch (e: unknown) {
-      setError(cleanError(String(e)))
-      setIsProcessing(false)
-      logger.error(String(e))
-      return
-    }
-
     setIsProcessing(false)
+    setDidVerify(true)
     setCurrentStep('StepThree')
   }
 
@@ -194,6 +209,9 @@ export function Inner({control}: {control: Dialog.DialogControlProps}) {
                 <ButtonText>
                   <Trans>Confirm</Trans>
                 </ButtonText>
+                {isProcessing ? (
+                  <Loader size="sm" style={[{color: 'white'}]} />
+                ) : null}
               </Button>
               <Button
                 label={_(msg`Resend Email`)}
@@ -208,9 +226,6 @@ export function Inner({control}: {control: Dialog.DialogControlProps}) {
                 <ButtonText>
                   <Trans>Resend Email</Trans>
                 </ButtonText>
-                {isProcessing ? (
-                  <Loader size="sm" style={[{color: 'white'}]} />
-                ) : null}
               </Button>
             </>
           ) : currentStep === 'StepThree' ? (
