@@ -6,8 +6,6 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {parseAltFromGIFDescription} from '#/lib/gif-alt-text'
-import {usePalette} from '#/lib/hooks/usePalette'
-import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {shareUrl} from '#/lib/sharing'
 import {parseEmbedPlayerFromUrl} from '#/lib/strings/embed-player'
 import {
@@ -22,8 +20,10 @@ import {ExternalGifEmbed} from '#/view/com/util/post-embeds/ExternalGifEmbed'
 import {ExternalPlayer} from '#/view/com/util/post-embeds/ExternalPlayerEmbed'
 import {GifEmbed} from '#/view/com/util/post-embeds/GifEmbed'
 import {atoms as a, useTheme} from '#/alf'
+import {Divider} from '#/components/Divider'
+import {Earth_Stroke2_Corner0_Rounded as Globe} from '#/components/icons/Globe'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
-import {Text} from '../text/Text'
+import {Text} from '#/components/Typography'
 
 export const ExternalLinkEmbed = ({
   link,
@@ -37,9 +37,7 @@ export const ExternalLinkEmbed = ({
   hideAlt?: boolean
 }) => {
   const {_} = useLingui()
-  const pal = usePalette('default')
   const t = useTheme()
-  const {isMobile} = useWebMediaQueries()
   const externalEmbedPrefs = useExternalEmbedsPrefs()
 
   const starterPackParsed = parseStarterPackUri(link.uri)
@@ -69,8 +67,9 @@ export const ExternalLinkEmbed = ({
   }
 
   return (
-    <View style={[a.flex_col, a.rounded_md, a.w_full]}>
-      <LinkWrapper link={link} onOpen={onOpen} style={style}>
+    <View
+      style={[a.flex_col, a.rounded_md, a.overflow_hidden, a.w_full, style]}>
+      <LinkWrapper link={link} onOpen={onOpen}>
         {imageUri && !embedPlayerParams ? (
           <View>
             <Image
@@ -108,36 +107,58 @@ export const ExternalLinkEmbed = ({
             a.border_l,
             a.border_r,
             a.flex_1,
-            a.py_sm,
+            a.pt_sm,
+            a.gap_xs,
+            a.overflow_hidden,
             t.atoms.border_contrast_low,
             {
               borderBottomRightRadius: a.rounded_md.borderRadius,
               borderBottomLeftRadius: a.rounded_md.borderRadius,
-              paddingHorizontal: isMobile ? 10 : 14,
             },
             !imageUri && !embedPlayerParams && [a.border, a.rounded_md],
           ]}>
-          <Text
-            type="sm"
-            numberOfLines={1}
-            style={[pal.textLight, {marginVertical: 2}]}>
-            {toNiceDomain(link.uri)}
-          </Text>
-
-          {!embedPlayerParams?.isGif && !embedPlayerParams?.dimensions && (
-            <Text emoji type="lg-bold" numberOfLines={3} style={[pal.text]}>
-              {link.title || link.uri}
-            </Text>
-          )}
-          {link.description ? (
-            <Text
-              emoji
-              type="md"
-              numberOfLines={link.thumb ? 2 : 4}
-              style={[pal.text, a.mt_xs]}>
-              {link.description}
-            </Text>
-          ) : undefined}
+          <View style={[a.gap_xs, a.pb_xs, a.px_md]}>
+            {!embedPlayerParams?.isGif && !embedPlayerParams?.dimensions && (
+              <Text
+                emoji
+                numberOfLines={3}
+                style={[a.text_md, a.font_bold, a.leading_snug]}>
+                {link.title || link.uri}
+              </Text>
+            )}
+            {link.description ? (
+              <Text
+                emoji
+                numberOfLines={link.thumb ? 2 : 4}
+                style={[a.text_sm, a.leading_snug]}>
+                {link.description}
+              </Text>
+            ) : undefined}
+          </View>
+          <View style={[a.px_md]}>
+            <Divider />
+            <View
+              style={[
+                a.flex_row,
+                a.align_center,
+                a.gap_2xs,
+                a.pb_sm,
+                {
+                  paddingTop: 6, // off menu
+                },
+              ]}>
+              <Globe size="xs" fill={t.atoms.text_contrast_low.color} />
+              <Text
+                numberOfLines={1}
+                style={[
+                  a.text_xs,
+                  a.leading_tight,
+                  t.atoms.text_contrast_medium,
+                ]}>
+                {toNiceDomain(link.uri)}
+              </Text>
+            </View>
+          </View>
         </View>
       </LinkWrapper>
     </View>
@@ -147,12 +168,10 @@ export const ExternalLinkEmbed = ({
 function LinkWrapper({
   link,
   onOpen,
-  style,
   children,
 }: {
   link: AppBskyEmbedExternal.ViewExternal
   onOpen?: () => void
-  style?: StyleProp<ViewStyle>
   children: React.ReactNode
 }) {
   const onShareExternal = useCallback(() => {
@@ -166,7 +185,6 @@ function LinkWrapper({
       asAnchor
       anchorNoUnderline
       href={link.uri}
-      style={[a.flex_1, a.rounded_sm, style]}
       onBeforePress={onOpen}
       onLongPress={onShareExternal}>
       {children}
