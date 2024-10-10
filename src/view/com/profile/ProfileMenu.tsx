@@ -333,7 +333,7 @@ let ProfileMenu = ({
                 msg`Blocking will not prevent labels from being applied on your account, but it will stop this account from replying in your threads or interacting with you.`,
               )
             : _(
-                msg`Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you.`,
+                msg`Blocking is public. Blocked accounts will be prevented from seeing your content and they cannot reply in your threads, mention you, or otherwise interact with you. You will not see their content.`,
               )
         }
         onConfirm={blockAccount}

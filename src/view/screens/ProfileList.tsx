@@ -732,7 +732,7 @@ function Header({
         control={subscribeBlockPromptControl}
         title={_(msg`Block these accounts?`)}
         description={_(
-          msg`Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you.`,
+          msg`Blocking is public. Blocked accounts will be prevented from seeing your content and they cannot reply in your threads, mention you, or otherwise interact with you. You will not see their content.`,
         )}
         onConfirm={onSubscribeBlock}
         confirmButtonCta={_(msg`Block list`)}
