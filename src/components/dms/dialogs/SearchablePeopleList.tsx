@@ -278,7 +278,7 @@ export function SearchablePeopleList({
           ) : null}
         </View>
 
-        <View style={[, web([a.pt_xs])]}>
+        <View style={[web([a.pt_xs])]}>
           <SearchInput
             inputRef={inputRef}
             value={searchText}

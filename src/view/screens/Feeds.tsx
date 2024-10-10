@@ -155,10 +155,10 @@ export function FeedsScreen(_props: Props) {
     [setQuery, refetchPopularFeeds, debouncedSearch, resetSearch],
   )
   const onPressCancelSearch = React.useCallback(() => {
-    setQuery('')
     refetchPopularFeeds()
     resetSearch()
-  }, [refetchPopularFeeds, setQuery, resetSearch])
+  }, [refetchPopularFeeds, resetSearch])
+
   const onSubmitQuery = React.useCallback(() => {
     debouncedSearch(query)
   }, [query, debouncedSearch])
@@ -481,7 +481,7 @@ export function FeedsScreen(_props: Props) {
             <FeedsAboutHeader />
             <View style={{paddingHorizontal: 12, paddingBottom: 4}}>
               <SearchInput
-                value={query}
+                defaultValue={query}
                 onChangeText={onChangeQuery}
                 onClearText={onPressCancelSearch}
                 onSubmitEditing={onSubmitQuery}
