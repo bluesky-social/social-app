@@ -117,6 +117,7 @@ export function Inner({
 
   return (
     <Dialog.ScrollableInner label={_(msg`Verify email dialog`)}>
+      <Dialog.Close />
       <View style={[a.gap_xl]}>
         <View style={[a.gap_sm]}>
           <Text style={[a.font_heavy, a.text_2xl]}>
@@ -189,8 +190,8 @@ export function Inner({
               </Button>
               <Button
                 label={_(msg`I Have a Code`)}
-                variant="ghost"
-                color="primary"
+                variant="solid"
+                color="secondary"
                 size="large"
                 disabled={isProcessing}
                 onPress={() => setCurrentStep('StepTwo')}>
@@ -217,8 +218,8 @@ export function Inner({
               </Button>
               <Button
                 label={_(msg`Resend Email`)}
-                variant="ghost"
-                color="primary"
+                variant="solid"
+                color="secondary"
                 size="large"
                 disabled={isProcessing}
                 onPress={() => {
