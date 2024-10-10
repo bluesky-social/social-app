@@ -30,14 +30,9 @@ export function useMyLabelersQuery({
       ),
     ),
   )
-
-  /*
-   * By default, remove non-configurable moderation authorities
-   */
   if (excludeNonConfigurableLabelers) {
     dids = dids.filter(did => !isNonConfigurableModerationAuthority(did))
   }
-
   const labelers = useLabelersDetailedInfoQuery({dids})
   const isLoading = prefs.isLoading || labelers.isLoading
   const error = prefs.error || labelers.error
