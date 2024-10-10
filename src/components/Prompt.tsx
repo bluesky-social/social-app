@@ -27,12 +27,10 @@ export function Outer({
   control,
   testID,
   nativeOptions,
-  onClose,
 }: React.PropsWithChildren<{
   control: Dialog.DialogControlProps
   testID?: string
   nativeOptions?: Omit<BottomSheetViewProps, 'children'>
-  onClose?: () => unknown
 }>) {
   const {gtMobile} = useBreakpoints()
   const titleId = React.useId()
@@ -47,8 +45,7 @@ export function Outer({
     <Dialog.Outer
       control={control}
       testID={testID}
-      nativeOptions={{preventExpansion: true, ...nativeOptions}}
-      onClose={onClose}>
+      nativeOptions={{preventExpansion: true, ...nativeOptions}}>
       <Dialog.Handle />
       <Context.Provider value={context}>
         <Dialog.ScrollableInner
