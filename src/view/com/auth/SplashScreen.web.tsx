@@ -9,7 +9,10 @@ import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {Logo} from '#/view/icons/Logo'
 import {Logotype} from '#/view/icons/Logotype'
 import {ErrorBoundary} from 'view/com/util/ErrorBoundary'
-import {AppClipOverlay} from '#/screens/StarterPack/StarterPackLandingScreen'
+import {
+  AppClipOverlay,
+  postAppClipMessage,
+} from '#/screens/StarterPack/StarterPackLandingScreen'
 import {atoms as a, useTheme} from '#/alf'
 import {AppLanguageDropdown} from '#/components/AppLanguageDropdown'
 import {Button, ButtonText} from '#/components/Button'
@@ -36,6 +39,9 @@ export const SplashScreen = ({
     const clip = getParams.get('clip')
     if (clip === 'true') {
       setShowClipOverlay(true)
+      postAppClipMessage({
+        action: 'present',
+      })
     }
   }, [])
 
