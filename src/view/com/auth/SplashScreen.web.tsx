@@ -39,9 +39,11 @@ export const SplashScreen = ({
     const clip = getParams.get('clip')
     if (clip === 'true') {
       setShowClipOverlay(true)
-      postAppClipMessage({
-        action: 'present',
-      })
+      setTimeout(() => {
+        postAppClipMessage({
+          action: 'present',
+        })
+      }, 1000)
     }
   }, [])
 
