@@ -106,7 +106,7 @@ export function UserBanner({
               ) : (
                 <View
                   testID="userBannerFallback"
-                  style={[styles.bannerImage, styles.defaultBanner]}
+                  style={[styles.bannerImage, t.atoms.bg_contrast_25]}
                 />
               )}
               <View style={[styles.editButtonContainer, pal.btn]}>
@@ -181,7 +181,7 @@ export function UserBanner({
       testID="userBannerFallback"
       style={[
         styles.bannerImage,
-        type === 'labeler' ? styles.labelerBanner : styles.defaultBanner,
+        type === 'labeler' ? styles.labelerBanner : t.atoms.bg_contrast_25,
       ]}
     />
   )
@@ -202,9 +202,6 @@ const styles = StyleSheet.create({
   bannerImage: {
     width: '100%',
     height: 150,
-  },
-  defaultBanner: {
-    backgroundColor: '#0070ff',
   },
   labelerBanner: {
     backgroundColor: tokens.color.temp_purple,

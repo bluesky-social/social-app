@@ -8,10 +8,11 @@ import {logger} from '#/logger'
 import {useModalControls} from '#/state/modals'
 import {useAgent, useSession} from '#/state/session'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, useBreakpoints} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
+import {InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 
@@ -55,7 +56,6 @@ export function Inner({
   const {_} = useLingui()
   const {currentAccount} = useSession()
   const agent = useAgent()
-  const t = useTheme()
   const {openModal} = useModalControls()
   const {gtMobile} = useBreakpoints()
 
@@ -116,7 +116,12 @@ export function Inner({
   }
 
   return (
-    <Dialog.ScrollableInner label={_(msg`Verify email dialog`)}>
+    <Dialog.ScrollableInner
+      label={_(msg`Verify email dialog`)}
+      style={[
+        gtMobile ? {width: 'auto', maxWidth: 400, minWidth: 200} : a.w_full,
+      ]}>
+      <Dialog.Close />
       <View style={[a.gap_xl]}>
         <View style={[a.gap_sm]}>
           <Text style={[a.font_heavy, a.text_2xl]}>
@@ -129,26 +134,28 @@ export function Inner({
           ) : null}
           <Text style={[a.text_md, a.leading_snug]}>
             {currentStep === 'StepOne' ? (
-              <Trans>
-                You'll receive an email at{' '}
-                <Text style={[a.text_md, a.leading_snug, a.font_bold]}>
-                  {currentAccount?.email}
-                </Text>{' '}
-                to verify it's you.{' '}
-                <Text
-                  onPress={() => {
+              <>
+                <Trans>
+                  You'll receive an email at{' '}
+                  <Text style={[a.text_md, a.leading_snug, a.font_bold]}>
+                    {currentAccount?.email}
+                  </Text>{' '}
+                  to verify it's you.
+                </Trans>{' '}
+                <InlineLinkText
+                  to="#"
+                  label={_(msg`Change email address`)}
+                  style={[a.text_md, a.leading_snug]}
+                  onPress={e => {
+                    e.preventDefault()
                     control.close(() => {
                       openModal({name: 'change-email'})
                     })
-                  }}
-                  style={[
-                    a.text_md,
-                    a.leading_snug,
-                    {color: t.palette.primary_500},
-                  ]}>
+                    return false
+                  }}>
                   <Trans>Need to change it?</Trans>
-                </Text>
-              </Trans>
+                </InlineLinkText>
+              </>
             ) : (
               uiStrings[currentStep].message
             )}
@@ -187,8 +194,8 @@ export function Inner({
               </Button>
               <Button
                 label={_(msg`I Have a Code`)}
-                variant="ghost"
-                color="primary"
+                variant="solid"
+                color="secondary"
                 size="large"
                 disabled={isProcessing}
                 onPress={() => setCurrentStep('StepTwo')}>
@@ -215,8 +222,8 @@ export function Inner({
               </Button>
               <Button
                 label={_(msg`Resend Email`)}
-                variant="ghost"
-                color="primary"
+                variant="solid"
+                color="secondary"
                 size="large"
                 disabled={isProcessing}
                 onPress={() => {
