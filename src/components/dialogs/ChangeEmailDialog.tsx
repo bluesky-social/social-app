@@ -3,7 +3,8 @@ import {View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {atoms as a} from '#/alf'
+import {useAgent, useSession} from '#/state/session'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import * as Dialog from '#/components/Dialog'
 import {Text} from '#/components/Typography'
 
@@ -22,6 +23,25 @@ export function ChangeEmailDialog({
 
 function Inner({control}: {control: Dialog.DialogControlProps}) {
   const {_} = useLingui()
+  const {currentAccount} = useSession()
+  const agent = useAgent()
+  const t = useTheme()
+  const {gtMobile} = useBreakpoints()
+
+  const [currentStep, setCurrentStep] = React.useState<'StepOne' | 'StepTwo'>(
+    'StepOne',
+  )
+
+  const uiStrings = {
+    StepOne: {
+      title: _(msg`Change Email`),
+      message: _(msg`Enter your new email address below.`),
+    },
+    StepTwo: {
+      title: _(msg),
+      message: '',
+    },
+  }
 
   return (
     <Dialog.ScrollableInner label={_(msg`Change email dialog`)}>
