@@ -35,7 +35,7 @@ function ReportDialogInner(props: ReportDialogProps) {
     isLoading: isLabelerLoading,
     data: labelers,
     error,
-  } = useMyLabelersQuery()
+  } = useMyLabelersQuery({includeNonConfigurable: false})
   const isLoading = useDelayedLoading(500, isLabelerLoading)
 
   const ref = React.useRef<ScrollView>(null)

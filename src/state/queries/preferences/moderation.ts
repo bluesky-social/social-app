@@ -18,7 +18,7 @@ export const DEFAULT_LOGGED_OUT_LABEL_PREFERENCES: typeof DEFAULT_LABEL_SETTINGS
   )
 
 export function useMyLabelersQuery({
-  includeNonConfigurable = false,
+  includeNonConfigurable = true,
 }: {
   includeNonConfigurable?: boolean
 } = {}) {
@@ -51,7 +51,7 @@ export function useMyLabelersQuery({
 }
 
 export function useLabelDefinitionsQuery() {
-  const labelers = useMyLabelersQuery({includeNonConfigurable: true})
+  const labelers = useMyLabelersQuery()
   return React.useMemo(() => {
     return {
       labelDefs: Object.fromEntries(
