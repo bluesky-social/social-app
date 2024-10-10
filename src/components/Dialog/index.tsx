@@ -39,6 +39,7 @@ import {
 import {BottomSheetNativeComponent} from '../../../modules/bottom-sheet/src/BottomSheetNativeComponent'
 
 export {useDialogContext, useDialogControl} from '#/components/Dialog/context'
+export * from '#/components/Dialog/shared'
 export * from '#/components/Dialog/types'
 export * from '#/components/Dialog/utils'
 // @ts-ignore
@@ -168,25 +169,31 @@ export function Outer({
   )
 }
 
-export function Inner({children, style}: DialogInnerProps) {
+export function Inner({children, style, header}: DialogInnerProps) {
   const insets = useSafeAreaInsets()
   return (
-    <View
-      style={[
-        a.pt_2xl,
-        a.px_xl,
-        {
-          paddingBottom: insets.bottom + insets.top,
-        },
-        style,
-      ]}>
-      {children}
-    </View>
+    <>
+      {header}
+      <View
+        style={[
+          a.pt_2xl,
+          a.px_xl,
+          {
+            paddingBottom: insets.bottom + insets.top,
+          },
+          style,
+        ]}>
+        {children}
+      </View>
+    </>
   )
 }
 
 export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
-  function ScrollableInner({children, style, ...props}, ref) {
+  function ScrollableInner(
+    {children, style, contentContainerStyle, header, ...props},
+    ref,
+  ) {
     const {nativeSnapPoint, disableDrag, setDisableDrag} = useDialogContext()
     const insets = useSafeAreaInsets()
     const [keyboardHeight, setKeyboardHeight] = React.useState(0)
@@ -217,13 +224,20 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
     return (
       <KeyboardAwareScrollView
         style={[style]}
-        contentContainerStyle={[a.pt_2xl, a.px_xl, {paddingBottom}]}
+        contentContainerStyle={[
+          a.pt_2xl,
+          a.px_xl,
+          {paddingBottom},
+          contentContainerStyle,
+        ]}
         ref={ref}
         {...props}
         bounces={nativeSnapPoint === BottomSheetSnapPoint.Full}
         bottomOffset={30}
         scrollEventThrottle={50}
-        onScroll={isAndroid ? onScroll : undefined}>
+        onScroll={isAndroid ? onScroll : undefined}
+        stickyHeaderIndices={header ? [0] : undefined}>
+        {header}
         {children}
       </KeyboardAwareScrollView>
     )
