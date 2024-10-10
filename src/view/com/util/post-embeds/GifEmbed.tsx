@@ -18,7 +18,6 @@ import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
 import {atoms as a, useTheme} from '#/alf'
 import {Fill} from '#/components/Fill'
 import {Loader} from '#/components/Loader'
-import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
 import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
@@ -51,7 +50,6 @@ function PlaybackControls({
         a.inset_0,
         a.w_full,
         a.h_full,
-        a.rounded_md,
         {
           zIndex: 2,
           backgroundColor: !isLoaded
@@ -114,12 +112,28 @@ export function GifEmbed({
   }, [])
 
   return (
-    <View style={[a.rounded_md, a.overflow_hidden, a.mt_sm, style]}>
+    <View
+      style={[
+        a.rounded_md,
+        a.overflow_hidden,
+        a.mt_sm,
+        a.border,
+        t.atoms.border_contrast_low,
+        {aspectRatio: params.dimensions!.width / params.dimensions!.height},
+        style,
+      ]}>
       <View
         style={[
-          a.rounded_md,
-          a.overflow_hidden,
-          {aspectRatio: params.dimensions!.width / params.dimensions!.height},
+          a.absolute,
+          /*
+           * Aspect ratio was being clipped weirdly on web -esb
+           */
+          {
+            top: -2,
+            bottom: -2,
+            left: -2,
+            right: -2,
+          },
         ]}>
         <PlaybackControls
           onPress={onPress}
@@ -129,7 +143,7 @@ export function GifEmbed({
         <GifView
           source={params.playerUri}
           placeholderSource={thumb}
-          style={[a.flex_1, a.rounded_md]}
+          style={[a.flex_1]}
           autoplay={!autoplayDisabled}
           onPlayerStateChange={onPlayerStateChange}
           ref={playerRef}
@@ -146,7 +160,6 @@ export function GifEmbed({
             ]}
           />
         )}
-        <MediaInsetBorder />
         {!hideAlt && isPreferredAltText && <AltText text={altText} />}
       </View>
     </View>
