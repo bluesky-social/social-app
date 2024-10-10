@@ -25,7 +25,7 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
   var preventDismiss = false
   var preventExpansion = false
   var cornerRadius: CGFloat?
-  var initialHeight: String?
+  var initialHeight: String = "auto"
   var minHeight = 0.0
   var maxHeight: CGFloat! {
     didSet {
