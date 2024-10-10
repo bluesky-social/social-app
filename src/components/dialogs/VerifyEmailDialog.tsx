@@ -134,7 +134,7 @@ export function Inner({
                 <Text style={[a.text_md, a.leading_snug, a.font_bold]}>
                   {currentAccount?.email}
                 </Text>{' '}
-                to verify it is you.{' '}
+                to verify it's you.{' '}
                 <Text
                   onPress={() => {
                     control.close(() => {
