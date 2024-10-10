@@ -19,6 +19,7 @@ import {
   TriggerProps,
 } from '#/components/Menu/types'
 import {Text} from '#/components/Typography'
+import {BottomSheetViewProps} from '../../../modules/bottom-sheet'
 
 export {
   type DialogControlProps as MenuControlProps,
@@ -77,9 +78,11 @@ export function Trigger({children, label}: TriggerProps) {
 export function Outer({
   children,
   showCancel,
+  nativeOptions,
 }: React.PropsWithChildren<{
   showCancel?: boolean
   style?: StyleProp<ViewStyle>
+  nativeOptions?: Omit<BottomSheetViewProps, 'children'>
 }>) {
   const context = React.useContext(Context)
   const {_} = useLingui()
@@ -87,7 +90,7 @@ export function Outer({
   return (
     <Dialog.Outer
       control={context.control}
-      nativeOptions={{preventExpansion: true}}>
+      nativeOptions={{preventExpansion: true, ...nativeOptions}}>
       <Dialog.Handle />
       {/* Re-wrap with context since Dialogs are portal-ed to root */}
       <Context.Provider value={context}>

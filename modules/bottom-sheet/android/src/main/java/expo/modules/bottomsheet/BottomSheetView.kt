@@ -52,6 +52,8 @@ class BottomSheetView(
     }
   var preventExpansion = false
 
+  var initialHeight = "auto"
+
   var minHeight = 0f
     set(value) {
       field =

@@ -25,9 +25,7 @@ const NativeModule = requireNativeModule('BottomSheet')
 
 export class BottomSheetNativeComponent extends React.Component<
   BottomSheetViewProps,
-  {
-    open: boolean
-  }
+  {open: boolean}
 > {
   ref = React.createRef<any>()
 

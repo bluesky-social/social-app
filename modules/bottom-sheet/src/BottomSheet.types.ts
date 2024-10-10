@@ -3,6 +3,8 @@ import {ColorValue, NativeSyntheticEvent} from 'react-native'
 
 export type BottomSheetState = 'closed' | 'closing' | 'open' | 'opening'
 
+export type BottomSheetDetent = 'auto' | 'half' | 'full'
+
 export enum BottomSheetSnapPoint {
   Hidden,
   Partial,
@@ -25,6 +27,7 @@ export interface BottomSheetViewProps {
   backgroundColor?: ColorValue
   containerBackgroundColor?: ColorValue
   disableDrag?: boolean
+  initialHeight?: BottomSheetDetent
 
   minHeight?: number
   maxHeight?: number
