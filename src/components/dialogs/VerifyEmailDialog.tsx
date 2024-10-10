@@ -41,6 +41,7 @@ export function VerifyEmailDialog({
           return
         }
       }}>
+      <Dialog.Handle />
       <Dialog.Close />
       <Inner control={control} setDidVerify={setDidVerify} />
     </Prompt.Outer>
