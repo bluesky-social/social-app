@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-10-11 15:00+0900\n"
+"PO-Revision-Date: 2024-10-11 15:28+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -527,6 +527,10 @@ msgstr "メールが{0}に送信されました。以下に入力できる確認
 msgid "An email has been sent to your previous address, {0}. It includes a confirmation code which you can enter below."
 msgstr "以前のメールアドレス{0}にメールが送信されました。以下に入力できる確認コードがそのメールに記載されています。"
 
+#: src/components/dialogs/VerifyEmailDialog.tsx:77
+msgid "An email has been sent! Please enter the confirmation code included in the email below."
+msgstr "メールが送信されました！メールに書かれている確認コードを以下に入力してください。"
+
 #: src/components/dialogs/GifSelect.tsx:267
 msgid "An error has occurred"
 msgstr "エラーが発生しました"
@@ -1035,6 +1039,10 @@ msgctxt "action"
 msgid "Change"
 msgstr "変更"
 
+#: src/components/dialogs/VerifyEmailDialog.tsx:147
+msgid "Change email address"
+msgstr "メールアドレスを変更"
+
 #: src/view/screens/Settings/index.tsx:683
 msgid "Change handle"
 msgstr "ハンドルを変更"
@@ -1341,6 +1349,10 @@ msgstr "生年月日の確認"
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:142
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:148
 msgid "Confirmation code"
+msgstr "確認コード"
+
+#: src/components/dialogs/VerifyEmailDialog.tsx:167
+msgid "Confirmation Code"
 msgstr "確認コード"
 
 #: src/screens/Login/LoginForm.tsx:309
@@ -2156,6 +2168,10 @@ msgstr "パスワードを入力"
 msgid "Enter a word or tag"
 msgstr "ワードまたはタグを入力"
 
+#: src/components/dialogs/VerifyEmailDialog.tsx:75
+msgid "Enter Code"
+msgstr "コードを入力"
+
 #: src/view/com/modals/VerifyEmail.tsx:113
 msgid "Enter Confirmation Code"
 msgstr "確認コードを入力してください"
@@ -2943,6 +2959,11 @@ msgstr "このリンクをどのように開きますか？"
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:131
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:134
 msgid "I have a code"
+msgstr "コードを持っています"
+
+#: src/components/dialogs/VerifyEmailDialog.tsx:196
+#: src/components/dialogs/VerifyEmailDialog.tsx:203
+msgid "I Have a Code"
 msgstr "コードを持っています"
 
 #: src/view/com/modals/VerifyEmail.tsx:224
@@ -3771,6 +3792,10 @@ msgstr "次の画面に移動します"
 #: src/view/shell/Drawer.tsx:78
 msgid "Navigates to your profile"
 msgstr "あなたのプロフィールに移動します"
+
+#: src/components/dialogs/VerifyEmailDialog.tsx:156
+msgid "Need to change it?"
+msgstr "変更が必要？"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:130
 msgid "Need to report a copyright violation?"
@@ -5578,6 +5603,14 @@ msgstr "フィード内の翻訳に使用する言語を選択します。"
 msgid "Send a neat website!"
 msgstr "素敵なウェブサイトを送って！"
 
+#: src/components/dialogs/VerifyEmailDialog.tsx:189
+msgid "Send Confirmation"
+msgstr "確認を送信"
+
+#: src/components/dialogs/VerifyEmailDialog.tsx:182
+msgid "Send confirmation email"
+msgstr "確認のメールを送信"
+
 #: src/view/com/modals/VerifyEmail.tsx:210
 #: src/view/com/modals/VerifyEmail.tsx:212
 msgid "Send Confirmation Email"
@@ -5772,10 +5805,6 @@ msgstr "リンクしたウェブサイトを共有"
 #: src/view/screens/Settings/index.tsx:350
 msgid "Show"
 msgstr "表示"
-
-#: src/view/screens/Search/Search.tsx:889
-msgid "Show advanced filters"
-msgstr "高度なフィルターを表示"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:166
 msgid "Show alt text"
@@ -6107,6 +6136,10 @@ msgstr "このラベラーを登録"
 msgid "Subscribe to this list"
 msgstr "このリストに登録"
 
+#: src/components/dialogs/VerifyEmailDialog.tsx:81
+msgid "Success!"
+msgstr "成功！"
+
 #: src/view/screens/Search/Explore.tsx:332
 msgid "Suggested accounts"
 msgstr "おすすめのアカウント"
@@ -6224,6 +6257,10 @@ msgstr "テキストとタグ"
 #: src/screens/Messages/components/ChatDisabled.tsx:108
 msgid "Text input field"
 msgstr "テキストの入力フィールド"
+
+#: src/components/dialogs/VerifyEmailDialog.tsx:82
+msgid "Thank you! Your email has been successfully verified."
+msgstr "ありがとう！メールの確認に成功しました。"
 
 #: src/components/dms/ReportDialog.tsx:129
 #: src/components/ReportDialog/SubmitView.tsx:82
@@ -7653,6 +7690,10 @@ msgstr "これらのユーザーや他{0}をフォローします"
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:230
 msgid "You'll follow these people right away"
 msgstr "これらのユーザーをすぐにフォローします"
+
+#: src/components/dialogs/VerifyEmailDialog.tsx:138
+msgid "You'll receive an email at <0>{0}</0> to verify it's you."
+msgstr "本人確認のために<0>{0}</0>へメールが届きます。"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:270
 msgid "You'll stay updated with these feeds"
