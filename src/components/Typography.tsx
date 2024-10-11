@@ -26,7 +26,7 @@ export type TextProps = Omit<RNTextProps, 'children'> & {
   title?: string
 } & (
     | {
-        emoji: true
+        emoji?: true
         children: StringChild
       }
     | {

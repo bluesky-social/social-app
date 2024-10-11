@@ -31,12 +31,12 @@ import {
   DialogOuterProps,
 } from '#/components/Dialog/types'
 import {createInput} from '#/components/forms/TextField'
-import {Portal as DefaultPortal} from '#/components/Portal'
 import {BottomSheet, BottomSheetSnapPoint} from '../../../modules/bottom-sheet'
 import {
   BottomSheetSnapPointChangeEvent,
   BottomSheetStateChangeEvent,
 } from '../../../modules/bottom-sheet/src/BottomSheet.types'
+import {BottomSheetNativeComponent} from '../../../modules/bottom-sheet/src/BottomSheetNativeComponent'
 
 export {useDialogContext, useDialogControl} from '#/components/Dialog/context'
 export * from '#/components/Dialog/types'
@@ -50,10 +50,9 @@ export function Outer({
   onClose,
   nativeOptions,
   testID,
-  Portal = DefaultPortal,
 }: React.PropsWithChildren<DialogOuterProps>) {
   const t = useTheme()
-  const ref = React.useRef<BottomSheet>(null)
+  const ref = React.useRef<BottomSheetNativeComponent>(null)
   const closeCallbacks = React.useRef<(() => void)[]>([])
   const {setDialogIsOpen, setFullyExpandedCount} =
     useDialogStateControlContext()
@@ -154,20 +153,18 @@ export function Outer({
   )
 
   return (
-    <Portal>
+    <BottomSheet
+      ref={ref}
+      cornerRadius={20}
+      backgroundColor={t.atoms.bg.backgroundColor}
+      {...nativeOptions}
+      onSnapPointChange={onSnapPointChange}
+      onStateChange={onStateChange}
+      disableDrag={disableDrag}>
       <Context.Provider value={context}>
-        <BottomSheet
-          ref={ref}
-          cornerRadius={20}
-          backgroundColor={t.atoms.bg.backgroundColor}
-          {...nativeOptions}
-          onSnapPointChange={onSnapPointChange}
-          onStateChange={onStateChange}
-          disableDrag={disableDrag}>
-          <View testID={testID}>{children}</View>
-        </BottomSheet>
+        <View testID={testID}>{children}</View>
       </Context.Provider>
-    </Portal>
+    </BottomSheet>
   )
 }
 

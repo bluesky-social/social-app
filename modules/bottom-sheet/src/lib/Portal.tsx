@@ -12,7 +12,7 @@ type ComponentMap = {
   [id: string]: Component
 }
 
-export function createPortalGroup() {
+export function createPortalGroup_INTERNAL() {
   const Context = React.createContext<ContextType>({
     outlet: null,
     append: () => {},
@@ -65,8 +65,3 @@ export function createPortalGroup() {
 
   return {Provider, Outlet, Portal}
 }
-
-const DefaultPortal = createPortalGroup()
-export const Provider = DefaultPortal.Provider
-export const Outlet = DefaultPortal.Outlet
-export const Portal = DefaultPortal.Portal

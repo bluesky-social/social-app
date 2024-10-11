@@ -13,7 +13,6 @@ import * as Dialog from '#/components/Dialog'
 import {PostInteractionSettingsControlledDialog} from '#/components/dialogs/PostInteractionSettingsDialog'
 import {Earth_Stroke2_Corner0_Rounded as Earth} from '#/components/icons/Globe'
 import {Group3_Stroke2_Corner0_Rounded as Group} from '#/components/icons/Group'
-import {PortalComponent} from '#/components/Portal'
 
 export function ThreadgateBtn({
   postgate,
@@ -21,7 +20,6 @@ export function ThreadgateBtn({
   threadgateAllowUISettings,
   onChangeThreadgateAllowUISettings,
   style,
-  Portal,
 }: {
   postgate: AppBskyFeedPostgate.Record
   onChangePostgate: (v: AppBskyFeedPostgate.Record) => void
@@ -30,8 +28,6 @@ export function ThreadgateBtn({
   onChangeThreadgateAllowUISettings: (v: ThreadgateAllowUISetting[]) => void
 
   style?: StyleProp<AnimatedStyle<ViewStyle>>
-
-  Portal: PortalComponent
 }) {
   const {_} = useLingui()
   const t = useTheme()
@@ -81,7 +77,6 @@ export function ThreadgateBtn({
         onChangePostgate={onChangePostgate}
         threadgateAllowUISettings={threadgateAllowUISettings}
         onChangeThreadgateAllowUISettings={onChangeThreadgateAllowUISettings}
-        Portal={Portal}
       />
     </>
   )
