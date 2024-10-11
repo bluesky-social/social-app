@@ -65,7 +65,6 @@ import * as FeedCard from '#/components/FeedCard'
 import {SearchInput} from '#/components/forms/SearchInput'
 import {ChevronBottom_Stroke2_Corner0_Rounded as ChevronDown} from '#/components/icons/Chevron'
 import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
-import {SettingsGear2_Stroke2_Corner0_Rounded as Gear} from '#/components/icons/SettingsGear2'
 
 function Loader() {
   const pal = usePalette('default')
@@ -626,8 +625,7 @@ export function SearchScreen(
   const {params, query, queryWithParams} = useQueryManager({
     initialQuery: queryParam,
   })
-  const showFiltersButton = Boolean(query && !showAutocomplete)
-  const [showFilters, setShowFilters] = React.useState(false)
+  const showFilters = Boolean(query && !showAutocomplete)
   /*
    * Arbitrary sizing, so guess and check, used for sticky header alignment and
    * sizing.
@@ -788,7 +786,6 @@ export function SearchScreen(
       setSearchText('')
       navigation.setParams({q: ''})
     }
-    setShowFilters(false)
   }, [navigation])
 
   useFocusEffect(
@@ -838,7 +835,6 @@ export function SearchScreen(
     } else {
       setShowAutocomplete(true)
     }
-    setShowFilters(false)
   }, [setShowAutocomplete])
 
   return (
@@ -882,25 +878,6 @@ export function SearchScreen(
               onSubmitEditing={onSubmit}
             />
           </View>
-          {showFiltersButton && (
-            <Button
-              onPress={() => setShowFilters(!showFilters)}
-              hitSlop={HITSLOP_10}
-              label={_(msg`Show advanced filters`)}
-              size="large"
-              variant="solid"
-              color="secondary"
-              shape="square">
-              <Gear
-                size="md"
-                fill={
-                  showFilters
-                    ? t.palette.primary_500
-                    : t.atoms.text_contrast_medium.color
-                }
-              />
-            </Button>
-          )}
           {showAutocomplete && (
             <Button
               label={_(msg`Cancel search`)}
