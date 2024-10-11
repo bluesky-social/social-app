@@ -26,7 +26,7 @@ class SheetViewController: UIViewController {
     else {
       return
     }
-    
+
     if #available(iOS 16.0, *) {
       if contentHeight > screenHeight - 100 {
         sheet.detents = [
@@ -57,8 +57,8 @@ class SheetViewController: UIViewController {
         if !preventExpansion {
           sheet.detents.append(.large())
         }
+        sheet.selectedDetentIdentifier = .medium
       }
-      sheet.selectedDetentIdentifier = .medium
     }
   }
 
