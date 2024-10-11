@@ -325,7 +325,7 @@ msgstr "<0>{0}</0> membres"
 
 #: src/components/dms/DateDivider.tsx:69
 msgid "<0>{date}</0> at {time}"
-msgstr "<0>{date}</0> a {time}"
+msgstr "<0>{date}</0> a les {time}"
 
 #: src/components/ProfileHoverCard/index.web.tsx:437
 #~ msgid "<0>{followers} </0><1>{pluralizedFollowers}</1>"
@@ -1210,19 +1210,19 @@ msgstr "per <0/>"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:80
 #~ msgid "By creating an account you agree to the {els}."
-#~ msgstr "Creant el compte indiques que estàs d'acord amb {els}."
+#~ msgstr "Creant un compte indiques que estàs d'acord amb {els}."
 
 #: src/screens/Signup/StepInfo/Policies.tsx:81
 msgid "By creating an account you agree to the <0>Privacy Policy</0>."
-msgstr "Creant el compte indiques que estàs d'acord amb la <0>Política de privadesa</0>."
+msgstr "Creant un compte indiques que estàs d'acord amb la <0>Política de privadesa</0>."
 
 #: src/screens/Signup/StepInfo/Policies.tsx:48
 msgid "By creating an account you agree to the <0>Terms of Service</0> and <1>Privacy Policy</1>."
-msgstr "Creant el compte indiques que estàs d'acord amb les <0>Condicions del servei/0> i amb la <0>Política de privadesa</0>."
+msgstr "Creant un compte indiques que estàs d'acord amb les <0>Condicions del servei/0> i amb la <0>Política de privadesa</0>."
 
 #: src/screens/Signup/StepInfo/Policies.tsx:68
 msgid "By creating an account you agree to the <0>Terms of Service</0>."
-msgstr "Creant el compte indiques que estàs d'acord amb les <0>Condicions del servei/0>."
+msgstr "Creant un compte indiques que estàs d'acord amb les <0>Condicions del servei/0>."
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:162
 msgid "by you"
