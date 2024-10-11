@@ -5,7 +5,6 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
-import {createHitslop} from '#/lib/constants'
 import {NavigationProp} from '#/lib/routes/types'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
@@ -85,7 +84,12 @@ export function AviFollowButton({
       {!isFollowing && (
         <Button
           label={_(msg`Open ${name} profile shortcut menu`)}
-          hitSlop={createHitslop(3)}
+          hitSlop={{
+            top: 0,
+            left: 0,
+            right: 5,
+            bottom: 5,
+          }}
           style={[
             a.rounded_full,
             a.absolute,
