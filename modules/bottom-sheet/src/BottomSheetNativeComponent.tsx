@@ -23,10 +23,13 @@ const NativeView: React.ComponentType<
 
 const NativeModule = requireNativeModule('BottomSheet')
 
+const isIOS15 = Platform.OS === 'ios' && Number(Platform.Version) < 16
+
 export class BottomSheetNativeComponent extends React.Component<
   BottomSheetViewProps,
   {
     open: boolean
+    viewHeight?: number
   }
 > {
   ref = React.createRef<any>()
@@ -67,6 +70,19 @@ export class BottomSheetNativeComponent extends React.Component<
     const {children, backgroundColor, ...rest} = this.props
     const cornerRadius = rest.cornerRadius ?? 0
 
+    let extraStyles
+    if (isIOS15 && this.state.viewHeight) {
+      const {viewHeight} = this.state
+      if (viewHeight < screenHeight / 2) {
+        extraStyles = {
+          height: viewHeight,
+          marginTop: screenHeight / 2 - viewHeight,
+          borderTopLeftRadius: cornerRadius,
+          borderTopRightRadius: cornerRadius,
+        }
+      }
+    }
+
     if (!this.state.open) {
       return null
     }
@@ -92,8 +108,14 @@ export class BottomSheetNativeComponent extends React.Component<
               borderTopLeftRadius: cornerRadius,
               borderTopRightRadius: cornerRadius,
             },
+            extraStyles,
           ]}>
-          <View onLayout={this.updateLayout}>
+          <View
+            onLayout={e => {
+              const {height} = e.nativeEvent.layout
+              this.setState({viewHeight: height})
+              this.updateLayout()
+            }}>
             <BottomSheetPortalProvider>{children}</BottomSheetPortalProvider>
           </View>
         </View>
