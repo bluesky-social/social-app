@@ -26,27 +26,37 @@ class SheetViewController: UIViewController {
     else {
       return
     }
-
-    if contentHeight > screenHeight - 100 {
-      sheet.detents = [
-        .large()
-      ]
-      sheet.selectedDetentIdentifier = .large
-    } else {
-      if #available(iOS 16.0, *) {
+    
+    if #available(iOS 16.0, *) {
+      if contentHeight > screenHeight - 100 {
+        sheet.detents = [
+          .large()
+        ]
+        sheet.selectedDetentIdentifier = .large
+      } else {
         sheet.detents = [
           .custom { _ in
             return contentHeight
           }
         ]
+        if !preventExpansion {
+          sheet.detents.append(.large())
+        }
+        sheet.selectedDetentIdentifier = .medium
+      }
+    } else {
+      if contentHeight > screenHeight / 2 {
+        sheet.detents = [
+          .large()
+        ]
+        sheet.selectedDetentIdentifier = .large
       } else {
         sheet.detents = [
           .medium()
         ]
-      }
-
-      if !preventExpansion {
-        sheet.detents.append(.large())
+        if !preventExpansion {
+          sheet.detents.append(.large())
+        }
       }
       sheet.selectedDetentIdentifier = .medium
     }

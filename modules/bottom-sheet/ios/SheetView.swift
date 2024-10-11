@@ -23,13 +23,7 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
 
   // React view props
   var preventDismiss = false
-  var preventExpansion = false {
-    didSet {
-      if #unavailable(iOS 16.0) {
-        preventExpansion = false
-      }
-    }
-  }
+  var preventExpansion = false
   var cornerRadius: CGFloat?
   var minHeight = 0.0
   var maxHeight: CGFloat! {
