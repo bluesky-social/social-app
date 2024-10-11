@@ -52,21 +52,23 @@ export function applyFonts(
     if (isWeb) {
       style.fontFamily += `, ${FAMILIES}`
     }
+
+    /**
+     * Disable contextual alternates in Inter
+     * {@link https://developer.mozilla.org/en-US/docs/Web/CSS/font-variant}
+     */
+    style.fontVariant = (style.fontVariant || []).concat('no-contextual')
   } else {
     // fallback families only supported on web
     if (isWeb) {
       style.fontFamily = style.fontFamily || FAMILIES
     }
-  }
 
-  style.fontVariant = style.fontVariant || []
-
-  /**
-   * Disable contextual alternates in Inter
-   * {@link https://developer.mozilla.org/en-US/docs/Web/CSS/font-variant}
-   */
-  if (fontFamily === 'theme') {
-    style.fontVariant = (style.fontVariant || []).concat('no-contextual')
+    /**
+     * Overridden to previous spacing for the `system` font option.
+     * https://github.com/bluesky-social/social-app/commit/2419096e2409008b7d71fd6b8f8d0dd5b016e267
+     */
+    style.letterSpacing = 0.25
   }
 }
 
