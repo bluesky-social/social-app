@@ -325,7 +325,7 @@ msgstr "<0>{0}</0> membres"
 
 #: src/components/dms/DateDivider.tsx:69
 msgid "<0>{date}</0> at {time}"
-msgstr ""
+msgstr "<0>{date}</0> a {time}"
 
 #: src/components/ProfileHoverCard/index.web.tsx:437
 #~ msgid "<0>{followers} </0><1>{pluralizedFollowers}</1>"
@@ -684,7 +684,7 @@ msgstr "El text alternatiu descriu les imatges per a les persones cegues o amb p
 #: src/view/com/composer/GifAltText.tsx:186
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:143
 msgid "Alt text will be truncated. Limit: {0} characters."
-msgstr ""
+msgstr "El text alternatiu es tallarà. Límit: {0} caràcters."
 
 #: src/view/com/modals/VerifyEmail.tsx:132
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:95
@@ -805,7 +805,7 @@ msgstr "Comportament antisocial"
 #: src/view/screens/Search/Search.tsx:347
 #: src/view/screens/Search/Search.tsx:348
 msgid "Any language"
-msgstr ""
+msgstr "Qualsevol idioma"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:55
 msgid "Anybody can interact"
@@ -1093,7 +1093,7 @@ msgstr "Bluesky"
 
 #: src/view/com/auth/server-input/index.tsx:151
 msgid "Bluesky is an open network where you can choose your hosting provider. If you're a developer, you can host your own server."
-msgstr ""
+msgstr "Bluesky és una xarxa oberta on pots escollir el teu proveïdor d'allotjament. Si ets un desenvolupador pots allotjar el teu propi servidor."
 
 #: src/components/ProgressGuide/List.tsx:55
 msgid "Bluesky is better with friends!"
@@ -1214,15 +1214,15 @@ msgstr "per <0/>"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:81
 msgid "By creating an account you agree to the <0>Privacy Policy</0>."
-msgstr ""
+msgstr "Creant el compte indiques que estàs d'acord amb la <0>Política de privadesa</0>."
 
 #: src/screens/Signup/StepInfo/Policies.tsx:48
 msgid "By creating an account you agree to the <0>Terms of Service</0> and <1>Privacy Policy</1>."
-msgstr ""
+msgstr "Creant el compte indiques que estàs d'acord amb les <0>Condicions del servei/0> i amb la <0>Política de privadesa</0>."
 
 #: src/screens/Signup/StepInfo/Policies.tsx:68
 msgid "By creating an account you agree to the <0>Terms of Service</0>."
-msgstr ""
+msgstr "Creant el compte indiques que estàs d'acord amb les <0>Condicions del servei/0>."
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:162
 msgid "by you"
@@ -1635,7 +1635,7 @@ msgstr "Plega la llista d'usuaris per una notificació concreta"
 
 #: src/screens/Settings/AppearanceSettings.tsx:97
 msgid "Color mode"
-msgstr ""
+msgstr "Mode de color"
 
 #: src/screens/Onboarding/index.tsx:38
 #: src/screens/Onboarding/state.ts:84
@@ -1974,7 +1974,7 @@ msgstr "Crea un starter pack per a mi"
 #: src/view/com/auth/SplashScreen.tsx:56
 #: src/view/com/auth/SplashScreen.web.tsx:100
 msgid "Create account"
-msgstr ""
+msgstr "Crea un compte"
 
 #: src/screens/Signup/index.tsx:93
 msgid "Create Account"
@@ -2098,7 +2098,7 @@ msgstr "Panell de depuració"
 #: src/components/dialogs/nuxs/NeueTypography.tsx:99
 #: src/screens/Settings/AppearanceSettings.tsx:169
 msgid "Default"
-msgstr ""
+msgstr "Per defecte"
 
 #: src/components/dms/MessageMenu.tsx:151
 #: src/screens/StarterPack/StarterPackScreen.tsx:573
@@ -2397,7 +2397,7 @@ msgstr "Fet{extraText}"
 
 #: src/components/Dialog/index.tsx:268
 msgid "Double tap to close the dialog"
-msgstr ""
+msgstr "Fes doble toc per tancar el diàleg"
 
 #: src/view/com/auth/login/ChooseAccountForm.tsx:46
 #~ msgid "Double tap to sign in"
@@ -2959,7 +2959,7 @@ msgstr "No s'han pogut carregar els comptes suggerits"
 
 #: src/state/queries/pinned-post.ts:75
 msgid "Failed to pin post"
-msgstr ""
+msgstr "No s'ha pogut fixar la publicació"
 
 #: src/view/com/lightbox/Lightbox.tsx:97
 msgid "Failed to save image: {0}"
@@ -3302,12 +3302,12 @@ msgstr "Et segueix"
 #: src/components/dialogs/nuxs/NeueTypography.tsx:71
 #: src/screens/Settings/AppearanceSettings.tsx:141
 msgid "Font"
-msgstr ""
+msgstr "Font"
 
 #: src/components/dialogs/nuxs/NeueTypography.tsx:91
 #: src/screens/Settings/AppearanceSettings.tsx:161
 msgid "Font size"
-msgstr ""
+msgstr "Moda de la font"
 
 #: src/screens/Onboarding/index.tsx:40
 #: src/screens/Onboarding/state.ts:89
@@ -3325,7 +3325,7 @@ msgstr "Per motius de seguretat no podràs tornar-la a veure. Si perds aquesta c
 #: src/components/dialogs/nuxs/NeueTypography.tsx:73
 #: src/screens/Settings/AppearanceSettings.tsx:143
 msgid "For the best experience, we recommend using the theme font."
-msgstr ""
+msgstr "Per obtenir la millor experiència, et recomanem utilitzar el tipus de lletra del tema."
 
 #: src/components/dialogs/MutedWords.tsx:192
 msgid "Forever"
@@ -3824,7 +3824,7 @@ msgstr "Interacció limitada"
 
 #: src/components/dialogs/nuxs/NeueTypography.tsx:47
 msgid "Introducing new font settings"
-msgstr ""
+msgstr "Presentació de nous paràmetres de tipus de lletra"
 
 #: src/screens/Login/LoginForm.tsx:142
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:70
@@ -3886,7 +3886,7 @@ msgstr "Convida a Bluesky de manera més personalitzada"
 
 #: src/screens/Signup/StepInfo/index.tsx:80
 msgid "It looks like you may have entered your email address incorrectly. Are you sure it's right?"
-msgstr ""
+msgstr "Sembla que potser has introduït la teva adreça de correu incorrectament. Segur que és correcte?"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:65
 #~ msgid "It shows posts from the people you follow as they happen."
@@ -3894,7 +3894,7 @@ msgstr ""
 
 #: src/screens/Signup/StepInfo/index.tsx:241
 msgid "It's correct"
-msgstr ""
+msgstr "És correcte"
 
 #: src/screens/StarterPack/Wizard/index.tsx:452
 msgid "It's just you right now! Add more people to your starter pack by searching above."
@@ -3993,7 +3993,7 @@ msgstr "Idiomes"
 #: src/components/dialogs/nuxs/NeueTypography.tsx:103
 #: src/screens/Settings/AppearanceSettings.tsx:173
 msgid "Larger"
-msgstr ""
+msgstr "Més gran"
 
 #: src/view/com/auth/create/StepHeader.tsx:20
 #~ msgid "Last step!"
@@ -4018,7 +4018,7 @@ msgstr "Més informació sobre Bluesky"
 
 #: src/view/com/auth/server-input/index.tsx:156
 msgid "Learn more about self hosting your PDS."
-msgstr ""
+msgstr "Més informació sobre com allotjament el teu PDS."
 
 #: src/components/moderation/ContentHider.tsx:66
 #: src/components/moderation/ContentHider.tsx:131
@@ -4732,7 +4732,7 @@ msgstr "Xat nou"
 
 #: src/components/dialogs/nuxs/NeueTypography.tsx:51
 msgid "New font settings ✨"
-msgstr ""
+msgstr "Noves configuracions de tipus de lletra ✨"
 
 #: src/components/dms/NewMessagesPill.tsx:92
 msgid "New messages"
@@ -4845,7 +4845,7 @@ msgstr "No s'han trobat canals. Intenta cercar una altra cosa."
 #: src/components/LikedByList.tsx:78
 #: src/view/com/post-thread/PostLikedBy.tsx:85
 msgid "No likes yet"
-msgstr ""
+msgstr "Encara no té cap m'agrada"
 
 #: src/components/ProfileCard.tsx:338
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:111
@@ -4883,11 +4883,11 @@ msgstr "Encara no hi ha publicacions."
 
 #: src/view/com/post-thread/PostQuotes.tsx:106
 msgid "No quotes yet"
-msgstr ""
+msgstr "Encara no té cap citació"
 
 #: src/view/com/post-thread/PostRepostedBy.tsx:78
 msgid "No reposts yet"
-msgstr ""
+msgstr "Encara no s'ha republicat"
 
 #: src/view/com/composer/text-input/mobile/Autocomplete.tsx:111
 #: src/view/com/composer/text-input/web/Autocomplete.tsx:196
@@ -4942,11 +4942,11 @@ msgstr "A ningú encara li ha agradat això. Potser hauries de ser el primer!"
 
 #: src/view/com/post-thread/PostQuotes.tsx:108
 msgid "Nobody has quoted this yet. Maybe you should be the first!"
-msgstr ""
+msgstr "Ningú ha citat això encara. Potser hauries de ser el primer!"
 
 #: src/view/com/post-thread/PostRepostedBy.tsx:80
 msgid "Nobody has reposted this yet. Maybe you should be the first!"
-msgstr ""
+msgstr "Ningú ha republicat això encara. Potser hauries de ser el primer!"
 
 #: src/screens/StarterPack/Wizard/StepProfiles.tsx:102
 msgid "Nobody was found. Try searching for someone else."
@@ -5512,11 +5512,11 @@ msgstr "Fixa a l'Inici"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:398
 #: src/view/com/util/forms/PostDropdownBtn.tsx:405
 msgid "Pin to your profile"
-msgstr ""
+msgstr "Fixa-ho al teu perfil"
 
 #: src/view/com/posts/FeedItem.tsx:354
 msgid "Pinned"
-msgstr ""
+msgstr "Fixat"
 
 #: src/view/screens/SavedFeeds.tsx:99
 msgid "Pinned Feeds"
@@ -5720,11 +5720,11 @@ msgstr "Publicació no trobada"
 
 #: src/state/queries/pinned-post.ts:59
 msgid "Post pinned"
-msgstr ""
+msgstr "Publicació fixada"
 
 #: src/state/queries/pinned-post.ts:61
 msgid "Post unpinned"
-msgstr ""
+msgstr "Publicació sense fixar"
 
 #: src/components/TagMenu/index.tsx:266
 msgid "posts"
@@ -6406,7 +6406,7 @@ msgstr "Requerit per aquest proveïdor"
 
 #: src/components/LabelingServiceCard/index.tsx:80
 msgid "Required in your region"
-msgstr ""
+msgstr "Obligatori a la teva regió"
 
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:167
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:170
@@ -7150,7 +7150,7 @@ msgstr "Mostra"
 
 #: src/view/screens/Search/Search.tsx:889
 msgid "Show advanced filters"
-msgstr ""
+msgstr "Mostra els filtres avançats"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:68
 #~ msgid "Show all replies"
@@ -7404,7 +7404,7 @@ msgstr "Salta aquest flux"
 #: src/components/dialogs/nuxs/NeueTypography.tsx:95
 #: src/screens/Settings/AppearanceSettings.tsx:165
 msgid "Smaller"
-msgstr ""
+msgstr "Més petit"
 
 #: src/view/com/auth/create/Step2.tsx:82
 #~ msgid "SMS verification"
@@ -7530,7 +7530,7 @@ msgstr "Starter pack de {0}"
 
 #: src/components/StarterPack/StarterPackCard.tsx:74
 msgid "Starter pack by you"
-msgstr ""
+msgstr "Starter pack fet per tu"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:703
 msgid "Starter pack is invalid"
@@ -7774,7 +7774,7 @@ msgstr "Gràcies. El teu informe s'ha enviat."
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:82
 msgid "Thanks, you have successfully verified your email address. You can close this dialog."
-msgstr ""
+msgstr "Gràcies, has verificat correctament el teu correu. Pots tancar aquest diàleg."
 
 #: src/view/com/modals/ChangeHandle.tsx:452
 msgid "That contains the following:"
@@ -7888,7 +7888,7 @@ msgstr "El codi de verificació que has proporcionat no és vàlid. Assegura't q
 #: src/components/dialogs/nuxs/NeueTypography.tsx:82
 #: src/screens/Settings/AppearanceSettings.tsx:152
 msgid "Theme"
-msgstr ""
+msgstr "Tema"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:141
 #~ msgid "There are many feeds to try:"
@@ -8300,7 +8300,7 @@ msgstr "A qui vols enviar aquest informe?"
 
 #: src/components/dms/DateDivider.tsx:44
 msgid "Today"
-msgstr ""
+msgstr "Avui"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:597
 #~ msgid "Together, we're rebuilding the social internet. We're glad you're here."
@@ -8510,7 +8510,7 @@ msgstr "Deixa de fixar a l'inici"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:397
 #: src/view/com/util/forms/PostDropdownBtn.tsx:404
 msgid "Unpin from profile"
-msgstr ""
+msgstr "No fixis al perfil"
 
 #: src/view/screens/ProfileList.tsx:550
 msgid "Unpin moderation list"
@@ -8560,7 +8560,7 @@ msgstr "Contingut sexual no desitjat"
 
 #: src/view/com/modals/UserAddRemoveLists.tsx:82
 msgid "Update <0>{displayName}</0> in Lists"
-msgstr ""
+msgstr "Actualitza <0>{displayName}</0> a les Llistes"
 
 #: src/lib/hooks/useOTAUpdate.ts:15
 #~ msgid "Update Available"
@@ -9003,7 +9003,7 @@ msgstr "Tenim problemes de xarxa, torna-ho a provar"
 
 #: src/components/dialogs/nuxs/NeueTypography.tsx:54
 msgid "We're introducing a new theme font, along with adjustable font sizing."
-msgstr ""
+msgstr "Estem introduint un nou tipus de lletra, juntament amb una mida de lletra ajustable."
 
 #: src/screens/Signup/index.tsx:94
 msgid "We're so excited to have you join us!"
@@ -9193,7 +9193,7 @@ msgstr "Sí, torna a activar el meu compte"
 
 #: src/components/dms/DateDivider.tsx:46
 msgid "Yesterday"
-msgstr ""
+msgstr "Ahir"
 
 #: src/components/dms/MessageItem.tsx:183
 #~ msgid "Yesterday, {time}"
@@ -9221,7 +9221,7 @@ msgstr "No segueixes a ningú."
 
 #: src/components/dialogs/nuxs/NeueTypography.tsx:61
 msgid "You can adjust these in your Appearance Settings later."
-msgstr ""
+msgstr "Pots ajustar-los a la configuració de l'aparença més endavant."
 
 #: src/view/com/posts/FollowingEmptyState.tsx:63
 #: src/view/com/posts/FollowingEndOfFeed.tsx:64
