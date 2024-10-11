@@ -87,8 +87,8 @@ export function AviFollowButton({
           hitSlop={{
             top: 0,
             left: 0,
-            right: 3,
-            bottom: 3,
+            right: 5,
+            bottom: 5,
           }}
           style={[
             a.rounded_full,
