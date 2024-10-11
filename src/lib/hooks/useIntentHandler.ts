@@ -13,6 +13,8 @@ type IntentType = 'compose' | 'verify-email'
 
 const VALID_IMAGE_REGEX = /^[\w.:\-_/]+\|\d+(\.\d+)?\|\d+(\.\d+)?$/
 
+let previousIntentUrl = ''
+
 export function useIntentHandler() {
   const incomingUrl = Linking.useURL()
   const composeIntent = useComposeIntent()
@@ -68,7 +70,13 @@ export function useIntentHandler() {
       }
     }
 
-    if (incomingUrl) handleIncomingURL(incomingUrl)
+    if (incomingUrl) {
+      if (previousIntentUrl === incomingUrl) {
+        return
+      }
+      handleIncomingURL(incomingUrl)
+      previousIntentUrl = incomingUrl
+    }
   }, [incomingUrl, composeIntent, verifyEmailIntent])
 }
 
