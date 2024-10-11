@@ -1,7 +1,7 @@
 import React from 'react'
 import {View} from 'react-native'
 
-import {atoms as a, useBreakpoints,useTheme} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {CircleInfo_Stroke2_Corner0_Rounded as ErrorIcon} from '#/components/icons/CircleInfo'
 import {Eye_Stroke2_Corner0_Rounded as InfoIcon} from '#/components/icons/Eye'
 import {Leaf_Stroke2_Corner0_Rounded as TipIcon} from '#/components/icons/Leaf'
