@@ -92,13 +92,11 @@ export class BottomSheetNativeComponent extends React.Component<
         {...rest}
         onStateChange={this.onStateChange}
         ref={this.ref}
-        style={[
-          {
-            position: 'absolute',
-            height: screenHeight,
-            width: '100%',
-          },
-        ]}
+        style={{
+          position: 'absolute',
+          height: screenHeight,
+          width: '100%',
+        }}
         containerBackgroundColor={backgroundColor}>
         <View
           style={[
