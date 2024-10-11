@@ -26,7 +26,7 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
   var preventExpansion = false {
     didSet {
       if #unavailable(iOS 16.0) {
-        preventDismiss = false
+        preventExpansion = false
       }
     }
   }
