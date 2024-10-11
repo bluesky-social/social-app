@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useCallback, useState} from 'react'
 import {
   GestureResponderEvent,
   Pressable,
@@ -20,10 +20,11 @@ import {
 } from '#/lib/strings/url-helpers'
 import {isNative, isWeb} from '#/platform/detection'
 import {shouldClickOpenNewTab} from '#/platform/urls'
-import {useModalControls} from '#/state/modals'
 import {useOpenLink} from '#/state/preferences/in-app-browser'
+import {useCloseAllActiveElements} from '#/state/util'
 import {atoms as a, flatten, TextStyleProp, useTheme, web} from '#/alf'
 import {Button, ButtonProps} from '#/components/Button'
+import {useDialogControl} from '#/components/Dialog'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {Text, TextProps} from '#/components/Typography'
 import {router} from '#/routes'
@@ -87,10 +88,20 @@ export function useLink({
       typeof to === 'string' ? convertBskyAppUrlIfNeeded(sanitizeUrl(to)) : to,
   })
   const isExternal = isExternalUrl(href)
-  const {openModal, closeModal} = useModalControls()
   const openLink = useOpenLink()
+  const dismissEverything = useCloseAllActiveElements()
+  const [_warningMode, setWarningMode] = useState<'open' | 'share'>('open')
+  const linkWarningControl = useDialogControl()
 
-  const onPress = React.useCallback(
+  const showWarningDialog = useCallback(
+    (mode: 'open' | 'share') => {
+      setWarningMode(mode)
+      linkWarningControl.open()
+    },
+    [linkWarningControl],
+  )
+
+  const onPress = useCallback(
     (e: GestureResponderEvent) => {
       const exitEarlyIfFalse = outerOnPress?.(e)
 
@@ -108,11 +119,7 @@ export function useLink({
       }
 
       if (requiresWarning) {
-        openModal({
-          name: 'link-warning',
-          text: displayText,
-          href: href,
-        })
+        showWarningDialog('open')
       } else {
         if (isExternal) {
           openLink(href)
@@ -128,7 +135,7 @@ export function useLink({
           ) {
             openLink(href)
           } else {
-            closeModal() // close any active modals
+            dismissEverything() // close any active dialogs
 
             if (action === 'push') {
               navigation.dispatch(StackActions.push(...router.matchPath(href)))
@@ -152,15 +159,15 @@ export function useLink({
       displayText,
       isExternal,
       href,
-      openModal,
       openLink,
-      closeModal,
       action,
       navigation,
+      showWarningDialog,
+      dismissEverything,
     ],
   )
 
-  const handleLongPress = React.useCallback(() => {
+  const handleLongPress = useCallback(() => {
     const requiresWarning = Boolean(
       !disableMismatchWarning &&
         displayText &&
@@ -169,16 +176,11 @@ export function useLink({
     )
 
     if (requiresWarning) {
-      openModal({
-        name: 'link-warning',
-        text: displayText,
-        href: href,
-        share: true,
-      })
+      showWarningDialog('share')
     } else {
       shareUrl(href)
     }
-  }, [disableMismatchWarning, displayText, href, isExternal, openModal])
+  }, [disableMismatchWarning, displayText, href, isExternal, showWarningDialog])
 
   const onLongPress =
     isNative && isExternal && shareOnLongPress ? handleLongPress : undefined
