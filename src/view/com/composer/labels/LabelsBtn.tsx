@@ -9,7 +9,6 @@ import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as ToggleButton from '#/components/forms/ToggleButton'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
-import {PortalComponent} from '#/components/Portal'
 import {Text} from '#/components/Typography'
 
 const ADULT_CONTENT_LABELS = ['sexual', 'nudity', 'porn']
@@ -18,12 +17,10 @@ export function LabelsBtn({
   labels,
   hasMedia,
   onChange,
-  Portal,
 }: {
   labels: string[]
   hasMedia: boolean
   onChange: (v: string[]) => void
-  Portal: PortalComponent
 }) {
   const control = Dialog.useDialogControl()
   const t = useTheme()
@@ -63,10 +60,7 @@ export function LabelsBtn({
         ) : null}
       </Button>
 
-      <Dialog.Outer
-        control={control}
-        Portal={Portal}
-        nativeOptions={{preventExpansion: true}}>
+      <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
         <Dialog.Handle />
         <DialogInner
           labels={labels}

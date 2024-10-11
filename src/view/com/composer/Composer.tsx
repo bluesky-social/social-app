@@ -565,7 +565,6 @@ export const ComposePost = ({
                       dispatch({type: 'update_labels', labels: nextLabels})
                     }}
                     hasMedia={hasMedia || Boolean(extLink)}
-                    Portal={Portal.Portal}
                   />
                   {canPost ? (
                     <Button
@@ -803,10 +802,7 @@ export const ComposePost = ({
                     disabled={!canSelectImages}
                     onAdd={onImageAdd}
                   />
-                  <SelectGifBtn
-                    onSelectGif={onSelectGif}
-                    disabled={hasMedia}
-                  />
+                  <SelectGifBtn onSelectGif={onSelectGif} disabled={hasMedia} />
                   {!isMobile ? (
                     <Button
                       onPress={onEmojiButtonPress}
