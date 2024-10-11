@@ -33,19 +33,6 @@ import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {FilterTimeline_Stroke2_Corner0_Rounded as FilterTimeline} from '#/components/icons/FilterTimeline'
 import {Loader} from '#/components/Loader'
 
-const HITSLOP_TOP = {
-  top: 20,
-  left: 20,
-  bottom: 5,
-  right: 20,
-}
-const HITSLOP_BOTTOM = {
-  top: 5,
-  left: 20,
-  bottom: 20,
-  right: 20,
-}
-
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'SavedFeeds'>
 export function SavedFeeds({}: Props) {
   const {data: preferences} = usePreferencesQuery()
@@ -318,7 +305,7 @@ function ListItem({
           <Pressable
             accessibilityRole="button"
             onPress={onPressUp}
-            hitSlop={HITSLOP_TOP}
+            hitSlop={5}
             style={state => ({
               backgroundColor: pal.viewLight.backgroundColor,
               paddingHorizontal: 12,
@@ -336,7 +323,7 @@ function ListItem({
           <Pressable
             accessibilityRole="button"
             onPress={onPressDown}
-            hitSlop={HITSLOP_BOTTOM}
+            hitSlop={5}
             style={state => ({
               backgroundColor: pal.viewLight.backgroundColor,
               paddingHorizontal: 12,
@@ -359,7 +346,7 @@ function ListItem({
           accessibilityLabel={_(msg`Remove from my feeds`)}
           accessibilityHint=""
           onPress={onPressRemove}
-          hitSlop={15}
+          hitSlop={5}
           style={state => ({
             marginRight: 8,
             paddingHorizontal: 12,
@@ -377,7 +364,7 @@ function ListItem({
       <View style={{paddingRight: 16}}>
         <Pressable
           accessibilityRole="button"
-          hitSlop={10}
+          hitSlop={5}
           onPress={onTogglePinned}
           style={state => ({
             backgroundColor: pal.viewLight.backgroundColor,
