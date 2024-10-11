@@ -122,7 +122,7 @@ const ImageAltTextInner = ({
                 defaultValue={altText}
                 multiline
                 numberOfLines={3}
-                autoFocus
+                autoFocus={isWeb}
               />
             </TextField.Root>
           </View>

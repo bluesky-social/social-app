@@ -9,7 +9,7 @@ import {
   EmbedPlayerParams,
   parseEmbedPlayerFromUrl,
 } from '#/lib/strings/embed-player'
-import {isAndroid} from '#/platform/detection'
+import {isAndroid, isWeb} from '#/platform/detection'
 import {useResolveGifQuery} from '#/state/queries/resolve-link'
 import {Gif} from '#/state/queries/tenor'
 import {AltTextCounterWrapper} from '#/view/com/composer/AltTextCounterWrapper'
@@ -157,7 +157,7 @@ function AltTextInner({
                   defaultValue={altText}
                   multiline
                   numberOfLines={3}
-                  autoFocus
+                  autoFocus={isWeb}
                   onKeyPress={({nativeEvent}) => {
                     if (nativeEvent.key === 'Escape') {
                       control.close()
