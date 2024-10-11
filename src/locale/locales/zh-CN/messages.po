@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh_CN\n"
 "Project-Id-Version: zh-CN for bluesky-social-app\n"
 "Report-Msgid-Bugs-To: Frudrax Cheng <i@cynosura.one>\n"
-"PO-Revision-Date: 2024-10-09 11:40+0800\n"
+"PO-Revision-Date: 2024-10-11 10:13+0800\n"
 "Last-Translator: Frudrax Cheng <i@cynosura.one>\n"
 "Language-Team: Frudrax Cheng (auroursa), Simon Chan (RitsukiP), U2FsdGVkX1, Mikan Harada (mitian233), IceCodeNew\n"
 "Plural-Forms: \n"
@@ -19,7 +19,7 @@ msgstr "（包含嵌入内容）"
 
 #: src/view/com/modals/VerifyEmail.tsx:150
 msgid "(no email)"
-msgstr "(没有邮件)"
+msgstr "(没有电子邮件)"
 
 #: src/view/com/notifications/FeedItem.tsx:232
 #: src/view/com/notifications/FeedItem.tsx:327
@@ -521,15 +521,15 @@ msgstr "替代文本过长将被截断，限制长度：{0}个字符。"
 #: src/view/com/modals/VerifyEmail.tsx:132
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:95
 msgid "An email has been sent to {0}. It includes a confirmation code which you can enter below."
-msgstr "一封电子邮件已发送至 {0}。请查阅邮件内容并复制验证码至下方。"
+msgstr "电子邮件已发送至 {0}。请查阅邮件内容并复制验证码至下方。"
 
 #: src/view/com/modals/ChangeEmail.tsx:114
 msgid "An email has been sent to your previous address, {0}. It includes a confirmation code which you can enter below."
-msgstr "一封电子邮件已发送至先前填写的邮箱 {0}。请查阅邮件内容并复制验证码至下方。"
+msgstr "电子邮件已发送至先前填写的邮箱 {0}。请查阅邮件内容并复制验证码至下方。"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:77
 msgid "An email has been sent! Please enter the confirmation code included in the email below."
-msgstr ""
+msgstr "电子邮件已发送！请输入邮件中包含的验证码至下方。"
 
 #: src/components/dialogs/GifSelect.tsx:263
 msgid "An error has occurred"
@@ -1041,7 +1041,7 @@ msgstr "更改"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:147
 msgid "Change email address"
-msgstr ""
+msgstr "更改邮箱地址"
 
 #: src/view/screens/Settings/index.tsx:684
 msgid "Change handle"
@@ -1111,7 +1111,7 @@ msgstr "在这里输入刚才发送到你电子邮箱里的验证码。"
 
 #: src/view/com/modals/DeleteAccount.tsx:231
 msgid "Check your inbox for an email with the confirmation code to enter below:"
-msgstr "查看发送至你电子邮箱的确认邮件，并在下方输入收到的验证码："
+msgstr "查看发送至你电子邮箱的验证邮件，并在下方输入收到的验证码："
 
 #: src/screens/StarterPack/Wizard/index.tsx:190
 msgid "Choose Feeds"
@@ -1358,7 +1358,7 @@ msgstr "验证码"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:167
 msgid "Confirmation Code"
-msgstr ""
+msgstr "验证码"
 
 #: src/screens/Login/LoginForm.tsx:309
 msgid "Connecting..."
@@ -2175,7 +2175,7 @@ msgstr "输入一个词或标签"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:75
 msgid "Enter Code"
-msgstr ""
+msgstr "输入验证码"
 
 #: src/view/com/modals/VerifyEmail.tsx:113
 msgid "Enter Confirmation Code"
@@ -2183,7 +2183,7 @@ msgstr "输入验证码"
 
 #: src/view/com/modals/ChangePassword.tsx:154
 msgid "Enter the code you received to change your password."
-msgstr "输入你收到的确认码以更改密码。"
+msgstr "输入你收到的验证码以更改密码。"
 
 #: src/view/com/modals/ChangeHandle.tsx:357
 msgid "Enter the domain you want to use"
@@ -2191,7 +2191,7 @@ msgstr "输入你想使用的域名"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:113
 msgid "Enter the email you used to create your account. We'll send you a \"reset code\" so you can set a new password."
-msgstr "输入你用于创建账户的电子邮箱。我们将向你发送用于密码重设的确认码。"
+msgstr "输入你用于创建账户的电子邮箱。我们将向你发送用于密码重设的验证码。"
 
 #: src/components/dialogs/BirthDateSettings.tsx:107
 msgid "Enter your birth date"
@@ -2969,7 +2969,7 @@ msgstr "我有验证码"
 #: src/components/dialogs/VerifyEmailDialog.tsx:196
 #: src/components/dialogs/VerifyEmailDialog.tsx:203
 msgid "I Have a Code"
-msgstr ""
+msgstr "我有验证码"
 
 #: src/view/com/modals/VerifyEmail.tsx:224
 msgid "I have a confirmation code"
@@ -3136,7 +3136,7 @@ msgstr "邀请，但保持私密"
 
 #: src/screens/Signup/StepInfo/index.tsx:80
 msgid "It looks like you may have entered your email address incorrectly. Are you sure it's right?"
-msgstr "你可能输入了错误的电子邮箱地址。确认是否输入正确？"
+msgstr "你可能输入了错误的电子邮箱地址。请确认是否输入正确？"
 
 #: src/screens/Signup/StepInfo/index.tsx:241
 msgid "It's correct"
@@ -3800,7 +3800,7 @@ msgstr "转到个人资料"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:156
 msgid "Need to change it?"
-msgstr ""
+msgstr "需要更改吗？"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:130
 msgid "Need to report a copyright violation?"
@@ -5230,7 +5230,7 @@ msgstr "请求变更"
 #: src/view/com/modals/ChangePassword.tsx:242
 #: src/view/com/modals/ChangePassword.tsx:244
 msgid "Request Code"
-msgstr "确认码"
+msgstr "验证码"
 
 #: src/view/screens/AccessibilitySettings.tsx:89
 msgid "Require alt text before posting"
@@ -5265,11 +5265,11 @@ msgstr "重新发送验证码电子邮件"
 
 #: src/view/com/modals/ChangePassword.tsx:186
 msgid "Reset code"
-msgstr "确认码"
+msgstr "重设码"
 
 #: src/view/com/modals/ChangePassword.tsx:193
 msgid "Reset Code"
-msgstr "确认码"
+msgstr "重设码"
 
 #: src/view/screens/Settings/index.tsx:866
 #: src/view/screens/Settings/index.tsx:869
@@ -5612,16 +5612,16 @@ msgstr "发送一个你认为很有趣的网站！"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:189
 msgid "Send Confirmation"
-msgstr ""
+msgstr "发送验证"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:182
 msgid "Send confirmation email"
-msgstr ""
+msgstr "发送验证电子邮件"
 
 #: src/view/com/modals/VerifyEmail.tsx:210
 #: src/view/com/modals/VerifyEmail.tsx:212
 msgid "Send Confirmation Email"
-msgstr "发送确认电子邮件"
+msgstr "发送验证电子邮件"
 
 #: src/view/com/modals/DeleteAccount.tsx:149
 msgid "Send email"
@@ -6149,7 +6149,7 @@ msgstr "订阅这个列表"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:81
 msgid "Success!"
-msgstr ""
+msgstr "完成！"
 
 #: src/view/screens/Search/Explore.tsx:332
 msgid "Suggested accounts"
@@ -6271,7 +6271,7 @@ msgstr "文本输入框"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:82
 msgid "Thank you! Your email has been successfully verified."
-msgstr ""
+msgstr "谢谢！您的电子邮箱已成功验证。"
 
 #: src/components/dms/ReportDialog.tsx:129
 #: src/components/ReportDialog/SubmitView.tsx:82
@@ -7559,7 +7559,7 @@ msgstr "你已屏蔽这个用户，你将无法查看他们发布的内容。"
 #: src/view/com/modals/ChangePassword.tsx:88
 #: src/view/com/modals/ChangePassword.tsx:122
 msgid "You have entered an invalid code. It should look like XXXXX-XXXXX."
-msgstr "你输入的确认码无效。它应该长得像这样 XXXXX-XXXXX。"
+msgstr "你输入的验证码无效。它应该长得像这样 XXXXX-XXXXX。"
 
 #: src/lib/moderation/useModerationCauseDescription.ts:114
 msgid "You have hidden this post"
@@ -7674,7 +7674,7 @@ msgstr "你将收到这条讨论串的通知"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:98
 msgid "You will receive an email with a \"reset code.\" Enter that code here, then enter your new password."
-msgstr "你将收到一封带有确认码的电子邮件。请在此输入该确认码，然后输入你的新密码。"
+msgstr "你将收到一封带有验证码的电子邮件。请在此输入该验证码，然后输入你的新密码。"
 
 #: src/screens/Messages/components/ChatListItem.tsx:124
 msgid "You: {0}"
@@ -7706,7 +7706,7 @@ msgstr "你将立即关注这些人"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:138
 msgid "You'll receive an email at <0>{0}</0> to verify it's you."
-msgstr ""
+msgstr "你将在 <0>{0}</0> 收到一封电子邮件，以验证你的身份。"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:270
 msgid "You'll stay updated with these feeds"
