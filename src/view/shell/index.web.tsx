@@ -4,12 +4,14 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
+import {useColorSchemeStyle} from '#/lib/hooks/useColorSchemeStyle'
+import {useIntentHandler} from '#/lib/hooks/useIntentHandler'
 import {useWebBodyScrollLock} from '#/lib/hooks/useWebBodyScrollLock'
+import {NavigationProp} from '#/lib/routes/types'
+import {colors, s} from '#/lib/styles'
 import {useIsDrawerOpen, useSetDrawerOpen} from '#/state/shell'
+import {useComposerKeyboardShortcut} from '#/state/shell/composer/useComposerKeyboardShortcut'
 import {useCloseAllActiveElements} from '#/state/util'
-import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
-import {NavigationProp} from 'lib/routes/types'
-import {colors, s} from 'lib/styles'
 import {MutedWordsDialog} from '#/components/dialogs/MutedWords'
 import {SigninDialog} from '#/components/dialogs/Signin'
 import {Outlet as PortalOutlet} from '#/components/Portal'
@@ -30,6 +32,8 @@ function ShellInner() {
   const {_} = useLingui()
 
   useWebBodyScrollLock(isDrawerOpen)
+  useComposerKeyboardShortcut()
+  useIntentHandler()
 
   useEffect(() => {
     const unsubscribe = navigator.addListener('state', () => {
