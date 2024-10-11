@@ -14,7 +14,6 @@ import * as SplashScreen from 'expo-splash-screen'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useIntentHandler} from '#/lib/hooks/useIntentHandler'
 import {QueryProvider} from '#/lib/react-query'
 import {
   initialize,
@@ -85,7 +84,6 @@ function InnerApp() {
   const theme = useColorModeTheme()
   const {_} = useLingui()
 
-  useIntentHandler()
   const hasCheckedReferrer = useStarterPackEntry()
 
   // init
