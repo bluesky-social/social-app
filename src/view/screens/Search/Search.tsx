@@ -22,7 +22,7 @@ import {useLingui} from '@lingui/react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 
-import {LANGUAGES} from '#/lib/../locale/languages'
+import {APP_LANGUAGES, LANGUAGES} from '#/lib/../locale/languages'
 import {createHitslop} from '#/lib/constants'
 import {HITSLOP_10} from '#/lib/constants'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
@@ -350,14 +350,31 @@ function SearchLanguageDropdown({
         key: '*',
       },
     ].concat(
-      LANGUAGES.filter(l => Boolean(l.code2))
+      LANGUAGES.filter(
+        (lang, index, self) =>
+          Boolean(lang.code2) && // reduce to the code2 varieties
+          index === self.findIndex(t => t.code2 === lang.code2), // remove dupes (which will happen)
+      )
         .map(l => ({
           label: l.name,
           inputLabel: l.name,
           value: l.code2,
           key: l.code2 + l.code3,
         }))
-        .sort(a => (contentLanguages.includes(a.value) ? -1 : 1)),
+        .sort((a, b) => {
+          // prioritize user's languages
+          const aIsUser = contentLanguages.includes(a.value)
+          const bIsUser = contentLanguages.includes(b.value)
+          if (aIsUser && !bIsUser) return -1
+          if (bIsUser && !aIsUser) return 1
+          // prioritize "common" langs in the network
+          const aIsCommon = !!APP_LANGUAGES.find(al => al.code2 === a.value)
+          const bIsCommon = !!APP_LANGUAGES.find(al => al.code2 === b.value)
+          if (aIsCommon && !bIsCommon) return -1
+          if (bIsCommon && !aIsCommon) return 1
+          // fall back to alphabetical
+          return a.label.localeCompare(b.label)
+        }),
     )
   }, [_, contentLanguages])
 
