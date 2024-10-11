@@ -2,7 +2,6 @@ import React from 'react'
 import {Linking} from 'react-native'
 import * as WebBrowser from 'expo-web-browser'
 
-import {usePalette} from '#/lib/hooks/usePalette'
 import {
   createBskyAppAbsoluteUrl,
   isBskyRSSUrl,
@@ -10,6 +9,8 @@ import {
 } from '#/lib/strings/url-helpers'
 import {isNative} from '#/platform/detection'
 import * as persisted from '#/state/persisted'
+import {useTheme} from '#/alf'
+import {useSheetWrapper} from '#/components/Dialog/sheet-wrapper'
 import {useModalControls} from '../modals'
 
 type StateContext = persisted.Schema['useInAppBrowser']
@@ -59,7 +60,8 @@ export function useSetInAppBrowser() {
 export function useOpenLink() {
   const {openModal} = useModalControls()
   const enabled = useInAppBrowser()
-  const pal = usePalette('default')
+  const t = useTheme()
+  const sheetWrapper = useSheetWrapper()
 
   const openLink = React.useCallback(
     async (url: string, override?: boolean) => {
@@ -75,18 +77,21 @@ export function useOpenLink() {
           })
           return
         } else if (override ?? enabled) {
-          await WebBrowser.openBrowserAsync(url, {
-            presentationStyle:
-              WebBrowser.WebBrowserPresentationStyle.FULL_SCREEN,
-            toolbarColor: pal.colors.backgroundLight,
-            createTask: false,
-          })
+          await sheetWrapper(
+            WebBrowser.openBrowserAsync(url, {
+              presentationStyle:
+                WebBrowser.WebBrowserPresentationStyle.PAGE_SHEET,
+              toolbarColor: t.atoms.bg.backgroundColor,
+              controlsColor: t.palette.primary_500,
+              createTask: false,
+            }),
+          )
           return
         }
       }
       Linking.openURL(url)
     },
-    [enabled, openModal, pal.colors.backgroundLight],
+    [enabled, openModal, t, sheetWrapper],
   )
 
   return openLink
