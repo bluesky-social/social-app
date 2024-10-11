@@ -7,7 +7,7 @@ import {ModerationUI} from '@atproto/api'
 const CHECK_MARKS_RE = /[\u2705\u2713\u2714\u2611]/gu
 const CONTROL_CHARS_RE =
   /[\u0000-\u001F\u007F-\u009F\u061C\u200E\u200F\u202A-\u202E\u2066-\u2069]/g
-const MULTIPLE_SPACES_RE = /[\s][\s]+/g
+const MULTIPLE_SPACES_RE = /[\s][\s\u200B]+/g
 
 export function sanitizeDisplayName(
   str: string,
