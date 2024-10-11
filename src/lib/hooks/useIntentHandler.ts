@@ -13,6 +13,7 @@ type IntentType = 'compose' | 'verify-email'
 
 const VALID_IMAGE_REGEX = /^[\w.:\-_/]+\|\d+(\.\d+)?\|\d+(\.\d+)?$/
 
+// This needs to stay outside of react to persist between account switches
 let previousIntentUrl = ''
 
 export function useIntentHandler() {
