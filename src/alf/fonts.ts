@@ -1,3 +1,4 @@
+import {TextStyle} from 'react-native'
 import {useFonts} from 'expo-font'
 
 import {isWeb} from '#/platform/detection'
@@ -37,10 +38,7 @@ export function setFontFamily(fontFamily: Device['fontFamily']) {
 /*
  * Unused fonts are commented out, but the files are there if we need them.
  */
-export function applyFonts(
-  style: Record<string, any>,
-  fontFamily: 'system' | 'theme',
-) {
+export function applyFonts(style: TextStyle, fontFamily: 'system' | 'theme') {
   if (fontFamily === 'theme') {
     style.fontFamily = 'InterVariable'
 
@@ -52,21 +50,23 @@ export function applyFonts(
     if (isWeb) {
       style.fontFamily += `, ${FAMILIES}`
     }
+
+    /**
+     * Disable contextual alternates in Inter
+     * {@link https://developer.mozilla.org/en-US/docs/Web/CSS/font-variant}
+     */
+    style.fontVariant = (style.fontVariant || []).concat('no-contextual')
   } else {
     // fallback families only supported on web
     if (isWeb) {
       style.fontFamily = style.fontFamily || FAMILIES
     }
-  }
 
-  style.fontVariant = style.fontVariant || []
-
-  /**
-   * Disable contextual alternates in Inter
-   * {@link https://developer.mozilla.org/en-US/docs/Web/CSS/font-variant}
-   */
-  if (fontFamily === 'theme') {
-    style.fontVariant = (style.fontVariant || []).concat('no-contextual')
+    /**
+     * Overridden to previous spacing for the `system` font option.
+     * https://github.com/bluesky-social/social-app/commit/2419096e2409008b7d71fd6b8f8d0dd5b016e267
+     */
+    style.letterSpacing = 0.25
   }
 }
 

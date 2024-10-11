@@ -22,7 +22,7 @@ import {
 import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {ListMethods} from '#/view/com/util/List'
-import {atoms as a, ios, native, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, ios, native, useBreakpoints, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
@@ -205,7 +205,10 @@ function GifList({
         renderItem={renderItem}
         numColumns={gtMobile ? 3 : 2}
         columnWrapperStyle={[a.gap_sm]}
-        contentContainerStyle={[native([a.px_xl, {minHeight: height}])]}
+        contentContainerStyle={[
+          native([a.px_xl, {minHeight: height}]),
+          web(a.h_full_vh),
+        ]}
         ListHeaderComponent={
           <>
             {listHeader}
