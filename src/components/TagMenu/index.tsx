@@ -18,7 +18,7 @@ import {Divider} from '#/components/Divider'
 import {MagnifyingGlass2_Stroke2_Corner0_Rounded as Search} from '#/components/icons/MagnifyingGlass2'
 import {Mute_Stroke2_Corner0_Rounded as Mute} from '#/components/icons/Mute'
 import {Person_Stroke2_Corner0_Rounded as Person} from '#/components/icons/Person'
-import {createStaticClick,Link} from '#/components/Link'
+import {createStaticClick, Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 
