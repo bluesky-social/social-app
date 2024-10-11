@@ -5,18 +5,18 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
+import {useNavigation} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {useHaptics} from '#/lib/haptics'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {CommonNavigatorParams} from '#/lib/routes/types'
+import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
 import {colors, s} from '#/lib/styles'
 import {logger} from '#/logger'
 import {
   useOverwriteSavedFeedsMutation,
   usePreferencesQuery,
-  useUpdateSavedFeedsMutation,
 } from '#/state/queries/preferences'
 import {UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
 import {useSetMinimalShellMode} from '#/state/shell'
@@ -29,7 +29,9 @@ import {CenteredView, ScrollView} from '#/view/com/util/Views'
 import {NoFollowingFeed} from '#/screens/Feeds/NoFollowingFeed'
 import {NoSavedFeedsOfAnyType} from '#/screens/Feeds/NoSavedFeedsOfAnyType'
 import {atoms as a, useTheme} from '#/alf'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {FilterTimeline_Stroke2_Corner0_Rounded as FilterTimeline} from '#/components/icons/FilterTimeline'
+import {Loader} from '#/components/Loader'
 
 const HITSLOP_TOP = {
   top: 20,
@@ -46,26 +48,34 @@ const HITSLOP_BOTTOM = {
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'SavedFeeds'>
 export function SavedFeeds({}: Props) {
+  const {data: preferences} = usePreferencesQuery()
+  if (!preferences) {
+    return <View />
+  }
+  return <SavedFeedsInner preferences={preferences} />
+}
+
+function SavedFeedsInner({
+  preferences,
+}: {
+  preferences: UsePreferencesQueryResponse
+}) {
   const pal = usePalette('default')
   const {_} = useLingui()
-  const {isMobile, isTabletOrDesktop} = useWebMediaQueries()
+  const {isMobile, isTabletOrDesktop, isDesktop} = useWebMediaQueries()
   const setMinimalShellMode = useSetMinimalShellMode()
-  const {data: preferences} = usePreferencesQuery()
-  const {
-    mutateAsync: overwriteSavedFeeds,
-    variables: optimisticSavedFeedsResponse,
-    reset: resetSaveFeedsMutationState,
-    error: savedFeedsError,
-  } = useOverwriteSavedFeedsMutation()
+  const {mutateAsync: overwriteSavedFeeds, isPending: isOverwritePending} =
+    useOverwriteSavedFeedsMutation()
+  const navigation = useNavigation<NavigationProp>()
 
   /*
    * Use optimistic data if exists and no error, otherwise fallback to remote
    * data
    */
-  const currentFeeds =
-    optimisticSavedFeedsResponse && !savedFeedsError
-      ? optimisticSavedFeedsResponse
-      : preferences?.savedFeeds || []
+  const [currentFeeds, setCurrentFeeds] = React.useState(
+    () => preferences.savedFeeds || [],
+  )
+  const hasUnsavedChanges = currentFeeds !== preferences.savedFeeds
   const pinnedFeeds = currentFeeds.filter(f => f.pinned)
   const unpinnedFeeds = currentFeeds.filter(f => !f.pinned)
   const noSavedFeedsOfAnyType = pinnedFeeds.length + unpinnedFeeds.length === 0
@@ -78,6 +88,35 @@ export function SavedFeeds({}: Props) {
     }, [setMinimalShellMode]),
   )
 
+  const onSaveChanges = React.useCallback(async () => {
+    try {
+      await overwriteSavedFeeds(currentFeeds)
+      Toast.show(_(msg`Feeds updated!`))
+      navigation.navigate('Feeds')
+    } catch (e) {
+      Toast.show(_(msg`There was an issue contacting the server`), 'xmark')
+      logger.error('Failed to toggle pinned feed', {message: e})
+    }
+  }, [_, overwriteSavedFeeds, currentFeeds, navigation])
+
+  const renderHeaderBtn = React.useCallback(() => {
+    return (
+      <Button
+        size="small"
+        variant={hasUnsavedChanges ? 'solid' : 'solid'}
+        color={hasUnsavedChanges ? 'primary' : 'secondary'}
+        onPress={onSaveChanges}
+        label={_(msg`Save changes`)}
+        disabled={isOverwritePending || !hasUnsavedChanges}
+        style={[isDesktop && a.mt_sm]}>
+        <ButtonText style={[isDesktop && a.text_md]}>
+          {isDesktop ? <Trans>Save changes</Trans> : <Trans>Save</Trans>}
+        </ButtonText>
+        {isOverwritePending && <ButtonIcon icon={Loader} />}
+      </Button>
+    )
+  }, [_, isDesktop, onSaveChanges, hasUnsavedChanges, isOverwritePending])
+
   return (
     <CenteredView
       style={[
@@ -85,7 +124,12 @@ export function SavedFeeds({}: Props) {
         pal.border,
         isTabletOrDesktop && styles.desktopContainer,
       ]}>
-      <ViewHeader title={_(msg`Edit My Feeds`)} showOnDesktop showBorder />
+      <ViewHeader
+        title={_(msg`Edit My Feeds`)}
+        showOnDesktop
+        showBorder
+        renderButton={renderHeaderBtn}
+      />
       <ScrollView style={s.flex1} contentContainerStyle={[styles.noBorder]}>
         {noSavedFeedsOfAnyType && (
           <View
@@ -119,9 +163,8 @@ export function SavedFeeds({}: Props) {
                 key={f.id}
                 feed={f}
                 isPinned
-                overwriteSavedFeeds={overwriteSavedFeeds}
-                resetSaveFeedsMutationState={resetSaveFeedsMutationState}
                 currentFeeds={currentFeeds}
+                setCurrentFeeds={setCurrentFeeds}
                 preferences={preferences}
               />
             ))
@@ -161,9 +204,8 @@ export function SavedFeeds({}: Props) {
                 key={f.id}
                 feed={f}
                 isPinned={false}
-                overwriteSavedFeeds={overwriteSavedFeeds}
-                resetSaveFeedsMutationState={resetSaveFeedsMutationState}
                 currentFeeds={currentFeeds}
+                setCurrentFeeds={setCurrentFeeds}
                 preferences={preferences}
               />
             ))
@@ -197,44 +239,27 @@ function ListItem({
   feed,
   isPinned,
   currentFeeds,
-  overwriteSavedFeeds,
-  resetSaveFeedsMutationState,
+  setCurrentFeeds,
 }: {
   feed: AppBskyActorDefs.SavedFeed
   isPinned: boolean
   currentFeeds: AppBskyActorDefs.SavedFeed[]
-  overwriteSavedFeeds: ReturnType<
-    typeof useOverwriteSavedFeedsMutation
-  >['mutateAsync']
-  resetSaveFeedsMutationState: ReturnType<
-    typeof useOverwriteSavedFeedsMutation
-  >['reset']
+  setCurrentFeeds: React.Dispatch<AppBskyActorDefs.SavedFeed[]>
   preferences: UsePreferencesQueryResponse
 }) {
-  const pal = usePalette('default')
   const {_} = useLingui()
+  const pal = usePalette('default')
   const playHaptic = useHaptics()
-  const {isPending: isUpdatePending, mutateAsync: updateSavedFeeds} =
-    useUpdateSavedFeedsMutation()
   const feedUri = feed.value
 
   const onTogglePinned = React.useCallback(async () => {
     playHaptic()
-
-    try {
-      resetSaveFeedsMutationState()
-
-      await updateSavedFeeds([
-        {
-          ...feed,
-          pinned: !feed.pinned,
-        },
-      ])
-    } catch (e) {
-      Toast.show(_(msg`There was an issue contacting the server`), 'xmark')
-      logger.error('Failed to toggle pinned feed', {message: e})
-    }
-  }, [_, playHaptic, feed, updateSavedFeeds, resetSaveFeedsMutationState])
+    setCurrentFeeds(
+      currentFeeds.map(f =>
+        f.id === feed.id ? {...feed, pinned: !feed.pinned} : f,
+      ),
+    )
+  }, [playHaptic, feed, currentFeeds, setCurrentFeeds])
 
   const onPressUp = React.useCallback(async () => {
     if (!isPinned) return
@@ -250,13 +275,8 @@ function ListItem({
       nextFeeds[index],
     ]
 
-    try {
-      await overwriteSavedFeeds(nextFeeds)
-    } catch (e) {
-      Toast.show(_(msg`There was an issue contacting the server`), 'xmark')
-      logger.error('Failed to set pinned feed order', {message: e})
-    }
-  }, [feed, isPinned, overwriteSavedFeeds, currentFeeds, _])
+    setCurrentFeeds(nextFeeds)
+  }, [feed, isPinned, setCurrentFeeds, currentFeeds])
 
   const onPressDown = React.useCallback(async () => {
     if (!isPinned) return
@@ -272,13 +292,13 @@ function ListItem({
       nextFeeds[index],
     ]
 
-    try {
-      await overwriteSavedFeeds(nextFeeds)
-    } catch (e) {
-      Toast.show(_(msg`There was an issue contacting the server`), 'xmark')
-      logger.error('Failed to set pinned feed order', {message: e})
-    }
-  }, [feed, isPinned, overwriteSavedFeeds, currentFeeds, _])
+    setCurrentFeeds(nextFeeds)
+  }, [feed, isPinned, setCurrentFeeds, currentFeeds])
+
+  const onPressRemove = React.useCallback(async () => {
+    playHaptic()
+    setCurrentFeeds(currentFeeds.filter(f => f.id !== feed.id))
+  }, [playHaptic, feed, currentFeeds, setCurrentFeeds])
 
   return (
     <View style={[styles.itemContainer, pal.border]}>
@@ -290,14 +310,12 @@ function ListItem({
           feedUri={feedUri}
           style={[isPinned && {paddingRight: 8}]}
           showMinimalPlaceholder
-          showSaveBtn={!isPinned}
           hideTopBorder={true}
         />
       )}
       {isPinned ? (
         <>
           <Pressable
-            disabled={isUpdatePending}
             accessibilityRole="button"
             onPress={onPressUp}
             hitSlop={HITSLOP_TOP}
@@ -307,8 +325,7 @@ function ListItem({
               paddingVertical: 10,
               borderRadius: 4,
               marginRight: 8,
-              opacity:
-                state.hovered || state.pressed || isUpdatePending ? 0.5 : 1,
+              opacity: state.hovered || state.pressed ? 0.5 : 1,
             })}>
             <FontAwesomeIcon
               icon="arrow-up"
@@ -317,7 +334,6 @@ function ListItem({
             />
           </Pressable>
           <Pressable
-            disabled={isUpdatePending}
             accessibilityRole="button"
             onPress={onPressDown}
             hitSlop={HITSLOP_BOTTOM}
@@ -327,8 +343,7 @@ function ListItem({
               paddingVertical: 10,
               borderRadius: 4,
               marginRight: 8,
-              opacity:
-                state.hovered || state.pressed || isUpdatePending ? 0.5 : 1,
+              opacity: state.hovered || state.pressed ? 0.5 : 1,
             })}>
             <FontAwesomeIcon
               icon="arrow-down"
@@ -337,10 +352,30 @@ function ListItem({
             />
           </Pressable>
         </>
-      ) : null}
+      ) : (
+        <Pressable
+          testID={`feed-${feedUri}-toggleSave`}
+          accessibilityRole="button"
+          accessibilityLabel={_(msg`Remove from my feeds`)}
+          accessibilityHint=""
+          onPress={onPressRemove}
+          hitSlop={15}
+          style={state => ({
+            marginRight: 8,
+            paddingHorizontal: 12,
+            paddingVertical: 10,
+            borderRadius: 4,
+            opacity: state.hovered || state.focused ? 0.5 : 1,
+          })}>
+          <FontAwesomeIcon
+            icon={['far', 'trash-can']}
+            size={19}
+            color={pal.colors.icon}
+          />
+        </Pressable>
+      )}
       <View style={{paddingRight: 16}}>
         <Pressable
-          disabled={isUpdatePending}
           accessibilityRole="button"
           hitSlop={10}
           onPress={onTogglePinned}
@@ -349,8 +384,7 @@ function ListItem({
             paddingHorizontal: 12,
             paddingVertical: 10,
             borderRadius: 4,
-            opacity:
-              state.hovered || state.focused || isUpdatePending ? 0.5 : 1,
+            opacity: state.hovered || state.focused ? 0.5 : 1,
           })}>
           <FontAwesomeIcon
             icon="thumb-tack"
