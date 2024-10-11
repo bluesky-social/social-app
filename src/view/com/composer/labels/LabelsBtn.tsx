@@ -185,7 +185,6 @@ function DialogInner({
       <Button
         label={_(msg`Done`)}
         onPress={() => control.close()}
-        onAccessibilityEscape={() => control.close()}
         color="primary"
         size="large"
         variant="solid"
