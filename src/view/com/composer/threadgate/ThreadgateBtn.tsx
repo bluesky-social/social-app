@@ -68,7 +68,7 @@ export function ThreadgateBtn({
             !isNative ? {paddingVertical: 6, paddingHorizontal: 8} : undefined
           }>
           <ButtonIcon icon={anyoneCanInteract ? Earth : Group} />
-          <ButtonText>{label}</ButtonText>
+          <ButtonText numberOfLines={1}>{label}</ButtonText>
         </Button>
       </Animated.View>
       <PostInteractionSettingsControlledDialog
