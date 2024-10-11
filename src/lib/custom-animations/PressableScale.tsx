@@ -4,6 +4,7 @@ import Animated, {
   cancelAnimation,
   runOnJS,
   useAnimatedStyle,
+  useReducedMotion,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated'
@@ -26,6 +27,8 @@ export function PressableScale({
   targetScale?: number
   style?: StyleProp<ViewStyle>
 } & Exclude<PressableProps, 'onPressIn' | 'onPressOut' | 'style'>) {
+  const reducedMotion = useReducedMotion()
+
   const scale = useSharedValue(1)
 
   const animatedStyle = useAnimatedStyle(() => ({
@@ -51,7 +54,7 @@ export function PressableScale({
         cancelAnimation(scale)
         scale.value = withTiming(1, {duration: 100})
       }}
-      style={[animatedStyle, style]}
+      style={[!reducedMotion && animatedStyle, style]}
       {...rest}>
       {children}
     </AnimatedPressable>
