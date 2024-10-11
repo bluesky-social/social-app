@@ -201,6 +201,7 @@ export function createInput(Component: typeof TextInput) {
               lineHeight: a.text_md.fontSize * 1.1875,
               textAlignVertical: rest.multiline ? 'top' : undefined,
               minHeight: rest.multiline ? 80 : undefined,
+              fontFamily: 'inherit',
               minWidth: 0,
             },
             // fix for autofill styles covering border
