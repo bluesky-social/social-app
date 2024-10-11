@@ -5,6 +5,7 @@ import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
 import {useColorSchemeStyle} from '#/lib/hooks/useColorSchemeStyle'
+import {useIntentHandler} from '#/lib/hooks/useIntentHandler'
 import {useWebBodyScrollLock} from '#/lib/hooks/useWebBodyScrollLock'
 import {NavigationProp} from '#/lib/routes/types'
 import {colors, s} from '#/lib/styles'
@@ -32,6 +33,7 @@ function ShellInner() {
 
   useWebBodyScrollLock(isDrawerOpen)
   useComposerKeyboardShortcut()
+  useIntentHandler()
 
   useEffect(() => {
     const unsubscribe = navigator.addListener('state', () => {
