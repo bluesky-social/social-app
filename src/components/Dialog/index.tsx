@@ -223,7 +223,8 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
         bounces={nativeSnapPoint === BottomSheetSnapPoint.Full}
         bottomOffset={30}
         scrollEventThrottle={50}
-        onScroll={isAndroid ? onScroll : undefined}>
+        onScroll={isAndroid ? onScroll : undefined}
+        keyboardShouldPersistTaps="handled">
         {children}
       </KeyboardAwareScrollView>
     )
