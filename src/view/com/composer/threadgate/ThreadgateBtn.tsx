@@ -65,7 +65,7 @@ export function ThreadgateBtn({
             msg`Opens a dialog to choose who can reply to this thread`,
           )}>
           <ButtonIcon icon={anyoneCanInteract ? Earth : Group} />
-          <ButtonText>{label}</ButtonText>
+          <ButtonText numberOfLines={1}>{label}</ButtonText>
         </Button>
       </Animated.View>
       <PostInteractionSettingsControlledDialog
