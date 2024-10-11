@@ -292,7 +292,7 @@ function ListItem({
   return (
     <Animated.View
       style={[styles.itemContainer, pal.border]}
-      layout={LinearTransition}>
+      layout={LinearTransition.duration(100)}>
       {feed.type === 'timeline' ? (
         <FollowingFeedCard />
       ) : (
