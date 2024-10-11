@@ -274,7 +274,8 @@ function ListItem({
     const index = ids.indexOf(feed.id)
     const nextIndex = index + 1
 
-    if (index === -1 || index >= nextFeeds.length - 1) return
+    if (index === -1 || index >= nextFeeds.filter(f => f.pinned).length - 1)
+      return
     ;[nextFeeds[index], nextFeeds[nextIndex]] = [
       nextFeeds[nextIndex],
       nextFeeds[index],
