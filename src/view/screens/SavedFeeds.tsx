@@ -1,5 +1,6 @@
 import React from 'react'
 import {ActivityIndicator, Pressable, StyleSheet, View} from 'react-native'
+import Animated, {LinearTransition} from 'react-native-reanimated'
 import {AppBskyActorDefs} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
@@ -288,7 +289,9 @@ function ListItem({
   }, [playHaptic, feed, currentFeeds, setCurrentFeeds])
 
   return (
-    <View style={[styles.itemContainer, pal.border]}>
+    <Animated.View
+      style={[styles.itemContainer, pal.border]}
+      layout={LinearTransition}>
       {feed.type === 'timeline' ? (
         <FollowingFeedCard />
       ) : (
@@ -380,7 +383,7 @@ function ListItem({
           />
         </Pressable>
       </View>
-    </View>
+    </Animated.View>
   )
 }
 
