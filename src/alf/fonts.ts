@@ -1,3 +1,4 @@
+import {TextStyle} from 'react-native'
 import {useFonts} from 'expo-font'
 
 import {isWeb} from '#/platform/detection'
@@ -37,10 +38,7 @@ export function setFontFamily(fontFamily: Device['fontFamily']) {
 /*
  * Unused fonts are commented out, but the files are there if we need them.
  */
-export function applyFonts(
-  style: Record<string, any>,
-  fontFamily: 'system' | 'theme',
-) {
+export function applyFonts(style: TextStyle, fontFamily: 'system' | 'theme') {
   if (fontFamily === 'theme') {
     style.fontFamily = 'InterVariable'
 
