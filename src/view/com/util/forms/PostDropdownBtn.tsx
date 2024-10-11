@@ -386,7 +386,7 @@ let PostDropdownBtn = ({
           }}
         </Menu.Trigger>
 
-        <Menu.Outer>
+        <Menu.Outer nativeOptions={{initialHeight: 'half'}}>
           {isAuthor && (
             <>
               <Menu.Group>
