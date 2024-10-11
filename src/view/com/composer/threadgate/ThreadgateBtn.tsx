@@ -64,7 +64,9 @@ export function ThreadgateBtn({
           accessibilityHint={_(
             msg`Opens a dialog to choose who can reply to this thread`,
           )}
-          style={{paddingVertical: 6, paddingHorizontal: 8}}>
+          style={
+            !isNative ? {paddingVertical: 6, paddingHorizontal: 8} : undefined
+          }>
           <ButtonIcon icon={anyoneCanInteract ? Earth : Group} />
           <ButtonText>{label}</ButtonText>
         </Button>
