@@ -8,7 +8,7 @@ msgstr ""
 "Language: pt-BR\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-09-20 10:25:00\n"
+"PO-Revision-Date: 2024-10-10 23:30:00\n"
 "Last-Translator: Felps3000\n"
 "Language-Team: maisondasilva, MightyLoggor, gildaswise, gleydson, faeriarum, fabiohcnobre, garccez\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -19,7 +19,7 @@ msgstr "(contém conteúdo incorporado)"
 
 #: src/view/com/modals/VerifyEmail.tsx:150
 msgid "(no email)"
-msgstr "(sem email)"
+msgstr "(sem e-mail)"
 
 #: src/view/com/notifications/FeedItem.tsx:232
 #: src/view/com/notifications/FeedItem.tsx:327
@@ -292,7 +292,7 @@ msgstr "<0>{0}</0> membros"
 
 #: src/components/dms/DateDivider.tsx:69
 msgid "<0>{date}</0> at {time}"
-msgstr ""
+msgstr "<0>{date}</0> às {time}"
 
 #: src/components/ProfileHoverCard/index.web.tsx:437
 #~ msgid "<0>{followers} </0><1>{pluralizedFollowers}</1>"
@@ -634,16 +634,16 @@ msgstr "O texto alternativo descreve imagens para usuários cegos e com baixa vi
 #: src/view/com/composer/GifAltText.tsx:186
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:143
 msgid "Alt text will be truncated. Limit: {0} characters."
-msgstr ""
+msgstr "O texto alternativo vai ficar truncado. Limite de {0} caracteres."
 
 #: src/view/com/modals/VerifyEmail.tsx:132
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:95
 msgid "An email has been sent to {0}. It includes a confirmation code which you can enter below."
-msgstr "Um email foi enviado para {0}. Ele inclui um código de confirmação que você pode inserir abaixo."
+msgstr "Um e-mail foi enviado para {0}. Ele inclui um código de confirmação que você pode inserir abaixo."
 
 #: src/view/com/modals/ChangeEmail.tsx:114
 msgid "An email has been sent to your previous address, {0}. It includes a confirmation code which you can enter below."
-msgstr "Um email foi enviado para seu email anterior, {0}. Ele inclui um código de confirmação que você pode inserir abaixo."
+msgstr "Um e-mail foi enviado para seu e-mail anterior, {0}. Ele inclui um código de confirmação que você pode inserir abaixo."
 
 #: src/components/dialogs/GifSelect.tsx:267
 msgid "An error has occurred"
@@ -751,7 +751,7 @@ msgstr "Comportamento Anti-Social"
 #: src/view/screens/Search/Search.tsx:347
 #: src/view/screens/Search/Search.tsx:348
 msgid "Any language"
-msgstr ""
+msgstr "Qualquer idioma"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:55
 msgid "Anybody can interact"
@@ -767,7 +767,7 @@ msgstr "Senha de Aplicativo excluída"
 
 #: src/view/com/modals/AddAppPasswords.tsx:138
 msgid "App Password names can only contain letters, numbers, spaces, dashes, and underscores."
-msgstr "O nome da Senha de Aplicativo só pode conter letras, números, traços e sublinhados."
+msgstr "O nome da Senha de Aplicativo só pode conter letras, números, travessões e underline."
 
 #: src/view/com/modals/AddAppPasswords.tsx:103
 msgid "App Password names must be at least 4 characters long."
@@ -1006,7 +1006,7 @@ msgstr "Bluesky"
 
 #: src/view/com/auth/server-input/index.tsx:151
 msgid "Bluesky is an open network where you can choose your hosting provider. If you're a developer, you can host your own server."
-msgstr ""
+msgstr "Bluesky é uma rede aberta onde você pode escolher seu provedor de hospedagem. Se você é um desenvolvedor, você pode hospedar seu próprio servidor"
 
 #: src/components/ProgressGuide/List.tsx:55
 msgid "Bluesky is better with friends!"
@@ -1015,7 +1015,7 @@ msgstr "Bluesky é melhor com amigos!"
 #: src/components/dialogs/nuxs/TenMillion/Trigger.tsx:43
 #: src/components/dialogs/nuxs/TenMillion/Trigger.tsx:59
 #~ msgid "Bluesky is celebrating 10 million users!"
-#~ msgstr ""
+#~ msgstr "Bluesky está celebrando 10 milhões de usuários!"
 
 #: src/view/com/auth/onboarding/WelcomeDesktop.tsx:80
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:82
@@ -1116,15 +1116,15 @@ msgstr "por <0/>"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:81
 msgid "By creating an account you agree to the <0>Privacy Policy</0>."
-msgstr ""
+msgstr "Ao criar uma conta você concorda com a <0>Política de Privacidade</0>."
 
 #: src/screens/Signup/StepInfo/Policies.tsx:48
 msgid "By creating an account you agree to the <0>Terms of Service</0> and <1>Privacy Policy</1>."
-msgstr ""
+msgstr "Ao criar uma conta você concorda com os <0>Termos de Serviço</0> e a <0>Política de Privacidade</0>."
 
 #: src/screens/Signup/StepInfo/Policies.tsx:68
 msgid "By creating an account you agree to the <0>Terms of Service</0>."
-msgstr ""
+msgstr "Ao criar uma conta você concorda com os <0>Termos de Serviço</0>."
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:162
 msgid "by you"
@@ -1136,7 +1136,7 @@ msgstr "Câmera"
 
 #: src/view/com/modals/AddAppPasswords.tsx:180
 msgid "Can only contain letters, numbers, spaces, dashes, and underscores. Must be at least 4 characters long, but no more than 32 characters long."
-msgstr "Só pode conter letras, números, espaços, riscas e subtraços. Deve ter pelo menos 4 caracteres, mas não mais de 32 caracteres."
+msgstr "Só pode conter letras, números, espaços, travessões e underline. Deve ter pelo menos 4 caracteres, mas não mais de 32 caracteres."
 
 #: src/components/Menu/index.tsx:239
 #: src/components/Prompt.tsx:133
@@ -1244,7 +1244,7 @@ msgstr "Alterar Usuário"
 
 #: src/view/com/modals/VerifyEmail.tsx:155
 msgid "Change my email"
-msgstr "Alterar meu email"
+msgstr "Alterar meu e-mail"
 
 #: src/view/screens/Settings/index.tsx:728
 msgid "Change password"
@@ -1261,7 +1261,7 @@ msgstr "Alterar idioma do post para {0}"
 
 #: src/view/com/modals/ChangeEmail.tsx:104
 msgid "Change Your Email"
-msgstr "Altere o Seu Email"
+msgstr "Altere o Seu E-mail"
 
 #: src/Navigation.tsx:337
 #: src/view/shell/bottom-bar/BottomBar.tsx:200
@@ -1350,7 +1350,7 @@ msgstr "Escolha os algoritmos que geram seus feeds customizados."
 #: src/view/com/auth/onboarding/WelcomeDesktop.tsx:83
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:85
 #~ msgid "Choose the algorithms that power your experience with custom feeds."
-#~ msgstr "Escolha os algoritmos que fazem sentido para você com os feeds personalizados."
+#~ msgstr "Escolha os algoritmos que fazem sentido para você com os feeds customizados."
 
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:107
 msgid "Choose this color as your avatar"
@@ -1521,7 +1521,7 @@ msgstr "Fecha lista de usuários da notificação"
 
 #: src/screens/Settings/AppearanceSettings.tsx:97
 msgid "Color mode"
-msgstr ""
+msgstr "Esquema de cor"
 
 #: src/screens/Onboarding/index.tsx:38
 #: src/screens/Onboarding/state.ts:84
@@ -1830,7 +1830,7 @@ msgstr "Crie um pacote inicial para mim"
 #: src/view/com/auth/SplashScreen.tsx:56
 #: src/view/com/auth/SplashScreen.web.tsx:100
 msgid "Create account"
-msgstr ""
+msgstr "Criar conta"
 
 #: src/screens/Signup/index.tsx:93
 msgid "Create Account"
@@ -1942,7 +1942,7 @@ msgstr "Painel de depuração"
 #: src/components/dialogs/nuxs/NeueTypography.tsx:99
 #: src/screens/Settings/AppearanceSettings.tsx:169
 msgid "Default"
-msgstr ""
+msgstr "Padrão"
 
 #: src/components/dms/MessageMenu.tsx:151
 #: src/screens/StarterPack/StarterPackScreen.tsx:573
@@ -2131,7 +2131,7 @@ msgstr "Desencorajar aplicativos a mostrar minha conta para usuários desautenti
 #: src/view/com/posts/FollowingEmptyState.tsx:70
 #: src/view/com/posts/FollowingEndOfFeed.tsx:71
 msgid "Discover new custom feeds"
-msgstr "Descubra novos feeds"
+msgstr "Descubra novos feeds customizados"
 
 #: src/view/screens/Search/Explore.tsx:389
 msgid "Discover new feeds"
@@ -2221,7 +2221,7 @@ msgstr "Feito{extraText}"
 
 #: src/components/Dialog/index.tsx:268
 msgid "Double tap to close the dialog"
-msgstr ""
+msgstr "Toque duplo pra fechar o diálogo"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:317
 msgid "Download Bluesky"
@@ -2657,7 +2657,7 @@ msgstr "Expirado"
 
 #: src/components/dialogs/MutedWords.tsx:548
 msgid "Expires {0}"
-msgstr "Expirada {0}"
+msgstr "Expira {0}"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:47
 msgid "Explicit or potentially disturbing media."
@@ -2755,7 +2755,7 @@ msgstr "Falha ao carregar sugestões a seguir"
 
 #: src/state/queries/pinned-post.ts:75
 msgid "Failed to pin post"
-msgstr ""
+msgstr "Falha ao fixar postagem"
 
 #: src/view/com/lightbox/Lightbox.tsx:97
 msgid "Failed to save image: {0}"
@@ -3082,12 +3082,12 @@ msgstr "Segue Você"
 #: src/components/dialogs/nuxs/NeueTypography.tsx:71
 #: src/screens/Settings/AppearanceSettings.tsx:141
 msgid "Font"
-msgstr ""
+msgstr "Fonte"
 
 #: src/components/dialogs/nuxs/NeueTypography.tsx:91
 #: src/screens/Settings/AppearanceSettings.tsx:161
 msgid "Font size"
-msgstr ""
+msgstr "Tamanho da fonte"
 
 #: src/screens/Onboarding/index.tsx:40
 #: src/screens/Onboarding/state.ts:89
@@ -3105,7 +3105,7 @@ msgstr "Por motivos de segurança, você não poderá ver esta senha novamente. 
 #: src/components/dialogs/nuxs/NeueTypography.tsx:73
 #: src/screens/Settings/AppearanceSettings.tsx:143
 msgid "For the best experience, we recommend using the theme font."
-msgstr ""
+msgstr "Para melhor experiência, nós recomendamos usar a fonte padrão."
 
 #: src/components/dialogs/MutedWords.tsx:192
 msgid "Forever"
@@ -3459,7 +3459,7 @@ msgstr "Se você deletar esta lista, você não poderá recuperá-la."
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:670
 msgid "If you remove this post, you won't be able to recover it."
-msgstr "Se você remover esta postagem, você não poderá recuperá-lo."
+msgstr "Se você remover esta postagem, você não poderá recuperá-la."
 
 #: src/view/com/modals/ChangePassword.tsx:149
 msgid "If you want to change your password, we will send you a code to verify that this is your account."
@@ -3551,7 +3551,7 @@ msgstr "Interação limitada"
 
 #: src/components/dialogs/nuxs/NeueTypography.tsx:47
 msgid "Introducing new font settings"
-msgstr ""
+msgstr "Apresentando as novas configurações de fonte"
 
 #: src/screens/Login/LoginForm.tsx:142
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:70
@@ -3605,7 +3605,7 @@ msgstr "Convites, mas pessoais"
 
 #: src/screens/Signup/StepInfo/index.tsx:80
 msgid "It looks like you may have entered your email address incorrectly. Are you sure it's right?"
-msgstr ""
+msgstr "Parece que você pode ter inserido seu endereço de e-mail incorretamente. Você tem certeza que está correto?"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:65
 #~ msgid "It shows posts from the people you follow as they happen."
@@ -3613,7 +3613,7 @@ msgstr ""
 
 #: src/screens/Signup/StepInfo/index.tsx:241
 msgid "It's correct"
-msgstr ""
+msgstr "Não está correto"
 
 #: src/screens/StarterPack/Wizard/index.tsx:452
 msgid "It's just you right now! Add more people to your starter pack by searching above."
@@ -3644,7 +3644,7 @@ msgstr "Participe da conversa"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:559
 #~ msgid "Joined on {joinedDate}"
-#~ msgstr ""
+#~ msgstr "Juntou-se no dia {joinedDate}"
 
 #: src/screens/Onboarding/index.tsx:21
 #: src/screens/Onboarding/state.ts:91
@@ -3703,7 +3703,7 @@ msgstr "Idiomas"
 #: src/components/dialogs/nuxs/NeueTypography.tsx:103
 #: src/screens/Settings/AppearanceSettings.tsx:173
 msgid "Larger"
-msgstr ""
+msgstr "Maior"
 
 #: src/screens/Hashtag.tsx:97
 #: src/view/screens/Search/Search.tsx:506
@@ -3720,7 +3720,7 @@ msgstr "Saiba mais sobre o Bluesky"
 
 #: src/view/com/auth/server-input/index.tsx:156
 msgid "Learn more about self hosting your PDS."
-msgstr ""
+msgstr "Saiba mais sobre a auto-hospedagem do seu Servidor de Dados Pessoais."
 
 #: src/components/moderation/ContentHider.tsx:66
 #: src/components/moderation/ContentHider.tsx:131
@@ -3839,7 +3839,7 @@ msgstr "Curtido Por"
 
 #: src/view/com/notifications/FeedItem.tsx:211
 msgid "liked your custom feed"
-msgstr "curtiram seu feed"
+msgstr "curtiram seu feed customizado"
 
 #: src/view/com/notifications/FeedItem.tsx:178
 msgid "liked your post"
@@ -4368,11 +4368,11 @@ msgstr "Novo"
 #: src/screens/Messages/ChatList.tsx:327
 #: src/screens/Messages/ChatList.tsx:334
 msgid "New chat"
-msgstr "Nova conversa"
+msgstr "Novo chat"
 
 #: src/components/dialogs/nuxs/NeueTypography.tsx:51
 msgid "New font settings ✨"
-msgstr ""
+msgstr "Novas configurações de fonte ✨"
 
 #: src/components/dms/NewMessagesPill.tsx:92
 msgid "New messages"
@@ -4578,7 +4578,7 @@ msgstr "Ninguém curtiu isso ainda. Você pode ser o primeiro!"
 
 #: src/view/com/post-thread/PostQuotes.tsx:108
 msgid "Nobody has quoted this yet. Maybe you should be the first!"
-msgstr ""
+msgstr "Ninguém citou isso ainda. Talvez você devesse ser o primeiro!"
 
 #: src/view/com/post-thread/PostRepostedBy.tsx:80
 msgid "Nobody has reposted this yet. Maybe you should be the first!"
@@ -4882,7 +4882,7 @@ msgstr "Abre janela para confirmação da desativação da conta"
 
 #: src/view/screens/Settings/index.tsx:795
 msgid "Opens modal for account deletion confirmation. Requires email code"
-msgstr "Abre modal de confirmar a exclusão da conta. Requer código enviado por email"
+msgstr "Abre modal de confirmar a exclusão da conta. Requer código enviado por e-mail"
 
 #: src/view/screens/Settings/index.tsx:730
 msgid "Opens modal for changing your Bluesky password"
@@ -4898,7 +4898,7 @@ msgstr "Abre modal para baixar os dados da sua conta do Bluesky"
 
 #: src/view/screens/Settings/index.tsx:961
 msgid "Opens modal for email verification"
-msgstr "Abre modal para verificação de email"
+msgstr "Abre modal para verificação de e-mail"
 
 #: src/view/com/modals/ChangeHandle.tsx:269
 msgid "Opens modal for using custom domain"
@@ -5092,11 +5092,11 @@ msgstr "Fixar na Tela Inicial"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:398
 #: src/view/com/util/forms/PostDropdownBtn.tsx:405
 msgid "Pin to your profile"
-msgstr ""
+msgstr "Fixe no seu perfil"
 
 #: src/view/com/posts/FeedItem.tsx:354
 msgid "Pinned"
-msgstr ""
+msgstr "Fixado"
 
 #: src/view/screens/SavedFeeds.tsx:99
 msgid "Pinned Feeds"
@@ -5270,11 +5270,11 @@ msgstr "Postagem não encontrada"
 
 #: src/state/queries/pinned-post.ts:59
 msgid "Post pinned"
-msgstr ""
+msgstr "Postagem fixada"
 
 #: src/state/queries/pinned-post.ts:61
 msgid "Post unpinned"
-msgstr ""
+msgstr "Postagem desafixada"
 
 #: src/components/TagMenu/index.tsx:266
 msgid "posts"
@@ -5453,11 +5453,11 @@ msgstr "A postagem de citação foi desanexada com sucesso"
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:84
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:91
 msgid "Quote posts disabled"
-msgstr "Postagens de citações desabilitadas"
+msgstr "Citações desabilitadas"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:313
 msgid "Quote posts enabled"
-msgstr "Postagens de citações habilitadas"
+msgstr "Citações habilitadas"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:297
 msgid "Quote settings"
@@ -5924,7 +5924,7 @@ msgstr "Obrigatório para este provedor"
 
 #: src/components/LabelingServiceCard/index.tsx:80
 msgid "Required in your region"
-msgstr ""
+msgstr "Obrigatório na sua região"
 
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:167
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:170
@@ -6568,7 +6568,7 @@ msgstr "Mostrar"
 
 #: src/view/screens/Search/Search.tsx:889
 msgid "Show advanced filters"
-msgstr ""
+msgstr "Mostrar filtros avançados"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:68
 #~ msgid "Show all replies"
@@ -6800,7 +6800,7 @@ msgstr "Pular"
 #: src/components/dialogs/nuxs/NeueTypography.tsx:95
 #: src/screens/Settings/AppearanceSettings.tsx:165
 msgid "Smaller"
-msgstr ""
+msgstr "Menor"
 
 #: src/screens/Onboarding/index.tsx:37
 #: src/screens/Onboarding/state.ts:87
@@ -6850,7 +6850,7 @@ msgstr "Classificar respostas de uma postagem por:"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:167
 msgid "Source:"
-msgstr ""
+msgstr "Fonte:"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:163
 #~ msgid "Source: <0>{sourceName}</0>"
@@ -6902,7 +6902,7 @@ msgstr "Pacote inicial por {0}"
 
 #: src/components/StarterPack/StarterPackCard.tsx:74
 msgid "Starter pack by you"
-msgstr ""
+msgstr "Seu pacote inicial"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:703
 msgid "Starter pack is invalid"
@@ -7134,7 +7134,7 @@ msgstr "Obrigado. Sua denúncia foi enviada."
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:82
 msgid "Thanks, you have successfully verified your email address. You can close this dialog."
-msgstr ""
+msgstr "Obrigado, você verificou seu endereço e-mail com sucesso. Você pode fechar esse diálogo."
 
 #: src/view/com/modals/ChangeHandle.tsx:452
 msgid "That contains the following:"
@@ -7244,7 +7244,7 @@ msgstr "O código de verificação que você forneceu é inválido. Certifique-s
 #: src/components/dialogs/nuxs/NeueTypography.tsx:82
 #: src/screens/Settings/AppearanceSettings.tsx:152
 msgid "Theme"
-msgstr ""
+msgstr "Padrão"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:141
 #~ msgid "There are many feeds to try:"
@@ -7629,7 +7629,7 @@ msgstr "Para quem você gostaria de enviar esta denúncia?"
 
 #: src/components/dms/DateDivider.tsx:44
 msgid "Today"
-msgstr ""
+msgstr "Hoje"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:658
 #: src/components/dialogs/nuxs/TenMillion/Trigger.tsx:63
@@ -7797,7 +7797,7 @@ msgstr "Dessilenciar postagens com {displayTag}"
 
 #: src/components/dms/ConvoMenu.tsx:176
 msgid "Unmute conversation"
-msgstr "Desmutar conversa"
+msgstr "Dessilenciar conversa"
 
 #: src/components/dms/ConvoMenu.tsx:140
 #~ msgid "Unmute notifications"
@@ -7828,7 +7828,7 @@ msgstr "Desafixar da tela inicial"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:397
 #: src/view/com/util/forms/PostDropdownBtn.tsx:404
 msgid "Unpin from profile"
-msgstr ""
+msgstr "Desafixar do seu perfil"
 
 #: src/view/screens/ProfileList.tsx:550
 msgid "Unpin moderation list"
@@ -7836,7 +7836,7 @@ msgstr "Desafixar lista de moderação"
 
 #: src/view/screens/ProfileList.tsx:347
 msgid "Unpinned from your feeds"
-msgstr "Desfixado dos seus feeds"
+msgstr "Desafixado dos seus feeds"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:223
 msgid "Unsubscribe"
@@ -7874,7 +7874,7 @@ msgstr "Conteúdo Sexual Indesejado"
 
 #: src/view/com/modals/UserAddRemoveLists.tsx:82
 msgid "Update <0>{displayName}</0> in Lists"
-msgstr ""
+msgstr "Atualizar <0>{displayName}</0> nas Listas"
 
 #: src/view/com/modals/ChangeHandle.tsx:495
 msgid "Update to {handle}"
@@ -8070,7 +8070,7 @@ msgstr "Verificar meu e-mail"
 
 #: src/view/screens/Settings/index.tsx:969
 msgid "Verify My Email"
-msgstr "Verificar Meu Email"
+msgstr "Verificar Meu E-mail"
 
 #: src/view/com/modals/ChangeEmail.tsx:200
 #: src/view/com/modals/ChangeEmail.tsx:202
@@ -8293,7 +8293,7 @@ msgstr "Estamos com problemas de rede, tente novamente"
 
 #: src/components/dialogs/nuxs/NeueTypography.tsx:54
 msgid "We're introducing a new theme font, along with adjustable font sizing."
-msgstr ""
+msgstr "Nós estamos introduzindo uma nova fonte, junto com o tamanho de fonte ajustável."
 
 #: src/screens/Signup/index.tsx:94
 msgid "We're so excited to have you join us!"
@@ -8472,7 +8472,7 @@ msgstr "Sim, reative minha conta"
 
 #: src/components/dms/DateDivider.tsx:46
 msgid "Yesterday"
-msgstr ""
+msgstr "Ontem"
 
 #: src/components/dms/MessageItem.tsx:183
 #~ msgid "Yesterday, {time}"
@@ -8500,12 +8500,12 @@ msgstr "Você não segue ninguém."
 
 #: src/components/dialogs/nuxs/NeueTypography.tsx:61
 msgid "You can adjust these in your Appearance Settings later."
-msgstr ""
+msgstr "Você pode ajustar isso depois nas suas Configurações de Aparência"
 
 #: src/view/com/posts/FollowingEmptyState.tsx:63
 #: src/view/com/posts/FollowingEndOfFeed.tsx:64
 msgid "You can also discover new Custom Feeds to follow."
-msgstr "Você também pode descobrir novos feeds para seguir."
+msgstr "Você também pode descobrir novos feeds customizados para seguir."
 
 #: src/view/com/modals/DeleteAccount.tsx:202
 msgid "You can also temporarily deactivate your account instead, and reactivate it at any time."
