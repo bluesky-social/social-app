@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: zh-TW for bluesky-social-app\n"
 "POT-Creation-Date: \n"
 "Report-Msgid-Bugs-To: Kuwa Lee <kuwalee1069@gmail.com>, Frudrax Cheng <i@cynosura.one>\n"
-"PO-Revision-Date: 2024-10-09 11:40+0800\n"
+"PO-Revision-Date: 2024-10-11 10:18+0800\n"
 "Last-Translator: \n"
 "Language-Team: Frudrax Cheng <i@cynosura.one>, Kuwa Lee <kuwalee1069@gmail.com>, noeFly, snowleo208, Kisaragi Hiu, Yi-Jyun Pan, toto6038, cirx1e\n"
 "Language: zh_TW\n"
@@ -521,15 +521,15 @@ msgstr "替代文字太長將要被截斷，字數限制：{0}個字元。"
 #: src/view/com/modals/VerifyEmail.tsx:132
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:95
 msgid "An email has been sent to {0}. It includes a confirmation code which you can enter below."
-msgstr "一封電子郵件已發送至 {0}。請查閱郵件並在下方輸入驗證碼。"
+msgstr "電子郵件已發送至 {0}。請查閱郵件並在下方輸入驗證碼。"
 
 #: src/view/com/modals/ChangeEmail.tsx:114
 msgid "An email has been sent to your previous address, {0}. It includes a confirmation code which you can enter below."
-msgstr "一封電子郵件已發送至先前填寫的電子郵件地址 {0}。請查閱郵件並在下方輸入驗證碼。"
+msgstr "電子郵件已發送至先前填寫的電子郵件地址 {0}。請查閱郵件並在下方輸入驗證碼。"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:77
 msgid "An email has been sent! Please enter the confirmation code included in the email below."
-msgstr ""
+msgstr "電子郵件已發送！請查閱郵件並在下方輸入驗證碼。"
 
 #: src/components/dialogs/GifSelect.tsx:263
 msgid "An error has occurred"
@@ -1041,7 +1041,7 @@ msgstr "變更"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:147
 msgid "Change email address"
-msgstr ""
+msgstr "變更電子郵件地址"
 
 #: src/view/screens/Settings/index.tsx:684
 msgid "Change handle"
@@ -1358,7 +1358,7 @@ msgstr "驗證碼"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:167
 msgid "Confirmation Code"
-msgstr ""
+msgstr "驗證碼"
 
 #: src/screens/Login/LoginForm.tsx:309
 msgid "Connecting..."
@@ -2175,7 +2175,7 @@ msgstr "輸入文字或標籤"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:75
 msgid "Enter Code"
-msgstr ""
+msgstr "輸入驗證碼"
 
 #: src/view/com/modals/VerifyEmail.tsx:113
 msgid "Enter Confirmation Code"
@@ -2969,7 +2969,7 @@ msgstr "我有驗證碼"
 #: src/components/dialogs/VerifyEmailDialog.tsx:196
 #: src/components/dialogs/VerifyEmailDialog.tsx:203
 msgid "I Have a Code"
-msgstr ""
+msgstr "我有驗證碼"
 
 #: src/view/com/modals/VerifyEmail.tsx:224
 msgid "I have a confirmation code"
@@ -3800,7 +3800,7 @@ msgstr "切換到您的個人檔案"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:156
 msgid "Need to change it?"
-msgstr ""
+msgstr "需要變更嗎？"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:130
 msgid "Need to report a copyright violation?"
@@ -5612,11 +5612,11 @@ msgstr "發送一個妙趣的網站！"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:189
 msgid "Send Confirmation"
-msgstr ""
+msgstr "發送確認"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:182
 msgid "Send confirmation email"
-msgstr ""
+msgstr "發送確認電子郵件"
 
 #: src/view/com/modals/VerifyEmail.tsx:210
 #: src/view/com/modals/VerifyEmail.tsx:212
@@ -6149,7 +6149,7 @@ msgstr "訂閱這個列表"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:81
 msgid "Success!"
-msgstr ""
+msgstr "完成！"
 
 #: src/view/screens/Search/Explore.tsx:332
 msgid "Suggested accounts"
@@ -6271,7 +6271,7 @@ msgstr "文字輸入框"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:82
 msgid "Thank you! Your email has been successfully verified."
-msgstr ""
+msgstr "謝謝你！您的電子郵件地址已成功驗證。"
 
 #: src/components/dms/ReportDialog.tsx:129
 #: src/components/ReportDialog/SubmitView.tsx:82
@@ -7706,7 +7706,7 @@ msgstr "您將會立即跟隨這些人物"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:138
 msgid "You'll receive an email at <0>{0}</0> to verify it's you."
-msgstr ""
+msgstr "您將會在 <0>{0}</0> 收到一封電子郵件，以驗證您的身分。"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:270
 msgid "You'll stay updated with these feeds"
