@@ -1,6 +1,5 @@
 import React from 'react'
 import {Pressable, View} from 'react-native'
-import {ScrollView} from 'react-native-gesture-handler'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -38,10 +37,8 @@ function ReportDialogInner(props: ReportDialogProps) {
   } = useMyLabelersQuery({excludeNonConfigurableLabelers: true})
   const isLoading = useDelayedLoading(500, isLabelerLoading)
 
-  const ref = React.useRef<ScrollView>(null)
-
   return (
-    <Dialog.ScrollableInner label={_(msg`Report dialog`)} ref={ref}>
+    <Dialog.ScrollableInner label={_(msg`Report dialog`)}>
       {isLoading ? (
         <View style={[a.align_center, {height: 100}]}>
           <Loader size="xl" />
