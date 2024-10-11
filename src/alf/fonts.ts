@@ -59,11 +59,15 @@ export function applyFonts(
     }
   }
 
+  style.fontVariant = style.fontVariant || []
+
   /**
-   * Disable contextual ligatures
+   * Disable contextual alternates in Inter
    * {@link https://developer.mozilla.org/en-US/docs/Web/CSS/font-variant}
    */
-  style.fontVariant = (style.fontVariant || []).concat('no-contextual')
+  if (fontFamily === 'theme') {
+    style.fontVariant = (style.fontVariant || []).concat('no-contextual')
+  }
 }
 
 /*
