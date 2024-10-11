@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import {TouchableOpacity, View} from 'react-native'
+import {Dimensions, TouchableOpacity, View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -107,7 +107,8 @@ export function GifAltTextDialogLoaded({
         control={control}
         onClose={() => {
           onSubmit(altTextDraft)
-        }}>
+        }}
+        nativeOptions={{minHeight: Dimensions.get('window').height}}>
         <Dialog.Handle />
         <AltTextInner
           vendorAltText={vendorAltText}
