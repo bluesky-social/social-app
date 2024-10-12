@@ -267,7 +267,7 @@ msgid "7 days"
 msgstr "7 日"
 
 #: src/view/com/util/ViewHeader.tsx:89
-#: src/view/screens/Search/Search.tsx:867
+#: src/view/screens/Search/Search.tsx:877
 msgid "Access navigation links and settings"
 msgstr "存取導覽連結同設定"
 
@@ -367,12 +367,12 @@ msgid "Add account"
 msgstr "新增帳戶"
 
 #: src/view/com/composer/GifAltText.tsx:76
-#: src/view/com/composer/GifAltText.tsx:144
-#: src/view/com/composer/GifAltText.tsx:207
+#: src/view/com/composer/GifAltText.tsx:145
+#: src/view/com/composer/GifAltText.tsx:208
 #: src/view/com/composer/photos/Gallery.tsx:166
 #: src/view/com/composer/photos/Gallery.tsx:213
-#: src/view/com/composer/photos/ImageAltTextDialog.tsx:88
-#: src/view/com/composer/photos/ImageAltTextDialog.tsx:93
+#: src/view/com/composer/photos/ImageAltTextDialog.tsx:89
+#: src/view/com/composer/photos/ImageAltTextDialog.tsx:94
 msgid "Add alt text"
 msgstr "新增 ALT 文字"
 
@@ -496,8 +496,8 @@ msgstr "已經以 @{0} 身分登入"
 msgid "ALT"
 msgstr "ALT"
 
-#: src/view/com/composer/GifAltText.tsx:154
-#: src/view/com/composer/photos/ImageAltTextDialog.tsx:118
+#: src/view/com/composer/GifAltText.tsx:155
+#: src/view/com/composer/photos/ImageAltTextDialog.tsx:119
 #: src/view/com/composer/videos/SubtitleDialog.tsx:56
 #: src/view/com/composer/videos/SubtitleDialog.tsx:102
 #: src/view/com/composer/videos/SubtitleDialog.tsx:106
@@ -513,8 +513,8 @@ msgstr "ALT 文字"
 msgid "Alt text describes images for blind and low-vision users, and helps give context to everyone."
 msgstr "ALT 文字會為盲人同低視力用戶描述圖片，同埋有助為每個人提供背景資料。"
 
-#: src/view/com/composer/GifAltText.tsx:179
-#: src/view/com/composer/photos/ImageAltTextDialog.tsx:139
+#: src/view/com/composer/GifAltText.tsx:180
+#: src/view/com/composer/photos/ImageAltTextDialog.tsx:140
 msgid "Alt text will be truncated. Limit: {0} characters."
 msgstr "ALT 文字會被截斷，限制：{0} 個字元。"
 
@@ -531,7 +531,7 @@ msgstr "電郵已經發送到之前填寫嘅電郵地址 {0}。請查閱郵件�
 msgid "An email has been sent! Please enter the confirmation code included in the email below."
 msgstr "電郵已經發送！請查閱郵件同埋喺下面輸入驗證碼。"
 
-#: src/components/dialogs/GifSelect.tsx:263
+#: src/components/dialogs/GifSelect.tsx:266
 msgid "An error has occurred"
 msgstr "發生錯誤"
 
@@ -622,8 +622,8 @@ msgstr "GIF 動畫"
 msgid "Anti-Social Behavior"
 msgstr "反社會行為"
 
+#: src/view/screens/Search/Search.tsx:346
 #: src/view/screens/Search/Search.tsx:347
-#: src/view/screens/Search/Search.tsx:348
 msgid "Any language"
 msgstr "任何語言"
 
@@ -720,7 +720,7 @@ msgstr "你肯定你想喺你嘅資訊提供入面移除 {0} 嗎？"
 msgid "Are you sure you want to remove this from your feeds?"
 msgstr "你肯定你想喺你嘅資訊提供入面移除呢個嗎？"
 
-#: src/view/com/composer/Composer.tsx:838
+#: src/view/com/composer/Composer.tsx:840
 msgid "Are you sure you'd like to discard this draft?"
 msgstr "你肯定你想棄置呢份草稿？"
 
@@ -953,8 +953,8 @@ msgstr "只可以包含字母、數字、空格、破折號同下划線。必須
 #: src/components/Prompt.tsx:131
 #: src/components/TagMenu/index.tsx:281
 #: src/screens/Deactivated.tsx:161
-#: src/view/com/composer/Composer.tsx:538
-#: src/view/com/composer/Composer.tsx:553
+#: src/view/com/composer/Composer.tsx:540
+#: src/view/com/composer/Composer.tsx:555
 #: src/view/com/modals/ChangeEmail.tsx:213
 #: src/view/com/modals/ChangeEmail.tsx:215
 #: src/view/com/modals/ChangeHandle.tsx:141
@@ -963,14 +963,14 @@ msgstr "只可以包含字母、數字、空格、破折號同下划線。必須
 #: src/view/com/modals/CreateOrEditList.tsx:335
 #: src/view/com/modals/CropImage.web.tsx:97
 #: src/view/com/modals/EditProfile.tsx:244
+#: src/view/com/modals/InAppBrowserConsent.tsx:75
 #: src/view/com/modals/InAppBrowserConsent.tsx:77
-#: src/view/com/modals/InAppBrowserConsent.tsx:79
 #: src/view/com/modals/LinkWarning.tsx:105
 #: src/view/com/modals/LinkWarning.tsx:107
 #: src/view/com/modals/VerifyEmail.tsx:255
 #: src/view/com/modals/VerifyEmail.tsx:261
 #: src/view/com/util/post-ctrls/RepostButton.tsx:164
-#: src/view/screens/Search/Search.tsx:914
+#: src/view/screens/Search/Search.tsx:905
 msgid "Cancel"
 msgstr "取消"
 
@@ -1007,7 +1007,7 @@ msgid "Cancel reactivation and log out"
 msgstr "取消重新啟動同埋登出"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:88
-#: src/view/screens/Search/Search.tsx:906
+#: src/view/screens/Search/Search.tsx:897
 msgid "Cancel search"
 msgstr "取消搜尋"
 
@@ -1193,7 +1193,7 @@ msgstr "氣候"
 msgid "Clip 🐴 clop 🐴"
 msgstr "Clip 🐴 clop 🐴"
 
-#: src/components/dialogs/GifSelect.tsx:279
+#: src/components/dialogs/GifSelect.tsx:282
 #: src/components/dialogs/VerifyEmailDialog.tsx:246
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:263
 #: src/components/NewskieDialog.tsx:146
@@ -1219,7 +1219,7 @@ msgstr "閂咗警示"
 msgid "Close bottom drawer"
 msgstr "閂咗底部抽屜"
 
-#: src/components/dialogs/GifSelect.tsx:273
+#: src/components/dialogs/GifSelect.tsx:276
 msgid "Close dialog"
 msgstr "閂咗對話框"
 
@@ -1235,7 +1235,7 @@ msgstr "閂咗圖片"
 msgid "Close image viewer"
 msgstr "閂咗圖片檢視器"
 
-#: src/view/shell/index.web.tsx:61
+#: src/view/shell/index.web.tsx:65
 msgid "Close navigation footer"
 msgstr "閂咗導覽頁尾"
 
@@ -1244,7 +1244,7 @@ msgstr "閂咗導覽頁尾"
 msgid "Close this dialog"
 msgstr "閂咗呢個對話框"
 
-#: src/view/shell/index.web.tsx:62
+#: src/view/shell/index.web.tsx:66
 msgid "Closes bottom navigation bar"
 msgstr "閂咗底部導覽列"
 
@@ -1252,7 +1252,7 @@ msgstr "閂咗底部導覽列"
 msgid "Closes password update alert"
 msgstr "閂咗密碼更新警示"
 
-#: src/view/com/composer/Composer.tsx:550
+#: src/view/com/composer/Composer.tsx:552
 msgid "Closes post composer and discards post draft"
 msgstr "閂咗帖文編輯器同埋棄置帖文草稿"
 
@@ -1295,7 +1295,7 @@ msgstr "完成呢個入門，然後開始使用你嘅帳戶"
 msgid "Complete the challenge"
 msgstr "完成呢個挑戰"
 
-#: src/view/com/composer/Composer.tsx:662
+#: src/view/com/composer/Composer.tsx:664
 msgid "Compose posts up to {MAX_GRAPHEME_LENGTH} characters in length"
 msgstr "撰寫長度最多為 {MAX_GRAPHEME_LENGTH} 字元嘅帖文"
 
@@ -1748,8 +1748,8 @@ msgstr "刪除咗傾偈申報記錄"
 msgid "Description"
 msgstr "描述"
 
-#: src/view/com/composer/GifAltText.tsx:150
-#: src/view/com/composer/photos/ImageAltTextDialog.tsx:114
+#: src/view/com/composer/GifAltText.tsx:151
+#: src/view/com/composer/photos/ImageAltTextDialog.tsx:115
 msgid "Descriptive alt text"
 msgstr "描述 ALT 文字"
 
@@ -1766,7 +1766,7 @@ msgstr "拆開引文帖文？"
 msgid "Dialog: adjust who can interact with this post"
 msgstr "對話框：調整邊個可以同呢個帖文互動"
 
-#: src/view/com/composer/Composer.tsx:366
+#: src/view/com/composer/Composer.tsx:367
 msgid "Did you want to say anything?"
 msgstr "你想唔想講啲咩？"
 
@@ -1799,11 +1799,11 @@ msgstr "停用字幕"
 msgid "Disabled"
 msgstr "停用咗"
 
-#: src/view/com/composer/Composer.tsx:840
+#: src/view/com/composer/Composer.tsx:842
 msgid "Discard"
 msgstr "棄置"
 
-#: src/view/com/composer/Composer.tsx:837
+#: src/view/com/composer/Composer.tsx:839
 msgid "Discard draft?"
 msgstr "棄置草稿？"
 
@@ -1825,11 +1825,11 @@ msgstr "發掘新嘅資訊提供"
 msgid "Discover New Feeds"
 msgstr "發掘新嘅資訊提供"
 
-#: src/components/Dialog/index.tsx:264
+#: src/components/Dialog/index.tsx:265
 msgid "Dismiss"
 msgstr "跳過"
 
-#: src/view/com/composer/Composer.tsx:1099
+#: src/view/com/composer/Composer.tsx:1101
 msgid "Dismiss error"
 msgstr "跳過錯誤"
 
@@ -1903,7 +1903,7 @@ msgstr "搞掂"
 msgid "Done{extraText}"
 msgstr "搞掂 {extraText}"
 
-#: src/components/Dialog/index.tsx:265
+#: src/components/Dialog/index.tsx:266
 msgid "Double tap to close the dialog"
 msgstr "撳兩下就可以閂呢個對話框"
 
@@ -2008,7 +2008,7 @@ msgstr "編輯審核清單"
 #: src/Navigation.tsx:290
 #: src/view/screens/Feeds.tsx:383
 #: src/view/screens/Feeds.tsx:451
-#: src/view/screens/SavedFeeds.tsx:88
+#: src/view/screens/SavedFeeds.tsx:116
 msgid "Edit My Feeds"
 msgstr "編輯我嘅資訊提供"
 
@@ -2223,7 +2223,7 @@ msgid "Error receiving captcha response."
 msgstr "接收 CAPTCHA 回應嗰陣發生錯誤。"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:183
-#: src/view/screens/Search/Search.tsx:122
+#: src/view/screens/Search/Search.tsx:121
 msgid "Error:"
 msgstr "錯誤："
 
@@ -2377,7 +2377,7 @@ msgstr "刪除唔到新手包"
 msgid "Failed to load feeds preferences"
 msgstr "載入唔到資訊提供設定"
 
-#: src/components/dialogs/GifSelect.tsx:221
+#: src/components/dialogs/GifSelect.tsx:224
 msgid "Failed to load GIFs"
 msgstr "載入唔到 GIF"
 
@@ -2457,18 +2457,19 @@ msgstr "反應"
 #: src/view/screens/Feeds.tsx:445
 #: src/view/screens/Feeds.tsx:551
 #: src/view/screens/Profile.tsx:223
-#: src/view/screens/Search/Search.tsx:522
+#: src/view/screens/Search/Search.tsx:535
 #: src/view/shell/desktop/LeftNav.tsx:401
 #: src/view/shell/Drawer.tsx:489
 #: src/view/shell/Drawer.tsx:490
 msgid "Feeds"
 msgstr "資訊提供"
 
-#: src/view/screens/SavedFeeds.tsx:177
+#: src/view/screens/SavedFeeds.tsx:207
 msgid "Feeds are custom algorithms that users build with a little coding expertise. <0/> for more information."
 msgstr "資訊提供係用戶用少少編碼專業知識建立嘅自訂算法。<0/> 想知多啲。"
 
 #: src/components/FeedCard.tsx:273
+#: src/view/screens/SavedFeeds.tsx:82
 msgid "Feeds updated!"
 msgstr "資訊提供更新咗！"
 
@@ -2494,7 +2495,7 @@ msgstr "正在完成"
 msgid "Find accounts to follow"
 msgstr "搵帳戶嚟跟蹤"
 
-#: src/view/screens/Search/Search.tsx:594
+#: src/view/screens/Search/Search.tsx:607
 msgid "Find posts and users on Bluesky"
 msgstr "喺 Bluesky 上面搵帖文同用戶"
 
@@ -2537,7 +2538,7 @@ msgstr "追蹤"
 msgid "Follow {0}"
 msgstr "追蹤 {0}"
 
-#: src/view/com/posts/AviFollowButton.tsx:69
+#: src/view/com/posts/AviFollowButton.tsx:68
 msgid "Follow {name}"
 msgstr "追蹤 {name}"
 
@@ -2620,7 +2621,7 @@ msgstr "你識嘅追隨者"
 #: src/view/screens/Feeds.tsx:631
 #: src/view/screens/ProfileFollows.tsx:29
 #: src/view/screens/ProfileFollows.tsx:30
-#: src/view/screens/SavedFeeds.tsx:404
+#: src/view/screens/SavedFeeds.tsx:429
 msgid "Following"
 msgstr "追蹤中"
 
@@ -2629,7 +2630,7 @@ msgstr "追蹤中"
 msgid "Following {0}"
 msgstr "追蹤 {0}"
 
-#: src/view/com/posts/AviFollowButton.tsx:51
+#: src/view/com/posts/AviFollowButton.tsx:50
 msgid "Following {name}"
 msgstr "追蹤 {name}"
 
@@ -2956,7 +2957,7 @@ msgstr "Host:"
 msgid "Hosting provider"
 msgstr "Hosting 供應商"
 
-#: src/view/com/modals/InAppBrowserConsent.tsx:43
+#: src/view/com/modals/InAppBrowserConsent.tsx:41
 msgid "How should we open this link?"
 msgstr "我哋應該點樣打開呢個連結？"
 
@@ -3146,7 +3147,7 @@ msgstr "係正確嘅"
 msgid "It's just you right now! Add more people to your starter pack by searching above."
 msgstr "而家只有你！喺上面搜尋，將更多人加入你嘅新手包。"
 
-#: src/view/com/composer/Composer.tsx:1118
+#: src/view/com/composer/Composer.tsx:1120
 msgid "Job ID: {0}"
 msgstr "Job ID: {0}"
 
@@ -3217,7 +3218,7 @@ msgid "Larger"
 msgstr "大啲"
 
 #: src/screens/Hashtag.tsx:97
-#: src/view/screens/Search/Search.tsx:506
+#: src/view/screens/Search/Search.tsx:519
 msgid "Latest"
 msgstr "最近"
 
@@ -3503,7 +3504,7 @@ msgstr "提到嘅用戶"
 
 #: src/components/Menu/index.tsx:94
 #: src/view/com/util/ViewHeader.tsx:87
-#: src/view/screens/Search/Search.tsx:866
+#: src/view/screens/Search/Search.tsx:876
 msgid "Menu"
 msgstr "菜單"
 
@@ -3924,7 +3925,7 @@ msgstr "無描述"
 msgid "No DNS Panel"
 msgstr "無 DNS 面板"
 
-#: src/components/dialogs/GifSelect.tsx:227
+#: src/components/dialogs/GifSelect.tsx:230
 msgid "No featured GIFs found. There may be an issue with Tenor."
 msgstr "搵唔到精選 GIF，Tenor 可能出現問題。"
 
@@ -3997,13 +3998,13 @@ msgid "No results found for \"{query}\""
 msgstr "搵唔到「{query}」嘅結果。"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:128
-#: src/view/screens/Search/Search.tsx:239
-#: src/view/screens/Search/Search.tsx:278
-#: src/view/screens/Search/Search.tsx:324
+#: src/view/screens/Search/Search.tsx:238
+#: src/view/screens/Search/Search.tsx:277
+#: src/view/screens/Search/Search.tsx:323
 msgid "No results found for {query}"
 msgstr "搵唔到 {query} 嘅結果"
 
-#: src/components/dialogs/GifSelect.tsx:225
+#: src/components/dialogs/GifSelect.tsx:228
 msgid "No search results found for \"{search}\"."
 msgstr "搵唔到「{search}」嘅搜尋結果。"
 
@@ -4114,7 +4115,7 @@ msgstr "無標籤嘅裸體或者成人內容"
 msgid "Off"
 msgstr "閂"
 
-#: src/components/dialogs/GifSelect.tsx:266
+#: src/components/dialogs/GifSelect.tsx:269
 #: src/view/com/util/ErrorBoundary.tsx:55
 msgid "Oh no!"
 msgstr "哎吔！"
@@ -4143,7 +4144,7 @@ msgstr "喺<0><1/><2><3/></2></0>"
 msgid "Onboarding reset"
 msgstr "重新開始引導流程"
 
-#: src/view/com/composer/Composer.tsx:617
+#: src/view/com/composer/Composer.tsx:619
 msgid "One or more images is missing alt text."
 msgstr "一張或者多張圖片缺少 ALT 文字。"
 
@@ -4180,7 +4181,7 @@ msgstr "哎呀！"
 msgid "Open"
 msgstr "打開"
 
-#: src/view/com/posts/AviFollowButton.tsx:87
+#: src/view/com/posts/AviFollowButton.tsx:86
 msgid "Open {name} profile shortcut menu"
 msgstr "打開 {name} 個人檔案快捷選單"
 
@@ -4194,8 +4195,8 @@ msgid "Open conversation options"
 msgstr "打開對話選項"
 
 #: src/screens/Messages/components/MessageInput.web.tsx:165
-#: src/view/com/composer/Composer.tsx:818
-#: src/view/com/composer/Composer.tsx:819
+#: src/view/com/composer/Composer.tsx:820
+#: src/view/com/composer/Composer.tsx:821
 msgid "Open emoji picker"
 msgstr "打開 emoji 挑選器"
 
@@ -4456,7 +4457,7 @@ msgid "Pause video"
 msgstr "暫停影片"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:171
-#: src/view/screens/Search/Search.tsx:516
+#: src/view/screens/Search/Search.tsx:529
 msgid "People"
 msgstr "用戶"
 
@@ -4511,7 +4512,7 @@ msgstr "固定到你嘅個人檔案"
 msgid "Pinned"
 msgstr "固定咗"
 
-#: src/view/screens/SavedFeeds.tsx:99
+#: src/view/screens/SavedFeeds.tsx:131
 msgid "Pinned Feeds"
 msgstr "固定嘅資訊提供"
 
@@ -4615,8 +4616,8 @@ msgstr "政治"
 msgid "Porn"
 msgstr "色情"
 
-#: src/view/com/composer/Composer.tsx:592
-#: src/view/com/composer/Composer.tsx:599
+#: src/view/com/composer/Composer.tsx:594
+#: src/view/com/composer/Composer.tsx:601
 msgctxt "action"
 msgid "Post"
 msgstr "帖文"
@@ -4789,11 +4790,11 @@ msgstr "公開而且可以共享嘅用戶列表，可以批量靜音或者封鎖
 msgid "Public, shareable lists which can drive feeds."
 msgstr "公開而且可以共享嘅列表，可以作為資訊提供使用。"
 
-#: src/view/com/composer/Composer.tsx:577
+#: src/view/com/composer/Composer.tsx:579
 msgid "Publish post"
 msgstr "發佈帖文"
 
-#: src/view/com/composer/Composer.tsx:577
+#: src/view/com/composer/Composer.tsx:579
 msgid "Publish reply"
 msgstr "發佈回覆"
 
@@ -4880,7 +4881,7 @@ msgstr "睇下 Bluesky 服務條款"
 msgid "Reason:"
 msgstr "原因："
 
-#: src/view/screens/Search/Search.tsx:1060
+#: src/view/screens/Search/Search.tsx:1051
 msgid "Recent Searches"
 msgstr "最近嘅搜尋"
 
@@ -4948,6 +4949,7 @@ msgstr "移除資訊提供？"
 #: src/view/screens/ProfileFeed.tsx:330
 #: src/view/screens/ProfileFeed.tsx:336
 #: src/view/screens/ProfileList.tsx:493
+#: src/view/screens/SavedFeeds.tsx:350
 msgid "Remove from my feeds"
 msgstr "喺我嘅資訊提供入面移除"
 
@@ -4972,11 +4974,11 @@ msgstr "移除圖片"
 msgid "Remove mute word from your list"
 msgstr "喺你嘅清單入面移除靜音字詞"
 
-#: src/view/screens/Search/Search.tsx:1104
+#: src/view/screens/Search/Search.tsx:1095
 msgid "Remove profile"
 msgstr "移除個人檔案"
 
-#: src/view/screens/Search/Search.tsx:1106
+#: src/view/screens/Search/Search.tsx:1097
 msgid "Remove profile from search history"
 msgstr "喺搜尋記錄入面移除個人檔案"
 
@@ -5050,7 +5052,7 @@ msgstr "停用咗回覆"
 msgid "Replies to this post are disabled."
 msgstr "呢個帖文嘅回覆已經停用。"
 
-#: src/view/com/composer/Composer.tsx:590
+#: src/view/com/composer/Composer.tsx:592
 msgctxt "action"
 msgid "Reply"
 msgstr "回覆"
@@ -5339,15 +5341,16 @@ msgstr "返去上一頁"
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:439
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:445
 #: src/components/StarterPack/QrCodeDialog.tsx:185
-#: src/view/com/composer/GifAltText.tsx:190
-#: src/view/com/composer/GifAltText.tsx:199
+#: src/view/com/composer/GifAltText.tsx:191
+#: src/view/com/composer/GifAltText.tsx:200
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:77
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:83
-#: src/view/com/composer/photos/ImageAltTextDialog.tsx:150
-#: src/view/com/composer/photos/ImageAltTextDialog.tsx:160
+#: src/view/com/composer/photos/ImageAltTextDialog.tsx:151
+#: src/view/com/composer/photos/ImageAltTextDialog.tsx:161
 #: src/view/com/modals/ChangeHandle.tsx:161
 #: src/view/com/modals/CreateOrEditList.tsx:317
 #: src/view/com/modals/EditProfile.tsx:219
+#: src/view/screens/SavedFeeds.tsx:101
 msgid "Save"
 msgstr "儲存"
 
@@ -5360,6 +5363,11 @@ msgstr "儲存"
 #: src/components/dialogs/BirthDateSettings.tsx:118
 msgid "Save birthday"
 msgstr "儲存生日"
+
+#: src/view/screens/SavedFeeds.tsx:97
+#: src/view/screens/SavedFeeds.tsx:101
+msgid "Save changes"
+msgstr ""
 
 #: src/view/com/modals/EditProfile.tsx:227
 msgid "Save Changes"
@@ -5387,7 +5395,7 @@ msgstr "儲存 QR code"
 msgid "Save to my feeds"
 msgstr "儲存去我嘅資訊提供"
 
-#: src/view/screens/SavedFeeds.tsx:142
+#: src/view/screens/SavedFeeds.tsx:173
 msgid "Saved Feeds"
 msgstr "儲存咗資訊提供"
 
@@ -5433,7 +5441,7 @@ msgstr "捲動去頂部"
 #: src/components/forms/SearchInput.tsx:36
 #: src/Navigation.tsx:554
 #: src/view/com/modals/ListAddRemoveUsers.tsx:76
-#: src/view/screens/Search/Search.tsx:576
+#: src/view/screens/Search/Search.tsx:589
 #: src/view/shell/bottom-bar/BottomBar.tsx:178
 #: src/view/shell/desktop/LeftNav.tsx:377
 #: src/view/shell/Drawer.tsx:390
@@ -5445,7 +5453,7 @@ msgstr "搜尋"
 msgid "Search for \"{query}\""
 msgstr "搜尋「{query}」"
 
-#: src/view/screens/Search/Search.tsx:1003
+#: src/view/screens/Search/Search.tsx:994
 msgid "Search for \"{searchText}\""
 msgstr "搜尋「{searchText}」"
 
@@ -5502,7 +5510,7 @@ msgstr "睇下呢個用戶嘅 <0>{displayTag}</0> 帖文"
 msgid "See jobs at Bluesky"
 msgstr "喺 Bluesky 搵工"
 
-#: src/view/screens/SavedFeeds.tsx:184
+#: src/view/screens/SavedFeeds.tsx:214
 msgid "See this guide"
 msgstr "睇下呢個指南"
 
@@ -5538,7 +5546,7 @@ msgstr "喺現有帳戶入面揀"
 msgid "Select GIF"
 msgstr "揀 GIF"
 
-#: src/components/dialogs/GifSelect.tsx:304
+#: src/components/dialogs/GifSelect.tsx:307
 msgid "Select GIF \"{0}\""
 msgstr "揀 GIF「{0}」"
 
@@ -5814,8 +5822,8 @@ msgid "Show"
 msgstr "顯示"
 
 #: src/view/screens/Search/Search.tsx:889
-msgid "Show advanced filters"
-msgstr "顯示進階篩選器"
+#~ msgid "Show advanced filters"
+#~ msgstr "顯示進階篩選器"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:166
 msgid "Show alt text"
@@ -6038,8 +6046,8 @@ msgstr "有啲嘢出錯，請試多一次。"
 msgid "Something went wrong!"
 msgstr "有啲嘢出錯！"
 
-#: src/App.native.tsx:114
-#: src/App.web.tsx:100
+#: src/App.native.tsx:112
+#: src/App.web.tsx:95
 msgid "Sorry! Your session expired. Please log in again."
 msgstr "對唔住！你嘅登入已經過期，請試下再登入。"
 
@@ -6407,16 +6415,14 @@ msgstr "移除呢個資訊提供出現問題。請檢查你嘅互聯網連線，
 msgid "There was an an issue updating your feeds, please check your internet connection and try again."
 msgstr "更新你嘅資訊提供嗰陣出現問題，請檢查你嘅互聯網連線，然後試多一次。"
 
-#: src/components/dialogs/GifSelect.tsx:222
+#: src/components/dialogs/GifSelect.tsx:225
 msgid "There was an issue connecting to Tenor."
 msgstr "連接 Tenor 出現問題。"
 
 #: src/view/screens/ProfileFeed.tsx:233
 #: src/view/screens/ProfileList.tsx:360
 #: src/view/screens/ProfileList.tsx:379
-#: src/view/screens/SavedFeeds.tsx:234
-#: src/view/screens/SavedFeeds.tsx:256
-#: src/view/screens/SavedFeeds.tsx:278
+#: src/view/screens/SavedFeeds.tsx:85
 msgid "There was an issue contacting the server"
 msgstr "連接伺服器出現問題"
 
@@ -6476,7 +6482,7 @@ msgstr "{0} 出現問題！"
 msgid "There was an issue. Please check your internet connection and try again."
 msgstr "出現問題。請檢查你嘅互聯網連線，然後試多一次。"
 
-#: src/components/dialogs/GifSelect.tsx:268
+#: src/components/dialogs/GifSelect.tsx:271
 #: src/view/com/util/ErrorBoundary.tsx:57
 msgid "There was an unexpected issue in the application. Please let us know if this happened to you!"
 msgstr "一個估唔到嘅問題。如果你發生呢件事，請話我哋知！"
@@ -6613,7 +6619,7 @@ msgstr "呢個帖文只會畀登入咗嘅用戶睇到，未登入嘅人唔會睇
 msgid "This post will be hidden from feeds and threads. This cannot be undone."
 msgstr "呢個帖文將會喺討論串及資訊提供中被隱藏，呢個操作無法撤銷。"
 
-#: src/view/com/composer/Composer.tsx:405
+#: src/view/com/composer/Composer.tsx:406
 msgid "This post's author has disabled quote posts."
 msgstr "呢個帖文嘅發佈者已經停用引文。"
 
@@ -6724,7 +6730,7 @@ msgid "Toggle to enable or disable adult content"
 msgstr "切換嚟啟用或者停用成人內容"
 
 #: src/screens/Hashtag.tsx:86
-#: src/view/screens/Search/Search.tsx:496
+#: src/view/screens/Search/Search.tsx:509
 msgid "Top"
 msgstr "TOP"
 
@@ -6982,13 +6988,13 @@ msgstr "用 bsky.social 作為 hosting 供應商"
 msgid "Use default provider"
 msgstr "使用預設供應商"
 
+#: src/view/com/modals/InAppBrowserConsent.tsx:53
 #: src/view/com/modals/InAppBrowserConsent.tsx:55
-#: src/view/com/modals/InAppBrowserConsent.tsx:57
 msgid "Use in-app browser"
 msgstr "使用 App 內瀏覽器"
 
+#: src/view/com/modals/InAppBrowserConsent.tsx:63
 #: src/view/com/modals/InAppBrowserConsent.tsx:65
-#: src/view/com/modals/InAppBrowserConsent.tsx:67
 msgid "Use my default browser"
 msgstr "用我嘅預設瀏覽器"
 
@@ -7209,7 +7215,7 @@ msgstr "睇下有關呢啲標籤嘅資料"
 #: src/components/ProfileHoverCard/index.web.tsx:419
 #: src/components/ProfileHoverCard/index.web.tsx:439
 #: src/components/ProfileHoverCard/index.web.tsx:466
-#: src/view/com/posts/AviFollowButton.tsx:56
+#: src/view/com/posts/AviFollowButton.tsx:55
 #: src/view/com/posts/FeedErrorMessage.tsx:175
 #: src/view/com/util/PostMeta.tsx:77
 #: src/view/com/util/PostMeta.tsx:92
@@ -7332,11 +7338,11 @@ msgstr "對唔住，但係我哋用唔到呢個清單。如果呢個情況持續
 msgid "We're sorry, but we weren't able to load your muted words at this time. Please try again."
 msgstr "對唔住，我哋宜家載入唔到你啲靜音字詞。唔該再試多次。"
 
-#: src/view/screens/Search/Search.tsx:212
+#: src/view/screens/Search/Search.tsx:211
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr "對唔住，但係你嘅搜尋完成唔到。請喺幾分鐘之後再試。"
 
-#: src/view/com/composer/Composer.tsx:402
+#: src/view/com/composer/Composer.tsx:403
 msgid "We're sorry! The post you are replying to has been deleted."
 msgstr "對唔住！你回覆緊嘅帖文已經刪除咗。"
 
@@ -7367,7 +7373,7 @@ msgstr "你想點叫你嘅新手包？"
 
 #: src/view/com/auth/SplashScreen.tsx:39
 #: src/view/com/auth/SplashScreen.web.tsx:98
-#: src/view/com/composer/Composer.tsx:488
+#: src/view/com/composer/Composer.tsx:490
 msgid "What's up?"
 msgstr "有咩新鮮事？"
 
@@ -7425,11 +7431,11 @@ msgstr "點解要審查呢個用戶？"
 msgid "Write a message"
 msgstr "寫個訊息"
 
-#: src/view/com/composer/Composer.tsx:660
+#: src/view/com/composer/Composer.tsx:662
 msgid "Write post"
 msgstr "寫個帖文"
 
-#: src/view/com/composer/Composer.tsx:487
+#: src/view/com/composer/Composer.tsx:489
 #: src/view/com/post-thread/PostThreadComposePrompt.tsx:75
 msgid "Write your reply"
 msgstr "寫你嘅回覆"
@@ -7532,11 +7538,11 @@ msgstr "你唔會追蹤任何追蹤 @{name} 嘅用戶。"
 msgid "You don't have any invite codes yet! We'll send you some when you've been on Bluesky for a little longer."
 msgstr "你仲未有任何邀請碼！當你上咗 Bluesky 耐咗少少之後，我哋會送啲畀你。"
 
-#: src/view/screens/SavedFeeds.tsx:113
+#: src/view/screens/SavedFeeds.tsx:145
 msgid "You don't have any pinned feeds."
 msgstr "你冇任何固定嘅資訊提供。"
 
-#: src/view/screens/SavedFeeds.tsx:155
+#: src/view/screens/SavedFeeds.tsx:186
 msgid "You don't have any saved feeds."
 msgstr "你冇任何儲存咗嘅資訊提供。"
 
@@ -7772,7 +7778,7 @@ msgstr "你個瀏覽器唔支援呢個影片格式，請試下用唔同嘅瀏覽
 msgid "Your chats have been disabled"
 msgstr "你嘅傾偈已經停用咗"
 
-#: src/view/com/modals/InAppBrowserConsent.tsx:46
+#: src/view/com/modals/InAppBrowserConsent.tsx:44
 msgid "Your choice will be saved, but can be changed later in settings."
 msgstr "你嘅揀會儲存，但係遲啲可以喺設定入面更改。"
 
@@ -7815,7 +7821,7 @@ msgstr "你設定咗嘅靜音字"
 msgid "Your password has been changed successfully!"
 msgstr "你個密碼已經成功改咗！"
 
-#: src/view/com/composer/Composer.tsx:446
+#: src/view/com/composer/Composer.tsx:447
 msgid "Your post has been published"
 msgstr "你嘅帖文已經發佈咗"
 
@@ -7831,7 +7837,7 @@ msgstr "你嘅個人檔案"
 msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
 msgstr "你嘅個人檔案、帖文、資訊提供同埋清單唔會再畀其他 Bluesky 用戶睇到。你可以隨時登入重新啟動你嘅帳戶。"
 
-#: src/view/com/composer/Composer.tsx:445
+#: src/view/com/composer/Composer.tsx:446
 msgid "Your reply has been published"
 msgstr "你嘅回覆已經發佈咗"
 
