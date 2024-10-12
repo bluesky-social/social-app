@@ -56,7 +56,6 @@ import {DeactivateAccountDialog} from '#/screens/Settings/components/DeactivateA
 import {atoms as a, useTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {BirthDateSettingsDialog} from '#/components/dialogs/BirthDateSettings'
-import {VerifyEmailDialog} from '#/components/dialogs/VerifyEmailDialog'
 import {Email2FAToggle} from './Email2FAToggle'
 import {ExportCarDialog} from './ExportCarDialog'
 
@@ -928,7 +927,7 @@ function EmailConfirmationNotice() {
   const palInverted = usePalette('inverted')
   const {_} = useLingui()
   const {isMobile} = useWebMediaQueries()
-  const verifyEmailDialogControl = useDialogControl()
+  const {openModal} = useModalControls()
 
   return (
     <View style={{marginBottom: 20}}>
@@ -960,7 +959,7 @@ function EmailConfirmationNotice() {
             accessibilityRole="button"
             accessibilityLabel={_(msg`Verify my email`)}
             accessibilityHint={_(msg`Opens modal for email verification`)}
-            onPress={() => verifyEmailDialogControl.open()}>
+            onPress={() => openModal({name: 'verify-email'})}>
             <FontAwesomeIcon
               icon="envelope"
               color={palInverted.colors.text}
@@ -975,7 +974,6 @@ function EmailConfirmationNotice() {
           <Trans>Protect your account by verifying your email.</Trans>
         </Text>
       </View>
-      <VerifyEmailDialog control={verifyEmailDialogControl} />
     </View>
   )
 }
