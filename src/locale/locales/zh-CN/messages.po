@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh_CN\n"
 "Project-Id-Version: zh-CN for bluesky-social-app\n"
 "Report-Msgid-Bugs-To: Frudrax Cheng <i@cynosura.one>\n"
-"PO-Revision-Date: 2024-10-11 10:13+0800\n"
+"PO-Revision-Date: 2024-10-12 09:26+0800\n"
 "Last-Translator: Frudrax Cheng <i@cynosura.one>\n"
 "Language-Team: Frudrax Cheng (auroursa), Simon Chan (RitsukiP), U2FsdGVkX1, Mikan Harada (mitian233), IceCodeNew\n"
 "Plural-Forms: \n"
@@ -5367,7 +5367,7 @@ msgstr "保存生日"
 #: src/view/screens/SavedFeeds.tsx:97
 #: src/view/screens/SavedFeeds.tsx:101
 msgid "Save changes"
-msgstr ""
+msgstr "保存更改"
 
 #: src/view/com/modals/EditProfile.tsx:227
 msgid "Save Changes"
@@ -5820,10 +5820,6 @@ msgstr "分享链接的网站"
 #: src/view/screens/Settings/index.tsx:351
 msgid "Show"
 msgstr "显示"
-
-#: src/view/screens/Search/Search.tsx:889
-#~ msgid "Show advanced filters"
-#~ msgstr "显示高级搜索"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:166
 msgid "Show alt text"

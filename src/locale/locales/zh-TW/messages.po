@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: zh-TW for bluesky-social-app\n"
 "POT-Creation-Date: \n"
 "Report-Msgid-Bugs-To: Kuwa Lee <kuwalee1069@gmail.com>, Frudrax Cheng <i@cynosura.one>\n"
-"PO-Revision-Date: 2024-10-11 10:18+0800\n"
+"PO-Revision-Date: 2024-10-12 09:27+0800\n"
 "Last-Translator: \n"
 "Language-Team: Frudrax Cheng <i@cynosura.one>, Kuwa Lee <kuwalee1069@gmail.com>, noeFly, snowleo208, Kisaragi Hiu, Yi-Jyun Pan, toto6038, cirx1e\n"
 "Language: zh_TW\n"
@@ -5367,7 +5367,7 @@ msgstr "儲存生日"
 #: src/view/screens/SavedFeeds.tsx:97
 #: src/view/screens/SavedFeeds.tsx:101
 msgid "Save changes"
-msgstr ""
+msgstr "儲存更改"
 
 #: src/view/com/modals/EditProfile.tsx:227
 msgid "Save Changes"
@@ -5820,10 +5820,6 @@ msgstr "分享網站的連結"
 #: src/view/screens/Settings/index.tsx:351
 msgid "Show"
 msgstr "顯示"
-
-#: src/view/screens/Search/Search.tsx:889
-#~ msgid "Show advanced filters"
-#~ msgstr "顯示進階搜尋"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:166
 msgid "Show alt text"
