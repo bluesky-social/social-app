@@ -8,7 +8,7 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-10-06 15:41+0900\n"
+"PO-Revision-Date: 2024-10-13 00:21+0900\n"
 "Last-Translator: quiple\n"
 "Language-Team: quiple, lens0021, HaruChanHeart, hazzzi, heartade\n"
 "Plural-Forms: \n"
@@ -529,7 +529,7 @@ msgstr "이전 주소인 {0}(으)로 이메일을 보냈습니다. 이 이메일
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:77
 msgid "An email has been sent! Please enter the confirmation code included in the email below."
-msgstr ""
+msgstr "이메일을 보냈습니다! 아래에 이메일에 포함된 인증 코드를 입력하세요."
 
 #: src/components/dialogs/GifSelect.tsx:266
 msgid "An error has occurred"
@@ -1041,7 +1041,7 @@ msgstr "변경"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:147
 msgid "Change email address"
-msgstr ""
+msgstr "이메일 주소 변경"
 
 #: src/view/screens/Settings/index.tsx:684
 msgid "Change handle"
@@ -1358,7 +1358,7 @@ msgstr "인증 코드"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:167
 msgid "Confirmation Code"
-msgstr ""
+msgstr "인증 코드"
 
 #: src/screens/Login/LoginForm.tsx:309
 msgid "Connecting..."
@@ -2175,7 +2175,7 @@ msgstr "단어 또는 태그 입력"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:75
 msgid "Enter Code"
-msgstr ""
+msgstr "코드 입력"
 
 #: src/view/com/modals/VerifyEmail.tsx:113
 msgid "Enter Confirmation Code"
@@ -2965,16 +2965,16 @@ msgstr "이 링크를 어떻게 여시겠습니까?"
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:131
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:134
 msgid "I have a code"
-msgstr "코드가 있습니다"
+msgstr "코드를 가지고 있습니다"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:196
 #: src/components/dialogs/VerifyEmailDialog.tsx:203
 msgid "I Have a Code"
-msgstr ""
+msgstr "코드를 가지고 있습니다"
 
 #: src/view/com/modals/VerifyEmail.tsx:224
 msgid "I have a confirmation code"
-msgstr "인증 코드가 있습니다"
+msgstr "인증 코드를 가지고 있습니다"
 
 #: src/view/com/modals/ChangeHandle.tsx:271
 msgid "I have my own domain"
@@ -3801,7 +3801,7 @@ msgstr "내 프로필로 이동합니다"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:156
 msgid "Need to change it?"
-msgstr ""
+msgstr "이메일을 변경하시겠어요?"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:130
 msgid "Need to report a copyright violation?"
@@ -4607,10 +4607,6 @@ msgstr "@{0}(으)로 로그인하세요"
 msgid "Please Verify Your Email"
 msgstr "이메일 인증하기"
 
-#: src/view/com/composer/Composer.tsx:415
-#~ msgid "Please wait for your link card to finish loading"
-#~ msgstr "링크 카드를 완전히 불러올 때까지 기다려주세요"
-
 #: src/screens/Onboarding/index.tsx:34
 #: src/screens/Onboarding/state.ts:98
 msgid "Politics"
@@ -5371,7 +5367,7 @@ msgstr "생년월일 저장"
 #: src/view/screens/SavedFeeds.tsx:97
 #: src/view/screens/SavedFeeds.tsx:101
 msgid "Save changes"
-msgstr ""
+msgstr "변경 사항 저장"
 
 #: src/view/com/modals/EditProfile.tsx:227
 msgid "Save Changes"
@@ -5624,11 +5620,11 @@ msgstr "멋진 웹사이트 링크를 보내 보세요!"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:189
 msgid "Send Confirmation"
-msgstr ""
+msgstr "인증 메일 보내기"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:182
 msgid "Send confirmation email"
-msgstr ""
+msgstr "인증 이메일 보내기"
 
 #: src/view/com/modals/VerifyEmail.tsx:210
 #: src/view/com/modals/VerifyEmail.tsx:212
@@ -5824,10 +5820,6 @@ msgstr "연결된 웹사이트를 공유합니다"
 #: src/view/screens/Settings/index.tsx:351
 msgid "Show"
 msgstr "표시"
-
-#: src/view/screens/Search/Search.tsx:889
-#~ msgid "Show advanced filters"
-#~ msgstr "고급 필터 표시"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:166
 msgid "Show alt text"
@@ -6161,7 +6153,7 @@ msgstr "이 리스트 구독하기"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:81
 msgid "Success!"
-msgstr ""
+msgstr "성공!"
 
 #: src/view/screens/Search/Explore.tsx:332
 msgid "Suggested accounts"
@@ -6283,7 +6275,7 @@ msgstr "텍스트 입력 필드"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:82
 msgid "Thank you! Your email has been successfully verified."
-msgstr ""
+msgstr "감사합니다! 이메일을 성공적으로 인증했습니다."
 
 #: src/components/dms/ReportDialog.tsx:129
 #: src/components/ReportDialog/SubmitView.tsx:82
@@ -7716,7 +7708,7 @@ msgstr "다음 사람들을 바로 팔로우하게 됩니다"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:138
 msgid "You'll receive an email at <0>{0}</0> to verify it's you."
-msgstr ""
+msgstr "본인 인증을 위해 <0>{0}</0>(으)로 이메일을 보냅니다."
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:270
 msgid "You'll stay updated with these feeds"
