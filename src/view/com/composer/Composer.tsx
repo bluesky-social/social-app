@@ -360,6 +360,7 @@ export const ComposePost = ({
         richtext.text.trim().length === 0 &&
         images.length === 0 &&
         !extLink &&
+        !extGif &&
         !quote &&
         videoState.status === 'idle'
       ) {
@@ -451,6 +452,7 @@ export const ComposePost = ({
       agent,
       draft,
       extLink,
+      extGif,
       images,
       graphemeLength,
       isAltTextRequiredAndMissing,

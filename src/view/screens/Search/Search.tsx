@@ -436,19 +436,16 @@ function SearchLanguageDropdown({
 }
 
 function useQueryManager({initialQuery}: {initialQuery: string}) {
-  const {contentLanguages} = useLanguagePrefs()
   const {query, params: initialParams} = React.useMemo(() => {
     return parseSearchQuery(initialQuery || '')
   }, [initialQuery])
   const prevInitialQuery = React.useRef(initialQuery)
-  const [lang, setLang] = React.useState(
-    initialParams.lang || contentLanguages[0],
-  )
+  const [lang, setLang] = React.useState(initialParams.lang || '')
 
   if (initialQuery !== prevInitialQuery.current) {
     // handle new queryParam change (from manual search entry)
     prevInitialQuery.current = initialQuery
-    setLang(initialParams.lang || contentLanguages[0])
+    setLang(initialParams.lang || '')
   }
 
   const params = React.useMemo(
