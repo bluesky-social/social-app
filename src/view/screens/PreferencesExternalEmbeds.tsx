@@ -10,17 +10,17 @@ import {
   EmbedPlayerSource,
   externalEmbedLabels,
 } from '#/lib/strings/embed-player'
-import {s} from '#/lib/styles'
 import {
   useExternalEmbedsPrefs,
   useSetExternalEmbedPref,
 } from '#/state/preferences'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {ToggleButton} from '#/view/com/util/forms/ToggleButton'
+import {SimpleViewHeader} from '#/view/com/util/SimpleViewHeader'
+import {Text} from '#/view/com/util/text/Text'
+import {ScrollView} from '#/view/com/util/Views'
 import {atoms as a} from '#/alf'
-import {SimpleViewHeader} from '../com/util/SimpleViewHeader'
-import {Text} from '../com/util/text/Text'
-import {ScrollView} from '../com/util/Views'
+import * as Layout from '#/components/Layout'
 
 type Props = NativeStackScreenProps<
   CommonNavigatorParams,
@@ -38,7 +38,7 @@ export function PreferencesExternalEmbeds({}: Props) {
   )
 
   return (
-    <View style={s.hContentRegion} testID="preferencesExternalEmbedsScreen">
+    <Layout.Screen testID="preferencesExternalEmbedsScreen">
       <ScrollView
         // @ts-ignore web only -prf
         dataSet={{'stable-gutters': 1}}
@@ -81,7 +81,7 @@ export function PreferencesExternalEmbeds({}: Props) {
             />
           ))}
       </ScrollView>
-    </View>
+    </Layout.Screen>
   )
 }
 
