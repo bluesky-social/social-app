@@ -11,6 +11,7 @@ import {
   ComAtprotoRepoStrongRef,
   RichText,
 } from '@atproto/api'
+import {t} from '@lingui/macro'
 import {QueryClient} from '@tanstack/react-query'
 
 import {isNetworkError} from '#/lib/strings/errors'
@@ -52,7 +53,7 @@ export async function post(
     {cleanNewlines: true},
   )
 
-  opts.onStateChange?.('Processing...')
+  opts.onStateChange?.(t`Processing...`)
 
   await rt.detectFacets(agent)
 
@@ -102,7 +103,7 @@ export async function post(
 
   let res
   try {
-    opts.onStateChange?.('Posting...')
+    opts.onStateChange?.(t`Posting...`)
     res = await agent.post({
       text: rt.text,
       facets: rt.facets,
@@ -116,8 +117,8 @@ export async function post(
       safeMessage: e.message,
     })
     if (isNetworkError(e)) {
-      throw new Error(
-        'Post failed to upload. Please check your Internet connection and try again.',
+      throw new Error(t
+        `Post failed to upload. Please check your Internet connection and try again.`,
       )
     } else {
       throw e
@@ -140,8 +141,8 @@ export async function post(
         context: 'composer',
         safeMessage: e.message,
       })
-      throw new Error(
-        'Failed to save post interaction settings. Your post was created but users may be able to interact with it.',
+      throw new Error(t
+        `Failed to save post interaction settings. Your post was created but users may be able to interact with it.`,
       )
     }
   }
@@ -165,8 +166,8 @@ export async function post(
         context: 'composer',
         safeMessage: e.message,
       })
-      throw new Error(
-        'Failed to save post interaction settings. Your post was created but users may be able to interact with it.',
+      throw new Error(t
+        `Failed to save post interaction settings. Your post was created but users may be able to interact with it.`,
       )
     }
   }
@@ -248,7 +249,7 @@ async function resolveMedia(
     logger.debug(`Uploading images`, {
       count: imagesDraft.length,
     })
-    onStateChange?.(`Uploading images...`)
+    onStateChange?.(t`Uploading images...`)
     const images: AppBskyEmbedImages.Image[] = await Promise.all(
       imagesDraft.map(async (image, i) => {
         logger.debug(`Compressing image #${i}`)
@@ -302,7 +303,7 @@ async function resolveMedia(
     )
     let blob: BlobRef | undefined
     if (resolvedGif.thumb) {
-      onStateChange?.('Uploading link thumbnail...')
+      onStateChange?.(t`Uploading link thumbnail...`)
       const {path, mime} = resolvedGif.thumb.source
       const response = await uploadBlob(agent, path, mime)
       blob = response.data.blob
@@ -326,7 +327,7 @@ async function resolveMedia(
     if (resolvedLink.type === 'external') {
       let blob: BlobRef | undefined
       if (resolvedLink.thumb) {
-        onStateChange?.('Uploading link thumbnail...')
+        onStateChange?.(t`Uploading link thumbnail...`)
         const {path, mime} = resolvedLink.thumb.source
         const response = await uploadBlob(agent, path, mime)
         blob = response.data.blob
@@ -352,7 +353,7 @@ async function resolveRecord(
 ): Promise<ComAtprotoRepoStrongRef.Main> {
   const resolvedLink = await fetchResolveLinkQuery(queryClient, agent, uri)
   if (resolvedLink.type !== 'record') {
-    throw Error('Expected uri to resolve to a record')
+    throw Error(t`Expected uri to resolve to a record`)
   }
   return resolvedLink.record
 }
