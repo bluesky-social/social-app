@@ -67,7 +67,6 @@ import {ChevronBottom_Stroke2_Corner0_Rounded as ChevronDown} from '#/components
 import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
 import * as Layout from '#/components/Layout'
 
-
 function Loader() {
   const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()
