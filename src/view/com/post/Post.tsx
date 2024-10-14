@@ -159,6 +159,7 @@ function PostInner({
         !hideTopBorder && {borderTopWidth: StyleSheet.hairlineWidth},
         style,
       ]}
+      noFeedback
       onBeforePress={onBeforePress}
       onPointerEnter={() => {
         setHover(true)

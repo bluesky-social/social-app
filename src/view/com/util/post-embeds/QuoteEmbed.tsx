@@ -223,16 +223,18 @@ export function QuoteEmbed({
         modui={moderation?.ui('contentList')}
         style={[
           a.rounded_md,
-          a.p_md,
           a.mt_sm,
           a.border,
           t.atoms.border_contrast_low,
           style,
+          {overflow: 'hidden'},
         ]}
         childContainerStyle={[a.pt_sm]}>
         <SubtleWebHover hover={hover} />
         <Link
           hoverStyle={{borderColor: pal.colors.borderLinkHover}}
+          style={a.p_md}
+          noFeedback
           href={itemHref}
           title={itemTitle}
           onBeforePress={onBeforePress}>
