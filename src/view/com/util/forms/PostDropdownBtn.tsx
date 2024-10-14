@@ -127,6 +127,7 @@ let PostDropdownBtn = ({
   const postInteractionSettingsDialogControl = useDialogControl()
   const quotePostDetachConfirmControl = useDialogControl()
   const hideReplyConfirmControl = useDialogControl()
+  const hideAfterFeedbackPromptControl = useDialogControl()
   const {mutateAsync: toggleReplyVisibility} =
     useToggleReplyVisibilityMutation()
 
@@ -268,9 +269,8 @@ let PostDropdownBtn = ({
       item: postUri,
       feedContext: postFeedContext,
     })
-    hidePost({uri: postUri})
     Toast.show('Feedback sent!')
-  }, [feedFeedback, postUri, postFeedContext, hidePost])
+  }, [feedFeedback, postUri, postFeedContext])
 
   const onPressShowLess = React.useCallback(() => {
     feedFeedback.sendInteraction({
@@ -278,8 +278,9 @@ let PostDropdownBtn = ({
       item: postUri,
       feedContext: postFeedContext,
     })
+    hideAfterFeedbackPromptControl.open()
     Toast.show('Feedback sent!')
-  }, [feedFeedback, postUri, postFeedContext])
+  }, [feedFeedback, postUri, postFeedContext, hideAfterFeedbackPromptControl])
 
   const onSelectChatToShareTo = React.useCallback(
     (conversation: string) => {
@@ -673,6 +674,16 @@ let PostDropdownBtn = ({
         onConfirm={onDeletePost}
         confirmButtonCta={_(msg`Delete`)}
         confirmButtonColor="negative"
+      />
+
+      <Prompt.Basic
+        control={hideAfterFeedbackPromptControl}
+        title={_(msg`Feedback sent!`)}
+        description={_(
+          msg`Do you want to also hide this post? It will be hidden from feeds and threads. This cannot be undone.`,
+        )}
+        onConfirm={onHidePost}
+        confirmButtonCta={_(msg`Hide`)}
       />
 
       <Prompt.Basic
