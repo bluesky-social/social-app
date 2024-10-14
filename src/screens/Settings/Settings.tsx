@@ -1,16 +1,19 @@
 import React from 'react'
 import {View} from 'react-native'
 import {Linking} from 'react-native'
-import {moderateProfile} from '@atproto/api'
+import {AppBskyActorDefs, moderateProfile} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {HELP_DESK_URL} from '#/lib/constants'
 import {CommonNavigatorParams} from '#/lib/routes/types'
+import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {useProfilesQuery} from '#/state/queries/profile'
+import {useProfileQuery, useProfilesQuery} from '#/state/queries/profile'
 import {useSession, useSessionApi} from '#/state/session'
+import {useLoggedOutViewControls} from '#/state/shell/logged-out'
+import {useCloseAllActiveElements} from '#/state/util'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
 import {ScrollView} from '#/view/com/util/Views'
@@ -29,6 +32,8 @@ import {
 import {RaisingHand4Finger_Stroke2_Corner2_Rounded as HandIcon} from '#/components/icons/RaisingHand'
 import {Window_Stroke2_Corner2_Rounded as WindowIcon} from '#/components/icons/Window'
 import * as Prompt from '#/components/Prompt'
+import {ProfileHeaderDisplayName} from '../Profile/Header/DisplayName'
+import {ProfileHeaderHandle} from '../Profile/Header/Handle'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Settings'>
 export function SettingsScreen({}: Props) {
@@ -37,18 +42,41 @@ export function SettingsScreen({}: Props) {
   const {accounts, currentAccount} = useSession()
   const switchAccountControl = useDialogControl()
   const signOutPromptControl = Prompt.usePromptControl()
+  const {data: profile} = useProfileQuery({did: currentAccount?.did})
+  const {setShowLoggedOut} = useLoggedOutViewControls()
+  const closeEverything = useCloseAllActiveElements()
+
+  const onAddAnotherAccount = () => {
+    setShowLoggedOut(true)
+    closeEverything()
+  }
 
   return (
     <View style={[a.util_screen_outer]}>
       <TempHeader />
-      <ScrollView contentContainerStyle={[a.pt_md, {paddingBottom: 100}]}>
+      <ScrollView contentContainerStyle={[{paddingBottom: 100}]}>
+        <View
+          style={[
+            a.px_xl,
+            a.py_md,
+            a.flex_1,
+            a.gap_2xs,
+            a.align_center,
+            {minHeight: 160},
+          ]}>
+          {profile && <ProfilePreview profile={profile} />}
+        </View>
         <SettingsList.PressableItem
           label={
             accounts.length > 1
               ? _(msg`Switch account`)
               : _(msg`Add another account`)
           }
-          onPress={() => switchAccountControl.open()}>
+          onPress={() =>
+            accounts.length > 1
+              ? switchAccountControl.open()
+              : onAddAnotherAccount()
+          }>
           <SettingsList.ItemIcon icon={PersonGroupIcon} />
           <SettingsList.ItemText>
             {accounts.length > 1 ? (
@@ -161,6 +189,34 @@ export function TempHeader() {
   return <ViewHeader title="Settings" showBorder showOnDesktop />
 }
 
+function ProfilePreview({
+  profile,
+}: {
+  profile: AppBskyActorDefs.ProfileViewDetailed
+}) {
+  const shadow = useProfileShadow(profile)
+  const moderationOpts = useModerationOpts()
+
+  if (!moderationOpts) return null
+
+  const moderation = moderateProfile(profile, moderationOpts)
+
+  return (
+    <>
+      <UserAvatar
+        size={80}
+        avatar={shadow.avatar}
+        moderation={moderation.ui('avatar')}
+      />
+      <ProfileHeaderDisplayName profile={shadow} moderation={moderation} />
+      <ProfileHeaderHandle profile={shadow} />
+    </>
+  )
+}
+
+const AVI_SIZE = 26
+const HALF_AVI_SIZE = AVI_SIZE / 2
+
 function AvatarStack({profiles}: {profiles: string[]}) {
   const {data, error} = useProfilesQuery({handles: profiles})
   const t = useTheme()
@@ -191,7 +247,7 @@ function AvatarStack({profiles}: {profiles: string[]}) {
         a.flex_row,
         a.align_center,
         a.relative,
-        {width: 30 + (items.length - 1) * 15},
+        {width: AVI_SIZE + (items.length - 1) * HALF_AVI_SIZE},
       ]}>
       {items.map((item, i) => (
         <View
@@ -200,9 +256,9 @@ function AvatarStack({profiles}: {profiles: string[]}) {
             t.atoms.bg_contrast_25,
             a.relative,
             {
-              width: 30,
-              height: 30,
-              left: i * -15,
+              width: AVI_SIZE,
+              height: AVI_SIZE,
+              left: i * -HALF_AVI_SIZE,
               borderWidth: 1,
               borderColor: t.atoms.bg.backgroundColor,
               borderRadius: 999,
@@ -211,7 +267,7 @@ function AvatarStack({profiles}: {profiles: string[]}) {
           ]}>
           {item.profile && (
             <UserAvatar
-              size={28}
+              size={AVI_SIZE - 2}
               avatar={item.profile.avatar}
               moderation={item.moderation.ui('avatar')}
             />
