@@ -28,6 +28,7 @@ import {HandIcon, HashtagIcon} from '#/lib/icons'
 import {makeProfileLink} from '#/lib/routes/links'
 import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
 import {NavigationProp} from '#/lib/routes/types'
+import {useGate} from '#/lib/statsig/statsig'
 import {colors, s} from '#/lib/styles'
 import {isNative} from '#/platform/detection'
 import {useModalControls} from '#/state/modals'
@@ -53,6 +54,7 @@ import * as Toast from '#/view/com/util/Toast'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {ScrollView} from '#/view/com/util/Views'
 import {DeactivateAccountDialog} from '#/screens/Settings/components/DeactivateAccountDialog'
+import {SettingsScreen as NewSettingsScreen} from '#/screens/Settings/Settings'
 import {atoms as a, useTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {BirthDateSettingsDialog} from '#/components/dialogs/BirthDateSettings'
@@ -137,7 +139,16 @@ function SettingsAccountCard({
 }
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Settings'>
-export function SettingsScreen({}: Props) {
+export function SettingsScreen(props: Props) {
+  const gate = useGate()
+  return gate('new_settings') ? (
+    <NewSettingsScreen {...props} />
+  ) : (
+    <SettingsScreenInner {...props} />
+  )
+}
+
+function SettingsScreenInner({}: Props) {
   const queryClient = useQueryClient()
   const pal = usePalette('default')
   const {_} = useLingui()
