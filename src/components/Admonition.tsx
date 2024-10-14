@@ -1,5 +1,5 @@
 import React from 'react'
-import {View} from 'react-native'
+import {StyleProp, View, ViewStyle} from 'react-native'
 
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {CircleInfo_Stroke2_Corner0_Rounded as ErrorIcon} from '#/components/icons/CircleInfo'
@@ -70,9 +70,11 @@ export function Row({children}: {children: React.ReactNode}) {
 export function Outer({
   children,
   type = 'info',
+  style,
 }: {
   children: React.ReactNode
   type?: Context['type']
+  style?: StyleProp<ViewStyle>
 }) {
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
@@ -90,9 +92,8 @@ export function Outer({
           a.rounded_sm,
           a.border,
           t.atoms.bg_contrast_25,
-          {
-            borderColor,
-          },
+          {borderColor},
+          style,
         ]}>
         {children}
       </View>
@@ -103,12 +104,14 @@ export function Outer({
 export function Admonition({
   children,
   type,
+  style,
 }: {
   children: TextProps['children']
   type?: Context['type']
+  style?: StyleProp<ViewStyle>
 }) {
   return (
-    <Outer type={type}>
+    <Outer type={type} style={style}>
       <Row>
         <Icon />
         <Text>{children}</Text>
