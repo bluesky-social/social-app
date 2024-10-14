@@ -117,8 +117,8 @@ export async function post(
       safeMessage: e.message,
     })
     if (isNetworkError(e)) {
-      throw new Error(t
-        `Post failed to upload. Please check your Internet connection and try again.`,
+      throw new Error(
+        t`Post failed to upload. Please check your Internet connection and try again.`,
       )
     } else {
       throw e
@@ -141,8 +141,8 @@ export async function post(
         context: 'composer',
         safeMessage: e.message,
       })
-      throw new Error(t
-        `Failed to save post interaction settings. Your post was created but users may be able to interact with it.`,
+      throw new Error(
+        t`Failed to save post interaction settings. Your post was created but users may be able to interact with it.`,
       )
     }
   }
@@ -166,8 +166,8 @@ export async function post(
         context: 'composer',
         safeMessage: e.message,
       })
-      throw new Error(t
-        `Failed to save post interaction settings. Your post was created but users may be able to interact with it.`,
+      throw new Error(
+        t`Failed to save post interaction settings. Your post was created but users may be able to interact with it.`,
       )
     }
   }
