@@ -100,7 +100,7 @@ export function TagMenu({
                   t.atoms.bg_contrast_25,
                 ]}>
                 <Link
-                  label={_(msg`Search for all posts with tag ${displayTag}`)}
+                  label={_(msg`View all posts with tag ${displayTag}`)}
                   {...createStaticClick(() => {
                     control.close(() => {
                       navigation.push('Hashtag', {
@@ -146,7 +146,7 @@ export function TagMenu({
 
                     <Link
                       label={_(
-                        msg`Search for all posts by @${authorHandle} with tag ${displayTag}`,
+                        msg`View all posts by @${authorHandle} with tag ${displayTag}`,
                       )}
                       {...createStaticClick(() => {
                         control.close(() => {
