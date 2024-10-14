@@ -22,6 +22,7 @@ import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {MessagesListBlockedFooter} from '#/components/dms/MessagesListBlockedFooter'
 import {MessagesListHeader} from '#/components/dms/MessagesListHeader'
 import {Error} from '#/components/Error'
+import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
 
 type Props = NativeStackScreenProps<
@@ -64,9 +65,11 @@ export function MessagesConversationScreen({route}: Props) {
   )
 
   return (
-    <ConvoProvider key={convoId} convoId={convoId}>
-      <Inner />
-    </ConvoProvider>
+    <Layout.Screen testID="convoScreen">
+      <ConvoProvider key={convoId} convoId={convoId}>
+        <Inner />
+      </ConvoProvider>
+    </Layout.Screen>
   )
 }
 
