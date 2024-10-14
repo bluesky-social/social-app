@@ -14,6 +14,7 @@ import {StatusBar} from 'expo-status-bar'
 import {useNavigation, useNavigationState} from '@react-navigation/native'
 
 import {useDedupe} from '#/lib/hooks/useDedupe'
+import {useIntentHandler} from '#/lib/hooks/useIntentHandler'
 import {useNotificationsHandler} from '#/lib/hooks/useNotificationHandler'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useNotificationsRegistration} from '#/lib/notifications/notifications'
@@ -129,6 +130,8 @@ export const Shell: React.FC = function ShellImpl() {
   const {fullyExpandedCount} = useDialogStateControlContext()
   const pal = usePalette('default')
   const theme = useTheme()
+  useIntentHandler()
+
   React.useEffect(() => {
     if (isAndroid) {
       NavigationBar.setBackgroundColorAsync(theme.palette.default.background)

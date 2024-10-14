@@ -22,7 +22,7 @@ import {useLingui} from '@lingui/react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 
-import {LANGUAGES} from '#/lib/../locale/languages'
+import {APP_LANGUAGES, LANGUAGES} from '#/lib/../locale/languages'
 import {createHitslop} from '#/lib/constants'
 import {HITSLOP_10} from '#/lib/constants'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
@@ -65,7 +65,6 @@ import * as FeedCard from '#/components/FeedCard'
 import {SearchInput} from '#/components/forms/SearchInput'
 import {ChevronBottom_Stroke2_Corner0_Rounded as ChevronDown} from '#/components/icons/Chevron'
 import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
-import {SettingsGear2_Stroke2_Corner0_Rounded as Gear} from '#/components/icons/SettingsGear2'
 
 function Loader() {
   const pal = usePalette('default')
@@ -350,14 +349,31 @@ function SearchLanguageDropdown({
         key: '*',
       },
     ].concat(
-      LANGUAGES.filter(l => Boolean(l.code2))
+      LANGUAGES.filter(
+        (lang, index, self) =>
+          Boolean(lang.code2) && // reduce to the code2 varieties
+          index === self.findIndex(t => t.code2 === lang.code2), // remove dupes (which will happen)
+      )
         .map(l => ({
           label: l.name,
           inputLabel: l.name,
           value: l.code2,
           key: l.code2 + l.code3,
         }))
-        .sort(a => (contentLanguages.includes(a.value) ? -1 : 1)),
+        .sort((a, b) => {
+          // prioritize user's languages
+          const aIsUser = contentLanguages.includes(a.value)
+          const bIsUser = contentLanguages.includes(b.value)
+          if (aIsUser && !bIsUser) return -1
+          if (bIsUser && !aIsUser) return 1
+          // prioritize "common" langs in the network
+          const aIsCommon = !!APP_LANGUAGES.find(al => al.code2 === a.value)
+          const bIsCommon = !!APP_LANGUAGES.find(al => al.code2 === b.value)
+          if (aIsCommon && !bIsCommon) return -1
+          if (bIsCommon && !aIsCommon) return 1
+          // fall back to alphabetical
+          return a.label.localeCompare(b.label)
+        }),
     )
   }, [_, contentLanguages])
 
@@ -420,19 +436,16 @@ function SearchLanguageDropdown({
 }
 
 function useQueryManager({initialQuery}: {initialQuery: string}) {
-  const {contentLanguages} = useLanguagePrefs()
   const {query, params: initialParams} = React.useMemo(() => {
     return parseSearchQuery(initialQuery || '')
   }, [initialQuery])
   const prevInitialQuery = React.useRef(initialQuery)
-  const [lang, setLang] = React.useState(
-    initialParams.lang || contentLanguages[0],
-  )
+  const [lang, setLang] = React.useState(initialParams.lang || '')
 
   if (initialQuery !== prevInitialQuery.current) {
     // handle new queryParam change (from manual search entry)
     prevInitialQuery.current = initialQuery
-    setLang(initialParams.lang || contentLanguages[0])
+    setLang(initialParams.lang || '')
   }
 
   const params = React.useMemo(
@@ -626,8 +639,7 @@ export function SearchScreen(
   const {params, query, queryWithParams} = useQueryManager({
     initialQuery: queryParam,
   })
-  const showFiltersButton = Boolean(query && !showAutocomplete)
-  const [showFilters, setShowFilters] = React.useState(false)
+  const showFilters = Boolean(query && !showAutocomplete)
   /*
    * Arbitrary sizing, so guess and check, used for sticky header alignment and
    * sizing.
@@ -788,7 +800,6 @@ export function SearchScreen(
       setSearchText('')
       navigation.setParams({q: ''})
     }
-    setShowFilters(false)
   }, [navigation])
 
   useFocusEffect(
@@ -838,7 +849,6 @@ export function SearchScreen(
     } else {
       setShowAutocomplete(true)
     }
-    setShowFilters(false)
   }, [setShowAutocomplete])
 
   return (
@@ -882,25 +892,6 @@ export function SearchScreen(
               onSubmitEditing={onSubmit}
             />
           </View>
-          {showFiltersButton && (
-            <Button
-              onPress={() => setShowFilters(!showFilters)}
-              hitSlop={HITSLOP_10}
-              label={_(msg`Show advanced filters`)}
-              size="large"
-              variant="solid"
-              color="secondary"
-              shape="square">
-              <Gear
-                size="md"
-                fill={
-                  showFilters
-                    ? t.palette.primary_500
-                    : t.atoms.text_contrast_medium.color
-                }
-              />
-            </Button>
-          )}
           {showAutocomplete && (
             <Button
               label={_(msg`Cancel search`)}

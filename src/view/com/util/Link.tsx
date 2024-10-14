@@ -13,20 +13,20 @@ import {
 import {sanitizeUrl} from '@braintree/sanitize-url'
 import {StackActions, useLinkProps} from '@react-navigation/native'
 
-import {useModalControls} from '#/state/modals'
-import {useOpenLink} from '#/state/preferences/in-app-browser'
 import {
   DebouncedNavigationProp,
   useNavigationDeduped,
-} from 'lib/hooks/useNavigationDeduped'
+} from '#/lib/hooks/useNavigationDeduped'
+import {useOpenLink} from '#/lib/hooks/useOpenLink'
 import {
   convertBskyAppUrlIfNeeded,
   isExternalUrl,
   linkRequiresWarning,
-} from 'lib/strings/url-helpers'
-import {TypographyVariant} from 'lib/ThemeContext'
-import {isAndroid, isWeb} from 'platform/detection'
-import {WebAuxClickWrapper} from 'view/com/util/WebAuxClickWrapper'
+} from '#/lib/strings/url-helpers'
+import {TypographyVariant} from '#/lib/ThemeContext'
+import {isAndroid, isWeb} from '#/platform/detection'
+import {useModalControls} from '#/state/modals'
+import {WebAuxClickWrapper} from '#/view/com/util/WebAuxClickWrapper'
 import {useTheme} from '#/alf'
 import {router} from '../../../routes'
 import {PressableWithHover} from './PressableWithHover'
