@@ -268,8 +268,9 @@ let PostDropdownBtn = ({
       item: postUri,
       feedContext: postFeedContext,
     })
+    hidePost({uri: postUri})
     Toast.show('Feedback sent!')
-  }, [feedFeedback, postUri, postFeedContext])
+  }, [feedFeedback, postUri, postFeedContext, hidePost])
 
   const onPressShowLess = React.useCallback(() => {
     feedFeedback.sendInteraction({
