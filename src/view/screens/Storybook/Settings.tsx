@@ -123,6 +123,15 @@ export function Settings() {
           onPress={() => Toast.show('Show edit birthday dialog')}
         />
       </SettingsList.Item>
+      <SettingsList.Divider />
+      <SettingsList.LinkItem to="/settings" label="Long test">
+        <SettingsList.ItemIcon icon={ExplosionIcon} />
+        <SettingsList.ItemText>
+          long long long long long long long long long long long long long long
+          long long long long long long long long long long long long long long
+          long long long long long long long long long
+        </SettingsList.ItemText>
+      </SettingsList.LinkItem>
     </View>
   )
 }

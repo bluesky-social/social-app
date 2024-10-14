@@ -99,10 +99,8 @@ export function ItemIcon({
   icon: Comp,
   size = 'xl',
   color: colorProp,
-  style,
 }: Omit<React.ComponentProps<typeof Button.ButtonIcon>, 'position'> & {
   color?: string
-  style?: StyleProp<ViewStyle>
 }) {
   const t = useTheme()
   const {destructive} = useContext(ItemContext)
@@ -124,7 +122,7 @@ export function ItemIcon({
     colorProp ?? (destructive ? t.palette.negative_400 : t.atoms.text.color)
 
   return (
-    <View style={[a.z_20, {width: iconSize, height: iconSize}, style]}>
+    <View style={[a.z_20, {width: iconSize, height: iconSize}]}>
       <Comp width={iconSize} style={[{color}]} />
     </View>
   )
@@ -144,6 +142,7 @@ export function ItemText({
         a.text_md,
         a.font_normal,
         a.text_left,
+        a.flex_1,
         destructive ? {color: t.palette.negative_400} : t.atoms.text,
         style,
       ]}
@@ -161,42 +160,22 @@ export function Divider() {
   )
 }
 
-export function Chevron({
-  children,
-  color: colorProp,
-}: {
-  children?: React.ReactNode
-  color?: string
-}) {
+export function Chevron({color: colorProp}: {color?: string}) {
   const {destructive} = useContext(ItemContext)
   const t = useTheme()
   const color =
     colorProp ?? (destructive ? t.palette.negative_400 : t.palette.contrast_500)
-  return (
-    <>
-      <View style={[a.flex_1]} />
-      {children}
-      <ItemIcon
-        style={[a.ml_sm]}
-        icon={ChevronRightIcon}
-        size="md"
-        color={color}
-      />
-    </>
-  )
+  return <ItemIcon icon={ChevronRightIcon} size="md" color={color} />
 }
 
 export function BadgeText({children}: {children: React.ReactNode}) {
   const t = useTheme()
   return (
-    <>
-      <View style={[a.flex_1]} />
-      <Text
-        style={[t.atoms.text_contrast_medium, a.text_md, a.text_right]}
-        numberOfLines={1}>
-        {children}
-      </Text>
-    </>
+    <Text
+      style={[t.atoms.text_contrast_medium, a.text_md, a.text_right]}
+      numberOfLines={1}>
+      {children}
+    </Text>
   )
 }
 
@@ -209,21 +188,18 @@ export function BadgeButton({
 }) {
   const t = useTheme()
   return (
-    <>
-      <View style={[a.flex_1]} />
-      <Button.Button label={label} onPress={onPress} hitSlop={HITSLOP_10}>
-        {({pressed}) => (
-          <Button.ButtonText
-            style={[
-              a.text_md,
-              a.font_normal,
-              a.text_right,
-              {color: pressed ? t.palette.contrast_300 : t.palette.primary_500},
-            ]}>
-            {label}
-          </Button.ButtonText>
-        )}
-      </Button.Button>
-    </>
+    <Button.Button label={label} onPress={onPress} hitSlop={HITSLOP_10}>
+      {({pressed}) => (
+        <Button.ButtonText
+          style={[
+            a.text_md,
+            a.font_normal,
+            a.text_right,
+            {color: pressed ? t.palette.contrast_300 : t.palette.primary_500},
+          ]}>
+          {label}
+        </Button.ButtonText>
+      )}
+    </Button.Button>
   )
 }
