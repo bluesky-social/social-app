@@ -18,7 +18,7 @@ import {useProfileQuery} from '#/state/queries/profile'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {CenteredView} from '#/view/com/util/Views'
 import {MessagesList} from '#/screens/Messages/components/MessagesList'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import {MessagesListBlockedFooter} from '#/components/dms/MessagesListBlockedFooter'
 import {MessagesListHeader} from '#/components/dms/MessagesListHeader'
 import {Error} from '#/components/Error'
@@ -65,7 +65,7 @@ export function MessagesConversationScreen({route}: Props) {
   )
 
   return (
-    <Layout.Screen testID="convoScreen">
+    <Layout.Screen testID="convoScreen" style={web([{minHeight: 0}, a.flex_1])}>
       <ConvoProvider key={convoId} convoId={convoId}>
         <Inner />
       </ConvoProvider>
@@ -103,7 +103,7 @@ function Inner() {
 
   if (convoState.status === ConvoStatus.Error) {
     return (
-      <CenteredView style={a.flex_1} sideBorders>
+      <CenteredView style={[a.flex_1]} sideBorders>
         <MessagesListHeader />
         <Error
           title={_(msg`Something went wrong`)}
