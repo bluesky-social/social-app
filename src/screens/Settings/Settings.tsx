@@ -1,22 +1,31 @@
 import React from 'react'
 import {View} from 'react-native'
 import {Linking} from 'react-native'
+import {moderateProfile} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {HELP_DESK_URL} from '#/lib/constants'
 import {CommonNavigatorParams} from '#/lib/routes/types'
-import {useSessionApi} from '#/state/session'
+import {useModerationOpts} from '#/state/preferences/moderation-opts'
+import {useProfilesQuery} from '#/state/queries/profile'
+import {useSession, useSessionApi} from '#/state/session'
+import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
 import {ScrollView} from '#/view/com/util/Views'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
-import {atoms as a} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
+import {useDialogControl} from '#/components/Dialog'
+import {SwitchAccountDialog} from '#/components/dialogs/SwitchAccount'
 import {BubbleInfo_Stroke2_Corner2_Rounded as BubbleInfoIcon} from '#/components/icons/BubbleInfo'
 import {CircleQuestion_Stroke2_Corner2_Rounded as CircleQuestionIcon} from '#/components/icons/CircleQuestion'
 import {Earth_Stroke2_Corner2_Rounded as EarthIcon} from '#/components/icons/Globe'
 import {PaintRoller_Stroke2_Corner2_Rounded as PaintRollerIcon} from '#/components/icons/PaintRoller'
-import {Person_Stroke2_Corner2_Rounded as PersonIcon} from '#/components/icons/Person'
+import {
+  Person_Stroke2_Corner2_Rounded as PersonIcon,
+  PersonGroup_Stroke2_Corner2_Rounded as PersonGroupIcon,
+} from '#/components/icons/Person'
 import {RaisingHand4Finger_Stroke2_Corner2_Rounded as HandIcon} from '#/components/icons/RaisingHand'
 import {Window_Stroke2_Corner2_Rounded as WindowIcon} from '#/components/icons/Window'
 import * as Prompt from '#/components/Prompt'
@@ -25,12 +34,39 @@ type Props = NativeStackScreenProps<CommonNavigatorParams, 'Settings'>
 export function SettingsScreen({}: Props) {
   const {_} = useLingui()
   const {logoutEveryAccount} = useSessionApi()
+  const {accounts, currentAccount} = useSession()
+  const switchAccountControl = useDialogControl()
   const signOutPromptControl = Prompt.usePromptControl()
 
   return (
     <View style={[a.util_screen_outer]}>
       <TempHeader />
       <ScrollView contentContainerStyle={[a.pt_md, {paddingBottom: 100}]}>
+        <SettingsList.PressableItem
+          label={
+            accounts.length > 1
+              ? _(msg`Switch account`)
+              : _(msg`Add another account`)
+          }
+          onPress={() => switchAccountControl.open()}>
+          <SettingsList.ItemIcon icon={PersonGroupIcon} />
+          <SettingsList.ItemText>
+            {accounts.length > 1 ? (
+              <Trans>Switch account</Trans>
+            ) : (
+              <Trans>Add another account</Trans>
+            )}
+          </SettingsList.ItemText>
+          {accounts.length > 1 && (
+            <AvatarStack
+              profiles={accounts
+                .map(acc => acc.did)
+                .filter(did => did !== currentAccount?.did)
+                .slice(0, 5)}
+            />
+          )}
+        </SettingsList.PressableItem>
+        <SettingsList.Divider />
         <SettingsList.LinkItem to="/settings/account" label={_(msg`Account`)}>
           <SettingsList.ItemIcon icon={PersonIcon} />
           <SettingsList.ItemText>
@@ -111,6 +147,8 @@ export function SettingsScreen({}: Props) {
         cancelButtonCta={_(msg`Cancel`)}
         confirmButtonColor="negative"
       />
+
+      <SwitchAccountDialog control={switchAccountControl} />
     </View>
   )
 }
@@ -121,4 +159,65 @@ export function SettingsScreen({}: Props) {
  */
 export function TempHeader() {
   return <ViewHeader title="Settings" showBorder showOnDesktop />
+}
+
+function AvatarStack({profiles}: {profiles: string[]}) {
+  const {data, error} = useProfilesQuery({handles: profiles})
+  const t = useTheme()
+  const moderationOpts = useModerationOpts()
+
+  if (error) {
+    console.error(error)
+    return null
+  }
+
+  const isPending = !data || !moderationOpts
+
+  const items = isPending
+    ? Array.from({length: profiles.length}).map((_, i) => ({
+        key: i,
+        profile: null,
+        moderation: null,
+      }))
+    : data.profiles.map(item => ({
+        key: item.did,
+        profile: item,
+        moderation: moderateProfile(item, moderationOpts),
+      }))
+
+  return (
+    <View
+      style={[
+        a.flex_row,
+        a.align_center,
+        a.relative,
+        {width: 30 + (items.length - 1) * 15},
+      ]}>
+      {items.map((item, i) => (
+        <View
+          key={item.key}
+          style={[
+            t.atoms.bg_contrast_25,
+            a.relative,
+            {
+              width: 30,
+              height: 30,
+              left: i * -15,
+              borderWidth: 1,
+              borderColor: t.atoms.bg.backgroundColor,
+              borderRadius: 999,
+              zIndex: 3 - i,
+            },
+          ]}>
+          {item.profile && (
+            <UserAvatar
+              size={28}
+              avatar={item.profile.avatar}
+              moderation={item.moderation.ui('avatar')}
+            />
+          )}
+        </View>
+      ))}
+    </View>
+  )
 }

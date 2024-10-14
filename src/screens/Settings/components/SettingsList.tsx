@@ -155,7 +155,7 @@ export function Divider() {
   const t = useTheme()
   return (
     <View
-      style={[a.border_t, t.atoms.border_contrast_high, a.w_full, a.my_sm]}
+      style={[a.border_t, t.atoms.border_contrast_medium, a.w_full, a.my_sm]}
     />
   )
 }
