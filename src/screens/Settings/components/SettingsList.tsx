@@ -16,7 +16,8 @@ export function LinkItem({style, children, ...props}: LinkProps) {
             a.px_xl,
             a.py_sm,
             a.align_center,
-            a.gap_sm,
+            a.gap_md,
+            a.flex_1,
             a.flex_row,
             {minHeight: 48},
             (args.hovered || args.pressed) && [t.atoms.bg_contrast_25],
@@ -24,7 +25,11 @@ export function LinkItem({style, children, ...props}: LinkProps) {
           ]}>
           {typeof children === 'function' ? children(args) : children}
           <View style={[a.flex_1]} />
-          <ItemIcon icon={ChevronRightIcon} size="lg" />
+          <ItemIcon
+            icon={ChevronRightIcon}
+            size="md"
+            color={t.palette.contrast_500}
+          />
         </View>
       )}
     </Link>
@@ -34,7 +39,11 @@ export function LinkItem({style, children, ...props}: LinkProps) {
 export function ItemIcon({
   icon: Comp,
   size = 'xl',
-}: Omit<React.ComponentProps<typeof Button.ButtonIcon>, 'position'>) {
+
+  color,
+}: Omit<React.ComponentProps<typeof Button.ButtonIcon>, 'position'> & {
+  color?: string
+}) {
   const t = useTheme()
 
   /*
@@ -52,7 +61,7 @@ export function ItemIcon({
 
   return (
     <View style={[a.z_20, {width: iconSize, height: iconSize}]}>
-      <Comp width={iconSize} style={[t.atoms.text]} />
+      <Comp width={iconSize} style={[color ? {color} : t.atoms.text]} />
     </View>
   )
 }
@@ -63,6 +72,9 @@ export function ItemText({
   ...props
 }: React.ComponentProps<typeof Button.ButtonText>) {
   return (
-    <Button.ButtonText style={[a.text_lg, a.font_normal, style]} {...props} />
+    <Button.ButtonText
+      style={[a.text_md, a.font_normal, a.text_left, style]}
+      {...props}
+    />
   )
 }
