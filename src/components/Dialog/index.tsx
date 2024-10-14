@@ -11,6 +11,7 @@ import {
 } from 'react-native'
 import {
   KeyboardAwareScrollView,
+  useKeyboardController,
   useKeyboardHandler,
 } from 'react-native-keyboard-controller'
 import {runOnJS} from 'react-native-reanimated'
@@ -189,7 +190,21 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
   function ScrollableInner({children, style, ...props}, ref) {
     const {nativeSnapPoint, disableDrag, setDisableDrag} = useDialogContext()
     const insets = useSafeAreaInsets()
+    const {setEnabled} = useKeyboardController()
+
     const [keyboardHeight, setKeyboardHeight] = React.useState(0)
+
+    React.useEffect(() => {
+      if (!isIOS) {
+        return
+      }
+
+      setEnabled(true)
+      return () => {
+        setEnabled(false)
+      }
+    })
+
     useKeyboardHandler({
       onEnd: e => {
         'worklet'
