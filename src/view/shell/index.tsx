@@ -15,7 +15,6 @@ import {isStateAtTabRoot} from '#/lib/routes/helpers'
 import {useTheme} from '#/lib/ThemeContext'
 import {isAndroid, isIOS} from '#/platform/detection'
 import {useDialogStateControlContext} from '#/state/dialogs'
-import {useDialogStateContext} from '#/state/dialogs'
 import {useSession} from '#/state/session'
 import {
   useIsDrawerOpen,
