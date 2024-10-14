@@ -67,8 +67,7 @@ export function Settings() {
         label="Sign out">
         <SettingsList.ItemText>Sign out</SettingsList.ItemText>
       </SettingsList.PressableItem>
-      <SettingsList.Divider />
-      <SettingsList.Item>
+      <SettingsList.Item style={[a.mt_xl]}>
         <SettingsList.ItemIcon icon={PizzaIcon} />
         <SettingsList.ItemText>Not pressable</SettingsList.ItemText>
       </SettingsList.Item>
@@ -85,7 +84,6 @@ export function Settings() {
         <SettingsList.ItemIcon icon={ExplosionIcon} />
         <SettingsList.ItemText>Destructive link</SettingsList.ItemText>
       </SettingsList.LinkItem>
-      <SettingsList.Divider />
       <SettingsList.PressableItem
         label="Email"
         onPress={() => Toast.show('Email change dialog goes here')}>
@@ -123,7 +121,6 @@ export function Settings() {
           onPress={() => Toast.show('Show edit birthday dialog')}
         />
       </SettingsList.Item>
-      <SettingsList.Divider />
       <SettingsList.LinkItem to="/settings" label="Long test">
         <SettingsList.ItemIcon icon={ExplosionIcon} />
         <SettingsList.ItemText>
