@@ -38,6 +38,7 @@ function PlaybackControls({
 
   return (
     <Pressable
+      android_ripple={{foreground: true, borderless: true}}
       accessibilityRole="button"
       accessibilityHint={_(msg`Play or pause the GIF`)}
       accessibilityLabel={isPlaying ? _(msg`Pause`) : _(msg`Play`)}

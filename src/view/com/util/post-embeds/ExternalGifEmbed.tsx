@@ -102,6 +102,7 @@ export function ExternalGifEmbed({
           },
         ]}
         onPress={onPlayPress}
+        android_ripple={{foreground: true, borderless: true}}
         accessibilityRole="button"
         accessibilityHint={_(msg`Plays the GIF`)}
         accessibilityLabel={_(msg`Play ${link.title}`)}>
