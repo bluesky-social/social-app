@@ -62,7 +62,7 @@ export function ContentAndMediaSettingsScreen({}: Props) {
           </SettingsList.LinkItem>
           <SettingsList.Divider />
           <Toggle.Item
-            name="use_in_app_browser"
+            name="disable_autoplay"
             label={_(msg`Disable autoplay for videos and GIFs`)}
             value={autoplayDisabledPref}
             onChange={value => setAutoplayDisabledPref(value)}>
