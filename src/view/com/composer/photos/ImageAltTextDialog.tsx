@@ -1,5 +1,5 @@
 import React from 'react'
-import {Dimensions, ImageStyle, useWindowDimensions, View} from 'react-native'
+import {ImageStyle, useWindowDimensions, View} from 'react-native'
 import {Image} from 'expo-image'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -38,8 +38,7 @@ export const ImageAltTextDialog = ({
           ...image,
           alt: enforceLen(altText, MAX_ALT_TEXT, true),
         })
-      }}
-      nativeOptions={{minHeight: Dimensions.get('window').height}}>
+      }}>
       <Dialog.Handle />
       <ImageAltTextInner
         control={control}
@@ -123,7 +122,7 @@ const ImageAltTextInner = ({
                 defaultValue={altText}
                 multiline
                 numberOfLines={3}
-                autoFocus={isWeb}
+                autoFocus
               />
             </TextField.Root>
           </View>
