@@ -96,10 +96,10 @@ function DialogInner({
           <Text style={[a.text_2xl, a.font_bold]}>
             <Trans>Add a content warning</Trans>
           </Text>
-          <Text style={[a.leading_snug]}>
+          <Text style={[t.atoms.text_contrast_medium, a.leading_snug]}>
             {hasMedia ? (
               <Trans>
-                Select self labels that are applicable for the media you are
+                Choose self labels that are applicable for the media you are
                 posting. If none are selected, this post is suitable for all
                 audiences.
               </Trans>
@@ -218,11 +218,11 @@ function DialogInner({
             <Trans>Done</Trans>
           </ButtonText>
         </Button>
-        {hasMedia ? (
+        {hasMedia && hasLabel ? (
           <Button
             label={_(msg`Remove`)}
             variant="ghost"
-            color="primary"
+            color="negative"
             size="large"
             onPress={removeLabel}
             disabled={!hasLabel}>
