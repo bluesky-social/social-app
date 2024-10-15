@@ -4,7 +4,13 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {ShieldExclamation} from '#/lib/icons'
-import {SELF_LABELS, SelfLabel} from '#/lib/moderation'
+import {
+  ADULT_CONTENT_LABELS,
+  AdultSelfLabel,
+  OTHER_SELF_LABELS,
+  OtherSelfLabel,
+  SelfLabel,
+} from '#/lib/moderation'
 import {atoms as a, useTheme, web} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -27,14 +33,26 @@ export function LabelsBtn({
 
   const hasLabel = labels.length > 0
 
-  const removeLabel = () => {
-    const final = labels.filter(l => !SELF_LABELS.includes(l))
-    onChange(final)
+  const updateAdultLabels = (newLabels: AdultSelfLabel[]) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+
+    const newLabel = newLabels[newLabels.length - 1]
+    const filtered = labels.filter(
+      l => !ADULT_CONTENT_LABELS.includes(l as any),
+    )
+    onChange([...filtered, newLabel].filter(Boolean) as SelfLabel[])
+  }
+
+  const updateOtherLabels = (newLabels: OtherSelfLabel[]) => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+
+    const newLabel = newLabels[newLabels.length - 1]
+    const filtered = labels.filter(l => !OTHER_SELF_LABELS.includes(l as any))
+    onChange([...filtered, newLabel].filter(Boolean) as SelfLabel[])
   }
 
   if (!hasMedia && hasLabel) {
-    removeLabel()
+    onChange([])
   }
 
   return (
@@ -61,9 +79,8 @@ export function LabelsBtn({
         <DialogInner
           labels={labels}
           hasMedia={hasMedia}
-          hasLabel={hasLabel}
-          removeLabel={removeLabel}
-          onChange={onChange}
+          updateAdultLabels={updateAdultLabels}
+          updateOtherLabels={updateOtherLabels}
         />
       </Dialog.Outer>
     </>
@@ -73,15 +90,13 @@ export function LabelsBtn({
 function DialogInner({
   labels,
   hasMedia,
-  hasLabel,
-  removeLabel,
-  onChange,
+  updateAdultLabels,
+  updateOtherLabels,
 }: {
   labels: string[]
   hasMedia: boolean
-  hasLabel: boolean
-  removeLabel: () => void
-  onChange: (v: SelfLabel[]) => void
+  updateAdultLabels: (labels: AdultSelfLabel[]) => void
+  updateOtherLabels: (labels: OtherSelfLabel[]) => void
 }) {
   const {_} = useLingui()
   const control = Dialog.useDialogContext()
@@ -113,7 +128,7 @@ function DialogInner({
 
         <View style={[a.my_md]}>
           {hasMedia ? (
-            <View style={[a.gap_sm]}>
+            <View style={[a.gap_lg]}>
               <View style={[t.atoms.border_contrast_high]}>
                 <View
                   style={[
@@ -130,11 +145,9 @@ function DialogInner({
                   label={_(msg`Adult Content labels`)}
                   values={labels}
                   onChange={values => {
-                    onChange(values as SelfLabel[])
-                    LayoutAnimation.configureNext(
-                      LayoutAnimation.Presets.easeInEaseOut,
-                    )
-                  }}>
+                    updateAdultLabels(values as AdultSelfLabel[])
+                  }}
+                  multiple={true}>
                   <ToggleButton.Button name="sexual" label={_(msg`Suggestive`)}>
                     <ToggleButton.ButtonText>
                       <Trans>Suggestive</Trans>
@@ -151,6 +164,17 @@ function DialogInner({
                     </ToggleButton.ButtonText>
                   </ToggleButton.Button>
                 </ToggleButton.Group>
+                <Text style={[a.mt_sm, t.atoms.text_contrast_medium]}>
+                  {labels.includes('sexual') ? (
+                    <Trans>Pictures meant for adults.</Trans>
+                  ) : labels.includes('nudity') ? (
+                    <Trans>Artistic or non-erotic nudity.</Trans>
+                  ) : labels.includes('porn') ? (
+                    <Trans>Sexual activity or erotic nudity.</Trans>
+                  ) : (
+                    <Trans>Does not contain adult content.</Trans>
+                  )}
+                </Text>
               </View>
               <View style={[t.atoms.border_contrast_high]}>
                 <View
@@ -168,11 +192,12 @@ function DialogInner({
                   label={_(msg`Adult Content labels`)}
                   values={labels}
                   onChange={values => {
-                    onChange(values as SelfLabel[])
+                    updateOtherLabels(values as OtherSelfLabel[])
                     LayoutAnimation.configureNext(
                       LayoutAnimation.Presets.easeInEaseOut,
                     )
-                  }}>
+                  }}
+                  multiple={true}>
                   <ToggleButton.Button
                     name="graphic-media"
                     label={_(msg`Graphic Media`)}>
@@ -181,23 +206,19 @@ function DialogInner({
                     </ToggleButton.ButtonText>
                   </ToggleButton.Button>
                 </ToggleButton.Group>
+                <Text style={[a.mt_sm, t.atoms.text_contrast_medium]}>
+                  {labels.includes('graphic-media') ? (
+                    <Trans>
+                      Media that may be disturbing or inappropriate for some
+                      audiences.
+                    </Trans>
+                  ) : (
+                    <Trans>
+                      Does not contain graphic or disturbing content.
+                    </Trans>
+                  )}
+                </Text>
               </View>
-              <Text style={[a.mt_sm, t.atoms.text_contrast_medium]}>
-                {labels.includes('sexual') ? (
-                  <Trans>Pictures meant for adults.</Trans>
-                ) : labels.includes('nudity') ? (
-                  <Trans>Artistic or non-erotic nudity.</Trans>
-                ) : labels.includes('porn') ? (
-                  <Trans>Sexual activity or erotic nudity.</Trans>
-                ) : labels.includes('graphic-media') ? (
-                  <Trans>
-                    Media that may be disturbing or inappropriate for some
-                    audiences.
-                  </Trans>
-                ) : (
-                  ' '
-                )}
-              </Text>
             </View>
           ) : null}
         </View>
@@ -218,19 +239,6 @@ function DialogInner({
             <Trans>Done</Trans>
           </ButtonText>
         </Button>
-        {hasMedia && hasLabel ? (
-          <Button
-            label={_(msg`Remove`)}
-            variant="ghost"
-            color="negative"
-            size="large"
-            onPress={removeLabel}
-            disabled={!hasLabel}>
-            <ButtonText>
-              <Trans>Remove</Trans>
-            </ButtonText>
-          </Button>
-        ) : null}
       </View>
     </Dialog.ScrollableInner>
   )

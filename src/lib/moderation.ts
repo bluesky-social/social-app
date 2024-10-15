@@ -21,6 +21,8 @@ export const SELF_LABELS = [
   ...OTHER_SELF_LABELS,
 ] as const
 
+export type AdultSelfLabel = (typeof ADULT_CONTENT_LABELS)[number]
+export type OtherSelfLabel = (typeof OTHER_SELF_LABELS)[number]
 export type SelfLabel = (typeof SELF_LABELS)[number]
 
 export function getModerationCauseKey(
