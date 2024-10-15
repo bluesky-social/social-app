@@ -17,10 +17,16 @@ export function Container({children}: {children: React.ReactNode}) {
 export function Item({
   children,
   destructive = false,
+  iconInset = false,
   style,
 }: {
   children?: React.ReactNode
   destructive?: boolean
+  /**
+   * Adds left padding so that the content will be aligned with other Items that contain icons
+   * @default false
+   */
+  iconInset?: boolean
   style?: StyleProp<ViewStyle>
 }) {
   const context = useMemo(() => ({destructive}), [destructive])
@@ -34,6 +40,15 @@ export function Item({
         a.flex_1,
         a.flex_row,
         {minHeight: 48},
+        iconInset && {
+          paddingLeft:
+            // existing padding
+            a.pl_xl.paddingLeft +
+            // icon
+            28 +
+            // gap
+            a.gap_md.gap,
+        },
         style,
       ]}>
       <ItemContext.Provider value={context}>{children}</ItemContext.Provider>
@@ -45,10 +60,12 @@ export function LinkItem({
   children,
   destructive = false,
   contentContainerStyle,
+  chevronColor,
   ...props
 }: LinkProps & {
   contentContainerStyle?: StyleProp<ViewStyle>
   destructive?: boolean
+  chevronColor?: string
 }) {
   const t = useTheme()
 
@@ -62,7 +79,7 @@ export function LinkItem({
             contentContainerStyle,
           ]}>
           {typeof children === 'function' ? children(args) : children}
-          <Chevron />
+          <Chevron color={chevronColor} />
         </Item>
       )}
     </Link>

@@ -74,8 +74,8 @@ export function AccountSettingsScreen({}: Props) {
             </SettingsList.ItemText>
             <SettingsList.Chevron />
           </SettingsList.PressableItem>
-          <SettingsList.PressableItem
-            onPress={() => {}}
+          <SettingsList.LinkItem
+            to="/settings/privacy-and-security"
             label="Protect your account"
             style={[
               a.my_xs,
@@ -83,6 +83,7 @@ export function AccountSettingsScreen({}: Props) {
               a.rounded_md,
               {backgroundColor: t.palette.primary_50},
             ]}
+            chevronColor={t.palette.primary_500}
             hoverStyle={[{backgroundColor: t.palette.primary_100}]}
             contentContainerStyle={[a.rounded_md, a.px_lg]}>
             <SettingsList.ItemIcon
@@ -93,8 +94,7 @@ export function AccountSettingsScreen({}: Props) {
               style={[{color: t.palette.primary_500}, a.font_bold]}>
               Protect your account
             </SettingsList.ItemText>
-            <SettingsList.Chevron color={t.palette.primary_500} />
-          </SettingsList.PressableItem>
+          </SettingsList.LinkItem>
           <SettingsList.Divider />
           <SettingsList.Item>
             <SettingsList.ItemIcon icon={BirthdayCakeIcon} />
