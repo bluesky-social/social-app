@@ -44,6 +44,7 @@ export type CommonNavigatorParams = {
   PrivacyAndSecuritySettings: undefined
   ContentAndMediaSettings: undefined
   AccessibilityAndAppearanceSettings: undefined
+  AboutSettings: undefined
   Search: {q?: string}
   Hashtag: {tag: string; author?: string}
   MessagesConversation: {conversation: string; embed?: string}

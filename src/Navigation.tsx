@@ -95,6 +95,7 @@ import {Wizard} from '#/screens/StarterPack/Wizard'
 import {useTheme} from '#/alf'
 import {router} from '#/routes'
 import {Referrer} from '../modules/expo-bluesky-swiss-army'
+import {AboutSettingsScreen} from './screens/Settings/AboutSettings'
 import {AccountSettingsScreen} from './screens/Settings/AccountSettings'
 import {ContentAndMediaSettingsScreen} from './screens/Settings/ContentAndMediaSettings'
 import {PrivacyAndSecuritySettingsScreen} from './screens/Settings/PrivacyAndSecuritySettings'
@@ -350,6 +351,14 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         getComponent={() => ContentAndMediaSettingsScreen}
         options={{
           title: title(msg`Content and Media`),
+          requireAuth: true,
+        }}
+      />
+      <Stack.Screen
+        name="AboutSettings"
+        getComponent={() => AboutSettingsScreen}
+        options={{
+          title: title(msg`About`),
           requireAuth: true,
         }}
       />

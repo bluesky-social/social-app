@@ -44,7 +44,7 @@ export const router = new Router({
   PrivacyAndSecuritySettings: '/settings/privacy-and-security',
   ContentAndMediaSettings: '/settings/content-and-media',
   AccessibilityAndAppearanceSettings: '/settings/accessibility-and-appearance',
-  About: '/settings/about',
+  AboutSettings: '/settings/about',
   // support
   Support: '/support',
   PrivacyPolicy: '/support/privacy',
