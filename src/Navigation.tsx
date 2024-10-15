@@ -95,6 +95,7 @@ import {Wizard} from '#/screens/StarterPack/Wizard'
 import {useTheme} from '#/alf'
 import {router} from '#/routes'
 import {Referrer} from '../modules/expo-bluesky-swiss-army'
+import {AccountSettingsScreen} from './screens/Settings/AccountSettings'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
 
@@ -322,7 +323,15 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         name="AppearanceSettings"
         getComponent={() => AppearanceSettingsScreen}
         options={{
-          title: title(msg`Appearance Settings`),
+          title: title(msg`Appearance`),
+          requireAuth: true,
+        }}
+      />
+      <Stack.Screen
+        name="AccountSettings"
+        getComponent={() => AccountSettingsScreen}
+        options={{
+          title: title(msg`Account`),
           requireAuth: true,
         }}
       />

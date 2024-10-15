@@ -24,6 +24,7 @@ import {SwitchAccountDialog} from '#/components/dialogs/SwitchAccount'
 import {BubbleInfo_Stroke2_Corner2_Rounded as BubbleInfoIcon} from '#/components/icons/BubbleInfo'
 import {CircleQuestion_Stroke2_Corner2_Rounded as CircleQuestionIcon} from '#/components/icons/CircleQuestion'
 import {Earth_Stroke2_Corner2_Rounded as EarthIcon} from '#/components/icons/Globe'
+import {Lock_Stroke2_Corner2_Rounded as LockIcon} from '#/components/icons/Lock'
 import {PaintRoller_Stroke2_Corner2_Rounded as PaintRollerIcon} from '#/components/icons/PaintRoller'
 import {
   Person_Stroke2_Corner2_Rounded as PersonIcon,
@@ -54,115 +55,117 @@ export function SettingsScreen({}: Props) {
     <Layout.Screen>
       <Layout.Header title={_(msg`Settings`)} />
       <Layout.Content>
-        <View
-          style={[
-            a.px_xl,
-            a.py_md,
-            a.flex_1,
-            a.gap_2xs,
-            a.align_center,
-            {minHeight: 160},
-          ]}>
-          {profile && <ProfilePreview profile={profile} />}
-        </View>
-        <SettingsList.PressableItem
-          label={
-            accounts.length > 1
-              ? _(msg`Switch account`)
-              : _(msg`Add another account`)
-          }
-          onPress={() =>
-            accounts.length > 1
-              ? switchAccountControl.open()
-              : onAddAnotherAccount()
-          }>
-          <SettingsList.ItemIcon icon={PersonGroupIcon} />
-          <SettingsList.ItemText>
-            {accounts.length > 1 ? (
-              <Trans>Switch account</Trans>
-            ) : (
-              <Trans>Add another account</Trans>
+        <SettingsList.Container>
+          <View
+            style={[
+              a.px_xl,
+              a.pb_md,
+              a.flex_1,
+              a.gap_2xs,
+              a.align_center,
+              {minHeight: 160},
+            ]}>
+            {profile && <ProfilePreview profile={profile} />}
+          </View>
+          <SettingsList.PressableItem
+            label={
+              accounts.length > 1
+                ? _(msg`Switch account`)
+                : _(msg`Add another account`)
+            }
+            onPress={() =>
+              accounts.length > 1
+                ? switchAccountControl.open()
+                : onAddAnotherAccount()
+            }>
+            <SettingsList.ItemIcon icon={PersonGroupIcon} />
+            <SettingsList.ItemText>
+              {accounts.length > 1 ? (
+                <Trans>Switch account</Trans>
+              ) : (
+                <Trans>Add another account</Trans>
+              )}
+            </SettingsList.ItemText>
+            {accounts.length > 1 && (
+              <AvatarStack
+                profiles={accounts
+                  .map(acc => acc.did)
+                  .filter(did => did !== currentAccount?.did)
+                  .slice(0, 5)}
+              />
             )}
-          </SettingsList.ItemText>
-          {accounts.length > 1 && (
-            <AvatarStack
-              profiles={accounts
-                .map(acc => acc.did)
-                .filter(did => did !== currentAccount?.did)
-                .slice(0, 5)}
-            />
-          )}
-        </SettingsList.PressableItem>
-        <SettingsList.Divider />
-        <SettingsList.LinkItem to="/settings/account" label={_(msg`Account`)}>
-          <SettingsList.ItemIcon icon={PersonIcon} />
-          <SettingsList.ItemText>
-            <Trans>Account</Trans>
-          </SettingsList.ItemText>
-        </SettingsList.LinkItem>
-        <SettingsList.LinkItem
-          to="/settings/privacy-and-security"
-          label={_(msg`Privacy and security`)}>
-          <SettingsList.ItemIcon icon={PaintRollerIcon} />
-          <SettingsList.ItemText>
-            <Trans>Privacy and security</Trans>
-          </SettingsList.ItemText>
-        </SettingsList.LinkItem>
-        <SettingsList.LinkItem to="/moderation" label={_(msg`Moderation`)}>
-          <SettingsList.ItemIcon icon={HandIcon} />
-          <SettingsList.ItemText>
-            <Trans>Moderation</Trans>
-          </SettingsList.ItemText>
-        </SettingsList.LinkItem>
-        <SettingsList.LinkItem
-          to="/settings/content-and-media"
-          label={_(msg`Content and media`)}>
-          <SettingsList.ItemIcon icon={WindowIcon} />
-          <SettingsList.ItemText>
-            <Trans>Content and media</Trans>
-          </SettingsList.ItemText>
-        </SettingsList.LinkItem>
-        <SettingsList.LinkItem
-          to="/settings/accessibility-and-appearance"
-          label={_(msg`Accessibility and appearance`)}>
-          <SettingsList.ItemIcon icon={PaintRollerIcon} />
-          <SettingsList.ItemText>
-            <Trans>Accessibilty and appearance</Trans>
-          </SettingsList.ItemText>
-        </SettingsList.LinkItem>
-        <SettingsList.LinkItem
-          to="/settings/languages"
-          label={_(msg`Languages`)}>
-          <SettingsList.ItemIcon icon={EarthIcon} />
-          <SettingsList.ItemText>
-            <Trans>Languages</Trans>
-          </SettingsList.ItemText>
-        </SettingsList.LinkItem>
-        <SettingsList.PressableItem
-          onPress={() => Linking.openURL(HELP_DESK_URL)}
-          label={_(msg`Help`)}
-          accessibilityHint={_(msg`Open helpdesk in browser`)}>
-          <SettingsList.ItemIcon icon={CircleQuestionIcon} />
-          <SettingsList.ItemText>
-            <Trans>Help</Trans>
-          </SettingsList.ItemText>
-          <SettingsList.Chevron />
-        </SettingsList.PressableItem>
-        <SettingsList.LinkItem to="/settings/about" label={_(msg`About`)}>
-          <SettingsList.ItemIcon icon={BubbleInfoIcon} />
-          <SettingsList.ItemText>
-            <Trans>About</Trans>
-          </SettingsList.ItemText>
-        </SettingsList.LinkItem>
-        <SettingsList.Divider />
-        <SettingsList.PressableItem
-          destructive
-          onPress={() => signOutPromptControl.open()}
-          label={_(msg`Sign out`)}>
-          <SettingsList.ItemText>
-            <Trans>Sign out</Trans>
-          </SettingsList.ItemText>
-        </SettingsList.PressableItem>
+          </SettingsList.PressableItem>
+          <SettingsList.Divider />
+          <SettingsList.LinkItem to="/settings/account" label={_(msg`Account`)}>
+            <SettingsList.ItemIcon icon={PersonIcon} />
+            <SettingsList.ItemText>
+              <Trans>Account</Trans>
+            </SettingsList.ItemText>
+          </SettingsList.LinkItem>
+          <SettingsList.LinkItem
+            to="/settings/privacy-and-security"
+            label={_(msg`Privacy and security`)}>
+            <SettingsList.ItemIcon icon={LockIcon} />
+            <SettingsList.ItemText>
+              <Trans>Privacy and security</Trans>
+            </SettingsList.ItemText>
+          </SettingsList.LinkItem>
+          <SettingsList.LinkItem to="/moderation" label={_(msg`Moderation`)}>
+            <SettingsList.ItemIcon icon={HandIcon} />
+            <SettingsList.ItemText>
+              <Trans>Moderation</Trans>
+            </SettingsList.ItemText>
+          </SettingsList.LinkItem>
+          <SettingsList.LinkItem
+            to="/settings/content-and-media"
+            label={_(msg`Content and media`)}>
+            <SettingsList.ItemIcon icon={WindowIcon} />
+            <SettingsList.ItemText>
+              <Trans>Content and media</Trans>
+            </SettingsList.ItemText>
+          </SettingsList.LinkItem>
+          <SettingsList.LinkItem
+            to="/settings/accessibility-and-appearance"
+            label={_(msg`Accessibility and appearance`)}>
+            <SettingsList.ItemIcon icon={PaintRollerIcon} />
+            <SettingsList.ItemText>
+              <Trans>Accessibilty and appearance</Trans>
+            </SettingsList.ItemText>
+          </SettingsList.LinkItem>
+          <SettingsList.LinkItem
+            to="/settings/language"
+            label={_(msg`Languages`)}>
+            <SettingsList.ItemIcon icon={EarthIcon} />
+            <SettingsList.ItemText>
+              <Trans>Languages</Trans>
+            </SettingsList.ItemText>
+          </SettingsList.LinkItem>
+          <SettingsList.PressableItem
+            onPress={() => Linking.openURL(HELP_DESK_URL)}
+            label={_(msg`Help`)}
+            accessibilityHint={_(msg`Open helpdesk in browser`)}>
+            <SettingsList.ItemIcon icon={CircleQuestionIcon} />
+            <SettingsList.ItemText>
+              <Trans>Help</Trans>
+            </SettingsList.ItemText>
+            <SettingsList.Chevron />
+          </SettingsList.PressableItem>
+          <SettingsList.LinkItem to="/settings/about" label={_(msg`About`)}>
+            <SettingsList.ItemIcon icon={BubbleInfoIcon} />
+            <SettingsList.ItemText>
+              <Trans>About</Trans>
+            </SettingsList.ItemText>
+          </SettingsList.LinkItem>
+          <SettingsList.Divider />
+          <SettingsList.PressableItem
+            destructive
+            onPress={() => signOutPromptControl.open()}
+            label={_(msg`Sign out`)}>
+            <SettingsList.ItemText>
+              <Trans>Sign out</Trans>
+            </SettingsList.ItemText>
+          </SettingsList.PressableItem>
+        </SettingsList.Container>
       </Layout.Content>
 
       <Prompt.Basic

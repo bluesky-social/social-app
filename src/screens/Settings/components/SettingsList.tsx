@@ -10,6 +10,10 @@ import {Text} from '#/components/Typography'
 
 const ItemContext = React.createContext({destructive: false})
 
+export function Container({children}: {children: React.ReactNode}) {
+  return <View style={[a.flex_1, a.py_lg]}>{children}</View>
+}
+
 export function Item({
   children,
   destructive = false,
@@ -119,7 +123,7 @@ export function ItemIcon({
   }[size]
 
   const color =
-    colorProp ?? (destructive ? t.palette.negative_400 : t.atoms.text.color)
+    colorProp ?? (destructive ? t.palette.negative_500 : t.atoms.text.color)
 
   return (
     <View style={[a.z_20, {width: iconSize, height: iconSize}]}>
@@ -143,7 +147,7 @@ export function ItemText({
         a.font_normal,
         a.text_left,
         a.flex_1,
-        destructive ? {color: t.palette.negative_400} : t.atoms.text,
+        destructive ? {color: t.palette.negative_500} : t.atoms.text,
         style,
       ]}
       {...props}
@@ -164,7 +168,7 @@ export function Chevron({color: colorProp}: {color?: string}) {
   const {destructive} = useContext(ItemContext)
   const t = useTheme()
   const color =
-    colorProp ?? (destructive ? t.palette.negative_400 : t.palette.contrast_500)
+    colorProp ?? (destructive ? t.palette.negative_500 : t.palette.contrast_500)
   return <ItemIcon icon={ChevronRightIcon} size="md" color={color} />
 }
 
@@ -172,7 +176,7 @@ export function BadgeText({children}: {children: React.ReactNode}) {
   const t = useTheme()
   return (
     <Text
-      style={[t.atoms.text_contrast_medium, a.text_md, a.text_right]}
+      style={[t.atoms.text_contrast_low, a.text_md, a.text_right]}
       numberOfLines={1}>
       {children}
     </Text>
