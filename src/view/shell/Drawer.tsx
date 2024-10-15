@@ -227,6 +227,8 @@ let DrawerContent = ({}: {}): React.ReactNode => {
       testID="drawer"
       style={[
         a.flex_1,
+        a.pt_sm,
+        a.pb_lg,
         t.scheme === 'light' ? t.atoms.bg : t.atoms.bg_contrast_25,
       ]}>
       <SafeAreaView style={[a.flex_1]}>
