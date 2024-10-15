@@ -144,11 +144,11 @@ export function SettingsScreen(props: Props) {
   return gate('new_settings') ? (
     <NewSettingsScreen {...props} />
   ) : (
-    <SettingsScreenInner {...props} />
+    <LegacySettingsScreen {...props} />
   )
 }
 
-function SettingsScreenInner({}: Props) {
+function LegacySettingsScreen({}: Props) {
   const queryClient = useQueryClient()
   const pal = usePalette('default')
   const {_} = useLingui()
