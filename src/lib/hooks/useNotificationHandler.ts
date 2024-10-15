@@ -3,19 +3,18 @@ import * as Notifications from 'expo-notifications'
 import {CommonActions, useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
+import {NavigationProp} from '#/lib/routes/types'
+import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
-import {track} from 'lib/analytics/analytics'
-import {useAccountSwitcher} from 'lib/hooks/useAccountSwitcher'
-import {NavigationProp} from 'lib/routes/types'
-import {logEvent} from 'lib/statsig/statsig'
-import {isAndroid} from 'platform/detection'
-import {useCurrentConvoId} from 'state/messages/current-convo-id'
-import {RQKEY as RQKEY_NOTIFS} from 'state/queries/notifications/feed'
-import {invalidateCachedUnreadPage} from 'state/queries/notifications/unread'
-import {truncateAndInvalidate} from 'state/queries/util'
-import {useSession} from 'state/session'
-import {useLoggedOutViewControls} from 'state/shell/logged-out'
-import {useCloseAllActiveElements} from 'state/util'
+import {isAndroid} from '#/platform/detection'
+import {useCurrentConvoId} from '#/state/messages/current-convo-id'
+import {RQKEY as RQKEY_NOTIFS} from '#/state/queries/notifications/feed'
+import {invalidateCachedUnreadPage} from '#/state/queries/notifications/unread'
+import {truncateAndInvalidate} from '#/state/queries/util'
+import {useSession} from '#/state/session'
+import {useLoggedOutViewControls} from '#/state/shell/logged-out'
+import {useCloseAllActiveElements} from '#/state/util'
 import {resetToTab} from '#/Navigation'
 
 type NotificationReason =
@@ -228,7 +227,6 @@ export function useNotificationsHandler() {
             {},
             logger.DebugContext.notifications,
           )
-          track('Notificatons:OpenApp')
           logEvent('notifications:openApp', {})
           invalidateCachedUnreadPage()
           truncateAndInvalidate(queryClient, RQKEY_NOTIFS())

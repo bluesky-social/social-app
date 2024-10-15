@@ -9,6 +9,8 @@ import {sanitizeUrl} from '@braintree/sanitize-url'
 import {StackActions, useLinkProps} from '@react-navigation/native'
 
 import {BSKY_DOWNLOAD_URL} from '#/lib/constants'
+import {useNavigationDeduped} from '#/lib/hooks/useNavigationDeduped'
+import {useOpenLink} from '#/lib/hooks/useOpenLink'
 import {AllNavigatorParams} from '#/lib/routes/types'
 import {shareUrl} from '#/lib/sharing'
 import {
@@ -17,11 +19,9 @@ import {
   isExternalUrl,
   linkRequiresWarning,
 } from '#/lib/strings/url-helpers'
-import {isNative} from '#/platform/detection'
+import {isNative, isWeb} from '#/platform/detection'
 import {shouldClickOpenNewTab} from '#/platform/urls'
 import {useModalControls} from '#/state/modals'
-import {useOpenLink} from '#/state/preferences/in-app-browser'
-import {useNavigationDeduped} from 'lib/hooks/useNavigationDeduped'
 import {atoms as a, flatten, TextStyleProp, useTheme, web} from '#/alf'
 import {Button, ButtonProps} from '#/components/Button'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
@@ -103,17 +103,17 @@ export function useLink({
           linkRequiresWarning(href, displayText),
       )
 
-      if (requiresWarning) {
+      if (isWeb) {
         e.preventDefault()
+      }
 
+      if (requiresWarning) {
         openModal({
           name: 'link-warning',
           text: displayText,
           href: href,
         })
       } else {
-        e.preventDefault()
-
         if (isExternal) {
           openLink(href)
         } else {
@@ -244,7 +244,10 @@ export function Link({
 export type InlineLinkProps = React.PropsWithChildren<
   BaseLinkProps & TextStyleProp & Pick<TextProps, 'selectable'>
 > &
-  Pick<ButtonProps, 'label'>
+  Pick<ButtonProps, 'label'> & {
+    disableUnderline?: boolean
+    title?: TextProps['title']
+  }
 
 export function InlineLinkText({
   children,
@@ -257,6 +260,7 @@ export function InlineLinkText({
   selectable,
   label,
   shareOnLongPress,
+  disableUnderline,
   ...rest
 }: InlineLinkProps) {
   const t = useTheme()
@@ -290,11 +294,12 @@ export function InlineLinkText({
       {...rest}
       style={[
         {color: t.palette.primary_500},
-        (hovered || focused || pressed) && {
-          ...web({outline: 0}),
-          textDecorationLine: 'underline',
-          textDecorationColor: flattenedStyle.color ?? t.palette.primary_500,
-        },
+        (hovered || focused || pressed) &&
+          !disableUnderline && {
+            ...web({outline: 0}),
+            textDecorationLine: 'underline',
+            textDecorationColor: flattenedStyle.color ?? t.palette.primary_500,
+          },
         flattenedStyle,
       ]}
       role="link"
@@ -322,6 +327,25 @@ export function InlineLinkText({
       {children}
     </Text>
   )
+}
+
+/**
+ * Utility to create a static `onPress` handler for a `Link` that would otherwise link to a URI
+ *
+ * Example:
+ *   `<Link {...createStaticClick(e => {...})} />`
+ */
+export function createStaticClick(
+  onPressHandler: Exclude<BaseLinkProps['onPress'], undefined>,
+): Pick<BaseLinkProps, 'to' | 'onPress'> {
+  return {
+    to: '#',
+    onPress(e: GestureResponderEvent) {
+      e.preventDefault()
+      onPressHandler(e)
+      return false
+    },
+  }
 }
 
 /**
@@ -363,5 +387,20 @@ export function BaseLink({
       {...btnProps}>
       {children}
     </Pressable>
+  )
+}
+
+export function WebOnlyInlineLinkText({
+  children,
+  to,
+  onPress,
+  ...props
+}: InlineLinkProps) {
+  return isWeb ? (
+    <InlineLinkText {...props} to={to} onPress={onPress}>
+      {children}
+    </InlineLinkText>
+  ) : (
+    <Text {...props}>{children}</Text>
   )
 }

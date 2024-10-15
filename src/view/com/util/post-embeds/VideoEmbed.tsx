@@ -1,42 +1,35 @@
 import React, {useCallback, useState} from 'react'
 import {View} from 'react-native'
-import {Image} from 'expo-image'
+import {ImageBackground} from 'expo-image'
 import {AppBskyEmbedVideo} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {clamp} from '#/lib/numbers'
-import {useGate} from '#/lib/statsig/statsig'
 import {VideoEmbedInnerNative} from '#/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a} from '#/alf'
 import {Button} from '#/components/Button'
-import {Play_Filled_Corner2_Rounded as PlayIcon} from '#/components/icons/Play'
-import {VisibilityView} from '../../../../../modules/expo-bluesky-swiss-army'
+import {useThrottledValue} from '#/components/hooks/useThrottledValue'
+import {Loader} from '#/components/Loader'
+import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
 import {ErrorBoundary} from '../ErrorBoundary'
-import {useActiveVideoNative} from './ActiveVideoNativeContext'
 import * as VideoFallback from './VideoEmbedInner/VideoFallback'
 
-export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
-  const t = useTheme()
-  const {activeSource, setActiveSource} = useActiveVideoNative()
-  const isActive = embed.playlist === activeSource
-  const {_} = useLingui()
+interface Props {
+  embed: AppBskyEmbedVideo.View
+}
 
+export function VideoEmbed({embed}: Props) {
   const [key, setKey] = useState(0)
+
   const renderError = useCallback(
     (error: unknown) => (
       <VideoError error={error} retry={() => setKey(key + 1)} />
     ),
     [key],
   )
-  const gate = useGate()
-
-  if (!gate('video_view_on_posts')) {
-    return null
-  }
 
   let aspectRatio = 16 / 9
-
   if (embed.aspectRatio) {
     const {width, height} = embed.aspectRatio
     aspectRatio = width / height
@@ -47,45 +40,91 @@ export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
     <View
       style={[
         a.w_full,
-        a.rounded_sm,
+        a.rounded_md,
         a.overflow_hidden,
         {aspectRatio},
-        {backgroundColor: t.palette.black},
-        a.my_xs,
+        {backgroundColor: 'black'},
+        a.mt_xs,
       ]}>
       <ErrorBoundary renderError={renderError} key={key}>
-        <VisibilityView
-          enabled={true}
-          onChangeStatus={isVisible => {
-            if (isVisible) {
-              setActiveSource(embed.playlist)
-            }
-          }}>
-          {isActive ? (
-            <VideoEmbedInnerNative embed={embed} />
-          ) : (
-            <>
-              <Image
-                source={{uri: embed.thumbnail}}
-                alt={embed.alt}
-                style={a.flex_1}
-                contentFit="contain"
-                accessibilityIgnoresInvertColors
-              />
-              <Button
-                style={[a.absolute, a.inset_0]}
-                onPress={() => {
-                  setActiveSource(embed.playlist)
-                }}
-                label={_(msg`Play video`)}
-                color="secondary">
-                <PlayIcon width={48} fill={t.palette.white} />
-              </Button>
-            </>
-          )}
-        </VisibilityView>
+        <InnerWrapper embed={embed} />
       </ErrorBoundary>
     </View>
+  )
+}
+
+function InnerWrapper({embed}: Props) {
+  const {_} = useLingui()
+  const ref = React.useRef<{togglePlayback: () => void}>(null)
+
+  const [status, setStatus] = React.useState<'playing' | 'paused' | 'pending'>(
+    'pending',
+  )
+  const [isLoading, setIsLoading] = React.useState(false)
+  const [isActive, setIsActive] = React.useState(false)
+  const showSpinner = useThrottledValue(isActive && isLoading, 100)
+
+  const showOverlay =
+    !isActive ||
+    isLoading ||
+    (status === 'paused' && !isActive) ||
+    status === 'pending'
+
+  React.useEffect(() => {
+    if (!isActive && status !== 'pending') {
+      setStatus('pending')
+    }
+  }, [isActive, status])
+
+  return (
+    <>
+      <VideoEmbedInnerNative
+        embed={embed}
+        setStatus={setStatus}
+        setIsLoading={setIsLoading}
+        setIsActive={setIsActive}
+        ref={ref}
+      />
+      <ImageBackground
+        source={{uri: embed.thumbnail}}
+        accessibilityIgnoresInvertColors
+        style={[
+          {
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'transparent', // If you don't add `backgroundColor` to the styles here,
+            // the play button won't show up on the first render on android 🥴😮‍💨
+            display: showOverlay ? 'flex' : 'none',
+          },
+        ]}
+        cachePolicy="memory-disk" // Preferring memory cache helps to avoid flicker when re-displaying on android
+      >
+        <Button
+          style={[a.flex_1, a.align_center, a.justify_center]}
+          onPress={() => {
+            ref.current?.togglePlayback()
+          }}
+          label={_(msg`Play video`)}
+          color="secondary">
+          {showSpinner ? (
+            <View
+              style={[
+                a.rounded_full,
+                a.p_xs,
+                a.align_center,
+                a.justify_center,
+              ]}>
+              <Loader size="2xl" style={{color: 'white'}} />
+            </View>
+          ) : (
+            <PlayButtonIcon />
+          )}
+        </Button>
+      </ImageBackground>
+    </>
   )
 }
 

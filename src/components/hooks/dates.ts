@@ -21,9 +21,11 @@ import {
   ja,
   ko,
   ptBR,
+  ru,
   tr,
   uk,
   zhCN,
+  zhHK,
   zhTW,
 } from 'date-fns/locale'
 
@@ -47,9 +49,11 @@ const locales: Record<AppLanguage, Locale | undefined> = {
   ja,
   ko,
   ['pt-BR']: ptBR,
+  ru,
   tr,
   uk,
   ['zh-CN']: zhCN,
+  ['zh-HK']: zhHK,
   ['zh-TW']: zhTW,
 }
 

@@ -5,23 +5,24 @@ import {AppBskyEmbedExternal} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {shareUrl} from 'lib/sharing'
-import {parseEmbedPlayerFromUrl} from 'lib/strings/embed-player'
+import {parseAltFromGIFDescription} from '#/lib/gif-alt-text'
+import {shareUrl} from '#/lib/sharing'
+import {parseEmbedPlayerFromUrl} from '#/lib/strings/embed-player'
 import {
   getStarterPackOgCard,
   parseStarterPackUri,
-} from 'lib/strings/starter-pack'
-import {toNiceDomain} from 'lib/strings/url-helpers'
-import {isNative} from 'platform/detection'
-import {useExternalEmbedsPrefs} from 'state/preferences'
-import {Link} from 'view/com/util/Link'
-import {ExternalGifEmbed} from 'view/com/util/post-embeds/ExternalGifEmbed'
-import {ExternalPlayer} from 'view/com/util/post-embeds/ExternalPlayerEmbed'
-import {GifEmbed} from 'view/com/util/post-embeds/GifEmbed'
+} from '#/lib/strings/starter-pack'
+import {toNiceDomain} from '#/lib/strings/url-helpers'
+import {isNative} from '#/platform/detection'
+import {useExternalEmbedsPrefs} from '#/state/preferences'
+import {ExternalGifEmbed} from '#/view/com/util/post-embeds/ExternalGifEmbed'
+import {ExternalPlayer} from '#/view/com/util/post-embeds/ExternalPlayerEmbed'
+import {GifEmbed} from '#/view/com/util/post-embeds/GifEmbed'
 import {atoms as a, useTheme} from '#/alf'
-import {Text} from '../text/Text'
+import {Divider} from '#/components/Divider'
+import {Earth_Stroke2_Corner0_Rounded as Globe} from '#/components/icons/Globe'
+import {Link} from '#/components/Link'
+import {Text} from '#/components/Typography'
 
 export const ExternalLinkEmbed = ({
   link,
@@ -35,15 +36,13 @@ export const ExternalLinkEmbed = ({
   hideAlt?: boolean
 }) => {
   const {_} = useLingui()
-  const pal = usePalette('default')
-  const {isMobile} = useWebMediaQueries()
+  const t = useTheme()
   const externalEmbedPrefs = useExternalEmbedsPrefs()
-
+  const niceUrl = toNiceDomain(link.uri)
   const starterPackParsed = parseStarterPackUri(link.uri)
   const imageUri = starterPackParsed
     ? getStarterPackOgCard(starterPackParsed.name, starterPackParsed.rkey)
     : link.thumb
-
   const embedPlayerParams = React.useMemo(() => {
     const params = parseEmbedPlayerFromUrl(link.uri)
 
@@ -51,80 +50,7 @@ export const ExternalLinkEmbed = ({
       return params
     }
   }, [link.uri, externalEmbedPrefs])
-
-  if (embedPlayerParams?.source === 'tenor') {
-    return <GifEmbed params={embedPlayerParams} link={link} hideAlt={hideAlt} />
-  }
-
-  return (
-    <View style={[a.flex_col, a.rounded_sm, a.overflow_hidden]}>
-      <LinkWrapper link={link} onOpen={onOpen} style={style}>
-        {imageUri && !embedPlayerParams ? (
-          <Image
-            style={{
-              aspectRatio: 1.91,
-              borderTopRightRadius: 6,
-              borderTopLeftRadius: 6,
-            }}
-            source={{uri: imageUri}}
-            accessibilityIgnoresInvertColors
-            accessibilityLabel={starterPackParsed ? link.title : undefined}
-            accessibilityHint={
-              starterPackParsed ? _(msg`Navigate to starter pack`) : undefined
-            }
-          />
-        ) : undefined}
-        {embedPlayerParams?.isGif ? (
-          <ExternalGifEmbed link={link} params={embedPlayerParams} />
-        ) : embedPlayerParams ? (
-          <ExternalPlayer link={link} params={embedPlayerParams} />
-        ) : undefined}
-        <View
-          style={[
-            a.flex_1,
-            a.py_sm,
-            {
-              paddingHorizontal: isMobile ? 10 : 14,
-            },
-          ]}>
-          <Text
-            type="sm"
-            numberOfLines={1}
-            style={[pal.textLight, {marginVertical: 2}]}>
-            {toNiceDomain(link.uri)}
-          </Text>
-
-          {!embedPlayerParams?.isGif && !embedPlayerParams?.dimensions && (
-            <Text type="lg-bold" numberOfLines={3} style={[pal.text]}>
-              {link.title || link.uri}
-            </Text>
-          )}
-          {link.description ? (
-            <Text
-              type="md"
-              numberOfLines={link.thumb ? 2 : 4}
-              style={[pal.text, a.mt_xs]}>
-              {link.description}
-            </Text>
-          ) : undefined}
-        </View>
-      </LinkWrapper>
-    </View>
-  )
-}
-
-function LinkWrapper({
-  link,
-  onOpen,
-  style,
-  children,
-}: {
-  link: AppBskyEmbedExternal.ViewExternal
-  onOpen?: () => void
-  style?: StyleProp<ViewStyle>
-  children: React.ReactNode
-}) {
-  const t = useTheme()
+  const hasMedia = Boolean(imageUri || embedPlayerParams)
 
   const onShareExternal = useCallback(() => {
     if (link.uri && isNative) {
@@ -132,22 +58,123 @@ function LinkWrapper({
     }
   }, [link.uri])
 
+  if (embedPlayerParams?.source === 'tenor') {
+    const parsedAlt = parseAltFromGIFDescription(link.description)
+    return (
+      <View style={style}>
+        <GifEmbed
+          params={embedPlayerParams}
+          thumb={link.thumb}
+          altText={parsedAlt.alt}
+          isPreferredAltText={parsedAlt.isPreferred}
+          hideAlt={hideAlt}
+        />
+      </View>
+    )
+  }
+
   return (
     <Link
-      asAnchor
-      anchorNoUnderline
-      href={link.uri}
-      style={[
-        a.flex_1,
-        a.border,
-        a.rounded_sm,
-        t.atoms.border_contrast_medium,
-        style,
-      ]}
-      hoverStyle={t.atoms.border_contrast_high}
-      onBeforePress={onOpen}
+      label={link.title || _(msg`Open link to ${niceUrl}`)}
+      to={link.uri}
+      onPress={onOpen}
       onLongPress={onShareExternal}>
-      {children}
+      {({hovered}) => (
+        <View
+          style={[
+            a.transition_color,
+            a.flex_col,
+            a.rounded_md,
+            a.overflow_hidden,
+            a.w_full,
+            a.border,
+            style,
+            hovered
+              ? t.atoms.border_contrast_high
+              : t.atoms.border_contrast_low,
+          ]}>
+          {imageUri && !embedPlayerParams ? (
+            <Image
+              style={{
+                aspectRatio: 1.91,
+              }}
+              source={{uri: imageUri}}
+              accessibilityIgnoresInvertColors
+            />
+          ) : undefined}
+
+          {embedPlayerParams?.isGif ? (
+            <ExternalGifEmbed link={link} params={embedPlayerParams} />
+          ) : embedPlayerParams ? (
+            <ExternalPlayer link={link} params={embedPlayerParams} />
+          ) : undefined}
+
+          <View
+            style={[
+              a.flex_1,
+              a.pt_sm,
+              {gap: 3},
+              hasMedia && a.border_t,
+              hovered
+                ? t.atoms.border_contrast_high
+                : t.atoms.border_contrast_low,
+            ]}>
+            <View style={[{gap: 3}, a.pb_xs, a.px_md]}>
+              {!embedPlayerParams?.isGif && !embedPlayerParams?.dimensions && (
+                <Text
+                  emoji
+                  numberOfLines={3}
+                  style={[a.text_md, a.font_bold, a.leading_snug]}>
+                  {link.title || link.uri}
+                </Text>
+              )}
+              {link.description ? (
+                <Text
+                  emoji
+                  numberOfLines={link.thumb ? 2 : 4}
+                  style={[a.text_sm, a.leading_snug]}>
+                  {link.description}
+                </Text>
+              ) : undefined}
+            </View>
+            <View style={[a.px_md]}>
+              <Divider />
+              <View
+                style={[
+                  a.flex_row,
+                  a.align_center,
+                  a.gap_2xs,
+                  a.pb_sm,
+                  {
+                    paddingTop: 6, // off menu
+                  },
+                ]}>
+                <Globe
+                  size="xs"
+                  style={[
+                    a.transition_color,
+                    hovered
+                      ? t.atoms.text_contrast_medium
+                      : t.atoms.text_contrast_low,
+                  ]}
+                />
+                <Text
+                  numberOfLines={1}
+                  style={[
+                    a.transition_color,
+                    a.text_xs,
+                    a.leading_tight,
+                    hovered
+                      ? t.atoms.text_contrast_high
+                      : t.atoms.text_contrast_medium,
+                  ]}>
+                  {toNiceDomain(link.uri)}
+                </Text>
+              </View>
+            </View>
+          </View>
+        </View>
+      )}
     </Link>
   )
 }

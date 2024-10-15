@@ -14,9 +14,11 @@ module.exports = {
     'ja',
     'ko',
     'pt-BR',
+    'ru',
     'tr',
     'uk',
     'zh-CN',
+    'zh-HK',
     'zh-TW',
   ],
   catalogs: [

@@ -10,12 +10,13 @@ appId: xyz.blueskyweb.app
     id: "e2eSignInAlice"
 
 # Pin alice's feed
+- extendedWaitUntil:
+    visible:
+        id: "viewHeaderDrawerBtn"
 - tapOn:
-    id: "bottomBarProfileBtn"
-- swipe:
-    from:
-        id: "profilePager-selector"
-    direction: LEFT
+    id: "viewHeaderDrawerBtn"
+- tapOn:
+    id: "profileCardButton"
 - tapOn:
     id: "profilePager-selector-4"
 - tapOn: "alice-favs"

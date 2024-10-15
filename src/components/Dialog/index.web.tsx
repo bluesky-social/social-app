@@ -10,7 +10,9 @@ import {
 import Animated, {FadeIn, FadeInDown} from 'react-native-reanimated'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {FocusScope} from '@tamagui/focus-scope'
+import {DismissableLayer} from '@radix-ui/react-dismissable-layer'
+import {useFocusGuards} from '@radix-ui/react-focus-guards'
+import {FocusScope} from '@radix-ui/react-focus-scope'
 
 import {logger} from '#/logger'
 import {useDialogStateControlContext} from '#/state/dialogs'
@@ -26,10 +28,13 @@ import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import {Portal} from '#/components/Portal'
 
 export {useDialogContext, useDialogControl} from '#/components/Dialog/context'
+export * from '#/components/Dialog/shared'
 export * from '#/components/Dialog/types'
+export * from '#/components/Dialog/utils'
 export {Input} from '#/components/forms/TextField'
 
 const stopPropagation = (e: any) => e.stopPropagation()
+const preventDefault = (e: any) => e.preventDefault()
 
 export function Outer({
   children,
@@ -84,24 +89,13 @@ export function Outer({
     [close, open],
   )
 
-  React.useEffect(() => {
-    if (!isOpen) return
-
-    function handler(e: KeyboardEvent) {
-      if (e.key === 'Escape') {
-        e.stopPropagation()
-        close()
-      }
-    }
-
-    document.addEventListener('keydown', handler)
-
-    return () => document.removeEventListener('keydown', handler)
-  }, [close, isOpen])
-
   const context = React.useMemo(
     () => ({
       close,
+      isNativeDialog: false,
+      nativeSnapPoint: 0,
+      disableDrag: false,
+      setDisableDrag: () => {},
     }),
     [close],
   )
@@ -161,11 +155,15 @@ export function Inner({
   label,
   accessibilityLabelledBy,
   accessibilityDescribedBy,
+  header,
+  contentContainerStyle,
 }: DialogInnerProps) {
   const t = useTheme()
+  const {close} = React.useContext(Context)
   const {gtMobile} = useBreakpoints()
+  useFocusGuards()
   return (
-    <FocusScope loop enabled trapped>
+    <FocusScope loop asChild trapped>
       <Animated.View
         role="dialog"
         aria-role="dialog"
@@ -178,12 +176,11 @@ export function Inner({
         onTouchEnd={stopPropagation}
         entering={FadeInDown.duration(100)}
         // exiting={FadeOut.duration(100)}
-        style={[
+        style={flatten([
           a.relative,
           a.rounded_md,
           a.w_full,
           a.border,
-          gtMobile ? a.p_2xl : a.p_xl,
           t.atoms.bg,
           {
             maxWidth: 600,
@@ -193,8 +190,17 @@ export function Inner({
             shadowRadius: 30,
           },
           flatten(style),
-        ]}>
-        {children}
+        ])}>
+        <DismissableLayer
+          onInteractOutside={preventDefault}
+          onFocusOutside={preventDefault}
+          onDismiss={close}
+          style={{display: 'flex', flexDirection: 'column'}}>
+          {header}
+          <View style={[gtMobile ? a.p_2xl : a.p_xl, contentContainerStyle]}>
+            {children}
+          </View>
+        </DismissableLayer>
       </Animated.View>
     </FocusScope>
   )
@@ -228,10 +234,6 @@ export const InnerFlatList = React.forwardRef<
   )
 })
 
-export function Handle() {
-  return null
-}
-
 export function Close() {
   const {_} = useLingui()
   const {close} = React.useContext(Context)
@@ -256,4 +258,8 @@ export function Close() {
       </Button>
     </View>
   )
+}
+
+export function Handle() {
+  return null
 }

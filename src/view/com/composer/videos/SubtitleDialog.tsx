@@ -1,5 +1,5 @@
-import React, {useCallback} from 'react'
-import {StyleProp, View, ViewStyle} from 'react-native'
+import React, {useCallback, useState} from 'react'
+import {Keyboard, StyleProp, View, ViewStyle} from 'react-native'
 import RNPickerSelect from 'react-native-picker-select'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -20,13 +20,15 @@ import {Warning_Stroke2_Corner0_Rounded as WarningIcon} from '#/components/icons
 import {Text} from '#/components/Typography'
 import {SubtitleFilePicker} from './SubtitleFilePicker'
 
+const MAX_NUM_CAPTIONS = 1
+
+type CaptionsTrack = {lang: string; file: File}
+
 interface Props {
-  altText: string
-  captions: {lang: string; file: File}[]
-  setAltText: (altText: string) => void
-  setCaptions: React.Dispatch<
-    React.SetStateAction<{lang: string; file: File}[]>
-  >
+  defaultAltText: string
+  captions: CaptionsTrack[]
+  saveAltText: (altText: string) => void
+  setCaptions: (updater: (prev: CaptionsTrack[]) => CaptionsTrack[]) => void
 }
 
 export function SubtitleDialogBtn(props: Props) {
@@ -34,7 +36,7 @@ export function SubtitleDialogBtn(props: Props) {
   const {_} = useLingui()
 
   return (
-    <View style={[a.flex_row, a.mt_xs]}>
+    <View style={[a.flex_row, a.my_xs]}>
       <Button
         label={isWeb ? _('Captions & alt text') : _('Alt text')}
         accessibilityHint={
@@ -42,10 +44,13 @@ export function SubtitleDialogBtn(props: Props) {
             ? _('Opens captions and alt text dialog')
             : _('Opens alt text dialog')
         }
-        size="xsmall"
+        size="small"
         color="secondary"
         variant="ghost"
-        onPress={control.open}>
+        onPress={() => {
+          if (Keyboard.isVisible()) Keyboard.dismiss()
+          control.open()
+        }}>
         <ButtonIcon icon={CCIcon} />
         <ButtonText>
           {isWeb ? <Trans>Captions & alt text</Trans> : <Trans>Alt text</Trans>}
@@ -60,8 +65,8 @@ export function SubtitleDialogBtn(props: Props) {
 }
 
 function SubtitleDialogInner({
-  altText,
-  setAltText,
+  defaultAltText,
+  saveAltText,
   captions,
   setCaptions,
 }: Props) {
@@ -70,6 +75,8 @@ function SubtitleDialogInner({
   const t = useTheme()
   const enforceLen = useEnforceMaxGraphemeCount()
   const {primaryLanguage} = useLanguagePrefs()
+
+  const [altText, setAltText] = useState(defaultAltText)
 
   const handleSelectFile = useCallback(
     (file: File) => {
@@ -102,6 +109,7 @@ function SubtitleDialogInner({
             onChangeText={evt => setAltText(enforceLen(evt, MAX_ALT_TEXT))}
             maxLength={MAX_ALT_TEXT * 10}
             multiline
+            style={{maxHeight: 300}}
             numberOfLines={3}
             onKeyPress={({nativeEvent}) => {
               if (nativeEvent.key === 'Escape') {
@@ -126,7 +134,9 @@ function SubtitleDialogInner({
             </Text>
             <SubtitleFilePicker
               onSelectFile={handleSelectFile}
-              disabled={subtitleMissingLanguage || captions.length >= 4}
+              disabled={
+                subtitleMissingLanguage || captions.length >= MAX_NUM_CAPTIONS
+              }
             />
             <View>
               {captions.map((subtitle, i) => (
@@ -144,22 +154,26 @@ function SubtitleDialogInner({
                 />
               ))}
             </View>
+            {subtitleMissingLanguage && (
+              <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
+                <Trans>
+                  Ensure you have selected a language for each subtitle file.
+                </Trans>
+              </Text>
+            )}
           </>
-        )}
-
-        {subtitleMissingLanguage && (
-          <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
-            Ensure you have selected a language for each subtitle file.
-          </Text>
         )}
 
         <View style={web([a.flex_row, a.justify_end])}>
           <Button
             label={_(msg`Done`)}
-            size={isWeb ? 'small' : 'medium'}
+            size={isWeb ? 'small' : 'large'}
             color="primary"
             variant="solid"
-            onPress={() => control.close()}
+            onPress={() => {
+              saveAltText(altText)
+              control.close()
+            }}
             style={a.mt_lg}>
             <ButtonText>
               <Trans>Done</Trans>
@@ -182,9 +196,7 @@ function SubtitleFileRow({
   language: string
   file: File
   otherLanguages: {code2: string; code3: string; name: string}[]
-  setCaptions: React.Dispatch<
-    React.SetStateAction<{lang: string; file: File}[]>
-  >
+  setCaptions: (updater: (prev: CaptionsTrack[]) => CaptionsTrack[]) => void
   style: StyleProp<ViewStyle>
 }) {
   const {_} = useLingui()

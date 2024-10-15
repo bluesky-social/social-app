@@ -8,7 +8,6 @@ import {useNavigation} from '@react-navigation/native'
 
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {NavigationProp} from '#/lib/routes/types'
-import {useGate} from '#/lib/statsig/statsig'
 import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
@@ -61,16 +60,13 @@ function CardOuter({
 export function SuggestedFollowPlaceholder() {
   const t = useTheme()
   return (
-    <CardOuter style={[a.gap_sm, t.atoms.border_contrast_low]}>
+    <CardOuter style={[a.gap_md, t.atoms.border_contrast_low]}>
       <ProfileCard.Header>
         <ProfileCard.AvatarPlaceholder />
+        <ProfileCard.NameAndHandlePlaceholder />
       </ProfileCard.Header>
 
-      <View style={[a.py_xs]}>
-        <ProfileCard.NameAndHandlePlaceholder />
-      </View>
-
-      <ProfileCard.DescriptionPlaceholder />
+      <ProfileCard.DescriptionPlaceholder numberOfLines={2} />
     </CardOuter>
   )
 }
@@ -177,13 +173,13 @@ function useExperimentalSuggestedUsersQuery() {
 }
 
 export function SuggestedFollows({feed}: {feed: FeedDescriptor}) {
-  const gate = useGate()
-  const [feedType, feedUri] = feed.split('|')
+  const {currentAccount} = useSession()
+  const [feedType, feedUriOrDid] = feed.split('|')
   if (feedType === 'author') {
-    if (gate('show_follow_suggestions_in_profile')) {
-      return <SuggestedFollowsProfile did={feedUri} />
-    } else {
+    if (currentAccount?.did === feedUriOrDid) {
       return null
+    } else {
+      return <SuggestedFollowsProfile did={feedUriOrDid} />
     }
   } else {
     return <SuggestedFollowsHome />
@@ -203,6 +199,7 @@ export function SuggestedFollowsProfile({did}: {did: string}) {
       isSuggestionsLoading={isSuggestionsLoading}
       profiles={data?.suggestions ?? []}
       error={error}
+      viewContext="profile"
     />
   )
 }
@@ -218,6 +215,7 @@ export function SuggestedFollowsHome() {
       isSuggestionsLoading={isSuggestionsLoading}
       profiles={profiles}
       error={error}
+      viewContext="feed"
     />
   )
 }
@@ -226,10 +224,12 @@ export function ProfileGrid({
   isSuggestionsLoading,
   error,
   profiles,
+  viewContext = 'feed',
 }: {
   isSuggestionsLoading: boolean
   profiles: AppBskyActorDefs.ProfileViewDetailed[]
   error: Error | null
+  viewContext: 'profile' | 'feed'
 }) {
   const t = useTheme()
   const {_} = useLingui()
@@ -286,7 +286,7 @@ export function ProfileGrid({
                     shape="round"
                   />
                 </ProfileCard.Header>
-                <ProfileCard.Description profile={profile} />
+                <ProfileCard.Description profile={profile} numberOfLines={2} />
               </ProfileCard.Outer>
             </CardOuter>
           )}
@@ -303,33 +303,31 @@ export function ProfileGrid({
   return (
     <View
       style={[a.border_t, t.atoms.border_contrast_low, t.atoms.bg_contrast_25]}>
-      <View style={[a.pt_2xl, a.px_lg, a.flex_row, a.pb_xs]}>
-        <Text
-          style={[
-            a.flex_1,
-            a.text_lg,
-            a.font_bold,
-            t.atoms.text_contrast_medium,
-          ]}>
-          <Trans>Suggested for you</Trans>
+      <View
+        style={[
+          a.p_lg,
+          a.pb_xs,
+          a.flex_row,
+          a.align_center,
+          a.justify_between,
+        ]}>
+        <Text style={[a.text_sm, a.font_bold, t.atoms.text_contrast_medium]}>
+          {viewContext === 'profile' ? (
+            <Trans>Similar accounts</Trans>
+          ) : (
+            <Trans>Suggested for you</Trans>
+          )}
         </Text>
-        <Person fill={t.atoms.text_contrast_low.color} />
+        <Person fill={t.atoms.text_contrast_low.color} size="sm" />
       </View>
 
       {gtMobile ? (
-        <View style={[a.flex_1, a.px_lg, a.pt_md, a.pb_xl, a.gap_md]}>
-          <View style={[a.flex_1, a.flex_row, a.flex_wrap, a.gap_md]}>
+        <View style={[a.flex_1, a.px_lg, a.pt_sm, a.pb_lg, a.gap_md]}>
+          <View style={[a.flex_1, a.flex_row, a.flex_wrap, a.gap_sm]}>
             {content}
           </View>
 
-          <View
-            style={[
-              a.flex_row,
-              a.justify_end,
-              a.align_center,
-              a.pt_xs,
-              a.gap_md,
-            ]}>
+          <View style={[a.flex_row, a.justify_end, a.align_center, a.gap_md]}>
             <InlineLinkText
               label={_(msg`Browse more suggestions`)}
               to="/search"
@@ -345,7 +343,7 @@ export function ProfileGrid({
           showsHorizontalScrollIndicator={false}
           snapToInterval={MOBILE_CARD_WIDTH + a.gap_md.gap}
           decelerationRate="fast">
-          <View style={[a.px_lg, a.pt_md, a.pb_xl, a.flex_row, a.gap_md]}>
+          <View style={[a.px_lg, a.pt_sm, a.pb_lg, a.flex_row, a.gap_md]}>
             {content}
 
             <Button

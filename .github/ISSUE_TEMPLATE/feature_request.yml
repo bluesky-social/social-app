@@ -1,0 +1,42 @@
+name: "Feature Request"
+description: "Suggest an idea for the Bluesky app."
+labels: ["feature-request"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for submitting a feature request! Before you submit this request, please make sure you've searched for similar requests that are already open and being tracked. If you find an open request that seems relevant to yours, it is best to leave a response there with your information instead of opening a new request, since it helps to consolidate the info in one place.
+  - type: textarea
+    attributes:
+      label: Describe the Feature
+      description: |
+        Please provide a detailed description of the feature you would like to see implemented in the app. The more
+        information you provide, the easier it will be for us to understand the feature you are requesting and to
+        implement it in a timely manner.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Attachments
+      description: |
+        If helpful, provide some images or videos of similar features in other apps that you think would be helpful
+        for us to understand the feature you are requesting, or places within the app that you think the feature belongs
+        in or is missing from.
+    validations:
+      required: false
+  - type: textarea
+    attributes:
+      label: Describe Alternatives
+      description: |
+        If there are any alternative solutions or features that you think would be helpful to implement in place of the
+        feature you are requesting, please provide a description of those as well.
+    validations:
+      required: false
+  - type: textarea
+    attributes:
+      label: Additional Context
+      description: |
+        If there is any additional context or information that you think would be helpful for us to know about the
+        feature you are requesting, please provide that information here.
+    validations:
+      required: false

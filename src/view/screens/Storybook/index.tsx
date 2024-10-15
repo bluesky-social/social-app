@@ -1,12 +1,14 @@
 import React from 'react'
 import {ScrollView, View} from 'react-native'
 
+import {isWeb} from '#/platform/detection'
 import {useSetThemePrefs} from '#/state/shell'
-import {isWeb} from 'platform/detection'
 import {CenteredView} from '#/view/com/util/Views'
-import {ListContained} from 'view/screens/Storybook/ListContained'
+import {ListContained} from '#/view/screens/Storybook/ListContained'
 import {atoms as a, ThemeProvider, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
+import * as Layout from '#/components/Layout'
+import {Admonitions} from './Admonitions'
 import {Breakpoints} from './Breakpoints'
 import {Buttons} from './Buttons'
 import {Dialogs} from './Dialogs'
@@ -20,12 +22,16 @@ import {Theming} from './Theming'
 import {Typography} from './Typography'
 
 export function Storybook() {
-  if (isWeb) return <StorybookInner />
-
   return (
-    <ScrollView>
-      <StorybookInner />
-    </ScrollView>
+    <Layout.Screen>
+      {isWeb ? (
+        <StorybookInner />
+      ) : (
+        <ScrollView>
+          <StorybookInner />
+        </ScrollView>
+      )}
+    </Layout.Screen>
   )
 }
 
@@ -80,7 +86,8 @@ function StorybookInner() {
               </Button>
             </View>
 
-            <Dialogs />
+            <Admonitions />
+
             <ThemeProvider theme="light">
               <Theming />
             </ThemeProvider>
@@ -91,16 +98,18 @@ function StorybookInner() {
               <Theming />
             </ThemeProvider>
 
+            <Forms />
+            <Buttons />
             <Typography />
             <Spacing />
             <Shadows />
             <Buttons />
             <Icons />
             <Links />
-            <Forms />
             <Dialogs />
             <Menus />
             <Breakpoints />
+            <Dialogs />
 
             <Button
               variant="solid"

@@ -23,7 +23,16 @@ module.exports = {
     'bsky-internal/avoid-unwrapped-text': [
       'error',
       {
-        impliedTextComponents: ['H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'P'],
+        impliedTextComponents: [
+          'H1',
+          'H2',
+          'H3',
+          'H4',
+          'H5',
+          'H6',
+          'P',
+          'Admonition',
+        ],
         impliedTextProps: [],
         suggestedTextWrappers: {
           Button: 'ButtonText',
@@ -33,6 +42,7 @@ module.exports = {
     ],
     'bsky-internal/use-exact-imports': 'error',
     'bsky-internal/use-typed-gates': 'error',
+    'bsky-internal/use-prefixed-imports': 'warn',
     'simple-import-sort/imports': [
       'warn',
       {

@@ -1,29 +1,33 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react'
 import {View} from 'react-native'
 import {AppBskyEmbedVideo} from '@atproto/api'
-import {Trans} from '@lingui/macro'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
+import {isFirefox} from '#/lib/browser'
 import {clamp} from '#/lib/numbers'
-import {useGate} from '#/lib/statsig/statsig'
 import {
   HLSUnsupportedError,
   VideoEmbedInnerWeb,
+  VideoNotFoundError,
 } from '#/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerWeb'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a} from '#/alf'
+import {useIsWithinMessage} from '#/components/dms/MessageContext'
+import {useFullscreen} from '#/components/hooks/useFullscreen'
 import {ErrorBoundary} from '../ErrorBoundary'
 import {useActiveVideoWeb} from './ActiveVideoWebContext'
 import * as VideoFallback from './VideoEmbedInner/VideoFallback'
 
 export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
-  const t = useTheme()
   const ref = useRef<HTMLDivElement>(null)
-  const gate = useGate()
   const {active, setActive, sendPosition, currentActiveView} =
     useActiveVideoWeb()
   const [onScreen, setOnScreen] = useState(false)
+  const [isFullscreen] = useFullscreen()
 
   useEffect(() => {
     if (!ref.current) return
+    if (isFullscreen && !isFirefox) return
     const observer = new IntersectionObserver(
       entries => {
         const entry = entries[0]
@@ -37,7 +41,7 @@ export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
     )
     observer.observe(ref.current)
     return () => observer.disconnect()
-  }, [sendPosition])
+  }, [sendPosition, isFullscreen])
 
   const [key, setKey] = useState(0)
   const renderError = useCallback(
@@ -46,10 +50,6 @@ export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
     ),
     [key],
   )
-
-  if (!gate('video_view_on_posts')) {
-    return null
-  }
 
   let aspectRatio = 16 / 9
 
@@ -64,10 +64,10 @@ export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
       style={[
         a.w_full,
         {aspectRatio},
-        {backgroundColor: t.palette.black},
+        {backgroundColor: 'black'},
         a.relative,
-        a.rounded_sm,
-        a.my_xs,
+        a.rounded_md,
+        a.mt_xs,
       ]}>
       <div
         ref={ref}
@@ -101,15 +101,18 @@ function ViewportObserver({
 }: {
   children: React.ReactNode
   sendPosition: (position: number) => void
-  isAnyViewActive?: boolean
+  isAnyViewActive: boolean
 }) {
   const ref = useRef<HTMLDivElement>(null)
   const [nearScreen, setNearScreen] = useState(false)
+  const [isFullscreen] = useFullscreen()
+  const isWithinMessage = useIsWithinMessage()
 
   // Send position when scrolling. This is done with an IntersectionObserver
   // observing a div of 100vh height
   useEffect(() => {
     if (!ref.current) return
+    if (isFullscreen && !isFirefox) return
     const observer = new IntersectionObserver(
       entries => {
         const entry = entries[0]
@@ -123,7 +126,7 @@ function ViewportObserver({
     )
     observer.observe(ref.current)
     return () => observer.disconnect()
-  }, [sendPosition])
+  }, [sendPosition, isFullscreen])
 
   // In case scrolling hasn't started yet, send up the position
   useEffect(() => {
@@ -140,10 +143,12 @@ function ViewportObserver({
       <div
         ref={ref}
         style={{
+          // Don't escape bounds when in a message
+          ...(isWithinMessage
+            ? {top: 0, height: '100%'}
+            : {top: 'calc(50% - 50vh)', height: '100vh'}),
           position: 'absolute',
-          top: 'calc(50% - 50vh)',
           left: '50%',
-          height: '100vh',
           width: 1,
           pointerEvents: 'none',
         }}
@@ -153,23 +158,26 @@ function ViewportObserver({
 }
 
 function VideoError({error, retry}: {error: unknown; retry: () => void}) {
-  const isHLS = error instanceof HLSUnsupportedError
+  const {_} = useLingui()
+
+  let showRetryButton = true
+  let text = null
+
+  if (error instanceof VideoNotFoundError) {
+    text = _(msg`Video not found.`)
+  } else if (error instanceof HLSUnsupportedError) {
+    showRetryButton = false
+    text = _(
+      msg`Your browser does not support the video format. Please try a different browser.`,
+    )
+  } else {
+    text = _(msg`An error occurred while loading the video. Please try again.`)
+  }
 
   return (
     <VideoFallback.Container>
-      <VideoFallback.Text>
-        {isHLS ? (
-          <Trans>
-            Your browser does not support the video format. Please try a
-            different browser.
-          </Trans>
-        ) : (
-          <Trans>
-            An error occurred while loading the video. Please try again later.
-          </Trans>
-        )}
-      </VideoFallback.Text>
-      {!isHLS && <VideoFallback.RetryButton onPress={retry} />}
+      <VideoFallback.Text>{text}</VideoFallback.Text>
+      {showRetryButton && <VideoFallback.RetryButton onPress={retry} />}
     </VideoFallback.Container>
   )
 }

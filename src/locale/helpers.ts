@@ -143,12 +143,16 @@ export function sanitizeAppLanguageSetting(appLanguage: string): AppLanguage {
         return AppLanguage.ko
       case 'pt-BR':
         return AppLanguage.pt_BR
+      case 'ru':
+        return AppLanguage.ru
       case 'tr':
         return AppLanguage.tr
       case 'uk':
         return AppLanguage.uk
       case 'zh-CN':
         return AppLanguage.zh_CN
+      case 'zh-HK':
+        return AppLanguage.zh_HK
       case 'zh-TW':
         return AppLanguage.zh_TW
       default:
@@ -158,8 +162,13 @@ export function sanitizeAppLanguageSetting(appLanguage: string): AppLanguage {
   return AppLanguage.en
 }
 
+/**
+ * Handles legacy migration for Java devices.
+ *
+ * {@link https://github.com/bluesky-social/social-app/pull/4461}
+ * {@link https://xml.coverpages.org/iso639a.html}
+ */
 export function fixLegacyLanguageCode(code: string | null): string | null {
-  // handle some legacy code conversions, see https://xml.coverpages.org/iso639a.html
   if (code === 'in') {
     // indonesian
     return 'id'
@@ -173,4 +182,21 @@ export function fixLegacyLanguageCode(code: string | null): string | null {
     return 'yi'
   }
   return code
+}
+
+/**
+ * Find the first language supported by our translation infra. Values should be
+ * in order of preference, and match the values of {@link AppLanguage}.
+ *
+ * If no match, returns `en`.
+ */
+export function findSupportedAppLanguage(languageTags: (string | undefined)[]) {
+  const supported = new Set(Object.values(AppLanguage))
+  for (const tag of languageTags) {
+    if (!tag) continue
+    if (supported.has(tag as AppLanguage)) {
+      return tag
+    }
+  }
+  return AppLanguage.en
 }

@@ -12,19 +12,19 @@ import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
+import {usePalette} from '#/lib/hooks/usePalette'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {CommonNavigatorParams} from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {useMyMutedAccountsQuery} from '#/state/queries/my-muted-accounts'
 import {useSetMinimalShellMode} from '#/state/shell'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {CommonNavigatorParams} from 'lib/routes/types'
-import {ProfileCard} from 'view/com/profile/ProfileCard'
-import {CenteredView} from 'view/com/util/Views'
-import {ErrorScreen} from '../com/util/error/ErrorScreen'
-import {Text} from '../com/util/text/Text'
-import {ViewHeader} from '../com/util/ViewHeader'
+import {ProfileCard} from '#/view/com/profile/ProfileCard'
+import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
+import {Text} from '#/view/com/util/text/Text'
+import {ViewHeader} from '#/view/com/util/ViewHeader'
+import {CenteredView} from '#/view/com/util/Views'
+import * as Layout from '#/components/Layout'
 
 type Props = NativeStackScreenProps<
   CommonNavigatorParams,
@@ -35,7 +35,6 @@ export function ModerationMutedAccounts({}: Props) {
   const {_} = useLingui()
   const setMinimalShellMode = useSetMinimalShellMode()
   const {isTabletOrDesktop} = useWebMediaQueries()
-  const {screen} = useAnalytics()
 
   const [isPTRing, setIsPTRing] = React.useState(false)
   const {
@@ -58,9 +57,8 @@ export function ModerationMutedAccounts({}: Props) {
 
   useFocusEffect(
     React.useCallback(() => {
-      screen('MutedAccounts')
       setMinimalShellMode(false)
-    }, [screen, setMinimalShellMode]),
+    }, [setMinimalShellMode]),
   )
 
   const onRefresh = React.useCallback(async () => {
@@ -98,75 +96,77 @@ export function ModerationMutedAccounts({}: Props) {
     />
   )
   return (
-    <CenteredView
-      style={[
-        styles.container,
-        isTabletOrDesktop && styles.containerDesktop,
-        pal.view,
-        pal.border,
-      ]}
-      testID="mutedAccountsScreen">
-      <ViewHeader title={_(msg`Muted Accounts`)} showOnDesktop />
-      <Text
-        type="sm"
+    <Layout.Screen testID="mutedAccountsScreen">
+      <CenteredView
         style={[
-          styles.description,
-          pal.text,
-          isTabletOrDesktop && styles.descriptionDesktop,
-        ]}>
-        <Trans>
-          Muted accounts have their posts removed from your feed and from your
-          notifications. Mutes are completely private.
-        </Trans>
-      </Text>
-      {isEmpty ? (
-        <View style={[pal.border, !isTabletOrDesktop && styles.flex1]}>
-          {isError ? (
-            <ErrorScreen
-              title="Oops!"
-              message={cleanError(error)}
-              onPressTryAgain={refetch}
-            />
-          ) : (
-            <View style={[styles.empty, pal.viewLight]}>
-              <Text type="lg" style={[pal.text, styles.emptyText]}>
-                <Trans>
-                  You have not muted any accounts yet. To mute an account, go to
-                  their profile and select "Mute account" from the menu on their
-                  account.
-                </Trans>
-              </Text>
-            </View>
-          )}
-        </View>
-      ) : (
-        <FlatList
-          style={[!isTabletOrDesktop && styles.flex1]}
-          data={profiles}
-          keyExtractor={item => item.did}
-          refreshControl={
-            <RefreshControl
-              refreshing={isPTRing}
-              onRefresh={onRefresh}
-              tintColor={pal.colors.text}
-              titleColor={pal.colors.text}
-            />
-          }
-          onEndReached={onEndReached}
-          renderItem={renderItem}
-          initialNumToRender={15}
-          // FIXME(dan)
+          styles.container,
+          isTabletOrDesktop && styles.containerDesktop,
+          pal.view,
+          pal.border,
+        ]}
+        testID="mutedAccountsScreen">
+        <ViewHeader title={_(msg`Muted Accounts`)} showOnDesktop />
+        <Text
+          type="sm"
+          style={[
+            styles.description,
+            pal.text,
+            isTabletOrDesktop && styles.descriptionDesktop,
+          ]}>
+          <Trans>
+            Muted accounts have their posts removed from your feed and from your
+            notifications. Mutes are completely private.
+          </Trans>
+        </Text>
+        {isEmpty ? (
+          <View style={[pal.border, !isTabletOrDesktop && styles.flex1]}>
+            {isError ? (
+              <ErrorScreen
+                title="Oops!"
+                message={cleanError(error)}
+                onPressTryAgain={refetch}
+              />
+            ) : (
+              <View style={[styles.empty, pal.viewLight]}>
+                <Text type="lg" style={[pal.text, styles.emptyText]}>
+                  <Trans>
+                    You have not muted any accounts yet. To mute an account, go
+                    to their profile and select "Mute account" from the menu on
+                    their account.
+                  </Trans>
+                </Text>
+              </View>
+            )}
+          </View>
+        ) : (
+          <FlatList
+            style={[!isTabletOrDesktop && styles.flex1]}
+            data={profiles}
+            keyExtractor={item => item.did}
+            refreshControl={
+              <RefreshControl
+                refreshing={isPTRing}
+                onRefresh={onRefresh}
+                tintColor={pal.colors.text}
+                titleColor={pal.colors.text}
+              />
+            }
+            onEndReached={onEndReached}
+            renderItem={renderItem}
+            initialNumToRender={15}
+            // FIXME(dan)
 
-          ListFooterComponent={() => (
-            <View style={styles.footer}>
-              {(isFetching || isFetchingNextPage) && <ActivityIndicator />}
-            </View>
-          )}
-          // @ts-ignore our .web version only -prf
-          desktopFixedHeight
-        />
-      )}
-    </CenteredView>
+            ListFooterComponent={() => (
+              <View style={styles.footer}>
+                {(isFetching || isFetchingNextPage) && <ActivityIndicator />}
+              </View>
+            )}
+            // @ts-ignore our .web version only -prf
+            desktopFixedHeight
+          />
+        )}
+      </CenteredView>
+    </Layout.Screen>
   )
 }
 

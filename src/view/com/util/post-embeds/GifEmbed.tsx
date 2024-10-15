@@ -7,21 +7,20 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
-import {AppBskyEmbedExternal} from '@atproto/api'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {HITSLOP_20} from '#/lib/constants'
-import {parseAltFromGIFDescription} from '#/lib/gif-alt-text'
+import {EmbedPlayerParams} from '#/lib/strings/embed-player'
 import {isWeb} from '#/platform/detection'
+import {useAutoplayDisabled} from '#/state/preferences'
 import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
-import {EmbedPlayerParams} from 'lib/strings/embed-player'
-import {useAutoplayDisabled} from 'state/preferences'
 import {atoms as a, useTheme} from '#/alf'
+import {Fill} from '#/components/Fill'
 import {Loader} from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
+import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
 import {GifView} from '../../../../../modules/expo-bluesky-gif-view'
 import {GifViewStateChangeEvent} from '../../../../../modules/expo-bluesky-gif-view/src/GifView.types'
 
@@ -51,13 +50,10 @@ function PlaybackControls({
         a.inset_0,
         a.w_full,
         a.h_full,
-        a.rounded_sm,
         {
           zIndex: 2,
           backgroundColor: !isLoaded
             ? t.atoms.bg_contrast_25.backgroundColor
-            : !isPlaying
-            ? 'rgba(0, 0, 0, 0.3)'
             : undefined,
         },
       ]}
@@ -69,24 +65,7 @@ function PlaybackControls({
           </View>
         </View>
       ) : !isPlaying ? (
-        <View
-          style={[
-            a.rounded_full,
-            a.align_center,
-            a.justify_center,
-            {
-              backgroundColor: t.palette.primary_500,
-              width: 60,
-              height: 60,
-            },
-          ]}>
-          <FontAwesomeIcon
-            icon="play"
-            size={42}
-            color="white"
-            style={{marginLeft: 8}}
-          />
-        </View>
+        <PlayButtonIcon />
       ) : undefined}
     </Pressable>
   )
@@ -94,15 +73,20 @@ function PlaybackControls({
 
 export function GifEmbed({
   params,
-  link,
+  thumb,
+  altText,
+  isPreferredAltText,
   hideAlt,
   style = {width: '100%'},
 }: {
   params: EmbedPlayerParams
-  link: AppBskyEmbedExternal.ViewExternal
+  thumb: string | undefined
+  altText: string
+  isPreferredAltText: boolean
   hideAlt?: boolean
   style?: StyleProp<ViewStyle>
 }) {
+  const t = useTheme()
   const {_} = useLingui()
   const autoplayDisabled = useAutoplayDisabled()
 
@@ -127,18 +111,28 @@ export function GifEmbed({
     playerRef.current?.toggleAsync()
   }, [])
 
-  const parsedAlt = React.useMemo(
-    () => parseAltFromGIFDescription(link.description),
-    [link],
-  )
-
   return (
-    <View style={[a.rounded_sm, a.overflow_hidden, a.mt_sm, style]}>
+    <View
+      style={[
+        a.rounded_md,
+        a.overflow_hidden,
+        a.border,
+        t.atoms.border_contrast_low,
+        {aspectRatio: params.dimensions!.width / params.dimensions!.height},
+        style,
+      ]}>
       <View
         style={[
-          a.rounded_sm,
-          a.overflow_hidden,
-          {aspectRatio: params.dimensions!.width / params.dimensions!.height},
+          a.absolute,
+          /*
+           * Aspect ratio was being clipped weirdly on web -esb
+           */
+          {
+            top: -2,
+            bottom: -2,
+            left: -2,
+            right: -2,
+          },
         ]}>
         <PlaybackControls
           onPress={onPress}
@@ -147,16 +141,25 @@ export function GifEmbed({
         />
         <GifView
           source={params.playerUri}
-          placeholderSource={link.thumb}
-          style={[a.flex_1, a.rounded_sm]}
+          placeholderSource={thumb}
+          style={[a.flex_1]}
           autoplay={!autoplayDisabled}
           onPlayerStateChange={onPlayerStateChange}
           ref={playerRef}
           accessibilityHint={_(msg`Animated GIF`)}
-          accessibilityLabel={parsedAlt.alt}
+          accessibilityLabel={altText}
         />
-
-        {!hideAlt && parsedAlt.isPreferred && <AltText text={parsedAlt.alt} />}
+        {!playerState.isPlaying && (
+          <Fill
+            style={[
+              t.name === 'light' ? t.atoms.bg_contrast_975 : t.atoms.bg,
+              {
+                opacity: 0.3,
+              },
+            ]}
+          />
+        )}
+        {!hideAlt && isPreferredAltText && <AltText text={altText} />}
       </View>
     </View>
   )
@@ -183,7 +186,6 @@ function AltText({text}: {text: string}) {
           <Trans>ALT</Trans>
         </Text>
       </TouchableOpacity>
-
       <Prompt.Outer control={control}>
         <Prompt.TitleText>
           <Trans>Alt Text</Trans>
@@ -217,6 +219,6 @@ const styles = StyleSheet.create({
   alt: {
     color: 'white',
     fontSize: isWeb ? 10 : 7,
-    fontWeight: 'bold',
+    fontWeight: '600',
   },
 })

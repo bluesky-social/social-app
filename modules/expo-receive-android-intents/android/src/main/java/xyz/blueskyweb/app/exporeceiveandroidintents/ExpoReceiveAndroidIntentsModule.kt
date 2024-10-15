@@ -2,6 +2,7 @@ package xyz.blueskyweb.app.exporeceiveandroidintents
 
 import android.content.Intent
 import android.graphics.Bitmap
+import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
@@ -11,6 +12,11 @@ import expo.modules.kotlin.modules.ModuleDefinition
 import java.io.File
 import java.io.FileOutputStream
 import java.net.URLEncoder
+
+enum class AttachmentType {
+  IMAGE,
+  VIDEO,
+}
 
 class ExpoReceiveAndroidIntentsModule : Module() {
   override fun definition() =
@@ -23,17 +29,26 @@ class ExpoReceiveAndroidIntentsModule : Module() {
     }
 
   private fun handleIntent(intent: Intent?) {
-    if (appContext.currentActivity == null || intent == null) return
-
-    if (intent.action == Intent.ACTION_SEND) {
-      if (intent.type == "text/plain") {
-        handleTextIntent(intent)
-      } else if (intent.type.toString().startsWith("image/")) {
-        handleImageIntent(intent)
+    if (appContext.currentActivity == null) return
+    intent?.let {
+      if (it.action == Intent.ACTION_SEND && it.type == "text/plain") {
+        handleTextIntent(it)
+        return
       }
-    } else if (intent.action == Intent.ACTION_SEND_MULTIPLE) {
-      if (intent.type.toString().startsWith("image/")) {
-        handleImagesIntent(intent)
+
+      val type =
+        if (it.type.toString().startsWith("image/")) {
+          AttachmentType.IMAGE
+        } else if (it.type.toString().startsWith("video/")) {
+          AttachmentType.VIDEO
+        } else {
+          return
+        }
+
+      if (it.action == Intent.ACTION_SEND) {
+        handleAttachmentIntent(it, type)
+      } else if (it.action == Intent.ACTION_SEND_MULTIPLE) {
+        handleAttachmentsIntent(it, type)
       }
     }
   }
@@ -48,26 +63,46 @@ class ExpoReceiveAndroidIntentsModule : Module() {
     }
   }
 
-  private fun handleImageIntent(intent: Intent) {
+  private fun handleAttachmentIntent(
+    intent: Intent,
+    type: AttachmentType,
+  ) {
     val uri =
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         intent.getParcelableExtra(Intent.EXTRA_STREAM, Uri::class.java)
       } else {
         intent.getParcelableExtra(Intent.EXTRA_STREAM)
       }
-    if (uri == null) return
 
-    handleImageIntents(listOf(uri))
+    uri?.let {
+      when (type) {
+        AttachmentType.IMAGE -> handleImageIntents(listOf(it))
+        AttachmentType.VIDEO -> handleVideoIntents(listOf(it))
+      }
+    }
   }
 
-  private fun handleImagesIntent(intent: Intent) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-      intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM, Uri::class.java)?.let {
-        handleImageIntents(it.filterIsInstance<Uri>().take(4))
+  private fun handleAttachmentsIntent(
+    intent: Intent,
+    type: AttachmentType,
+  ) {
+    val uris =
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        intent
+          .getParcelableArrayListExtra(Intent.EXTRA_STREAM, Uri::class.java)
+          ?.filterIsInstance<Uri>()
+          ?.take(4)
+      } else {
+        intent
+          .getParcelableArrayListExtra<Uri>(Intent.EXTRA_STREAM)
+          ?.filterIsInstance<Uri>()
+          ?.take(4)
       }
-    } else {
-      intent.getParcelableArrayListExtra<Uri>(Intent.EXTRA_STREAM)?.let {
-        handleImageIntents(it.filterIsInstance<Uri>().take(4))
+
+    uris?.let {
+      when (type) {
+        AttachmentType.IMAGE -> handleImageIntents(it)
+        else -> return
       }
     }
   }
@@ -93,11 +128,36 @@ class ExpoReceiveAndroidIntentsModule : Module() {
     }
   }
 
+  private fun handleVideoIntents(uris: List<Uri>) {
+    val uri = uris[0]
+    // If there is no extension for the file, substringAfterLast returns the original string - not
+    // null, so we check for that below
+    // It doesn't actually matter what the extension is, so defaulting to mp4 is fine, even if the
+    // video isn't actually an mp4
+    var extension = uri.path?.substringAfterLast(".")
+    if (extension == null || extension == uri.path) {
+      extension = "mp4"
+    }
+    val file = createFile(extension)
+
+    val out = FileOutputStream(file)
+    appContext.currentActivity?.contentResolver?.openInputStream(uri)?.use {
+      it.copyTo(out)
+    }
+
+    val info = getVideoInfo(uri) ?: return
+
+    "bluesky://intent/compose?videoUri=${URLEncoder.encode(file.path, "UTF-8")}|${info["width"]}|${info["height"]}".toUri().let {
+      val newIntent = Intent(Intent.ACTION_VIEW, it)
+      appContext.currentActivity?.startActivity(newIntent)
+    }
+  }
+
   private fun getImageInfo(uri: Uri): Map<String, Any> {
     val bitmap = MediaStore.Images.Media.getBitmap(appContext.currentActivity?.contentResolver, uri)
     // We have to save this so that we can access it later when uploading the image.
     // createTempFile will automatically place a unique string between "img" and "temp.jpeg"
-    val file = File.createTempFile("img", "temp.jpeg", appContext.currentActivity?.cacheDir)
+    val file = createFile("jpeg")
     val out = FileOutputStream(file)
     bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out)
     out.flush()
@@ -109,6 +169,26 @@ class ExpoReceiveAndroidIntentsModule : Module() {
       "path" to file.path.toString(),
     )
   }
+
+  private fun getVideoInfo(uri: Uri): Map<String, Any>? {
+    val retriever = MediaMetadataRetriever()
+    retriever.setDataSource(appContext.currentActivity, uri)
+
+    val width = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH)?.toIntOrNull()
+    val height = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT)?.toIntOrNull()
+
+    if (width == null || height == null) {
+      return null
+    }
+
+    return mapOf(
+      "width" to width,
+      "height" to height,
+      "path" to uri.path.toString(),
+    )
+  }
+
+  private fun createFile(extension: String): File = File.createTempFile(extension, "temp.$extension", appContext.currentActivity?.cacheDir)
 
   // We will pas the width and height to the app here, since getting measurements
   // on the RN side is a bit more involved, and we already have them here anyway.

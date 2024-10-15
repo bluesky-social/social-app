@@ -5,7 +5,6 @@ import {useLingui} from '@lingui/react'
 import {useFocusEffect, useIsFocused} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {useAnalytics} from '#/lib/analytics/analytics'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {ComposeIcon2} from '#/lib/icons'
@@ -27,14 +26,15 @@ import {useSetMinimalShellMode} from '#/state/shell'
 import {useComposerControls} from '#/state/shell/composer'
 import {Feed} from '#/view/com/notifications/Feed'
 import {FAB} from '#/view/com/util/fab/FAB'
+import {ListMethods} from '#/view/com/util/List'
+import {LoadLatestBtn} from '#/view/com/util/load-latest/LoadLatestBtn'
 import {MainScrollProvider} from '#/view/com/util/MainScrollProvider'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
-import {ListMethods} from 'view/com/util/List'
-import {LoadLatestBtn} from 'view/com/util/load-latest/LoadLatestBtn'
-import {CenteredView} from 'view/com/util/Views'
+import {CenteredView} from '#/view/com/util/Views'
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {SettingsGear2_Stroke2_Corner0_Rounded as SettingsIcon} from '#/components/icons/SettingsGear2'
+import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
@@ -49,7 +49,6 @@ export function NotificationsScreen({route: {params}}: Props) {
   const [isScrolledDown, setIsScrolledDown] = React.useState(false)
   const [isLoadingLatest, setIsLoadingLatest] = React.useState(false)
   const scrollElRef = React.useRef<ListMethods>(null)
-  const {screen} = useAnalytics()
   const t = useTheme()
   const {isDesktop} = useWebMediaQueries()
   const queryClient = useQueryClient()
@@ -101,9 +100,8 @@ export function NotificationsScreen({route: {params}}: Props) {
     React.useCallback(() => {
       setMinimalShellMode(false)
       logger.debug('NotificationsScreen: Focus')
-      screen('Notifications')
       onFocusCheckLatest()
-    }, [screen, setMinimalShellMode, onFocusCheckLatest]),
+    }, [setMinimalShellMode, onFocusCheckLatest]),
   )
   React.useEffect(() => {
     if (!isScreenFocused) {
@@ -195,39 +193,38 @@ export function NotificationsScreen({route: {params}}: Props) {
   }, [renderButton, isLoadingLatest])
 
   return (
-    <CenteredView
-      testID="notificationsScreen"
-      style={[s.hContentRegion, {paddingTop: 2}]}
-      sideBorders={true}>
-      <ViewHeader
-        title={_(msg`Notifications`)}
-        canGoBack={false}
-        showBorder={true}
-        renderButton={renderHeaderSpinner}
-      />
-      <MainScrollProvider>
-        <Feed
-          onScrolledDownChange={setIsScrolledDown}
-          scrollElRef={scrollElRef}
-          ListHeaderComponent={ListHeaderComponent}
-          overridePriorityNotifications={params?.show === 'all'}
+    <Layout.Screen testID="notificationsScreen">
+      <CenteredView style={[a.flex_1, {paddingTop: 2}]} sideBorders={true}>
+        <ViewHeader
+          title={_(msg`Notifications`)}
+          canGoBack={false}
+          showBorder={true}
+          renderButton={renderHeaderSpinner}
         />
-      </MainScrollProvider>
-      {(isScrolledDown || hasNew) && (
-        <LoadLatestBtn
-          onPress={onPressLoadLatest}
-          label={_(msg`Load new notifications`)}
-          showIndicator={hasNew}
+        <MainScrollProvider>
+          <Feed
+            onScrolledDownChange={setIsScrolledDown}
+            scrollElRef={scrollElRef}
+            ListHeaderComponent={ListHeaderComponent}
+            overridePriorityNotifications={params?.show === 'all'}
+          />
+        </MainScrollProvider>
+        {(isScrolledDown || hasNew) && (
+          <LoadLatestBtn
+            onPress={onPressLoadLatest}
+            label={_(msg`Load new notifications`)}
+            showIndicator={hasNew}
+          />
+        )}
+        <FAB
+          testID="composeFAB"
+          onPress={() => openComposer({})}
+          icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
+          accessibilityRole="button"
+          accessibilityLabel={_(msg`New post`)}
+          accessibilityHint=""
         />
-      )}
-      <FAB
-        testID="composeFAB"
-        onPress={() => openComposer({})}
-        icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
-        accessibilityRole="button"
-        accessibilityLabel={_(msg`New post`)}
-        accessibilityHint=""
-      />
-    </CenteredView>
+      </CenteredView>
+    </Layout.Screen>
   )
 }

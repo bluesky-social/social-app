@@ -17,7 +17,6 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {WebView} from 'react-native-webview'
 import {Image} from 'expo-image'
 import {AppBskyEmbedExternal} from '@atproto/api'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
@@ -26,9 +25,11 @@ import {NavigationProp} from '#/lib/routes/types'
 import {EmbedPlayerParams, getPlayerAspect} from '#/lib/strings/embed-player'
 import {isNative} from '#/platform/detection'
 import {useExternalEmbedsPrefs} from '#/state/preferences'
-import {atoms as a} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {EmbedConsentDialog} from '#/components/dialogs/EmbedConsent'
+import {Fill} from '#/components/Fill'
+import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
 import {EventStopper} from '../EventStopper'
 
 interface ShouldStartLoadRequest {
@@ -57,9 +58,9 @@ function PlaceholderOverlay({
         accessibilityLabel={_(msg`Play Video`)}
         accessibilityHint={_(msg`Play Video`)}
         onPress={onPress}
-        style={[styles.overlayContainer, styles.topRadius]}>
+        style={[styles.overlayContainer]}>
         {!isPlayerActive ? (
-          <FontAwesomeIcon icon="play" size={42} color="white" />
+          <PlayButtonIcon />
         ) : (
           <ActivityIndicator size="large" color="white" />
         )}
@@ -118,6 +119,7 @@ export function ExternalPlayer({
   link: AppBskyEmbedExternal.ViewExternal
   params: EmbedPlayerParams
 }) {
+  const t = useTheme()
   const navigation = useNavigation<NavigationProp>()
   const insets = useSafeAreaInsets()
   const windowDims = useWindowDimensions()
@@ -211,12 +213,35 @@ export function ExternalPlayer({
         onAccept={onAcceptConsent}
       />
 
-      <Animated.View ref={viewRef} collapsable={false} style={[aspect]}>
-        {link.thumb && (!isPlayerActive || isLoading) && (
-          <Image
-            style={[a.flex_1, styles.topRadius]}
-            source={{uri: link.thumb}}
-            accessibilityIgnoresInvertColors
+      <Animated.View
+        ref={viewRef}
+        collapsable={false}
+        style={[aspect, a.overflow_hidden]}>
+        {link.thumb && (!isPlayerActive || isLoading) ? (
+          <>
+            <Image
+              style={[a.flex_1]}
+              source={{uri: link.thumb}}
+              accessibilityIgnoresInvertColors
+            />
+            <Fill
+              style={[
+                t.name === 'light' ? t.atoms.bg_contrast_975 : t.atoms.bg,
+                {
+                  opacity: 0.3,
+                },
+              ]}
+            />
+          </>
+        ) : (
+          <Fill
+            style={[
+              {
+                backgroundColor:
+                  t.name === 'light' ? t.palette.contrast_975 : 'black',
+                opacity: 0.3,
+              },
+            ]}
           />
         )}
         <PlaceholderOverlay
@@ -235,15 +260,10 @@ export function ExternalPlayer({
 }
 
 const styles = StyleSheet.create({
-  topRadius: {
-    borderTopLeftRadius: 6,
-    borderTopRightRadius: 6,
-  },
   overlayContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.5)',
   },
   overlayLayer: {
     zIndex: 2,

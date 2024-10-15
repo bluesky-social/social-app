@@ -3,6 +3,7 @@ import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {logger} from '#/logger'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -25,9 +26,17 @@ export function SubtitleFilePicker({
   const handlePick = (evt: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = evt.target.files?.[0]
     if (selectedFile) {
-      if (selectedFile.type === 'text/vtt') {
+      if (
+        selectedFile.type === 'text/vtt' ||
+        // HACK: sometimes the mime type is just straight-up missing
+        // best we can do is check the file extension and hope for the best
+        selectedFile.name.endsWith('.vtt')
+      ) {
         onSelectFile(selectedFile)
       } else {
+        logger.error('Invalid subtitle file type', {
+          safeMessage: `File: ${selectedFile.name} (${selectedFile.type})`,
+        })
         Toast.show(_(msg`Only WebVTT (.vtt) files are supported`))
       }
     }
@@ -48,7 +57,7 @@ export function SubtitleFilePicker({
         <Button
           onPress={handleClick}
           label={_('Select subtitle file (.vtt)')}
-          size="medium"
+          size="large"
           color="primary"
           variant="solid"
           disabled={disabled}>

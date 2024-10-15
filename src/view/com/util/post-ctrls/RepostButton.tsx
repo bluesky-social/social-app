@@ -53,6 +53,9 @@ let RepostButton = ({
         onPress={() => {
           requireAuth(() => dialogControl.open())
         }}
+        onLongPress={() => {
+          requireAuth(() => onQuote())
+        }}
         style={[
           a.flex_row,
           a.align_center,
@@ -83,9 +86,11 @@ let RepostButton = ({
           </Text>
         ) : undefined}
       </Button>
-      <Dialog.Outer control={dialogControl}>
+      <Dialog.Outer
+        control={dialogControl}
+        nativeOptions={{preventExpansion: true}}>
         <Dialog.Handle />
-        <Dialog.Inner label={_(msg`Repost or quote post`)}>
+        <Dialog.ScrollableInner label={_(msg`Repost or quote post`)}>
           <View style={a.gap_xl}>
             <View style={a.gap_xs}>
               <Button
@@ -152,15 +157,14 @@ let RepostButton = ({
             </View>
             <Button
               label={_(msg`Cancel quote post`)}
-              onAccessibilityEscape={close}
               onPress={close}
-              size="medium"
+              size="large"
               variant="solid"
               color="primary">
               <ButtonText>{_(msg`Cancel`)}</ButtonText>
             </Button>
           </View>
-        </Dialog.Inner>
+        </Dialog.ScrollableInner>
       </Dialog.Outer>
     </>
   )

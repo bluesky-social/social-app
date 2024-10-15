@@ -1,71 +1,112 @@
 import React from 'react'
 import {StyleProp, View, ViewStyle} from 'react-native'
 
-import {ExternalEmbedDraft} from 'lib/api/index'
-import {Gif} from 'state/queries/tenor'
-import {ExternalEmbedRemoveBtn} from 'view/com/composer/ExternalEmbedRemoveBtn'
-import {ExternalLinkEmbed} from 'view/com/util/post-embeds/ExternalLinkEmbed'
+import {cleanError} from '#/lib/strings/errors'
+import {
+  useResolveGifQuery,
+  useResolveLinkQuery,
+} from '#/state/queries/resolve-link'
+import {Gif} from '#/state/queries/tenor'
+import {ExternalEmbedRemoveBtn} from '#/view/com/composer/ExternalEmbedRemoveBtn'
+import {ExternalLinkEmbed} from '#/view/com/util/post-embeds/ExternalLinkEmbed'
 import {atoms as a, useTheme} from '#/alf'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 
-export const ExternalEmbed = ({
-  link,
+export const ExternalEmbedGif = ({
   onRemove,
   gif,
 }: {
-  link?: ExternalEmbedDraft
   onRemove: () => void
-  gif?: Gif
+  gif: Gif
 }) => {
   const t = useTheme()
-
+  const {data, error} = useResolveGifQuery(gif)
   const linkInfo = React.useMemo(
     () =>
-      link && {
-        title: link.meta?.title ?? link.uri,
-        uri: link.uri,
-        description: link.meta?.description ?? '',
-        thumb: link.localThumb?.path,
+      data && {
+        title: data.title ?? data.uri,
+        uri: data.uri,
+        description: data.description ?? '',
+        thumb: data.thumb?.source.path,
       },
-    [link],
+    [data],
   )
 
-  if (!link) return null
-
-  const loadingStyle: ViewStyle | undefined = gif
-    ? {
-        aspectRatio:
-          gif.media_formats.gif.dims[0] / gif.media_formats.gif.dims[1],
-        width: '100%',
-      }
-    : undefined
+  const loadingStyle: ViewStyle = {
+    aspectRatio: gif.media_formats.gif.dims[0] / gif.media_formats.gif.dims[1],
+    width: '100%',
+  }
 
   return (
-    <View
-      style={[
-        !gif && a.mb_xl,
-        a.overflow_hidden,
-        t.atoms.border_contrast_medium,
-      ]}>
-      {link.isLoading ? (
+    <View style={[a.overflow_hidden, t.atoms.border_contrast_medium]}>
+      {linkInfo ? (
+        <View style={{pointerEvents: 'auto'}}>
+          <ExternalLinkEmbed link={linkInfo} hideAlt />
+        </View>
+      ) : error ? (
+        <Container style={[a.align_start, a.p_md, a.gap_xs]}>
+          <Text numberOfLines={1} style={t.atoms.text_contrast_high}>
+            {gif.url}
+          </Text>
+          <Text numberOfLines={2} style={[{color: t.palette.negative_400}]}>
+            {cleanError(error)}
+          </Text>
+        </Container>
+      ) : (
         <Container style={loadingStyle}>
           <Loader size="xl" />
         </Container>
-      ) : link.meta?.error ? (
-        <Container style={[a.align_start, a.p_md, a.gap_xs]}>
-          <Text numberOfLines={1} style={t.atoms.text_contrast_high}>
-            {link.uri}
-          </Text>
-          <Text numberOfLines={2} style={[{color: t.palette.negative_400}]}>
-            {link.meta?.error}
-          </Text>
-        </Container>
-      ) : linkInfo ? (
-        <View style={{pointerEvents: !gif ? 'none' : 'auto'}}>
+      )}
+      <ExternalEmbedRemoveBtn onRemove={onRemove} />
+    </View>
+  )
+}
+
+export const ExternalEmbedLink = ({
+  uri,
+  onRemove,
+}: {
+  uri: string
+  onRemove: () => void
+}) => {
+  const t = useTheme()
+  const {data, error} = useResolveLinkQuery(uri)
+  const linkInfo = React.useMemo(
+    () =>
+      data && {
+        title:
+          data.type === 'external'
+            ? data.title
+            : data.kind === 'other'
+            ? data.meta.title
+            : uri,
+        uri,
+        description: data.type === 'external' ? data.description : '',
+        thumb: data.type === 'external' ? data.thumb?.source.path : undefined,
+      },
+    [data, uri],
+  )
+  return (
+    <View style={[a.mb_xl, a.overflow_hidden, t.atoms.border_contrast_medium]}>
+      {linkInfo ? (
+        <View style={{pointerEvents: 'none'}}>
           <ExternalLinkEmbed link={linkInfo} hideAlt />
         </View>
-      ) : null}
+      ) : error ? (
+        <Container style={[a.align_start, a.p_md, a.gap_xs]}>
+          <Text numberOfLines={1} style={t.atoms.text_contrast_high}>
+            {uri}
+          </Text>
+          <Text numberOfLines={2} style={[{color: t.palette.negative_400}]}>
+            {cleanError(error)}
+          </Text>
+        </Container>
+      ) : (
+        <Container>
+          <Loader size="xl" />
+        </Container>
+      )}
       <ExternalEmbedRemoveBtn onRemove={onRemove} />
     </View>
   )

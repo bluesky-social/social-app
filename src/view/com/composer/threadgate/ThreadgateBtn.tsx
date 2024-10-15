@@ -7,7 +7,6 @@ import {useLingui} from '@lingui/react'
 
 import {isNative} from '#/platform/detection'
 import {ThreadgateAllowUISetting} from '#/state/queries/threadgate'
-import {useAnalytics} from 'lib/analytics/analytics'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -30,13 +29,11 @@ export function ThreadgateBtn({
 
   style?: StyleProp<AnimatedStyle<ViewStyle>>
 }) {
-  const {track} = useAnalytics()
   const {_} = useLingui()
   const t = useTheme()
   const control = Dialog.useDialogControl()
 
   const onPress = () => {
-    track('Composer:ThreadgateOpened')
     if (isNative && Keyboard.isVisible()) {
       Keyboard.dismiss()
     }
@@ -60,15 +57,18 @@ export function ThreadgateBtn({
         <Button
           variant="solid"
           color="secondary"
-          size="xsmall"
+          size="small"
           testID="openReplyGateButton"
           onPress={onPress}
           label={label}
           accessibilityHint={_(
             msg`Opens a dialog to choose who can reply to this thread`,
-          )}>
+          )}
+          style={
+            !isNative ? {paddingVertical: 6, paddingHorizontal: 8} : undefined
+          }>
           <ButtonIcon icon={anyoneCanInteract ? Earth : Group} />
-          <ButtonText>{label}</ButtonText>
+          <ButtonText numberOfLines={1}>{label}</ButtonText>
         </Button>
       </Animated.View>
       <PostInteractionSettingsControlledDialog

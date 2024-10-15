@@ -10,14 +10,14 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
-import {BACK_HITSLOP} from 'lib/constants'
-import {makeProfileLink} from 'lib/routes/links'
-import {NavigationProp} from 'lib/routes/types'
-import {sanitizeDisplayName} from 'lib/strings/display-names'
-import {isWeb} from 'platform/detection'
-import {useProfileShadow} from 'state/cache/profile-shadow'
-import {isConvoActive, useConvo} from 'state/messages/convo'
-import {PreviewableUserAvatar} from 'view/com/util/UserAvatar'
+import {BACK_HITSLOP} from '#/lib/constants'
+import {makeProfileLink} from '#/lib/routes/links'
+import {NavigationProp} from '#/lib/routes/types'
+import {sanitizeDisplayName} from '#/lib/strings/display-names'
+import {isWeb} from '#/platform/detection'
+import {useProfileShadow} from '#/state/cache/profile-shadow'
+import {isConvoActive, useConvo} from '#/state/messages/convo'
+import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import {ConvoMenu} from '#/components/dms/ConvoMenu'
 import {Bell2Off_Filled_Corner0_Rounded as BellStroke} from '#/components/icons/Bell2'
@@ -170,6 +170,7 @@ function HeaderReady({
           </View>
           <View style={a.flex_1}>
             <Text
+              emoji
               style={[
                 a.text_md,
                 a.font_bold,

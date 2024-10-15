@@ -1,9 +1,14 @@
-import {Platform, StyleSheet} from 'react-native'
+import {Platform, StyleSheet, ViewStyle} from 'react-native'
 
 import * as tokens from '#/alf/tokens'
 import {native, web} from '#/alf/util/platform'
 
 export const atoms = {
+  debug: {
+    borderColor: 'red',
+    borderWidth: 1,
+  },
+
   /*
    * Positioning
    */
@@ -54,6 +59,19 @@ export const atoms = {
   h_full_vh: web({
     height: '100vh',
   }),
+
+  /**
+   * Used for the outermost components on screens, to ensure that they can fill
+   * the screen and extend beyond.
+   */
+  util_screen_outer: [
+    web({
+      minHeight: '100vh',
+    }),
+    native({
+      height: '100%',
+    }),
+  ] as ViewStyle,
 
   /*
    * Theme-independent bg colors
@@ -207,43 +225,43 @@ export const atoms = {
   },
   text_2xs: {
     fontSize: tokens.fontSize._2xs,
-    letterSpacing: 0.25,
+    letterSpacing: tokens.TRACKING,
   },
   text_xs: {
     fontSize: tokens.fontSize.xs,
-    letterSpacing: 0.25,
+    letterSpacing: tokens.TRACKING,
   },
   text_sm: {
     fontSize: tokens.fontSize.sm,
-    letterSpacing: 0.25,
+    letterSpacing: tokens.TRACKING,
   },
   text_md: {
     fontSize: tokens.fontSize.md,
-    letterSpacing: 0.25,
+    letterSpacing: tokens.TRACKING,
   },
   text_lg: {
     fontSize: tokens.fontSize.lg,
-    letterSpacing: 0.25,
+    letterSpacing: tokens.TRACKING,
   },
   text_xl: {
     fontSize: tokens.fontSize.xl,
-    letterSpacing: 0.25,
+    letterSpacing: tokens.TRACKING,
   },
   text_2xl: {
     fontSize: tokens.fontSize._2xl,
-    letterSpacing: 0.25,
+    letterSpacing: tokens.TRACKING,
   },
   text_3xl: {
     fontSize: tokens.fontSize._3xl,
-    letterSpacing: 0.25,
+    letterSpacing: tokens.TRACKING,
   },
   text_4xl: {
     fontSize: tokens.fontSize._4xl,
-    letterSpacing: 0.25,
+    letterSpacing: tokens.TRACKING,
   },
   text_5xl: {
     fontSize: tokens.fontSize._5xl,
-    letterSpacing: 0.25,
+    letterSpacing: tokens.TRACKING,
   },
   leading_tight: {
     lineHeight: 1.15,
@@ -255,16 +273,10 @@ export const atoms = {
     lineHeight: 1.5,
   },
   tracking_normal: {
-    letterSpacing: 0,
-  },
-  tracking_wide: {
-    letterSpacing: 0.25,
+    letterSpacing: tokens.TRACKING,
   },
   font_normal: {
     fontWeight: tokens.fontWeight.normal,
-  },
-  font_semibold: {
-    fontWeight: tokens.fontWeight.semibold,
   },
   font_bold: {
     fontWeight: tokens.fontWeight.bold,
@@ -889,4 +901,32 @@ export const atoms = {
   hidden: {
     display: 'none',
   },
+
+  /*
+   * Transition
+   */
+  transition_none: web({
+    transitionProperty: 'none',
+  }),
+  transition_all: web({
+    transitionProperty: 'all',
+    transitionTimingFunction: 'cubic-bezier(0.17, 0.73, 0.14, 1)',
+    transitionDuration: '100ms',
+  }),
+  transition_color: web({
+    transitionProperty:
+      'color, background-color, border-color, text-decoration-color, fill, stroke',
+    transitionTimingFunction: 'cubic-bezier(0.17, 0.73, 0.14, 1)',
+    transitionDuration: '100ms',
+  }),
+  transition_opacity: web({
+    transitionProperty: 'opacity',
+    transitionTimingFunction: 'cubic-bezier(0.17, 0.73, 0.14, 1)',
+    transitionDuration: '100ms',
+  }),
+  transition_transform: web({
+    transitionProperty: 'transform',
+    transitionTimingFunction: 'cubic-bezier(0.17, 0.73, 0.14, 1)',
+    transitionDuration: '100ms',
+  }),
 } as const

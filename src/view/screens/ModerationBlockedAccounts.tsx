@@ -12,19 +12,19 @@ import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
+import {usePalette} from '#/lib/hooks/usePalette'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {CommonNavigatorParams} from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {useMyBlockedAccountsQuery} from '#/state/queries/my-blocked-accounts'
 import {useSetMinimalShellMode} from '#/state/shell'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {CommonNavigatorParams} from 'lib/routes/types'
-import {ProfileCard} from 'view/com/profile/ProfileCard'
-import {CenteredView} from 'view/com/util/Views'
-import {ErrorScreen} from '../com/util/error/ErrorScreen'
-import {Text} from '../com/util/text/Text'
-import {ViewHeader} from '../com/util/ViewHeader'
+import {ProfileCard} from '#/view/com/profile/ProfileCard'
+import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
+import {Text} from '#/view/com/util/text/Text'
+import {ViewHeader} from '#/view/com/util/ViewHeader'
+import {CenteredView} from '#/view/com/util/Views'
+import * as Layout from '#/components/Layout'
 
 type Props = NativeStackScreenProps<
   CommonNavigatorParams,
@@ -35,7 +35,6 @@ export function ModerationBlockedAccounts({}: Props) {
   const {_} = useLingui()
   const setMinimalShellMode = useSetMinimalShellMode()
   const {isTabletOrDesktop} = useWebMediaQueries()
-  const {screen} = useAnalytics()
 
   const [isPTRing, setIsPTRing] = React.useState(false)
   const {
@@ -58,9 +57,8 @@ export function ModerationBlockedAccounts({}: Props) {
 
   useFocusEffect(
     React.useCallback(() => {
-      screen('BlockedAccounts')
       setMinimalShellMode(false)
-    }, [screen, setMinimalShellMode]),
+    }, [setMinimalShellMode]),
   )
 
   const onRefresh = React.useCallback(async () => {
@@ -98,76 +96,78 @@ export function ModerationBlockedAccounts({}: Props) {
     />
   )
   return (
-    <CenteredView
-      style={[
-        styles.container,
-        isTabletOrDesktop && styles.containerDesktop,
-        pal.view,
-        pal.border,
-      ]}
-      testID="blockedAccountsScreen">
-      <ViewHeader title={_(msg`Blocked Accounts`)} showOnDesktop />
-      <Text
-        type="sm"
+    <Layout.Screen testID="blockedAccountsScreen">
+      <CenteredView
         style={[
-          styles.description,
-          pal.text,
-          isTabletOrDesktop && styles.descriptionDesktop,
-        ]}>
-        <Trans>
-          Blocked accounts cannot reply in your threads, mention you, or
-          otherwise interact with you. You will not see their content and they
-          will be prevented from seeing yours.
-        </Trans>
-      </Text>
-      {isEmpty ? (
-        <View style={[pal.border, !isTabletOrDesktop && styles.flex1]}>
-          {isError ? (
-            <ErrorScreen
-              title="Oops!"
-              message={cleanError(error)}
-              onPressTryAgain={refetch}
-            />
-          ) : (
-            <View style={[styles.empty, pal.viewLight]}>
-              <Text type="lg" style={[pal.text, styles.emptyText]}>
-                <Trans>
-                  You have not blocked any accounts yet. To block an account, go
-                  to their profile and select "Block account" from the menu on
-                  their account.
-                </Trans>
-              </Text>
-            </View>
-          )}
-        </View>
-      ) : (
-        <FlatList
-          style={[!isTabletOrDesktop && styles.flex1]}
-          data={profiles}
-          keyExtractor={(item: ActorDefs.ProfileView) => item.did}
-          refreshControl={
-            <RefreshControl
-              refreshing={isPTRing}
-              onRefresh={onRefresh}
-              tintColor={pal.colors.text}
-              titleColor={pal.colors.text}
-            />
-          }
-          onEndReached={onEndReached}
-          renderItem={renderItem}
-          initialNumToRender={15}
-          // FIXME(dan)
+          styles.container,
+          isTabletOrDesktop && styles.containerDesktop,
+          pal.view,
+          pal.border,
+        ]}
+        testID="blockedAccountsScreen">
+        <ViewHeader title={_(msg`Blocked Accounts`)} showOnDesktop />
+        <Text
+          type="sm"
+          style={[
+            styles.description,
+            pal.text,
+            isTabletOrDesktop && styles.descriptionDesktop,
+          ]}>
+          <Trans>
+            Blocked accounts cannot reply in your threads, mention you, or
+            otherwise interact with you. You will not see their content and they
+            will be prevented from seeing yours.
+          </Trans>
+        </Text>
+        {isEmpty ? (
+          <View style={[pal.border, !isTabletOrDesktop && styles.flex1]}>
+            {isError ? (
+              <ErrorScreen
+                title="Oops!"
+                message={cleanError(error)}
+                onPressTryAgain={refetch}
+              />
+            ) : (
+              <View style={[styles.empty, pal.viewLight]}>
+                <Text type="lg" style={[pal.text, styles.emptyText]}>
+                  <Trans>
+                    You have not blocked any accounts yet. To block an account,
+                    go to their profile and select "Block account" from the menu
+                    on their account.
+                  </Trans>
+                </Text>
+              </View>
+            )}
+          </View>
+        ) : (
+          <FlatList
+            style={[!isTabletOrDesktop && styles.flex1]}
+            data={profiles}
+            keyExtractor={(item: ActorDefs.ProfileView) => item.did}
+            refreshControl={
+              <RefreshControl
+                refreshing={isPTRing}
+                onRefresh={onRefresh}
+                tintColor={pal.colors.text}
+                titleColor={pal.colors.text}
+              />
+            }
+            onEndReached={onEndReached}
+            renderItem={renderItem}
+            initialNumToRender={15}
+            // FIXME(dan)
 
-          ListFooterComponent={() => (
-            <View style={styles.footer}>
-              {(isFetching || isFetchingNextPage) && <ActivityIndicator />}
-            </View>
-          )}
-          // @ts-ignore our .web version only -prf
-          desktopFixedHeight
-        />
-      )}
-    </CenteredView>
+            ListFooterComponent={() => (
+              <View style={styles.footer}>
+                {(isFetching || isFetchingNextPage) && <ActivityIndicator />}
+              </View>
+            )}
+            // @ts-ignore our .web version only -prf
+            desktopFixedHeight
+          />
+        )}
+      </CenteredView>
+    </Layout.Screen>
   )
 }
 

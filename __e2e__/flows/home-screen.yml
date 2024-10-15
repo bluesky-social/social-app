@@ -9,6 +9,9 @@ appId: xyz.blueskyweb.app
 - tapOn:
     id: "e2eSignInAlice"
 
+- extendedWaitUntil:
+    visible:
+        text: "Feeds ✨"
 - tapOn:
     label: "Can go to feeds page using feeds button in tab bar"
     text: "Feeds ✨"
@@ -17,10 +20,6 @@ appId: xyz.blueskyweb.app
 - tapOn:
     label: "Feeds button disappears after pinning a feed"
     id: "bottomBarProfileBtn"
-- swipe:
-    from:
-        id: "profilePager-selector"
-    direction: LEFT
 - tapOn:
     id: "profilePager-selector-4"
 - tapOn: "alice-favs"
@@ -34,26 +33,16 @@ appId: xyz.blueskyweb.app
 - tapOn:
     label: "Can like posts"
     id: "likeBtn"
-- assertVisible:
-    id: "likeCount"
-    text: "1"
 - tapOn:
     id: "likeBtn"
-- assertNotVisible:
-    id: "likeCount"
 
 - tapOn:
     label: "Can repost posts"
     id: "repostBtn"
 - tapOn: "Repost"
-- assertVisible:
-    id: "repostCount"
-    text: "1"
 - tapOn:
     id: "repostBtn"
 - tapOn: "Remove repost"
-- assertNotVisible:
-    id: "repostCount"
 
 - tapOn:
     label: "Can delete posts"

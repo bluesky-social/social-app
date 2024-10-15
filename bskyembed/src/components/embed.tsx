@@ -3,6 +3,7 @@ import {
   AppBskyEmbedImages,
   AppBskyEmbedRecord,
   AppBskyEmbedRecordWithMedia,
+  AppBskyEmbedVideo,
   AppBskyFeedDefs,
   AppBskyFeedPost,
   AppBskyGraphDefs,
@@ -14,6 +15,7 @@ import {ComponentChildren, h} from 'preact'
 import {useMemo} from 'preact/hooks'
 
 import infoIcon from '../../assets/circleInfo_stroke2_corner0_rounded.svg'
+import playIcon from '../../assets/play_filled_corner2_rounded.svg'
 import starterPackIcon from '../../assets/starterPack.svg'
 import {CONTENT_LABELS, labelsToInfo} from '../labels'
 import {getRkey} from '../utils'
@@ -156,11 +158,22 @@ export function Embed({
         return <Info>The quoted post is blocked.</Info>
       }
 
+      // Case 3.8: Detached quote post
+      if (AppBskyEmbedRecord.isViewDetached(record)) {
+        // Just don't show anything
+        return null
+      }
+
       // Unknown embed type
       return null
     }
 
-    // Case 4: Record with media
+    // Case 4: Video
+    if (AppBskyEmbedVideo.isView(content)) {
+      return <VideoEmbed content={content} />
+    }
+
+    // Case 5: Record with media
     if (
       AppBskyEmbedRecordWithMedia.isView(content) &&
       AppBskyEmbedRecord.isViewRecord(content.record.record)
@@ -354,6 +367,31 @@ function GenericWithImageEmbed({
   )
 }
 
+// just the thumbnail and a play button
+function VideoEmbed({content}: {content: AppBskyEmbedVideo.View}) {
+  let aspectRatio = 1
+
+  if (content.aspectRatio) {
+    const {width, height} = content.aspectRatio
+    aspectRatio = clamp(width / height, 1 / 1, 3 / 1)
+  }
+
+  return (
+    <div
+      className="w-full overflow-hidden rounded-lg aspect-square relative"
+      style={{aspectRatio: `${aspectRatio} / 1`}}>
+      <img
+        src={content.thumbnail}
+        alt={content.alt}
+        className="object-cover size-full"
+      />
+      <div className="size-24 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-black/50 flex items-center justify-center">
+        <img src={playIcon} className="object-cover size-3/5" />
+      </div>
+    </div>
+  )
+}
+
 function StarterPackEmbed({
   content,
 }: {
@@ -409,4 +447,8 @@ function getStarterPackHref(
   const rkey = new AtUri(starterPack.uri).rkey
   const handleOrDid = starterPack.creator.handle || starterPack.creator.did
   return `/starter-pack/${handleOrDid}/${rkey}`
+}
+
+function clamp(num: number, min: number, max: number) {
+  return Math.max(min, Math.min(num, max))
 }

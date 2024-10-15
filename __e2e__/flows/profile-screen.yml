@@ -10,10 +10,12 @@ appId: xyz.blueskyweb.app
     id: "e2eSignInAlice"
 
 # Navigate to another user profile
+- extendedWaitUntil:
+    visible:
+        id: "bottomBarSearchBtn"
 - tapOn:
     id: "bottomBarSearchBtn"
-- tapOn:
-    id: "searchTextInput"
+- tapOn: "Search"
 - inputText: "b"
 - tapOn:
     id: "searchAutoCompleteResult-bob.test"

@@ -1,6 +1,5 @@
 import React from 'react'
 
-import {track} from '#/lib/analytics/analytics'
 import * as persisted from '#/state/persisted'
 
 export const OnboardingScreenSteps = {
@@ -55,17 +54,14 @@ function reducer(state: StateContext, action: Action): StateContext {
       return compute({...state, step: nextStep})
     }
     case 'start': {
-      track('Onboarding:Begin')
       persisted.write('onboarding', {step: 'Welcome'})
       return compute({...state, step: 'Welcome'})
     }
     case 'finish': {
-      track('Onboarding:Complete')
       persisted.write('onboarding', {step: 'Home'})
       return compute({...state, step: 'Home'})
     }
     case 'skip': {
-      track('Onboarding:Skipped')
       persisted.write('onboarding', {step: 'Home'})
       return compute({...state, step: 'Home'})
     }

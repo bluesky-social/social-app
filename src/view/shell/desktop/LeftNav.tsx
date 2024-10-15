@@ -12,6 +12,11 @@ import {
   useNavigationState,
 } from '@react-navigation/native'
 
+import {usePalette} from '#/lib/hooks/usePalette'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {getCurrentRoute, isStateAtTabRoot, isTab} from '#/lib/routes/helpers'
+import {makeProfileLink} from '#/lib/routes/links'
+import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
 import {isInvalidHandle} from '#/lib/strings/handles'
 import {emitSoftReset} from '#/state/events'
 import {useFetchHandle} from '#/state/queries/handle'
@@ -20,18 +25,13 @@ import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {getCurrentRoute, isStateAtTabRoot, isTab} from 'lib/routes/helpers'
-import {makeProfileLink} from 'lib/routes/links'
-import {CommonNavigatorParams, NavigationProp} from 'lib/routes/types'
-import {colors, s} from 'lib/styles'
+import {Link} from '#/view/com/util/Link'
+import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
+import {PressableWithHover} from '#/view/com/util/PressableWithHover'
+import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {NavSignupCard} from '#/view/shell/NavSignupCard'
-import {Link} from 'view/com/util/Link'
-import {LoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
-import {PressableWithHover} from 'view/com/util/PressableWithHover'
-import {Text} from 'view/com/util/text/Text'
-import {UserAvatar} from 'view/com/util/UserAvatar'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {
   Bell_Filled_Corner0_Rounded as BellFilled,
   Bell_Stroke2_Corner0_Rounded as Bell,
@@ -63,6 +63,7 @@ import {
   UserCircle_Filled_Corner0_Rounded as UserCircleFilled,
   UserCircle_Stroke2_Corner0_Rounded as UserCircle,
 } from '#/components/icons/UserCircle'
+import {Text} from '#/components/Typography'
 import {router} from '../../../routes'
 
 const NAV_ICON_WIDTH = 28
@@ -149,9 +150,10 @@ interface NavItemProps {
   label: string
 }
 function NavItem({count, href, icon, iconFilled, label}: NavItemProps) {
-  const pal = usePalette('default')
+  const t = useTheme()
   const {currentAccount} = useSession()
-  const {isDesktop, isTablet} = useWebMediaQueries()
+  const {gtMobile, gtTablet} = useBreakpoints()
+  const isTablet = gtMobile && !gtTablet
   const [pathName] = React.useMemo(() => router.matchPath(href), [href])
   const currentRouteInfo = useNavigationState(state => {
     if (!state) {
@@ -183,8 +185,8 @@ function NavItem({count, href, icon, iconFilled, label}: NavItemProps) {
 
   return (
     <PressableWithHover
-      style={styles.navItemWrapper}
-      hoverStyle={pal.viewLight}
+      style={[a.flex_row, a.align_center, a.p_md, a.rounded_sm, a.gap_sm]}
+      hoverStyle={t.atoms.bg_contrast_25}
       // @ts-ignore the function signature differs on web -prf
       onPress={onPressWrapped}
       // @ts-ignore web only -prf
@@ -195,23 +197,50 @@ function NavItem({count, href, icon, iconFilled, label}: NavItemProps) {
       accessibilityHint="">
       <View
         style={[
-          styles.navItemIconWrapper,
-          isTablet && styles.navItemIconWrapperTablet,
+          a.align_center,
+          a.justify_center,
+          a.z_10,
+          {
+            width: 24,
+            height: 24,
+          },
+          isTablet && {
+            width: 40,
+            height: 40,
+          },
         ]}>
         {isCurrent ? iconFilled : icon}
         {typeof count === 'string' && count ? (
           <Text
-            type="button"
             style={[
-              styles.navItemCount,
-              isTablet && styles.navItemCountTablet,
+              a.absolute,
+              a.text_xs,
+              a.font_bold,
+              a.rounded_full,
+              a.text_center,
+              {
+                top: '-10%',
+                left: count.length === 1 ? '50%' : '40%',
+                backgroundColor: t.palette.primary_500,
+                color: t.palette.white,
+                lineHeight: a.text_sm.fontSize,
+                paddingHorizontal: 4,
+                paddingVertical: 1,
+                minWidth: 16,
+              },
+              isTablet && [
+                {
+                  top: '10%',
+                  left: count.length === 1 ? '50%' : '40%',
+                },
+              ],
             ]}>
             {count}
           </Text>
         ) : null}
       </View>
-      {isDesktop && (
-        <Text type="title" style={[isCurrent ? s.bold : s.normal, pal.text]}>
+      {gtTablet && (
+        <Text style={[a.text_xl, isCurrent ? a.font_heavy : a.font_normal]}>
           {label}
         </Text>
       )}
@@ -268,21 +297,20 @@ function ComposeBtn() {
     return null
   }
   return (
-    <View style={styles.newPostBtnContainer}>
-      <TouchableOpacity
+    <View style={[a.flex_row, a.pl_md, a.pt_xl]}>
+      <Button
         disabled={isFetchingHandle}
-        style={styles.newPostBtn}
+        label={_(msg`New post`)}
         onPress={onPressCompose}
-        accessibilityRole="button"
-        accessibilityLabel={_(msg`New post`)}
-        accessibilityHint="">
-        <View style={styles.newPostBtnIconWrapper}>
-          <EditBig width={19} style={styles.newPostBtnLabel} />
-        </View>
-        <Text type="button" style={styles.newPostBtnLabel}>
+        size="large"
+        variant="solid"
+        color="primary"
+        style={[a.rounded_full]}>
+        <ButtonIcon icon={EditBig} position="left" />
+        <ButtonText>
           <Trans context="action">New Post</Trans>
-        </Text>
-      </TouchableOpacity>
+        </ButtonText>
+      </Button>
     </View>
   )
 }
@@ -439,68 +467,5 @@ const styles = StyleSheet.create({
     right: 12,
     width: 30,
     height: 30,
-  },
-
-  navItemWrapper: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 12,
-    padding: 12,
-    borderRadius: 8,
-    gap: 10,
-  },
-  navItemIconWrapper: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: 28,
-    height: 24,
-    marginTop: 2,
-    zIndex: 1,
-  },
-  navItemIconWrapperTablet: {
-    width: 40,
-    height: 40,
-  },
-  navItemCount: {
-    position: 'absolute',
-    top: 0,
-    left: 15,
-    backgroundColor: colors.blue3,
-    color: colors.white,
-    fontSize: 12,
-    fontWeight: 'bold',
-    paddingHorizontal: 4,
-    borderRadius: 6,
-  },
-  navItemCountTablet: {
-    left: 18,
-    fontSize: 14,
-  },
-
-  newPostBtnContainer: {
-    flexDirection: 'row',
-  },
-  newPostBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 24,
-    paddingTop: 10,
-    paddingBottom: 12, // visually aligns the text vertically inside the button
-    paddingLeft: 16,
-    paddingRight: 18, // looks nicer like this
-    backgroundColor: colors.blue3,
-    marginLeft: 12,
-    marginTop: 20,
-    marginBottom: 10,
-    gap: 8,
-  },
-  newPostBtnIconWrapper: {
-    marginTop: 2, // aligns the icon visually with the text
-  },
-  newPostBtnLabel: {
-    color: colors.white,
-    fontSize: 16,
-    fontWeight: '600',
   },
 })

@@ -12,11 +12,11 @@ import {GeneratorView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {DISCOVER_FEED_URI, STARTER_PACK_MAX_SIZE} from 'lib/constants'
-import {sanitizeDisplayName} from 'lib/strings/display-names'
-import {sanitizeHandle} from 'lib/strings/handles'
-import {useSession} from 'state/session'
-import {UserAvatar} from 'view/com/util/UserAvatar'
+import {DISCOVER_FEED_URI, STARTER_PACK_MAX_SIZE} from '#/lib/constants'
+import {sanitizeDisplayName} from '#/lib/strings/display-names'
+import {sanitizeHandle} from '#/lib/strings/handles'
+import {useSession} from '#/state/session'
+import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {WizardAction, WizardState} from '#/screens/StarterPack/Wizard/State'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
@@ -78,6 +78,7 @@ function WizardListCard({
       />
       <View style={[a.flex_1, a.gap_2xs]}>
         <Text
+          emoji
           style={[
             a.flex_1,
             a.font_bold,
@@ -101,7 +102,7 @@ function WizardListCard({
           label={_(msg`Remove`)}
           variant="solid"
           color="secondary"
-          size="xsmall"
+          size="small"
           style={[a.self_center, {marginLeft: 'auto'}]}
           onPress={onPress}>
           <ButtonText>

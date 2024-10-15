@@ -45,6 +45,29 @@ const withIntentFilters = config => {
         data: [
           {
             $: {
+              'android:mimeType': 'video/*',
+            },
+          },
+        ],
+      },
+      {
+        action: [
+          {
+            $: {
+              'android:name': 'android.intent.action.SEND',
+            },
+          },
+        ],
+        category: [
+          {
+            $: {
+              'android:name': 'android.intent.category.DEFAULT',
+            },
+          },
+        ],
+        data: [
+          {
+            $: {
               'android:mimeType': 'text/plain',
             },
           },
