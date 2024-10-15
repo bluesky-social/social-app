@@ -43,7 +43,6 @@ export type CommonNavigatorParams = {
   AccountSettings: undefined
   PrivacyAndSecuritySettings: undefined
   ContentAndMediaSettings: undefined
-  AccessibilityAndAppearanceSettings: undefined
   AboutSettings: undefined
   Search: {q?: string}
   Hashtag: {tag: string; author?: string}

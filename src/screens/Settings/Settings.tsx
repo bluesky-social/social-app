@@ -21,6 +21,7 @@ import * as SettingsList from '#/screens/Settings/components/SettingsList'
 import {atoms as a, useTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {SwitchAccountDialog} from '#/components/dialogs/SwitchAccount'
+import {Accessibility_Stroke2_Corner2_Rounded as AccessibilityIcon} from '#/components/icons/Accessibility'
 import {BubbleInfo_Stroke2_Corner2_Rounded as BubbleInfoIcon} from '#/components/icons/BubbleInfo'
 import {CircleQuestion_Stroke2_Corner2_Rounded as CircleQuestionIcon} from '#/components/icons/CircleQuestion'
 import {Earth_Stroke2_Corner2_Rounded as EarthIcon} from '#/components/icons/Globe'
@@ -125,11 +126,19 @@ export function SettingsScreen({}: Props) {
             </SettingsList.ItemText>
           </SettingsList.LinkItem>
           <SettingsList.LinkItem
-            to="/settings/accessibility-and-appearance"
-            label={_(msg`Accessibility and appearance`)}>
+            to="/settings/appearance"
+            label={_(msg`Appearance`)}>
             <SettingsList.ItemIcon icon={PaintRollerIcon} />
             <SettingsList.ItemText>
-              <Trans>Accessibilty and appearance</Trans>
+              <Trans>Appearance</Trans>
+            </SettingsList.ItemText>
+          </SettingsList.LinkItem>
+          <SettingsList.LinkItem
+            to="/settings/accessibility"
+            label={_(msg`Accessibility`)}>
+            <SettingsList.ItemIcon icon={AccessibilityIcon} />
+            <SettingsList.ItemText>
+              <Trans>Accessibilty</Trans>
             </SettingsList.ItemText>
           </SettingsList.LinkItem>
           <SettingsList.LinkItem

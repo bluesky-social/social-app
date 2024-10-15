@@ -43,7 +43,6 @@ export const router = new Router({
   AccountSettings: '/settings/account',
   PrivacyAndSecuritySettings: '/settings/privacy-and-security',
   ContentAndMediaSettings: '/settings/content-and-media',
-  AccessibilityAndAppearanceSettings: '/settings/accessibility-and-appearance',
   AboutSettings: '/settings/about',
   // support
   Support: '/support',

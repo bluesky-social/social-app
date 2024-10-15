@@ -96,7 +96,6 @@ import {useTheme} from '#/alf'
 import {router} from '#/routes'
 import {Referrer} from '../modules/expo-bluesky-swiss-army'
 import {AboutSettingsScreen} from './screens/Settings/AboutSettings'
-import {AccessibilityAndAppearanceSettingsScreen} from './screens/Settings/AccessibilityAndAppearance'
 import {AccountSettingsScreen} from './screens/Settings/AccountSettings'
 import {ContentAndMediaSettingsScreen} from './screens/Settings/ContentAndMediaSettings'
 import {PrivacyAndSecuritySettingsScreen} from './screens/Settings/PrivacyAndSecuritySettings'
@@ -352,14 +351,6 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         getComponent={() => ContentAndMediaSettingsScreen}
         options={{
           title: title(msg`Content and Media`),
-          requireAuth: true,
-        }}
-      />
-      <Stack.Screen
-        name="AccessibilityAndAppearanceSettings"
-        getComponent={() => AccessibilityAndAppearanceSettingsScreen}
-        options={{
-          title: title(msg`Accessibility and Appearance`),
           requireAuth: true,
         }}
       />
