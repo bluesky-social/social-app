@@ -96,6 +96,7 @@ import {useTheme} from '#/alf'
 import {router} from '#/routes'
 import {Referrer} from '../modules/expo-bluesky-swiss-army'
 import {AccountSettingsScreen} from './screens/Settings/AccountSettings'
+import {ContentAndMediaSettingsScreen} from './screens/Settings/ContentAndMediaSettings'
 import {PrivacyAndSecuritySettingsScreen} from './screens/Settings/PrivacyAndSecuritySettings'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
@@ -341,6 +342,14 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         getComponent={() => PrivacyAndSecuritySettingsScreen}
         options={{
           title: title(msg`Privacy and Security`),
+          requireAuth: true,
+        }}
+      />
+      <Stack.Screen
+        name="ContentAndMediaSettings"
+        getComponent={() => ContentAndMediaSettingsScreen}
+        options={{
+          title: title(msg`Content and Media`),
           requireAuth: true,
         }}
       />
