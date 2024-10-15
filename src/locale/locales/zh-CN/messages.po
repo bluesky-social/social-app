@@ -3800,10 +3800,6 @@ msgstr "自然"
 msgid "Navigate to {0}"
 msgstr "转到 {0}"
 
-#: src/view/com/util/post-embeds/ExternalLinkEmbed.tsx:86
-#~ msgid "Navigate to starter pack"
-#~ msgstr "转到入门包"
-
 #: src/screens/Login/ForgotPasswordForm.tsx:166
 #: src/screens/Login/LoginForm.tsx:316
 #: src/view/com/modals/ChangePassword.tsx:169
@@ -5063,10 +5059,6 @@ msgstr "从你的自定义资讯源中删除"
 msgid "Removes quoted post"
 msgstr "删除引用的帖文"
 
-#: src/view/com/composer/ExternalEmbedRemoveBtn.tsx:29
-#~ msgid "Removes the attachment"
-#~ msgstr "删除所有关联"
-
 #: src/view/com/posts/FeedShutdownMsg.tsx:129
 #: src/view/com/posts/FeedShutdownMsg.tsx:133
 msgid "Replace with Discover"
@@ -5488,14 +5480,6 @@ msgstr "搜索 \"{query}\""
 #: src/view/screens/Search/Search.tsx:995
 msgid "Search for \"{searchText}\""
 msgstr "搜索 \"{searchText}\""
-
-#: src/components/TagMenu/index.tsx:155
-#~ msgid "Search for all posts by @{authorHandle} with tag {displayTag}"
-#~ msgstr "搜索 @{authorHandle} 带有 {displayTag} 的所有帖文"
-
-#: src/components/TagMenu/index.tsx:104
-#~ msgid "Search for all posts with tag {displayTag}"
-#~ msgstr "搜索所有带有 {displayTag} 的帖文"
 
 #: src/screens/StarterPack/Wizard/index.tsx:498
 msgid "Search for feeds that you want to suggest to others."
