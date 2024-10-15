@@ -100,35 +100,42 @@ function DialogInner({
           <Trans>Add a content warning</Trans>
         </Text>
 
-        <View
-          style={[
-            a.border,
-            a.p_md,
-            t.atoms.border_contrast_high,
-            a.rounded_md,
-          ]}>
-          <View
-            style={[a.flex_row, a.align_center, a.justify_between, a.pb_sm]}>
-            <Text style={[a.font_bold, a.text_lg]}>
-              <Trans>Adult Content</Trans>
+        {!hasMedia ? (
+          <View>
+            <Text style={t.atoms.text_contrast_medium}>
+              <Trans>
+                There are no self-labels that can be applied to this post.
+              </Trans>
             </Text>
-
-            <Button
-              label={_(msg`Remove`)}
-              variant="ghost"
-              color="primary"
-              size="tiny"
-              onPress={removeAdultLabel}
-              disabled={!hasAdultSelection}
-              style={{opacity: hasAdultSelection ? 1 : 0}}
-              aria-hidden={!hasAdultSelection}>
-              <ButtonText>
-                <Trans>Remove</Trans>
-              </ButtonText>
-            </Button>
           </View>
-          {hasMedia ? (
-            <>
+        ) : (
+          <>
+            <View style={[a.p_sm, t.atoms.border_contrast_high]}>
+              <View
+                style={[
+                  a.flex_row,
+                  a.align_center,
+                  a.justify_between,
+                  a.pb_sm,
+                ]}>
+                <Text style={[a.font_bold, a.text_lg]}>
+                  <Trans>Adult Content</Trans>
+                </Text>
+
+                <Button
+                  label={_(msg`Remove`)}
+                  variant="ghost"
+                  color="primary"
+                  size="tiny"
+                  onPress={removeAdultLabel}
+                  disabled={!hasAdultSelection}
+                  style={{opacity: hasAdultSelection ? 1 : 0}}
+                  aria-hidden={!hasAdultSelection}>
+                  <ButtonText>
+                    <Trans>Remove</Trans>
+                  </ButtonText>
+                </Button>
+              </View>
               <ToggleButton.Group
                 label={_(msg`Adult Content labels`)}
                 values={labels}
@@ -163,23 +170,15 @@ function DialogInner({
                 ) : labels.includes('porn') ? (
                   <Trans>Sexual activity or erotic nudity.</Trans>
                 ) : (
-                  <Trans>If none are selected, suitable for all ages.</Trans>
+                  <Trans>
+                    If none are selected, this post is suitable for all
+                    audiences.
+                  </Trans>
                 )}
               </Text>
-            </>
-          ) : (
-            <View>
-              <Text style={t.atoms.text_contrast_medium}>
-                <Trans>
-                  <Text style={[a.font_bold, t.atoms.text_contrast_medium]}>
-                    Not Applicable.
-                  </Text>{' '}
-                  This warning is only available for posts with media attached.
-                </Trans>
-              </Text>
             </View>
-          )}
-        </View>
+          </>
+        )}
       </View>
 
       <Button
