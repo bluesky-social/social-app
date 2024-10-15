@@ -7,19 +7,20 @@ import {useNavigation} from '@react-navigation/native'
 import {useColorSchemeStyle} from '#/lib/hooks/useColorSchemeStyle'
 import {useIntentHandler} from '#/lib/hooks/useIntentHandler'
 import {useWebBodyScrollLock} from '#/lib/hooks/useWebBodyScrollLock'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {NavigationProp} from '#/lib/routes/types'
-import {colors, s} from '#/lib/styles'
+import {colors} from '#/lib/styles'
 import {useIsDrawerOpen, useSetDrawerOpen} from '#/state/shell'
 import {useComposerKeyboardShortcut} from '#/state/shell/composer/useComposerKeyboardShortcut'
 import {useCloseAllActiveElements} from '#/state/util'
+import {Lightbox} from '#/view/com/lightbox/Lightbox'
+import {ModalsContainer} from '#/view/com/modals/Modal'
+import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
+import {atoms as a} from '#/alf'
 import {MutedWordsDialog} from '#/components/dialogs/MutedWords'
 import {SigninDialog} from '#/components/dialogs/Signin'
 import {Outlet as PortalOutlet} from '#/components/Portal'
-import {useWebMediaQueries} from '../../lib/hooks/useWebMediaQueries'
-import {FlatNavigator, RoutesContainer} from '../../Navigation'
-import {Lightbox} from '../com/lightbox/Lightbox'
-import {ModalsContainer} from '../com/modals/Modal'
-import {ErrorBoundary} from '../com/util/ErrorBoundary'
+import {FlatNavigator, RoutesContainer} from '#/Navigation'
 import {Composer} from './Composer.web'
 import {DrawerContent} from './Drawer'
 
@@ -78,7 +79,7 @@ function ShellInner() {
 export const Shell: React.FC = function ShellImpl() {
   const pageBg = useColorSchemeStyle(styles.bgLight, styles.bgDark)
   return (
-    <View style={[s.hContentRegion, pageBg]}>
+    <View style={[a.util_screen_outer, pageBg]}>
       <RoutesContainer>
         <ShellInner />
       </RoutesContainer>

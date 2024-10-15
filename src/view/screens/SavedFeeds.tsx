@@ -32,6 +32,7 @@ import {NoSavedFeedsOfAnyType} from '#/screens/Feeds/NoSavedFeedsOfAnyType'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {FilterTimeline_Stroke2_Corner0_Rounded as FilterTimeline} from '#/components/icons/FilterTimeline'
+import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'SavedFeeds'>
@@ -106,120 +107,117 @@ function SavedFeedsInner({
   }, [_, isDesktop, onSaveChanges, hasUnsavedChanges, isOverwritePending])
 
   return (
-    <CenteredView
-      style={[
-        s.hContentRegion,
-        pal.border,
-        isTabletOrDesktop && styles.desktopContainer,
-      ]}>
-      <ViewHeader
-        title={_(msg`Edit My Feeds`)}
-        showOnDesktop
-        showBorder
-        renderButton={renderHeaderBtn}
-      />
-      <ScrollView style={s.flex1} contentContainerStyle={[styles.noBorder]}>
-        {noSavedFeedsOfAnyType && (
-          <View
-            style={[pal.border, {borderBottomWidth: StyleSheet.hairlineWidth}]}>
-            <NoSavedFeedsOfAnyType />
-          </View>
-        )}
-
-        <View style={[pal.text, pal.border, styles.title]}>
-          <Text type="title" style={pal.text}>
-            <Trans>Pinned Feeds</Trans>
-          </Text>
-        </View>
-
-        {preferences ? (
-          !pinnedFeeds.length ? (
-            <View
-              style={[
-                pal.border,
-                isMobile && s.flex1,
-                pal.viewLight,
-                styles.empty,
-              ]}>
-              <Text type="lg" style={[pal.text]}>
-                <Trans>You don't have any pinned feeds.</Trans>
-              </Text>
+    <Layout.Screen>
+      <CenteredView
+        style={[a.util_screen_outer]}
+        sideBorders={isTabletOrDesktop}>
+        <ViewHeader
+          title={_(msg`Edit My Feeds`)}
+          showOnDesktop
+          showBorder
+          renderButton={renderHeaderBtn}
+        />
+        <ScrollView style={[a.flex_1]} contentContainerStyle={[a.border_0]}>
+          {noSavedFeedsOfAnyType && (
+            <View style={[pal.border, a.border_b]}>
+              <NoSavedFeedsOfAnyType />
             </View>
-          ) : (
-            pinnedFeeds.map(f => (
-              <ListItem
-                key={f.id}
-                feed={f}
-                isPinned
-                currentFeeds={currentFeeds}
-                setCurrentFeeds={setCurrentFeeds}
-                preferences={preferences}
-              />
-            ))
-          )
-        ) : (
-          <ActivityIndicator style={{marginTop: 20}} />
-        )}
+          )}
 
-        {noFollowingFeed && (
-          <View
-            style={[pal.border, {borderBottomWidth: StyleSheet.hairlineWidth}]}>
-            <NoFollowingFeed />
+          <View style={[pal.text, pal.border, styles.title]}>
+            <Text type="title" style={pal.text}>
+              <Trans>Pinned Feeds</Trans>
+            </Text>
           </View>
-        )}
 
-        <View style={[pal.text, pal.border, styles.title]}>
-          <Text type="title" style={pal.text}>
-            <Trans>Saved Feeds</Trans>
-          </Text>
-        </View>
-        {preferences ? (
-          !unpinnedFeeds.length ? (
-            <View
-              style={[
-                pal.border,
-                isMobile && s.flex1,
-                pal.viewLight,
-                styles.empty,
-              ]}>
-              <Text type="lg" style={[pal.text]}>
-                <Trans>You don't have any saved feeds.</Trans>
-              </Text>
-            </View>
+          {preferences ? (
+            !pinnedFeeds.length ? (
+              <View
+                style={[
+                  pal.border,
+                  isMobile && s.flex1,
+                  pal.viewLight,
+                  styles.empty,
+                ]}>
+                <Text type="lg" style={[pal.text]}>
+                  <Trans>You don't have any pinned feeds.</Trans>
+                </Text>
+              </View>
+            ) : (
+              pinnedFeeds.map(f => (
+                <ListItem
+                  key={f.id}
+                  feed={f}
+                  isPinned
+                  currentFeeds={currentFeeds}
+                  setCurrentFeeds={setCurrentFeeds}
+                  preferences={preferences}
+                />
+              ))
+            )
           ) : (
-            unpinnedFeeds.map(f => (
-              <ListItem
-                key={f.id}
-                feed={f}
-                isPinned={false}
-                currentFeeds={currentFeeds}
-                setCurrentFeeds={setCurrentFeeds}
-                preferences={preferences}
-              />
-            ))
-          )
-        ) : (
-          <ActivityIndicator style={{marginTop: 20}} />
-        )}
+            <ActivityIndicator style={{marginTop: 20}} />
+          )}
 
-        <View style={styles.footerText}>
-          <Text type="sm" style={pal.textLight}>
-            <Trans>
-              Feeds are custom algorithms that users build with a little coding
-              expertise.{' '}
-              <TextLink
-                type="sm"
-                style={pal.link}
-                href="https://github.com/bluesky-social/feed-generator"
-                text={_(msg`See this guide`)}
-              />{' '}
-              for more information.
-            </Trans>
-          </Text>
-        </View>
-        <View style={{height: 100}} />
-      </ScrollView>
-    </CenteredView>
+          {noFollowingFeed && (
+            <View style={[pal.border, a.border_b]}>
+              <NoFollowingFeed />
+            </View>
+          )}
+
+          <View style={[pal.text, pal.border, styles.title]}>
+            <Text type="title" style={pal.text}>
+              <Trans>Saved Feeds</Trans>
+            </Text>
+          </View>
+          {preferences ? (
+            !unpinnedFeeds.length ? (
+              <View
+                style={[
+                  pal.border,
+                  isMobile && s.flex1,
+                  pal.viewLight,
+                  styles.empty,
+                ]}>
+                <Text type="lg" style={[pal.text]}>
+                  <Trans>You don't have any saved feeds.</Trans>
+                </Text>
+              </View>
+            ) : (
+              unpinnedFeeds.map(f => (
+                <ListItem
+                  key={f.id}
+                  feed={f}
+                  isPinned={false}
+                  currentFeeds={currentFeeds}
+                  setCurrentFeeds={setCurrentFeeds}
+                  preferences={preferences}
+                />
+              ))
+            )
+          ) : (
+            <ActivityIndicator style={{marginTop: 20}} />
+          )}
+
+          <View style={styles.footerText}>
+            <Text type="sm" style={pal.textLight}>
+              <Trans>
+                Feeds are custom algorithms that users build with a little
+                coding expertise.{' '}
+                <TextLink
+                  type="sm"
+                  style={pal.link}
+                  href="https://github.com/bluesky-social/feed-generator"
+                  text={_(msg`See this guide`)}
+                />{' '}
+                for more information.
+              </Trans>
+            </Text>
+          </View>
+          <View style={{height: 100}} />
+        </ScrollView>
+      </CenteredView>
+    </Layout.Screen>
   )
 }
 
@@ -434,12 +432,6 @@ function FollowingFeedCard() {
 }
 
 const styles = StyleSheet.create({
-  desktopContainer: {
-    borderLeftWidth: 1,
-    borderRightWidth: 1,
-    // @ts-ignore only rendered on web
-    minHeight: '100vh',
-  },
   empty: {
     paddingHorizontal: 20,
     paddingVertical: 20,
@@ -462,11 +454,5 @@ const styles = StyleSheet.create({
     paddingHorizontal: 26,
     paddingTop: 22,
     paddingBottom: 100,
-  },
-  noBorder: {
-    borderBottomWidth: 0,
-    borderRightWidth: 0,
-    borderLeftWidth: 0,
-    borderTopWidth: 0,
   },
 })

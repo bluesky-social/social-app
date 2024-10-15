@@ -330,6 +330,25 @@ export function InlineLinkText({
 }
 
 /**
+ * Utility to create a static `onPress` handler for a `Link` that would otherwise link to a URI
+ *
+ * Example:
+ *   `<Link {...createStaticClick(e => {...})} />`
+ */
+export function createStaticClick(
+  onPressHandler: Exclude<BaseLinkProps['onPress'], undefined>,
+): Pick<BaseLinkProps, 'to' | 'onPress'> {
+  return {
+    to: '#',
+    onPress(e: GestureResponderEvent) {
+      e.preventDefault()
+      onPressHandler(e)
+      return false
+    },
+  }
+}
+
+/**
  * A Pressable that uses useLink to handle navigation. It is unstyled, so can be used in cases where the Button styles
  * in Link are not desired.
  * @param displayText
