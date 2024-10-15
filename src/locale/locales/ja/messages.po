@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-10-11 15:28+0900\n"
+"PO-Revision-Date: 2024-10-15 13:17+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -2297,6 +2297,10 @@ msgstr "ユーザーリストを展開"
 msgid "Expand or collapse the full post you are replying to"
 msgstr "返信する投稿全体を展開または折りたたむ"
 
+#: src/lib/api/index.ts:356
+msgid "Expected uri to resolve to a record"
+msgstr "レコードを指すURIではありません"
+
 #: src/view/screens/NotificationsSettings.tsx:83
 msgid "Experimental: When this preference is enabled, you'll only receive reply and quote notifications from users you follow. We'll continue to add more controls here over time."
 msgstr "実験的機能: この設定を有効にすると、フォローしているユーザーからの返信と引用通知のみを受け取るようになります。今後、いろんなコントロールを追加していきます。"
@@ -2406,6 +2410,11 @@ msgstr "画像の保存に失敗しました：{0}"
 msgid "Failed to save notification preferences, please try again"
 msgstr "通知の設定の保存に失敗しました。もう一度お試しください"
 
+#: src/lib/api/index.ts:145
+#: src/lib/api/index.ts:170
+msgid "Failed to save post interaction settings. Your post was created but users may be able to interact with it."
+msgstr "投稿の反応の設定を保存できませんでした。投稿はされましたが、他のユーザーが反応してくるかもしれません。"
+
 #: src/components/dms/MessageItem.tsx:233
 msgid "Failed to send"
 msgstr "送信に失敗"
@@ -2451,6 +2460,11 @@ msgstr "フィードの切り替え"
 #: src/view/shell/Drawer.tsx:338
 msgid "Feedback"
 msgstr "フィードバック"
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:271
+#: src/view/com/util/forms/PostDropdownBtn.tsx:280
+msgid "Feedback sent!"
+msgstr "フィードバックを送りました！"
 
 #: src/Navigation.tsx:352
 #: src/screens/StarterPack/StarterPackScreen.tsx:172
@@ -3785,10 +3799,6 @@ msgstr "自然"
 msgid "Navigate to {0}"
 msgstr "{0}へ移動します"
 
-#: src/view/com/util/post-embeds/ExternalLinkEmbed.tsx:86
-msgid "Navigate to starter pack"
-msgstr "スターターパックへ移動します"
-
 #: src/screens/Login/ForgotPasswordForm.tsx:166
 #: src/screens/Login/LoginForm.tsx:316
 #: src/view/com/modals/ChangePassword.tsx:169
@@ -4160,6 +4170,10 @@ msgstr "{0}のみ返信可能。"
 msgid "Only contains letters, numbers, and hyphens"
 msgstr "英数字とハイフンのみ"
 
+#: src/lib/media/picker.shared.ts:29
+msgid "Only image files are supported"
+msgstr "画像ファイルのみに対応しています"
+
 #: src/view/com/composer/videos/SubtitleFilePicker.tsx:40
 msgid "Only WebVTT (.vtt) files are supported"
 msgstr "WebVTT（.vtt）ファイルのみに対応しています"
@@ -4203,6 +4217,10 @@ msgstr "絵文字を入力"
 #: src/view/screens/ProfileFeed.tsx:294
 msgid "Open feed options menu"
 msgstr "フィードの設定メニューを開く"
+
+#: src/view/com/util/post-embeds/ExternalLinkEmbed.tsx:78
+msgid "Open link to {niceUrl}"
+msgstr "{niceUrl}へのリンクを開く"
 
 #: src/view/screens/Settings/index.tsx:702
 msgid "Open links with in-app browser"
@@ -4642,6 +4660,10 @@ msgstr "@{0}による投稿"
 msgid "Post deleted"
 msgstr "投稿を削除"
 
+#: src/lib/api/index.ts:121
+msgid "Post failed to upload. Please check your Internet connection and try again."
+msgstr "投稿のアップロードに失敗しました。インターネット接続を確認し、再度試してください。"
+
 #: src/view/com/post-thread/PostThread.tsx:212
 msgid "Post hidden"
 msgstr "投稿を非表示"
@@ -4680,6 +4702,10 @@ msgstr "投稿を固定しました"
 #: src/state/queries/pinned-post.ts:61
 msgid "Post unpinned"
 msgstr "投稿の固定を解除しました"
+
+#: src/lib/api/index.ts:106
+msgid "Posting..."
+msgstr "投稿中…"
 
 #: src/components/TagMenu/index.tsx:266
 msgid "posts"
@@ -5031,10 +5057,6 @@ msgstr "あなたのフィードから削除しました"
 msgid "Removes quoted post"
 msgstr "引用を削除する"
 
-#: src/view/com/composer/ExternalEmbedRemoveBtn.tsx:29
-msgid "Removes the attachment"
-msgstr "添付を削除する"
-
 #: src/view/com/posts/FeedShutdownMsg.tsx:129
 #: src/view/com/posts/FeedShutdownMsg.tsx:133
 msgid "Replace with Discover"
@@ -5367,7 +5389,7 @@ msgstr "生年月日を保存"
 #: src/view/screens/SavedFeeds.tsx:97
 #: src/view/screens/SavedFeeds.tsx:101
 msgid "Save changes"
-msgstr ""
+msgstr "変更を保存"
 
 #: src/view/com/modals/EditProfile.tsx:227
 msgid "Save Changes"
@@ -5456,14 +5478,6 @@ msgstr "「{query}」を検索"
 #: src/view/screens/Search/Search.tsx:994
 msgid "Search for \"{searchText}\""
 msgstr "「{searchText}」を検索"
-
-#: src/components/TagMenu/index.tsx:155
-msgid "Search for all posts by @{authorHandle} with tag {displayTag}"
-msgstr "{displayTag}のすべての投稿を検索（@{authorHandle}のみ）"
-
-#: src/components/TagMenu/index.tsx:104
-msgid "Search for all posts with tag {displayTag}"
-msgstr "{displayTag}のすべての投稿を検索（すべてのユーザー）"
 
 #: src/screens/StarterPack/Wizard/index.tsx:491
 msgid "Search for feeds that you want to suggest to others."
@@ -6968,6 +6982,15 @@ msgstr "ファイルからアップロード"
 msgid "Upload from Library"
 msgstr "ライブラリーからアップロード"
 
+#: src/lib/api/index.ts:252
+msgid "Uploading images..."
+msgstr "画像をアップロード中…"
+
+#: src/lib/api/index.ts:306
+#: src/lib/api/index.ts:330
+msgid "Uploading link thumbnail..."
+msgstr "リンクのサムネイルをアップロード中…"
+
 #: src/view/com/modals/ChangeHandle.tsx:395
 msgid "Use a file on your server"
 msgstr "あなたのサーバーのファイルを使用"
@@ -7179,6 +7202,14 @@ msgstr "{0}のプロフィールを表示"
 #: src/components/dms/MessagesListHeader.tsx:160
 msgid "View {displayName}'s profile"
 msgstr "{displayName}のプロフィールを表示"
+
+#: src/components/TagMenu/index.tsx:149
+msgid "View all posts by @{authorHandle} with tag {displayTag}"
+msgstr "{displayTag}のすべての投稿を表示（@{authorHandle}のみ）"
+
+#: src/components/TagMenu/index.tsx:103
+msgid "View all posts with tag {displayTag}"
+msgstr "{displayTag}のすべての投稿を表示（すべてのユーザー）"
 
 #: src/components/ProfileHoverCard/index.web.tsx:433
 msgid "View blocked user's profile"
@@ -7641,6 +7672,10 @@ msgstr "{STARTER_PACK_MAX_SIZE}ユーザーまで追加できます"
 #: src/screens/StarterPack/Wizard/State.tsx:97
 msgid "You may only add up to 3 feeds"
 msgstr "3フィードまで追加できます"
+
+#: src/lib/media/picker.shared.ts:22
+msgid "You may only select up to 4 images"
+msgstr "画像は４枚まで選択できます"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:106
 msgid "You must be 13 years of age or older to sign up."
