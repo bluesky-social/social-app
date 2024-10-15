@@ -17,6 +17,8 @@ import {useCloseAllActiveElements} from '#/state/util'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
 import {ScrollView} from '#/view/com/util/Views'
+import {ProfileHeaderDisplayName} from '#/screens/Profile/Header/DisplayName'
+import {ProfileHeaderHandle} from '#/screens/Profile/Header/Handle'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
 import {atoms as a, useTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
@@ -31,9 +33,8 @@ import {
 } from '#/components/icons/Person'
 import {RaisingHand4Finger_Stroke2_Corner2_Rounded as HandIcon} from '#/components/icons/RaisingHand'
 import {Window_Stroke2_Corner2_Rounded as WindowIcon} from '#/components/icons/Window'
+import * as Layout from '#/components/Layout'
 import * as Prompt from '#/components/Prompt'
-import {ProfileHeaderDisplayName} from '../Profile/Header/DisplayName'
-import {ProfileHeaderHandle} from '../Profile/Header/Handle'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Settings'>
 export function SettingsScreen({}: Props) {
@@ -52,7 +53,7 @@ export function SettingsScreen({}: Props) {
   }
 
   return (
-    <View style={[a.util_screen_outer]}>
+    <Layout.Screen>
       <TempHeader />
       <ScrollView contentContainerStyle={[{paddingBottom: 100}]}>
         <View
@@ -177,7 +178,7 @@ export function SettingsScreen({}: Props) {
       />
 
       <SwitchAccountDialog control={switchAccountControl} />
-    </View>
+    </Layout.Screen>
   )
 }
 
