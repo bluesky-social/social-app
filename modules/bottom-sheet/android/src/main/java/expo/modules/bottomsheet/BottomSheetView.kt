@@ -1,6 +1,7 @@
 package expo.modules.bottomsheet
 
 import android.content.Context
+import android.util.DisplayMetrics
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewStructure
@@ -17,7 +18,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import expo.modules.kotlin.AppContext
 import expo.modules.kotlin.viewevent.EventDispatcher
 import expo.modules.kotlin.views.ExpoView
-import java.util.ArrayList
+
 
 class BottomSheetView(
   context: Context,
@@ -58,17 +59,18 @@ class BottomSheetView(
         if (value < 0) {
           0f
         } else {
-          value
+          dpToPx(value)
         }
     }
 
   var maxHeight = this.screenHeight
     set(value) {
+      val px = dpToPx(value)
       field =
-        if (value > this.screenHeight) {
-          this.screenHeight.toFloat()
+        if (px > this.screenHeight) {
+          this.screenHeight
         } else {
-          value
+          px
         }
     }
 
@@ -175,7 +177,7 @@ class BottomSheetView(
       behavior.isDraggable = true
       behavior.isHideable = true
 
-      if (contentHeight > this.screenHeight) {
+      if (contentHeight >= this.screenHeight || this.minHeight >= this.screenHeight) {
         behavior.state = BottomSheetBehavior.STATE_EXPANDED
         this.selectedSnapPoint = 2
       } else {
@@ -332,4 +334,11 @@ class BottomSheetView(
   override fun addChildrenForAccessibility(outChildren: ArrayList<View>?) { }
 
   override fun dispatchPopulateAccessibilityEvent(event: AccessibilityEvent?): Boolean = false
+
+  // https://stackoverflow.com/questions/11862391/getheight-px-or-dpi
+  fun dpToPx(dp: Float): Float {
+    val displayMetrics = context.resources.displayMetrics
+    val px = dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT)
+    return px
+  }
 }
