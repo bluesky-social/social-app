@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react'
-import {useWindowDimensions, View} from 'react-native'
+import {Dimensions, View} from 'react-native'
 import {Image as RNImage} from 'react-native-image-crop-picker'
 import {AppBskyActorDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
@@ -24,6 +24,8 @@ import * as Prompt from '#/components/Prompt'
 const DISPLAY_NAME_MAX_GRAPHEMES = 64
 const DESCRIPTION_MAX_GRAPHEMES = 256
 
+const SCREEN_HEIGHT = Dimensions.get('window').height
+
 export function EditProfileDialog({
   profile,
   control,
@@ -36,7 +38,6 @@ export function EditProfileDialog({
   const {_} = useLingui()
   const cancelControl = Dialog.useDialogControl()
   const [dirty, setDirty] = useState(false)
-  const {height} = useWindowDimensions()
 
   // 'You might lose unsaved changes' warning
   useEffect(() => {
@@ -65,7 +66,7 @@ export function EditProfileDialog({
       control={control}
       nativeOptions={{
         preventDismiss: dirty,
-        minHeight: height,
+        minHeight: SCREEN_HEIGHT,
       }}>
       <DialogInner
         profile={profile}
