@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh_CN\n"
 "Project-Id-Version: zh-CN for bluesky-social-app\n"
 "Report-Msgid-Bugs-To: Frudrax Cheng <i@cynosura.one>\n"
-"PO-Revision-Date: 2024-10-12 09:26+0800\n"
+"PO-Revision-Date: 2024-10-15 13:28+0800\n"
 "Last-Translator: Frudrax Cheng <i@cynosura.one>\n"
 "Language-Team: Frudrax Cheng (auroursa), Simon Chan (RitsukiP), U2FsdGVkX1, Mikan Harada (mitian233), IceCodeNew\n"
 "Plural-Forms: \n"
@@ -2300,7 +2300,7 @@ msgstr "展开或折叠你要回复的完整帖文"
 
 #: src/lib/api/index.ts:356
 msgid "Expected uri to resolve to a record"
-msgstr ""
+msgstr "预期 URL 解析为记录"
 
 #: src/view/screens/NotificationsSettings.tsx:78
 msgid "Experimental: When this preference is enabled, you'll only receive reply and quote notifications from users you follow. We'll continue to add more controls here over time."
@@ -2414,7 +2414,7 @@ msgstr "无法保存通知首选项，请再试一次"
 #: src/lib/api/index.ts:145
 #: src/lib/api/index.ts:170
 msgid "Failed to save post interaction settings. Your post was created but users may be able to interact with it."
-msgstr ""
+msgstr "无法保存帖文互动选项。您的帖文已成功创建，但其他用户可能无法与其互动。"
 
 #: src/components/dms/MessageItem.tsx:233
 msgid "Failed to send"
@@ -2465,7 +2465,7 @@ msgstr "反馈"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:271
 #: src/view/com/util/forms/PostDropdownBtn.tsx:280
 msgid "Feedback sent!"
-msgstr ""
+msgstr "反馈已发送！"
 
 #: src/Navigation.tsx:352
 #: src/screens/StarterPack/StarterPackScreen.tsx:183
@@ -4177,7 +4177,7 @@ msgstr "仅限字母、数字和连字符"
 
 #: src/lib/media/picker.shared.ts:29
 msgid "Only image files are supported"
-msgstr ""
+msgstr "仅支持图片文件"
 
 #: src/view/com/composer/videos/SubtitleFilePicker.tsx:40
 msgid "Only WebVTT (.vtt) files are supported"
@@ -4225,7 +4225,7 @@ msgstr "开启资讯源选项菜单"
 
 #: src/view/com/util/post-embeds/ExternalLinkEmbed.tsx:78
 msgid "Open link to {niceUrl}"
-msgstr ""
+msgstr "打开指向 {niceUrl} 的链接"
 
 #: src/view/screens/Settings/index.tsx:703
 msgid "Open links with in-app browser"
@@ -4667,7 +4667,7 @@ msgstr "已删除帖文"
 
 #: src/lib/api/index.ts:121
 msgid "Post failed to upload. Please check your Internet connection and try again."
-msgstr ""
+msgstr "帖文上传失败，请检查您的互联网连接并重试。"
 
 #: src/view/com/post-thread/PostThread.tsx:212
 msgid "Post hidden"
@@ -4710,7 +4710,7 @@ msgstr "贴文已取消固定"
 
 #: src/lib/api/index.ts:106
 msgid "Posting..."
-msgstr ""
+msgstr "正在发帖..."
 
 #: src/components/TagMenu/index.tsx:252
 msgid "posts"
@@ -7002,12 +7002,12 @@ msgstr "从照片图库上传"
 
 #: src/lib/api/index.ts:252
 msgid "Uploading images..."
-msgstr ""
+msgstr "正在上传图片..."
 
 #: src/lib/api/index.ts:306
 #: src/lib/api/index.ts:330
 msgid "Uploading link thumbnail..."
-msgstr ""
+msgstr "正在上传链接缩略图..."
 
 #: src/view/com/modals/ChangeHandle.tsx:395
 msgid "Use a file on your server"
@@ -7223,11 +7223,11 @@ msgstr "查看{displayName}的个人资料"
 
 #: src/components/TagMenu/index.tsx:149
 msgid "View all posts by @{authorHandle} with tag {displayTag}"
-msgstr ""
+msgstr "查看@{authorHandle} 带有标签 {displayTag} 的所有帖文"
 
 #: src/components/TagMenu/index.tsx:103
 msgid "View all posts with tag {displayTag}"
-msgstr ""
+msgstr "查看所有带有标签 {displayTag} 的帖文"
 
 #: src/components/ProfileHoverCard/index.web.tsx:433
 msgid "View blocked user's profile"
@@ -7693,7 +7693,7 @@ msgstr "你最多只能添加 3 个资讯源"
 
 #: src/lib/media/picker.shared.ts:22
 msgid "You may only select up to 4 images"
-msgstr ""
+msgstr "您最多只能选择 4 张图片"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:106
 msgid "You must be 13 years of age or older to sign up."
