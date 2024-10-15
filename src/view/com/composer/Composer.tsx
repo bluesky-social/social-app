@@ -1174,20 +1174,20 @@ function VideoUploadToolbar({state}: {state: VideoState}) {
 
   switch (state.status) {
     case 'compressing':
-      text = _('Compressing video...')
+      text = _(msg`Compressing video...`)
       break
     case 'uploading':
-      text = _('Uploading video...')
+      text = _(msg`Uploading video...`)
       break
     case 'processing':
-      text = _('Processing video...')
+      text = _(msg`Processing video...`)
       break
     case 'error':
-      text = _('Error')
+      text = _(msg`Error`)
       wheelProgress = 100
       break
     case 'done':
-      text = _('Video uploaded')
+      text = _(msg`Video uploaded`)
       break
   }
 
