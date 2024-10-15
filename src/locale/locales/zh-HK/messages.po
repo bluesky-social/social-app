@@ -8,7 +8,7 @@ msgstr ""
 "Language: yue\n"
 "Project-Id-Version: Yue for bluesky-social-app\n"
 "Report-Msgid-Bugs-To: Frudrax Cheng <i@cynosura.one>\n"
-"PO-Revision-Date: 2024-10-12 09:27+0800\n"
+"PO-Revision-Date: 2024-10-15 13:39+0800\n"
 "Last-Translator: Frudrax Cheng <i@cynosura.one>\n"
 "Language-Team: Frudrax Cheng (auroursa), Quicpasta (quicpasta.bsky.social)\n"
 "Plural-Forms: \n"
@@ -2300,7 +2300,7 @@ msgstr "展開或者收合你回覆緊嘅全部帖文"
 
 #: src/lib/api/index.ts:356
 msgid "Expected uri to resolve to a record"
-msgstr ""
+msgstr "預計 URL 會解析到記錄"
 
 #: src/view/screens/NotificationsSettings.tsx:78
 msgid "Experimental: When this preference is enabled, you'll only receive reply and quote notifications from users you follow. We'll continue to add more controls here over time."
@@ -2414,7 +2414,7 @@ msgstr "儲存唔到通知設定，請試多一次"
 #: src/lib/api/index.ts:145
 #: src/lib/api/index.ts:170
 msgid "Failed to save post interaction settings. Your post was created but users may be able to interact with it."
-msgstr ""
+msgstr "儲存唔到帖文互動設定。你嘅帖文已經建立咗，但係用戶可能同佢互動唔到。"
 
 #: src/components/dms/MessageItem.tsx:233
 msgid "Failed to send"
@@ -2465,7 +2465,7 @@ msgstr "反應"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:271
 #: src/view/com/util/forms/PostDropdownBtn.tsx:280
 msgid "Feedback sent!"
-msgstr ""
+msgstr "反應已經傳送咗！"
 
 #: src/Navigation.tsx:352
 #: src/screens/StarterPack/StarterPackScreen.tsx:183
@@ -3800,10 +3800,6 @@ msgstr "自然"
 msgid "Navigate to {0}"
 msgstr "導覽去 {0}"
 
-#: src/view/com/util/post-embeds/ExternalLinkEmbed.tsx:86
-#~ msgid "Navigate to starter pack"
-#~ msgstr "導覽去新手包"
-
 #: src/screens/Login/ForgotPasswordForm.tsx:166
 #: src/screens/Login/LoginForm.tsx:316
 #: src/view/com/modals/ChangePassword.tsx:169
@@ -4177,7 +4173,7 @@ msgstr "只包含字母、數字同連字符"
 
 #: src/lib/media/picker.shared.ts:29
 msgid "Only image files are supported"
-msgstr ""
+msgstr "只支援圖片檔案"
 
 #: src/view/com/composer/videos/SubtitleFilePicker.tsx:40
 msgid "Only WebVTT (.vtt) files are supported"
@@ -4225,7 +4221,7 @@ msgstr "打開資訊提供選項選單"
 
 #: src/view/com/util/post-embeds/ExternalLinkEmbed.tsx:78
 msgid "Open link to {niceUrl}"
-msgstr ""
+msgstr "打開指向 {niceUrl} 嘅連結"
 
 #: src/view/screens/Settings/index.tsx:703
 msgid "Open links with in-app browser"
@@ -4667,7 +4663,7 @@ msgstr "帖文刪除咗"
 
 #: src/lib/api/index.ts:121
 msgid "Post failed to upload. Please check your Internet connection and try again."
-msgstr ""
+msgstr "未能發文。請檢查你嘅互聯網連線，然後試多一次。"
 
 #: src/view/com/post-thread/PostThread.tsx:212
 msgid "Post hidden"
@@ -4710,7 +4706,7 @@ msgstr "帖文已經取消固定"
 
 #: src/lib/api/index.ts:106
 msgid "Posting..."
-msgstr ""
+msgstr "發緊文..."
 
 #: src/components/TagMenu/index.tsx:252
 msgid "posts"
@@ -5062,10 +5058,6 @@ msgstr "喺你嘅資訊提供入面移除咗"
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:282
 msgid "Removes quoted post"
 msgstr "移除引文嘅帖文"
-
-#: src/view/com/composer/ExternalEmbedRemoveBtn.tsx:29
-#~ msgid "Removes the attachment"
-#~ msgstr "移除附上"
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:129
 #: src/view/com/posts/FeedShutdownMsg.tsx:133
@@ -5488,14 +5480,6 @@ msgstr "搜尋「{query}」"
 #: src/view/screens/Search/Search.tsx:995
 msgid "Search for \"{searchText}\""
 msgstr "搜尋「{searchText}」"
-
-#: src/components/TagMenu/index.tsx:155
-#~ msgid "Search for all posts by @{authorHandle} with tag {displayTag}"
-#~ msgstr "搜尋所有由 @{authorHandle} 發佈並具有標籤 {displayTag} 嘅帖文"
-
-#: src/components/TagMenu/index.tsx:104
-#~ msgid "Search for all posts with tag {displayTag}"
-#~ msgstr "搜尋所有具有標籤 {displayTag} 嘅帖文"
 
 #: src/screens/StarterPack/Wizard/index.tsx:498
 msgid "Search for feeds that you want to suggest to others."
@@ -7002,12 +6986,12 @@ msgstr "喺檔案庫上載"
 
 #: src/lib/api/index.ts:252
 msgid "Uploading images..."
-msgstr ""
+msgstr "上載緊圖片..."
 
 #: src/lib/api/index.ts:306
 #: src/lib/api/index.ts:330
 msgid "Uploading link thumbnail..."
-msgstr ""
+msgstr "上載緊連結縮圖..."
 
 #: src/view/com/modals/ChangeHandle.tsx:395
 msgid "Use a file on your server"
@@ -7223,11 +7207,11 @@ msgstr "睇下 {displayName} 嘅個人檔案"
 
 #: src/components/TagMenu/index.tsx:149
 msgid "View all posts by @{authorHandle} with tag {displayTag}"
-msgstr ""
+msgstr "用標籤 {displayTag} 睇返 @{authorHandle} 嘅所有帖文"
 
 #: src/components/TagMenu/index.tsx:103
 msgid "View all posts with tag {displayTag}"
-msgstr ""
+msgstr "用標籤 {displayTag} 睇返所有帖文"
 
 #: src/components/ProfileHoverCard/index.web.tsx:433
 msgid "View blocked user's profile"
@@ -7693,7 +7677,7 @@ msgstr "你最多只可以加3個資訊提供"
 
 #: src/lib/media/picker.shared.ts:22
 msgid "You may only select up to 4 images"
-msgstr ""
+msgstr "你最多只可以揀4張圖片"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:106
 msgid "You must be 13 years of age or older to sign up."
