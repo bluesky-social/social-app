@@ -54,7 +54,9 @@ export function ExportCarDialog({
   return (
     <Dialog.Outer control={control}>
       <Dialog.Handle />
-      <Dialog.ScrollableInner label={_(msg`Export my data`)}>
+      <Dialog.ScrollableInner
+        accessibilityDescribedBy="dialog-description"
+        accessibilityLabelledBy="dialog-title">
         <View style={[a.relative, a.gap_lg, a.w_full]}>
           <Text nativeID="dialog-title" style={[a.text_2xl, a.font_bold]}>
             <Trans>Export My Data</Trans>
