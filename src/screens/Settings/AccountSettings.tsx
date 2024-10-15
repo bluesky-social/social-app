@@ -76,7 +76,7 @@ export function AccountSettingsScreen({}: Props) {
           </SettingsList.PressableItem>
           <SettingsList.LinkItem
             to="/settings/privacy-and-security"
-            label="Protect your account"
+            label={_(msg`Protect your account`)}
             style={[
               a.my_xs,
               a.mx_lg,
@@ -92,7 +92,7 @@ export function AccountSettingsScreen({}: Props) {
             />
             <SettingsList.ItemText
               style={[{color: t.palette.primary_500}, a.font_bold]}>
-              Protect your account
+              <Trans>Protect your account</Trans>
             </SettingsList.ItemText>
           </SettingsList.LinkItem>
           <SettingsList.Divider />
@@ -102,7 +102,7 @@ export function AccountSettingsScreen({}: Props) {
               <Trans>Birthday</Trans>
             </SettingsList.ItemText>
             <SettingsList.BadgeButton
-              label="Edit"
+              label={_(msg`Edit`)}
               onPress={() => birthdayControl.open()}
             />
           </SettingsList.Item>
