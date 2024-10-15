@@ -1,6 +1,7 @@
 import {ImagePickerAsset} from 'expo-image-picker'
 import {AppBskyFeedPostgate, RichText} from '@atproto/api'
 
+import {SelfLabel} from '#/lib/moderation'
 import {insertMentionAt} from '#/lib/strings/mention-manip'
 import {
   isBskyPostUrl,
@@ -48,7 +49,7 @@ export type EmbedDraft = {
 
 export type ComposerDraft = {
   richtext: RichText
-  labels: string[]
+  labels: SelfLabel[]
   postgate: AppBskyFeedPostgate.Record
   threadgate: ThreadgateAllowUISetting[]
   embed: EmbedDraft
@@ -56,7 +57,7 @@ export type ComposerDraft = {
 
 export type ComposerAction =
   | {type: 'update_richtext'; richtext: RichText}
-  | {type: 'update_labels'; labels: string[]}
+  | {type: 'update_labels'; labels: SelfLabel[]}
   | {type: 'update_postgate'; postgate: AppBskyFeedPostgate.Record}
   | {type: 'update_threadgate'; threadgate: ThreadgateAllowUISetting[]}
   | {type: 'embed_add_images'; images: ComposerImage[]}

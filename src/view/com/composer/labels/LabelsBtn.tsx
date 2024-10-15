@@ -19,7 +19,7 @@ export function LabelsBtn({
 }: {
   labels: SelfLabel[]
   hasMedia: boolean
-  onChange: (v: string[]) => void
+  onChange: (v: SelfLabel[]) => void
 }) {
   const control = Dialog.useDialogControl()
   const t = useTheme()
@@ -81,7 +81,7 @@ function DialogInner({
   hasMedia: boolean
   hasLabel: boolean
   removeLabel: () => void
-  onChange: (v: string[]) => void
+  onChange: (v: SelfLabel[]) => void
 }) {
   const {_} = useLingui()
   const control = Dialog.useDialogContext()
@@ -130,7 +130,7 @@ function DialogInner({
                   label={_(msg`Adult Content labels`)}
                   values={labels}
                   onChange={values => {
-                    onChange(values)
+                    onChange(values as SelfLabel[])
                     LayoutAnimation.configureNext(
                       LayoutAnimation.Presets.easeInEaseOut,
                     )
@@ -168,7 +168,7 @@ function DialogInner({
                   label={_(msg`Adult Content labels`)}
                   values={labels}
                   onChange={values => {
-                    onChange(values)
+                    onChange(values as SelfLabel[])
                     LayoutAnimation.configureNext(
                       LayoutAnimation.Presets.easeInEaseOut,
                     )
