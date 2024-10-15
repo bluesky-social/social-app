@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import {Dimensions, TouchableOpacity, View} from 'react-native'
+import {TouchableOpacity, View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -9,11 +9,11 @@ import {
   EmbedPlayerParams,
   parseEmbedPlayerFromUrl,
 } from '#/lib/strings/embed-player'
-import {isAndroid, isWeb} from '#/platform/detection'
+import {isAndroid} from '#/platform/detection'
 import {useResolveGifQuery} from '#/state/queries/resolve-link'
 import {Gif} from '#/state/queries/tenor'
 import {AltTextCounterWrapper} from '#/view/com/composer/AltTextCounterWrapper'
-import {atoms as a, native, useTheme} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {DialogControlProps} from '#/components/Dialog'
@@ -107,8 +107,7 @@ export function GifAltTextDialogLoaded({
         control={control}
         onClose={() => {
           onSubmit(altTextDraft)
-        }}
-        nativeOptions={{minHeight: Dimensions.get('window').height}}>
+        }}>
         <Dialog.Handle />
         <AltTextInner
           vendorAltText={vendorAltText}
@@ -158,7 +157,7 @@ function AltTextInner({
                   defaultValue={altText}
                   multiline
                   numberOfLines={3}
-                  autoFocus={isWeb}
+                  autoFocus
                   onKeyPress={({nativeEvent}) => {
                     if (nativeEvent.key === 'Escape') {
                       control.close()
@@ -214,7 +213,7 @@ function AltTextInner({
               isPreferredAltText={true}
               params={params}
               hideAlt
-              style={[native({maxHeight: 225})]}
+              style={[{height: 225}]}
             />
           </View>
         </View>

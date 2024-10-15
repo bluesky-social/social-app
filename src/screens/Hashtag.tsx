@@ -6,23 +6,24 @@ import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
-import {HITSLOP_10} from 'lib/constants'
-import {useInitialNumToRender} from 'lib/hooks/useInitialNumToRender'
-import {CommonNavigatorParams} from 'lib/routes/types'
-import {shareUrl} from 'lib/sharing'
-import {cleanError} from 'lib/strings/errors'
-import {sanitizeHandle} from 'lib/strings/handles'
-import {enforceLen} from 'lib/strings/helpers'
-import {isNative, isWeb} from 'platform/detection'
-import {useSearchPostsQuery} from 'state/queries/search-posts'
-import {useSetDrawerSwipeDisabled, useSetMinimalShellMode} from 'state/shell'
+import {HITSLOP_10} from '#/lib/constants'
+import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
+import {CommonNavigatorParams} from '#/lib/routes/types'
+import {shareUrl} from '#/lib/sharing'
+import {cleanError} from '#/lib/strings/errors'
+import {sanitizeHandle} from '#/lib/strings/handles'
+import {enforceLen} from '#/lib/strings/helpers'
+import {isNative, isWeb} from '#/platform/detection'
+import {useSearchPostsQuery} from '#/state/queries/search-posts'
+import {useSetDrawerSwipeDisabled, useSetMinimalShellMode} from '#/state/shell'
 import {Pager} from '#/view/com/pager/Pager'
 import {TabBar} from '#/view/com/pager/TabBar'
+import {Post} from '#/view/com/post/Post'
+import {List} from '#/view/com/util/List'
+import {ViewHeader} from '#/view/com/util/ViewHeader'
 import {CenteredView} from '#/view/com/util/Views'
-import {Post} from 'view/com/post/Post'
-import {List} from 'view/com/util/List'
-import {ViewHeader} from 'view/com/util/ViewHeader'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded} from '#/components/icons/ArrowOutOfBox'
+import * as Layout from '#/components/Layout'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
 
 const renderItem = ({item}: ListRenderItemInfo<PostView>) => {
@@ -108,7 +109,7 @@ export default function HashtagScreen({
   }, [_, fullTag, author, activeTab])
 
   return (
-    <>
+    <Layout.Screen>
       <CenteredView sideBorders={true}>
         <ViewHeader
           showOnDesktop
@@ -155,7 +156,7 @@ export default function HashtagScreen({
           <View key={i}>{section.component}</View>
         ))}
       </Pager>
-    </>
+    </Layout.Screen>
   )
 }
 
