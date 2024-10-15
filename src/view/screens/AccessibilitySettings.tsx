@@ -27,6 +27,7 @@ import {SimpleViewHeader} from '#/view/com/util/SimpleViewHeader'
 import {Text} from '#/view/com/util/text/Text'
 import {ScrollView} from '#/view/com/util/Views'
 import {atoms as a} from '#/alf'
+import * as Layout from '#/components/Layout'
 
 type Props = NativeStackScreenProps<
   CommonNavigatorParams,
@@ -54,7 +55,7 @@ export function AccessibilitySettingsScreen({}: Props) {
   )
 
   return (
-    <View style={s.hContentRegion} testID="accessibilitySettingsScreen">
+    <Layout.Screen testID="accessibilitySettingsScreen">
       <SimpleViewHeader
         showBackButton={isTabletOrMobile}
         style={[
@@ -128,7 +129,7 @@ export function AccessibilitySettingsScreen({}: Props) {
           </>
         )}
       </ScrollView>
-    </View>
+    </Layout.Screen>
   )
 }
 

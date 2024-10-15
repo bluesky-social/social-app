@@ -65,6 +65,7 @@ import * as FeedCard from '#/components/FeedCard'
 import {SearchInput} from '#/components/forms/SearchInput'
 import {ChevronBottom_Stroke2_Corner0_Rounded as ChevronDown} from '#/components/icons/Chevron'
 import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
+import * as Layout from '#/components/Layout'
 
 function Loader() {
   const pal = usePalette('default')
@@ -436,19 +437,16 @@ function SearchLanguageDropdown({
 }
 
 function useQueryManager({initialQuery}: {initialQuery: string}) {
-  const {contentLanguages} = useLanguagePrefs()
   const {query, params: initialParams} = React.useMemo(() => {
     return parseSearchQuery(initialQuery || '')
   }, [initialQuery])
   const prevInitialQuery = React.useRef(initialQuery)
-  const [lang, setLang] = React.useState(
-    initialParams.lang || contentLanguages[0],
-  )
+  const [lang, setLang] = React.useState(initialParams.lang || '')
 
   if (initialQuery !== prevInitialQuery.current) {
     // handle new queryParam change (from manual search entry)
     prevInitialQuery.current = initialQuery
-    setLang(initialParams.lang || contentLanguages[0])
+    setLang(initialParams.lang || '')
   }
 
   const params = React.useMemo(
@@ -855,7 +853,7 @@ export function SearchScreen(
   }, [setShowAutocomplete])
 
   return (
-    <View style={isWeb ? null : {flex: 1}}>
+    <Layout.Screen testID="searchScreen">
       <CenteredView
         style={[
           a.p_md,
@@ -960,7 +958,7 @@ export function SearchScreen(
           headerHeight={headerHeight}
         />
       </View>
-    </View>
+    </Layout.Screen>
   )
 }
 

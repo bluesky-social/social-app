@@ -53,6 +53,7 @@ import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/ico
 import {DotGrid_Stroke2_Corner0_Rounded as Ellipsis} from '#/components/icons/DotGrid'
 import {Pencil_Stroke2_Corner0_Rounded as Pencil} from '#/components/icons/Pencil'
 import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
+import * as Layout from '#/components/Layout'
 import {ListMaybePlaceholder} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
 import * as Menu from '#/components/Menu'
@@ -76,7 +77,11 @@ type StarterPackScreenShortProps = NativeStackScreenProps<
 >
 
 export function StarterPackScreen({route}: StarterPackScreeProps) {
-  return <StarterPackScreenInner routeParams={route.params} />
+  return (
+    <Layout.Screen>
+      <StarterPackScreenInner routeParams={route.params} />
+    </Layout.Screen>
+  )
 }
 
 export function StarterPackScreenShort({route}: StarterPackScreenShortProps) {
@@ -91,15 +96,21 @@ export function StarterPackScreenShort({route}: StarterPackScreenShortProps) {
 
   if (isLoading || isError || !resolvedStarterPack) {
     return (
-      <ListMaybePlaceholder
-        isLoading={isLoading}
-        isError={isError}
-        errorMessage={_(msg`That starter pack could not be found.`)}
-        emptyMessage={_(msg`That starter pack could not be found.`)}
-      />
+      <Layout.Screen>
+        <ListMaybePlaceholder
+          isLoading={isLoading}
+          isError={isError}
+          errorMessage={_(msg`That starter pack could not be found.`)}
+          emptyMessage={_(msg`That starter pack could not be found.`)}
+        />
+      </Layout.Screen>
     )
   }
-  return <StarterPackScreenInner routeParams={resolvedStarterPack} />
+  return (
+    <Layout.Screen>
+      <StarterPackScreenInner routeParams={resolvedStarterPack} />
+    </Layout.Screen>
+  )
 }
 
 export function StarterPackScreenInner({

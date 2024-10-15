@@ -10,6 +10,7 @@ import {StackActions, useLinkProps} from '@react-navigation/native'
 
 import {BSKY_DOWNLOAD_URL} from '#/lib/constants'
 import {useNavigationDeduped} from '#/lib/hooks/useNavigationDeduped'
+import {useOpenLink} from '#/lib/hooks/useOpenLink'
 import {AllNavigatorParams} from '#/lib/routes/types'
 import {shareUrl} from '#/lib/sharing'
 import {
@@ -21,7 +22,6 @@ import {
 import {isNative, isWeb} from '#/platform/detection'
 import {shouldClickOpenNewTab} from '#/platform/urls'
 import {useModalControls} from '#/state/modals'
-import {useOpenLink} from '#/state/preferences/in-app-browser'
 import {atoms as a, flatten, TextStyleProp, useTheme, web} from '#/alf'
 import {Button, ButtonProps} from '#/components/Button'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
@@ -327,6 +327,25 @@ export function InlineLinkText({
       {children}
     </Text>
   )
+}
+
+/**
+ * Utility to create a static `onPress` handler for a `Link` that would otherwise link to a URI
+ *
+ * Example:
+ *   `<Link {...createStaticClick(e => {...})} />`
+ */
+export function createStaticClick(
+  onPressHandler: Exclude<BaseLinkProps['onPress'], undefined>,
+): Pick<BaseLinkProps, 'to' | 'onPress'> {
+  return {
+    to: '#',
+    onPress(e: GestureResponderEvent) {
+      e.preventDefault()
+      onPressHandler(e)
+      return false
+    },
+  }
 }
 
 /**
