@@ -19,13 +19,10 @@ import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
-import {createPortalGroup} from '#/components/Portal'
 import * as Prompt from '#/components/Prompt'
 
 const DISPLAY_NAME_MAX_GRAPHEMES = 64
 const DESCRIPTION_MAX_GRAPHEMES = 256
-
-const Portal = createPortalGroup()
 
 export function EditProfileDialog({
   profile,
@@ -70,25 +67,21 @@ export function EditProfileDialog({
         preventDismiss: dirty,
         minHeight: height,
       }}>
-      <Portal.Provider>
-        <DialogInner
-          profile={profile}
-          onUpdate={onUpdate}
-          setDirty={setDirty}
-          onPressCancel={onPressCancel}
-        />
+      <DialogInner
+        profile={profile}
+        onUpdate={onUpdate}
+        setDirty={setDirty}
+        onPressCancel={onPressCancel}
+      />
 
-        <Prompt.Basic
-          control={cancelControl}
-          title={_(msg`Discard changes?`)}
-          description={_(msg`Are you sure you want to discard your changes?`)}
-          onConfirm={() => control.close()}
-          confirmButtonCta={_(msg`Discard`)}
-          confirmButtonColor="negative"
-          Portal={Portal.Portal}
-        />
-        <Portal.Outlet />
-      </Portal.Provider>
+      <Prompt.Basic
+        control={cancelControl}
+        title={_(msg`Discard changes?`)}
+        description={_(msg`Are you sure you want to discard your changes?`)}
+        onConfirm={() => control.close()}
+        confirmButtonCta={_(msg`Discard`)}
+        confirmButtonColor="negative"
+      />
     </Dialog.Outer>
   )
 }
@@ -280,11 +273,7 @@ function DialogInner({
         </Dialog.Header>
       }>
       <View style={[a.relative]}>
-        <UserBanner
-          banner={userBanner}
-          onSelectNewBanner={onSelectNewBanner}
-          Portal={Portal.Portal}
-        />
+        <UserBanner banner={userBanner} onSelectNewBanner={onSelectNewBanner} />
         <View
           style={[
             a.absolute,
@@ -302,7 +291,6 @@ function DialogInner({
             size={80}
             avatar={userAvatar}
             onSelectNewAvatar={onSelectNewAvatar}
-            Portal={Portal.Portal}
           />
         </View>
       </View>
