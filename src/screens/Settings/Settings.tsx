@@ -15,8 +15,6 @@ import {useSession, useSessionApi} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {ViewHeader} from '#/view/com/util/ViewHeader'
-import {ScrollView} from '#/view/com/util/Views'
 import {ProfileHeaderDisplayName} from '#/screens/Profile/Header/DisplayName'
 import {ProfileHeaderHandle} from '#/screens/Profile/Header/Handle'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
@@ -54,8 +52,8 @@ export function SettingsScreen({}: Props) {
 
   return (
     <Layout.Screen>
-      <TempHeader />
-      <ScrollView contentContainerStyle={[{paddingBottom: 100}]}>
+      <Layout.Header title={_(msg`Settings`)} />
+      <Layout.Content>
         <View
           style={[
             a.px_xl,
@@ -165,7 +163,7 @@ export function SettingsScreen({}: Props) {
             <Trans>Sign out</Trans>
           </SettingsList.ItemText>
         </SettingsList.PressableItem>
-      </ScrollView>
+      </Layout.Content>
 
       <Prompt.Basic
         control={signOutPromptControl}
@@ -180,14 +178,6 @@ export function SettingsScreen({}: Props) {
       <SwitchAccountDialog control={switchAccountControl} />
     </Layout.Screen>
   )
-}
-
-/**
- * I want to make a nicer one in the future.
- * @deprecated
- */
-export function TempHeader() {
-  return <ViewHeader title="Settings" showBorder showOnDesktop />
 }
 
 function ProfilePreview({
