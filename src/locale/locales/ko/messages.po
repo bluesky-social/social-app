@@ -7685,7 +7685,7 @@ msgstr "가입하려면 만 13세 이상이어야 합니다."
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:307
 msgid "You must be following at least seven other people to generate a starter pack."
-msgstr "스타터 팩을 만들려면 최소 7명 이상의 다른 사람을 팔로우해야 합니다."
+msgstr "스타터 팩을 만들려면 다른 사람을 최소 7명 이상 팔로우해야 합니다."
 
 #: src/components/StarterPack/QrCodeDialog.tsx:60
 msgid "You must grant access to your photo library to save a QR code"
