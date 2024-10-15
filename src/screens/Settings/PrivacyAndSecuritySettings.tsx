@@ -32,7 +32,7 @@ export function PrivacyAndSecuritySettingsScreen({}: Props) {
           <SettingsList.Item>
             <SettingsList.ItemIcon icon={VerifiedIcon} />
             <SettingsList.ItemText>
-              <Trans>Two-factor authentication</Trans>
+              <Trans>Two-factor authentication (2FA)</Trans>
             </SettingsList.ItemText>
             <Email2FAToggle />
           </SettingsList.Item>
