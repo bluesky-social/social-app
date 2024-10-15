@@ -47,19 +47,22 @@ export function AccessibilityAndAppearanceSettingsScreen({}: Props) {
             </SettingsList.ItemText>
           </SettingsList.LinkItem>
           {isNative && (
-            <Toggle.Item
-              name="use_in_app_browser"
-              label={_(msg`Use in-app browser to open links`)}
-              value={inAppBrowserPref ?? false}
-              onChange={value => setUseInAppBrowser(value)}>
-              <SettingsList.Item>
-                <SettingsList.ItemIcon icon={WindowIcon} />
-                <SettingsList.ItemText>
-                  <Trans>Use in-app browser to open links</Trans>
-                </SettingsList.ItemText>
-                <Toggle.Platform />
-              </SettingsList.Item>
-            </Toggle.Item>
+            <>
+              <SettingsList.Divider />
+              <Toggle.Item
+                name="use_in_app_browser"
+                label={_(msg`Use in-app browser to open links`)}
+                value={inAppBrowserPref ?? false}
+                onChange={value => setUseInAppBrowser(value)}>
+                <SettingsList.Item>
+                  <SettingsList.ItemIcon icon={WindowIcon} />
+                  <SettingsList.ItemText>
+                    <Trans>Use in-app browser to open links</Trans>
+                  </SettingsList.ItemText>
+                  <Toggle.Platform />
+                </SettingsList.Item>
+              </Toggle.Item>
+            </>
           )}
         </SettingsList.Container>
       </Layout.Content>
