@@ -20,6 +20,10 @@ export function Container({children}: {children: React.ReactNode}) {
   return <View style={[a.flex_1, a.py_lg]}>{children}</View>
 }
 
+/**
+ * This uses `Portal` magic ✨ to render the icons and title correctly. ItemIcon and ItemText components
+ * get teleported to the top row, leaving the rest of the children in the bottom row.
+ */
 export function Group({
   children,
   destructive = false,
@@ -41,13 +45,13 @@ export function Group({
     <View style={[a.w_full, style]}>
       <Portal.Provider>
         <ItemContext.Provider value={context}>
-          <Item style={[a.pb_xs, {minHeight: 44}]}>
+          <Item style={[a.pb_2xs, {minHeight: 42}]}>
             <Portal.Outlet />
           </Item>
           <Item
             style={[
               a.flex_col,
-              a.pt_0,
+              a.pt_2xs,
               a.align_start,
               a.gap_0,
               contentContainerStyle,
