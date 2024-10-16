@@ -37,9 +37,7 @@ export function LabelsBtn({
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
 
     const newLabel = newLabels[newLabels.length - 1]
-    const filtered = labels.filter(
-      l => !ADULT_CONTENT_LABELS.includes(l as any),
-    )
+    const filtered = labels.filter(l => !ADULT_CONTENT_LABELS.includes(l))
     onChange([...filtered, newLabel].filter(Boolean) as SelfLabel[])
   }
 
@@ -47,7 +45,7 @@ export function LabelsBtn({
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
 
     const newLabel = newLabels[newLabels.length - 1]
-    const filtered = labels.filter(l => !OTHER_SELF_LABELS.includes(l as any))
+    const filtered = labels.filter(l => !OTHER_SELF_LABELS.includes(l))
     onChange([...filtered, newLabel].filter(Boolean) as SelfLabel[])
   }
 

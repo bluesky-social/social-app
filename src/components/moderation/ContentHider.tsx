@@ -64,7 +64,7 @@ export function ContentHider({
         if (cause.source.type !== 'user') {
           return false
         }
-        if (ADULT_CONTENT_LABELS.includes(cause.label.val as any)) {
+        if (ADULT_CONTENT_LABELS.includes(cause.label.val)) {
           if (hasAdultContentLabel) {
             return false
           }
