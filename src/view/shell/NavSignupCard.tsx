@@ -5,18 +5,15 @@ import {useLingui} from '@lingui/react'
 
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
-import {usePalette} from 'lib/hooks/usePalette'
-import {s} from 'lib/styles'
-import {Button} from '#/view/com/util/forms/Button'
-import {Text} from '#/view/com/util/text/Text'
 import {Logo} from '#/view/icons/Logo'
 import {atoms as a} from '#/alf'
 import {AppLanguageDropdown} from '#/components/AppLanguageDropdown'
+import {Button, ButtonText} from '#/components/Button'
 import {Link} from '#/components/Link'
+import {Text} from '#/components/Typography'
 
 let NavSignupCard = ({}: {}): React.ReactNode => {
   const {_} = useLingui()
-  const pal = usePalette('default')
   const {requestSwitchToAccount} = useLoggedOutViewControls()
   const closeAllActiveElements = useCloseAllActiveElements()
 
@@ -33,44 +30,42 @@ let NavSignupCard = ({}: {}): React.ReactNode => {
 
   return (
     <View
-      style={{
-        alignItems: 'flex-start',
-        paddingTop: 6,
-        marginBottom: 24,
-      }}>
+      style={[
+        {
+          maxWidth: 200,
+        },
+      ]}>
       <Link to="/" label="Bluesky - Home">
-        <Logo width={48} />
+        <Logo width={32} />
       </Link>
 
-      <View style={{paddingTop: 18}}>
-        <Text type="md-bold" style={[pal.text]}>
-          <Trans>Sign up or sign in to join the conversation</Trans>
+      <View style={[a.pt_lg]}>
+        <Text
+          style={[a.text_3xl, a.font_heavy, {lineHeight: a.text_3xl.fontSize}]}>
+          <Trans>Join the conversation</Trans>
         </Text>
       </View>
 
-      <View
-        style={{
-          flexDirection: 'row',
-          flexWrap: 'wrap',
-          paddingTop: 12,
-          gap: 8,
-        }}>
+      <View style={[a.flex_row, a.flex_wrap, a.gap_sm, a.pt_md]}>
         <Button
           onPress={showCreateAccount}
-          accessibilityHint={_(msg`Sign up`)}
-          accessibilityLabel={_(msg`Sign up`)}>
-          <Text type="md" style={[{color: 'white'}, s.bold]}>
+          label={_(msg`Sign up`)}
+          size="small"
+          variant="solid"
+          color="primary">
+          <ButtonText>
             <Trans>Sign up</Trans>
-          </Text>
+          </ButtonText>
         </Button>
         <Button
-          type="default"
           onPress={showSignIn}
-          accessibilityHint={_(msg`Sign in`)}
-          accessibilityLabel={_(msg`Sign in`)}>
-          <Text type="md" style={[pal.text, s.bold]}>
+          label={_(msg`Sign in`)}
+          size="small"
+          variant="solid"
+          color="secondary">
+          <ButtonText>
             <Trans>Sign in</Trans>
-          </Text>
+          </ButtonText>
         </Button>
       </View>
 
