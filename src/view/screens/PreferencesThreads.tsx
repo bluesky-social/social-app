@@ -7,6 +7,7 @@ import {useLingui} from '@lingui/react'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
+import {useGate} from '#/lib/statsig/statsig'
 import {colors, s} from '#/lib/styles'
 import {
   usePreferencesQuery,
@@ -17,11 +18,22 @@ import {ToggleButton} from '#/view/com/util/forms/ToggleButton'
 import {SimpleViewHeader} from '#/view/com/util/SimpleViewHeader'
 import {Text} from '#/view/com/util/text/Text'
 import {ScrollView} from '#/view/com/util/Views'
+import {ThreadPreferencesScreen} from '#/screens/Settings/ThreadPreferences'
 import {atoms as a} from '#/alf'
 import * as Layout from '#/components/Layout'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'PreferencesThreads'>
-export function PreferencesThreads({}: Props) {
+export function PreferencesThreads(props: Props) {
+  const gate = useGate()
+
+  return gate('new_settings') ? (
+    <ThreadPreferencesScreen {...props} />
+  ) : (
+    <LegacyPreferencesThreads {...props} />
+  )
+}
+
+function LegacyPreferencesThreads({}: Props) {
   const pal = usePalette('default')
   const {_} = useLingui()
   const {isTabletOrMobile} = useWebMediaQueries()
