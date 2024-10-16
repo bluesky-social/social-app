@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-10-15 23:04+0900\n"
+"PO-Revision-Date: 2024-10-16 10:30+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -708,6 +708,10 @@ msgstr "このメッセージを本当に削除しますか？このメッセー
 msgid "Are you sure you want to delete this starter pack?"
 msgstr "本当にこのスターターパックを削除したいですか？"
 
+#: src/screens/Profile/Header/EditProfileDialog.tsx:81
+msgid "Are you sure you want to discard your changes?"
+msgstr "本当に変更を破棄したいですか？"
+
 #: src/components/dms/LeaveConvoPrompt.tsx:48
 msgid "Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for the other participant."
 msgstr "この会話から退出しますか？あなたのメッセージはあなたからは削除したように見えますが、他の参加者からは削除されません。"
@@ -993,10 +997,6 @@ msgstr "ハンドルの変更をキャンセル"
 #: src/view/com/modals/CropImage.web.tsx:94
 msgid "Cancel image crop"
 msgstr "画像の切り抜きをキャンセル"
-
-#: src/view/com/modals/EditProfile.tsx:239
-msgid "Cancel profile editing"
-msgstr "プロフィールの編集をキャンセル"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:159
 msgid "Cancel quote post"
@@ -1302,6 +1302,10 @@ msgstr "{MAX_GRAPHEME_LENGTH}文字までの投稿を作成"
 #: src/view/com/post-thread/PostThreadComposePrompt.tsx:47
 msgid "Compose reply"
 msgstr "返信を作成"
+
+#: src/view/com/composer/Composer.tsx:1177
+msgid "Compressing video..."
+msgstr "ビデオを圧縮中…"
 
 #: src/components/moderation/LabelPreference.tsx:81
 msgid "Configure content filtering setting for category: {name}"
@@ -1748,6 +1752,14 @@ msgstr "チャットの宣言レコードを削除する"
 msgid "Description"
 msgstr "説明"
 
+#: src/screens/Profile/Header/EditProfileDialog.tsx:359
+msgid "Description is too long"
+msgstr "説明が長すぎます"
+
+#: src/screens/Profile/Header/EditProfileDialog.tsx:360
+msgid "Description is too long. The maximum number of characters is {DESCRIPTION_MAX_GRAPHEMES}."
+msgstr "説明が長すぎます。最大で{DESCRIPTION_MAX_GRAPHEMES}文字です。"
+
 #: src/view/com/composer/GifAltText.tsx:151
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:115
 msgid "Descriptive alt text"
@@ -1803,6 +1815,10 @@ msgstr "無効"
 msgid "Discard"
 msgstr "破棄"
 
+#: src/screens/Profile/Header/EditProfileDialog.tsx:80
+msgid "Discard changes?"
+msgstr "変更を破棄しますか？"
+
 #: src/view/com/composer/Composer.tsx:839
 msgid "Discard draft?"
 msgstr "下書きを削除しますか？"
@@ -1845,9 +1861,13 @@ msgstr "大きなALTテキストのバッジを表示"
 msgid "Display name"
 msgstr "表示名"
 
-#: src/view/com/modals/EditProfile.tsx:175
-msgid "Display Name"
-msgstr "表示名"
+#: src/screens/Profile/Header/EditProfileDialog.tsx:329
+msgid "Display name is too long"
+msgstr "表示名が長すぎます"
+
+#: src/screens/Profile/Header/EditProfileDialog.tsx:330
+msgid "Display name is too long. The maximum number of characters is {DISPLAY_NAME_MAX_GRAPHEMES}."
+msgstr "表示名が長すぎます。最大で{DISPLAY_NAME_MAX_GRAPHEMES}文字です。"
 
 #: src/view/com/modals/ChangeHandle.tsx:384
 msgid "DNS Panel"
@@ -1928,17 +1948,13 @@ msgstr "期間："
 msgid "e.g. alice"
 msgstr "例：太郎"
 
-#: src/view/com/modals/EditProfile.tsx:180
-msgid "e.g. Alice Roberts"
+#: src/screens/Profile/Header/EditProfileDialog.tsx:318
+msgid "e.g. Alice Lastname"
 msgstr "例：山田 太郎"
 
 #: src/view/com/modals/ChangeHandle.tsx:367
 msgid "e.g. alice.com"
 msgstr "例：taro.com"
-
-#: src/view/com/modals/EditProfile.tsx:198
-msgid "e.g. Artist, dog-lover, and avid reader."
-msgstr "例：アーティスト、犬好き、熱烈な読書愛好家。"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:43
 msgid "E.g. artistic nudes."
@@ -2012,10 +2028,6 @@ msgstr "モデレーションリストを編集"
 msgid "Edit My Feeds"
 msgstr "マイフィードを編集"
 
-#: src/view/com/modals/EditProfile.tsx:147
-msgid "Edit my profile"
-msgstr "マイプロフィールを編集"
-
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:109
 msgid "Edit People"
 msgstr "ユーザーを編集"
@@ -2046,14 +2058,6 @@ msgstr "ユーザーリストを編集"
 #: src/components/WhoCanReply.tsx:87
 msgid "Edit who can reply"
 msgstr "誰が返信できるのかを編集"
-
-#: src/view/com/modals/EditProfile.tsx:188
-msgid "Edit your display name"
-msgstr "あなたの表示名を編集します"
-
-#: src/view/com/modals/EditProfile.tsx:206
-msgid "Edit your profile description"
-msgstr "あなたのプロフィールの説明を編集します"
 
 #: src/Navigation.tsx:372
 msgid "Edit your starter pack"
@@ -2213,6 +2217,10 @@ msgstr "以下に新しいメールアドレスを入力してください。"
 #: src/screens/Login/index.tsx:98
 msgid "Enter your username and password"
 msgstr "ユーザー名とパスワードを入力してください"
+
+#: src/view/com/composer/Composer.tsx:1186
+msgid "Error"
+msgstr "エラー"
 
 #: src/view/screens/Settings/ExportCarDialog.tsx:46
 msgid "Error occurred while saving file"
@@ -4779,6 +4787,10 @@ msgstr "プライバシー"
 msgid "Privacy Policy"
 msgstr "プライバシーポリシー"
 
+#: src/view/com/composer/Composer.tsx:1183
+msgid "Processing video..."
+msgstr "ビデオを処理中…"
+
 #: src/screens/Login/ForgotPasswordForm.tsx:149
 msgid "Processing..."
 msgstr "処理中…"
@@ -5391,10 +5403,6 @@ msgstr "生年月日を保存"
 msgid "Save changes"
 msgstr "変更を保存"
 
-#: src/view/com/modals/EditProfile.tsx:227
-msgid "Save Changes"
-msgstr "変更を保存"
-
 #: src/view/com/modals/ChangeHandle.tsx:158
 msgid "Save handle change"
 msgstr "ハンドルの変更を保存"
@@ -5429,10 +5437,6 @@ msgstr "カメラロールに保存しました"
 #: src/view/screens/ProfileList.tsx:357
 msgid "Saved to your feeds"
 msgstr "フィードを保存しました"
-
-#: src/view/com/modals/EditProfile.tsx:220
-msgid "Saves any changes to your profile"
-msgstr "プロフィールに加えた変更を保存します"
 
 #: src/view/com/modals/ChangeHandle.tsx:159
 msgid "Saves handle change to {handle}"
@@ -6256,6 +6260,10 @@ msgstr "テクノロジー"
 msgid "Tell a joke!"
 msgstr "ジョークを言って！"
 
+#: src/screens/Profile/Header/EditProfileDialog.tsx:348
+msgid "Tell us a bit about yourself"
+msgstr "あなた自身について少し教えて"
+
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:63
 msgid "Tell us a little more"
 msgstr "もう少し教えて"
@@ -6991,6 +6999,10 @@ msgstr "画像をアップロード中…"
 msgid "Uploading link thumbnail..."
 msgstr "リンクのサムネイルをアップロード中…"
 
+#: src/view/com/composer/Composer.tsx:1180
+msgid "Uploading video..."
+msgstr "ビデオをアップロード中…"
+
 #: src/view/com/modals/ChangeHandle.tsx:395
 msgid "Use a file on your server"
 msgstr "あなたのサーバーのファイルを使用"
@@ -7180,6 +7192,10 @@ msgstr "ビデオが見つかりません。"
 #: src/view/com/composer/videos/SubtitleDialog.tsx:99
 msgid "Video settings"
 msgstr "ビデオの設定"
+
+#: src/view/com/composer/Composer.tsx:1190
+msgid "Video uploaded"
+msgstr "ビデオをアップロードしました"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:84
 msgid "Video: {0}"
