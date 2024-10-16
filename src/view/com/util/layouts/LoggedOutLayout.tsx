@@ -1,11 +1,12 @@
 import React from 'react'
 import {ScrollView, StyleSheet, View} from 'react-native'
+import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {useColorSchemeStyle} from '#/lib/hooks/useColorSchemeStyle'
+import {useIsKeyboardVisible} from '#/lib/hooks/useIsKeyboardVisible'
+import {usePalette} from '#/lib/hooks/usePalette'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {isWeb} from '#/platform/detection'
-import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
-import {useIsKeyboardVisible} from 'lib/hooks/useIsKeyboardVisible'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {atoms as a} from '#/alf'
 import {Text} from '../text/Text'
 
@@ -35,22 +36,24 @@ export const LoggedOutLayout = ({
   if (isMobile) {
     if (scrollable) {
       return (
-        <ScrollView
-          style={styles.scrollview}
-          keyboardShouldPersistTaps="handled"
-          keyboardDismissMode="none"
-          contentContainerStyle={[
-            {paddingBottom: isKeyboardVisible ? 300 : 0},
-          ]}>
-          <View style={a.pt_md}>{children}</View>
-        </ScrollView>
+        <SafeAreaView style={[a.flex_1]}>
+          <ScrollView
+            style={[a.flex_1]}
+            keyboardShouldPersistTaps="handled"
+            keyboardDismissMode="none"
+            contentContainerStyle={[
+              {paddingBottom: isKeyboardVisible ? 300 : 0},
+            ]}>
+            <View style={a.pt_md}>{children}</View>
+          </ScrollView>
+        </SafeAreaView>
       )
     } else {
-      return <View style={a.pt_md}>{children}</View>
+      return <SafeAreaView style={[a.flex_1, a.pt_md]}>{children}</SafeAreaView>
     }
   }
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={[styles.side, sideBg]}>
         <Text
           style={[
@@ -75,7 +78,7 @@ export const LoggedOutLayout = ({
       {scrollable ? (
         <View style={[styles.scrollableContent, contentBg]}>
           <ScrollView
-            style={styles.scrollview}
+            style={[a.flex_1]}
             contentContainerStyle={styles.scrollViewContentContainer}
             keyboardShouldPersistTaps="handled"
             keyboardDismissMode="on-drag">
@@ -89,7 +92,7 @@ export const LoggedOutLayout = ({
           <View style={styles.contentWrapper}>{children}</View>
         </View>
       )}
-    </View>
+    </SafeAreaView>
   )
 }
 
@@ -112,9 +115,6 @@ const styles = StyleSheet.create({
   },
   scrollableContent: {
     flex: 2,
-  },
-  scrollview: {
-    flex: 1,
   },
   scrollViewContentContainer: {
     flex: 1,
