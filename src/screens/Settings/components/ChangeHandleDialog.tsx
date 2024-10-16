@@ -323,7 +323,14 @@ function OwnHandlePage({
             <Text>
               <Trans>Add the following DNS record to your domain:</Trans>
             </Text>
-            <View style={[t.atoms.bg_contrast_25, a.rounded_xs, a.p_md]}>
+            <View
+              style={[
+                t.atoms.bg_contrast_25,
+                a.rounded_sm,
+                a.p_md,
+                a.border,
+                t.atoms.border_contrast_low,
+              ]}>
               <Text style={[t.atoms.text_contrast_medium]}>
                 <Trans>Host:</Trans>
               </Text>
@@ -346,7 +353,14 @@ function OwnHandlePage({
             <Text>
               <Trans>This should create a domain record at:</Trans>
             </Text>
-            <View style={[t.atoms.bg_contrast_25, a.rounded_xs, a.p_md]}>
+            <View
+              style={[
+                t.atoms.bg_contrast_25,
+                a.rounded_sm,
+                a.p_md,
+                a.border,
+                t.atoms.border_contrast_low,
+              ]}>
               <Text style={[a.text_md]}>_atproto.{domain}</Text>
             </View>
           </>
@@ -355,7 +369,14 @@ function OwnHandlePage({
             <Text>
               <Trans>Upload a text file to:</Trans>
             </Text>
-            <View style={[t.atoms.bg_contrast_25, a.rounded_xs, a.p_md]}>
+            <View
+              style={[
+                t.atoms.bg_contrast_25,
+                a.rounded_sm,
+                a.p_md,
+                a.border,
+                t.atoms.border_contrast_low,
+              ]}>
               <Text style={[a.text_md]}>
                 https://{domain}/.well-known/atproto-did
               </Text>
@@ -363,7 +384,14 @@ function OwnHandlePage({
             <Text>
               <Trans>That contains the following:</Trans>
             </Text>
-            <View style={[t.atoms.bg_contrast_25, a.rounded_xs, a.p_md]}>
+            <View
+              style={[
+                t.atoms.bg_contrast_25,
+                a.rounded_sm,
+                a.p_md,
+                a.border,
+                t.atoms.border_contrast_low,
+              ]}>
               <Text style={[a.text_md]}>{currentAccount?.did}</Text>
             </View>
           </>
