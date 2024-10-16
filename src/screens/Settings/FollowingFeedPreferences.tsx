@@ -94,7 +94,7 @@ export function FollowingFeedPreferencesScreen({}: Props) {
           <Toggle.Item
             type="checkbox"
             name="show-quotes"
-            label={_(msg`Show quotes`)}
+            label={_(msg`Show quote posts`)}
             value={showQuotePosts}
             onChange={value =>
               setFeedViewPref({
