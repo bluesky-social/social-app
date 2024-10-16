@@ -283,7 +283,9 @@ function OwnHandlePage({
           </Admonition>
         </Animated.View>
       )}
-      <Animated.View layout={LinearTransition} style={[a.flex_1, a.gap_md]}>
+      <Animated.View
+        layout={LinearTransition}
+        style={[a.flex_1, a.gap_md, a.overflow_hidden]}>
         <View>
           <TextField.LabelText>
             <Trans>Enter the domain you want to use</Trans>
