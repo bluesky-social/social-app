@@ -15,8 +15,7 @@ import {atoms as a, native, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as Toggle from '#/components/forms/Toggle'
-import {Earth_Stroke2_Corner0_Rounded as Earth} from '#/components/icons/Globe'
-import {Group3_Stroke2_Corner0_Rounded as Group} from '#/components/icons/Group'
+import {Shield_Stroke2_Corner0_Rounded} from '#/components/icons/Shield'
 import {Text} from '#/components/Typography'
 export function LabelsBtn({
   labels,
@@ -69,7 +68,7 @@ export function LabelsBtn({
             paddingVertical: 6,
           }),
         ]}>
-        <ButtonIcon icon={true ? Earth : Group} />
+        <ButtonIcon icon={Shield_Stroke2_Corner0_Rounded} />
         <ButtonText numberOfLines={1}>
           {labels.length > 0 ? (
             <Trans>Labels added</Trans>
