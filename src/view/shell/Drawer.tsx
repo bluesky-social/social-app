@@ -230,7 +230,7 @@ let DrawerContent = ({}: {}): React.ReactNode => {
           a.px_xl,
           {
             paddingTop: Math.max(
-              insets.top + a.pt_sm.paddingTop,
+              insets.top + a.pt_xl.paddingTop,
               a.pt_xl.paddingTop,
             ),
           },
