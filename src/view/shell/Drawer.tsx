@@ -16,6 +16,7 @@ import {PressableScale} from '#/lib/custom-animations/PressableScale'
 import {useNavigationTabState} from '#/lib/hooks/useNavigationTabState'
 import {getTabState, TabState} from '#/lib/routes/helpers'
 import {NavigationProp} from '#/lib/routes/types'
+import {sanitizeHandle} from '#/lib/strings/handles'
 import {colors} from '#/lib/styles'
 import {isWeb} from '#/platform/detection'
 import {emitSoftReset} from '#/state/events'
@@ -76,48 +77,51 @@ let DrawerProfileCard = ({
       accessibilityLabel={_(msg`Profile`)}
       accessibilityHint={_(msg`Navigates to your profile`)}
       onPress={onPressProfile}
-      style={[a.flex_col, a.gap_xs]}>
+      style={[a.gap_sm]}>
       <UserAvatar
-        size={60}
+        size={52}
         avatar={profile?.avatar}
         // See https://github.com/bluesky-social/social-app/pull/1801:
         usePlainRNImage={true}
         type={profile?.associated?.labeler ? 'labeler' : 'user'}
       />
-      <Text style={[a.font_heavy, a.text_3xl, a.mt_2xs]} numberOfLines={1}>
-        {profile?.displayName || account.handle}
-      </Text>
-      <Text style={[t.atoms.text_contrast_medium, a.text_md]} numberOfLines={1}>
-        @{account.handle}
-      </Text>
-      <View
-        style={[a.mt_md, a.gap_xs, a.flex_row, a.align_center, a.flex_wrap]}>
-        <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
-          <Trans>
-            <Text style={[a.text_md, a.font_bold]}>
-              {formatCount(i18n, profile?.followersCount ?? 0)}
-            </Text>{' '}
-            <Plural
-              value={profile?.followersCount || 0}
-              one="follower"
-              other="followers"
-            />
-          </Trans>
+      <View style={[a.gap_2xs]}>
+        <Text
+          emoji
+          style={[a.font_heavy, a.text_xl, a.mt_2xs, a.leading_tight]}
+          numberOfLines={1}>
+          {profile?.displayName || account.handle}
         </Text>
-        <Text style={[a.text_md, t.atoms.text_contrast_medium]}>&middot;</Text>
-        <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
-          <Trans>
-            <Text style={[a.text_md, a.font_bold]}>
-              {formatCount(i18n, profile?.followsCount ?? 0)}
-            </Text>{' '}
-            <Plural
-              value={profile?.followsCount || 0}
-              one="following"
-              other="following"
-            />
-          </Trans>
+        <Text
+          emoji
+          style={[t.atoms.text_contrast_medium, a.text_md, a.leading_tight]}
+          numberOfLines={1}>
+          {sanitizeHandle(account.handle, '@')}
         </Text>
       </View>
+      <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
+        <Trans>
+          <Text style={[a.text_md, a.font_bold]}>
+            {formatCount(i18n, profile?.followersCount ?? 0)}
+          </Text>{' '}
+          <Plural
+            value={profile?.followersCount || 0}
+            one="follower"
+            other="followers"
+          />
+        </Trans>{' '}
+        &middot;{' '}
+        <Trans>
+          <Text style={[a.text_md, a.font_bold]}>
+            {formatCount(i18n, profile?.followsCount ?? 0)}
+          </Text>{' '}
+          <Plural
+            value={profile?.followsCount || 0}
+            one="following"
+            other="following"
+          />
+        </Trans>
+      </Text>
     </TouchableOpacity>
   )
 }
@@ -223,14 +227,7 @@ let DrawerContent = ({}: {}): React.ReactNode => {
   // =
 
   return (
-    <View
-      testID="drawer"
-      style={[
-        a.flex_1,
-        a.pt_sm,
-        a.pb_lg,
-        t.scheme === 'light' ? t.atoms.bg : t.atoms.bg_contrast_25,
-      ]}>
+    <View testID="drawer" style={[a.flex_1, a.pt_sm, a.pb_lg, t.atoms.bg]}>
       <SafeAreaView style={[a.flex_1]}>
         <ScrollView
           style={[a.flex_1]}
