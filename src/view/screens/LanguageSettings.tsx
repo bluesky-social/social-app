@@ -13,6 +13,7 @@ import {APP_LANGUAGES, LANGUAGES} from '#/lib/../locale/languages'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
+import {useGate} from '#/lib/statsig/statsig'
 import {s} from '#/lib/styles'
 import {sanitizeAppLanguageSetting} from '#/locale/helpers'
 import {useModalControls} from '#/state/modals'
@@ -22,11 +23,22 @@ import {Button} from '#/view/com/util/forms/Button'
 import {Text} from '#/view/com/util/text/Text'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
 import {CenteredView} from '#/view/com/util/Views'
+import {LanguageSettingsScreen as NewLanguageSettingsScreen} from '#/screens/Settings/LanguageSettings'
 import * as Layout from '#/components/Layout'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'LanguageSettings'>
 
-export function LanguageSettingsScreen(_props: Props) {
+export function LanguageSettingsScreen(props: Props) {
+  const gate = useGate()
+
+  return gate('new_settings') ? (
+    <NewLanguageSettingsScreen {...props} />
+  ) : (
+    <LegacyLanguageSettingsScreen {...props} />
+  )
+}
+
+function LegacyLanguageSettingsScreen(_props: Props) {
   const pal = usePalette('default')
   const {_} = useLingui()
   const langPrefs = useLanguagePrefs()
