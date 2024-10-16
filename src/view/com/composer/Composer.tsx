@@ -13,6 +13,7 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   LayoutChangeEvent,
+  ScrollView,
   StyleProp,
   StyleSheet,
   View,
@@ -744,36 +745,35 @@ export const ComposePost = ({
           <SuggestedLanguage text={richtext.text} />
 
           <Animated.View
-            style={[
-              a.flex_row,
-              a.p_sm,
-              a.gap_sm,
-              t.atoms.bg,
-              bottomBarAnimatedStyle,
-            ]}>
-            {replyTo ? null : (
-              <ThreadgateBtn
-                postgate={draft.postgate}
-                onChangePostgate={nextPostgate => {
-                  dispatch({type: 'update_postgate', postgate: nextPostgate})
+            style={[a.flex_row, a.p_sm, t.atoms.bg, bottomBarAnimatedStyle]}>
+            <ScrollView
+              horizontal
+              contentContainerStyle={[a.gap_sm]}
+              bounces={false}>
+              {replyTo ? null : (
+                <ThreadgateBtn
+                  postgate={draft.postgate}
+                  onChangePostgate={nextPostgate => {
+                    dispatch({type: 'update_postgate', postgate: nextPostgate})
+                  }}
+                  threadgateAllowUISettings={draft.threadgate}
+                  onChangeThreadgateAllowUISettings={nextThreadgate => {
+                    dispatch({
+                      type: 'update_threadgate',
+                      threadgate: nextThreadgate,
+                    })
+                  }}
+                  style={bottomBarAnimatedStyle}
+                />
+              )}
+              <LabelsBtn
+                labels={draft.labels}
+                onChange={nextLabels => {
+                  dispatch({type: 'update_labels', labels: nextLabels})
                 }}
-                threadgateAllowUISettings={draft.threadgate}
-                onChangeThreadgateAllowUISettings={nextThreadgate => {
-                  dispatch({
-                    type: 'update_threadgate',
-                    threadgate: nextThreadgate,
-                  })
-                }}
-                style={bottomBarAnimatedStyle}
+                hasMedia={hasMedia || Boolean(extLink)}
               />
-            )}
-            <LabelsBtn
-              labels={draft.labels}
-              onChange={nextLabels => {
-                dispatch({type: 'update_labels', labels: nextLabels})
-              }}
-              hasMedia={hasMedia || Boolean(extLink)}
-            />
+            </ScrollView>
           </Animated.View>
           <View
             style={[
