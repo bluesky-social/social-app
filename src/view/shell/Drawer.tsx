@@ -31,6 +31,7 @@ import {NavSignupCard} from '#/view/shell/NavSignupCard'
 import {atoms as a} from '#/alf'
 import {useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {Divider} from '#/components/Divider'
 import {
   Bell_Filled_Corner0_Rounded as BellFilled,
   Bell_Stroke2_Corner0_Rounded as Bell,
@@ -228,7 +229,7 @@ let DrawerContent = ({}: {}): React.ReactNode => {
   // =
 
   return (
-    <View testID="drawer" style={[a.flex_1, a.pb_lg, t.atoms.bg, a.debug]}>
+    <View testID="drawer" style={[a.flex_1, t.atoms.bg]}>
       <ScrollView
         style={[a.flex_1]}
         contentContainerStyle={[
@@ -251,9 +252,10 @@ let DrawerContent = ({}: {}): React.ReactNode => {
           </View>
         )}
 
+        <Divider style={[a.mt_xl, a.mb_sm]} />
+
         {hasSession ? (
           <>
-            <View style={{height: 16}} />
             <SearchMenuItem isActive={isAtSearch} onPress={onPressSearch} />
             <HomeMenuItem isActive={isAtHome} onPress={onPressHome} />
             <ChatMenuItem isActive={isAtMessages} onPress={onPressMessages} />
@@ -277,7 +279,9 @@ let DrawerContent = ({}: {}): React.ReactNode => {
           </>
         )}
 
-        <View style={[a.flex_col, a.gap_md, a.flex_wrap, a.my_xl]}>
+        <Divider style={[a.mb_xl, a.mt_sm]} />
+
+        <View style={[a.flex_col, a.gap_md, a.flex_wrap]}>
           <InlineLinkText
             style={[a.text_md]}
             label={_(msg`Terms of Service`)}
@@ -324,8 +328,17 @@ let DrawerFooter = ({
   onPressHelp: () => void
 }): React.ReactNode => {
   const {_} = useLingui()
+  const insets = useSafeAreaInsets()
   return (
-    <View style={[a.flex_row, a.gap_sm, a.flex_wrap, a.pl_xl, a.py_sm]}>
+    <View
+      style={[
+        a.flex_row,
+        a.gap_sm,
+        a.flex_wrap,
+        a.pl_xl,
+        a.pt_md,
+        {paddingBottom: Math.max(insets.bottom, a.pb_xl.paddingBottom)},
+      ]}>
       <Button
         label={_(msg`Send feedback`)}
         size="small"
@@ -577,7 +590,7 @@ function MenuItem({
   return (
     <PressableScale
       testID={`menuItemButton-${label}`}
-      style={[a.flex_row, a.align_center, {paddingVertical: 14}]}
+      style={[a.flex_row, a.align_center, {paddingVertical: 10}]}
       onPress={onPress}
       accessibilityRole="tab"
       accessibilityLabel={accessibilityLabel}
