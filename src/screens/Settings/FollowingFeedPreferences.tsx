@@ -119,7 +119,7 @@ export function FollowingFeedPreferencesScreen({}: Props) {
               type="checkbox"
               name="merge-feed"
               label={_(
-                msg`Show samples of your saved feeds in your Following feederge feed`,
+                msg`Show samples of your saved feeds in your Following feed`,
               )}
               value={mergeFeedEnabled}
               onChange={value =>
