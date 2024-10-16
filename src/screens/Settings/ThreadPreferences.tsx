@@ -38,7 +38,7 @@ export function ThreadPreferencesScreen({}: Props) {
   )
 
   return (
-    <Layout.Screen testID="preferencesThreadsScreen">
+    <Layout.Screen testID="threadPreferencesScreen">
       <Layout.Header title={_(msg`Thread Preferences`)} />
       <Layout.Content>
         <SettingsList.Container>
@@ -123,7 +123,7 @@ export function ThreadPreferencesScreen({}: Props) {
             </SettingsList.ItemText>
             <Toggle.Item
               type="checkbox"
-              name="prioritize-follows"
+              name="threaded-mode"
               label={_(msg`Threaded mode`)}
               value={treeViewEnabled}
               onChange={value =>
