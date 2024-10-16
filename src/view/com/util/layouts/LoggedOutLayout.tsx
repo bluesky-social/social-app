@@ -1,6 +1,5 @@
 import React from 'react'
 import {ScrollView, StyleSheet, View} from 'react-native'
-import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useColorSchemeStyle} from '#/lib/hooks/useColorSchemeStyle'
 import {useIsKeyboardVisible} from '#/lib/hooks/useIsKeyboardVisible'
@@ -36,24 +35,22 @@ export const LoggedOutLayout = ({
   if (isMobile) {
     if (scrollable) {
       return (
-        <SafeAreaView style={[a.flex_1]}>
-          <ScrollView
-            style={[a.flex_1]}
-            keyboardShouldPersistTaps="handled"
-            keyboardDismissMode="none"
-            contentContainerStyle={[
-              {paddingBottom: isKeyboardVisible ? 300 : 0},
-            ]}>
-            <View style={a.pt_md}>{children}</View>
-          </ScrollView>
-        </SafeAreaView>
+        <ScrollView
+          style={a.flex_1}
+          keyboardShouldPersistTaps="handled"
+          keyboardDismissMode="none"
+          contentContainerStyle={[
+            {paddingBottom: isKeyboardVisible ? 300 : 0},
+          ]}>
+          <View style={a.pt_md}>{children}</View>
+        </ScrollView>
       )
     } else {
-      return <SafeAreaView style={[a.flex_1, a.pt_md]}>{children}</SafeAreaView>
+      return <View style={a.pt_md}>{children}</View>
     }
   }
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <View style={[styles.side, sideBg]}>
         <Text
           style={[
@@ -78,7 +75,7 @@ export const LoggedOutLayout = ({
       {scrollable ? (
         <View style={[styles.scrollableContent, contentBg]}>
           <ScrollView
-            style={[a.flex_1]}
+            style={a.flex_1}
             contentContainerStyle={styles.scrollViewContentContainer}
             keyboardShouldPersistTaps="handled"
             keyboardDismissMode="on-drag">
@@ -92,7 +89,7 @@ export const LoggedOutLayout = ({
           <View style={styles.contentWrapper}>{children}</View>
         </View>
       )}
-    </SafeAreaView>
+    </View>
   )
 }
 

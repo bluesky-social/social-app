@@ -1,13 +1,10 @@
 import React from 'react'
 import {Pressable, View} from 'react-native'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {usePalette} from '#/lib/hooks/usePalette'
 import {logEvent} from '#/lib/statsig/statsig'
-import {s} from '#/lib/styles'
-import {isIOS} from '#/platform/detection'
 import {
   useLoggedOutView,
   useLoggedOutViewControls,
@@ -17,6 +14,8 @@ import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {Login} from '#/screens/Login'
 import {Signup} from '#/screens/Signup'
 import {LandingScreen} from '#/screens/StarterPack/StarterPackLandingScreen'
+import {atoms as a, useTheme} from '#/alf'
+import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
 import {SplashScreen} from './SplashScreen'
 
 enum ScreenState {
@@ -29,7 +28,8 @@ export {ScreenState as LoggedOutScreenState}
 
 export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
   const {_} = useLingui()
-  const pal = usePalette('default')
+  const t = useTheme()
+  const insets = useSafeAreaInsets()
   const setMinimalShellMode = useSetMinimalShellMode()
   const {requestedAccountSwitchTo} = useLoggedOutView()
   const [screenState, setScreenState] = React.useState<ScreenState>(() => {
@@ -57,30 +57,32 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
   }, [clearRequestedAccount, onDismiss])
 
   return (
-    <View testID="noSessionView" style={[s.hContentRegion, pal.view]}>
+    <View
+      testID="noSessionView"
+      style={[
+        a.util_screen_outer,
+        t.atoms.bg,
+        {paddingTop: insets.top, paddingBottom: insets.bottom},
+      ]}>
       <ErrorBoundary>
         {onDismiss && screenState === ScreenState.S_LoginOrCreateAccount ? (
           <Pressable
             accessibilityHint={_(msg`Go back`)}
             accessibilityLabel={_(msg`Go back`)}
             accessibilityRole="button"
-            style={{
-              position: 'absolute',
-              top: isIOS ? 0 : 20,
-              right: 20,
-              padding: 10,
-              zIndex: 100,
-              backgroundColor: pal.text.color,
-              borderRadius: 100,
-            }}
+            style={[
+              {
+                top: insets.top + 12,
+                right: 20,
+                zIndex: 100,
+                backgroundColor: t.atoms.text.color,
+              },
+              a.p_sm,
+              a.absolute,
+              a.rounded_full,
+            ]}
             onPress={onPressDismiss}>
-            <FontAwesomeIcon
-              icon="x"
-              size={12}
-              style={{
-                color: String(pal.textInverted.color),
-              }}
-            />
+            <XIcon size="sm" style={[t.atoms.text_inverted]} />
           </Pressable>
         ) : null}
 
