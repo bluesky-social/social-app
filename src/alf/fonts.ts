@@ -1,7 +1,7 @@
 import {TextStyle} from 'react-native'
 import {useFonts} from 'expo-font'
 
-import {isAndroid,isWeb} from '#/platform/detection'
+import {isAndroid, isWeb} from '#/platform/detection'
 import {Device, device} from '#/storage'
 
 const WEB_FONT_FAMILIES = `system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji"`
