@@ -6,6 +6,7 @@ import {useFocusEffect} from '@react-navigation/native'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
+import {useGate} from '#/lib/statsig/statsig'
 import {
   EmbedPlayerSource,
   externalEmbedLabels,
@@ -19,6 +20,7 @@ import {ToggleButton} from '#/view/com/util/forms/ToggleButton'
 import {SimpleViewHeader} from '#/view/com/util/SimpleViewHeader'
 import {Text} from '#/view/com/util/text/Text'
 import {ScrollView} from '#/view/com/util/Views'
+import {ExternalMediaPreferencesScreen} from '#/screens/Settings/ExternalMediaPreferences'
 import {atoms as a} from '#/alf'
 import * as Layout from '#/components/Layout'
 
@@ -26,7 +28,17 @@ type Props = NativeStackScreenProps<
   CommonNavigatorParams,
   'PreferencesExternalEmbeds'
 >
-export function PreferencesExternalEmbeds({}: Props) {
+export function PreferencesExternalEmbeds(props: Props) {
+  const gate = useGate()
+
+  return gate('new_settings') ? (
+    <ExternalMediaPreferencesScreen {...props} />
+  ) : (
+    <LegacyPreferencesExternalEmbeds {...props} />
+  )
+}
+
+function LegacyPreferencesExternalEmbeds({}: Props) {
   const pal = usePalette('default')
   const setMinimalShellMode = useSetMinimalShellMode()
   const {isTabletOrMobile} = useWebMediaQueries()
