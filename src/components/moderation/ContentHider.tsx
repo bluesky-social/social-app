@@ -4,7 +4,7 @@ import {ModerationUI} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {isJustAMute} from '#/lib/moderation'
+import {ADULT_CONTENT_LABELS, isJustAMute} from '#/lib/moderation'
 import {useGlobalLabelStrings} from '#/lib/moderation/useGlobalLabelStrings'
 import {getDefinition, getLabelStrings} from '#/lib/moderation/useLabelInfo'
 import {useModerationCauseDescription} from '#/lib/moderation/useModerationCauseDescription'
@@ -55,8 +55,24 @@ export function ContentHider({
       return desc.name
     }
 
+    let hasAdultContentLabel = false
     const selfBlurNames = modui.blurs
-      .filter(cause => cause.type === 'label' && cause.source.type === 'user')
+      .filter(cause => {
+        if (cause.type !== 'label') {
+          return false
+        }
+        if (cause.source.type !== 'user') {
+          return false
+        }
+        if (ADULT_CONTENT_LABELS.includes(cause.label.val as any)) {
+          if (hasAdultContentLabel) {
+            return false
+          }
+          hasAdultContentLabel = true
+        }
+        return true
+      })
+      .slice(0, 2)
       .map(cause => {
         if (cause.type !== 'label') {
           return
