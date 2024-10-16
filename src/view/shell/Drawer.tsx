@@ -1,12 +1,6 @@
 import React, {ComponentProps} from 'react'
-import {
-  Linking,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native'
+import {Linking, ScrollView, TouchableOpacity, View} from 'react-native'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {StackActions, useNavigation} from '@react-navigation/native'
@@ -16,6 +10,7 @@ import {PressableScale} from '#/lib/custom-animations/PressableScale'
 import {useNavigationTabState} from '#/lib/hooks/useNavigationTabState'
 import {getTabState, TabState} from '#/lib/routes/helpers'
 import {NavigationProp} from '#/lib/routes/types'
+import {sanitizeHandle} from '#/lib/strings/handles'
 import {colors} from '#/lib/styles'
 import {isWeb} from '#/platform/detection'
 import {emitSoftReset} from '#/state/events'
@@ -30,6 +25,7 @@ import {NavSignupCard} from '#/view/shell/NavSignupCard'
 import {atoms as a} from '#/alf'
 import {useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {Divider} from '#/components/Divider'
 import {
   Bell_Filled_Corner0_Rounded as BellFilled,
   Bell_Stroke2_Corner0_Rounded as Bell,
@@ -76,48 +72,51 @@ let DrawerProfileCard = ({
       accessibilityLabel={_(msg`Profile`)}
       accessibilityHint={_(msg`Navigates to your profile`)}
       onPress={onPressProfile}
-      style={[a.flex_col, a.gap_xs]}>
+      style={[a.gap_sm]}>
       <UserAvatar
-        size={60}
+        size={52}
         avatar={profile?.avatar}
         // See https://github.com/bluesky-social/social-app/pull/1801:
         usePlainRNImage={true}
         type={profile?.associated?.labeler ? 'labeler' : 'user'}
       />
-      <Text style={[a.font_heavy, a.text_3xl, a.mt_2xs]} numberOfLines={1}>
-        {profile?.displayName || account.handle}
-      </Text>
-      <Text style={[t.atoms.text_contrast_medium, a.text_md]} numberOfLines={1}>
-        @{account.handle}
-      </Text>
-      <View
-        style={[a.mt_md, a.gap_xs, a.flex_row, a.align_center, a.flex_wrap]}>
-        <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
-          <Trans>
-            <Text style={[a.text_md, a.font_bold]}>
-              {formatCount(i18n, profile?.followersCount ?? 0)}
-            </Text>{' '}
-            <Plural
-              value={profile?.followersCount || 0}
-              one="follower"
-              other="followers"
-            />
-          </Trans>
+      <View style={[a.gap_2xs]}>
+        <Text
+          emoji
+          style={[a.font_heavy, a.text_xl, a.mt_2xs, a.leading_tight]}
+          numberOfLines={1}>
+          {profile?.displayName || account.handle}
         </Text>
-        <Text style={[a.text_md, t.atoms.text_contrast_medium]}>&middot;</Text>
-        <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
-          <Trans>
-            <Text style={[a.text_md, a.font_bold]}>
-              {formatCount(i18n, profile?.followsCount ?? 0)}
-            </Text>{' '}
-            <Plural
-              value={profile?.followsCount || 0}
-              one="following"
-              other="following"
-            />
-          </Trans>
+        <Text
+          emoji
+          style={[t.atoms.text_contrast_medium, a.text_md, a.leading_tight]}
+          numberOfLines={1}>
+          {sanitizeHandle(account.handle, '@')}
         </Text>
       </View>
+      <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
+        <Trans>
+          <Text style={[a.text_md, a.font_bold]}>
+            {formatCount(i18n, profile?.followersCount ?? 0)}
+          </Text>{' '}
+          <Plural
+            value={profile?.followersCount || 0}
+            one="follower"
+            other="followers"
+          />
+        </Trans>{' '}
+        &middot;{' '}
+        <Trans>
+          <Text style={[a.text_md, a.font_bold]}>
+            {formatCount(i18n, profile?.followsCount ?? 0)}
+          </Text>{' '}
+          <Plural
+            value={profile?.followsCount || 0}
+            one="following"
+            other="following"
+          />
+        </Trans>
+      </Text>
     </TouchableOpacity>
   )
 }
@@ -127,6 +126,7 @@ export {DrawerProfileCard}
 let DrawerContent = ({}: {}): React.ReactNode => {
   const t = useTheme()
   const {_} = useLingui()
+  const insets = useSafeAreaInsets()
   const setDrawerOpen = useSetDrawerOpen()
   const navigation = useNavigation<NavigationProp>()
   const {
@@ -223,89 +223,91 @@ let DrawerContent = ({}: {}): React.ReactNode => {
   // =
 
   return (
-    <View
-      testID="drawer"
-      style={[
-        a.flex_1,
-        a.pt_sm,
-        a.pb_lg,
-        t.scheme === 'light' ? t.atoms.bg : t.atoms.bg_contrast_25,
-      ]}>
-      <SafeAreaView style={[a.flex_1]}>
-        <ScrollView
-          style={[a.flex_1]}
-          contentContainerStyle={[a.px_xl, a.pt_lg]}>
-          {hasSession && currentAccount ? (
-            <DrawerProfileCard
-              account={currentAccount}
-              onPressProfile={onPressProfile}
-            />
-          ) : (
-            <View style={[a.pr_xl]}>
-              <NavSignupCard />
-            </View>
-          )}
-
-          {hasSession ? (
-            <>
-              <View style={{height: 16}} />
-              <SearchMenuItem isActive={isAtSearch} onPress={onPressSearch} />
-              <HomeMenuItem isActive={isAtHome} onPress={onPressHome} />
-              <ChatMenuItem isActive={isAtMessages} onPress={onPressMessages} />
-              <NotificationsMenuItem
-                isActive={isAtNotifications}
-                onPress={onPressNotifications}
-              />
-              <FeedsMenuItem isActive={isAtFeeds} onPress={onPressMyFeeds} />
-              <ListsMenuItem onPress={onPressLists} />
-              <ProfileMenuItem
-                isActive={isAtMyProfile}
-                onPress={onPressProfile}
-              />
-              <SettingsMenuItem onPress={onPressSettings} />
-            </>
-          ) : (
-            <>
-              <HomeMenuItem isActive={isAtHome} onPress={onPressHome} />
-              <FeedsMenuItem isActive={isAtFeeds} onPress={onPressMyFeeds} />
-              <SearchMenuItem isActive={isAtSearch} onPress={onPressSearch} />
-            </>
-          )}
-
-          <View style={[a.flex_col, a.gap_md, a.flex_wrap, a.my_xl]}>
-            <InlineLinkText
-              style={[a.text_md]}
-              label={_(msg`Terms of Service`)}
-              to="https://bsky.social/about/support/tos">
-              <Trans>Terms of Service</Trans>
-            </InlineLinkText>
-            <InlineLinkText
-              style={[a.text_md]}
-              to="https://bsky.social/about/support/privacy-policy"
-              label={_(msg`Privacy Policy`)}>
-              <Trans>Privacy Policy</Trans>
-            </InlineLinkText>
-            {kawaii && (
-              <Text style={t.atoms.text_contrast_medium}>
-                <Trans>
-                  Logo by{' '}
-                  <InlineLinkText
-                    style={[a.text_md]}
-                    to="/profile/sawaratsuki.bsky.social"
-                    label="@sawaratsuki.bsky.social">
-                    @sawaratsuki.bsky.social
-                  </InlineLinkText>
-                </Trans>
-              </Text>
-            )}
+    <View testID="drawer" style={[a.flex_1, t.atoms.bg]}>
+      <ScrollView
+        style={[a.flex_1]}
+        contentContainerStyle={[
+          a.px_xl,
+          {
+            paddingTop: Math.max(
+              insets.top + a.pt_xl.paddingTop,
+              a.pt_xl.paddingTop,
+            ),
+          },
+        ]}>
+        {hasSession && currentAccount ? (
+          <DrawerProfileCard
+            account={currentAccount}
+            onPressProfile={onPressProfile}
+          />
+        ) : (
+          <View style={[a.pr_xl]}>
+            <NavSignupCard />
           </View>
-        </ScrollView>
+        )}
 
-        <DrawerFooter
-          onPressFeedback={onPressFeedback}
-          onPressHelp={onPressHelp}
-        />
-      </SafeAreaView>
+        <Divider style={[a.mt_xl, a.mb_sm]} />
+
+        {hasSession ? (
+          <>
+            <SearchMenuItem isActive={isAtSearch} onPress={onPressSearch} />
+            <HomeMenuItem isActive={isAtHome} onPress={onPressHome} />
+            <ChatMenuItem isActive={isAtMessages} onPress={onPressMessages} />
+            <NotificationsMenuItem
+              isActive={isAtNotifications}
+              onPress={onPressNotifications}
+            />
+            <FeedsMenuItem isActive={isAtFeeds} onPress={onPressMyFeeds} />
+            <ListsMenuItem onPress={onPressLists} />
+            <ProfileMenuItem
+              isActive={isAtMyProfile}
+              onPress={onPressProfile}
+            />
+            <SettingsMenuItem onPress={onPressSettings} />
+          </>
+        ) : (
+          <>
+            <HomeMenuItem isActive={isAtHome} onPress={onPressHome} />
+            <FeedsMenuItem isActive={isAtFeeds} onPress={onPressMyFeeds} />
+            <SearchMenuItem isActive={isAtSearch} onPress={onPressSearch} />
+          </>
+        )}
+
+        <Divider style={[a.mb_xl, a.mt_sm]} />
+
+        <View style={[a.flex_col, a.gap_md, a.flex_wrap]}>
+          <InlineLinkText
+            style={[a.text_md]}
+            label={_(msg`Terms of Service`)}
+            to="https://bsky.social/about/support/tos">
+            <Trans>Terms of Service</Trans>
+          </InlineLinkText>
+          <InlineLinkText
+            style={[a.text_md]}
+            to="https://bsky.social/about/support/privacy-policy"
+            label={_(msg`Privacy Policy`)}>
+            <Trans>Privacy Policy</Trans>
+          </InlineLinkText>
+          {kawaii && (
+            <Text style={t.atoms.text_contrast_medium}>
+              <Trans>
+                Logo by{' '}
+                <InlineLinkText
+                  style={[a.text_md]}
+                  to="/profile/sawaratsuki.bsky.social"
+                  label="@sawaratsuki.bsky.social">
+                  @sawaratsuki.bsky.social
+                </InlineLinkText>
+              </Trans>
+            </Text>
+          )}
+        </View>
+      </ScrollView>
+
+      <DrawerFooter
+        onPressFeedback={onPressFeedback}
+        onPressHelp={onPressHelp}
+      />
     </View>
   )
 }
@@ -320,8 +322,17 @@ let DrawerFooter = ({
   onPressHelp: () => void
 }): React.ReactNode => {
   const {_} = useLingui()
+  const insets = useSafeAreaInsets()
   return (
-    <View style={[a.flex_row, a.gap_sm, a.flex_wrap, a.pl_xl, a.py_sm]}>
+    <View
+      style={[
+        a.flex_row,
+        a.gap_sm,
+        a.flex_wrap,
+        a.pl_xl,
+        a.pt_md,
+        {paddingBottom: Math.max(insets.bottom, a.pb_xl.paddingBottom)},
+      ]}>
       <Button
         label={_(msg`Send feedback`)}
         size="small"
@@ -570,33 +581,50 @@ function MenuItem({
   bold,
   onPress,
 }: MenuItemProps) {
+  const t = useTheme()
   return (
     <PressableScale
       testID={`menuItemButton-${label}`}
-      style={[a.flex_row, a.align_center, {paddingVertical: 14}]}
+      style={[a.flex_row, a.align_center, a.gap_sm, {paddingVertical: 10}]}
       onPress={onPress}
       accessibilityRole="tab"
       accessibilityLabel={accessibilityLabel}
       accessibilityHint=""
       targetScale={0.95}>
-      <View style={[styles.menuItemIconWrapper]}>
+      <View style={[a.relative]}>
         {icon}
         {count ? (
           <View
             style={[
-              styles.menuItemCount,
-              a.rounded_full,
-              count.length > 2
-                ? styles.menuItemCountHundreds
-                : count.length > 1
-                ? styles.menuItemCountTens
-                : undefined,
+              a.absolute,
+              a.inset_0,
+              a.align_end,
+              {top: -4, right: a.gap_sm.gap * -1},
             ]}>
-            <Text
-              style={[styles.menuItemCountLabel, a.font_bold]}
-              numberOfLines={1}>
-              {count}
-            </Text>
+            <View
+              style={[
+                a.rounded_full,
+                {
+                  right: count.length === 1 ? 6 : 0,
+                  paddingHorizontal: 4,
+                  paddingVertical: 1,
+                  backgroundColor: t.palette.primary_500,
+                },
+              ]}>
+              <Text
+                style={[
+                  a.text_xs,
+                  a.leading_tight,
+                  a.font_bold,
+                  {
+                    fontVariant: ['tabular-nums'],
+                    color: colors.white,
+                  },
+                ]}
+                numberOfLines={1}>
+                {count}
+              </Text>
+            </View>
           </View>
         ) : undefined}
       </View>
@@ -608,35 +636,3 @@ function MenuItem({
     </PressableScale>
   )
 }
-
-const styles = StyleSheet.create({
-  menuItemIconWrapper: {
-    width: 24,
-    height: 24,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: 12,
-  },
-  menuItemCount: {
-    position: 'absolute',
-    width: 'auto',
-    right: -6,
-    top: -4,
-    backgroundColor: colors.blue3,
-    paddingHorizontal: 4,
-    paddingBottom: 1,
-    borderRadius: 6,
-  },
-  menuItemCountTens: {
-    width: 25,
-  },
-  menuItemCountHundreds: {
-    right: -12,
-    width: 34,
-  },
-  menuItemCountLabel: {
-    fontSize: 12,
-    fontVariant: ['tabular-nums'],
-    color: colors.white,
-  },
-})
