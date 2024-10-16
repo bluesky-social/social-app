@@ -138,7 +138,7 @@ export function SettingsScreen({}: Props) {
             label={_(msg`Accessibility`)}>
             <SettingsList.ItemIcon icon={AccessibilityIcon} />
             <SettingsList.ItemText>
-              <Trans>Accessibilty</Trans>
+              <Trans>Accessibility</Trans>
             </SettingsList.ItemText>
           </SettingsList.LinkItem>
           <SettingsList.LinkItem
