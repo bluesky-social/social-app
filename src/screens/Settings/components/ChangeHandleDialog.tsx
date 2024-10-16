@@ -20,7 +20,7 @@ import {useUpdateHandleMutation} from '#/state/queries/handle'
 import {useServiceQuery} from '#/state/queries/service'
 import {useAgent, useSession} from '#/state/session'
 import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, native, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -129,8 +129,8 @@ function ChangeHandleDialogInner() {
             {page === 'service-handle' ? (
               <Animated.View
                 key={page}
-                entering={SlideInLeft}
-                exiting={SlideOutLeft}>
+                entering={native(SlideInLeft)}
+                exiting={native(SlideOutLeft)}>
                 <ServiceHandlePage
                   serviceInfo={serviceInfo}
                   setHandle={setHandle}
@@ -146,8 +146,8 @@ function ChangeHandleDialogInner() {
             ) : (
               <Animated.View
                 key={page}
-                entering={SlideInRight}
-                exiting={SlideOutRight}>
+                entering={native(SlideInRight)}
+                exiting={native(SlideOutRight)}>
                 <OwnHandlePage
                   setHandle={setHandle}
                   goToServiceHandle={() => {
