@@ -504,7 +504,8 @@ let SearchScreenInner = ({
   )
 
   const sections = React.useMemo(() => {
-    if (!query) return []
+    if (!queryWithParams) return []
+    const noParams = queryWithParams === query
     return [
       {
         title: _(msg`Top`),
@@ -526,22 +527,25 @@ let SearchScreenInner = ({
           />
         ),
       },
-      {
+      noParams && {
         title: _(msg`People`),
         component: (
           <SearchScreenUserResults query={query} active={activeTab === 2} />
         ),
       },
-      {
+      noParams && {
         title: _(msg`Feeds`),
         component: (
           <SearchScreenFeedsResults query={query} active={activeTab === 3} />
         ),
       },
-    ]
+    ].filter(Boolean) as {
+      title: string
+      component: React.ReactNode
+    }[]
   }, [_, query, queryWithParams, activeTab])
 
-  return query ? (
+  return queryWithParams ? (
     <Pager
       onPageSelected={onPageSelected}
       renderTabBar={props => (
@@ -640,7 +644,7 @@ export function SearchScreen(
   const {params, query, queryWithParams} = useQueryManager({
     initialQuery: queryParam,
   })
-  const showFilters = Boolean(query && !showAutocomplete)
+  const showFilters = Boolean(queryWithParams && !showAutocomplete)
   /*
    * Arbitrary sizing, so guess and check, used for sticky header alignment and
    * sizing.

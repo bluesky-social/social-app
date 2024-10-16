@@ -14,7 +14,6 @@ import {logger} from '#/logger'
 import {isIOS} from '#/platform/detection'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {Shadow} from '#/state/cache/types'
-import {useModalControls} from '#/state/modals'
 import {
   useProfileBlockMutationQueue,
   useProfileFollowMutationQueue,
@@ -24,6 +23,7 @@ import {ProfileMenu} from '#/view/com/profile/ProfileMenu'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {useDialogControl} from '#/components/Dialog'
 import {MessageProfileButton} from '#/components/dms/MessageProfileButton'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
@@ -34,6 +34,7 @@ import {
 import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
 import {ProfileHeaderDisplayName} from './DisplayName'
+import {EditProfileDialog} from './EditProfileDialog'
 import {ProfileHeaderHandle} from './Handle'
 import {ProfileHeaderMetrics} from './Metrics'
 import {ProfileHeaderShell} from './Shell'
@@ -57,7 +58,6 @@ let ProfileHeaderStandard = ({
     useProfileShadow(profileUnshadowed)
   const {currentAccount, hasSession} = useSession()
   const {_} = useLingui()
-  const {openModal} = useModalControls()
   const moderation = useMemo(
     () => moderateProfile(profile, moderationOpts),
     [profile, moderationOpts],
@@ -74,12 +74,10 @@ let ProfileHeaderStandard = ({
     profile.viewer?.blockedBy ||
     profile.viewer?.blockingByList
 
+  const editProfileControl = useDialogControl()
   const onPressEditProfile = React.useCallback(() => {
-    openModal({
-      name: 'edit-profile',
-      profile,
-    })
-  }, [openModal, profile])
+    editProfileControl.open()
+  }, [editProfileControl])
 
   const onPressFollow = () => {
     requireAuth(async () => {
@@ -161,18 +159,24 @@ let ProfileHeaderStandard = ({
           ]}
           pointerEvents={isIOS ? 'auto' : 'box-none'}>
           {isMe ? (
-            <Button
-              testID="profileHeaderEditProfileButton"
-              size="small"
-              color="secondary"
-              variant="solid"
-              onPress={onPressEditProfile}
-              label={_(msg`Edit profile`)}
-              style={[a.rounded_full]}>
-              <ButtonText>
-                <Trans>Edit Profile</Trans>
-              </ButtonText>
-            </Button>
+            <>
+              <Button
+                testID="profileHeaderEditProfileButton"
+                size="small"
+                color="secondary"
+                variant="solid"
+                onPress={onPressEditProfile}
+                label={_(msg`Edit profile`)}
+                style={[a.rounded_full]}>
+                <ButtonText>
+                  <Trans>Edit Profile</Trans>
+                </ButtonText>
+              </Button>
+              <EditProfileDialog
+                profile={profile}
+                control={editProfileControl}
+              />
+            </>
           ) : profile.viewer?.blocking ? (
             profile.viewer?.blockingByList ? null : (
               <Button
