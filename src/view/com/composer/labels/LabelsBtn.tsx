@@ -11,6 +11,7 @@ import {
   OtherSelfLabel,
   SelfLabel,
 } from '#/lib/moderation'
+import {isWeb} from '#/platform/detection'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
