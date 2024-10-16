@@ -25,6 +25,7 @@ import {PencilLine_Stroke2_Corner2_Rounded as PencilIcon} from '#/components/ico
 import {Trash_Stroke2_Corner2_Rounded} from '#/components/icons/Trash'
 import {Verified_Stroke2_Corner2_Rounded as VerifiedIcon} from '#/components/icons/Verified'
 import * as Layout from '#/components/Layout'
+import {ChangeHandleDialog} from './components/ChangeHandleDialog'
 import {DeactivateAccountDialog} from './components/DeactivateAccountDialog'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AccountSettings'>
@@ -36,6 +37,7 @@ export function AccountSettingsScreen({}: Props) {
   const {data: profile} = useProfileQuery({did: currentAccount?.did})
   const {openModal} = useModalControls()
   const birthdayControl = useDialogControl()
+  const changeHandleControl = useDialogControl()
   const exportCarControl = useDialogControl()
   const deactivateAccountControl = useDialogControl()
 
@@ -117,6 +119,7 @@ export function AccountSettingsScreen({}: Props) {
           </SettingsList.PressableItem>
           <SettingsList.PressableItem
             label={_(msg`Handle`)}
+            accessibilityHint={_(msg`Open change handle dialog`)}
             onPress={() =>
               openModal({
                 name: 'change-handle',
@@ -133,6 +136,19 @@ export function AccountSettingsScreen({}: Props) {
             <SettingsList.ItemIcon icon={AtIcon} />
             <SettingsList.ItemText>
               <Trans>Handle</Trans>
+            </SettingsList.ItemText>
+            {profile && (
+              <SettingsList.BadgeText>@{profile.handle}</SettingsList.BadgeText>
+            )}
+            <SettingsList.Chevron />
+          </SettingsList.PressableItem>
+          <SettingsList.PressableItem
+            label={_(msg`Handle`)}
+            accessibilityHint={_(msg`Open change handle dialog`)}
+            onPress={() => changeHandleControl.open()}>
+            <SettingsList.ItemIcon icon={AtIcon} />
+            <SettingsList.ItemText>
+              <Trans>Handle (new)</Trans>
             </SettingsList.ItemText>
             {profile && (
               <SettingsList.BadgeText>@{profile.handle}</SettingsList.BadgeText>
@@ -173,6 +189,7 @@ export function AccountSettingsScreen({}: Props) {
       </Layout.Content>
 
       <BirthDateSettingsDialog control={birthdayControl} />
+      <ChangeHandleDialog control={changeHandleControl} />
       <ExportCarDialog control={exportCarControl} />
       <DeactivateAccountDialog control={deactivateAccountControl} />
     </Layout.Screen>
