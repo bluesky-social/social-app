@@ -88,7 +88,7 @@ export function ContentHider({
     if (selfBlurNames.length === 0) {
       return desc.name
     }
-    return selfBlurNames.join(', ')
+    return [...new Set(selfBlurNames)].join(', ')
   }, [
     _,
     modui?.blurs,
