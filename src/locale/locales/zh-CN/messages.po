@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh_CN\n"
 "Project-Id-Version: zh-CN for bluesky-social-app\n"
 "Report-Msgid-Bugs-To: Frudrax Cheng <i@cynosura.one>\n"
-"PO-Revision-Date: 2024-10-16 10:48+0800\n"
+"PO-Revision-Date: 2024-10-16 10:59+0800\n"
 "Last-Translator: Frudrax Cheng <i@cynosura.one>\n"
 "Language-Team: Frudrax Cheng (auroursa), Simon Chan (RitsukiP), U2FsdGVkX1, Mikan Harada (mitian233), IceCodeNew\n"
 "Plural-Forms: \n"
@@ -6270,7 +6270,7 @@ msgstr "讲个笑话！"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:348
 msgid "Tell us a bit about yourself"
-msgstr "告诉我们一些关于你自己的情况"
+msgstr "跟大家介绍一下你自己"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:63
 msgid "Tell us a little more"
@@ -7229,7 +7229,7 @@ msgstr "查看{displayName}的个人资料"
 
 #: src/components/TagMenu/index.tsx:149
 msgid "View all posts by @{authorHandle} with tag {displayTag}"
-msgstr "查看@{authorHandle} 带有标签 {displayTag} 的所有帖文"
+msgstr "查看所有由 @{authorHandle} 发布，并带有标签 {displayTag} 的帖文"
 
 #: src/components/TagMenu/index.tsx:103
 msgid "View all posts with tag {displayTag}"
