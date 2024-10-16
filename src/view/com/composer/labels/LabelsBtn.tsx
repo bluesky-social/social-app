@@ -239,7 +239,7 @@ function DialogInner({
           label={_(msg`Done`)}
           onPress={() => control.close()}
           color="primary"
-          size="large"
+          size={isWeb ? 'small' : 'large'}
           variant="solid">
           <ButtonText>
             <Trans>Done</Trans>
