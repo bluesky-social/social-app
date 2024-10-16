@@ -79,6 +79,9 @@ export function ContentHider({
         }
 
         const def = cause.labelDef || getDefinition(labelDefs, cause.label)
+        if (def.identifier === 'porn' || def.identifier === 'sexual') {
+          return _(msg`Adult Content`)
+        }
         return getLabelStrings(i18n.locale, globalLabelStrings, def).name
       })
 
@@ -87,6 +90,7 @@ export function ContentHider({
     }
     return selfBlurNames.join(', ')
   }, [
+    _,
     modui?.blurs,
     blur,
     desc.name,
