@@ -280,7 +280,8 @@
     "**/zod": "3.23.8",
     "**/expo-constants": "16.0.1",
     "**/expo-device": "6.0.2",
-    "@react-native/babel-preset": "0.74.1"
+    "@react-native/babel-preset": "0.74.1",
+    "@radix-ui/react-focus-scope": "1.1.0"
   },
   "jest": {
     "preset": "jest-expo/ios",
