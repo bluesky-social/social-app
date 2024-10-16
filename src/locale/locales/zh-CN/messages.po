@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh_CN\n"
 "Project-Id-Version: zh-CN for bluesky-social-app\n"
 "Report-Msgid-Bugs-To: Frudrax Cheng <i@cynosura.one>\n"
-"PO-Revision-Date: 2024-10-15 13:28+0800\n"
+"PO-Revision-Date: 2024-10-16 10:48+0800\n"
 "Last-Translator: Frudrax Cheng <i@cynosura.one>\n"
 "Language-Team: Frudrax Cheng (auroursa), Simon Chan (RitsukiP), U2FsdGVkX1, Mikan Harada (mitian233), IceCodeNew\n"
 "Plural-Forms: \n"
@@ -186,8 +186,8 @@ msgstr "{following} 个正在关注"
 msgid "{handle} can't be messaged"
 msgstr "无法给 {handle} 发送私信"
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:281
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:294
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:284
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:297
 #: src/view/screens/ProfileFeed.tsx:591
 msgid "{likeCount, plural, one {Liked by # user} other {Liked by # users}}"
 msgstr "{likeCount, plural, one {# 位用户喜欢} other {# 位用户喜欢}}"
@@ -267,7 +267,7 @@ msgid "7 days"
 msgstr "7天"
 
 #: src/view/com/util/ViewHeader.tsx:89
-#: src/view/screens/Search/Search.tsx:878
+#: src/view/screens/Search/Search.tsx:882
 msgid "Access navigation links and settings"
 msgstr "访问导航链接及设置"
 
@@ -323,7 +323,7 @@ msgstr "账户选项"
 msgid "Account removed from quick access"
 msgstr "已从快速访问中移除账户"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:129
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:127
 #: src/view/com/profile/ProfileMenu.tsx:122
 msgid "Account unblocked"
 msgstr "已取消屏蔽账户"
@@ -708,6 +708,10 @@ msgstr "你确定要删除这条私信吗？此操作仅会在你的对话中删
 msgid "Are you sure you want to delete this starter pack?"
 msgstr "你确定要删除此入门包吗？"
 
+#: src/screens/Profile/Header/EditProfileDialog.tsx:81
+msgid "Are you sure you want to discard your changes?"
+msgstr "您确定要放弃更改吗？"
+
 #: src/components/dms/LeaveConvoPrompt.tsx:48
 msgid "Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for the other participant."
 msgstr "你确定要离开这个对话吗？此操作仅会在你的私信列表中删除对话，而不会在其他人的私信列表中删除。"
@@ -777,7 +781,7 @@ msgstr "生日"
 msgid "Birthday:"
 msgstr "生日："
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:269
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:273
 #: src/view/com/profile/ProfileMenu.tsx:341
 msgid "Block"
 msgstr "屏蔽"
@@ -953,6 +957,8 @@ msgstr "只能包含字母、数字、空格、破折号及下划线。 长度�
 #: src/components/Prompt.tsx:131
 #: src/components/TagMenu/index.tsx:267
 #: src/screens/Deactivated.tsx:161
+#: src/screens/Profile/Header/EditProfileDialog.tsx:219
+#: src/screens/Profile/Header/EditProfileDialog.tsx:226
 #: src/view/com/composer/Composer.tsx:540
 #: src/view/com/composer/Composer.tsx:555
 #: src/view/com/modals/ChangeEmail.tsx:213
@@ -962,7 +968,6 @@ msgstr "只能包含字母、数字、空格、破折号及下划线。 长度�
 #: src/view/com/modals/ChangePassword.tsx:271
 #: src/view/com/modals/CreateOrEditList.tsx:335
 #: src/view/com/modals/CropImage.web.tsx:97
-#: src/view/com/modals/EditProfile.tsx:244
 #: src/view/com/modals/InAppBrowserConsent.tsx:75
 #: src/view/com/modals/InAppBrowserConsent.tsx:77
 #: src/view/com/modals/LinkWarning.tsx:105
@@ -970,7 +975,7 @@ msgstr "只能包含字母、数字、空格、破折号及下划线。 长度�
 #: src/view/com/modals/VerifyEmail.tsx:255
 #: src/view/com/modals/VerifyEmail.tsx:261
 #: src/view/com/util/post-ctrls/RepostButton.tsx:164
-#: src/view/screens/Search/Search.tsx:906
+#: src/view/screens/Search/Search.tsx:910
 msgid "Cancel"
 msgstr "取消"
 
@@ -994,10 +999,6 @@ msgstr "取消修改用户识别符"
 msgid "Cancel image crop"
 msgstr "取消裁剪图片"
 
-#: src/view/com/modals/EditProfile.tsx:239
-msgid "Cancel profile editing"
-msgstr "取消编辑个人资料"
-
 #: src/view/com/util/post-ctrls/RepostButton.tsx:159
 msgid "Cancel quote post"
 msgstr "取消引用帖文"
@@ -1007,7 +1008,7 @@ msgid "Cancel reactivation and log out"
 msgstr "取消重新激活账户并登出"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:88
-#: src/view/screens/Search/Search.tsx:898
+#: src/view/screens/Search/Search.tsx:902
 msgid "Cancel search"
 msgstr "取消搜索"
 
@@ -1206,8 +1207,8 @@ msgstr "哒哒🐴哒哒🐴"
 msgid "Close"
 msgstr "关闭"
 
-#: src/components/Dialog/index.web.tsx:109
-#: src/components/Dialog/index.web.tsx:251
+#: src/components/Dialog/index.web.tsx:110
+#: src/components/Dialog/index.web.tsx:256
 msgid "Close active dialog"
 msgstr "关闭活动对话框"
 
@@ -1302,6 +1303,10 @@ msgstr "撰写帖文的长度最多为 {MAX_GRAPHEME_LENGTH} 个字符"
 #: src/view/com/post-thread/PostThreadComposePrompt.tsx:47
 msgid "Compose reply"
 msgstr "撰写回复"
+
+#: src/view/com/composer/Composer.tsx:1177
+msgid "Compressing video..."
+msgstr "正在压缩视频..."
 
 #: src/components/moderation/LabelPreference.tsx:81
 msgid "Configure content filtering setting for category: {name}"
@@ -1742,12 +1747,19 @@ msgstr "已删除的帖文。"
 msgid "Deletes the chat declaration record"
 msgstr "删除聊天记录"
 
+#: src/screens/Profile/Header/EditProfileDialog.tsx:340
 #: src/view/com/modals/CreateOrEditList.tsx:280
 #: src/view/com/modals/CreateOrEditList.tsx:301
-#: src/view/com/modals/EditProfile.tsx:193
-#: src/view/com/modals/EditProfile.tsx:205
 msgid "Description"
 msgstr "描述"
+
+#: src/screens/Profile/Header/EditProfileDialog.tsx:359
+msgid "Description is too long"
+msgstr "描述太长"
+
+#: src/screens/Profile/Header/EditProfileDialog.tsx:360
+msgid "Description is too long. The maximum number of characters is {DESCRIPTION_MAX_GRAPHEMES}."
+msgstr "描述太长，限制的最大字数为 {DESCRIPTION_MAX_GRAPHEMES}。"
 
 #: src/view/com/composer/GifAltText.tsx:150
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:114
@@ -1800,9 +1812,14 @@ msgstr "禁用字幕"
 msgid "Disabled"
 msgstr "关闭"
 
+#: src/screens/Profile/Header/EditProfileDialog.tsx:83
 #: src/view/com/composer/Composer.tsx:842
 msgid "Discard"
 msgstr "丢弃"
+
+#: src/screens/Profile/Header/EditProfileDialog.tsx:80
+msgid "Discard changes?"
+msgstr "放弃更改？"
 
 #: src/view/com/composer/Composer.tsx:839
 msgid "Discard draft?"
@@ -1826,7 +1843,7 @@ msgstr "探索新的资讯源"
 msgid "Discover New Feeds"
 msgstr "探索新的资讯源"
 
-#: src/components/Dialog/index.tsx:280
+#: src/components/Dialog/index.tsx:294
 msgid "Dismiss"
 msgstr "关闭"
 
@@ -1842,13 +1859,19 @@ msgstr "关闭入门指南"
 msgid "Display larger alt text badges"
 msgstr "显示更大的替代文本标签"
 
-#: src/view/com/modals/EditProfile.tsx:187
+#: src/screens/Profile/Header/EditProfileDialog.tsx:311
+#: src/screens/Profile/Header/EditProfileDialog.tsx:317
+#: src/screens/Profile/Header/EditProfileDialog.tsx:347
 msgid "Display name"
 msgstr "显示名称"
 
-#: src/view/com/modals/EditProfile.tsx:175
-msgid "Display Name"
-msgstr "显示名称"
+#: src/screens/Profile/Header/EditProfileDialog.tsx:329
+msgid "Display name is too long"
+msgstr "显示名称太长"
+
+#: src/screens/Profile/Header/EditProfileDialog.tsx:330
+msgid "Display name is too long. The maximum number of characters is {DISPLAY_NAME_MAX_GRAPHEMES}."
+msgstr "显示名称太长，限制的最大字数为 {DISPLAY_NAME_MAX_GRAPHEMES}。"
 
 #: src/view/com/modals/ChangeHandle.tsx:384
 msgid "DNS Panel"
@@ -1904,7 +1927,7 @@ msgstr "完成"
 msgid "Done{extraText}"
 msgstr "完成{extraText}"
 
-#: src/components/Dialog/index.tsx:281
+#: src/components/Dialog/index.tsx:295
 msgid "Double tap to close the dialog"
 msgstr "双击以关闭对话框"
 
@@ -1929,17 +1952,13 @@ msgstr "期间："
 msgid "e.g. alice"
 msgstr "例如：alice"
 
-#: src/view/com/modals/EditProfile.tsx:180
-msgid "e.g. Alice Roberts"
-msgstr "例如：爱丽丝·罗伯特"
+#: src/screens/Profile/Header/EditProfileDialog.tsx:318
+msgid "e.g. Alice Lastname"
+msgstr "例如：爱丽丝"
 
 #: src/view/com/modals/ChangeHandle.tsx:367
 msgid "e.g. alice.com"
 msgstr "例如：alice.com"
-
-#: src/view/com/modals/EditProfile.tsx:198
-msgid "e.g. Artist, dog-lover, and avid reader."
-msgstr "例如：艺术家、爱狗人士和狂热读者。"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:43
 msgid "E.g. artistic nudes."
@@ -2013,10 +2032,6 @@ msgstr "编辑内容审核列表"
 msgid "Edit My Feeds"
 msgstr "编辑自定义资讯源"
 
-#: src/view/com/modals/EditProfile.tsx:147
-msgid "Edit my profile"
-msgstr "编辑个人资料"
-
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:109
 msgid "Edit People"
 msgstr "编辑用户"
@@ -2026,13 +2041,15 @@ msgstr "编辑用户"
 msgid "Edit post interaction settings"
 msgstr "调整帖文互动选项"
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:178
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:170
+#: src/screens/Profile/Header/EditProfileDialog.tsx:266
+#: src/screens/Profile/Header/EditProfileDialog.tsx:272
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:176
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:169
 msgid "Edit profile"
 msgstr "编辑个人资料"
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:181
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:173
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:179
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:172
 msgid "Edit Profile"
 msgstr "编辑个人资料"
 
@@ -2047,14 +2064,6 @@ msgstr "编辑用户列表"
 #: src/components/WhoCanReply.tsx:87
 msgid "Edit who can reply"
 msgstr "编辑谁可以回复"
-
-#: src/view/com/modals/EditProfile.tsx:188
-msgid "Edit your display name"
-msgstr "编辑你的显示名称"
-
-#: src/view/com/modals/EditProfile.tsx:206
-msgid "Edit your profile description"
-msgstr "编辑你的账户描述"
 
 #: src/Navigation.tsx:372
 msgid "Edit your starter pack"
@@ -2214,6 +2223,10 @@ msgstr "请在下方输入你新的电子邮箱。"
 #: src/screens/Login/index.tsx:98
 msgid "Enter your username and password"
 msgstr "输入你的用户名和密码"
+
+#: src/view/com/composer/Composer.tsx:1186
+msgid "Error"
+msgstr "错误"
 
 #: src/view/screens/Settings/ExportCarDialog.tsx:46
 msgid "Error occurred while saving file"
@@ -2472,7 +2485,7 @@ msgstr "反馈已发送！"
 #: src/view/screens/Feeds.tsx:446
 #: src/view/screens/Feeds.tsx:552
 #: src/view/screens/Profile.tsx:232
-#: src/view/screens/Search/Search.tsx:536
+#: src/view/screens/Search/Search.tsx:537
 #: src/view/shell/desktop/LeftNav.tsx:401
 #: src/view/shell/Drawer.tsx:489
 #: src/view/shell/Drawer.tsx:490
@@ -2510,7 +2523,7 @@ msgstr "最终确定"
 msgid "Find accounts to follow"
 msgstr "寻找一些账户关注"
 
-#: src/view/screens/Search/Search.tsx:608
+#: src/view/screens/Search/Search.tsx:612
 msgid "Find posts and users on Bluesky"
 msgstr "在 Bluesky 寻找帖文和用户"
 
@@ -2538,7 +2551,7 @@ msgstr "灵活"
 #: src/components/ProfileCard.tsx:358
 #: src/components/ProfileHoverCard/index.web.tsx:449
 #: src/components/ProfileHoverCard/index.web.tsx:460
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:220
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:224
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:132
 msgid "Follow"
 msgstr "关注"
@@ -2548,7 +2561,7 @@ msgctxt "action"
 msgid "Follow"
 msgstr "关注"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:204
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:208
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:114
 msgid "Follow {0}"
 msgstr "关注 {0}"
@@ -2571,7 +2584,7 @@ msgstr "关注账户"
 msgid "Follow all"
 msgstr "关注所有人"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:218
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:222
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:130
 msgid "Follow Back"
 msgstr "回关"
@@ -2631,7 +2644,7 @@ msgstr "由你所认识的关注者"
 #: src/components/ProfileCard.tsx:352
 #: src/components/ProfileHoverCard/index.web.tsx:448
 #: src/components/ProfileHoverCard/index.web.tsx:459
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:216
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:220
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:135
 #: src/view/screens/Feeds.tsx:632
 #: src/view/screens/ProfileFollows.tsx:30
@@ -2641,7 +2654,7 @@ msgid "Following"
 msgstr "正在关注"
 
 #: src/components/ProfileCard.tsx:318
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:90
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:88
 msgid "Following {0}"
 msgstr "已关注 {0}"
 
@@ -3233,7 +3246,7 @@ msgid "Larger"
 msgstr "更大"
 
 #: src/screens/Hashtag.tsx:98
-#: src/view/screens/Search/Search.tsx:520
+#: src/view/screens/Search/Search.tsx:521
 msgid "Latest"
 msgstr "最新"
 
@@ -3324,7 +3337,7 @@ msgstr "喜欢 10 条帖文"
 msgid "Like 10 posts to train the Discover feed"
 msgstr "喜欢 10 条帖文，以训练 \"Discover\" 算法推送"
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:262
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:265
 #: src/view/screens/ProfileFeed.tsx:576
 msgid "Like this feed"
 msgstr "喜欢这个资讯源"
@@ -3519,7 +3532,7 @@ msgstr "提到的用户"
 
 #: src/components/Menu/index.tsx:94
 #: src/view/com/util/ViewHeader.tsx:87
-#: src/view/screens/Search/Search.tsx:877
+#: src/view/screens/Search/Search.tsx:881
 msgid "Menu"
 msgstr "菜单"
 
@@ -3950,7 +3963,7 @@ msgid "No likes yet"
 msgstr "目前还没有任何喜欢"
 
 #: src/components/ProfileCard.tsx:338
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:111
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:109
 msgid "No longer following {0}"
 msgstr "不再关注 {0}"
 
@@ -4135,7 +4148,7 @@ msgstr "糟糕！"
 msgid "Oh no! Something went wrong."
 msgstr "糟糕！发生了一些错误。"
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:334
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:337
 msgid "OK"
 msgstr "好的"
 
@@ -4476,7 +4489,7 @@ msgid "Pause video"
 msgstr "暂停视频"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:182
-#: src/view/screens/Search/Search.tsx:530
+#: src/view/screens/Search/Search.tsx:531
 msgid "People"
 msgstr "用户"
 
@@ -4780,6 +4793,10 @@ msgstr "隐私"
 msgid "Privacy Policy"
 msgstr "隐私政策"
 
+#: src/view/com/composer/Composer.tsx:1183
+msgid "Processing video..."
+msgstr "正在处理视频..."
+
 #: src/lib/api/index.ts:56
 #: src/screens/Login/ForgotPasswordForm.tsx:149
 msgid "Processing..."
@@ -4798,7 +4815,7 @@ msgstr "个人资料"
 msgid "Profile"
 msgstr "个人资料"
 
-#: src/view/com/modals/EditProfile.tsx:124
+#: src/screens/Profile/Header/EditProfileDialog.tsx:190
 msgid "Profile updated"
 msgstr "个人资料已更新"
 
@@ -4909,7 +4926,7 @@ msgstr "浏览 Bluesky 使用条款"
 msgid "Reason:"
 msgstr "结果："
 
-#: src/view/screens/Search/Search.tsx:1052
+#: src/view/screens/Search/Search.tsx:1056
 msgid "Recent Searches"
 msgstr "最近的搜索"
 
@@ -5002,11 +5019,11 @@ msgstr "删除图片"
 msgid "Remove mute word from your list"
 msgstr "从你的隐藏词汇列表中删除"
 
-#: src/view/screens/Search/Search.tsx:1096
+#: src/view/screens/Search/Search.tsx:1100
 msgid "Remove profile"
 msgstr "删除个人资料"
 
-#: src/view/screens/Search/Search.tsx:1098
+#: src/view/screens/Search/Search.tsx:1102
 msgid "Remove profile from search history"
 msgstr "从搜索历史中删除个人资料"
 
@@ -5365,6 +5382,8 @@ msgstr "回到上一页"
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:439
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:445
 #: src/components/StarterPack/QrCodeDialog.tsx:185
+#: src/screens/Profile/Header/EditProfileDialog.tsx:236
+#: src/screens/Profile/Header/EditProfileDialog.tsx:249
 #: src/view/com/composer/GifAltText.tsx:190
 #: src/view/com/composer/GifAltText.tsx:199
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:77
@@ -5373,7 +5392,6 @@ msgstr "回到上一页"
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:160
 #: src/view/com/modals/ChangeHandle.tsx:161
 #: src/view/com/modals/CreateOrEditList.tsx:317
-#: src/view/com/modals/EditProfile.tsx:219
 #: src/view/screens/SavedFeeds.tsx:102
 msgid "Save"
 msgstr "保存"
@@ -5391,10 +5409,6 @@ msgstr "保存生日"
 #: src/view/screens/SavedFeeds.tsx:98
 #: src/view/screens/SavedFeeds.tsx:102
 msgid "Save changes"
-msgstr "保存更改"
-
-#: src/view/com/modals/EditProfile.tsx:227
-msgid "Save Changes"
 msgstr "保存更改"
 
 #: src/view/com/modals/ChangeHandle.tsx:158
@@ -5432,10 +5446,6 @@ msgstr "保存到你的照片图库"
 msgid "Saved to your feeds"
 msgstr "已保存到你的自定义资讯源"
 
-#: src/view/com/modals/EditProfile.tsx:220
-msgid "Saves any changes to your profile"
-msgstr "保存个人资料中所做的变更"
-
 #: src/view/com/modals/ChangeHandle.tsx:159
 msgid "Saves handle change to {handle}"
 msgstr "保存用户识别符更改至 {handle}"
@@ -5465,7 +5475,7 @@ msgstr "滚动到顶部"
 #: src/components/forms/SearchInput.tsx:36
 #: src/Navigation.tsx:554
 #: src/view/com/modals/ListAddRemoveUsers.tsx:76
-#: src/view/screens/Search/Search.tsx:590
+#: src/view/screens/Search/Search.tsx:594
 #: src/view/shell/bottom-bar/BottomBar.tsx:178
 #: src/view/shell/desktop/LeftNav.tsx:377
 #: src/view/shell/Drawer.tsx:390
@@ -5477,7 +5487,7 @@ msgstr "搜索"
 msgid "Search for \"{query}\""
 msgstr "搜索 \"{query}\""
 
-#: src/view/screens/Search/Search.tsx:995
+#: src/view/screens/Search/Search.tsx:999
 msgid "Search for \"{searchText}\""
 msgstr "搜索 \"{searchText}\""
 
@@ -6155,11 +6165,11 @@ msgstr "订阅"
 msgid "Subscribe to @{0} to use these labels:"
 msgstr "订阅 @{0} 以使用这些标记："
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:225
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:228
 msgid "Subscribe to Labeler"
 msgstr "订阅标记者"
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:191
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:194
 msgid "Subscribe to this labeler"
 msgstr "订阅这个标记者"
 
@@ -6258,6 +6268,10 @@ msgstr "科技"
 msgid "Tell a joke!"
 msgstr "讲个笑话！"
 
+#: src/screens/Profile/Header/EditProfileDialog.tsx:348
+msgid "Tell us a bit about yourself"
+msgstr "告诉我们一些关于你自己的情况"
+
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:63
 msgid "Tell us a little more"
 msgstr "告诉我们更多"
@@ -6323,7 +6337,7 @@ msgstr "找不到此入门包。"
 msgid "That's all, folks!"
 msgstr "大功告成！"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:265
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:269
 #: src/view/com/profile/ProfileMenu.tsx:329
 msgid "The account will be able to interact with you after unblocking."
 msgstr "解除屏蔽后，该账户将能够与你互动。"
@@ -6412,7 +6426,7 @@ msgstr "主题"
 msgid "There is no time limit for account deactivation, come back any time."
 msgstr "停用账户没有时间限制，你可以随时决定回来。"
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:112
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:111
 #: src/view/screens/ProfileFeed.tsx:546
 msgid "There was an an issue contacting the server, please check your internet connection and try again."
 msgstr "连接至服务器时出现问题，请检查你的互联网连接并重试。"
@@ -6469,9 +6483,9 @@ msgstr "提交举报时出现问题，请检查你的网络连接。"
 msgid "There was an issue with fetching your app passwords"
 msgstr "获取应用专用密码时出现问题"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:99
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:120
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:133
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:97
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:118
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:131
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:91
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:102
 #: src/view/com/profile/ProfileMenu.tsx:102
@@ -6742,7 +6756,7 @@ msgid "Toggle to enable or disable adult content"
 msgstr "切换以启用或禁用成人内容"
 
 #: src/screens/Hashtag.tsx:87
-#: src/view/screens/Search/Search.tsx:510
+#: src/view/screens/Search/Search.tsx:511
 msgid "Top"
 msgstr "热门"
 
@@ -6801,14 +6815,14 @@ msgstr "无法删除"
 #: src/components/dms/MessagesListBlockedFooter.tsx:96
 #: src/components/dms/MessagesListBlockedFooter.tsx:104
 #: src/components/dms/MessagesListBlockedFooter.tsx:111
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:183
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:269
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:187
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:273
 #: src/view/com/profile/ProfileMenu.tsx:341
 #: src/view/screens/ProfileList.tsx:685
 msgid "Unblock"
 msgstr "取消屏蔽"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:188
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:192
 msgctxt "action"
 msgid "Unblock"
 msgstr "取消屏蔽"
@@ -6823,7 +6837,7 @@ msgstr "取消屏蔽账户"
 msgid "Unblock Account"
 msgstr "取消屏蔽账户"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:263
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:267
 #: src/view/com/profile/ProfileMenu.tsx:323
 msgid "Unblock Account?"
 msgstr "取消屏蔽账户？"
@@ -6839,7 +6853,7 @@ msgctxt "action"
 msgid "Unfollow"
 msgstr "取消关注"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:203
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:207
 msgid "Unfollow {0}"
 msgstr "取消关注 {0}"
 
@@ -6911,7 +6925,7 @@ msgstr "取消固定限制列表"
 msgid "Unpinned from your feeds"
 msgstr "已从你的资讯源中取消固定"
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:223
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:226
 msgid "Unsubscribe"
 msgstr "取消订阅"
 
@@ -6920,7 +6934,7 @@ msgstr "取消订阅"
 msgid "Unsubscribe from list"
 msgstr "从列表取消订阅"
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:190
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:193
 msgid "Unsubscribe from this labeler"
 msgstr "取消订阅这个标记者"
 
@@ -6992,6 +7006,10 @@ msgstr "正在上传图片..."
 #: src/lib/api/index.ts:330
 msgid "Uploading link thumbnail..."
 msgstr "正在上传链接缩略图..."
+
+#: src/view/com/composer/Composer.tsx:1180
+msgid "Uploading video..."
+msgstr "正在上传视频..."
 
 #: src/view/com/modals/ChangeHandle.tsx:395
 msgid "Use a file on your server"
@@ -7182,6 +7200,10 @@ msgstr "无法找到视频。"
 #: src/view/com/composer/videos/SubtitleDialog.tsx:99
 msgid "Video settings"
 msgstr "视频设置"
+
+#: src/view/com/composer/Composer.tsx:1190
+msgid "Video uploaded"
+msgstr "视频已上传"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:84
 msgid "Video: {0}"
@@ -7380,7 +7402,7 @@ msgstr "很抱歉！你所回复的帖文已被删除。"
 msgid "We're sorry! We can't find the page you were looking for."
 msgstr "很抱歉！我们找不到你正在寻找的页面。"
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:328
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:331
 msgid "We're sorry! You can only subscribe to twenty labelers, and you've reached your limit of twenty."
 msgstr "很抱歉！你目前只能订阅 20 个标记者，你已达到 20 个的限制。"
 
