@@ -9,6 +9,7 @@ import {useFocusEffect} from '@react-navigation/native'
 
 import {getLabelingServiceTitle} from '#/lib/moderation'
 import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
+import {useGate} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {isIOS} from '#/platform/detection'
 import {
@@ -173,6 +174,7 @@ export function ModerationScreenInner({
     data: labelers,
     error: labelersError,
   } = useMyLabelersQuery()
+  const gate = useGate()
 
   useFocusEffect(
     React.useCallback(() => {
@@ -469,18 +471,22 @@ export function ModerationScreenInner({
         </View>
       )}
 
-      <Text
-        style={[
-          a.text_md,
-          a.font_bold,
-          a.pt_2xl,
-          a.pb_md,
-          t.atoms.text_contrast_high,
-        ]}>
-        <Trans>Logged-out visibility</Trans>
-      </Text>
+      {!gate('new_settings') && (
+        <>
+          <Text
+            style={[
+              a.text_md,
+              a.font_bold,
+              a.pt_2xl,
+              a.pb_md,
+              t.atoms.text_contrast_high,
+            ]}>
+            <Trans>Logged-out visibility</Trans>
+          </Text>
 
-      <PwiOptOut />
+          <PwiOptOut />
+        </>
+      )}
 
       <View style={{height: 200}} />
     </ScrollView>
