@@ -17,7 +17,7 @@ const ItemContext = React.createContext({
 const Portal = createPortalGroup()
 
 export function Container({children}: {children: React.ReactNode}) {
-  return <View style={[a.flex_1, a.py_lg]}>{children}</View>
+  return <View style={[a.flex_1, a.py_md]}>{children}</View>
 }
 
 /**

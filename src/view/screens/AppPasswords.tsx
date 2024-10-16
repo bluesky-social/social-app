@@ -15,6 +15,7 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {CommonNavigatorParams} from '#/lib/routes/types'
+import {useGate} from '#/lib/statsig/statsig'
 import {cleanError} from '#/lib/strings/errors'
 import {useModalControls} from '#/state/modals'
 import {
@@ -28,14 +29,18 @@ import {Text} from '#/view/com/util/text/Text'
 import * as Toast from '#/view/com/util/Toast'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
 import {CenteredView} from '#/view/com/util/Views'
+import {AppPasswordsScreen as NewAppPasswordsScreen} from '#/screens/Settings/AppPasswords'
 import {atoms as a} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import * as Layout from '#/components/Layout'
 import * as Prompt from '#/components/Prompt'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AppPasswords'>
-export function AppPasswords({}: Props) {
-  return (
+export function AppPasswords(props: Props) {
+  const gate = useGate()
+  return gate('new_settings') ? (
+    <NewAppPasswordsScreen {...props} />
+  ) : (
     <Layout.Screen testID="AppPasswordsScreen">
       <AppPasswordsInner />
     </Layout.Screen>

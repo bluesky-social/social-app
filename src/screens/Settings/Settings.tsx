@@ -60,6 +60,7 @@ export function SettingsScreen({}: Props) {
           <View
             style={[
               a.px_xl,
+              a.pt_md,
               a.pb_md,
               a.w_full,
               a.gap_2xs,
