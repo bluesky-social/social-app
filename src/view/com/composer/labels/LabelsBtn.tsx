@@ -74,7 +74,7 @@ export function LabelsBtn({
           {labels.length > 0 ? (
             <Trans>Labels added</Trans>
           ) : (
-            <Trans>Add self-label</Trans>
+            <Trans>Self-labels</Trans>
           )}
         </ButtonText>
       </Button>
