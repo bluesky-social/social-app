@@ -1,12 +1,12 @@
 import React, {ComponentProps} from 'react'
 import {
   Linking,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
   View,
 } from 'react-native'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {StackActions, useNavigation} from '@react-navigation/native'
@@ -131,6 +131,7 @@ export {DrawerProfileCard}
 let DrawerContent = ({}: {}): React.ReactNode => {
   const t = useTheme()
   const {_} = useLingui()
+  const insets = useSafeAreaInsets()
   const setDrawerOpen = useSetDrawerOpen()
   const navigation = useNavigation<NavigationProp>()
   const {
@@ -227,82 +228,88 @@ let DrawerContent = ({}: {}): React.ReactNode => {
   // =
 
   return (
-    <View testID="drawer" style={[a.flex_1, a.pt_sm, a.pb_lg, t.atoms.bg]}>
-      <SafeAreaView style={[a.flex_1]}>
-        <ScrollView
-          style={[a.flex_1]}
-          contentContainerStyle={[a.px_xl, a.pt_lg]}>
-          {hasSession && currentAccount ? (
-            <DrawerProfileCard
-              account={currentAccount}
-              onPressProfile={onPressProfile}
-            />
-          ) : (
-            <View style={[a.pr_xl]}>
-              <NavSignupCard />
-            </View>
-          )}
-
-          {hasSession ? (
-            <>
-              <View style={{height: 16}} />
-              <SearchMenuItem isActive={isAtSearch} onPress={onPressSearch} />
-              <HomeMenuItem isActive={isAtHome} onPress={onPressHome} />
-              <ChatMenuItem isActive={isAtMessages} onPress={onPressMessages} />
-              <NotificationsMenuItem
-                isActive={isAtNotifications}
-                onPress={onPressNotifications}
-              />
-              <FeedsMenuItem isActive={isAtFeeds} onPress={onPressMyFeeds} />
-              <ListsMenuItem onPress={onPressLists} />
-              <ProfileMenuItem
-                isActive={isAtMyProfile}
-                onPress={onPressProfile}
-              />
-              <SettingsMenuItem onPress={onPressSettings} />
-            </>
-          ) : (
-            <>
-              <HomeMenuItem isActive={isAtHome} onPress={onPressHome} />
-              <FeedsMenuItem isActive={isAtFeeds} onPress={onPressMyFeeds} />
-              <SearchMenuItem isActive={isAtSearch} onPress={onPressSearch} />
-            </>
-          )}
-
-          <View style={[a.flex_col, a.gap_md, a.flex_wrap, a.my_xl]}>
-            <InlineLinkText
-              style={[a.text_md]}
-              label={_(msg`Terms of Service`)}
-              to="https://bsky.social/about/support/tos">
-              <Trans>Terms of Service</Trans>
-            </InlineLinkText>
-            <InlineLinkText
-              style={[a.text_md]}
-              to="https://bsky.social/about/support/privacy-policy"
-              label={_(msg`Privacy Policy`)}>
-              <Trans>Privacy Policy</Trans>
-            </InlineLinkText>
-            {kawaii && (
-              <Text style={t.atoms.text_contrast_medium}>
-                <Trans>
-                  Logo by{' '}
-                  <InlineLinkText
-                    style={[a.text_md]}
-                    to="/profile/sawaratsuki.bsky.social"
-                    label="@sawaratsuki.bsky.social">
-                    @sawaratsuki.bsky.social
-                  </InlineLinkText>
-                </Trans>
-              </Text>
-            )}
+    <View testID="drawer" style={[a.flex_1, a.pb_lg, t.atoms.bg, a.debug]}>
+      <ScrollView
+        style={[a.flex_1]}
+        contentContainerStyle={[
+          a.px_xl,
+          {
+            paddingTop: Math.max(
+              insets.top + a.pt_sm.paddingTop,
+              a.pt_xl.paddingTop,
+            ),
+          },
+        ]}>
+        {hasSession && currentAccount ? (
+          <DrawerProfileCard
+            account={currentAccount}
+            onPressProfile={onPressProfile}
+          />
+        ) : (
+          <View style={[a.pr_xl]}>
+            <NavSignupCard />
           </View>
-        </ScrollView>
+        )}
 
-        <DrawerFooter
-          onPressFeedback={onPressFeedback}
-          onPressHelp={onPressHelp}
-        />
-      </SafeAreaView>
+        {hasSession ? (
+          <>
+            <View style={{height: 16}} />
+            <SearchMenuItem isActive={isAtSearch} onPress={onPressSearch} />
+            <HomeMenuItem isActive={isAtHome} onPress={onPressHome} />
+            <ChatMenuItem isActive={isAtMessages} onPress={onPressMessages} />
+            <NotificationsMenuItem
+              isActive={isAtNotifications}
+              onPress={onPressNotifications}
+            />
+            <FeedsMenuItem isActive={isAtFeeds} onPress={onPressMyFeeds} />
+            <ListsMenuItem onPress={onPressLists} />
+            <ProfileMenuItem
+              isActive={isAtMyProfile}
+              onPress={onPressProfile}
+            />
+            <SettingsMenuItem onPress={onPressSettings} />
+          </>
+        ) : (
+          <>
+            <HomeMenuItem isActive={isAtHome} onPress={onPressHome} />
+            <FeedsMenuItem isActive={isAtFeeds} onPress={onPressMyFeeds} />
+            <SearchMenuItem isActive={isAtSearch} onPress={onPressSearch} />
+          </>
+        )}
+
+        <View style={[a.flex_col, a.gap_md, a.flex_wrap, a.my_xl]}>
+          <InlineLinkText
+            style={[a.text_md]}
+            label={_(msg`Terms of Service`)}
+            to="https://bsky.social/about/support/tos">
+            <Trans>Terms of Service</Trans>
+          </InlineLinkText>
+          <InlineLinkText
+            style={[a.text_md]}
+            to="https://bsky.social/about/support/privacy-policy"
+            label={_(msg`Privacy Policy`)}>
+            <Trans>Privacy Policy</Trans>
+          </InlineLinkText>
+          {kawaii && (
+            <Text style={t.atoms.text_contrast_medium}>
+              <Trans>
+                Logo by{' '}
+                <InlineLinkText
+                  style={[a.text_md]}
+                  to="/profile/sawaratsuki.bsky.social"
+                  label="@sawaratsuki.bsky.social">
+                  @sawaratsuki.bsky.social
+                </InlineLinkText>
+              </Trans>
+            </Text>
+          )}
+        </View>
+      </ScrollView>
+
+      <DrawerFooter
+        onPressFeedback={onPressFeedback}
+        onPressHelp={onPressHelp}
+      />
     </View>
   )
 }
