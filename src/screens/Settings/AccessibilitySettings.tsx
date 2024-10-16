@@ -43,18 +43,17 @@ export function AccessibilitySettingsScreen({}: Props) {
       <Layout.Header title={_(msg`Accessibility`)} />
       <Layout.Content>
         <SettingsList.Container>
-          <SettingsList.Item>
+          <SettingsList.Group contentContainerStyle={[a.gap_sm]}>
             <SettingsList.ItemIcon icon={AccessibilityIcon} />
             <SettingsList.ItemText>
               <Trans>Alt text</Trans>
             </SettingsList.ItemText>
-          </SettingsList.Item>
-          <SettingsList.Item style={[a.pt_0, a.flex_col, a.gap_sm]} iconInset>
             <Toggle.Item
               name="require_alt_text"
               label={_(msg`Require alt text before posting`)}
               value={requireAltTextEnabled ?? false}
-              onChange={value => setRequireAltTextEnabled(value)}>
+              onChange={value => setRequireAltTextEnabled(value)}
+              style={[a.w_full]}>
               <Toggle.LabelText style={[a.flex_1]}>
                 <Trans>Require alt text before posting</Trans>
               </Toggle.LabelText>
@@ -64,36 +63,34 @@ export function AccessibilitySettingsScreen({}: Props) {
               name="large_alt_badge"
               label={_(msg`Display larger alt text badges`)}
               value={!!largeAltBadgeEnabled}
-              onChange={value => setLargeAltBadgeEnabled(value)}>
+              onChange={value => setLargeAltBadgeEnabled(value)}
+              style={[a.w_full]}>
               <Toggle.LabelText style={[a.flex_1]}>
                 <Trans>Display larger alt text badges</Trans>
               </Toggle.LabelText>
               <Toggle.Platform />
             </Toggle.Item>
-          </SettingsList.Item>
+          </SettingsList.Group>
           {isNative && (
             <>
               <SettingsList.Divider />
-              <SettingsList.Item>
+              <SettingsList.Group contentContainerStyle={[a.gap_sm]}>
                 <SettingsList.ItemIcon icon={HapticIcon} />
                 <SettingsList.ItemText>
                   <Trans>Haptics</Trans>
                 </SettingsList.ItemText>
-              </SettingsList.Item>
-              <SettingsList.Item
-                style={[a.pt_0, a.flex_col, a.gap_sm]}
-                iconInset>
                 <Toggle.Item
                   name="haptics"
                   label={_(msg`Disable haptic feedback`)}
                   value={hapticsDisabled ?? false}
-                  onChange={value => setHapticsDisabled(value)}>
+                  onChange={value => setHapticsDisabled(value)}
+                  style={[a.w_full]}>
                   <Toggle.LabelText style={[a.flex_1]}>
                     <Trans>Disable haptic feedback</Trans>
                   </Toggle.LabelText>
                   <Toggle.Platform />
                 </Toggle.Item>
-              </SettingsList.Item>
+              </SettingsList.Group>
             </>
           )}
           <SettingsList.Item>

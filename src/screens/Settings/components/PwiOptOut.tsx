@@ -78,7 +78,8 @@ export function PwiOptOut() {
         onChange={onToggleOptOut}
         label={_(
           msg`Discourage apps from showing my account to logged-out users`,
-        )}>
+        )}
+        style={[a.w_full]}>
         <Toggle.LabelText style={[a.flex_1]}>
           <Trans>
             Discourage apps from showing my account to logged-out users

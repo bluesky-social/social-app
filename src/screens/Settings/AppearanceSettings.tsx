@@ -190,11 +190,9 @@ export function AppearanceToggleButtonGroup({
   const t = useTheme()
   return (
     <>
-      <SettingsList.Item style={[a.pb_0]}>
+      <SettingsList.Group contentContainerStyle={[a.gap_sm]} iconInset={false}>
         <SettingsList.ItemIcon icon={Icon} />
         <SettingsList.ItemText>{title}</SettingsList.ItemText>
-      </SettingsList.Item>
-      <SettingsList.Item style={[a.flex_col, a.gap_sm, a.pt_0]}>
         {description && (
           <Text
             style={[
@@ -216,7 +214,7 @@ export function AppearanceToggleButtonGroup({
             </ToggleButton.Button>
           ))}
         </ToggleButton.Group>
-      </SettingsList.Item>
+      </SettingsList.Group>
     </>
   )
 }

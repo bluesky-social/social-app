@@ -6,17 +6,64 @@ import {atoms as a, useTheme} from '#/alf'
 import * as Button from '#/components/Button'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon} from '#/components/icons/Chevron'
 import {Link, LinkProps} from '#/components/Link'
+import {createPortalGroup} from '#/components/Portal'
 import {Text} from '#/components/Typography'
 
-const ItemContext = React.createContext({destructive: false})
+const ItemContext = React.createContext({
+  destructive: false,
+  withinGroup: false,
+})
+
+const Portal = createPortalGroup()
 
 export function Container({children}: {children: React.ReactNode}) {
   return <View style={[a.flex_1, a.py_lg]}>{children}</View>
 }
 
-export function Item({
+export function Group({
   children,
   destructive = false,
+  iconInset = true,
+  style,
+  contentContainerStyle,
+}: {
+  children: React.ReactNode
+  destructive?: boolean
+  iconInset?: boolean
+  style?: StyleProp<ViewStyle>
+  contentContainerStyle?: StyleProp<ViewStyle>
+}) {
+  const context = useMemo(
+    () => ({destructive, withinGroup: true}),
+    [destructive],
+  )
+  return (
+    <View style={[a.w_full, style]}>
+      <Portal.Provider>
+        <ItemContext.Provider value={context}>
+          <Item style={[a.pb_xs, {minHeight: 44}]}>
+            <Portal.Outlet />
+          </Item>
+          <Item
+            style={[
+              a.flex_col,
+              a.pt_0,
+              a.align_start,
+              a.gap_0,
+              contentContainerStyle,
+            ]}
+            iconInset={iconInset}>
+            {children}
+          </Item>
+        </ItemContext.Provider>
+      </Portal.Provider>
+    </View>
+  )
+}
+
+export function Item({
+  children,
+  destructive,
   iconInset = false,
   style,
 }: {
@@ -29,7 +76,11 @@ export function Item({
   iconInset?: boolean
   style?: StyleProp<ViewStyle>
 }) {
-  const context = useMemo(() => ({destructive}), [destructive])
+  const context = useContext(ItemContext)
+  const childContext = useMemo(() => {
+    if (typeof destructive !== 'boolean') return context
+    return {...context, destructive}
+  }, [context, destructive])
   return (
     <View
       style={[
@@ -51,7 +102,9 @@ export function Item({
         },
         style,
       ]}>
-      <ItemContext.Provider value={context}>{children}</ItemContext.Provider>
+      <ItemContext.Provider value={childContext}>
+        {children}
+      </ItemContext.Provider>
     </View>
   )
 }
@@ -124,7 +177,7 @@ export function ItemIcon({
   color?: string
 }) {
   const t = useTheme()
-  const {destructive} = useContext(ItemContext)
+  const {destructive, withinGroup} = useContext(ItemContext)
 
   /*
    * Copied here from icons/common.tsx so we can tweak if we need to, but
@@ -142,11 +195,17 @@ export function ItemIcon({
   const color =
     colorProp ?? (destructive ? t.palette.negative_500 : t.atoms.text.color)
 
-  return (
+  const content = (
     <View style={[a.z_20, {width: iconSize, height: iconSize}]}>
       <Comp width={iconSize} style={[{color}]} />
     </View>
   )
+
+  if (withinGroup) {
+    return <Portal.Portal>{content}</Portal.Portal>
+  } else {
+    return content
+  }
 }
 
 export function ItemText({
@@ -155,9 +214,9 @@ export function ItemText({
   ...props
 }: React.ComponentProps<typeof Button.ButtonText>) {
   const t = useTheme()
-  const {destructive} = useContext(ItemContext)
+  const {destructive, withinGroup} = useContext(ItemContext)
 
-  return (
+  const content = (
     <Button.ButtonText
       style={[
         a.text_md,
@@ -170,6 +229,12 @@ export function ItemText({
       {...props}
     />
   )
+
+  if (withinGroup) {
+    return <Portal.Portal>{content}</Portal.Portal>
+  } else {
+    return content
+  }
 }
 
 export function Divider() {

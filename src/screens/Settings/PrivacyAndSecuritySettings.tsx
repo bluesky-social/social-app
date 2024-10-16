@@ -50,15 +50,13 @@ export function PrivacyAndSecuritySettingsScreen({}: Props) {
             )}
           </SettingsList.LinkItem>
           <SettingsList.Divider />
-          <SettingsList.Item>
+          <SettingsList.Group>
             <SettingsList.ItemIcon icon={EyeSlashIcon} />
             <SettingsList.ItemText>
               <Trans>Logged-out visibility</Trans>
             </SettingsList.ItemText>
-          </SettingsList.Item>
-          <SettingsList.Item iconInset style={[a.pt_0]}>
             <PwiOptOut />
-          </SettingsList.Item>
+          </SettingsList.Group>
           <SettingsList.Item>
             <Admonition.Outer type="tip" style={[a.flex_1]}>
               <Admonition.Row>
