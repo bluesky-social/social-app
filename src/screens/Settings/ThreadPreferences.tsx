@@ -106,7 +106,7 @@ export function ThreadPreferencesScreen({}: Props) {
                   prioritizeFollowedUsers: value,
                 })
               }
-              style={[a.w_full]}>
+              style={[a.w_full, a.gap_md]}>
               <Toggle.LabelText style={[a.flex_1]}>
                 <Trans>
                   Show replies by people you follow before all other replies.
@@ -131,7 +131,7 @@ export function ThreadPreferencesScreen({}: Props) {
                   lab_treeViewEnabled: value,
                 })
               }
-              style={[a.w_full]}>
+              style={[a.w_full, a.gap_md]}>
               <Toggle.LabelText style={[a.flex_1]}>
                 <Trans>Show replies in a threaded view</Trans>
               </Toggle.LabelText>
