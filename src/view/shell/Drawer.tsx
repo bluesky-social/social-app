@@ -1,11 +1,5 @@
 import React, {ComponentProps} from 'react'
-import {
-  Linking,
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native'
+import {Linking, ScrollView, TouchableOpacity, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -587,33 +581,50 @@ function MenuItem({
   bold,
   onPress,
 }: MenuItemProps) {
+  const t = useTheme()
   return (
     <PressableScale
       testID={`menuItemButton-${label}`}
-      style={[a.flex_row, a.align_center, {paddingVertical: 10}]}
+      style={[a.flex_row, a.align_center, a.gap_sm, {paddingVertical: 10}]}
       onPress={onPress}
       accessibilityRole="tab"
       accessibilityLabel={accessibilityLabel}
       accessibilityHint=""
       targetScale={0.95}>
-      <View style={[styles.menuItemIconWrapper]}>
+      <View style={[a.relative]}>
         {icon}
         {count ? (
           <View
             style={[
-              styles.menuItemCount,
-              a.rounded_full,
-              count.length > 2
-                ? styles.menuItemCountHundreds
-                : count.length > 1
-                ? styles.menuItemCountTens
-                : undefined,
+              a.absolute,
+              a.inset_0,
+              a.align_end,
+              {top: -4, right: a.gap_sm.gap * -1},
             ]}>
-            <Text
-              style={[styles.menuItemCountLabel, a.font_bold]}
-              numberOfLines={1}>
-              {count}
-            </Text>
+            <View
+              style={[
+                a.rounded_full,
+                {
+                  right: count.length === 1 ? 6 : 0,
+                  paddingHorizontal: 4,
+                  paddingVertical: 1,
+                  backgroundColor: t.palette.primary_500,
+                },
+              ]}>
+              <Text
+                style={[
+                  a.text_xs,
+                  a.leading_tight,
+                  a.font_bold,
+                  {
+                    fontVariant: ['tabular-nums'],
+                    color: colors.white,
+                  },
+                ]}
+                numberOfLines={1}>
+                {count}
+              </Text>
+            </View>
           </View>
         ) : undefined}
       </View>
@@ -625,35 +636,3 @@ function MenuItem({
     </PressableScale>
   )
 }
-
-const styles = StyleSheet.create({
-  menuItemIconWrapper: {
-    width: 24,
-    height: 24,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: 12,
-  },
-  menuItemCount: {
-    position: 'absolute',
-    width: 'auto',
-    right: -6,
-    top: -4,
-    backgroundColor: colors.blue3,
-    paddingHorizontal: 4,
-    paddingBottom: 1,
-    borderRadius: 6,
-  },
-  menuItemCountTens: {
-    width: 25,
-  },
-  menuItemCountHundreds: {
-    right: -12,
-    width: 34,
-  },
-  menuItemCountLabel: {
-    fontSize: 12,
-    fontVariant: ['tabular-nums'],
-    color: colors.white,
-  },
-})
