@@ -747,9 +747,10 @@ export const ComposePost = ({
           <Animated.View
             style={[a.flex_row, a.p_sm, t.atoms.bg, bottomBarAnimatedStyle]}>
             <ScrollView
-              horizontal
               contentContainerStyle={[a.gap_sm]}
-              bounces={false}>
+              horizontal={true}
+              bounces={false}
+              showsHorizontalScrollIndicator={false}>
               {replyTo ? null : (
                 <ThreadgateBtn
                   postgate={draft.postgate}
