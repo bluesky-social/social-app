@@ -37,7 +37,7 @@ export function Item({
         a.py_sm,
         a.align_center,
         a.gap_md,
-        a.flex_1,
+        a.w_full,
         a.flex_row,
         {minHeight: 48},
         iconInset && {
@@ -193,7 +193,12 @@ export function BadgeText({children}: {children: React.ReactNode}) {
   const t = useTheme()
   return (
     <Text
-      style={[t.atoms.text_contrast_low, a.text_md, a.text_right]}
+      style={[
+        t.atoms.text_contrast_low,
+        a.text_md,
+        a.text_right,
+        a.leading_snug,
+      ]}
       numberOfLines={1}>
       {children}
     </Text>
