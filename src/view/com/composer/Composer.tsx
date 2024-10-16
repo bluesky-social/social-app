@@ -559,38 +559,30 @@ export const ComposePost = ({
                     <ActivityIndicator />
                   </View>
                 </>
+              ) : canPost ? (
+                <Button
+                  testID="composerPublishBtn"
+                  label={replyTo ? _(msg`Publish reply`) : _(msg`Publish post`)}
+                  variant="solid"
+                  color="primary"
+                  shape="default"
+                  size="small"
+                  style={[a.rounded_full, a.py_sm]}
+                  onPress={() => onPressPublish()}
+                  disabled={videoState.status !== 'idle' && publishOnUpload}>
+                  <ButtonText style={[a.text_md]}>
+                    {replyTo ? (
+                      <Trans context="action">Reply</Trans>
+                    ) : (
+                      <Trans context="action">Post</Trans>
+                    )}
+                  </ButtonText>
+                </Button>
               ) : (
-                <View style={[styles.postBtnWrapper]}>
-                  {canPost ? (
-                    <Button
-                      testID="composerPublishBtn"
-                      label={
-                        replyTo ? _(msg`Publish reply`) : _(msg`Publish post`)
-                      }
-                      variant="solid"
-                      color="primary"
-                      shape="default"
-                      size="small"
-                      style={[a.rounded_full, a.py_sm]}
-                      onPress={() => onPressPublish()}
-                      disabled={
-                        videoState.status !== 'idle' && publishOnUpload
-                      }>
-                      <ButtonText style={[a.text_md]}>
-                        {replyTo ? (
-                          <Trans context="action">Reply</Trans>
-                        ) : (
-                          <Trans context="action">Post</Trans>
-                        )}
-                      </ButtonText>
-                    </Button>
-                  ) : (
-                    <View style={[styles.postBtn, pal.btn]}>
-                      <Text style={[pal.textLight, s.f16, s.bold]}>
-                        <Trans context="action">Post</Trans>
-                      </Text>
-                    </View>
-                  )}
+                <View style={[styles.postBtn, pal.btn]}>
+                  <Text style={[pal.textLight, s.f16, s.bold]}>
+                    <Trans context="action">Post</Trans>
+                  </Text>
                 </View>
               )}
             </View>
@@ -996,10 +988,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 6,
     marginLeft: 12,
-  },
-  postBtnWrapper: {
-    flexDirection: 'row',
-    gap: 14,
   },
   errorLine: {
     flexDirection: 'row',
