@@ -561,13 +561,6 @@ export const ComposePost = ({
                 </>
               ) : (
                 <View style={[styles.postBtnWrapper]}>
-                  <LabelsBtn
-                    labels={draft.labels}
-                    onChange={nextLabels => {
-                      dispatch({type: 'update_labels', labels: nextLabels})
-                    }}
-                    hasMedia={hasMedia || Boolean(extLink)}
-                  />
                   {canPost ? (
                     <Button
                       testID="composerPublishBtn"
@@ -758,22 +751,38 @@ export const ComposePost = ({
           </Animated.ScrollView>
           <SuggestedLanguage text={richtext.text} />
 
-          {replyTo ? null : (
-            <ThreadgateBtn
-              postgate={draft.postgate}
-              onChangePostgate={nextPostgate => {
-                dispatch({type: 'update_postgate', postgate: nextPostgate})
+          <Animated.View
+            style={[
+              a.flex_row,
+              a.p_sm,
+              a.gap_sm,
+              t.atoms.bg,
+              bottomBarAnimatedStyle,
+            ]}>
+            {replyTo ? null : (
+              <ThreadgateBtn
+                postgate={draft.postgate}
+                onChangePostgate={nextPostgate => {
+                  dispatch({type: 'update_postgate', postgate: nextPostgate})
+                }}
+                threadgateAllowUISettings={draft.threadgate}
+                onChangeThreadgateAllowUISettings={nextThreadgate => {
+                  dispatch({
+                    type: 'update_threadgate',
+                    threadgate: nextThreadgate,
+                  })
+                }}
+                style={bottomBarAnimatedStyle}
+              />
+            )}
+            <LabelsBtn
+              labels={draft.labels}
+              onChange={nextLabels => {
+                dispatch({type: 'update_labels', labels: nextLabels})
               }}
-              threadgateAllowUISettings={draft.threadgate}
-              onChangeThreadgateAllowUISettings={nextThreadgate => {
-                dispatch({
-                  type: 'update_threadgate',
-                  threadgate: nextThreadgate,
-                })
-              }}
-              style={bottomBarAnimatedStyle}
+              hasMedia={hasMedia || Boolean(extLink)}
             />
-          )}
+          </Animated.View>
           <View
             style={[
               a.flex_row,

@@ -3,7 +3,6 @@ import {Keyboard, View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {ShieldExclamation} from '#/lib/icons'
 import {
   ADULT_CONTENT_LABELS,
   AdultSelfLabel,
@@ -12,11 +11,12 @@ import {
   SelfLabel,
 } from '#/lib/moderation'
 import {isWeb} from '#/platform/detection'
-import {atoms as a, useTheme} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
+import {atoms as a, native, useTheme, web} from '#/alf'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as Toggle from '#/components/forms/Toggle'
-import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
+import {Earth_Stroke2_Corner0_Rounded as Earth} from '#/components/icons/Globe'
+import {Group3_Stroke2_Corner0_Rounded as Group} from '#/components/icons/Group'
 import {Text} from '#/components/Typography'
 export function LabelsBtn({
   labels,
@@ -28,7 +28,6 @@ export function LabelsBtn({
   onChange: (v: SelfLabel[]) => void
 }) {
   const control = Dialog.useDialogControl()
-  const t = useTheme()
   const {_} = useLingui()
 
   const hasLabel = labels.length > 0
@@ -52,20 +51,32 @@ export function LabelsBtn({
   return (
     <>
       <Button
+        variant="solid"
+        color="secondary"
+        size="small"
         testID="labelsBtn"
-        style={!hasMedia && {opacity: 0.4}}
+        onPress={() => {
+          Keyboard.dismiss()
+          control.open()
+        }}
         label={_(msg`Content warnings`)}
         accessibilityHint={_(
           msg`Opens a dialog to add a content warning to your post`,
         )}
-        onPress={() => {
-          Keyboard.dismiss()
-          control.open()
-        }}>
-        <ShieldExclamation style={{color: t.palette.primary_500}} size={24} />
-        {labels.length > 0 ? (
-          <Check size="sm" fill={t.palette.primary_500} />
-        ) : null}
+        style={[
+          native({
+            paddingHorizontal: 8,
+            paddingVertical: 6,
+          }),
+        ]}>
+        <ButtonIcon icon={true ? Earth : Group} />
+        <ButtonText numberOfLines={1}>
+          {labels.length > 0 ? (
+            <Trans>Labels added</Trans>
+          ) : (
+            <Trans>Add self-label</Trans>
+          )}
+        </ButtonText>
       </Button>
 
       <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
@@ -235,7 +246,7 @@ function DialogInner({
         </View>
       </View>
 
-      <View style={[a.mt_sm]}>
+      <View style={[a.mt_sm, web([a.flex_row, a.ml_auto])]}>
         <Button
           label={_(msg`Done`)}
           onPress={() => control.close()}
