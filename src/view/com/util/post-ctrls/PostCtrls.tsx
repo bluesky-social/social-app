@@ -17,7 +17,7 @@ import {
 import {msg, plural} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {IS_DEV, IS_TESTFLIGHT} from '#/lib/app-info'
+import {IS_INTERNAL} from '#/lib/app-info'
 import {POST_CTRL_HITSLOP} from '#/lib/constants'
 import {CountWheel} from '#/lib/custom-animations/CountWheel'
 import {AnimatedLikeIcon} from '#/lib/custom-animations/LikeIcon'
@@ -374,7 +374,7 @@ let PostCtrls = ({
           threadgateRecord={threadgateRecord}
         />
       </View>
-      {(IS_DEV || IS_TESTFLIGHT) && feedContext && (
+      {IS_INTERNAL && feedContext && (
         <Pressable
           accessible={false}
           style={{
