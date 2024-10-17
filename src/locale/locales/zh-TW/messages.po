@@ -4263,7 +4263,7 @@ msgstr "開啟動態選項選單"
 
 #: src/view/com/util/post-embeds/ExternalLinkEmbed.tsx:78
 msgid "Open link to {niceUrl}"
-msgstr "開啟 {niceUrl} 的鏈接"
+msgstr "開啟 {niceUrl} 的連結"
 
 #: src/view/screens/Settings/index.tsx:703
 msgid "Open links with in-app browser"
