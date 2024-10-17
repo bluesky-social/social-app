@@ -4711,7 +4711,7 @@ msgstr "貼文已刪除"
 
 #: src/lib/api/index.ts:121
 msgid "Post failed to upload. Please check your Internet connection and try again."
-msgstr "貼文上傳失敗。請檢查您的網路連線並重試。"
+msgstr "貼文發佈失敗。請檢查您的網路連線並重試。"
 
 #: src/view/com/post-thread/PostThread.tsx:212
 msgid "Post hidden"
