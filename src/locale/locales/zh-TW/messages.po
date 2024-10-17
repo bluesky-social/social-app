@@ -3502,7 +3502,7 @@ msgstr "此 Logo 由 <0/> 繪製"
 
 #: src/view/shell/Drawer.tsx:293
 msgid "Logo by <0>@sawaratsuki.bsky.social</0>"
-msgstr "此 LOGO 由 <0>@sawaratsuki.bsky.social</0> 繪製"
+msgstr "此 Logo 由 <0>@sawaratsuki.bsky.social</0> 繪製"
 
 #: src/components/RichText.tsx:226
 msgid "Long press to open tag menu for #{tag}"
