@@ -123,7 +123,8 @@ export function Link({
           starterPack.creator.did,
         )
         precacheStarterPack(queryClient, starterPack)
-      }}>
+      }}
+      style={[a.flex_col, a.align_start]}>
       {children}
     </BaseLink>
   )
