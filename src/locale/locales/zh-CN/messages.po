@@ -6454,7 +6454,7 @@ msgstr "主题"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:116
 msgid "There are no self-labels that can be applied to this post."
-msgstr "你不能给这个帖文贴上内容标签。"
+msgstr "没有适用于此帖文的内容标签。"
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:86
 msgid "There is no time limit for account deactivation, come back any time."
