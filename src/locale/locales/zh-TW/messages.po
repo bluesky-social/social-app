@@ -3548,7 +3548,7 @@ msgstr "媒體"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:221
 msgid "Media that may be disturbing or inappropriate for some audiences."
-msgstr "可能會令某些受眾感到不安或不合適的媒體內容。"
+msgstr "可能會使某些受眾感到不安或造成不適的媒體內容。"
 
 #: src/components/WhoCanReply.tsx:254
 msgid "mentioned users"
