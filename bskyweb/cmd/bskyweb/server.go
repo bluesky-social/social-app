@@ -38,6 +38,8 @@ type Server struct {
 	httpd *http.Server
 	xrpcc *xrpc.Client
 	cfg   *Config
+
+	ipccClient http.Client
 }
 
 type Config struct {
@@ -100,6 +102,13 @@ func serve(cctx *cli.Context) error {
 			ogcardHost:  ogcardHost,
 			linkHost:    linkHost,
 			ipccHost:    ipccHost,
+		},
+		ipccClient: http.Client{
+			Transport: &http.Transport{
+				TLSClientConfig: &tls.Config{
+					InsecureSkipVerify: true,
+				},
+			},
 		},
 	}
 
@@ -573,15 +582,8 @@ func (srv *Server) WebIpCC(c echo.Context) error {
 	}
 	ipccUrlBuilder.Path = "ipccdata.IpCcService/Lookup"
 	ipccUrl := ipccUrlBuilder.String()
-	cl := http.Client{
-		Transport: &http.Transport{
-			TLSClientConfig: &tls.Config{
-				InsecureSkipVerify: true,
-			},
-		},
-	}
 	postBodyReader := bytes.NewReader(request)
-	response, err := cl.Post(ipccUrl, "application/json", postBodyReader)
+	response, err := srv.ipccClient.Post(ipccUrl, "application/json", postBodyReader)
 	if err != nil {
 		log.Warnf("ipcc backend error %s", err)
 		return c.JSON(500, IPCCResponse{})
