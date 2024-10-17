@@ -19,7 +19,6 @@ import * as ContentLanguagesSettingsModal from './lang-settings/ContentLanguages
 import * as PostLanguagesSettingsModal from './lang-settings/PostLanguagesSettings'
 import * as LinkWarningModal from './LinkWarning'
 import * as ListAddUserModal from './ListAddRemoveUsers'
-import * as SelfLabelModal from './SelfLabel'
 import * as UserAddRemoveLists from './UserAddRemoveLists'
 import * as VerifyEmailModal from './VerifyEmail'
 
@@ -72,8 +71,6 @@ function Modal({modal}: {modal: ModalIface}) {
     element = <CropImageModal.Component {...modal} />
   } else if (modal.name === 'delete-account') {
     element = <DeleteAccountModal.Component />
-  } else if (modal.name === 'self-label') {
-    element = <SelfLabelModal.Component {...modal} />
   } else if (modal.name === 'change-handle') {
     element = <ChangeHandleModal.Component {...modal} />
   } else if (modal.name === 'invite-codes') {

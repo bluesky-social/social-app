@@ -499,10 +499,6 @@ export const ComposePost = ({
     openEmojiPicker?.(textInput.current?.getCursorPosition())
   }, [openEmojiPicker])
 
-  const focusTextInput = useCallback(() => {
-    textInput.current?.focus()
-  }, [])
-
   const onSelectGif = useCallback((gif: Gif) => {
     dispatch({type: 'embed_add_gif', gif})
   }, [])
@@ -808,11 +804,7 @@ export const ComposePost = ({
                     disabled={!canSelectImages}
                     onAdd={onImageAdd}
                   />
-                  <SelectGifBtn
-                    onClose={focusTextInput}
-                    onSelectGif={onSelectGif}
-                    disabled={hasMedia}
-                  />
+                  <SelectGifBtn onSelectGif={onSelectGif} disabled={hasMedia} />
                   {!isMobile ? (
                     <Button
                       onPress={onEmojiButtonPress}
