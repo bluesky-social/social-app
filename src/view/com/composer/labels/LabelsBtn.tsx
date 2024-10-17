@@ -15,8 +15,10 @@ import {atoms as a, native, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as Toggle from '#/components/forms/Toggle'
+import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {Shield_Stroke2_Corner0_Rounded} from '#/components/icons/Shield'
 import {Text} from '#/components/Typography'
+
 export function LabelsBtn({
   labels,
   hasMedia,
@@ -69,7 +71,7 @@ export function LabelsBtn({
             paddingVertical: 6,
           }),
         ]}>
-        <ButtonIcon icon={Shield_Stroke2_Corner0_Rounded} />
+        <ButtonIcon icon={hasLabel ? Check : Shield_Stroke2_Corner0_Rounded} />
         <ButtonText numberOfLines={1}>
           {labels.length > 0 ? (
             <Trans>Labels added</Trans>
@@ -125,7 +127,8 @@ function DialogInner({
               </Trans>
             ) : (
               <Trans>
-                There are no self-labels that can be applied to this post.
+                No self-labels can be applied to this post because it contains
+                no media.
               </Trans>
             )}
           </Text>
