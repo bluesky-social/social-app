@@ -2330,7 +2330,7 @@ msgstr "展開或摺疊您正在回覆的完整貼文"
 
 #: src/lib/api/index.ts:356
 msgid "Expected uri to resolve to a record"
-msgstr "預計 URL 將解析為記錄"
+msgstr "URI 應解析為記錄"
 
 #: src/view/screens/NotificationsSettings.tsx:78
 msgid "Experimental: When this preference is enabled, you'll only receive reply and quote notifications from users you follow. We'll continue to add more controls here over time."
