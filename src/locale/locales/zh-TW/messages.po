@@ -1133,7 +1133,7 @@ msgstr "選擇人物"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:110
 msgid "Choose self-labels that are applicable for the media you are posting. If none are selected, this post is suitable for all audiences."
-msgstr "請勾選您認為最適用於此媒體內容的標記。若不勾選，則預設為全年齡向。"
+msgstr "請勾選您認為最符合此媒體內容的標記。若不勾選，則預設為全年齡向。"
 
 #: src/view/com/auth/server-input/index.tsx:76
 msgid "Choose Service"
