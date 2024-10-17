@@ -50,7 +50,7 @@ export function AppPasswordsScreen({}: Props) {
           <ErrorScreen
             title={_(msg`Oops!`)}
             message={_(
-              msg`There was an issue with fetching your app passwords`,
+              msg`There was an issue fetching your app passwords`,
             )}
             details={cleanError(error)}
           />
@@ -97,7 +97,7 @@ export function AppPasswordsScreen({}: Props) {
                     ))}
                   </View>
                 ) : (
-                  <EmptyState icon="growth" message="No app passwords yet" />
+                  <EmptyState icon="growth" message={_(msg`No app passwords yet`)} />
                 )
               ) : (
                 <View
@@ -175,7 +175,7 @@ function AppPasswordCard({
           </Text>
         </View>
         <Button
-          label={_(msg`Delete password`)}
+          label={_(msg`Delete app password`)}
           variant="ghost"
           color="negative"
           size="small"
