@@ -78,7 +78,7 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
             style={[
               a.absolute,
               {
-                top: insets.top + tokens.space.lg,
+                top: insets.top + tokens.space.xl,
                 right: tokens.space.xl,
                 zIndex: 100,
               },
