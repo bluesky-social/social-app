@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-10-16 10:30+0900\n"
+"PO-Revision-Date: 2024-10-17 11:00+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -445,6 +445,10 @@ msgstr "成人向けコンテンツは<0>bsky.app</0>のウェブ版からしか
 #: src/components/moderation/LabelPreference.tsx:241
 msgid "Adult content is disabled."
 msgstr "成人向けコンテンツは無効になっています。"
+
+#: src/view/com/composer/labels/LabelsBtn.tsx:133
+msgid "Adult Content labels"
+msgstr "成人向けコンテンツのラベル"
 
 #: src/screens/Moderation/index.tsx:407
 #: src/view/screens/Settings/index.tsx:652
@@ -1099,6 +1103,11 @@ msgstr "チャットの設定"
 #: src/components/dms/ConvoMenu.tsx:84
 msgid "Chat unmuted"
 msgstr "チャットのミュートを解除しました"
+
+#: src/view/shell/Drawer.tsx:446
+#: src/view/shell/Drawer.tsx:447
+msgid "Chats"
+msgstr "チャット"
 
 #: src/screens/SignupQueued.tsx:78
 #: src/screens/SignupQueued.tsx:82
@@ -3474,6 +3483,10 @@ msgstr "ログアウトしたユーザーからの可視性"
 msgid "Login to account that is not listed"
 msgstr "リストにないアカウントにログイン"
 
+#: src/view/shell/Drawer.tsx:293
+msgid "Logo by <0>@sawaratsuki.bsky.social</0>"
+msgstr "<0>@sawaratsuki.bsky.social</0>によるロゴ"
+
 #: src/components/RichText.tsx:226
 msgid "Long press to open tag menu for #{tag}"
 msgstr "長押しで #{tag} のタグメニューを開く"
@@ -4266,6 +4279,10 @@ msgstr "システムのログを開く"
 #: src/view/com/util/forms/DropdownButton.tsx:159
 msgid "Opens {numItems} options"
 msgstr "{numItems}個のオプションを開く"
+
+#: src/view/com/composer/labels/LabelsBtn.tsx:51
+msgid "Opens a dialog to add a content warning to your post"
+msgstr "自分の投稿にコンテンツの警告を追加するダイアログを開く"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:65
 msgid "Opens a dialog to choose who can reply to this thread"
@@ -5981,10 +5998,6 @@ msgstr "すべてのアカウントからサインアウト"
 #: src/view/shell/NavSignupCard.tsx:63
 msgid "Sign up"
 msgstr "サインアップ"
-
-#: src/view/shell/NavSignupCard.tsx:47
-msgid "Sign up or sign in to join the conversation"
-msgstr "サインアップまたはサインインして会話に参加"
 
 #: src/components/moderation/ScreenHider.tsx:91
 #: src/lib/moderation/useGlobalLabelStrings.ts:28
