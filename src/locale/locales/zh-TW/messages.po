@@ -1971,7 +1971,7 @@ msgstr "例如：alice"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:318
 msgid "e.g. Alice Lastname"
-msgstr "例如：愛麗絲"
+msgstr "例如：張藍天"
 
 #: src/view/com/modals/ChangeHandle.tsx:367
 msgid "e.g. alice.com"
