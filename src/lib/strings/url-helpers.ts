@@ -2,10 +2,10 @@ import {AtUri} from '@atproto/api'
 import psl from 'psl'
 import TLDs from 'tlds'
 
+import {BSKY_SERVICE} from '#/lib/constants'
+import {isInvalidHandle} from '#/lib/strings/handles'
+import {startUriToStarterPackUri} from '#/lib/strings/starter-pack'
 import {logger} from '#/logger'
-import {BSKY_SERVICE} from 'lib/constants'
-import {isInvalidHandle} from 'lib/strings/handles'
-import {startUriToStarterPackUri} from 'lib/strings/starter-pack'
 
 export const BSKY_APP_HOST = 'https://bsky.app'
 const BSKY_TRUSTED_HOSTS = [
@@ -193,7 +193,11 @@ export function convertBskyAppUrlIfNeeded(url: string): string {
         return startUriToStarterPackUri(urlp.pathname)
       }
 
-      return urlp.pathname
+      if (urlp.pathname === '/search') {
+        return urlp.pathname + urlp.search
+      } else {
+        return urlp.pathname
+      }
     } catch (e) {
       console.error('Unexpected error in convertBskyAppUrlIfNeeded()', e)
     }
