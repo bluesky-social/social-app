@@ -2444,7 +2444,7 @@ msgstr "無法儲存通知偏好設定，請再試一次"
 #: src/lib/api/index.ts:145
 #: src/lib/api/index.ts:170
 msgid "Failed to save post interaction settings. Your post was created but users may be able to interact with it."
-msgstr "無法儲存貼文互動設定。您的貼文已創建，但其他用戶可能無法與其互動。"
+msgstr "無法儲存貼文互動限制。您的貼文已發佈，但其他用戶可能仍然能夠與其互動。"
 
 #: src/components/dms/MessageItem.tsx:233
 msgid "Failed to send"
