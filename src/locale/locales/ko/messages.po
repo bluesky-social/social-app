@@ -8,7 +8,7 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-10-17 10:08+0900\n"
+"PO-Revision-Date: 2024-10-17 14:07+0900\n"
 "Last-Translator: quiple\n"
 "Language-Team: quiple, lens0021, HaruChanHeart, hazzzi, heartade\n"
 "Plural-Forms: \n"
@@ -238,10 +238,6 @@ msgstr "<0>{0}</0>의 멤버"
 msgid "<0>{date}</0> at {time}"
 msgstr "<0>{date}</0> {time}"
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:173
-msgid "<0>Not Applicable.</0> This warning is only available for posts with media attached."
-msgstr "<0>해당 없음.</0> 이 경고는 미디어가 첨부된 게시물에만 사용할 수 있습니다."
-
 #: src/screens/StarterPack/Wizard/index.tsx:464
 msgid "<0>You</0> and<1> </1><2>{0} </2>are included in your starter pack"
 msgstr "<0>나</0>와<1> </1><2>{0} </2>님이 스타터 팩에 포함됩니다"
@@ -351,8 +347,8 @@ msgstr "계속하려면 {0}명 더 추가하기"
 msgid "Add {displayName} to starter pack"
 msgstr "스타터 팩에 {displayName} 추가"
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:96
-#: src/view/com/composer/labels/LabelsBtn.tsx:100
+#: src/view/com/composer/labels/LabelsBtn.tsx:101
+#: src/view/com/composer/labels/LabelsBtn.tsx:106
 msgid "Add a content warning"
 msgstr "콘텐츠 경고 추가"
 
@@ -433,9 +429,10 @@ msgstr "리스트에 추가됨"
 msgid "Added to my feeds"
 msgstr "내 피드에 추가됨"
 
+#: src/components/moderation/ContentHider.tsx:83
 #: src/lib/moderation/useGlobalLabelStrings.ts:34
 #: src/lib/moderation/useModerationCauseDescription.ts:144
-#: src/view/com/composer/labels/LabelsBtn.tsx:113
+#: src/view/com/composer/labels/LabelsBtn.tsx:135
 msgid "Adult Content"
 msgstr "성인 콘텐츠"
 
@@ -447,7 +444,8 @@ msgstr "성인 콘텐츠는 <0>bsky.app</0>에서 웹을 통해서만 활성화�
 msgid "Adult content is disabled."
 msgstr "성인 콘텐츠가 비활성화되어 있습니다."
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:133
+#: src/view/com/composer/labels/LabelsBtn.tsx:146
+#: src/view/com/composer/labels/LabelsBtn.tsx:205
 msgid "Adult Content labels"
 msgstr "성인 콘텐츠 라벨"
 
@@ -746,7 +744,7 @@ msgstr "{0}(으)로 쓰고 있나요?"
 msgid "Art"
 msgstr "예술"
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:162
+#: src/view/com/composer/labels/LabelsBtn.tsx:176
 msgid "Artistic or non-erotic nudity."
 msgstr "선정적이지 않거나 예술적인 노출."
 
@@ -1136,6 +1134,10 @@ msgstr "임의로 선택하기"
 msgid "Choose People"
 msgstr "사람들 선택"
 
+#: src/view/com/composer/labels/LabelsBtn.tsx:110
+msgid "Choose self-labels that are applicable for the media you are posting. If none are selected, this post is suitable for all audiences."
+msgstr "게시하는 미디어에 적용할 라벨을 선택하세요. 아무것도 선택하지 않으면 이 게시물이 모든 대상에게 적합하다는 것입니다."
+
 #: src/view/com/auth/server-input/index.tsx:76
 msgid "Choose Service"
 msgstr "서비스 선택"
@@ -1408,7 +1410,7 @@ msgstr "콘텐츠를 사용할 수 없음"
 msgid "Content Warning"
 msgstr "콘텐츠 경고"
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:49
+#: src/view/com/composer/labels/LabelsBtn.tsx:57
 msgid "Content warnings"
 msgstr "콘텐츠 경고"
 
@@ -1890,6 +1892,14 @@ msgstr "DNS 패널"
 msgid "Do not apply this mute word to users you follow"
 msgstr "내가 팔로우하는 사용자에게는 이 뮤트 단어를 적용하지 않기"
 
+#: src/view/com/composer/labels/LabelsBtn.tsx:180
+msgid "Does not contain adult content."
+msgstr "성인 콘텐츠가 포함되어 있지 않습니다."
+
+#: src/view/com/composer/labels/LabelsBtn.tsx:226
+msgid "Does not contain graphic or disturbing content."
+msgstr "선정적이거나 불쾌감을 주는 콘텐츠가 포함되어 있지 않습니다."
+
 #: src/lib/moderation/useGlobalLabelStrings.ts:39
 msgid "Does not include nudity."
 msgstr "노출을 포함하지 않습니다."
@@ -1914,8 +1924,8 @@ msgstr "도메인을 확인했습니다."
 #: src/screens/Onboarding/StepProfile/index.tsx:333
 #: src/view/com/auth/server-input/index.tsx:170
 #: src/view/com/auth/server-input/index.tsx:171
-#: src/view/com/composer/labels/LabelsBtn.tsx:186
-#: src/view/com/composer/labels/LabelsBtn.tsx:193
+#: src/view/com/composer/labels/LabelsBtn.tsx:240
+#: src/view/com/composer/labels/LabelsBtn.tsx:246
 #: src/view/com/composer/videos/SubtitleDialog.tsx:169
 #: src/view/com/composer/videos/SubtitleDialog.tsx:179
 #: src/view/com/modals/AddAppPasswords.tsx:243
@@ -2846,6 +2856,8 @@ msgid "Go to user's profile"
 msgstr "사용자의 프로필로 가기"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:46
+#: src/view/com/composer/labels/LabelsBtn.tsx:212
+#: src/view/com/composer/labels/LabelsBtn.tsx:215
 msgid "Graphic Media"
 msgstr "그래픽 미디어"
 
@@ -2894,7 +2906,7 @@ msgstr "앱 비밀번호입니다."
 msgid "Hidden list"
 msgstr "숨겨진 리스트"
 
-#: src/components/moderation/ContentHider.tsx:116
+#: src/components/moderation/ContentHider.tsx:178
 #: src/components/moderation/LabelPreference.tsx:134
 #: src/components/moderation/PostHider.tsx:122
 #: src/lib/moderation/useLabelBehaviorDescription.ts:15
@@ -2925,7 +2937,7 @@ msgstr "모두에게서 답글 숨기기"
 msgid "Hide reply for me"
 msgstr "나에게서 답글 숨기기"
 
-#: src/components/moderation/ContentHider.tsx:68
+#: src/components/moderation/ContentHider.tsx:129
 #: src/components/moderation/PostHider.tsx:79
 msgid "Hide the content"
 msgstr "콘텐츠 숨기기"
@@ -3026,10 +3038,6 @@ msgstr "확인"
 #: src/view/com/lightbox/Lightbox.web.tsx:185
 msgid "If alt text is long, toggles alt text expanded state"
 msgstr "대체 텍스트가 긴 경우 대체 텍스트 확장 상태를 전환합니다"
-
-#: src/view/com/composer/labels/LabelsBtn.tsx:166
-msgid "If none are selected, suitable for all ages."
-msgstr "아무것도 선택하지 않으면 모든 연령대에 적합하다는 뜻입니다."
 
 #: src/screens/Signup/StepInfo/Policies.tsx:110
 msgid "If you are not yet an adult according to the laws of your country, your parent or legal guardian must read these Terms on your behalf."
@@ -3210,11 +3218,11 @@ msgstr "대화에 참여하기"
 msgid "Journalism"
 msgstr "저널리즘"
 
-#: src/components/moderation/ContentHider.tsx:147
+#: src/components/moderation/ContentHider.tsx:209
 msgid "Labeled by {0}."
 msgstr "{0}이(가) 라벨 지정함."
 
-#: src/components/moderation/ContentHider.tsx:145
+#: src/components/moderation/ContentHider.tsx:207
 msgid "Labeled by the author."
 msgstr "작성자가 라벨 지정함."
 
@@ -3273,8 +3281,8 @@ msgstr "Bluesky에 대해 더 알아보기"
 msgid "Learn more about self hosting your PDS."
 msgstr "PDS 셀프 호스팅에 대해 자세히 알아보세요."
 
-#: src/components/moderation/ContentHider.tsx:66
-#: src/components/moderation/ContentHider.tsx:131
+#: src/components/moderation/ContentHider.tsx:127
+#: src/components/moderation/ContentHider.tsx:193
 msgid "Learn more about the moderation applied to this content."
 msgstr "이 콘텐츠에 적용된 검토 설정에 대해 자세히 알아보세요."
 
@@ -3288,7 +3296,7 @@ msgstr "이 경고에 대해 더 알아보기"
 msgid "Learn more about what is public on Bluesky."
 msgstr "Bluesky에서 공개되는 항목에 대해 자세히 알아보세요."
 
-#: src/components/moderation/ContentHider.tsx:155
+#: src/components/moderation/ContentHider.tsx:217
 #: src/view/com/auth/server-input/index.tsx:158
 msgid "Learn more."
 msgstr "더 알아보기"
@@ -3536,6 +3544,10 @@ msgstr "읽음으로 표시"
 #: src/view/screens/Profile.tsx:230
 msgid "Media"
 msgstr "미디어"
+
+#: src/view/com/composer/labels/LabelsBtn.tsx:221
+msgid "Media that may be disturbing or inappropriate for some audiences."
+msgstr "일부 사용자에게 불쾌감을 주거나 부적절할 수 있는 미디어."
 
 #: src/components/WhoCanReply.tsx:254
 msgid "mentioned users"
@@ -4142,8 +4154,8 @@ msgstr "지금"
 msgid "Now"
 msgstr "지금"
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:146
-#: src/view/com/composer/labels/LabelsBtn.tsx:148
+#: src/view/com/composer/labels/LabelsBtn.tsx:158
+#: src/view/com/composer/labels/LabelsBtn.tsx:161
 msgid "Nudity"
 msgstr "노출"
 
@@ -4289,7 +4301,7 @@ msgstr "시스템 로그 열기"
 msgid "Opens {numItems} options"
 msgstr "{numItems}번째 옵션을 엽니다"
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:51
+#: src/view/com/composer/labels/LabelsBtn.tsx:59
 msgid "Opens a dialog to add a content warning to your post"
 msgstr "게시물에 콘텐츠 경고를 추가하는 대화 상자를 엽니다"
 
@@ -4451,6 +4463,7 @@ msgid "Or, log into one of your other accounts."
 msgstr "또는 다른 계정 중 하나로 로그인하세요."
 
 #: src/lib/moderation/useReportOptions.ts:27
+#: src/view/com/composer/labels/LabelsBtn.tsx:194
 msgid "Other"
 msgstr "기타"
 
@@ -4542,7 +4555,7 @@ msgstr "반려동물"
 msgid "Photography"
 msgstr "사진"
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:160
+#: src/view/com/composer/labels/LabelsBtn.tsx:174
 msgid "Pictures meant for adults."
 msgstr "성인용 사진."
 
@@ -4664,8 +4677,8 @@ msgstr "이메일 인증하기"
 msgid "Politics"
 msgstr "정치"
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:151
-#: src/view/com/composer/labels/LabelsBtn.tsx:153
+#: src/view/com/composer/labels/LabelsBtn.tsx:164
+#: src/view/com/composer/labels/LabelsBtn.tsx:167
 msgid "Porn"
 msgstr "음란물"
 
@@ -4968,8 +4981,6 @@ msgstr "대화 다시 불러오기"
 #: src/components/FeedCard.tsx:316
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:102
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:109
-#: src/view/com/composer/labels/LabelsBtn.tsx:117
-#: src/view/com/composer/labels/LabelsBtn.tsx:126
 #: src/view/com/feeds/FeedSourceCard.tsx:316
 #: src/view/com/modals/ListAddRemoveUsers.tsx:269
 #: src/view/com/modals/UserAddRemoveLists.tsx:235
@@ -5779,7 +5790,7 @@ msgstr "비밀번호 재설정을 위한 이메일을 설정합니다"
 msgid "Settings"
 msgstr "설정"
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:164
+#: src/view/com/composer/labels/LabelsBtn.tsx:178
 msgid "Sexual activity or erotic nudity."
 msgstr "성행위 또는 선정적인 노출."
 
@@ -5863,7 +5874,7 @@ msgstr "공유 설정 테스터"
 msgid "Shares the linked website"
 msgstr "연결된 웹사이트를 공유합니다"
 
-#: src/components/moderation/ContentHider.tsx:116
+#: src/components/moderation/ContentHider.tsx:178
 #: src/components/moderation/LabelPreference.tsx:136
 #: src/components/moderation/PostHider.tsx:122
 #: src/view/screens/Settings/index.tsx:352
@@ -5942,7 +5953,7 @@ msgstr "모두에게 답글 표시"
 msgid "Show Reposts"
 msgstr "재게시 표시"
 
-#: src/components/moderation/ContentHider.tsx:69
+#: src/components/moderation/ContentHider.tsx:130
 #: src/components/moderation/PostHider.tsx:79
 msgid "Show the content"
 msgstr "콘텐츠 표시"
@@ -6206,8 +6217,8 @@ msgstr "추천 계정"
 msgid "Suggested for you"
 msgstr "나를 위한 추천"
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:141
-#: src/view/com/composer/labels/LabelsBtn.tsx:143
+#: src/view/com/composer/labels/LabelsBtn.tsx:152
+#: src/view/com/composer/labels/LabelsBtn.tsx:155
 msgid "Suggestive"
 msgstr "외설적"
 
@@ -6440,6 +6451,10 @@ msgstr "입력한 인증 코드가 올바르지 않습니다. 올바른 인증 �
 #: src/screens/Settings/AppearanceSettings.tsx:152
 msgid "Theme"
 msgstr "테마"
+
+#: src/view/com/composer/labels/LabelsBtn.tsx:116
+msgid "There are no self-labels that can be applied to this post."
+msgstr "이 게시물에 적용할 수 있는 라벨이 없습니다."
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:86
 msgid "There is no time limit for account deactivation, come back any time."
