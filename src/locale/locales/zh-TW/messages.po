@@ -5681,7 +5681,7 @@ msgstr "發送一個妙趣的網站！"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:189
 msgid "Send Confirmation"
-msgstr "發送確認"
+msgstr "發送確認信"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:182
 msgid "Send confirmation email"
