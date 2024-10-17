@@ -64,8 +64,8 @@ let NavSignupCard = ({}: {}): React.ReactNode => {
         </Button>
       </View>
 
-      <View style={[a.pt_2xl, a.w_full]}>
-        <AppLanguageDropdown />
+      <View style={[a.mt_md, a.w_full, {height: 32}]}>
+        <AppLanguageDropdown style={{marginTop: 0}} />
       </View>
     </View>
   )
