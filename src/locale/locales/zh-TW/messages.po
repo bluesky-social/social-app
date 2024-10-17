@@ -6512,7 +6512,7 @@ msgstr "提交您的檢舉時出現問題，請檢查您的網路連線。"
 #: src/view/com/posts/FeedShutdownMsg.tsx:71
 #: src/view/screens/ProfileFeed.tsx:211
 msgid "There was an issue updating your feeds, please check your internet connection and try again."
-msgstr "更新動態源時出現問題，請檢查您的網路連線並重試。"
+msgstr "更新動態時出現問題，請檢查您的網路連線並重試。"
 
 #: src/view/screens/AppPasswords.tsx:75
 msgid "There was an issue with fetching your app passwords"
