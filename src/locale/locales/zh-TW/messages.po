@@ -6336,7 +6336,7 @@ msgstr "文字輸入框"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:82
 msgid "Thank you! Your email has been successfully verified."
-msgstr "謝謝你！您的電子郵件地址已成功驗證。"
+msgstr "謝謝您！您的電子郵件地址已成功驗證。"
 
 #: src/components/dms/ReportDialog.tsx:129
 #: src/components/ReportDialog/SubmitView.tsx:82
