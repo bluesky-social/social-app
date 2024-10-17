@@ -3,6 +3,7 @@ import {
   ImageStyle,
   Keyboard,
   LayoutChangeEvent,
+  Pressable,
   StyleSheet,
   TouchableOpacity,
   View,
@@ -208,24 +209,23 @@ const GalleryItem = ({
           />
         </TouchableOpacity>
       </View>
-      <TouchableOpacity
+      <Pressable
         accessibilityRole="button"
         accessibilityLabel={_(msg`Add alt text`)}
         accessibilityHint=""
         onPress={onAltTextEdit}
-        style={styles.altTextHiddenRegion}
-      />
-
-      <Image
-        testID="selectedPhotoImage"
-        style={[styles.image, imageStyle] as ImageStyle}
-        source={{
-          uri: (image.transformed ?? image.source).path,
-        }}
-        accessible={true}
-        accessibilityIgnoresInvertColors
-      />
-
+        style={[styles.image, {overflow: 'hidden'}]}
+        android_ripple={{foreground: true, borderless: true}}>
+        <Image
+          testID="selectedPhotoImage"
+          style={[styles.image, imageStyle] as ImageStyle}
+          source={{
+            uri: (image.transformed ?? image.source).path,
+          }}
+          accessible={true}
+          accessibilityIgnoresInvertColors
+        />
+      </Pressable>
       <ImageAltTextDialog
         control={altTextControl}
         image={image}
