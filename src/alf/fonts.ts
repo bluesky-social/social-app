@@ -1,5 +1,4 @@
 import {TextStyle} from 'react-native'
-import {useFonts} from 'expo-font'
 
 import {isAndroid, isWeb} from '#/platform/detection'
 import {Device, device} from '#/storage'
@@ -96,27 +95,7 @@ export function applyFonts(style: TextStyle, fontFamily: 'system' | 'theme') {
   }
 }
 
-/*
- * IMPORTANT: This is unused. Expo statically extracts these fonts.
- *
- * All used fonts MUST be configured here. Unused fonts can be commented out.
- *
- * This is used for both web fonts and native fonts.
+/**
+ * Here only for bundling purposes, not actually used.
  */
-export function DO_NOT_USE() {
-  return useFonts(
-    isAndroid
-      ? {
-          'Inter-Regular': require('../../assets/fonts/inter/Inter-Regular.otf'),
-          'Inter-Italic': require('../../assets/fonts/inter/Inter-Italic.otf'),
-          'Inter-Bold': require('../../assets/fonts/inter/Inter-SemiBold.otf'),
-          'Inter-BoldItalic': require('../../assets/fonts/inter/Inter-SemiBoldItalic.otf'),
-          'Inter-Black': require('../../assets/fonts/inter/Inter-ExtraBold.otf'),
-          'Inter-BlackItalic': require('../../assets/fonts/inter/Inter-ExtraBoldItalic.otf'),
-        }
-      : {
-          InterVariable: require('../../assets/fonts/inter/InterVariable.ttf'),
-          'InterVariable-Italic': require('../../assets/fonts/inter/InterVariable-Italic.ttf'),
-        },
-  )
-}
+export {DO_NOT_USE} from '#/alf/util/unusedUseFonts'
