@@ -96,6 +96,7 @@ function ShellInner() {
         <ErrorBoundary>
           <Drawer
             renderDrawerContent={renderDrawerContent}
+            drawerStyle={{width: Math.min(400, winDim.width * 0.8)}}
             open={isDrawerOpen}
             onOpen={onOpenDrawer}
             onClose={onCloseDrawer}
