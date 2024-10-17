@@ -108,7 +108,7 @@ let ProfileHeaderLabeler = ({
     } catch (e: any) {
       Toast.show(
         _(
-          msg`There was an an issue contacting the server, please check your internet connection and try again.`,
+          msg`There was an issue contacting the server, please check your internet connection and try again.`,
         ),
         'xmark',
       )
