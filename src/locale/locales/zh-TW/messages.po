@@ -4304,7 +4304,7 @@ msgstr "開啟 {numItems} 個選項"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:59
 msgid "Opens a dialog to add a content warning to your post"
-msgstr "開啟對話窗來向您的貼文添加內容警告"
+msgstr "開啟對話窗來向您的貼文加入內容警告"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:65
 msgid "Opens a dialog to choose who can reply to this thread"
