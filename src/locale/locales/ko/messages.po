@@ -5998,7 +5998,7 @@ msgstr "로그아웃"
 #: src/view/screens/Settings/index.tsx:421
 #: src/view/screens/Settings/index.tsx:431
 msgid "Sign out of all accounts"
-msgstr "모든 계정 로그아웃"
+msgstr "모든 계정에서 로그아웃"
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:301
 #: src/view/shell/bottom-bar/BottomBar.tsx:302
