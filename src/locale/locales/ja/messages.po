@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-10-17 11:00+0900\n"
+"PO-Revision-Date: 2024-10-17 13:00+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -1767,7 +1767,7 @@ msgstr "説明が長すぎます"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:360
 msgid "Description is too long. The maximum number of characters is {DESCRIPTION_MAX_GRAPHEMES}."
-msgstr "説明が長すぎます。最大で{DESCRIPTION_MAX_GRAPHEMES}文字です。"
+msgstr "説明が長すぎます。最大{DESCRIPTION_MAX_GRAPHEMES}文字までです。"
 
 #: src/view/com/composer/GifAltText.tsx:151
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:115
@@ -1876,7 +1876,7 @@ msgstr "表示名が長すぎます"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:330
 msgid "Display name is too long. The maximum number of characters is {DISPLAY_NAME_MAX_GRAPHEMES}."
-msgstr "表示名が長すぎます。最大で{DISPLAY_NAME_MAX_GRAPHEMES}文字です。"
+msgstr "表示名が長すぎます。最大{DISPLAY_NAME_MAX_GRAPHEMES}文字までです。"
 
 #: src/view/com/modals/ChangeHandle.tsx:384
 msgid "DNS Panel"
@@ -7234,11 +7234,11 @@ msgstr "{displayName}のプロフィールを表示"
 
 #: src/components/TagMenu/index.tsx:149
 msgid "View all posts by @{authorHandle} with tag {displayTag}"
-msgstr "{displayTag}のすべての投稿を表示（@{authorHandle}のみ）"
+msgstr "{displayTag}の投稿をすべて表示（@{authorHandle}のみ）"
 
 #: src/components/TagMenu/index.tsx:103
 msgid "View all posts with tag {displayTag}"
-msgstr "{displayTag}のすべての投稿を表示（すべてのユーザー）"
+msgstr "{displayTag}の投稿をすべて表示（すべてのユーザー）"
 
 #: src/components/ProfileHoverCard/index.web.tsx:433
 msgid "View blocked user's profile"
@@ -7700,7 +7700,7 @@ msgstr "{STARTER_PACK_MAX_SIZE}ユーザーまで追加できます"
 
 #: src/screens/StarterPack/Wizard/State.tsx:97
 msgid "You may only add up to 3 feeds"
-msgstr "３フィードまで追加できます"
+msgstr "３つまでフィードを追加できます"
 
 #: src/lib/media/picker.shared.ts:22
 msgid "You may only select up to 4 images"
@@ -7712,7 +7712,7 @@ msgstr "サインアップするには、13歳以上である必要がありま�
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:307
 msgid "You must be following at least seven other people to generate a starter pack."
-msgstr "スターターパックを作成するには少なくとも７人フォローしていなくてはなりません"
+msgstr "スターターパックを作成するには、少なくとも７人をフォローしなければなりません。"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:60
 msgid "You must grant access to your photo library to save a QR code"
