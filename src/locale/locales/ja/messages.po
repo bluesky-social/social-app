@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-10-17 17:35+0900\n"
+"PO-Revision-Date: 2024-10-17 23:54+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -4257,7 +4257,7 @@ msgstr "{niceUrl}へのリンクを開く"
 
 #: src/view/screens/Settings/index.tsx:702
 msgid "Open links with in-app browser"
-msgstr "アプリ内ブラウザーでリンクを開く"
+msgstr "アプリ内ブラウザでリンクを開く"
 
 #: src/components/dms/ActionsWrapper.tsx:87
 msgid "Open message options"
@@ -7051,12 +7051,12 @@ msgstr "デフォルトプロバイダーを使用"
 #: src/view/com/modals/InAppBrowserConsent.tsx:53
 #: src/view/com/modals/InAppBrowserConsent.tsx:55
 msgid "Use in-app browser"
-msgstr "アプリ内ブラウザーを使用"
+msgstr "アプリ内ブラウザを使用"
 
 #: src/view/com/modals/InAppBrowserConsent.tsx:63
 #: src/view/com/modals/InAppBrowserConsent.tsx:65
 msgid "Use my default browser"
-msgstr "デフォルトのブラウザーを使用"
+msgstr "デフォルトのブラウザを使用"
 
 #: src/screens/Feeds/NoSavedFeedsOfAnyType.tsx:53
 msgid "Use recommended"
