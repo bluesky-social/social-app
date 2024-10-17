@@ -17,13 +17,13 @@ import {
 import {msg, plural} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {IS_INTERNAL} from '#/lib/app-info'
 import {POST_CTRL_HITSLOP} from '#/lib/constants'
 import {CountWheel} from '#/lib/custom-animations/CountWheel'
 import {AnimatedLikeIcon} from '#/lib/custom-animations/LikeIcon'
 import {useHaptics} from '#/lib/haptics'
 import {makeProfileLink} from '#/lib/routes/links'
 import {shareUrl} from '#/lib/sharing'
-import {useGate} from '#/lib/statsig/statsig'
 import {toShareUrl} from '#/lib/strings/url-helpers'
 import {Shadow} from '#/state/cache/types'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
@@ -85,7 +85,6 @@ let PostCtrls = ({
   const {sendInteraction} = useFeedFeedbackContext()
   const {captureAction} = useProgressGuideControls()
   const playHaptic = useHaptics()
-  const gate = useGate()
   const isBlocked = Boolean(
     post.author.viewer?.blocking ||
       post.author.viewer?.blockedBy ||
@@ -375,7 +374,7 @@ let PostCtrls = ({
           threadgateRecord={threadgateRecord}
         />
       </View>
-      {gate('debug_show_feedcontext') && feedContext && (
+      {IS_INTERNAL && feedContext && (
         <Pressable
           accessible={false}
           style={{

@@ -2,6 +2,7 @@ import React from 'react'
 import {BackHandler, StyleSheet, useWindowDimensions, View} from 'react-native'
 import {Drawer} from 'react-native-drawer-layout'
 import Animated from 'react-native-reanimated'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import * as NavigationBar from 'expo-navigation-bar'
 import {StatusBar} from 'expo-status-bar'
 import {useNavigation, useNavigationState} from '@react-navigation/native'
@@ -25,7 +26,7 @@ import {useCloseAnyActiveElement} from '#/state/util'
 import {Lightbox} from '#/view/com/lightbox/Lightbox'
 import {ModalsContainer} from '#/view/com/modals/Modal'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
-import {atoms as a} from '#/alf'
+import {atoms as a, select, useTheme as useNewTheme} from '#/alf'
 import {MutedWordsDialog} from '#/components/dialogs/MutedWords'
 import {SigninDialog} from '#/components/dialogs/Signin'
 import {Outlet as PortalOutlet} from '#/components/Portal'
@@ -36,10 +37,12 @@ import {Composer} from './Composer'
 import {DrawerContent} from './Drawer'
 
 function ShellInner() {
+  const t = useNewTheme()
   const isDrawerOpen = useIsDrawerOpen()
   const isDrawerSwipeDisabled = useIsDrawerSwipeDisabled()
   const setIsDrawerOpen = useSetDrawerOpen()
   const winDim = useWindowDimensions()
+  const insets = useSafeAreaInsets()
 
   const renderDrawerContent = React.useCallback(() => <DrawerContent />, [])
   const onOpenDrawer = React.useCallback(
@@ -93,7 +96,8 @@ function ShellInner() {
   return (
     <>
       <Animated.View style={[a.h_full]}>
-        <ErrorBoundary>
+        <ErrorBoundary
+          style={{paddingTop: insets.top, paddingBottom: insets.bottom}}>
           <Drawer
             renderDrawerContent={renderDrawerContent}
             drawerStyle={{width: Math.min(400, winDim.width * 0.8)}}
@@ -101,7 +105,16 @@ function ShellInner() {
             onOpen={onOpenDrawer}
             onClose={onCloseDrawer}
             swipeEdgeWidth={winDim.width / 2}
-            swipeEnabled={!canGoBack && hasSession && !isDrawerSwipeDisabled}>
+            swipeEnabled={!canGoBack && hasSession && !isDrawerSwipeDisabled}
+            overlayStyle={{
+              backgroundColor: select(t.name, {
+                light: 'rgba(0, 57, 117, 0.1)',
+                dark: isAndroid
+                  ? 'rgba(16, 133, 254, 0.1)'
+                  : 'rgba(1, 82, 168, 0.1)',
+                dim: 'rgba(10, 13, 16, 0.8)',
+              }),
+            }}>
             <TabsNavigator />
           </Drawer>
         </ErrorBoundary>

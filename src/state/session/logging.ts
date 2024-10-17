@@ -2,6 +2,7 @@ import {AtpSessionData, AtpSessionEvent} from '@atproto/api'
 import {sha256} from 'js-sha256'
 import {Statsig} from 'statsig-react-native-expo'
 
+import {IS_INTERNAL} from '#/lib/app-info'
 import {Schema} from '../persisted'
 import {Action, State} from './reducer'
 import {SessionAccount} from './types'
@@ -93,9 +94,13 @@ export function addSessionDebugLog(log: Log) {
       // Drop these logs for now.
       return
     }
-    if (!Statsig.checkGate('debug_session')) {
+    // DISABLING THIS GATE DUE TO EME @TODO EME-GATE
+    if (!IS_INTERNAL) {
       return
     }
+    // if (!Statsig.checkGate('debug_session')) {
+    //   return
+    // }
     const messageIndex = nextMessageIndex++
     const {type, ...content} = log
     let payload = JSON.stringify(content, replacer)
