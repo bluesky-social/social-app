@@ -2,6 +2,7 @@ import React from 'react'
 import {BackHandler, StyleSheet, useWindowDimensions, View} from 'react-native'
 import {Drawer} from 'react-native-drawer-layout'
 import Animated from 'react-native-reanimated'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import * as NavigationBar from 'expo-navigation-bar'
 import {StatusBar} from 'expo-status-bar'
 import {useNavigation, useNavigationState} from '@react-navigation/native'
@@ -41,6 +42,7 @@ function ShellInner() {
   const isDrawerSwipeDisabled = useIsDrawerSwipeDisabled()
   const setIsDrawerOpen = useSetDrawerOpen()
   const winDim = useWindowDimensions()
+  const insets = useSafeAreaInsets()
 
   const renderDrawerContent = React.useCallback(() => <DrawerContent />, [])
   const onOpenDrawer = React.useCallback(
@@ -94,7 +96,8 @@ function ShellInner() {
   return (
     <>
       <Animated.View style={[a.h_full]}>
-        <ErrorBoundary>
+        <ErrorBoundary
+          style={{paddingTop: insets.top, paddingBottom: insets.bottom}}>
           <Drawer
             renderDrawerContent={renderDrawerContent}
             drawerStyle={{width: Math.min(400, winDim.width * 0.8)}}

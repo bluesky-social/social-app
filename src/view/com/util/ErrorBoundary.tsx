@@ -1,4 +1,5 @@
 import React, {Component, ErrorInfo, ReactNode} from 'react'
+import {StyleProp, ViewStyle} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -9,6 +10,7 @@ import {CenteredView} from './Views'
 interface Props {
   children?: ReactNode
   renderError?: (error: any) => ReactNode
+  style?: StyleProp<ViewStyle>
 }
 
 interface State {
@@ -37,7 +39,7 @@ export class ErrorBoundary extends Component<Props, State> {
       }
 
       return (
-        <CenteredView style={{height: '100%', flex: 1}}>
+        <CenteredView style={[{height: '100%', flex: 1}, this.props.style]}>
           <TranslatedErrorScreen details={this.state.error.toString()} />
         </CenteredView>
       )
