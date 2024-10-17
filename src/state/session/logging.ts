@@ -93,6 +93,10 @@ export function addSessionDebugLog(log: Log) {
       // Drop these logs for now.
       return
     }
+    // DISABLING THIS GATE DUE TO EME @TODO EME-GATE
+    if (true) {
+      return
+    }
     if (!Statsig.checkGate('debug_session')) {
       return
     }
