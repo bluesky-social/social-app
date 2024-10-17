@@ -145,6 +145,7 @@ export function AutoSizedImage({
 
       {(hasAlt || isCropped) && !hideBadge ? (
         <View
+          pointerEvents="none"
           accessible={false}
           style={[
             a.absolute,

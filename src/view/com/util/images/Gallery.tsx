@@ -69,6 +69,7 @@ export function GalleryItem({
       {hasAlt && !hideBadges ? (
         <View
           accessible={false}
+          pointerEvents="none"
           style={[
             a.absolute,
             a.flex_row,
