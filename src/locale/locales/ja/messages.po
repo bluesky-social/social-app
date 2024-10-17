@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-10-17 13:00+0900\n"
+"PO-Revision-Date: 2024-10-17 14:00+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -237,10 +237,6 @@ msgstr "<0>{0}</0>のメンバー"
 #: src/components/dms/DateDivider.tsx:69
 msgid "<0>{date}</0> at {time}"
 msgstr "<0>{date}</0> {time}"
-
-#: src/view/com/modals/SelfLabel.tsx:135
-msgid "<0>Not Applicable.</0> This warning is only available for posts with media attached."
-msgstr "<0>適用できません。</0> この警告はメディアが添付された投稿にのみ利用可能です。"
 
 #: src/screens/StarterPack/Wizard/index.tsx:457
 msgid "<0>You</0> and<1> </1><2>{0} </2>are included in your starter pack"
@@ -1134,6 +1130,10 @@ msgstr "私向けに選んで"
 msgid "Choose People"
 msgstr "ユーザーの選択"
 
+#: src/view/com/composer/labels/LabelsBtn.tsx:110
+msgid "Choose self-labels that are applicable for the media you are posting. If none are selected, this post is suitable for all audiences."
+msgstr "投稿しようとしているメディアに適した自己ラベルを選んでください。何も選択しない場合は、この投稿はすべての閲覧者へ適したものとします。"
+
 #: src/view/com/auth/server-input/index.tsx:76
 msgid "Choose Service"
 msgstr "サービスを選択"
@@ -1885,6 +1885,14 @@ msgstr "DNSパネルがある場合"
 #: src/components/dialogs/MutedWords.tsx:302
 msgid "Do not apply this mute word to users you follow"
 msgstr "このミュートワードはフォローしているユーザーには適用しない"
+
+#: src/view/com/composer/labels/LabelsBtn.tsx:180
+msgid "Does not contain adult content."
+msgstr "成人向けコンテンツは含んでいません。"
+
+#: src/view/com/composer/labels/LabelsBtn.tsx:226
+msgid "Does not contain graphic or disturbing content."
+msgstr "生々しい（グロい）、または困惑させるコンテンツを含んでいません。"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:39
 msgid "Does not include nudity."
@@ -3020,10 +3028,6 @@ msgstr "理解した"
 msgid "If alt text is long, toggles alt text expanded state"
 msgstr "ALTテキストが長い場合、ALTテキストの展開状態を切り替える"
 
-#: src/view/com/modals/SelfLabel.tsx:128
-msgid "If none are selected, suitable for all ages."
-msgstr "なにも選択しない場合は、全年齢対象です。"
-
 #: src/screens/Signup/StepInfo/Policies.tsx:110
 msgid "If you are not yet an adult according to the laws of your country, your parent or legal guardian must read these Terms on your behalf."
 msgstr "あなたがお住いの国の法律においてまだ成人していない場合は、親権者または法定後見人があなたに代わって本規約をお読みください。"
@@ -3528,6 +3532,10 @@ msgstr "既読にする"
 #: src/view/screens/Profile.tsx:221
 msgid "Media"
 msgstr "メディア"
+
+#: src/view/com/composer/labels/LabelsBtn.tsx:221
+msgid "Media that may be disturbing or inappropriate for some audiences."
+msgstr "一部の閲覧者にとっては困惑する、あるいは不適切なメディアです。"
 
 #: src/components/WhoCanReply.tsx:254
 msgid "mentioned users"
@@ -6426,6 +6434,10 @@ msgstr "入力された確認コードが正しくありません。正しいリ
 #: src/screens/Settings/AppearanceSettings.tsx:152
 msgid "Theme"
 msgstr "テーマ"
+
+#: src/view/com/composer/labels/LabelsBtn.tsx:116
+msgid "There are no self-labels that can be applied to this post."
+msgstr "この投稿に適用できる自己ラベルはありません。"
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:86
 msgid "There is no time limit for account deactivation, come back any time."
