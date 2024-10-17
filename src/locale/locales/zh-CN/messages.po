@@ -1080,6 +1080,8 @@ msgstr "更改你的邮箱地址"
 #: src/Navigation.tsx:337
 #: src/view/shell/bottom-bar/BottomBar.tsx:200
 #: src/view/shell/desktop/LeftNav.tsx:329
+#: src/view/shell/Drawer.tsx:446
+#: src/view/shell/Drawer.tsx:447
 msgid "Chat"
 msgstr "私信"
 
@@ -1103,11 +1105,6 @@ msgstr "私信设置"
 #: src/components/dms/ConvoMenu.tsx:84
 msgid "Chat unmuted"
 msgstr "已解除隐藏对话"
-
-#: src/view/shell/Drawer.tsx:446
-#: src/view/shell/Drawer.tsx:447
-msgid "Chats"
-msgstr ""
 
 #: src/screens/SignupQueued.tsx:78
 #: src/screens/SignupQueued.tsx:82
@@ -3498,6 +3495,10 @@ msgstr "未登录用户可见性"
 #: src/components/AccountList.tsx:58
 msgid "Login to account that is not listed"
 msgstr "登录未列出的账户"
+
+#: src/view/shell/desktop/RightNav.tsx:104
+msgid "Logo by <0/>"
+msgstr ""
 
 #: src/view/shell/Drawer.tsx:293
 msgid "Logo by <0>@sawaratsuki.bsky.social</0>"
