@@ -5,12 +5,15 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thanks for submitting a feature request! Before you submit this request, please make sure you've searched for similar requests that are already open and being tracked. If you find an open request that seems relevant to yours, it is best to leave a response there with your information instead of opening a new request, since it helps to consolidate the info in one place.
+        Thanks for submitting a feature request!
+        Before you submit this request, please make sure you've searched for similar requests that are already open and being tracked.
+        If you find an open request that seems relevant to yours, it is best to leave a response there with your information instead of opening a new request, since it helps to consolidate the info in one place.
   - type: textarea
     attributes:
       label: Describe the Feature
       description: |
-        Please provide a detailed description of the feature you would like to see implemented in the app. The more information you provide, the easier it will be for us to understand the feature you are requesting and to implement it in a timely manner.
+        Please provide a detailed description of the feature you would like to see implemented in the app.
+        The more information you provide, the easier it will be for us to understand the feature you are requesting and to implement it in a timely manner.
     validations:
       required: true
   - type: textarea
