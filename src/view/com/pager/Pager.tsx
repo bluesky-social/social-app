@@ -7,7 +7,7 @@ import PagerView, {
 } from 'react-native-pager-view'
 
 import {LogEvents} from '#/lib/statsig/events'
-import {atoms as a} from '#/alf'
+import {atoms as a, native} from '#/alf'
 
 export type PageSelectedEvent = PagerViewOnPageSelectedEvent
 const AnimatedPagerView = Animated.createAnimatedComponent(PagerView)
@@ -133,7 +133,7 @@ export const Pager = forwardRef<PagerRef, React.PropsWithChildren<Props>>(
     )
 
     return (
-      <View testID={testID} style={[a.flex_1, a.overflow_hidden]}>
+      <View testID={testID} style={[a.flex_1, native(a.overflow_hidden)]}>
         {renderTabBar({
           selectedPage,
           onSelect: onTabBarSelect,
