@@ -10,6 +10,7 @@ import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
+import {Download_Stroke2_Corner0_Rounded as DownloadIcon} from '#/components/icons/Download'
 import {InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
@@ -76,6 +77,7 @@ export function ExportCarDialog({
             label={_(msg`Download CAR file`)}
             disabled={loading}
             onPress={download}>
+            <ButtonIcon icon={DownloadIcon} />
             <ButtonText>
               <Trans>Download CAR file</Trans>
             </ButtonText>

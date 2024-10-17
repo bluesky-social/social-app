@@ -11,3 +11,7 @@ export const Bubble_Stroke2_Corner2_Rounded = createSinglePathSVG({
 export const Bubble_Stroke2_Corner3_Rounded = createSinglePathSVG({
   path: 'M2.002 7a4 4 0 0 1 4-4h12a4 4 0 0 1 4 4v8a4 4 0 0 1-4 4H12.28l-4.762 2.858A1 1 0 0 1 6.002 21v-2a4 4 0 0 1-4-4V7Zm4-2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h1a1 1 0 0 1 1 1v1.234l3.486-2.092a1 1 0 0 1 .514-.142h6a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-12Z',
 })
+
+export const Bubbles_Stroke2_Corner2_Rounded = createSinglePathSVG({
+  path: 'M6.002 6a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3v6a3 3 0 0 1-3 3h-1v1a3 3 0 0 1-3 3h-4.24l-4.274 2.374a1 1 0 0 1-1.486-.874V19a3 3 0 0 1-3-3v-6a3 3 0 0 1 3-3h1V6Zm-1 3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h1a1 1 0 0 1 1 1v.8l3.015-1.674a1 1 0 0 1 .485-.126h4.5a1 1 0 0 0 1-1v-1.933a1 1 0 0 1 0-.134V10a1 1 0 0 0-1-1h-10Zm13 4v-3a3 3 0 0 0-3-3h-7V6a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1h-1Z',
+})

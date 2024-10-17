@@ -1,4 +1,4 @@
-import {Router} from 'lib/routes/router'
+import {Router} from '#/lib/routes/router'
 
 export const router = new Router({
   Home: '/',
@@ -7,12 +7,13 @@ export const router = new Router({
   Notifications: '/notifications',
   NotificationsSettings: '/notifications/settings',
   Settings: '/settings',
-  LanguageSettings: '/settings/language',
   Lists: '/lists',
+  // moderation
   Moderation: '/moderation',
   ModerationModlists: '/moderation/modlists',
   ModerationMutedAccounts: '/moderation/muted-accounts',
   ModerationBlockedAccounts: '/moderation/blocked-accounts',
+  // profiles, threads, lists
   Profile: ['/profile/:name', '/profile/:name/rss'],
   ProfileFollowers: '/profile/:name/followers',
   ProfileFollows: '/profile/:name/follows',
@@ -25,9 +26,12 @@ export const router = new Router({
   ProfileFeed: '/profile/:name/feed/:rkey',
   ProfileFeedLikedBy: '/profile/:name/feed/:rkey/liked-by',
   ProfileLabelerLikedBy: '/profile/:name/labeler/liked-by',
+  // debug
   Debug: '/sys/debug',
   DebugMod: '/sys/debug-mod',
   Log: '/sys/log',
+  // settings
+  LanguageSettings: '/settings/language',
   AppPasswords: '/settings/app-passwords',
   PreferencesFollowingFeed: '/settings/following-feed',
   PreferencesThreads: '/settings/threads',
@@ -35,15 +39,24 @@ export const router = new Router({
   AccessibilitySettings: '/settings/accessibility',
   AppearanceSettings: '/settings/appearance',
   SavedFeeds: '/settings/saved-feeds',
+  // new settings
+  AccountSettings: '/settings/account',
+  PrivacyAndSecuritySettings: '/settings/privacy-and-security',
+  ContentAndMediaSettings: '/settings/content-and-media',
+  AboutSettings: '/settings/about',
+  // support
   Support: '/support',
   PrivacyPolicy: '/support/privacy',
   TermsOfService: '/support/tos',
   CommunityGuidelines: '/support/community-guidelines',
   CopyrightPolicy: '/support/copyright',
+  // hashtags
   Hashtag: '/hashtag/:tag',
+  // DMs
   Messages: '/messages',
   MessagesSettings: '/messages/settings',
   MessagesConversation: '/messages/:conversation',
+  // starter packs
   Start: '/start/:name/:rkey',
   StarterPackEdit: '/starter-pack/edit/:rkey',
   StarterPack: '/starter-pack/:name/:rkey',

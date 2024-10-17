@@ -10,15 +10,15 @@ import {LinearGradient} from 'expo-linear-gradient'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {usePalette} from '#/lib/hooks/usePalette'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {cleanError} from '#/lib/strings/errors'
+import {colors, gradients, s} from '#/lib/styles'
+import {useTheme} from '#/lib/ThemeContext'
+import {isAndroid, isWeb} from '#/platform/detection'
 import {useModalControls} from '#/state/modals'
 import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
 import {useAgent, useSession, useSessionApi} from '#/state/session'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {cleanError} from 'lib/strings/errors'
-import {colors, gradients, s} from 'lib/styles'
-import {useTheme} from 'lib/ThemeContext'
-import {isAndroid, isWeb} from 'platform/detection'
 import {DeactivateAccountDialog} from '#/screens/Settings/components/DeactivateAccountDialog'
 import {atoms as a, useTheme as useNewTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
@@ -210,6 +210,7 @@ export function Component({}: {}) {
                     to="#"
                     onPress={e => {
                       e.preventDefault()
+                      closeModal()
                       deactivateAccountControl.open()
                       return false
                     }}>

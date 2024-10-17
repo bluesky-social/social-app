@@ -102,6 +102,9 @@ export const atoms = {
   /*
    * Flex
    */
+  gap_0: {
+    gap: 0,
+  },
   gap_2xs: {
     gap: tokens.space._2xs,
   },
