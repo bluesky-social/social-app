@@ -443,8 +443,8 @@ let ChatMenuItem = ({
           <Message style={[t.atoms.text]} width={iconWidth} />
         )
       }
-      label={_(msg`Chats`)}
-      accessibilityLabel={_(msg`Chats`)}
+      label={_(msg`Chat`)}
+      accessibilityLabel={_(msg`Chat`)}
       accessibilityHint=""
       bold={isActive}
       onPress={onPress}
