@@ -2856,7 +2856,7 @@ msgstr "去用戶個人檔案"
 #: src/view/com/composer/labels/LabelsBtn.tsx:212
 #: src/view/com/composer/labels/LabelsBtn.tsx:215
 msgid "Graphic Media"
-msgstr "圖像媒體"
+msgstr "敏感媒體"
 
 #: src/state/shell/progress-guide.tsx:161
 msgid "Half way there!"

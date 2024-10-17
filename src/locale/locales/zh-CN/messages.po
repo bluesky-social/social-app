@@ -2856,7 +2856,7 @@ msgstr "前往用户个人资料"
 #: src/view/com/composer/labels/LabelsBtn.tsx:212
 #: src/view/com/composer/labels/LabelsBtn.tsx:215
 msgid "Graphic Media"
-msgstr "图形媒体"
+msgstr "敏感媒体"
 
 #: src/state/shell/progress-guide.tsx:161
 msgid "Half way there!"
