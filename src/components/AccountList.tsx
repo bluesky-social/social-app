@@ -4,6 +4,8 @@ import {AppBskyActorDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {sanitizeDisplayName} from '#/lib/strings/display-names'
+import {sanitizeHandle} from '#/lib/strings/handles'
 import {useProfilesQuery} from '#/state/queries/profile'
 import {type SessionAccount, useSession} from '#/state/session'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
@@ -133,9 +135,13 @@ function AccountItem({
           </View>
           <Text style={[a.align_baseline, a.flex_1, a.flex_row, a.py_sm]}>
             <Text emoji style={[a.font_bold]}>
-              {profile?.displayName || account.handle}{' '}
+              {sanitizeDisplayName(
+                profile?.displayName || profile?.handle || account.handle,
+              )}
+            </Text>{' '}
+            <Text emoji style={[t.atoms.text_contrast_medium]}>
+              {sanitizeHandle(account.handle)}
             </Text>
-            <Text style={[t.atoms.text_contrast_medium]}>{account.handle}</Text>
           </Text>
           {isCurrentAccount ? (
             <Check
