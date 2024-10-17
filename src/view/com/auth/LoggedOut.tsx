@@ -1,9 +1,10 @@
 import React from 'react'
-import {Pressable, View} from 'react-native'
+import {View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {PressableScale} from '#/lib/custom-animations/PressableScale'
 import {logEvent} from '#/lib/statsig/statsig'
 import {
   useLoggedOutView,
@@ -14,7 +15,8 @@ import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {Login} from '#/screens/Login'
 import {Signup} from '#/screens/Signup'
 import {LandingScreen} from '#/screens/StarterPack/StarterPackLandingScreen'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, native, tokens, useTheme} from '#/alf'
+import {Button, ButtonIcon} from '#/components/Button'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
 import {SplashScreen} from './SplashScreen'
 
@@ -66,24 +68,24 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
       ]}>
       <ErrorBoundary>
         {onDismiss && screenState === ScreenState.S_LoginOrCreateAccount ? (
-          <Pressable
-            accessibilityHint={_(msg`Go back`)}
-            accessibilityLabel={_(msg`Go back`)}
-            accessibilityRole="button"
+          <Button
+            label={_(msg`Go back`)}
+            variant="solid"
+            color="secondary_inverted"
+            size="small"
+            shape="round"
+            PressableComponent={native(PressableScale)}
             style={[
-              {
-                top: insets.top + 12,
-                right: 20,
-                zIndex: 100,
-                backgroundColor: t.atoms.text.color,
-              },
-              a.p_sm,
               a.absolute,
-              a.rounded_full,
+              {
+                top: insets.top + tokens.space.lg,
+                right: tokens.space.xl,
+                zIndex: 100,
+              },
             ]}
             onPress={onPressDismiss}>
-            <XIcon size="sm" style={[t.atoms.text_inverted]} />
-          </Pressable>
+            <ButtonIcon icon={XIcon} />
+          </Button>
         ) : null}
 
         {screenState === ScreenState.S_StarterPack ? (
