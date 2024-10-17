@@ -8,7 +8,7 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-10-17 17:45+0900\n"
+"PO-Revision-Date: 2024-10-17 20:40+0900\n"
 "Last-Translator: quiple\n"
 "Language-Team: quiple, lens0021, HaruChanHeart, hazzzi, heartade\n"
 "Plural-Forms: \n"
@@ -1105,11 +1105,6 @@ msgstr "대화 설정"
 #: src/components/dms/ConvoMenu.tsx:84
 msgid "Chat unmuted"
 msgstr "대화 언뮤트됨"
-
-#: src/view/shell/Drawer.tsx:446
-#: src/view/shell/Drawer.tsx:447
-#~ msgid "Chats"
-#~ msgstr "대화"
 
 #: src/screens/SignupQueued.tsx:78
 #: src/screens/SignupQueued.tsx:82
@@ -6466,21 +6461,6 @@ msgstr "이 게시물에 적용할 수 있는 라벨이 없습니다."
 msgid "There is no time limit for account deactivation, come back any time."
 msgstr "계정 비활성화에는 시간 제한이 없으므로 언제든지 다시 돌아올 수 있습니다."
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:111
-#: src/view/screens/ProfileFeed.tsx:546
-msgid "There was an an issue contacting the server, please check your internet connection and try again."
-msgstr "서버에 연결하는 동안 문제가 발생했습니다. 인터넷 연결을 확인한 후 다시 시도하세요."
-
-#: src/view/com/posts/FeedErrorMessage.tsx:145
-msgid "There was an an issue removing this feed. Please check your internet connection and try again."
-msgstr "이 피드를 삭제하는 동안 문제가 발생했습니다. 인터넷 연결을 확인한 후 다시 시도하세요."
-
-#: src/view/com/posts/FeedShutdownMsg.tsx:52
-#: src/view/com/posts/FeedShutdownMsg.tsx:71
-#: src/view/screens/ProfileFeed.tsx:211
-msgid "There was an an issue updating your feeds, please check your internet connection and try again."
-msgstr "피드를 업데이트하는 동안 문제가 발생했습니다. 인터넷 연결을 확인한 후 다시 시도하세요."
-
 #: src/components/dialogs/GifSelect.tsx:225
 msgid "There was an issue connecting to Tenor."
 msgstr "Tenor에 연결하는 동안 문제가 발생했습니다."
@@ -6491,6 +6471,11 @@ msgstr "Tenor에 연결하는 동안 문제가 발생했습니다."
 #: src/view/screens/SavedFeeds.tsx:86
 msgid "There was an issue contacting the server"
 msgstr "서버에 연결하는 동안 문제가 발생했습니다"
+
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:111
+#: src/view/screens/ProfileFeed.tsx:546
+msgid "There was an issue contacting the server, please check your internet connection and try again."
+msgstr "서버에 연결하는 동안 문제가 발생했습니다. 인터넷 연결을 확인한 후 다시 시도하세요."
 
 #: src/view/com/feeds/FeedSourceCard.tsx:127
 #: src/view/com/feeds/FeedSourceCard.tsx:140
@@ -6514,10 +6499,20 @@ msgstr "리스트를 가져오는 동안 문제가 발생했습니다. 이곳을
 msgid "There was an issue fetching your lists. Tap here to try again."
 msgstr "리스트를 가져오는 동안 문제가 발생했습니다. 이곳을 탭하여 다시 시도하세요."
 
+#: src/view/com/posts/FeedErrorMessage.tsx:145
+msgid "There was an issue removing this feed. Please check your internet connection and try again."
+msgstr "이 피드를 삭제하는 동안 문제가 발생했습니다. 인터넷 연결을 확인한 후 다시 시도하세요."
+
 #: src/components/dms/ReportDialog.tsx:217
 #: src/components/ReportDialog/SubmitView.tsx:87
 msgid "There was an issue sending your report. Please check your internet connection."
 msgstr "신고를 전송하는 동안 문제가 발생했습니다. 인터넷 연결을 확인해 주세요."
+
+#: src/view/com/posts/FeedShutdownMsg.tsx:52
+#: src/view/com/posts/FeedShutdownMsg.tsx:71
+#: src/view/screens/ProfileFeed.tsx:211
+msgid "There was an issue updating your feeds, please check your internet connection and try again."
+msgstr "피드를 업데이트하는 동안 문제가 발생했습니다. 인터넷 연결을 확인한 후 다시 시도하세요."
 
 #: src/view/screens/AppPasswords.tsx:75
 msgid "There was an issue with fetching your app passwords"
