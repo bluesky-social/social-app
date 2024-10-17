@@ -8,7 +8,7 @@ msgstr ""
 "Language: yue\n"
 "Project-Id-Version: Yue for bluesky-social-app\n"
 "Report-Msgid-Bugs-To: Frudrax Cheng <i@cynosura.one>\n"
-"PO-Revision-Date: 2024-10-17 16:33+0800\n"
+"PO-Revision-Date: 2024-10-17 17:45+0800\n"
 "Last-Translator: Frudrax Cheng <i@cynosura.one>\n"
 "Language-Team: Frudrax Cheng (auroursa), Quicpasta (quicpasta.bsky.social)\n"
 "Plural-Forms: \n"
@@ -6461,21 +6461,6 @@ msgstr "呢個帖文冇任何內容標籤可以套用。"
 msgid "There is no time limit for account deactivation, come back any time."
 msgstr "帳戶停用無時間限制，隨時返嚟。"
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:111
-#: src/view/screens/ProfileFeed.tsx:546
-msgid "There was an an issue contacting the server, please check your internet connection and try again."
-msgstr "聯絡伺服器時出現問題，請檢查你嘅互聯網連線，然後試多一次。"
-
-#: src/view/com/posts/FeedErrorMessage.tsx:145
-msgid "There was an an issue removing this feed. Please check your internet connection and try again."
-msgstr "移除呢個資訊提供出現問題。請檢查你嘅互聯網連線，然後試多一次。"
-
-#: src/view/com/posts/FeedShutdownMsg.tsx:52
-#: src/view/com/posts/FeedShutdownMsg.tsx:71
-#: src/view/screens/ProfileFeed.tsx:211
-msgid "There was an an issue updating your feeds, please check your internet connection and try again."
-msgstr "更新你嘅資訊提供嗰陣出現問題，請檢查你嘅互聯網連線，然後試多一次。"
-
 #: src/components/dialogs/GifSelect.tsx:225
 msgid "There was an issue connecting to Tenor."
 msgstr "連接 Tenor 出現問題。"
@@ -6486,6 +6471,11 @@ msgstr "連接 Tenor 出現問題。"
 #: src/view/screens/SavedFeeds.tsx:86
 msgid "There was an issue contacting the server"
 msgstr "連接伺服器出現問題"
+
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:111
+#: src/view/screens/ProfileFeed.tsx:546
+msgid "There was an issue contacting the server, please check your internet connection and try again."
+msgstr "聯絡伺服器時出現問題，請檢查你嘅互聯網連線，然後試多一次。"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:127
 #: src/view/com/feeds/FeedSourceCard.tsx:140
@@ -6509,10 +6499,20 @@ msgstr "攞清單出現問題，㩒呢度試多一次。"
 msgid "There was an issue fetching your lists. Tap here to try again."
 msgstr "攞清單出現問題，㩒呢度試多一次。"
 
+#: src/view/com/posts/FeedErrorMessage.tsx:145
+msgid "There was an issue removing this feed. Please check your internet connection and try again."
+msgstr "移除呢個資訊提供出現問題。請檢查你嘅互聯網連線，然後試多一次。"
+
 #: src/components/dms/ReportDialog.tsx:217
 #: src/components/ReportDialog/SubmitView.tsx:87
 msgid "There was an issue sending your report. Please check your internet connection."
 msgstr "傳送你嘅上報出現問題，請檢查你嘅互聯網連線。"
+
+#: src/view/com/posts/FeedShutdownMsg.tsx:52
+#: src/view/com/posts/FeedShutdownMsg.tsx:71
+#: src/view/screens/ProfileFeed.tsx:211
+msgid "There was an issue updating your feeds, please check your internet connection and try again."
+msgstr "更新你嘅資訊提供嗰陣出現問題，請檢查你嘅互聯網連線，然後試多一次。"
 
 #: src/view/screens/AppPasswords.tsx:75
 msgid "There was an issue with fetching your app passwords"
