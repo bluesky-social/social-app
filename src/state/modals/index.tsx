@@ -42,13 +42,6 @@ export interface DeleteAccountModal {
   name: 'delete-account'
 }
 
-export interface SelfLabelModal {
-  name: 'self-label'
-  labels: string[]
-  hasMedia: boolean
-  onChange: (labels: string[]) => void
-}
-
 export interface ChangeHandleModal {
   name: 'change-handle'
   onChanged: () => void
@@ -120,7 +113,6 @@ export type Modal =
 
   // Posts
   | CropImageModal
-  | SelfLabelModal
 
   // Bluesky access
   | WaitlistModal
