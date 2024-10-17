@@ -8,7 +8,7 @@ import {Leaf_Stroke2_Corner0_Rounded as TipIcon} from '#/components/icons/Leaf'
 import {Warning_Stroke2_Corner0_Rounded as WarningIcon} from '#/components/icons/Warning'
 import {Text as BaseText, TextProps} from '#/components/Typography'
 
-const colors = {
+export const colors = {
   warning: {
     light: '#DFBC00',
     dark: '#BFAF1F',
