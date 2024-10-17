@@ -8,7 +8,7 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-10-17 14:07+0900\n"
+"PO-Revision-Date: 2024-10-17 17:45+0900\n"
 "Last-Translator: quiple\n"
 "Language-Team: quiple, lens0021, HaruChanHeart, hazzzi, heartade\n"
 "Plural-Forms: \n"
@@ -1080,6 +1080,8 @@ msgstr "이메일 변경"
 #: src/Navigation.tsx:337
 #: src/view/shell/bottom-bar/BottomBar.tsx:200
 #: src/view/shell/desktop/LeftNav.tsx:329
+#: src/view/shell/Drawer.tsx:446
+#: src/view/shell/Drawer.tsx:447
 msgid "Chat"
 msgstr "대화"
 
@@ -1106,8 +1108,8 @@ msgstr "대화 언뮤트됨"
 
 #: src/view/shell/Drawer.tsx:446
 #: src/view/shell/Drawer.tsx:447
-msgid "Chats"
-msgstr "대화"
+#~ msgid "Chats"
+#~ msgstr "대화"
 
 #: src/screens/SignupQueued.tsx:78
 #: src/screens/SignupQueued.tsx:82
@@ -3498,6 +3500,10 @@ msgstr "로그아웃 표시"
 #: src/components/AccountList.tsx:58
 msgid "Login to account that is not listed"
 msgstr "목록에 없는 계정으로 로그인"
+
+#: src/view/shell/desktop/RightNav.tsx:104
+msgid "Logo by <0/>"
+msgstr "<0/> 님의 로고"
 
 #: src/view/shell/Drawer.tsx:293
 msgid "Logo by <0>@sawaratsuki.bsky.social</0>"
