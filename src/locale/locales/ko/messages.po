@@ -5601,7 +5601,7 @@ msgstr "이모티콘 선택"
 
 #: src/screens/Login/index.tsx:117
 msgid "Select from an existing account"
-msgstr "기존 계정에서 선택"
+msgstr "기존 계정에서 선택하기"
 
 #: src/view/com/composer/photos/SelectGifBtn.tsx:35
 msgid "Select GIF"
