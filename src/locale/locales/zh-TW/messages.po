@@ -4754,7 +4754,7 @@ msgstr "貼文已取消釘選"
 
 #: src/lib/api/index.ts:106
 msgid "Posting..."
-msgstr "貼文發佈中..."
+msgstr "正在發佈貼文..."
 
 #: src/components/TagMenu/index.tsx:252
 msgid "posts"
