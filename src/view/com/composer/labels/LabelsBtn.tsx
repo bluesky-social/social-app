@@ -63,6 +63,7 @@ export function LabelsBtn({
           msg`Opens a dialog to add a content warning to your post`,
         )}
         style={[
+          !hasMedia && {opacity: 0.5},
           native({
             paddingHorizontal: 8,
             paddingVertical: 6,
@@ -73,7 +74,7 @@ export function LabelsBtn({
           {labels.length > 0 ? (
             <Trans>Labels added</Trans>
           ) : (
-            <Trans>Self-labels</Trans>
+            <Trans>Add label</Trans>
           )}
         </ButtonText>
       </Button>
