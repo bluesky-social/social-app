@@ -127,7 +127,7 @@ export function NewskieDialog({
                 }}>
                 <View
                   style={[
-                    a.flex_1,
+                    a.w_full,
                     a.mt_sm,
                     a.p_lg,
                     a.border,
