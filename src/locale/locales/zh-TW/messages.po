@@ -3498,7 +3498,7 @@ msgstr "登入未列出的帳號"
 
 #: src/view/shell/desktop/RightNav.tsx:104
 msgid "Logo by <0/>"
-msgstr "此 LOGO 由 <0/> 繪製"
+msgstr "此 Logo 由 <0/> 繪製"
 
 #: src/view/shell/Drawer.tsx:293
 msgid "Logo by <0>@sawaratsuki.bsky.social</0>"
