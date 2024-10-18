@@ -6176,7 +6176,7 @@ msgstr "状态页"
 
 #: src/screens/Signup/index.tsx:130
 msgid "Step {0} of {1}"
-msgstr "步骤 {1} 共 {0} 步"
+msgstr "第 {0} 步（共 {1} 步）"
 
 #: src/view/screens/Settings/index.tsx:279
 msgid "Storage cleared, you need to restart the app now."
