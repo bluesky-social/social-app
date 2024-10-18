@@ -89,7 +89,7 @@ export function toClout(n: number | null | undefined): number | undefined {
   }
 }
 
-const DOWNSAMPLE_RATE = 0.98 // 98% likely
+const DOWNSAMPLE_RATE = 0.99 // 98% likely
 const DOWNSAMPLED_EVENTS: Set<keyof LogEvents> = new Set([
   'router:navigate:notifications:sampled',
   'state:background:sampled',
