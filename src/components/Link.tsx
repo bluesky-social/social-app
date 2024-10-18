@@ -1,10 +1,5 @@
 import React from 'react'
-import {
-  GestureResponderEvent,
-  Pressable,
-  StyleProp,
-  ViewStyle,
-} from 'react-native'
+import {GestureResponderEvent} from 'react-native'
 import {sanitizeUrl} from '@braintree/sanitize-url'
 import {StackActions, useLinkProps} from '@react-navigation/native'
 
@@ -346,48 +341,6 @@ export function createStaticClick(
       return false
     },
   }
-}
-
-/**
- * A Pressable that uses useLink to handle navigation. It is unstyled, so can be used in cases where the Button styles
- * in Link are not desired.
- * @param displayText
- * @param style
- * @param children
- * @param rest
- * @constructor
- */
-export function BaseLink({
-  displayText,
-  onPress: onPressOuter,
-  style,
-  children,
-  ...rest
-}: {
-  style?: StyleProp<ViewStyle>
-  children: React.ReactNode
-  to: string
-  action: 'push' | 'replace' | 'navigate'
-  onPress?: () => false | void
-  shareOnLongPress?: boolean
-  label: string
-  displayText?: string
-}) {
-  const {onPress, ...btnProps} = useLink({
-    displayText: displayText ?? rest.to,
-    ...rest,
-  })
-  return (
-    <Pressable
-      style={style}
-      onPress={e => {
-        onPressOuter?.()
-        onPress(e)
-      }}
-      {...btnProps}>
-      {children}
-    </Pressable>
-  )
 }
 
 export function WebOnlyInlineLinkText({

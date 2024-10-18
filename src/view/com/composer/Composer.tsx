@@ -13,6 +13,7 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   LayoutChangeEvent,
+  ScrollView,
   StyleProp,
   StyleSheet,
   View,
@@ -559,45 +560,30 @@ export const ComposePost = ({
                     <ActivityIndicator />
                   </View>
                 </>
+              ) : canPost ? (
+                <Button
+                  testID="composerPublishBtn"
+                  label={replyTo ? _(msg`Publish reply`) : _(msg`Publish post`)}
+                  variant="solid"
+                  color="primary"
+                  shape="default"
+                  size="small"
+                  style={[a.rounded_full, a.py_sm]}
+                  onPress={() => onPressPublish()}
+                  disabled={videoState.status !== 'idle' && publishOnUpload}>
+                  <ButtonText style={[a.text_md]}>
+                    {replyTo ? (
+                      <Trans context="action">Reply</Trans>
+                    ) : (
+                      <Trans context="action">Post</Trans>
+                    )}
+                  </ButtonText>
+                </Button>
               ) : (
-                <View style={[styles.postBtnWrapper]}>
-                  <LabelsBtn
-                    labels={draft.labels}
-                    onChange={nextLabels => {
-                      dispatch({type: 'update_labels', labels: nextLabels})
-                    }}
-                    hasMedia={hasMedia || Boolean(extLink)}
-                  />
-                  {canPost ? (
-                    <Button
-                      testID="composerPublishBtn"
-                      label={
-                        replyTo ? _(msg`Publish reply`) : _(msg`Publish post`)
-                      }
-                      variant="solid"
-                      color="primary"
-                      shape="default"
-                      size="small"
-                      style={[a.rounded_full, a.py_sm]}
-                      onPress={() => onPressPublish()}
-                      disabled={
-                        videoState.status !== 'idle' && publishOnUpload
-                      }>
-                      <ButtonText style={[a.text_md]}>
-                        {replyTo ? (
-                          <Trans context="action">Reply</Trans>
-                        ) : (
-                          <Trans context="action">Post</Trans>
-                        )}
-                      </ButtonText>
-                    </Button>
-                  ) : (
-                    <View style={[styles.postBtn, pal.btn]}>
-                      <Text style={[pal.textLight, s.f16, s.bold]}>
-                        <Trans context="action">Post</Trans>
-                      </Text>
-                    </View>
-                  )}
+                <View style={[styles.postBtn, pal.btn]}>
+                  <Text style={[pal.textLight, s.f16, s.bold]}>
+                    <Trans context="action">Post</Trans>
+                  </Text>
                 </View>
               )}
             </View>
@@ -758,22 +744,38 @@ export const ComposePost = ({
           </Animated.ScrollView>
           <SuggestedLanguage text={richtext.text} />
 
-          {replyTo ? null : (
-            <ThreadgateBtn
-              postgate={draft.postgate}
-              onChangePostgate={nextPostgate => {
-                dispatch({type: 'update_postgate', postgate: nextPostgate})
-              }}
-              threadgateAllowUISettings={draft.threadgate}
-              onChangeThreadgateAllowUISettings={nextThreadgate => {
-                dispatch({
-                  type: 'update_threadgate',
-                  threadgate: nextThreadgate,
-                })
-              }}
-              style={bottomBarAnimatedStyle}
-            />
-          )}
+          <Animated.View
+            style={[a.flex_row, a.p_sm, t.atoms.bg, bottomBarAnimatedStyle]}>
+            <ScrollView
+              contentContainerStyle={[a.gap_sm]}
+              horizontal={true}
+              bounces={false}
+              showsHorizontalScrollIndicator={false}>
+              {replyTo ? null : (
+                <ThreadgateBtn
+                  postgate={draft.postgate}
+                  onChangePostgate={nextPostgate => {
+                    dispatch({type: 'update_postgate', postgate: nextPostgate})
+                  }}
+                  threadgateAllowUISettings={draft.threadgate}
+                  onChangeThreadgateAllowUISettings={nextThreadgate => {
+                    dispatch({
+                      type: 'update_threadgate',
+                      threadgate: nextThreadgate,
+                    })
+                  }}
+                  style={bottomBarAnimatedStyle}
+                />
+              )}
+              <LabelsBtn
+                labels={draft.labels}
+                onChange={nextLabels => {
+                  dispatch({type: 'update_labels', labels: nextLabels})
+                }}
+                hasMedia={hasMedia || Boolean(extLink)}
+              />
+            </ScrollView>
+          </Animated.View>
           <View
             style={[
               a.flex_row,
@@ -987,10 +989,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 6,
     marginLeft: 12,
-  },
-  postBtnWrapper: {
-    flexDirection: 'row',
-    gap: 14,
   },
   errorLine: {
     flexDirection: 'row',

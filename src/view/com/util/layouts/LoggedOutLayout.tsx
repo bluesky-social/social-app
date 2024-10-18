@@ -1,11 +1,11 @@
 import React from 'react'
 import {ScrollView, StyleSheet, View} from 'react-native'
 
+import {useColorSchemeStyle} from '#/lib/hooks/useColorSchemeStyle'
+import {useIsKeyboardVisible} from '#/lib/hooks/useIsKeyboardVisible'
+import {usePalette} from '#/lib/hooks/usePalette'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {isWeb} from '#/platform/detection'
-import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
-import {useIsKeyboardVisible} from 'lib/hooks/useIsKeyboardVisible'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {atoms as a} from '#/alf'
 import {Text} from '../text/Text'
 
@@ -36,7 +36,7 @@ export const LoggedOutLayout = ({
     if (scrollable) {
       return (
         <ScrollView
-          style={styles.scrollview}
+          style={a.flex_1}
           keyboardShouldPersistTaps="handled"
           keyboardDismissMode="none"
           contentContainerStyle={[
@@ -75,7 +75,7 @@ export const LoggedOutLayout = ({
       {scrollable ? (
         <View style={[styles.scrollableContent, contentBg]}>
           <ScrollView
-            style={styles.scrollview}
+            style={a.flex_1}
             contentContainerStyle={styles.scrollViewContentContainer}
             keyboardShouldPersistTaps="handled"
             keyboardDismissMode="on-drag">
@@ -112,9 +112,6 @@ const styles = StyleSheet.create({
   },
   scrollableContent: {
     flex: 2,
-  },
-  scrollview: {
-    flex: 1,
   },
   scrollViewContentContainer: {
     flex: 1,
