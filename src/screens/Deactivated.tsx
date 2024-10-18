@@ -104,7 +104,7 @@ export function Deactivated() {
   }, [_, agent, setPending, setError, queryClient])
 
   return (
-    <View style={[a.h_full_vh, a.flex_1, t.atoms.bg]}>
+    <View style={[a.util_screen_outer, a.flex_1, t.atoms.bg]}>
       <ScrollView
         style={[a.h_full, a.w_full]}
         contentContainerStyle={{borderWidth: 0}}>
@@ -112,7 +112,7 @@ export function Deactivated() {
           style={[
             a.px_2xl,
             {
-              paddingTop: isWeb ? 64 : insets.top,
+              paddingTop: isWeb ? 64 : insets.top + 16,
               paddingBottom: isWeb ? 64 : insets.bottom,
             },
           ]}>

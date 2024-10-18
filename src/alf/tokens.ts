@@ -52,8 +52,8 @@ export const borderRadius = {
  */
 export const fontWeight = {
   normal: '400',
-  bold: isAndroid ? '700' : '600',
-  heavy: isAndroid ? '900' : '800',
+  bold: '600',
+  heavy: '800',
 } as const
 
 export const gradients = {
