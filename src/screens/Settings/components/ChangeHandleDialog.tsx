@@ -14,6 +14,7 @@ import {ComAtprotoServerDescribeServer} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {HITSLOP_10} from '#/lib/constants'
 import {cleanError} from '#/lib/strings/errors'
 import {createFullHandle, validateHandle} from '#/lib/strings/handles'
 import {useUpdateHandleMutation} from '#/state/queries/handle'
@@ -22,13 +23,15 @@ import {useAgent, useSession} from '#/state/session'
 import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
 import {atoms as a, native, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
-import {Button, ButtonText} from '#/components/Button'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
 import * as ToggleButton from '#/components/forms/ToggleButton'
 import {At_Stroke2_Corner0_Rounded as AtIcon} from '#/components/icons/At'
+import {SquareBehindSquare4_Stroke2_Corner0_Rounded as CopyIcon} from '#/components/icons/SquareBehindSquare4'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
+import {CopyButton} from './CopyButton'
 
 export function ChangeHandleDialog({
   control,
@@ -48,9 +51,11 @@ function ChangeHandleDialogInner() {
   const control = Dialog.useDialogContext()
   const {_} = useLingui()
   const agent = useAgent()
-  const {data: serviceInfo, error: serviceInfoError} = useServiceQuery(
-    agent.serviceUrl.toString(),
-  )
+  const {
+    data: serviceInfo,
+    error: serviceInfoError,
+    refetch,
+  } = useServiceQuery(agent.serviceUrl.toString())
   const [handle, setHandle] = useState('')
   const {
     mutate: changeHandle,
@@ -63,8 +68,8 @@ function ChangeHandleDialogInner() {
     },
   })
 
-  const [page, setPage] = useState<'service-handle' | 'own-handle'>(
-    'service-handle',
+  const [page, setPage] = useState<'provided-handle' | 'own-handle'>(
+    'provided-handle',
   )
 
   const cancelButton = useCallback(
@@ -123,15 +128,16 @@ function ChangeHandleDialogInner() {
             title={_(msg`Oops!`)}
             message={_(msg`There was an issue with fetching your service info`)}
             details={cleanError(serviceInfoError)}
+            onPressTryAgain={refetch}
           />
         ) : serviceInfo ? (
           <LayoutAnimationConfig skipEntering skipExiting>
-            {page === 'service-handle' ? (
+            {page === 'provided-handle' ? (
               <Animated.View
                 key={page}
                 entering={native(SlideInLeft)}
                 exiting={native(SlideOutLeft)}>
-                <ServiceHandlePage
+                <ProvidedHandlePage
                   serviceInfo={serviceInfo}
                   setHandle={setHandle}
                   goToOwnHandle={() => {
@@ -152,7 +158,7 @@ function ChangeHandleDialogInner() {
                   setHandle={setHandle}
                   goToServiceHandle={() => {
                     setHandle('')
-                    setPage('service-handle')
+                    setPage('provided-handle')
                     reset()
                   }}
                   isPending={isPending}
@@ -171,7 +177,7 @@ function ChangeHandleDialogInner() {
   )
 }
 
-function ServiceHandlePage({
+function ProvidedHandlePage({
   serviceInfo,
   setHandle,
   goToOwnHandle,
@@ -201,59 +207,61 @@ function ServiceHandlePage({
     !validation.totalLength
 
   return (
-    <View style={[a.flex_1, a.gap_md]}>
-      {error && (
-        <Animated.View entering={FadeIn} exiting={FadeOut}>
-          <Admonition type="error">
-            <Trans>Failed to change handle. Please try again.</Trans>
-          </Admonition>
+    <LayoutAnimationConfig skipEntering>
+      <View style={[a.flex_1, a.gap_md]}>
+        {error && (
+          <Animated.View entering={FadeIn} exiting={FadeOut}>
+            <Admonition type="error">
+              <Trans>Failed to change handle. Please try again.</Trans>
+            </Admonition>
+          </Animated.View>
+        )}
+        <Animated.View layout={LinearTransition} style={[a.flex_1, a.gap_md]}>
+          <View>
+            <TextField.LabelText>
+              <Trans>New handle</Trans>
+            </TextField.LabelText>
+            <TextField.Root isInvalid={isInvalid}>
+              <TextField.Icon icon={AtIcon} />
+              <Dialog.Input
+                editable={!isPending}
+                defaultValue={subdomain}
+                onChangeText={text => {
+                  setSubdomain(text)
+                  if (validateHandle(text, host).overall) {
+                    setHandle(createFullHandle(text, host))
+                  } else {
+                    setHandle('')
+                  }
+                }}
+                label={_(msg`New handle`)}
+                placeholder={_(msg`e.g. alice`)}
+                autoCapitalize="none"
+                autoCorrect={false}
+              />
+              <TextField.SuffixText label={host}>{host}</TextField.SuffixText>
+            </TextField.Root>
+          </View>
+          <Text>
+            <Trans>
+              Your full handle will be{' '}
+              <Text style={[a.font_bold]}>
+                @{subdomain}
+                {host}
+              </Text>
+            </Trans>
+          </Text>
+          <Button
+            label={_(msg`I have my own domain`)}
+            onPress={goToOwnHandle}
+            style={[a.p_0, a.justify_start]}>
+            <ButtonText style={[{color: t.palette.primary_500}, a.text_left]}>
+              <Trans>I have my own domain</Trans>
+            </ButtonText>
+          </Button>
         </Animated.View>
-      )}
-      <Animated.View layout={LinearTransition} style={[a.flex_1, a.gap_md]}>
-        <View>
-          <TextField.LabelText>
-            <Trans>New handle</Trans>
-          </TextField.LabelText>
-          <TextField.Root isInvalid={isInvalid}>
-            <TextField.Icon icon={AtIcon} />
-            <Dialog.Input
-              editable={!isPending}
-              defaultValue={subdomain}
-              onChangeText={text => {
-                setSubdomain(text)
-                if (validateHandle(text, host).overall) {
-                  setHandle(createFullHandle(text, host))
-                } else {
-                  setHandle('')
-                }
-              }}
-              label={_(msg`New handle`)}
-              placeholder={_(msg`e.g. alice`)}
-              autoCapitalize="none"
-              autoCorrect={false}
-            />
-            <TextField.SuffixText label={host}>{host}</TextField.SuffixText>
-          </TextField.Root>
-        </View>
-        <Text>
-          <Trans>
-            Your full handle will be{' '}
-            <Text style={[a.font_bold]}>
-              @{subdomain}
-              {host}
-            </Text>
-          </Trans>
-        </Text>
-        <Button
-          label={_(msg`I have my own domain`)}
-          onPress={goToOwnHandle}
-          style={[a.p_0, a.justify_start]}>
-          <ButtonText style={[{color: t.palette.primary_500}, a.text_left]}>
-            <Trans>I have my own domain</Trans>
-          </ButtonText>
-        </Button>
-      </Animated.View>
-    </View>
+      </View>
+    </LayoutAnimationConfig>
   )
 }
 
@@ -335,7 +343,16 @@ function OwnHandlePage({
                 <Trans>Host:</Trans>
               </Text>
               <View style={[a.py_xs]}>
-                <Text style={[a.text_md]}>_atproto</Text>
+                <CopyButton
+                  variant="solid"
+                  color="secondary"
+                  value="_atproto"
+                  label={_(msg`Copy host`)}
+                  hoverStyle={[a.bg_transparent]}
+                  hitSlop={HITSLOP_10}>
+                  <Text style={[a.text_md, a.flex_1]}>_atproto</Text>
+                  <ButtonIcon icon={CopyIcon} />
+                </CopyButton>
               </View>
               <Text style={[a.mt_xs, t.atoms.text_contrast_medium]}>
                 <Trans>Type:</Trans>
@@ -347,7 +364,18 @@ function OwnHandlePage({
                 <Trans>Value:</Trans>
               </Text>
               <View style={[a.py_xs]}>
-                <Text style={[a.text_md]}>did={currentAccount?.did}</Text>
+                <CopyButton
+                  variant="solid"
+                  color="secondary"
+                  value={'did=' + currentAccount?.did}
+                  label={_(msg`Copy TXT record value`)}
+                  hoverStyle={[a.bg_transparent]}
+                  hitSlop={HITSLOP_10}>
+                  <Text style={[a.text_md, a.flex_1]}>
+                    did={currentAccount?.did}
+                  </Text>
+                  <ButtonIcon icon={CopyIcon} />
+                </CopyButton>
               </View>
             </View>
             <Text>
@@ -384,16 +412,16 @@ function OwnHandlePage({
             <Text>
               <Trans>That contains the following:</Trans>
             </Text>
-            <View
-              style={[
-                t.atoms.bg_contrast_25,
-                a.rounded_sm,
-                a.p_md,
-                a.border,
-                t.atoms.border_contrast_low,
-              ]}>
-              <Text style={[a.text_md]}>{currentAccount?.did}</Text>
-            </View>
+            <CopyButton
+              value={currentAccount?.did ?? ''}
+              label={_(msg`Copy DID`)}
+              size="large"
+              variant="solid"
+              color="secondary"
+              style={[a.px_md, a.border, t.atoms.border_contrast_low]}>
+              <Text style={[a.text_md, a.flex_1]}>{currentAccount?.did}</Text>
+              <ButtonIcon icon={CopyIcon} />
+            </CopyButton>
           </>
         )}
       </Animated.View>

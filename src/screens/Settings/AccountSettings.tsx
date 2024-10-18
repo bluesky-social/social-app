@@ -7,7 +7,6 @@ import {useQueryClient} from '@tanstack/react-query'
 import {CommonNavigatorParams} from '#/lib/routes/types'
 import {useModalControls} from '#/state/modals'
 import {RQKEY as RQKEY_PROFILE} from '#/state/queries/profile'
-import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import {ExportCarDialog} from '#/view/screens/Settings/ExportCarDialog'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
@@ -34,7 +33,6 @@ export function AccountSettingsScreen({}: Props) {
   const {_} = useLingui()
   const {currentAccount} = useSession()
   const queryClient = useQueryClient()
-  const {data: profile} = useProfileQuery({did: currentAccount?.did})
   const {openModal} = useModalControls()
   const birthdayControl = useDialogControl()
   const changeHandleControl = useDialogControl()
@@ -137,9 +135,6 @@ export function AccountSettingsScreen({}: Props) {
             <SettingsList.ItemText>
               <Trans>Handle</Trans>
             </SettingsList.ItemText>
-            {profile && (
-              <SettingsList.BadgeText>@{profile.handle}</SettingsList.BadgeText>
-            )}
             <SettingsList.Chevron />
           </SettingsList.PressableItem>
           <SettingsList.PressableItem
@@ -150,9 +145,6 @@ export function AccountSettingsScreen({}: Props) {
             <SettingsList.ItemText>
               <Trans>Handle (new)</Trans>
             </SettingsList.ItemText>
-            {profile && (
-              <SettingsList.BadgeText>@{profile.handle}</SettingsList.BadgeText>
-            )}
             <SettingsList.Chevron />
           </SettingsList.PressableItem>
           <SettingsList.Divider />
