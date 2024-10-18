@@ -108,11 +108,12 @@ async function loggedOutFetch({
 }) {
   let contentLangs = getAppLanguageAsContentLanguage()
 
-  /**
-   * Copied from our root `Agent` class
-   * @see https://github.com/bluesky-social/atproto/blob/60df3fc652b00cdff71dd9235d98a7a4bb828f05/packages/api/src/agent.ts#L120
-   */
-  const labelersHeader = {
+  const headers = {
+    'x-bsky-topics': 'pwi',
+    /**
+     * Copied from our root `Agent` class
+     * @see https://github.com/bluesky-social/atproto/blob/60df3fc652b00cdff71dd9235d98a7a4bb828f05/packages/api/src/agent.ts#L120
+     */
     'atproto-accept-labelers': BskyAgent.appLabelers
       .map(l => `${l};redact`)
       .join(', '),
@@ -125,7 +126,7 @@ async function loggedOutFetch({
     }&limit=${limit}&lang=${contentLangs}`,
     {
       method: 'GET',
-      headers: {'Accept-Language': contentLangs, ...labelersHeader},
+      headers: {'Accept-Language': contentLangs, ...headers},
     },
   )
   let data = res.ok ? jsonStringToLex(await res.text()) : null
@@ -141,7 +142,7 @@ async function loggedOutFetch({
     `https://api.bsky.app/xrpc/app.bsky.feed.getFeed?feed=${feed}${
       cursor ? `&cursor=${cursor}` : ''
     }&limit=${limit}`,
-    {method: 'GET', headers: {'Accept-Language': '', ...labelersHeader}},
+    {method: 'GET', headers: {'Accept-Language': '', ...headers}},
   )
   data = res.ok ? jsonStringToLex(await res.text()) : null
   if (data?.feed?.length) {
