@@ -214,6 +214,7 @@ export function AutoSizedImage({
         onPress={onPress}
         onLongPress={onLongPress}
         onPressIn={onPressIn}
+        android_ripple={{foreground: true, borderless: true}}
         // alt here is what screen readers actually use
         accessibilityLabel={image.alt}
         accessibilityHint={_(msg`Tap to view full image`)}
@@ -234,6 +235,7 @@ export function AutoSizedImage({
           onPress={onPress}
           onLongPress={onLongPress}
           onPressIn={onPressIn}
+          android_ripple={{foreground: true, borderless: true}}
           // alt here is what screen readers actually use
           accessibilityLabel={image.alt}
           accessibilityHint={_(msg`Tap to view full image`)}

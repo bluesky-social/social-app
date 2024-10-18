@@ -157,6 +157,7 @@ function PostInner({
         !hideTopBorder && {borderTopWidth: StyleSheet.hairlineWidth},
         style,
       ]}
+      noFeedback
       onBeforePress={onBeforePress}>
       {showReplyLine && <View style={styles.replyLine} />}
       <View style={styles.layout}>
