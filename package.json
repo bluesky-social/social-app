@@ -181,6 +181,7 @@
     "react-native-pager-view": "6.2.3",
     "react-native-picker-select": "^9.1.3",
     "react-native-progress": "bluesky-social/react-native-progress",
+    "react-native-purchases": "^8.2.3",
     "react-native-qrcode-styled": "^0.3.1",
     "react-native-reanimated": "^3.11.0",
     "react-native-root-siblings": "^4.1.1",

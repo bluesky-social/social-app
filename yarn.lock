@@ -5942,6 +5942,11 @@
   resolved "https://registry.yarnpkg.com/@remirror/core-constants/-/core-constants-2.0.2.tgz#f05eccdc69e3a65e7d524b52548f567904a11a1a"
   integrity sha512-dyHY+sMF0ihPus3O27ODd4+agdHMEmuRdyiZJ2CCWjPV5UFmn17ZbElvk6WOGVE4rdCJKZQCrPV2BcikOMLUGQ==
 
+"@revenuecat/purchases-typescript-internal@13.4.0":
+  version "13.4.0"
+  resolved "https://registry.yarnpkg.com/@revenuecat/purchases-typescript-internal/-/purchases-typescript-internal-13.4.0.tgz#e95c29e7c44c281022d1d2eb6fef67f62249f945"
+  integrity sha512-y3+tUEhBs7kcqd6pAQnX1x2rGfztCYAPzyzGR7gHgVKeBsGIu18GpokhjqzzxyJD/bNXJICwhnj4R4omf8KHmw==
+
 "@rnx-kit/chromium-edge-launcher@^1.0.0":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@rnx-kit/chromium-edge-launcher/-/chromium-edge-launcher-1.0.0.tgz#c0df8ea00a902c7a417cd9655aab06de398b939c"
@@ -18152,6 +18157,13 @@ react-native-progress@bluesky-social/react-native-progress:
   resolved "https://codeload.github.com/bluesky-social/react-native-progress/tar.gz/5a372f4f2ce5feb26f4f47b6a4d187ab9b923ab4"
   dependencies:
     prop-types "^15.7.2"
+
+react-native-purchases@^8.2.3:
+  version "8.2.3"
+  resolved "https://registry.yarnpkg.com/react-native-purchases/-/react-native-purchases-8.2.3.tgz#8a4cb39ba5e15a8bc43cc33313b360e3dfa35139"
+  integrity sha512-5iWhfhebOHekqskrvL22xiJPiED+260JakMDtApA8XekkbEo+ozUEDUZ56x+Z/Q5t4uJo4SPylKxSpT6nHQ/rg==
+  dependencies:
+    "@revenuecat/purchases-typescript-internal" "13.4.0"
 
 react-native-qrcode-styled@^0.3.1:
   version "0.3.1"
