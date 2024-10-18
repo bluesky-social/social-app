@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useMemo} from 'react'
 import {Pressable, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
@@ -19,6 +19,7 @@ import {Button, ButtonText} from '#/components/Button'
 import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {CenteredView} from '../util/Views'
+import {getTagline} from './util/taglines'
 
 export const SplashScreen = ({
   onDismiss,
@@ -46,6 +47,8 @@ export const SplashScreen = ({
   }, [])
 
   const kawaii = useKawaiiMode()
+
+  const tagline = useMemo(() => getTagline(), [])
 
   return (
     <>
@@ -94,8 +97,15 @@ export const SplashScreen = ({
               )}
 
               <Text
-                style={[a.text_md, a.font_bold, t.atoms.text_contrast_medium]}>
-                <Trans>What's up?</Trans>
+                style={[
+                  a.text_md,
+                  a.font_bold,
+                  a.text_center,
+                  t.atoms.text_contrast_medium,
+                  a.leading_snug,
+                  {maxWidth: 300},
+                ]}>
+                {tagline}
               </Text>
             </View>
 
