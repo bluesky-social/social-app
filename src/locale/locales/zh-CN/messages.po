@@ -2641,7 +2641,7 @@ msgstr "关注了你"
 
 #: src/view/com/notifications/FeedItem.tsx:205
 msgid "followed you back"
-msgstr "回关"
+msgstr "回关了你"
 
 #: src/view/screens/ProfileFollowers.tsx:30
 #: src/view/screens/ProfileFollowers.tsx:31
