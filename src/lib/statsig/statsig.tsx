@@ -4,10 +4,10 @@ import {AppState, AppStateStatus} from 'react-native'
 import {sha256} from 'js-sha256'
 import {Statsig, StatsigProvider} from 'statsig-react-native-expo'
 
+import {BUNDLE_DATE, BUNDLE_IDENTIFIER, IS_TESTFLIGHT} from '#/lib/app-info'
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
 import * as persisted from '#/state/persisted'
-import {BUNDLE_DATE, BUNDLE_IDENTIFIER, IS_TESTFLIGHT} from 'lib/app-info'
 import {useSession} from '../../state/session'
 import {timeout} from '../async/timeout'
 import {useNonReactiveCallback} from '../hooks/useNonReactiveCallback'
@@ -89,7 +89,7 @@ export function toClout(n: number | null | undefined): number | undefined {
   }
 }
 
-const DOWNSAMPLE_RATE = 0.95 // 95% likely
+const DOWNSAMPLE_RATE = 0.99 // 99% likely
 const DOWNSAMPLED_EVENTS: Set<keyof LogEvents> = new Set([
   'router:navigate:notifications:sampled',
   'state:background:sampled',
