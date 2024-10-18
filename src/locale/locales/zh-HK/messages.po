@@ -2490,12 +2490,12 @@ msgstr "切換資訊流"
 #: src/view/shell/desktop/RightNav.tsx:70
 #: src/view/shell/Drawer.tsx:343
 msgid "Feedback"
-msgstr "反應"
+msgstr "反饋"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:271
 #: src/view/com/util/forms/PostDropdownBtn.tsx:280
 msgid "Feedback sent!"
-msgstr "反應已經傳送咗！"
+msgstr "反饋已經傳送咗！"
 
 #: src/Navigation.tsx:352
 #: src/screens/StarterPack/StarterPackScreen.tsx:183
@@ -5711,7 +5711,7 @@ msgstr "傳送電郵"
 
 #: src/view/shell/Drawer.tsx:336
 msgid "Send feedback"
-msgstr "傳送意見"
+msgstr "傳送反饋"
 
 #: src/screens/Messages/components/MessageInput.tsx:165
 #: src/screens/Messages/components/MessageInput.web.tsx:219
