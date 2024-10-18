@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useMemo} from 'react'
 import {View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg, Trans} from '@lingui/macro'
@@ -12,6 +12,7 @@ import {AppLanguageDropdown} from '#/components/AppLanguageDropdown'
 import {Button, ButtonText} from '#/components/Button'
 import {Text} from '#/components/Typography'
 import {CenteredView} from '../util/Views'
+import {getTagline} from './util/taglines'
 
 export const SplashScreen = ({
   onPressSignin,
@@ -25,6 +26,8 @@ export const SplashScreen = ({
 
   const insets = useSafeAreaInsets()
 
+  const tagline = useMemo(() => getTagline(), [])
+
   return (
     <CenteredView style={[a.h_full, a.flex_1]}>
       <ErrorBoundary>
@@ -35,8 +38,16 @@ export const SplashScreen = ({
             <Logotype width={161} fill={t.atoms.text.color} />
           </View>
 
-          <Text style={[a.text_md, a.font_bold, t.atoms.text_contrast_medium]}>
-            <Trans>What's up?</Trans>
+          <Text
+            style={[
+              a.text_md,
+              a.font_bold,
+              a.text_center,
+              t.atoms.text_contrast_medium,
+              a.leading_snug,
+              {maxWidth: 300},
+            ]}>
+            {tagline}
           </Text>
         </View>
         <View
