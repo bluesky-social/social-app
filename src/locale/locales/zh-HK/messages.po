@@ -2330,7 +2330,7 @@ msgstr "展開或者收合你回覆緊嘅全部帖文"
 
 #: src/lib/api/index.ts:356
 msgid "Expected uri to resolve to a record"
-msgstr "預計 URL 會解析到記錄"
+msgstr "URI 應解析為記錄"
 
 #: src/view/screens/NotificationsSettings.tsx:78
 msgid "Experimental: When this preference is enabled, you'll only receive reply and quote notifications from users you follow. We'll continue to add more controls here over time."
@@ -2444,7 +2444,7 @@ msgstr "儲存唔到通知設定，請試多一次"
 #: src/lib/api/index.ts:145
 #: src/lib/api/index.ts:170
 msgid "Failed to save post interaction settings. Your post was created but users may be able to interact with it."
-msgstr "儲存唔到帖文互動設定。你嘅帖文已經建立咗，但係用戶可能同佢互動唔到。"
+msgstr "儲存唔到帖文互動設定。你嘅帖文已經建立咗，但其他用戶可能仍然可以同佢互動。"
 
 #: src/components/dms/MessageItem.tsx:233
 msgid "Failed to send"
@@ -3548,7 +3548,7 @@ msgstr "媒體"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:221
 msgid "Media that may be disturbing or inappropriate for some audiences."
-msgstr "可能會令某啲觀眾感到不安或者唔適合嘅媒體。"
+msgstr "可能會令某啲受眾感到不安或者造成唔適嘅媒體內容。"
 
 #: src/components/WhoCanReply.tsx:254
 msgid "mentioned users"
@@ -5681,7 +5681,7 @@ msgstr "送個整齊嘅網站！"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:189
 msgid "Send Confirmation"
-msgstr "傳送確認"
+msgstr "傳送確認電郵"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:182
 msgid "Send confirmation email"

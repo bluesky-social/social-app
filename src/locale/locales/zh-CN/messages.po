@@ -2330,7 +2330,7 @@ msgstr "展开或折叠你要回复的完整帖文"
 
 #: src/lib/api/index.ts:356
 msgid "Expected uri to resolve to a record"
-msgstr "预期 URL 解析为记录"
+msgstr "URL 应解析为记录"
 
 #: src/view/screens/NotificationsSettings.tsx:78
 msgid "Experimental: When this preference is enabled, you'll only receive reply and quote notifications from users you follow. We'll continue to add more controls here over time."
@@ -3548,7 +3548,7 @@ msgstr "媒体"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:221
 msgid "Media that may be disturbing or inappropriate for some audiences."
-msgstr "对于一部分受众而言可能令人不安或不适当的媒体内容。"
+msgstr "对于一部分受众而言可能令人不安或造成不适的媒体内容。"
 
 #: src/components/WhoCanReply.tsx:254
 msgid "mentioned users"
@@ -5494,7 +5494,7 @@ msgstr "保存图片裁剪设置"
 #: src/view/com/notifications/FeedItem.tsx:416
 #: src/view/com/notifications/FeedItem.tsx:441
 msgid "Say hello!"
-msgstr "说嗨！"
+msgstr "说嘿！"
 
 #: src/screens/Onboarding/index.tsx:33
 #: src/screens/Onboarding/state.ts:99
