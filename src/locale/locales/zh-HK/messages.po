@@ -3869,7 +3869,7 @@ msgstr "永遠唔好失去對你嘅追隨者或者資料嘅存取權。"
 
 #: src/view/com/modals/ChangeHandle.tsx:508
 msgid "Nevermind, create a handle for me"
-msgstr "唔緊要，幫我整個帳戶頭銜"
+msgstr "唔使喇，為我建立個帳戶頭銜"
 
 #: src/view/screens/Lists.tsx:84
 msgctxt "action"

@@ -3869,7 +3869,7 @@ msgstr "永远不会失去对你的关注者或数据的访问。"
 
 #: src/view/com/modals/ChangeHandle.tsx:508
 msgid "Nevermind, create a handle for me"
-msgstr "没关系，为我创建一个用户识别符"
+msgstr "不用了，为我创建一个用户识别符"
 
 #: src/view/screens/Lists.tsx:84
 msgctxt "action"
