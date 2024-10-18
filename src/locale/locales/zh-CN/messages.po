@@ -5494,7 +5494,7 @@ msgstr "保存图片裁剪设置"
 #: src/view/com/notifications/FeedItem.tsx:416
 #: src/view/com/notifications/FeedItem.tsx:441
 msgid "Say hello!"
-msgstr "说嘿！"
+msgstr "说句“你好”！"
 
 #: src/screens/Onboarding/index.tsx:33
 #: src/screens/Onboarding/state.ts:99
