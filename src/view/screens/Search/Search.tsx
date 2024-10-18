@@ -684,7 +684,6 @@ export function SearchScreen(
 
   const onPressClearQuery = React.useCallback(() => {
     scrollToTopWeb()
-    setSearchText('')
     textInput.current?.focus()
   }, [])
 
