@@ -746,7 +746,7 @@ msgstr "예술"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:190
 msgid "Artistic or non-erotic nudity."
-msgstr "선정적이지 않거나 예술적인 노출."
+msgstr "선정적이지 않거나 예술적인 나체."
 
 #: src/screens/Signup/StepHandle.tsx:173
 msgid "At least 3 characters"
@@ -1899,7 +1899,7 @@ msgstr "선정적이거나 불쾌감을 주는 콘텐츠가 포함되어 있지 
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:39
 msgid "Does not include nudity."
-msgstr "노출을 포함하지 않습니다."
+msgstr "나체를 포함하지 않습니다."
 
 #: src/screens/Signup/StepHandle.tsx:159
 msgid "Doesn't begin or end with a hyphen"
@@ -1979,7 +1979,7 @@ msgstr "예: alice.com"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:43
 msgid "E.g. artistic nudes."
-msgstr "예: 예술적인 노출."
+msgstr "예: 예술적인 나체."
 
 #: src/view/com/modals/CreateOrEditList.tsx:263
 msgid "e.g. Great Posters"
@@ -4097,7 +4097,7 @@ msgstr "아무도 찾을 수 없습니다. 다른 사용자를 검색해 보세�
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:42
 msgid "Non-sexual Nudity"
-msgstr "선정적이지 않은 노출"
+msgstr "선정적이지 않은 나체"
 
 #: src/Navigation.tsx:124
 #: src/view/screens/Profile.tsx:128
@@ -4166,11 +4166,11 @@ msgstr "지금"
 #: src/view/com/composer/labels/LabelsBtn.tsx:172
 #: src/view/com/composer/labels/LabelsBtn.tsx:175
 msgid "Nudity"
-msgstr "노출"
+msgstr "나체"
 
 #: src/lib/moderation/useReportOptions.ts:78
 msgid "Nudity or adult content not labeled as such"
-msgstr "누드 또는 성인 콘텐츠로 설정되지 않은 콘텐츠"
+msgstr "나체 또는 성인 콘텐츠로 설정되지 않은 콘텐츠"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:11
 msgid "Off"
@@ -5801,7 +5801,7 @@ msgstr "설정"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:192
 msgid "Sexual activity or erotic nudity."
-msgstr "성행위 또는 선정적인 노출."
+msgstr "성행위 또는 선정적인 나체."
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:38
 msgid "Sexually Suggestive"
