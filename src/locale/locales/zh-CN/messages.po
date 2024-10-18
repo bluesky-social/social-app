@@ -4066,7 +4066,7 @@ msgstr "未找到 \"{search}\" 的搜索结果。"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:129
 msgid "No self-labels can be applied to this post because it contains no media."
-msgstr "这个帖文没有任何标签，因为帖文中不包含媒体内容。"
+msgstr "这个帖文没有任何标记，因为帖文中不包含媒体内容。"
 
 #: src/components/dialogs/EmbedConsent.tsx:104
 #: src/components/dialogs/EmbedConsent.tsx:111
