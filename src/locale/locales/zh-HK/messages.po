@@ -309,7 +309,7 @@ msgstr "已經靜音帳戶"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:88
 msgid "Account Muted by List"
-msgstr "帳戶已經被清單靜音"
+msgstr "帳戶已俾清單靜音"
 
 #: src/view/com/util/AccountDropdownBtn.tsx:43
 msgid "Account options"
@@ -519,7 +519,7 @@ msgstr "ALT 文字會為盲人同低視力用戶描述圖片，同埋有助為�
 #: src/view/com/composer/GifAltText.tsx:179
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:139
 msgid "Alt text will be truncated. Limit: {0} characters."
-msgstr "ALT 文字會被截斷，限制：{0} 個字元。"
+msgstr "ALT 文字會俾截斷，限制：{0} 個字元。"
 
 #: src/view/com/modals/VerifyEmail.tsx:132
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:95
@@ -830,11 +830,11 @@ msgstr "封鎖咗帳戶"
 
 #: src/view/com/profile/ProfileMenu.tsx:336
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
-msgstr "被封鎖嘅帳戶唔可以喺你嘅討論串入面回覆、提及你或者以其他方式同你互動。"
+msgstr "俾封鎖嘅帳戶唔可以喺你嘅討論串入面回覆、提及你或者以其他方式同你互動。"
 
 #: src/view/screens/ModerationBlockedAccounts.tsx:116
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you. You will not see their content and they will be prevented from seeing yours."
-msgstr "被封鎖嘅帳戶唔可以喺你嘅討論串入面回覆、提及你或者以其他方式同你互動。你唔會睇到佢哋嘅內容，而且佢哋會被阻止睇到你嘅內容。"
+msgstr "俾封鎖嘅帳戶唔可以喺你嘅討論串入面回覆、提及你或者以其他方式同你互動。你唔會睇到佢哋嘅內容，而且佢哋會俾阻止睇到你嘅內容。"
 
 #: src/view/com/post-thread/PostThread.tsx:412
 msgid "Blocked post."
@@ -846,7 +846,7 @@ msgstr "封鎖唔會阻止呢個標籤者喺你嘅帳戶上面放置標籤。"
 
 #: src/view/screens/ProfileList.tsx:744
 msgid "Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
-msgstr "封鎖係公開嘅。被封鎖嘅帳戶唔可以喺你嘅討論串入面回覆、提及你或者以其他方式同你互動。"
+msgstr "封鎖係公開嘅。俾封鎖嘅帳戶唔可以喺你嘅討論串入面回覆、提及你或者以其他方式同你互動。"
 
 #: src/view/com/profile/ProfileMenu.tsx:333
 msgid "Blocking will not prevent labels from being applied on your account, but it will stop this account from replying in your threads or interacting with you."
@@ -1024,7 +1024,7 @@ msgstr "取消打開連結咗嘅網站"
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:154
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:190
 msgid "Cannot interact with a blocked user"
-msgstr "同被封鎖嘅用戶互動唔到"
+msgstr "同俾封鎖嘅用戶互動唔到"
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:133
 msgid "Captions (.vtt)"
@@ -1384,7 +1384,7 @@ msgstr "聯絡支援"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:18
 msgid "Content Blocked"
-msgstr "內容被封鎖"
+msgstr "內容俾封鎖"
 
 #: src/screens/Moderation/index.tsx:298
 msgid "Content filters"
@@ -3401,7 +3401,7 @@ msgstr "清單大頭相"
 
 #: src/view/screens/ProfileList.tsx:422
 msgid "List blocked"
-msgstr "清單被封鎖"
+msgstr "清單俾封鎖"
 
 #: src/components/ListCard.tsx:150
 #: src/view/com/feeds/FeedSourceCard.tsx:252
@@ -3789,7 +3789,7 @@ msgstr "靜音帳戶嘅帖文會喺你嘅資訊流同通知入面移除。靜音
 
 #: src/lib/moderation/useModerationCauseDescription.ts:90
 msgid "Muted by \"{0}\""
-msgstr "被 \"{0}\" 靜音"
+msgstr "俾 \"{0}\" 靜音"
 
 #: src/screens/Moderation/index.tsx:235
 msgid "Muted words & tags"
@@ -4537,7 +4537,7 @@ msgstr "用戶"
 
 #: src/Navigation.tsx:179
 msgid "People followed by @{0}"
-msgstr "被 @{0} 追蹤嘅人"
+msgstr "俾 @{0} 追蹤嘅人"
 
 #: src/Navigation.tsx:172
 msgid "People following @{0}"
@@ -4549,7 +4549,7 @@ msgstr "需要存取圖庫嘅權限。"
 
 #: src/view/com/lightbox/Lightbox.tsx:85
 msgid "Permission to access camera roll was denied. Please enable it in your system settings."
-msgstr "存取圖庫嘅權限被拒絕，請喺你嘅系統設定入面啟用佢。"
+msgstr "存取圖庫嘅權限俾拒絕，請喺你嘅系統設定入面啟用佢。"
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:55
 msgid "Person toggle"
@@ -4728,7 +4728,7 @@ msgstr "帖文隱藏咗"
 #: src/components/moderation/ModerationDetailsDialog.tsx:106
 #: src/lib/moderation/useModerationCauseDescription.ts:104
 msgid "Post Hidden by Muted Word"
-msgstr "帖文被靜音字詞隱藏"
+msgstr "帖文俾靜音字詞隱藏"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:109
 #: src/lib/moderation/useModerationCauseDescription.ts:113
@@ -5168,7 +5168,7 @@ msgstr "回覆畀 <0><1/></0>"
 #: src/view/com/posts/FeedItem.tsx:535
 msgctxt "description"
 msgid "Reply to a blocked post"
-msgstr "回覆被封鎖嘅帖文"
+msgstr "回覆俾封鎖嘅帖文"
 
 #: src/view/com/posts/FeedItem.tsx:537
 msgctxt "description"
@@ -6562,7 +6562,7 @@ msgstr "新用戶湧入 Bluesky ！我哋會盡快啟動你嘅帳戶。"
 
 #: src/components/moderation/ScreenHider.tsx:111
 msgid "This {screenDescription} has been flagged:"
-msgstr "呢個 {screenDescription} 已經被標記咗："
+msgstr "呢個 {screenDescription} 已經俾標記咗："
 
 #: src/components/moderation/ScreenHider.tsx:106
 msgid "This account has requested that users sign in to view their profile."
@@ -6570,7 +6570,7 @@ msgstr "呢個帳戶要求用戶登入嚟睇佢哋嘅個人檔案。"
 
 #: src/components/dms/BlockedByListDialog.tsx:34
 msgid "This account is blocked by one or more of your moderation lists. To unblock, please visit the lists directly and remove this user."
-msgstr "呢個帳戶被你嘅一個或者多個審核清單封鎖。如果要解除封鎖，請直接去清單同埋移除呢個用戶。"
+msgstr "呢個帳戶俾你嘅一個或者多個審核清單封鎖。如果要解除封鎖，請直接去清單同埋移除呢個用戶。"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:246
 msgid "This appeal will be sent to <0>{sourceName}</0>."
@@ -6586,7 +6586,7 @@ msgstr "呢個傾偈已經斷咗連線"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:19
 msgid "This content has been hidden by the moderators."
-msgstr "呢個內容已經被審核服務提供者隱藏咗。"
+msgstr "呢個內容已經俾審核服務提供者隱藏咗。"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:24
 msgid "This content has received a general warning from moderators."
@@ -6686,7 +6686,7 @@ msgstr "呢個帖文只會畀登入咗嘅用戶睇到，未登入嘅人唔會睇
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:681
 msgid "This post will be hidden from feeds and threads. This cannot be undone."
-msgstr "呢個帖文將會喺討論串及資訊流中被隱藏，呢個操作無法撤銷。"
+msgstr "呢個帖文將會喺討論串及資訊流中俾隱藏，呢個操作無法撤銷。"
 
 #: src/view/com/composer/Composer.tsx:407
 msgid "This post's author has disabled quote posts."
@@ -6698,7 +6698,7 @@ msgstr "呢個個人檔案只會畀登入咗嘅使用者睇到，未登入嘅人
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:743
 msgid "This reply will be sorted into a hidden section at the bottom of your thread and will mute notifications for subsequent replies - both for yourself and others."
-msgstr "呢個回覆會被分類到你討論串底部嘅隱藏部分，並且會為你自己同其他人靜音後續回覆嘅通知。"
+msgstr "呢個回覆會俾分類到你討論串底部嘅隱藏部分，並且會為你自己同其他人靜音後續回覆嘅通知。"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:37
 msgid "This service has not provided terms of service or a privacy policy."
@@ -7099,19 +7099,19 @@ msgstr "使用者："
 #: src/components/moderation/ModerationDetailsDialog.tsx:70
 #: src/lib/moderation/useModerationCauseDescription.ts:61
 msgid "User Blocked"
-msgstr "用戶已經被封鎖"
+msgstr "用戶已經俾封鎖"
 
 #: src/lib/moderation/useModerationCauseDescription.ts:53
 msgid "User Blocked by \"{0}\""
-msgstr "用戶已經被「{0}」封鎖"
+msgstr "用戶已經俾「{0}」封鎖"
 
 #: src/components/dms/BlockedByListDialog.tsx:27
 msgid "User blocked by list"
-msgstr "用戶已經被清單封鎖"
+msgstr "用戶已經俾清單封鎖"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:56
 msgid "User Blocked by List"
-msgstr "用戶已經被清單封鎖"
+msgstr "用戶已經俾清單封鎖"
 
 #: src/lib/moderation/useModerationCauseDescription.ts:71
 msgid "User Blocking You"
@@ -7156,7 +7156,7 @@ msgstr "用戶"
 
 #: src/components/WhoCanReply.tsx:258
 msgid "users followed by <0>@{0}</0>"
-msgstr "被 <0>@{0}</0> 追蹤嘅用戶"
+msgstr "俾 <0>@{0}</0> 追蹤嘅用戶"
 
 #: src/screens/Messages/Settings.tsx:86
 #: src/screens/Messages/Settings.tsx:89
@@ -7280,7 +7280,7 @@ msgstr "用標籤 {displayTag} 睇返所有帖文"
 
 #: src/components/ProfileHoverCard/index.web.tsx:433
 msgid "View blocked user's profile"
-msgstr "睇下被封鎖用戶嘅個人檔案"
+msgstr "睇下俾封鎖用戶嘅個人檔案"
 
 #: src/view/screens/Settings/ExportCarDialog.tsx:96
 msgid "View blogpost for more details"
@@ -7642,7 +7642,7 @@ msgstr "你冇任何儲存咗嘅資訊流。"
 
 #: src/view/com/post-thread/PostThread.tsx:214
 msgid "You have blocked the author or you have been blocked by the author."
-msgstr "你已經封鎖咗作者，或者你已經被作者封鎖咗。"
+msgstr "你已經封鎖咗作者，或者你已經俾作者封鎖咗。"
 
 #: src/components/dms/MessagesListBlockedFooter.tsx:58
 msgid "You have blocked this user"
