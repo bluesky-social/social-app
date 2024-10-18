@@ -1895,7 +1895,7 @@ msgstr "不包含成人内容。"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:240
 msgid "Does not contain graphic or disturbing content."
-msgstr "不包含敏感或令人不适的内容"
+msgstr "不包含敏感或令人不适的内容。"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:39
 msgid "Does not include nudity."
