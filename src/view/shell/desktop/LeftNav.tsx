@@ -353,7 +353,7 @@ export function DesktopLeftNav() {
       {hasSession ? (
         <ProfileCard />
       ) : isDesktop ? (
-        <View style={{paddingHorizontal: 12}}>
+        <View style={[a.pt_xl]}>
           <NavSignupCard />
         </View>
       ) : null}
