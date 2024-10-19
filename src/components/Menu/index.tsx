@@ -121,12 +121,9 @@ export function Item({children, label, style, onPress, ...rest}: ItemProps) {
       onFocus={onFocus}
       onBlur={onBlur}
       onPress={async e => {
-        if (e.defaultPrevented) {
-          await onPress(e)
-        } else {
-          control?.close(() => {
-            onPress(e)
-          })
+        await onPress(e)
+        if (!e.defaultPrevented) {
+          control?.close()
         }
       }}
       onPressIn={e => {
