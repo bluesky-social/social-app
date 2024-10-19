@@ -121,7 +121,7 @@ msgstr "第 {0} 个（共 {1} 个）"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:478
 msgid "{0} people have used this starter pack!"
-msgstr "{0} 人已使用过此入门包！"
+msgstr "{0} 人已使用过此新手包！"
 
 #: src/view/com/util/UserAvatar.tsx:435
 msgid "{0}'s avatar"
@@ -133,7 +133,7 @@ msgstr "{0}最喜欢的资讯源和用户 - 来加入我们吧！"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:47
 msgid "{0}'s starter pack"
-msgstr "{0}的入门包"
+msgstr "{0}的新手包"
 
 #. How many days have passed, displayed in a narrow form
 #: src/lib/hooks/useTimeAgo.ts:158
@@ -167,7 +167,7 @@ msgstr "{count, plural, one {# 位用户喜欢} other {# 位用户喜欢}}"
 #: src/lib/generate-starterpack.ts:108
 #: src/screens/StarterPack/Wizard/index.tsx:181
 msgid "{displayName}'s Starter Pack"
-msgstr "{displayName} 的入门包"
+msgstr "{displayName} 的新手包"
 
 #: src/screens/SignupQueued.tsx:207
 msgid "{estimatedTimeHrs, plural, one {hour} other {hours}}"
@@ -202,17 +202,17 @@ msgstr "{profileName} 在 {0} 前加入了 Bluesky"
 
 #: src/components/NewskieDialog.tsx:111
 msgid "{profileName} joined Bluesky using a starter pack {0} ago"
-msgstr "{profileName} 在 {0} 前使用入门包加入了 Bluesky"
+msgstr "{profileName} 在 {0} 前使用新手包加入了 Bluesky"
 
 #: src/screens/StarterPack/Wizard/index.tsx:473
 msgctxt "profiles"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
-msgstr "<0>{0}、</0><1>{1}</1>及{2, plural, one {其他 # } other {其他 # }}人包含在你的入门包中"
+msgstr "<0>{0}、</0><1>{1}</1>及{2, plural, one {其他 # } other {其他 # }}人包含在你的新手包中"
 
 #: src/screens/StarterPack/Wizard/index.tsx:526
 msgctxt "feeds"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
-msgstr "<0>{0}、</0><1>{1}</1>及{2, plural, one {其他 # } other {其他 # }}个资讯源包含在你的入门包中"
+msgstr "<0>{0}、</0><1>{1}</1>及{2, plural, one {其他 # } other {其他 # }}个资讯源包含在你的新手包中"
 
 #: src/view/shell/Drawer.tsx:97
 msgid "<0>{0}</0> {1, plural, one {follower} other {followers}}"
@@ -224,11 +224,11 @@ msgstr "<0>{0}</0> {1, plural, one {正在关注} other {正在关注}}"
 
 #: src/screens/StarterPack/Wizard/index.tsx:514
 msgid "<0>{0}</0> and<1> </1><2>{1} </2>are included in your starter pack"
-msgstr "<0>{0}</0> 以及<1></1><2>{1} </2>包含在你的入门包中"
+msgstr "<0>{0}</0> 以及<1></1><2>{1} </2>包含在你的新手包中"
 
 #: src/screens/StarterPack/Wizard/index.tsx:507
 msgid "<0>{0}</0> is included in your starter pack"
-msgstr "<0>{0}</0> 包含在你的入门包中"
+msgstr "<0>{0}</0> 包含在你的新手包中"
 
 #: src/components/WhoCanReply.tsx:274
 msgid "<0>{0}</0> members"
@@ -240,7 +240,7 @@ msgstr "<0>{date}</0> {time}"
 
 #: src/screens/StarterPack/Wizard/index.tsx:464
 msgid "<0>You</0> and<1> </1><2>{0} </2>are included in your starter pack"
-msgstr "<0>你</0>以及<1> </1><2>{0} </2>包含在你的入门包中"
+msgstr "<0>你</0>以及<1> </1><2>{0} </2>包含在你的新手包中"
 
 #: src/screens/Profile/Header/Handle.tsx:53
 msgid "⚠Invalid Handle"
@@ -341,11 +341,11 @@ msgstr "添加"
 
 #: src/screens/StarterPack/Wizard/index.tsx:575
 msgid "Add {0} more to continue"
-msgstr "添加 {0} 个以继续"
+msgstr "继续添加 {0} 个以继续"
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:59
 msgid "Add {displayName} to starter pack"
-msgstr "添加 {displayName} 至入门包"
+msgstr "添加 {displayName} 至新手包"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:114
 #: src/view/com/composer/labels/LabelsBtn.tsx:119
@@ -397,7 +397,7 @@ msgstr "添加推荐的资讯源"
 
 #: src/screens/StarterPack/Wizard/index.tsx:495
 msgid "Add some feeds to your starter pack!"
-msgstr "添加一些推荐的资讯源到你的入门包中！"
+msgstr "添加一些推荐的资讯源到你的新手包中！"
 
 #: src/screens/Feeds/NoFollowingFeed.tsx:41
 msgid "Add the default feed of only people you follow"
@@ -548,7 +548,7 @@ msgstr "压缩视频时发生错误。"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:316
 msgid "An error occurred while generating your starter pack. Want to try again?"
-msgstr "创建入门包时发生错误，想再试一次吗？"
+msgstr "创建新手包时发生错误，想再试一次吗？"
 
 #: src/view/com/util/post-embeds/VideoEmbed.tsx:135
 msgid "An error occurred while loading the video. Please try again later."
@@ -709,7 +709,7 @@ msgstr "你确定要删除这条私信吗？此操作仅会在你的对话中删
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:632
 msgid "Are you sure you want to delete this starter pack?"
-msgstr "你确定要删除此入门包吗？"
+msgstr "你确定要删除此新手包吗？"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:81
 msgid "Are you sure you want to discard your changes?"
@@ -871,7 +871,7 @@ msgstr "Bluesky 因朋友而更好！"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:283
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
-msgstr "Bluesky 将从你的社交网络中选择一组推荐的账户。"
+msgstr "Bluesky 将从你的关系网中选择一组推荐关注的用户。"
 
 #: src/screens/Moderation/index.tsx:571
 msgid "Bluesky will not show your profile and posts to logged-out users. Other apps may not honor this request. This does not make your account private."
@@ -1125,7 +1125,7 @@ msgstr "选择资讯源"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:291
 msgid "Choose for me"
-msgstr "为我做选择"
+msgstr "帮我选择"
 
 #: src/screens/StarterPack/Wizard/index.tsx:193
 msgid "Choose People"
@@ -1549,17 +1549,17 @@ msgstr "创建新的 Bluesky 账户"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:153
 msgid "Create a QR code for a starter pack"
-msgstr "为入门包创建二维码"
+msgstr "为新手包创建二维码"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:166
 #: src/components/StarterPack/ProfileStarterPacks.tsx:260
 #: src/Navigation.tsx:367
 msgid "Create a starter pack"
-msgstr "创建入门包"
+msgstr "创建新手包"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:247
 msgid "Create a starter pack for me"
-msgstr "为我创建入门包"
+msgstr "为我创建新手包"
 
 #: src/view/com/auth/SplashScreen.tsx:56
 #: src/view/com/auth/SplashScreen.web.tsx:116
@@ -1729,11 +1729,11 @@ msgstr "删除帖文"
 #: src/screens/StarterPack/StarterPackScreen.tsx:578
 #: src/screens/StarterPack/StarterPackScreen.tsx:734
 msgid "Delete starter pack"
-msgstr "删除入门包"
+msgstr "删除新手包"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:629
 msgid "Delete starter pack?"
-msgstr "删除入门包？"
+msgstr "删除新手包？"
 
 #: src/view/screens/ProfileList.tsx:721
 msgid "Delete this list?"
@@ -2072,7 +2072,7 @@ msgstr "编辑个人资料"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:565
 msgid "Edit starter pack"
-msgstr "编辑入门包"
+msgstr "编辑新手包"
 
 #: src/view/com/modals/CreateOrEditList.tsx:225
 msgid "Edit User List"
@@ -2084,7 +2084,7 @@ msgstr "编辑谁可以回复"
 
 #: src/Navigation.tsx:372
 msgid "Edit your starter pack"
-msgstr "编辑你的入门包"
+msgstr "编辑你的新手包"
 
 #: src/screens/Onboarding/index.tsx:31
 #: src/screens/Onboarding/state.ts:88
@@ -2389,7 +2389,7 @@ msgstr "创建应用专用密码失败。"
 #: src/screens/StarterPack/Wizard/index.tsx:236
 #: src/screens/StarterPack/Wizard/index.tsx:244
 msgid "Failed to create starter pack"
-msgstr "无法创建入门包"
+msgstr "无法创建新手包"
 
 #: src/view/com/modals/CreateOrEditList.tsx:186
 msgid "Failed to create the list. Check your internet connection and try again."
@@ -2405,7 +2405,7 @@ msgstr "无法删除帖文，请重试"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:697
 msgid "Failed to delete starter pack"
-msgstr "无法删除入门包"
+msgstr "无法删除新手包"
 
 #: src/view/screens/Search/Explore.tsx:427
 #: src/view/screens/Search/Explore.tsx:455
@@ -2765,7 +2765,7 @@ msgstr "相册"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:280
 msgid "Generate a starter pack"
-msgstr "创建一个入门包"
+msgstr "创建一个新手包"
 
 #: src/view/shell/Drawer.tsx:347
 msgid "Get help"
@@ -3167,15 +3167,15 @@ msgstr "邀请码：1 个可用"
 
 #: src/components/StarterPack/ShareDialog.tsx:97
 msgid "Invite people to this starter pack!"
-msgstr "邀请朋友使用此入门包！"
+msgstr "邀请朋友使用此新手包！"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:35
 msgid "Invite your friends to follow your favorite feeds and people"
-msgstr "邀请你的朋友关注你喜欢的资讯源和用户"
+msgstr "邀请朋友关注你喜欢的资讯源和用户"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:32
 msgid "Invites, but personal"
-msgstr "邀请，但保持私密"
+msgstr "个性化邀请朋友加入"
 
 #: src/screens/Signup/StepInfo/index.tsx:80
 msgid "It looks like you may have entered your email address incorrectly. Are you sure it's right?"
@@ -3187,7 +3187,7 @@ msgstr "输入正确"
 
 #: src/screens/StarterPack/Wizard/index.tsx:459
 msgid "It's just you right now! Add more people to your starter pack by searching above."
-msgstr "现在就只有你了！通过上面的搜索将更多人添加到你的入门包中。"
+msgstr "目前新手包里只有你！通过上面的列表将更多人添加到你的新手包中。"
 
 #: src/view/com/composer/Composer.tsx:1110
 msgid "Job ID: {0}"
@@ -4295,7 +4295,7 @@ msgstr "开启帖文选项菜单"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:551
 msgid "Open starter pack menu"
-msgstr "开启入门包菜单"
+msgstr "开启新手包菜单"
 
 #: src/view/screens/Settings/index.tsx:827
 #: src/view/screens/Settings/index.tsx:837
@@ -5000,7 +5000,7 @@ msgstr "移除"
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:58
 msgid "Remove {displayName} from starter pack"
-msgstr "从你的入门包中删除 {displayName}"
+msgstr "从你的新手包中删除 {displayName}"
 
 #: src/view/com/util/AccountDropdownBtn.tsx:26
 msgid "Remove account"
@@ -5231,7 +5231,7 @@ msgstr "举报帖文"
 #: src/screens/StarterPack/StarterPackScreen.tsx:604
 #: src/screens/StarterPack/StarterPackScreen.tsx:607
 msgid "Report starter pack"
-msgstr "举报入门包"
+msgstr "举报新手包"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:43
 msgid "Report this content"
@@ -5257,7 +5257,7 @@ msgstr "举报这条帖文"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:59
 msgid "Report this starter pack"
-msgstr "举报此入门包"
+msgstr "举报此新手包"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:47
 msgid "Report this user"
@@ -5865,11 +5865,11 @@ msgstr "分享二维码"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:415
 msgid "Share this starter pack"
-msgstr "分享这个入门包"
+msgstr "分享这个新手包"
 
 #: src/components/StarterPack/ShareDialog.tsx:100
 msgid "Share this starter pack and help people join your community on Bluesky."
-msgstr "分享这个入门包以帮助其他人加入你在 Bluesky 上的社交网络。"
+msgstr "分享这个新手包以帮助其他人加入你在 Bluesky 上的社交网络。"
 
 #: src/components/dms/ChatEmptyPill.tsx:34
 msgid "Share your favorite feed!"
@@ -6047,12 +6047,12 @@ msgstr "以 @{0} 身份登录"
 
 #: src/view/com/notifications/FeedItem.tsx:218
 msgid "signed up with your starter pack"
-msgstr "使用你的入门包注册"
+msgstr "使用你的新手包注册"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:299
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:306
 msgid "Signup without a starter pack"
-msgstr "注册但不使用入门包"
+msgstr "注册但不使用新手包"
 
 #: src/components/FeedInterstitials.tsx:316
 msgid "Similar accounts"
@@ -6148,27 +6148,27 @@ msgstr "与 {displayName} 开始私信"
 #: src/Navigation.tsx:362
 #: src/screens/StarterPack/Wizard/index.tsx:189
 msgid "Starter Pack"
-msgstr "入门包"
+msgstr "新手包"
 
 #: src/components/StarterPack/StarterPackCard.tsx:75
 msgid "Starter pack by {0}"
-msgstr "由 {0} 创建的入门包"
+msgstr "由 {0} 创建的新手包"
 
 #: src/components/StarterPack/StarterPackCard.tsx:74
 msgid "Starter pack by you"
-msgstr "由你创建的入门包"
+msgstr "由你创建的新手包"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:714
 msgid "Starter pack is invalid"
-msgstr "入门包无效"
+msgstr "新手包无效"
 
 #: src/view/screens/Profile.tsx:233
 msgid "Starter Packs"
-msgstr "入门包"
+msgstr "新手包"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:239
 msgid "Starter packs let you easily share your favorite feeds and people with your friends."
-msgstr "入门包能让你更轻松地与朋友分享你最中意的资讯源和关注用户。"
+msgstr "新手包能使你轻松与朋友分享你喜欢的用户和资讯源。"
 
 #: src/view/screens/Settings/index.tsx:918
 msgid "Status Page"
@@ -6370,7 +6370,7 @@ msgstr "该用户识别符已被占用。"
 #: src/screens/StarterPack/Wizard/index.tsx:107
 #: src/screens/StarterPack/Wizard/index.tsx:117
 msgid "That starter pack could not be found."
-msgstr "找不到此入门包。"
+msgstr "找不到此新手包。"
 
 #: src/view/com/post-thread/PostQuotes.tsx:133
 msgid "That's all, folks!"
@@ -6442,7 +6442,7 @@ msgstr "选择的视频大小超过 50MB。"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:724
 msgid "The starter pack that you are trying to view is invalid. You may delete this starter pack instead."
-msgstr "你尝试查看的入门包无效，你可以删除此入门包。"
+msgstr "你尝试查看的新手包无效，你可以删除此新手包。"
 
 #: src/view/screens/Support.tsx:37
 msgid "The support form has been moved. If you need help, please <0/> or visit {HELP_DESK_URL} to get in touch with us."
@@ -7463,7 +7463,7 @@ msgstr "你感兴趣的是什么？"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:42
 msgid "What do you want to call your starter pack?"
-msgstr "你想如何命名你的入门包？"
+msgstr "你想如何命名你的新手包？"
 
 #: src/view/com/auth/SplashScreen.tsx:39
 #: src/view/com/auth/SplashScreen.web.tsx:98
@@ -7514,7 +7514,7 @@ msgstr "为什么应该审核这条帖文？"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:60
 msgid "Why should this starter pack be reviewed?"
-msgstr "为什么应该审核此入门包？"
+msgstr "为什么应该审核此新手包？"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:48
 msgid "Why should this user be reviewed?"
@@ -7556,7 +7556,7 @@ msgstr "是的，请停用"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:660
 msgid "Yes, delete this starter pack"
-msgstr "是的，删除此入门包"
+msgstr "是的，删除此新手包"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:736
 msgid "Yes, detach"
@@ -7713,7 +7713,7 @@ msgstr "您已暂时达到视频上传的限制，请稍后重试。"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:236
 msgid "You haven't created a starter pack yet!"
-msgstr "你还没有创建任何入门包！"
+msgstr "你还没有创建任何新手包！"
 
 #: src/components/dialogs/MutedWords.tsx:398
 msgid "You haven't muted any words or tags yet"
@@ -7750,7 +7750,7 @@ msgstr "你必须年满13岁及以上才能注册。"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:307
 msgid "You must be following at least seven other people to generate a starter pack."
-msgstr "你必须至少关注 7 个人以创建入门包。"
+msgstr "你必须至少关注 7 个人以创建新手包。"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:60
 msgid "You must grant access to your photo library to save a QR code"
