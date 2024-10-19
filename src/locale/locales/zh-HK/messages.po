@@ -2625,7 +2625,7 @@ msgstr "俾 <0>{0}</0> 及{1, plural, one {另外 # 人追蹤} other {另外 # �
 
 #: src/components/KnownFollowers.tsx:204
 msgid "Followed by <0>{0}</0> and <1>{1}</1>"
-msgstr "俾 <0>{0}</0> 及<1>{1}</1> 追蹤"
+msgstr "俾 <0>{0}</0> 及 <1>{1}</1> 追蹤"
 
 #: src/components/KnownFollowers.tsx:186
 msgid "Followed by <0>{0}</0>, <1>{1}</1>, and {2, plural, one {# other} other {# others}}"
@@ -4066,7 +4066,7 @@ msgstr "搵唔到「{search}」嘅搜尋結果。"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:129
 msgid "No self-labels can be applied to this post because it contains no media."
-msgstr "呢個帖文冇任何標籤，因為佢冇任何媒體。"
+msgstr "呢個貼文唔包含任何媒體內容，所以唔可以加入標記。"
 
 #: src/components/dialogs/EmbedConsent.tsx:104
 #: src/components/dialogs/EmbedConsent.tsx:111

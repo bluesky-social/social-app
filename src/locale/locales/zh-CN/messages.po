@@ -2625,7 +2625,7 @@ msgstr "被你认识的<0>{0}</0>及{1, plural, one {其他#人} other {其他#�
 
 #: src/components/KnownFollowers.tsx:204
 msgid "Followed by <0>{0}</0> and <1>{1}</1>"
-msgstr "被你认识的<0>{0}</0>及<1>{1}</1>所关注"
+msgstr "被你认识的<0>{0}</0>及 <1>{1}</1>所关注"
 
 #: src/components/KnownFollowers.tsx:186
 msgid "Followed by <0>{0}</0>, <1>{1}</1>, and {2, plural, one {# other} other {# others}}"
