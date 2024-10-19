@@ -244,7 +244,7 @@ msgstr "<0>你</0>同<1> </1><2>{0} </2>已經喺你嘅新手包入面"
 
 #: src/screens/Profile/Header/Handle.tsx:53
 msgid "⚠Invalid Handle"
-msgstr "⚠無效嘅帳戶代碼"
+msgstr "⚠無效嘅帳戶頭銜"
 
 #: src/components/dialogs/MutedWords.tsx:193
 msgid "24 hours"
@@ -487,7 +487,7 @@ msgstr "允許存取你嘅私人訊息"
 #: src/screens/Login/ForgotPasswordForm.tsx:171
 #: src/view/com/modals/ChangePassword.tsx:171
 msgid "Already have a code?"
-msgstr "已經有重設碼喇？"
+msgstr "已經有驗證碼喇？"
 
 #: src/screens/Login/ChooseAccountForm.tsx:43
 msgid "Already signed in as @{0}"
@@ -996,7 +996,7 @@ msgstr "取消帳戶刪除"
 
 #: src/view/com/modals/ChangeHandle.tsx:137
 msgid "Cancel change handle"
-msgstr "取消改咗帳戶頭銜"
+msgstr "取消變更帳戶頭銜"
 
 #: src/view/com/modals/CropImage.web.tsx:94
 msgid "Cancel image crop"
@@ -1036,38 +1036,38 @@ msgstr "字幕同 ALT 文字"
 
 #: src/view/com/modals/VerifyEmail.tsx:160
 msgid "Change"
-msgstr "改咗"
+msgstr "變更"
 
 #: src/view/screens/Settings/index.tsx:342
 msgctxt "action"
 msgid "Change"
-msgstr "改咗"
+msgstr "變更"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:147
 msgid "Change email address"
-msgstr "改咗電郵"
+msgstr "變更電郵"
 
 #: src/view/screens/Settings/index.tsx:685
 msgid "Change handle"
-msgstr "改咗帳戶頭銜"
+msgstr "變更帳戶頭銜"
 
 #: src/view/com/modals/ChangeHandle.tsx:149
 #: src/view/screens/Settings/index.tsx:696
 msgid "Change Handle"
-msgstr "改咗帳戶頭銜"
+msgstr "變更帳戶頭銜"
 
 #: src/view/com/modals/VerifyEmail.tsx:155
 msgid "Change my email"
-msgstr "改咗我嘅電郵"
+msgstr "變更我嘅電郵"
 
 #: src/view/screens/Settings/index.tsx:730
 msgid "Change password"
-msgstr "改咗密碼"
+msgstr "變更密碼"
 
 #: src/view/com/modals/ChangePassword.tsx:142
 #: src/view/screens/Settings/index.tsx:741
 msgid "Change Password"
-msgstr "改咗密碼"
+msgstr "變更密碼"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:73
 msgid "Change post language to {0}"
@@ -1075,7 +1075,7 @@ msgstr "將帖文語言改為 {0}"
 
 #: src/view/com/modals/ChangeEmail.tsx:104
 msgid "Change Your Email"
-msgstr "改咗你嘅電郵"
+msgstr "變更你嘅電郵"
 
 #: src/Navigation.tsx:337
 #: src/view/shell/bottom-bar/BottomBar.tsx:200
@@ -1999,7 +1999,7 @@ msgstr "例如：重複用廣告回覆嘅用戶。"
 
 #: src/view/com/modals/InviteCodes.tsx:97
 msgid "Each code works once. You'll receive more invite codes periodically."
-msgstr "每個代碼只可以用一次。你會定期收到更多邀請碼。"
+msgstr "每個邀請碼只可以用一次。你會定期收到更多邀請碼。"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:573
 #: src/screens/StarterPack/Wizard/index.tsx:558
@@ -2210,7 +2210,7 @@ msgstr "輸入確認碼"
 
 #: src/view/com/modals/ChangePassword.tsx:154
 msgid "Enter the code you received to change your password."
-msgstr "輸入你收到嘅代碼嚟更改你嘅密碼。"
+msgstr "輸入你收到嘅驗證碼嚟更改你嘅密碼。"
 
 #: src/view/com/modals/ChangeHandle.tsx:357
 msgid "Enter the domain you want to use"
@@ -2218,7 +2218,7 @@ msgstr "輸入你想用嘅網域"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:113
 msgid "Enter the email you used to create your account. We'll send you a \"reset code\" so you can set a new password."
-msgstr "輸入你用嚟建立帳戶嘅電郵地址。我哋會傳送「重設碼」畀你，等你可以設定新密碼。"
+msgstr "輸入你用嚟建立帳戶嘅電郵地址。我哋會傳送「驗證碼」畀你，等你可以設定新密碼。"
 
 #: src/components/dialogs/BirthDateSettings.tsx:107
 msgid "Enter your birth date"
@@ -3011,7 +3011,7 @@ msgstr "我哋應該點樣打開呢個連結？"
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:131
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:134
 msgid "I have a code"
-msgstr "我有代碼"
+msgstr "我有驗證碼"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:196
 #: src/components/dialogs/VerifyEmailDialog.tsx:203
@@ -3049,7 +3049,7 @@ msgstr "如果你移除呢個帖文，你就恢復唔到佢。"
 
 #: src/view/com/modals/ChangePassword.tsx:149
 msgid "If you want to change your password, we will send you a code to verify that this is your account."
-msgstr "如果你想更改你嘅密碼，我哋會傳送一個代碼畀你嚟驗證呢個係咪你嘅帳戶。"
+msgstr "如果你想更改你嘅密碼，我哋會傳送一個驗證碼畀你嚟驗證呢個係咪你嘅帳戶。"
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:92
 msgid "If you're trying to change your handle or email, do so before you deactivate."
@@ -3081,7 +3081,7 @@ msgstr "唔恰當嘅訊息或者明確嘅連結"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:121
 msgid "Input code sent to your email for password reset"
-msgstr "輸入傳送去你電郵嘅代碼嚟重設密碼"
+msgstr "輸入傳送去你電郵嘅驗證碼嚟重設密碼"
 
 #: src/view/com/modals/DeleteAccount.tsx:246
 msgid "Input confirmation code for account deletion"
@@ -3101,7 +3101,7 @@ msgstr "輸入密碼嚟刪除帳戶"
 
 #: src/screens/Login/LoginForm.tsx:270
 msgid "Input the code which has been emailed to you"
-msgstr "輸入已經電郵畀你嘅代碼"
+msgstr "輸入已經電郵畀你嘅驗證碼"
 
 #: src/screens/Login/LoginForm.tsx:200
 msgid "Input the username or email address you used at signup"
@@ -3818,7 +3818,7 @@ msgstr "我儲存咗嘅資訊流"
 
 #: src/view/screens/Settings/index.tsx:589
 msgid "My Saved Feeds"
-msgstr "我儲存咗嘅資訊流"
+msgstr "我儲存嘅資訊流"
 
 #: src/view/com/modals/AddAppPasswords.tsx:174
 #: src/view/com/modals/CreateOrEditList.tsx:270
@@ -4378,7 +4378,7 @@ msgstr "開啟帳戶停用確認模式"
 
 #: src/view/screens/Settings/index.tsx:797
 msgid "Opens modal for account deletion confirmation. Requires email code"
-msgstr "開啟帳戶刪除確認模式，需要電郵代碼"
+msgstr "開啟帳戶刪除確認模式，需要電郵驗證碼"
 
 #: src/view/screens/Settings/index.tsx:732
 msgid "Opens modal for changing your Bluesky password"
@@ -5316,7 +5316,7 @@ msgstr "要求更改"
 #: src/view/com/modals/ChangePassword.tsx:242
 #: src/view/com/modals/ChangePassword.tsx:244
 msgid "Request Code"
-msgstr "要求代碼"
+msgstr "要求驗證碼"
 
 #: src/view/screens/AccessibilitySettings.tsx:90
 msgid "Require alt text before posting"
@@ -5324,7 +5324,7 @@ msgstr "發佈之前要求附上 ALT 文字"
 
 #: src/view/screens/Settings/Email2FAToggle.tsx:51
 msgid "Require email code to log into your account"
-msgstr "需要電郵代碼先可以登入你嘅帳戶"
+msgstr "登入時要求電郵驗證碼"
 
 #: src/screens/Signup/StepInfo/index.tsx:159
 msgid "Required for this provider"
@@ -5351,11 +5351,11 @@ msgstr "重新發送驗證電郵"
 
 #: src/view/com/modals/ChangePassword.tsx:186
 msgid "Reset code"
-msgstr "重設代碼"
+msgstr "重設驗證碼"
 
 #: src/view/com/modals/ChangePassword.tsx:193
 msgid "Reset Code"
-msgstr "重設代碼"
+msgstr "重設驗證碼"
 
 #: src/view/screens/Settings/index.tsx:867
 #: src/view/screens/Settings/index.tsx:870
@@ -7659,7 +7659,7 @@ msgstr "你已經封鎖咗呢個用戶，你睇唔到佢哋嘅內容。"
 #: src/view/com/modals/ChangePassword.tsx:88
 #: src/view/com/modals/ChangePassword.tsx:122
 msgid "You have entered an invalid code. It should look like XXXXX-XXXXX."
-msgstr "你輸入咗個無效嘅代碼。應該係 XXXXX-XXXXX 嘅樣。"
+msgstr "你輸入咗個無效嘅驗證碼。應該係 XXXXX-XXXXX 嘅樣。"
 
 #: src/lib/moderation/useModerationCauseDescription.ts:114
 msgid "You have hidden this post"
@@ -7778,7 +7778,7 @@ msgstr "你而家會收到呢個討論串嘅通知"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:98
 msgid "You will receive an email with a \"reset code.\" Enter that code here, then enter your new password."
-msgstr "你會收到一封包含「重設碼」嘅電郵。請喺呢度輸入呢個代碼，然後輸入你嘅新密碼。"
+msgstr "你會收到一封包含「驗證碼」嘅電郵。請喺呢度輸入呢個驗證碼，然後輸入你嘅新密碼。"
 
 #: src/screens/Messages/components/ChatListItem.tsx:124
 msgid "You: {0}"
