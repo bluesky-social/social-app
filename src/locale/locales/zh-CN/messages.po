@@ -1871,15 +1871,15 @@ msgstr "显示更大的替代文本标签"
 #: src/screens/Profile/Header/EditProfileDialog.tsx:317
 #: src/screens/Profile/Header/EditProfileDialog.tsx:347
 msgid "Display name"
-msgstr "昵称"
+msgstr "名称"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:329
 msgid "Display name is too long"
-msgstr "昵称太长"
+msgstr "名称太长"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:330
 msgid "Display name is too long. The maximum number of characters is {DISPLAY_NAME_MAX_GRAPHEMES}."
-msgstr "昵称太长，限制的最大字数为 {DISPLAY_NAME_MAX_GRAPHEMES}。"
+msgstr "名称太长，限制的最大字数为 {DISPLAY_NAME_MAX_GRAPHEMES}。"
 
 #: src/view/com/modals/ChangeHandle.tsx:384
 msgid "DNS Panel"
