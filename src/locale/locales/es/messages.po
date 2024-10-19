@@ -1504,11 +1504,11 @@ msgstr "Redactar la respuesta"
 
 #: src/components/moderation/LabelPreference.tsx:81
 msgid "Configure content filtering setting for category: {name}"
-msgstr ""
+msgstr "Configuración de filtrado de contenido para la categoría: {name}"
 
 #: src/components/moderation/LabelPreference.tsx:243
 msgid "Configured in <0>moderation settings</0>."
-msgstr ""
+msgstr "Configurado en <0>ajustes de moderación</0>"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:210
 #: src/components/dialogs/VerifyEmailDialog.tsx:217
@@ -1530,7 +1530,7 @@ msgstr "Confirmar el cambio"
 
 #: src/view/com/modals/lang-settings/ConfirmLanguagesButton.tsx:35
 msgid "Confirm content language settings"
-msgstr "Confirmar la configuración del idioma del contenido"
+msgstr "Confimar el idioma del contenido"
 
 #: src/view/com/modals/DeleteAccount.tsx:282
 msgid "Confirm delete account"
@@ -1538,11 +1538,11 @@ msgstr "Confirmar eliminación de cuenta"
 
 #: src/screens/Moderation/index.tsx:311
 msgid "Confirm your age:"
-msgstr ""
+msgstr "Confirma tu edad:"
 
 #: src/screens/Moderation/index.tsx:302
 msgid "Confirm your birthdate"
-msgstr ""
+msgstr "Confirma tu fecha de nacimiento"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:171
 #: src/screens/Login/LoginForm.tsx:256
@@ -1557,7 +1557,7 @@ msgstr "Código de confirmación"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:167
 msgid "Confirmation Code"
-msgstr ""
+msgstr "Codigo de confirmación"
 
 #: src/screens/Login/LoginForm.tsx:309
 msgid "Connecting..."
@@ -1566,7 +1566,7 @@ msgstr "Conectando..."
 #: src/screens/Signup/index.tsx:175
 #: src/screens/Signup/index.tsx:178
 msgid "Contact support"
-msgstr ""
+msgstr "Contactar a soporte"
 
 #: src/components/moderation/LabelsOnMe.tsx:42
 #~ msgid "content"
@@ -1574,11 +1574,11 @@ msgstr ""
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:18
 msgid "Content Blocked"
-msgstr ""
+msgstr "Contenido Bloqueado"
 
 #: src/screens/Moderation/index.tsx:295
 msgid "Content filters"
-msgstr ""
+msgstr "Filtros de contenido"
 
 #: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:75
 #: src/view/screens/LanguageSettings.tsx:278
@@ -1588,7 +1588,7 @@ msgstr "Idiomas de contenido"
 #: src/components/moderation/ModerationDetailsDialog.tsx:81
 #: src/lib/moderation/useModerationCauseDescription.ts:80
 msgid "Content Not Available"
-msgstr ""
+msgstr "Contenido no disponible"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:49
 #: src/components/moderation/ScreenHider.tsx:93
@@ -1603,7 +1603,7 @@ msgstr "Advertencias de contenido"
 
 #: src/components/Menu/index.web.tsx:83
 msgid "Context menu backdrop, click to close the menu."
-msgstr ""
+msgstr "Fondo del menú contextual, haga clic para cerrar el menú."
 
 #: src/screens/Onboarding/StepInterests/index.tsx:244
 #: src/screens/Onboarding/StepProfile/index.tsx:278
@@ -1612,17 +1612,17 @@ msgstr "Continuar"
 
 #: src/components/AccountList.tsx:113
 msgid "Continue as {0} (currently signed in)"
-msgstr ""
+msgstr "Continuar como {0} (actualmente ha iniciado sesión)"
 
 #: src/view/com/post-thread/PostThreadLoadMore.tsx:52
 msgid "Continue thread..."
-msgstr ""
+msgstr "Continuar hilo..."
 
 #: src/screens/Onboarding/StepInterests/index.tsx:241
 #: src/screens/Onboarding/StepProfile/index.tsx:275
 #: src/screens/Signup/BackNextButtons.tsx:61
 msgid "Continue to next step"
-msgstr ""
+msgstr "Continua al siguiente paso"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:158
 #~ msgid "Continue to the next step"
@@ -1634,11 +1634,11 @@ msgstr ""
 
 #: src/screens/Messages/components/ChatListItem.tsx:164
 msgid "Conversation deleted"
-msgstr ""
+msgstr "Conversación eliminada"
 
 #: src/screens/Onboarding/index.tsx:41
 msgid "Cooking"
-msgstr ""
+msgstr "Cocinando"
 
 #: src/view/com/modals/AddAppPasswords.tsx:221
 #: src/view/com/modals/InviteCodes.tsx:183
@@ -1647,7 +1647,7 @@ msgstr "Copiado"
 
 #: src/view/screens/Settings/index.tsx:233
 msgid "Copied build version to clipboard"
-msgstr ""
+msgstr "Versión de compilación copiada al portapapeles"
 
 #: src/components/dms/MessageMenu.tsx:57
 #: src/view/com/modals/AddAppPasswords.tsx:80
@@ -1656,15 +1656,15 @@ msgstr ""
 #: src/view/com/util/forms/PostDropdownBtn.tsx:240
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:392
 msgid "Copied to clipboard"
-msgstr ""
+msgstr "Copiado al portapapeles"
 
 #: src/components/dialogs/Embed.tsx:136
 msgid "Copied!"
-msgstr ""
+msgstr "Copiado!"
 
 #: src/view/com/modals/AddAppPasswords.tsx:215
 msgid "Copies app password"
-msgstr ""
+msgstr "Copia la contraseña de la aplicación"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:175
 #: src/view/com/modals/AddAppPasswords.tsx:214
@@ -1673,20 +1673,20 @@ msgstr "Copiar"
 
 #: src/view/com/modals/ChangeHandle.tsx:467
 msgid "Copy {0}"
-msgstr ""
+msgstr "Copiar {0}"
 
 #: src/components/dialogs/Embed.tsx:122
 #: src/components/dialogs/Embed.tsx:141
 msgid "Copy code"
-msgstr ""
+msgstr "Copiar código"
 
 #: src/components/StarterPack/ShareDialog.tsx:124
 msgid "Copy link"
-msgstr ""
+msgstr "Copiar link"
 
 #: src/components/StarterPack/ShareDialog.tsx:131
 msgid "Copy Link"
-msgstr ""
+msgstr "Copiar Link"
 
 #: src/view/screens/ProfileList.tsx:478
 msgid "Copy link to list"
@@ -1695,21 +1695,21 @@ msgstr "Copia el enlace a la lista"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:452
 #: src/view/com/util/forms/PostDropdownBtn.tsx:461
 msgid "Copy link to post"
-msgstr "Copia el enlace a la post"
+msgstr "Copiar el enlace hacia el post"
 
 #: src/components/dms/MessageMenu.tsx:110
 #: src/components/dms/MessageMenu.tsx:112
 msgid "Copy message text"
-msgstr ""
+msgstr "Copiar mensaje de texto"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:430
 #: src/view/com/util/forms/PostDropdownBtn.tsx:432
 msgid "Copy post text"
-msgstr "Copiar el texto de la post"
+msgstr "Copiar el texto del post"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:169
 msgid "Copy QR code"
-msgstr ""
+msgstr "Copiar código QR"
 
 #: src/Navigation.tsx:280
 #: src/view/screens/CopyrightPolicy.tsx:29
@@ -1718,7 +1718,7 @@ msgstr "Política de derechos de autor"
 
 #: src/view/com/composer/videos/state.ts:31
 #~ msgid "Could not compress video"
-#~ msgstr ""
+#~ msgstr "No se puede comprimir el video"
 
 #: src/components/dms/LeaveConvoPrompt.tsx:39
 msgid "Could not leave chat"
@@ -1742,15 +1742,15 @@ msgstr "No se pudo mutear al chat"
 
 #: src/view/com/composer/videos/VideoPreview.web.tsx:56
 msgid "Could not process your video"
-msgstr ""
+msgstr "No se pudo procesar tu video"
 
 #: src/components/dms/ConvoMenu.tsx:68
 #~ msgid "Could not unmute chat"
-#~ msgstr ""
+#~ msgstr "No se pudo desmutear el chat"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:273
 msgid "Create"
-msgstr ""
+msgstr "Crear"
 
 #: src/view/com/auth/SplashScreen.tsx:57
 #: src/view/com/auth/SplashScreen.web.tsx:106
@@ -1759,26 +1759,26 @@ msgstr ""
 
 #: src/view/screens/Settings/index.tsx:402
 msgid "Create a new Bluesky account"
-msgstr ""
+msgstr "Crear una nueva cuenta de Bluesky"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:153
 msgid "Create a QR code for a starter pack"
-msgstr ""
+msgstr "Crear un código QR para pack de inicio"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:166
 #: src/components/StarterPack/ProfileStarterPacks.tsx:260
 #: src/Navigation.tsx:367
 msgid "Create a starter pack"
-msgstr ""
+msgstr "Crea un pack de inicio"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:247
 msgid "Create a starter pack for me"
-msgstr ""
+msgstr "Crea un pack de inicio para mi"
 
 #: src/view/com/auth/SplashScreen.tsx:56
 #: src/view/com/auth/SplashScreen.web.tsx:116
 msgid "Create account"
-msgstr ""
+msgstr "Crear una cuenta"
 
 #: src/screens/Signup/index.tsx:93
 msgid "Create Account"
@@ -1787,19 +1787,19 @@ msgstr "Crear una cuenta"
 #: src/components/dialogs/Signin.tsx:86
 #: src/components/dialogs/Signin.tsx:88
 msgid "Create an account"
-msgstr ""
+msgstr "Crea una cuenta"
 
 #: src/screens/Onboarding/StepProfile/index.tsx:292
 msgid "Create an avatar instead"
-msgstr ""
+msgstr "Crea un avatar"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:173
 msgid "Create another"
-msgstr ""
+msgstr "Crea otro"
 
 #: src/view/com/modals/AddAppPasswords.tsx:243
 msgid "Create App Password"
-msgstr ""
+msgstr "Crea una contraseña de aplicación"
 
 #: src/view/com/auth/SplashScreen.tsx:48
 #: src/view/com/auth/SplashScreen.web.tsx:108
@@ -1808,11 +1808,11 @@ msgstr "Crear una cuenta nueva"
 
 #: src/components/StarterPack/ShareDialog.tsx:158
 #~ msgid "Create QR code"
-#~ msgstr ""
+#~ msgstr "Crea un código QR"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:101
 msgid "Create report for {0}"
-msgstr ""
+msgstr "Crea un reporte de {0}"
 
 #: src/view/screens/AppPasswords.tsx:243
 msgid "Created {0}"
@@ -1821,12 +1821,12 @@ msgstr "Creado {0}"
 #: src/screens/Onboarding/index.tsx:26
 #: src/screens/Onboarding/state.ts:86
 msgid "Culture"
-msgstr ""
+msgstr "Cultura"
 
 #: src/view/com/auth/server-input/index.tsx:94
 #: src/view/com/auth/server-input/index.tsx:96
 msgid "Custom"
-msgstr ""
+msgstr "Personalizado"
 
 #: src/view/com/modals/ChangeHandle.tsx:375
 msgid "Custom domain"
@@ -1835,7 +1835,7 @@ msgstr "Dominio personalizado"
 #: src/view/screens/Feeds.tsx:760
 #: src/view/screens/Search/Explore.tsx:391
 msgid "Custom feeds built by the community bring you new experiences and help you find the content you love."
-msgstr ""
+msgstr "Los feeds personalizados creados por la comunidad te brindan nuevas experiencias y te ayudan a encontrar el contenido que te encanta."
 
 #: src/view/screens/PreferencesExternalEmbeds.tsx:54
 msgid "Customize media from external sites."
@@ -1843,20 +1843,20 @@ msgstr "Preferencias sobre medios externos."
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:289
 msgid "Customize who can interact with this post."
-msgstr ""
+msgstr "Personaliza quién puede interactuar con esta publicación."
 
 #: src/screens/Settings/AppearanceSettings.tsx:109
 #: src/screens/Settings/AppearanceSettings.tsx:130
 msgid "Dark"
-msgstr ""
+msgstr "Oscuro"
 
 #: src/view/screens/Debug.tsx:63
 msgid "Dark mode"
-msgstr ""
+msgstr "Modo Oscuro"
 
 #: src/screens/Settings/AppearanceSettings.tsx:122
 msgid "Dark theme"
-msgstr ""
+msgstr "Tema oscuro"
 
 #: src/view/screens/Settings/index.tsx:473
 #~ msgid "Dark Theme"
@@ -1864,29 +1864,29 @@ msgstr ""
 
 #: src/screens/Signup/StepInfo/index.tsx:222
 msgid "Date of birth"
-msgstr ""
+msgstr "Fecha de nacimiento"
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:73
 #: src/view/screens/Settings/index.tsx:772
 msgid "Deactivate account"
-msgstr ""
+msgstr "Desactivar cuenta"
 
 #: src/view/screens/Settings/index.tsx:784
 msgid "Deactivate my account"
-msgstr ""
+msgstr "Desactivar mi cuenta"
 
 #: src/view/screens/Settings/index.tsx:839
 msgid "Debug Moderation"
-msgstr ""
+msgstr "Moderacion de debug"
 
 #: src/view/screens/Debug.tsx:83
 msgid "Debug panel"
-msgstr ""
+msgstr "Panel de debug"
 
 #: src/components/dialogs/nuxs/NeueTypography.tsx:99
 #: src/screens/Settings/AppearanceSettings.tsx:169
 msgid "Default"
-msgstr ""
+msgstr "Por Defecto"
 
 #: src/components/dms/MessageMenu.tsx:151
 #: src/screens/StarterPack/StarterPackScreen.tsx:573
@@ -1896,7 +1896,7 @@ msgstr ""
 #: src/view/screens/AppPasswords.tsx:277
 #: src/view/screens/ProfileList.tsx:717
 msgid "Delete"
-msgstr ""
+msgstr "Borrar"
 
 #: src/view/screens/Settings/index.tsx:794
 msgid "Delete account"
@@ -1916,7 +1916,7 @@ msgstr "Borrar la contraseña de la app"
 
 #: src/view/screens/AppPasswords.tsx:272
 msgid "Delete app password?"
-msgstr ""
+msgstr "Borrar la contraseña de la app?"
 
 #: src/view/screens/Settings/index.tsx:856
 #: src/view/screens/Settings/index.tsx:859
@@ -1925,7 +1925,7 @@ msgstr ""
 
 #: src/components/dms/MessageMenu.tsx:124
 msgid "Delete for me"
-msgstr ""
+msgstr "Borrar para mi"
 
 #: src/view/screens/ProfileList.tsx:521
 msgid "Delete List"
@@ -1933,11 +1933,11 @@ msgstr "Borrar la lista"
 
 #: src/components/dms/MessageMenu.tsx:147
 msgid "Delete message"
-msgstr ""
+msgstr "Borrar mensaje"
 
 #: src/components/dms/MessageMenu.tsx:122
 msgid "Delete message for me"
-msgstr ""
+msgstr "Borrar mensaje para mi"
 
 #: src/view/com/modals/DeleteAccount.tsx:285
 msgid "Delete my account"
@@ -1945,25 +1945,25 @@ msgstr "Borrar mi cuenta"
 
 #: src/view/screens/Settings/index.tsx:806
 msgid "Delete My Account…"
-msgstr ""
+msgstr "Borrar Mi Cuenta…"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:653
 #: src/view/com/util/forms/PostDropdownBtn.tsx:655
 msgid "Delete post"
-msgstr "Borrar una post"
+msgstr "Borrar un post"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:567
 #: src/screens/StarterPack/StarterPackScreen.tsx:723
 msgid "Delete starter pack"
-msgstr ""
+msgstr "Borrar pack de inicio"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:618
 msgid "Delete starter pack?"
-msgstr ""
+msgstr "¿Borrar pack de inicio?"
 
 #: src/view/screens/ProfileList.tsx:712
 msgid "Delete this list?"
-msgstr ""
+msgstr "¿Borrar esta lista?"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:668
 msgid "Delete this post?"
@@ -1971,11 +1971,11 @@ msgstr "¿Borrar esta post?"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:94
 msgid "Deleted"
-msgstr ""
+msgstr "Eliminado"
 
 #: src/view/com/post-thread/PostThread.tsx:398
 msgid "Deleted post."
-msgstr "Se borró la post."
+msgstr "Se borró el post."
 
 #: src/view/screens/Settings/index.tsx:857
 msgid "Deletes the chat declaration record"
@@ -1991,16 +1991,16 @@ msgstr "Descripción"
 #: src/view/com/composer/GifAltText.tsx:151
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:115
 msgid "Descriptive alt text"
-msgstr ""
+msgstr "Texto descriptivo alternativo"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:586
 #: src/view/com/util/forms/PostDropdownBtn.tsx:596
 msgid "Detach quote"
-msgstr ""
+msgstr "Desvincular cita"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:731
 msgid "Detach quote post?"
-msgstr ""
+msgstr "¿Desvincular publicación de la cita?"
 
 #: src/components/WhoCanReply.tsx:175
 msgid "Dialog: adjust who can interact with this post"
