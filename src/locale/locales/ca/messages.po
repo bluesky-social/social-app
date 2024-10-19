@@ -1173,7 +1173,7 @@ msgstr "Explora més recomanacions"
 #: src/components/FeedInterstitials.tsx:358
 #: src/components/FeedInterstitials.tsx:492
 msgid "Browse more suggestions on the Explore page"
-msgstr "Explora més recomancaions a la pàgina Explora"
+msgstr "Explora més recomanacions a la pàgina Explora"
 
 #: src/screens/Home/NoFeedsPinned.tsx:103
 #: src/screens/Home/NoFeedsPinned.tsx:109
