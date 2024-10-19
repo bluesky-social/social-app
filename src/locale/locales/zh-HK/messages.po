@@ -3175,7 +3175,7 @@ msgstr "邀請你嘅朋友追蹤你最鍾意嘅資訊流同人物"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:32
 msgid "Invites, but personal"
-msgstr "個人化邀請朋友加入"
+msgstr "邀請朋友加入，同時保持個人化"
 
 #: src/screens/Signup/StepInfo/index.tsx:80
 msgid "It looks like you may have entered your email address incorrectly. Are you sure it's right?"
