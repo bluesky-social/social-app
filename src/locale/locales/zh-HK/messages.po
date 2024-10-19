@@ -2571,7 +2571,7 @@ msgstr "靈活"
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:224
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:132
 msgid "Follow"
-msgstr "追隨者"
+msgstr "追蹤"
 
 #: src/view/com/profile/FollowButton.tsx:70
 msgctxt "action"
