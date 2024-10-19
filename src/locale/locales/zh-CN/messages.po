@@ -1871,15 +1871,15 @@ msgstr "显示更大的替代文本标签"
 #: src/screens/Profile/Header/EditProfileDialog.tsx:317
 #: src/screens/Profile/Header/EditProfileDialog.tsx:347
 msgid "Display name"
-msgstr "显示名称"
+msgstr "昵称"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:329
 msgid "Display name is too long"
-msgstr "显示名称太长"
+msgstr "昵称太长"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:330
 msgid "Display name is too long. The maximum number of characters is {DISPLAY_NAME_MAX_GRAPHEMES}."
-msgstr "显示名称太长，限制的最大字数为 {DISPLAY_NAME_MAX_GRAPHEMES}。"
+msgstr "昵称太长，限制的最大字数为 {DISPLAY_NAME_MAX_GRAPHEMES}。"
 
 #: src/view/com/modals/ChangeHandle.tsx:384
 msgid "DNS Panel"
@@ -3175,7 +3175,7 @@ msgstr "邀请朋友关注你喜欢的资讯源和用户"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:32
 msgid "Invites, but personal"
-msgstr "个性化邀请朋友加入"
+msgstr "以个性化的方式邀请朋友加入"
 
 #: src/screens/Signup/StepInfo/index.tsx:80
 msgid "It looks like you may have entered your email address incorrectly. Are you sure it's right?"
