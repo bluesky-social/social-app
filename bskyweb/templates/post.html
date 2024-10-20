@@ -28,6 +28,7 @@
   {%- if imgThumbUrls %}
   {% for imgThumbUrl in imgThumbUrls %}
   <meta property="og:image" content="{{ imgThumbUrl }}">
+  <meta name="twitter:image" content="{{ imgThumbUrl }}" />
   {% endfor %}
   <meta name="twitter:card" content="summary_large_image">
   {%- elif postView.Author.Avatar %}
