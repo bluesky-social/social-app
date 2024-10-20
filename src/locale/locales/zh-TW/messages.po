@@ -3626,7 +3626,7 @@ msgstr "由 {0} 建立的內容管理列表"
 
 #: src/view/screens/ProfileList.tsx:902
 msgid "Moderation list by <0/>"
-msgstr "由 </0> 建立的內容管理列表"
+msgstr "由 <0/> 建立的內容管理列表"
 
 #: src/view/com/modals/UserAddRemoveLists.tsx:220
 #: src/view/screens/ProfileList.tsx:900
