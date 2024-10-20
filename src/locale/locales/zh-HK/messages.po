@@ -3884,7 +3884,7 @@ msgstr "新建"
 #: src/screens/Messages/ChatList.tsx:328
 #: src/screens/Messages/ChatList.tsx:335
 msgid "New chat"
-msgstr "新聊天"
+msgstr "新聊天室"
 
 #: src/components/dialogs/nuxs/NeueTypography.tsx:51
 msgid "New font settings ✨"
