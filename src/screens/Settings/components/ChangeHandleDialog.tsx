@@ -561,7 +561,7 @@ function ChangeHandleError({error}: {error: unknown}) {
       message = _(msg`Invalid handle. Please try a different one.`)
     } else if (error.message === 'Rate Limit Exceeded') {
       message = _(
-        msg`Rate limit exceeded - you've tried to change your handle too many times in a short period. Please wait a minute before trying again.`,
+        msg`Rate limit exceeded – you've tried to change your handle too many times in a short period. Please wait a minute before trying again.`,
       )
     }
   }
