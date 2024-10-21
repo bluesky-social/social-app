@@ -559,6 +559,10 @@ function ChangeHandleError({error}: {error: unknown}) {
       message = _(msg`Handle too long. Please try a shorter one.`)
     } else if (error.message === 'Input/handle must be a valid handle') {
       message = _(msg`Invalid handle. Please try a different one.`)
+    } else if (error.message === 'Rate Limit Exceeded') {
+      message = _(
+        msg`Rate limit exceeded - you've tried to change your handle too many time in a short period. Please wait a minute before trying again.`,
+      )
     }
   }
 
