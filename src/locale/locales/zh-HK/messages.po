@@ -817,7 +817,7 @@ msgstr "封鎖呢啲帳戶？"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:84
 msgid "Blocked"
-msgstr "封鎖咗"
+msgstr "已被封鎖"
 
 #: src/screens/Moderation/index.tsx:280
 msgid "Blocked accounts"
