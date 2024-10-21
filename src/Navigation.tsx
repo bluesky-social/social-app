@@ -55,7 +55,6 @@ import {ModerationModlistsScreen} from '#/view/screens/ModerationModlists'
 import {ModerationMutedAccounts} from '#/view/screens/ModerationMutedAccounts'
 import {NotFoundScreen} from '#/view/screens/NotFound'
 import {NotificationsScreen} from '#/view/screens/Notifications'
-import {NotificationsSettingsScreen} from '#/view/screens/NotificationsSettings'
 import {PostThreadScreen} from '#/view/screens/PostThread'
 import {PreferencesExternalEmbeds} from '#/view/screens/PreferencesExternalEmbeds'
 import {PreferencesFollowingFeed} from '#/view/screens/PreferencesFollowingFeed'
@@ -87,6 +86,7 @@ import {PostRepostedByScreen} from '#/screens/Post/PostRepostedBy'
 import {ProfileKnownFollowersScreen} from '#/screens/Profile/KnownFollowers'
 import {ProfileLabelerLikedByScreen} from '#/screens/Profile/ProfileLabelerLikedBy'
 import {AppearanceSettingsScreen} from '#/screens/Settings/AppearanceSettings'
+import {NotificationSettingsScreen} from '#/screens/Settings/NotificationSettings'
 import {
   StarterPackScreen,
   StarterPackScreenShort,
@@ -378,8 +378,8 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         options={{title: title(msg`Chat settings`), requireAuth: true}}
       />
       <Stack.Screen
-        name="NotificationsSettings"
-        getComponent={() => NotificationsSettingsScreen}
+        name="NotificationSettings"
+        getComponent={() => NotificationSettingsScreen}
         options={{title: title(msg`Notification settings`), requireAuth: true}}
       />
       <Stack.Screen

@@ -9,7 +9,7 @@ import {invalidateCachedUnreadPage} from '#/state/queries/notifications/unread'
 import {useAgent} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
 
-export function useNotificationsSettingsMutation() {
+export function useNotificationSettingsMutation() {
   const {_} = useLingui()
   const agent = useAgent()
   const queryClient = useQueryClient()
