@@ -31,7 +31,7 @@ import * as TextField from '#/components/forms/TextField'
 import * as ToggleButton from '#/components/forms/ToggleButton'
 import {ArrowRight_Stroke2_Corner0_Rounded as ArrowRightIcon} from '#/components/icons/Arrow'
 import {At_Stroke2_Corner0_Rounded as AtIcon} from '#/components/icons/At'
-import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
+import {CheckThick_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
 import {SquareBehindSquare4_Stroke2_Corner0_Rounded as CopyIcon} from '#/components/icons/SquareBehindSquare4'
 import {InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
@@ -86,6 +86,7 @@ function ChangeHandleDialogInner() {
   return (
     <Dialog.ScrollableInner
       label={_(msg`Change Handle`)}
+      style={[a.overflow_hidden]}
       header={
         <Dialog.Header renderLeft={cancelButton}>
           <Dialog.HeaderText>
@@ -192,7 +193,9 @@ function ProvidedHandlePage({
             <ChangeHandleError error={error} />
           </Animated.View>
         )}
-        <Animated.View layout={LinearTransition} style={[a.flex_1, a.gap_md]}>
+        <Animated.View
+          layout={native(LinearTransition)}
+          style={[a.flex_1, a.gap_md]}>
           <View>
             <TextField.LabelText>
               <Trans>New handle</Trans>
@@ -339,7 +342,7 @@ function OwnHandlePage({goToServiceHandle}: {goToServiceHandle: () => void}) {
         </Animated.View>
       )}
       <Animated.View
-        layout={LinearTransition}
+        layout={native(LinearTransition)}
         style={[a.flex_1, a.gap_md, a.overflow_hidden]}>
         <View>
           <TextField.LabelText>
@@ -479,11 +482,11 @@ function OwnHandlePage({goToServiceHandle}: {goToServiceHandle: () => void}) {
         <Animated.View
           entering={FadeIn}
           exiting={FadeOut}
-          layout={LinearTransition}>
+          layout={native(LinearTransition)}>
           <SuccessMessage text={_(msg`Domain verified!`)} />
         </Animated.View>
       )}
-      <Animated.View layout={LinearTransition}>
+      <Animated.View layout={native(LinearTransition)}>
         <Button
           label={
             isVerified
@@ -518,7 +521,7 @@ function OwnHandlePage({goToServiceHandle}: {goToServiceHandle: () => void}) {
           )}
         </Button>
       </Animated.View>
-      <Animated.View layout={LinearTransition}>
+      <Animated.View layout={native(LinearTransition)}>
         <Button
           label={_(msg`Use default provider`)}
           accessibilityHint={_(msg`Go back to previous page`)}
@@ -574,18 +577,18 @@ function SuccessMessage({text}: {text: string}) {
         a.justify_center,
         a.align_center,
         gtMobile ? a.px_md : a.px_sm,
-        a.py_sm,
+        a.py_xs,
         t.atoms.border_contrast_low,
       ]}>
       <View
         style={[
-          {height: 24, width: 24},
+          {height: 20, width: 20},
           a.rounded_full,
           a.align_center,
           a.justify_center,
           {backgroundColor: t.palette.positive_600},
         ]}>
-        <CheckIcon fill={t.palette.white} size="sm" />
+        <CheckIcon fill={t.palette.white} size="xs" />
       </View>
       <Text style={[a.text_md]}>{text}</Text>
     </View>
