@@ -132,8 +132,10 @@ export function Link({
 
 export function Embed({
   starterPack,
+  withTopMargin,
 }: {
   starterPack: AppBskyGraphDefs.StarterPackViewBasic
+  withTopMargin?: boolean
 }) {
   const t = useTheme()
   const imageUri = getStarterPackOgCard(starterPack)
@@ -141,11 +143,11 @@ export function Embed({
   return (
     <View
       style={[
-        a.mt_xs,
         a.border,
         a.rounded_sm,
         a.overflow_hidden,
         t.atoms.border_contrast_low,
+        withTopMargin && a.mt_sm,
       ]}>
       <Link starterPack={starterPack}>
         <Image

@@ -89,17 +89,17 @@ export function PostEmbeds({
   if (AppBskyEmbedRecord.isView(embed)) {
     // custom feed embed (i.e. generator view)
     if (AppBskyFeedDefs.isGeneratorView(embed.record)) {
-      return <MaybeFeedCard view={embed.record} />
+      return <MaybeFeedCard view={embed.record} withTopMargin />
     }
 
     // list embed
     if (AppBskyGraphDefs.isListView(embed.record)) {
-      return <MaybeListCard view={embed.record} />
+      return <MaybeListCard view={embed.record} withTopMargin />
     }
 
     // starter pack embed
     if (AppBskyGraphDefs.isStarterPackViewBasic(embed.record)) {
-      return <StarterPackCard starterPack={embed.record} />
+      return <StarterPackCard starterPack={embed.record} withTopMargin />
     }
 
     // quote post
@@ -203,7 +203,13 @@ export function PostEmbeds({
   return <View />
 }
 
-function MaybeFeedCard({view}: {view: AppBskyFeedDefs.GeneratorView}) {
+export function MaybeFeedCard({
+  view,
+  withTopMargin,
+}: {
+  view: AppBskyFeedDefs.GeneratorView
+  withTopMargin?: boolean
+}) {
   const pal = usePalette('default')
   const moderationOpts = useModerationOpts()
   const moderation = React.useMemo(() => {
@@ -216,14 +222,25 @@ function MaybeFeedCard({view}: {view: AppBskyFeedDefs.GeneratorView}) {
     <ContentHider modui={moderation?.ui('contentList')}>
       <FeedSourceCard
         feedUri={view.uri}
-        style={[pal.view, pal.border, styles.customFeedOuter]}
+        style={[
+          pal.view,
+          pal.border,
+          styles.customFeedOuter,
+          withTopMargin && a.mt_sm,
+        ]}
         showLikes
       />
     </ContentHider>
   )
 }
 
-function MaybeListCard({view}: {view: AppBskyGraphDefs.ListView}) {
+export function MaybeListCard({
+  view,
+  withTopMargin,
+}: {
+  view: AppBskyGraphDefs.ListView
+  withTopMargin?: boolean
+}) {
   const moderationOpts = useModerationOpts()
   const moderation = React.useMemo(() => {
     return moderationOpts ? moderateUserList(view, moderationOpts) : undefined
@@ -238,7 +255,7 @@ function MaybeListCard({view}: {view: AppBskyGraphDefs.ListView}) {
           t.atoms.border_contrast_medium,
           a.p_md,
           a.rounded_sm,
-          a.mt_sm,
+          withTopMargin && a.mt_sm,
         ]}>
         <ListCard.Default view={view} />
       </View>
@@ -264,7 +281,6 @@ const styles = StyleSheet.create({
   customFeedOuter: {
     borderWidth: StyleSheet.hairlineWidth,
     borderRadius: 8,
-    marginTop: 4,
     paddingHorizontal: 12,
     paddingVertical: 12,
   },
