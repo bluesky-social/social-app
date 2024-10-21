@@ -9,7 +9,7 @@ import {
 import {BottomSheetSnapPoint} from '../../../modules/bottom-sheet/src/BottomSheet.types'
 
 export const Context = React.createContext<DialogContextProps>({
-  close: () => {},
+  close: cb => cb?.(),
   isNativeDialog: false,
   nativeSnapPoint: BottomSheetSnapPoint.Hidden,
   disableDrag: false,

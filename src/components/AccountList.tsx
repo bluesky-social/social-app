@@ -7,30 +7,34 @@ import {useLingui} from '@lingui/react'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {useProfilesQuery} from '#/state/queries/profile'
-import {type SessionAccount, useSession} from '#/state/session'
+import {type SessionAccount, useSession, useSessionApi} from '#/state/session'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
-import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
-import {ChevronRight_Stroke2_Corner0_Rounded as Chevron} from '#/components/icons/Chevron'
-import {Button} from './Button'
-import {Text} from './Typography'
+import {Button, ButtonText} from '#/components/Button'
+import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
+import {ChevronRight_Stroke2_Corner0_Rounded as ChevronIcon} from '#/components/icons/Chevron'
+import {Text} from '#/components/Typography'
+import {useDialogContext} from './Dialog'
 
 export function AccountList({
   onSelectAccount,
   onSelectOther,
   otherLabel,
   pendingDid,
+  editing = false,
 }: {
   onSelectAccount: (account: SessionAccount) => void
   onSelectOther: () => void
   otherLabel?: string
   pendingDid: string | null
+  editing?: boolean
 }) {
   const {currentAccount, accounts} = useSession()
   const t = useTheme()
   const {_} = useLingui()
   const {data: profiles} = useProfilesQuery({
     handles: accounts.map(acc => acc.did),
+    keepPrevious: true,
   })
 
   const onPressAddAccount = useCallback(() => {
@@ -46,46 +50,55 @@ export function AccountList({
         {borderWidth: 1},
         t.atoms.border_contrast_low,
       ]}>
-      {accounts.map(account => (
-        <React.Fragment key={account.did}>
+      {accounts.map((account, i) => (
+        <View
+          key={account.did}
+          style={
+            i !== accounts.length - 1 && [
+              {borderBottomWidth: 1},
+              t.atoms.border_contrast_low,
+            ]
+          }>
           <AccountItem
             profile={profiles?.profiles.find(p => p.did === account.did)}
             account={account}
             onSelect={onSelectAccount}
             isCurrentAccount={account.did === currentAccount?.did}
             isPendingAccount={account.did === pendingDid}
+            editing={editing}
           />
-          <View style={[{borderBottomWidth: 1}, t.atoms.border_contrast_low]} />
-        </React.Fragment>
+        </View>
       ))}
-      <Button
-        testID="chooseAddAccountBtn"
-        style={[a.flex_1]}
-        onPress={pendingDid ? undefined : onPressAddAccount}
-        label={_(msg`Login to account that is not listed`)}>
-        {({hovered, pressed}) => (
-          <View
-            style={[
-              a.flex_1,
-              a.flex_row,
-              a.align_center,
-              {height: 48},
-              (hovered || pressed) && t.atoms.bg_contrast_25,
-            ]}>
-            <Text
+      {!editing && (
+        <Button
+          testID="chooseAddAccountBtn"
+          style={[a.flex_1, {borderTopWidth: 1}, t.atoms.border_contrast_low]}
+          onPress={pendingDid ? undefined : onPressAddAccount}
+          label={_(msg`Login to account that is not listed`)}>
+          {({hovered, pressed}) => (
+            <View
               style={[
-                a.align_baseline,
                 a.flex_1,
                 a.flex_row,
-                a.py_sm,
-                {paddingLeft: 48},
+                a.align_center,
+                {height: 48},
+                (hovered || pressed) && t.atoms.bg_contrast_25,
               ]}>
-              {otherLabel ?? <Trans>Other account</Trans>}
-            </Text>
-            <Chevron size="sm" style={[t.atoms.text, a.mr_md]} />
-          </View>
-        )}
-      </Button>
+              <Text
+                style={[
+                  a.align_baseline,
+                  a.flex_1,
+                  a.flex_row,
+                  a.py_sm,
+                  {paddingLeft: 48},
+                ]}>
+                {otherLabel ?? <Trans>Other account</Trans>}
+              </Text>
+              <ChevronIcon size="sm" style={[t.atoms.text, a.mr_md]} />
+            </View>
+          )}
+        </Button>
+      )}
     </View>
   )
 }
@@ -96,19 +109,51 @@ function AccountItem({
   onSelect,
   isCurrentAccount,
   isPendingAccount,
+  editing,
 }: {
   profile?: AppBskyActorDefs.ProfileViewDetailed
   account: SessionAccount
   onSelect: (account: SessionAccount) => void
   isCurrentAccount: boolean
   isPendingAccount: boolean
+  editing?: boolean
 }) {
   const t = useTheme()
   const {_} = useLingui()
+  const control = useDialogContext()
+  const {logoutCurrentAccount, removeAccount} = useSessionApi()
 
   const onPress = useCallback(() => {
     onSelect(account)
   }, [account, onSelect])
+
+  const onPressRemove = useCallback(() => {
+    if (isCurrentAccount) {
+      control.close(() => {
+        logoutCurrentAccount('AccountList')
+      })
+    } else {
+      removeAccount(account)
+    }
+  }, [control, logoutCurrentAccount, removeAccount, account, isCurrentAccount])
+
+  if (editing) {
+    return (
+      <AccountItemContent profile={profile} account={account}>
+        <Button
+          label={isCurrentAccount ? _(msg`Sign out`) : _(msg`Remove account`)}
+          variant="outline"
+          color="negative"
+          size="tiny"
+          style={[a.mr_md]}
+          onPress={onPressRemove}>
+          <ButtonText>
+            {isCurrentAccount ? <Trans>Sign out</Trans> : <Trans>Remove</Trans>}
+          </ButtonText>
+        </Button>
+      </AccountItemContent>
+    )
+  }
 
   return (
     <Button
@@ -122,37 +167,61 @@ function AccountItem({
           : _(msg`Sign in as ${account.handle}`)
       }>
       {({hovered, pressed}) => (
-        <View
-          style={[
-            a.flex_1,
-            a.flex_row,
-            a.align_center,
-            {height: 48},
-            (hovered || pressed || isPendingAccount) && t.atoms.bg_contrast_25,
-          ]}>
-          <View style={a.p_md}>
-            <UserAvatar avatar={profile?.avatar} size={24} />
-          </View>
-          <Text style={[a.align_baseline, a.flex_1, a.flex_row, a.py_sm]}>
-            <Text emoji style={[a.font_bold]}>
-              {sanitizeDisplayName(
-                profile?.displayName || profile?.handle || account.handle,
-              )}
-            </Text>{' '}
-            <Text emoji style={[t.atoms.text_contrast_medium]}>
-              {sanitizeHandle(account.handle)}
-            </Text>
-          </Text>
+        <AccountItemContent
+          highlight={hovered || pressed || isPendingAccount}
+          profile={profile}
+          account={account}>
           {isCurrentAccount ? (
-            <Check
+            <CheckIcon
               size="sm"
               style={[{color: t.palette.positive_600}, a.mr_md]}
             />
           ) : (
-            <Chevron size="sm" style={[t.atoms.text, a.mr_md]} />
+            <ChevronIcon size="sm" style={[t.atoms.text, a.mr_md]} />
           )}
-        </View>
+        </AccountItemContent>
       )}
     </Button>
+  )
+}
+
+function AccountItemContent({
+  highlight,
+  profile,
+  account,
+
+  children,
+}: {
+  highlight?: boolean
+  profile?: AppBskyActorDefs.ProfileViewDetailed
+  account: SessionAccount
+  children?: React.ReactNode
+}) {
+  const t = useTheme()
+
+  return (
+    <View
+      style={[
+        a.flex_1,
+        a.flex_row,
+        a.align_center,
+        {height: 48},
+        highlight && t.atoms.bg_contrast_25,
+      ]}>
+      <View style={a.p_md}>
+        <UserAvatar avatar={profile?.avatar} size={24} />
+      </View>
+      <Text style={[a.align_baseline, a.flex_1, a.flex_row, a.py_sm]}>
+        <Text emoji style={[a.font_bold]}>
+          {sanitizeDisplayName(
+            profile?.displayName || profile?.handle || account.handle,
+          )}
+        </Text>{' '}
+        <Text emoji style={[t.atoms.text_contrast_medium]}>
+          {sanitizeHandle(account.handle)}
+        </Text>
+      </Text>
+      {children}
+    </View>
   )
 }
