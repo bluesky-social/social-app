@@ -244,7 +244,7 @@ function ProvidedHandlePage({
           <Text style={[a.leading_snug]}>
             <Trans>
               If you have your own domain, you can use that as your handle. This
-              lets you self-verify your identity -{' '}
+              lets you self-verify your identity –{' '}
               <InlineLinkText
                 label={_(msg`learn more`)}
                 to="https://bsky.social/about/blog/4-28-2023-domain-handle-tutorial"
