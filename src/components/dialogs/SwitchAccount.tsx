@@ -55,7 +55,7 @@ export function SwitchAccountDialog({
               a.flex_wrap,
             ]}>
             <Text style={[a.text_2xl, a.font_bold]}>
-              <Trans>Switch account</Trans>
+              <Trans>Switch Account</Trans>
             </Text>
 
             <Button

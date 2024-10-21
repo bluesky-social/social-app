@@ -87,7 +87,7 @@ export function useProfilesQuery({
   keepPrevious,
 }: {
   handles: string[]
-  keepPrevious: boolean
+  keepPrevious?: boolean
 }) {
   const agent = useAgent()
   return useQuery({
