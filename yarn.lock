@@ -10930,10 +10930,10 @@ eslint-plugin-prettier@^4.2.1:
   dependencies:
     prettier-linter-helpers "^1.0.0"
 
-eslint-plugin-react-compiler@^0.0.0-experimental-c8b3f72-20240517:
-  version "0.0.0-experimental-c8b3f72-20240517"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-react-compiler/-/eslint-plugin-react-compiler-0.0.0-experimental-c8b3f72-20240517.tgz#56b512aa0d6dbf051be0d297bde1d696e412bc50"
-  integrity sha512-cxUTFNMEKiLX6uFaRfrr2GHnB7KUHDMYLjEGzDec82ka6WyBCHg906nGSf3JvVnQKHaBDfUk7Mmv/JMvdgQB8Q==
+eslint-plugin-react-compiler@^19.0.0-beta-8a03594-20241020:
+  version "19.0.0-beta-8a03594-20241020"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-react-compiler/-/eslint-plugin-react-compiler-19.0.0-beta-8a03594-20241020.tgz#6296f82b89a417646e93ce378eddf964d8c96c16"
+  integrity sha512-bYg1COih1s3r14IV/AKdQs/SN7CQmNI0ZaMtPdgZ6gp1S1Q/KGP9P43w7R6dHJ4wYpuMBvekNJHQdVu+x6UM+A==
   dependencies:
     "@babel/core" "^7.24.4"
     "@babel/parser" "^7.24.4"
