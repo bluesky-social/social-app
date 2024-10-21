@@ -141,7 +141,6 @@ export function Embed({
   return (
     <View
       style={[
-        a.mt_xs,
         a.border,
         a.rounded_sm,
         a.overflow_hidden,

@@ -89,17 +89,29 @@ export function PostEmbeds({
   if (AppBskyEmbedRecord.isView(embed)) {
     // custom feed embed (i.e. generator view)
     if (AppBskyFeedDefs.isGeneratorView(embed.record)) {
-      return <MaybeFeedCard view={embed.record} />
+      return (
+        <View style={a.mt_sm}>
+          <MaybeFeedCard view={embed.record} />
+        </View>
+      )
     }
 
     // list embed
     if (AppBskyGraphDefs.isListView(embed.record)) {
-      return <MaybeListCard view={embed.record} />
+      return (
+        <View style={a.mt_sm}>
+          <MaybeListCard view={embed.record} />
+        </View>
+      )
     }
 
     // starter pack embed
     if (AppBskyGraphDefs.isStarterPackViewBasic(embed.record)) {
-      return <StarterPackCard starterPack={embed.record} />
+      return (
+        <View style={a.mt_sm}>
+          <StarterPackCard starterPack={embed.record} />
+        </View>
+      )
     }
 
     // quote post
@@ -238,7 +250,6 @@ export function MaybeListCard({view}: {view: AppBskyGraphDefs.ListView}) {
           t.atoms.border_contrast_medium,
           a.p_md,
           a.rounded_sm,
-          a.mt_sm,
         ]}>
         <ListCard.Default view={view} />
       </View>
@@ -264,7 +275,6 @@ const styles = StyleSheet.create({
   customFeedOuter: {
     borderWidth: StyleSheet.hairlineWidth,
     borderRadius: 8,
-    marginTop: 4,
     paddingHorizontal: 12,
     paddingVertical: 12,
   },
