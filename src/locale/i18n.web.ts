@@ -64,6 +64,10 @@ export async function dynamicActivate(locale: AppLanguage) {
       mod = await import(`./locales/ru/messages`)
       break
     }
+    case AppLanguage.th: {
+      mod = await import(`./locales/th/messages`)
+      break
+    }
     case AppLanguage.tr: {
       mod = await import(`./locales/tr/messages`)
       break
