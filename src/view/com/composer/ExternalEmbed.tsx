@@ -139,7 +139,6 @@ function Container({
   return (
     <View
       style={[
-        a.mt_sm,
         a.rounded_sm,
         a.border,
         a.align_center,
