@@ -2,13 +2,10 @@ import React, {useEffect, useMemo, useState} from 'react'
 import {useWindowDimensions, View} from 'react-native'
 import Animated, {
   FadeIn,
-  FadeOutUp,
   LayoutAnimationConfig,
   SlideInRight,
   SlideOutLeft,
-  ZoomIn,
 } from 'react-native-reanimated'
-import * as Clipboard from 'expo-clipboard'
 import {ComAtprotoServerCreateAppPassword} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -25,6 +22,7 @@ import * as Toggle from '#/components/forms/Toggle'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
 import {SquareBehindSquare4_Stroke2_Corner0_Rounded as CopyIcon} from '#/components/icons/SquareBehindSquare4'
 import {Text} from '#/components/Typography'
+import {CopyButton} from './CopyButton'
 
 export function AddAppPasswordDialog({
   control,
@@ -185,44 +183,15 @@ function CreateDialogInner({passwords}: {passwords: string[]}) {
                   Use this to sign into the other app along with your handle.
                 </Trans>
               </Text>
-              <View style={[a.relative]}>
-                {hasBeenCopied && (
-                  <Animated.View
-                    entering={ZoomIn.duration(100)}
-                    exiting={FadeOutUp.duration(2000)}
-                    style={[
-                      a.absolute,
-                      {bottom: '110%', right: 0},
-                      a.justify_center,
-                      a.gap_sm,
-                      a.z_10,
-                    ]}
-                    pointerEvents="none">
-                    <Text
-                      style={[
-                        a.font_bold,
-                        a.text_right,
-                        a.text_md,
-                        t.atoms.text_contrast_high,
-                      ]}>
-                      <Trans>Copied!</Trans>
-                    </Text>
-                  </Animated.View>
-                )}
-                <Button
-                  label={_(msg`Copy App Password`)}
-                  size="large"
-                  variant="solid"
-                  color="secondary"
-                  style={[a.flex_1, a.justify_between]}
-                  onPress={() => {
-                    Clipboard.setStringAsync(data.password)
-                    setHasBeenCopied(true)
-                  }}>
-                  <ButtonText>{data.password}</ButtonText>
-                  <ButtonIcon icon={CopyIcon} />
-                </Button>
-              </View>
+              <CopyButton
+                value={data.password}
+                label={_(msg`Copy App Password`)}
+                size="large"
+                variant="solid"
+                color="secondary">
+                <ButtonText>{data.password}</ButtonText>
+                <ButtonIcon icon={CopyIcon} />
+              </CopyButton>
               <Text
                 style={[
                   a.text_md,
