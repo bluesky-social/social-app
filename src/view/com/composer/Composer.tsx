@@ -129,7 +129,6 @@ export const ComposePost = ({
   replyTo,
   onPost,
   quote: initQuote,
-  quoteCount: initQuoteCount,
   mention: initMention,
   openEmojiPicker,
   text: initText,
@@ -425,13 +424,13 @@ export const ComposePost = ({
         emitPostCreated()
       }
       setLangPrefs.savePostLanguageToHistory()
-      if (initQuote && initQuoteCount !== undefined) {
+      if (initQuote) {
         // We want to wait for the quote count to update before we call `onPost`, which will refetch data
         whenAppViewReady(agent, initQuote.uri, res => {
           const thread = res.data.thread
           if (
             AppBskyFeedDefs.isThreadViewPost(thread) &&
-            thread.post.quoteCount !== initQuoteCount
+            thread.post.quoteCount !== initQuote.quoteCount
           ) {
             onPost?.(postUri)
             return true
@@ -463,7 +462,6 @@ export const ComposePost = ({
       onPost,
       quote,
       initQuote,
-      initQuoteCount,
       replyTo,
       richtext.text,
       setLangPrefs,

@@ -2,7 +2,7 @@ import React from 'react'
 import {
   AppBskyActorDefs,
   AppBskyEmbedRecord,
-  AppBskyRichtextFacet,
+  AppBskyFeedDefs,
   ModerationDecision,
 } from '@atproto/api'
 import {msg} from '@lingui/macro'
@@ -23,20 +23,11 @@ export interface ComposerOptsPostRef {
   embed?: AppBskyEmbedRecord.ViewRecord['embed']
   moderation?: ModerationDecision
 }
-export interface ComposerOptsQuote {
-  uri: string
-  cid: string
-  text: string
-  facets?: AppBskyRichtextFacet.Main[]
-  indexedAt: string
-  author: AppBskyActorDefs.ProfileViewBasic
-  embeds?: AppBskyEmbedRecord.ViewRecord['embeds']
-}
+
 export interface ComposerOpts {
   replyTo?: ComposerOptsPostRef
   onPost?: (postUri: string | undefined) => void
-  quote?: ComposerOptsQuote
-  quoteCount?: number
+  quote?: AppBskyFeedDefs.PostView
   mention?: string // handle of user to mention
   openEmojiPicker?: (pos: DOMRect | undefined) => void
   text?: string
@@ -75,11 +66,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
             cid: opts.quote.cid,
             uri: opts.quote.uri,
           },
-          meta: {
-            author: opts.quote.author,
-            indexedAt: opts.quote.indexedAt,
-            text: opts.quote.text,
-          },
+          meta: opts.quote,
         })
       }
     }
