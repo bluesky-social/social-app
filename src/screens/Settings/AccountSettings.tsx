@@ -2,11 +2,9 @@ import React from 'react'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
-import {useQueryClient} from '@tanstack/react-query'
 
 import {CommonNavigatorParams} from '#/lib/routes/types'
 import {useModalControls} from '#/state/modals'
-import {RQKEY as RQKEY_PROFILE} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import {ExportCarDialog} from '#/view/screens/Settings/ExportCarDialog'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
@@ -32,7 +30,6 @@ export function AccountSettingsScreen({}: Props) {
   const t = useTheme()
   const {_} = useLingui()
   const {currentAccount} = useSession()
-  const queryClient = useQueryClient()
   const {openModal} = useModalControls()
   const birthdayControl = useDialogControl()
   const changeHandleControl = useDialogControl()
@@ -118,32 +115,10 @@ export function AccountSettingsScreen({}: Props) {
           <SettingsList.PressableItem
             label={_(msg`Handle`)}
             accessibilityHint={_(msg`Open change handle dialog`)}
-            onPress={() =>
-              openModal({
-                name: 'change-handle',
-                onChanged() {
-                  if (currentAccount) {
-                    // refresh my profile
-                    queryClient.invalidateQueries({
-                      queryKey: RQKEY_PROFILE(currentAccount.did),
-                    })
-                  }
-                },
-              })
-            }>
-            <SettingsList.ItemIcon icon={AtIcon} />
-            <SettingsList.ItemText>
-              <Trans>Handle</Trans>
-            </SettingsList.ItemText>
-            <SettingsList.Chevron />
-          </SettingsList.PressableItem>
-          <SettingsList.PressableItem
-            label={_(msg`Handle`)}
-            accessibilityHint={_(msg`Open change handle dialog`)}
             onPress={() => changeHandleControl.open()}>
             <SettingsList.ItemIcon icon={AtIcon} />
             <SettingsList.ItemText>
-              <Trans>Handle (new)</Trans>
+              <Trans>Handle</Trans>
             </SettingsList.ItemText>
             <SettingsList.Chevron />
           </SettingsList.PressableItem>

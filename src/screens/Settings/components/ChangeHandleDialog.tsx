@@ -13,12 +13,13 @@ import Animated, {
 import {ComAtprotoServerDescribeServer} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useMutation} from '@tanstack/react-query'
+import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {HITSLOP_10} from '#/lib/constants'
 import {cleanError} from '#/lib/strings/errors'
 import {createFullHandle, validateHandle} from '#/lib/strings/handles'
 import {useFetchDid, useUpdateHandleMutation} from '#/state/queries/handle'
+import {RQKEY as RQKEY_PROFILE} from '#/state/queries/profile'
 import {useServiceQuery} from '#/state/queries/service'
 import {useAgent, useSession} from '#/state/session'
 import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
@@ -145,6 +146,8 @@ function ProvidedHandlePage({
   const [subdomain, setSubdomain] = useState('')
   const agent = useAgent()
   const control = Dialog.useDialogContext()
+  const {currentAccount} = useSession()
+  const queryClient = useQueryClient()
 
   const {
     mutate: changeHandle,
@@ -153,6 +156,11 @@ function ProvidedHandlePage({
     isSuccess,
   } = useUpdateHandleMutation({
     onSuccess: () => {
+      if (currentAccount) {
+        queryClient.invalidateQueries({
+          queryKey: RQKEY_PROFILE(currentAccount.did),
+        })
+      }
       agent.resumeSession(agent.session!).then(() => control.close())
     },
   })
@@ -270,6 +278,7 @@ function OwnHandlePage({goToServiceHandle}: {goToServiceHandle: () => void}) {
   const agent = useAgent()
   const control = Dialog.useDialogContext()
   const fetchDid = useFetchDid()
+  const queryClient = useQueryClient()
 
   const {
     mutate: changeHandle,
@@ -278,6 +287,11 @@ function OwnHandlePage({goToServiceHandle}: {goToServiceHandle: () => void}) {
     isSuccess,
   } = useUpdateHandleMutation({
     onSuccess: () => {
+      if (currentAccount) {
+        queryClient.invalidateQueries({
+          queryKey: RQKEY_PROFILE(currentAccount.did),
+        })
+      }
       agent.resumeSession(agent.session!).then(() => control.close())
     },
   })
