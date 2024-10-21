@@ -226,7 +226,6 @@ let DrawerContent = ({}: {}): React.ReactNode => {
       <ScrollView
         style={[a.flex_1]}
         contentContainerStyle={[
-          a.px_xl,
           {
             paddingTop: Math.max(
               insets.top + a.pt_xl.paddingTop,
@@ -234,18 +233,20 @@ let DrawerContent = ({}: {}): React.ReactNode => {
             ),
           },
         ]}>
-        {hasSession && currentAccount ? (
-          <DrawerProfileCard
-            account={currentAccount}
-            onPressProfile={onPressProfile}
-          />
-        ) : (
-          <View style={[a.pr_xl]}>
-            <NavSignupCard />
-          </View>
-        )}
+        <View style={[a.px_xl]}>
+          {hasSession && currentAccount ? (
+            <DrawerProfileCard
+              account={currentAccount}
+              onPressProfile={onPressProfile}
+            />
+          ) : (
+            <View style={[a.pr_xl]}>
+              <NavSignupCard />
+            </View>
+          )}
 
-        <Divider style={[a.mt_xl, a.mb_sm]} />
+          <Divider style={[a.mt_xl, a.mb_sm]} />
+        </View>
 
         {hasSession ? (
           <>
@@ -272,34 +273,36 @@ let DrawerContent = ({}: {}): React.ReactNode => {
           </>
         )}
 
-        <Divider style={[a.mb_xl, a.mt_sm]} />
+        <View style={[a.px_xl]}>
+          <Divider style={[a.mb_xl, a.mt_sm]} />
 
-        <View style={[a.flex_col, a.gap_md, a.flex_wrap]}>
-          <InlineLinkText
-            style={[a.text_md]}
-            label={_(msg`Terms of Service`)}
-            to="https://bsky.social/about/support/tos">
-            <Trans>Terms of Service</Trans>
-          </InlineLinkText>
-          <InlineLinkText
-            style={[a.text_md]}
-            to="https://bsky.social/about/support/privacy-policy"
-            label={_(msg`Privacy Policy`)}>
-            <Trans>Privacy Policy</Trans>
-          </InlineLinkText>
-          {kawaii && (
-            <Text style={t.atoms.text_contrast_medium}>
-              <Trans>
-                Logo by{' '}
-                <InlineLinkText
-                  style={[a.text_md]}
-                  to="/profile/sawaratsuki.bsky.social"
-                  label="@sawaratsuki.bsky.social">
-                  @sawaratsuki.bsky.social
-                </InlineLinkText>
-              </Trans>
-            </Text>
-          )}
+          <View style={[a.flex_col, a.gap_md, a.flex_wrap]}>
+            <InlineLinkText
+              style={[a.text_md]}
+              label={_(msg`Terms of Service`)}
+              to="https://bsky.social/about/support/tos">
+              <Trans>Terms of Service</Trans>
+            </InlineLinkText>
+            <InlineLinkText
+              style={[a.text_md]}
+              to="https://bsky.social/about/support/privacy-policy"
+              label={_(msg`Privacy Policy`)}>
+              <Trans>Privacy Policy</Trans>
+            </InlineLinkText>
+            {kawaii && (
+              <Text style={t.atoms.text_contrast_medium}>
+                <Trans>
+                  Logo by{' '}
+                  <InlineLinkText
+                    style={[a.text_md]}
+                    to="/profile/sawaratsuki.bsky.social"
+                    label="@sawaratsuki.bsky.social">
+                    @sawaratsuki.bsky.social
+                  </InlineLinkText>
+                </Trans>
+              </Text>
+            )}
+          </View>
         </View>
       </ScrollView>
 
@@ -387,8 +390,6 @@ let SearchMenuItem = ({
         )
       }
       label={_(msg`Search`)}
-      accessibilityLabel={_(msg`Search`)}
-      accessibilityHint=""
       bold={isActive}
       onPress={onPress}
     />
@@ -415,8 +416,6 @@ let HomeMenuItem = ({
         )
       }
       label={_(msg`Home`)}
-      accessibilityLabel={_(msg`Home`)}
-      accessibilityHint=""
       bold={isActive}
       onPress={onPress}
     />
@@ -443,8 +442,6 @@ let ChatMenuItem = ({
         )
       }
       label={_(msg`Chat`)}
-      accessibilityLabel={_(msg`Chat`)}
-      accessibilityHint=""
       bold={isActive}
       onPress={onPress}
     />
@@ -472,7 +469,6 @@ let NotificationsMenuItem = ({
         )
       }
       label={_(msg`Notifications`)}
-      accessibilityLabel={_(msg`Notifications`)}
       accessibilityHint={
         numUnreadNotifications === ''
           ? ''
@@ -505,8 +501,6 @@ let FeedsMenuItem = ({
         )
       }
       label={_(msg`Feeds`)}
-      accessibilityLabel={_(msg`Feeds`)}
-      accessibilityHint=""
       bold={isActive}
       onPress={onPress}
     />
@@ -522,8 +516,6 @@ let ListsMenuItem = ({onPress}: {onPress: () => void}): React.ReactNode => {
     <MenuItem
       icon={<List style={[t.atoms.text]} width={iconWidth} />}
       label={_(msg`Lists`)}
-      accessibilityLabel={_(msg`Lists`)}
-      accessibilityHint=""
       onPress={onPress}
     />
   )
@@ -549,8 +541,6 @@ let ProfileMenuItem = ({
         )
       }
       label={_(msg`Profile`)}
-      accessibilityLabel={_(msg`Profile`)}
-      accessibilityHint=""
       onPress={onPress}
     />
   )
@@ -564,74 +554,79 @@ let SettingsMenuItem = ({onPress}: {onPress: () => void}): React.ReactNode => {
     <MenuItem
       icon={<Settings style={[t.atoms.text]} width={iconWidth} />}
       label={_(msg`Settings`)}
-      accessibilityLabel={_(msg`Settings`)}
-      accessibilityHint=""
       onPress={onPress}
     />
   )
 }
 SettingsMenuItem = React.memo(SettingsMenuItem)
 
-function MenuItem({
-  icon,
-  label,
-  accessibilityLabel,
-  count,
-  bold,
-  onPress,
-}: MenuItemProps) {
+function MenuItem({icon, label, count, bold, onPress}: MenuItemProps) {
   const t = useTheme()
   return (
-    <PressableScale
+    <Button
       testID={`menuItemButton-${label}`}
-      style={[a.flex_row, a.align_center, a.gap_sm, {paddingVertical: 10}]}
       onPress={onPress}
       accessibilityRole="tab"
-      accessibilityLabel={accessibilityLabel}
-      accessibilityHint=""
-      targetScale={0.95}>
-      <View style={[a.relative]}>
-        {icon}
-        {count ? (
-          <View
-            style={[
-              a.absolute,
-              a.inset_0,
-              a.align_end,
-              {top: -4, right: a.gap_sm.gap * -1},
-            ]}>
-            <View
-              style={[
-                a.rounded_full,
-                {
-                  right: count.length === 1 ? 6 : 0,
-                  paddingHorizontal: 4,
-                  paddingVertical: 1,
-                  backgroundColor: t.palette.primary_500,
-                },
-              ]}>
-              <Text
+      label={label}>
+      {({hovered, pressed}) => (
+        <View
+          style={[
+            a.flex_1,
+            a.flex_row,
+            a.gap_md,
+            a.py_md,
+            a.px_xl,
+            (hovered || pressed) && t.atoms.bg_contrast_25,
+          ]}>
+          <View style={[a.relative]}>
+            {icon}
+            {count ? (
+              <View
                 style={[
-                  a.text_xs,
-                  a.leading_tight,
-                  a.font_bold,
-                  {
-                    fontVariant: ['tabular-nums'],
-                    color: colors.white,
-                  },
-                ]}
-                numberOfLines={1}>
-                {count}
-              </Text>
-            </View>
+                  a.absolute,
+                  a.inset_0,
+                  a.align_end,
+                  {top: -4, right: a.gap_sm.gap * -1},
+                ]}>
+                <View
+                  style={[
+                    a.rounded_full,
+                    {
+                      right: count.length === 1 ? 6 : 0,
+                      paddingHorizontal: 4,
+                      paddingVertical: 1,
+                      backgroundColor: t.palette.primary_500,
+                    },
+                  ]}>
+                  <Text
+                    style={[
+                      a.text_xs,
+                      a.leading_tight,
+                      a.font_bold,
+                      {
+                        fontVariant: ['tabular-nums'],
+                        color: colors.white,
+                      },
+                    ]}
+                    numberOfLines={1}>
+                    {count}
+                  </Text>
+                </View>
+              </View>
+            ) : undefined}
           </View>
-        ) : undefined}
-      </View>
-      <Text
-        style={[a.flex_1, a.text_2xl, bold && a.font_bold, web(a.leading_snug)]}
-        numberOfLines={1}>
-        {label}
-      </Text>
-    </PressableScale>
+          <Text
+            style={[
+              a.flex_1,
+              a.text_2xl,
+              bold && a.font_heavy,
+              web(a.leading_snug),
+            ]}
+            numberOfLines={1}>
+            {label}
+          </Text>
+        </View>
+      )}
+    </Button>
   )
 }
