@@ -95,7 +95,7 @@ export function createTagsAutocomplete({
 
 const Autocomplete = forwardRef<AutocompleteRef, ListProps>(
   function AutocompleteImpl(props, ref) {
-    const {items, command} = props
+    const {items, command, model} = props
     const pal = usePalette('default')
     const [selectedIndex, setSelectedIndex] = useState(0)
 
@@ -111,8 +111,9 @@ const Autocomplete = forwardRef<AutocompleteRef, ListProps>(
          * only want to `commitRecentTag` with the sanitized tag.
          */
         command({tag, punctuation})
+        model.save(tag)
       },
-      [command],
+      [command, model],
     )
 
     const selectItem = React.useCallback(

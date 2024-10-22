@@ -31,7 +31,7 @@ import {Text} from '../../util/text/Text'
 import {createSuggestion} from './web/Autocomplete'
 import {Emoji} from './web/EmojiPicker.web'
 import {LinkDecorator} from './web/LinkDecorator'
-import {createTagsAutocomplete,Tags} from './web/Tags'
+import {createTagsAutocomplete, Tags} from './web/Tags'
 
 export interface TextInputRef {
   focus: () => void
@@ -338,6 +338,8 @@ function editorJsonToText(
     text += json.text || ''
   } else if (json.type === 'mention') {
     text += `@${json.attrs?.id || ''}`
+  } else if (json.type === 'tag') {
+    text += `#${json.attrs?.id || ''}`
   }
   return text
 }

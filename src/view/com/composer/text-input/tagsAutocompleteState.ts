@@ -19,13 +19,17 @@ export function tagAutocompleteModel({
   return {
     async search(query: string) {
       if (!query) return [{value: query}]
-      return [{value: query}]
+      return [
+        {value: query},
+        ...recentTags.filter(t => t.value.includes(query)),
+      ]
     },
     save(tag: string) {
       recentTags = [
         {value: tag},
         ...recentTags.filter(t => t.value !== tag),
       ].slice(0, 40)
+      account.set([currentDid, 'recentTags'], recentTags)
     },
   }
 }

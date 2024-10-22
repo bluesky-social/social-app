@@ -49,13 +49,6 @@ export function findSuggestionMatch({
   const from = textFrom + match.index + leadingSpaceOffset
   const to = from + tag.length + hashtagOffset
 
-  console.log({
-    pos: $position.pos,
-    from,
-    to,
-    text,
-  })
-
   // If the $position is located within the matched substring, return that range
   if (from < $position.pos && to >= $position.pos) {
     return {

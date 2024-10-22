@@ -1,7 +1,7 @@
 import {MMKV} from 'react-native-mmkv'
 
 import {IS_DEV} from '#/env'
-import {Account} from '#/storage/schema'
+import {Account,Device} from '#/storage/schema'
 
 export * from '#/storage/schema'
 

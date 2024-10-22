@@ -88,7 +88,7 @@ export type MentionOptions<
  * The plugin key for the mention plugin.
  * @default 'mention'
  */
-export const TagsPluginKey = new PluginKey('tags')
+export const TagsPluginKey = new PluginKey('tag')
 
 /**
  * This extension allows you to insert mentions into the editor.
@@ -97,7 +97,7 @@ export const TagsPluginKey = new PluginKey('tags')
 export const Tags = Node.create<
   MentionOptions<any, {tag: string; punctuation?: string}>
 >({
-  name: 'tags',
+  name: 'tag',
 
   addOptions() {
     return {
