@@ -233,12 +233,12 @@ function CreateAnother() {
         t.atoms.border_contrast_low,
       ]}>
       <Button
-        label={_(msg`Create a starter pack`)}
+        label={_(msg`Create a feed`)}
         variant="solid"
         color="secondary"
         size="small"
         style={[a.self_center]}
-        onPress={() => navigation.navigate('StarterPackWizard')}>
+        onPress={() => navigation.navigate('FeedWizard')}>
         <ButtonText>
           <Trans>Create another</Trans>
         </ButtonText>
@@ -252,37 +252,33 @@ function Empty() {
   const {_} = useLingui()
   const t = useTheme()
   const navigation = useNavigation<NavigationProp>()
-  const confirmDialogControl = useDialogControl()
-  const followersDialogControl = useDialogControl()
   const errorDialogControl = useDialogControl()
 
-  const [isGenerating, setIsGenerating] = React.useState(false)
+  const [isCreating, setIsCreating] = React.useState(false)
 
-  const {mutate: generateStarterPack} = useGenerateStarterPackMutation({
+  // TODO
+  const {mutate: createFeed} = useGenerateStarterPackMutation({
     onSuccess: ({uri}) => {
+      // TODO
       const parsed = parseStarterPackUri(uri)
       if (parsed) {
-        navigation.push('StarterPack', {
+        navigation.push('ProfileFeed', {
           name: parsed.name,
           rkey: parsed.rkey,
         })
       }
-      setIsGenerating(false)
+      setIsCreating(false)
     },
     onError: e => {
-      logger.error('Failed to generate starter pack', {safeMessage: e})
-      setIsGenerating(false)
-      if (e.name === 'NOT_ENOUGH_FOLLOWERS') {
-        followersDialogControl.open()
-      } else {
-        errorDialogControl.open()
-      }
+      logger.error('Failed to generate feed', {safeMessage: e})
+      setIsCreating(false)
+      errorDialogControl.open()
     },
   })
 
   const generate = () => {
-    setIsGenerating(true)
-    generateStarterPack()
+    setIsCreating(true)
+    createFeed()
   }
 
   return (
@@ -317,8 +313,8 @@ function Empty() {
           variant="ghost"
           color="primary"
           size="small"
-          disabled={isGenerating}
-          onPress={() => navigation.navigate('StarterPackWizard')}
+          disabled={isCreating}
+          onPress={() => navigation.navigate('FeedWizard')}
           style={{
             backgroundColor: 'white',
             borderColor: 'white',
@@ -331,45 +327,11 @@ function Empty() {
         </Button>
       </View>
 
-      <Prompt.Outer control={confirmDialogControl}>
-        <Prompt.TitleText>
-          <Trans>Generate a starter pack</Trans>
-        </Prompt.TitleText>
-        <Prompt.DescriptionText>
-          <Trans>
-            Bluesky will choose a set of recommended accounts from people in
-            your network.
-          </Trans>
-        </Prompt.DescriptionText>
-        <Prompt.Actions>
-          <Prompt.Action
-            color="primary"
-            cta={_(msg`Choose for me`)}
-            onPress={generate}
-          />
-          <Prompt.Action
-            color="secondary"
-            cta={_(msg`Let me choose`)}
-            onPress={() => {
-              navigation.navigate('StarterPackWizard')
-            }}
-          />
-        </Prompt.Actions>
-      </Prompt.Outer>
-      <Prompt.Basic
-        control={followersDialogControl}
-        title={_(msg`Oops!`)}
-        description={_(
-          msg`You must be following at least seven other people to generate a starter pack.`,
-        )}
-        onConfirm={() => {}}
-        showCancel={false}
-      />
       <Prompt.Basic
         control={errorDialogControl}
         title={_(msg`Oops!`)}
         description={_(
-          msg`An error occurred while generating your starter pack. Want to try again?`,
+          msg`An error occurred while creating your feed. Want to try again?`,
         )}
         onConfirm={generate}
         confirmButtonCta={_(msg`Retry`)}
