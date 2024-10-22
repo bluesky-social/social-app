@@ -238,7 +238,7 @@ function CreateAnother() {
         color="secondary"
         size="small"
         style={[a.self_center]}
-        onPress={() => navigation.navigate('FeedWizard')}>
+        onPress={() => navigation.navigate('FeedsWizard')}>
         <ButtonText>
           <Trans>Create another</Trans>
         </ButtonText>
@@ -314,7 +314,7 @@ function Empty() {
           color="primary"
           size="small"
           disabled={isCreating}
-          onPress={() => navigation.navigate('FeedWizard')}
+          onPress={() => navigation.navigate('FeedsWizard')}
           style={{
             backgroundColor: 'white',
             borderColor: 'white',

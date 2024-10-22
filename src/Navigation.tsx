@@ -76,6 +76,7 @@ import {TermsOfServiceScreen} from '#/view/screens/TermsOfService'
 import {BottomBar} from '#/view/shell/bottom-bar/BottomBar'
 import {createNativeStackNavigatorWithAuth} from '#/view/shell/createNativeStackNavigatorWithAuth'
 import {SharedPreferencesTesterScreen} from '#/screens/E2E/SharedPreferencesTesterScreen'
+import {Wizard as FeedsWizard} from '#/screens/Feeds/Wizard'
 import HashtagScreen from '#/screens/Hashtag'
 import {MessagesScreen} from '#/screens/Messages/ChatList'
 import {MessagesConversationScreen} from '#/screens/Messages/Conversation'
@@ -350,6 +351,16 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         name="Feeds"
         getComponent={() => FeedsScreen}
         options={{title: title(msg`Feeds`)}}
+      />
+      <Stack.Screen
+        name="FeedsWizard"
+        getComponent={() => FeedsWizard}
+        options={{title: title(msg`Create a feed`), requireAuth: true}}
+      />
+      <Stack.Screen
+        name="FeedsEdit"
+        getComponent={() => FeedsWizard}
+        options={{title: title(msg`Edit your feed`), requireAuth: true}}
       />
       <Stack.Screen
         name="StarterPack"

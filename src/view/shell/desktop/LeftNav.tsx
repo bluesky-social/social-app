@@ -101,7 +101,12 @@ function ProfileCard() {
   )
 }
 
-const HIDDEN_BACK_BNT_ROUTES = ['StarterPackWizard', 'StarterPackEdit']
+const HIDDEN_BACK_BNT_ROUTES = [
+  'StarterPackWizard',
+  'StarterPackEdit',
+  'FeedsWizard',
+  'FeedsEdit',
+]
 
 function BackBtn() {
   const {isTablet} = useWebMediaQueries()

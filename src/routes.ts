@@ -1,9 +1,11 @@
-import {Router} from 'lib/routes/router'
+import {Router} from '#/lib/routes/router'
 
 export const router = new Router({
   Home: '/',
   Search: '/search',
   Feeds: '/feeds',
+  FeedsWizard: '/feeds/create',
+  FeedsEdit: '/feeds/edit/:rkey',
   Notifications: '/notifications',
   NotificationsSettings: '/notifications/settings',
   Settings: '/settings',
