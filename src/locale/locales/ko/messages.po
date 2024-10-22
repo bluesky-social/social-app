@@ -4661,7 +4661,7 @@ msgstr "비밀번호를 입력하세요."
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:265
 msgid "Please explain why you think this label was incorrectly applied by {0}"
-msgstr "{0} 님이 이 라벨을 잘못 적용했다고 생각하는 이유를 설명해 주세요"
+msgstr "{0}이(가) 이 라벨을 잘못 적용했다고 생각하는 이유를 설명해 주세요"
 
 #: src/screens/Messages/components/ChatDisabled.tsx:110
 msgid "Please explain why you think your chats were incorrectly disabled"
