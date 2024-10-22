@@ -15,6 +15,7 @@ import Animated, {
   useAnimatedRef,
   useAnimatedStyle,
   useSharedValue,
+  withTiming,
 } from 'react-native-reanimated'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
@@ -44,179 +45,210 @@ export interface PagerWithHeaderProps {
   onCurrentPageSelected?: (index: number) => void
   allowHeaderOverScroll?: boolean
 }
-export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
-  function PageWithHeaderImpl(
-    {
-      children,
-      testID,
+export const PagerWithHeader = React.forwardRef<
+  PagerRef,
+  PagerWithHeaderProps & {
+    headerRef: React.Ref<{
+      scrollHeaderAway: () => void
+      scrollHeaderBack: () => void
+    }>
+  }
+>(function PageWithHeaderImpl(
+  {
+    children,
+    testID,
+    items,
+    isHeaderReady,
+    renderHeader,
+    initialPage,
+    onPageSelected,
+    onCurrentPageSelected,
+    allowHeaderOverScroll,
+    headerRef,
+  },
+  ref,
+) {
+  const [currentPage, setCurrentPage] = React.useState(0)
+  const [tabBarHeight, setTabBarHeight] = React.useState(0)
+  const [headerOnlyHeight, setHeaderOnlyHeight] = React.useState(0)
+  const scrollY = useSharedValue(0)
+  const headerHeight = headerOnlyHeight + tabBarHeight
+
+  const maybePrevScrollY = useSharedValue<number | null>(null)
+  function scrollHeaderAway() {
+    'worklet'
+    maybePrevScrollY.value = scrollY.value
+    scrollY.value = withTiming(headerHeight)
+  }
+
+  function scrollHeaderBack() {
+    'worklet'
+    if (maybePrevScrollY.value !== null) {
+      scrollY.value = withTiming(maybePrevScrollY.value)
+      maybePrevScrollY.value = null
+    }
+  }
+
+  React.useImperativeHandle(headerRef, () => ({
+    scrollHeaderAway: () => {
+      runOnUI(scrollHeaderAway)()
+    },
+    scrollHeaderBack: () => {
+      runOnUI(scrollHeaderBack)()
+    },
+  }))
+
+  // capture the header bar sizing
+  const onTabBarLayout = useNonReactiveCallback((evt: LayoutChangeEvent) => {
+    const height = evt.nativeEvent.layout.height
+    if (height > 0) {
+      // The rounding is necessary to prevent jumps on iOS
+      setTabBarHeight(Math.round(height * 2) / 2)
+    }
+  })
+  const onHeaderOnlyLayout = useNonReactiveCallback((height: number) => {
+    if (height > 0) {
+      // The rounding is necessary to prevent jumps on iOS
+      setHeaderOnlyHeight(Math.round(height * 2) / 2)
+    }
+  })
+
+  const renderTabBar = React.useCallback(
+    (props: RenderTabBarFnProps) => {
+      return (
+        <PagerHeaderProvider scrollY={scrollY}>
+          <PagerTabBar
+            headerOnlyHeight={headerOnlyHeight}
+            items={items}
+            isHeaderReady={isHeaderReady}
+            renderHeader={renderHeader}
+            currentPage={currentPage}
+            onCurrentPageSelected={onCurrentPageSelected}
+            onTabBarLayout={onTabBarLayout}
+            onHeaderOnlyLayout={onHeaderOnlyLayout}
+            onSelect={props.onSelect}
+            scrollY={scrollY}
+            testID={testID}
+            allowHeaderOverScroll={allowHeaderOverScroll}
+          />
+        </PagerHeaderProvider>
+      )
+    },
+    [
+      headerOnlyHeight,
       items,
       isHeaderReady,
       renderHeader,
-      initialPage,
-      onPageSelected,
+      currentPage,
       onCurrentPageSelected,
+      onTabBarLayout,
+      onHeaderOnlyLayout,
+      scrollY,
+      testID,
       allowHeaderOverScroll,
-    }: PagerWithHeaderProps,
-    ref,
-  ) {
-    const [currentPage, setCurrentPage] = React.useState(0)
-    const [tabBarHeight, setTabBarHeight] = React.useState(0)
-    const [headerOnlyHeight, setHeaderOnlyHeight] = React.useState(0)
-    const scrollY = useSharedValue(0)
-    const headerHeight = headerOnlyHeight + tabBarHeight
+    ],
+  )
 
-    // capture the header bar sizing
-    const onTabBarLayout = useNonReactiveCallback((evt: LayoutChangeEvent) => {
-      const height = evt.nativeEvent.layout.height
-      if (height > 0) {
-        // The rounding is necessary to prevent jumps on iOS
-        setTabBarHeight(Math.round(height * 2) / 2)
-      }
-    })
-    const onHeaderOnlyLayout = useNonReactiveCallback((height: number) => {
-      if (height > 0) {
-        // The rounding is necessary to prevent jumps on iOS
-        setHeaderOnlyHeight(Math.round(height * 2) / 2)
-      }
-    })
+  const scrollRefs = useSharedValue<Array<AnimatedRef<any> | null>>([])
+  const registerRef = React.useCallback(
+    (scrollRef: AnimatedRef<any> | null, atIndex: number) => {
+      scrollRefs.modify(refs => {
+        'worklet'
+        refs[atIndex] = scrollRef
+        return refs
+      })
+    },
+    [scrollRefs],
+  )
 
-    const renderTabBar = React.useCallback(
-      (props: RenderTabBarFnProps) => {
-        return (
-          <PagerHeaderProvider scrollY={scrollY}>
-            <PagerTabBar
-              headerOnlyHeight={headerOnlyHeight}
-              items={items}
-              isHeaderReady={isHeaderReady}
-              renderHeader={renderHeader}
-              currentPage={currentPage}
-              onCurrentPageSelected={onCurrentPageSelected}
-              onTabBarLayout={onTabBarLayout}
-              onHeaderOnlyLayout={onHeaderOnlyLayout}
-              onSelect={props.onSelect}
-              scrollY={scrollY}
-              testID={testID}
-              allowHeaderOverScroll={allowHeaderOverScroll}
-            />
-          </PagerHeaderProvider>
-        )
-      },
-      [
-        headerOnlyHeight,
-        items,
-        isHeaderReady,
-        renderHeader,
-        currentPage,
-        onCurrentPageSelected,
-        onTabBarLayout,
-        onHeaderOnlyLayout,
-        scrollY,
-        testID,
-        allowHeaderOverScroll,
-      ],
-    )
-
-    const scrollRefs = useSharedValue<Array<AnimatedRef<any> | null>>([])
-    const registerRef = React.useCallback(
-      (scrollRef: AnimatedRef<any> | null, atIndex: number) => {
-        scrollRefs.modify(refs => {
-          'worklet'
-          refs[atIndex] = scrollRef
-          return refs
-        })
-      },
-      [scrollRefs],
-    )
-
-    const lastForcedScrollY = useSharedValue(0)
-    const adjustScrollForOtherPages = () => {
-      'worklet'
-      const currentScrollY = scrollY.value
-      const forcedScrollY = Math.min(currentScrollY, headerOnlyHeight)
-      if (lastForcedScrollY.value !== forcedScrollY) {
-        lastForcedScrollY.value = forcedScrollY
-        const refs = scrollRefs.value
-        for (let i = 0; i < refs.length; i++) {
-          const scollRef = refs[i]
-          if (i !== currentPage && scollRef != null) {
-            scrollTo(scollRef, 0, forcedScrollY, false)
-          }
+  const lastForcedScrollY = useSharedValue(0)
+  const adjustScrollForOtherPages = () => {
+    'worklet'
+    const currentScrollY = scrollY.value
+    const forcedScrollY = Math.min(currentScrollY, headerOnlyHeight)
+    if (lastForcedScrollY.value !== forcedScrollY) {
+      lastForcedScrollY.value = forcedScrollY
+      const refs = scrollRefs.value
+      for (let i = 0; i < refs.length; i++) {
+        const scollRef = refs[i]
+        if (i !== currentPage && scollRef != null) {
+          scrollTo(scollRef, 0, forcedScrollY, false)
         }
       }
     }
+  }
 
-    const throttleTimeout = React.useRef<ReturnType<typeof setTimeout> | null>(
-      null,
-    )
-    const queueThrottledOnScroll = useNonReactiveCallback(() => {
-      if (!throttleTimeout.current) {
-        throttleTimeout.current = setTimeout(() => {
-          throttleTimeout.current = null
-          runOnUI(adjustScrollForOtherPages)()
-        }, 80 /* Sync often enough you're unlikely to catch it unsynced */)
+  const throttleTimeout = React.useRef<ReturnType<typeof setTimeout> | null>(
+    null,
+  )
+  const queueThrottledOnScroll = useNonReactiveCallback(() => {
+    if (!throttleTimeout.current) {
+      throttleTimeout.current = setTimeout(() => {
+        throttleTimeout.current = null
+        runOnUI(adjustScrollForOtherPages)()
+      }, 80 /* Sync often enough you're unlikely to catch it unsynced */)
+    }
+  })
+
+  const onScrollWorklet = React.useCallback(
+    (e: NativeScrollEvent) => {
+      'worklet'
+      const nextScrollY = e.contentOffset.y
+      // HACK: onScroll is reporting some strange values on load (negative header height).
+      // Highly improbable that you'd be overscrolled by over 400px -
+      // in fact, I actually can't do it, so let's just ignore those. -sfn
+      const isPossiblyInvalid =
+        headerHeight > 0 && Math.round(nextScrollY * 2) / 2 === -headerHeight
+      if (!isPossiblyInvalid) {
+        scrollY.value = nextScrollY
+        runOnJS(queueThrottledOnScroll)()
       }
-    })
+    },
+    [scrollY, queueThrottledOnScroll, headerHeight],
+  )
 
-    const onScrollWorklet = React.useCallback(
-      (e: NativeScrollEvent) => {
-        'worklet'
-        const nextScrollY = e.contentOffset.y
-        // HACK: onScroll is reporting some strange values on load (negative header height).
-        // Highly improbable that you'd be overscrolled by over 400px -
-        // in fact, I actually can't do it, so let's just ignore those. -sfn
-        const isPossiblyInvalid =
-          headerHeight > 0 && Math.round(nextScrollY * 2) / 2 === -headerHeight
-        if (!isPossiblyInvalid) {
-          scrollY.value = nextScrollY
-          runOnJS(queueThrottledOnScroll)()
-        }
-      },
-      [scrollY, queueThrottledOnScroll, headerHeight],
-    )
-
-    const onPageSelectedInner = React.useCallback(
-      (index: number) => {
-        setCurrentPage(index)
-        onPageSelected?.(index)
-      },
-      [onPageSelected, setCurrentPage],
-    )
-
-    const onPageSelecting = React.useCallback((index: number) => {
+  const onPageSelectedInner = React.useCallback(
+    (index: number) => {
       setCurrentPage(index)
-    }, [])
+      onPageSelected?.(index)
+    },
+    [onPageSelected, setCurrentPage],
+  )
 
-    return (
-      <Pager
-        ref={ref}
-        testID={testID}
-        initialPage={initialPage}
-        onPageSelected={onPageSelectedInner}
-        onPageSelecting={onPageSelecting}
-        renderTabBar={renderTabBar}>
-        {toArray(children)
-          .filter(Boolean)
-          .map((child, i) => {
-            const isReady =
-              isHeaderReady && headerOnlyHeight > 0 && tabBarHeight > 0
-            return (
-              <View key={i} collapsable={false}>
-                <PagerItem
-                  headerHeight={headerHeight}
-                  index={i}
-                  isReady={isReady}
-                  isFocused={i === currentPage}
-                  onScrollWorklet={i === currentPage ? onScrollWorklet : noop}
-                  registerRef={registerRef}
-                  renderTab={child}
-                />
-              </View>
-            )
-          })}
-      </Pager>
-    )
-  },
-)
+  const onPageSelecting = React.useCallback((index: number) => {
+    setCurrentPage(index)
+  }, [])
+
+  return (
+    <Pager
+      ref={ref}
+      testID={testID}
+      initialPage={initialPage}
+      onPageSelected={onPageSelectedInner}
+      onPageSelecting={onPageSelecting}
+      renderTabBar={renderTabBar}>
+      {toArray(children)
+        .filter(Boolean)
+        .map((child, i) => {
+          const isReady =
+            isHeaderReady && headerOnlyHeight > 0 && tabBarHeight > 0
+          return (
+            <View key={i} collapsable={false}>
+              <PagerItem
+                headerHeight={headerHeight}
+                index={i}
+                isReady={isReady}
+                isFocused={i === currentPage}
+                onScrollWorklet={i === currentPage ? onScrollWorklet : noop}
+                registerRef={registerRef}
+                renderTab={child}
+              />
+            </View>
+          )
+        })}
+    </Pager>
+  )
+})
 
 let PagerTabBar = ({
   currentPage,

@@ -25,6 +25,7 @@ import {isInvalidHandle} from '#/lib/strings/handles'
 import {colors, s} from '#/lib/styles'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {listenSoftReset} from '#/state/events'
+import {ConvoProvider, isConvoActive, useConvo} from '#/state/messages/convo'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useActorStarterPacksQuery} from '#/state/queries/actor-starter-packs'
 import {useLabelerInfoQuery} from '#/state/queries/labeler'
@@ -41,6 +42,7 @@ import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
 import {FAB} from '#/view/com/util/fab/FAB'
 import {ListRef} from '#/view/com/util/List'
 import {CenteredView} from '#/view/com/util/Views'
+import {MessagesList} from '#/screens/Messages/components/MessagesList'
 import {ProfileHeader, ProfileHeaderLoading} from '#/screens/Profile/Header'
 import {ProfileFeedSection} from '#/screens/Profile/Sections/Feed'
 import {ProfileLabelsSection} from '#/screens/Profile/Sections/Labels'
@@ -190,8 +192,9 @@ function ProfileScreenLoaded({
   const [scrollViewTag, setScrollViewTag] = React.useState<number | null>(null)
 
   const postsSectionRef = React.useRef<SectionRef>(null)
-  const repliesSectionRef = React.useRef<SectionRef>(null)
-  const mediaSectionRef = React.useRef<SectionRef>(null)
+  // const repliesSectionRef = React.useRef<SectionRef>(null)
+  // const mediaSectionRef = React.useRef<SectionRef>(null)
+  const monologueSectionRef = React.useRef<SectionRef>(null)
   const likesSectionRef = React.useRef<SectionRef>(null)
   const feedsSectionRef = React.useRef<SectionRef>(null)
   const listsSectionRef = React.useRef<SectionRef>(null)
@@ -213,8 +216,9 @@ function ProfileScreenLoaded({
   const hasLabeler = !!profile.associated?.labeler
   const showFiltersTab = hasLabeler
   const showPostsTab = true
-  const showRepliesTab = hasSession
-  const showMediaTab = !hasLabeler
+  // const showRepliesTab = hasSession
+  // const showMediaTab = !hasLabeler
+  const showMonologueTab = !!currentAccount
   const showLikesTab = isMe
   const showFeedsTab = isMe || (profile.associated?.feedgens || 0) > 0
   const showStarterPacksTab =
@@ -226,8 +230,9 @@ function ProfileScreenLoaded({
     showFiltersTab ? _(msg`Labels`) : undefined,
     showListsTab && hasLabeler ? _(msg`Lists`) : undefined,
     showPostsTab ? _(msg`Posts`) : undefined,
-    showRepliesTab ? _(msg`Replies`) : undefined,
-    showMediaTab ? _(msg`Media`) : undefined,
+    // showRepliesTab ? _(msg`Replies`) : undefined,
+    // showMediaTab ? _(msg`Media`) : undefined,
+    showMonologueTab ? _(msg`Monologue`) : undefined,
     showLikesTab ? _(msg`Likes`) : undefined,
     showFeedsTab ? _(msg`Feeds`) : undefined,
     showStarterPacksTab ? _(msg`Starter Packs`) : undefined,
@@ -237,8 +242,9 @@ function ProfileScreenLoaded({
   let nextIndex = 0
   let filtersIndex: number | null = null
   let postsIndex: number | null = null
-  let repliesIndex: number | null = null
-  let mediaIndex: number | null = null
+  // let repliesIndex: number | null = null
+  // let mediaIndex: number | null = null
+  let monologueIndex: number | null = null
   let likesIndex: number | null = null
   let feedsIndex: number | null = null
   let starterPacksIndex: number | null = null
@@ -249,11 +255,14 @@ function ProfileScreenLoaded({
   if (showPostsTab) {
     postsIndex = nextIndex++
   }
-  if (showRepliesTab) {
-    repliesIndex = nextIndex++
-  }
-  if (showMediaTab) {
-    mediaIndex = nextIndex++
+  // if (showRepliesTab) {
+  //   repliesIndex = nextIndex++
+  // }
+  // if (showMediaTab) {
+  //   mediaIndex = nextIndex++
+  // }
+  if (showMonologueTab) {
+    monologueIndex = nextIndex++
   }
   if (showLikesTab) {
     likesIndex = nextIndex++
@@ -274,10 +283,12 @@ function ProfileScreenLoaded({
         labelsSectionRef.current?.scrollToTop()
       } else if (index === postsIndex) {
         postsSectionRef.current?.scrollToTop()
-      } else if (index === repliesIndex) {
-        repliesSectionRef.current?.scrollToTop()
-      } else if (index === mediaIndex) {
-        mediaSectionRef.current?.scrollToTop()
+        // } else if (index === repliesIndex) {
+        //   repliesSectionRef.current?.scrollToTop()
+        // } else if (index === mediaIndex) {
+        //   mediaSectionRef.current?.scrollToTop()
+      } else if (index === monologueIndex) {
+        monologueSectionRef.current?.scrollToTop()
       } else if (index === likesIndex) {
         likesSectionRef.current?.scrollToTop()
       } else if (index === feedsIndex) {
@@ -291,8 +302,9 @@ function ProfileScreenLoaded({
     [
       filtersIndex,
       postsIndex,
-      repliesIndex,
-      mediaIndex,
+      // repliesIndex,
+      // mediaIndex,
+      monologueIndex,
       likesIndex,
       feedsIndex,
       listsIndex,
@@ -330,7 +342,17 @@ function ProfileScreenLoaded({
     openComposer({mention})
   }
 
+  const headerRef = React.useRef<{
+    scrollHeaderAway: () => void
+    scrollHeaderBack: () => void
+  }>(null!)
+
   const onPageSelected = (i: number) => {
+    if (showMonologueTab && i === monologueIndex) {
+      headerRef.current?.scrollHeaderAway()
+    } else {
+      headerRef.current?.scrollHeaderBack()
+    }
     setCurrentPage(i)
   }
 
@@ -363,6 +385,7 @@ function ProfileScreenLoaded({
       screenDescription={_(msg`profile`)}
       modui={moderation.ui('profileView')}>
       <PagerWithHeader
+        headerRef={headerRef}
         testID="profilePager"
         isHeaderReady={!showPlaceholder}
         items={sectionTitles}
@@ -410,7 +433,20 @@ function ProfileScreenLoaded({
               />
             )
           : null}
-        {showRepliesTab
+        {showMonologueTab
+          ? ({headerHeight, isFocused, scrollElRef}) => (
+              <ConvoProvider convoId="3ksogfbowfs27">
+                <ProfileMonologueSection
+                  // ref={monologueSectionRef}
+                  headerHeight={headerHeight}
+                  isFocused={isFocused}
+                  scrollElRef={scrollElRef as ListRef}
+                  setScrollViewTag={setScrollViewTag}
+                />
+              </ConvoProvider>
+            )
+          : null}
+        {/* {showRepliesTab
           ? ({headerHeight, isFocused, scrollElRef}) => (
               <ProfileFeedSection
                 ref={repliesSectionRef}
@@ -435,7 +471,7 @@ function ProfileScreenLoaded({
                 setScrollViewTag={setScrollViewTag}
               />
             )
-          : null}
+          : null} */}
         {showLikesTab
           ? ({headerHeight, isFocused, scrollElRef}) => (
               <ProfileFeedSection
@@ -487,18 +523,44 @@ function ProfileScreenLoaded({
             )
           : null}
       </PagerWithHeader>
-      {hasSession && (
-        <FAB
-          testID="composeFAB"
-          onPress={onPressCompose}
-          icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
-          accessibilityRole="button"
-          accessibilityLabel={_(msg`New post`)}
-          accessibilityHint=""
-        />
-      )}
+      {hasSession &&
+        (showMonologueTab ? monologueIndex !== currentPage : true) && (
+          <FAB
+            testID="composeFAB"
+            onPress={onPressCompose}
+            icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
+            accessibilityRole="button"
+            accessibilityLabel={_(msg`New post`)}
+            accessibilityHint=""
+          />
+        )}
     </ScreenHider>
   )
+}
+
+function ProfileMonologueSection({}: // isFocused,
+// scrollElRef,
+// headerHeight,
+// setScrollViewTag,
+{
+  headerHeight: number
+  isFocused: boolean
+  scrollElRef: ListRef
+  setScrollViewTag: (tag: number | null) => void
+}) {
+  const [hasScrolled, setHasScrolled] = React.useState(false)
+  const convo = useConvo()
+
+  if (isConvoActive(convo)) {
+    return (
+      <MessagesList
+        hasScrolled={hasScrolled}
+        setHasScrolled={setHasScrolled}
+        blocked={false}
+        footer={<></>}
+      />
+    )
+  }
 }
 
 function useRichText(text: string): [RichTextAPI, boolean] {
