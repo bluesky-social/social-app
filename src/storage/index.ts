@@ -1,7 +1,7 @@
 import {MMKV} from 'react-native-mmkv'
 
 import {IS_DEV} from '#/env'
-import {Account,Device} from '#/storage/schema'
+import {Account, Device} from '#/storage/schema'
 
 export * from '#/storage/schema'
 
@@ -85,5 +85,6 @@ if (IS_DEV && typeof window !== 'undefined') {
   // @ts-ignore
   window.bsky_storage = {
     device,
+    account,
   }
 }

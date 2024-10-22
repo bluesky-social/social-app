@@ -29,6 +29,7 @@ import {useComposerControls} from '#/state/shell/composer'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
 import {PostThreadFollowBtn} from '#/view/com/post-thread/PostThreadFollowBtn'
 import {atoms as a, useTheme} from '#/alf'
+import {Button, ButtonText} from '#/components/Button'
 import {AppModerationCause} from '#/components/Pills'
 import {RichText} from '#/components/RichText'
 import {Text as NewText} from '#/components/Typography'
@@ -367,6 +368,28 @@ let PostThreadItemLoaded = ({
                   />
                 </View>
               )}
+
+              {AppBskyFeedPost.isRecord(post.record) && post.record.tags ? (
+                <View
+                  style={[
+                    a.flex_row,
+                    a.flex_wrap,
+                    a.align_start,
+                    a.gap_sm,
+                    a.pt_sm,
+                  ]}>
+                  {post.record.tags.map((tag, i) => (
+                    <Button
+                      key={tag + i}
+                      label={tag}
+                      size="tiny"
+                      variant="solid"
+                      color="secondary">
+                      <ButtonText>#{tag}</ButtonText>
+                    </Button>
+                  ))}
+                </View>
+              ) : null}
             </ContentHider>
             <ExpandedPostDetails
               post={post}
