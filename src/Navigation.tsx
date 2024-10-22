@@ -76,6 +76,7 @@ import {TermsOfServiceScreen} from '#/view/screens/TermsOfService'
 import {BottomBar} from '#/view/shell/bottom-bar/BottomBar'
 import {createNativeStackNavigatorWithAuth} from '#/view/shell/createNativeStackNavigatorWithAuth'
 import {SharedPreferencesTesterScreen} from '#/screens/E2E/SharedPreferencesTesterScreen'
+import {Creator as FeedCreator} from '#/screens/Feeds/Creator'
 import {Wizard as FeedsWizard} from '#/screens/Feeds/Wizard'
 import HashtagScreen from '#/screens/Hashtag'
 import {MessagesScreen} from '#/screens/Messages/ChatList'
@@ -354,7 +355,7 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
       />
       <Stack.Screen
         name="FeedsWizard"
-        getComponent={() => FeedsWizard}
+        getComponent={() => FeedCreator}
         options={{title: title(msg`Create a feed`), requireAuth: true}}
       />
       <Stack.Screen
