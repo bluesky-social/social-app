@@ -105,6 +105,7 @@ import * as Toast from '#/view/com/util/Toast'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, native, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {OutlineTags} from '#/components/Composer/OutlineTags'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmile} from '#/components/icons/Emoji'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
@@ -164,7 +165,13 @@ export const ComposePost = ({
 
   const [draft, dispatch] = useReducer(
     composerReducer,
-    {initImageUris, initQuoteUri: initQuote?.uri, initText, initMention},
+    {
+      initImageUris,
+      initQuoteUri: initQuote?.uri,
+      initText,
+      initMention,
+      initOutlineTags: [],
+    },
     createComposerState,
   )
   const richtext = draft.richtext
@@ -508,6 +515,13 @@ export const ComposePost = ({
     dispatch({type: 'embed_update_gif', alt: altText})
   }, [])
 
+  const onChangeOutlineTags = useCallback(
+    (tags: string[]) => {
+      dispatch({type: 'tags_update', tags})
+    },
+    [dispatch],
+  )
+
   const {
     scrollHandler,
     onScrollViewContentSizeChange,
@@ -743,6 +757,8 @@ export const ComposePost = ({
             </View>
           </Animated.ScrollView>
           <SuggestedLanguage text={richtext.text} />
+
+          <OutlineTags onChangeTags={onChangeOutlineTags} />
 
           <Animated.View
             style={[a.flex_row, a.p_sm, t.atoms.bg, bottomBarAnimatedStyle]}>

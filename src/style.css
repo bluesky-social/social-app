@@ -15,6 +15,11 @@
   --text: black;
   --background: white;
   --backgroundLight: hsl(211, 20%, 95%);
+
+  --tagFg: black;
+  --tagBg: #c1ccd7;
+  --mentionFg: white;
+  --mentionBg: #14a571;
 }
 @media (prefers-color-scheme: dark) {
   :root {
@@ -22,6 +27,11 @@
     --text: white;
     --background: black;
     --backgroundLight: hsl(211, 20%, 20%);
+
+    --tagFg: black;
+    --tagBg: #c1ccd7;
+    --mentionFg: white;
+    --mentionBg: #14a571;
   }
 }
 
@@ -30,6 +40,11 @@ html.theme--light {
   --background: white;
   --backgroundLight: hsl(211, 20%, 95%);
   background-color: white;
+
+  --tagFg: black;
+  --tagBg: #c1ccd7;
+  --mentionFg: white;
+  --mentionBg: #14a571;
 }
 html.theme--dark {
   color-scheme: dark;
@@ -37,6 +52,11 @@ html.theme--dark {
   --text: white;
   --background: black;
   --backgroundLight: hsl(211, 20%, 20%);
+
+  --tagFg: white;
+  --tagBg: #637f9c;
+  --mentionFg: white;
+  --mentionBg: #14a571;
 }
 html.theme--dim {
   color-scheme: dark;
@@ -44,6 +64,9 @@ html.theme--dim {
   --text: white;
   --background: hsl(211, 20%, 4%);
   --backgroundLight: hsl(211, 20%, 10%);
+
+  --tagFg: white;
+  --tagBg: #637f9c;
 }
 
 /* Buttons and inputs have a font set by UA, so we'll have to reset that */
@@ -120,6 +143,26 @@ a[role='link'][data-no-underline='1']:hover {
 .ProseMirror-focused {
   outline: 0;
 }
+/* Hashtags in ProseMirror */
+.ProseMirror .inline-tag,
+.ProseMirror .mention {
+  position: relative;
+}
+/* Neato™ */
+.ProseMirror .inline-tag {
+  color: var(--tagFg);
+  background-color: var(--tagBg);
+}
+.ProseMirror .mention {
+  color: var(--mentionFg);
+  background-color: var(--mentionBg);
+}
+.ProseMirror .inline-tag,
+.ProseMirror .mention {
+  border-radius: 4px;
+  padding: 0 3px 2px;
+}
+
 textarea:focus,
 input:focus {
   outline: 0;

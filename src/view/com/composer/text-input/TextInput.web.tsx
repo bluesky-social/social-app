@@ -13,15 +13,15 @@ import {Text as TiptapText} from '@tiptap/extension-text'
 import {generateJSON} from '@tiptap/html'
 import {EditorContent, JSONContent, useEditor} from '@tiptap/react'
 
+import {useColorSchemeStyle} from '#/lib/hooks/useColorSchemeStyle'
 import {usePalette} from '#/lib/hooks/usePalette'
+import {blobToDataUri, isUriImage} from '#/lib/media/util'
 import {useActorAutocompleteFn} from '#/state/queries/actor-autocomplete'
-import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
-import {blobToDataUri, isUriImage} from 'lib/media/util'
-import {textInputWebEmitter} from '#/view/com/composer/text-input/textInputWebEmitter'
 import {
   LinkFacetMatch,
   suggestLinkCardUri,
-} from 'view/com/composer/text-input/text-input-util'
+} from '#/view/com/composer/text-input/text-input-util'
+import {textInputWebEmitter} from '#/view/com/composer/text-input/textInputWebEmitter'
 import {atoms as a, useAlf} from '#/alf'
 import {Portal} from '#/components/Portal'
 import {normalizeTextStyles} from '#/components/Typography'
@@ -29,7 +29,7 @@ import {Text} from '../../util/text/Text'
 import {createSuggestion} from './web/Autocomplete'
 import {Emoji} from './web/EmojiPicker.web'
 import {LinkDecorator} from './web/LinkDecorator'
-import {TagDecorator} from './web/TagDecorator'
+import {createTagsAutocomplete, Tags} from './web/Tags'
 
 export interface TextInputRef {
   focus: () => void
@@ -71,7 +71,13 @@ export const TextInput = React.forwardRef(function TextInputImpl(
     () => [
       Document,
       LinkDecorator,
-      TagDecorator,
+      // TagDecorator,
+      Tags.configure({
+        HTMLAttributes: {
+          class: 'inline-tag',
+        },
+        suggestion: createTagsAutocomplete(),
+      }),
       Mention.configure({
         HTMLAttributes: {
           class: 'mention',
@@ -327,6 +333,8 @@ function editorJsonToText(
     text += json.text || ''
   } else if (json.type === 'mention') {
     text += `@${json.attrs?.id || ''}`
+  } else if (json.type === 'tag') {
+    text += `#${json.attrs?.id || ''}`
   }
   return text
 }

@@ -1,7 +1,7 @@
 import {MMKV} from 'react-native-mmkv'
 
 import {IS_DEV} from '#/env'
-import {Device} from '#/storage/schema'
+import {Account, Device} from '#/storage/schema'
 
 export * from '#/storage/schema'
 
@@ -74,9 +74,17 @@ export class Storage<Scopes extends unknown[], Schema> {
  */
 export const device = new Storage<[], Device>({id: 'bsky_device'})
 
+/**
+ * Account data that's specific to the account
+ *
+ *   `account.set([did, key], true)`
+ */
+export const account = new Storage<[string], Account>({id: 'bsky_account'})
+
 if (IS_DEV && typeof window !== 'undefined') {
   // @ts-ignore
   window.bsky_storage = {
     device,
+    account,
   }
 }

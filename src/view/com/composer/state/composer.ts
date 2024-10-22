@@ -53,6 +53,7 @@ export type ComposerDraft = {
   postgate: AppBskyFeedPostgate.Record
   threadgate: ThreadgateAllowUISetting[]
   embed: EmbedDraft
+  tags: string[]
 }
 
 export type ComposerAction =
@@ -76,6 +77,7 @@ export type ComposerAction =
   | {type: 'embed_add_gif'; gif: Gif}
   | {type: 'embed_update_gif'; alt: string}
   | {type: 'embed_remove_gif'}
+  | {type: 'tags_update'; tags: string[]}
 
 export const MAX_IMAGES = 4
 
@@ -324,6 +326,12 @@ export function composerReducer(
         },
       }
     }
+    case 'tags_update': {
+      return {
+        ...state,
+        tags: action.tags,
+      }
+    }
     default:
       return state
   }
@@ -334,11 +342,13 @@ export function createComposerState({
   initMention,
   initImageUris,
   initQuoteUri,
+  initOutlineTags,
 }: {
   initText: string | undefined
   initMention: string | undefined
   initImageUris: ComposerOpts['imageUris']
   initQuoteUri: string | undefined
+  initOutlineTags: string[]
 }): ComposerDraft {
   let media: ImagesMedia | undefined
   if (initImageUris?.length) {
@@ -379,5 +389,6 @@ export function createComposerState({
       media,
       link: undefined,
     },
+    tags: initOutlineTags,
   }
 }
