@@ -12,10 +12,9 @@ import {TextInputFocusEventData} from 'react-native'
 import {Pin} from 'pind'
 
 import {isWeb} from '#/platform/detection'
-import {useSession} from '#/state/session'
-import {tagAutocompleteModel} from '#/view/com/composer/text-input/tagsAutocompleteState'
+import {useTagAutocomplete} from '#/view/com/composer/text-input/tagsAutocompleteState'
 import {atoms as a, useTheme} from '#/alf'
-import {Button, ButtonIcon, ButtonProps,ButtonText} from '#/components/Button'
+import {Button, ButtonIcon, ButtonProps, ButtonText} from '#/components/Button'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import {Text} from '#/components/Typography'
 
@@ -57,32 +56,23 @@ export function OutlineTags({
   onChangeTags: (tags: string[]) => void
 }) {
   const t = useTheme()
-  const {currentAccount} = useSession()
   const dropdown = React.useRef<HTMLDivElement>(null)
   const input = React.useRef<HTMLInputElement>(null)
   const inputWidth = input.current
     ? input.current.getBoundingClientRect().width
     : 200
-  const model = React.useMemo(
-    () => tagAutocompleteModel({currentDid: currentAccount?.did!}),
-    [currentAccount],
-  )
+  const {query, suggestions, setQuery, saveRecentTag} = useTagAutocomplete()
   const containerRef = React.useRef<HTMLDivElement>(null)
 
-  const [value, setValue] = React.useState('')
   const [tags, setTags] = React.useState<string[]>(initialTags)
-  const [dropdownItems, setDropdownItems] = React.useState<
-    {value: string; label: string}[]
-  >([])
   const [selectedItemIndex, setSelectedItemIndex] = React.useState(0)
 
-  const dropdownIsActive = Boolean(value.length)
+  const dropdownIsActive = Boolean(query.length)
 
   const closeDropdownAndReset = React.useCallback(() => {
-    setValue('')
+    setQuery('')
     setSelectedItemIndex(0)
-    setDropdownItems([])
-  }, [setSelectedItemIndex, setDropdownItems])
+  }, [setQuery, setSelectedItemIndex])
 
   const addTags = React.useCallback(
     (_tags: string[]) => {
@@ -109,29 +99,29 @@ export function OutlineTags({
         addTags(Array.from(new Set([...tags, tag])).slice(0, max))
       }
 
-      model.save(tag)
-      setValue('')
+      saveRecentTag(tag)
+      setQuery('')
       input.current?.focus()
       closeDropdownAndReset()
     },
-    [max, tags, closeDropdownAndReset, setValue, addTags, model],
+    [max, tags, closeDropdownAndReset, setQuery, addTags, saveRecentTag],
   )
 
   const onSubmitEditing = React.useCallback(() => {
-    const item = dropdownItems[selectedItemIndex]
-    addTagAndReset(item?.value || value)
-  }, [value, dropdownItems, selectedItemIndex, addTagAndReset])
+    const item = suggestions[selectedItemIndex]
+    addTagAndReset(item?.value || query)
+  }, [query, suggestions, selectedItemIndex, addTagAndReset])
 
   const onKeyPress = React.useCallback(
     (e: NativeSyntheticEvent<TextInputKeyPressEventData>) => {
       const {key} = e.nativeEvent
 
-      if (key === 'Backspace' && value === '') {
+      if (key === 'Backspace' && query === '') {
         addTags(tags.slice(0, -1))
         closeDropdownAndReset()
       } else if (key === ' ') {
         e.preventDefault() // prevents an additional space on web
-        addTagAndReset(value)
+        addTagAndReset(query)
       }
 
       if (dropdownIsActive) {
@@ -140,12 +130,11 @@ export function OutlineTags({
         } else if (key === 'ArrowUp') {
           e.preventDefault()
           setSelectedItemIndex(
-            (selectedItemIndex + dropdownItems.length - 1) %
-              dropdownItems.length,
+            (selectedItemIndex + suggestions.length - 1) % suggestions.length,
           )
         } else if (key === 'ArrowDown') {
           e.preventDefault()
-          setSelectedItemIndex((selectedItemIndex + 1) % dropdownItems.length)
+          setSelectedItemIndex((selectedItemIndex + 1) % suggestions.length)
         } else if (
           isWeb &&
           key === 'Tab' &&
@@ -158,11 +147,11 @@ export function OutlineTags({
       }
     },
     [
-      value,
+      query,
       tags,
       dropdownIsActive,
       selectedItemIndex,
-      dropdownItems.length,
+      suggestions.length,
       closeDropdownAndReset,
       setSelectedItemIndex,
       addTags,
@@ -171,32 +160,19 @@ export function OutlineTags({
     ],
   )
 
-  const search = React.useCallback(
-    async (value: string) => {
-      await model.search(value)
-      setDropdownItems(
-        model.suggestions.map(s => ({
-          value: s.value,
-          label: s.value,
-        })),
-      )
-    },
-    [model, setDropdownItems],
-  )
-
   const onChangeText = React.useCallback(
     async (value: string) => {
       const tag = sanitizeHashtagOnChange(value)
 
-      setValue(tag)
+      setQuery(tag)
 
       if (tag.length) {
-        search(tag)
+        setQuery(tag)
       } else {
-        closeDropdownAndReset()
+        setSelectedItemIndex(0)
       }
     },
-    [setValue, closeDropdownAndReset, search],
+    [setSelectedItemIndex, setQuery],
   )
 
   const onBlur = React.useCallback(
@@ -208,10 +184,10 @@ export function OutlineTags({
         !tags.length &&
         (!target || !target.id.includes('tag_autocomplete_option'))
       ) {
-        setValue('')
+        setQuery('')
       }
     },
-    [tags, setValue],
+    [tags, setQuery],
   )
 
   React.useEffect(() => {
@@ -257,7 +233,7 @@ export function OutlineTags({
             aria-controls="tags-autocomplete-dropdown"
             aria-haspopup="listbox"
             aria-expanded={dropdownIsActive}
-            value={value}
+            value={query}
             onBlur={onBlur}
             onKeyPress={onKeyPress}
             onSubmitEditing={onSubmitEditing}
@@ -283,7 +259,7 @@ export function OutlineTags({
       </View>
 
       <Pin
-        pinned={Boolean(value.length)}
+        pinned={Boolean(query.length)}
         to={input}
         at="bottomLeft"
         from="topLeft"
@@ -293,9 +269,9 @@ export function OutlineTags({
           style={[t.atoms.bg, t.atoms.border_contrast_low, styles.dropdown]}
           role={'listbox' as any}
           id="tags-autocomplete-dropdown">
-          {dropdownItems.map((item, index) => {
+          {suggestions.map((item, index) => {
             const isFirst = index === 0
-            const isLast = index === dropdownItems.length - 1
+            const isLast = index === suggestions.length - 1
             return (
               <Pressable
                 id={`tag_autocomplete_option_${item.value}`}
@@ -319,7 +295,7 @@ export function OutlineTags({
                     ? styles.lastResult
                     : undefined,
                 ]}>
-                <Text numberOfLines={1}>{item.label}</Text>
+                <Text numberOfLines={1}>{item.value}</Text>
               </Pressable>
             )
           })}

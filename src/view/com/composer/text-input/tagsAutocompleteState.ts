@@ -66,6 +66,7 @@ export function useTagAutocomplete() {
   }, [currentAccount, query, searchSuggestions])
 
   return {
+    query,
     suggestions,
     setQuery: onSetQuery,
     saveRecentTag,
