@@ -17,8 +17,6 @@ import {useColorSchemeStyle} from '#/lib/hooks/useColorSchemeStyle'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {blobToDataUri, isUriImage} from '#/lib/media/util'
 import {useActorAutocompleteFn} from '#/state/queries/actor-autocomplete'
-import {useSession} from '#/state/session'
-import {tagAutocompleteModel} from '#/view/com/composer/text-input/tagsAutocompleteState'
 import {
   LinkFacetMatch,
   suggestLinkCardUri,
@@ -66,7 +64,6 @@ export const TextInput = React.forwardRef(function TextInputImpl(
   const autocomplete = useActorAutocompleteFn()
   const pal = usePalette('default')
   const modeClass = useColorSchemeStyle('ProseMirror-light', 'ProseMirror-dark')
-  const {currentAccount} = useSession()
 
   const [isDropping, setIsDropping] = React.useState(false)
 
@@ -79,9 +76,7 @@ export const TextInput = React.forwardRef(function TextInputImpl(
         HTMLAttributes: {
           class: 'inline-tag',
         },
-        suggestion: createTagsAutocomplete({
-          model: tagAutocompleteModel({currentDid: currentAccount?.did!}),
-        }),
+        suggestion: createTagsAutocomplete(),
       }),
       Mention.configure({
         HTMLAttributes: {
@@ -97,7 +92,7 @@ export const TextInput = React.forwardRef(function TextInputImpl(
       History,
       Hardbreak,
     ],
-    [autocomplete, placeholder, currentAccount],
+    [autocomplete, placeholder],
   )
 
   React.useEffect(() => {

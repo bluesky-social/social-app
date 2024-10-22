@@ -8,34 +8,17 @@ import {
 } from '@tiptap/suggestion'
 import tippy, {Instance as TippyInstance} from 'tippy.js'
 
-// import {TagsAutocompleteModel} from 'state/models/ui/tags-autocomplete'
 import {usePalette} from '#/lib/hooks/usePalette'
-import {
-  Model,
-  Result,
-} from '#/view/com/composer/text-input/tagsAutocompleteState'
+import {useTagAutocomplete} from '#/view/com/composer/text-input/tagsAutocompleteState'
 import {Text} from '#/view/com/util/text/Text'
 import {parsePunctuationFromTag} from './utils'
 
-type ListProps = SuggestionProps<Result> & {
-  model: Model
-}
 type AutocompleteRef = {
   onKeyDown: (props: SuggestionKeyDownProps) => boolean
 }
 
-export function createTagsAutocomplete({
-  model,
-}: {
-  model: Model
-}): Omit<SuggestionOptions, 'editor'> {
+export function createTagsAutocomplete(): Omit<SuggestionOptions, 'editor'> {
   return {
-    /**
-     * This `query` param comes from the result of `findSuggestionMatch`
-     */
-    async items({query}) {
-      return await model.search(query)
-    },
     render() {
       let component: ReactRenderer<AutocompleteRef> | undefined
       let popup: TippyInstance[] | undefined
@@ -43,10 +26,7 @@ export function createTagsAutocomplete({
       return {
         onStart: props => {
           component = new ReactRenderer(Autocomplete, {
-            props: {
-              ...props,
-              model,
-            },
+            props,
             editor: props.editor,
           })
 
@@ -93,11 +73,16 @@ export function createTagsAutocomplete({
   }
 }
 
-const Autocomplete = forwardRef<AutocompleteRef, ListProps>(
+const Autocomplete = forwardRef<AutocompleteRef, SuggestionProps>(
   function AutocompleteImpl(props, ref) {
-    const {items, command, model} = props
+    const {command, query} = props
+    const {suggestions, setQuery, saveRecentTag} = useTagAutocomplete()
     const pal = usePalette('default')
     const [selectedIndex, setSelectedIndex] = useState(0)
+
+    React.useEffect(() => {
+      setQuery(query)
+    }, [query, setQuery])
 
     const commit = React.useCallback(
       (query: string) => {
@@ -111,36 +96,36 @@ const Autocomplete = forwardRef<AutocompleteRef, ListProps>(
          * only want to `commitRecentTag` with the sanitized tag.
          */
         command({tag, punctuation})
-        model.save(tag)
+        saveRecentTag(tag)
       },
-      [command, model],
+      [command, saveRecentTag],
     )
 
     const selectItem = React.useCallback(
       (index: number) => {
-        const item = items[index]
+        const item = suggestions[index]
         if (item) commit(item.value)
       },
-      [items, commit],
+      [suggestions, commit],
     )
 
     useImperativeHandle(ref, () => ({
       onKeyDown: ({event}) => {
         if (event.key === 'ArrowUp') {
           setSelectedIndex(
-            (selectedIndex + props.items.length - 1) % props.items.length,
+            (selectedIndex + suggestions.length - 1) % suggestions.length,
           )
           return true
         }
 
         if (event.key === 'ArrowDown') {
-          setSelectedIndex((selectedIndex + 1) % props.items.length)
+          setSelectedIndex((selectedIndex + 1) % suggestions.length)
           return true
         }
 
         if (event.key === 'Enter') {
-          if (!props.items.length) {
-            // no items, use whatever the user typed
+          if (!suggestions.length) {
+            // no suggestions, use whatever the user typed
             commit(props.query)
           } else {
             selectItem(selectedIndex)
@@ -158,16 +143,16 @@ const Autocomplete = forwardRef<AutocompleteRef, ListProps>(
     }))
 
     // hide entirely if no suggestions
-    if (!items.length) return null
+    if (!suggestions.length) return null
 
     return (
       <div className="items">
         <View style={[pal.borderDark, pal.view, styles.container]}>
-          {items.map(({value}, index) => {
+          {suggestions.map(({value}, index) => {
             const {tag} = parsePunctuationFromTag(value)
             const isSelected = selectedIndex === index
             const isFirst = index === 0
-            const isLast = index === items.length - 1
+            const isLast = index === suggestions.length - 1
 
             return (
               <Pressable
