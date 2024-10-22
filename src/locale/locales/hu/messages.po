@@ -137,27 +137,27 @@ msgstr "{0} kezdőcsomagja"
 #. How many days have passed, displayed in a narrow form
 #: src/lib/hooks/useTimeAgo.ts:158
 msgid "{0}d"
-msgstr "{0}n"
+msgstr "{0} n"
 
 #. How many hours have passed, displayed in a narrow form
 #: src/lib/hooks/useTimeAgo.ts:148
 msgid "{0}h"
-msgstr "{0}ó"
+msgstr "{0} ó"
 
 #. How many minutes have passed, displayed in a narrow form
 #: src/lib/hooks/useTimeAgo.ts:138
 msgid "{0}m"
-msgstr "{0}p"
+msgstr "{0} p"
 
 #. How many months have passed, displayed in a narrow form
 #: src/lib/hooks/useTimeAgo.ts:169
 msgid "{0}mo"
-msgstr "{0}hó"
+msgstr "{0} hó"
 
 #. How many seconds have passed, displayed in a narrow form
 #: src/lib/hooks/useTimeAgo.ts:128
 msgid "{0}s"
-msgstr "{0}mp"
+msgstr "{0} mp"
 
 #: src/components/LabelingServiceCard/index.tsx:96
 msgid "{count, plural, one {Liked by # user} other {Liked by # users}}"
@@ -3400,7 +3400,7 @@ msgstr "Megjelölés olvasottként"
 #: src/view/screens/AccessibilitySettings.tsx:103
 #: src/view/screens/Profile.tsx:221
 msgid "Media"
-msgstr "Médiatartalom"
+msgstr "Média"
 
 #: src/components/WhoCanReply.tsx:254
 msgid "mentioned users"
