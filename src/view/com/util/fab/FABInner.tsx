@@ -42,14 +42,14 @@ export function FABInner({testID, icon, onPress, ...props}: FABProps) {
       ]}>
       <PressableScale
         testID={testID}
+        onPressIn={() => playHaptic('Light')}
         onPress={e => {
           playHaptic('Light')
-          setTimeout(
-            () => {
-              onPress?.(e)
-            },
-            isHapticsDisabled ? 0 : 75,
-          )
+          setTimeout(() => onPress?.(e), isHapticsDisabled ? 0 : 75)
+        }}
+        onLongPress={e => {
+          playHaptic('Medium')
+          setTimeout(() => onPress?.(e), isHapticsDisabled ? 0 : 75)
         }}
         targetScale={0.9}
         {...props}>
