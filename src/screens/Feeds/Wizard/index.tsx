@@ -4,7 +4,6 @@ import {
   KeyboardAwareScrollView,
   useKeyboardController,
 } from 'react-native-keyboard-controller'
-import {Image} from 'expo-image'
 import {AppBskyGraphDefs, AtUri} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
@@ -13,20 +12,15 @@ import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {HITSLOP_10} from '#/lib/constants'
-import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
 import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
-import {logEvent} from '#/lib/statsig/statsig'
-import {
-  getStarterPackOgCard,
-  parseStarterPackUri,
-} from '#/lib/strings/starter-pack'
+import {parseStarterPackUri} from '#/lib/strings/starter-pack'
 import {logger} from '#/logger'
 import {isAndroid, isWeb} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
+import {useCreateFeedMutation} from '#/state/queries/feed'
 import {useAllListMembersQuery} from '#/state/queries/list-members'
 import {useProfileQuery} from '#/state/queries/profile'
 import {
-  useCreateStarterPackMutation,
   useEditStarterPackMutation,
   useStarterPackQuery,
 } from '#/state/queries/starter-packs'
@@ -127,10 +121,6 @@ function WizardInner({
   const {setEnabled} = useKeyboardController()
   const [state, dispatch] = useWizardState()
   const {currentAccount} = useSession()
-  const {data: currentProfile} = useProfileQuery({
-    did: currentAccount?.did,
-    staleTime: 0,
-  })
   const parsed = parseStarterPackUri(currentStarterPack?.uri)
 
   React.useEffect(() => {
@@ -152,8 +142,7 @@ function WizardInner({
   )
 
   const getDefaultName = () => {
-    const displayName = createSanitizedDisplayName(currentProfile!, true)
-    return _(msg`${displayName}'s Starter Pack`).slice(0, 50)
+    return _(msg`Your feed name`)
   }
 
   const wizardUiStrings: Record<
@@ -169,18 +158,10 @@ function WizardInner({
 
   const onSuccessCreate = (data: {uri: string; cid: string}) => {
     const rkey = new AtUri(data.uri).rkey
-    logEvent('starterPack:create', {
-      setName: state.name != null,
-      setDescription: state.description != null,
-      profilesCount: state.profiles.length,
-      feedsCount: state.feeds.length,
-    })
-    Image.prefetch([getStarterPackOgCard(currentProfile!.did, rkey)])
     dispatch({type: 'SetProcessing', processing: false})
-    navigation.replace('StarterPack', {
+    navigation.replace('ProfileFeed', {
       name: currentAccount!.handle,
       rkey,
-      new: true,
     })
   }
 
@@ -188,14 +169,14 @@ function WizardInner({
     if (navigation.canGoBack()) {
       navigation.goBack()
     } else {
-      navigation.replace('StarterPack', {
+      navigation.replace('ProfileFeed', {
         name: currentAccount!.handle,
         rkey: parsed!.rkey,
       })
     }
   }
 
-  const {mutate: createStarterPack} = useCreateStarterPackMutation({
+  const {mutate: createFeed} = useCreateFeedMutation({
     onSuccess: onSuccessCreate,
     onError: e => {
       logger.error('Failed to create starter pack', {safeMessage: e})
@@ -203,6 +184,8 @@ function WizardInner({
       Toast.show(_(msg`Failed to create starter pack`), 'xmark')
     },
   })
+
+  // TODO
   const {mutate: editStarterPack} = useEditStarterPackMutation({
     onSuccess: onSuccessEdit,
     onError: e => {
@@ -224,11 +207,9 @@ function WizardInner({
         currentListItems: currentListItems,
       })
     } else {
-      createStarterPack({
+      createFeed({
         name: state.name?.trim() || getDefaultName(),
         description: state.description?.trim(),
-        profiles: state.profiles,
-        feeds: state.feeds,
       })
     }
   }

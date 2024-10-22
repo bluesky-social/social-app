@@ -5,12 +5,12 @@ import {useLingui} from '@lingui/react'
 
 import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
-import {useWizardState} from '#/screens/StarterPack/Wizard/State'
 import {atoms as a, useTheme} from '#/alf'
 import * as TextField from '#/components/forms/TextField'
 import {StarterPack} from '#/components/icons/StarterPack'
 import {ScreenTransition} from '#/components/StarterPack/Wizard/ScreenTransition'
 import {Text} from '#/components/Typography'
+import {useWizardState} from './State'
 
 export function StepDetails() {
   const {_} = useLingui()
@@ -41,17 +41,13 @@ export function StepDetails() {
           </TextField.LabelText>
           <TextField.Root>
             <TextField.Input
-              label={_(
-                msg`${
-                  currentProfile?.displayName || currentProfile?.handle
-                }'s feed`,
-              )}
+              label={_(`My feed`)}
               value={state.name}
               onChangeText={text => dispatch({type: 'SetName', name: text})}
             />
-            <TextField.SuffixText label={_(`${state.name?.length} out of 50`)}>
+            <TextField.SuffixText label={_(`${state.name?.length} out of 24`)}>
               <Text style={[t.atoms.text_contrast_medium]}>
-                {state.name?.length ?? 0}/50
+                {state.name?.length ?? 0}/24
               </Text>
             </TextField.SuffixText>
           </TextField.Root>

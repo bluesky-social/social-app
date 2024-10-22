@@ -1,5 +1,10 @@
 import {useCallback, useEffect, useMemo, useRef} from 'react'
 import {
+  AppBskyFeedGetFeedGenerator,
+  AppBskyRichtextFacet,
+  BskyAgent,
+} from '@atproto/api'
+import {
   AppBskyActorDefs,
   AppBskyFeedDefs,
   AppBskyGraphDefs,
@@ -19,6 +24,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query'
 
+import {until} from '#/lib/async/until'
 import {DISCOVER_FEED_URI, DISCOVER_SAVED_FEED} from '#/lib/constants'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
@@ -638,4 +644,83 @@ export function precacheFeedFromGeneratorView(
 ) {
   const hydratedFeed = hydrateFeedGenerator(view)
   precacheFeed(queryClient, hydratedFeed)
+}
+
+// --- feeds playground ---
+
+interface UseCreateFeedMutationParams {
+  name: string
+  description?: string
+}
+
+export function useCreateFeedMutation({
+  onSuccess,
+  onError,
+}: {
+  onSuccess: (data: {uri: string; cid: string}) => void
+  onError: (e: Error) => void
+}) {
+  const agent = useAgent()
+
+  return useMutation<
+    {uri: string; cid: string},
+    Error,
+    UseCreateFeedMutationParams
+  >({
+    mutationFn: async ({name, description}) => {
+      let descriptionFacets: AppBskyRichtextFacet.Main[] | undefined
+      if (description) {
+        const rt = new RichText({text: description})
+        await rt.detectFacets(agent)
+        descriptionFacets = rt.facets
+      }
+
+      const res = await agent.api.com.atproto.repo.createRecord({
+        repo: agent.session!.did,
+        collection: 'app.bsky.feed.generator',
+        record: {
+          $type: 'app.bsky.feed.generator',
+          createdAt: new Date().toISOString(),
+          did: 'did:web:feeed.club',
+          displayName: name,
+          description,
+          descriptionFacets,
+          labels: {
+            $type: 'com.atproto.label.defs#selfLabels',
+            values: [{val: 'feeed-club'}],
+          },
+          '$club.feeed.generator': {
+            $type: 'club.feeed.generator',
+            actors: [],
+            handleSuffixes: [],
+            tags: [],
+          },
+        },
+      })
+      return res.data
+    },
+    onSuccess: async data => {
+      await whenAppViewReady(agent, data.uri, v => {
+        return typeof v?.data.view.uri === 'string'
+      })
+      // TODO: Invalidate query
+      onSuccess(data)
+    },
+    onError: async error => {
+      onError(error)
+    },
+  })
+}
+
+async function whenAppViewReady(
+  agent: BskyAgent,
+  uri: string,
+  fn: (res?: AppBskyFeedGetFeedGenerator.Response) => boolean,
+) {
+  await until(
+    5, // 5 tries
+    1e3, // 1s delay between tries
+    fn,
+    () => agent.app.bsky.feed.getFeedGenerator({feed: uri}),
+  )
 }
