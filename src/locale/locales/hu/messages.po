@@ -24,81 +24,81 @@ msgstr "(nincs megadott email-cím)"
 #: src/view/com/notifications/FeedItem.tsx:232
 #: src/view/com/notifications/FeedItem.tsx:327
 msgid "{0, plural, one {{formattedCount} other} other {{formattedCount} others}}"
-msgstr "{formattedCount} további"
+msgstr "{0} {formattedCount} további"
 
 #: src/lib/hooks/useTimeAgo.ts:156
 msgid "{0, plural, one {# day} other {# days}}"
-msgstr "# nappal"
+msgstr "{0} nappal"
 
 #: src/lib/hooks/useTimeAgo.ts:146
 msgid "{0, plural, one {# hour} other {# hours}}"
-msgstr "# órával"
+msgstr "{0} órával"
 
 #: src/components/moderation/LabelsOnMe.tsx:54
 msgid "{0, plural, one {# label has been placed on this account} other {# labels have been placed on this account}}"
-msgstr "# feljegyzést helyeztek erre a fiókra"
+msgstr "{0} feljegyzést helyeztek erre a fiókra"
 
 #: src/components/moderation/LabelsOnMe.tsx:60
 msgid "{0, plural, one {# label has been placed on this content} other {# labels have been placed on this content}}"
-msgstr "# feljegyzést helyeztek erre a tartalomra"
+msgstr "{0} feljegyzést helyeztek erre a tartalomra"
 
 #: src/lib/hooks/useTimeAgo.ts:136
 msgid "{0, plural, one {# minute} other {# minutes}}"
-msgstr "# perccel"
+msgstr "{0} perccel"
 
 #: src/lib/hooks/useTimeAgo.ts:167
 msgid "{0, plural, one {# month} other {# months}}"
-msgstr "# hónappal"
+msgstr "{0} hónappal"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:71
 msgid "{0, plural, one {# repost} other {# reposts}}"
-msgstr "# megosztás"
+msgstr "{0} megosztás"
 
 #: src/lib/hooks/useTimeAgo.ts:126
 msgid "{0, plural, one {# second} other {# seconds}}"
-msgstr "# másodperccel"
+msgstr "{0} másodperccel"
 
 #: src/components/ProfileHoverCard/index.web.tsx:398
 #: src/screens/Profile/Header/Metrics.tsx:23
 msgid "{0, plural, one {follower} other {followers}}"
-msgstr "követő"
+msgstr "{0} követő"
 
 #: src/components/ProfileHoverCard/index.web.tsx:402
 #: src/screens/Profile/Header/Metrics.tsx:27
 msgid "{0, plural, one {following} other {following}}"
-msgstr "követett"
+msgstr "{0} követett"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:312
 msgid "{0, plural, one {Like (# like)} other {Like (# likes)}}"
-msgstr "Tetszik (# kedvelés)"
+msgstr "Tetszik ({0} kedvelés)"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:434
 msgid "{0, plural, one {like} other {likes}}"
-msgstr "kedvelés"
+msgstr "{0} kedvelés"
 
 #: src/components/FeedCard.tsx:213 src/view/com/feeds/FeedSourceCard.tsx:300
 msgid "{0, plural, one {Liked by # user} other {Liked by # users}}"
-msgstr "# felhasználó kedveli"
+msgstr "{0} felhasználó kedveli"
 
 #: src/screens/Profile/Header/Metrics.tsx:59
 msgid "{0, plural, one {post} other {posts}}"
-msgstr "bejegyzés"
+msgstr "{0} bejegyzés"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:418
 msgid "{0, plural, one {quote} other {quotes}}"
-msgstr "idézés"
+msgstr "{0} idézés"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:269
 msgid "{0, plural, one {Reply (# reply)} other {Reply (# replies)}}"
-msgstr "Válaszírás (# válasz)"
+msgstr "Válaszírás ({0} válasz)"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:400
 msgid "{0, plural, one {repost} other {reposts}}"
-msgstr "megosztás"
+msgstr "{0} megosztás"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:308
 msgid "{0, plural, one {Unlike (# like)} other {Unlike (# likes)}}"
-msgstr "Mégse tetszik (# kedvelés)"
+msgstr "Mégse tetszik ({0} kedvelés)"
 
 #. Pattern: {wordValue} in tags
 #: src/components/dialogs/MutedWords.tsx:475
@@ -161,7 +161,7 @@ msgstr "{0} mp"
 
 #: src/components/LabelingServiceCard/index.tsx:96
 msgid "{count, plural, one {Liked by # user} other {Liked by # users}}"
-msgstr "# felhasználó kedveli"
+msgstr "{0} felhasználó kedveli"
 
 #: src/lib/generate-starterpack.ts:108
 #: src/screens/StarterPack/Wizard/index.tsx:174
@@ -170,11 +170,11 @@ msgstr "{displayName} kezdőcsomagja"
 
 #: src/screens/SignupQueued.tsx:207
 msgid "{estimatedTimeHrs, plural, one {hour} other {hours}}"
-msgstr "órával"
+msgstr "{0} órával"
 
 #: src/screens/SignupQueued.tsx:213
 msgid "{estimatedTimeMins, plural, one {minute} other {minutes}}"
-msgstr "perccel"
+msgstr "{0} perccel"
 
 #: src/components/ProfileHoverCard/index.web.tsx:508
 #: src/screens/Profile/Header/Metrics.tsx:50
@@ -189,7 +189,7 @@ msgstr "{handle} jelenleg nem fogad üzeneteket"
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:294
 #: src/view/screens/ProfileFeed.tsx:584
 msgid "{likeCount, plural, one {Liked by # user} other {Liked by # users}}"
-msgstr "# felhasználó kedveli"
+msgstr "{0} felhasználó kedveli"
 
 #: src/view/shell/Drawer.tsx:458
 msgid "{numUnreadNotifications} unread"
@@ -206,20 +206,20 @@ msgstr "{profileName} {0} ezelőtt csatlakozott a Blueskyhoz egy kezdőcsomag ig
 #: src/screens/StarterPack/Wizard/index.tsx:466
 msgctxt "profiles"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
-msgstr "<0>{0}, </0><1>{1}, </1>és # további személy szerepel a kezdőcsomagodban"
+msgstr "<0>{0}, </0><1>{1}, </1>és {2} további személy szerepel a kezdőcsomagodban"
 
 #: src/screens/StarterPack/Wizard/index.tsx:519
 msgctxt "feeds"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
-msgstr "<0>{0}, </0><1>{1}, </1>és # további személy szerepel a kezdőcsomagodban"
+msgstr "<0>{0}, </0><1>{1}, </1>és {2} további személy szerepel a kezdőcsomagodban"
 
 #: src/view/shell/Drawer.tsx:108
 msgid "<0>{0}</0> {1, plural, one {follower} other {followers}}"
-msgstr "<0>{0}</0> követő"
+msgstr "<0>{0}</0> {1} követő"
 
 #: src/view/shell/Drawer.tsx:123
 msgid "<0>{0}</0> {1, plural, one {following} other {following}}"
-msgstr "<0>{0}</0> követett"
+msgstr "<0>{0}</0> {1} követett"
 
 #: src/screens/StarterPack/Wizard/index.tsx:507
 msgid "<0>{0}</0> and<1> </1><2>{1} </2>are included in your starter pack"
@@ -2519,7 +2519,7 @@ msgstr "<0>{0}</0> követi"
 
 #: src/components/KnownFollowers.tsx:217
 msgid "Followed by <0>{0}</0> and {1, plural, one {# other} other {# others}}"
-msgstr "<0>{0}</0> és # további személy követi"
+msgstr "<0>{0}</0> és {1} további személy követi"
 
 #: src/components/KnownFollowers.tsx:204
 msgid "Followed by <0>{0}</0> and <1>{1}</1>"
@@ -2527,7 +2527,7 @@ msgstr "<0>{0}</0> és <1>{1}</1> követi"
 
 #: src/components/KnownFollowers.tsx:186
 msgid "Followed by <0>{0}</0>, <1>{1}</1>, and {2, plural, one {# other} other {# others}}"
-msgstr "<0>{0}</0>, <1>{1}</1> és # további személy követi"
+msgstr "<0>{0}</0>, <1>{1}</1> és {2} további személy követi"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:404
 msgid "Followed users"
