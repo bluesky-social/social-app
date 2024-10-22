@@ -3551,7 +3551,7 @@ msgstr "Elnémítás"
 
 #: src/components/TagMenu/index.web.tsx:116
 msgid "Mute {truncatedTag}"
-msgstr "{truncatedTag} elnémítása"
+msgstr "A(z) {truncatedTag} címke elnémítása"
 
 #: src/view/com/profile/ProfileMenu.tsx:259
 #: src/view/com/profile/ProfileMenu.tsx:266
@@ -5342,19 +5342,19 @@ msgstr "Biztonsági lépés szükséges"
 
 #: src/components/TagMenu/index.web.tsx:77
 msgid "See {truncatedTag} posts"
-msgstr "A(z) {truncatedTag} címkével ellátott bejegyzések"
+msgstr "A(z) {truncatedTag} címkével ellátott bejegyzések megtekintése"
 
 #: src/components/TagMenu/index.web.tsx:94
 msgid "See {truncatedTag} posts by user"
-msgstr "A felhasználó {truncatedTag} címkével ellátott bejegyzései"
+msgstr "A felhasználó {truncatedTag} címkével ellátott bejegyzéseinek megtekintése"
 
 #: src/components/TagMenu/index.tsx:138
 msgid "See <0>{displayTag}</0> posts"
-msgstr "A(z) <0>{displayTag}</0> címkével ellátott bejegyzések"
+msgstr "A(z) <0>{displayTag}</0> címkével ellátott bejegyzések megtekintése"
 
 #: src/components/TagMenu/index.tsx:197
 msgid "See <0>{displayTag}</0> posts by this user"
-msgstr "A felhasználó <0>{displayTag}</0> címkével ellátott bejegyzései"
+msgstr "A felhasználó <0>{displayTag}</0> címkével ellátott bejegyzéseinek megtekintése"
 
 #: src/view/com/auth/SplashScreen.web.tsx:175
 msgid "See jobs at Bluesky"
