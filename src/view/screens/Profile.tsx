@@ -453,6 +453,7 @@ function ProfileScreenLoaded({
           ? ({headerHeight, isFocused, scrollElRef}) => (
               <ProfileFeedgens
                 ref={feedsSectionRef}
+                isMe={isMe}
                 did={profile.did}
                 scrollElRef={scrollElRef as ListRef}
                 headerOffset={headerHeight}
