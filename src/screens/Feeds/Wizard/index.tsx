@@ -1,37 +1,27 @@
 import React from 'react'
-import {Keyboard, TouchableOpacity, View} from 'react-native'
+import {TouchableOpacity, View} from 'react-native'
 import {
   KeyboardAwareScrollView,
   useKeyboardController,
 } from 'react-native-keyboard-controller'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {Image} from 'expo-image'
-import {
-  AppBskyActorDefs,
-  AppBskyGraphDefs,
-  AtUri,
-  ModerationOpts,
-} from '@atproto/api'
-import {GeneratorView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
+import {AppBskyGraphDefs, AtUri} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {msg, Plural, Trans} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
-import {HITSLOP_10, STARTER_PACK_MAX_SIZE} from '#/lib/constants'
+import {HITSLOP_10} from '#/lib/constants'
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
 import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
 import {logEvent} from '#/lib/statsig/statsig'
-import {sanitizeDisplayName} from '#/lib/strings/display-names'
-import {sanitizeHandle} from '#/lib/strings/handles'
-import {enforceLen} from '#/lib/strings/helpers'
 import {
   getStarterPackOgCard,
   parseStarterPackUri,
 } from '#/lib/strings/starter-pack'
 import {logger} from '#/logger'
-import {isAndroid, isNative, isWeb} from '#/platform/detection'
+import {isAndroid, isWeb} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useAllListMembersQuery} from '#/state/queries/list-members'
 import {useProfileQuery} from '#/state/queries/profile'
@@ -43,21 +33,15 @@ import {
 import {useSession} from '#/state/session'
 import {useSetMinimalShellMode} from '#/state/shell'
 import * as Toast from '#/view/com/util/Toast'
-import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {CenteredView} from '#/view/com/util/Views'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
-import {useDialogControl} from '#/components/Dialog'
 import * as Layout from '#/components/Layout'
 import {ListMaybePlaceholder} from '#/components/Lists'
-import {Loader} from '#/components/Loader'
-import {WizardEditListDialog} from '#/components/StarterPack/Wizard/WizardEditListDialog'
 import {Text} from '#/components/Typography'
 import {useWizardState, WizardStep} from './State'
 import {Provider} from './State'
 import {StepDetails} from './StepDetails'
-import {StepFeeds} from './StepFeeds'
-import {StepProfiles} from './StepProfiles'
 
 export function Wizard({
   route,
@@ -123,8 +107,6 @@ export function Wizard({
         <WizardInner
           currentStarterPack={starterPack}
           currentListItems={listItems}
-          profile={profile}
-          moderationOpts={moderationOpts}
         />
       </Provider>
     </Layout.Screen>
@@ -134,13 +116,9 @@ export function Wizard({
 function WizardInner({
   currentStarterPack,
   currentListItems,
-  profile,
-  moderationOpts,
 }: {
   currentStarterPack?: AppBskyGraphDefs.StarterPackView
   currentListItems?: AppBskyGraphDefs.ListItemView[]
-  profile: AppBskyActorDefs.ProfileViewBasic
-  moderationOpts: ModerationOpts
 }) {
   const navigation = useNavigation<NavigationProp>()
   const {_} = useLingui()
@@ -183,16 +161,8 @@ function WizardInner({
     {header: string; nextBtn: string; subtitle?: string}
   > = {
     Details: {
-      header: _(msg`Starter Pack`),
-      nextBtn: _(msg`Next`),
-    },
-    Profiles: {
-      header: _(msg`Choose People`),
-      nextBtn: _(msg`Next`),
-    },
-    Feeds: {
-      header: _(msg`Choose Feeds`),
-      nextBtn: state.feeds.length === 0 ? _(msg`Skip`) : _(msg`Finish`),
+      header: _(msg`Create a Feed`),
+      nextBtn: _(msg`Finish`),
     },
   }
   const currUiStrings = wizardUiStrings[state.currentStep]
@@ -263,22 +233,6 @@ function WizardInner({
     }
   }
 
-  const onNext = () => {
-    if (state.currentStep === 'Feeds') {
-      submit()
-      return
-    }
-
-    const keyboardVisible = Keyboard.isVisible()
-    Keyboard.dismiss()
-    setTimeout(
-      () => {
-        dispatch({type: 'Next'})
-      },
-      keyboardVisible ? 16 : 0,
-    )
-  }
-
   return (
     <CenteredView style={[a.flex_1]} sideBorders>
       <View
@@ -321,35 +275,22 @@ function WizardInner({
         <View style={[{width: 65}]} />
       </View>
 
-      <Container>
-        {state.currentStep === 'Details' ? (
-          <StepDetails />
-        ) : state.currentStep === 'Profiles' ? (
-          <StepProfiles moderationOpts={moderationOpts} />
-        ) : state.currentStep === 'Feeds' ? (
-          <StepFeeds moderationOpts={moderationOpts} />
-        ) : null}
+      <Container onFinish={submit}>
+        {state.currentStep === 'Details' ? <StepDetails /> : null}
       </Container>
-
-      {state.currentStep !== 'Details' && (
-        <Footer
-          onNext={onNext}
-          nextBtnText={currUiStrings.nextBtn}
-          moderationOpts={moderationOpts}
-          profile={profile}
-        />
-      )}
     </CenteredView>
   )
 }
 
-function Container({children}: {children: React.ReactNode}) {
+function Container({
+  children,
+  onFinish,
+}: {
+  children: React.ReactNode
+  onFinish: () => void
+}) {
   const {_} = useLingui()
-  const [state, dispatch] = useWizardState()
-
-  if (state.currentStep === 'Profiles' || state.currentStep === 'Feeds') {
-    return <View style={[a.flex_1]}>{children}</View>
-  }
+  const [state] = useWizardState()
 
   return (
     <KeyboardAwareScrollView
@@ -359,250 +300,18 @@ function Container({children}: {children: React.ReactNode}) {
       {state.currentStep === 'Details' && (
         <>
           <Button
-            label={_(msg`Next`)}
+            label={_(msg`Finish`)}
             variant="solid"
             color="primary"
             size="large"
             style={[a.mx_xl, a.mb_lg, {marginTop: 35}]}
-            onPress={() => dispatch({type: 'Next'})}>
+            onPress={onFinish}>
             <ButtonText>
-              <Trans>Next</Trans>
+              <Trans>Finish</Trans>
             </ButtonText>
           </Button>
         </>
       )}
     </KeyboardAwareScrollView>
   )
-}
-
-function Footer({
-  onNext,
-  nextBtnText,
-  moderationOpts,
-  profile,
-}: {
-  onNext: () => void
-  nextBtnText: string
-  moderationOpts: ModerationOpts
-  profile: AppBskyActorDefs.ProfileViewBasic
-}) {
-  const {_} = useLingui()
-  const t = useTheme()
-  const [state, dispatch] = useWizardState()
-  const editDialogControl = useDialogControl()
-  const {bottom: bottomInset} = useSafeAreaInsets()
-
-  const items =
-    state.currentStep === 'Profiles'
-      ? [profile, ...state.profiles]
-      : state.feeds
-
-  const isEditEnabled =
-    (state.currentStep === 'Profiles' && items.length > 1) ||
-    (state.currentStep === 'Feeds' && items.length > 0)
-
-  const minimumItems = state.currentStep === 'Profiles' ? 8 : 0
-
-  const textStyles = [a.text_md]
-
-  return (
-    <View
-      style={[
-        a.border_t,
-        a.align_center,
-        a.px_lg,
-        a.pt_xl,
-        a.gap_md,
-        t.atoms.bg,
-        t.atoms.border_contrast_medium,
-        {
-          paddingBottom: a.pb_lg.paddingBottom + bottomInset,
-        },
-        isNative && [
-          a.border_l,
-          a.border_r,
-          t.atoms.shadow_md,
-          {
-            borderTopLeftRadius: 14,
-            borderTopRightRadius: 14,
-          },
-        ],
-      ]}>
-      {items.length > minimumItems && (
-        <View style={[a.absolute, {right: 14, top: 31}]}>
-          <Text style={[a.font_bold]}>
-            {items.length}/
-            {state.currentStep === 'Profiles' ? STARTER_PACK_MAX_SIZE : 3}
-          </Text>
-        </View>
-      )}
-
-      <View style={[a.flex_row, a.gap_xs]}>
-        {items.slice(0, 6).map((p, index) => (
-          <UserAvatar
-            key={index}
-            avatar={p.avatar}
-            size={32}
-            type={state.currentStep === 'Profiles' ? 'user' : 'algo'}
-          />
-        ))}
-      </View>
-
-      {
-        state.currentStep === 'Profiles' ? (
-          <Text style={[a.text_center, textStyles]}>
-            {
-              items.length < 2 ? (
-                <Trans>
-                  It's just you right now! Add more people to your starter pack
-                  by searching above.
-                </Trans>
-              ) : items.length === 2 ? (
-                <Trans>
-                  <Text style={[a.font_bold, textStyles]}>You</Text> and
-                  <Text> </Text>
-                  <Text style={[a.font_bold, textStyles]}>
-                    {getName(items[1] /* [0] is self, skip it */)}{' '}
-                  </Text>
-                  are included in your starter pack
-                </Trans>
-              ) : items.length > 2 ? (
-                <Trans context="profiles">
-                  <Text style={[a.font_bold, textStyles]}>
-                    {getName(items[1] /* [0] is self, skip it */)},{' '}
-                  </Text>
-                  <Text style={[a.font_bold, textStyles]}>
-                    {getName(items[2])},{' '}
-                  </Text>
-                  and{' '}
-                  <Plural
-                    value={items.length - 2}
-                    one="# other"
-                    other="# others"
-                  />{' '}
-                  are included in your starter pack
-                </Trans>
-              ) : null /* Should not happen. */
-            }
-          </Text>
-        ) : state.currentStep === 'Feeds' ? (
-          items.length === 0 ? (
-            <View style={[a.gap_sm]}>
-              <Text style={[a.font_bold, a.text_center, textStyles]}>
-                <Trans>Add some feeds to your starter pack!</Trans>
-              </Text>
-              <Text style={[a.text_center, textStyles]}>
-                <Trans>
-                  Search for feeds that you want to suggest to others.
-                </Trans>
-              </Text>
-            </View>
-          ) : (
-            <Text style={[a.text_center, textStyles]}>
-              {
-                items.length === 1 ? (
-                  <Trans>
-                    <Text style={[a.font_bold, textStyles]}>
-                      {getName(items[0])}
-                    </Text>{' '}
-                    is included in your starter pack
-                  </Trans>
-                ) : items.length === 2 ? (
-                  <Trans>
-                    <Text style={[a.font_bold, textStyles]}>
-                      {getName(items[0])}
-                    </Text>{' '}
-                    and
-                    <Text> </Text>
-                    <Text style={[a.font_bold, textStyles]}>
-                      {getName(items[1])}{' '}
-                    </Text>
-                    are included in your starter pack
-                  </Trans>
-                ) : items.length > 2 ? (
-                  <Trans context="feeds">
-                    <Text style={[a.font_bold, textStyles]}>
-                      {getName(items[0])},{' '}
-                    </Text>
-                    <Text style={[a.font_bold, textStyles]}>
-                      {getName(items[1])},{' '}
-                    </Text>
-                    and{' '}
-                    <Plural
-                      value={items.length - 2}
-                      one="# other"
-                      other="# others"
-                    />{' '}
-                    are included in your starter pack
-                  </Trans>
-                ) : null /* Should not happen. */
-              }
-            </Text>
-          )
-        ) : null /* Should not happen. */
-      }
-
-      <View
-        style={[
-          a.flex_row,
-          a.w_full,
-          a.justify_between,
-          a.align_center,
-          isNative ? a.mt_sm : a.mt_md,
-        ]}>
-        {isEditEnabled ? (
-          <Button
-            label={_(msg`Edit`)}
-            variant="solid"
-            color="secondary"
-            size="small"
-            style={{width: 70}}
-            onPress={editDialogControl.open}>
-            <ButtonText>
-              <Trans>Edit</Trans>
-            </ButtonText>
-          </Button>
-        ) : (
-          <View style={{width: 70, height: 35}} />
-        )}
-        {state.currentStep === 'Profiles' && items.length < 8 ? (
-          <>
-            <Text
-              style={[a.font_bold, textStyles, t.atoms.text_contrast_medium]}>
-              <Trans>Add {8 - items.length} more to continue</Trans>
-            </Text>
-            <View style={{width: 70}} />
-          </>
-        ) : (
-          <Button
-            label={nextBtnText}
-            variant="solid"
-            color="primary"
-            size="small"
-            onPress={onNext}
-            disabled={!state.canNext || state.processing}>
-            <ButtonText>{nextBtnText}</ButtonText>
-            {state.processing && <Loader size="xs" style={{color: 'white'}} />}
-          </Button>
-        )}
-      </View>
-
-      <WizardEditListDialog
-        control={editDialogControl}
-        state={state}
-        dispatch={dispatch}
-        moderationOpts={moderationOpts}
-        profile={profile}
-      />
-    </View>
-  )
-}
-
-function getName(item: AppBskyActorDefs.ProfileViewBasic | GeneratorView) {
-  if (typeof item.displayName === 'string') {
-    return enforceLen(sanitizeDisplayName(item.displayName), 28, true)
-  } else if (typeof item.handle === 'string') {
-    return enforceLen(sanitizeHandle(item.handle), 28, true)
-  }
-  return ''
 }

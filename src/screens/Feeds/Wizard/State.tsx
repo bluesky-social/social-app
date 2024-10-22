@@ -5,13 +5,10 @@ import {
   AppBskyGraphStarterpack,
 } from '@atproto/api'
 import {GeneratorView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
-import {msg} from '@lingui/macro'
 
-import {STARTER_PACK_MAX_SIZE} from '#/lib/constants'
 import {useSession} from '#/state/session'
-import * as Toast from '#/view/com/util/Toast'
 
-const steps = ['Details', 'Profiles', 'Feeds'] as const
+const steps = ['Details'] as const
 type Step = (typeof steps)[number]
 
 type Action =
@@ -20,10 +17,6 @@ type Action =
   | {type: 'SetCanNext'; canNext: boolean}
   | {type: 'SetName'; name: string}
   | {type: 'SetDescription'; description: string}
-  | {type: 'AddProfile'; profile: AppBskyActorDefs.ProfileViewBasic}
-  | {type: 'RemoveProfile'; profileDid: string}
-  | {type: 'AddFeed'; feed: GeneratorView}
-  | {type: 'RemoveFeed'; feedUri: string}
   | {type: 'SetProcessing'; processing: boolean}
   | {type: 'SetError'; error: string}
 
@@ -52,7 +45,7 @@ function reducer(state: State, action: Action): State {
 
   // -- Navigation
   const currentIndex = steps.indexOf(state.currentStep)
-  if (action.type === 'Next' && state.currentStep !== 'Feeds') {
+  if (action.type === 'Next') {
     updatedState = {
       ...state,
       currentStep: steps[currentIndex + 1],
@@ -72,38 +65,6 @@ function reducer(state: State, action: Action): State {
       break
     case 'SetDescription':
       updatedState = {...state, description: action.description}
-      break
-    case 'AddProfile':
-      if (state.profiles.length > STARTER_PACK_MAX_SIZE) {
-        Toast.show(
-          msg`You may only add up to ${STARTER_PACK_MAX_SIZE} profiles`
-            .message ?? '',
-          'info',
-        )
-      } else {
-        updatedState = {...state, profiles: [...state.profiles, action.profile]}
-      }
-      break
-    case 'RemoveProfile':
-      updatedState = {
-        ...state,
-        profiles: state.profiles.filter(
-          profile => profile.did !== action.profileDid,
-        ),
-      }
-      break
-    case 'AddFeed':
-      if (state.feeds.length >= 3) {
-        Toast.show(msg`You may only add up to 3 feeds`.message ?? '', 'info')
-      } else {
-        updatedState = {...state, feeds: [...state.feeds, action.feed]}
-      }
-      break
-    case 'RemoveFeed':
-      updatedState = {
-        ...state,
-        feeds: state.feeds.filter(f => f.uri !== action.feedUri),
-      }
       break
     case 'SetProcessing':
       updatedState = {...state, processing: action.processing}
