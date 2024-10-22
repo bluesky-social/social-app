@@ -111,6 +111,7 @@ export async function post(
       embed,
       langs,
       labels,
+      tags: draft.tags,
     })
   } catch (e: any) {
     logger.error(`Failed to create post`, {

@@ -165,7 +165,13 @@ export const ComposePost = ({
 
   const [draft, dispatch] = useReducer(
     composerReducer,
-    {initImageUris, initQuoteUri: initQuote?.uri, initText, initMention},
+    {
+      initImageUris,
+      initQuoteUri: initQuote?.uri,
+      initText,
+      initMention,
+      initOutlineTags: [],
+    },
     createComposerState,
   )
   const richtext = draft.richtext
@@ -509,6 +515,13 @@ export const ComposePost = ({
     dispatch({type: 'embed_update_gif', alt: altText})
   }, [])
 
+  const onChangeOutlineTags = useCallback(
+    (tags: string[]) => {
+      dispatch({type: 'tags_update', tags})
+    },
+    [dispatch],
+  )
+
   const {
     scrollHandler,
     onScrollViewContentSizeChange,
@@ -745,7 +758,7 @@ export const ComposePost = ({
           </Animated.ScrollView>
           <SuggestedLanguage text={richtext.text} />
 
-          <OutlineTags onChangeTags={() => {}} />
+          <OutlineTags onChangeTags={onChangeOutlineTags} />
 
           <Animated.View
             style={[a.flex_row, a.p_sm, t.atoms.bg, bottomBarAnimatedStyle]}>
