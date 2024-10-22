@@ -15,6 +15,7 @@ import {isAndroid} from '#/platform/detection'
 import {precacheProfile} from '#/state/queries/profile'
 import {atoms as a, useTheme, web} from '#/alf'
 import {WebOnlyInlineLinkText} from '#/components/Link'
+import {NewskieDialog} from '#/components/NewskieDialog'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {Text} from '#/components/Typography'
 import {TimeElapsed} from './TimeElapsed'
@@ -102,6 +103,8 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
           </WebOnlyInlineLinkText>
         </Text>
       </ProfileHoverCard>
+
+      <NewskieDialog profile={opts.author} disabled={false} />
 
       {!isAndroid && (
         <Text

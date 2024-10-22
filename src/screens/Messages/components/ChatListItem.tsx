@@ -38,6 +38,7 @@ import {Trash_Stroke2_Corner0_Rounded} from '#/components/icons/Trash'
 import {Link} from '#/components/Link'
 import {useMenuControl} from '#/components/Menu'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
+import {NewskieDialog} from '#/components/NewskieDialog'
 import {Text} from '#/components/Typography'
 
 export let ChatListItem = ({
@@ -326,6 +327,7 @@ function ChatListItemReady({
                       )}
                     </TimeElapsed>
                   )}
+
                   {(convo.muted || moderation.blocked) && (
                     <Text
                       style={[
@@ -345,11 +347,22 @@ function ChatListItemReady({
                 </View>
 
                 {!isDeletedAccount && (
-                  <Text
-                    numberOfLines={1}
-                    style={[a.text_sm, t.atoms.text_contrast_medium, a.pb_xs]}>
-                    @{profile.handle}
-                  </Text>
+                  <View style={[a.flex_row, a.gap_xs, a.align_center]}>
+                    <Text
+                      numberOfLines={1}
+                      style={[
+                        a.text_sm,
+                        t.atoms.text_contrast_medium,
+                        a.pb_xs,
+                      ]}>
+                      @{profile.handle}
+                    </Text>
+
+                    {/* Newskies dialog is disabled as if the user clicks the badge, it'll open the conversation and message. */}
+                    {profile.createdAt && (
+                      <NewskieDialog profile={profile} disabled={true} />
+                    )}
+                  </View>
                 )}
 
                 <Text
