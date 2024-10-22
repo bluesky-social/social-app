@@ -135,6 +135,7 @@ function VideoControls({
         accessibilityLabel={_(msg`Video`)}
         accessibilityHint={_(msg`Tap to enter full screen`)}
         accessibilityRole="button"
+        android_ripple={{foreground: true, borderless: true}}
       />
       <ControlButton
         onPress={togglePlayback}

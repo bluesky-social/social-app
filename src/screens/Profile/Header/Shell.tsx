@@ -1,5 +1,10 @@
 import React, {memo} from 'react'
-import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native'
+import {
+  Pressable,
+  StyleSheet,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native'
 import {AppBskyActorDefs, ModerationDecision} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg} from '@lingui/macro'
@@ -121,27 +126,36 @@ let ProfileHeaderShell = ({
       )}
 
       <GrowableAvatar style={styles.aviPosition}>
-        <TouchableWithoutFeedback
-          testID="profileHeaderAviButton"
-          onPress={onPressAvi}
-          accessibilityRole="image"
-          accessibilityLabel={_(msg`View ${profile.handle}'s avatar`)}
-          accessibilityHint="">
-          <View
+        <View
+          style={[
+            t.atoms.bg,
+            {borderColor: t.atoms.bg.backgroundColor},
+            styles.avi,
+            profile.associated?.labeler && styles.aviLabeler,
+          ]}>
+          <Pressable
+            testID="profileHeaderAviButton"
+            android_ripple={{foreground: true, borderless: true}}
             style={[
-              t.atoms.bg,
-              {borderColor: t.atoms.bg.backgroundColor},
-              styles.avi,
-              profile.associated?.labeler && styles.aviLabeler,
-            ]}>
+              {
+                borderRadius: profile.associated?.labeler
+                  ? styles.aviLabeler.borderRadius
+                  : styles.avi.borderRadius,
+                overflow: 'hidden',
+              },
+            ]}
+            onPress={onPressAvi}
+            accessibilityRole="image"
+            accessibilityLabel={_(msg`View ${profile.handle}'s avatar`)}
+            accessibilityHint="">
             <UserAvatar
               type={profile.associated?.labeler ? 'labeler' : 'user'}
               size={90}
               avatar={profile.avatar}
               moderation={moderation.ui('avatar')}
             />
-          </View>
-        </TouchableWithoutFeedback>
+          </Pressable>
+        </View>
       </GrowableAvatar>
     </View>
   )
