@@ -105,6 +105,7 @@ import * as Toast from '#/view/com/util/Toast'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, native, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {OutlineTags} from '#/components/Composer/OutlineTags'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmile} from '#/components/icons/Emoji'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
@@ -743,6 +744,8 @@ export const ComposePost = ({
             </View>
           </Animated.ScrollView>
           <SuggestedLanguage text={richtext.text} />
+
+          <OutlineTags onChangeTags={() => {}} />
 
           <Animated.View
             style={[a.flex_row, a.p_sm, t.atoms.bg, bottomBarAnimatedStyle]}>

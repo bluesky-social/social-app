@@ -162,6 +162,7 @@
     "nanoid": "^5.0.5",
     "normalize-url": "^8.0.0",
     "patch-package": "^6.5.1",
+    "pind": "^0.5.0",
     "postinstall-postinstall": "^2.1.0",
     "psl": "^1.9.0",
     "react": "18.2.0",
