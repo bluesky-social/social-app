@@ -804,7 +804,7 @@ msgstr "Configuración de apariencia"
 #: src/screens/Feeds/NoSavedFeedsOfAnyType.tsx:47
 #: src/screens/Home/NoFeedsPinned.tsx:93
 msgid "Apply default recommended feeds"
-msgstr "Aplicar alimentos recomendados predeterminados"
+msgstr "Aplicar feeds recomendados predeterminados"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:610
 #~ msgid "Are you sure you want delete this starter pack?"
