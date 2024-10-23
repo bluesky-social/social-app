@@ -1,33 +1,66 @@
 import React from 'react'
 import {View} from 'react-native'
+import {AtUri} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useNavigation} from '@react-navigation/native'
 
+import {NavigationProp} from '#/lib/routes/types'
+import {useCreateFeedMutation} from '#/state/queries/feed'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import {UserSelectButton} from '#/screens/Feeds/Creator/UserSelectButton'
 import {atoms as a, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
-import {Button, ButtonIcon,ButtonText} from '#/components/Button'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {OutlineTags} from '#/components/Composer/OutlineTags'
 import * as TextField from '#/components/forms/TextField'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import * as Layout from '#/components/Layout'
+import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 
 export function Creator() {
   const t = useTheme()
   const {_} = useLingui()
   const {currentAccount} = useSession()
-  const {data: currentProfile} = useProfileQuery({
+  const navigation = useNavigation<NavigationProp>()
+  const {data: currentProfile, isPending} = useProfileQuery({
     did: currentAccount?.did,
     staleTime: 300,
+  })
+  const onSuccessCreate = (data: {uri: string; cid: string}) => {
+    const rkey = new AtUri(data.uri).rkey
+    navigation.replace('ProfileFeed', {
+      name: currentAccount!.handle,
+      rkey,
+    })
+  }
+  const {mutateAsync: createFeed} = useCreateFeedMutation({
+    onSuccess: onSuccessCreate,
+    onError: e => {
+      console.error(e)
+    },
   })
 
   const [name, setName] = React.useState('')
   const [description, setDescription] = React.useState('')
-  const [_tags, setTags] = React.useState<string[]>([])
-  const [dids, setDids] = React.useState<string[]>([])
+  const [tags, setTags] = React.useState<string[]>([])
+  const [actors, setActors] = React.useState<string[]>([])
+
+  const onSubmit = React.useCallback(async () => {
+    try {
+      await createFeed({
+        name,
+        description,
+        actors,
+        tags,
+        handleSuffixes: [],
+      })
+    } catch (e) {
+      console.error(e)
+    }
+  }, [name, description, actors, tags, createFeed])
 
   return (
     <Layout.Screen>
@@ -115,7 +148,7 @@ export function Creator() {
                 </Trans>
               </Text>
 
-              <UserSelectButton dids={dids} onChangeDids={setDids} />
+              <UserSelectButton dids={actors} onChangeDids={setActors} />
             </View>
 
             <View style={[a.gap_md]}>
@@ -156,11 +189,13 @@ export function Creator() {
               label={_(msg`Save feed`)}
               size="large"
               variant="solid"
-              color="primary">
+              color="primary"
+              onPress={onSubmit}
+              disabled={isPending}>
               <ButtonText>
                 <Trans>Create feed</Trans>
               </ButtonText>
-              <ButtonIcon icon={Plus} position="right" />
+              <ButtonIcon icon={isPending ? Loader : Plus} position="right" />
             </Button>
 
             <View style={{height: 500}} />

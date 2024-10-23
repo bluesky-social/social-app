@@ -651,6 +651,9 @@ export function precacheFeedFromGeneratorView(
 interface UseCreateFeedMutationParams {
   name: string
   description?: string
+  actors: string[]
+  tags: string[]
+  handleSuffixes: string[]
 }
 
 export function useCreateFeedMutation({
@@ -667,7 +670,7 @@ export function useCreateFeedMutation({
     Error,
     UseCreateFeedMutationParams
   >({
-    mutationFn: async ({name, description}) => {
+    mutationFn: async ({name, description, actors, tags, handleSuffixes}) => {
       let descriptionFacets: AppBskyRichtextFacet.Main[] | undefined
       if (description) {
         const rt = new RichText({text: description})
@@ -691,9 +694,9 @@ export function useCreateFeedMutation({
           },
           '$club.feeed.generator': {
             $type: 'club.feeed.generator',
-            actors: [],
-            handleSuffixes: [],
-            tags: [],
+            actors,
+            handleSuffixes,
+            tags,
           },
         },
       })
