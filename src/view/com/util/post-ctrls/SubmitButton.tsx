@@ -3,6 +3,7 @@ import {TextInput, View} from 'react-native'
 import {AppBskyFeedDefs} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useQueryClient} from '@tanstack/react-query'
 
 import {isWeb} from '#/platform/detection'
 import {writeFeedSubmissionRecords} from '#/state/queries/feedgens'
@@ -51,6 +52,7 @@ export function FeedSelectDialog({
   const {_} = useLingui()
   const listRef = React.useRef<ListMethods>(null)
   const inputRef = React.useRef<TextInput>(null)
+  const queryClient = useQueryClient()
   const agent = useAgent()
 
   const [uris, setUris] = React.useState<string[]>([])
@@ -183,6 +185,11 @@ export function FeedSelectDialog({
               })),
             })
             Toast.show('Post submitted')
+            for (const feedUri of uris) {
+              queryClient.invalidateQueries({
+                queryKey: ['post-feed', 'feedgen|' + feedUri, {}],
+              })
+            }
             control.close()
           }}>
           <ButtonText>Submit</ButtonText>
@@ -190,6 +197,7 @@ export function FeedSelectDialog({
       </View>
     )
   }, [
+    queryClient,
     t.atoms.border_contrast_low,
     t.atoms.bg,
     uris,
