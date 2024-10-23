@@ -1366,7 +1366,7 @@ msgstr "Clic para deshabilitar las citas para esta publicación."
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:305
 msgid "Click to enable quote posts of this post."
-msgstr "Clic para habilitar las publicaciones de cotización de esta publicación."
+msgstr "Clic para habilitar las citas para esta publicación."
 
 #: src/components/dms/MessageItem.tsx:240
 msgid "Click to retry failed message"
