@@ -1773,7 +1773,7 @@ msgstr "Crea un paquete de inicio"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:247
 msgid "Create a starter pack for me"
-msgstr "Crea un pack de inicio para mi"
+msgstr "Crea un paquete de inicio para mí"
 
 #: src/view/com/auth/SplashScreen.tsx:56
 #: src/view/com/auth/SplashScreen.web.tsx:116
