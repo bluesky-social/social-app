@@ -3552,7 +3552,7 @@ msgstr "Tareas"
 #: src/screens/StarterPack/StarterPackScreen.tsx:443
 #: src/screens/StarterPack/StarterPackScreen.tsx:454
 msgid "Join Bluesky"
-msgstr "Unete a Bluesky"
+msgstr "Únete a Bluesky"
 
 #: src/components/StarterPack/QrCode.tsx:61
 msgid "Join the conversation"
