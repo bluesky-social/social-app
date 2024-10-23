@@ -832,7 +832,7 @@ msgstr "¿Estás seguro de que quieres eliminar este paquete de inicio?"
 
 #: src/components/dms/LeaveConvoPrompt.tsx:48
 msgid "Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for the other participant."
-msgstr "¿Estás seguro de que quieres dejar esta conversación?Sus mensajes serán eliminados para usted, pero no para el otro participante."
+msgstr "¿Estás seguro de que quieres dejar esta conversación? Sus mensajes serán eliminados para usted, pero no para el otro participante."
 
 #: src/view/com/feeds/FeedSourceCard.tsx:313
 msgid "Are you sure you want to remove {0} from your feeds?"
