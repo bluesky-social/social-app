@@ -10,7 +10,9 @@ export function useFeedsAutocomplete() {
 
   const {data} = useProfileFeedgensQuery(currentAccount!.did)
   const allFeeds = React.useMemo(() => {
-    return data?.pages?.flatMap(page => page.feeds) || []
+    return (data?.pages?.flatMap(page => page.feeds) || []).filter(feed => {
+      return feed.did === 'did:web:feeed.club'
+    })
   }, [data])
 
   const onSetQuery = React.useCallback(
