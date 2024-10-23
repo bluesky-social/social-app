@@ -639,7 +639,7 @@ msgstr "Se produjo un error al comprimir el video."
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:316
 msgid "An error occurred while generating your starter pack. Want to try again?"
-msgstr "Se produjo un error al generar su paquete de inicio.¿Quieres intentarlo de nuevo?"
+msgstr "Se produjo un error al generar su paquete de inicio. ¿Quieres intentarlo de nuevo?"
 
 #: src/view/com/util/post-embeds/VideoEmbed.tsx:135
 msgid "An error occurred while loading the video. Please try again later."
