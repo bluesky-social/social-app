@@ -2607,16 +2607,16 @@ msgstr "Ismert követők"
 #: src/view/screens/Feeds.tsx:632 src/view/screens/ProfileFollows.tsx:30
 #: src/view/screens/ProfileFollows.tsx:31 src/view/screens/SavedFeeds.tsx:427
 msgid "Following"
-msgstr "Követett személyek"
+msgstr "Követett"
 
 #: src/components/ProfileCard.tsx:318
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:88
 msgid "Following {0}"
-msgstr "{0} követett"
+msgstr "Mostantól követed: {0}"
 
 #: src/view/com/posts/AviFollowButton.tsx:50
 msgid "Following {name}"
-msgstr "{name} követett"
+msgstr "Mostantól követed: {name}"
 
 #: src/view/screens/Settings/index.tsx:540
 msgid "Following feed preferences"
@@ -3293,11 +3293,11 @@ msgstr "Kedvelők"
 
 #: src/view/com/notifications/FeedItem.tsx:211
 msgid "liked your custom feed"
-msgstr "személy kedvelte az egyéni hírfolyamodat"
+msgstr "kedvelte az egyéni hírfolyamodat"
 
 #: src/view/com/notifications/FeedItem.tsx:178
 msgid "liked your post"
-msgstr "személy kedvelte a bejegyzésedet"
+msgstr "kedvelte a bejegyzésedet"
 
 #: src/view/screens/Profile.tsx:231
 msgid "Likes"
