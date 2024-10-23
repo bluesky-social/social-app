@@ -1705,7 +1705,7 @@ msgstr "Copiar texto del mensaje"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:430
 #: src/view/com/util/forms/PostDropdownBtn.tsx:432
 msgid "Copy post text"
-msgstr "Copiar el texto del post"
+msgstr "Copiar texto del post"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:169
 msgid "Copy QR code"
