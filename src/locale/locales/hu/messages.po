@@ -152,7 +152,7 @@ msgstr "{0} p"
 #. How many months have passed, displayed in a narrow form
 #: src/lib/hooks/useTimeAgo.ts:169
 msgid "{0}mo"
-msgstr "{0} hó"
+msgstr "{0} hó"
 
 #. How many seconds have passed, displayed in a narrow form
 #: src/lib/hooks/useTimeAgo.ts:128
