@@ -5,7 +5,10 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {isWeb} from '#/platform/detection'
+import {writeFeedSubmissionRecords} from '#/state/queries/feedgens'
+import {useAgent} from '#/state/session'
 import {ListMethods} from '#/view/com/util/List'
+import * as Toast from '#/view/com/util/Toast'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, native, useTheme, web} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
@@ -39,13 +42,16 @@ type Item =
 
 export function FeedSelectDialog({
   control,
+  postUri,
 }: {
   control: Dialog.DialogOuterProps['control']
+  postUri: string
 }) {
   const t = useTheme()
   const {_} = useLingui()
   const listRef = React.useRef<ListMethods>(null)
   const inputRef = React.useRef<TextInput>(null)
+  const agent = useAgent()
 
   const [uris, setUris] = React.useState<string[]>([])
 
@@ -168,8 +174,16 @@ export function FeedSelectDialog({
           variant={isWeb ? 'ghost' : 'solid'}
           color="primary"
           style={[a.z_20]}
-          onPress={() => {
-            console.log(uris)
+          onPress={async () => {
+            await writeFeedSubmissionRecords({
+              agent,
+              records: uris.map(feedUri => ({
+                feedUri,
+                postUri,
+              })),
+            })
+            Toast.show('Post submitted')
+            control.close()
           }}>
           <ButtonText>Submit</ButtonText>
         </Button>
@@ -183,6 +197,8 @@ export function FeedSelectDialog({
     searchText,
     control,
     setSearchText,
+    postUri,
+    agent,
   ])
 
   return (

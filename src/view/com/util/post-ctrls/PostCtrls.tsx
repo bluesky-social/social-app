@@ -409,12 +409,7 @@ let PostCtrls = ({
       )}
       <Dialog.Outer control={submitControl}>
         <Dialog.Handle />
-        <FeedSelectDialog
-          control={submitControl}
-          dids={[]}
-          onChangeDids={() => {}}
-          profiles={[]}
-        />
+        <FeedSelectDialog control={submitControl} postUri={post.uri} />
       </Dialog.Outer>
     </View>
   )
