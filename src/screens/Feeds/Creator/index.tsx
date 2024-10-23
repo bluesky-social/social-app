@@ -204,8 +204,8 @@ export function Creator() {
                   t.atoms.text_contrast_medium,
                 ]}>
                 <Trans>
-                  You may add some tags to further filter the posts from the
-                  authors above.
+                  Choose which of their posts will get pulled into your feed by
+                  adding tags.
                 </Trans>
               </Text>
 
