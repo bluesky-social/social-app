@@ -1769,7 +1769,7 @@ msgstr "Crear un código QR para pack de inicio"
 #: src/components/StarterPack/ProfileStarterPacks.tsx:260
 #: src/Navigation.tsx:367
 msgid "Create a starter pack"
-msgstr "Crea un pack de inicio"
+msgstr "Crea un paquete de inicio"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:247
 msgid "Create a starter pack for me"
