@@ -1,14 +1,17 @@
 import React from 'react'
 import {View} from 'react-native'
+import {Image as RNImage} from 'react-native-image-crop-picker'
 import {AtUri} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
+import {compressIfNeeded} from '#/lib/media/manip'
 import {NavigationProp} from '#/lib/routes/types'
 import {useCreateFeedMutation} from '#/state/queries/feed'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
+import {EditableUserAvatar} from '#/view/com/util/UserAvatar'
 import {UserSelectButton} from '#/screens/Feeds/Creator/UserSelectButton'
 import {atoms as a, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
@@ -47,10 +50,15 @@ export function Creator() {
   const [description, setDescription] = React.useState('')
   const [tags, setTags] = React.useState<string[]>([])
   const [actors, setActors] = React.useState<string[]>([])
+  const [avatar, setAvatar] = React.useState<string | undefined>()
+  const [avatarImage, setAvatarImage] = React.useState<
+    RNImage | undefined | null
+  >()
 
   const onSubmit = React.useCallback(async () => {
     try {
       await createFeed({
+        avatar: avatarImage ?? undefined,
         name,
         description,
         actors,
@@ -60,7 +68,26 @@ export function Creator() {
     } catch (e) {
       console.error(e)
     }
-  }, [name, description, actors, tags, createFeed])
+  }, [name, description, actors, tags, createFeed, avatarImage])
+
+  const onSelectAvatar = React.useCallback(
+    async (image: RNImage | null) => {
+      //setImageError('')
+      if (image === null) {
+        setAvatar(undefined)
+        setAvatarImage(null)
+        return
+      }
+      try {
+        const finalImg = await compressIfNeeded(image, 1000000)
+        setAvatar(finalImg.path)
+        setAvatarImage(finalImg)
+      } catch (e: any) {
+        //setImageError(cleanError(e))
+      }
+    },
+    [setAvatar, setAvatarImage],
+  )
 
   return (
     <Layout.Screen>
@@ -84,6 +111,25 @@ export function Creator() {
                   below.
                 </Trans>
               </Text>
+
+              <View style={[a.flex_row, a.align_center, a.gap_md]}>
+                <View>
+                  <EditableUserAvatar
+                    type="algo"
+                    size={60}
+                    avatar={avatar}
+                    onSelectNewAvatar={onSelectAvatar}
+                  />
+                </View>
+                <View>
+                  <TextField.LabelText>
+                    <Trans>Add an avatar</Trans>
+                  </TextField.LabelText>
+                  <Text>
+                    <Trans>Be creative!</Trans>
+                  </Text>
+                </View>
+              </View>
 
               <View>
                 <TextField.LabelText>

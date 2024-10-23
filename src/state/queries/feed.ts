@@ -1,8 +1,10 @@
 import {useCallback, useEffect, useMemo, useRef} from 'react'
+import {Image as RNImage} from 'react-native-image-crop-picker'
 import {
   AppBskyFeedGetFeedGenerator,
   AppBskyRichtextFacet,
   BskyAgent,
+  ComAtprotoRepoUploadBlob,
 } from '@atproto/api'
 import {
   AppBskyActorDefs,
@@ -24,6 +26,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query'
 
+import {uploadBlob} from '#/lib/api'
 import {until} from '#/lib/async/until'
 import {DISCOVER_FEED_URI, DISCOVER_SAVED_FEED} from '#/lib/constants'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
@@ -653,6 +656,7 @@ export function precacheFeedFromGeneratorView(
 // --- feeds playground ---
 
 interface UseCreateFeedMutationParams {
+  avatar?: RNImage
   name: string
   description?: string
   actors: string[]
@@ -674,12 +678,29 @@ export function useCreateFeedMutation({
     Error,
     UseCreateFeedMutationParams
   >({
-    mutationFn: async ({name, description, actors, tags, handleSuffixes}) => {
+    mutationFn: async ({
+      avatar,
+      name,
+      description,
+      actors,
+      tags,
+      handleSuffixes,
+    }) => {
       let descriptionFacets: AppBskyRichtextFacet.Main[] | undefined
       if (description) {
         const rt = new RichText({text: description})
         await rt.detectFacets(agent)
         descriptionFacets = rt.facets
+      }
+      let avatarBlob:
+        | ComAtprotoRepoUploadBlob.Response['data']['blob']
+        | undefined
+
+      if (avatar) {
+        const res = await uploadBlob(agent, avatar.path, avatar.mime)
+        if (res.data) {
+          avatarBlob = res.data.blob
+        }
       }
 
       const res = await agent.api.com.atproto.repo.createRecord({
@@ -689,6 +710,7 @@ export function useCreateFeedMutation({
           $type: 'app.bsky.feed.generator',
           createdAt: new Date().toISOString(),
           did: 'did:web:feeed.club',
+          avatar: avatarBlob,
           displayName: name,
           description,
           descriptionFacets,
