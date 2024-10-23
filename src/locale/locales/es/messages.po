@@ -565,7 +565,7 @@ msgstr "Permitir nuevos mensajes de"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:360
 msgid "Allow replies from:"
-msgstr "Permitir respuestas desde:"
+msgstr "Permitir respuestas de:"
 
 #: src/view/screens/AppPasswords.tsx:263
 msgid "Allows access to direct messages"
