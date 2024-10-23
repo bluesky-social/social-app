@@ -48,7 +48,7 @@ msgstr "{0, plural, one {se ha colocado # etiqueta en esta cuenta} other {se han
 
 #: src/components/moderation/LabelsOnMe.tsx:60
 msgid "{0, plural, one {# label has been placed on this content} other {# labels have been placed on this content}}"
-msgstr "{0, plural, una {# label has been placed on this content} unas {# labels have been placed on this content}}"
+msgstr "{0, plural, one {se ha colocado # etiqueta en este contenido} other {se han colocado # etiquetas en este contenido}}"
 
 #: src/lib/hooks/useTimeAgo.ts:136
 msgid "{0, plural, one {# minute} other {# minutes}}"
