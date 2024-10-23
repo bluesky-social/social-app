@@ -2536,7 +2536,7 @@ msgstr "Todos"
 
 #: src/lib/moderation/useReportOptions.ts:73
 msgid "Excessive mentions or replies"
-msgstr "Excessive mentions or replies"
+msgstr "Menciones o respuestas excesivas"
 
 #: src/lib/moderation/useReportOptions.ts:86
 msgid "Excessive or unwanted messages"
