@@ -2777,7 +2777,7 @@ msgstr "Las noticias son algoritmos personalizados que los usuarios construyen c
 #: src/components/FeedCard.tsx:273
 #: src/view/screens/SavedFeeds.tsx:82
 msgid "Feeds updated!"
-msgstr "Feeds actualizados!"
+msgstr "¡Feeds actualizados!"
 
 #: src/view/com/modals/ChangeHandle.tsx:468
 msgid "File Contents"
