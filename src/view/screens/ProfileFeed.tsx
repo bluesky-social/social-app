@@ -51,10 +51,11 @@ import {Text} from '#/view/com/util/text/Text'
 import * as Toast from '#/view/com/util/Toast'
 import {CenteredView} from '#/view/com/util/Views'
 import {atoms as a, useTheme} from '#/alf'
-import {Button as NewButton, ButtonText} from '#/components/Button'
+import {Button as NewButton, ButtonIcon, ButtonText} from '#/components/Button'
 import {useRichText} from '#/components/hooks/useRichText'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded as Share} from '#/components/icons/ArrowOutOfBox'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
+import {EditBig_Stroke2_Corner0_Rounded as EditBig} from '#/components/icons/EditBig'
 import {
   Heart2_Filled_Stroke2_Corner0_Rounded as HeartFilled,
   Heart2_Stroke2_Corner0_Rounded as HeartOutline,
@@ -266,6 +267,9 @@ export function ProfileFeedScreenInner({
     },
     [feedSectionRef],
   )
+  const isFeedSubmittable =
+    feedInfo.creatorDid === currentAccount?.did &&
+    feedInfo.did === 'did:web:feeed.club'
 
   const renderHeader = useCallback(() => {
     return (
@@ -283,6 +287,21 @@ export function ProfileFeedScreenInner({
           }
           avatarType="algo">
           <View style={[a.flex_row, a.align_center, a.gap_sm]}>
+            {isFeedSubmittable && (
+              <NewButton
+                size="small"
+                variant="solid"
+                color="primary"
+                shape="round"
+                label={_(msg`Add post to feed`)}
+                onPress={() =>
+                  openComposer({
+                    initFeeds: [feedInfo.uri],
+                  })
+                }>
+                <ButtonIcon icon={EditBig} />
+              </NewButton>
+            )}
             {feedInfo && hasSession && (
               <NewButton
                 testID={isPinned ? 'unpinBtn' : 'pinBtn'}
@@ -391,6 +410,8 @@ export function ProfileFeedScreenInner({
     onPressShare,
     t,
     isPending,
+    isFeedSubmittable,
+    openComposer,
   ])
 
   return (

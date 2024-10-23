@@ -100,6 +100,7 @@ function Inner({state}: {state: ComposerOpts}) {
             openEmojiPicker={onOpenPicker}
             text={state.text}
             imageUris={state.imageUris}
+            initFeeds={state.initFeeds}
           />
         </View>
         <EmojiPicker state={pickerState} close={onClosePicker} />

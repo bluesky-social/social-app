@@ -141,8 +141,10 @@ export const ComposePost = ({
   imageUris: initImageUris,
   videoUri: initVideoUri,
   cancelRef,
+  initFeeds,
 }: Props & {
   cancelRef?: React.RefObject<CancelRef>
+  initFeeds?: string[]
 }) => {
   const {currentAccount} = useSession()
   const agent = useAgent()
@@ -175,7 +177,7 @@ export const ComposePost = ({
       initText,
       initMention,
       initOutlineTags: [],
-      initFeeds: [],
+      initFeeds: initFeeds || [],
     },
     createComposerState,
   )
@@ -537,6 +539,7 @@ export const ComposePost = ({
   const [showOutlineTags, setShowOutlineTags] = useState(false)
   const outlineTagsVisible = showOutlineTags || draft.tags.length > 0
   const [showFeeds, setShowFeeds] = useState(false)
+  const feedsAreVisible = showFeeds || draft.feeds.length > 0
 
   const {
     scrollHandler,
@@ -793,7 +796,7 @@ export const ComposePost = ({
             </View>
           )}
 
-          {showFeeds && (
+          {feedsAreVisible && (
             <View style={[a.px_lg]}>
               <Divider />
               <View style={[a.flex_row, a.gap_xs, a.pt_sm, a.pb_md]}>
@@ -806,7 +809,10 @@ export const ComposePost = ({
                   <FeedsIcon size="md" />
                 </View>
                 <View style={[a.flex_1]}>
-                  <FeedsSelector onChangeFeeds={onChangeFeeds} />
+                  <FeedsSelector
+                    initialFeeds={draft.feeds}
+                    onChangeFeeds={onChangeFeeds}
+                  />
                 </View>
               </View>
             </View>
@@ -863,9 +869,9 @@ export const ComposePost = ({
                 </Button>
               )}
 
-              {!showFeeds && (
+              {!feedsAreVisible && (
                 <Button
-                  label={_(msg`Add tags`)}
+                  label={_(msg`Add feeds to submit to`)}
                   size="small"
                   variant="solid"
                   color="secondary"

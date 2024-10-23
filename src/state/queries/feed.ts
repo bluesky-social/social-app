@@ -46,6 +46,7 @@ export type FeedSourceFeedInfo = {
     name: string
     params: Record<string, string>
   }
+  did: string
   cid: string
   avatar: string | undefined
   displayName: string
@@ -65,6 +66,7 @@ export type FeedSourceListInfo = {
     name: string
     params: Record<string, string>
   }
+  did: unknown
   cid: string
   avatar: string | undefined
   displayName: string
@@ -99,6 +101,7 @@ export function hydrateFeedGenerator(
     type: 'feed',
     uri: view.uri,
     feedDescriptor: `feedgen|${view.uri}`,
+    did: view.did,
     cid: view.cid,
     route: {
       href,
@@ -136,6 +139,7 @@ export function hydrateList(view: AppBskyGraphDefs.ListView): FeedSourceInfo {
       name: route[0],
       params: route[1],
     },
+    did: view.did,
     cid: view.cid,
     avatar: view.avatar,
     description: new RichText({
