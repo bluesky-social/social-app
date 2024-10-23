@@ -3775,7 +3775,7 @@ msgstr "Lista"
 
 #: src/view/com/modals/CreateOrEditList.tsx:241
 msgid "List Avatar"
-msgstr "Lista de avatares"
+msgstr "Avatar de la lista"
 
 #: src/view/screens/ProfileList.tsx:413
 msgid "List blocked"
