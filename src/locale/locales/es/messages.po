@@ -2644,7 +2644,7 @@ msgstr "Error al crear la contraseña de la aplicación."
 #: src/screens/StarterPack/Wizard/index.tsx:229
 #: src/screens/StarterPack/Wizard/index.tsx:237
 msgid "Failed to create starter pack"
-msgstr "Error al crear el paquete inicial."
+msgstr "Error al crear el paquete de inicio."
 
 #: src/view/com/modals/CreateOrEditList.tsx:186
 msgid "Failed to create the list. Check your internet connection and try again."
