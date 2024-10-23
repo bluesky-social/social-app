@@ -3792,7 +3792,7 @@ msgstr "Lista de eliminados"
 
 #: src/screens/List/ListHiddenScreen.tsx:126
 msgid "List has been hidden"
-msgstr "La lista ha sido oculta"
+msgstr "Se ha ocultado la lista"
 
 #: src/view/screens/ProfileList.tsx:161
 msgid "List Hidden"
