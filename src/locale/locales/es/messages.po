@@ -2948,7 +2948,7 @@ msgstr "Seguidores"
 
 #: src/Navigation.tsx:186
 msgid "Followers of @{0} that you know"
-msgstr "Seguidore de @{0} que podrías conocer"
+msgstr "Seguidores de @{0} que conoces"
 
 #: src/screens/Profile/KnownFollowers.tsx:108
 #: src/screens/Profile/KnownFollowers.tsx:118
