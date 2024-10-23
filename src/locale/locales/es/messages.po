@@ -203,7 +203,7 @@ msgstr "{count, plural, un {Liked by # user} unos {Liked by # users}}"
 #: src/lib/generate-starterpack.ts:108
 #: src/screens/StarterPack/Wizard/index.tsx:174
 msgid "{displayName}'s Starter Pack"
-msgstr "{displayName}'s Starter Pack"
+msgstr "Paquete de inicio de {displayName}"
 
 #: src/screens/SignupQueued.tsx:207
 msgid "{estimatedTimeHrs, plural, one {hour} other {hours}}"
