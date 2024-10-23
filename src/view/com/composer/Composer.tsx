@@ -105,11 +105,13 @@ import * as Toast from '#/view/com/util/Toast'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, native, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {FeedsSelector} from '#/components/Composer/FeedsSelector'
 import {OutlineTags} from '#/components/Composer/OutlineTags'
 import {Divider} from '#/components/Divider'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmile} from '#/components/icons/Emoji'
 import {Hashtag_Stroke2_Corner0_Rounded as Hashtag} from '#/components/icons/Hashtag'
+import {ListSparkle_Stroke2_Corner0_Rounded as FeedsIcon} from '#/components/icons/ListSparkle'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import * as Prompt from '#/components/Prompt'
 import {Text as NewText} from '#/components/Typography'
@@ -524,8 +526,13 @@ export const ComposePost = ({
     [dispatch],
   )
 
+  const onChangeFeeds = useCallback((uris: string[]) => {
+    console.log(uris)
+  }, [])
+
   const [showOutlineTags, setShowOutlineTags] = useState(false)
   const outlineTagsVisible = showOutlineTags || draft.tags.length > 0
+  const [showFeeds, setShowFeeds] = useState(false)
 
   const {
     scrollHandler,
@@ -766,7 +773,7 @@ export const ComposePost = ({
           {outlineTagsVisible && (
             <View style={[a.px_lg]}>
               <Divider />
-              <View style={[a.flex_row, a.gap_xs, a.pt_sm, a.pb_md]}>
+              <View style={[a.flex_row, a.gap_xs, a.py_sm]}>
                 <View
                   style={[
                     {
@@ -777,6 +784,25 @@ export const ComposePost = ({
                 </View>
                 <View style={[a.flex_1]}>
                   <OutlineTags onChangeTags={onChangeOutlineTags} />
+                </View>
+              </View>
+            </View>
+          )}
+
+          {showFeeds && (
+            <View style={[a.px_lg]}>
+              <Divider />
+              <View style={[a.flex_row, a.gap_xs, a.pt_sm, a.pb_md]}>
+                <View
+                  style={[
+                    {
+                      paddingTop: 1,
+                    },
+                  ]}>
+                  <FeedsIcon size="md" />
+                </View>
+                <View style={[a.flex_1]}>
+                  <FeedsSelector onChangeFeeds={onChangeFeeds} />
                 </View>
               </View>
             </View>
@@ -829,6 +855,20 @@ export const ComposePost = ({
                   <ButtonIcon icon={Hashtag} position="left" />
                   <ButtonText>
                     <Trans>Add tags</Trans>
+                  </ButtonText>
+                </Button>
+              )}
+
+              {!showFeeds && (
+                <Button
+                  label={_(msg`Add tags`)}
+                  size="small"
+                  variant="solid"
+                  color="secondary"
+                  onPress={() => setShowFeeds(true)}>
+                  <ButtonIcon icon={FeedsIcon} position="left" />
+                  <ButtonText>
+                    <Trans>Post to feeds</Trans>
                   </ButtonText>
                 </Button>
               )}
