@@ -133,7 +133,7 @@ msgstr "{0} de {1}"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:467
 msgid "{0} people have used this starter pack!"
-msgstr "{0} personas han usado este paquete de inicio!"
+msgstr "¡{0} personas han usado este paquete de inicio!"
 
 #: src/view/screens/ProfileList.tsx:286
 #~ msgid "{0} your feeds"
