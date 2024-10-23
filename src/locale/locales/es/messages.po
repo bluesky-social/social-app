@@ -2387,7 +2387,7 @@ msgstr "Incrusta esta publicación en tu sitio web. Simplemente copia el siguien
 
 #: src/components/dialogs/EmbedConsent.tsx:100
 msgid "Enable {0} only"
-msgstr "Activa {0} solamente"
+msgstr "Activar {0} solamente"
 
 #: src/screens/Moderation/index.tsx:340
 msgid "Enable adult content"
