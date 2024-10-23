@@ -313,7 +313,7 @@ msgstr ""
 
 #: src/screens/Profile/Header/Handle.tsx:53
 msgid "⚠Invalid Handle"
-msgstr "⚠Manejo inválido"
+msgstr "⚠Nombre de usuario inválido"
 
 #: src/components/dialogs/MutedWords.tsx:193
 msgid "24 hours"
