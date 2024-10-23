@@ -2405,7 +2405,7 @@ msgstr "Activa contenido adulto"
 #: src/components/dialogs/EmbedConsent.tsx:81
 #: src/components/dialogs/EmbedConsent.tsx:88
 msgid "Enable external media"
-msgstr "Activa medios externos"
+msgstr "Activar medios externos"
 
 #: src/view/screens/PreferencesExternalEmbeds.tsx:71
 msgid "Enable media players for"
