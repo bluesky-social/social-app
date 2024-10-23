@@ -1700,7 +1700,7 @@ msgstr "Copiar el enlace hacia el post"
 #: src/components/dms/MessageMenu.tsx:110
 #: src/components/dms/MessageMenu.tsx:112
 msgid "Copy message text"
-msgstr "Copiar mensaje de texto"
+msgstr "Copiar texto del mensaje"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:430
 #: src/view/com/util/forms/PostDropdownBtn.tsx:432
