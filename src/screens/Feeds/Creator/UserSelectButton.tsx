@@ -1,7 +1,7 @@
 import React from 'react'
-import {TextInput,View} from 'react-native'
+import {TextInput, View} from 'react-native'
 import {AppBskyActorDefs, moderateProfile, ModerationOpts} from '@atproto/api'
-import {msg, Plural,Trans} from '@lingui/macro'
+import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
@@ -12,7 +12,7 @@ import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
 import {useProfilesQuery} from '#/state/queries/profile'
 import {ListMethods} from '#/view/com/util/List'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, native,useTheme, web} from '#/alf'
+import {atoms as a, native, useTheme, web} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as Toggle from '#/components/forms/Toggle'
@@ -186,7 +186,7 @@ export function UserSelectButton({
                 </Text>
               ) : (
                 <Text style={[a.text_sm, a.leading_snug]}>
-                  Your feed will contain posts from all user.
+                  Your feed will not automatically pull posts from any users.
                 </Text>
               )}
             </View>

@@ -134,7 +134,7 @@ export function Creator() {
 
             <View style={[a.gap_md]}>
               <Text style={[a.text_xl, a.font_heavy, a.leading_tight]}>
-                <Trans>Users</Trans>
+                <Trans>Automatically pull posts into your feed</Trans>
               </Text>
 
               <Text
@@ -144,17 +144,12 @@ export function Creator() {
                   t.atoms.text_contrast_medium,
                 ]}>
                 <Trans>
-                  Only posts by users you add here will appear in your feed.
+                  You may add people below to automatically pull their posts
+                  into your feed.
                 </Trans>
               </Text>
 
               <UserSelectButton dids={actors} onChangeDids={setActors} />
-            </View>
-
-            <View style={[a.gap_md]}>
-              <Text style={[a.text_xl, a.font_heavy, a.leading_tight]}>
-                <Trans>Tags</Trans>
-              </Text>
 
               <Text
                 style={[
@@ -163,9 +158,8 @@ export function Creator() {
                   t.atoms.text_contrast_medium,
                 ]}>
                 <Trans>
-                  Posts tagged with the following tags will automatically appear
-                  in your feed, provided they are from the users you've selected
-                  above.
+                  You may add some tags to further filter the posts from the
+                  authors above.
                 </Trans>
               </Text>
 
