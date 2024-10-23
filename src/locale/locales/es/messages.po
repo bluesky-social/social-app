@@ -1955,7 +1955,7 @@ msgstr "Borrar un post"
 #: src/screens/StarterPack/StarterPackScreen.tsx:567
 #: src/screens/StarterPack/StarterPackScreen.tsx:723
 msgid "Delete starter pack"
-msgstr "Borrar pack de inicio"
+msgstr "Borrar paquete de inicio"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:618
 msgid "Delete starter pack?"
