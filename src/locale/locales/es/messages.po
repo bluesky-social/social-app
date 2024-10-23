@@ -24,7 +24,7 @@ msgstr "(sin correo)"
 #: src/view/com/notifications/FeedItem.tsx:232
 #: src/view/com/notifications/FeedItem.tsx:327
 msgid "{0, plural, one {{formattedCount} other} other {{formattedCount} others}}"
-msgstr "{0, plural, un {{formattedCount} other} otro {{formattedCount} others}}"
+msgstr "{0, plural, one {{formattedCount} otro} other {{formattedCount} otros}}"
 
 #: src/lib/hooks/useTimeAgo.ts:156
 msgid "{0, plural, one {# day} other {# days}}"
