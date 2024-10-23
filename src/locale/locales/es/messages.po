@@ -121,7 +121,7 @@ msgstr "{0} <0>en <1>tags</1></0>"
 #. Pattern: {wordValue} in text, tags
 #: src/components/dialogs/MutedWords.tsx:465
 msgid "{0} <0>in <1>text & tags</1></0>"
-msgstr "{0} <0>en <1>Texto y etiquetas</1></0>"
+msgstr "{0} <0>en <1>texto y etiquetas</1></0>"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:219
 msgid "{0} joined this week"
