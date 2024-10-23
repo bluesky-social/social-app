@@ -2391,7 +2391,7 @@ msgstr "Activa {0} solamente"
 
 #: src/screens/Moderation/index.tsx:340
 msgid "Enable adult content"
-msgstr "Activa contenido adulto"
+msgstr "Activar contenido adulto"
 
 #: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:94
 #~ msgid "Enable Adult Content"
