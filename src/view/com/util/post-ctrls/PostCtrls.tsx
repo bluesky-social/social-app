@@ -293,6 +293,7 @@ let PostCtrls = ({
           repostCount={(post.repostCount ?? 0) + (post.quoteCount ?? 0)}
           onRepost={onRepost}
           onQuote={onQuote}
+          onSubmit={onShare /* TODO */}
           big={big}
           embeddingDisabled={Boolean(post.viewer?.embeddingDisabled)}
         />

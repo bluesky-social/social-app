@@ -19,6 +19,7 @@ interface Props {
   repostCount?: number
   onRepost: () => void
   onQuote: () => void
+  onSubmit: () => void
   big?: boolean
   embeddingDisabled: boolean
 }
@@ -28,6 +29,7 @@ export const RepostButton = ({
   repostCount,
   onRepost,
   onQuote,
+  onSubmit,
   big,
   embeddingDisabled,
 }: Props) => {
@@ -90,6 +92,22 @@ export const RepostButton = ({
               {embeddingDisabled
                 ? _(msg`Quote posts disabled`)
                 : _(msg`Quote post`)}
+            </Menu.ItemText>
+            <Menu.ItemIcon icon={Quote} position="right" />
+          </Menu.Item>
+          <Menu.Item
+            disabled={embeddingDisabled}
+            label={
+              embeddingDisabled
+                ? _(msg`Quote posts disabled`)
+                : _(msg`Submit to a feed`)
+            }
+            testID="repostDropdownQuoteBtn"
+            onPress={onSubmit}>
+            <Menu.ItemText>
+              {embeddingDisabled
+                ? _(msg`Quote posts disabled`)
+                : _(msg`Submit to a feed`)}
             </Menu.ItemText>
             <Menu.ItemIcon icon={Quote} position="right" />
           </Menu.Item>

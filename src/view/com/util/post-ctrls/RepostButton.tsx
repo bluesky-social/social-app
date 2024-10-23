@@ -19,6 +19,7 @@ interface Props {
   repostCount?: number
   onRepost: () => void
   onQuote: () => void
+  onSubmit: () => void
   big?: boolean
   embeddingDisabled: boolean
 }
@@ -28,6 +29,7 @@ let RepostButton = ({
   repostCount,
   onRepost,
   onQuote,
+  onSubmit,
   big,
   embeddingDisabled,
 }: Props): React.ReactNode => {
@@ -152,6 +154,42 @@ let RepostButton = ({
                   {embeddingDisabled
                     ? _(msg`Quote posts disabled`)
                     : _(msg`Quote post`)}
+                </Text>
+              </Button>
+              <Button
+                disabled={embeddingDisabled}
+                style={[a.justify_start, a.px_md]}
+                label={
+                  embeddingDisabled
+                    ? _(msg`Quote posts disabled`)
+                    : _(msg`Submit to a feed`)
+                }
+                onPress={() => {
+                  playHaptic()
+                  dialogControl.close(() => {
+                    onSubmit()
+                  })
+                }}
+                size="large"
+                variant="ghost"
+                color="primary">
+                <Quote
+                  size="lg"
+                  fill={
+                    embeddingDisabled
+                      ? t.atoms.text_contrast_low.color
+                      : t.palette.primary_500
+                  }
+                />
+                <Text
+                  style={[
+                    a.font_bold,
+                    a.text_xl,
+                    embeddingDisabled && t.atoms.text_contrast_low,
+                  ]}>
+                  {embeddingDisabled
+                    ? _(msg`Quote posts disabled`)
+                    : _(msg`Submit to a feed`)}
                 </Text>
               </Button>
             </View>
