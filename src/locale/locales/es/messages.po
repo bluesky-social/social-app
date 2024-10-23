@@ -149,7 +149,7 @@ msgstr "Los feeds y personas favoritas de {0}, ¡únete a mí!"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:47
 msgid "{0}'s starter pack"
-msgstr "pack inicial de {0}"
+msgstr "paquete de inicio de {0}"
 
 #. How many days have passed, displayed in a narrow form
 #: src/lib/hooks/useTimeAgo.ts:158
