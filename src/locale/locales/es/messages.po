@@ -56,7 +56,7 @@ msgstr "{0, plural, one {# minuto} other {# minutos}}"
 
 #: src/lib/hooks/useTimeAgo.ts:167
 msgid "{0, plural, one {# month} other {# months}}"
-msgstr "{0, plural, un {# month} unos {# months}}"
+msgstr "{0, plural, one {# mes} other {# meses}}"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:71
 msgid "{0, plural, one {# repost} other {# reposts}}"
