@@ -2045,7 +2045,7 @@ msgstr "Desactivar subtitulos"
 #: src/screens/Messages/Settings.tsx:143
 #: src/screens/Moderation/index.tsx:353
 msgid "Disabled"
-msgstr "Dishabilitado"
+msgstr "Deshabilitado"
 
 #: src/view/com/composer/Composer.tsx:842
 msgid "Discard"
