@@ -542,7 +542,7 @@ msgstr "¡Entrenamiento de algoritmo completo!"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:370
 msgid "All accounts have been followed!"
-msgstr "Se han seguido todas las cuentas!"
+msgstr "¡Se han seguido todas las cuentas!"
 
 #: src/view/screens/Feeds.tsx:734
 msgid "All the feeds you've saved, right in one place."
