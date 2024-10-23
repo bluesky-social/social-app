@@ -217,7 +217,7 @@ export function OutlineTags({
   }, [closeDropdownAndReset])
 
   return (
-    <View ref={containerRef as any} style={[a.px_sm]}>
+    <View ref={containerRef as any} style={[a.w_full]}>
       <View style={[a.flex_row, a.align_start, a.flex_wrap, a.gap_sm]}>
         {tags.map((tag, i) => (
           <TagButton key={tag + i} onPress={() => removeTag(tag)}>
@@ -247,7 +247,7 @@ export function OutlineTags({
                 paddingVertical: 4,
               },
             ]}
-            placeholder="Add outline tags"
+            placeholder="Add tags"
             autoCapitalize="none"
             autoCorrect={false}
             autoComplete="off"

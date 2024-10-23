@@ -106,8 +106,10 @@ import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, native, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {OutlineTags} from '#/components/Composer/OutlineTags'
+import {Divider} from '#/components/Divider'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmile} from '#/components/icons/Emoji'
+import {Hashtag_Stroke2_Corner0_Rounded as Hashtag} from '#/components/icons/Hashtag'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import * as Prompt from '#/components/Prompt'
 import {Text as NewText} from '#/components/Typography'
@@ -522,6 +524,9 @@ export const ComposePost = ({
     [dispatch],
   )
 
+  const [showOutlineTags, setShowOutlineTags] = useState(false)
+  const outlineTagsVisible = showOutlineTags || draft.tags.length > 0
+
   const {
     scrollHandler,
     onScrollViewContentSizeChange,
@@ -758,10 +763,33 @@ export const ComposePost = ({
           </Animated.ScrollView>
           <SuggestedLanguage text={richtext.text} />
 
-          <OutlineTags onChangeTags={onChangeOutlineTags} />
+          {outlineTagsVisible && (
+            <View style={[a.px_lg]}>
+              <Divider />
+              <View style={[a.flex_row, a.gap_xs, a.pt_sm, a.pb_md]}>
+                <View
+                  style={[
+                    {
+                      paddingTop: 1,
+                    },
+                  ]}>
+                  <Hashtag size="md" />
+                </View>
+                <View style={[a.flex_1]}>
+                  <OutlineTags onChangeTags={onChangeOutlineTags} />
+                </View>
+              </View>
+            </View>
+          )}
 
           <Animated.View
-            style={[a.flex_row, a.p_sm, t.atoms.bg, bottomBarAnimatedStyle]}>
+            style={[
+              a.flex_row,
+              a.pb_md,
+              a.px_lg,
+              t.atoms.bg,
+              bottomBarAnimatedStyle,
+            ]}>
             <ScrollView
               contentContainerStyle={[a.gap_sm]}
               horizontal={true}
@@ -790,6 +818,20 @@ export const ComposePost = ({
                 }}
                 hasMedia={hasMedia || Boolean(extLink)}
               />
+
+              {!outlineTagsVisible && (
+                <Button
+                  label={_(msg`Add tags`)}
+                  size="small"
+                  variant="solid"
+                  color="secondary"
+                  onPress={() => setShowOutlineTags(true)}>
+                  <ButtonIcon icon={Hashtag} position="left" />
+                  <ButtonText>
+                    <Trans>Add tags</Trans>
+                  </ButtonText>
+                </Button>
+              )}
             </ScrollView>
           </Animated.View>
           <View
