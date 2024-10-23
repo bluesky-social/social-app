@@ -231,7 +231,7 @@ export function Creator() {
               variant="solid"
               color="primary"
               onPress={onSubmit}
-              disabled={isPending}>
+              disabled={isPending || (actors.length > 0 && tags.length === 0)}>
               <ButtonText>
                 <Trans>Create feed</Trans>
               </ButtonText>
