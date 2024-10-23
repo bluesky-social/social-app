@@ -455,7 +455,7 @@ msgstr "Añadir texto alternativo"
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:107
 msgid "Add alt text (optional)"
-msgstr "Agregar texto alt (opcional)"
+msgstr "Agregar texto alternativo (opcional)"
 
 #: src/view/screens/AppPasswords.tsx:102
 #: src/view/screens/AppPasswords.tsx:144
