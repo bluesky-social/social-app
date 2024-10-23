@@ -820,7 +820,7 @@ msgstr "¿Seguro que quieres eliminar la contraseña de app \"{name}\"?"
 
 #: src/components/dms/MessageMenu.tsx:149
 msgid "Are you sure you want to delete this message? The message will be deleted for you, but not for the other participant."
-msgstr "¿Estás seguro de que quieres eliminar este mensaje?El mensaje se eliminará para usted, pero no para el otro participante."
+msgstr "¿Estás seguro de que quieres eliminar este mensaje? El mensaje se eliminará para usted, pero no para el otro participante."
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:621
 msgid "Are you sure you want to delete this starter pack?"
