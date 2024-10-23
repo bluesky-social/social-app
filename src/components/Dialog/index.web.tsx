@@ -156,6 +156,7 @@ export function Inner({
   accessibilityLabelledBy,
   accessibilityDescribedBy,
   header,
+  // TODO no need for this I think
   contentContainerStyle,
 }: DialogInnerProps) {
   const t = useTheme()
@@ -181,6 +182,7 @@ export function Inner({
           a.rounded_md,
           a.w_full,
           a.border,
+          gtMobile ? a.p_2xl : a.p_xl,
           t.atoms.bg,
           {
             maxWidth: 600,
@@ -190,6 +192,7 @@ export function Inner({
             shadowRadius: 30,
           },
           flatten(style),
+          contentContainerStyle,
         ])}>
         <DismissableLayer
           onInteractOutside={preventDefault}
@@ -197,9 +200,7 @@ export function Inner({
           onDismiss={close}
           style={{display: 'flex', flexDirection: 'column'}}>
           {header}
-          <View style={[gtMobile ? a.p_2xl : a.p_xl, contentContainerStyle]}>
-            {children}
-          </View>
+          <View>{children}</View>
         </DismissableLayer>
       </Animated.View>
     </FocusScope>

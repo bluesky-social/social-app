@@ -1,5 +1,5 @@
 import React from 'react'
-import {View, ViewProps,ViewStyle} from 'react-native'
+import {View, ViewProps, ViewStyle} from 'react-native'
 import {StyleProp} from 'react-native'
 import {
   KeyboardAwareScrollView,
@@ -11,7 +11,7 @@ import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
 import {NavigationProp} from '#/lib/routes/types'
-import {atoms as a, useBreakpoints,useTheme} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme, ViewStyleProp} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import {Divider} from '#/components/Divider'
 import {ChevronLeft_Stroke2_Corner0_Rounded as ChevronLeft} from '#/components/icons/Chevron'
@@ -122,7 +122,8 @@ export function Gutter({
   children,
   top,
   bottom,
-}: {
+  style,
+}: ViewStyleProp & {
   children: React.ReactNode
   top?: boolean
   bottom?: boolean
@@ -135,6 +136,7 @@ export function Gutter({
         top && a.pt_lg,
         bottom && a.pb_lg,
         gtMobile && [a.px_xl, top && a.pt_xl, bottom && a.pb_xl],
+        style,
       ]}>
       {children}
     </View>

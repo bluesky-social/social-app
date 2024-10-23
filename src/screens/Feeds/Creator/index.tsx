@@ -5,9 +5,13 @@ import {useLingui} from '@lingui/react'
 
 import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
+import {UserSelectButton} from '#/screens/Feeds/Creator/UserSelectButton'
 import {atoms as a, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
+import {Button, ButtonIcon,ButtonText} from '#/components/Button'
+import {OutlineTags} from '#/components/Composer/OutlineTags'
 import * as TextField from '#/components/forms/TextField'
+import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import * as Layout from '#/components/Layout'
 import {Text} from '#/components/Typography'
 
@@ -22,6 +26,8 @@ export function Creator() {
 
   const [name, setName] = React.useState('')
   const [description, setDescription] = React.useState('')
+  const [_tags, setTags] = React.useState<string[]>([])
+  const [dids, setDids] = React.useState<string[]>([])
 
   return (
     <Layout.Screen>
@@ -31,13 +37,12 @@ export function Creator() {
             <Layout.Header.TitleText>Create a feed</Layout.Header.TitleText>
           </Layout.Header>
 
-          <Layout.Gutter top>
+          <Layout.Gutter top style={[a.gap_2xl]}>
             <View style={[a.gap_lg]}>
               <Text
                 style={[
                   a.text_md,
                   a.leading_snug,
-                  a.pb_sm,
                   t.atoms.text_contrast_medium,
                 ]}>
                 <Trans>
@@ -83,7 +88,7 @@ export function Creator() {
                     value={description}
                     onChangeText={setDescription}
                     multiline
-                    style={{minHeight: 150}}
+                    style={{minHeight: 100}}
                   />
                 </TextField.Root>
               </View>
@@ -93,6 +98,72 @@ export function Creator() {
                 find your feed!
               </Admonition>
             </View>
+
+            <View style={[a.gap_md]}>
+              <Text style={[a.text_xl, a.font_heavy, a.leading_tight]}>
+                <Trans>Users</Trans>
+              </Text>
+
+              <Text
+                style={[
+                  a.text_md,
+                  a.leading_snug,
+                  t.atoms.text_contrast_medium,
+                ]}>
+                <Trans>
+                  Only posts by users you add here will appear in your feed.
+                </Trans>
+              </Text>
+
+              <UserSelectButton dids={dids} onChangeDids={setDids} />
+            </View>
+
+            <View style={[a.gap_md]}>
+              <Text style={[a.text_xl, a.font_heavy, a.leading_tight]}>
+                <Trans>Tags</Trans>
+              </Text>
+
+              <Text
+                style={[
+                  a.text_md,
+                  a.leading_snug,
+                  t.atoms.text_contrast_medium,
+                ]}>
+                <Trans>
+                  Posts tagged with the following tags will automatically appear
+                  in your feed, provided they are from the users you've selected
+                  above.
+                </Trans>
+              </Text>
+
+              <View
+                style={[
+                  a.py_sm,
+                  a.px_sm,
+                  a.border,
+                  a.rounded_sm,
+                  t.atoms.border_contrast_low,
+                ]}>
+                <OutlineTags onChangeTags={setTags} />
+              </View>
+
+              <Admonition type="tip">
+                Tags added here also help users find your feed!
+              </Admonition>
+            </View>
+
+            <Button
+              label={_(msg`Save feed`)}
+              size="large"
+              variant="solid"
+              color="primary">
+              <ButtonText>
+                <Trans>Create feed</Trans>
+              </ButtonText>
+              <ButtonIcon icon={Plus} position="right" />
+            </Button>
+
+            <View style={{height: 500}} />
           </Layout.Gutter>
         </Layout.Center>
       </Layout.ScrollView>
