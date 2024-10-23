@@ -3556,7 +3556,7 @@ msgstr "Unete a Bluesky"
 
 #: src/components/StarterPack/QrCode.tsx:61
 msgid "Join the conversation"
-msgstr "Unete a la conversación"
+msgstr "Únete a la conversación"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:492
 #~ msgid "Joined {0}"
