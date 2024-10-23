@@ -1076,7 +1076,7 @@ msgstr "Al crear una cuenta, usted acepta la <0>Política de privacidad</0>."
 
 #: src/screens/Signup/StepInfo/Policies.tsx:48
 msgid "By creating an account you agree to the <0>Terms of Service</0> and <1>Privacy Policy</1>."
-msgstr "Al crear una cuenta, usted acepta los <0>Términos de Servicio</0> y <1>Política de privacidad </1>."
+msgstr "Al crear una cuenta, usted acepta los <0>Términos de Servicio</0> y la <1>Política de privacidad</1>."
 
 #: src/screens/Signup/StepInfo/Policies.tsx:68
 msgid "By creating an account you agree to the <0>Terms of Service</0>."
