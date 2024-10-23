@@ -23,6 +23,7 @@ import {useFetchHandle} from '#/state/queries/handle'
 import {useUnreadMessageCount} from '#/state/queries/messages/list-converations'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {useProfileQuery} from '#/state/queries/profile'
+import {useAgent} from '#/state/session'
 import {useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
 import {Link} from '#/view/com/util/Link'
@@ -261,12 +262,16 @@ function ComposeBtn() {
   const {isTablet} = useWebMediaQueries()
   const [isFetchingHandle, setIsFetchingHandle] = React.useState(false)
   const fetchHandle = useFetchHandle()
+  const agent = useAgent()
 
   const getProfileHandle = async () => {
     const routes = getState()?.routes
     const currentRoute = routes?.[routes?.length - 1]
 
-    if (currentRoute?.name === 'Profile') {
+    if (
+      currentRoute?.name === 'Profile' ||
+      currentRoute?.name === 'ProfileFeed'
+    ) {
       let handle: string | undefined = (
         currentRoute.params as CommonNavigatorParams['Profile']
       ).name
@@ -282,12 +287,7 @@ function ComposeBtn() {
         }
       }
 
-      if (
-        !handle ||
-        handle === currentAccount?.handle ||
-        isInvalidHandle(handle)
-      )
-        return undefined
+      if (!handle || isInvalidHandle(handle)) return undefined
 
       return handle
     }
@@ -295,8 +295,42 @@ function ComposeBtn() {
     return undefined
   }
 
-  const onPressCompose = async () =>
-    openComposer({mention: await getProfileHandle()})
+  const getFeedUris = async (handle: string | undefined) => {
+    if (!handle) return undefined
+
+    const did = (await agent.resolveHandle({handle: handle})).data.did
+
+    const routes = getState()?.routes
+    const currentRoute = routes?.[routes?.length - 1]
+
+    if (currentRoute?.name === 'ProfileFeed') {
+      let rkey: string | undefined = (
+        currentRoute.params as CommonNavigatorParams['ProfileFeed']
+      ).rkey
+
+      return [`at://${did}/app.bsky.feed.generator/${rkey}`]
+    }
+
+    return undefined
+  }
+
+  const onPressCompose = async () => {
+    const handle = await getProfileHandle()
+    const routes = getState()?.routes
+    const currentRoute = routes?.[routes?.length - 1]
+    let mention =
+      handle !== currentAccount?.handle && currentRoute?.name === 'Profile'
+        ? handle
+        : undefined
+    let initFeeds =
+      handle === currentAccount?.handle && currentRoute?.name === 'ProfileFeed'
+        ? await getFeedUris(handle)
+        : undefined
+    openComposer({
+      mention,
+      initFeeds,
+    })
+  }
 
   if (isTablet) {
     return null
