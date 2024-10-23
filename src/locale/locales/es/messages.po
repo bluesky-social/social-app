@@ -403,7 +403,7 @@ msgstr "Cuenta desbloqueada"
 
 #: src/view/com/profile/ProfileMenu.tsx:157
 msgid "Account unfollowed"
-msgstr "Cuenta sin seguir"
+msgstr "Has dejado de seguir a esta cuenta"
 
 #: src/view/com/profile/ProfileMenu.tsx:98
 msgid "Account unmuted"
