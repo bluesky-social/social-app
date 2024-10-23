@@ -2540,7 +2540,7 @@ msgstr "Excessive mentions or replies"
 
 #: src/lib/moderation/useReportOptions.ts:86
 msgid "Excessive or unwanted messages"
-msgstr "Excessive or unwanted messages"
+msgstr "Mensajes excesivos o no deseados"
 
 #: src/components/dialogs/MutedWords.tsx:311
 msgid "Exclude users you follow"
