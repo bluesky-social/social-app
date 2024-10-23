@@ -2867,7 +2867,7 @@ msgstr "Seguir {name}"
 
 #: src/components/ProgressGuide/List.tsx:54
 msgid "Follow 7 accounts"
-msgstr "Seguir 7 cuentas"
+msgstr "Sigue 7 cuentas"
 
 #: src/view/com/profile/ProfileMenu.tsx:222
 #: src/view/com/profile/ProfileMenu.tsx:233
