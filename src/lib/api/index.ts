@@ -183,6 +183,11 @@ export async function post(
           postUri: res.uri,
         })),
       })
+      for (const feedUri of draft.feeds) {
+        queryClient.invalidateQueries({
+          queryKey: ['post-feed', 'feedgen|' + feedUri, {}],
+        })
+      }
     } catch (e: any) {
       logger.error(`Failed to create submission records`, {
         context: 'composer',
