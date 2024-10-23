@@ -38,6 +38,7 @@ import {
   useProgressGuideControls,
 } from '#/state/shell/progress-guide'
 import {atoms as a, useTheme} from '#/alf'
+import * as Dialog from '#/components/Dialog'
 import {useDialogControl} from '#/components/Dialog'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded as ArrowOutOfBox} from '#/components/icons/ArrowOutOfBox'
 import {Bubble_Stroke2_Corner2_Rounded as Bubble} from '#/components/icons/Bubble'
@@ -47,6 +48,7 @@ import {formatCount} from '../numeric/format'
 import {Text} from '../text/Text'
 import * as Toast from '../Toast'
 import {RepostButton} from './RepostButton'
+import {FeedSelectDialog} from './SubmitButton'
 
 let PostCtrls = ({
   big,
@@ -85,6 +87,7 @@ let PostCtrls = ({
   const {sendInteraction} = useFeedFeedbackContext()
   const {captureAction} = useProgressGuideControls()
   const playHaptic = useHaptics()
+  const submitControl = Dialog.useDialogControl()
   const isBlocked = Boolean(
     post.author.viewer?.blocking ||
       post.author.viewer?.blockedBy ||
@@ -224,6 +227,10 @@ let PostCtrls = ({
     isBlocked,
   ])
 
+  const onSubmit = () => {
+    submitControl.open()
+  }
+
   const onShare = useCallback(() => {
     const urip = new AtUri(post.uri)
     const href = makeProfileLink(post.author, 'post', urip.rkey)
@@ -293,7 +300,7 @@ let PostCtrls = ({
           repostCount={(post.repostCount ?? 0) + (post.quoteCount ?? 0)}
           onRepost={onRepost}
           onQuote={onQuote}
-          onSubmit={onShare /* TODO */}
+          onSubmit={onSubmit}
           big={big}
           embeddingDisabled={Boolean(post.viewer?.embeddingDisabled)}
         />
@@ -400,6 +407,15 @@ let PostCtrls = ({
           </Text>
         </Pressable>
       )}
+      <Dialog.Outer control={submitControl}>
+        <Dialog.Handle />
+        <FeedSelectDialog
+          control={submitControl}
+          dids={[]}
+          onChangeDids={() => {}}
+          profiles={[]}
+        />
+      </Dialog.Outer>
     </View>
   )
 }
