@@ -2418,7 +2418,7 @@ msgstr "Habilitar notificaciones prioritarias"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:389
 msgid "Enable subtitles"
-msgstr "Activa subtítutlos"
+msgstr "Activar subtítutlos"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:145
 #~ msgid "Enable this setting to only see replies between people you follow."
