@@ -1660,7 +1660,7 @@ msgstr "Copiado al portapapeles"
 
 #: src/components/dialogs/Embed.tsx:136
 msgid "Copied!"
-msgstr "Copiado!"
+msgstr "¡Copiado!"
 
 #: src/view/com/modals/AddAppPasswords.tsx:215
 msgid "Copies app password"
