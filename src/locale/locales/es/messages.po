@@ -2785,7 +2785,7 @@ msgstr "Contenido del Archivo"
 
 #: src/view/screens/Settings/ExportCarDialog.tsx:42
 msgid "File saved successfully!"
-msgstr "Archivo grabado exitosamente!"
+msgstr "¡Archivo guardado exitosamente!"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:66
 msgid "Filter from feeds"
