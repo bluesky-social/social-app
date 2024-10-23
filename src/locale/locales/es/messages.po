@@ -2322,7 +2322,7 @@ msgstr "Edita tu descripcion de perfil"
 
 #: src/Navigation.tsx:372
 msgid "Edit your starter pack"
-msgstr "Edita tu pack inicial"
+msgstr "Edita tu paquete de inicio"
 
 #: src/screens/Onboarding/index.tsx:31
 #: src/screens/Onboarding/state.ts:88
