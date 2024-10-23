@@ -28,7 +28,7 @@ export function Creator() {
   const {_} = useLingui()
   const {currentAccount} = useSession()
   const navigation = useNavigation<NavigationProp>()
-  const {data: currentProfile, isPending} = useProfileQuery({
+  const {data: currentProfile} = useProfileQuery({
     did: currentAccount?.did,
     staleTime: 300,
   })
@@ -39,7 +39,7 @@ export function Creator() {
       rkey,
     })
   }
-  const {mutateAsync: createFeed} = useCreateFeedMutation({
+  const {mutateAsync: createFeed, isPending} = useCreateFeedMutation({
     onSuccess: onSuccessCreate,
     onError: e => {
       console.error(e)

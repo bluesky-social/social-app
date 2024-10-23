@@ -43,7 +43,7 @@ function FeedCard({
       color="secondary"
       onPress={onPress}
       style={[a.py_sm, a.pl_sm, a.pr_md, a.rounded_sm, a.gap_sm]}>
-      <UserAvatar avatar="" size={32} type="algo" />
+      <UserAvatar avatar={feed.avatar} size={32} type="algo" />
       <View style={[a.flex_1, a.gap_2xs, a.pr_sm]}>
         <Text
           style={[a.text_sm, a.font_bold, a.leading_tight]}
