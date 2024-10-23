@@ -795,7 +795,7 @@ msgstr "Aparencia"
 
 #: src/view/screens/Settings/index.tsx:475
 msgid "Appearance settings"
-msgstr "Appearance settings"
+msgstr "Configuración de apariencia"
 
 #: src/Navigation.tsx:325
 msgid "Appearance Settings"
