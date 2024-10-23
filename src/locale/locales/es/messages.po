@@ -561,7 +561,7 @@ msgstr "Permitir el acceso a sus mensajes directos"
 #: src/screens/Messages/Settings.tsx:62
 #: src/screens/Messages/Settings.tsx:65
 msgid "Allow new messages from"
-msgstr "Permitir nuevos mensajes desde"
+msgstr "Permitir nuevos mensajes de"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:360
 msgid "Allow replies from:"
