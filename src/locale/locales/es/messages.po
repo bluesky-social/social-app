@@ -619,7 +619,7 @@ msgstr "Un código de verificación ha sido enviado a tu dirección anterior, {0
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:77
 msgid "An email has been sent! Please enter the confirmation code included in the email below."
-msgstr "¡Se ha enviado un correo electrónico!Ingrese el código de confirmación incluido en el correo electrónico a continuación."
+msgstr "¡Se ha enviado un correo electrónico! Ingrese el código de confirmación incluido en el correo electrónico a continuación."
 
 #: src/components/dialogs/GifSelect.tsx:266
 msgid "An error has occurred"
