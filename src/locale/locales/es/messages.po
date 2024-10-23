@@ -52,7 +52,7 @@ msgstr "{0, plural, one {se ha colocado # etiqueta en este contenido} other {se 
 
 #: src/lib/hooks/useTimeAgo.ts:136
 msgid "{0, plural, one {# minute} other {# minutes}}"
-msgstr "{0, plural, un {# minute} unos {# minutes}}"
+msgstr "{0, plural, one {# minuto} other {# minutos}}"
 
 #: src/lib/hooks/useTimeAgo.ts:167
 msgid "{0, plural, one {# month} other {# months}}"
