@@ -990,7 +990,7 @@ msgstr "Bluesky es una red abierta donde puede elegir su proveedor de alojamient
 
 #: src/components/ProgressGuide/List.tsx:55
 msgid "Bluesky is better with friends!"
-msgstr "Bluesky es mejor con amigos!"
+msgstr "¡Bluesky es mejor con amigos!"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:206
 #~ msgid "Bluesky now has over 10 million users, and I was #{0}!"
