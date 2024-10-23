@@ -1362,7 +1362,7 @@ msgstr "Clic aquí para abrir el menu de {tag}"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:304
 msgid "Click to disable quote posts of this post."
-msgstr "Clic para deshabilitar las publicaciones de cotización de esta publicación."
+msgstr "Clic para deshabilitar las citas para esta publicación."
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:305
 msgid "Click to enable quote posts of this post."
