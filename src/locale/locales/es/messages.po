@@ -1457,7 +1457,7 @@ msgstr "Lista de colapso de usuarios"
 
 #: src/view/com/notifications/FeedItem.tsx:470
 msgid "Collapses list of users for a given notification"
-msgstr "Colapsa la lista de usuarios para una notificación dada"
+msgstr "Colapsa la lista de usuarios para una notificación en particular"
 
 #: src/screens/Settings/AppearanceSettings.tsx:97
 msgid "Color mode"
