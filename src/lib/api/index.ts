@@ -18,6 +18,7 @@ import {isNetworkError} from '#/lib/strings/errors'
 import {shortenLinks, stripInvalidMentions} from '#/lib/strings/rich-text-manip'
 import {logger} from '#/logger'
 import {compressImage} from '#/state/gallery'
+import {writeFeedSubmissionRecords} from '#/state/queries/feedgens'
 import {writePostgateRecord} from '#/state/queries/postgate'
 import {
   fetchResolveGifQuery,
@@ -169,6 +170,26 @@ export async function post(
       })
       throw new Error(
         t`Failed to save post interaction settings. Your post was created but users may be able to interact with it.`,
+      )
+    }
+  }
+
+  if (draft.feeds?.length) {
+    try {
+      await writeFeedSubmissionRecords({
+        agent,
+        records: draft.feeds.map(feedUri => ({
+          feedUri,
+          postUri: res.uri,
+        })),
+      })
+    } catch (e: any) {
+      logger.error(`Failed to create submission records`, {
+        context: 'composer',
+        safeMessage: e.message,
+      })
+      throw new Error(
+        t`Failed to write feed submission records. Your post was created, but it was not submitted to any feeds.`,
       )
     }
   }

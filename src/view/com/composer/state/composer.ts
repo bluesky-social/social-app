@@ -54,6 +54,7 @@ export type ComposerDraft = {
   threadgate: ThreadgateAllowUISetting[]
   embed: EmbedDraft
   tags: string[]
+  feeds: string[]
 }
 
 export type ComposerAction =
@@ -78,6 +79,7 @@ export type ComposerAction =
   | {type: 'embed_update_gif'; alt: string}
   | {type: 'embed_remove_gif'}
   | {type: 'tags_update'; tags: string[]}
+  | {type: 'feeds_update'; feeds: string[]}
 
 export const MAX_IMAGES = 4
 
@@ -332,6 +334,12 @@ export function composerReducer(
         tags: action.tags,
       }
     }
+    case 'feeds_update': {
+      return {
+        ...state,
+        feeds: action.feeds,
+      }
+    }
     default:
       return state
   }
@@ -343,12 +351,14 @@ export function createComposerState({
   initImageUris,
   initQuoteUri,
   initOutlineTags,
+  initFeeds,
 }: {
   initText: string | undefined
   initMention: string | undefined
   initImageUris: ComposerOpts['imageUris']
   initQuoteUri: string | undefined
   initOutlineTags: string[]
+  initFeeds: string[]
 }): ComposerDraft {
   let media: ImagesMedia | undefined
   if (initImageUris?.length) {
@@ -390,5 +400,6 @@ export function createComposerState({
       link: undefined,
     },
     tags: initOutlineTags,
+    feeds: initFeeds,
   }
 }

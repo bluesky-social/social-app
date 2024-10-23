@@ -175,6 +175,7 @@ export const ComposePost = ({
       initText,
       initMention,
       initOutlineTags: [],
+      initFeeds: [],
     },
     createComposerState,
   )
@@ -526,9 +527,12 @@ export const ComposePost = ({
     [dispatch],
   )
 
-  const onChangeFeeds = useCallback((uris: string[]) => {
-    console.log(uris)
-  }, [])
+  const onChangeFeeds = useCallback(
+    (uris: string[]) => {
+      dispatch({type: 'feeds_update', feeds: uris})
+    },
+    [dispatch],
+  )
 
   const [showOutlineTags, setShowOutlineTags] = useState(false)
   const outlineTagsVisible = showOutlineTags || draft.tags.length > 0
