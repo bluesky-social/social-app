@@ -65,7 +65,7 @@ export function Card({
     <View style={[a.w_full, a.gap_md]}>
       <View style={[a.flex_row, a.gap_sm]}>
         {!noIcon ? <StarterPack width={40} gradient="sky" /> : null}
-        <View>
+        <View style={[a.flex_1]}>
           <Text emoji style={[a.text_md, a.font_bold, a.leading_snug]}>
             {record.name}
           </Text>
