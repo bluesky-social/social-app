@@ -3459,7 +3459,7 @@ msgstr "Introduce tu proveedor de alojamiento preferido."
 
 #: src/screens/Signup/StepHandle.tsx:114
 msgid "Input your user handle"
-msgstr "Introduce tu nombre de usuario."
+msgstr "Introduce tu nombre de usuario"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:52
 msgid "Interaction limited"
