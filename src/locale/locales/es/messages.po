@@ -1404,15 +1404,15 @@ msgstr "Cerrar la alerta"
 
 #: src/view/com/util/BottomSheetCustomBackdrop.tsx:36
 msgid "Close bottom drawer"
-msgstr "Cierra el cajón inferior"
+msgstr "Cerrar el cajón inferior"
 
 #: src/components/dialogs/GifSelect.tsx:276
 msgid "Close dialog"
-msgstr "Close dialog"
+msgstr "Cerrar ventana"
 
 #: src/components/dialogs/GifSelect.tsx:169
 msgid "Close GIF dialog"
-msgstr "Cerrar el diálogo GIF"
+msgstr "Cerrar ventana de GIF"
 
 #: src/view/com/lightbox/ImageViewing/components/ImageDefaultHeader.tsx:36
 msgid "Close image"
