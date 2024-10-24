@@ -95,11 +95,11 @@ msgstr "{0, plural, un {Liked by # user} unos {Liked by # users}}"
 
 #: src/screens/Profile/Header/Metrics.tsx:59
 msgid "{0, plural, one {post} other {posts}}"
-msgstr "{0, plural, un {post} unos {posts}}"
+msgstr "{0, plural, one {post} other {posts}}"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:418
 msgid "{0, plural, one {quote} other {quotes}}"
-msgstr "{0, plural, una {quote} unas {quotes}}"
+msgstr "{0, plural, one {cita} other {citas}}"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:269
 msgid "{0, plural, one {Reply (# reply)} other {Reply (# replies)}}"
@@ -125,7 +125,7 @@ msgstr "{0} <0>en <1>texto y etiquetas</1></0>"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:219
 msgid "{0} joined this week"
-msgstr "{0} Se unió esta semana"
+msgstr "{0} se han unido esta semana"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/Scrubber.tsx:195
 msgid "{0} of {1}"
@@ -3407,7 +3407,7 @@ msgstr "¡Imagen guardada en tu carrete de fotos!"
 
 #: src/lib/moderation/useReportOptions.ts:49
 msgid "Impersonation or false claims about identity or affiliation"
-msgstr "Suplantación de identidad o afirmaciones falsas sobre identidad o afiliación."
+msgstr "Suplantación de identidad o afirmaciones falsas sobre identidad o afiliación"
 
 #: src/lib/moderation/useReportOptions.ts:68
 msgid "Impersonation, misinformation, or false claims"
@@ -3415,7 +3415,7 @@ msgstr "Suplantación de identidad, desinformación o afirmaciones falsas"
 
 #: src/lib/moderation/useReportOptions.ts:91
 msgid "Inappropriate messages or explicit links"
-msgstr "Mensajes inapropiados o enlaces explícitos."
+msgstr "Mensajes inapropiados o enlaces explícitos"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:121
 msgid "Input code sent to your email for password reset"
@@ -3455,11 +3455,11 @@ msgstr "Introduce tu contraseña."
 
 #: src/view/com/modals/ChangeHandle.tsx:376
 msgid "Input your preferred hosting provider"
-msgstr "Introduce tu proveedor de alojamiento preferido."
+msgstr "Introduce tu proveedor de alojamiento preferido"
 
 #: src/screens/Signup/StepHandle.tsx:114
 msgid "Input your user handle"
-msgstr "Introduce tu nombre de usuario."
+msgstr "Introduce tu nombre de usuario"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:52
 msgid "Interaction limited"
@@ -3471,7 +3471,7 @@ msgstr "Interacción limitada"
 
 #: src/components/dialogs/nuxs/NeueTypography.tsx:47
 msgid "Introducing new font settings"
-msgstr "Presentando nuevas configuraciones de fuentes."
+msgstr "Presentando nuevas configuraciones de fuentes"
 
 #: src/screens/Login/LoginForm.tsx:142
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:70
@@ -3480,7 +3480,7 @@ msgstr "Código de confirmación 2FA no es válido."
 
 #: src/view/com/post-thread/PostThreadItem.tsx:264
 msgid "Invalid or unsupported post record"
-msgstr "Registro de publicación inválido o no compatible."
+msgstr "Registro de publicación inválido o no compatible"
 
 #: src/screens/Login/LoginForm.tsx:88
 #: src/screens/Login/LoginForm.tsx:147
@@ -3517,7 +3517,7 @@ msgstr "¡Invita a personas a este paquete inicial!"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:35
 msgid "Invite your friends to follow your favorite feeds and people"
-msgstr "Invita a tus amigos a seguir tus feeds y personas favoritas."
+msgstr "Invita a tus amigos a seguir tus feeds y personas favoritas"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:32
 msgid "Invites, but personal"
@@ -3573,7 +3573,7 @@ msgstr "Periodismo"
 
 #: src/components/moderation/ContentHider.tsx:147
 msgid "Labeled by {0}."
-msgstr "Etiquetado por {0}"
+msgstr "Etiquetado por {0}."
 
 #: src/components/moderation/ContentHider.tsx:145
 msgid "Labeled by the author."
@@ -3880,7 +3880,7 @@ msgstr "Acceder a una cuenta que no está en la lista"
 
 #: src/components/RichText.tsx:226
 msgid "Long press to open tag menu for #{tag}"
-msgstr "Mantén presionado para abrir el menú de etiquetas para #{tag}."
+msgstr "Mantén presionado para abrir el menú de etiquetas para #{tag}"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:110
 msgid "Looks like XXXXX-XXXXX"
