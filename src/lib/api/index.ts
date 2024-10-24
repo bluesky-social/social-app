@@ -49,43 +49,20 @@ export async function post(
   opts: PostOpts,
 ) {
   const draft = opts.draft
-  let reply
-  let rt = new RichText(
-    {text: draft.richtext.text.trimEnd()},
-    {cleanNewlines: true},
-  )
 
   opts.onStateChange?.(t`Processing...`)
-
-  await rt.detectFacets(agent)
-
-  rt = shortenLinks(rt)
-  rt = stripInvalidMentions(rt)
-
-  const embed = await resolveEmbed(
+  // NB -- Do not await anything here to avoid waterfalls!
+  // Instead, store Promises which will be unwrapped as they're needed.
+  const rtPromise = resolveRT(agent, draft.richtext)
+  const embedPromise = resolveEmbed(
     agent,
     queryClient,
     draft,
     opts.onStateChange,
   )
-
-  // add replyTo if post is a reply to another post
+  let replyPromise
   if (opts.replyTo) {
-    const replyToUrip = new AtUri(opts.replyTo)
-    const parentPost = await agent.getPost({
-      repo: replyToUrip.host,
-      rkey: replyToUrip.rkey,
-    })
-    if (parentPost) {
-      const parentRef = {
-        uri: parentPost.uri,
-        cid: parentPost.cid,
-      }
-      reply = {
-        root: parentPost.value.reply?.root || parentRef,
-        parent: parentRef,
-      }
-    }
+    replyPromise = resolveReply(agent, opts.replyTo)
   }
 
   // set labels
@@ -111,6 +88,9 @@ export async function post(
 
   // Create post record
   {
+    const rt = await rtPromise
+    const embed = await embedPromise
+    const reply = await replyPromise
     const record: AppBskyFeedPost.Record = {
       $type: 'app.bsky.feed.post',
       createdAt: date,
@@ -186,6 +166,33 @@ export async function post(
   }
 
   return {uri}
+}
+
+async function resolveRT(agent: BskyAgent, richtext: RichText) {
+  let rt = new RichText({text: richtext.text.trimEnd()}, {cleanNewlines: true})
+  await rt.detectFacets(agent)
+
+  rt = shortenLinks(rt)
+  rt = stripInvalidMentions(rt)
+  return rt
+}
+
+async function resolveReply(agent: BskyAgent, replyTo: string) {
+  const replyToUrip = new AtUri(replyTo)
+  const parentPost = await agent.getPost({
+    repo: replyToUrip.host,
+    rkey: replyToUrip.rkey,
+  })
+  if (parentPost) {
+    const parentRef = {
+      uri: parentPost.uri,
+      cid: parentPost.cid,
+    }
+    return {
+      root: parentPost.value.reply?.root || parentRef,
+      parent: parentRef,
+    }
+  }
 }
 
 async function resolveEmbed(
