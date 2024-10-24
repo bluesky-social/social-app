@@ -1,6 +1,5 @@
 import {
-  AppBskyActorDefs,
-  AppBskyFeedPost,
+  AppBskyFeedDefs,
   AppBskyGraphStarterpack,
   ComAtprotoRepoStrongRef,
 } from '@atproto/api'
@@ -41,11 +40,7 @@ type ResolvedPostRecord = {
   type: 'record'
   record: ComAtprotoRepoStrongRef.Main
   kind: 'post'
-  meta: {
-    text: string
-    indexedAt: string
-    author: AppBskyActorDefs.ProfileViewBasic
-  }
+  meta: AppBskyFeedDefs.PostView
 }
 
 type ResolvedOtherRecord = {
@@ -92,11 +87,7 @@ export async function resolveLink(
         uri: post.uri,
       },
       kind: 'post',
-      meta: {
-        text: AppBskyFeedPost.isRecord(post.record) ? post.record.text : '',
-        indexedAt: post.indexedAt,
-        author: post.author,
-      },
+      meta: post,
     }
   }
   if (isBskyCustomFeedUrl(uri)) {
