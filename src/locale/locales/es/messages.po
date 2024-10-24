@@ -1877,7 +1877,7 @@ msgstr "Desactivar mi cuenta"
 
 #: src/view/screens/Settings/index.tsx:839
 msgid "Debug Moderation"
-msgstr "Moderacion de debug"
+msgstr "Moderacion de depuración"
 
 #: src/view/screens/Debug.tsx:83
 msgid "Debug panel"
