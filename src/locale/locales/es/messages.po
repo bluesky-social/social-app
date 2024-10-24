@@ -3767,7 +3767,7 @@ msgstr "Cantidad de «Me gusta»"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:204
 msgid "Likes on this post"
-msgstr "Cantidad de  «Me gusta» en este post"
+msgstr "Me gusta en este post"
 
 #: src/Navigation.tsx:192
 msgid "List"
