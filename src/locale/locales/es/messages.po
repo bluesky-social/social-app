@@ -125,7 +125,7 @@ msgstr "{0} <0>en <1>texto y etiquetas</1></0>"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:219
 msgid "{0} joined this week"
-msgstr "{0} Se unió esta semana"
+msgstr "{0} se han unido esta semana"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/Scrubber.tsx:195
 msgid "{0} of {1}"
