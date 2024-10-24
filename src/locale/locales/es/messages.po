@@ -95,7 +95,7 @@ msgstr "{0, plural, un {Liked by # user} unos {Liked by # users}}"
 
 #: src/screens/Profile/Header/Metrics.tsx:59
 msgid "{0, plural, one {post} other {posts}}"
-msgstr "{0, plural, un {post} unos {posts}}"
+msgstr "{0, plural, one {post} other {posts}}"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:418
 msgid "{0, plural, one {quote} other {quotes}}"
