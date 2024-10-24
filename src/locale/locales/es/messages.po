@@ -64,7 +64,7 @@ msgstr "{0, plural, one {# repost} other {# reposts}}"
 
 #: src/lib/hooks/useTimeAgo.ts:126
 msgid "{0, plural, one {# second} other {# seconds}}"
-msgstr "{0, plural, un {# second} unos {# seconds}}"
+msgstr "{0, plural, one {# segundo} other {# segundos}}"
 
 #: src/components/KnownFollowers.tsx:179
 #~ msgid "{0, plural, one {and # other} other {and # others}}"
