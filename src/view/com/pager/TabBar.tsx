@@ -1,6 +1,7 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {LayoutChangeEvent, ScrollView, StyleSheet, View} from 'react-native'
-
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {isNative} from '#/platform/detection'
@@ -29,6 +30,7 @@ export function TabBar({
   onSelect,
   onPressSelected,
 }: TabBarProps) {
+  const {_} = useLingui()
   const pal = usePalette('default')
   const scrollElRef = useRef<ScrollView>(null)
   const itemRefs = useRef<Array<Element>>([])
@@ -117,6 +119,13 @@ export function TabBar({
     [],
   )
 
+  const feedsDefault = {
+    ["Following"]: _(msg`Following`),
+    // ["Discover"]: _(msg`Discover`),
+    // ["What's Hot Classic"]: _(msg`What's Hot Classic`),
+    // ["Popular With Friends"]: _(msg`Popular With Friends`),
+  } as any;
+
   return (
     <View testID={testID} style={[pal.view, styles.outer]}>
       <DraggableScrollView
@@ -145,7 +154,7 @@ export function TabBar({
                     selected ? pal.text : pal.textLight,
                     {lineHeight: 20},
                   ]}>
-                  {item}
+                  {feedsDefault[item] ?? item}
                 </Text>
               </View>
             </PressableWithHover>
