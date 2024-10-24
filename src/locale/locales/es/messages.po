@@ -1027,7 +1027,7 @@ msgstr "Explorar más cuentas en la página Explore"
 
 #: src/components/FeedInterstitials.tsx:483
 msgid "Browse more feeds on the Explore page"
-msgstr "Explore más alimentos en la página de explorar"
+msgstr "Revisar más feeds en la página de exploración"
 
 #: src/components/FeedInterstitials.tsx:332
 #: src/components/FeedInterstitials.tsx:335
