@@ -14,6 +14,7 @@ import {useExternalEmbedsPrefs} from '#/state/preferences'
 import {ExternalGifEmbed} from '#/view/com/util/post-embeds/ExternalGifEmbed'
 import {ExternalPlayer} from '#/view/com/util/post-embeds/ExternalPlayerEmbed'
 import {GifEmbed} from '#/view/com/util/post-embeds/GifEmbed'
+import {GithubGist} from '#/view/com/util/post-embeds/GithubGist'
 import {atoms as a, useTheme} from '#/alf'
 import {Divider} from '#/components/Divider'
 import {Earth_Stroke2_Corner0_Rounded as Globe} from '#/components/icons/Globe'
@@ -62,6 +63,17 @@ export const ExternalLinkEmbed = ({
           isPreferredAltText={parsedAlt.isPreferred}
           hideAlt={hideAlt}
         />
+      </View>
+    )
+  }
+
+  if (
+    embedPlayerParams?.source === 'github' &&
+    embedPlayerParams?.type === 'github_gist'
+  ) {
+    return (
+      <View style={style}>
+        <GithubGist info={link} id={embedPlayerParams.playerUri} />
       </View>
     )
   }
