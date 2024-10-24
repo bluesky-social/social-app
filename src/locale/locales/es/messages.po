@@ -178,7 +178,7 @@ msgstr "{0}s"
 
 #: src/components/LabelingServiceCard/index.tsx:96
 msgid "{count, plural, one {Liked by # user} other {Liked by # users}}"
-msgstr "{count, plural, un {Liked by # user} unos {Liked by # users}}"
+msgstr "{count, plural, one {Le ha gustado a # usuario} other {Les han gustado a # usuarios}}"
 
 #: src/lib/hooks/useTimeAgo.ts:69
 #~ msgid "{diff, plural, one {day} other {days}}"
@@ -3427,15 +3427,15 @@ msgstr "Introduce el código de confirmación para la eliminación de la cuenta"
 
 #: src/view/com/modals/AddAppPasswords.tsx:175
 msgid "Input name for app password"
-msgstr "Introduce un nombre para la contraseña de la aplicación."
+msgstr "Introduce un nombre para la contraseña de la aplicación"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:145
 msgid "Input new password"
-msgstr "Introduce una nueva contraseña."
+msgstr "Introduce una nueva contraseña"
 
 #: src/view/com/modals/DeleteAccount.tsx:265
 msgid "Input password for account deletion"
-msgstr "Introduce la contraseña para la eliminación de la cuenta."
+msgstr "Introduce la contraseña para la eliminación de la cuenta"
 
 #: src/screens/Login/LoginForm.tsx:270
 msgid "Input the code which has been emailed to you"
@@ -3447,11 +3447,11 @@ msgstr "Introduce el código que se te ha enviado por correo electrónico."
 
 #: src/screens/Login/LoginForm.tsx:200
 msgid "Input the username or email address you used at signup"
-msgstr "Introduce el nombre de usuario o la dirección de correo electrónico que usaste al registrarte."
+msgstr "Introduce el nombre de usuario o la dirección de correo electrónico que usaste al registrarte"
 
 #: src/screens/Login/LoginForm.tsx:225
 msgid "Input your password"
-msgstr "Introduce tu contraseña."
+msgstr "Introduce tu contraseña"
 
 #: src/view/com/modals/ChangeHandle.tsx:376
 msgid "Input your preferred hosting provider"
