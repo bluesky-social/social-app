@@ -3435,7 +3435,7 @@ msgstr "Introduce una nueva contraseña."
 
 #: src/view/com/modals/DeleteAccount.tsx:265
 msgid "Input password for account deletion"
-msgstr "Introduce la contraseña para la eliminación de la cuenta."
+msgstr "Introduce la contraseña para la eliminación de la cuenta"
 
 #: src/screens/Login/LoginForm.tsx:270
 msgid "Input the code which has been emailed to you"
