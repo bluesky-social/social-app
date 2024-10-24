@@ -3451,7 +3451,7 @@ msgstr "Introduce el nombre de usuario o la dirección de correo electrónico qu
 
 #: src/screens/Login/LoginForm.tsx:225
 msgid "Input your password"
-msgstr "Introduce tu contraseña."
+msgstr "Introduce tu contraseña"
 
 #: src/view/com/modals/ChangeHandle.tsx:376
 msgid "Input your preferred hosting provider"
