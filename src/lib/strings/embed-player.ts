@@ -25,6 +25,7 @@ export const embedPlayerSources = [
   'giphy',
   'tenor',
   'flickr',
+  'github',
 ] as const
 
 export type EmbedPlayerSource = (typeof embedPlayerSources)[number]
@@ -45,6 +46,7 @@ export type EmbedPlayerType =
   | 'giphy_gif'
   | 'tenor_gif'
   | 'flickr_album'
+  | 'github_gist'
 
 export const externalEmbedLabels: Record<EmbedPlayerSource, string> = {
   youtube: 'YouTube',
@@ -57,6 +59,7 @@ export const externalEmbedLabels: Record<EmbedPlayerSource, string> = {
   appleMusic: 'Apple Music',
   soundcloud: 'SoundCloud',
   flickr: 'Flickr',
+  github: 'GitHub',
 }
 
 export interface EmbedPlayerParams {
@@ -446,6 +449,15 @@ export function parseEmbedPlayerFromUrl(
       default:
         // we don't know what this is so we can't embed it
         return undefined
+    }
+  }
+
+  if (urlp.hostname === 'gist.github.com') {
+    const id = urlp.pathname.replace(/^\//, '').split('/')[1]
+    return {
+      type: 'github_gist',
+      source: 'github',
+      playerUri: id,
     }
   }
 }
