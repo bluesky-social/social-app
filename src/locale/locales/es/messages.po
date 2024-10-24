@@ -3423,7 +3423,7 @@ msgstr "Introduce el código enviado a tu correo electrónico para restablecer l
 
 #: src/view/com/modals/DeleteAccount.tsx:246
 msgid "Input confirmation code for account deletion"
-msgstr "Introduce el código de confirmación para la eliminación de la cuenta."
+msgstr "Introduce el código de confirmación para la eliminación de la cuenta"
 
 #: src/view/com/modals/AddAppPasswords.tsx:175
 msgid "Input name for app password"
