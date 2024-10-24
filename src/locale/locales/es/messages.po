@@ -3573,7 +3573,7 @@ msgstr "Periodismo"
 
 #: src/components/moderation/ContentHider.tsx:147
 msgid "Labeled by {0}."
-msgstr "Etiquetado por {0}"
+msgstr "Etiquetado por {0}."
 
 #: src/components/moderation/ContentHider.tsx:145
 msgid "Labeled by the author."
