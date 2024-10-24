@@ -407,7 +407,7 @@ msgstr "Has dejado de seguir a esta cuenta"
 
 #: src/view/com/profile/ProfileMenu.tsx:98
 msgid "Account unmuted"
-msgstr "Cuenta desmuteada"
+msgstr "Cuenta con sonido reactivado"
 
 #: src/components/dialogs/MutedWords.tsx:328
 #: src/view/com/modals/ListAddRemoveUsers.tsx:269
