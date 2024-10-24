@@ -178,7 +178,7 @@ msgstr "{0}s"
 
 #: src/components/LabelingServiceCard/index.tsx:96
 msgid "{count, plural, one {Liked by # user} other {Liked by # users}}"
-msgstr "{count, plural, un {Liked by # user} unos {Liked by # users}}"
+msgstr "{count, plural, one {Le ha gustado a # usuario} other {Les han gustado a # usuarios}}"
 
 #: src/lib/hooks/useTimeAgo.ts:69
 #~ msgid "{diff, plural, one {day} other {days}}"
