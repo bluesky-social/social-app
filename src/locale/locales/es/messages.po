@@ -78,7 +78,7 @@ msgstr "{0, plural, one {seguidor} other {seguidores}}"
 #: src/components/ProfileHoverCard/index.web.tsx:402
 #: src/screens/Profile/Header/Metrics.tsx:27
 msgid "{0, plural, one {following} other {following}}"
-msgstr "{0, plural, un {following} unos {following}}"
+msgstr "{0, plural, one {siguiendo} other {siguiendo}}"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:312
 msgid "{0, plural, one {Like (# like)} other {Like (# likes)}}"
