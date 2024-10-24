@@ -3419,7 +3419,7 @@ msgstr "Mensajes inapropiados o enlaces explícitos."
 
 #: src/screens/Login/SetNewPasswordForm.tsx:121
 msgid "Input code sent to your email for password reset"
-msgstr "Introduce el código enviado a tu correo electrónico para restablecer la contraseña."
+msgstr "Introduce el código enviado a tu correo electrónico para restablecer la contraseña"
 
 #: src/view/com/modals/DeleteAccount.tsx:246
 msgid "Input confirmation code for account deletion"
