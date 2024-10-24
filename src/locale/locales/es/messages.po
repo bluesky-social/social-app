@@ -3480,7 +3480,7 @@ msgstr "Código de confirmación 2FA no es válido."
 
 #: src/view/com/post-thread/PostThreadItem.tsx:264
 msgid "Invalid or unsupported post record"
-msgstr "Registro de publicación inválido o no compatible."
+msgstr "Registro de publicación inválido o no compatible"
 
 #: src/screens/Login/LoginForm.tsx:88
 #: src/screens/Login/LoginForm.tsx:147
