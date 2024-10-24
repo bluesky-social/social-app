@@ -3471,7 +3471,7 @@ msgstr "Interacción limitada"
 
 #: src/components/dialogs/nuxs/NeueTypography.tsx:47
 msgid "Introducing new font settings"
-msgstr "Presentando nuevas configuraciones de fuentes."
+msgstr "Presentando nuevas configuraciones de fuentes"
 
 #: src/screens/Login/LoginForm.tsx:142
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:70
