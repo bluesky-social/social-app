@@ -3521,7 +3521,7 @@ msgstr "Invita a tus amigos a seguir tus feeds y personas favoritas."
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:32
 msgid "Invites, but personal"
-msgstr "Invitaciones, pero personales."
+msgstr "Invitaciones, pero personales"
 
 #: src/screens/Signup/StepInfo/index.tsx:80
 msgid "It looks like you may have entered your email address incorrectly. Are you sure it's right?"
