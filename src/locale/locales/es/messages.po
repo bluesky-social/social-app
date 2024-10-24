@@ -24,15 +24,15 @@ msgstr "(sin correo)"
 #: src/view/com/notifications/FeedItem.tsx:232
 #: src/view/com/notifications/FeedItem.tsx:327
 msgid "{0, plural, one {{formattedCount} other} other {{formattedCount} others}}"
-msgstr "{0, plural, un {{formattedCount} other} otro {{formattedCount} others}}"
+msgstr "{0, plural, one {{formattedCount} otro} other {{formattedCount} otros}}"
 
 #: src/lib/hooks/useTimeAgo.ts:156
 msgid "{0, plural, one {# day} other {# days}}"
-msgstr "{0, plural, un {# day} unos {# days}}"
+msgstr "{0, plural, one {# día} other {# días}}"
 
 #: src/lib/hooks/useTimeAgo.ts:146
 msgid "{0, plural, one {# hour} other {# hours}}"
-msgstr "{0, plural, una {# hour} unas {# hours}}"
+msgstr "{0, plural, one {# hora} other {# horas}}"
 
 #: src/components/moderation/LabelsOnMe.tsx:55
 #~ msgid "{0, plural, one {# label has been placed on this account} other {# labels has been placed on this account}}"
@@ -40,7 +40,7 @@ msgstr "{0, plural, una {# hour} unas {# hours}}"
 
 #: src/components/moderation/LabelsOnMe.tsx:54
 msgid "{0, plural, one {# label has been placed on this account} other {# labels have been placed on this account}}"
-msgstr "{0, plural, una {# label has been placed on this account} unas {# labels have been placed on this account}}"
+msgstr "{0, plural, one {se ha colocado # etiqueta en esta cuenta} other {se han colocado # etiquetas en esta cuenta}}"
 
 #: src/components/moderation/LabelsOnMe.tsx:61
 #~ msgid "{0, plural, one {# label has been placed on this content} other {# labels has been placed on this content}}"
@@ -48,23 +48,23 @@ msgstr "{0, plural, una {# label has been placed on this account} unas {# labels
 
 #: src/components/moderation/LabelsOnMe.tsx:60
 msgid "{0, plural, one {# label has been placed on this content} other {# labels have been placed on this content}}"
-msgstr "{0, plural, una {# label has been placed on this content} unas {# labels have been placed on this content}}"
+msgstr "{0, plural, one {se ha colocado # etiqueta en este contenido} other {se han colocado # etiquetas en este contenido}}"
 
 #: src/lib/hooks/useTimeAgo.ts:136
 msgid "{0, plural, one {# minute} other {# minutes}}"
-msgstr "{0, plural, un {# minute} unos {# minutes}}"
+msgstr "{0, plural, one {# minuto} other {# minutos}}"
 
 #: src/lib/hooks/useTimeAgo.ts:167
 msgid "{0, plural, one {# month} other {# months}}"
-msgstr "{0, plural, un {# month} unos {# months}}"
+msgstr "{0, plural, one {# mes} other {# meses}}"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:71
 msgid "{0, plural, one {# repost} other {# reposts}}"
-msgstr "{0, plural, un {# repost} unos {# reposts}}"
+msgstr "{0, plural, one {# repost} other {# reposts}}"
 
 #: src/lib/hooks/useTimeAgo.ts:126
 msgid "{0, plural, one {# second} other {# seconds}}"
-msgstr "{0, plural, un {# second} unos {# seconds}}"
+msgstr "{0, plural, one {# segundo} other {# segundos}}"
 
 #: src/components/KnownFollowers.tsx:179
 #~ msgid "{0, plural, one {and # other} other {and # others}}"
@@ -73,16 +73,16 @@ msgstr "{0, plural, un {# second} unos {# seconds}}"
 #: src/components/ProfileHoverCard/index.web.tsx:398
 #: src/screens/Profile/Header/Metrics.tsx:23
 msgid "{0, plural, one {follower} other {followers}}"
-msgstr "{0, plural, un {follower} unos {followers}}"
+msgstr "{0, plural, one {seguidor} other {seguidores}}"
 
 #: src/components/ProfileHoverCard/index.web.tsx:402
 #: src/screens/Profile/Header/Metrics.tsx:27
 msgid "{0, plural, one {following} other {following}}"
-msgstr "{0, plural, un {following} unos {following}}"
+msgstr "{0, plural, one {siguiendo} other {siguiendo}}"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:312
 msgid "{0, plural, one {Like (# like)} other {Like (# likes)}}"
-msgstr "{0, plural, un {Like (# like)} unos {Like (# likes)}}"
+msgstr "{0, plural, one {Me gusta (# me gusta)} other {Me gusta (# me gusta)}}"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:434
 msgid "{0, plural, one {like} other {likes}}"
@@ -103,15 +103,15 @@ msgstr "{0, plural, una {quote} unas {quotes}}"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:269
 msgid "{0, plural, one {Reply (# reply)} other {Reply (# replies)}}"
-msgstr "{0, plural, una {Reply (# reply)} unas {Reply (# replies)}}"
+msgstr "{0, plural, one {Responder (# respuesta)} other {Responder (# respuestas)}}"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:400
 msgid "{0, plural, one {repost} other {reposts}}"
-msgstr "{0, plural, un {repost} unos {reposts}}"
+msgstr "{0, plural, one {repost} other {reposts}}"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:308
 msgid "{0, plural, one {Unlike (# like)} other {Unlike (# likes)}}"
-msgstr "{0, plural, un {Unlike (# like)} unos {Unlike (# likes)}}"
+msgstr "{0, plural, one {Unlike (# me gusta)} other {Unlike (# me gusta)}}"
 
 #. Pattern: {wordValue} in tags
 #: src/components/dialogs/MutedWords.tsx:475
@@ -121,7 +121,7 @@ msgstr "{0} <0>en <1>tags</1></0>"
 #. Pattern: {wordValue} in text, tags
 #: src/components/dialogs/MutedWords.tsx:465
 msgid "{0} <0>in <1>text & tags</1></0>"
-msgstr "{0} <0>en <1>Texto y etiquetas</1></0>"
+msgstr "{0} <0>en <1>texto y etiquetas</1></0>"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:219
 msgid "{0} joined this week"
@@ -133,7 +133,7 @@ msgstr "{0} de {1}"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:467
 msgid "{0} people have used this starter pack!"
-msgstr "{0} personas han usado este paquete de inicio!"
+msgstr "¡{0} personas han usado este paquete de inicio!"
 
 #: src/view/screens/ProfileList.tsx:286
 #~ msgid "{0} your feeds"
@@ -149,7 +149,7 @@ msgstr "Los feeds y personas favoritas de {0}, ¡únete a mí!"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:47
 msgid "{0}'s starter pack"
-msgstr "pack inicial de {0}"
+msgstr "paquete de inicio de {0}"
 
 #. How many days have passed, displayed in a narrow form
 #: src/lib/hooks/useTimeAgo.ts:158
@@ -203,7 +203,7 @@ msgstr "{count, plural, un {Liked by # user} unos {Liked by # users}}"
 #: src/lib/generate-starterpack.ts:108
 #: src/screens/StarterPack/Wizard/index.tsx:174
 msgid "{displayName}'s Starter Pack"
-msgstr "{displayName}'s Starter Pack"
+msgstr "Paquete de inicio de {displayName}"
 
 #: src/screens/SignupQueued.tsx:207
 msgid "{estimatedTimeHrs, plural, one {hour} other {hours}}"
@@ -313,7 +313,7 @@ msgstr ""
 
 #: src/screens/Profile/Header/Handle.tsx:53
 msgid "⚠Invalid Handle"
-msgstr "⚠Manejo inválido"
+msgstr "⚠Nombre de usuario inválido"
 
 #: src/components/dialogs/MutedWords.tsx:193
 msgid "24 hours"
@@ -403,7 +403,7 @@ msgstr "Cuenta desbloqueada"
 
 #: src/view/com/profile/ProfileMenu.tsx:157
 msgid "Account unfollowed"
-msgstr "Cuenta sin seguir"
+msgstr "Has dejado de seguir a esta cuenta"
 
 #: src/view/com/profile/ProfileMenu.tsx:98
 msgid "Account unmuted"
@@ -455,7 +455,7 @@ msgstr "Añadir texto alternativo"
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:107
 msgid "Add alt text (optional)"
-msgstr "Agregar texto alt (opcional)"
+msgstr "Agregar texto alternativo (opcional)"
 
 #: src/view/screens/AppPasswords.tsx:102
 #: src/view/screens/AppPasswords.tsx:144
@@ -542,7 +542,7 @@ msgstr "¡Entrenamiento de algoritmo completo!"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:370
 msgid "All accounts have been followed!"
-msgstr "Se han seguido todas las cuentas!"
+msgstr "¡Se han seguido todas las cuentas!"
 
 #: src/view/screens/Feeds.tsx:734
 msgid "All the feeds you've saved, right in one place."
@@ -561,11 +561,11 @@ msgstr "Permitir el acceso a sus mensajes directos"
 #: src/screens/Messages/Settings.tsx:62
 #: src/screens/Messages/Settings.tsx:65
 msgid "Allow new messages from"
-msgstr "Permitir nuevos mensajes desde"
+msgstr "Permitir nuevos mensajes de"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:360
 msgid "Allow replies from:"
-msgstr "Permitir respuestas desde:"
+msgstr "Permitir respuestas de:"
 
 #: src/view/screens/AppPasswords.tsx:263
 msgid "Allows access to direct messages"
@@ -619,7 +619,7 @@ msgstr "Un código de verificación ha sido enviado a tu dirección anterior, {0
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:77
 msgid "An email has been sent! Please enter the confirmation code included in the email below."
-msgstr "¡Se ha enviado un correo electrónico!Ingrese el código de confirmación incluido en el correo electrónico a continuación."
+msgstr "¡Se ha enviado un correo electrónico! Ingrese el código de confirmación incluido en el correo electrónico a continuación."
 
 #: src/components/dialogs/GifSelect.tsx:266
 msgid "An error has occurred"
@@ -639,7 +639,7 @@ msgstr "Se produjo un error al comprimir el video."
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:316
 msgid "An error occurred while generating your starter pack. Want to try again?"
-msgstr "Se produjo un error al generar su paquete de inicio.¿Quieres intentarlo de nuevo?"
+msgstr "Se produjo un error al generar su paquete de inicio. ¿Quieres intentarlo de nuevo?"
 
 #: src/view/com/util/post-embeds/VideoEmbed.tsx:135
 msgid "An error occurred while loading the video. Please try again later."
@@ -795,7 +795,7 @@ msgstr "Aparencia"
 
 #: src/view/screens/Settings/index.tsx:475
 msgid "Appearance settings"
-msgstr "Appearance settings"
+msgstr "Configuración de apariencia"
 
 #: src/Navigation.tsx:325
 msgid "Appearance Settings"
@@ -804,7 +804,7 @@ msgstr "Configuración de apariencia"
 #: src/screens/Feeds/NoSavedFeedsOfAnyType.tsx:47
 #: src/screens/Home/NoFeedsPinned.tsx:93
 msgid "Apply default recommended feeds"
-msgstr "Aplicar alimentos recomendados predeterminados"
+msgstr "Aplicar feeds recomendados predeterminados"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:610
 #~ msgid "Are you sure you want delete this starter pack?"
@@ -820,7 +820,7 @@ msgstr "¿Seguro que quieres eliminar la contraseña de app \"{name}\"?"
 
 #: src/components/dms/MessageMenu.tsx:149
 msgid "Are you sure you want to delete this message? The message will be deleted for you, but not for the other participant."
-msgstr "¿Estás seguro de que quieres eliminar este mensaje?El mensaje se eliminará para usted, pero no para el otro participante."
+msgstr "¿Estás seguro de que quieres eliminar este mensaje? El mensaje se eliminará para usted, pero no para el otro participante."
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:621
 msgid "Are you sure you want to delete this starter pack?"
@@ -832,7 +832,7 @@ msgstr "¿Estás seguro de que quieres eliminar este paquete de inicio?"
 
 #: src/components/dms/LeaveConvoPrompt.tsx:48
 msgid "Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for the other participant."
-msgstr "¿Estás seguro de que quieres dejar esta conversación?Sus mensajes serán eliminados para usted, pero no para el otro participante."
+msgstr "¿Estás seguro de que quieres dejar esta conversación? Sus mensajes serán eliminados para usted, pero no para el otro participante."
 
 #: src/view/com/feeds/FeedSourceCard.tsx:313
 msgid "Are you sure you want to remove {0} from your feeds?"
@@ -990,7 +990,7 @@ msgstr "Bluesky es una red abierta donde puede elegir su proveedor de alojamient
 
 #: src/components/ProgressGuide/List.tsx:55
 msgid "Bluesky is better with friends!"
-msgstr "Bluesky es mejor con amigos!"
+msgstr "¡Bluesky es mejor con amigos!"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:206
 #~ msgid "Bluesky now has over 10 million users, and I was #{0}!"
@@ -1076,7 +1076,7 @@ msgstr "Al crear una cuenta, usted acepta la <0>Política de privacidad</0>."
 
 #: src/screens/Signup/StepInfo/Policies.tsx:48
 msgid "By creating an account you agree to the <0>Terms of Service</0> and <1>Privacy Policy</1>."
-msgstr "Al crear una cuenta, usted acepta los <0>Términos de Servicio</0> y <1>Política de privacidad </1>."
+msgstr "Al crear una cuenta, usted acepta los <0>Términos de Servicio</0> y la <1>Política de privacidad</1>."
 
 #: src/screens/Signup/StepInfo/Policies.tsx:68
 msgid "By creating an account you agree to the <0>Terms of Service</0>."
@@ -1362,11 +1362,11 @@ msgstr "Clic aquí para abrir el menu de {tag}"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:304
 msgid "Click to disable quote posts of this post."
-msgstr "Clic para deshabilitar las publicaciones de cotización de esta publicación."
+msgstr "Clic para deshabilitar las citas para esta publicación."
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:305
 msgid "Click to enable quote posts of this post."
-msgstr "Clic para habilitar las publicaciones de cotización de esta publicación."
+msgstr "Clic para habilitar las citas para esta publicación."
 
 #: src/components/dms/MessageItem.tsx:240
 msgid "Click to retry failed message"
@@ -1457,7 +1457,7 @@ msgstr "Lista de colapso de usuarios"
 
 #: src/view/com/notifications/FeedItem.tsx:470
 msgid "Collapses list of users for a given notification"
-msgstr "Colapsa la lista de usuarios para una notificación dada"
+msgstr "Colapsa la lista de usuarios para una notificación en particular"
 
 #: src/screens/Settings/AppearanceSettings.tsx:97
 msgid "Color mode"
@@ -1660,7 +1660,7 @@ msgstr "Copiado al portapapeles"
 
 #: src/components/dialogs/Embed.tsx:136
 msgid "Copied!"
-msgstr "Copiado!"
+msgstr "¡Copiado!"
 
 #: src/view/com/modals/AddAppPasswords.tsx:215
 msgid "Copies app password"
@@ -1700,12 +1700,12 @@ msgstr "Copiar el enlace hacia el post"
 #: src/components/dms/MessageMenu.tsx:110
 #: src/components/dms/MessageMenu.tsx:112
 msgid "Copy message text"
-msgstr "Copiar mensaje de texto"
+msgstr "Copiar texto del mensaje"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:430
 #: src/view/com/util/forms/PostDropdownBtn.tsx:432
 msgid "Copy post text"
-msgstr "Copiar el texto del post"
+msgstr "Copiar texto del post"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:169
 msgid "Copy QR code"
@@ -1769,11 +1769,11 @@ msgstr "Crear un código QR para pack de inicio"
 #: src/components/StarterPack/ProfileStarterPacks.tsx:260
 #: src/Navigation.tsx:367
 msgid "Create a starter pack"
-msgstr "Crea un pack de inicio"
+msgstr "Crea un paquete de inicio"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:247
 msgid "Create a starter pack for me"
-msgstr "Crea un pack de inicio para mi"
+msgstr "Crea un paquete de inicio para mí"
 
 #: src/view/com/auth/SplashScreen.tsx:56
 #: src/view/com/auth/SplashScreen.web.tsx:116
@@ -1955,7 +1955,7 @@ msgstr "Borrar un post"
 #: src/screens/StarterPack/StarterPackScreen.tsx:567
 #: src/screens/StarterPack/StarterPackScreen.tsx:723
 msgid "Delete starter pack"
-msgstr "Borrar pack de inicio"
+msgstr "Borrar paquete de inicio"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:618
 msgid "Delete starter pack?"
@@ -2045,7 +2045,7 @@ msgstr "Desactivar subtitulos"
 #: src/screens/Messages/Settings.tsx:143
 #: src/screens/Moderation/index.tsx:353
 msgid "Disabled"
-msgstr "Dishabilitado"
+msgstr "Deshabilitado"
 
 #: src/view/com/composer/Composer.tsx:842
 msgid "Discard"
@@ -2322,7 +2322,7 @@ msgstr "Edita tu descripcion de perfil"
 
 #: src/Navigation.tsx:372
 msgid "Edit your starter pack"
-msgstr "Edita tu pack inicial"
+msgstr "Edita tu paquete de inicio"
 
 #: src/screens/Onboarding/index.tsx:31
 #: src/screens/Onboarding/state.ts:88
@@ -2387,11 +2387,11 @@ msgstr "Incrusta esta publicación en tu sitio web. Simplemente copia el siguien
 
 #: src/components/dialogs/EmbedConsent.tsx:100
 msgid "Enable {0} only"
-msgstr "Activa {0} solamente"
+msgstr "Activar {0} solamente"
 
 #: src/screens/Moderation/index.tsx:340
 msgid "Enable adult content"
-msgstr "Activa contenido adulto"
+msgstr "Activar contenido adulto"
 
 #: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:94
 #~ msgid "Enable Adult Content"
@@ -2405,7 +2405,7 @@ msgstr "Activa contenido adulto"
 #: src/components/dialogs/EmbedConsent.tsx:81
 #: src/components/dialogs/EmbedConsent.tsx:88
 msgid "Enable external media"
-msgstr "Activa medios externos"
+msgstr "Activar medios externos"
 
 #: src/view/screens/PreferencesExternalEmbeds.tsx:71
 msgid "Enable media players for"
@@ -2418,7 +2418,7 @@ msgstr "Habilitar notificaciones prioritarias"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:389
 msgid "Enable subtitles"
-msgstr "Activa subtítutlos"
+msgstr "Activar subtítutlos"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:145
 #~ msgid "Enable this setting to only see replies between people you follow."
@@ -2536,11 +2536,11 @@ msgstr "Todos"
 
 #: src/lib/moderation/useReportOptions.ts:73
 msgid "Excessive mentions or replies"
-msgstr "Excessive mentions or replies"
+msgstr "Menciones o respuestas excesivas"
 
 #: src/lib/moderation/useReportOptions.ts:86
 msgid "Excessive or unwanted messages"
-msgstr "Excessive or unwanted messages"
+msgstr "Mensajes excesivos o no deseados"
 
 #: src/components/dialogs/MutedWords.tsx:311
 msgid "Exclude users you follow"
@@ -2644,7 +2644,7 @@ msgstr "Error al crear la contraseña de la aplicación."
 #: src/screens/StarterPack/Wizard/index.tsx:229
 #: src/screens/StarterPack/Wizard/index.tsx:237
 msgid "Failed to create starter pack"
-msgstr "Error al crear el paquete inicial."
+msgstr "Error al crear el paquete de inicio."
 
 #: src/view/com/modals/CreateOrEditList.tsx:186
 msgid "Failed to create the list. Check your internet connection and try again."
@@ -2777,7 +2777,7 @@ msgstr "Las noticias son algoritmos personalizados que los usuarios construyen c
 #: src/components/FeedCard.tsx:273
 #: src/view/screens/SavedFeeds.tsx:82
 msgid "Feeds updated!"
-msgstr "Feeds actualizados!"
+msgstr "¡Feeds actualizados!"
 
 #: src/view/com/modals/ChangeHandle.tsx:468
 msgid "File Contents"
@@ -2785,7 +2785,7 @@ msgstr "Contenido del Archivo"
 
 #: src/view/screens/Settings/ExportCarDialog.tsx:42
 msgid "File saved successfully!"
-msgstr "Archivo grabado exitosamente!"
+msgstr "¡Archivo guardado exitosamente!"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:66
 msgid "Filter from feeds"
@@ -2867,7 +2867,7 @@ msgstr "Seguir {name}"
 
 #: src/components/ProgressGuide/List.tsx:54
 msgid "Follow 7 accounts"
-msgstr "Seguir 7 cuentas"
+msgstr "Sigue 7 cuentas"
 
 #: src/view/com/profile/ProfileMenu.tsx:222
 #: src/view/com/profile/ProfileMenu.tsx:233
@@ -2948,7 +2948,7 @@ msgstr "Seguidores"
 
 #: src/Navigation.tsx:186
 msgid "Followers of @{0} that you know"
-msgstr "Seguidore de @{0} que podrías conocer"
+msgstr "Seguidores de @{0} que conoces"
 
 #: src/screens/Profile/KnownFollowers.tsx:108
 #: src/screens/Profile/KnownFollowers.tsx:118
@@ -3411,7 +3411,7 @@ msgstr "Suplantación de identidad o afirmaciones falsas sobre identidad o afili
 
 #: src/lib/moderation/useReportOptions.ts:68
 msgid "Impersonation, misinformation, or false claims"
-msgstr "Suplantación de identidad, desinformación o afirmaciones falsas."
+msgstr "Suplantación de identidad, desinformación o afirmaciones falsas"
 
 #: src/lib/moderation/useReportOptions.ts:91
 msgid "Inappropriate messages or explicit links"
@@ -3419,11 +3419,11 @@ msgstr "Mensajes inapropiados o enlaces explícitos."
 
 #: src/screens/Login/SetNewPasswordForm.tsx:121
 msgid "Input code sent to your email for password reset"
-msgstr "Introduce el código enviado a tu correo electrónico para restablecer la contraseña."
+msgstr "Introduce el código enviado a tu correo electrónico para restablecer la contraseña"
 
 #: src/view/com/modals/DeleteAccount.tsx:246
 msgid "Input confirmation code for account deletion"
-msgstr "Introduce el código de confirmación para la eliminación de la cuenta."
+msgstr "Introduce el código de confirmación para la eliminación de la cuenta"
 
 #: src/view/com/modals/AddAppPasswords.tsx:175
 msgid "Input name for app password"
@@ -3521,7 +3521,7 @@ msgstr "Invita a tus amigos a seguir tus feeds y personas favoritas."
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:32
 msgid "Invites, but personal"
-msgstr "Invitaciones, pero personales."
+msgstr "Invitaciones, pero personales"
 
 #: src/screens/Signup/StepInfo/index.tsx:80
 msgid "It looks like you may have entered your email address incorrectly. Are you sure it's right?"
@@ -3552,11 +3552,11 @@ msgstr "Tareas"
 #: src/screens/StarterPack/StarterPackScreen.tsx:443
 #: src/screens/StarterPack/StarterPackScreen.tsx:454
 msgid "Join Bluesky"
-msgstr "Unete a Bluesky"
+msgstr "Únete a Bluesky"
 
 #: src/components/StarterPack/QrCode.tsx:61
 msgid "Join the conversation"
-msgstr "Unete a la conversación"
+msgstr "Únete a la conversación"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:492
 #~ msgid "Joined {0}"
@@ -3763,11 +3763,11 @@ msgstr "le gusta tu post"
 
 #: src/view/screens/Profile.tsx:222
 msgid "Likes"
-msgstr "Cantidad de «Me gusta»"
+msgstr "Me gusta"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:204
 msgid "Likes on this post"
-msgstr "Cantidad de  «Me gusta» en este post"
+msgstr "Me gusta en este post"
 
 #: src/Navigation.tsx:192
 msgid "List"
@@ -3775,7 +3775,7 @@ msgstr "Lista"
 
 #: src/view/com/modals/CreateOrEditList.tsx:241
 msgid "List Avatar"
-msgstr "Lista de avatares"
+msgstr "Avatar de la lista"
 
 #: src/view/screens/ProfileList.tsx:413
 msgid "List blocked"
@@ -3792,7 +3792,7 @@ msgstr "Lista de eliminados"
 
 #: src/screens/List/ListHiddenScreen.tsx:126
 msgid "List has been hidden"
-msgstr "La lista ha sido oculta"
+msgstr "Se ha ocultado la lista"
 
 #: src/view/screens/ProfileList.tsx:161
 msgid "List Hidden"
@@ -3912,7 +3912,7 @@ msgstr "¡Asegúrate de que es aquí a donde pretendes ir!"
 
 #: src/components/dialogs/MutedWords.tsx:108
 msgid "Manage your muted words and tags"
-msgstr "Gestiona tus palabras y etiquetas silenciadas."
+msgstr "Gestiona tus palabras y etiquetas silenciadas"
 
 #: src/components/dms/ConvoMenu.tsx:151
 #: src/components/dms/ConvoMenu.tsx:158
