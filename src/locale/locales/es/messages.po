@@ -3912,7 +3912,7 @@ msgstr "¡Asegúrate de que es aquí a donde pretendes ir!"
 
 #: src/components/dialogs/MutedWords.tsx:108
 msgid "Manage your muted words and tags"
-msgstr "Gestiona tus palabras y etiquetas silenciadas."
+msgstr "Gestiona tus palabras y etiquetas silenciadas"
 
 #: src/components/dms/ConvoMenu.tsx:151
 #: src/components/dms/ConvoMenu.tsx:158
