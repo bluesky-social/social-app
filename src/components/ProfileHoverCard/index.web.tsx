@@ -5,15 +5,15 @@ import {flip, offset, shift, size, useFloating} from '@floating-ui/react-dom'
 import {msg, plural} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {isTouchDevice} from '#/lib/browser'
 import {getModerationCauseKey} from '#/lib/moderation'
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
+import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {usePrefetchProfileQuery, useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
-import {isTouchDevice} from 'lib/browser'
-import {useProfileShadow} from 'state/cache/profile-shadow'
 import {formatCount} from '#/view/com/util/numeric/format'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {ProfileHeaderHandle} from '#/screens/Profile/Header/Handle'
@@ -344,7 +344,6 @@ let Card = ({did, hide}: {did: string; hide: () => void}): React.ReactNode => {
   return (
     <View
       style={[
-        a.p_lg,
         a.border,
         a.rounded_md,
         a.overflow_hidden,
@@ -414,8 +413,8 @@ function Inner({
   const isLabeler = profile.associated?.labeler
 
   return (
-    <View>
-      <View style={[a.flex_row, a.justify_between, a.align_start]}>
+    <View style={[a.aliceCardLight]}>
+      <View style={[a.flex_row, a.justify_between, a.align_start, a.aliceCardDark, a.p_md]}>
         <Link to={profileURL} label={_(msg`View profile`)} onPress={hide}>
           <UserAvatar
             size={64}
@@ -464,7 +463,7 @@ function Inner({
       </View>
 
       <Link to={profileURL} label={_(msg`View profile`)} onPress={hide}>
-        <View style={[a.pb_sm, a.flex_1]}>
+        <View style={[a.pb_sm, a.flex_1, a.pl_md, a.pr_md]}>
           <Text
             style={[a.pt_md, a.pb_xs, a.text_lg, a.font_bold, a.self_start]}>
             {sanitizeDisplayName(
@@ -492,7 +491,7 @@ function Inner({
 
       {!isBlockedUser && (
         <>
-          <View style={[a.flex_row, a.flex_wrap, a.gap_md, a.pt_xs]}>
+          <View style={[a.flex_row, a.flex_wrap, a.gap_md, a.pt_xs, a.pr_md, a.pl_md]}>
             <InlineLinkText
               to={makeProfileLink(profile, 'followers')}
               label={`${followers} ${pluralizedFollowers}`}
@@ -516,7 +515,7 @@ function Inner({
           </View>
 
           {profile.description?.trim() && !moderation.ui('profileView').blur ? (
-            <View style={[a.pt_md]}>
+            <View style={[a.pt_md, a.p_md]}>
               <RichText
                 numberOfLines={8}
                 value={descriptionRT}
