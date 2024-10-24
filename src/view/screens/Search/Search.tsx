@@ -12,6 +12,14 @@ import {
 } from 'react-native'
 import {ScrollView as RNGHScrollView} from 'react-native-gesture-handler'
 import RNPickerSelect from 'react-native-picker-select'
+import Animated, {
+  LayoutAnimationConfig,
+  LinearTransition,
+  SlideInLeft,
+  SlideInRight,
+  SlideOutLeft,
+  SlideOutRight,
+} from 'react-native-reanimated'
 import {AppBskyActorDefs, AppBskyFeedDefs, moderateProfile} from '@atproto/api'
 import {
   FontAwesomeIcon,
@@ -63,6 +71,7 @@ import {atoms as a, useBreakpoints, useTheme as useThemeNew, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as FeedCard from '#/components/FeedCard'
 import {SearchInput} from '#/components/forms/SearchInput'
+import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {ChevronBottom_Stroke2_Corner0_Rounded as ChevronDown} from '#/components/icons/Chevron'
 import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
 import * as Layout from '#/components/Layout'
@@ -844,7 +853,10 @@ export function SearchScreen(
     [selectedProfiles],
   )
 
+  const {state: isFocused, onIn: onFocus, onOut: onBlur} = useInteractionState()
+
   const onSearchInputFocus = React.useCallback(() => {
+    onFocus()
     if (isWeb) {
       // Prevent a jump on iPad by ensuring that
       // the initial focused render has no result list.
@@ -854,7 +866,7 @@ export function SearchScreen(
     } else {
       setShowAutocomplete(true)
     }
-  }, [setShowAutocomplete])
+  }, [setShowAutocomplete, onFocus])
 
   return (
     <Layout.Screen testID="searchScreen">
@@ -872,46 +884,58 @@ export function SearchScreen(
           }),
         ]}
         sideBorders={gtMobile}>
-        <View style={[a.flex_row, a.gap_sm]}>
-          {!gtMobile && (
-            <Button
-              testID="viewHeaderBackOrMenuBtn"
-              onPress={onPressMenu}
-              hitSlop={HITSLOP_10}
-              label={_(msg`Menu`)}
-              accessibilityHint={_(msg`Access navigation links and settings`)}
-              size="large"
-              variant="solid"
-              color="secondary"
-              shape="square">
-              <ButtonIcon icon={Menu} size="lg" />
-            </Button>
-          )}
-          <View style={[a.flex_1]}>
-            <SearchInput
-              ref={textInput}
-              value={searchText}
-              onFocus={onSearchInputFocus}
-              onChangeText={onChangeText}
-              onClearText={onPressClearQuery}
-              onSubmitEditing={onSubmit}
-            />
+        <LayoutAnimationConfig skipEntering skipExiting>
+          <View style={[a.flex_row, a.gap_sm]}>
+            {!gtMobile && !isFocused && (
+              <Animated.View
+                layout={LinearTransition}
+                entering={SlideInLeft}
+                exiting={SlideOutLeft}>
+                <Button
+                  testID="viewHeaderBackOrMenuBtn"
+                  onPress={onPressMenu}
+                  hitSlop={HITSLOP_10}
+                  label={_(msg`Menu`)}
+                  accessibilityHint={_(
+                    msg`Access navigation links and settings`,
+                  )}
+                  size="large"
+                  variant="solid"
+                  color="secondary"
+                  shape="square">
+                  <ButtonIcon icon={Menu} size="lg" />
+                </Button>
+              </Animated.View>
+            )}
+            <Animated.View style={[a.flex_1]} layout={LinearTransition}>
+              <SearchInput
+                ref={textInput}
+                value={searchText}
+                onFocus={onSearchInputFocus}
+                onBlur={onBlur}
+                onChangeText={onChangeText}
+                onClearText={onPressClearQuery}
+                onSubmitEditing={onSubmit}
+              />
+            </Animated.View>
+            {showAutocomplete && (
+              <Animated.View entering={SlideInRight} exiting={SlideOutRight}>
+                <Button
+                  label={_(msg`Cancel search`)}
+                  size="large"
+                  variant="ghost"
+                  color="secondary"
+                  style={[a.px_sm]}
+                  onPress={onPressCancelSearch}
+                  hitSlop={HITSLOP_10}>
+                  <ButtonText>
+                    <Trans>Cancel</Trans>
+                  </ButtonText>
+                </Button>
+              </Animated.View>
+            )}
           </View>
-          {showAutocomplete && (
-            <Button
-              label={_(msg`Cancel search`)}
-              size="large"
-              variant="ghost"
-              color="secondary"
-              style={[a.px_sm]}
-              onPress={onPressCancelSearch}
-              hitSlop={HITSLOP_10}>
-              <ButtonText>
-                <Trans>Cancel</Trans>
-              </ButtonText>
-            </Button>
-          )}
-        </View>
+        </LayoutAnimationConfig>
 
         {showFilters && (
           <View
