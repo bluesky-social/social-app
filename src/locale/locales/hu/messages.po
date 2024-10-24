@@ -189,7 +189,7 @@ msgstr "{handle} jelenleg nem fogad üzeneteket"
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:297
 #: src/view/screens/ProfileFeed.tsx:591
 msgid "{likeCount, plural, one {Liked by # user} other {Liked by # users}}"
-msgstr "{0} felhasználó kedveli"
+msgstr "{likeCount} felhasználó kedveli"
 
 #: src/view/shell/Drawer.tsx:479
 msgid "{numUnreadNotifications} unread"
