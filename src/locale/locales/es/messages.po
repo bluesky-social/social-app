@@ -3431,7 +3431,7 @@ msgstr "Introduce un nombre para la contraseña de la aplicación"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:145
 msgid "Input new password"
-msgstr "Introduce una nueva contraseña."
+msgstr "Introduce una nueva contraseña"
 
 #: src/view/com/modals/DeleteAccount.tsx:265
 msgid "Input password for account deletion"
