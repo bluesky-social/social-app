@@ -3880,7 +3880,7 @@ msgstr "Acceder a una cuenta que no está en la lista"
 
 #: src/components/RichText.tsx:226
 msgid "Long press to open tag menu for #{tag}"
-msgstr "Mantén presionado para abrir el menú de etiquetas para #{tag}."
+msgstr "Mantén presionado para abrir el menú de etiquetas para #{tag}"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:110
 msgid "Looks like XXXXX-XXXXX"
