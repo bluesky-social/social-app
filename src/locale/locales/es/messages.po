@@ -3427,7 +3427,7 @@ msgstr "Introduce el código de confirmación para la eliminación de la cuenta"
 
 #: src/view/com/modals/AddAppPasswords.tsx:175
 msgid "Input name for app password"
-msgstr "Introduce un nombre para la contraseña de la aplicación."
+msgstr "Introduce un nombre para la contraseña de la aplicación"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:145
 msgid "Input new password"
