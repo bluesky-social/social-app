@@ -3415,7 +3415,7 @@ msgstr "Suplantación de identidad, desinformación o afirmaciones falsas"
 
 #: src/lib/moderation/useReportOptions.ts:91
 msgid "Inappropriate messages or explicit links"
-msgstr "Mensajes inapropiados o enlaces explícitos."
+msgstr "Mensajes inapropiados o enlaces explícitos"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:121
 msgid "Input code sent to your email for password reset"
