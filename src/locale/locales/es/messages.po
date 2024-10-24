@@ -107,7 +107,7 @@ msgstr "{0, plural, one {Responder (# respuesta)} other {Responder (# respuestas
 
 #: src/view/com/post-thread/PostThreadItem.tsx:400
 msgid "{0, plural, one {repost} other {reposts}}"
-msgstr "{0, plural, un {repost} unos {reposts}}"
+msgstr "{0, plural, one {repost} other {reposts}}"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:308
 msgid "{0, plural, one {Unlike (# like)} other {Unlike (# likes)}}"
