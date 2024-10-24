@@ -49,23 +49,20 @@ export async function post(
   opts: PostOpts,
 ) {
   const draft = opts.draft
-  let reply
-  let rt
 
   opts.onStateChange?.(t`Processing...`)
-
-  rt = await resolveRT(agent, draft.richtext)
-
-  const embed = await resolveEmbed(
+  // NB -- Do not await anything here to avoid waterfalls!
+  // Instead, store Promises which will be unwrapped as they're needed.
+  const rtPromise = resolveRT(agent, draft.richtext)
+  const embedPromise = resolveEmbed(
     agent,
     queryClient,
     draft,
     opts.onStateChange,
   )
-
-  // add replyTo if post is a reply to another post
+  let replyPromise
   if (opts.replyTo) {
-    reply = await resolveReply(agent, opts.replyTo)
+    replyPromise = resolveReply(agent, opts.replyTo)
   }
 
   // set labels
@@ -91,6 +88,9 @@ export async function post(
 
   // Create post record
   {
+    const rt = await rtPromise
+    const embed = await embedPromise
+    const reply = await replyPromise
     const record: AppBskyFeedPost.Record = {
       $type: 'app.bsky.feed.post',
       createdAt: date,
