@@ -111,7 +111,7 @@ msgstr "{0, plural, one {repost} other {reposts}}"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:308
 msgid "{0, plural, one {Unlike (# like)} other {Unlike (# likes)}}"
-msgstr "{0, plural, un {Unlike (# like)} unos {Unlike (# likes)}}"
+msgstr "{0, plural, one {Unlike (# me gusta)} other {Unlike (# me gusta)}}"
 
 #. Pattern: {wordValue} in tags
 #: src/components/dialogs/MutedWords.tsx:475
