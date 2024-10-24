@@ -50,17 +50,11 @@ export async function post(
 ) {
   const draft = opts.draft
   let reply
-  let rt = new RichText(
-    {text: draft.richtext.text.trimEnd()},
-    {cleanNewlines: true},
-  )
+  let rt
 
   opts.onStateChange?.(t`Processing...`)
 
-  await rt.detectFacets(agent)
-
-  rt = shortenLinks(rt)
-  rt = stripInvalidMentions(rt)
+  rt = await resolveRT(agent, draft.richtext)
 
   const embed = await resolveEmbed(
     agent,
@@ -71,21 +65,7 @@ export async function post(
 
   // add replyTo if post is a reply to another post
   if (opts.replyTo) {
-    const replyToUrip = new AtUri(opts.replyTo)
-    const parentPost = await agent.getPost({
-      repo: replyToUrip.host,
-      rkey: replyToUrip.rkey,
-    })
-    if (parentPost) {
-      const parentRef = {
-        uri: parentPost.uri,
-        cid: parentPost.cid,
-      }
-      reply = {
-        root: parentPost.value.reply?.root || parentRef,
-        parent: parentRef,
-      }
-    }
+    reply = await resolveReply(agent, opts.replyTo)
   }
 
   // set labels
@@ -186,6 +166,33 @@ export async function post(
   }
 
   return {uri}
+}
+
+async function resolveRT(agent: BskyAgent, richtext: RichText) {
+  let rt = new RichText({text: richtext.text.trimEnd()}, {cleanNewlines: true})
+  await rt.detectFacets(agent)
+
+  rt = shortenLinks(rt)
+  rt = stripInvalidMentions(rt)
+  return rt
+}
+
+async function resolveReply(agent: BskyAgent, replyTo: string) {
+  const replyToUrip = new AtUri(replyTo)
+  const parentPost = await agent.getPost({
+    repo: replyToUrip.host,
+    rkey: replyToUrip.rkey,
+  })
+  if (parentPost) {
+    const parentRef = {
+      uri: parentPost.uri,
+      cid: parentPost.cid,
+    }
+    return {
+      root: parentPost.value.reply?.root || parentRef,
+      parent: parentRef,
+    }
+  }
 }
 
 async function resolveEmbed(
