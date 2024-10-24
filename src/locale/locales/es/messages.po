@@ -4621,7 +4621,7 @@ msgstr "Respuestas antiguas primero"
 
 #: src/components/StarterPack/QrCode.tsx:75
 msgid "on<0><1/><2><3/></2></0>"
-msgstr ""
+msgstr "en<0><1/><2><3/></2></0>"
 
 #: src/view/screens/Settings/index.tsx:226
 msgid "Onboarding reset"
@@ -5041,21 +5041,21 @@ msgstr "Reproducir {0}"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:43
 msgid "Play or pause the GIF"
-msgstr ""
+msgstr "Reproducir o pausar GIF"
 
 #: src/view/com/util/post-embeds/VideoEmbed.tsx:110
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:324
 msgid "Play video"
-msgstr ""
+msgstr "Reproducir video"
 
 #: src/view/com/util/post-embeds/ExternalPlayerEmbed.tsx:59
 #: src/view/com/util/post-embeds/ExternalPlayerEmbed.tsx:60
 msgid "Play Video"
-msgstr ""
+msgstr "Reproducir Video"
 
 #: src/view/com/util/post-embeds/ExternalGifEmbed.tsx:130
 msgid "Plays the GIF"
-msgstr ""
+msgstr "Reproducir GIF"
 
 #: src/screens/Signup/state.ts:217
 msgid "Please choose your handle."
@@ -5068,7 +5068,7 @@ msgstr "Por favor, elige tu contraseña."
 
 #: src/screens/Signup/state.ts:231
 msgid "Please complete the verification captcha."
-msgstr ""
+msgstr "Por favor, completa la verificación CAPTCHA"
 
 #: src/view/com/modals/ChangeEmail.tsx:65
 msgid "Please confirm your email before changing it. This is a temporary requirement while email-updating tools are added, and it will soon be removed."
@@ -5076,7 +5076,7 @@ msgstr "Por favor, confirma tu correo electrónico antes de cambiarlo. Se trata 
 
 #: src/view/com/modals/AddAppPasswords.tsx:94
 msgid "Please enter a name for your app password. All spaces is not allowed."
-msgstr ""
+msgstr "Por favor, introduce un nombre para tu contraseña de aplicación. No están permitidos los espacios"
 
 #: src/view/com/modals/AddAppPasswords.tsx:151
 msgid "Please enter a unique name for this App Password or use our randomly generated one."
@@ -5084,7 +5084,7 @@ msgstr "Introduce un nombre único para la contraseña de esta app o utiliza una
 
 #: src/components/dialogs/MutedWords.tsx:86
 msgid "Please enter a valid word, tag, or phrase to mute"
-msgstr ""
+msgstr "Por favor, introduce una palabra, tag, o frase valida para silenciar"
 
 #: src/screens/Signup/state.ts:196
 #: src/screens/Signup/StepInfo/index.tsx:102
@@ -5093,7 +5093,7 @@ msgstr "Introduce tu correo electrónico."
 
 #: src/screens/Signup/StepInfo/index.tsx:96
 msgid "Please enter your invite code."
-msgstr ""
+msgstr "Introduce tu código de invitación"
 
 #: src/view/com/modals/DeleteAccount.tsx:253
 msgid "Please enter your password as well:"
@@ -5101,20 +5101,20 @@ msgstr "Introduce tu contraseña, también:"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:265
 msgid "Please explain why you think this label was incorrectly applied by {0}"
-msgstr ""
+msgstr "Por favor explica por qué crees que esta etiqueta fue aplicada incorrectamente por {0}"
 
 #: src/screens/Messages/components/ChatDisabled.tsx:110
 msgid "Please explain why you think your chats were incorrectly disabled"
-msgstr ""
+msgstr "Por favor explica por qué crees que tus chats fueron deshabilitados incorrectamente"
 
 #: src/lib/hooks/useAccountSwitcher.ts:45
 #: src/lib/hooks/useAccountSwitcher.ts:55
 msgid "Please sign in as @{0}"
-msgstr ""
+msgstr "Por favor, ingresa como @{0}"
 
 #: src/view/com/modals/VerifyEmail.tsx:109
 msgid "Please Verify Your Email"
-msgstr ""
+msgstr "Por favor, verifica tu email"
 
 #: src/view/com/composer/Composer.tsx:359
 #~ msgid "Please wait for your link card to finish loading"
@@ -8598,23 +8598,23 @@ msgstr ""
 
 #: src/components/StarterPack/ShareDialog.tsx:69
 msgid "You must grant access to your photo library to save the image."
-msgstr ""
+msgstr "Debes otorgar acceso a tu biblioteca de fotos para guardar la imagen."
 
 #: src/components/ReportDialog/SubmitView.tsx:210
 msgid "You must select at least one labeler for a report"
-msgstr ""
+msgstr "Debes seleccionar al menos un etiquetador para un informe"
 
 #: src/screens/Deactivated.tsx:131
 msgid "You previously deactivated @{0}."
-msgstr ""
+msgstr "Anteriormente desactivaste a @{0}."
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:222
 msgid "You will no longer receive notifications for this thread"
-msgstr ""
+msgstr "Ya no recibirás notificaciones de este hilo"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:218
 msgid "You will now receive notifications for this thread"
-msgstr ""
+msgstr "Ahora recibirás notificaciones de este hilo"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:98
 msgid "You will receive an email with a \"reset code.\" Enter that code here, then enter your new password."
@@ -8626,35 +8626,35 @@ msgstr "Tu: {0}"
 
 #: src/screens/Messages/components/ChatListItem.tsx:153
 msgid "You: {defaultEmbeddedContentMessage}"
-msgstr ""
+msgstr "Tu: {defaultEmbeddedContentMessage}"
 
 #: src/screens/Messages/components/ChatListItem.tsx:146
 msgid "You: {short}"
-msgstr ""
+msgstr "Tu: {short}"
 
 #: src/screens/Signup/index.tsx:107
 msgid "You'll follow the suggested users and feeds once you finish creating your account!"
-msgstr ""
+msgstr "Comenzarás a seguir a los usuarios y feeds sugeridos una vez que termines de crear tu cuenta."
 
 #: src/screens/Signup/index.tsx:112
 msgid "You'll follow the suggested users once you finish creating your account!"
-msgstr ""
+msgstr "Comenzarás a seguir a los usuarios sugeridos una vez que termines de crear tu cuenta!"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:232
 msgid "You'll follow these people and {0} others"
-msgstr ""
+msgstr "Comenzarás a seguir a estas personas y a {0} más"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:230
 msgid "You'll follow these people right away"
-msgstr ""
+msgstr "Comenzarás a seguir a estas personas de inmediato"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:138
 msgid "You'll receive an email at <0>{0}</0> to verify it's you."
-msgstr ""
+msgstr "Recibirás un correo electrónico en <0>{0}</0> para verificar que eres tú."
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:270
 msgid "You'll stay updated with these feeds"
-msgstr ""
+msgstr "Te mantendrás actualizado con estos feeds"
 
 #: src/screens/Onboarding/StepModeration/index.tsx:60
 #~ msgid "You're in control"
@@ -8669,7 +8669,7 @@ msgstr "Ya estás en cola"
 #: src/screens/Deactivated.tsx:89
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:54
 msgid "You're logged in with an App Password. Please log in with your main password to continue deactivating your account."
-msgstr ""
+msgstr "Has iniciado sesión con una contraseña de aplicación. Por favor, inicia sesión con tu contraseña principal para continuar con la desactivación de tu cuenta."
 
 #: src/screens/Onboarding/StepFinished.tsx:226
 msgid "You're ready to go!"
@@ -8678,7 +8678,7 @@ msgstr "¡Eso es todo!"
 #: src/components/moderation/ModerationDetailsDialog.tsx:107
 #: src/lib/moderation/useModerationCauseDescription.ts:106
 msgid "You've chosen to hide a word or tag within this post."
-msgstr ""
+msgstr "Has elegido ocultar una palabra o etiqueta dentro de esta publicación."
 
 #: src/view/com/posts/FollowingEndOfFeed.tsx:44
 msgid "You've reached the end of your feed! Find some more accounts to follow."
@@ -8686,11 +8686,11 @@ msgstr "¡Haz llegado al fin de tu feed! Encuentra más cuentas para seguir."
 
 #: src/view/com/composer/state/video.ts:435
 msgid "You've reached your daily limit for video uploads (too many bytes)"
-msgstr ""
+msgstr "Has alcanzado tu límite diario de carga de videos (demasiados bytes)"
 
 #: src/view/com/composer/state/video.ts:439
 msgid "You've reached your daily limit for video uploads (too many videos)"
-msgstr ""
+msgstr "Has alcanzado tu límite diario de carga de videos (demasiados videos)"
 
 #: src/screens/Signup/index.tsx:140
 msgid "Your account"
@@ -8702,11 +8702,11 @@ msgstr "Tu cuenta ha sido eliminada"
 
 #: src/view/com/composer/state/video.ts:443
 msgid "Your account is not yet old enough to upload videos. Please try again later."
-msgstr ""
+msgstr "Tu cuenta aún no tiene suficiente antigüedad para subir videos. Por favor, inténtalo de nuevo más tarde."
 
 #: src/view/screens/Settings/ExportCarDialog.tsx:64
 msgid "Your account repository, containing all public data records, can be downloaded as a \"CAR\" file. This file does not include media embeds, such as images, or your private data, which must be fetched separately."
-msgstr ""
+msgstr "Tu repositorio de cuenta, que contiene todos los registros de datos públicos, puede ser descargado como un archivo \"CAR\". Este archivo no incluye archivos multimedia incrustados, como imágenes, ni tus datos privados, que deben ser obtenidos por separado."
 
 #: src/screens/Signup/StepInfo/index.tsx:211
 msgid "Your birth date"
@@ -8714,11 +8714,11 @@ msgstr "Tu fecha de nacimiento"
 
 #: src/view/com/util/post-embeds/VideoEmbed.web.tsx:171
 msgid "Your browser does not support the video format. Please try a different browser."
-msgstr ""
+msgstr "Tu navegador no soporta este formato de video. Por favor intenta con uno diferente"
 
 #: src/screens/Messages/components/ChatDisabled.tsx:25
 msgid "Your chats have been disabled"
-msgstr ""
+msgstr "Tus chats han sido deshabilitados"
 
 #: src/view/com/modals/InAppBrowserConsent.tsx:44
 msgid "Your choice will be saved, but can be changed later in settings."
@@ -8745,7 +8745,7 @@ msgstr "Tu correo electrónico aún no ha sido verificado. Por tu seguridad, rec
 
 #: src/state/shell/progress-guide.tsx:156
 msgid "Your first like!"
-msgstr ""
+msgstr "¡Tu primer like!"
 
 #: src/view/com/posts/FollowingEmptyState.tsx:43
 msgid "Your following feed is empty! Follow more users to see what's happening."
