@@ -3407,7 +3407,7 @@ msgstr "¡Imagen guardada en tu carrete de fotos!"
 
 #: src/lib/moderation/useReportOptions.ts:49
 msgid "Impersonation or false claims about identity or affiliation"
-msgstr "Suplantación de identidad o afirmaciones falsas sobre identidad o afiliación."
+msgstr "Suplantación de identidad o afirmaciones falsas sobre identidad o afiliación"
 
 #: src/lib/moderation/useReportOptions.ts:68
 msgid "Impersonation, misinformation, or false claims"
