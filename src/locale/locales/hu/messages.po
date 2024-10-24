@@ -161,7 +161,7 @@ msgstr "{0} mp"
 
 #: src/components/LabelingServiceCard/index.tsx:96
 msgid "{count, plural, one {Liked by # user} other {Liked by # users}}"
-msgstr "{0} felhasználó kedveli"
+msgstr "{count} felhasználó kedveli"
 
 #: src/lib/generate-starterpack.ts:108
 #: src/screens/StarterPack/Wizard/index.tsx:181
