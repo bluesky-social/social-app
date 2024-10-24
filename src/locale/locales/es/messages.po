@@ -1881,7 +1881,7 @@ msgstr "Moderacion de debug"
 
 #: src/view/screens/Debug.tsx:83
 msgid "Debug panel"
-msgstr "Panel de debug"
+msgstr "Panel de depuración"
 
 #: src/components/dialogs/nuxs/NeueTypography.tsx:99
 #: src/screens/Settings/AppearanceSettings.tsx:169
