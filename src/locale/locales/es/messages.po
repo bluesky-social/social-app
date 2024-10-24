@@ -99,7 +99,7 @@ msgstr "{0, plural, one {post} other {posts}}"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:418
 msgid "{0, plural, one {quote} other {quotes}}"
-msgstr "{0, plural, una {quote} unas {quotes}}"
+msgstr "{0, plural, one {cita} other {citas}}"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:269
 msgid "{0, plural, one {Reply (# reply)} other {Reply (# replies)}}"
