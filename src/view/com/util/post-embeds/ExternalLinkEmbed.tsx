@@ -8,10 +8,6 @@ import {useLingui} from '@lingui/react'
 import {parseAltFromGIFDescription} from '#/lib/gif-alt-text'
 import {shareUrl} from '#/lib/sharing'
 import {parseEmbedPlayerFromUrl} from '#/lib/strings/embed-player'
-import {
-  getStarterPackOgCard,
-  parseStarterPackUri,
-} from '#/lib/strings/starter-pack'
 import {toNiceDomain} from '#/lib/strings/url-helpers'
 import {isNative} from '#/platform/detection'
 import {useExternalEmbedsPrefs} from '#/state/preferences'
@@ -39,10 +35,7 @@ export const ExternalLinkEmbed = ({
   const t = useTheme()
   const externalEmbedPrefs = useExternalEmbedsPrefs()
   const niceUrl = toNiceDomain(link.uri)
-  const starterPackParsed = parseStarterPackUri(link.uri)
-  const imageUri = starterPackParsed
-    ? getStarterPackOgCard(starterPackParsed.name, starterPackParsed.rkey)
-    : link.thumb
+  const imageUri = link.thumb
   const embedPlayerParams = React.useMemo(() => {
     const params = parseEmbedPlayerFromUrl(link.uri)
 
