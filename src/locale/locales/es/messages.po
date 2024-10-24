@@ -1557,7 +1557,7 @@ msgstr "Código de confirmación"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:167
 msgid "Confirmation Code"
-msgstr "Codigo de confirmación"
+msgstr "Código de confirmación"
 
 #: src/screens/Login/LoginForm.tsx:309
 msgid "Connecting..."
