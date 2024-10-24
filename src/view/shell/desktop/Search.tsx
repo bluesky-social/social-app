@@ -166,9 +166,8 @@ export function DesktopSearch() {
   }, [])
 
   const onPressCancelSearch = React.useCallback(() => {
-    setQuery('')
     setIsActive(false)
-  }, [setQuery])
+  }, [])
 
   const onSubmit = React.useCallback(() => {
     setIsActive(false)
@@ -184,6 +183,7 @@ export function DesktopSearch() {
   return (
     <View style={[styles.container, pal.view]}>
       <SearchInput
+        // web only, so fine to be controlled
         value={query}
         onChangeText={onChangeText}
         onClearText={onPressCancelSearch}
