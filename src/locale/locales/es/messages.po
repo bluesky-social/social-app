@@ -3447,7 +3447,7 @@ msgstr "Introduce el código que se te ha enviado por correo electrónico."
 
 #: src/screens/Login/LoginForm.tsx:200
 msgid "Input the username or email address you used at signup"
-msgstr "Introduce el nombre de usuario o la dirección de correo electrónico que usaste al registrarte."
+msgstr "Introduce el nombre de usuario o la dirección de correo electrónico que usaste al registrarte"
 
 #: src/screens/Login/LoginForm.tsx:225
 msgid "Input your password"
