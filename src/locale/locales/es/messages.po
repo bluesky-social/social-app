@@ -82,7 +82,7 @@ msgstr "{0, plural, one {siguiendo} other {siguiendo}}"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:312
 msgid "{0, plural, one {Like (# like)} other {Like (# likes)}}"
-msgstr "{0, plural, un {Like (# like)} unos {Like (# likes)}}"
+msgstr "{0, plural, one {Me gusta (# me gusta)} other {Me gusta (# me gusta)}}"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:434
 msgid "{0, plural, one {like} other {likes}}"
