@@ -3455,7 +3455,7 @@ msgstr "Introduce tu contraseña."
 
 #: src/view/com/modals/ChangeHandle.tsx:376
 msgid "Input your preferred hosting provider"
-msgstr "Introduce tu proveedor de alojamiento preferido."
+msgstr "Introduce tu proveedor de alojamiento preferido"
 
 #: src/screens/Signup/StepHandle.tsx:114
 msgid "Input your user handle"
