@@ -31,6 +31,7 @@ import {NavigationProp} from '#/lib/routes/types'
 import {colors, s} from '#/lib/styles'
 import {isNative} from '#/platform/detection'
 import {useModalControls} from '#/state/modals'
+import * as persisted from '#/state/persisted'
 import {clearStorage} from '#/state/persisted'
 import {
   useInAppBrowser,
@@ -285,6 +286,16 @@ export function SettingsScreen({}: Props) {
   }, [deactivateAccountControl])
 
   const {mutate: onPressDeleteChatDeclaration} = useDeleteActorDeclaration()
+
+  const onPressUnsnoozeReminder = React.useCallback(() => {
+    const lastEmailConfirm = new Date()
+    // wind back 3 days
+    lastEmailConfirm.setDate(lastEmailConfirm.getDate() - 3)
+    persisted.write('reminders', {
+      ...persisted.get('reminders'),
+      lastEmailConfirm: lastEmailConfirm.toISOString(),
+    })
+  }, [])
 
   return (
     <Layout.Screen testID="settingsScreen">
@@ -868,6 +879,18 @@ export function SettingsScreen({}: Props) {
               accessibilityHint={_(msg`Resets the onboarding state`)}>
               <Text type="lg" style={pal.text}>
                 <Trans>Reset onboarding state</Trans>
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[pal.view, styles.linkCardNoIcon]}
+              onPress={onPressUnsnoozeReminder}
+              accessibilityRole="button"
+              accessibilityLabel={_(
+                msg`Unsnooze email confirm (restart after this)`,
+              )}
+              accessibilityHint={_(msg`Unsnoozes the email confirmation`)}>
+              <Text type="lg" style={pal.text}>
+                <Trans>Unsnooze email confirm (restart after this)</Trans>
               </Text>
             </TouchableOpacity>
             <TouchableOpacity

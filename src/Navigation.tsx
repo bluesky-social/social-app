@@ -33,7 +33,6 @@ import {RouteParams, State} from '#/lib/routes/types'
 import {attachRouteToLogEvents, logEvent} from '#/lib/statsig/statsig'
 import {bskyTitle} from '#/lib/strings/headings'
 import {isAndroid, isNative, isWeb} from '#/platform/detection'
-import {useModalControls} from '#/state/modals'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {useSession} from '#/state/session'
 import {
@@ -95,6 +94,8 @@ import {Wizard} from '#/screens/StarterPack/Wizard'
 import {useTheme} from '#/alf'
 import {router} from '#/routes'
 import {Referrer} from '../modules/expo-bluesky-swiss-army'
+import {useDialogControl} from './components/Dialog'
+import {VerifyEmailDialog} from './components/dialogs/VerifyEmailDialog'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
 
@@ -641,35 +642,38 @@ const LINKING = {
 function RoutesContainer({children}: React.PropsWithChildren<{}>) {
   const theme = useColorSchemeStyle(DefaultTheme, DarkTheme)
   const {currentAccount} = useSession()
-  const {openModal} = useModalControls()
   const prevLoggedRouteName = React.useRef<string | undefined>(undefined)
+  const verifyEmailDialogControl = useDialogControl()
 
   function onReady() {
     prevLoggedRouteName.current = getCurrentRouteName()
     if (currentAccount && shouldRequestEmailConfirmation(currentAccount)) {
-      openModal({name: 'verify-email', showReminder: true})
+      verifyEmailDialogControl.open()
       snoozeEmailConfirmationPrompt()
     }
   }
 
   return (
-    <NavigationContainer
-      ref={navigationRef}
-      linking={LINKING}
-      theme={theme}
-      onStateChange={() => {
-        const routeName = getCurrentRouteName()
-        if (routeName === 'Notifications') {
-          logEvent('router:navigate:notifications:sampled', {})
-        }
-      }}
-      onReady={() => {
-        attachRouteToLogEvents(getCurrentRouteName)
-        logModuleInitTime()
-        onReady()
-      }}>
-      {children}
-    </NavigationContainer>
+    <>
+      <NavigationContainer
+        ref={navigationRef}
+        linking={LINKING}
+        theme={theme}
+        onStateChange={() => {
+          const routeName = getCurrentRouteName()
+          if (routeName === 'Notifications') {
+            logEvent('router:navigate:notifications:sampled', {})
+          }
+        }}
+        onReady={() => {
+          attachRouteToLogEvents(getCurrentRouteName)
+          logModuleInitTime()
+          onReady()
+        }}>
+        {children}
+      </NavigationContainer>
+      <VerifyEmailDialog control={verifyEmailDialogControl} reminder />
+    </>
   )
 }
 
