@@ -3411,7 +3411,7 @@ msgstr "Suplantación de identidad o afirmaciones falsas sobre identidad o afili
 
 #: src/lib/moderation/useReportOptions.ts:68
 msgid "Impersonation, misinformation, or false claims"
-msgstr "Suplantación de identidad, desinformación o afirmaciones falsas."
+msgstr "Suplantación de identidad, desinformación o afirmaciones falsas"
 
 #: src/lib/moderation/useReportOptions.ts:91
 msgid "Inappropriate messages or explicit links"
