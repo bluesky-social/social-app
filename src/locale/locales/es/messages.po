@@ -86,12 +86,12 @@ msgstr "{0, plural, one {Me gusta (# me gusta)} other {Me gusta (# me gusta)}}"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:434
 msgid "{0, plural, one {like} other {likes}}"
-msgstr "{0, plural, un {like} unos {likes}}"
+msgstr "{0, plural, one {me gusta} other {me gusta}}"
 
 #: src/components/FeedCard.tsx:213
 #: src/view/com/feeds/FeedSourceCard.tsx:300
 msgid "{0, plural, one {Liked by # user} other {Liked by # users}}"
-msgstr "{0, plural, un {Liked by # user} unos {Liked by # users}}"
+msgstr "{0, plural, one {Le gustó a # user} unos {Les gustó a # users}}"
 
 #: src/screens/Profile/Header/Metrics.tsx:59
 msgid "{0, plural, one {post} other {posts}}"
