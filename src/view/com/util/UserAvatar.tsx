@@ -45,6 +45,7 @@ interface BaseUserAvatarProps {
 interface UserAvatarProps extends BaseUserAvatarProps {
   moderation?: ModerationUI
   usePlainRNImage?: boolean
+  isAlice?: boolean
   onLoad?: () => void
 }
 
@@ -177,6 +178,7 @@ let UserAvatar = ({
   avatar,
   moderation,
   usePlainRNImage = false,
+  isAlice = false,
   onLoad,
 }: UserAvatarProps): React.ReactNode => {
   const pal = usePalette('default')
@@ -217,7 +219,8 @@ let UserAvatar = ({
 
   return avatar &&
     !((moderation?.blur && isAndroid) /* android crashes with blur */) ? (
-    <View style={{width: size, height: size}}>
+    <View style={{width: size, height: size, alignItems: 'center', justifyContent: 'center'}}>
+      {isAlice ? (<View style={styles.glow} />) : null}
       {usePlainRNImage ? (
         <Image
           accessibilityIgnoresInvertColors
@@ -439,7 +442,7 @@ let PreviewableUserAvatar = ({
           handle: profile.handle,
         })}
         onPress={onPress}>
-        <UserAvatar avatar={profile.avatar} moderation={moderation} {...rest} />
+        <UserAvatar avatar={profile.avatar} moderation={moderation} isAlice={profile.did === 'did:plc:by3jhwdqgbtrcc7q4tkkv3cf'} {...rest} />
       </Link>
     </ProfileHoverCard>
   )
@@ -477,5 +480,18 @@ const styles = StyleSheet.create({
   },
   alertIcon: {
     color: colors.red3,
+  },
+  glow: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    borderRadius: 999,
+    shadowColor: 'rgba(255, 235, 59, 1)',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 1,
+    shadowRadius: 10,
+    elevation: 10,
   },
 })

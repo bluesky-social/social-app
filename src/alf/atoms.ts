@@ -9,6 +9,13 @@ export const atoms = {
     borderWidth: 1,
   },
 
+  aliceCardDark: {
+    backgroundColor: '#efc84f',
+  },
+
+  aliceCardLight: {
+    backgroundColor: '#faefc3',
+  },
   /*
    * Positioning
    */
