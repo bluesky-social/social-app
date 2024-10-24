@@ -112,6 +112,7 @@ export async function post(
   // Create post record
   {
     const record: AppBskyFeedPost.Record = {
+      $type: 'app.bsky.feed.post',
       createdAt: date,
       text: rt.text,
       facets: rt.facets,
@@ -152,6 +153,7 @@ export async function post(
   ) {
     const record: AppBskyFeedPostgate.Record = {
       ...draft.postgate,
+      $type: 'app.bsky.feed.postgate',
       createdAt: date,
       post: uri,
     }
