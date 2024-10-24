@@ -18,6 +18,7 @@ import {
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
+import * as persisted from '#/state/persisted'
 import {clearStorage} from '#/state/persisted'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useDeleteActorDeclaration} from '#/state/queries/messages/actor-declaration'
@@ -359,6 +360,16 @@ function DevOptions() {
     Toast.show(_(msg`Storage cleared, you need to restart the app now.`))
   }
 
+  const onPressUnsnoozeReminder = () => {
+    const lastEmailConfirm = new Date()
+    // wind back 3 days
+    lastEmailConfirm.setDate(lastEmailConfirm.getDate() - 3)
+    persisted.write('reminders', {
+      ...persisted.get('reminders'),
+      lastEmailConfirm: lastEmailConfirm.toISOString(),
+    })
+  }
+
   return (
     <>
       <SettingsList.PressableItem
@@ -394,6 +405,13 @@ function DevOptions() {
         label={_(msg`Reset onboarding state`)}>
         <SettingsList.ItemText>
           <Trans>Reset onboarding state</Trans>
+        </SettingsList.ItemText>
+      </SettingsList.PressableItem>
+      <SettingsList.PressableItem
+        onPress={onPressUnsnoozeReminder}
+        label={_(msg`Unsnooze email reminder`)}>
+        <SettingsList.ItemText>
+          <Trans>Unsnooze email reminder</Trans>
         </SettingsList.ItemText>
       </SettingsList.PressableItem>
       <SettingsList.PressableItem
