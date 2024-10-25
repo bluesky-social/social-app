@@ -47,19 +47,15 @@ export type EmbedDraft = {
   link: Link | undefined
 }
 
-export type ComposerDraft = {
+export type PostDraft = {
   richtext: RichText
   labels: SelfLabel[]
-  postgate: AppBskyFeedPostgate.Record
-  threadgate: ThreadgateAllowUISetting[]
   embed: EmbedDraft
 }
 
-export type ComposerAction =
+export type PostAction =
   | {type: 'update_richtext'; richtext: RichText}
   | {type: 'update_labels'; labels: SelfLabel[]}
-  | {type: 'update_postgate'; postgate: AppBskyFeedPostgate.Record}
-  | {type: 'update_threadgate'; threadgate: ThreadgateAllowUISetting[]}
   | {type: 'embed_add_images'; images: ComposerImage[]}
   | {type: 'embed_update_image'; image: ComposerImage}
   | {type: 'embed_remove_image'; image: ComposerImage}
@@ -77,12 +73,65 @@ export type ComposerAction =
   | {type: 'embed_update_gif'; alt: string}
   | {type: 'embed_remove_gif'}
 
+export type ThreadDraft = {
+  posts: PostDraft[]
+  postgate: AppBskyFeedPostgate.Record
+  threadgate: ThreadgateAllowUISetting[]
+}
+
+export type ComposerState = {
+  thread: ThreadDraft
+  activePostIndex: number // TODO: Add actions to update this.
+}
+
+export type ComposerAction =
+  | {type: 'update_postgate'; postgate: AppBskyFeedPostgate.Record}
+  | {type: 'update_threadgate'; threadgate: ThreadgateAllowUISetting[]}
+  | {type: 'update_post'; postAction: PostAction}
+
 export const MAX_IMAGES = 4
 
 export function composerReducer(
-  state: ComposerDraft,
+  state: ComposerState,
   action: ComposerAction,
-): ComposerDraft {
+): ComposerState {
+  switch (action.type) {
+    case 'update_postgate': {
+      return {
+        ...state,
+        thread: {
+          ...state.thread,
+          postgate: action.postgate,
+        },
+      }
+    }
+    case 'update_threadgate': {
+      return {
+        ...state,
+        thread: {
+          ...state.thread,
+          threadgate: action.threadgate,
+        },
+      }
+    }
+    case 'update_post': {
+      const nextPosts = [...state.thread.posts]
+      nextPosts[state.activePostIndex] = postReducer(
+        state.thread.posts[state.activePostIndex],
+        action.postAction,
+      )
+      return {
+        ...state,
+        thread: {
+          ...state.thread,
+          posts: nextPosts,
+        },
+      }
+    }
+  }
+}
+
+function postReducer(state: PostDraft, action: PostAction): PostDraft {
   switch (action.type) {
     case 'update_richtext': {
       return {
@@ -94,18 +143,6 @@ export function composerReducer(
       return {
         ...state,
         labels: action.labels,
-      }
-    }
-    case 'update_postgate': {
-      return {
-        ...state,
-        postgate: action.postgate,
-      }
-    }
-    case 'update_threadgate': {
-      return {
-        ...state,
-        threadgate: action.threadgate,
       }
     }
     case 'embed_add_images': {
@@ -354,7 +391,7 @@ export function createComposerState({
   initMention: string | undefined
   initImageUris: ComposerOpts['imageUris']
   initQuoteUri: string | undefined
-}): ComposerDraft {
+}): ComposerState {
   let media: ImagesMedia | undefined
   if (initImageUris?.length) {
     media = {
@@ -385,14 +422,21 @@ export function createComposerState({
       : '',
   })
   return {
-    richtext: initRichText,
-    labels: [],
-    postgate: createPostgateRecord({post: ''}),
-    threadgate: threadgateViewToAllowUISetting(undefined),
-    embed: {
-      quote,
-      media,
-      link: undefined,
+    activePostIndex: 0,
+    thread: {
+      posts: [
+        {
+          richtext: initRichText,
+          labels: [],
+          embed: {
+            quote,
+            media,
+            link: undefined,
+          },
+        },
+      ],
+      postgate: createPostgateRecord({post: ''}),
+      threadgate: threadgateViewToAllowUISetting(undefined),
     },
   }
 }
