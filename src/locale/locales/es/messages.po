@@ -493,7 +493,7 @@ msgstr "Añade el siguiente registro DNS a tu dominio:"
 
 #: src/components/FeedCard.tsx:296
 msgid "Add this feed to your feeds"
-msgstr "Agregue esta feed a sus feeds"
+msgstr "Agregue este feed a sus feeds"
 
 #: src/view/com/profile/ProfileMenu.tsx:243
 #: src/view/com/profile/ProfileMenu.tsx:246
