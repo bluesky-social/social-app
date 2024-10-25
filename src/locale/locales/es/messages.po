@@ -8738,7 +8738,7 @@ msgstr "Tu correo electrónico aún no ha sido verificado. Por tu seguridad, rec
 
 #: src/state/shell/progress-guide.tsx:156
 msgid "Your first like!"
-msgstr "¡Tu primer like!"
+msgstr "¡Tu primer me gusta!"
 
 #: src/view/com/posts/FollowingEmptyState.tsx:43
 msgid "Your following feed is empty! Follow more users to see what's happening."
