@@ -42,6 +42,7 @@ import {
   AppBskyFeedDefs,
   AppBskyFeedGetPostThread,
   BskyAgent,
+  RichText,
 } from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
@@ -145,7 +146,6 @@ export const ComposePost = ({
   const agent = useAgent()
   const queryClient = useQueryClient()
   const currentDid = currentAccount!.did
-  const {data: currentProfile} = useProfileQuery({did: currentDid})
   const {closeComposer} = useComposerControls()
   const {_} = useLingui()
   const requireAltTextEnabled = useRequireAltTextEnabled()
@@ -282,32 +282,6 @@ export const ComposePost = ({
       backHandler.remove()
     }
   }, [onPressCancel, closeAllDialogs, closeAllModals])
-
-  const onNewLink = useCallback((uri: string) => {
-    dispatch({type: 'embed_add_uri', uri})
-  }, [])
-
-  const onImageAdd = useCallback(
-    (next: ComposerImage[]) => {
-      dispatch({
-        type: 'embed_add_images',
-        images: next,
-      })
-    },
-    [dispatch],
-  )
-
-  const onPhotoPasted = useCallback(
-    async (uri: string) => {
-      if (uri.startsWith('data:video/')) {
-        selectVideo({uri, type: 'video', height: 0, width: 0})
-      } else {
-        const res = await pasteImage(uri)
-        onImageAdd([res])
-      }
-    },
-    [selectVideo, onImageAdd],
-  )
 
   const isAltTextRequiredAndMissing = useMemo(() => {
     if (!requireAltTextEnabled) return false
@@ -468,9 +442,6 @@ export const ComposePost = ({
     () => graphemeLength <= MAX_GRAPHEME_LENGTH && !isAltTextRequiredAndMissing,
     [graphemeLength, isAltTextRequiredAndMissing],
   )
-  const selectTextInputPlaceholder = replyTo
-    ? _(msg`Write your reply`)
-    : _(msg`What's up?`)
 
   const onEmojiButtonPress = useCallback(() => {
     openEmojiPicker?.(textInput.current?.getCursorPosition())
@@ -523,42 +494,16 @@ export const ComposePost = ({
             onContentSizeChange={onScrollViewContentSizeChange}
             onLayout={onScrollViewLayout}>
             {replyTo ? <ComposerReplyTo replyTo={replyTo} /> : undefined}
-
-            <View
-              style={[
-                styles.textInputLayout,
-                isNative && styles.textInputLayoutMobile,
-              ]}>
-              <UserAvatar
-                avatar={currentProfile?.avatar}
-                size={50}
-                type={currentProfile?.associated?.labeler ? 'labeler' : 'user'}
-              />
-              <TextInput
-                ref={textInput}
-                richtext={richtext}
-                placeholder={selectTextInputPlaceholder}
-                autoFocus
-                setRichText={rt => {
-                  dispatch({type: 'update_richtext', richtext: rt})
-                }}
-                onPhotoPasted={onPhotoPasted}
-                onPressPublish={() => onPressPublish(false)}
-                onNewLink={onNewLink}
-                onError={setError}
-                accessible={true}
-                accessibilityLabel={_(msg`Write post`)}
-                accessibilityHint={_(
-                  msg`Compose posts up to ${MAX_GRAPHEME_LENGTH} characters in length`,
-                )}
-              />
-            </View>
-
-            <ComposerEmbeds
-              canRemoveQuote={!initQuote}
-              embed={draft.embed}
+            <ComposerPost
+              draft={draft}
               dispatch={dispatch}
-              clearVideo={clearVideo}
+              textInput={textInput}
+              isReply={!!replyTo}
+              canRemoveQuote={!initQuote}
+              onSelectVideo={selectVideo}
+              onClearVideo={clearVideo}
+              onPublish={() => onPressPublish(false)}
+              onError={setError}
             />
           </Animated.ScrollView>
 
@@ -591,6 +536,107 @@ export const ComposePost = ({
         />
       </KeyboardAvoidingView>
     </BottomSheetPortalProvider>
+  )
+}
+
+function ComposerPost({
+  draft,
+  dispatch,
+  textInput,
+  isReply,
+  canRemoveQuote,
+  onClearVideo,
+  onSelectVideo,
+  onError,
+  onPublish,
+}: {
+  draft: ComposerDraft
+  dispatch: (action: ComposerAction) => void
+  textInput: React.Ref<TextInputRef>
+  isReply: boolean
+  canRemoveQuote: boolean
+  onClearVideo: () => void
+  onSelectVideo: (asset: ImagePickerAsset) => void
+  onError: (error: string) => void
+  onPublish: (richtext: RichText) => void
+}) {
+  const {currentAccount} = useSession()
+  const currentDid = currentAccount!.did
+  const {_} = useLingui()
+  const {data: currentProfile} = useProfileQuery({did: currentDid})
+  const richtext = draft.richtext
+  const selectTextInputPlaceholder = isReply
+    ? _(msg`Write your reply`)
+    : _(msg`What's up?`)
+
+  const onImageAdd = useCallback(
+    (next: ComposerImage[]) => {
+      dispatch({
+        type: 'embed_add_images',
+        images: next,
+      })
+    },
+    [dispatch],
+  )
+
+  const onNewLink = useCallback(
+    (uri: string) => {
+      dispatch({type: 'embed_add_uri', uri})
+    },
+    [dispatch],
+  )
+
+  const onPhotoPasted = useCallback(
+    async (uri: string) => {
+      if (uri.startsWith('data:video/')) {
+        onSelectVideo({uri, type: 'video', height: 0, width: 0})
+      } else {
+        const res = await pasteImage(uri)
+        onImageAdd([res])
+      }
+    },
+    [onSelectVideo, onImageAdd],
+  )
+
+  return (
+    <>
+      <View
+        style={[
+          styles.textInputLayout,
+          isNative && styles.textInputLayoutMobile,
+        ]}>
+        <UserAvatar
+          avatar={currentProfile?.avatar}
+          size={50}
+          type={currentProfile?.associated?.labeler ? 'labeler' : 'user'}
+        />
+        <TextInput
+          ref={textInput}
+          richtext={richtext}
+          placeholder={selectTextInputPlaceholder}
+          autoFocus
+          setRichText={rt => {
+            dispatch({type: 'update_richtext', richtext: rt})
+          }}
+          onPhotoPasted={onPhotoPasted}
+          onNewLink={onNewLink}
+          onError={onError}
+          onPressPublish={onPublish}
+          accessible={true}
+          accessibilityLabel={_(msg`Write post`)}
+          accessibilityHint={_(
+            msg`Compose posts up to ${MAX_GRAPHEME_LENGTH} characters in length`,
+          )}
+        />
+      </View>
+
+      <ComposerEmbeds
+        canRemoveQuote={canRemoveQuote}
+        embed={draft.embed}
+        dispatch={dispatch}
+        clearVideo={onClearVideo}
+      />
+    </>
   )
 }
 

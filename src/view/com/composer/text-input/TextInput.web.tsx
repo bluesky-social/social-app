@@ -13,15 +13,15 @@ import {Text as TiptapText} from '@tiptap/extension-text'
 import {generateJSON} from '@tiptap/html'
 import {EditorContent, JSONContent, useEditor} from '@tiptap/react'
 
+import {useColorSchemeStyle} from '#/lib/hooks/useColorSchemeStyle'
 import {usePalette} from '#/lib/hooks/usePalette'
+import {blobToDataUri, isUriImage} from '#/lib/media/util'
 import {useActorAutocompleteFn} from '#/state/queries/actor-autocomplete'
-import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
-import {blobToDataUri, isUriImage} from 'lib/media/util'
-import {textInputWebEmitter} from '#/view/com/composer/text-input/textInputWebEmitter'
 import {
   LinkFacetMatch,
   suggestLinkCardUri,
-} from 'view/com/composer/text-input/text-input-util'
+} from '#/view/com/composer/text-input/text-input-util'
+import {textInputWebEmitter} from '#/view/com/composer/text-input/textInputWebEmitter'
 import {atoms as a, useAlf} from '#/alf'
 import {Portal} from '#/components/Portal'
 import {normalizeTextStyles} from '#/components/Typography'
@@ -43,7 +43,7 @@ interface TextInputProps {
   suggestedLinks: Set<string>
   setRichText: (v: RichText | ((v: RichText) => RichText)) => void
   onPhotoPasted: (uri: string) => void
-  onPressPublish: (richtext: RichText) => Promise<void>
+  onPressPublish: (richtext: RichText) => void
   onNewLink: (uri: string) => void
   onError: (err: string) => void
 }
