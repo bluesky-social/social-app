@@ -12,7 +12,6 @@ import {useLingui} from '@lingui/react'
 
 import {GestureActionView} from '#/lib/custom-animations/GestureActionView'
 import {useHaptics} from '#/lib/haptics'
-import {decrementBadgeCount} from '#/lib/notifications/notifications'
 import {logEvent} from '#/lib/statsig/statsig'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {
@@ -39,6 +38,7 @@ import {Link} from '#/components/Link'
 import {useMenuControl} from '#/components/Menu'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {Text} from '#/components/Typography'
+import {BackgroundNotifications} from '../../../../modules/expo-background-notification-handler'
 
 export let ChatListItem = ({
   convo,
@@ -188,7 +188,7 @@ function ChatListItemReady({
 
   const onPress = useCallback(
     (e: GestureResponderEvent) => {
-      decrementBadgeCount(convo.unreadCount)
+      BackgroundNotifications.maybeDecrementMessagesCountAsync(convo.id)
       if (isDeletedAccount) {
         e.preventDefault()
         menuControl.open()
@@ -197,7 +197,7 @@ function ChatListItemReady({
         logEvent('chat:open', {logContext: 'ChatsList'})
       }
     },
-    [convo.unreadCount, isDeletedAccount, menuControl],
+    [convo.id, isDeletedAccount, menuControl],
   )
 
   const onLongPress = useCallback(() => {
