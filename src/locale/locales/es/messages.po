@@ -4287,7 +4287,7 @@ msgstr "Nuevo chat"
 
 #: src/components/dialogs/nuxs/NeueTypography.tsx:51
 msgid "New font settings ✨"
-msgstr "Nuevo juste de fuente ✨"
+msgstr "Nuevas opciones de fuentes ✨"
 
 #: src/components/dms/NewMessagesPill.tsx:92
 msgid "New messages"
