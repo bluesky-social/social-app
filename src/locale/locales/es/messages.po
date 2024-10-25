@@ -4268,7 +4268,7 @@ msgstr "Nunca pierdas acceso de tus seguidores o tus datos."
 
 #: src/view/com/modals/ChangeHandle.tsx:508
 msgid "Nevermind, create a handle for me"
-msgstr "No importa, crea un nombre de usuario para mí."
+msgstr "No importa, crea un nombre de usuario por mí."
 
 #: src/view/screens/Lists.tsx:83
 msgctxt "action"
