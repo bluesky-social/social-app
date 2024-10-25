@@ -4845,7 +4845,7 @@ msgstr "Abre la configuración de contraseñas de la aplicación."
 
 #: src/view/screens/Settings/index.tsx:540
 msgid "Opens the Following feed preferences"
-msgstr "Abre las preferencias del feed de Seguidos."
+msgstr "Abre las preferencias del feed de Seguidos"
 
 #: src/view/com/modals/LinkWarning.tsx:93
 msgid "Opens the linked website"
