@@ -4335,7 +4335,7 @@ msgstr "Nueva lista de usuarios"
 
 #: src/view/screens/PreferencesThreads.tsx:73
 msgid "Newest replies first"
-msgstr "Nuevas respuestas primero"
+msgstr "Respuestas nuevas primero"
 
 #: src/screens/Onboarding/index.tsx:20
 #: src/screens/Onboarding/state.ts:95
