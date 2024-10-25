@@ -3812,7 +3812,7 @@ msgstr "Lista desbloqueada"
 
 #: src/view/screens/ProfileList.tsx:400
 msgid "List unmuted"
-msgstr "Lista desilenciada"
+msgstr "La lista ya no está silenciada"
 
 #: src/Navigation.tsx:129
 #: src/view/screens/Profile.tsx:218
