@@ -4841,7 +4841,7 @@ msgstr "Abre la pantalla con todas las noticias guardadas"
 
 #: src/view/screens/Settings/index.tsx:664
 msgid "Opens the app password settings"
-msgstr "Abre la configuración de contraseñas de la aplicación."
+msgstr "Abre la configuración de contraseñas de la aplicación"
 
 #: src/view/screens/Settings/index.tsx:540
 msgid "Opens the Following feed preferences"
