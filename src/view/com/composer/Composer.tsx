@@ -683,7 +683,7 @@ function ComposerTopBar({
         <View style={a.flex_1} />
         {isPublishing ? (
           <>
-            <Text>{publishingStage}</Text>
+            <Text style={pal.textLight}>{publishingStage}</Text>
             <View style={styles.postBtn}>
               <ActivityIndicator />
             </View>
