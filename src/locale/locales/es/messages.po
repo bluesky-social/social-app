@@ -4514,7 +4514,7 @@ msgstr "No encontrado"
 #: src/view/com/modals/VerifyEmail.tsx:254
 #: src/view/com/modals/VerifyEmail.tsx:260
 msgid "Not right now"
-msgstr "No en estos momentos"
+msgstr "No en este momento"
 
 #: src/view/com/profile/ProfileMenu.tsx:348
 #: src/view/com/util/forms/PostDropdownBtn.tsx:698
