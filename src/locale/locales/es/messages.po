@@ -986,7 +986,7 @@ msgstr "Bluesky"
 
 #: src/view/com/auth/server-input/index.tsx:151
 msgid "Bluesky is an open network where you can choose your hosting provider. If you're a developer, you can host your own server."
-msgstr "Bluesky es una red abierta donde puede elegir su proveedor de alojamiento.Si eres un desarrollador, puedes alojar tu propio servidor."
+msgstr "Bluesky es una red abierta donde puede elegir su proveedor de alojamiento. Si eres un desarrollador, puedes alojar tu propio servidor."
 
 #: src/components/ProgressGuide/List.tsx:55
 msgid "Bluesky is better with friends!"
