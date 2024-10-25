@@ -4572,7 +4572,7 @@ msgstr "Ahora"
 
 #: src/view/com/modals/SelfLabel.tsx:104
 msgid "Nudity"
-msgstr "Desnudos"
+msgstr "Desnudez"
 
 #: src/lib/moderation/useReportOptions.ts:78
 msgid "Nudity or adult content not labeled as such"
