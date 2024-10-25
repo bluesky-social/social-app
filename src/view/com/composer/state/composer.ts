@@ -376,8 +376,6 @@ function postReducer(state: PostDraft, action: PostAction): PostDraft {
         },
       }
     }
-    default:
-      return state
   }
 }
 
