@@ -147,7 +147,6 @@ export const ComposePost = ({
   const currentDid = currentAccount!.did
   const {data: currentProfile} = useProfileQuery({did: currentDid})
   const {closeComposer} = useComposerControls()
-  const {isMobile} = useWebMediaQueries()
   const {_} = useLingui()
   const requireAltTextEnabled = useRequireAltTextEnabled()
   const langPrefs = useLanguagePrefs()
@@ -156,7 +155,6 @@ export const ComposePost = ({
   const discardPromptControl = Prompt.usePromptControl()
   const {closeAllDialogs} = useDialogStateControlContext()
   const {closeAllModals} = useModalControls()
-  const t = useTheme()
 
   const [isKeyboardVisible] = useIsKeyboardVisible({iosUseWillEvents: true})
   const [isPublishing, setIsPublishing] = useState(false)
@@ -474,19 +472,9 @@ export const ComposePost = ({
     ? _(msg`Write your reply`)
     : _(msg`What's up?`)
 
-  const canSelectImages =
-    images.length < MAX_IMAGES &&
-    videoState.status === 'idle' &&
-    !videoState.video
-  const hasMedia = images.length > 0 || Boolean(videoState.video)
-
   const onEmojiButtonPress = useCallback(() => {
     openEmojiPicker?.(textInput.current?.getCursorPosition())
   }, [openEmojiPicker])
-
-  const onSelectGif = useCallback((gif: Gif) => {
-    dispatch({type: 'embed_add_gif', gif})
-  }, [])
 
   const {
     scrollHandler,
@@ -526,6 +514,7 @@ export const ComposePost = ({
               clearVideo={clearVideo}
             />
           </ComposerTopBar>
+
           <Animated.ScrollView
             layout={native(LinearTransition)}
             onScroll={scrollHandler}
@@ -582,58 +571,16 @@ export const ComposePost = ({
             bottomBarAnimatedStyle={bottomBarAnimatedStyle}
           />
 
-          <View
-            style={[
-              a.flex_row,
-              a.py_xs,
-              {paddingLeft: 7, paddingRight: 16},
-              a.align_center,
-              a.border_t,
-              t.atoms.bg,
-              t.atoms.border_contrast_medium,
-              a.justify_between,
-            ]}>
-            <View style={[a.flex_row, a.align_center]}>
-              {videoState.status !== 'idle' && videoState.status !== 'done' ? (
-                <VideoUploadToolbar state={videoState} />
-              ) : (
-                <ToolbarWrapper style={[a.flex_row, a.align_center, a.gap_xs]}>
-                  <SelectPhotoBtn
-                    size={images.length}
-                    disabled={!canSelectImages}
-                    onAdd={onImageAdd}
-                  />
-                  <SelectVideoBtn
-                    onSelectVideo={selectVideo}
-                    disabled={!canSelectImages || images?.length > 0}
-                    setError={setError}
-                  />
-                  <OpenCameraBtn
-                    disabled={!canSelectImages}
-                    onAdd={onImageAdd}
-                  />
-                  <SelectGifBtn onSelectGif={onSelectGif} disabled={hasMedia} />
-                  {!isMobile ? (
-                    <Button
-                      onPress={onEmojiButtonPress}
-                      style={a.p_sm}
-                      label={_(msg`Open emoji picker`)}
-                      accessibilityHint={_(msg`Open emoji picker`)}
-                      variant="ghost"
-                      shape="round"
-                      color="primary">
-                      <EmojiSmile size="lg" />
-                    </Button>
-                  ) : null}
-                </ToolbarWrapper>
-              )}
-            </View>
-            <View style={[a.flex_row, a.align_center, a.justify_between]}>
-              <SelectLangBtn />
-              <CharProgress count={graphemeLength} style={{width: 65}} />
-            </View>
-          </View>
+          <ComposerFooter
+            draft={draft}
+            graphemeLength={graphemeLength}
+            dispatch={dispatch}
+            onError={setError}
+            onEmojiButtonPress={onEmojiButtonPress}
+            onSelectVideo={selectVideo}
+          />
         </View>
+
         <Prompt.Basic
           control={discardPromptControl}
           title={_(msg`Discard draft?`)}
@@ -912,6 +859,103 @@ function ComposerPills({
         />
       </ScrollView>
     </Animated.View>
+  )
+}
+
+function ComposerFooter({
+  draft,
+  dispatch,
+  graphemeLength,
+  onEmojiButtonPress,
+  onError,
+  onSelectVideo,
+}: {
+  draft: ComposerDraft
+  dispatch: (action: ComposerAction) => void
+  graphemeLength: number
+  onEmojiButtonPress: () => void
+  onError: (error: string) => void
+  onSelectVideo: (asset: ImagePickerAsset) => void
+}) {
+  const t = useTheme()
+  const {_} = useLingui()
+  const {isMobile} = useWebMediaQueries()
+
+  const media = draft.embed.media
+  const images = media?.type === 'images' ? media.images : []
+  const video = media?.type === 'video' ? media.video : null
+  const isMaxImages =
+    media?.type === 'images' && media.images.length === MAX_IMAGES
+
+  const onImageAdd = useCallback(
+    (next: ComposerImage[]) => {
+      dispatch({
+        type: 'embed_add_images',
+        images: next,
+      })
+    },
+    [dispatch],
+  )
+
+  const onSelectGif = useCallback(
+    (gif: Gif) => {
+      dispatch({type: 'embed_add_gif', gif})
+    },
+    [dispatch],
+  )
+
+  return (
+    <View
+      style={[
+        a.flex_row,
+        a.py_xs,
+        {paddingLeft: 7, paddingRight: 16},
+        a.align_center,
+        a.border_t,
+        t.atoms.bg,
+        t.atoms.border_contrast_medium,
+        a.justify_between,
+      ]}>
+      <View style={[a.flex_row, a.align_center]}>
+        {video && video.status !== 'done' ? (
+          <VideoUploadToolbar state={video} />
+        ) : (
+          <ToolbarWrapper style={[a.flex_row, a.align_center, a.gap_xs]}>
+            <SelectPhotoBtn
+              size={images.length}
+              disabled={media?.type === 'images' ? isMaxImages : !!media}
+              onAdd={onImageAdd}
+            />
+            <SelectVideoBtn
+              onSelectVideo={onSelectVideo}
+              disabled={!!media}
+              setError={onError}
+            />
+            <OpenCameraBtn
+              disabled={media?.type === 'images' ? isMaxImages : !!media}
+              onAdd={onImageAdd}
+            />
+            <SelectGifBtn onSelectGif={onSelectGif} disabled={!!media} />
+            {!isMobile ? (
+              <Button
+                onPress={onEmojiButtonPress}
+                style={a.p_sm}
+                label={_(msg`Open emoji picker`)}
+                accessibilityHint={_(msg`Open emoji picker`)}
+                variant="ghost"
+                shape="round"
+                color="primary">
+                <EmojiSmile size="lg" />
+              </Button>
+            ) : null}
+          </ToolbarWrapper>
+        )}
+      </View>
+      <View style={[a.flex_row, a.align_center, a.justify_between]}>
+        <SelectLangBtn />
+        <CharProgress count={graphemeLength} style={{width: 65}} />
+      </View>
+    </View>
   )
 }
 
