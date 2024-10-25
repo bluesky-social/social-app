@@ -113,6 +113,7 @@ import {Text as NewText} from '#/components/Typography'
 import {BottomSheetPortalProvider} from '../../../../modules/bottom-sheet'
 import {
   ComposerAction,
+  ComposerDraft,
   composerReducer,
   createComposerState,
   EmbedDraft,
@@ -571,40 +572,16 @@ export const ComposePost = ({
               clearVideo={clearVideo}
             />
           </Animated.ScrollView>
+
           <SuggestedLanguage text={richtext.text} />
 
-          <Animated.View
-            style={[a.flex_row, a.p_sm, t.atoms.bg, bottomBarAnimatedStyle]}>
-            <ScrollView
-              contentContainerStyle={[a.gap_sm]}
-              horizontal={true}
-              bounces={false}
-              showsHorizontalScrollIndicator={false}>
-              {replyTo ? null : (
-                <ThreadgateBtn
-                  postgate={draft.postgate}
-                  onChangePostgate={nextPostgate => {
-                    dispatch({type: 'update_postgate', postgate: nextPostgate})
-                  }}
-                  threadgateAllowUISettings={draft.threadgate}
-                  onChangeThreadgateAllowUISettings={nextThreadgate => {
-                    dispatch({
-                      type: 'update_threadgate',
-                      threadgate: nextThreadgate,
-                    })
-                  }}
-                  style={bottomBarAnimatedStyle}
-                />
-              )}
-              <LabelsBtn
-                labels={draft.labels}
-                onChange={nextLabels => {
-                  dispatch({type: 'update_labels', labels: nextLabels})
-                }}
-                hasMedia={hasMedia || Boolean(extLink)}
-              />
-            </ScrollView>
-          </Animated.View>
+          <ComposerPills
+            isReply={!!replyTo}
+            draft={draft}
+            dispatch={dispatch}
+            bottomBarAnimatedStyle={bottomBarAnimatedStyle}
+          />
+
           <View
             style={[
               a.flex_row,
@@ -884,6 +861,57 @@ function ComposerEmbeds({
         ) : null}
       </View>
     </>
+  )
+}
+
+function ComposerPills({
+  isReply,
+  draft,
+  dispatch,
+  bottomBarAnimatedStyle,
+}: {
+  isReply: boolean
+  draft: ComposerDraft
+  dispatch: (action: ComposerAction) => void
+  bottomBarAnimatedStyle: StyleProp<ViewStyle>
+}) {
+  const t = useTheme()
+  const media = draft.embed.media
+  const hasMedia = media?.type === 'images' || media?.type === 'video'
+  const hasLink = !!draft.embed.link
+  return (
+    <Animated.View
+      style={[a.flex_row, a.p_sm, t.atoms.bg, bottomBarAnimatedStyle]}>
+      <ScrollView
+        contentContainerStyle={[a.gap_sm]}
+        horizontal={true}
+        bounces={false}
+        showsHorizontalScrollIndicator={false}>
+        {isReply ? null : (
+          <ThreadgateBtn
+            postgate={draft.postgate}
+            onChangePostgate={nextPostgate => {
+              dispatch({type: 'update_postgate', postgate: nextPostgate})
+            }}
+            threadgateAllowUISettings={draft.threadgate}
+            onChangeThreadgateAllowUISettings={nextThreadgate => {
+              dispatch({
+                type: 'update_threadgate',
+                threadgate: nextThreadgate,
+              })
+            }}
+            style={bottomBarAnimatedStyle}
+          />
+        )}
+        <LabelsBtn
+          labels={draft.labels}
+          onChange={nextLabels => {
+            dispatch({type: 'update_labels', labels: nextLabels})
+          }}
+          hasMedia={hasMedia || hasLink}
+        />
+      </ScrollView>
+    </Animated.View>
   )
 }
 
