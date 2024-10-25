@@ -1023,11 +1023,11 @@ msgstr "Libros"
 
 #: src/components/FeedInterstitials.tsx:350
 msgid "Browse more accounts on the Explore page"
-msgstr "Explorar más cuentas en la página Explore"
+msgstr "Explorar más cuentas"
 
 #: src/components/FeedInterstitials.tsx:483
 msgid "Browse more feeds on the Explore page"
-msgstr "Revisar más feeds en la página de exploración"
+msgstr "Revisar más feeds"
 
 #: src/components/FeedInterstitials.tsx:332
 #: src/components/FeedInterstitials.tsx:335
@@ -1039,7 +1039,7 @@ msgstr "Explorar más sugerencias"
 #: src/components/FeedInterstitials.tsx:358
 #: src/components/FeedInterstitials.tsx:492
 msgid "Browse more suggestions on the Explore page"
-msgstr "Explore más sugerencias en la página Explore"
+msgstr "Explore más sugerencias"
 
 #: src/screens/Home/NoFeedsPinned.tsx:103
 #: src/screens/Home/NoFeedsPinned.tsx:109
