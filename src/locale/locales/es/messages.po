@@ -4713,7 +4713,7 @@ msgstr "Abrir navegación"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:365
 msgid "Open post options menu"
-msgstr "Abrir menu de opciones del post"
+msgstr "Abrir menú de opciones del post"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:540
 msgid "Open starter pack menu"
