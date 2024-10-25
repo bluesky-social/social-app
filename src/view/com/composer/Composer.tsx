@@ -511,9 +511,6 @@ export const ComposePost = ({
 
           <ComposerPills
             isReply={!!replyTo}
-            containsMedia={
-              images.length > 0 || videoState.status !== 'idle' || !!extLink
-            }
             draft={draft}
             dispatch={dispatch}
             bottomBarAnimatedStyle={bottomBarAnimatedStyle}
@@ -862,13 +859,11 @@ function ComposerEmbeds({
 
 function ComposerPills({
   isReply,
-  containsMedia,
   draft,
   dispatch,
   bottomBarAnimatedStyle,
 }: {
   isReply: boolean
-  containsMedia: boolean
   draft: ComposerDraft
   dispatch: (action: ComposerAction) => void
   bottomBarAnimatedStyle: StyleProp<ViewStyle>
@@ -901,13 +896,12 @@ function ComposerPills({
             style={bottomBarAnimatedStyle}
           />
         )}
-        {containsMedia ? (
+        {hasMedia || hasLink ? (
           <LabelsBtn
             labels={draft.labels}
             onChange={nextLabels => {
               dispatch({type: 'update_labels', labels: nextLabels})
             }}
-            hasMedia={hasMedia || hasLink}
           />
         ) : null}
       </ScrollView>
