@@ -4816,7 +4816,7 @@ msgstr "Abre el modal para descargar los datos de tu cuenta de Bluesky (reposito
 
 #: src/view/screens/Settings/index.tsx:962
 msgid "Opens modal for email verification"
-msgstr "Abre el modal para la verificación de correo electrónico."
+msgstr "Abre el modal para la verificación de correo electrónico"
 
 #: src/view/com/modals/ChangeHandle.tsx:269
 msgid "Opens modal for using custom domain"
