@@ -4849,7 +4849,7 @@ msgstr "Abre las preferencias del feed de Seguidos."
 
 #: src/view/com/modals/LinkWarning.tsx:93
 msgid "Opens the linked website"
-msgstr "Abre el sitio web vinculado."
+msgstr "Abre el sitio web vinculado"
 
 #: src/screens/Messages/List/index.tsx:86
 #~ msgid "Opens the message settings page"
