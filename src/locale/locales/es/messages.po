@@ -8619,7 +8619,7 @@ msgstr "Tu: {0}"
 
 #: src/screens/Messages/components/ChatListItem.tsx:153
 msgid "You: {defaultEmbeddedContentMessage}"
-msgstr "Tu: {defaultEmbeddedContentMessage}"
+msgstr "Tú: {defaultEmbeddedContentMessage}"
 
 #: src/screens/Messages/components/ChatListItem.tsx:146
 msgid "You: {short}"
