@@ -4693,7 +4693,7 @@ msgstr "Abrir selector de emoji"
 
 #: src/view/screens/ProfileFeed.tsx:294
 msgid "Open feed options menu"
-msgstr "Abrir menu de opciones del feed"
+msgstr "Abrir menú de opciones del feed"
 
 #: src/view/screens/Settings/index.tsx:702
 msgid "Open links with in-app browser"
