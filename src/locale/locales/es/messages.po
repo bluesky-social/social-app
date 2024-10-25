@@ -4412,7 +4412,7 @@ msgstr "No hay conversaciones para mostrar"
 
 #: src/view/com/notifications/Feed.tsx:121
 msgid "No notifications yet!"
-msgstr "No hay notificaciones aun!"
+msgstr "¡Aún no hay notificaciones!"
 
 #: src/screens/Messages/Settings.tsx:93
 #: src/screens/Messages/Settings.tsx:96
