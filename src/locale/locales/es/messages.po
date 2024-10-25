@@ -8623,7 +8623,7 @@ msgstr "Tu: {defaultEmbeddedContentMessage}"
 
 #: src/screens/Messages/components/ChatListItem.tsx:146
 msgid "You: {short}"
-msgstr "Tu: {short}"
+msgstr "Tú: {short}"
 
 #: src/screens/Signup/index.tsx:107
 msgid "You'll follow the suggested users and feeds once you finish creating your account!"
