@@ -884,8 +884,7 @@ function ComposerFooter({
   const media = draft.embed.media
   const images = media?.type === 'images' ? media.images : []
   const video = media?.type === 'video' ? media.video : null
-  const isMaxImages =
-    media?.type === 'images' && media.images.length === MAX_IMAGES
+  const isMaxImages = images.length >= MAX_IMAGES
 
   const onImageAdd = useCallback(
     (next: ComposerImage[]) => {
