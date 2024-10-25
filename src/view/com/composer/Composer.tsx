@@ -896,13 +896,14 @@ function ComposerPills({
             style={bottomBarAnimatedStyle}
           />
         )}
-        <LabelsBtn
-          labels={draft.labels}
-          onChange={nextLabels => {
-            dispatch({type: 'update_labels', labels: nextLabels})
-          }}
-          hasMedia={hasMedia || hasLink}
-        />
+        {hasMedia || hasLink ? (
+          <LabelsBtn
+            labels={draft.labels}
+            onChange={nextLabels => {
+              dispatch({type: 'update_labels', labels: nextLabels})
+            }}
+          />
+        ) : null}
       </ScrollView>
     </Animated.View>
   )
