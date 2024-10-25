@@ -4774,7 +4774,7 @@ msgstr "Abrir galería de fotos del dispositivo"
 
 #: src/view/screens/Settings/index.tsx:637
 msgid "Opens external embeds settings"
-msgstr "Abre la configuración de incrustaciones externas."
+msgstr "Abre la configuración de incrustaciones externas"
 
 #: src/view/com/auth/SplashScreen.tsx:50
 #: src/view/com/auth/SplashScreen.web.tsx:110
