@@ -4779,12 +4779,12 @@ msgstr "Abre la configuración de incrustaciones externas"
 #: src/view/com/auth/SplashScreen.tsx:50
 #: src/view/com/auth/SplashScreen.web.tsx:110
 msgid "Opens flow to create a new Bluesky account"
-msgstr "Abre el flujo para crear una nueva cuenta de Bluesky."
+msgstr "Abre el flujo para crear una nueva cuenta de Bluesky"
 
 #: src/view/com/auth/SplashScreen.tsx:64
 #: src/view/com/auth/SplashScreen.web.tsx:124
 msgid "Opens flow to sign into your existing Bluesky account"
-msgstr "Abre el flujo para iniciar sesión en tu cuenta existente de Bluesky."
+msgstr "Abre el flujo para iniciar sesión en tu cuenta existente de Bluesky"
 
 #: src/view/com/composer/photos/SelectGifBtn.tsx:36
 msgid "Opens GIF select dialog"
@@ -4796,23 +4796,23 @@ msgstr "Abre la lista de códigos de invitación"
 
 #: src/view/screens/Settings/index.tsx:774
 msgid "Opens modal for account deactivation confirmation"
-msgstr "Abre el modal para la confirmación de desactivación de cuenta."
+msgstr "Abre el modal para la confirmación de desactivación de cuenta"
 
 #: src/view/screens/Settings/index.tsx:796
 msgid "Opens modal for account deletion confirmation. Requires email code"
-msgstr "Abre el modal para la confirmación de eliminación de cuenta. Requiere un código enviado por correo electrónico."
+msgstr "Abre el modal para la confirmación de eliminación de cuenta. Requiere un código enviado por correo electrónico"
 
 #: src/view/screens/Settings/index.tsx:731
 msgid "Opens modal for changing your Bluesky password"
-msgstr "Abre el modal para cambiar tu contraseña de Bluesky."
+msgstr "Abre el modal para cambiar tu contraseña de Bluesky"
 
 #: src/view/screens/Settings/index.tsx:686
 msgid "Opens modal for choosing a new Bluesky handle"
-msgstr "Abre el modal para elegir un nuevo nombre de usuario en Bluesky."
+msgstr "Abre el modal para elegir un nuevo nombre de usuario en Bluesky"
 
 #: src/view/screens/Settings/index.tsx:754
 msgid "Opens modal for downloading your Bluesky account data (repository)"
-msgstr "Abre el modal para descargar los datos de tu cuenta de Bluesky (repositorio)."
+msgstr "Abre el modal para descargar los datos de tu cuenta de Bluesky (repositorio)"
 
 #: src/view/screens/Settings/index.tsx:962
 msgid "Opens modal for email verification"
@@ -4871,11 +4871,11 @@ msgstr "Abre las preferencias de hilos"
 #: src/view/com/notifications/FeedItem.tsx:555
 #: src/view/com/util/UserAvatar.tsx:436
 msgid "Opens this profile"
-msgstr "Abrir este perfil"
+msgstr "Abre este perfil"
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:107
 msgid "Opens video picker"
-msgstr "Abrir el selector de video"
+msgstr "Abre el selector de video"
 
 #: src/view/com/util/forms/DropdownButton.tsx:293
 msgid "Option {0} of {numItems}"
@@ -4896,7 +4896,7 @@ msgstr "O combina estas opciones:"
 
 #: src/screens/Deactivated.tsx:211
 msgid "Or, continue with another account."
-msgstr "O, continua con otra cuenta."
+msgstr "O, continúa con otra cuenta."
 
 #: src/screens/Deactivated.tsx:194
 msgid "Or, log into one of your other accounts."
@@ -4920,7 +4920,7 @@ msgstr "Otro..."
 
 #: src/screens/Messages/components/ChatDisabled.tsx:28
 msgid "Our moderators have reviewed reports and decided to disable your access to chats on Bluesky."
-msgstr "Nuestros moderadores han revisado los informes y han decidido deshabilitar tu acceso a los chats en Bluesky."
+msgstr "Nuestros moderadores han revisado denuncias y han decidido deshabilitar tu acceso a los chats en Bluesky."
 
 #: src/components/Lists.tsx:216
 #: src/view/screens/NotFound.tsx:45
@@ -5018,7 +5018,7 @@ msgstr "Anclado"
 
 #: src/view/screens/SavedFeeds.tsx:131
 msgid "Pinned Feeds"
-msgstr "Feeds Anclados"
+msgstr "Feeds anclados"
 
 #: src/view/screens/ProfileList.tsx:346
 msgid "Pinned to your feeds"
@@ -5084,7 +5084,7 @@ msgstr "Introduce un nombre único para la contraseña de esta app o utiliza una
 
 #: src/components/dialogs/MutedWords.tsx:86
 msgid "Please enter a valid word, tag, or phrase to mute"
-msgstr "Por favor, introduce una palabra, tag, o frase valida para silenciar"
+msgstr "Por favor, introduce una palabra, tag, o frase válida para silenciar"
 
 #: src/screens/Signup/state.ts:196
 #: src/screens/Signup/StepInfo/index.tsx:102
@@ -5371,11 +5371,11 @@ msgstr "La publicación citada se ha separado correctamente"
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:84
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:91
 msgid "Quote posts disabled"
-msgstr "Publicaciones citadas deshabilitadas."
+msgstr "Citas deshabilitadas"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:312
 msgid "Quote posts enabled"
-msgstr "Publicaciones citadas habilitadas."
+msgstr "Citas habilitadas"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:296
 msgid "Quote settings"
@@ -5414,7 +5414,7 @@ msgstr "Leer el blog de Bluesky"
 #: src/screens/Signup/StepInfo/Policies.tsx:58
 #: src/screens/Signup/StepInfo/Policies.tsx:84
 msgid "Read the Bluesky Privacy Policy"
-msgstr "Leer las Politicas de Privacidad de Bluesky"
+msgstr "Leer las Políticas de Privacidad de Bluesky"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:51
 #: src/screens/Signup/StepInfo/Policies.tsx:71
@@ -5508,7 +5508,7 @@ msgstr "¿Remover de mis feeds?"
 
 #: src/view/com/util/AccountDropdownBtn.tsx:53
 msgid "Remove from quick access?"
-msgstr "¿Remover de acceso rápido?"
+msgstr "¿Remover del acceso rápido?"
 
 #: src/screens/List/ListHiddenScreen.tsx:156
 msgid "Remove from saved feeds"
@@ -5681,7 +5681,7 @@ msgstr "La respuesta se ha ocultado correctamente."
 #: src/components/dms/MessagesListBlockedFooter.tsx:77
 #: src/components/dms/MessagesListBlockedFooter.tsx:84
 msgid "Report"
-msgstr "Reportar"
+msgstr "Denunciar"
 
 #: src/components/dms/ConvoMenu.tsx:146
 #: src/components/dms/ConvoMenu.tsx:150
@@ -5691,30 +5691,30 @@ msgstr "Reportar"
 #: src/view/com/profile/ProfileMenu.tsx:299
 #: src/view/com/profile/ProfileMenu.tsx:302
 msgid "Report Account"
-msgstr "Reportar cuenta"
+msgstr "Denunciar cuenta"
 
 #: src/components/dms/ConvoMenu.tsx:197
 #: src/components/dms/ConvoMenu.tsx:200
 #: src/components/dms/ReportConversationPrompt.tsx:18
 msgid "Report conversation"
-msgstr "Reportar conversación"
+msgstr "Denunciar conversación"
 
 #: src/components/ReportDialog/index.tsx:44
 msgid "Report dialog"
-msgstr "Reportar diálogo"
+msgstr "Ventana de denuncia"
 
 #: src/view/screens/ProfileFeed.tsx:347
 #: src/view/screens/ProfileFeed.tsx:349
 msgid "Report feed"
-msgstr "Reportar feed"
+msgstr "Denunciar feed"
 
 #: src/view/screens/ProfileList.tsx:535
 msgid "Report List"
-msgstr "Reportar lista"
+msgstr "Denunciar lista"
 
 #: src/components/dms/MessageMenu.tsx:130
 msgid "Report message"
-msgstr "Reportar mensaje"
+msgstr "Denunciar mensaje"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:621
 #: src/view/com/util/forms/PostDropdownBtn.tsx:623
@@ -5724,37 +5724,37 @@ msgstr "Reportar publicación"
 #: src/screens/StarterPack/StarterPackScreen.tsx:593
 #: src/screens/StarterPack/StarterPackScreen.tsx:596
 msgid "Report starter pack"
-msgstr "Reportar paquete inicial"
+msgstr "Denunciar paquete de inicio"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:43
 msgid "Report this content"
-msgstr "Reportar este contenido"
+msgstr "Denunciar este contenido"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:56
 msgid "Report this feed"
-msgstr "Reportar este feed"
+msgstr "Denunciar este feed"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:53
 msgid "Report this list"
-msgstr "Reportar esta lista"
+msgstr "Denunciar esta lista"
 
 #: src/components/dms/ReportDialog.tsx:44
 #: src/components/dms/ReportDialog.tsx:137
 #: src/components/ReportDialog/SelectReportOptionView.tsx:62
 msgid "Report this message"
-msgstr "Reportar este mensaje"
+msgstr "Denunciar este mensaje"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:50
 msgid "Report this post"
-msgstr "Reportar esta publicación"
+msgstr "Denunciar esta publicación"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:59
 msgid "Report this starter pack"
-msgstr "Reportar este paquete inicial"
+msgstr "Denunciar este paquete de inicio"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:47
 msgid "Report this user"
-msgstr "Reportar este usuario"
+msgstr "Denunciar este usuario"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:70
 #: src/view/com/util/post-ctrls/RepostButton.tsx:101
@@ -6149,7 +6149,7 @@ msgstr "Seleccionar GIF \"{0}\""
 
 #: src/components/dialogs/MutedWords.tsx:142
 msgid "Select how long to mute this word for."
-msgstr "Selecciona por cuánto tiempo silenciar esta palabra."
+msgstr "Selecciona por cuánto tiempo se debería silenciar esta palabra."
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:245
 msgid "Select language..."
@@ -6441,7 +6441,7 @@ msgstr "Compartir enlace"
 
 #: src/components/StarterPack/ShareDialog.tsx:88
 msgid "Share link dialog"
-msgstr "Diálogo para compartir enlace"
+msgstr "Ventana para compartir enlace"
 
 #: src/components/StarterPack/ShareDialog.tsx:135
 #: src/components/StarterPack/ShareDialog.tsx:146
@@ -6686,7 +6686,7 @@ msgstr "Sesión iniciada como @{0}"
 
 #: src/view/com/notifications/FeedItem.tsx:218
 msgid "signed up with your starter pack"
-msgstr "te has registrado con tu paquete de inicio"
+msgstr "se ha registrado con tu paquete de inicio"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:299
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:306
@@ -6811,7 +6811,7 @@ msgstr "Iniciar chat con {displayName}"
 #: src/Navigation.tsx:362
 #: src/screens/StarterPack/Wizard/index.tsx:182
 msgid "Starter Pack"
-msgstr "Paquete de Inicio"
+msgstr "Paquete de inicio"
 
 #: src/components/StarterPack/StarterPackCard.tsx:75
 msgid "Starter pack by {0}"
@@ -6827,7 +6827,7 @@ msgstr "El paquete de inicio es inválido"
 
 #: src/view/screens/Profile.tsx:224
 msgid "Starter Packs"
-msgstr "Paquetes de Inicio"
+msgstr "Paquetes de inicio"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:239
 msgid "Starter packs let you easily share your favorite feeds and people with your friends."
@@ -6835,7 +6835,7 @@ msgstr "Los paquetes de inicio te permiten compartir fácilmente tus feeds y per
 
 #: src/view/screens/Settings/index.tsx:917
 msgid "Status Page"
-msgstr "Página de Estado"
+msgstr "Página de estado"
 
 #: src/screens/Signup/index.tsx:145
 #~ msgid "Step"
@@ -7042,7 +7042,7 @@ msgstr "¡Gracias! Tu correo electrónico ha sido verificado exitosamente."
 #: src/components/dms/ReportDialog.tsx:129
 #: src/components/ReportDialog/SubmitView.tsx:82
 msgid "Thank you. Your report has been sent."
-msgstr "Gracias. Tu reporte ha sido enviado."
+msgstr "Gracias. Tu denuncia ha sido enviada."
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:593
 #~ msgid "Thanks for being one of our first 10 million users."
@@ -7054,7 +7054,7 @@ msgstr "Gracias. Tu reporte ha sido enviado."
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:82
 msgid "Thanks, you have successfully verified your email address. You can close this dialog."
-msgstr "Gracias, has verificado tu dirección de correo electrónico exitosamente. Puedes cerrar este diálogo."
+msgstr "Gracias, has verificado tu dirección de correo electrónico exitosamente. Puedes cerrar esta ventana."
 
 #: src/view/com/modals/ChangeHandle.tsx:452
 msgid "That contains the following:"
@@ -7147,7 +7147,7 @@ msgstr "El video seleccionado es mayor de 50MB."
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:713
 msgid "The starter pack that you are trying to view is invalid. You may delete this starter pack instead."
-msgstr "El paquete de inicio que intentas ver no es válido. Puedes eliminar este paquete de inicio en su lugar."
+msgstr "El paquete de inicio que intentas ver es inválido. Puedes eliminar este paquete de inicio en su lugar."
 
 #: src/view/screens/Support.tsx:36
 msgid "The support form has been moved. If you need help, please <0/> or visit {HELP_DESK_URL} to get in touch with us."
@@ -7159,7 +7159,7 @@ msgstr "Las condiciones de servicio se han trasladado a"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:94
 msgid "The verification code you have provided is invalid. Please make sure that you have used the correct verification link or request a new one."
-msgstr "El código de verificación que has proporcionado no es válido. Por favor, asegúrate de haber utilizado el enlace de verificación correcto o solicita uno nuevo."
+msgstr "El código de verificación que has proporcionado es inválido. Por favor, asegúrate de haber utilizado el enlace de verificación correcto o solicita uno nuevo."
 
 #: src/components/dialogs/nuxs/NeueTypography.tsx:82
 #: src/screens/Settings/AppearanceSettings.tsx:152
@@ -7336,7 +7336,7 @@ msgstr "Esta conversación es con una cuenta eliminada o desactivada. Presiona p
 
 #: src/view/screens/Settings/ExportCarDialog.tsx:92
 msgid "This feature is in beta. You can read more about repository exports in <0>this blogpost</0>."
-msgstr "Esta función está en beta. Puedes leer más sobre las exportaciones de repositorios en <0>esta publicación del blog</0>."
+msgstr "Esta función está en beta. Puedes leer más sobre la exportación de repositorios en <0>esta publicación del blog</0>."
 
 #: src/view/com/posts/FeedErrorMessage.tsx:120
 msgid "This feed is currently receiving high traffic and is temporarily unavailable. Please try again later."
@@ -7530,7 +7530,7 @@ msgstr "Para desactivar el método de 2FA por correo electrónico, por favor ver
 
 #: src/components/dms/ReportConversationPrompt.tsx:20
 msgid "To report a conversation, please report one of its messages via the conversation screen. This lets our moderators understand the context of your issue."
-msgstr "Para reportar una conversación, por favor reporta uno de sus mensajes a través de la pantalla de la conversación. Esto permite a nuestros moderadores entender el contexto de tu problema."
+msgstr "Para denunciar una conversación, por favor denuncia uno de sus mensajes a través de la pantalla de la conversación. Esto permite a nuestros moderadores entender el contexto de tu problema."
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:133
 msgid "To upload videos to Bluesky, you must first verify your email."
@@ -7822,7 +7822,7 @@ msgstr "Subir desde la cámara"
 #: src/view/com/util/UserAvatar.tsx:388
 #: src/view/com/util/UserBanner.tsx:140
 msgid "Upload from Files"
-msgstr "Subir desde archivos"
+msgstr "Subir desde tus archivos"
 
 #: src/view/com/util/UserAvatar.tsx:382
 #: src/view/com/util/UserAvatar.tsx:386
@@ -7850,7 +7850,7 @@ msgstr "Utilizar el proveedor predeterminado"
 #: src/view/com/modals/InAppBrowserConsent.tsx:53
 #: src/view/com/modals/InAppBrowserConsent.tsx:55
 msgid "Use in-app browser"
-msgstr "Usar navegador en la app"
+msgstr "Usar navegador integrado"
 
 #: src/view/com/modals/InAppBrowserConsent.tsx:63
 #: src/view/com/modals/InAppBrowserConsent.tsx:65
@@ -7950,7 +7950,7 @@ msgstr "Usuarios en \"{0}\""
 
 #: src/components/LikesDialog.tsx:83
 msgid "Users that have liked this content or profile"
-msgstr "Usuarios que han gustado este contenido o perfil"
+msgstr "Usuarios que les ha gustado este contenido o perfil"
 
 #: src/view/com/modals/ChangeHandle.tsx:423
 msgid "Value:"
@@ -7958,7 +7958,7 @@ msgstr "Valor:"
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:131
 msgid "Verified email required"
-msgstr "Correo electrónico verificado requerido"
+msgstr "Se requiere un correo electrónico verificado"
 
 #: src/view/com/modals/ChangeHandle.tsx:510
 #~ msgid "Verify {0}"
