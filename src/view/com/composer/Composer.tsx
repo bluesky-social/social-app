@@ -144,7 +144,6 @@ export const ComposePost = ({
   const currentDid = currentAccount!.did
   const {data: currentProfile} = useProfileQuery({did: currentDid})
   const {closeComposer} = useComposerControls()
-  const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()
   const {_} = useLingui()
   const requireAltTextEnabled = useRequireAltTextEnabled()
@@ -336,7 +335,7 @@ export const ComposePost = ({
   }, [images, extGifAlt, extGif, requireAltTextEnabled])
 
   const onPressPublish = React.useCallback(
-    async (finishedUploading?: boolean) => {
+    async (finishedUploading: boolean) => {
       if (isProcessing || graphemeLength > MAX_GRAPHEME_LENGTH) {
         return
       }
@@ -527,86 +526,23 @@ export const ComposePost = ({
           style={[a.flex_1, viewStyles]}
           aria-modal
           accessibilityViewIsModal>
-          <Animated.View
-            style={topBarAnimatedStyle}
-            layout={native(LinearTransition)}>
-            <View style={styles.topbarInner}>
-              <Button
-                label={_(msg`Cancel`)}
-                variant="ghost"
-                color="primary"
-                shape="default"
-                size="small"
-                style={[
-                  a.rounded_full,
-                  a.py_sm,
-                  {paddingLeft: 7, paddingRight: 7},
-                ]}
-                onPress={onPressCancel}
-                accessibilityHint={_(
-                  msg`Closes post composer and discards post draft`,
-                )}>
-                <ButtonText style={[a.text_md]}>
-                  <Trans>Cancel</Trans>
-                </ButtonText>
-              </Button>
-              <View style={a.flex_1} />
-              {isProcessing ? (
-                <>
-                  <Text style={pal.textLight}>{processingState}</Text>
-                  <View style={styles.postBtn}>
-                    <ActivityIndicator />
-                  </View>
-                </>
-              ) : canPost ? (
-                <Button
-                  testID="composerPublishBtn"
-                  label={replyTo ? _(msg`Publish reply`) : _(msg`Publish post`)}
-                  variant="solid"
-                  color="primary"
-                  shape="default"
-                  size="small"
-                  style={[a.rounded_full, a.py_sm]}
-                  onPress={() => onPressPublish()}
-                  disabled={videoState.status !== 'idle' && publishOnUpload}>
-                  <ButtonText style={[a.text_md]}>
-                    {replyTo ? (
-                      <Trans context="action">Reply</Trans>
-                    ) : (
-                      <Trans context="action">Post</Trans>
-                    )}
-                  </ButtonText>
-                </Button>
-              ) : (
-                <View style={[styles.postBtn, pal.btn]}>
-                  <Text style={[pal.textLight, s.f16, s.bold]}>
-                    <Trans context="action">Post</Trans>
-                  </Text>
-                </View>
-              )}
-            </View>
-
-            {isAltTextRequiredAndMissing && (
-              <View style={[styles.reminderLine, pal.viewLight]}>
-                <View style={styles.errorIcon}>
-                  <FontAwesomeIcon
-                    icon="exclamation"
-                    style={{color: colors.red4}}
-                    size={10}
-                  />
-                </View>
-                <Text style={[pal.text, a.flex_1]}>
-                  <Trans>One or more images is missing alt text.</Trans>
-                </Text>
-              </View>
-            )}
+          <ComposerTopBar
+            canPost={canPost}
+            isReply={!!replyTo}
+            isPublishQueued={videoState.status !== 'idle' && publishOnUpload}
+            isPublishing={isProcessing}
+            publishingStage={processingState}
+            topBarAnimatedStyle={topBarAnimatedStyle}
+            onCancel={onPressCancel}
+            onPublish={() => onPressPublish(false)}>
+            {isAltTextRequiredAndMissing && <AltTextReminder />}
             <ErrorBanner
               error={error}
               videoState={videoState}
               clearError={() => setError('')}
               clearVideo={clearVideo}
             />
-          </Animated.View>
+          </ComposerTopBar>
           <Animated.ScrollView
             layout={native(LinearTransition)}
             onScroll={scrollHandler}
@@ -635,7 +571,7 @@ export const ComposePost = ({
                   dispatch({type: 'update_richtext', richtext: rt})
                 }}
                 onPhotoPasted={onPhotoPasted}
-                onPressPublish={() => onPressPublish()}
+                onPressPublish={() => onPressPublish(false)}
                 onNewLink={onNewLink}
                 onError={setError}
                 accessible={true}
@@ -837,6 +773,104 @@ export const ComposePost = ({
         />
       </KeyboardAvoidingView>
     </BottomSheetPortalProvider>
+  )
+}
+
+function ComposerTopBar({
+  canPost,
+  isReply,
+  isPublishQueued,
+  isPublishing,
+  publishingStage,
+  onCancel,
+  onPublish,
+  topBarAnimatedStyle,
+  children,
+}: {
+  isPublishing: boolean
+  publishingStage: string
+  canPost: boolean
+  isReply: boolean
+  isPublishQueued: boolean
+  onCancel: () => void
+  onPublish: () => void
+  topBarAnimatedStyle: StyleProp<ViewStyle>
+  children?: React.ReactNode
+}) {
+  const pal = usePalette('default')
+  return (
+    <Animated.View
+      style={topBarAnimatedStyle}
+      layout={native(LinearTransition)}>
+      <View style={styles.topbarInner}>
+        <Button
+          label="Cancel"
+          variant="ghost"
+          color="primary"
+          shape="default"
+          size="small"
+          style={[a.rounded_full, a.py_sm, {paddingLeft: 7, paddingRight: 7}]}
+          onPress={onCancel}
+          accessibilityHint="Closes post composer and discards post draft">
+          <ButtonText style={[a.text_md]}>
+            <Trans>Cancel</Trans>
+          </ButtonText>
+        </Button>
+        <View style={a.flex_1} />
+        {isPublishing ? (
+          <>
+            <Text>{publishingStage}</Text>
+            <View style={styles.postBtn}>
+              <ActivityIndicator />
+            </View>
+          </>
+        ) : canPost ? (
+          <Button
+            testID="composerPublishBtn"
+            label={isReply ? 'Publish reply' : 'Publish post'}
+            variant="solid"
+            color="primary"
+            shape="default"
+            size="small"
+            style={[a.rounded_full, a.py_sm]}
+            onPress={onPublish}
+            disabled={isPublishQueued}>
+            <ButtonText style={[a.text_md]}>
+              {isReply ? (
+                <Trans context="action">Reply</Trans>
+              ) : (
+                <Trans context="action">Post</Trans>
+              )}
+            </ButtonText>
+          </Button>
+        ) : (
+          <View style={[styles.postBtn, pal.btn]}>
+            <Text style={[pal.textLight, s.f16, s.bold]}>
+              <Trans context="action">Post</Trans>
+            </Text>
+          </View>
+        )}
+      </View>
+      {children}
+    </Animated.View>
+  )
+}
+
+function AltTextReminder() {
+  const pal = usePalette('default')
+  return (
+    <View style={[styles.reminderLine, pal.viewLight]}>
+      <View style={styles.errorIcon}>
+        <FontAwesomeIcon
+          icon="exclamation"
+          style={{color: colors.red4}}
+          size={10}
+        />
+      </View>
+      <Text style={[pal.text, a.flex_1]}>
+        <Trans>One or more images is missing alt text.</Trans>
+      </Text>
+    </View>
   )
 }
 
