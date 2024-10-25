@@ -29,6 +29,7 @@ import {useComposerControls} from '#/state/shell/composer'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
 import {PostThreadFollowBtn} from '#/view/com/post-thread/PostThreadFollowBtn'
 import {atoms as a, useTheme} from '#/alf'
+import {NewskieDialog} from '#/components/NewskieDialog'
 import {AppModerationCause} from '#/components/Pills'
 import {RichText} from '#/components/RichText'
 import {Text as NewText} from '#/components/Typography'
@@ -317,7 +318,10 @@ let PostThreadItemLoaded = ({
                   )}
                 </NewText>
               </Link>
-              <Link style={s.flex1} href={authorHref} title={authorTitle}>
+              <Link
+                style={[a.flex_row, a.gap_xs, a.align_center]}
+                href={authorHref}
+                title={authorTitle}>
                 <NewText
                   emoji
                   style={[
@@ -328,6 +332,8 @@ let PostThreadItemLoaded = ({
                   numberOfLines={1}>
                   {sanitizeHandle(post.author.handle, '@')}
                 </NewText>
+
+                <NewskieDialog profile={post.author} disabled={false} />
               </Link>
             </View>
             {currentAccount?.did !== post.author.did && (
