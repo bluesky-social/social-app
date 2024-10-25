@@ -5,6 +5,7 @@ import '#/view/icons'
 import React, {useEffect, useState} from 'react'
 import {GestureHandlerRootView} from 'react-native-gesture-handler'
 import {KeyboardProvider} from 'react-native-keyboard-controller'
+import Purchases from 'react-native-purchases'
 import {RootSiblingParent} from 'react-native-root-siblings'
 import {
   initialWindowMetrics,
@@ -24,6 +25,7 @@ import {s} from '#/lib/styles'
 import {ThemeProvider} from '#/lib/ThemeContext'
 import I18nProvider from '#/locale/i18nProvider'
 import {logger} from '#/logger'
+import {isAndroid,isIOS} from '#/platform/detection'
 import {Provider as A11yProvider} from '#/state/a11y'
 import {Provider as MutedThreadsProvider} from '#/state/cache/thread-mutes'
 import {Provider as DialogStateProvider} from '#/state/dialogs'
@@ -66,6 +68,7 @@ import {NuxDialogs} from '#/components/dialogs/nuxs'
 import {useStarterPackEntry} from '#/components/hooks/useStarterPackEntry'
 import {Provider as IntentDialogProvider} from '#/components/intents/IntentDialogs'
 import {Provider as PortalProvider} from '#/components/Portal'
+import {RC_GOOGLE_PUBLIC_KEY} from '#/env'
 import {Splash} from '#/Splash'
 import {BottomSheetProvider} from '../modules/bottom-sheet'
 import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
@@ -173,6 +176,11 @@ function App() {
     Promise.all([initPersistedState(), ensureGeolocationResolved()]).then(() =>
       setReady(true),
     )
+
+    if (isIOS) {
+    } else if (isAndroid) {
+      Purchases.configure({apiKey: RC_GOOGLE_PUBLIC_KEY})
+    }
   }, [])
 
   if (!isReady) {

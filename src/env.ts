@@ -7,3 +7,6 @@ export const LOG_LEVEL = (process.env.EXPO_PUBLIC_LOG_LEVEL || 'info') as
   | 'info'
   | 'warn'
   | 'error'
+
+export const RC_GOOGLE_PUBLIC_KEY =
+  process.env.EXPO_PUBLIC_RC_GOOGLE_PUBLIC_KEY || ''
