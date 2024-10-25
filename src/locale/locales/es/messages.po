@@ -4500,7 +4500,7 @@ msgstr "No se encontró a nadie. Intenta buscar a otra persona."
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:42
 msgid "Non-sexual Nudity"
-msgstr "Desnudo No Sexual"
+msgstr "Desnudez no sexual"
 
 #: src/view/com/modals/SelfLabel.tsx:135
 #~ msgid "Not Applicable."
