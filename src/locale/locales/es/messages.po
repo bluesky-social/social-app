@@ -4051,7 +4051,7 @@ msgstr "El moderador ha decidido establecer una advertencia general sobre el con
 
 #: src/view/com/post-thread/PostThreadItem.tsx:619
 msgid "More"
-msgstr "Mas"
+msgstr "Más"
 
 #: src/view/shell/desktop/Feeds.tsx:55
 msgid "More feeds"
