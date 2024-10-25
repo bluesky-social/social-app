@@ -112,8 +112,10 @@ import * as Prompt from '#/components/Prompt'
 import {Text as NewText} from '#/components/Typography'
 import {BottomSheetPortalProvider} from '../../../../modules/bottom-sheet'
 import {
+  ComposerAction,
   composerReducer,
   createComposerState,
+  EmbedDraft,
   MAX_IMAGES,
 } from './state/composer'
 import {NO_VIDEO, NoVideoState, processVideo, VideoState} from './state/video'
@@ -221,22 +223,6 @@ export const ComposePost = ({
     dispatch({type: 'embed_remove_video'})
   }, [videoState.abortController, dispatch])
 
-  const updateVideoDimensions = useCallback(
-    (width: number, height: number) => {
-      dispatch({
-        type: 'embed_update_video',
-        videoAction: {
-          type: 'update_dimensions',
-          width,
-          height,
-          signal: videoState.abortController.signal,
-        },
-      })
-    },
-    [videoState.abortController],
-  )
-
-  const hasVideo = Boolean(videoState.asset || videoState.video)
   const [publishOnUpload, setPublishOnUpload] = useState(false)
 
   const onClose = useCallback(() => {
@@ -501,10 +487,6 @@ export const ComposePost = ({
     dispatch({type: 'embed_add_gif', gif})
   }, [])
 
-  const handleChangeGifAltText = useCallback((altText: string) => {
-    dispatch({type: 'embed_update_gif', alt: altText})
-  }, [])
-
   const {
     scrollHandler,
     onScrollViewContentSizeChange,
@@ -582,100 +564,12 @@ export const ComposePost = ({
               />
             </View>
 
-            <Gallery images={images} dispatch={dispatch} />
-
-            {extGif && (
-              <View style={a.relative} key={extGif.url}>
-                <ExternalEmbedGif
-                  gif={extGif}
-                  onRemove={() => {
-                    dispatch({type: 'embed_remove_gif'})
-                  }}
-                />
-                <GifAltTextDialog
-                  gif={extGif}
-                  altText={extGifAlt ?? ''}
-                  onSubmit={handleChangeGifAltText}
-                />
-              </View>
-            )}
-
-            {!draft.embed.media && extLink && (
-              <View style={a.relative} key={extLink}>
-                <ExternalEmbedLink
-                  uri={extLink}
-                  hasQuote={!!quote}
-                  onRemove={() => {
-                    dispatch({type: 'embed_remove_link'})
-                  }}
-                />
-              </View>
-            )}
-
-            <LayoutAnimationConfig skipExiting>
-              {hasVideo && (
-                <Animated.View
-                  style={[a.w_full, a.mt_lg]}
-                  entering={native(ZoomIn)}
-                  exiting={native(ZoomOut)}>
-                  {videoState.asset &&
-                    (videoState.status === 'compressing' ? (
-                      <VideoTranscodeProgress
-                        asset={videoState.asset}
-                        progress={videoState.progress}
-                        clear={clearVideo}
-                      />
-                    ) : videoState.video ? (
-                      <VideoPreview
-                        asset={videoState.asset}
-                        video={videoState.video}
-                        setDimensions={updateVideoDimensions}
-                        clear={clearVideo}
-                      />
-                    ) : null)}
-                  <SubtitleDialogBtn
-                    defaultAltText={videoState.altText}
-                    saveAltText={altText =>
-                      dispatch({
-                        type: 'embed_update_video',
-                        videoAction: {
-                          type: 'update_alt_text',
-                          altText,
-                          signal: videoState.abortController.signal,
-                        },
-                      })
-                    }
-                    captions={videoState.captions}
-                    setCaptions={updater => {
-                      dispatch({
-                        type: 'embed_update_video',
-                        videoAction: {
-                          type: 'update_captions',
-                          updater,
-                          signal: videoState.abortController.signal,
-                        },
-                      })
-                    }}
-                  />
-                </Animated.View>
-              )}
-            </LayoutAnimationConfig>
-            <View style={!hasVideo ? [a.mt_md] : []}>
-              {quote ? (
-                <View style={[s.mt5, s.mb2, isWeb && s.mb10]}>
-                  <View style={{pointerEvents: 'none'}}>
-                    <LazyQuoteEmbed uri={quote} />
-                  </View>
-                  {!initQuote && (
-                    <QuoteX
-                      onRemove={() => {
-                        dispatch({type: 'embed_remove_quote'})
-                      }}
-                    />
-                  )}
-                </View>
-              ) : null}
-            </View>
+            <ComposerEmbeds
+              canRemoveQuote={!initQuote}
+              embed={draft.embed}
+              dispatch={dispatch}
+              clearVideo={clearVideo}
+            />
           </Animated.ScrollView>
           <SuggestedLanguage text={richtext.text} />
 
@@ -871,6 +765,125 @@ function AltTextReminder() {
         <Trans>One or more images is missing alt text.</Trans>
       </Text>
     </View>
+  )
+}
+
+function ComposerEmbeds({
+  embed,
+  dispatch,
+  clearVideo,
+  canRemoveQuote,
+}: {
+  embed: EmbedDraft
+  dispatch: (action: ComposerAction) => void
+  clearVideo: () => void
+  canRemoveQuote: boolean
+}) {
+  const video = embed.media?.type === 'video' ? embed.media.video : null
+  return (
+    <>
+      {embed.media?.type === 'images' && (
+        <Gallery images={embed.media.images} dispatch={dispatch} />
+      )}
+
+      {embed.media?.type === 'gif' && (
+        <View style={a.relative} key={embed.media.gif.url}>
+          <ExternalEmbedGif
+            gif={embed.media.gif}
+            onRemove={() => dispatch({type: 'embed_remove_gif'})}
+          />
+          <GifAltTextDialog
+            gif={embed.media.gif}
+            altText={embed.media.alt ?? ''}
+            onSubmit={(altText: string) => {
+              dispatch({type: 'embed_update_gif', alt: altText})
+            }}
+          />
+        </View>
+      )}
+
+      {!embed.media && embed.link && (
+        <View style={a.relative} key={embed.link.uri}>
+          <ExternalEmbedLink
+            uri={embed.link.uri}
+            hasQuote={!!embed.quote}
+            onRemove={() => dispatch({type: 'embed_remove_link'})}
+          />
+        </View>
+      )}
+
+      <LayoutAnimationConfig skipExiting>
+        {video && (
+          <Animated.View
+            style={[a.w_full, a.mt_lg]}
+            entering={native(ZoomIn)}
+            exiting={native(ZoomOut)}>
+            {video.asset &&
+              (video.status === 'compressing' ? (
+                <VideoTranscodeProgress
+                  asset={video.asset}
+                  progress={video.progress}
+                  clear={clearVideo}
+                />
+              ) : video.video ? (
+                <VideoPreview
+                  asset={video.asset}
+                  video={video.video}
+                  setDimensions={(width: number, height: number) => {
+                    dispatch({
+                      type: 'embed_update_video',
+                      videoAction: {
+                        type: 'update_dimensions',
+                        width,
+                        height,
+                        signal: video.abortController.signal,
+                      },
+                    })
+                  }}
+                  clear={clearVideo}
+                />
+              ) : null)}
+            <SubtitleDialogBtn
+              defaultAltText={video.altText}
+              saveAltText={altText =>
+                dispatch({
+                  type: 'embed_update_video',
+                  videoAction: {
+                    type: 'update_alt_text',
+                    altText,
+                    signal: video.abortController.signal,
+                  },
+                })
+              }
+              captions={video.captions}
+              setCaptions={updater => {
+                dispatch({
+                  type: 'embed_update_video',
+                  videoAction: {
+                    type: 'update_captions',
+                    updater,
+                    signal: video.abortController.signal,
+                  },
+                })
+              }}
+            />
+          </Animated.View>
+        )}
+      </LayoutAnimationConfig>
+
+      <View style={!video ? [a.mt_md] : []}>
+        {embed.quote?.uri ? (
+          <View style={[s.mt5, s.mb2, isWeb && s.mb10]}>
+            <View style={{pointerEvents: 'none'}}>
+              <LazyQuoteEmbed uri={embed.quote.uri} />
+            </View>
+            {canRemoveQuote && (
+              <QuoteX onRemove={() => dispatch({type: 'embed_remove_quote'})} />
+            )}
+          </View>
+        ) : null}
+      </View>
+    </>
   )
 }
 
