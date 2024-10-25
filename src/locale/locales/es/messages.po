@@ -5719,7 +5719,7 @@ msgstr "Denunciar mensaje"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:621
 #: src/view/com/util/forms/PostDropdownBtn.tsx:623
 msgid "Report post"
-msgstr "Reportar publicación"
+msgstr "Denunciar publicación"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:593
 #: src/screens/StarterPack/StarterPackScreen.tsx:596
