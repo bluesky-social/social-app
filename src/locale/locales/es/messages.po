@@ -4229,7 +4229,7 @@ msgstr "Nombre requerido"
 #: src/lib/moderation/useReportOptions.ts:106
 #: src/lib/moderation/useReportOptions.ts:114
 msgid "Name or Description Violates Community Standards"
-msgstr "Nombre o Descripción viola los estandares de la comunidad"
+msgstr "Nombre o descripción que violan los estándares de la comunidad"
 
 #: src/screens/Onboarding/index.tsx:22
 #: src/screens/Onboarding/state.ts:94
