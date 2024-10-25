@@ -4657,7 +4657,7 @@ msgstr "Solo se admiten archivos WebVTT (.vtt)."
 
 #: src/components/Lists.tsx:88
 msgid "Oops, something went wrong!"
-msgstr "Oops, ocurrió algo malo!"
+msgstr "¡Ups, algo salió mal!"
 
 #: src/components/Lists.tsx:199
 #: src/components/StarterPack/ProfileStarterPacks.tsx:305
