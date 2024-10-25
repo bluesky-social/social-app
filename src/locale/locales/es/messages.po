@@ -4593,7 +4593,7 @@ msgstr "¡Qué problema!"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:124
 msgid "Oh no! Something went wrong."
-msgstr "Oh no! Ocurrió algo malo."
+msgstr "¡Oh no! Algo salió mal."
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:175
 #~ msgid "Oh no! We weren't able to generate an image for you to share. Rest assured, we're glad you're here 🦋"
