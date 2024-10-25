@@ -4828,7 +4828,7 @@ msgstr "Abre la configuración de moderación"
 
 #: src/screens/Login/LoginForm.tsx:231
 msgid "Opens password reset form"
-msgstr "Abre el formulario de restablecimiento de contraseña."
+msgstr "Abre el formulario de restablecimiento de contraseña"
 
 #: src/view/com/home/HomeHeaderLayout.web.tsx:77
 #: src/view/screens/Feeds.tsx:417
