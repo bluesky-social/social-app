@@ -4064,7 +4064,7 @@ msgstr "Más opciones"
 
 #: src/view/screens/PreferencesThreads.tsx:76
 msgid "Most-liked replies first"
-msgstr "Las respuestas más valoradas primero."
+msgstr "Respuestas mejor valoradas primero"
 
 #: src/screens/Onboarding/state.ts:92
 msgid "Movies"
