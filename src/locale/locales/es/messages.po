@@ -4717,7 +4717,7 @@ msgstr "Abrir menú de opciones del post"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:540
 msgid "Open starter pack menu"
-msgstr "Abrir menu de paquete inicial"
+msgstr "Abrir menú del paquete de inicio"
 
 #: src/view/screens/Settings/index.tsx:826
 #: src/view/screens/Settings/index.tsx:836
