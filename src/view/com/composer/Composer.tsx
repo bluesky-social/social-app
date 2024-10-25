@@ -156,8 +156,8 @@ export const ComposePost = ({
   const t = useTheme()
 
   const [isKeyboardVisible] = useIsKeyboardVisible({iosUseWillEvents: true})
-  const [isProcessing, setIsProcessing] = useState(false)
-  const [processingState, setProcessingState] = useState('')
+  const [isPublishing, setIsPublishing] = useState(false)
+  const [publishingStage, setPublishingStage] = useState('')
   const [error, setError] = useState('')
 
   const [draft, dispatch] = useReducer(
@@ -336,7 +336,7 @@ export const ComposePost = ({
 
   const onPressPublish = React.useCallback(
     async (finishedUploading: boolean) => {
-      if (isProcessing || graphemeLength > MAX_GRAPHEME_LENGTH) {
+      if (isPublishing || graphemeLength > MAX_GRAPHEME_LENGTH) {
         return
       }
 
@@ -367,7 +367,7 @@ export const ComposePost = ({
         return
       }
 
-      setIsProcessing(true)
+      setIsPublishing(true)
 
       let postUri
       try {
@@ -375,7 +375,7 @@ export const ComposePost = ({
           await apilib.post(agent, queryClient, {
             draft: draft,
             replyTo: replyTo?.uri,
-            onStateChange: setProcessingState,
+            onStateChange: setPublishingStage,
             langs: toPostLanguages(langPrefs.postLanguage),
           })
         ).uri
@@ -405,7 +405,7 @@ export const ComposePost = ({
           err = _(msg`This post's author has disabled quote posts.`)
         }
         setError(err)
-        setIsProcessing(false)
+        setIsPublishing(false)
         return
       } finally {
         if (postUri) {
@@ -455,7 +455,7 @@ export const ComposePost = ({
       images,
       graphemeLength,
       isAltTextRequiredAndMissing,
-      isProcessing,
+      isPublishing,
       langPrefs.postLanguage,
       onClose,
       onPost,
@@ -530,8 +530,8 @@ export const ComposePost = ({
             canPost={canPost}
             isReply={!!replyTo}
             isPublishQueued={videoState.status !== 'idle' && publishOnUpload}
-            isPublishing={isProcessing}
-            publishingStage={processingState}
+            isPublishing={isPublishing}
+            publishingStage={publishingStage}
             topBarAnimatedStyle={topBarAnimatedStyle}
             onCancel={onPressCancel}
             onPublish={() => onPressPublish(false)}>
