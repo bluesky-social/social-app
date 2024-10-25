@@ -4242,7 +4242,7 @@ msgstr "Navegar a {0}"
 
 #: src/view/com/util/post-embeds/ExternalLinkEmbed.tsx:86
 msgid "Navigate to starter pack"
-msgstr "Navegar a paquete inicial"
+msgstr "Navegar al paquete de inicio"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:166
 #: src/screens/Login/LoginForm.tsx:316
