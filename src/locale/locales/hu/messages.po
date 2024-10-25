@@ -137,27 +137,27 @@ msgstr "{0} kezdőcsomagja"
 #. How many days have passed, displayed in a narrow form
 #: src/lib/hooks/useTimeAgo.ts:158
 msgid "{0}d"
-msgstr "{0} n"
+msgstr "{0} napja"
 
 #. How many hours have passed, displayed in a narrow form
 #: src/lib/hooks/useTimeAgo.ts:148
 msgid "{0}h"
-msgstr "{0} ó"
+msgstr "{0} órája"
 
 #. How many minutes have passed, displayed in a narrow form
 #: src/lib/hooks/useTimeAgo.ts:138
 msgid "{0}m"
-msgstr "{0} p"
+msgstr "{0} perce"
 
 #. How many months have passed, displayed in a narrow form
 #: src/lib/hooks/useTimeAgo.ts:169
 msgid "{0}mo"
-msgstr "{0} hó"
+msgstr "{0} hónapja"
 
 #. How many seconds have passed, displayed in a narrow form
 #: src/lib/hooks/useTimeAgo.ts:128
 msgid "{0}s"
-msgstr "{0} mp"
+msgstr "{0} másodperce"
 
 #: src/components/LabelingServiceCard/index.tsx:96
 msgid "{count, plural, one {Liked by # user} other {Liked by # users}}"
@@ -313,7 +313,7 @@ msgstr "Fióklehetőségek"
 
 #: src/view/com/util/AccountDropdownBtn.tsx:59
 msgid "Account removed from quick access"
-msgstr "Fiók eltávolítva a gyorselérési eszköztárról"
+msgstr "Eltávolítva a fióklistáról"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:127
 #: src/view/com/profile/ProfileMenu.tsx:122
@@ -2530,7 +2530,7 @@ msgstr "{name} követése"
 
 #: src/components/ProgressGuide/List.tsx:54
 msgid "Follow 7 accounts"
-msgstr "7 fiók követése"
+msgstr "Kövess 7 fiókot!"
 
 #: src/view/com/profile/ProfileMenu.tsx:222
 #: src/view/com/profile/ProfileMenu.tsx:233
@@ -3121,7 +3121,7 @@ msgstr "Állásazonosító: {0}"
 
 #: src/view/com/auth/SplashScreen.web.tsx:177
 msgid "Jobs"
-msgstr "Hivatás"
+msgstr "Karrier"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:201
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:207
@@ -4913,7 +4913,7 @@ msgstr "Eltávolítás a hírfolyamgyűjteményből"
 
 #: src/view/com/util/AccountDropdownBtn.tsx:53
 msgid "Remove from quick access?"
-msgstr "Eltávolítás a gyorselérési eszköztárról"
+msgstr "Eltávolítás a fióklistáról"
 
 #: src/screens/List/ListHiddenScreen.tsx:156
 msgid "Remove from saved feeds"
@@ -5179,7 +5179,7 @@ msgstr "Kód kérelmezése"
 
 #: src/view/screens/AccessibilitySettings.tsx:90
 msgid "Require alt text before posting"
-msgstr "Helyettesítő szöveg megkövetelése a közzétételhez"
+msgstr "Helyettesítő szöveg hozzáadásának megkövetelése közzététel előtt"
 
 #: src/view/screens/Settings/Email2FAToggle.tsx:51
 msgid "Require email code to log into your account"
@@ -6127,7 +6127,9 @@ msgstr "Feladat teljesítve – 10 kedvelés!"
 
 #: src/components/ProgressGuide/List.tsx:49
 msgid "Teach our algorithm what you like"
-msgstr "Tanítsd meg az algoritmusnak, hogy mit szeretnél látni!"
+msgstr ""
+"Tanítsd meg az algoritmusnak,\n"
+"hogy mit szeretnél látni!"
 
 #: src/screens/Onboarding/index.tsx:36 src/screens/Onboarding/state.ts:101
 msgid "Tech"
@@ -6567,7 +6569,7 @@ msgstr "Ezzel a(z) „{0}” kifejezés el lesz távolítva az elnémított szav
 
 #: src/view/com/util/AccountDropdownBtn.tsx:55
 msgid "This will remove @{0} from the quick access list."
-msgstr "Ezzel @{0} el lesz távolítva a gyorselérési eszköztárról."
+msgstr "Ezzel @{0} el lesz távolítva a fióklistáról."
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:733
 msgid "This will remove your post from this quote post for all users, and replace it with a placeholder."
@@ -7489,7 +7491,7 @@ msgstr "A nyilvános hírfolyamgyűjteményed üres."
 
 #: src/view/com/lists/MyLists.tsx:90 src/view/com/lists/ProfileLists.tsx:134
 msgid "You have no lists."
-msgstr "Jelenleg nem rendelkezel listákkal."
+msgstr "Még nincsenek listáid."
 
 #: src/view/screens/ModerationBlockedAccounts.tsx:133
 msgid "You have not blocked any accounts yet. To block an account, go to their profile and select \"Block account\" from the menu on their account."
@@ -7570,11 +7572,11 @@ msgstr "Korábban deaktiváltad a(z) @{0} fiókot."
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:222
 msgid "You will no longer receive notifications for this thread"
-msgstr "Mostantól nem fogsz értesítéseket kapni ebből a válaszláncból"
+msgstr "Mostantól nem fogsz értesítéseket kapni erről a válaszláncról"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:218
 msgid "You will now receive notifications for this thread"
-msgstr "Mostantól fogsz értesítéseket kapni ebből a válaszláncból"
+msgstr "Mostantól fogsz értesítéseket kapni erről a válaszláncról"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:98
 msgid "You will receive an email with a \"reset code.\" Enter that code here, then enter your new password."
