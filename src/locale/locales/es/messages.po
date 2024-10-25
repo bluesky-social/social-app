@@ -4327,7 +4327,7 @@ msgstr "Nuevo post"
 
 #: src/components/NewskieDialog.tsx:83
 msgid "New user info dialog"
-msgstr "Diálogo de información para nuevo usuario."
+msgstr "Ventana de información para nuevo usuario."
 
 #: src/view/com/modals/CreateOrEditList.tsx:227
 msgid "New User List"
