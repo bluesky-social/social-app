@@ -167,7 +167,8 @@ export const ComposePost = ({
   )
 
   // TODO: Display drafts for other posts in the thread.
-  const draft = composerState.thread.posts[composerState.activePostIndex]
+  const thread = composerState.thread
+  const draft = thread.posts[composerState.activePostIndex]
   const dispatch = useCallback((postAction: PostAction) => {
     composerDispatch({
       type: 'update_post',
@@ -226,9 +227,12 @@ export const ComposePost = ({
 
   const onPressCancel = useCallback(() => {
     if (
-      draft.shortenedGraphemeLength > 0 ||
-      draft.embed.media ||
-      draft.embed.link
+      thread.posts.some(
+        post =>
+          post.shortenedGraphemeLength > 0 ||
+          post.embed.media ||
+          post.embed.link,
+      )
     ) {
       closeAllDialogs()
       Keyboard.dismiss()
@@ -236,7 +240,7 @@ export const ComposePost = ({
     } else {
       onClose()
     }
-  }, [draft, closeAllDialogs, discardPromptControl, onClose])
+  }, [thread, closeAllDialogs, discardPromptControl, onClose])
 
   useImperativeHandle(cancelRef, () => ({onPressCancel}))
 
@@ -261,30 +265,38 @@ export const ComposePost = ({
   }, [onPressCancel, closeAllDialogs, closeAllModals])
 
   const isAltTextRequiredAndMissing = useMemo(() => {
-    const media = draft.embed.media
-    if (!requireAltTextEnabled || !media) {
+    if (!requireAltTextEnabled) {
       return false
     }
-    if (media.type === 'images' && media.images.some(img => !img.alt)) {
-      return true
-    }
-    if (media.type === 'gif' && !media.alt) {
-      return true
-    }
-    return false
-  }, [draft.embed.media, requireAltTextEnabled])
-
-  const isEmptyPost =
-    draft.richtext.text.trim().length === 0 &&
-    !draft.embed.link &&
-    !draft.embed.media &&
-    !draft.embed.quote
+    return thread.posts.some(post => {
+      const media = post.embed.media
+      if (media) {
+        if (media.type === 'images' && media.images.some(img => !img.alt)) {
+          return true
+        }
+        if (media.type === 'gif' && !media.alt) {
+          return true
+        }
+      }
+    })
+  }, [thread, requireAltTextEnabled])
 
   const canPost =
-    draft.shortenedGraphemeLength <= MAX_GRAPHEME_LENGTH &&
     !isAltTextRequiredAndMissing &&
-    !isEmptyPost &&
-    videoState.status !== 'error'
+    thread.posts.every(
+      post =>
+        post.shortenedGraphemeLength <= MAX_GRAPHEME_LENGTH &&
+        !(
+          post.richtext.text.trim().length === 0 &&
+          !post.embed.link &&
+          !post.embed.media &&
+          !post.embed.quote
+        ) &&
+        !(
+          post.embed.media?.type === 'video' &&
+          post.embed.media.video.status === 'error'
+        ),
+    )
 
   const onPressPublish = React.useCallback(
     async (finishedUploading: boolean) => {
