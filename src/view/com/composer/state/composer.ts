@@ -96,6 +96,9 @@ export type ComposerAction =
       postId: string
       postAction: PostAction
     }
+  | {
+      type: 'add_post'
+    }
 
 export const MAX_IMAGES = 4
 
@@ -139,6 +142,29 @@ export function composerReducer(
         thread: {
           ...state.thread,
           posts: nextPosts,
+        },
+      }
+    }
+    case 'add_post': {
+      // TODO: Only allow one trailing empty post.
+      return {
+        ...state,
+        thread: {
+          ...state.thread,
+          posts: [
+            ...state.thread.posts,
+            {
+              id: nanoid(),
+              richtext: new RichText({text: ''}),
+              shortenedGraphemeLength: 0,
+              labels: [],
+              embed: {
+                quote: undefined,
+                media: undefined,
+                link: undefined,
+              },
+            },
+          ],
         },
       }
     }
