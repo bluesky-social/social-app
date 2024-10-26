@@ -487,7 +487,7 @@ export const ComposePost = ({
             {replyTo ? <ComposerReplyTo replyTo={replyTo} /> : undefined}
             <ComposerPost
               draft={draft}
-              dispatch={dispatch}
+              dispatch={composerDispatch}
               textInput={textInput}
               isReply={!!replyTo}
               canRemoveQuote={!initQuote}
@@ -542,7 +542,7 @@ function ComposerPost({
   onPublish,
 }: {
   draft: PostDraft
-  dispatch: (action: PostAction) => void
+  dispatch: (action: ComposerAction) => void
   textInput: React.Ref<TextInputRef>
   isReply: boolean
   canRemoveQuote: boolean
@@ -563,21 +563,32 @@ function ComposerPost({
     ? _(msg`Write your reply`)
     : _(msg`What's up?`)
 
+  const dispatchPost = useCallback(
+    (action: PostAction) => {
+      dispatch({
+        type: 'update_post',
+        postId: draft.id,
+        postAction: action,
+      })
+    },
+    [dispatch, draft.id],
+  )
+
   const onImageAdd = useCallback(
     (next: ComposerImage[]) => {
-      dispatch({
+      dispatchPost({
         type: 'embed_add_images',
         images: next,
       })
     },
-    [dispatch],
+    [dispatchPost],
   )
 
   const onNewLink = useCallback(
     (uri: string) => {
-      dispatch({type: 'embed_add_uri', uri})
+      dispatchPost({type: 'embed_add_uri', uri})
     },
-    [dispatch],
+    [dispatchPost],
   )
 
   const onPhotoPasted = useCallback(
@@ -611,7 +622,7 @@ function ComposerPost({
           autoFocus
           webForceMinHeight={forceMinHeight}
           setRichText={rt => {
-            dispatch({type: 'update_richtext', richtext: rt})
+            dispatchPost({type: 'update_richtext', richtext: rt})
           }}
           onPhotoPasted={onPhotoPasted}
           onNewLink={onNewLink}
@@ -628,7 +639,7 @@ function ComposerPost({
       <ComposerEmbeds
         canRemoveQuote={canRemoveQuote}
         embed={draft.embed}
-        dispatch={dispatch}
+        dispatch={dispatchPost}
         clearVideo={onClearVideo}
       />
     </>
