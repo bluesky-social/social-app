@@ -684,7 +684,7 @@ function ComposerTopBar({
               <ActivityIndicator />
             </View>
           </>
-        ) : canPost ? (
+        ) : (
           <Button
             testID="composerPublishBtn"
             label={isReply ? 'Publish reply' : 'Publish post'}
@@ -694,7 +694,7 @@ function ComposerTopBar({
             size="small"
             style={[a.rounded_full, a.py_sm]}
             onPress={onPublish}
-            disabled={isPublishQueued}>
+            disabled={!canPost || isPublishQueued}>
             <ButtonText style={[a.text_md]}>
               {isReply ? (
                 <Trans context="action">Reply</Trans>
@@ -703,12 +703,6 @@ function ComposerTopBar({
               )}
             </ButtonText>
           </Button>
-        ) : (
-          <View style={[styles.postBtn, pal.btn]}>
-            <Text style={[pal.textLight, s.f16, s.bold]}>
-              <Trans context="action">Post</Trans>
-            </Text>
-          </View>
         )}
       </View>
       {children}
