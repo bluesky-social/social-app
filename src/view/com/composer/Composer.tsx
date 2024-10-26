@@ -252,10 +252,9 @@ export const ComposePost = ({
 
   const onPressCancel = useCallback(() => {
     if (
-      graphemeLength > 0 ||
-      images.length !== 0 ||
-      extGif ||
-      videoState.status !== 'idle'
+      draft.richtext.graphemeLength > 0 ||
+      draft.embed.media ||
+      draft.embed.link
     ) {
       closeAllDialogs()
       Keyboard.dismiss()
@@ -263,15 +262,7 @@ export const ComposePost = ({
     } else {
       onClose()
     }
-  }, [
-    extGif,
-    graphemeLength,
-    images.length,
-    closeAllDialogs,
-    discardPromptControl,
-    onClose,
-    videoState.status,
-  ])
+  }, [draft, closeAllDialogs, discardPromptControl, onClose])
 
   useImperativeHandle(cancelRef, () => ({onPressCancel}))
 
