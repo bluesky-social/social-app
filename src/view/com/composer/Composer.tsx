@@ -546,18 +546,22 @@ export const ComposePost = ({
             onContentSizeChange={onScrollViewContentSizeChange}
             onLayout={onScrollViewLayout}>
             {replyTo ? <ComposerReplyTo replyTo={replyTo} /> : undefined}
-            <ComposerPost
-              key={activePost.id}
-              post={activePost}
-              dispatch={composerDispatch}
-              textInput={textInput}
-              isReply={!!replyTo}
-              canRemoveQuote={!initQuote}
-              onSelectVideo={asset => selectVideo(activePost.id, asset)}
-              onClearVideo={() => clearVideo(activePost.id)}
-              onPublish={() => onPressPublish(false)}
-              onError={setError}
-            />
+            {thread.posts.map((post, index) => (
+              <ComposerPost
+                key={post.id}
+                post={post}
+                dispatch={composerDispatch}
+                textInput={
+                  index === composerState.activePostIndex ? textInput : null
+                }
+                isReply={index > 0 || !!replyTo}
+                canRemoveQuote={index > 0 || !initQuote}
+                onSelectVideo={asset => selectVideo(post.id, asset)}
+                onClearVideo={() => clearVideo(post.id)}
+                onPublish={() => onPressPublish(false)}
+                onError={setError}
+              />
+            ))}
           </Animated.ScrollView>
 
           <React.Fragment key={activePost.id}>
@@ -575,6 +579,11 @@ export const ComposePost = ({
               onError={setError}
               onEmojiButtonPress={onEmojiButtonPress}
               onSelectVideo={asset => selectVideo(activePost.id, asset)}
+              onAddPost={() => {
+                composerDispatch({
+                  type: 'add_post',
+                })
+              }}
             />
           </React.Fragment>
         </View>
@@ -991,12 +1000,14 @@ function ComposerFooter({
   onEmojiButtonPress,
   onError,
   onSelectVideo,
+  onAddPost,
 }: {
   post: PostDraft
   dispatch: (action: PostAction) => void
   onEmojiButtonPress: () => void
   onError: (error: string) => void
   onSelectVideo: (asset: ImagePickerAsset) => void
+  onAddPost: () => void
 }) {
   const t = useTheme()
   const {_} = useLingui()
@@ -1072,6 +1083,15 @@ function ComposerFooter({
         )}
       </View>
       <View style={[a.flex_row, a.align_center, a.justify_between]}>
+        <Button
+          label={_(msg`Add new post`)}
+          onPress={onAddPost}
+          style={[a.p_sm, a.m_2xs]}
+          variant="ghost"
+          shape="round"
+          color="primary">
+          <FontAwesomeIcon icon="add" size={20} color={t.palette.primary_500} />
+        </Button>
         <SelectLangBtn />
         <CharProgress
           count={post.shortenedGraphemeLength}
