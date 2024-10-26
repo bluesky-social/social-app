@@ -1,29 +1,32 @@
 import Purchases, {PurchasesPackage} from 'react-native-purchases'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useMutation,useQuery} from '@tanstack/react-query'
+import {useMutation, useQuery} from '@tanstack/react-query'
 
-import {Subscription} from '#/state/purchases/useSubscriptions/types'
-import {identifierToSubscriptionInfo} from '#/state/purchases/useSubscriptions/util'
+import {
+  Subscription,
+  Subscriptions,
+} from '#/state/purchases/subscriptions/types'
+import {
+  identifierToSubscriptionInfo,
+  organizeSubscriptionsByTier,
+} from '#/state/purchases/subscriptions/util'
 import {useSession} from '#/state/session'
 
 export function useAvailableSubscriptions() {
-  const {_} = useLingui()
   const {currentAccount} = useSession()
   const did = currentAccount!.did
 
-  return useQuery<Subscription[]>({
+  return useQuery<Subscriptions>({
     queryKey: ['availableSubscriptions', did],
     async queryFn() {
       Purchases.logIn(did)
       const offerings = await Purchases.getOfferings()
-      if (
-        offerings.current !== null &&
-        offerings.current.availablePackages.length !== 0
-      ) {
-        return normalizePackages(offerings.current.availablePackages)
-      }
-      throw new Error(_(msg`Error loading subscriptions`))
+      const tierOfferings = Object.values(offerings.all).filter(offering => {
+        return offering.identifier.includes('bsky_tier')
+      })
+      const packages = tierOfferings.flatMap(
+        offering => offering.availablePackages,
+      )
+      return organizeSubscriptionsByTier(normalizePackages(packages))
     },
   })
 }
@@ -41,14 +44,15 @@ function normalizePackages(pkgs: PurchasesPackage[]): Subscription[] {
     .map(p => {
       const info = identifierToSubscriptionInfo(p.product.identifier)
       if (!info) return
-      return {
+      const subscription: Subscription = {
         info,
-        pricing: {
+        price: {
           formatted: p.product.priceString,
           value: p.product.price,
         },
         raw: p,
       }
+      return subscription
     })
     .filter(Boolean) as Subscription[]
 }
