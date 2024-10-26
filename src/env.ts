@@ -10,3 +10,5 @@ export const LOG_LEVEL = (process.env.EXPO_PUBLIC_LOG_LEVEL || 'info') as
 
 export const RC_GOOGLE_PUBLIC_KEY =
   process.env.EXPO_PUBLIC_RC_GOOGLE_PUBLIC_KEY || ''
+export const BSKY_PURCHASES_API =
+  process.env.EXPO_PUBLIC_BSKY_PURCHASES_API || ''

@@ -1,3 +1,4 @@
+import {Linking} from 'react-native'
 import {useMutation, useQuery} from '@tanstack/react-query'
 
 import {useCurrencyFormatter} from '#/lib/currency'
@@ -14,6 +15,7 @@ import {
   organizeSubscriptionsByTier,
 } from '#/state/purchases/subscriptions/util'
 import {useSession} from '#/state/session'
+import {BSKY_PURCHASES_API} from '#/env'
 
 export function useAvailableSubscriptions() {
   const {currentAccount} = useSession()
@@ -22,7 +24,7 @@ export function useAvailableSubscriptions() {
   return useQuery<Subscriptions>({
     queryKey: ['availableSubscriptions', currentAccount!.did],
     async queryFn() {
-      const res = await fetch(`http://localhost:8787/getWebOffers`).then(res =>
+      const res = await fetch(`${BSKY_PURCHASES_API}/getWebOffers`).then(res =>
         res.json(),
       )
       const filtered = res.filter((item: any) =>
@@ -37,7 +39,11 @@ export function useAvailableSubscriptions() {
 
 export function usePurchaseSubscription() {
   return useMutation({
-    async mutationFn(_priceObject: any) {},
+    async mutationFn(priceObject: any) {
+      Linking.openURL(
+        `${BSKY_PURCHASES_API}/initCheckout/${priceObject.price_id}`,
+      )
+    },
   })
 }
 
