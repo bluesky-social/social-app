@@ -47,6 +47,7 @@ interface TextInputProps {
   onPressPublish: (richtext: RichText) => void
   onNewLink: (uri: string) => void
   onError: (err: string) => void
+  onFocus: () => void
 }
 
 export const TextInput = React.forwardRef(function TextInputImpl(
@@ -58,6 +59,7 @@ export const TextInput = React.forwardRef(function TextInputImpl(
     onPhotoPasted,
     onPressPublish,
     onNewLink,
+    onFocus,
   }: // onError, TODO
   TextInputProps,
   ref,
@@ -149,6 +151,9 @@ export const TextInput = React.forwardRef(function TextInputImpl(
   const editor = useEditor(
     {
       extensions,
+      onFocus() {
+        onFocus?.()
+      },
       editorProps: {
         attributes: {
           class: modeClass,
