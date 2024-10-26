@@ -99,6 +99,10 @@ export type ComposerAction =
   | {
       type: 'add_post'
     }
+  | {
+      type: 'focus_post'
+      postId: string
+    }
 
 export const MAX_IMAGES = 4
 
@@ -166,6 +170,18 @@ export function composerReducer(
             },
           ],
         },
+      }
+    }
+    case 'focus_post': {
+      const nextActivePostIndex = state.thread.posts.findIndex(
+        p => p.id === action.postId,
+      )
+      if (nextActivePostIndex === -1) {
+        return state
+      }
+      return {
+        ...state,
+        activePostIndex: nextActivePostIndex,
       }
     }
   }

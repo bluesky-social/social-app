@@ -167,7 +167,6 @@ export const ComposePost = ({
     createComposerState,
   )
 
-  // TODO: Display drafts for other posts in the thread.
   const thread = composerState.thread
   const activePost = thread.posts[composerState.activePostIndex]
   const dispatch = useCallback(
@@ -693,6 +692,12 @@ function ComposerPost({
           webForceMinHeight={forceMinHeight}
           setRichText={rt => {
             dispatchPost({type: 'update_richtext', richtext: rt})
+          }}
+          onFocus={() => {
+            dispatch({
+              type: 'focus_post',
+              postId: post.id,
+            })
           }}
           onPhotoPasted={onPhotoPasted}
           onNewLink={onNewLink}
