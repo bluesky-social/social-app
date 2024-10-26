@@ -347,8 +347,8 @@ msgstr "계속하려면 {0}명 더 추가하기"
 msgid "Add {displayName} to starter pack"
 msgstr "스타터 팩에 {displayName} 추가"
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:114
-#: src/view/com/composer/labels/LabelsBtn.tsx:119
+#: src/view/com/composer/labels/LabelsBtn.tsx:104
+#: src/view/com/composer/labels/LabelsBtn.tsx:109
 msgid "Add a content warning"
 msgstr "콘텐츠 경고 추가"
 
@@ -432,7 +432,7 @@ msgstr "내 피드에 추가됨"
 #: src/components/moderation/ContentHider.tsx:83
 #: src/lib/moderation/useGlobalLabelStrings.ts:34
 #: src/lib/moderation/useModerationCauseDescription.ts:144
-#: src/view/com/composer/labels/LabelsBtn.tsx:149
+#: src/view/com/composer/labels/LabelsBtn.tsx:125
 msgid "Adult Content"
 msgstr "성인 콘텐츠"
 
@@ -444,8 +444,8 @@ msgstr "성인 콘텐츠는 <0>bsky.app</0>에서 웹을 통해서만 활성화�
 msgid "Adult content is disabled."
 msgstr "성인 콘텐츠가 비활성화되어 있습니다."
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:160
-#: src/view/com/composer/labels/LabelsBtn.tsx:219
+#: src/view/com/composer/labels/LabelsBtn.tsx:136
+#: src/view/com/composer/labels/LabelsBtn.tsx:190
 msgid "Adult Content labels"
 msgstr "성인 콘텐츠 라벨"
 
@@ -727,7 +727,7 @@ msgstr "피드에서 {0}을(를) 제거하시겠습니까?"
 msgid "Are you sure you want to remove this from your feeds?"
 msgstr "내 피드에서 이 피드를 삭제하시겠습니까?"
 
-#: src/view/com/composer/Composer.tsx:833
+#: src/view/com/composer/Composer.tsx:532
 msgid "Are you sure you'd like to discard this draft?"
 msgstr "이 초안을 삭제하시겠습니까?"
 
@@ -744,7 +744,7 @@ msgstr "{0}(으)로 쓰고 있나요?"
 msgid "Art"
 msgstr "예술"
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:190
+#: src/view/com/composer/labels/LabelsBtn.tsx:166
 msgid "Artistic or non-erotic nudity."
 msgstr "선정적이지 않거나 예술적인 나체."
 
@@ -962,8 +962,7 @@ msgstr "글자, 숫자, 공백, 대시, 밑줄만 포함할 수 있습니다. �
 #: src/screens/Deactivated.tsx:161
 #: src/screens/Profile/Header/EditProfileDialog.tsx:219
 #: src/screens/Profile/Header/EditProfileDialog.tsx:226
-#: src/view/com/composer/Composer.tsx:535
-#: src/view/com/composer/Composer.tsx:550
+#: src/view/com/composer/Composer.tsx:680
 #: src/view/com/modals/ChangeEmail.tsx:213
 #: src/view/com/modals/ChangeEmail.tsx:215
 #: src/view/com/modals/ChangeHandle.tsx:141
@@ -1130,7 +1129,7 @@ msgstr "임의로 선택하기"
 msgid "Choose People"
 msgstr "사람들 선택"
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:123
+#: src/view/com/composer/labels/LabelsBtn.tsx:112
 msgid "Choose self-labels that are applicable for the media you are posting. If none are selected, this post is suitable for all audiences."
 msgstr "게시하는 미디어에 적용할 자체 라벨을 선택하세요. 아무것도 선택하지 않으면 이 게시물이 모든 대상에게 적합하다는 것입니다."
 
@@ -1262,8 +1261,8 @@ msgid "Closes password update alert"
 msgstr "비밀번호 변경 알림을 닫습니다"
 
 #: src/view/com/composer/Composer.tsx:547
-msgid "Closes post composer and discards post draft"
-msgstr "게시물 작성 상자를 닫고 게시물 초안을 삭제합니다"
+#~ msgid "Closes post composer and discards post draft"
+#~ msgstr "게시물 작성 상자를 닫고 게시물 초안을 삭제합니다"
 
 #: src/view/com/lightbox/ImageViewing/components/ImageDefaultHeader.tsx:37
 msgid "Closes viewer for header image"
@@ -1304,7 +1303,7 @@ msgstr "온보딩 완료 후 계정 사용 시작"
 msgid "Complete the challenge"
 msgstr "챌린지 완료하기"
 
-#: src/view/com/composer/Composer.tsx:644
+#: src/view/com/composer/Composer.tsx:628
 msgid "Compose posts up to {MAX_GRAPHEME_LENGTH} characters in length"
 msgstr "최대 {MAX_GRAPHEME_LENGTH}자 길이까지 글을 작성할 수 있습니다"
 
@@ -1312,7 +1311,7 @@ msgstr "최대 {MAX_GRAPHEME_LENGTH}자 길이까지 글을 작성할 수 있습
 msgid "Compose reply"
 msgstr "답글 작성하기"
 
-#: src/view/com/composer/Composer.tsx:1166
+#: src/view/com/composer/Composer.tsx:1331
 msgid "Compressing video..."
 msgstr "동영상 압축 중..."
 
@@ -1406,7 +1405,7 @@ msgstr "콘텐츠를 사용할 수 없음"
 msgid "Content Warning"
 msgstr "콘텐츠 경고"
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:63
+#: src/view/com/composer/labels/LabelsBtn.tsx:57
 msgid "Content warnings"
 msgstr "콘텐츠 경고"
 
@@ -1786,7 +1785,7 @@ msgstr "인용을 해제하시겠습니까?"
 msgid "Dialog: adjust who can interact with this post"
 msgstr "대화 상자: 이 게시물과 상호작용할 수 있는 사람 조정하기"
 
-#: src/view/com/composer/Composer.tsx:367
+#: src/view/com/composer/Composer.tsx:325
 msgid "Did you want to say anything?"
 msgstr "하고 싶은 말이 없나요?"
 
@@ -1820,7 +1819,7 @@ msgid "Disabled"
 msgstr "사용 안 함"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:83
-#: src/view/com/composer/Composer.tsx:835
+#: src/view/com/composer/Composer.tsx:534
 msgid "Discard"
 msgstr "삭제"
 
@@ -1828,7 +1827,7 @@ msgstr "삭제"
 msgid "Discard changes?"
 msgstr "변경 사항 삭제"
 
-#: src/view/com/composer/Composer.tsx:832
+#: src/view/com/composer/Composer.tsx:531
 msgid "Discard draft?"
 msgstr "초안 삭제"
 
@@ -1854,7 +1853,7 @@ msgstr "새 피드 발견하기"
 msgid "Dismiss"
 msgstr "닫기"
 
-#: src/view/com/composer/Composer.tsx:1090
+#: src/view/com/composer/Composer.tsx:1255
 msgid "Dismiss error"
 msgstr "오류 무시"
 
@@ -1888,11 +1887,11 @@ msgstr "DNS 패널"
 msgid "Do not apply this mute word to users you follow"
 msgstr "내가 팔로우하는 사용자에게는 이 뮤트 단어를 적용하지 않기"
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:194
+#: src/view/com/composer/labels/LabelsBtn.tsx:170
 msgid "Does not contain adult content."
 msgstr "성인 콘텐츠가 포함되어 있지 않습니다."
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:240
+#: src/view/com/composer/labels/LabelsBtn.tsx:209
 msgid "Does not contain graphic or disturbing content."
 msgstr "선정적이거나 불쾌감을 주는 콘텐츠가 포함되어 있지 않습니다."
 
@@ -1920,8 +1919,8 @@ msgstr "도메인을 확인했습니다."
 #: src/screens/Onboarding/StepProfile/index.tsx:333
 #: src/view/com/auth/server-input/index.tsx:170
 #: src/view/com/auth/server-input/index.tsx:171
-#: src/view/com/composer/labels/LabelsBtn.tsx:254
-#: src/view/com/composer/labels/LabelsBtn.tsx:260
+#: src/view/com/composer/labels/LabelsBtn.tsx:219
+#: src/view/com/composer/labels/LabelsBtn.tsx:225
 #: src/view/com/composer/videos/SubtitleDialog.tsx:169
 #: src/view/com/composer/videos/SubtitleDialog.tsx:179
 #: src/view/com/modals/AddAppPasswords.tsx:243
@@ -2240,7 +2239,7 @@ msgstr "아래에 새 이메일 주소를 입력하세요."
 msgid "Enter your username and password"
 msgstr "사용자 이름 및 비밀번호 입력"
 
-#: src/view/com/composer/Composer.tsx:1175
+#: src/view/com/composer/Composer.tsx:1340
 msgid "Error"
 msgstr "오류"
 
@@ -2845,8 +2844,8 @@ msgid "Go to user's profile"
 msgstr "사용자의 프로필로 가기"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:46
-#: src/view/com/composer/labels/LabelsBtn.tsx:226
-#: src/view/com/composer/labels/LabelsBtn.tsx:229
+#: src/view/com/composer/labels/LabelsBtn.tsx:195
+#: src/view/com/composer/labels/LabelsBtn.tsx:198
 msgid "Graphic Media"
 msgstr "그래픽 미디어"
 
@@ -3181,7 +3180,7 @@ msgstr "올바른 주소입니다"
 msgid "It's just you right now! Add more people to your starter pack by searching above."
 msgstr "아직은 나밖에 없습니다. 위에서 검색하여 스타터 팩에 더 많은 사람을 추가하세요."
 
-#: src/view/com/composer/Composer.tsx:1109
+#: src/view/com/composer/Composer.tsx:1274
 msgid "Job ID: {0}"
 msgstr "작업 ID: {0}"
 
@@ -3214,12 +3213,12 @@ msgstr "{0}이(가) 라벨 지정함."
 msgid "Labeled by the author."
 msgstr "작성자가 라벨 지정함."
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:79
+#: src/view/com/composer/labels/LabelsBtn.tsx:72
 #: src/view/screens/Profile.tsx:226
 msgid "Labels"
 msgstr "라벨"
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:77
+#: src/view/com/composer/labels/LabelsBtn.tsx:70
 msgid "Labels added"
 msgstr "라벨 추가됨"
 
@@ -3541,7 +3540,7 @@ msgstr "읽음으로 표시"
 msgid "Media"
 msgstr "미디어"
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:235
+#: src/view/com/composer/labels/LabelsBtn.tsx:204
 msgid "Media that may be disturbing or inappropriate for some audiences."
 msgstr "일부 사용자에게 불쾌감을 주거나 부적절할 수 있는 미디어."
 
@@ -4056,8 +4055,8 @@ msgid "No search results found for \"{search}\"."
 msgstr "\"{search}\"에 대한 검색 결과를 찾을 수 없습니다."
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:129
-msgid "No self-labels can be applied to this post because it contains no media."
-msgstr "이 게시물에는 미디어가 포함되어 있지 않으므로 자체 라벨을 적용할 수 없습니다."
+#~ msgid "No self-labels can be applied to this post because it contains no media."
+#~ msgstr "이 게시물에는 미디어가 포함되어 있지 않으므로 자체 라벨을 적용할 수 없습니다."
 
 #: src/components/dialogs/EmbedConsent.tsx:104
 #: src/components/dialogs/EmbedConsent.tsx:111
@@ -4153,8 +4152,8 @@ msgstr "지금"
 msgid "Now"
 msgstr "지금"
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:172
-#: src/view/com/composer/labels/LabelsBtn.tsx:175
+#: src/view/com/composer/labels/LabelsBtn.tsx:148
+#: src/view/com/composer/labels/LabelsBtn.tsx:151
 msgid "Nudity"
 msgstr "나체"
 
@@ -4195,7 +4194,7 @@ msgstr "<0><1/><2><3/></2></0>"
 msgid "Onboarding reset"
 msgstr "온보딩 재설정"
 
-#: src/view/com/composer/Composer.tsx:599
+#: src/view/com/composer/Composer.tsx:735
 msgid "One or more images is missing alt text."
 msgstr "하나 이상의 이미지에 대체 텍스트가 누락되었습니다."
 
@@ -4250,8 +4249,8 @@ msgid "Open conversation options"
 msgstr "대화 옵션 열기"
 
 #: src/screens/Messages/components/MessageInput.web.tsx:165
-#: src/view/com/composer/Composer.tsx:813
-#: src/view/com/composer/Composer.tsx:814
+#: src/view/com/composer/Composer.tsx:989
+#: src/view/com/composer/Composer.tsx:990
 msgid "Open emoji picker"
 msgstr "이모티콘 선택기 열기"
 
@@ -4300,7 +4299,7 @@ msgstr "시스템 로그 열기"
 msgid "Opens {numItems} options"
 msgstr "{numItems}번째 옵션을 엽니다"
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:65
+#: src/view/com/composer/labels/LabelsBtn.tsx:59
 msgid "Opens a dialog to add a content warning to your post"
 msgstr "게시물에 콘텐츠 경고를 추가하는 대화 상자를 엽니다"
 
@@ -4462,7 +4461,7 @@ msgid "Or, log into one of your other accounts."
 msgstr "또는 다른 계정 중 하나로 로그인하세요."
 
 #: src/lib/moderation/useReportOptions.ts:27
-#: src/view/com/composer/labels/LabelsBtn.tsx:208
+#: src/view/com/composer/labels/LabelsBtn.tsx:179
 msgid "Other"
 msgstr "기타"
 
@@ -4554,7 +4553,7 @@ msgstr "반려동물"
 msgid "Photography"
 msgstr "사진"
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:188
+#: src/view/com/composer/labels/LabelsBtn.tsx:164
 msgid "Pictures meant for adults."
 msgstr "성인용 사진."
 
@@ -4676,13 +4675,13 @@ msgstr "이메일 인증하기"
 msgid "Politics"
 msgstr "정치"
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:178
-#: src/view/com/composer/labels/LabelsBtn.tsx:181
+#: src/view/com/composer/labels/LabelsBtn.tsx:154
+#: src/view/com/composer/labels/LabelsBtn.tsx:157
 msgid "Porn"
 msgstr "음란물"
 
-#: src/view/com/composer/Composer.tsx:576
-#: src/view/com/composer/Composer.tsx:583
+#: src/view/com/composer/Composer.tsx:706
+#: src/view/com/composer/Composer.tsx:713
 msgctxt "action"
 msgid "Post"
 msgstr "게시하기"
@@ -4823,7 +4822,7 @@ msgstr "개인정보"
 msgid "Privacy Policy"
 msgstr "개인정보 처리방침"
 
-#: src/view/com/composer/Composer.tsx:1172
+#: src/view/com/composer/Composer.tsx:1337
 msgid "Processing video..."
 msgstr "동영상 처리 중..."
 
@@ -4865,12 +4864,12 @@ msgid "Public, shareable lists which can drive feeds."
 msgstr "피드를 탐색할 수 있는 공개적이고 공유 가능한 목록입니다."
 
 #: src/view/com/composer/Composer.tsx:564
-msgid "Publish post"
-msgstr "게시물 게시하기"
+#~ msgid "Publish post"
+#~ msgstr "게시물 게시하기"
 
 #: src/view/com/composer/Composer.tsx:564
-msgid "Publish reply"
-msgstr "답글 게시하기"
+#~ msgid "Publish reply"
+#~ msgstr "답글 게시하기"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:128
 msgid "QR code copied to your clipboard!"
@@ -5121,7 +5120,7 @@ msgstr "답글 비활성화됨"
 msgid "Replies to this post are disabled."
 msgstr "이 게시물에 대한 답글은 비활성화되어 있습니다."
 
-#: src/view/com/composer/Composer.tsx:574
+#: src/view/com/composer/Composer.tsx:704
 msgctxt "action"
 msgid "Reply"
 msgstr "답글 게시하기"
@@ -5782,7 +5781,7 @@ msgstr "비밀번호 재설정을 위한 이메일을 설정합니다"
 msgid "Settings"
 msgstr "설정"
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:192
+#: src/view/com/composer/labels/LabelsBtn.tsx:168
 msgid "Sexual activity or erotic nudity."
 msgstr "성행위 또는 선정적인 나체."
 
@@ -6209,8 +6208,8 @@ msgstr "추천 계정"
 msgid "Suggested for you"
 msgstr "나를 위한 추천"
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:166
-#: src/view/com/composer/labels/LabelsBtn.tsx:169
+#: src/view/com/composer/labels/LabelsBtn.tsx:142
+#: src/view/com/composer/labels/LabelsBtn.tsx:145
 msgid "Suggestive"
 msgstr "외설적"
 
@@ -6667,7 +6666,7 @@ msgstr "이 게시물은 로그인한 사용자에게만 표시됩니다. 로그
 msgid "This post will be hidden from feeds and threads. This cannot be undone."
 msgstr "이 게시물을 피드와 스레드에서 숨깁니다. 이 작업은 되돌릴 수 없습니다."
 
-#: src/view/com/composer/Composer.tsx:406
+#: src/view/com/composer/Composer.tsx:364
 msgid "This post's author has disabled quote posts."
 msgstr "이 게시물의 작성자가 인용 게시물을 비활성화했습니다."
 
@@ -7029,7 +7028,7 @@ msgstr "이미지 업로드 중..."
 msgid "Uploading link thumbnail..."
 msgstr "링크 미리보기 업로드 중..."
 
-#: src/view/com/composer/Composer.tsx:1169
+#: src/view/com/composer/Composer.tsx:1334
 msgid "Uploading video..."
 msgstr "동영상 업로드 중..."
 
@@ -7223,7 +7222,7 @@ msgstr "동영상을 찾을 수 없습니다."
 msgid "Video settings"
 msgstr "동영상 설정"
 
-#: src/view/com/composer/Composer.tsx:1179
+#: src/view/com/composer/Composer.tsx:1344
 msgid "Video uploaded"
 msgstr "동영상 업로드됨"
 
@@ -7415,7 +7414,7 @@ msgstr "죄송하지만 현재 뮤트한 단어를 불러올 수 없습니다. �
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr "죄송하지만 검색을 완료할 수 없습니다. 몇 분 후에 다시 시도해 주세요."
 
-#: src/view/com/composer/Composer.tsx:403
+#: src/view/com/composer/Composer.tsx:361
 msgid "We're sorry! The post you are replying to has been deleted."
 msgstr "죄송하지만 답글을 달려는 게시물이 삭제되었습니다."
 
@@ -7446,7 +7445,7 @@ msgstr "스타터 팩의 이름을 무엇으로 할까요?"
 
 #: src/view/com/auth/SplashScreen.tsx:39
 #: src/view/com/auth/SplashScreen.web.tsx:98
-#: src/view/com/composer/Composer.tsx:489
+#: src/view/com/composer/Composer.tsx:570
 msgid "What's up?"
 msgstr "무슨 일이 일어나고 있나요?"
 
@@ -7504,11 +7503,11 @@ msgstr "이 사용자를 검토해야 하는 이유는 무엇인가요?"
 msgid "Write a message"
 msgstr "메시지를 입력하세요"
 
-#: src/view/com/composer/Composer.tsx:642
+#: src/view/com/composer/Composer.tsx:626
 msgid "Write post"
 msgstr "게시물 작성"
 
-#: src/view/com/composer/Composer.tsx:488
+#: src/view/com/composer/Composer.tsx:569
 #: src/view/com/post-thread/PostThreadComposePrompt.tsx:75
 msgid "Write your reply"
 msgstr "답글 작성하기"
@@ -7898,7 +7897,7 @@ msgstr "뮤트한 단어"
 msgid "Your password has been changed successfully!"
 msgstr "비밀번호를 성공적으로 변경했습니다."
 
-#: src/view/com/composer/Composer.tsx:447
+#: src/view/com/composer/Composer.tsx:405
 msgid "Your post has been published"
 msgstr "게시물을 게시했습니다"
 
@@ -7914,7 +7913,7 @@ msgstr "내 프로필"
 msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
 msgstr "내 프로필, 글, 피드 및 리스트가 더 이상 다른 Bluesky 사용자에게 표시되지 않습니다. 언제든지 로그인하여 계정을 재활성화할 수 있습니다."
 
-#: src/view/com/composer/Composer.tsx:446
+#: src/view/com/composer/Composer.tsx:404
 msgid "Your reply has been published"
 msgstr "내 답글을 게시했습니다"
 
