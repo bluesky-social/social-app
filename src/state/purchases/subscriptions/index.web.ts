@@ -27,11 +27,8 @@ export function useAvailableSubscriptions() {
       const res = await fetch(`${BSKY_PURCHASES_API}/getWebOffers`).then(res =>
         res.json(),
       )
-      const filtered = res.filter((item: any) =>
-        item.product.name.includes('bsky_tier'),
-      )
       return organizeSubscriptionsByTier(
-        normalizeProducts(filtered, {currencyFormatter}),
+        normalizeProducts(res, {currencyFormatter}),
       )
     },
   })
@@ -55,7 +52,7 @@ function normalizeProducts(
 ): Subscription[] {
   return products
     .map(({product, price}) => {
-      const info = identifierToSubscriptionInfo(product.name)
+      const info = identifierToSubscriptionInfo(product.id)
 
       if (!info) return
 

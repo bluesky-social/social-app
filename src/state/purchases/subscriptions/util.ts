@@ -58,42 +58,42 @@ export function identifierToSubscriptionInfo(
     /*
      * Stripe
      */
-    case 'bsky_tier_0_monthly': {
+    case 'prod_R2eNjNa6mB1Jlu': {
       return {
         identifier: SubscriptionIdentifier.Tier0MonthlyAuto,
         interval: 'monthly',
         autoRenew: true,
       }
     }
-    case 'bsky_tier_0_annual': {
+    case 'prod_R37Zg28EeQ9XAz': {
       return {
         identifier: SubscriptionIdentifier.Tier0AnnualAuto,
         interval: 'annual',
         autoRenew: true,
       }
     }
-    case 'bsky_tier_1_monthly': {
+    case 'prod_R67eiEMuIf59w7': {
       return {
         identifier: SubscriptionIdentifier.Tier1MonthlyAuto,
         interval: 'monthly',
         autoRenew: true,
       }
     }
-    case 'bsky_tier_1_annual': {
+    case 'prod_R67fjfexQ7THQ0': {
       return {
         identifier: SubscriptionIdentifier.Tier1AnnualAuto,
         interval: 'annual',
         autoRenew: true,
       }
     }
-    case 'bsky_tier_2_monthly': {
+    case 'prod_R67ftsSVu2U1D6': {
       return {
         identifier: SubscriptionIdentifier.Tier2MonthlyAuto,
         interval: 'monthly',
         autoRenew: true,
       }
     }
-    case 'bsky_tier_2_annual': {
+    case 'prod_R67gClEZy1cry2': {
       return {
         identifier: SubscriptionIdentifier.Tier2AnnualAuto,
         interval: 'annual',
