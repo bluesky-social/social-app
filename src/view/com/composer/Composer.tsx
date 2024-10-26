@@ -128,8 +128,6 @@ type CancelRef = {
   onPressCancel: () => void
 }
 
-const NO_IMAGES: ComposerImage[] = []
-
 type Props = ComposerOpts
 export const ComposePost = ({
   replyTo,
@@ -178,33 +176,14 @@ export const ComposePost = ({
     })
   }, [])
 
-  const richtext = draft.richtext
-  let quote: string | undefined
-  if (draft.embed.quote) {
-    quote = draft.embed.quote.uri
-  }
-  let images = NO_IMAGES
-  if (draft.embed.media?.type === 'images') {
-    images = draft.embed.media.images
-  }
   let videoState: VideoState | NoVideoState = NO_VIDEO
   if (draft.embed.media?.type === 'video') {
     videoState = draft.embed.media.video
   }
-  let extGif: Gif | undefined
-  let extGifAlt: string | undefined
-  if (draft.embed.media?.type === 'gif') {
-    extGif = draft.embed.media.gif
-    extGifAlt = draft.embed.media.alt
-  }
-  let extLink: string | undefined
-  if (draft.embed.link) {
-    extLink = draft.embed.link.uri
-  }
 
   const graphemeLength = useMemo(() => {
-    return shortenLinks(richtext).graphemeLength
-  }, [richtext])
+    return shortenLinks(draft.richtext).graphemeLength
+  }, [draft.richtext])
 
   const selectVideo = React.useCallback(
     (asset: ImagePickerAsset) => {
@@ -287,22 +266,24 @@ export const ComposePost = ({
   }, [onPressCancel, closeAllDialogs, closeAllModals])
 
   const isAltTextRequiredAndMissing = useMemo(() => {
-    if (!requireAltTextEnabled) return false
-
-    if (images.some(img => img.alt === '')) return true
-
-    if (extGif && !extGifAlt) return true
-
+    const media = draft.embed.media
+    if (!requireAltTextEnabled || !media) {
+      return false
+    }
+    if (media.type === 'images' && media.images.some(img => !img.alt)) {
+      return true
+    }
+    if (media.type === 'gif' && !media.alt) {
+      return true
+    }
     return false
-  }, [images, extGifAlt, extGif, requireAltTextEnabled])
+  }, [draft.embed.media, requireAltTextEnabled])
 
   const isEmptyPost =
-    richtext.text.trim().length === 0 &&
-    images.length === 0 &&
-    !extLink &&
-    !extGif &&
-    !quote &&
-    videoState.status === 'idle'
+    draft.richtext.text.trim().length === 0 &&
+    !draft.embed.link &&
+    !draft.embed.media &&
+    !draft.embed.quote
 
   const canPost =
     graphemeLength <= MAX_GRAPHEME_LENGTH &&
@@ -332,6 +313,11 @@ export const ComposePost = ({
       setError('')
       setIsPublishing(true)
 
+      const imageCount =
+        draft.embed.media?.type === 'images'
+          ? draft.embed.media.images.length
+          : 0
+
       let postUri
       try {
         postUri = (
@@ -356,7 +342,7 @@ export const ComposePost = ({
       } catch (e: any) {
         logger.error(e, {
           message: `Composer: create post failed`,
-          hasImages: images.length > 0,
+          hasImages: imageCount > 0,
         })
 
         let err = cleanError(e.message)
@@ -373,10 +359,10 @@ export const ComposePost = ({
       } finally {
         if (postUri) {
           logEvent('post:create', {
-            imageCount: images.length,
-            isReply: replyTo != null,
-            hasLink: extLink != null,
-            hasQuote: quote != null,
+            imageCount,
+            isReply: !!replyTo,
+            hasLink: !!draft.embed.link,
+            hasQuote: !!draft.embed.quote,
             langs: langPrefs.postLanguage,
             logContext: 'Composer',
           })
@@ -413,14 +399,12 @@ export const ComposePost = ({
       _,
       agent,
       composerState.thread,
-      extLink,
-      images,
+      draft,
       canPost,
       isPublishing,
       langPrefs.postLanguage,
       onClose,
       onPost,
-      quote,
       initQuote,
       replyTo,
       setLangPrefs,
@@ -503,7 +487,7 @@ export const ComposePost = ({
             />
           </Animated.ScrollView>
 
-          <SuggestedLanguage text={richtext.text} />
+          <SuggestedLanguage text={draft.richtext.text} />
 
           <ComposerPills
             isReply={!!replyTo}
