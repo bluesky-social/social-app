@@ -293,13 +293,26 @@ export const ComposePost = ({
     return false
   }, [images, extGifAlt, extGif, requireAltTextEnabled])
 
+  const isEmptyPost =
+    richtext.text.trim().length === 0 &&
+    images.length === 0 &&
+    !extLink &&
+    !extGif &&
+    !quote &&
+    videoState.status === 'idle'
+
+  const canPost =
+    graphemeLength <= MAX_GRAPHEME_LENGTH &&
+    !isAltTextRequiredAndMissing &&
+    !isEmptyPost
+
   const onPressPublish = React.useCallback(
     async (finishedUploading: boolean) => {
-      if (isPublishing || graphemeLength > MAX_GRAPHEME_LENGTH) {
+      if (isPublishing) {
         return
       }
 
-      if (isAltTextRequiredAndMissing) {
+      if (!canPost) {
         return
       }
 
@@ -313,19 +326,6 @@ export const ComposePost = ({
       }
 
       setError('')
-
-      if (
-        richtext.text.trim().length === 0 &&
-        images.length === 0 &&
-        !extLink &&
-        !extGif &&
-        !quote &&
-        videoState.status === 'idle'
-      ) {
-        setError(_(msg`Did you want to say anything?`))
-        return
-      }
-
       setIsPublishing(true)
 
       let postUri
@@ -410,10 +410,8 @@ export const ComposePost = ({
       agent,
       draft,
       extLink,
-      extGif,
       images,
-      graphemeLength,
-      isAltTextRequiredAndMissing,
+      canPost,
       isPublishing,
       langPrefs.postLanguage,
       onClose,
@@ -421,7 +419,6 @@ export const ComposePost = ({
       quote,
       initQuote,
       replyTo,
-      richtext.text,
       setLangPrefs,
       videoState.asset,
       videoState.status,
@@ -437,11 +434,6 @@ export const ComposePost = ({
       }
     }
   }, [onPressPublish, publishOnUpload, videoState.pendingPublish])
-
-  const canPost = useMemo(
-    () => graphemeLength <= MAX_GRAPHEME_LENGTH && !isAltTextRequiredAndMissing,
-    [graphemeLength, isAltTextRequiredAndMissing],
-  )
 
   const onEmojiButtonPress = useCallback(() => {
     openEmojiPicker?.(textInput.current?.getCursorPosition())
