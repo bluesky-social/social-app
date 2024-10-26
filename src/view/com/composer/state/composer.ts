@@ -3,6 +3,7 @@ import {AppBskyFeedPostgate, RichText} from '@atproto/api'
 
 import {SelfLabel} from '#/lib/moderation'
 import {insertMentionAt} from '#/lib/strings/mention-manip'
+import {shortenLinks} from '#/lib/strings/rich-text-manip'
 import {
   isBskyPostUrl,
   postUriToRelativePath,
@@ -51,6 +52,7 @@ export type PostDraft = {
   richtext: RichText
   labels: SelfLabel[]
   embed: EmbedDraft
+  shortenedGraphemeLength: number
 }
 
 export type PostAction =
@@ -137,6 +139,7 @@ function postReducer(state: PostDraft, action: PostAction): PostDraft {
       return {
         ...state,
         richtext: action.richtext,
+        shortenedGraphemeLength: shortenLinks(action.richtext).graphemeLength,
       }
     }
     case 'update_labels': {
@@ -425,6 +428,7 @@ export function createComposerState({
       posts: [
         {
           richtext: initRichText,
+          shortenedGraphemeLength: 0,
           labels: [],
           embed: {
             quote,

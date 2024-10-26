@@ -59,7 +59,6 @@ import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {logEvent} from '#/lib/statsig/statsig'
 import {cleanError} from '#/lib/strings/errors'
-import {shortenLinks} from '#/lib/strings/rich-text-manip'
 import {colors, s} from '#/lib/styles'
 import {logger} from '#/logger'
 import {isAndroid, isIOS, isNative, isWeb} from '#/platform/detection'
@@ -181,10 +180,6 @@ export const ComposePost = ({
     videoState = draft.embed.media.video
   }
 
-  const graphemeLength = useMemo(() => {
-    return shortenLinks(draft.richtext).graphemeLength
-  }, [draft.richtext])
-
   const selectVideo = React.useCallback(
     (asset: ImagePickerAsset) => {
       const abortController = new AbortController()
@@ -231,7 +226,7 @@ export const ComposePost = ({
 
   const onPressCancel = useCallback(() => {
     if (
-      draft.richtext.graphemeLength > 0 ||
+      draft.shortenedGraphemeLength > 0 ||
       draft.embed.media ||
       draft.embed.link
     ) {
@@ -286,7 +281,7 @@ export const ComposePost = ({
     !draft.embed.quote
 
   const canPost =
-    graphemeLength <= MAX_GRAPHEME_LENGTH &&
+    draft.shortenedGraphemeLength <= MAX_GRAPHEME_LENGTH &&
     !isAltTextRequiredAndMissing &&
     !isEmptyPost &&
     videoState.status !== 'error'
@@ -499,7 +494,6 @@ export const ComposePost = ({
 
           <ComposerFooter
             draft={draft}
-            graphemeLength={graphemeLength}
             dispatch={dispatch}
             onError={setError}
             onEmojiButtonPress={onEmojiButtonPress}
@@ -905,14 +899,12 @@ function ComposerPills({
 function ComposerFooter({
   draft,
   dispatch,
-  graphemeLength,
   onEmojiButtonPress,
   onError,
   onSelectVideo,
 }: {
   draft: PostDraft
   dispatch: (action: PostAction) => void
-  graphemeLength: number
   onEmojiButtonPress: () => void
   onError: (error: string) => void
   onSelectVideo: (asset: ImagePickerAsset) => void
@@ -992,7 +984,10 @@ function ComposerFooter({
       </View>
       <View style={[a.flex_row, a.align_center, a.justify_between]}>
         <SelectLangBtn />
-        <CharProgress count={graphemeLength} style={{width: 65}} />
+        <CharProgress
+          count={draft.shortenedGraphemeLength}
+          style={{width: 65}}
+        />
       </View>
     </View>
   )
