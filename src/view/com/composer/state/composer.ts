@@ -1,5 +1,6 @@
 import {ImagePickerAsset} from 'expo-image-picker'
 import {AppBskyFeedPostgate, RichText} from '@atproto/api'
+import {nanoid} from 'nanoid/non-secure'
 
 import {SelfLabel} from '#/lib/moderation'
 import {insertMentionAt} from '#/lib/strings/mention-manip'
@@ -49,6 +50,7 @@ export type EmbedDraft = {
 }
 
 export type PostDraft = {
+  id: string
   richtext: RichText
   labels: SelfLabel[]
   embed: EmbedDraft
@@ -89,7 +91,11 @@ export type ComposerState = {
 export type ComposerAction =
   | {type: 'update_postgate'; postgate: AppBskyFeedPostgate.Record}
   | {type: 'update_threadgate'; threadgate: ThreadgateAllowUISetting[]}
-  | {type: 'update_post'; postAction: PostAction}
+  | {
+      type: 'update_post'
+      postId: string | undefined // If undefined, updates active post
+      postAction: PostAction
+    }
 
 export const MAX_IMAGES = 4
 
@@ -117,11 +123,20 @@ export function composerReducer(
       }
     }
     case 'update_post': {
-      const nextPosts = [...state.thread.posts]
-      nextPosts[state.activePostIndex] = postReducer(
-        state.thread.posts[state.activePostIndex],
-        action.postAction,
-      )
+      let nextPosts = state.thread.posts
+      let postIndex = -1
+      if (action.postId !== undefined) {
+        postIndex = state.thread.posts.findIndex(p => p.id === action.postId)
+      } else {
+        postIndex = state.activePostIndex
+      }
+      if (postIndex !== -1) {
+        nextPosts = state.thread.posts.slice()
+        nextPosts[postIndex] = postReducer(
+          state.thread.posts[postIndex],
+          action.postAction,
+        )
+      }
       return {
         ...state,
         thread: {
@@ -427,6 +442,7 @@ export function createComposerState({
     thread: {
       posts: [
         {
+          id: nanoid(),
           richtext: initRichText,
           shortenedGraphemeLength: 0,
           labels: [],

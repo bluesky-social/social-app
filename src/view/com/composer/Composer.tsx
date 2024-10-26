@@ -172,6 +172,7 @@ export const ComposePost = ({
   const dispatch = useCallback((postAction: PostAction) => {
     composerDispatch({
       type: 'update_post',
+      postId: undefined, // Active post
       postAction,
     })
   }, [])
@@ -898,6 +899,7 @@ function ComposerPills({
             onChange={nextLabels => {
               dispatch({
                 type: 'update_post',
+                postId: post.id,
                 postAction: {
                   type: 'update_labels',
                   labels: nextLabels,
