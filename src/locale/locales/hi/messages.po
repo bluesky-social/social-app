@@ -6000,19 +6000,19 @@ msgstr "खाता हटाएँ"
 
 #: src/view/com/composer/ExternalEmbedRemoveBtn.tsx:28
 msgid "Remove attachment"
-msgstr ""
+msgstr "अटैचमेंट हटाएँ"
 
 #: src/view/com/util/UserAvatar.tsx:403
 msgid "Remove Avatar"
-msgstr ""
+msgstr "अवतार हटाएँ"
 
 #: src/view/com/util/UserBanner.tsx:155
 msgid "Remove Banner"
-msgstr ""
+msgstr "बैनर हटाएँ"
 
 #: src/screens/Messages/components/MessageInputEmbed.tsx:206
 msgid "Remove embed"
-msgstr ""
+msgstr "एंबेड हटाएँ"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:169
 #: src/view/com/posts/FeedShutdownMsg.tsx:116
@@ -6022,7 +6022,7 @@ msgstr "फ़ीड हटाएँ"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:210
 msgid "Remove feed?"
-msgstr ""
+msgstr "फ़ीड हटाएँ?"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:187
 #: src/view/com/feeds/FeedSourceCard.tsx:265
@@ -6036,48 +6036,48 @@ msgstr "मेरे फ़ीड से हटाएँ"
 #: src/components/FeedCard.tsx:311
 #: src/view/com/feeds/FeedSourceCard.tsx:311
 msgid "Remove from my feeds?"
-msgstr ""
+msgstr "मेरे फ़ीड से हटाएँ?"
 
 #: src/view/com/util/AccountDropdownBtn.tsx:53
 msgid "Remove from quick access?"
-msgstr ""
+msgstr "जल्द पहुँच से हटाएँ?"
 
 #: src/screens/List/ListHiddenScreen.tsx:156
 msgid "Remove from saved feeds"
-msgstr ""
+msgstr "सहेजे फ़ीड से हटाएँ"
 
 #: src/view/com/composer/photos/Gallery.tsx:200
 msgid "Remove image"
-msgstr "छवि निकालें"
+msgstr "छवि हटाएँ"
 
 #: src/view/com/composer/ExternalEmbedRemoveBtn.tsx:28
 #~ msgid "Remove image preview"
-#~ msgstr "छवि पूर्वावलोकन निकालें"
+#~ msgstr "छवि पूर्वावलोकन हटाएँ"
 
 #: src/components/dialogs/MutedWords.tsx:523
 msgid "Remove mute word from your list"
-msgstr ""
+msgstr "अपने सूची से म्यूट शब्द हटाएँ"
 
 #: src/view/screens/Search/Search.tsx:1095
 msgid "Remove profile"
-msgstr ""
+msgstr "प्रोफ़ाइल हटाएँ"
 
 #: src/view/screens/Search/Search.tsx:1097
 msgid "Remove profile from search history"
-msgstr ""
+msgstr "खोज इतिहास से प्रोफ़ाइल हटाएँ"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:281
 msgid "Remove quote"
-msgstr ""
+msgstr "क्वोट हटाएँ"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:100
 #: src/view/com/util/post-ctrls/RepostButton.tsx:116
 msgid "Remove repost"
-msgstr ""
+msgstr "रिपोस्ट हटाएँ"
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:260
 msgid "Remove subtitle file"
-msgstr ""
+msgstr "उपशीर्षक फ़ाइल हटाएँ"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:175
 #~ msgid "Remove this feed from my feeds?"
@@ -6085,39 +6085,39 @@ msgstr ""
 
 #: src/view/com/posts/FeedErrorMessage.tsx:211
 msgid "Remove this feed from your saved feeds"
-msgstr ""
+msgstr "अपने सहेजे फ़ीड से इस फ़ीड को हटाएँ"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:132
 #~ msgid "Remove this feed from your saved feeds?"
-#~ msgstr "इस फ़ीड को सहेजे गए फ़ीड से हटा दें?"
+#~ msgstr "इस फ़ीड को अपने सहेजे गए फ़ीड से हटाएँ?"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:110
 msgid "Removed by author"
-msgstr ""
+msgstr "लेखक द्वारा हटाया गया"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:108
 msgid "Removed by you"
-msgstr ""
+msgstr "आपके द्वारा हटाया गया"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:200
 #: src/view/com/modals/UserAddRemoveLists.tsx:170
 msgid "Removed from list"
-msgstr ""
+msgstr "सूची से हटाया गया"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:138
 msgid "Removed from my feeds"
-msgstr ""
+msgstr "मेरे फ़ीड से हटाया गया"
 
 #: src/screens/List/ListHiddenScreen.tsx:94
 #: src/screens/List/ListHiddenScreen.tsx:160
 msgid "Removed from saved feeds"
-msgstr ""
+msgstr "सहेजे फ़ीड से हटाया गया"
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:44
 #: src/view/screens/ProfileFeed.tsx:190
 #: src/view/screens/ProfileList.tsx:377
 msgid "Removed from your feeds"
-msgstr ""
+msgstr "आपके सहेजे फ़ीड से हटाया गया"
 
 #: src/view/com/composer/ExternalEmbed.tsx:88
 #~ msgid "Removes default thumbnail from {0}"
@@ -6125,11 +6125,11 @@ msgstr ""
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:282
 msgid "Removes quoted post"
-msgstr ""
+msgstr "क्वोट की गई पोस्ट हटाता है"
 
 #: src/view/com/composer/ExternalEmbedRemoveBtn.tsx:29
 msgid "Removes the attachment"
-msgstr ""
+msgstr "अटैचमेंट हटाता है"
 
 #: src/view/com/composer/ExternalEmbedRemoveBtn.tsx:29
 #~ msgid "Removes the image preview"
@@ -6138,15 +6138,15 @@ msgstr ""
 #: src/view/com/posts/FeedShutdownMsg.tsx:129
 #: src/view/com/posts/FeedShutdownMsg.tsx:133
 msgid "Replace with Discover"
-msgstr ""
+msgstr "डिस्कवर से बदलें"
 
 #: src/view/screens/Profile.tsx:220
 msgid "Replies"
-msgstr ""
+msgstr "जवाब"
 
 #: src/components/WhoCanReply.tsx:69
 msgid "Replies disabled"
-msgstr ""
+msgstr "जवाब अक्षम"
 
 #: src/view/com/threadgate/WhoCanReply.tsx:123
 #~ msgid "Replies on this thread are disabled"
@@ -6154,7 +6154,7 @@ msgstr ""
 
 #: src/components/WhoCanReply.tsx:215
 msgid "Replies to this post are disabled."
-msgstr ""
+msgstr "इस पोस्ट पर जवाब अक्षम है"
 
 #: src/components/WhoCanReply.tsx:243
 #~ msgid "Replies to this thread are disabled"
@@ -6163,29 +6163,29 @@ msgstr ""
 #: src/view/com/composer/Composer.tsx:592
 msgctxt "action"
 msgid "Reply"
-msgstr ""
+msgstr "अक्षम"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:142
 #~ msgid "Reply Filters"
-#~ msgstr "फिल्टर"
+#~ msgstr "जवाब फ़िल्टर"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:115
 #: src/lib/moderation/useModerationCauseDescription.ts:123
 msgid "Reply Hidden by Thread Author"
-msgstr ""
+msgstr "जवाब थ्रेड लेखक द्वारा छिपाया गया"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:114
 #: src/lib/moderation/useModerationCauseDescription.ts:122
 msgid "Reply Hidden by You"
-msgstr ""
+msgstr "जवाब आपके द्वारा छिपाया गया"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:356
 msgid "Reply settings"
-msgstr ""
+msgstr "जवाब सेटिंग"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:341
 msgid "Reply settings are chosen by the author of the thread"
-msgstr ""
+msgstr "जवाब सेटिंग थ्रेड का लेखक चुनता है"
 
 #: src/view/com/post/Post.tsx:177
 #: src/view/com/posts/FeedItem.tsx:285
@@ -6197,41 +6197,41 @@ msgstr ""
 #: src/view/com/posts/FeedItem.tsx:544
 msgctxt "description"
 msgid "Reply to <0><1/></0>"
-msgstr ""
+msgstr "<0><1/></0> को जवाब दें"
 
 #: src/view/com/posts/FeedItem.tsx:535
 msgctxt "description"
 msgid "Reply to a blocked post"
-msgstr ""
+msgstr "अवरुद्ध पोस्ट को जवाब दें"
 
 #: src/view/com/posts/FeedItem.tsx:537
 msgctxt "description"
 msgid "Reply to a post"
-msgstr ""
+msgstr "पोस्ट को जवाब दें"
 
 #: src/view/com/post/Post.tsx:193
 #: src/view/com/posts/FeedItem.tsx:541
 msgctxt "description"
 msgid "Reply to you"
-msgstr ""
+msgstr "आपको जवाब दें"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:338
 msgid "Reply visibility updated"
-msgstr ""
+msgstr "जवाब दृश्यता अपडेट की गई"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:337
 msgid "Reply was successfully hidden"
-msgstr ""
+msgstr "जवाब सफलतापूर्वक छिपाई गई"
 
 #: src/components/dms/MessageMenu.tsx:132
 #: src/components/dms/MessagesListBlockedFooter.tsx:77
 #: src/components/dms/MessagesListBlockedFooter.tsx:84
 msgid "Report"
-msgstr ""
+msgstr "रिपोर्ट करें"
 
 #: src/view/com/modals/report/Modal.tsx:166
 #~ msgid "Report {collectionName}"
-#~ msgstr "रिपोर्ट {collectionName}"
+#~ msgstr "{collectionName} रिपोर्ट करें"
 
 #: src/components/dms/ConvoMenu.tsx:146
 #: src/components/dms/ConvoMenu.tsx:150
@@ -6241,98 +6241,98 @@ msgstr ""
 #: src/view/com/profile/ProfileMenu.tsx:299
 #: src/view/com/profile/ProfileMenu.tsx:302
 msgid "Report Account"
-msgstr "रिपोर्ट"
+msgstr "खाता रिपोर्ट करें"
 
 #: src/components/dms/ConvoMenu.tsx:197
 #: src/components/dms/ConvoMenu.tsx:200
 #: src/components/dms/ReportConversationPrompt.tsx:18
 msgid "Report conversation"
-msgstr ""
+msgstr "बातचीत रिपोर्ट करें"
 
 #: src/components/ReportDialog/index.tsx:44
 msgid "Report dialog"
-msgstr ""
+msgstr "डायलॉग रिपोर्ट करें"
 
 #: src/view/screens/ProfileFeed.tsx:347
 #: src/view/screens/ProfileFeed.tsx:349
 msgid "Report feed"
-msgstr "रिपोर्ट फ़ीड"
+msgstr "फ़ीड रिपोर्ट करें"
 
 #: src/view/screens/ProfileList.tsx:535
 msgid "Report List"
-msgstr "रिपोर्ट सूची"
+msgstr "सूची रिपोर्ट करें"
 
 #: src/components/dms/MessageMenu.tsx:130
 msgid "Report message"
-msgstr ""
+msgstr "संदेश रिपोर्ट करें"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:621
 #: src/view/com/util/forms/PostDropdownBtn.tsx:623
 msgid "Report post"
-msgstr "रिपोर्ट पोस्ट"
+msgstr "पोस्ट रिपोर्ट करें"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:593
 #: src/screens/StarterPack/StarterPackScreen.tsx:596
 msgid "Report starter pack"
-msgstr ""
+msgstr "स्टार्टर पैक रिपोर्ट करें"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:43
 msgid "Report this content"
-msgstr ""
+msgstr "यह सामाग्री रिपोर्ट करें"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:56
 msgid "Report this feed"
-msgstr ""
+msgstr "यह फ़ीड रिपोर्ट करें"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:53
 msgid "Report this list"
-msgstr ""
+msgstr "यह सूची रिपोर्ट करें"
 
 #: src/components/dms/ReportDialog.tsx:44
 #: src/components/dms/ReportDialog.tsx:137
 #: src/components/ReportDialog/SelectReportOptionView.tsx:62
 msgid "Report this message"
-msgstr ""
+msgstr "यह संदेश रिपोर्ट करें"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:50
 msgid "Report this post"
-msgstr ""
+msgstr "यह पोस्ट रिपोर्ट करें"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:59
 msgid "Report this starter pack"
-msgstr ""
+msgstr "यह स्टार्टर पैक रिपोर्ट करें"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:47
 msgid "Report this user"
-msgstr ""
+msgstr "यह उपयोगकर्ता रिपोर्ट करें"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:70
 #: src/view/com/util/post-ctrls/RepostButton.tsx:101
 #: src/view/com/util/post-ctrls/RepostButton.tsx:117
 msgctxt "action"
 msgid "Repost"
-msgstr ""
+msgstr "रीपोस्ट"
 
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:72
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:76
 msgid "Repost"
-msgstr "पुन: पोस्ट"
+msgstr "रीपोस्ट"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:535
 #: src/view/com/util/post-ctrls/RepostButton.tsx:93
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:49
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:104
 msgid "Repost or quote post"
-msgstr "पोस्ट दोबारा पोस्ट करें या उद्धृत करे"
+msgstr "रीपोस्ट करें या पोस्ट क्वोट करे"
 
 #: src/screens/Post/PostRepostedBy.tsx:31
 #: src/screens/Post/PostRepostedBy.tsx:32
 msgid "Reposted By"
-msgstr "द्वारा दोबारा पोस्ट किया गया"
+msgstr "इनके द्वारा रीपोस्ट किया गया"
 
 #: src/view/com/posts/FeedItem.tsx:294
 msgid "Reposted by {0}"
-msgstr ""
+msgstr "{0} द्वारा रीपोस्ट किया गया"
 
 #: src/view/com/posts/FeedItem.tsx:214
 #~ msgid "Reposted by <0/>"
@@ -6340,25 +6340,25 @@ msgstr ""
 
 #: src/view/com/posts/FeedItem.tsx:313
 msgid "Reposted by <0><1/></0>"
-msgstr ""
+msgstr "<0><1/></0> द्वारा रीपोस्ट किया गया"
 
 #: src/view/com/posts/FeedItem.tsx:292
 #: src/view/com/posts/FeedItem.tsx:311
 msgid "Reposted by you"
-msgstr ""
+msgstr "आपके द्वारा रीपोस्ट किया गया"
 
 #: src/view/com/notifications/FeedItem.tsx:180
 msgid "reposted your post"
-msgstr ""
+msgstr "ने आपका पोस्ट रीपोस्ट किया"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:209
 msgid "Reposts of this post"
-msgstr ""
+msgstr "इस पोस्ट के रीपोस्ट"
 
 #: src/view/com/modals/ChangeEmail.tsx:176
 #: src/view/com/modals/ChangeEmail.tsx:178
 msgid "Request Change"
-msgstr "अनुरोध बदलें"
+msgstr "बदलाव अनुरोध करें"
 
 #: src/view/com/auth/create/Step2.tsx:219
 #~ msgid "Request code"
@@ -6367,15 +6367,15 @@ msgstr "अनुरोध बदलें"
 #: src/view/com/modals/ChangePassword.tsx:242
 #: src/view/com/modals/ChangePassword.tsx:244
 msgid "Request Code"
-msgstr ""
+msgstr "कोड अनुरोध करें"
 
 #: src/view/screens/AccessibilitySettings.tsx:89
 msgid "Require alt text before posting"
-msgstr "पोस्ट करने से पहले वैकल्पिक टेक्स्ट की आवश्यकता है"
+msgstr "पोस्ट करने से पहले वैकल्पिक पाठ आवश्यक करें"
 
 #: src/view/screens/Settings/Email2FAToggle.tsx:51
 msgid "Require email code to log into your account"
-msgstr ""
+msgstr "खाते में लॉग इन करने के लिए ईमेल कोड आवश्यक करें"
 
 #: src/screens/Signup/StepInfo/index.tsx:159
 msgid "Required for this provider"
@@ -6383,22 +6383,22 @@ msgstr "इस प्रदाता के लिए आवश्यक"
 
 #: src/components/LabelingServiceCard/index.tsx:80
 msgid "Required in your region"
-msgstr ""
+msgstr "आपके क्षेत्र में आवश्यक"
 
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:167
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:170
 msgid "Resend email"
-msgstr ""
+msgstr "ईमेल फिर भेजें"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:224
 #: src/components/dialogs/VerifyEmailDialog.tsx:234
 #: src/components/intents/VerifyEmailIntentDialog.tsx:130
 msgid "Resend Email"
-msgstr ""
+msgstr "ईमेल फिर भेजें"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:122
 msgid "Resend Verification Email"
-msgstr ""
+msgstr "सत्यापन ईमेल फिर भेजें"
 
 #: src/view/com/modals/ChangePassword.tsx:186
 msgid "Reset code"
@@ -6406,7 +6406,7 @@ msgstr "कोड रीसेट करें"
 
 #: src/view/com/modals/ChangePassword.tsx:193
 msgid "Reset Code"
-msgstr ""
+msgstr "कोड रीसेट करें"
 
 #: src/view/screens/Settings/index.tsx:824
 #~ msgid "Reset onboarding"
@@ -6415,11 +6415,11 @@ msgstr ""
 #: src/view/screens/Settings/index.tsx:866
 #: src/view/screens/Settings/index.tsx:869
 msgid "Reset onboarding state"
-msgstr "ऑनबोर्डिंग स्टेट को रीसेट करें"
+msgstr "ज्ञानप्राप्ति स्थिति को रीसेट करें"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:80
 msgid "Reset password"
-msgstr "पासवर्ड रीसेट"
+msgstr "पासवर्ड रीसेट करें"
 
 #: src/view/screens/Settings/index.tsx:814
 #~ msgid "Reset preferences"
@@ -6428,24 +6428,24 @@ msgstr "पासवर्ड रीसेट"
 #: src/view/screens/Settings/index.tsx:846
 #: src/view/screens/Settings/index.tsx:849
 msgid "Reset preferences state"
-msgstr "प्राथमिकताओं को रीसेट करें"
+msgstr "प्राथमिकताओं की स्थिति को रीसेट करें"
 
 #: src/view/screens/Settings/index.tsx:867
 msgid "Resets the onboarding state"
-msgstr "ऑनबोर्डिंग स्टेट को रीसेट करें"
+msgstr "ज्ञानप्राप्ति स्थिति को रीसेट करता है"
 
 #: src/view/screens/Settings/index.tsx:847
 msgid "Resets the preferences state"
-msgstr "प्राथमिकताओं की स्थिति को रीसेट करें"
+msgstr "प्राथमिकताओं की स्थिति को रीसेट करता है"
 
 #: src/screens/Login/LoginForm.tsx:296
 msgid "Retries login"
-msgstr ""
+msgstr "लॉग इन को फिर से प्रयास करता है"
 
 #: src/view/com/util/error/ErrorMessage.tsx:57
 #: src/view/com/util/error/ErrorScreen.tsx:74
 msgid "Retries the last action, which errored out"
-msgstr ""
+msgstr "पिछली क्रिया का फिर से प्रयास करता है, जिसमें त्रुटि हुई"
 
 #: src/components/dms/MessageItem.tsx:244
 #: src/components/Error.tsx:66
@@ -6462,7 +6462,7 @@ msgstr ""
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoFallback.tsx:55
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoFallback.tsx:57
 msgid "Retry"
-msgstr "फिर से कोशिश करो"
+msgstr "फिर प्रयास करें"
 
 #: src/screens/Messages/Conversation/MessageListError.tsx:54
 #~ msgid "Retry."
@@ -6473,16 +6473,16 @@ msgstr "फिर से कोशिश करो"
 #: src/screens/StarterPack/StarterPackScreen.tsx:739
 #: src/view/screens/ProfileList.tsx:1021
 msgid "Return to previous page"
-msgstr ""
+msgstr "पिछले पृष्ठ पर वापस जाएँ"
 
 #: src/view/screens/NotFound.tsx:59
 msgid "Returns to home page"
-msgstr ""
+msgstr "होम पृष्ठ पर वापस जाता है"
 
 #: src/view/screens/NotFound.tsx:58
 #: src/view/screens/ProfileFeed.tsx:112
 msgid "Returns to previous page"
-msgstr ""
+msgstr "पिछले पृष्ठ पर वापस जाता है"
 
 #: src/view/shell/desktop/RightNav.tsx:55
 #~ msgid "SANDBOX. Posts and accounts are not permanent."
@@ -6503,52 +6503,52 @@ msgstr ""
 #: src/view/com/modals/EditProfile.tsx:219
 #: src/view/screens/SavedFeeds.tsx:101
 msgid "Save"
-msgstr "सेव करो"
+msgstr "सहेजें"
 
 #: src/view/com/lightbox/Lightbox.tsx:167
 #: src/view/com/modals/CreateOrEditList.tsx:325
 msgctxt "action"
 msgid "Save"
-msgstr ""
+msgstr "सहेजें"
 
 #: src/view/com/modals/AltImage.tsx:132
 #~ msgid "Save alt text"
-#~ msgstr "सेव ऑल्ट टेक्स्ट"
+#~ msgstr "वैकल्पिक पाठ सहेजें"
 
 #: src/components/dialogs/BirthDateSettings.tsx:118
 msgid "Save birthday"
-msgstr ""
+msgstr "जन्मदिन सहेजें"
 
 #: src/view/screens/SavedFeeds.tsx:97
 #: src/view/screens/SavedFeeds.tsx:101
 msgid "Save changes"
-msgstr ""
+msgstr "बदलाव सहेजें"
 
 #: src/view/com/modals/EditProfile.tsx:227
 msgid "Save Changes"
-msgstr "बदलाव सेव करो"
+msgstr "बदलाव सहेजें"
 
 #: src/view/com/modals/ChangeHandle.tsx:158
 msgid "Save handle change"
-msgstr "बदलाव सेव करो"
+msgstr "हैंडल बदलाव सहेजें"
 
 #: src/components/StarterPack/ShareDialog.tsx:151
 #: src/components/StarterPack/ShareDialog.tsx:158
 msgid "Save image"
-msgstr ""
+msgstr "छवि सहेजें"
 
 #: src/view/com/modals/CropImage.web.tsx:104
 msgid "Save image crop"
-msgstr "फोटो बदलाव सेव करो"
+msgstr "छवि क्रॉप सहेजें"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:179
 msgid "Save QR code"
-msgstr ""
+msgstr "QR कोड सहेजें"
 
 #: src/view/screens/ProfileFeed.tsx:331
 #: src/view/screens/ProfileFeed.tsx:337
 msgid "Save to my feeds"
-msgstr ""
+msgstr "मेरे फ़ीड में सहेजें"
 
 #: src/view/screens/SavedFeeds.tsx:173
 msgid "Saved Feeds"
@@ -6556,7 +6556,7 @@ msgstr "सहेजे गए फ़ीड"
 
 #: src/view/com/lightbox/Lightbox.tsx:95
 msgid "Saved to your camera roll"
-msgstr ""
+msgstr "आपके कैमरा रोल में सहेजा गया"
 
 #: src/view/com/lightbox/Lightbox.tsx:81
 #~ msgid "Saved to your camera roll."
@@ -6565,35 +6565,35 @@ msgstr ""
 #: src/view/screens/ProfileFeed.tsx:199
 #: src/view/screens/ProfileList.tsx:357
 msgid "Saved to your feeds"
-msgstr ""
+msgstr "आपके फ़ीड में सहेजा गया"
 
 #: src/view/com/modals/EditProfile.tsx:220
 msgid "Saves any changes to your profile"
-msgstr ""
+msgstr "आपके प्रोफ़ाइल में कोई भी बदलाव सहेजता है"
 
 #: src/view/com/modals/ChangeHandle.tsx:159
 msgid "Saves handle change to {handle}"
-msgstr ""
+msgstr "{handle} में हैंडल बदलाव सहेजता है"
 
 #: src/view/com/modals/CropImage.web.tsx:105
 msgid "Saves image crop settings"
-msgstr ""
+msgstr "छवि क्रॉप सेटिंग सहेजता है"
 
 #: src/components/dms/ChatEmptyPill.tsx:33
 #: src/components/NewskieDialog.tsx:105
 #: src/view/com/notifications/FeedItem.tsx:416
 #: src/view/com/notifications/FeedItem.tsx:441
 msgid "Say hello!"
-msgstr ""
+msgstr "नमस्ते कहें!"
 
 #: src/screens/Onboarding/index.tsx:33
 #: src/screens/Onboarding/state.ts:99
 msgid "Science"
-msgstr ""
+msgstr "विज्ञान"
 
 #: src/view/screens/ProfileList.tsx:977
 msgid "Scroll to top"
-msgstr ""
+msgstr "ऊपर जाएँ"
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:483
 #: src/components/forms/SearchInput.tsx:34
@@ -6606,19 +6606,19 @@ msgstr ""
 #: src/view/shell/Drawer.tsx:390
 #: src/view/shell/Drawer.tsx:391
 msgid "Search"
-msgstr "खोज"
+msgstr "खोजें"
 
 #: src/view/shell/desktop/Search.tsx:201
 msgid "Search for \"{query}\""
-msgstr ""
+msgstr "\"{query}\" खोजें"
 
 #: src/view/screens/Search/Search.tsx:994
 msgid "Search for \"{searchText}\""
-msgstr ""
+msgstr "\"{searchText}\" खोजें"
 
 #: src/components/TagMenu/index.tsx:155
 msgid "Search for all posts by @{authorHandle} with tag {displayTag}"
-msgstr ""
+msgstr "@{authorHandle} द्वारा {displayTag} टैग वाले सभी पोस्ट खोजें"
 
 #: src/components/TagMenu/index.tsx:145
 #~ msgid "Search for all posts by @{authorHandle} with tag {tag}"
@@ -6626,7 +6626,7 @@ msgstr ""
 
 #: src/components/TagMenu/index.tsx:104
 msgid "Search for all posts with tag {displayTag}"
-msgstr ""
+msgstr "{displayTag} टैग वाले सभी पोस्ट खोजें"
 
 #: src/components/TagMenu/index.tsx:90
 #~ msgid "Search for all posts with tag {tag}"
@@ -6634,7 +6634,7 @@ msgstr ""
 
 #: src/screens/StarterPack/Wizard/index.tsx:491
 msgid "Search for feeds that you want to suggest to others."
-msgstr ""
+msgstr "फ़ीड खोजें जो आप दूसरों को दिखाना चाहते हैं"
 
 #: src/components/dms/NewChat.tsx:226
 #~ msgid "Search for someone to start a conversation with."
@@ -6642,20 +6642,20 @@ msgstr ""
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:71
 msgid "Search for users"
-msgstr ""
+msgstr "उपयोगकर्ता खोजें"
 
 #: src/components/dialogs/GifSelect.tsx:177
 msgid "Search GIFs"
-msgstr ""
+msgstr "GIF खोजें"
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:503
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:504
 msgid "Search profiles"
-msgstr ""
+msgstr "प्रोफ़ाइल खोजें"
 
 #: src/components/dialogs/GifSelect.tsx:178
 msgid "Search Tenor"
-msgstr ""
+msgstr "Tenor में खोजें"
 
 #: src/view/com/modals/ChangeEmail.tsx:105
 msgid "Security Step Required"
@@ -6663,19 +6663,19 @@ msgstr "सुरक्षा चरण आवश्यक"
 
 #: src/components/TagMenu/index.web.tsx:77
 msgid "See {truncatedTag} posts"
-msgstr ""
+msgstr "{truncatedTag} वाले पोस्ट देखें"
 
 #: src/components/TagMenu/index.web.tsx:94
 msgid "See {truncatedTag} posts by user"
-msgstr ""
+msgstr "उपयोगकर्ताओं के अनुसार {truncatedTag} वाले पोस्ट देखें"
 
 #: src/components/TagMenu/index.tsx:138
 msgid "See <0>{displayTag}</0> posts"
-msgstr ""
+msgstr "<0>{displayTag}</0> वाले पोस्ट देखें"
 
 #: src/components/TagMenu/index.tsx:197
 msgid "See <0>{displayTag}</0> posts by this user"
-msgstr ""
+msgstr "उपयोगकर्ताओं के अनुसार <0>{displayTag}</0> वाले पोस्ट देखें"
 
 #: src/components/TagMenu/index.tsx:128
 #~ msgid "See <0>{tag}</0> posts"
@@ -6687,7 +6687,7 @@ msgstr ""
 
 #: src/view/com/auth/SplashScreen.web.tsx:175
 msgid "See jobs at Bluesky"
-msgstr ""
+msgstr "Bluesky में नौकरियाँ देखें"
 
 #: src/view/com/notifications/FeedItem.tsx:411
 #: src/view/com/util/UserAvatar.tsx:402
@@ -6696,7 +6696,7 @@ msgstr ""
 
 #: src/view/screens/SavedFeeds.tsx:214
 msgid "See this guide"
-msgstr ""
+msgstr "यह गाइड देखें"
 
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:40
 #~ msgid "See what's next"
@@ -6704,31 +6704,31 @@ msgstr ""
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/Scrubber.tsx:189
 msgid "Seek slider"
-msgstr ""
+msgstr "सीक स्लाइडर"
 
 #: src/view/com/util/Selector.tsx:106
 msgid "Select {item}"
-msgstr ""
+msgstr "{item} चुनें"
 
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:67
 msgid "Select a color"
-msgstr ""
+msgstr "रंग चुनें"
 
 #: src/screens/Login/ChooseAccountForm.tsx:77
 msgid "Select account"
-msgstr ""
+msgstr "खाता चुनें"
 
 #: src/screens/Onboarding/StepProfile/AvatarCircle.tsx:66
 msgid "Select an avatar"
-msgstr ""
+msgstr "अवतार चुनें"
 
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:65
 msgid "Select an emoji"
-msgstr ""
+msgstr "इमोजी चुनें"
 
 #: src/view/com/modals/ServerInput.tsx:75
 #~ msgid "Select Bluesky Social"
-#~ msgstr "Bluesky Social का चयन करें"
+#~ msgstr "Bluesky Social चुनें"
 
 #: src/screens/Login/index.tsx:117
 msgid "Select from an existing account"
@@ -6736,31 +6736,31 @@ msgstr "मौजूदा खाते से चुनें"
 
 #: src/view/com/composer/photos/SelectGifBtn.tsx:35
 msgid "Select GIF"
-msgstr ""
+msgstr "GIF चुनें"
 
 #: src/components/dialogs/GifSelect.tsx:307
 msgid "Select GIF \"{0}\""
-msgstr ""
+msgstr "\"{0}\" GIF चुनें"
 
 #: src/components/dialogs/MutedWords.tsx:142
 msgid "Select how long to mute this word for."
-msgstr ""
+msgstr "चुनें कि कितने समय तक इस शब्द को म्यूट करना है।"
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:245
 msgid "Select language..."
-msgstr ""
+msgstr "भाषा चुनें..."
 
 #: src/view/screens/LanguageSettings.tsx:299
 msgid "Select languages"
-msgstr ""
+msgstr "भाषाएँ चुनें"
 
 #: src/components/ReportDialog/SelectLabelerView.tsx:29
 msgid "Select moderator"
-msgstr ""
+msgstr "मॉडरेटर चुनें"
 
 #: src/view/com/util/Selector.tsx:107
 msgid "Select option {i} of {numItems}"
-msgstr ""
+msgstr "{numItems} से विकल्प {i} चुनें"
 
 #: src/view/com/auth/create/Step1.tsx:96
 #: src/view/com/auth/login/LoginForm.tsx:153
@@ -6773,19 +6773,19 @@ msgstr ""
 
 #: src/view/com/composer/videos/SubtitleFilePicker.tsx:66
 msgid "Select subtitle file (.vtt)"
-msgstr ""
+msgstr "उपशीर्षक फ़ाइल (.vtt) चुनें"
 
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:83
 msgid "Select the {emojiName} emoji as your avatar"
-msgstr ""
+msgstr "{emojiName} इमोजी को अपने अवतार के रूप में चुनें"
 
 #: src/components/ReportDialog/SubmitView.tsx:140
 msgid "Select the moderation service(s) to report to"
-msgstr ""
+msgstr "रिपोर्ट करने के लिए मॉडरेशन सेवा(एँ) चुनें"
 
 #: src/view/com/auth/server-input/index.tsx:79
 msgid "Select the service that hosts your data."
-msgstr ""
+msgstr "आपके डेटा को होस्ट करने वाली सेवा चुनें"
 
 #: src/screens/Onboarding/StepModeration/index.tsx:49
 #~ msgid "Select the types of content that you want to see (or not see), and we'll handle the rest."
@@ -6797,11 +6797,11 @@ msgstr ""
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:106
 msgid "Select video"
-msgstr ""
+msgstr "वीडियो चुनें"
 
 #: src/components/dialogs/MutedWords.tsx:242
 msgid "Select what content this mute word should apply to."
-msgstr ""
+msgstr "चुनें कि किस सामाग्री पर यह म्यूट शब्द लागू होगा"
 
 #: src/screens/Onboarding/StepModeration/index.tsx:63
 #~ msgid "Select what you want to see (or not see), and we’ll handle the rest."
@@ -6809,23 +6809,23 @@ msgstr ""
 
 #: src/view/screens/LanguageSettings.tsx:281
 msgid "Select which languages you want your subscribed feeds to include. If none are selected, all languages will be shown."
-msgstr "चुनें कि आप अपनी सदस्यता वाली फ़ीड में कौन सी भाषाएँ शामिल करना चाहते हैं। यदि कोई भी चयनित नहीं है, तो सभी भाषाएँ दिखाई जाएंगी।"
+msgstr "चुनें कि आप अपनी सदस्यता वाली फ़ीड में कौन सी भाषाएँ शामिल करना चाहते हैं। यदि कोई भी चयनित नहीं है, तो सभी भाषाएँ दिखाई जाएँगी।"
 
 #: src/view/screens/LanguageSettings.tsx:98
 #~ msgid "Select your app language for the default text to display in the app"
-#~ msgstr "ऐप में प्रदर्शित होने वाले डिफ़ॉल्ट टेक्स्ट के लिए अपनी ऐप भाषा चुनें"
+#~ msgstr "ऐप में प्रदर्शित होने वाले डिफ़ॉल्ट पाठ के लिए अपनी ऐप भाषा चुनें"
 
 #: src/view/screens/LanguageSettings.tsx:95
 msgid "Select your app language for the default text to display in the app."
-msgstr ""
+msgstr "ऐप में प्रदर्शित होने वाले डिफ़ॉल्ट पाठ के लिए अपनी ऐप भाषा चुनें"
 
 #: src/screens/Signup/StepInfo/index.tsx:223
 msgid "Select your date of birth"
-msgstr ""
+msgstr "अपनी जन्मतिथि चुनें"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:192
 msgid "Select your interests from the options below"
-msgstr ""
+msgstr "नीचे दिए विकल्पों में अपनी दिलचस्पियाँ चुनें"
 
 #: src/view/com/auth/create/Step2.tsx:155
 #~ msgid "Select your phone's country"
@@ -6845,15 +6845,15 @@ msgstr "अपने फ़ीड में अनुवाद के लिए 
 
 #: src/components/dms/ChatEmptyPill.tsx:38
 msgid "Send a neat website!"
-msgstr ""
+msgstr "कितना सुंदर वेबसाइट है!"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:189
 msgid "Send Confirmation"
-msgstr ""
+msgstr "पुष्टिकरण भेजें"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:182
 msgid "Send confirmation email"
-msgstr ""
+msgstr "पुष्टिकरण ईमेल भेजें"
 
 #: src/view/com/modals/VerifyEmail.tsx:210
 #: src/view/com/modals/VerifyEmail.tsx:212
@@ -6876,18 +6876,18 @@ msgstr "प्रतिक्रिया भेजें"
 #: src/screens/Messages/components/MessageInput.tsx:165
 #: src/screens/Messages/components/MessageInput.web.tsx:219
 msgid "Send message"
-msgstr ""
+msgstr "संदेश भेजें"
 
 #: src/components/dms/dialogs/ShareViaChatDialog.tsx:62
 msgid "Send post to..."
-msgstr ""
+msgstr "इन्हें पोस्ट भेजें"
 
 #: src/components/dms/ReportDialog.tsx:229
 #: src/components/dms/ReportDialog.tsx:232
 #: src/components/ReportDialog/SubmitView.tsx:220
 #: src/components/ReportDialog/SubmitView.tsx:224
 msgid "Send report"
-msgstr ""
+msgstr "रिपोर्ट भेजें"
 
 #: src/view/com/modals/report/SendReportButton.tsx:45
 #~ msgid "Send Report"
@@ -6900,20 +6900,20 @@ msgstr ""
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:118
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:121
 msgid "Send verification email"
-msgstr ""
+msgstr "सत्यापन ईमेल भेजें"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:441
 #: src/view/com/util/forms/PostDropdownBtn.tsx:444
 msgid "Send via direct message"
-msgstr ""
+msgstr "सीधा संदेश द्वारा भेजें"
 
 #: src/view/com/modals/DeleteAccount.tsx:151
 msgid "Sends email with confirmation code for account deletion"
-msgstr ""
+msgstr "खाता मिटाने के लिए पुष्टिकरण कोड के साथ ईमेल भेजता है"
 
 #: src/view/com/auth/server-input/index.tsx:111
 msgid "Server address"
-msgstr ""
+msgstr "सर्वर पता"
 
 #: src/view/com/modals/ContentFilteringSettings.tsx:311
 #~ msgid "Set {value} for {labelGroup} content moderation policy"
@@ -6927,7 +6927,7 @@ msgstr ""
 
 #: src/screens/Moderation/index.tsx:314
 msgid "Set birthdate"
-msgstr ""
+msgstr "जन्मतिथि चुनें"
 
 #: src/view/screens/Settings/index.tsx:488
 #~ msgid "Set color theme to dark"
@@ -6959,35 +6959,35 @@ msgstr "नया पासवर्ड सेट करें"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:121
 msgid "Set this setting to \"No\" to hide all quote posts from your feed. Reposts will still be visible."
-msgstr "अपने फ़ीड से सभी उद्धरण पदों को छिपाने के लिए इस सेटिंग को \"नहीं\" में सेट करें। Reposts अभी भी दिखाई देगा।।"
+msgstr "अपने फ़ीड से सभी क्वोट पोस्ट को छिपाने के लिए इस सेटिंग को \"नहीं\" सेट करें। रीपोस्ट फिर भी दिखेंगे।"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:63
 msgid "Set this setting to \"No\" to hide all replies from your feed."
-msgstr "इस सेटिंग को अपने फ़ीड से सभी उत्तरों को छिपाने के लिए \"नहीं\" पर सेट करें।।"
+msgstr "अपने फ़ीड से सभी जवाबों को छिपाने के लिए इस सेटिंग को \"नहीं\" सेट करें।"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:87
 msgid "Set this setting to \"No\" to hide all reposts from your feed."
-msgstr "इस सेटिंग को अपने फ़ीड से सभी पोस्ट छिपाने के लिए \"नहीं\" करने के लिए सेट करें।।"
+msgstr "अपने फ़ीड से सभी रीपोस्ट छिपाने के लिए इस सेटिंग को \"नहीं\" सेट करें।"
 
 #: src/view/screens/PreferencesThreads.tsx:116
 msgid "Set this setting to \"Yes\" to show replies in a threaded view. This is an experimental feature."
-msgstr "इस सेटिंग को \"हाँ\" में सेट करने के लिए एक थ्रेडेड व्यू में जवाब दिखाने के लिए। यह एक प्रयोगात्मक विशेषता है।।"
+msgstr "जवाबों को थ्रेड व्यू दिखाने के लिए इस सेटिंग को \"हाँ\" सेट करें। यह एक प्रयोगात्मक सुविधा है।"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:261
 #~ msgid "Set this setting to \"Yes\" to show samples of your saved feeds in your following feed. This is an experimental feature."
-#~ msgstr "इस सेटिंग को अपने निम्नलिखित फ़ीड में अपने सहेजे गए फ़ीड के नमूने दिखाने के लिए \"हाँ\" पर सेट करें। यह एक प्रयोगात्मक विशेषता है।।"
+#~ msgstr "अपने फ़ॉलोइंग फ़ीड में सहेजे गए फ़ीड के नमूने दिखाने के लिए इस सेटिंग को \"हाँ\" सेट करें। यह एक प्रयोगात्मक सुविधा है।"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:157
 msgid "Set this setting to \"Yes\" to show samples of your saved feeds in your Following feed. This is an experimental feature."
-msgstr ""
+msgstr "अपने फ़ॉलोइंग फ़ीड में सहेजे गए फ़ीड के नमूने दिखाने के लिए इस सेटिंग को \"हाँ\" सेट करें। यह एक प्रयोगात्मक सुविधा है।"
 
 #: src/screens/Onboarding/Layout.tsx:48
 msgid "Set up your account"
-msgstr ""
+msgstr "खाता बनाएँ"
 
 #: src/view/com/modals/ChangeHandle.tsx:254
 msgid "Sets Bluesky username"
-msgstr ""
+msgstr "Bluesky उपयोगकर्ता नाम चुनता है"
 
 #: src/view/screens/Settings/index.tsx:463
 #~ msgid "Sets color theme to dark"
@@ -7011,7 +7011,7 @@ msgstr ""
 
 #: src/screens/Login/ForgotPasswordForm.tsx:107
 msgid "Sets email for password reset"
-msgstr ""
+msgstr "पासवर्ड रीसेट करने के लिए ईमेल चुनता है"
 
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:122
 #~ msgid "Sets hosting provider for password reset"
