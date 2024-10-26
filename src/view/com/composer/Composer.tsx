@@ -177,38 +177,68 @@ export const ComposePost = ({
     })
   }, [])
 
-  let videoState: VideoState | NoVideoState = NO_VIDEO
-  if (draft.embed.media?.type === 'video') {
-    videoState = draft.embed.media.video
-  }
-
   const selectVideo = React.useCallback(
-    (asset: ImagePickerAsset) => {
+    (postId: string | undefined, asset: ImagePickerAsset) => {
       const abortController = new AbortController()
-      dispatch({type: 'embed_add_video', asset, abortController})
+      composerDispatch({
+        type: 'update_post',
+        postId: postId,
+        postAction: {
+          type: 'embed_add_video',
+          asset,
+          abortController,
+        },
+      })
       processVideo(
         asset,
-        videoAction => dispatch({type: 'embed_update_video', videoAction}),
+        videoAction => {
+          composerDispatch({
+            type: 'update_post',
+            postId: postId,
+            postAction: {
+              type: 'embed_update_video',
+              videoAction,
+            },
+          })
+        },
         agent,
         currentDid,
         abortController.signal,
         _,
       )
     },
-    [_, agent, currentDid, dispatch],
+    [_, agent, currentDid, composerDispatch],
   )
 
   // Whenever we receive an initial video uri, we should immediately run compression if necessary
   useEffect(() => {
     if (initVideoUri) {
-      selectVideo(initVideoUri)
+      selectVideo(undefined, initVideoUri)
     }
   }, [initVideoUri, selectVideo])
 
-  const clearVideo = React.useCallback(() => {
-    videoState.abortController.abort()
-    dispatch({type: 'embed_remove_video'})
-  }, [videoState.abortController, dispatch])
+  const clearVideo = React.useCallback(
+    (postId: string | undefined) => {
+      let post: PostDraft | undefined
+      if (postId !== undefined) {
+        post = thread.posts.find(p => p.id === postId)
+      } else {
+        post = thread.posts[composerState.activePostIndex]
+      }
+      const postMedia = post?.embed.media
+      if (postMedia?.type === 'video') {
+        postMedia.video.abortController.abort()
+        composerDispatch({
+          type: 'update_post',
+          postId: postId,
+          postAction: {
+            type: 'embed_remove_video',
+          },
+        })
+      }
+    },
+    [composerState, thread, composerDispatch],
+  )
 
   const [publishOnUpload, setPublishOnUpload] = useState(false)
 
@@ -426,13 +456,35 @@ export const ComposePost = ({
   )
 
   React.useEffect(() => {
-    if (videoState.pendingPublish && publishOnUpload) {
-      if (!videoState.pendingPublish.mutableProcessed) {
-        videoState.pendingPublish.mutableProcessed = true
+    if (publishOnUpload) {
+      let uploadingVideos = 0
+      for (let post of thread.posts) {
+        if (post.embed.media?.type === 'video') {
+          const video = post.embed.media.video
+          if (!video.pendingPublish) {
+            uploadingVideos++
+          }
+        }
+      }
+      if (uploadingVideos === 0) {
+        setPublishOnUpload(false)
         onPressPublish(true)
       }
     }
-  }, [onPressPublish, publishOnUpload, videoState.pendingPublish])
+  }, [thread.posts, onPressPublish, publishOnUpload])
+
+  let erroredVideoPostId: string | undefined
+  let erroredVideo: VideoState | NoVideoState = NO_VIDEO
+  for (let i = 0; i < thread.posts.length; i++) {
+    const post = thread.posts[i]
+    if (
+      post.embed.media?.type === 'video' &&
+      post.embed.media.video.status === 'error'
+    ) {
+      erroredVideoPostId = post.id
+      erroredVideo = post.embed.media.video
+    }
+  }
 
   const onEmojiButtonPress = useCallback(() => {
     openEmojiPicker?.(textInput.current?.getCursorPosition())
@@ -462,7 +514,7 @@ export const ComposePost = ({
           <ComposerTopBar
             canPost={canPost}
             isReply={!!replyTo}
-            isPublishQueued={videoState.status !== 'idle' && publishOnUpload}
+            isPublishQueued={publishOnUpload}
             isPublishing={isPublishing}
             publishingStage={publishingStage}
             topBarAnimatedStyle={topBarAnimatedStyle}
@@ -471,9 +523,13 @@ export const ComposePost = ({
             {isAltTextRequiredAndMissing && <AltTextReminder />}
             <ErrorBanner
               error={error}
-              videoState={videoState}
+              videoState={erroredVideo}
               clearError={() => setError('')}
-              clearVideo={clearVideo}
+              clearVideo={
+                erroredVideoPostId
+                  ? () => clearVideo(erroredVideoPostId)
+                  : () => {}
+              }
             />
           </ComposerTopBar>
 
@@ -491,8 +547,8 @@ export const ComposePost = ({
               textInput={textInput}
               isReply={!!replyTo}
               canRemoveQuote={!initQuote}
-              onSelectVideo={selectVideo}
-              onClearVideo={clearVideo}
+              onSelectVideo={asset => selectVideo(draft.id, asset)}
+              onClearVideo={() => clearVideo(draft.id)}
               onPublish={() => onPressPublish(false)}
               onError={setError}
             />
@@ -513,7 +569,7 @@ export const ComposePost = ({
             dispatch={dispatch}
             onError={setError}
             onEmojiButtonPress={onEmojiButtonPress}
-            onSelectVideo={selectVideo}
+            onSelectVideo={asset => selectVideo(undefined, asset)}
           />
         </View>
 
