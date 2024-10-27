@@ -169,6 +169,8 @@ export const ComposePost = ({
 
   const thread = composerState.thread
   const activePost = thread.posts[composerState.activePostIndex]
+  const nextPost: PostDraft | undefined =
+    thread.posts[composerState.activePostIndex + 1]
   const dispatch = useCallback(
     (postAction: PostAction) => {
       composerDispatch({
@@ -575,7 +577,10 @@ export const ComposePost = ({
             <ComposerFooter
               post={activePost}
               dispatch={dispatch}
-              showAddButton={activePost.shortenedGraphemeLength > 0}
+              showAddButton={
+                activePost.shortenedGraphemeLength > 0 &&
+                (!nextPost || nextPost.shortenedGraphemeLength > 0)
+              }
               onError={setError}
               onEmojiButtonPress={onEmojiButtonPress}
               onSelectVideo={asset => selectVideo(activePost.id, asset)}
