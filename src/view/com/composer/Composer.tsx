@@ -555,6 +555,7 @@ export const ComposePost = ({
                 textInput={post.id === activePost.id ? textInput : null}
                 isReply={index > 0 || !!replyTo}
                 isActive={post.id === activePost.id}
+                canRemovePost={thread.posts.length > 1}
                 canRemoveQuote={index > 0 || !initQuote}
                 onSelectVideo={asset => selectVideo(post.id, asset)}
                 onClearVideo={() => clearVideo(post.id)}
@@ -611,6 +612,7 @@ function ComposerPost({
   textInput,
   isActive,
   isReply,
+  canRemovePost,
   canRemoveQuote,
   onClearVideo,
   onSelectVideo,
@@ -622,6 +624,7 @@ function ComposerPost({
   textInput: React.Ref<TextInputRef>
   isActive: boolean
   isReply: boolean
+  canRemovePost: boolean
   canRemoveQuote: boolean
   onClearVideo: () => void
   onSelectVideo: (asset: ImagePickerAsset) => void
@@ -638,6 +641,7 @@ function ComposerPost({
   const selectTextInputPlaceholder = isReply
     ? _(msg`Write your reply`)
     : _(msg`What's up?`)
+  const discardPromptControl = Prompt.usePromptControl()
 
   const dispatchPost = useCallback(
     (action: PostAction) => {
@@ -717,6 +721,48 @@ function ComposerPost({
           )}
         />
       </View>
+
+      {canRemovePost && isActive && (
+        <>
+          <Button
+            label={_(msg`Delete post`)}
+            size="small"
+            color="secondary"
+            variant="ghost"
+            shape="round"
+            style={[a.absolute, {top: 0, right: 0}]}
+            onPress={() => {
+              if (
+                post.shortenedGraphemeLength > 0 ||
+                post.embed.media ||
+                post.embed.link ||
+                post.embed.quote
+              ) {
+                discardPromptControl.open()
+              } else {
+                dispatch({
+                  type: 'remove_post',
+                  postId: post.id,
+                })
+              }
+            }}>
+            <ButtonIcon icon={X} />
+          </Button>
+          <Prompt.Basic
+            control={discardPromptControl}
+            title={_(msg`Discard post?`)}
+            description={_(msg`Are you sure you'd like to discard this post?`)}
+            onConfirm={() => {
+              dispatch({
+                type: 'remove_post',
+                postId: post.id,
+              })
+            }}
+            confirmButtonCta={_(msg`Discard`)}
+            confirmButtonColor="negative"
+          />
+        </>
+      )}
 
       <ComposerEmbeds
         canRemoveQuote={canRemoveQuote}
