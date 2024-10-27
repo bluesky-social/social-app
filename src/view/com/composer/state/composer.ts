@@ -93,7 +93,7 @@ export type ComposerAction =
   | {type: 'update_threadgate'; threadgate: ThreadgateAllowUISetting[]}
   | {
       type: 'update_post'
-      postId: string | undefined // If undefined, updates active post
+      postId: string
       postAction: PostAction
     }
 
@@ -124,12 +124,9 @@ export function composerReducer(
     }
     case 'update_post': {
       let nextPosts = state.thread.posts
-      let postIndex = -1
-      if (action.postId !== undefined) {
-        postIndex = state.thread.posts.findIndex(p => p.id === action.postId)
-      } else {
-        postIndex = state.activePostIndex
-      }
+      const postIndex = state.thread.posts.findIndex(
+        p => p.id === action.postId,
+      )
       if (postIndex !== -1) {
         nextPosts = state.thread.posts.slice()
         nextPosts[postIndex] = postReducer(

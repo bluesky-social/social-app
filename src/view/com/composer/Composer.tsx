@@ -55,6 +55,7 @@ import {until} from '#/lib/async/until'
 import {MAX_GRAPHEME_LENGTH} from '#/lib/constants'
 import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
 import {useIsKeyboardVisible} from '#/lib/hooks/useIsKeyboardVisible'
+import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {logEvent} from '#/lib/statsig/statsig'
@@ -169,16 +170,19 @@ export const ComposePost = ({
   // TODO: Display drafts for other posts in the thread.
   const thread = composerState.thread
   const draft = thread.posts[composerState.activePostIndex]
-  const dispatch = useCallback((postAction: PostAction) => {
-    composerDispatch({
-      type: 'update_post',
-      postId: undefined, // Active post
-      postAction,
-    })
-  }, [])
+  const dispatch = useCallback(
+    (postAction: PostAction) => {
+      composerDispatch({
+        type: 'update_post',
+        postId: draft.id, // Active post
+        postAction,
+      })
+    },
+    [draft.id],
+  )
 
   const selectVideo = React.useCallback(
-    (postId: string | undefined, asset: ImagePickerAsset) => {
+    (postId: string, asset: ImagePickerAsset) => {
       const abortController = new AbortController()
       composerDispatch({
         type: 'update_post',
@@ -210,21 +214,19 @@ export const ComposePost = ({
     [_, agent, currentDid, composerDispatch],
   )
 
-  // Whenever we receive an initial video uri, we should immediately run compression if necessary
-  useEffect(() => {
+  const onInitVideo = useNonReactiveCallback(() => {
     if (initVideoUri) {
-      selectVideo(undefined, initVideoUri)
+      selectVideo(draft.id, initVideoUri)
     }
-  }, [initVideoUri, selectVideo])
+  })
+
+  useEffect(() => {
+    onInitVideo()
+  }, [onInitVideo])
 
   const clearVideo = React.useCallback(
-    (postId: string | undefined) => {
-      let post: PostDraft | undefined
-      if (postId !== undefined) {
-        post = thread.posts.find(p => p.id === postId)
-      } else {
-        post = thread.posts[composerState.activePostIndex]
-      }
+    (postId: string) => {
+      const post = thread.posts.find(p => p.id === postId)
       const postMedia = post?.embed.media
       if (postMedia?.type === 'video') {
         postMedia.video.abortController.abort()
@@ -237,7 +239,7 @@ export const ComposePost = ({
         })
       }
     },
-    [composerState, thread, composerDispatch],
+    [thread, composerDispatch],
   )
 
   const [publishOnUpload, setPublishOnUpload] = useState(false)
@@ -569,7 +571,7 @@ export const ComposePost = ({
             dispatch={dispatch}
             onError={setError}
             onEmojiButtonPress={onEmojiButtonPress}
-            onSelectVideo={asset => selectVideo(undefined, asset)}
+            onSelectVideo={asset => selectVideo(draft.id, asset)}
           />
         </View>
 
