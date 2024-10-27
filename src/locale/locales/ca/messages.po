@@ -4173,7 +4173,7 @@ msgstr "els ha agradat el teu canal personalitzat"
 
 #: src/view/com/notifications/FeedItem.tsx:171
 #~ msgid "liked your custom feed{0}"
-#~ msgstr "i ha agradat el teu canal personalitzat{0}"
+#~ msgstr "li ha agradat el teu canal personalitzat{0}"
 
 #: src/view/com/notifications/FeedItem.tsx:178
 msgid "liked your post"
