@@ -1,0 +1,22 @@
+{
+  "private": true,
+  "name": "workers-site",
+  "scripts": {
+    "start": "wrangler dev",
+    "push": "wrangler publish",
+    "dry": "wrangler deploy --dry-run --outdir dist",
+    "typecheck": "tsc --noEmit",
+    "format": "prettier --write ."
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20240903.0",
+    "prettier": "^3.3.3",
+    "typescript": "^5.5.4",
+    "wrangler": "^3.75.0"
+  },
+  "dependencies": {
+    "hono": "^4.5.11",
+    "ky": "^1.7.2",
+    "stripe": "^17.2.1"
+  }
+}

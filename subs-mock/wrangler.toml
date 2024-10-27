@@ -1,0 +1,6 @@
+name = "purchases"
+main = "src/index.ts"
+
+account_id = '8443bac20f1f475b04c034a0d98c7ed9'
+compatibility_date = "2024-09-06"
+# route = 'worker.com/*'

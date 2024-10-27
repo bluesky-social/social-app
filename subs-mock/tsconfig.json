@@ -1,0 +1,21 @@
+{
+  "include": ["src", "env.d.ts"],
+  "compilerOptions": {
+    "types": ["@cloudflare/workers-types"],
+    "baseUrl": ".",
+    "paths": {
+      "~/*": ["src/*"]
+    },
+    "strict": true,
+    "target": "es2021",
+    "lib": ["es2021"],
+    "module": "es2022",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "noUnusedLocals": true,
+    "noImplicitReturns": true,
+    "skipLibCheck": true,
+    "noEmit": true
+  }
+}
