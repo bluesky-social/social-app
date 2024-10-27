@@ -552,10 +552,9 @@ export const ComposePost = ({
                 key={post.id}
                 post={post}
                 dispatch={composerDispatch}
-                textInput={
-                  index === composerState.activePostIndex ? textInput : null
-                }
+                textInput={post.id === activePost.id ? textInput : null}
                 isReply={index > 0 || !!replyTo}
+                isActive={post.id === activePost.id}
                 canRemoveQuote={index > 0 || !initQuote}
                 onSelectVideo={asset => selectVideo(post.id, asset)}
                 onClearVideo={() => clearVideo(post.id)}
@@ -610,6 +609,7 @@ function ComposerPost({
   post,
   dispatch,
   textInput,
+  isActive,
   isReply,
   canRemoveQuote,
   onClearVideo,
@@ -620,6 +620,7 @@ function ComposerPost({
   post: PostDraft
   dispatch: (action: ComposerAction) => void
   textInput: React.Ref<TextInputRef>
+  isActive: boolean
   isReply: boolean
   canRemoveQuote: boolean
   onClearVideo: () => void
@@ -679,7 +680,7 @@ function ComposerPost({
   )
 
   return (
-    <>
+    <View style={!isActive && styles.inactivePost}>
       <View
         style={[
           styles.textInputLayout,
@@ -723,7 +724,7 @@ function ComposerPost({
         dispatch={dispatchPost}
         clearVideo={onClearVideo}
       />
-    </>
+    </View>
   )
 }
 
@@ -1299,6 +1300,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 5,
+  },
+  inactivePost: {
+    opacity: 0.5,
   },
   scrollView: {
     flex: 1,
