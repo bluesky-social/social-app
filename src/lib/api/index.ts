@@ -17,6 +17,7 @@ import {TID} from '@atproto/common-web'
 import * as dcbor from '@ipld/dag-cbor'
 import {t} from '@lingui/macro'
 import {QueryClient} from '@tanstack/react-query'
+import {sha256} from 'js-sha256'
 import {CID} from 'multiformats/cid'
 import * as Hasher from 'multiformats/hashes/hasher'
 
@@ -402,12 +403,12 @@ async function resolveRecord(
 }
 
 // The built-in hashing functions from multiformats (`multiformats/hashes/sha2`)
-// are meant for Node.js, this is the Web Crypto API equivalent.
+// are meant for Node.js, this is the cross-platform equivalent.
 const mf_sha256 = Hasher.from({
   name: 'sha2-256',
   code: 0x12,
-  encode: async input => {
-    const digest = await crypto.subtle.digest('sha-256', input)
+  encode: input => {
+    const digest = sha256.arrayBuffer(input)
     return new Uint8Array(digest)
   },
 })
