@@ -366,7 +366,7 @@ export const ComposePost = ({
             onStateChange: setPublishingStage,
             langs: toPostLanguages(langPrefs.postLanguage),
           })
-        ).uri
+        ).uris[0]
         try {
           await whenAppViewReady(agent, postUri, res => {
             const postedThread = res.data.thread
