@@ -496,6 +496,13 @@ export const ComposePost = ({
     openEmojiPicker?.(textInput.current?.getCursorPosition())
   }, [openEmojiPicker])
 
+  useEffect(() => {
+    if (composerState.mutableNeedsFocusActive) {
+      composerState.mutableNeedsFocusActive = false
+      textInput.current?.focus()
+    }
+  }, [composerState])
+
   const {
     scrollHandler,
     onScrollViewContentSizeChange,
