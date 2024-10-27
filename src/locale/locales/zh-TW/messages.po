@@ -1219,7 +1219,7 @@ msgstr "關閉"
 #: src/components/Dialog/index.web.tsx:110
 #: src/components/Dialog/index.web.tsx:256
 msgid "Close active dialog"
-msgstr "關閉打開的對話窗"
+msgstr "關閉打開的對話框"
 
 #: src/screens/Login/PasswordUpdatedForm.tsx:32
 msgid "Close alert"
@@ -1231,11 +1231,11 @@ msgstr "關閉底欄"
 
 #: src/components/dialogs/GifSelect.tsx:276
 msgid "Close dialog"
-msgstr "關閉對話窗"
+msgstr "關閉對話框"
 
 #: src/components/dialogs/GifSelect.tsx:169
 msgid "Close GIF dialog"
-msgstr "關閉 GIF 對話窗"
+msgstr "關閉 GIF 對話框"
 
 #: src/view/com/lightbox/ImageViewing/components/ImageDefaultHeader.tsx:36
 msgid "Close image"
@@ -1252,7 +1252,7 @@ msgstr "關閉導覽頁腳"
 #: src/components/Menu/index.tsx:229
 #: src/components/TagMenu/index.tsx:261
 msgid "Close this dialog"
-msgstr "關閉此對話窗"
+msgstr "關閉此對話框"
 
 #: src/view/shell/index.web.tsx:68
 msgid "Closes bottom navigation bar"
@@ -1785,7 +1785,7 @@ msgstr "分離這則帖文的引用？"
 
 #: src/components/WhoCanReply.tsx:175
 msgid "Dialog: adjust who can interact with this post"
-msgstr "對話窗：自訂誰可以參與這則帖文的互動"
+msgstr "對話框：自訂誰可以參與這則帖文的互動"
 
 #: src/view/com/composer/Composer.tsx:368
 msgid "Did you want to say anything?"
@@ -1946,7 +1946,7 @@ msgstr "完成{extraText}"
 
 #: src/components/Dialog/index.tsx:316
 msgid "Double tap to close the dialog"
-msgstr "按兩下關閉對話窗"
+msgstr "按兩下關閉對話框"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:317
 msgid "Download Bluesky"
@@ -3928,7 +3928,7 @@ msgstr "新貼文"
 
 #: src/components/NewskieDialog.tsx:83
 msgid "New user info dialog"
-msgstr "新用戶資訊對話窗"
+msgstr "新用戶資訊對話框"
 
 #: src/view/com/modals/CreateOrEditList.tsx:227
 msgid "New User List"
@@ -4312,11 +4312,11 @@ msgstr "開啟 {numItems} 個選項"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:65
 msgid "Opens a dialog to add a content warning to your post"
-msgstr "開啟對話窗來向您的貼文加入內容警告"
+msgstr "開啟對話框來向您的貼文加入內容警告"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:62
 msgid "Opens a dialog to choose who can reply to this thread"
-msgstr "開啟對話窗來選擇哪些人可以回覆此討論串"
+msgstr "開啟對話框來選擇哪些人可以回覆此討論串"
 
 #: src/view/screens/Settings/index.tsx:456
 msgid "Opens accessibility settings"
@@ -4366,7 +4366,7 @@ msgstr "開始登入您現有的 Bluesky 帳號流程"
 
 #: src/view/com/composer/photos/SelectGifBtn.tsx:36
 msgid "Opens GIF select dialog"
-msgstr "開啟 GIF 選擇對話窗"
+msgstr "開啟 GIF 選擇對話框"
 
 #: src/view/com/modals/InviteCodes.tsx:173
 msgid "Opens list of invite codes"
@@ -5208,7 +5208,7 @@ msgstr "檢舉對話"
 
 #: src/components/ReportDialog/index.tsx:44
 msgid "Report dialog"
-msgstr "檢舉對話窗"
+msgstr "檢舉對話框"
 
 #: src/view/screens/ProfileFeed.tsx:354
 #: src/view/screens/ProfileFeed.tsx:356
@@ -5856,7 +5856,7 @@ msgstr "分享連結"
 
 #: src/components/StarterPack/ShareDialog.tsx:88
 msgid "Share link dialog"
-msgstr "分享連結對話窗"
+msgstr "分享連結對話框"
 
 #: src/components/StarterPack/ShareDialog.tsx:135
 #: src/components/StarterPack/ShareDialog.tsx:146
@@ -6353,7 +6353,7 @@ msgstr "謝謝，您的檢舉已提交。"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:82
 msgid "Thanks, you have successfully verified your email address. You can close this dialog."
-msgstr "謝謝，您已成功驗證您的電子郵件地址。您可以關閉此對話窗。"
+msgstr "謝謝，您已成功驗證您的電子郵件地址。您可以關閉此對話框。"
 
 #: src/view/com/modals/ChangeHandle.tsx:452
 msgid "That contains the following:"
@@ -7190,7 +7190,7 @@ msgstr "驗證電子郵件"
 #: src/components/dialogs/VerifyEmailDialog.tsx:120
 #: src/components/intents/VerifyEmailIntentDialog.tsx:67
 msgid "Verify email dialog"
-msgstr "驗證電子郵件對話窗"
+msgstr "驗證電子郵件對話框"
 
 #: src/view/screens/Settings/index.tsx:962
 msgid "Verify my email"
