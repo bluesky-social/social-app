@@ -150,25 +150,24 @@ export function composerReducer(
       }
     }
     case 'add_post': {
-      // TODO: Only allow one trailing empty post.
+      const activePostIndex = state.activePostIndex
+      const nextPosts = [...state.thread.posts]
+      nextPosts.splice(activePostIndex + 1, 0, {
+        id: nanoid(),
+        richtext: new RichText({text: ''}),
+        shortenedGraphemeLength: 0,
+        labels: [],
+        embed: {
+          quote: undefined,
+          media: undefined,
+          link: undefined,
+        },
+      })
       return {
         ...state,
         thread: {
           ...state.thread,
-          posts: [
-            ...state.thread.posts,
-            {
-              id: nanoid(),
-              richtext: new RichText({text: ''}),
-              shortenedGraphemeLength: 0,
-              labels: [],
-              embed: {
-                quote: undefined,
-                media: undefined,
-                link: undefined,
-              },
-            },
-          ],
+          posts: nextPosts,
         },
       }
     }
