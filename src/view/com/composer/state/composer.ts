@@ -85,7 +85,8 @@ export type ThreadDraft = {
 
 export type ComposerState = {
   thread: ThreadDraft
-  activePostIndex: number // TODO: Add actions to update this.
+  activePostIndex: number
+  mutableNeedsFocusActive: boolean
 }
 
 export type ComposerAction =
@@ -191,6 +192,7 @@ export function composerReducer(
       return {
         ...state,
         activePostIndex: nextActivePostIndex,
+        mutableNeedsFocusActive: true,
         thread: {
           ...state.thread,
           posts: nextPosts,
@@ -503,6 +505,7 @@ export function createComposerState({
   })
   return {
     activePostIndex: 0,
+    mutableNeedsFocusActive: false,
     thread: {
       posts: [
         {

@@ -249,8 +249,12 @@ export const TextInput = React.forwardRef(function TextInputImpl(
   }, [onEmojiInserted])
 
   React.useImperativeHandle(ref, () => ({
-    focus: () => {}, // TODO
-    blur: () => {}, // TODO
+    focus: () => {
+      editor?.chain().focus()
+    },
+    blur: () => {
+      editor?.chain().blur()
+    },
     getCursorPosition: () => {
       const pos = editor?.state.selection.$anchor.pos
       return pos ? editor?.view.coordsAtPos(pos) : undefined
