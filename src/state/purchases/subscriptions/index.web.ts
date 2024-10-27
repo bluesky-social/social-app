@@ -2,18 +2,12 @@ import {Linking} from 'react-native'
 import {useMutation, useQuery} from '@tanstack/react-query'
 
 import {useCurrencyFormatter} from '#/lib/currency'
+import {getSubscriptions} from '#/state/purchases/subscriptions/api'
 import {
   Subscription,
   Subscriptions,
 } from '#/state/purchases/subscriptions/types'
-import {
-  StripePrice,
-  StripeProduct,
-} from '#/state/purchases/subscriptions/types/stripe'
-import {
-  identifierToSubscriptionInfo,
-  organizeSubscriptionsByTier,
-} from '#/state/purchases/subscriptions/util'
+import {organizeSubscriptionsByTier} from '#/state/purchases/subscriptions/util'
 import {useSession} from '#/state/session'
 import {BSKY_PURCHASES_API} from '#/env'
 
@@ -24,55 +18,60 @@ export function useAvailableSubscriptions() {
   return useQuery<Subscriptions>({
     queryKey: ['availableSubscriptions', currentAccount!.did],
     async queryFn() {
-      const res = await fetch(`${BSKY_PURCHASES_API}/getWebOffers`).then(res =>
-        res.json(),
+      const rawSubscriptions = await getSubscriptions({
+        did: currentAccount!.did,
+        platform: 'web',
+      })
+      const platformSubscriptions = rawSubscriptions.filter(
+        s => s.platform === 'web',
       )
-      return organizeSubscriptionsByTier(
-        normalizeProducts(res, {currencyFormatter}),
-      )
+      const subscriptions = platformSubscriptions.map(sub => {
+        const subscription: Subscription = {
+          ...sub,
+          price: {
+            value: sub.price,
+            formatted: currencyFormatter.format(sub.price / 100),
+          },
+          product: {
+            platform: 'web',
+            data: sub.checkoutId,
+          },
+        }
+        return subscription
+      })
+
+      return organizeSubscriptionsByTier(subscriptions)
     },
   })
 }
 
 export function usePurchaseSubscription() {
+  const {currentAccount} = useSession()
   return useMutation({
-    async mutationFn(priceObject: any) {
-      Linking.openURL(
-        `${BSKY_PURCHASES_API}/initCheckout/${priceObject.price_id}`,
-      )
-    },
-  })
-}
-
-function normalizeProducts(
-  products: {product: StripeProduct; price: StripePrice}[],
-  options: {
-    currencyFormatter: ReturnType<typeof useCurrencyFormatter>
-  },
-): Subscription[] {
-  return products
-    .map(({product, price}) => {
-      const info = identifierToSubscriptionInfo(product.id)
-
-      if (!info) return
-
-      const priceObj =
-        price.currency_options[options.currencyFormatter.currency]
-      const value = priceObj.unit_amount
-      const formatted = options.currencyFormatter.format(value / 100)
-
-      const subscription: Subscription = {
-        info,
-        price: {
-          value,
-          formatted,
-        },
-        raw: {
-          price_id: price.id,
-        },
+    async mutationFn(product: Subscription['product']) {
+      if (product.platform !== 'web') {
+        throw new Error('Cannot purchase native subscription on web')
+      }
+      if (!currentAccount || !currentAccount.email) {
+        throw new Error('No account or email')
       }
 
-      return subscription
-    })
-    .filter(Boolean) as Subscription[]
+      const {checkoutUrl} = await fetch(
+        `${BSKY_PURCHASES_API}/createCheckout`,
+        {
+          method: 'POST',
+          body: JSON.stringify({
+            price: product.data,
+            // TODO should NOT use query, use auth and our db state
+            user: currentAccount.did,
+            email: currentAccount.email,
+          }),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      ).then(res => res.json())
+      Linking.openURL(checkoutUrl)
+    },
+  })
 }

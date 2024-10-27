@@ -1,14 +1,13 @@
-import Purchases, {PurchasesPackage} from 'react-native-purchases'
+import Purchases from 'react-native-purchases'
 import {useMutation, useQuery} from '@tanstack/react-query'
 
+import {isAndroid} from '#/platform/detection'
+import {getSubscriptions} from '#/state/purchases/subscriptions/api'
 import {
   Subscription,
   Subscriptions,
 } from '#/state/purchases/subscriptions/types'
-import {
-  identifierToSubscriptionInfo,
-  organizeSubscriptionsByTier,
-} from '#/state/purchases/subscriptions/util'
+import {organizeSubscriptionsByTier} from '#/state/purchases/subscriptions/util'
 import {useSession} from '#/state/session'
 
 export function useAvailableSubscriptions() {
@@ -19,40 +18,51 @@ export function useAvailableSubscriptions() {
     queryKey: ['availableSubscriptions', did],
     async queryFn() {
       Purchases.logIn(did)
-      const offerings = await Purchases.getOfferings()
-      const tierOfferings = Object.values(offerings.all).filter(offering => {
-        return offering.identifier.includes('bsky_tier')
+      Purchases.setEmail(currentAccount!.email!)
+
+      const platform = isAndroid ? 'android' : ('ios' as const)
+      const rawSubscriptions = await getSubscriptions({
+        did: currentAccount!.did,
+        platform,
       })
-      const packages = tierOfferings.flatMap(
-        offering => offering.availablePackages,
+      const platformSubscriptions = rawSubscriptions
+        .filter(s => s.platform !== 'web')
+        .filter(s => s.platform === platform)
+      const lookupKeys = Array.from(
+        new Set(platformSubscriptions.map(s => s.lookupKey)),
       )
-      return organizeSubscriptionsByTier(normalizePackages(packages))
+      const products = await Purchases.getProducts(lookupKeys)
+      const subscriptions: Subscription[] = platformSubscriptions
+        .map(sub => {
+          const productData = products.find(p => p.identifier === sub.storeId)
+          if (!productData) return undefined
+          const subscription = {
+            ...sub,
+            price: {
+              value: productData.price * 100, // convert to cents
+              formatted: productData.priceString,
+            },
+            product: {
+              platform,
+              data: productData,
+            },
+          }
+          return subscription
+        })
+        .filter(Boolean) as Subscription[]
+
+      return organizeSubscriptionsByTier(subscriptions)
     },
   })
 }
 
 export function usePurchaseSubscription() {
   return useMutation({
-    async mutationFn(pkg: PurchasesPackage) {
-      return Purchases.purchasePackage(pkg)
+    async mutationFn(product: Subscription['product']) {
+      if (product.platform === 'web') {
+        throw new Error('Cannot purchase web subscription on native')
+      }
+      return Purchases.purchaseStoreProduct(product.data)
     },
   })
-}
-
-function normalizePackages(pkgs: PurchasesPackage[]): Subscription[] {
-  return pkgs
-    .map(p => {
-      const info = identifierToSubscriptionInfo(p.product.identifier)
-      if (!info) return
-      const subscription: Subscription = {
-        info,
-        price: {
-          formatted: p.product.priceString,
-          value: p.product.price,
-        },
-        raw: p,
-      }
-      return subscription
-    })
-    .filter(Boolean) as Subscription[]
 }
