@@ -560,25 +560,23 @@ export const ComposePost = ({
             />
           </Animated.ScrollView>
 
-          <SuggestedLanguage text={activePost.richtext.text} />
-
-          <ComposerPills
-            key={activePost.id}
-            isReply={!!replyTo}
-            post={activePost}
-            thread={composerState.thread}
-            dispatch={composerDispatch}
-            bottomBarAnimatedStyle={bottomBarAnimatedStyle}
-          />
-
-          <ComposerFooter
-            key={activePost.id}
-            post={activePost}
-            dispatch={dispatch}
-            onError={setError}
-            onEmojiButtonPress={onEmojiButtonPress}
-            onSelectVideo={asset => selectVideo(activePost.id, asset)}
-          />
+          <React.Fragment key={activePost.id}>
+            <SuggestedLanguage text={activePost.richtext.text} />
+            <ComposerPills
+              isReply={!!replyTo}
+              post={activePost}
+              thread={composerState.thread}
+              dispatch={composerDispatch}
+              bottomBarAnimatedStyle={bottomBarAnimatedStyle}
+            />
+            <ComposerFooter
+              post={activePost}
+              dispatch={dispatch}
+              onError={setError}
+              onEmojiButtonPress={onEmojiButtonPress}
+              onSelectVideo={asset => selectVideo(activePost.id, asset)}
+            />
+          </React.Fragment>
         </View>
 
         <Prompt.Basic
