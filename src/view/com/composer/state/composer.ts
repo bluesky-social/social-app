@@ -100,6 +100,10 @@ export type ComposerAction =
       type: 'add_post'
     }
   | {
+      type: 'remove_post'
+      postId: string
+    }
+  | {
       type: 'focus_post'
       postId: string
     }
@@ -165,6 +169,28 @@ export function composerReducer(
       })
       return {
         ...state,
+        thread: {
+          ...state.thread,
+          posts: nextPosts,
+        },
+      }
+    }
+    case 'remove_post': {
+      if (state.thread.posts.length < 2) {
+        return state
+      }
+      let nextActivePostIndex = state.activePostIndex
+      const indexToRemove = state.thread.posts.findIndex(
+        p => p.id === action.postId,
+      )
+      let nextPosts = [...state.thread.posts]
+      if (indexToRemove !== -1) {
+        nextPosts.splice(indexToRemove, 1)
+        nextActivePostIndex = Math.max(0, indexToRemove - 1)
+      }
+      return {
+        ...state,
+        activePostIndex: nextActivePostIndex,
         thread: {
           ...state.thread,
           posts: nextPosts,
