@@ -2,23 +2,23 @@ import {Linking} from 'react-native'
 import {useMutation, useQuery} from '@tanstack/react-query'
 
 import {useCurrencyFormatter} from '#/lib/currency'
-import {getSubscriptions} from '#/state/purchases/subscriptions/api'
+import {getMainSubscriptions} from '#/state/purchases/subscriptions/api'
 import {
   Subscription,
   Subscriptions,
 } from '#/state/purchases/subscriptions/types'
-import {organizeSubscriptionsByTier} from '#/state/purchases/subscriptions/util'
+import {organizeMainSubscriptionsByTier} from '#/state/purchases/subscriptions/util'
 import {useSession} from '#/state/session'
 import {BSKY_PURCHASES_API} from '#/env'
 
-export function useAvailableSubscriptions() {
+export function useMainSubscriptions() {
   const {currentAccount} = useSession()
   const currencyFormatter = useCurrencyFormatter()
 
   return useQuery<Subscriptions>({
     queryKey: ['availableSubscriptions', currentAccount!.did],
     async queryFn() {
-      const rawSubscriptions = await getSubscriptions({
+      const rawSubscriptions = await getMainSubscriptions({
         did: currentAccount!.did,
         platform: 'web',
       })
@@ -40,7 +40,7 @@ export function useAvailableSubscriptions() {
         return subscription
       })
 
-      return organizeSubscriptionsByTier(subscriptions)
+      return organizeMainSubscriptionsByTier(subscriptions)
     },
   })
 }

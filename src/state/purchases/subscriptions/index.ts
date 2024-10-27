@@ -2,15 +2,15 @@ import Purchases from 'react-native-purchases'
 import {useMutation, useQuery} from '@tanstack/react-query'
 
 import {isAndroid} from '#/platform/detection'
-import {getSubscriptions} from '#/state/purchases/subscriptions/api'
+import {getMainSubscriptions} from '#/state/purchases/subscriptions/api'
 import {
   Subscription,
   Subscriptions,
 } from '#/state/purchases/subscriptions/types'
-import {organizeSubscriptionsByTier} from '#/state/purchases/subscriptions/util'
+import {organizeMainSubscriptionsByTier} from '#/state/purchases/subscriptions/util'
 import {useSession} from '#/state/session'
 
-export function useAvailableSubscriptions() {
+export function useMainSubscriptions() {
   const {currentAccount} = useSession()
   const did = currentAccount!.did
 
@@ -21,7 +21,7 @@ export function useAvailableSubscriptions() {
       Purchases.setEmail(currentAccount!.email!)
 
       const platform = isAndroid ? 'android' : ('ios' as const)
-      const rawSubscriptions = await getSubscriptions({
+      const rawSubscriptions = await getMainSubscriptions({
         did: currentAccount!.did,
         platform,
       })
@@ -51,7 +51,7 @@ export function useAvailableSubscriptions() {
         })
         .filter(Boolean) as Subscription[]
 
-      return organizeSubscriptionsByTier(subscriptions)
+      return organizeMainSubscriptionsByTier(subscriptions)
     },
   })
 }

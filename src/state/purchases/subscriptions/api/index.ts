@@ -1,6 +1,6 @@
 import {RawSubscriptionObject} from '#/state/purchases/subscriptions/api/types'
 
-export async function getSubscriptions({
+export async function getMainSubscriptions({
   did,
   platform,
 }: {
@@ -8,7 +8,7 @@ export async function getSubscriptions({
   platform: 'web' | 'ios' | 'android'
 }) {
   const res = await fetch(
-    `https://bsky-purchases.ngrok.io/subscriptions?user=${did}&platform=${platform}`,
+    `https://bsky-purchases.ngrok.io/subscriptions/main?user=${did}&platform=${platform}`,
   )
 
   if (!res.ok) {
