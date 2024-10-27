@@ -320,12 +320,7 @@ export const ComposePost = ({
     thread.posts.every(
       post =>
         post.shortenedGraphemeLength <= MAX_GRAPHEME_LENGTH &&
-        !(
-          post.richtext.text.trim().length === 0 &&
-          !post.embed.link &&
-          !post.embed.media &&
-          !post.embed.quote
-        ) &&
+        !isEmptyPost(post) &&
         !(
           post.embed.media?.type === 'video' &&
           post.embed.media.video.status === 'error'
@@ -585,8 +580,8 @@ export const ComposePost = ({
               post={activePost}
               dispatch={dispatch}
               showAddButton={
-                activePost.shortenedGraphemeLength > 0 &&
-                (!nextPost || nextPost.shortenedGraphemeLength > 0)
+                !isEmptyPost(activePost) &&
+                (!nextPost || !isEmptyPost(nextPost))
               }
               onError={setError}
               onEmojiButtonPress={onEmojiButtonPress}
@@ -1307,6 +1302,15 @@ async function whenAppViewReady(
         uri,
         depth: 0,
       }),
+  )
+}
+
+function isEmptyPost(post: PostDraft) {
+  return (
+    post.richtext.text.trim().length === 0 &&
+    !post.embed.media &&
+    !post.embed.link &&
+    !post.embed.quote
   )
 }
 
