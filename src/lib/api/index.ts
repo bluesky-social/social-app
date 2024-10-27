@@ -5,7 +5,6 @@ import {
   AppBskyEmbedRecordWithMedia,
   AppBskyEmbedVideo,
   AppBskyFeedPost,
-  AppBskyFeedPostgate,
   AtUri,
   BlobRef,
   BskyAgent,
@@ -15,8 +14,11 @@ import {
   RichText,
 } from '@atproto/api'
 import {TID} from '@atproto/common-web'
+import * as dcbor from '@ipld/dag-cbor'
 import {t} from '@lingui/macro'
 import {QueryClient} from '@tanstack/react-query'
+import {CID} from 'multiformats/cid'
+import * as Hasher from 'multiformats/hashes/hasher'
 
 import {isNetworkError} from '#/lib/strings/errors'
 import {shortenLinks, stripInvalidMentions} from '#/lib/strings/rich-text-manip'
@@ -53,30 +55,15 @@ export async function post(
   opts: PostOpts,
 ) {
   const thread = opts.thread
-  const draft = thread.posts[0] // TODO: Support threads.
-
   opts.onStateChange?.(t`Processing...`)
-  // NB -- Do not await anything here to avoid waterfalls!
-  // Instead, store Promises which will be unwrapped as they're needed.
-  const rtPromise = resolveRT(agent, draft.richtext)
-  const embedPromise = resolveEmbed(
-    agent,
-    queryClient,
-    draft,
-    opts.onStateChange,
-  )
-  let replyPromise
-  if (opts.replyTo) {
-    replyPromise = resolveReply(agent, opts.replyTo)
-  }
 
-  // set labels
-  let labels: ComAtprotoLabelDefs.SelfLabels | undefined
-  if (draft.labels.length) {
-    labels = {
-      $type: 'com.atproto.label.defs#selfLabels',
-      values: draft.labels.map(val => ({val})),
-    }
+  let replyPromise:
+    | Promise<AppBskyFeedPost.Record['reply']>
+    | AppBskyFeedPost.Record['reply']
+    | undefined
+  if (opts.replyTo) {
+    // Not awaited to avoid waterfalls.
+    replyPromise = resolveReply(agent, opts.replyTo)
   }
 
   // add top 3 languages from user preferences if langs is provided
@@ -85,20 +72,48 @@ export async function post(
     langs = opts.langs.slice(0, 3)
   }
 
-  const rkey = TID.nextStr()
-  const uri = `at://${agent.assertDid}/app.bsky.feed.post/${rkey}`
-  const date = new Date().toISOString()
-
+  const did = agent.assertDid
   const writes: ComAtprotoRepoApplyWrites.Create[] = []
+  const uris: string[] = []
 
-  // Create post record
-  {
+  let now = new Date()
+  let tid: TID | undefined
+
+  for (let i = 0; i < thread.posts.length; i++) {
+    const draft = thread.posts[i]
+
+    // Not awaited to avoid waterfalls.
+    const rtPromise = resolveRT(agent, draft.richtext)
+    const embedPromise = resolveEmbed(
+      agent,
+      queryClient,
+      draft,
+      opts.onStateChange,
+    )
+    let labels: ComAtprotoLabelDefs.SelfLabels | undefined
+    if (draft.labels.length) {
+      labels = {
+        $type: 'com.atproto.label.defs#selfLabels',
+        values: draft.labels.map(val => ({val})),
+      }
+    }
+
+    // The sorting behavior for multiple posts sharing the same createdAt time is
+    // undefined, so what we'll do here is increment the time by 1 for every post
+    now.setMilliseconds(now.getMilliseconds() + 1)
+    tid = TID.next(tid)
+    const rkey = tid.toString()
+    const uri = `at://${did}/app.bsky.feed.post/${rkey}`
+    uris.push(uri)
+
     const rt = await rtPromise
     const embed = await embedPromise
     const reply = await replyPromise
     const record: AppBskyFeedPost.Record = {
+      // IMPORTANT: $type has to exist, CID is calculated with the `$type` field
+      // present and will produce the wrong CID if you omit it.
       $type: 'app.bsky.feed.post',
-      createdAt: date,
+      createdAt: now.toISOString(),
       text: rt.text,
       facets: rt.facets,
       reply,
@@ -106,49 +121,52 @@ export async function post(
       langs,
       labels,
     }
-
     writes.push({
       $type: 'com.atproto.repo.applyWrites#create',
       collection: 'app.bsky.feed.post',
       rkey: rkey,
       value: record,
     })
-  }
 
-  // Create threadgate record
-  if (thread.threadgate.some(tg => tg.type !== 'everybody')) {
-    const record = createThreadgateRecord({
-      createdAt: date,
-      post: uri,
-      allow: threadgateAllowUISettingToAllowRecordValue(thread.threadgate),
-    })
-
-    writes.push({
-      $type: 'com.atproto.repo.applyWrites#create',
-      collection: 'app.bsky.feed.threadgate',
-      rkey: rkey,
-      value: record,
-    })
-  }
-
-  // Create postgate record
-  if (
-    thread.postgate.embeddingRules?.length ||
-    thread.postgate.detachedEmbeddingUris?.length
-  ) {
-    const record: AppBskyFeedPostgate.Record = {
-      ...thread.postgate,
-      $type: 'app.bsky.feed.postgate',
-      createdAt: date,
-      post: uri,
+    if (i === 0 && thread.threadgate.some(tg => tg.type !== 'everybody')) {
+      writes.push({
+        $type: 'com.atproto.repo.applyWrites#create',
+        collection: 'app.bsky.feed.threadgate',
+        rkey: rkey,
+        value: createThreadgateRecord({
+          createdAt: now.toISOString(),
+          post: uri,
+          allow: threadgateAllowUISettingToAllowRecordValue(thread.threadgate),
+        }),
+      })
     }
 
-    writes.push({
-      $type: 'com.atproto.repo.applyWrites#create',
-      collection: 'app.bsky.feed.postgate',
-      rkey: rkey,
-      value: record,
-    })
+    if (
+      thread.postgate.embeddingRules?.length ||
+      thread.postgate.detachedEmbeddingUris?.length
+    ) {
+      writes.push({
+        $type: 'com.atproto.repo.applyWrites#create',
+        collection: 'app.bsky.feed.postgate',
+        rkey: rkey,
+        value: {
+          ...thread.postgate,
+          $type: 'app.bsky.feed.postgate',
+          createdAt: now.toISOString(),
+          post: uri,
+        },
+      })
+    }
+
+    // Prepare a ref to the current post for the next post in the thread.
+    const ref = {
+      cid: await computeCid(record),
+      uri,
+    }
+    replyPromise = {
+      root: reply?.root ?? ref,
+      parent: ref,
+    }
   }
 
   try {
@@ -170,7 +188,7 @@ export async function post(
     }
   }
 
-  return {uri}
+  return {uris}
 }
 
 async function resolveRT(agent: BskyAgent, richtext: RichText) {
@@ -381,4 +399,82 @@ async function resolveRecord(
     throw Error(t`Expected uri to resolve to a record`)
   }
   return resolvedLink.record
+}
+
+// The built-in hashing functions from multiformats (`multiformats/hashes/sha2`)
+// are meant for Node.js, this is the Web Crypto API equivalent.
+const mf_sha256 = Hasher.from({
+  name: 'sha2-256',
+  code: 0x12,
+  encode: async input => {
+    const digest = await crypto.subtle.digest('sha-256', input)
+    return new Uint8Array(digest)
+  },
+})
+
+async function computeCid(record: AppBskyFeedPost.Record): Promise<string> {
+  // IMPORTANT: `prepareObject` prepares the record to be hashed by removing
+  // fields with undefined value, and converting BlobRef instances to the
+  // right IPLD representation.
+  const prepared = prepareForHashing(record)
+  // 1. Encode the record into DAG-CBOR format
+  const encoded = dcbor.encode(prepared)
+  // 2. Hash the record in SHA-256 (code 0x12)
+  const digest = await mf_sha256.digest(encoded)
+  // 3. Create a CIDv1, specifying DAG-CBOR as content (code 0x71)
+  const cid = CID.createV1(0x71, digest)
+  // 4. Get the Base32 representation of the CID (`b` prefix)
+  return cid.toString()
+}
+
+// Returns a transformed version of the object for use in DAG-CBOR.
+function prepareForHashing(v: any): any {
+  // IMPORTANT: BlobRef#ipld() returns the correct object we need for hashing,
+  // the API client will convert this for you but we're hashing in the client,
+  // so we need it *now*.
+  if (v instanceof BlobRef) {
+    return v.ipld()
+  }
+
+  // Walk through arrays
+  if (Array.isArray(v)) {
+    let pure = true
+    const mapped = v.map(value => {
+      if (value !== (value = prepareForHashing(value))) {
+        pure = false
+      }
+      return value
+    })
+    return pure ? v : mapped
+  }
+
+  // Walk through plain objects
+  if (isPlainObject(v)) {
+    const obj: any = {}
+    let pure = true
+    for (const key in v) {
+      let value = v[key]
+      // `value` is undefined
+      if (value === undefined) {
+        pure = false
+        continue
+      }
+      // `prepareObject` returned a value that's different from what we had before
+      if (value !== (value = prepareForHashing(value))) {
+        pure = false
+      }
+      obj[key] = value
+    }
+    // Return as is if we haven't needed to tamper with anything
+    return pure ? v : obj
+  }
+  return v
+}
+
+function isPlainObject(v: any): boolean {
+  if (typeof v !== 'object' || v === null) {
+    return false
+  }
+  const proto = Object.getPrototypeOf(v)
+  return proto === Object.prototype || proto === null
 }
