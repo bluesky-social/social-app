@@ -575,6 +575,7 @@ export const ComposePost = ({
             <ComposerFooter
               post={activePost}
               dispatch={dispatch}
+              showAddButton={activePost.shortenedGraphemeLength > 0}
               onError={setError}
               onEmojiButtonPress={onEmojiButtonPress}
               onSelectVideo={asset => selectVideo(activePost.id, asset)}
@@ -1002,6 +1003,7 @@ function ComposerPills({
 function ComposerFooter({
   post,
   dispatch,
+  showAddButton,
   onEmojiButtonPress,
   onError,
   onSelectVideo,
@@ -1009,6 +1011,7 @@ function ComposerFooter({
 }: {
   post: PostDraft
   dispatch: (action: PostAction) => void
+  showAddButton: boolean
   onEmojiButtonPress: () => void
   onError: (error: string) => void
   onSelectVideo: (asset: ImagePickerAsset) => void
@@ -1088,15 +1091,21 @@ function ComposerFooter({
         )}
       </View>
       <View style={[a.flex_row, a.align_center, a.justify_between]}>
-        <Button
-          label={_(msg`Add new post`)}
-          onPress={onAddPost}
-          style={[a.p_sm, a.m_2xs]}
-          variant="ghost"
-          shape="round"
-          color="primary">
-          <FontAwesomeIcon icon="add" size={20} color={t.palette.primary_500} />
-        </Button>
+        {showAddButton && (
+          <Button
+            label={_(msg`Add new post`)}
+            onPress={onAddPost}
+            style={[a.p_sm, a.m_2xs]}
+            variant="ghost"
+            shape="round"
+            color="primary">
+            <FontAwesomeIcon
+              icon="add"
+              size={20}
+              color={t.palette.primary_500}
+            />
+          </Button>
+        )}
         <SelectLangBtn />
         <CharProgress
           count={post.shortenedGraphemeLength}
