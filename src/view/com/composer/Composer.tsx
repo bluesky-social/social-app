@@ -169,16 +169,16 @@ export const ComposePost = ({
 
   // TODO: Display drafts for other posts in the thread.
   const thread = composerState.thread
-  const draft = thread.posts[composerState.activePostIndex]
+  const activePost = thread.posts[composerState.activePostIndex]
   const dispatch = useCallback(
     (postAction: PostAction) => {
       composerDispatch({
         type: 'update_post',
-        postId: draft.id, // Active post
+        postId: activePost.id,
         postAction,
       })
     },
-    [draft.id],
+    [activePost.id],
   )
 
   const selectVideo = React.useCallback(
@@ -216,7 +216,7 @@ export const ComposePost = ({
 
   const onInitVideo = useNonReactiveCallback(() => {
     if (initVideoUri) {
-      selectVideo(draft.id, initVideoUri)
+      selectVideo(activePost.id, initVideoUri)
     }
   })
 
@@ -475,6 +475,8 @@ export const ComposePost = ({
     }
   }, [thread.posts, onPressPublish, publishOnUpload])
 
+  // TODO: It might make more sense to display this error per-post.
+  // Right now we're just displaying the first one.
   let erroredVideoPostId: string | undefined
   let erroredVideo: VideoState | NoVideoState = NO_VIDEO
   for (let i = 0; i < thread.posts.length; i++) {
@@ -485,6 +487,7 @@ export const ComposePost = ({
     ) {
       erroredVideoPostId = post.id
       erroredVideo = post.embed.media.video
+      break
     }
   }
 
@@ -544,34 +547,37 @@ export const ComposePost = ({
             onLayout={onScrollViewLayout}>
             {replyTo ? <ComposerReplyTo replyTo={replyTo} /> : undefined}
             <ComposerPost
-              draft={draft}
+              key={activePost.id}
+              post={activePost}
               dispatch={composerDispatch}
               textInput={textInput}
               isReply={!!replyTo}
               canRemoveQuote={!initQuote}
-              onSelectVideo={asset => selectVideo(draft.id, asset)}
-              onClearVideo={() => clearVideo(draft.id)}
+              onSelectVideo={asset => selectVideo(activePost.id, asset)}
+              onClearVideo={() => clearVideo(activePost.id)}
               onPublish={() => onPressPublish(false)}
               onError={setError}
             />
           </Animated.ScrollView>
 
-          <SuggestedLanguage text={draft.richtext.text} />
+          <SuggestedLanguage text={activePost.richtext.text} />
 
           <ComposerPills
+            key={activePost.id}
             isReply={!!replyTo}
-            post={draft}
+            post={activePost}
             thread={composerState.thread}
             dispatch={composerDispatch}
             bottomBarAnimatedStyle={bottomBarAnimatedStyle}
           />
 
           <ComposerFooter
-            draft={draft}
+            key={activePost.id}
+            post={activePost}
             dispatch={dispatch}
             onError={setError}
             onEmojiButtonPress={onEmojiButtonPress}
-            onSelectVideo={asset => selectVideo(draft.id, asset)}
+            onSelectVideo={asset => selectVideo(activePost.id, asset)}
           />
         </View>
 
@@ -589,7 +595,7 @@ export const ComposePost = ({
 }
 
 function ComposerPost({
-  draft,
+  post,
   dispatch,
   textInput,
   isReply,
@@ -599,7 +605,7 @@ function ComposerPost({
   onError,
   onPublish,
 }: {
-  draft: PostDraft
+  post: PostDraft
   dispatch: (action: ComposerAction) => void
   textInput: React.Ref<TextInputRef>
   isReply: boolean
@@ -613,9 +619,8 @@ function ComposerPost({
   const currentDid = currentAccount!.did
   const {_} = useLingui()
   const {data: currentProfile} = useProfileQuery({did: currentDid})
-  const richtext = draft.richtext
-  const isTextOnly =
-    !draft.embed.link && !draft.embed.quote && !draft.embed.media
+  const richtext = post.richtext
+  const isTextOnly = !post.embed.link && !post.embed.quote && !post.embed.media
   const forceMinHeight = isWeb && isTextOnly
   const selectTextInputPlaceholder = isReply
     ? _(msg`Write your reply`)
@@ -625,11 +630,11 @@ function ComposerPost({
     (action: PostAction) => {
       dispatch({
         type: 'update_post',
-        postId: draft.id,
+        postId: post.id,
         postAction: action,
       })
     },
-    [dispatch, draft.id],
+    [dispatch, post.id],
   )
 
   const onImageAdd = useCallback(
@@ -696,7 +701,7 @@ function ComposerPost({
 
       <ComposerEmbeds
         canRemoveQuote={canRemoveQuote}
-        embed={draft.embed}
+        embed={post.embed}
         dispatch={dispatchPost}
         clearVideo={onClearVideo}
       />
@@ -983,13 +988,13 @@ function ComposerPills({
 }
 
 function ComposerFooter({
-  draft,
+  post,
   dispatch,
   onEmojiButtonPress,
   onError,
   onSelectVideo,
 }: {
-  draft: PostDraft
+  post: PostDraft
   dispatch: (action: PostAction) => void
   onEmojiButtonPress: () => void
   onError: (error: string) => void
@@ -999,7 +1004,7 @@ function ComposerFooter({
   const {_} = useLingui()
   const {isMobile} = useWebMediaQueries()
 
-  const media = draft.embed.media
+  const media = post.embed.media
   const images = media?.type === 'images' ? media.images : []
   const video = media?.type === 'video' ? media.video : null
   const isMaxImages = images.length >= MAX_IMAGES
@@ -1071,7 +1076,7 @@ function ComposerFooter({
       <View style={[a.flex_row, a.align_center, a.justify_between]}>
         <SelectLangBtn />
         <CharProgress
-          count={draft.shortenedGraphemeLength}
+          count={post.shortenedGraphemeLength}
           style={{width: 65}}
         />
       </View>
