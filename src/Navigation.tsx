@@ -92,6 +92,7 @@ import {
   StarterPackScreenShort,
 } from '#/screens/StarterPack/StarterPackScreen'
 import {Wizard} from '#/screens/StarterPack/Wizard'
+import {Subscriptions} from '#/screens/Subscriptions'
 import {useTheme} from '#/alf'
 import {router} from '#/routes'
 import {Referrer} from '../modules/expo-bluesky-swiss-army'
@@ -406,6 +407,11 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         name="StarterPackEdit"
         getComponent={() => Wizard}
         options={{title: title(msg`Edit your starter pack`), requireAuth: true}}
+      />
+      <Stack.Screen
+        name="Subscriptions"
+        getComponent={() => Subscriptions}
+        options={{title: title(msg`Subscriptions`), requireAuth: true}}
       />
     </>
   )
