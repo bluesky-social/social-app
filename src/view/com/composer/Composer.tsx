@@ -227,20 +227,15 @@ export const ComposePost = ({
 
   const clearVideo = React.useCallback(
     (postId: string) => {
-      const post = thread.posts.find(p => p.id === postId)
-      const postMedia = post?.embed.media
-      if (postMedia?.type === 'video') {
-        postMedia.video.abortController.abort()
-        composerDispatch({
-          type: 'update_post',
-          postId: postId,
-          postAction: {
-            type: 'embed_remove_video',
-          },
-        })
-      }
+      composerDispatch({
+        type: 'update_post',
+        postId: postId,
+        postAction: {
+          type: 'embed_remove_video',
+        },
+      })
     },
-    [thread, composerDispatch],
+    [composerDispatch],
   )
 
   const [publishOnUpload, setPublishOnUpload] = useState(false)
