@@ -872,6 +872,12 @@ function ComposerPills({
   const media = draft.embed.media
   const hasMedia = media?.type === 'images' || media?.type === 'video'
   const hasLink = !!draft.embed.link
+
+  // Don't render anything if no pills are going to be displayed
+  if (isReply && !hasMedia && !hasLink) {
+    return null
+  }
+
   return (
     <Animated.View
       style={[a.flex_row, a.p_sm, t.atoms.bg, bottomBarAnimatedStyle]}>
