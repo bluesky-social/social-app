@@ -509,23 +509,34 @@ export const ComposePost = ({
   const keyboardVerticalOffset = useKeyboardVerticalOffset()
 
   const footer = (
-    <ComposerFooter
-      post={activePost}
-      dispatch={dispatch}
-      showAddButton={
-        !isEmptyPost(activePost) && (!nextPost || !isEmptyPost(nextPost))
-      }
-      onError={setError}
-      onEmojiButtonPress={onEmojiButtonPress}
-      onSelectVideo={asset => selectVideo(activePost.id, asset)}
-      onAddPost={() => {
-        composerDispatch({
-          type: 'add_post',
-        })
-      }}
-    />
+    <>
+      <SuggestedLanguage text={activePost.richtext.text} />
+      <ComposerPills
+        isReply={!!replyTo}
+        post={activePost}
+        thread={composerState.thread}
+        dispatch={composerDispatch}
+        bottomBarAnimatedStyle={bottomBarAnimatedStyle}
+      />
+      <ComposerFooter
+        post={activePost}
+        dispatch={dispatch}
+        showAddButton={
+          !isEmptyPost(activePost) && (!nextPost || !isEmptyPost(nextPost))
+        }
+        onError={setError}
+        onEmojiButtonPress={onEmojiButtonPress}
+        onSelectVideo={asset => selectVideo(activePost.id, asset)}
+        onAddPost={() => {
+          composerDispatch({
+            type: 'add_post',
+          })
+        }}
+      />
+    </>
   )
 
+  const isFooterSticky = !isNative && thread.posts.length > 1
   return (
     <BottomSheetPortalProvider>
       <KeyboardAvoidingView
@@ -582,21 +593,11 @@ export const ComposePost = ({
                   onPublish={() => onPressPublish(false)}
                   onError={setError}
                 />
-                {!isNative && post.id === activePost.id && footer}
+                {isFooterSticky && post.id === activePost.id && footer}
               </React.Fragment>
             ))}
           </Animated.ScrollView>
-          <React.Fragment key={activePost.id}>
-            <SuggestedLanguage text={activePost.richtext.text} />
-            <ComposerPills
-              isReply={!!replyTo}
-              post={activePost}
-              thread={composerState.thread}
-              dispatch={composerDispatch}
-              bottomBarAnimatedStyle={bottomBarAnimatedStyle}
-            />
-          </React.Fragment>
-          {isNative && footer}
+          {!isFooterSticky && footer}
         </View>
 
         <Prompt.Basic
@@ -690,7 +691,7 @@ function ComposerPost({
   )
 
   return (
-    <View style={!isActive && styles.inactivePost}>
+    <View style={[styles.post, !isActive && styles.inactivePost]}>
       <View
         style={[
           styles.textInputLayout,
@@ -1362,12 +1363,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginRight: 5,
   },
+  post: {
+    marginHorizontal: 16,
+  },
   inactivePost: {
     opacity: 0.5,
   },
   scrollView: {
     flex: 1,
-    paddingHorizontal: 16,
   },
   textInputLayout: {
     flexDirection: 'row',
