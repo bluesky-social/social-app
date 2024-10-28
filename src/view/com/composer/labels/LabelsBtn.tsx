@@ -40,7 +40,6 @@ export function LabelsBtn({
   }
 
   const updateOtherLabels = (newLabels: OtherSelfLabel[]) => {
-    console.log(newLabels)
     const newLabel = newLabels[newLabels.length - 1]
     const filtered = labels.filter(l => !OTHER_SELF_LABELS.includes(l))
     onChange([
