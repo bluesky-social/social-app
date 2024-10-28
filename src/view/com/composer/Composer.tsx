@@ -526,7 +526,7 @@ export const ComposePost = ({
         }
         onError={setError}
         onEmojiButtonPress={onEmojiButtonPress}
-        onSelectVideo={asset => selectVideo(activePost.id, asset)}
+        onSelectVideo={selectVideo}
         onAddPost={() => {
           composerDispatch({
             type: 'add_post',
@@ -589,8 +589,8 @@ export const ComposePost = ({
                   isActive={post.id === activePost.id}
                   canRemovePost={thread.posts.length > 1}
                   canRemoveQuote={index > 0 || !initQuote}
-                  onSelectVideo={asset => selectVideo(post.id, asset)}
-                  onClearVideo={() => clearVideo(post.id)}
+                  onSelectVideo={selectVideo}
+                  onClearVideo={clearVideo}
                   onPublish={() => onPressPublish(false)}
                   onError={setError}
                 />
@@ -634,8 +634,8 @@ function ComposerPost({
   isReply: boolean
   canRemovePost: boolean
   canRemoveQuote: boolean
-  onClearVideo: () => void
-  onSelectVideo: (asset: ImagePickerAsset) => void
+  onClearVideo: (postId: string) => void
+  onSelectVideo: (postId: string, asset: ImagePickerAsset) => void
   onError: (error: string) => void
   onPublish: (richtext: RichText) => void
 }) {
@@ -682,13 +682,13 @@ function ComposerPost({
   const onPhotoPasted = useCallback(
     async (uri: string) => {
       if (uri.startsWith('data:video/')) {
-        onSelectVideo({uri, type: 'video', height: 0, width: 0})
+        onSelectVideo(post.id, {uri, type: 'video', height: 0, width: 0})
       } else {
         const res = await pasteImage(uri)
         onImageAdd([res])
       }
     },
-    [onSelectVideo, onImageAdd],
+    [post.id, onSelectVideo, onImageAdd],
   )
 
   return (
@@ -776,7 +776,7 @@ function ComposerPost({
         canRemoveQuote={canRemoveQuote}
         embed={post.embed}
         dispatch={dispatchPost}
-        clearVideo={onClearVideo}
+        clearVideo={() => onClearVideo(post.id)}
       />
     </View>
   )
@@ -1078,7 +1078,7 @@ function ComposerFooter({
   showAddButton: boolean
   onEmojiButtonPress: () => void
   onError: (error: string) => void
-  onSelectVideo: (asset: ImagePickerAsset) => void
+  onSelectVideo: (postId: string, asset: ImagePickerAsset) => void
   onAddPost: () => void
 }) {
   const t = useTheme()
@@ -1130,7 +1130,7 @@ function ComposerFooter({
               onAdd={onImageAdd}
             />
             <SelectVideoBtn
-              onSelectVideo={onSelectVideo}
+              onSelectVideo={asset => onSelectVideo(post.id, asset)}
               disabled={!!media}
               setError={onError}
             />
