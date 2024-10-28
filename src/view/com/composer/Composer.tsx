@@ -553,6 +553,7 @@ export const ComposePost = ({
             isReply={!!replyTo}
             isPublishQueued={publishOnUpload}
             isPublishing={isPublishing}
+            isThread={thread.posts.length > 1}
             publishingStage={publishingStage}
             topBarAnimatedStyle={topBarAnimatedStyle}
             onCancel={onPressCancel}
@@ -786,6 +787,7 @@ function ComposerTopBar({
   isReply,
   isPublishQueued,
   isPublishing,
+  isThread,
   publishingStage,
   onCancel,
   onPublish,
@@ -797,6 +799,7 @@ function ComposerTopBar({
   canPost: boolean
   isReply: boolean
   isPublishQueued: boolean
+  isThread: boolean
   onCancel: () => void
   onPublish: () => void
   topBarAnimatedStyle: StyleProp<ViewStyle>
@@ -843,6 +846,8 @@ function ComposerTopBar({
             <ButtonText style={[a.text_md]}>
               {isReply ? (
                 <Trans context="action">Reply</Trans>
+              ) : isThread ? (
+                <Trans context="action">Post All</Trans>
               ) : (
                 <Trans context="action">Post</Trans>
               )}
