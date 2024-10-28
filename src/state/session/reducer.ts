@@ -1,5 +1,6 @@
 import {AtpSessionEvent} from '@atproto/api'
 
+import {identifyUser as identifyPurchasesUser} from '#/state/purchases/identifyUser'
 import {createPublicAgent} from './agent'
 import {wrapSessionReducerForLogging} from './logging'
 import {SessionAccount} from './types'
@@ -118,6 +119,7 @@ let reducer = (state: State, action: Action): State => {
     }
     case 'switched-to-account': {
       const {newAccount, newAgent} = action
+      identifyPurchasesUser(newAccount)
       return {
         accounts: [
           newAccount,
