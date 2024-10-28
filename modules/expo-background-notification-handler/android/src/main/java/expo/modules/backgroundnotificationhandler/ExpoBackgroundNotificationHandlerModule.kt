@@ -1,11 +1,36 @@
 package expo.modules.backgroundnotificationhandler
 
+import android.content.Context
+import expo.modules.blueskyswissarmy.sharedprefs.SharedPrefs
 import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
+
+val DEFAULTS =
+  mapOf<String, Any>(
+    "playSoundChat" to true,
+    "playSoundFollow" to false,
+    "playSoundLike" to false,
+    "playSoundMention" to false,
+    "playSoundQuote" to false,
+    "playSoundReply" to false,
+    "playSoundRepost" to false,
+    "mutedThreads" to mapOf<String, List<String>>(),
+  )
+
+enum class BadgeType(val rawValue: String) {
+  Generic("badgeCountGeneric"),
+  Messages("badgeCountMessages"),
+}
+
+const val INCREMENTED_FOR_KEY = "incremented-for-convos"
 
 class ExpoBackgroundNotificationHandlerModule : Module() {
   companion object {
     var isForegrounded = false
+  }
+
+  fun getContext(): Context {
+    return appContext.reactContext ?: throw Error("Context is null")
   }
 
   override fun definition() =
@@ -13,7 +38,13 @@ class ExpoBackgroundNotificationHandlerModule : Module() {
       Name("ExpoBackgroundNotificationHandler")
 
       OnCreate {
-        NotificationPrefs(appContext.reactContext).initialize()
+        val context = appContext.reactContext ?: throw Error("Context is null")
+        DEFAULTS.forEach { (key, value) ->
+          if (SharedPrefs(context).hasValue(key)) {
+            return@forEach
+          }
+          SharedPrefs(context)._setAnyValue(key, value)
+        }
       }
 
       OnActivityEntersForeground {
@@ -24,52 +55,31 @@ class ExpoBackgroundNotificationHandlerModule : Module() {
         isForegrounded = false
       }
 
-      AsyncFunction("getAllPrefsAsync") {
-        return@AsyncFunction NotificationPrefs(appContext.reactContext).getAllPrefs()
+      AsyncFunction("getPrefsAsync") {
+        val keys = DEFAULTS.keys
+        return@AsyncFunction SharedPrefs(getContext()).getValues(keys)
       }
 
-      AsyncFunction("getBoolAsync") { forKey: String ->
-        return@AsyncFunction NotificationPrefs(appContext.reactContext).getBoolean(forKey)
+      AsyncFunction("resetGenericCountAsync") {
+        SharedPrefs(getContext()).setValue(BadgeType.Generic.rawValue, 0f)
       }
 
-      AsyncFunction("getStringAsync") { forKey: String ->
-        return@AsyncFunction NotificationPrefs(appContext.reactContext).getString(forKey)
+      AsyncFunction("maybeIncrementMessagesCountAsync") { convoId: String ->
+        val prefs = SharedPrefs(getContext())
+        if (!prefs.setContains(INCREMENTED_FOR_KEY, convoId)) {
+          val curr = prefs.getFloat(BadgeType.Messages.rawValue) ?: 0f
+          prefs.setValue(BadgeType.Messages.rawValue, curr + 1)
+        }
       }
 
-      AsyncFunction("getStringArrayAsync") { forKey: String ->
-        return@AsyncFunction NotificationPrefs(appContext.reactContext).getStringArray(forKey)
-      }
-
-      AsyncFunction("setBoolAsync") { forKey: String, value: Boolean ->
-        NotificationPrefs(appContext.reactContext).setBoolean(forKey, value)
-      }
-
-      AsyncFunction("setStringAsync") { forKey: String, value: String ->
-        NotificationPrefs(appContext.reactContext).setString(forKey, value)
-      }
-
-      AsyncFunction("setStringArrayAsync") { forKey: String, value: Array<String> ->
-        NotificationPrefs(appContext.reactContext).setStringArray(forKey, value)
-      }
-
-      AsyncFunction("addToStringArrayAsync") { forKey: String, string: String ->
-        NotificationPrefs(appContext.reactContext).addToStringArray(forKey, string)
-      }
-
-      AsyncFunction("removeFromStringArrayAsync") { forKey: String, string: String ->
-        NotificationPrefs(appContext.reactContext).removeFromStringArray(forKey, string)
-      }
-
-      AsyncFunction("addManyToStringArrayAsync") { forKey: String, strings: Array<String> ->
-        NotificationPrefs(appContext.reactContext).addManyToStringArray(forKey, strings)
-      }
-
-      AsyncFunction("removeManyFromStringArrayAsync") { forKey: String, strings: Array<String> ->
-        NotificationPrefs(appContext.reactContext).removeManyFromStringArray(forKey, strings)
-      }
-
-      AsyncFunction("setBadgeCountAsync") { _: Int ->
-        // This does nothing on Android
+      AsyncFunction("maybeDecrementMessagesCountAsync") { convoId: String ->
+        val prefs = SharedPrefs(getContext())
+        if (prefs.setContains(INCREMENTED_FOR_KEY, convoId)) {
+          val curr = prefs.getFloat(BadgeType.Messages.rawValue) ?: 0f
+          if (curr != 0f) {
+            prefs.setValue(BadgeType.Messages.rawValue, curr - 1)
+          }
+        }
       }
     }
 }
