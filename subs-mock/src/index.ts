@@ -80,6 +80,7 @@ export default new Hono<{Bindings: Bindings; Variables: Variables}>()
     } catch (e) {}
 
     let products = getMainSubscriptionProducts(allProducts.items, subscriptions)
+    const activeProducts = products.filter(p => p.active)
 
     if (platform === 'web') {
       const stripe = c.get('stripe')
@@ -116,7 +117,7 @@ export default new Hono<{Bindings: Bindings; Variables: Variables}>()
       products = products.filter(p => p.provider === 'play_store')
     }
 
-    return c.json({subscriptions: products})
+    return c.json({active: activeProducts, subscriptions: products})
   })
 
   /**

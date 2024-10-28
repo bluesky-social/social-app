@@ -131,6 +131,7 @@ export type Subscription =
        * The rest of this is pretty generic
        */
       interval: 'monthly' | 'annual'
+      active: boolean
       autoRenew: boolean
       provider: RevenueCatSubscription['store']
       status: RevenueCatSubscription['status'] | null
@@ -146,6 +147,7 @@ export type Subscription =
       lookupKey: string
       checkoutId: string
       interval: 'monthly' | 'annual'
+      active: boolean
       autoRenew: boolean
       storeSubscriptionIdentifier: string | null
       provider: RevenueCatSubscription['store']
@@ -191,6 +193,7 @@ export function normalizeMainSubscriptionProduct({
         lookupKey: 'bsky_tier_0',
         checkoutId: product.store_identifier,
         interval: 'monthly',
+        active: subscription?.gives_access ?? false,
         autoRenew: true,
         platform: 'android',
         provider: 'play_store',
@@ -212,6 +215,7 @@ export function normalizeMainSubscriptionProduct({
         lookupKey: 'bsky_tier_0',
         checkoutId: product.store_identifier,
         interval: 'annual',
+        active: subscription?.gives_access ?? false,
         autoRenew: true,
         platform: 'android',
         provider: 'play_store',
@@ -233,6 +237,7 @@ export function normalizeMainSubscriptionProduct({
         lookupKey: 'bsky_tier_1',
         checkoutId: product.store_identifier,
         interval: 'monthly',
+        active: subscription?.gives_access ?? false,
         autoRenew: true,
         platform: 'android',
         provider: 'play_store',
@@ -254,6 +259,7 @@ export function normalizeMainSubscriptionProduct({
         lookupKey: 'bsky_tier_1',
         checkoutId: product.store_identifier,
         interval: 'annual',
+        active: subscription?.gives_access ?? false,
         autoRenew: true,
         platform: 'android',
         provider: 'play_store',
@@ -275,6 +281,7 @@ export function normalizeMainSubscriptionProduct({
         lookupKey: 'bsky_tier_2',
         checkoutId: product.store_identifier,
         interval: 'monthly',
+        active: subscription?.gives_access ?? false,
         autoRenew: true,
         platform: 'android',
         provider: 'play_store',
@@ -296,6 +303,7 @@ export function normalizeMainSubscriptionProduct({
         lookupKey: 'bsky_tier_2',
         checkoutId: product.store_identifier,
         interval: 'annual',
+        active: subscription?.gives_access ?? false,
         autoRenew: true,
         platform: 'android',
         provider: 'play_store',
@@ -321,6 +329,7 @@ export function normalizeMainSubscriptionProduct({
         lookupKey: product.store_identifier,
         checkoutId: product.store_identifier,
         interval: 'monthly',
+        active: subscription?.gives_access ?? false,
         autoRenew: true,
         platform: 'web',
         provider: 'stripe',
@@ -343,6 +352,7 @@ export function normalizeMainSubscriptionProduct({
         lookupKey: product.store_identifier,
         checkoutId: product.store_identifier,
         interval: 'annual',
+        active: subscription?.gives_access ?? false,
         autoRenew: true,
         platform: 'web',
         provider: 'stripe',
@@ -365,6 +375,7 @@ export function normalizeMainSubscriptionProduct({
         lookupKey: product.store_identifier,
         checkoutId: product.store_identifier,
         interval: 'monthly',
+        active: subscription?.gives_access ?? false,
         autoRenew: true,
         platform: 'web',
         provider: 'stripe',
@@ -387,6 +398,7 @@ export function normalizeMainSubscriptionProduct({
         lookupKey: product.store_identifier,
         checkoutId: product.store_identifier,
         interval: 'annual',
+        active: subscription?.gives_access ?? false,
         autoRenew: true,
         platform: 'web',
         provider: 'stripe',
@@ -409,6 +421,7 @@ export function normalizeMainSubscriptionProduct({
         lookupKey: product.store_identifier,
         checkoutId: product.store_identifier,
         interval: 'monthly',
+        active: subscription?.gives_access ?? false,
         autoRenew: true,
         platform: 'web',
         provider: 'stripe',
@@ -431,6 +444,7 @@ export function normalizeMainSubscriptionProduct({
         lookupKey: product.store_identifier,
         checkoutId: product.store_identifier,
         interval: 'annual',
+        active: subscription?.gives_access ?? false,
         autoRenew: true,
         platform: 'web',
         provider: 'stripe',
