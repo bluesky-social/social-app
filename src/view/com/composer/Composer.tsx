@@ -322,131 +322,127 @@ export const ComposePost = ({
         ),
     )
 
-  const onPressPublish = React.useCallback(
-    async (finishedUploading: boolean) => {
-      if (isPublishing) {
-        return
-      }
+  const onPressPublish = React.useCallback(async () => {
+    if (isPublishing) {
+      return
+    }
 
-      if (!canPost) {
-        return
-      }
+    if (!canPost) {
+      return
+    }
 
-      if (
-        !finishedUploading &&
-        thread.posts.some(
-          post =>
-            post.embed.media?.type === 'video' &&
-            post.embed.media.video.asset &&
-            post.embed.media.video.status !== 'done',
-        )
-      ) {
-        setPublishOnUpload(true)
-        return
-      }
-
-      setError('')
-      setIsPublishing(true)
-
-      let postUri
-      try {
-        postUri = (
-          await apilib.post(agent, queryClient, {
-            thread,
-            replyTo: replyTo?.uri,
-            onStateChange: setPublishingStage,
-            langs: toPostLanguages(langPrefs.postLanguage),
-          })
-        ).uris[0]
-        try {
-          await whenAppViewReady(agent, postUri, res => {
-            const postedThread = res.data.thread
-            return AppBskyFeedDefs.isThreadViewPost(postedThread)
-          })
-        } catch (waitErr: any) {
-          logger.error(waitErr, {
-            message: `Waiting for app view failed`,
-          })
-          // Keep going because the post *was* published.
-        }
-      } catch (e: any) {
-        logger.error(e, {
-          message: `Composer: create post failed`,
-          hasImages: thread.posts.some(p => p.embed.media?.type === 'images'),
-        })
-
-        let err = cleanError(e.message)
-        if (err.includes('not locate record')) {
-          err = _(
-            msg`We're sorry! The post you are replying to has been deleted.`,
-          )
-        } else if (e instanceof EmbeddingDisabledError) {
-          err = _(msg`This post's author has disabled quote posts.`)
-        }
-        setError(err)
-        setIsPublishing(false)
-        return
-      } finally {
-        if (postUri) {
-          let index = 0
-          for (let post of thread.posts) {
-            logEvent('post:create', {
-              imageCount:
-                post.embed.media?.type === 'images'
-                  ? post.embed.media.images.length
-                  : 0,
-              isReply: index > 0 || !!replyTo,
-              hasLink: !!post.embed.link,
-              hasQuote: !!post.embed.quote,
-              langs: langPrefs.postLanguage,
-              logContext: 'Composer',
-            })
-            index++
-          }
-        }
-      }
-      if (postUri && !replyTo) {
-        emitPostCreated()
-      }
-      setLangPrefs.savePostLanguageToHistory()
-      if (initQuote) {
-        // We want to wait for the quote count to update before we call `onPost`, which will refetch data
-        whenAppViewReady(agent, initQuote.uri, res => {
-          const quotedThread = res.data.thread
-          if (
-            AppBskyFeedDefs.isThreadViewPost(quotedThread) &&
-            quotedThread.post.quoteCount !== initQuote.quoteCount
-          ) {
-            onPost?.(postUri)
-            return true
-          }
-          return false
-        })
-      } else {
-        onPost?.(postUri)
-      }
-      onClose()
-      Toast.show(
-        replyTo
-          ? _(msg`Your reply has been published`)
-          : _(msg`Your post has been published`),
+    if (
+      thread.posts.some(
+        post =>
+          post.embed.media?.type === 'video' &&
+          post.embed.media.video.asset &&
+          post.embed.media.video.status !== 'done',
       )
-    },
-    [
-      _,
-      agent,
-      thread,
-      canPost,
-      isPublishing,
-      langPrefs.postLanguage,
-      onClose,
-      onPost,
-      initQuote,
-      replyTo,
-      setLangPrefs,
-      queryClient,
-    ],
-  )
+    ) {
+      setPublishOnUpload(true)
+      return
+    }
+
+    setError('')
+    setIsPublishing(true)
+
+    let postUri
+    try {
+      postUri = (
+        await apilib.post(agent, queryClient, {
+          thread,
+          replyTo: replyTo?.uri,
+          onStateChange: setPublishingStage,
+          langs: toPostLanguages(langPrefs.postLanguage),
+        })
+      ).uris[0]
+      try {
+        await whenAppViewReady(agent, postUri, res => {
+          const postedThread = res.data.thread
+          return AppBskyFeedDefs.isThreadViewPost(postedThread)
+        })
+      } catch (waitErr: any) {
+        logger.error(waitErr, {
+          message: `Waiting for app view failed`,
+        })
+        // Keep going because the post *was* published.
+      }
+    } catch (e: any) {
+      logger.error(e, {
+        message: `Composer: create post failed`,
+        hasImages: thread.posts.some(p => p.embed.media?.type === 'images'),
+      })
+
+      let err = cleanError(e.message)
+      if (err.includes('not locate record')) {
+        err = _(
+          msg`We're sorry! The post you are replying to has been deleted.`,
+        )
+      } else if (e instanceof EmbeddingDisabledError) {
+        err = _(msg`This post's author has disabled quote posts.`)
+      }
+      setError(err)
+      setIsPublishing(false)
+      return
+    } finally {
+      if (postUri) {
+        let index = 0
+        for (let post of thread.posts) {
+          logEvent('post:create', {
+            imageCount:
+              post.embed.media?.type === 'images'
+                ? post.embed.media.images.length
+                : 0,
+            isReply: index > 0 || !!replyTo,
+            hasLink: !!post.embed.link,
+            hasQuote: !!post.embed.quote,
+            langs: langPrefs.postLanguage,
+            logContext: 'Composer',
+          })
+          index++
+        }
+      }
+    }
+    if (postUri && !replyTo) {
+      emitPostCreated()
+    }
+    setLangPrefs.savePostLanguageToHistory()
+    if (initQuote) {
+      // We want to wait for the quote count to update before we call `onPost`, which will refetch data
+      whenAppViewReady(agent, initQuote.uri, res => {
+        const quotedThread = res.data.thread
+        if (
+          AppBskyFeedDefs.isThreadViewPost(quotedThread) &&
+          quotedThread.post.quoteCount !== initQuote.quoteCount
+        ) {
+          onPost?.(postUri)
+          return true
+        }
+        return false
+      })
+    } else {
+      onPost?.(postUri)
+    }
+    onClose()
+    Toast.show(
+      replyTo
+        ? _(msg`Your reply has been published`)
+        : _(msg`Your post has been published`),
+    )
+  }, [
+    _,
+    agent,
+    thread,
+    canPost,
+    isPublishing,
+    langPrefs.postLanguage,
+    onClose,
+    onPost,
+    initQuote,
+    replyTo,
+    setLangPrefs,
+    queryClient,
+  ])
 
   React.useEffect(() => {
     if (publishOnUpload) {
@@ -461,7 +457,7 @@ export const ComposePost = ({
       }
       if (uploadingVideos === 0) {
         setPublishOnUpload(false)
-        onPressPublish(true)
+        onPressPublish()
       }
     }
   }, [thread.posts, onPressPublish, publishOnUpload])
@@ -552,7 +548,7 @@ export const ComposePost = ({
             publishingStage={publishingStage}
             topBarAnimatedStyle={topBarAnimatedStyle}
             onCancel={onPressCancel}
-            onPublish={() => onPressPublish(false)}>
+            onPublish={onPressPublish}>
             {isAltTextRequiredAndMissing && <AltTextReminder />}
             <ErrorBanner
               error={error}
@@ -586,7 +582,7 @@ export const ComposePost = ({
                   canRemoveQuote={index > 0 || !initQuote}
                   onSelectVideo={selectVideo}
                   onClearVideo={clearVideo}
-                  onPublish={() => onPressPublish(false)}
+                  onPublish={onPressPublish}
                   onError={setError}
                 />
                 {isFooterSticky && post.id === activePost.id && footer}
