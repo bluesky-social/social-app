@@ -3,10 +3,10 @@ import {StyleSheet, View} from 'react-native'
 import {Trans} from '@lingui/macro'
 import {useFocusEffect} from '@react-navigation/native'
 
+import {IS_INTERNAL} from '#/lib/app-info'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
-import {useGate} from '#/lib/statsig/statsig'
 import {
   EmbedPlayerSource,
   externalEmbedLabels,
@@ -29,9 +29,7 @@ type Props = NativeStackScreenProps<
   'PreferencesExternalEmbeds'
 >
 export function PreferencesExternalEmbeds(props: Props) {
-  const gate = useGate()
-
-  return gate('new_settings') ? (
+  return IS_INTERNAL ? (
     <ExternalMediaPreferencesScreen {...props} />
   ) : (
     <LegacyPreferencesExternalEmbeds {...props} />
