@@ -5,7 +5,6 @@ import {useLingui} from '@lingui/react'
 
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
 import {useHaptics} from '#/lib/haptics'
-import {isIOS} from '#/platform/detection'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
@@ -45,11 +44,7 @@ export function PostThreadComposePrompt({
       onPressIn={ios(() => playHaptic('Light'))}
       onPress={() => {
         onPressCompose()
-        if (isIOS) {
-          setTimeout(() => playHaptic('Medium'), 10)
-        } else {
-          playHaptic('Light')
-        }
+        playHaptic('Light')
       }}
       onLongPress={ios(() => {
         onPressCompose()
