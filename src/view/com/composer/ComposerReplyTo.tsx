@@ -204,6 +204,7 @@ const styles = StyleSheet.create({
     paddingTop: 4,
     paddingBottom: 16,
     marginBottom: 12,
+    marginHorizontal: 16,
   },
   replyToPost: {
     flex: 1,
