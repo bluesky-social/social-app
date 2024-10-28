@@ -565,6 +565,9 @@ function ComposerPost({
   const {_} = useLingui()
   const {data: currentProfile} = useProfileQuery({did: currentDid})
   const richtext = draft.richtext
+  const isTextOnly =
+    !draft.embed.link && !draft.embed.quote && !draft.embed.media
+  const forceMinHeight = isWeb && isTextOnly
   const selectTextInputPlaceholder = isReply
     ? _(msg`Write your reply`)
     : _(msg`What's up?`)
@@ -615,6 +618,7 @@ function ComposerPost({
           richtext={richtext}
           placeholder={selectTextInputPlaceholder}
           autoFocus
+          webForceMinHeight={forceMinHeight}
           setRichText={rt => {
             dispatch({type: 'update_richtext', richtext: rt})
           }}
@@ -757,7 +761,7 @@ function ComposerEmbeds({
       )}
 
       {embed.media?.type === 'gif' && (
-        <View style={a.relative} key={embed.media.gif.url}>
+        <View style={[a.relative, a.mt_lg]} key={embed.media.gif.url}>
           <ExternalEmbedGif
             gif={embed.media.gif}
             onRemove={() => dispatch({type: 'embed_remove_gif'})}
@@ -773,7 +777,7 @@ function ComposerEmbeds({
       )}
 
       {!embed.media && embed.link && (
-        <View style={a.relative} key={embed.link.uri}>
+        <View style={[a.relative, a.mt_lg]} key={embed.link.uri}>
           <ExternalEmbedLink
             uri={embed.link.uri}
             hasQuote={!!embed.quote}
