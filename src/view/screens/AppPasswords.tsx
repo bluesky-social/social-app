@@ -12,10 +12,10 @@ import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
+import {IS_INTERNAL} from '#/lib/app-info'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {CommonNavigatorParams} from '#/lib/routes/types'
-import {useGate} from '#/lib/statsig/statsig'
 import {cleanError} from '#/lib/strings/errors'
 import {useModalControls} from '#/state/modals'
 import {
@@ -37,8 +37,7 @@ import * as Prompt from '#/components/Prompt'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AppPasswords'>
 export function AppPasswords(props: Props) {
-  const gate = useGate()
-  return gate('new_settings') ? (
+  return IS_INTERNAL ? (
     <NewAppPasswordsScreen {...props} />
   ) : (
     <Layout.Screen testID="AppPasswordsScreen">
