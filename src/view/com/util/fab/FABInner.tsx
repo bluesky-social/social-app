@@ -10,8 +10,8 @@ import {useMinimalShellFabTransform} from '#/lib/hooks/useMinimalShellTransform'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {clamp} from '#/lib/numbers'
 import {gradients} from '#/lib/styles'
-import {isWeb} from '#/platform/detection'
-import {native} from '#/alf'
+import {isIOS, isWeb} from '#/platform/detection'
+import {ios} from '#/alf'
 
 export interface FABProps
   extends ComponentProps<typeof TouchableWithoutFeedback> {
@@ -41,14 +41,18 @@ export function FABInner({testID, icon, onPress, ...props}: FABProps) {
       ]}>
       <PressableScale
         testID={testID}
-        onPressIn={() => playHaptic('Light')}
+        onPressIn={ios(() => playHaptic('Light'))}
         onPress={evt => {
           onPress?.(evt)
-          setTimeout(() => playHaptic('Medium'), 200)
+          if (isIOS) {
+            setTimeout(() => playHaptic('Medium'), 10)
+          } else {
+            playHaptic('Light')
+          }
         }}
-        onLongPress={native((evt: any) => {
+        onLongPress={ios((evt: any) => {
           onPress?.(evt)
-          setTimeout(() => playHaptic('Heavy'), 200)
+          playHaptic('Heavy')
         })}
         targetScale={0.9}
         {...props}>
