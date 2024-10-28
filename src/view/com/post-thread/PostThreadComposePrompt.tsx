@@ -5,11 +5,10 @@ import {useLingui} from '@lingui/react'
 
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
 import {useHaptics} from '#/lib/haptics'
-import {useHapticsDisabled} from '#/state/preferences'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, native, useBreakpoints, useTheme} from '#/alf'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {Text} from '#/components/Typography'
 
@@ -23,23 +22,12 @@ export function PostThreadComposePrompt({
   const {_} = useLingui()
   const {gtMobile} = useBreakpoints()
   const t = useTheme()
-  const playHaptics = useHaptics()
-  const isHapticsDisabled = useHapticsDisabled()
+  const playHaptic = useHaptics()
   const {
     state: hovered,
     onIn: onHoverIn,
     onOut: onHoverOut,
   } = useInteractionState()
-
-  const onPress = () => {
-    playHaptics('Light')
-    setTimeout(
-      () => {
-        onPressCompose()
-      },
-      isHapticsDisabled ? 0 : 75,
-    )
-  }
 
   return (
     <PressableScale
@@ -53,7 +41,15 @@ export function PostThreadComposePrompt({
         t.atoms.border_contrast_low,
         t.atoms.bg,
       ]}
-      onPress={onPress}
+      onPressIn={() => playHaptic('Light')}
+      onPress={() => {
+        onPressCompose()
+        setTimeout(() => playHaptic('Medium'), 200)
+      }}
+      onLongPress={native(() => {
+        onPressCompose()
+        setTimeout(() => playHaptic('Heavy'), 200)
+      })}
       onHoverIn={onHoverIn}
       onHoverOut={onHoverOut}>
       <View
