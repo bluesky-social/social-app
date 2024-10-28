@@ -28,6 +28,9 @@ import Animated, {
   interpolateColor,
   LayoutAnimationConfig,
   LinearTransition,
+  runOnUI,
+  scrollTo,
+  useAnimatedRef,
   useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
@@ -488,6 +491,7 @@ export const ComposePost = ({
     openEmojiPicker?.(textInput.current?.getCursorPosition())
   }, [openEmojiPicker])
 
+  const scrollViewRef = useAnimatedRef<Animated.ScrollView>()
   useEffect(() => {
     if (composerState.mutableNeedsFocusActive) {
       composerState.mutableNeedsFocusActive = false
@@ -496,12 +500,20 @@ export const ComposePost = ({
   }, [composerState])
 
   const {
+    contentHeight,
     scrollHandler,
     onScrollViewContentSizeChange,
     onScrollViewLayout,
     topBarAnimatedStyle,
     bottomBarAnimatedStyle,
   } = useAnimatedBorders()
+
+  useEffect(() => {
+    if (composerState.mutableNeedsScrollToBottom) {
+      composerState.mutableNeedsScrollToBottom = false
+      runOnUI(scrollTo)(scrollViewRef, 0, contentHeight.value, true)
+    }
+  }, [composerState, scrollViewRef, contentHeight])
 
   const keyboardVerticalOffset = useKeyboardVerticalOffset()
 
@@ -569,6 +581,7 @@ export const ComposePost = ({
           </ComposerTopBar>
 
           <Animated.ScrollView
+            ref={scrollViewRef}
             layout={native(LinearTransition)}
             onScroll={scrollHandler}
             style={styles.scrollView}
@@ -1274,6 +1287,7 @@ function useAnimatedBorders() {
   })
 
   return {
+    contentHeight,
     scrollHandler,
     onScrollViewContentSizeChange,
     onScrollViewLayout,
