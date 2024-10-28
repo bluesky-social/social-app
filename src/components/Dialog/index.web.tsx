@@ -217,14 +217,13 @@ export const InnerFlatList = React.forwardRef<
     <Inner
       label={label}
       style={[
+        a.overflow_hidden,
+        a.px_0,
         // @ts-ignore web only -sfn
-        {
-          paddingHorizontal: 0,
-          maxHeight: 'calc(-36px + 100vh)',
-          overflow: 'hidden',
-        },
+        {maxHeight: 'calc(-36px + 100vh)'},
         webInnerStyle,
-      ]}>
+      ]}
+      contentContainerStyle={[a.px_0]}>
       <FlatList
         ref={ref}
         style={[gtMobile ? a.px_2xl : a.px_xl, flatten(style)]}
