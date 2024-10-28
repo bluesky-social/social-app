@@ -46,8 +46,6 @@ appId: xyz.blueskyweb.app
       id: "saveChangesBtn"
 - tapOn:
     id: "viewHeaderDrawerBtn"
-- tapOn:
-    id: "viewHeaderDrawerBtn"
 - assertVisible:
     id: "homeScreenFeedTabs-selector-0"
     text: "alice-favs"
@@ -70,8 +68,6 @@ appId: xyz.blueskyweb.app
     id: "saveChangesBtn"
 - tapOn:
     id: "viewHeaderDrawerBtn"
-- tapOn:
-    id: "viewHeaderDrawerBtn"
 - assertVisible:
     id: "homeScreenFeedTabs-selector-0"
     text: "Following"
@@ -92,8 +88,6 @@ appId: xyz.blueskyweb.app
 - tapOn:
       label: "Save button"
       id: "saveChangesBtn"
-- tapOn:
-    id: "viewHeaderDrawerBtn"
 - tapOn:
     id: "viewHeaderDrawerBtn"
 - assertVisible:
