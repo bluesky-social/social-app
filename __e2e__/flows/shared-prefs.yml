@@ -8,7 +8,8 @@ appId: xyz.blueskyweb.app
     file: ../setupApp.yml
 - tapOn:
     id: "e2eSignInAlice"
-- tapOn: "/sys/debug"
+- tapOn:
+      id: "storybookBtn"
 - tapOn:
     id: "sharedPrefsTestOpenBtn"
 - tapOn:
