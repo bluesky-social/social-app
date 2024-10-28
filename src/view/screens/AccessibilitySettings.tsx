@@ -4,10 +4,10 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
 
+import {IS_INTERNAL} from '#/lib/app-info'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
-import {useGate} from '#/lib/statsig/statsig'
 import {s} from '#/lib/styles'
 import {isNative} from '#/platform/detection'
 import {
@@ -36,8 +36,7 @@ type Props = NativeStackScreenProps<
   'AccessibilitySettings'
 >
 export function AccessibilitySettingsScreen(props: Props) {
-  const gate = useGate()
-  return gate('new_settings') ? (
+  return IS_INTERNAL ? (
     <NewAccessibilitySettingsScreen {...props} />
   ) : (
     <LegacyAccessibilitySettingsScreen {...props} />

@@ -7,9 +7,9 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
 
+import {IS_INTERNAL} from '#/lib/app-info'
 import {getLabelingServiceTitle} from '#/lib/moderation'
 import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
-import {useGate} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {isIOS} from '#/platform/detection'
 import {
@@ -174,7 +174,6 @@ export function ModerationScreenInner({
     data: labelers,
     error: labelersError,
   } = useMyLabelersQuery()
-  const gate = useGate()
 
   useFocusEffect(
     React.useCallback(() => {
@@ -471,7 +470,7 @@ export function ModerationScreenInner({
         </View>
       )}
 
-      {!gate('new_settings') && (
+      {!IS_INTERNAL && (
         <>
           <Text
             style={[

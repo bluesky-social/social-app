@@ -18,7 +18,7 @@ import {useLingui} from '@lingui/react'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {appVersion, BUNDLE_DATE, bundleInfo} from '#/lib/app-info'
+import {appVersion, BUNDLE_DATE, bundleInfo, IS_INTERNAL} from '#/lib/app-info'
 import {STATUS_PAGE_URL} from '#/lib/constants'
 import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
 import {useCustomPalette} from '#/lib/hooks/useCustomPalette'
@@ -28,7 +28,6 @@ import {HandIcon, HashtagIcon} from '#/lib/icons'
 import {makeProfileLink} from '#/lib/routes/links'
 import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
 import {NavigationProp} from '#/lib/routes/types'
-import {useGate} from '#/lib/statsig/statsig'
 import {colors, s} from '#/lib/styles'
 import {isNative} from '#/platform/detection'
 import {useModalControls} from '#/state/modals'
@@ -140,8 +139,7 @@ function SettingsAccountCard({
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Settings'>
 export function SettingsScreen(props: Props) {
-  const gate = useGate()
-  return gate('new_settings') ? (
+  return IS_INTERNAL ? (
     <NewSettingsScreen {...props} />
   ) : (
     <LegacySettingsScreen {...props} />
