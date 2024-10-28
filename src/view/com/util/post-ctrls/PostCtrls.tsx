@@ -290,10 +290,7 @@ let PostCtrls = ({
         <Pressable
           testID="likeBtn"
           style={btnStyle}
-          onPress={() => {
-            playHaptic('Light')
-            requireAuth(() => onPressToggleLike())
-          }}
+          onPress={() => requireAuth(() => onPressToggleLike())}
           accessibilityLabel={
             post.viewer?.like
               ? plural(post.likeCount || 0, {
