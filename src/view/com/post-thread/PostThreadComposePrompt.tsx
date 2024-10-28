@@ -8,7 +8,7 @@ import {useHaptics} from '#/lib/haptics'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, native, useBreakpoints, useTheme} from '#/alf'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {Text} from '#/components/Typography'
 
@@ -46,10 +46,10 @@ export function PostThreadComposePrompt({
         onPressCompose()
         setTimeout(() => playHaptic('Medium'), 200)
       }}
-      onLongPress={() => {
+      onLongPress={native(() => {
         onPressCompose()
         setTimeout(() => playHaptic('Heavy'), 200)
-      }}
+      })}
       onHoverIn={onHoverIn}
       onHoverOut={onHoverOut}>
       <View

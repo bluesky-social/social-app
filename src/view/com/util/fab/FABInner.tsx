@@ -11,6 +11,7 @@ import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {clamp} from '#/lib/numbers'
 import {gradients} from '#/lib/styles'
 import {isWeb} from '#/platform/detection'
+import {native} from '#/alf'
 
 export interface FABProps
   extends ComponentProps<typeof TouchableWithoutFeedback> {
@@ -41,14 +42,14 @@ export function FABInner({testID, icon, onPress, ...props}: FABProps) {
       <PressableScale
         testID={testID}
         onPressIn={() => playHaptic('Light')}
-        onPress={e => {
-          onPress?.(e)
+        onPress={evt => {
+          onPress?.(evt)
           setTimeout(() => playHaptic('Medium'), 200)
         }}
-        onLongPress={e => {
-          onPress?.(e)
+        onLongPress={native((evt: any) => {
+          onPress?.(evt)
           setTimeout(() => playHaptic('Heavy'), 200)
-        }}
+        })}
         targetScale={0.9}
         {...props}>
         <LinearGradient
