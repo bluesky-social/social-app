@@ -117,7 +117,7 @@ export default new Hono<{Bindings: Bindings; Variables: Variables}>()
       products = products.filter(p => p.provider === 'play_store')
     }
 
-    return c.json({active: activeProducts, subscriptions: products})
+    return c.json({active: activeProducts, available: products})
   })
 
   /**

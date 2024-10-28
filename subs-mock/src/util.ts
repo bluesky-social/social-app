@@ -132,7 +132,7 @@ export type Subscription =
        */
       interval: 'monthly' | 'annual'
       active: boolean
-      autoRenew: boolean
+      autoRenewStatus: RevenueCatSubscription['auto_renewal_status'] | null
       provider: RevenueCatSubscription['store']
       status: RevenueCatSubscription['status'] | null
       entitlements: RevenueCatSubscription['entitlements']['items']
@@ -148,7 +148,7 @@ export type Subscription =
       checkoutId: string
       interval: 'monthly' | 'annual'
       active: boolean
-      autoRenew: boolean
+      autoRenewStatus: RevenueCatSubscription['auto_renewal_status'] | null
       storeSubscriptionIdentifier: string | null
       provider: RevenueCatSubscription['store']
       status: RevenueCatSubscription['status'] | null
@@ -194,9 +194,9 @@ export function normalizeMainSubscriptionProduct({
         checkoutId: product.store_identifier,
         interval: 'monthly',
         active: subscription?.gives_access ?? false,
-        autoRenew: true,
         platform: 'android',
         provider: 'play_store',
+        autoRenewStatus: subscription?.auto_renewal_status ?? null,
         storeSubscriptionIdentifier:
           subscription?.store_subscription_identifier ?? null,
         status: subscription?.status ?? null,
@@ -216,7 +216,7 @@ export function normalizeMainSubscriptionProduct({
         checkoutId: product.store_identifier,
         interval: 'annual',
         active: subscription?.gives_access ?? false,
-        autoRenew: true,
+        autoRenewStatus: subscription?.auto_renewal_status ?? null,
         platform: 'android',
         provider: 'play_store',
         storeSubscriptionIdentifier:
@@ -238,7 +238,7 @@ export function normalizeMainSubscriptionProduct({
         checkoutId: product.store_identifier,
         interval: 'monthly',
         active: subscription?.gives_access ?? false,
-        autoRenew: true,
+        autoRenewStatus: subscription?.auto_renewal_status ?? null,
         platform: 'android',
         provider: 'play_store',
         storeSubscriptionIdentifier:
@@ -260,7 +260,7 @@ export function normalizeMainSubscriptionProduct({
         checkoutId: product.store_identifier,
         interval: 'annual',
         active: subscription?.gives_access ?? false,
-        autoRenew: true,
+        autoRenewStatus: subscription?.auto_renewal_status ?? null,
         platform: 'android',
         provider: 'play_store',
         storeSubscriptionIdentifier:
@@ -282,7 +282,7 @@ export function normalizeMainSubscriptionProduct({
         checkoutId: product.store_identifier,
         interval: 'monthly',
         active: subscription?.gives_access ?? false,
-        autoRenew: true,
+        autoRenewStatus: subscription?.auto_renewal_status ?? null,
         platform: 'android',
         provider: 'play_store',
         storeSubscriptionIdentifier:
@@ -304,7 +304,7 @@ export function normalizeMainSubscriptionProduct({
         checkoutId: product.store_identifier,
         interval: 'annual',
         active: subscription?.gives_access ?? false,
-        autoRenew: true,
+        autoRenewStatus: subscription?.auto_renewal_status ?? null,
         platform: 'android',
         provider: 'play_store',
         storeSubscriptionIdentifier:
@@ -330,7 +330,7 @@ export function normalizeMainSubscriptionProduct({
         checkoutId: product.store_identifier,
         interval: 'monthly',
         active: subscription?.gives_access ?? false,
-        autoRenew: true,
+        autoRenewStatus: subscription?.auto_renewal_status ?? null,
         platform: 'web',
         provider: 'stripe',
         price: 0,
@@ -353,7 +353,7 @@ export function normalizeMainSubscriptionProduct({
         checkoutId: product.store_identifier,
         interval: 'annual',
         active: subscription?.gives_access ?? false,
-        autoRenew: true,
+        autoRenewStatus: subscription?.auto_renewal_status ?? null,
         platform: 'web',
         provider: 'stripe',
         price: 0,
@@ -376,7 +376,7 @@ export function normalizeMainSubscriptionProduct({
         checkoutId: product.store_identifier,
         interval: 'monthly',
         active: subscription?.gives_access ?? false,
-        autoRenew: true,
+        autoRenewStatus: subscription?.auto_renewal_status ?? null,
         platform: 'web',
         provider: 'stripe',
         price: 0,
@@ -399,7 +399,7 @@ export function normalizeMainSubscriptionProduct({
         checkoutId: product.store_identifier,
         interval: 'annual',
         active: subscription?.gives_access ?? false,
-        autoRenew: true,
+        autoRenewStatus: subscription?.auto_renewal_status ?? null,
         platform: 'web',
         provider: 'stripe',
         price: 0,
@@ -422,7 +422,7 @@ export function normalizeMainSubscriptionProduct({
         checkoutId: product.store_identifier,
         interval: 'monthly',
         active: subscription?.gives_access ?? false,
-        autoRenew: true,
+        autoRenewStatus: subscription?.auto_renewal_status ?? null,
         platform: 'web',
         provider: 'stripe',
         price: 0,
@@ -445,7 +445,7 @@ export function normalizeMainSubscriptionProduct({
         checkoutId: product.store_identifier,
         interval: 'annual',
         active: subscription?.gives_access ?? false,
-        autoRenew: true,
+        autoRenewStatus: subscription?.auto_renewal_status ?? null,
         platform: 'web',
         provider: 'stripe',
         price: 0,
