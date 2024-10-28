@@ -52,7 +52,7 @@ export function FollowingFeedPreferencesScreen({}: Props) {
         <SettingsList.Container>
           <SettingsList.Item>
             <Admonition type="tip" style={[a.flex_1]}>
-              These settings only apply to the Following feed.
+              <Trans>These settings only apply to the Following feed.</Trans>
             </Admonition>
           </SettingsList.Item>
           <Toggle.Item
