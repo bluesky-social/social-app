@@ -304,7 +304,8 @@ export const ComposePost = ({
   const canPost =
     graphemeLength <= MAX_GRAPHEME_LENGTH &&
     !isAltTextRequiredAndMissing &&
-    !isEmptyPost
+    !isEmptyPost &&
+    videoState.status !== 'error'
 
   const onPressPublish = React.useCallback(
     async (finishedUploading: boolean) => {
