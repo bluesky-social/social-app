@@ -508,6 +508,24 @@ export const ComposePost = ({
 
   const keyboardVerticalOffset = useKeyboardVerticalOffset()
 
+  const footer = (
+    <ComposerFooter
+      post={activePost}
+      dispatch={dispatch}
+      showAddButton={
+        !isEmptyPost(activePost) && (!nextPost || !isEmptyPost(nextPost))
+      }
+      onError={setError}
+      onEmojiButtonPress={onEmojiButtonPress}
+      onSelectVideo={asset => selectVideo(activePost.id, asset)}
+      onAddPost={() => {
+        composerDispatch({
+          type: 'add_post',
+        })
+      }}
+    />
+  )
+
   return (
     <BottomSheetPortalProvider>
       <KeyboardAvoidingView
@@ -550,23 +568,24 @@ export const ComposePost = ({
             onLayout={onScrollViewLayout}>
             {replyTo ? <ComposerReplyTo replyTo={replyTo} /> : undefined}
             {thread.posts.map((post, index) => (
-              <ComposerPost
-                key={post.id}
-                post={post}
-                dispatch={composerDispatch}
-                textInput={post.id === activePost.id ? textInput : null}
-                isReply={index > 0 || !!replyTo}
-                isActive={post.id === activePost.id}
-                canRemovePost={thread.posts.length > 1}
-                canRemoveQuote={index > 0 || !initQuote}
-                onSelectVideo={asset => selectVideo(post.id, asset)}
-                onClearVideo={() => clearVideo(post.id)}
-                onPublish={() => onPressPublish(false)}
-                onError={setError}
-              />
+              <React.Fragment key={post.id}>
+                <ComposerPost
+                  post={post}
+                  dispatch={composerDispatch}
+                  textInput={post.id === activePost.id ? textInput : null}
+                  isReply={index > 0 || !!replyTo}
+                  isActive={post.id === activePost.id}
+                  canRemovePost={thread.posts.length > 1}
+                  canRemoveQuote={index > 0 || !initQuote}
+                  onSelectVideo={asset => selectVideo(post.id, asset)}
+                  onClearVideo={() => clearVideo(post.id)}
+                  onPublish={() => onPressPublish(false)}
+                  onError={setError}
+                />
+                {!isNative && post.id === activePost.id && footer}
+              </React.Fragment>
             ))}
           </Animated.ScrollView>
-
           <React.Fragment key={activePost.id}>
             <SuggestedLanguage text={activePost.richtext.text} />
             <ComposerPills
@@ -576,23 +595,8 @@ export const ComposePost = ({
               dispatch={composerDispatch}
               bottomBarAnimatedStyle={bottomBarAnimatedStyle}
             />
-            <ComposerFooter
-              post={activePost}
-              dispatch={dispatch}
-              showAddButton={
-                !isEmptyPost(activePost) &&
-                (!nextPost || !isEmptyPost(nextPost))
-              }
-              onError={setError}
-              onEmojiButtonPress={onEmojiButtonPress}
-              onSelectVideo={asset => selectVideo(activePost.id, asset)}
-              onAddPost={() => {
-                composerDispatch({
-                  type: 'add_post',
-                })
-              }}
-            />
           </React.Fragment>
+          {isNative && footer}
         </View>
 
         <Prompt.Basic
