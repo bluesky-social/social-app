@@ -10,7 +10,7 @@ import {useMinimalShellFabTransform} from '#/lib/hooks/useMinimalShellTransform'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {clamp} from '#/lib/numbers'
 import {gradients} from '#/lib/styles'
-import {isIOS, isWeb} from '#/platform/detection'
+import {isWeb} from '#/platform/detection'
 import {ios} from '#/alf'
 
 export interface FABProps
@@ -44,11 +44,7 @@ export function FABInner({testID, icon, onPress, ...props}: FABProps) {
         onPressIn={ios(() => playHaptic('Light'))}
         onPress={evt => {
           onPress?.(evt)
-          if (isIOS) {
-            setTimeout(() => playHaptic('Medium'), 10)
-          } else {
-            playHaptic('Light')
-          }
+          playHaptic('Light')
         }}
         onLongPress={ios((evt: any) => {
           onPress?.(evt)
