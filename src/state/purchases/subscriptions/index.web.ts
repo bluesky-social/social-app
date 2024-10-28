@@ -22,7 +22,7 @@ export function useMainSubscriptions() {
         did: currentAccount!.did,
         platform: 'web',
       })
-      const platformSubscriptions = rawSubscriptions.filter(
+      const platformSubscriptions = rawSubscriptions.available.filter(
         s => s.platform === 'web',
       )
       const subscriptions = platformSubscriptions.map(sub => {
@@ -40,7 +40,10 @@ export function useMainSubscriptions() {
         return subscription
       })
 
-      return organizeMainSubscriptionsByTier(subscriptions)
+      return {
+        active: rawSubscriptions.active,
+        available: organizeMainSubscriptionsByTier(subscriptions),
+      }
     },
   })
 }

@@ -1,5 +1,5 @@
 import Purchases from 'react-native-purchases'
-import {useMutation, useQuery} from '@tanstack/react-query'
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {isAndroid} from '#/platform/detection'
 import {getMainSubscriptions} from '#/state/purchases/subscriptions/api'
@@ -17,15 +17,12 @@ export function useMainSubscriptions() {
   return useQuery<Subscriptions>({
     queryKey: ['availableSubscriptions', did],
     async queryFn() {
-      Purchases.logIn(did)
-      Purchases.setEmail(currentAccount!.email!)
-
-      const platform = isAndroid ? 'android' : ('ios' as const)
+      const platform = isAndroid ? 'android' : 'ios'
       const rawSubscriptions = await getMainSubscriptions({
         did: currentAccount!.did,
         platform,
       })
-      const platformSubscriptions = rawSubscriptions
+      const platformSubscriptions = rawSubscriptions.available
         .filter(s => s.platform !== 'web')
         .filter(s => s.platform === platform)
       const lookupKeys = Array.from(
@@ -51,17 +48,29 @@ export function useMainSubscriptions() {
         })
         .filter(Boolean) as Subscription[]
 
-      return organizeMainSubscriptionsByTier(subscriptions)
+      return {
+        active: rawSubscriptions.active,
+        available: organizeMainSubscriptionsByTier(subscriptions),
+      }
     },
   })
 }
 
 export function usePurchaseSubscription() {
+  const {currentAccount} = useSession()
+  const queryClient = useQueryClient()
+
   return useMutation({
     async mutationFn(product: Subscription['product']) {
       if (product.platform === 'web') {
         throw new Error('Cannot purchase web subscription on native')
       }
+      // TODO don't do this here
+      Purchases.addCustomerInfoUpdateListener(_info => {
+        queryClient.invalidateQueries({
+          queryKey: ['availableSubscriptions', currentAccount!.did],
+        })
+      })
       return Purchases.purchaseStoreProduct(product.data)
     },
   })

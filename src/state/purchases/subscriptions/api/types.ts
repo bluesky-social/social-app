@@ -6,7 +6,15 @@ export type RawSubscriptionObjectBase<T> = T & {
   lookupKey: string
   checkoutId: string
   interval: 'monthly' | 'annual'
-  autoRenew: boolean
+  active: boolean
+  autoRenewStatus:
+    | 'will_renew'
+    | 'will_not_renew'
+    | 'will_change_product'
+    | 'will_pause'
+    | 'requires_price_increase_consent'
+    | 'has_already_renewed'
+    | null
   status:
     | 'trialing'
     | 'active'

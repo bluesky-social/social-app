@@ -2,8 +2,8 @@ import {Subscription, Subscriptions} from './types'
 
 export function organizeMainSubscriptionsByTier(
   subscriptions: Subscription[],
-): Subscriptions {
-  const result: Subscriptions = {
+): Subscriptions['subscriptions'] {
+  const result: Subscriptions['subscriptions'] = {
     monthly: [],
     annual: [],
   }

@@ -1,6 +1,9 @@
 import {PurchasesStoreProduct} from 'react-native-purchases'
 
-import {RawSubscriptionObjectBase} from '#/state/purchases/subscriptions/api/types'
+import {
+  RawSubscriptionObject,
+  RawSubscriptionObjectBase,
+} from '#/state/purchases/subscriptions/api/types'
 
 export enum SubscriptionId {
   Main0MonthlyAuto = 'main:0:monthly:auto',
@@ -9,6 +12,12 @@ export enum SubscriptionId {
   Main1AnnualAuto = 'main:1:annual:auto',
   Main2MonthlyAuto = 'main:2:monthly:auto',
   Main2AnnualAuto = 'main:2:annual:auto',
+}
+
+export enum EntitlementId {
+  Main0 = 'main:0',
+  Main1 = 'main:1',
+  Main2 = 'main:2',
 }
 
 export type Subscription =
@@ -50,6 +59,9 @@ export type Subscription =
     }>
 
 export type Subscriptions = {
-  monthly: Subscription[]
-  annual: Subscription[]
+  active: RawSubscriptionObject[]
+  available: {
+    monthly: Subscription[]
+    annual: Subscription[]
+  }
 }

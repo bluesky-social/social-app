@@ -5,7 +5,6 @@ import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {StackActions, useNavigation} from '@react-navigation/native'
 
-import {IS_INTERNAL} from '#/lib/app-info'
 import {FEEDBACK_FORM_URL, HELP_DESK_URL} from '#/lib/constants'
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
 import {useNavigationTabState} from '#/lib/hooks/useNavigationTabState'
@@ -276,12 +275,10 @@ let DrawerContent = ({}: {}): React.ReactNode => {
               onPress={onPressProfile}
             />
             <SettingsMenuItem onPress={onPressSettings} />
-            {IS_INTERNAL && (
-              <SubscriptionsMenuItem
-                isActive={false}
-                onPress={onPressSubscriptions}
-              />
-            )}
+            <SubscriptionsMenuItem
+              isActive={false}
+              onPress={onPressSubscriptions}
+            />
           </>
         ) : (
           <>
