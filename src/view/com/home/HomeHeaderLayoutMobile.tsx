@@ -16,6 +16,7 @@ import {atoms} from '#/alf'
 import {useTheme} from '#/alf'
 import {atoms as a} from '#/alf'
 import {ColorPalette_Stroke2_Corner0_Rounded as ColorPalette} from '#/components/icons/ColorPalette'
+import {Gift1_Stroke2_Corner0_Rounded as Gift} from '#/components/icons/Gift1'
 import {Hashtag_Stroke2_Corner0_Rounded as FeedsIcon} from '#/components/icons/Hashtag'
 import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
 import {Link} from '#/components/Link'
@@ -73,6 +74,9 @@ export function HomeHeaderLayoutMobile({
           ]}>
           {IS_DEV && (
             <>
+              <Link label="Jump to subscriptions" to="/subscriptions">
+                <Gift size="md" />
+              </Link>
               <Link
                 label="View storybook"
                 to="/sys/debug"
