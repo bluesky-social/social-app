@@ -8,6 +8,8 @@ appId: xyz.blueskyweb.app
     file: ../setupApp.yml
 - tapOn:
     id: "e2eSignInAlice"
+- assertVisible:
+      id: "storybookBtn"
 - tapOn:
     id: "storybookBtn"
 - tapOn:
