@@ -92,21 +92,52 @@ export enum SubscriptionId {
 
 export type Subscription =
   | {
+      /**
+       * Using this to discriminate the union
+       */
       platform: 'android' | 'ios'
+      /**
+       * Bsky internal ID. We map RC products to this for use in the app
+       */
       id: SubscriptionId
+      /**
+       * This is the full ID from whatever store this product was configured in
+       */
       storeId: string
+      /**
+       * This is the key needed to fetch the product from the RC SDK. For
+       * Android, this is the first part of the `storeId` e.g. bsky_tier_0 with
+       * no `:monthly-annual` suffix
+       */
       lookupKey: string
+      /**
+       * A value needed to check out. This is useless on native, but on web, this is the `price.id`
+       */
       checkoutId: string
+      /**
+       * The internal ID that we can use to fetch the subscription. For
+       * Androi/iOS, we probably won't need this. On web, this is the Stripe
+       * "subscription item" ID e.g. `si_xxx`
+       */
+      storeSubscriptionIdentifier: string | null
+      /**
+       * This is unused on native, on web we fill this in with fetched Stripe
+       * product data. The price should be in cents, and we localize and format
+       * this value on the client.
+       */
+      price?: number
+
+      /**
+       * The rest of this is pretty generic
+       */
       interval: 'monthly' | 'annual'
       autoRenew: boolean
-      storeSubscriptionIdentifier: string | null
       provider: RevenueCatSubscription['store']
       status: RevenueCatSubscription['status'] | null
       entitlements: RevenueCatSubscription['entitlements']['items']
       startedAt: RevenueCatSubscription['starts_at'] | null
       periodStart: RevenueCatSubscription['current_period_starts_at'] | null
       periodEnd: RevenueCatSubscription['current_period_ends_at'] | null
-      price?: number
     }
   | {
       platform: 'web'
@@ -125,11 +156,6 @@ export type Subscription =
       periodEnd: RevenueCatSubscription['current_period_ends_at'] | null
       price: number
     }
-
-export type Subscriptions = {
-  monthly: Subscription[]
-  annual: Subscription[]
-}
 
 export function getMainSubscriptionProducts(
   products: RevenueCatProduct[],
@@ -428,31 +454,4 @@ export function normalizeMainSubscriptionProduct({
       return undefined
     }
   }
-}
-
-export function organizeSubscriptionsByMain(
-  subscriptions: Subscription[],
-): Subscriptions {
-  const result: Subscriptions = {
-    monthly: [],
-    annual: [],
-  }
-
-  for (const subscription of subscriptions) {
-    const {interval} = subscription
-    result[interval].push(subscription)
-  }
-
-  result.monthly = result.monthly.sort((a, b) => {
-    const _a = parseInt(a.id.slice(0, 1))
-    const _b = parseInt(b.id.slice(0, 1))
-    return _a - _b
-  })
-  result.annual = result.annual.sort((a, b) => {
-    const _a = parseInt(a.id.slice(0, 1))
-    const _b = parseInt(b.id.slice(0, 1))
-    return _a - _b
-  })
-
-  return result
 }
