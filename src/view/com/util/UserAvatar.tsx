@@ -1,5 +1,5 @@
 import React, {memo, useMemo} from 'react'
-import {Image, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {Image, Pressable, StyleSheet, View} from 'react-native'
 import {Image as RNImage} from 'react-native-image-crop-picker'
 import Svg, {Circle, Path, Rect} from 'react-native-svg'
 import {AppBskyActorDefs, ModerationUI} from '@atproto/api'
@@ -8,18 +8,19 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {logger} from '#/logger'
-import {usePalette} from 'lib/hooks/usePalette'
+import {usePalette} from '#/lib/hooks/usePalette'
 import {
   useCameraPermission,
   usePhotoLibraryPermission,
-} from 'lib/hooks/usePermissions'
-import {makeProfileLink} from 'lib/routes/links'
-import {colors} from 'lib/styles'
-import {isAndroid, isNative, isWeb} from 'platform/detection'
-import {precacheProfile} from 'state/queries/profile'
-import {HighPriorityImage} from 'view/com/util/images/Image'
-import {atoms as a, tokens, useTheme} from '#/alf'
+} from '#/lib/hooks/usePermissions'
+import {makeProfileLink} from '#/lib/routes/links'
+import {colors} from '#/lib/styles'
+import {logger} from '#/logger'
+import {isAndroid, isNative, isWeb} from '#/platform/detection'
+import {precacheProfile} from '#/state/queries/profile'
+import {HighPriorityImage} from '#/view/com/util/images/Image'
+import {tokens, useTheme} from '#/alf'
+import {useSheetWrapper} from '#/components/Dialog/sheet-wrapper'
 import {
   Camera_Filled_Stroke2_Corner0_Rounded as CameraFilled,
   Camera_Stroke2_Corner0_Rounded as Camera,
@@ -241,7 +242,13 @@ let UserAvatar = ({
           onLoad={onLoad}
         />
       )}
-      <MediaInsetBorder style={[a.rounded_full]} />
+      <MediaInsetBorder
+        style={[
+          {
+            borderRadius: aviStyle.borderRadius,
+          },
+        ]}
+      />
       {alert}
     </View>
   ) : (
@@ -265,6 +272,7 @@ let EditableUserAvatar = ({
   const {_} = useLingui()
   const {requestCameraAccessIfNeeded} = useCameraPermission()
   const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
+  const sheetWrapper = useSheetWrapper()
 
   const aviStyle = useMemo(() => {
     if (type === 'algo' || type === 'list') {
@@ -300,9 +308,11 @@ let EditableUserAvatar = ({
       return
     }
 
-    const items = await openPicker({
-      aspect: [1, 1],
-    })
+    const items = await sheetWrapper(
+      openPicker({
+        aspect: [1, 1],
+      }),
+    )
     const item = items[0]
     if (!item) {
       return
@@ -315,15 +325,18 @@ let EditableUserAvatar = ({
         height: 1000,
         width: 1000,
         path: item.path,
+        webAspectRatio: 1,
+        webCircularCrop: true,
       })
 
       onSelectNewAvatar(croppedImage)
     } catch (e: any) {
-      if (!String(e).includes('Canceled')) {
+      // Don't log errors for cancelling selection to sentry on ios or android
+      if (!String(e).toLowerCase().includes('cancel')) {
         logger.error('Failed to crop banner', {error: e})
       }
     }
-  }, [onSelectNewAvatar, requestPhotoAccessIfNeeded])
+  }, [onSelectNewAvatar, requestPhotoAccessIfNeeded, sheetWrapper])
 
   const onRemoveAvatar = React.useCallback(() => {
     onSelectNewAvatar(null)
@@ -333,10 +346,7 @@ let EditableUserAvatar = ({
     <Menu.Root>
       <Menu.Trigger label={_(msg`Edit avatar`)}>
         {({props}) => (
-          <TouchableOpacity
-            {...props}
-            activeOpacity={0.8}
-            testID="changeAvatarBtn">
+          <Pressable {...props} testID="changeAvatarBtn">
             {avatar ? (
               <HighPriorityImage
                 testID="userAvatarImage"
@@ -350,7 +360,7 @@ let EditableUserAvatar = ({
             <View style={[styles.editButtonContainer, pal.btn]}>
               <CameraFilled height={14} width={14} style={t.atoms.text} />
             </View>
-          </TouchableOpacity>
+          </Pressable>
         )}
       </Menu.Trigger>
       <Menu.Outer showCancel>

@@ -1,17 +1,20 @@
 import React from 'react'
 import * as Linking from 'expo-linking'
 
-import {logEvent} from 'lib/statsig/statsig'
-import {isNative} from 'platform/detection'
-import {useSession} from 'state/session'
-import {useComposerControls} from 'state/shell'
-import {useCloseAllActiveElements} from 'state/util'
+import {logEvent} from '#/lib/statsig/statsig'
+import {isNative} from '#/platform/detection'
+import {useSession} from '#/state/session'
+import {useComposerControls} from '#/state/shell'
+import {useCloseAllActiveElements} from '#/state/util'
 import {useIntentDialogs} from '#/components/intents/IntentDialogs'
 import {Referrer} from '../../../modules/expo-bluesky-swiss-army'
 
 type IntentType = 'compose' | 'verify-email'
 
 const VALID_IMAGE_REGEX = /^[\w.:\-_/]+\|\d+(\.\d+)?\|\d+(\.\d+)?$/
+
+// This needs to stay outside of react to persist between account switches
+let previousIntentUrl = ''
 
 export function useIntentHandler() {
   const incomingUrl = Linking.useURL()
@@ -52,6 +55,7 @@ export function useIntentHandler() {
           composeIntent({
             text: params.get('text'),
             imageUrisStr: params.get('imageUris'),
+            videoUri: params.get('videoUri'),
           })
           return
         }
@@ -67,7 +71,13 @@ export function useIntentHandler() {
       }
     }
 
-    if (incomingUrl) handleIncomingURL(incomingUrl)
+    if (incomingUrl) {
+      if (previousIntentUrl === incomingUrl) {
+        return
+      }
+      handleIncomingURL(incomingUrl)
+      previousIntentUrl = incomingUrl
+    }
   }, [incomingUrl, composeIntent, verifyEmailIntent])
 }
 
@@ -80,13 +90,25 @@ export function useComposeIntent() {
     ({
       text,
       imageUrisStr,
+      videoUri,
     }: {
       text: string | null
-      imageUrisStr: string | null // unused for right now, will be used later with intents
+      imageUrisStr: string | null
+      videoUri: string | null
     }) => {
       if (!hasSession) return
 
       closeAllActiveElements()
+
+      // Whenever a video URI is present, we don't support adding images right now.
+      if (videoUri) {
+        const [uri, width, height] = videoUri.split('|')
+        openComposer({
+          text: text ?? undefined,
+          videoUri: {uri, width: Number(width), height: Number(height)},
+        })
+        return
+      }
 
       const imageUris = imageUrisStr
         ?.split(',')
@@ -97,10 +119,6 @@ export function useComposeIntent() {
           if (part.includes('https://') || part.includes('http://')) {
             return false
           }
-          console.log({
-            part,
-            text: VALID_IMAGE_REGEX.test(part),
-          })
           // We also should just filter out cases that don't have all the info we need
           return VALID_IMAGE_REGEX.test(part)
         })

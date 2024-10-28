@@ -4,9 +4,9 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {Logo} from '#/view/icons/Logo'
 import {Logotype} from '#/view/icons/Logotype'
-import {ErrorBoundary} from 'view/com/util/ErrorBoundary'
 import {atoms as a, useTheme} from '#/alf'
 import {AppLanguageDropdown} from '#/components/AppLanguageDropdown'
 import {Button, ButtonText} from '#/components/Button'
@@ -35,26 +35,25 @@ export const SplashScreen = ({
             <Logotype width={161} fill={t.atoms.text.color} />
           </View>
 
-          <Text
-            style={[a.text_md, a.font_semibold, t.atoms.text_contrast_medium]}>
+          <Text style={[a.text_md, a.font_bold, t.atoms.text_contrast_medium]}>
             <Trans>What's up?</Trans>
           </Text>
         </View>
-        <View testID="signinOrCreateAccount">
+        <View
+          testID="signinOrCreateAccount"
+          style={[a.px_xl, a.gap_md, a.pb_2xl]}>
           <Button
             testID="createAccountButton"
             onPress={onPressCreateAccount}
-            accessibilityRole="button"
             label={_(msg`Create new account`)}
             accessibilityHint={_(
               msg`Opens flow to create a new Bluesky account`,
             )}
-            style={[a.mx_xl, a.mb_xl]}
             size="large"
             variant="solid"
             color="primary">
             <ButtonText>
-              <Trans>Create a new account</Trans>
+              <Trans>Create account</Trans>
             </ButtonText>
           </Button>
           <Button
@@ -64,7 +63,6 @@ export const SplashScreen = ({
             accessibilityHint={_(
               msg`Opens flow to sign into your existing Bluesky account`,
             )}
-            style={[a.mx_xl, a.mb_xl]}
             size="large"
             variant="solid"
             color="secondary">

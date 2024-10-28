@@ -19,32 +19,32 @@ import {useLingui} from '@lingui/react'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
-import {logger} from '#/logger'
-import {HITSLOP_10, STARTER_PACK_MAX_SIZE} from 'lib/constants'
-import {createSanitizedDisplayName} from 'lib/moderation/create-sanitized-display-name'
-import {CommonNavigatorParams, NavigationProp} from 'lib/routes/types'
-import {logEvent} from 'lib/statsig/statsig'
-import {sanitizeDisplayName} from 'lib/strings/display-names'
-import {sanitizeHandle} from 'lib/strings/handles'
-import {enforceLen} from 'lib/strings/helpers'
+import {HITSLOP_10, STARTER_PACK_MAX_SIZE} from '#/lib/constants'
+import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
+import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
+import {logEvent} from '#/lib/statsig/statsig'
+import {sanitizeDisplayName} from '#/lib/strings/display-names'
+import {sanitizeHandle} from '#/lib/strings/handles'
+import {enforceLen} from '#/lib/strings/helpers'
 import {
   getStarterPackOgCard,
   parseStarterPackUri,
-} from 'lib/strings/starter-pack'
-import {isAndroid, isNative, isWeb} from 'platform/detection'
-import {useModerationOpts} from 'state/preferences/moderation-opts'
-import {useAllListMembersQuery} from 'state/queries/list-members'
-import {useProfileQuery} from 'state/queries/profile'
+} from '#/lib/strings/starter-pack'
+import {logger} from '#/logger'
+import {isAndroid, isNative, isWeb} from '#/platform/detection'
+import {useModerationOpts} from '#/state/preferences/moderation-opts'
+import {useAllListMembersQuery} from '#/state/queries/list-members'
+import {useProfileQuery} from '#/state/queries/profile'
 import {
   useCreateStarterPackMutation,
   useEditStarterPackMutation,
   useStarterPackQuery,
-} from 'state/queries/starter-packs'
-import {useSession} from 'state/session'
-import {useSetMinimalShellMode} from 'state/shell'
+} from '#/state/queries/starter-packs'
+import {useSession} from '#/state/session'
+import {useSetMinimalShellMode} from '#/state/shell'
 import * as Toast from '#/view/com/util/Toast'
-import {UserAvatar} from 'view/com/util/UserAvatar'
-import {CenteredView} from 'view/com/util/Views'
+import {UserAvatar} from '#/view/com/util/UserAvatar'
+import {CenteredView} from '#/view/com/util/Views'
 import {useWizardState, WizardStep} from '#/screens/StarterPack/Wizard/State'
 import {StepDetails} from '#/screens/StarterPack/Wizard/StepDetails'
 import {StepFeeds} from '#/screens/StarterPack/Wizard/StepFeeds'
@@ -52,6 +52,7 @@ import {StepProfiles} from '#/screens/StarterPack/Wizard/StepProfiles'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
+import * as Layout from '#/components/Layout'
 import {ListMaybePlaceholder} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
 import {WizardEditListDialog} from '#/components/StarterPack/Wizard/WizardEditListDialog'
@@ -97,33 +98,39 @@ export function Wizard({
 
   if (!isReady) {
     return (
-      <ListMaybePlaceholder
-        isLoading={
-          isLoadingStarterPack || isLoadingProfiles || isLoadingProfile
-        }
-        isError={isErrorStarterPack || isErrorProfiles || isErrorProfile}
-        errorMessage={_(msg`That starter pack could not be found.`)}
-      />
+      <Layout.Screen>
+        <ListMaybePlaceholder
+          isLoading={
+            isLoadingStarterPack || isLoadingProfiles || isLoadingProfile
+          }
+          isError={isErrorStarterPack || isErrorProfiles || isErrorProfile}
+          errorMessage={_(msg`That starter pack could not be found.`)}
+        />
+      </Layout.Screen>
     )
   } else if (isEdit && starterPack?.creator.did !== currentAccount?.did) {
     return (
-      <ListMaybePlaceholder
-        isLoading={false}
-        isError={true}
-        errorMessage={_(msg`That starter pack could not be found.`)}
-      />
+      <Layout.Screen>
+        <ListMaybePlaceholder
+          isLoading={false}
+          isError={true}
+          errorMessage={_(msg`That starter pack could not be found.`)}
+        />
+      </Layout.Screen>
     )
   }
 
   return (
-    <Provider starterPack={starterPack} listItems={listItems}>
-      <WizardInner
-        currentStarterPack={starterPack}
-        currentListItems={listItems}
-        profile={profile}
-        moderationOpts={moderationOpts}
-      />
-    </Provider>
+    <Layout.Screen>
+      <Provider starterPack={starterPack} listItems={listItems}>
+        <WizardInner
+          currentStarterPack={starterPack}
+          currentListItems={listItems}
+          profile={profile}
+          moderationOpts={moderationOpts}
+        />
+      </Provider>
+    </Layout.Screen>
   )
 }
 
@@ -358,7 +365,7 @@ function Container({children}: {children: React.ReactNode}) {
             label={_(msg`Next`)}
             variant="solid"
             color="primary"
-            size="medium"
+            size="large"
             style={[a.mx_xl, a.mb_lg, {marginTop: 35}]}
             onPress={() => dispatch({type: 'Next'})}>
             <ButtonText>

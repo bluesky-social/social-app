@@ -10,6 +10,10 @@ jest.mock('jwt-decode', () => ({
   },
 }))
 
+jest.mock('expo-localization', () => ({
+  getLocales: () => [],
+}))
+
 describe('session', () => {
   it('can log in and out', () => {
     let state = getInitialState([])

@@ -8,11 +8,13 @@ export enum AppLanguage {
   en = 'en',
   ca = 'ca',
   de = 'de',
+  en_GB = 'en-GB',
   es = 'es',
   fi = 'fi',
   fr = 'fr',
   ga = 'ga',
   hi = 'hi',
+  hu = 'hu',
   id = 'id',
   it = 'it',
   ja = 'ja',
@@ -22,6 +24,7 @@ export enum AppLanguage {
   tr = 'tr',
   uk = 'uk',
   zh_CN = 'zh-CN',
+  zh_HK = 'zh-HK',
   zh_TW = 'zh-TW',
 }
 
@@ -34,11 +37,13 @@ export const APP_LANGUAGES: AppLanguageConfig[] = [
   {code2: AppLanguage.en, name: 'English'},
   {code2: AppLanguage.ca, name: 'Català – Catalan'},
   {code2: AppLanguage.de, name: 'Deutsch – German'},
+  {code2: AppLanguage.en_GB, name: 'English (UK)'},
   {code2: AppLanguage.es, name: 'Español – Spanish'},
   {code2: AppLanguage.fi, name: 'Suomi – Finnish'},
   {code2: AppLanguage.fr, name: 'Français – French'},
   {code2: AppLanguage.ga, name: 'Gaeilge – Irish'},
   {code2: AppLanguage.hi, name: 'हिंदी – Hindi'},
+  {code2: AppLanguage.hu, name: 'magyar – Hungarian'},
   {code2: AppLanguage.id, name: 'Bahasa Indonesia – Indonesian'},
   {code2: AppLanguage.it, name: 'Italiano – Italian'},
   {code2: AppLanguage.ja, name: '日本語 – Japanese'},
@@ -47,8 +52,9 @@ export const APP_LANGUAGES: AppLanguageConfig[] = [
   {code2: AppLanguage.ru, name: 'Русский – Russian'},
   {code2: AppLanguage.tr, name: 'Türkçe – Turkish'},
   {code2: AppLanguage.uk, name: 'Українська – Ukrainian'},
-  {code2: AppLanguage.zh_CN, name: '简体中文（中国）– Chinese (Simplified)'},
-  {code2: AppLanguage.zh_TW, name: '繁體中文（臺灣）– Chinese (Traditional)'},
+  {code2: AppLanguage.zh_CN, name: '简体中文 – Simplified Chinese'},
+  {code2: AppLanguage.zh_TW, name: '繁體中文 – Traditional Chinese'},
+  {code2: AppLanguage.zh_HK, name: '粵文 – Cantonese'},
 ]
 
 export const LANGUAGES: Language[] = [

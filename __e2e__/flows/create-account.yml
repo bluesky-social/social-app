@@ -29,6 +29,7 @@ appId: xyz.blueskyweb.app
 - pressKey: Enter
 - tapOn:
     id: "nextBtn"
+- tapOn: "Not now"
 - tapOn:
      id: "handleInput"
 - inputText: "e2e-test"

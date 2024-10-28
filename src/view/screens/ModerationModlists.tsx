@@ -1,20 +1,22 @@
 import React from 'react'
 import {View} from 'react-native'
-import {useFocusEffect, useNavigation} from '@react-navigation/native'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {AtUri} from '@atproto/api'
-import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
-import {MyLists} from '#/view/com/lists/MyLists'
-import {Text} from 'view/com/util/text/Text'
-import {Button} from 'view/com/util/forms/Button'
-import {NavigationProp} from 'lib/routes/types'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {SimpleViewHeader} from 'view/com/util/SimpleViewHeader'
-import {s} from 'lib/styles'
-import {useSetMinimalShellMode} from '#/state/shell'
-import {useModalControls} from '#/state/modals'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Trans} from '@lingui/macro'
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
+
+import {usePalette} from '#/lib/hooks/usePalette'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
+import {NavigationProp} from '#/lib/routes/types'
+import {s} from '#/lib/styles'
+import {useModalControls} from '#/state/modals'
+import {useSetMinimalShellMode} from '#/state/shell'
+import {MyLists} from '#/view/com/lists/MyLists'
+import {Button} from '#/view/com/util/forms/Button'
+import {SimpleViewHeader} from '#/view/com/util/SimpleViewHeader'
+import {Text} from '#/view/com/util/text/Text'
+import * as Layout from '#/components/Layout'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ModerationModlists'>
 export function ModerationModlistsScreen({}: Props) {
@@ -47,14 +49,14 @@ export function ModerationModlistsScreen({}: Props) {
   }, [openModal, navigation])
 
   return (
-    <View style={s.hContentRegion} testID="moderationModlistsScreen">
+    <Layout.Screen testID="moderationModlistsScreen">
       <SimpleViewHeader
         showBackButton={isMobile}
         style={
           !isMobile && [pal.border, {borderLeftWidth: 1, borderRightWidth: 1}]
         }>
         <View style={{flex: 1}}>
-          <Text type="title-lg" style={[pal.text, {fontWeight: 'bold'}]}>
+          <Text type="title-lg" style={[pal.text, {fontWeight: '600'}]}>
             <Trans>Moderation Lists</Trans>
           </Text>
           <Text style={pal.textLight}>
@@ -81,6 +83,6 @@ export function ModerationModlistsScreen({}: Props) {
         </View>
       </SimpleViewHeader>
       <MyLists filter="mod" style={s.flexGrow1} />
-    </View>
+    </Layout.Screen>
   )
 }

@@ -13,16 +13,18 @@ import {Text as TiptapText} from '@tiptap/extension-text'
 import {generateJSON} from '@tiptap/html'
 import {EditorContent, JSONContent, useEditor} from '@tiptap/react'
 
+import {useColorSchemeStyle} from '#/lib/hooks/useColorSchemeStyle'
 import {usePalette} from '#/lib/hooks/usePalette'
+import {blobToDataUri, isUriImage} from '#/lib/media/util'
 import {useActorAutocompleteFn} from '#/state/queries/actor-autocomplete'
-import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
-import {blobToDataUri, isUriImage} from 'lib/media/util'
-import {textInputWebEmitter} from '#/view/com/composer/text-input/textInputWebEmitter'
 import {
   LinkFacetMatch,
   suggestLinkCardUri,
-} from 'view/com/composer/text-input/text-input-util'
+} from '#/view/com/composer/text-input/text-input-util'
+import {textInputWebEmitter} from '#/view/com/composer/text-input/textInputWebEmitter'
+import {atoms as a, useAlf} from '#/alf'
 import {Portal} from '#/components/Portal'
+import {normalizeTextStyles} from '#/components/Typography'
 import {Text} from '../../util/text/Text'
 import {createSuggestion} from './web/Autocomplete'
 import {Emoji} from './web/EmojiPicker.web'
@@ -39,9 +41,10 @@ interface TextInputProps {
   richtext: RichText
   placeholder: string
   suggestedLinks: Set<string>
+  webForceMinHeight: boolean
   setRichText: (v: RichText | ((v: RichText) => RichText)) => void
   onPhotoPasted: (uri: string) => void
-  onPressPublish: (richtext: RichText) => Promise<void>
+  onPressPublish: (richtext: RichText) => void
   onNewLink: (uri: string) => void
   onError: (err: string) => void
 }
@@ -50,6 +53,7 @@ export const TextInput = React.forwardRef(function TextInputImpl(
   {
     richtext,
     placeholder,
+    webForceMinHeight,
     setRichText,
     onPhotoPasted,
     onPressPublish,
@@ -58,6 +62,7 @@ export const TextInput = React.forwardRef(function TextInputImpl(
   TextInputProps,
   ref,
 ) {
+  const {theme: t, fonts} = useAlf()
   const autocomplete = useActorAutocompleteFn()
   const pal = usePalette('default')
   const modeClass = useColorSchemeStyle('ProseMirror-light', 'ProseMirror-dark')
@@ -247,13 +252,39 @@ export const TextInput = React.forwardRef(function TextInputImpl(
     },
   }))
 
+  const inputStyle = React.useMemo(() => {
+    const style = normalizeTextStyles(
+      [a.text_lg, a.leading_snug, t.atoms.text],
+      {
+        fontScale: fonts.scaleMultiplier,
+        fontFamily: fonts.family,
+        flags: {},
+      },
+    )
+    /*
+     * TipTap component isn't a RN View and while it seems to convert
+     * `fontSize` to `px`, it doesn't convert `lineHeight`.
+     *
+     * `lineHeight` should always be defined here, this is defensive.
+     */
+    style.lineHeight = style.lineHeight
+      ? ((style.lineHeight + 'px') as unknown as number)
+      : undefined
+    return style
+  }, [t, fonts])
+
+  React.useLayoutEffect(() => {
+    let node = editor?.view.dom
+    if (node) {
+      node.style.minHeight = webForceMinHeight ? '140px' : ''
+    }
+  }, [editor, webForceMinHeight])
+
   return (
     <>
       <View style={styles.container}>
-        <EditorContent
-          editor={editor}
-          style={{color: pal.text.color as string}}
-        />
+        {/* @ts-ignore inputStyle is fine */}
+        <EditorContent editor={editor} style={inputStyle} />
       </View>
 
       {isDropping && (

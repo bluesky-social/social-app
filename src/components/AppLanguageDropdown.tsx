@@ -7,10 +7,10 @@ import {sanitizeAppLanguageSetting} from '#/locale/helpers'
 import {APP_LANGUAGES} from '#/locale/languages'
 import {useLanguagePrefs, useLanguagePrefsApi} from '#/state/preferences'
 import {resetPostsFeedQueries} from '#/state/queries/post-feed'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, useTheme, ViewStyleProp} from '#/alf'
 import {ChevronBottom_Stroke2_Corner0_Rounded as ChevronDown} from '#/components/icons/Chevron'
 
-export function AppLanguageDropdown() {
+export function AppLanguageDropdown(_props: ViewStyleProp) {
   const t = useTheme()
 
   const queryClient = useQueryClient()
@@ -24,8 +24,6 @@ export function AppLanguageDropdown() {
       if (sanitizedLang !== value) {
         setLangPrefs.setAppLanguage(sanitizeAppLanguageSetting(value))
       }
-      setLangPrefs.setPrimaryLanguage(value)
-      setLangPrefs.setContentLanguage(value)
 
       // reset feeds to refetch content
       resetPostsFeedQueries(queryClient)

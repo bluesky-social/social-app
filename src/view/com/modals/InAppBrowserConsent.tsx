@@ -1,19 +1,16 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
-
-import {s} from 'lib/styles'
-import {Text} from '../util/text/Text'
-import {Button} from '../util/forms/Button'
-import {ScrollView} from './util'
-import {usePalette} from 'lib/hooks/usePalette'
-
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+
+import {useOpenLink} from '#/lib/hooks/useOpenLink'
+import {usePalette} from '#/lib/hooks/usePalette'
+import {s} from '#/lib/styles'
 import {useModalControls} from '#/state/modals'
-import {
-  useOpenLink,
-  useSetInAppBrowser,
-} from '#/state/preferences/in-app-browser'
+import {useSetInAppBrowser} from '#/state/preferences/in-app-browser'
+import {ScrollView} from '#/view/com/modals/util'
+import {Button} from '#/view/com/util/forms/Button'
+import {Text} from '#/view/com/util/text/Text'
 
 export const snapPoints = [350]
 
@@ -89,7 +86,7 @@ export function Component({href}: {href: string}) {
 const styles = StyleSheet.create({
   title: {
     textAlign: 'center',
-    fontWeight: 'bold',
+    fontWeight: '600',
     fontSize: 24,
     marginBottom: 12,
   },

@@ -3,14 +3,6 @@ import {Image as RNImage} from 'react-native-image-crop-picker'
 import {AppBskyActorDefs, AppBskyGraphDefs} from '@atproto/api'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-import {GalleryModel} from '#/state/models/media/gallery'
-import {ImageModel} from '#/state/models/media/image'
-
-export interface EditProfileModal {
-  name: 'edit-profile'
-  profile: AppBskyActorDefs.ProfileViewDetailed
-  onUpdate?: () => void
-}
 
 export interface CreateOrEditListModal {
   name: 'create-or-edit-list'
@@ -37,33 +29,17 @@ export interface ListAddRemoveUsersModal {
   ) => void
 }
 
-export interface EditImageModal {
-  name: 'edit-image'
-  image: ImageModel
-  gallery: GalleryModel
-}
-
 export interface CropImageModal {
   name: 'crop-image'
   uri: string
   dimensions?: {width: number; height: number}
+  aspect?: number
+  circular?: boolean
   onSelect: (img?: RNImage) => void
-}
-
-export interface AltTextImageModal {
-  name: 'alt-text-image'
-  image: ImageModel
 }
 
 export interface DeleteAccountModal {
   name: 'delete-account'
-}
-
-export interface SelfLabelModal {
-  name: 'self-label'
-  labels: string[]
-  hasMedia: boolean
-  onChange: (labels: string[]) => void
 }
 
 export interface ChangeHandleModal {
@@ -122,7 +98,6 @@ export type Modal =
   | AddAppPasswordModal
   | ChangeHandleModal
   | DeleteAccountModal
-  | EditProfileModal
   | VerifyEmailModal
   | ChangeEmailModal
   | ChangePasswordModal
@@ -137,10 +112,7 @@ export type Modal =
   | ListAddRemoveUsersModal
 
   // Posts
-  | AltTextImageModal
   | CropImageModal
-  | EditImageModal
-  | SelfLabelModal
 
   // Bluesky access
   | WaitlistModal

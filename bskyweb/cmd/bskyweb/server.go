@@ -38,15 +38,18 @@ type Server struct {
 	httpd *http.Server
 	xrpcc *xrpc.Client
 	cfg   *Config
+
+	ipccClient http.Client
 }
 
 type Config struct {
-	debug       bool
-	httpAddress string
-	appviewHost string
-	ogcardHost  string
-	linkHost    string
-	ipccHost    string
+	debug         bool
+	httpAddress   string
+	appviewHost   string
+	ogcardHost    string
+	linkHost      string
+	ipccHost      string
+	staticCDNHost string
 }
 
 func serve(cctx *cli.Context) error {
@@ -58,6 +61,8 @@ func serve(cctx *cli.Context) error {
 	ipccHost := cctx.String("ipcc-host")
 	basicAuthPassword := cctx.String("basic-auth-password")
 	corsOrigins := cctx.StringSlice("cors-allowed-origins")
+	staticCDNHost := cctx.String("static-cdn-host")
+	staticCDNHost = strings.TrimSuffix(staticCDNHost, "/")
 
 	// Echo
 	e := echo.New()
@@ -94,12 +99,20 @@ func serve(cctx *cli.Context) error {
 		echo:  e,
 		xrpcc: xrpcc,
 		cfg: &Config{
-			debug:       debug,
-			httpAddress: httpAddress,
-			appviewHost: appviewHost,
-			ogcardHost:  ogcardHost,
-			linkHost:    linkHost,
-			ipccHost:    ipccHost,
+			debug:         debug,
+			httpAddress:   httpAddress,
+			appviewHost:   appviewHost,
+			ogcardHost:    ogcardHost,
+			linkHost:      linkHost,
+			ipccHost:      ipccHost,
+			staticCDNHost: staticCDNHost,
+		},
+		ipccClient: http.Client{
+			Transport: &http.Transport{
+				TLSClientConfig: &tls.Config{
+					InsecureSkipVerify: true,
+				},
+			},
 		},
 	}
 
@@ -204,10 +217,9 @@ func serve(cctx *cli.Context) error {
 			path := c.Request().URL.Path
 			maxAge := 1 * (60 * 60) // default is 1 hour
 
-			// Cache javascript and images files for 1 week, which works because
-			// they're always versioned (e.g. /static/js/main.64c14927.js)
-			if strings.HasPrefix(path, "/static/js/") || strings.HasPrefix(path, "/static/images/") || strings.HasPrefix(path, "/static/media/") {
-				maxAge = 7 * (60 * 60 * 24) // 1 week
+			// all assets in /static/js, /static/css, /static/media are content-hashed and can be cached for a long time
+			if strings.HasPrefix(path, "/static/js/") || strings.HasPrefix(path, "/static/css/") || strings.HasPrefix(path, "/static/media/") {
+				maxAge = 365 * (60 * 60 * 24) // 1 year
 			}
 
 			c.Response().Header().Set("Cache-Control", fmt.Sprintf("public, max-age=%d", maxAge))
@@ -250,6 +262,7 @@ func serve(cctx *cli.Context) error {
 	e.GET("/support/community-guidelines", server.WebGeneric)
 	e.GET("/support/copyright", server.WebGeneric)
 	e.GET("/intent/compose", server.WebGeneric)
+	e.GET("/intent/verify-email", server.WebGeneric)
 	e.GET("/messages", server.WebGeneric)
 	e.GET("/messages/:conversation", server.WebGeneric)
 
@@ -274,6 +287,7 @@ func serve(cctx *cli.Context) error {
 
 	// starter packs
 	e.GET("/starter-pack/:handleOrDID/:rkey", server.WebStarterPack)
+	e.GET("/starter-pack-short/:code", server.WebGeneric)
 	e.GET("/start/:handleOrDID/:rkey", server.WebStarterPack)
 
 	// ipcc
@@ -332,15 +346,21 @@ func (srv *Server) Shutdown() error {
 	return srv.httpd.Shutdown(ctx)
 }
 
+// NewTemplateContext returns a new pongo2 context with some default values.
+func (srv *Server) NewTemplateContext() pongo2.Context {
+	return pongo2.Context{
+		"staticCDNHost": srv.cfg.staticCDNHost,
+	}
+}
+
 func (srv *Server) errorHandler(err error, c echo.Context) {
 	code := http.StatusInternalServerError
 	if he, ok := err.(*echo.HTTPError); ok {
 		code = he.Code
 	}
 	c.Logger().Error(err)
-	data := pongo2.Context{
-		"statusCode": code,
-	}
+	data := srv.NewTemplateContext()
+	data["statusCode"] = code
 	c.Render(code, "error.html", data)
 }
 
@@ -384,18 +404,18 @@ func (srv *Server) LinkProxyMiddleware(url *url.URL) echo.MiddlewareFunc {
 
 // handler for endpoint that have no specific server-side handling
 func (srv *Server) WebGeneric(c echo.Context) error {
-	data := pongo2.Context{}
+	data := srv.NewTemplateContext()
 	return c.Render(http.StatusOK, "base.html", data)
 }
 
 func (srv *Server) WebHome(c echo.Context) error {
-	data := pongo2.Context{}
+	data := srv.NewTemplateContext()
 	return c.Render(http.StatusOK, "home.html", data)
 }
 
 func (srv *Server) WebPost(c echo.Context) error {
 	ctx := c.Request().Context()
-	data := pongo2.Context{}
+	data := srv.NewTemplateContext()
 
 	// sanity check arguments. don't 4xx, just let app handle if not expected format
 	rkeyParam := c.Param("rkey")
@@ -470,7 +490,7 @@ func (srv *Server) WebPost(c echo.Context) error {
 func (srv *Server) WebStarterPack(c echo.Context) error {
 	req := c.Request()
 	ctx := req.Context()
-	data := pongo2.Context{}
+	data := srv.NewTemplateContext()
 	data["requestURI"] = fmt.Sprintf("https://%s%s", req.Host, req.URL.Path)
 	// sanity check arguments. don't 4xx, just let app handle if not expected format
 	rkeyParam := c.Param("rkey")
@@ -508,7 +528,7 @@ func (srv *Server) WebStarterPack(c echo.Context) error {
 
 func (srv *Server) WebProfile(c echo.Context) error {
 	ctx := c.Request().Context()
-	data := pongo2.Context{}
+	data := srv.NewTemplateContext()
 
 	// sanity check arguments. don't 4xx, just let app handle if not expected format
 	handleOrDIDParam := c.Param("handleOrDID")
@@ -573,15 +593,8 @@ func (srv *Server) WebIpCC(c echo.Context) error {
 	}
 	ipccUrlBuilder.Path = "ipccdata.IpCcService/Lookup"
 	ipccUrl := ipccUrlBuilder.String()
-	cl := http.Client{
-		Transport: &http.Transport{
-			TLSClientConfig: &tls.Config{
-				InsecureSkipVerify: true,
-			},
-		},
-	}
 	postBodyReader := bytes.NewReader(request)
-	response, err := cl.Post(ipccUrl, "application/json", postBodyReader)
+	response, err := srv.ipccClient.Post(ipccUrl, "application/json", postBodyReader)
 	if err != nil {
 		log.Warnf("ipcc backend error %s", err)
 		return c.JSON(500, IPCCResponse{})

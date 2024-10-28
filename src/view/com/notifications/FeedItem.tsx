@@ -22,21 +22,21 @@ import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {useAnimatedValue} from '#/lib/hooks/useAnimatedValue'
+import {usePalette} from '#/lib/hooks/usePalette'
+import {makeProfileLink} from '#/lib/routes/links'
+import {NavigationProp} from '#/lib/routes/types'
+import {forceLTR} from '#/lib/strings/bidi'
+import {sanitizeDisplayName} from '#/lib/strings/display-names'
+import {sanitizeHandle} from '#/lib/strings/handles'
+import {niceDate} from '#/lib/strings/time'
+import {colors, s} from '#/lib/styles'
 import {logger} from '#/logger'
+import {isWeb} from '#/platform/detection'
+import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
 import {FeedNotification} from '#/state/queries/notifications/feed'
-import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
-import {usePalette} from 'lib/hooks/usePalette'
-import {makeProfileLink} from 'lib/routes/links'
-import {NavigationProp} from 'lib/routes/types'
-import {forceLTR} from 'lib/strings/bidi'
-import {sanitizeDisplayName} from 'lib/strings/display-names'
-import {sanitizeHandle} from 'lib/strings/handles'
-import {niceDate} from 'lib/strings/time'
-import {colors, s} from 'lib/styles'
-import {isWeb} from 'platform/detection'
-import {DM_SERVICE_HEADERS} from 'state/queries/messages/const'
-import {precacheProfile} from 'state/queries/profile'
-import {useAgent} from 'state/session'
+import {precacheProfile} from '#/state/queries/profile'
+import {useAgent} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {
@@ -310,12 +310,16 @@ let FeedItem = ({
               key={authors[0].href}
               style={[pal.text, s.bold]}
               href={authors[0].href}
-              text={forceLTR(firstAuthorName)}
+              text={
+                <Text emoji style={[pal.text, s.bold]}>
+                  {forceLTR(firstAuthorName)}
+                </Text>
+              }
               disableMismatchWarning
             />
             {authors.length > 1 ? (
               <>
-                <Text style={[pal.text, s.mr5, s.ml5]}>
+                <Text style={[pal.text]}>
                   {' '}
                   <Trans>and</Trans>{' '}
                 </Text>
@@ -412,7 +416,7 @@ function SayHelloBtn({profile}: {profile: AppBskyActorDefs.ProfileViewBasic}) {
       label={_(msg`Say hello!`)}
       variant="ghost"
       color="primary"
-      size="xsmall"
+      size="small"
       style={[a.self_center, {marginLeft: 'auto'}]}
       disabled={isLoading}
       onPress={async () => {
@@ -570,12 +574,13 @@ function ExpandedAuthorsList({
                 numberOfLines={1}
                 style={pal.text}
                 lineHeight={1.2}>
-                {sanitizeDisplayName(
-                  author.profile.displayName || author.profile.handle,
-                )}
-                &nbsp;
+                <Text emoji type="lg-bold" style={pal.text} lineHeight={1.2}>
+                  {sanitizeDisplayName(
+                    author.profile.displayName || author.profile.handle,
+                  )}
+                </Text>{' '}
                 <Text style={[pal.textLight]} lineHeight={1.2}>
-                  {sanitizeHandle(author.profile.handle)}
+                  {sanitizeHandle(author.profile.handle, '@')}
                 </Text>
               </Text>
             </View>
@@ -592,7 +597,11 @@ function AdditionalPostText({post}: {post?: AppBskyFeedDefs.PostView}) {
 
     return (
       <>
-        {text?.length > 0 && <Text style={pal.textLight}>{text}</Text>}
+        {text?.length > 0 && (
+          <Text emoji style={pal.textLight}>
+            {text}
+          </Text>
+        )}
         <MediaPreview.Embed
           embed={post.embed}
           style={styles.additionalPostImages}
@@ -616,7 +625,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   layoutIcon: {
-    width: 70,
+    width: 60,
     alignItems: 'flex-end',
     paddingTop: 2,
   },
@@ -632,7 +641,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   aviExtraCount: {
-    fontWeight: 'bold',
+    fontWeight: '600',
     paddingLeft: 6,
   },
   meta: {

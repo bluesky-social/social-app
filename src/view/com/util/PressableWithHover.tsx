@@ -1,39 +1,35 @@
-import React, {
-  useState,
-  useCallback,
-  PropsWithChildren,
-  forwardRef,
-  Ref,
-} from 'react'
+import React, {forwardRef, PropsWithChildren} from 'react'
 import {Pressable, PressableProps, StyleProp, ViewStyle} from 'react-native'
-import {addStyle} from 'lib/styles'
+import {View} from 'react-native'
+
+import {addStyle} from '#/lib/styles'
+import {useInteractionState} from '#/components/hooks/useInteractionState'
 
 interface PressableWithHover extends PressableProps {
   hoverStyle: StyleProp<ViewStyle>
 }
 
-export const PressableWithHover = forwardRef(function PressableWithHoverImpl(
-  {
-    children,
-    style,
-    hoverStyle,
-    ...props
-  }: PropsWithChildren<PressableWithHover>,
-  ref: Ref<any>,
+export const PressableWithHover = forwardRef<
+  View,
+  PropsWithChildren<PressableWithHover>
+>(function PressableWithHoverImpl(
+  {children, style, hoverStyle, ...props},
+  ref,
 ) {
-  const [isHovering, setIsHovering] = useState(false)
-
-  const onHoverIn = useCallback(() => setIsHovering(true), [setIsHovering])
-  const onHoverOut = useCallback(() => setIsHovering(false), [setIsHovering])
-  style =
-    typeof style !== 'function' && isHovering
-      ? addStyle(style, hoverStyle)
-      : style
+  const {
+    state: hovered,
+    onIn: onHoverIn,
+    onOut: onHoverOut,
+  } = useInteractionState()
 
   return (
     <Pressable
       {...props}
-      style={style}
+      style={
+        typeof style !== 'function' && hovered
+          ? addStyle(style, hoverStyle)
+          : style
+      }
       onHoverIn={onHoverIn}
       onHoverOut={onHoverOut}
       ref={ref}>

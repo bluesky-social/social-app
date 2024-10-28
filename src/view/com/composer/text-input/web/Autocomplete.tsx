@@ -5,19 +5,20 @@ import React, {
   useState,
 } from 'react'
 import {Pressable, StyleSheet, View} from 'react-native'
+import {Trans} from '@lingui/macro'
 import {ReactRenderer} from '@tiptap/react'
-import tippy, {Instance as TippyInstance} from 'tippy.js'
 import {
+  SuggestionKeyDownProps,
   SuggestionOptions,
   SuggestionProps,
-  SuggestionKeyDownProps,
 } from '@tiptap/suggestion'
+import tippy, {Instance as TippyInstance} from 'tippy.js'
+
+import {usePalette} from '#/lib/hooks/usePalette'
 import {ActorAutocompleteFn} from '#/state/queries/actor-autocomplete'
-import {usePalette} from 'lib/hooks/usePalette'
-import {Text} from 'view/com/util/text/Text'
-import {UserAvatar} from 'view/com/util/UserAvatar'
+import {Text} from '#/view/com/util/text/Text'
+import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {useGrapheme} from '../hooks/useGrapheme'
-import {Trans} from '@lingui/macro'
 
 interface MentionListRef {
   onKeyDown: (props: SuggestionKeyDownProps) => boolean
@@ -180,7 +181,7 @@ const MentionList = forwardRef<MentionListRef, SuggestionProps>(
                       size={26}
                       type={item.associated?.labeler ? 'labeler' : 'user'}
                     />
-                    <Text style={pal.text} numberOfLines={1}>
+                    <Text emoji style={pal.text} numberOfLines={1}>
                       {displayName}
                     </Text>
                   </View>

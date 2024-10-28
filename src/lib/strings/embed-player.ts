@@ -1,7 +1,7 @@
 import {Dimensions} from 'react-native'
 
-import {isSafari} from 'lib/browser'
-import {isWeb} from 'platform/detection'
+import {isSafari} from '#/lib/browser'
+import {isWeb} from '#/platform/detection'
 
 const {height: SCREEN_HEIGHT} = Dimensions.get('window')
 
@@ -183,6 +183,20 @@ export function parseEmbedPlayerFromUrl(
           type: 'spotify_song',
           source: 'spotify',
           playerUri: `https://open.spotify.com/embed/track/${id ?? idOrType}`,
+        }
+      }
+      if (typeOrLocale === 'episode' || idOrType === 'episode') {
+        return {
+          type: 'spotify_song',
+          source: 'spotify',
+          playerUri: `https://open.spotify.com/embed/episode/${id ?? idOrType}`,
+        }
+      }
+      if (typeOrLocale === 'show' || idOrType === 'show') {
+        return {
+          type: 'spotify_song',
+          source: 'spotify',
+          playerUri: `https://open.spotify.com/embed/show/${id ?? idOrType}`,
         }
       }
     }

@@ -1,0 +1,253 @@
+/**
+ * IMPORTANT
+ *
+ * Some of these styles are duplicated in the `web/index.html` and
+ * `bskyweb/templates/base.html` files. Depending on what you're updating, you
+ * may need to touch all three. Ask Eric if you aren't sure.
+ */
+
+/**
+ * BEGIN STYLES
+ *
+ * HTML & BODY STYLES IN `web/index.html` and `bskyweb/templates/base.html`
+ */
+:root {
+  --text: black;
+  --background: white;
+  --backgroundLight: hsl(211, 20%, 95%);
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --text: white;
+    --background: black;
+    --backgroundLight: hsl(211, 20%, 20%);
+  }
+}
+
+html.theme--light {
+  --text: black;
+  --background: white;
+  --backgroundLight: hsl(211, 20%, 95%);
+  background-color: white;
+}
+html.theme--dark {
+  color-scheme: dark;
+  background-color: black;
+  --text: white;
+  --background: black;
+  --backgroundLight: hsl(211, 20%, 20%);
+}
+html.theme--dim {
+  color-scheme: dark;
+  background-color: hsl(211, 28%, 12%);
+  --text: white;
+  --background: hsl(211, 20%, 4%);
+  --backgroundLight: hsl(211, 20%, 10%);
+}
+
+/* Buttons and inputs have a font set by UA, so we'll have to reset that */
+button,
+input,
+textarea {
+  font: inherit;
+  line-height: inherit;
+}
+
+/* Remove autofill styles on Webkit */
+input:autofill,
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: var(--text);
+  transition: background-color 5000s ease-in-out 0s;
+  box-shadow: inset 0 0 20px 20px var(--background);
+  background: var(--background);
+  color: var(--text);
+}
+/* Force left-align date/time inputs on iOS mobile */
+input::-webkit-date-and-time-value {
+  text-align: left;
+}
+
+/* Remove default link styling */
+a {
+  color: inherit;
+}
+a[role='link']:hover {
+  text-decoration: underline;
+}
+a[role='link'][data-no-underline='1']:hover {
+  text-decoration: none;
+}
+
+/* Styling hacks */
+*[data-word-wrap] {
+  word-break: break-word;
+}
+*[data-stable-gutters] {
+  scrollbar-gutter: stable both-edges;
+}
+
+/* ProseMirror */
+.ProseMirror-dark {
+  color: white;
+}
+.ProseMirror p {
+  margin: 0;
+}
+.ProseMirror p.is-editor-empty:first-child::before {
+  color: #8d8e96;
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+.ProseMirror .mention {
+  color: #0085ff;
+}
+.ProseMirror a,
+.ProseMirror .autolink {
+  color: #0085ff;
+}
+/* OLLIE: TODO -- this is not accessible */
+/* Remove focus state on inputs */
+.ProseMirror-focused {
+  outline: 0;
+}
+textarea:focus,
+input:focus {
+  outline: 0;
+}
+.tippy-content .items {
+  width: fit-content;
+}
+
+/* Tooltips */
+[data-tooltip] {
+  position: relative;
+  z-index: 10;
+}
+[data-tooltip]::after {
+  content: attr(data-tooltip);
+  display: none;
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateY(100%) translateY(8px) translateX(-50%);
+  padding: 4px 10px;
+  border-radius: 10px;
+  background: var(--backgroundLight);
+  color: var(--text);
+  text-align: center;
+  white-space: nowrap;
+  font-size: 12px;
+  z-index: 10;
+}
+[data-tooltip]::before {
+  content: '';
+  display: none;
+  position: absolute;
+  border-bottom: 6px solid var(--backgroundLight);
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  bottom: 0;
+  left: 50%;
+  transform: translateY(100%) translateY(2px) translateX(-50%);
+  z-index: 10;
+}
+[data-tooltip]:hover::after,
+[data-tooltip]:hover::before {
+  display: block;
+}
+
+/* NativeDropdown component */
+.radix-dropdown-item:focus,
+.nativeDropdown-item:focus {
+  outline: none;
+}
+
+/* Spinner component */
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+.rotate-500ms {
+  position: absolute;
+  inset: 0;
+  animation: rotate 500ms linear infinite;
+}
+
+@keyframes avatarHoverFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes avatarHoverFadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.force-no-clicks > *,
+.force-no-clicks * {
+  pointer-events: none !important;
+}
+
+input[type='range'][orient='vertical'] {
+  writing-mode: vertical-lr;
+  direction: rtl;
+  appearance: slider-vertical;
+  width: 16px;
+  vertical-align: bottom;
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+input[type='range'][orient='vertical']::-webkit-slider-runnable-track {
+  background: white;
+  height: 100%;
+  width: 4px;
+  border-radius: 4px;
+}
+
+input[type='range'][orient='vertical']::-moz-range-track {
+  background: white;
+  height: 100%;
+  width: 4px;
+  border-radius: 4px;
+}
+
+input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  border-radius: 50%;
+  background-color: white;
+  height: 16px;
+  width: 16px;
+  margin-left: -6px;
+}
+
+input[type='range'][orient='vertical']::-moz-range-thumb {
+  border: none;
+  border-radius: 50%;
+  background-color: white;
+  height: 16px;
+  width: 16px;
+  margin-left: -6px;
+}

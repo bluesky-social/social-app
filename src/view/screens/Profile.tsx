@@ -16,9 +16,17 @@ import {
   useQueryClient,
 } from '@tanstack/react-query'
 
+import {useSetTitle} from '#/lib/hooks/useSetTitle'
+import {ComposeIcon2} from '#/lib/icons'
+import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
+import {combinedDisplayName} from '#/lib/strings/display-names'
 import {cleanError} from '#/lib/strings/errors'
+import {isInvalidHandle} from '#/lib/strings/handles'
+import {colors, s} from '#/lib/styles'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
+import {listenSoftReset} from '#/state/events'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
+import {useActorStarterPacksQuery} from '#/state/queries/actor-starter-packs'
 import {useLabelerInfoQuery} from '#/state/queries/labeler'
 import {resetProfilePostsQueries} from '#/state/queries/post-feed'
 import {useProfileQuery} from '#/state/queries/profile'
@@ -26,36 +34,37 @@ import {useResolveDidQuery} from '#/state/queries/resolve-uri'
 import {useAgent, useSession} from '#/state/session'
 import {useSetDrawerSwipeDisabled, useSetMinimalShellMode} from '#/state/shell'
 import {useComposerControls} from '#/state/shell/composer'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {useSetTitle} from 'lib/hooks/useSetTitle'
-import {ComposeIcon2} from 'lib/icons'
-import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
-import {combinedDisplayName} from 'lib/strings/display-names'
-import {isInvalidHandle} from 'lib/strings/handles'
-import {colors, s} from 'lib/styles'
-import {listenSoftReset} from 'state/events'
-import {useActorStarterPacksQuery} from 'state/queries/actor-starter-packs'
-import {PagerWithHeader} from 'view/com/pager/PagerWithHeader'
+import {ProfileFeedgens} from '#/view/com/feeds/ProfileFeedgens'
+import {ProfileLists} from '#/view/com/lists/ProfileLists'
+import {PagerWithHeader} from '#/view/com/pager/PagerWithHeader'
+import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
+import {FAB} from '#/view/com/util/fab/FAB'
+import {ListRef} from '#/view/com/util/List'
+import {CenteredView} from '#/view/com/util/Views'
 import {ProfileHeader, ProfileHeaderLoading} from '#/screens/Profile/Header'
 import {ProfileFeedSection} from '#/screens/Profile/Sections/Feed'
 import {ProfileLabelsSection} from '#/screens/Profile/Sections/Labels'
+import {web} from '#/alf'
+import * as Layout from '#/components/Layout'
 import {ScreenHider} from '#/components/moderation/ScreenHider'
 import {ProfileStarterPacks} from '#/components/StarterPack/ProfileStarterPacks'
 import {navigate} from '#/Navigation'
 import {ExpoScrollForwarderView} from '../../../modules/expo-scroll-forwarder'
-import {ProfileFeedgens} from '../com/feeds/ProfileFeedgens'
-import {ProfileLists} from '../com/lists/ProfileLists'
-import {ErrorScreen} from '../com/util/error/ErrorScreen'
-import {FAB} from '../com/util/fab/FAB'
-import {ListRef} from '../com/util/List'
-import {CenteredView} from '../com/util/Views'
 
 interface SectionRef {
   scrollToTop: () => void
 }
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Profile'>
-export function ProfileScreen({route}: Props) {
+export function ProfileScreen(props: Props) {
+  return (
+    <Layout.Screen testID="profileScreen">
+      <ProfileScreenInner {...props} />
+    </Layout.Screen>
+  )
+}
+
+function ProfileScreenInner({route}: Props) {
   const {_} = useLingui()
   const {currentAccount} = useSession()
   const queryClient = useQueryClient()
@@ -107,7 +116,7 @@ export function ProfileScreen({route}: Props) {
   // Most pushes will happen here, since we will have only placeholder data
   if (isLoadingDid || isLoadingProfile || starterPacksQuery.isLoading) {
     return (
-      <CenteredView>
+      <CenteredView sideBorders style={web({height: '100vh'})}>
         <ProfileHeaderLoading />
       </CenteredView>
     )
@@ -166,7 +175,6 @@ function ProfileScreenLoaded({
   const {hasSession, currentAccount} = useSession()
   const setMinimalShellMode = useSetMinimalShellMode()
   const {openComposer} = useComposerControls()
-  const {screen, track} = useAnalytics()
   const {
     data: labelerInfo,
     error: labelerError,
@@ -295,11 +303,10 @@ function ProfileScreenLoaded({
   useFocusEffect(
     React.useCallback(() => {
       setMinimalShellMode(false)
-      screen('Profile')
       return listenSoftReset(() => {
         scrollSectionToTop(currentPage)
       })
-    }, [setMinimalShellMode, screen, currentPage, scrollSectionToTop]),
+    }, [setMinimalShellMode, currentPage, scrollSectionToTop]),
   )
 
   useFocusEffect(
@@ -315,7 +322,6 @@ function ProfileScreenLoaded({
   // =
 
   const onPressCompose = () => {
-    track('ProfileScreen:PressCompose')
     const mention =
       profile.handle === currentAccount?.handle ||
       isInvalidHandle(profile.handle)
@@ -362,7 +368,8 @@ function ProfileScreenLoaded({
         items={sectionTitles}
         onPageSelected={onPageSelected}
         onCurrentPageSelected={onCurrentPageSelected}
-        renderHeader={renderHeader}>
+        renderHeader={renderHeader}
+        allowHeaderOverScroll>
         {showFiltersTab
           ? ({headerHeight, isFocused, scrollElRef}) => (
               <ProfileLabelsSection

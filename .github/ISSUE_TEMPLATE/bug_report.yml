@@ -1,0 +1,64 @@
+name: "Bug Report"
+description: "Create a report for an issue you have experience in the app."
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report an issue you've found in the app! Before you submit this issue, please make sure you've searched for similar issues that are already open and being tracked. If you find an open issue that seems relevant to yours, it is best to leave a response there with your information instead of opening a new issue, since it helps to consolidate the info in one place.
+  - type: textarea
+    attributes:
+      label: Steps to Reproduce
+      description: |
+        Please provide the steps that may reproduce the issue that you are experiencing. The more concise of a
+        reproduction that you provide, the easier it will be for us to identify the issue and fix it in a timely manner.
+      placeholder: |
+        1. Go to '...'
+        2. Click on '....'
+        3. Scroll down to '....'
+        4. See error
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Attachments
+      description: |
+        If possible, please provide any images or videos that may help us understand the issue you are experiencing.
+    validations:
+      required: false
+  - type: dropdown
+    attributes:
+      label: What platform(s) does this occur on?
+      multiple: true
+      options:
+        - iOS
+        - Android
+        - Web (Desktop)
+        - Web (Mobile)
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: Device Info
+      description: |
+        Please provide the device information that you are using when experiencing this issue. This can include the
+        device model, operating system version, and any other relevant information.
+    validations:
+      required: false
+  - type: input
+    attributes:
+      label: What version of the app are you using?
+      description: |
+        You can easily find this information by visting the Settings screen in the app, and tapping on the version info
+        at the bottom of the screen. All the relevant information will be copied to your clipboard, and you will be
+        able to share it here.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Additional Information
+      description: |
+        Please provide any additional information that you think may be helpful in identifying the issue you are
+        experiencing. This can include any error messages, logs, or other information that you think may be relevant.
+    validations:
+        required: false

@@ -4,7 +4,6 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
 
-import {useAnalytics} from '#/lib/analytics/analytics'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
@@ -28,6 +27,7 @@ import {SimpleViewHeader} from '#/view/com/util/SimpleViewHeader'
 import {Text} from '#/view/com/util/text/Text'
 import {ScrollView} from '#/view/com/util/Views'
 import {atoms as a} from '#/alf'
+import * as Layout from '#/components/Layout'
 
 type Props = NativeStackScreenProps<
   CommonNavigatorParams,
@@ -36,7 +36,6 @@ type Props = NativeStackScreenProps<
 export function AccessibilitySettingsScreen({}: Props) {
   const pal = usePalette('default')
   const setMinimalShellMode = useSetMinimalShellMode()
-  const {screen} = useAnalytics()
   const {isMobile, isTabletOrMobile} = useWebMediaQueries()
   const {_} = useLingui()
 
@@ -51,13 +50,12 @@ export function AccessibilitySettingsScreen({}: Props) {
 
   useFocusEffect(
     React.useCallback(() => {
-      screen('PreferencesExternalEmbeds')
       setMinimalShellMode(false)
-    }, [screen, setMinimalShellMode]),
+    }, [setMinimalShellMode]),
   )
 
   return (
-    <View style={s.hContentRegion} testID="accessibilitySettingsScreen">
+    <Layout.Screen testID="accessibilitySettingsScreen">
       <SimpleViewHeader
         showBackButton={isTabletOrMobile}
         style={[
@@ -69,7 +67,7 @@ export function AccessibilitySettingsScreen({}: Props) {
           },
         ]}>
         <View style={a.flex_1}>
-          <Text type="title-lg" style={[pal.text, {fontWeight: 'bold'}]}>
+          <Text type="title-lg" style={[pal.text, {fontWeight: '600'}]}>
             <Trans>Accessibility Settings</Trans>
           </Text>
         </View>
@@ -131,7 +129,7 @@ export function AccessibilitySettingsScreen({}: Props) {
           </>
         )}
       </ScrollView>
-    </View>
+    </Layout.Screen>
   )
 }
 

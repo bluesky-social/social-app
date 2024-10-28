@@ -12,7 +12,6 @@ import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
-import {useAnalytics} from '#/lib/analytics/analytics'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {CommonNavigatorParams} from '#/lib/routes/types'
@@ -28,26 +27,33 @@ import {Button} from '#/view/com/util/forms/Button'
 import {Text} from '#/view/com/util/text/Text'
 import * as Toast from '#/view/com/util/Toast'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
-import {CenteredView} from 'view/com/util/Views'
+import {CenteredView} from '#/view/com/util/Views'
 import {atoms as a} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
+import * as Layout from '#/components/Layout'
 import * as Prompt from '#/components/Prompt'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AppPasswords'>
 export function AppPasswords({}: Props) {
+  return (
+    <Layout.Screen testID="AppPasswordsScreen">
+      <AppPasswordsInner />
+    </Layout.Screen>
+  )
+}
+
+function AppPasswordsInner() {
   const pal = usePalette('default')
   const {_} = useLingui()
   const setMinimalShellMode = useSetMinimalShellMode()
-  const {screen} = useAnalytics()
   const {isTabletOrDesktop} = useWebMediaQueries()
   const {openModal} = useModalControls()
   const {data: appPasswords, error} = useAppPasswordsQuery()
 
   useFocusEffect(
     React.useCallback(() => {
-      screen('AppPasswords')
       setMinimalShellMode(false)
-    }, [screen, setMinimalShellMode]),
+    }, [setMinimalShellMode]),
   )
 
   const onAdd = React.useCallback(async () => {

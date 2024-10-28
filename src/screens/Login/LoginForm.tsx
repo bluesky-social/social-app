@@ -13,15 +13,14 @@ import {
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useAnalytics} from '#/lib/analytics/analytics'
+import {useRequestNotificationsPermission} from '#/lib/notifications/notifications'
 import {isNetworkError} from '#/lib/strings/errors'
 import {cleanError} from '#/lib/strings/errors'
 import {createFullHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
+import {useSetHasCheckedForStarterPack} from '#/state/preferences/used-starter-packs'
 import {useSessionApi} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
-import {useRequestNotificationsPermission} from 'lib/notifications/notifications'
-import {useSetHasCheckedForStarterPack} from 'state/preferences/used-starter-packs'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {FormError} from '#/components/forms/FormError'
@@ -57,7 +56,6 @@ export const LoginForm = ({
   onPressBack: () => void
   onPressForgotPassword: () => void
 }) => {
-  const {track} = useAnalytics()
   const t = useTheme()
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
   const [isAuthFactorTokenNeeded, setIsAuthFactorTokenNeeded] =
@@ -74,8 +72,7 @@ export const LoginForm = ({
 
   const onPressSelectService = React.useCallback(() => {
     Keyboard.dismiss()
-    track('Signin:PressedSelectService')
-  }, [track])
+  }, [])
 
   const onPressNext = async () => {
     if (isProcessing) return
@@ -285,7 +282,7 @@ export const LoginForm = ({
           label={_(msg`Back`)}
           variant="solid"
           color="secondary"
-          size="medium"
+          size="large"
           onPress={onPressBack}>
           <ButtonText>
             <Trans>Back</Trans>
@@ -299,7 +296,7 @@ export const LoginForm = ({
             accessibilityHint={_(msg`Retries login`)}
             variant="solid"
             color="secondary"
-            size="medium"
+            size="large"
             onPress={onPressRetryConnect}>
             <ButtonText>
               <Trans>Retry</Trans>
@@ -319,7 +316,7 @@ export const LoginForm = ({
             accessibilityHint={_(msg`Navigates to the next screen`)}
             variant="solid"
             color="primary"
-            size="medium"
+            size="large"
             onPress={onPressNext}>
             <ButtonText>
               <Trans>Next</Trans>

@@ -50,7 +50,6 @@ export function EmbedConsentDialog({
   return (
     <Dialog.Outer control={control}>
       <Dialog.Handle />
-
       <Dialog.ScrollableInner
         label={_(msg`External Media`)}
         style={[gtMobile ? {width: 'auto', maxWidth: 400} : a.w_full]}>
@@ -83,7 +82,7 @@ export function EmbedConsentDialog({
             onPress={onShowAllPress}
             onAccessibilityEscape={control.close}
             color="primary"
-            size="medium"
+            size="large"
             variant="solid">
             <ButtonText>
               <Trans>Enable external media</Trans>
@@ -95,7 +94,7 @@ export function EmbedConsentDialog({
             onPress={onShowPress}
             onAccessibilityEscape={control.close}
             color="secondary"
-            size="medium"
+            size="large"
             variant="solid">
             <ButtonText>
               <Trans>Enable {externalEmbedLabels[source]} only</Trans>
@@ -106,7 +105,7 @@ export function EmbedConsentDialog({
             onAccessibilityEscape={control.close}
             onPress={onHidePress}
             color="secondary"
-            size="medium"
+            size="large"
             variant="ghost">
             <ButtonText>
               <Trans>No thanks</Trans>

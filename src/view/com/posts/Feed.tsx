@@ -15,7 +15,9 @@ import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {DISCOVER_FEED_URI, KNOWN_SHUTDOWN_FEEDS} from '#/lib/constants'
+import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {logEvent, useGate} from '#/lib/statsig/statsig'
+import {useTheme} from '#/lib/ThemeContext'
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
 import {listenPostCreated} from '#/state/events'
@@ -30,9 +32,6 @@ import {
   usePostFeedQuery,
 } from '#/state/queries/post-feed'
 import {useSession} from '#/state/session'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {useInitialNumToRender} from 'lib/hooks/useInitialNumToRender'
-import {useTheme} from 'lib/ThemeContext'
 import {
   ProgressGuide,
   SuggestedFeeds,
@@ -167,6 +166,7 @@ let Feed = ({
   renderEndOfFeed,
   testID,
   headerOffset = 0,
+  progressViewOffset,
   desktopFixedHeightOffset,
   ListHeaderComponent,
   extraData,
@@ -187,6 +187,7 @@ let Feed = ({
   renderEndOfFeed?: () => JSX.Element
   testID?: string
   headerOffset?: number
+  progressViewOffset?: number
   desktopFixedHeightOffset?: number
   ListHeaderComponent?: () => JSX.Element
   extraData?: any
@@ -194,7 +195,6 @@ let Feed = ({
   initialNumToRender?: number
 }): React.ReactNode => {
   const theme = useTheme()
-  const {track} = useAnalytics()
   const {_} = useLingui()
   const queryClient = useQueryClient()
   const {currentAccount, hasSession} = useSession()
@@ -403,7 +403,6 @@ let Feed = ({
   // =
 
   const onRefresh = React.useCallback(async () => {
-    track('Feed:onRefresh')
     logEvent('feed:refresh:sampled', {
       feedType: feedType,
       feedUrl: feed,
@@ -417,7 +416,7 @@ let Feed = ({
       logger.error('Failed to refresh posts feed', {message: err})
     }
     setIsPTRing(false)
-  }, [refetch, track, setIsPTRing, onHasNew, feed, feedType])
+  }, [refetch, setIsPTRing, onHasNew, feed, feedType])
 
   const onEndReached = React.useCallback(async () => {
     if (isFetching || !hasNextPage || isError) return
@@ -427,7 +426,6 @@ let Feed = ({
       feedUrl: feed,
       itemCount: feedItems.length,
     })
-    track('Feed:onEndReached')
     try {
       await fetchNextPage()
     } catch (err) {
@@ -438,7 +436,6 @@ let Feed = ({
     hasNextPage,
     isError,
     fetchNextPage,
-    track,
     feed,
     feedType,
     feedItems.length,
@@ -548,6 +545,7 @@ let Feed = ({
         refreshing={isPTRing}
         onRefresh={onRefresh}
         headerOffset={headerOffset}
+        progressViewOffset={progressViewOffset}
         contentContainerStyle={{
           minHeight: Dimensions.get('window').height * 1.5,
         }}

@@ -4,15 +4,15 @@ import Animated from 'react-native-reanimated'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {useMinimalShellHeaderTransform} from '#/lib/hooks/useMinimalShellTransform'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {useKawaiiMode} from '#/state/preferences/kawaii'
 import {useSession} from '#/state/session'
 import {useShellLayout} from '#/state/shell/shell-layout'
-import {useMinimalShellHeaderTransform} from 'lib/hooks/useMinimalShellTransform'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {Logo} from '#/view/icons/Logo'
 import {atoms as a, useTheme} from '#/alf'
 import {Hashtag_Stroke2_Corner0_Rounded as FeedsIcon} from '#/components/icons/Hashtag'
 import {Link} from '#/components/Link'
-import {useKawaiiMode} from '../../../state/preferences/kawaii'
 import {HomeHeaderLayoutMobile} from './HomeHeaderLayoutMobile'
 
 export function HomeHeaderLayout(props: {
@@ -39,7 +39,6 @@ function HomeHeaderLayoutDesktopAndTablet({
   const {headerHeight} = useShellLayout()
   const {hasSession} = useSession()
   const {_} = useLingui()
-
   const kawaii = useKawaiiMode()
 
   return (

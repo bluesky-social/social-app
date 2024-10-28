@@ -14,6 +14,14 @@ import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {AppModerationCause} from '#/components/Pills'
 
+export const ADULT_CONTENT_LABELS = ['sexual', 'nudity', 'porn']
+export const OTHER_SELF_LABELS = ['graphic-media']
+export const SELF_LABELS = [...ADULT_CONTENT_LABELS, ...OTHER_SELF_LABELS]
+
+export type AdultSelfLabel = (typeof ADULT_CONTENT_LABELS)[number]
+export type OtherSelfLabel = (typeof OTHER_SELF_LABELS)[number]
+export type SelfLabel = (typeof SELF_LABELS)[number]
+
 export function getModerationCauseKey(
   cause: ModerationCause | AppModerationCause,
 ): string {
@@ -31,6 +39,20 @@ export function getModerationCauseKey(
 
 export function isJustAMute(modui: ModerationUI): boolean {
   return modui.filters.length === 1 && modui.filters[0].type === 'muted'
+}
+
+export function moduiContainsHideableOffense(modui: ModerationUI): boolean {
+  const label = modui.filters.at(0)
+  if (label && label.type === 'label') {
+    return labelIsHideableOffense(label.label)
+  }
+  return false
+}
+
+export function labelIsHideableOffense(
+  label: ComAtprotoLabelDefs.Label,
+): boolean {
+  return ['!hide', '!takedown'].includes(label.val)
 }
 
 export function getLabelingServiceTitle({

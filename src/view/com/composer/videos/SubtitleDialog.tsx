@@ -7,7 +7,7 @@ import {useLingui} from '@lingui/react'
 import {MAX_ALT_TEXT} from '#/lib/constants'
 import {useEnforceMaxGraphemeCount} from '#/lib/strings/helpers'
 import {LANGUAGES} from '#/locale/languages'
-import {isAndroid, isWeb} from '#/platform/detection'
+import {isWeb} from '#/platform/detection'
 import {useLanguagePrefs} from '#/state/preferences'
 import {atoms as a, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -22,13 +22,13 @@ import {SubtitleFilePicker} from './SubtitleFilePicker'
 
 const MAX_NUM_CAPTIONS = 1
 
+type CaptionsTrack = {lang: string; file: File}
+
 interface Props {
   defaultAltText: string
-  captions: {lang: string; file: File}[]
+  captions: CaptionsTrack[]
   saveAltText: (altText: string) => void
-  setCaptions: React.Dispatch<
-    React.SetStateAction<{lang: string; file: File}[]>
-  >
+  setCaptions: (updater: (prev: CaptionsTrack[]) => CaptionsTrack[]) => void
 }
 
 export function SubtitleDialogBtn(props: Props) {
@@ -44,7 +44,7 @@ export function SubtitleDialogBtn(props: Props) {
             ? _('Opens captions and alt text dialog')
             : _('Opens alt text dialog')
         }
-        size="xsmall"
+        size="small"
         color="secondary"
         variant="ghost"
         onPress={() => {
@@ -56,9 +56,7 @@ export function SubtitleDialogBtn(props: Props) {
           {isWeb ? <Trans>Captions & alt text</Trans> : <Trans>Alt text</Trans>}
         </ButtonText>
       </Button>
-      <Dialog.Outer
-        control={control}
-        nativeOptions={isAndroid ? {sheet: {snapPoints: ['60%']}} : {}}>
+      <Dialog.Outer control={control}>
         <Dialog.Handle />
         <SubtitleDialogInner {...props} />
       </Dialog.Outer>
@@ -169,7 +167,7 @@ function SubtitleDialogInner({
         <View style={web([a.flex_row, a.justify_end])}>
           <Button
             label={_(msg`Done`)}
-            size={isWeb ? 'small' : 'medium'}
+            size={isWeb ? 'small' : 'large'}
             color="primary"
             variant="solid"
             onPress={() => {
@@ -198,9 +196,7 @@ function SubtitleFileRow({
   language: string
   file: File
   otherLanguages: {code2: string; code3: string; name: string}[]
-  setCaptions: React.Dispatch<
-    React.SetStateAction<{lang: string; file: File}[]>
-  >
+  setCaptions: (updater: (prev: CaptionsTrack[]) => CaptionsTrack[]) => void
   style: StyleProp<ViewStyle>
 }) {
   const {_} = useLingui()

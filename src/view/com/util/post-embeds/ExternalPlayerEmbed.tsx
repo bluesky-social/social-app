@@ -29,7 +29,6 @@ import {atoms as a, useTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {EmbedConsentDialog} from '#/components/dialogs/EmbedConsent'
 import {Fill} from '#/components/Fill'
-import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
 import {EventStopper} from '../EventStopper'
 
@@ -59,7 +58,7 @@ function PlaceholderOverlay({
         accessibilityLabel={_(msg`Play Video`)}
         accessibilityHint={_(msg`Play Video`)}
         onPress={onPress}
-        style={[styles.overlayContainer, styles.topRadius]}>
+        style={[styles.overlayContainer]}>
         {!isPlayerActive ? (
           <PlayButtonIcon />
         ) : (
@@ -107,16 +106,6 @@ function Player({
         onLoad={onLoad}
         style={styles.webview}
         setSupportMultipleWindows={false} // Prevent any redirects from opening a new window (ads)
-      />
-
-      <MediaInsetBorder
-        opaque
-        style={[
-          {
-            borderBottomLeftRadius: 0,
-            borderBottomRightRadius: 0,
-          },
-        ]}
       />
     </EventStopper>
   )
@@ -227,39 +216,19 @@ export function ExternalPlayer({
       <Animated.View
         ref={viewRef}
         collapsable={false}
-        style={[
-          aspect,
-          a.rounded_sm,
-          a.overflow_hidden,
-          {
-            borderBottomLeftRadius: 0,
-            borderBottomRightRadius: 0,
-          },
-        ]}>
+        style={[aspect, a.overflow_hidden]}>
         {link.thumb && (!isPlayerActive || isLoading) ? (
           <>
             <Image
-              style={[a.flex_1, styles.topRadius]}
+              style={[a.flex_1]}
               source={{uri: link.thumb}}
               accessibilityIgnoresInvertColors
             />
             <Fill
               style={[
-                a.rounded_sm,
                 t.name === 'light' ? t.atoms.bg_contrast_975 : t.atoms.bg,
                 {
-                  borderBottomLeftRadius: 0,
-                  borderBottomRightRadius: 0,
                   opacity: 0.3,
-                },
-              ]}
-            />
-            <MediaInsetBorder
-              opaque
-              style={[
-                {
-                  borderBottomLeftRadius: 0,
-                  borderBottomRightRadius: 0,
                 },
               ]}
             />
@@ -267,26 +236,14 @@ export function ExternalPlayer({
         ) : (
           <Fill
             style={[
-              a.rounded_sm,
               {
                 backgroundColor:
                   t.name === 'light' ? t.palette.contrast_975 : 'black',
-                borderBottomLeftRadius: 0,
-                borderBottomRightRadius: 0,
                 opacity: 0.3,
               },
             ]}
           />
         )}
-        <MediaInsetBorder
-          opaque
-          style={[
-            {
-              borderBottomLeftRadius: 0,
-              borderBottomRightRadius: 0,
-            },
-          ]}
-        />
         <PlaceholderOverlay
           isLoading={isLoading}
           isPlayerActive={isPlayerActive}
@@ -303,10 +260,6 @@ export function ExternalPlayer({
 }
 
 const styles = StyleSheet.create({
-  topRadius: {
-    borderTopLeftRadius: 8,
-    borderTopRightRadius: 8,
-  },
   overlayContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -319,8 +272,6 @@ const styles = StyleSheet.create({
     zIndex: 3,
   },
   webview: {
-    borderTopRightRadius: 8,
-    borderTopLeftRadius: 8,
     backgroundColor: 'transparent',
   },
   gifContainer: {

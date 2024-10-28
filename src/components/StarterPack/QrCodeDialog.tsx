@@ -1,6 +1,6 @@
 import React from 'react'
 import {View} from 'react-native'
-import ViewShot from 'react-native-view-shot'
+import type ViewShot from 'react-native-view-shot'
 import {requestMediaLibraryPermissionsAsync} from 'expo-image-picker'
 import {createAssetAsync} from 'expo-media-library'
 import * as Sharing from 'expo-sharing'
@@ -8,9 +8,9 @@ import {AppBskyGraphDefs, AppBskyGraphStarterpack} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
-import {logEvent} from 'lib/statsig/statsig'
-import {isNative, isWeb} from 'platform/detection'
+import {isNative, isWeb} from '#/platform/detection'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
@@ -149,50 +149,57 @@ export function QrCodeDialog({
 
   return (
     <Dialog.Outer control={control}>
-      <Dialog.Handle />
       <Dialog.ScrollableInner
         label={_(msg`Create a QR code for a starter pack`)}>
         <View style={[a.flex_1, a.align_center, a.gap_5xl]}>
-          {!link ? (
-            <View style={[a.align_center, a.p_xl]}>
-              <Loader size="xl" />
-            </View>
-          ) : (
-            <>
-              <QrCode starterPack={starterPack} link={link} ref={ref} />
-              {isProcessing ? (
-                <View>
-                  <Loader size="xl" />
-                </View>
-              ) : (
-                <View
-                  style={[a.w_full, a.gap_md, isWeb && [a.flex_row_reverse]]}>
-                  <Button
-                    label={_(msg`Copy QR code`)}
-                    variant="solid"
-                    color="secondary"
-                    size="small"
-                    onPress={isWeb ? onCopyPress : onSharePress}>
-                    <ButtonText>
-                      {isWeb ? <Trans>Copy</Trans> : <Trans>Share</Trans>}
-                    </ButtonText>
-                  </Button>
-                  <Button
-                    label={_(msg`Save QR code`)}
-                    variant="solid"
-                    color="secondary"
-                    size="small"
-                    onPress={onSavePress}>
-                    <ButtonText>
-                      <Trans>Save</Trans>
-                    </ButtonText>
-                  </Button>
-                </View>
-              )}
-            </>
-          )}
+          <React.Suspense fallback={<Loading />}>
+            {!link ? (
+              <Loading />
+            ) : (
+              <>
+                <QrCode starterPack={starterPack} link={link} ref={ref} />
+                {isProcessing ? (
+                  <View>
+                    <Loader size="xl" />
+                  </View>
+                ) : (
+                  <View
+                    style={[a.w_full, a.gap_md, isWeb && [a.flex_row_reverse]]}>
+                    <Button
+                      label={_(msg`Copy QR code`)}
+                      variant="solid"
+                      color="secondary"
+                      size="small"
+                      onPress={isWeb ? onCopyPress : onSharePress}>
+                      <ButtonText>
+                        {isWeb ? <Trans>Copy</Trans> : <Trans>Share</Trans>}
+                      </ButtonText>
+                    </Button>
+                    <Button
+                      label={_(msg`Save QR code`)}
+                      variant="solid"
+                      color="secondary"
+                      size="small"
+                      onPress={onSavePress}>
+                      <ButtonText>
+                        <Trans>Save</Trans>
+                      </ButtonText>
+                    </Button>
+                  </View>
+                )}
+              </>
+            )}
+          </React.Suspense>
         </View>
       </Dialog.ScrollableInner>
     </Dialog.Outer>
+  )
+}
+
+function Loading() {
+  return (
+    <View style={[a.align_center, a.p_xl]}>
+      <Loader size="xl" />
+    </View>
   )
 }

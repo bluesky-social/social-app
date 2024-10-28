@@ -1,14 +1,16 @@
 import React from 'react'
-import {StyleSheet, TouchableOpacity} from 'react-native'
+import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {PressableScale} from '#/lib/custom-animations/PressableScale'
+import {useHaptics} from '#/lib/haptics'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {Text} from '../util/text/Text'
-import {UserAvatar} from '../util/UserAvatar'
+import {UserAvatar} from '#/view/com/util/UserAvatar'
+import {atoms as a, ios, useBreakpoints, useTheme} from '#/alf'
+import {useInteractionState} from '#/components/hooks/useInteractionState'
+import {Text} from '#/components/Typography'
 
 export function PostThreadComposePrompt({
   onPressCompose,
@@ -17,47 +19,58 @@ export function PostThreadComposePrompt({
 }) {
   const {currentAccount} = useSession()
   const {data: profile} = useProfileQuery({did: currentAccount?.did})
-  const pal = usePalette('default')
   const {_} = useLingui()
-  const {isDesktop} = useWebMediaQueries()
+  const {gtMobile} = useBreakpoints()
+  const t = useTheme()
+  const playHaptic = useHaptics()
+  const {
+    state: hovered,
+    onIn: onHoverIn,
+    onOut: onHoverOut,
+  } = useInteractionState()
+
   return (
-    <TouchableOpacity
-      testID="replyPromptBtn"
-      style={[pal.view, pal.border, styles.prompt]}
-      onPress={() => onPressCompose()}
+    <PressableScale
       accessibilityRole="button"
       accessibilityLabel={_(msg`Compose reply`)}
-      accessibilityHint={_(msg`Opens composer`)}>
-      <UserAvatar
-        avatar={profile?.avatar}
-        size={38}
-        type={profile?.associated?.labeler ? 'labeler' : 'user'}
-      />
-      <Text
-        type="xl"
+      accessibilityHint={_(msg`Opens composer`)}
+      style={[
+        gtMobile ? a.py_xs : {paddingTop: 8, paddingBottom: 11},
+        a.px_sm,
+        a.border_t,
+        t.atoms.border_contrast_low,
+        t.atoms.bg,
+      ]}
+      onPressIn={ios(() => playHaptic('Light'))}
+      onPress={() => {
+        onPressCompose()
+        playHaptic('Light')
+      }}
+      onLongPress={ios(() => {
+        onPressCompose()
+        playHaptic('Heavy')
+      })}
+      onHoverIn={onHoverIn}
+      onHoverOut={onHoverOut}>
+      <View
         style={[
-          pal.text,
-          isDesktop ? styles.labelDesktopWeb : styles.labelMobile,
+          a.flex_row,
+          a.align_center,
+          a.p_sm,
+          a.gap_sm,
+          a.rounded_full,
+          (!gtMobile || hovered) && t.atoms.bg_contrast_25,
+          a.transition_color,
         ]}>
-        <Trans>Write your reply</Trans>
-      </Text>
-    </TouchableOpacity>
+        <UserAvatar
+          size={gtMobile ? 24 : 22}
+          avatar={profile?.avatar}
+          type={profile?.associated?.labeler ? 'labeler' : 'user'}
+        />
+        <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
+          <Trans>Write your reply</Trans>
+        </Text>
+      </View>
+    </PressableScale>
   )
 }
-
-const styles = StyleSheet.create({
-  prompt: {
-    paddingHorizontal: 16,
-    paddingTop: 10,
-    paddingBottom: 10,
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderTopWidth: StyleSheet.hairlineWidth,
-  },
-  labelMobile: {
-    paddingLeft: 12,
-  },
-  labelDesktopWeb: {
-    paddingLeft: 12,
-  },
-})

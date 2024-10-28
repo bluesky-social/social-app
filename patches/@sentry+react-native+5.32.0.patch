@@ -1,0 +1,36 @@
+diff --git a/node_modules/@sentry/react-native/dist/js/utils/ignorerequirecyclelogs.js b/node_modules/@sentry/react-native/dist/js/utils/ignorerequirecyclelogs.js
+index 7e0b4cd..177454c 100644
+--- a/node_modules/@sentry/react-native/dist/js/utils/ignorerequirecyclelogs.js
++++ b/node_modules/@sentry/react-native/dist/js/utils/ignorerequirecyclelogs.js
+@@ -3,6 +3,8 @@ import { LogBox } from 'react-native';
+  * This is a workaround for using fetch on RN, this is a known issue in react-native and only generates a warning.
+  */
+ export function ignoreRequireCycleLogs() {
+-    LogBox.ignoreLogs(['Require cycle:']);
++    try {
++        LogBox.ignoreLogs(['Require cycle:']);
++    } catch (e) {}
+ }
+ //# sourceMappingURL=ignorerequirecyclelogs.js.map
+\ No newline at end of file
+diff --git a/node_modules/@sentry/react-native/scripts/expo-upload-sourcemaps.js b/node_modules/@sentry/react-native/scripts/expo-upload-sourcemaps.js
+index 0f244f2..ae7dfb3 100755
+--- a/node_modules/@sentry/react-native/scripts/expo-upload-sourcemaps.js
++++ b/node_modules/@sentry/react-native/scripts/expo-upload-sourcemaps.js
+@@ -174,6 +174,7 @@ if (!outputDir) {
+   process.exit(1);
+ }
+
++const otherArgs = process.argv.slice(3);
+ const files = getAssetPathsSync(outputDir);
+ const groupedAssets = groupAssets(files);
+
+@@ -195,7 +196,7 @@ for (const [assetGroupName, assets] of Object.entries(groupedAssets)) {
+
+   const isHermes = assets.find(asset => asset.endsWith('.hbc'));
+   const windowsCallback = process.platform === "win32" ? 'node ' : '';
+-  execSync(`${windowsCallback}${sentryCliBin} sourcemaps upload ${isHermes ? '--debug-id-reference' : ''} ${assets.join(' ')}`, {
++  execSync(`${windowsCallback}${sentryCliBin} sourcemaps upload ${isHermes ? '--debug-id-reference' : ''} ${assets.join(' ')} ${otherArgs.join(' ')}`, {
+     env: {
+       ...process.env,
+       [SENTRY_PROJECT]: sentryProject,

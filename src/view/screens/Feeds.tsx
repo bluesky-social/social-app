@@ -6,6 +6,12 @@ import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
 import debounce from 'lodash.debounce'
 
+import {usePalette} from '#/lib/hooks/usePalette'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {ComposeIcon2} from '#/lib/icons'
+import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
+import {cleanError} from '#/lib/strings/errors'
+import {s} from '#/lib/styles'
 import {isNative, isWeb} from '#/platform/detection'
 import {
   SavedFeedItem,
@@ -16,30 +22,25 @@ import {
 import {useSession} from '#/state/session'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {useComposerControls} from '#/state/shell/composer'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {ComposeIcon2} from 'lib/icons'
-import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
-import {cleanError} from 'lib/strings/errors'
-import {s} from 'lib/styles'
-import {ErrorMessage} from 'view/com/util/error/ErrorMessage'
-import {FAB} from 'view/com/util/fab/FAB'
-import {SearchInput} from 'view/com/util/forms/SearchInput'
-import {TextLink} from 'view/com/util/Link'
-import {List} from 'view/com/util/List'
-import {FeedFeedLoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
-import {Text} from 'view/com/util/text/Text'
-import {ViewHeader} from 'view/com/util/ViewHeader'
+import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
+import {FAB} from '#/view/com/util/fab/FAB'
+import {TextLink} from '#/view/com/util/Link'
+import {List} from '#/view/com/util/List'
+import {FeedFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
+import {Text} from '#/view/com/util/text/Text'
+import {ViewHeader} from '#/view/com/util/ViewHeader'
 import {NoFollowingFeed} from '#/screens/Feeds/NoFollowingFeed'
 import {NoSavedFeedsOfAnyType} from '#/screens/Feeds/NoSavedFeedsOfAnyType'
 import {atoms as a, useTheme} from '#/alf'
 import {Divider} from '#/components/Divider'
 import * as FeedCard from '#/components/FeedCard'
+import {SearchInput} from '#/components/forms/SearchInput'
 import {IconCircle} from '#/components/IconCircle'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
 import {FilterTimeline_Stroke2_Corner0_Rounded as FilterTimeline} from '#/components/icons/FilterTimeline'
 import {ListMagnifyingGlass_Stroke2_Corner0_Rounded} from '#/components/icons/ListMagnifyingGlass'
 import {ListSparkle_Stroke2_Corner0_Rounded} from '#/components/icons/ListSparkle'
+import * as Layout from '#/components/Layout'
 import * as ListCard from '#/components/ListCard'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Feeds'>
@@ -481,11 +482,12 @@ export function FeedsScreen(_props: Props) {
             <FeedsAboutHeader />
             <View style={{paddingHorizontal: 12, paddingBottom: 4}}>
               <SearchInput
-                query={query}
-                onChangeQuery={onChangeQuery}
-                onPressCancelSearch={onPressCancelSearch}
-                onSubmitQuery={onSubmitQuery}
-                setIsInputFocused={onChangeSearchFocus}
+                value={query}
+                onChangeText={onChangeQuery}
+                onClearText={onPressCancelSearch}
+                onSubmitEditing={onSubmitQuery}
+                onFocus={() => onChangeSearchFocus(true)}
+                onBlur={() => onChangeSearchFocus(false)}
               />
             </View>
           </>
@@ -544,7 +546,7 @@ export function FeedsScreen(_props: Props) {
   )
 
   return (
-    <View style={[pal.view, styles.container]}>
+    <Layout.Screen testID="FeedsScreen">
       {isMobile && (
         <ViewHeader
           title={_(msg`Feeds`)}
@@ -581,7 +583,7 @@ export function FeedsScreen(_props: Props) {
           accessibilityHint=""
         />
       )}
-    </View>
+    </Layout.Screen>
   )
 }
 
@@ -767,9 +769,6 @@ function FeedsAboutHeader() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   list: {
     height: '100%',
   },

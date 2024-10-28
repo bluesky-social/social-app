@@ -38,7 +38,8 @@ import {PostMeta} from '#/view/com/util/PostMeta'
 import {Text} from '#/view/com/util/text/Text'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a} from '#/alf'
-import {Repost_Stroke2_Corner2_Rounded as Repost} from '#/components/icons/Repost'
+import {Pin_Stroke2_Corner0_Rounded as PinIcon} from '#/components/icons/Pin'
+import {Repost_Stroke2_Corner2_Rounded as RepostIcon} from '#/components/icons/Repost'
 import {ContentHider} from '#/components/moderation/ContentHider'
 import {LabelsOnMyPost} from '#/components/moderation/LabelsOnMe'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
@@ -52,6 +53,7 @@ interface FeedItemProps {
   record: AppBskyFeedPost.Record
   reason:
     | AppBskyFeedDefs.ReasonRepost
+    | AppBskyFeedDefs.ReasonPin
     | ReasonFeedSource
     | {[k: string]: unknown; $type: string}
     | undefined
@@ -245,7 +247,7 @@ let FeedItemInner = ({
       onBeforePress={onBeforePress}
       dataSet={{feedContext}}>
       <View style={{flexDirection: 'row', gap: 10, paddingLeft: 8}}>
-        <View style={{width: 52}}>
+        <View style={{width: 42}}>
           {isThreadChild && (
             <View
               style={[
@@ -295,10 +297,10 @@ let FeedItemInner = ({
                     )
               }
               onBeforePress={onOpenReposter}>
-              <Repost
+              <RepostIcon
                 style={{color: pal.colors.textLight, marginRight: 3}}
-                width={14}
-                height={14}
+                width={13}
+                height={13}
               />
               <Text
                 type="sm-bold"
@@ -316,11 +318,19 @@ let FeedItemInner = ({
                         style={pal.textLight}
                         lineHeight={1.2}
                         numberOfLines={1}
-                        text={sanitizeDisplayName(
-                          reason.by.displayName ||
-                            sanitizeHandle(reason.by.handle),
-                          moderation.ui('displayName'),
-                        )}
+                        text={
+                          <Text
+                            emoji
+                            type="sm-bold"
+                            style={pal.textLight}
+                            lineHeight={1.2}>
+                            {sanitizeDisplayName(
+                              reason.by.displayName ||
+                                sanitizeHandle(reason.by.handle),
+                              moderation.ui('displayName'),
+                            )}
+                          </Text>
+                        }
                         href={makeProfileLink(reason.by)}
                         onBeforePress={onOpenReposter}
                       />
@@ -329,6 +339,21 @@ let FeedItemInner = ({
                 )}
               </Text>
             </Link>
+          ) : AppBskyFeedDefs.isReasonPin(reason) ? (
+            <View style={styles.includeReason}>
+              <PinIcon
+                style={{color: pal.colors.textLight, marginRight: 3}}
+                width={13}
+                height={13}
+              />
+              <Text
+                type="sm-bold"
+                style={pal.textLight}
+                lineHeight={1.2}
+                numberOfLines={1}>
+                <Trans>Pinned</Trans>
+              </Text>
+            </View>
           ) : null}
         </View>
       </View>
@@ -337,7 +362,7 @@ let FeedItemInner = ({
         <View style={styles.layoutAvi}>
           <AviFollowButton author={post.author} moderation={moderation}>
             <PreviewableUserAvatar
-              size={52}
+              size={42}
               profile={post.author}
               moderation={moderation.ui('avatar')}
               type={post.author.associated?.labeler ? 'labeler' : 'user'}
@@ -361,7 +386,6 @@ let FeedItemInner = ({
           <PostMeta
             author={post.author}
             moderation={moderation}
-            authorHasWarning={!!post.author.labels?.length}
             timestamp={post.indexedAt}
             postHref={href}
             onOpenAuthor={onOpenAuthor}
@@ -527,9 +551,11 @@ function ReplyToLabel({
               numberOfLines={1}
               href={makeProfileLink(profile)}
               text={
-                profile.displayName
-                  ? sanitizeDisplayName(profile.displayName)
-                  : sanitizeHandle(profile.handle)
+                <Text emoji type="md" style={pal.textLight} lineHeight={1.2}>
+                  {profile.displayName
+                    ? sanitizeDisplayName(profile.displayName)
+                    : sanitizeHandle(profile.handle)}
+                </Text>
               }
             />
           </ProfileHoverCard>
@@ -578,7 +604,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 2,
     marginBottom: 2,
-    marginLeft: -18,
+    marginLeft: -16,
   },
   layout: {
     flexDirection: 'row',

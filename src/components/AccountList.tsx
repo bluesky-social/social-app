@@ -1,9 +1,12 @@
 import React, {useCallback} from 'react'
 import {View} from 'react-native'
+import {AppBskyActorDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useProfileQuery} from '#/state/queries/profile'
+import {sanitizeDisplayName} from '#/lib/strings/display-names'
+import {sanitizeHandle} from '#/lib/strings/handles'
+import {useProfilesQuery} from '#/state/queries/profile'
 import {type SessionAccount, useSession} from '#/state/session'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
@@ -26,6 +29,9 @@ export function AccountList({
   const {currentAccount, accounts} = useSession()
   const t = useTheme()
   const {_} = useLingui()
+  const {data: profiles} = useProfilesQuery({
+    handles: accounts.map(acc => acc.did),
+  })
 
   const onPressAddAccount = useCallback(() => {
     onSelectOther()
@@ -43,6 +49,7 @@ export function AccountList({
       {accounts.map(account => (
         <React.Fragment key={account.did}>
           <AccountItem
+            profile={profiles?.profiles.find(p => p.did === account.did)}
             account={account}
             onSelect={onSelectAccount}
             isCurrentAccount={account.did === currentAccount?.did}
@@ -84,11 +91,13 @@ export function AccountList({
 }
 
 function AccountItem({
+  profile,
   account,
   onSelect,
   isCurrentAccount,
   isPendingAccount,
 }: {
+  profile?: AppBskyActorDefs.ProfileViewDetailed
   account: SessionAccount
   onSelect: (account: SessionAccount) => void
   isCurrentAccount: boolean
@@ -96,9 +105,8 @@ function AccountItem({
 }) {
   const t = useTheme()
   const {_} = useLingui()
-  const {data: profile} = useProfileQuery({did: account.did})
 
-  const onPress = React.useCallback(() => {
+  const onPress = useCallback(() => {
     onSelect(account)
   }, [account, onSelect])
 
@@ -126,10 +134,14 @@ function AccountItem({
             <UserAvatar avatar={profile?.avatar} size={24} />
           </View>
           <Text style={[a.align_baseline, a.flex_1, a.flex_row, a.py_sm]}>
-            <Text style={[a.font_bold]}>
-              {profile?.displayName || account.handle}{' '}
+            <Text emoji style={[a.font_bold]}>
+              {sanitizeDisplayName(
+                profile?.displayName || profile?.handle || account.handle,
+              )}
+            </Text>{' '}
+            <Text emoji style={[t.atoms.text_contrast_medium]}>
+              {sanitizeHandle(account.handle)}
             </Text>
-            <Text style={[t.atoms.text_contrast_medium]}>{account.handle}</Text>
           </Text>
           {isCurrentAccount ? (
             <Check

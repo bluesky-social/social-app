@@ -6,6 +6,7 @@ import {useLingui} from '@lingui/react'
 
 import {getLabelingServiceTitle} from '#/lib/moderation'
 import {ReportOption} from '#/lib/moderation/useReportOptions'
+import {isAndroid} from '#/platform/detection'
 import {useAgent} from '#/state/session'
 import {CharProgress} from '#/view/com/composer/char-progress/CharProgress'
 import * as Toast from '#/view/com/util/Toast'
@@ -225,6 +226,8 @@ export function SubmitView({
           {submitting && <ButtonIcon icon={Loader} />}
         </Button>
       </View>
+      {/* Maybe fix this later -h */}
+      {isAndroid ? <View style={{height: 300}} /> : null}
     </View>
   )
 }
@@ -256,6 +259,7 @@ function LabelerToggle({title}: {title: string}) {
           a.z_10,
         ]}>
         <Text
+          emoji
           style={[
             native({marginTop: 2}),
             t.atoms.text_contrast_medium,

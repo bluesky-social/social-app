@@ -17,11 +17,11 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {HITSLOP_10} from 'lib/constants'
-import {usePalette} from 'lib/hooks/usePalette'
-import {colors} from 'lib/styles'
-import {useTheme} from 'lib/ThemeContext'
-import {isWeb} from 'platform/detection'
+import {HITSLOP_10} from '#/lib/constants'
+import {usePalette} from '#/lib/hooks/usePalette'
+import {colors} from '#/lib/styles'
+import {useTheme} from '#/lib/ThemeContext'
+import {isWeb} from '#/platform/detection'
 import {native} from '#/alf'
 import {FullWindowOverlay} from '#/components/FullWindowOverlay'
 import {Text} from '../text/Text'
@@ -382,6 +382,6 @@ const styles = StyleSheet.create({
   },
   headingLabel: {
     fontSize: 18,
-    fontWeight: '500',
+    fontWeight: '600',
   },
 })

@@ -1,11 +1,20 @@
 import UIKit
+import AVKit
+
+let IMAGE_EXTENSIONS: [String] = ["png", "jpg", "jpeg", "gif", "heic"]
+let MOVIE_EXTENSIONS: [String] = ["mov", "mp4", "m4v"]
+
+enum URLType: String, CaseIterable {
+  case image
+  case movie
+  case other
+}
 
 class ShareViewController: UIViewController {
   // This allows other forks to use this extension while also changing their
   // scheme.
   let appScheme = Bundle.main.object(forInfoDictionaryKey: "MainAppScheme") as? String ?? "bluesky"
 
-  //
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
 
@@ -24,6 +33,8 @@ class ShareViewController: UIViewController {
         await self.handleUrl(item: firstAttachment)
       } else if firstAttachment.hasItemConformingToTypeIdentifier("public.image") {
         await self.handleImages(items: attachments)
+      } else if firstAttachment.hasItemConformingToTypeIdentifier("public.movie") {
+        await self.handleVideos(items: attachments)
       } else {
         self.completeRequest()
       }
@@ -31,31 +42,32 @@ class ShareViewController: UIViewController {
   }
 
   private func handleText(item: NSItemProvider) async {
-    do {
-      if let data = try await item.loadItem(forTypeIdentifier: "public.text") as? String {
-        if let encoded = data.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed),
-           let url = URL(string: "\(self.appScheme)://intent/compose?text=\(encoded)") {
-          _ = self.openURL(url)
-        }
+    if let data = try? await item.loadItem(forTypeIdentifier: "public.text") as? String {
+      if let encoded = data.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed),
+         let url = URL(string: "\(self.appScheme)://intent/compose?text=\(encoded)") {
+        _ = self.openURL(url)
       }
-      self.completeRequest()
-    } catch {
-      self.completeRequest()
     }
+    self.completeRequest()
   }
 
   private func handleUrl(item: NSItemProvider) async {
-    do {
-      if let data = try await item.loadItem(forTypeIdentifier: "public.url") as? URL {
+    if let data = try? await item.loadItem(forTypeIdentifier: "public.url") as? URL {
+      switch data.type {
+      case .image:
+        await handleImages(items: [item])
+        return
+      case .movie:
+        await handleVideos(items: [item])
+        return
+      case .other:
         if let encoded = data.absoluteString.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed),
            let url = URL(string: "\(self.appScheme)://intent/compose?text=\(encoded)") {
           _ = self.openURL(url)
         }
       }
-      self.completeRequest()
-    } catch {
-      self.completeRequest()
     }
+    self.completeRequest()
   }
 
   private func handleImages(items: [NSItemProvider]) async {
@@ -105,6 +117,20 @@ class ShareViewController: UIViewController {
     self.completeRequest()
   }
 
+  private func handleVideos(items: [NSItemProvider]) async {
+    let firstItem = items.first
+
+    if let dataUrl = try? await firstItem?.loadItem(forTypeIdentifier: "public.movie") as? URL {
+      let ext = String(dataUrl.lastPathComponent.split(separator: ".").last ?? "mp4")
+      if let videoUriInfo = saveVideoWithInfo(dataUrl),
+         let url = URL(string: "\(self.appScheme)://intent/compose?videoUri=\(videoUriInfo)") {
+        _ = self.openURL(url)
+      }
+    }
+
+    self.completeRequest()
+  }
+
   private func saveImageWithInfo(_ image: UIImage?) -> String? {
     guard let image = image else {
       return nil
@@ -114,35 +140,71 @@ class ShareViewController: UIViewController {
       // Saving this file to the bundle group's directory lets us access it from
       // inside of the app. Otherwise, we wouldn't have access even though the
       // extension does.
-      if let dir = FileManager()
-        .containerURL(
-          forSecurityApplicationGroupIdentifier: "group.app.bsky") {
-        let filePath = "\(dir.absoluteString)\(ProcessInfo.processInfo.globallyUniqueString).jpeg"
-
-        if let newUri = URL(string: filePath),
-           let jpegData = image.jpegData(compressionQuality: 1) {
-          try jpegData.write(to: newUri)
-          return "\(newUri.absoluteString)|\(image.size.width)|\(image.size.height)"
-        }
+      if let tempUrl = getTempUrl(ext: "jpeg"),
+         let jpegData = image.jpegData(compressionQuality: 1) {
+          try jpegData.write(to: tempUrl)
+          return "\(tempUrl.absoluteString)|\(image.size.width)|\(image.size.height)"
       }
-      return nil
-    } catch {
+    } catch {}
+    return nil
+  }
+
+  private func saveVideoWithInfo(_ dataUrl: URL) -> String? {
+    let ext = String(dataUrl.lastPathComponent.split(separator: ".").last ?? "mp4")
+    guard let tempUrl = getTempUrl(ext: ext) else {
       return nil
     }
+
+    let data = try? Data(contentsOf: dataUrl)
+    try? data?.write(to: tempUrl)
+
+    guard let track = AVURLAsset(url: dataUrl).tracks(withMediaType: AVMediaType.video).first else {
+      _ = try? FileManager().removeItem(at: tempUrl)
+      return nil
+    }
+
+    let size = track.naturalSize.applying(track.preferredTransform)
+    return "\(tempUrl.absoluteString)|\(size.width)|\(size.height)"
   }
 
   private func completeRequest() {
     self.extensionContext?.completeRequest(returningItems: nil)
   }
 
+  private func getTempUrl(ext: String) -> URL? {
+    if let dir = FileManager().containerURL(forSecurityApplicationGroupIdentifier: "group.app.bsky") {
+      return URL(string: "\(dir.absoluteString)\(ProcessInfo.processInfo.globallyUniqueString).\(ext)")!
+    }
+    return nil
+  }
+
   @objc func openURL(_ url: URL) -> Bool {
     var responder: UIResponder? = self
     while responder != nil {
       if let application = responder as? UIApplication {
-          return application.perform(#selector(openURL(_:)), with: url) != nil
+        application.open(url)
+        return true
       }
       responder = responder?.next
     }
     return false
+  }
+}
+
+extension URL {
+  var type: URLType {
+    get {
+      guard self.absoluteString.starts(with: "file://"),
+            let ext = self.pathComponents.last?.split(separator: ".").last?.lowercased() else {
+        return .other
+      }
+
+      if IMAGE_EXTENSIONS.contains(ext) {
+        return .image
+      } else if MOVIE_EXTENSIONS.contains(ext) {
+        return .movie
+      }
+      return .other
+    }
   }
 }

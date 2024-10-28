@@ -24,15 +24,15 @@ import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {HITSLOP_20} from '#/lib/constants'
+import {usePalette} from '#/lib/hooks/usePalette'
+import {InfoCircleIcon} from '#/lib/icons'
 import {moderatePost_wrapped} from '#/lib/moderatePost_wrapped'
+import {makeProfileLink} from '#/lib/routes/links'
 import {s} from '#/lib/styles'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
+import {precacheProfile} from '#/state/queries/profile'
+import {useResolveLinkQuery} from '#/state/queries/resolve-link'
 import {useSession} from '#/state/session'
-import {usePalette} from 'lib/hooks/usePalette'
-import {InfoCircleIcon} from 'lib/icons'
-import {makeProfileLink} from 'lib/routes/links'
-import {precacheProfile} from 'state/queries/profile'
-import {ComposerOptsQuote} from 'state/shell/composer'
 import {atoms as a, useTheme} from '#/alf'
 import {RichText} from '#/components/RichText'
 import {ContentHider} from '../../../../components/moderation/ContentHider'
@@ -67,7 +67,6 @@ export function MaybeQuoteEmbed({
     return (
       <QuoteEmbedModerated
         viewRecord={embed.record}
-        postRecord={embed.record.value}
         onOpen={onOpen}
         style={style}
         allowNestedQuotes={allowNestedQuotes}
@@ -117,39 +116,31 @@ export function MaybeQuoteEmbed({
 
 function QuoteEmbedModerated({
   viewRecord,
-  postRecord,
   onOpen,
   style,
   allowNestedQuotes,
   viewContext,
 }: {
   viewRecord: AppBskyEmbedRecord.ViewRecord
-  postRecord: AppBskyFeedPost.Record
   onOpen?: () => void
   style?: StyleProp<ViewStyle>
   allowNestedQuotes?: boolean
   viewContext?: QuoteEmbedViewContext
 }) {
   const moderationOpts = useModerationOpts()
+  const postView = React.useMemo(
+    () => viewRecordToPostView(viewRecord),
+    [viewRecord],
+  )
   const moderation = React.useMemo(() => {
     return moderationOpts
-      ? moderatePost_wrapped(viewRecordToPostView(viewRecord), moderationOpts)
+      ? moderatePost_wrapped(postView, moderationOpts)
       : undefined
-  }, [viewRecord, moderationOpts])
-
-  const quote = {
-    author: viewRecord.author,
-    cid: viewRecord.cid,
-    uri: viewRecord.uri,
-    indexedAt: viewRecord.indexedAt,
-    text: postRecord.text,
-    facets: postRecord.facets,
-    embeds: viewRecord.embeds,
-  }
+  }, [postView, moderationOpts])
 
   return (
     <QuoteEmbed
-      quote={quote}
+      quote={postView}
       moderation={moderation}
       onOpen={onOpen}
       style={style}
@@ -166,7 +157,7 @@ export function QuoteEmbed({
   style,
   allowNestedQuotes,
 }: {
-  quote: ComposerOptsQuote
+  quote: AppBskyFeedDefs.PostView
   moderation?: ModerationDecision
   onOpen?: () => void
   style?: StyleProp<ViewStyle>
@@ -180,16 +171,18 @@ export function QuoteEmbed({
   const itemHref = makeProfileLink(quote.author, 'post', itemUrip.rkey)
   const itemTitle = `Post by ${quote.author.handle}`
 
-  const richText = React.useMemo(
-    () =>
-      quote.text.trim()
-        ? new RichTextAPI({text: quote.text, facets: quote.facets})
-        : undefined,
-    [quote.text, quote.facets],
-  )
+  const richText = React.useMemo(() => {
+    const text = AppBskyFeedPost.isRecord(quote.record) ? quote.record.text : ''
+    const facets = AppBskyFeedPost.isRecord(quote.record)
+      ? quote.record.facets
+      : undefined
+    return text.trim()
+      ? new RichTextAPI({text: text, facets: facets})
+      : undefined
+  }, [quote.record])
 
   const embed = React.useMemo(() => {
-    const e = quote.embeds?.[0]
+    const e = quote.embed
 
     if (allowNestedQuotes) {
       return e
@@ -209,7 +202,7 @@ export function QuoteEmbed({
         return e.media
       }
     }
-  }, [quote.embeds, allowNestedQuotes])
+  }, [quote.embed, allowNestedQuotes])
 
   const onBeforePress = React.useCallback(() => {
     precacheProfile(queryClient, quote.author)
@@ -219,7 +212,14 @@ export function QuoteEmbed({
   return (
     <ContentHider
       modui={moderation?.ui('contentList')}
-      style={[styles.container, a.border, t.atoms.border_contrast_low, style]}
+      style={[
+        a.rounded_md,
+        a.p_md,
+        a.mt_sm,
+        a.border,
+        t.atoms.border_contrast_low,
+        style,
+      ]}
       childContainerStyle={[a.pt_sm]}>
       <Link
         hoverStyle={{borderColor: pal.colors.borderLinkHover}}
@@ -231,7 +231,6 @@ export function QuoteEmbed({
             author={quote.author}
             moderation={moderation}
             showAvatar
-            authorHasWarning={false}
             postHref={itemHref}
             timestamp={quote.indexedAt}
           />
@@ -280,6 +279,14 @@ export function QuoteX({onRemove}: {onRemove: () => void}) {
   )
 }
 
+export function LazyQuoteEmbed({uri}: {uri: string}) {
+  const {data} = useResolveLinkQuery(uri)
+  if (!data || data.type !== 'record' || data.kind !== 'post') {
+    return null
+  }
+  return <QuoteEmbed quote={data.view} />
+}
+
 function viewRecordToPostView(
   viewRecord: AppBskyEmbedRecord.ViewRecord,
 ): AppBskyFeedDefs.PostView {
@@ -293,13 +300,6 @@ function viewRecordToPostView(
 }
 
 const styles = StyleSheet.create({
-  container: {
-    borderRadius: 8,
-    marginTop: 8,
-    paddingVertical: 12,
-    paddingHorizontal: 12,
-    borderWidth: StyleSheet.hairlineWidth,
-  },
   errorContainer: {
     flexDirection: 'row',
     alignItems: 'center',

@@ -142,7 +142,7 @@ function FeedgenErrorMessage({
     } catch (err) {
       Toast.show(
         _l(
-          msgLingui`There was an an issue removing this feed. Please check your internet connection and try again.`,
+          msgLingui`There was an issue removing this feed. Please check your internet connection and try again.`,
         ),
         'exclamation-circle',
       )

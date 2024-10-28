@@ -2,13 +2,17 @@ import React from 'react'
 import {
   AppBskyActorDefs,
   AppBskyEmbedRecord,
-  AppBskyRichtextFacet,
+  AppBskyFeedDefs,
   ModerationDecision,
 } from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useQueryClient} from '@tanstack/react-query'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
+import {postUriToRelativePath, toBskyAppUrl} from '#/lib/strings/url-helpers'
+import {purgeTemporaryImageFiles} from '#/state/gallery'
+import {precacheResolveLinkQuery} from '#/state/queries/resolve-link'
 import * as Toast from '#/view/com/util/Toast'
 
 export interface ComposerOptsPostRef {
@@ -19,24 +23,16 @@ export interface ComposerOptsPostRef {
   embed?: AppBskyEmbedRecord.ViewRecord['embed']
   moderation?: ModerationDecision
 }
-export interface ComposerOptsQuote {
-  uri: string
-  cid: string
-  text: string
-  facets?: AppBskyRichtextFacet.Main[]
-  indexedAt: string
-  author: AppBskyActorDefs.ProfileViewBasic
-  embeds?: AppBskyEmbedRecord.ViewRecord['embeds']
-}
+
 export interface ComposerOpts {
   replyTo?: ComposerOptsPostRef
   onPost?: (postUri: string | undefined) => void
-  quote?: ComposerOptsQuote
-  quoteCount?: number
+  quote?: AppBskyFeedDefs.PostView
   mention?: string // handle of user to mention
   openEmojiPicker?: (pos: DOMRect | undefined) => void
   text?: string
-  imageUris?: {uri: string; width: number; height: number}[]
+  imageUris?: {uri: string; width: number; height: number; altText?: string}[]
+  videoUri?: {uri: string; width: number; height: number}
 }
 
 type StateContext = ComposerOpts | undefined
@@ -56,8 +52,24 @@ const controlsContext = React.createContext<ControlsContext>({
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const {_} = useLingui()
   const [state, setState] = React.useState<StateContext>()
+  const queryClient = useQueryClient()
 
   const openComposer = useNonReactiveCallback((opts: ComposerOpts) => {
+    if (opts.quote) {
+      const path = postUriToRelativePath(opts.quote.uri)
+      if (path) {
+        const appUrl = toBskyAppUrl(path)
+        precacheResolveLinkQuery(queryClient, appUrl, {
+          type: 'record',
+          kind: 'post',
+          record: {
+            cid: opts.quote.cid,
+            uri: opts.quote.uri,
+          },
+          view: opts.quote,
+        })
+      }
+    }
     const author = opts.replyTo?.author || opts.quote?.author
     const isBlocked = Boolean(
       author &&
@@ -77,7 +89,11 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
   const closeComposer = useNonReactiveCallback(() => {
     let wasOpen = !!state
-    setState(undefined)
+    if (wasOpen) {
+      setState(undefined)
+      purgeTemporaryImageFiles()
+    }
+
     return wasOpen
   })
 
