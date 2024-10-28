@@ -168,7 +168,8 @@ export function getMainSubscriptionProducts(
     .map(product => ({
       product,
       subscription: subscriptions.find(
-        subscription => subscription.product_id === product.id,
+        subscription =>
+          subscription.product_id === product.id && subscription.gives_access,
       ),
     }))
     .map(normalizeMainSubscriptionProduct)
