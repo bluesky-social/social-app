@@ -11,7 +11,6 @@ import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {clamp} from '#/lib/numbers'
 import {gradients} from '#/lib/styles'
 import {isWeb} from '#/platform/detection'
-import {useHapticsDisabled} from '#/state/preferences'
 
 export interface FABProps
   extends ComponentProps<typeof TouchableWithoutFeedback> {
@@ -23,7 +22,6 @@ export function FABInner({testID, icon, onPress, ...props}: FABProps) {
   const insets = useSafeAreaInsets()
   const {isMobile, isTablet} = useWebMediaQueries()
   const playHaptic = useHaptics()
-  const isHapticsDisabled = useHapticsDisabled()
   const fabMinimalShellTransform = useMinimalShellFabTransform()
 
   const size = isTablet ? styles.sizeLarge : styles.sizeRegular
@@ -44,12 +42,12 @@ export function FABInner({testID, icon, onPress, ...props}: FABProps) {
         testID={testID}
         onPressIn={() => playHaptic('Light')}
         onPress={e => {
-          playHaptic('Light')
-          setTimeout(() => onPress?.(e), isHapticsDisabled ? 0 : 75)
+          onPress?.(e)
+          setTimeout(() => playHaptic('Medium'), 200)
         }}
         onLongPress={e => {
-          playHaptic('Medium')
-          setTimeout(() => onPress?.(e), isHapticsDisabled ? 0 : 75)
+          onPress?.(e)
+          setTimeout(() => playHaptic('Heavy'), 200)
         }}
         targetScale={0.9}
         {...props}>
