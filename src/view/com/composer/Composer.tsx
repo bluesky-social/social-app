@@ -639,7 +639,7 @@ function ComposerPost({
   const {data: currentProfile} = useProfileQuery({did: currentDid})
   const richtext = post.richtext
   const isTextOnly = !post.embed.link && !post.embed.quote && !post.embed.media
-  const forceMinHeight = isWeb && isTextOnly
+  const forceMinHeight = isWeb && isTextOnly && isActive
   const selectTextInputPlaceholder = isReply
     ? _(msg`Write your reply`)
     : _(msg`What's up?`)
