@@ -6,7 +6,7 @@ appId: xyz.blueskyweb.app
         SERVER_PATH: "?users&follows"
 - runFlow:
     file: ../setupApp.yml
-
+0
 
 # Login, create a thread, and log out
 - tapOn:
