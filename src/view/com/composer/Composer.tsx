@@ -565,6 +565,9 @@ function ComposerPost({
   const {_} = useLingui()
   const {data: currentProfile} = useProfileQuery({did: currentDid})
   const richtext = draft.richtext
+  const isTextOnly =
+    !draft.embed.link && !draft.embed.quote && !draft.embed.media
+  const forceMinHeight = isWeb && isTextOnly
   const selectTextInputPlaceholder = isReply
     ? _(msg`Write your reply`)
     : _(msg`What's up?`)
@@ -615,6 +618,7 @@ function ComposerPost({
           richtext={richtext}
           placeholder={selectTextInputPlaceholder}
           autoFocus
+          webForceMinHeight={forceMinHeight}
           setRichText={rt => {
             dispatch({type: 'update_richtext', richtext: rt})
           }}

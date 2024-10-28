@@ -41,6 +41,7 @@ interface TextInputProps {
   richtext: RichText
   placeholder: string
   suggestedLinks: Set<string>
+  webForceMinHeight: boolean
   setRichText: (v: RichText | ((v: RichText) => RichText)) => void
   onPhotoPasted: (uri: string) => void
   onPressPublish: (richtext: RichText) => void
@@ -52,6 +53,7 @@ export const TextInput = React.forwardRef(function TextInputImpl(
   {
     richtext,
     placeholder,
+    webForceMinHeight,
     setRichText,
     onPhotoPasted,
     onPressPublish,
@@ -270,6 +272,13 @@ export const TextInput = React.forwardRef(function TextInputImpl(
       : undefined
     return style
   }, [t, fonts])
+
+  React.useLayoutEffect(() => {
+    let node = editor?.view.dom
+    if (node) {
+      node.style.minHeight = webForceMinHeight ? '140px' : ''
+    }
+  }, [editor, webForceMinHeight])
 
   return (
     <>

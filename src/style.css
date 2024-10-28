@@ -92,9 +92,6 @@ a[role='link'][data-no-underline='1']:hover {
 }
 
 /* ProseMirror */
-.ProseMirror {
-  min-height: 140px;
-}
 .ProseMirror-dark {
   color: white;
 }
