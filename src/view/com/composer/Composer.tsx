@@ -761,7 +761,7 @@ function ComposerEmbeds({
       )}
 
       {embed.media?.type === 'gif' && (
-        <View style={a.relative} key={embed.media.gif.url}>
+        <View style={[a.relative, a.mt_lg]} key={embed.media.gif.url}>
           <ExternalEmbedGif
             gif={embed.media.gif}
             onRemove={() => dispatch({type: 'embed_remove_gif'})}
@@ -777,7 +777,7 @@ function ComposerEmbeds({
       )}
 
       {!embed.media && embed.link && (
-        <View style={a.relative} key={embed.link.uri}>
+        <View style={[a.relative, a.mt_lg]} key={embed.link.uri}>
           <ExternalEmbedLink
             uri={embed.link.uri}
             hasQuote={!!embed.quote}
