@@ -444,6 +444,12 @@ export const ComposePost = ({
     queryClient,
   ])
 
+  // Preserves the referential identity passed to each post item.
+  // Avoids re-rendering all posts on each keystroke.
+  const onComposerPostPublish = useNonReactiveCallback(() => {
+    onPressPublish()
+  })
+
   React.useEffect(() => {
     if (publishOnUpload) {
       let uploadingVideos = 0
@@ -582,7 +588,7 @@ export const ComposePost = ({
                   canRemoveQuote={index > 0 || !initQuote}
                   onSelectVideo={selectVideo}
                   onClearVideo={clearVideo}
-                  onPublish={onPressPublish}
+                  onPublish={onComposerPostPublish}
                   onError={setError}
                 />
                 {isFooterSticky && post.id === activePost.id && footer}
@@ -605,7 +611,7 @@ export const ComposePost = ({
   )
 }
 
-function ComposerPost({
+let ComposerPost = React.memo(function ComposerPost({
   post,
   dispatch,
   textInput,
@@ -771,7 +777,7 @@ function ComposerPost({
       />
     </View>
   )
-}
+})
 
 function ComposerTopBar({
   canPost,
