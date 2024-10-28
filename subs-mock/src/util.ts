@@ -455,3 +455,36 @@ export function normalizeMainSubscriptionProduct({
     }
   }
 }
+
+export enum EntitlementId {
+  Main0 = 'main:0',
+  Main1 = 'main:1',
+  Main2 = 'main:2',
+}
+
+export function normalizeEntitlements(
+  entitlements: RevenueCatSubscription['entitlements']['items'],
+) {
+  return entitlements.map(entitlement => {
+    let id = EntitlementId.Main0
+
+    switch (entitlement.lookup_key) {
+      case 'main:0': {
+        id = EntitlementId.Main0
+        break
+      }
+      case 'main:1': {
+        id = EntitlementId.Main1
+        break
+      }
+      case 'main:2': {
+        id = EntitlementId.Main2
+        break
+      }
+    }
+
+    return {
+      id,
+    }
+  })
+}

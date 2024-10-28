@@ -6,6 +6,7 @@ import Stripe from 'stripe'
 
 import {
   getMainSubscriptionProducts,
+  normalizeEntitlements,
   RevenueCatProduct,
   RevenueCatSubscription,
 } from './util'
@@ -156,9 +157,14 @@ export default new Hono<{Bindings: Bindings; Variables: Variables}>()
     const rc = c.get('rcv2')
     const user = c.req.query('user')
 
-    const {items} = await rc.get<any>(`customers/${user}/subscriptions`).json()
+    const {items} = await rc
+      .get<{items: RevenueCatSubscription[]}>(`customers/${user}/subscriptions`)
+      .json()
+    const entitlements = normalizeEntitlements(
+      items.flatMap(sub => sub.entitlements.items),
+    )
 
-    return c.json(items)
+    return c.json({entitlements})
   })
 
   /**
