@@ -36,11 +36,14 @@ appId: xyz.blueskyweb.app
     id: "viewHeaderDrawerBtn"
 - tapOn:
     id: "menuItemButton-Feeds"
-- tapOn: 
+- tapOn:
     id: "editFeedsBtn"
 - tapOn:
     label: "Tap on down arrow"
-    point: "79%,23%"
+    id: "feed-timeline-moveDown"
+- tapOn:
+      label: "Save button"
+      id: "saveChangesBtn"
 - tapOn:
     id: "viewHeaderDrawerBtn"
 - tapOn:
@@ -57,11 +60,14 @@ appId: xyz.blueskyweb.app
     id: "viewHeaderDrawerBtn"
 - tapOn:
     id: "menuItemButton-Feeds"
-- tapOn: 
+- tapOn:
     id: "editFeedsBtn"
 - tapOn:
     label: "Tap on down arrow"
-    point: "79%,23%"
+    id: "feed-feed-moveDown"
+- tapOn:
+    label: "Save button"
+    id: "saveChangesBtn"
 - tapOn:
     id: "viewHeaderDrawerBtn"
 - tapOn:
@@ -78,11 +84,14 @@ appId: xyz.blueskyweb.app
     id: "viewHeaderDrawerBtn"
 - tapOn:
     id: "menuItemButton-Feeds"
-- tapOn: 
+- tapOn:
     id: "editFeedsBtn"
 - tapOn:
     label: "Tap on unpin"
-    point: "91%,23%"
+    id: "feed-timeline-togglePin"
+- tapOn:
+      label: "Save button"
+      id: "saveChangesBtn"
 - tapOn:
     id: "viewHeaderDrawerBtn"
 - tapOn:

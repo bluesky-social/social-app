@@ -97,7 +97,8 @@ function SavedFeedsInner({
         onPress={onSaveChanges}
         label={_(msg`Save changes`)}
         disabled={isOverwritePending || !hasUnsavedChanges}
-        style={[isDesktop && a.mt_sm]}>
+        style={[isDesktop && a.mt_sm]}
+        testID="saveChangesBtn">
         <ButtonText style={[isDesktop && a.text_md]}>
           {isDesktop ? <Trans>Save changes</Trans> : <Trans>Save</Trans>}
         </ButtonText>
@@ -315,7 +316,8 @@ function ListItem({
               borderRadius: 4,
               marginRight: 8,
               opacity: state.hovered || state.pressed ? 0.5 : 1,
-            })}>
+            })}
+            testID={`feed-${feed.type}-moveUp`}>
             <FontAwesomeIcon
               icon="arrow-up"
               size={14}
@@ -333,7 +335,8 @@ function ListItem({
               borderRadius: 4,
               marginRight: 8,
               opacity: state.hovered || state.pressed ? 0.5 : 1,
-            })}>
+            })}
+            testID={`feed-${feed.type}-moveDown`}>
             <FontAwesomeIcon
               icon="arrow-down"
               size={14}
@@ -374,7 +377,8 @@ function ListItem({
             paddingVertical: 10,
             borderRadius: 4,
             opacity: state.hovered || state.focused ? 0.5 : 1,
-          })}>
+          })}
+          testID={`feed-${feed.type}-togglePin`}>
           <FontAwesomeIcon
             icon="thumb-tack"
             size={14}
