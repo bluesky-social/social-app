@@ -186,6 +186,10 @@ export function composerReducer(
       )
       let nextPosts = [...state.thread.posts]
       if (indexToRemove !== -1) {
+        const postToRemove = state.thread.posts[indexToRemove]
+        if (postToRemove.embed.media?.type === 'video') {
+          postToRemove.embed.media.video.abortController.abort()
+        }
         nextPosts.splice(indexToRemove, 1)
         nextActivePostIndex = Math.max(0, indexToRemove - 1)
       }
@@ -344,6 +348,7 @@ function postReducer(state: PostDraft, action: PostAction): PostDraft {
       const prevMedia = state.embed.media
       let nextMedia = prevMedia
       if (prevMedia?.type === 'video') {
+        prevMedia.video.abortController.abort()
         nextMedia = undefined
       }
       let nextLabels = state.labels
