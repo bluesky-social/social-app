@@ -4,10 +4,10 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {IS_INTERNAL} from '#/lib/app-info'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
-import {useGate} from '#/lib/statsig/statsig'
 import {colors, s} from '#/lib/styles'
 import {
   usePreferencesQuery,
@@ -24,9 +24,7 @@ import * as Layout from '#/components/Layout'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'PreferencesThreads'>
 export function PreferencesThreads(props: Props) {
-  const gate = useGate()
-
-  return gate('new_settings') ? (
+  return IS_INTERNAL ? (
     <ThreadPreferencesScreen {...props} />
   ) : (
     <LegacyPreferencesThreads {...props} />
