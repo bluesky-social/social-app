@@ -21,6 +21,7 @@ import {isReasonFeedSource, ReasonFeedSource} from '#/lib/api/feed/types'
 import {MAX_POST_LINES} from '#/lib/constants'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {makeProfileLink} from '#/lib/routes/links'
+import {NON_BREAKING_SPACE} from '#/lib/strings/constants'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {countLines} from '#/lib/strings/helpers'
@@ -304,14 +305,17 @@ let FeedItemInner = ({
               />
               <Text
                 type="sm-bold"
-                style={pal.textLight}
+                style={[pal.textLight, {display: 'flex', flexDirection: 'row'}]}
                 lineHeight={1.2}
                 numberOfLines={1}>
                 {isOwner ? (
                   <Trans>Reposted by you</Trans>
                 ) : (
+                  // Due to display: flex and implicit white-space-collapse: collapse,
+                  // trailing spaces get trimmed during layout. A nbsp isn't affected,
+                  // and is required in translation strings as well.
                   <Trans>
-                    Reposted by{' '}
+                    Reposted by{NON_BREAKING_SPACE}
                     <ProfileHoverCard inline did={reason.by.did}>
                       <TextLinkOnWebOnly
                         type="sm-bold"
@@ -541,8 +545,10 @@ function ReplyToLabel({
       label = <Trans context="description">Reply to you</Trans>
     } else {
       label = (
+        // A nbsp is required to prevent trailing whitespace trimming during layout.
+        // See the "Reposted by" case higher up
         <Trans context="description">
-          Reply to{' '}
+          Reply to{NON_BREAKING_SPACE}
           <ProfileHoverCard inline did={profile.did}>
             <TextLinkOnWebOnly
               type="md"
@@ -578,7 +584,7 @@ function ReplyToLabel({
       />
       <Text
         type="md"
-        style={[pal.textLight, s.mr2]}
+        style={[pal.textLight, s.mr2, {display: 'flex', flexDirection: 'row'}]}
         lineHeight={1.2}
         numberOfLines={1}>
         {label}
