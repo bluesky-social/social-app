@@ -9,7 +9,7 @@ appId: xyz.blueskyweb.app
 - tapOn:
     id: "e2eSignInAlice"
 - tapOn:
-      id: "storybookBtn"
+    id: "storybookBtn"
 - tapOn:
     id: "sharedPrefsTestOpenBtn"
 - tapOn:
@@ -17,7 +17,7 @@ appId: xyz.blueskyweb.app
 - assertVisible: "Hello"
 - tapOn:
     id: "removeStringBtn"
-- assertVisible: "null"
+- assertVisible: "undefined"
 - tapOn:
     id: "setBoolBtn"
 - assertVisible: "true"
