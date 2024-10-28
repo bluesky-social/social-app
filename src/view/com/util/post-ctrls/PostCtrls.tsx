@@ -250,6 +250,7 @@ let PostCtrls = ({
           style={btnStyle}
           onPress={() => {
             if (!post.viewer?.replyDisabled) {
+              playHaptic('Light')
               requireAuth(() => onPressReply())
             }
           }}

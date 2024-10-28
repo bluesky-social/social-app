@@ -5,10 +5,11 @@ import {useLingui} from '@lingui/react'
 
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
 import {useHaptics} from '#/lib/haptics'
+import {isIOS} from '#/platform/detection'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, native, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, ios, useBreakpoints, useTheme} from '#/alf'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {Text} from '#/components/Typography'
 
@@ -41,14 +42,18 @@ export function PostThreadComposePrompt({
         t.atoms.border_contrast_low,
         t.atoms.bg,
       ]}
-      onPressIn={() => playHaptic('Light')}
+      onPressIn={ios(() => playHaptic('Light'))}
       onPress={() => {
         onPressCompose()
-        setTimeout(() => playHaptic('Medium'), 200)
+        if (isIOS) {
+          setTimeout(() => playHaptic('Medium'), 10)
+        } else {
+          playHaptic('Light')
+        }
       }}
-      onLongPress={native(() => {
+      onLongPress={ios(() => {
         onPressCompose()
-        setTimeout(() => playHaptic('Heavy'), 200)
+        playHaptic('Heavy')
       })}
       onHoverIn={onHoverIn}
       onHoverOut={onHoverOut}>
