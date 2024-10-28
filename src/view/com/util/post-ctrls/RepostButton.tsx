@@ -51,9 +51,11 @@ let RepostButton = ({
       <Button
         testID="repostBtn"
         onPress={() => {
+          playHaptic('Light')
           requireAuth(() => dialogControl.open())
         }}
         onLongPress={() => {
+          playHaptic('Heavy')
           requireAuth(() => onQuote())
         }}
         style={[
