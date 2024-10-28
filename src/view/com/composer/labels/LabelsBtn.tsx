@@ -220,7 +220,8 @@ function DialogInner({
           onPress={() => control.close()}
           color="primary"
           size={isWeb ? 'small' : 'large'}
-          variant="solid">
+          variant="solid"
+          testID="confirmBtn">
           <ButtonText>
             <Trans>Done</Trans>
           </ButtonText>
