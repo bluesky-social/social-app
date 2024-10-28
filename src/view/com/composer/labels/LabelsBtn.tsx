@@ -21,11 +21,9 @@ import {Text} from '#/components/Typography'
 
 export function LabelsBtn({
   labels,
-  hasMedia,
   onChange,
 }: {
   labels: SelfLabel[]
-  hasMedia: boolean
   onChange: (v: SelfLabel[]) => void
 }) {
   const control = Dialog.useDialogControl()
@@ -45,10 +43,6 @@ export function LabelsBtn({
     onChange([...filtered, newLabel].filter(Boolean) as SelfLabel[])
   }
 
-  if (!hasMedia && hasLabel) {
-    onChange([])
-  }
-
   return (
     <>
       <Button
@@ -65,7 +59,6 @@ export function LabelsBtn({
           msg`Opens a dialog to add a content warning to your post`,
         )}
         style={[
-          !hasMedia && {opacity: 0.5},
           native({
             paddingHorizontal: 8,
             paddingVertical: 6,
@@ -85,7 +78,6 @@ export function LabelsBtn({
         <Dialog.Handle />
         <DialogInner
           labels={labels}
-          hasMedia={hasMedia}
           updateAdultLabels={updateAdultLabels}
           updateOtherLabels={updateOtherLabels}
         />
@@ -96,12 +88,10 @@ export function LabelsBtn({
 
 function DialogInner({
   labels,
-  hasMedia,
   updateAdultLabels,
   updateOtherLabels,
 }: {
   labels: string[]
-  hasMedia: boolean
   updateAdultLabels: (labels: AdultSelfLabel[]) => void
   updateOtherLabels: (labels: OtherSelfLabel[]) => void
 }) {
@@ -119,133 +109,108 @@ function DialogInner({
             <Trans>Add a content warning</Trans>
           </Text>
           <Text style={[t.atoms.text_contrast_medium, a.leading_snug]}>
-            {hasMedia ? (
-              <Trans>
-                Choose self-labels that are applicable for the media you are
-                posting. If none are selected, this post is suitable for all
-                audiences.
-              </Trans>
-            ) : (
-              <Trans>
-                No self-labels can be applied to this post because it contains
-                no media.
-              </Trans>
-            )}
+            <Trans>
+              Choose self-labels that are applicable for the media you are
+              posting. If none are selected, this post is suitable for all
+              audiences.
+            </Trans>
           </Text>
         </View>
 
         <View style={[a.my_md, a.gap_lg]}>
-          {hasMedia ? (
-            <>
-              <View>
-                <View
-                  style={[
-                    a.flex_row,
-                    a.align_center,
-                    a.justify_between,
-                    a.pb_sm,
-                  ]}>
-                  <Text style={[a.font_bold, a.text_lg]}>
-                    <Trans>Adult Content</Trans>
-                  </Text>
+          <View>
+            <View
+              style={[a.flex_row, a.align_center, a.justify_between, a.pb_sm]}>
+              <Text style={[a.font_bold, a.text_lg]}>
+                <Trans>Adult Content</Trans>
+              </Text>
+            </View>
+            <View
+              style={[
+                a.p_md,
+                a.rounded_sm,
+                a.border,
+                t.atoms.border_contrast_medium,
+              ]}>
+              <Toggle.Group
+                label={_(msg`Adult Content labels`)}
+                values={labels}
+                onChange={values => {
+                  updateAdultLabels(values as AdultSelfLabel[])
+                }}>
+                <View style={[a.gap_sm]}>
+                  <Toggle.Item name="sexual" label={_(msg`Suggestive`)}>
+                    <Toggle.Radio />
+                    <Toggle.LabelText>
+                      <Trans>Suggestive</Trans>
+                    </Toggle.LabelText>
+                  </Toggle.Item>
+                  <Toggle.Item name="nudity" label={_(msg`Nudity`)}>
+                    <Toggle.Radio />
+                    <Toggle.LabelText>
+                      <Trans>Nudity</Trans>
+                    </Toggle.LabelText>
+                  </Toggle.Item>
+                  <Toggle.Item name="porn" label={_(msg`Porn`)}>
+                    <Toggle.Radio />
+                    <Toggle.LabelText>
+                      <Trans>Porn</Trans>
+                    </Toggle.LabelText>
+                  </Toggle.Item>
                 </View>
-                <View
-                  style={[
-                    a.p_md,
-                    a.rounded_sm,
-                    a.border,
-                    t.atoms.border_contrast_medium,
-                  ]}>
-                  <Toggle.Group
-                    label={_(msg`Adult Content labels`)}
-                    values={labels}
-                    onChange={values => {
-                      updateAdultLabels(values as AdultSelfLabel[])
-                    }}>
-                    <View style={[a.gap_sm]}>
-                      <Toggle.Item name="sexual" label={_(msg`Suggestive`)}>
-                        <Toggle.Radio />
-                        <Toggle.LabelText>
-                          <Trans>Suggestive</Trans>
-                        </Toggle.LabelText>
-                      </Toggle.Item>
-                      <Toggle.Item name="nudity" label={_(msg`Nudity`)}>
-                        <Toggle.Radio />
-                        <Toggle.LabelText>
-                          <Trans>Nudity</Trans>
-                        </Toggle.LabelText>
-                      </Toggle.Item>
-                      <Toggle.Item name="porn" label={_(msg`Porn`)}>
-                        <Toggle.Radio />
-                        <Toggle.LabelText>
-                          <Trans>Porn</Trans>
-                        </Toggle.LabelText>
-                      </Toggle.Item>
-                    </View>
-                  </Toggle.Group>
-                  <Text style={[a.mt_sm, t.atoms.text_contrast_medium]}>
-                    {labels.includes('sexual') ? (
-                      <Trans>Pictures meant for adults.</Trans>
-                    ) : labels.includes('nudity') ? (
-                      <Trans>Artistic or non-erotic nudity.</Trans>
-                    ) : labels.includes('porn') ? (
-                      <Trans>Sexual activity or erotic nudity.</Trans>
-                    ) : (
-                      <Trans>Does not contain adult content.</Trans>
-                    )}
-                  </Text>
-                </View>
-              </View>
-              <View>
-                <View
-                  style={[
-                    a.flex_row,
-                    a.align_center,
-                    a.justify_between,
-                    a.pb_sm,
-                  ]}>
-                  <Text style={[a.font_bold, a.text_lg]}>
-                    <Trans>Other</Trans>
-                  </Text>
-                </View>
-                <View
-                  style={[
-                    a.p_md,
-                    a.rounded_sm,
-                    a.border,
-                    t.atoms.border_contrast_medium,
-                  ]}>
-                  <Toggle.Group
-                    label={_(msg`Adult Content labels`)}
-                    values={labels}
-                    onChange={values => {
-                      updateOtherLabels(values as OtherSelfLabel[])
-                    }}>
-                    <Toggle.Item
-                      name="graphic-media"
-                      label={_(msg`Graphic Media`)}>
-                      <Toggle.Checkbox />
-                      <Toggle.LabelText>
-                        <Trans>Graphic Media</Trans>
-                      </Toggle.LabelText>
-                    </Toggle.Item>
-                  </Toggle.Group>
-                  <Text style={[a.mt_sm, t.atoms.text_contrast_medium]}>
-                    {labels.includes('graphic-media') ? (
-                      <Trans>
-                        Media that may be disturbing or inappropriate for some
-                        audiences.
-                      </Trans>
-                    ) : (
-                      <Trans>
-                        Does not contain graphic or disturbing content.
-                      </Trans>
-                    )}
-                  </Text>
-                </View>
-              </View>
-            </>
-          ) : null}
+              </Toggle.Group>
+              <Text style={[a.mt_sm, t.atoms.text_contrast_medium]}>
+                {labels.includes('sexual') ? (
+                  <Trans>Pictures meant for adults.</Trans>
+                ) : labels.includes('nudity') ? (
+                  <Trans>Artistic or non-erotic nudity.</Trans>
+                ) : labels.includes('porn') ? (
+                  <Trans>Sexual activity or erotic nudity.</Trans>
+                ) : (
+                  <Trans>Does not contain adult content.</Trans>
+                )}
+              </Text>
+            </View>
+          </View>
+          <View>
+            <View
+              style={[a.flex_row, a.align_center, a.justify_between, a.pb_sm]}>
+              <Text style={[a.font_bold, a.text_lg]}>
+                <Trans>Other</Trans>
+              </Text>
+            </View>
+            <View
+              style={[
+                a.p_md,
+                a.rounded_sm,
+                a.border,
+                t.atoms.border_contrast_medium,
+              ]}>
+              <Toggle.Group
+                label={_(msg`Adult Content labels`)}
+                values={labels}
+                onChange={values => {
+                  updateOtherLabels(values as OtherSelfLabel[])
+                }}>
+                <Toggle.Item name="graphic-media" label={_(msg`Graphic Media`)}>
+                  <Toggle.Checkbox />
+                  <Toggle.LabelText>
+                    <Trans>Graphic Media</Trans>
+                  </Toggle.LabelText>
+                </Toggle.Item>
+              </Toggle.Group>
+              <Text style={[a.mt_sm, t.atoms.text_contrast_medium]}>
+                {labels.includes('graphic-media') ? (
+                  <Trans>
+                    Media that may be disturbing or inappropriate for some
+                    audiences.
+                  </Trans>
+                ) : (
+                  <Trans>Does not contain graphic or disturbing content.</Trans>
+                )}
+              </Text>
+            </View>
+          </View>
         </View>
       </View>
 

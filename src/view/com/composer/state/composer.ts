@@ -158,6 +158,7 @@ export function composerReducer(
     }
     case 'embed_remove_image': {
       const prevMedia = state.embed.media
+      let nextLabels = state.labels
       if (prevMedia?.type === 'images') {
         const removedImage = action.image
         let nextMedia: ImagesMedia | undefined = {
@@ -168,9 +169,13 @@ export function composerReducer(
         }
         if (nextMedia.images.length === 0) {
           nextMedia = undefined
+          if (!state.embed.link) {
+            nextLabels = []
+          }
         }
         return {
           ...state,
+          labels: nextLabels,
           embed: {
             ...state.embed,
             media: nextMedia,
@@ -220,8 +225,13 @@ export function composerReducer(
       if (prevMedia?.type === 'video') {
         nextMedia = undefined
       }
+      let nextLabels = state.labels
+      if (!state.embed.link) {
+        nextLabels = []
+      }
       return {
         ...state,
+        labels: nextLabels,
         embed: {
           ...state.embed,
           media: nextMedia,
@@ -258,8 +268,13 @@ export function composerReducer(
       }
     }
     case 'embed_remove_link': {
+      let nextLabels = state.labels
+      if (!state.embed.media) {
+        nextLabels = []
+      }
       return {
         ...state,
+        labels: nextLabels,
         embed: {
           ...state.embed,
           link: undefined,
