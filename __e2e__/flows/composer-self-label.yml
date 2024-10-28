@@ -17,12 +17,10 @@ appId: xyz.blueskyweb.app
     id: "openGalleryBtn"
 - tapOn:
     id: "labelsBtn"
-- tapOn:
-    label: "Tap on porn"
-    point: 78%,67%
+- tapOn: "Porn"
 - tapOn:
     label: "Tap on confirm"
-    point: 51%,92%
+    id: "confirmBtn"
 - tapOn:
     id: "composerPublishBtn"
 - tapOn:
