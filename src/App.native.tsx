@@ -25,7 +25,7 @@ import {s} from '#/lib/styles'
 import {ThemeProvider} from '#/lib/ThemeContext'
 import I18nProvider from '#/locale/i18nProvider'
 import {logger} from '#/logger'
-import {isAndroid,isIOS} from '#/platform/detection'
+import {isAndroid, isIOS} from '#/platform/detection'
 import {Provider as A11yProvider} from '#/state/a11y'
 import {Provider as MutedThreadsProvider} from '#/state/cache/thread-mutes'
 import {Provider as DialogStateProvider} from '#/state/dialogs'
@@ -68,7 +68,7 @@ import {NuxDialogs} from '#/components/dialogs/nuxs'
 import {useStarterPackEntry} from '#/components/hooks/useStarterPackEntry'
 import {Provider as IntentDialogProvider} from '#/components/intents/IntentDialogs'
 import {Provider as PortalProvider} from '#/components/Portal'
-import {RC_GOOGLE_PUBLIC_KEY} from '#/env'
+import {RC_APPLE_PUBLIC_KEY,RC_GOOGLE_PUBLIC_KEY} from '#/env'
 import {Splash} from '#/Splash'
 import {BottomSheetProvider} from '../modules/bottom-sheet'
 import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
@@ -177,7 +177,10 @@ function App() {
       setReady(true),
     )
 
+    Purchases.setLogLevel(Purchases.LOG_LEVEL.DEBUG)
+
     if (isIOS) {
+      Purchases.configure({apiKey: RC_APPLE_PUBLIC_KEY})
     } else if (isAndroid) {
       Purchases.configure({apiKey: RC_GOOGLE_PUBLIC_KEY})
     }
