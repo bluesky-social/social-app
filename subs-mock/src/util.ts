@@ -102,7 +102,6 @@ export type Entitlement = {
 
 export type SubscriptionState = {
   active: boolean
-  interval: 'monthly' | 'annual'
   entitlements: {id: EntitlementId}[]
   status:
     | 'trialing'
@@ -129,6 +128,7 @@ export type Subscription =
   | {
       id: SubscriptionId
       platform: 'android' | 'ios'
+      interval: 'monthly' | 'annual'
       state?: SubscriptionState
       store: {
         type: 'play_store' | 'app_store'
@@ -139,6 +139,7 @@ export type Subscription =
   | {
       id: SubscriptionId
       platform: 'web'
+      interval: 'monthly' | 'annual'
       state: undefined
       store: {
         type: 'stripe'
@@ -151,6 +152,7 @@ export type Subscription =
   | {
       id: SubscriptionId
       platform: 'web'
+      interval: 'monthly' | 'annual'
       state: SubscriptionState
       store: {
         type: 'stripe'
@@ -185,12 +187,14 @@ export function normalizeSubscriptions(
     if (!id) continue
     const platform = getSubscriptionPlatform(product.store_identifier)
     const state = subscription ? getSubscriptionState(subscription) : undefined
+    const interval = getSubscriptionInterval(id)
 
     if (platform === 'web') {
       if (state) {
         normalized.push({
           id,
           platform,
+          interval,
           state,
           store: {
             type: 'stripe',
@@ -204,6 +208,7 @@ export function normalizeSubscriptions(
         normalized.push({
           id,
           platform,
+          interval,
           state,
           store: {
             type: 'stripe',
@@ -218,6 +223,7 @@ export function normalizeSubscriptions(
       normalized.push({
         id,
         platform,
+        interval,
         state,
         store: {
           type: 'play_store',
@@ -231,14 +237,26 @@ export function normalizeSubscriptions(
   return normalized
 }
 
+export function getSubscriptionInterval(
+  id: SubscriptionId,
+): 'monthly' | 'annual' {
+  switch (id) {
+    case SubscriptionId.Main0MonthlyAuto:
+    case SubscriptionId.Main1MonthlyAuto:
+    case SubscriptionId.Main2MonthlyAuto:
+      return 'monthly'
+    case SubscriptionId.Main0AnnualAuto:
+    case SubscriptionId.Main1AnnualAuto:
+    case SubscriptionId.Main2AnnualAuto:
+      return 'annual'
+  }
+}
+
 export function getSubscriptionState(
   subscription: RevenueCatSubscription,
 ): SubscriptionState {
   return {
     active: subscription.gives_access,
-    interval: subscription.store_subscription_identifier.includes('monthly')
-      ? 'monthly'
-      : 'annual',
     status: subscription.status,
     renewalStatus: subscription.auto_renewal_status,
     entitlements: normalizeEntitlements(subscription.entitlements.items),
