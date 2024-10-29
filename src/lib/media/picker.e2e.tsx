@@ -45,7 +45,7 @@ export async function openCamera(): Promise<RNImage> {
   return await getFile()
 }
 
-export async function openCropper(opts: CropperOptions) {
+export async function openCropperNative(opts: CropperOptions) {
   const item = await openCropperFn({
     ...opts,
     forceJpg: true, // ios only

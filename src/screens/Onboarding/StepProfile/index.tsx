@@ -11,7 +11,7 @@ import {useLingui} from '@lingui/react'
 
 import {usePhotoLibraryPermission} from '#/lib/hooks/usePermissions'
 import {compressIfNeeded} from '#/lib/media/manip'
-import {openCropper} from '#/lib/media/picker'
+import {openCropperNative} from '#/lib/media/picker'
 import {getDataUriSize} from '#/lib/media/util'
 import {useRequestNotificationsPermission} from '#/lib/notifications/notifications'
 import {logEvent, useGate} from '#/lib/statsig/statsig'
@@ -181,7 +181,7 @@ export function StepProfile() {
     if (!image) return
 
     if (!isWeb) {
-      image = await openCropper({
+      image = await openCropperNative({
         mediaType: 'photo',
         cropperCircleOverlay: true,
         height: 1000,

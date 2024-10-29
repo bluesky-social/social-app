@@ -13,6 +13,7 @@ import {
   useCameraPermission,
   usePhotoLibraryPermission,
 } from '#/lib/hooks/usePermissions'
+import {openCamera, openPicker} from '#/lib/media/picker'
 import {makeProfileLink} from '#/lib/routes/links'
 import {colors} from '#/lib/styles'
 import {logger} from '#/logger'
@@ -21,6 +22,10 @@ import {precacheProfile} from '#/state/queries/profile'
 import {HighPriorityImage} from '#/view/com/util/images/Image'
 import {tokens, useTheme} from '#/alf'
 import {useSheetWrapper} from '#/components/Dialog/sheet-wrapper'
+import {
+  CropImageDialog,
+  useImageCropperControl,
+} from '#/components/dialogs/CropImageDialog'
 import {
   Camera_Filled_Stroke2_Corner0_Rounded as CameraFilled,
   Camera_Stroke2_Corner0_Rounded as Camera,
@@ -31,7 +36,6 @@ import {Link} from '#/components/Link'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import * as Menu from '#/components/Menu'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
-import {openCamera, openCropper, openPicker} from '../../../lib/media/picker'
 
 export type UserAvatarType = 'user' | 'algo' | 'list' | 'labeler'
 
@@ -273,6 +277,7 @@ let EditableUserAvatar = ({
   const {requestCameraAccessIfNeeded} = useCameraPermission()
   const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
   const sheetWrapper = useSheetWrapper()
+  const [cropControlRef, cropImage] = useImageCropperControl()
 
   const aviStyle = useMemo(() => {
     if (type === 'algo' || type === 'list') {
@@ -319,7 +324,7 @@ let EditableUserAvatar = ({
     }
 
     try {
-      const croppedImage = await openCropper({
+      const croppedImage = await cropImage({
         mediaType: 'photo',
         cropperCircleOverlay: true,
         height: 1000,
@@ -336,79 +341,82 @@ let EditableUserAvatar = ({
         logger.error('Failed to crop banner', {error: e})
       }
     }
-  }, [onSelectNewAvatar, requestPhotoAccessIfNeeded, sheetWrapper])
+  }, [onSelectNewAvatar, requestPhotoAccessIfNeeded, sheetWrapper, cropImage])
 
   const onRemoveAvatar = React.useCallback(() => {
     onSelectNewAvatar(null)
   }, [onSelectNewAvatar])
 
   return (
-    <Menu.Root>
-      <Menu.Trigger label={_(msg`Edit avatar`)}>
-        {({props}) => (
-          <Pressable {...props} testID="changeAvatarBtn">
-            {avatar ? (
-              <HighPriorityImage
-                testID="userAvatarImage"
-                style={aviStyle}
-                source={{uri: avatar}}
-                accessibilityRole="image"
-              />
-            ) : (
-              <DefaultAvatar type={type} size={size} />
-            )}
-            <View style={[styles.editButtonContainer, pal.btn]}>
-              <CameraFilled height={14} width={14} style={t.atoms.text} />
-            </View>
-          </Pressable>
-        )}
-      </Menu.Trigger>
-      <Menu.Outer showCancel>
-        <Menu.Group>
-          {isNative && (
-            <Menu.Item
-              testID="changeAvatarCameraBtn"
-              label={_(msg`Upload from Camera`)}
-              onPress={onOpenCamera}>
-              <Menu.ItemText>
-                <Trans>Upload from Camera</Trans>
-              </Menu.ItemText>
-              <Menu.ItemIcon icon={Camera} />
-            </Menu.Item>
-          )}
-
-          <Menu.Item
-            testID="changeAvatarLibraryBtn"
-            label={_(msg`Upload from Library`)}
-            onPress={onOpenLibrary}>
-            <Menu.ItemText>
-              {isNative ? (
-                <Trans>Upload from Library</Trans>
+    <>
+      <Menu.Root>
+        <Menu.Trigger label={_(msg`Edit avatar`)}>
+          {({props}) => (
+            <Pressable {...props} testID="changeAvatarBtn">
+              {avatar ? (
+                <HighPriorityImage
+                  testID="userAvatarImage"
+                  style={aviStyle}
+                  source={{uri: avatar}}
+                  accessibilityRole="image"
+                />
               ) : (
-                <Trans>Upload from Files</Trans>
+                <DefaultAvatar type={type} size={size} />
               )}
-            </Menu.ItemText>
-            <Menu.ItemIcon icon={Library} />
-          </Menu.Item>
-        </Menu.Group>
-        {!!avatar && (
-          <>
-            <Menu.Divider />
-            <Menu.Group>
+              <View style={[styles.editButtonContainer, pal.btn]}>
+                <CameraFilled height={14} width={14} style={t.atoms.text} />
+              </View>
+            </Pressable>
+          )}
+        </Menu.Trigger>
+        <Menu.Outer showCancel>
+          <Menu.Group>
+            {isNative && (
               <Menu.Item
-                testID="changeAvatarRemoveBtn"
-                label={_(`Remove Avatar`)}
-                onPress={onRemoveAvatar}>
+                testID="changeAvatarCameraBtn"
+                label={_(msg`Upload from Camera`)}
+                onPress={onOpenCamera}>
                 <Menu.ItemText>
-                  <Trans>Remove Avatar</Trans>
+                  <Trans>Upload from Camera</Trans>
                 </Menu.ItemText>
-                <Menu.ItemIcon icon={Trash} />
+                <Menu.ItemIcon icon={Camera} />
               </Menu.Item>
-            </Menu.Group>
-          </>
-        )}
-      </Menu.Outer>
-    </Menu.Root>
+            )}
+
+            <Menu.Item
+              testID="changeAvatarLibraryBtn"
+              label={_(msg`Upload from Library`)}
+              onPress={onOpenLibrary}>
+              <Menu.ItemText>
+                {isNative ? (
+                  <Trans>Upload from Library</Trans>
+                ) : (
+                  <Trans>Upload from Files</Trans>
+                )}
+              </Menu.ItemText>
+              <Menu.ItemIcon icon={Library} />
+            </Menu.Item>
+          </Menu.Group>
+          {!!avatar && (
+            <>
+              <Menu.Divider />
+              <Menu.Group>
+                <Menu.Item
+                  testID="changeAvatarRemoveBtn"
+                  label={_(`Remove Avatar`)}
+                  onPress={onRemoveAvatar}>
+                  <Menu.ItemText>
+                    <Trans>Remove Avatar</Trans>
+                  </Menu.ItemText>
+                  <Menu.ItemIcon icon={Trash} />
+                </Menu.Item>
+              </Menu.Group>
+            </>
+          )}
+        </Menu.Outer>
+      </Menu.Root>
+      <CropImageDialog controlRef={cropControlRef} />
+    </>
   )
 }
 EditableUserAvatar = memo(EditableUserAvatar)

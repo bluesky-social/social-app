@@ -11,6 +11,7 @@ import {
   useCameraPermission,
   usePhotoLibraryPermission,
 } from '#/lib/hooks/usePermissions'
+import {openCamera, openPicker} from '#/lib/media/picker'
 import {colors} from '#/lib/styles'
 import {useTheme} from '#/lib/ThemeContext'
 import {logger} from '#/logger'
@@ -19,13 +20,16 @@ import {EventStopper} from '#/view/com/util/EventStopper'
 import {tokens, useTheme as useAlfTheme} from '#/alf'
 import {useSheetWrapper} from '#/components/Dialog/sheet-wrapper'
 import {
+  CropImageDialog,
+  useImageCropperControl,
+} from '#/components/dialogs/CropImageDialog'
+import {
   Camera_Filled_Stroke2_Corner0_Rounded as CameraFilled,
   Camera_Stroke2_Corner0_Rounded as Camera,
 } from '#/components/icons/Camera'
 import {StreamingLive_Stroke2_Corner0_Rounded as Library} from '#/components/icons/StreamingLive'
 import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
 import * as Menu from '#/components/Menu'
-import {openCamera, openCropper, openPicker} from '../../../lib/media/picker'
 
 export function UserBanner({
   type,
@@ -45,6 +49,7 @@ export function UserBanner({
   const {requestCameraAccessIfNeeded} = useCameraPermission()
   const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
   const sheetWrapper = useSheetWrapper()
+  const [cropControlRef, cropImage] = useImageCropperControl()
 
   const onOpenCamera = React.useCallback(async () => {
     if (!(await requestCameraAccessIfNeeded())) {
@@ -69,7 +74,7 @@ export function UserBanner({
 
     try {
       onSelectNewBanner?.(
-        await openCropper({
+        await cropImage({
           mediaType: 'photo',
           path: items[0].path,
           width: 3000,
@@ -82,7 +87,7 @@ export function UserBanner({
         logger.error('Failed to crop banner', {error: e})
       }
     }
-  }, [onSelectNewBanner, requestPhotoAccessIfNeeded, sheetWrapper])
+  }, [onSelectNewBanner, requestPhotoAccessIfNeeded, sheetWrapper, cropImage])
 
   const onRemoveBanner = React.useCallback(() => {
     onSelectNewBanner?.(null)
@@ -90,78 +95,81 @@ export function UserBanner({
 
   // setUserBanner is only passed as prop on the EditProfile component
   return onSelectNewBanner ? (
-    <EventStopper onKeyDown={true}>
-      <Menu.Root>
-        <Menu.Trigger label={_(msg`Edit avatar`)}>
-          {({props}) => (
-            <Pressable {...props} testID="changeBannerBtn">
-              {banner ? (
-                <Image
-                  testID="userBannerImage"
-                  style={styles.bannerImage}
-                  source={{uri: banner}}
-                  accessible={true}
-                  accessibilityIgnoresInvertColors
-                />
-              ) : (
-                <View
-                  testID="userBannerFallback"
-                  style={[styles.bannerImage, t.atoms.bg_contrast_25]}
-                />
-              )}
-              <View style={[styles.editButtonContainer, pal.btn]}>
-                <CameraFilled height={14} width={14} style={t.atoms.text} />
-              </View>
-            </Pressable>
-          )}
-        </Menu.Trigger>
-        <Menu.Outer showCancel>
-          <Menu.Group>
-            {isNative && (
-              <Menu.Item
-                testID="changeBannerCameraBtn"
-                label={_(msg`Upload from Camera`)}
-                onPress={onOpenCamera}>
-                <Menu.ItemText>
-                  <Trans>Upload from Camera</Trans>
-                </Menu.ItemText>
-                <Menu.ItemIcon icon={Camera} />
-              </Menu.Item>
-            )}
-
-            <Menu.Item
-              testID="changeBannerLibraryBtn"
-              label={_(msg`Upload from Library`)}
-              onPress={onOpenLibrary}>
-              <Menu.ItemText>
-                {isNative ? (
-                  <Trans>Upload from Library</Trans>
+    <>
+      <EventStopper onKeyDown={true}>
+        <Menu.Root>
+          <Menu.Trigger label={_(msg`Edit avatar`)}>
+            {({props}) => (
+              <Pressable {...props} testID="changeBannerBtn">
+                {banner ? (
+                  <Image
+                    testID="userBannerImage"
+                    style={styles.bannerImage}
+                    source={{uri: banner}}
+                    accessible={true}
+                    accessibilityIgnoresInvertColors
+                  />
                 ) : (
-                  <Trans>Upload from Files</Trans>
+                  <View
+                    testID="userBannerFallback"
+                    style={[styles.bannerImage, t.atoms.bg_contrast_25]}
+                  />
                 )}
-              </Menu.ItemText>
-              <Menu.ItemIcon icon={Library} />
-            </Menu.Item>
-          </Menu.Group>
-          {!!banner && (
-            <>
-              <Menu.Divider />
-              <Menu.Group>
+                <View style={[styles.editButtonContainer, pal.btn]}>
+                  <CameraFilled height={14} width={14} style={t.atoms.text} />
+                </View>
+              </Pressable>
+            )}
+          </Menu.Trigger>
+          <Menu.Outer showCancel>
+            <Menu.Group>
+              {isNative && (
                 <Menu.Item
-                  testID="changeBannerRemoveBtn"
-                  label={_(`Remove Banner`)}
-                  onPress={onRemoveBanner}>
+                  testID="changeBannerCameraBtn"
+                  label={_(msg`Upload from Camera`)}
+                  onPress={onOpenCamera}>
                   <Menu.ItemText>
-                    <Trans>Remove Banner</Trans>
+                    <Trans>Upload from Camera</Trans>
                   </Menu.ItemText>
-                  <Menu.ItemIcon icon={Trash} />
+                  <Menu.ItemIcon icon={Camera} />
                 </Menu.Item>
-              </Menu.Group>
-            </>
-          )}
-        </Menu.Outer>
-      </Menu.Root>
-    </EventStopper>
+              )}
+
+              <Menu.Item
+                testID="changeBannerLibraryBtn"
+                label={_(msg`Upload from Library`)}
+                onPress={onOpenLibrary}>
+                <Menu.ItemText>
+                  {isNative ? (
+                    <Trans>Upload from Library</Trans>
+                  ) : (
+                    <Trans>Upload from Files</Trans>
+                  )}
+                </Menu.ItemText>
+                <Menu.ItemIcon icon={Library} />
+              </Menu.Item>
+            </Menu.Group>
+            {!!banner && (
+              <>
+                <Menu.Divider />
+                <Menu.Group>
+                  <Menu.Item
+                    testID="changeBannerRemoveBtn"
+                    label={_(`Remove Banner`)}
+                    onPress={onRemoveBanner}>
+                    <Menu.ItemText>
+                      <Trans>Remove Banner</Trans>
+                    </Menu.ItemText>
+                    <Menu.ItemIcon icon={Trash} />
+                  </Menu.Item>
+                </Menu.Group>
+              </>
+            )}
+          </Menu.Outer>
+        </Menu.Root>
+      </EventStopper>
+      <CropImageDialog controlRef={cropControlRef} />
+    </>
   ) : banner &&
     !((moderation?.blur && isAndroid) /* android crashes with blur */) ? (
     <Image
