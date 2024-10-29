@@ -149,13 +149,13 @@ export function PostEmbeds({
       }))
       const _openLightbox = (
         index: number,
-        // TODO: Pass dimensions to the lightbox.
-        _dims: MeasuredDimensions | null,
+        thumbDims: MeasuredDimensions | null,
       ) => {
         openLightbox({
           type: 'images',
           images: items,
           index,
+          thumbDims,
         })
       }
       const onPress = (
