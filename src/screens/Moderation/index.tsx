@@ -7,6 +7,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
 
+import {IS_INTERNAL} from '#/lib/app-info'
 import {getLabelingServiceTitle} from '#/lib/moderation'
 import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
 import {logger} from '#/logger'
@@ -469,18 +470,22 @@ export function ModerationScreenInner({
         </View>
       )}
 
-      <Text
-        style={[
-          a.text_md,
-          a.font_bold,
-          a.pt_2xl,
-          a.pb_md,
-          t.atoms.text_contrast_high,
-        ]}>
-        <Trans>Logged-out visibility</Trans>
-      </Text>
+      {!IS_INTERNAL && (
+        <>
+          <Text
+            style={[
+              a.text_md,
+              a.font_bold,
+              a.pt_2xl,
+              a.pb_md,
+              t.atoms.text_contrast_high,
+            ]}>
+            <Trans>Logged-out visibility</Trans>
+          </Text>
 
-      <PwiOptOut />
+          <PwiOptOut />
+        </>
+      )}
 
       <View style={{height: 200}} />
     </ScrollView>

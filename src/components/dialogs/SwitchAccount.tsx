@@ -56,6 +56,8 @@ export function SwitchAccountDialog({
             pendingDid={pendingDid}
           />
         </View>
+
+        <Dialog.Close />
       </Dialog.ScrollableInner>
     </Dialog.Outer>
   )
