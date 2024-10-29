@@ -25,7 +25,7 @@ type Props = NativeStackScreenProps<
 export function ExternalMediaPreferencesScreen({}: Props) {
   return (
     <Layout.Screen testID="externalMediaPreferencesScreen">
-      <Layout.Header title="External Media Preferences" />
+      <Layout.Header title={_(msg`External Media Preferences`)} />
       <Layout.Content>
         <SettingsList.Container>
           <SettingsList.Item>
