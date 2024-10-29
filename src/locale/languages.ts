@@ -544,7 +544,7 @@ export const LANGUAGES: Language[] = [
   {code3: 'tli', code2: '', name: 'Tlingit'},
   {code3: 'tmh', code2: '', name: 'Tamashek'},
   {code3: 'tog', code2: '', name: 'Tonga (Nyasa)'},
-  {code3: 'tok', code2: '', name: 'toki pona'},
+  {code3: 'tok', code2: '', name: 'Toki Pona'},
   {code3: 'ton', code2: 'to', name: 'Tonga (Tonga Islands)'},
   {code3: 'tpi', code2: '', name: 'Tok Pisin'},
   {code3: 'tsi', code2: '', name: 'Tsimshian'},
