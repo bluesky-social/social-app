@@ -4,13 +4,17 @@ import {
   AppBskyEmbedRecord,
   AppBskyEmbedRecordWithMedia,
   AppBskyEmbedVideo,
+  AppBskyFeedPost,
+  AppBskyFeedPostgate,
   AtUri,
   BlobRef,
   BskyAgent,
   ComAtprotoLabelDefs,
+  ComAtprotoRepoApplyWrites,
   ComAtprotoRepoStrongRef,
   RichText,
 } from '@atproto/api'
+import {TID} from '@atproto/common-web'
 import {t} from '@lingui/macro'
 import {QueryClient} from '@tanstack/react-query'
 
@@ -18,7 +22,6 @@ import {isNetworkError} from '#/lib/strings/errors'
 import {shortenLinks, stripInvalidMentions} from '#/lib/strings/rich-text-manip'
 import {logger} from '#/logger'
 import {compressImage} from '#/state/gallery'
-import {writePostgateRecord} from '#/state/queries/postgate'
 import {
   fetchResolveGifQuery,
   fetchResolveLinkQuery,
@@ -26,7 +29,6 @@ import {
 import {
   createThreadgateRecord,
   threadgateAllowUISettingToAllowRecordValue,
-  writeThreadgateRecord,
 } from '#/state/queries/threadgate'
 import {ComposerDraft, EmbedDraft} from '#/view/com/composer/state/composer'
 import {createGIFDescription} from '../gif-alt-text'
@@ -47,43 +49,20 @@ export async function post(
   opts: PostOpts,
 ) {
   const draft = opts.draft
-  let reply
-  let rt = new RichText(
-    {text: draft.richtext.text.trimEnd()},
-    {cleanNewlines: true},
-  )
 
   opts.onStateChange?.(t`Processing...`)
-
-  await rt.detectFacets(agent)
-
-  rt = shortenLinks(rt)
-  rt = stripInvalidMentions(rt)
-
-  const embed = await resolveEmbed(
+  // NB -- Do not await anything here to avoid waterfalls!
+  // Instead, store Promises which will be unwrapped as they're needed.
+  const rtPromise = resolveRT(agent, draft.richtext)
+  const embedPromise = resolveEmbed(
     agent,
     queryClient,
     draft,
     opts.onStateChange,
   )
-
-  // add replyTo if post is a reply to another post
+  let replyPromise
   if (opts.replyTo) {
-    const replyToUrip = new AtUri(opts.replyTo)
-    const parentPost = await agent.getPost({
-      repo: replyToUrip.host,
-      rkey: replyToUrip.rkey,
-    })
-    if (parentPost) {
-      const parentRef = {
-        uri: parentPost.uri,
-        cid: parentPost.cid,
-      }
-      reply = {
-        root: parentPost.value.reply?.root || parentRef,
-        parent: parentRef,
-      }
-    }
+    replyPromise = resolveReply(agent, opts.replyTo)
   }
 
   // set labels
@@ -101,16 +80,77 @@ export async function post(
     langs = opts.langs.slice(0, 3)
   }
 
-  let res
-  try {
-    opts.onStateChange?.(t`Posting...`)
-    res = await agent.post({
+  const rkey = TID.nextStr()
+  const uri = `at://${agent.assertDid}/app.bsky.feed.post/${rkey}`
+  const date = new Date().toISOString()
+
+  const writes: ComAtprotoRepoApplyWrites.Create[] = []
+
+  // Create post record
+  {
+    const rt = await rtPromise
+    const embed = await embedPromise
+    const reply = await replyPromise
+    const record: AppBskyFeedPost.Record = {
+      $type: 'app.bsky.feed.post',
+      createdAt: date,
       text: rt.text,
       facets: rt.facets,
       reply,
       embed,
       langs,
       labels,
+    }
+
+    writes.push({
+      $type: 'com.atproto.repo.applyWrites#create',
+      collection: 'app.bsky.feed.post',
+      rkey: rkey,
+      value: record,
+    })
+  }
+
+  // Create threadgate record
+  if (draft.threadgate.some(tg => tg.type !== 'everybody')) {
+    const record = createThreadgateRecord({
+      createdAt: date,
+      post: uri,
+      allow: threadgateAllowUISettingToAllowRecordValue(draft.threadgate),
+    })
+
+    writes.push({
+      $type: 'com.atproto.repo.applyWrites#create',
+      collection: 'app.bsky.feed.threadgate',
+      rkey: rkey,
+      value: record,
+    })
+  }
+
+  // Create postgate record
+  if (
+    draft.postgate.embeddingRules?.length ||
+    draft.postgate.detachedEmbeddingUris?.length
+  ) {
+    const record: AppBskyFeedPostgate.Record = {
+      ...draft.postgate,
+      $type: 'app.bsky.feed.postgate',
+      createdAt: date,
+      post: uri,
+    }
+
+    writes.push({
+      $type: 'com.atproto.repo.applyWrites#create',
+      collection: 'app.bsky.feed.postgate',
+      rkey: rkey,
+      value: record,
+    })
+  }
+
+  try {
+    await agent.com.atproto.repo.applyWrites({
+      repo: agent.assertDid,
+      writes: writes,
+      validate: true,
     })
   } catch (e: any) {
     logger.error(`Failed to create post`, {
@@ -125,54 +165,34 @@ export async function post(
     }
   }
 
-  if (draft.threadgate.some(tg => tg.type !== 'everybody')) {
-    try {
-      // TODO: this needs to be batch-created with the post!
-      await writeThreadgateRecord({
-        agent,
-        postUri: res.uri,
-        threadgate: createThreadgateRecord({
-          post: res.uri,
-          allow: threadgateAllowUISettingToAllowRecordValue(draft.threadgate),
-        }),
-      })
-    } catch (e: any) {
-      logger.error(`Failed to create threadgate`, {
-        context: 'composer',
-        safeMessage: e.message,
-      })
-      throw new Error(
-        t`Failed to save post interaction settings. Your post was created but users may be able to interact with it.`,
-      )
+  return {uri}
+}
+
+async function resolveRT(agent: BskyAgent, richtext: RichText) {
+  let rt = new RichText({text: richtext.text.trimEnd()}, {cleanNewlines: true})
+  await rt.detectFacets(agent)
+
+  rt = shortenLinks(rt)
+  rt = stripInvalidMentions(rt)
+  return rt
+}
+
+async function resolveReply(agent: BskyAgent, replyTo: string) {
+  const replyToUrip = new AtUri(replyTo)
+  const parentPost = await agent.getPost({
+    repo: replyToUrip.host,
+    rkey: replyToUrip.rkey,
+  })
+  if (parentPost) {
+    const parentRef = {
+      uri: parentPost.uri,
+      cid: parentPost.cid,
+    }
+    return {
+      root: parentPost.value.reply?.root || parentRef,
+      parent: parentRef,
     }
   }
-
-  if (
-    draft.postgate.embeddingRules?.length ||
-    draft.postgate.detachedEmbeddingUris?.length
-  ) {
-    try {
-      // TODO: this needs to be batch-created with the post!
-      await writePostgateRecord({
-        agent,
-        postUri: res.uri,
-        postgate: {
-          ...draft.postgate,
-          post: res.uri,
-        },
-      })
-    } catch (e: any) {
-      logger.error(`Failed to create postgate`, {
-        context: 'composer',
-        safeMessage: e.message,
-      })
-      throw new Error(
-        t`Failed to save post interaction settings. Your post was created but users may be able to interact with it.`,
-      )
-    }
-  }
-
-  return res
 }
 
 async function resolveEmbed(

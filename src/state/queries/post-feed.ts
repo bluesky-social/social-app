@@ -28,7 +28,6 @@ import {FeedTuner, FeedTunerFn} from '#/lib/api/feed-manip'
 import {DISCOVER_FEED_URI} from '#/lib/constants'
 import {BSKY_FEED_OWNER_DIDS} from '#/lib/constants'
 import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
-import {useGate} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {STALE} from '#/state/queries'
 import {DEFAULT_LOGGED_OUT_PREFERENCES} from '#/state/queries/preferences/const'
@@ -123,7 +122,6 @@ export function usePostFeedQuery(
   params?: FeedParams,
   opts?: {enabled?: boolean; ignoreFilterFor?: string},
 ) {
-  const gate = useGate()
   const feedTuners = useFeedTuners(feedDesc)
   const moderationOpts = useModerationOpts()
   const {data: preferences} = usePreferencesQuery()
@@ -148,7 +146,10 @@ export function usePostFeedQuery(
    * unwanted content, we may over-fetch here to try and fill pages by
    * `MIN_POSTS`.
    */
-  const fetchLimit = gate('post_feed_lang_window') ? 100 : MIN_POSTS
+
+  // TEMPORARILY DISABLING GATE TO PREVENT EVENT CONSUMPTION @TODO EME-GATE
+  // const fetchLimit = gate('post_feed_lang_window') ? 100 : MIN_POSTS
+  const fetchLimit = MIN_POSTS
 
   // Make sure this doesn't invalidate unless really needed.
   const selectArgs = React.useMemo(

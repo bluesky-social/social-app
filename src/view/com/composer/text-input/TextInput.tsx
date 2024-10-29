@@ -43,9 +43,10 @@ export interface TextInputRef {
 interface TextInputProps extends ComponentProps<typeof RNTextInput> {
   richtext: RichText
   placeholder: string
+  webForceMinHeight: boolean
   setRichText: (v: RichText) => void
   onPhotoPasted: (uri: string) => void
-  onPressPublish: (richtext: RichText) => Promise<void>
+  onPressPublish: (richtext: RichText) => void
   onNewLink: (uri: string) => void
   onError: (err: string) => void
 }
@@ -230,7 +231,7 @@ export const TextInput = forwardRef(function TextInputImpl(
   }, [t, richtext, inputTextStyle])
 
   return (
-    <View style={[a.flex_1, a.pl_md, a.pb_2xl]}>
+    <View style={[a.flex_1, a.pl_md]}>
       <PasteInput
         testID="composerTextInput"
         ref={textInput}
@@ -244,7 +245,7 @@ export const TextInput = forwardRef(function TextInputImpl(
         allowFontScaling
         multiline
         scrollEnabled={false}
-        numberOfLines={4}
+        numberOfLines={2}
         style={[
           inputTextStyle,
           a.w_full,

@@ -9,7 +9,7 @@ appId: xyz.blueskyweb.app
 - tapOn:
     id: "e2eOpenLoggedOutView"
 - tapOn: "Sign in"
-- tapOn: 
+- tapOn:
     id: "selectServiceButton"
 - tapOn: "Custom"
 - tapOn:
@@ -23,4 +23,5 @@ appId: xyz.blueskyweb.app
     id: "loginPasswordInput"
 - inputText: "hunter2"
 - pressKey: Enter
+- tapOn: "Not now"
 - assertVisible: "Following"

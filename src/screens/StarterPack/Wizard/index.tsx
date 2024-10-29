@@ -49,7 +49,7 @@ import {useWizardState, WizardStep} from '#/screens/StarterPack/Wizard/State'
 import {StepDetails} from '#/screens/StarterPack/Wizard/StepDetails'
 import {StepFeeds} from '#/screens/StarterPack/Wizard/StepFeeds'
 import {StepProfiles} from '#/screens/StarterPack/Wizard/StepProfiles'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, useTheme, web} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import * as Layout from '#/components/Layout'
@@ -121,7 +121,9 @@ export function Wizard({
   }
 
   return (
-    <Layout.Screen>
+    <Layout.Screen
+      testID="starterPackWizardScreen"
+      style={web([{minHeight: 0}, a.flex_1])}>
       <Provider starterPack={starterPack} listItems={listItems}>
         <WizardInner
           currentStarterPack={starterPack}

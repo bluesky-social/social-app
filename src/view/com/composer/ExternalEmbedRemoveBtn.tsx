@@ -11,7 +11,7 @@ export function ExternalEmbedRemoveBtn({onRemove}: {onRemove: () => void}) {
   const {_} = useLingui()
 
   return (
-    <View style={[a.absolute, a.pt_sm, a.pr_sm, {top: 0, right: 0}]}>
+    <View style={[a.absolute, {top: 8, right: 8}, a.z_50]}>
       <Button
         label={_(msg`Remove attachment`)}
         onPress={onRemove}

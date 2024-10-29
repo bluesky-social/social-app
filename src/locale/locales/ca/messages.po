@@ -697,7 +697,7 @@ msgstr "S'ha enviat un correu a la teva adreça prèvia, {0}. Inclou un codi de 
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:77
 msgid "An email has been sent! Please enter the confirmation code included in the email below."
-msgstr ""
+msgstr "S'ha enviat un correu. Entra el codi de confirmació que t'ha arribat per correu."
 
 #: src/components/dialogs/GifSelect.tsx:266
 msgid "An error has occurred"
@@ -1173,7 +1173,7 @@ msgstr "Explora més recomanacions"
 #: src/components/FeedInterstitials.tsx:358
 #: src/components/FeedInterstitials.tsx:492
 msgid "Browse more suggestions on the Explore page"
-msgstr "Explora més recomancaions a la pàgina Explora"
+msgstr "Explora més recomanacions a la pàgina Explora"
 
 #: src/screens/Home/NoFeedsPinned.tsx:103
 #: src/screens/Home/NoFeedsPinned.tsx:109
@@ -1222,11 +1222,11 @@ msgstr "Creant un compte indiques que estàs d'acord amb la <0>Política de priv
 
 #: src/screens/Signup/StepInfo/Policies.tsx:48
 msgid "By creating an account you agree to the <0>Terms of Service</0> and <1>Privacy Policy</1>."
-msgstr "Creant un compte indiques que estàs d'acord amb les <0>Condicions del servei/0> i amb la <0>Política de privadesa</0>."
+msgstr "Creant un compte indiques que estàs d'acord amb les <0>Condicions del servei</0> i amb la <0>Política de privadesa</0>."
 
 #: src/screens/Signup/StepInfo/Policies.tsx:68
 msgid "By creating an account you agree to the <0>Terms of Service</0>."
-msgstr "Creant un compte indiques que estàs d'acord amb les <0>Condicions del servei/0>."
+msgstr "Creant un compte indiques que estàs d'acord amb les <0>Condicions del servei</0>."
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:162
 msgid "by you"
@@ -1345,7 +1345,7 @@ msgstr "Canvia"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:147
 msgid "Change email address"
-msgstr ""
+msgstr "Canvia l'adreça de correu"
 
 #: src/view/screens/Settings/index.tsx:684
 msgid "Change handle"
@@ -1750,7 +1750,7 @@ msgstr "Codi de confirmació"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:167
 msgid "Confirmation Code"
-msgstr ""
+msgstr "Codi de confirmació"
 
 #: src/view/com/modals/Waitlist.tsx:120
 #~ msgid "Confirms signing up {email} to the waitlist"
@@ -2734,7 +2734,7 @@ msgstr "Introdueix una lletra o etiqueta"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:75
 msgid "Enter Code"
-msgstr ""
+msgstr "Entra el codi"
 
 #: src/view/com/modals/VerifyEmail.tsx:113
 msgid "Enter Confirmation Code"
@@ -3701,7 +3701,7 @@ msgstr "Tinc un codi"
 #: src/components/dialogs/VerifyEmailDialog.tsx:196
 #: src/components/dialogs/VerifyEmailDialog.tsx:203
 msgid "I Have a Code"
-msgstr ""
+msgstr "Tinc un codi"
 
 #: src/view/com/modals/VerifyEmail.tsx:224
 msgid "I have a confirmation code"
@@ -4173,7 +4173,7 @@ msgstr "els ha agradat el teu canal personalitzat"
 
 #: src/view/com/notifications/FeedItem.tsx:171
 #~ msgid "liked your custom feed{0}"
-#~ msgstr "i ha agradat el teu canal personalitzat{0}"
+#~ msgstr "li ha agradat el teu canal personalitzat{0}"
 
 #: src/view/com/notifications/FeedItem.tsx:178
 msgid "liked your post"
@@ -4718,7 +4718,7 @@ msgstr "Navega al teu perfil"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:156
 msgid "Need to change it?"
-msgstr ""
+msgstr "Necessites canviar-lo?"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:130
 msgid "Need to report a copyright violation?"
@@ -6577,7 +6577,7 @@ msgstr "Desa la data de naixement"
 #: src/view/screens/SavedFeeds.tsx:97
 #: src/view/screens/SavedFeeds.tsx:101
 msgid "Save changes"
-msgstr ""
+msgstr "Desa els canvis"
 
 #: src/view/com/modals/EditProfile.tsx:227
 msgid "Save Changes"
@@ -6900,11 +6900,11 @@ msgstr "Envia un lloc web net!"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:189
 msgid "Send Confirmation"
-msgstr ""
+msgstr "Envia confirmació"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:182
 msgid "Send confirmation email"
-msgstr ""
+msgstr "Envia correu de confirmació"
 
 #: src/view/com/modals/VerifyEmail.tsx:210
 #: src/view/com/modals/VerifyEmail.tsx:212
@@ -7655,7 +7655,7 @@ msgstr "Subscriure's a la llista"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:81
 msgid "Success!"
-msgstr ""
+msgstr "Verificat"
 
 #: src/view/screens/Search/Explore.tsx:332
 msgid "Suggested accounts"
@@ -7813,7 +7813,7 @@ msgstr "Camp d'introducció de text"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:82
 msgid "Thank you! Your email has been successfully verified."
-msgstr ""
+msgstr "Gràcies, el teu correu està verificat."
 
 #: src/components/dms/ReportDialog.tsx:129
 #: src/components/ReportDialog/SubmitView.tsx:82
@@ -9535,7 +9535,7 @@ msgstr "Seguiràs a aquesta gent de seguida"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:138
 msgid "You'll receive an email at <0>{0}</0> to verify it's you."
-msgstr ""
+msgstr "Rebràs un correu a <0>{0}</0> per verificar que ets tu."
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:270
 msgid "You'll stay updated with these feeds"

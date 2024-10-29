@@ -2747,7 +2747,7 @@ msgstr "Gefolgt von <0>{0}</0> und <1>{1}</1>"
 
 #: src/components/KnownFollowers.tsx:186
 msgid "Followed by <0>{0}</0>, <1>{1}</1>, and {2, plural, one {# other} other {# others}}"
-msgstr "Gefolgt von <0>{0}</0>, <1>{1}</1> und {1, plural, one {# anderer} other {# andere}}"
+msgstr "Gefolgt von <0>{0}</0>, <1>{1}</1> und {2, plural, one {# anderer} other {# andere}}"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:404
 msgid "Followed users"
@@ -4328,7 +4328,7 @@ msgstr ""
 
 #: src/screens/Profile/Sections/Feed.tsx:65
 msgid "No posts yet."
-msgstr ""
+msgstr "Keine Beiträge bisher."
 
 #: src/view/com/post-thread/PostQuotes.tsx:106
 msgid "No quotes yet"
@@ -4544,7 +4544,7 @@ msgstr "Bei einem oder mehreren Bildern fehlt der Alt-Text."
 
 #: src/screens/Onboarding/StepProfile/index.tsx:115
 msgid "Only .jpg and .png files are supported"
-msgstr ""
+msgstr "Nur .jpg- und .png-Dateien werden unterstützt"
 
 #: src/components/WhoCanReply.tsx:245
 #~ msgid "Only {0} can reply"
@@ -4843,7 +4843,7 @@ msgstr ""
 
 #: src/lib/moderation/useReportOptions.ts:27
 msgid "Other"
-msgstr ""
+msgstr "Andere"
 
 #: src/components/AccountList.tsx:76
 msgid "Other account"
@@ -4851,7 +4851,7 @@ msgstr "Anderes Konto"
 
 #: src/view/screens/Settings/index.tsx:379
 msgid "Other accounts"
-msgstr ""
+msgstr "Andere Accounts"
 
 #: src/view/com/composer/select-language/SelectLangBtn.tsx:92
 msgid "Other..."
@@ -4859,7 +4859,7 @@ msgstr "Andere..."
 
 #: src/screens/Messages/components/ChatDisabled.tsx:28
 msgid "Our moderators have reviewed reports and decided to disable your access to chats on Bluesky."
-msgstr ""
+msgstr "Unsere Moderatoren haben Berichte geprüft und beschlossen, Ihren Chat-Zugriff auf Bluesky zu deaktivieren."
 
 #: src/components/Lists.tsx:216
 #: src/view/screens/NotFound.tsx:45
@@ -5371,11 +5371,11 @@ msgstr ""
 
 #: src/components/dms/ReportDialog.tsx:169
 msgid "Reason:"
-msgstr ""
+msgstr "Grund: "
 
 #: src/components/dms/MessageReportDialog.tsx:149
 #~ msgid "Reason: {0}"
-#~ msgstr ""
+#~ msgstr "Grund: {0}"
 
 #: src/view/screens/Search/Search.tsx:1051
 msgid "Recent Searches"
@@ -5395,7 +5395,7 @@ msgstr ""
 
 #: src/view/screens/Notifications.tsx:143
 msgid "Refresh notifications"
-msgstr ""
+msgstr "Benachrichtigungen aktualisieren"
 
 #: src/screens/Messages/ChatList.tsx:197
 msgid "Reload conversations"
@@ -6058,7 +6058,7 @@ msgstr "Nach Nutzern suchen"
 
 #: src/components/dialogs/GifSelect.tsx:177
 msgid "Search GIFs"
-msgstr ""
+msgstr "Suche nach GIFs"
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:503
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:504
@@ -6116,19 +6116,19 @@ msgstr "Wähle {item}"
 
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:67
 msgid "Select a color"
-msgstr ""
+msgstr "Wähle eine Farbe"
 
 #: src/screens/Login/ChooseAccountForm.tsx:77
 msgid "Select account"
-msgstr ""
+msgstr "Account wählen"
 
 #: src/screens/Onboarding/StepProfile/AvatarCircle.tsx:66
 msgid "Select an avatar"
-msgstr ""
+msgstr "Einen Avatar auswählen"
 
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:65
 msgid "Select an emoji"
-msgstr ""
+msgstr "Ein Emoji auswählen"
 
 #: src/screens/Login/index.tsx:117
 msgid "Select from an existing account"
@@ -6148,11 +6148,11 @@ msgstr ""
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:245
 msgid "Select language..."
-msgstr ""
+msgstr "Sprache auswählen..."
 
 #: src/view/screens/LanguageSettings.tsx:299
 msgid "Select languages"
-msgstr ""
+msgstr "Sprachen auswählen"
 
 #: src/components/ReportDialog/SelectLabelerView.tsx:29
 msgid "Select moderator"
@@ -6213,11 +6213,11 @@ msgstr "Wähle aus, welche Sprachen deine abonnierten Feeds enthalten sollen. We
 
 #: src/view/screens/LanguageSettings.tsx:95
 msgid "Select your app language for the default text to display in the app."
-msgstr ""
+msgstr "Wählen Sie Ihre App-Sprache für den Standardtext aus, der in der App angezeigt werden soll."
 
 #: src/screens/Signup/StepInfo/index.tsx:223
 msgid "Select your date of birth"
-msgstr ""
+msgstr "Wähle dein Geburtsdatum"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:192
 msgid "Select your interests from the options below"
@@ -6245,7 +6245,7 @@ msgstr ""
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:182
 msgid "Send confirmation email"
-msgstr ""
+msgstr "Bestätigungs-E-Mail senden"
 
 #: src/view/com/modals/VerifyEmail.tsx:210
 #: src/view/com/modals/VerifyEmail.tsx:212
@@ -6268,7 +6268,7 @@ msgstr "Feedback senden"
 #: src/screens/Messages/components/MessageInput.tsx:165
 #: src/screens/Messages/components/MessageInput.web.tsx:219
 msgid "Send message"
-msgstr ""
+msgstr "Nachricht senden"
 
 #: src/components/dms/dialogs/ShareViaChatDialog.tsx:62
 msgid "Send post to..."
@@ -6279,7 +6279,7 @@ msgstr ""
 #: src/components/ReportDialog/SubmitView.tsx:220
 #: src/components/ReportDialog/SubmitView.tsx:224
 msgid "Send report"
-msgstr ""
+msgstr "Bericht senden"
 
 #: src/view/com/modals/report/SendReportButton.tsx:45
 #~ msgid "Send Report"
