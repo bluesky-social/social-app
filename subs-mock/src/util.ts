@@ -477,9 +477,7 @@ export enum EntitlementId {
   Main2 = 'main:2',
 }
 
-export function normalizeEntitlements(
-  entitlements: RevenueCatSubscription['entitlements']['items'],
-) {
+export function normalizeEntitlements(entitlements: any[]) {
   return entitlements.map(entitlement => {
     let id = EntitlementId.Main0
 
@@ -500,6 +498,7 @@ export function normalizeEntitlements(
 
     return {
       id,
+      products: entitlement.products.items.map((p: any) => p.store_identifier),
     }
   })
 }

@@ -7,7 +7,6 @@ import Stripe from 'stripe'
 import {
   getMainSubscriptionProducts,
   normalizeEntitlements,
-  RevenueCatProduct,
   RevenueCatSubscription,
 } from './util'
 
@@ -59,35 +58,51 @@ export default new Hono<{Bindings: Bindings; Variables: Variables}>()
   })
 
   /**
-   * Get main subscription products
+   * Get subscription products for a given offering
    */
-  .get('/subscriptions/main', async c => {
+  .get('/subscriptions/:offering_lookup_key', async c => {
     const rc = c.get('rcv2')
     const {user, platform} = c.req.query()
+    const {offering_lookup_key} = c.req.param()
 
-    const allProducts = await rc
-      .get<{items: RevenueCatProduct[]}>(`products?expand=items.app`)
+    const {items} = await rc
+      .get<{items: any[]}>(`offerings?expand=items.package.product`)
       .json()
+    const offering = items.find(i => i.lookup_key == offering_lookup_key)
+
+    if (!offering) {
+      throw new HTTPException(404, {message: `Offering not found`})
+    }
+
+    const products = offering.packages.items
+      .flatMap((i: any) => i.products.items)
+      .map((i: any) => i.product)
+
     let subscriptions: any[] = []
 
     try {
       const {items} = await rc
-        .get<{items: RevenueCatSubscription[]}>(
-          `customers/${user}/subscriptions`,
-        )
+        .get<{
+          items: RevenueCatSubscription[]
+        }>(`customers/${user}/subscriptions`)
         .json()
       subscriptions = items
     } catch (e) {}
 
-    let products = getMainSubscriptionProducts(allProducts.items, subscriptions)
-    const activeProducts = products.filter(p => p.active)
+    let normalizedProducts = getMainSubscriptionProducts(
+      products,
+      subscriptions,
+    )
+    const activeProducts = normalizedProducts.filter(p => p.active)
 
     if (platform === 'web') {
       const stripe = c.get('stripe')
 
-      products = products.filter(p => p.provider === 'stripe')
+      normalizedProducts = normalizedProducts.filter(
+        p => p.provider === 'stripe',
+      )
 
-      const ids = products.map(p => p.storeId)
+      const ids = normalizedProducts.map(p => p.storeId)
       const {data} = await stripe.products.list({ids})
       const prices = await Promise.all(
         data.map(p => {
@@ -101,7 +116,7 @@ export default new Hono<{Bindings: Bindings; Variables: Variables}>()
         }),
       )
 
-      for (const product of products) {
+      for (const product of normalizedProducts) {
         if (product.provider !== 'stripe') continue
         for (const price of prices) {
           if (!price) continue
@@ -114,10 +129,12 @@ export default new Hono<{Bindings: Bindings; Variables: Variables}>()
       }
     } else if (platform === 'ios') {
     } else if (platform === 'android') {
-      products = products.filter(p => p.provider === 'play_store')
+      normalizedProducts = normalizedProducts.filter(
+        p => p.provider === 'play_store',
+      )
     }
 
-    return c.json({active: activeProducts, available: products})
+    return c.json({active: activeProducts, available: normalizedProducts})
   })
 
   /**
@@ -158,14 +175,19 @@ export default new Hono<{Bindings: Bindings; Variables: Variables}>()
     const rc = c.get('rcv2')
     const user = c.req.query('user')
 
-    const {items} = await rc
-      .get<{items: RevenueCatSubscription[]}>(`customers/${user}/subscriptions`)
+    const {items: activeEntitlements} = await rc
+      .get<{
+        items: {entitlement_id: string}[]
+      }>(`customers/${user}/active_entitlements`)
       .json()
-    const entitlements = normalizeEntitlements(
-      items.flatMap(sub => sub.entitlements.items),
+    const entitlements = await Promise.all(
+      activeEntitlements.map(e => {
+        return rc.get(`entitlements/${e.entitlement_id}?expand=product`).json()
+      }),
     )
+    const normalized = normalizeEntitlements(entitlements)
 
-    return c.json({entitlements})
+    return c.json({entitlements: normalized})
   })
 
   /**
