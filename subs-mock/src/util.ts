@@ -90,391 +90,248 @@ export enum SubscriptionId {
   Main2AnnualAuto = 'main:2:annual:auto',
 }
 
-export type Subscription =
-  | {
-      /**
-       * Using this to discriminate the union
-       */
-      platform: 'android' | 'ios'
-      /**
-       * Bsky internal ID. We map RC products to this for use in the app
-       */
-      id: SubscriptionId
-      /**
-       * This is the full ID from whatever store this product was configured in
-       */
-      storeId: string
-      /**
-       * This is the key needed to fetch the product from the RC SDK. For
-       * Android, this is the first part of the `storeId` e.g. bsky_tier_0 with
-       * no `:monthly-annual` suffix
-       */
-      lookupKey: string
-      /**
-       * A value needed to check out. This is useless on native, but on web, this is the `price.id`
-       */
-      checkoutId: string
-      /**
-       * The internal ID that we can use to fetch the subscription. For
-       * Androi/iOS, we probably won't need this. On web, this is the Stripe
-       * "subscription item" ID e.g. `si_xxx`
-       */
-      storeSubscriptionIdentifier: string | null
-      /**
-       * This is unused on native, on web we fill this in with fetched Stripe
-       * product data. The price should be in cents, and we localize and format
-       * this value on the client.
-       */
-      price?: number
-
-      /**
-       * The rest of this is pretty generic
-       */
-      interval: 'monthly' | 'annual'
-      active: boolean
-      autoRenewStatus: RevenueCatSubscription['auto_renewal_status'] | null
-      provider: RevenueCatSubscription['store']
-      status: RevenueCatSubscription['status'] | null
-      entitlements: RevenueCatSubscription['entitlements']['items']
-      startedAt: RevenueCatSubscription['starts_at'] | null
-      periodStart: RevenueCatSubscription['current_period_starts_at'] | null
-      periodEnd: RevenueCatSubscription['current_period_ends_at'] | null
-    }
-  | {
-      platform: 'web'
-      id: SubscriptionId
-      storeId: string
-      lookupKey: string
-      checkoutId: string
-      interval: 'monthly' | 'annual'
-      active: boolean
-      autoRenewStatus: RevenueCatSubscription['auto_renewal_status'] | null
-      storeSubscriptionIdentifier: string | null
-      provider: RevenueCatSubscription['store']
-      status: RevenueCatSubscription['status'] | null
-      entitlements: RevenueCatSubscription['entitlements']['items']
-      startedAt: RevenueCatSubscription['starts_at'] | null
-      periodStart: RevenueCatSubscription['current_period_starts_at'] | null
-      periodEnd: RevenueCatSubscription['current_period_ends_at'] | null
-      price: number
-    }
-
-export function getMainSubscriptionProducts(
-  products: RevenueCatProduct[],
-  subscriptions: RevenueCatSubscription[],
-): Subscription[] {
-  return products
-    .filter(product => product.type === 'subscription')
-    .map(product => ({
-      product,
-      subscription: subscriptions.find(
-        subscription =>
-          subscription.product_id === product.id && subscription.gives_access,
-      ),
-    }))
-    .map(normalizeMainSubscriptionProduct)
-    .filter(Boolean) as Subscription[]
-}
-
-export function normalizeMainSubscriptionProduct({
-  product,
-  subscription,
-}: {
-  product: RevenueCatProduct
-  subscription: RevenueCatSubscription | undefined
-}): Subscription | undefined {
-  switch (product.store_identifier) {
-    /*
-     * Android
-     */
-    case 'bsky_tier_0:monthly-auto': {
-      return {
-        id: SubscriptionId.Main0MonthlyAuto,
-        storeId: product.store_identifier,
-        lookupKey: 'bsky_tier_0',
-        checkoutId: product.store_identifier,
-        interval: 'monthly',
-        active: subscription?.gives_access ?? false,
-        platform: 'android',
-        provider: 'play_store',
-        autoRenewStatus: subscription?.auto_renewal_status ?? null,
-        storeSubscriptionIdentifier:
-          subscription?.store_subscription_identifier ?? null,
-        status: subscription?.status ?? null,
-        entitlements: subscription?.gives_access
-          ? subscription?.entitlements?.items ?? []
-          : [],
-        startedAt: subscription?.starts_at ?? null,
-        periodStart: subscription?.current_period_starts_at ?? null,
-        periodEnd: subscription?.current_period_ends_at ?? null,
-      }
-    }
-    case 'bsky_tier_0:annual-auto': {
-      return {
-        id: SubscriptionId.Main0AnnualAuto,
-        storeId: product.store_identifier,
-        lookupKey: 'bsky_tier_0',
-        checkoutId: product.store_identifier,
-        interval: 'annual',
-        active: subscription?.gives_access ?? false,
-        autoRenewStatus: subscription?.auto_renewal_status ?? null,
-        platform: 'android',
-        provider: 'play_store',
-        storeSubscriptionIdentifier:
-          subscription?.store_subscription_identifier ?? null,
-        status: subscription?.status ?? null,
-        entitlements: subscription?.gives_access
-          ? subscription?.entitlements?.items ?? []
-          : [],
-        startedAt: subscription?.starts_at ?? null,
-        periodStart: subscription?.current_period_starts_at ?? null,
-        periodEnd: subscription?.current_period_ends_at ?? null,
-      }
-    }
-    case 'bsky_tier_1:monthly-auto': {
-      return {
-        id: SubscriptionId.Main1MonthlyAuto,
-        storeId: product.store_identifier,
-        lookupKey: 'bsky_tier_1',
-        checkoutId: product.store_identifier,
-        interval: 'monthly',
-        active: subscription?.gives_access ?? false,
-        autoRenewStatus: subscription?.auto_renewal_status ?? null,
-        platform: 'android',
-        provider: 'play_store',
-        storeSubscriptionIdentifier:
-          subscription?.store_subscription_identifier ?? null,
-        status: subscription?.status ?? null,
-        entitlements: subscription?.gives_access
-          ? subscription?.entitlements?.items ?? []
-          : [],
-        startedAt: subscription?.starts_at ?? null,
-        periodStart: subscription?.current_period_starts_at ?? null,
-        periodEnd: subscription?.current_period_ends_at ?? null,
-      }
-    }
-    case 'bsky_tier_1:annual-auto': {
-      return {
-        id: SubscriptionId.Main1AnnualAuto,
-        storeId: product.store_identifier,
-        lookupKey: 'bsky_tier_1',
-        checkoutId: product.store_identifier,
-        interval: 'annual',
-        active: subscription?.gives_access ?? false,
-        autoRenewStatus: subscription?.auto_renewal_status ?? null,
-        platform: 'android',
-        provider: 'play_store',
-        storeSubscriptionIdentifier:
-          subscription?.store_subscription_identifier ?? null,
-        status: subscription?.status ?? null,
-        entitlements: subscription?.gives_access
-          ? subscription?.entitlements?.items ?? []
-          : [],
-        startedAt: subscription?.starts_at ?? null,
-        periodStart: subscription?.current_period_starts_at ?? null,
-        periodEnd: subscription?.current_period_ends_at ?? null,
-      }
-    }
-    case 'bsky_tier_2:monthly-auto': {
-      return {
-        id: SubscriptionId.Main2MonthlyAuto,
-        storeId: product.store_identifier,
-        lookupKey: 'bsky_tier_2',
-        checkoutId: product.store_identifier,
-        interval: 'monthly',
-        active: subscription?.gives_access ?? false,
-        autoRenewStatus: subscription?.auto_renewal_status ?? null,
-        platform: 'android',
-        provider: 'play_store',
-        storeSubscriptionIdentifier:
-          subscription?.store_subscription_identifier ?? null,
-        status: subscription?.status ?? null,
-        entitlements: subscription?.gives_access
-          ? subscription?.entitlements?.items ?? []
-          : [],
-        startedAt: subscription?.starts_at ?? null,
-        periodStart: subscription?.current_period_starts_at ?? null,
-        periodEnd: subscription?.current_period_ends_at ?? null,
-      }
-    }
-    case 'bsky_tier_2:annual-auto': {
-      return {
-        id: SubscriptionId.Main2AnnualAuto,
-        storeId: product.store_identifier,
-        lookupKey: 'bsky_tier_2',
-        checkoutId: product.store_identifier,
-        interval: 'annual',
-        active: subscription?.gives_access ?? false,
-        autoRenewStatus: subscription?.auto_renewal_status ?? null,
-        platform: 'android',
-        provider: 'play_store',
-        storeSubscriptionIdentifier:
-          subscription?.store_subscription_identifier ?? null,
-        status: subscription?.status ?? null,
-        entitlements: subscription?.gives_access
-          ? subscription?.entitlements?.items ?? []
-          : [],
-        startedAt: subscription?.starts_at ?? null,
-        periodStart: subscription?.current_period_starts_at ?? null,
-        periodEnd: subscription?.current_period_ends_at ?? null,
-      }
-    }
-
-    /*
-     * Stripe
-     */
-    case 'prod_R2eNjNa6mB1Jlu': {
-      return {
-        id: SubscriptionId.Main0MonthlyAuto,
-        storeId: product.store_identifier,
-        lookupKey: product.store_identifier,
-        checkoutId: product.store_identifier,
-        interval: 'monthly',
-        active: subscription?.gives_access ?? false,
-        autoRenewStatus: subscription?.auto_renewal_status ?? null,
-        platform: 'web',
-        provider: 'stripe',
-        price: 0,
-        storeSubscriptionIdentifier:
-          subscription?.store_subscription_identifier ?? null,
-        status: subscription?.status ?? null,
-        entitlements: subscription?.gives_access
-          ? subscription?.entitlements?.items ?? []
-          : [],
-        startedAt: subscription?.starts_at ?? null,
-        periodStart: subscription?.current_period_starts_at ?? null,
-        periodEnd: subscription?.current_period_ends_at ?? null,
-      }
-    }
-    case 'prod_R37Zg28EeQ9XAz': {
-      return {
-        id: SubscriptionId.Main0AnnualAuto,
-        storeId: product.store_identifier,
-        lookupKey: product.store_identifier,
-        checkoutId: product.store_identifier,
-        interval: 'annual',
-        active: subscription?.gives_access ?? false,
-        autoRenewStatus: subscription?.auto_renewal_status ?? null,
-        platform: 'web',
-        provider: 'stripe',
-        price: 0,
-        storeSubscriptionIdentifier:
-          subscription?.store_subscription_identifier ?? null,
-        status: subscription?.status ?? null,
-        entitlements: subscription?.gives_access
-          ? subscription?.entitlements?.items ?? []
-          : [],
-        startedAt: subscription?.starts_at ?? null,
-        periodStart: subscription?.current_period_starts_at ?? null,
-        periodEnd: subscription?.current_period_ends_at ?? null,
-      }
-    }
-    case 'prod_R67eiEMuIf59w7': {
-      return {
-        id: SubscriptionId.Main1MonthlyAuto,
-        storeId: product.store_identifier,
-        lookupKey: product.store_identifier,
-        checkoutId: product.store_identifier,
-        interval: 'monthly',
-        active: subscription?.gives_access ?? false,
-        autoRenewStatus: subscription?.auto_renewal_status ?? null,
-        platform: 'web',
-        provider: 'stripe',
-        price: 0,
-        storeSubscriptionIdentifier:
-          subscription?.store_subscription_identifier ?? null,
-        status: subscription?.status ?? null,
-        entitlements: subscription?.gives_access
-          ? subscription?.entitlements?.items ?? []
-          : [],
-        startedAt: subscription?.starts_at ?? null,
-        periodStart: subscription?.current_period_starts_at ?? null,
-        periodEnd: subscription?.current_period_ends_at ?? null,
-      }
-    }
-    case 'prod_R67fjfexQ7THQ0': {
-      return {
-        id: SubscriptionId.Main1AnnualAuto,
-        storeId: product.store_identifier,
-        lookupKey: product.store_identifier,
-        checkoutId: product.store_identifier,
-        interval: 'annual',
-        active: subscription?.gives_access ?? false,
-        autoRenewStatus: subscription?.auto_renewal_status ?? null,
-        platform: 'web',
-        provider: 'stripe',
-        price: 0,
-        storeSubscriptionIdentifier:
-          subscription?.store_subscription_identifier ?? null,
-        status: subscription?.status ?? null,
-        entitlements: subscription?.gives_access
-          ? subscription?.entitlements?.items ?? []
-          : [],
-        startedAt: subscription?.starts_at ?? null,
-        periodStart: subscription?.current_period_starts_at ?? null,
-        periodEnd: subscription?.current_period_ends_at ?? null,
-      }
-    }
-    case 'prod_R67ftsSVu2U1D6': {
-      return {
-        id: SubscriptionId.Main2MonthlyAuto,
-        storeId: product.store_identifier,
-        lookupKey: product.store_identifier,
-        checkoutId: product.store_identifier,
-        interval: 'monthly',
-        active: subscription?.gives_access ?? false,
-        autoRenewStatus: subscription?.auto_renewal_status ?? null,
-        platform: 'web',
-        provider: 'stripe',
-        price: 0,
-        storeSubscriptionIdentifier:
-          subscription?.store_subscription_identifier ?? null,
-        status: subscription?.status ?? null,
-        entitlements: subscription?.gives_access
-          ? subscription?.entitlements?.items ?? []
-          : [],
-        startedAt: subscription?.starts_at ?? null,
-        periodStart: subscription?.current_period_starts_at ?? null,
-        periodEnd: subscription?.current_period_ends_at ?? null,
-      }
-    }
-    case 'prod_R67gClEZy1cry2': {
-      return {
-        id: SubscriptionId.Main2AnnualAuto,
-        storeId: product.store_identifier,
-        lookupKey: product.store_identifier,
-        checkoutId: product.store_identifier,
-        interval: 'annual',
-        active: subscription?.gives_access ?? false,
-        autoRenewStatus: subscription?.auto_renewal_status ?? null,
-        platform: 'web',
-        provider: 'stripe',
-        price: 0,
-        storeSubscriptionIdentifier:
-          subscription?.store_subscription_identifier ?? null,
-        status: subscription?.status ?? null,
-        entitlements: subscription?.gives_access
-          ? subscription?.entitlements?.items ?? []
-          : [],
-        startedAt: subscription?.starts_at ?? null,
-        periodStart: subscription?.current_period_starts_at ?? null,
-        periodEnd: subscription?.current_period_ends_at ?? null,
-      }
-    }
-
-    /*
-     * Fallback
-     */
-    default: {
-      return undefined
-    }
-  }
-}
-
 export enum EntitlementId {
   Main0 = 'main:0',
   Main1 = 'main:1',
   Main2 = 'main:2',
+}
+
+export type Entitlement = {
+  id: EntitlementId
+}
+
+export type SubscriptionState = {
+  active: boolean
+  interval: 'monthly' | 'annual'
+  entitlements: {id: EntitlementId}[]
+  status:
+    | 'trialing'
+    | 'active'
+    | 'expired'
+    | 'in_grace_period'
+    | 'in_billing_retry'
+    | 'paused'
+    | 'unknown'
+    | 'incomplete'
+  renewalStatus:
+    | 'will_renew'
+    | 'will_not_renew'
+    | 'will_change_product'
+    | 'will_pause'
+    | 'requires_price_increase_consent'
+    | 'has_already_renewed'
+  startedAt: number
+  periodStart: number
+  periodEnd: number
+}
+
+export type Subscription =
+  | {
+      id: SubscriptionId
+      platform: 'android' | 'ios'
+      state?: SubscriptionState
+      store: {
+        type: 'play_store' | 'app_store'
+        productId: string
+        productLookupKey: string
+      }
+    }
+  | {
+      id: SubscriptionId
+      platform: 'web'
+      state: undefined
+      store: {
+        type: 'stripe'
+        productId: string
+        price: number
+        priceId: string
+        subscriptionId: undefined
+      }
+    }
+  | {
+      id: SubscriptionId
+      platform: 'web'
+      state: SubscriptionState
+      store: {
+        type: 'stripe'
+        productId: string
+        price: number
+        priceId: string
+        subscriptionId: string
+      }
+    }
+
+export function normalizeSubscriptions(
+  products: RevenueCatProduct[],
+  subscriptions: RevenueCatSubscription[],
+): Subscription[] {
+  // should always be subscriptions, but guard here
+  const subscriptionProducts = products.filter(
+    product => product.type === 'subscription',
+  )
+
+  const normalized: Subscription[] = []
+
+  for (const product of subscriptionProducts) {
+    /**
+     * Matches product ID and gives user access (is active)
+     * @see https://www.revenuecat.com/docs/api-v2#tag/Customer/operation/list-subscriptions
+     */
+    const subscription = subscriptions.find(
+      s => s.product_id === product.id && s.gives_access,
+    )
+
+    const id = normalizeSubscriptionId(product.store_identifier)
+    if (!id) continue
+    const platform = getSubscriptionPlatform(product.store_identifier)
+    const state = subscription ? getSubscriptionState(subscription) : undefined
+
+    if (platform === 'web') {
+      if (state) {
+        normalized.push({
+          id,
+          platform,
+          state,
+          store: {
+            type: 'stripe',
+            price: 0,
+            productId: product.store_identifier,
+            priceId: '',
+            subscriptionId: subscription?.store_subscription_identifier!,
+          },
+        })
+      } else {
+        normalized.push({
+          id,
+          platform,
+          state,
+          store: {
+            type: 'stripe',
+            productId: product.store_identifier,
+            price: 0,
+            priceId: '',
+            subscriptionId: undefined,
+          },
+        })
+      }
+    } else {
+      normalized.push({
+        id,
+        platform,
+        state,
+        store: {
+          type: 'play_store',
+          productId: product.store_identifier,
+          productLookupKey: getProductLookupKey(product.store_identifier),
+        },
+      })
+    }
+  }
+
+  return normalized
+}
+
+export function getSubscriptionState(
+  subscription: RevenueCatSubscription,
+): SubscriptionState {
+  return {
+    active: subscription.gives_access,
+    interval: subscription.store_subscription_identifier.includes('monthly')
+      ? 'monthly'
+      : 'annual',
+    status: subscription.status,
+    renewalStatus: subscription.auto_renewal_status,
+    entitlements: normalizeEntitlements(subscription.entitlements.items),
+    startedAt: subscription.starts_at,
+    periodStart: subscription.current_period_starts_at,
+    periodEnd: subscription.current_period_ends_at,
+  }
+}
+
+export function getSubscriptionPlatform(id: string): 'web' | 'android' | 'ios' {
+  switch (id) {
+    case 'prod_R2eNjNa6mB1Jlu':
+    case 'prod_R37Zg28EeQ9XAz':
+    case 'prod_R67eiEMuIf59w7':
+    case 'prod_R67fjfexQ7THQ0':
+    case 'prod_R67ftsSVu2U1D6':
+    case 'prod_R67gClEZy1cry2': {
+      return 'web'
+    }
+    case 'bsky_tier_0:monthly-auto':
+    case 'bsky_tier_0:annual-auto':
+    case 'bsky_tier_1:monthly-auto':
+    case 'bsky_tier_1:annual-auto':
+    case 'bsky_tier_2:monthly-auto':
+    case 'bsky_tier_2:annual-auto': {
+      return 'android'
+    }
+    default: {
+      return 'ios'
+    }
+  }
+}
+
+export function getProductLookupKey(id: string): string {
+  switch (id) {
+    case 'bsky_tier_0:monthly-auto':
+    case 'bsky_tier_0:annual-auto':
+      return 'bsky_tier_0'
+    case 'bsky_tier_1:monthly-auto':
+    case 'bsky_tier_1:annual-auto':
+      return 'bsky_tier_1'
+    case 'bsky_tier_2:monthly-auto':
+    case 'bsky_tier_2:annual-auto':
+      return 'bsky_tier_2'
+    default:
+      throw new Error(`Unknown product ID: ${id}`)
+  }
+}
+
+export function normalizeSubscriptionId(
+  id: string,
+): SubscriptionId | undefined {
+  switch (id) {
+    case 'bsky_tier_0:monthly-auto': {
+      return SubscriptionId.Main0MonthlyAuto
+    }
+    case 'bsky_tier_0:annual-auto': {
+      return SubscriptionId.Main0AnnualAuto
+    }
+    case 'bsky_tier_1:monthly-auto': {
+      return SubscriptionId.Main1MonthlyAuto
+    }
+    case 'bsky_tier_1:annual-auto': {
+      return SubscriptionId.Main1AnnualAuto
+    }
+    case 'bsky_tier_2:monthly-auto': {
+      return SubscriptionId.Main2MonthlyAuto
+    }
+    case 'bsky_tier_2:annual-auto': {
+      return SubscriptionId.Main2AnnualAuto
+    }
+    case 'prod_R2eNjNa6mB1Jlu': {
+      return SubscriptionId.Main0MonthlyAuto
+    }
+    case 'prod_R37Zg28EeQ9XAz': {
+      return SubscriptionId.Main0AnnualAuto
+    }
+    case 'prod_R67eiEMuIf59w7': {
+      return SubscriptionId.Main1MonthlyAuto
+    }
+    case 'prod_R67fjfexQ7THQ0': {
+      return SubscriptionId.Main1AnnualAuto
+    }
+    case 'prod_R67ftsSVu2U1D6': {
+      return SubscriptionId.Main2MonthlyAuto
+    }
+    case 'prod_R67gClEZy1cry2': {
+      return SubscriptionId.Main2AnnualAuto
+    }
+    default: {
+      return undefined
+    }
+  }
 }
 
 export function normalizeEntitlements(entitlements: any[]) {
@@ -498,7 +355,6 @@ export function normalizeEntitlements(entitlements: any[]) {
 
     return {
       id,
-      products: entitlement.products.items.map((p: any) => p.store_identifier),
     }
   })
 }

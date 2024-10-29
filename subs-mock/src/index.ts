@@ -5,9 +5,10 @@ import ky, {KyInstance} from 'ky'
 import Stripe from 'stripe'
 
 import {
-  getMainSubscriptionProducts,
   normalizeEntitlements,
+  normalizeSubscriptions,
   RevenueCatSubscription,
+  Subscription,
 } from './util'
 
 type Bindings = {
@@ -74,11 +75,10 @@ export default new Hono<{Bindings: Bindings; Variables: Variables}>()
       throw new HTTPException(404, {message: `Offering not found`})
     }
 
-    const products = offering.packages.items
+    const offeringProducts = offering.packages.items
       .flatMap((i: any) => i.products.items)
       .map((i: any) => i.product)
-
-    let subscriptions: any[] = []
+    let userSubscriptions: any[] = []
 
     try {
       const {items} = await rc
@@ -86,23 +86,26 @@ export default new Hono<{Bindings: Bindings; Variables: Variables}>()
           items: RevenueCatSubscription[]
         }>(`customers/${user}/subscriptions`)
         .json()
-      subscriptions = items
+      userSubscriptions = items
     } catch (e) {}
 
-    let normalizedProducts = getMainSubscriptionProducts(
-      products,
-      subscriptions,
+    let normalizedSubscriptions = normalizeSubscriptions(
+      offeringProducts,
+      userSubscriptions,
     )
-    const activeProducts = normalizedProducts.filter(p => p.active)
+    let activeSubscriptions = normalizedSubscriptions.filter(
+      p => p.state?.active,
+    )
+    let platformSubscriptions = normalizedSubscriptions.filter(
+      p => p.platform === platform,
+    )
 
-    if (platform === 'web') {
+    async function decorateWebProducts(subscriptions: Subscription[]) {
       const stripe = c.get('stripe')
 
-      normalizedProducts = normalizedProducts.filter(
-        p => p.provider === 'stripe',
-      )
-
-      const ids = normalizedProducts.map(p => p.storeId)
+      const ids = subscriptions
+        .filter(p => p.platform === 'web')
+        .map(p => p.store.productId)
       const {data} = await stripe.products.list({ids})
       const prices = await Promise.all(
         data.map(p => {
@@ -116,25 +119,37 @@ export default new Hono<{Bindings: Bindings; Variables: Variables}>()
         }),
       )
 
-      for (const product of normalizedProducts) {
-        if (product.provider !== 'stripe') continue
-        for (const price of prices) {
-          if (!price) continue
-          if (price.product === product.storeId) {
-            product.price = price.unit_amount ?? undefined
-            product.checkoutId = price.id
+      for (const price of prices) {
+        if (!price) continue
+
+        // mutates for now
+        for (const sub of subscriptions) {
+          if (sub.platform !== 'web') continue
+
+          if (price.product === sub.store.productId) {
+            sub.store.price = price.unit_amount ?? 0
+            sub.store.priceId = price.id
             break
           }
         }
       }
-    } else if (platform === 'ios') {
-    } else if (platform === 'android') {
-      normalizedProducts = normalizedProducts.filter(
-        p => p.provider === 'play_store',
-      )
+
+      return subscriptions
     }
 
-    return c.json({active: activeProducts, available: normalizedProducts})
+    if (platform === 'web') {
+      activeSubscriptions = await decorateWebProducts(activeSubscriptions)
+      platformSubscriptions = await decorateWebProducts(platformSubscriptions)
+    } else if (platform === 'ios') {
+      activeSubscriptions = await decorateWebProducts(activeSubscriptions)
+    } else if (platform === 'android') {
+      activeSubscriptions = await decorateWebProducts(activeSubscriptions)
+    }
+
+    return c.json({
+      active: activeSubscriptions,
+      available: platformSubscriptions,
+    })
   })
 
   /**
