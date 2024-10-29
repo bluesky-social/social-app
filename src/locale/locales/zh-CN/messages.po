@@ -2171,7 +2171,7 @@ msgstr "仅启用这个来源"
 #: src/screens/Messages/Settings.tsx:127
 #: src/screens/Moderation/index.tsx:354
 msgid "Enabled"
-msgstr "已启用"
+msgstr "启用"
 
 #: src/screens/Profile/Sections/Feed.tsx:114
 msgid "End of feed"
