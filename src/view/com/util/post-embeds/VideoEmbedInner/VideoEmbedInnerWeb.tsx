@@ -197,9 +197,6 @@ function useHLS({
     hls.attachMedia(videoRef.current)
     hls.loadSource(playlist)
 
-    // initial value, later on it's managed by Controls
-    hls.autoLevelCapping = 0
-
     // manually loop, so if we've flushed the first buffer it doesn't get confused
     const abortController = new AbortController()
     const {signal} = abortController
