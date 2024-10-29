@@ -28,6 +28,14 @@ export function DesktopFeeds() {
   if (!pinnedFeedInfos) {
     return null
   }
+
+  const feedsDefault = {
+    ["Following"]: _(msg`Following`),
+    // ["Discover"]: _(msg`Discover`),
+    // ["What's Hot Classic"]: _(msg`What's Hot Classic`),
+    // ["Popular With Friends"]: _(msg`Popular With Friends`),
+  } as any;
+
   return (
     <View style={[styles.container, pal.view]}>
       {pinnedFeedInfos.map(feedInfo => {
@@ -36,7 +44,7 @@ export function DesktopFeeds() {
           <FeedItem
             key={feed}
             href={'/?' + new URLSearchParams([['feed', feed]])}
-            title={feedInfo.displayName}
+            title={feedsDefault[feedInfo.displayName] ?? feedInfo.displayName}
             current={route.name === 'Home' && feed === selectedFeed}
             onPress={() => {
               setSelectedFeed(feed)
