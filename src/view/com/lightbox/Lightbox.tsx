@@ -9,12 +9,7 @@ import {useLingui} from '@lingui/react'
 import {saveImageToMediaLibrary, shareImageModal} from '#/lib/media/manip'
 import {colors, s} from '#/lib/styles'
 import {isIOS} from '#/platform/detection'
-import {
-  ImagesLightbox,
-  ProfileImageLightbox,
-  useLightbox,
-  useLightboxControls,
-} from '#/state/lightbox'
+import {useLightbox, useLightboxControls} from '#/state/lightbox'
 import {ScrollView} from '#/view/com/util/Views'
 import {Button} from '../util/forms/Button'
 import {Text} from '../util/text/Text'
@@ -32,19 +27,21 @@ export function Lightbox() {
 
   if (!activeLightbox) {
     return null
-  } else if (activeLightbox.name === 'profile-image') {
-    const opts = activeLightbox as ProfileImageLightbox
+  } else if (activeLightbox.type === 'profile-image') {
+    const opts = activeLightbox
     return (
       <ImageView
-        images={[{uri: opts.profile.avatar || ''}]}
+        images={[
+          {uri: opts.profile.avatar || '', thumbUri: opts.profile.avatar || ''},
+        ]}
         initialImageIndex={0}
         visible
         onRequestClose={onClose}
         FooterComponent={LightboxFooter}
       />
     )
-  } else if (activeLightbox.name === 'images') {
-    const opts = activeLightbox as ImagesLightbox
+  } else if (activeLightbox.type === 'images') {
+    const opts = activeLightbox
     return (
       <ImageView
         images={opts.images.map(img => ({...img}))}
@@ -107,12 +104,12 @@ function LightboxFooter({imageIndex}: {imageIndex: number}) {
 
   let altText = ''
   let uri = ''
-  if (lightbox.name === 'images') {
-    const opts = lightbox as ImagesLightbox
+  if (lightbox.type === 'images') {
+    const opts = lightbox
     uri = opts.images[imageIndex].uri
     altText = opts.images[imageIndex].alt || ''
-  } else if (lightbox.name === 'profile-image') {
-    const opts = lightbox as ProfileImageLightbox
+  } else if (lightbox.type === 'profile-image') {
+    const opts = lightbox
     uri = opts.profile.avatar || ''
   }
 

@@ -18,17 +18,17 @@ import {
 } from '@tanstack/react-query'
 import chunk from 'lodash.chunk'
 
-import {until} from 'lib/async/until'
-import {createStarterPackList} from 'lib/generate-starterpack'
+import {until} from '#/lib/async/until'
+import {createStarterPackList} from '#/lib/generate-starterpack'
 import {
   createStarterPackUri,
   httpStarterPackUriToAtUri,
   parseStarterPackUri,
-} from 'lib/strings/starter-pack'
-import {invalidateActorStarterPacksQuery} from 'state/queries/actor-starter-packs'
-import {STALE} from 'state/queries/index'
-import {invalidateListMembersQuery} from 'state/queries/list-members'
-import {useAgent} from 'state/session'
+} from '#/lib/strings/starter-pack'
+import {invalidateActorStarterPacksQuery} from '#/state/queries/actor-starter-packs'
+import {STALE} from '#/state/queries/index'
+import {invalidateListMembersQuery} from '#/state/queries/list-members'
+import {useAgent} from '#/state/session'
 
 const RQKEY_ROOT = 'starter-pack'
 const RQKEY = ({

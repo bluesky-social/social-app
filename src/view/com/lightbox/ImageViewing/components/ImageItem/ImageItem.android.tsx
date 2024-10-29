@@ -34,7 +34,6 @@ const SCREEN = {
 const MIN_DOUBLE_TAP_SCALE = 2
 const MAX_ORIGINAL_IMAGE_ZOOM = 2
 
-const AnimatedImage = Animated.createAnimatedComponent(Image)
 const initialTransform = createTransform()
 
 type Props = {
@@ -53,7 +52,6 @@ const ImageItem = ({
   isScrollViewBeingDragged,
 }: Props) => {
   const [isScaled, setIsScaled] = useState(false)
-  const [isLoaded, setIsLoaded] = useState(false)
   const imageDimensions = useImageDimensions(imageSrc)
   const committedTransform = useSharedValue(initialTransform)
   const panTranslation = useSharedValue({x: 0, y: 0})
@@ -313,20 +311,23 @@ const ImageItem = ({
         singleTap,
       )
 
-  const isLoading = !isLoaded || !imageDimensions
   return (
-    <Animated.View ref={containerRef} style={styles.container}>
-      {isLoading && (
-        <ActivityIndicator size="small" color="#FFF" style={styles.loading} />
-      )}
+    <Animated.View
+      ref={containerRef}
+      // Necessary to make opacity work for both children together.
+      renderToHardwareTextureAndroid
+      style={[styles.container, animatedStyle]}>
+      <ActivityIndicator size="small" color="#FFF" style={styles.loading} />
       <GestureDetector gesture={composedGesture}>
-        <AnimatedImage
+        <Image
           contentFit="contain"
           source={{uri: imageSrc.uri}}
-          style={[styles.image, animatedStyle]}
+          placeholderContentFit="contain"
+          placeholder={{uri: imageSrc.thumbUri}}
+          style={styles.image}
           accessibilityLabel={imageSrc.alt}
           accessibilityHint=""
-          onLoad={() => setIsLoaded(true)}
+          accessibilityIgnoresInvertColors
           cachePolicy="memory"
         />
       </GestureDetector>

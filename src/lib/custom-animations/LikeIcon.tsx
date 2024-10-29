@@ -6,7 +6,7 @@ import Animated, {
   useReducedMotion,
 } from 'react-native-reanimated'
 
-import {s} from 'lib/styles'
+import {s} from '#/lib/styles'
 import {useTheme} from '#/alf'
 import {
   Heart2_Filled_Stroke2_Corner0_Rounded as HeartIconFilled,

@@ -9,15 +9,14 @@
 // https://github.com/jobtoday/react-native-image-viewing
 
 import React, {ComponentType, useCallback, useMemo, useState} from 'react'
-import {StyleSheet, View, Platform} from 'react-native'
-
-import ImageItem from './components/ImageItem/ImageItem'
-import ImageDefaultHeader from './components/ImageDefaultHeader'
-
-import {ImageSource} from './@types'
+import {Platform, StyleSheet, View} from 'react-native'
+import PagerView from 'react-native-pager-view'
 import Animated, {useAnimatedStyle, withSpring} from 'react-native-reanimated'
 import {Edge, SafeAreaView} from 'react-native-safe-area-context'
-import PagerView from 'react-native-pager-view'
+
+import {ImageSource} from './@types'
+import ImageDefaultHeader from './components/ImageDefaultHeader'
+import ImageItem from './components/ImageItem/ImageItem'
 
 type Props = {
   images: ImageSource[]

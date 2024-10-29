@@ -7,9 +7,8 @@
  */
 
 import React, {useState} from 'react'
-
-import {Dimensions, StyleSheet} from 'react-native'
-import {Image} from 'expo-image'
+import {ActivityIndicator, Dimensions, StyleSheet} from 'react-native'
+import {Gesture, GestureDetector} from 'react-native-gesture-handler'
 import Animated, {
   interpolate,
   runOnJS,
@@ -17,13 +16,11 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated'
+import {Image} from 'expo-image'
+
 import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
-import {Gesture, GestureDetector} from 'react-native-gesture-handler'
-
+import {Dimensions as ImageDimensions, ImageSource} from '../../@types'
 import useImageDimensions from '../../hooks/useImageDimensions'
-
-import {ImageSource, Dimensions as ImageDimensions} from '../../@types'
-import {ImageLoading} from './ImageLoading'
 
 const SWIPE_CLOSE_OFFSET = 75
 const SWIPE_CLOSE_VELOCITY = 1
@@ -40,8 +37,6 @@ type Props = {
   showControls: boolean
 }
 
-const AnimatedImage = Animated.createAnimatedComponent(Image)
-
 const ImageItem = ({
   imageSrc,
   onTap,
@@ -51,7 +46,6 @@ const ImageItem = ({
 }: Props) => {
   const scrollViewRef = useAnimatedRef<Animated.ScrollView>()
   const translationY = useSharedValue(0)
-  const [loaded, setLoaded] = useState(false)
   const [scaled, setScaled] = useState(false)
   const imageDimensions = useImageDimensions(imageSrc)
   const maxZoomScale = imageDimensions
@@ -141,18 +135,21 @@ const ImageItem = ({
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
         maximumZoomScale={maxZoomScale}
-        contentContainerStyle={styles.imageScrollContainer}
         onScroll={scrollHandler}>
-        {(!loaded || !imageDimensions) && <ImageLoading />}
-        <AnimatedImage
-          contentFit="contain"
-          source={{uri: imageSrc.uri}}
-          style={[styles.image, animatedStyle]}
-          accessibilityLabel={imageSrc.alt}
-          accessibilityHint=""
-          onLoad={() => setLoaded(true)}
-          enableLiveTextInteraction={showControls && !scaled}
-        />
+        <Animated.View style={[styles.imageScrollContainer, animatedStyle]}>
+          <ActivityIndicator size="small" color="#FFF" style={styles.loading} />
+          <Image
+            contentFit="contain"
+            source={{uri: imageSrc.uri}}
+            placeholderContentFit="contain"
+            placeholder={{uri: imageSrc.thumbUri}}
+            style={styles.image}
+            accessibilityLabel={imageSrc.alt}
+            accessibilityHint=""
+            enableLiveTextInteraction={showControls && !scaled}
+            accessibilityIgnoresInvertColors
+          />
+        </Animated.View>
       </Animated.ScrollView>
     </GestureDetector>
   )
@@ -169,6 +166,13 @@ const styles = StyleSheet.create({
   image: {
     width: SCREEN.width,
     height: SCREEN.height,
+  },
+  loading: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
   },
 })
 

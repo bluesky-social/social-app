@@ -1,4 +1,4 @@
-import {useMemo, useState, useEffect} from 'react'
+import {useEffect, useMemo, useState} from 'react'
 import {EventArg, useNavigation} from '@react-navigation/core'
 
 if ('scrollRestoration' in history) {

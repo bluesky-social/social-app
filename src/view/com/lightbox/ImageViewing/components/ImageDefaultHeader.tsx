@@ -8,8 +8,8 @@
 import React from 'react'
 import {
   SafeAreaView,
-  TouchableOpacity,
   StyleSheet,
+  TouchableOpacity,
   ViewStyle,
 } from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'

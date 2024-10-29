@@ -63,7 +63,7 @@ export function Card({
 
   return (
     <View style={[a.w_full, a.gap_md]}>
-      <View style={[a.flex_row, a.gap_sm]}>
+      <View style={[a.flex_row, a.gap_sm, a.w_full]}>
         {!noIcon ? <StarterPack width={40} gradient="sky" /> : null}
         <View style={[a.flex_1]}>
           <Text

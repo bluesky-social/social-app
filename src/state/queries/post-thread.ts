@@ -11,13 +11,13 @@ import {
 import {QueryClient, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
+import {findAllPostsInQueryData as findAllPostsInQuoteQueryData} from '#/state/queries/post-quotes'
 import {UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
-import {useAgent} from '#/state/session'
-import {findAllPostsInQueryData as findAllPostsInQuoteQueryData} from 'state/queries/post-quotes'
 import {
   findAllPostsInQueryData as findAllPostsInSearchQueryData,
   findAllProfilesInQueryData as findAllProfilesInSearchQueryData,
-} from 'state/queries/search-posts'
+} from '#/state/queries/search-posts'
+import {useAgent} from '#/state/session'
 import {
   findAllPostsInQueryData as findAllPostsInNotifsQueryData,
   findAllProfilesInQueryData as findAllProfilesInNotifsQueryData,
