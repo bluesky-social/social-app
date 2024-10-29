@@ -322,6 +322,8 @@ const ImageItem = ({
         <Image
           contentFit="contain"
           source={{uri: imageSrc.uri}}
+          placeholderContentFit="contain"
+          placeholder={{uri: imageSrc.thumbUri}}
           style={styles.image}
           accessibilityLabel={imageSrc.alt}
           accessibilityHint=""

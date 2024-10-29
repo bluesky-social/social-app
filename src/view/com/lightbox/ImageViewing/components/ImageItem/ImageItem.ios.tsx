@@ -19,7 +19,7 @@ import Animated, {
 import {Image} from 'expo-image'
 
 import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
-import {Dimensions as ImageDimensions,ImageSource} from '../../@types'
+import {Dimensions as ImageDimensions, ImageSource} from '../../@types'
 import useImageDimensions from '../../hooks/useImageDimensions'
 
 const SWIPE_CLOSE_OFFSET = 75
@@ -141,6 +141,8 @@ const ImageItem = ({
           <Image
             contentFit="contain"
             source={{uri: imageSrc.uri}}
+            placeholderContentFit="contain"
+            placeholder={{uri: imageSrc.thumbUri}}
             style={styles.image}
             accessibilityLabel={imageSrc.alt}
             accessibilityHint=""
