@@ -8,6 +8,7 @@
 
 import {useEffect, useState} from 'react'
 import {Image, ImageURISource} from 'react-native'
+
 import {Dimensions, ImageSource} from '../@types'
 
 const CACHE_SIZE = 50
@@ -36,8 +37,9 @@ const imageDimensionsCache = createCache(CACHE_SIZE)
 const useImageDimensions = (image: ImageSource): Dimensions | null => {
   const [dimensions, setDimensions] = useState<Dimensions | null>(null)
 
-  // eslint-disable-next-line @typescript-eslint/no-shadow
-  const getImageDimensions = (image: ImageSource): Promise<Dimensions> => {
+  const getImageDimensions = (
+    image: ImageSource,
+  ): Promise<Dimensions | null> => {
     return new Promise(resolve => {
       if (image.uri) {
         const source = image as ImageURISource
@@ -51,16 +53,20 @@ const useImageDimensions = (image: ImageSource): Dimensions | null => {
             source.uri,
             source.headers,
             (width: number, height: number) => {
-              imageDimensionsCache.set(cacheKey, {width, height})
-              resolve({width, height})
+              if (width > 0 && height > 0) {
+                imageDimensionsCache.set(cacheKey, {width, height})
+                resolve({width, height})
+              } else {
+                resolve(null)
+              }
             },
             () => {
-              resolve({width: 0, height: 0})
+              resolve(null)
             },
           )
         }
       } else {
-        resolve({width: 0, height: 0})
+        resolve(null)
       }
     })
   }

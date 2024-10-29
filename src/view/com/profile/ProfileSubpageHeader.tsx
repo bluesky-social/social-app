@@ -72,7 +72,7 @@ export function ProfileSubpageHeader({
     ) {
       openLightbox({
         type: 'images',
-        images: [{uri: avatar}],
+        images: [{uri: avatar, thumbUri: avatar}],
         index: 0,
       })
     }
