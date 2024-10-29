@@ -1,8 +1,8 @@
 import {useQuery} from '@tanstack/react-query'
 
-import {resolveShortLink} from 'lib/link-meta/resolve-short-link'
-import {parseStarterPackUri} from 'lib/strings/starter-pack'
-import {STALE} from 'state/queries/index'
+import {resolveShortLink} from '#/lib/link-meta/resolve-short-link'
+import {parseStarterPackUri} from '#/lib/strings/starter-pack'
+import {STALE} from '#/state/queries/index'
 
 const ROOT_URI = 'https://go.bsky.app/'
 

@@ -12,9 +12,9 @@ import {Trans} from '@lingui/macro'
 import {
   ScaleAndFadeIn,
   ScaleAndFadeOut,
-} from 'lib/custom-animations/ScaleAndFade'
-import {useHaptics} from 'lib/haptics'
-import {isAndroid, isIOS, isWeb} from 'platform/detection'
+} from '#/lib/custom-animations/ScaleAndFade'
+import {useHaptics} from '#/lib/haptics'
+import {isAndroid, isIOS, isWeb} from '#/platform/detection'
 import {atoms as a, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
 
