@@ -27,7 +27,7 @@ export function Lightbox() {
 
   if (!activeLightbox) {
     return null
-  } else if (activeLightbox.name === 'profile-image') {
+  } else if (activeLightbox.type === 'profile-image') {
     const opts = activeLightbox
     return (
       <ImageView
@@ -38,7 +38,7 @@ export function Lightbox() {
         FooterComponent={LightboxFooter}
       />
     )
-  } else if (activeLightbox.name === 'images') {
+  } else if (activeLightbox.type === 'images') {
     const opts = activeLightbox
     return (
       <ImageView
@@ -102,11 +102,11 @@ function LightboxFooter({imageIndex}: {imageIndex: number}) {
 
   let altText = ''
   let uri = ''
-  if (lightbox.name === 'images') {
+  if (lightbox.type === 'images') {
     const opts = lightbox
     uri = opts.images[imageIndex].uri
     altText = opts.images[imageIndex].alt || ''
-  } else if (lightbox.name === 'profile-image') {
+  } else if (lightbox.type === 'profile-image') {
     const opts = lightbox
     uri = opts.profile.avatar || ''
   }

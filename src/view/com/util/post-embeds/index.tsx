@@ -139,7 +139,7 @@ export function PostEmbeds({
       }))
       const _openLightbox = (index: number) => {
         openLightbox({
-          name: 'images',
+          type: 'images',
           images: items,
           index,
         })

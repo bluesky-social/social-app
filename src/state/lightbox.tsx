@@ -4,7 +4,7 @@ import {AppBskyActorDefs} from '@atproto/api'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 
 type ProfileImageLightbox = {
-  name: 'profile-image'
+  type: 'profile-image'
   profile: AppBskyActorDefs.ProfileViewDetailed
 }
 
@@ -14,7 +14,7 @@ type ImagesLightboxItem = {
 }
 
 type ImagesLightbox = {
-  name: 'images'
+  type: 'images'
   images: ImagesLightboxItem[]
   index: number
 }
