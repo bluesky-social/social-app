@@ -12,7 +12,6 @@ import * as ChangeEmailModal from './ChangeEmail'
 import * as ChangeHandleModal from './ChangeHandle'
 import * as ChangePasswordModal from './ChangePassword'
 import * as CreateOrEditListModal from './CreateOrEditList'
-import * as CropImageModal from './CropImage.web'
 import * as DeleteAccountModal from './DeleteAccount'
 import * as InviteCodesModal from './InviteCodes'
 import * as ContentLanguagesSettingsModal from './lang-settings/ContentLanguagesSettings'
@@ -50,9 +49,6 @@ function Modal({modal}: {modal: ModalIface}) {
   }
 
   const onPressMask = () => {
-    if (modal.name === 'crop-image') {
-      return // dont close on mask presses during crop
-    }
     closeModal()
   }
   const onInnerPress = () => {
@@ -67,8 +63,6 @@ function Modal({modal}: {modal: ModalIface}) {
     element = <UserAddRemoveLists.Component {...modal} />
   } else if (modal.name === 'list-add-remove-users') {
     element = <ListAddUserModal.Component {...modal} />
-  } else if (modal.name === 'crop-image') {
-    element = <CropImageModal.Component {...modal} />
   } else if (modal.name === 'delete-account') {
     element = <DeleteAccountModal.Component />
   } else if (modal.name === 'change-handle') {
