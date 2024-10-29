@@ -42,9 +42,9 @@ module.exports = {
     ],
     'bsky-internal/use-exact-imports': 'error',
     'bsky-internal/use-typed-gates': 'error',
-    'bsky-internal/use-prefixed-imports': 'warn',
+    'bsky-internal/use-prefixed-imports': 'error',
     'simple-import-sort/imports': [
-      'warn',
+      'error',
       {
         groups: [
           // Side effect imports.
@@ -78,7 +78,7 @@ module.exports = {
         ],
       },
     ],
-    'simple-import-sort/exports': 'warn',
+    'simple-import-sort/exports': 'error',
     // TODO: Reenable when we figure out why it gets stuck on CI.
     // 'react-compiler/react-compiler': 'error',
     'no-restricted-imports': [
