@@ -226,7 +226,7 @@ export function normalizeSubscriptions(
         interval,
         state,
         store: {
-          type: 'play_store',
+          type: platform === 'android' ? 'play_store' : 'app_store',
           productId: product.store_identifier,
           productLookupKey: getProductLookupKey(product.store_identifier),
         },
@@ -267,6 +267,7 @@ export function getSubscriptionState(
 }
 
 export function getSubscriptionPlatform(id: string): 'web' | 'android' | 'ios' {
+  console.log(id)
   switch (id) {
     case 'prod_R2eNjNa6mB1Jlu':
     case 'prod_R37Zg28EeQ9XAz':
@@ -284,8 +285,16 @@ export function getSubscriptionPlatform(id: string): 'web' | 'android' | 'ios' {
     case 'bsky_tier_2:annual-auto': {
       return 'android'
     }
-    default: {
+    case 'bsky_tier_0_monthly':
+    case 'bsky_tier_0_annual':
+    case 'bsky_tier_1_monthly':
+    case 'bsky_tier_1_annual':
+    case 'bsky_tier_2_monthly':
+    case 'bsky_tier_2_annual': {
       return 'ios'
+    }
+    default: {
+      throw new Error(`Unknown product ID: ${id}`)
     }
   }
 }
@@ -302,7 +311,7 @@ export function getProductLookupKey(id: string): string {
     case 'bsky_tier_2:annual-auto':
       return 'bsky_tier_2'
     default:
-      throw new Error(`Unknown product ID: ${id}`)
+      return id
   }
 }
 
@@ -310,42 +319,30 @@ export function normalizeSubscriptionId(
   id: string,
 ): SubscriptionId | undefined {
   switch (id) {
-    case 'bsky_tier_0:monthly-auto': {
+    case 'bsky_tier_0_monthly':
+    case 'bsky_tier_0:monthly-auto':
+    case 'prod_R2eNjNa6mB1Jlu':
       return SubscriptionId.Main0MonthlyAuto
-    }
-    case 'bsky_tier_0:annual-auto': {
+    case 'bsky_tier_0_annual':
+    case 'bsky_tier_0:annual-auto':
+    case 'prod_R37Zg28EeQ9XAz':
       return SubscriptionId.Main0AnnualAuto
-    }
-    case 'bsky_tier_1:monthly-auto': {
+    case 'bsky_tier_1_monthly':
+    case 'bsky_tier_1:monthly-auto':
+    case 'prod_R67eiEMuIf59w7':
       return SubscriptionId.Main1MonthlyAuto
-    }
-    case 'bsky_tier_1:annual-auto': {
+    case 'bsky_tier_1_annual':
+    case 'bsky_tier_1:annual-auto':
+    case 'prod_R67fjfexQ7THQ0':
       return SubscriptionId.Main1AnnualAuto
-    }
-    case 'bsky_tier_2:monthly-auto': {
+    case 'bsky_tier_2_monthly':
+    case 'bsky_tier_2:monthly-auto':
+    case 'prod_R67ftsSVu2U1D6':
       return SubscriptionId.Main2MonthlyAuto
-    }
-    case 'bsky_tier_2:annual-auto': {
+    case 'bsky_tier_2_annual':
+    case 'bsky_tier_2:annual-auto':
+    case 'prod_R67gClEZy1cry2':
       return SubscriptionId.Main2AnnualAuto
-    }
-    case 'prod_R2eNjNa6mB1Jlu': {
-      return SubscriptionId.Main0MonthlyAuto
-    }
-    case 'prod_R37Zg28EeQ9XAz': {
-      return SubscriptionId.Main0AnnualAuto
-    }
-    case 'prod_R67eiEMuIf59w7': {
-      return SubscriptionId.Main1MonthlyAuto
-    }
-    case 'prod_R67fjfexQ7THQ0': {
-      return SubscriptionId.Main1AnnualAuto
-    }
-    case 'prod_R67ftsSVu2U1D6': {
-      return SubscriptionId.Main2MonthlyAuto
-    }
-    case 'prod_R67gClEZy1cry2': {
-      return SubscriptionId.Main2AnnualAuto
-    }
     default: {
       return undefined
     }
