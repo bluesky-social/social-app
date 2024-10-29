@@ -1,10 +1,14 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
+import {isTouchDevice} from '#/lib/browser'
 import {useTheme} from '#/alf'
 
 export function SubtleWebHover({hover}: {hover: boolean}) {
   const t = useTheme()
+  if (isTouchDevice) {
+    return null
+  }
   let opacity: number
   switch (t.name) {
     case 'dark':
