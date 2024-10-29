@@ -51,6 +51,7 @@ import {Link as NewLink} from '#/components/Link'
 import * as MediaPreview from '#/components/MediaPreview'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {Notification as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
+import {SubtleWebHover} from '#/components/SubtleWebHover'
 import {FeedSourceCard} from '../feeds/FeedSourceCard'
 import {Post} from '../post/Post'
 import {Link, TextLink} from '../util/Link'
@@ -128,6 +129,8 @@ let FeedItem = ({
       })) || []),
     ]
   }, [item, moderationOpts])
+
+  const [hover, setHover] = React.useState(false)
 
   if (item.subjectUri && !item.subject && item.type !== 'feedgen-like') {
     // don't render anything if the target post was deleted or unfindable
@@ -285,7 +288,14 @@ let FeedItem = ({
           onToggleAuthorsExpanded()
         }
       }}
-      onBeforePress={onBeforePress}>
+      onBeforePress={onBeforePress}
+      onPointerEnter={() => {
+        setHover(true)
+      }}
+      onPointerLeave={() => {
+        setHover(false)
+      }}>
+      <SubtleWebHover hover={hover} />
       <View style={[styles.layoutIcon, a.pr_sm]}>
         {/* TODO: Prevent conditional rendering and move toward composable
         notifications for clearer accessibility labeling */}
