@@ -19,6 +19,7 @@ import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {UserBanner} from '#/view/com/util/UserBanner'
 import {atoms as a, useTheme} from '#/alf'
+import {createThemes} from '#/alf/themes'
 import {LabelsOnMe} from '#/components/moderation/LabelsOnMe'
 import {ProfileHeaderAlerts} from '#/components/moderation/ProfileHeaderAlerts'
 import {GrowableAvatar} from './GrowableAvatar'
@@ -95,8 +96,18 @@ let ProfileHeaderShell = ({
     [currentAccount, profile],
   )
 
+  const theme = createThemes({
+    hues: {
+      primary: 200,
+      negative: 200,
+      positive: 200,
+    },
+  })
+
   return (
-    <View pointerEvents={isIOS ? 'auto' : 'box-none'}>
+    <View
+      pointerEvents={isIOS ? 'auto' : 'box-none'}
+      style={[{backgroundColor: theme.light.atoms.bg.backgroundColor}]}>
       <View
         pointerEvents={isIOS ? 'auto' : 'box-none'}
         style={[a.relative, {height: 150}]}>
