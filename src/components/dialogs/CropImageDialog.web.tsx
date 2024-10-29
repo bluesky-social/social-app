@@ -8,7 +8,7 @@ import ReactCrop, {PercentCrop} from 'react-image-crop'
 
 import {CropperOptions} from '#/lib/media/types'
 import {getDataUriSize} from '#/lib/media/util'
-import {atoms as a} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 
@@ -97,6 +97,7 @@ function DialogInner({
   const {_} = useLingui()
   const imageRef = React.useRef<HTMLImageElement>(null)
   const [crop, setCrop] = React.useState<PercentCrop>()
+  const t = useTheme()
 
   if (!opts) {
     control.close()
@@ -148,16 +149,18 @@ function DialogInner({
     <Dialog.Inner label={_(msg`Crop image`)}>
       <Dialog.Close />
       <View style={[a.gap_xl]}>
-        <Text style={[a.text_2xl, a.font_bold, a.leading_tight, a.pb_sm]}>
+        <Text
+          style={[a.text_2xl, a.font_bold, a.leading_tight, a.mb_sm, a.mt_sm]}>
           <Trans>Edit image</Trans>
         </Text>
         <View
           style={[
             a.mx_auto,
-            {borderWidth: 1},
+            a.border,
             a.overflow_hidden,
             a.rounded_xs,
             a.align_center,
+            t.atoms.border_contrast_medium,
           ]}>
           <ReactCrop
             aspect={aspect}
