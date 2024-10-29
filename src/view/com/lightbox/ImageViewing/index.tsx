@@ -18,7 +18,11 @@ import {
 } from 'react-native'
 import PagerView from 'react-native-pager-view'
 import {MeasuredDimensions} from 'react-native-reanimated'
-import Animated, {useAnimatedStyle, withSpring} from 'react-native-reanimated'
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+} from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {Edge, SafeAreaView} from 'react-native-safe-area-context'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
@@ -62,6 +66,7 @@ function ImageViewing({
   const [imageIndex, setImageIndex] = useState(initialImageIndex)
   const [showControls, setShowControls] = useState(true)
 
+  const dismissSwipeTranslateY = useSharedValue(0)
   const animatedHeaderStyle = useAnimatedStyle(() => ({
     pointerEvents: showControls ? 'auto' : 'none',
     opacity: withClampedSpring(showControls ? 1 : 0),
@@ -134,6 +139,7 @@ function ImageViewing({
                 onRequestClose={onRequestClose}
                 isScrollViewBeingDragged={isDragging}
                 showControls={showControls}
+                dismissSwipeTranslateY={dismissSwipeTranslateY}
               />
             </View>
           ))}

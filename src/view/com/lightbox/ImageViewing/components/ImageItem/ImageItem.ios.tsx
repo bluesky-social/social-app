@@ -12,9 +12,9 @@ import {Gesture, GestureDetector} from 'react-native-gesture-handler'
 import Animated, {
   interpolate,
   runOnJS,
+  SharedValue,
   useAnimatedRef,
   useAnimatedStyle,
-  useSharedValue,
 } from 'react-native-reanimated'
 import {Image} from 'expo-image'
 
@@ -35,6 +35,7 @@ type Props = {
   onZoom: (scaled: boolean) => void
   isScrollViewBeingDragged: boolean
   showControls: boolean
+  dismissSwipeTranslateY: SharedValue<number>
 }
 
 const ImageItem = ({
@@ -43,9 +44,10 @@ const ImageItem = ({
   onZoom,
   onRequestClose,
   showControls,
+  dismissSwipeTranslateY,
 }: Props) => {
   const scrollViewRef = useAnimatedRef<Animated.ScrollView>()
-  const translationY = useSharedValue(0)
+
   const [scaled, setScaled] = useState(false)
   const [imageAspect, imageDimensions] = useImageDimensions({
     src: imageSrc.uri,
@@ -58,7 +60,7 @@ const ImageItem = ({
   const animatedStyle = useAnimatedStyle(() => {
     return {
       opacity: interpolate(
-        translationY.value,
+        dismissSwipeTranslateY.value,
         [-SWIPE_CLOSE_OFFSET, 0, SWIPE_CLOSE_OFFSET],
         [0.5, 1, 0.5],
       ),
@@ -68,7 +70,7 @@ const ImageItem = ({
   const scrollHandler = useAnimatedScrollHandler({
     onScroll(e) {
       const nextIsScaled = e.zoomScale > 1
-      translationY.value = nextIsScaled ? 0 : e.contentOffset.y
+      dismissSwipeTranslateY.value = nextIsScaled ? 0 : e.contentOffset.y
       if (scaled !== nextIsScaled) {
         runOnJS(handleZoom)(nextIsScaled)
       }

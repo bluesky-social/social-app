@@ -3,6 +3,7 @@ import {ActivityIndicator, Dimensions, StyleSheet} from 'react-native'
 import {Gesture, GestureDetector} from 'react-native-gesture-handler'
 import Animated, {
   runOnJS,
+  SharedValue,
   useAnimatedReaction,
   useAnimatedRef,
   useAnimatedStyle,
@@ -43,6 +44,7 @@ type Props = {
   onZoom: (isZoomed: boolean) => void
   isScrollViewBeingDragged: boolean
   showControls: boolean
+  dismissSwipeTranslateY: SharedValue<number>
 }
 const ImageItem = ({
   imageSrc,
@@ -50,6 +52,7 @@ const ImageItem = ({
   onZoom,
   onRequestClose,
   isScrollViewBeingDragged,
+  dismissSwipeTranslateY,
 }: Props) => {
   const [isScaled, setIsScaled] = useState(false)
   const [imageAspect, imageDimensions] = useImageDimensions({
@@ -61,7 +64,6 @@ const ImageItem = ({
   const pinchOrigin = useSharedValue({x: 0, y: 0})
   const pinchScale = useSharedValue(1)
   const pinchTranslation = useSharedValue({x: 0, y: 0})
-  const dismissSwipeTranslateY = useSharedValue(0)
   const containerRef = useAnimatedRef()
 
   // Keep track of when we're entering or leaving scaled rendering.
