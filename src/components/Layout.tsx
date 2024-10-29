@@ -3,7 +3,7 @@ import {View, ViewStyle} from 'react-native'
 import {StyleProp} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
-import {atoms as a} from '#/alf'
+import {atoms as a, web} from '#/alf'
 
 // Every screen should have a Layout component wrapping it.
 // This component provides a default padding for the top of the screen.
@@ -31,6 +31,7 @@ let Screen = ({
       style={[
         {paddingTop: disableTopPadding ? 0 : top},
         a.util_screen_outer,
+        web([{minHeight: 0}, a.flex_1]),
         style,
       ]}
       {...props}
