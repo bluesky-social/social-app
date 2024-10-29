@@ -4,7 +4,7 @@ import {useLingui} from '@lingui/react'
 
 import {useModalControls} from '#/state/modals'
 import {useAgent, useSession} from '#/state/session'
-import {ToggleButton} from 'view/com/util/forms/ToggleButton'
+import {ToggleButton} from '#/view/com/util/forms/ToggleButton'
 import {useDialogControl} from '#/components/Dialog'
 import {DisableEmail2FADialog} from './DisableEmail2FADialog'
 

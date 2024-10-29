@@ -7,15 +7,15 @@ import {
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
+import {isWeb} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {usePostQuotesQuery} from '#/state/queries/post-quotes'
 import {useResolveUriQuery} from '#/state/queries/resolve-uri'
-import {useInitialNumToRender} from 'lib/hooks/useInitialNumToRender'
-import {isWeb} from 'platform/detection'
-import {Post} from 'view/com/post/Post'
+import {Post} from '#/view/com/post/Post'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
 import {List} from '../util/List'
 

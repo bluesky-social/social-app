@@ -9,9 +9,9 @@ import {
 import EventEmitter from 'eventemitter3'
 
 import {ScrollProvider} from '#/lib/ScrollContext'
+import {isNative, isWeb} from '#/platform/detection'
 import {useMinimalShellMode} from '#/state/shell'
 import {useShellLayout} from '#/state/shell/shell-layout'
-import {isNative, isWeb} from 'platform/detection'
 
 const WEB_HIDE_SHELL_THRESHOLD = 200
 

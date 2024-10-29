@@ -23,9 +23,9 @@ import {
 } from 'react-native'
 import Animated from 'react-native-reanimated'
 
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {addStyle} from 'lib/styles'
+import {usePalette} from '#/lib/hooks/usePalette'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {addStyle} from '#/lib/styles'
 
 interface AddedProps {
   desktopFixedHeight?: boolean | number

@@ -1,10 +1,10 @@
 import {ChatBskyConvoDefs} from '@atproto/api'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
+import {STALE} from '#/state/queries'
 import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
 import {useOnMarkAsRead} from '#/state/queries/messages/list-converations'
 import {useAgent} from '#/state/session'
-import {STALE} from 'state/queries'
 import {RQKEY as LIST_CONVOS_KEY} from './list-converations'
 
 const RQKEY_ROOT = 'convo'
