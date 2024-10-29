@@ -167,7 +167,8 @@ export const ComposePost = ({
   )
 
   // TODO: Display drafts for other posts in the thread.
-  const draft = composerState.thread.posts[composerState.activePostIndex]
+  const thread = composerState.thread
+  const draft = thread.posts[composerState.activePostIndex]
   const dispatch = useCallback((postAction: PostAction) => {
     composerDispatch({
       type: 'update_post',
@@ -226,9 +227,12 @@ export const ComposePost = ({
 
   const onPressCancel = useCallback(() => {
     if (
-      draft.shortenedGraphemeLength > 0 ||
-      draft.embed.media ||
-      draft.embed.link
+      thread.posts.some(
+        post =>
+          post.shortenedGraphemeLength > 0 ||
+          post.embed.media ||
+          post.embed.link,
+      )
     ) {
       closeAllDialogs()
       Keyboard.dismiss()
@@ -236,7 +240,7 @@ export const ComposePost = ({
     } else {
       onClose()
     }
-  }, [draft, closeAllDialogs, discardPromptControl, onClose])
+  }, [thread, closeAllDialogs, discardPromptControl, onClose])
 
   useImperativeHandle(cancelRef, () => ({onPressCancel}))
 
@@ -261,30 +265,38 @@ export const ComposePost = ({
   }, [onPressCancel, closeAllDialogs, closeAllModals])
 
   const isAltTextRequiredAndMissing = useMemo(() => {
-    const media = draft.embed.media
-    if (!requireAltTextEnabled || !media) {
+    if (!requireAltTextEnabled) {
       return false
     }
-    if (media.type === 'images' && media.images.some(img => !img.alt)) {
-      return true
-    }
-    if (media.type === 'gif' && !media.alt) {
-      return true
-    }
-    return false
-  }, [draft.embed.media, requireAltTextEnabled])
-
-  const isEmptyPost =
-    draft.richtext.text.trim().length === 0 &&
-    !draft.embed.link &&
-    !draft.embed.media &&
-    !draft.embed.quote
+    return thread.posts.some(post => {
+      const media = post.embed.media
+      if (media) {
+        if (media.type === 'images' && media.images.some(img => !img.alt)) {
+          return true
+        }
+        if (media.type === 'gif' && !media.alt) {
+          return true
+        }
+      }
+    })
+  }, [thread, requireAltTextEnabled])
 
   const canPost =
-    draft.shortenedGraphemeLength <= MAX_GRAPHEME_LENGTH &&
     !isAltTextRequiredAndMissing &&
-    !isEmptyPost &&
-    videoState.status !== 'error'
+    thread.posts.every(
+      post =>
+        post.shortenedGraphemeLength <= MAX_GRAPHEME_LENGTH &&
+        !(
+          post.richtext.text.trim().length === 0 &&
+          !post.embed.link &&
+          !post.embed.media &&
+          !post.embed.quote
+        ) &&
+        !(
+          post.embed.media?.type === 'video' &&
+          post.embed.media.video.status === 'error'
+        ),
+    )
 
   const onPressPublish = React.useCallback(
     async (finishedUploading: boolean) => {
@@ -298,8 +310,12 @@ export const ComposePost = ({
 
       if (
         !finishedUploading &&
-        videoState.asset &&
-        videoState.status !== 'done'
+        thread.posts.some(
+          post =>
+            post.embed.media?.type === 'video' &&
+            post.embed.media.video.asset &&
+            post.embed.media.video.status !== 'done',
+        )
       ) {
         setPublishOnUpload(true)
         return
@@ -308,16 +324,11 @@ export const ComposePost = ({
       setError('')
       setIsPublishing(true)
 
-      const imageCount =
-        draft.embed.media?.type === 'images'
-          ? draft.embed.media.images.length
-          : 0
-
       let postUri
       try {
         postUri = (
           await apilib.post(agent, queryClient, {
-            thread: composerState.thread,
+            thread,
             replyTo: replyTo?.uri,
             onStateChange: setPublishingStage,
             langs: toPostLanguages(langPrefs.postLanguage),
@@ -325,8 +336,8 @@ export const ComposePost = ({
         ).uri
         try {
           await whenAppViewReady(agent, postUri, res => {
-            const thread = res.data.thread
-            return AppBskyFeedDefs.isThreadViewPost(thread)
+            const postedThread = res.data.thread
+            return AppBskyFeedDefs.isThreadViewPost(postedThread)
           })
         } catch (waitErr: any) {
           logger.error(waitErr, {
@@ -337,7 +348,7 @@ export const ComposePost = ({
       } catch (e: any) {
         logger.error(e, {
           message: `Composer: create post failed`,
-          hasImages: imageCount > 0,
+          hasImages: thread.posts.some(p => p.embed.media?.type === 'images'),
         })
 
         let err = cleanError(e.message)
@@ -353,14 +364,21 @@ export const ComposePost = ({
         return
       } finally {
         if (postUri) {
-          logEvent('post:create', {
-            imageCount,
-            isReply: !!replyTo,
-            hasLink: !!draft.embed.link,
-            hasQuote: !!draft.embed.quote,
-            langs: langPrefs.postLanguage,
-            logContext: 'Composer',
-          })
+          let index = 0
+          for (let post of thread.posts) {
+            logEvent('post:create', {
+              imageCount:
+                post.embed.media?.type === 'images'
+                  ? post.embed.media.images.length
+                  : 0,
+              isReply: index > 0 || !!replyTo,
+              hasLink: !!post.embed.link,
+              hasQuote: !!post.embed.quote,
+              langs: langPrefs.postLanguage,
+              logContext: 'Composer',
+            })
+            index++
+          }
         }
       }
       if (postUri && !replyTo) {
@@ -370,10 +388,10 @@ export const ComposePost = ({
       if (initQuote) {
         // We want to wait for the quote count to update before we call `onPost`, which will refetch data
         whenAppViewReady(agent, initQuote.uri, res => {
-          const thread = res.data.thread
+          const quotedThread = res.data.thread
           if (
-            AppBskyFeedDefs.isThreadViewPost(thread) &&
-            thread.post.quoteCount !== initQuote.quoteCount
+            AppBskyFeedDefs.isThreadViewPost(quotedThread) &&
+            quotedThread.post.quoteCount !== initQuote.quoteCount
           ) {
             onPost?.(postUri)
             return true
@@ -393,8 +411,7 @@ export const ComposePost = ({
     [
       _,
       agent,
-      composerState.thread,
-      draft,
+      thread,
       canPost,
       isPublishing,
       langPrefs.postLanguage,
@@ -403,8 +420,6 @@ export const ComposePost = ({
       initQuote,
       replyTo,
       setLangPrefs,
-      videoState.asset,
-      videoState.status,
       queryClient,
     ],
   )
