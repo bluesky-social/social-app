@@ -381,7 +381,7 @@ msgstr "新增替代文本（可选）"
 #: src/view/screens/AppPasswords.tsx:153
 #: src/view/screens/AppPasswords.tsx:166
 msgid "Add App Password"
-msgstr "新增应用专用密码"
+msgstr "新增应用密码"
 
 #: src/components/dialogs/MutedWords.tsx:321
 msgid "Add mute word for configured settings"
@@ -389,7 +389,7 @@ msgstr "为配置的设置添加隐藏词汇"
 
 #: src/components/dialogs/MutedWords.tsx:112
 msgid "Add muted words and tags"
-msgstr "添加隐藏词和标签"
+msgstr "添加隐藏词汇和标签"
 
 #: src/screens/Home/NoFeedsPinned.tsx:99
 msgid "Add recommended feeds"
@@ -640,25 +640,25 @@ msgstr "应用语言"
 
 #: src/view/screens/AppPasswords.tsx:232
 msgid "App password deleted"
-msgstr "应用专用密码已删除"
+msgstr "应用密码已删除"
 
 #: src/view/com/modals/AddAppPasswords.tsx:138
 msgid "App Password names can only contain letters, numbers, spaces, dashes, and underscores."
-msgstr "应用专用密码只能包含字母、数字、空格、破折号及下划线。"
+msgstr "应用密码只能包含字母、数字、空格、破折号及下划线。"
 
 #: src/view/com/modals/AddAppPasswords.tsx:103
 msgid "App Password names must be at least 4 characters long."
-msgstr "应用专用密码必须至少为 4 个字符。"
+msgstr "应用密码必须至少为 4 个字符。"
 
 #: src/view/screens/Settings/index.tsx:664
 msgid "App password settings"
-msgstr "应用专用密码设置"
+msgstr "应用密码设置"
 
 #: src/Navigation.tsx:285
 #: src/view/screens/AppPasswords.tsx:197
 #: src/view/screens/Settings/index.tsx:673
 msgid "App Passwords"
-msgstr "应用专用密码"
+msgstr "应用密码"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:148
 #: src/components/moderation/LabelsOnMeDialog.tsx:151
@@ -701,7 +701,7 @@ msgstr "使用默认推荐的资讯源"
 
 #: src/view/screens/AppPasswords.tsx:283
 msgid "Are you sure you want to delete the app password \"{name}\"?"
-msgstr "你确定要删除这条应用专用密码 \"{name}\" 吗？"
+msgstr "你确定要删除这条应用密码 \"{name}\" 吗？"
 
 #: src/components/dms/MessageMenu.tsx:149
 msgid "Are you sure you want to delete this message? The message will be deleted for you, but not for the other participant."
@@ -729,7 +729,7 @@ msgstr "你确定要从自定义资讯源列表中删除此资讯源吗？"
 
 #: src/view/com/composer/Composer.tsx:532
 msgid "Are you sure you'd like to discard this draft?"
-msgstr "你确定要丢弃这段草稿吗？"
+msgstr "你确定要放弃这段草稿吗？"
 
 #: src/components/dialogs/MutedWords.tsx:433
 msgid "Are you sure?"
@@ -774,7 +774,7 @@ msgstr "返回"
 
 #: src/view/screens/Settings/index.tsx:442
 msgid "Basics"
-msgstr "基础信息"
+msgstr "基础设置"
 
 #: src/components/dialogs/BirthDateSettings.tsx:106
 msgid "Birthday"
@@ -875,7 +875,7 @@ msgstr "Bluesky 将从你的关系网中选择一组推荐关注的用户。"
 
 #: src/screens/Moderation/index.tsx:571
 msgid "Bluesky will not show your profile and posts to logged-out users. Other apps may not honor this request. This does not make your account private."
-msgstr "Bluesky 不会向未登录的用户显示你的个人资料和帖文。但其他应用可能不会遵照这个请求，这无法确保你的账户隐私。"
+msgstr "Bluesky 将不会向未登录的用户显示你的个人资料和帖文。但其他第三方应用可能会忽略此设置项，故仍然无法彻底保护你的用户隐私。"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:53
 msgid "Blur images"
@@ -1465,7 +1465,7 @@ msgstr "已复制！"
 
 #: src/view/com/modals/AddAppPasswords.tsx:215
 msgid "Copies app password"
-msgstr "已复制应用专用密码"
+msgstr "已复制应用密码"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:175
 #: src/view/com/modals/AddAppPasswords.tsx:214
@@ -1583,7 +1583,7 @@ msgstr "创建另外一个"
 
 #: src/view/com/modals/AddAppPasswords.tsx:243
 msgid "Create App Password"
-msgstr "创建应用专用密码"
+msgstr "创建应用密码"
 
 #: src/view/com/auth/SplashScreen.tsx:48
 #: src/view/com/auth/SplashScreen.web.tsx:108
@@ -1619,7 +1619,7 @@ msgstr "由社群构建的自定义资讯源能为你带来新的体验，并帮
 
 #: src/view/screens/PreferencesExternalEmbeds.tsx:54
 msgid "Customize media from external sites."
-msgstr "自定义外部站点的媒体。"
+msgstr "自定义外部平台的媒体显示。"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:289
 msgid "Customize who can interact with this post."
@@ -1684,11 +1684,11 @@ msgstr "删除账户 <0>\"</0><1>{0}</1><2>\"</2>"
 
 #: src/view/screens/AppPasswords.tsx:245
 msgid "Delete app password"
-msgstr "删除应用专用密码"
+msgstr "删除应用密码"
 
 #: src/view/screens/AppPasswords.tsx:281
 msgid "Delete app password?"
-msgstr "删除应用专用密码？"
+msgstr "删除应用密码？"
 
 #: src/view/screens/Settings/index.tsx:857
 #: src/view/screens/Settings/index.tsx:860
@@ -1821,7 +1821,7 @@ msgstr "关闭"
 #: src/screens/Profile/Header/EditProfileDialog.tsx:84
 #: src/view/com/composer/Composer.tsx:534
 msgid "Discard"
-msgstr "丢弃"
+msgstr "放弃"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:81
 msgid "Discard changes?"
@@ -1829,12 +1829,12 @@ msgstr "放弃更改？"
 
 #: src/view/com/composer/Composer.tsx:531
 msgid "Discard draft?"
-msgstr "丢弃草稿？"
+msgstr "放弃草稿？"
 
 #: src/screens/Moderation/index.tsx:556
 #: src/screens/Moderation/index.tsx:560
 msgid "Discourage apps from showing my account to logged-out users"
-msgstr "阻止应用向未登录用户显示我的账户"
+msgstr "阻止平台向未登录用户显示我的资料信息"
 
 #: src/view/com/posts/FollowingEmptyState.tsx:70
 #: src/view/com/posts/FollowingEndOfFeed.tsx:71
@@ -1885,7 +1885,7 @@ msgstr "DNS 面板"
 
 #: src/components/dialogs/MutedWords.tsx:302
 msgid "Do not apply this mute word to users you follow"
-msgstr "不对你已关注的用户使用此隐藏词"
+msgstr "不对你已关注的用户使用此隐藏词汇"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:174
 msgid "Does not contain adult content."
@@ -1965,15 +1965,15 @@ msgstr "期间："
 
 #: src/view/com/modals/ChangeHandle.tsx:245
 msgid "e.g. alice"
-msgstr "例如：alice"
+msgstr "例如：zhangsan"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:321
 msgid "e.g. Alice Lastname"
-msgstr "例如：爱丽丝"
+msgstr "例如：张蓝天"
 
 #: src/view/com/modals/ChangeHandle.tsx:367
 msgid "e.g. alice.com"
-msgstr "例如：alice.com"
+msgstr "例如：zhangsan.com"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:43
 msgid "E.g. artistic nudes."
@@ -2187,7 +2187,7 @@ msgstr "确保为每个字幕文件都选择了一种语言。"
 
 #: src/view/com/modals/AddAppPasswords.tsx:161
 msgid "Enter a name for this App Password"
-msgstr "为这个应用专用密码命名"
+msgstr "为这个应用密码命名"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:133
 msgid "Enter a password"
@@ -2332,7 +2332,7 @@ msgstr "URL 应解析为记录"
 
 #: src/view/screens/NotificationsSettings.tsx:78
 msgid "Experimental: When this preference is enabled, you'll only receive reply and quote notifications from users you follow. We'll continue to add more controls here over time."
-msgstr "实验性：当你启用此设置项，你将仅收到你已关注用户的回复及引用通知。我们会持续在此添加更多设置项。"
+msgstr "实验性：当你启用此设置项，你将仅收到已关注用户的回复及引用通知。我们会持续在此添加更多设置项。"
 
 #: src/components/dialogs/MutedWords.tsx:500
 msgid "Expired"
@@ -2367,7 +2367,7 @@ msgstr "外部媒体"
 #: src/components/dialogs/EmbedConsent.tsx:70
 #: src/view/screens/PreferencesExternalEmbeds.tsx:62
 msgid "External media may allow websites to collect information about you and your device. No information is sent or requested until you press the \"play\" button."
-msgstr "外部媒体可能允许网站收集有关你和你设备的有关信息。在你按下\"查看\"按钮之前，将不会发送或请求任何外部信息。"
+msgstr "外部媒体可能允许平台收集有关你和设备的相关信息。在你按下\"查看\"按钮之前，将不会发送请求给任何外部平台。"
 
 #: src/Navigation.tsx:309
 #: src/view/screens/PreferencesExternalEmbeds.tsx:51
@@ -2382,7 +2382,7 @@ msgstr "外部媒体设置"
 #: src/view/com/modals/AddAppPasswords.tsx:119
 #: src/view/com/modals/AddAppPasswords.tsx:123
 msgid "Failed to create app password."
-msgstr "创建应用专用密码失败。"
+msgstr "创建应用密码失败。"
 
 #: src/screens/StarterPack/Wizard/index.tsx:238
 #: src/screens/StarterPack/Wizard/index.tsx:246
@@ -2543,7 +2543,7 @@ msgstr "在 Bluesky 寻找帖文和用户"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:52
 msgid "Fine-tune the content you see on your Following feed."
-msgstr "调整你在\"正在关注\"资讯源上所看到的内容。"
+msgstr "调整你在\"Following\"资讯源上所看到的内容。"
 
 #: src/view/screens/PreferencesThreads.tsx:55
 msgid "Fine-tune the discussion threads."
@@ -2678,13 +2678,13 @@ msgstr "已关注 {name}"
 
 #: src/view/screens/Settings/index.tsx:540
 msgid "Following feed preferences"
-msgstr "\"正在关注\"资讯源首选项"
+msgstr "\"Following\"资讯源首选项"
 
 #: src/Navigation.tsx:296
 #: src/view/screens/PreferencesFollowingFeed.tsx:49
 #: src/view/screens/Settings/index.tsx:549
 msgid "Following Feed Preferences"
-msgstr "\"正在关注\"资讯源首选项"
+msgstr "\"Following\"资讯源首选项"
 
 #: src/screens/Profile/Header/Handle.tsx:33
 msgid "Follows you"
@@ -2893,7 +2893,7 @@ msgstr "通过上传图片或创建头像来帮助人们了解你不是机器人
 
 #: src/view/com/modals/AddAppPasswords.tsx:204
 msgid "Here is your app password."
-msgstr "这里是你的应用专用密码。"
+msgstr "这里是你的应用密码。"
 
 #: src/components/ListCard.tsx:130
 msgid "Hidden list"
@@ -3085,7 +3085,7 @@ msgstr "输入删除用户的验证码"
 
 #: src/view/com/modals/AddAppPasswords.tsx:175
 msgid "Input name for app password"
-msgstr "输入应用专用密码名称"
+msgstr "输入应用密码名称"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:145
 msgid "Input new password"
@@ -3521,7 +3521,7 @@ msgstr "看起来你已取消固定所有资讯源。不过别担心，你仍然
 
 #: src/screens/Feeds/NoFollowingFeed.tsx:37
 msgid "Looks like you're missing a following feed. <0>Click here to add one.</0>"
-msgstr "看起来你似乎缺少\"正在关注\"资讯源。<0>点击这里来重新添加它。</0>"
+msgstr "看起来你似乎缺少\"Following\"资讯源。<0>点击这里来重新添加它。</0>"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:255
 msgid "Make one for me"
@@ -3533,7 +3533,7 @@ msgstr "请确认目标页面地址是否正确！"
 
 #: src/components/dialogs/MutedWords.tsx:108
 msgid "Manage your muted words and tags"
-msgstr "管理你的隐藏词和标签"
+msgstr "管理你的隐藏词汇和标签"
 
 #: src/components/dms/ConvoMenu.tsx:151
 #: src/components/dms/ConvoMenu.tsx:158
@@ -3767,7 +3767,7 @@ msgstr "隐藏讨论串"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:523
 #: src/view/com/util/forms/PostDropdownBtn.tsx:525
 msgid "Mute words & tags"
-msgstr "隐藏词和标签"
+msgstr "隐藏词汇和标签"
 
 #: src/screens/Moderation/index.tsx:265
 msgid "Muted accounts"
@@ -4112,7 +4112,7 @@ msgstr "分享注意事项"
 
 #: src/screens/Moderation/index.tsx:578
 msgid "Note: Bluesky is an open and public network. This setting only limits the visibility of your content on the Bluesky app and website, and other apps may not respect this setting. Your content may still be shown to logged-out users by other apps and websites."
-msgstr "注意：Bluesky 是一个开放的公共网络。这个设置项仅限制你发布的内容在 Bluesky 应用和网站上的可见性，其他应用可能不遵从这个设置项，仍可能会向未登录的用户显示你的动态。"
+msgstr "注意：Bluesky 是一个开放的社交网络。这个设置项仅限制你发布的内容在 Bluesky 应用和网页上的可见性，但其他第三方应用可能会忽略此设置项，仍可能会向未登录的用户显示你的资料信息。"
 
 #: src/screens/Messages/ChatList.tsx:213
 msgid "Nothing here"
@@ -4408,11 +4408,11 @@ msgstr "开启包含所有已保存资讯源的界面"
 
 #: src/view/screens/Settings/index.tsx:665
 msgid "Opens the app password settings"
-msgstr "开启应用专用密码设置界面"
+msgstr "开启应用密码设置界面"
 
 #: src/view/screens/Settings/index.tsx:541
 msgid "Opens the Following feed preferences"
-msgstr "开启\"正在关注\"资讯源首选项"
+msgstr "开启\"Following\"资讯源首选项"
 
 #: src/view/com/modals/LinkWarning.tsx:93
 msgid "Opens the linked website"
@@ -4635,11 +4635,11 @@ msgstr "更改前请先确认你的电子邮箱。这是新增电子邮箱更新
 
 #: src/view/com/modals/AddAppPasswords.tsx:94
 msgid "Please enter a name for your app password. All spaces is not allowed."
-msgstr "请输入应用专用密码的名称，不允许使用空格。"
+msgstr "请输入应用密码的名称，不允许使用空格。"
 
 #: src/view/com/modals/AddAppPasswords.tsx:151
 msgid "Please enter a unique name for this App Password or use our randomly generated one."
-msgstr "请输入这个应用专用密码的唯一名称，或使用我们提供的随机生成名称。"
+msgstr "请输入这个应用密码的唯一名称，或使用我们提供的随机生成名称。"
 
 #: src/components/dialogs/MutedWords.tsx:86
 msgid "Please enter a valid word, tag, or phrase to mute"
@@ -5172,7 +5172,7 @@ msgstr "回复这条帖文"
 #: src/view/com/posts/FeedItem.tsx:541
 msgctxt "description"
 msgid "Reply to you"
-msgstr "对你回复"
+msgstr "对你进行回复"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:338
 msgid "Reply visibility updated"
@@ -5653,15 +5653,15 @@ msgstr "选择视频"
 
 #: src/components/dialogs/MutedWords.tsx:242
 msgid "Select what content this mute word should apply to."
-msgstr "选择此隐藏词应用于哪些内容。"
+msgstr "选择此隐藏词汇应用于哪些内容。"
 
 #: src/view/screens/LanguageSettings.tsx:283
 msgid "Select which languages you want your subscribed feeds to include. If none are selected, all languages will be shown."
-msgstr "选择你希望订阅资讯源中所包含的语言。如果未选择任何语言，将默认显示所有语言。"
+msgstr "选择你希望在订阅资讯源中所包含的语言。如果未选择任何语言，将默认显示所有语言的帖文。"
 
 #: src/view/screens/LanguageSettings.tsx:97
 msgid "Select your app language for the default text to display in the app."
-msgstr "选择你的应用语言，以显示应用中的默认文本。"
+msgstr "选择你的默认显示语言。"
 
 #: src/screens/Signup/StepInfo/index.tsx:223
 msgid "Select your date of birth"
@@ -5673,7 +5673,7 @@ msgstr "下面选择你感兴趣的选项"
 
 #: src/view/screens/LanguageSettings.tsx:191
 msgid "Select your preferred language for translations in your feed."
-msgstr "选择你在订阅资讯源中希望进行翻译的目标首选语言。"
+msgstr "选择你在订阅的资讯源中翻译的目标语言。"
 
 #: src/components/dms/ChatEmptyPill.tsx:38
 msgid "Send a neat website!"
@@ -5753,7 +5753,7 @@ msgstr "设置新密码"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:122
 msgid "Set this setting to \"No\" to hide all quote posts from your feed. Reposts will still be visible."
-msgstr "停用这个设置项将从资讯源中隐藏所有引用帖文，但转发仍将可见。"
+msgstr "停用这个设置项将从资讯源中隐藏所有引用帖文，但转发仍然可见。"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:64
 msgid "Set this setting to \"No\" to hide all replies from your feed."
@@ -5765,11 +5765,11 @@ msgstr "停用这个设置项将从资讯源中隐藏所有转发。"
 
 #: src/view/screens/PreferencesThreads.tsx:117
 msgid "Set this setting to \"Yes\" to show replies in a threaded view. This is an experimental feature."
-msgstr "启用这个设置项将在分层视图中显示回复。这是一个实验性功能。"
+msgstr "实验性：启用这个设置项将在分层视图中显示回复。"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:158
 msgid "Set this setting to \"Yes\" to show samples of your saved feeds in your Following feed. This is an experimental feature."
-msgstr "启用这个设置项将在\"正在关注\"资讯源中显示已保存资讯源的样例。这是一个实验性功能。"
+msgstr "实验性：启用这个设置项将在\"Following\"资讯源中显示已保存资讯源的样例。"
 
 #: src/screens/Onboarding/Layout.tsx:48
 msgid "Set up your account"
@@ -5942,7 +5942,7 @@ msgstr "显示回复"
 
 #: src/view/screens/PreferencesThreads.tsx:95
 msgid "Show replies by people you follow before all other replies."
-msgstr "将你关注的用户的回复置于其他回复之前。"
+msgstr "将你关注用户的回复置于其他回复之前。"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:559
 #: src/view/com/util/forms/PostDropdownBtn.tsx:569
@@ -6515,7 +6515,7 @@ msgstr "更新资讯源时出现问题，请检查你的互联网连接并重试
 
 #: src/view/screens/AppPasswords.tsx:75
 msgid "There was an issue with fetching your app passwords"
-msgstr "获取应用专用密码时出现问题"
+msgstr "获取应用密码时出现问题"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:97
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:118
@@ -7051,7 +7051,7 @@ msgstr "使用你服务器上的文件"
 
 #: src/view/screens/AppPasswords.tsx:205
 msgid "Use app passwords to login to other Bluesky clients without giving full access to your account or password."
-msgstr "使用应用专用密码登录到其他 Bluesky 客户端，而无需对其授予你账户或密码的完全访问权限。"
+msgstr "使用应用密码登录到其他 Bluesky 客户端，而无需对其授予你账户或密码的完全访问权限。"
 
 #: src/view/com/modals/ChangeHandle.tsx:506
 msgid "Use bsky.social as hosting provider"
@@ -7688,7 +7688,7 @@ msgstr "你还没有屏蔽任何账户。要屏蔽账户，请转到其个人资
 
 #: src/view/screens/AppPasswords.tsx:96
 msgid "You have not created any app passwords yet. You can create one by pressing the button below."
-msgstr "你尚未创建任何应用专用密码，可以通过点击下面的按钮来创建一个。"
+msgstr "你尚未创建任何应用密码，可以通过点击下面的按钮来创建一个。"
 
 #: src/view/screens/ModerationMutedAccounts.tsx:132
 msgid "You have not muted any accounts yet. To mute an account, go to their profile and select \"Mute account\" from the menu on their account."
@@ -7892,7 +7892,7 @@ msgstr "你的第一个喜欢！"
 
 #: src/view/com/posts/FollowingEmptyState.tsx:43
 msgid "Your following feed is empty! Follow more users to see what's happening."
-msgstr "你的\"正在关注\"资讯源为空！关注更多用户去看看他们发了什么。"
+msgstr "你的\"Following\"资讯源为空！关注更多用户去看看他们发了什么。"
 
 #: src/screens/Signup/StepHandle.tsx:125
 msgid "Your full handle will be"
