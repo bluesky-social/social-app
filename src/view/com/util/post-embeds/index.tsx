@@ -6,6 +6,14 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
+import Animated, {
+  AnimatedRef,
+  measure,
+  MeasuredDimensions,
+  runOnJS,
+  runOnUI,
+  useAnimatedRef,
+} from 'react-native-reanimated'
 import {Image} from 'expo-image'
 import {
   AppBskyEmbedExternal,
@@ -61,6 +69,7 @@ export function PostEmbeds({
   viewContext?: PostEmbedViewContext
 }) {
   const {openLightbox} = useLightboxControls()
+  const containerRef = useAnimatedRef()
 
   // quote post with media
   // =
@@ -138,12 +147,26 @@ export function PostEmbeds({
         alt: img.alt,
         aspectRatio: img.aspectRatio,
       }))
-      const _openLightbox = (index: number) => {
+      const _openLightbox = (
+        index: number,
+        // TODO: Pass dimensions to the lightbox.
+        _dims: MeasuredDimensions | null,
+      ) => {
         openLightbox({
           type: 'images',
           images: items,
           index,
         })
+      }
+      const onPress = (
+        index: number,
+        ref: AnimatedRef<React.Component<{}, {}, any>>,
+      ) => {
+        runOnUI(() => {
+          'worklet'
+          const dims = measure(ref)
+          runOnJS(_openLightbox)(index, dims)
+        })()
       }
       const onPressIn = (_: number) => {
         InteractionManager.runAfterInteractions(() => {
@@ -155,7 +178,7 @@ export function PostEmbeds({
         const image = images[0]
         return (
           <ContentHider modui={moderation?.ui('contentMedia')}>
-            <View style={[a.mt_sm, style]}>
+            <Animated.View ref={containerRef} style={[a.mt_sm, style]}>
               <AutoSizedImage
                 crop={
                   viewContext === PostEmbedViewContext.ThreadHighlighted
@@ -166,13 +189,13 @@ export function PostEmbeds({
                     : 'constrained'
                 }
                 image={image}
-                onPress={() => _openLightbox(0)}
+                onPress={() => onPress(0, containerRef)}
                 onPressIn={() => onPressIn(0)}
                 hideBadge={
                   viewContext === PostEmbedViewContext.FeedEmbedRecordWithMedia
                 }
               />
-            </View>
+            </Animated.View>
           </ContentHider>
         )
       }
@@ -182,7 +205,7 @@ export function PostEmbeds({
           <View style={[a.mt_sm, style]}>
             <ImageLayoutGrid
               images={embed.images}
-              onPress={_openLightbox}
+              onPress={onPress}
               onPressIn={onPressIn}
               viewContext={viewContext}
             />
