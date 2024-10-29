@@ -575,6 +575,7 @@ function MenuItem({icon, label, count, bold, onPress}: MenuItemProps) {
           style={[
             a.flex_1,
             a.flex_row,
+            a.align_center,
             a.gap_md,
             a.py_md,
             a.px_xl,
