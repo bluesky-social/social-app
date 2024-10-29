@@ -91,7 +91,7 @@ msgstr "{0, plural, one {me gusta} other {me gusta}}"
 #: src/components/FeedCard.tsx:213
 #: src/view/com/feeds/FeedSourceCard.tsx:300
 msgid "{0, plural, one {Liked by # user} other {Liked by # users}}"
-msgstr "{0, plural, one {Le gustó a # user} unos {Les gustó a # users}}"
+msgstr "{0, plural, one {Le gustó a # user} other {Les gustó a # users}}"
 
 #: src/screens/Profile/Header/Metrics.tsx:59
 msgid "{0, plural, one {post} other {posts}}"
@@ -2915,7 +2915,7 @@ msgstr "Seguido por <0>{0}</0>"
 
 #: src/components/KnownFollowers.tsx:217
 msgid "Followed by <0>{0}</0> and {1, plural, one {# other} other {# others}}"
-msgstr "Seguido por <0>{0}</0> y {1, plural, un {# other} otros {# others}}"
+msgstr "Seguido por <0>{0}</0> y {1, plural, one {# other} other {# others}}"
 
 #: src/components/KnownFollowers.tsx:204
 msgid "Followed by <0>{0}</0> and <1>{1}</1>"
@@ -2923,7 +2923,7 @@ msgstr "Seguido por <0>{0}</0> y <1>{1}</1>"
 
 #: src/components/KnownFollowers.tsx:186
 msgid "Followed by <0>{0}</0>, <1>{1}</1>, and {2, plural, one {# other} other {# others}}"
-msgstr "Seguido por <0>{0}</0>, <1>{1}</1>, y {2, plural, un {# other} otros {# others}}"
+msgstr "Seguido por <0>{0}</0>, <1>{1}</1>, y {2, plural, one {# other} other {# others}}"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:404
 msgid "Followed users"
