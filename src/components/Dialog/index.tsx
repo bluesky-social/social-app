@@ -267,7 +267,10 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
 
 export const InnerFlatList = React.forwardRef<
   ListMethods,
-  ListProps<any> & {webInnerStyle?: StyleProp<ViewStyle>}
+  ListProps<any> & {
+    webInnerStyle?: StyleProp<ViewStyle>
+    webInnerContentContainerStyle?: StyleProp<ViewStyle>
+  }
 >(function InnerFlatList({style, ...props}, ref) {
   const insets = useSafeAreaInsets()
   const {nativeSnapPoint, disableDrag, setDisableDrag} = useDialogContext()
