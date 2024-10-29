@@ -10,6 +10,7 @@ type ProfileImageLightbox = {
 
 type ImagesLightboxItem = {
   uri: string
+  thumbUri: string
   alt?: string
 }
 

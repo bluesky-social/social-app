@@ -31,7 +31,9 @@ export function Lightbox() {
     const opts = activeLightbox
     return (
       <ImageView
-        images={[{uri: opts.profile.avatar || ''}]}
+        images={[
+          {uri: opts.profile.avatar || '', thumbUri: opts.profile.avatar || ''},
+        ]}
         initialImageIndex={0}
         visible
         onRequestClose={onClose}
