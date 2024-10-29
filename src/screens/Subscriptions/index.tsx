@@ -28,7 +28,11 @@ export function Subscriptions(_props: ScreenProps) {
   const {_} = useLingui()
 
   // const {data: entitlements} = useEntitlements()
-  const {data: subscriptions, isError} = useMainSubscriptions()
+  const {data: subscriptions, isError, error} = useMainSubscriptions()
+
+  if (error) {
+    console.log(error)
+  }
 
   return (
     <Layout.Screen>
@@ -96,17 +100,21 @@ export function MainSubscription({
         style={[a.p_lg, a.rounded_md, a.border, t.atoms.border_contrast_low]}>
         <View style={[a.gap_sm, a.pb_xl]}>
           {subscriptions.available.monthly.map(s => (
-            <View key={s.id}>
+            <View key={s.subscription.id}>
               <Button
-                label={s.id}
+                label={s.subscription.id}
                 size="small"
                 variant="solid"
-                color={s.status === 'active' ? 'primary' : 'secondary'}
+                color={
+                  s.subscription.state?.status === 'active'
+                    ? 'primary'
+                    : 'secondary'
+                }
                 onPress={() => {
-                  purchaseSubscription(s.product)
+                  purchaseSubscription(s)
                 }}>
                 <ButtonText>
-                  {s.id} ({s.price.formatted})
+                  {s.subscription.id} ({s.price?.formatted})
                 </ButtonText>
               </Button>
             </View>
@@ -114,17 +122,21 @@ export function MainSubscription({
         </View>
         <View style={[a.gap_sm]}>
           {subscriptions.available.annual.map(s => (
-            <View key={s.id}>
+            <View key={s.subscription.id}>
               <Button
-                label={s.id}
+                label={s.subscription.id}
                 size="small"
                 variant="solid"
-                color={s.status === 'active' ? 'primary' : 'secondary'}
+                color={
+                  s.subscription.state?.status === 'active'
+                    ? 'primary'
+                    : 'secondary'
+                }
                 onPress={() => {
-                  purchaseSubscription(s.product)
+                  purchaseSubscription(s)
                 }}>
                 <ButtonText>
-                  {s.id} ({s.price.formatted})
+                  {s.subscription.id} ({s.price?.formatted})
                 </ButtonText>
               </Button>
             </View>

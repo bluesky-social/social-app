@@ -1,9 +1,6 @@
 import {PurchasesStoreProduct} from 'react-native-purchases'
 
-import {
-  RawSubscriptionObject,
-  RawSubscriptionObjectBase,
-} from '#/state/purchases/subscriptions/api/types'
+import {Subscription as APISubscription} from '#/state/purchases/subscriptions/api/types'
 
 export enum SubscriptionId {
   Main0MonthlyAuto = 'main:0:monthly:auto',
@@ -20,46 +17,56 @@ export enum EntitlementId {
   Main2 = 'main:2',
 }
 
+export type Entitlement = {
+  id: EntitlementId
+}
+
 export type Subscription =
-  | RawSubscriptionObjectBase<{
+  | {
+      id: SubscriptionId
       platform: 'android'
-      provider: 'play_store'
-      price: {
+      interval: 'monthly' | 'annual'
+      /**
+       * Response from our API
+       */
+      subscription: APISubscription
+      price?: {
         value: number
         formatted: string
       }
-      product: {
-        platform: 'android'
-        data: PurchasesStoreProduct
-      }
-    }>
-  | RawSubscriptionObjectBase<{
+      product?: PurchasesStoreProduct
+    }
+  | {
+      id: SubscriptionId
       platform: 'ios'
-      provider: 'app_store'
-      price: {
+      interval: 'monthly' | 'annual'
+      /**
+       * Response from our API
+       */
+      subscription: APISubscription
+      price?: {
         value: number
         formatted: string
       }
-      product: {
-        platform: 'ios'
-        data: PurchasesStoreProduct
-      }
-    }>
-  | RawSubscriptionObjectBase<{
+      product?: PurchasesStoreProduct
+    }
+  | {
+      id: SubscriptionId
       platform: 'web'
-      provider: 'stripe'
+      interval: 'monthly' | 'annual'
+      /**
+       * Response from our API
+       */
+      subscription: APISubscription
       price: {
         value: number
         formatted: string
       }
-      product: {
-        platform: 'web'
-        data: string
-      }
-    }>
+      product: string
+    }
 
 export type Subscriptions = {
-  active: RawSubscriptionObject[]
+  active: Subscription[]
   available: {
     monthly: Subscription[]
     annual: Subscription[]

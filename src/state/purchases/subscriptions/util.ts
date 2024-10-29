@@ -2,15 +2,14 @@ import {Subscription, Subscriptions} from './types'
 
 export function organizeMainSubscriptionsByTier(
   subscriptions: Subscription[],
-): Subscriptions['subscriptions'] {
-  const result: Subscriptions['subscriptions'] = {
+): Subscriptions['available'] {
+  const result: Subscriptions['available'] = {
     monthly: [],
     annual: [],
   }
 
-  for (const subscription of subscriptions) {
-    const {interval} = subscription
-    result[interval].push(subscription)
+  for (const sub of subscriptions) {
+    result[sub.interval].push(sub)
   }
 
   result.monthly = result.monthly.sort((a, b) => {

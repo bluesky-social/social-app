@@ -1,5 +1,5 @@
-import {RawSubscriptionObject} from '#/state/purchases/subscriptions/api/types'
-import {EntitlementId} from '#/state/purchases/subscriptions/types'
+import {Subscription} from '#/state/purchases/subscriptions/api/types'
+import {Entitlement} from '#/state/purchases/subscriptions/types'
 
 export async function getMainSubscriptions({
   did,
@@ -23,8 +23,8 @@ export async function getMainSubscriptions({
   const json = await res.json()
 
   return json as {
-    active: RawSubscriptionObject[]
-    available: RawSubscriptionObject[]
+    active: Subscription[]
+    available: Subscription[]
   }
 }
 
@@ -40,5 +40,5 @@ export async function getEntitlements({did}: {did: string}) {
 
   const {entitlements} = await res.json()
 
-  return entitlements as {id: EntitlementId}[]
+  return entitlements as Entitlement[]
 }

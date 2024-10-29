@@ -1,20 +1,11 @@
-import {SubscriptionId} from '#/state/purchases/subscriptions/types'
+import {
+  EntitlementId,
+  SubscriptionId,
+} from '#/state/purchases/subscriptions/types'
 
-export type RawSubscriptionObjectBase<T> = T & {
-  id: SubscriptionId
-  storeId: string
-  lookupKey: string
-  checkoutId: string
-  interval: 'monthly' | 'annual'
+export type SubscriptionState = {
   active: boolean
-  autoRenewStatus:
-    | 'will_renew'
-    | 'will_not_renew'
-    | 'will_change_product'
-    | 'will_pause'
-    | 'requires_price_increase_consent'
-    | 'has_already_renewed'
-    | null
+  entitlements: {id: EntitlementId}[]
   status:
     | 'trialing'
     | 'active'
@@ -24,31 +15,56 @@ export type RawSubscriptionObjectBase<T> = T & {
     | 'paused'
     | 'unknown'
     | 'incomplete'
-    | null
-  entitlements: {
-    created_at: number
-    display_name: string
-    id: string
-    lookup_key: string
-    object: 'entitlement'
-    project_id: string
-  }[]
-  startedAt: number | null
-  periodStart: number | null
-  periodEnd: number | null
+  renewalStatus:
+    | 'will_renew'
+    | 'will_not_renew'
+    | 'will_change_product'
+    | 'will_pause'
+    | 'requires_price_increase_consent'
+    | 'has_already_renewed'
+  startedAt: number
+  periodStart: number
+  periodEnd: number
 }
 
-export type RawSubscriptionObject =
-  | RawSubscriptionObjectBase<{
-      platform: 'android'
-      provider: 'play_store'
-    }>
-  | RawSubscriptionObjectBase<{
-      platform: 'ios'
-      provider: 'app_store'
-    }>
-  | RawSubscriptionObjectBase<{
+/**
+ * Response from our API
+ */
+export type Subscription =
+  | {
+      id: SubscriptionId
+      platform: 'android' | 'ios'
+      interval: 'monthly' | 'annual'
+      state?: SubscriptionState
+      store: {
+        type: 'play_store' | 'app_store'
+        productId: string
+        productLookupKey: string
+      }
+    }
+  | {
+      id: SubscriptionId
       platform: 'web'
-      provider: 'stripe'
-      price: number
-    }>
+      interval: 'monthly' | 'annual'
+      state: undefined
+      store: {
+        type: 'stripe'
+        productId: string
+        price: number
+        priceId: string
+        subscriptionId: undefined
+      }
+    }
+  | {
+      id: SubscriptionId
+      platform: 'web'
+      interval: 'monthly' | 'annual'
+      state: SubscriptionState
+      store: {
+        type: 'stripe'
+        productId: string
+        price: number
+        priceId: string
+        subscriptionId: string
+      }
+    }

@@ -25,23 +25,57 @@ export function useMainSubscriptions() {
       const platformSubscriptions = rawSubscriptions.available.filter(
         s => s.platform === 'web',
       )
-      const subscriptions = platformSubscriptions.map(sub => {
-        const subscription: Subscription = {
-          ...sub,
+      const subscriptions: Subscription[] = platformSubscriptions.map(sub => {
+        return {
+          id: sub.id,
+          platform: 'web',
+          interval: sub.interval,
+          subscription: sub,
           price: {
-            value: sub.price,
-            formatted: currencyFormatter.format(sub.price / 100),
+            value: sub.store.price,
+            formatted: currencyFormatter.format(sub.store.price / 100),
           },
-          product: {
-            platform: 'web',
-            data: sub.checkoutId,
-          },
+          // TODO may need to have si_id too
+          product: sub.store.priceId,
         }
-        return subscription
+      })
+
+      const active: Subscription[] = rawSubscriptions.active.map(sub => {
+        if (sub.platform === 'web') {
+          const s: Subscription = {
+            id: sub.id,
+            platform: 'web',
+            interval: sub.interval,
+            subscription: sub,
+            price: {
+              value: sub.store.price,
+              formatted: currencyFormatter.format(sub.store.price / 100),
+            },
+            // TODO may need to have si_id too
+            product: sub.store.priceId,
+          }
+          return s
+        }
+
+        const s: Subscription = {
+          id: sub.id,
+          platform: sub.platform,
+          interval: sub.interval,
+          subscription: sub,
+          price: {
+            value: 0,
+            formatted: '',
+          },
+          product: undefined,
+        }
+        return s
       })
 
       return {
-        active: rawSubscriptions.active,
+        /**
+         * TODO decorate this too
+         */
+        active: active,
         available: organizeMainSubscriptionsByTier(subscriptions),
       }
     },
@@ -51,10 +85,11 @@ export function useMainSubscriptions() {
 export function usePurchaseSubscription() {
   const {currentAccount} = useSession()
   return useMutation({
-    async mutationFn(product: Subscription['product']) {
-      if (product.platform !== 'web') {
+    async mutationFn(subscription: Subscription) {
+      if (subscription.platform !== 'web') {
         throw new Error('Cannot purchase native subscription on web')
       }
+
       if (!currentAccount || !currentAccount.email) {
         throw new Error('No account or email')
       }
@@ -64,7 +99,7 @@ export function usePurchaseSubscription() {
         {
           method: 'POST',
           body: JSON.stringify({
-            price: product.data,
+            price: subscription.product,
             // TODO should NOT use query, use auth and our db state
             user: currentAccount.did,
             email: currentAccount.email,

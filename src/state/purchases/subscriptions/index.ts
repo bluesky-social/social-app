@@ -1,8 +1,10 @@
 import Purchases from 'react-native-purchases'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
+import {useCurrencyFormatter} from '#/lib/currency'
 import {isAndroid} from '#/platform/detection'
 import {getMainSubscriptions} from '#/state/purchases/subscriptions/api'
+import {Subscription as APISubscription} from '#/state/purchases/subscriptions/api/types'
 import {
   Subscription,
   Subscriptions,
@@ -13,6 +15,7 @@ import {useSession} from '#/state/session'
 export function useMainSubscriptions() {
   const {currentAccount} = useSession()
   const did = currentAccount!.did
+  const currencyFormatter = useCurrencyFormatter()
 
   return useQuery<Subscriptions>({
     queryKey: ['availableSubscriptions', did],
@@ -26,30 +29,54 @@ export function useMainSubscriptions() {
         .filter(s => s.platform !== 'web')
         .filter(s => s.platform === platform)
       const lookupKeys = Array.from(
-        new Set(platformSubscriptions.map(s => s.lookupKey)),
+        new Set(platformSubscriptions.map(s => s.store.productLookupKey)),
       )
       const products = await Purchases.getProducts(lookupKeys)
-      const subscriptions: Subscription[] = platformSubscriptions
-        .map(sub => {
-          const productData = products.find(p => p.identifier === sub.storeId)
-          if (!productData) return undefined
-          const subscription = {
-            ...sub,
+
+      function decorateSubscription(
+        sub: APISubscription,
+      ): Subscription | undefined {
+        if (sub.platform === 'web') {
+          return {
+            id: sub.id,
+            platform: sub.platform,
+            interval: sub.interval,
+            subscription: sub,
             price: {
-              value: productData.price * 100, // convert to cents
-              formatted: productData.priceString,
+              value: sub.store.price, // convert to cents
+              formatted: currencyFormatter.format(sub.store.price / 100),
             },
-            product: {
-              platform,
-              data: productData,
-            },
+            product: sub.store.priceId,
           }
-          return subscription
-        })
+        }
+
+        const productData = products.find(
+          p => p.identifier === sub.store.productId,
+        )
+
+        if (!productData) return undefined
+
+        return {
+          id: sub.id,
+          platform: sub.platform,
+          interval: sub.interval,
+          subscription: sub,
+          price: {
+            value: productData.price * 100, // convert to cents
+            formatted: productData.priceString,
+          },
+          product: productData,
+        }
+      }
+      const subscriptions = platformSubscriptions
+        .map(decorateSubscription)
+        .filter(Boolean) as Subscription[]
+      const active = rawSubscriptions.active
+        .map(decorateSubscription)
         .filter(Boolean) as Subscription[]
 
       return {
-        active: rawSubscriptions.active,
+        active: active,
         available: organizeMainSubscriptionsByTier(subscriptions),
       }
     },
@@ -61,17 +88,23 @@ export function usePurchaseSubscription() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    async mutationFn(product: Subscription['product']) {
-      if (product.platform === 'web') {
+    async mutationFn(subscription: Subscription) {
+      if (subscription.platform === 'web') {
         throw new Error('Cannot purchase web subscription on native')
       }
+
+      if (!subscription.product) {
+        throw new Error('Subscription product not found')
+      }
+
       // TODO don't do this here
       Purchases.addCustomerInfoUpdateListener(_info => {
         queryClient.invalidateQueries({
           queryKey: ['availableSubscriptions', currentAccount!.did],
         })
       })
-      return Purchases.purchaseStoreProduct(product.data)
+
+      return Purchases.purchaseStoreProduct(subscription.product)
     },
   })
 }
