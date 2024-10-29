@@ -37,7 +37,6 @@ const imageDimensionsCache = createCache(CACHE_SIZE)
 const useImageDimensions = (image: ImageSource): Dimensions | null => {
   const [dimensions, setDimensions] = useState<Dimensions | null>(null)
 
-   
   const getImageDimensions = (
     image: ImageSource,
   ): Promise<Dimensions | null> => {
@@ -54,8 +53,12 @@ const useImageDimensions = (image: ImageSource): Dimensions | null => {
             source.uri,
             source.headers,
             (width: number, height: number) => {
-              imageDimensionsCache.set(cacheKey, {width, height})
-              resolve({width, height})
+              if (width > 0 && height > 0) {
+                imageDimensionsCache.set(cacheKey, {width, height})
+                resolve({width, height})
+              } else {
+                resolve(null)
+              }
             },
             () => {
               resolve(null)
