@@ -144,7 +144,7 @@ function GifList({
           a.mb_lg,
           a.flex_row,
           a.align_center,
-          !gtMobile && isWeb && a.gap_md,
+          !gtMobile && web(a.gap_md),
         ]}>
         {/* cover top corners */}
         <View
@@ -209,6 +209,7 @@ function GifList({
           native([a.px_xl, {minHeight: height}]),
           web(a.h_full_vh),
         ]}
+        style={[web(a.h_full_vh)]}
         ListHeaderComponent={
           <>
             {listHeader}
@@ -238,8 +239,6 @@ function GifList({
         onEndReached={onEndReached}
         onEndReachedThreshold={4}
         keyExtractor={(item: Gif) => item.id}
-        // @ts-expect-error web only
-        style={isWeb && {minHeight: '100vh'}}
         keyboardDismissMode="on-drag"
         ListFooterComponent={
           hasData ? (

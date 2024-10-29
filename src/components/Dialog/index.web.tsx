@@ -210,21 +210,26 @@ export const ScrollableInner = Inner
 
 export const InnerFlatList = React.forwardRef<
   FlatList,
-  FlatListProps<any> & {label: string} & {webInnerStyle?: StyleProp<ViewStyle>}
->(function InnerFlatList({label, style, webInnerStyle, ...props}, ref) {
+  FlatListProps<any> & {label: string} & {
+    webInnerStyle?: StyleProp<ViewStyle>
+    webInnerContentContainerStyle?: StyleProp<ViewStyle>
+  }
+>(function InnerFlatList(
+  {label, style, webInnerStyle, webInnerContentContainerStyle, ...props},
+  ref,
+) {
   const {gtMobile} = useBreakpoints()
   return (
     <Inner
       label={label}
       style={[
+        a.overflow_hidden,
+        a.px_0,
         // @ts-ignore web only -sfn
-        {
-          paddingHorizontal: 0,
-          maxHeight: 'calc(-36px + 100vh)',
-          overflow: 'hidden',
-        },
+        {maxHeight: 'calc(-36px + 100vh)'},
         webInnerStyle,
-      ]}>
+      ]}
+      contentContainerStyle={[a.px_0, webInnerContentContainerStyle]}>
       <FlatList
         ref={ref}
         style={[gtMobile ? a.px_2xl : a.px_xl, flatten(style)]}
