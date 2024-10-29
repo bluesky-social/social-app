@@ -96,7 +96,7 @@ let ProfileHeaderShell = ({
   )
 
   return (
-    <View style={t.atoms.bg} pointerEvents={isIOS ? 'auto' : 'box-none'}>
+    <View pointerEvents={isIOS ? 'auto' : 'box-none'}>
       <View
         pointerEvents={isIOS ? 'auto' : 'box-none'}
         style={[a.relative, {height: 150}]}>
