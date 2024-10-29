@@ -5,13 +5,25 @@ import {useTheme} from '#/alf'
 
 export function SubtleWebHover({hover}: {hover: boolean}) {
   const t = useTheme()
+  let opacity: number
+  switch (t.name) {
+    case 'dark':
+      opacity = 0.4
+      break
+    case 'dim':
+      opacity = 0.45
+      break
+    case 'light':
+      opacity = 0.5
+      break
+  }
   return (
     <View
       style={[
         t.atoms.bg_contrast_25,
         styles.container,
         {
-          opacity: hover ? 0.5 : 0,
+          opacity: hover ? opacity : 0,
         },
       ]}
     />
@@ -27,6 +39,6 @@ const styles = StyleSheet.create({
     top: 0,
     pointerEvents: 'none',
     // @ts-ignore web only
-    transition: '0.05s ease-in-out opacity',
+    transition: '0.15s ease-in-out opacity',
   },
 })
