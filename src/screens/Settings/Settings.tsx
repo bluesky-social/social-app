@@ -61,7 +61,7 @@ export function SettingsScreen({}: Props) {
             style={[
               a.px_xl,
               a.pb_md,
-              a.flex_1,
+              a.w_full,
               a.gap_2xs,
               a.align_center,
               {minHeight: 160},
