@@ -1,6 +1,7 @@
 import React from 'react'
 import {View} from 'react-native'
-import {Trans} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
 import {
@@ -23,6 +24,7 @@ type Props = NativeStackScreenProps<
   'PreferencesExternalEmbeds'
 >
 export function ExternalMediaPreferencesScreen({}: Props) {
+  const {_} = useLingui()
   return (
     <Layout.Screen testID="externalMediaPreferencesScreen">
       <Layout.Header title={_(msg`External Media Preferences`)} />
