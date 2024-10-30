@@ -679,6 +679,7 @@ export function SearchScreen(
   }, [])
 
   const onPressMenu = React.useCallback(() => {
+    textInput.current?.blur()
     setDrawerOpen(true)
   }, [setDrawerOpen])
 
