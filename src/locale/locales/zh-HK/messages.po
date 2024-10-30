@@ -62,12 +62,12 @@ msgstr "{0, plural, one {# 秒鐘} other {# 秒鐘}}"
 #: src/components/ProfileHoverCard/index.web.tsx:398
 #: src/screens/Profile/Header/Metrics.tsx:23
 msgid "{0, plural, one {follower} other {followers}}"
-msgstr "{0, plural, one {個追隨者} other {個追隨者}}"
+msgstr "{0, plural, one {個跟隨者} other {個跟隨者}}"
 
 #: src/components/ProfileHoverCard/index.web.tsx:402
 #: src/screens/Profile/Header/Metrics.tsx:27
 msgid "{0, plural, one {following} other {following}}"
-msgstr "{0, plural, one {個追蹤中} other {個追蹤中}}"
+msgstr "{0, plural, one {個跟隨中} other {個跟隨中}}"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:300
 msgid "{0, plural, one {Like (# like)} other {Like (# likes)}}"
@@ -181,7 +181,7 @@ msgstr "{estimatedTimeMins, plural, one {分鐘} other {分鐘}}"
 #: src/components/ProfileHoverCard/index.web.tsx:508
 #: src/screens/Profile/Header/Metrics.tsx:50
 msgid "{following} following"
-msgstr "{following} 個追蹤中"
+msgstr "{following} 個跟隨中"
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:384
 msgid "{handle} can't be messaged"
@@ -217,11 +217,11 @@ msgstr "<0>{0}、</0><1>{1}</1>同{2, plural, one {另外 # } other {另外 # }}
 
 #: src/view/shell/Drawer.tsx:97
 msgid "<0>{0}</0> {1, plural, one {follower} other {followers}}"
-msgstr "<0>{0}</0> {1, plural, one {個追隨者} other {個追隨者}}"
+msgstr "<0>{0}</0> {1, plural, one {個跟隨者} other {個跟隨者}}"
 
 #: src/view/shell/Drawer.tsx:108
 msgid "<0>{0}</0> {1, plural, one {following} other {following}}"
-msgstr "<0>{0}</0> {1, plural, one {個追蹤中} other {個追蹤中}}"
+msgstr "<0>{0}</0> {1, plural, one {個跟隨中} other {個跟隨中}}"
 
 #: src/screens/StarterPack/Wizard/index.tsx:516
 msgid "<0>{0}</0> and<1> </1><2>{1} </2>are included in your starter pack"
@@ -311,7 +311,7 @@ msgstr "已經封鎖帳戶"
 
 #: src/view/com/profile/ProfileMenu.tsx:145
 msgid "Account followed"
-msgstr "已經追蹤帳戶"
+msgstr "已經跟隨帳戶"
 
 #: src/view/com/profile/ProfileMenu.tsx:108
 msgid "Account muted"
@@ -421,7 +421,7 @@ msgstr "加啲動態落你個新手包裏面！"
 
 #: src/screens/Feeds/NoFollowingFeed.tsx:41
 msgid "Add the default feed of only people you follow"
-msgstr "只加你追蹤緊嘅人嘅預設動態"
+msgstr "只加你跟隨緊嘅人嘅預設動態"
 
 #: src/view/com/modals/ChangeHandle.tsx:403
 msgid "Add the following DNS record to your domain:"
@@ -480,7 +480,7 @@ msgstr "演算法訓練完成！"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:381
 msgid "All accounts have been followed!"
-msgstr "已經追蹤所有帳戶！"
+msgstr "已經跟隨所有帳戶！"
 
 #: src/view/screens/Feeds.tsx:735
 msgid "All the feeds you've saved, right in one place."
@@ -591,7 +591,7 @@ msgstr "揀影片嗰陣發生錯誤"
 #: src/screens/StarterPack/StarterPackScreen.tsx:347
 #: src/screens/StarterPack/StarterPackScreen.tsx:369
 msgid "An error occurred while trying to follow all"
-msgstr "追蹤所有帳戶時發生錯誤"
+msgstr "跟隨所有帳戶時發生錯誤"
 
 #: src/view/com/composer/state/video.ts:449
 msgid "An error occurred while uploading the video."
@@ -1958,7 +1958,7 @@ msgstr "DNS 面板"
 
 #: src/components/dialogs/MutedWords.tsx:302
 msgid "Do not apply this mute word to users you follow"
-msgstr "唔好將呢個靜音字套用到你追蹤嘅用戶"
+msgstr "唔好將呢個靜音字套用到你跟隨嘅用戶"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:174
 msgid "Does not contain adult content."
@@ -2387,11 +2387,11 @@ msgstr "過多或者不受歡迎嘅訊息"
 
 #: src/components/dialogs/MutedWords.tsx:311
 msgid "Exclude users you follow"
-msgstr "排除你追蹤嘅用戶"
+msgstr "排除你跟隨嘅用戶"
 
 #: src/components/dialogs/MutedWords.tsx:514
 msgid "Excludes users you follow"
-msgstr "排除你追蹤嘅用戶"
+msgstr "排除你跟隨嘅用戶"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:403
 msgid "Exit fullscreen"
@@ -2436,7 +2436,7 @@ msgstr "URI 應解析為記錄"
 
 #: src/view/screens/NotificationsSettings.tsx:78
 msgid "Experimental: When this preference is enabled, you'll only receive reply and quote notifications from users you follow. We'll continue to add more controls here over time."
-msgstr "實驗性選項：啟用呢個設定之後，你只會收到你追蹤嘅使用者嘅回覆同引用通知。我哋會隨住時間嘅推移繼續喺呢度加入更多控制項。"
+msgstr "實驗性選項：啟用呢個設定之後，你只會收到你跟隨嘅使用者嘅回覆同引用通知。我哋會隨住時間嘅推移繼續喺呢度加入更多控制項。"
 
 #: src/components/dialogs/MutedWords.tsx:500
 msgid "Expired"
@@ -2536,7 +2536,7 @@ msgstr "載入唔到建議嘅動態"
 
 #: src/view/screens/Search/Explore.tsx:378
 msgid "Failed to load suggested follows"
-msgstr "載入唔到建議追蹤"
+msgstr "載入唔到建議跟隨"
 
 #: src/state/queries/pinned-post.ts:75
 msgid "Failed to pin post"
@@ -2674,91 +2674,91 @@ msgstr "靈活"
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:234
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:132
 msgid "Follow"
-msgstr "追蹤"
+msgstr "跟隨"
 
 #: src/view/com/profile/FollowButton.tsx:70
 msgctxt "action"
 msgid "Follow"
-msgstr "追蹤"
+msgstr "跟隨"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:218
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:114
 msgid "Follow {0}"
-msgstr "追蹤 {0}"
+msgstr "跟隨 {0}"
 
 #: src/view/com/posts/AviFollowButton.tsx:68
 msgid "Follow {name}"
-msgstr "追蹤 {name}"
+msgstr "跟隨 {name}"
 
 #: src/components/ProgressGuide/List.tsx:54
 msgid "Follow 7 accounts"
-msgstr "追蹤 7 個帳戶"
+msgstr "跟隨 7 個帳戶"
 
 #: src/view/com/profile/ProfileMenu.tsx:222
 #: src/view/com/profile/ProfileMenu.tsx:233
 msgid "Follow Account"
-msgstr "追蹤帳戶"
+msgstr "跟隨帳戶"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:427
 #: src/screens/StarterPack/StarterPackScreen.tsx:434
 msgid "Follow all"
-msgstr "追蹤所有"
+msgstr "跟隨所有"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:232
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:130
 msgid "Follow Back"
-msgstr "追蹤返嚟"
+msgstr "跟隨返嚟"
 
 #: src/view/com/profile/FollowButton.tsx:79
 msgctxt "action"
 msgid "Follow Back"
-msgstr "追蹤返嚟"
+msgstr "跟隨返嚟"
 
 #: src/view/screens/Search/Explore.tsx:334
 msgid "Follow more accounts to get connected to your interests and build your network."
-msgstr "追蹤更多帳戶，同你嘅興趣聯繫，同埋建立你嘅網絡。"
+msgstr "跟隨更多帳戶，同你嘅興趣聯繫，同埋建立你嘅網絡。"
 
 #: src/components/KnownFollowers.tsx:231
 msgid "Followed by <0>{0}</0>"
-msgstr "俾 <0>{0}</0> 追蹤"
+msgstr "俾 <0>{0}</0> 跟隨"
 
 #: src/components/KnownFollowers.tsx:217
 msgid "Followed by <0>{0}</0> and {1, plural, one {# other} other {# others}}"
-msgstr "俾 <0>{0}</0> 及{1, plural, one {另外 # 人追蹤} other {另外 # 人追蹤}}"
+msgstr "俾 <0>{0}</0> 及{1, plural, one {另外 # 人跟隨} other {另外 # 人跟隨}}"
 
 #: src/components/KnownFollowers.tsx:204
 msgid "Followed by <0>{0}</0> and <1>{1}</1>"
-msgstr "俾 <0>{0}</0> 及 <1>{1}</1> 追蹤"
+msgstr "俾 <0>{0}</0> 及 <1>{1}</1> 跟隨"
 
 #: src/components/KnownFollowers.tsx:186
 msgid "Followed by <0>{0}</0>, <1>{1}</1>, and {2, plural, one {# other} other {# others}}"
-msgstr "俾 <0>{0}</0>, <1>{1}</1> 及{2, plural, one {另外 # 人追蹤} other {另外 # 人追蹤}}"
+msgstr "俾 <0>{0}</0>, <1>{1}</1> 及{2, plural, one {另外 # 人跟隨} other {另外 # 人跟隨}}"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:404
 msgid "Followed users"
-msgstr "追蹤咗嘅用戶"
+msgstr "跟隨咗嘅用戶"
 
 #: src/view/com/notifications/FeedItem.tsx:210
 msgid "followed you"
-msgstr "追蹤你"
+msgstr "跟隨你"
 
 #: src/view/com/notifications/FeedItem.tsx:208
 msgid "followed you back"
-msgstr "追蹤你返嚟"
+msgstr "跟隨你返嚟"
 
 #: src/view/screens/ProfileFollowers.tsx:30
 #: src/view/screens/ProfileFollowers.tsx:31
 msgid "Followers"
-msgstr "追隨者"
+msgstr "跟隨者"
 
 #: src/Navigation.tsx:190
 msgid "Followers of @{0} that you know"
-msgstr "你識嘅 @{0} 追蹤"
+msgstr "你識嘅 @{0} 跟隨"
 
 #: src/screens/Profile/KnownFollowers.tsx:110
 #: src/screens/Profile/KnownFollowers.tsx:120
 msgid "Followers you know"
-msgstr "你識嘅追隨者"
+msgstr "你識嘅跟隨者"
 
 #. User is following this account, click to unfollow
 #: src/components/ProfileCard.tsx:352
@@ -2771,16 +2771,16 @@ msgstr "你識嘅追隨者"
 #: src/view/screens/ProfileFollows.tsx:31
 #: src/view/screens/SavedFeeds.tsx:431
 msgid "Following"
-msgstr "追蹤中"
+msgstr "跟隨中"
 
 #: src/components/ProfileCard.tsx:318
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:98
 msgid "Following {0}"
-msgstr "追蹤 {0}"
+msgstr "跟隨 {0}"
 
 #: src/view/com/posts/AviFollowButton.tsx:50
 msgid "Following {name}"
-msgstr "追蹤 {name}"
+msgstr "跟隨 {name}"
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:57
 #: src/screens/Settings/ContentAndMediaSettings.tsx:60
@@ -2796,11 +2796,11 @@ msgstr "「Following」動態設定"
 
 #: src/screens/Profile/Header/Handle.tsx:33
 msgid "Follows you"
-msgstr "追蹤你"
+msgstr "跟隨你"
 
 #: src/components/Pills.tsx:175
 msgid "Follows You"
-msgstr "追蹤你"
+msgstr "跟隨你"
 
 #: src/components/dialogs/nuxs/NeueTypography.tsx:71
 #: src/screens/Settings/AppearanceSettings.tsx:125
@@ -3280,7 +3280,7 @@ msgstr "邀請人嚟呢個新手包！"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:35
 msgid "Invite your friends to follow your favorite feeds and people"
-msgstr "邀請你嘅朋友追蹤你最鍾意嘅動態同人物"
+msgstr "邀請你嘅朋友跟隨你最鍾意嘅動態同人物"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:32
 msgid "Invites, but personal"
@@ -3571,7 +3571,7 @@ msgstr "載入更多建議動態"
 
 #: src/view/screens/Search/Explore.tsx:217
 msgid "Load more suggested follows"
-msgstr "載入更多建議追蹤"
+msgstr "載入更多建議跟隨"
 
 #: src/view/screens/Notifications.tsx:215
 msgid "Load new notifications"
@@ -3985,7 +3985,7 @@ msgstr "需要上報侵犯版權？"
 
 #: src/screens/Onboarding/StepFinished.tsx:255
 msgid "Never lose access to your followers or data."
-msgstr "永遠唔好失去對你嘅追隨者或者資料嘅存取權。"
+msgstr "永遠唔好失去對你嘅跟隨者或者資料嘅存取權。"
 
 #: src/view/com/modals/ChangeHandle.tsx:508
 msgid "Nevermind, create a handle for me"
@@ -4117,7 +4117,7 @@ msgstr "仲未有讚"
 #: src/components/ProfileCard.tsx:338
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:119
 msgid "No longer following {0}"
-msgstr "唔再追蹤 {0}"
+msgstr "唔再跟隨 {0}"
 
 #: src/screens/Signup/StepHandle.tsx:169
 msgid "No longer than 253 characters"
@@ -4659,11 +4659,11 @@ msgstr "用戶"
 
 #: src/Navigation.tsx:183
 msgid "People followed by @{0}"
-msgstr "俾 @{0} 追蹤嘅人"
+msgstr "俾 @{0} 跟隨嘅人"
 
 #: src/Navigation.tsx:176
 msgid "People following @{0}"
-msgstr "追蹤 @{0} 嘅人"
+msgstr "跟隨 @{0} 嘅人"
 
 #: src/view/com/lightbox/Lightbox.tsx:74
 msgid "Permission to access camera roll is required."
@@ -4923,7 +4923,7 @@ msgstr "撳嚟重試"
 
 #: src/components/KnownFollowers.tsx:124
 msgid "Press to view followers of this account that you also follow"
-msgstr "撳一下就可以睇到你亦都追蹤緊嘅呢個帳戶嘅追隨者"
+msgstr "撳一下就可以睇到你亦都跟隨緊嘅呢個帳戶嘅跟隨者"
 
 #: src/view/com/lightbox/Lightbox.web.tsx:146
 msgid "Previous image"
@@ -6091,7 +6091,7 @@ msgstr "顯示回覆"
 
 #: src/view/screens/PreferencesThreads.tsx:95
 msgid "Show replies by people you follow before all other replies."
-msgstr "喺所有其他回覆之前顯示你追蹤嘅人嘅回覆。"
+msgstr "喺所有其他回覆之前顯示你跟隨嘅人嘅回覆。"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:559
 #: src/view/com/util/forms/PostDropdownBtn.tsx:569
@@ -6773,7 +6773,7 @@ msgstr "呢個動態而家流量好大，暫時唔可以用。請遲啲再試。
 
 #: src/view/com/posts/CustomFeedEmptyState.tsx:38
 msgid "This feed is empty! You may need to follow more users or tune your language settings."
-msgstr "呢個動態係空嘅！你可能需要追蹤更多用戶或者調整你嘅語言設定。"
+msgstr "呢個動態係空嘅！你可能需要跟隨更多用戶或者調整你嘅語言設定。"
 
 #: src/components/StarterPack/Main/PostsList.tsx:36
 #: src/view/screens/ProfileFeed.tsx:478
@@ -6864,7 +6864,7 @@ msgstr "呢個應該會喺以下位置建立一個網域記錄："
 
 #: src/view/com/profile/ProfileFollowers.tsx:96
 msgid "This user doesn't have any followers."
-msgstr "呢個用戶無任何追蹤。"
+msgstr "呢個用戶無任何跟隨。"
 
 #: src/components/dms/MessagesListBlockedFooter.tsx:60
 msgid "This user has blocked you"
@@ -6893,7 +6893,7 @@ msgstr "呢個用戶係呢度嘅新用戶，撳一下就可以睇到佢哋幾時
 
 #: src/view/com/profile/ProfileFollows.tsx:96
 msgid "This user isn't following anyone."
-msgstr "呢個用戶冇追蹤任何人。"
+msgstr "呢個用戶冇跟隨任何人。"
 
 #: src/components/dialogs/MutedWords.tsx:435
 msgid "This will delete \"{0}\" from your muted words. You can always add it back later."
@@ -7321,12 +7321,12 @@ msgstr "用戶"
 
 #: src/components/WhoCanReply.tsx:258
 msgid "users followed by <0>@{0}</0>"
-msgstr "俾 <0>@{0}</0> 追蹤嘅用戶"
+msgstr "俾 <0>@{0}</0> 跟隨嘅用戶"
 
 #: src/screens/Messages/Settings.tsx:86
 #: src/screens/Messages/Settings.tsx:89
 msgid "Users I follow"
-msgstr "我追蹤嘅用戶"
+msgstr "我跟隨嘅用戶"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:417
 msgid "Users in \"{0}\""
@@ -7560,7 +7560,7 @@ msgstr "我哋希望你有個美好嘅時光。記住，Bluesky 係："
 
 #: src/view/com/posts/DiscoverFallbackHeader.tsx:30
 msgid "We ran out of posts from your follows. Here's the latest from <0/>."
-msgstr "我哋用完你嘅追蹤嘅帖文。呢個係 <0/> 嘅最新消息。"
+msgstr "我哋用完你嘅跟隨嘅帖文。呢個係 <0/> 嘅最新消息。"
 
 #: src/view/com/composer/state/video.ts:431
 msgid "We were unable to determine if you are allowed to upload videos. Please try again."
@@ -7766,7 +7766,7 @@ msgstr "你唔可以上載影片。"
 
 #: src/view/com/profile/ProfileFollows.tsx:95
 msgid "You are not following anyone."
-msgstr "你冇追蹤任何用戶。"
+msgstr "你冇跟隨任何用戶。"
 
 #: src/components/dialogs/nuxs/NeueTypography.tsx:61
 msgid "You can adjust these in your Appearance Settings later."
@@ -7775,7 +7775,7 @@ msgstr "你遲啲可以喺你嘅外觀設定裏面調整呢啲。"
 #: src/view/com/posts/FollowingEmptyState.tsx:63
 #: src/view/com/posts/FollowingEndOfFeed.tsx:64
 msgid "You can also discover new Custom Feeds to follow."
-msgstr "你亦可以發現新嘅自訂動態嚟追蹤。"
+msgstr "你亦可以發現新嘅自訂動態嚟跟隨。"
 
 #: src/view/com/modals/DeleteAccount.tsx:202
 msgid "You can also temporarily deactivate your account instead, and reactivate it at any time."
@@ -7796,11 +7796,11 @@ msgstr "你可以重新啟動你嘅帳戶嚟繼續登入，你嘅個人檔案同
 
 #: src/view/com/profile/ProfileFollowers.tsx:95
 msgid "You do not have any followers."
-msgstr "你冇任何追隨者。"
+msgstr "你冇任何跟隨者。"
 
 #: src/screens/Profile/KnownFollowers.tsx:100
 msgid "You don't follow any users who follow @{name}."
-msgstr "你唔會追蹤任何追蹤 @{name} 嘅用戶。"
+msgstr "你唔會跟隨任何跟隨 @{name} 嘅用戶。"
 
 #: src/view/com/modals/InviteCodes.tsx:67
 msgid "You don't have any invite codes yet! We'll send you some when you've been on Bluesky for a little longer."
@@ -7924,7 +7924,7 @@ msgstr "你一定要年滿13歲先可以建立帳戶。"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:307
 msgid "You must be following at least seven other people to generate a starter pack."
-msgstr "你必須追蹤至少七個人先可以產生新手包。"
+msgstr "你必須跟隨至少七個人先可以產生新手包。"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:60
 msgid "You must grant access to your photo library to save a QR code"
@@ -7972,19 +7972,19 @@ msgstr "你：{short}"
 
 #: src/screens/Signup/index.tsx:107
 msgid "You'll follow the suggested users and feeds once you finish creating your account!"
-msgstr "建立完帳戶之後，你就會追蹤建議嘅使用者同動態！"
+msgstr "建立完帳戶之後，你就會跟隨建議嘅使用者同動態！"
 
 #: src/screens/Signup/index.tsx:112
 msgid "You'll follow the suggested users once you finish creating your account!"
-msgstr "建立完帳戶之後，你就會追蹤建議嘅使用者！"
+msgstr "建立完帳戶之後，你就會跟隨建議嘅使用者！"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:232
 msgid "You'll follow these people and {0} others"
-msgstr "你會追蹤呢啲人同另外 {0} 人"
+msgstr "你會跟隨呢啲人同另外 {0} 人"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:230
 msgid "You'll follow these people right away"
-msgstr "你會即刻追蹤呢啲人"
+msgstr "你會即刻跟隨呢啲人"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:138
 msgid "You'll receive an email at <0>{0}</0> to verify it's you."
@@ -8016,7 +8016,7 @@ msgstr "你揀咗喺呢篇帖文裏面隱藏字詞或者標籤。"
 
 #: src/view/com/posts/FollowingEndOfFeed.tsx:44
 msgid "You've reached the end of your feed! Find some more accounts to follow."
-msgstr "你已經去到你嘅動態嘅最後喇！搵多啲帳戶嚟追蹤。"
+msgstr "你已經去到你嘅動態嘅最後喇！搵多啲帳戶嚟跟隨。"
 
 #: src/view/com/composer/state/video.ts:435
 msgid "You've reached your daily limit for video uploads (too many bytes)"
@@ -8079,7 +8079,7 @@ msgstr "你嘅第一個讚！"
 
 #: src/view/com/posts/FollowingEmptyState.tsx:43
 msgid "Your following feed is empty! Follow more users to see what's happening."
-msgstr "你嘅「Following」動態係空嘅！追蹤更多用戶嚟睇下發生緊啲咩事。"
+msgstr "你嘅「Following」動態係空嘅！跟隨更多用戶嚟睇下發生緊啲咩事。"
 
 #: src/screens/Signup/StepHandle.tsx:125
 msgid "Your full handle will be"
