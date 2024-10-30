@@ -60,6 +60,37 @@ export default new Hono<{Bindings: Bindings; Variables: Variables}>()
   })
 
   /**
+   * Update a subscription (web only)
+   */
+  .post(`/subscriptions/update`, async c => {
+    const stripe = c.get('stripe')
+    const {stripeSubscriptionId, newPriceId} = await c.req.json()
+    const subscriptionItem = await stripe.subscriptionItems.retrieve(
+      stripeSubscriptionId,
+    )
+    // TODO get customer and compare DID to auth state to ensure it's legit
+    const subscription = await stripe.subscriptions.update(
+      subscriptionItem.subscription,
+      {
+        items: [
+          {
+            id: stripeSubscriptionId,
+            deleted: true,
+          },
+          {
+            price: newPriceId,
+          },
+        ],
+      },
+    )
+
+    return c.json({
+      oldItem: subscriptionItem,
+      subscription,
+    })
+  })
+
+  /**
    * Get subscription products for a given offering
    */
   .get('/subscriptions/:offering_lookup_key', async c => {
@@ -152,37 +183,6 @@ export default new Hono<{Bindings: Bindings; Variables: Variables}>()
         platformSubscriptions,
         activeSubscriptions,
       ),
-    })
-  })
-
-  /**
-   * Update a subscription (web only)
-   */
-  .post(`/subscriptions/update`, async c => {
-    const stripe = c.get('stripe')
-    const {stripeSubscriptionItemId, newPriceId} = await c.req.json()
-    const subscriptionItem = await stripe.subscriptionItems.retrieve(
-      stripeSubscriptionItemId,
-    )
-    // TODO get customer and compare DID to auth state to ensure it's legit
-    const subscription = await stripe.subscriptions.update(
-      subscriptionItem.subscription,
-      {
-        items: [
-          {
-            id: stripeSubscriptionItemId,
-            deleted: true,
-          },
-          {
-            price: newPriceId,
-          },
-        ],
-      },
-    )
-
-    return c.json({
-      oldItem: subscriptionItem,
-      subscription,
     })
   })
 

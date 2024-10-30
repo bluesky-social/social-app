@@ -246,14 +246,13 @@ export function mergeSubscriptions(
 ): Subscription[] {
   const merged: Subscription[] = []
 
-  for (const a of active) {
-    for (const s of all) {
-      if (a.id === s.id) {
-        // @ts-ignore
-        merged.push({...s, state: a.state})
-      } else {
-        merged.push(s)
-      }
+  for (const s of all) {
+    const a = active.find(p => p.id === s.id)
+    if (a) {
+      // @ts-ignore
+      merged.push({...s, state: a.state})
+    } else {
+      merged.push(s)
     }
   }
 
@@ -294,7 +293,6 @@ export function getSubscriptionState(
 }
 
 export function getSubscriptionPlatform(id: string): 'web' | 'android' | 'ios' {
-  console.log(id)
   switch (id) {
     case 'prod_R2eNjNa6mB1Jlu':
     case 'prod_R37Zg28EeQ9XAz':
