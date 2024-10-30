@@ -5,6 +5,7 @@ import ky, {KyInstance} from 'ky'
 import Stripe from 'stripe'
 
 import {
+  mergeSubscriptions,
   normalizeEntitlements,
   normalizeSubscriptions,
   RevenueCatSubscription,
@@ -147,8 +148,10 @@ export default new Hono<{Bindings: Bindings; Variables: Variables}>()
     }
 
     return c.json({
-      active: activeSubscriptions,
-      available: platformSubscriptions,
+      subscriptions: mergeSubscriptions(
+        platformSubscriptions,
+        activeSubscriptions,
+      ),
     })
   })
 

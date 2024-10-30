@@ -101,6 +101,7 @@ export type Entitlement = {
 }
 
 export type SubscriptionState = {
+  platform: 'web' | 'android' | 'ios'
   active: boolean
   entitlements: {id: EntitlementId}[]
   status:
@@ -186,7 +187,9 @@ export function normalizeSubscriptions(
     const id = normalizeSubscriptionId(product.store_identifier)
     if (!id) continue
     const platform = getSubscriptionPlatform(product.store_identifier)
-    const state = subscription ? getSubscriptionState(subscription) : undefined
+    const state = subscription
+      ? getSubscriptionState(subscription, {platform})
+      : undefined
     const interval = getSubscriptionInterval(id)
 
     if (platform === 'web') {
@@ -237,6 +240,26 @@ export function normalizeSubscriptions(
   return normalized
 }
 
+export function mergeSubscriptions(
+  all: Subscription[],
+  active: Subscription[],
+): Subscription[] {
+  const merged: Subscription[] = []
+
+  for (const a of active) {
+    for (const s of all) {
+      if (a.id === s.id) {
+        // @ts-ignore
+        merged.push({...s, state: a.state})
+      } else {
+        merged.push(s)
+      }
+    }
+  }
+
+  return merged
+}
+
 export function getSubscriptionInterval(
   id: SubscriptionId,
 ): 'monthly' | 'annual' {
@@ -254,8 +277,12 @@ export function getSubscriptionInterval(
 
 export function getSubscriptionState(
   subscription: RevenueCatSubscription,
+  options: {
+    platform: 'web' | 'android' | 'ios'
+  },
 ): SubscriptionState {
   return {
+    platform: options.platform,
     active: subscription.gives_access,
     status: subscription.status,
     renewalStatus: subscription.auto_renewal_status,
