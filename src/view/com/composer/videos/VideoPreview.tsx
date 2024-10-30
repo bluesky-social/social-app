@@ -9,6 +9,7 @@ import {useAutoplayDisabled} from '#/state/preferences'
 import {ExternalEmbedRemoveBtn} from '#/view/com/composer/ExternalEmbedRemoveBtn'
 import {atoms as a, useTheme} from '#/alf'
 import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
+import {VideoTranscodeBackdrop} from './VideoTranscodeBackdrop'
 
 export function VideoPreview({
   asset,
@@ -42,6 +43,9 @@ export function VideoPreview({
         t.atoms.border_contrast_low,
         {backgroundColor: 'black'},
       ]}>
+      <View style={[a.absolute, a.inset_0]}>
+        <VideoTranscodeBackdrop uri={asset.uri} />
+      </View>
       <BlueskyVideoView
         url={video.uri}
         autoplay={!autoplayDisabled}
