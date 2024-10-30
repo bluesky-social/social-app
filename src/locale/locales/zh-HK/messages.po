@@ -5809,7 +5809,7 @@ msgstr "揀你想訂閱嘅動態提供包含邊啲語言。如果冇揀，就會
 
 #: src/view/screens/LanguageSettings.tsx:97
 msgid "Select your app language for the default text to display in the app."
-msgstr "揀你嘅 App 語言，喺 App 裏面顯示預設文字。"
+msgstr "揀你嘅 App 顯示語言。"
 
 #: src/screens/Signup/StepInfo/index.tsx:223
 msgid "Select your date of birth"
