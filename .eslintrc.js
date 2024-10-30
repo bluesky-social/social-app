@@ -79,7 +79,7 @@ module.exports = {
       },
     ],
     'simple-import-sort/exports': 'error',
-    'react-compiler/react-compiler': 'error',
+    'react-compiler/react-compiler': 'warn',
     'no-restricted-imports': [
       'error',
       {
