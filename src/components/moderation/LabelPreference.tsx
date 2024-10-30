@@ -46,8 +46,10 @@ export function Content({
 
   return (
     <View style={[a.gap_xs, a.flex_1]}>
-      <Text style={[a.font_bold, gtPhone ? a.text_sm : a.text_md]}>{name}</Text>
-      <Text style={[t.atoms.text_contrast_medium, a.leading_snug]}>
+      <Text emoji style={[a.font_bold, gtPhone ? a.text_sm : a.text_md]}>
+        {name}
+      </Text>
+      <Text emoji style={[t.atoms.text_contrast_medium, a.leading_snug]}>
         {description}
       </Text>
 
@@ -268,7 +270,7 @@ export function LabelerLabelPreference({
                 a.border,
                 t.atoms.border_contrast_low,
               ]}>
-              <Text style={[a.font_bold, t.atoms.text_contrast_low]}>
+              <Text emoji style={[a.font_bold, t.atoms.text_contrast_low]}>
                 {currentPrefLabel}
               </Text>
             </View>
