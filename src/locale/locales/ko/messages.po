@@ -8,7 +8,7 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-10-25 09:19+0900\n"
+"PO-Revision-Date: 2024-10-30 09:25+0900\n"
 "Last-Translator: quiple\n"
 "Language-Team: quiple, lens0021, HaruChanHeart, hazzzi, heartade\n"
 "Plural-Forms: \n"
@@ -719,10 +719,6 @@ msgstr "모양"
 msgid "Appearance settings"
 msgstr "모양 설정"
 
-#: src/Navigation.tsx:325
-#~ msgid "Appearance Settings"
-#~ msgstr "모양 설정"
-
 #: src/screens/Feeds/NoSavedFeedsOfAnyType.tsx:47
 #: src/screens/Home/NoFeedsPinned.tsx:93
 msgid "Apply default recommended feeds"
@@ -1305,10 +1301,6 @@ msgstr "하단 탐색 막대를 닫습니다"
 #: src/screens/Login/PasswordUpdatedForm.tsx:33
 msgid "Closes password update alert"
 msgstr "비밀번호 변경 알림을 닫습니다"
-
-#: src/view/com/composer/Composer.tsx:547
-#~ msgid "Closes post composer and discards post draft"
-#~ msgstr "게시물 작성 상자를 닫고 게시물 초안을 삭제합니다"
 
 #: src/view/com/lightbox/ImageViewing/components/ImageDefaultHeader.tsx:37
 msgid "Closes viewer for header image"
@@ -4192,10 +4184,6 @@ msgstr "{query}에 대한 결과를 찾을 수 없습니다"
 msgid "No search results found for \"{search}\"."
 msgstr "\"{search}\"에 대한 검색 결과를 찾을 수 없습니다."
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:129
-#~ msgid "No self-labels can be applied to this post because it contains no media."
-#~ msgstr "이 게시물에는 미디어가 포함되어 있지 않으므로 자체 라벨을 적용할 수 없습니다."
-
 #: src/components/dialogs/EmbedConsent.tsx:104
 #: src/components/dialogs/EmbedConsent.tsx:111
 msgid "No thanks"
@@ -5024,14 +5012,6 @@ msgstr "일괄 뮤트하거나 차단할 수 있는 공개적이고 공유 가�
 #: src/view/screens/Lists.tsx:69
 msgid "Public, shareable lists which can drive feeds."
 msgstr "피드를 탐색할 수 있는 공개적이고 공유 가능한 목록입니다."
-
-#: src/view/com/composer/Composer.tsx:564
-#~ msgid "Publish post"
-#~ msgstr "게시물 게시하기"
-
-#: src/view/com/composer/Composer.tsx:564
-#~ msgid "Publish reply"
-#~ msgstr "답글 게시하기"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:128
 msgid "QR code copied to your clipboard!"
