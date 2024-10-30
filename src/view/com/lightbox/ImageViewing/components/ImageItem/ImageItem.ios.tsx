@@ -7,23 +7,19 @@
  */
 
 import React, {useState} from 'react'
-import {ActivityIndicator, Dimensions, StyleSheet} from 'react-native'
-import {Gesture, GestureDetector} from 'react-native-gesture-handler'
-import Animated, {
-  interpolate,
-  runOnJS,
-  SharedValue,
-  useAnimatedRef,
-  useAnimatedStyle,
-} from 'react-native-reanimated'
+import {ActivityIndicator, Dimensions, StyleSheet, View} from 'react-native'
+import {
+  Gesture,
+  GestureDetector,
+  PanGesture,
+} from 'react-native-gesture-handler'
+import Animated, {runOnJS, useAnimatedRef} from 'react-native-reanimated'
 import {Image} from 'expo-image'
 
 import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
 import {useImageDimensions} from '#/lib/media/image-sizes'
 import {ImageSource} from '../../@types'
 
-const SWIPE_CLOSE_OFFSET = 75
-const SWIPE_CLOSE_VELOCITY = 1
 const SCREEN = Dimensions.get('screen')
 const MAX_ORIGINAL_IMAGE_ZOOM = 2
 const MIN_DOUBLE_TAP_SCALE = 2
@@ -35,16 +31,15 @@ type Props = {
   onZoom: (scaled: boolean) => void
   isScrollViewBeingDragged: boolean
   showControls: boolean
-  dismissSwipeTranslateY: SharedValue<number>
+  dismissSwipePan: PanGesture | null
 }
 
 const ImageItem = ({
   imageSrc,
   onTap,
   onZoom,
-  onRequestClose,
   showControls,
-  dismissSwipeTranslateY,
+  dismissSwipePan,
 }: Props) => {
   const scrollViewRef = useAnimatedRef<Animated.ScrollView>()
 
@@ -57,32 +52,17 @@ const ImageItem = ({
     ? (imageDimensions.width / SCREEN.width) * MAX_ORIGINAL_IMAGE_ZOOM
     : 1
 
-  const animatedStyle = useAnimatedStyle(() => {
-    return {
-      opacity: interpolate(
-        dismissSwipeTranslateY.value,
-        [-SWIPE_CLOSE_OFFSET, 0, SWIPE_CLOSE_OFFSET],
-        [0.5, 1, 0.5],
-      ),
-    }
-  })
-
   const scrollHandler = useAnimatedScrollHandler({
     onScroll(e) {
       const nextIsScaled = e.zoomScale > 1
-      dismissSwipeTranslateY.value = nextIsScaled ? 0 : e.contentOffset.y
       if (scaled !== nextIsScaled) {
         runOnJS(handleZoom)(nextIsScaled)
       }
     },
     onEndDrag(e) {
-      const velocityY = e.velocity?.y ?? 0
       const nextIsScaled = e.zoomScale > 1
       if (scaled !== nextIsScaled) {
         runOnJS(handleZoom)(nextIsScaled)
-      }
-      if (!nextIsScaled && Math.abs(velocityY) > SWIPE_CLOSE_VELOCITY) {
-        runOnJS(onRequestClose)()
       }
     },
   })
@@ -130,7 +110,11 @@ const ImageItem = ({
       runOnJS(handleDoubleTap)(absoluteX, absoluteY)
     })
 
-  const composedGesture = Gesture.Exclusive(doubleTap, singleTap)
+  const composedGesture = Gesture.Exclusive(
+    dismissSwipePan ?? Gesture.Manual(),
+    doubleTap,
+    singleTap,
+  )
 
   return (
     <GestureDetector gesture={composedGesture}>
@@ -142,8 +126,9 @@ const ImageItem = ({
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
         maximumZoomScale={maxZoomScale}
-        onScroll={scrollHandler}>
-        <Animated.View style={[styles.imageScrollContainer, animatedStyle]}>
+        onScroll={scrollHandler}
+        bounces={scaled}>
+        <View style={styles.imageScrollContainer}>
           <ActivityIndicator size="small" color="#FFF" style={styles.loading} />
           <Image
             contentFit="contain"
@@ -156,7 +141,7 @@ const ImageItem = ({
             enableLiveTextInteraction={showControls && !scaled}
             accessibilityIgnoresInvertColors
           />
-        </Animated.View>
+        </View>
       </Animated.ScrollView>
     </GestureDetector>
   )

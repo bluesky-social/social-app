@@ -16,11 +16,14 @@ import {
   StyleSheet,
   View,
 } from 'react-native'
+import {Gesture} from 'react-native-gesture-handler'
 import PagerView from 'react-native-pager-view'
 import {MeasuredDimensions} from 'react-native-reanimated'
 import Animated, {
+  runOnJS,
   useAnimatedStyle,
   useSharedValue,
+  withDecay,
   withSpring,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
@@ -86,6 +89,29 @@ function ImageViewing({
     ],
   }))
 
+  const dismissSwipePan = Gesture.Pan()
+    .enabled(!isScaled)
+    .activeOffsetY([-10, 10])
+    .failOffsetX([-10, 10])
+    .maxPointers(1)
+    .onUpdate(e => {
+      'worklet'
+      dismissSwipeTranslateY.value = e.translationY
+      console.log(dismissSwipeTranslateY.value)
+    })
+    .onEnd(e => {
+      'worklet'
+      if (Math.abs(e.velocityY) > 1000) {
+        dismissSwipeTranslateY.value = withDecay({velocity: e.velocityY})
+        runOnJS(onRequestClose)()
+      } else {
+        dismissSwipeTranslateY.value = withSpring(0, {
+          stiffness: 700,
+          damping: 50,
+        })
+      }
+    })
+
   const onTap = useCallback(() => {
     setShowControls(show => !show)
   }, [])
@@ -130,7 +156,7 @@ function ImageViewing({
           }}
           overdrag={true}
           style={styles.pager}>
-          {images.map(imageSrc => (
+          {images.map((imageSrc, i) => (
             <View key={imageSrc.uri}>
               <ImageItem
                 onTap={onTap}
@@ -139,7 +165,9 @@ function ImageViewing({
                 onRequestClose={onRequestClose}
                 isScrollViewBeingDragged={isDragging}
                 showControls={showControls}
-                dismissSwipeTranslateY={dismissSwipeTranslateY}
+                dismissSwipePan={
+                  imageIndex === i && !isDragging ? dismissSwipePan : null
+                }
               />
             </View>
           ))}

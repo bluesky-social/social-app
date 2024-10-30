@@ -2,7 +2,7 @@
 
 import React from 'react'
 import {View} from 'react-native'
-import {SharedValue} from 'react-native-reanimated'
+import {PanGesture} from 'react-native-gesture-handler'
 
 import {ImageSource} from '../../@types'
 
@@ -13,7 +13,7 @@ type Props = {
   onZoom: (scaled: boolean) => void
   isScrollViewBeingDragged: boolean
   showControls: boolean
-  dismissSwipeTranslateY: SharedValue<number>
+  dismissSwipePan: PanGesture | null
 }
 
 const ImageItem = (_props: Props) => {

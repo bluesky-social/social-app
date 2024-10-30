@@ -1,14 +1,16 @@
 import React, {useState} from 'react'
 import {ActivityIndicator, Dimensions, StyleSheet} from 'react-native'
-import {Gesture, GestureDetector} from 'react-native-gesture-handler'
+import {
+  Gesture,
+  GestureDetector,
+  PanGesture,
+} from 'react-native-gesture-handler'
 import Animated, {
   runOnJS,
-  SharedValue,
   useAnimatedReaction,
   useAnimatedRef,
   useAnimatedStyle,
   useSharedValue,
-  withDecay,
   withSpring,
 } from 'react-native-reanimated'
 import {Image} from 'expo-image'
@@ -44,15 +46,14 @@ type Props = {
   onZoom: (isZoomed: boolean) => void
   isScrollViewBeingDragged: boolean
   showControls: boolean
-  dismissSwipeTranslateY: SharedValue<number>
+  dismissSwipePan: PanGesture
 }
 const ImageItem = ({
   imageSrc,
   onTap,
   onZoom,
-  onRequestClose,
   isScrollViewBeingDragged,
-  dismissSwipeTranslateY,
+  dismissSwipePan,
 }: Props) => {
   const [isScaled, setIsScaled] = useState(false)
   const [imageAspect, imageDimensions] = useImageDimensions({
@@ -102,19 +103,8 @@ const ImageItem = ({
     prependPinch(t, pinchScale.value, pinchOrigin.value, pinchTranslation.value)
     prependTransform(t, committedTransform.value)
     const [translateX, translateY, scale] = readTransform(t)
-
-    const dismissDistance = dismissSwipeTranslateY.value
-    const dismissProgress = Math.min(
-      Math.abs(dismissDistance) / (SCREEN.height / 2),
-      1,
-    )
     return {
-      opacity: 1 - dismissProgress,
-      transform: [
-        {translateX},
-        {translateY: translateY + dismissDistance},
-        {scale},
-      ],
+      transform: [{translateX}, {translateY: translateY}, {scale}],
     }
   })
 
@@ -292,33 +282,11 @@ const ImageItem = ({
       committedTransform.value = withClampedSpring(finalTransform)
     })
 
-  const dismissSwipePan = Gesture.Pan()
-    .enabled(!isScaled)
-    .activeOffsetY([-10, 10])
-    .failOffsetX([-10, 10])
-    .maxPointers(1)
-    .onUpdate(e => {
-      'worklet'
-      dismissSwipeTranslateY.value = e.translationY
-    })
-    .onEnd(e => {
-      'worklet'
-      if (Math.abs(e.velocityY) > 1000) {
-        dismissSwipeTranslateY.value = withDecay({velocity: e.velocityY})
-        runOnJS(onRequestClose)()
-      } else {
-        dismissSwipeTranslateY.value = withSpring(0, {
-          stiffness: 700,
-          damping: 50,
-        })
-      }
-    })
-
   const composedGesture = isScrollViewBeingDragged
     ? // If the parent is not at rest, provide a no-op gesture.
       Gesture.Manual()
     : Gesture.Exclusive(
-        dismissSwipePan,
+        dismissSwipePan ?? Gesture.Manual(),
         Gesture.Simultaneous(pinch, pan),
         doubleTap,
         singleTap,
