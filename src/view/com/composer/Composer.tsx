@@ -787,6 +787,7 @@ let ComposerPost = React.memo(function ComposerPost({
         embed={post.embed}
         dispatch={dispatchPost}
         clearVideo={() => onClearVideo(post.id)}
+        isActivePost={isActive}
       />
     </View>
   )
@@ -893,11 +894,13 @@ function ComposerEmbeds({
   dispatch,
   clearVideo,
   canRemoveQuote,
+  isActivePost,
 }: {
   embed: EmbedDraft
   dispatch: (action: PostAction) => void
   clearVideo: () => void
   canRemoveQuote: boolean
+  isActivePost: boolean
 }) {
   const video = embed.media?.type === 'video' ? embed.media.video : null
   return (
@@ -949,6 +952,7 @@ function ComposerEmbeds({
                 <VideoPreview
                   asset={video.asset}
                   video={video.video}
+                  isActivePost={isActivePost}
                   setDimensions={(width: number, height: number) => {
                     dispatch({
                       type: 'embed_update_video',
