@@ -2054,7 +2054,7 @@ msgstr "例如：zhangsan.com"
 
 #: src/view/com/modals/EditProfile.tsx:198
 msgid "e.g. Artist, dog-lover, and avid reader."
-msgstr "例如：艺术家、爱狗人士和读书爱好者"
+msgstr "例如：艺术家、爱狗人士和读书爱好者。"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:43
 msgid "E.g. artistic nudes."
@@ -5452,7 +5452,7 @@ msgstr "发布时检查媒体是否存在替代文本"
 
 #: src/screens/Settings/components/Email2FAToggle.tsx:54
 msgid "Require an email code to log in to your account."
-msgstr "需要电子邮件验证码才能登录到你的账户"
+msgstr "需要电子邮件验证码才能登录到你的账户。"
 
 #: src/view/screens/Settings/Email2FAToggle.tsx:51
 msgid "Require email code to log into your account"

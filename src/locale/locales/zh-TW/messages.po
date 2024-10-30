@@ -5452,7 +5452,7 @@ msgstr "要求發佈前提供替代文字"
 
 #: src/screens/Settings/components/Email2FAToggle.tsx:54
 msgid "Require an email code to log in to your account."
-msgstr "登入時要求電子郵件驗證碼"
+msgstr "登入時要求電子郵件驗證碼。"
 
 #: src/view/screens/Settings/Email2FAToggle.tsx:51
 msgid "Require email code to log into your account"
