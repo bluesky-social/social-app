@@ -15,9 +15,11 @@ export function VideoPreview({
   asset,
   video,
   clear,
+  isActivePost,
 }: {
   asset: ImagePickerAsset
   video: CompressedVideo
+  isActivePost: boolean
   setDimensions: (width: number, height: number) => void
   clear: () => void
 }) {
@@ -46,13 +48,15 @@ export function VideoPreview({
       <View style={[a.absolute, a.inset_0]}>
         <VideoTranscodeBackdrop uri={asset.uri} />
       </View>
-      <BlueskyVideoView
-        url={video.uri}
-        autoplay={!autoplayDisabled}
-        beginMuted={true}
-        forceTakeover={true}
-        ref={playerRef}
-      />
+      {isActivePost && (
+        <BlueskyVideoView
+          url={video.uri}
+          autoplay={!autoplayDisabled}
+          beginMuted={true}
+          forceTakeover={true}
+          ref={playerRef}
+        />
+      )}
       <ExternalEmbedRemoveBtn onRemove={clear} />
       {autoplayDisabled && (
         <View style={[a.absolute, a.inset_0, a.justify_center, a.align_center]}>
