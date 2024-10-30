@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: zh-TW for bluesky-social-app\n"
 "POT-Creation-Date: \n"
 "Report-Msgid-Bugs-To: Kuwa Lee <kuwalee1069@gmail.com>, Frudrax Cheng <i@cynosura.one>\n"
-"PO-Revision-Date: 2024-10-17 17:45+0800\n"
+"PO-Revision-Date: 2024-10-30 09:41+0800\n"
 "Last-Translator: \n"
 "Language-Team: Frudrax Cheng <i@cynosura.one>, Kuwa Lee <kuwalee1069@gmail.com>, noeFly, snowleo208, Kisaragi Hiu, Yi-Jyun Pan, toto6038, cirx1e\n"
 "Language: zh_TW\n"
@@ -268,7 +268,7 @@ msgstr "7 天"
 #: src/screens/Settings/Settings.tsx:162
 #: src/screens/Settings/Settings.tsx:165
 msgid "About"
-msgstr ""
+msgstr "關於"
 
 #: src/view/com/util/ViewHeader.tsx:89
 #: src/view/screens/Search/Search.tsx:882
@@ -395,7 +395,7 @@ msgstr "新增替代文字（可選）"
 #: src/screens/Settings/Settings.tsx:75
 #: src/screens/Settings/Settings.tsx:87
 msgid "Add another account"
-msgstr ""
+msgstr "新增其他帳號"
 
 #: src/view/screens/AppPasswords.tsx:111
 #: src/view/screens/AppPasswords.tsx:153
@@ -678,7 +678,7 @@ msgstr "應用程式專用密碼設定"
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:41
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:44
 msgid "App passwords"
-msgstr ""
+msgstr "應用程式專用密碼"
 
 #: src/Navigation.tsx:289
 #: src/view/screens/AppPasswords.tsx:197
@@ -783,7 +783,7 @@ msgstr "至少 3 個字元"
 
 #: src/screens/Settings/AccessibilitySettings.tsx:98
 msgid "Autoplay options have moved to the <0>Content and Media settings</0>."
-msgstr ""
+msgstr "自動播放選項已移至<0>內容與媒體設定</0>。"
 
 #: src/components/dms/MessagesListHeader.tsx:75
 #: src/components/moderation/LabelsOnMeDialog.tsx:290
@@ -1040,7 +1040,7 @@ msgstr "取消圖片裁剪"
 
 #: src/view/com/modals/EditProfile.tsx:239
 msgid "Cancel profile editing"
-msgstr ""
+msgstr "取消編輯個人檔案"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:161
 msgid "Cancel quote post"
@@ -1086,7 +1086,7 @@ msgstr "變更"
 #: src/screens/Settings/AccountSettings.tsx:69
 #: src/screens/Settings/AccountSettings.tsx:73
 msgid "Change email"
-msgstr ""
+msgstr "變更電子郵件"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:147
 msgid "Change email address"
@@ -1430,12 +1430,12 @@ msgstr "聯繫支援"
 #: src/screens/Settings/Settings.tsx:122
 #: src/screens/Settings/Settings.tsx:125
 msgid "Content and media"
-msgstr ""
+msgstr "內容與媒體"
 
 #: src/Navigation.tsx:353
 #: src/screens/Settings/ContentAndMediaSettings.tsx:36
 msgid "Content and Media"
-msgstr ""
+msgstr "內容與媒體"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:18
 msgid "Content Blocked"
@@ -1536,7 +1536,7 @@ msgstr "複製{0}"
 
 #: src/screens/Settings/AboutSettings.tsx:61
 msgid "Copy build version to clipboard"
-msgstr ""
+msgstr "複製建構版本號至剪貼簿"
 
 #: src/components/dialogs/Embed.tsx:122
 #: src/components/dialogs/Embed.tsx:141
@@ -1863,7 +1863,7 @@ msgstr "昏暗"
 
 #: src/screens/Settings/components/Email2FAToggle.tsx:60
 msgid "Disable"
-msgstr ""
+msgstr "停用"
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:89
 #: src/screens/Settings/ContentAndMediaSettings.tsx:95
@@ -1954,7 +1954,7 @@ msgstr "名稱"
 
 #: src/view/com/modals/EditProfile.tsx:175
 msgid "Display Name"
-msgstr ""
+msgstr "名稱"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:333
 msgid "Display name is too long"
@@ -2058,7 +2058,7 @@ msgstr "例如：張藍天"
 
 #: src/view/com/modals/EditProfile.tsx:180
 msgid "e.g. Alice Roberts"
-msgstr ""
+msgstr "例如：張藍天"
 
 #: src/view/com/modals/ChangeHandle.tsx:367
 msgid "e.g. alice.com"
@@ -2066,7 +2066,7 @@ msgstr "例如：alice.com"
 
 #: src/view/com/modals/EditProfile.tsx:198
 msgid "e.g. Artist, dog-lover, and avid reader."
-msgstr ""
+msgstr "例如：藝術家、愛狗人士和狂熱讀者。"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:43
 msgid "E.g. artistic nudes."
@@ -2143,7 +2143,7 @@ msgstr "編輯我的動態源"
 
 #: src/view/com/modals/EditProfile.tsx:147
 msgid "Edit my profile"
-msgstr ""
+msgstr "編輯個人檔案"
 
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:109
 msgid "Edit People"
@@ -2180,11 +2180,11 @@ msgstr "編輯「誰可以回覆」"
 
 #: src/view/com/modals/EditProfile.tsx:188
 msgid "Edit your display name"
-msgstr ""
+msgstr "編輯您的名稱"
 
 #: src/view/com/modals/EditProfile.tsx:206
 msgid "Edit your profile description"
-msgstr ""
+msgstr "編輯您的描述"
 
 #: src/Navigation.tsx:408
 msgid "Edit your starter pack"
@@ -2251,7 +2251,7 @@ msgstr "將這則貼文嵌入到您的網站。只需複製以下程式碼片段
 #: src/screens/Settings/components/Email2FAToggle.tsx:56
 #: src/screens/Settings/components/Email2FAToggle.tsx:60
 msgid "Enable"
-msgstr ""
+msgstr "啟用"
 
 #: src/components/dialogs/EmbedConsent.tsx:100
 msgid "Enable {0} only"
@@ -2263,7 +2263,7 @@ msgstr "顯示成人內容"
 
 #: src/screens/Settings/components/Email2FAToggle.tsx:53
 msgid "Enable Email 2FA"
-msgstr ""
+msgstr "啟用電子郵件雙重驗證"
 
 #: src/components/dialogs/EmbedConsent.tsx:81
 #: src/components/dialogs/EmbedConsent.tsx:88
@@ -2480,7 +2480,7 @@ msgstr "匯出我的資料"
 #: src/screens/Settings/ContentAndMediaSettings.tsx:65
 #: src/screens/Settings/ContentAndMediaSettings.tsx:68
 msgid "External media"
-msgstr ""
+msgstr "外部媒體"
 
 #: src/components/dialogs/EmbedConsent.tsx:54
 #: src/components/dialogs/EmbedConsent.tsx:58
@@ -3669,7 +3669,7 @@ msgstr "請確認這是您想要去的的地方！"
 #: src/screens/Settings/ContentAndMediaSettings.tsx:41
 #: src/screens/Settings/ContentAndMediaSettings.tsx:44
 msgid "Manage saved feeds"
-msgstr ""
+msgstr "管理儲存的動態源"
 
 #: src/components/dialogs/MutedWords.tsx:108
 msgid "Manage your muted words and tags"
@@ -4408,7 +4408,7 @@ msgstr "開啟動態選項選單"
 
 #: src/screens/Settings/Settings.tsx:155
 msgid "Open helpdesk in browser"
-msgstr ""
+msgstr "在瀏覽器中開啟幫助台"
 
 #: src/view/com/util/post-embeds/ExternalLinkEmbed.tsx:71
 msgid "Open link to {niceUrl}"
@@ -4974,12 +4974,12 @@ msgstr "隱私"
 #: src/screens/Settings/Settings.tsx:108
 #: src/screens/Settings/Settings.tsx:111
 msgid "Privacy and security"
-msgstr ""
+msgstr "隱私與安全"
 
 #: src/Navigation.tsx:345
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:29
 msgid "Privacy and Security"
-msgstr ""
+msgstr "隱私與安全"
 
 #: src/Navigation.tsx:269
 #: src/screens/Settings/AboutSettings.tsx:38
@@ -5020,7 +5020,7 @@ msgstr "個人檔案已更新"
 #: src/screens/Settings/AccountSettings.tsx:79
 #: src/screens/Settings/AccountSettings.tsx:95
 msgid "Protect your account"
-msgstr ""
+msgstr "保護您的帳號"
 
 #: src/view/screens/Settings/index.tsx:985
 msgid "Protect your account by verifying your email."
@@ -5485,7 +5485,7 @@ msgstr "要求發佈前提供替代文字"
 
 #: src/screens/Settings/components/Email2FAToggle.tsx:54
 msgid "Require an email code to log in to your account."
-msgstr ""
+msgstr "登入時要求電子郵件驗證碼"
 
 #: src/view/screens/Settings/Email2FAToggle.tsx:51
 msgid "Require email code to log into your account"
@@ -5622,7 +5622,7 @@ msgstr "儲存更改"
 
 #: src/view/com/modals/EditProfile.tsx:227
 msgid "Save Changes"
-msgstr ""
+msgstr "儲存更改"
 
 #: src/view/com/modals/ChangeHandle.tsx:158
 msgid "Save handle change"
@@ -5661,7 +5661,7 @@ msgstr "儲存到您的動態源"
 
 #: src/view/com/modals/EditProfile.tsx:220
 msgid "Saves any changes to your profile"
-msgstr ""
+msgstr "儲存對您個人檔案的任何更改"
 
 #: src/view/com/modals/ChangeHandle.tsx:159
 msgid "Saves handle change to {handle}"
@@ -6198,7 +6198,7 @@ msgstr "登出所有帳戶"
 
 #: src/screens/Settings/Settings.tsx:182
 msgid "Sign out?"
-msgstr ""
+msgstr "登出？"
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:301
 #: src/view/shell/bottom-bar/BottomBar.tsx:302
@@ -6422,7 +6422,7 @@ msgstr "支援"
 #: src/screens/Settings/Settings.tsx:74
 #: src/screens/Settings/Settings.tsx:85
 msgid "Switch account"
-msgstr ""
+msgstr "切換帳號"
 
 #: src/components/dialogs/SwitchAccount.tsx:46
 #: src/components/dialogs/SwitchAccount.tsx:49
@@ -7020,7 +7020,7 @@ msgstr "雙重驗證"
 
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:35
 msgid "Two-factor authentication (2FA)"
-msgstr ""
+msgstr "雙重驗證（2FA）"
 
 #: src/screens/Messages/components/MessageInput.tsx:141
 msgid "Type your message here"
@@ -7275,7 +7275,7 @@ msgstr "使用內建瀏覽器"
 #: src/screens/Settings/ContentAndMediaSettings.tsx:75
 #: src/screens/Settings/ContentAndMediaSettings.tsx:81
 msgid "Use in-app browser to open links"
-msgstr ""
+msgstr "使用內建瀏覽器開啟連結"
 
 #: src/view/com/modals/InAppBrowserConsent.tsx:63
 #: src/view/com/modals/InAppBrowserConsent.tsx:65
@@ -7383,7 +7383,7 @@ msgstr "需要驗證的電子郵件"
 
 #: src/screens/Settings/AccountSettings.tsx:61
 msgid "Verify"
-msgstr ""
+msgstr "驗證"
 
 #: src/view/com/modals/ChangeHandle.tsx:497
 msgid "Verify DNS Record"
@@ -7427,7 +7427,7 @@ msgstr "驗證您的電子郵件"
 #: src/screens/Settings/AboutSettings.tsx:60
 #: src/screens/Settings/AboutSettings.tsx:70
 msgid "Version {appVersion}"
-msgstr ""
+msgstr "版本 {appVersion}"
 
 #: src/view/screens/Settings/index.tsx:899
 msgid "Version {appVersion} {bundleInfo}"
@@ -7981,7 +7981,7 @@ msgstr "您之前停用了 @{0}。"
 
 #: src/screens/Settings/Settings.tsx:183
 msgid "You will be signed out of all your accounts."
-msgstr ""
+msgstr "您將登出所有帳號。"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:222
 msgid "You will no longer receive notifications for this thread"
