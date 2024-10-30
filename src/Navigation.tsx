@@ -79,6 +79,7 @@ import {PostRepostedByScreen} from '#/screens/Post/PostRepostedBy'
 import {ProfileKnownFollowersScreen} from '#/screens/Profile/KnownFollowers'
 import {ProfileLabelerLikedByScreen} from '#/screens/Profile/ProfileLabelerLikedBy'
 import {AppearanceSettingsScreen} from '#/screens/Settings/AppearanceSettings'
+import {AppIconSettingsScreen} from '#/screens/Settings/AppIconSettings'
 import {NotificationSettingsScreen} from '#/screens/Settings/NotificationSettings'
 import {
   StarterPackScreen,
@@ -359,6 +360,14 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         getComponent={() => AboutSettingsScreen}
         options={{
           title: title(msg`About`),
+          requireAuth: true,
+        }}
+      />
+      <Stack.Screen
+        name="AppIconSettings"
+        getComponent={() => AppIconSettingsScreen}
+        options={{
+          title: title(msg`App Icon`),
           requireAuth: true,
         }}
       />

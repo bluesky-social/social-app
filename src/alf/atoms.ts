@@ -1,7 +1,7 @@
 import {Platform, StyleProp, StyleSheet, ViewStyle} from 'react-native'
 
 import * as tokens from '#/alf/tokens'
-import {native, web} from '#/alf/util/platform'
+import {ios, native, web} from '#/alf/util/platform'
 
 export const atoms = {
   debug: {
@@ -312,6 +312,12 @@ export const atoms = {
   border_r: {
     borderRightWidth: StyleSheet.hairlineWidth,
   },
+  curve_circular: ios({
+    borderCurve: 'circular',
+  }),
+  curve_continuous: ios({
+    borderCurve: 'continuous',
+  }),
 
   /*
    * Shadow

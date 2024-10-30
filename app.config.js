@@ -273,6 +273,35 @@ module.exports = function (config) {
             ],
           },
         ],
+        [
+          '@config-plugins/react-native-dynamic-app-icon',
+          {
+            default: {
+              image: './assets/icon.png',
+              prerendered: true,
+            },
+            bonfire: {
+              image: './assets/icon-bonfire.png',
+              prerendered: true,
+            },
+            midnight: {
+              image: './assets/icon-midnight.png',
+              prerendered: true,
+            },
+            'nordic-light': {
+              image: './assets/icon-nordic-light.png',
+              prerendered: true,
+            },
+            summer: {
+              image: './assets/icon-summer.png',
+              prerendered: true,
+            },
+            sunset: {
+              image: './assets/icon-sunset.png',
+              prerendered: true,
+            },
+          },
+        ],
       ].filter(Boolean),
       extra: {
         eas: {

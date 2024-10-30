@@ -56,6 +56,7 @@
   "dependencies": {
     "@atproto/api": "^0.13.18",
     "@braintree/sanitize-url": "^6.0.2",
+    "@config-plugins/react-native-dynamic-app-icon": "^8.0.0",
     "@discord/bottom-sheet": "bluesky-social/react-native-bottom-sheet",
     "@emoji-mart/react": "^1.1.1",
     "@expo/html-elements": "^0.4.2",
@@ -171,6 +172,7 @@
     "react-native-compressor": "^1.8.24",
     "react-native-date-picker": "^4.4.2",
     "react-native-drawer-layout": "^4.0.1",
+    "react-native-dynamic-app-icon": "^1.1.0",
     "react-native-gesture-handler": "2.20.0",
     "react-native-get-random-values": "~1.11.0",
     "react-native-image-crop-picker": "0.41.2",
