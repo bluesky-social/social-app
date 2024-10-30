@@ -1,6 +1,7 @@
 import React, {memo} from 'react'
 import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native'
 import {MeasuredDimensions, runOnJS, runOnUI} from 'react-native-reanimated'
+import {LinearGradient} from 'expo-linear-gradient'
 import {AppBskyActorDefs, ModerationDecision} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg} from '@lingui/macro'
@@ -18,8 +19,8 @@ import {useSession} from '#/state/session'
 import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {UserBanner} from '#/view/com/util/UserBanner'
+import {useProfileTheme} from '#/view/screens/Profile'
 import {atoms as a, useTheme} from '#/alf'
-import {createThemes} from '#/alf/themes'
 import {LabelsOnMe} from '#/components/moderation/LabelsOnMe'
 import {ProfileHeaderAlerts} from '#/components/moderation/ProfileHeaderAlerts'
 import {GrowableAvatar} from './GrowableAvatar'
@@ -96,18 +97,25 @@ let ProfileHeaderShell = ({
     [currentAccount, profile],
   )
 
-  const theme = createThemes({
-    hues: {
-      primary: 200,
-      negative: 200,
-      positive: 200,
-    },
-  })
+  const pTheme = useProfileTheme()
 
   return (
-    <View
-      pointerEvents={isIOS ? 'auto' : 'box-none'}
-      style={[{backgroundColor: theme.light.atoms.bg.backgroundColor}]}>
+    <View pointerEvents={isIOS ? 'auto' : 'box-none'}>
+      <LinearGradient
+        colors={[
+          pTheme.lightPalette.primary_200,
+          pTheme.lightPalette.primary_200,
+
+          t.atoms.bg.backgroundColor,
+        ]}
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+        }}
+      />
       <View
         pointerEvents={isIOS ? 'auto' : 'box-none'}
         style={[a.relative, {height: 150}]}>

@@ -44,12 +44,25 @@ import {CenteredView} from '#/view/com/util/Views'
 import {ProfileHeader, ProfileHeaderLoading} from '#/screens/Profile/Header'
 import {ProfileFeedSection} from '#/screens/Profile/Sections/Feed'
 import {ProfileLabelsSection} from '#/screens/Profile/Sections/Labels'
-import {web} from '#/alf'
+import {Palette, Theme, web} from '#/alf'
+import {createThemes} from '#/alf/themes'
 import * as Layout from '#/components/Layout'
 import {ScreenHider} from '#/components/moderation/ScreenHider'
 import {ProfileStarterPacks} from '#/components/StarterPack/ProfileStarterPacks'
 import {navigate} from '#/Navigation'
 import {ExpoScrollForwarderView} from '../../../modules/expo-scroll-forwarder'
+
+type ThemeType = {
+  lightPalette: Palette
+  darkPalette: Palette
+  dimPalette: Palette
+  light: Theme
+  dark: Theme
+  dim: Theme
+}
+
+const ProfileThemeContext = React.createContext<ThemeType>({} as ThemeType)
+export const useProfileTheme = () => React.useContext(ProfileThemeContext)
 
 interface SectionRef {
   scrollToTop: () => void
@@ -341,17 +354,27 @@ function ProfileScreenLoaded({
   // rendering
   // =
 
+  const theme = createThemes({
+    hues: {
+      primary: 350,
+      negative: 0,
+      positive: 0,
+    },
+  })
+
   const renderHeader = () => {
     return (
       <ExpoScrollForwarderView scrollViewTag={scrollViewTag}>
-        <ProfileHeader
-          profile={profile}
-          labeler={labelerInfo}
-          descriptionRT={hasDescription ? descriptionRT : null}
-          moderationOpts={moderationOpts}
-          hideBackButton={hideBackButton}
-          isPlaceholderProfile={showPlaceholder}
-        />
+        <ProfileThemeContext.Provider value={theme}>
+          <ProfileHeader
+            profile={profile}
+            labeler={labelerInfo}
+            descriptionRT={hasDescription ? descriptionRT : null}
+            moderationOpts={moderationOpts}
+            hideBackButton={hideBackButton}
+            isPlaceholderProfile={showPlaceholder}
+          />
+        </ProfileThemeContext.Provider>
       </ExpoScrollForwarderView>
     )
   }

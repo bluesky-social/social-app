@@ -22,6 +22,7 @@ import {
 import {useRequireAuth, useSession} from '#/state/session'
 import {ProfileMenu} from '#/view/com/profile/ProfileMenu'
 import * as Toast from '#/view/com/util/Toast'
+import {useProfileTheme} from '#/view/screens/Profile'
 import {atoms as a} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
@@ -148,6 +149,8 @@ let ProfileHeaderStandard = ({
     [currentAccount, profile],
   )
 
+  const pTheme = useProfileTheme()
+
   return (
     <ProfileHeaderShell
       profile={profile}
@@ -177,7 +180,7 @@ let ProfileHeaderStandard = ({
                 variant="solid"
                 onPress={onPressEditProfile}
                 label={_(msg`Edit profile`)}
-                style={[a.rounded_full]}>
+                style={[{backgroundColor: pTheme.lightPalette.primary_50}]}>
                 <ButtonText>
                   <Trans>Edit Profile</Trans>
                 </ButtonText>
@@ -197,7 +200,10 @@ let ProfileHeaderStandard = ({
                 label={_(msg`Unblock`)}
                 disabled={!hasSession}
                 onPress={() => unblockPromptControl.open()}
-                style={[a.rounded_full]}>
+                style={[
+                  a.rounded_full,
+                  {backgroundColor: pTheme.lightPalette.primary_50},
+                ]}>
                 <ButtonText>
                   <Trans context="action">Unblock</Trans>
                 </ButtonText>
@@ -220,7 +226,10 @@ let ProfileHeaderStandard = ({
                 onPress={
                   profile.viewer?.following ? onPressUnfollow : onPressFollow
                 }
-                style={[a.rounded_full]}>
+                style={[
+                  a.rounded_full,
+                  {backgroundColor: pTheme.lightPalette.primary_50},
+                ]}>
                 <ButtonIcon
                   position="left"
                   icon={profile.viewer?.following ? Check : Plus}
