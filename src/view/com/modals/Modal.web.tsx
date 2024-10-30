@@ -14,6 +14,7 @@ import * as ChangePasswordModal from './ChangePassword'
 import * as CreateOrEditListModal from './CreateOrEditList'
 import * as CropImageModal from './CropImage.web'
 import * as DeleteAccountModal from './DeleteAccount'
+import * as EditProfileModal from './EditProfile'
 import * as InviteCodesModal from './InviteCodes'
 import * as ContentLanguagesSettingsModal from './lang-settings/ContentLanguagesSettings'
 import * as PostLanguagesSettingsModal from './lang-settings/PostLanguagesSettings'
@@ -61,7 +62,9 @@ function Modal({modal}: {modal: ModalIface}) {
   }
 
   let element
-  if (modal.name === 'create-or-edit-list') {
+  if (modal.name === 'edit-profile') {
+    element = <EditProfileModal.Component {...modal} />
+  } else if (modal.name === 'create-or-edit-list') {
     element = <CreateOrEditListModal.Component {...modal} />
   } else if (modal.name === 'user-add-remove-lists') {
     element = <UserAddRemoveLists.Component {...modal} />

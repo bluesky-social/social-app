@@ -21,7 +21,7 @@ import {
 } from '@atproto/api'
 
 import {usePalette} from '#/lib/hooks/usePalette'
-import {ImagesLightbox, useLightboxControls} from '#/state/lightbox'
+import {useLightboxControls} from '#/state/lightbox'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {FeedSourceCard} from '#/view/com/feeds/FeedSourceCard'
 import {atoms as a, useTheme} from '#/alf'
@@ -134,11 +134,16 @@ export function PostEmbeds({
     if (images.length > 0) {
       const items = embed.images.map(img => ({
         uri: img.fullsize,
+        thumbUri: img.thumb,
         alt: img.alt,
         aspectRatio: img.aspectRatio,
       }))
       const _openLightbox = (index: number) => {
-        openLightbox(new ImagesLightbox(items, index))
+        openLightbox({
+          type: 'images',
+          images: items,
+          index,
+        })
       }
       const onPressIn = (_: number) => {
         InteractionManager.runAfterInteractions(() => {

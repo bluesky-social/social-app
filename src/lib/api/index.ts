@@ -30,14 +30,18 @@ import {
   createThreadgateRecord,
   threadgateAllowUISettingToAllowRecordValue,
 } from '#/state/queries/threadgate'
-import {ComposerDraft, EmbedDraft} from '#/view/com/composer/state/composer'
+import {
+  EmbedDraft,
+  PostDraft,
+  ThreadDraft,
+} from '#/view/com/composer/state/composer'
 import {createGIFDescription} from '../gif-alt-text'
 import {uploadBlob} from './upload-blob'
 
 export {uploadBlob}
 
 interface PostOpts {
-  draft: ComposerDraft
+  thread: ThreadDraft
   replyTo?: string
   onStateChange?: (state: string) => void
   langs?: string[]
@@ -48,7 +52,8 @@ export async function post(
   queryClient: QueryClient,
   opts: PostOpts,
 ) {
-  const draft = opts.draft
+  const thread = opts.thread
+  const draft = thread.posts[0] // TODO: Support threads.
 
   opts.onStateChange?.(t`Processing...`)
   // NB -- Do not await anything here to avoid waterfalls!
@@ -111,11 +116,11 @@ export async function post(
   }
 
   // Create threadgate record
-  if (draft.threadgate.some(tg => tg.type !== 'everybody')) {
+  if (thread.threadgate.some(tg => tg.type !== 'everybody')) {
     const record = createThreadgateRecord({
       createdAt: date,
       post: uri,
-      allow: threadgateAllowUISettingToAllowRecordValue(draft.threadgate),
+      allow: threadgateAllowUISettingToAllowRecordValue(thread.threadgate),
     })
 
     writes.push({
@@ -128,11 +133,11 @@ export async function post(
 
   // Create postgate record
   if (
-    draft.postgate.embeddingRules?.length ||
-    draft.postgate.detachedEmbeddingUris?.length
+    thread.postgate.embeddingRules?.length ||
+    thread.postgate.detachedEmbeddingUris?.length
   ) {
     const record: AppBskyFeedPostgate.Record = {
-      ...draft.postgate,
+      ...thread.postgate,
       $type: 'app.bsky.feed.postgate',
       createdAt: date,
       post: uri,
@@ -198,7 +203,7 @@ async function resolveReply(agent: BskyAgent, replyTo: string) {
 async function resolveEmbed(
   agent: BskyAgent,
   queryClient: QueryClient,
-  draft: ComposerDraft,
+  draft: PostDraft,
   onStateChange: ((state: string) => void) | undefined,
 ): Promise<
   | AppBskyEmbedImages.Main

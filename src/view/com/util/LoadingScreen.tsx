@@ -1,6 +1,7 @@
 import React from 'react'
 import {ActivityIndicator, View} from 'react-native'
-import {s} from 'lib/styles'
+
+import {s} from '#/lib/styles'
 import {CenteredView} from './Views'
 
 export function LoadingScreen() {

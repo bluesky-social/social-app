@@ -13,7 +13,7 @@ import {NavigationProp} from '#/lib/routes/types'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {isNative} from '#/platform/detection'
 import {emitSoftReset} from '#/state/events'
-import {ImagesLightbox, useLightboxControls} from '#/state/lightbox'
+import {useLightboxControls} from '#/state/lightbox'
 import {useSetDrawerOpen} from '#/state/shell'
 import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
 import {StarterPack} from '#/components/icons/StarterPack'
@@ -70,7 +70,11 @@ export function ProfileSubpageHeader({
     if (
       avatar // TODO && !(view.moderation.avatar.blur && view.moderation.avatar.noOverride)
     ) {
-      openLightbox(new ImagesLightbox([{uri: avatar}], 0))
+      openLightbox({
+        type: 'images',
+        images: [{uri: avatar, thumbUri: avatar}],
+        index: 0,
+      })
     }
   }, [openLightbox, avatar])
 

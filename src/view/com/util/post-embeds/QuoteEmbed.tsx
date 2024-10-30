@@ -35,6 +35,7 @@ import {useResolveLinkQuery} from '#/state/queries/resolve-link'
 import {useSession} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
 import {RichText} from '#/components/RichText'
+import {SubtleWebHover} from '#/components/SubtleWebHover'
 import {ContentHider} from '../../../../components/moderation/ContentHider'
 import {PostAlerts} from '../../../../components/moderation/PostAlerts'
 import {Link} from '../Link'
@@ -209,46 +210,59 @@ export function QuoteEmbed({
     onOpen?.()
   }, [queryClient, quote.author, onOpen])
 
+  const [hover, setHover] = React.useState(false)
   return (
-    <ContentHider
-      modui={moderation?.ui('contentList')}
-      style={[
-        a.rounded_md,
-        a.p_md,
-        a.mt_sm,
-        a.border,
-        t.atoms.border_contrast_low,
-        style,
-      ]}
-      childContainerStyle={[a.pt_sm]}>
-      <Link
-        hoverStyle={{borderColor: pal.colors.borderLinkHover}}
-        href={itemHref}
-        title={itemTitle}
-        onBeforePress={onBeforePress}>
-        <View pointerEvents="none">
-          <PostMeta
-            author={quote.author}
-            moderation={moderation}
-            showAvatar
-            postHref={itemHref}
-            timestamp={quote.indexedAt}
-          />
-        </View>
-        {moderation ? (
-          <PostAlerts modui={moderation.ui('contentView')} style={[a.py_xs]} />
-        ) : null}
-        {richText ? (
-          <RichText
-            value={richText}
-            style={a.text_md}
-            numberOfLines={20}
-            disableLinks
-          />
-        ) : null}
-        {embed && <PostEmbeds embed={embed} moderation={moderation} />}
-      </Link>
-    </ContentHider>
+    <View
+      onPointerEnter={() => {
+        setHover(true)
+      }}
+      onPointerLeave={() => {
+        setHover(false)
+      }}>
+      <ContentHider
+        modui={moderation?.ui('contentList')}
+        style={[
+          a.rounded_md,
+          a.p_md,
+          a.mt_sm,
+          a.border,
+          t.atoms.border_contrast_low,
+          style,
+        ]}
+        childContainerStyle={[a.pt_sm]}>
+        <SubtleWebHover hover={hover} />
+        <Link
+          hoverStyle={{borderColor: pal.colors.borderLinkHover}}
+          href={itemHref}
+          title={itemTitle}
+          onBeforePress={onBeforePress}>
+          <View pointerEvents="none">
+            <PostMeta
+              author={quote.author}
+              moderation={moderation}
+              showAvatar
+              postHref={itemHref}
+              timestamp={quote.indexedAt}
+            />
+          </View>
+          {moderation ? (
+            <PostAlerts
+              modui={moderation.ui('contentView')}
+              style={[a.py_xs]}
+            />
+          ) : null}
+          {richText ? (
+            <RichText
+              value={richText}
+              style={a.text_md}
+              numberOfLines={20}
+              disableLinks
+            />
+          ) : null}
+          {embed && <PostEmbeds embed={embed} moderation={moderation} />}
+        </Link>
+      </ContentHider>
+    </View>
   )
 }
 

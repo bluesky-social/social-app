@@ -1,4 +1,5 @@
 import {AppBskyRichtextFacet, RichText} from '@atproto/api'
+
 import {linkRequiresWarning} from './url-helpers'
 
 export function richTextToString(rt: RichText, loose: boolean): string {

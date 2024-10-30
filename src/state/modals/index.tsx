@@ -4,6 +4,12 @@ import {AppBskyActorDefs, AppBskyGraphDefs} from '@atproto/api'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 
+export interface EditProfileModal {
+  name: 'edit-profile'
+  profile: AppBskyActorDefs.ProfileViewDetailed
+  onUpdate?: () => void
+}
+
 export interface CreateOrEditListModal {
   name: 'create-or-edit-list'
   purpose?: string
@@ -101,6 +107,9 @@ export type Modal =
   | VerifyEmailModal
   | ChangeEmailModal
   | ChangePasswordModal
+
+  // Temp
+  | EditProfileModal
 
   // Curation
   | ContentLanguagesSettingsModal

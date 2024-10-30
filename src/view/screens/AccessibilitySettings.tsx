@@ -4,6 +4,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
 
+import {IS_INTERNAL} from '#/lib/app-info'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
@@ -26,6 +27,7 @@ import {ToggleButton} from '#/view/com/util/forms/ToggleButton'
 import {SimpleViewHeader} from '#/view/com/util/SimpleViewHeader'
 import {Text} from '#/view/com/util/text/Text'
 import {ScrollView} from '#/view/com/util/Views'
+import {AccessibilitySettingsScreen as NewAccessibilitySettingsScreen} from '#/screens/Settings/AccessibilitySettings'
 import {atoms as a} from '#/alf'
 import * as Layout from '#/components/Layout'
 
@@ -33,7 +35,15 @@ type Props = NativeStackScreenProps<
   CommonNavigatorParams,
   'AccessibilitySettings'
 >
-export function AccessibilitySettingsScreen({}: Props) {
+export function AccessibilitySettingsScreen(props: Props) {
+  return IS_INTERNAL ? (
+    <NewAccessibilitySettingsScreen {...props} />
+  ) : (
+    <LegacyAccessibilitySettingsScreen {...props} />
+  )
+}
+
+function LegacyAccessibilitySettingsScreen({}: Props) {
   const pal = usePalette('default')
   const setMinimalShellMode = useSetMinimalShellMode()
   const {isMobile, isTabletOrMobile} = useWebMediaQueries()
