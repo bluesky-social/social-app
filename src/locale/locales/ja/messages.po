@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-10-30 13:12+0900\n"
+"PO-Revision-Date: 2024-10-30 13:21+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -707,10 +707,6 @@ msgstr "外観"
 msgid "Appearance settings"
 msgstr "外観の設定"
 
-#: src/Navigation.tsx:325
-msgid "Appearance Settings"
-msgstr "外観の設定"
-
 #: src/screens/Feeds/NoSavedFeedsOfAnyType.tsx:47
 #: src/screens/Home/NoFeedsPinned.tsx:93
 msgid "Apply default recommended feeds"
@@ -1290,10 +1286,6 @@ msgstr "下部のナビゲーションバーを閉じる"
 msgid "Closes password update alert"
 msgstr "パスワード更新アラートを閉じる"
 
-#: src/view/com/composer/Composer.tsx:552
-#~ msgid "Closes post composer and discards post draft"
-#~ msgstr "投稿の編集画面を閉じて下書きを削除する"
-
 #: src/view/com/lightbox/ImageViewing/components/ImageDefaultHeader.tsx:37
 msgid "Closes viewer for header image"
 msgstr "ヘッダー画像のビューワーを閉じる"
@@ -1829,10 +1821,6 @@ msgstr "引用投稿を切り離しますか？"
 #: src/components/WhoCanReply.tsx:175
 msgid "Dialog: adjust who can interact with this post"
 msgstr "ダイアログ：この投稿に誰が反応できるか調整"
-
-#: src/view/com/composer/Composer.tsx:325
-msgid "Did you want to say anything?"
-msgstr "なにか言いたいことはあった？"
 
 #: src/screens/Settings/AppearanceSettings.tsx:126
 msgid "Dim"
@@ -2525,11 +2513,6 @@ msgstr "画像の保存に失敗しました：{0}"
 #: src/state/queries/notifications/settings.ts:39
 msgid "Failed to save notification preferences, please try again"
 msgstr "通知の設定の保存に失敗しました。もう一度お試しください"
-
-#: src/lib/api/index.ts:145
-#: src/lib/api/index.ts:170
-#~ msgid "Failed to save post interaction settings. Your post was created but users may be able to interact with it."
-#~ msgstr "投稿の反応の設定を保存できませんでした。投稿はされましたが、他のユーザーが反応してくるかもしれません。"
 
 #: src/components/dms/MessageItem.tsx:233
 msgid "Failed to send"
@@ -4151,10 +4134,6 @@ msgstr "「{query}」の検索結果はありません"
 msgid "No search results found for \"{search}\"."
 msgstr "「{search}」の検索結果はありません。"
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:129
-#~ msgid "No self-labels can be applied to this post because it contains no media."
-#~ msgstr "この投稿にはメディアが含まれてないので自己ラベルは適用されません。"
-
 #: src/components/dialogs/EmbedConsent.tsx:104
 #: src/components/dialogs/EmbedConsent.tsx:111
 msgid "No thanks"
@@ -4850,10 +4829,6 @@ msgstr "投稿を固定しました"
 msgid "Post unpinned"
 msgstr "投稿の固定を解除しました"
 
-#: src/lib/api/index.ts:106
-#~ msgid "Posting..."
-#~ msgstr "投稿中…"
-
 #: src/components/TagMenu/index.tsx:252
 msgid "posts"
 msgstr "投稿"
@@ -4982,14 +4957,6 @@ msgstr "ユーザーを一括でミュートまたはブロックする、公開
 #: src/view/screens/Lists.tsx:69
 msgid "Public, shareable lists which can drive feeds."
 msgstr "フィードとして利用できる、公開された共有可能なリスト。"
-
-#: src/view/com/composer/Composer.tsx:579
-#~ msgid "Publish post"
-#~ msgstr "投稿を公開"
-
-#: src/view/com/composer/Composer.tsx:579
-#~ msgid "Publish reply"
-#~ msgstr "返信を公開"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:128
 msgid "QR code copied to your clipboard!"
