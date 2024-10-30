@@ -2,6 +2,7 @@ import React from 'react'
 import {Text, View} from 'react-native'
 import AppIcon from 'react-native-dynamic-app-icon'
 import {Image} from 'expo-image'
+import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
@@ -17,6 +18,7 @@ const icons = [
   'nordic-light',
   'summer',
   'sunset',
+  'classic',
 ] as const
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AppIconSettings'>
@@ -32,8 +34,8 @@ export function AppIconSettingsScreen({}: Props) {
             style={[{width: '50%'}, a.py_lg, a.px_xs, a.align_center]}
             key={icon}>
             <PressableScale
-              accessibilityLabel={_(`${icon} app icon`)}
-              accessibilityHint={_('Tap to change app icon')}
+              accessibilityLabel={_(msg`${icon} app icon`)}
+              accessibilityHint={_(msg`Tap to change app icon`)}
               targetScale={0.95}
               onPress={() =>
                 AppIcon.setAppIcon(icon === 'default' ? null : icon)
@@ -69,6 +71,8 @@ function getImage(icon: (typeof icons)[number]) {
       return require(`../../../assets/icon-summer.png`)
     case 'sunset':
       return require(`../../../assets/icon-sunset.png`)
+    case 'classic':
+      return require(`../../../assets/icon-classic.png`)
   }
 }
 
@@ -78,22 +82,25 @@ function IconName({icon}: {icon: (typeof icons)[number]}) {
   let name
   switch (icon) {
     case 'default':
-      name = _('Bluesky')
+      name = _(msg`Bluesky`)
       break
     case 'bonfire':
-      name = _('Bonfire')
+      name = _(msg`Bonfire`)
       break
     case 'midnight':
-      name = _('Midnight')
+      name = _(msg`Midnight`)
       break
     case 'nordic-light':
-      name = _('Nordic Light')
+      name = _(msg`Nordic Light`)
       break
     case 'summer':
-      name = _('Summer')
+      name = _(msg`Summer`)
       break
     case 'sunset':
-      name = _('Sunset')
+      name = _(msg`Sunset`)
+      break
+    case 'classic':
+      name = _(msg`clouds.jpg`)
       break
   }
 

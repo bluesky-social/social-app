@@ -296,6 +296,10 @@ module.exports = function (config) {
               image: './assets/icon-sunset.png',
               prerendered: true,
             },
+            classic: {
+              image: './assets/icon-classic.png',
+              prerendered: true,
+            },
           },
         ],
       ].filter(Boolean),
