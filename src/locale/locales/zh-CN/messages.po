@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh_CN\n"
 "Project-Id-Version: zh-CN for bluesky-social-app\n"
 "Report-Msgid-Bugs-To: Frudrax Cheng <i@cynosura.one>\n"
-"PO-Revision-Date: 2024-10-30 09:25+0800\n"
+"PO-Revision-Date: 2024-10-30 09:54+0800\n"
 "Last-Translator: Frudrax Cheng <i@cynosura.one>\n"
 "Language-Team: Frudrax Cheng (auroursa), Simon Chan (RitsukiP), U2FsdGVkX1, Mikan Harada (mitian233), IceCodeNew\n"
 "Plural-Forms: \n"
@@ -718,10 +718,6 @@ msgstr "外观"
 #: src/view/screens/Settings/index.tsx:485
 msgid "Appearance settings"
 msgstr "外观设置"
-
-#: src/Navigation.tsx:325
-#~ msgid "Appearance Settings"
-#~ msgstr "外观设置"
 
 #: src/screens/Feeds/NoSavedFeedsOfAnyType.tsx:47
 #: src/screens/Home/NoFeedsPinned.tsx:93
@@ -1848,10 +1844,6 @@ msgstr "分离引用帖文？"
 #: src/components/WhoCanReply.tsx:175
 msgid "Dialog: adjust who can interact with this post"
 msgstr "对话框：调整谁可以参与这条帖文的互动"
-
-#: src/view/com/composer/Composer.tsx:325
-#~ msgid "Did you want to say anything?"
-#~ msgstr "有什么想说的吗？"
 
 #: src/screens/Settings/AppearanceSettings.tsx:109
 msgid "Dim"
