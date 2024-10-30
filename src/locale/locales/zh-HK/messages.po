@@ -4935,7 +4935,7 @@ msgstr "首選語言"
 
 #: src/view/screens/PreferencesThreads.tsx:92
 msgid "Prioritize Your Follows"
-msgstr "優先處理你嘅追隨者"
+msgstr "優先睇你跟隨嘅人"
 
 #: src/view/screens/NotificationsSettings.tsx:60
 msgid "Priority notifications"
