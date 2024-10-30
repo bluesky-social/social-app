@@ -198,11 +198,11 @@ msgstr "{numUnreadNotifications} 條通知未讀"
 
 #: src/components/NewskieDialog.tsx:116
 msgid "{profileName} joined Bluesky {0} ago"
-msgstr "{profileName} 喺 {0} 前加入咗 Bluesky"
+msgstr "{profileName}喺{0}前加入咗 Bluesky"
 
 #: src/components/NewskieDialog.tsx:111
 msgid "{profileName} joined Bluesky using a starter pack {0} ago"
-msgstr "{profileName} 喺 {0} 前用新手包加入咗 Bluesky"
+msgstr "{profileName}喺{0}前用新手包加入咗 Bluesky"
 
 #: src/screens/StarterPack/Wizard/index.tsx:475
 msgctxt "profiles"
