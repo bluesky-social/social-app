@@ -309,6 +309,13 @@ export const ComposePost = ({
         if (media.type === 'gif' && !media.alt) {
           return true
         }
+        if (
+          media.type === 'video' &&
+          media.video.status !== 'error' &&
+          !media.video.altText
+        ) {
+          return true
+        }
       }
     })
   }, [thread, requireAltTextEnabled])
