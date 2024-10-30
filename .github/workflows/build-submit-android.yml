@@ -65,6 +65,8 @@ jobs:
           echo "EXPO_PUBLIC_BUNDLE_IDENTIFIER=$(git rev-parse --short HEAD)" >> .env
           echo "EXPO_PUBLIC_BUNDLE_DATE=$(date -u +"%y%m%d%H")" >> .env
           echo "EXPO_PUBLIC_RC_GOOGLE_PUBLIC_KEY=${{ secrets.EXPO_PUBLIC_RC_GOOGLE_PUBLIC_KEY }}" >> .env
+          echo "EXPO_PUBLIC_RC_APPLE_PUBLIC_KEY=${{ secrets.EXPO_PUBLIC_RC_APPLE_PUBLIC_KEY }}" >> .env
+          echo "EXPO_PUBLIC_BSKY_PURCHASES_API=${{ secrets.EXPO_PUBLIC_BSKY_PURCHASES_API }}" >> .env
           echo "$json" > google-services.json
 
       - name: 🏗️ EAS Build
