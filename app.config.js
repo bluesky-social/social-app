@@ -276,10 +276,6 @@ module.exports = function (config) {
         [
           '@config-plugins/react-native-dynamic-app-icon',
           {
-            default: {
-              image: './assets/icon.png',
-              prerendered: true,
-            },
             bonfire: {
               image: './assets/icon-bonfire.png',
               prerendered: true,
