@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh_CN\n"
 "Project-Id-Version: zh-CN for bluesky-social-app\n"
 "Report-Msgid-Bugs-To: Frudrax Cheng <i@cynosura.one>\n"
-"PO-Revision-Date: 2024-10-30 09:54+0800\n"
+"PO-Revision-Date: 2024-10-30 13:51+0800\n"
 "Last-Translator: Frudrax Cheng <i@cynosura.one>\n"
 "Language-Team: Frudrax Cheng (auroursa), Simon Chan (RitsukiP), U2FsdGVkX1, Mikan Harada (mitian233), IceCodeNew\n"
 "Plural-Forms: \n"
@@ -2649,11 +2649,11 @@ msgstr "在 Bluesky 寻找帖文和用户"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:52
 msgid "Fine-tune the content you see on your Following feed."
-msgstr "调整你在\"Following\"资讯源上所看到的内容。"
+msgstr "微调你在\"Following\"资讯源上所看到的内容。"
 
 #: src/view/screens/PreferencesThreads.tsx:55
 msgid "Fine-tune the discussion threads."
-msgstr "调整讨论主题。"
+msgstr "微调讨论串的显示偏好。"
 
 #: src/screens/StarterPack/Wizard/index.tsx:200
 msgid "Finish"
@@ -3806,7 +3806,7 @@ msgstr "更多选项"
 
 #: src/view/screens/PreferencesThreads.tsx:77
 msgid "Most-liked replies first"
-msgstr "优先显示最多喜欢"
+msgstr "优先显示最多人喜欢的回复"
 
 #: src/screens/Onboarding/state.ts:92
 msgid "Movies"
@@ -4056,7 +4056,7 @@ msgstr "新的用户列表"
 
 #: src/view/screens/PreferencesThreads.tsx:74
 msgid "Newest replies first"
-msgstr "优先显示最新回复"
+msgstr "优先显示最新的回复"
 
 #: src/screens/Onboarding/index.tsx:20
 #: src/screens/Onboarding/state.ts:95
@@ -4311,7 +4311,7 @@ msgstr "好的"
 
 #: src/view/screens/PreferencesThreads.tsx:73
 msgid "Oldest replies first"
-msgstr "优先显示最旧的回复"
+msgstr "优先显示最早的回复"
 
 #: src/components/StarterPack/QrCode.tsx:75
 msgid "on<0><1/><2><3/></2></0>"
@@ -4935,7 +4935,7 @@ msgstr "首选语言"
 
 #: src/view/screens/PreferencesThreads.tsx:92
 msgid "Prioritize Your Follows"
-msgstr "优先显示关注者"
+msgstr "优先显示你的关注"
 
 #: src/view/screens/NotificationsSettings.tsx:60
 msgid "Priority notifications"
@@ -5067,7 +5067,7 @@ msgstr "引用这条帖文"
 
 #: src/view/screens/PreferencesThreads.tsx:81
 msgid "Random (aka \"Poster's Roulette\")"
-msgstr "随机显示 (手气不错)"
+msgstr "随机显示 (又名试试手气)"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:585
 #: src/view/com/util/forms/PostDropdownBtn.tsx:595
