@@ -607,6 +607,7 @@ export const ComposePost = ({
                   post={post}
                   dispatch={composerDispatch}
                   textInput={post.id === activePost.id ? textInput : null}
+                  isFirstPost={index === 0}
                   isReply={index > 0 || !!replyTo}
                   isActive={post.id === activePost.id}
                   canRemovePost={thread.posts.length > 1}
@@ -642,6 +643,7 @@ let ComposerPost = React.memo(function ComposerPost({
   textInput,
   isActive,
   isReply,
+  isFirstPost,
   canRemovePost,
   canRemoveQuote,
   onClearVideo,
@@ -654,6 +656,7 @@ let ComposerPost = React.memo(function ComposerPost({
   textInput: React.Ref<TextInputRef>
   isActive: boolean
   isReply: boolean
+  isFirstPost: boolean
   canRemovePost: boolean
   canRemoveQuote: boolean
   onClearVideo: (postId: string) => void
@@ -669,7 +672,9 @@ let ComposerPost = React.memo(function ComposerPost({
   const isTextOnly = !post.embed.link && !post.embed.quote && !post.embed.media
   const forceMinHeight = isWeb && isTextOnly && isActive
   const selectTextInputPlaceholder = isReply
-    ? _(msg`Write your reply`)
+    ? isFirstPost
+      ? _(msg`Write your reply`)
+      : _(msg`Add another post`)
     : _(msg`What's up?`)
   const discardPromptControl = Prompt.usePromptControl()
 
