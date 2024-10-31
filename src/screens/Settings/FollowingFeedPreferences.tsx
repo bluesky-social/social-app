@@ -113,7 +113,7 @@ export function FollowingFeedPreferencesScreen({}: Props) {
           <SettingsList.Group>
             <SettingsList.ItemIcon icon={BeakerIcon} />
             <SettingsList.ItemText>
-              <Trans>Show posts from my feeds (experimental)</Trans>
+              <Trans>Experimental</Trans>
             </SettingsList.ItemText>
             <Toggle.Item
               type="checkbox"
