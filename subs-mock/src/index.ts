@@ -68,7 +68,61 @@ export default new Hono<{Bindings: Bindings; Variables: Variables}>()
     const subscriptionItem = await stripe.subscriptionItems.retrieve(
       stripeSubscriptionId,
     )
+    const subscription = await stripe.subscriptions.retrieve(
+      subscriptionItem.subscription,
+    )
+    const price = await stripe.prices.retrieve(newPriceId)
+
+    if (!subscription.schedule) {
+      throw new HTTPException(400, {
+        message: `Subscription does not have an associated schedule`,
+      })
+    }
+
+    const schedule = await stripe.subscriptionSchedules.retrieve(
+      typeof subscription.schedule === 'string'
+        ? subscription.schedule
+        : subscription.schedule.id,
+    )
+    const now = Date.now() / 1000
+    const activeSubscriptionPhases = schedule.phases.filter(p => {
+      return p.end_date > now && p.start_date < now
+    })
+
+    const updatedSchedule = await stripe.subscriptionSchedules.update(
+      schedule.id,
+      {
+        phases: [
+          ...activeSubscriptionPhases.map(p => ({
+            items: [
+              {
+                price:
+                  typeof p.items[0].price === 'string'
+                    ? p.items[0].price
+                    : p.items[0].price.id,
+                quantity: p.items[0].quantity,
+              },
+            ],
+            start_date: p.start_date,
+            end_date: p.end_date,
+          })),
+          {
+            items: [
+              {
+                price: newPriceId,
+                quantity: 1,
+              },
+            ],
+            iterations: 1,
+          },
+        ],
+      },
+    )
+
+    return c.json({subscription: s, price, schedule: updatedSchedule})
+
     // TODO get customer and compare DID to auth state to ensure it's legit
+    /*
     const subscription = await stripe.subscriptions.update(
       subscriptionItem.subscription,
       {
@@ -81,6 +135,31 @@ export default new Hono<{Bindings: Bindings; Variables: Variables}>()
             price: newPriceId,
           },
         ],
+        proration_behavior: 'always_invoice',
+      },
+    )
+
+    return c.json({
+      oldItem: subscriptionItem,
+      subscription,
+    })
+    */
+  })
+
+  /**
+   * Cancel a subscription (web only)
+   */
+  .post(`/subscriptions/cancel`, async c => {
+    const stripe = c.get('stripe')
+    const {stripeSubscriptionId} = await c.req.json()
+    const subscriptionItem = await stripe.subscriptionItems.retrieve(
+      stripeSubscriptionId,
+    )
+    // TODO get customer and compare DID to auth state to ensure it's legit
+    const subscription = await stripe.subscriptions.update(
+      subscriptionItem.subscription,
+      {
+        cancel_at_period_end: true,
       },
     )
 
@@ -95,7 +174,7 @@ export default new Hono<{Bindings: Bindings; Variables: Variables}>()
    */
   .get('/subscriptions/:offering_lookup_key', async c => {
     const rc = c.get('rcv2')
-    const {user, platform} = c.req.query()
+    const {user, platform, currency} = c.req.query()
     const {offering_lookup_key} = c.req.param()
 
     const {items} = await rc
@@ -159,7 +238,10 @@ export default new Hono<{Bindings: Bindings; Variables: Variables}>()
           if (sub.platform !== 'web') continue
 
           if (price.product === sub.store.productId) {
-            sub.store.price = price.unit_amount ?? 0
+            const localizedPrice =
+              price?.currency_options?.[currency || 'usd']?.unit_amount ||
+              price.unit_amount
+            sub.store.price = localizedPrice ?? 0
             sub.store.priceId = price.id
             break
           }
@@ -277,6 +359,12 @@ export default new Hono<{Bindings: Bindings; Variables: Variables}>()
     if (type === 'customer.subscription.created') {
       const {object: sub} = data
       const customer = await stripe.customers.retrieve(sub.customer)
+
+      // immediately attach a schedule for later manipulation
+      await stripe.subscriptionSchedules.create({
+        from_subscription: sub.id,
+      })
+
       if (!customer.deleted) {
         const payload = {
           fetch_token: sub.id,
