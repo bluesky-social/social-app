@@ -113,12 +113,14 @@ const ImageItem = ({
   }
 
   const singleTap = Gesture.Tap().onEnd(() => {
+    'worklet'
     runOnJS(onTap)()
   })
 
   const doubleTap = Gesture.Tap()
     .numberOfTaps(2)
     .onEnd(e => {
+      'worklet'
       const {absoluteX, absoluteY} = e
       runOnJS(handleDoubleTap)(absoluteX, absoluteY)
     })
