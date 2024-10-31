@@ -1274,7 +1274,7 @@ function useScrollTracker({
     (_width: number, height: number) => {
       if (stickyBottom && height > contentHeight.value) {
         const isFairlyCloseToBottom =
-          contentHeight.value - contentOffset.value - 50 <=
+          contentHeight.value - contentOffset.value - 100 <=
           scrollViewHeight.value
         if (isFairlyCloseToBottom) {
           runOnUI(() => {
