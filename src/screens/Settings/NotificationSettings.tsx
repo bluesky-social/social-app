@@ -1,4 +1,5 @@
 import React from 'react'
+import {Text} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -69,9 +70,10 @@ export function NotificationSettingsScreen({}: Props) {
             <SettingsList.Item>
               <Admonition type="warning" style={[a.flex_1]}>
                 <Trans>
-                  Experimental: When this preference is enabled, you'll only
-                  receive reply and quote notifications from users you follow.
-                  We'll continue to add more controls here over time.
+                  <Text style={[a.font_bold]}>Experimental:</Text> When this
+                  preference is enabled, you'll only receive reply and quote
+                  notifications from users you follow. We'll continue to add
+                  more controls here over time.
                 </Trans>
               </Admonition>
             </SettingsList.Item>
