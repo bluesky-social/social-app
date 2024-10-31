@@ -296,32 +296,32 @@ export const ComposePost = ({
     }
   }, [onPressCancel, closeAllDialogs, closeAllModals])
 
-  const isAltTextRequiredAndMissing = useMemo(() => {
+  const missingAltError = useMemo(() => {
     if (!requireAltTextEnabled) {
-      return false
+      return
     }
-    return thread.posts.some(post => {
-      const media = post.embed.media
+    for (let i = 0; i < thread.posts.length; i++) {
+      const media = thread.posts[i].embed.media
       if (media) {
         if (media.type === 'images' && media.images.some(img => !img.alt)) {
-          return true
+          return _(msg`One or more images is missing alt text.`)
         }
         if (media.type === 'gif' && !media.alt) {
-          return true
+          return _(msg`One or more GIFs is missing alt text.`)
         }
         if (
           media.type === 'video' &&
           media.video.status !== 'error' &&
           !media.video.altText
         ) {
-          return true
+          return _(msg`One or more videos is missing alt text.`)
         }
       }
-    })
-  }, [thread, requireAltTextEnabled])
+    }
+  }, [thread, requireAltTextEnabled, _])
 
   const canPost =
-    !isAltTextRequiredAndMissing &&
+    !missingAltError &&
     thread.posts.every(
       post =>
         post.shortenedGraphemeLength <= MAX_GRAPHEME_LENGTH &&
@@ -579,7 +579,7 @@ export const ComposePost = ({
             topBarAnimatedStyle={topBarAnimatedStyle}
             onCancel={onPressCancel}
             onPublish={onPressPublish}>
-            {isAltTextRequiredAndMissing && <AltTextReminder />}
+            {missingAltError && <AltTextReminder error={missingAltError} />}
             <ErrorBanner
               error={error}
               videoState={erroredVideo}
@@ -883,7 +883,7 @@ function ComposerTopBar({
   )
 }
 
-function AltTextReminder() {
+function AltTextReminder({error}: {error: string}) {
   const pal = usePalette('default')
   return (
     <View style={[styles.reminderLine, pal.viewLight]}>
@@ -894,9 +894,7 @@ function AltTextReminder() {
           size={10}
         />
       </View>
-      <Text style={[pal.text, a.flex_1]}>
-        <Trans>One or more images is missing alt text.</Trans>
-      </Text>
+      <Text style={[pal.text, a.flex_1]}>{error}</Text>
     </View>
   )
 }
