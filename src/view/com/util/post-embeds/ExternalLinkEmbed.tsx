@@ -7,7 +7,10 @@ import {useLingui} from '@lingui/react'
 
 import {parseAltFromGIFDescription} from '#/lib/gif-alt-text'
 import {shareUrl} from '#/lib/sharing'
-import {parseEmbedPlayerFromUrl} from '#/lib/strings/embed-player'
+import {
+  EmbedPlayerParams,
+  parseEmbedPlayerFromUrl,
+} from '#/lib/strings/embed-player'
 import {toNiceDomain} from '#/lib/strings/url-helpers'
 import {isNative} from '#/platform/detection'
 import {useExternalEmbedsPrefs} from '#/state/preferences'
@@ -32,11 +35,7 @@ export const ExternalLinkEmbed = ({
   style?: StyleProp<ViewStyle>
   hideAlt?: boolean
 }) => {
-  const {_} = useLingui()
-  const t = useTheme()
   const externalEmbedPrefs = useExternalEmbedsPrefs()
-  const niceUrl = toNiceDomain(link.uri)
-  const imageUri = link.thumb
   const embedPlayerParams = React.useMemo(() => {
     const params = parseEmbedPlayerFromUrl(link.uri)
 
@@ -44,13 +43,6 @@ export const ExternalLinkEmbed = ({
       return params
     }
   }, [link.uri, externalEmbedPrefs])
-  const hasMedia = Boolean(imageUri || embedPlayerParams)
-
-  const onShareExternal = useCallback(() => {
-    if (link.uri && isNative) {
-      shareUrl(link.uri)
-    }
-  }, [link.uri])
 
   if (embedPlayerParams?.source === 'tenor') {
     const parsedAlt = parseAltFromGIFDescription(link.description)
@@ -79,6 +71,38 @@ export const ExternalLinkEmbed = ({
   }
 
   return (
+    <ExternalLinkEmbedCard
+      link={link}
+      onOpen={onOpen}
+      embedPlayerParams={embedPlayerParams}
+      style={style}
+    />
+  )
+}
+
+export function ExternalLinkEmbedCard({
+  link,
+  onOpen,
+  embedPlayerParams,
+  style,
+}: {
+  link: AppBskyEmbedExternal.ViewExternal
+  onOpen?: () => void
+  embedPlayerParams?: EmbedPlayerParams
+  style?: StyleProp<ViewStyle>
+}) {
+  const t = useTheme()
+  const {_} = useLingui()
+  const niceUrl = toNiceDomain(link.uri)
+  const hasMedia = Boolean(link.thumb || embedPlayerParams)
+
+  const onShareExternal = useCallback(() => {
+    if (link.uri && isNative) {
+      shareUrl(link.uri)
+    }
+  }, [link.uri])
+
+  return (
     <Link
       label={link.title || _(msg`Open link to ${niceUrl}`)}
       to={link.uri}
@@ -98,12 +122,12 @@ export const ExternalLinkEmbed = ({
               ? t.atoms.border_contrast_high
               : t.atoms.border_contrast_low,
           ]}>
-          {imageUri && !embedPlayerParams ? (
+          {link.thumb && !embedPlayerParams ? (
             <Image
               style={{
                 aspectRatio: 1.91,
               }}
-              source={{uri: imageUri}}
+              source={{uri: link.thumb}}
               accessibilityIgnoresInvertColors
             />
           ) : undefined}

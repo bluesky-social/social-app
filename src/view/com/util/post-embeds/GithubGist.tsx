@@ -1,5 +1,5 @@
 import React from 'react'
-import {LayoutChangeEvent,ScrollView, View} from 'react-native'
+import {LayoutChangeEvent, ScrollView, View} from 'react-native'
 import {LinearGradient} from 'expo-linear-gradient'
 import {AppBskyEmbedExternal} from '@atproto/api'
 import {msg} from '@lingui/macro'
@@ -9,6 +9,7 @@ import {useQuery} from '@tanstack/react-query'
 import {shareUrl} from '#/lib/sharing'
 import {toNiceDomain} from '#/lib/strings/url-helpers'
 import {isNative} from '#/platform/detection'
+import {ExternalLinkEmbedCard} from '#/view/com/util/post-embeds/ExternalLinkEmbed'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {Divider} from '#/components/Divider'
@@ -19,6 +20,8 @@ import {Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 
+const MAX_HEIGHT = 400
+
 export function GithubGist({
   info,
   id,
@@ -28,10 +31,10 @@ export function GithubGist({
 }) {
   const t = useTheme()
   const {_} = useLingui()
-  const [footerHeight, setFooterHeight] = React.useState(100)
-  const [showMore, setShowMore] = React.useState(false)
+  const [footerHeight, setFooterHeight] = React.useState(97) // magic #
+  const [showMore, setShowMore] = React.useState<boolean | undefined>()
 
-  const {data: files, isLoading} = useQuery({
+  const {data: files, error} = useQuery({
     queryKey: ['gist', id],
     async queryFn() {
       const url = `https://api.github.com/gists/${id}`
@@ -62,9 +65,24 @@ export function GithubGist({
     [setFooterHeight],
   )
 
+  const onCodeLayout = React.useCallback(
+    (e: LayoutChangeEvent) => {
+      if (e.nativeEvent.layout.height < 400) {
+        setShowMore(true)
+      } else {
+        setShowMore(false)
+      }
+    },
+    [setShowMore],
+  )
+
   const onShowMore = React.useCallback(() => {
     setShowMore(true)
   }, [setShowMore])
+
+  if (error) {
+    return <ExternalLinkEmbedCard link={info} />
+  }
 
   return (
     <View
@@ -78,16 +96,29 @@ export function GithubGist({
         t.atoms.border_contrast_low,
       ]}>
       <View style={[t.atoms.bg_contrast_25]}>
-        {isLoading || !files ? (
-          <View style={[a.px_lg]}>
+        {error ? null : !files ? ( // handled above
+          <View style={[a.p_lg]}>
             <Loader />
           </View>
         ) : (
           <View style={[a.relative]}>
             <View style={[a.relative]}>
               <ScrollView
-                style={[a.pt_lg, {maxHeight: showMore ? undefined : 500}]}>
-                <ScrollView horizontal style={[{paddingBottom: footerHeight}]}>
+                style={[
+                  a.pt_lg,
+                  {
+                    maxHeight:
+                      showMore === undefined
+                        ? MAX_HEIGHT
+                        : showMore
+                        ? undefined
+                        : MAX_HEIGHT,
+                  },
+                ]}>
+                <ScrollView
+                  horizontal
+                  style={[{paddingBottom: footerHeight}]}
+                  onLayout={onCodeLayout}>
                   <View>
                     <View
                       style={[
@@ -127,14 +158,14 @@ export function GithubGist({
                 </ScrollView>
               </ScrollView>
 
-              {!showMore && <View style={[a.absolute, a.inset_0]} />}
+              {showMore === false && <View style={[a.absolute, a.inset_0]} />}
             </View>
 
             <View
               style={[a.absolute, a.inset_0, a.p_lg, {top: 'auto'}]}
               onLayout={onFooterLayout}>
-              {!showMore && (
-                <View style={[a.absolute, a.inset_0]}>
+              <View style={[a.absolute, a.inset_0]}>
+                {showMore === false && (
                   <View
                     style={[
                       a.absolute,
@@ -163,15 +194,15 @@ export function GithubGist({
                       <ButtonIcon icon={Chevron} size="sm" position="right" />
                     </Button>
                   </View>
-                  <LinearGradient
-                    colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.5)']}
-                    locations={[0, 1]}
-                    start={{x: 0, y: 0}}
-                    end={{x: 0, y: 1}}
-                    style={[a.absolute, a.inset_0]}
-                  />
-                </View>
-              )}
+                )}
+                <LinearGradient
+                  colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.5)']}
+                  locations={[0, 1]}
+                  start={{x: 0, y: 0}}
+                  end={{x: 0, y: 1}}
+                  style={[a.absolute, a.inset_0]}
+                />
+              </View>
 
               <Link
                 label={info.title || _(msg`Open this Gist`)}
