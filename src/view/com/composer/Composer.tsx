@@ -1205,11 +1205,21 @@ export function useComposerCancelRef() {
 
 function useAnimatedBorders() {
   const t = useTheme()
-  const hasScrolledToTop = useSharedValue(1)
-  const hasScrolledToBottom = useSharedValue(1)
   const contentOffset = useSharedValue(0)
   const scrollViewHeight = useSharedValue(Infinity)
   const contentHeight = useSharedValue(0)
+
+  const hasScrolledToTop = useDerivedValue(() =>
+    withTiming(contentOffset.value === 0 ? 1 : 0),
+  )
+
+  const hasScrolledToBottom = useDerivedValue(() =>
+    withTiming(
+      contentHeight.value - contentOffset.value - 5 <= scrollViewHeight.value
+        ? 1
+        : 0,
+    ),
+  )
 
   const showHideBottomBorder = useCallback(
     ({
@@ -1222,27 +1232,19 @@ function useAnimatedBorders() {
       newScrollViewHeight?: number
     }) => {
       'worklet'
-
       if (typeof newContentHeight === 'number')
         contentHeight.value = Math.floor(newContentHeight)
       if (typeof newContentOffset === 'number')
         contentOffset.value = Math.floor(newContentOffset)
       if (typeof newScrollViewHeight === 'number')
         scrollViewHeight.value = Math.floor(newScrollViewHeight)
-
-      hasScrolledToBottom.value = withTiming(
-        contentHeight.value - contentOffset.value - 5 <= scrollViewHeight.value
-          ? 1
-          : 0,
-      )
     },
-    [contentHeight, contentOffset, scrollViewHeight, hasScrolledToBottom],
+    [contentHeight, contentOffset, scrollViewHeight],
   )
 
   const scrollHandler = useAnimatedScrollHandler({
     onScroll: event => {
       'worklet'
-      hasScrolledToTop.value = withTiming(event.contentOffset.y === 0 ? 1 : 0)
       showHideBottomBorder({
         newContentOffset: event.contentOffset.y,
         newContentHeight: event.contentSize.height,
