@@ -211,7 +211,9 @@ function ProvidedHandlePage({
                 autoCapitalize="none"
                 autoCorrect={false}
               />
-              <TextField.SuffixText label={host}>{host}</TextField.SuffixText>
+              <TextField.SuffixText label={host} style={[{maxWidth: '40%'}]}>
+                {host}
+              </TextField.SuffixText>
             </TextField.Root>
           </View>
           <Text>
