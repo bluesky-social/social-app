@@ -10,7 +10,7 @@ import {shareUrl} from '#/lib/sharing'
 import {toNiceDomain} from '#/lib/strings/url-helpers'
 import {isNative} from '#/platform/detection'
 import {ExternalLinkEmbedCard} from '#/view/com/util/post-embeds/ExternalLinkEmbed'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, useBreakpoints,useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {Divider} from '#/components/Divider'
 import {ChevronBottom_Stroke2_Corner0_Rounded as Chevron} from '#/components/icons/Chevron'
@@ -31,6 +31,7 @@ export function GithubGist({
 }) {
   const t = useTheme()
   const {_} = useLingui()
+  const {gtMobile} = useBreakpoints()
   const [footerHeight, setFooterHeight] = React.useState(97) // magic #
   const [showMore, setShowMore] = React.useState<boolean | undefined>()
 
@@ -67,13 +68,15 @@ export function GithubGist({
 
   const onCodeLayout = React.useCallback(
     (e: LayoutChangeEvent) => {
-      if (e.nativeEvent.layout.height < 400) {
+      if (showMore !== undefined) return
+      const height = e.nativeEvent.layout.height
+      if (height < 400) {
         setShowMore(true)
       } else {
         setShowMore(false)
       }
     },
-    [setShowMore],
+    [showMore, setShowMore],
   )
 
   const onShowMore = React.useCallback(() => {
@@ -97,35 +100,32 @@ export function GithubGist({
       ]}>
       <View style={[t.atoms.bg_contrast_25]}>
         {error ? null : !files ? ( // handled above
-          <View style={[a.p_lg]}>
+          <View style={[gtMobile ? a.p_lg : a.p_md]}>
             <Loader />
           </View>
         ) : (
           <View style={[a.relative]}>
-            <View style={[a.relative]}>
+            <View style={[gtMobile ? a.pt_lg : a.pt_md, a.relative]}>
               <ScrollView
                 style={[
-                  a.pt_lg,
-                  {
-                    maxHeight:
-                      showMore === undefined
-                        ? MAX_HEIGHT
-                        : showMore
-                        ? undefined
-                        : MAX_HEIGHT,
-                  },
+                  a.overflow_hidden,
+                  showMore === undefined || showMore === false
+                    ? {
+                        maxHeight: MAX_HEIGHT,
+                      }
+                    : {},
                 ]}>
                 <ScrollView
                   horizontal
-                  style={[{paddingBottom: footerHeight}]}
-                  onLayout={onCodeLayout}>
+                  onLayout={onCodeLayout}
+                  style={[{paddingBottom: footerHeight}]}>
                   <View>
                     <View
                       style={[
                         a.flex_row,
                         a.align_center,
                         a.gap_xs,
-                        a.px_lg,
+                        gtMobile ? a.px_lg : a.px_md,
                         a.pb_md,
                       ]}>
                       <Code
@@ -147,12 +147,12 @@ export function GithubGist({
                     </View>
                     <Text
                       style={[
-                        a.px_lg,
+                        gtMobile ? a.px_lg : a.px_md,
                         {
                           fontFamily: 'monospace',
                         },
                       ]}>
-                      {files[0].content}
+                      {files[0].content.trimRight()}
                     </Text>
                   </View>
                 </ScrollView>
@@ -162,47 +162,39 @@ export function GithubGist({
             </View>
 
             <View
-              style={[a.absolute, a.inset_0, a.p_lg, {top: 'auto'}]}
+              style={[
+                a.absolute,
+                a.inset_0,
+                gtMobile ? a.p_lg : a.p_md,
+                {top: 'auto'},
+              ]}
               onLayout={onFooterLayout}>
-              <View style={[a.absolute, a.inset_0]}>
-                {showMore === false && (
-                  <View
+              <LinearGradient
+                colors={['rgba(0, 17, 36,0)', 'rgba(0, 17, 36,0.5)']}
+                locations={[0, 1]}
+                start={{x: 0, y: 0}}
+                end={{x: 0, y: 1}}
+                style={[a.absolute, a.inset_0]}
+              />
+              {showMore === false && (
+                <View style={[a.flex_row, a.justify_center, a.pb_md]}>
+                  <Button
+                    label={_(msg`Show more`)}
+                    size="small"
+                    variant="solid"
+                    color="primary"
                     style={[
-                      a.absolute,
-                      a.flex_row,
-                      a.justify_center,
+                      a.rounded_full,
                       {
-                        left: 0,
-                        right: 0,
-                        top: 0,
-                        transform: [{translateY: '-100%'}],
+                        paddingVertical: 6,
                       },
-                    ]}>
-                    <Button
-                      label={_(msg`Show more`)}
-                      size="small"
-                      variant="solid"
-                      color="primary"
-                      style={[
-                        a.rounded_full,
-                        {
-                          paddingVertical: 6,
-                        },
-                      ]}
-                      onPress={onShowMore}>
-                      <ButtonText>Show more</ButtonText>
-                      <ButtonIcon icon={Chevron} size="sm" position="right" />
-                    </Button>
-                  </View>
-                )}
-                <LinearGradient
-                  colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.5)']}
-                  locations={[0, 1]}
-                  start={{x: 0, y: 0}}
-                  end={{x: 0, y: 1}}
-                  style={[a.absolute, a.inset_0]}
-                />
-              </View>
+                    ]}
+                    onPress={onShowMore}>
+                    <ButtonText>Show more</ButtonText>
+                    <ButtonIcon icon={Chevron} size="sm" position="right" />
+                  </Button>
+                </View>
+              )}
 
               <Link
                 label={info.title || _(msg`Open this Gist`)}
@@ -216,16 +208,15 @@ export function GithubGist({
                       a.rounded_sm,
                       a.border,
                       {gap: 3},
-                      t.atoms.bg_contrast_100,
-                      t.atoms.border_contrast_high,
-                      hovered && {
-                        borderColor: t.palette.contrast_400,
-                      },
+                      t.atoms.bg,
+                      hovered
+                        ? t.atoms.border_contrast_high
+                        : t.atoms.border_contrast_low,
                     ]}>
                     <View style={[{gap: 3}, a.pb_xs, a.px_md]}>
                       <Text
                         emoji
-                        numberOfLines={3}
+                        numberOfLines={2}
                         style={[a.text_md, a.font_bold, a.leading_snug]}>
                         {info.title || info.uri}
                       </Text>
@@ -233,10 +224,9 @@ export function GithubGist({
                     <View style={[a.px_md]}>
                       <Divider
                         style={[
-                          t.atoms.border_contrast_high,
-                          hovered && {
-                            borderColor: t.palette.contrast_400,
-                          },
+                          hovered
+                            ? t.atoms.border_contrast_high
+                            : t.atoms.border_contrast_low,
                         ]}
                       />
                       <View
@@ -254,7 +244,7 @@ export function GithubGist({
                           style={[
                             a.transition_color,
                             hovered
-                              ? t.atoms.text_contrast_medium
+                              ? t.atoms.text_contrast_high
                               : t.atoms.text_contrast_low,
                           ]}
                         />
