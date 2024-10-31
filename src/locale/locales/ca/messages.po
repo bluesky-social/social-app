@@ -1475,7 +1475,7 @@ msgstr "Tria les persones"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:116
 msgid "Choose self-labels that are applicable for the media you are posting. If none are selected, this post is suitable for all audiences."
-msgstr "Tria les autoetiquetes que siguin aplicables als mitjans que publiques. Si no se'n selecciona cap, aquesta publicació és considerarà apta per a tots els públics."
+msgstr "Tria les autoetiquetes que siguin aplicables als mitjans que publiques. Si no se'n selecciona cap, aquesta publicació es considerarà apta per a tots els públics."
 
 #: src/view/com/auth/server-input/index.tsx:76
 msgid "Choose Service"
@@ -2410,7 +2410,7 @@ msgstr "No conté contingut per a adults."
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:213
 msgid "Does not contain graphic or disturbing content."
-msgstr "No conté contingut gràfic o inquietant."
+msgstr "No conté contingut gràfic o pertorbador."
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:39
 msgid "Does not include nudity."
@@ -2522,7 +2522,7 @@ msgstr "p. ex. jordi.com"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:43
 msgid "E.g. artistic nudes."
-msgstr "p. ex. nuesa artística"
+msgstr "p. ex. nuesa artística."
 
 #: src/view/com/modals/CreateOrEditList.tsx:263
 msgid "e.g. Great Posters"
@@ -2534,11 +2534,11 @@ msgstr "p. ex. Spammers"
 
 #: src/view/com/modals/CreateOrEditList.tsx:292
 msgid "e.g. The posters who never miss."
-msgstr "p. ex. Els que mai fallen"
+msgstr "p. ex. Els que mai fallen."
 
 #: src/view/com/modals/CreateOrEditList.tsx:293
 msgid "e.g. Users that repeatedly reply with ads."
-msgstr "p. ex. Usuaris que sempre responen amb anuncis"
+msgstr "p. ex. Usuaris que sempre responen amb anuncis."
 
 #: src/view/com/modals/InviteCodes.tsx:97
 msgid "Each code works once. You'll receive more invite codes periodically."
