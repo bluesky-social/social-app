@@ -100,17 +100,17 @@ function ImageViewing({
     }
   })
 
-  const initialTransform = calculateInitialTransform(SCREEN, thumbDims)
   const activeImageStyle = useAnimatedStyle(() => {
     if (openProgress.value === 1) {
       return {
         transform: [{translateY: dismissSwipeTranslateY.value}],
       }
     }
-    if (initialTransform) {
+    if (thumbDims) {
       const interpolatedTransform = interpolateTransform(
         openProgress.value,
-        initialTransform,
+        thumbDims,
+        SCREEN,
       )
       return {
         transform: interpolatedTransform,
@@ -315,61 +315,30 @@ function LightboxFooter({
   )
 }
 
-function calculateInitialTransform(
-  screenSize: {width: number; height: number},
-  thumbnailPlacement:
-    | {
-        pageX: number
-        width: number
-        pageY: number
-        height: number
-      }
-    | null
-    | undefined,
-) {
-  if (!thumbnailPlacement) {
-    return null
-  }
-  const scale = thumbnailPlacement.width / screenSize.width
-  const screenCenterX = screenSize.width / 2
-  const screenCenterY = screenSize.height / 2
-  const thumbnailCenterX =
-    thumbnailPlacement.pageX + thumbnailPlacement.width / 2
-  const thumbnailCenterY =
-    thumbnailPlacement.pageY + thumbnailPlacement.height / 2
-  const translateX = (thumbnailCenterX - screenCenterX) / scale
-  const translateY = (thumbnailCenterY - screenCenterY) / scale
-  return {scale, translateX, translateY}
-}
-
 function interpolateTransform(
   progress: number,
-  initialTransform: {
-    translateX: number
-    translateY: number
-    scale: number
+  thumbnailDims: {
+    pageX: number
+    width: number
+    pageY: number
+    height: number
   },
+  screenSize: {width: number; height: number},
 ) {
   'worklet'
-  return [
-    {
-      scale: interpolate(progress, [0, 1], [initialTransform.scale, 1]),
-    },
-    {
-      translateX: interpolate(
-        progress,
-        [0, 1],
-        [initialTransform.translateX, 0],
-      ),
-    },
-    {
-      translateY: interpolate(
-        progress,
-        [0, 1],
-        [initialTransform.translateY, 0],
-      ),
-    },
-  ]
+  const screenCenterX = screenSize.width / 2
+  const screenCenterY = screenSize.height / 2
+  const thumbnailCenterX = thumbnailDims.pageX + thumbnailDims.width / 2
+  const thumbnailCenterY = thumbnailDims.pageY + thumbnailDims.height / 2
+
+  const initialScale = thumbnailDims.width / screenSize.width
+  const initialTranslateX = (thumbnailCenterX - screenCenterX) / initialScale
+  const initialTranslateY = (thumbnailCenterY - screenCenterY) / initialScale
+
+  const scale = interpolate(progress, [0, 1], [initialScale, 1])
+  const translateX = interpolate(progress, [0, 1], [initialTranslateX, 0])
+  const translateY = interpolate(progress, [0, 1], [initialTranslateY, 0])
+  return [{scale}, {translateX}, {translateY}]
 }
 
 const styles = StyleSheet.create({
