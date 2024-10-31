@@ -7,7 +7,7 @@ import {Platform} from 'react-native'
 import {nativeApplicationVersion, nativeBuildVersion} from 'expo-application'
 import {init} from '@sentry/react-native'
 
-import {BUILD_ENV, IS_DEV, IS_TESTFLIGHT} from 'lib/app-info'
+import {BUILD_ENV, IS_DEV, IS_TESTFLIGHT} from '#/lib/app-info'
 
 /**
  * Examples:

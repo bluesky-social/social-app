@@ -13,6 +13,9 @@ type IntentType = 'compose' | 'verify-email'
 
 const VALID_IMAGE_REGEX = /^[\w.:\-_/]+\|\d+(\.\d+)?\|\d+(\.\d+)?$/
 
+// This needs to stay outside of react to persist between account switches
+let previousIntentUrl = ''
+
 export function useIntentHandler() {
   const incomingUrl = Linking.useURL()
   const composeIntent = useComposeIntent()
@@ -68,7 +71,13 @@ export function useIntentHandler() {
       }
     }
 
-    if (incomingUrl) handleIncomingURL(incomingUrl)
+    if (incomingUrl) {
+      if (previousIntentUrl === incomingUrl) {
+        return
+      }
+      handleIncomingURL(incomingUrl)
+      previousIntentUrl = incomingUrl
+    }
   }, [incomingUrl, composeIntent, verifyEmailIntent])
 }
 
@@ -93,9 +102,10 @@ export function useComposeIntent() {
 
       // Whenever a video URI is present, we don't support adding images right now.
       if (videoUri) {
+        const [uri, width, height] = videoUri.split('|')
         openComposer({
           text: text ?? undefined,
-          videoUri,
+          videoUri: {uri, width: Number(width), height: Number(height)},
         })
         return
       }

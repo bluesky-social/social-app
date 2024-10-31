@@ -9,7 +9,6 @@ import {SafeAreaProvider} from 'react-native-safe-area-context'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useIntentHandler} from '#/lib/hooks/useIntentHandler'
 import {QueryProvider} from '#/lib/react-query'
 import {Provider as StatsigProvider} from '#/lib/statsig/statsig'
 import {ThemeProvider} from '#/lib/ThemeContext'
@@ -41,7 +40,7 @@ import {
 } from '#/state/session'
 import {readLastActiveAccount} from '#/state/session/util'
 import {Provider as ShellStateProvider} from '#/state/shell'
-import {useComposerKeyboardShortcut} from '#/state/shell/composer/useComposerKeyboardShortcut'
+import {Provider as ComposerProvider} from '#/state/shell/composer'
 import {Provider as LoggedOutViewProvider} from '#/state/shell/logged-out'
 import {Provider as ProgressGuideProvider} from '#/state/shell/progress-guide'
 import {Provider as SelectedFeedProvider} from '#/state/shell/selected-feed'
@@ -71,10 +70,7 @@ function InnerApp() {
   const {resumeSession} = useSessionApi()
   const theme = useColorModeTheme()
   const {_} = useLingui()
-  useIntentHandler()
   const hasCheckedReferrer = useStarterPackEntry()
-
-  useComposerKeyboardShortcut()
 
   // init
   useEffect(() => {
@@ -116,33 +112,35 @@ function InnerApp() {
                   // Resets the entire tree below when it changes:
                   key={currentAccount?.did}>
                   <QueryProvider currentDid={currentAccount?.did}>
-                    <StatsigProvider>
-                      <MessagesProvider>
-                        {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
-                        <LabelDefsProvider>
-                          <ModerationOptsProvider>
-                            <LoggedOutViewProvider>
-                              <SelectedFeedProvider>
-                                <HiddenRepliesProvider>
-                                  <UnreadNotifsProvider>
-                                    <BackgroundNotificationPreferencesProvider>
-                                      <MutedThreadsProvider>
-                                        <SafeAreaProvider>
-                                          <ProgressGuideProvider>
-                                            <Shell />
-                                            <NuxDialogs />
-                                          </ProgressGuideProvider>
-                                        </SafeAreaProvider>
-                                      </MutedThreadsProvider>
-                                    </BackgroundNotificationPreferencesProvider>
-                                  </UnreadNotifsProvider>
-                                </HiddenRepliesProvider>
-                              </SelectedFeedProvider>
-                            </LoggedOutViewProvider>
-                          </ModerationOptsProvider>
-                        </LabelDefsProvider>
-                      </MessagesProvider>
-                    </StatsigProvider>
+                    <ComposerProvider>
+                      <StatsigProvider>
+                        <MessagesProvider>
+                          {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
+                          <LabelDefsProvider>
+                            <ModerationOptsProvider>
+                              <LoggedOutViewProvider>
+                                <SelectedFeedProvider>
+                                  <HiddenRepliesProvider>
+                                    <UnreadNotifsProvider>
+                                      <BackgroundNotificationPreferencesProvider>
+                                        <MutedThreadsProvider>
+                                          <SafeAreaProvider>
+                                            <ProgressGuideProvider>
+                                              <Shell />
+                                              <NuxDialogs />
+                                            </ProgressGuideProvider>
+                                          </SafeAreaProvider>
+                                        </MutedThreadsProvider>
+                                      </BackgroundNotificationPreferencesProvider>
+                                    </UnreadNotifsProvider>
+                                  </HiddenRepliesProvider>
+                                </SelectedFeedProvider>
+                              </LoggedOutViewProvider>
+                            </ModerationOptsProvider>
+                          </LabelDefsProvider>
+                        </MessagesProvider>
+                      </StatsigProvider>
+                    </ComposerProvider>
                   </QueryProvider>
                   <ToastContainer />
                 </React.Fragment>

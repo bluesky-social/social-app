@@ -21,7 +21,7 @@ import {
 } from '@atproto/api'
 
 import {usePalette} from '#/lib/hooks/usePalette'
-import {ImagesLightbox, useLightboxControls} from '#/state/lightbox'
+import {useLightboxControls} from '#/state/lightbox'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {FeedSourceCard} from '#/view/com/feeds/FeedSourceCard'
 import {atoms as a, useTheme} from '#/alf'
@@ -89,17 +89,29 @@ export function PostEmbeds({
   if (AppBskyEmbedRecord.isView(embed)) {
     // custom feed embed (i.e. generator view)
     if (AppBskyFeedDefs.isGeneratorView(embed.record)) {
-      return <MaybeFeedCard view={embed.record} />
+      return (
+        <View style={a.mt_sm}>
+          <MaybeFeedCard view={embed.record} />
+        </View>
+      )
     }
 
     // list embed
     if (AppBskyGraphDefs.isListView(embed.record)) {
-      return <MaybeListCard view={embed.record} />
+      return (
+        <View style={a.mt_sm}>
+          <MaybeListCard view={embed.record} />
+        </View>
+      )
     }
 
     // starter pack embed
     if (AppBskyGraphDefs.isStarterPackViewBasic(embed.record)) {
-      return <StarterPackCard starterPack={embed.record} />
+      return (
+        <View style={a.mt_sm}>
+          <StarterPackCard starterPack={embed.record} />
+        </View>
+      )
     }
 
     // quote post
@@ -122,11 +134,16 @@ export function PostEmbeds({
     if (images.length > 0) {
       const items = embed.images.map(img => ({
         uri: img.fullsize,
+        thumbUri: img.thumb,
         alt: img.alt,
         aspectRatio: img.aspectRatio,
       }))
       const _openLightbox = (index: number) => {
-        openLightbox(new ImagesLightbox(items, index))
+        openLightbox({
+          type: 'images',
+          images: items,
+          index,
+        })
       }
       const onPressIn = (_: number) => {
         InteractionManager.runAfterInteractions(() => {
@@ -203,7 +220,7 @@ export function PostEmbeds({
   return <View />
 }
 
-function MaybeFeedCard({view}: {view: AppBskyFeedDefs.GeneratorView}) {
+export function MaybeFeedCard({view}: {view: AppBskyFeedDefs.GeneratorView}) {
   const pal = usePalette('default')
   const moderationOpts = useModerationOpts()
   const moderation = React.useMemo(() => {
@@ -223,7 +240,7 @@ function MaybeFeedCard({view}: {view: AppBskyFeedDefs.GeneratorView}) {
   )
 }
 
-function MaybeListCard({view}: {view: AppBskyGraphDefs.ListView}) {
+export function MaybeListCard({view}: {view: AppBskyGraphDefs.ListView}) {
   const moderationOpts = useModerationOpts()
   const moderation = React.useMemo(() => {
     return moderationOpts ? moderateUserList(view, moderationOpts) : undefined
@@ -238,7 +255,6 @@ function MaybeListCard({view}: {view: AppBskyGraphDefs.ListView}) {
           t.atoms.border_contrast_medium,
           a.p_md,
           a.rounded_sm,
-          a.mt_sm,
         ]}>
         <ListCard.Default view={view} />
       </View>
@@ -264,7 +280,6 @@ const styles = StyleSheet.create({
   customFeedOuter: {
     borderWidth: StyleSheet.hairlineWidth,
     borderRadius: 8,
-    marginTop: 4,
     paddingHorizontal: 12,
     paddingVertical: 12,
   },

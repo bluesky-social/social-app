@@ -10,6 +10,7 @@ import {useLabelInfo} from '#/lib/moderation/useLabelInfo'
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
+import {isAndroid} from '#/platform/detection'
 import {useAgent, useSession} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
@@ -32,7 +33,6 @@ export function LabelsOnMeDialog(props: LabelsOnMeDialogProps) {
   return (
     <Dialog.Outer control={props.control}>
       <Dialog.Handle />
-
       <LabelsOnMeDialogInner {...props} />
     </Dialog.Outer>
   )
@@ -158,23 +158,25 @@ function Label({
       <Divider />
 
       <View style={[a.px_md, a.py_sm, t.atoms.bg_contrast_25]}>
-        <Text style={[t.atoms.text_contrast_medium]}>
-          {isSelfLabel ? (
+        {isSelfLabel ? (
+          <Text style={[t.atoms.text_contrast_medium]}>
             <Trans>This label was applied by you.</Trans>
-          ) : (
-            <Trans>
-              Source:{' '}
-              <InlineLinkText
-                label={sourceName}
-                to={makeProfileLink(
-                  labeler ? labeler.creator : {did: label.src, handle: ''},
-                )}
-                onPress={() => control.close()}>
-                {sourceName}
-              </InlineLinkText>
-            </Trans>
-          )}
-        </Text>
+          </Text>
+        ) : (
+          <View style={{flexDirection: 'row'}}>
+            <Text style={[t.atoms.text_contrast_medium]}>
+              <Trans>Source: </Trans>{' '}
+            </Text>
+            <InlineLinkText
+              label={sourceName}
+              to={makeProfileLink(
+                labeler ? labeler.creator : {did: label.src, handle: ''},
+              )}
+              onPress={() => control.close()}>
+              {sourceName}
+            </InlineLinkText>
+          </View>
+        )}
       </View>
     </View>
   )
@@ -236,24 +238,26 @@ function AppealForm({
 
   return (
     <>
-      <Text style={[a.text_2xl, a.font_bold, a.pb_xs, a.leading_tight]}>
-        <Trans>Appeal "{strings.name}" label</Trans>
-      </Text>
-      <Text style={[a.text_md, a.leading_snug]}>
-        <Trans>
-          This appeal will be sent to{' '}
-          <InlineLinkText
-            label={sourceName}
-            to={makeProfileLink(
-              labeler ? labeler.creator : {did: label.src, handle: ''},
-            )}
-            onPress={() => control.close()}
-            style={[a.text_md, a.leading_snug]}>
-            {sourceName}
-          </InlineLinkText>
-          .
-        </Trans>
-      </Text>
+      <View>
+        <Text style={[a.text_2xl, a.font_bold, a.pb_xs, a.leading_tight]}>
+          <Trans>Appeal "{strings.name}" label</Trans>
+        </Text>
+        <Text style={[a.text_md, a.leading_snug]}>
+          <Trans>
+            This appeal will be sent to{' '}
+            <InlineLinkText
+              label={sourceName}
+              to={makeProfileLink(
+                labeler ? labeler.creator : {did: label.src, handle: ''},
+              )}
+              onPress={() => control.close()}
+              style={[a.text_md, a.leading_snug]}>
+              {sourceName}
+            </InlineLinkText>
+            .
+          </Trans>
+        </Text>
+      </View>
       <View style={[a.my_md]}>
         <Dialog.Input
           label={_(msg`Text input field`)}
@@ -297,6 +301,7 @@ function AppealForm({
           {isPending && <ButtonIcon icon={Loader} />}
         </Button>
       </View>
+      {isAndroid && <View style={{height: 300}} />}
     </>
   )
 }

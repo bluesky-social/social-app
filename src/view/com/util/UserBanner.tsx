@@ -1,5 +1,5 @@
 import React from 'react'
-import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import {Pressable, StyleSheet, View} from 'react-native'
 import {Image as RNImage} from 'react-native-image-crop-picker'
 import {Image} from 'expo-image'
 import {ModerationUI} from '@atproto/api'
@@ -17,6 +17,7 @@ import {logger} from '#/logger'
 import {isAndroid, isNative} from '#/platform/detection'
 import {EventStopper} from '#/view/com/util/EventStopper'
 import {tokens, useTheme as useAlfTheme} from '#/alf'
+import {useSheetWrapper} from '#/components/Dialog/sheet-wrapper'
 import {
   Camera_Filled_Stroke2_Corner0_Rounded as CameraFilled,
   Camera_Stroke2_Corner0_Rounded as Camera,
@@ -43,6 +44,7 @@ export function UserBanner({
   const {_} = useLingui()
   const {requestCameraAccessIfNeeded} = useCameraPermission()
   const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
+  const sheetWrapper = useSheetWrapper()
 
   const onOpenCamera = React.useCallback(async () => {
     if (!(await requestCameraAccessIfNeeded())) {
@@ -60,7 +62,7 @@ export function UserBanner({
     if (!(await requestPhotoAccessIfNeeded())) {
       return
     }
-    const items = await openPicker()
+    const items = await sheetWrapper(openPicker())
     if (!items[0]) {
       return
     }
@@ -80,7 +82,7 @@ export function UserBanner({
         logger.error('Failed to crop banner', {error: e})
       }
     }
-  }, [onSelectNewBanner, requestPhotoAccessIfNeeded])
+  }, [onSelectNewBanner, requestPhotoAccessIfNeeded, sheetWrapper])
 
   const onRemoveBanner = React.useCallback(() => {
     onSelectNewBanner?.(null)
@@ -88,14 +90,11 @@ export function UserBanner({
 
   // setUserBanner is only passed as prop on the EditProfile component
   return onSelectNewBanner ? (
-    <EventStopper onKeyDown={false}>
+    <EventStopper onKeyDown={true}>
       <Menu.Root>
         <Menu.Trigger label={_(msg`Edit avatar`)}>
           {({props}) => (
-            <TouchableOpacity
-              {...props}
-              activeOpacity={0.8}
-              testID="changeBannerBtn">
+            <Pressable {...props} testID="changeBannerBtn">
               {banner ? (
                 <Image
                   testID="userBannerImage"
@@ -107,13 +106,13 @@ export function UserBanner({
               ) : (
                 <View
                   testID="userBannerFallback"
-                  style={[styles.bannerImage, styles.defaultBanner]}
+                  style={[styles.bannerImage, t.atoms.bg_contrast_25]}
                 />
               )}
               <View style={[styles.editButtonContainer, pal.btn]}>
                 <CameraFilled height={14} width={14} style={t.atoms.text} />
               </View>
-            </TouchableOpacity>
+            </Pressable>
           )}
         </Menu.Trigger>
         <Menu.Outer showCancel>
@@ -182,7 +181,7 @@ export function UserBanner({
       testID="userBannerFallback"
       style={[
         styles.bannerImage,
-        type === 'labeler' ? styles.labelerBanner : styles.defaultBanner,
+        type === 'labeler' ? styles.labelerBanner : t.atoms.bg_contrast_25,
       ]}
     />
   )
@@ -203,9 +202,6 @@ const styles = StyleSheet.create({
   bannerImage: {
     width: '100%',
     height: 150,
-  },
-  defaultBanner: {
-    backgroundColor: '#0070ff',
   },
   labelerBanner: {
     backgroundColor: tokens.color.temp_purple,

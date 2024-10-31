@@ -1,8 +1,8 @@
 import React from 'react'
 import {FlatList, View} from 'react-native'
 
-import {ScrollProvider} from 'lib/ScrollContext'
-import {List} from 'view/com/util/List'
+import {ScrollProvider} from '#/lib/ScrollContext'
+import {List} from '#/view/com/util/List'
 import {Button, ButtonText} from '#/components/Button'
 import * as Toggle from '#/components/forms/Toggle'
 import {Text} from '#/components/Typography'

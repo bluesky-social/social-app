@@ -36,8 +36,8 @@ export function GrowableBanner({
   if (!pagerContext || !isIOS) {
     return (
       <View style={[a.w_full, a.h_full]}>
-        {backButton}
         {children}
+        {backButton}
       </View>
     )
   }

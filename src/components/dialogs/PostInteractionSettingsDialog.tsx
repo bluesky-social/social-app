@@ -204,7 +204,9 @@ export function PostInteractionSettingsDialogControlledInner(
       label={_(msg`Edit post interaction settings`)}
       style={[{maxWidth: 500}, a.w_full]}>
       {isLoading ? (
-        <Loader size="xl" />
+        <View style={[a.flex_1, a.py_4xl, a.align_center, a.justify_center]}>
+          <Loader size="xl" />
+        </View>
       ) : (
         <PostInteractionSettingsForm
           replySettingsDisabled={!isThreadgateOwnedByViewer}
@@ -231,7 +233,6 @@ export function PostInteractionSettingsForm({
 }: PostInteractionSettingsFormProps) {
   const t = useTheme()
   const {_} = useLingui()
-  const control = Dialog.useDialogContext()
   const {data: lists} = useMyListsQuery('curate')
   const [quotesEnabled, setQuotesEnabled] = React.useState(
     !(
@@ -437,7 +438,6 @@ export function PostInteractionSettingsForm({
       <Button
         label={_(msg`Save`)}
         onPress={onSave}
-        onAccessibilityEscape={control.close}
         color="primary"
         size="large"
         variant="solid"

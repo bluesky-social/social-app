@@ -14,7 +14,7 @@ import {
 } from 'react-native'
 import {LinearGradient} from 'expo-linear-gradient'
 
-import {atoms as a, flatten, select, tokens, useTheme, web} from '#/alf'
+import {atoms as a, flatten, select, tokens, useTheme} from '#/alf'
 import {Props as SVGIconProps} from '#/components/icons/common'
 import {Text} from '#/components/Typography'
 
@@ -87,6 +87,7 @@ export type ButtonProps = Pick<
     style?: StyleProp<ViewStyle>
     hoverStyle?: StyleProp<ViewStyle>
     children: NonTextElements | ((context: ButtonContext) => NonTextElements)
+    PressableComponent?: React.ComponentType<PressableProps>
   }
 
 export type ButtonTextProps = TextProps & VariantProps & {disabled?: boolean}
@@ -114,6 +115,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
       disabled = false,
       style,
       hoverStyle: hoverStyleProp,
+      PressableComponent = Pressable,
       ...rest
     },
     ref,
@@ -352,7 +354,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
           })
         } else if (size === 'small') {
           baseStyles.push({
-            paddingVertical: 8,
+            paddingVertical: 9,
             paddingHorizontal: 12,
             borderRadius: 6,
             gap: 6,
@@ -374,7 +376,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
           }
         } else if (size === 'small') {
           if (shape === 'round') {
-            baseStyles.push({height: 36, width: 36})
+            baseStyles.push({height: 34, width: 34})
           } else {
             baseStyles.push({height: 34, width: 34})
           }
@@ -449,10 +451,11 @@ export const Button = React.forwardRef<View, ButtonProps>(
     const flattenedBaseStyles = flatten([baseStyles, style])
 
     return (
-      <Pressable
+      <PressableComponent
         role="button"
         accessibilityHint={undefined} // optional
         {...rest}
+        // @ts-ignore - this will always be a pressable
         ref={ref}
         aria-label={label}
         aria-pressed={state.pressed}
@@ -500,7 +503,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
         <Context.Provider value={context}>
           {typeof children === 'function' ? children(context) : children}
         </Context.Provider>
-      </Pressable>
+      </PressableComponent>
     )
   },
 )
@@ -627,9 +630,9 @@ export function useSharedButtonTextStyles() {
     }
 
     if (size === 'large') {
-      baseStyles.push(a.text_md, a.leading_tight, web({top: -0.4}))
+      baseStyles.push(a.text_md, a.leading_tight)
     } else if (size === 'small') {
-      baseStyles.push(a.text_sm, a.leading_tight, web({top: -0.4}))
+      baseStyles.push(a.text_sm, a.leading_tight)
     } else if (size === 'tiny') {
       baseStyles.push(a.text_xs, a.leading_tight)
     }
@@ -667,7 +670,7 @@ export function ButtonIcon({
       size ??
       (({
         large: 'sm',
-        small: 'xs',
+        small: 'sm',
         tiny: 'xs',
       }[buttonSize || 'small'] || 'sm') as Exclude<
         SVGIconProps['size'],

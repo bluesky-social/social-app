@@ -149,7 +149,6 @@ export function QrCodeDialog({
 
   return (
     <Dialog.Outer control={control}>
-      <Dialog.Handle />
       <Dialog.ScrollableInner
         label={_(msg`Create a QR code for a starter pack`)}>
         <View style={[a.flex_1, a.align_center, a.gap_5xl]}>

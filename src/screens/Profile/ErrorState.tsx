@@ -1,14 +1,14 @@
 import React from 'react'
 import {View} from 'react-native'
-import {Trans, msg} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
-import {useTheme, atoms as a} from '#/alf'
-import {Text} from '#/components/Typography'
+import {NavigationProp} from '#/lib/routes/types'
+import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
-import {NavigationProp} from '#/lib/routes/types'
+import {Text} from '#/components/Typography'
 
 export function ErrorState({error}: {error: string}) {
   const t = useTheme()

@@ -20,10 +20,6 @@ appId: xyz.blueskyweb.app
 - tapOn:
     label: "Feeds button disappears after pinning a feed"
     id: "bottomBarProfileBtn"
-- swipe:
-    from:
-        id: "profilePager-selector"
-    direction: LEFT
 - tapOn:
     id: "profilePager-selector-4"
 - tapOn: "alice-favs"

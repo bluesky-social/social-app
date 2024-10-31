@@ -21,7 +21,7 @@ export const STARTER_PACK_MAX_SIZE = 150
 // code and update this number with each release until we can get the
 // server route done.
 // -prf
-export const JOINED_THIS_WEEK = 3060000 // estimate as of 9/6/24
+export const JOINED_THIS_WEEK = 650000 // estimate as of 10/28/24
 
 const BASE_FEEDBACK_FORM_URL = `${HELP_DESK_URL}/requests/new`
 export function FEEDBACK_FORM_URL({
@@ -50,7 +50,7 @@ export const MAX_DM_GRAPHEME_LENGTH = 1000
 
 // Recommended is 100 per: https://www.w3.org/WAI/GL/WCAG20/tests/test3.html
 // but increasing limit per user feedback
-export const MAX_ALT_TEXT = 1000
+export const MAX_ALT_TEXT = 2000
 
 export function IS_TEST_USER(handle?: string) {
   return handle && handle?.endsWith('.test')

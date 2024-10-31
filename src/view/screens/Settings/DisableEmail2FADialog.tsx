@@ -79,7 +79,6 @@ export function DisableEmail2FADialog({
   return (
     <Dialog.Outer control={control}>
       <Dialog.Handle />
-
       <Dialog.ScrollableInner
         accessibilityDescribedBy="dialog-description"
         accessibilityLabelledBy="dialog-title">
@@ -109,7 +108,11 @@ export function DisableEmail2FADialog({
           {error ? <ErrorMessage message={error} /> : undefined}
 
           {stage === Stages.Email ? (
-            <View style={gtMobile && [a.flex_row, a.justify_end, a.gap_md]}>
+            <View
+              style={[
+                a.gap_sm,
+                gtMobile && [a.flex_row, a.justify_end, a.gap_md],
+              ]}>
               <Button
                 testID="sendEmailButton"
                 variant="solid"
@@ -158,7 +161,11 @@ export function DisableEmail2FADialog({
                   />
                 </TextField.Root>
               </View>
-              <View style={gtMobile && [a.flex_row, a.justify_end]}>
+              <View
+                style={[
+                  a.gap_sm,
+                  gtMobile && [a.flex_row, a.justify_end, a.gap_md],
+                ]}>
                 <Button
                   testID="resendCodeBtn"
                   variant="ghost"

@@ -10,7 +10,9 @@ import {
 import Animated, {FadeIn, FadeInDown} from 'react-native-reanimated'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {FocusScope} from '@tamagui/focus-scope'
+import {DismissableLayer} from '@radix-ui/react-dismissable-layer'
+import {useFocusGuards} from '@radix-ui/react-focus-guards'
+import {FocusScope} from '@radix-ui/react-focus-scope'
 
 import {logger} from '#/logger'
 import {useDialogStateControlContext} from '#/state/dialogs'
@@ -26,11 +28,13 @@ import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import {Portal} from '#/components/Portal'
 
 export {useDialogContext, useDialogControl} from '#/components/Dialog/context'
+export * from '#/components/Dialog/shared'
 export * from '#/components/Dialog/types'
 export * from '#/components/Dialog/utils'
 export {Input} from '#/components/forms/TextField'
 
 const stopPropagation = (e: any) => e.stopPropagation()
+const preventDefault = (e: any) => e.preventDefault()
 
 export function Outer({
   children,
@@ -85,24 +89,13 @@ export function Outer({
     [close, open],
   )
 
-  React.useEffect(() => {
-    if (!isOpen) return
-
-    function handler(e: KeyboardEvent) {
-      if (e.key === 'Escape') {
-        e.stopPropagation()
-        close()
-      }
-    }
-
-    document.addEventListener('keydown', handler)
-
-    return () => document.removeEventListener('keydown', handler)
-  }, [close, isOpen])
-
   const context = React.useMemo(
     () => ({
       close,
+      isNativeDialog: false,
+      nativeSnapPoint: 0,
+      disableDrag: false,
+      setDisableDrag: () => {},
     }),
     [close],
   )
@@ -162,11 +155,15 @@ export function Inner({
   label,
   accessibilityLabelledBy,
   accessibilityDescribedBy,
+  header,
+  contentContainerStyle,
 }: DialogInnerProps) {
   const t = useTheme()
+  const {close} = React.useContext(Context)
   const {gtMobile} = useBreakpoints()
+  useFocusGuards()
   return (
-    <FocusScope loop enabled trapped>
+    <FocusScope loop asChild trapped>
       <Animated.View
         role="dialog"
         aria-role="dialog"
@@ -179,12 +176,11 @@ export function Inner({
         onTouchEnd={stopPropagation}
         entering={FadeInDown.duration(100)}
         // exiting={FadeOut.duration(100)}
-        style={[
+        style={flatten([
           a.relative,
           a.rounded_md,
           a.w_full,
           a.border,
-          gtMobile ? a.p_2xl : a.p_xl,
           t.atoms.bg,
           {
             maxWidth: 600,
@@ -194,8 +190,17 @@ export function Inner({
             shadowRadius: 30,
           },
           flatten(style),
-        ]}>
-        {children}
+        ])}>
+        <DismissableLayer
+          onInteractOutside={preventDefault}
+          onFocusOutside={preventDefault}
+          onDismiss={close}
+          style={{display: 'flex', flexDirection: 'column'}}>
+          {header}
+          <View style={[gtMobile ? a.p_2xl : a.p_xl, contentContainerStyle]}>
+            {children}
+          </View>
+        </DismissableLayer>
       </Animated.View>
     </FocusScope>
   )
@@ -205,21 +210,26 @@ export const ScrollableInner = Inner
 
 export const InnerFlatList = React.forwardRef<
   FlatList,
-  FlatListProps<any> & {label: string} & {webInnerStyle?: StyleProp<ViewStyle>}
->(function InnerFlatList({label, style, webInnerStyle, ...props}, ref) {
+  FlatListProps<any> & {label: string} & {
+    webInnerStyle?: StyleProp<ViewStyle>
+    webInnerContentContainerStyle?: StyleProp<ViewStyle>
+  }
+>(function InnerFlatList(
+  {label, style, webInnerStyle, webInnerContentContainerStyle, ...props},
+  ref,
+) {
   const {gtMobile} = useBreakpoints()
   return (
     <Inner
       label={label}
       style={[
+        a.overflow_hidden,
+        a.px_0,
         // @ts-ignore web only -sfn
-        {
-          paddingHorizontal: 0,
-          maxHeight: 'calc(-36px + 100vh)',
-          overflow: 'hidden',
-        },
+        {maxHeight: 'calc(-36px + 100vh)'},
         webInnerStyle,
-      ]}>
+      ]}
+      contentContainerStyle={[a.px_0, webInnerContentContainerStyle]}>
       <FlatList
         ref={ref}
         style={[gtMobile ? a.px_2xl : a.px_xl, flatten(style)]}
@@ -228,10 +238,6 @@ export const InnerFlatList = React.forwardRef<
     </Inner>
   )
 })
-
-export function Handle() {
-  return null
-}
 
 export function Close() {
   const {_} = useLingui()
@@ -257,4 +263,8 @@ export function Close() {
       </Button>
     </View>
   )
+}
+
+export function Handle() {
+  return null
 }

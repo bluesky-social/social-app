@@ -5,16 +5,17 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
 
+import {usePalette} from '#/lib/hooks/usePalette'
 import {useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
+import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
+import {s} from '#/lib/styles'
 import {getEntries} from '#/logger/logDump'
 import {useTickEveryMinute} from '#/state/shell'
 import {useSetMinimalShellMode} from '#/state/shell'
-import {usePalette} from 'lib/hooks/usePalette'
-import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
-import {s} from 'lib/styles'
-import {Text} from '../com/util/text/Text'
-import {ViewHeader} from '../com/util/ViewHeader'
-import {ScrollView} from '../com/util/Views'
+import {Text} from '#/view/com/util/text/Text'
+import {ViewHeader} from '#/view/com/util/ViewHeader'
+import {ScrollView} from '#/view/com/util/Views'
+import * as Layout from '#/components/Layout'
 
 export function LogScreen({}: NativeStackScreenProps<
   CommonNavigatorParams,
@@ -42,7 +43,7 @@ export function LogScreen({}: NativeStackScreenProps<
   }
 
   return (
-    <View style={[s.flex1]}>
+    <Layout.Screen>
       <ViewHeader title="Log" />
       <ScrollView style={s.flex1}>
         {getEntries()
@@ -91,7 +92,7 @@ export function LogScreen({}: NativeStackScreenProps<
           })}
         <View style={s.footerSpacer} />
       </ScrollView>
-    </View>
+    </Layout.Screen>
   )
 }
 

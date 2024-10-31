@@ -1,66 +1,73 @@
-import React, {useCallback, useState} from 'react'
+import React, {useState} from 'react'
 import {TouchableOpacity, View} from 'react-native'
-import {AppBskyEmbedExternal} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {ExternalEmbedDraft} from '#/lib/api'
 import {HITSLOP_10, MAX_ALT_TEXT} from '#/lib/constants'
 import {parseAltFromGIFDescription} from '#/lib/gif-alt-text'
 import {
   EmbedPlayerParams,
   parseEmbedPlayerFromUrl,
 } from '#/lib/strings/embed-player'
-import {enforceLen} from '#/lib/strings/helpers'
 import {isAndroid} from '#/platform/detection'
+import {useResolveGifQuery} from '#/state/queries/resolve-link'
 import {Gif} from '#/state/queries/tenor'
-import {atoms as a, native, useTheme} from '#/alf'
+import {AltTextCounterWrapper} from '#/view/com/composer/AltTextCounterWrapper'
+import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
+import {DialogControlProps} from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
+import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {PlusSmall_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {Text} from '#/components/Typography'
 import {GifEmbed} from '../util/post-embeds/GifEmbed'
 import {AltTextReminder} from './photos/Gallery'
 
-export function GifAltText({
-  link: linkProp,
+export function GifAltTextDialog({
   gif,
+  altText,
   onSubmit,
 }: {
-  link: ExternalEmbedDraft
-  gif?: Gif
+  gif: Gif
+  altText: string
   onSubmit: (alt: string) => void
+}) {
+  const {data} = useResolveGifQuery(gif)
+  const vendorAltText = parseAltFromGIFDescription(data?.description ?? '').alt
+  const params = data ? parseEmbedPlayerFromUrl(data.uri) : undefined
+  if (!data || !params) {
+    return null
+  }
+  return (
+    <GifAltTextDialogLoaded
+      altText={altText}
+      vendorAltText={vendorAltText}
+      thumb={data.thumb?.source.path}
+      params={params}
+      onSubmit={onSubmit}
+    />
+  )
+}
+
+export function GifAltTextDialogLoaded({
+  vendorAltText,
+  altText,
+  onSubmit,
+  params,
+  thumb,
+}: {
+  vendorAltText: string
+  altText: string
+  onSubmit: (alt: string) => void
+  params: EmbedPlayerParams
+  thumb: string | undefined
 }) {
   const control = Dialog.useDialogControl()
   const {_} = useLingui()
   const t = useTheme()
-
-  const {link, params} = React.useMemo(() => {
-    return {
-      link: {
-        title: linkProp.meta?.title ?? linkProp.uri,
-        uri: linkProp.uri,
-        description: linkProp.meta?.description ?? '',
-        thumb: linkProp.localThumb?.source.path,
-      },
-      params: parseEmbedPlayerFromUrl(linkProp.uri),
-    }
-  }, [linkProp])
-
-  const onPressSubmit = useCallback(
-    (alt: string) => {
-      control.close(() => {
-        onSubmit(alt)
-      })
-    },
-    [onSubmit, control],
-  )
-
-  if (!gif || !params) return null
-
-  const parsedAlt = parseAltFromGIFDescription(link.description)
+  const [altTextDraft, setAltTextDraft] = useState(altText || vendorAltText)
   return (
     <>
       <TouchableOpacity
@@ -72,7 +79,7 @@ export function GifAltText({
         onPress={control.open}
         style={[
           a.absolute,
-          {top: 20, left: 12},
+          {top: 8, left: 8},
           {borderRadius: 6},
           a.pl_xs,
           a.pr_sm,
@@ -82,7 +89,7 @@ export function GifAltText({
           a.align_center,
           {backgroundColor: 'rgba(0, 0, 0, 0.75)'},
         ]}>
-        {parsedAlt.isPreferred ? (
+        {altText ? (
           <Check size="xs" fill={t.palette.white} style={a.ml_xs} />
         ) : (
           <Plus size="sm" fill={t.palette.white} />
@@ -98,14 +105,17 @@ export function GifAltText({
 
       <Dialog.Outer
         control={control}
-        nativeOptions={isAndroid ? {sheet: {snapPoints: ['100%']}} : {}}>
+        onClose={() => {
+          onSubmit(altTextDraft)
+        }}>
         <Dialog.Handle />
         <AltTextInner
-          onSubmit={onPressSubmit}
-          link={link}
+          vendorAltText={vendorAltText}
+          altText={altTextDraft}
+          onChange={setAltTextDraft}
+          thumb={thumb}
+          control={control}
           params={params}
-          initialValue={parsedAlt.isPreferred ? parsedAlt.alt : ''}
-          key={link.uri}
         />
       </Dialog.Outer>
     </>
@@ -113,61 +123,83 @@ export function GifAltText({
 }
 
 function AltTextInner({
-  onSubmit,
-  link,
+  vendorAltText,
+  altText,
+  onChange,
+  control,
   params,
-  initialValue: initalValue,
+  thumb,
 }: {
-  onSubmit: (text: string) => void
-  link: AppBskyEmbedExternal.ViewExternal
+  vendorAltText: string
+  altText: string
+  onChange: (text: string) => void
+  control: DialogControlProps
   params: EmbedPlayerParams
-  initialValue: string
+  thumb: string | undefined
 }) {
-  const {_} = useLingui()
-  const [altText, setAltText] = useState(initalValue)
-  const control = Dialog.useDialogContext()
-
-  const onPressSubmit = useCallback(() => {
-    onSubmit(altText)
-  }, [onSubmit, altText])
+  const t = useTheme()
+  const {_, i18n} = useLingui()
 
   return (
     <Dialog.ScrollableInner label={_(msg`Add alt text`)}>
       <View style={a.flex_col_reverse}>
         <View style={[a.mt_md, a.gap_md]}>
-          <View>
-            <TextField.LabelText>
-              <Trans>Descriptive alt text</Trans>
-            </TextField.LabelText>
-            <TextField.Root>
-              <Dialog.Input
-                label={_(msg`Alt text`)}
-                placeholder={link.title}
-                onChangeText={text =>
-                  setAltText(enforceLen(text, MAX_ALT_TEXT))
-                }
-                value={altText}
-                multiline
-                numberOfLines={3}
-                autoFocus
-                onKeyPress={({nativeEvent}) => {
-                  if (nativeEvent.key === 'Escape') {
-                    control.close()
-                  }
-                }}
-              />
-            </TextField.Root>
+          <View style={[a.gap_sm]}>
+            <View style={[a.relative]}>
+              <TextField.LabelText>
+                <Trans>Descriptive alt text</Trans>
+              </TextField.LabelText>
+              <TextField.Root>
+                <Dialog.Input
+                  label={_(msg`Alt text`)}
+                  placeholder={vendorAltText}
+                  onChangeText={onChange}
+                  defaultValue={altText}
+                  multiline
+                  numberOfLines={3}
+                  autoFocus
+                  onKeyPress={({nativeEvent}) => {
+                    if (nativeEvent.key === 'Escape') {
+                      control.close()
+                    }
+                  }}
+                />
+              </TextField.Root>
+            </View>
+
+            {altText.length > MAX_ALT_TEXT && (
+              <View style={[a.pb_sm, a.flex_row, a.gap_xs]}>
+                <CircleInfo fill={t.palette.negative_500} />
+                <Text
+                  style={[
+                    a.italic,
+                    a.leading_snug,
+                    t.atoms.text_contrast_medium,
+                  ]}>
+                  <Trans>
+                    Alt text will be truncated. Limit:{' '}
+                    {i18n.number(MAX_ALT_TEXT)} characters.
+                  </Trans>
+                </Text>
+              </View>
+            )}
           </View>
-          <Button
-            label={_(msg`Save`)}
-            size="large"
-            color="primary"
-            variant="solid"
-            onPress={onPressSubmit}>
-            <ButtonText>
-              <Trans>Save</Trans>
-            </ButtonText>
-          </Button>
+
+          <AltTextCounterWrapper altText={altText}>
+            <Button
+              label={_(msg`Save`)}
+              size="large"
+              color="primary"
+              variant="solid"
+              onPress={() => {
+                control.close()
+              }}
+              style={[a.flex_grow]}>
+              <ButtonText>
+                <Trans>Save</Trans>
+              </ButtonText>
+            </Button>
+          </AltTextCounterWrapper>
         </View>
         {/* below the text input to force tab order */}
         <View>
@@ -176,15 +208,19 @@ function AltTextInner({
           </Text>
           <View style={[a.align_center]}>
             <GifEmbed
-              link={link}
+              thumb={thumb}
+              altText={altText}
+              isPreferredAltText={true}
               params={params}
               hideAlt
-              style={[native({maxHeight: 225})]}
+              style={[{height: 225}]}
             />
           </View>
         </View>
       </View>
       <Dialog.Close />
+      {/* Maybe fix this later -h */}
+      {isAndroid ? <View style={{height: 300}} /> : null}
     </Dialog.ScrollableInner>
   )
 }

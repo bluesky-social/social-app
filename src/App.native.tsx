@@ -1,6 +1,6 @@
 import 'react-native-url-polyfill/auto'
-import 'lib/sentry' // must be near top
-import 'view/icons'
+import '#/lib/sentry' // must be near top
+import '#/view/icons'
 
 import React, {useEffect, useState} from 'react'
 import {GestureHandlerRootView} from 'react-native-gesture-handler'
@@ -14,7 +14,6 @@ import * as SplashScreen from 'expo-splash-screen'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useIntentHandler} from '#/lib/hooks/useIntentHandler'
 import {QueryProvider} from '#/lib/react-query'
 import {
   initialize,
@@ -51,6 +50,7 @@ import {
 } from '#/state/session'
 import {readLastActiveAccount} from '#/state/session/util'
 import {Provider as ShellStateProvider} from '#/state/shell'
+import {Provider as ComposerProvider} from '#/state/shell/composer'
 import {Provider as LoggedOutViewProvider} from '#/state/shell/logged-out'
 import {Provider as ProgressGuideProvider} from '#/state/shell/progress-guide'
 import {Provider as SelectedFeedProvider} from '#/state/shell/selected-feed'
@@ -67,6 +67,7 @@ import {useStarterPackEntry} from '#/components/hooks/useStarterPackEntry'
 import {Provider as IntentDialogProvider} from '#/components/intents/IntentDialogs'
 import {Provider as PortalProvider} from '#/components/Portal'
 import {Splash} from '#/Splash'
+import {BottomSheetProvider} from '../modules/bottom-sheet'
 import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
 
 SplashScreen.preventAutoHideAsync()
@@ -83,7 +84,6 @@ function InnerApp() {
   const theme = useColorModeTheme()
   const {_} = useLingui()
 
-  useIntentHandler()
   const hasCheckedReferrer = useStarterPackEntry()
 
   // init
@@ -125,35 +125,37 @@ function InnerApp() {
                 // Resets the entire tree below when it changes:
                 key={currentAccount?.did}>
                 <QueryProvider currentDid={currentAccount?.did}>
-                  <StatsigProvider>
-                    <MessagesProvider>
-                      {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
-                      <LabelDefsProvider>
-                        <ModerationOptsProvider>
-                          <LoggedOutViewProvider>
-                            <SelectedFeedProvider>
-                              <HiddenRepliesProvider>
-                                <UnreadNotifsProvider>
-                                  <BackgroundNotificationPreferencesProvider>
-                                    <MutedThreadsProvider>
-                                      <ProgressGuideProvider>
-                                        <GestureHandlerRootView
-                                          style={s.h100pct}>
-                                          <TestCtrls />
-                                          <Shell />
-                                          <NuxDialogs />
-                                        </GestureHandlerRootView>
-                                      </ProgressGuideProvider>
-                                    </MutedThreadsProvider>
-                                  </BackgroundNotificationPreferencesProvider>
-                                </UnreadNotifsProvider>
-                              </HiddenRepliesProvider>
-                            </SelectedFeedProvider>
-                          </LoggedOutViewProvider>
-                        </ModerationOptsProvider>
-                      </LabelDefsProvider>
-                    </MessagesProvider>
-                  </StatsigProvider>
+                  <ComposerProvider>
+                    <StatsigProvider>
+                      <MessagesProvider>
+                        {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
+                        <LabelDefsProvider>
+                          <ModerationOptsProvider>
+                            <LoggedOutViewProvider>
+                              <SelectedFeedProvider>
+                                <HiddenRepliesProvider>
+                                  <UnreadNotifsProvider>
+                                    <BackgroundNotificationPreferencesProvider>
+                                      <MutedThreadsProvider>
+                                        <ProgressGuideProvider>
+                                          <GestureHandlerRootView
+                                            style={s.h100pct}>
+                                            <TestCtrls />
+                                            <Shell />
+                                            <NuxDialogs />
+                                          </GestureHandlerRootView>
+                                        </ProgressGuideProvider>
+                                      </MutedThreadsProvider>
+                                    </BackgroundNotificationPreferencesProvider>
+                                  </UnreadNotifsProvider>
+                                </HiddenRepliesProvider>
+                              </SelectedFeedProvider>
+                            </LoggedOutViewProvider>
+                          </ModerationOptsProvider>
+                        </LabelDefsProvider>
+                      </MessagesProvider>
+                    </StatsigProvider>
+                  </ComposerProvider>
                 </QueryProvider>
               </React.Fragment>
             </VideoVolumeProvider>
@@ -194,14 +196,16 @@ function App() {
                       <DialogStateProvider>
                         <LightboxStateProvider>
                           <PortalProvider>
-                            <StarterPackProvider>
-                              <SafeAreaProvider
-                                initialMetrics={initialWindowMetrics}>
-                                <IntentDialogProvider>
-                                  <InnerApp />
-                                </IntentDialogProvider>
-                              </SafeAreaProvider>
-                            </StarterPackProvider>
+                            <BottomSheetProvider>
+                              <StarterPackProvider>
+                                <SafeAreaProvider
+                                  initialMetrics={initialWindowMetrics}>
+                                  <IntentDialogProvider>
+                                    <InnerApp />
+                                  </IntentDialogProvider>
+                                </SafeAreaProvider>
+                              </StarterPackProvider>
+                            </BottomSheetProvider>
                           </PortalProvider>
                         </LightboxStateProvider>
                       </DialogStateProvider>

@@ -6,21 +6,6 @@
  * may need to touch all three. Ask Eric if you aren't sure.
  */
 
-@font-face {
-  font-family: 'InterVariable';
-  src: url(/assets/fonts/inter/InterVariable.ttf) format('truetype');
-  font-weight: 300 1000;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'InterVariableItalic';
-  src: url(/assets/fonts/inter/InterVariable-Italic.ttf) format('truetype');
-  font-weight: 300 1000;
-  font-style: italic;
-  font-display: swap;
-}
-
 /**
  * BEGIN STYLES
  *
@@ -107,11 +92,6 @@ a[role='link'][data-no-underline='1']:hover {
 }
 
 /* ProseMirror */
-.ProseMirror {
-  font: 18px -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-    'Liberation Sans', Helvetica, Arial, sans-serif;
-  min-height: 140px;
-}
 .ProseMirror-dark {
   color: white;
 }

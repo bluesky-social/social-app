@@ -1,15 +1,11 @@
 import React from 'react'
-import {
-  GestureResponderEvent,
-  Pressable,
-  StyleProp,
-  ViewStyle,
-} from 'react-native'
+import {GestureResponderEvent} from 'react-native'
 import {sanitizeUrl} from '@braintree/sanitize-url'
 import {StackActions, useLinkProps} from '@react-navigation/native'
 
 import {BSKY_DOWNLOAD_URL} from '#/lib/constants'
 import {useNavigationDeduped} from '#/lib/hooks/useNavigationDeduped'
+import {useOpenLink} from '#/lib/hooks/useOpenLink'
 import {AllNavigatorParams} from '#/lib/routes/types'
 import {shareUrl} from '#/lib/sharing'
 import {
@@ -21,7 +17,6 @@ import {
 import {isNative, isWeb} from '#/platform/detection'
 import {shouldClickOpenNewTab} from '#/platform/urls'
 import {useModalControls} from '#/state/modals'
-import {useOpenLink} from '#/state/preferences/in-app-browser'
 import {atoms as a, flatten, TextStyleProp, useTheme, web} from '#/alf'
 import {Button, ButtonProps} from '#/components/Button'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
@@ -103,17 +98,17 @@ export function useLink({
           linkRequiresWarning(href, displayText),
       )
 
-      if (requiresWarning) {
+      if (isWeb) {
         e.preventDefault()
+      }
 
+      if (requiresWarning) {
         openModal({
           name: 'link-warning',
           text: displayText,
           href: href,
         })
       } else {
-        e.preventDefault()
-
         if (isExternal) {
           openLink(href)
         } else {
@@ -330,45 +325,22 @@ export function InlineLinkText({
 }
 
 /**
- * A Pressable that uses useLink to handle navigation. It is unstyled, so can be used in cases where the Button styles
- * in Link are not desired.
- * @param displayText
- * @param style
- * @param children
- * @param rest
- * @constructor
+ * Utility to create a static `onPress` handler for a `Link` that would otherwise link to a URI
+ *
+ * Example:
+ *   `<Link {...createStaticClick(e => {...})} />`
  */
-export function BaseLink({
-  displayText,
-  onPress: onPressOuter,
-  style,
-  children,
-  ...rest
-}: {
-  style?: StyleProp<ViewStyle>
-  children: React.ReactNode
-  to: string
-  action: 'push' | 'replace' | 'navigate'
-  onPress?: () => false | void
-  shareOnLongPress?: boolean
-  label: string
-  displayText?: string
-}) {
-  const {onPress, ...btnProps} = useLink({
-    displayText: displayText ?? rest.to,
-    ...rest,
-  })
-  return (
-    <Pressable
-      style={style}
-      onPress={e => {
-        onPressOuter?.()
-        onPress(e)
-      }}
-      {...btnProps}>
-      {children}
-    </Pressable>
-  )
+export function createStaticClick(
+  onPressHandler: Exclude<BaseLinkProps['onPress'], undefined>,
+): Pick<BaseLinkProps, 'to' | 'onPress'> {
+  return {
+    to: '#',
+    onPress(e: GestureResponderEvent) {
+      e.preventDefault()
+      onPressHandler(e)
+      return false
+    },
+  }
 }
 
 export function WebOnlyInlineLinkText({

@@ -102,6 +102,9 @@ export const atoms = {
   /*
    * Flex
    */
+  gap_0: {
+    gap: 0,
+  },
   gap_2xs: {
     gap: tokens.space._2xs,
   },
@@ -276,13 +279,13 @@ export const atoms = {
     letterSpacing: tokens.TRACKING,
   },
   font_normal: {
-    fontWeight: tokens.fontWeight.regular,
+    fontWeight: tokens.fontWeight.normal,
   },
   font_bold: {
-    fontWeight: tokens.fontWeight.semibold,
+    fontWeight: tokens.fontWeight.bold,
   },
   font_heavy: {
-    fontWeight: tokens.fontWeight.extrabold,
+    fontWeight: tokens.fontWeight.heavy,
   },
   italic: {
     fontStyle: 'italic',
@@ -901,4 +904,32 @@ export const atoms = {
   hidden: {
     display: 'none',
   },
+
+  /*
+   * Transition
+   */
+  transition_none: web({
+    transitionProperty: 'none',
+  }),
+  transition_all: web({
+    transitionProperty: 'all',
+    transitionTimingFunction: 'cubic-bezier(0.17, 0.73, 0.14, 1)',
+    transitionDuration: '100ms',
+  }),
+  transition_color: web({
+    transitionProperty:
+      'color, background-color, border-color, text-decoration-color, fill, stroke',
+    transitionTimingFunction: 'cubic-bezier(0.17, 0.73, 0.14, 1)',
+    transitionDuration: '100ms',
+  }),
+  transition_opacity: web({
+    transitionProperty: 'opacity',
+    transitionTimingFunction: 'cubic-bezier(0.17, 0.73, 0.14, 1)',
+    transitionDuration: '100ms',
+  }),
+  transition_transform: web({
+    transitionProperty: 'transform',
+    transitionTimingFunction: 'cubic-bezier(0.17, 0.73, 0.14, 1)',
+    transitionDuration: '100ms',
+  }),
 } as const

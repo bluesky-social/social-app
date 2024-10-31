@@ -2,6 +2,7 @@ import {Platform} from 'react-native'
 
 import {tokens} from '#/alf'
 import {darkPalette, dimPalette, lightPalette} from '#/alf/themes'
+import {fontWeight} from '#/alf/tokens'
 import {colors} from './styles'
 import type {Theme} from './ThemeContext'
 
@@ -90,195 +91,195 @@ export const defaultTheme: Theme = {
     '2xl-thin': {
       fontSize: 18,
       letterSpacing: tokens.TRACKING,
-      fontWeight: '400',
+      fontWeight: fontWeight.normal,
     },
     '2xl': {
       fontSize: 18,
       letterSpacing: tokens.TRACKING,
-      fontWeight: '400',
+      fontWeight: fontWeight.normal,
     },
     '2xl-medium': {
       fontSize: 18,
       letterSpacing: tokens.TRACKING,
-      fontWeight: '600',
+      fontWeight: fontWeight.bold,
     },
     '2xl-bold': {
       fontSize: 18,
       letterSpacing: tokens.TRACKING,
-      fontWeight: '600',
+      fontWeight: fontWeight.bold,
     },
     '2xl-heavy': {
       fontSize: 18,
       letterSpacing: tokens.TRACKING,
-      fontWeight: '800',
+      fontWeight: fontWeight.heavy,
     },
     'xl-thin': {
       fontSize: 17,
       letterSpacing: tokens.TRACKING,
-      fontWeight: '400',
+      fontWeight: fontWeight.normal,
     },
     xl: {
       fontSize: 17,
       letterSpacing: tokens.TRACKING,
-      fontWeight: '400',
+      fontWeight: fontWeight.normal,
     },
     'xl-medium': {
       fontSize: 17,
       letterSpacing: tokens.TRACKING,
-      fontWeight: '600',
+      fontWeight: fontWeight.bold,
     },
     'xl-bold': {
       fontSize: 17,
       letterSpacing: tokens.TRACKING,
-      fontWeight: '600',
+      fontWeight: fontWeight.bold,
     },
     'xl-heavy': {
       fontSize: 17,
       letterSpacing: tokens.TRACKING,
-      fontWeight: '800',
+      fontWeight: fontWeight.heavy,
     },
     'lg-thin': {
       fontSize: 16,
       letterSpacing: tokens.TRACKING,
-      fontWeight: '400',
+      fontWeight: fontWeight.normal,
     },
     lg: {
       fontSize: 16,
       letterSpacing: tokens.TRACKING,
-      fontWeight: '400',
+      fontWeight: fontWeight.normal,
     },
     'lg-medium': {
       fontSize: 16,
       letterSpacing: tokens.TRACKING,
-      fontWeight: '600',
+      fontWeight: fontWeight.bold,
     },
     'lg-bold': {
       fontSize: 16,
       letterSpacing: tokens.TRACKING,
-      fontWeight: '600',
+      fontWeight: fontWeight.bold,
     },
     'lg-heavy': {
       fontSize: 16,
       letterSpacing: tokens.TRACKING,
-      fontWeight: '800',
+      fontWeight: fontWeight.heavy,
     },
     'md-thin': {
       fontSize: 15,
       letterSpacing: tokens.TRACKING,
-      fontWeight: '400',
+      fontWeight: fontWeight.normal,
     },
     md: {
       fontSize: 15,
       letterSpacing: tokens.TRACKING,
-      fontWeight: '400',
+      fontWeight: fontWeight.normal,
     },
     'md-medium': {
       fontSize: 15,
       letterSpacing: tokens.TRACKING,
-      fontWeight: '600',
+      fontWeight: fontWeight.bold,
     },
     'md-bold': {
       fontSize: 15,
       letterSpacing: tokens.TRACKING,
-      fontWeight: '600',
+      fontWeight: fontWeight.bold,
     },
     'md-heavy': {
       fontSize: 15,
       letterSpacing: tokens.TRACKING,
-      fontWeight: '800',
+      fontWeight: fontWeight.heavy,
     },
     'sm-thin': {
       fontSize: 14,
       letterSpacing: tokens.TRACKING,
-      fontWeight: '400',
+      fontWeight: fontWeight.normal,
     },
     sm: {
       fontSize: 14,
       letterSpacing: tokens.TRACKING,
-      fontWeight: '400',
+      fontWeight: fontWeight.normal,
     },
     'sm-medium': {
       fontSize: 14,
       letterSpacing: tokens.TRACKING,
-      fontWeight: '600',
+      fontWeight: fontWeight.bold,
     },
     'sm-bold': {
       fontSize: 14,
       letterSpacing: tokens.TRACKING,
-      fontWeight: '600',
+      fontWeight: fontWeight.bold,
     },
     'sm-heavy': {
       fontSize: 14,
       letterSpacing: tokens.TRACKING,
-      fontWeight: '800',
+      fontWeight: fontWeight.heavy,
     },
     'xs-thin': {
       fontSize: 13,
       letterSpacing: tokens.TRACKING,
-      fontWeight: '400',
+      fontWeight: fontWeight.normal,
     },
     xs: {
       fontSize: 13,
       letterSpacing: tokens.TRACKING,
-      fontWeight: '400',
+      fontWeight: fontWeight.normal,
     },
     'xs-medium': {
       fontSize: 13,
       letterSpacing: tokens.TRACKING,
-      fontWeight: '600',
+      fontWeight: fontWeight.bold,
     },
     'xs-bold': {
       fontSize: 13,
       letterSpacing: tokens.TRACKING,
-      fontWeight: '600',
+      fontWeight: fontWeight.bold,
     },
     'xs-heavy': {
       fontSize: 13,
       letterSpacing: tokens.TRACKING,
-      fontWeight: '800',
+      fontWeight: fontWeight.heavy,
     },
 
     'title-2xl': {
       fontSize: 34,
       letterSpacing: tokens.TRACKING,
-      fontWeight: '600',
+      fontWeight: fontWeight.bold,
     },
     'title-xl': {
       fontSize: 28,
       letterSpacing: tokens.TRACKING,
-      fontWeight: '600',
+      fontWeight: fontWeight.bold,
     },
     'title-lg': {
       fontSize: 22,
-      fontWeight: '600',
+      fontWeight: fontWeight.bold,
     },
     title: {
-      fontWeight: '600',
+      fontWeight: fontWeight.bold,
       fontSize: 20,
       letterSpacing: tokens.TRACKING,
     },
     'title-sm': {
-      fontWeight: '600',
+      fontWeight: fontWeight.bold,
       fontSize: 17,
       letterSpacing: tokens.TRACKING,
     },
     'post-text': {
       fontSize: 16,
       letterSpacing: tokens.TRACKING,
-      fontWeight: '400',
+      fontWeight: fontWeight.normal,
     },
     'post-text-lg': {
       fontSize: 20,
       letterSpacing: tokens.TRACKING,
-      fontWeight: '400',
+      fontWeight: fontWeight.normal,
     },
     'button-lg': {
-      fontWeight: '600',
+      fontWeight: fontWeight.bold,
       fontSize: 18,
       letterSpacing: tokens.TRACKING,
     },
     button: {
-      fontWeight: '600',
+      fontWeight: fontWeight.bold,
       fontSize: 14,
       letterSpacing: tokens.TRACKING,
     },

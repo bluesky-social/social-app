@@ -141,23 +141,27 @@ function ModerationDetailsDialogInner({
       {modcause?.type === 'label' && (
         <View style={[a.pt_lg]}>
           <Divider />
-          <Text style={[t.atoms.text, a.text_md, a.leading_snug, a.mt_lg]}>
-            {modcause.source.type === 'user' ? (
+          {modcause.source.type === 'user' ? (
+            <Text style={[t.atoms.text, a.text_md, a.leading_snug, a.mt_lg]}>
               <Trans>This label was applied by the author.</Trans>
-            ) : (
-              <Trans>
-                This label was applied by{' '}
-                <InlineLinkText
-                  label={desc.source || _(msg`an unknown labeler`)}
-                  to={makeProfileLink({did: modcause.label.src, handle: ''})}
-                  onPress={() => control.close()}
-                  style={a.text_md}>
-                  {desc.source || _(msg`an unknown labeler`)}
-                </InlineLinkText>
-                .
-              </Trans>
-            )}
-          </Text>
+            </Text>
+          ) : (
+            <>
+              <Text style={[t.atoms.text, a.text_md, a.leading_snug, a.mt_lg]}>
+                <Trans>
+                  This label was applied by{' '}
+                  <InlineLinkText
+                    label={desc.source || _(msg`an unknown labeler`)}
+                    to={makeProfileLink({did: modcause.label.src, handle: ''})}
+                    onPress={() => control.close()}
+                    style={a.text_md}>
+                    {desc.source || _(msg`an unknown labeler`)}
+                  </InlineLinkText>
+                  .
+                </Trans>
+              </Text>
+            </>
+          )}
         </View>
       )}
 

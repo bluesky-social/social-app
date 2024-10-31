@@ -5,10 +5,10 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import * as DropdownMenu from 'zeego/dropdown-menu'
 import {MenuItemCommonProps} from 'zeego/lib/typescript/menu'
 
-import {HITSLOP_10} from 'lib/constants'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useTheme} from 'lib/ThemeContext'
-import {isIOS, isWeb} from 'platform/detection'
+import {HITSLOP_10} from '#/lib/constants'
+import {usePalette} from '#/lib/hooks/usePalette'
+import {useTheme} from '#/lib/ThemeContext'
+import {isIOS, isWeb} from '#/platform/detection'
 import {Portal} from '#/components/Portal'
 
 // Custom Dropdown Menu Components
@@ -190,6 +190,7 @@ export function NativeDropdown({
           accessibilityHint={accessibilityHint}>
           {children}
         </DropdownMenuTrigger>
+        {/* @ts-ignore inheriting props from Radix, which is only for web */}
         <DropdownMenuContent
           style={[styles.content, dropDownBackgroundColor]}
           loop>

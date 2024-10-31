@@ -29,9 +29,8 @@ export function BirthDateSettingsDialog({
   const {isLoading, error, data: preferences} = usePreferencesQuery()
 
   return (
-    <Dialog.Outer control={control}>
+    <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
       <Dialog.Handle />
-
       <Dialog.ScrollableInner label={_(msg`My Birthday`)}>
         <View style={[a.gap_sm, a.pb_lg]}>
           <Text style={[a.text_2xl, a.font_bold]}>

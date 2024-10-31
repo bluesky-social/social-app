@@ -24,18 +24,7 @@ export function ImageLayoutGrid({style, ...props}: ImageLayoutGridProps) {
         : a.gap_2xs
       : a.gap_xs
   const count = props.images.length
-  let aspectRatio
-  switch (count) {
-    case 2:
-      aspectRatio = 2
-      break
-    case 3:
-      aspectRatio = 2
-      break
-    case 4:
-      aspectRatio = undefined
-      break
-  }
+  const aspectRatio = count === 3 ? 2 : undefined
   return (
     <View style={style}>
       <View style={[gap, a.rounded_md, a.overflow_hidden, {aspectRatio}]}>

@@ -18,10 +18,12 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
+import {useOpenLink} from '#/lib/hooks/useOpenLink'
 import {getCurrentRoute} from '#/lib/routes/helpers'
 import {makeProfileLink} from '#/lib/routes/links'
 import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
 import {shareUrl} from '#/lib/sharing'
+import {logEvent} from '#/lib/statsig/statsig'
 import {richTextToString} from '#/lib/strings/rich-text-helpers'
 import {toShareUrl} from '#/lib/strings/url-helpers'
 import {useTheme} from '#/lib/ThemeContext'
@@ -32,7 +34,6 @@ import {Shadow} from '#/state/cache/post-shadow'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {useLanguagePrefs} from '#/state/preferences'
 import {useHiddenPosts, useHiddenPostsApi} from '#/state/preferences'
-import {useOpenLink} from '#/state/preferences/in-app-browser'
 import {usePinnedPostMutation} from '#/state/queries/pinned-post'
 import {
   usePostDeleteMutation,
@@ -239,8 +240,8 @@ let PostDropdownBtn = ({
     Toast.show(_(msg`Copied to clipboard`), 'clipboard-check')
   }, [_, richText])
 
-  const onPressTranslate = React.useCallback(() => {
-    openLink(translatorUrl)
+  const onPressTranslate = React.useCallback(async () => {
+    await openLink(translatorUrl)
   }, [openLink, translatorUrl])
 
   const onHidePost = React.useCallback(() => {
@@ -267,8 +268,8 @@ let PostDropdownBtn = ({
       item: postUri,
       feedContext: postFeedContext,
     })
-    Toast.show('Feedback sent!')
-  }, [feedFeedback, postUri, postFeedContext])
+    Toast.show(_(msg`Feedback sent!`))
+  }, [feedFeedback, postUri, postFeedContext, _])
 
   const onPressShowLess = React.useCallback(() => {
     feedFeedback.sendInteraction({
@@ -276,8 +277,8 @@ let PostDropdownBtn = ({
       item: postUri,
       feedContext: postFeedContext,
     })
-    Toast.show('Feedback sent!')
-  }, [feedFeedback, postUri, postFeedContext])
+    Toast.show(_(msg`Feedback sent!`))
+  }, [feedFeedback, postUri, postFeedContext, _])
 
   const onSelectChatToShareTo = React.useCallback(
     (conversation: string) => {
@@ -350,6 +351,7 @@ let PostDropdownBtn = ({
   ])
 
   const onPressPin = useCallback(() => {
+    logEvent(isPinned ? 'post:unpin' : 'post:pin', {})
     pinPostMutate({
       postUri,
       postCid,
@@ -437,7 +439,7 @@ let PostDropdownBtn = ({
               <Menu.Item
                 testID="postDropdownSendViaDMBtn"
                 label={_(msg`Send via direct message`)}
-                onPress={sendViaChatControl.open}>
+                onPress={() => sendViaChatControl.open()}>
                 <Menu.ItemText>
                   <Trans>Send via direct message</Trans>
                 </Menu.ItemText>
@@ -465,7 +467,7 @@ let PostDropdownBtn = ({
               <Menu.Item
                 testID="postDropdownEmbedBtn"
                 label={_(msg`Embed post`)}
-                onPress={embedPostControl.open}>
+                onPress={() => embedPostControl.open()}>
                 <Menu.ItemText>{_(msg`Embed post`)}</Menu.ItemText>
                 <Menu.ItemIcon icon={CodeBrackets} position="right" />
               </Menu.Item>
@@ -540,7 +542,7 @@ let PostDropdownBtn = ({
                           ? _(msg`Hide reply for me`)
                           : _(msg`Hide post for me`)
                       }
-                      onPress={hidePromptControl.open}>
+                      onPress={() => hidePromptControl.open()}>
                       <Menu.ItemText>
                         {isReply
                           ? _(msg`Hide reply for me`)
@@ -628,7 +630,9 @@ let PostDropdownBtn = ({
                     <Menu.Item
                       testID="postDropdownEditPostInteractions"
                       label={_(msg`Edit interaction settings`)}
-                      onPress={postInteractionSettingsDialogControl.open}
+                      onPress={() =>
+                        postInteractionSettingsDialogControl.open()
+                      }
                       {...(isAuthor
                         ? Platform.select({
                             web: {
@@ -647,7 +651,7 @@ let PostDropdownBtn = ({
                     <Menu.Item
                       testID="postDropdownDeleteBtn"
                       label={_(msg`Delete post`)}
-                      onPress={deletePromptControl.open}>
+                      onPress={() => deletePromptControl.open()}>
                       <Menu.ItemText>{_(msg`Delete post`)}</Menu.ItemText>
                       <Menu.ItemIcon icon={Trash} position="right" />
                     </Menu.Item>

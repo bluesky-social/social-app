@@ -18,7 +18,7 @@ import {useLingui} from '@lingui/react'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {appVersion, BUNDLE_DATE, bundleInfo} from '#/lib/app-info'
+import {appVersion, BUNDLE_DATE, bundleInfo, IS_INTERNAL} from '#/lib/app-info'
 import {STATUS_PAGE_URL} from '#/lib/constants'
 import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
 import {useCustomPalette} from '#/lib/hooks/useCustomPalette'
@@ -53,9 +53,12 @@ import * as Toast from '#/view/com/util/Toast'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {ScrollView} from '#/view/com/util/Views'
 import {DeactivateAccountDialog} from '#/screens/Settings/components/DeactivateAccountDialog'
+import {SettingsScreen as NewSettingsScreen} from '#/screens/Settings/Settings'
 import {atoms as a, useTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {BirthDateSettingsDialog} from '#/components/dialogs/BirthDateSettings'
+import {VerifyEmailDialog} from '#/components/dialogs/VerifyEmailDialog'
+import * as Layout from '#/components/Layout'
 import {Email2FAToggle} from './Email2FAToggle'
 import {ExportCarDialog} from './ExportCarDialog'
 
@@ -135,7 +138,15 @@ function SettingsAccountCard({
 }
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Settings'>
-export function SettingsScreen({}: Props) {
+export function SettingsScreen(props: Props) {
+  return IS_INTERNAL ? (
+    <NewSettingsScreen {...props} />
+  ) : (
+    <LegacySettingsScreen {...props} />
+  )
+}
+
+function LegacySettingsScreen({}: Props) {
   const queryClient = useQueryClient()
   const pal = usePalette('default')
   const {_} = useLingui()
@@ -285,7 +296,7 @@ export function SettingsScreen({}: Props) {
   const {mutate: onPressDeleteChatDeclaration} = useDeleteActorDeclaration()
 
   return (
-    <View style={s.hContentRegion} testID="settingsScreen">
+    <Layout.Screen testID="settingsScreen">
       <ExportCarDialog control={exportCarControl} />
       <BirthDateSettingsDialog control={birthdayControl} />
 
@@ -918,7 +929,7 @@ export function SettingsScreen({}: Props) {
         </View>
         <View style={s.footerSpacer} />
       </ScrollView>
-    </View>
+    </Layout.Screen>
   )
 }
 
@@ -927,7 +938,7 @@ function EmailConfirmationNotice() {
   const palInverted = usePalette('inverted')
   const {_} = useLingui()
   const {isMobile} = useWebMediaQueries()
-  const {openModal} = useModalControls()
+  const verifyEmailDialogControl = useDialogControl()
 
   return (
     <View style={{marginBottom: 20}}>
@@ -959,7 +970,7 @@ function EmailConfirmationNotice() {
             accessibilityRole="button"
             accessibilityLabel={_(msg`Verify my email`)}
             accessibilityHint={_(msg`Opens modal for email verification`)}
-            onPress={() => openModal({name: 'verify-email'})}>
+            onPress={() => verifyEmailDialogControl.open()}>
             <FontAwesomeIcon
               icon="envelope"
               color={palInverted.colors.text}
@@ -974,6 +985,7 @@ function EmailConfirmationNotice() {
           <Trans>Protect your account by verifying your email.</Trans>
         </Text>
       </View>
+      <VerifyEmailDialog control={verifyEmailDialogControl} />
     </View>
   )
 }
