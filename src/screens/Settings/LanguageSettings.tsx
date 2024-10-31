@@ -71,7 +71,7 @@ export function LanguageSettingsScreen({}: Props) {
             <SettingsList.ItemText>
               <Trans>App Language</Trans>
             </SettingsList.ItemText>
-            <View style={[a.gap_md]}>
+            <View style={[a.gap_md, a.w_full]}>
               <Text style={[a.leading_snug]}>
                 <Trans>
                   Select your app language for the default text to display in
@@ -109,7 +109,6 @@ export function LanguageSettingsScreen({}: Props) {
                       paddingVertical: 8,
                       borderRadius: a.rounded_xs.borderRadius,
                     },
-
                     inputWeb: {
                       flex: 1,
                       width: '100%',
@@ -134,18 +133,20 @@ export function LanguageSettingsScreen({}: Props) {
                 />
 
                 <View
-                  style={{
-                    position: 'absolute',
-                    top: 1,
-                    right: 1,
-                    bottom: 1,
-                    width: 40,
-                    backgroundColor: t.atoms.bg_contrast_25.backgroundColor,
-                    borderRadius: a.rounded_xs.borderRadius,
-                    pointerEvents: 'none',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}>
+                  style={[
+                    a.absolute,
+                    t.atoms.bg_contrast_25,
+                    a.rounded_xs,
+                    a.pointer_events_none,
+                    a.align_center,
+                    a.justify_center,
+                    {
+                      top: 1,
+                      right: 1,
+                      bottom: 1,
+                      width: 40,
+                    },
+                  ]}>
                   <ChevronDownIcon style={[t.atoms.text]} />
                 </View>
               </View>
@@ -156,7 +157,7 @@ export function LanguageSettingsScreen({}: Props) {
             <SettingsList.ItemText>
               <Trans>Primary Language</Trans>
             </SettingsList.ItemText>
-            <View style={[a.gap_md]}>
+            <View style={[a.gap_md, a.w_full]}>
               <Text style={[a.leading_snug]}>
                 <Trans>
                   Select your preferred language for translations in your feed.
