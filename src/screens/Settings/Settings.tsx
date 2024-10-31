@@ -40,7 +40,6 @@ type Props = NativeStackScreenProps<CommonNavigatorParams, 'Settings'>
 export function SettingsScreen({}: Props) {
   const {_} = useLingui()
   const {logoutEveryAccount} = useSessionApi()
-
   const {accounts, currentAccount} = useSession()
   const switchAccountControl = useDialogControl()
   const signOutPromptControl = Prompt.usePromptControl()
