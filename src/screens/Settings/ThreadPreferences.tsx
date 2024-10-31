@@ -119,7 +119,7 @@ export function ThreadPreferencesScreen({}: Props) {
           <SettingsList.Group>
             <SettingsList.ItemIcon icon={BeakerIcon} />
             <SettingsList.ItemText>
-              <Trans>Threaded mode (experimental)</Trans>
+              <Trans>Experimental</Trans>
             </SettingsList.ItemText>
             <Toggle.Item
               type="checkbox"
