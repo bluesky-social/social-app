@@ -331,14 +331,14 @@ function interpolateTransform(
   const thumbnailCenterX = thumbnailDims.pageX + thumbnailDims.width / 2
   const thumbnailCenterY = thumbnailDims.pageY + thumbnailDims.height / 2
 
+  const initialTranslateX = thumbnailCenterX - screenCenterX
+  const initialTranslateY = thumbnailCenterY - screenCenterY
   const initialScale = thumbnailDims.width / screenSize.width
-  const initialTranslateX = (thumbnailCenterX - screenCenterX) / initialScale
-  const initialTranslateY = (thumbnailCenterY - screenCenterY) / initialScale
 
-  const scale = interpolate(progress, [0, 1], [initialScale, 1])
   const translateX = interpolate(progress, [0, 1], [initialTranslateX, 0])
   const translateY = interpolate(progress, [0, 1], [initialTranslateY, 0])
-  return [{scale}, {translateX}, {translateY}]
+  const scale = interpolate(progress, [0, 1], [initialScale, 1])
+  return [{translateX}, {translateY}, {scale}]
 }
 
 const styles = StyleSheet.create({
