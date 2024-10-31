@@ -462,16 +462,21 @@ export const ComposePost = ({
 
   React.useEffect(() => {
     if (publishOnUpload) {
+      let erroredVideos = 0
       let uploadingVideos = 0
       for (let post of thread.posts) {
         if (post.embed.media?.type === 'video') {
           const video = post.embed.media.video
-          if (!video.pendingPublish) {
+          if (video.status === 'error') {
+            erroredVideos++
+          } else if (video.status !== 'done') {
             uploadingVideos++
           }
         }
       }
-      if (uploadingVideos === 0) {
+      if (erroredVideos > 0) {
+        setPublishOnUpload(false)
+      } else if (uploadingVideos === 0) {
         setPublishOnUpload(false)
         onPressPublish()
       }
