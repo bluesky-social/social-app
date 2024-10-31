@@ -1,27 +1,18 @@
-import {Subscription, Subscriptions} from './types'
+import {Subscription, SubscriptionTier} from './types'
 
 export function organizeMainSubscriptionsByTier(
   subscriptions: Subscription[],
-): Subscriptions['available'] {
-  const result: Subscriptions['available'] = {
-    monthly: [],
-    annual: [],
-  }
+): SubscriptionTier[] {
+  const interim: Record<string, SubscriptionTier> = {}
 
   for (const sub of subscriptions) {
-    result[sub.interval].push(sub)
+    const [_, tier, interval] = sub.id.split(':')
+
+    interim[tier] = interim[tier] || {
+      id: `main:${tier}`,
+    }
+    interim[tier][interval as 'monthly' | 'annual'] = sub
   }
 
-  result.monthly = result.monthly.sort((a, b) => {
-    const _a = parseInt(a.id.split(':')[1])
-    const _b = parseInt(b.id.split(':')[1])
-    return _a - _b
-  })
-  result.annual = result.annual.sort((a, b) => {
-    const _a = parseInt(a.id.split(':')[1])
-    const _b = parseInt(b.id.split(':')[1])
-    return _a - _b
-  })
-
-  return result
+  return Object.values(interim)
 }

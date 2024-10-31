@@ -11,14 +11,19 @@ export enum SubscriptionId {
   Main2AnnualAuto = 'main:2:annual:auto',
 }
 
-export enum EntitlementId {
+export enum TierId {
   Main0 = 'main:0',
   Main1 = 'main:1',
   Main2 = 'main:2',
 }
 
+export enum PaymentInterval {
+  Monthly = 'monthly',
+  Annual = 'annual',
+}
+
 export type Entitlement = {
-  id: EntitlementId
+  id: TierId
 }
 
 export type Subscription =
@@ -65,10 +70,8 @@ export type Subscription =
       product: string
     }
 
-export type Subscriptions = {
-  active: Subscription[]
-  available: {
-    monthly: Subscription[]
-    annual: Subscription[]
-  }
+export type SubscriptionTier = {
+  id: TierId
+  [PaymentInterval.Monthly]: Subscription
+  [PaymentInterval.Annual]: Subscription
 }

@@ -1,11 +1,12 @@
 import {
-  EntitlementId,
+  TierId,
   SubscriptionId,
 } from '#/state/purchases/subscriptions/types'
 
 export type SubscriptionState = {
+  platform: 'android' | 'ios' | 'web'
   active: boolean
-  entitlements: {id: EntitlementId}[]
+  entitlements: {id: TierId}[]
   status:
     | 'trialing'
     | 'active'

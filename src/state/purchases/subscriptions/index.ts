@@ -7,7 +7,7 @@ import {getMainSubscriptions} from '#/state/purchases/subscriptions/api'
 import {Subscription as APISubscription} from '#/state/purchases/subscriptions/api/types'
 import {
   Subscription,
-  Subscriptions,
+  SubscriptionTier,
 } from '#/state/purchases/subscriptions/types'
 import {organizeMainSubscriptionsByTier} from '#/state/purchases/subscriptions/util'
 import {useSession} from '#/state/session'
@@ -17,7 +17,7 @@ export function useMainSubscriptions() {
   const did = currentAccount!.did
   const currencyFormatter = useCurrencyFormatter()
 
-  return useQuery<Subscriptions>({
+  return useQuery<SubscriptionTier[]>({
     queryKey: ['availableSubscriptions', did],
     async queryFn() {
       const platform = isAndroid ? 'android' : 'ios'
@@ -25,7 +25,7 @@ export function useMainSubscriptions() {
         did: currentAccount!.did,
         platform,
       })
-      const platformSubscriptions = rawSubscriptions.available
+      const platformSubscriptions = rawSubscriptions.subscriptions
         .filter(s => s.platform !== 'web')
         .filter(s => s.platform === platform)
       const lookupKeys = Array.from(
@@ -68,17 +68,11 @@ export function useMainSubscriptions() {
           product: productData,
         }
       }
-      const subscriptions = platformSubscriptions
-        .map(decorateSubscription)
-        .filter(Boolean) as Subscription[]
-      const active = rawSubscriptions.active
+      const subscriptions = rawSubscriptions.subscriptions
         .map(decorateSubscription)
         .filter(Boolean) as Subscription[]
 
-      return {
-        active: active,
-        available: organizeMainSubscriptionsByTier(subscriptions),
-      }
+      return organizeMainSubscriptionsByTier(subscriptions)
     },
   })
 }
@@ -106,5 +100,17 @@ export function usePurchaseSubscription() {
 
       return Purchases.purchaseStoreProduct(subscription.product)
     },
+  })
+}
+
+export function useChangeSubscription() {
+  return useMutation({
+    async mutationFn({prev, next}: {prev: Subscription; next: Subscription}) {},
+  })
+}
+
+export function useCancelSubscription() {
+  return useMutation({
+    async mutationFn(subscription: Subscription) {},
   })
 }

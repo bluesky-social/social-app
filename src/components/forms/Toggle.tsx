@@ -41,7 +41,7 @@ const GroupContext = React.createContext<{
   disabled: boolean
   type: 'radio' | 'checkbox'
   maxSelectionsReached: boolean
-  setFieldValue: (props: {name: string; value: boolean}) => void
+  setFieldValue: (props: {name: any; value: boolean}) => void
 }>({
   type: 'checkbox',
   values: [],
@@ -50,12 +50,12 @@ const GroupContext = React.createContext<{
   setFieldValue: () => {},
 })
 
-export type GroupProps = React.PropsWithChildren<{
+export type GroupProps<V> = React.PropsWithChildren<{
   type?: 'radio' | 'checkbox'
-  values: string[]
+  values: V[]
   maxSelections?: number
   disabled?: boolean
-  onChange: (value: string[]) => void
+  onChange: (value: V[]) => void
   label: string
 }>
 
@@ -74,7 +74,7 @@ export function useItemContext() {
   return React.useContext(ItemContext)
 }
 
-export function Group({
+export function Group<V extends string>({
   children,
   values: providedValues,
   onChange,
@@ -82,13 +82,13 @@ export function Group({
   type = 'checkbox',
   maxSelections,
   label,
-}: GroupProps) {
+}: GroupProps<V>) {
   const groupRole = type === 'radio' ? 'radiogroup' : undefined
   const values = type === 'radio' ? providedValues.slice(0, 1) : providedValues
   const [maxReached, setMaxReached] = React.useState(false)
 
   const setFieldValue = React.useCallback<
-    (props: {name: string; value: boolean}) => void
+    (props: {name: V; value: boolean}) => void
   >(
     ({name, value}) => {
       if (type === 'checkbox') {
