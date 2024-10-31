@@ -22,12 +22,15 @@ import {
 // @ts-expect-error no type definition
 import ProgressCircle from 'react-native-progress/Circle'
 import Animated, {
+  AnimatedRef,
   Easing,
   FadeIn,
   FadeOut,
   interpolateColor,
   LayoutAnimationConfig,
   LinearTransition,
+  runOnUI,
+  scrollTo,
   useAnimatedRef,
   useAnimatedStyle,
   useDerivedValue,
@@ -515,7 +518,10 @@ export const ComposePost = ({
     onScrollViewLayout,
     topBarAnimatedStyle,
     bottomBarAnimatedStyle,
-  } = useAnimatedBorders()
+  } = useScrollTracker({
+    scrollViewRef,
+    stickyBottom: true,
+  })
 
   const keyboardVerticalOffset = useKeyboardVerticalOffset()
 
@@ -1203,7 +1209,13 @@ export function useComposerCancelRef() {
   return useRef<CancelRef>(null)
 }
 
-function useAnimatedBorders() {
+function useScrollTracker({
+  scrollViewRef,
+  stickyBottom,
+}: {
+  scrollViewRef: AnimatedRef<Animated.ScrollView>
+  stickyBottom: boolean
+}) {
   const t = useTheme()
   const contentOffset = useSharedValue(0)
   const scrollViewHeight = useSharedValue(Infinity)
@@ -1255,11 +1267,28 @@ function useAnimatedBorders() {
 
   const onScrollViewContentSizeChange = useCallback(
     (_width: number, height: number) => {
+      if (stickyBottom && height > contentHeight.value) {
+        const isFairlyCloseToBottom =
+          contentHeight.value - contentOffset.value - 50 <=
+          scrollViewHeight.value
+        if (isFairlyCloseToBottom) {
+          runOnUI(() => {
+            scrollTo(scrollViewRef, 0, contentHeight.value, true)
+          })()
+        }
+      }
       showHideBottomBorder({
         newContentHeight: height,
       })
     },
-    [showHideBottomBorder],
+    [
+      showHideBottomBorder,
+      scrollViewRef,
+      contentHeight,
+      stickyBottom,
+      contentOffset,
+      scrollViewHeight,
+    ],
   )
 
   const onScrollViewLayout = useCallback(
