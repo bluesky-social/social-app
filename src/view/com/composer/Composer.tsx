@@ -1211,9 +1211,6 @@ function useAnimatedBorders() {
   const scrollViewHeight = useSharedValue(Infinity)
   const contentHeight = useSharedValue(0)
 
-  /**
-   * Make sure to run this on the UI thread!
-   */
   const showHideBottomBorder = useCallback(
     ({
       newContentHeight,
