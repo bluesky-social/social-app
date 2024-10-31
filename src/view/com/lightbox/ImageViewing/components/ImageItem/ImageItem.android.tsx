@@ -34,7 +34,6 @@ const SCREEN = {
 const MIN_DOUBLE_TAP_SCALE = 2
 const MAX_ORIGINAL_IMAGE_ZOOM = 2
 
-const AnimatedImage = Animated.createAnimatedComponent(Image)
 const initialTransform = createTransform()
 
 type Props = {
@@ -53,7 +52,6 @@ const ImageItem = ({
   isScrollViewBeingDragged,
 }: Props) => {
   const [isScaled, setIsScaled] = useState(false)
-  const [isLoaded, setIsLoaded] = useState(false)
   const imageDimensions = useImageDimensions(imageSrc)
   const committedTransform = useSharedValue(initialTransform)
   const panTranslation = useSharedValue({x: 0, y: 0})
@@ -144,12 +142,14 @@ const ImageItem = ({
 
   const pinch = Gesture.Pinch()
     .onStart(e => {
+      'worklet'
       pinchOrigin.value = {
         x: e.focalX - SCREEN.width / 2,
         y: e.focalY - SCREEN.height / 2,
       }
     })
     .onChange(e => {
+      'worklet'
       if (!imageDimensions) {
         return
       }
@@ -181,6 +181,7 @@ const ImageItem = ({
       }
     })
     .onEnd(() => {
+      'worklet'
       // Commit just the pinch.
       let t = createTransform()
       prependPinch(
@@ -204,6 +205,7 @@ const ImageItem = ({
     // Unlike .enabled(isScaled), this ensures that an initial pinch can turn into a pan midway:
     .minPointers(isScaled ? 1 : 2)
     .onChange(e => {
+      'worklet'
       if (!imageDimensions) {
         return
       }
@@ -225,6 +227,7 @@ const ImageItem = ({
       panTranslation.value = nextPanTranslation
     })
     .onEnd(() => {
+      'worklet'
       // Commit just the pan.
       let t = createTransform()
       prependPan(t, panTranslation.value)
@@ -237,12 +240,14 @@ const ImageItem = ({
     })
 
   const singleTap = Gesture.Tap().onEnd(() => {
+    'worklet'
     runOnJS(onTap)()
   })
 
   const doubleTap = Gesture.Tap()
     .numberOfTaps(2)
     .onEnd(e => {
+      'worklet'
       if (!imageDimensions) {
         return
       }
@@ -289,9 +294,11 @@ const ImageItem = ({
     .failOffsetX([-10, 10])
     .maxPointers(1)
     .onUpdate(e => {
+      'worklet'
       dismissSwipeTranslateY.value = e.translationY
     })
     .onEnd(e => {
+      'worklet'
       if (Math.abs(e.velocityY) > 1000) {
         dismissSwipeTranslateY.value = withDecay({velocity: e.velocityY})
         runOnJS(onRequestClose)()
@@ -313,20 +320,23 @@ const ImageItem = ({
         singleTap,
       )
 
-  const isLoading = !isLoaded || !imageDimensions
   return (
-    <Animated.View ref={containerRef} style={styles.container}>
-      {isLoading && (
-        <ActivityIndicator size="small" color="#FFF" style={styles.loading} />
-      )}
+    <Animated.View
+      ref={containerRef}
+      // Necessary to make opacity work for both children together.
+      renderToHardwareTextureAndroid
+      style={[styles.container, animatedStyle]}>
+      <ActivityIndicator size="small" color="#FFF" style={styles.loading} />
       <GestureDetector gesture={composedGesture}>
-        <AnimatedImage
+        <Image
           contentFit="contain"
           source={{uri: imageSrc.uri}}
-          style={[styles.image, animatedStyle]}
+          placeholderContentFit="contain"
+          placeholder={{uri: imageSrc.thumbUri}}
+          style={styles.image}
           accessibilityLabel={imageSrc.alt}
           accessibilityHint=""
-          onLoad={() => setIsLoaded(true)}
+          accessibilityIgnoresInvertColors
           cachePolicy="memory"
         />
       </GestureDetector>

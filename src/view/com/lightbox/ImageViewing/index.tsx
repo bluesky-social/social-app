@@ -9,18 +9,19 @@
 // https://github.com/jobtoday/react-native-image-viewing
 
 import React, {ComponentType, useCallback, useMemo, useState} from 'react'
-import {StyleSheet, View, Platform} from 'react-native'
-
-import ImageItem from './components/ImageItem/ImageItem'
-import ImageDefaultHeader from './components/ImageDefaultHeader'
-
-import {ImageSource} from './@types'
+import {Platform, StyleSheet, View} from 'react-native'
+import PagerView from 'react-native-pager-view'
+import {MeasuredDimensions} from 'react-native-reanimated'
 import Animated, {useAnimatedStyle, withSpring} from 'react-native-reanimated'
 import {Edge, SafeAreaView} from 'react-native-safe-area-context'
-import PagerView from 'react-native-pager-view'
+
+import {ImageSource} from './@types'
+import ImageDefaultHeader from './components/ImageDefaultHeader'
+import ImageItem from './components/ImageItem/ImageItem'
 
 type Props = {
   images: ImageSource[]
+  thumbDims: MeasuredDimensions | null
   initialImageIndex: number
   visible: boolean
   onRequestClose: () => void
@@ -33,6 +34,7 @@ const DEFAULT_BG_COLOR = '#000'
 
 function ImageViewing({
   images,
+  thumbDims: _thumbDims, // TODO: Pass down and use for animation.
   initialImageIndex,
   visible,
   onRequestClose,

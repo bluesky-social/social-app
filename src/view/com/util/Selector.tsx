@@ -1,9 +1,10 @@
-import React, {createRef, useState, useMemo, useRef} from 'react'
+import React, {createRef, useMemo, useRef, useState} from 'react'
 import {Animated, Pressable, StyleSheet, View} from 'react-native'
-import {Text} from './text/Text'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useLingui} from '@lingui/react'
 import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+
+import {usePalette} from '#/lib/hooks/usePalette'
+import {Text} from './text/Text'
 
 interface Layout {
   x: number

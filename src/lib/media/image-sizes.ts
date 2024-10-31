@@ -1,5 +1,6 @@
 import {Image} from 'react-native'
-import type {Dimensions} from 'lib/media/types'
+
+import type {Dimensions} from '#/lib/media/types'
 
 const sizes: Map<string, Dimensions> = new Map()
 const activeRequests: Map<string, Promise<Dimensions>> = new Map()

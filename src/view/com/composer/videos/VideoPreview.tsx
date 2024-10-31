@@ -6,7 +6,7 @@ import {BlueskyVideoView} from '@haileyok/bluesky-video'
 import {CompressedVideo} from '#/lib/media/video/types'
 import {clamp} from '#/lib/numbers'
 import {useAutoplayDisabled} from '#/state/preferences'
-import {ExternalEmbedRemoveBtn} from 'view/com/composer/ExternalEmbedRemoveBtn'
+import {ExternalEmbedRemoveBtn} from '#/view/com/composer/ExternalEmbedRemoveBtn'
 import {atoms as a, useTheme} from '#/alf'
 import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
 

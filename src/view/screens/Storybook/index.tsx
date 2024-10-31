@@ -18,6 +18,7 @@ import {Forms} from './Forms'
 import {Icons} from './Icons'
 import {Links} from './Links'
 import {Menus} from './Menus'
+import {Settings} from './Settings'
 import {Shadows} from './Shadows'
 import {Spacing} from './Spacing'
 import {Theming} from './Theming'
@@ -100,6 +101,8 @@ function StorybookInner() {
             </Button>
 
             <Admonitions />
+
+            <Settings />
 
             <ThemeProvider theme="light">
               <Theming />

@@ -55,7 +55,6 @@ import {ModerationModlistsScreen} from '#/view/screens/ModerationModlists'
 import {ModerationMutedAccounts} from '#/view/screens/ModerationMutedAccounts'
 import {NotFoundScreen} from '#/view/screens/NotFound'
 import {NotificationsScreen} from '#/view/screens/Notifications'
-import {NotificationsSettingsScreen} from '#/view/screens/NotificationsSettings'
 import {PostThreadScreen} from '#/view/screens/PostThread'
 import {PreferencesExternalEmbeds} from '#/view/screens/PreferencesExternalEmbeds'
 import {PreferencesFollowingFeed} from '#/view/screens/PreferencesFollowingFeed'
@@ -87,6 +86,7 @@ import {PostRepostedByScreen} from '#/screens/Post/PostRepostedBy'
 import {ProfileKnownFollowersScreen} from '#/screens/Profile/KnownFollowers'
 import {ProfileLabelerLikedByScreen} from '#/screens/Profile/ProfileLabelerLikedBy'
 import {AppearanceSettingsScreen} from '#/screens/Settings/AppearanceSettings'
+import {NotificationSettingsScreen} from '#/screens/Settings/NotificationSettings'
 import {
   StarterPackScreen,
   StarterPackScreenShort,
@@ -95,6 +95,10 @@ import {Wizard} from '#/screens/StarterPack/Wizard'
 import {useTheme} from '#/alf'
 import {router} from '#/routes'
 import {Referrer} from '../modules/expo-bluesky-swiss-army'
+import {AboutSettingsScreen} from './screens/Settings/AboutSettings'
+import {AccountSettingsScreen} from './screens/Settings/AccountSettings'
+import {ContentAndMediaSettingsScreen} from './screens/Settings/ContentAndMediaSettings'
+import {PrivacyAndSecuritySettingsScreen} from './screens/Settings/PrivacyAndSecuritySettings'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
 
@@ -322,7 +326,39 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         name="AppearanceSettings"
         getComponent={() => AppearanceSettingsScreen}
         options={{
-          title: title(msg`Appearance Settings`),
+          title: title(msg`Appearance`),
+          requireAuth: true,
+        }}
+      />
+      <Stack.Screen
+        name="AccountSettings"
+        getComponent={() => AccountSettingsScreen}
+        options={{
+          title: title(msg`Account`),
+          requireAuth: true,
+        }}
+      />
+      <Stack.Screen
+        name="PrivacyAndSecuritySettings"
+        getComponent={() => PrivacyAndSecuritySettingsScreen}
+        options={{
+          title: title(msg`Privacy and Security`),
+          requireAuth: true,
+        }}
+      />
+      <Stack.Screen
+        name="ContentAndMediaSettings"
+        getComponent={() => ContentAndMediaSettingsScreen}
+        options={{
+          title: title(msg`Content and Media`),
+          requireAuth: true,
+        }}
+      />
+      <Stack.Screen
+        name="AboutSettings"
+        getComponent={() => AboutSettingsScreen}
+        options={{
+          title: title(msg`About`),
           requireAuth: true,
         }}
       />
@@ -342,8 +378,8 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         options={{title: title(msg`Chat settings`), requireAuth: true}}
       />
       <Stack.Screen
-        name="NotificationsSettings"
-        getComponent={() => NotificationsSettingsScreen}
+        name="NotificationSettings"
+        getComponent={() => NotificationSettingsScreen}
         options={{title: title(msg`Notification settings`), requireAuth: true}}
       />
       <Stack.Screen

@@ -7,6 +7,8 @@ import {
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {usePalette} from '#/lib/hooks/usePalette'
+import {isNative} from '#/platform/detection'
 import {useModalControls} from '#/state/modals'
 import {
   hasPostLanguage,
@@ -14,14 +16,12 @@ import {
   useLanguagePrefs,
   useLanguagePrefsApi,
 } from '#/state/preferences/languages'
-import {usePalette} from 'lib/hooks/usePalette'
-import {isNative} from 'platform/detection'
 import {
   DropdownButton,
   DropdownItem,
   DropdownItemButton,
-} from 'view/com/util/forms/DropdownButton'
-import {Text} from 'view/com/util/text/Text'
+} from '#/view/com/util/forms/DropdownButton'
+import {Text} from '#/view/com/util/text/Text'
 import {codeToLanguageName} from '../../../../locale/helpers'
 
 export function SelectLangBtn() {

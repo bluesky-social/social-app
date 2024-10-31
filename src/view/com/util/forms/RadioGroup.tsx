@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import {View} from 'react-native'
 
-import {s} from 'lib/styles'
+import {s} from '#/lib/styles'
 import {ButtonType} from './Button'
 import {RadioButton} from './RadioButton'
 

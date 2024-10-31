@@ -18,7 +18,7 @@ import {useLingui} from '@lingui/react'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {appVersion, BUNDLE_DATE, bundleInfo} from '#/lib/app-info'
+import {appVersion, BUNDLE_DATE, bundleInfo, IS_INTERNAL} from '#/lib/app-info'
 import {STATUS_PAGE_URL} from '#/lib/constants'
 import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
 import {useCustomPalette} from '#/lib/hooks/useCustomPalette'
@@ -53,6 +53,7 @@ import * as Toast from '#/view/com/util/Toast'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {ScrollView} from '#/view/com/util/Views'
 import {DeactivateAccountDialog} from '#/screens/Settings/components/DeactivateAccountDialog'
+import {SettingsScreen as NewSettingsScreen} from '#/screens/Settings/Settings'
 import {atoms as a, useTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {BirthDateSettingsDialog} from '#/components/dialogs/BirthDateSettings'
@@ -137,7 +138,15 @@ function SettingsAccountCard({
 }
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Settings'>
-export function SettingsScreen({}: Props) {
+export function SettingsScreen(props: Props) {
+  return IS_INTERNAL ? (
+    <NewSettingsScreen {...props} />
+  ) : (
+    <LegacySettingsScreen {...props} />
+  )
+}
+
+function LegacySettingsScreen({}: Props) {
   const queryClient = useQueryClient()
   const pal = usePalette('default')
   const {_} = useLingui()

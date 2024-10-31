@@ -59,7 +59,6 @@ import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {logEvent} from '#/lib/statsig/statsig'
 import {cleanError} from '#/lib/strings/errors'
-import {shortenLinks} from '#/lib/strings/rich-text-manip'
 import {colors, s} from '#/lib/styles'
 import {logger} from '#/logger'
 import {isAndroid, isIOS, isNative, isWeb} from '#/platform/detection'
@@ -114,19 +113,19 @@ import {Text as NewText} from '#/components/Typography'
 import {BottomSheetPortalProvider} from '../../../../modules/bottom-sheet'
 import {
   ComposerAction,
-  ComposerDraft,
   composerReducer,
   createComposerState,
   EmbedDraft,
   MAX_IMAGES,
+  PostAction,
+  PostDraft,
+  ThreadDraft,
 } from './state/composer'
 import {NO_VIDEO, NoVideoState, processVideo, VideoState} from './state/video'
 
 type CancelRef = {
   onPressCancel: () => void
 }
-
-const NO_IMAGES: ComposerImage[] = []
 
 type Props = ComposerOpts
 export const ComposePost = ({
@@ -161,38 +160,26 @@ export const ComposePost = ({
   const [publishingStage, setPublishingStage] = useState('')
   const [error, setError] = useState('')
 
-  const [draft, dispatch] = useReducer(
+  const [composerState, composerDispatch] = useReducer(
     composerReducer,
     {initImageUris, initQuoteUri: initQuote?.uri, initText, initMention},
     createComposerState,
   )
-  const richtext = draft.richtext
-  let quote: string | undefined
-  if (draft.embed.quote) {
-    quote = draft.embed.quote.uri
-  }
-  let images = NO_IMAGES
-  if (draft.embed.media?.type === 'images') {
-    images = draft.embed.media.images
-  }
+
+  // TODO: Display drafts for other posts in the thread.
+  const thread = composerState.thread
+  const draft = thread.posts[composerState.activePostIndex]
+  const dispatch = useCallback((postAction: PostAction) => {
+    composerDispatch({
+      type: 'update_post',
+      postAction,
+    })
+  }, [])
+
   let videoState: VideoState | NoVideoState = NO_VIDEO
   if (draft.embed.media?.type === 'video') {
     videoState = draft.embed.media.video
   }
-  let extGif: Gif | undefined
-  let extGifAlt: string | undefined
-  if (draft.embed.media?.type === 'gif') {
-    extGif = draft.embed.media.gif
-    extGifAlt = draft.embed.media.alt
-  }
-  let extLink: string | undefined
-  if (draft.embed.link) {
-    extLink = draft.embed.link.uri
-  }
-
-  const graphemeLength = useMemo(() => {
-    return shortenLinks(richtext).graphemeLength
-  }, [richtext])
 
   const selectVideo = React.useCallback(
     (asset: ImagePickerAsset) => {
@@ -207,7 +194,7 @@ export const ComposePost = ({
         _,
       )
     },
-    [_, agent, currentDid],
+    [_, agent, currentDid, dispatch],
   )
 
   // Whenever we receive an initial video uri, we should immediately run compression if necessary
@@ -240,10 +227,12 @@ export const ComposePost = ({
 
   const onPressCancel = useCallback(() => {
     if (
-      graphemeLength > 0 ||
-      images.length !== 0 ||
-      extGif ||
-      videoState.status !== 'idle'
+      thread.posts.some(
+        post =>
+          post.shortenedGraphemeLength > 0 ||
+          post.embed.media ||
+          post.embed.link,
+      )
     ) {
       closeAllDialogs()
       Keyboard.dismiss()
@@ -251,15 +240,7 @@ export const ComposePost = ({
     } else {
       onClose()
     }
-  }, [
-    extGif,
-    graphemeLength,
-    images.length,
-    closeAllDialogs,
-    discardPromptControl,
-    onClose,
-    videoState.status,
-  ])
+  }, [thread, closeAllDialogs, discardPromptControl, onClose])
 
   useImperativeHandle(cancelRef, () => ({onPressCancel}))
 
@@ -284,55 +265,70 @@ export const ComposePost = ({
   }, [onPressCancel, closeAllDialogs, closeAllModals])
 
   const isAltTextRequiredAndMissing = useMemo(() => {
-    if (!requireAltTextEnabled) return false
+    if (!requireAltTextEnabled) {
+      return false
+    }
+    return thread.posts.some(post => {
+      const media = post.embed.media
+      if (media) {
+        if (media.type === 'images' && media.images.some(img => !img.alt)) {
+          return true
+        }
+        if (media.type === 'gif' && !media.alt) {
+          return true
+        }
+      }
+    })
+  }, [thread, requireAltTextEnabled])
 
-    if (images.some(img => img.alt === '')) return true
-
-    if (extGif && !extGifAlt) return true
-
-    return false
-  }, [images, extGifAlt, extGif, requireAltTextEnabled])
+  const canPost =
+    !isAltTextRequiredAndMissing &&
+    thread.posts.every(
+      post =>
+        post.shortenedGraphemeLength <= MAX_GRAPHEME_LENGTH &&
+        !(
+          post.richtext.text.trim().length === 0 &&
+          !post.embed.link &&
+          !post.embed.media &&
+          !post.embed.quote
+        ) &&
+        !(
+          post.embed.media?.type === 'video' &&
+          post.embed.media.video.status === 'error'
+        ),
+    )
 
   const onPressPublish = React.useCallback(
     async (finishedUploading: boolean) => {
-      if (isPublishing || graphemeLength > MAX_GRAPHEME_LENGTH) {
+      if (isPublishing) {
         return
       }
 
-      if (isAltTextRequiredAndMissing) {
+      if (!canPost) {
         return
       }
 
       if (
         !finishedUploading &&
-        videoState.asset &&
-        videoState.status !== 'done'
+        thread.posts.some(
+          post =>
+            post.embed.media?.type === 'video' &&
+            post.embed.media.video.asset &&
+            post.embed.media.video.status !== 'done',
+        )
       ) {
         setPublishOnUpload(true)
         return
       }
 
       setError('')
-
-      if (
-        richtext.text.trim().length === 0 &&
-        images.length === 0 &&
-        !extLink &&
-        !extGif &&
-        !quote &&
-        videoState.status === 'idle'
-      ) {
-        setError(_(msg`Did you want to say anything?`))
-        return
-      }
-
       setIsPublishing(true)
 
       let postUri
       try {
         postUri = (
           await apilib.post(agent, queryClient, {
-            draft: draft,
+            thread,
             replyTo: replyTo?.uri,
             onStateChange: setPublishingStage,
             langs: toPostLanguages(langPrefs.postLanguage),
@@ -340,8 +336,8 @@ export const ComposePost = ({
         ).uri
         try {
           await whenAppViewReady(agent, postUri, res => {
-            const thread = res.data.thread
-            return AppBskyFeedDefs.isThreadViewPost(thread)
+            const postedThread = res.data.thread
+            return AppBskyFeedDefs.isThreadViewPost(postedThread)
           })
         } catch (waitErr: any) {
           logger.error(waitErr, {
@@ -352,7 +348,7 @@ export const ComposePost = ({
       } catch (e: any) {
         logger.error(e, {
           message: `Composer: create post failed`,
-          hasImages: images.length > 0,
+          hasImages: thread.posts.some(p => p.embed.media?.type === 'images'),
         })
 
         let err = cleanError(e.message)
@@ -368,14 +364,21 @@ export const ComposePost = ({
         return
       } finally {
         if (postUri) {
-          logEvent('post:create', {
-            imageCount: images.length,
-            isReply: replyTo != null,
-            hasLink: extLink != null,
-            hasQuote: quote != null,
-            langs: langPrefs.postLanguage,
-            logContext: 'Composer',
-          })
+          let index = 0
+          for (let post of thread.posts) {
+            logEvent('post:create', {
+              imageCount:
+                post.embed.media?.type === 'images'
+                  ? post.embed.media.images.length
+                  : 0,
+              isReply: index > 0 || !!replyTo,
+              hasLink: !!post.embed.link,
+              hasQuote: !!post.embed.quote,
+              langs: langPrefs.postLanguage,
+              logContext: 'Composer',
+            })
+            index++
+          }
         }
       }
       if (postUri && !replyTo) {
@@ -385,10 +388,10 @@ export const ComposePost = ({
       if (initQuote) {
         // We want to wait for the quote count to update before we call `onPost`, which will refetch data
         whenAppViewReady(agent, initQuote.uri, res => {
-          const thread = res.data.thread
+          const quotedThread = res.data.thread
           if (
-            AppBskyFeedDefs.isThreadViewPost(thread) &&
-            thread.post.quoteCount !== initQuote.quoteCount
+            AppBskyFeedDefs.isThreadViewPost(quotedThread) &&
+            quotedThread.post.quoteCount !== initQuote.quoteCount
           ) {
             onPost?.(postUri)
             return true
@@ -408,23 +411,15 @@ export const ComposePost = ({
     [
       _,
       agent,
-      draft,
-      extLink,
-      extGif,
-      images,
-      graphemeLength,
-      isAltTextRequiredAndMissing,
+      thread,
+      canPost,
       isPublishing,
       langPrefs.postLanguage,
       onClose,
       onPost,
-      quote,
       initQuote,
       replyTo,
-      richtext.text,
       setLangPrefs,
-      videoState.asset,
-      videoState.status,
       queryClient,
     ],
   )
@@ -437,11 +432,6 @@ export const ComposePost = ({
       }
     }
   }, [onPressPublish, publishOnUpload, videoState.pendingPublish])
-
-  const canPost = useMemo(
-    () => graphemeLength <= MAX_GRAPHEME_LENGTH && !isAltTextRequiredAndMissing,
-    [graphemeLength, isAltTextRequiredAndMissing],
-  )
 
   const onEmojiButtonPress = useCallback(() => {
     openEmojiPicker?.(textInput.current?.getCursorPosition())
@@ -507,18 +497,18 @@ export const ComposePost = ({
             />
           </Animated.ScrollView>
 
-          <SuggestedLanguage text={richtext.text} />
+          <SuggestedLanguage text={draft.richtext.text} />
 
           <ComposerPills
             isReply={!!replyTo}
-            draft={draft}
-            dispatch={dispatch}
+            post={draft}
+            thread={composerState.thread}
+            dispatch={composerDispatch}
             bottomBarAnimatedStyle={bottomBarAnimatedStyle}
           />
 
           <ComposerFooter
             draft={draft}
-            graphemeLength={graphemeLength}
             dispatch={dispatch}
             onError={setError}
             onEmojiButtonPress={onEmojiButtonPress}
@@ -550,8 +540,8 @@ function ComposerPost({
   onError,
   onPublish,
 }: {
-  draft: ComposerDraft
-  dispatch: (action: ComposerAction) => void
+  draft: PostDraft
+  dispatch: (action: PostAction) => void
   textInput: React.Ref<TextInputRef>
   isReply: boolean
   canRemoveQuote: boolean
@@ -692,7 +682,7 @@ function ComposerTopBar({
               <ActivityIndicator />
             </View>
           </>
-        ) : canPost ? (
+        ) : (
           <Button
             testID="composerPublishBtn"
             label={isReply ? 'Publish reply' : 'Publish post'}
@@ -702,7 +692,7 @@ function ComposerTopBar({
             size="small"
             style={[a.rounded_full, a.py_sm]}
             onPress={onPublish}
-            disabled={isPublishQueued}>
+            disabled={!canPost || isPublishQueued}>
             <ButtonText style={[a.text_md]}>
               {isReply ? (
                 <Trans context="action">Reply</Trans>
@@ -711,12 +701,6 @@ function ComposerTopBar({
               )}
             </ButtonText>
           </Button>
-        ) : (
-          <View style={[styles.postBtn, pal.btn]}>
-            <Text style={[pal.textLight, s.f16, s.bold]}>
-              <Trans context="action">Post</Trans>
-            </Text>
-          </View>
         )}
       </View>
       {children}
@@ -749,7 +733,7 @@ function ComposerEmbeds({
   canRemoveQuote,
 }: {
   embed: EmbedDraft
-  dispatch: (action: ComposerAction) => void
+  dispatch: (action: PostAction) => void
   clearVideo: () => void
   canRemoveQuote: boolean
 }) {
@@ -863,19 +847,21 @@ function ComposerEmbeds({
 
 function ComposerPills({
   isReply,
-  draft,
+  thread,
+  post,
   dispatch,
   bottomBarAnimatedStyle,
 }: {
   isReply: boolean
-  draft: ComposerDraft
+  thread: ThreadDraft
+  post: PostDraft
   dispatch: (action: ComposerAction) => void
   bottomBarAnimatedStyle: StyleProp<ViewStyle>
 }) {
   const t = useTheme()
-  const media = draft.embed.media
+  const media = post.embed.media
   const hasMedia = media?.type === 'images' || media?.type === 'video'
-  const hasLink = !!draft.embed.link
+  const hasLink = !!post.embed.link
 
   // Don't render anything if no pills are going to be displayed
   if (isReply && !hasMedia && !hasLink) {
@@ -892,11 +878,11 @@ function ComposerPills({
         showsHorizontalScrollIndicator={false}>
         {isReply ? null : (
           <ThreadgateBtn
-            postgate={draft.postgate}
+            postgate={thread.postgate}
             onChangePostgate={nextPostgate => {
               dispatch({type: 'update_postgate', postgate: nextPostgate})
             }}
-            threadgateAllowUISettings={draft.threadgate}
+            threadgateAllowUISettings={thread.threadgate}
             onChangeThreadgateAllowUISettings={nextThreadgate => {
               dispatch({
                 type: 'update_threadgate',
@@ -908,9 +894,15 @@ function ComposerPills({
         )}
         {hasMedia || hasLink ? (
           <LabelsBtn
-            labels={draft.labels}
+            labels={post.labels}
             onChange={nextLabels => {
-              dispatch({type: 'update_labels', labels: nextLabels})
+              dispatch({
+                type: 'update_post',
+                postAction: {
+                  type: 'update_labels',
+                  labels: nextLabels,
+                },
+              })
             }}
           />
         ) : null}
@@ -922,14 +914,12 @@ function ComposerPills({
 function ComposerFooter({
   draft,
   dispatch,
-  graphemeLength,
   onEmojiButtonPress,
   onError,
   onSelectVideo,
 }: {
-  draft: ComposerDraft
-  dispatch: (action: ComposerAction) => void
-  graphemeLength: number
+  draft: PostDraft
+  dispatch: (action: PostAction) => void
   onEmojiButtonPress: () => void
   onError: (error: string) => void
   onSelectVideo: (asset: ImagePickerAsset) => void
@@ -1009,7 +999,10 @@ function ComposerFooter({
       </View>
       <View style={[a.flex_row, a.align_center, a.justify_between]}>
         <SelectLangBtn />
-        <CharProgress count={graphemeLength} style={{width: 65}} />
+        <CharProgress
+          count={draft.shortenedGraphemeLength}
+          style={{width: 65}}
+        />
       </View>
     </View>
   )

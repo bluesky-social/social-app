@@ -11,7 +11,7 @@ import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {NavigationProp} from '#/lib/routes/types'
 import {isIOS} from '#/platform/detection'
 import {Shadow} from '#/state/cache/types'
-import {ProfileImageLightbox, useLightboxControls} from '#/state/lightbox'
+import {useLightboxControls} from '#/state/lightbox'
 import {useSession} from '#/state/session'
 import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
@@ -54,7 +54,11 @@ let ProfileHeaderShell = ({
   const onPressAvi = React.useCallback(() => {
     const modui = moderation.ui('avatar')
     if (profile.avatar && !(modui.blur && modui.noOverride)) {
-      openLightbox(new ProfileImageLightbox(profile))
+      openLightbox({
+        type: 'profile-image',
+        profile: profile,
+        thumbDims: null,
+      })
     }
   }, [openLightbox, profile, moderation])
 

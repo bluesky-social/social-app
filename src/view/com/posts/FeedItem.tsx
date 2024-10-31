@@ -46,6 +46,7 @@ import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {AppModerationCause} from '#/components/Pills'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {RichText} from '#/components/RichText'
+import {SubtleWebHover} from '#/components/SubtleWebHover'
 import {Link, TextLink, TextLinkOnWebOnly} from '../util/Link'
 import {AviFollowButton} from './AviFollowButton'
 
@@ -237,6 +238,7 @@ let FeedItemInner = ({
     ? rootPost.threadgate.record
     : undefined
 
+  const [hover, setHover] = useState(false)
   return (
     <Link
       testID={`feedItem-by-${post.author.handle}`}
@@ -245,7 +247,14 @@ let FeedItemInner = ({
       noFeedback
       accessible={false}
       onBeforePress={onBeforePress}
-      dataSet={{feedContext}}>
+      dataSet={{feedContext}}
+      onPointerEnter={() => {
+        setHover(true)
+      }}
+      onPointerLeave={() => {
+        setHover(false)
+      }}>
+      <SubtleWebHover hover={hover} />
       <View style={{flexDirection: 'row', gap: 10, paddingLeft: 8}}>
         <View style={{width: 42}}>
           {isThreadChild && (

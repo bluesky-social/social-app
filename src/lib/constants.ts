@@ -21,7 +21,7 @@ export const STARTER_PACK_MAX_SIZE = 150
 // code and update this number with each release until we can get the
 // server route done.
 // -prf
-export const JOINED_THIS_WEEK = 150000 // estimate as of 10/9/24
+export const JOINED_THIS_WEEK = 650000 // estimate as of 10/28/24
 
 const BASE_FEEDBACK_FORM_URL = `${HELP_DESK_URL}/requests/new`
 export function FEEDBACK_FORM_URL({

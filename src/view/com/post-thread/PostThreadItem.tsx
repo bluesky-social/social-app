@@ -31,6 +31,7 @@ import {PostThreadFollowBtn} from '#/view/com/post-thread/PostThreadFollowBtn'
 import {atoms as a, useTheme} from '#/alf'
 import {AppModerationCause} from '#/components/Pills'
 import {RichText} from '#/components/RichText'
+import {SubtleWebHover} from '#/components/SubtleWebHover'
 import {Text as NewText} from '#/components/Typography'
 import {ContentHider} from '../../../components/moderation/ContentHider'
 import {LabelsOnMyPost} from '../../../components/moderation/LabelsOnMe'
@@ -649,6 +650,7 @@ function PostOuterWrapper({
   hideTopBorder?: boolean
 }>) {
   const t = useTheme()
+  const [hover, setHover] = React.useState(false)
   if (treeView && depth > 0) {
     return (
       <View
@@ -661,7 +663,13 @@ function PostOuterWrapper({
             flexDirection: 'row',
             borderTopWidth: depth === 1 ? a.border_t.borderTopWidth : 0,
           },
-        ]}>
+        ]}
+        onPointerEnter={() => {
+          setHover(true)
+        }}
+        onPointerLeave={() => {
+          setHover(false)
+        }}>
         {Array.from(Array(depth - 1)).map((_, n: number) => (
           <View
             key={`${post.uri}-padding-${n}`}
@@ -681,6 +689,12 @@ function PostOuterWrapper({
   }
   return (
     <View
+      onPointerEnter={() => {
+        setHover(true)
+      }}
+      onPointerLeave={() => {
+        setHover(false)
+      }}
       style={[
         a.border_t,
         a.px_sm,
@@ -689,6 +703,7 @@ function PostOuterWrapper({
         hideTopBorder && styles.noTopBorder,
         styles.cursor,
       ]}>
+      <SubtleWebHover hover={hover} />
       {children}
     </View>
   )
