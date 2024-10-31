@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {Fragment} from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -12,10 +12,9 @@ import {
   useExternalEmbedsPrefs,
   useSetExternalEmbedPref,
 } from '#/state/preferences'
-import {atoms as a} from '#/alf'
+import {atoms as a, native} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import * as Toggle from '#/components/forms/Toggle'
-import {Macintosh_Stroke2_Corner2_Rounded as MacintoshIcon} from '#/components/icons/Macintosh'
 import * as Layout from '#/components/Layout'
 import * as SettingsList from './components/SettingsList'
 
@@ -39,21 +38,24 @@ export function ExternalMediaPreferencesScreen({}: Props) {
               </Trans>
             </Admonition>
           </SettingsList.Item>
-          <SettingsList.Group>
-            <SettingsList.ItemIcon icon={MacintoshIcon} />
+          <SettingsList.Group iconInset={false}>
             <SettingsList.ItemText>
               <Trans>Enable media players for</Trans>
             </SettingsList.ItemText>
-            <View style={[a.mt_sm, a.gap_md]}>
+            <View style={[a.mt_sm, a.w_full]}>
+              {native(<SettingsList.Divider style={[a.my_0]} />)}
               {Object.entries(externalEmbedLabels)
                 // TODO: Remove special case when we disable the old integration.
                 .filter(([key]) => key !== 'tenor')
                 .map(([key, label]) => (
-                  <PrefSelector
-                    source={key as EmbedPlayerSource}
-                    label={label}
-                    key={key}
-                  />
+                  <Fragment key={key}>
+                    <PrefSelector
+                      source={key as EmbedPlayerSource}
+                      label={label}
+                      key={key}
+                    />
+                    {native(<SettingsList.Divider style={[a.my_0]} />)}
+                  </Fragment>
                 ))}
             </View>
           </SettingsList.Group>
@@ -84,8 +86,13 @@ function PrefSelector({
           source,
           sources?.[source] === 'show' ? 'hide' : 'show',
         )
-      }>
-      <Toggle.Checkbox />
+      }
+      style={[
+        a.flex_1,
+        a.py_md,
+        native([a.justify_between, a.flex_row_reverse]),
+      ]}>
+      <Toggle.Platform />
       <Toggle.LabelText style={[a.text_md]}>{label}</Toggle.LabelText>
     </Toggle.Item>
   )
