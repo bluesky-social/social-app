@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-10-30 11:44\n"
+"PO-Revision-Date: 2024-10-31 01:25\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional, Hong Kong\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -276,7 +276,7 @@ msgid "About"
 msgstr "關於"
 
 #: src/view/com/util/ViewHeader.tsx:89
-#: src/view/screens/Search/Search.tsx:882
+#: src/view/screens/Search/Search.tsx:883
 msgid "Access navigation links and settings"
 msgstr "存取導覽連結同設定"
 
@@ -465,7 +465,7 @@ msgstr "成人內容"
 msgid "Adult content can only be enabled via the Web at <0>bsky.app</0>."
 msgstr "成人內容只可以透過網頁版 (<0>bsky.app</0>) 啟用。"
 
-#: src/components/moderation/LabelPreference.tsx:241
+#: src/components/moderation/LabelPreference.tsx:243
 msgid "Adult content is disabled."
 msgstr "成人內容已經停用。"
 
@@ -723,10 +723,6 @@ msgstr "外觀"
 #: src/view/screens/Settings/index.tsx:485
 msgid "Appearance settings"
 msgstr "外觀設定"
-
-#: src/Navigation.tsx:325
-#~ msgid "Appearance Settings"
-#~ msgstr ""
 
 #: src/screens/Feeds/NoSavedFeedsOfAnyType.tsx:47
 #: src/screens/Home/NoFeedsPinned.tsx:93
@@ -1019,7 +1015,7 @@ msgstr "只可以包含字母、數字、空格、破折號同下划線。必須
 #: src/view/com/modals/VerifyEmail.tsx:255
 #: src/view/com/modals/VerifyEmail.tsx:261
 #: src/view/com/util/post-ctrls/RepostButton.tsx:166
-#: src/view/screens/Search/Search.tsx:910
+#: src/view/screens/Search/Search.tsx:911
 msgid "Cancel"
 msgstr "取消"
 
@@ -1056,7 +1052,7 @@ msgid "Cancel reactivation and log out"
 msgstr "取消重新啟動同埋登出"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:88
-#: src/view/screens/Search/Search.tsx:902
+#: src/view/screens/Search/Search.tsx:903
 msgid "Cancel search"
 msgstr "取消搜尋"
 
@@ -1311,10 +1307,6 @@ msgstr "閂咗底部導覽列"
 msgid "Closes password update alert"
 msgstr "閂咗密碼更新警示"
 
-#: src/view/com/composer/Composer.tsx:552
-#~ msgid "Closes post composer and discards post draft"
-#~ msgstr ""
-
 #: src/view/com/lightbox/ImageViewing/components/ImageDefaultHeader.tsx:37
 msgid "Closes viewer for header image"
 msgstr "閂咗標題圖片嘅檢視器"
@@ -1366,11 +1358,11 @@ msgstr "撰寫回覆"
 msgid "Compressing video..."
 msgstr "壓縮緊影片..."
 
-#: src/components/moderation/LabelPreference.tsx:81
+#: src/components/moderation/LabelPreference.tsx:83
 msgid "Configure content filtering setting for category: {name}"
 msgstr "為 {name} 配置內容審核設定"
 
-#: src/components/moderation/LabelPreference.tsx:243
+#: src/components/moderation/LabelPreference.tsx:245
 msgid "Configured in <0>moderation settings</0>."
 msgstr "喺 <0>審核設定</0> 裏面設定咗。"
 
@@ -1857,10 +1849,6 @@ msgstr "拆開引文？"
 #: src/components/WhoCanReply.tsx:175
 msgid "Dialog: adjust who can interact with this post"
 msgstr "對話框：調整邊個可以同呢篇帖文互動"
-
-#: src/view/com/composer/Composer.tsx:325
-#~ msgid "Did you want to say anything?"
-#~ msgstr ""
 
 #: src/screens/Settings/AppearanceSettings.tsx:109
 msgid "Dim"
@@ -2567,11 +2555,6 @@ msgstr "儲存唔到圖片：{0}"
 msgid "Failed to save notification preferences, please try again"
 msgstr "儲存唔到通知設定，請試多一次"
 
-#: src/lib/api/index.ts:145
-#: src/lib/api/index.ts:170
-#~ msgid "Failed to save post interaction settings. Your post was created but users may be able to interact with it."
-#~ msgstr ""
-
 #: src/components/dms/MessageItem.tsx:233
 msgid "Failed to send"
 msgstr "傳送唔到"
@@ -3035,7 +3018,7 @@ msgid "Hidden list"
 msgstr "隱藏清單"
 
 #: src/components/moderation/ContentHider.tsx:178
-#: src/components/moderation/LabelPreference.tsx:134
+#: src/components/moderation/LabelPreference.tsx:136
 #: src/components/moderation/PostHider.tsx:122
 #: src/lib/moderation/useLabelBehaviorDescription.ts:15
 #: src/lib/moderation/useLabelBehaviorDescription.ts:20
@@ -3704,7 +3687,7 @@ msgstr "提到嘅用戶"
 
 #: src/components/Menu/index.tsx:94
 #: src/view/com/util/ViewHeader.tsx:87
-#: src/view/screens/Search/Search.tsx:881
+#: src/view/screens/Search/Search.tsx:882
 msgid "Menu"
 msgstr "菜單"
 
@@ -3792,7 +3775,7 @@ msgstr "審核清單"
 msgid "Moderation Lists"
 msgstr "審核清單"
 
-#: src/components/moderation/LabelPreference.tsx:246
+#: src/components/moderation/LabelPreference.tsx:248
 msgid "moderation settings"
 msgstr "審核設定"
 
@@ -4205,10 +4188,6 @@ msgstr "搵唔到 {query} 嘅結果"
 #: src/components/dialogs/GifSelect.tsx:229
 msgid "No search results found for \"{search}\"."
 msgstr "搵唔到「{search}」嘅搜尋結果。"
-
-#: src/view/com/composer/labels/LabelsBtn.tsx:129
-#~ msgid "No self-labels can be applied to this post because it contains no media."
-#~ msgstr ""
 
 #: src/components/dialogs/EmbedConsent.tsx:104
 #: src/components/dialogs/EmbedConsent.tsx:111
@@ -4907,10 +4886,6 @@ msgstr "帖文固定咗"
 msgid "Post unpinned"
 msgstr "帖文已經取消固定"
 
-#: src/lib/api/index.ts:106
-#~ msgid "Posting..."
-#~ msgstr ""
-
 #: src/components/TagMenu/index.tsx:252
 msgid "posts"
 msgstr "帖文"
@@ -5043,14 +5018,6 @@ msgstr "公開而且可以共享嘅用戶列表，可以批量靜音或者封鎖
 msgid "Public, shareable lists which can drive feeds."
 msgstr "公開而且可以共享嘅列表，可以作為動態使用。"
 
-#: src/view/com/composer/Composer.tsx:579
-#~ msgid "Publish post"
-#~ msgstr ""
-
-#: src/view/com/composer/Composer.tsx:579
-#~ msgid "Publish reply"
-#~ msgstr ""
-
 #: src/components/StarterPack/QrCodeDialog.tsx:128
 msgid "QR code copied to your clipboard!"
 msgstr "QR code 複製咗去你嘅剪貼簿！"
@@ -5134,7 +5101,7 @@ msgstr "睇下 Bluesky 服務條款"
 msgid "Reason:"
 msgstr "原因："
 
-#: src/view/screens/Search/Search.tsx:1056
+#: src/view/screens/Search/Search.tsx:1057
 msgid "Recent Searches"
 msgstr "最近嘅搜尋"
 
@@ -5226,11 +5193,11 @@ msgstr "移除圖片"
 msgid "Remove mute word from your list"
 msgstr "喺你嘅清單裏面移除靜音字詞"
 
-#: src/view/screens/Search/Search.tsx:1100
+#: src/view/screens/Search/Search.tsx:1101
 msgid "Remove profile"
 msgstr "移除個人檔案"
 
-#: src/view/screens/Search/Search.tsx:1102
+#: src/view/screens/Search/Search.tsx:1103
 msgid "Remove profile from search history"
 msgstr "喺搜尋記錄裏面移除個人檔案"
 
@@ -5708,7 +5675,7 @@ msgstr "搜尋"
 msgid "Search for \"{query}\""
 msgstr "搜尋「{query}」"
 
-#: src/view/screens/Search/Search.tsx:999
+#: src/view/screens/Search/Search.tsx:1000
 msgid "Search for \"{searchText}\""
 msgstr "搜尋「{searchText}」"
 
@@ -6062,7 +6029,7 @@ msgid "Shares the linked website"
 msgstr "分享連結咗嘅網站"
 
 #: src/components/moderation/ContentHider.tsx:178
-#: src/components/moderation/LabelPreference.tsx:136
+#: src/components/moderation/LabelPreference.tsx:138
 #: src/components/moderation/PostHider.tsx:122
 #: src/view/screens/Settings/index.tsx:361
 msgid "Show"
@@ -7562,7 +7529,7 @@ msgstr "睇下你嘅靜音帳戶"
 msgid "Visit Site"
 msgstr "去網站"
 
-#: src/components/moderation/LabelPreference.tsx:135
+#: src/components/moderation/LabelPreference.tsx:137
 #: src/lib/moderation/useLabelBehaviorDescription.ts:17
 #: src/lib/moderation/useLabelBehaviorDescription.ts:22
 msgid "Warn"
