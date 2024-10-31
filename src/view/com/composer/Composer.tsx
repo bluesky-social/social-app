@@ -19,7 +19,6 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
-import {KeyboardAwareScrollView} from 'react-native-keyboard-controller'
 // @ts-expect-error no type definition
 import ProgressCircle from 'react-native-progress/Circle'
 import Animated, {
@@ -128,10 +127,6 @@ import {
   ThreadDraft,
 } from './state/composer'
 import {NO_VIDEO, NoVideoState, processVideo, VideoState} from './state/video'
-
-const AnimatedKeyboardAwareScrollView = Animated.createAnimatedComponent(
-  KeyboardAwareScrollView,
-)
 
 type CancelRef = {
   onPressCancel: () => void
@@ -597,7 +592,7 @@ export const ComposePost = ({
             />
           </ComposerTopBar>
 
-          <AnimatedKeyboardAwareScrollView
+          <Animated.ScrollView
             ref={scrollViewRef}
             layout={native(LinearTransition)}
             onScroll={scrollHandler}
@@ -625,7 +620,7 @@ export const ComposePost = ({
                 {isFooterSticky && post.id === activePost.id && footer}
               </React.Fragment>
             ))}
-          </AnimatedKeyboardAwareScrollView>
+          </Animated.ScrollView>
           {!isFooterSticky && footer}
         </View>
 
