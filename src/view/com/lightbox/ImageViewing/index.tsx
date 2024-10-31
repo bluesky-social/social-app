@@ -40,6 +40,8 @@ import {ImageSource} from './@types'
 import ImageDefaultHeader from './components/ImageDefaultHeader'
 import ImageItem from './components/ImageItem/ImageItem'
 
+const SCREEN = Dimensions.get('screen')
+
 type Props = {
   images: ImageSource[]
   thumbDims: MeasuredDimensions | null
@@ -52,7 +54,6 @@ type Props = {
 }
 
 const SCREEN_HEIGHT = Dimensions.get('window').height
-const DEFAULT_BG_COLOR = '#000'
 
 function ImageViewing({
   images,
@@ -60,7 +61,6 @@ function ImageViewing({
   initialImageIndex,
   visible,
   onRequestClose,
-  backgroundColor = DEFAULT_BG_COLOR,
   onPressSave,
   onPressShare,
 }: Props) {
@@ -70,24 +70,30 @@ function ImageViewing({
   const [showControls, setShowControls] = useState(true)
 
   const dismissSwipeTranslateY = useSharedValue(0)
-  const animatedHeaderStyle = useAnimatedStyle(() => ({
-    pointerEvents: showControls ? 'auto' : 'none',
-    opacity: withClampedSpring(showControls ? 1 : 0),
-    transform: [
-      {
-        translateY: withClampedSpring(showControls ? 0 : -30),
-      },
-    ],
-  }))
-  const animatedFooterStyle = useAnimatedStyle(() => ({
-    pointerEvents: showControls ? 'auto' : 'none',
-    opacity: withClampedSpring(showControls ? 1 : 0),
-    transform: [
-      {
-        translateY: withClampedSpring(showControls ? 0 : 30),
-      },
-    ],
-  }))
+  const animatedHeaderStyle = useAnimatedStyle(() => {
+    const show = showControls && dismissSwipeTranslateY.value === 0
+    return {
+      pointerEvents: show ? 'auto' : 'none',
+      opacity: withClampedSpring(show ? 1 : 0),
+      transform: [
+        {
+          translateY: withClampedSpring(show ? 0 : -30),
+        },
+      ],
+    }
+  })
+  const animatedFooterStyle = useAnimatedStyle(() => {
+    const show = showControls && dismissSwipeTranslateY.value === 0
+    return {
+      pointerEvents: show ? 'auto' : 'none',
+      opacity: withClampedSpring(show ? 1 : 0),
+      transform: [
+        {
+          translateY: withClampedSpring(show ? 0 : 30),
+        },
+      ],
+    }
+  })
 
   const dismissSwipePan = Gesture.Pan()
     .enabled(!isScaled)
@@ -130,6 +136,21 @@ function ImageViewing({
     return ['left', 'right'] satisfies Edge[] // iOS, so no top/bottom safe area
   }, [])
 
+  const backdropStyle = useAnimatedStyle(() => {
+    const dismissProgress = Math.min(
+      Math.abs(dismissSwipeTranslateY.value) / (SCREEN.height / 2),
+      1,
+    )
+    return {
+      opacity: 1 - dismissProgress,
+    }
+  })
+  const activeImageStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{translateY: dismissSwipeTranslateY.value}],
+    }
+  })
+
   if (!visible) {
     return null
   }
@@ -140,7 +161,8 @@ function ImageViewing({
       edges={edges}
       aria-modal
       accessibilityViewIsModal>
-      <View style={[styles.container, {backgroundColor}]}>
+      <View style={[styles.container]}>
+        <Animated.View style={[styles.backdrop, backdropStyle]} />
         <Animated.View style={[styles.header, animatedHeaderStyle]}>
           <ImageDefaultHeader onRequestClose={onRequestClose} />
         </Animated.View>
@@ -157,7 +179,9 @@ function ImageViewing({
           overdrag={true}
           style={styles.pager}>
           {images.map((imageSrc, i) => (
-            <View key={imageSrc.uri}>
+            <Animated.View
+              key={imageSrc.uri}
+              style={imageIndex === i ? activeImageStyle : null}>
               <ImageItem
                 onTap={onTap}
                 onZoom={onZoom}
@@ -169,7 +193,7 @@ function ImageViewing({
                   imageIndex === i && !isDragging ? dismissSwipePan : null
                 }
               />
-            </View>
+            </Animated.View>
           ))}
         </PagerView>
         <Animated.View style={[styles.footer, animatedFooterStyle]}>
@@ -276,7 +300,14 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
+  },
+  backdrop: {
     backgroundColor: '#000',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
   },
   pager: {
     flex: 1,
