@@ -11,6 +11,7 @@
 import React, {ComponentType, useCallback, useMemo, useState} from 'react'
 import {Platform, StyleSheet, View} from 'react-native'
 import PagerView from 'react-native-pager-view'
+import {MeasuredDimensions} from 'react-native-reanimated'
 import Animated, {useAnimatedStyle, withSpring} from 'react-native-reanimated'
 import {Edge, SafeAreaView} from 'react-native-safe-area-context'
 
@@ -20,6 +21,7 @@ import ImageItem from './components/ImageItem/ImageItem'
 
 type Props = {
   images: ImageSource[]
+  thumbDims: MeasuredDimensions | null
   initialImageIndex: number
   visible: boolean
   onRequestClose: () => void
@@ -32,6 +34,7 @@ const DEFAULT_BG_COLOR = '#000'
 
 function ImageViewing({
   images,
+  thumbDims: _thumbDims, // TODO: Pass down and use for animation.
   initialImageIndex,
   visible,
   onRequestClose,

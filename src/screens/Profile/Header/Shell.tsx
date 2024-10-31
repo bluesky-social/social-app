@@ -57,6 +57,7 @@ let ProfileHeaderShell = ({
       openLightbox({
         type: 'profile-image',
         profile: profile,
+        thumbDims: null,
       })
     }
   }, [openLightbox, profile, moderation])

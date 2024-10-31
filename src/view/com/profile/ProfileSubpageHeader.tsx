@@ -74,6 +74,7 @@ export function ProfileSubpageHeader({
         type: 'images',
         images: [{uri: avatar, thumbUri: avatar}],
         index: 0,
+        thumbDims: null,
       })
     }
   }, [openLightbox, avatar])
