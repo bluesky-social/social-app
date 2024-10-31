@@ -99,7 +99,7 @@ function ChangeHandleDialogInner() {
         {serviceInfoError ? (
           <ErrorScreen
             title={_(msg`Oops!`)}
-            message={_(msg`There was an issue with fetching your service info`)}
+            message={_(msg`There was an issue fetching your service info`)}
             details={cleanError(serviceInfoError)}
             onPressTryAgain={refetch}
           />
