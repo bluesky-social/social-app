@@ -5,7 +5,7 @@ export const router = new Router({
   Search: '/search',
   Feeds: '/feeds',
   Notifications: '/notifications',
-  NotificationsSettings: '/notifications/settings',
+  NotificationSettings: '/notifications/settings',
   Settings: '/settings',
   Lists: '/lists',
   // moderation
