@@ -520,12 +520,17 @@ export const ComposePost = ({
     bottomBarAnimatedStyle,
   } = useAnimatedBorders()
 
+  const scrollToBottom = React.useCallback(() => {
+    'worklet'
+    scrollTo(scrollViewRef, 0, contentHeight.value, true)
+  }, [scrollViewRef, contentHeight])
+
   useEffect(() => {
     if (composerState.mutableNeedsScrollToBottom) {
       composerState.mutableNeedsScrollToBottom = false
-      runOnUI(scrollTo)(scrollViewRef, 0, contentHeight.value, true)
+      runOnUI(scrollToBottom)()
     }
-  }, [composerState, scrollViewRef, contentHeight])
+  }, [composerState, scrollToBottom])
 
   const keyboardVerticalOffset = useKeyboardVerticalOffset()
 
