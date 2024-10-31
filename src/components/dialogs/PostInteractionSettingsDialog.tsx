@@ -483,7 +483,7 @@ function Selectable({
             a.justify_between,
             a.rounded_sm,
             a.p_md,
-            {height: 40}, // for consistency with checkmark icon visible or not
+            {height: 43}, // for consistency with checkmark icon visible or not
             t.atoms.bg_contrast_50,
             (hovered || focused) && t.atoms.bg_contrast_100,
             isSelected && {
