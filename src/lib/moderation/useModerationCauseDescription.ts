@@ -101,7 +101,7 @@ export function useModerationCauseDescription(
     if (cause.type === 'mute-word') {
       return {
         icon: EyeSlash,
-        name: _(msg`Post Hidden by Muted Word`),
+        name: _(msg`Post hidden by muted word: ${cause.match.word.value}`),
         description: _(
           msg`You've chosen to hide a word or tag within this post.`,
         ),
