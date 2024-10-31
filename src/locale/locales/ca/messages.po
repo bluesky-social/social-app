@@ -614,7 +614,7 @@ msgstr "El contingut per a adults està deshabilitat."
 #: src/view/com/composer/labels/LabelsBtn.tsx:140
 #: src/view/com/composer/labels/LabelsBtn.tsx:194
 msgid "Adult Content labels"
-msgstr ""
+msgstr "Etiquetes de contingut per a adults"
 
 #: src/screens/Moderation/index.tsx:410
 #: src/view/screens/Settings/index.tsx:653
@@ -933,7 +933,7 @@ msgstr "Estàs segur que vols eliminar aquest starter pack?"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:82
 msgid "Are you sure you want to discard your changes?"
-msgstr ""
+msgstr "Estàs segur que vols descartar els canvis?"
 
 #: src/components/dms/ConvoMenu.tsx:189
 #~ msgid "Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for other participants."
@@ -1475,7 +1475,7 @@ msgstr "Tria les persones"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:116
 msgid "Choose self-labels that are applicable for the media you are posting. If none are selected, this post is suitable for all audiences."
-msgstr ""
+msgstr "Tria les autoetiquetes que siguin aplicables als mitjans que publiques. Si no se'n selecciona cap, aquesta publicació és considerarà apta per a tots els públics."
 
 #: src/view/com/auth/server-input/index.tsx:76
 msgid "Choose Service"
@@ -1695,7 +1695,7 @@ msgstr "Redacta una resposta"
 
 #: src/view/com/composer/Composer.tsx:1341
 msgid "Compressing video..."
-msgstr ""
+msgstr "Comprimint el vídeo..."
 
 #: src/view/com/composer/videos/VideoTranscodeProgress.tsx:51
 #~ msgid "Compressing..."
@@ -2242,11 +2242,11 @@ msgstr "Descripció"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:364
 msgid "Description is too long"
-msgstr ""
+msgstr "La descripció és massa llarga"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:365
 msgid "Description is too long. The maximum number of characters is {DESCRIPTION_MAX_GRAPHEMES}."
-msgstr ""
+msgstr "La descripció és massa llarga. El nombre màxim de caràcters és {DESCRIPTION_MAX_GRAPHEMES}."
 
 #: src/view/com/composer/GifAltText.tsx:150
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:114
@@ -2330,7 +2330,7 @@ msgstr "Descarta"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:81
 msgid "Discard changes?"
-msgstr ""
+msgstr "Vols descartar els canvis?"
 
 #: src/view/com/composer/Composer.tsx:145
 #~ msgid "Discard draft"
@@ -2390,11 +2390,11 @@ msgstr "Nom mostrat"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:333
 msgid "Display name is too long"
-msgstr ""
+msgstr "El nom de visualització és massa llarg"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:334
 msgid "Display name is too long. The maximum number of characters is {DISPLAY_NAME_MAX_GRAPHEMES}."
-msgstr ""
+msgstr "El nom de visualització és massa llarg. El nombre màxim de caràcters és {DISPLAY_NAME_MAX_GRAPHEMES}."
 
 #: src/view/com/modals/ChangeHandle.tsx:384
 msgid "DNS Panel"
@@ -2406,11 +2406,11 @@ msgstr "No silenciïs aquesta paraula als usuaris que segueixo"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:174
 msgid "Does not contain adult content."
-msgstr ""
+msgstr "No conté contingut per a adults."
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:213
 msgid "Does not contain graphic or disturbing content."
-msgstr ""
+msgstr "No conté contingut gràfic o inquietant."
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:39
 msgid "Does not include nudity."
@@ -2502,43 +2502,43 @@ msgstr "Durada:"
 
 #: src/view/com/modals/ChangeHandle.tsx:245
 msgid "e.g. alice"
-msgstr "p. ex.jordi"
+msgstr "p. ex. jordi"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:321
 msgid "e.g. Alice Lastname"
-msgstr ""
+msgstr "p. ex. Jordi Cognom"
 
 #: src/view/com/modals/EditProfile.tsx:180
 #~ msgid "e.g. Alice Roberts"
-#~ msgstr "p. ex.Jordi Guix"
+#~ msgstr "p. ex. Jordi Guix"
 
 #: src/view/com/modals/ChangeHandle.tsx:367
 msgid "e.g. alice.com"
-msgstr "p. ex.jordi.com"
+msgstr "p. ex. jordi.com"
 
 #: src/view/com/modals/EditProfile.tsx:198
 #~ msgid "e.g. Artist, dog-lover, and avid reader."
-#~ msgstr "p. ex.Artista, amant dels gossos i amant de la lectura."
+#~ msgstr "p. ex. Artista, amant dels gossos i amant de la lectura."
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:43
 msgid "E.g. artistic nudes."
-msgstr "p. ex.nuesa artística"
+msgstr "p. ex. nuesa artística"
 
 #: src/view/com/modals/CreateOrEditList.tsx:263
 msgid "e.g. Great Posters"
-msgstr "p. ex.Gent interessant"
+msgstr "p. ex. Gent interessant"
 
 #: src/view/com/modals/CreateOrEditList.tsx:264
 msgid "e.g. Spammers"
-msgstr "p. ex.Spammers"
+msgstr "p. ex. Spammers"
 
 #: src/view/com/modals/CreateOrEditList.tsx:292
 msgid "e.g. The posters who never miss."
-msgstr "p. ex.Els que mai fallen"
+msgstr "p. ex. Els que mai fallen"
 
 #: src/view/com/modals/CreateOrEditList.tsx:293
 msgid "e.g. Users that repeatedly reply with ads."
-msgstr "p. ex.Usuaris que sempre responen amb anuncis"
+msgstr "p. ex. Usuaris que sempre responen amb anuncis"
 
 #: src/view/com/modals/InviteCodes.tsx:97
 msgid "Each code works once. You'll receive more invite codes periodically."
@@ -2844,7 +2844,7 @@ msgstr "Introdueix el teu usuari i contrasenya"
 
 #: src/view/com/composer/Composer.tsx:1350
 msgid "Error"
-msgstr ""
+msgstr "Error"
 
 #: src/view/screens/Settings/ExportCarDialog.tsx:46
 msgid "Error occurred while saving file"
@@ -2935,7 +2935,7 @@ msgstr "Expandeix o replega la publicació completa a la qual estàs responent"
 
 #: src/lib/api/index.ts:376
 msgid "Expected uri to resolve to a record"
-msgstr ""
+msgstr "S'esperava que l'uri es resolgués en un registre"
 
 #: src/view/screens/NotificationsSettings.tsx:78
 msgid "Experimental: When this preference is enabled, you'll only receive reply and quote notifications from users you follow. We'll continue to add more controls here over time."
@@ -3116,7 +3116,7 @@ msgstr "Comentaris"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:271
 #: src/view/com/util/forms/PostDropdownBtn.tsx:280
 msgid "Feedback sent!"
-msgstr ""
+msgstr "Comentaris enviats!"
 
 #: src/Navigation.tsx:352
 #: src/screens/StarterPack/StarterPackScreen.tsx:183
@@ -4057,7 +4057,7 @@ msgstr "Etiquetes"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:74
 msgid "Labels added"
-msgstr ""
+msgstr "Etiquetes afegides"
 
 #: src/screens/Profile/Sections/Labels.tsx:163
 msgid "Labels are annotations on users and content. They can be used to hide, warn, and categorize the network."
@@ -4381,11 +4381,11 @@ msgstr "Accedeix a un compte que no està llistat"
 
 #: src/view/shell/desktop/RightNav.tsx:104
 msgid "Logo by <0/>"
-msgstr ""
+msgstr "Logo per <0/>"
 
 #: src/view/shell/Drawer.tsx:296
 msgid "Logo by <0>@sawaratsuki.bsky.social</0>"
-msgstr ""
+msgstr "Logo per <0>@sawaratsuki.bsky.social</0>"
 
 #: src/components/RichText.tsx:226
 msgid "Long press to open tag menu for #{tag}"
@@ -4446,7 +4446,7 @@ msgstr "Contingut"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:208
 msgid "Media that may be disturbing or inappropriate for some audiences."
-msgstr ""
+msgstr "Continguts que poden ser inquietants o inadequats per a alguns públics."
 
 #: src/components/WhoCanReply.tsx:254
 msgid "mentioned users"
@@ -5228,7 +5228,7 @@ msgstr "Només pot tenir lletres, nombres i guionets"
 
 #: src/lib/media/picker.shared.ts:29
 msgid "Only image files are supported"
-msgstr ""
+msgstr "Només s'admeten fitxers d'imatge"
 
 #: src/view/com/composer/videos/SubtitleFilePicker.tsx:40
 msgid "Only WebVTT (.vtt) files are supported"
@@ -5280,7 +5280,7 @@ msgstr "Obre el menú de les opcions del canal"
 
 #: src/view/com/util/post-embeds/ExternalLinkEmbed.tsx:71
 msgid "Open link to {niceUrl}"
-msgstr ""
+msgstr "Obre l'enllaç a {niceUrl}"
 
 #: src/view/screens/Settings/index.tsx:703
 msgid "Open links with in-app browser"
@@ -5325,7 +5325,7 @@ msgstr "Obre {numItems} opcions"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:63
 msgid "Opens a dialog to add a content warning to your post"
-msgstr ""
+msgstr "Obre un diàleg per afegir un avís de contingut a la teva publicació"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:62
 msgid "Opens a dialog to choose who can reply to this thread"
@@ -5820,7 +5820,7 @@ msgstr "Publicació eliminada"
 
 #: src/lib/api/index.ts:161
 msgid "Post failed to upload. Please check your Internet connection and try again."
-msgstr ""
+msgstr "No s'ha pogut penjar la publicació. Comprova la tevaa connexió a Internet i torna-ho a provar."
 
 #: src/view/com/post-thread/PostThread.tsx:212
 msgid "Post hidden"
@@ -5949,7 +5949,7 @@ msgstr "Política de privacitat"
 
 #: src/view/com/composer/Composer.tsx:1347
 msgid "Processing video..."
-msgstr ""
+msgstr "Processant el vídeo..."
 
 #: src/lib/api/index.ts:53
 #: src/screens/Login/ForgotPasswordForm.tsx:149
@@ -7880,7 +7880,7 @@ msgstr "Explica un acudit!"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:352
 msgid "Tell us a bit about yourself"
-msgstr ""
+msgstr "Explica'ns més coses sobre tu"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:63
 msgid "Tell us a little more"
@@ -8098,7 +8098,7 @@ msgstr "Hi ha hagut un problema per a contactar amb el servidor"
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:111
 #: src/view/screens/ProfileFeed.tsx:546
 msgid "There was an issue contacting the server, please check your internet connection and try again."
-msgstr ""
+msgstr "S'ha produït un problema en contactar amb el servidor, comprova la teva connexió a Internet i torna-ho a provar."
 
 #: src/view/com/feeds/FeedSourceCard.tsx:127
 #: src/view/com/feeds/FeedSourceCard.tsx:140
@@ -8124,7 +8124,7 @@ msgstr "Hi ha hagut un problema en obtenir les teves llistes. Toca aquí per a t
 
 #: src/view/com/posts/FeedErrorMessage.tsx:145
 msgid "There was an issue removing this feed. Please check your internet connection and try again."
-msgstr ""
+msgstr "S'ha produït un problema en eliminar aquest canal. Comprova la teva connexió a Internet i torna-ho a provar."
 
 #: src/components/dms/ReportDialog.tsx:217
 #: src/components/ReportDialog/SubmitView.tsx:87
@@ -8139,7 +8139,7 @@ msgstr "S'ha produït un problema en enviar el teu informe. Comprova la teva con
 #: src/view/com/posts/FeedShutdownMsg.tsx:71
 #: src/view/screens/ProfileFeed.tsx:211
 msgid "There was an issue updating your feeds, please check your internet connection and try again."
-msgstr ""
+msgstr "S'ha produït un problema actualitzant els teus canals. Comprova la teva connexió a Internet i torna-ho a provar."
 
 #: src/view/screens/AppPasswords.tsx:75
 msgid "There was an issue with fetching your app passwords"
@@ -8791,16 +8791,16 @@ msgstr "Puja de la biblioteca"
 
 #: src/lib/api/index.ts:272
 msgid "Uploading images..."
-msgstr ""
+msgstr "S'estan penjant imatges..."
 
 #: src/lib/api/index.ts:326
 #: src/lib/api/index.ts:350
 msgid "Uploading link thumbnail..."
-msgstr ""
+msgstr "S'està penjant la miniatura de l'enllaç..."
 
 #: src/view/com/composer/Composer.tsx:1344
 msgid "Uploading video..."
-msgstr ""
+msgstr "S'està penjant el vídeo..."
 
 #: src/view/com/modals/ChangeHandle.tsx:395
 msgid "Use a file on your server"
@@ -9018,7 +9018,7 @@ msgstr "Configuració de vídeo"
 
 #: src/view/com/composer/Composer.tsx:1354
 msgid "Video uploaded"
-msgstr ""
+msgstr "Vídeo penjat"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:84
 msgid "Video: {0}"
@@ -9048,11 +9048,11 @@ msgstr "Mostra el perfil de {displayName}"
 
 #: src/components/TagMenu/index.tsx:149
 msgid "View all posts by @{authorHandle} with tag {displayTag}"
-msgstr ""
+msgstr "Mostra totes les publicacions de @{authorHandle} amb l'etiqueta {displayTag}"
 
 #: src/components/TagMenu/index.tsx:103
 msgid "View all posts with tag {displayTag}"
-msgstr ""
+msgstr "Mostra totes les publicacions amb l'etiqueta {displayTag}"
 
 #: src/components/ProfileHoverCard/index.web.tsx:433
 msgid "View blocked user's profile"
@@ -9614,7 +9614,7 @@ msgstr "Només pots afegir 3 canals"
 
 #: src/lib/media/picker.shared.ts:22
 msgid "You may only select up to 4 images"
-msgstr ""
+msgstr "Només podeu seleccionar fins a 4 imatges"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:106
 msgid "You must be 13 years of age or older to sign up."
