@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-10-30 11:44\n"
+"PO-Revision-Date: 2024-10-31 00:12\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -2557,7 +2557,7 @@ msgstr "无法加载建议关注"
 
 #: src/state/queries/pinned-post.ts:75
 msgid "Failed to pin post"
-msgstr "无法固定这条贴文"
+msgstr "无法固定这条帖文"
 
 #: src/view/com/lightbox/Lightbox.tsx:94
 msgid "Failed to save image: {0}"
@@ -4901,11 +4901,11 @@ msgstr "无法找到帖文"
 
 #: src/state/queries/pinned-post.ts:59
 msgid "Post pinned"
-msgstr "贴文已固定"
+msgstr "帖文已固定"
 
 #: src/state/queries/pinned-post.ts:61
 msgid "Post unpinned"
-msgstr "贴文已取消固定"
+msgstr "帖文已取消固定"
 
 #: src/lib/api/index.ts:106
 #~ msgid "Posting..."
