@@ -1256,7 +1256,6 @@ function useAnimatedBorders() {
 
   const onScrollViewContentSizeChange = useCallback(
     (_width: number, height: number) => {
-      'worklet'
       showHideBottomBorder({
         newContentHeight: height,
       })
@@ -1266,7 +1265,6 @@ function useAnimatedBorders() {
 
   const onScrollViewLayout = useCallback(
     (evt: LayoutChangeEvent) => {
-      'worklet'
       showHideBottomBorder({
         newScrollViewHeight: evt.nativeEvent.layout.height,
       })
