@@ -2,12 +2,9 @@ import React from 'react'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
-import {useQueryClient} from '@tanstack/react-query'
 
 import {CommonNavigatorParams} from '#/lib/routes/types'
 import {useModalControls} from '#/state/modals'
-import {RQKEY as RQKEY_PROFILE} from '#/state/queries/profile'
-import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import {ExportCarDialog} from '#/view/screens/Settings/ExportCarDialog'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
@@ -25,6 +22,7 @@ import {PencilLine_Stroke2_Corner2_Rounded as PencilIcon} from '#/components/ico
 import {Trash_Stroke2_Corner2_Rounded} from '#/components/icons/Trash'
 import {Verified_Stroke2_Corner2_Rounded as VerifiedIcon} from '#/components/icons/Verified'
 import * as Layout from '#/components/Layout'
+import {ChangeHandleDialog} from './components/ChangeHandleDialog'
 import {DeactivateAccountDialog} from './components/DeactivateAccountDialog'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AccountSettings'>
@@ -32,10 +30,9 @@ export function AccountSettingsScreen({}: Props) {
   const t = useTheme()
   const {_} = useLingui()
   const {currentAccount} = useSession()
-  const queryClient = useQueryClient()
-  const {data: profile} = useProfileQuery({did: currentAccount?.did})
   const {openModal} = useModalControls()
   const birthdayControl = useDialogControl()
+  const changeHandleControl = useDialogControl()
   const exportCarControl = useDialogControl()
   const deactivateAccountControl = useDialogControl()
 
@@ -117,26 +114,12 @@ export function AccountSettingsScreen({}: Props) {
           </SettingsList.PressableItem>
           <SettingsList.PressableItem
             label={_(msg`Handle`)}
-            onPress={() =>
-              openModal({
-                name: 'change-handle',
-                onChanged() {
-                  if (currentAccount) {
-                    // refresh my profile
-                    queryClient.invalidateQueries({
-                      queryKey: RQKEY_PROFILE(currentAccount.did),
-                    })
-                  }
-                },
-              })
-            }>
+            accessibilityHint={_(msg`Open change handle dialog`)}
+            onPress={() => changeHandleControl.open()}>
             <SettingsList.ItemIcon icon={AtIcon} />
             <SettingsList.ItemText>
               <Trans>Handle</Trans>
             </SettingsList.ItemText>
-            {profile && (
-              <SettingsList.BadgeText>@{profile.handle}</SettingsList.BadgeText>
-            )}
             <SettingsList.Chevron />
           </SettingsList.PressableItem>
           <SettingsList.Divider />
@@ -173,6 +156,7 @@ export function AccountSettingsScreen({}: Props) {
       </Layout.Content>
 
       <BirthDateSettingsDialog control={birthdayControl} />
+      <ChangeHandleDialog control={changeHandleControl} />
       <ExportCarDialog control={exportCarControl} />
       <DeactivateAccountDialog control={deactivateAccountControl} />
     </Layout.Screen>

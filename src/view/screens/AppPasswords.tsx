@@ -12,6 +12,7 @@ import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
+import {IS_INTERNAL} from '#/lib/app-info'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {CommonNavigatorParams} from '#/lib/routes/types'
@@ -28,14 +29,17 @@ import {Text} from '#/view/com/util/text/Text'
 import * as Toast from '#/view/com/util/Toast'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
 import {CenteredView} from '#/view/com/util/Views'
+import {AppPasswordsScreen as NewAppPasswordsScreen} from '#/screens/Settings/AppPasswords'
 import {atoms as a} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import * as Layout from '#/components/Layout'
 import * as Prompt from '#/components/Prompt'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AppPasswords'>
-export function AppPasswords({}: Props) {
-  return (
+export function AppPasswords(props: Props) {
+  return IS_INTERNAL ? (
+    <NewAppPasswordsScreen {...props} />
+  ) : (
     <Layout.Screen testID="AppPasswordsScreen">
       <AppPasswordsInner />
     </Layout.Screen>
