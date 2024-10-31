@@ -28,8 +28,6 @@ import Animated, {
   interpolateColor,
   LayoutAnimationConfig,
   LinearTransition,
-  runOnUI,
-  scrollTo,
   useAnimatedRef,
   useAnimatedStyle,
   useDerivedValue,
@@ -512,25 +510,12 @@ export const ComposePost = ({
   }, [composerState])
 
   const {
-    contentHeight,
     scrollHandler,
     onScrollViewContentSizeChange,
     onScrollViewLayout,
     topBarAnimatedStyle,
     bottomBarAnimatedStyle,
   } = useAnimatedBorders()
-
-  const scrollToBottom = React.useCallback(() => {
-    'worklet'
-    scrollTo(scrollViewRef, 0, contentHeight.value, true)
-  }, [scrollViewRef, contentHeight])
-
-  useEffect(() => {
-    if (composerState.mutableNeedsScrollToBottom) {
-      composerState.mutableNeedsScrollToBottom = false
-      runOnUI(scrollToBottom)()
-    }
-  }, [composerState, scrollToBottom])
 
   const keyboardVerticalOffset = useKeyboardVerticalOffset()
 
@@ -1311,7 +1296,6 @@ function useAnimatedBorders() {
   })
 
   return {
-    contentHeight,
     scrollHandler,
     onScrollViewContentSizeChange,
     onScrollViewLayout,

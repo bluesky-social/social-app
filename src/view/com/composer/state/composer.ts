@@ -87,7 +87,6 @@ export type ComposerState = {
   thread: ThreadDraft
   activePostIndex: number
   mutableNeedsFocusActive: boolean
-  mutableNeedsScrollToBottom: boolean
 }
 
 export type ComposerAction =
@@ -157,7 +156,6 @@ export function composerReducer(
     }
     case 'add_post': {
       const activePostIndex = state.activePostIndex
-      const isAtTheEnd = activePostIndex === state.thread.posts.length - 1
       const nextPosts = [...state.thread.posts]
       nextPosts.splice(activePostIndex + 1, 0, {
         id: nanoid(),
@@ -172,7 +170,6 @@ export function composerReducer(
       })
       return {
         ...state,
-        mutableNeedsScrollToBottom: isAtTheEnd,
         thread: {
           ...state.thread,
           posts: nextPosts,
@@ -514,7 +511,6 @@ export function createComposerState({
   return {
     activePostIndex: 0,
     mutableNeedsFocusActive: false,
-    mutableNeedsScrollToBottom: false,
     thread: {
       posts: [
         {
