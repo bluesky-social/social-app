@@ -1205,8 +1205,8 @@ export function useComposerCancelRef() {
 
 function useAnimatedBorders() {
   const t = useTheme()
-  const hasScrolledTop = useSharedValue(0)
-  const hasScrolledBottom = useSharedValue(0)
+  const hasScrolledToTop = useSharedValue(1)
+  const hasScrolledToBottom = useSharedValue(1)
   const contentOffset = useSharedValue(0)
   const scrollViewHeight = useSharedValue(Infinity)
   const contentHeight = useSharedValue(0)
@@ -1233,19 +1233,19 @@ function useAnimatedBorders() {
       if (typeof newScrollViewHeight === 'number')
         scrollViewHeight.value = Math.floor(newScrollViewHeight)
 
-      hasScrolledBottom.value = withTiming(
-        contentHeight.value - contentOffset.value - 5 > scrollViewHeight.value
+      hasScrolledToBottom.value = withTiming(
+        contentHeight.value - contentOffset.value - 5 <= scrollViewHeight.value
           ? 1
           : 0,
       )
     },
-    [contentHeight, contentOffset, scrollViewHeight, hasScrolledBottom],
+    [contentHeight, contentOffset, scrollViewHeight, hasScrolledToBottom],
   )
 
   const scrollHandler = useAnimatedScrollHandler({
     onScroll: event => {
       'worklet'
-      hasScrolledTop.value = withTiming(event.contentOffset.y > 0 ? 1 : 0)
+      hasScrolledToTop.value = withTiming(event.contentOffset.y === 0 ? 1 : 0)
       showHideBottomBorder({
         newContentOffset: event.contentOffset.y,
         newContentHeight: event.contentSize.height,
@@ -1276,9 +1276,9 @@ function useAnimatedBorders() {
     return {
       borderBottomWidth: StyleSheet.hairlineWidth,
       borderColor: interpolateColor(
-        hasScrolledTop.value,
+        hasScrolledToTop.value,
         [0, 1],
-        ['transparent', t.atoms.border_contrast_medium.borderColor],
+        [t.atoms.border_contrast_medium.borderColor, 'transparent'],
       ),
     }
   })
@@ -1286,9 +1286,9 @@ function useAnimatedBorders() {
     return {
       borderTopWidth: StyleSheet.hairlineWidth,
       borderColor: interpolateColor(
-        hasScrolledBottom.value,
+        hasScrolledToBottom.value,
         [0, 1],
-        ['transparent', t.atoms.border_contrast_medium.borderColor],
+        [t.atoms.border_contrast_medium.borderColor, 'transparent'],
       ),
     }
   })
