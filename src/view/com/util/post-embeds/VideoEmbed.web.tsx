@@ -104,7 +104,6 @@ function ViewportObserver({
   isAnyViewActive: boolean
 }) {
   const ref = useRef<HTMLDivElement>(null)
-  const [nearScreen, setNearScreen] = useState(false)
   const [isFullscreen] = useFullscreen()
   const isWithinMessage = useIsWithinMessage()
 
@@ -120,7 +119,6 @@ function ViewportObserver({
         const position =
           entry.boundingClientRect.y + entry.boundingClientRect.height / 2
         sendPosition(position)
-        setNearScreen(entry.isIntersecting)
       },
       {threshold: Array.from({length: 101}, (_, i) => i / 100)},
     )
@@ -139,7 +137,7 @@ function ViewportObserver({
 
   return (
     <View style={[a.flex_1, a.flex_row]}>
-      {nearScreen && children}
+      {children}
       <div
         ref={ref}
         style={{
