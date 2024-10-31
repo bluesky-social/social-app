@@ -2,8 +2,10 @@ import React, {useEffect, useMemo, useState} from 'react'
 import {useWindowDimensions, View} from 'react-native'
 import Animated, {
   FadeIn,
+  FadeOut,
   FadeOutUp,
   LayoutAnimationConfig,
+  LinearTransition,
   SlideInRight,
   SlideOutLeft,
   ZoomIn,
@@ -133,44 +135,50 @@ function CreateDialogInner({passwords}: {passwords: string[]}) {
                 </TextInput.Root>
               </View>
               {error instanceof DisplayableError && (
-                <TextInput.SuffixText label={error.message}>
-                  {error.message}
-                </TextInput.SuffixText>
+                <Animated.View entering={FadeIn} exiting={FadeOut}>
+                  <Admonition type="error">{error.message}</Admonition>
+                </Animated.View>
               )}
-              <Toggle.Item
-                name="privileged"
-                type="checkbox"
-                label={_(msg`Allow access to your direct messages`)}
-                value={privileged}
-                onChange={setPrivileged}
-                style={[a.flex_1]}>
-                <Toggle.Checkbox />
-                <Toggle.LabelText
-                  style={[a.font_normal, a.text_md, a.leading_snug]}>
-                  <Trans>Allow access to your direct messages</Trans>
-                </Toggle.LabelText>
-              </Toggle.Item>
-              <Button
-                label={_(msg`Next`)}
-                size="large"
-                variant="solid"
-                color="primary"
-                style={[a.flex_1]}
-                onPress={() => createAppPassword()}
-                disabled={isPending}>
-                <ButtonText>
-                  <Trans>Next</Trans>
-                </ButtonText>
-                <ButtonIcon icon={ChevronRight} />
-              </Button>
-              {!!apiError ||
-                (error && !(error instanceof DisplayableError) && (
-                  <Admonition type="error">
-                    <Trans>
-                      Failed to create app password. Please try again.
-                    </Trans>
-                  </Admonition>
-                ))}
+              <Animated.View
+                style={[a.gap_lg]}
+                layout={native(LinearTransition)}>
+                <Toggle.Item
+                  name="privileged"
+                  type="checkbox"
+                  label={_(msg`Allow access to your direct messages`)}
+                  value={privileged}
+                  onChange={setPrivileged}
+                  style={[a.flex_1]}>
+                  <Toggle.Checkbox />
+                  <Toggle.LabelText
+                    style={[a.font_normal, a.text_md, a.leading_snug]}>
+                    <Trans>Allow access to your direct messages</Trans>
+                  </Toggle.LabelText>
+                </Toggle.Item>
+                <Button
+                  label={_(msg`Next`)}
+                  size="large"
+                  variant="solid"
+                  color="primary"
+                  style={[a.flex_1]}
+                  onPress={() => createAppPassword()}
+                  disabled={isPending}>
+                  <ButtonText>
+                    <Trans>Next</Trans>
+                  </ButtonText>
+                  <ButtonIcon icon={ChevronRight} />
+                </Button>
+                {!!apiError ||
+                  (error && !(error instanceof DisplayableError) && (
+                    <Animated.View entering={FadeIn} exiting={FadeOut}>
+                      <Admonition type="error">
+                        <Trans>
+                          Failed to create app password. Please try again.
+                        </Trans>
+                      </Admonition>
+                    </Animated.View>
+                  ))}
+              </Animated.View>
             </Animated.View>
           ) : (
             <Animated.View
