@@ -513,7 +513,11 @@ export const ComposePost = ({
   useEffect(() => {
     if (composerState.mutableNeedsFocusActive) {
       composerState.mutableNeedsFocusActive = false
-      textInput.current?.focus()
+      // On Android, this risks getting the cursor stuck behind the keyboard.
+      // Not worth it.
+      if (!isAndroid) {
+        textInput.current?.focus()
+      }
     }
   }, [composerState])
 
