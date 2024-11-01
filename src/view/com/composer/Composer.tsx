@@ -28,6 +28,9 @@ import Animated, {
   interpolateColor,
   LayoutAnimationConfig,
   LinearTransition,
+  runOnUI,
+  scrollTo,
+  useAnimatedRef,
   useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
@@ -167,9 +170,10 @@ export const ComposePost = ({
     createComposerState,
   )
 
-  // TODO: Display drafts for other posts in the thread.
   const thread = composerState.thread
   const activePost = thread.posts[composerState.activePostIndex]
+  const nextPost: PostDraft | undefined =
+    thread.posts[composerState.activePostIndex + 1]
   const dispatch = useCallback(
     (postAction: PostAction) => {
       composerDispatch({
@@ -226,20 +230,15 @@ export const ComposePost = ({
 
   const clearVideo = React.useCallback(
     (postId: string) => {
-      const post = thread.posts.find(p => p.id === postId)
-      const postMedia = post?.embed.media
-      if (postMedia?.type === 'video') {
-        postMedia.video.abortController.abort()
-        composerDispatch({
-          type: 'update_post',
-          postId: postId,
-          postAction: {
-            type: 'embed_remove_video',
-          },
-        })
-      }
+      composerDispatch({
+        type: 'update_post',
+        postId: postId,
+        postAction: {
+          type: 'embed_remove_video',
+        },
+      })
     },
-    [thread, composerDispatch],
+    [composerDispatch],
   )
 
   const [publishOnUpload, setPublishOnUpload] = useState(false)
@@ -297,180 +296,189 @@ export const ComposePost = ({
     }
   }, [onPressCancel, closeAllDialogs, closeAllModals])
 
-  const isAltTextRequiredAndMissing = useMemo(() => {
+  const missingAltError = useMemo(() => {
     if (!requireAltTextEnabled) {
-      return false
+      return
     }
-    return thread.posts.some(post => {
-      const media = post.embed.media
+    for (let i = 0; i < thread.posts.length; i++) {
+      const media = thread.posts[i].embed.media
       if (media) {
         if (media.type === 'images' && media.images.some(img => !img.alt)) {
-          return true
+          return _(msg`One or more images is missing alt text.`)
         }
         if (media.type === 'gif' && !media.alt) {
-          return true
+          return _(msg`One or more GIFs is missing alt text.`)
+        }
+        if (
+          media.type === 'video' &&
+          media.video.status !== 'error' &&
+          !media.video.altText
+        ) {
+          return _(msg`One or more videos is missing alt text.`)
         }
       }
-    })
-  }, [thread, requireAltTextEnabled])
+    }
+  }, [thread, requireAltTextEnabled, _])
 
   const canPost =
-    !isAltTextRequiredAndMissing &&
+    !missingAltError &&
     thread.posts.every(
       post =>
         post.shortenedGraphemeLength <= MAX_GRAPHEME_LENGTH &&
-        !(
-          post.richtext.text.trim().length === 0 &&
-          !post.embed.link &&
-          !post.embed.media &&
-          !post.embed.quote
-        ) &&
+        !isEmptyPost(post) &&
         !(
           post.embed.media?.type === 'video' &&
           post.embed.media.video.status === 'error'
         ),
     )
 
-  const onPressPublish = React.useCallback(
-    async (finishedUploading: boolean) => {
-      if (isPublishing) {
-        return
-      }
+  const onPressPublish = React.useCallback(async () => {
+    if (isPublishing) {
+      return
+    }
 
-      if (!canPost) {
-        return
-      }
+    if (!canPost) {
+      return
+    }
 
-      if (
-        !finishedUploading &&
-        thread.posts.some(
-          post =>
-            post.embed.media?.type === 'video' &&
-            post.embed.media.video.asset &&
-            post.embed.media.video.status !== 'done',
-        )
-      ) {
-        setPublishOnUpload(true)
-        return
-      }
-
-      setError('')
-      setIsPublishing(true)
-
-      let postUri
-      try {
-        postUri = (
-          await apilib.post(agent, queryClient, {
-            thread,
-            replyTo: replyTo?.uri,
-            onStateChange: setPublishingStage,
-            langs: toPostLanguages(langPrefs.postLanguage),
-          })
-        ).uris[0]
-        try {
-          await whenAppViewReady(agent, postUri, res => {
-            const postedThread = res.data.thread
-            return AppBskyFeedDefs.isThreadViewPost(postedThread)
-          })
-        } catch (waitErr: any) {
-          logger.error(waitErr, {
-            message: `Waiting for app view failed`,
-          })
-          // Keep going because the post *was* published.
-        }
-      } catch (e: any) {
-        logger.error(e, {
-          message: `Composer: create post failed`,
-          hasImages: thread.posts.some(p => p.embed.media?.type === 'images'),
-        })
-
-        let err = cleanError(e.message)
-        if (err.includes('not locate record')) {
-          err = _(
-            msg`We're sorry! The post you are replying to has been deleted.`,
-          )
-        } else if (e instanceof EmbeddingDisabledError) {
-          err = _(msg`This post's author has disabled quote posts.`)
-        }
-        setError(err)
-        setIsPublishing(false)
-        return
-      } finally {
-        if (postUri) {
-          let index = 0
-          for (let post of thread.posts) {
-            logEvent('post:create', {
-              imageCount:
-                post.embed.media?.type === 'images'
-                  ? post.embed.media.images.length
-                  : 0,
-              isReply: index > 0 || !!replyTo,
-              hasLink: !!post.embed.link,
-              hasQuote: !!post.embed.quote,
-              langs: langPrefs.postLanguage,
-              logContext: 'Composer',
-            })
-            index++
-          }
-        }
-      }
-      if (postUri && !replyTo) {
-        emitPostCreated()
-      }
-      setLangPrefs.savePostLanguageToHistory()
-      if (initQuote) {
-        // We want to wait for the quote count to update before we call `onPost`, which will refetch data
-        whenAppViewReady(agent, initQuote.uri, res => {
-          const quotedThread = res.data.thread
-          if (
-            AppBskyFeedDefs.isThreadViewPost(quotedThread) &&
-            quotedThread.post.quoteCount !== initQuote.quoteCount
-          ) {
-            onPost?.(postUri)
-            return true
-          }
-          return false
-        })
-      } else {
-        onPost?.(postUri)
-      }
-      onClose()
-      Toast.show(
-        replyTo
-          ? _(msg`Your reply has been published`)
-          : _(msg`Your post has been published`),
+    if (
+      thread.posts.some(
+        post =>
+          post.embed.media?.type === 'video' &&
+          post.embed.media.video.asset &&
+          post.embed.media.video.status !== 'done',
       )
-    },
-    [
-      _,
-      agent,
-      thread,
-      canPost,
-      isPublishing,
-      langPrefs.postLanguage,
-      onClose,
-      onPost,
-      initQuote,
-      replyTo,
-      setLangPrefs,
-      queryClient,
-    ],
-  )
+    ) {
+      setPublishOnUpload(true)
+      return
+    }
+
+    setError('')
+    setIsPublishing(true)
+
+    let postUri
+    try {
+      postUri = (
+        await apilib.post(agent, queryClient, {
+          thread,
+          replyTo: replyTo?.uri,
+          onStateChange: setPublishingStage,
+          langs: toPostLanguages(langPrefs.postLanguage),
+        })
+      ).uris[0]
+      try {
+        await whenAppViewReady(agent, postUri, res => {
+          const postedThread = res.data.thread
+          return AppBskyFeedDefs.isThreadViewPost(postedThread)
+        })
+      } catch (waitErr: any) {
+        logger.error(waitErr, {
+          message: `Waiting for app view failed`,
+        })
+        // Keep going because the post *was* published.
+      }
+    } catch (e: any) {
+      logger.error(e, {
+        message: `Composer: create post failed`,
+        hasImages: thread.posts.some(p => p.embed.media?.type === 'images'),
+      })
+
+      let err = cleanError(e.message)
+      if (err.includes('not locate record')) {
+        err = _(
+          msg`We're sorry! The post you are replying to has been deleted.`,
+        )
+      } else if (e instanceof EmbeddingDisabledError) {
+        err = _(msg`This post's author has disabled quote posts.`)
+      }
+      setError(err)
+      setIsPublishing(false)
+      return
+    } finally {
+      if (postUri) {
+        let index = 0
+        for (let post of thread.posts) {
+          logEvent('post:create', {
+            imageCount:
+              post.embed.media?.type === 'images'
+                ? post.embed.media.images.length
+                : 0,
+            isReply: index > 0 || !!replyTo,
+            hasLink: !!post.embed.link,
+            hasQuote: !!post.embed.quote,
+            langs: langPrefs.postLanguage,
+            logContext: 'Composer',
+          })
+          index++
+        }
+      }
+    }
+    if (postUri && !replyTo) {
+      emitPostCreated()
+    }
+    setLangPrefs.savePostLanguageToHistory()
+    if (initQuote) {
+      // We want to wait for the quote count to update before we call `onPost`, which will refetch data
+      whenAppViewReady(agent, initQuote.uri, res => {
+        const quotedThread = res.data.thread
+        if (
+          AppBskyFeedDefs.isThreadViewPost(quotedThread) &&
+          quotedThread.post.quoteCount !== initQuote.quoteCount
+        ) {
+          onPost?.(postUri)
+          return true
+        }
+        return false
+      })
+    } else {
+      onPost?.(postUri)
+    }
+    onClose()
+    Toast.show(
+      replyTo
+        ? _(msg`Your reply has been published`)
+        : _(msg`Your post has been published`),
+    )
+  }, [
+    _,
+    agent,
+    thread,
+    canPost,
+    isPublishing,
+    langPrefs.postLanguage,
+    onClose,
+    onPost,
+    initQuote,
+    replyTo,
+    setLangPrefs,
+    queryClient,
+  ])
+
+  // Preserves the referential identity passed to each post item.
+  // Avoids re-rendering all posts on each keystroke.
+  const onComposerPostPublish = useNonReactiveCallback(() => {
+    onPressPublish()
+  })
 
   React.useEffect(() => {
     if (publishOnUpload) {
+      let erroredVideos = 0
       let uploadingVideos = 0
       for (let post of thread.posts) {
         if (post.embed.media?.type === 'video') {
           const video = post.embed.media.video
-          if (!video.pendingPublish) {
+          if (video.status === 'error') {
+            erroredVideos++
+          } else if (video.status !== 'done') {
             uploadingVideos++
           }
         }
       }
-      if (uploadingVideos === 0) {
+      if (erroredVideos > 0) {
         setPublishOnUpload(false)
-        onPressPublish(true)
+      } else if (uploadingVideos === 0) {
+        setPublishOnUpload(false)
+        onPressPublish()
       }
     }
   }, [thread.posts, onPressPublish, publishOnUpload])
@@ -495,7 +503,16 @@ export const ComposePost = ({
     openEmojiPicker?.(textInput.current?.getCursorPosition())
   }, [openEmojiPicker])
 
+  const scrollViewRef = useAnimatedRef<Animated.ScrollView>()
+  useEffect(() => {
+    if (composerState.mutableNeedsFocusActive) {
+      composerState.mutableNeedsFocusActive = false
+      textInput.current?.focus()
+    }
+  }, [composerState])
+
   const {
+    contentHeight,
     scrollHandler,
     onScrollViewContentSizeChange,
     onScrollViewLayout,
@@ -503,8 +520,44 @@ export const ComposePost = ({
     bottomBarAnimatedStyle,
   } = useAnimatedBorders()
 
+  useEffect(() => {
+    if (composerState.mutableNeedsScrollToBottom) {
+      composerState.mutableNeedsScrollToBottom = false
+      runOnUI(scrollTo)(scrollViewRef, 0, contentHeight.value, true)
+    }
+  }, [composerState, scrollViewRef, contentHeight])
+
   const keyboardVerticalOffset = useKeyboardVerticalOffset()
 
+  const footer = (
+    <>
+      <SuggestedLanguage text={activePost.richtext.text} />
+      <ComposerPills
+        isReply={!!replyTo}
+        post={activePost}
+        thread={composerState.thread}
+        dispatch={composerDispatch}
+        bottomBarAnimatedStyle={bottomBarAnimatedStyle}
+      />
+      <ComposerFooter
+        post={activePost}
+        dispatch={dispatch}
+        showAddButton={
+          !isEmptyPost(activePost) && (!nextPost || !isEmptyPost(nextPost))
+        }
+        onError={setError}
+        onEmojiButtonPress={onEmojiButtonPress}
+        onSelectVideo={selectVideo}
+        onAddPost={() => {
+          composerDispatch({
+            type: 'add_post',
+          })
+        }}
+      />
+    </>
+  )
+
+  const isFooterSticky = !isNative && thread.posts.length > 1
   return (
     <BottomSheetPortalProvider>
       <KeyboardAvoidingView
@@ -521,11 +574,12 @@ export const ComposePost = ({
             isReply={!!replyTo}
             isPublishQueued={publishOnUpload}
             isPublishing={isPublishing}
+            isThread={thread.posts.length > 1}
             publishingStage={publishingStage}
             topBarAnimatedStyle={topBarAnimatedStyle}
             onCancel={onPressCancel}
-            onPublish={() => onPressPublish(false)}>
-            {isAltTextRequiredAndMissing && <AltTextReminder />}
+            onPublish={onPressPublish}>
+            {missingAltError && <AltTextReminder error={missingAltError} />}
             <ErrorBanner
               error={error}
               videoState={erroredVideo}
@@ -539,6 +593,7 @@ export const ComposePost = ({
           </ComposerTopBar>
 
           <Animated.ScrollView
+            ref={scrollViewRef}
             layout={native(LinearTransition)}
             onScroll={scrollHandler}
             style={styles.scrollView}
@@ -546,37 +601,27 @@ export const ComposePost = ({
             onContentSizeChange={onScrollViewContentSizeChange}
             onLayout={onScrollViewLayout}>
             {replyTo ? <ComposerReplyTo replyTo={replyTo} /> : undefined}
-            <ComposerPost
-              key={activePost.id}
-              post={activePost}
-              dispatch={composerDispatch}
-              textInput={textInput}
-              isReply={!!replyTo}
-              canRemoveQuote={!initQuote}
-              onSelectVideo={asset => selectVideo(activePost.id, asset)}
-              onClearVideo={() => clearVideo(activePost.id)}
-              onPublish={() => onPressPublish(false)}
-              onError={setError}
-            />
+            {thread.posts.map((post, index) => (
+              <React.Fragment key={post.id}>
+                <ComposerPost
+                  post={post}
+                  dispatch={composerDispatch}
+                  textInput={post.id === activePost.id ? textInput : null}
+                  isFirstPost={index === 0}
+                  isReply={index > 0 || !!replyTo}
+                  isActive={post.id === activePost.id}
+                  canRemovePost={thread.posts.length > 1}
+                  canRemoveQuote={index > 0 || !initQuote}
+                  onSelectVideo={selectVideo}
+                  onClearVideo={clearVideo}
+                  onPublish={onComposerPostPublish}
+                  onError={setError}
+                />
+                {isFooterSticky && post.id === activePost.id && footer}
+              </React.Fragment>
+            ))}
           </Animated.ScrollView>
-
-          <React.Fragment key={activePost.id}>
-            <SuggestedLanguage text={activePost.richtext.text} />
-            <ComposerPills
-              isReply={!!replyTo}
-              post={activePost}
-              thread={composerState.thread}
-              dispatch={composerDispatch}
-              bottomBarAnimatedStyle={bottomBarAnimatedStyle}
-            />
-            <ComposerFooter
-              post={activePost}
-              dispatch={dispatch}
-              onError={setError}
-              onEmojiButtonPress={onEmojiButtonPress}
-              onSelectVideo={asset => selectVideo(activePost.id, asset)}
-            />
-          </React.Fragment>
+          {!isFooterSticky && footer}
         </View>
 
         <Prompt.Basic
@@ -592,11 +637,14 @@ export const ComposePost = ({
   )
 }
 
-function ComposerPost({
+let ComposerPost = React.memo(function ComposerPost({
   post,
   dispatch,
   textInput,
+  isActive,
   isReply,
+  isFirstPost,
+  canRemovePost,
   canRemoveQuote,
   onClearVideo,
   onSelectVideo,
@@ -606,10 +654,13 @@ function ComposerPost({
   post: PostDraft
   dispatch: (action: ComposerAction) => void
   textInput: React.Ref<TextInputRef>
+  isActive: boolean
   isReply: boolean
+  isFirstPost: boolean
+  canRemovePost: boolean
   canRemoveQuote: boolean
-  onClearVideo: () => void
-  onSelectVideo: (asset: ImagePickerAsset) => void
+  onClearVideo: (postId: string) => void
+  onSelectVideo: (postId: string, asset: ImagePickerAsset) => void
   onError: (error: string) => void
   onPublish: (richtext: RichText) => void
 }) {
@@ -619,10 +670,13 @@ function ComposerPost({
   const {data: currentProfile} = useProfileQuery({did: currentDid})
   const richtext = post.richtext
   const isTextOnly = !post.embed.link && !post.embed.quote && !post.embed.media
-  const forceMinHeight = isWeb && isTextOnly
+  const forceMinHeight = isWeb && isTextOnly && isActive
   const selectTextInputPlaceholder = isReply
-    ? _(msg`Write your reply`)
+    ? isFirstPost
+      ? _(msg`Write your reply`)
+      : _(msg`Add another post`)
     : _(msg`What's up?`)
+  const discardPromptControl = Prompt.usePromptControl()
 
   const dispatchPost = useCallback(
     (action: PostAction) => {
@@ -655,17 +709,17 @@ function ComposerPost({
   const onPhotoPasted = useCallback(
     async (uri: string) => {
       if (uri.startsWith('data:video/')) {
-        onSelectVideo({uri, type: 'video', height: 0, width: 0})
+        onSelectVideo(post.id, {uri, type: 'video', height: 0, width: 0})
       } else {
         const res = await pasteImage(uri)
         onImageAdd([res])
       }
     },
-    [onSelectVideo, onImageAdd],
+    [post.id, onSelectVideo, onImageAdd],
   )
 
   return (
-    <>
+    <View style={[styles.post, !isActive && styles.inactivePost]}>
       <View
         style={[
           styles.textInputLayout,
@@ -685,6 +739,12 @@ function ComposerPost({
           setRichText={rt => {
             dispatchPost({type: 'update_richtext', richtext: rt})
           }}
+          onFocus={() => {
+            dispatch({
+              type: 'focus_post',
+              postId: post.id,
+            })
+          }}
           onPhotoPasted={onPhotoPasted}
           onNewLink={onNewLink}
           onError={onError}
@@ -697,21 +757,65 @@ function ComposerPost({
         />
       </View>
 
+      {canRemovePost && isActive && (
+        <>
+          <Button
+            label={_(msg`Delete post`)}
+            size="small"
+            color="secondary"
+            variant="ghost"
+            shape="round"
+            style={[a.absolute, {top: 0, right: 0}]}
+            onPress={() => {
+              if (
+                post.shortenedGraphemeLength > 0 ||
+                post.embed.media ||
+                post.embed.link ||
+                post.embed.quote
+              ) {
+                discardPromptControl.open()
+              } else {
+                dispatch({
+                  type: 'remove_post',
+                  postId: post.id,
+                })
+              }
+            }}>
+            <ButtonIcon icon={X} />
+          </Button>
+          <Prompt.Basic
+            control={discardPromptControl}
+            title={_(msg`Discard post?`)}
+            description={_(msg`Are you sure you'd like to discard this post?`)}
+            onConfirm={() => {
+              dispatch({
+                type: 'remove_post',
+                postId: post.id,
+              })
+            }}
+            confirmButtonCta={_(msg`Discard`)}
+            confirmButtonColor="negative"
+          />
+        </>
+      )}
+
       <ComposerEmbeds
         canRemoveQuote={canRemoveQuote}
         embed={post.embed}
         dispatch={dispatchPost}
-        clearVideo={onClearVideo}
+        clearVideo={() => onClearVideo(post.id)}
+        isActivePost={isActive}
       />
-    </>
+    </View>
   )
-}
+})
 
 function ComposerTopBar({
   canPost,
   isReply,
   isPublishQueued,
   isPublishing,
+  isThread,
   publishingStage,
   onCancel,
   onPublish,
@@ -723,6 +827,7 @@ function ComposerTopBar({
   canPost: boolean
   isReply: boolean
   isPublishQueued: boolean
+  isThread: boolean
   onCancel: () => void
   onPublish: () => void
   topBarAnimatedStyle: StyleProp<ViewStyle>
@@ -769,6 +874,8 @@ function ComposerTopBar({
             <ButtonText style={[a.text_md]}>
               {isReply ? (
                 <Trans context="action">Reply</Trans>
+              ) : isThread ? (
+                <Trans context="action">Post All</Trans>
               ) : (
                 <Trans context="action">Post</Trans>
               )}
@@ -781,7 +888,7 @@ function ComposerTopBar({
   )
 }
 
-function AltTextReminder() {
+function AltTextReminder({error}: {error: string}) {
   const pal = usePalette('default')
   return (
     <View style={[styles.reminderLine, pal.viewLight]}>
@@ -792,9 +899,7 @@ function AltTextReminder() {
           size={10}
         />
       </View>
-      <Text style={[pal.text, a.flex_1]}>
-        <Trans>One or more images is missing alt text.</Trans>
-      </Text>
+      <Text style={[pal.text, a.flex_1]}>{error}</Text>
     </View>
   )
 }
@@ -804,11 +909,13 @@ function ComposerEmbeds({
   dispatch,
   clearVideo,
   canRemoveQuote,
+  isActivePost,
 }: {
   embed: EmbedDraft
   dispatch: (action: PostAction) => void
   clearVideo: () => void
   canRemoveQuote: boolean
+  isActivePost: boolean
 }) {
   const video = embed.media?.type === 'video' ? embed.media.video : null
   return (
@@ -860,6 +967,7 @@ function ComposerEmbeds({
                 <VideoPreview
                   asset={video.asset}
                   video={video.video}
+                  isActivePost={isActivePost}
                   setDimensions={(width: number, height: number) => {
                     dispatch({
                       type: 'embed_update_video',
@@ -988,15 +1096,19 @@ function ComposerPills({
 function ComposerFooter({
   post,
   dispatch,
+  showAddButton,
   onEmojiButtonPress,
   onError,
   onSelectVideo,
+  onAddPost,
 }: {
   post: PostDraft
   dispatch: (action: PostAction) => void
+  showAddButton: boolean
   onEmojiButtonPress: () => void
   onError: (error: string) => void
-  onSelectVideo: (asset: ImagePickerAsset) => void
+  onSelectVideo: (postId: string, asset: ImagePickerAsset) => void
+  onAddPost: () => void
 }) {
   const t = useTheme()
   const {_} = useLingui()
@@ -1047,7 +1159,7 @@ function ComposerFooter({
               onAdd={onImageAdd}
             />
             <SelectVideoBtn
-              onSelectVideo={onSelectVideo}
+              onSelectVideo={asset => onSelectVideo(post.id, asset)}
               disabled={!!media}
               setError={onError}
             />
@@ -1072,6 +1184,21 @@ function ComposerFooter({
         )}
       </View>
       <View style={[a.flex_row, a.align_center, a.justify_between]}>
+        {showAddButton && (
+          <Button
+            label={_(msg`Add new post`)}
+            onPress={onAddPost}
+            style={[a.p_sm, a.m_2xs]}
+            variant="ghost"
+            shape="round"
+            color="primary">
+            <FontAwesomeIcon
+              icon="add"
+              size={20}
+              color={t.palette.primary_500}
+            />
+          </Button>
+        )}
         <SelectLangBtn />
         <CharProgress
           count={post.shortenedGraphemeLength}
@@ -1179,6 +1306,7 @@ function useAnimatedBorders() {
   })
 
   return {
+    contentHeight,
     scrollHandler,
     onScrollViewContentSizeChange,
     onScrollViewLayout,
@@ -1214,6 +1342,15 @@ async function whenAppViewReady(
         uri,
         depth: 0,
       }),
+  )
+}
+
+function isEmptyPost(post: PostDraft) {
+  return (
+    post.richtext.text.trim().length === 0 &&
+    !post.embed.media &&
+    !post.embed.link &&
+    !post.embed.quote
   )
 }
 
@@ -1261,9 +1398,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginRight: 5,
   },
+  post: {
+    marginHorizontal: 16,
+  },
+  inactivePost: {
+    opacity: 0.5,
+  },
   scrollView: {
     flex: 1,
-    paddingHorizontal: 16,
   },
   textInputLayout: {
     flexDirection: 'row',
