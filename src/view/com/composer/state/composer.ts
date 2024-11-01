@@ -10,6 +10,8 @@ import {
   postUriToRelativePath,
   toBskyAppUrl,
 } from '#/lib/strings/url-helpers'
+import {DraftEntry} from '#/state/composer-drafts/database.types'
+import {deserializeThread} from '#/state/composer-drafts/schema'
 import {ComposerImage, createInitialImages} from '#/state/gallery'
 import {createPostgateRecord} from '#/state/queries/postgate/util'
 import {Gif} from '#/state/queries/tenor'
@@ -86,6 +88,7 @@ export type ThreadDraft = {
 export type ComposerState = {
   thread: ThreadDraft
   activePostIndex: number
+  draftEntryId: string | undefined
   mutableNeedsFocusActive: boolean
 }
 
@@ -473,12 +476,23 @@ export function createComposerState({
   initMention,
   initImageUris,
   initQuoteUri,
+  initDraftEntry,
 }: {
   initText: string | undefined
   initMention: string | undefined
   initImageUris: ComposerOpts['imageUris']
   initQuoteUri: string | undefined
+  initDraftEntry: DraftEntry | undefined
 }): ComposerState {
+  if (initDraftEntry) {
+    return {
+      activePostIndex: 0,
+      mutableNeedsFocusActive: false,
+      draftEntryId: initDraftEntry.id,
+      thread: deserializeThread(initDraftEntry.state),
+    }
+  }
+
   let media: ImagesMedia | undefined
   if (initImageUris?.length) {
     media = {
@@ -511,6 +525,7 @@ export function createComposerState({
   return {
     activePostIndex: 0,
     mutableNeedsFocusActive: false,
+    draftEntryId: undefined,
     thread: {
       posts: [
         {
