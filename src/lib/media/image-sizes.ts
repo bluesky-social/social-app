@@ -2,7 +2,23 @@ import {Image} from 'react-native'
 
 import type {Dimensions} from '#/lib/media/types'
 
-const sizes: Map<string, Dimensions> = new Map()
+type CacheStorageItem<T> = {key: string; value: T}
+const createCache = <T>(cacheSize: number) => ({
+  _storage: [] as CacheStorageItem<T>[],
+  get(key: string) {
+    const {value} =
+      this._storage.find(({key: storageKey}) => storageKey === key) || {}
+    return value
+  },
+  set(key: string, value: T) {
+    if (this._storage.length >= cacheSize) {
+      this._storage.shift()
+    }
+    this._storage.push({key, value})
+  },
+})
+
+const sizes = createCache<Dimensions>(50)
 const activeRequests: Map<string, Promise<Dimensions>> = new Map()
 
 export function get(uri: string): Dimensions | undefined {
