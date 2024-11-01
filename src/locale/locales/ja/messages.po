@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-10-30 14:42+0900\n"
+"PO-Revision-Date: 2024-11-02 02:41+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -20,11 +20,6 @@ msgstr "（埋め込みコンテンツあり）"
 #: src/view/com/modals/VerifyEmail.tsx:150
 msgid "(no email)"
 msgstr "（メールがありません）"
-
-#: src/view/com/notifications/FeedItem.tsx:232
-#: src/view/com/notifications/FeedItem.tsx:327
-msgid "{0, plural, one {{formattedCount} other} other {{formattedCount} others}}"
-msgstr "{0, plural, other {他{formattedCount}人}}"
 
 #: src/lib/hooks/useTimeAgo.ts:156
 msgid "{0, plural, one {# day} other {# days}}"
@@ -177,6 +172,94 @@ msgstr "{estimatedTimeHrs, plural, other {時間}}"
 msgid "{estimatedTimeMins, plural, one {minute} other {minutes}}"
 msgstr "{estimatedTimeMins, plural, other {分}}"
 
+#: src/view/com/notifications/FeedItem.tsx:300
+msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> followed you"
+msgstr "{firstAuthorLink}および<0>{additionalAuthorsCount, plural, other {他{formattedAuthorsCount}人}}</0>があなたをフォローしました"
+
+#: src/view/com/notifications/FeedItem.tsx:326
+msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> liked your custom feed"
+msgstr "{firstAuthorLink}および<0>{additionalAuthorsCount, plural, other {他{formattedAuthorsCount}人}}</0>があなたのカスタムフィードをいいねしました"
+
+#: src/view/com/notifications/FeedItem.tsx:222
+msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> liked your post"
+msgstr "{firstAuthorLink}および<0>{additionalAuthorsCount, plural, other {他{formattedAuthorsCount}人}}</0>があなたの投稿をいいねしました"
+
+#: src/view/com/notifications/FeedItem.tsx:246
+msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> reposted your post"
+msgstr "{firstAuthorLink}および<0>{additionalAuthorsCount, plural, other {他{formattedAuthorsCount}人}}</0>があなたの投稿をリポストしました"
+
+#: src/view/com/notifications/FeedItem.tsx:350
+msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> signed up with your starter pack"
+msgstr "{firstAuthorLink}および<0>{additionalAuthorsCount, plural, other {他{formattedAuthorsCount}人}}</0>があなたのスターターパックでサインアップしました"
+
+#: src/view/com/notifications/FeedItem.tsx:312
+msgid "{firstAuthorLink} followed you"
+msgstr "{firstAuthorLink}があなたをフォローしました"
+
+#: src/view/com/notifications/FeedItem.tsx:289
+msgid "{firstAuthorLink} followed you back"
+msgstr "{firstAuthorLink}があなたをフォローバックしました"
+
+#: src/view/com/notifications/FeedItem.tsx:338
+msgid "{firstAuthorLink} liked your custom feed"
+msgstr "{firstAuthorLink}があなたのカスタムフィードをいいねしました"
+
+#: src/view/com/notifications/FeedItem.tsx:234
+msgid "{firstAuthorLink} liked your post"
+msgstr "{firstAuthorLink}があなたの投稿をいいねしました"
+
+#: src/view/com/notifications/FeedItem.tsx:258
+msgid "{firstAuthorLink} reposted your post"
+msgstr "{firstAuthorLink}があなたの投稿をリポストしました"
+
+#: src/view/com/notifications/FeedItem.tsx:362
+msgid "{firstAuthorLink} signed up with your starter pack"
+msgstr "{firstAuthorLink}があなたのスターターパックでサインアップしました"
+
+#: src/view/com/notifications/FeedItem.tsx:293
+msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} followed you"
+msgstr "{firstAuthorName}および{additionalAuthorsCount, plural, other {他{formattedAuthorsCount}人}}があなたをフォローしました"
+
+#: src/view/com/notifications/FeedItem.tsx:319
+msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} liked your custom feed"
+msgstr "{firstAuthorName}および{additionalAuthorsCount, plural, other {他{formattedAuthorsCount}人}}があなたのカスタムフィードをいいねしました"
+
+#: src/view/com/notifications/FeedItem.tsx:215
+msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} liked your post"
+msgstr "{firstAuthorName}および{additionalAuthorsCount, plural, other {他{formattedAuthorsCount}人}}があなたの投稿をいいねしました"
+
+#: src/view/com/notifications/FeedItem.tsx:239
+msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} reposted your post"
+msgstr "{firstAuthorName}および{additionalAuthorsCount, plural, other {他{formattedAuthorsCount}人}}があなたの投稿をリポストしました"
+
+#: src/view/com/notifications/FeedItem.tsx:343
+msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} signed up with your starter pack"
+msgstr "{firstAuthorName}および{additionalAuthorsCount, plural, other {他{formattedAuthorsCount}人}}があなたのスターターパックでサインアップしました"
+
+#: src/view/com/notifications/FeedItem.tsx:298
+msgid "{firstAuthorName} followed you"
+msgstr "{firstAuthorName}があなたをフォローしました"
+
+#: src/view/com/notifications/FeedItem.tsx:288
+msgid "{firstAuthorName} followed you back"
+msgstr "{firstAuthorName}があなたをフォローバックしました"
+
+#: src/view/com/notifications/FeedItem.tsx:324
+msgid "{firstAuthorName} liked your custom feed"
+msgstr "{firstAuthorName}があなたのカスタムフィードをいいねしました"
+
+#: src/view/com/notifications/FeedItem.tsx:220
+msgid "{firstAuthorName} liked your post"
+msgstr "{firstAuthorName}があなたの投稿をいいねしました"
+
+#: src/view/com/notifications/FeedItem.tsx:244
+msgid "{firstAuthorName} reposted your post"
+msgstr "{firstAuthorName}があなたの投稿をリポストしました"
+
+#: src/view/com/notifications/FeedItem.tsx:348
+msgid "{firstAuthorName} signed up with your starter pack"
+msgstr "{firstAuthorName}があなたのスターターパックでサインアップしました"
+
 #: src/components/ProfileHoverCard/index.web.tsx:508
 #: src/screens/Profile/Header/Metrics.tsx:50
 msgid "{following} following"
@@ -237,6 +320,10 @@ msgstr "<0>{0}</0>のメンバー"
 #: src/components/dms/DateDivider.tsx:69
 msgid "<0>{date}</0> at {time}"
 msgstr "<0>{date}</0> {time}"
+
+#: src/screens/Settings/NotificationSettings.tsx:72
+msgid "<0>Experimental:</0> When this preference is enabled, you'll only receive reply and quote notifications from users you follow. We'll continue to add more controls here over time."
+msgstr "<0>実験的機能：</0> この設定を有効にすると、フォローしているユーザーからの返信と引用通知のみを受け取るようになります。今後、いろんなコントロールを追加していきます。"
 
 #: src/screens/StarterPack/Wizard/index.tsx:466
 msgid "<0>You</0> and<1> </1><2>{0} </2>are included in your starter pack"
@@ -389,6 +476,14 @@ msgstr "ALTテキストを追加（オプション）"
 msgid "Add another account"
 msgstr "他のアカウントを追加"
 
+#: src/view/com/composer/Composer.tsx:677
+msgid "Add another post"
+msgstr "他の投稿を追加"
+
+#: src/screens/Settings/components/AddAppPasswordDialog.tsx:102
+msgid "Add app password"
+msgstr "アプリパスワードを追加"
+
 #: src/view/screens/AppPasswords.tsx:111
 #: src/view/screens/AppPasswords.tsx:153
 #: src/view/screens/AppPasswords.tsx:166
@@ -402,6 +497,10 @@ msgstr "ミュートするワードを設定に追加"
 #: src/components/dialogs/MutedWords.tsx:112
 msgid "Add muted words and tags"
 msgstr "ミュートするワードとタグを追加"
+
+#: src/view/com/composer/Composer.tsx:1189
+msgid "Add new post"
+msgstr "新しい投稿を追加"
 
 #: src/screens/Home/NoFeedsPinned.tsx:99
 msgid "Add recommended feeds"
@@ -650,13 +749,29 @@ msgstr "誰でも反応可能"
 msgid "App Language"
 msgstr "アプリの言語"
 
+#: src/screens/Settings/components/AddAppPasswordDialog.tsx:122
+msgid "App Password"
+msgstr "アプリパスワード"
+
 #: src/view/screens/AppPasswords.tsx:232
 msgid "App password deleted"
 msgstr "アプリパスワードを削除しました"
 
+#: src/screens/Settings/components/AddAppPasswordDialog.tsx:84
+msgid "App password name must be unique"
+msgstr "アプリパスワードの名前は他と重ならないようにしなくてはなりません"
+
+#: src/screens/Settings/components/AddAppPasswordDialog.tsx:62
+msgid "App password names can only contain letters, numbers, spaces, dashes, and underscores"
+msgstr "アプリパスワードの名前には、英数字、スペース、ハイフン、アンダースコアのみが使用可能です"
+
 #: src/view/com/modals/AddAppPasswords.tsx:138
 msgid "App Password names can only contain letters, numbers, spaces, dashes, and underscores."
 msgstr "アプリパスワードの名前には、英数字、スペース、ハイフン、アンダースコアのみが使用可能です。"
+
+#: src/screens/Settings/components/AddAppPasswordDialog.tsx:80
+msgid "App password names must be at least 4 characters long"
+msgstr "アプリパスワードの名前は長さが４文字以上である必要があります"
 
 #: src/view/com/modals/AddAppPasswords.tsx:103
 msgid "App Password names must be at least 4 characters long."
@@ -712,6 +827,10 @@ msgstr "外観の設定"
 msgid "Apply default recommended feeds"
 msgstr "デフォルトのおすすめフィードを追加"
 
+#: src/screens/Settings/AppPasswords.tsx:201
+msgid "Are you sure you want to delete the app password \"{0}\"?"
+msgstr "アプリパスワード「{0}」を本当に削除しますか？"
+
 #: src/view/screens/AppPasswords.tsx:283
 msgid "Are you sure you want to delete the app password \"{name}\"?"
 msgstr "アプリパスワード「{name}」を本当に削除しますか？"
@@ -743,6 +862,10 @@ msgstr "本当にこのフィードをあなたのフィードから削除した
 #: src/view/com/composer/Composer.tsx:532
 msgid "Are you sure you'd like to discard this draft?"
 msgstr "本当にこの下書きを破棄しますか？"
+
+#: src/view/com/composer/Composer.tsx:789
+msgid "Are you sure you'd like to discard this post?"
+msgstr "本当にこの投稿を破棄しますか？"
 
 #: src/components/dialogs/MutedWords.tsx:433
 msgid "Are you sure?"
@@ -1143,6 +1266,10 @@ msgstr "確認コードが記載されたメールを確認し、ここに入力
 msgid "Check your inbox for an email with the confirmation code to enter below:"
 msgstr "入力したメールアドレスの受信トレイを確認して、以下に入力するための確認コードが記載されたメールが届いていないか確認してください："
 
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:370
+msgid "Choose domain verification method"
+msgstr "ドメイン名の確認方法を選択"
+
 #: src/screens/StarterPack/Wizard/index.tsx:199
 msgid "Choose Feeds"
 msgstr "フィードの選択"
@@ -1509,6 +1636,10 @@ msgstr "コピー"
 msgid "Copy {0}"
 msgstr "{0}をコピー"
 
+#: src/screens/Settings/components/AddAppPasswordDialog.tsx:196
+msgid "Copy App Password"
+msgstr "アプリパスワードをコピー"
+
 #: src/screens/Settings/AboutSettings.tsx:61
 msgid "Copy build version to clipboard"
 msgstr "ビルドバージョンをクリップボードへコピー"
@@ -1517,6 +1648,14 @@ msgstr "ビルドバージョンをクリップボードへコピー"
 #: src/components/dialogs/Embed.tsx:141
 msgid "Copy code"
 msgstr "コードをコピー"
+
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:472
+msgid "Copy DID"
+msgstr "DIDをコピー"
+
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:405
+msgid "Copy host"
+msgstr "ホストをコピー"
 
 #: src/components/StarterPack/ShareDialog.tsx:124
 msgid "Copy link"
@@ -1548,6 +1687,10 @@ msgstr "投稿のテキストをコピー"
 #: src/components/StarterPack/QrCodeDialog.tsx:169
 msgid "Copy QR code"
 msgstr "QRコードをコピー"
+
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:426
+msgid "Copy TXT record value"
+msgstr "TXTレコードの値をコピー"
 
 #: src/Navigation.tsx:280
 #: src/view/screens/CopyrightPolicy.tsx:31
@@ -1826,10 +1969,6 @@ msgstr "ダイアログ：この投稿に誰が反応できるか調整"
 msgid "Dim"
 msgstr "グレー"
 
-#: src/screens/Settings/components/Email2FAToggle.tsx:60
-msgid "Disable"
-msgstr "無効化"
-
 #: src/view/screens/AccessibilitySettings.tsx:109
 msgid "Disable autoplay for videos and GIFs"
 msgstr "ビデオやGIFを自動再生しない"
@@ -1867,6 +2006,10 @@ msgstr "変更を破棄しますか？"
 #: src/view/com/composer/Composer.tsx:531
 msgid "Discard draft?"
 msgstr "下書きを削除しますか？"
+
+#: src/view/com/composer/Composer.tsx:788
+msgid "Discard post?"
+msgstr "投稿を削除しますか？"
 
 #: src/screens/Moderation/index.tsx:556
 #: src/screens/Moderation/index.tsx:560
@@ -2159,6 +2302,10 @@ msgstr "メールアドレス"
 msgid "Email 2FA disabled"
 msgstr "メールでの２要素認証を無効にしました"
 
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:47
+msgid "Email 2FA enabled"
+msgstr "メールでの２要素認証を有効にしました"
+
 #: src/screens/Login/ForgotPasswordForm.tsx:93
 msgid "Email address"
 msgstr "メールアドレス"
@@ -2400,9 +2547,10 @@ msgstr "返信する投稿全体を展開または折りたたむ"
 msgid "Expected uri to resolve to a record"
 msgstr "レコードを指すURIではありません"
 
-#: src/view/screens/NotificationsSettings.tsx:78
-msgid "Experimental: When this preference is enabled, you'll only receive reply and quote notifications from users you follow. We'll continue to add more controls here over time."
-msgstr "実験的機能: この設定を有効にすると、フォローしているユーザーからの返信と引用通知のみを受け取るようになります。今後、いろんなコントロールを追加していきます。"
+#: src/screens/Settings/FollowingFeedPreferences.tsx:116
+#: src/screens/Settings/ThreadPreferences.tsx:122
+msgid "Experimental"
+msgstr "実験的機能"
 
 #: src/components/dialogs/MutedWords.tsx:500
 msgid "Expired"
@@ -2454,10 +2602,18 @@ msgstr "外部メディアの設定"
 msgid "External media settings"
 msgstr "外部メディアの設定"
 
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:553
+msgid "Failed to change handle. Please try again."
+msgstr "ハンドルの変更に失敗しました。もう一度試してください。"
+
 #: src/view/com/modals/AddAppPasswords.tsx:119
 #: src/view/com/modals/AddAppPasswords.tsx:123
 msgid "Failed to create app password."
 msgstr "アプリパスワードの作成に失敗しました。"
+
+#: src/screens/Settings/components/AddAppPasswordDialog.tsx:173
+msgid "Failed to create app password. Please try again."
+msgstr "アプリパスワードの作成に失敗しました。もう一度試してください。"
 
 #: src/screens/StarterPack/Wizard/index.tsx:238
 #: src/screens/StarterPack/Wizard/index.tsx:246
@@ -2541,6 +2697,10 @@ msgstr "設定の更新に失敗しました"
 #: src/lib/media/video/upload.web.ts:88
 msgid "Failed to upload video"
 msgstr "ビデオのアップロードに失敗しました"
+
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:341
+msgid "Failed to verify handle. Please try again."
+msgstr "ハンドルの変更に失敗しました。もう一度試してください。"
 
 #: src/Navigation.tsx:225
 msgid "Feed"
@@ -2702,14 +2862,6 @@ msgstr "<0>{0}</0>、<1>{1}</1>および{2, plural, other {他#人}}がフォロ
 msgid "Followed users"
 msgstr "自分がフォローしているユーザー"
 
-#: src/view/com/notifications/FeedItem.tsx:207
-msgid "followed you"
-msgstr "があなたをフォローしました"
-
-#: src/view/com/notifications/FeedItem.tsx:205
-msgid "followed you back"
-msgstr "があなたをフォローバックしました"
-
 #: src/view/screens/ProfileFollowers.tsx:30
 #: src/view/screens/ProfileFollowers.tsx:31
 msgid "Followers"
@@ -2782,6 +2934,10 @@ msgstr "食べ物"
 #: src/view/com/modals/DeleteAccount.tsx:129
 msgid "For security reasons, we'll need to send a confirmation code to your email address."
 msgstr "セキュリティ上の理由から、あなたのメールアドレスに確認コードを送信する必要があります。"
+
+#: src/screens/Settings/components/AddAppPasswordDialog.tsx:209
+msgid "For security reasons, you won't be able to view this again. If you lose this app password, you'll need to generate a new one."
+msgstr "セキュリティ上の理由から、これを再度表示することはできません。このアプリパスワードを紛失した場合は、新しいパスワードを生成する必要があります。"
 
 #: src/view/com/modals/AddAppPasswords.tsx:233
 msgid "For security reasons, you won't be able to view this again. If you lose this password, you'll need to generate a new one."
@@ -2880,6 +3036,10 @@ msgstr "戻る"
 msgid "Go Back"
 msgstr "戻る"
 
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:529
+msgid "Go back to previous page"
+msgstr "前のページに戻る"
+
 #: src/components/dms/ReportDialog.tsx:149
 #: src/components/ReportDialog/SelectReportOptionView.tsx:80
 #: src/components/ReportDialog/SubmitView.tsx:109
@@ -2932,6 +3092,19 @@ msgstr "半分まで来ました！"
 msgid "Handle"
 msgstr "ハンドル"
 
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:557
+msgid "Handle already taken. Please try a different one."
+msgstr "ハンドルは既に取られています。他のものをお試しください。"
+
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:188
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:325
+msgid "Handle changed!"
+msgstr "ハンドルを変更しました！"
+
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:561
+msgid "Handle too long. Please try a shorter one."
+msgstr "ハンドルが長すぎます。短いものをお試しください。"
+
 #: src/view/screens/AccessibilitySettings.tsx:118
 msgid "Haptics"
 msgstr "触覚フィードバック"
@@ -2960,6 +3133,10 @@ msgstr "ヘルプ"
 #: src/screens/Onboarding/StepProfile/index.tsx:237
 msgid "Help people know you're not a bot by uploading a picture or creating an avatar."
 msgstr "画像をアップロードするかアバターを作ってあなたがbotではないことをみんなに知らせましょう。"
+
+#: src/screens/Settings/components/AddAppPasswordDialog.tsx:187
+msgid "Here is your app password!"
+msgstr "アプリパスワードをお知らせします！"
 
 #: src/view/com/modals/AddAppPasswords.tsx:204
 msgid "Here is your app password."
@@ -3109,6 +3286,10 @@ msgstr "あなたがお住いの国の法律においてまだ成人していな
 msgid "If you delete this list, you won't be able to recover it."
 msgstr "このリストを削除すると、復元できなくなります。"
 
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:247
+msgid "If you have your own domain, you can use that as your handle. This lets you self-verify your identity – <0>learn more</0>."
+msgstr "自分のドメインを持っていれば、ハンドルとして利用できます。これによりあなたのアイデンティティを自己証明できます - <0>詳しくはこちら</0>。"
+
 #: src/view/com/util/forms/PostDropdownBtn.tsx:670
 msgid "If you remove this post, you won't be able to recover it."
 msgstr "この投稿を削除すると、復元できなくなります。"
@@ -3197,6 +3378,10 @@ msgstr "新しいフォント設定の紹介"
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:70
 msgid "Invalid 2FA confirmation code."
 msgstr "無効な２要素認証の確認コードです。"
+
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:563
+msgid "Invalid handle. Please try a different one."
+msgstr "無効なハンドルです。他のものを試してください。"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:264
 msgid "Invalid or unsupported post record"
@@ -3336,6 +3521,10 @@ msgstr "大きい"
 msgid "Latest"
 msgstr "最新"
 
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:251
+msgid "learn more"
+msgstr "詳細"
+
 #: src/components/moderation/ScreenHider.tsx:140
 msgid "Learn More"
 msgstr "詳細"
@@ -3440,14 +3629,6 @@ msgstr "いいねしたユーザー"
 #: src/view/screens/ProfileFeedLikedBy.tsx:30
 msgid "Liked By"
 msgstr "いいねしたユーザー"
-
-#: src/view/com/notifications/FeedItem.tsx:211
-msgid "liked your custom feed"
-msgstr "があなたのカスタムフィードをいいねしました"
-
-#: src/view/com/notifications/FeedItem.tsx:178
-msgid "liked your post"
-msgstr "があなたの投稿をいいねしました"
 
 #: src/view/screens/Profile.tsx:231
 msgid "Likes"
@@ -3754,6 +3935,10 @@ msgstr "その他のフィード"
 msgid "More options"
 msgstr "その他のオプション"
 
+#: src/screens/Settings/ThreadPreferences.tsx:79
+msgid "Most-liked first"
+msgstr "いいねの数が多い順"
+
 #: src/view/screens/PreferencesThreads.tsx:77
 msgid "Most-liked replies first"
 msgstr "いいねの数が多い順に返信を表示"
@@ -3960,6 +4145,12 @@ msgstr "新しいチャット"
 msgid "New font settings ✨"
 msgstr "新しいフォント設定 ✨"
 
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:201
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:209
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:356
+msgid "New handle"
+msgstr "新しいハンドル"
+
 #: src/components/dms/NewMessagesPill.tsx:92
 msgid "New messages"
 msgstr "新しいメッセージ"
@@ -4041,6 +4232,10 @@ msgstr "次の画像"
 #: src/view/screens/PreferencesThreads.tsx:124
 msgid "No"
 msgstr "いいえ"
+
+#: src/screens/Settings/AppPasswords.tsx:100
+msgid "No app passwords yet"
+msgstr "アプリパスワードはまだありません"
 
 #: src/view/screens/ProfileFeed.tsx:565
 #: src/view/screens/ProfileList.tsx:882
@@ -4270,9 +4465,17 @@ msgstr "<0><1/><2><3/></2></0>"
 msgid "Onboarding reset"
 msgstr "オンボーディングのリセット"
 
+#: src/view/com/composer/Composer.tsx:311
+msgid "One or more GIFs is missing alt text."
+msgstr "１つもしくは複数のGIFにALTテキストがありません。"
+
 #: src/view/com/composer/Composer.tsx:739
 msgid "One or more images is missing alt text."
 msgstr "１つもしくは複数の画像にALTテキストがありません。"
+
+#: src/view/com/composer/Composer.tsx:318
+msgid "One or more videos is missing alt text."
+msgstr "１つもしくは複数のビデオにALTテキストがありません。"
 
 #: src/screens/Onboarding/StepProfile/index.tsx:115
 msgid "Only .jpg and .png files are supported"
@@ -4318,6 +4521,10 @@ msgstr "{name}のプロフィールのショートカットメニューを開く
 #: src/screens/Onboarding/StepProfile/index.tsx:286
 msgid "Open avatar creator"
 msgstr "アバター・クリエイターを開く"
+
+#: src/screens/Settings/AccountSettings.tsx:117
+msgid "Open change handle dialog"
+msgstr "ハンドル変更ダイアログを開く"
 
 #: src/screens/Messages/components/ChatListItem.tsx:272
 #: src/screens/Messages/components/ChatListItem.tsx:273
@@ -4712,6 +4919,10 @@ msgstr "変更する前にメールを確認してください。これは、メ
 msgid "Please enter a name for your app password. All spaces is not allowed."
 msgstr "アプリパスワードにつける名前を入力してください。すべてスペースとしてはいけません。"
 
+#: src/screens/Settings/components/AddAppPasswordDialog.tsx:114
+msgid "Please enter a unique name for this app password or use our randomly generated one."
+msgstr "このアプリパスワードに固有の名前を入力するか、ランダムに生成された名前を使用してください。"
+
 #: src/view/com/modals/AddAppPasswords.tsx:151
 msgid "Please enter a unique name for this App Password or use our randomly generated one."
 msgstr "このアプリパスワードに固有の名前を入力するか、ランダムに生成された名前を使用してください。"
@@ -4770,6 +4981,11 @@ msgstr "投稿"
 msgctxt "description"
 msgid "Post"
 msgstr "投稿"
+
+#: src/view/com/composer/Composer.tsx:878
+msgctxt "action"
+msgid "Post All"
+msgstr "すべてポスト"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:196
 msgid "Post by {0}"
@@ -4880,6 +5096,11 @@ msgstr "前の画像"
 #: src/view/screens/LanguageSettings.tsx:188
 msgid "Primary Language"
 msgstr "第一言語"
+
+#: src/screens/Settings/ThreadPreferences.tsx:97
+#: src/screens/Settings/ThreadPreferences.tsx:102
+msgid "Prioritize your Follows"
+msgstr "あなたのフォローを優先"
 
 #: src/view/screens/PreferencesThreads.tsx:92
 msgid "Prioritize Your Follows"
@@ -5013,6 +5234,10 @@ msgstr "この投稿の引用"
 #: src/view/screens/PreferencesThreads.tsx:81
 msgid "Random (aka \"Poster's Roulette\")"
 msgstr "ランダムな順番で表示（別名「投稿者のルーレット」）"
+
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:566
+msgid "Rate limit exceeded – you've tried to change your handle too many times in a short period. Please wait a minute before trying again."
+msgstr "レート制限を超えました - 短い時間でハンドルを何度も変更しようとしました。再度試す前にしばらく時間をおいてください。"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:585
 #: src/view/com/util/forms/PostDropdownBtn.tsx:595
@@ -5371,10 +5596,6 @@ msgstr "<0><1/></0>がリポスト"
 msgid "Reposted by you"
 msgstr "あなたのリポスト"
 
-#: src/view/com/notifications/FeedItem.tsx:180
-msgid "reposted your post"
-msgstr "があなたの投稿をリポストしました"
-
 #: src/view/com/post-thread/PostThreadItem.tsx:209
 msgid "Reposts of this post"
 msgstr "この投稿をリポスト"
@@ -5546,6 +5767,10 @@ msgstr "画像を保存"
 msgid "Save image crop"
 msgstr "画像の切り抜きを保存"
 
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:228
+msgid "Save new handle"
+msgstr "新しいハンドルを保存"
+
 #: src/components/StarterPack/QrCodeDialog.tsx:179
 msgid "Save QR code"
 msgstr "QRコードを保存"
@@ -5688,6 +5913,10 @@ msgstr "アバターを選択"
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:65
 msgid "Select an emoji"
 msgstr "絵文字を選択"
+
+#: src/screens/Settings/LanguageSettings.tsx:252
+msgid "Select content languages"
+msgstr "コンテンツの言語を選択"
 
 #: src/screens/Login/index.tsx:117
 msgid "Select from an existing account"
@@ -6022,9 +6251,19 @@ msgstr "ミュートした返信を表示"
 msgid "Show Posts from My Feeds"
 msgstr "マイフィードからの投稿を表示"
 
+#: src/screens/Settings/FollowingFeedPreferences.tsx:97
+#: src/screens/Settings/FollowingFeedPreferences.tsx:107
+msgid "Show quote posts"
+msgstr "引用を表示"
+
 #: src/view/screens/PreferencesFollowingFeed.tsx:119
 msgid "Show Quote Posts"
 msgstr "引用を表示"
+
+#: src/screens/Settings/FollowingFeedPreferences.tsx:61
+#: src/screens/Settings/FollowingFeedPreferences.tsx:71
+msgid "Show replies"
+msgstr "返信を表示"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:61
 msgid "Show Replies"
@@ -6034,14 +6273,28 @@ msgstr "返信を表示"
 msgid "Show replies by people you follow before all other replies."
 msgstr "自分がフォローしているユーザーからの返信を、他のすべての返信の前に表示します。"
 
+#: src/screens/Settings/ThreadPreferences.tsx:136
+msgid "Show replies in a threaded view"
+msgstr "スレッド表示で返信を表示"
+
 #: src/view/com/util/forms/PostDropdownBtn.tsx:559
 #: src/view/com/util/forms/PostDropdownBtn.tsx:569
 msgid "Show reply for everyone"
 msgstr "返信を全員に見せる"
 
+#: src/screens/Settings/FollowingFeedPreferences.tsx:79
+#: src/screens/Settings/FollowingFeedPreferences.tsx:89
+msgid "Show reposts"
+msgstr "リポストを表示"
+
 #: src/view/screens/PreferencesFollowingFeed.tsx:85
 msgid "Show Reposts"
 msgstr "リポストを表示"
+
+#: src/screens/Settings/FollowingFeedPreferences.tsx:122
+#: src/screens/Settings/FollowingFeedPreferences.tsx:132
+msgid "Show samples of your saved feeds in your Following feed"
+msgstr "Followingフィードに保存されたフィードからサンプルを表示"
 
 #: src/components/moderation/ContentHider.tsx:130
 #: src/components/moderation/PostHider.tsx:79
@@ -6130,10 +6383,6 @@ msgstr "サインイン済み"
 msgid "Signed in as @{0}"
 msgstr "@{0}でサインイン"
 
-#: src/view/com/notifications/FeedItem.tsx:218
-msgid "signed up with your starter pack"
-msgstr "あなたのスターターパックでサインアップ"
-
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:299
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:306
 msgid "Signup without a starter pack"
@@ -6198,6 +6447,10 @@ msgstr "大変申し訳ありません！セッションの有効期限が切れ
 #: src/view/screens/PreferencesThreads.tsx:64
 msgid "Sort Replies"
 msgstr "返信を並び替える"
+
+#: src/screens/Settings/ThreadPreferences.tsx:53
+msgid "Sort replies by"
+msgstr "返信を並び替える："
 
 #: src/view/screens/PreferencesThreads.tsx:67
 msgid "Sort replies to the same post by:"
@@ -6588,10 +6841,18 @@ msgstr "投稿の取得中に問題が発生しました。もう一度試すに
 msgid "There was an issue fetching the list. Tap here to try again."
 msgstr "リストの取得中に問題が発生しました。もう一度試すにはこちらをタップしてください。"
 
+#: src/screens/Settings/AppPasswords.tsx:52
+msgid "There was an issue fetching your app passwords"
+msgstr "アプリパスワードの取得中に問題が発生しました"
+
 #: src/view/com/feeds/ProfileFeedgens.tsx:150
 #: src/view/com/lists/ProfileLists.tsx:149
 msgid "There was an issue fetching your lists. Tap here to try again."
 msgstr "リストの取得中に問題が発生しました。もう一度試すにはこちらをタップしてください。"
+
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:102
+msgid "There was an issue fetching your service info"
+msgstr "サービス情報の取得中に問題が発生しました"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:145
 msgid "There was an issue removing this feed. Please check your internet connection and try again."
@@ -6645,6 +6906,10 @@ msgstr "アプリケーションに予期しない問題が発生しました。
 #: src/screens/SignupQueued.tsx:112
 msgid "There's been a rush of new users to Bluesky! We'll activate your account as soon as we can."
 msgstr "Blueskyに新規ユーザーが殺到しています！できるだけ早くアカウントを有効にできるよう努めます。"
+
+#: src/screens/Settings/FollowingFeedPreferences.tsx:55
+msgid "These settings only apply to the Following feed."
+msgstr "これらの設定はFollowingフィードにのみ適用されます。"
 
 #: src/components/moderation/ScreenHider.tsx:111
 msgid "This {screenDescription} has been flagged:"
@@ -6716,6 +6981,10 @@ msgstr "このフィードは空です。"
 #: src/view/com/posts/FeedShutdownMsg.tsx:99
 msgid "This feed is no longer online. We are showing <0>Discover</0> instead."
 msgstr "このフィードはもはやオンラインではありません。代わりに<0>Discover</0>を表示しています。"
+
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:559
+msgid "This handle is reserved. Please try a different one."
+msgstr "このハンドルは予約されています。他のものをお試しください。"
 
 #: src/components/dialogs/BirthDateSettings.tsx:40
 msgid "This information is not shared with other users."
@@ -6792,7 +7061,7 @@ msgstr "このサービスには、利用規約もプライバシーポリシー
 
 #: src/view/com/modals/ChangeHandle.tsx:432
 msgid "This should create a domain record at:"
-msgstr "右記にドメインレコードを作成されるはずです："
+msgstr "これにより以下にドメインレコードが作成されるはずです："
 
 #: src/view/com/profile/ProfileFollowers.tsx:96
 msgid "This user doesn't have any followers."
@@ -6847,6 +7116,10 @@ msgstr "スレッドの設定"
 #: src/view/screens/Settings/index.tsx:571
 msgid "Thread Preferences"
 msgstr "スレッドの設定"
+
+#: src/screens/Settings/ThreadPreferences.tsx:127
+msgid "Threaded mode"
+msgstr "スレッドモード"
 
 #: src/view/screens/PreferencesThreads.tsx:114
 msgid "Threaded Mode"
@@ -7088,6 +7361,11 @@ msgstr "望まない性的なコンテンツ"
 msgid "Update <0>{displayName}</0> in Lists"
 msgstr "リストの<0>{displayName}</0>を更新"
 
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:495
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:516
+msgid "Update to {domain}"
+msgstr "{domain}に更新"
+
 #: src/view/com/modals/ChangeHandle.tsx:495
 msgid "Update to {handle}"
 msgstr "{handle}に更新"
@@ -7151,6 +7429,10 @@ msgstr "あなたのサーバーのファイルを使用"
 #: src/view/screens/AppPasswords.tsx:205
 msgid "Use app passwords to login to other Bluesky clients without giving full access to your account or password."
 msgstr "他のBlueskyクライアントにアカウントやパスワードに完全にアクセスする権限を与えずに、アプリパスワードを使ってログインします。"
+
+#: src/screens/Settings/AppPasswords.tsx:59
+msgid "Use app passwords to sign in to other Bluesky clients without giving full access to your account or password."
+msgstr "他のBlueskyクライアントにアカウントやパスワードに完全にアクセスする権限を与えずに、アプリパスワードを使ってサインインします。"
 
 #: src/view/com/modals/ChangeHandle.tsx:506
 msgid "Use bsky.social as hosting provider"
@@ -7642,6 +7924,10 @@ msgstr "返信を書く"
 #: src/screens/Onboarding/state.ts:103
 msgid "Writers"
 msgstr "ライター"
+
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:337
+msgid "Wrong DID returned from server. Received: {0}"
+msgstr "サーバーから間違ったDIDが送られてきました。受信したもの：{0}"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:77
 #: src/view/screens/PreferencesFollowingFeed.tsx:71
