@@ -152,7 +152,6 @@ export function PostEmbeds({
         thumbDims: MeasuredDimensions | null,
       ) => {
         openLightbox({
-          type: 'images',
           images: items,
           index,
           thumbDims,

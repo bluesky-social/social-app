@@ -27,33 +27,11 @@ export function Lightbox() {
 
   if (!activeLightbox) {
     return null
-  } else if (activeLightbox.type === 'profile-image') {
+  } else {
     const opts = activeLightbox
     return (
       <ImageView
-        images={[
-          {
-            uri: opts.profile.avatar || '',
-            thumbUri: opts.profile.avatar || '',
-            dimensions: {
-              // It's fine if it's actually smaller but we know it's 1:1.
-              height: 1000,
-              width: 1000,
-            },
-          },
-        ]}
-        initialImageIndex={0}
-        thumbDims={opts.thumbDims}
-        visible
-        onRequestClose={onClose}
-        renderFooter={() => <LightboxFooter uri={opts.profile.avatar || ''} />}
-      />
-    )
-  } else if (activeLightbox.type === 'images') {
-    const opts = activeLightbox
-    return (
-      <ImageView
-        images={opts.images.map(img => ({...img}))}
+        images={opts.images}
         initialImageIndex={opts.index}
         thumbDims={opts.thumbDims}
         visible
@@ -66,8 +44,6 @@ export function Lightbox() {
         )}
       />
     )
-  } else {
-    return null
   }
 }
 
