@@ -248,7 +248,7 @@ export async function compressImage(img: ComposerImage): Promise<ImageMeta> {
 async function moveIfNecessary(from: string) {
   const cacheDir = isNative && getImageCacheDirectory()
 
-  if (cacheDir && from.startsWith(cacheDir)) {
+  if (cacheDir && !from.startsWith('data:') && !from.startsWith(cacheDir)) {
     const to = joinPath(cacheDir, nanoid(36))
 
     await makeDirectoryAsync(cacheDir, {intermediates: true})
