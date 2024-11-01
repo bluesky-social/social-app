@@ -46,7 +46,7 @@ export function Lightbox() {
         thumbDims={opts.thumbDims}
         visible
         onRequestClose={onClose}
-        FooterComponent={LightboxFooter}
+        renderFooter={() => <LightboxFooter uri={opts.profile.avatar || ''} />}
       />
     )
   } else if (activeLightbox.type === 'images') {
@@ -58,7 +58,12 @@ export function Lightbox() {
         thumbDims={opts.thumbDims}
         visible
         onRequestClose={onClose}
-        FooterComponent={LightboxFooter}
+        renderFooter={index => (
+          <LightboxFooter
+            uri={opts.images[index].uri}
+            altText={opts.images[index].alt || ''}
+          />
+        )}
       />
     )
   } else {
@@ -66,9 +71,8 @@ export function Lightbox() {
   }
 }
 
-function LightboxFooter({imageIndex}: {imageIndex: number}) {
+function LightboxFooter({altText, uri}: {altText?: string; uri: string}) {
   const {_} = useLingui()
-  const {activeLightbox} = useLightbox()
   const [isAltExpanded, setAltExpanded] = React.useState(false)
   const [permissionResponse, requestPermission] = MediaLibrary.usePermissions({
     granularPermissions: ['photo'],
@@ -106,22 +110,6 @@ function LightboxFooter({imageIndex}: {imageIndex: number}) {
     },
     [permissionResponse, requestPermission, _],
   )
-
-  const lightbox = activeLightbox
-  if (!lightbox) {
-    return null
-  }
-
-  let altText = ''
-  let uri = ''
-  if (lightbox.type === 'images') {
-    const opts = lightbox
-    uri = opts.images[imageIndex].uri
-    altText = opts.images[imageIndex].alt || ''
-  } else if (lightbox.type === 'profile-image') {
-    const opts = lightbox
-    uri = opts.profile.avatar || ''
-  }
 
   return (
     <ScrollView

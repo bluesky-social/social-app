@@ -8,7 +8,7 @@
 // Original code copied and simplified from the link below as the codebase is currently not maintained:
 // https://github.com/jobtoday/react-native-image-viewing
 
-import React, {ComponentType, useCallback, useMemo, useState} from 'react'
+import React, {useCallback, useMemo, useState} from 'react'
 import {Platform, StyleSheet, View} from 'react-native'
 import PagerView from 'react-native-pager-view'
 import {MeasuredDimensions} from 'react-native-reanimated'
@@ -26,8 +26,7 @@ type Props = {
   visible: boolean
   onRequestClose: () => void
   backgroundColor?: string
-  HeaderComponent?: ComponentType<{imageIndex: number}>
-  FooterComponent?: ComponentType<{imageIndex: number}>
+  renderFooter: (index: number) => React.ReactNode
 }
 
 const DEFAULT_BG_COLOR = '#000'
@@ -39,8 +38,7 @@ function ImageViewing({
   visible,
   onRequestClose,
   backgroundColor = DEFAULT_BG_COLOR,
-  HeaderComponent,
-  FooterComponent,
+  renderFooter,
 }: Props) {
   const [isScaled, setIsScaled] = useState(false)
   const [isDragging, setIsDragging] = useState(false)
@@ -96,13 +94,7 @@ function ImageViewing({
       accessibilityViewIsModal>
       <View style={[styles.container, {backgroundColor}]}>
         <Animated.View style={[styles.header, animatedHeaderStyle]}>
-          {typeof HeaderComponent !== 'undefined' ? (
-            React.createElement(HeaderComponent, {
-              imageIndex,
-            })
-          ) : (
-            <ImageDefaultHeader onRequestClose={onRequestClose} />
-          )}
+          <ImageDefaultHeader onRequestClose={onRequestClose} />
         </Animated.View>
         <PagerView
           scrollEnabled={!isScaled}
@@ -129,13 +121,9 @@ function ImageViewing({
             </View>
           ))}
         </PagerView>
-        {typeof FooterComponent !== 'undefined' && (
-          <Animated.View style={[styles.footer, animatedFooterStyle]}>
-            {React.createElement(FooterComponent, {
-              imageIndex,
-            })}
-          </Animated.View>
-        )}
+        <Animated.View style={[styles.footer, animatedFooterStyle]}>
+          {renderFooter(imageIndex)}
+        </Animated.View>
       </View>
     </SafeAreaView>
   )
