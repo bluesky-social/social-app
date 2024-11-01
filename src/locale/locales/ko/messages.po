@@ -486,7 +486,7 @@ msgstr "다른 계정 추가"
 
 #: src/view/com/composer/Composer.tsx:677
 msgid "Add another post"
-msgstr "다른 게시물 추가"
+msgstr "다른 게시물 추가하기"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:102
 msgid "Add app password"
