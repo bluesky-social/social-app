@@ -56,8 +56,6 @@ export function useImageAspectRatio({
   }, [raw, setAspectRatio, src])
 
   return {
-    dimensions,
-    raw,
     constrained,
     max,
     isCropped,
