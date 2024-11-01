@@ -21,22 +21,21 @@ export function useImageAspectRatio({
   src: string
   dimensions: Dimensions | undefined
 }) {
-  const [raw, setAspectRatio] = React.useState(() => {
-    const dims = dimensions ?? imageSizes.get(src)
-    return dims ? calc(dims) : undefined
-  })
+  const [dims, setDims] = React.useState(
+    () => dimensions ?? imageSizes.get(src),
+  )
 
   const [prevSrc, setPrevSrc] = React.useState(src)
   if (src !== prevSrc) {
-    const dims = dimensions ?? imageSizes.get(src)
-    setAspectRatio(dims ? calc(dims) : undefined)
+    setDims(dimensions ?? imageSizes.get(src))
     setPrevSrc(src)
   }
 
   let constrained: number | undefined
   let max: number | undefined
   let isCropped: boolean | undefined
-  if (raw !== undefined) {
+  if (dims !== undefined) {
+    const raw = calc(dims)
     const ratio = 1 / 2 // max of 1:2 ratio in feeds
     constrained = Math.max(raw, ratio)
     max = Math.max(raw, 0.25) // max of 1:4 in thread
@@ -45,15 +44,15 @@ export function useImageAspectRatio({
 
   React.useEffect(() => {
     let aborted = false
-    if (raw !== undefined) return
-    imageSizes.fetch(src).then(newDim => {
+    if (dims !== undefined) return
+    imageSizes.fetch(src).then(newDims => {
       if (aborted) return
-      setAspectRatio(calc(newDim))
+      setDims(newDims)
     })
     return () => {
       aborted = true
     }
-  }, [raw, setAspectRatio, src])
+  }, [dims, setDims, src])
 
   return {
     constrained,
