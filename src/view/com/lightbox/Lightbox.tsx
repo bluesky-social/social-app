@@ -27,24 +27,23 @@ export function Lightbox() {
 
   if (!activeLightbox) {
     return null
-  } else {
-    const opts = activeLightbox
-    return (
-      <ImageView
-        images={opts.images}
-        initialImageIndex={opts.index}
-        thumbDims={opts.thumbDims}
-        visible
-        onRequestClose={onClose}
-        renderFooter={index => (
-          <LightboxFooter
-            uri={opts.images[index].uri}
-            altText={opts.images[index].alt || ''}
-          />
-        )}
-      />
-    )
   }
+
+  return (
+    <ImageView
+      images={activeLightbox.images}
+      initialImageIndex={activeLightbox.index}
+      thumbDims={activeLightbox.thumbDims}
+      visible
+      onRequestClose={onClose}
+      renderFooter={index => (
+        <LightboxFooter
+          uri={activeLightbox.images[index].uri}
+          altText={activeLightbox.images[index].alt || ''}
+        />
+      )}
+    />
+  )
 }
 
 function LightboxFooter({altText, uri}: {altText?: string; uri: string}) {
