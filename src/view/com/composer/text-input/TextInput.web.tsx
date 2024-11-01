@@ -42,6 +42,7 @@ interface TextInputProps {
   placeholder: string
   suggestedLinks: Set<string>
   webForceMinHeight: boolean
+  hasRightPadding: boolean
   isActive: boolean
   setRichText: (v: RichText | ((v: RichText) => RichText)) => void
   onPhotoPasted: (uri: string) => void
@@ -56,6 +57,7 @@ export const TextInput = React.forwardRef(function TextInputImpl(
     richtext,
     placeholder,
     webForceMinHeight,
+    hasRightPadding,
     isActive,
     setRichText,
     onPhotoPasted,
@@ -307,7 +309,7 @@ export const TextInput = React.forwardRef(function TextInputImpl(
 
   return (
     <>
-      <View style={styles.container}>
+      <View style={[styles.container, hasRightPadding && styles.rightPadding]}>
         {/* @ts-ignore inputStyle is fine */}
         <EditorContent editor={editor} style={inputStyle} />
       </View>
@@ -372,6 +374,9 @@ const styles = StyleSheet.create({
     padding: 5,
     marginLeft: 8,
     marginBottom: 10,
+  },
+  rightPadding: {
+    paddingRight: 32,
   },
   dropContainer: {
     backgroundColor: '#0007',
