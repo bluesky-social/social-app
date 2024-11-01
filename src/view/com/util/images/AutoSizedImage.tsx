@@ -21,14 +21,19 @@ export function useImageAspectRatio({
   src: string
   dimensions: Dimensions | undefined
 }) {
-  const [raw, setAspectRatio] = React.useState<number>(
-    dimensions ? calc(dimensions) : 1,
+  const [raw, setAspectRatio] = React.useState(
+    dimensions ? calc(dimensions) : undefined,
   )
 
-  const ratio = 1 / 2 // max of 1:2 ratio in feeds
-  const constrained = Math.max(raw, ratio)
-  const max = Math.max(raw, 0.25) // max of 1:4 in thread
-  const isCropped = raw < constrained
+  let constrained: number | undefined
+  let max: number | undefined
+  let isCropped: boolean | undefined
+  if (raw !== undefined) {
+    const ratio = 1 / 2 // max of 1:2 ratio in feeds
+    constrained = Math.max(raw, ratio)
+    max = Math.max(raw, 0.25) // max of 1:4 in thread
+    isCropped = raw < constrained
+  }
 
   React.useEffect(() => {
     let aborted = false
@@ -215,14 +220,16 @@ export function AutoSizedImage({
           a.rounded_md,
           a.overflow_hidden,
           t.atoms.bg_contrast_25,
-          {aspectRatio: max},
+          {aspectRatio: max ?? 1},
         ]}>
         {contents}
       </Pressable>
     )
   } else {
     return (
-      <ConstrainedImage fullBleed={crop === 'square'} aspectRatio={constrained}>
+      <ConstrainedImage
+        fullBleed={crop === 'square'}
+        aspectRatio={constrained ?? 1}>
         <Pressable
           onPress={onPress}
           onLongPress={onLongPress}
