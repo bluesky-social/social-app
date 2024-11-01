@@ -126,6 +126,7 @@ export type LogEvents = {
     hasQuote: boolean
     langs: string
     logContext: 'Composer'
+    threadLength: number
   }
   'post:like:sampled': {
     doesLikerFollowPoster: boolean | undefined

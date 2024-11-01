@@ -409,6 +409,7 @@ export const ComposePost = ({
             hasQuote: !!post.embed.quote,
             langs: langPrefs.postLanguage,
             logContext: 'Composer',
+            threadLength: thread.posts.length,
           })
           index++
         }
