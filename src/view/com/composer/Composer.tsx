@@ -715,6 +715,9 @@ let ComposerPost = React.memo(function ComposerPost({
 
   const onPhotoPasted = useCallback(
     async (uri: string) => {
+      if (!isActive) {
+        return
+      }
       if (uri.startsWith('data:video/')) {
         onSelectVideo(post.id, {uri, type: 'video', height: 0, width: 0})
       } else {
@@ -722,7 +725,7 @@ let ComposerPost = React.memo(function ComposerPost({
         onImageAdd([res])
       }
     },
-    [post.id, onSelectVideo, onImageAdd],
+    [post.id, onSelectVideo, onImageAdd, isActive],
   )
 
   return (
