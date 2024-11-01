@@ -1,3 +1,4 @@
+import {useEffect,useState} from 'react'
 import {Image} from 'react-native'
 
 import type {Dimensions} from '#/lib/media/types'
@@ -52,4 +53,33 @@ export function fetch(uri: string): Promise<Dimensions> {
   })
   activeRequests.set(uri, prom)
   return prom
+}
+
+export function useImageDimensions({
+  src,
+  knownDimensions,
+}: {
+  src: string
+  knownDimensions: Dimensions | undefined
+}) {
+  const [dims, setDims] = useState(() => knownDimensions ?? get(src))
+  const [prevSrc, setPrevSrc] = useState(src)
+  if (src !== prevSrc) {
+    setDims(knownDimensions ?? get(src))
+    setPrevSrc(src)
+  }
+
+  useEffect(() => {
+    let aborted = false
+    if (dims !== undefined) return
+    fetch(src).then(newDims => {
+      if (aborted) return
+      setDims(newDims)
+    })
+    return () => {
+      aborted = true
+    }
+  }, [dims, setDims, src])
+
+  return dims
 }

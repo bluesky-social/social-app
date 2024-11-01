@@ -5,7 +5,7 @@ import {AppBskyEmbedImages} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import * as imageSizes from '#/lib/media/image-sizes'
+import {useImageDimensions} from '#/lib/media/image-sizes'
 import {Dimensions} from '#/lib/media/types'
 import {isNative} from '#/platform/detection'
 import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
@@ -13,38 +13,6 @@ import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {ArrowsDiagonalOut_Stroke2_Corner0_Rounded as Fullscreen} from '#/components/icons/ArrowsDiagonal'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {Text} from '#/components/Typography'
-
-function useImageDimensions({
-  src,
-  knownDimensions,
-}: {
-  src: string
-  knownDimensions: Dimensions | undefined
-}) {
-  const [dims, setDims] = React.useState(
-    () => knownDimensions ?? imageSizes.get(src),
-  )
-
-  const [prevSrc, setPrevSrc] = React.useState(src)
-  if (src !== prevSrc) {
-    setDims(knownDimensions ?? imageSizes.get(src))
-    setPrevSrc(src)
-  }
-
-  React.useEffect(() => {
-    let aborted = false
-    if (dims !== undefined) return
-    imageSizes.fetch(src).then(newDims => {
-      if (aborted) return
-      setDims(newDims)
-    })
-    return () => {
-      aborted = true
-    }
-  }, [dims, setDims, src])
-
-  return dims
-}
 
 function useImageAspectRatio({
   src,
