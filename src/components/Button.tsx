@@ -468,6 +468,8 @@ export const Button = React.forwardRef<View, ButtonProps>(
           a.flex_row,
           a.align_center,
           a.justify_center,
+          // @ts-ignore - web only
+          a.focus_visible,
           flattenedBaseStyles,
           ...(state.hovered || state.pressed
             ? [hoverStyles, flatten(hoverStyleProp)]
