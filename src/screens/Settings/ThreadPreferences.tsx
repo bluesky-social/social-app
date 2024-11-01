@@ -44,7 +44,7 @@ export function ThreadPreferencesScreen({}: Props) {
         <SettingsList.Container>
           <SettingsList.Group>
             <SettingsList.ItemIcon icon={BubblesIcon} />
-            <SettingsList.ItemText>Sort replies</SettingsList.ItemText>
+            <SettingsList.ItemText>{_(msg`Sort Replies`)}</SettingsList.ItemText>
             <View style={[a.w_full, a.gap_md]}>
               <Text style={[a.flex_1, t.atoms.text_contrast_medium]}>
                 <Trans>Sort replies to the same post by:</Trans>
