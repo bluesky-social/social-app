@@ -88,9 +88,7 @@ export function DisableEmail2FADialog({
             style={[a.text_2xl, a.font_bold, t.atoms.text]}>
             <Trans>Disable Email 2FA</Trans>
           </Text>
-          <P
-            nativeID="dialog-description"
-            style={[a.text_sm, t.atoms.text, a.leading_snug]}>
+          <P nativeID="dialog-description">
             {stage === Stages.ConfirmCode ? (
               <Trans>
                 An email has been sent to{' '}
