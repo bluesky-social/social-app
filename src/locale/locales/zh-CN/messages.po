@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-01 05:06\n"
+"PO-Revision-Date: 2024-11-01 05:13\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -890,7 +890,7 @@ msgstr "你确定要放弃这段草稿吗？"
 
 #: src/view/com/composer/Composer.tsx:789
 msgid "Are you sure you'd like to discard this post?"
-msgstr "你确定要放弃发布这个帖文吗？"
+msgstr "你确定要放弃发布这条帖文吗？"
 
 #: src/components/dialogs/MutedWords.tsx:433
 msgid "Are you sure?"
