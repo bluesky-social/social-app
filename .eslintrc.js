@@ -79,7 +79,8 @@ module.exports = {
       },
     ],
     'simple-import-sort/exports': 'error',
-    'react-compiler/react-compiler': 'warn',
+    // TODO: Reenable when we figure out why it gets stuck on CI.
+    // 'react-compiler/react-compiler': 'error',
     'no-restricted-imports': [
       'error',
       {
