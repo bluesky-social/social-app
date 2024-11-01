@@ -887,6 +887,9 @@ export const atoms = {
   user_select_all: {
     userSelect: 'all',
   },
+  focus_visible: {
+    'outline-offset': '-1px',
+  },
 
   /*
    * Text decoration
