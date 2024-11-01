@@ -557,7 +557,7 @@ export const ComposePost = ({
     </>
   )
 
-  const isFooterSticky = !isNative && thread.posts.length > 1
+  const isWebFooterSticky = !isNative && thread.posts.length > 1
   return (
     <BottomSheetPortalProvider>
       <KeyboardAvoidingView
@@ -618,11 +618,13 @@ export const ComposePost = ({
                   onPublish={onComposerPostPublish}
                   onError={setError}
                 />
-                {isFooterSticky && post.id === activePost.id && footer}
+                {isWebFooterSticky && post.id === activePost.id && (
+                  <View style={styles.stickyFooterWeb}>{footer}</View>
+                )}
               </React.Fragment>
             ))}
           </Animated.ScrollView>
-          {!isFooterSticky && footer}
+          {!isWebFooterSticky && footer}
         </View>
 
         <Prompt.Basic
@@ -1391,6 +1393,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 6,
     marginLeft: 12,
+  },
+  stickyFooterWeb: {
+    // @ts-ignore web-only
+    position: 'sticky',
+    bottom: 0,
   },
   errorLine: {
     flexDirection: 'row',
