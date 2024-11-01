@@ -22,6 +22,7 @@ import {
 // @ts-expect-error no type definition
 import ProgressCircle from 'react-native-progress/Circle'
 import Animated, {
+  AnimatedRef,
   Easing,
   FadeIn,
   FadeOut,
@@ -507,25 +508,24 @@ export const ComposePost = ({
   useEffect(() => {
     if (composerState.mutableNeedsFocusActive) {
       composerState.mutableNeedsFocusActive = false
-      textInput.current?.focus()
+      // On Android, this risks getting the cursor stuck behind the keyboard.
+      // Not worth it.
+      if (!isAndroid) {
+        textInput.current?.focus()
+      }
     }
   }, [composerState])
 
   const {
-    contentHeight,
     scrollHandler,
     onScrollViewContentSizeChange,
     onScrollViewLayout,
     topBarAnimatedStyle,
     bottomBarAnimatedStyle,
-  } = useAnimatedBorders()
-
-  useEffect(() => {
-    if (composerState.mutableNeedsScrollToBottom) {
-      composerState.mutableNeedsScrollToBottom = false
-      runOnUI(scrollTo)(scrollViewRef, 0, contentHeight.value, true)
-    }
-  }, [composerState, scrollViewRef, contentHeight])
+  } = useScrollTracker({
+    scrollViewRef,
+    stickyBottom: true,
+  })
 
   const keyboardVerticalOffset = useKeyboardVerticalOffset()
 
@@ -1213,17 +1213,30 @@ export function useComposerCancelRef() {
   return useRef<CancelRef>(null)
 }
 
-function useAnimatedBorders() {
+function useScrollTracker({
+  scrollViewRef,
+  stickyBottom,
+}: {
+  scrollViewRef: AnimatedRef<Animated.ScrollView>
+  stickyBottom: boolean
+}) {
   const t = useTheme()
-  const hasScrolledTop = useSharedValue(0)
-  const hasScrolledBottom = useSharedValue(0)
   const contentOffset = useSharedValue(0)
   const scrollViewHeight = useSharedValue(Infinity)
   const contentHeight = useSharedValue(0)
 
-  /**
-   * Make sure to run this on the UI thread!
-   */
+  const hasScrolledToTop = useDerivedValue(() =>
+    withTiming(contentOffset.value === 0 ? 1 : 0),
+  )
+
+  const hasScrolledToBottom = useDerivedValue(() =>
+    withTiming(
+      contentHeight.value - contentOffset.value - 5 <= scrollViewHeight.value
+        ? 1
+        : 0,
+    ),
+  )
+
   const showHideBottomBorder = useCallback(
     ({
       newContentHeight,
@@ -1235,27 +1248,19 @@ function useAnimatedBorders() {
       newScrollViewHeight?: number
     }) => {
       'worklet'
-
       if (typeof newContentHeight === 'number')
         contentHeight.value = Math.floor(newContentHeight)
       if (typeof newContentOffset === 'number')
         contentOffset.value = Math.floor(newContentOffset)
       if (typeof newScrollViewHeight === 'number')
         scrollViewHeight.value = Math.floor(newScrollViewHeight)
-
-      hasScrolledBottom.value = withTiming(
-        contentHeight.value - contentOffset.value - 5 > scrollViewHeight.value
-          ? 1
-          : 0,
-      )
     },
-    [contentHeight, contentOffset, scrollViewHeight, hasScrolledBottom],
+    [contentHeight, contentOffset, scrollViewHeight],
   )
 
   const scrollHandler = useAnimatedScrollHandler({
     onScroll: event => {
       'worklet'
-      hasScrolledTop.value = withTiming(event.contentOffset.y > 0 ? 1 : 0)
       showHideBottomBorder({
         newContentOffset: event.contentOffset.y,
         newContentHeight: event.contentSize.height,
@@ -1266,17 +1271,32 @@ function useAnimatedBorders() {
 
   const onScrollViewContentSizeChange = useCallback(
     (_width: number, height: number) => {
-      'worklet'
+      if (stickyBottom && height > contentHeight.value) {
+        const isFairlyCloseToBottom =
+          contentHeight.value - contentOffset.value - 100 <=
+          scrollViewHeight.value
+        if (isFairlyCloseToBottom) {
+          runOnUI(() => {
+            scrollTo(scrollViewRef, 0, contentHeight.value, true)
+          })()
+        }
+      }
       showHideBottomBorder({
         newContentHeight: height,
       })
     },
-    [showHideBottomBorder],
+    [
+      showHideBottomBorder,
+      scrollViewRef,
+      contentHeight,
+      stickyBottom,
+      contentOffset,
+      scrollViewHeight,
+    ],
   )
 
   const onScrollViewLayout = useCallback(
     (evt: LayoutChangeEvent) => {
-      'worklet'
       showHideBottomBorder({
         newScrollViewHeight: evt.nativeEvent.layout.height,
       })
@@ -1288,9 +1308,9 @@ function useAnimatedBorders() {
     return {
       borderBottomWidth: StyleSheet.hairlineWidth,
       borderColor: interpolateColor(
-        hasScrolledTop.value,
+        hasScrolledToTop.value,
         [0, 1],
-        ['transparent', t.atoms.border_contrast_medium.borderColor],
+        [t.atoms.border_contrast_medium.borderColor, 'transparent'],
       ),
     }
   })
@@ -1298,15 +1318,14 @@ function useAnimatedBorders() {
     return {
       borderTopWidth: StyleSheet.hairlineWidth,
       borderColor: interpolateColor(
-        hasScrolledBottom.value,
+        hasScrolledToBottom.value,
         [0, 1],
-        ['transparent', t.atoms.border_contrast_medium.borderColor],
+        [t.atoms.border_contrast_medium.borderColor, 'transparent'],
       ),
     }
   })
 
   return {
-    contentHeight,
     scrollHandler,
     onScrollViewContentSizeChange,
     onScrollViewLayout,
