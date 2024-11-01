@@ -26,6 +26,13 @@ export function useImageAspectRatio({
     return dims ? calc(dims) : undefined
   })
 
+  const [prevSrc, setPrevSrc] = React.useState(src)
+  if (src !== prevSrc) {
+    const dims = dimensions ?? imageSizes.get(src)
+    setAspectRatio(dims ? calc(dims) : undefined)
+    setPrevSrc(src)
+  }
+
   let constrained: number | undefined
   let max: number | undefined
   let isCropped: boolean | undefined
