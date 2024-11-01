@@ -14,32 +14,21 @@ import {ArrowsDiagonalOut_Stroke2_Corner0_Rounded as Fullscreen} from '#/compone
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {Text} from '#/components/Typography'
 
-export function useImageAspectRatio({
+function useImageDimensions({
   src,
-  dimensions,
+  knownDimensions,
 }: {
   src: string
-  dimensions: Dimensions | undefined
+  knownDimensions: Dimensions | undefined
 }) {
   const [dims, setDims] = React.useState(
-    () => dimensions ?? imageSizes.get(src),
+    () => knownDimensions ?? imageSizes.get(src),
   )
 
   const [prevSrc, setPrevSrc] = React.useState(src)
   if (src !== prevSrc) {
-    setDims(dimensions ?? imageSizes.get(src))
+    setDims(knownDimensions ?? imageSizes.get(src))
     setPrevSrc(src)
-  }
-
-  let constrained: number | undefined
-  let max: number | undefined
-  let isCropped: boolean | undefined
-  if (dims !== undefined) {
-    const raw = calc(dims)
-    const ratio = 1 / 2 // max of 1:2 ratio in feeds
-    constrained = Math.max(raw, ratio)
-    max = Math.max(raw, 0.25) // max of 1:4 in thread
-    isCropped = raw < constrained
   }
 
   React.useEffect(() => {
@@ -54,6 +43,27 @@ export function useImageAspectRatio({
     }
   }, [dims, setDims, src])
 
+  return dims
+}
+
+function useImageAspectRatio({
+  src,
+  knownDimensions,
+}: {
+  src: string
+  knownDimensions: Dimensions | undefined
+}) {
+  const dims = useImageDimensions({src, knownDimensions})
+  let constrained: number | undefined
+  let max: number | undefined
+  let isCropped: boolean | undefined
+  if (dims !== undefined) {
+    const raw = calc(dims)
+    const ratio = 1 / 2 // max of 1:2 ratio in feeds
+    constrained = Math.max(raw, ratio)
+    max = Math.max(raw, 0.25) // max of 1:4 in thread
+    isCropped = raw < constrained
+  }
   return {
     constrained,
     max,
@@ -128,7 +138,7 @@ export function AutoSizedImage({
     isCropped: rawIsCropped,
   } = useImageAspectRatio({
     src: image.thumb,
-    dimensions: image.aspectRatio,
+    knownDimensions: image.aspectRatio,
   })
   const cropDisabled = crop === 'none'
   const isCropped = rawIsCropped && !cropDisabled
