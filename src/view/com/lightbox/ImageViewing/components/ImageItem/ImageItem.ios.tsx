@@ -20,7 +20,7 @@ import {Image} from 'expo-image'
 
 import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
 import {useImageDimensions} from '#/lib/media/image-sizes'
-import {Dimensions as ImageDimensions, ImageSource} from '../../@types'
+import {ImageSource} from '../../@types'
 
 const SWIPE_CLOSE_OFFSET = 75
 const SWIPE_CLOSE_VELOCITY = 1
@@ -47,7 +47,7 @@ const ImageItem = ({
   const scrollViewRef = useAnimatedRef<Animated.ScrollView>()
   const translationY = useSharedValue(0)
   const [scaled, setScaled] = useState(false)
-  const [_aspectRatio, imageDimensions] = useImageDimensions({
+  const [imageAspect, imageDimensions] = useImageDimensions({
     src: imageSrc.uri,
     knownDimensions: imageSrc.dimensions,
   })
@@ -102,7 +102,7 @@ const ImageItem = ({
     const willZoom = !scaled
     if (willZoom) {
       nextZoomRect = getZoomRectAfterDoubleTap(
-        imageDimensions,
+        imageAspect,
         absoluteX,
         absoluteY,
       )
@@ -182,7 +182,7 @@ const styles = StyleSheet.create({
 })
 
 const getZoomRectAfterDoubleTap = (
-  imageDimensions: ImageDimensions | undefined,
+  imageAspect: number | undefined,
   touchX: number,
   touchY: number,
 ): {
@@ -191,7 +191,7 @@ const getZoomRectAfterDoubleTap = (
   width: number
   height: number
 } => {
-  if (!imageDimensions) {
+  if (!imageAspect) {
     return {
       x: 0,
       y: 0,
@@ -202,7 +202,6 @@ const getZoomRectAfterDoubleTap = (
 
   // First, let's figure out how much we want to zoom in.
   // We want to try to zoom in at least close enough to get rid of black bars.
-  const imageAspect = imageDimensions.width / imageDimensions.height
   const screenAspect = SCREEN.width / SCREEN.height
   const zoom = Math.max(
     imageAspect / screenAspect,
