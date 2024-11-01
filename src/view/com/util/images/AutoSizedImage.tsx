@@ -21,9 +21,10 @@ export function useImageAspectRatio({
   src: string
   dimensions: Dimensions | undefined
 }) {
-  const [raw, setAspectRatio] = React.useState(
-    dimensions ? calc(dimensions) : undefined,
-  )
+  const [raw, setAspectRatio] = React.useState(() => {
+    const dims = dimensions ?? imageSizes.get(src)
+    return dims ? calc(dims) : undefined
+  })
 
   let constrained: number | undefined
   let max: number | undefined
@@ -37,7 +38,7 @@ export function useImageAspectRatio({
 
   React.useEffect(() => {
     let aborted = false
-    if (dimensions) return
+    if (raw !== undefined) return
     imageSizes.fetch(src).then(newDim => {
       if (aborted) return
       setAspectRatio(calc(newDim))
@@ -45,7 +46,7 @@ export function useImageAspectRatio({
     return () => {
       aborted = true
     }
-  }, [dimensions, setAspectRatio, src])
+  }, [raw, setAspectRatio, src])
 
   return {
     dimensions,
