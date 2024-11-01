@@ -318,6 +318,18 @@ function OwnHandlePage({goToServiceHandle}: {goToServiceHandle: () => void}) {
     },
   })
 
+  const getHostFromDomain = (domainString: string): string => {
+    const parts = domainString.trim().split('.')
+
+    if (parts.length <= 2) {
+      return '_atproto'
+    }
+
+    return '_atproto.' + parts.slice(0, -2).join('.')
+  }
+
+  const host = getHostFromDomain(domain)
+
   return (
     <View style={[a.flex_1, a.gap_lg]}>
       {isSuccess && (
@@ -401,11 +413,11 @@ function OwnHandlePage({goToServiceHandle}: {goToServiceHandle: () => void}) {
                 <CopyButton
                   variant="solid"
                   color="secondary"
-                  value="_atproto"
+                  value={host}
                   label={_(msg`Copy host`)}
                   hoverStyle={[a.bg_transparent]}
                   hitSlop={HITSLOP_10}>
-                  <Text style={[a.text_md, a.flex_1]}>_atproto</Text>
+                  <Text style={[a.text_md, a.flex_1]}>{host}</Text>
                   <ButtonIcon icon={CopyIcon} />
                 </CopyButton>
               </View>
