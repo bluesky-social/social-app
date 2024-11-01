@@ -405,6 +405,7 @@ export const ComposePost = ({
                 ? post.embed.media.images.length
                 : 0,
             isReply: index > 0 || !!replyTo,
+            isPartOfThread: thread.posts.length > 1,
             hasLink: !!post.embed.link,
             hasQuote: !!post.embed.quote,
             langs: langPrefs.postLanguage,
@@ -412,6 +413,12 @@ export const ComposePost = ({
           })
           index++
         }
+      }
+      if (thread.posts.length > 1) {
+        logEvent('thread:create', {
+          postCount: thread.posts.length,
+          isReply: !!replyTo,
+        })
       }
     }
     if (postUri && !replyTo) {
@@ -746,6 +753,7 @@ let ComposerPost = React.memo(function ComposerPost({
           webForceMinHeight={forceMinHeight}
           // To avoid overlap with the close button:
           hasRightPadding={isPartOfThread}
+          isActive={isActive}
           setRichText={rt => {
             dispatchPost({type: 'update_richtext', richtext: rt})
           }}

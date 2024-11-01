@@ -43,6 +43,7 @@ interface TextInputProps {
   suggestedLinks: Set<string>
   webForceMinHeight: boolean
   hasRightPadding: boolean
+  isActive: boolean
   setRichText: (v: RichText | ((v: RichText) => RichText)) => void
   onPhotoPasted: (uri: string) => void
   onPressPublish: (richtext: RichText) => void
@@ -57,6 +58,7 @@ export const TextInput = React.forwardRef(function TextInputImpl(
     placeholder,
     webForceMinHeight,
     hasRightPadding,
+    isActive,
     setRichText,
     onPhotoPasted,
     onPressPublish,
@@ -96,19 +98,30 @@ export const TextInput = React.forwardRef(function TextInputImpl(
   )
 
   React.useEffect(() => {
+    if (!isActive) {
+      return
+    }
     textInputWebEmitter.addListener('publish', onPressPublish)
     return () => {
       textInputWebEmitter.removeListener('publish', onPressPublish)
     }
-  }, [onPressPublish])
+  }, [onPressPublish, isActive])
+
   React.useEffect(() => {
+    if (!isActive) {
+      return
+    }
     textInputWebEmitter.addListener('media-pasted', onPhotoPasted)
     return () => {
       textInputWebEmitter.removeListener('media-pasted', onPhotoPasted)
     }
-  }, [onPhotoPasted])
+  }, [isActive, onPhotoPasted])
 
   React.useEffect(() => {
+    if (!isActive) {
+      return
+    }
+
     const handleDrop = (event: DragEvent) => {
       const transfer = event.dataTransfer
       if (transfer) {
@@ -146,7 +159,7 @@ export const TextInput = React.forwardRef(function TextInputImpl(
       document.body.removeEventListener('dragover', handleDragEnter)
       document.body.removeEventListener('dragleave', handleDragLeave)
     }
-  }, [setIsDropping])
+  }, [setIsDropping, isActive])
 
   const pastSuggestedUris = useRef(new Set<string>())
   const prevDetectedUris = useRef(new Map<string, LinkFacetMatch>())
@@ -244,11 +257,14 @@ export const TextInput = React.forwardRef(function TextInputImpl(
     [editor],
   )
   React.useEffect(() => {
+    if (!isActive) {
+      return
+    }
     textInputWebEmitter.addListener('emoji-inserted', onEmojiInserted)
     return () => {
       textInputWebEmitter.removeListener('emoji-inserted', onEmojiInserted)
     }
-  }, [onEmojiInserted])
+  }, [onEmojiInserted, isActive])
 
   React.useImperativeHandle(ref, () => ({
     focus: () => {

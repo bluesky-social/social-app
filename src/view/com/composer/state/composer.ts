@@ -224,7 +224,7 @@ function postReducer(state: PostDraft, action: PostAction): PostDraft {
       return {
         ...state,
         richtext: action.richtext,
-        shortenedGraphemeLength: shortenLinks(action.richtext).graphemeLength,
+        shortenedGraphemeLength: getShortenedLength(action.richtext),
       }
     }
     case 'update_labels': {
@@ -516,7 +516,7 @@ export function createComposerState({
         {
           id: nanoid(),
           richtext: initRichText,
-          shortenedGraphemeLength: 0,
+          shortenedGraphemeLength: getShortenedLength(initRichText),
           labels: [],
           embed: {
             quote,
@@ -529,4 +529,8 @@ export function createComposerState({
       threadgate: threadgateViewToAllowUISetting(undefined),
     },
   }
+}
+
+function getShortenedLength(rt: RichText) {
+  return shortenLinks(rt).graphemeLength
 }

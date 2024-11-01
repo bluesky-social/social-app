@@ -45,6 +45,7 @@ interface TextInputProps extends ComponentProps<typeof RNTextInput> {
   placeholder: string
   webForceMinHeight: boolean
   hasRightPadding: boolean
+  isActive: boolean
   setRichText: (v: RichText) => void
   onPhotoPasted: (uri: string) => void
   onPressPublish: (richtext: RichText) => void
