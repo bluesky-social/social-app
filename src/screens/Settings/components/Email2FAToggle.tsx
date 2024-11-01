@@ -57,7 +57,7 @@ export function Email2FAToggle() {
       />
       <SettingsList.BadgeButton
         label={
-          currentAccount?.emailAuthFactor ? _(msg`Disable`) : _(msg`Enable`)
+          currentAccount?.emailAuthFactor ? _(msg`Change`) : _(msg`Enable`)
         }
         onPress={onToggle}
       />
