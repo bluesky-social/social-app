@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-01 03:21\n"
+"PO-Revision-Date: 2024-11-01 05:06\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -473,8 +473,8 @@ msgstr "添加账户"
 #: src/view/com/composer/GifAltText.tsx:76
 #: src/view/com/composer/GifAltText.tsx:144
 #: src/view/com/composer/GifAltText.tsx:207
-#: src/view/com/composer/photos/Gallery.tsx:166
-#: src/view/com/composer/photos/Gallery.tsx:213
+#: src/view/com/composer/photos/Gallery.tsx:169
+#: src/view/com/composer/photos/Gallery.tsx:216
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:88
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:93
 msgid "Add alt text"
@@ -488,6 +488,10 @@ msgstr "新增替代文本（可选）"
 #: src/screens/Settings/Settings.tsx:88
 msgid "Add another account"
 msgstr "添加其他账户"
+
+#: src/view/com/composer/Composer.tsx:677
+msgid "Add another post"
+msgstr "添加另一条帖文"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:102
 msgid "Add app password"
@@ -509,6 +513,10 @@ msgstr "为配置的设置添加隐藏词汇"
 #: src/components/dialogs/MutedWords.tsx:112
 msgid "Add muted words and tags"
 msgstr "添加隐藏词汇和标签"
+
+#: src/view/com/composer/Composer.tsx:1189
+msgid "Add new post"
+msgstr "添加新的帖文"
 
 #: src/screens/Home/NoFeedsPinned.tsx:99
 msgid "Add recommended feeds"
@@ -617,7 +625,7 @@ msgid "Already signed in as @{0}"
 msgstr "已以@{0}身份登录"
 
 #: src/view/com/composer/GifAltText.tsx:100
-#: src/view/com/composer/photos/Gallery.tsx:184
+#: src/view/com/composer/photos/Gallery.tsx:187
 #: src/view/com/util/post-embeds/GifEmbed.tsx:186
 msgid "ALT"
 msgstr "ALT"
@@ -636,7 +644,7 @@ msgstr "替代文本"
 msgid "Alt Text"
 msgstr "替代文本"
 
-#: src/view/com/composer/photos/Gallery.tsx:252
+#: src/view/com/composer/photos/Gallery.tsx:255
 msgid "Alt text describes images for blind and low-vision users, and helps give context to everyone."
 msgstr "为图片新增替代文本，以帮助盲人及视障群体了解图片内容。"
 
@@ -666,7 +674,7 @@ msgstr "发生错误"
 msgid "An error occurred"
 msgstr "发生错误"
 
-#: src/view/com/composer/state/video.ts:412
+#: src/view/com/composer/state/video.ts:411
 msgid "An error occurred while compressing the video."
 msgstr "压缩视频时发生错误。"
 
@@ -696,7 +704,7 @@ msgstr "选择视频时发生错误"
 msgid "An error occurred while trying to follow all"
 msgstr "关注所有人时发生错误"
 
-#: src/view/com/composer/state/video.ts:449
+#: src/view/com/composer/state/video.ts:448
 msgid "An error occurred while uploading the video."
 msgstr "上传视频时出现问题。"
 
@@ -876,9 +884,13 @@ msgstr "你确定要从你的资讯源中删除 {0} 吗？"
 msgid "Are you sure you want to remove this from your feeds?"
 msgstr "你确定要从自定义资讯源列表中删除此资讯源吗？"
 
-#: src/view/com/composer/Composer.tsx:522
+#: src/view/com/composer/Composer.tsx:630
 msgid "Are you sure you'd like to discard this draft?"
 msgstr "你确定要放弃这段草稿吗？"
+
+#: src/view/com/composer/Composer.tsx:789
+msgid "Are you sure you'd like to discard this post?"
+msgstr "你确定要放弃发布这个帖文吗？"
 
 #: src/components/dialogs/MutedWords.tsx:433
 msgid "Are you sure?"
@@ -1120,7 +1132,7 @@ msgstr "只能包含字母、数字、空格、破折号及下划线。 长度�
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:72
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:79
 #: src/screens/Settings/Settings.tsx:187
-#: src/view/com/composer/Composer.tsx:674
+#: src/view/com/composer/Composer.tsx:852
 #: src/view/com/modals/ChangeEmail.tsx:213
 #: src/view/com/modals/ChangeEmail.tsx:215
 #: src/view/com/modals/ChangeHandle.tsx:141
@@ -1474,7 +1486,7 @@ msgstr "完成引导并开始使用你的账户"
 msgid "Complete the challenge"
 msgstr "完成验证"
 
-#: src/view/com/composer/Composer.tsx:622
+#: src/view/com/composer/Composer.tsx:755
 msgid "Compose posts up to {MAX_GRAPHEME_LENGTH} characters in length"
 msgstr "撰写帖文的长度最多为 {MAX_GRAPHEME_LENGTH} 个字符"
 
@@ -1482,7 +1494,7 @@ msgstr "撰写帖文的长度最多为 {MAX_GRAPHEME_LENGTH} 个字符"
 msgid "Compose reply"
 msgstr "撰写回复"
 
-#: src/view/com/composer/Composer.tsx:1334
+#: src/view/com/composer/Composer.tsx:1569
 msgid "Compressing video..."
 msgstr "正在压缩视频..."
 
@@ -1932,6 +1944,7 @@ msgstr "删除我的账户"
 msgid "Delete My Account…"
 msgstr "删除我的账户…"
 
+#: src/view/com/composer/Composer.tsx:763
 #: src/view/com/util/forms/PostDropdownBtn.tsx:653
 #: src/view/com/util/forms/PostDropdownBtn.tsx:655
 msgid "Delete post"
@@ -2034,7 +2047,8 @@ msgid "Disabled"
 msgstr "禁用"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:84
-#: src/view/com/composer/Composer.tsx:524
+#: src/view/com/composer/Composer.tsx:632
+#: src/view/com/composer/Composer.tsx:796
 msgid "Discard"
 msgstr "放弃"
 
@@ -2042,9 +2056,13 @@ msgstr "放弃"
 msgid "Discard changes?"
 msgstr "放弃更改？"
 
-#: src/view/com/composer/Composer.tsx:521
+#: src/view/com/composer/Composer.tsx:629
 msgid "Discard draft?"
 msgstr "放弃草稿？"
+
+#: src/view/com/composer/Composer.tsx:788
+msgid "Discard post?"
+msgstr "放弃发布？"
 
 #: src/screens/Moderation/index.tsx:561
 #: src/screens/Moderation/index.tsx:565
@@ -2070,7 +2088,7 @@ msgstr "探索新的资讯源"
 msgid "Dismiss"
 msgstr "关闭"
 
-#: src/view/com/composer/Composer.tsx:1258
+#: src/view/com/composer/Composer.tsx:1493
 msgid "Dismiss error"
 msgstr "关闭错误"
 
@@ -2184,7 +2202,7 @@ msgstr "下载 Bluesky"
 msgid "Download CAR file"
 msgstr "下载 CAR 文件"
 
-#: src/view/com/composer/text-input/TextInput.web.tsx:300
+#: src/view/com/composer/text-input/TextInput.web.tsx:309
 msgid "Drop to add images"
 msgstr "拖放即可新增图片"
 
@@ -2263,7 +2281,7 @@ msgstr "编辑资讯源"
 
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:58
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:62
-#: src/view/com/composer/photos/Gallery.tsx:191
+#: src/view/com/composer/photos/Gallery.tsx:194
 msgid "Edit image"
 msgstr "编辑图片"
 
@@ -2507,7 +2525,7 @@ msgstr "请在下方输入你新的电子邮箱。"
 msgid "Enter your username and password"
 msgstr "输入你的用户名和密码"
 
-#: src/view/com/composer/Composer.tsx:1343
+#: src/view/com/composer/Composer.tsx:1578
 msgid "Error"
 msgstr "错误"
 
@@ -2594,7 +2612,7 @@ msgstr "展开用户列表"
 msgid "Expand or collapse the full post you are replying to"
 msgstr "展开或折叠你要回复的完整帖文"
 
-#: src/lib/api/index.ts:381
+#: src/lib/api/index.ts:400
 msgid "Expected uri to resolve to a record"
 msgstr "URL 应解析为记录"
 
@@ -3286,7 +3304,7 @@ msgstr "看起来在加载数据时遇到了问题，请查看下方获取更多
 msgid "Hmmmm, we couldn't load that moderation service."
 msgstr "无法加载此内容审核提供服务。"
 
-#: src/view/com/composer/state/video.ts:427
+#: src/view/com/composer/state/video.ts:426
 msgid "Hold up! We’re gradually giving access to video, and you’re still waiting in line. Check back soon!"
 msgstr "请稍等！我们正在逐步开放视频功能权限，你仍在等待队伍中。请稍后再回来查看！"
 
@@ -3506,7 +3524,7 @@ msgstr "输入正确"
 msgid "It's just you right now! Add more people to your starter pack by searching above."
 msgstr "目前新手包里只有你！通过上面的列表将更多人添加到你的新手包中。"
 
-#: src/view/com/composer/Composer.tsx:1277
+#: src/view/com/composer/Composer.tsx:1512
 msgid "Job ID: {0}"
 msgstr "工作编号：{0}"
 
@@ -3560,7 +3578,7 @@ msgstr "你账户上的标记"
 msgid "Labels on your content"
 msgstr "你内容上的标记"
 
-#: src/view/com/composer/select-language/SelectLangBtn.tsx:105
+#: src/view/com/composer/select-language/SelectLangBtn.tsx:107
 msgid "Language selection"
 msgstr "选择语言"
 
@@ -4550,8 +4568,16 @@ msgstr "于<0><1/><2><3/></2></0>"
 msgid "Onboarding reset"
 msgstr "重新开始引导流程"
 
-#: src/view/com/composer/Composer.tsx:723
+#: src/view/com/composer/Composer.tsx:311
+msgid "One or more GIFs is missing alt text."
+msgstr "至少有一张 GIF 缺失了替代文本。"
+
+#: src/view/com/composer/Composer.tsx:308
 msgid "One or more images is missing alt text."
+msgstr "至少有一张图片缺失了替代文本。"
+
+#: src/view/com/composer/Composer.tsx:318
+msgid "One or more videos is missing alt text."
 msgstr "至少有一张图片缺失了替代文本。"
 
 #: src/screens/Onboarding/StepProfile/index.tsx:115
@@ -4611,8 +4637,8 @@ msgid "Open conversation options"
 msgstr "开启对话选项"
 
 #: src/screens/Messages/components/MessageInput.web.tsx:165
-#: src/view/com/composer/Composer.tsx:989
-#: src/view/com/composer/Composer.tsx:990
+#: src/view/com/composer/Composer.tsx:1175
+#: src/view/com/composer/Composer.tsx:1176
 msgid "Open emoji picker"
 msgstr "开启表情符号选择器"
 
@@ -4661,7 +4687,7 @@ msgstr "开启 Storybook 界面"
 msgid "Open system log"
 msgstr "开启系统日志"
 
-#: src/view/com/util/forms/DropdownButton.tsx:159
+#: src/view/com/util/forms/DropdownButton.tsx:162
 msgid "Opens {numItems} options"
 msgstr "开启 {numItems} 个选项"
 
@@ -4801,7 +4827,7 @@ msgstr "开启此个人资料"
 msgid "Opens video picker"
 msgstr "开启视频选择器"
 
-#: src/view/com/util/forms/DropdownButton.tsx:293
+#: src/view/com/util/forms/DropdownButton.tsx:296
 msgid "Option {0} of {numItems}"
 msgstr "第 {0} 个选项，共 {numItems} 个"
 
@@ -4839,7 +4865,7 @@ msgstr "其他账户"
 msgid "Other accounts"
 msgstr "其他账户"
 
-#: src/view/com/composer/select-language/SelectLangBtn.tsx:92
+#: src/view/com/composer/select-language/SelectLangBtn.tsx:93
 msgid "Other..."
 msgstr "其他..."
 
@@ -5052,7 +5078,7 @@ msgstr "政治"
 msgid "Porn"
 msgstr "色情内容"
 
-#: src/view/com/composer/Composer.tsx:700
+#: src/view/com/composer/Composer.tsx:880
 msgctxt "action"
 msgid "Post"
 msgstr "发布"
@@ -5061,6 +5087,11 @@ msgstr "发布"
 msgctxt "description"
 msgid "Post"
 msgstr "帖文"
+
+#: src/view/com/composer/Composer.tsx:878
+msgctxt "action"
+msgid "Post All"
+msgstr "发布全部"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:197
 msgid "Post by {0}"
@@ -5077,7 +5108,7 @@ msgstr "@{0} 的帖文"
 msgid "Post deleted"
 msgstr "已删除帖文"
 
-#: src/lib/api/index.ts:166
+#: src/lib/api/index.ts:185
 msgid "Post failed to upload. Please check your Internet connection and try again."
 msgstr "帖文上传失败，请检查您的互联网连接并重试。"
 
@@ -5099,7 +5130,7 @@ msgstr "帖文已由你隐藏"
 msgid "Post interaction settings"
 msgstr "帖文互动选项"
 
-#: src/view/com/composer/select-language/SelectLangBtn.tsx:88
+#: src/view/com/composer/select-language/SelectLangBtn.tsx:89
 msgid "Post language"
 msgstr "帖文语言"
 
@@ -5211,11 +5242,11 @@ msgstr "隐私与安全"
 msgid "Privacy Policy"
 msgstr "隐私政策"
 
-#: src/view/com/composer/Composer.tsx:1340
+#: src/view/com/composer/Composer.tsx:1575
 msgid "Processing video..."
 msgstr "正在处理视频..."
 
-#: src/lib/api/index.ts:58
+#: src/lib/api/index.ts:59
 #: src/screens/Login/ForgotPasswordForm.tsx:149
 msgid "Processing..."
 msgstr "处理中..."
@@ -5431,7 +5462,7 @@ msgstr "从快速访问中删除？"
 msgid "Remove from saved feeds"
 msgstr "从已保存的资讯源中删除"
 
-#: src/view/com/composer/photos/Gallery.tsx:200
+#: src/view/com/composer/photos/Gallery.tsx:203
 msgid "Remove image"
 msgstr "删除图片"
 
@@ -5513,7 +5544,7 @@ msgstr "回复已被禁用"
 msgid "Replies to this post are disabled."
 msgstr "这条帖文的回复已被关闭。"
 
-#: src/view/com/composer/Composer.tsx:698
+#: src/view/com/composer/Composer.tsx:876
 msgctxt "action"
 msgid "Reply"
 msgstr "回复"
@@ -6881,7 +6912,7 @@ msgstr "这条帖文可能已被删除。"
 msgid "The Privacy Policy has been moved to <0/>"
 msgstr "隐私政策已迁移至 <0/>"
 
-#: src/view/com/composer/state/video.ts:409
+#: src/view/com/composer/state/video.ts:408
 msgid "The selected video is larger than 50MB."
 msgstr "选择的视频大小超过 50MB。"
 
@@ -7145,7 +7176,7 @@ msgstr "这条帖文只对已登录用户可见，未登录的用户将无法看
 msgid "This post will be hidden from feeds and threads. This cannot be undone."
 msgstr "这条帖文将从资讯源和讨论串中隐藏。注意此操作无法撤消。"
 
-#: src/view/com/composer/Composer.tsx:360
+#: src/view/com/composer/Composer.tsx:393
 msgid "This post's author has disabled quote posts."
 msgstr "这条帖文的作者已关闭引用帖文。"
 
@@ -7255,7 +7286,7 @@ msgstr "你想将举报提交给谁？"
 msgid "Today"
 msgstr "今天"
 
-#: src/view/com/util/forms/DropdownButton.tsx:255
+#: src/view/com/util/forms/DropdownButton.tsx:258
 msgid "Toggle dropdown"
 msgstr "切换下拉式菜单"
 
@@ -7517,16 +7548,16 @@ msgstr "从文件上传"
 msgid "Upload from Library"
 msgstr "从照片图库上传"
 
-#: src/lib/api/index.ts:277
+#: src/lib/api/index.ts:296
 msgid "Uploading images..."
 msgstr "正在上传图片..."
 
-#: src/lib/api/index.ts:331
-#: src/lib/api/index.ts:355
+#: src/lib/api/index.ts:350
+#: src/lib/api/index.ts:374
 msgid "Uploading link thumbnail..."
 msgstr "正在上传链接缩略图..."
 
-#: src/view/com/composer/Composer.tsx:1337
+#: src/view/com/composer/Composer.tsx:1572
 msgid "Uploading video..."
 msgstr "正在上传视频..."
 
@@ -7728,7 +7759,7 @@ msgstr "版本 {appVersion} {bundleInfo}"
 msgid "Video"
 msgstr "视频"
 
-#: src/view/com/composer/state/video.ts:372
+#: src/view/com/composer/state/video.ts:371
 msgid "Video failed to process"
 msgstr "视频处理失败"
 
@@ -7745,7 +7776,7 @@ msgstr "无法找到视频。"
 msgid "Video settings"
 msgstr "视频设置"
 
-#: src/view/com/composer/Composer.tsx:1347
+#: src/view/com/composer/Composer.tsx:1582
 msgid "Video uploaded"
 msgstr "视频已上传"
 
@@ -7889,7 +7920,7 @@ msgstr "我们希望你在此度过愉快的时光。请记住，Bluesky 是："
 msgid "We ran out of posts from your follows. Here's the latest from <0/>."
 msgstr "我们已经看完了你关注的帖文。这是来自 <0/> 的最新消息。"
 
-#: src/view/com/composer/state/video.ts:431
+#: src/view/com/composer/state/video.ts:430
 msgid "We were unable to determine if you are allowed to upload videos. Please try again."
 msgstr "我们无法确定你是否有权上传视频，请重试。"
 
@@ -7937,7 +7968,7 @@ msgstr "很抱歉，我们无法加载你的隐藏词汇列表。请重试。"
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr "很抱歉，无法完成你的搜索。请重试。"
 
-#: src/view/com/composer/Composer.tsx:357
+#: src/view/com/composer/Composer.tsx:390
 msgid "We're sorry! The post you are replying to has been deleted."
 msgstr "很抱歉！你所回复的帖文已被删除。"
 
@@ -7968,7 +7999,7 @@ msgstr "你想如何命名你的新手包？"
 
 #: src/view/com/auth/SplashScreen.tsx:39
 #: src/view/com/auth/SplashScreen.web.tsx:99
-#: src/view/com/composer/Composer.tsx:563
+#: src/view/com/composer/Composer.tsx:678
 msgid "What's up?"
 msgstr "发生了什么新鲜事？"
 
@@ -8026,11 +8057,11 @@ msgstr "为什么应该审核这个用户？"
 msgid "Write a message"
 msgstr "编写私信"
 
-#: src/view/com/composer/Composer.tsx:620
+#: src/view/com/composer/Composer.tsx:753
 msgid "Write post"
 msgstr "撰写帖文"
 
-#: src/view/com/composer/Composer.tsx:562
+#: src/view/com/composer/Composer.tsx:676
 #: src/view/com/post-thread/PostThreadComposePrompt.tsx:71
 msgid "Write your reply"
 msgstr "撰写你的回复"
@@ -8091,7 +8122,7 @@ msgstr "你"
 msgid "You are in line."
 msgstr "轮到你了。"
 
-#: src/view/com/composer/state/video.ts:424
+#: src/view/com/composer/state/video.ts:423
 msgid "You are not allowed to upload videos."
 msgstr "你无法上传视频。"
 
@@ -8349,11 +8380,11 @@ msgstr "你选择隐藏了这条帖文中的词汇或标签。"
 msgid "You've reached the end of your feed! Find some more accounts to follow."
 msgstr "你已经浏览完你的订阅资讯源啦！寻找一些更多的账户关注吧。"
 
-#: src/view/com/composer/state/video.ts:435
+#: src/view/com/composer/state/video.ts:434
 msgid "You've reached your daily limit for video uploads (too many bytes)"
 msgstr "你已达到每日上传视频上限（文件太大）"
 
-#: src/view/com/composer/state/video.ts:439
+#: src/view/com/composer/state/video.ts:438
 msgid "You've reached your daily limit for video uploads (too many videos)"
 msgstr "你已达到每日上传视频上限（数量太多）"
 
@@ -8365,7 +8396,7 @@ msgstr "你的账户"
 msgid "Your account has been deleted"
 msgstr "你的账户已删除"
 
-#: src/view/com/composer/state/video.ts:443
+#: src/view/com/composer/state/video.ts:442
 msgid "Your account is not yet old enough to upload videos. Please try again later."
 msgstr "你的账户注册时间过短，暂时无法上传视频。请稍后再试。"
 
@@ -8429,7 +8460,7 @@ msgstr "你的隐藏词汇"
 msgid "Your password has been changed successfully!"
 msgstr "你的密码已成功更改！"
 
-#: src/view/com/composer/Composer.tsx:408
+#: src/view/com/composer/Composer.tsx:441
 msgid "Your post has been published"
 msgstr "你的帖文已发布"
 
@@ -8445,7 +8476,7 @@ msgstr "你的个人资料"
 msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
 msgstr "其他 Bluesky 用户将无法再看到你的个人资料、帖文、列表与其他相关信息，你可以随时登录以重新激活你的账户。"
 
-#: src/view/com/composer/Composer.tsx:407
+#: src/view/com/composer/Composer.tsx:440
 msgid "Your reply has been published"
 msgstr "你的回复已发布"
 
