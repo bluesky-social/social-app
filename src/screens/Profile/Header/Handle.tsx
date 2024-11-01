@@ -47,7 +47,7 @@ export function ProfileHeaderHandle({
                 a.rounded_xs,
                 {borderColor: t.palette.contrast_200},
               ]
-            : [a.text_md, a.leading_tight, t.atoms.text_contrast_medium],
+            : [a.text_md, a.leading_snug, t.atoms.text_contrast_medium],
           web({wordBreak: 'break-all'}),
         ]}>
         {invalidHandle ? _(msg`⚠Invalid Handle`) : `@${profile.handle}`}
