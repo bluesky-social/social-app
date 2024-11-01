@@ -21,12 +21,11 @@ function useImageAspectRatio({
   src: string
   knownDimensions: Dimensions | null
 }) {
-  const dims = useImageDimensions({src, knownDimensions})
+  const [raw] = useImageDimensions({src, knownDimensions})
   let constrained: number | undefined
   let max: number | undefined
   let isCropped: boolean | undefined
-  if (dims !== undefined) {
-    const raw = calc(dims)
+  if (raw !== undefined) {
     const ratio = 1 / 2 // max of 1:2 ratio in feeds
     constrained = Math.max(raw, ratio)
     max = Math.max(raw, 0.25) // max of 1:4 in thread
@@ -226,11 +225,4 @@ export function AutoSizedImage({
       </ConstrainedImage>
     )
   }
-}
-
-function calc(dim: Dimensions) {
-  if (dim.width === 0 || dim.height === 0) {
-    return 1
-  }
-  return dim.width / dim.height
 }

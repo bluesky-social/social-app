@@ -52,7 +52,7 @@ const ImageItem = ({
   isScrollViewBeingDragged,
 }: Props) => {
   const [isScaled, setIsScaled] = useState(false)
-  const imageDimensions = useImageDimensions({
+  const [_aspectRatio, imageDimensions] = useImageDimensions({
     src: imageSrc.uri,
     knownDimensions: imageSrc.dimensions,
   })

@@ -47,7 +47,7 @@ const ImageItem = ({
   const scrollViewRef = useAnimatedRef<Animated.ScrollView>()
   const translationY = useSharedValue(0)
   const [scaled, setScaled] = useState(false)
-  const imageDimensions = useImageDimensions({
+  const [_aspectRatio, imageDimensions] = useImageDimensions({
     src: imageSrc.uri,
     knownDimensions: imageSrc.dimensions,
   })
@@ -182,7 +182,7 @@ const styles = StyleSheet.create({
 })
 
 const getZoomRectAfterDoubleTap = (
-  imageDimensions: ImageDimensions | null,
+  imageDimensions: ImageDimensions | undefined,
   touchX: number,
   touchY: number,
 ): {

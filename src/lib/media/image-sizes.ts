@@ -61,11 +61,11 @@ export function useImageDimensions({
 }: {
   src: string
   knownDimensions: Dimensions | null
-}) {
-  const [dims, setDims] = useState(() => knownDimensions ?? get(src) ?? null)
+}): [number | undefined, Dimensions | undefined] {
+  const [dims, setDims] = useState(() => knownDimensions ?? get(src))
   const [prevSrc, setPrevSrc] = useState(src)
   if (src !== prevSrc) {
-    setDims(knownDimensions ?? get(src) ?? null)
+    setDims(knownDimensions ?? get(src))
     setPrevSrc(src)
   }
 
@@ -81,5 +81,13 @@ export function useImageDimensions({
     }
   }, [dims, setDims, src])
 
-  return dims
+  let aspectRatio: number | undefined
+  if (dims) {
+    aspectRatio = dims.width / dims.height
+    if (Number.isNaN(aspectRatio)) {
+      aspectRatio = undefined
+    }
+  }
+
+  return [aspectRatio, dims]
 }
