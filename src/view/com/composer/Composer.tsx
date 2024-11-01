@@ -736,6 +736,7 @@ let ComposerPost = React.memo(function ComposerPost({
           placeholder={selectTextInputPlaceholder}
           autoFocus
           webForceMinHeight={forceMinHeight}
+          isActive={isActive}
           setRichText={rt => {
             dispatchPost({type: 'update_richtext', richtext: rt})
           }}
