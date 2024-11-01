@@ -24,18 +24,11 @@ export function useImageAspectRatio({
   const [raw, setAspectRatio] = React.useState<number>(
     dimensions ? calc(dimensions) : 1,
   )
-  // this basically controls the width of the image
-  const {isCropped, constrained, max} = React.useMemo(() => {
-    const ratio = 1 / 2 // max of 1:2 ratio in feeds
-    const constrained = Math.max(raw, ratio)
-    const max = Math.max(raw, 0.25) // max of 1:4 in thread
-    const isCropped = raw < constrained
-    return {
-      isCropped,
-      constrained,
-      max,
-    }
-  }, [raw])
+
+  const ratio = 1 / 2 // max of 1:2 ratio in feeds
+  const constrained = Math.max(raw, ratio)
+  const max = Math.max(raw, 0.25) // max of 1:4 in thread
+  const isCropped = raw < constrained
 
   React.useEffect(() => {
     let aborted = false
