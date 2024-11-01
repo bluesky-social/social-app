@@ -71,7 +71,6 @@ export function ProfileSubpageHeader({
       avatar // TODO && !(view.moderation.avatar.blur && view.moderation.avatar.noOverride)
     ) {
       openLightbox({
-        type: 'images',
         images: [
           {
             uri: avatar,
