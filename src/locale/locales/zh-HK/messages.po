@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-01 05:06\n"
+"PO-Revision-Date: 2024-11-01 07:21\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional, Hong Kong\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -337,7 +337,7 @@ msgstr "<0>你</0>同<1> </1><2>{0} </2>已經喺你嘅新手包裏面"
 
 #: src/screens/Profile/Header/Handle.tsx:53
 msgid "⚠Invalid Handle"
-msgstr "⚠無效嘅帳戶頭銜"
+msgstr "⚠無效嘅帳號頭銜"
 
 #: src/components/dialogs/MutedWords.tsx:193
 msgid "24 hours"
@@ -395,49 +395,49 @@ msgstr "無障礙設定"
 #: src/view/screens/Settings/index.tsx:325
 #: src/view/screens/Settings/index.tsx:728
 msgid "Account"
-msgstr "帳戶"
+msgstr "帳號"
 
 #: src/view/com/profile/ProfileMenu.tsx:132
 msgid "Account blocked"
-msgstr "已經封鎖帳戶"
+msgstr "已經封鎖帳號"
 
 #: src/view/com/profile/ProfileMenu.tsx:145
 msgid "Account followed"
-msgstr "已經跟隨帳戶"
+msgstr "已經跟隨帳號"
 
 #: src/view/com/profile/ProfileMenu.tsx:108
 msgid "Account muted"
-msgstr "已經靜音帳戶"
+msgstr "已經靜音帳號"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:102
 #: src/lib/moderation/useModerationCauseDescription.ts:96
 msgid "Account Muted"
-msgstr "已經靜音帳戶"
+msgstr "已經靜音帳號"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:88
 msgid "Account Muted by List"
-msgstr "帳戶已俾清單靜音"
+msgstr "帳號已俾清單靜音"
 
 #: src/view/com/util/AccountDropdownBtn.tsx:43
 msgid "Account options"
-msgstr "帳戶設定"
+msgstr "帳號設定"
 
 #: src/view/com/util/AccountDropdownBtn.tsx:59
 msgid "Account removed from quick access"
-msgstr "已經喺快速存取中移除帳戶"
+msgstr "已經喺快速存取中移除帳號"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:137
 #: src/view/com/profile/ProfileMenu.tsx:122
 msgid "Account unblocked"
-msgstr "已經解除封鎖帳戶"
+msgstr "已經解除封鎖帳號"
 
 #: src/view/com/profile/ProfileMenu.tsx:157
 msgid "Account unfollowed"
-msgstr "已經刪追帳戶"
+msgstr "已經刪追帳號"
 
 #: src/view/com/profile/ProfileMenu.tsx:98
 msgid "Account unmuted"
-msgstr "已經取消靜音帳戶"
+msgstr "已經取消靜音帳號"
 
 #: src/components/dialogs/MutedWords.tsx:328
 #: src/view/com/modals/ListAddRemoveUsers.tsx:269
@@ -468,7 +468,7 @@ msgstr "將用戶新增到呢個清單"
 #: src/view/screens/Settings/index.tsx:411
 #: src/view/screens/Settings/index.tsx:420
 msgid "Add account"
-msgstr "新增帳戶"
+msgstr "新增帳號"
 
 #: src/view/com/composer/GifAltText.tsx:76
 #: src/view/com/composer/GifAltText.tsx:144
@@ -487,7 +487,7 @@ msgstr "新增 ALT 文字（可選）"
 #: src/screens/Settings/Settings.tsx:76
 #: src/screens/Settings/Settings.tsx:88
 msgid "Add another account"
-msgstr "新增另一個帳戶"
+msgstr "加多個帳號"
 
 #: src/view/com/composer/Composer.tsx:677
 msgid "Add another post"
@@ -588,7 +588,7 @@ msgstr "演算法訓練完成！"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:381
 msgid "All accounts have been followed!"
-msgstr "已經跟隨所有帳戶！"
+msgstr "已經跟隨所有帳號！"
 
 #: src/view/screens/Feeds.tsx:735
 msgid "All the feeds you've saved, right in one place."
@@ -702,7 +702,7 @@ msgstr "揀影片嗰陣發生錯誤"
 #: src/screens/StarterPack/StarterPackScreen.tsx:347
 #: src/screens/StarterPack/StarterPackScreen.tsx:369
 msgid "An error occurred while trying to follow all"
-msgstr "跟隨所有帳戶時發生錯誤"
+msgstr "跟隨所有帳號時發生錯誤"
 
 #: src/view/com/composer/state/video.ts:448
 msgid "An error occurred while uploading the video."
@@ -958,20 +958,20 @@ msgstr "封鎖"
 #: src/components/dms/ConvoMenu.tsx:188
 #: src/components/dms/ConvoMenu.tsx:192
 msgid "Block account"
-msgstr "封鎖帳戶"
+msgstr "封鎖帳號"
 
 #: src/view/com/profile/ProfileMenu.tsx:280
 #: src/view/com/profile/ProfileMenu.tsx:287
 msgid "Block Account"
-msgstr "封鎖帳戶"
+msgstr "封鎖帳號"
 
 #: src/view/com/profile/ProfileMenu.tsx:324
 msgid "Block Account?"
-msgstr "封鎖帳戶？"
+msgstr "封鎖帳號？"
 
 #: src/view/screens/ProfileList.tsx:643
 msgid "Block accounts"
-msgstr "封鎖帳戶"
+msgstr "封鎖帳號"
 
 #: src/view/screens/ProfileList.tsx:747
 msgid "Block list"
@@ -979,7 +979,7 @@ msgstr "封鎖清單"
 
 #: src/view/screens/ProfileList.tsx:742
 msgid "Block these accounts?"
-msgstr "封鎖呢啲帳戶？"
+msgstr "封鎖呢啲帳號？"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:83
 msgid "Blocked"
@@ -987,20 +987,20 @@ msgstr "已被封鎖"
 
 #: src/screens/Moderation/index.tsx:281
 msgid "Blocked accounts"
-msgstr "封鎖咗帳戶"
+msgstr "封鎖咗帳號"
 
 #: src/Navigation.tsx:153
 #: src/view/screens/ModerationBlockedAccounts.tsx:108
 msgid "Blocked Accounts"
-msgstr "封鎖咗帳戶"
+msgstr "封鎖咗帳號"
 
 #: src/view/com/profile/ProfileMenu.tsx:336
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
-msgstr "俾封鎖嘅帳戶唔可以喺你嘅討論串裏面回覆、提及你或者以其他方式同你互動。"
+msgstr "俾封鎖嘅帳號唔可以喺你嘅討論串裏面回覆、提及你或者以其他方式同你互動。"
 
 #: src/view/screens/ModerationBlockedAccounts.tsx:116
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you. You will not see their content and they will be prevented from seeing yours."
-msgstr "俾封鎖嘅帳戶唔可以喺你嘅討論串裏面回覆、提及你或者以其他方式同你互動。你唔會睇到佢哋嘅內容，而且佢哋會俾阻止睇到你嘅內容。"
+msgstr "俾封鎖嘅帳號唔可以喺你嘅討論串裏面回覆、提及你或者以其他方式同你互動。你唔會睇到佢哋嘅內容，而且佢哋會俾阻止睇到你嘅內容。"
 
 #: src/view/com/post-thread/PostThread.tsx:412
 msgid "Blocked post."
@@ -1008,15 +1008,15 @@ msgstr "封鎖咗嘅帖文。"
 
 #: src/screens/Profile/Sections/Labels.tsx:173
 msgid "Blocking does not prevent this labeler from placing labels on your account."
-msgstr "封鎖唔會阻止呢個標籤者喺你嘅帳戶上面放置標籤。"
+msgstr "封鎖唔會阻止呢個標籤者喺你嘅帳號上面放置標籤。"
 
 #: src/view/screens/ProfileList.tsx:744
 msgid "Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
-msgstr "封鎖係公開嘅。俾封鎖嘅帳戶唔可以喺你嘅討論串裏面回覆、提及你或者以其他方式同你互動。"
+msgstr "封鎖係公開嘅。俾封鎖嘅帳號唔可以喺你嘅討論串裏面回覆、提及你或者以其他方式同你互動。"
 
 #: src/view/com/profile/ProfileMenu.tsx:333
 msgid "Blocking will not prevent labels from being applied on your account, but it will stop this account from replying in your threads or interacting with you."
-msgstr "封鎖唔會阻止標籤喺你嘅帳戶上面套用，但係會阻止呢個帳戶喺你嘅討論串裏面回覆或者同你互動。"
+msgstr "封鎖唔會阻止標籤喺你嘅帳號上面套用，但係會阻止呢個帳號喺你嘅討論串裏面回覆或者同你互動。"
 
 #: src/view/com/auth/SplashScreen.web.tsx:173
 msgid "Blog"
@@ -1037,12 +1037,12 @@ msgstr "Bluesky 同朋友一齊好啲！"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:283
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
-msgstr "Bluesky 會喺你網絡裏面嘅人裏面揀一組推薦嘅帳戶。"
+msgstr "Bluesky 會喺你網絡裏面嘅人裏面揀一組推薦嘅帳號。"
 
 #: src/screens/Moderation/index.tsx:576
 #: src/screens/Settings/components/PwiOptOut.tsx:92
 msgid "Bluesky will not show your profile and posts to logged-out users. Other apps may not honor this request. This does not make your account private."
-msgstr "Bluesky 唔會向已登出用戶顯示你嘅個人檔案同帖文，但其他 App 未必會聽佢支笛。你嘅帳戶唔會成為私帳。"
+msgstr "Bluesky 唔會向已登出用戶顯示你嘅個人檔案同帖文，但其他 App 未必會聽佢支笛。你嘅帳號唔會成為私帳。"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:53
 msgid "Blur images"
@@ -1059,7 +1059,7 @@ msgstr "書"
 
 #: src/components/FeedInterstitials.tsx:350
 msgid "Browse more accounts on the Explore page"
-msgstr "喺探索頁面瀏覽更多帳戶"
+msgstr "喺探索頁面瀏覽更多帳號"
 
 #: src/components/FeedInterstitials.tsx:483
 msgid "Browse more feeds on the Explore page"
@@ -1100,15 +1100,15 @@ msgstr "由 <0/>"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:81
 msgid "By creating an account you agree to the <0>Privacy Policy</0>."
-msgstr "建立帳戶，即係你同意<0>私隱政策</0>。"
+msgstr "建立帳號，即係你同意<0>私隱政策</0>。"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:48
 msgid "By creating an account you agree to the <0>Terms of Service</0> and <1>Privacy Policy</1>."
-msgstr "建立帳戶，即係你同意<0>服務條款</0>同<1>私隱政策</1>。"
+msgstr "建立帳號，即係你同意<0>服務條款</0>同<1>私隱政策</1>。"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:68
 msgid "By creating an account you agree to the <0>Terms of Service</0>."
-msgstr "建立帳戶，即係你同意<0>服務條款</0>。"
+msgstr "建立帳號，即係你同意<0>服務條款</0>。"
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:167
 msgid "by you"
@@ -1162,11 +1162,11 @@ msgstr "取消"
 #: src/view/com/modals/DeleteAccount.tsx:170
 #: src/view/com/modals/DeleteAccount.tsx:293
 msgid "Cancel account deletion"
-msgstr "取消帳戶刪除"
+msgstr "取消帳號刪除"
 
 #: src/view/com/modals/ChangeHandle.tsx:137
 msgid "Cancel change handle"
-msgstr "取消變更帳戶頭銜"
+msgstr "取消變更帳號頭銜"
 
 #: src/view/com/modals/CropImage.web.tsx:94
 msgid "Cancel image crop"
@@ -1229,14 +1229,14 @@ msgstr "變更電郵"
 
 #: src/view/screens/Settings/index.tsx:694
 msgid "Change handle"
-msgstr "變更帳戶頭銜"
+msgstr "變更帳號頭銜"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:88
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:93
 #: src/view/com/modals/ChangeHandle.tsx:149
 #: src/view/screens/Settings/index.tsx:705
 msgid "Change Handle"
-msgstr "變更帳戶頭銜"
+msgstr "變更帳號頭銜"
 
 #: src/view/com/modals/VerifyEmail.tsx:155
 msgid "Change my email"
@@ -1358,7 +1358,7 @@ msgstr "撳呢度"
 
 #: src/view/com/modals/DeleteAccount.tsx:208
 msgid "Click here for more information on deactivating your account"
-msgstr "撳呢度睇多啲有關停用你個帳戶嘅資訊"
+msgstr "撳呢度睇多啲有關停用你個帳號嘅資訊"
 
 #: src/view/com/modals/DeleteAccount.tsx:217
 msgid "Click here for more information."
@@ -1480,7 +1480,7 @@ msgstr "社區指南"
 
 #: src/screens/Onboarding/StepFinished.tsx:284
 msgid "Complete onboarding and start using your account"
-msgstr "完成呢個入門，然後開始使用你嘅帳戶"
+msgstr "完成呢個入門，然後開始使用你嘅帳號"
 
 #: src/screens/Signup/index.tsx:144
 msgid "Complete the challenge"
@@ -1529,7 +1529,7 @@ msgstr "確認內容語言設定"
 
 #: src/view/com/modals/DeleteAccount.tsx:283
 msgid "Confirm delete account"
-msgstr "確認刪除帳戶"
+msgstr "確認刪除帳號"
 
 #: src/screens/Moderation/index.tsx:315
 msgid "Confirm your age:"
@@ -1760,7 +1760,7 @@ msgstr "建立"
 
 #: src/view/screens/Settings/index.tsx:412
 msgid "Create a new Bluesky account"
-msgstr "建立一個 Bluesky 新帳戶"
+msgstr "建立一個 Bluesky 新帳號"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:153
 msgid "Create a QR code for a starter pack"
@@ -1779,16 +1779,16 @@ msgstr "幫我建立一個新手包"
 #: src/view/com/auth/SplashScreen.tsx:56
 #: src/view/com/auth/SplashScreen.web.tsx:117
 msgid "Create account"
-msgstr "建立帳戶"
+msgstr "建立帳號"
 
 #: src/screens/Signup/index.tsx:93
 msgid "Create Account"
-msgstr "建立帳戶"
+msgstr "建立帳號"
 
 #: src/components/dialogs/Signin.tsx:86
 #: src/components/dialogs/Signin.tsx:88
 msgid "Create an account"
-msgstr "建立一個帳戶"
+msgstr "建立一個帳號"
 
 #: src/screens/Onboarding/StepProfile/index.tsx:292
 msgid "Create an avatar instead"
@@ -1805,7 +1805,7 @@ msgstr "建立 App 密碼"
 #: src/view/com/auth/SplashScreen.tsx:48
 #: src/view/com/auth/SplashScreen.web.tsx:109
 msgid "Create new account"
-msgstr "建立新帳戶"
+msgstr "建立新帳號"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:101
 msgid "Create report for {0}"
@@ -1865,11 +1865,11 @@ msgstr "出生日期"
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:73
 #: src/view/screens/Settings/index.tsx:782
 msgid "Deactivate account"
-msgstr "停用帳戶"
+msgstr "停用帳號"
 
 #: src/view/screens/Settings/index.tsx:794
 msgid "Deactivate my account"
-msgstr "停用我嘅帳戶"
+msgstr "停用我嘅帳號"
 
 #: src/view/screens/Settings/index.tsx:849
 msgid "Debug Moderation"
@@ -1899,11 +1899,11 @@ msgstr "刪除"
 #: src/screens/Settings/AccountSettings.tsx:151
 #: src/view/screens/Settings/index.tsx:804
 msgid "Delete account"
-msgstr "刪除帳戶"
+msgstr "刪除帳號"
 
 #: src/view/com/modals/DeleteAccount.tsx:105
 msgid "Delete Account <0>\"</0><1>{0}</1><2>\"</2>"
-msgstr "刪除帳戶 <0>\"</0><1>{0}</1><2>\"</2>"
+msgstr "刪除帳號 <0>\"</0><1>{0}</1><2>\"</2>"
 
 #: src/screens/Settings/AppPasswords.tsx:179
 #: src/view/screens/AppPasswords.tsx:249
@@ -1938,11 +1938,11 @@ msgstr "幫我刪除訊息"
 
 #: src/view/com/modals/DeleteAccount.tsx:286
 msgid "Delete my account"
-msgstr "刪除我嘅帳戶"
+msgstr "刪除我嘅帳號"
 
 #: src/view/screens/Settings/index.tsx:816
 msgid "Delete My Account…"
-msgstr "刪除我嘅帳戶…"
+msgstr "刪除我嘅帳號…"
 
 #: src/view/com/composer/Composer.tsx:763
 #: src/view/com/util/forms/PostDropdownBtn.tsx:653
@@ -2069,7 +2069,7 @@ msgstr "放棄發文？"
 #: src/screens/Settings/components/PwiOptOut.tsx:80
 #: src/screens/Settings/components/PwiOptOut.tsx:84
 msgid "Discourage apps from showing my account to logged-out users"
-msgstr "阻止 App 向登出嘅使用者顯示我嘅帳戶"
+msgstr "阻止 App 向登出嘅使用者顯示我嘅帳號"
 
 #: src/view/com/posts/FollowingEmptyState.tsx:70
 #: src/view/com/posts/FollowingEndOfFeed.tsx:71
@@ -2502,7 +2502,7 @@ msgstr "輸入你想用嘅網域"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:113
 msgid "Enter the email you used to create your account. We'll send you a \"reset code\" so you can set a new password."
-msgstr "輸入你用嚟建立帳戶嘅電郵地址。我哋會傳送「驗證碼」畀你，等你可以設定新密碼。"
+msgstr "輸入你用嚟建立帳號嘅電郵地址。我哋會傳送「驗證碼」畀你，等你可以設定新密碼。"
 
 #: src/components/dialogs/BirthDateSettings.tsx:107
 msgid "Enter your birth date"
@@ -2581,11 +2581,11 @@ msgstr "退出全螢幕"
 
 #: src/view/com/modals/DeleteAccount.tsx:294
 msgid "Exits account deletion process"
-msgstr "退出帳戶刪除過程"
+msgstr "退出帳號刪除過程"
 
 #: src/view/com/modals/ChangeHandle.tsx:138
 msgid "Exits handle change process"
-msgstr "退出帳戶頭銜變更過程"
+msgstr "退出帳號頭銜變更過程"
 
 #: src/view/com/modals/CropImage.web.tsx:95
 msgid "Exits image cropping process"
@@ -2677,7 +2677,7 @@ msgstr "外部媒體設定"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:553
 msgid "Failed to change handle. Please try again."
-msgstr "改唔到帳戶頭銜，請試多一次。"
+msgstr "改唔到帳號頭銜，請試多一次。"
 
 #: src/view/com/modals/AddAppPasswords.tsx:119
 #: src/view/com/modals/AddAppPasswords.tsx:123
@@ -2773,7 +2773,7 @@ msgstr "上載唔到影片"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:341
 msgid "Failed to verify handle. Please try again."
-msgstr "驗證唔到帳戶頭銜，請試多一次。"
+msgstr "驗證唔到帳號頭銜，請試多一次。"
 
 #: src/Navigation.tsx:229
 msgid "Feed"
@@ -2838,7 +2838,7 @@ msgstr "正在完成"
 #: src/view/com/posts/FollowingEmptyState.tsx:53
 #: src/view/com/posts/FollowingEndOfFeed.tsx:54
 msgid "Find accounts to follow"
-msgstr "搵帳戶嚟跟蹤"
+msgstr "搵帳號嚟跟蹤"
 
 #: src/view/screens/Search/Search.tsx:612
 msgid "Find posts and users on Bluesky"
@@ -2889,12 +2889,12 @@ msgstr "跟隨 {name}"
 
 #: src/components/ProgressGuide/List.tsx:54
 msgid "Follow 7 accounts"
-msgstr "跟隨 7 個帳戶"
+msgstr "跟隨 7 個帳號"
 
 #: src/view/com/profile/ProfileMenu.tsx:222
 #: src/view/com/profile/ProfileMenu.tsx:233
 msgid "Follow Account"
-msgstr "跟隨帳戶"
+msgstr "跟隨帳號"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:427
 #: src/screens/StarterPack/StarterPackScreen.tsx:434
@@ -2913,7 +2913,7 @@ msgstr "跟隨返嚟"
 
 #: src/view/screens/Search/Explore.tsx:334
 msgid "Follow more accounts to get connected to your interests and build your network."
-msgstr "跟隨更多帳戶，同你嘅興趣聯繫，同埋建立你嘅網絡。"
+msgstr "跟隨更多帳號，同你嘅興趣聯繫，同埋建立你嘅網絡。"
 
 #: src/components/KnownFollowers.tsx:231
 msgid "Followed by <0>{0}</0>"
@@ -3068,7 +3068,7 @@ msgstr "生成一個新手包"
 
 #: src/view/shell/Drawer.tsx:352
 msgid "Get help"
-msgstr "搵人幫手"
+msgstr "尋找協助"
 
 #: src/view/com/modals/VerifyEmail.tsx:197
 #: src/view/com/modals/VerifyEmail.tsx:199
@@ -3168,20 +3168,20 @@ msgstr "去到一半喇！"
 #: src/screens/Settings/AccountSettings.tsx:121
 #: src/view/com/modals/ChangeHandle.tsx:253
 msgid "Handle"
-msgstr "帳戶頭銜"
+msgstr "帳號頭銜"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:557
 msgid "Handle already taken. Please try a different one."
-msgstr "呢個帳戶頭銜已經攞咗，請試下唔同嘅。"
+msgstr "呢個帳號頭銜已經攞咗，請試下唔同嘅。"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:188
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:325
 msgid "Handle changed!"
-msgstr "帳戶頭銜變咗！"
+msgstr "帳號頭銜變咗！"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:561
 msgid "Handle too long. Please try a shorter one."
-msgstr "呢個帳戶頭銜太長，請試下短啲嘅。"
+msgstr "呢個帳號頭銜太長，請試下短啲嘅。"
 
 #: src/screens/Settings/AccessibilitySettings.tsx:80
 #: src/view/screens/AccessibilitySettings.tsx:128
@@ -3209,7 +3209,7 @@ msgstr "有冇麻煩？"
 #: src/view/shell/desktop/RightNav.tsx:99
 #: src/view/shell/Drawer.tsx:361
 msgid "Help"
-msgstr "幫手"
+msgstr "協助"
 
 #: src/screens/Onboarding/StepProfile/index.tsx:237
 msgid "Help people know you're not a bot by uploading a picture or creating an avatar."
@@ -3372,7 +3372,7 @@ msgstr "如果你移除咗呢個清單，之後就無辦法恢復。"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:247
 msgid "If you have your own domain, you can use that as your handle. This lets you self-verify your identity – <0>learn more</0>."
-msgstr "如果你有自己嘅網域，你可以用嗰個做你嘅帳戶頭銜。噉樣亦都可以畀你自我驗證你嘅身份——<0> 進一步瞭解 </0>。"
+msgstr "如果你有自己嘅網域，你可以用嗰個做你嘅帳號頭銜。噉樣亦都可以畀你自我驗證你嘅身份——<0> 進一步瞭解 </0>。"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:670
 msgid "If you remove this post, you won't be able to recover it."
@@ -3380,11 +3380,11 @@ msgstr "如果你移除咗呢篇帖文，之後就無辦法恢復。"
 
 #: src/view/com/modals/ChangePassword.tsx:149
 msgid "If you want to change your password, we will send you a code to verify that this is your account."
-msgstr "如果你想變更你嘅密碼，我哋會傳送一個驗證碼畀你嚟驗證呢個係咪你嘅帳戶。"
+msgstr "如果你想變更你嘅密碼，我哋會傳送一個驗證碼畀你嚟驗證呢個係咪你嘅帳號。"
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:92
 msgid "If you're trying to change your handle or email, do so before you deactivate."
-msgstr "如果你想變更你嘅帳戶頭銜或者電郵，喺你停用之前先咁做。"
+msgstr "如果你想變更你嘅帳號頭銜或者電郵，喺你停用之前先咁做。"
 
 #: src/lib/moderation/useReportOptions.ts:38
 msgid "Illegal and Urgent"
@@ -3416,7 +3416,7 @@ msgstr "輸入傳送去你電郵嘅驗證碼嚟重設密碼"
 
 #: src/view/com/modals/DeleteAccount.tsx:247
 msgid "Input confirmation code for account deletion"
-msgstr "輸入刪除帳戶嘅確認碼"
+msgstr "輸入刪除帳號嘅確認碼"
 
 #: src/view/com/modals/AddAppPasswords.tsx:175
 msgid "Input name for app password"
@@ -3428,7 +3428,7 @@ msgstr "輸入新密碼"
 
 #: src/view/com/modals/DeleteAccount.tsx:266
 msgid "Input password for account deletion"
-msgstr "輸入密碼嚟刪除帳戶"
+msgstr "輸入密碼嚟刪除帳號"
 
 #: src/screens/Login/LoginForm.tsx:270
 msgid "Input the code which has been emailed to you"
@@ -3448,7 +3448,7 @@ msgstr "輸入你首選嘅 hosting 供應商"
 
 #: src/screens/Signup/StepHandle.tsx:114
 msgid "Input your user handle"
-msgstr "輸入你嘅帳戶頭銜"
+msgstr "輸入你嘅帳號頭銜"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:50
 msgid "Interaction limited"
@@ -3465,7 +3465,7 @@ msgstr "雙重驗證確認碼無效。"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:563
 msgid "Invalid handle. Please try a different one."
-msgstr "無效嘅帳戶頭銜，請試下唔同嘅。"
+msgstr "無效嘅帳號頭銜，請試下唔同嘅。"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:265
 msgid "Invalid or unsupported post record"
@@ -3572,7 +3572,7 @@ msgstr "標籤係用戶同內容嘅註解。佢哋可以用嚟隱藏、警告同
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:71
 msgid "Labels on your account"
-msgstr "你個帳戶上面嘅標籤"
+msgstr "你個帳號上面嘅標籤"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:73
 msgid "Labels on your content"
@@ -3818,7 +3818,7 @@ msgstr "日誌"
 #: src/screens/Deactivated.tsx:209
 #: src/screens/Deactivated.tsx:215
 msgid "Log in or sign up"
-msgstr "登入或者建立帳戶"
+msgstr "登入或者建立帳號"
 
 #: src/screens/SignupQueued.tsx:155
 #: src/screens/SignupQueued.tsx:158
@@ -3834,7 +3834,7 @@ msgstr "登出咗嘅可見性"
 
 #: src/components/AccountList.tsx:65
 msgid "Login to account that is not listed"
-msgstr "登入冇列出嘅帳戶"
+msgstr "登入冇列出嘅帳號"
 
 #: src/view/shell/desktop/RightNav.tsx:104
 msgid "Logo by <0/>"
@@ -3944,7 +3944,7 @@ msgstr "聊天室"
 
 #: src/lib/moderation/useReportOptions.ts:47
 msgid "Misleading Account"
-msgstr "誤導性帳戶"
+msgstr "誤導性帳號"
 
 #: src/lib/moderation/useReportOptions.ts:67
 msgid "Misleading Post"
@@ -4061,11 +4061,11 @@ msgstr "靜音 {truncatedTag}"
 #: src/view/com/profile/ProfileMenu.tsx:259
 #: src/view/com/profile/ProfileMenu.tsx:266
 msgid "Mute Account"
-msgstr "靜音帳戶"
+msgstr "靜音帳號"
 
 #: src/view/screens/ProfileList.tsx:631
 msgid "Mute accounts"
-msgstr "靜音帳戶"
+msgstr "靜音帳號"
 
 #: src/components/TagMenu/index.tsx:205
 msgid "Mute all {displayTag} posts"
@@ -4086,7 +4086,7 @@ msgstr "靜音清單"
 
 #: src/view/screens/ProfileList.tsx:732
 msgid "Mute these accounts?"
-msgstr "將呢啲帳戶靜音？"
+msgstr "將呢啲帳號靜音？"
 
 #: src/components/dialogs/MutedWords.tsx:185
 msgid "Mute this word for 24 hours"
@@ -4124,16 +4124,16 @@ msgstr "靜音字詞同標籤"
 
 #: src/screens/Moderation/index.tsx:266
 msgid "Muted accounts"
-msgstr "靜音咗帳戶"
+msgstr "靜音咗帳號"
 
 #: src/Navigation.tsx:148
 #: src/view/screens/ModerationMutedAccounts.tsx:108
 msgid "Muted Accounts"
-msgstr "靜音咗帳戶"
+msgstr "靜音咗帳號"
 
 #: src/view/screens/ModerationMutedAccounts.tsx:116
 msgid "Muted accounts have their posts removed from your feed and from your notifications. Mutes are completely private."
-msgstr "靜音帳戶嘅帖文會喺你嘅動態同通知裏面移除。靜音係完全私人嘅。"
+msgstr "靜音帳號嘅帖文會喺你嘅動態同通知裏面移除。靜音係完全私人嘅。"
 
 #: src/lib/moderation/useModerationCauseDescription.ts:90
 msgid "Muted by \"{0}\""
@@ -4145,7 +4145,7 @@ msgstr "靜音字詞同標籤"
 
 #: src/view/screens/ProfileList.tsx:734
 msgid "Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them."
-msgstr "靜音係私人嘅。靜音帳戶可以同你互動，但係你唔會睇到佢哋嘅帖文或者收到佢哋嘅通知。"
+msgstr "靜音係私人嘅。靜音帳號可以同你互動，但係你唔會睇到佢哋嘅帖文或者收到佢哋嘅通知。"
 
 #: src/components/dialogs/BirthDateSettings.tsx:34
 #: src/components/dialogs/BirthDateSettings.tsx:37
@@ -4218,7 +4218,7 @@ msgstr "永遠唔好失去對你嘅跟隨者或者資料嘅存取權。"
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:533
 #: src/view/com/modals/ChangeHandle.tsx:508
 msgid "Nevermind, create a handle for me"
-msgstr "唔使喇，幫我建立個帳戶頭銜"
+msgstr "唔使喇，幫我建立個帳號頭銜"
 
 #: src/view/screens/Lists.tsx:84
 msgctxt "action"
@@ -4243,7 +4243,7 @@ msgstr "新字體設定 ✨"
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:209
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:356
 msgid "New handle"
-msgstr "新帳戶頭銜"
+msgstr "新帳號頭銜"
 
 #: src/components/dms/NewMessagesPill.tsx:92
 msgid "New messages"
@@ -4629,7 +4629,7 @@ msgstr "打開大頭相創作工具"
 
 #: src/screens/Settings/AccountSettings.tsx:117
 msgid "Open change handle dialog"
-msgstr "打開變更帳戶頭銜對話框"
+msgstr "打開變更帳號頭銜對話框"
 
 #: src/screens/Messages/components/ChatListItem.tsx:272
 #: src/screens/Messages/components/ChatListItem.tsx:273
@@ -4738,12 +4738,12 @@ msgstr "打開外部嵌入設定"
 #: src/view/com/auth/SplashScreen.tsx:50
 #: src/view/com/auth/SplashScreen.web.tsx:111
 msgid "Opens flow to create a new Bluesky account"
-msgstr "打開流程嚟建立一個新嘅 Bluesky 帳戶"
+msgstr "打開流程嚟建立一個新嘅 Bluesky 帳號"
 
 #: src/view/com/auth/SplashScreen.tsx:64
 #: src/view/com/auth/SplashScreen.web.tsx:125
 msgid "Opens flow to sign into your existing Bluesky account"
-msgstr "打開流程嚟登入你現有嘅 Bluesky 帳戶"
+msgstr "打開流程嚟登入你現有嘅 Bluesky 帳號"
 
 #: src/view/com/composer/photos/SelectGifBtn.tsx:36
 msgid "Opens GIF select dialog"
@@ -4755,11 +4755,11 @@ msgstr "打開邀請碼清單"
 
 #: src/view/screens/Settings/index.tsx:784
 msgid "Opens modal for account deactivation confirmation"
-msgstr "開啟帳戶停用確認模式"
+msgstr "開啟帳號停用確認模式"
 
 #: src/view/screens/Settings/index.tsx:806
 msgid "Opens modal for account deletion confirmation. Requires email code"
-msgstr "開啟帳戶刪除確認模式，需要電郵驗證碼"
+msgstr "開啟帳號刪除確認模式，需要電郵驗證碼"
 
 #: src/view/screens/Settings/index.tsx:741
 msgid "Opens modal for changing your Bluesky password"
@@ -4767,11 +4767,11 @@ msgstr "開啟變更你嘅 Bluesky 密碼嘅模式"
 
 #: src/view/screens/Settings/index.tsx:696
 msgid "Opens modal for choosing a new Bluesky handle"
-msgstr "開啟揀新嘅 Bluesky 帳戶頭銜嘅模式"
+msgstr "開啟揀新嘅 Bluesky 帳號頭銜嘅模式"
 
 #: src/view/screens/Settings/index.tsx:764
 msgid "Opens modal for downloading your Bluesky account data (repository)"
-msgstr "開啟下載你嘅 Bluesky 帳戶資料嘅模式（存儲庫）"
+msgstr "開啟下載你嘅 Bluesky 帳號資料嘅模式（存儲庫）"
 
 #: src/view/screens/Settings/index.tsx:972
 msgid "Opens modal for email verification"
@@ -4846,11 +4846,11 @@ msgstr "或者將呢啲選項組合埋一齊："
 
 #: src/screens/Deactivated.tsx:206
 msgid "Or, continue with another account."
-msgstr "或者，繼續用另一個帳戶。"
+msgstr "或者，繼續用另一個帳號。"
 
 #: src/screens/Deactivated.tsx:193
 msgid "Or, log into one of your other accounts."
-msgstr "或者，登入你嘅其他帳戶。"
+msgstr "或者，登入你嘅其他帳號。"
 
 #: src/lib/moderation/useReportOptions.ts:27
 #: src/view/com/composer/labels/LabelsBtn.tsx:183
@@ -4859,11 +4859,11 @@ msgstr "其他"
 
 #: src/components/AccountList.tsx:83
 msgid "Other account"
-msgstr "其他帳戶"
+msgstr "其他帳號"
 
 #: src/view/screens/Settings/index.tsx:389
 msgid "Other accounts"
-msgstr "其他帳戶"
+msgstr "其他帳號"
 
 #: src/view/com/composer/select-language/SelectLangBtn.tsx:93
 msgid "Other..."
@@ -5007,7 +5007,7 @@ msgstr "播放 GIF"
 
 #: src/screens/Signup/state.ts:217
 msgid "Please choose your handle."
-msgstr "請輸入你嘅帳戶頭銜。"
+msgstr "請輸入你嘅帳號頭銜。"
 
 #: src/screens/Signup/state.ts:210
 #: src/screens/Signup/StepInfo/index.tsx:114
@@ -5193,7 +5193,7 @@ msgstr "撳嚟重試"
 
 #: src/components/KnownFollowers.tsx:124
 msgid "Press to view followers of this account that you also follow"
-msgstr "撳一下就可以睇到你亦都跟隨緊嘅呢個帳戶嘅跟隨者"
+msgstr "撳一下就可以睇到你亦都跟隨緊嘅呢個帳號嘅跟隨者"
 
 #: src/view/com/lightbox/Lightbox.web.tsx:146
 msgid "Previous image"
@@ -5271,11 +5271,11 @@ msgstr "個人檔案更新咗"
 #: src/screens/Settings/AccountSettings.tsx:76
 #: src/screens/Settings/AccountSettings.tsx:92
 msgid "Protect your account"
-msgstr "保護你嘅帳戶"
+msgstr "保護你嘅帳號"
 
 #: src/view/screens/Settings/index.tsx:985
 msgid "Protect your account by verifying your email."
-msgstr "驗證你嘅電郵嚟保護你嘅帳戶。"
+msgstr "驗證你嘅電郵嚟保護你嘅帳號。"
 
 #: src/screens/Onboarding/StepFinished.tsx:237
 msgid "Public"
@@ -5349,7 +5349,7 @@ msgstr "隨機顯示（又名試試手氣）"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:566
 msgid "Rate limit exceeded – you've tried to change your handle too many times in a short period. Please wait a minute before trying again."
-msgstr "超過咗速率限制——你喺短時間內試過變更帳戶頭銜太多次，請等一陣先再試。"
+msgstr "超過咗速率限制——你喺短時間內試過變更帳號頭銜太多次，請等一陣先再試。"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:585
 #: src/view/com/util/forms/PostDropdownBtn.tsx:595
@@ -5358,7 +5358,7 @@ msgstr "重新附上引文"
 
 #: src/screens/Deactivated.tsx:147
 msgid "Reactivate your account"
-msgstr "重新啟動你嘅帳戶"
+msgstr "重新啟動你嘅帳號"
 
 #: src/view/com/auth/SplashScreen.web.tsx:171
 msgid "Read the Bluesky blog"
@@ -5412,7 +5412,7 @@ msgstr "喺新手包裏面移除 {displayName}"
 
 #: src/view/com/util/AccountDropdownBtn.tsx:26
 msgid "Remove account"
-msgstr "移除帳戶"
+msgstr "移除帳號"
 
 #: src/view/com/composer/ExternalEmbedRemoveBtn.tsx:16
 msgid "Remove attachment"
@@ -5606,7 +5606,7 @@ msgstr "上報"
 #: src/view/com/profile/ProfileMenu.tsx:299
 #: src/view/com/profile/ProfileMenu.tsx:302
 msgid "Report Account"
-msgstr "上報帳戶"
+msgstr "上報帳號"
 
 #: src/components/dms/ConvoMenu.tsx:197
 #: src/components/dms/ConvoMenu.tsx:200
@@ -5872,7 +5872,7 @@ msgstr "儲存變更"
 
 #: src/view/com/modals/ChangeHandle.tsx:158
 msgid "Save handle change"
-msgstr "儲存帳戶頭銜變更"
+msgstr "儲存帳號頭銜變更"
 
 #: src/components/StarterPack/ShareDialog.tsx:151
 #: src/components/StarterPack/ShareDialog.tsx:158
@@ -5885,7 +5885,7 @@ msgstr "儲存圖片裁剪"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:228
 msgid "Save new handle"
-msgstr "儲存新帳戶頭銜"
+msgstr "儲存新帳號頭銜"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:179
 msgid "Save QR code"
@@ -5915,7 +5915,7 @@ msgstr "儲存你個人檔案嘅任何變更"
 
 #: src/view/com/modals/ChangeHandle.tsx:159
 msgid "Saves handle change to {handle}"
-msgstr "將帳戶頭銜變更為 {handle}"
+msgstr "將帳號頭銜變更為 {handle}"
 
 #: src/view/com/modals/CropImage.web.tsx:105
 msgid "Saves image crop settings"
@@ -6020,7 +6020,7 @@ msgstr "揀一個顏色"
 
 #: src/screens/Login/ChooseAccountForm.tsx:77
 msgid "Select account"
-msgstr "揀帳戶"
+msgstr "揀帳號"
 
 #: src/screens/Onboarding/StepProfile/AvatarCircle.tsx:66
 msgid "Select an avatar"
@@ -6036,7 +6036,7 @@ msgstr "揀內容語言"
 
 #: src/screens/Login/index.tsx:117
 msgid "Select from an existing account"
-msgstr "喺現有帳戶裏面揀"
+msgstr "喺現有帳號裏面揀"
 
 #: src/view/com/composer/photos/SelectGifBtn.tsx:35
 msgid "Select GIF"
@@ -6176,7 +6176,7 @@ msgstr "透過聊天室傳送"
 
 #: src/view/com/modals/DeleteAccount.tsx:151
 msgid "Sends email with confirmation code for account deletion"
-msgstr "傳送電郵，裏面有確認碼，用嚟刪除帳戶"
+msgstr "傳送電郵，裏面有確認碼，用嚟刪除帳號"
 
 #: src/view/com/auth/server-input/index.tsx:111
 msgid "Server address"
@@ -6212,7 +6212,7 @@ msgstr "呢個係實驗功能：將呢個設定為「啟用」就可以喺「Fol
 
 #: src/screens/Onboarding/Layout.tsx:48
 msgid "Set up your account"
-msgstr "設定你嘅帳戶"
+msgstr "設定你嘅帳號"
 
 #: src/view/com/modals/ChangeHandle.tsx:254
 msgid "Sets Bluesky username"
@@ -6461,11 +6461,11 @@ msgstr "以..."
 
 #: src/components/dialogs/Signin.tsx:75
 msgid "Sign in or create your account to join the conversation!"
-msgstr "登入或者建立帳戶嚟加入對話！"
+msgstr "登入或者建立帳號嚟加入對話！"
 
 #: src/components/dialogs/Signin.tsx:46
 msgid "Sign into Bluesky or create a new account"
-msgstr "登入 Bluesky 或者建立新帳戶"
+msgstr "登入 Bluesky 或者建立新帳號"
 
 #: src/screens/Settings/Settings.tsx:173
 #: src/screens/Settings/Settings.tsx:175
@@ -6477,7 +6477,7 @@ msgstr "登出"
 #: src/view/screens/Settings/index.tsx:430
 #: src/view/screens/Settings/index.tsx:440
 msgid "Sign out of all accounts"
-msgstr "登出所有帳戶"
+msgstr "登出所有帳號"
 
 #: src/screens/Settings/Settings.tsx:183
 msgid "Sign out?"
@@ -6492,7 +6492,7 @@ msgstr "登出？"
 #: src/view/shell/NavSignupCard.tsx:47
 #: src/view/shell/NavSignupCard.tsx:52
 msgid "Sign up"
-msgstr "建立帳戶"
+msgstr "建立帳號"
 
 #: src/components/moderation/ScreenHider.tsx:91
 #: src/lib/moderation/useGlobalLabelStrings.ts:28
@@ -6511,11 +6511,11 @@ msgstr "以 @{0} 身份登入"
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:299
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:306
 msgid "Signup without a starter pack"
-msgstr "建立帳戶但唔使用新手包"
+msgstr "建立帳號但唔使用新手包"
 
 #: src/components/FeedInterstitials.tsx:316
 msgid "Similar accounts"
-msgstr "相似帳戶"
+msgstr "相似帳號"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:231
 #: src/screens/StarterPack/Wizard/index.tsx:200
@@ -6686,7 +6686,7 @@ msgstr "搞掂！"
 
 #: src/view/screens/Search/Explore.tsx:332
 msgid "Suggested accounts"
-msgstr "建議帳戶"
+msgstr "建議帳號"
 
 #: src/components/FeedInterstitials.tsx:318
 msgid "Suggested for you"
@@ -6706,12 +6706,12 @@ msgstr "支持"
 #: src/screens/Settings/Settings.tsx:75
 #: src/screens/Settings/Settings.tsx:86
 msgid "Switch account"
-msgstr "切換帳戶"
+msgstr "切換帳號"
 
 #: src/components/dialogs/SwitchAccount.tsx:46
 #: src/components/dialogs/SwitchAccount.tsx:49
 msgid "Switch Account"
-msgstr "切換帳戶"
+msgstr "切換帳號"
 
 #: src/view/screens/Settings/index.tsx:132
 msgid "Switch to {0}"
@@ -6719,7 +6719,7 @@ msgstr "切換去 {0}"
 
 #: src/view/screens/Settings/index.tsx:133
 msgid "Switches the account you are logged in to"
-msgstr "切換你登入咗嘅帳戶"
+msgstr "切換你登入咗嘅帳號"
 
 #: src/components/dialogs/nuxs/NeueTypography.tsx:78
 #: src/screens/Settings/AppearanceSettings.tsx:84
@@ -6837,7 +6837,7 @@ msgstr "當中包含以下內容："
 
 #: src/screens/Signup/StepHandle.tsx:51
 msgid "That handle is already taken."
-msgstr "嗰個帳戶頭銜已經攞咗。"
+msgstr "嗰個帳號頭銜已經攞咗。"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:103
 #: src/screens/StarterPack/StarterPackScreen.tsx:104
@@ -6855,7 +6855,7 @@ msgstr "就咁先！"
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:279
 #: src/view/com/profile/ProfileMenu.tsx:329
 msgid "The account will be able to interact with you after unblocking."
-msgstr "呢個帳戶喺解除封鎖之後就可以同你互動。"
+msgstr "呢個帳號喺解除封鎖之後就可以同你互動。"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:118
 #: src/lib/moderation/useModerationCauseDescription.ts:126
@@ -6893,7 +6893,7 @@ msgstr "呢個動態已經用「Discover」取代。"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:58
 msgid "The following labels were applied to your account."
-msgstr "以下標籤已經套用到你嘅帳戶。"
+msgstr "以下標籤已經套用到你嘅帳號。"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:59
 msgid "The following labels were applied to your content."
@@ -6939,7 +6939,7 @@ msgstr "主題"
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:86
 msgid "There is no time limit for account deactivation, come back any time."
-msgstr "帳戶停用無時間限制，隨時返嚟。"
+msgstr "帳號停用無時間限制，隨時返嚟。"
 
 #: src/components/dialogs/GifSelect.tsx:226
 msgid "There was an issue connecting to Tenor."
@@ -7038,7 +7038,7 @@ msgstr "一個估唔到嘅問題。如果你發生呢件事，請話我哋知！
 
 #: src/screens/SignupQueued.tsx:112
 msgid "There's been a rush of new users to Bluesky! We'll activate your account as soon as we can."
-msgstr "新用戶湧入 Bluesky ！我哋會盡快啟動你嘅帳戶。"
+msgstr "新用戶湧入 Bluesky ！我哋會盡快啟動你嘅帳號。"
 
 #: src/screens/Settings/FollowingFeedPreferences.tsx:55
 msgid "These settings only apply to the Following feed."
@@ -7050,11 +7050,11 @@ msgstr "呢個 {screenDescription} 已經俾標記咗："
 
 #: src/components/moderation/ScreenHider.tsx:106
 msgid "This account has requested that users sign in to view their profile."
-msgstr "呢個帳戶要求用戶登入嚟睇佢哋嘅個人檔案。"
+msgstr "呢個帳號要求用戶登入嚟睇佢哋嘅個人檔案。"
 
 #: src/components/dms/BlockedByListDialog.tsx:34
 msgid "This account is blocked by one or more of your moderation lists. To unblock, please visit the lists directly and remove this user."
-msgstr "呢個帳戶俾你嘅一個或者多個審核清單封鎖。如果要解除封鎖，請直接去清單同埋移除呢個用戶。"
+msgstr "呢個帳號俾你嘅一個或者多個審核清單封鎖。如果要解除封鎖，請直接去清單同埋移除呢個用戶。"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:246
 msgid "This appeal will be sent to <0>{sourceName}</0>."
@@ -7087,11 +7087,11 @@ msgstr "呢個內容唔可以用，因為其中一個涉及嘅使用者封鎖咗
 
 #: src/view/com/posts/FeedErrorMessage.tsx:114
 msgid "This content is not viewable without a Bluesky account."
-msgstr "如果冇 Bluesky 帳戶，呢啲內容就睇唔到。"
+msgstr "如果冇 Bluesky 帳號，呢啲內容就睇唔到。"
 
 #: src/screens/Messages/components/ChatListItem.tsx:266
 msgid "This conversation is with a deleted or a deactivated account. Press for options."
-msgstr "呢個對話係同一個刪除咗或者停用咗嘅帳戶進行。撳一下就可以睇到選項。"
+msgstr "呢個對話係同一個刪除咗或者停用咗嘅帳號進行。撳一下就可以睇到選項。"
 
 #: src/view/screens/Settings/ExportCarDialog.tsx:94
 msgid "This feature is in beta. You can read more about repository exports in <0>this blogpost</0>."
@@ -7117,7 +7117,7 @@ msgstr "呢個動態唔再可用，我哋改為顯示 <0>Discover</0>。"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:559
 msgid "This handle is reserved. Please try a different one."
-msgstr "呢個帳戶頭銜係預留嘅，請試下唔同嘅。"
+msgstr "呢個帳號頭銜係預留嘅，請試下唔同嘅。"
 
 #: src/components/dialogs/BirthDateSettings.tsx:40
 msgid "This information is not shared with other users."
@@ -7374,17 +7374,17 @@ msgstr "解除封鎖"
 #: src/components/dms/ConvoMenu.tsx:188
 #: src/components/dms/ConvoMenu.tsx:192
 msgid "Unblock account"
-msgstr "解除封鎖帳戶"
+msgstr "解除封鎖帳號"
 
 #: src/view/com/profile/ProfileMenu.tsx:279
 #: src/view/com/profile/ProfileMenu.tsx:285
 msgid "Unblock Account"
-msgstr "解除封鎖帳戶"
+msgstr "解除封鎖帳號"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:277
 #: src/view/com/profile/ProfileMenu.tsx:323
 msgid "Unblock Account?"
-msgstr "解除封鎖帳戶？"
+msgstr "解除封鎖帳號？"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:71
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:72
@@ -7404,7 +7404,7 @@ msgstr "刪追 {0}"
 #: src/view/com/profile/ProfileMenu.tsx:221
 #: src/view/com/profile/ProfileMenu.tsx:231
 msgid "Unfollow Account"
-msgstr "刪追帳戶"
+msgstr "刪追帳號"
 
 #: src/view/screens/ProfileFeed.tsx:576
 msgid "Unlike this feed"
@@ -7567,11 +7567,11 @@ msgstr "喺你嘅伺服器上面用檔案"
 
 #: src/view/screens/AppPasswords.tsx:209
 msgid "Use app passwords to login to other Bluesky clients without giving full access to your account or password."
-msgstr "使用 App 密碼登入其他 Bluesky 用戶端，而唔需要完全存取你嘅帳戶或密碼。"
+msgstr "使用 App 密碼登入其他 Bluesky 用戶端，而唔需要完全存取你嘅帳號或密碼。"
 
 #: src/screens/Settings/AppPasswords.tsx:59
 msgid "Use app passwords to sign in to other Bluesky clients without giving full access to your account or password."
-msgstr "使用 App 密碼登入其他 Bluesky 用戶端，而唔需要完全存取你嘅帳戶或密碼。"
+msgstr "使用 App 密碼登入其他 Bluesky 用戶端，而唔需要完全存取你嘅帳號或密碼。"
 
 #: src/view/com/modals/ChangeHandle.tsx:506
 msgid "Use bsky.social as hosting provider"
@@ -7608,7 +7608,7 @@ msgstr "用 DNS 面板"
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:190
 #: src/view/com/modals/AddAppPasswords.tsx:206
 msgid "Use this to sign into the other app along with your handle."
-msgstr "用呢個嚟登入另一個 App 同埋你嘅帳戶頭銜。"
+msgstr "用呢個嚟登入另一個 App 同埋你嘅帳號頭銜。"
 
 #: src/view/com/modals/InviteCodes.tsx:201
 msgid "Used by:"
@@ -7862,7 +7862,7 @@ msgstr "睇下讚呢個動態嘅用戶"
 
 #: src/screens/Moderation/index.tsx:276
 msgid "View your blocked accounts"
-msgstr "睇下你封鎖咗嘅帳戶"
+msgstr "睇下你封鎖咗嘅帳號"
 
 #: src/view/com/home/HomeHeaderLayout.web.tsx:78
 #: src/view/com/home/HomeHeaderLayoutMobile.tsx:89
@@ -7875,7 +7875,7 @@ msgstr "睇下你嘅審核清單"
 
 #: src/screens/Moderation/index.tsx:261
 msgid "View your muted accounts"
-msgstr "睇下你嘅靜音帳戶"
+msgstr "睇下你嘅靜音帳號"
 
 #: src/view/com/modals/LinkWarning.tsx:89
 #: src/view/com/modals/LinkWarning.tsx:95
@@ -7934,11 +7934,11 @@ msgstr "我哋宜家加載唔到你設定咗嘅標籤者。"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:129
 msgid "We weren't able to connect. Please try again to continue setting up your account. If it continues to fail, you can skip this flow."
-msgstr "連接唔到，請再試一次繼續設定你嘅帳戶。如果佢繼續失敗，你可以略過呢個流程。"
+msgstr "連接唔到，請再試一次繼續設定你嘅帳號。如果佢繼續失敗，你可以略過呢個流程。"
 
 #: src/screens/SignupQueued.tsx:143
 msgid "We will let you know when your account is ready."
-msgstr "我哋會喺你嘅帳戶準備好嗰陣通知你。"
+msgstr "我哋會喺你嘅帳號準備好嗰陣通知你。"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:134
 msgid "We'll use this to help customize your experience."
@@ -8104,7 +8104,7 @@ msgstr "係，隱藏"
 
 #: src/screens/Deactivated.tsx:153
 msgid "Yes, reactivate my account"
-msgstr "係，重新啟動我嘅帳戶"
+msgstr "係，重新啟動我嘅帳號"
 
 #: src/components/dms/DateDivider.tsx:46
 msgid "Yesterday"
@@ -8141,7 +8141,7 @@ msgstr "你亦可以發現新嘅自訂動態嚟跟隨。"
 
 #: src/view/com/modals/DeleteAccount.tsx:202
 msgid "You can also temporarily deactivate your account instead, and reactivate it at any time."
-msgstr "你亦可以暫時停用你嘅帳戶，同埋隨時重新啟動佢。"
+msgstr "你亦可以暫時停用你嘅帳號，同埋隨時重新啟動佢。"
 
 #: src/screens/Messages/Settings.tsx:105
 msgid "You can continue ongoing conversations regardless of which setting you choose."
@@ -8154,7 +8154,7 @@ msgstr "你而家可以用你嘅新密碼登入。"
 
 #: src/screens/Deactivated.tsx:139
 msgid "You can reactivate your account to continue logging in. Your profile and posts will be visible to other users."
-msgstr "你可以重新啟動你嘅帳戶嚟繼續登入，你嘅個人檔案同帖文會畀其他用戶睇到。"
+msgstr "你可以重新啟動你嘅帳號嚟繼續登入，你嘅個人檔案同帖文會畀其他用戶睇到。"
 
 #: src/view/com/profile/ProfileFollowers.tsx:95
 msgid "You do not have any followers."
@@ -8208,7 +8208,7 @@ msgstr "你隱藏咗呢篇帖文。"
 #: src/components/moderation/ModerationDetailsDialog.tsx:103
 #: src/lib/moderation/useModerationCauseDescription.ts:97
 msgid "You have muted this account."
-msgstr "你已經將呢個帳戶靜音咗。"
+msgstr "你已經將呢個帳號靜音咗。"
 
 #: src/lib/moderation/useModerationCauseDescription.ts:91
 msgid "You have muted this user"
@@ -8282,7 +8282,7 @@ msgstr "你最多只可以揀4張圖片"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:106
 msgid "You must be 13 years of age or older to sign up."
-msgstr "你一定要年滿13歲先可以建立帳戶。"
+msgstr "你一定要年滿13歲先可以建立帳號。"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:307
 msgid "You must be following at least seven other people to generate a starter pack."
@@ -8306,7 +8306,7 @@ msgstr "你之前停用咗 @{0}。"
 
 #: src/screens/Settings/Settings.tsx:184
 msgid "You will be signed out of all your accounts."
-msgstr "你將會被登出所有帳戶。"
+msgstr "你將會被登出所有帳號。"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:222
 msgid "You will no longer receive notifications for this thread"
@@ -8334,11 +8334,11 @@ msgstr "你：{short}"
 
 #: src/screens/Signup/index.tsx:107
 msgid "You'll follow the suggested users and feeds once you finish creating your account!"
-msgstr "建立完帳戶之後，你就會跟隨建議嘅使用者同動態！"
+msgstr "建立完帳號之後，你就會跟隨建議嘅使用者同動態！"
 
 #: src/screens/Signup/index.tsx:112
 msgid "You'll follow the suggested users once you finish creating your account!"
-msgstr "建立完帳戶之後，你就會跟隨建議嘅使用者！"
+msgstr "建立完帳號之後，你就會跟隨建議嘅使用者！"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:232
 msgid "You'll follow these people and {0} others"
@@ -8365,7 +8365,7 @@ msgstr "你排緊隊"
 #: src/screens/Deactivated.tsx:89
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:54
 msgid "You're logged in with an App Password. Please log in with your main password to continue deactivating your account."
-msgstr "你用咗個 App 密碼登入咗。請用你嘅主要密碼登入嚟繼續停用你嘅帳戶。"
+msgstr "你用咗個 App 密碼登入咗。請用你嘅主要密碼登入嚟繼續停用你嘅帳號。"
 
 #: src/screens/Onboarding/StepFinished.tsx:226
 msgid "You're ready to go!"
@@ -8378,7 +8378,7 @@ msgstr "你揀咗喺呢篇帖文裏面隱藏字詞或者標籤。"
 
 #: src/view/com/posts/FollowingEndOfFeed.tsx:44
 msgid "You've reached the end of your feed! Find some more accounts to follow."
-msgstr "你已經去到你嘅動態嘅最後喇！搵多啲帳戶嚟跟隨。"
+msgstr "你已經去到你嘅動態嘅最後喇！搵多啲帳號嚟跟隨。"
 
 #: src/view/com/composer/state/video.ts:434
 msgid "You've reached your daily limit for video uploads (too many bytes)"
@@ -8390,19 +8390,19 @@ msgstr "你已經達到每日上載影片嘅上限（影片數量過多）"
 
 #: src/screens/Signup/index.tsx:140
 msgid "Your account"
-msgstr "你個帳戶"
+msgstr "你個帳號"
 
 #: src/view/com/modals/DeleteAccount.tsx:88
 msgid "Your account has been deleted"
-msgstr "你個帳戶已經刪除咗"
+msgstr "你個帳號已經刪除咗"
 
 #: src/view/com/composer/state/video.ts:442
 msgid "Your account is not yet old enough to upload videos. Please try again later."
-msgstr "你嘅帳戶仲未夠上載影片。請遲啲再試。"
+msgstr "你嘅帳號仲未夠上載影片。請遲啲再試。"
 
 #: src/view/screens/Settings/ExportCarDialog.tsx:65
 msgid "Your account repository, containing all public data records, can be downloaded as a \"CAR\" file. This file does not include media embeds, such as images, or your private data, which must be fetched separately."
-msgstr "你嘅帳戶存儲庫包含所有公開資料記錄，可以以 \"CAR\" 檔案形式下載。呢個檔案唔包括媒體嵌入，例如圖片或者你嘅私人資料，呢啲資料必須單獨擷取。"
+msgstr "你嘅帳號存儲庫包含所有公開資料記錄，可以以 \"CAR\" 檔案形式下載。呢個檔案唔包括媒體嵌入，例如圖片或者你嘅私人資料，呢啲資料必須單獨擷取。"
 
 #: src/screens/Signup/StepInfo/index.tsx:211
 msgid "Your birth date"
@@ -8445,12 +8445,12 @@ msgstr "你嘅「Following」動態係空嘅！跟隨更多用戶嚟睇下發生
 
 #: src/screens/Signup/StepHandle.tsx:125
 msgid "Your full handle will be"
-msgstr "你嘅完整帳戶頭銜會係"
+msgstr "你嘅完整帳號頭銜會係"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:220
 #: src/view/com/modals/ChangeHandle.tsx:258
 msgid "Your full handle will be <0>@{0}</0>"
-msgstr "你嘅完整帳戶頭銜會係 <0>@{0}</0>"
+msgstr "你嘅完整帳號頭銜會係 <0>@{0}</0>"
 
 #: src/components/dialogs/MutedWords.tsx:369
 msgid "Your muted words"
@@ -8474,7 +8474,7 @@ msgstr "你嘅個人檔案"
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:75
 msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
-msgstr "你嘅個人檔案、帖文、動態同埋清單唔會再畀其他 Bluesky 用戶睇到。你可以隨時登入重新啟動你嘅帳戶。"
+msgstr "你嘅個人檔案、帖文、動態同埋清單唔會再畀其他 Bluesky 用戶睇到。你可以隨時登入重新啟動你嘅帳號。"
 
 #: src/view/com/composer/Composer.tsx:440
 msgid "Your reply has been published"
@@ -8486,5 +8486,5 @@ msgstr "你嘅上報會傳送去 Bluesky 審核服務"
 
 #: src/screens/Signup/index.tsx:142
 msgid "Your user handle"
-msgstr "你嘅帳戶頭銜"
+msgstr "你嘅帳號頭銜"
 
