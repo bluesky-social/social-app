@@ -19,8 +19,8 @@ import Animated, {
 import {Image} from 'expo-image'
 
 import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
+import {useImageDimensions} from '#/lib/media/image-sizes'
 import {Dimensions as ImageDimensions, ImageSource} from '../../@types'
-import useImageDimensions from '../../hooks/useImageDimensions'
 
 const SWIPE_CLOSE_OFFSET = 75
 const SWIPE_CLOSE_VELOCITY = 1
@@ -47,7 +47,10 @@ const ImageItem = ({
   const scrollViewRef = useAnimatedRef<Animated.ScrollView>()
   const translationY = useSharedValue(0)
   const [scaled, setScaled] = useState(false)
-  const imageDimensions = useImageDimensions(imageSrc)
+  const imageDimensions = useImageDimensions({
+    src: imageSrc.uri,
+    knownDimensions: undefined, // TODO: We have those.
+  })
   const maxZoomScale = imageDimensions
     ? (imageDimensions.width / SCREEN.width) * MAX_ORIGINAL_IMAGE_ZOOM
     : 1
@@ -179,7 +182,7 @@ const styles = StyleSheet.create({
 })
 
 const getZoomRectAfterDoubleTap = (
-  imageDimensions: ImageDimensions | null,
+  imageDimensions: ImageDimensions | undefined,
   touchX: number,
   touchY: number,
 ): {

@@ -12,8 +12,8 @@ import Animated, {
 } from 'react-native-reanimated'
 import {Image} from 'expo-image'
 
+import {useImageDimensions} from '#/lib/media/image-sizes'
 import type {Dimensions as ImageDimensions, ImageSource} from '../../@types'
-import useImageDimensions from '../../hooks/useImageDimensions'
 import {
   applyRounding,
   createTransform,
@@ -52,7 +52,10 @@ const ImageItem = ({
   isScrollViewBeingDragged,
 }: Props) => {
   const [isScaled, setIsScaled] = useState(false)
-  const imageDimensions = useImageDimensions(imageSrc)
+  const imageDimensions = useImageDimensions({
+    src: imageSrc.uri,
+    knownDimensions: undefined, // TODO: We have those.
+  })
   const committedTransform = useSharedValue(initialTransform)
   const panTranslation = useSharedValue({x: 0, y: 0})
   const pinchOrigin = useSharedValue({x: 0, y: 0})
