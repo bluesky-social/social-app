@@ -4,6 +4,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {IS_INTERNAL} from '#/lib/app-info'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
@@ -16,6 +17,7 @@ import {ToggleButton} from '#/view/com/util/forms/ToggleButton'
 import {SimpleViewHeader} from '#/view/com/util/SimpleViewHeader'
 import {Text} from '#/view/com/util/text/Text'
 import {ScrollView} from '#/view/com/util/Views'
+import {FollowingFeedPreferencesScreen} from '#/screens/Settings/FollowingFeedPreferences'
 import {atoms as a} from '#/alf'
 import * as Layout from '#/components/Layout'
 
@@ -23,7 +25,15 @@ type Props = NativeStackScreenProps<
   CommonNavigatorParams,
   'PreferencesFollowingFeed'
 >
-export function PreferencesFollowingFeed({}: Props) {
+export function PreferencesFollowingFeed(props: Props) {
+  return IS_INTERNAL ? (
+    <FollowingFeedPreferencesScreen {...props} />
+  ) : (
+    <LegacyPreferencesFollowingFeed {...props} />
+  )
+}
+
+function LegacyPreferencesFollowingFeed({}: Props) {
   const pal = usePalette('default')
   const {_} = useLingui()
   const {isTabletOrMobile} = useWebMediaQueries()

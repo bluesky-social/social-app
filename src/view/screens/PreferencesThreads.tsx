@@ -4,6 +4,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {IS_INTERNAL} from '#/lib/app-info'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
@@ -17,11 +18,20 @@ import {ToggleButton} from '#/view/com/util/forms/ToggleButton'
 import {SimpleViewHeader} from '#/view/com/util/SimpleViewHeader'
 import {Text} from '#/view/com/util/text/Text'
 import {ScrollView} from '#/view/com/util/Views'
+import {ThreadPreferencesScreen} from '#/screens/Settings/ThreadPreferences'
 import {atoms as a} from '#/alf'
 import * as Layout from '#/components/Layout'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'PreferencesThreads'>
-export function PreferencesThreads({}: Props) {
+export function PreferencesThreads(props: Props) {
+  return IS_INTERNAL ? (
+    <ThreadPreferencesScreen {...props} />
+  ) : (
+    <LegacyPreferencesThreads {...props} />
+  )
+}
+
+function LegacyPreferencesThreads({}: Props) {
   const pal = usePalette('default')
   const {_} = useLingui()
   const {isTabletOrMobile} = useWebMediaQueries()

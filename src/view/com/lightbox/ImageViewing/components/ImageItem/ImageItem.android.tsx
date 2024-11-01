@@ -142,12 +142,14 @@ const ImageItem = ({
 
   const pinch = Gesture.Pinch()
     .onStart(e => {
+      'worklet'
       pinchOrigin.value = {
         x: e.focalX - SCREEN.width / 2,
         y: e.focalY - SCREEN.height / 2,
       }
     })
     .onChange(e => {
+      'worklet'
       if (!imageDimensions) {
         return
       }
@@ -179,6 +181,7 @@ const ImageItem = ({
       }
     })
     .onEnd(() => {
+      'worklet'
       // Commit just the pinch.
       let t = createTransform()
       prependPinch(
@@ -202,6 +205,7 @@ const ImageItem = ({
     // Unlike .enabled(isScaled), this ensures that an initial pinch can turn into a pan midway:
     .minPointers(isScaled ? 1 : 2)
     .onChange(e => {
+      'worklet'
       if (!imageDimensions) {
         return
       }
@@ -223,6 +227,7 @@ const ImageItem = ({
       panTranslation.value = nextPanTranslation
     })
     .onEnd(() => {
+      'worklet'
       // Commit just the pan.
       let t = createTransform()
       prependPan(t, panTranslation.value)
@@ -235,12 +240,14 @@ const ImageItem = ({
     })
 
   const singleTap = Gesture.Tap().onEnd(() => {
+    'worklet'
     runOnJS(onTap)()
   })
 
   const doubleTap = Gesture.Tap()
     .numberOfTaps(2)
     .onEnd(e => {
+      'worklet'
       if (!imageDimensions) {
         return
       }
@@ -287,9 +294,11 @@ const ImageItem = ({
     .failOffsetX([-10, 10])
     .maxPointers(1)
     .onUpdate(e => {
+      'worklet'
       dismissSwipeTranslateY.value = e.translationY
     })
     .onEnd(e => {
+      'worklet'
       if (Math.abs(e.velocityY) > 1000) {
         dismissSwipeTranslateY.value = withDecay({velocity: e.velocityY})
         runOnJS(onRequestClose)()

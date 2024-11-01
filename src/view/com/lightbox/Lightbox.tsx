@@ -35,6 +35,7 @@ export function Lightbox() {
           {uri: opts.profile.avatar || '', thumbUri: opts.profile.avatar || ''},
         ]}
         initialImageIndex={0}
+        thumbDims={opts.thumbDims}
         visible
         onRequestClose={onClose}
         FooterComponent={LightboxFooter}
@@ -46,6 +47,7 @@ export function Lightbox() {
       <ImageView
         images={opts.images.map(img => ({...img}))}
         initialImageIndex={opts.index}
+        thumbDims={opts.thumbDims}
         visible
         onRequestClose={onClose}
         FooterComponent={LightboxFooter}

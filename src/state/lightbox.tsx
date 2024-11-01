@@ -1,4 +1,5 @@
 import React from 'react'
+import type {MeasuredDimensions} from 'react-native-reanimated'
 import {AppBskyActorDefs} from '@atproto/api'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
@@ -6,6 +7,7 @@ import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 type ProfileImageLightbox = {
   type: 'profile-image'
   profile: AppBskyActorDefs.ProfileViewDetailed
+  thumbDims: null
 }
 
 type ImagesLightboxItem = {
@@ -17,6 +19,7 @@ type ImagesLightboxItem = {
 type ImagesLightbox = {
   type: 'images'
   images: ImagesLightboxItem[]
+  thumbDims: MeasuredDimensions | null
   index: number
 }
 

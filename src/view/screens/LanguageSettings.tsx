@@ -10,6 +10,7 @@ import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
 
 import {APP_LANGUAGES, LANGUAGES} from '#/lib/../locale/languages'
+import {IS_INTERNAL} from '#/lib/app-info'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
@@ -22,11 +23,20 @@ import {Button} from '#/view/com/util/forms/Button'
 import {Text} from '#/view/com/util/text/Text'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
 import {CenteredView} from '#/view/com/util/Views'
+import {LanguageSettingsScreen as NewLanguageSettingsScreen} from '#/screens/Settings/LanguageSettings'
 import * as Layout from '#/components/Layout'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'LanguageSettings'>
 
-export function LanguageSettingsScreen(_props: Props) {
+export function LanguageSettingsScreen(props: Props) {
+  return IS_INTERNAL ? (
+    <NewLanguageSettingsScreen {...props} />
+  ) : (
+    <LegacyLanguageSettingsScreen {...props} />
+  )
+}
+
+function LegacyLanguageSettingsScreen(_props: Props) {
   const pal = usePalette('default')
   const {_} = useLingui()
   const langPrefs = useLanguagePrefs()

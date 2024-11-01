@@ -17,6 +17,7 @@ module.exports = {
     'ko',
     'pt-BR',
     'ru',
+    'th',
     'tr',
     'uk',
     'zh-CN',
