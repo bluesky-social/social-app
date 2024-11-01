@@ -608,6 +608,7 @@ export const ComposePost = ({
                   dispatch={composerDispatch}
                   textInput={post.id === activePost.id ? textInput : null}
                   isFirstPost={index === 0}
+                  isPartOfThread={thread.posts.length > 1}
                   isReply={index > 0 || !!replyTo}
                   isActive={post.id === activePost.id}
                   canRemovePost={thread.posts.length > 1}
@@ -644,6 +645,7 @@ let ComposerPost = React.memo(function ComposerPost({
   isActive,
   isReply,
   isFirstPost,
+  isPartOfThread,
   canRemovePost,
   canRemoveQuote,
   onClearVideo,
@@ -657,6 +659,7 @@ let ComposerPost = React.memo(function ComposerPost({
   isActive: boolean
   isReply: boolean
   isFirstPost: boolean
+  isPartOfThread: boolean
   canRemovePost: boolean
   canRemoveQuote: boolean
   onClearVideo: (postId: string) => void
@@ -736,6 +739,8 @@ let ComposerPost = React.memo(function ComposerPost({
           placeholder={selectTextInputPlaceholder}
           autoFocus
           webForceMinHeight={forceMinHeight}
+          // To avoid overlap with the close button:
+          hasRightPadding={isPartOfThread}
           setRichText={rt => {
             dispatchPost({type: 'update_richtext', richtext: rt})
           }}
