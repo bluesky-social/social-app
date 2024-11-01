@@ -7,7 +7,7 @@
  */
 
 import React, {useState} from 'react'
-import {ActivityIndicator, Dimensions, StyleSheet, View} from 'react-native'
+import {ActivityIndicator, Dimensions, StyleSheet} from 'react-native'
 import {
   Gesture,
   GestureDetector,
@@ -121,44 +121,34 @@ const ImageItem = ({
       <Animated.ScrollView
         // @ts-ignore Something's up with the types here
         ref={scrollViewRef}
-        style={styles.listItem}
         pinchGestureEnabled
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
         maximumZoomScale={maxZoomScale}
         onScroll={scrollHandler}
-        bounces={scaled}>
-        <View style={styles.imageScrollContainer}>
-          <ActivityIndicator size="small" color="#FFF" style={styles.loading} />
-          <Image
-            contentFit="contain"
-            source={{uri: imageSrc.uri}}
-            placeholderContentFit="contain"
-            placeholder={{uri: imageSrc.thumbUri}}
-            style={styles.image}
-            accessibilityLabel={imageSrc.alt}
-            accessibilityHint=""
-            enableLiveTextInteraction={showControls && !scaled}
-            accessibilityIgnoresInvertColors
-          />
-        </View>
+        bounces={scaled}
+        centerContent>
+        <ActivityIndicator size="small" color="#FFF" style={styles.loading} />
+        <Image
+          contentFit="contain"
+          source={{uri: imageSrc.uri}}
+          placeholderContentFit="contain"
+          placeholder={{uri: imageSrc.thumbUri}}
+          style={{
+            width: SCREEN.width,
+            height: imageAspect ? SCREEN.width / imageAspect : undefined,
+          }}
+          accessibilityLabel={imageSrc.alt}
+          accessibilityHint=""
+          enableLiveTextInteraction={showControls && !scaled}
+          accessibilityIgnoresInvertColors
+        />
       </Animated.ScrollView>
     </GestureDetector>
   )
 }
 
 const styles = StyleSheet.create({
-  imageScrollContainer: {
-    height: SCREEN.height,
-  },
-  listItem: {
-    width: SCREEN.width,
-    height: SCREEN.height,
-  },
-  image: {
-    width: SCREEN.width,
-    height: SCREEN.height,
-  },
   loading: {
     position: 'absolute',
     top: 0,
