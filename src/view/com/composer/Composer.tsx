@@ -518,6 +518,7 @@ export const ComposePost = ({
     }
   }, [composerState])
 
+  const isLastThreadedPost = thread.posts.length > 1 && nextPost === undefined
   const {
     scrollHandler,
     onScrollViewContentSizeChange,
@@ -526,7 +527,7 @@ export const ComposePost = ({
     bottomBarAnimatedStyle,
   } = useScrollTracker({
     scrollViewRef,
-    stickyBottom: true,
+    stickyBottom: isLastThreadedPost,
   })
 
   const keyboardVerticalOffset = useKeyboardVerticalOffset()
