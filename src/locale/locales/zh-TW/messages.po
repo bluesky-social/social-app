@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-01 08:45\n"
+"PO-Revision-Date: 2024-11-01 09:36\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -180,23 +180,23 @@ msgstr "{estimatedTimeMins, plural, one {分} other {分}}"
 
 #: src/view/com/notifications/FeedItem.tsx:300
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> followed you"
-msgstr "{firstAuthorLink}和<0>{additionalAuthorsCount, plural, one {其他{formattedAuthorsCount}人} other {其他{formattedAuthorsCount}人}}</0>已跟隨您"
+msgstr "{firstAuthorLink}和<0>{additionalAuthorsCount, plural, one {其他 {formattedAuthorsCount} 人} other {其他 {formattedAuthorsCount} 人}}</0>已跟隨您"
 
 #: src/view/com/notifications/FeedItem.tsx:326
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> liked your custom feed"
-msgstr "{firstAuthorLink}和<0>{additionalAuthorsCount, plural, one {其他{formattedAuthorsCount}人} other {其他{formattedAuthorsCount}人}}</0>對您的自訂動態源表示喜歡"
+msgstr "{firstAuthorLink}和<0>{additionalAuthorsCount, plural, one {其他 {formattedAuthorsCount} 人} other {其他 {formattedAuthorsCount} 人}}</0>對您的自訂動態源表示喜歡"
 
 #: src/view/com/notifications/FeedItem.tsx:222
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> liked your post"
-msgstr "{firstAuthorLink}和<0>{additionalAuthorsCount, plural, one {其他{formattedAuthorsCount}人} other {其他{formattedAuthorsCount}人}}</0>表示喜歡您的貼文"
+msgstr "{firstAuthorLink}和<0>{additionalAuthorsCount, plural, one {其他 {formattedAuthorsCount} 人} other {其他 {formattedAuthorsCount} 人}}</0>表示喜歡您的貼文"
 
 #: src/view/com/notifications/FeedItem.tsx:246
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> reposted your post"
-msgstr "{firstAuthorLink}和<0>{additionalAuthorsCount, plural, one {其他{formattedAuthorsCount}人} other {其他{formattedAuthorsCount}人}}</0>轉貼您的貼文"
+msgstr "{firstAuthorLink}和<0>{additionalAuthorsCount, plural, one {其他 {formattedAuthorsCount} 人} other {其他 {formattedAuthorsCount} 人}}</0>轉發了您的貼文"
 
 #: src/view/com/notifications/FeedItem.tsx:350
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> signed up with your starter pack"
-msgstr "{firstAuthorLink}和<0>{additionalAuthorsCount, plural, one {其他{formattedAuthorsCount}人} other {其他{formattedAuthorsCount}人}}</0>用您的新手包註冊"
+msgstr "{firstAuthorLink}和<0>{additionalAuthorsCount, plural, one {其他 {formattedAuthorsCount} 人} other {其他 {formattedAuthorsCount} 人}}</0>用您的新手包註冊"
 
 #: src/view/com/notifications/FeedItem.tsx:312
 msgid "{firstAuthorLink} followed you"
@@ -212,11 +212,11 @@ msgstr "{firstAuthorLink} 對您的自訂動態源表示喜歡"
 
 #: src/view/com/notifications/FeedItem.tsx:234
 msgid "{firstAuthorLink} liked your post"
-msgstr "{firstAuthorLink} 表示喜歡您的貼文"
+msgstr "{firstAuthorLink} 對您的貼文表示喜歡"
 
 #: src/view/com/notifications/FeedItem.tsx:258
 msgid "{firstAuthorLink} reposted your post"
-msgstr "{firstAuthorLink} 轉貼您的貼文"
+msgstr "{firstAuthorLink} 轉發了您的貼文"
 
 #: src/view/com/notifications/FeedItem.tsx:362
 msgid "{firstAuthorLink} signed up with your starter pack"
@@ -236,7 +236,7 @@ msgstr "{firstAuthorName}和{additionalAuthorsCount, plural, one {其他 {format
 
 #: src/view/com/notifications/FeedItem.tsx:239
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} reposted your post"
-msgstr "{firstAuthorName}和{additionalAuthorsCount, plural, one {其他 {formattedAuthorsCount} 人} other {其他 {formattedAuthorsCount} 人}}轉貼您的貼文"
+msgstr "{firstAuthorName}和{additionalAuthorsCount, plural, one {其他 {formattedAuthorsCount} 人} other {其他 {formattedAuthorsCount} 人}}轉發了您的貼文"
 
 #: src/view/com/notifications/FeedItem.tsx:343
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} signed up with your starter pack"
@@ -256,11 +256,11 @@ msgstr "{firstAuthorName} 對您的自訂動態源表示喜歡"
 
 #: src/view/com/notifications/FeedItem.tsx:220
 msgid "{firstAuthorName} liked your post"
-msgstr "{firstAuthorName} 表示喜歡您的貼文"
+msgstr "{firstAuthorName} 對您的貼文表示喜歡"
 
 #: src/view/com/notifications/FeedItem.tsx:244
 msgid "{firstAuthorName} reposted your post"
-msgstr "{firstAuthorName} 轉貼您的貼文"
+msgstr "{firstAuthorName} 轉發了您的貼文"
 
 #: src/view/com/notifications/FeedItem.tsx:348
 msgid "{firstAuthorName} signed up with your starter pack"
@@ -780,15 +780,15 @@ msgstr "應用程式專用密碼已刪除"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:84
 msgid "App password name must be unique"
-msgstr "應用程式專用密碼名稱必須唯一"
+msgstr "應用程式專用密碼名稱必須是唯一的"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:62
 msgid "App password names can only contain letters, numbers, spaces, dashes, and underscores"
-msgstr "應用程式專用密碼只能包含字母、數字、空格、破折號及底線"
+msgstr "應用程式專用密碼只能包含字母、數字、空格、連字號及底線"
 
 #: src/view/com/modals/AddAppPasswords.tsx:138
 msgid "App Password names can only contain letters, numbers, spaces, dashes, and underscores."
-msgstr "應用程式專用密碼只能包含字母、數字、空格、破折號及底線。"
+msgstr "應用程式專用密碼只能包含字母、數字、空格、連字號及底線。"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:80
 msgid "App password names must be at least 4 characters long"
@@ -890,7 +890,7 @@ msgstr "您確定要捨棄這份草稿嗎？"
 
 #: src/view/com/composer/Composer.tsx:789
 msgid "Are you sure you'd like to discard this post?"
-msgstr "您確定要放棄發佈這則貼文嗎？"
+msgstr "您確定要放棄發布這則貼文嗎？"
 
 #: src/components/dialogs/MutedWords.tsx:433
 msgid "Are you sure?"
@@ -1253,7 +1253,7 @@ msgstr "變更密碼"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:74
 msgid "Change post language to {0}"
-msgstr "變更貼文的發佈語言為 {0}"
+msgstr "變更貼文的發布語言為 {0}"
 
 #: src/view/com/modals/ChangeEmail.tsx:104
 msgid "Change Your Email"
@@ -2062,7 +2062,7 @@ msgstr "要捨棄草稿嗎？"
 
 #: src/view/com/composer/Composer.tsx:788
 msgid "Discard post?"
-msgstr "放棄發佈？"
+msgstr "放棄發布？"
 
 #: src/screens/Moderation/index.tsx:561
 #: src/screens/Moderation/index.tsx:565
@@ -3043,7 +3043,7 @@ msgstr "忘記了？"
 
 #: src/lib/moderation/useReportOptions.ts:54
 msgid "Frequently Posts Unwanted Content"
-msgstr "頻繁發佈不當內容"
+msgstr "頻繁發布不當內容"
 
 #: src/screens/Hashtag.tsx:117
 msgid "From @{sanitizedAuthor}"
@@ -3372,7 +3372,7 @@ msgstr "如果您刪除這個列表，將無法復原。"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:247
 msgid "If you have your own domain, you can use that as your handle. This lets you self-verify your identity – <0>learn more</0>."
-msgstr "如果您擁有自己的網域，可以將其用作您的帳號代碼使用。這還可以讓您驗證自己的身分——<0>了解詳情</0>。"
+msgstr "如果您擁有自己的網域，可以將其用作您的帳號代碼使用。這還可以讓您驗證自己的身分——<0>瞭解詳情</0>。"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:670
 msgid "If you remove this post, you won't be able to recover it."
@@ -4387,7 +4387,7 @@ msgstr "沒有人"
 
 #: src/components/WhoCanReply.tsx:237
 msgid "No one but the author can quote this post."
-msgstr "僅限發佈者可以引用這則貼文。"
+msgstr "僅限發布者可以引用這則貼文。"
 
 #: src/screens/Profile/Sections/Feed.tsx:65
 msgid "No posts yet."
@@ -4570,7 +4570,7 @@ msgstr "重新開始引導流程"
 
 #: src/view/com/composer/Composer.tsx:311
 msgid "One or more GIFs is missing alt text."
-msgstr "至少有一張 GIF 缺失了替代文字。"
+msgstr "至少有一張 GIF 缺少了替代文字。"
 
 #: src/view/com/composer/Composer.tsx:308
 msgid "One or more images is missing alt text."
@@ -4578,7 +4578,7 @@ msgstr "至少有一張圖片缺少了替代文字。"
 
 #: src/view/com/composer/Composer.tsx:318
 msgid "One or more videos is missing alt text."
-msgstr "至少有一段影片缺失了替代文字。"
+msgstr "至少有一段影片缺少了替代文字。"
 
 #: src/screens/Onboarding/StepProfile/index.tsx:115
 msgid "Only .jpg and .png files are supported"
@@ -5081,7 +5081,7 @@ msgstr "色情"
 #: src/view/com/composer/Composer.tsx:880
 msgctxt "action"
 msgid "Post"
-msgstr "發佈"
+msgstr "發布"
 
 #: src/view/com/post-thread/PostThread.tsx:481
 msgctxt "description"
@@ -5091,7 +5091,7 @@ msgstr "貼文"
 #: src/view/com/composer/Composer.tsx:878
 msgctxt "action"
 msgid "Post All"
-msgstr "發佈全部"
+msgstr "發布全部"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:197
 msgid "Post by {0}"
@@ -5110,7 +5110,7 @@ msgstr "貼文已刪除"
 
 #: src/lib/api/index.ts:185
 msgid "Post failed to upload. Please check your Internet connection and try again."
-msgstr "貼文發佈失敗。請檢查您的網路連線並重試。"
+msgstr "貼文發布失敗。請檢查您的網路連線，然後再試一次。"
 
 #: src/view/com/post-thread/PostThread.tsx:212
 msgid "Post hidden"
@@ -5349,7 +5349,7 @@ msgstr "隨機顯示（又名試試手氣）"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:566
 msgid "Rate limit exceeded – you've tried to change your handle too many times in a short period. Please wait a minute before trying again."
-msgstr "超過速率限制——您嘗試在短時間內更改使用者名稱的次數過多，請稍後再試。"
+msgstr "超過速率限制——您嘗試在短時間內變更使用者名稱的次數過多，請稍後再試。"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:585
 #: src/view/com/util/forms/PostDropdownBtn.tsx:595
@@ -5497,7 +5497,7 @@ msgstr "將這個動態源從您已儲存的動態源中刪除"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:109
 msgid "Removed by author"
-msgstr "由發佈者刪除"
+msgstr "由發布者刪除"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:107
 msgid "Removed by you"
@@ -5552,7 +5552,7 @@ msgstr "回覆"
 #: src/components/moderation/ModerationDetailsDialog.tsx:115
 #: src/lib/moderation/useModerationCauseDescription.ts:123
 msgid "Reply Hidden by Thread Author"
-msgstr "回覆由此討論串的發佈者所隱藏"
+msgstr "回覆由此討論串的發布者所隱藏"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:114
 #: src/lib/moderation/useModerationCauseDescription.ts:122
@@ -5565,7 +5565,7 @@ msgstr "回覆設定"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:341
 msgid "Reply settings are chosen by the author of the thread"
-msgstr "由此討論串的發佈者選擇的回覆設定"
+msgstr "由此討論串的發布者選擇的回覆設定"
 
 #: src/view/com/post/Post.tsx:204
 #: src/view/com/posts/FeedItem.tsx:553
@@ -5726,7 +5726,7 @@ msgstr "請求代碼"
 #: src/screens/Settings/AccessibilitySettings.tsx:58
 #: src/view/screens/AccessibilitySettings.tsx:100
 msgid "Require alt text before posting"
-msgstr "要求發佈前提供替代文字"
+msgstr "要求發布前提供替代文字"
 
 #: src/screens/Settings/components/Email2FAToggle.tsx:54
 msgid "Require an email code to log in to your account."
@@ -6860,7 +6860,7 @@ msgstr "解除封鎖後，該帳號將能夠與您互動。"
 #: src/components/moderation/ModerationDetailsDialog.tsx:118
 #: src/lib/moderation/useModerationCauseDescription.ts:126
 msgid "The author of this thread has hidden this reply."
-msgstr "此討論串的發佈者已隱藏這則回覆。"
+msgstr "此討論串的發布者已隱藏這則回覆。"
 
 #: src/screens/Moderation/index.tsx:370
 msgid "The Bluesky web application"
@@ -7133,7 +7133,7 @@ msgstr "這個標記由 <0>{0}</0> 新增。"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:146
 msgid "This label was applied by the author."
-msgstr "這個標記由發佈者新增。"
+msgstr "這個標記由發布者新增。"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:163
 msgid "This label was applied by you."
@@ -7141,7 +7141,7 @@ msgstr "這個標記由您新增。"
 
 #: src/screens/Profile/Sections/Labels.tsx:188
 msgid "This labeler hasn't declared what labels it publishes, and may not be active."
-msgstr "此標記者尚未公開其發佈的標記類型，也可能已經不再提供服務。"
+msgstr "此標記者尚未公開其發布的標記類型，也可能已經不再提供服務。"
 
 #: src/view/com/modals/LinkWarning.tsx:72
 msgid "This link is taking you to the following website:"
@@ -7178,7 +7178,7 @@ msgstr "這則貼文將從討論串及動態源中被隱藏，這項操作無法
 
 #: src/view/com/composer/Composer.tsx:393
 msgid "This post's author has disabled quote posts."
-msgstr "這則貼文的發佈者拒絕引用貼文。"
+msgstr "這則貼文的發布者拒絕引用貼文。"
 
 #: src/view/com/profile/ProfileMenu.tsx:350
 msgid "This profile is only visible to logged-in users. It won't be visible to people who aren't logged in."
@@ -7571,7 +7571,7 @@ msgstr "使用應用程式專用密碼登入到其他 Bluesky 用戶端，而無
 
 #: src/screens/Settings/AppPasswords.tsx:59
 msgid "Use app passwords to sign in to other Bluesky clients without giving full access to your account or password."
-msgstr "使用應用程式專用密碼登入到其他 Bluesky 客戶端，而無需提供完整的帳號權限和密碼。"
+msgstr "使用應用程式專用密碼登入到其他 Bluesky 用戶端，而無需提供完整的帳號權限和密碼。"
 
 #: src/view/com/modals/ChangeHandle.tsx:506
 msgid "Use bsky.social as hosting provider"
@@ -7804,7 +7804,7 @@ msgstr "查看 {displayName} 的個人檔案"
 
 #: src/components/TagMenu/index.tsx:149
 msgid "View all posts by @{authorHandle} with tag {displayTag}"
-msgstr "查看所有由 @{authorHandle} 發佈，並且帶有標籤 {displayTag} 的貼文"
+msgstr "查看所有由 @{authorHandle} 發布，並且帶有標籤 {displayTag} 的貼文"
 
 #: src/components/TagMenu/index.tsx:103
 msgid "View all posts with tag {displayTag}"
@@ -8188,7 +8188,7 @@ msgstr "您已封鎖該用戶"
 #: src/lib/moderation/useModerationCauseDescription.ts:55
 #: src/lib/moderation/useModerationCauseDescription.ts:63
 msgid "You have blocked this user. You cannot view their content."
-msgstr "您封鎖了此用戶，因此無法查看他們發佈的內容。"
+msgstr "您封鎖了此用戶，因此無法查看他們發布的內容。"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:48
 #: src/screens/Login/SetNewPasswordForm.tsx:85
@@ -8462,7 +8462,7 @@ msgstr "您的密碼已成功變更！"
 
 #: src/view/com/composer/Composer.tsx:441
 msgid "Your post has been published"
-msgstr "您的貼文已發佈"
+msgstr "您的貼文已發布"
 
 #: src/screens/Onboarding/StepFinished.tsx:241
 msgid "Your posts, likes, and blocks are public. Mutes are private."
@@ -8478,7 +8478,7 @@ msgstr "其他 Bluesky 用戶將無法再看到您的個人檔案、貼文、動
 
 #: src/view/com/composer/Composer.tsx:440
 msgid "Your reply has been published"
-msgstr "您的回覆已發佈"
+msgstr "您的回覆已發布"
 
 #: src/components/dms/ReportDialog.tsx:157
 msgid "Your report will be sent to the Bluesky Moderation Service"
