@@ -9,27 +9,31 @@ export function get(uri: string): Dimensions | undefined {
   return sizes.get(uri)
 }
 
-export async function fetch(uri: string): Promise<Dimensions> {
-  const Dimensions = sizes.get(uri)
-  if (Dimensions) {
-    return Dimensions
+export function fetch(uri: string): Promise<Dimensions> {
+  const dims = sizes.get(uri)
+  if (dims) {
+    return Promise.resolve(dims)
   }
-
-  const prom =
-    activeRequests.get(uri) ||
-    new Promise<Dimensions>(resolve => {
-      Image.getSize(
-        uri,
-        (width: number, height: number) => resolve({width, height}),
-        (err: any) => {
-          console.error('Failed to fetch image dimensions for', uri, err)
-          resolve({width: 0, height: 0})
-        },
-      )
-    })
+  const activeRequest = activeRequests.get(uri)
+  if (activeRequest) {
+    return activeRequest
+  }
+  const prom = new Promise<Dimensions>((resolve, reject) => {
+    Image.getSize(
+      uri,
+      (width: number, height: number) => {
+        const size = {width, height}
+        sizes.set(uri, size)
+        resolve(size)
+      },
+      (err: any) => {
+        console.error('Failed to fetch image dimensions for', uri, err)
+        reject(new Error('Could not fetch dimensions'))
+      },
+    )
+  }).finally(() => {
+    activeRequests.delete(uri)
+  })
   activeRequests.set(uri, prom)
-  const res = await prom
-  activeRequests.delete(uri)
-  sizes.set(uri, res)
-  return res
+  return prom
 }
