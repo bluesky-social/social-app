@@ -19,7 +19,7 @@ function useImageAspectRatio({
   knownDimensions,
 }: {
   src: string
-  knownDimensions: Dimensions | undefined
+  knownDimensions: Dimensions | null
 }) {
   const dims = useImageDimensions({src, knownDimensions})
   let constrained: number | undefined
@@ -106,7 +106,7 @@ export function AutoSizedImage({
     isCropped: rawIsCropped,
   } = useImageAspectRatio({
     src: image.thumb,
-    knownDimensions: image.aspectRatio,
+    knownDimensions: image.aspectRatio ?? null,
   })
   const cropDisabled = crop === 'none'
   const isCropped = rawIsCropped && !cropDisabled

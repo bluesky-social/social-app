@@ -49,7 +49,7 @@ const ImageItem = ({
   const [scaled, setScaled] = useState(false)
   const imageDimensions = useImageDimensions({
     src: imageSrc.uri,
-    knownDimensions: undefined, // TODO: We have those.
+    knownDimensions: imageSrc.dimensions,
   })
   const maxZoomScale = imageDimensions
     ? (imageDimensions.width / SCREEN.width) * MAX_ORIGINAL_IMAGE_ZOOM
@@ -182,7 +182,7 @@ const styles = StyleSheet.create({
 })
 
 const getZoomRectAfterDoubleTap = (
-  imageDimensions: ImageDimensions | undefined,
+  imageDimensions: ImageDimensions | null,
   touchX: number,
   touchY: number,
 ): {

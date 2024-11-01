@@ -1,4 +1,4 @@
-import {useEffect,useState} from 'react'
+import {useEffect, useState} from 'react'
 import {Image} from 'react-native'
 
 import type {Dimensions} from '#/lib/media/types'
@@ -60,12 +60,12 @@ export function useImageDimensions({
   knownDimensions,
 }: {
   src: string
-  knownDimensions: Dimensions | undefined
+  knownDimensions: Dimensions | null
 }) {
-  const [dims, setDims] = useState(() => knownDimensions ?? get(src))
+  const [dims, setDims] = useState(() => knownDimensions ?? get(src) ?? null)
   const [prevSrc, setPrevSrc] = useState(src)
   if (src !== prevSrc) {
-    setDims(knownDimensions ?? get(src))
+    setDims(knownDimensions ?? get(src) ?? null)
     setPrevSrc(src)
   }
 

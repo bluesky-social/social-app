@@ -72,7 +72,17 @@ export function ProfileSubpageHeader({
     ) {
       openLightbox({
         type: 'images',
-        images: [{uri: avatar, thumbUri: avatar}],
+        images: [
+          {
+            uri: avatar,
+            thumbUri: avatar,
+            dimensions: {
+              // It's fine if it's actually smaller but we know it's 1:1.
+              height: 1000,
+              width: 1000,
+            },
+          },
+        ],
         index: 0,
         thumbDims: null,
       })

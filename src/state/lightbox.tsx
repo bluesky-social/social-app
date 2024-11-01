@@ -3,6 +3,7 @@ import type {MeasuredDimensions} from 'react-native-reanimated'
 import {AppBskyActorDefs} from '@atproto/api'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
+import {Dimensions} from '#/lib/media/types'
 
 type ProfileImageLightbox = {
   type: 'profile-image'
@@ -14,6 +15,7 @@ type ImagesLightboxItem = {
   uri: string
   thumbUri: string
   alt?: string
+  dimensions: Dimensions | null
 }
 
 type ImagesLightbox = {

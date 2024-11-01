@@ -54,7 +54,7 @@ const ImageItem = ({
   const [isScaled, setIsScaled] = useState(false)
   const imageDimensions = useImageDimensions({
     src: imageSrc.uri,
-    knownDimensions: undefined, // TODO: We have those.
+    knownDimensions: imageSrc.dimensions,
   })
   const committedTransform = useSharedValue(initialTransform)
   const panTranslation = useSharedValue({x: 0, y: 0})
