@@ -1,4 +1,4 @@
-import {Platform, StyleSheet, ViewStyle} from 'react-native'
+import {Platform, StyleProp, StyleSheet, ViewStyle} from 'react-native'
 
 import * as tokens from '#/alf/tokens'
 import {native, web} from '#/alf/util/platform'
@@ -887,9 +887,9 @@ export const atoms = {
   user_select_all: {
     userSelect: 'all',
   },
-  focus_visible: {
-    'outline-offset': '-1px',
-  },
+  outline_inset_1: {
+    outlineOffset: '-1px',
+  } as StyleProp<ViewStyle>,
 
   /*
    * Text decoration
