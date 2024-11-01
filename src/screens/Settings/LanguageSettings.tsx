@@ -15,6 +15,7 @@ import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Che
 import {ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon} from '#/components/icons/Chevron'
 import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
 import * as Layout from '#/components/Layout'
+import * as Select from '#/components/Select'
 import {Text} from '#/components/Typography'
 import * as SettingsList from './components/SettingsList'
 
@@ -85,79 +86,29 @@ export function LanguageSettingsScreen({}: Props) {
                   Select which language to use for the app's user interface.
                 </Trans>
               </Text>
-              <View style={[a.relative, web([a.w_full, {maxWidth: 400}])]}>
-                <RNPickerSelect
-                  darkTheme={t.scheme === 'dark'}
-                  placeholder={{}}
-                  value={sanitizeAppLanguageSetting(langPrefs.appLanguage)}
-                  onValueChange={onChangeAppLanguage}
+              <Select.Root
+                value={sanitizeAppLanguageSetting(langPrefs.appLanguage)}
+                onValueChange={onChangeAppLanguage}>
+                <Select.Trigger label={_(msg`Select app language`)}>
+                  <Select.Value
+                    placeholder={_(msg`Select an app language...`)}
+                  />
+                  <Select.Icon />
+                </Select.Trigger>
+                <Select.Content
+                  renderItem={({label, value}) => (
+                    <Select.Item key={value} value={value}>
+                      <Select.ItemText>{label}</Select.ItemText>
+                      <Select.ItemIndicator />
+                    </Select.Item>
+                  )}
                   items={APP_LANGUAGES.filter(l => Boolean(l.code2)).map(l => ({
                     label: l.name,
                     value: l.code2,
                     key: l.code2,
                   }))}
-                  style={{
-                    inputAndroid: {
-                      backgroundColor: t.atoms.bg_contrast_25.backgroundColor,
-                      color: t.atoms.text.color,
-                      fontSize: 14,
-                      letterSpacing: 0.5,
-                      fontWeight: a.font_bold.fontWeight,
-                      paddingHorizontal: 14,
-                      paddingVertical: 8,
-                      borderRadius: a.rounded_xs.borderRadius,
-                    },
-                    inputIOS: {
-                      backgroundColor: t.atoms.bg_contrast_25.backgroundColor,
-                      color: t.atoms.text.color,
-                      fontSize: 14,
-                      letterSpacing: 0.5,
-                      fontWeight: a.font_bold.fontWeight,
-                      paddingHorizontal: 14,
-                      paddingVertical: 8,
-                      borderRadius: a.rounded_xs.borderRadius,
-                    },
-                    inputWeb: {
-                      flex: 1,
-                      width: '100%',
-                      cursor: 'pointer',
-                      // @ts-ignore web only
-                      '-moz-appearance': 'none',
-                      '-webkit-appearance': 'none',
-                      appearance: 'none',
-                      outline: 0,
-                      borderWidth: 0,
-                      backgroundColor: t.atoms.bg_contrast_25.backgroundColor,
-                      color: t.atoms.text.color,
-                      fontSize: 14,
-                      fontFamily: 'inherit',
-                      letterSpacing: 0.5,
-                      fontWeight: a.font_bold.fontWeight,
-                      paddingHorizontal: 14,
-                      paddingVertical: 8,
-                      borderRadius: a.rounded_xs.borderRadius,
-                    },
-                  }}
                 />
-
-                <View
-                  style={[
-                    a.absolute,
-                    t.atoms.bg_contrast_25,
-                    a.rounded_xs,
-                    a.pointer_events_none,
-                    a.align_center,
-                    a.justify_center,
-                    {
-                      top: 1,
-                      right: 1,
-                      bottom: 1,
-                      width: 40,
-                    },
-                  ]}>
-                  <ChevronDownIcon style={[t.atoms.text]} />
-                </View>
-              </View>
+              </Select.Root>
             </View>
           </SettingsList.Group>
           <SettingsList.Divider />
