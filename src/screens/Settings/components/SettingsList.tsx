@@ -2,7 +2,7 @@ import React, {useContext, useMemo} from 'react'
 import {GestureResponderEvent, StyleProp, View, ViewStyle} from 'react-native'
 
 import {HITSLOP_10} from '#/lib/constants'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, useTheme, ViewStyleProp} from '#/alf'
 import * as Button from '#/components/Button'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon} from '#/components/icons/Chevron'
 import {Link, LinkProps} from '#/components/Link'
@@ -17,7 +17,7 @@ const ItemContext = React.createContext({
 const Portal = createPortalGroup()
 
 export function Container({children}: {children: React.ReactNode}) {
-  return <View style={[a.flex_1, a.py_lg]}>{children}</View>
+  return <View style={[a.flex_1, a.py_md]}>{children}</View>
 }
 
 /**
@@ -241,11 +241,17 @@ export function ItemText({
   }
 }
 
-export function Divider() {
+export function Divider({style}: ViewStyleProp) {
   const t = useTheme()
   return (
     <View
-      style={[a.border_t, t.atoms.border_contrast_medium, a.w_full, a.my_sm]}
+      style={[
+        a.border_t,
+        t.atoms.border_contrast_medium,
+        a.w_full,
+        a.my_sm,
+        style,
+      ]}
     />
   )
 }

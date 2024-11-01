@@ -128,7 +128,8 @@ export function RichText({
             // @ts-ignore TODO
             dataSet={WORD_WRAP}
             shareOnLongPress
-            onPress={onLinkPress}>
+            onPress={onLinkPress}
+            emoji>
             {toShortUrl(segment.text)}
           </InlineLinkText>,
         )
