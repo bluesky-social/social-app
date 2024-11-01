@@ -132,7 +132,7 @@ type DoneState = {
   asset: ImagePickerAsset
   video: CompressedVideo
   jobId?: undefined
-  pendingPublish: {blobRef: BlobRef; mutableProcessed: boolean}
+  pendingPublish: {blobRef: BlobRef}
   altText: string
   captions: CaptionsTrack[]
 }
@@ -250,7 +250,6 @@ export function videoReducer(
         video: state.video,
         pendingPublish: {
           blobRef: action.blobRef,
-          mutableProcessed: false,
         },
         altText: state.altText,
         captions: state.captions,
