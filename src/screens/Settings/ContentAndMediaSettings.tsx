@@ -86,13 +86,13 @@ export function ContentAndMediaSettingsScreen({}: Props) {
           )}
           <Toggle.Item
             name="disable_autoplay"
-            label={_(msg`Disable autoplay for videos and GIFs`)}
-            value={autoplayDisabledPref}
-            onChange={value => setAutoplayDisabledPref(value)}>
+            label={_(msg`Autoplay videos and GIFs`)}
+            value={!autoplayDisabledPref}
+            onChange={value => setAutoplayDisabledPref(!value)}>
             <SettingsList.Item>
               <SettingsList.ItemIcon icon={PlayIcon} />
               <SettingsList.ItemText>
-                <Trans>Disable autoplay for videos and GIFs</Trans>
+                <Trans>Autoplay videos and GIFs</Trans>
               </SettingsList.ItemText>
               <Toggle.Platform />
             </SettingsList.Item>
