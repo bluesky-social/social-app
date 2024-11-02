@@ -48,6 +48,7 @@ interface Props extends ComponentProps<typeof TouchableOpacity> {
   dataSet?: Object | undefined
   anchorNoUnderline?: boolean
   navigationAction?: 'push' | 'replace' | 'navigate'
+  tabIndex?: 0 | -1
   onPointerEnter?: () => void
   onPointerLeave?: () => void
   onBeforePress?: () => void
