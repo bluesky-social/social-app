@@ -38,7 +38,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Trans} from '@lingui/macro'
 
 import {colors, s} from '#/lib/styles'
-import {isIOS} from '#/platform/detection'
+import {isAndroid, isIOS} from '#/platform/detection'
 import {Lightbox} from '#/state/lightbox'
 import {Button} from '#/view/com/util/forms/Button'
 import {Text} from '#/view/com/util/text/Text'
@@ -69,7 +69,7 @@ function ImageViewing({
 }) {
   const {images, index: initialImageIndex} = lightbox
   const [isScaled, setIsScaled] = useState(false)
-  const [isDragging, setIsDragging] = useState(false)
+  const [isPagingAndroid, setIsPagingAndroid] = useState(false)
   const [imageIndex, setImageIndex] = useState(initialImageIndex)
   const [showControls, setShowControls] = useState(true)
   const dismissSwipeTranslateY = useSharedValue(0)
@@ -170,7 +170,13 @@ function ImageViewing({
             setIsScaled(false)
           }}
           onPageScrollStateChanged={e => {
-            setIsDragging(e.nativeEvent.pageScrollState !== 'idle')
+            if (isAndroid) {
+              // Note this would be downright broken on iOS where this method
+              // can't actually reliably report idle state if you do an extra
+              // vertical drag while paginating (you had one job, pager view).
+              // But it's OK because we only need this state on Android anyway.
+              setIsPagingAndroid(e.nativeEvent.pageScrollState !== 'idle')
+            }
           }}
           overdrag={true}
           style={styles.pager}>
@@ -182,7 +188,7 @@ function ImageViewing({
               onTap={onTap}
               onZoom={onZoom}
               isActive={i === imageIndex}
-              isScrollViewBeingDragged={isDragging}
+              isPagingAndroid={isPagingAndroid}
               isFlyingAway={isFlyingAway}
               isScaled={isScaled}
               showControls={showControls}
@@ -210,7 +216,7 @@ function LightboxPage({
   onTap,
   onZoom,
   isActive,
-  isScrollViewBeingDragged,
+  isPagingAndroid,
   isFlyingAway,
   isScaled,
   showControls,
@@ -222,7 +228,7 @@ function LightboxPage({
   onTap: () => void
   onZoom: (scaled: boolean) => void
   isActive: boolean
-  isScrollViewBeingDragged: boolean
+  isPagingAndroid: boolean
   isFlyingAway: SharedValue<boolean>
   isScaled: boolean
   showControls: boolean
@@ -289,7 +295,7 @@ function LightboxPage({
   return (
     <ImageItem
       imageSrc={image}
-      isScrollViewBeingDragged={isScrollViewBeingDragged}
+      isPagingAndroid={isPagingAndroid}
       onTap={onTap}
       onZoom={onZoom}
       onRequestClose={onRequestClose}
