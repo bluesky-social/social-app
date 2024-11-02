@@ -1,10 +1,12 @@
 import React from 'react'
 import type {MeasuredDimensions} from 'react-native-reanimated'
+import {nanoid} from 'nanoid/non-secure'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {ImageSource} from '#/view/com/lightbox/ImageViewing/@types'
 
 export type Lightbox = {
+  id: string
   images: ImageSource[]
   thumbDims: MeasuredDimensions | null
   index: number
@@ -29,9 +31,14 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     null,
   )
 
-  const openLightbox = useNonReactiveCallback((lightbox: Lightbox) => {
-    setActiveLightbox(lightbox)
-  })
+  const openLightbox = useNonReactiveCallback(
+    (lightbox: Omit<Lightbox, 'id'>) => {
+      setActiveLightbox({
+        ...lightbox,
+        id: nanoid(),
+      })
+    },
+  )
 
   const closeLightbox = useNonReactiveCallback(() => {
     let wasActive = !!activeLightbox

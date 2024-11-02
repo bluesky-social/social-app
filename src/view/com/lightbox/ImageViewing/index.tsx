@@ -398,7 +398,7 @@ function ImageViewingRoot({
   }
   return (
     <ImageViewing
-      key={lightbox.index}
+      key={lightbox.id}
       lightbox={lightbox}
       onRequestClose={onRequestClose}
       onPressSave={onPressSave}
