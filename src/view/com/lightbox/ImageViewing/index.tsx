@@ -12,6 +12,7 @@ import React, {useCallback, useMemo, useState} from 'react'
 import {
   Dimensions,
   LayoutAnimation,
+  PixelRatio,
   Platform,
   StyleSheet,
   View,
@@ -48,8 +49,8 @@ import ImageDefaultHeader from './components/ImageDefaultHeader'
 import ImageItem from './components/ImageItem/ImageItem'
 
 const SCREEN = Dimensions.get('screen')
-
 const SCREEN_HEIGHT = Dimensions.get('window').height
+const PIXEL_RATIO = PixelRatio.get()
 
 function ImageViewing({
   lightbox,
@@ -339,6 +340,16 @@ function LightboxFooter({
   )
 }
 
+function interpolatePx(
+  px: number,
+  inputRange: readonly number[],
+  outputRange: readonly number[],
+) {
+  'worklet'
+  const value = interpolate(px, inputRange, outputRange)
+  return Math.round(value * PIXEL_RATIO) / PIXEL_RATIO
+}
+
 function interpolateFromThumbnail(
   progress: number,
   thumbnailDims: {
@@ -351,37 +362,47 @@ function interpolateFromThumbnail(
   imageDims: {width: number; height: number},
 ) {
   'worklet'
+  const imageAspect = imageDims.width / imageDims.height
+  const thumbAspect = thumbnailDims.width / thumbnailDims.height
+  let uncroppedInitialWidth
+  let uncroppedInitialHeight
+  if (imageAspect > thumbAspect) {
+    uncroppedInitialWidth = thumbnailDims.height * imageAspect
+    uncroppedInitialHeight = thumbnailDims.height
+  } else {
+    uncroppedInitialWidth = thumbnailDims.width
+    uncroppedInitialHeight = thumbnailDims.width / imageAspect
+  }
+  const finalWidth = screenSize.width
+  const finalHeight = screenSize.width / imageAspect
+  const initialScale = Math.min(
+    uncroppedInitialWidth / finalWidth,
+    uncroppedInitialHeight / finalHeight,
+  )
+
+  const croppedFinalWidth = thumbnailDims.width / initialScale
+  const croppedFinalHeight = thumbnailDims.height / initialScale
   const screenCenterX = screenSize.width / 2
   const screenCenterY = screenSize.height / 2
   const thumbnailCenterX = thumbnailDims.pageX + thumbnailDims.width / 2
   const thumbnailCenterY = thumbnailDims.pageY + thumbnailDims.height / 2
-  const initialTranslateX = thumbnailCenterX - screenCenterX
+  const initialTranslateX =
+    thumbnailCenterX + (finalWidth - croppedFinalWidth) / 2 - screenCenterX
   const initialTranslateY = thumbnailCenterY - screenCenterY
 
-  const imageAspect = imageDims.width / imageDims.height
-  const thumbAspect = thumbnailDims.width / thumbnailDims.height
-  const initialWidth =
-    imageAspect > thumbAspect
-      ? thumbnailDims.height * imageAspect
-      : thumbnailDims.width
-  const initialHeight =
-    imageAspect > thumbAspect
-      ? thumbnailDims.height
-      : thumbnailDims.width / imageAspect
-  const finalWidth = screenSize.width
-  const finalHeight = screenSize.width / imageAspect
-  const initialScale = Math.min(
-    initialWidth / finalWidth,
-    initialHeight / finalHeight,
-  )
-
-  const translateX = interpolate(progress, [0, 1], [initialTranslateX, 0])
-  const translateY = interpolate(progress, [0, 1], [initialTranslateY, 0])
   const scale = interpolate(progress, [0, 1], [initialScale, 1])
+  const translateX = interpolatePx(progress, [0, 1], [initialTranslateX, 0])
+  const translateY = interpolatePx(progress, [0, 1], [initialTranslateY, 0])
+  const width = interpolatePx(progress, [0, 1], [croppedFinalWidth, finalWidth])
+  const height = interpolatePx(
+    progress,
+    [0, 1],
+    [croppedFinalHeight, finalHeight],
+  )
   return {
     transform: [{translateX}, {translateY}, {scale}],
-    width: finalWidth,
-    height: finalHeight,
+    width,
+    height,
   }
 }
 
@@ -507,7 +528,7 @@ function ImageViewingRoot({
 
 function withClampedSpring(value: any) {
   'worklet'
-  return withSpring(value, {overshootClamping: true, stiffness: 150})
+  return withSpring(value, {overshootClamping: true, stiffness: 120})
 }
 
 export default ImageViewingRoot

@@ -25,8 +25,6 @@ import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIX
 import {useImageDimensions} from '#/lib/media/image-sizes'
 import {ImageSource} from '../../@types'
 
-const AnimatedImage = Animated.createAnimatedComponent(Image)
-
 const SCREEN = Dimensions.get('screen')
 const MAX_ORIGINAL_IMAGE_ZOOM = 2
 const MIN_DOUBLE_TAP_SCALE = 2
@@ -139,7 +137,7 @@ const ImageItem = ({
         centerContent>
         <Animated.View style={animatedStyle}>
           <ActivityIndicator size="small" color="#FFF" style={styles.loading} />
-          <AnimatedImage
+          <Image
             contentFit="cover"
             source={{uri: imageSrc.uri}}
             placeholderContentFit="cover"

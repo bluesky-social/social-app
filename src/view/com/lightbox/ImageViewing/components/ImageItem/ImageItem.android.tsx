@@ -20,8 +20,6 @@ import Animated, {
 } from 'react-native-reanimated'
 import {Image, ImageStyle} from 'expo-image'
 
-const AnimatedImage = Animated.createAnimatedComponent(Image)
-
 import {useImageDimensions} from '#/lib/media/image-sizes'
 import type {Dimensions as ImageDimensions, ImageSource} from '../../@types'
 import {
@@ -308,10 +306,10 @@ const ImageItem = ({
         style={[styles.container, animatedContainerStyle, {}]}>
         <Animated.View style={animatedStyle}>
           <ActivityIndicator size="small" color="#FFF" style={styles.loading} />
-          <AnimatedImage
-            contentFit="contain"
+          <Image
+            contentFit="cover"
             source={{uri: imageSrc.uri}}
-            placeholderContentFit="contain"
+            placeholderContentFit="cover"
             placeholder={{uri: imageSrc.thumbUri}}
             style={{
               flex: 1,
