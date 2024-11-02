@@ -2,17 +2,10 @@ import React from 'react'
 import type {MeasuredDimensions} from 'react-native-reanimated'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-import {Dimensions} from '#/lib/media/types'
-
-type ImagesLightboxItem = {
-  uri: string
-  thumbUri: string
-  alt?: string
-  dimensions: Dimensions | null
-}
+import {ImageSource} from '#/view/com/lightbox/ImageViewing/@types'
 
 type Lightbox = {
-  images: ImagesLightboxItem[]
+  images: ImageSource[]
   thumbDims: MeasuredDimensions | null
   index: number
 }
