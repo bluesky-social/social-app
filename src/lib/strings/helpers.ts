@@ -1,5 +1,5 @@
 import {useCallback, useMemo} from 'react'
-import Graphemer from 'graphemer'
+import {countGrapheme, graphemeSegments} from 'unicode-segmenter/grapheme'
 
 export function enforceLen(
   str: string,
@@ -27,18 +27,14 @@ export function enforceLen(
 }
 
 export function useEnforceMaxGraphemeCount() {
-  const splitter = useMemo(() => new Graphemer(), [])
-
-  return useCallback(
-    (text: string, maxCount: number) => {
-      if (splitter.countGraphemes(text) > maxCount) {
-        return splitter.splitGraphemes(text).slice(0, maxCount).join('')
-      } else {
-        return text
-      }
-    },
-    [splitter],
-  )
+  return useCallback((text: string, maxCount: number) => {
+    const segments = [...graphemeSegments(text)]
+    if (segments.length > maxCount) {
+      return segments.slice(0, maxCount).join('')
+    } else {
+      return text
+    }
+  }, [])
 }
 
 export function useWarnMaxGraphemeCount({
@@ -48,11 +44,9 @@ export function useWarnMaxGraphemeCount({
   text: string
   maxCount: number
 }) {
-  const splitter = useMemo(() => new Graphemer(), [])
-
   return useMemo(() => {
-    return splitter.countGraphemes(text) > maxCount
-  }, [splitter, maxCount, text])
+    return countGrapheme(text) > maxCount
+  }, [maxCount, text])
 }
 
 // https://stackoverflow.com/a/52171480
