@@ -334,8 +334,8 @@ msgstr "<0>{date}</0> को {time}"
 #~ msgstr "<0>यह आपका ऐप पासवर्ड है।</0> इसे अपने हैंडल के साथ दूसरे ऐप में साइन इन करने के लिए उपयोग करें।"
 
 #: src/view/com/modals/SelfLabel.tsx:135
-msgid "<0>Not Applicable.</0> This warning is only available for posts with media attached."
-msgstr "<0>उपयुक्त नहीं।</0> यह चेतावनी केवल मीडिया-युक्त पोस्ट के लिए उपलब्ध है।"
+#~msgid "<0>Not Applicable.</0> This warning is only available for posts with media attached."
+#~msgstr "<0>उपयुक्त नहीं।</0> यह चेतावनी केवल मीडिया-युक्त पोस्ट के लिए उपलब्ध है।"
 
 #: src/view/com/auth/onboarding/WelcomeDesktop.tsx:21
 #~ msgid "<0>Welcome to</0><1>Bluesky</1>"
