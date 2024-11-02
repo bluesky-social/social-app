@@ -152,7 +152,10 @@ export function PostEmbeds({
         thumbDims: MeasuredDimensions | null,
       ) => {
         openLightbox({
-          images: items,
+          images: items.map(item => ({
+            ...item,
+            shape: 'rect',
+          })),
           index,
           thumbDims,
         })
