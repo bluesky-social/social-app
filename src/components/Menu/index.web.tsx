@@ -111,7 +111,7 @@ const RadixTriggerPassThrough = React.forwardRef(
 )
 RadixTriggerPassThrough.displayName = 'RadixTriggerPassThrough'
 
-export function Trigger({children, label}: TriggerProps) {
+export function Trigger({children, label, role = 'button'}: TriggerProps) {
   const {control} = React.useContext(Context)
   const {
     state: hovered,
@@ -155,6 +155,7 @@ export function Trigger({children, label}: TriggerProps) {
               onMouseEnter,
               onMouseLeave,
               accessibilityLabel: label,
+              accessibilityRole: role,
             },
           })
         }

@@ -1,5 +1,5 @@
 import React, {memo, useMemo} from 'react'
-import {StyleSheet, View} from 'react-native'
+import {Pressable, StyleSheet, View} from 'react-native'
 import {
   AppBskyFeedDefs,
   AppBskyFeedPost,
@@ -744,12 +744,11 @@ function ExpandedPostDetails({
             &middot;
           </NewText>
 
-          <NewText
-            style={[a.text_sm, pal.link]}
-            title={_(msg`Translate`)}
-            onPress={onTranslatePress}>
-            <Trans>Translate</Trans>
-          </NewText>
+          <Pressable accessibilityRole="button" onPress={onTranslatePress}>
+            <NewText style={[a.text_sm, pal.link]} title={_(msg`Translate`)}>
+              <Trans>Translate</Trans>
+            </NewText>
+          </Pressable>
         </>
       )}
     </View>
