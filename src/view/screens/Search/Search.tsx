@@ -20,7 +20,11 @@ import {
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import {useFocusEffect, useNavigation} from '@react-navigation/native'
+import {
+  useFocusEffect,
+  useIsFocused,
+  useNavigation,
+} from '@react-navigation/native'
 
 import {APP_LANGUAGES, LANGUAGES} from '#/lib/../locale/languages'
 import {createHitslop} from '#/lib/constants'
@@ -624,6 +628,7 @@ export function SearchScreen(
   const t = useThemeNew()
   const {gtMobile} = useBreakpoints()
   const navigation = useNavigation<NavigationProp>()
+  const isFocused = useIsFocused()
   const textInput = React.useRef<TextInput>(null)
   const {_} = useLingui()
   const setDrawerOpen = useSetDrawerOpen()
@@ -658,6 +663,13 @@ export function SearchScreen(
       }
     }),
   )
+
+  React.useEffect(() => {
+    if (!isFocused) {
+      return
+    }
+    return listenSoftReset(() => textInput.current?.focus())
+  }, [isFocused])
 
   React.useEffect(() => {
     const loadSearchHistory = async () => {
