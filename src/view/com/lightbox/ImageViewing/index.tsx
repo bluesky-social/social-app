@@ -54,6 +54,7 @@ function ImageViewing({
   lightbox,
   openProgress,
   onFlyAway,
+  onChangeIndex,
   onRequestClose,
   onPressSave,
   onPressShare,
@@ -61,6 +62,7 @@ function ImageViewing({
   lightbox: Lightbox
   openProgress: SharedValue<number>
   onFlyAway: () => void
+  onChangeIndex: (index: number) => void
   onRequestClose: () => void
   onPressSave: (uri: string) => void
   onPressShare: (uri: string) => void
@@ -207,6 +209,7 @@ function ImageViewing({
           onPageSelected={e => {
             setImageIndex(e.nativeEvent.position)
             setIsScaled(false)
+            onChangeIndex(e.nativeEvent.position)
           }}
           onPageScrollStateChanged={e => {
             setIsDragging(e.nativeEvent.pageScrollState !== 'idle')
@@ -424,6 +427,8 @@ function ImageViewingRoot({
 }) {
   const [activeLightbox, setActiveLightbox] = useState(nextLightbox)
   const openProgress = useSharedValue(0)
+  const isAnimatable = useSharedValue(false)
+  const isInitialIndex = useSharedValue(true)
 
   if (!activeLightbox && nextLightbox) {
     setActiveLightbox(nextLightbox)
@@ -436,13 +441,21 @@ function ImageViewingRoot({
         nextLightbox.thumbDims
       ) {
         openProgress.value = withClampedSpring(1)
+        isAnimatable.value = true
       } else {
         openProgress.value = 1
+        isAnimatable.value = false
       }
+      isInitialIndex.value = true
     } else {
-      openProgress.value = withClampedSpring(0)
+      // TODO: Support animation to non-initial index.
+      if (isAnimatable.value && isInitialIndex.value) {
+        openProgress.value = withClampedSpring(0)
+      } else {
+        openProgress.value = 0
+      }
     }
-  }, [nextLightbox, openProgress])
+  }, [nextLightbox, openProgress, isAnimatable, isInitialIndex])
 
   useAnimatedReaction(
     () => openProgress.value === 0,
@@ -463,6 +476,9 @@ function ImageViewingRoot({
       lightbox={activeLightbox}
       openProgress={openProgress}
       onRequestClose={onRequestClose}
+      onChangeIndex={index => {
+        isInitialIndex.value = index === activeLightbox.index
+      }}
       onFlyAway={() => {
         'worklet'
         openProgress.value = 0
