@@ -2439,9 +2439,9 @@ msgstr "उदाहरण के लिए, राम"
 msgid "e.g. Alice Lastname"
 msgstr "उदाहरण के लिए, राम उपनाम"
 
-#: src/view/com/modals/EditProfile.tsx:180
-#~ msgid "e.g. Alice Roberts"
-#~ msgstr ""
+#: src/screens/Profile/Header/EditProfileDialog.tsx:321
+msgid "e.g. Alice Lastname"
+msgstr ""
 
 #: src/view/com/modals/ChangeHandle.tsx:367
 msgid "e.g. alice.com"
