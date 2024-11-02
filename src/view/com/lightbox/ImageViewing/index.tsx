@@ -42,6 +42,7 @@ import {Lightbox} from '#/state/lightbox'
 import {Button} from '#/view/com/util/forms/Button'
 import {Text} from '#/view/com/util/text/Text'
 import {ScrollView} from '#/view/com/util/Views'
+import {PlatformInfo} from '../../../../../modules/expo-bluesky-swiss-army'
 import {ImageSource} from './@types'
 import ImageDefaultHeader from './components/ImageDefaultHeader'
 import ImageItem from './components/ImageItem/ImageItem'
@@ -434,9 +435,9 @@ function ImageViewingRoot({
     if (!nextLightbox) {
       return
     }
-    const canAnimate = nextLightbox.images.every(
-      img => img.dimensions && img.thumbRect,
-    )
+    const canAnimate =
+      !PlatformInfo.getIsReducedMotionEnabled() &&
+      nextLightbox.images.every(img => img.dimensions && img.thumbRect)
     if (canAnimate) {
       openProgress.value = withClampedSpring(1)
       return () => {
