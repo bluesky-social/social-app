@@ -54,7 +54,6 @@ function ImageViewing({
   lightbox,
   openProgress,
   onFlyAway,
-  onChangeIndex,
   onRequestClose,
   onPressSave,
   onPressShare,
@@ -62,12 +61,11 @@ function ImageViewing({
   lightbox: Lightbox
   openProgress: SharedValue<number>
   onFlyAway: () => void
-  onChangeIndex: (index: number) => void
   onRequestClose: () => void
   onPressSave: (uri: string) => void
   onPressShare: (uri: string) => void
 }) {
-  const {images, index: initialImageIndex, thumbDims} = lightbox
+  const {images, index: initialImageIndex} = lightbox
   const [isScaled, setIsScaled] = useState(false)
   const [isDragging, setIsDragging] = useState(false)
   const [imageIndex, setImageIndex] = useState(initialImageIndex)
@@ -106,12 +104,13 @@ function ImageViewing({
         transform: [{translateY: dismissSwipeTranslateY.value}],
       }
     }
-    if (thumbDims && images[imageIndex].dimensions) {
+    const image = images[imageIndex]
+    if (image.thumbRect && image.dimensions) {
       const interpolatedTransform = interpolateTransform(
         openProgress.value,
-        thumbDims,
+        image.thumbRect,
         SCREEN,
-        images[imageIndex].dimensions,
+        image.dimensions,
       )
       return {
         pointerEvents: 'none',
@@ -209,7 +208,6 @@ function ImageViewing({
           onPageSelected={e => {
             setImageIndex(e.nativeEvent.position)
             setIsScaled(false)
-            onChangeIndex(e.nativeEvent.position)
           }}
           onPageScrollStateChanged={e => {
             setIsDragging(e.nativeEvent.pageScrollState !== 'idle')
@@ -427,35 +425,30 @@ function ImageViewingRoot({
 }) {
   const [activeLightbox, setActiveLightbox] = useState(nextLightbox)
   const openProgress = useSharedValue(0)
-  const isAnimatable = useSharedValue(false)
-  const isInitialIndex = useSharedValue(true)
 
   if (!activeLightbox && nextLightbox) {
     setActiveLightbox(nextLightbox)
   }
 
   React.useEffect(() => {
-    if (nextLightbox) {
-      if (
-        nextLightbox.images[nextLightbox.index].dimensions &&
-        nextLightbox.thumbDims
-      ) {
-        openProgress.value = withClampedSpring(1)
-        isAnimatable.value = true
-      } else {
-        openProgress.value = 1
-        isAnimatable.value = false
-      }
-      isInitialIndex.value = true
-    } else {
-      // TODO: Support animation to non-initial index.
-      if (isAnimatable.value && isInitialIndex.value) {
+    if (!nextLightbox) {
+      return
+    }
+    const canAnimate = nextLightbox.images.every(
+      img => img.dimensions && img.thumbRect,
+    )
+    if (canAnimate) {
+      openProgress.value = withClampedSpring(1)
+      return () => {
         openProgress.value = withClampedSpring(0)
-      } else {
+      }
+    } else {
+      openProgress.value = 1
+      return () => {
         openProgress.value = 0
       }
     }
-  }, [nextLightbox, openProgress, isAnimatable, isInitialIndex])
+  }, [nextLightbox, openProgress])
 
   useAnimatedReaction(
     () => openProgress.value === 0,
@@ -476,9 +469,6 @@ function ImageViewingRoot({
       lightbox={activeLightbox}
       openProgress={openProgress}
       onRequestClose={onRequestClose}
-      onChangeIndex={index => {
-        isInitialIndex.value = index === activeLightbox.index
-      }}
       onFlyAway={() => {
         'worklet'
         openProgress.value = 0

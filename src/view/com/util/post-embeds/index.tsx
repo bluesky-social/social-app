@@ -149,22 +149,24 @@ export function PostEmbeds({
       }))
       const _openLightbox = (
         index: number,
-        thumbDims: MeasuredDimensions | null,
+        thumbRects: (MeasuredDimensions | null)[],
       ) => {
         openLightbox({
-          images: items,
+          images: items.map((item, i) => ({
+            ...item,
+            thumbRect: thumbRects[i] ?? null,
+          })),
           index,
-          thumbDims,
         })
       }
       const onPress = (
         index: number,
-        ref: AnimatedRef<React.Component<{}, {}, any>>,
+        refs: AnimatedRef<React.Component<{}, {}, any>>[],
       ) => {
         runOnUI(() => {
           'worklet'
-          const dims = measure(ref)
-          runOnJS(_openLightbox)(index, dims)
+          const rects = refs.map(ref => (ref ? measure(ref) : null))
+          runOnJS(_openLightbox)(index, rects)
         })()
       }
       const onPressIn = (_: number) => {
@@ -188,7 +190,7 @@ export function PostEmbeds({
                     : 'constrained'
                 }
                 image={image}
-                onPress={() => onPress(0, containerRef)}
+                onPress={() => onPress(0, [containerRef])}
                 onPressIn={() => onPressIn(0)}
                 hideBadge={
                   viewContext === PostEmbedViewContext.FeedEmbedRecordWithMedia

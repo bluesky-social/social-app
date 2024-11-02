@@ -75,6 +75,7 @@ export function ProfileSubpageHeader({
           {
             uri: avatar,
             thumbUri: avatar,
+            thumbRect: null,
             dimensions: {
               // It's fine if it's actually smaller but we know it's 1:1.
               height: 1000,
@@ -83,7 +84,6 @@ export function ProfileSubpageHeader({
           },
         ],
         index: 0,
-        thumbDims: null,
       })
     }
   }, [openLightbox, avatar])

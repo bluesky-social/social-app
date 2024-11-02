@@ -6,6 +6,8 @@
  *
  */
 
+import {MeasuredDimensions} from 'react-native-reanimated'
+
 export type Dimensions = {
   width: number
   height: number
@@ -19,6 +21,7 @@ export type Position = {
 export type ImageSource = {
   uri: string
   thumbUri: string
+  thumbRect: MeasuredDimensions | null
   alt?: string
   dimensions: Dimensions | null
 }
