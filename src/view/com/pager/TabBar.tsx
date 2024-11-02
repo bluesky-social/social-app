@@ -118,7 +118,7 @@ export function TabBar({
   )
 
   return (
-    <View testID={testID} style={[pal.view, styles.outer]}>
+    <View testID={testID} style={[pal.view, styles.outer]} accessibilityRole="tablist">
       <DraggableScrollView
         testID={`${testID}-selector`}
         horizontal={true}
@@ -135,7 +135,8 @@ export function TabBar({
               onLayout={e => onItemLayout(e, i)}
               style={styles.item}
               hoverStyle={pal.viewLight}
-              onPress={() => onPressItem(i)}>
+              onPress={() => onPressItem(i)}
+              accessibilityRole="tab">
               <View style={[styles.itemInner, selected && indicatorStyle]}>
                 <Text
                   emoji
