@@ -335,7 +335,7 @@ msgstr "<0>{date}</0> को {time}"
 
 #: src/view/com/modals/SelfLabel.tsx:135
 #~ msgid "<0>Not Applicable.</0> This warning is only available for posts with media attached."
-#~ msgstr "<0>उपयुक्त नहीं।</0> यह चेतावनी केवल मीडिया-युक्त पोस्ट के लिए उपलब्ध है।"
+#~ msgstr ""
 
 #: src/view/com/auth/onboarding/WelcomeDesktop.tsx:21
 #~ msgid "<0>Welcome to</0><1>Bluesky</1>"
@@ -1274,7 +1274,7 @@ msgstr "छवि क्रॉप रद्द करें"
 
 #: src/view/com/modals/EditProfile.tsx:239
 #~ msgid "Cancel profile editing"
-#~ msgstr "प्रोफ़ाइल संपादन रद्द करें"
+#~ msgstr "प्रोफ़ाइल संपादन मत करो"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:159
 msgid "Cancel quote post"
@@ -1614,7 +1614,7 @@ msgstr "पासवर्ड अपडेट सूचना बंद कर�
 
 #: src/view/com/composer/Composer.tsx:552
 #~ msgid "Closes post composer and discards post draft"
-#~ msgstr "पोस्ट रचना बंद करता है और पोस्ट ड्राफ़्ट ख़ारिज करता है"
+#~ msgstr ""
 
 #: src/view/com/lightbox/ImageViewing/components/ImageDefaultHeader.tsx:37
 msgid "Closes viewer for header image"
@@ -2449,7 +2449,7 @@ msgstr "उदाहरण के लिए, ramkumar.com"
 
 #: src/view/com/modals/EditProfile.tsx:198
 #~ msgid "e.g. Artist, dog-lover, and avid reader."
-#~ msgstr "उदाहरण के लिए, कलाकार, पशु प्रेमी, और नियमित पाठक"
+#~ msgstr ""
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:43
 msgid "E.g. artistic nudes."
@@ -2565,11 +2565,11 @@ msgstr "संपादित करें कि कौन जवाब दे 
 
 #: src/view/com/modals/EditProfile.tsx:188
 #~ msgid "Edit your display name"
-#~ msgstr "प्रदर्शन नाम संपादित करें"
+#~ msgstr ""
 
 #: src/view/com/modals/EditProfile.tsx:206
 #~ msgid "Edit your profile description"
-#~ msgstr "प्रोफ़ाइल विवरण संपादित करें"
+#~ msgstr ""
 
 #: src/Navigation.tsx:372
 msgid "Edit your starter pack"
@@ -3703,7 +3703,7 @@ msgstr "यदि वैकल्पिक पाठ लंबा है, बड़
 
 #: src/view/com/modals/SelfLabel.tsx:128
 #~ msgid "If none are selected, suitable for all ages."
-#~ msgstr "यदि किसी को चुना जाता है, तो सभी उम्र के लिए उपयुक्त है।"
+#~ msgstr "यदि किसी को चुना जाता है, तो सभी उम्र के लिए उपयुक्त है।।"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:110
 msgid "If you are not yet an adult according to the laws of your country, your parent or legal guardian must read these Terms on your behalf."
@@ -5842,11 +5842,11 @@ msgstr "सार्वजनिक, साझा करने योग्य �
 
 #: src/view/com/composer/Composer.tsx:579
 #~ msgid "Publish post"
-#~ msgstr "पोस्ट प्रकाशित करें"
+#~ msgstr ""
 
 #: src/view/com/composer/Composer.tsx:579
 #~ msgid "Publish reply"
-#~ msgstr "जवाब प्रकाशित करें"
+#~ msgstr ""
 
 #: src/components/StarterPack/QrCodeDialog.tsx:128
 msgid "QR code copied to your clipboard!"
@@ -6133,7 +6133,7 @@ msgstr "क्वोट की गई पोस्ट हटाता है"
 
 #: src/view/com/composer/ExternalEmbedRemoveBtn.tsx:29
 #~ msgid "Removes the attachment"
-#~ msgstr "अटैचमेंट हटाता है"
+#~ msgstr ""
 
 #: src/view/com/composer/ExternalEmbedRemoveBtn.tsx:29
 #~ msgid "Removes the image preview"
@@ -6530,7 +6530,7 @@ msgstr "बदलाव सहेजें"
 
 #: src/view/com/modals/EditProfile.tsx:227
 #~ msgid "Save Changes"
-#~ msgstr "बदलाव सहेजें"
+#~ msgstr "बदलाव सेव करो"
 
 #: src/view/com/modals/ChangeHandle.tsx:158
 msgid "Save handle change"
@@ -6573,7 +6573,7 @@ msgstr "आपके फ़ीड में सहेजा गया"
 
 #: src/view/com/modals/EditProfile.tsx:220
 #~ msgid "Saves any changes to your profile"
-#~ msgstr "आपके प्रोफ़ाइल में कोई भी बदलाव सहेजता है"
+#~ msgstr ""
 
 #: src/view/com/modals/ChangeHandle.tsx:159
 msgid "Saves handle change to {handle}"
@@ -6622,7 +6622,7 @@ msgstr "\"{searchText}\" खोजें"
 
 #: src/components/TagMenu/index.tsx:155
 #~ msgid "Search for all posts by @{authorHandle} with tag {displayTag}"
-#~ msgstr "@{authorHandle} द्वारा {displayTag} टैग वाले सभी पोस्ट खोजें"
+#~ msgstr ""
 
 #: src/components/TagMenu/index.tsx:145
 #~ msgid "Search for all posts by @{authorHandle} with tag {tag}"
@@ -6630,7 +6630,7 @@ msgstr "\"{searchText}\" खोजें"
 
 #: src/components/TagMenu/index.tsx:104
 #~ msgid "Search for all posts with tag {displayTag}"
-#~ msgstr "{displayTag} टैग वाले सभी पोस्ट खोजें"
+#~ msgstr ""
 
 #: src/components/TagMenu/index.tsx:90
 #~ msgid "Search for all posts with tag {tag}"
@@ -7356,7 +7356,7 @@ msgstr "साइन अप"
 
 #: src/view/shell/NavSignupCard.tsx:47
 #~ msgid "Sign up or sign in to join the conversation"
-#~ msgstr "बातचीत में जुड़ने के लिए साइन इन या साइन अप करें"
+#~ msgstr ""
 
 #: src/components/moderation/ScreenHider.tsx:91
 #: src/lib/moderation/useGlobalLabelStrings.ts:28
@@ -7902,17 +7902,17 @@ msgstr "खाता निष्क्रियण पर कोई समय �
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:112
 #: src/view/screens/ProfileFeed.tsx:539
 #~ msgid "There was an an issue contacting the server, please check your internet connection and try again."
-#~ msgstr "सर्वर से संपर्क करने में समस्या हुई, कृपया अपना इंटरनेट कनेक्शन जाँच ले और फिर प्रयास करें।"
+#~ msgstr ""
 
 #: src/view/com/posts/FeedErrorMessage.tsx:145
 #~ msgid "There was an an issue removing this feed. Please check your internet connection and try again."
-#~ msgstr "इस फ़ीड को हटाने में समस्या हुई। कृपया अपना इंटरनेट कनेक्शन जाँच ले और फिर प्रयास करें।"
+#~ msgstr ""
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:52
 #: src/view/com/posts/FeedShutdownMsg.tsx:71
 #: src/view/screens/ProfileFeed.tsx:204
 #~ msgid "There was an an issue updating your feeds, please check your internet connection and try again."
-#~ msgstr "आपके फ़ीड को अपडेट करने में समस्या हुई, कृपया अपना इंटरनेट कनेक्शन जाँच ले और फिर प्रयास करें।"
+#~ msgstr ""
 
 #: src/components/dialogs/GifSelect.tsx:225
 msgid "There was an issue connecting to Tenor."
