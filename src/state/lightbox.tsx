@@ -19,7 +19,7 @@ const LightboxContext = React.createContext<{
 })
 
 const LightboxControlContext = React.createContext<{
-  openLightbox: (lightbox: Lightbox) => void
+  openLightbox: (lightbox: Omit<Lightbox, 'id'>) => void
   closeLightbox: () => boolean
 }>({
   openLightbox: () => {},
