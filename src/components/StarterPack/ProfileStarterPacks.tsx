@@ -13,10 +13,10 @@ import {useNavigation} from '@react-navigation/native'
 import {InfiniteData, UseInfiniteQueryResult} from '@tanstack/react-query'
 
 import {useGenerateStarterPackMutation} from '#/lib/generate-starterpack'
-import {useBottomBarOffset} from '#/lib/hooks/useBottomBarOffset'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {NavigationProp} from '#/lib/routes/types'
 import {parseStarterPackUri} from '#/lib/strings/starter-pack'
+import {s} from '#/lib/styles'
 import {logger} from '#/logger'
 import {List, ListRef} from '#/view/com/util/List'
 import {Text} from '#/view/com/util/text/Text'
@@ -68,7 +68,6 @@ export const ProfileStarterPacks = React.forwardRef<
   ref,
 ) {
   const t = useTheme()
-  const bottomBarOffset = useBottomBarOffset(100)
   const [isPTRing, setIsPTRing] = React.useState(false)
   const {data, refetch, isFetching, hasNextPage, fetchNextPage} = query
   const {isTabletOrDesktop} = useWebMediaQueries()
@@ -133,7 +132,9 @@ export const ProfileStarterPacks = React.forwardRef<
         refreshing={isPTRing}
         headerOffset={headerOffset}
         progressViewOffset={ios(0)}
-        contentContainerStyle={{paddingBottom: headerOffset + bottomBarOffset}}
+        contentContainerStyle={{
+          minHeight: s.window.height + headerOffset,
+        }}
         indicatorStyle={t.name === 'light' ? 'black' : 'white'}
         removeClippedSubviews={true}
         desktopFixedHeight
