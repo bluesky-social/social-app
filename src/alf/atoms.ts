@@ -891,7 +891,7 @@ export const atoms = {
     outlineOffset: '-1px',
   } as StyleProp<ViewStyle>,
   outline_outset_1: {
-    outlineOffset: '2px',
+    outlineOffset: '1px',
   } as StyleProp<ViewStyle>,
 
   /*
