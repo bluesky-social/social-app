@@ -73,7 +73,7 @@ function ImageViewing({
     const show = showControls && dismissSwipeTranslateY.value === 0
     return {
       pointerEvents: show ? 'auto' : 'none',
-      opacity: withClampedSpring(show && openProgress.value > 0 ? 1 : 0),
+      opacity: withClampedSpring(show && openProgress.value === 1 ? 1 : 0),
       transform: [
         {
           translateY: withClampedSpring(show ? 0 : -30),
@@ -85,7 +85,7 @@ function ImageViewing({
     const show = showControls && dismissSwipeTranslateY.value === 0
     return {
       pointerEvents: show ? 'auto' : 'none',
-      opacity: withClampedSpring(show && openProgress.value > 0 ? 1 : 0),
+      opacity: withClampedSpring(show && openProgress.value === 1 ? 1 : 0),
       transform: [
         {
           translateY: withClampedSpring(show ? 0 : 30),
