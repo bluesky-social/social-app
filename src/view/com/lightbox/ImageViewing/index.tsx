@@ -18,7 +18,11 @@ import {
 } from 'react-native'
 import {Gesture} from 'react-native-gesture-handler'
 import PagerView from 'react-native-pager-view'
-import {interpolate} from 'react-native-reanimated'
+import {
+  interpolate,
+  SharedValue,
+  useAnimatedReaction,
+} from 'react-native-reanimated'
 import Animated, {
   runOnJS,
   useAnimatedStyle,
@@ -47,20 +51,17 @@ const SCREEN_HEIGHT = Dimensions.get('window').height
 
 function ImageViewing({
   lightbox,
+  openProgress,
   onRequestClose,
   onPressSave,
   onPressShare,
 }: {
   lightbox: Lightbox
+  openProgress: SharedValue<number>
   onRequestClose: () => void
   onPressSave: (uri: string) => void
   onPressShare: (uri: string) => void
 }) {
-  const openProgress = useSharedValue(0)
-  React.useEffect(() => {
-    openProgress.value = withClampedSpring(1)
-  }, [openProgress])
-
   const {images, index: initialImageIndex, thumbDims} = lightbox
   const [isScaled, setIsScaled] = useState(false)
   const [isDragging, setIsDragging] = useState(false)
@@ -383,7 +384,7 @@ const styles = StyleSheet.create({
 })
 
 function ImageViewingRoot({
-  lightbox,
+  lightbox: nextLightbox,
   onRequestClose,
   onPressSave,
   onPressShare,
@@ -393,13 +394,39 @@ function ImageViewingRoot({
   onPressSave: (uri: string) => void
   onPressShare: (uri: string) => void
 }) {
-  if (!lightbox) {
+  const [activeLightbox, setActiveLightbox] = useState(nextLightbox)
+  const openProgress = useSharedValue(0)
+
+  if (!activeLightbox && nextLightbox) {
+    setActiveLightbox(nextLightbox)
+  }
+
+  React.useEffect(() => {
+    if (nextLightbox) {
+      openProgress.value = withClampedSpring(1)
+    } else {
+      openProgress.value = withClampedSpring(0)
+    }
+  }, [nextLightbox, openProgress])
+
+  useAnimatedReaction(
+    () => openProgress.value === 0,
+    (isGone, wasGone) => {
+      if (isGone && !wasGone) {
+        runOnJS(setActiveLightbox)(null)
+      }
+    },
+  )
+
+  if (!activeLightbox) {
     return null
   }
+
   return (
     <ImageViewing
-      key={lightbox.id}
-      lightbox={lightbox}
+      key={activeLightbox.id}
+      lightbox={activeLightbox}
+      openProgress={openProgress}
       onRequestClose={onRequestClose}
       onPressSave={onPressSave}
       onPressShare={onPressShare}

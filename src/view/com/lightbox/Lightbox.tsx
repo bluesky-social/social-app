@@ -49,10 +49,6 @@ export function Lightbox() {
     [permissionResponse, requestPermission, _],
   )
 
-  if (!activeLightbox) {
-    return null
-  }
-
   return (
     <ImageView
       lightbox={activeLightbox}
