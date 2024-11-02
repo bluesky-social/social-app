@@ -4,14 +4,14 @@ import * as RadixSelect from '@radix-ui/react-select'
 import {flatten, useTheme} from '#/alf'
 import {atoms as a} from '#/alf'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
-import {Props as SVGIconProps} from '#/components/icons/common'
-import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '../icons/Check'
+import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
 import {
   ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon,
   ChevronTop_Stroke2_Corner0_Rounded as ChevronUpIcon,
-} from '../icons/Chevron'
+} from '#/components/icons/Chevron'
 import {
   ContentProps,
+  ItemIndicatorProps,
   ItemProps,
   RadixPassThroughTriggerProps,
   RootProps,
@@ -234,11 +234,7 @@ Item.displayName = 'SelectItem'
 
 export const ItemText = RadixSelect.ItemText
 
-export function ItemIndicator({
-  icon: Icon = CheckIcon,
-}: {
-  icon?: React.ComponentType<SVGIconProps>
-}) {
+export function ItemIndicator({icon: Icon = CheckIcon}: ItemIndicatorProps) {
   const t = useTheme()
   const {hovered, focused} = useItemContext()
   return (

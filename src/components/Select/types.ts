@@ -1,11 +1,17 @@
 import {AccessibilityProps} from 'react-native'
 
+import {DialogControlProps} from '#/components/Dialog'
+import {Props as SVGIconProps} from '#/components/icons/common'
+
 export type RootProps = {
   children?: React.ReactNode
   value?: string
-  defaultValue?: string
   onValueChange?(value: string): void
   disabled?: boolean
+  /**
+   * @platform web
+   */
+  defaultValue?: string
   /**
    * @platform web
    */
@@ -52,6 +58,7 @@ export type TriggerProps = {
 export type TriggerChildProps =
   | {
       isNative: true
+      control: DialogControlProps
       state: {
         /**
          * Web only, `false` on native
@@ -102,10 +109,19 @@ export type ValueProps = {
 
 export type ContentProps<T> = {
   items: T[]
-  renderItem: (item: T, index: number) => React.ReactNode
+  renderItem: (item: T, index: number) => React.ReactElement
 }
 
 export type ItemProps = {
   value: string
+  label: string
   children: React.ReactNode
+}
+
+export type ItemTextProps = {
+  children: React.ReactNode
+}
+
+export type ItemIndicatorProps = {
+  icon: React.ComponentType<SVGIconProps>
 }

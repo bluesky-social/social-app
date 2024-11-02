@@ -1,45 +1,172 @@
-import React from 'react'
+import React, {useCallback, useMemo, useState} from 'react'
 import {View} from 'react-native'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 import {useTheme} from '#/alf'
 import {atoms as a} from '#/alf'
-import {Props as SVGIconProps} from '#/components/icons/common'
-import {ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon} from '../icons/Chevron'
+import * as Dialog from '#/components/Dialog'
+import {Button, ButtonIcon, ButtonText} from '../Button'
+import {useInteractionState} from '../hooks/useInteractionState'
+import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '../icons/Check'
+import {ChevronTopBottom_Stroke2_Corner0_Rounded as ChevronUpDownIcon} from '../icons/Chevron'
+import {Text} from '../Typography'
 import {
   ContentProps,
+  ItemIndicatorProps,
   ItemProps,
+  ItemTextProps,
   RootProps,
   TriggerProps,
   ValueProps,
 } from './types'
 
-export function Root(props: RootProps) {
-  return null
+type ContextType = {
+  control: Dialog.DialogControlProps
+  valueLabel: string
+  setValueLabel: (value: string) => void
+} & Pick<RootProps, 'value' | 'onValueChange' | 'disabled'>
+
+const Context = React.createContext<ContextType | null>(null)
+
+function useSelectContext() {
+  const ctx = React.useContext(Context)
+  if (!ctx) {
+    throw new Error('Select components must must be used within a Select.Root')
+  }
+  return ctx
+}
+
+export function Root({children, value, onValueChange, disabled}: RootProps) {
+  const control = Dialog.useDialogControl()
+  const [valueLabel, setValueLabel] = useState('')
+  const ctx = useMemo(
+    () => ({
+      control,
+      value,
+      onValueChange,
+      disabled,
+      valueLabel,
+      setValueLabel,
+    }),
+    [control, value, onValueChange, disabled, valueLabel, setValueLabel],
+  )
+  return <Context.Provider value={ctx}>{children}</Context.Provider>
 }
 
 export function Trigger({children, label}: TriggerProps) {
-  return null
+  const {control} = useSelectContext()
+  const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
+  const {
+    state: pressed,
+    onIn: onPressIn,
+    onOut: onPressOut,
+  } = useInteractionState()
+
+  if (typeof children === 'function') {
+    return children({
+      isNative: true,
+      control,
+      state: {
+        hovered: false,
+        focused,
+        pressed,
+      },
+      props: {
+        onPress: control.open,
+        onFocus,
+        onBlur,
+        onPressIn,
+        onPressOut,
+        accessibilityLabel: label,
+      },
+    })
+  } else {
+    return (
+      <Button
+        label={label}
+        onPress={control.open}
+        style={[a.flex_1, a.justify_between]}
+        color="secondary"
+        size="small"
+        variant="solid">
+        <>{children}</>
+      </Button>
+    )
+  }
 }
 
-export function Value(props: ValueProps) {
-  return null
+export function Value({placeholder}: ValueProps) {
+  const {value} = useSelectContext()
+  const t = useTheme()
+  return <ButtonText style={[t.atoms.text]}>{value || placeholder}</ButtonText>
 }
 
 export function Icon() {
-  const t = useTheme()
-  return <ChevronDownIcon style={[t.atoms.text]} size="xs" />
+  return <ButtonIcon icon={ChevronUpDownIcon} />
 }
 
-export function Content<T>({items, renderItem}: ContentProps<T>) {
-  const t = useTheme()
-  return null
+export function Content<T>(props: ContentProps<T>) {
+  const {control, ...context} = useSelectContext()
+
+  return (
+    <Dialog.Outer control={control}>
+      <ContentInner {...props} {...context} />
+    </Dialog.Outer>
+  )
+}
+
+function ContentInner<T>({
+  items,
+  renderItem,
+  ...context
+}: ContentProps<T> & ContextType) {
+  const control = Dialog.useDialogContext()
+  const {_} = useLingui()
+
+  const render = React.useCallback(
+    ({item, index}: {item: T; index: number}) => {
+      return renderItem(item, index)
+    },
+    [renderItem],
+  )
+
+  const doneButton = useCallback(
+    () => (
+      <Button
+        label={_(msg`Done`)}
+        onPress={() => control.close()}
+        size="small"
+        color="primary"
+        variant="ghost"
+        style={[a.rounded_full]}>
+        <ButtonText style={[a.text_md]}>
+          <Trans>Done</Trans>
+        </ButtonText>
+      </Button>
+    ),
+    [control, _],
+  )
+
+  return (
+    <Context.Provider value={context}>
+      <Dialog.Header renderRight={doneButton}>
+        <Dialog.HeaderText>
+          <Trans>Select an option</Trans>
+        </Dialog.HeaderText>
+      </Dialog.Header>
+      <Dialog.InnerFlatList data={items} renderItem={render} />
+    </Context.Provider>
+  )
 }
 
 const ItemContext = React.createContext<{
+  selected: boolean
   hovered: boolean
   focused: boolean
   pressed: boolean
 }>({
+  selected: false,
   hovered: false,
   focused: false,
   pressed: false,
@@ -49,22 +176,54 @@ export function useItemContext() {
   return React.useContext(ItemContext)
 }
 
-export const Item = React.forwardRef<View, ItemProps>(
-  ({value, children}, ref) => {
-    return null
-  },
-)
-Item.displayName = 'SelectItem'
-
-export function ItemText({children}: React.PropsWithChildren<{}>) {
+export function Item({children, value, label}: ItemProps) {
   const t = useTheme()
-  return null
+  const control = Dialog.useDialogContext()
+  const {value: selected, onValueChange} = useSelectContext()
+  return (
+    <Button
+      role="listitem"
+      label={label}
+      style={[a.flex_1]}
+      onPress={() => {
+        control.close(() => {
+          onValueChange?.(value)
+        })
+      }}>
+      {({hovered, focused, pressed}) => (
+        <ItemContext.Provider
+          value={{selected: value === selected, hovered, focused, pressed}}>
+          <View
+            style={[
+              a.flex_1,
+              a.px_lg,
+              (focused || pressed) && t.atoms.bg_contrast_25,
+            ]}>
+            <View
+              style={[
+                a.flex_1,
+                a.flex_row,
+                a.py_md,
+                a.justify_between,
+                a.align_center,
+                a.border_b,
+                t.atoms.border_contrast_low,
+              ]}>
+              {children}
+            </View>
+          </View>
+        </ItemContext.Provider>
+      )}
+    </Button>
+  )
 }
 
-export function ItemIndicator({
-  icon,
-}: {
-  icon?: React.ComponentType<SVGIconProps>
-}) {
-  return null
+export function ItemText({children}: ItemTextProps) {
+  return <Text style={[a.text_md]}>{children}</Text>
+}
+
+export function ItemIndicator({icon: Icon = CheckIcon}: ItemIndicatorProps) {
+  const {selected} = useItemContext()
+  if (!selected) return null
+  return <Icon size="md" />
 }
