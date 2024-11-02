@@ -10,6 +10,7 @@ import {saveImageToMediaLibrary, shareImageModal} from '#/lib/media/manip'
 import {colors, s} from '#/lib/styles'
 import {isIOS} from '#/platform/detection'
 import {useLightbox, useLightboxControls} from '#/state/lightbox'
+import {ImageSource} from '#/view/com/lightbox/ImageViewing/@types'
 import {ScrollView} from '#/view/com/util/Views'
 import {Button} from '../util/forms/Button'
 import {Text} from '../util/text/Text'
@@ -21,41 +22,15 @@ const SCREEN_HEIGHT = Dimensions.get('window').height
 export function Lightbox() {
   const {activeLightbox} = useLightbox()
   const {closeLightbox} = useLightboxControls()
+
   const onClose = React.useCallback(() => {
     closeLightbox()
   }, [closeLightbox])
 
-  if (!activeLightbox) {
-    return null
-  }
-
-  return (
-    <ImageView
-      images={activeLightbox.images}
-      initialImageIndex={activeLightbox.index}
-      thumbDims={activeLightbox.thumbDims}
-      visible
-      onRequestClose={onClose}
-      renderFooter={index => (
-        <LightboxFooter
-          uri={activeLightbox.images[index].uri}
-          altText={activeLightbox.images[index].alt || ''}
-        />
-      )}
-    />
-  )
-}
-
-function LightboxFooter({altText, uri}: {altText?: string; uri: string}) {
   const {_} = useLingui()
-  const [isAltExpanded, setAltExpanded] = React.useState(false)
   const [permissionResponse, requestPermission] = MediaLibrary.usePermissions({
     granularPermissions: ['photo'],
   })
-  const insets = useSafeAreaInsets()
-  const svMaxHeight = SCREEN_HEIGHT - insets.top - 50
-  const isMomentumScrolling = React.useRef(false)
-
   const saveImageToAlbumWithToasts = React.useCallback(
     async (uri: string) => {
       if (!permissionResponse || permissionResponse.granted === false) {
@@ -75,7 +50,6 @@ function LightboxFooter({altText, uri}: {altText?: string; uri: string}) {
         }
         return
       }
-
       try {
         await saveImageToMediaLibrary({uri})
         Toast.show(_(msg`Saved to your camera roll`))
@@ -86,6 +60,42 @@ function LightboxFooter({altText, uri}: {altText?: string; uri: string}) {
     [permissionResponse, requestPermission, _],
   )
 
+  if (!activeLightbox) {
+    return null
+  }
+
+  return (
+    <ImageView
+      images={activeLightbox.images}
+      initialImageIndex={activeLightbox.index}
+      thumbDims={activeLightbox.thumbDims}
+      visible
+      onRequestClose={onClose}
+      renderFooter={index => (
+        <LightboxFooter
+          images={activeLightbox.images}
+          index={index}
+          onPressSave={saveImageToAlbumWithToasts}
+        />
+      )}
+    />
+  )
+}
+
+function LightboxFooter({
+  images,
+  index,
+  onPressSave,
+}: {
+  images: ImageSource[]
+  index: number
+  onPressSave: (uri: string) => void
+}) {
+  const {alt: altText, uri} = images[index]
+  const [isAltExpanded, setAltExpanded] = React.useState(false)
+  const insets = useSafeAreaInsets()
+  const svMaxHeight = SCREEN_HEIGHT - insets.top - 50
+  const isMomentumScrolling = React.useRef(false)
   return (
     <ScrollView
       style={[
@@ -131,7 +141,7 @@ function LightboxFooter({altText, uri}: {altText?: string; uri: string}) {
         <Button
           type="primary-outline"
           style={styles.footerBtn}
-          onPress={() => saveImageToAlbumWithToasts(uri)}>
+          onPress={() => onPressSave(uri)}>
           <FontAwesomeIcon icon={['far', 'floppy-disk']} style={s.white} />
           <Text type="xl" style={s.white}>
             <Trans context="action">Save</Trans>
