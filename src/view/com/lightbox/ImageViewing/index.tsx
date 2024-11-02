@@ -349,9 +349,8 @@ function interpolateTransform(
   let initialScale = thumbnailDims.width / screenSize.width
 
   const imageAspect = imageDims.width / imageDims.height
-  const finalWidth = screenSize.width
-  const finalHeight = finalWidth / imageAspect
-  if (initialScale * finalHeight < thumbnailDims.height) {
+  const thumbAspect = thumbnailDims.width / thumbnailDims.height
+  if (imageAspect > 1 && thumbAspect < 1) {
     initialScale = initialScale * imageAspect
   }
 
