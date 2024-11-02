@@ -107,61 +107,6 @@ function ImageViewing({
     return {pointerEvents: 'auto'}
   })
 
-  const activeImageStyle = useAnimatedStyle(() => {
-    const image = images[imageIndex]
-    const imageAspect = image.dimensions
-      ? image.dimensions.width / image.dimensions.height
-      : null
-    const width = SCREEN.width
-    const height = imageAspect ? SCREEN.width / imageAspect : undefined
-
-    if (openProgress.value === 1 || dismissSwipeTranslateY.value !== 0) {
-      return {
-        transform: [{translateY: dismissSwipeTranslateY.value}],
-        width,
-        height,
-      }
-    }
-    if (image.thumbRect && image.dimensions) {
-      return interpolateFromThumbnail(
-        openProgress.value,
-        image.thumbRect,
-        SCREEN,
-        image.dimensions,
-      )
-    }
-    return {
-      transform: [],
-      width,
-      height,
-    }
-  })
-
-  const dismissSwipePan = Gesture.Pan()
-    .enabled(!isScaled)
-    .activeOffsetY([-10, 10])
-    .failOffsetX([-10, 10])
-    .maxPointers(1)
-    .onUpdate(e => {
-      'worklet'
-      dismissSwipeTranslateY.value = e.translationY
-    })
-    .onEnd(e => {
-      'worklet'
-      if (Math.abs(e.velocityY) > 1000) {
-        isFlyingAway.value = true
-        dismissSwipeTranslateY.value = withDecay({
-          velocity: e.velocityY,
-          velocityFactor: Math.max(3000 / Math.abs(e.velocityY), 1), // Speed up if it's too slow.
-          deceleration: 1, // Danger! This relies on the reaction below stopping it.
-        })
-      } else {
-        dismissSwipeTranslateY.value = withSpring(0, {
-          stiffness: 700,
-          damping: 50,
-        })
-      }
-    })
   useAnimatedReaction(
     () => Math.abs(dismissSwipeTranslateY.value) > SCREEN_HEIGHT,
     (isOut, wasOut) => {
@@ -230,20 +175,20 @@ function ImageViewing({
           overdrag={true}
           style={styles.pager}>
           {images.map((imageSrc, i) => (
-            <View key={imageSrc.uri}>
-              <ImageItem
-                onTap={onTap}
-                onZoom={onZoom}
-                imageSrc={imageSrc}
-                onRequestClose={onRequestClose}
-                isScrollViewBeingDragged={isDragging}
-                showControls={showControls}
-                animatedStyle={imageIndex === i ? activeImageStyle : null}
-                dismissSwipePan={
-                  imageIndex === i && !isDragging ? dismissSwipePan : null
-                }
-              />
-            </View>
+            <LightboxPage
+              key={imageSrc.uri}
+              image={imageSrc}
+              onRequestClose={onRequestClose}
+              onTap={onTap}
+              onZoom={onZoom}
+              isActive={i === imageIndex}
+              isScrollViewBeingDragged={isDragging}
+              isFlyingAway={isFlyingAway}
+              isScaled={isScaled}
+              showControls={showControls}
+              openProgress={openProgress}
+              dismissSwipeTranslateY={dismissSwipeTranslateY}
+            />
           ))}
         </PagerView>
         <Animated.View style={[styles.footer, animatedFooterStyle]}>
@@ -256,6 +201,102 @@ function ImageViewing({
         </Animated.View>
       </Animated.View>
     </SafeAreaView>
+  )
+}
+
+function LightboxPage({
+  image,
+  onRequestClose,
+  onTap,
+  onZoom,
+  isActive,
+  isScrollViewBeingDragged,
+  isFlyingAway,
+  isScaled,
+  showControls,
+  openProgress,
+  dismissSwipeTranslateY,
+}: {
+  image: ImageSource
+  onRequestClose: () => void
+  onTap: () => void
+  onZoom: (scaled: boolean) => void
+  isActive: boolean
+  isScrollViewBeingDragged: boolean
+  isFlyingAway: SharedValue<boolean>
+  isScaled: boolean
+  showControls: boolean
+  openProgress: SharedValue<number>
+  dismissSwipeTranslateY: SharedValue<number>
+}) {
+  const dimensions = image.dimensions
+  const thumbRect = image.thumbRect
+  const imageAspect = dimensions ? dimensions.width / dimensions.height : null
+
+  const imageStyle = useAnimatedStyle(() => {
+    const width = SCREEN.width
+    const height = imageAspect ? SCREEN.width / imageAspect : undefined
+    if (isActive) {
+      if (openProgress.value === 1 || dismissSwipeTranslateY.value !== 0) {
+        return {
+          transform: [{translateY: dismissSwipeTranslateY.value}],
+          width,
+          height,
+        }
+      }
+      if (thumbRect && dimensions) {
+        return interpolateFromThumbnail(
+          openProgress.value,
+          thumbRect,
+          SCREEN,
+          dimensions,
+        )
+      }
+    }
+    return {
+      transform: [],
+      width,
+      height,
+    }
+  })
+
+  const dismissSwipePan = Gesture.Pan()
+    .enabled(!isScaled && isActive)
+    .activeOffsetY([-10, 10])
+    .failOffsetX([-10, 10])
+    .maxPointers(1)
+    .onUpdate(e => {
+      'worklet'
+      dismissSwipeTranslateY.value = e.translationY
+    })
+    .onEnd(e => {
+      'worklet'
+      if (Math.abs(e.velocityY) > 1000) {
+        isFlyingAway.value = true
+        dismissSwipeTranslateY.value = withDecay({
+          velocity: e.velocityY,
+          velocityFactor: Math.max(3000 / Math.abs(e.velocityY), 1), // Speed up if it's too slow.
+          deceleration: 1, // Danger! This relies on the reaction below stopping it.
+        })
+      } else {
+        dismissSwipeTranslateY.value = withSpring(0, {
+          stiffness: 700,
+          damping: 50,
+        })
+      }
+    })
+
+  return (
+    <ImageItem
+      imageSrc={image}
+      isScrollViewBeingDragged={isScrollViewBeingDragged}
+      onTap={onTap}
+      onZoom={onZoom}
+      onRequestClose={onRequestClose}
+      showControls={showControls}
+      animatedStyle={imageStyle}
+      dismissSwipePan={dismissSwipePan}
+    />
   )
 }
 
