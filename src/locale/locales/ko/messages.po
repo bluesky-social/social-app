@@ -8,7 +8,7 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-01 13:13+0900\n"
+"PO-Revision-Date: 2024-11-02 20:26+0900\n"
 "Last-Translator: quiple\n"
 "Language-Team: quiple, lens0021, HaruChanHeart, hazzzi, heartade\n"
 "Plural-Forms: \n"
@@ -64,7 +64,7 @@ msgstr "팔로워"
 msgid "{0, plural, one {following} other {following}}"
 msgstr "팔로우 중"
 
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:300
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:302
 msgid "{0, plural, one {Like (# like)} other {Like (# likes)}}"
 msgstr "좋아요 ({0, plural, other {#}}개)"
 
@@ -85,7 +85,7 @@ msgstr "게시물"
 msgid "{0, plural, one {quote} other {quotes}}"
 msgstr "인용"
 
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:257
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:259
 msgid "{0, plural, one {Reply (# reply)} other {Reply (# replies)}}"
 msgstr "답글 ({0, plural, other {#}}개)"
 
@@ -93,7 +93,7 @@ msgstr "답글 ({0, plural, other {#}}개)"
 msgid "{0, plural, one {repost} other {reposts}}"
 msgstr "재게시"
 
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:296
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:298
 msgid "{0, plural, one {Unlike (# like)} other {Unlike (# likes)}}"
 msgstr "좋아요 취소 ({0, plural, other {#}}개)"
 
@@ -484,7 +484,7 @@ msgstr "대체 텍스트 추가 (선택 사항)"
 msgid "Add another account"
 msgstr "다른 계정 추가"
 
-#: src/view/com/composer/Composer.tsx:677
+#: src/view/com/composer/Composer.tsx:692
 msgid "Add another post"
 msgstr "다른 게시물 추가하기"
 
@@ -509,7 +509,7 @@ msgstr "구성 설정에 뮤트 단어 추가"
 msgid "Add muted words and tags"
 msgstr "뮤트할 단어 및 태그 추가"
 
-#: src/view/com/composer/Composer.tsx:1189
+#: src/view/com/composer/Composer.tsx:1207
 msgid "Add new post"
 msgstr "새 게시물 추가"
 
@@ -879,11 +879,11 @@ msgstr "피드에서 {0}을(를) 제거하시겠습니까?"
 msgid "Are you sure you want to remove this from your feeds?"
 msgstr "내 피드에서 이 피드를 삭제하시겠습니까?"
 
-#: src/view/com/composer/Composer.tsx:630
+#: src/view/com/composer/Composer.tsx:643
 msgid "Are you sure you'd like to discard this draft?"
 msgstr "이 초안을 삭제하시겠습니까?"
 
-#: src/view/com/composer/Composer.tsx:789
+#: src/view/com/composer/Composer.tsx:807
 msgid "Are you sure you'd like to discard this post?"
 msgstr "이 게시물을 삭제하시겠습니까?"
 
@@ -911,6 +911,11 @@ msgstr "3자 이상"
 #: src/screens/Settings/AccessibilitySettings.tsx:98
 msgid "Autoplay options have moved to the <0>Content and Media settings</0>."
 msgstr "자동 재생 옵션은 <0>콘텐츠 및 미디어 설정</0>으로 이동했습니다."
+
+#: src/screens/Settings/ContentAndMediaSettings.tsx:89
+#: src/screens/Settings/ContentAndMediaSettings.tsx:95
+msgid "Autoplay videos and GIFs"
+msgstr "동영상 및 GIF 자동 재생"
 
 #: src/components/dms/MessagesListHeader.tsx:75
 #: src/components/moderation/LabelsOnMeDialog.tsx:290
@@ -1127,7 +1132,7 @@ msgstr "글자, 숫자, 공백, 대시, 밑줄만 포함할 수 있습니다. �
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:72
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:79
 #: src/screens/Settings/Settings.tsx:187
-#: src/view/com/composer/Composer.tsx:852
+#: src/view/com/composer/Composer.tsx:870
 #: src/view/com/modals/ChangeEmail.tsx:213
 #: src/view/com/modals/ChangeEmail.tsx:215
 #: src/view/com/modals/ChangeHandle.tsx:141
@@ -1189,9 +1194,9 @@ msgid "Cancels opening the linked website"
 msgstr "연결된 웹사이트를 여는 것을 취소합니다"
 
 #: src/state/shell/composer/index.tsx:82
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:113
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:154
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:190
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:115
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:156
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:192
 msgid "Cannot interact with a blocked user"
 msgstr "차단된 사용자와 상호작용할 수 없습니다"
 
@@ -1256,7 +1261,7 @@ msgstr "이메일 변경"
 
 #: src/Navigation.tsx:373
 #: src/view/shell/bottom-bar/BottomBar.tsx:200
-#: src/view/shell/desktop/LeftNav.tsx:329
+#: src/view/shell/desktop/LeftNav.tsx:336
 #: src/view/shell/Drawer.tsx:446
 msgid "Chat"
 msgstr "대화"
@@ -1481,7 +1486,7 @@ msgstr "온보딩 완료 후 계정 사용 시작"
 msgid "Complete the challenge"
 msgstr "챌린지 완료하기"
 
-#: src/view/com/composer/Composer.tsx:755
+#: src/view/com/composer/Composer.tsx:773
 msgid "Compose posts up to {MAX_GRAPHEME_LENGTH} characters in length"
 msgstr "최대 {MAX_GRAPHEME_LENGTH}자 길이까지 글을 작성할 수 있습니다"
 
@@ -1489,7 +1494,7 @@ msgstr "최대 {MAX_GRAPHEME_LENGTH}자 길이까지 글을 작성할 수 있습
 msgid "Compose reply"
 msgstr "답글 작성하기"
 
-#: src/view/com/composer/Composer.tsx:1569
+#: src/view/com/composer/Composer.tsx:1592
 msgid "Compressing video..."
 msgstr "동영상 압축 중..."
 
@@ -1646,7 +1651,7 @@ msgstr "빌드 버전을 클립보드에 복사했습니다"
 #: src/view/com/modals/ChangeHandle.tsx:313
 #: src/view/com/modals/InviteCodes.tsx:153
 #: src/view/com/util/forms/PostDropdownBtn.tsx:240
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:380
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:382
 msgid "Copied to clipboard"
 msgstr "클립보드에 복사했습니다"
 
@@ -1939,7 +1944,7 @@ msgstr "내 계정 삭제"
 msgid "Delete My Account…"
 msgstr "내 계정 삭제…"
 
-#: src/view/com/composer/Composer.tsx:763
+#: src/view/com/composer/Composer.tsx:781
 #: src/view/com/util/forms/PostDropdownBtn.tsx:653
 #: src/view/com/util/forms/PostDropdownBtn.tsx:655
 msgid "Delete post"
@@ -2012,8 +2017,6 @@ msgstr "대화 상자: 이 게시물과 상호작용할 수 있는 사람 조정
 msgid "Dim"
 msgstr "어둑함"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:89
-#: src/screens/Settings/ContentAndMediaSettings.tsx:95
 #: src/view/screens/AccessibilitySettings.tsx:119
 msgid "Disable autoplay for videos and GIFs"
 msgstr "동영상 및 GIF 자동 재생 끄기"
@@ -2042,8 +2045,8 @@ msgid "Disabled"
 msgstr "사용 안 함"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:84
-#: src/view/com/composer/Composer.tsx:632
-#: src/view/com/composer/Composer.tsx:796
+#: src/view/com/composer/Composer.tsx:645
+#: src/view/com/composer/Composer.tsx:814
 msgid "Discard"
 msgstr "삭제"
 
@@ -2051,11 +2054,11 @@ msgstr "삭제"
 msgid "Discard changes?"
 msgstr "변경 사항 삭제"
 
-#: src/view/com/composer/Composer.tsx:629
+#: src/view/com/composer/Composer.tsx:642
 msgid "Discard draft?"
 msgstr "초안 삭제"
 
-#: src/view/com/composer/Composer.tsx:788
+#: src/view/com/composer/Composer.tsx:806
 msgid "Discard post?"
 msgstr "게시물 삭제"
 
@@ -2083,7 +2086,7 @@ msgstr "새 피드 발견하기"
 msgid "Dismiss"
 msgstr "닫기"
 
-#: src/view/com/composer/Composer.tsx:1493
+#: src/view/com/composer/Composer.tsx:1516
 msgid "Dismiss error"
 msgstr "오류 무시"
 
@@ -2197,7 +2200,7 @@ msgstr "Bluesky 다운로드"
 msgid "Download CAR file"
 msgstr "CAR 파일 다운로드"
 
-#: src/view/com/composer/text-input/TextInput.web.tsx:309
+#: src/view/com/composer/text-input/TextInput.web.tsx:327
 msgid "Drop to add images"
 msgstr "드롭하여 이미지 추가"
 
@@ -2520,7 +2523,7 @@ msgstr "아래에 새 이메일 주소를 입력하세요."
 msgid "Enter your username and password"
 msgstr "사용자 이름 및 비밀번호 입력"
 
-#: src/view/com/composer/Composer.tsx:1578
+#: src/view/com/composer/Composer.tsx:1601
 msgid "Error"
 msgstr "오류"
 
@@ -2799,7 +2802,7 @@ msgstr "피드백을 보냈습니다!"
 #: src/view/screens/Feeds.tsx:552
 #: src/view/screens/Profile.tsx:232
 #: src/view/screens/Search/Search.tsx:537
-#: src/view/shell/desktop/LeftNav.tsx:401
+#: src/view/shell/desktop/LeftNav.tsx:408
 #: src/view/shell/Drawer.tsx:505
 msgid "Feeds"
 msgstr "피드"
@@ -3306,7 +3309,7 @@ msgstr "잠깐! 동영상에 대한 접근 권한이 점차적으로 제공되�
 #: src/Navigation.tsx:585
 #: src/Navigation.tsx:605
 #: src/view/shell/bottom-bar/BottomBar.tsx:158
-#: src/view/shell/desktop/LeftNav.tsx:369
+#: src/view/shell/desktop/LeftNav.tsx:376
 #: src/view/shell/Drawer.tsx:420
 msgid "Home"
 msgstr "홈"
@@ -3519,7 +3522,7 @@ msgstr "올바른 주소입니다"
 msgid "It's just you right now! Add more people to your starter pack by searching above."
 msgstr "아직은 나밖에 없습니다. 위에서 검색하여 스타터 팩에 더 많은 사람을 추가하세요."
 
-#: src/view/com/composer/Composer.tsx:1512
+#: src/view/com/composer/Composer.tsx:1535
 msgid "Job ID: {0}"
 msgstr "작업 ID: {0}"
 
@@ -3770,7 +3773,7 @@ msgstr "리스트 언뮤트됨"
 #: src/Navigation.tsx:133
 #: src/view/screens/Profile.tsx:227
 #: src/view/screens/Profile.tsx:234
-#: src/view/shell/desktop/LeftNav.tsx:407
+#: src/view/shell/desktop/LeftNav.tsx:414
 #: src/view/shell/Drawer.tsx:520
 msgid "Lists"
 msgstr "리스트"
@@ -4267,11 +4270,11 @@ msgstr "새 게시물"
 #: src/view/screens/ProfileFeed.tsx:433
 #: src/view/screens/ProfileList.tsx:248
 #: src/view/screens/ProfileList.tsx:287
-#: src/view/shell/desktop/LeftNav.tsx:303
+#: src/view/shell/desktop/LeftNav.tsx:310
 msgid "New post"
 msgstr "새 게시물"
 
-#: src/view/shell/desktop/LeftNav.tsx:311
+#: src/view/shell/desktop/LeftNav.tsx:318
 msgctxt "action"
 msgid "New Post"
 msgstr "새 게시물"
@@ -4467,7 +4470,7 @@ msgstr "나중에 하기"
 
 #: src/view/com/profile/ProfileMenu.tsx:348
 #: src/view/com/util/forms/PostDropdownBtn.tsx:698
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:344
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:346
 msgid "Note about sharing"
 msgstr "공유 관련 참고 사항"
 
@@ -4506,7 +4509,7 @@ msgstr "알림음"
 #: src/view/screens/Notifications.tsx:153
 #: src/view/screens/Notifications.tsx:199
 #: src/view/shell/bottom-bar/BottomBar.tsx:226
-#: src/view/shell/desktop/LeftNav.tsx:384
+#: src/view/shell/desktop/LeftNav.tsx:391
 #: src/view/shell/Drawer.tsx:473
 msgid "Notifications"
 msgstr "알림"
@@ -4632,8 +4635,8 @@ msgid "Open conversation options"
 msgstr "대화 옵션 열기"
 
 #: src/screens/Messages/components/MessageInput.web.tsx:165
-#: src/view/com/composer/Composer.tsx:1175
-#: src/view/com/composer/Composer.tsx:1176
+#: src/view/com/composer/Composer.tsx:1193
+#: src/view/com/composer/Composer.tsx:1194
 msgid "Open emoji picker"
 msgstr "이모티콘 선택기 열기"
 
@@ -5073,7 +5076,7 @@ msgstr "정치"
 msgid "Porn"
 msgstr "음란물"
 
-#: src/view/com/composer/Composer.tsx:880
+#: src/view/com/composer/Composer.tsx:898
 msgctxt "action"
 msgid "Post"
 msgstr "게시하기"
@@ -5083,7 +5086,7 @@ msgctxt "description"
 msgid "Post"
 msgstr "게시물"
 
-#: src/view/com/composer/Composer.tsx:878
+#: src/view/com/composer/Composer.tsx:896
 msgctxt "action"
 msgid "Post All"
 msgstr "모두 게시하기"
@@ -5237,7 +5240,7 @@ msgstr "개인정보 및 보안"
 msgid "Privacy Policy"
 msgstr "개인정보 처리방침"
 
-#: src/view/com/composer/Composer.tsx:1575
+#: src/view/com/composer/Composer.tsx:1598
 msgid "Processing video..."
 msgstr "동영상 처리 중..."
 
@@ -5252,7 +5255,7 @@ msgid "profile"
 msgstr "프로필"
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:271
-#: src/view/shell/desktop/LeftNav.tsx:415
+#: src/view/shell/desktop/LeftNav.tsx:422
 #: src/view/shell/Drawer.tsx:71
 #: src/view/shell/Drawer.tsx:545
 msgid "Profile"
@@ -5539,7 +5542,7 @@ msgstr "답글 비활성화됨"
 msgid "Replies to this post are disabled."
 msgstr "이 게시물에 대한 답글은 비활성화되어 있습니다."
 
-#: src/view/com/composer/Composer.tsx:876
+#: src/view/com/composer/Composer.tsx:894
 msgctxt "action"
 msgid "Reply"
 msgstr "답글 게시하기"
@@ -5939,7 +5942,7 @@ msgstr "맨 위로 스크롤"
 #: src/view/com/modals/ListAddRemoveUsers.tsx:76
 #: src/view/screens/Search/Search.tsx:594
 #: src/view/shell/bottom-bar/BottomBar.tsx:178
-#: src/view/shell/desktop/LeftNav.tsx:377
+#: src/view/shell/desktop/LeftNav.tsx:384
 #: src/view/shell/Drawer.tsx:394
 msgid "Search"
 msgstr "검색"
@@ -6220,7 +6223,7 @@ msgstr "비밀번호 재설정을 위한 이메일을 설정합니다"
 #: src/Navigation.tsx:158
 #: src/screens/Settings/Settings.tsx:57
 #: src/view/screens/Settings/index.tsx:312
-#: src/view/shell/desktop/LeftNav.tsx:423
+#: src/view/shell/desktop/LeftNav.tsx:430
 #: src/view/shell/Drawer.tsx:558
 msgid "Settings"
 msgstr "설정"
@@ -6240,7 +6243,7 @@ msgstr "외설적"
 #: src/view/com/profile/ProfileMenu.tsx:204
 #: src/view/com/util/forms/PostDropdownBtn.tsx:452
 #: src/view/com/util/forms/PostDropdownBtn.tsx:461
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:333
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:335
 #: src/view/screens/ProfileList.tsx:487
 msgid "Share"
 msgstr "공유"
@@ -6260,7 +6263,7 @@ msgstr "재미있는 사실을 전하세요!"
 
 #: src/view/com/profile/ProfileMenu.tsx:353
 #: src/view/com/util/forms/PostDropdownBtn.tsx:703
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:349
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:351
 msgid "Share anyway"
 msgstr "무시하고 공유"
 
@@ -7163,7 +7166,7 @@ msgid "This post has been deleted."
 msgstr "이 게시물은 삭제되었습니다."
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:700
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:346
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:348
 msgid "This post is only visible to logged-in users. It won't be visible to people who aren't logged in."
 msgstr "이 게시물은 로그인한 사용자에게만 표시됩니다. 로그인하지 않은 사용자에게는 표시되지 않습니다."
 
@@ -7552,7 +7555,7 @@ msgstr "이미지 업로드 중..."
 msgid "Uploading link thumbnail..."
 msgstr "링크 미리보기 업로드 중..."
 
-#: src/view/com/composer/Composer.tsx:1572
+#: src/view/com/composer/Composer.tsx:1595
 msgid "Uploading video..."
 msgstr "동영상 업로드 중..."
 
@@ -7771,7 +7774,7 @@ msgstr "동영상을 찾을 수 없습니다."
 msgid "Video settings"
 msgstr "동영상 설정"
 
-#: src/view/com/composer/Composer.tsx:1582
+#: src/view/com/composer/Composer.tsx:1605
 msgid "Video uploaded"
 msgstr "동영상 업로드됨"
 
@@ -7994,7 +7997,7 @@ msgstr "스타터 팩의 이름을 무엇으로 할까요?"
 
 #: src/view/com/auth/SplashScreen.tsx:39
 #: src/view/com/auth/SplashScreen.web.tsx:99
-#: src/view/com/composer/Composer.tsx:678
+#: src/view/com/composer/Composer.tsx:693
 msgid "What's up?"
 msgstr "무슨 일이 일어나고 있나요?"
 
@@ -8052,11 +8055,11 @@ msgstr "이 사용자를 검토해야 하는 이유는 무엇인가요?"
 msgid "Write a message"
 msgstr "메시지를 입력하세요"
 
-#: src/view/com/composer/Composer.tsx:753
+#: src/view/com/composer/Composer.tsx:771
 msgid "Write post"
 msgstr "게시물 작성"
 
-#: src/view/com/composer/Composer.tsx:676
+#: src/view/com/composer/Composer.tsx:691
 #: src/view/com/post-thread/PostThreadComposePrompt.tsx:71
 msgid "Write your reply"
 msgstr "답글 작성하기"
@@ -8455,8 +8458,12 @@ msgstr "뮤트한 단어"
 msgid "Your password has been changed successfully!"
 msgstr "비밀번호를 성공적으로 변경했습니다."
 
-#: src/view/com/composer/Composer.tsx:441
+#: src/view/com/composer/Composer.tsx:450
 msgid "Your post has been published"
+msgstr "게시물을 게시했습니다"
+
+#: src/view/com/composer/Composer.tsx:447
+msgid "Your posts have been published"
 msgstr "게시물을 게시했습니다"
 
 #: src/screens/Onboarding/StepFinished.tsx:241
@@ -8471,7 +8478,7 @@ msgstr "내 프로필"
 msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
 msgstr "내 프로필, 글, 피드 및 리스트가 더 이상 다른 Bluesky 사용자에게 표시되지 않습니다. 언제든지 로그인하여 계정을 재활성화할 수 있습니다."
 
-#: src/view/com/composer/Composer.tsx:440
+#: src/view/com/composer/Composer.tsx:449
 msgid "Your reply has been published"
 msgstr "내 답글을 게시했습니다"
 
