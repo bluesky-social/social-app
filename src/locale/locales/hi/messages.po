@@ -2437,7 +2437,7 @@ msgstr "उदाहरण के लिए, राम"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:321
 msgid "e.g. Alice Lastname"
-msgstr "उदाहरण के लिए, राम उपनाम"
+msgstr ""
 
 #: src/view/com/modals/ChangeHandle.tsx:367
 msgid "e.g. alice.com"
