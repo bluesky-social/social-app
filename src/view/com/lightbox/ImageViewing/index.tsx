@@ -343,16 +343,25 @@ function interpolateTransform(
   const screenCenterY = screenSize.height / 2
   const thumbnailCenterX = thumbnailDims.pageX + thumbnailDims.width / 2
   const thumbnailCenterY = thumbnailDims.pageY + thumbnailDims.height / 2
-
   const initialTranslateX = thumbnailCenterX - screenCenterX
   const initialTranslateY = thumbnailCenterY - screenCenterY
-  let initialScale = thumbnailDims.width / screenSize.width
 
   const imageAspect = imageDims.width / imageDims.height
   const thumbAspect = thumbnailDims.width / thumbnailDims.height
-  if (imageAspect > 1 && thumbAspect < 1) {
-    initialScale = initialScale * imageAspect
-  }
+  const initialWidth =
+    imageAspect > thumbAspect
+      ? thumbnailDims.height * imageAspect
+      : thumbnailDims.width
+  const initialHeight =
+    imageAspect > thumbAspect
+      ? thumbnailDims.height
+      : thumbnailDims.width / imageAspect
+  const finalWidth = screenSize.width
+  const finalHeight = screenSize.width / imageAspect
+  const initialScale = Math.min(
+    initialWidth / finalWidth,
+    initialHeight / finalHeight,
+  )
 
   const translateX = interpolate(progress, [0, 1], [initialTranslateX, 0])
   const translateY = interpolate(progress, [0, 1], [initialTranslateY, 0])
