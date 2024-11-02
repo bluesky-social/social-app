@@ -24,6 +24,7 @@ import {Bell2Off_Filled_Corner0_Rounded as BellStroke} from '#/components/icons/
 import {Link} from '#/components/Link'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {Text} from '#/components/Typography'
+import {NewskieDialog} from '../NewskieDialog'
 
 const PFP_SIZE = isWeb ? 40 : 34
 
@@ -181,25 +182,28 @@ function HeaderReady({
               {displayName}
             </Text>
             {!isDeletedAccount && (
-              <Text
-                style={[
-                  t.atoms.text_contrast_medium,
-                  a.text_sm,
-                  web([a.leading_normal, {marginTop: -2}]),
-                ]}
-                numberOfLines={1}>
-                @{profile.handle}
-                {convoState.convo?.muted && (
-                  <>
-                    {' '}
-                    &middot;{' '}
-                    <BellStroke
-                      size="xs"
-                      style={t.atoms.text_contrast_medium}
-                    />
-                  </>
-                )}
-              </Text>
+              <View style={[a.flex_row, a.gap_xs, a.align_center]}>
+                <Text
+                  style={[
+                    t.atoms.text_contrast_medium,
+                    a.text_sm,
+                    web([a.leading_normal, {marginTop: -2}]),
+                  ]}
+                  numberOfLines={1}>
+                  @{profile.handle}
+                  {convoState.convo?.muted && (
+                    <>
+                      {' '}
+                      &middot;{' '}
+                      <BellStroke
+                        size="xs"
+                        style={t.atoms.text_contrast_medium}
+                      />
+                    </>
+                  )}
+                </Text>
+                <NewskieDialog profile={profile} disabled={false} />
+              </View>
             )}
           </View>
         </Link>
