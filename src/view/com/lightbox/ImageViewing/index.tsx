@@ -19,6 +19,7 @@ import {
 import {Gesture} from 'react-native-gesture-handler'
 import PagerView from 'react-native-pager-view'
 import {
+  cancelAnimation,
   interpolate,
   SharedValue,
   useAnimatedReaction,
@@ -52,12 +53,14 @@ const SCREEN_HEIGHT = Dimensions.get('window').height
 function ImageViewing({
   lightbox,
   openProgress,
+  onFlyAway,
   onRequestClose,
   onPressSave,
   onPressShare,
 }: {
   lightbox: Lightbox
   openProgress: SharedValue<number>
+  onFlyAway: () => void
   onRequestClose: () => void
   onPressSave: (uri: string) => void
   onPressShare: (uri: string) => void
@@ -95,7 +98,7 @@ function ImageViewing({
   })
 
   const activeImageStyle = useAnimatedStyle(() => {
-    if (openProgress.value === 1) {
+    if (openProgress.value === 1 || dismissSwipeTranslateY.value !== 0) {
       return {
         transform: [{translateY: dismissSwipeTranslateY.value}],
       }
@@ -127,8 +130,11 @@ function ImageViewing({
     .onEnd(e => {
       'worklet'
       if (Math.abs(e.velocityY) > 1000) {
-        dismissSwipeTranslateY.value = withDecay({velocity: e.velocityY})
-        runOnJS(onRequestClose)()
+        dismissSwipeTranslateY.value = withDecay({
+          velocity: e.velocityY,
+          velocityFactor: 2,
+          deceleration: 1, // Danger! This relies on the reaction below stopping it.
+        })
       } else {
         dismissSwipeTranslateY.value = withSpring(0, {
           stiffness: 700,
@@ -136,6 +142,16 @@ function ImageViewing({
         })
       }
     })
+  useAnimatedReaction(
+    () => Math.abs(dismissSwipeTranslateY.value) > SCREEN_HEIGHT,
+    (isOut, wasOut) => {
+      if (isOut && !wasOut) {
+        // Stop the animation from blocking the screen forever.
+        cancelAnimation(dismissSwipeTranslateY)
+        onFlyAway()
+      }
+    },
+  )
 
   const onTap = useCallback(() => {
     setShowControls(show => !show)
@@ -428,6 +444,11 @@ function ImageViewingRoot({
       lightbox={activeLightbox}
       openProgress={openProgress}
       onRequestClose={onRequestClose}
+      onFlyAway={() => {
+        'worklet'
+        openProgress.value = 0
+        runOnJS(onRequestClose)()
+      }}
       onPressSave={onPressSave}
       onPressShare={onPressShare}
     />
