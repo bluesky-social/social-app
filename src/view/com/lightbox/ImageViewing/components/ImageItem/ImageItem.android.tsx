@@ -13,7 +13,9 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated'
-import {Image} from 'expo-image'
+import {Image, ImageStyle} from 'expo-image'
+
+const AnimatedImage = Animated.createAnimatedComponent(Image)
 
 import {useImageDimensions} from '#/lib/media/image-sizes'
 import type {Dimensions as ImageDimensions, ImageSource} from '../../@types'
@@ -47,6 +49,7 @@ type Props = {
   isScrollViewBeingDragged: boolean
   showControls: boolean
   dismissSwipePan: PanGesture
+  animatedStyle: ImageStyle | null
 }
 const ImageItem = ({
   imageSrc,
@@ -54,6 +57,7 @@ const ImageItem = ({
   onZoom,
   isScrollViewBeingDragged,
   dismissSwipePan,
+  animatedStyle,
 }: Props) => {
   const [isScaled, setIsScaled] = useState(false)
   const [imageAspect, imageDimensions] = useImageDimensions({
@@ -95,7 +99,7 @@ const ImageItem = ({
     onZoom(nextIsScaled)
   }
 
-  const animatedStyle = useAnimatedStyle(() => {
+  const animatedContainerStyle = useAnimatedStyle(() => {
     // Apply the active adjustments on top of the committed transform before the gestures.
     // This is matrix multiplication, so operations are applied in the reverse order.
     let t = createTransform()
@@ -293,35 +297,39 @@ const ImageItem = ({
       )
 
   return (
-    <Animated.View
-      ref={containerRef}
-      // Necessary to make opacity work for both children together.
-      renderToHardwareTextureAndroid
-      style={[styles.container, animatedStyle, {}]}>
-      <ActivityIndicator size="small" color="#FFF" style={styles.loading} />
-      <GestureDetector gesture={composedGesture}>
-        <Image
-          contentFit="contain"
-          source={{uri: imageSrc.uri}}
-          placeholderContentFit="contain"
-          placeholder={{uri: imageSrc.thumbUri}}
-          style={{
-            width: SCREEN.width,
-            height: imageAspect ? SCREEN.width / imageAspect : undefined,
-            borderRadius:
-              imageSrc.type === 'circle-avi'
-                ? SCREEN.width / 2
-                : imageSrc.type === 'rect-avi'
-                ? 20
-                : 0,
-          }}
-          accessibilityLabel={imageSrc.alt}
-          accessibilityHint=""
-          accessibilityIgnoresInvertColors
-          cachePolicy="memory"
-        />
-      </GestureDetector>
-    </Animated.View>
+    <GestureDetector gesture={composedGesture}>
+      <Animated.View
+        ref={containerRef}
+        style={[styles.container, animatedContainerStyle, {}]}>
+        <Animated.View
+          style={[
+            animatedStyle,
+            {
+              width: SCREEN.width,
+              height: imageAspect ? SCREEN.width / imageAspect : undefined,
+              borderRadius:
+                imageSrc.type === 'circle-avi'
+                  ? SCREEN.width / 2
+                  : imageSrc.type === 'rect-avi'
+                  ? 20
+                  : 0,
+            },
+          ]}>
+          <ActivityIndicator size="small" color="#FFF" style={styles.loading} />
+          <AnimatedImage
+            contentFit="contain"
+            source={{uri: imageSrc.uri}}
+            placeholderContentFit="contain"
+            placeholder={{uri: imageSrc.thumbUri}}
+            style={{flex: 1}}
+            accessibilityLabel={imageSrc.alt}
+            accessibilityHint=""
+            accessibilityIgnoresInvertColors
+            cachePolicy="memory"
+          />
+        </Animated.View>
+      </Animated.View>
+    </GestureDetector>
   )
 }
 

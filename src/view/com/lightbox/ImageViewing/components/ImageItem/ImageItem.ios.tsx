@@ -14,11 +14,13 @@ import {
   PanGesture,
 } from 'react-native-gesture-handler'
 import Animated, {runOnJS, useAnimatedRef} from 'react-native-reanimated'
-import {Image} from 'expo-image'
+import {Image, ImageStyle} from 'expo-image'
 
 import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
 import {useImageDimensions} from '#/lib/media/image-sizes'
 import {ImageSource} from '../../@types'
+
+const AnimatedImage = Animated.createAnimatedComponent(Image)
 
 const SCREEN = Dimensions.get('screen')
 const MAX_ORIGINAL_IMAGE_ZOOM = 2
@@ -32,6 +34,7 @@ type Props = {
   isScrollViewBeingDragged: boolean
   showControls: boolean
   dismissSwipePan: PanGesture | null
+  animatedStyle: ImageStyle | null
 }
 
 const ImageItem = ({
@@ -40,6 +43,7 @@ const ImageItem = ({
   onZoom,
   showControls,
   dismissSwipePan,
+  animatedStyle,
 }: Props) => {
   const scrollViewRef = useAnimatedRef<Animated.ScrollView>()
 
@@ -128,27 +132,33 @@ const ImageItem = ({
         onScroll={scrollHandler}
         bounces={scaled}
         centerContent>
-        <ActivityIndicator size="small" color="#FFF" style={styles.loading} />
-        <Image
-          contentFit="contain"
-          source={{uri: imageSrc.uri}}
-          placeholderContentFit="contain"
-          placeholder={{uri: imageSrc.thumbUri}}
-          style={{
-            width: SCREEN.width,
-            height: imageAspect ? SCREEN.width / imageAspect : undefined,
-            borderRadius:
-              imageSrc.type === 'circle-avi'
-                ? SCREEN.width / 2
-                : imageSrc.type === 'rect-avi'
-                ? 20
-                : 0,
-          }}
-          accessibilityLabel={imageSrc.alt}
-          accessibilityHint=""
-          enableLiveTextInteraction={showControls && !scaled}
-          accessibilityIgnoresInvertColors
-        />
+        <Animated.View
+          style={[
+            animatedStyle,
+            {
+              width: SCREEN.width,
+              height: imageAspect ? SCREEN.width / imageAspect : undefined,
+              borderRadius:
+                imageSrc.type === 'circle-avi'
+                  ? SCREEN.width / 2
+                  : imageSrc.type === 'rect-avi'
+                  ? 20
+                  : 0,
+            },
+          ]}>
+          <ActivityIndicator size="small" color="#FFF" style={styles.loading} />
+          <AnimatedImage
+            contentFit="cover"
+            source={{uri: imageSrc.uri}}
+            placeholderContentFit="cover"
+            placeholder={{uri: imageSrc.thumbUri}}
+            accessibilityLabel={imageSrc.alt}
+            accessibilityHint=""
+            enableLiveTextInteraction={showControls && !scaled}
+            accessibilityIgnoresInvertColors
+            style={{flex: 1}}
+          />
+        </Animated.View>
       </Animated.ScrollView>
     </GestureDetector>
   )
