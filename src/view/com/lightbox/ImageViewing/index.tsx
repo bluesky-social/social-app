@@ -122,17 +122,12 @@ function ImageViewing({
       }
     }
     if (image.thumbRect && image.dimensions) {
-      const interpolatedTransform = interpolateTransform(
+      return interpolateFromThumbnail(
         openProgress.value,
         image.thumbRect,
         SCREEN,
         image.dimensions,
       )
-      return {
-        transform: interpolatedTransform,
-        width,
-        height,
-      }
     }
     return {
       transform: [],
@@ -344,7 +339,7 @@ function LightboxFooter({
   )
 }
 
-function interpolateTransform(
+function interpolateFromThumbnail(
   progress: number,
   thumbnailDims: {
     pageX: number
@@ -383,7 +378,11 @@ function interpolateTransform(
   const translateX = interpolate(progress, [0, 1], [initialTranslateX, 0])
   const translateY = interpolate(progress, [0, 1], [initialTranslateY, 0])
   const scale = interpolate(progress, [0, 1], [initialScale, 1])
-  return [{translateX}, {translateY}, {scale}]
+  return {
+    transform: [{translateX}, {translateY}, {scale}],
+    width: finalWidth,
+    height: finalHeight,
+  }
 }
 
 const styles = StyleSheet.create({
