@@ -87,7 +87,7 @@ export function ProfileSubpageHeader({
               height: 1000,
               width: 1000,
             },
-            shape: 'rounded-rect',
+            type: 'rect-avi',
           },
         ],
         index: 0,

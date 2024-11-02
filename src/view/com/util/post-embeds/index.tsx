@@ -155,7 +155,7 @@ export function PostEmbeds({
           images: items.map((item, i) => ({
             ...item,
             thumbRect: thumbRects[i] ?? null,
-            shape: 'rect',
+            type: 'image',
           })),
           index,
         })

@@ -309,9 +309,9 @@ const ImageItem = ({
             width: SCREEN.width,
             height: imageAspect ? SCREEN.width / imageAspect : undefined,
             borderRadius:
-              imageSrc.shape === 'circle'
+              imageSrc.type === 'circle-avi'
                 ? SCREEN.width / 2
-                : imageSrc.shape === 'rounded-rect'
+                : imageSrc.type === 'rect-avi'
                 ? 20
                 : 0,
           }}
