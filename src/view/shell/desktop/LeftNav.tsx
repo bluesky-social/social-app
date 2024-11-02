@@ -83,9 +83,11 @@ function ProfileCard() {
       })}
       style={[styles.profileCard, !isDesktop && styles.profileCardTablet]}
       title={_(msg`My Profile`)}
+      tabIndex={-1}
       asAnchor>
       <UserAvatar
         avatar={profile.avatar}
+        tabIndex={0}
         size={size}
         type={profile?.associated?.labeler ? 'labeler' : 'user'}
       />
@@ -312,7 +314,7 @@ function ComposeBtn() {
         size="large"
         variant="solid"
         color="primary"
-        style={[a.rounded_full]}>
+        style={[a.rounded_full, a.outline_inset_1]}>
         <ButtonIcon icon={EditBig} position="left" />
         <ButtonText>
           <Trans context="action">New Post</Trans>
