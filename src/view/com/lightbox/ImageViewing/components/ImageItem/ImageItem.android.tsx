@@ -297,7 +297,7 @@ const ImageItem = ({
       ref={containerRef}
       // Necessary to make opacity work for both children together.
       renderToHardwareTextureAndroid
-      style={[styles.container, animatedStyle]}>
+      style={[styles.container, animatedStyle, {}]}>
       <ActivityIndicator size="small" color="#FFF" style={styles.loading} />
       <GestureDetector gesture={composedGesture}>
         <Image
@@ -305,7 +305,16 @@ const ImageItem = ({
           source={{uri: imageSrc.uri}}
           placeholderContentFit="contain"
           placeholder={{uri: imageSrc.thumbUri}}
-          style={styles.image}
+          style={{
+            width: SCREEN.width,
+            height: imageAspect ? SCREEN.width / imageAspect : undefined,
+            borderRadius:
+              imageSrc.shape === 'circle'
+                ? SCREEN.width / 2
+                : imageSrc.shape === 'rounded-rect'
+                ? 20
+                : 0,
+          }}
           accessibilityLabel={imageSrc.alt}
           accessibilityHint=""
           accessibilityIgnoresInvertColors
@@ -321,9 +330,7 @@ const styles = StyleSheet.create({
     width: SCREEN.width,
     height: SCREEN.height,
     overflow: 'hidden',
-  },
-  image: {
-    flex: 1,
+    justifyContent: 'center',
   },
   loading: {
     position: 'absolute',

@@ -24,4 +24,5 @@ export type ImageSource = {
   thumbRect: MeasuredDimensions | null
   alt?: string
   dimensions: Dimensions | null
+  shape: 'circle' | 'rect' | 'rounded-rect'
 }

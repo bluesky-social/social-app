@@ -137,6 +137,12 @@ const ImageItem = ({
           style={{
             width: SCREEN.width,
             height: imageAspect ? SCREEN.width / imageAspect : undefined,
+            borderRadius:
+              imageSrc.shape === 'circle'
+                ? SCREEN.width / 2
+                : imageSrc.shape === 'rounded-rect'
+                ? 20
+                : 0,
           }}
           accessibilityLabel={imageSrc.alt}
           accessibilityHint=""
