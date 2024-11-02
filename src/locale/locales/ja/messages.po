@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-02 02:41+0900\n"
+"PO-Revision-Date: 2024-11-02 09:17+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -891,6 +891,11 @@ msgstr "少なくとも３文字"
 #: src/screens/Settings/AccessibilitySettings.tsx:98
 msgid "Autoplay options have moved to the <0>Content and Media settings</0>."
 msgstr "自動再生オプションは<0>コンテンツとメディアの設定</0>へ移動しました。"
+
+#: src/screens/Settings/ContentAndMediaSettings.tsx:89
+#: src/screens/Settings/ContentAndMediaSettings.tsx:95
+msgid "Autoplay videos and GIFs"
+msgstr "ビデオとGIFの自動再生"
 
 #: src/components/dms/MessagesListHeader.tsx:75
 #: src/components/moderation/LabelsOnMeDialog.tsx:290
@@ -6088,7 +6093,7 @@ msgstr "スレッド表示で返信を表示するには、この設定を「は
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:158
 msgid "Set this setting to \"Yes\" to show samples of your saved feeds in your Following feed. This is an experimental feature."
-msgstr "保存されたフィードから投稿を抽出してFollowingフィードに表示するには、この設定を「はい」にします。これは実験的な機能です。"
+msgstr "保存されたフィードから一部の投稿をFollowingフィードに表示するには、この設定を「はい」にします。これは実験的な機能です。"
 
 #: src/screens/Onboarding/Layout.tsx:48
 msgid "Set up your account"
@@ -6294,7 +6299,7 @@ msgstr "リポストを表示"
 #: src/screens/Settings/FollowingFeedPreferences.tsx:122
 #: src/screens/Settings/FollowingFeedPreferences.tsx:132
 msgid "Show samples of your saved feeds in your Following feed"
-msgstr "Followingフィードに保存されたフィードからサンプルを表示"
+msgstr "保存されたフィードから一部の投稿をFollowingフィードに表示する"
 
 #: src/components/moderation/ContentHider.tsx:130
 #: src/components/moderation/PostHider.tsx:79
@@ -8316,6 +8321,10 @@ msgstr "パスワードの変更が完了しました！"
 #: src/view/com/composer/Composer.tsx:405
 msgid "Your post has been published"
 msgstr "投稿を公開しました"
+
+#: src/view/com/composer/Composer.tsx:447
+msgid "Your posts have been published"
+msgstr "投稿が公開されました"
 
 #: src/screens/Onboarding/StepFinished.tsx:241
 msgid "Your posts, likes, and blocks are public. Mutes are private."
