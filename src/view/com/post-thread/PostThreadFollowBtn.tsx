@@ -115,7 +115,7 @@ function PostThreadFollowBtnLoaded({
       onPress={onPress}
       size="small"
       variant="solid"
-      color="secondary_inverted"
+      color={isFollowing ? 'secondary' : 'secondary_inverted'}
       style={[a.rounded_full]}>
       {gtMobile && (
         <ButtonIcon

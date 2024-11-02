@@ -405,6 +405,7 @@ export const ComposePost = ({
                 ? post.embed.media.images.length
                 : 0,
             isReply: index > 0 || !!replyTo,
+            isPartOfThread: thread.posts.length > 1,
             hasLink: !!post.embed.link,
             hasQuote: !!post.embed.quote,
             langs: langPrefs.postLanguage,
@@ -412,6 +413,12 @@ export const ComposePost = ({
           })
           index++
         }
+      }
+      if (thread.posts.length > 1) {
+        logEvent('thread:create', {
+          postCount: thread.posts.length,
+          isReply: !!replyTo,
+        })
       }
     }
     if (postUri && !replyTo) {
@@ -436,7 +443,9 @@ export const ComposePost = ({
     }
     onClose()
     Toast.show(
-      replyTo
+      thread.posts.length > 1
+        ? _(msg`Your posts have been published`)
+        : replyTo
         ? _(msg`Your reply has been published`)
         : _(msg`Your post has been published`),
     )
@@ -516,6 +525,7 @@ export const ComposePost = ({
     }
   }, [composerState])
 
+  const isLastThreadedPost = thread.posts.length > 1 && nextPost === undefined
   const {
     scrollHandler,
     onScrollViewContentSizeChange,
@@ -524,7 +534,7 @@ export const ComposePost = ({
     bottomBarAnimatedStyle,
   } = useScrollTracker({
     scrollViewRef,
-    stickyBottom: true,
+    stickyBottom: isLastThreadedPost,
   })
 
   const keyboardVerticalOffset = useKeyboardVerticalOffset()
@@ -557,7 +567,7 @@ export const ComposePost = ({
     </>
   )
 
-  const isFooterSticky = !isNative && thread.posts.length > 1
+  const isWebFooterSticky = !isNative && thread.posts.length > 1
   return (
     <BottomSheetPortalProvider>
       <KeyboardAvoidingView
@@ -608,6 +618,7 @@ export const ComposePost = ({
                   dispatch={composerDispatch}
                   textInput={post.id === activePost.id ? textInput : null}
                   isFirstPost={index === 0}
+                  isPartOfThread={thread.posts.length > 1}
                   isReply={index > 0 || !!replyTo}
                   isActive={post.id === activePost.id}
                   canRemovePost={thread.posts.length > 1}
@@ -617,11 +628,13 @@ export const ComposePost = ({
                   onPublish={onComposerPostPublish}
                   onError={setError}
                 />
-                {isFooterSticky && post.id === activePost.id && footer}
+                {isWebFooterSticky && post.id === activePost.id && (
+                  <View style={styles.stickyFooterWeb}>{footer}</View>
+                )}
               </React.Fragment>
             ))}
           </Animated.ScrollView>
-          {!isFooterSticky && footer}
+          {!isWebFooterSticky && footer}
         </View>
 
         <Prompt.Basic
@@ -644,6 +657,7 @@ let ComposerPost = React.memo(function ComposerPost({
   isActive,
   isReply,
   isFirstPost,
+  isPartOfThread,
   canRemovePost,
   canRemoveQuote,
   onClearVideo,
@@ -657,6 +671,7 @@ let ComposerPost = React.memo(function ComposerPost({
   isActive: boolean
   isReply: boolean
   isFirstPost: boolean
+  isPartOfThread: boolean
   canRemovePost: boolean
   canRemoveQuote: boolean
   onClearVideo: (postId: string) => void
@@ -736,6 +751,9 @@ let ComposerPost = React.memo(function ComposerPost({
           placeholder={selectTextInputPlaceholder}
           autoFocus
           webForceMinHeight={forceMinHeight}
+          // To avoid overlap with the close button:
+          hasRightPadding={isPartOfThread}
+          isActive={isActive}
           setRichText={rt => {
             dispatchPost({type: 'update_richtext', richtext: rt})
           }}
@@ -1386,6 +1404,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 6,
     marginLeft: 12,
+  },
+  stickyFooterWeb: {
+    // @ts-ignore web-only
+    position: 'sticky',
+    bottom: 0,
   },
   errorLine: {
     flexDirection: 'row',
