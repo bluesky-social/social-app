@@ -18,7 +18,7 @@ import {
 } from 'react-native'
 import {Gesture} from 'react-native-gesture-handler'
 import PagerView from 'react-native-pager-view'
-import {interpolate, MeasuredDimensions} from 'react-native-reanimated'
+import {interpolate} from 'react-native-reanimated'
 import Animated, {
   runOnJS,
   useAnimatedStyle,
@@ -33,6 +33,7 @@ import {Trans} from '@lingui/macro'
 
 import {colors, s} from '#/lib/styles'
 import {isIOS} from '#/platform/detection'
+import {Lightbox} from '#/state/lightbox'
 import {Button} from '#/view/com/util/forms/Button'
 import {Text} from '#/view/com/util/text/Text'
 import {ScrollView} from '#/view/com/util/Views'
@@ -42,33 +43,25 @@ import ImageItem from './components/ImageItem/ImageItem'
 
 const SCREEN = Dimensions.get('screen')
 
-type Props = {
-  images: ImageSource[]
-  thumbDims: MeasuredDimensions | null
-  initialImageIndex: number
-  visible: boolean
-  onRequestClose: () => void
-  backgroundColor?: string
-  onPressSave: (uri: string) => void
-  onPressShare: (uri: string) => void
-}
-
 const SCREEN_HEIGHT = Dimensions.get('window').height
 
 function ImageViewing({
-  images,
-  thumbDims,
-  initialImageIndex,
-  visible,
+  lightbox,
   onRequestClose,
   onPressSave,
   onPressShare,
-}: Props) {
+}: {
+  lightbox: Lightbox
+  onRequestClose: () => void
+  onPressSave: (uri: string) => void
+  onPressShare: (uri: string) => void
+}) {
   const openProgress = useSharedValue(0)
   React.useEffect(() => {
     openProgress.value = withClampedSpring(1)
   }, [openProgress])
 
+  const {images, index: initialImageIndex, thumbDims} = lightbox
   const [isScaled, setIsScaled] = useState(false)
   const [isDragging, setIsDragging] = useState(false)
   const [imageIndex, setImageIndex] = useState(initialImageIndex)
@@ -175,10 +168,6 @@ function ImageViewing({
     }
     return {opacity}
   })
-
-  if (!visible) {
-    return null
-  }
 
   return (
     <SafeAreaView
@@ -393,13 +382,34 @@ const styles = StyleSheet.create({
   },
 })
 
-const EnhancedImageViewing = (props: Props) => (
-  <ImageViewing key={props.initialImageIndex} {...props} />
-)
+function ImageViewingRoot({
+  lightbox,
+  onRequestClose,
+  onPressSave,
+  onPressShare,
+}: {
+  lightbox: Lightbox | null
+  onRequestClose: () => void
+  onPressSave: (uri: string) => void
+  onPressShare: (uri: string) => void
+}) {
+  if (!lightbox) {
+    return null
+  }
+  return (
+    <ImageViewing
+      key={lightbox.index}
+      lightbox={lightbox}
+      onRequestClose={onRequestClose}
+      onPressSave={onPressSave}
+      onPressShare={onPressShare}
+    />
+  )
+}
 
 function withClampedSpring(value: any) {
   'worklet'
   return withSpring(value, {overshootClamping: true, stiffness: 150})
 }
 
-export default EnhancedImageViewing
+export default ImageViewingRoot

@@ -4,7 +4,7 @@ import type {MeasuredDimensions} from 'react-native-reanimated'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {ImageSource} from '#/view/com/lightbox/ImageViewing/@types'
 
-type Lightbox = {
+export type Lightbox = {
   images: ImageSource[]
   thumbDims: MeasuredDimensions | null
   index: number
