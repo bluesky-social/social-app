@@ -1,5 +1,10 @@
 import React, {useState} from 'react'
-import {ActivityIndicator, Dimensions, StyleSheet} from 'react-native'
+import {
+  ActivityIndicator,
+  Dimensions,
+  StyleProp,
+  StyleSheet,
+} from 'react-native'
 import {
   Gesture,
   GestureDetector,
@@ -49,7 +54,7 @@ type Props = {
   isScrollViewBeingDragged: boolean
   showControls: boolean
   dismissSwipePan: PanGesture
-  animatedStyle: ImageStyle | null
+  animatedStyle: StyleProp<ImageStyle>
 }
 const ImageItem = ({
   imageSrc,
@@ -301,27 +306,22 @@ const ImageItem = ({
       <Animated.View
         ref={containerRef}
         style={[styles.container, animatedContainerStyle, {}]}>
-        <Animated.View
-          style={[
-            animatedStyle,
-            {
-              width: SCREEN.width,
-              height: imageAspect ? SCREEN.width / imageAspect : undefined,
-              borderRadius:
-                imageSrc.type === 'circle-avi'
-                  ? SCREEN.width / 2
-                  : imageSrc.type === 'rect-avi'
-                  ? 20
-                  : 0,
-            },
-          ]}>
+        <Animated.View style={animatedStyle}>
           <ActivityIndicator size="small" color="#FFF" style={styles.loading} />
           <AnimatedImage
             contentFit="contain"
             source={{uri: imageSrc.uri}}
             placeholderContentFit="contain"
             placeholder={{uri: imageSrc.thumbUri}}
-            style={{flex: 1}}
+            style={{
+              flex: 1,
+              borderRadius:
+                imageSrc.type === 'circle-avi'
+                  ? SCREEN.width / 2
+                  : imageSrc.type === 'rect-avi'
+                  ? 20
+                  : 0,
+            }}
             accessibilityLabel={imageSrc.alt}
             accessibilityHint=""
             accessibilityIgnoresInvertColors

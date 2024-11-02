@@ -107,12 +107,20 @@ function ImageViewing({
   })
 
   const activeImageStyle = useAnimatedStyle(() => {
+    const image = images[imageIndex]
+    const imageAspect = image.dimensions
+      ? image.dimensions.width / image.dimensions.height
+      : null
+    const width = SCREEN.width
+    const height = imageAspect ? SCREEN.width / imageAspect : undefined
+
     if (openProgress.value === 1 || dismissSwipeTranslateY.value !== 0) {
       return {
         transform: [{translateY: dismissSwipeTranslateY.value}],
+        width,
+        height,
       }
     }
-    const image = images[imageIndex]
     if (image.thumbRect && image.dimensions) {
       const interpolatedTransform = interpolateTransform(
         openProgress.value,
@@ -122,10 +130,14 @@ function ImageViewing({
       )
       return {
         transform: interpolatedTransform,
+        width,
+        height,
       }
     }
     return {
       transform: [],
+      width,
+      height,
     }
   })
 

@@ -1,7 +1,7 @@
 // default implementation fallback for web
 
 import React from 'react'
-import {View} from 'react-native'
+import {StyleProp, View} from 'react-native'
 import {PanGesture} from 'react-native-gesture-handler'
 import {ImageStyle} from 'expo-image'
 
@@ -15,7 +15,7 @@ type Props = {
   isScrollViewBeingDragged: boolean
   showControls: boolean
   dismissSwipePan: PanGesture | null
-  animatedStyle: ImageStyle | null
+  animatedStyle: StyleProp<ImageStyle>
 }
 
 const ImageItem = (_props: Props) => {
