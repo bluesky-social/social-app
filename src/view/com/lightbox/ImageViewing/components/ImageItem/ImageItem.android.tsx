@@ -317,9 +317,9 @@ const ImageItem = ({
         singleTap,
       )
 
-  const shape = imageSrc.shape
+  const type = imageSrc.type
   const borderRadius =
-    shape === 'circle' ? 1e5 : shape === 'rounded-rect' ? 20 : 0
+    type === 'circle-avi' ? 1e5 : type === 'rect-avi' ? 20 : 0
   return (
     <GestureDetector gesture={composedGesture}>
       <Animated.View style={imageStyle} renderToHardwareTextureAndroid>

@@ -154,7 +154,7 @@ export function PostEmbeds({
         openLightbox({
           images: items.map(item => ({
             ...item,
-            shape: 'rect',
+            type: 'image',
           })),
           index,
           thumbDims,

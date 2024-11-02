@@ -64,7 +64,7 @@ let ProfileHeaderShell = ({
               height: 1000,
               width: 1000,
             },
-            shape: 'circle',
+            type: 'circle-avi',
           },
         ],
         index: 0,
