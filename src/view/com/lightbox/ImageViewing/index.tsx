@@ -100,6 +100,7 @@ function ImageViewing({
   const activeImageStyle = useAnimatedStyle(() => {
     if (openProgress.value === 1 || dismissSwipeTranslateY.value !== 0) {
       return {
+        pointerEvents: 'auto',
         transform: [{translateY: dismissSwipeTranslateY.value}],
       }
     }
@@ -110,10 +111,12 @@ function ImageViewing({
         SCREEN,
       )
       return {
+        pointerEvents: 'none',
         transform: interpolatedTransform,
       }
     }
     return {
+      pointerEvents: 'auto',
       transform: [],
     }
   })
