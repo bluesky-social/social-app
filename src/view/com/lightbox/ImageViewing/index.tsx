@@ -104,11 +104,12 @@ function ImageViewing({
         transform: [{translateY: dismissSwipeTranslateY.value}],
       }
     }
-    if (thumbDims) {
+    if (thumbDims && images[imageIndex].dimensions) {
       const interpolatedTransform = interpolateTransform(
         openProgress.value,
         thumbDims,
         SCREEN,
+        images[imageIndex].dimensions,
       )
       return {
         pointerEvents: 'none',
@@ -333,6 +334,7 @@ function interpolateTransform(
     height: number
   },
   screenSize: {width: number; height: number},
+  imageDims: {width: number; height: number},
 ) {
   'worklet'
   const screenCenterX = screenSize.width / 2
@@ -342,7 +344,14 @@ function interpolateTransform(
 
   const initialTranslateX = thumbnailCenterX - screenCenterX
   const initialTranslateY = thumbnailCenterY - screenCenterY
-  const initialScale = thumbnailDims.width / screenSize.width
+  let initialScale = thumbnailDims.width / screenSize.width
+
+  const imageAspect = imageDims.width / imageDims.height
+  const finalWidth = screenSize.width
+  const finalHeight = finalWidth / imageAspect
+  if (initialScale * finalHeight < thumbnailDims.height) {
+    initialScale = initialScale * imageAspect
+  }
 
   const translateX = interpolate(progress, [0, 1], [initialTranslateX, 0])
   const translateY = interpolate(progress, [0, 1], [initialTranslateY, 0])
@@ -422,7 +431,14 @@ function ImageViewingRoot({
 
   React.useEffect(() => {
     if (nextLightbox) {
-      openProgress.value = withClampedSpring(1)
+      if (
+        nextLightbox.images[nextLightbox.index].dimensions &&
+        nextLightbox.thumbDims
+      ) {
+        openProgress.value = withClampedSpring(1)
+      } else {
+        openProgress.value = 1
+      }
     } else {
       openProgress.value = withClampedSpring(0)
     }
