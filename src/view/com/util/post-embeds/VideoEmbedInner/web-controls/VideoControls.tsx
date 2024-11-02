@@ -138,13 +138,10 @@ export function Controls({
   useEffect(() => {
     if (!hlsRef.current) return
     if (focused) {
-      // auto decide quality based on network conditions
-      hlsRef.current.autoLevelCapping = -1
       // allow 30s of buffering
       hlsRef.current.config.maxMaxBufferLength = 30
     } else {
       // back to what we initially set
-      hlsRef.current.autoLevelCapping = 0
       hlsRef.current.config.maxMaxBufferLength = 10
     }
   }, [hlsRef, focused])

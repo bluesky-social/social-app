@@ -82,6 +82,7 @@ export const SplashScreen = ({
             t.atoms.border_contrast_medium,
             a.align_center,
             a.gap_5xl,
+            a.flex_1,
           ]}>
           <ErrorBoundary>
             <View style={[a.justify_center, a.align_center]}>

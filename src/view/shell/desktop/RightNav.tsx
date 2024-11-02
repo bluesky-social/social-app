@@ -1,16 +1,16 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
-import {msg} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {FEEDBACK_FORM_URL, HELP_DESK_URL} from '#/lib/constants'
+import {usePalette} from '#/lib/hooks/usePalette'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {s} from '#/lib/styles'
 import {useKawaiiMode} from '#/state/preferences/kawaii'
 import {useSession} from '#/state/session'
-import {FEEDBACK_FORM_URL, HELP_DESK_URL} from 'lib/constants'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {s} from 'lib/styles'
-import {TextLink} from 'view/com/util/Link'
-import {Text} from 'view/com/util/text/Text'
+import {TextLink} from '#/view/com/util/Link'
+import {Text} from '#/view/com/util/text/Text'
 import {atoms as a} from '#/alf'
 import {ProgressGuideList} from '#/components/ProgressGuide/List'
 import {DesktopFeeds} from './Feeds'
@@ -101,13 +101,15 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
           </View>
           {kawaii && (
             <Text type="md" style={[pal.textLight, {marginTop: 12}]}>
-              Logo by{' '}
-              <TextLink
-                type="md"
-                href="/profile/sawaratsuki.bsky.social"
-                text="@sawaratsuki.bsky.social"
-                style={pal.link}
-              />
+              <Trans>
+                Logo by{' '}
+                <TextLink
+                  type="md"
+                  href="/profile/sawaratsuki.bsky.social"
+                  text="@sawaratsuki.bsky.social"
+                  style={pal.link}
+                />
+              </Trans>
             </Text>
           )}
         </View>

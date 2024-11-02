@@ -1,4 +1,10 @@
-import React, {memo, useEffect, useMemo, useState} from 'react'
+import React, {
+  memo,
+  type ReactElement,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react'
 import {
   Animated,
   Pressable,
@@ -17,7 +23,7 @@ import {
 } from '@atproto/api'
 import {AtUri} from '@atproto/api'
 import {TID} from '@atproto/common-web'
-import {msg, plural, Trans} from '@lingui/macro'
+import {msg, Plural, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
@@ -51,6 +57,7 @@ import {Link as NewLink} from '#/components/Link'
 import * as MediaPreview from '#/components/MediaPreview'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {Notification as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
+import {SubtleWebHover} from '#/components/SubtleWebHover'
 import {FeedSourceCard} from '../feeds/FeedSourceCard'
 import {Post} from '../post/Post'
 import {Link, TextLink} from '../util/Link'
@@ -129,6 +136,8 @@ let FeedItem = ({
     ]
   }, [item, moderationOpts])
 
+  const [hover, setHover] = React.useState(false)
+
   if (item.subjectUri && !item.subject && item.type !== 'feedgen-like') {
     // don't render anything if the target post was deleted or unfindable
     return <View />
@@ -164,7 +173,32 @@ let FeedItem = ({
     )
   }
 
-  let action = ''
+  const niceTimestamp = niceDate(i18n, item.notification.indexedAt)
+  const firstAuthor = authors[0]
+  const firstAuthorName = sanitizeDisplayName(
+    firstAuthor.profile.displayName || firstAuthor.profile.handle,
+  )
+  const firstAuthorLink = (
+    <TextLink
+      key={firstAuthor.href}
+      style={[pal.text, s.bold]}
+      href={firstAuthor.href}
+      text={
+        <Text emoji style={[pal.text, s.bold]}>
+          {forceLTR(firstAuthorName)}
+        </Text>
+      }
+      disableMismatchWarning
+    />
+  )
+  const additionalAuthorsCount = authors.length - 1
+  const hasMultipleAuthors = additionalAuthorsCount > 0
+  const formattedAuthorsCount = hasMultipleAuthors
+    ? formatCount(i18n, additionalAuthorsCount)
+    : ''
+
+  let a11yLabel = ''
+  let notificationContent: ReactElement
   let icon = (
     <HeartIconFilled
       size="xl"
@@ -174,10 +208,55 @@ let FeedItem = ({
       ]}
     />
   )
+
   if (item.type === 'post-like') {
-    action = _(msg`liked your post`)
+    a11yLabel = hasMultipleAuthors
+      ? _(
+          msg`${firstAuthorName} and ${plural(additionalAuthorsCount, {
+            one: `${formattedAuthorsCount} other`,
+            other: `${formattedAuthorsCount} others`,
+          })} liked your post`,
+        )
+      : _(msg`${firstAuthorName} liked your post`)
+    notificationContent = hasMultipleAuthors ? (
+      <Trans>
+        {firstAuthorLink} and{' '}
+        <Text style={[pal.text, s.bold]}>
+          <Plural
+            value={additionalAuthorsCount}
+            one={`${formattedAuthorsCount} other`}
+            other={`${formattedAuthorsCount} others`}
+          />
+        </Text>{' '}
+        liked your post
+      </Trans>
+    ) : (
+      <Trans>{firstAuthorLink} liked your post</Trans>
+    )
   } else if (item.type === 'repost') {
-    action = _(msg`reposted your post`)
+    a11yLabel = hasMultipleAuthors
+      ? _(
+          msg`${firstAuthorName} and ${plural(additionalAuthorsCount, {
+            one: `${formattedAuthorsCount} other`,
+            other: `${formattedAuthorsCount} others`,
+          })} reposted your post`,
+        )
+      : _(msg`${firstAuthorName} reposted your post`)
+    notificationContent = hasMultipleAuthors ? (
+      <Trans>
+        {firstAuthorLink} and{' '}
+        <Text style={[pal.text, s.bold]}>
+          <Plural
+            value={additionalAuthorsCount}
+            one={`${formattedAuthorsCount} other`}
+            other={`${formattedAuthorsCount} others`}
+          />
+        </Text>{' '}
+        reposted your post
+      </Trans>
+    ) : (
+      <Trans>{firstAuthorLink} reposted your post</Trans>
+    )
     icon = <RepostIcon size="xl" style={{color: t.palette.positive_600}} />
   } else if (item.type === 'follow') {
     let isFollowBack = false
@@ -201,40 +280,96 @@ let FeedItem = ({
       }
     }
 
-    if (isFollowBack) {
-      action = _(msg`followed you back`)
+    if (isFollowBack && !hasMultipleAuthors) {
+      /*
+       * Follow-backs are ungrouped, grouped follow-backs not supported atm,
+       * see `src/state/queries/notifications/util.ts`
+       */
+      a11yLabel = _(msg`${firstAuthorName} followed you back`)
+      notificationContent = <Trans>{firstAuthorLink} followed you back</Trans>
     } else {
-      action = _(msg`followed you`)
+      a11yLabel = hasMultipleAuthors
+        ? _(
+            msg`${firstAuthorName} and ${plural(additionalAuthorsCount, {
+              one: `${formattedAuthorsCount} other`,
+              other: `${formattedAuthorsCount} others`,
+            })} followed you`,
+          )
+        : _(msg`${firstAuthorName} followed you`)
+      notificationContent = hasMultipleAuthors ? (
+        <Trans>
+          {firstAuthorLink} and{' '}
+          <Text style={[pal.text, s.bold]}>
+            <Plural
+              value={additionalAuthorsCount}
+              one={`${formattedAuthorsCount} other`}
+              other={`${formattedAuthorsCount} others`}
+            />
+          </Text>{' '}
+          followed you
+        </Trans>
+      ) : (
+        <Trans>{firstAuthorLink} followed you</Trans>
+      )
     }
     icon = <PersonPlusIcon size="xl" style={{color: t.palette.primary_500}} />
   } else if (item.type === 'feedgen-like') {
-    action = _(msg`liked your custom feed`)
+    a11yLabel = hasMultipleAuthors
+      ? _(
+          msg`${firstAuthorName} and ${plural(additionalAuthorsCount, {
+            one: `${formattedAuthorsCount} other`,
+            other: `${formattedAuthorsCount} others`,
+          })} liked your custom feed`,
+        )
+      : _(msg`${firstAuthorName} liked your custom feed`)
+    notificationContent = hasMultipleAuthors ? (
+      <Trans>
+        {firstAuthorLink} and{' '}
+        <Text style={[pal.text, s.bold]}>
+          <Plural
+            value={additionalAuthorsCount}
+            one={`${formattedAuthorsCount} other`}
+            other={`${formattedAuthorsCount} others`}
+          />
+        </Text>{' '}
+        liked your custom feed
+      </Trans>
+    ) : (
+      <Trans>{firstAuthorLink} liked your custom feed</Trans>
+    )
   } else if (item.type === 'starterpack-joined') {
+    a11yLabel = hasMultipleAuthors
+      ? _(
+          msg`${firstAuthorName} and ${plural(additionalAuthorsCount, {
+            one: `${formattedAuthorsCount} other`,
+            other: `${formattedAuthorsCount} others`,
+          })} signed up with your starter pack`,
+        )
+      : _(msg`${firstAuthorName} signed up with your starter pack`)
+    notificationContent = hasMultipleAuthors ? (
+      <Trans>
+        {firstAuthorLink} and{' '}
+        <Text style={[pal.text, s.bold]}>
+          <Plural
+            value={additionalAuthorsCount}
+            one={`${formattedAuthorsCount} other`}
+            other={`${formattedAuthorsCount} others`}
+          />
+        </Text>{' '}
+        signed up with your starter pack
+      </Trans>
+    ) : (
+      <Trans>{firstAuthorLink} signed up with your starter pack</Trans>
+    )
     icon = (
       <View style={{height: 30, width: 30}}>
         <StarterPack width={30} gradient="sky" />
       </View>
     )
-    action = _(msg`signed up with your starter pack`)
   } else {
     return null
   }
-
-  const formattedCount =
-    authors.length > 1 ? formatCount(i18n, authors.length - 1) : ''
-  const firstAuthorName = sanitizeDisplayName(
-    authors[0].profile.displayName || authors[0].profile.handle,
-  )
-  const niceTimestamp = niceDate(i18n, item.notification.indexedAt)
-  const a11yLabelUsers =
-    authors.length > 1
-      ? _(msg` and `) +
-        plural(authors.length - 1, {
-          one: `${formattedCount} other`,
-          other: `${formattedCount} others`,
-        })
-      : ''
-  const a11yLabel = `${firstAuthorName}${a11yLabelUsers} ${action} ${niceTimestamp}`
+  a11yLabel += ` · ${niceTimestamp}`
 
   return (
     <Link
@@ -257,7 +392,7 @@ let FeedItem = ({
       accessibilityLabel={a11yLabel}
       accessible={!isAuthorsExpanded}
       accessibilityActions={
-        authors.length > 1
+        hasMultipleAuthors
           ? [
               {
                 name: 'toggleAuthorsExpanded',
@@ -285,7 +420,13 @@ let FeedItem = ({
           onToggleAuthorsExpanded()
         }
       }}
-      onBeforePress={onBeforePress}>
+      onPointerEnter={() => {
+        setHover(true)
+      }}
+      onPointerLeave={() => {
+        setHover(false)
+      }}>
+      <SubtleWebHover hover={hover} />
       <View style={[styles.layoutIcon, a.pr_sm]}>
         {/* TODO: Prevent conditional rendering and move toward composable
         notifications for clearer accessibility labeling */}
@@ -293,7 +434,7 @@ let FeedItem = ({
       </View>
       <View style={styles.layoutContent}>
         <ExpandListPressable
-          hasMultipleAuthors={authors.length > 1}
+          hasMultipleAuthors={hasMultipleAuthors}
           onToggleAuthorsExpanded={onToggleAuthorsExpanded}>
           <CondensedAuthorsList
             visible={!isAuthorsExpanded}
@@ -303,42 +444,18 @@ let FeedItem = ({
           />
           <ExpandedAuthorsList visible={isAuthorsExpanded} authors={authors} />
           <Text
-            style={[styles.meta, a.self_start]}
+            style={[styles.meta, a.self_start, pal.text]}
             accessibilityHint=""
             accessibilityLabel={a11yLabel}>
-            <TextLink
-              key={authors[0].href}
-              style={[pal.text, s.bold]}
-              href={authors[0].href}
-              text={
-                <Text emoji style={[pal.text, s.bold]}>
-                  {forceLTR(firstAuthorName)}
-                </Text>
-              }
-              disableMismatchWarning
-            />
-            {authors.length > 1 ? (
-              <>
-                <Text style={[pal.text]}>
-                  {' '}
-                  <Trans>and</Trans>{' '}
-                </Text>
-                <Text style={[pal.text, s.bold]}>
-                  {plural(authors.length - 1, {
-                    one: `${formattedCount} other`,
-                    other: `${formattedCount} others`,
-                  })}
-                </Text>
-              </>
-            ) : undefined}
-            <Text style={[pal.text]}> {action}</Text>
+            {notificationContent}
             <TimeElapsed timestamp={item.notification.indexedAt}>
               {({timeElapsed}) => (
-                <Text
-                  style={[pal.textLight, styles.pointer]}
-                  title={niceTimestamp}>
-                  {' ' + timeElapsed}
-                </Text>
+                <>
+                  <Text style={[a.ml_xs, pal.textLight]}>&middot;</Text>
+                  <Text style={[a.ml_xs, pal.textLight]} title={niceTimestamp}>
+                    {timeElapsed}
+                  </Text>
+                </>
               )}
             </TimeElapsed>
           </Text>

@@ -7,9 +7,9 @@ import {
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {usePalette} from '#/lib/hooks/usePalette'
+import {s} from '#/lib/styles'
 import {SessionAccount, useSessionApi} from '#/state/session'
-import {usePalette} from 'lib/hooks/usePalette'
-import {s} from 'lib/styles'
 import {useDialogControl} from '#/components/Dialog'
 import * as Prompt from '#/components/Prompt'
 import * as Toast from '../../com/util/Toast'

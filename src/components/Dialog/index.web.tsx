@@ -28,6 +28,7 @@ import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import {Portal} from '#/components/Portal'
 
 export {useDialogContext, useDialogControl} from '#/components/Dialog/context'
+export * from '#/components/Dialog/shared'
 export * from '#/components/Dialog/types'
 export * from '#/components/Dialog/utils'
 export {Input} from '#/components/forms/TextField'
@@ -154,6 +155,8 @@ export function Inner({
   label,
   accessibilityLabelledBy,
   accessibilityDescribedBy,
+  header,
+  contentContainerStyle,
 }: DialogInnerProps) {
   const t = useTheme()
   const {close} = React.useContext(Context)
@@ -178,7 +181,6 @@ export function Inner({
           a.rounded_md,
           a.w_full,
           a.border,
-          gtMobile ? a.p_2xl : a.p_xl,
           t.atoms.bg,
           {
             maxWidth: 600,
@@ -194,7 +196,10 @@ export function Inner({
           onFocusOutside={preventDefault}
           onDismiss={close}
           style={{display: 'flex', flexDirection: 'column'}}>
-          {children}
+          {header}
+          <View style={[gtMobile ? a.p_2xl : a.p_xl, contentContainerStyle]}>
+            {children}
+          </View>
         </DismissableLayer>
       </Animated.View>
     </FocusScope>
@@ -205,21 +210,26 @@ export const ScrollableInner = Inner
 
 export const InnerFlatList = React.forwardRef<
   FlatList,
-  FlatListProps<any> & {label: string} & {webInnerStyle?: StyleProp<ViewStyle>}
->(function InnerFlatList({label, style, webInnerStyle, ...props}, ref) {
+  FlatListProps<any> & {label: string} & {
+    webInnerStyle?: StyleProp<ViewStyle>
+    webInnerContentContainerStyle?: StyleProp<ViewStyle>
+  }
+>(function InnerFlatList(
+  {label, style, webInnerStyle, webInnerContentContainerStyle, ...props},
+  ref,
+) {
   const {gtMobile} = useBreakpoints()
   return (
     <Inner
       label={label}
       style={[
+        a.overflow_hidden,
+        a.px_0,
         // @ts-ignore web only -sfn
-        {
-          paddingHorizontal: 0,
-          maxHeight: 'calc(-36px + 100vh)',
-          overflow: 'hidden',
-        },
+        {maxHeight: 'calc(-36px + 100vh)'},
         webInnerStyle,
-      ]}>
+      ]}
+      contentContainerStyle={[a.px_0, webInnerContentContainerStyle]}>
       <FlatList
         ref={ref}
         style={[gtMobile ? a.px_2xl : a.px_xl, flatten(style)]}

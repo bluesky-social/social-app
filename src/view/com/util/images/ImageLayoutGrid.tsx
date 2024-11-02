@@ -1,5 +1,6 @@
 import React from 'react'
 import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
+import {AnimatedRef} from 'react-native-reanimated'
 import {AppBskyEmbedImages} from '@atproto/api'
 
 import {PostEmbedViewContext} from '#/view/com/util/post-embeds/types'
@@ -8,7 +9,10 @@ import {GalleryItem} from './Gallery'
 
 interface ImageLayoutGridProps {
   images: AppBskyEmbedImages.ViewImage[]
-  onPress?: (index: number) => void
+  onPress?: (
+    index: number,
+    containerRef: AnimatedRef<React.Component<{}, {}, any>>,
+  ) => void
   onLongPress?: (index: number) => void
   onPressIn?: (index: number) => void
   style?: StyleProp<ViewStyle>
@@ -24,18 +28,7 @@ export function ImageLayoutGrid({style, ...props}: ImageLayoutGridProps) {
         : a.gap_2xs
       : a.gap_xs
   const count = props.images.length
-  let aspectRatio
-  switch (count) {
-    case 2:
-      aspectRatio = 2
-      break
-    case 3:
-      aspectRatio = 2
-      break
-    case 4:
-      aspectRatio = undefined
-      break
-  }
+  const aspectRatio = count === 3 ? 2 : undefined
   return (
     <View style={style}>
       <View style={[gap, a.rounded_md, a.overflow_hidden, {aspectRatio}]}>
@@ -47,7 +40,10 @@ export function ImageLayoutGrid({style, ...props}: ImageLayoutGridProps) {
 
 interface ImageLayoutGridInnerProps {
   images: AppBskyEmbedImages.ViewImage[]
-  onPress?: (index: number) => void
+  onPress?: (
+    index: number,
+    containerRef: AnimatedRef<React.Component<{}, {}, any>>,
+  ) => void
   onLongPress?: (index: number) => void
   onPressIn?: (index: number) => void
   viewContext?: PostEmbedViewContext

@@ -3,7 +3,7 @@ import {View} from 'react-native'
 import {flushSync} from 'react-dom'
 
 import {LogEvents} from '#/lib/statsig/events'
-import {s} from 'lib/styles'
+import {s} from '#/lib/styles'
 
 export interface RenderTabBarFnProps {
   selectedPage: number

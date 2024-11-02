@@ -1,5 +1,6 @@
 import React from 'react'
 import {Pressable, StyleProp, View, ViewStyle} from 'react-native'
+import Animated, {AnimatedRef, useAnimatedRef} from 'react-native-reanimated'
 import {Image, ImageStyle} from 'expo-image'
 import {AppBskyEmbedImages} from '@atproto/api'
 import {msg} from '@lingui/macro'
@@ -16,7 +17,10 @@ type EventFunction = (index: number) => void
 interface Props {
   images: AppBskyEmbedImages.ViewImage[]
   index: number
-  onPress?: EventFunction
+  onPress?: (
+    index: number,
+    containerRef: AnimatedRef<React.Component<{}, {}, any>>,
+  ) => void
   onLongPress?: EventFunction
   onPressIn?: EventFunction
   imageStyle?: StyleProp<ImageStyle>
@@ -41,10 +45,11 @@ export function GalleryItem({
   const hasAlt = !!image.alt
   const hideBadges =
     viewContext === PostEmbedViewContext.FeedEmbedRecordWithMedia
+  const containerRef = useAnimatedRef()
   return (
-    <View style={a.flex_1}>
+    <Animated.View style={a.flex_1} ref={containerRef}>
       <Pressable
-        onPress={onPress ? () => onPress(index) : undefined}
+        onPress={onPress ? () => onPress(index, containerRef) : undefined}
         onPressIn={onPressIn ? () => onPressIn(index) : undefined}
         onLongPress={onLongPress ? () => onLongPress(index) : undefined}
         style={[
@@ -95,6 +100,6 @@ export function GalleryItem({
           </Text>
         </View>
       ) : null}
-    </View>
+    </Animated.View>
   )
 }

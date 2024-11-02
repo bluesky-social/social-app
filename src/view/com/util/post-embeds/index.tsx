@@ -6,6 +6,14 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
+import Animated, {
+  AnimatedRef,
+  measure,
+  MeasuredDimensions,
+  runOnJS,
+  runOnUI,
+  useAnimatedRef,
+} from 'react-native-reanimated'
 import {Image} from 'expo-image'
 import {
   AppBskyEmbedExternal,
@@ -21,7 +29,7 @@ import {
 } from '@atproto/api'
 
 import {usePalette} from '#/lib/hooks/usePalette'
-import {ImagesLightbox, useLightboxControls} from '#/state/lightbox'
+import {useLightboxControls} from '#/state/lightbox'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {FeedSourceCard} from '#/view/com/feeds/FeedSourceCard'
 import {atoms as a, useTheme} from '#/alf'
@@ -61,6 +69,7 @@ export function PostEmbeds({
   viewContext?: PostEmbedViewContext
 }) {
   const {openLightbox} = useLightboxControls()
+  const containerRef = useAnimatedRef()
 
   // quote post with media
   // =
@@ -89,17 +98,29 @@ export function PostEmbeds({
   if (AppBskyEmbedRecord.isView(embed)) {
     // custom feed embed (i.e. generator view)
     if (AppBskyFeedDefs.isGeneratorView(embed.record)) {
-      return <MaybeFeedCard view={embed.record} />
+      return (
+        <View style={a.mt_sm}>
+          <MaybeFeedCard view={embed.record} />
+        </View>
+      )
     }
 
     // list embed
     if (AppBskyGraphDefs.isListView(embed.record)) {
-      return <MaybeListCard view={embed.record} />
+      return (
+        <View style={a.mt_sm}>
+          <MaybeListCard view={embed.record} />
+        </View>
+      )
     }
 
     // starter pack embed
     if (AppBskyGraphDefs.isStarterPackViewBasic(embed.record)) {
-      return <StarterPackCard starterPack={embed.record} />
+      return (
+        <View style={a.mt_sm}>
+          <StarterPackCard starterPack={embed.record} />
+        </View>
+      )
     }
 
     // quote post
@@ -122,11 +143,30 @@ export function PostEmbeds({
     if (images.length > 0) {
       const items = embed.images.map(img => ({
         uri: img.fullsize,
+        thumbUri: img.thumb,
         alt: img.alt,
         aspectRatio: img.aspectRatio,
       }))
-      const _openLightbox = (index: number) => {
-        openLightbox(new ImagesLightbox(items, index))
+      const _openLightbox = (
+        index: number,
+        thumbDims: MeasuredDimensions | null,
+      ) => {
+        openLightbox({
+          type: 'images',
+          images: items,
+          index,
+          thumbDims,
+        })
+      }
+      const onPress = (
+        index: number,
+        ref: AnimatedRef<React.Component<{}, {}, any>>,
+      ) => {
+        runOnUI(() => {
+          'worklet'
+          const dims = measure(ref)
+          runOnJS(_openLightbox)(index, dims)
+        })()
       }
       const onPressIn = (_: number) => {
         InteractionManager.runAfterInteractions(() => {
@@ -138,7 +178,7 @@ export function PostEmbeds({
         const image = images[0]
         return (
           <ContentHider modui={moderation?.ui('contentMedia')}>
-            <View style={[a.mt_sm, style]}>
+            <Animated.View ref={containerRef} style={[a.mt_sm, style]}>
               <AutoSizedImage
                 crop={
                   viewContext === PostEmbedViewContext.ThreadHighlighted
@@ -149,13 +189,13 @@ export function PostEmbeds({
                     : 'constrained'
                 }
                 image={image}
-                onPress={() => _openLightbox(0)}
+                onPress={() => onPress(0, containerRef)}
                 onPressIn={() => onPressIn(0)}
                 hideBadge={
                   viewContext === PostEmbedViewContext.FeedEmbedRecordWithMedia
                 }
               />
-            </View>
+            </Animated.View>
           </ContentHider>
         )
       }
@@ -165,7 +205,7 @@ export function PostEmbeds({
           <View style={[a.mt_sm, style]}>
             <ImageLayoutGrid
               images={embed.images}
-              onPress={_openLightbox}
+              onPress={onPress}
               onPressIn={onPressIn}
               viewContext={viewContext}
             />
@@ -203,7 +243,7 @@ export function PostEmbeds({
   return <View />
 }
 
-function MaybeFeedCard({view}: {view: AppBskyFeedDefs.GeneratorView}) {
+export function MaybeFeedCard({view}: {view: AppBskyFeedDefs.GeneratorView}) {
   const pal = usePalette('default')
   const moderationOpts = useModerationOpts()
   const moderation = React.useMemo(() => {
@@ -223,7 +263,7 @@ function MaybeFeedCard({view}: {view: AppBskyFeedDefs.GeneratorView}) {
   )
 }
 
-function MaybeListCard({view}: {view: AppBskyGraphDefs.ListView}) {
+export function MaybeListCard({view}: {view: AppBskyGraphDefs.ListView}) {
   const moderationOpts = useModerationOpts()
   const moderation = React.useMemo(() => {
     return moderationOpts ? moderateUserList(view, moderationOpts) : undefined
@@ -238,7 +278,6 @@ function MaybeListCard({view}: {view: AppBskyGraphDefs.ListView}) {
           t.atoms.border_contrast_medium,
           a.p_md,
           a.rounded_sm,
-          a.mt_sm,
         ]}>
         <ListCard.Default view={view} />
       </View>
@@ -264,7 +303,6 @@ const styles = StyleSheet.create({
   customFeedOuter: {
     borderWidth: StyleSheet.hairlineWidth,
     borderRadius: 8,
-    marginTop: 4,
     paddingHorizontal: 12,
     paddingVertical: 12,
   },

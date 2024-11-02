@@ -65,6 +65,7 @@ import * as FeedCard from '#/components/FeedCard'
 import {SearchInput} from '#/components/forms/SearchInput'
 import {ChevronBottom_Stroke2_Corner0_Rounded as ChevronDown} from '#/components/icons/Chevron'
 import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
+import * as Layout from '#/components/Layout'
 
 function Loader() {
   const pal = usePalette('default')
@@ -503,7 +504,8 @@ let SearchScreenInner = ({
   )
 
   const sections = React.useMemo(() => {
-    if (!query) return []
+    if (!queryWithParams) return []
+    const noParams = queryWithParams === query
     return [
       {
         title: _(msg`Top`),
@@ -525,22 +527,25 @@ let SearchScreenInner = ({
           />
         ),
       },
-      {
+      noParams && {
         title: _(msg`People`),
         component: (
           <SearchScreenUserResults query={query} active={activeTab === 2} />
         ),
       },
-      {
+      noParams && {
         title: _(msg`Feeds`),
         component: (
           <SearchScreenFeedsResults query={query} active={activeTab === 3} />
         ),
       },
-    ]
+    ].filter(Boolean) as {
+      title: string
+      component: React.ReactNode
+    }[]
   }, [_, query, queryWithParams, activeTab])
 
-  return query ? (
+  return queryWithParams ? (
     <Pager
       onPageSelected={onPageSelected}
       renderTabBar={props => (
@@ -639,7 +644,7 @@ export function SearchScreen(
   const {params, query, queryWithParams} = useQueryManager({
     initialQuery: queryParam,
   })
-  const showFilters = Boolean(query && !showAutocomplete)
+  const showFilters = Boolean(queryWithParams && !showAutocomplete)
   /*
    * Arbitrary sizing, so guess and check, used for sticky header alignment and
    * sizing.
@@ -674,6 +679,7 @@ export function SearchScreen(
   }, [])
 
   const onPressMenu = React.useCallback(() => {
+    textInput.current?.blur()
     setDrawerOpen(true)
   }, [setDrawerOpen])
 
@@ -853,7 +859,7 @@ export function SearchScreen(
   }, [setShowAutocomplete])
 
   return (
-    <View style={isWeb ? null : {flex: 1}}>
+    <Layout.Screen testID="searchScreen">
       <CenteredView
         style={[
           a.p_md,
@@ -958,7 +964,7 @@ export function SearchScreen(
           headerHeight={headerHeight}
         />
       </View>
-    </View>
+    </Layout.Screen>
   )
 }
 

@@ -17,13 +17,13 @@ import {
 import {msg, plural} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {POST_CTRL_HITSLOP} from '#/lib/constants'
+import {IS_INTERNAL} from '#/lib/app-info'
+import {DISCOVER_DEBUG_DIDS, POST_CTRL_HITSLOP} from '#/lib/constants'
 import {CountWheel} from '#/lib/custom-animations/CountWheel'
 import {AnimatedLikeIcon} from '#/lib/custom-animations/LikeIcon'
 import {useHaptics} from '#/lib/haptics'
 import {makeProfileLink} from '#/lib/routes/links'
 import {shareUrl} from '#/lib/sharing'
-import {useGate} from '#/lib/statsig/statsig'
 import {toShareUrl} from '#/lib/strings/url-helpers'
 import {Shadow} from '#/state/cache/types'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
@@ -85,7 +85,8 @@ let PostCtrls = ({
   const {sendInteraction} = useFeedFeedbackContext()
   const {captureAction} = useProgressGuideControls()
   const playHaptic = useHaptics()
-  const gate = useGate()
+  const isDiscoverDebugUser =
+    IS_INTERNAL || DISCOVER_DEBUG_DIDS[currentAccount?.did ?? '']
   const isBlocked = Boolean(
     post.author.viewer?.blocking ||
       post.author.viewer?.blockedBy ||
@@ -120,7 +121,7 @@ let PostCtrls = ({
     try {
       setIsToggleLikeIcon(true)
       if (!post.viewer?.like) {
-        playHaptic()
+        playHaptic('Light')
         sendInteraction({
           item: post.uri,
           event: 'app.bsky.feed.defs#interactionLike',
@@ -200,27 +201,15 @@ let PostCtrls = ({
       feedContext,
     })
     openComposer({
-      quote: {
-        uri: post.uri,
-        cid: post.cid,
-        text: record.text,
-        author: post.author,
-        indexedAt: post.indexedAt,
-      },
-      quoteCount: post.quoteCount,
+      quote: post,
       onPost: onPostReply,
     })
   }, [
     _,
     sendInteraction,
-    post.uri,
-    post.cid,
-    post.author,
-    post.indexedAt,
-    post.quoteCount,
+    post,
     feedContext,
     openComposer,
-    record.text,
     onPostReply,
     isBlocked,
   ])
@@ -263,6 +252,7 @@ let PostCtrls = ({
           style={btnStyle}
           onPress={() => {
             if (!post.viewer?.replyDisabled) {
+              playHaptic('Light')
               requireAuth(() => onPressReply())
             }
           }}
@@ -375,7 +365,7 @@ let PostCtrls = ({
           threadgateRecord={threadgateRecord}
         />
       </View>
-      {gate('debug_show_feedcontext') && feedContext && (
+      {isDiscoverDebugUser && feedContext && (
         <Pressable
           accessible={false}
           style={{

@@ -1,19 +1,21 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {
-  useNavigation,
   StackActions,
   useFocusEffect,
+  useNavigation,
 } from '@react-navigation/native'
-import {ViewHeader} from '../com/util/ViewHeader'
-import {Text} from '../com/util/text/Text'
-import {Button} from 'view/com/util/forms/Button'
-import {NavigationProp} from 'lib/routes/types'
-import {usePalette} from 'lib/hooks/usePalette'
-import {s} from 'lib/styles'
+
+import {usePalette} from '#/lib/hooks/usePalette'
+import {NavigationProp} from '#/lib/routes/types'
+import {s} from '#/lib/styles'
 import {useSetMinimalShellMode} from '#/state/shell'
-import {Trans, msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {Button} from '#/view/com/util/forms/Button'
+import {Text} from '#/view/com/util/text/Text'
+import {ViewHeader} from '#/view/com/util/ViewHeader'
+import * as Layout from '#/components/Layout'
 
 export const NotFoundScreen = () => {
   const pal = usePalette('default')
@@ -38,7 +40,7 @@ export const NotFoundScreen = () => {
   }, [navigation, canGoBack])
 
   return (
-    <View testID="notFoundView" style={pal.view}>
+    <Layout.Screen testID="notFoundView">
       <ViewHeader title={_(msg`Page Not Found`)} />
       <View style={styles.container}>
         <Text type="title-2xl" style={[pal.text, s.mb10]}>
@@ -61,7 +63,7 @@ export const NotFoundScreen = () => {
           onPress={onPressHome}
         />
       </View>
-    </View>
+    </Layout.Screen>
   )
 }
 

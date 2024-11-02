@@ -15,7 +15,7 @@ import {MAX_LABELERS} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
 import {isAppLabeler} from '#/lib/moderation'
 import {logger} from '#/logger'
-import {isIOS} from '#/platform/detection'
+import {isIOS, isWeb} from '#/platform/detection'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {Shadow} from '#/state/cache/types'
 import {useModalControls} from '#/state/modals'
@@ -27,7 +27,7 @@ import {ProfileMenu} from '#/view/com/profile/ProfileMenu'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, tokens, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
-import {DialogOuterProps} from '#/components/Dialog'
+import {DialogOuterProps, useDialogControl} from '#/components/Dialog'
 import {
   Heart2_Filled_Stroke2_Corner0_Rounded as HeartFilled,
   Heart2_Stroke2_Corner0_Rounded as Heart,
@@ -37,6 +37,7 @@ import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
 import {ProfileHeaderDisplayName} from './DisplayName'
+import {EditProfileDialog} from './EditProfileDialog'
 import {ProfileHeaderHandle} from './Handle'
 import {ProfileHeaderMetrics} from './Metrics'
 import {ProfileHeaderShell} from './Shell'
@@ -63,7 +64,6 @@ let ProfileHeaderLabeler = ({
   const t = useTheme()
   const {_} = useLingui()
   const {currentAccount, hasSession} = useSession()
-  const {openModal} = useModalControls()
   const requireAuth = useRequireAuth()
   const playHaptic = useHaptics()
   const cantSubscribePrompt = Prompt.usePromptControl()
@@ -109,7 +109,7 @@ let ProfileHeaderLabeler = ({
     } catch (e: any) {
       Toast.show(
         _(
-          msg`There was an an issue contacting the server, please check your internet connection and try again.`,
+          msg`There was an issue contacting the server, please check your internet connection and try again.`,
         ),
         'xmark',
       )
@@ -117,12 +117,19 @@ let ProfileHeaderLabeler = ({
     }
   }, [labeler, playHaptic, likeUri, unlikeMod, likeMod, _])
 
+  const {openModal} = useModalControls()
+  const editProfileControl = useDialogControl()
   const onPressEditProfile = React.useCallback(() => {
-    openModal({
-      name: 'edit-profile',
-      profile,
-    })
-  }, [openModal, profile])
+    if (isWeb) {
+      // temp, while we figure out the nested dialog bug
+      openModal({
+        name: 'edit-profile',
+        profile,
+      })
+    } else {
+      editProfileControl.open()
+    }
+  }, [editProfileControl, openModal, profile])
 
   const onPressSubscribe = React.useCallback(
     () =>
@@ -169,18 +176,24 @@ let ProfileHeaderLabeler = ({
           style={[a.flex_row, a.justify_end, a.align_center, a.gap_xs, a.pb_lg]}
           pointerEvents={isIOS ? 'auto' : 'box-none'}>
           {isMe ? (
-            <Button
-              testID="profileHeaderEditProfileButton"
-              size="small"
-              color="secondary"
-              variant="solid"
-              onPress={onPressEditProfile}
-              label={_(msg`Edit profile`)}
-              style={a.rounded_full}>
-              <ButtonText>
-                <Trans>Edit Profile</Trans>
-              </ButtonText>
-            </Button>
+            <>
+              <Button
+                testID="profileHeaderEditProfileButton"
+                size="small"
+                color="secondary"
+                variant="solid"
+                onPress={onPressEditProfile}
+                label={_(msg`Edit profile`)}
+                style={a.rounded_full}>
+                <ButtonText>
+                  <Trans>Edit Profile</Trans>
+                </ButtonText>
+              </Button>
+              <EditProfileDialog
+                profile={profile}
+                control={editProfileControl}
+              />
+            </>
           ) : !isAppLabeler(profile.did) ? (
             <>
               <Button

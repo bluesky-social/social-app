@@ -16,6 +16,7 @@ import {MyLists} from '#/view/com/lists/MyLists'
 import {Button} from '#/view/com/util/forms/Button'
 import {SimpleViewHeader} from '#/view/com/util/SimpleViewHeader'
 import {Text} from '#/view/com/util/text/Text'
+import * as Layout from '#/components/Layout'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Lists'>
 export function ListsScreen({}: Props) {
@@ -48,7 +49,7 @@ export function ListsScreen({}: Props) {
   }, [openModal, navigation])
 
   return (
-    <View style={s.hContentRegion} testID="listsScreen">
+    <Layout.Screen testID="listsScreen">
       <SimpleViewHeader
         showBackButton={isMobile}
         style={[
@@ -86,6 +87,6 @@ export function ListsScreen({}: Props) {
         </View>
       </SimpleViewHeader>
       <MyLists filter="curate" style={s.flexGrow1} />
-    </View>
+    </Layout.Screen>
   )
 }

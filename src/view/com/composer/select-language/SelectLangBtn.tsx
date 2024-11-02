@@ -7,6 +7,9 @@ import {
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {LANG_DROPDOWN_HITSLOP} from '#/lib/constants'
+import {usePalette} from '#/lib/hooks/usePalette'
+import {isNative} from '#/platform/detection'
 import {useModalControls} from '#/state/modals'
 import {
   hasPostLanguage,
@@ -14,14 +17,12 @@ import {
   useLanguagePrefs,
   useLanguagePrefsApi,
 } from '#/state/preferences/languages'
-import {usePalette} from 'lib/hooks/usePalette'
-import {isNative} from 'platform/detection'
 import {
   DropdownButton,
   DropdownItem,
   DropdownItemButton,
-} from 'view/com/util/forms/DropdownButton'
-import {Text} from 'view/com/util/text/Text'
+} from '#/view/com/util/forms/DropdownButton'
+import {Text} from '#/view/com/util/text/Text'
 import {codeToLanguageName} from '../../../../locale/helpers'
 
 export function SelectLangBtn() {
@@ -102,6 +103,7 @@ export function SelectLangBtn() {
       items={items}
       openUpwards
       style={styles.button}
+      hitSlop={LANG_DROPDOWN_HITSLOP}
       accessibilityLabel={_(msg`Language selection`)}
       accessibilityHint="">
       {postLanguagesPref.length > 0 ? (
@@ -121,7 +123,7 @@ export function SelectLangBtn() {
 
 const styles = StyleSheet.create({
   button: {
-    paddingHorizontal: 15,
+    marginHorizontal: 15,
   },
   label: {
     maxWidth: 100,

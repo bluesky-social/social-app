@@ -185,7 +185,14 @@ function NavItem({count, href, icon, iconFilled, label}: NavItemProps) {
 
   return (
     <PressableWithHover
-      style={[a.flex_row, a.align_center, a.p_md, a.rounded_sm, a.gap_sm]}
+      style={[
+        a.flex_row,
+        a.align_center,
+        a.p_md,
+        a.rounded_sm,
+        a.gap_sm,
+        a.outline_inset_1,
+      ]}
       hoverStyle={t.atoms.bg_contrast_25}
       // @ts-ignore the function signature differs on web -prf
       onPress={onPressWrapped}
@@ -353,7 +360,7 @@ export function DesktopLeftNav() {
       {hasSession ? (
         <ProfileCard />
       ) : isDesktop ? (
-        <View style={{paddingHorizontal: 12}}>
+        <View style={[a.pt_xl]}>
           <NavSignupCard />
         </View>
       ) : null}

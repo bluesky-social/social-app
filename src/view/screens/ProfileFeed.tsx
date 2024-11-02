@@ -61,6 +61,7 @@ import {
 } from '#/components/icons/Heart2'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
+import * as Layout from '#/components/Layout'
 import {InlineLinkText} from '#/components/Link'
 import * as Menu from '#/components/Menu'
 import {ReportDialog, useReportDialogControl} from '#/components/ReportDialog'
@@ -96,36 +97,42 @@ export function ProfileFeedScreen(props: Props) {
 
   if (error) {
     return (
-      <CenteredView>
-        <View style={[pal.view, pal.border, styles.notFoundContainer]}>
-          <Text type="title-lg" style={[pal.text, s.mb10]}>
-            <Trans>Could not load feed</Trans>
-          </Text>
-          <Text type="md" style={[pal.text, s.mb20]}>
-            {error.toString()}
-          </Text>
+      <Layout.Screen testID="profileFeedScreenError">
+        <CenteredView>
+          <View style={[pal.view, pal.border, styles.notFoundContainer]}>
+            <Text type="title-lg" style={[pal.text, s.mb10]}>
+              <Trans>Could not load feed</Trans>
+            </Text>
+            <Text type="md" style={[pal.text, s.mb20]}>
+              {error.toString()}
+            </Text>
 
-          <View style={{flexDirection: 'row'}}>
-            <Button
-              type="default"
-              accessibilityLabel={_(msg`Go back`)}
-              accessibilityHint={_(msg`Returns to previous page`)}
-              onPress={onPressBack}
-              style={{flexShrink: 1}}>
-              <Text type="button" style={pal.text}>
-                <Trans>Go Back</Trans>
-              </Text>
-            </Button>
+            <View style={{flexDirection: 'row'}}>
+              <Button
+                type="default"
+                accessibilityLabel={_(msg`Go back`)}
+                accessibilityHint={_(msg`Returns to previous page`)}
+                onPress={onPressBack}
+                style={{flexShrink: 1}}>
+                <Text type="button" style={pal.text}>
+                  <Trans>Go Back</Trans>
+                </Text>
+              </Button>
+            </View>
           </View>
-        </View>
-      </CenteredView>
+        </CenteredView>
+      </Layout.Screen>
     )
   }
 
   return resolvedUri ? (
-    <ProfileFeedScreenIntermediate feedUri={resolvedUri.uri} />
+    <Layout.Screen>
+      <ProfileFeedScreenIntermediate feedUri={resolvedUri.uri} />
+    </Layout.Screen>
   ) : (
-    <LoadingScreen />
+    <Layout.Screen>
+      <LoadingScreen />
+    </Layout.Screen>
   )
 }
 
@@ -201,11 +208,11 @@ export function ProfileFeedScreenInner({
     } catch (err) {
       Toast.show(
         _(
-          msg`There was an an issue updating your feeds, please check your internet connection and try again.`,
+          msg`There was an issue updating your feeds, please check your internet connection and try again.`,
         ),
         'xmark',
       )
-      logger.error('Failed up update feeds', {message: err})
+      logger.error('Failed to update feeds', {message: err})
     }
   }, [_, playHaptic, feedInfo, removeFeed, addSavedFeeds, savedFeedConfig])
 
@@ -536,11 +543,11 @@ function AboutSection({
     } catch (err) {
       Toast.show(
         _(
-          msg`There was an an issue contacting the server, please check your internet connection and try again.`,
+          msg`There was an issue contacting the server, please check your internet connection and try again.`,
         ),
         'xmark',
       )
-      logger.error('Failed up toggle like', {message: err})
+      logger.error('Failed to toggle like', {message: err})
     }
   }, [playHaptic, isLiked, likeUri, unlikeFeed, likeFeed, feedInfo, _])
 

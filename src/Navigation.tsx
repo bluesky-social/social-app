@@ -17,7 +17,6 @@ import {
 
 import {timeout} from '#/lib/async/timeout'
 import {useColorSchemeStyle} from '#/lib/hooks/useColorSchemeStyle'
-import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebScrollRestoration} from '#/lib/hooks/useWebScrollRestoration'
 import {buildStateObject} from '#/lib/routes/helpers'
 import {
@@ -56,7 +55,6 @@ import {ModerationModlistsScreen} from '#/view/screens/ModerationModlists'
 import {ModerationMutedAccounts} from '#/view/screens/ModerationMutedAccounts'
 import {NotFoundScreen} from '#/view/screens/NotFound'
 import {NotificationsScreen} from '#/view/screens/Notifications'
-import {NotificationsSettingsScreen} from '#/view/screens/NotificationsSettings'
 import {PostThreadScreen} from '#/view/screens/PostThread'
 import {PreferencesExternalEmbeds} from '#/view/screens/PreferencesExternalEmbeds'
 import {PreferencesFollowingFeed} from '#/view/screens/PreferencesFollowingFeed'
@@ -88,13 +86,19 @@ import {PostRepostedByScreen} from '#/screens/Post/PostRepostedBy'
 import {ProfileKnownFollowersScreen} from '#/screens/Profile/KnownFollowers'
 import {ProfileLabelerLikedByScreen} from '#/screens/Profile/ProfileLabelerLikedBy'
 import {AppearanceSettingsScreen} from '#/screens/Settings/AppearanceSettings'
+import {NotificationSettingsScreen} from '#/screens/Settings/NotificationSettings'
 import {
   StarterPackScreen,
   StarterPackScreenShort,
 } from '#/screens/StarterPack/StarterPackScreen'
 import {Wizard} from '#/screens/StarterPack/Wizard'
+import {useTheme} from '#/alf'
 import {router} from '#/routes'
 import {Referrer} from '../modules/expo-bluesky-swiss-army'
+import {AboutSettingsScreen} from './screens/Settings/AboutSettings'
+import {AccountSettingsScreen} from './screens/Settings/AccountSettings'
+import {ContentAndMediaSettingsScreen} from './screens/Settings/ContentAndMediaSettings'
+import {PrivacyAndSecuritySettingsScreen} from './screens/Settings/PrivacyAndSecuritySettings'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
 
@@ -322,7 +326,39 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         name="AppearanceSettings"
         getComponent={() => AppearanceSettingsScreen}
         options={{
-          title: title(msg`Appearance Settings`),
+          title: title(msg`Appearance`),
+          requireAuth: true,
+        }}
+      />
+      <Stack.Screen
+        name="AccountSettings"
+        getComponent={() => AccountSettingsScreen}
+        options={{
+          title: title(msg`Account`),
+          requireAuth: true,
+        }}
+      />
+      <Stack.Screen
+        name="PrivacyAndSecuritySettings"
+        getComponent={() => PrivacyAndSecuritySettingsScreen}
+        options={{
+          title: title(msg`Privacy and Security`),
+          requireAuth: true,
+        }}
+      />
+      <Stack.Screen
+        name="ContentAndMediaSettings"
+        getComponent={() => ContentAndMediaSettingsScreen}
+        options={{
+          title: title(msg`Content and Media`),
+          requireAuth: true,
+        }}
+      />
+      <Stack.Screen
+        name="AboutSettings"
+        getComponent={() => AboutSettingsScreen}
+        options={{
+          title: title(msg`About`),
           requireAuth: true,
         }}
       />
@@ -342,8 +378,8 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         options={{title: title(msg`Chat settings`), requireAuth: true}}
       />
       <Stack.Screen
-        name="NotificationsSettings"
-        getComponent={() => NotificationsSettingsScreen}
+        name="NotificationSettings"
+        getComponent={() => NotificationSettingsScreen}
         options={{title: title(msg`Notification settings`), requireAuth: true}}
       />
       <Stack.Screen
@@ -412,7 +448,7 @@ function TabsNavigator() {
 }
 
 function HomeTabNavigator() {
-  const pal = usePalette('default')
+  const t = useTheme()
 
   return (
     <HomeTab.Navigator
@@ -422,7 +458,7 @@ function HomeTabNavigator() {
         gestureEnabled: true,
         fullScreenGestureEnabled: true,
         headerShown: false,
-        contentStyle: pal.view,
+        contentStyle: t.atoms.bg,
       }}>
       <HomeTab.Screen name="Home" getComponent={() => HomeScreen} />
       <HomeTab.Screen name="Start" getComponent={() => HomeScreen} />
@@ -432,7 +468,7 @@ function HomeTabNavigator() {
 }
 
 function SearchTabNavigator() {
-  const pal = usePalette('default')
+  const t = useTheme()
   return (
     <SearchTab.Navigator
       screenOptions={{
@@ -441,7 +477,7 @@ function SearchTabNavigator() {
         gestureEnabled: true,
         fullScreenGestureEnabled: true,
         headerShown: false,
-        contentStyle: pal.view,
+        contentStyle: t.atoms.bg,
       }}>
       <SearchTab.Screen name="Search" getComponent={() => SearchScreen} />
       {commonScreens(SearchTab as typeof HomeTab)}
@@ -450,7 +486,7 @@ function SearchTabNavigator() {
 }
 
 function NotificationsTabNavigator() {
-  const pal = usePalette('default')
+  const t = useTheme()
   return (
     <NotificationsTab.Navigator
       screenOptions={{
@@ -459,7 +495,7 @@ function NotificationsTabNavigator() {
         gestureEnabled: true,
         fullScreenGestureEnabled: true,
         headerShown: false,
-        contentStyle: pal.view,
+        contentStyle: t.atoms.bg,
       }}>
       <NotificationsTab.Screen
         name="Notifications"
@@ -472,7 +508,7 @@ function NotificationsTabNavigator() {
 }
 
 function MyProfileTabNavigator() {
-  const pal = usePalette('default')
+  const t = useTheme()
   return (
     <MyProfileTab.Navigator
       screenOptions={{
@@ -481,7 +517,7 @@ function MyProfileTabNavigator() {
         gestureEnabled: true,
         fullScreenGestureEnabled: true,
         headerShown: false,
-        contentStyle: pal.view,
+        contentStyle: t.atoms.bg,
       }}>
       <MyProfileTab.Screen
         // @ts-ignore // TODO: fix this broken type in ProfileScreen
@@ -498,7 +534,7 @@ function MyProfileTabNavigator() {
 }
 
 function MessagesTabNavigator() {
-  const pal = usePalette('default')
+  const t = useTheme()
   return (
     <MessagesTab.Navigator
       screenOptions={{
@@ -507,7 +543,7 @@ function MessagesTabNavigator() {
         gestureEnabled: true,
         fullScreenGestureEnabled: true,
         headerShown: false,
-        contentStyle: pal.view,
+        contentStyle: t.atoms.bg,
       }}>
       <MessagesTab.Screen
         name="Messages"
@@ -527,7 +563,7 @@ function MessagesTabNavigator() {
  * in a single ("flat") stack.
  */
 const FlatNavigator = () => {
-  const pal = usePalette('default')
+  const t = useTheme()
   const numUnread = useUnreadNotifications()
   const screenListeners = useWebScrollRestoration()
   const title = (page: MessageDescriptor) => bskyTitle(i18n._(page), numUnread)
@@ -541,7 +577,7 @@ const FlatNavigator = () => {
         gestureEnabled: true,
         fullScreenGestureEnabled: true,
         headerShown: false,
-        contentStyle: pal.view,
+        contentStyle: t.atoms.bg,
       }}>
       <Flat.Screen
         name="Home"

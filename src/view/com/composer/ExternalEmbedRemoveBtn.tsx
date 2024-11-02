@@ -1,34 +1,26 @@
 import React from 'react'
-import {TouchableOpacity} from 'react-native'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {s} from 'lib/styles'
+import {atoms as a} from '#/alf'
+import {Button, ButtonIcon} from '#/components/Button'
+import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 
 export function ExternalEmbedRemoveBtn({onRemove}: {onRemove: () => void}) {
   const {_} = useLingui()
 
   return (
-    <TouchableOpacity
-      style={{
-        position: 'absolute',
-        top: 10,
-        right: 10,
-        height: 36,
-        width: 36,
-        backgroundColor: 'rgba(0, 0, 0, 0.75)',
-        borderRadius: 18,
-        alignItems: 'center',
-        justifyContent: 'center',
-        zIndex: 1,
-      }}
-      onPress={onRemove}
-      accessibilityRole="button"
-      accessibilityLabel={_(msg`Remove attachment`)}
-      accessibilityHint={_(msg`Removes the attachment`)}
-      onAccessibilityEscape={onRemove}>
-      <FontAwesomeIcon size={18} icon="xmark" style={s.white} />
-    </TouchableOpacity>
+    <View style={[a.absolute, {top: 8, right: 8}, a.z_50]}>
+      <Button
+        label={_(msg`Remove attachment`)}
+        onPress={onRemove}
+        size="small"
+        variant="solid"
+        color="secondary"
+        shape="round">
+        <ButtonIcon icon={X} size="sm" />
+      </Button>
+    </View>
   )
 }

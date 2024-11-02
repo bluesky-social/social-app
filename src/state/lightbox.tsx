@@ -1,28 +1,29 @@
 import React from 'react'
+import type {MeasuredDimensions} from 'react-native-reanimated'
 import {AppBskyActorDefs} from '@atproto/api'
+
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 
-interface Lightbox {
-  name: string
+type ProfileImageLightbox = {
+  type: 'profile-image'
+  profile: AppBskyActorDefs.ProfileViewDetailed
+  thumbDims: null
 }
 
-export class ProfileImageLightbox implements Lightbox {
-  name = 'profile-image'
-  constructor(public profile: AppBskyActorDefs.ProfileViewDetailed) {}
-}
-
-interface ImagesLightboxItem {
+type ImagesLightboxItem = {
   uri: string
+  thumbUri: string
   alt?: string
 }
 
-export class ImagesLightbox implements Lightbox {
-  name = 'images'
-  constructor(public images: ImagesLightboxItem[], public index: number) {}
-  setIndex(index: number) {
-    this.index = index
-  }
+type ImagesLightbox = {
+  type: 'images'
+  images: ImagesLightboxItem[]
+  thumbDims: MeasuredDimensions | null
+  index: number
 }
+
+type Lightbox = ProfileImageLightbox | ImagesLightbox
 
 const LightboxContext = React.createContext<{
   activeLightbox: Lightbox | null

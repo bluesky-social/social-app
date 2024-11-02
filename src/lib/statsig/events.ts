@@ -122,10 +122,15 @@ export type LogEvents = {
   'post:create': {
     imageCount: number
     isReply: boolean
+    isPartOfThread: boolean
     hasLink: boolean
     hasQuote: boolean
     langs: string
     logContext: 'Composer'
+  }
+  'thread:create': {
+    postCount: number
+    isReply: boolean
   }
   'post:like:sampled': {
     doesLikerFollowPoster: boolean | undefined
