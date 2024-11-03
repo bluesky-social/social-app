@@ -1,7 +1,7 @@
 // default implementation fallback for web
 
 import React from 'react'
-import {StyleProp,View} from 'react-native'
+import {StyleProp, View} from 'react-native'
 import {PanGesture} from 'react-native-gesture-handler'
 import {ImageStyle} from 'expo-image'
 
