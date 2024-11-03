@@ -118,7 +118,10 @@ export function TabBar({
   )
 
   return (
-    <View testID={testID} style={[pal.view, styles.outer]} accessibilityRole="tablist">
+    <View
+      testID={testID}
+      style={[pal.view, styles.outer]}
+      accessibilityRole="tablist">
       <DraggableScrollView
         testID={`${testID}-selector`}
         horizontal={true}
