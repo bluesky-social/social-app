@@ -117,9 +117,8 @@ const ImageItem = ({
         height: SCREEN.height,
         animated: true,
       })
-    } else {
-      onTap()
     }
+    onTap()
   }
 
   const singleTap = Gesture.Tap().onEnd(() => {

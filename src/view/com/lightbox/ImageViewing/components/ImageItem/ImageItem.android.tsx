@@ -251,7 +251,6 @@ const ImageItem = ({
       // Go back to 1:1 using the identity vector.
       let t = createTransform()
       committedTransform.value = withClampedSpring(t)
-      return
     }
     runOnJS(onTap)()
   })
