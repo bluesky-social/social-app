@@ -51,6 +51,7 @@ import {useDialogControl} from '#/components/Dialog'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded as ArrowOutOfBox} from '#/components/icons/ArrowOutOfBox'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {DotGrid_Stroke2_Corner0_Rounded as Ellipsis} from '#/components/icons/DotGrid'
+import {ListSparkle_Stroke2_Corner0_Rounded as List} from '#/components/icons/ListSparkle'
 import {Pencil_Stroke2_Corner0_Rounded as Pencil} from '#/components/icons/Pencil'
 import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
 import * as Layout from '#/components/Layout'
@@ -197,6 +198,11 @@ function StarterPackScreenLoaded({
     })
   }, [starterPack.uri])
 
+  // TODO: implement handler
+  const onOpenConvertToListDialog = React.useCallback(() => {
+    console.warn('TODO: implement handler')
+  }, [])
+
   const onOpenShareDialog = React.useCallback(() => {
     const rkey = new AtUri(starterPack.uri).rkey
     shortenLink(makeStarterPackLink(starterPack.creator.did, rkey)).then(
@@ -231,6 +237,7 @@ function StarterPackScreenLoaded({
               starterPack={starterPack}
               routeParams={routeParams}
               onOpenShareDialog={onOpenShareDialog}
+              onOpenConvertToListDialog={onOpenConvertToListDialog}
             />
           )}>
           {showPeopleTab
@@ -291,10 +298,12 @@ function Header({
   starterPack,
   routeParams,
   onOpenShareDialog,
+  onOpenConvertToListDialog,
 }: {
   starterPack: AppBskyGraphDefs.StarterPackView
   routeParams: StarterPackScreeProps['route']['params']
   onOpenShareDialog: () => void
+  onOpenConvertToListDialog: () => void
 }) {
   const {_} = useLingui()
   const t = useTheme()
@@ -441,6 +450,7 @@ function Header({
               routeParams={routeParams}
               starterPack={starterPack}
               onOpenShareDialog={onOpenShareDialog}
+              onOpenConvertToListDialog={onOpenConvertToListDialog}
             />
           </View>
         ) : null}
@@ -493,10 +503,12 @@ function OverflowMenu({
   starterPack,
   routeParams,
   onOpenShareDialog,
+  onOpenConvertToListDialog,
 }: {
   starterPack: AppBskyGraphDefs.StarterPackView
   routeParams: StarterPackScreeProps['route']['params']
   onOpenShareDialog: () => void
+  onOpenConvertToListDialog: () => void
 }) {
   const t = useTheme()
   const {_} = useLingui()
@@ -599,7 +611,18 @@ function OverflowMenu({
                   </Menu.ItemText>
                   <Menu.ItemIcon icon={ArrowOutOfBox} position="right" />
                 </Menu.Item>
+                <Menu.Item
+                  label={_(msg`Convert to List`)}
+                  testID="convertToListStarterPackLinkBtn"
+                  onPress={onOpenConvertToListDialog}>
+                  <Menu.ItemText>
+                    <Trans>Convert to List</Trans>
+                  </Menu.ItemText>
+                  <Menu.ItemIcon icon={List} position="right" />
+                </Menu.Item>
               </Menu.Group>
+
+              <Menu.Divider />
 
               <Menu.Item
                 label={_(msg`Report starter pack`)}
