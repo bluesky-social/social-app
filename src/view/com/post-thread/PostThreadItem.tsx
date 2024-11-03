@@ -1,5 +1,5 @@
 import React, {memo, useMemo} from 'react'
-import {Pressable, StyleSheet, View} from 'react-native'
+import {StyleSheet, View} from 'react-native'
 import {
   AppBskyFeedDefs,
   AppBskyFeedPost,
@@ -29,6 +29,7 @@ import {useComposerControls} from '#/state/shell/composer'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
 import {PostThreadFollowBtn} from '#/view/com/post-thread/PostThreadFollowBtn'
 import {atoms as a, useTheme} from '#/alf'
+import {InlineLinkText} from '#/components/Link'
 import {AppModerationCause} from '#/components/Pills'
 import {RichText} from '#/components/RichText'
 import {SubtleWebHover} from '#/components/SubtleWebHover'
@@ -744,11 +745,13 @@ function ExpandedPostDetails({
             &middot;
           </NewText>
 
-          <Pressable accessibilityRole="button" onPress={onTranslatePress}>
-            <NewText style={[a.text_sm, pal.link]} title={_(msg`Translate`)}>
-              <Trans>Translate</Trans>
-            </NewText>
-          </Pressable>
+          <InlineLinkText
+            to="#"
+            label={_(msg`Translate`)}
+            style={[a.text_sm, pal.link]}
+            onPress={onTranslatePress}>
+            <Trans>Translate</Trans>
+          </InlineLinkText>
         </>
       )}
     </View>
