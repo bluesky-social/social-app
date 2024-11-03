@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-02 09:17+0900\n"
+"PO-Revision-Date: 2024-11-03 17:14+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -759,7 +759,7 @@ msgstr "アプリパスワードを削除しました"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:84
 msgid "App password name must be unique"
-msgstr "アプリパスワードの名前は他と重ならないようにしなくてはなりません"
+msgstr "アプリパスワードの名前はすでにあるものと異なるようにしなくてはなりません"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:62
 msgid "App password names can only contain letters, numbers, spaces, dashes, and underscores"
@@ -861,11 +861,11 @@ msgstr "本当にこのフィードをあなたのフィードから削除した
 
 #: src/view/com/composer/Composer.tsx:532
 msgid "Are you sure you'd like to discard this draft?"
-msgstr "本当にこの下書きを破棄しますか？"
+msgstr "本当にこの下書きを削除しますか？"
 
 #: src/view/com/composer/Composer.tsx:789
 msgid "Are you sure you'd like to discard this post?"
-msgstr "本当にこの投稿を破棄しますか？"
+msgstr "本当にこの投稿を削除しますか？"
 
 #: src/components/dialogs/MutedWords.tsx:433
 msgid "Are you sure?"
@@ -2942,7 +2942,7 @@ msgstr "セキュリティ上の理由から、あなたのメールアドレス
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:209
 msgid "For security reasons, you won't be able to view this again. If you lose this app password, you'll need to generate a new one."
-msgstr "セキュリティ上の理由から、これを再度表示することはできません。このアプリパスワードを紛失した場合は、新しいパスワードを生成する必要があります。"
+msgstr "セキュリティ上の理由から、これを再度表示することはできません。このアプリパスワードを紛失した場合は、新しいものを生成する必要があります。"
 
 #: src/view/com/modals/AddAppPasswords.tsx:233
 msgid "For security reasons, you won't be able to view this again. If you lose this password, you'll need to generate a new one."
@@ -3099,7 +3099,7 @@ msgstr "ハンドル"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:557
 msgid "Handle already taken. Please try a different one."
-msgstr "ハンドルは既に取られています。他のものをお試しください。"
+msgstr "ハンドルはすでに取得されています。他のものをお試しください。"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:188
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:325
