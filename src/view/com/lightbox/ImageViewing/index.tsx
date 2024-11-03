@@ -17,7 +17,7 @@ import {
   StyleSheet,
   View,
 } from 'react-native'
-import {Gesture} from 'react-native-gesture-handler'
+import {Gesture, PanGesture} from 'react-native-gesture-handler'
 import PagerView from 'react-native-pager-view'
 import {
   cancelAnimation,
@@ -106,47 +106,6 @@ function ImageViewing({
       return {pointerEvents: 'none'}
     }
     return {pointerEvents: 'auto'}
-  })
-
-  const activeInterpolation = useDerivedValue(() => {
-    const image = images[imageIndex]
-    if (image.thumbRect && image.dimensions) {
-      const interpolatedTransform = interpolateTransform(
-        openProgress.value,
-        image.thumbRect,
-        SCREEN,
-        image.dimensions,
-      )
-      return interpolatedTransform
-    }
-  })
-
-  const activeImageContainerStyle = useAnimatedStyle(() => {
-    if (openProgress.value === 1 || dismissSwipeTranslateY.value !== 0) {
-      return {
-        transform: [{translateY: dismissSwipeTranslateY.value}],
-      }
-    }
-    const interpolation = activeInterpolation.value
-    if (interpolation) {
-      return {
-        transform: interpolation.transform,
-      }
-    }
-    return {
-      transform: [],
-    }
-  })
-
-  const activeImageStyle = useAnimatedStyle(() => {
-    const interpolation = activeInterpolation.value
-    if (interpolation) {
-      return {
-        height: interpolation.height,
-        width: interpolation.width,
-      }
-    }
-    return {}
   })
 
   const dismissSwipePan = Gesture.Pan()
@@ -248,20 +207,21 @@ function ImageViewing({
           overdrag={true}
           style={styles.pager}>
           {images.map((imageSrc, i) => (
-            <Animated.View
+            <LightboxPage
               key={imageSrc.uri}
-              style={imageIndex === i ? activeImageContainerStyle : null}>
-              <ImageItem
-                onTap={onTap}
-                onZoom={onZoom}
-                imageSrc={imageSrc}
-                onRequestClose={onRequestClose}
-                isPagingAndroid={isPagingAndroid}
-                showControls={showControls}
-                dismissSwipePan={imageIndex === i ? dismissSwipePan : null}
-                imageStyle={imageIndex === i ? activeImageStyle : null}
-              />
-            </Animated.View>
+              imageSrc={imageSrc}
+              onRequestClose={onRequestClose}
+              onTap={onTap}
+              onZoom={onZoom}
+              isActive={i === imageIndex}
+              isPagingAndroid={isPagingAndroid}
+              isFlyingAway={isFlyingAway}
+              isScaled={isScaled}
+              showControls={showControls}
+              openProgress={openProgress}
+              dismissSwipePan={dismissSwipePan}
+              dismissSwipeTranslateY={dismissSwipeTranslateY}
+            />
           ))}
         </PagerView>
         <Animated.View style={[styles.footer, animatedFooterStyle]}>
@@ -274,6 +234,87 @@ function ImageViewing({
         </Animated.View>
       </Animated.View>
     </SafeAreaView>
+  )
+}
+
+function LightboxPage({
+  imageSrc,
+  onRequestClose,
+  onTap,
+  onZoom,
+  isActive,
+  isPagingAndroid,
+  showControls,
+  openProgress,
+  dismissSwipeTranslateY,
+  dismissSwipePan,
+}: {
+  imageSrc: ImageSource
+  onRequestClose: () => void
+  onTap: () => void
+  onZoom: (scaled: boolean) => void
+  isActive: boolean
+  isPagingAndroid: boolean
+  isFlyingAway: SharedValue<boolean>
+  isScaled: boolean
+  showControls: boolean
+  openProgress: SharedValue<number>
+  dismissSwipeTranslateY: SharedValue<number>
+  dismissSwipePan: PanGesture
+}) {
+  const {thumbRect, dimensions} = imageSrc
+  const imageAspect = dimensions
+    ? dimensions.width / dimensions.height
+    : undefined
+  const finalWidth = SCREEN.width
+  const finalHeight = imageAspect ? SCREEN.width / imageAspect : undefined
+
+  const interpolation = useDerivedValue(() => {
+    if (isActive && thumbRect && dimensions && openProgress.value < 1) {
+      return interpolateTransform(
+        openProgress.value,
+        thumbRect,
+        SCREEN,
+        dimensions,
+      )
+    }
+    const translateY = isActive ? dismissSwipeTranslateY.value : 0
+    return {
+      transform: [{translateY}],
+      width: finalWidth,
+      height: finalHeight,
+    }
+  })
+
+  const containerStyle = useAnimatedStyle(() => {
+    const {transform} = interpolation.value
+    return {
+      flex: 1,
+      transform,
+    }
+  })
+
+  const imageStyle = useAnimatedStyle(() => {
+    const {width, height} = interpolation.value
+    return {
+      width,
+      height,
+    }
+  })
+
+  return (
+    <Animated.View style={containerStyle}>
+      <ImageItem
+        onTap={onTap}
+        onZoom={onZoom}
+        imageSrc={imageSrc}
+        onRequestClose={onRequestClose}
+        isPagingAndroid={isPagingAndroid}
+        showControls={showControls}
+        dismissSwipePan={isActive ? dismissSwipePan : null}
+        imageStyle={imageStyle}
+      />
+    </Animated.View>
   )
 }
 
