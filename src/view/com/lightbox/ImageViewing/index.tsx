@@ -12,6 +12,7 @@ import React, {useCallback, useMemo, useState} from 'react'
 import {
   Dimensions,
   LayoutAnimation,
+  PixelRatio,
   Platform,
   StyleSheet,
   View,
@@ -23,6 +24,7 @@ import {
   interpolate,
   SharedValue,
   useAnimatedReaction,
+  useDerivedValue,
 } from 'react-native-reanimated'
 import Animated, {
   runOnJS,
@@ -48,7 +50,7 @@ import ImageDefaultHeader from './components/ImageDefaultHeader'
 import ImageItem from './components/ImageItem/ImageItem'
 
 const SCREEN = Dimensions.get('screen')
-
+const PIXEL_RATIO = PixelRatio.get()
 const SCREEN_HEIGHT = Dimensions.get('window').height
 
 function ImageViewing({
@@ -106,12 +108,7 @@ function ImageViewing({
     return {pointerEvents: 'auto'}
   })
 
-  const activeImageStyle = useAnimatedStyle(() => {
-    if (openProgress.value === 1 || dismissSwipeTranslateY.value !== 0) {
-      return {
-        transform: [{translateY: dismissSwipeTranslateY.value}],
-      }
-    }
+  const activeInterpolation = useDerivedValue(() => {
     const image = images[imageIndex]
     if (image.thumbRect && image.dimensions) {
       const interpolatedTransform = interpolateTransform(
@@ -120,13 +117,36 @@ function ImageViewing({
         SCREEN,
         image.dimensions,
       )
+      return interpolatedTransform
+    }
+  })
+
+  const activeImageContainerStyle = useAnimatedStyle(() => {
+    if (openProgress.value === 1 || dismissSwipeTranslateY.value !== 0) {
       return {
-        transform: interpolatedTransform,
+        transform: [{translateY: dismissSwipeTranslateY.value}],
+      }
+    }
+    const interpolation = activeInterpolation.value
+    if (interpolation) {
+      return {
+        transform: interpolation.transform,
       }
     }
     return {
       transform: [],
     }
+  })
+
+  const activeImageStyle = useAnimatedStyle(() => {
+    const interpolation = activeInterpolation.value
+    if (interpolation) {
+      return {
+        height: interpolation.height,
+        width: interpolation.width,
+      }
+    }
+    return {}
   })
 
   const dismissSwipePan = Gesture.Pan()
@@ -230,7 +250,7 @@ function ImageViewing({
           {images.map((imageSrc, i) => (
             <Animated.View
               key={imageSrc.uri}
-              style={imageIndex === i ? activeImageStyle : null}>
+              style={imageIndex === i ? activeImageContainerStyle : null}>
               <ImageItem
                 onTap={onTap}
                 onZoom={onZoom}
@@ -239,6 +259,7 @@ function ImageViewing({
                 isPagingAndroid={isPagingAndroid}
                 showControls={showControls}
                 dismissSwipePan={imageIndex === i ? dismissSwipePan : null}
+                imageStyle={imageIndex === i ? activeImageStyle : null}
               />
             </Animated.View>
           ))}
@@ -337,6 +358,16 @@ function LightboxFooter({
   )
 }
 
+function interpolatePx(
+  px: number,
+  inputRange: readonly number[],
+  outputRange: readonly number[],
+) {
+  'worklet'
+  const value = interpolate(px, inputRange, outputRange)
+  return Math.round(value * PIXEL_RATIO) / PIXEL_RATIO
+}
+
 function interpolateTransform(
   progress: number,
   thumbnailDims: {
@@ -349,34 +380,55 @@ function interpolateTransform(
   imageDims: {width: number; height: number},
 ) {
   'worklet'
+  const imageAspect = imageDims.width / imageDims.height
+  const thumbAspect = thumbnailDims.width / thumbnailDims.height
+  let uncroppedInitialWidth
+  let uncroppedInitialHeight
+  if (imageAspect > thumbAspect) {
+    uncroppedInitialWidth = thumbnailDims.height * imageAspect
+    uncroppedInitialHeight = thumbnailDims.height
+  } else {
+    uncroppedInitialWidth = thumbnailDims.width
+    uncroppedInitialHeight = thumbnailDims.width / imageAspect
+  }
+  const finalWidth = screenSize.width
+  const finalHeight = screenSize.width / imageAspect
+  const initialScale = Math.min(
+    uncroppedInitialWidth / finalWidth,
+    uncroppedInitialHeight / finalHeight,
+  )
+  const croppedFinalWidth = thumbnailDims.width / initialScale
+  const croppedFinalHeight = thumbnailDims.height / initialScale
   const screenCenterX = screenSize.width / 2
   const screenCenterY = screenSize.height / 2
   const thumbnailCenterX = thumbnailDims.pageX + thumbnailDims.width / 2
   const thumbnailCenterY = thumbnailDims.pageY + thumbnailDims.height / 2
   const initialTranslateX = thumbnailCenterX - screenCenterX
   const initialTranslateY = thumbnailCenterY - screenCenterY
-
-  const imageAspect = imageDims.width / imageDims.height
-  const thumbAspect = thumbnailDims.width / thumbnailDims.height
-  const initialWidth =
-    imageAspect > thumbAspect
-      ? thumbnailDims.height * imageAspect
-      : thumbnailDims.width
-  const initialHeight =
-    imageAspect > thumbAspect
-      ? thumbnailDims.height
-      : thumbnailDims.width / imageAspect
-  const finalWidth = screenSize.width
-  const finalHeight = screenSize.width / imageAspect
-  const initialScale = Math.min(
-    initialWidth / finalWidth,
-    initialHeight / finalHeight,
-  )
-
-  const translateX = interpolate(progress, [0, 1], [initialTranslateX, 0])
-  const translateY = interpolate(progress, [0, 1], [initialTranslateY, 0])
   const scale = interpolate(progress, [0, 1], [initialScale, 1])
-  return [{translateX}, {translateY}, {scale}]
+  const translateX = interpolatePx(progress, [0, 1], [initialTranslateX, 0])
+  const translateY = interpolatePx(progress, [0, 1], [initialTranslateY, 0])
+  const width = interpolatePx(progress, [0, 1], [croppedFinalWidth, finalWidth])
+  const height = interpolatePx(
+    progress,
+    [0, 1],
+    [croppedFinalHeight, finalHeight],
+  )
+  const cropTranslateX = interpolatePx(
+    progress,
+    [0, 1],
+    [(finalWidth - croppedFinalWidth) / 2, 0],
+  )
+  return {
+    transform: [
+      {translateX},
+      {translateY},
+      {scale},
+      {translateX: cropTranslateX},
+    ],
+    width,
+    height,
+  }
 }
 
 const styles = StyleSheet.create({
@@ -501,7 +553,7 @@ function ImageViewingRoot({
 
 function withClampedSpring(value: any) {
   'worklet'
-  return withSpring(value, {overshootClamping: true, stiffness: 150})
+  return withSpring(value, {overshootClamping: true, stiffness: 120})
 }
 
 export default ImageViewingRoot

@@ -1,5 +1,10 @@
 import React, {useState} from 'react'
-import {ActivityIndicator, Dimensions, StyleSheet} from 'react-native'
+import {
+  ActivityIndicator,
+  Dimensions,
+  StyleProp,
+  StyleSheet,
+} from 'react-native'
 import {
   Gesture,
   GestureDetector,
@@ -13,7 +18,7 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated'
-import {Image} from 'expo-image'
+import {Image, ImageStyle} from 'expo-image'
 
 import {useImageDimensions} from '#/lib/media/image-sizes'
 import type {Dimensions as ImageDimensions, ImageSource} from '../../@types'
@@ -26,6 +31,8 @@ import {
   readTransform,
   TransformMatrix,
 } from '../../transforms'
+
+const AnimatedImage = Animated.createAnimatedComponent(Image)
 
 const windowDim = Dimensions.get('window')
 const screenDim = Dimensions.get('screen')
@@ -47,13 +54,16 @@ type Props = {
   isPagingAndroid: boolean
   showControls: boolean
   dismissSwipePan: PanGesture
+  imageStyle: StyleProp<ImageStyle>
 }
+
 const ImageItem = ({
   imageSrc,
   onTap,
   onZoom,
   isPagingAndroid,
   dismissSwipePan,
+  imageStyle,
 }: Props) => {
   const [isScaled, setIsScaled] = useState(false)
   const [imageAspect, imageDimensions] = useImageDimensions({
@@ -307,21 +317,24 @@ const ImageItem = ({
         renderToHardwareTextureAndroid
         style={[styles.container, animatedStyle, {}]}>
         <ActivityIndicator size="small" color="#FFF" style={styles.loading} />
-        <Image
-          contentFit="contain"
+        <AnimatedImage
+          contentFit="cover"
           source={{uri: imageSrc.uri}}
-          placeholderContentFit="contain"
+          placeholderContentFit="cover"
           placeholder={{uri: imageSrc.thumbUri}}
-          style={{
-            width: SCREEN.width,
-            height: imageAspect ? SCREEN.width / imageAspect : undefined,
-            borderRadius:
-              imageSrc.type === 'circle-avi'
-                ? SCREEN.width / 2
-                : imageSrc.type === 'rect-avi'
-                ? 20
-                : 0,
-          }}
+          style={[
+            {
+              width: SCREEN.width,
+              height: imageAspect ? SCREEN.width / imageAspect : undefined,
+              borderRadius:
+                imageSrc.type === 'circle-avi'
+                  ? SCREEN.width / 2
+                  : imageSrc.type === 'rect-avi'
+                  ? 20
+                  : 0,
+            },
+            imageStyle,
+          ]}
           accessibilityLabel={imageSrc.alt}
           accessibilityHint=""
           accessibilityIgnoresInvertColors
