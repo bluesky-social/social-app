@@ -236,6 +236,13 @@ const ImageItem = ({
 
   const singleTap = Gesture.Tap().onEnd(() => {
     'worklet'
+    const [, , committedScale] = readTransform(committedTransform.value)
+    if (committedScale !== 1) {
+      // Go back to 1:1 using the identity vector.
+      let t = createTransform()
+      committedTransform.value = withClampedSpring(t)
+      return
+    }
     runOnJS(onTap)()
   })
 

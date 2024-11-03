@@ -97,9 +97,25 @@ const ImageItem = ({
     })
   }
 
+  function handleTap() {
+    if (scaled) {
+      const scrollResponderRef = scrollViewRef?.current?.getScrollResponder()
+      // @ts-ignore
+      scrollResponderRef?.scrollResponderZoomTo({
+        x: 0,
+        y: 0,
+        width: SCREEN.width,
+        height: SCREEN.height,
+        animated: true,
+      })
+    } else {
+      onTap()
+    }
+  }
+
   const singleTap = Gesture.Tap().onEnd(() => {
     'worklet'
-    runOnJS(onTap)()
+    runOnJS(handleTap)()
   })
 
   const doubleTap = Gesture.Tap()
