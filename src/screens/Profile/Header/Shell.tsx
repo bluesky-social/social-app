@@ -162,21 +162,22 @@ let ProfileHeaderShell = ({
           accessibilityRole="image"
           accessibilityLabel={_(msg`View ${profile.handle}'s avatar`)}
           accessibilityHint="">
-          <Animated.View
-            ref={aviRef}
+          <View
             style={[
               t.atoms.bg,
               {borderColor: t.atoms.bg.backgroundColor},
               styles.avi,
               profile.associated?.labeler && styles.aviLabeler,
             ]}>
-            <UserAvatar
-              type={profile.associated?.labeler ? 'labeler' : 'user'}
-              size={90}
-              avatar={profile.avatar}
-              moderation={moderation.ui('avatar')}
-            />
-          </Animated.View>
+            <Animated.View ref={aviRef}>
+              <UserAvatar
+                type={profile.associated?.labeler ? 'labeler' : 'user'}
+                size={90}
+                avatar={profile.avatar}
+                moderation={moderation.ui('avatar')}
+              />
+            </Animated.View>
+          </View>
         </TouchableWithoutFeedback>
       </GrowableAvatar>
     </View>
