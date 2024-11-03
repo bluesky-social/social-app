@@ -72,6 +72,7 @@ function ImageViewing({
   const [imageIndex, setImageIndex] = useState(initialImageIndex)
   const [showControls, setShowControls] = useState(true)
   const dismissSwipeTranslateY = useSharedValue(0)
+  const isFlyingAway = useSharedValue(false)
 
   const animatedHeaderStyle = useAnimatedStyle(() => {
     const show = showControls && dismissSwipeTranslateY.value === 0
@@ -98,10 +99,16 @@ function ImageViewing({
     }
   })
 
+  const containerStyle = useAnimatedStyle(() => {
+    if (openProgress.value < 1 || isFlyingAway.value) {
+      return {pointerEvents: 'none'}
+    }
+    return {pointerEvents: 'auto'}
+  })
+
   const activeImageStyle = useAnimatedStyle(() => {
     if (openProgress.value === 1 || dismissSwipeTranslateY.value !== 0) {
       return {
-        pointerEvents: 'auto',
         transform: [{translateY: dismissSwipeTranslateY.value}],
       }
     }
@@ -114,12 +121,10 @@ function ImageViewing({
         image.dimensions,
       )
       return {
-        pointerEvents: 'none',
         transform: interpolatedTransform,
       }
     }
     return {
-      pointerEvents: 'auto',
       transform: [],
     }
   })
@@ -136,6 +141,7 @@ function ImageViewing({
     .onEnd(e => {
       'worklet'
       if (Math.abs(e.velocityY) > 1000) {
+        isFlyingAway.value = true
         dismissSwipeTranslateY.value = withDecay({
           velocity: e.velocityY,
           velocityFactor: Math.max(3000 / Math.abs(e.velocityY), 1), // Speed up if it's too slow.
@@ -198,7 +204,7 @@ function ImageViewing({
       edges={edges}
       aria-modal
       accessibilityViewIsModal>
-      <View style={[styles.container]}>
+      <Animated.View style={[styles.container, containerStyle]}>
         <Animated.View style={[styles.backdrop, backdropStyle]} />
         <Animated.View style={[styles.header, animatedHeaderStyle]}>
           <ImageDefaultHeader onRequestClose={onRequestClose} />
@@ -245,7 +251,7 @@ function ImageViewing({
             onPressShare={onPressShare}
           />
         </Animated.View>
-      </View>
+      </Animated.View>
     </SafeAreaView>
   )
 }
