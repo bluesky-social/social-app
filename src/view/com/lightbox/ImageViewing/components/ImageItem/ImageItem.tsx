@@ -5,7 +5,7 @@ import {StyleProp, View} from 'react-native'
 import {PanGesture} from 'react-native-gesture-handler'
 import {ImageStyle} from 'expo-image'
 
-import {ImageSource} from '../../@types'
+import {Dimensions as ImageDimensions, ImageSource} from '../../@types'
 
 type Props = {
   imageSrc: ImageSource
@@ -16,6 +16,8 @@ type Props = {
   showControls: boolean
   dismissSwipePan: PanGesture | null
   imageStyle: StyleProp<ImageStyle>
+  imageAspect: number | undefined
+  dimensions: ImageDimensions | undefined
 }
 
 const ImageItem = (_props: Props) => {

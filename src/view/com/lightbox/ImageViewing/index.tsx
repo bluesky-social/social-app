@@ -38,6 +38,7 @@ import {Edge, SafeAreaView} from 'react-native-safe-area-context'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Trans} from '@lingui/macro'
 
+import {useImageDimensions} from '#/lib/media/image-sizes'
 import {colors, s} from '#/lib/styles'
 import {isAndroid, isIOS} from '#/platform/detection'
 import {Lightbox} from '#/state/lightbox'
@@ -262,20 +263,22 @@ function LightboxPage({
   dismissSwipeTranslateY: SharedValue<number>
   dismissSwipePan: PanGesture
 }) {
-  const {thumbRect, dimensions} = imageSrc
-  const imageAspect = dimensions
-    ? dimensions.width / dimensions.height
-    : undefined
+  const {thumbRect, dimensions: knownDimensions, type} = imageSrc
+  const [imageAspect, dimensions] = useImageDimensions({
+    src: imageSrc.uri,
+    knownDimensions,
+  })
+
   const finalWidth = SCREEN.width
   const finalHeight = imageAspect ? SCREEN.width / imageAspect : undefined
 
   const interpolation = useDerivedValue(() => {
-    if (isActive && thumbRect && dimensions && openProgress.value < 1) {
+    if (isActive && thumbRect && knownDimensions && openProgress.value < 1) {
       return interpolateTransform(
         openProgress.value,
         thumbRect,
         SCREEN,
-        dimensions,
+        knownDimensions,
       )
     }
     const translateY = isActive ? dismissSwipeTranslateY.value : 0
@@ -299,6 +302,8 @@ function LightboxPage({
     return {
       width,
       height,
+      borderRadius:
+        type === 'circle-avi' ? SCREEN.width / 2 : type === 'rect-avi' ? 20 : 0,
     }
   })
 
@@ -313,6 +318,8 @@ function LightboxPage({
         showControls={showControls}
         dismissSwipePan={isActive ? dismissSwipePan : null}
         imageStyle={imageStyle}
+        imageAspect={imageAspect}
+        dimensions={dimensions}
       />
     </Animated.View>
   )

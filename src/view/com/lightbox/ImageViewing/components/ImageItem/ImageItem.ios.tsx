@@ -22,8 +22,7 @@ import Animated, {runOnJS, useAnimatedRef} from 'react-native-reanimated'
 import {Image, ImageStyle} from 'expo-image'
 
 import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
-import {useImageDimensions} from '#/lib/media/image-sizes'
-import {ImageSource} from '../../@types'
+import {Dimensions as ImageDimensions, ImageSource} from '../../@types'
 
 const AnimatedImage = Animated.createAnimatedComponent(Image)
 
@@ -40,25 +39,24 @@ type Props = {
   showControls: boolean
   dismissSwipePan: PanGesture | null
   imageStyle: StyleProp<ImageStyle>
+  imageAspect: number | undefined
+  dimensions: ImageDimensions | undefined
 }
 
 const ImageItem = ({
   imageSrc,
+  dimensions,
   onTap,
   onZoom,
   showControls,
   dismissSwipePan,
   imageStyle,
+  imageAspect,
 }: Props) => {
   const scrollViewRef = useAnimatedRef<Animated.ScrollView>()
-
   const [scaled, setScaled] = useState(false)
-  const [imageAspect, imageDimensions] = useImageDimensions({
-    src: imageSrc.uri,
-    knownDimensions: imageSrc.dimensions,
-  })
-  const maxZoomScale = imageDimensions
-    ? (imageDimensions.width / SCREEN.width) * MAX_ORIGINAL_IMAGE_ZOOM
+  const maxZoomScale = dimensions
+    ? (dimensions.width / SCREEN.width) * MAX_ORIGINAL_IMAGE_ZOOM
     : 1
 
   const scrollHandler = useAnimatedScrollHandler({
@@ -158,19 +156,7 @@ const ImageItem = ({
           source={{uri: imageSrc.uri}}
           placeholderContentFit="cover"
           placeholder={{uri: imageSrc.thumbUri}}
-          style={[
-            {
-              width: SCREEN.width,
-              height: imageAspect ? SCREEN.width / imageAspect : undefined,
-              borderRadius:
-                imageSrc.type === 'circle-avi'
-                  ? SCREEN.width / 2
-                  : imageSrc.type === 'rect-avi'
-                  ? 20
-                  : 0,
-            },
-            imageStyle,
-          ]}
+          style={imageStyle}
           accessibilityLabel={imageSrc.alt}
           accessibilityHint=""
           enableLiveTextInteraction={showControls && !scaled}

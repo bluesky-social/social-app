@@ -20,7 +20,6 @@ import Animated, {
 } from 'react-native-reanimated'
 import {Image, ImageStyle} from 'expo-image'
 
-import {useImageDimensions} from '#/lib/media/image-sizes'
 import type {Dimensions as ImageDimensions, ImageSource} from '../../@types'
 import {
   applyRounding,
@@ -55,6 +54,8 @@ type Props = {
   showControls: boolean
   dismissSwipePan: PanGesture
   imageStyle: StyleProp<ImageStyle>
+  imageAspect: number | undefined
+  dimensions: ImageDimensions | undefined
 }
 
 const ImageItem = ({
@@ -64,12 +65,10 @@ const ImageItem = ({
   isPagingAndroid,
   dismissSwipePan,
   imageStyle,
+  imageAspect,
+  dimensions,
 }: Props) => {
   const [isScaled, setIsScaled] = useState(false)
-  const [imageAspect, imageDimensions] = useImageDimensions({
-    src: imageSrc.uri,
-    knownDimensions: imageSrc.dimensions,
-  })
   const committedTransform = useSharedValue(initialTransform)
   const panTranslation = useSharedValue({x: 0, y: 0})
   const pinchOrigin = useSharedValue({x: 0, y: 0})
@@ -155,14 +154,14 @@ const ImageItem = ({
     })
     .onChange(e => {
       'worklet'
-      if (!imageDimensions) {
+      if (!dimensions) {
         return
       }
       // Don't let the picture zoom in so close that it gets blurry.
       // Also, like in stock Android apps, don't let the user zoom out further than 1:1.
       const [, , committedScale] = readTransform(committedTransform.value)
       const maxCommittedScale =
-        (imageDimensions.width / SCREEN.width) * MAX_ORIGINAL_IMAGE_ZOOM
+        (dimensions.width / SCREEN.width) * MAX_ORIGINAL_IMAGE_ZOOM
       const minPinchScale = 1 / committedScale
       const maxPinchScale = maxCommittedScale / committedScale
       const nextPinchScale = Math.min(
@@ -211,7 +210,7 @@ const ImageItem = ({
     .minPointers(isScaled ? 1 : 2)
     .onChange(e => {
       'worklet'
-      if (!imageDimensions) {
+      if (!dimensions) {
         return
       }
       const nextPanTranslation = {x: e.translationX, y: e.translationY}
@@ -259,7 +258,7 @@ const ImageItem = ({
     .numberOfTaps(2)
     .onEnd(e => {
       'worklet'
-      if (!imageDimensions || !imageAspect) {
+      if (!dimensions || !imageAspect) {
         return
       }
       const [, , committedScale] = readTransform(committedTransform.value)
@@ -279,7 +278,7 @@ const ImageItem = ({
       )
       // But don't zoom in so close that the picture gets blurry.
       const maxScale =
-        (imageDimensions.width / SCREEN.width) * MAX_ORIGINAL_IMAGE_ZOOM
+        (dimensions.width / SCREEN.width) * MAX_ORIGINAL_IMAGE_ZOOM
       const scale = Math.min(candidateScale, maxScale)
 
       // Calculate where we would be if the user pinched into the double tapped point.
@@ -321,19 +320,7 @@ const ImageItem = ({
           source={{uri: imageSrc.uri}}
           placeholderContentFit="cover"
           placeholder={{uri: imageSrc.thumbUri}}
-          style={[
-            {
-              width: SCREEN.width,
-              height: imageAspect ? SCREEN.width / imageAspect : undefined,
-              borderRadius:
-                imageSrc.type === 'circle-avi'
-                  ? SCREEN.width / 2
-                  : imageSrc.type === 'rect-avi'
-                  ? 20
-                  : 0,
-            },
-            imageStyle,
-          ]}
+          style={imageStyle}
           accessibilityLabel={imageSrc.alt}
           accessibilityHint=""
           accessibilityIgnoresInvertColors
