@@ -169,7 +169,7 @@ let ProfileHeaderShell = ({
               styles.avi,
               profile.associated?.labeler && styles.aviLabeler,
             ]}>
-            <Animated.View ref={aviRef}>
+            <Animated.View ref={aviRef} collapsable={false}>
               <UserAvatar
                 type={profile.associated?.labeler ? 'labeler' : 'user'}
                 size={90}

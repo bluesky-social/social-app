@@ -48,7 +48,10 @@ export function GalleryItem({
   const hideBadges =
     viewContext === PostEmbedViewContext.FeedEmbedRecordWithMedia
   return (
-    <Animated.View style={a.flex_1} ref={containerRefs[index]}>
+    <Animated.View
+      style={a.flex_1}
+      ref={containerRefs[index]}
+      collapsable={false}>
       <Pressable
         onPress={onPress ? () => onPress(index, containerRefs) : undefined}
         onPressIn={onPressIn ? () => onPressIn(index) : undefined}

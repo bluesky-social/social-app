@@ -154,7 +154,7 @@ export function ProfileSubpageHeader({
           paddingBottom: 6,
           paddingHorizontal: isMobile ? 12 : 14,
         }}>
-        <Animated.View ref={aviRef}>
+        <Animated.View ref={aviRef} collapsable={false}>
           <Pressable
             testID="headerAviButton"
             onPress={onPressAvi}
