@@ -53,6 +53,26 @@ export async function getLinkMeta(
       url,
     }
   }
+
+  if (url.includes('vm.tiktok.com')) {
+    try {
+      const tiktokUri = await fetch(`https://www.tiktok.com/oembed?url=${url}`)
+        .then(res => res.json())
+        .then(json => [json.author_url, json.embed_product_id])
+
+      if (tiktokUri) {
+        url = `${tiktokUri[0]}/video/${tiktokUri[1]}`
+        urlp = new URL(url)
+      }
+    } catch (e) {
+      return {
+        error: 'Invalid URL',
+        likelyType: LikelyType.Other,
+        url,
+      }
+    }
+  }
+
   const likelyType = getLikelyType(urlp)
   const meta: LinkMeta = {
     likelyType,

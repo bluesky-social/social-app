@@ -25,6 +25,7 @@ export const embedPlayerSources = [
   'giphy',
   'tenor',
   'flickr',
+  'tiktok',
 ] as const
 
 export type EmbedPlayerSource = (typeof embedPlayerSources)[number]
@@ -45,6 +46,7 @@ export type EmbedPlayerType =
   | 'giphy_gif'
   | 'tenor_gif'
   | 'flickr_album'
+  | 'tiktok_video'
 
 export const externalEmbedLabels: Record<EmbedPlayerSource, string> = {
   youtube: 'YouTube',
@@ -57,6 +59,7 @@ export const externalEmbedLabels: Record<EmbedPlayerSource, string> = {
   appleMusic: 'Apple Music',
   soundcloud: 'SoundCloud',
   flickr: 'Flickr',
+  tiktok: 'Tiktok',
 }
 
 export interface EmbedPlayerParams {
@@ -119,6 +122,18 @@ export function parseEmbedPlayerFromUrl(
         source: isShorts ? 'youtubeShorts' : 'youtube',
         hideDetails: isShorts ? true : undefined,
         playerUri: `${IFRAME_HOST}/iframe/youtube.html?videoId=${videoId}&start=${seek}`,
+      }
+    }
+  }
+
+  //tiktok
+  if (urlp.hostname === 'www.tiktok.com') {
+    const videoId = urlp.pathname.split('/')[3]
+    if (videoId) {
+      return {
+        type: 'tiktok_video',
+        source: 'tiktok',
+        playerUri: `https://www.tiktok.com/player/v1/${videoId}?autoplay=1&loop=1&rel=0`,
       }
     }
   }
@@ -466,6 +481,7 @@ export function getPlayerAspect({
     case 'twitch_video':
     case 'vimeo_video':
       return {aspectRatio: 16 / 9}
+    case 'tiktok_video':
     case 'youtube_short':
       if (SCREEN_HEIGHT < 600) {
         return {aspectRatio: (9 / 16) * 1.75}
