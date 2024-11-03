@@ -37,7 +37,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Trans} from '@lingui/macro'
 
 import {colors, s} from '#/lib/styles'
-import {isIOS} from '#/platform/detection'
+import {isAndroid, isIOS} from '#/platform/detection'
 import {Lightbox} from '#/state/lightbox'
 import {Button} from '#/view/com/util/forms/Button'
 import {Text} from '#/view/com/util/text/Text'
@@ -68,7 +68,7 @@ function ImageViewing({
 }) {
   const {images, index: initialImageIndex} = lightbox
   const [isScaled, setIsScaled] = useState(false)
-  const [isDragging, setIsDragging] = useState(false)
+  const [isPagingAndroid, setIsPagingAndroid] = useState(false)
   const [imageIndex, setImageIndex] = useState(initialImageIndex)
   const [showControls, setShowControls] = useState(true)
   const dismissSwipeTranslateY = useSharedValue(0)
@@ -211,7 +211,13 @@ function ImageViewing({
             setIsScaled(false)
           }}
           onPageScrollStateChanged={e => {
-            setIsDragging(e.nativeEvent.pageScrollState !== 'idle')
+            if (isAndroid) {
+              // This condition isn't reliable on iOS (the pager may send
+              // events out of order if you spam it with vertical pans in
+              // the middle of deceleration). However, we only need this
+              // variable for Android anyway, so let's make that explicit.
+              setIsPagingAndroid(e.nativeEvent.pageScrollState !== 'idle')
+            }
           }}
           overdrag={true}
           style={styles.pager}>
@@ -224,11 +230,9 @@ function ImageViewing({
                 onZoom={onZoom}
                 imageSrc={imageSrc}
                 onRequestClose={onRequestClose}
-                isScrollViewBeingDragged={isDragging}
+                isPagingAndroid={isPagingAndroid}
                 showControls={showControls}
-                dismissSwipePan={
-                  imageIndex === i && !isDragging ? dismissSwipePan : null
-                }
+                dismissSwipePan={imageIndex === i ? dismissSwipePan : null}
               />
             </Animated.View>
           ))}

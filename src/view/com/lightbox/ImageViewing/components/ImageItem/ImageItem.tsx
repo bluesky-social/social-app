@@ -11,7 +11,7 @@ type Props = {
   onRequestClose: () => void
   onTap: () => void
   onZoom: (scaled: boolean) => void
-  isScrollViewBeingDragged: boolean
+  isPagingAndroid: boolean
   showControls: boolean
   dismissSwipePan: PanGesture | null
 }

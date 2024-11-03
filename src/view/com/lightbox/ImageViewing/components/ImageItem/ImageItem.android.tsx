@@ -44,7 +44,7 @@ type Props = {
   onRequestClose: () => void
   onTap: () => void
   onZoom: (isZoomed: boolean) => void
-  isScrollViewBeingDragged: boolean
+  isPagingAndroid: boolean
   showControls: boolean
   dismissSwipePan: PanGesture
 }
@@ -52,7 +52,7 @@ const ImageItem = ({
   imageSrc,
   onTap,
   onZoom,
-  isScrollViewBeingDragged,
+  isPagingAndroid,
   dismissSwipePan,
 }: Props) => {
   const [isScaled, setIsScaled] = useState(false)
@@ -282,7 +282,7 @@ const ImageItem = ({
       committedTransform.value = withClampedSpring(finalTransform)
     })
 
-  const composedGesture = isScrollViewBeingDragged
+  const composedGesture = isPagingAndroid
     ? // If the parent is not at rest, provide a no-op gesture.
       Gesture.Manual()
     : Gesture.Exclusive(
