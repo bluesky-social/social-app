@@ -114,7 +114,7 @@ export function useListCreateMutation() {
 
             if (members.length === 0) break
 
-            // Create batch of write operations for list items
+            // create batch of write operations for list items
             const writes = members.map(member => ({
               $type: 'com.atproto.repo.applyWrites#create',
               collection: 'app.bsky.graph.listitem',
@@ -125,7 +125,7 @@ export function useListCreateMutation() {
               },
             }))
 
-            // Apply writes in chunks of 10
+            // apply writes in chunks as big as `graph.getList` pagination limits allow
             for (const writesChunk of chunk(writes, LIMIT)) {
               await agent.com.atproto.repo.applyWrites({
                 repo: currentAccount.did,
