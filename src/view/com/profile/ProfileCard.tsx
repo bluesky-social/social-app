@@ -39,6 +39,7 @@ export function ProfileCard({
   onPress,
   style,
   showKnownFollowers,
+  hideFollowedBy,
 }: {
   testID?: string
   profile: AppBskyActorDefs.ProfileViewBasic
@@ -51,6 +52,7 @@ export function ProfileCard({
   onPress?: () => void
   style?: StyleProp<ViewStyle>
   showKnownFollowers?: boolean
+  hideFollowedBy?: boolean
 }) {
   const queryClient = useQueryClient()
   const pal = usePalette('default')
@@ -117,7 +119,7 @@ export function ProfileCard({
             {sanitizeHandle(profile.handle, '@')}
           </Text>
           <ProfileCardPills
-            followedBy={!!profile.viewer?.followedBy}
+            followedBy={!hideFollowedBy && !!profile.viewer?.followedBy}
             moderation={moderation}
           />
           {!!profile.viewer?.followedBy && <View style={s.flexRow} />}
@@ -186,6 +188,7 @@ export function ProfileCardWithFollowBtn({
   onPress,
   logContext = 'ProfileCard',
   showKnownFollowers,
+  hideFollowedBy,
 }: {
   profile: AppBskyActorDefs.ProfileView
   noBg?: boolean
@@ -193,6 +196,7 @@ export function ProfileCardWithFollowBtn({
   onPress?: () => void
   logContext?: 'ProfileCard' | 'StarterPackProfilesList'
   showKnownFollowers?: boolean
+  hideFollowedBy?: boolean
 }) {
   const {currentAccount} = useSession()
   const isMe = profile.did === currentAccount?.did
@@ -211,6 +215,7 @@ export function ProfileCardWithFollowBtn({
       }
       onPress={onPress}
       showKnownFollowers={!isMe && showKnownFollowers}
+      hideFollowedBy={hideFollowedBy}
     />
   )
 }
