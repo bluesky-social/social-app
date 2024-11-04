@@ -61,6 +61,7 @@ export function Feed({
   const moderationOpts = useModerationOpts()
   const {checkUnread} = useUnreadNotificationsApi()
   const [tab, setTab] = React.useState<(typeof tabs)[number]>(tabs[0])
+  const deferredTab = React.useDeferredValue(tab)
 
   const {
     data,
@@ -76,8 +77,11 @@ export function Feed({
     overridePriorityNotifications,
   })
   const isEmpty = !isFetching && !data?.pages[0]?.items.length
+  const isTransitioning = tab.types !== deferredTab.types
 
   const items = React.useMemo(() => {
+    if (isTransitioning) return [LOADING_ITEM]
+
     let arr: any[] = []
     if (isFetched) {
       if (isEmpty) {
@@ -94,7 +98,7 @@ export function Feed({
       arr.push(LOADING_ITEM)
     }
     return arr
-  }, [isFetched, isError, isEmpty, data])
+  }, [isFetched, isError, isEmpty, isTransitioning, data])
 
   const onRefresh = React.useCallback(async () => {
     try {
@@ -159,7 +163,7 @@ export function Feed({
             <NotificationFeedLoadingPlaceholder />
           </View>
         )
-      } else if (!tab.types || tab.types.includes(item.type)) {
+      } else if (!deferredTab.types || deferredTab.types.includes(item.type)) {
         return (
           <FeedItem
             item={item}
@@ -175,9 +179,9 @@ export function Feed({
       moderationOpts,
       isTabletOrMobile,
       _,
+      deferredTab.types,
       onPressRetryLoadMore,
       pal.border,
-      tab,
     ],
   )
 
