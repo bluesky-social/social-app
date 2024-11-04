@@ -114,17 +114,23 @@ export function useListCreateMutation() {
 
             if (members.length === 0) break
 
-            // this is pretty discusting, we need
-            // TODO: bulk membership insertion at protocol level
-            for (const member of members) {
-              await agent.app.bsky.graph.listitem.create(
-                {repo: currentAccount.did},
-                {
-                  subject: member.subject.did,
-                  list: res.uri,
-                  createdAt: new Date().toISOString(),
-                },
-              )
+            // Create batch of write operations for list items
+            const writes = members.map(member => ({
+              $type: 'com.atproto.repo.applyWrites#create',
+              collection: 'app.bsky.graph.listitem',
+              value: {
+                subject: member.subject.did,
+                list: res.uri,
+                createdAt: new Date().toISOString(),
+              },
+            }))
+
+            // Apply writes in chunks of 10
+            for (const writesChunk of chunk(writes, LIMIT)) {
+              await agent.com.atproto.repo.applyWrites({
+                repo: currentAccount.did,
+                writes: writesChunk,
+              })
             }
 
             cursor = membership.data.cursor
