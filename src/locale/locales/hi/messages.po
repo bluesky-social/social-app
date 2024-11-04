@@ -512,7 +512,7 @@ msgstr "ऐफ पासवर्ड जोड़ें"
 
 #: src/view/com/modals/report/Modal.tsx:194
 #~ msgid "Add details to report"
-#~ msgstr "रिपोर्ट करने के लिए विवरण जोड़ें"
+#~ msgstr "शिकायत करने के लिए विवरण जोड़ें"
 
 #: src/view/com/composer/Composer.tsx:467
 #~ msgid "Add link card"
@@ -2011,7 +2011,7 @@ msgstr "नया खाता बनाएँ"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:101
 msgid "Create report for {0}"
-msgstr "{0} के लिए रिपोर्ट बनाएँ"
+msgstr "{0} के लिए शिकायत बनाएँ"
 
 #: src/view/screens/AppPasswords.tsx:243
 msgid "Created {0}"
@@ -4688,7 +4688,7 @@ msgstr "इसे बदलना चाहते हैं?"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:130
 msgid "Need to report a copyright violation?"
-msgstr "कॉपीराइट उल्लंघन रिपोर्ट करना चाहते हैं?"
+msgstr "कॉपीराइट उल्लंघन शिकायत करना चाहते हैं?"
 
 #: src/view/com/modals/EmbedConsent.tsx:107
 #: src/view/com/modals/EmbedConsent.tsx:123
@@ -5242,7 +5242,7 @@ msgstr "बाहरी एंबेड सेटिंग खोलता ह�
 #: src/view/com/auth/SplashScreen.tsx:50
 #: src/view/com/auth/SplashScreen.web.tsx:110
 msgid "Opens flow to create a new Bluesky account"
-msgstr "नया Bluesky रिपोर्ट बनाने का साधन खोलता है"
+msgstr "नया Bluesky शिकायत बनाने का साधन खोलता है"
 
 #: src/view/com/auth/SplashScreen.tsx:64
 #: src/view/com/auth/SplashScreen.web.tsx:124
@@ -5415,7 +5415,7 @@ msgstr "अन्य..."
 
 #: src/screens/Messages/components/ChatDisabled.tsx:28
 msgid "Our moderators have reviewed reports and decided to disable your access to chats on Bluesky."
-msgstr "हमारे मॉडरेटर ने रिपोर्ट देखे और Bluesky पर आपकी बातचीत तक पहुँच को अक्षम करने का निर्णय लिया।"
+msgstr "हमारे मॉडरेटर ने शिकायत देखे और Bluesky पर आपकी बातचीत तक पहुँच को अक्षम करने का निर्णय लिया।"
 
 #: src/components/Lists.tsx:216
 #: src/view/screens/NotFound.tsx:45
@@ -6227,11 +6227,11 @@ msgstr "जवाब सफलतापूर्वक छिपाई गई"
 #: src/components/dms/MessagesListBlockedFooter.tsx:77
 #: src/components/dms/MessagesListBlockedFooter.tsx:84
 msgid "Report"
-msgstr "रिपोर्ट करें"
+msgstr "शिकायत करें"
 
 #: src/view/com/modals/report/Modal.tsx:166
 #~ msgid "Report {collectionName}"
-#~ msgstr "{collectionName} रिपोर्ट करें"
+#~ msgstr "{collectionName} शिकायत करें"
 
 #: src/components/dms/ConvoMenu.tsx:146
 #: src/components/dms/ConvoMenu.tsx:150
@@ -6241,70 +6241,70 @@ msgstr "रिपोर्ट करें"
 #: src/view/com/profile/ProfileMenu.tsx:299
 #: src/view/com/profile/ProfileMenu.tsx:302
 msgid "Report Account"
-msgstr "खाता रिपोर्ट करें"
+msgstr "खाता शिकायत करें"
 
 #: src/components/dms/ConvoMenu.tsx:197
 #: src/components/dms/ConvoMenu.tsx:200
 #: src/components/dms/ReportConversationPrompt.tsx:18
 msgid "Report conversation"
-msgstr "बातचीत रिपोर्ट करें"
+msgstr "बातचीत शिकायत करें"
 
 #: src/components/ReportDialog/index.tsx:44
 msgid "Report dialog"
-msgstr "रिपोर्ट डायलॉग"
+msgstr "शिकायत डायलॉग"
 
 #: src/view/screens/ProfileFeed.tsx:347
 #: src/view/screens/ProfileFeed.tsx:349
 msgid "Report feed"
-msgstr "फ़ीड रिपोर्ट करें"
+msgstr "फ़ीड शिकायत करें"
 
 #: src/view/screens/ProfileList.tsx:535
 msgid "Report List"
-msgstr "सूची रिपोर्ट करें"
+msgstr "सूची शिकायत करें"
 
 #: src/components/dms/MessageMenu.tsx:130
 msgid "Report message"
-msgstr "संदेश रिपोर्ट करें"
+msgstr "संदेश शिकायत करें"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:621
 #: src/view/com/util/forms/PostDropdownBtn.tsx:623
 msgid "Report post"
-msgstr "पोस्ट रिपोर्ट करें"
+msgstr "पोस्ट शिकायत करें"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:593
 #: src/screens/StarterPack/StarterPackScreen.tsx:596
 msgid "Report starter pack"
-msgstr "स्टार्टर पैक रिपोर्ट करें"
+msgstr "स्टार्टर पैक शिकायत करें"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:43
 msgid "Report this content"
-msgstr "यह सामाग्री रिपोर्ट करें"
+msgstr "यह सामाग्री शिकायत करें"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:56
 msgid "Report this feed"
-msgstr "यह फ़ीड रिपोर्ट करें"
+msgstr "यह फ़ीड शिकायत करें"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:53
 msgid "Report this list"
-msgstr "यह सूची रिपोर्ट करें"
+msgstr "यह सूची शिकायत करें"
 
 #: src/components/dms/ReportDialog.tsx:44
 #: src/components/dms/ReportDialog.tsx:137
 #: src/components/ReportDialog/SelectReportOptionView.tsx:62
 msgid "Report this message"
-msgstr "यह संदेश रिपोर्ट करें"
+msgstr "यह संदेश शिकायत करें"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:50
 msgid "Report this post"
-msgstr "यह पोस्ट रिपोर्ट करें"
+msgstr "यह पोस्ट शिकायत करें"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:59
 msgid "Report this starter pack"
-msgstr "यह स्टार्टर पैक रिपोर्ट करें"
+msgstr "यह स्टार्टर पैक शिकायत करें"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:47
 msgid "Report this user"
-msgstr "यह उपयोगकर्ता रिपोर्ट करें"
+msgstr "यह उपयोगकर्ता शिकायत करें"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:70
 #: src/view/com/util/post-ctrls/RepostButton.tsx:101
@@ -6781,7 +6781,7 @@ msgstr "{emojiName} इमोजी को अपने अवतार के �
 
 #: src/components/ReportDialog/SubmitView.tsx:140
 msgid "Select the moderation service(s) to report to"
-msgstr "रिपोर्ट करने के लिए मॉडरेशन सेवा(एँ) चुनें"
+msgstr "शिकायत करने के लिए मॉडरेशन सेवा(एँ) चुनें"
 
 #: src/view/com/auth/server-input/index.tsx:79
 msgid "Select the service that hosts your data."
@@ -6887,11 +6887,11 @@ msgstr "इन्हें पोस्ट भेजें"
 #: src/components/ReportDialog/SubmitView.tsx:220
 #: src/components/ReportDialog/SubmitView.tsx:224
 msgid "Send report"
-msgstr "रिपोर्ट भेजें"
+msgstr "शिकायत भेजें"
 
 #: src/view/com/modals/report/SendReportButton.tsx:45
 #~ msgid "Send Report"
-#~ msgstr "रिपोर्ट भेजें"
+#~ msgstr "शिकायत भेजें"
 
 #: src/components/ReportDialog/SelectLabelerView.tsx:43
 msgid "Send report to {0}"
@@ -7763,7 +7763,7 @@ msgstr "धन्यवाद! आपका ईमेल सफलतापू�
 #: src/components/dms/ReportDialog.tsx:129
 #: src/components/ReportDialog/SubmitView.tsx:82
 msgid "Thank you. Your report has been sent."
-msgstr "धन्यवाद। आपकी रिपोर्ट भेज दी गई है।"
+msgstr "धन्यवाद। आपकी शिकायत भेज दी गई है।"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:593
 #~ msgid "Thanks for being one of our first 10 million users."
@@ -7950,7 +7950,7 @@ msgstr "आपकी सूचियों को लाने में सम�
 #: src/components/dms/ReportDialog.tsx:217
 #: src/components/ReportDialog/SubmitView.tsx:87
 msgid "There was an issue sending your report. Please check your internet connection."
-msgstr "आपके रिपोर्ट को भेजने में समस्या हुई। कृपया अपना इंटरनेट कनेक्शन जाँच लें।"
+msgstr "आपके शिकायत को भेजने में समस्या हुई। कृपया अपना इंटरनेट कनेक्शन जाँच लें।"
 
 #: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:65
 #~ msgid "There was an issue syncing your preferences with the server"
@@ -8276,7 +8276,7 @@ msgstr "ईमेल 2FA विधि अक्षम करने के लि
 
 #: src/components/dms/ReportConversationPrompt.tsx:20
 msgid "To report a conversation, please report one of its messages via the conversation screen. This lets our moderators understand the context of your issue."
-msgstr "बातचीत को रिपोर्ट करने के लिए, कृपया बातचीत स्क्रीन द्वारा किसी संदेश को रिपोर्ट करें। इससे हमारे मॉडरेटर को आपकी समस्या का संदर्भ समझने में आसानी होगी।"
+msgstr "बातचीत को शिकायत करने के लिए, कृपया बातचीत स्क्रीन द्वारा किसी संदेश को शिकायत करें। इससे हमारे मॉडरेटर को आपकी समस्या का संदर्भ समझने में आसानी होगी।"
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:133
 msgid "To upload videos to Bluesky, you must first verify your email."
@@ -8284,7 +8284,7 @@ msgstr "Bluesky पर वीडियो अपलोड करने के �
 
 #: src/components/ReportDialog/SelectLabelerView.tsx:32
 msgid "To whom would you like to send this report?"
-msgstr "आप यह रिपोर्ट किसे भेजना चाहते हैं?"
+msgstr "आप यह शिकायत किसे भेजना चाहते हैं?"
 
 #: src/components/dms/DateDivider.tsx:44
 msgid "Today"
@@ -8851,7 +8851,7 @@ msgstr "विवरण देखें"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:134
 msgid "View details for reporting a copyright violation"
-msgstr "कॉपीराइट उल्लंघन को रिपोर्ट करने के लिए विवरण देखें"
+msgstr "कॉपीराइट उल्लंघन को शिकायत करने के लिए विवरण देखें"
 
 #: src/view/com/posts/FeedSlice.tsx:136
 msgid "View full thread"
@@ -9422,7 +9422,7 @@ msgstr "छवि सहेजने के लिए आपको फ़ोटो 
 
 #: src/components/ReportDialog/SubmitView.tsx:210
 msgid "You must select at least one labeler for a report"
-msgstr "रिपोर्ट करने के लिए आपको कम से कम एक लेबलकर्ता चुनना पड़ेगा।"
+msgstr "शिकायत करने के लिए आपको कम से कम एक लेबलकर्ता चुनना पड़ेगा।"
 
 #: src/screens/Deactivated.tsx:131
 msgid "You previously deactivated @{0}."
@@ -9619,7 +9619,7 @@ msgstr "आपके जवाब को प्रकाशित किया �
 
 #: src/components/dms/ReportDialog.tsx:157
 msgid "Your report will be sent to the Bluesky Moderation Service"
-msgstr "आपके रिपोर्ट को Bluesky मॉडरेशन सेवा को भेजा जाएगा।"
+msgstr "आपके शिकायत को Bluesky मॉडरेशन सेवा को भेजा जाएगा।"
 
 #: src/screens/Signup/index.tsx:142
 msgid "Your user handle"
