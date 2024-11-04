@@ -32,7 +32,15 @@ export function Lightbox() {
     return (
       <ImageView
         images={[
-          {uri: opts.profile.avatar || '', thumbUri: opts.profile.avatar || ''},
+          {
+            uri: opts.profile.avatar || '',
+            thumbUri: opts.profile.avatar || '',
+            dimensions: {
+              // It's fine if it's actually smaller but we know it's 1:1.
+              height: 1000,
+              width: 1000,
+            },
+          },
         ]}
         initialImageIndex={0}
         thumbDims={opts.thumbDims}

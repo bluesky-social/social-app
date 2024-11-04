@@ -12,8 +12,8 @@ import Animated, {
 } from 'react-native-reanimated'
 import {Image} from 'expo-image'
 
+import {useImageDimensions} from '#/lib/media/image-sizes'
 import type {Dimensions as ImageDimensions, ImageSource} from '../../@types'
-import useImageDimensions from '../../hooks/useImageDimensions'
 import {
   applyRounding,
   createTransform,
@@ -52,7 +52,10 @@ const ImageItem = ({
   isScrollViewBeingDragged,
 }: Props) => {
   const [isScaled, setIsScaled] = useState(false)
-  const imageDimensions = useImageDimensions(imageSrc)
+  const [imageAspect, imageDimensions] = useImageDimensions({
+    src: imageSrc.uri,
+    knownDimensions: imageSrc.dimensions,
+  })
   const committedTransform = useSharedValue(initialTransform)
   const panTranslation = useSharedValue({x: 0, y: 0})
   const pinchOrigin = useSharedValue({x: 0, y: 0})
@@ -119,12 +122,12 @@ const ImageItem = ({
     candidateTransform: TransformMatrix,
   ) {
     'worklet'
-    if (!imageDimensions) {
+    if (!imageAspect) {
       return [0, 0]
     }
     const [nextTranslateX, nextTranslateY, nextScale] =
       readTransform(candidateTransform)
-    const scaledDimensions = getScaledDimensions(imageDimensions, nextScale)
+    const scaledDimensions = getScaledDimensions(imageAspect, nextScale)
     const clampedTranslateX = clampTranslation(
       nextTranslateX,
       scaledDimensions.width,
@@ -248,7 +251,7 @@ const ImageItem = ({
     .numberOfTaps(2)
     .onEnd(e => {
       'worklet'
-      if (!imageDimensions) {
+      if (!imageDimensions || !imageAspect) {
         return
       }
       const [, , committedScale] = readTransform(committedTransform.value)
@@ -260,7 +263,6 @@ const ImageItem = ({
       }
 
       // Try to zoom in so that we get rid of the black bars (whatever the orientation was).
-      const imageAspect = imageDimensions.width / imageDimensions.height
       const screenAspect = SCREEN.width / SCREEN.height
       const candidateScale = Math.max(
         imageAspect / screenAspect,
@@ -363,11 +365,10 @@ const styles = StyleSheet.create({
 })
 
 function getScaledDimensions(
-  imageDimensions: ImageDimensions,
+  imageAspect: number,
   scale: number,
 ): ImageDimensions {
   'worklet'
-  const imageAspect = imageDimensions.width / imageDimensions.height
   const screenAspect = SCREEN.width / SCREEN.height
   const isLandscape = imageAspect > screenAspect
   if (isLandscape) {

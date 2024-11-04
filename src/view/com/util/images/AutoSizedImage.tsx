@@ -5,7 +5,7 @@ import {AppBskyEmbedImages} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import * as imageSizes from '#/lib/media/image-sizes'
+import {useImageDimensions} from '#/lib/media/image-sizes'
 import {Dimensions} from '#/lib/media/types'
 import {isNative} from '#/platform/detection'
 import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
@@ -14,44 +14,24 @@ import {ArrowsDiagonalOut_Stroke2_Corner0_Rounded as Fullscreen} from '#/compone
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {Text} from '#/components/Typography'
 
-export function useImageAspectRatio({
+function useImageAspectRatio({
   src,
-  dimensions,
+  knownDimensions,
 }: {
   src: string
-  dimensions: Dimensions | undefined
+  knownDimensions: Dimensions | null
 }) {
-  const [raw, setAspectRatio] = React.useState<number>(
-    dimensions ? calc(dimensions) : 1,
-  )
-  // this basically controls the width of the image
-  const {isCropped, constrained, max} = React.useMemo(() => {
+  const [raw] = useImageDimensions({src, knownDimensions})
+  let constrained: number | undefined
+  let max: number | undefined
+  let isCropped: boolean | undefined
+  if (raw !== undefined) {
     const ratio = 1 / 2 // max of 1:2 ratio in feeds
-    const constrained = Math.max(raw, ratio)
-    const max = Math.max(raw, 0.25) // max of 1:4 in thread
-    const isCropped = raw < constrained
-    return {
-      isCropped,
-      constrained,
-      max,
-    }
-  }, [raw])
-
-  React.useEffect(() => {
-    let aborted = false
-    if (dimensions) return
-    imageSizes.fetch(src).then(newDim => {
-      if (aborted) return
-      setAspectRatio(calc(newDim))
-    })
-    return () => {
-      aborted = true
-    }
-  }, [dimensions, setAspectRatio, src])
-
+    constrained = Math.max(raw, ratio)
+    max = Math.max(raw, 0.25) // max of 1:4 in thread
+    isCropped = raw < constrained
+  }
   return {
-    dimensions,
-    raw,
     constrained,
     max,
     isCropped,
@@ -125,7 +105,7 @@ export function AutoSizedImage({
     isCropped: rawIsCropped,
   } = useImageAspectRatio({
     src: image.thumb,
-    dimensions: image.aspectRatio,
+    knownDimensions: image.aspectRatio ?? null,
   })
   const cropDisabled = crop === 'none'
   const isCropped = rawIsCropped && !cropDisabled
@@ -222,14 +202,16 @@ export function AutoSizedImage({
           a.rounded_md,
           a.overflow_hidden,
           t.atoms.bg_contrast_25,
-          {aspectRatio: max},
+          {aspectRatio: max ?? 1},
         ]}>
         {contents}
       </Pressable>
     )
   } else {
     return (
-      <ConstrainedImage fullBleed={crop === 'square'} aspectRatio={constrained}>
+      <ConstrainedImage
+        fullBleed={crop === 'square'}
+        aspectRatio={constrained ?? 1}>
         <Pressable
           onPress={onPress}
           onLongPress={onLongPress}
@@ -243,11 +225,4 @@ export function AutoSizedImage({
       </ConstrainedImage>
     )
   }
-}
-
-function calc(dim: Dimensions) {
-  if (dim.width === 0 || dim.height === 0) {
-    return 1
-  }
-  return dim.width / dim.height
 }
