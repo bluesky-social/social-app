@@ -98,7 +98,7 @@ function Modal({modal}: {modal: ModalIface}) {
 
   return (
     // eslint-disable-next-line react-native-a11y/has-valid-accessibility-descriptors
-    <TouchableWithoutFeedback onPressIn={onPressMask}>
+    <TouchableWithoutFeedback onPressOut={onPressMask}>
       <Animated.View
         style={styles.mask}
         entering={FadeIn.duration(150)}
