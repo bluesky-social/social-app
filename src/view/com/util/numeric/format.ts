@@ -1,8 +1,12 @@
 import type {I18n} from '@lingui/core'
 
-export const formatCount = (i18n: I18n, num: number) => {
+export const formatCount = (
+  i18n: I18n,
+  num: number,
+  notation: Intl.NumberFormatOptions['notation'] = 'compact',
+): string => {
   return i18n.number(num, {
-    notation: 'compact',
+    notation,
     maximumFractionDigits: 1,
     // `1,953` shouldn't be rounded up to 2k, it should be truncated.
     // @ts-expect-error: `roundingMode` doesn't seem to be in the typings yet

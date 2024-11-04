@@ -11,6 +11,7 @@ import {ViewHeader} from '#/view/com/util/ViewHeader'
 import {CenteredView} from '#/view/com/util/Views'
 import * as Layout from '#/components/Layout'
 import {ListHeaderDesktop} from '#/components/Lists'
+import {ProfileCount} from '../com/profile/ProfileCount'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileFollows'>
 export const ProfileFollowsScreen = ({route}: Props) => {
@@ -27,8 +28,15 @@ export const ProfileFollowsScreen = ({route}: Props) => {
   return (
     <Layout.Screen testID="profileFollowsScreen">
       <CenteredView sideBorders={true}>
-        <ListHeaderDesktop title={_(msg`Following`)} />
-        <ViewHeader title={_(msg`Following`)} showBorder={!isWeb} />
+        <ListHeaderDesktop
+          title={_(msg`Following`)}
+          detail={<ProfileCount name={name} metric="followsCount" />}
+        />
+        <ViewHeader
+          title={_(msg`Following`)}
+          detail={<ProfileCount name={name} metric="followsCount" />}
+          showBorder={!isWeb}
+        />
         <ProfileFollowsComponent name={name} />
       </CenteredView>
     </Layout.Screen>
