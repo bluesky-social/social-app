@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native'
 import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
 
@@ -45,17 +45,29 @@ function Modal({modal}: {modal: ModalIface}) {
   const {closeModal} = useModalControls()
   const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()
+  const [isMaskPressedIn, setIsMaskPressedIn] = useState(false)
 
   if (!isModalActive) {
     return null
   }
 
   const onPressMask = () => {
+    // make sure onPressIn occurred prior to onPress for the mask
+    if (!isMaskPressedIn) {
+      return
+    }
+    setIsMaskPressedIn(false)
     if (modal.name === 'crop-image') {
       return // dont close on mask presses during crop
     }
     closeModal()
   }
+
+  const onPressInMask = () => {
+    // prevent onPress event from responding to onPressIn that occurred outside the mask
+    setIsMaskPressedIn(true)
+  }
+
   const onInnerPress = () => {
     // TODO: can we use prevent default?
     // do nothing, we just want to stop it from bubbling
@@ -98,7 +110,7 @@ function Modal({modal}: {modal: ModalIface}) {
 
   return (
     // eslint-disable-next-line react-native-a11y/has-valid-accessibility-descriptors
-    <TouchableWithoutFeedback onPressOut={onPressMask}>
+    <TouchableWithoutFeedback onPress={onPressMask} onPressIn={onPressInMask}>
       <Animated.View
         style={styles.mask}
         entering={FadeIn.duration(150)}
