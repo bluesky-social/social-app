@@ -77,7 +77,7 @@ export function Feed({
     overridePriorityNotifications,
   })
   const isEmpty = !isFetching && !data?.pages[0]?.items.length
-  const isTransitioning = tab.types !== deferredTab.types
+  const isTransitioning = tab !== deferredTab
 
   const items = React.useMemo(() => {
     if (isTransitioning) return [LOADING_ITEM]
