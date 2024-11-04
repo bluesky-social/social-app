@@ -2011,7 +2011,7 @@ msgstr "नया खाता बनाएँ"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:101
 msgid "Create report for {0}"
-msgstr "{0} के लिए शिकायत बनाएँ"
+msgstr "{0} के लिए शिकायत लिखें"
 
 #: src/view/screens/AppPasswords.tsx:243
 msgid "Created {0}"
@@ -5242,7 +5242,7 @@ msgstr "बाहरी एंबेड सेटिंग खोलता ह�
 #: src/view/com/auth/SplashScreen.tsx:50
 #: src/view/com/auth/SplashScreen.web.tsx:110
 msgid "Opens flow to create a new Bluesky account"
-msgstr "नया Bluesky शिकायत बनाने का साधन खोलता है"
+msgstr "नया Bluesky खाता बनाने का साधन खोलता है"
 
 #: src/view/com/auth/SplashScreen.tsx:64
 #: src/view/com/auth/SplashScreen.web.tsx:124
