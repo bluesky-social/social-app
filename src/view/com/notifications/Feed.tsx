@@ -96,14 +96,6 @@ export function Feed({
     return arr
   }, [isFetched, isError, isEmpty, data])
 
-  const filteredItems = React.useMemo(() => {
-    if (!tab.types) {
-      return items
-    }
-
-    return items.filter(item => tab.types?.includes(item.type))
-  }, [items, tab])
-
   const onRefresh = React.useCallback(async () => {
     try {
       setIsPTRing(true)
@@ -167,16 +159,26 @@ export function Feed({
             <NotificationFeedLoadingPlaceholder />
           </View>
         )
+      } else if (!tab.types || tab.types.includes(item.type)) {
+        return (
+          <FeedItem
+            item={item}
+            moderationOpts={moderationOpts!}
+            hideTopBorder={index === 0 && isTabletOrMobile}
+          />
+        )
       }
-      return (
-        <FeedItem
-          item={item}
-          moderationOpts={moderationOpts!}
-          hideTopBorder={index === 0 && isTabletOrMobile}
-        />
-      )
+
+      return null
     },
-    [moderationOpts, isTabletOrMobile, _, onPressRetryLoadMore, pal.border],
+    [
+      moderationOpts,
+      isTabletOrMobile,
+      _,
+      onPressRetryLoadMore,
+      pal.border,
+      tab,
+    ],
   )
 
   const FeedFooter = React.useCallback(
@@ -209,7 +211,7 @@ export function Feed({
       <List
         testID="notifsFeed"
         ref={scrollElRef}
-        data={filteredItems}
+        data={items}
         keyExtractor={item => item._reactKey}
         renderItem={renderItem}
         ListHeaderComponent={ListHeaderComponent}
