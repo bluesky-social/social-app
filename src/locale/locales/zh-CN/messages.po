@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-04 01:16\n"
+"PO-Revision-Date: 2024-11-04 05:13\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -6211,7 +6211,7 @@ msgstr "实验性：启用这个设置项将在分层视图中显示回复。"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:168
 msgid "Set this setting to \"Yes\" to show samples of your saved feeds in your Following feed. This is an experimental feature."
-msgstr "实验性：启用这个设置项将在\"Following\"资讯源中选录已保存资讯源。"
+msgstr "实验性：启用这个设置项将在你的“Following”资讯源显示你已保存的资讯源中的精选帖文"
 
 #: src/screens/Onboarding/Layout.tsx:48
 msgid "Set up your account"
@@ -6419,7 +6419,7 @@ msgstr "显示转发"
 #: src/screens/Settings/FollowingFeedPreferences.tsx:122
 #: src/screens/Settings/FollowingFeedPreferences.tsx:132
 msgid "Show samples of your saved feeds in your Following feed"
-msgstr "在你的“Following”资讯源中选录你已保存的资讯源"
+msgstr "在你的“Following”资讯源显示你已保存的资讯源中的精选帖文"
 
 #: src/components/moderation/ContentHider.tsx:130
 #: src/components/moderation/PostHider.tsx:79
