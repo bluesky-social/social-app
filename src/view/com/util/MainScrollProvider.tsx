@@ -14,6 +14,7 @@ import {useMinimalShellMode} from '#/state/shell'
 import {useShellLayout} from '#/state/shell/shell-layout'
 
 const WEB_HIDE_SHELL_THRESHOLD = 200
+const WEB_SCROLL_MOMENTUM_THRESHOLD = 10
 
 function clamp(num: number, min: number, max: number) {
   'worklet'
@@ -30,7 +31,6 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
   const setMode = React.useCallback(
     (v: boolean) => {
       'worklet'
-      cancelAnimation(headerMode)
       headerMode.value = withSpring(v ? 1 : 0, {
         overshootClamping: true,
       })
@@ -142,7 +142,7 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
       } else {
         if (didJustRestoreScroll.value) {
           didJustRestoreScroll.value = false
-          // Don't hide/show navbar based on scroll restoratoin.
+          // Don't hide/show navbar based on scroll restoration.
           return
         }
         // On the web, we don't try to follow the drag because we don't know when it ends.
@@ -150,9 +150,24 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
         const dy = e.contentOffset.y - (startDragOffset.value ?? 0)
         startDragOffset.value = e.contentOffset.y
 
-        if (dy < 0 || e.contentOffset.y < WEB_HIDE_SHELL_THRESHOLD) {
+        if (e.contentOffset.y < WEB_HIDE_SHELL_THRESHOLD) {
+          setMode(false)
+          // If scrolling up (dy < 0)
+        } else if (dy < 0) {
+          // If the scroll distance is less than the negative momentum threshold, ignore it
+          // This will discard minimal scroll up, and we consider these movements irrelevant for the header
+          if (dy > WEB_SCROLL_MOMENTUM_THRESHOLD * -2) {
+            return
+          }
+
           setMode(false)
         } else if (dy > 0) {
+          // Check if the scroll distance is less than the momentum threshold
+          // This ignores minimal scroll down, considering these movements irrelevant for the header
+          if (dy > WEB_SCROLL_MOMENTUM_THRESHOLD) {
+            return
+          }
+
           setMode(true)
         }
       }
