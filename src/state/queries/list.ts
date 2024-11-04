@@ -45,6 +45,10 @@ export interface ListCreateMutateParams {
   description: string
   descriptionFacets: Facet[] | undefined
   avatar: RNImage | null | undefined
+
+  // {source} is an optional URI of an already existing list
+  // to copy its members from when creating the new one
+  source?: string
 }
 export function useListCreateMutation() {
   const {currentAccount} = useSession()
@@ -58,6 +62,7 @@ export function useListCreateMutation() {
         description,
         descriptionFacets,
         avatar,
+        source,
       }) {
         if (!currentAccount) {
           throw new Error('Not logged in')
@@ -86,6 +91,46 @@ export function useListCreateMutation() {
           },
           record,
         )
+
+        // {source} is provided, so insert members
+        // from that list to the newly created list
+        if (source) {
+          const LIMIT = 100
+          let cursor: string | undefined
+
+          for (let i = 0; i < LIMIT; i++) {
+            const membership = await agent.app.bsky.graph.getList({
+              list: source,
+              limit: LIMIT,
+              cursor,
+            })
+
+            if (!membership) throw new Error('Invalid source list')
+
+            if (!membership.data.items) throw new Error('Empty source list')
+
+            const members = membership.data
+              .items as AppBskyGraphDefs.ListItemView[]
+
+            if (members.length === 0) break
+
+            // this is pretty discusting, we need
+            // TODO: bulk membership insertion at protocol level
+            for (const member of members) {
+              await agent.app.bsky.graph.listitem.create(
+                {repo: currentAccount.did},
+                {
+                  subject: member.subject.did,
+                  list: res.uri,
+                  createdAt: new Date().toISOString(),
+                },
+              )
+            }
+
+            cursor = membership.data.cursor
+            if (!cursor) break
+          }
+        }
 
         // wait for the appview to update
         await whenAppViewReady(
@@ -212,8 +257,8 @@ export function useListDeleteMutation() {
       }
 
       // batch delete the list and listitem records
-      const createDel = (uri: string) => {
-        const urip = new AtUri(uri)
+      const createDel = (uriToDelete: string) => {
+        const urip = new AtUri(uriToDelete)
         return {
           $type: 'com.atproto.repo.applyWrites#delete',
           collection: urip.collection,
@@ -221,7 +266,7 @@ export function useListDeleteMutation() {
         }
       }
       const writes = listitemRecordUris
-        .map(uri => createDel(uri))
+        .map(currentUri => createDel(currentUri))
         .concat([createDel(uri)])
 
       // apply in chunks

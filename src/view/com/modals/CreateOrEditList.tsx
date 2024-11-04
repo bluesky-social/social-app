@@ -42,10 +42,12 @@ export const snapPoints = ['fullscreen']
 export function Component({
   purpose,
   onSave,
+  source,
   list,
 }: {
   purpose?: string
   onSave?: (uri: string) => void
+  source?: string
   list?: AppBskyGraphDefs.ListView
 }) {
   const {closeModal} = useModalControls()
@@ -68,6 +70,14 @@ export function Component({
     return 'app.bsky.graph.defs#curatelist'
   }, [list, purpose])
   const isCurateList = activePurpose === 'app.bsky.graph.defs#curatelist'
+
+  const modalTranscript = useMemo(() => {
+    if (!isCurateList) {
+      return list ? 'Edit Moderation List' : 'New Moderation List'
+    }
+
+    return source ? 'New User List' : 'Edit User List'
+  }, [isCurateList, list, source])
 
   const [isProcessing, setProcessing] = useState<boolean>(false)
   const [name, setName] = useState<string>(list?.name || '')
@@ -149,6 +159,26 @@ export function Component({
       richText = shortenLinks(richText)
       richText = stripInvalidMentions(richText)
 
+      if (source) {
+        const res = await listCreateMutation.mutateAsync({
+          purpose: activePurpose,
+          source,
+          name,
+          description: richText.text,
+          descriptionFacets: richText.facets,
+          avatar: newAvatar,
+        })
+        Toast.show(
+          isCurateList
+            ? _(msg`User list created`)
+            : _(msg`Moderation list created`),
+        )
+        onSave?.(res.uri)
+
+        closeModal()
+        return
+      }
+
       if (list) {
         await listMetadataMutation.mutateAsync({
           uri: list.uri,
@@ -163,21 +193,25 @@ export function Component({
             : _(msg`Moderation list updated`),
         )
         onSave?.(list.uri)
-      } else {
-        const res = await listCreateMutation.mutateAsync({
-          purpose: activePurpose,
-          name,
-          description: richText.text,
-          descriptionFacets: richText.facets,
-          avatar: newAvatar,
-        })
-        Toast.show(
-          isCurateList
-            ? _(msg`User list created`)
-            : _(msg`Moderation list created`),
-        )
-        onSave?.(res.uri)
+
+        closeModal()
+        return
       }
+
+      const res = await listCreateMutation.mutateAsync({
+        purpose: activePurpose,
+        name,
+        description: richText.text,
+        descriptionFacets: richText.facets,
+        avatar: newAvatar,
+      })
+      Toast.show(
+        isCurateList
+          ? _(msg`User list created`)
+          : _(msg`Moderation list created`),
+      )
+      onSave?.(res.uri)
+
       closeModal()
     } catch (e: any) {
       if (isNetworkError(e)) {
@@ -203,6 +237,7 @@ export function Component({
     descriptionRt,
     newAvatar,
     list,
+    source,
     listMetadataMutation,
     listCreateMutation,
     _,
@@ -220,17 +255,7 @@ export function Component({
         ]}
         testID="createOrEditListModal">
         <Text style={[styles.title, pal.text]}>
-          {isCurateList ? (
-            list ? (
-              <Trans>Edit User List</Trans>
-            ) : (
-              <Trans>New User List</Trans>
-            )
-          ) : list ? (
-            <Trans>Edit Moderation List</Trans>
-          ) : (
-            <Trans>New Moderation List</Trans>
-          )}
+          <Trans>{modalTranscript}</Trans>
         </Text>
         {error !== '' && (
           <View style={styles.errorContainer}>

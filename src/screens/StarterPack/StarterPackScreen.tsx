@@ -26,6 +26,7 @@ import {getStarterPackOgCard} from '#/lib/strings/starter-pack'
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
 import {updateProfileShadow} from '#/state/cache/profile-shadow'
+import {CreateOrEditListModal, useModalControls} from '#/state/modals'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {getAllListMembers} from '#/state/queries/list-members'
 import {useResolvedStarterPackShortLink} from '#/state/queries/resolve-short-link'
@@ -185,12 +186,16 @@ function StarterPackScreenLoaded({
     ...(showPostsTab ? [_(msg`Posts`)] : []),
   ]
 
+  const {openModal} = useModalControls()
   const qrCodeDialogControl = useDialogControl()
   const shareDialogControl = useDialogControl()
 
   const shortenLink = useShortenLink()
   const [link, setLink] = React.useState<string>()
   const [imageLoaded, setImageLoaded] = React.useState(false)
+  const navigation = useNavigation<NavigationProp>()
+
+  const {currentAccount} = useSession()
 
   React.useEffect(() => {
     logEvent('starterPack:opened', {
@@ -198,10 +203,39 @@ function StarterPackScreenLoaded({
     })
   }, [starterPack.uri])
 
-  // TODO: implement handler
   const onOpenConvertToListDialog = React.useCallback(() => {
-    console.warn('TODO: implement handler')
-  }, [])
+    if (!starterPack || !starterPack.list) {
+      console.error("Can't convert an empty starter pack to a list.")
+      return
+    }
+
+    let m = {
+      name: 'create-or-edit-list',
+      onSave: (uri: string) => {
+        try {
+          const urip = new AtUri(uri)
+          navigation.navigate('ProfileList', {
+            name: urip.hostname,
+            rkey: urip.rkey,
+          })
+        } catch {
+          console.error('failed to navigate to list')
+        }
+      },
+    } as CreateOrEditListModal
+
+    m.list = {
+      ...starterPack.list,
+      creator: {
+        did: currentAccount!.did,
+        handle: currentAccount!.handle,
+      },
+      purpose: 'app.bsky.graph.defs#curatelist',
+    } as AppBskyGraphDefs.ListView
+    m.source = starterPack.list.uri || ''
+
+    openModal(m)
+  }, [openModal, navigation, starterPack, currentAccount])
 
   const onOpenShareDialog = React.useCallback(() => {
     const rkey = new AtUri(starterPack.uri).rkey
@@ -303,7 +337,9 @@ function Header({
   starterPack: AppBskyGraphDefs.StarterPackView
   routeParams: StarterPackScreeProps['route']['params']
   onOpenShareDialog: () => void
-  onOpenConvertToListDialog: () => void
+  onOpenConvertToListDialog: (
+    starterPack: AppBskyGraphDefs.StarterPackView,
+  ) => void
 }) {
   const {_} = useLingui()
   const t = useTheme()
@@ -508,7 +544,9 @@ function OverflowMenu({
   starterPack: AppBskyGraphDefs.StarterPackView
   routeParams: StarterPackScreeProps['route']['params']
   onOpenShareDialog: () => void
-  onOpenConvertToListDialog: () => void
+  onOpenConvertToListDialog: (
+    starterPack: AppBskyGraphDefs.StarterPackView,
+  ) => void
 }) {
   const t = useTheme()
   const {_} = useLingui()
@@ -614,7 +652,7 @@ function OverflowMenu({
                 <Menu.Item
                   label={_(msg`Convert to List`)}
                   testID="convertToListStarterPackLinkBtn"
-                  onPress={onOpenConvertToListDialog}>
+                  onPress={() => onOpenConvertToListDialog(starterPack)}>
                   <Menu.ItemText>
                     <Trans>Convert to List</Trans>
                   </Menu.ItemText>
