@@ -19,7 +19,7 @@ msgstr "(एम्बेडेड सामाग्री मौजूद ह�
 
 #: src/view/com/modals/VerifyEmail.tsx:150
 msgid "(no email)"
-msgstr "(कोई ईमेल नहीं)"
+msgstr "(कोई ईमेल नहीं है)"
 
 #: src/view/com/notifications/FeedItem.tsx:232
 #: src/view/com/notifications/FeedItem.tsx:327
@@ -149,7 +149,7 @@ msgstr "{0} का अवतार"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:68
 msgid "{0}'s favorite feeds and people - join me!"
-msgstr "{0} के पसंदीदा फ़ीड और लोग - मेरे साथ जुड़ें!"
+msgstr "{0} के पसंदीदा फ़ीड और लोग - मेरे साथ शामिल हो!"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:47
 msgid "{0}'s starter pack"
