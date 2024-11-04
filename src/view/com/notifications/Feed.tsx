@@ -33,15 +33,10 @@ const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
 const LOAD_MORE_ERROR_ITEM = {_reactKey: '__load_more_error__'}
 const LOADING_ITEM = {_reactKey: '__loading__'}
 
-type Tab = {
+const tabs: {
   label: string
   types?: NotificationType[]
-}
-
-const tabs: Tab[] = [
-  {label: 'All'},
-  {label: 'Mentions', types: ['reply', 'quote']},
-]
+}[] = [{label: 'All'}, {label: 'Mentions', types: ['reply', 'quote']}]
 
 export function Feed({
   scrollElRef,
