@@ -15,7 +15,10 @@ import {cleanError} from '#/lib/strings/errors'
 import {s} from '#/lib/styles'
 import {logger} from '#/logger'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {useNotificationFeedQuery} from '#/state/queries/notifications/feed'
+import {
+  NotificationType,
+  useNotificationFeedQuery,
+} from '#/state/queries/notifications/feed'
 import {useUnreadNotificationsApi} from '#/state/queries/notifications/unread'
 import {EmptyState} from '#/view/com/util/EmptyState'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
@@ -23,11 +26,22 @@ import {List, ListRef} from '#/view/com/util/List'
 import {NotificationFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
 import {CenteredView} from '#/view/com/util/Views'
+import {TabBar} from '../pager/TabBar'
 import {FeedItem} from './FeedItem'
 
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
 const LOAD_MORE_ERROR_ITEM = {_reactKey: '__load_more_error__'}
 const LOADING_ITEM = {_reactKey: '__loading__'}
+
+type Tab = {
+  label: string
+  types?: NotificationType[]
+}
+
+const tabs: Tab[] = [
+  {label: 'All'},
+  {label: 'Mentions', types: ['reply', 'quote']},
+]
 
 export function Feed({
   scrollElRef,
@@ -51,6 +65,8 @@ export function Feed({
   const {_} = useLingui()
   const moderationOpts = useModerationOpts()
   const {checkUnread} = useUnreadNotificationsApi()
+  const [tab, setTab] = React.useState<(typeof tabs)[number]>(tabs[0])
+
   const {
     data,
     isFetching,
@@ -85,6 +101,14 @@ export function Feed({
     return arr
   }, [isFetched, isError, isEmpty, data])
 
+  const filteredItems = React.useMemo(() => {
+    if (!tab.types) {
+      return items
+    }
+
+    return items.filter(item => tab.types?.includes(item.type))
+  }, [items, tab])
+
   const onRefresh = React.useCallback(async () => {
     try {
       setIsPTRing(true)
@@ -111,6 +135,13 @@ export function Feed({
   const onPressRetryLoadMore = React.useCallback(() => {
     fetchNextPage()
   }, [fetchNextPage])
+
+  const onSelectTab = React.useCallback(
+    (index: number) => setTab(tabs[index]),
+    [setTab],
+  )
+
+  const tabLabels = React.useMemo(() => tabs.map(({label}) => label), [])
 
   const renderItem = React.useCallback(
     ({item, index}: ListRenderItemInfo<any>) => {
@@ -175,10 +206,15 @@ export function Feed({
           />
         </CenteredView>
       )}
+      <TabBar
+        items={tabLabels}
+        onSelect={onSelectTab}
+        selectedPage={tabs.indexOf(tab)}
+      />
       <List
         testID="notifsFeed"
         ref={scrollElRef}
-        data={items}
+        data={filteredItems}
         keyExtractor={item => item._reactKey}
         renderItem={renderItem}
         ListHeaderComponent={ListHeaderComponent}
