@@ -50,22 +50,23 @@ export default function ImageViewRoot({
   onPressSave: (uri: string) => void
   onPressShare: (uri: string) => void
 }) {
-  if (!lightbox) {
-    return null
-  }
   return (
+    // Keep it always mounted to avoid flicker on the first frame.
     <SafeAreaView
-      style={styles.screen}
+      style={[styles.screen, !lightbox && styles.screenHidden]}
       edges={EDGES}
       aria-modal
-      accessibilityViewIsModal>
-      <ImageView
-        key={lightbox.id}
-        lightbox={lightbox}
-        onRequestClose={onRequestClose}
-        onPressSave={onPressSave}
-        onPressShare={onPressShare}
-      />
+      accessibilityViewIsModal
+      aria-hidden={!lightbox}>
+      {lightbox && (
+        <ImageView
+          key={lightbox.id}
+          lightbox={lightbox}
+          onRequestClose={onRequestClose}
+          onPressSave={onPressSave}
+          onPressShare={onPressShare}
+        />
+      )}
     </SafeAreaView>
   )
 }
@@ -247,6 +248,10 @@ const styles = StyleSheet.create({
     left: 0,
     bottom: 0,
     right: 0,
+  },
+  screenHidden: {
+    opacity: 0,
+    pointerEvents: 'none',
   },
   container: {
     flex: 1,
