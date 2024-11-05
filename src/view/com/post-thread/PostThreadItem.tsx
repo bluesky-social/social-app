@@ -29,6 +29,7 @@ import {useComposerControls} from '#/state/shell/composer'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
 import {PostThreadFollowBtn} from '#/view/com/post-thread/PostThreadFollowBtn'
 import {atoms as a, useTheme} from '#/alf'
+import {InlineLinkText} from '#/components/Link'
 import {AppModerationCause} from '#/components/Pills'
 import {RichText} from '#/components/RichText'
 import {SubtleWebHover} from '#/components/SubtleWebHover'
@@ -744,12 +745,13 @@ function ExpandedPostDetails({
             &middot;
           </NewText>
 
-          <NewText
+          <InlineLinkText
+            to="#"
+            label={_(msg`Translate`)}
             style={[a.text_sm, pal.link]}
-            title={_(msg`Translate`)}
             onPress={onTranslatePress}>
             <Trans>Translate</Trans>
-          </NewText>
+          </InlineLinkText>
         </>
       )}
     </View>

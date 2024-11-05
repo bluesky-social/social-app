@@ -256,6 +256,7 @@ let PostCtrls = ({
               requireAuth(() => onPressReply())
             }
           }}
+          accessibilityRole="button"
           accessibilityLabel={plural(post.replyCount || 0, {
             one: 'Reply (# reply)',
             other: 'Reply (# replies)',
@@ -293,6 +294,7 @@ let PostCtrls = ({
           testID="likeBtn"
           style={btnStyle}
           onPress={() => requireAuth(() => onPressToggleLike())}
+          accessibilityRole="button"
           accessibilityLabel={
             post.viewer?.like
               ? plural(post.likeCount || 0, {
@@ -332,6 +334,7 @@ let PostCtrls = ({
                   onShare()
                 }
               }}
+              accessibilityRole="button"
               accessibilityLabel={_(msg`Share`)}
               accessibilityHint=""
               hitSlop={POST_CTRL_HITSLOP}>

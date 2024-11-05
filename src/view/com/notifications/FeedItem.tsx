@@ -451,8 +451,9 @@ let FeedItem = ({
             <TimeElapsed timestamp={item.notification.indexedAt}>
               {({timeElapsed}) => (
                 <>
-                  <Text style={[a.ml_xs, pal.textLight]}>&middot;</Text>
-                  <Text style={[a.ml_xs, pal.textLight]} title={niceTimestamp}>
+                  {/* make sure there's whitespace around the middot -sfn */}
+                  <Text style={[pal.textLight]}> &middot; </Text>
+                  <Text style={[pal.textLight]} title={niceTimestamp}>
                     {timeElapsed}
                   </Text>
                 </>
