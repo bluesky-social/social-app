@@ -277,18 +277,45 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
     }
   }, [prefetchIfNeeded])
 
-  const onPointerLeaveTarget = React.useCallback(() => {
-    didFireHover.current = false
-    dispatch('unhovered-target')
-  }, [])
+  const onPointerLeaveTarget = React.useCallback(
+    (event: any) => {
+      const relatedTarget = event.nativeEvent.relatedTarget as Node | null
+      if (!relatedTarget) {
+        didFireHover.current = false
+        dispatch('unhovered-target')
+        return
+      }
+      const floating = refs.floating.current as any
+      // @ts-ignore
+      if (floating?.contains && floating.contains(relatedTarget)) {
+        return
+      }
+      didFireHover.current = false
+      dispatch('unhovered-target')
+    },
+    [refs.floating],
+  )
 
   const onPointerEnterCard = React.useCallback(() => {
     dispatch('hovered-card')
   }, [])
 
-  const onPointerLeaveCard = React.useCallback(() => {
-    dispatch('unhovered-card')
-  }, [])
+  const onPointerLeaveCard = React.useCallback(
+    (event: any) => {
+      const relatedTarget = event.nativeEvent.relatedTarget as Node | null
+      if (!relatedTarget) {
+        dispatch('unhovered-card')
+        return
+      }
+      const reference = refs.reference.current as any
+      // @ts-ignore
+      if (reference?.contains && reference.contains(relatedTarget)) {
+        return
+      }
+      dispatch('unhovered-card')
+    },
+    [refs.reference],
+  )
 
   const onPress = React.useCallback(() => {
     dispatch('pressed')
