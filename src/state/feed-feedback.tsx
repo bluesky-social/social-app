@@ -72,7 +72,7 @@ export function useFeedFeedback(feed: FeedDescriptor, hasSession: boolean) {
 
   const sendToFeed = React.useMemo(
     () =>
-      throttle(sendToFeedNoDelay, 15e3, {
+      throttle(sendToFeedNoDelay, 10e3, {
         leading: false,
         trailing: true,
       }),
