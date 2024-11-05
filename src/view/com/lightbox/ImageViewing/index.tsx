@@ -34,6 +34,7 @@ import ImageDefaultHeader from './components/ImageDefaultHeader'
 import ImageItem from './components/ImageItem/ImageItem'
 
 type Props = {
+  id: string
   images: ImageSource[]
   thumbDims: MeasuredDimensions | null
   initialImageIndex: number
@@ -277,13 +278,11 @@ const styles = StyleSheet.create({
   },
 })
 
-const EnhancedImageViewing = (props: Props) => (
-  <ImageViewing key={props.initialImageIndex} {...props} />
-)
+export default function ImageViewingRoot(props: Props) {
+  return <ImageViewing key={props.id} {...props} />
+}
 
 function withClampedSpring(value: any) {
   'worklet'
   return withSpring(value, {overshootClamping: true, stiffness: 300})
 }
-
-export default EnhancedImageViewing

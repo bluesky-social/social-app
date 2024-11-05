@@ -55,6 +55,7 @@ export function Lightbox() {
 
   return (
     <ImageView
+      id={activeLightbox.id}
       images={activeLightbox.images}
       initialImageIndex={activeLightbox.index}
       thumbDims={activeLightbox.thumbDims}
