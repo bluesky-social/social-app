@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-05 02:08\n"
+"PO-Revision-Date: 2024-11-05 06:27\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional, Hong Kong\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -433,7 +433,7 @@ msgstr "經已解除封鎖帳號"
 
 #: src/view/com/profile/ProfileMenu.tsx:157
 msgid "Account unfollowed"
-msgstr "經已唔再跟隨帳號"
+msgstr "已經唔再跟佢"
 
 #: src/view/com/profile/ProfileMenu.tsx:98
 msgid "Account unmuted"
@@ -684,11 +684,11 @@ msgstr "砌緊你嘅新手套裝嗰陣發生錯誤。使唔使試多一次？"
 
 #: src/view/com/util/post-embeds/VideoEmbed.tsx:135
 msgid "An error occurred while loading the video. Please try again later."
-msgstr "載入影片嗰陣發生錯誤。唔該遲啲試多一次。"
+msgstr "撈緊影片嗰陣發生錯誤。唔該遲啲試多一次。"
 
 #: src/view/com/util/post-embeds/VideoEmbed.web.tsx:174
 msgid "An error occurred while loading the video. Please try again."
-msgstr "載入影片嗰陣發生錯誤。唔該試多一次。"
+msgstr "撈緊影片嗰陣發生錯誤。唔該試多一次。"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:71
 #: src/components/StarterPack/ShareDialog.tsx:80
@@ -1034,7 +1034,7 @@ msgstr "Bluesky"
 
 #: src/view/com/auth/server-input/index.tsx:151
 msgid "Bluesky is an open network where you can choose your hosting provider. If you're a developer, you can host your own server."
-msgstr "Bluesky 係一個開放嘅網絡，你可以喺嗰度揀你嘅 hosting 供應商。如果你係開發人員，你可以托管你自己嘅伺服器。"
+msgstr "Bluesky 係一個開放嘅網絡，你可以喺嗰度揀你嘅託管服務供應商。若然你係開發人員嘅話，你仲可以托管你自己嘅伺服器。"
 
 #: src/components/ProgressGuide/List.tsx:55
 msgid "Bluesky is better with friends!"
@@ -1105,15 +1105,15 @@ msgstr "由 <0/>"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:81
 msgid "By creating an account you agree to the <0>Privacy Policy</0>."
-msgstr "建立帳號，即係你同意<0>私隱政策</0>。"
+msgstr "建立帳號即係表示你同意<0>私隱政策</0>。"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:48
 msgid "By creating an account you agree to the <0>Terms of Service</0> and <1>Privacy Policy</1>."
-msgstr "建立帳號，即係你同意<0>服務條款</0>同<1>私隱政策</1>。"
+msgstr "建立帳號即係表示你同意<0>服務條款</0>同<1>私隱政策</1>。"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:68
 msgid "By creating an account you agree to the <0>Terms of Service</0>."
-msgstr "建立帳號，即係你同意<0>服務條款</0>。"
+msgstr "建立帳號即係表示你同意<0>服務條款</0>。"
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:176
 msgid "by you"
@@ -1323,7 +1323,7 @@ msgstr "揀人"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:116
 msgid "Choose self-labels that are applicable for the media you are posting. If none are selected, this post is suitable for all audiences."
-msgstr "揀你認為最適用於呢個媒體內容嘅標籤。如果唔揀，則預設為全年齡向。"
+msgstr "揀啲啱你呢個媒體內容嘅標籤。唔揀嘅話，就當係全年齡向所有年齡嘅人都啱睇。"
 
 #: src/view/com/auth/server-input/index.tsx:76
 msgid "Choose Service"
@@ -1335,7 +1335,7 @@ msgstr "揀啲可以為你嘅自訂資訊推送提供支援嘅演算法。"
 
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:107
 msgid "Choose this color as your avatar"
-msgstr "揀呢個顏色做你嘅大頭相"
+msgstr "揀呢隻顏色做你嘅頭像"
 
 #: src/screens/Signup/StepInfo/index.tsx:201
 msgid "Choose your password"
@@ -1481,7 +1481,7 @@ msgstr "漫畫"
 #: src/Navigation.tsx:279
 #: src/view/screens/CommunityGuidelines.tsx:34
 msgid "Community Guidelines"
-msgstr "社區指南"
+msgstr "社群守則"
 
 #: src/screens/Onboarding/StepFinished.tsx:284
 msgid "Complete onboarding and start using your account"
@@ -1542,7 +1542,7 @@ msgstr "確認你嘅年齡："
 
 #: src/screens/Moderation/index.tsx:306
 msgid "Confirm your birthdate"
-msgstr "確認你嘅出生日期"
+msgstr "確認你嘅出世日期"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:171
 #: src/screens/Login/LoginForm.tsx:256
@@ -1624,7 +1624,7 @@ msgstr "以 {0} 繼續 (目前已登入)"
 
 #: src/view/com/post-thread/PostThreadLoadMore.tsx:52
 msgid "Continue thread..."
-msgstr "繼續載入討論串..."
+msgstr "繼續撈啲討論串..."
 
 #: src/screens/Onboarding/StepInterests/index.tsx:241
 #: src/screens/Onboarding/StepProfile/index.tsx:275
@@ -1643,7 +1643,7 @@ msgstr "煮緊嘢"
 #: src/view/com/modals/AddAppPasswords.tsx:221
 #: src/view/com/modals/InviteCodes.tsx:183
 msgid "Copied"
-msgstr "複製咗"
+msgstr "複製咗喇"
 
 #: src/screens/Settings/AboutSettings.tsx:66
 #: src/view/screens/Settings/index.tsx:243
@@ -1663,7 +1663,7 @@ msgstr "複製咗去剪貼簿"
 #: src/components/dialogs/Embed.tsx:136
 #: src/screens/Settings/components/CopyButton.tsx:58
 msgid "Copied!"
-msgstr "複製咗!"
+msgstr "複製咗喇!"
 
 #: src/view/com/modals/AddAppPasswords.tsx:215
 msgid "Copies app password"
@@ -1745,11 +1745,11 @@ msgstr "離開唔到傾計室"
 
 #: src/view/screens/ProfileFeed.tsx:104
 msgid "Could not load feed"
-msgstr "載入唔到資訊推送"
+msgstr "撈唔到資訊推送"
 
 #: src/view/screens/ProfileList.tsx:1020
 msgid "Could not load list"
-msgstr "載入唔到清單"
+msgstr "撈唔到清單"
 
 #: src/components/dms/ConvoMenu.tsx:88
 msgid "Could not mute chat"
@@ -1797,7 +1797,7 @@ msgstr "建立一個帳號"
 
 #: src/screens/Onboarding/StepProfile/index.tsx:292
 msgid "Create an avatar instead"
-msgstr "改為建立一個大頭相"
+msgstr "抑或建立一個頭像"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:173
 msgid "Create another"
@@ -1863,7 +1863,7 @@ msgstr "深色主題"
 
 #: src/screens/Signup/StepInfo/index.tsx:222
 msgid "Date of birth"
-msgstr "出生日期"
+msgstr "出世日期"
 
 #: src/screens/Settings/AccountSettings.tsx:136
 #: src/screens/Settings/AccountSettings.tsx:141
@@ -2276,7 +2276,7 @@ msgstr "編輯"
 #: src/view/com/util/UserAvatar.tsx:347
 #: src/view/com/util/UserBanner.tsx:95
 msgid "Edit avatar"
-msgstr "編輯大頭相"
+msgstr "編輯頭像"
 
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:111
 msgid "Edit Feeds"
@@ -2509,7 +2509,7 @@ msgstr "輸入你用嚟建立帳號嘅電郵地址。我哋會傳送「驗證碼
 
 #: src/components/dialogs/BirthDateSettings.tsx:107
 msgid "Enter your birth date"
-msgstr "輸入你嘅出生日期"
+msgstr "輸入你嘅出世日期"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:99
 #: src/screens/Signup/StepInfo/index.tsx:182
@@ -2715,24 +2715,24 @@ msgstr "刪除唔到新手套裝"
 #: src/view/screens/Search/Explore.tsx:427
 #: src/view/screens/Search/Explore.tsx:455
 msgid "Failed to load feeds preferences"
-msgstr "載入唔到資訊推送設定"
+msgstr "撈唔到資訊推送設定"
 
 #: src/components/dialogs/GifSelect.tsx:225
 msgid "Failed to load GIFs"
-msgstr "載入唔到 GIF"
+msgstr "撈唔到 GIF"
 
 #: src/screens/Messages/components/MessageListError.tsx:23
 msgid "Failed to load past messages"
-msgstr "載入唔到過去嘅訊息"
+msgstr "撈唔到過去嘅訊息"
 
 #: src/view/screens/Search/Explore.tsx:420
 #: src/view/screens/Search/Explore.tsx:448
 msgid "Failed to load suggested feeds"
-msgstr "載入唔到建議嘅資訊推送"
+msgstr "撈唔到建議嘅資訊推送"
 
 #: src/view/screens/Search/Explore.tsx:378
 msgid "Failed to load suggested follows"
-msgstr "載入唔到建議跟隨"
+msgstr "撈唔到建議跟隨"
 
 #: src/state/queries/pinned-post.ts:75
 msgid "Failed to pin post"
@@ -2963,7 +2963,7 @@ msgstr "你識嘅跟隨者"
 #: src/view/screens/ProfileFollows.tsx:31
 #: src/view/screens/SavedFeeds.tsx:431
 msgid "Following"
-msgstr "跟隨中"
+msgstr "跟隨緊"
 
 #: src/components/ProfileCard.tsx:318
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:98
@@ -3016,11 +3016,11 @@ msgstr "為咗安全起見，我哋需要將確認碼傳送去你嘅電郵地址
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:209
 msgid "For security reasons, you won't be able to view this again. If you lose this app password, you'll need to generate a new one."
-msgstr "為咗安全起見，你唔可以再睇返呢個。如果你唔見咗呢個密碼，你需要生成一個新嘅密碼。"
+msgstr "為咗安全起見，你唔可以再睇返呢個密碼。若然你唔見咗呢個密碼，你就要去生成一個新嘅密碼。"
 
 #: src/view/com/modals/AddAppPasswords.tsx:233
 msgid "For security reasons, you won't be able to view this again. If you lose this password, you'll need to generate a new one."
-msgstr "為咗安全起見，你唔可以再睇返呢個。如果你唔見咗呢個密碼，你需要生成一個新嘅密碼。"
+msgstr "為咗安全起見，你唔可以再睇返呢個密碼。若然你唔見咗呢個密碼，你就要去生成一個新嘅密碼。"
 
 #: src/components/dialogs/nuxs/NeueTypography.tsx:73
 #: src/screens/Settings/AppearanceSettings.tsx:127
@@ -3216,7 +3216,7 @@ msgstr "協助"
 
 #: src/screens/Onboarding/StepProfile/index.tsx:237
 msgid "Help people know you're not a bot by uploading a picture or creating an avatar."
-msgstr "上載圖片抑或整張大頭相，等大家知道你唔係機械人。"
+msgstr "上載圖片抑或整張頭像，等大家知道你唔係機械人。"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:187
 msgid "Here is your app password!"
@@ -3301,11 +3301,11 @@ msgstr "唔好意思，我哋搵唔到呢個資訊推送。可能已經刪除咗
 
 #: src/screens/Moderation/index.tsx:62
 msgid "Hmmmm, it seems we're having trouble loading this data. See below for more details. If this issue persists, please contact us."
-msgstr "唔好意思，我哋似乎喺載入呢啲數據嗰陣遇到問題。詳情請睇下面。如果呢個問題持續，請聯絡我哋。"
+msgstr "唔好意思，我哋好似喺撈緊數據嗰陣遇到問題。睇吓下低資訊瞭解詳情。若然仲係有呢個問題，請聯絡我哋。"
 
 #: src/screens/Profile/ErrorState.tsx:31
 msgid "Hmmmm, we couldn't load that moderation service."
-msgstr "唔好意思，我哋載入唔到嗰個審核服務。"
+msgstr "唔好意思，我哋撈唔到嗰個審核服務。"
 
 #: src/view/com/composer/state/video.ts:426
 msgid "Hold up! We’re gradually giving access to video, and you’re still waiting in line. Check back soon!"
@@ -3363,31 +3363,31 @@ msgstr "我知悉"
 
 #: src/view/com/lightbox/Lightbox.web.tsx:165
 msgid "If alt text is long, toggles alt text expanded state"
-msgstr "如果替代文字好長，就會切換替代文字展開狀態"
+msgstr "若然替代文字太長，就會切換替代文字展開狀態"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:110
 msgid "If you are not yet an adult according to the laws of your country, your parent or legal guardian must read these Terms on your behalf."
-msgstr "如果你嘅年齡根據所在國家/地區嘅法律仲未夠秤嘅話，咁你父母抑或法定監護人就必須代表你閱讀呢啲條款。"
+msgstr "若然你嘅年齡根據所在國家/地區嘅法律仲未夠秤嘅話，噉你父母抑或法定監護人就必須代表你閱讀呢啲條款。"
 
 #: src/view/screens/ProfileList.tsx:723
 msgid "If you delete this list, you won't be able to recover it."
-msgstr "如果你移除咗呢個清單，之後就無辦法恢復。"
+msgstr "若然你移除咗呢個清單，之後就冇得恢復。"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:247
 msgid "If you have your own domain, you can use that as your handle. This lets you self-verify your identity – <0>learn more</0>."
-msgstr "如果你有自己嘅網域，你可以用嗰個做你嘅帳號頭銜。噉樣亦都可以畀你自我驗證你嘅身份——<0> 進一步瞭解 </0>。"
+msgstr "若然你有自己嘅網域，你可以用佢作爲你嘅帳號頭銜。同時亦都可以證明你嘅身份——<0> 進一步瞭解 </0>。"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:670
 msgid "If you remove this post, you won't be able to recover it."
-msgstr "如果你移除咗呢篇帖文，之後就無辦法恢復。"
+msgstr "若然你移除咗呢篇帖文，之後就冇得恢復。"
 
 #: src/view/com/modals/ChangePassword.tsx:149
 msgid "If you want to change your password, we will send you a code to verify that this is your account."
-msgstr "如果你想變更你嘅密碼，我哋會傳送一個驗證碼畀你嚟驗證呢個係咪你嘅帳號。"
+msgstr "若然你想改你嘅密碼，我哋會就會傳送一個驗證碼畀你嚟驗證呢個係你嘅帳號。"
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:92
 msgid "If you're trying to change your handle or email, do so before you deactivate."
-msgstr "如果你想變更你嘅帳號頭銜抑或電郵，喺你停用之前先咁做。"
+msgstr "若然你想改咗你嘅帳號頭銜抑或電郵，喺你停用帳號之前先噉做。"
 
 #: src/lib/moderation/useReportOptions.ts:38
 msgid "Illegal and Urgent"
@@ -3736,7 +3736,7 @@ msgstr "清單"
 
 #: src/view/com/modals/CreateOrEditList.tsx:241
 msgid "List Avatar"
-msgstr "清單大頭相"
+msgstr "列表頭像"
 
 #: src/view/screens/ProfileList.tsx:422
 msgid "List blocked"
@@ -3789,30 +3789,30 @@ msgstr "封鎖緊呢個用戶清單："
 
 #: src/view/screens/Search/Explore.tsx:131
 msgid "Load more"
-msgstr "載入更多"
+msgstr "再撈啲"
 
 #: src/view/screens/Search/Explore.tsx:219
 msgid "Load more suggested feeds"
-msgstr "載入更多建議資訊推送"
+msgstr "再撈啲建議資訊推送"
 
 #: src/view/screens/Search/Explore.tsx:217
 msgid "Load more suggested follows"
-msgstr "載入更多建議跟隨"
+msgstr "再撈啲建議跟隨"
 
 #: src/view/screens/Notifications.tsx:215
 msgid "Load new notifications"
-msgstr "載入新通知"
+msgstr "撈吓新嘅通知"
 
 #: src/screens/Profile/Sections/Feed.tsx:96
 #: src/view/com/feeds/FeedPage.tsx:132
 #: src/view/screens/ProfileFeed.tsx:499
 #: src/view/screens/ProfileList.tsx:808
 msgid "Load new posts"
-msgstr "載入新帖文"
+msgstr "撈吓新嘅帖文"
 
 #: src/view/com/composer/text-input/mobile/Autocomplete.tsx:111
 msgid "Loading..."
-msgstr "載入緊..."
+msgstr "撈緊..."
 
 #: src/Navigation.tsx:259
 msgid "Log"
@@ -4628,7 +4628,7 @@ msgstr "打開 {name} 個人檔案快捷選單"
 
 #: src/screens/Onboarding/StepProfile/index.tsx:286
 msgid "Open avatar creator"
-msgstr "打開大頭相創作工具"
+msgstr "打開頭像製作器"
 
 #: src/screens/Settings/AccountSettings.tsx:117
 msgid "Open change handle dialog"
@@ -5365,17 +5365,17 @@ msgstr "重新啓動你嘅帳號"
 
 #: src/view/com/auth/SplashScreen.web.tsx:171
 msgid "Read the Bluesky blog"
-msgstr "睇下 Bluesky 網誌"
+msgstr "睇吓 Bluesky 網誌"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:58
 #: src/screens/Signup/StepInfo/Policies.tsx:84
 msgid "Read the Bluesky Privacy Policy"
-msgstr "睇下 Bluesky 私隱政策"
+msgstr "睇吓 Bluesky 私隱政策"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:51
 #: src/screens/Signup/StepInfo/Policies.tsx:71
 msgid "Read the Bluesky Terms of Service"
-msgstr "睇下 Bluesky 服務條款"
+msgstr "睇吓 Bluesky 服務條款"
 
 #: src/components/dms/ReportDialog.tsx:169
 msgid "Reason:"
@@ -5395,7 +5395,7 @@ msgstr "重新整理通知"
 
 #: src/screens/Messages/ChatList.tsx:198
 msgid "Reload conversations"
-msgstr "重新載入對話"
+msgstr "撈多次對話"
 
 #: src/components/dialogs/MutedWords.tsx:438
 #: src/components/FeedCard.tsx:316
@@ -5423,7 +5423,7 @@ msgstr "移除附上"
 
 #: src/view/com/util/UserAvatar.tsx:403
 msgid "Remove Avatar"
-msgstr "移除大頭相"
+msgstr "移除頭像"
 
 #: src/view/com/util/UserBanner.tsx:155
 msgid "Remove Banner"
@@ -5560,7 +5560,7 @@ msgstr "回覆由呢個討論串嘅發佈者所隱藏"
 #: src/components/moderation/ModerationDetailsDialog.tsx:114
 #: src/lib/moderation/useModerationCauseDescription.ts:122
 msgid "Reply Hidden by You"
-msgstr "回覆由你隱藏咗"
+msgstr "回覆俾你隱藏咗"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:356
 msgid "Reply settings"
@@ -5987,19 +5987,19 @@ msgstr "需要安全步驟"
 
 #: src/components/TagMenu/index.web.tsx:77
 msgid "See {truncatedTag} posts"
-msgstr "睇下 {truncatedTag} 帖文"
+msgstr "睇吓 {truncatedTag} 帖文"
 
 #: src/components/TagMenu/index.web.tsx:94
 msgid "See {truncatedTag} posts by user"
-msgstr "睇下用戶嘅 {truncatedTag} 帖文"
+msgstr "睇吓呢位用戶嘅 {truncatedTag} 帖文"
 
 #: src/components/TagMenu/index.tsx:132
 msgid "See <0>{displayTag}</0> posts"
-msgstr "睇下 <0>{displayTag}</0> 帖文"
+msgstr "睇吓 <0>{displayTag}</0> 帖文"
 
 #: src/components/TagMenu/index.tsx:183
 msgid "See <0>{displayTag}</0> posts by this user"
-msgstr "睇下呢個用戶嘅 <0>{displayTag}</0> 帖文"
+msgstr "睇吓呢位用戶嘅 <0>{displayTag}</0> 帖文"
 
 #: src/view/com/auth/SplashScreen.web.tsx:176
 msgid "See jobs at Bluesky"
@@ -6007,7 +6007,7 @@ msgstr "喺 Bluesky 搵工"
 
 #: src/view/screens/SavedFeeds.tsx:212
 msgid "See this guide"
-msgstr "睇下呢個指南"
+msgstr "睇吓呢個指南"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/Scrubber.tsx:189
 msgid "Seek slider"
@@ -6019,7 +6019,7 @@ msgstr "揀 {item}"
 
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:67
 msgid "Select a color"
-msgstr "揀一個顏色"
+msgstr "揀一隻色"
 
 #: src/screens/Login/ChooseAccountForm.tsx:77
 msgid "Select account"
@@ -6027,7 +6027,7 @@ msgstr "揀帳號"
 
 #: src/screens/Onboarding/StepProfile/AvatarCircle.tsx:66
 msgid "Select an avatar"
-msgstr "揀個大頭相"
+msgstr "揀個頭像"
 
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:65
 msgid "Select an emoji"
@@ -6076,7 +6076,7 @@ msgstr "揀字幕檔案（.vtt）"
 
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:83
 msgid "Select the {emojiName} emoji as your avatar"
-msgstr "揀 {emojiName} emoji 做你嘅大頭相"
+msgstr "揀個 {emojiName} emoji 做你嘅頭像"
 
 #: src/components/ReportDialog/SubmitView.tsx:140
 msgid "Select the moderation service(s) to report to"
@@ -6097,7 +6097,7 @@ msgstr "揀呢個靜音字詞應該適用喺邊啲內容。"
 #: src/screens/Settings/LanguageSettings.tsx:245
 #: src/view/screens/LanguageSettings.tsx:293
 msgid "Select which languages you want your subscribed feeds to include. If none are selected, all languages will be shown."
-msgstr "揀你想訂閱嘅資訊推送提供包含邊啲語言。如果冇揀，就會顯示所有語言。"
+msgstr "揀吓邊啲語言你想喺你訂閱嘅資訊推送度出現。唔揀嘅話，就會顯示所有語言。"
 
 #: src/screens/Settings/LanguageSettings.tsx:76
 #: src/view/screens/LanguageSettings.tsx:107
@@ -6106,7 +6106,7 @@ msgstr "揀你嘅 App 顯示語言。"
 
 #: src/screens/Signup/StepInfo/index.tsx:223
 msgid "Select your date of birth"
-msgstr "揀你嘅出生日期"
+msgstr "揀吓你個出世日期"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:192
 msgid "Select your interests from the options below"
@@ -6187,7 +6187,7 @@ msgstr "伺服器地址"
 
 #: src/screens/Moderation/index.tsx:318
 msgid "Set birthdate"
-msgstr "設定出生日期"
+msgstr "設定出世日期"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:96
 msgid "Set new password"
@@ -6875,7 +6875,7 @@ msgstr "Bluesky 網頁 App"
 
 #: src/view/screens/CommunityGuidelines.tsx:38
 msgid "The Community Guidelines have been moved to <0/>"
-msgstr "社群指南已經移至 <0/>"
+msgstr "社群守則已經擺到 <0/>"
 
 #: src/view/screens/CopyrightPolicy.tsx:35
 msgid "The Copyright Policy has been moved to <0/>"
@@ -6929,7 +6929,7 @@ msgstr "你想睇嘅新手套裝無效。你可以刪除呢個新手套裝。"
 
 #: src/view/screens/Support.tsx:37
 msgid "The support form has been moved. If you need help, please <0/> or visit {HELP_DESK_URL} to get in touch with us."
-msgstr "支援表格已經移動咗。如果你需要幫助，請 <0/> 抑或去 {HELP_DESK_URL} 同我哋聯絡。"
+msgstr "支援表格已經移動咗。若然你需要協助，請 <0/> 抑或去 {HELP_DESK_URL} 同我哋聯絡。"
 
 #: src/view/screens/TermsOfService.tsx:35
 msgid "The Terms of Service have been moved to"
@@ -7041,7 +7041,7 @@ msgstr "出現問題。請檢查你嘅互聯網連線，然後試多一次。"
 #: src/components/dialogs/GifSelect.tsx:270
 #: src/view/com/util/ErrorBoundary.tsx:59
 msgid "There was an unexpected issue in the application. Please let us know if this happened to you!"
-msgstr "一個估唔到嘅問題。如果你發生呢件事，請話我哋知！"
+msgstr "應用程式出現一個估唔到嘅問題。如果你係有呢個問題嘅話請話畀我哋知！"
 
 #: src/screens/SignupQueued.tsx:112
 msgid "There's been a rush of new users to Bluesky! We'll activate your account as soon as we can."
@@ -7061,7 +7061,7 @@ msgstr "呢個帳號要求用戶登入嚟睇佢哋嘅個人檔案。"
 
 #: src/components/dms/BlockedByListDialog.tsx:34
 msgid "This account is blocked by one or more of your moderation lists. To unblock, please visit the lists directly and remove this user."
-msgstr "呢個帳號俾你嘅一個抑或多個審核清單封鎖。如果要解除封鎖，請直接去清單同埋移除呢個用戶。"
+msgstr "呢個帳號已經俾你一個抑或多個審核清單封鎖。要解除封鎖嘅話，請直接去到清單度移除呢個用戶封鎖。"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:246
 msgid "This appeal will be sent to <0>{sourceName}</0>."
@@ -7085,7 +7085,7 @@ msgstr "呢個內容已經套用咗審核服務提供者所標記嘅普通警告
 
 #: src/components/dialogs/EmbedConsent.tsx:63
 msgid "This content is hosted by {0}. Do you want to enable external media?"
-msgstr "呢個內容由 {0} 托管。你想唔想啓用外部媒體？"
+msgstr "呢個內容係由 {0} 提供。你有冇諗過去啓用外部媒體嚟睇佢？"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:83
 #: src/lib/moderation/useModerationCauseDescription.ts:82
@@ -7094,7 +7094,7 @@ msgstr "呢個內容唔可以用，因為其中一個涉及嘅使用者封鎖咗
 
 #: src/view/com/posts/FeedErrorMessage.tsx:114
 msgid "This content is not viewable without a Bluesky account."
-msgstr "如果冇 Bluesky 帳號，呢啲內容就睇唔到。"
+msgstr "若然冇 Bluesky 帳號，就睇唔到呢啲內容。"
 
 #: src/screens/Messages/components/ChatListItem.tsx:266
 msgid "This conversation is with a deleted or a deactivated account. Press for options."
@@ -7140,7 +7140,7 @@ msgstr "呢個標籤係由 <0>{0}</0> 套用嘅。"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:146
 msgid "This label was applied by the author."
-msgstr "呢個標籤係由作者套用嘅。"
+msgstr "呢個標籤係作者加嘅。"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:163
 msgid "This label was applied by you."
@@ -7156,7 +7156,7 @@ msgstr "呢個連結會帶你去以下嘅網站："
 
 #: src/screens/List/ListHiddenScreen.tsx:136
 msgid "This list - created by <0>{0}</0> - contains possible violations of Bluesky's community guidelines in its name or description."
-msgstr "呢個清單 - 由 <0>{0}</0> 建立 - 喺佢嘅名稱抑或描述入邊可能違反咗 Bluesky 嘅社群指引。"
+msgstr "呢個清單係 <0>{0}</0> 整嘅 - 喺佢嘅名稱抑或描述入邊可能違反咗 Bluesky 嘅社群守則 。"
 
 #: src/view/screens/ProfileList.tsx:966
 msgid "This list is empty!"
@@ -7164,7 +7164,7 @@ msgstr "呢個清單係空嘅！"
 
 #: src/screens/Profile/ErrorState.tsx:40
 msgid "This moderation service is unavailable. See below for more details. If this issue persists, contact us."
-msgstr "呢個審核服務唔可用，詳情請睇下面。如果呢個問題持續，請聯絡我哋。"
+msgstr "呢個審核服務用唔到，睇下低瞭解更多嘢。若然呢個問題仲有嘅話，請聯絡我哋。"
 
 #: src/view/com/modals/AddAppPasswords.tsx:110
 msgid "This name is already in use"
@@ -7206,7 +7206,7 @@ msgstr "呢個應該會喺以下位置建立一個網域記錄："
 
 #: src/view/com/profile/ProfileFollowers.tsx:96
 msgid "This user doesn't have any followers."
-msgstr "呢個用戶無任何跟隨。"
+msgstr "呢個用戶未有人跟佢。"
 
 #: src/components/dms/MessagesListBlockedFooter.tsx:60
 msgid "This user has blocked you"
@@ -7275,7 +7275,7 @@ msgstr "討論串設定"
 
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:99
 msgid "To disable the email 2FA method, please verify your access to the email address."
-msgstr "如果要停用電郵雙重驗證，請驗證你對電郵地址嘅存取權。"
+msgstr "若然要停用電郵雙重驗證，請驗證你嘅電郵地址。"
 
 #: src/components/dms/ReportConversationPrompt.tsx:20
 msgid "To report a conversation, please report one of its messages via the conversation screen. This lets our moderators understand the context of your issue."
@@ -7283,7 +7283,7 @@ msgstr "需要上報對話嘅話，請喺對話頁面入邊抽取其中一條去
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:133
 msgid "To upload videos to Bluesky, you must first verify your email."
-msgstr "如果要上載影片去 Bluesky ，你必須先驗證你嘅電郵。"
+msgstr "想上載影片到 Bluesky 嘅話，你必須先驗證你嘅電郵。"
 
 #: src/components/ReportDialog/SelectLabelerView.tsx:32
 msgid "To whom would you like to send this report?"
@@ -7402,16 +7402,16 @@ msgstr "取消轉發"
 #: src/view/com/profile/FollowButton.tsx:61
 msgctxt "action"
 msgid "Unfollow"
-msgstr "刪追"
+msgstr "唔再跟佢"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:217
 msgid "Unfollow {0}"
-msgstr "刪追 {0}"
+msgstr "唔再跟 {0}"
 
 #: src/view/com/profile/ProfileMenu.tsx:221
 #: src/view/com/profile/ProfileMenu.tsx:231
 msgid "Unfollow Account"
-msgstr "刪追帳號"
+msgstr "唔再跟佢"
 
 #: src/view/screens/ProfileFeed.tsx:576
 msgid "Unlike this feed"
@@ -7541,7 +7541,7 @@ msgstr "上載文字檔案去："
 #: src/view/com/util/UserBanner.tsx:123
 #: src/view/com/util/UserBanner.tsx:126
 msgid "Upload from Camera"
-msgstr "喺相機上載"
+msgstr "從相機上載"
 
 #: src/view/com/util/UserAvatar.tsx:388
 #: src/view/com/util/UserBanner.tsx:140
@@ -7553,7 +7553,7 @@ msgstr "從檔案上載"
 #: src/view/com/util/UserBanner.tsx:134
 #: src/view/com/util/UserBanner.tsx:138
 msgid "Upload from Library"
-msgstr "喺檔案庫上載"
+msgstr "從圖片庫上載"
 
 #: src/lib/api/index.ts:296
 msgid "Uploading images..."
@@ -7798,16 +7798,16 @@ msgstr "影片長度一定要少過60秒鐘"
 
 #: src/screens/Profile/Header/Shell.tsx:142
 msgid "View {0}'s avatar"
-msgstr "睇下 {0} 嘅大頭相"
+msgstr "睇吓 {0} 嘅頭像"
 
 #: src/components/ProfileCard.tsx:110
 #: src/view/com/notifications/FeedItem.tsx:408
 msgid "View {0}'s profile"
-msgstr "睇下 {0} 嘅個人檔案"
+msgstr "睇吓 {0} 嘅個人檔案"
 
 #: src/components/dms/MessagesListHeader.tsx:160
 msgid "View {displayName}'s profile"
-msgstr "睇下 {displayName} 嘅個人檔案"
+msgstr "睇吓 {displayName} 嘅個人檔案"
 
 #: src/components/TagMenu/index.tsx:149
 msgid "View all posts by @{authorHandle} with tag {displayTag}"
@@ -7819,31 +7819,31 @@ msgstr "用標籤 {displayTag} 睇返所有帖文"
 
 #: src/components/ProfileHoverCard/index.web.tsx:433
 msgid "View blocked user's profile"
-msgstr "睇下俾封鎖用戶嘅個人檔案"
+msgstr "睇吓被封鎖用戶嘅個人檔案"
 
 #: src/view/screens/Settings/ExportCarDialog.tsx:98
 msgid "View blogpost for more details"
-msgstr "睇下網誌文章嚟了解更多詳情"
+msgstr "睇吓網誌文章嚟了解更多詳情"
 
 #: src/view/screens/Log.tsx:57
 msgid "View debug entry"
-msgstr "睇下調試條目"
+msgstr "睇吓調試條目"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:139
 msgid "View details"
-msgstr "睇下詳情"
+msgstr "睇吓詳情"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:134
 msgid "View details for reporting a copyright violation"
-msgstr "睇下報告侵犯版權嘅詳情"
+msgstr "睇吓報告侵犯版權嘅詳情"
 
 #: src/view/com/posts/FeedSlice.tsx:136
 msgid "View full thread"
-msgstr "睇下完整嘅討論串"
+msgstr "睇吓完整嘅討論串"
 
 #: src/components/moderation/LabelsOnMe.tsx:47
 msgid "View information about these labels"
-msgstr "睇下有關呢啲標籤嘅資料"
+msgstr "睇吓有關呢啲標籤嘅資料"
 
 #: src/components/ProfileHoverCard/index.web.tsx:419
 #: src/components/ProfileHoverCard/index.web.tsx:439
@@ -7853,15 +7853,15 @@ msgstr "睇下有關呢啲標籤嘅資料"
 #: src/view/com/util/PostMeta.tsx:77
 #: src/view/com/util/PostMeta.tsx:92
 msgid "View profile"
-msgstr "睇下個人檔案"
+msgstr "睇吓個人檔案"
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:141
 msgid "View the avatar"
-msgstr "睇下大頭相"
+msgstr "睇吓頭像"
 
 #: src/components/LabelingServiceCard/index.tsx:162
 msgid "View the labeling service provided by @{0}"
-msgstr "睇下 @{0} 提供嘅標籤服務"
+msgstr "睇吓 @{0} 提供嘅標籤服務"
 
 #: src/view/screens/ProfileFeed.tsx:588
 msgid "View users who like this feed"
@@ -7869,20 +7869,20 @@ msgstr "睇吓邊啲人讚過呢個資訊推送"
 
 #: src/screens/Moderation/index.tsx:276
 msgid "View your blocked accounts"
-msgstr "睇下你封鎖咗嘅帳號"
+msgstr "睇吓你封鎖咗嘅帳號"
 
 #: src/view/com/home/HomeHeaderLayout.web.tsx:78
 #: src/view/com/home/HomeHeaderLayoutMobile.tsx:89
 msgid "View your feeds and explore more"
-msgstr "睇下你嘅資訊推送同埋探索更多"
+msgstr "睇吓你嘅資訊推送同埋探索更多"
 
 #: src/screens/Moderation/index.tsx:246
 msgid "View your moderation lists"
-msgstr "睇下你嘅審核清單"
+msgstr "睇吓你嘅審核清單"
 
 #: src/screens/Moderation/index.tsx:261
 msgid "View your muted accounts"
-msgstr "睇下你嘅靜音帳號"
+msgstr "睇吓你嘅靜音帳號"
 
 #: src/view/com/modals/LinkWarning.tsx:89
 #: src/view/com/modals/LinkWarning.tsx:95
@@ -7909,7 +7909,7 @@ msgstr "我哋搵唔到嗰個標籤嘅任何結果。"
 
 #: src/screens/Messages/Conversation.tsx:110
 msgid "We couldn't load this conversation"
-msgstr "我哋載入唔到呢個對話"
+msgstr "我哋撈唔到呢個對話"
 
 #: src/screens/SignupQueued.tsx:139
 msgid "We estimate {estimatedTime} until your account is ready."
@@ -7933,7 +7933,7 @@ msgstr "我哋決定唔到你係咪可以上載影片，請再試多次。"
 
 #: src/components/dialogs/BirthDateSettings.tsx:51
 msgid "We were unable to load your birth date preferences. Please try again."
-msgstr "我哋載入唔到你嘅出生日期偏好設定，請再試多次。"
+msgstr "我哋撈唔到你嘅出世日期偏好設定，唔該試多一次。"
 
 #: src/screens/Moderation/index.tsx:421
 msgid "We were unable to load your configured labelers at this time."
@@ -7941,7 +7941,7 @@ msgstr "我哋宜家加載唔到你設定咗嘅標籤者。"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:129
 msgid "We weren't able to connect. Please try again to continue setting up your account. If it continues to fail, you can skip this flow."
-msgstr "連接唔到，請再試一次繼續設定你嘅帳號。如果佢繼續失敗，你可以略過呢個流程。"
+msgstr "我哋無法連線到網絡，唔該多一次去繼續設定你嘅帳號。仲係唔得嘅話，你可以跳過呢個流程。"
 
 #: src/screens/SignupQueued.tsx:143
 msgid "We will let you know when your account is ready."
@@ -7965,11 +7965,11 @@ msgstr "我哋好興奮你可以加入 Bluesky！"
 
 #: src/view/screens/ProfileList.tsx:113
 msgid "We're sorry, but we were unable to resolve this list. If this persists, please contact the list creator, @{handleOrDid}."
-msgstr "對唔住，但係我哋用唔到呢個清單。如果呢個情況持續，請聯絡清單創建者 @{handleOrDid}。"
+msgstr "對唔住，但係我哋用唔到呢個清單。若然呢個問題仲有嘅話，請聯絡清單建立者 @{handleOrDid}。"
 
 #: src/components/dialogs/MutedWords.tsx:378
 msgid "We're sorry, but we weren't able to load your muted words at this time. Please try again."
-msgstr "對唔住，我哋宜家載入唔到你啲靜音字詞。唔該再試多次。"
+msgstr "對唔住，我哋宜家撈唔到你啲靜音字詞。唔該試多一次。"
 
 #: src/view/screens/Search/Search.tsx:212
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
@@ -8236,7 +8236,7 @@ msgstr "你仲未有清單。"
 
 #: src/view/screens/ModerationBlockedAccounts.tsx:133
 msgid "You have not blocked any accounts yet. To block an account, go to their profile and select \"Block account\" from the menu on their account."
-msgstr "你仲未封鎖任何帳號。如果要封鎖帳號，請去佢個人檔案，並喺佢帳號上面嘅選單入邊揀「封鎖帳號」。"
+msgstr "你仲未有封鎖任何帳號。若然想封鎖帳號，去到佢個人檔案，喺佢個帳號上高嘅選單入邊揀「封鎖帳號」。"
 
 #: src/view/screens/AppPasswords.tsx:100
 msgid "You have not created any app passwords yet. You can create one by pressing the button below."
@@ -8244,7 +8244,7 @@ msgstr "你仲未建立任何 App 密碼。你可以撳下面個掣嚟建立一�
 
 #: src/view/screens/ModerationMutedAccounts.tsx:132
 msgid "You have not muted any accounts yet. To mute an account, go to their profile and select \"Mute account\" from the menu on their account."
-msgstr "你仲未靜音任何帳號。如果要靜音帳號，請去佢個人檔案，並喺佢帳號上面嘅選單入邊揀「靜音帳號」"
+msgstr "你仲未有靜音任何帳號。若然想靜音帳號，去到佢個人檔案，喺佢個帳號上高嘅選單入邊揀「靜音帳號」。"
 
 #: src/components/Lists.tsx:52
 msgid "You have reached the end"
@@ -8269,11 +8269,11 @@ msgstr "你隱藏咗呢個回覆。"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:78
 msgid "You may appeal non-self labels if you feel they were placed in error."
-msgstr "如果你覺得呢啲標籤放錯咗，而且標記並唔係由你新增，你可以上訴。"
+msgstr "若然你覺得呢啲由其他人黐嘅標籤唔啱，你可以上訴。"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:83
 msgid "You may appeal these labels if you feel they were placed in error."
-msgstr "如果你覺得呢啲標籤放錯咗，你可以上訴。"
+msgstr "若然你覺得呢啲標籤黐錯咗，你可以上訴。"
 
 #: src/screens/StarterPack/Wizard/State.tsx:79
 msgid "You may only add up to {STARTER_PACK_MAX_SIZE} profiles"
@@ -8413,7 +8413,7 @@ msgstr "你嘅帳號存儲庫包含所有公開資料記錄，可以以 \"CAR\" 
 
 #: src/screens/Signup/StepInfo/index.tsx:211
 msgid "Your birth date"
-msgstr "你嘅出生日期"
+msgstr "你嘅出世日期"
 
 #: src/view/com/util/post-embeds/VideoEmbed.web.tsx:171
 msgid "Your browser does not support the video format. Please try a different browser."
@@ -8448,7 +8448,7 @@ msgstr "你嘅第一個讚！"
 
 #: src/view/com/posts/FollowingEmptyState.tsx:43
 msgid "Your following feed is empty! Follow more users to see what's happening."
-msgstr "你嘅「Following」資訊推送係空嘅！跟隨更多用戶嚟睇下發生緊啲咩事。"
+msgstr "你嘅「Following」資訊推送乜都冇！跟隨更多用戶嚟睇吓發生緊啲咩事。"
 
 #: src/screens/Signup/StepHandle.tsx:125
 msgid "Your full handle will be"
