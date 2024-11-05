@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-05 06:27\n"
+"PO-Revision-Date: 2024-11-05 07:42\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional, Hong Kong\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -130,7 +130,7 @@ msgstr "{0} 嘅頭像"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:68
 msgid "{0}'s favorite feeds and people - join me!"
-msgstr "{0}至愛嘅人同資訊推送 - 快啲嚟加入！"
+msgstr "{0}至愛嘅人同動態源 - 快啲嚟加入！"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:47
 msgid "{0}'s starter pack"
@@ -184,7 +184,7 @@ msgstr "{firstAuthorLink}同<0>{additionalAuthorsCount, plural, one {另外 {for
 
 #: src/view/com/notifications/FeedItem.tsx:326
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> liked your custom feed"
-msgstr "{firstAuthorLink}同<0>{additionalAuthorsCount, plural, one {另外 {formattedAuthorsCount} 個人} other {另外 {formattedAuthorsCount} 個人}}</0>讚咗你嘅自訂資訊推送"
+msgstr "{firstAuthorLink}同<0>{additionalAuthorsCount, plural, one {另外 {formattedAuthorsCount} 個人} other {另外 {formattedAuthorsCount} 個人}}</0>讚咗你嘅自訂動態源"
 
 #: src/view/com/notifications/FeedItem.tsx:222
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> liked your post"
@@ -208,7 +208,7 @@ msgstr "{firstAuthorLink} 跟隨返你"
 
 #: src/view/com/notifications/FeedItem.tsx:338
 msgid "{firstAuthorLink} liked your custom feed"
-msgstr "{firstAuthorLink} 讚咗你嘅自訂資訊推送"
+msgstr "{firstAuthorLink} 讚咗你嘅自訂動態源"
 
 #: src/view/com/notifications/FeedItem.tsx:234
 msgid "{firstAuthorLink} liked your post"
@@ -228,7 +228,7 @@ msgstr "{firstAuthorName}同{additionalAuthorsCount, plural, one {另外 {format
 
 #: src/view/com/notifications/FeedItem.tsx:319
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} liked your custom feed"
-msgstr "{firstAuthorName}同{additionalAuthorsCount, plural, one {另外 {formattedAuthorsCount} 個人} other {另外 {formattedAuthorsCount} 個人}}讚咗你嘅自訂資訊推送"
+msgstr "{firstAuthorName}同{additionalAuthorsCount, plural, one {另外 {formattedAuthorsCount} 個人} other {另外 {formattedAuthorsCount} 個人}}讚咗你嘅自訂動態源"
 
 #: src/view/com/notifications/FeedItem.tsx:215
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} liked your post"
@@ -252,7 +252,7 @@ msgstr "{firstAuthorName} 跟隨返你"
 
 #: src/view/com/notifications/FeedItem.tsx:324
 msgid "{firstAuthorName} liked your custom feed"
-msgstr "{firstAuthorName} 讚咗你嘅自訂資訊推送"
+msgstr "{firstAuthorName} 讚咗你嘅自訂動態源"
 
 #: src/view/com/notifications/FeedItem.tsx:220
 msgid "{firstAuthorName} liked your post"
@@ -301,7 +301,7 @@ msgstr "<0>{0}、</0><1>{1}</1>同{2, plural, one {另外 # } other {另外 # }}
 #: src/screens/StarterPack/Wizard/index.tsx:528
 msgctxt "feeds"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
-msgstr "<0>{0}、</0><1>{1}</1>同{2, plural, one {另外 # } other {另外 # }}個資訊推送已經喺你嘅新手套裝入邊"
+msgstr "<0>{0}、</0><1>{1}</1>同{2, plural, one {另外 # } other {另外 # }}個動態源已經喺你嘅新手套裝入邊"
 
 #: src/view/shell/Drawer.tsx:97
 msgid "<0>{0}</0> {1, plural, one {follower} other {followers}}"
@@ -520,15 +520,15 @@ msgstr "新開帖文"
 
 #: src/screens/Home/NoFeedsPinned.tsx:99
 msgid "Add recommended feeds"
-msgstr "新增推薦嘅資訊推送"
+msgstr "新增推薦嘅動態源"
 
 #: src/screens/StarterPack/Wizard/index.tsx:497
 msgid "Add some feeds to your starter pack!"
-msgstr "加啲資訊推送落你個新手套裝入邊！"
+msgstr "加啲動態源落你個新手套裝入邊！"
 
 #: src/screens/Feeds/NoFollowingFeed.tsx:41
 msgid "Add the default feed of only people you follow"
-msgstr "淨係加你跟隨緊嘅人嘅預設資訊推送"
+msgstr "淨係加你跟隨緊嘅人嘅預設動態源"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:387
 #: src/view/com/modals/ChangeHandle.tsx:403
@@ -537,7 +537,7 @@ msgstr "將以下 DNS 記錄新增到你嘅網域："
 
 #: src/components/FeedCard.tsx:296
 msgid "Add this feed to your feeds"
-msgstr "將佢新增到你嘅資訊推送"
+msgstr "將佢新增到你嘅動態源"
 
 #: src/view/com/profile/ProfileMenu.tsx:243
 #: src/view/com/profile/ProfileMenu.tsx:246
@@ -546,7 +546,7 @@ msgstr "加入到清單"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:266
 msgid "Add to my feeds"
-msgstr "加入到我嘅資訊推送"
+msgstr "加入到我嘅動態源"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:192
 #: src/view/com/modals/UserAddRemoveLists.tsx:162
@@ -555,7 +555,7 @@ msgstr "加入到清單"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:125
 msgid "Added to my feeds"
-msgstr "加入到我嘅資訊推送"
+msgstr "加入到我嘅動態源"
 
 #: src/components/moderation/ContentHider.tsx:83
 #: src/lib/moderation/useGlobalLabelStrings.ts:34
@@ -592,7 +592,7 @@ msgstr "你已經跟晒所有帳號！"
 
 #: src/view/screens/Feeds.tsx:735
 msgid "All the feeds you've saved, right in one place."
-msgstr "以下係你儲存嘅資訊推送。"
+msgstr "以下係你儲存嘅動態源。"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:146
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:153
@@ -850,7 +850,7 @@ msgstr "外觀設定"
 #: src/screens/Feeds/NoSavedFeedsOfAnyType.tsx:47
 #: src/screens/Home/NoFeedsPinned.tsx:93
 msgid "Apply default recommended feeds"
-msgstr "套用預設嘅推薦資訊推送"
+msgstr "套用預設嘅推薦動態源"
 
 #: src/screens/Settings/AppPasswords.tsx:201
 msgid "Are you sure you want to delete the app password \"{0}\"?"
@@ -878,11 +878,11 @@ msgstr "你確定要離開呢個對話？你嘅訊息會為你刪除，但唔會
 
 #: src/view/com/feeds/FeedSourceCard.tsx:313
 msgid "Are you sure you want to remove {0} from your feeds?"
-msgstr "你確定要喺你嘅資訊推送入邊移除 {0} 嗎？"
+msgstr "你確定要喺你嘅動態源入邊移除 {0} 嗎？"
 
 #: src/components/FeedCard.tsx:313
 msgid "Are you sure you want to remove this from your feeds?"
-msgstr "你確定要喺你嘅資訊推送入邊移除呢個嗎？"
+msgstr "你確定要喺你嘅動態源入邊移除呢個嗎？"
 
 #: src/view/com/composer/Composer.tsx:643
 msgid "Are you sure you'd like to discard this draft?"
@@ -1047,7 +1047,7 @@ msgstr "Bluesky 會喺你網絡入邊嘅人入邊揀一組推薦嘅帳號。"
 #: src/screens/Moderation/index.tsx:576
 #: src/screens/Settings/components/PwiOptOut.tsx:92
 msgid "Bluesky will not show your profile and posts to logged-out users. Other apps may not honor this request. This does not make your account private."
-msgstr "Bluesky 唔會向已登出用戶顯示你嘅個人檔案同帖文，但其他 App 未必會聽佢支笛。你嘅帳號唔會成為私帳。"
+msgstr "Bluesky 唔會向登出咗嘅用戶顯示你嘅個人檔案同帖文，但其他 App 未必會聽佢支笛。你嘅帳號唔會成為私帳。"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:53
 msgid "Blur images"
@@ -1055,7 +1055,7 @@ msgstr "模糊圖片"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:51
 msgid "Blur images and filter from feeds"
-msgstr "模糊圖片同埋喺資訊推送入邊篩選"
+msgstr "模糊圖片同埋喺動態源入邊篩選"
 
 #: src/screens/Onboarding/index.tsx:30
 #: src/screens/Onboarding/state.ts:83
@@ -1068,7 +1068,7 @@ msgstr "喺探索頁面瀏覽更多帳號"
 
 #: src/components/FeedInterstitials.tsx:483
 msgid "Browse more feeds on the Explore page"
-msgstr "喺探索頁面瀏覽更多資訊推送"
+msgstr "喺探索頁面瀏覽更多動態源"
 
 #: src/components/FeedInterstitials.tsx:332
 #: src/components/FeedInterstitials.tsx:335
@@ -1085,7 +1085,7 @@ msgstr "喺探索頁面瀏覽更多建議"
 #: src/screens/Home/NoFeedsPinned.tsx:103
 #: src/screens/Home/NoFeedsPinned.tsx:109
 msgid "Browse other feeds"
-msgstr "瀏覽其他資訊推送"
+msgstr "瀏覽其他動態源"
 
 #: src/view/com/auth/SplashScreen.web.tsx:168
 msgid "Business"
@@ -1187,7 +1187,7 @@ msgstr "唔再提起"
 
 #: src/screens/Deactivated.tsx:158
 msgid "Cancel reactivation and log out"
-msgstr "取消重新啟動同埋登出"
+msgstr "取消重新啓動兼登出"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:88
 #: src/view/screens/Search/Search.tsx:903
@@ -1311,7 +1311,7 @@ msgstr "揀網域驗證方法"
 
 #: src/screens/StarterPack/Wizard/index.tsx:199
 msgid "Choose Feeds"
-msgstr "揀資訊推送"
+msgstr "揀動態源"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:291
 msgid "Choose for me"
@@ -1331,7 +1331,7 @@ msgstr "揀服務"
 
 #: src/screens/Onboarding/StepFinished.tsx:271
 msgid "Choose the algorithms that power your custom feeds."
-msgstr "揀啲可以為你嘅自訂資訊推送提供支援嘅演算法。"
+msgstr "揀啲可以為你嘅自訂動態源提供支援嘅演算法。"
 
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:107
 msgid "Choose this color as your avatar"
@@ -1745,7 +1745,7 @@ msgstr "離開唔到傾計室"
 
 #: src/view/screens/ProfileFeed.tsx:104
 msgid "Could not load feed"
-msgstr "撈唔到資訊推送"
+msgstr "撈唔到動態源"
 
 #: src/view/screens/ProfileList.tsx:1020
 msgid "Could not load list"
@@ -1838,7 +1838,7 @@ msgstr "自訂網域"
 #: src/view/screens/Feeds.tsx:761
 #: src/view/screens/Search/Explore.tsx:391
 msgid "Custom feeds built by the community bring you new experiences and help you find the content you love."
-msgstr "由社群建立嘅自訂資訊推送會為你帶嚟新嘅體驗，同埋幫你搵到你鍾意嘅內容。"
+msgstr "由社群建立嘅自訂動態源會為你帶嚟新嘅體驗，同埋幫你搵到你鍾意嘅內容。"
 
 #: src/view/screens/PreferencesExternalEmbeds.tsx:64
 msgid "Customize media from external sites."
@@ -2077,15 +2077,15 @@ msgstr "阻止 App 向登出嘅使用者顯示我嘅帳號"
 #: src/view/com/posts/FollowingEmptyState.tsx:70
 #: src/view/com/posts/FollowingEndOfFeed.tsx:71
 msgid "Discover new custom feeds"
-msgstr "發掘新嘅自訂資訊推送"
+msgstr "發掘新嘅自訂動態源"
 
 #: src/view/screens/Search/Explore.tsx:389
 msgid "Discover new feeds"
-msgstr "發掘新嘅資訊推送"
+msgstr "發掘新嘅動態源"
 
 #: src/view/screens/Feeds.tsx:758
 msgid "Discover New Feeds"
-msgstr "發掘新嘅資訊推送"
+msgstr "發掘新嘅動態源"
 
 #: src/components/Dialog/index.tsx:318
 msgid "Dismiss"
@@ -2280,7 +2280,7 @@ msgstr "編輯頭像"
 
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:111
 msgid "Edit Feeds"
-msgstr "編輯資訊推送"
+msgstr "編輯動態源"
 
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:58
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:62
@@ -2306,7 +2306,7 @@ msgstr "編輯審核清單"
 #: src/view/screens/Feeds.tsx:452
 #: src/view/screens/SavedFeeds.tsx:116
 msgid "Edit My Feeds"
-msgstr "編輯我嘅資訊推送"
+msgstr "編輯我嘅動態源"
 
 #: src/view/com/modals/EditProfile.tsx:147
 msgid "Edit my profile"
@@ -2391,7 +2391,7 @@ msgstr "電郵更新咗"
 
 #: src/view/com/modals/ChangeEmail.tsx:106
 msgid "Email Updated"
-msgstr "電郵更新咗"
+msgstr "電郵更新咗喇"
 
 #: src/view/com/modals/VerifyEmail.tsx:85
 msgid "Email verified"
@@ -2715,7 +2715,7 @@ msgstr "刪除唔到新手套裝"
 #: src/view/screens/Search/Explore.tsx:427
 #: src/view/screens/Search/Explore.tsx:455
 msgid "Failed to load feeds preferences"
-msgstr "撈唔到資訊推送設定"
+msgstr "撈唔到動態源設定"
 
 #: src/components/dialogs/GifSelect.tsx:225
 msgid "Failed to load GIFs"
@@ -2728,7 +2728,7 @@ msgstr "撈唔到過去嘅訊息"
 #: src/view/screens/Search/Explore.tsx:420
 #: src/view/screens/Search/Explore.tsx:448
 msgid "Failed to load suggested feeds"
-msgstr "撈唔到建議嘅資訊推送"
+msgstr "撈唔到建議嘅動態源"
 
 #: src/view/screens/Search/Explore.tsx:378
 msgid "Failed to load suggested follows"
@@ -2761,7 +2761,7 @@ msgstr "切換唔到討論串靜音，唔該試多一次"
 
 #: src/components/FeedCard.tsx:276
 msgid "Failed to update feeds"
-msgstr "更新唔到資訊推送"
+msgstr "更新唔到動態源"
 
 #: src/screens/Messages/Settings.tsx:36
 msgid "Failed to update settings"
@@ -2780,16 +2780,16 @@ msgstr "驗證唔到帳號頭銜，唔該試多一次。"
 
 #: src/Navigation.tsx:229
 msgid "Feed"
-msgstr "資訊推送"
+msgstr "動態源"
 
 #: src/components/FeedCard.tsx:134
 #: src/view/com/feeds/FeedSourceCard.tsx:250
 msgid "Feed by {0}"
-msgstr "由 {0} 建立嘅資訊推送"
+msgstr "由 {0} 建立嘅動態源"
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:55
 msgid "Feed toggle"
-msgstr "切換資訊推送"
+msgstr "切換動態源"
 
 #: src/view/shell/desktop/RightNav.tsx:70
 #: src/view/shell/Drawer.tsx:348
@@ -2810,16 +2810,16 @@ msgstr "反饋已經傳送咗！"
 #: src/view/shell/desktop/LeftNav.tsx:408
 #: src/view/shell/Drawer.tsx:505
 msgid "Feeds"
-msgstr "資訊推送"
+msgstr "動態源"
 
 #: src/view/screens/SavedFeeds.tsx:205
 msgid "Feeds are custom algorithms that users build with a little coding expertise. <0/> for more information."
-msgstr "資訊推送係用戶用少少編碼專業知識建立嘅自訂算法。<0/> 想知多啲。"
+msgstr "動態源係用戶用少少編碼專業知識建立嘅自訂算法。<0/> 想知多啲。"
 
 #: src/components/FeedCard.tsx:273
 #: src/view/screens/SavedFeeds.tsx:83
 msgid "Feeds updated!"
-msgstr "資訊推送更新咗！"
+msgstr "動態源更新咗喇！"
 
 #: src/view/com/modals/ChangeHandle.tsx:468
 msgid "File Contents"
@@ -2831,7 +2831,7 @@ msgstr "檔案儲存成功！"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:66
 msgid "Filter from feeds"
-msgstr "喺資訊推送入邊篩選"
+msgstr "喺動態源入邊篩選"
 
 #: src/screens/Onboarding/StepFinished.tsx:287
 msgid "Finalizing"
@@ -2978,14 +2978,14 @@ msgstr "跟隨 {name}"
 #: src/screens/Settings/ContentAndMediaSettings.tsx:60
 #: src/view/screens/Settings/index.tsx:549
 msgid "Following feed preferences"
-msgstr "「Following」資訊推送設定"
+msgstr "「Following」動態源設定"
 
 #: src/Navigation.tsx:300
 #: src/screens/Settings/FollowingFeedPreferences.tsx:50
 #: src/view/screens/PreferencesFollowingFeed.tsx:59
 #: src/view/screens/Settings/index.tsx:558
 msgid "Following Feed Preferences"
-msgstr "「Following」資訊推送設定"
+msgstr "「Following」動態源設定"
 
 #: src/screens/Profile/Header/Handle.tsx:33
 msgid "Follows you"
@@ -3281,23 +3281,23 @@ msgstr "隱藏用戶清單"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:117
 msgid "Hmm, some kind of issue occurred when contacting the feed server. Please let the feed owner know about this issue."
-msgstr "唔好意思，連線資訊推送伺服器嗰陣發生咗某種問題，請話畀資訊推送擁有者知呢個問題。"
+msgstr "唔好意思，連線動態源伺服器嗰陣發生咗某種問題，請話畀動態源擁有者知呢個問題。"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:105
 msgid "Hmm, the feed server appears to be misconfigured. Please let the feed owner know about this issue."
-msgstr "唔好意思，資訊推送伺服器似乎配置錯誤，請話畀資訊推送擁有者知呢個問題。"
+msgstr "唔好意思，動態源伺服器似乎配置錯誤，請話畀動態源擁有者知呢個問題。"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:111
 msgid "Hmm, the feed server appears to be offline. Please let the feed owner know about this issue."
-msgstr "唔好意思，資訊推送伺服器似乎離線，請話畀資訊推送擁有者知呢個問題。"
+msgstr "唔好意思，動態源伺服器似乎離線，請話畀動態源擁有者知呢個問題。"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:108
 msgid "Hmm, the feed server gave a bad response. Please let the feed owner know about this issue."
-msgstr "唔好意思，資訊推送伺服器畀咗個錯誤嘅回應，請話畀資訊推送擁有者知呢個問題。"
+msgstr "唔好意思，動態源伺服器畀咗個錯誤嘅回應，請話畀動態源擁有者知呢個問題。"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:102
 msgid "Hmm, we're having trouble finding this feed. It may have been deleted."
-msgstr "唔好意思，我哋搵唔到呢個資訊推送。可能已經刪除咗。"
+msgstr "唔好意思，我哋搵唔到呢個動態源。可能已經刪除咗。"
 
 #: src/screens/Moderation/index.tsx:62
 msgid "Hmmmm, it seems we're having trouble loading this data. See below for more details. If this issue persists, please contact us."
@@ -3509,7 +3509,7 @@ msgstr "邀請人嚟呢個新手套裝！"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:35
 msgid "Invite your friends to follow your favorite feeds and people"
-msgstr "邀請你嘅朋友跟隨你最鍾意嘅資訊推送同人物"
+msgstr "邀請你嘅朋友跟隨你最鍾意嘅動態源同人物"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:32
 msgid "Invites, but personal"
@@ -3702,12 +3702,12 @@ msgstr "讚好 10 個帖文"
 #: src/state/shell/progress-guide.tsx:157
 #: src/state/shell/progress-guide.tsx:162
 msgid "Like 10 posts to train the Discover feed"
-msgstr "讚夠 10 個帖文愛嚟訓練「Discover」資訊推送"
+msgstr "讚夠 10 個帖文愛嚟訓練「Discover」動態源"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:275
 #: src/view/screens/ProfileFeed.tsx:576
 msgid "Like this feed"
-msgstr "讚好呢個資訊推送"
+msgstr "讚好呢個動態源"
 
 #: src/components/LikesDialog.tsx:85
 #: src/Navigation.tsx:234
@@ -3793,7 +3793,7 @@ msgstr "再撈啲"
 
 #: src/view/screens/Search/Explore.tsx:219
 msgid "Load more suggested feeds"
-msgstr "再撈啲建議資訊推送"
+msgstr "再撈啲建議動態源"
 
 #: src/view/screens/Search/Explore.tsx:217
 msgid "Load more suggested follows"
@@ -3833,7 +3833,7 @@ msgstr "登出"
 #: src/screens/Moderation/index.tsx:483
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:71
 msgid "Logged-out visibility"
-msgstr "登出咗嘅可見性"
+msgstr "登出可視性"
 
 #: src/components/AccountList.tsx:65
 msgid "Login to account that is not listed"
@@ -3857,15 +3857,15 @@ msgstr "似係 XXXXX-XXXXXX"
 
 #: src/screens/Feeds/NoSavedFeedsOfAnyType.tsx:39
 msgid "Looks like you haven't saved any feeds! Use our recommendations or browse more below."
-msgstr "睇落你未有儲存任何資訊推送噃！試吓我哋嘅建議內容抑或喺下低睇住其他內容先。"
+msgstr "睇落你未有儲存任何動態源噃！試吓我哋嘅建議內容抑或喺下低睇住其他內容先。"
 
 #: src/screens/Home/NoFeedsPinned.tsx:83
 msgid "Looks like you unpinned all your feeds. But don't worry, you can add some below 😄"
-msgstr "睇落你經已唔再固定你所有嘅資訊推送噃。不過唔使驚，你可以喺下低加返啲返嚟 😄"
+msgstr "睇落你經已唔再固定你所有嘅動態源噃。不過唔使驚，你可以喺下低加返啲返嚟 😄"
 
 #: src/screens/Feeds/NoFollowingFeed.tsx:37
 msgid "Looks like you're missing a following feed. <0>Click here to add one.</0>"
-msgstr "睇落你好似唔見咗「Following」資訊推送喎。<0>撳呢度嚟加一個返嚟。</0>"
+msgstr "睇落你好似唔見咗「Following」動態源喎。<0>撳呢度嚟加一個返嚟。</0>"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:255
 msgid "Make one for me"
@@ -3878,7 +3878,7 @@ msgstr "確保呢度係你打算去嘅地方！"
 #: src/screens/Settings/ContentAndMediaSettings.tsx:41
 #: src/screens/Settings/ContentAndMediaSettings.tsx:44
 msgid "Manage saved feeds"
-msgstr "管理儲存嘅資訊推送"
+msgstr "管理儲存嘅動態源"
 
 #: src/components/dialogs/MutedWords.tsx:108
 msgid "Manage your muted words and tags"
@@ -3985,7 +3985,7 @@ msgstr "建立咗審核清單"
 
 #: src/view/com/modals/CreateOrEditList.tsx:163
 msgid "Moderation list updated"
-msgstr "更新咗審核清單"
+msgstr "審核清單更新咗喇"
 
 #: src/screens/Moderation/index.tsx:251
 msgid "Moderation lists"
@@ -4023,7 +4023,7 @@ msgstr "更多"
 
 #: src/view/shell/desktop/Feeds.tsx:55
 msgid "More feeds"
-msgstr "更多資訊推送"
+msgstr "更多動態源"
 
 #: src/view/com/profile/ProfileMenu.tsx:179
 #: src/view/screens/ProfileList.tsx:712
@@ -4136,7 +4136,7 @@ msgstr "靜音咗帳號"
 
 #: src/view/screens/ModerationMutedAccounts.tsx:116
 msgid "Muted accounts have their posts removed from your feed and from your notifications. Mutes are completely private."
-msgstr "靜音帳號嘅帖文會喺你嘅資訊推送同通知入邊移除。靜音係完全私人嘅。"
+msgstr "靜音帳號嘅帖文會喺你嘅動態源同通知入邊移除。靜音係完全私人嘅。"
 
 #: src/lib/moderation/useModerationCauseDescription.ts:90
 msgid "Muted by \"{0}\""
@@ -4157,7 +4157,7 @@ msgstr "我嘅生日"
 
 #: src/view/screens/Feeds.tsx:732
 msgid "My Feeds"
-msgstr "我嘅資訊推送"
+msgstr "我嘅動態源"
 
 #: src/view/shell/desktop/LeftNav.tsx:85
 msgid "My Profile"
@@ -4165,11 +4165,11 @@ msgstr "我嘅個人檔案"
 
 #: src/view/screens/Settings/index.tsx:592
 msgid "My saved feeds"
-msgstr "我儲存咗嘅資訊推送"
+msgstr "我儲存咗嘅動態源"
 
 #: src/view/screens/Settings/index.tsx:598
 msgid "My Saved Feeds"
-msgstr "我儲存嘅資訊推送"
+msgstr "我儲存嘅動態源"
 
 #: src/view/com/modals/AddAppPasswords.tsx:174
 #: src/view/com/modals/CreateOrEditList.tsx:270
@@ -4355,7 +4355,7 @@ msgstr "搵唔到精選 GIF，Tenor 可能出現問題。"
 
 #: src/screens/StarterPack/Wizard/StepFeeds.tsx:118
 msgid "No feeds found. Try searching for something else."
-msgstr "搵唔到任何資訊推送，試下搵其他嘢。"
+msgstr "搵唔到任何動態源，試下搵其他嘢。"
 
 #: src/components/LikedByList.tsx:78
 #: src/view/com/post-thread/PostLikedBy.tsx:85
@@ -4647,7 +4647,7 @@ msgstr "打開 emoji 挑選器"
 
 #: src/view/screens/ProfileFeed.tsx:301
 msgid "Open feed options menu"
-msgstr "打開資訊推送選項選單"
+msgstr "打開動態源選項選單"
 
 #: src/screens/Settings/Settings.tsx:156
 msgid "Open helpdesk in browser"
@@ -4794,7 +4794,7 @@ msgstr "打開密碼重設表單"
 
 #: src/view/screens/Settings/index.tsx:593
 msgid "Opens screen with all saved feeds"
-msgstr "打開所有儲存咗嘅資訊推送嘅畫面"
+msgstr "打開所有儲存咗嘅動態源嘅畫面"
 
 #: src/view/screens/Settings/index.tsx:674
 msgid "Opens the app password settings"
@@ -4802,7 +4802,7 @@ msgstr "打開 App 密碼設定"
 
 #: src/view/screens/Settings/index.tsx:550
 msgid "Opens the Following feed preferences"
-msgstr "打開以下資訊推送設定"
+msgstr "打開以下動態源設定"
 
 #: src/view/com/modals/LinkWarning.tsx:93
 msgid "Opens the linked website"
@@ -4900,11 +4900,11 @@ msgstr "密碼改咗"
 
 #: src/screens/Login/index.tsx:154
 msgid "Password updated"
-msgstr "密碼更新咗"
+msgstr "密碼更新咗喇"
 
 #: src/screens/Login/PasswordUpdatedForm.tsx:24
 msgid "Password updated!"
-msgstr "密碼更新咗！"
+msgstr "密碼更新咗喇！"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:43
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:141
@@ -4974,11 +4974,11 @@ msgstr "固定咗"
 
 #: src/view/screens/SavedFeeds.tsx:130
 msgid "Pinned Feeds"
-msgstr "固定嘅資訊推送"
+msgstr "固定嘅動態源"
 
 #: src/view/screens/ProfileList.tsx:355
 msgid "Pinned to your feeds"
-msgstr "固定喺你嘅資訊推送"
+msgstr "固定喺你嘅動態源"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:43
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:141
@@ -5269,7 +5269,7 @@ msgstr "個人檔案"
 #: src/screens/Profile/Header/EditProfileDialog.tsx:191
 #: src/view/com/modals/EditProfile.tsx:124
 msgid "Profile updated"
-msgstr "個人檔案更新咗"
+msgstr "個人檔案更新咗喇"
 
 #: src/screens/Settings/AccountSettings.tsx:76
 #: src/screens/Settings/AccountSettings.tsx:92
@@ -5290,7 +5290,7 @@ msgstr "公開而且可以共享嘅用戶列表，可以批量靜音抑或封鎖
 
 #: src/view/screens/Lists.tsx:69
 msgid "Public, shareable lists which can drive feeds."
-msgstr "公開而且可以共享嘅列表，可以作為資訊推送使用。"
+msgstr "公開而且可以共享嘅列表，可以作為動態源使用。"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:128
 msgid "QR code copied to your clipboard!"
@@ -5437,11 +5437,11 @@ msgstr "移除嵌入"
 #: src/view/com/posts/FeedShutdownMsg.tsx:116
 #: src/view/com/posts/FeedShutdownMsg.tsx:120
 msgid "Remove feed"
-msgstr "移除資訊推送"
+msgstr "移除動態源"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:210
 msgid "Remove feed?"
-msgstr "移除資訊推送？"
+msgstr "移除動態源？"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:187
 #: src/view/com/feeds/FeedSourceCard.tsx:265
@@ -5450,12 +5450,12 @@ msgstr "移除資訊推送？"
 #: src/view/screens/ProfileList.tsx:502
 #: src/view/screens/SavedFeeds.tsx:351
 msgid "Remove from my feeds"
-msgstr "喺我嘅資訊推送入邊移除"
+msgstr "喺我嘅動態源入邊移除"
 
 #: src/components/FeedCard.tsx:311
 #: src/view/com/feeds/FeedSourceCard.tsx:311
 msgid "Remove from my feeds?"
-msgstr "喺我嘅資訊推送入邊移除？"
+msgstr "喺我嘅動態源入邊移除？"
 
 #: src/view/com/util/AccountDropdownBtn.tsx:53
 msgid "Remove from quick access?"
@@ -5463,7 +5463,7 @@ msgstr "喺快速存取中移除？"
 
 #: src/screens/List/ListHiddenScreen.tsx:156
 msgid "Remove from saved feeds"
-msgstr "喺儲存咗嘅資訊推送入邊移除"
+msgstr "喺儲存咗嘅動態源入邊移除"
 
 #: src/view/com/composer/photos/Gallery.tsx:203
 msgid "Remove image"
@@ -5496,7 +5496,7 @@ msgstr "移除字幕檔案"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:211
 msgid "Remove this feed from your saved feeds"
-msgstr "喺你儲存咗嘅資訊推送入邊移除呢個資訊推送"
+msgstr "喺你儲存咗嘅動態源入邊移除呢個動態源"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:109
 msgid "Removed by author"
@@ -5513,18 +5513,18 @@ msgstr "喺清單入邊移除咗"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:138
 msgid "Removed from my feeds"
-msgstr "喺我嘅資訊推送入邊移除咗"
+msgstr "喺我嘅動態源入邊移除咗"
 
 #: src/screens/List/ListHiddenScreen.tsx:94
 #: src/screens/List/ListHiddenScreen.tsx:160
 msgid "Removed from saved feeds"
-msgstr "喺儲存咗嘅資訊推送入邊移除咗"
+msgstr "喺儲存咗嘅動態源入邊移除咗"
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:44
 #: src/view/screens/ProfileFeed.tsx:197
 #: src/view/screens/ProfileList.tsx:386
 msgid "Removed from your feeds"
-msgstr "喺你嘅資訊推送入邊移除咗"
+msgstr "喺你嘅動態源入邊移除咗"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:288
 msgid "Removes quoted post"
@@ -5594,7 +5594,7 @@ msgstr "回覆你"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:338
 msgid "Reply visibility updated"
-msgstr "更新咗回覆可見度"
+msgstr "回覆可視性更新咗喇"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:337
 msgid "Reply was successfully hidden"
@@ -5624,7 +5624,7 @@ msgstr "上報對話框"
 #: src/view/screens/ProfileFeed.tsx:354
 #: src/view/screens/ProfileFeed.tsx:356
 msgid "Report feed"
-msgstr "上報資訊推送"
+msgstr "上報動態源"
 
 #: src/view/screens/ProfileList.tsx:544
 msgid "Report List"
@@ -5650,7 +5650,7 @@ msgstr "上報呢個內容"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:56
 msgid "Report this feed"
-msgstr "上報呢個資訊推送"
+msgstr "上報呢個動態源"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:53
 msgid "Report this list"
@@ -5897,11 +5897,11 @@ msgstr "儲存 QR code"
 #: src/view/screens/ProfileFeed.tsx:338
 #: src/view/screens/ProfileFeed.tsx:344
 msgid "Save to my feeds"
-msgstr "儲存去我嘅資訊推送"
+msgstr "儲存去我嘅動態源"
 
 #: src/view/screens/SavedFeeds.tsx:171
 msgid "Saved Feeds"
-msgstr "儲存咗資訊推送"
+msgstr "儲存咗動態源"
 
 #: src/view/com/lightbox/Lightbox.tsx:44
 msgid "Saved to your camera roll"
@@ -5910,7 +5910,7 @@ msgstr "儲存咗去你嘅相簿"
 #: src/view/screens/ProfileFeed.tsx:206
 #: src/view/screens/ProfileList.tsx:366
 msgid "Saved to your feeds"
-msgstr "儲存咗去你嘅資訊推送"
+msgstr "儲存咗去你嘅動態源"
 
 #: src/view/com/modals/EditProfile.tsx:220
 msgid "Saves any changes to your profile"
@@ -5962,7 +5962,7 @@ msgstr "搵「{searchText}」"
 
 #: src/screens/StarterPack/Wizard/index.tsx:500
 msgid "Search for feeds that you want to suggest to others."
-msgstr "搵你想同其他人推薦嘅資訊推送。"
+msgstr "搵你想同其他人推薦嘅動態源。"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:71
 msgid "Search for users"
@@ -6097,7 +6097,7 @@ msgstr "揀呢個靜音字詞應該適用喺邊啲內容。"
 #: src/screens/Settings/LanguageSettings.tsx:245
 #: src/view/screens/LanguageSettings.tsx:293
 msgid "Select which languages you want your subscribed feeds to include. If none are selected, all languages will be shown."
-msgstr "揀吓邊啲語言你想喺你訂閱嘅資訊推送度出現。唔揀嘅話，就會顯示所有語言。"
+msgstr "揀吓邊啲語言你想喺你訂閱嘅動態源度出現。唔揀嘅話，就會顯示所有語言。"
 
 #: src/screens/Settings/LanguageSettings.tsx:76
 #: src/view/screens/LanguageSettings.tsx:107
@@ -6195,15 +6195,15 @@ msgstr "設定新密碼"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:132
 msgid "Set this setting to \"No\" to hide all quote posts from your feed. Reposts will still be visible."
-msgstr "將呢個設定做「停用」嘅話就可以隱藏你資訊推送入邊嘅所有引用帖文。轉發唔會影響。"
+msgstr "將呢個設定做「停用」嘅話就可以隱藏你動態源入邊嘅所有引用帖文。轉發唔會影響。"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:74
 msgid "Set this setting to \"No\" to hide all replies from your feed."
-msgstr "將呢個設定做「停用」就可以隱藏所有喺你嘅資訊推送入邊嘅回覆。"
+msgstr "將呢個設定做「停用」就可以隱藏所有喺你嘅動態源入邊嘅回覆。"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:98
 msgid "Set this setting to \"No\" to hide all reposts from your feed."
-msgstr "將呢個設定做「停用」就可以隱藏你嘅資訊推送入邊嘅所有轉發。"
+msgstr "將呢個設定做「停用」就可以隱藏你嘅動態源入邊嘅所有轉發。"
 
 #: src/view/screens/PreferencesThreads.tsx:127
 msgid "Set this setting to \"Yes\" to show replies in a threaded view. This is an experimental feature."
@@ -6211,7 +6211,7 @@ msgstr "呢個係實驗功能：將呢個設定做「啓用」嘅話回覆就會
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:168
 msgid "Set this setting to \"Yes\" to show samples of your saved feeds in your Following feed. This is an experimental feature."
-msgstr "呢個係實驗功能：將呢個設定做「啓用」就可以喺「Following」資訊推送入邊顯示你儲存咗嘅資訊推送嘅樣本。"
+msgstr "呢個係實驗功能：將呢個設定做「啓用」就可以喺「Following」動態源入邊顯示你儲存咗嘅動態源嘅樣本。"
 
 #: src/screens/Onboarding/Layout.tsx:48
 msgid "Set up your account"
@@ -6275,7 +6275,7 @@ msgstr "點都要分享"
 #: src/view/screens/ProfileFeed.tsx:364
 #: src/view/screens/ProfileFeed.tsx:366
 msgid "Share feed"
-msgstr "分享資訊推送"
+msgstr "分享動態源"
 
 #: src/components/StarterPack/ShareDialog.tsx:124
 #: src/components/StarterPack/ShareDialog.tsx:131
@@ -6307,7 +6307,7 @@ msgstr "分享呢個新手套裝，幫啲人加入你嘅 Bluesky 社群。"
 
 #: src/components/dms/ChatEmptyPill.tsx:34
 msgid "Share your favorite feed!"
-msgstr "分享你最鍾意嘅資訊推送！"
+msgstr "分享你最鍾意嘅動態源！"
 
 #: src/Navigation.tsx:254
 msgid "Shared Preferences Tester"
@@ -6341,7 +6341,7 @@ msgstr "顯示徽章"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:61
 msgid "Show badge and filter from feeds"
-msgstr "喺資訊推送入邊顯示徽章同埋篩選器"
+msgstr "喺動態源入邊顯示徽章同埋篩選器"
 
 #: src/view/com/post-thread/PostThreadShowHiddenReplies.tsx:23
 msgid "Show hidden replies"
@@ -6373,7 +6373,7 @@ msgstr "顯示靜音回覆"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:165
 msgid "Show Posts from My Feeds"
-msgstr "顯示我嘅資訊推送入邊嘅帖文"
+msgstr "顯示我嘅動態源入邊嘅帖文"
 
 #: src/screens/Settings/FollowingFeedPreferences.tsx:97
 #: src/screens/Settings/FollowingFeedPreferences.tsx:107
@@ -6419,7 +6419,7 @@ msgstr "顯示轉發"
 #: src/screens/Settings/FollowingFeedPreferences.tsx:122
 #: src/screens/Settings/FollowingFeedPreferences.tsx:132
 msgid "Show samples of your saved feeds in your Following feed"
-msgstr "喺「Following」資訊推送入邊顯示你儲存咗嘅資訊推送嘅樣本"
+msgstr "喺「Following」動態源入邊顯示你儲存咗嘅動態源嘅樣本"
 
 #: src/components/moderation/ContentHider.tsx:130
 #: src/components/moderation/PostHider.tsx:79
@@ -6432,7 +6432,7 @@ msgstr "顯示警告"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:56
 msgid "Show warning and filter from feeds"
-msgstr "喺資訊推送入邊顯示警告同埋篩選器"
+msgstr "喺動態源入邊顯示警告同埋篩選器"
 
 #: src/components/dialogs/Signin.tsx:97
 #: src/components/dialogs/Signin.tsx:99
@@ -6541,7 +6541,7 @@ msgstr "軟件開發"
 
 #: src/components/FeedInterstitials.tsx:447
 msgid "Some other feeds you might like"
-msgstr "你可能都會鍾意嘅其他資訊推送"
+msgstr "你可能都會鍾意嘅其他動態源"
 
 #: src/components/WhoCanReply.tsx:70
 msgid "Some people can reply"
@@ -6639,7 +6639,7 @@ msgstr "新手套裝"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:239
 msgid "Starter packs let you easily share your favorite feeds and people with your friends."
-msgstr "新手套裝可以畀你輕鬆同你嘅朋友分享你最鍾意嘅資訊推送同人物。"
+msgstr "新手套裝可以畀你輕鬆同你嘅朋友分享你最鍾意嘅動態源同人物。"
 
 #: src/screens/Settings/AboutSettings.tsx:46
 #: src/screens/Settings/AboutSettings.tsx:49
@@ -6883,12 +6883,12 @@ msgstr "版權政策已經移至 <0/>"
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:102
 msgid "The Discover feed"
-msgstr "「Discover」資訊推送"
+msgstr "「Discover」動態源"
 
 #: src/state/shell/progress-guide.tsx:167
 #: src/state/shell/progress-guide.tsx:172
 msgid "The Discover feed now knows what you like"
-msgstr "「Discover」資訊推送而家明你鍾意啲咩"
+msgstr "「Discover」動態源而家明你鍾意啲咩"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:320
 msgid "The experience is better in the app. Download Bluesky now and we'll pick back up where you left off."
@@ -6896,7 +6896,7 @@ msgstr "喺應用程式入邊嘅體驗會更好。即刻下載 Bluesky ，我哋
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:67
 msgid "The feed has been replaced with Discover."
-msgstr "呢個資訊推送已經用「Discover」取代。"
+msgstr "呢個動態源已經用「Discover」取代。"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:58
 msgid "The following labels were applied to your account."
@@ -6996,7 +6996,7 @@ msgstr "擷取你嘅服務資料嗰陣有問題"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:145
 msgid "There was an issue removing this feed. Please check your internet connection and try again."
-msgstr "移除呢個資訊推送出現問題。請檢查你嘅互聯網連線，然後試多一次。"
+msgstr "移除呢個動態源出現問題。請檢查你嘅互聯網連線，然後試多一次。"
 
 #: src/components/dms/ReportDialog.tsx:217
 #: src/components/ReportDialog/SubmitView.tsx:87
@@ -7007,7 +7007,7 @@ msgstr "傳送你嘅上報出現問題，請檢查你嘅互聯網連線。"
 #: src/view/com/posts/FeedShutdownMsg.tsx:71
 #: src/view/screens/ProfileFeed.tsx:211
 msgid "There was an issue updating your feeds, please check your internet connection and try again."
-msgstr "更新你嘅資訊推送嗰陣出現問題，請檢查你嘅互聯網連線，然後試多一次。"
+msgstr "更新你嘅動態源嗰陣出現問題，請檢查你嘅互聯網連線，然後試多一次。"
 
 #: src/view/screens/AppPasswords.tsx:79
 msgid "There was an issue with fetching your app passwords"
@@ -7049,7 +7049,7 @@ msgstr "新用戶湧入 Bluesky ！我哋會盡快啟動你嘅帳號。"
 
 #: src/screens/Settings/FollowingFeedPreferences.tsx:55
 msgid "These settings only apply to the Following feed."
-msgstr "呢啲設定只適用於「Following」資訊推送。"
+msgstr "呢啲設定只適用於「Following」動態源。"
 
 #: src/components/moderation/ScreenHider.tsx:111
 msgid "This {screenDescription} has been flagged:"
@@ -7106,21 +7106,21 @@ msgstr "呢個功能係測試版。你可以喺 <0>呢篇網誌文章</0> 睇到
 
 #: src/view/com/posts/FeedErrorMessage.tsx:120
 msgid "This feed is currently receiving high traffic and is temporarily unavailable. Please try again later."
-msgstr "而家呢個資訊推送皆因好多人用緊導致暫時用唔到。唔該遲啲試多一次。"
+msgstr "而家呢個動態源皆因好多人用緊導致暫時用唔到。唔該遲啲試多一次。"
 
 #: src/view/com/posts/CustomFeedEmptyState.tsx:38
 msgid "This feed is empty! You may need to follow more users or tune your language settings."
-msgstr "呢個資訊推送係空嘅！你可能需要跟隨更多用戶抑或調整你嘅語言設定。"
+msgstr "呢個動態源係空嘅！你可能需要跟隨更多用戶抑或調整你嘅語言設定。"
 
 #: src/components/StarterPack/Main/PostsList.tsx:36
 #: src/view/screens/ProfileFeed.tsx:478
 #: src/view/screens/ProfileList.tsx:788
 msgid "This feed is empty."
-msgstr "呢個資訊推送係空嘅。"
+msgstr "呢個動態源係空嘅。"
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:99
 msgid "This feed is no longer online. We are showing <0>Discover</0> instead."
-msgstr "呢個資訊推送唔再可用，我哋改為顯示 <0>Discover</0>。"
+msgstr "呢個動態源唔再可用，我哋改為顯示 <0>Discover</0>。"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:559
 msgid "This handle is reserved. Please try a different one."
@@ -7181,7 +7181,7 @@ msgstr "呢篇帖文只會畀登入咗嘅用戶睇到，未登入嘅人唔會睇
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:681
 msgid "This post will be hidden from feeds and threads. This cannot be undone."
-msgstr "呢篇帖文將會喺討論串及資訊推送中俾隱藏，呢個操作無法撤銷。"
+msgstr "呢篇帖文將會喺討論串及動態源中俾隱藏，呢個操作無法撤銷。"
 
 #: src/view/com/composer/Composer.tsx:393
 msgid "This post's author has disabled quote posts."
@@ -7415,7 +7415,7 @@ msgstr "唔再跟佢"
 
 #: src/view/screens/ProfileFeed.tsx:576
 msgid "Unlike this feed"
-msgstr "唔再讚呢個資訊推送"
+msgstr "唔再讚呢個動態源"
 
 #: src/components/TagMenu/index.tsx:248
 #: src/view/screens/ProfileList.tsx:692
@@ -7474,7 +7474,7 @@ msgstr "取消固定審核清單"
 
 #: src/view/screens/ProfileList.tsx:356
 msgid "Unpinned from your feeds"
-msgstr "喺你嘅資訊推送入邊取消固定"
+msgstr "喺你嘅動態源入邊取消固定"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:236
 msgid "Unsubscribe"
@@ -7521,7 +7521,7 @@ msgstr "更新引用附上狀態失敗"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:341
 msgid "Updating reply visibility failed"
-msgstr "更新回覆可見度失敗"
+msgstr "更新回覆可視性失敗"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:180
 msgid "Updating..."
@@ -7665,7 +7665,7 @@ msgstr "建立咗用戶清單"
 
 #: src/view/com/modals/CreateOrEditList.tsx:162
 msgid "User list updated"
-msgstr "更新咗用戶清單"
+msgstr "用戶清單更新咗喇"
 
 #: src/view/screens/Lists.tsx:66
 msgid "User Lists"
@@ -7865,7 +7865,7 @@ msgstr "睇吓 @{0} 提供嘅標籤服務"
 
 #: src/view/screens/ProfileFeed.tsx:588
 msgid "View users who like this feed"
-msgstr "睇吓邊啲人讚過呢個資訊推送"
+msgstr "睇吓邊啲人讚過呢個動態源"
 
 #: src/screens/Moderation/index.tsx:276
 msgid "View your blocked accounts"
@@ -7874,7 +7874,7 @@ msgstr "睇吓你封鎖咗嘅帳號"
 #: src/view/com/home/HomeHeaderLayout.web.tsx:78
 #: src/view/com/home/HomeHeaderLayoutMobile.tsx:89
 msgid "View your feeds and explore more"
-msgstr "睇吓你嘅資訊推送同埋探索更多"
+msgstr "睇吓你嘅動態源同埋探索更多"
 
 #: src/screens/Moderation/index.tsx:246
 msgid "View your moderation lists"
@@ -7901,7 +7901,7 @@ msgstr "警告內容"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:46
 msgid "Warn content and filter from feeds"
-msgstr "警告內容同埋喺資訊推送入邊篩選"
+msgstr "警告內容同埋喺動態源入邊篩選"
 
 #: src/screens/Hashtag.tsx:218
 msgid "We couldn't find any results for that hashtag."
@@ -8008,7 +8008,7 @@ msgstr "你想點叫你嘅新手套裝？"
 #: src/view/com/auth/SplashScreen.web.tsx:99
 #: src/view/com/composer/Composer.tsx:693
 msgid "What's up?"
-msgstr "有咩新嘢？"
+msgstr "有咩大件事？"
 
 #: src/view/com/modals/lang-settings/PostLanguagesSettings.tsx:79
 msgid "Which languages are used in this post?"
@@ -8016,7 +8016,7 @@ msgstr "呢篇帖文用咗邊啲語言？"
 
 #: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:78
 msgid "Which languages would you like to see in your algorithmic feeds?"
-msgstr "你諗住喺演算法資訊推送入邊睇到邊啲語言？"
+msgstr "你諗住喺演算法動態源入邊睇到邊啲語言？"
 
 #: src/components/WhoCanReply.tsx:179
 msgid "Who can interact with this post?"
@@ -8037,7 +8037,7 @@ msgstr "點解要審查呢個內容？"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:57
 msgid "Why should this feed be reviewed?"
-msgstr "點解要審查呢個資訊推送？"
+msgstr "點解要審查呢個動態源？"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:54
 msgid "Why should this list be reviewed?"
@@ -8144,7 +8144,7 @@ msgstr "你遲啲可以喺你嘅外觀設定入邊調整呢啲。"
 #: src/view/com/posts/FollowingEmptyState.tsx:63
 #: src/view/com/posts/FollowingEndOfFeed.tsx:64
 msgid "You can also discover new Custom Feeds to follow."
-msgstr "你亦可以發現新嘅自訂資訊推送嚟跟隨。"
+msgstr "你亦可以發現新嘅自訂動態源嚟跟隨。"
 
 #: src/view/com/modals/DeleteAccount.tsx:202
 msgid "You can also temporarily deactivate your account instead, and reactivate it at any time."
@@ -8177,11 +8177,11 @@ msgstr "你仲未有任何邀請碼！當你上咗 Bluesky 耐咗少少之後，
 
 #: src/view/screens/SavedFeeds.tsx:144
 msgid "You don't have any pinned feeds."
-msgstr "你未有任何固定嘅資訊推送。"
+msgstr "你未有任何固定嘅動態源。"
 
 #: src/view/screens/SavedFeeds.tsx:184
 msgid "You don't have any saved feeds."
-msgstr "你未有任何儲存咗嘅資訊推送。"
+msgstr "你未有任何儲存咗嘅動態源。"
 
 #: src/view/com/post-thread/PostThread.tsx:214
 msgid "You have blocked the author or you have been blocked by the author."
@@ -8227,7 +8227,7 @@ msgstr "你仲未有對話，開始一個！"
 
 #: src/view/com/feeds/ProfileFeedgens.tsx:138
 msgid "You have no feeds."
-msgstr "你仲未有任何資訊推送。"
+msgstr "你仲未有任何動態源。"
 
 #: src/view/com/lists/MyLists.tsx:90
 #: src/view/com/lists/ProfileLists.tsx:134
@@ -8281,7 +8281,7 @@ msgstr "你只可以加到 {STARTER_PACK_MAX_SIZE} 個個人檔案"
 
 #: src/screens/StarterPack/Wizard/State.tsx:97
 msgid "You may only add up to 3 feeds"
-msgstr "你最多只可以加 3 個資訊推送"
+msgstr "你最多只可以加 3 個動態源"
 
 #: src/lib/media/picker.shared.ts:22
 msgid "You may only select up to 4 images"
@@ -8341,7 +8341,7 @@ msgstr "你：{short}"
 
 #: src/screens/Signup/index.tsx:107
 msgid "You'll follow the suggested users and feeds once you finish creating your account!"
-msgstr "建立完帳號之後，你就會跟隨建議嘅使用者同資訊推送！"
+msgstr "建立完帳號之後，你就會跟隨建議嘅使用者同動態源！"
 
 #: src/screens/Signup/index.tsx:112
 msgid "You'll follow the suggested users once you finish creating your account!"
@@ -8361,7 +8361,7 @@ msgstr "你會喺 <0>{0}</0> 收到一封電郵嚟驗證係你。"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:270
 msgid "You'll stay updated with these feeds"
-msgstr "你會緊貼呢啲資訊推送"
+msgstr "呢啲動態源有新嘢嘅話你都會收到"
 
 #: src/screens/SignupQueued.tsx:93
 #: src/screens/SignupQueued.tsx:94
@@ -8385,7 +8385,7 @@ msgstr "你揀咗喺呢篇帖文入邊隱藏字詞抑或標籤。"
 
 #: src/view/com/posts/FollowingEndOfFeed.tsx:44
 msgid "You've reached the end of your feed! Find some more accounts to follow."
-msgstr "你已經去到你嘅資訊推送嘅最後喇！搵多啲帳號嚟跟隨。"
+msgstr "你已經去到你嘅動態源嘅最後喇！搵多啲帳號嚟跟隨。"
 
 #: src/view/com/composer/state/video.ts:434
 msgid "You've reached your daily limit for video uploads (too many bytes)"
@@ -8436,7 +8436,7 @@ msgstr "你嘅電郵似乎無效。"
 
 #: src/view/com/modals/ChangeEmail.tsx:120
 msgid "Your email has been updated but not verified. As a next step, please verify your new email."
-msgstr "你嘅電郵已經更新咗，但係未驗證。下一步，請驗證你嘅新電郵。"
+msgstr "你嘅電郵已經更新但係仲未驗證過。跟住落嚟，請驗證你嘅新電郵先。"
 
 #: src/view/com/modals/VerifyEmail.tsx:122
 msgid "Your email has not yet been verified. This is an important security step which we recommend."
@@ -8448,7 +8448,7 @@ msgstr "你嘅第一個讚！"
 
 #: src/view/com/posts/FollowingEmptyState.tsx:43
 msgid "Your following feed is empty! Follow more users to see what's happening."
-msgstr "你嘅「Following」資訊推送乜都冇！跟隨更多用戶嚟睇吓發生緊啲咩事。"
+msgstr "你嘅「Following」動態源乜都冇！跟隨更多用戶嚟睇吓發生緊啲咩事。"
 
 #: src/screens/Signup/StepHandle.tsx:125
 msgid "Your full handle will be"
@@ -8485,7 +8485,7 @@ msgstr "你嘅個人檔案"
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:75
 msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
-msgstr "你嘅個人檔案、帖文、資訊推送同埋清單唔會再畀其他 Bluesky 用戶睇到。你幾時都可以登入重新啓用你嘅帳號。"
+msgstr "你嘅個人檔案、帖文、動態源同埋清單唔會再畀其他 Bluesky 用戶睇到。你幾時都可以登入重新啓用你嘅帳號。"
 
 #: src/view/com/composer/Composer.tsx:449
 msgid "Your reply has been published"
