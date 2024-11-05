@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-04 01:15\n"
+"PO-Revision-Date: 2024-11-05 02:08\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional, Hong Kong\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -935,7 +935,7 @@ msgstr "自動播放影片同 GIF"
 #: src/screens/Login/SetNewPasswordForm.tsx:160
 #: src/screens/Messages/components/ChatDisabled.tsx:133
 #: src/screens/Messages/components/ChatDisabled.tsx:134
-#: src/screens/Profile/Header/Shell.tsx:84
+#: src/screens/Profile/Header/Shell.tsx:94
 #: src/screens/Signup/BackNextButtons.tsx:42
 #: src/screens/StarterPack/Wizard/index.tsx:307
 #: src/view/com/util/ViewHeader.tsx:87
@@ -1091,7 +1091,7 @@ msgstr "瀏覽其他資訊推送"
 msgid "Business"
 msgstr "商業"
 
-#: src/view/com/profile/ProfileSubpageHeader.tsx:165
+#: src/view/com/profile/ProfileSubpageHeader.tsx:174
 msgid "by —"
 msgstr "由 —"
 
@@ -1099,7 +1099,7 @@ msgstr "由 —"
 msgid "By {0}"
 msgstr "由 {0}"
 
-#: src/view/com/profile/ProfileSubpageHeader.tsx:169
+#: src/view/com/profile/ProfileSubpageHeader.tsx:178
 msgid "by <0/>"
 msgstr "由 <0/>"
 
@@ -1115,7 +1115,7 @@ msgstr "建立帳號，即係你同意<0>服務條款</0>同<1>私隱政策</1>�
 msgid "By creating an account you agree to the <0>Terms of Service</0>."
 msgstr "建立帳號，即係你同意<0>服務條款</0>。"
 
-#: src/view/com/profile/ProfileSubpageHeader.tsx:167
+#: src/view/com/profile/ProfileSubpageHeader.tsx:176
 msgid "by you"
 msgstr "由你"
 
@@ -1431,7 +1431,7 @@ msgstr "閂咗 GIF 對話框"
 msgid "Close image"
 msgstr "閂咗圖片"
 
-#: src/view/com/lightbox/Lightbox.web.tsx:125
+#: src/view/com/lightbox/Lightbox.web.tsx:109
 msgid "Close image viewer"
 msgstr "閂咗圖片檢視器"
 
@@ -1460,7 +1460,7 @@ msgstr "閂咗標題圖片嘅檢視器"
 msgid "Collapse list of users"
 msgstr "收合用戶清單"
 
-#: src/view/com/notifications/FeedItem.tsx:587
+#: src/view/com/notifications/FeedItem.tsx:588
 msgid "Collapses list of users for a given notification"
 msgstr "收合特定通知嘅使用者清單"
 
@@ -2594,7 +2594,7 @@ msgstr "退出帳號頭銜變更過程"
 msgid "Exits image cropping process"
 msgstr "退出圖片裁剪過程"
 
-#: src/view/com/lightbox/Lightbox.web.tsx:126
+#: src/view/com/lightbox/Lightbox.web.tsx:110
 msgid "Exits image view"
 msgstr "退出圖片檢視"
 
@@ -2602,7 +2602,7 @@ msgstr "退出圖片檢視"
 msgid "Exits inputting search query"
 msgstr "退出輸入搵嘢查詢"
 
-#: src/view/com/lightbox/Lightbox.web.tsx:179
+#: src/view/com/lightbox/Lightbox.web.tsx:163
 msgid "Expand alt text"
 msgstr "展開 ALT 文字"
 
@@ -2620,7 +2620,7 @@ msgid "Expected uri to resolve to a record"
 msgstr "URI 應解析為記錄"
 
 #: src/screens/Settings/FollowingFeedPreferences.tsx:116
-#: src/screens/Settings/ThreadPreferences.tsx:122
+#: src/screens/Settings/ThreadPreferences.tsx:124
 msgid "Experimental"
 msgstr "實驗性"
 
@@ -2738,7 +2738,7 @@ msgstr "載入唔到建議跟隨"
 msgid "Failed to pin post"
 msgstr "固定唔到帖文"
 
-#: src/view/com/lightbox/Lightbox.tsx:96
+#: src/view/com/lightbox/Lightbox.tsx:46
 msgid "Failed to save image: {0}"
 msgstr "儲存唔到圖片：{0}"
 
@@ -3241,7 +3241,7 @@ msgstr "隱藏清單"
 msgid "Hide"
 msgstr "隱藏"
 
-#: src/view/com/notifications/FeedItem.tsx:594
+#: src/view/com/notifications/FeedItem.tsx:595
 msgctxt "action"
 msgid "Hide"
 msgstr "隱藏"
@@ -3275,7 +3275,7 @@ msgstr "隱藏呢篇帖文？"
 msgid "Hide this reply?"
 msgstr "隱藏呢個回覆？"
 
-#: src/view/com/notifications/FeedItem.tsx:585
+#: src/view/com/notifications/FeedItem.tsx:586
 msgid "Hide user list"
 msgstr "隱藏用戶清單"
 
@@ -3361,7 +3361,7 @@ msgstr "我有我自己嘅網域"
 msgid "I understand"
 msgstr "我知悉"
 
-#: src/view/com/lightbox/Lightbox.web.tsx:181
+#: src/view/com/lightbox/Lightbox.web.tsx:165
 msgid "If alt text is long, toggles alt text expanded state"
 msgstr "如果替代文字好長，就會切換替代文字展開狀態"
 
@@ -4030,11 +4030,11 @@ msgstr "更多資訊推送"
 msgid "More options"
 msgstr "更多揀"
 
-#: src/screens/Settings/ThreadPreferences.tsx:79
+#: src/screens/Settings/ThreadPreferences.tsx:81
 msgid "Most-liked first"
 msgstr "先顯示最多人讚嘅回覆"
 
-#: src/screens/Settings/ThreadPreferences.tsx:76
+#: src/screens/Settings/ThreadPreferences.tsx:78
 #: src/view/screens/PreferencesThreads.tsx:87
 msgid "Most-liked replies first"
 msgstr "先顯示最多人讚嘅回覆"
@@ -4292,8 +4292,8 @@ msgstr "新用戶資訊對話框"
 msgid "New User List"
 msgstr "新用戶清單"
 
-#: src/screens/Settings/ThreadPreferences.tsx:68
-#: src/screens/Settings/ThreadPreferences.tsx:71
+#: src/screens/Settings/ThreadPreferences.tsx:70
+#: src/screens/Settings/ThreadPreferences.tsx:73
 #: src/view/screens/PreferencesThreads.tsx:84
 msgid "Newest replies first"
 msgstr "先顯示最新嘅回覆"
@@ -4321,7 +4321,7 @@ msgstr "新聞"
 msgid "Next"
 msgstr "下一個"
 
-#: src/view/com/lightbox/Lightbox.web.tsx:165
+#: src/view/com/lightbox/Lightbox.web.tsx:149
 msgid "Next image"
 msgstr "下一張圖片"
 
@@ -4557,8 +4557,8 @@ msgstr "好嘅"
 msgid "Okay"
 msgstr "好嘅"
 
-#: src/screens/Settings/ThreadPreferences.tsx:60
-#: src/screens/Settings/ThreadPreferences.tsx:63
+#: src/screens/Settings/ThreadPreferences.tsx:62
+#: src/screens/Settings/ThreadPreferences.tsx:65
 #: src/view/screens/PreferencesThreads.tsx:83
 msgid "Oldest replies first"
 msgstr "先顯示最老嘅回覆"
@@ -4821,7 +4821,7 @@ msgstr "打開系統日誌頁面"
 msgid "Opens the threads preferences"
 msgstr "打開討論串設定"
 
-#: src/view/com/notifications/FeedItem.tsx:672
+#: src/view/com/notifications/FeedItem.tsx:673
 #: src/view/com/util/UserAvatar.tsx:436
 msgid "Opens this profile"
 msgstr "打開呢個個人檔案"
@@ -4929,11 +4929,11 @@ msgstr "俾 @{0} 跟隨嘅人"
 msgid "People following @{0}"
 msgstr "跟隨 @{0} 嘅人"
 
-#: src/view/com/lightbox/Lightbox.tsx:76
+#: src/view/com/lightbox/Lightbox.tsx:27
 msgid "Permission to access camera roll is required."
 msgstr "我哋需要你相簿嘅權限。"
 
-#: src/view/com/lightbox/Lightbox.tsx:84
+#: src/view/com/lightbox/Lightbox.tsx:35
 msgid "Permission to access camera roll was denied. Please enable it in your system settings."
 msgstr "存取相簿嘅權限俾拒絕，請喺你嘅系統設定入邊啓用佢。"
 
@@ -5198,7 +5198,7 @@ msgstr "撳嚟重試"
 msgid "Press to view followers of this account that you also follow"
 msgstr "撳一下就可以睇到你亦都跟隨緊嘅呢個帳號嘅跟隨者"
 
-#: src/view/com/lightbox/Lightbox.web.tsx:146
+#: src/view/com/lightbox/Lightbox.web.tsx:130
 msgid "Previous image"
 msgstr "上一張圖片"
 
@@ -5207,8 +5207,8 @@ msgstr "上一張圖片"
 msgid "Primary Language"
 msgstr "首選語言"
 
-#: src/screens/Settings/ThreadPreferences.tsx:97
-#: src/screens/Settings/ThreadPreferences.tsx:102
+#: src/screens/Settings/ThreadPreferences.tsx:99
+#: src/screens/Settings/ThreadPreferences.tsx:104
 msgid "Prioritize your Follows"
 msgstr "優先睇你跟隨嘅人"
 
@@ -5344,8 +5344,8 @@ msgstr "引用"
 msgid "Quotes of this post"
 msgstr "引用呢篇帖文"
 
-#: src/screens/Settings/ThreadPreferences.tsx:84
-#: src/screens/Settings/ThreadPreferences.tsx:87
+#: src/screens/Settings/ThreadPreferences.tsx:86
+#: src/screens/Settings/ThreadPreferences.tsx:89
 #: src/view/screens/PreferencesThreads.tsx:91
 msgid "Random (aka \"Poster's Roulette\")"
 msgstr "隨機顯示（又名試試手氣）"
@@ -5854,7 +5854,7 @@ msgstr "返去上一頁"
 msgid "Save"
 msgstr "儲存"
 
-#: src/view/com/lightbox/Lightbox.tsx:166
+#: src/view/com/lightbox/ImageViewing/index.tsx:218
 #: src/view/com/modals/CreateOrEditList.tsx:325
 msgctxt "action"
 msgid "Save"
@@ -5903,7 +5903,7 @@ msgstr "儲存去我嘅資訊推送"
 msgid "Saved Feeds"
 msgstr "儲存咗資訊推送"
 
-#: src/view/com/lightbox/Lightbox.tsx:94
+#: src/view/com/lightbox/Lightbox.tsx:44
 msgid "Saved to your camera roll"
 msgstr "儲存咗去你嘅相簿"
 
@@ -5926,8 +5926,8 @@ msgstr "儲存圖片裁剪設定"
 
 #: src/components/dms/ChatEmptyPill.tsx:33
 #: src/components/NewskieDialog.tsx:105
-#: src/view/com/notifications/FeedItem.tsx:533
-#: src/view/com/notifications/FeedItem.tsx:558
+#: src/view/com/notifications/FeedItem.tsx:534
+#: src/view/com/notifications/FeedItem.tsx:559
 msgid "Say hello!"
 msgstr "打招呼！"
 
@@ -6253,7 +6253,7 @@ msgstr "性暗示"
 msgid "Share"
 msgstr "分享"
 
-#: src/view/com/lightbox/Lightbox.tsx:175
+#: src/view/com/lightbox/ImageViewing/index.tsx:227
 msgctxt "action"
 msgid "Share"
 msgstr "分享"
@@ -6393,12 +6393,12 @@ msgstr "顯示回覆"
 msgid "Show Replies"
 msgstr "顯示回覆"
 
-#: src/screens/Settings/ThreadPreferences.tsx:111
+#: src/screens/Settings/ThreadPreferences.tsx:113
 #: src/view/screens/PreferencesThreads.tsx:105
 msgid "Show replies by people you follow before all other replies."
 msgstr "喺所有其他回覆之前顯示你跟隨嘅人嘅回覆。"
 
-#: src/screens/Settings/ThreadPreferences.tsx:136
+#: src/screens/Settings/ThreadPreferences.tsx:138
 msgid "Show replies in a threaded view"
 msgstr "喺樹狀視圖中顯示回覆"
 
@@ -6572,15 +6572,19 @@ msgstr "有啲嘢出錯！"
 msgid "Sorry! Your session expired. Please log in again."
 msgstr "對唔住！你嘅登入已經過期，請試下再登入。"
 
+#: src/screens/Settings/ThreadPreferences.tsx:48
+msgid "Sort replies"
+msgstr "回覆排序"
+
 #: src/view/screens/PreferencesThreads.tsx:74
 msgid "Sort Replies"
 msgstr "回覆排序"
 
-#: src/screens/Settings/ThreadPreferences.tsx:53
+#: src/screens/Settings/ThreadPreferences.tsx:55
 msgid "Sort replies by"
 msgstr "回覆排序"
 
-#: src/screens/Settings/ThreadPreferences.tsx:50
+#: src/screens/Settings/ThreadPreferences.tsx:52
 #: src/view/screens/PreferencesThreads.tsx:77
 msgid "Sort replies to the same post by:"
 msgstr "排序同一個帖文嘅回覆："
@@ -6760,8 +6764,8 @@ msgstr "㩒一下就可以播放抑或暫停"
 msgid "Tap to toggle sound"
 msgstr "㩒一下就可以切換聲音"
 
-#: src/view/com/util/images/AutoSizedImage.tsx:219
-#: src/view/com/util/images/AutoSizedImage.tsx:239
+#: src/view/com/util/images/AutoSizedImage.tsx:199
+#: src/view/com/util/images/AutoSizedImage.tsx:221
 msgid "Tap to view full image"
 msgstr "㩒一下就可以睇到完整圖片"
 
@@ -7257,7 +7261,7 @@ msgstr "討論串設定"
 msgid "Thread Preferences"
 msgstr "討論串設定"
 
-#: src/screens/Settings/ThreadPreferences.tsx:127
+#: src/screens/Settings/ThreadPreferences.tsx:129
 msgid "Threaded mode"
 msgstr "樹狀視圖模式"
 
@@ -7792,7 +7796,7 @@ msgstr "影片：{0}"
 msgid "Videos must be less than 60 seconds long"
 msgstr "影片長度一定要少過60秒鐘"
 
-#: src/screens/Profile/Header/Shell.tsx:132
+#: src/screens/Profile/Header/Shell.tsx:142
 msgid "View {0}'s avatar"
 msgstr "睇下 {0} 嘅大頭相"
 
@@ -7851,7 +7855,7 @@ msgstr "睇下有關呢啲標籤嘅資料"
 msgid "View profile"
 msgstr "睇下個人檔案"
 
-#: src/view/com/profile/ProfileSubpageHeader.tsx:132
+#: src/view/com/profile/ProfileSubpageHeader.tsx:141
 msgid "View the avatar"
 msgstr "睇下大頭相"
 

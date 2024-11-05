@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-04 01:16\n"
+"PO-Revision-Date: 2024-11-05 02:08\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -296,12 +296,12 @@ msgstr "「{profileName}」在 {0} 前使用新手包加入了 Bluesky"
 #: src/screens/StarterPack/Wizard/index.tsx:475
 msgctxt "profiles"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
-msgstr "<0>{0}、</0><1>{1}</1>和{2, plural, one {其他 # } other {其他 # }}人已在您的新手包中"
+msgstr "<0>{0}、</0><1>{1}</1> 和{2, plural, one {其他 # } other {其他 # }}人已在您的新手包中"
 
 #: src/screens/StarterPack/Wizard/index.tsx:528
 msgctxt "feeds"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
-msgstr "<0>{0}、</0><1>{1}</1>和{2, plural, one {其他 # } other {其他 # }}個動態源已在您的新手包中"
+msgstr "<0>{0}、</0><1>{1}</1> 和{2, plural, one {其他 # } other {其他 # }}個動態源已在您的新手包中"
 
 #: src/view/shell/Drawer.tsx:97
 msgid "<0>{0}</0> {1, plural, one {follower} other {followers}}"
@@ -907,7 +907,7 @@ msgstr "藝術"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:170
 msgid "Artistic or non-erotic nudity."
-msgstr "藝術作品或非色情的裸露。"
+msgstr "帶有藝術性或非色情的裸露。"
 
 #: src/screens/Signup/StepHandle.tsx:173
 msgid "At least 3 characters"
@@ -935,7 +935,7 @@ msgstr "自動播放影片和 GIF"
 #: src/screens/Login/SetNewPasswordForm.tsx:160
 #: src/screens/Messages/components/ChatDisabled.tsx:133
 #: src/screens/Messages/components/ChatDisabled.tsx:134
-#: src/screens/Profile/Header/Shell.tsx:84
+#: src/screens/Profile/Header/Shell.tsx:94
 #: src/screens/Signup/BackNextButtons.tsx:42
 #: src/screens/StarterPack/Wizard/index.tsx:307
 #: src/view/com/util/ViewHeader.tsx:87
@@ -1005,7 +1005,7 @@ msgstr "被封鎖的帳號無法在您的討論串中回覆、提及您，或以
 
 #: src/view/screens/ModerationBlockedAccounts.tsx:116
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you. You will not see their content and they will be prevented from seeing yours."
-msgstr "被封鎖的帳號無法在您的討論串中回覆、提及您，或以其他方式與您互動。您將看不到他們的內容，他們也會被阻止看到您的內容"
+msgstr "被封鎖的帳號無法在您的討論串中回覆、提及您，或以其他方式與您互動。您將看不到他們的內容，他們也會被阻止看到您的內容。"
 
 #: src/view/com/post-thread/PostThread.tsx:412
 msgid "Blocked post."
@@ -1091,7 +1091,7 @@ msgstr "瀏覽其他動態源"
 msgid "Business"
 msgstr "商務"
 
-#: src/view/com/profile/ProfileSubpageHeader.tsx:165
+#: src/view/com/profile/ProfileSubpageHeader.tsx:174
 msgid "by —"
 msgstr "來自 —"
 
@@ -1099,7 +1099,7 @@ msgstr "來自 —"
 msgid "By {0}"
 msgstr "來自 {0}"
 
-#: src/view/com/profile/ProfileSubpageHeader.tsx:169
+#: src/view/com/profile/ProfileSubpageHeader.tsx:178
 msgid "by <0/>"
 msgstr "來自 <0/>"
 
@@ -1115,7 +1115,7 @@ msgstr "建立帳號即表示您同意<0>服務條款</0>及<1>隱私權政策</
 msgid "By creating an account you agree to the <0>Terms of Service</0>."
 msgstr "建立帳號即表示您同意<0>服務條款</0>。"
 
-#: src/view/com/profile/ProfileSubpageHeader.tsx:167
+#: src/view/com/profile/ProfileSubpageHeader.tsx:176
 msgid "by you"
 msgstr "由您設定"
 
@@ -1431,7 +1431,7 @@ msgstr "關閉 GIF 對話框"
 msgid "Close image"
 msgstr "關閉圖片"
 
-#: src/view/com/lightbox/Lightbox.web.tsx:125
+#: src/view/com/lightbox/Lightbox.web.tsx:109
 msgid "Close image viewer"
 msgstr "關閉圖片檢視器"
 
@@ -1460,7 +1460,7 @@ msgstr "關閉標題圖片檢視器"
 msgid "Collapse list of users"
 msgstr "折疊用戶列表"
 
-#: src/view/com/notifications/FeedItem.tsx:587
+#: src/view/com/notifications/FeedItem.tsx:588
 msgid "Collapses list of users for a given notification"
 msgstr "折疊指定通知的用戶列表"
 
@@ -2237,7 +2237,7 @@ msgstr "例如：藝術家、愛狗人士和狂熱讀者。"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:43
 msgid "E.g. artistic nudes."
-msgstr "例如：藝術裸露。"
+msgstr "例如：人體藝術。"
 
 #: src/view/com/modals/CreateOrEditList.tsx:263
 msgid "e.g. Great Posters"
@@ -2594,7 +2594,7 @@ msgstr "離開修改帳號代碼流程"
 msgid "Exits image cropping process"
 msgstr "離開圖片裁剪流程"
 
-#: src/view/com/lightbox/Lightbox.web.tsx:126
+#: src/view/com/lightbox/Lightbox.web.tsx:110
 msgid "Exits image view"
 msgstr "離開圖片檢視器"
 
@@ -2602,7 +2602,7 @@ msgstr "離開圖片檢視器"
 msgid "Exits inputting search query"
 msgstr "退出輸入搜尋查詢"
 
-#: src/view/com/lightbox/Lightbox.web.tsx:179
+#: src/view/com/lightbox/Lightbox.web.tsx:163
 msgid "Expand alt text"
 msgstr "展開替代文字"
 
@@ -2620,7 +2620,7 @@ msgid "Expected uri to resolve to a record"
 msgstr "URI 應解析為記錄"
 
 #: src/screens/Settings/FollowingFeedPreferences.tsx:116
-#: src/screens/Settings/ThreadPreferences.tsx:122
+#: src/screens/Settings/ThreadPreferences.tsx:124
 msgid "Experimental"
 msgstr "實驗性"
 
@@ -2738,7 +2738,7 @@ msgstr "無法載入建議的跟隨者"
 msgid "Failed to pin post"
 msgstr "無法釘選貼文"
 
-#: src/view/com/lightbox/Lightbox.tsx:96
+#: src/view/com/lightbox/Lightbox.tsx:46
 msgid "Failed to save image: {0}"
 msgstr "無法儲存圖片：{0}"
 
@@ -3241,7 +3241,7 @@ msgstr "隱藏列表"
 msgid "Hide"
 msgstr "隱藏"
 
-#: src/view/com/notifications/FeedItem.tsx:594
+#: src/view/com/notifications/FeedItem.tsx:595
 msgctxt "action"
 msgid "Hide"
 msgstr "隱藏"
@@ -3275,7 +3275,7 @@ msgstr "要隱藏這則貼文嗎？"
 msgid "Hide this reply?"
 msgstr "要隱藏這則回覆嗎？"
 
-#: src/view/com/notifications/FeedItem.tsx:585
+#: src/view/com/notifications/FeedItem.tsx:586
 msgid "Hide user list"
 msgstr "隱藏用戶列表"
 
@@ -3361,7 +3361,7 @@ msgstr "我擁有自己的網域"
 msgid "I understand"
 msgstr "我瞭解"
 
-#: src/view/com/lightbox/Lightbox.web.tsx:181
+#: src/view/com/lightbox/Lightbox.web.tsx:165
 msgid "If alt text is long, toggles alt text expanded state"
 msgstr "替代文字過長時，切換替代文字的展開狀態"
 
@@ -3375,7 +3375,7 @@ msgstr "如果您刪除這個列表，將無法復原。"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:247
 msgid "If you have your own domain, you can use that as your handle. This lets you self-verify your identity – <0>learn more</0>."
-msgstr "如果您擁有自己的網域，可以將其設定為您的帳號代碼。同時還可以證明自己的身分 — <0>瞭解詳情</0>。"
+msgstr "如果您擁有自己的網域，可以將其設定為您的帳號代碼。同時還可以證明自己的身分 —— <0>瞭解詳情</0>。"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:670
 msgid "If you remove this post, you won't be able to recover it."
@@ -3630,7 +3630,7 @@ msgstr "深入瞭解如何自行託管 PDS。"
 #: src/components/moderation/ContentHider.tsx:127
 #: src/components/moderation/ContentHider.tsx:193
 msgid "Learn more about the moderation applied to this content."
-msgstr "深入瞭解套用於這項內容的內容管理。"
+msgstr "深入瞭解套用於這項內容的內容管理措施。"
 
 #: src/components/moderation/PostHider.tsx:100
 #: src/components/moderation/ScreenHider.tsx:127
@@ -4015,7 +4015,7 @@ msgstr "內容管理工具"
 #: src/components/moderation/ModerationDetailsDialog.tsx:51
 #: src/lib/moderation/useModerationCauseDescription.ts:45
 msgid "Moderator has chosen to set a general warning on the content."
-msgstr "內容管理者已將這項內容標記為普通警告。"
+msgstr "內容管理服務已將這項內容標記為普通警告。"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:621
 msgid "More"
@@ -4030,11 +4030,11 @@ msgstr "更多動態源"
 msgid "More options"
 msgstr "更多選項"
 
-#: src/screens/Settings/ThreadPreferences.tsx:79
+#: src/screens/Settings/ThreadPreferences.tsx:81
 msgid "Most-liked first"
 msgstr "最多喜歡數優先"
 
-#: src/screens/Settings/ThreadPreferences.tsx:76
+#: src/screens/Settings/ThreadPreferences.tsx:78
 #: src/view/screens/PreferencesThreads.tsx:87
 msgid "Most-liked replies first"
 msgstr "最多喜歡的回覆優先"
@@ -4292,8 +4292,8 @@ msgstr "新用戶資訊對話框"
 msgid "New User List"
 msgstr "新的用戶列表"
 
-#: src/screens/Settings/ThreadPreferences.tsx:68
-#: src/screens/Settings/ThreadPreferences.tsx:71
+#: src/screens/Settings/ThreadPreferences.tsx:70
+#: src/screens/Settings/ThreadPreferences.tsx:73
 #: src/view/screens/PreferencesThreads.tsx:84
 msgid "Newest replies first"
 msgstr "最新回覆優先"
@@ -4321,7 +4321,7 @@ msgstr "新聞"
 msgid "Next"
 msgstr "下一步"
 
-#: src/view/com/lightbox/Lightbox.web.tsx:165
+#: src/view/com/lightbox/Lightbox.web.tsx:149
 msgid "Next image"
 msgstr "下一張圖片"
 
@@ -4557,11 +4557,11 @@ msgstr "好的"
 msgid "Okay"
 msgstr "好的"
 
-#: src/screens/Settings/ThreadPreferences.tsx:60
-#: src/screens/Settings/ThreadPreferences.tsx:63
+#: src/screens/Settings/ThreadPreferences.tsx:62
+#: src/screens/Settings/ThreadPreferences.tsx:65
 #: src/view/screens/PreferencesThreads.tsx:83
 msgid "Oldest replies first"
-msgstr "最舊的回覆優先"
+msgstr "最舊回覆優先"
 
 #: src/components/StarterPack/QrCode.tsx:75
 msgid "on<0><1/><2><3/></2></0>"
@@ -4821,7 +4821,7 @@ msgstr "開啟系統記錄頁面"
 msgid "Opens the threads preferences"
 msgstr "開啟討論串偏好"
 
-#: src/view/com/notifications/FeedItem.tsx:672
+#: src/view/com/notifications/FeedItem.tsx:673
 #: src/view/com/util/UserAvatar.tsx:436
 msgid "Opens this profile"
 msgstr "開啟這個個人檔案"
@@ -4929,11 +4929,11 @@ msgstr "被 @{0} 跟隨的人"
 msgid "People following @{0}"
 msgstr "跟隨 @{0} 的人"
 
-#: src/view/com/lightbox/Lightbox.tsx:76
+#: src/view/com/lightbox/Lightbox.tsx:27
 msgid "Permission to access camera roll is required."
 msgstr "需要相簿權限。"
 
-#: src/view/com/lightbox/Lightbox.tsx:84
+#: src/view/com/lightbox/Lightbox.tsx:35
 msgid "Permission to access camera roll was denied. Please enable it in your system settings."
 msgstr "相簿權限已遭拒絕，請在系統設定中啟用。"
 
@@ -5031,11 +5031,11 @@ msgstr "請輸入應用程式專用密碼的名稱。不允許包含任何空格
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:114
 msgid "Please enter a unique name for this app password or use our randomly generated one."
-msgstr "請輸入此應用程式專用密碼的唯一名稱，或使用我們提供的隨機生成名稱。"
+msgstr "請為這個應用程式專用密碼選擇一個名稱，或使用我們隨機產生的名稱。"
 
 #: src/view/com/modals/AddAppPasswords.tsx:151
 msgid "Please enter a unique name for this App Password or use our randomly generated one."
-msgstr "請輸入此應用程式專用密碼的唯一名稱，或使用我們提供的隨機生成名稱。"
+msgstr "請為這個應用程式專用密碼選擇一個名稱，或使用我們隨機產生的名稱。"
 
 #: src/components/dialogs/MutedWords.tsx:86
 msgid "Please enter a valid word, tag, or phrase to mute"
@@ -5198,7 +5198,7 @@ msgstr "按下以重試"
 msgid "Press to view followers of this account that you also follow"
 msgstr "按下以查看哪些您認識的人跟隨了此帳號"
 
-#: src/view/com/lightbox/Lightbox.web.tsx:146
+#: src/view/com/lightbox/Lightbox.web.tsx:130
 msgid "Previous image"
 msgstr "上一張圖片"
 
@@ -5207,8 +5207,8 @@ msgstr "上一張圖片"
 msgid "Primary Language"
 msgstr "主要語言"
 
-#: src/screens/Settings/ThreadPreferences.tsx:97
-#: src/screens/Settings/ThreadPreferences.tsx:102
+#: src/screens/Settings/ThreadPreferences.tsx:99
+#: src/screens/Settings/ThreadPreferences.tsx:104
 msgid "Prioritize your Follows"
 msgstr "優先顯示您跟隨的人"
 
@@ -5344,15 +5344,15 @@ msgstr "引用"
 msgid "Quotes of this post"
 msgstr "引用這則貼文"
 
-#: src/screens/Settings/ThreadPreferences.tsx:84
-#: src/screens/Settings/ThreadPreferences.tsx:87
+#: src/screens/Settings/ThreadPreferences.tsx:86
+#: src/screens/Settings/ThreadPreferences.tsx:89
 #: src/view/screens/PreferencesThreads.tsx:91
 msgid "Random (aka \"Poster's Roulette\")"
 msgstr "隨機顯示（又名試試手氣）"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:566
 msgid "Rate limit exceeded – you've tried to change your handle too many times in a short period. Please wait a minute before trying again."
-msgstr "超過速率限制 —— 您在短時間內變更使用者名稱的次數過多，請在幾分鐘後再試一次。"
+msgstr "超過速率限制 —— 您在短時間內嘗試變更帳號代碼的次數過多，請稍等幾分鐘後再試一次。"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:585
 #: src/view/com/util/forms/PostDropdownBtn.tsx:595
@@ -5854,7 +5854,7 @@ msgstr "返回上一頁"
 msgid "Save"
 msgstr "儲存"
 
-#: src/view/com/lightbox/Lightbox.tsx:166
+#: src/view/com/lightbox/ImageViewing/index.tsx:218
 #: src/view/com/modals/CreateOrEditList.tsx:325
 msgctxt "action"
 msgid "Save"
@@ -5903,7 +5903,7 @@ msgstr "儲存到我的動態源"
 msgid "Saved Feeds"
 msgstr "已儲存的動態源"
 
-#: src/view/com/lightbox/Lightbox.tsx:94
+#: src/view/com/lightbox/Lightbox.tsx:44
 msgid "Saved to your camera roll"
 msgstr "儲存至裝置相簿"
 
@@ -5926,8 +5926,8 @@ msgstr "儲存圖片裁剪設定"
 
 #: src/components/dms/ChatEmptyPill.tsx:33
 #: src/components/NewskieDialog.tsx:105
-#: src/view/com/notifications/FeedItem.tsx:533
-#: src/view/com/notifications/FeedItem.tsx:558
+#: src/view/com/notifications/FeedItem.tsx:534
+#: src/view/com/notifications/FeedItem.tsx:559
 msgid "Say hello!"
 msgstr "說句「你好！👋」"
 
@@ -6080,7 +6080,7 @@ msgstr "選擇 {emojiName} 表情符號作為您的大頭貼照"
 
 #: src/components/ReportDialog/SubmitView.tsx:140
 msgid "Select the moderation service(s) to report to"
-msgstr "選擇要向哪些內容管理服務提供者提出檢舉"
+msgstr "請選擇您要向哪些內容管理服務提交檢舉"
 
 #: src/view/com/auth/server-input/index.tsx:79
 msgid "Select the service that hosts your data."
@@ -6253,7 +6253,7 @@ msgstr "性暗示"
 msgid "Share"
 msgstr "分享"
 
-#: src/view/com/lightbox/Lightbox.tsx:175
+#: src/view/com/lightbox/ImageViewing/index.tsx:227
 msgctxt "action"
 msgid "Share"
 msgstr "分享"
@@ -6393,12 +6393,12 @@ msgstr "顯示回覆"
 msgid "Show Replies"
 msgstr "顯示回覆"
 
-#: src/screens/Settings/ThreadPreferences.tsx:111
+#: src/screens/Settings/ThreadPreferences.tsx:113
 #: src/view/screens/PreferencesThreads.tsx:105
 msgid "Show replies by people you follow before all other replies."
 msgstr "在所有其他回覆之前顯示您跟隨的人的回覆。"
 
-#: src/screens/Settings/ThreadPreferences.tsx:136
+#: src/screens/Settings/ThreadPreferences.tsx:138
 msgid "Show replies in a threaded view"
 msgstr "使用樹狀介面顯示回覆"
 
@@ -6572,15 +6572,19 @@ msgstr "發生問題！"
 msgid "Sorry! Your session expired. Please log in again."
 msgstr "抱歉！您的登入狀態已過期。請重新登入。"
 
+#: src/screens/Settings/ThreadPreferences.tsx:48
+msgid "Sort replies"
+msgstr "回覆排序"
+
 #: src/view/screens/PreferencesThreads.tsx:74
 msgid "Sort Replies"
 msgstr "回覆排序"
 
-#: src/screens/Settings/ThreadPreferences.tsx:53
+#: src/screens/Settings/ThreadPreferences.tsx:55
 msgid "Sort replies by"
 msgstr "回覆排序"
 
-#: src/screens/Settings/ThreadPreferences.tsx:50
+#: src/screens/Settings/ThreadPreferences.tsx:52
 #: src/view/screens/PreferencesThreads.tsx:77
 msgid "Sort replies to the same post by:"
 msgstr "對同一貼文的回覆進行排序："
@@ -6760,8 +6764,8 @@ msgstr "按下以播放或暫停"
 msgid "Tap to toggle sound"
 msgstr "按下以開關聲音"
 
-#: src/view/com/util/images/AutoSizedImage.tsx:219
-#: src/view/com/util/images/AutoSizedImage.tsx:239
+#: src/view/com/util/images/AutoSizedImage.tsx:199
+#: src/view/com/util/images/AutoSizedImage.tsx:221
 msgid "Tap to view full image"
 msgstr "按下查看完整圖片"
 
@@ -7077,7 +7081,7 @@ msgstr "這項內容已被內容管理者隱藏。"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:24
 msgid "This content has received a general warning from moderators."
-msgstr "這項內容已套用內容管理提供者所標記的普通警告。"
+msgstr "這項內容已套用內容管理服務所標記的普通警告。"
 
 #: src/components/dialogs/EmbedConsent.tsx:63
 msgid "This content is hosted by {0}. Do you want to enable external media?"
@@ -7257,7 +7261,7 @@ msgstr "討論串偏好"
 msgid "Thread Preferences"
 msgstr "討論串偏好"
 
-#: src/screens/Settings/ThreadPreferences.tsx:127
+#: src/screens/Settings/ThreadPreferences.tsx:129
 msgid "Threaded mode"
 msgstr "樹狀顯示模式"
 
@@ -7574,7 +7578,7 @@ msgstr "使用應用程式專用密碼登入到其他 Bluesky 用戶端，而無
 
 #: src/screens/Settings/AppPasswords.tsx:59
 msgid "Use app passwords to sign in to other Bluesky clients without giving full access to your account or password."
-msgstr "使用應用程式專用密碼登入到其他 Bluesky 用戶端，而無需提供完整的帳號權限和密碼。"
+msgstr "使用應用程式專用密碼來登入其他 Bluesky 用戶端，而不必提供完整的帳號權限或密碼。"
 
 #: src/view/com/modals/ChangeHandle.tsx:506
 msgid "Use bsky.social as hosting provider"
@@ -7792,7 +7796,7 @@ msgstr "影片：{0}"
 msgid "Videos must be less than 60 seconds long"
 msgstr "影片長度必須少於 60 秒"
 
-#: src/screens/Profile/Header/Shell.tsx:132
+#: src/screens/Profile/Header/Shell.tsx:142
 msgid "View {0}'s avatar"
 msgstr "查看 {0} 的大頭貼照"
 
@@ -7851,7 +7855,7 @@ msgstr "查看有關這些標記的資訊"
 msgid "View profile"
 msgstr "查看資料"
 
-#: src/view/com/profile/ProfileSubpageHeader.tsx:132
+#: src/view/com/profile/ProfileSubpageHeader.tsx:141
 msgid "View the avatar"
 msgstr "查看大頭貼照"
 

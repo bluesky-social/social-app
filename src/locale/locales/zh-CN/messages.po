@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-04 05:13\n"
+"PO-Revision-Date: 2024-11-05 02:09\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -935,7 +935,7 @@ msgstr "自动播放视频及 GIF"
 #: src/screens/Login/SetNewPasswordForm.tsx:160
 #: src/screens/Messages/components/ChatDisabled.tsx:133
 #: src/screens/Messages/components/ChatDisabled.tsx:134
-#: src/screens/Profile/Header/Shell.tsx:84
+#: src/screens/Profile/Header/Shell.tsx:94
 #: src/screens/Signup/BackNextButtons.tsx:42
 #: src/screens/StarterPack/Wizard/index.tsx:307
 #: src/view/com/util/ViewHeader.tsx:87
@@ -1091,7 +1091,7 @@ msgstr "浏览其他资讯源"
 msgid "Business"
 msgstr "商务"
 
-#: src/view/com/profile/ProfileSubpageHeader.tsx:165
+#: src/view/com/profile/ProfileSubpageHeader.tsx:174
 msgid "by —"
 msgstr "来自 —"
 
@@ -1099,7 +1099,7 @@ msgstr "来自 —"
 msgid "By {0}"
 msgstr "来自 {0}"
 
-#: src/view/com/profile/ProfileSubpageHeader.tsx:169
+#: src/view/com/profile/ProfileSubpageHeader.tsx:178
 msgid "by <0/>"
 msgstr "来自 <0/>"
 
@@ -1115,7 +1115,7 @@ msgstr "创建账户即代表你同意我们的<0>服务条款</0>及<1>隐私�
 msgid "By creating an account you agree to the <0>Terms of Service</0>."
 msgstr "创建账户即代表你同意我们的<0>服务条款</0>。"
 
-#: src/view/com/profile/ProfileSubpageHeader.tsx:167
+#: src/view/com/profile/ProfileSubpageHeader.tsx:176
 msgid "by you"
 msgstr "来自你"
 
@@ -1431,7 +1431,7 @@ msgstr "关闭 GIF 对话框"
 msgid "Close image"
 msgstr "关闭图片"
 
-#: src/view/com/lightbox/Lightbox.web.tsx:125
+#: src/view/com/lightbox/Lightbox.web.tsx:109
 msgid "Close image viewer"
 msgstr "关闭图片查看器"
 
@@ -1460,7 +1460,7 @@ msgstr "关闭标题图片查看器"
 msgid "Collapse list of users"
 msgstr "折叠用户列表"
 
-#: src/view/com/notifications/FeedItem.tsx:587
+#: src/view/com/notifications/FeedItem.tsx:588
 msgid "Collapses list of users for a given notification"
 msgstr "折叠给定通知的用户列表"
 
@@ -2594,7 +2594,7 @@ msgstr "退出修改用户识别符流程"
 msgid "Exits image cropping process"
 msgstr "退出图片裁剪流程"
 
-#: src/view/com/lightbox/Lightbox.web.tsx:126
+#: src/view/com/lightbox/Lightbox.web.tsx:110
 msgid "Exits image view"
 msgstr "退出图片查看器"
 
@@ -2602,7 +2602,7 @@ msgstr "退出图片查看器"
 msgid "Exits inputting search query"
 msgstr "退出搜索查询输入"
 
-#: src/view/com/lightbox/Lightbox.web.tsx:179
+#: src/view/com/lightbox/Lightbox.web.tsx:163
 msgid "Expand alt text"
 msgstr "展开替代文本"
 
@@ -2620,7 +2620,7 @@ msgid "Expected uri to resolve to a record"
 msgstr "URL 应解析为记录"
 
 #: src/screens/Settings/FollowingFeedPreferences.tsx:116
-#: src/screens/Settings/ThreadPreferences.tsx:122
+#: src/screens/Settings/ThreadPreferences.tsx:124
 msgid "Experimental"
 msgstr "实验性"
 
@@ -2738,7 +2738,7 @@ msgstr "无法加载建议关注"
 msgid "Failed to pin post"
 msgstr "无法固定这条帖文"
 
-#: src/view/com/lightbox/Lightbox.tsx:96
+#: src/view/com/lightbox/Lightbox.tsx:46
 msgid "Failed to save image: {0}"
 msgstr "无法保存这张图片：{0}"
 
@@ -3241,7 +3241,7 @@ msgstr "隐藏列表"
 msgid "Hide"
 msgstr "隐藏"
 
-#: src/view/com/notifications/FeedItem.tsx:594
+#: src/view/com/notifications/FeedItem.tsx:595
 msgctxt "action"
 msgid "Hide"
 msgstr "隐藏"
@@ -3275,7 +3275,7 @@ msgstr "隐藏这条帖文？"
 msgid "Hide this reply?"
 msgstr "隐藏这条回复？"
 
-#: src/view/com/notifications/FeedItem.tsx:585
+#: src/view/com/notifications/FeedItem.tsx:586
 msgid "Hide user list"
 msgstr "隐藏用户列表"
 
@@ -3361,7 +3361,7 @@ msgstr "我拥有自己的域名"
 msgid "I understand"
 msgstr "我了解"
 
-#: src/view/com/lightbox/Lightbox.web.tsx:181
+#: src/view/com/lightbox/Lightbox.web.tsx:165
 msgid "If alt text is long, toggles alt text expanded state"
 msgstr "若替代文本过长，则切换替代文本的展开状态"
 
@@ -4030,11 +4030,11 @@ msgstr "更多资讯源"
 msgid "More options"
 msgstr "更多选项"
 
-#: src/screens/Settings/ThreadPreferences.tsx:79
+#: src/screens/Settings/ThreadPreferences.tsx:81
 msgid "Most-liked first"
 msgstr "优先显示最多喜欢"
 
-#: src/screens/Settings/ThreadPreferences.tsx:76
+#: src/screens/Settings/ThreadPreferences.tsx:78
 #: src/view/screens/PreferencesThreads.tsx:87
 msgid "Most-liked replies first"
 msgstr "优先显示最多人喜欢的回复"
@@ -4292,8 +4292,8 @@ msgstr "新的用户信息对话框"
 msgid "New User List"
 msgstr "新的用户列表"
 
-#: src/screens/Settings/ThreadPreferences.tsx:68
-#: src/screens/Settings/ThreadPreferences.tsx:71
+#: src/screens/Settings/ThreadPreferences.tsx:70
+#: src/screens/Settings/ThreadPreferences.tsx:73
 #: src/view/screens/PreferencesThreads.tsx:84
 msgid "Newest replies first"
 msgstr "优先显示最新的回复"
@@ -4321,7 +4321,7 @@ msgstr "新闻"
 msgid "Next"
 msgstr "下一步"
 
-#: src/view/com/lightbox/Lightbox.web.tsx:165
+#: src/view/com/lightbox/Lightbox.web.tsx:149
 msgid "Next image"
 msgstr "下一张图片"
 
@@ -4557,8 +4557,8 @@ msgstr "好的"
 msgid "Okay"
 msgstr "好的"
 
-#: src/screens/Settings/ThreadPreferences.tsx:60
-#: src/screens/Settings/ThreadPreferences.tsx:63
+#: src/screens/Settings/ThreadPreferences.tsx:62
+#: src/screens/Settings/ThreadPreferences.tsx:65
 #: src/view/screens/PreferencesThreads.tsx:83
 msgid "Oldest replies first"
 msgstr "优先显示最早的回复"
@@ -4821,7 +4821,7 @@ msgstr "开启系统日志界面"
 msgid "Opens the threads preferences"
 msgstr "开启讨论串首选项"
 
-#: src/view/com/notifications/FeedItem.tsx:672
+#: src/view/com/notifications/FeedItem.tsx:673
 #: src/view/com/util/UserAvatar.tsx:436
 msgid "Opens this profile"
 msgstr "开启此个人资料"
@@ -4929,11 +4929,11 @@ msgstr "@{0} 关注的用户"
 msgid "People following @{0}"
 msgstr "关注 @{0} 的用户"
 
-#: src/view/com/lightbox/Lightbox.tsx:76
+#: src/view/com/lightbox/Lightbox.tsx:27
 msgid "Permission to access camera roll is required."
 msgstr "需要照片图库的访问权限。"
 
-#: src/view/com/lightbox/Lightbox.tsx:84
+#: src/view/com/lightbox/Lightbox.tsx:35
 msgid "Permission to access camera roll was denied. Please enable it in your system settings."
 msgstr "照片图库的访问权限已被拒绝，请在系统设置中启用。"
 
@@ -5198,7 +5198,7 @@ msgstr "点按重试"
 msgid "Press to view followers of this account that you also follow"
 msgstr "点按以查看同样关注此账户的共同关注者"
 
-#: src/view/com/lightbox/Lightbox.web.tsx:146
+#: src/view/com/lightbox/Lightbox.web.tsx:130
 msgid "Previous image"
 msgstr "上一张图片"
 
@@ -5207,8 +5207,8 @@ msgstr "上一张图片"
 msgid "Primary Language"
 msgstr "首选语言"
 
-#: src/screens/Settings/ThreadPreferences.tsx:97
-#: src/screens/Settings/ThreadPreferences.tsx:102
+#: src/screens/Settings/ThreadPreferences.tsx:99
+#: src/screens/Settings/ThreadPreferences.tsx:104
 msgid "Prioritize your Follows"
 msgstr "优先显示你的关注"
 
@@ -5344,8 +5344,8 @@ msgstr "引用"
 msgid "Quotes of this post"
 msgstr "引用这条帖文"
 
-#: src/screens/Settings/ThreadPreferences.tsx:84
-#: src/screens/Settings/ThreadPreferences.tsx:87
+#: src/screens/Settings/ThreadPreferences.tsx:86
+#: src/screens/Settings/ThreadPreferences.tsx:89
 #: src/view/screens/PreferencesThreads.tsx:91
 msgid "Random (aka \"Poster's Roulette\")"
 msgstr "随机显示 (又名试试手气)"
@@ -5854,7 +5854,7 @@ msgstr "回到上一页"
 msgid "Save"
 msgstr "保存"
 
-#: src/view/com/lightbox/Lightbox.tsx:166
+#: src/view/com/lightbox/ImageViewing/index.tsx:218
 #: src/view/com/modals/CreateOrEditList.tsx:325
 msgctxt "action"
 msgid "Save"
@@ -5903,7 +5903,7 @@ msgstr "保存到自定义资讯源"
 msgid "Saved Feeds"
 msgstr "已保存资讯源"
 
-#: src/view/com/lightbox/Lightbox.tsx:94
+#: src/view/com/lightbox/Lightbox.tsx:44
 msgid "Saved to your camera roll"
 msgstr "保存到你的照片图库"
 
@@ -5926,8 +5926,8 @@ msgstr "保存图片裁剪设置"
 
 #: src/components/dms/ChatEmptyPill.tsx:33
 #: src/components/NewskieDialog.tsx:105
-#: src/view/com/notifications/FeedItem.tsx:533
-#: src/view/com/notifications/FeedItem.tsx:558
+#: src/view/com/notifications/FeedItem.tsx:534
+#: src/view/com/notifications/FeedItem.tsx:559
 msgid "Say hello!"
 msgstr "说句“你好”！"
 
@@ -6253,7 +6253,7 @@ msgstr "性暗示"
 msgid "Share"
 msgstr "分享"
 
-#: src/view/com/lightbox/Lightbox.tsx:175
+#: src/view/com/lightbox/ImageViewing/index.tsx:227
 msgctxt "action"
 msgid "Share"
 msgstr "分享"
@@ -6393,12 +6393,12 @@ msgstr "显示回复"
 msgid "Show Replies"
 msgstr "显示回复"
 
-#: src/screens/Settings/ThreadPreferences.tsx:111
+#: src/screens/Settings/ThreadPreferences.tsx:113
 #: src/view/screens/PreferencesThreads.tsx:105
 msgid "Show replies by people you follow before all other replies."
 msgstr "将你关注用户的回复置于其他回复之前。"
 
-#: src/screens/Settings/ThreadPreferences.tsx:136
+#: src/screens/Settings/ThreadPreferences.tsx:138
 msgid "Show replies in a threaded view"
 msgstr "在树状视图中显示回复"
 
@@ -6572,15 +6572,19 @@ msgstr "出了点问题！"
 msgid "Sorry! Your session expired. Please log in again."
 msgstr "很抱歉，你的登录会话已过期，请重新登录。"
 
+#: src/screens/Settings/ThreadPreferences.tsx:48
+msgid "Sort replies"
+msgstr "回复排序"
+
 #: src/view/screens/PreferencesThreads.tsx:74
 msgid "Sort Replies"
 msgstr "回复排序"
 
-#: src/screens/Settings/ThreadPreferences.tsx:53
+#: src/screens/Settings/ThreadPreferences.tsx:55
 msgid "Sort replies by"
 msgstr "回复排序"
 
-#: src/screens/Settings/ThreadPreferences.tsx:50
+#: src/screens/Settings/ThreadPreferences.tsx:52
 #: src/view/screens/PreferencesThreads.tsx:77
 msgid "Sort replies to the same post by:"
 msgstr "对同一帖文的回复进行排序："
@@ -6760,8 +6764,8 @@ msgstr "点击以播放或静音"
 msgid "Tap to toggle sound"
 msgstr "点击切换声音播放"
 
-#: src/view/com/util/images/AutoSizedImage.tsx:219
-#: src/view/com/util/images/AutoSizedImage.tsx:239
+#: src/view/com/util/images/AutoSizedImage.tsx:199
+#: src/view/com/util/images/AutoSizedImage.tsx:221
 msgid "Tap to view full image"
 msgstr "点击查看完整图片"
 
@@ -7257,7 +7261,7 @@ msgstr "讨论串首选项"
 msgid "Thread Preferences"
 msgstr "讨论串首选项"
 
-#: src/screens/Settings/ThreadPreferences.tsx:127
+#: src/screens/Settings/ThreadPreferences.tsx:129
 msgid "Threaded mode"
 msgstr "树状显示模式"
 
@@ -7792,7 +7796,7 @@ msgstr "视频：{0}"
 msgid "Videos must be less than 60 seconds long"
 msgstr "视频必须短于60秒"
 
-#: src/screens/Profile/Header/Shell.tsx:132
+#: src/screens/Profile/Header/Shell.tsx:142
 msgid "View {0}'s avatar"
 msgstr "查看{0}的头像"
 
@@ -7851,7 +7855,7 @@ msgstr "查看这个标记的详情"
 msgid "View profile"
 msgstr "查看个人资料"
 
-#: src/view/com/profile/ProfileSubpageHeader.tsx:132
+#: src/view/com/profile/ProfileSubpageHeader.tsx:141
 msgid "View the avatar"
 msgstr "查看头像"
 
