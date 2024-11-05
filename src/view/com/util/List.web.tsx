@@ -1,6 +1,6 @@
 import React, {isValidElement, memo, startTransition, useRef} from 'react'
 import {FlatListProps, StyleSheet, View, ViewProps} from 'react-native'
-import {ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript/reanimated2/hook/commonTypes'
+import {ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript/hook/commonTypes'
 
 import {batchedUpdates} from '#/lib/batchedUpdates'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
