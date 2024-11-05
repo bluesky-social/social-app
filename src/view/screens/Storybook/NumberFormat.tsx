@@ -53,6 +53,15 @@ export function NumberFormat() {
       <Text>
         10950 <ArrowIcon size="xs" /> {formatCount(i18n, 10950)}
       </Text>
+      <Text>
+        109950 <ArrowIcon size="xs" /> {formatCount(i18n, 109950)}
+      </Text>
+      <Text>
+        1099950 <ArrowIcon size="xs" /> {formatCount(i18n, 1099950)}
+      </Text>
+      <Text>
+        19999950 <ArrowIcon size="xs" /> {formatCount(i18n, 19999950)}
+      </Text>
     </View>
   )
 }
