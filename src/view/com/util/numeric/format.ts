@@ -6,9 +6,10 @@ export const formatCount = (i18n: I18n, num: number) => {
   const formattedNum = i18n.number(num, {
     notation: 'compact',
     maximumFractionDigits: 1,
-    // `1,953` shouldn't be rounded up to 2k, it should be truncated.
+    // @ts-ignore types are missing in CI
     roundingMode: 'trunc',
   })
+
   // some langagues like `jp` start truncating at different thresholds
   // so skip if no truncation happens
   if (SUPPORTS_ROUNDING_MODE || String(num) === formattedNum) {
@@ -26,6 +27,7 @@ export const formatCount = (i18n: I18n, num: number) => {
     return i18n.number(correctedNum, {
       notation: 'compact',
       maximumFractionDigits: 1,
+      // @ts-ignore types are missing in CI
       roundingMode: 'trunc',
     })
   }
