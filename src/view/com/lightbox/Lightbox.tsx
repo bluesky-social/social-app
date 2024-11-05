@@ -49,17 +49,9 @@ export function Lightbox() {
     [permissionResponse, requestPermission, _],
   )
 
-  if (!activeLightbox) {
-    return null
-  }
-
   return (
     <ImageView
-      id={activeLightbox.id}
-      images={activeLightbox.images}
-      initialImageIndex={activeLightbox.index}
-      thumbDims={activeLightbox.thumbDims}
-      visible
+      lightbox={activeLightbox}
       onRequestClose={onClose}
       onPressSave={saveImageToAlbumWithToasts}
       onPressShare={uri => shareImageModal({uri})}

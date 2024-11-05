@@ -5,7 +5,7 @@ import {nanoid} from 'nanoid/non-secure'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {ImageSource} from '#/view/com/lightbox/ImageViewing/@types'
 
-type Lightbox = {
+export type Lightbox = {
   id: string
   images: ImageSource[]
   thumbDims: MeasuredDimensions | null

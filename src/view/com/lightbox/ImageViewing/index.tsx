@@ -17,7 +17,6 @@ import {
   View,
 } from 'react-native'
 import PagerView from 'react-native-pager-view'
-import {MeasuredDimensions} from 'react-native-reanimated'
 import Animated, {useAnimatedStyle, withSpring} from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {Edge, SafeAreaView} from 'react-native-safe-area-context'
@@ -26,6 +25,7 @@ import {Trans} from '@lingui/macro'
 
 import {colors, s} from '#/lib/styles'
 import {isIOS} from '#/platform/detection'
+import {Lightbox} from '#/state/lightbox'
 import {Button} from '#/view/com/util/forms/Button'
 import {Text} from '#/view/com/util/text/Text'
 import {ScrollView} from '#/view/com/util/Views'
@@ -33,31 +33,48 @@ import {ImageSource} from './@types'
 import ImageDefaultHeader from './components/ImageDefaultHeader'
 import ImageItem from './components/ImageItem/ImageItem'
 
-type Props = {
-  id: string
-  images: ImageSource[]
-  thumbDims: MeasuredDimensions | null
-  initialImageIndex: number
-  visible: boolean
-  onRequestClose: () => void
-  backgroundColor?: string
-  onPressSave: (uri: string) => void
-  onPressShare: (uri: string) => void
-}
-
 const SCREEN_HEIGHT = Dimensions.get('window').height
 const DEFAULT_BG_COLOR = '#000'
 
-function ImageViewing({
-  images,
-  thumbDims: _thumbDims, // TODO: Pass down and use for animation.
-  initialImageIndex,
-  visible,
+export default function ImageViewRoot({
+  lightbox,
+  onRequestClose,
+  onPressSave,
+  onPressShare,
+}: {
+  lightbox: Lightbox | null
+  onRequestClose: () => void
+  onPressSave: (uri: string) => void
+  onPressShare: (uri: string) => void
+}) {
+  if (!lightbox) {
+    return null
+  }
+  return (
+    <ImageView
+      key={lightbox.id}
+      lightbox={lightbox}
+      onRequestClose={onRequestClose}
+      onPressSave={onPressSave}
+      onPressShare={onPressShare}
+    />
+  )
+}
+
+function ImageView({
+  lightbox,
   onRequestClose,
   backgroundColor = DEFAULT_BG_COLOR,
   onPressSave,
   onPressShare,
-}: Props) {
+}: {
+  lightbox: Lightbox
+  onRequestClose: () => void
+  backgroundColor?: string
+  onPressSave: (uri: string) => void
+  onPressShare: (uri: string) => void
+}) {
+  const {images, index: initialImageIndex} = lightbox
   const [isScaled, setIsScaled] = useState(false)
   const [isDragging, setIsDragging] = useState(false)
   const [imageIndex, setImageIndex] = useState(initialImageIndex)
@@ -99,10 +116,6 @@ function ImageViewing({
     }
     return ['left', 'right'] satisfies Edge[] // iOS, so no top/bottom safe area
   }, [])
-
-  if (!visible) {
-    return null
-  }
 
   return (
     <SafeAreaView
@@ -277,10 +290,6 @@ const styles = StyleSheet.create({
     borderColor: colors.white,
   },
 })
-
-export default function ImageViewingRoot(props: Props) {
-  return <ImageViewing key={props.id} {...props} />
-}
 
 function withClampedSpring(value: any) {
   'worklet'
