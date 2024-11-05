@@ -10,7 +10,11 @@ import {
 } from 'react-native'
 import {Image as RNImage} from 'react-native-image-crop-picker'
 import {LinearGradient} from 'expo-linear-gradient'
-import {AppBskyGraphDefs, RichText as RichTextAPI} from '@atproto/api'
+import {
+  AppBskyGraphDefs,
+  AppBskyGraphList,
+  RichText as RichTextAPI,
+} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -19,15 +23,11 @@ import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {compressIfNeeded} from '#/lib/media/manip'
 import {cleanError, isNetworkError} from '#/lib/strings/errors'
 import {enforceLen} from '#/lib/strings/helpers'
-import {richTextToString} from '#/lib/strings/rich-text-helpers'
 import {shortenLinks, stripInvalidMentions} from '#/lib/strings/rich-text-manip'
 import {colors, gradients, s} from '#/lib/styles'
 import {useTheme} from '#/lib/ThemeContext'
 import {useModalControls} from '#/state/modals'
-import {
-  useListCreateMutation,
-  useListMetadataMutation,
-} from '#/state/queries/list'
+import {useListCreateFromStarterPackMutation} from '#/state/queries/list'
 import {useAgent} from '#/state/session'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {Text} from '../util/text/Text'
@@ -40,13 +40,11 @@ const MAX_DESCRIPTION = 300 // todo
 export const snapPoints = ['fullscreen']
 
 export function Component({
-  purpose,
   onSave,
-  list,
+  starterPack,
 }: {
-  purpose?: string
   onSave?: (uri: string) => void
-  list?: AppBskyGraphDefs.ListView
+  starterPack: AppBskyGraphDefs.StarterPackView
 }) {
   const {closeModal} = useModalControls()
   const {isMobile} = useWebMediaQueries()
@@ -54,54 +52,23 @@ export function Component({
   const pal = usePalette('default')
   const theme = useTheme()
   const {_} = useLingui()
-  const listCreateMutation = useListCreateMutation()
-  const listMetadataMutation = useListMetadataMutation()
+  const listCreateFromStarterPackMutation =
+    useListCreateFromStarterPackMutation()
   const agent = useAgent()
-
-  const activePurpose = useMemo(() => {
-    if (list?.purpose) {
-      return list.purpose
-    }
-    if (purpose) {
-      return purpose
-    }
-    return 'app.bsky.graph.defs#curatelist'
-  }, [list, purpose])
-  const isCurateList = activePurpose === 'app.bsky.graph.defs#curatelist'
-
-  const modalTranscript = useMemo(() => {
-    if (!isCurateList) {
-      return list ? 'Edit Moderation List' : 'New Moderation List'
-    }
-    return list ? 'New User List' : 'Edit User List'
-  }, [isCurateList, list])
+  const record = starterPack.record as AppBskyGraphList.Record
 
   const [isProcessing, setProcessing] = useState<boolean>(false)
-  const [name, setName] = useState<string>(list?.name || '')
+  const [name, setName] = useState<string>(record.name || '')
 
   const [descriptionRt, setDescriptionRt] = useState<RichTextAPI>(() => {
-    const text = list?.description
-    const facets = list?.descriptionFacets
-
-    if (!text || !facets) {
-      return new RichTextAPI({text: text || ''})
-    }
-
-    // We want to be working with a blank state here, so let's get the
-    // serialized version and turn it back into a RichText
-    const serialized = richTextToString(new RichTextAPI({text, facets}), false)
-
-    const richText = new RichTextAPI({text: serialized})
-    richText.detectFacetsWithoutResolution()
-
-    return richText
+    return new RichTextAPI({text: record.description || ''})
   })
   const graphemeLength = useMemo(() => {
     return shortenLinks(descriptionRt).graphemeLength
   }, [descriptionRt])
-  const isDescriptionOver = graphemeLength > MAX_DESCRIPTION
 
-  const [avatar, setAvatar] = useState<string | undefined>(list?.avatar)
+  const isDescriptionOver = graphemeLength > MAX_DESCRIPTION
+  const [avatar, setAvatar] = useState<string | undefined>(undefined)
   const [newAvatar, setNewAvatar] = useState<RNImage | undefined | null>()
 
   const onDescriptionChange = useCallback(
@@ -114,9 +81,7 @@ export function Component({
     [setDescriptionRt],
   )
 
-  const onPressCancel = useCallback(() => {
-    closeModal()
-  }, [closeModal])
+  const onPressCancel = useCallback(closeModal, [closeModal])
 
   const onSelectNewAvatar = useCallback(
     async (img: RNImage | null) => {
@@ -142,10 +107,18 @@ export function Component({
       setError(_(msg`Name is required`))
       return
     }
+
+    if (!starterPack.list) {
+      setError(_(msg`There's no list on this Starter Pack`))
+      return
+    }
+
     setProcessing(true)
+
     if (error) {
       setError('')
     }
+
     try {
       let richText = new RichTextAPI(
         {text: descriptionRt.text.trimEnd()},
@@ -156,39 +129,16 @@ export function Component({
       richText = shortenLinks(richText)
       richText = stripInvalidMentions(richText)
 
-      if (list) {
-        await listMetadataMutation.mutateAsync({
-          uri: list.uri,
-          name: nameTrimmed,
-          description: richText.text,
-          descriptionFacets: richText.facets,
-          avatar: newAvatar,
-        })
-        Toast.show(
-          isCurateList
-            ? _(msg`User list updated`)
-            : _(msg`Moderation list updated`),
-        )
-        onSave?.(list.uri)
-
-        closeModal()
-        return
-      }
-
-      const res = await listCreateMutation.mutateAsync({
-        purpose: activePurpose,
+      const res = await listCreateFromStarterPackMutation.mutateAsync({
         name,
         description: richText.text,
         descriptionFacets: richText.facets,
         avatar: newAvatar,
+        starterPackUri: starterPack.list.uri,
       })
-      Toast.show(
-        isCurateList
-          ? _(msg`User list created`)
-          : _(msg`Moderation list created`),
-      )
-      onSave?.(res.uri)
+      Toast.show(_(msg`New List created`))
 
+      onSave?.(res.uri)
       closeModal()
     } catch (e: any) {
       if (isNetworkError(e)) {
@@ -208,14 +158,11 @@ export function Component({
     error,
     onSave,
     closeModal,
-    activePurpose,
-    isCurateList,
     name,
     descriptionRt,
     newAvatar,
-    list,
-    listMetadataMutation,
-    listCreateMutation,
+    starterPack,
+    listCreateFromStarterPackMutation,
     _,
     agent,
   ])
@@ -231,7 +178,7 @@ export function Component({
         ]}
         testID="createOrEditListModal">
         <Text style={[styles.title, pal.text]}>
-          <Trans>{modalTranscript}</Trans>
+          <Trans>Convert Starter Pack to List</Trans>
         </Text>
         {error !== '' && (
           <View style={styles.errorContainer}>
@@ -259,11 +206,7 @@ export function Component({
             <TextInput
               testID="editNameInput"
               style={[styles.textInput, pal.border, pal.text]}
-              placeholder={
-                isCurateList
-                  ? _(msg`e.g. Great Posters`)
-                  : _(msg`e.g. Spammers`)
-              }
+              placeholder={_(msg`e.g. Great Posters`)}
               placeholderTextColor={colors.gray4}
               value={name}
               onChangeText={v => setName(enforceLen(v, MAX_NAME))}
@@ -288,11 +231,7 @@ export function Component({
             <TextInput
               testID="editDescriptionInput"
               style={[styles.textArea, pal.border, pal.text]}
-              placeholder={
-                isCurateList
-                  ? _(msg`e.g. The posters who never miss.`)
-                  : _(msg`e.g. Users that repeatedly reply with ads.`)
-              }
+              placeholder={_(msg`e.g. The posters who never miss.`)}
               placeholderTextColor={colors.gray4}
               keyboardAppearance={theme.colorScheme}
               multiline

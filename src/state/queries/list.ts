@@ -7,6 +7,7 @@ import {
   BskyAgent,
   Facet,
 } from '@atproto/api'
+import {Create} from '@atproto/api/dist/client/types/com/atproto/repo/applyWrites'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 import chunk from 'lodash.chunk'
 
@@ -45,10 +46,6 @@ export interface ListCreateMutateParams {
   description: string
   descriptionFacets: Facet[] | undefined
   avatar: RNImage | null | undefined
-
-  // {source} is an optional URI of an already existing list
-  // to copy its members from when creating the new one
-  source?: string
 }
 export function useListCreateMutation() {
   const {currentAccount} = useSession()
@@ -62,7 +59,6 @@ export function useListCreateMutation() {
         description,
         descriptionFacets,
         avatar,
-        source,
       }) {
         if (!currentAccount) {
           throw new Error('Not logged in')
@@ -92,52 +88,6 @@ export function useListCreateMutation() {
           record,
         )
 
-        // {source} is provided, so insert members
-        // from that list to the newly created list
-        if (source) {
-          const LIMIT = 100
-          let cursor: string | undefined
-
-          for (let i = 0; i < LIMIT; i++) {
-            const membership = await agent.app.bsky.graph.getList({
-              list: source,
-              limit: LIMIT,
-              cursor,
-            })
-
-            if (!membership) throw new Error('Invalid source list')
-
-            if (!membership.data.items) throw new Error('Empty source list')
-
-            const members = membership.data
-              .items as AppBskyGraphDefs.ListItemView[]
-
-            if (members.length === 0) break
-
-            // create batch of write operations for list items
-            const writes = members.map(member => ({
-              $type: 'com.atproto.repo.applyWrites#create',
-              collection: 'app.bsky.graph.listitem',
-              value: {
-                subject: member.subject.did,
-                list: res.uri,
-                createdAt: new Date().toISOString(),
-              },
-            }))
-
-            // apply writes in chunks as big as `graph.getList` pagination limits allow
-            for (const writesChunk of chunk(writes, LIMIT)) {
-              await agent.com.atproto.repo.applyWrites({
-                repo: currentAccount.did,
-                writes: writesChunk,
-              })
-            }
-
-            cursor = membership.data.cursor
-            if (!cursor) break
-          }
-        }
-
         // wait for the appview to update
         await whenAppViewReady(
           agent,
@@ -156,6 +106,121 @@ export function useListCreateMutation() {
       },
     },
   )
+}
+
+export interface ListCreatefromStarterPackMutateParams {
+  name: string
+  description: string
+  descriptionFacets: Facet[] | undefined
+  avatar: RNImage | null | undefined
+  starterPackUri: string
+}
+export function useListCreateFromStarterPackMutation() {
+  const {currentAccount} = useSession()
+  const queryClient = useQueryClient()
+  const agent = useAgent()
+
+  return useMutation<
+    {uri: string; cid: string},
+    Error,
+    ListCreatefromStarterPackMutateParams
+  >({
+    async mutationFn({
+      name,
+      description,
+      descriptionFacets,
+      avatar,
+      starterPackUri,
+    }) {
+      if (!currentAccount) {
+        throw new Error('Not logged in')
+      }
+
+      const starterPack = await agent.app.bsky.graph.getList({
+        list: starterPackUri,
+        limit: 100,
+      })
+
+      if (!starterPack.data.items) throw new Error('Invalid Starter Pack')
+      if (starterPack.data.items.length === 0)
+        throw new Error('Empty Starter Pack')
+
+      const record: AppBskyGraphList.Record = {
+        purpose: 'app.bsky.graph.defs#curatelist',
+        name,
+        description,
+        descriptionFacets,
+        avatar: undefined,
+        createdAt: new Date().toISOString(),
+      }
+
+      if (avatar) {
+        const blobRes = await uploadBlob(agent, avatar.path, avatar.mime)
+        record.avatar = blobRes.data.blob
+      }
+
+      const list = await agent.app.bsky.graph.list.create(
+        {repo: currentAccount.did},
+        record,
+      )
+
+      let cursor = starterPack.data.cursor
+      let page = starterPack
+
+      do {
+        const members = page.data.items as AppBskyGraphDefs.ListItemView[]
+
+        // because there's no way to batch insert members when creating a new List
+        // we insert them with batch writes using {atproto.repo.applyWrites}
+        // SEE: https://docs.bsky.app/docs/api/com-atproto-repo-apply-writes
+
+        const writes: Create[] = new Array(members.length)
+
+        for (let i = 0; i < members.length; i++) {
+          writes[i] = {
+            $type: 'com.atproto.repo.applyWrites#create',
+            collection: 'app.bsky.graph.listitem',
+            value: {
+              subject: members[i].subject.did,
+              list: list.uri,
+              createdAt: record.createdAt,
+            },
+          }
+        }
+
+        await agent.com.atproto.repo.applyWrites({
+          repo: currentAccount.did,
+          writes,
+        })
+
+        if (cursor) {
+          page = await agent.app.bsky.graph.getList({
+            list: starterPackUri,
+            limit: 100,
+            cursor,
+          })
+
+          cursor = page.data.cursor
+        }
+      } while (cursor)
+
+      // wait for the appview to update
+      await whenAppViewReady(
+        agent,
+        list.uri,
+        (v: AppBskyGraphGetList.Response) => {
+          return typeof v?.data?.list.uri === 'string'
+        },
+      )
+      return list
+    },
+    onSuccess() {
+      invalidateMyLists(queryClient)
+      queryClient.invalidateQueries({
+        queryKey: PROFILE_LISTS_RQKEY(currentAccount!.did),
+      })
+    },
+  })
 }
 
 export interface ListMetadataMutateParams {

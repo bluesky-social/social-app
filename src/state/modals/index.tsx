@@ -13,8 +13,13 @@ export interface EditProfileModal {
 export interface CreateOrEditListModal {
   name: 'create-or-edit-list'
   purpose?: string
-  source?: string
   list?: AppBskyGraphDefs.ListView
+  onSave?: (uri: string) => void
+}
+
+export interface ConvertStarterPackToListModal {
+  name: 'convert-starter-pack-to-list'
+  starterPack: AppBskyGraphDefs.StarterPackView
   onSave?: (uri: string) => void
 }
 
@@ -118,6 +123,7 @@ export type Modal =
 
   // Lists
   | CreateOrEditListModal
+  | ConvertStarterPackToListModal
   | UserAddRemoveListsModal
   | ListAddRemoveUsersModal
 

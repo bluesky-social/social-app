@@ -26,7 +26,7 @@ import {getStarterPackOgCard} from '#/lib/strings/starter-pack'
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
 import {updateProfileShadow} from '#/state/cache/profile-shadow'
-import {CreateOrEditListModal, useModalControls} from '#/state/modals'
+import {useModalControls} from '#/state/modals'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {getAllListMembers} from '#/state/queries/list-members'
 import {useResolvedStarterPackShortLink} from '#/state/queries/resolve-short-link'
@@ -209,8 +209,16 @@ function StarterPackScreenLoaded({
       return
     }
 
-    let m = {
-      name: 'create-or-edit-list',
+    if (!currentAccount) {
+      console.error(
+        "Can't convert a starter pack to a list without being logged in.",
+      )
+      return
+    }
+
+    openModal({
+      name: 'convert-starter-pack-to-list',
+      starterPack,
       onSave: (uri: string) => {
         try {
           const urip = new AtUri(uri)
@@ -219,22 +227,10 @@ function StarterPackScreenLoaded({
             rkey: urip.rkey,
           })
         } catch {
-          console.error('failed to navigate to list')
+          console.error('Failed to navigate to new list')
         }
       },
-    } as CreateOrEditListModal
-
-    m.list = {
-      ...starterPack.list,
-      creator: {
-        did: currentAccount!.did,
-        handle: currentAccount!.handle,
-      },
-      purpose: 'app.bsky.graph.defs#curatelist',
-    } as AppBskyGraphDefs.ListView
-    m.source = starterPack.list.uri || ''
-
-    openModal(m)
+    })
   }, [openModal, navigation, starterPack, currentAccount])
 
   const onOpenShareDialog = React.useCallback(() => {
