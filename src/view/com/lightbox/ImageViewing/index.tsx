@@ -17,7 +17,12 @@ import {
   View,
 } from 'react-native'
 import PagerView from 'react-native-pager-view'
-import Animated, {useAnimatedStyle, withSpring} from 'react-native-reanimated'
+import Animated, {
+  AnimatedRef,
+  useAnimatedRef,
+  useAnimatedStyle,
+  withSpring,
+} from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {Edge, SafeAreaView} from 'react-native-safe-area-context'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
@@ -32,6 +37,8 @@ import {ScrollView} from '#/view/com/util/Views'
 import {ImageSource} from './@types'
 import ImageDefaultHeader from './components/ImageDefaultHeader'
 import ImageItem from './components/ImageItem/ImageItem'
+
+const AnimatedSafeAreaView = Animated.createAnimatedComponent(SafeAreaView)
 
 const SCREEN_HEIGHT = Dimensions.get('window').height
 const EDGES =
@@ -50,9 +57,11 @@ export default function ImageViewRoot({
   onPressSave: (uri: string) => void
   onPressShare: (uri: string) => void
 }) {
+  const ref = useAnimatedRef<View>()
   return (
     // Keep it always mounted to avoid flicker on the first frame.
-    <SafeAreaView
+    <AnimatedSafeAreaView
+      ref={ref}
       style={[styles.screen, !lightbox && styles.screenHidden]}
       edges={EDGES}
       aria-modal
@@ -65,9 +74,10 @@ export default function ImageViewRoot({
           onRequestClose={onRequestClose}
           onPressSave={onPressSave}
           onPressShare={onPressShare}
+          safeAreaRef={ref}
         />
       )}
-    </SafeAreaView>
+    </AnimatedSafeAreaView>
   )
 }
 
@@ -76,11 +86,13 @@ function ImageView({
   onRequestClose,
   onPressSave,
   onPressShare,
+  safeAreaRef,
 }: {
   lightbox: Lightbox
   onRequestClose: () => void
   onPressSave: (uri: string) => void
   onPressShare: (uri: string) => void
+  safeAreaRef: AnimatedRef<View>
 }) {
   const {images, index: initialImageIndex} = lightbox
   const [isScaled, setIsScaled] = useState(false)
@@ -144,6 +156,7 @@ function ImageView({
               onRequestClose={onRequestClose}
               isScrollViewBeingDragged={isDragging}
               showControls={showControls}
+              safeAreaRef={safeAreaRef}
             />
           </View>
         ))}

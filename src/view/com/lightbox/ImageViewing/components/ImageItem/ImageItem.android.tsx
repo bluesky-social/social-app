@@ -1,7 +1,8 @@
 import React, {useState} from 'react'
-import {ActivityIndicator, Dimensions, StyleSheet} from 'react-native'
+import {ActivityIndicator, Dimensions, StyleSheet, View} from 'react-native'
 import {Gesture, GestureDetector} from 'react-native-gesture-handler'
 import Animated, {
+  AnimatedRef,
   runOnJS,
   useAnimatedReaction,
   useAnimatedRef,
@@ -43,6 +44,7 @@ type Props = {
   onZoom: (isZoomed: boolean) => void
   isScrollViewBeingDragged: boolean
   showControls: boolean
+  safeAreaRef: AnimatedRef<View>
 }
 const ImageItem = ({
   imageSrc,
