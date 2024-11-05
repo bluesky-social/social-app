@@ -34,7 +34,6 @@ import ImageDefaultHeader from './components/ImageDefaultHeader'
 import ImageItem from './components/ImageItem/ImageItem'
 
 const SCREEN_HEIGHT = Dimensions.get('window').height
-const DEFAULT_BG_COLOR = '#000'
 
 export default function ImageViewRoot({
   lightbox,
@@ -64,13 +63,11 @@ export default function ImageViewRoot({
 function ImageView({
   lightbox,
   onRequestClose,
-  backgroundColor = DEFAULT_BG_COLOR,
   onPressSave,
   onPressShare,
 }: {
   lightbox: Lightbox
   onRequestClose: () => void
-  backgroundColor?: string
   onPressSave: (uri: string) => void
   onPressShare: (uri: string) => void
 }) {
@@ -123,7 +120,7 @@ function ImageView({
       edges={edges}
       aria-modal
       accessibilityViewIsModal>
-      <View style={[styles.container, {backgroundColor}]}>
+      <View style={[styles.container]}>
         <Animated.View style={[styles.header, animatedHeaderStyle]}>
           <ImageDefaultHeader onRequestClose={onRequestClose} />
         </Animated.View>
