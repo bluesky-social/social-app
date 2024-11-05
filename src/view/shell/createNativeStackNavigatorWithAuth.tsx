@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {StyleSheet, View} from 'react-native'
+import {View} from 'react-native'
 // Based on @react-navigation/native-stack/src/createNativeStackNavigator.ts
 // MIT License
 // Copyright (c) 2017 React Navigation Contributors
@@ -34,6 +34,7 @@ import {LoggedOut} from '#/view/com/auth/LoggedOut'
 import {Deactivated} from '#/screens/Deactivated'
 import {Onboarding} from '#/screens/Onboarding'
 import {SignupQueued} from '#/screens/SignupQueued'
+import {atoms as a} from '#/alf'
 import {BottomBarWeb} from './bottom-bar/BottomBarWeb'
 import {DesktopLeftNav} from './desktop/LeftNav'
 import {DesktopRightNav} from './desktop/RightNav'
@@ -137,7 +138,7 @@ function NativeStackNavigator({
 
   return (
     <NavigationContent>
-      <View role="main" style={StyleSheet.absoluteFill}>
+      <View role="main" style={a.flex_1}>
         <NativeStackView
           {...rest}
           state={state}
