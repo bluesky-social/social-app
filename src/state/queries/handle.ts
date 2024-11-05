@@ -58,7 +58,7 @@ export function useFetchDid() {
   return React.useCallback(
     async (handleOrDid: string) => {
       return queryClient.fetchQuery({
-        staleTime: STALE.INFINITY,
+        staleTime: STALE.MINUTES.FIVE,
         queryKey: fetchDidQueryKey(handleOrDid),
         queryFn: async () => {
           let identifier = handleOrDid
