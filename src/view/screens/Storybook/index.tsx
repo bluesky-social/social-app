@@ -18,6 +18,7 @@ import {Forms} from './Forms'
 import {Icons} from './Icons'
 import {Links} from './Links'
 import {Menus} from './Menus'
+import {NumberFormat} from './NumberFormat'
 import {Settings} from './Settings'
 import {Shadows} from './Shadows'
 import {Spacing} from './Spacing'
@@ -99,6 +100,8 @@ function StorybookInner() {
               testID="sharedPrefsTestOpenBtn">
               <ButtonText>Open Shared Prefs Tester</ButtonText>
             </Button>
+
+            <NumberFormat />
 
             <Admonitions />
 
