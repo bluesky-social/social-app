@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import {ActivityIndicator, Dimensions, StyleSheet, View} from 'react-native'
+import {ActivityIndicator, StyleSheet, View} from 'react-native'
 import {Gesture, GestureDetector} from 'react-native-gesture-handler'
 import Animated, {
   AnimatedRef,
@@ -26,13 +26,6 @@ import {
   TransformMatrix,
 } from '../../transforms'
 
-const windowDim = Dimensions.get('window')
-const screenDim = Dimensions.get('screen')
-const statusBarHeight = windowDim.height - screenDim.height
-const SCREEN = {
-  width: windowDim.width,
-  height: windowDim.height + statusBarHeight,
-}
 const MIN_DOUBLE_TAP_SCALE = 2
 const MAX_ORIGINAL_IMAGE_ZOOM = 2
 
@@ -368,8 +361,7 @@ const ImageItem = ({
 
 const styles = StyleSheet.create({
   container: {
-    width: SCREEN.width,
-    height: SCREEN.height,
+    height: '100%',
     overflow: 'hidden',
   },
   image: {
