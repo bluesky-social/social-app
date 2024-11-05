@@ -55,8 +55,18 @@ let ProfileHeaderShell = ({
     const modui = moderation.ui('avatar')
     if (profile.avatar && !(modui.blur && modui.noOverride)) {
       openLightbox({
-        type: 'profile-image',
-        profile: profile,
+        images: [
+          {
+            uri: profile.avatar,
+            thumbUri: profile.avatar,
+            dimensions: {
+              // It's fine if it's actually smaller but we know it's 1:1.
+              height: 1000,
+              width: 1000,
+            },
+          },
+        ],
+        index: 0,
         thumbDims: null,
       })
     }

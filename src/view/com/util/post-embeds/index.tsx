@@ -145,14 +145,13 @@ export function PostEmbeds({
         uri: img.fullsize,
         thumbUri: img.thumb,
         alt: img.alt,
-        aspectRatio: img.aspectRatio,
+        dimensions: img.aspectRatio ?? null,
       }))
       const _openLightbox = (
         index: number,
         thumbDims: MeasuredDimensions | null,
       ) => {
         openLightbox({
-          type: 'images',
           images: items,
           index,
           thumbDims,
