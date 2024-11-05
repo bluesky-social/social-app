@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {View} from 'react-native'
+import {StyleSheet, View} from 'react-native'
 // Based on @react-navigation/native-stack/src/createNativeStackNavigator.ts
 // MIT License
 // Copyright (c) 2017 React Navigation Contributors
@@ -137,12 +137,14 @@ function NativeStackNavigator({
 
   return (
     <NavigationContent>
-      <NativeStackView
-        {...rest}
-        state={state}
-        navigation={navigation}
-        descriptors={newDescriptors}
-      />
+      <View role="main" style={StyleSheet.absoluteFill}>
+        <NativeStackView
+          {...rest}
+          state={state}
+          navigation={navigation}
+          descriptors={newDescriptors}
+        />
+      </View>
       {isWeb && showBottomBar && <BottomBarWeb />}
       {isWeb && !showBottomBar && (
         <>
