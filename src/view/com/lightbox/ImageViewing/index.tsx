@@ -9,13 +9,7 @@
 // https://github.com/jobtoday/react-native-image-viewing
 
 import React, {useCallback, useState} from 'react'
-import {
-  Dimensions,
-  LayoutAnimation,
-  Platform,
-  StyleSheet,
-  View,
-} from 'react-native'
+import {LayoutAnimation, Platform, StyleSheet, View} from 'react-native'
 import PagerView from 'react-native-pager-view'
 import Animated, {
   AnimatedRef,
@@ -23,7 +17,6 @@ import Animated, {
   useAnimatedStyle,
   withSpring,
 } from 'react-native-reanimated'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {Edge, SafeAreaView} from 'react-native-safe-area-context'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Trans} from '@lingui/macro'
@@ -38,7 +31,6 @@ import {ImageSource} from './@types'
 import ImageDefaultHeader from './components/ImageDefaultHeader'
 import ImageItem from './components/ImageItem/ImageItem'
 
-const SCREEN_HEIGHT = Dimensions.get('window').height
 const EDGES =
   Platform.OS === 'android'
     ? (['top', 'bottom', 'left', 'right'] satisfies Edge[])
@@ -100,7 +92,7 @@ function ImageView({
   const [showControls, setShowControls] = useState(true)
 
   const animatedHeaderStyle = useAnimatedStyle(() => ({
-    pointerEvents: showControls ? 'auto' : 'none',
+    pointerEvents: showControls ? 'box-none' : 'none',
     opacity: withClampedSpring(showControls ? 1 : 0),
     transform: [
       {
@@ -109,7 +101,8 @@ function ImageView({
     ],
   }))
   const animatedFooterStyle = useAnimatedStyle(() => ({
-    pointerEvents: showControls ? 'auto' : 'none',
+    flexGrow: 1,
+    pointerEvents: showControls ? 'box-none' : 'none',
     opacity: withClampedSpring(showControls ? 1 : 0),
     transform: [
       {
@@ -131,9 +124,6 @@ function ImageView({
 
   return (
     <View style={[styles.container]}>
-      <Animated.View style={[styles.header, animatedHeaderStyle]}>
-        <ImageDefaultHeader onRequestClose={onRequestClose} />
-      </Animated.View>
       <PagerView
         scrollEnabled={!isScaled}
         initialPage={initialImageIndex}
@@ -160,14 +150,19 @@ function ImageView({
           </View>
         ))}
       </PagerView>
-      <Animated.View style={[styles.footer, animatedFooterStyle]}>
-        <LightboxFooter
-          images={images}
-          index={imageIndex}
-          onPressSave={onPressSave}
-          onPressShare={onPressShare}
-        />
-      </Animated.View>
+      <View style={styles.controls}>
+        <Animated.View style={animatedHeaderStyle}>
+          <ImageDefaultHeader onRequestClose={onRequestClose} />
+        </Animated.View>
+        <Animated.View style={animatedFooterStyle}>
+          <LightboxFooter
+            images={images}
+            index={imageIndex}
+            onPressSave={onPressSave}
+            onPressShare={onPressShare}
+          />
+        </Animated.View>
+      </View>
     </View>
   )
 }
@@ -185,17 +180,10 @@ function LightboxFooter({
 }) {
   const {alt: altText, uri} = images[index]
   const [isAltExpanded, setAltExpanded] = React.useState(false)
-  const insets = useSafeAreaInsets()
-  const svMaxHeight = SCREEN_HEIGHT - insets.top - 50
   const isMomentumScrolling = React.useRef(false)
   return (
     <ScrollView
-      style={[
-        {
-          backgroundColor: '#000d',
-        },
-        {maxHeight: svMaxHeight},
-      ]}
+      style={styles.footerScrollView}
       scrollEnabled={isAltExpanded}
       onMomentumScrollBegin={() => {
         isMomentumScrolling.current = true
@@ -204,51 +192,52 @@ function LightboxFooter({
         isMomentumScrolling.current = false
       }}
       contentContainerStyle={{
-        paddingTop: 16,
-        paddingBottom: insets.bottom + 10,
+        paddingVertical: 12,
         paddingHorizontal: 24,
       }}>
-      {altText ? (
-        <View accessibilityRole="button" style={styles.footerText}>
-          <Text
-            style={[s.gray3]}
-            numberOfLines={isAltExpanded ? undefined : 3}
-            selectable
-            onPress={() => {
-              if (isMomentumScrolling.current) {
-                return
-              }
-              LayoutAnimation.configureNext({
-                duration: 450,
-                update: {type: 'spring', springDamping: 1},
-              })
-              setAltExpanded(prev => !prev)
-            }}
-            onLongPress={() => {}}>
-            {altText}
-          </Text>
+      <SafeAreaView edges={['bottom']}>
+        {altText ? (
+          <View accessibilityRole="button" style={styles.footerText}>
+            <Text
+              style={[s.gray3]}
+              numberOfLines={isAltExpanded ? undefined : 3}
+              selectable
+              onPress={() => {
+                if (isMomentumScrolling.current) {
+                  return
+                }
+                LayoutAnimation.configureNext({
+                  duration: 450,
+                  update: {type: 'spring', springDamping: 1},
+                })
+                setAltExpanded(prev => !prev)
+              }}
+              onLongPress={() => {}}>
+              {altText}
+            </Text>
+          </View>
+        ) : null}
+        <View style={styles.footerBtns}>
+          <Button
+            type="primary-outline"
+            style={styles.footerBtn}
+            onPress={() => onPressSave(uri)}>
+            <FontAwesomeIcon icon={['far', 'floppy-disk']} style={s.white} />
+            <Text type="xl" style={s.white}>
+              <Trans context="action">Save</Trans>
+            </Text>
+          </Button>
+          <Button
+            type="primary-outline"
+            style={styles.footerBtn}
+            onPress={() => onPressShare(uri)}>
+            <FontAwesomeIcon icon="arrow-up-from-bracket" style={s.white} />
+            <Text type="xl" style={s.white}>
+              <Trans context="action">Share</Trans>
+            </Text>
+          </Button>
         </View>
-      ) : null}
-      <View style={styles.footerBtns}>
-        <Button
-          type="primary-outline"
-          style={styles.footerBtn}
-          onPress={() => onPressSave(uri)}>
-          <FontAwesomeIcon icon={['far', 'floppy-disk']} style={s.white} />
-          <Text type="xl" style={s.white}>
-            <Trans context="action">Save</Trans>
-          </Text>
-        </Button>
-        <Button
-          type="primary-outline"
-          style={styles.footerBtn}
-          onPress={() => onPressShare(uri)}>
-          <FontAwesomeIcon icon="arrow-up-from-bracket" style={s.white} />
-          <Text type="xl" style={s.white}>
-            <Trans context="action">Share</Trans>
-          </Text>
-        </Button>
-      </View>
+      </SafeAreaView>
     </ScrollView>
   )
 }
@@ -269,21 +258,38 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#000',
   },
+  controls: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    gap: 20,
+    zIndex: 1,
+    pointerEvents: 'box-none',
+  },
   pager: {
     flex: 1,
   },
   header: {
     position: 'absolute',
     width: '100%',
-    zIndex: 1,
     top: 0,
     pointerEvents: 'box-none',
   },
   footer: {
     position: 'absolute',
     width: '100%',
-    zIndex: 1,
+    maxHeight: '100%',
     bottom: 0,
+  },
+  footerScrollView: {
+    backgroundColor: '#000d',
+    flex: 1,
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
+    maxHeight: '100%',
   },
   footerText: {
     paddingBottom: isIOS ? 20 : 16,
