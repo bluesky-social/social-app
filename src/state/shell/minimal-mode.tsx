@@ -18,12 +18,20 @@ const stateContext = React.createContext<StateContext>({
     addListener() {},
     removeListener() {},
     modify() {},
+    get() {
+      return 0
+    },
+    set() {},
   },
   footerMode: {
     value: 0,
     addListener() {},
     removeListener() {},
     modify() {},
+    get() {
+      return 0
+    },
+    set() {},
   },
 })
 const setContext = React.createContext<SetContext>((_: boolean) => {})
