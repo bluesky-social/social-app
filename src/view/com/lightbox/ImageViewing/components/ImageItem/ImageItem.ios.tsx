@@ -12,11 +12,13 @@ import {Gesture, GestureDetector} from 'react-native-gesture-handler'
 import Animated, {
   AnimatedRef,
   interpolate,
+  measure,
   runOnJS,
   useAnimatedRef,
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated'
+import {useSafeAreaFrame} from 'react-native-safe-area-context'
 import {Image} from 'expo-image'
 
 import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
@@ -45,16 +47,19 @@ const ImageItem = ({
   onZoom,
   onRequestClose,
   showControls,
+  safeAreaRef,
 }: Props) => {
   const scrollViewRef = useAnimatedRef<Animated.ScrollView>()
   const translationY = useSharedValue(0)
   const [scaled, setScaled] = useState(false)
+  const screenSizeDelayedForJSThreadOnly = useSafeAreaFrame()
   const [imageAspect, imageDimensions] = useImageDimensions({
     src: imageSrc.uri,
     knownDimensions: imageSrc.dimensions,
   })
   const maxZoomScale = imageDimensions
-    ? (imageDimensions.width / SCREEN.width) * MAX_ORIGINAL_IMAGE_ZOOM
+    ? (imageDimensions.width / screenSizeDelayedForJSThreadOnly.width) *
+      MAX_ORIGINAL_IMAGE_ZOOM
     : 1
 
   const animatedStyle = useAnimatedStyle(() => {
@@ -92,24 +97,13 @@ const ImageItem = ({
     setScaled(nextIsScaled)
   }
 
-  function handleDoubleTap(absoluteX: number, absoluteY: number) {
+  function zoomTo(nextZoomRect: {
+    x: number
+    y: number
+    width: number
+    height: number
+  }) {
     const scrollResponderRef = scrollViewRef?.current?.getScrollResponder()
-    let nextZoomRect = {
-      x: 0,
-      y: 0,
-      width: SCREEN.width,
-      height: SCREEN.height,
-    }
-
-    const willZoom = !scaled
-    if (willZoom) {
-      nextZoomRect = getZoomRectAfterDoubleTap(
-        imageAspect,
-        absoluteX,
-        absoluteY,
-      )
-    }
-
     // @ts-ignore
     scrollResponderRef?.scrollResponderZoomTo({
       ...nextZoomRect, // This rect is in screen coordinates
@@ -126,8 +120,27 @@ const ImageItem = ({
     .numberOfTaps(2)
     .onEnd(e => {
       'worklet'
+      const screenSize = measure(safeAreaRef)
+      if (!screenSize) {
+        return
+      }
       const {absoluteX, absoluteY} = e
-      runOnJS(handleDoubleTap)(absoluteX, absoluteY)
+      let nextZoomRect = {
+        x: 0,
+        y: 0,
+        width: screenSize.width,
+        height: screenSize.height,
+      }
+      const willZoom = !scaled
+      if (willZoom) {
+        nextZoomRect = getZoomRectAfterDoubleTap(
+          imageAspect,
+          absoluteX,
+          absoluteY,
+          screenSize,
+        )
+      }
+      runOnJS(zoomTo)(nextZoomRect)
     })
 
   const composedGesture = Gesture.Exclusive(doubleTap, singleTap)
@@ -187,24 +200,26 @@ const getZoomRectAfterDoubleTap = (
   imageAspect: number | undefined,
   touchX: number,
   touchY: number,
+  screenSize: {width: number; height: number},
 ): {
   x: number
   y: number
   width: number
   height: number
 } => {
+  'worklet'
   if (!imageAspect) {
     return {
       x: 0,
       y: 0,
-      width: SCREEN.width,
-      height: SCREEN.height,
+      width: screenSize.width,
+      height: screenSize.height,
     }
   }
 
   // First, let's figure out how much we want to zoom in.
   // We want to try to zoom in at least close enough to get rid of black bars.
-  const screenAspect = SCREEN.width / SCREEN.height
+  const screenAspect = screenSize.width / screenSize.height
   const zoom = Math.max(
     imageAspect / screenAspect,
     screenAspect / imageAspect,
@@ -215,25 +230,25 @@ const getZoomRectAfterDoubleTap = (
 
   // Next, we'll be calculating the rectangle to "zoom into" in screen coordinates.
   // We already know the zoom level, so this gives us the rectangle size.
-  let rectWidth = SCREEN.width / zoom
-  let rectHeight = SCREEN.height / zoom
+  let rectWidth = screenSize.width / zoom
+  let rectHeight = screenSize.height / zoom
 
   // Before we settle on the zoomed rect, figure out the safe area it has to be inside.
   // We don't want to introduce new black bars or make existing black bars unbalanced.
   let minX = 0
   let minY = 0
-  let maxX = SCREEN.width - rectWidth
-  let maxY = SCREEN.height - rectHeight
+  let maxX = screenSize.width - rectWidth
+  let maxY = screenSize.height - rectHeight
   if (imageAspect >= screenAspect) {
     // The image has horizontal black bars. Exclude them from the safe area.
-    const renderedHeight = SCREEN.width / imageAspect
-    const horizontalBarHeight = (SCREEN.height - renderedHeight) / 2
+    const renderedHeight = screenSize.width / imageAspect
+    const horizontalBarHeight = (screenSize.height - renderedHeight) / 2
     minY += horizontalBarHeight
     maxY -= horizontalBarHeight
   } else {
     // The image has vertical black bars. Exclude them from the safe area.
-    const renderedWidth = SCREEN.height * imageAspect
-    const verticalBarWidth = (SCREEN.width - renderedWidth) / 2
+    const renderedWidth = screenSize.height * imageAspect
+    const verticalBarWidth = (screenSize.width - renderedWidth) / 2
     minX += verticalBarWidth
     maxX -= verticalBarWidth
   }
@@ -248,7 +263,7 @@ const getZoomRectAfterDoubleTap = (
     rectX = Math.max(rectX, minX)
   } else {
     // Keep the rect centered on the screen so that black bars are balanced.
-    rectX = SCREEN.width / 2 - rectWidth / 2
+    rectX = screenSize.width / 2 - rectWidth / 2
   }
   let rectY
   if (maxY >= minY) {
@@ -259,7 +274,7 @@ const getZoomRectAfterDoubleTap = (
     rectY = Math.max(rectY, minY)
   } else {
     // Keep the rect centered on the screen so that black bars are balanced.
-    rectY = SCREEN.height / 2 - rectHeight / 2
+    rectY = screenSize.height / 2 - rectHeight / 2
   }
 
   return {
