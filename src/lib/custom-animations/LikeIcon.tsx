@@ -95,12 +95,10 @@ export function AnimatedLikeIcon({
             width={size}
           />
         )}
-        {isLiked ? (
+        {isLiked && shouldAnimate ? (
           <>
             <Animated.View
-              entering={
-                shouldAnimate ? circle1Keyframe.duration(300) : undefined
-              }
+              entering={circle1Keyframe.duration(300)}
               style={{
                 position: 'absolute',
                 backgroundColor: s.likeColor.color,
@@ -114,9 +112,7 @@ export function AnimatedLikeIcon({
               }}
             />
             <Animated.View
-              entering={
-                shouldAnimate ? circle2Keyframe.duration(300) : undefined
-              }
+              entering={circle2Keyframe.duration(300)}
               style={{
                 position: 'absolute',
                 backgroundColor: t.atoms.bg.backgroundColor,
