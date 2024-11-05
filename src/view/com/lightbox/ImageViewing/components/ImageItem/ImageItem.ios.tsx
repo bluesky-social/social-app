@@ -7,7 +7,7 @@
  */
 
 import React, {useState} from 'react'
-import {ActivityIndicator, Dimensions, StyleSheet, View} from 'react-native'
+import {ActivityIndicator, StyleSheet, View} from 'react-native'
 import {Gesture, GestureDetector} from 'react-native-gesture-handler'
 import Animated, {
   AnimatedRef,
@@ -27,7 +27,6 @@ import {ImageSource} from '../../@types'
 
 const SWIPE_CLOSE_OFFSET = 75
 const SWIPE_CLOSE_VELOCITY = 1
-const SCREEN = Dimensions.get('screen')
 const MAX_ORIGINAL_IMAGE_ZOOM = 2
 const MIN_DOUBLE_TAP_SCALE = 2
 
@@ -150,13 +149,19 @@ const ImageItem = ({
       <Animated.ScrollView
         // @ts-ignore Something's up with the types here
         ref={scrollViewRef}
-        style={styles.listItem}
         pinchGestureEnabled
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
         maximumZoomScale={maxZoomScale}
         onScroll={scrollHandler}>
-        <Animated.View style={[styles.imageScrollContainer, animatedStyle]}>
+        <Animated.View
+          style={[
+            {
+              // TODO: See if we can rely on native layout.
+              height: screenSizeDelayedForJSThreadOnly.height,
+            },
+            animatedStyle,
+          ]}>
           <ActivityIndicator size="small" color="#FFF" style={styles.loading} />
           <Image
             contentFit="contain"
@@ -176,23 +181,15 @@ const ImageItem = ({
 }
 
 const styles = StyleSheet.create({
-  imageScrollContainer: {
-    height: SCREEN.height,
-  },
-  listItem: {
-    width: SCREEN.width,
-    height: SCREEN.height,
-  },
-  image: {
-    width: SCREEN.width,
-    height: SCREEN.height,
-  },
   loading: {
     position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
     bottom: 0,
+  },
+  image: {
+    flex: 1,
   },
 })
 
