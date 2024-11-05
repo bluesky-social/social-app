@@ -581,7 +581,7 @@ msgstr "Wszystkie konta obserwowane!"
 
 #: src/view/screens/Feeds.tsx:735
 msgid "All the feeds you've saved, right in one place."
-msgstr "Kanały zapisane przez ciebie w jednym miejscu."
+msgstr "Kanały kuratorowane przez Ciebie, dla Ciebie."
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:146
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:153
@@ -1827,7 +1827,7 @@ msgstr "Dowolna domena"
 #: src/view/screens/Feeds.tsx:761
 #: src/view/screens/Search/Explore.tsx:391
 msgid "Custom feeds built by the community bring you new experiences and help you find the content you love."
-msgstr "Kanały stworzone przez społeczność pozwalają odkryć nowe przygody i pomagają Ci znaleść rzeczy, które kochasz."
+msgstr "Kanały stworzone przez społeczność pozwalają odkryć nowe przygody i pomagają Ci znaleść rzeczy, które najbardziej kochasz."
 
 #: src/view/screens/PreferencesExternalEmbeds.tsx:64
 msgid "Customize media from external sites."
