@@ -38,8 +38,6 @@ import {ImageSource} from './@types'
 import ImageDefaultHeader from './components/ImageDefaultHeader'
 import ImageItem from './components/ImageItem/ImageItem'
 
-const AnimatedSafeAreaView = Animated.createAnimatedComponent(SafeAreaView)
-
 const SCREEN_HEIGHT = Dimensions.get('window').height
 const EDGES =
   Platform.OS === 'android'
@@ -60,24 +58,25 @@ export default function ImageViewRoot({
   const ref = useAnimatedRef<View>()
   return (
     // Keep it always mounted to avoid flicker on the first frame.
-    <AnimatedSafeAreaView
-      ref={ref}
+    <SafeAreaView
       style={[styles.screen, !lightbox && styles.screenHidden]}
       edges={EDGES}
       aria-modal
       accessibilityViewIsModal
       aria-hidden={!lightbox}>
-      {lightbox && (
-        <ImageView
-          key={lightbox.id}
-          lightbox={lightbox}
-          onRequestClose={onRequestClose}
-          onPressSave={onPressSave}
-          onPressShare={onPressShare}
-          safeAreaRef={ref}
-        />
-      )}
-    </AnimatedSafeAreaView>
+      <Animated.View ref={ref} style={{flex: 1}} collapsable={false}>
+        {lightbox && (
+          <ImageView
+            key={lightbox.id}
+            lightbox={lightbox}
+            onRequestClose={onRequestClose}
+            onPressSave={onPressSave}
+            onPressShare={onPressShare}
+            safeAreaRef={ref}
+          />
+        )}
+      </Animated.View>
+    </SafeAreaView>
   )
 }
 
