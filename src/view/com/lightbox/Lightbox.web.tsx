@@ -38,24 +38,8 @@ export function Lightbox() {
     return null
   }
 
-  const initialIndex =
-    activeLightbox.type === 'images' ? activeLightbox.index : 0
-
-  let imgs: Img[] | undefined
-  if (activeLightbox.type === 'profile-image') {
-    const opts = activeLightbox
-    if (opts.profile.avatar) {
-      imgs = [{uri: opts.profile.avatar}]
-    }
-  } else if (activeLightbox.type === 'images') {
-    const opts = activeLightbox
-    imgs = opts.images
-  }
-
-  if (!imgs) {
-    return null
-  }
-
+  const initialIndex = activeLightbox.index
+  const imgs = activeLightbox.images
   return (
     <LightboxInner
       imgs={imgs}
