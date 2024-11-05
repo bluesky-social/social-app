@@ -8,7 +8,7 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-02 20:26+0900\n"
+"PO-Revision-Date: 2024-11-05 13:46+0900\n"
 "Last-Translator: quiple\n"
 "Language-Team: quiple, lens0021, HaruChanHeart, hazzzi, heartade\n"
 "Plural-Forms: \n"
@@ -64,11 +64,11 @@ msgstr "팔로워"
 msgid "{0, plural, one {following} other {following}}"
 msgstr "팔로우 중"
 
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:302
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:304
 msgid "{0, plural, one {Like (# like)} other {Like (# likes)}}"
 msgstr "좋아요 ({0, plural, other {#}}개)"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:435
+#: src/view/com/post-thread/PostThreadItem.tsx:436
 msgid "{0, plural, one {like} other {likes}}"
 msgstr "좋아요"
 
@@ -81,19 +81,19 @@ msgstr "{0, plural, other {#}}명의 사용자가 좋아함"
 msgid "{0, plural, one {post} other {posts}}"
 msgstr "게시물"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:419
+#: src/view/com/post-thread/PostThreadItem.tsx:420
 msgid "{0, plural, one {quote} other {quotes}}"
 msgstr "인용"
 
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:259
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:260
 msgid "{0, plural, one {Reply (# reply)} other {Reply (# replies)}}"
 msgstr "답글 ({0, plural, other {#}}개)"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:401
+#: src/view/com/post-thread/PostThreadItem.tsx:402
 msgid "{0, plural, one {repost} other {reposts}}"
 msgstr "재게시"
 
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:298
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:300
 msgid "{0, plural, one {Unlike (# like)} other {Unlike (# likes)}}"
 msgstr "좋아요 취소 ({0, plural, other {#}}개)"
 
@@ -930,7 +930,7 @@ msgstr "동영상 및 GIF 자동 재생"
 #: src/screens/Login/SetNewPasswordForm.tsx:160
 #: src/screens/Messages/components/ChatDisabled.tsx:133
 #: src/screens/Messages/components/ChatDisabled.tsx:134
-#: src/screens/Profile/Header/Shell.tsx:84
+#: src/screens/Profile/Header/Shell.tsx:94
 #: src/screens/Signup/BackNextButtons.tsx:42
 #: src/screens/StarterPack/Wizard/index.tsx:307
 #: src/view/com/util/ViewHeader.tsx:87
@@ -1086,7 +1086,7 @@ msgstr "다른 피드 탐색하기"
 msgid "Business"
 msgstr "비즈니스"
 
-#: src/view/com/profile/ProfileSubpageHeader.tsx:165
+#: src/view/com/profile/ProfileSubpageHeader.tsx:174
 msgid "by —"
 msgstr "— 님이 만듦"
 
@@ -1094,7 +1094,7 @@ msgstr "— 님이 만듦"
 msgid "By {0}"
 msgstr "{0} 님이 만듦"
 
-#: src/view/com/profile/ProfileSubpageHeader.tsx:169
+#: src/view/com/profile/ProfileSubpageHeader.tsx:178
 msgid "by <0/>"
 msgstr "<0/> 님이 만듦"
 
@@ -1110,7 +1110,7 @@ msgstr "계정을 만들면 <0>서비스 이용약관</0> 및 <1>개인정보 �
 msgid "By creating an account you agree to the <0>Terms of Service</0>."
 msgstr "계정을 만들면 <0>서비스 이용약관</0>에 동의하는 것입니다."
 
-#: src/view/com/profile/ProfileSubpageHeader.tsx:167
+#: src/view/com/profile/ProfileSubpageHeader.tsx:176
 msgid "by you"
 msgstr "내가 만듦"
 
@@ -1122,7 +1122,7 @@ msgstr "카메라"
 msgid "Can only contain letters, numbers, spaces, dashes, and underscores. Must be at least 4 characters long, but no more than 32 characters long."
 msgstr "글자, 숫자, 공백, 대시, 밑줄만 포함할 수 있습니다. 길이는 4자 이상이어야 하고 32자를 넘지 않아야 합니다."
 
-#: src/components/Menu/index.tsx:235
+#: src/components/Menu/index.tsx:236
 #: src/components/Prompt.tsx:129
 #: src/components/Prompt.tsx:131
 #: src/components/TagMenu/index.tsx:267
@@ -1426,7 +1426,7 @@ msgstr "GIF 대화 상자 닫기"
 msgid "Close image"
 msgstr "이미지 닫기"
 
-#: src/view/com/lightbox/Lightbox.web.tsx:125
+#: src/view/com/lightbox/Lightbox.web.tsx:109
 msgid "Close image viewer"
 msgstr "이미지 뷰어 닫기"
 
@@ -1434,7 +1434,7 @@ msgstr "이미지 뷰어 닫기"
 msgid "Close navigation footer"
 msgstr "탐색 푸터 닫기"
 
-#: src/components/Menu/index.tsx:229
+#: src/components/Menu/index.tsx:230
 #: src/components/TagMenu/index.tsx:261
 msgid "Close this dialog"
 msgstr "이 대화 상자 닫기"
@@ -1455,7 +1455,7 @@ msgstr "헤더 이미지 뷰어를 닫습니다"
 msgid "Collapse list of users"
 msgstr "사용자 목록 접기"
 
-#: src/view/com/notifications/FeedItem.tsx:587
+#: src/view/com/notifications/FeedItem.tsx:588
 msgid "Collapses list of users for a given notification"
 msgstr "이 알림에 대한 사용자 목록을 축소합니다"
 
@@ -1651,7 +1651,7 @@ msgstr "빌드 버전을 클립보드에 복사했습니다"
 #: src/view/com/modals/ChangeHandle.tsx:313
 #: src/view/com/modals/InviteCodes.tsx:153
 #: src/view/com/util/forms/PostDropdownBtn.tsx:240
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:382
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:385
 msgid "Copied to clipboard"
 msgstr "클립보드에 복사했습니다"
 
@@ -2589,7 +2589,7 @@ msgstr "핸들 변경 프로세스를 종료합니다"
 msgid "Exits image cropping process"
 msgstr "이미지 자르기 프로세스를 종료합니다"
 
-#: src/view/com/lightbox/Lightbox.web.tsx:126
+#: src/view/com/lightbox/Lightbox.web.tsx:110
 msgid "Exits image view"
 msgstr "이미지 보기를 종료합니다"
 
@@ -2597,7 +2597,7 @@ msgstr "이미지 보기를 종료합니다"
 msgid "Exits inputting search query"
 msgstr "검색어 입력을 종료합니다"
 
-#: src/view/com/lightbox/Lightbox.web.tsx:179
+#: src/view/com/lightbox/Lightbox.web.tsx:163
 msgid "Expand alt text"
 msgstr "대체 텍스트 확장"
 
@@ -2615,7 +2615,7 @@ msgid "Expected uri to resolve to a record"
 msgstr "레코드로 확인될 것으로 예상되는 URI"
 
 #: src/screens/Settings/FollowingFeedPreferences.tsx:116
-#: src/screens/Settings/ThreadPreferences.tsx:122
+#: src/screens/Settings/ThreadPreferences.tsx:124
 msgid "Experimental"
 msgstr "실험적"
 
@@ -2733,7 +2733,7 @@ msgstr "추천 팔로우를 불러오지 못했습니다"
 msgid "Failed to pin post"
 msgstr "게시물을 고정하지 못했습니다"
 
-#: src/view/com/lightbox/Lightbox.tsx:96
+#: src/view/com/lightbox/Lightbox.tsx:46
 msgid "Failed to save image: {0}"
 msgstr "이미지를 저장하지 못함: {0}"
 
@@ -3236,7 +3236,7 @@ msgstr "숨겨진 리스트"
 msgid "Hide"
 msgstr "숨기기"
 
-#: src/view/com/notifications/FeedItem.tsx:594
+#: src/view/com/notifications/FeedItem.tsx:595
 msgctxt "action"
 msgid "Hide"
 msgstr "숨기기"
@@ -3270,7 +3270,7 @@ msgstr "이 게시물을 숨기시겠습니까?"
 msgid "Hide this reply?"
 msgstr "이 답글을 숨기시겠습니까?"
 
-#: src/view/com/notifications/FeedItem.tsx:585
+#: src/view/com/notifications/FeedItem.tsx:586
 msgid "Hide user list"
 msgstr "사용자 리스트 숨기기"
 
@@ -3356,7 +3356,7 @@ msgstr "내 도메인을 가지고 있습니다"
 msgid "I understand"
 msgstr "확인"
 
-#: src/view/com/lightbox/Lightbox.web.tsx:181
+#: src/view/com/lightbox/Lightbox.web.tsx:165
 msgid "If alt text is long, toggles alt text expanded state"
 msgstr "대체 텍스트가 긴 경우 대체 텍스트 확장 상태를 전환합니다"
 
@@ -3465,7 +3465,7 @@ msgstr "잘못된 2단계 인증 코드입니다."
 msgid "Invalid handle. Please try a different one."
 msgstr "잘못된 핸들입니다. 다른 핸들을 사용하세요."
 
-#: src/view/com/post-thread/PostThreadItem.tsx:265
+#: src/view/com/post-thread/PostThreadItem.tsx:266
 msgid "Invalid or unsupported post record"
 msgstr "유효하지 않거나 지원되지 않는 게시물 기록"
 
@@ -3721,7 +3721,7 @@ msgstr "좋아요 표시한 사용자"
 msgid "Likes"
 msgstr "좋아요"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:205
+#: src/view/com/post-thread/PostThreadItem.tsx:206
 msgid "Likes on this post"
 msgstr "이 게시물을 좋아요 표시합니다"
 
@@ -3901,7 +3901,7 @@ msgstr "멘션한 사용자"
 msgid "Mentioned users"
 msgstr "멘션한 사용자"
 
-#: src/components/Menu/index.tsx:94
+#: src/components/Menu/index.tsx:95
 #: src/view/com/util/ViewHeader.tsx:87
 #: src/view/screens/Search/Search.tsx:882
 msgid "Menu"
@@ -4012,7 +4012,7 @@ msgstr "검토 도구"
 msgid "Moderator has chosen to set a general warning on the content."
 msgstr "검토자가 콘텐츠에 일반 경고를 설정했습니다."
 
-#: src/view/com/post-thread/PostThreadItem.tsx:620
+#: src/view/com/post-thread/PostThreadItem.tsx:621
 msgid "More"
 msgstr "더 보기"
 
@@ -4025,11 +4025,11 @@ msgstr "피드 더 보기"
 msgid "More options"
 msgstr "옵션 더 보기"
 
-#: src/screens/Settings/ThreadPreferences.tsx:79
+#: src/screens/Settings/ThreadPreferences.tsx:81
 msgid "Most-liked first"
 msgstr "좋아요 많은 순"
 
-#: src/screens/Settings/ThreadPreferences.tsx:76
+#: src/screens/Settings/ThreadPreferences.tsx:78
 #: src/view/screens/PreferencesThreads.tsx:87
 msgid "Most-liked replies first"
 msgstr "좋아요 많은 순"
@@ -4287,8 +4287,8 @@ msgstr "새 사용자 정보 대화 상자"
 msgid "New User List"
 msgstr "새 사용자 리스트"
 
-#: src/screens/Settings/ThreadPreferences.tsx:68
-#: src/screens/Settings/ThreadPreferences.tsx:71
+#: src/screens/Settings/ThreadPreferences.tsx:70
+#: src/screens/Settings/ThreadPreferences.tsx:73
 #: src/view/screens/PreferencesThreads.tsx:84
 msgid "Newest replies first"
 msgstr "새로운 순"
@@ -4316,7 +4316,7 @@ msgstr "뉴스"
 msgid "Next"
 msgstr "다음"
 
-#: src/view/com/lightbox/Lightbox.web.tsx:165
+#: src/view/com/lightbox/Lightbox.web.tsx:149
 msgid "Next image"
 msgstr "다음 이미지"
 
@@ -4470,7 +4470,7 @@ msgstr "나중에 하기"
 
 #: src/view/com/profile/ProfileMenu.tsx:348
 #: src/view/com/util/forms/PostDropdownBtn.tsx:698
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:346
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:349
 msgid "Note about sharing"
 msgstr "공유 관련 참고 사항"
 
@@ -4552,8 +4552,8 @@ msgstr "확인"
 msgid "Okay"
 msgstr "확인"
 
-#: src/screens/Settings/ThreadPreferences.tsx:60
-#: src/screens/Settings/ThreadPreferences.tsx:63
+#: src/screens/Settings/ThreadPreferences.tsx:62
+#: src/screens/Settings/ThreadPreferences.tsx:65
 #: src/view/screens/PreferencesThreads.tsx:83
 msgid "Oldest replies first"
 msgstr "오래된 순"
@@ -4816,7 +4816,7 @@ msgstr "시스템 로그 페이지를 엽니다"
 msgid "Opens the threads preferences"
 msgstr "스레드 설정을 엽니다"
 
-#: src/view/com/notifications/FeedItem.tsx:672
+#: src/view/com/notifications/FeedItem.tsx:673
 #: src/view/com/util/UserAvatar.tsx:436
 msgid "Opens this profile"
 msgstr "이 프로필을 엽니다"
@@ -4924,11 +4924,11 @@ msgstr "@{0} 님이 팔로우한 사람들"
 msgid "People following @{0}"
 msgstr "@{0} 님을 팔로우하는 사람들"
 
-#: src/view/com/lightbox/Lightbox.tsx:76
+#: src/view/com/lightbox/Lightbox.tsx:27
 msgid "Permission to access camera roll is required."
 msgstr "사진 보관함에 접근할 수 있는 권한이 필요합니다."
 
-#: src/view/com/lightbox/Lightbox.tsx:84
+#: src/view/com/lightbox/Lightbox.tsx:35
 msgid "Permission to access camera roll was denied. Please enable it in your system settings."
 msgstr "사진 보관함에 접근할 수 있는 권한이 거부되었습니다. 시스템 설정에서 활성화하세요."
 
@@ -5091,7 +5091,7 @@ msgctxt "action"
 msgid "Post All"
 msgstr "모두 게시하기"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:197
+#: src/view/com/post-thread/PostThreadItem.tsx:198
 msgid "Post by {0}"
 msgstr "{0} 님의 게시물"
 
@@ -5193,7 +5193,7 @@ msgstr "다시 시도하려면 누르기"
 msgid "Press to view followers of this account that you also follow"
 msgstr "내가 팔로우하는 이 계정의 팔로워를 보려면 누르세요"
 
-#: src/view/com/lightbox/Lightbox.web.tsx:146
+#: src/view/com/lightbox/Lightbox.web.tsx:130
 msgid "Previous image"
 msgstr "이전 이미지"
 
@@ -5202,8 +5202,8 @@ msgstr "이전 이미지"
 msgid "Primary Language"
 msgstr "주 언어"
 
-#: src/screens/Settings/ThreadPreferences.tsx:97
-#: src/screens/Settings/ThreadPreferences.tsx:102
+#: src/screens/Settings/ThreadPreferences.tsx:99
+#: src/screens/Settings/ThreadPreferences.tsx:104
 msgid "Prioritize your Follows"
 msgstr "내 팔로우 먼저 표시"
 
@@ -5335,12 +5335,12 @@ msgstr "인용 설정"
 msgid "Quotes"
 msgstr "인용"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:231
+#: src/view/com/post-thread/PostThreadItem.tsx:232
 msgid "Quotes of this post"
 msgstr "이 게시물의 인용"
 
-#: src/screens/Settings/ThreadPreferences.tsx:84
-#: src/screens/Settings/ThreadPreferences.tsx:87
+#: src/screens/Settings/ThreadPreferences.tsx:86
+#: src/screens/Settings/ThreadPreferences.tsx:89
 #: src/view/screens/PreferencesThreads.tsx:91
 msgid "Random (aka \"Poster's Roulette\")"
 msgstr "무작위"
@@ -5706,7 +5706,7 @@ msgstr "<0><1/></0> 님이 재게시함"
 msgid "Reposted by you"
 msgstr "내가 재게시함"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:210
+#: src/view/com/post-thread/PostThreadItem.tsx:211
 msgid "Reposts of this post"
 msgstr "이 게시물의 재게시물"
 
@@ -5849,7 +5849,7 @@ msgstr "이전 페이지로 돌아갑니다"
 msgid "Save"
 msgstr "저장"
 
-#: src/view/com/lightbox/Lightbox.tsx:166
+#: src/view/com/lightbox/ImageViewing/index.tsx:218
 #: src/view/com/modals/CreateOrEditList.tsx:325
 msgctxt "action"
 msgid "Save"
@@ -5898,7 +5898,7 @@ msgstr "내 피드에 저장"
 msgid "Saved Feeds"
 msgstr "저장한 피드"
 
-#: src/view/com/lightbox/Lightbox.tsx:94
+#: src/view/com/lightbox/Lightbox.tsx:44
 msgid "Saved to your camera roll"
 msgstr "내 사진 보관함에 저장됨"
 
@@ -5921,8 +5921,8 @@ msgstr "이미지 자르기 설정을 저장합니다"
 
 #: src/components/dms/ChatEmptyPill.tsx:33
 #: src/components/NewskieDialog.tsx:105
-#: src/view/com/notifications/FeedItem.tsx:533
-#: src/view/com/notifications/FeedItem.tsx:558
+#: src/view/com/notifications/FeedItem.tsx:534
+#: src/view/com/notifications/FeedItem.tsx:559
 msgid "Say hello!"
 msgstr "인사해 보세요!"
 
@@ -6243,12 +6243,12 @@ msgstr "외설적"
 #: src/view/com/profile/ProfileMenu.tsx:204
 #: src/view/com/util/forms/PostDropdownBtn.tsx:452
 #: src/view/com/util/forms/PostDropdownBtn.tsx:461
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:335
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:338
 #: src/view/screens/ProfileList.tsx:487
 msgid "Share"
 msgstr "공유"
 
-#: src/view/com/lightbox/Lightbox.tsx:175
+#: src/view/com/lightbox/ImageViewing/index.tsx:227
 msgctxt "action"
 msgid "Share"
 msgstr "공유"
@@ -6263,7 +6263,7 @@ msgstr "재미있는 사실을 전하세요!"
 
 #: src/view/com/profile/ProfileMenu.tsx:353
 #: src/view/com/util/forms/PostDropdownBtn.tsx:703
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:351
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:354
 msgid "Share anyway"
 msgstr "무시하고 공유"
 
@@ -6351,7 +6351,7 @@ msgstr "이런 항목 덜 보기"
 msgid "Show list anyway"
 msgstr "무시하고 리스트 표시하기"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:581
+#: src/view/com/post-thread/PostThreadItem.tsx:582
 #: src/view/com/post/Post.tsx:242
 #: src/view/com/posts/FeedItem.tsx:509
 msgid "Show More"
@@ -6388,12 +6388,12 @@ msgstr "답글 표시"
 msgid "Show Replies"
 msgstr "답글 표시"
 
-#: src/screens/Settings/ThreadPreferences.tsx:111
+#: src/screens/Settings/ThreadPreferences.tsx:113
 #: src/view/screens/PreferencesThreads.tsx:105
 msgid "Show replies by people you follow before all other replies."
 msgstr "내가 팔로우하는 사람들의 답글을 다른 모든 답글보다 먼저 표시합니다."
 
-#: src/screens/Settings/ThreadPreferences.tsx:136
+#: src/screens/Settings/ThreadPreferences.tsx:138
 msgid "Show replies in a threaded view"
 msgstr "스레드 보기로 답글 표시"
 
@@ -6567,15 +6567,19 @@ msgstr "문제가 발생했습니다!"
 msgid "Sorry! Your session expired. Please log in again."
 msgstr "죄송합니다. 세션이 만료되었습니다. 다시 로그인해 주세요."
 
+#: src/screens/Settings/ThreadPreferences.tsx:48
+msgid "Sort replies"
+msgstr "답글 정렬"
+
 #: src/view/screens/PreferencesThreads.tsx:74
 msgid "Sort Replies"
 msgstr "답글 정렬"
 
-#: src/screens/Settings/ThreadPreferences.tsx:53
+#: src/screens/Settings/ThreadPreferences.tsx:55
 msgid "Sort replies by"
 msgstr "답글 정렬"
 
-#: src/screens/Settings/ThreadPreferences.tsx:50
+#: src/screens/Settings/ThreadPreferences.tsx:52
 #: src/view/screens/PreferencesThreads.tsx:77
 msgid "Sort replies to the same post by:"
 msgstr "동일한 게시물에 대한 답글을 정렬하는 기준입니다."
@@ -6755,8 +6759,8 @@ msgstr "탭하여 재생/일시 정지"
 msgid "Tap to toggle sound"
 msgstr "탭하여 소리 켜기/끄기"
 
-#: src/view/com/util/images/AutoSizedImage.tsx:219
-#: src/view/com/util/images/AutoSizedImage.tsx:239
+#: src/view/com/util/images/AutoSizedImage.tsx:199
+#: src/view/com/util/images/AutoSizedImage.tsx:221
 msgid "Tap to view full image"
 msgstr "탭하여 전체 이미지를 봅니다"
 
@@ -7161,12 +7165,12 @@ msgstr "이 검토 서비스는 사용할 수 없습니다. 자세한 내용은 
 msgid "This name is already in use"
 msgstr "이 이름은 이미 사용 중입니다"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:140
+#: src/view/com/post-thread/PostThreadItem.tsx:141
 msgid "This post has been deleted."
 msgstr "이 게시물은 삭제되었습니다."
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:700
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:348
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:351
 msgid "This post is only visible to logged-in users. It won't be visible to people who aren't logged in."
 msgstr "이 게시물은 로그인한 사용자에게만 표시됩니다. 로그인하지 않은 사용자에게는 표시되지 않습니다."
 
@@ -7252,7 +7256,7 @@ msgstr "스레드 설정"
 msgid "Thread Preferences"
 msgstr "스레드 설정"
 
-#: src/screens/Settings/ThreadPreferences.tsx:127
+#: src/screens/Settings/ThreadPreferences.tsx:129
 msgid "Threaded mode"
 msgstr "스레드 모드"
 
@@ -7299,8 +7303,8 @@ msgstr "인기"
 
 #: src/components/dms/MessageMenu.tsx:103
 #: src/components/dms/MessageMenu.tsx:105
-#: src/view/com/post-thread/PostThreadItem.tsx:749
-#: src/view/com/post-thread/PostThreadItem.tsx:751
+#: src/view/com/post-thread/PostThreadItem.tsx:750
+#: src/view/com/post-thread/PostThreadItem.tsx:753
 #: src/view/com/util/forms/PostDropdownBtn.tsx:422
 #: src/view/com/util/forms/PostDropdownBtn.tsx:424
 msgid "Translate"
@@ -7787,7 +7791,7 @@ msgstr "동영상: {0}"
 msgid "Videos must be less than 60 seconds long"
 msgstr "동영상 길이는 60초 미만이어야 합니다."
 
-#: src/screens/Profile/Header/Shell.tsx:132
+#: src/screens/Profile/Header/Shell.tsx:142
 msgid "View {0}'s avatar"
 msgstr "{0} 님의 아바타 보기"
 
@@ -7846,7 +7850,7 @@ msgstr "이 라벨에 대한 정보 보기"
 msgid "View profile"
 msgstr "프로필 보기"
 
-#: src/view/com/profile/ProfileSubpageHeader.tsx:132
+#: src/view/com/profile/ProfileSubpageHeader.tsx:141
 msgid "View the avatar"
 msgstr "아바타 보기"
 
