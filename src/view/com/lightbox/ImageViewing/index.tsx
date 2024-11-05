@@ -8,7 +8,7 @@
 // Original code copied and simplified from the link below as the codebase is currently not maintained:
 // https://github.com/jobtoday/react-native-image-viewing
 
-import React, {useCallback, useMemo, useState} from 'react'
+import React, {useCallback, useState} from 'react'
 import {
   Dimensions,
   LayoutAnimation,
@@ -34,6 +34,10 @@ import ImageDefaultHeader from './components/ImageDefaultHeader'
 import ImageItem from './components/ImageItem/ImageItem'
 
 const SCREEN_HEIGHT = Dimensions.get('window').height
+const EDGES =
+  Platform.OS === 'android'
+    ? (['top', 'bottom', 'left', 'right'] satisfies Edge[])
+    : (['left', 'right'] satisfies Edge[]) // iOS, so no top/bottom safe area
 
 export default function ImageViewRoot({
   lightbox,
@@ -50,13 +54,19 @@ export default function ImageViewRoot({
     return null
   }
   return (
-    <ImageView
-      key={lightbox.id}
-      lightbox={lightbox}
-      onRequestClose={onRequestClose}
-      onPressSave={onPressSave}
-      onPressShare={onPressShare}
-    />
+    <SafeAreaView
+      style={styles.screen}
+      edges={EDGES}
+      aria-modal
+      accessibilityViewIsModal>
+      <ImageView
+        key={lightbox.id}
+        lightbox={lightbox}
+        onRequestClose={onRequestClose}
+        onPressSave={onPressSave}
+        onPressShare={onPressShare}
+      />
+    </SafeAreaView>
   )
 }
 
@@ -107,58 +117,45 @@ function ImageView({
     }
   }, [])
 
-  const edges = useMemo(() => {
-    if (Platform.OS === 'android') {
-      return ['top', 'bottom', 'left', 'right'] satisfies Edge[]
-    }
-    return ['left', 'right'] satisfies Edge[] // iOS, so no top/bottom safe area
-  }, [])
-
   return (
-    <SafeAreaView
-      style={styles.screen}
-      edges={edges}
-      aria-modal
-      accessibilityViewIsModal>
-      <View style={[styles.container]}>
-        <Animated.View style={[styles.header, animatedHeaderStyle]}>
-          <ImageDefaultHeader onRequestClose={onRequestClose} />
-        </Animated.View>
-        <PagerView
-          scrollEnabled={!isScaled}
-          initialPage={initialImageIndex}
-          onPageSelected={e => {
-            setImageIndex(e.nativeEvent.position)
-            setIsScaled(false)
-          }}
-          onPageScrollStateChanged={e => {
-            setIsDragging(e.nativeEvent.pageScrollState !== 'idle')
-          }}
-          overdrag={true}
-          style={styles.pager}>
-          {images.map(imageSrc => (
-            <View key={imageSrc.uri}>
-              <ImageItem
-                onTap={onTap}
-                onZoom={onZoom}
-                imageSrc={imageSrc}
-                onRequestClose={onRequestClose}
-                isScrollViewBeingDragged={isDragging}
-                showControls={showControls}
-              />
-            </View>
-          ))}
-        </PagerView>
-        <Animated.View style={[styles.footer, animatedFooterStyle]}>
-          <LightboxFooter
-            images={images}
-            index={imageIndex}
-            onPressSave={onPressSave}
-            onPressShare={onPressShare}
-          />
-        </Animated.View>
-      </View>
-    </SafeAreaView>
+    <View style={[styles.container]}>
+      <Animated.View style={[styles.header, animatedHeaderStyle]}>
+        <ImageDefaultHeader onRequestClose={onRequestClose} />
+      </Animated.View>
+      <PagerView
+        scrollEnabled={!isScaled}
+        initialPage={initialImageIndex}
+        onPageSelected={e => {
+          setImageIndex(e.nativeEvent.position)
+          setIsScaled(false)
+        }}
+        onPageScrollStateChanged={e => {
+          setIsDragging(e.nativeEvent.pageScrollState !== 'idle')
+        }}
+        overdrag={true}
+        style={styles.pager}>
+        {images.map(imageSrc => (
+          <View key={imageSrc.uri}>
+            <ImageItem
+              onTap={onTap}
+              onZoom={onZoom}
+              imageSrc={imageSrc}
+              onRequestClose={onRequestClose}
+              isScrollViewBeingDragged={isDragging}
+              showControls={showControls}
+            />
+          </View>
+        ))}
+      </PagerView>
+      <Animated.View style={[styles.footer, animatedFooterStyle]}>
+        <LightboxFooter
+          images={images}
+          index={imageIndex}
+          onPressSave={onPressSave}
+          onPressShare={onPressShare}
+        />
+      </Animated.View>
+    </View>
   )
 }
 
