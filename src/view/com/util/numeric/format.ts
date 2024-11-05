@@ -39,6 +39,7 @@ function detectRoundingModeSupport() {
     Intl.NumberFormat('en-US', {
       notation: 'compact',
       maximumFractionDigits: 1,
+      // @ts-ignore types are missing in CI
       roundingMode: 'trunc',
     }).format(testNum) === '1k'
   )
