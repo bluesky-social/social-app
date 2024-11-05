@@ -121,6 +121,24 @@ export function BottomBar({navigation}: BottomTabBarProps) {
     accountSwitchControl.open()
   }, [accountSwitchControl, playHaptic])
 
+  const onLongPressSearch = React.useCallback(() => {
+    const state = navigation.getState()
+    const tabState = getTabState(state, 'Search')
+    if (tabState === TabState.InsideAtRoot) {
+      emitSoftReset()
+    } else if (tabState === TabState.Inside) {
+      dedupe(() => {
+        navigation.dispatch(StackActions.popToTop())
+        setTimeout(() => emitSoftReset())
+      })
+    } else {
+      dedupe(() => {
+        navigation.navigate('SearchTab')
+        setTimeout(() => emitSoftReset())
+      })
+    }
+  }, [dedupe, navigation])
+
   return (
     <>
       <SwitchAccountDialog control={accountSwitchControl} />
@@ -174,6 +192,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
                 )
               }
               onPress={onPressSearch}
+              onLongPress={onLongPressSearch}
               accessibilityRole="search"
               accessibilityLabel={_(msg`Search`)}
               accessibilityHint=""
