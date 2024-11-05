@@ -63,6 +63,7 @@ const ImageItem = ({
 
   const animatedStyle = useAnimatedStyle(() => {
     return {
+      flex: 1,
       opacity: interpolate(
         translationY.value,
         [-SWIPE_CLOSE_OFFSET, 0, SWIPE_CLOSE_OFFSET],
@@ -153,15 +154,9 @@ const ImageItem = ({
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
         maximumZoomScale={maxZoomScale}
-        onScroll={scrollHandler}>
-        <Animated.View
-          style={[
-            {
-              // TODO: See if we can rely on native layout.
-              height: screenSizeDelayedForJSThreadOnly.height,
-            },
-            animatedStyle,
-          ]}>
+        onScroll={scrollHandler}
+        contentContainerStyle={styles.scrollContainer}>
+        <Animated.View style={animatedStyle}>
           <ActivityIndicator size="small" color="#FFF" style={styles.loading} />
           <Image
             contentFit="contain"
@@ -187,6 +182,9 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
+  },
+  scrollContainer: {
+    flex: 1,
   },
   image: {
     flex: 1,
