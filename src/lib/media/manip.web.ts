@@ -72,17 +72,28 @@ interface DoResizeOpts {
 async function doResize(dataUri: string, opts: DoResizeOpts): Promise<RNImage> {
   let newDataUri
 
-  for (let i = 0; i <= 10; i++) {
-    newDataUri = await createResizedImage(dataUri, {
+  let minQualityPercentage = 0
+  let maxQualityPercentage = 101 //exclusive
+
+  while (maxQualityPercentage - minQualityPercentage > 1) {
+    const qualityPercentage = Math.round(
+      (maxQualityPercentage + minQualityPercentage) / 2,
+    )
+    const tempDataUri = await createResizedImage(dataUri, {
       width: opts.width,
       height: opts.height,
-      quality: 1 - i * 0.1,
+      quality: qualityPercentage / 100,
       mode: opts.mode,
     })
-    if (getDataUriSize(newDataUri) < opts.maxSize) {
-      break
+
+    if (getDataUriSize(tempDataUri) < opts.maxSize) {
+      minQualityPercentage = qualityPercentage
+      newDataUri = tempDataUri
+    } else {
+      maxQualityPercentage = qualityPercentage
     }
   }
+
   if (!newDataUri) {
     throw new Error('Failed to compress image')
   }
