@@ -115,9 +115,13 @@ msgstr "이번 주에 {0}명이 가입함"
 msgid "{0} of {1}"
 msgstr "{0}/{1}"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:478
+#: src/screens/StarterPack/StarterPackScreen.tsx:479
 msgid "{0} people have used this starter pack!"
 msgstr "{0}명이 이 스타터 팩을 사용했습니다!"
+
+#: src/view/shell/bottom-bar/BottomBar.tsx:203
+msgid "{0} unread items"
+msgstr "읽지 않은 항목 {0}개"
 
 #: src/view/com/util/UserAvatar.tsx:435
 msgid "{0}'s avatar"
@@ -156,9 +160,17 @@ msgstr "{0}개월"
 msgid "{0}s"
 msgstr "{0}초"
 
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:252
+msgid "{badge} unread items"
+msgstr "읽지 않은 항목 {badge}개"
+
 #: src/components/LabelingServiceCard/index.tsx:96
 msgid "{count, plural, one {Liked by # user} other {Liked by # users}}"
 msgstr "{count, plural, other {#}}명의 사용자가 좋아함"
+
+#: src/view/shell/desktop/LeftNav.tsx:223
+msgid "{count} unread items"
+msgstr "읽지 않은 항목 {count}개"
 
 #: src/lib/generate-starterpack.ts:108
 #: src/screens/StarterPack/Wizard/index.tsx:183
@@ -279,6 +291,10 @@ msgstr "{likeCount, plural, other {#}}명의 사용자가 좋아함"
 #: src/view/shell/Drawer.tsx:477
 msgid "{numUnreadNotifications} unread"
 msgstr "{numUnreadNotifications}개 읽지 않음"
+
+#: src/view/shell/bottom-bar/BottomBar.tsx:230
+msgid "{numUnreadNotifications} unread items"
+msgstr "읽지 않은 항목 {numUnreadNotifications}개"
 
 #: src/components/NewskieDialog.tsx:116
 msgid "{profileName} joined Bluesky {0} ago"
@@ -859,7 +875,7 @@ msgstr "앱 비밀번호 \"{name}\"을(를) 삭제하시겠습니까?"
 msgid "Are you sure you want to delete this message? The message will be deleted for you, but not for the other participant."
 msgstr "정말 이 메시지를 삭제하시겠습니까? 나에게 보이는 메시지는 삭제되지만 상대방에게는 삭제되지 않습니다."
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:632
+#: src/screens/StarterPack/StarterPackScreen.tsx:633
 msgid "Are you sure you want to delete this starter pack?"
 msgstr "이 스타터 팩을 삭제하시겠습니까?"
 
@@ -1261,7 +1277,7 @@ msgstr "이메일 변경"
 
 #: src/Navigation.tsx:373
 #: src/view/shell/bottom-bar/BottomBar.tsx:200
-#: src/view/shell/desktop/LeftNav.tsx:336
+#: src/view/shell/desktop/LeftNav.tsx:348
 #: src/view/shell/Drawer.tsx:446
 msgid "Chat"
 msgstr "대화"
@@ -1485,6 +1501,10 @@ msgstr "온보딩 완료 후 계정 사용 시작"
 #: src/screens/Signup/index.tsx:144
 msgid "Complete the challenge"
 msgstr "챌린지 완료하기"
+
+#: src/view/shell/desktop/LeftNav.tsx:314
+msgid "Compose new post"
+msgstr "새 게시물 작성하기"
 
 #: src/view/com/composer/Composer.tsx:773
 msgid "Compose posts up to {MAX_GRAPHEME_LENGTH} characters in length"
@@ -1886,9 +1906,9 @@ msgstr "기본"
 
 #: src/components/dms/MessageMenu.tsx:151
 #: src/screens/Settings/AppPasswords.tsx:204
-#: src/screens/StarterPack/StarterPackScreen.tsx:584
-#: src/screens/StarterPack/StarterPackScreen.tsx:663
-#: src/screens/StarterPack/StarterPackScreen.tsx:743
+#: src/screens/StarterPack/StarterPackScreen.tsx:585
+#: src/screens/StarterPack/StarterPackScreen.tsx:664
+#: src/screens/StarterPack/StarterPackScreen.tsx:744
 #: src/view/com/util/forms/PostDropdownBtn.tsx:673
 #: src/view/screens/AppPasswords.tsx:290
 #: src/view/screens/ProfileList.tsx:726
@@ -1950,12 +1970,12 @@ msgstr "내 계정 삭제…"
 msgid "Delete post"
 msgstr "게시물 삭제"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:578
-#: src/screens/StarterPack/StarterPackScreen.tsx:734
+#: src/screens/StarterPack/StarterPackScreen.tsx:579
+#: src/screens/StarterPack/StarterPackScreen.tsx:735
 msgid "Delete starter pack"
 msgstr "스타터 팩 삭제"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:629
+#: src/screens/StarterPack/StarterPackScreen.tsx:630
 msgid "Delete starter pack?"
 msgstr "스타터 팩 삭제"
 
@@ -2255,7 +2275,7 @@ msgid "Each code works once. You'll receive more invite codes periodically."
 msgstr "각 코드는 한 번만 사용할 수 있습니다. 주기적으로 더 많은 초대 코드를 받게 됩니다."
 
 #: src/screens/Settings/AccountSettings.tsx:102
-#: src/screens/StarterPack/StarterPackScreen.tsx:573
+#: src/screens/StarterPack/StarterPackScreen.tsx:574
 #: src/screens/StarterPack/Wizard/index.tsx:560
 #: src/screens/StarterPack/Wizard/index.tsx:567
 #: src/view/screens/Feeds.tsx:386
@@ -2328,7 +2348,7 @@ msgstr "프로필 편집"
 msgid "Edit Profile"
 msgstr "프로필 편집"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:565
+#: src/screens/StarterPack/StarterPackScreen.tsx:566
 msgid "Edit starter pack"
 msgstr "스타터 팩 편집"
 
@@ -2703,7 +2723,7 @@ msgstr "메시지를 삭제하지 못했습니다"
 msgid "Failed to delete post, please try again"
 msgstr "게시물을 삭제하지 못했습니다. 다시 시도해 주세요"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:697
+#: src/screens/StarterPack/StarterPackScreen.tsx:698
 msgid "Failed to delete starter pack"
 msgstr "스타터 팩을 삭제하지 못했습니다"
 
@@ -2802,7 +2822,7 @@ msgstr "피드백을 보냈습니다!"
 #: src/view/screens/Feeds.tsx:552
 #: src/view/screens/Profile.tsx:232
 #: src/view/screens/Search/Search.tsx:537
-#: src/view/shell/desktop/LeftNav.tsx:408
+#: src/view/shell/desktop/LeftNav.tsx:457
 #: src/view/shell/Drawer.tsx:505
 msgid "Feeds"
 msgstr "피드"
@@ -2895,7 +2915,7 @@ msgid "Follow Account"
 msgstr "계정 팔로우"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:427
-#: src/screens/StarterPack/StarterPackScreen.tsx:434
+#: src/screens/StarterPack/StarterPackScreen.tsx:435
 msgid "Follow all"
 msgstr "모두 팔로우"
 
@@ -3103,7 +3123,7 @@ msgstr "뒤로"
 #: src/screens/List/ListHiddenScreen.tsx:210
 #: src/screens/Profile/ErrorState.tsx:62
 #: src/screens/Profile/ErrorState.tsx:66
-#: src/screens/StarterPack/StarterPackScreen.tsx:756
+#: src/screens/StarterPack/StarterPackScreen.tsx:757
 #: src/view/screens/NotFound.tsx:56
 #: src/view/screens/ProfileFeed.tsx:118
 #: src/view/screens/ProfileList.tsx:1034
@@ -3309,7 +3329,7 @@ msgstr "잠깐! 동영상에 대한 접근 권한이 점차적으로 제공되�
 #: src/Navigation.tsx:585
 #: src/Navigation.tsx:605
 #: src/view/shell/bottom-bar/BottomBar.tsx:158
-#: src/view/shell/desktop/LeftNav.tsx:376
+#: src/view/shell/desktop/LeftNav.tsx:401
 #: src/view/shell/Drawer.tsx:420
 msgid "Home"
 msgstr "홈"
@@ -3532,8 +3552,8 @@ msgstr "채용"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:201
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:207
-#: src/screens/StarterPack/StarterPackScreen.tsx:454
-#: src/screens/StarterPack/StarterPackScreen.tsx:465
+#: src/screens/StarterPack/StarterPackScreen.tsx:455
+#: src/screens/StarterPack/StarterPackScreen.tsx:466
 msgid "Join Bluesky"
 msgstr "Bluesky 가입하기"
 
@@ -3773,7 +3793,7 @@ msgstr "리스트 언뮤트됨"
 #: src/Navigation.tsx:133
 #: src/view/screens/Profile.tsx:227
 #: src/view/screens/Profile.tsx:234
-#: src/view/shell/desktop/LeftNav.tsx:414
+#: src/view/shell/desktop/LeftNav.tsx:475
 #: src/view/shell/Drawer.tsx:520
 msgid "Lists"
 msgstr "리스트"
@@ -4270,11 +4290,10 @@ msgstr "새 게시물"
 #: src/view/screens/ProfileFeed.tsx:433
 #: src/view/screens/ProfileList.tsx:248
 #: src/view/screens/ProfileList.tsx:287
-#: src/view/shell/desktop/LeftNav.tsx:310
 msgid "New post"
 msgstr "새 게시물"
 
-#: src/view/shell/desktop/LeftNav.tsx:318
+#: src/view/shell/desktop/LeftNav.tsx:322
 msgctxt "action"
 msgid "New Post"
 msgstr "새 게시물"
@@ -4509,7 +4528,7 @@ msgstr "알림음"
 #: src/view/screens/Notifications.tsx:153
 #: src/view/screens/Notifications.tsx:199
 #: src/view/shell/bottom-bar/BottomBar.tsx:226
-#: src/view/shell/desktop/LeftNav.tsx:391
+#: src/view/shell/desktop/LeftNav.tsx:438
 #: src/view/shell/Drawer.tsx:473
 msgid "Notifications"
 msgstr "알림"
@@ -4672,7 +4691,7 @@ msgstr "내비게이션 열기"
 msgid "Open post options menu"
 msgstr "게시물 옵션 메뉴 열기"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:551
+#: src/screens/StarterPack/StarterPackScreen.tsx:552
 msgid "Open starter pack menu"
 msgstr "스타터 팩 메뉴 열기"
 
@@ -5255,7 +5274,7 @@ msgid "profile"
 msgstr "프로필"
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:271
-#: src/view/shell/desktop/LeftNav.tsx:422
+#: src/view/shell/desktop/LeftNav.tsx:493
 #: src/view/shell/Drawer.tsx:71
 #: src/view/shell/Drawer.tsx:545
 msgid "Profile"
@@ -5634,8 +5653,8 @@ msgstr "메시지 신고"
 msgid "Report post"
 msgstr "게시물 신고"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:604
-#: src/screens/StarterPack/StarterPackScreen.tsx:607
+#: src/screens/StarterPack/StarterPackScreen.tsx:605
+#: src/screens/StarterPack/StarterPackScreen.tsx:608
 msgid "Report starter pack"
 msgstr "스타터 팩 신고"
 
@@ -5681,7 +5700,7 @@ msgstr "재게시"
 msgid "Repost"
 msgstr "재게시"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:546
+#: src/screens/StarterPack/StarterPackScreen.tsx:547
 #: src/view/com/util/post-ctrls/RepostButton.tsx:95
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:49
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:104
@@ -5815,7 +5834,7 @@ msgstr "다시 시도"
 
 #: src/components/Error.tsx:74
 #: src/screens/List/ListHiddenScreen.tsx:205
-#: src/screens/StarterPack/StarterPackScreen.tsx:750
+#: src/screens/StarterPack/StarterPackScreen.tsx:751
 #: src/view/screens/ProfileList.tsx:1030
 msgid "Return to previous page"
 msgstr "이전 페이지로 돌아갑니다"
@@ -5942,7 +5961,7 @@ msgstr "맨 위로 스크롤"
 #: src/view/com/modals/ListAddRemoveUsers.tsx:76
 #: src/view/screens/Search/Search.tsx:594
 #: src/view/shell/bottom-bar/BottomBar.tsx:178
-#: src/view/shell/desktop/LeftNav.tsx:384
+#: src/view/shell/desktop/LeftNav.tsx:419
 #: src/view/shell/Drawer.tsx:394
 msgid "Search"
 msgstr "검색"
@@ -6223,7 +6242,7 @@ msgstr "비밀번호 재설정을 위한 이메일을 설정합니다"
 #: src/Navigation.tsx:158
 #: src/screens/Settings/Settings.tsx:57
 #: src/view/screens/Settings/index.tsx:312
-#: src/view/shell/desktop/LeftNav.tsx:430
+#: src/view/shell/desktop/LeftNav.tsx:511
 #: src/view/shell/Drawer.tsx:558
 msgid "Settings"
 msgstr "설정"
@@ -6238,7 +6257,7 @@ msgstr "외설적"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:175
 #: src/screens/StarterPack/StarterPackScreen.tsx:422
-#: src/screens/StarterPack/StarterPackScreen.tsx:593
+#: src/screens/StarterPack/StarterPackScreen.tsx:594
 #: src/view/com/profile/ProfileMenu.tsx:195
 #: src/view/com/profile/ProfileMenu.tsx:204
 #: src/view/com/util/forms/PostDropdownBtn.tsx:452
@@ -6274,7 +6293,7 @@ msgstr "피드 공유"
 
 #: src/components/StarterPack/ShareDialog.tsx:124
 #: src/components/StarterPack/ShareDialog.tsx:131
-#: src/screens/StarterPack/StarterPackScreen.tsx:597
+#: src/screens/StarterPack/StarterPackScreen.tsx:598
 msgid "Share link"
 msgstr "링크 공유"
 
@@ -6441,9 +6460,9 @@ msgstr "경고 표시 및 피드에서 필터링"
 #: src/view/shell/bottom-bar/BottomBar.tsx:311
 #: src/view/shell/bottom-bar/BottomBar.tsx:312
 #: src/view/shell/bottom-bar/BottomBar.tsx:314
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:204
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:205
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:207
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:206
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:208
 #: src/view/shell/NavSignupCard.tsx:57
 #: src/view/shell/NavSignupCard.tsx:62
 msgid "Sign in"
@@ -6484,9 +6503,9 @@ msgstr "로그아웃하시겠습니까?"
 #: src/view/shell/bottom-bar/BottomBar.tsx:301
 #: src/view/shell/bottom-bar/BottomBar.tsx:302
 #: src/view/shell/bottom-bar/BottomBar.tsx:304
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:194
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:195
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:197
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:196
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:198
 #: src/view/shell/NavSignupCard.tsx:47
 #: src/view/shell/NavSignupCard.tsx:52
 msgid "Sign up"
@@ -6624,7 +6643,7 @@ msgstr "{0} 님의 스타터 팩"
 msgid "Starter pack by you"
 msgstr "내 스타터 팩"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:714
+#: src/screens/StarterPack/StarterPackScreen.tsx:715
 msgid "Starter pack is invalid"
 msgstr "스타터 팩이 유효하지 않음"
 
@@ -6918,7 +6937,7 @@ msgstr "개인정보 처리방침을 <0/>(으)로 이동했습니다"
 msgid "The selected video is larger than 50MB."
 msgstr "선택한 동영상이 50MB를 초과합니다."
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:724
+#: src/screens/StarterPack/StarterPackScreen.tsx:725
 msgid "The starter pack that you are trying to view is invalid. You may delete this starter pack instead."
 msgstr "이 스타터 팩은 유효하지 않습니다. 대신 이 스타터 팩을 삭제할 수 있습니다."
 
@@ -7353,7 +7372,7 @@ msgstr "리스트 언뮤트"
 msgid "Unable to contact your service. Please check your Internet connection."
 msgstr "서비스에 연결할 수 없습니다. 인터넷 연결을 확인하세요."
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:648
+#: src/screens/StarterPack/StarterPackScreen.tsx:649
 msgid "Unable to delete"
 msgstr "삭제할 수 없음"
 
@@ -8092,7 +8111,7 @@ msgstr "예"
 msgid "Yes, deactivate"
 msgstr "비활성화"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:660
+#: src/screens/StarterPack/StarterPackScreen.tsx:661
 msgid "Yes, delete this starter pack"
 msgstr "이 스타터 팩 삭제하기"
 
