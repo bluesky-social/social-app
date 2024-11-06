@@ -18,13 +18,18 @@ export const formatCount = (i18n: I18n, num: number) => {
     // HACK: janky workaround for formatjs not supporting roundingMode
     // https://github.com/formatjs/formatjs/issues/4359
     // TODO: remove when fixed by formatjs -sfn
-    //
-    // error is when the number is within 50 of the threshold to the next rounded value
-    // eg. 1050 is within 50 of 1100, so will incorrectly round to 1.1k. 1049 correctly goes to 1k
-    const isNearThreshould = num > 1000 && num % 100 >= 50
-    // applying `-((num % 100) - 49)` to the number will take it back down to beneath the threshold
-    const correctedNum = isNearThreshould ? num - ((num % 100) - 49) : num
-    return i18n.number(correctedNum, {
+    const factor =
+      num < 1e3
+        ? 1
+        : num < 1e6
+        ? 1e2 // 1e(6-4)
+        : num < 1e9
+        ? 1e5 // 1e(9-4)
+        : num < 1e12
+        ? 1e8 // 1e(12-4)
+        : 1e11 // 1e(15-4)
+    const truncatedNum = Math.trunc(num / factor) * factor
+    return i18n.number(truncatedNum, {
       notation: 'compact',
       maximumFractionDigits: 1,
       // @ts-ignore types are missing in CI
