@@ -107,7 +107,8 @@ let PostCtrls = ({
     [t],
   ) as StyleProp<ViewStyle>
 
-  const [isToggleLikeIcon, setIsToggleLikeIcon] = React.useState(false)
+  const [hasLikeIconBeenToggled, setHasLikeIconBeenToggled] =
+    React.useState(false)
 
   const onPressToggleLike = React.useCallback(async () => {
     if (isBlocked) {
@@ -119,7 +120,7 @@ let PostCtrls = ({
     }
 
     try {
-      setIsToggleLikeIcon(true)
+      setHasLikeIconBeenToggled(true)
       if (!post.viewer?.like) {
         playHaptic('Light')
         sendInteraction({
@@ -311,13 +312,13 @@ let PostCtrls = ({
           <AnimatedLikeIcon
             isLiked={Boolean(post.viewer?.like)}
             big={big}
-            isToggle={isToggleLikeIcon}
+            hasBeenToggled={hasLikeIconBeenToggled}
           />
           <CountWheel
             likeCount={post.likeCount ?? 0}
             big={big}
             isLiked={Boolean(post.viewer?.like)}
-            isToggle={isToggleLikeIcon}
+            hasBeenToggled={hasLikeIconBeenToggled}
           />
         </Pressable>
       </View>

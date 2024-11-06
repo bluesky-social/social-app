@@ -151,6 +151,7 @@ interface NavItemProps {
 }
 function NavItem({count, href, icon, iconFilled, label}: NavItemProps) {
   const t = useTheme()
+  const {_} = useLingui()
   const {currentAccount} = useSession()
   const {gtMobile, gtTablet} = useBreakpoints()
   const isTablet = gtMobile && !gtTablet
@@ -199,7 +200,7 @@ function NavItem({count, href, icon, iconFilled, label}: NavItemProps) {
       // @ts-ignore web only -prf
       href={href}
       dataSet={{noUnderline: 1}}
-      accessibilityRole="tab"
+      role="link"
       accessibilityLabel={label}
       accessibilityHint="">
       <View
@@ -219,6 +220,9 @@ function NavItem({count, href, icon, iconFilled, label}: NavItemProps) {
         {isCurrent ? iconFilled : icon}
         {typeof count === 'string' && count ? (
           <Text
+            accessibilityLabel={_(msg`${count} unread items`)}
+            accessibilityHint=""
+            accessible={true}
             style={[
               a.absolute,
               a.text_xs,
@@ -307,7 +311,7 @@ function ComposeBtn() {
     <View style={[a.flex_row, a.pl_md, a.pt_xl]}>
       <Button
         disabled={isFetchingHandle}
-        label={_(msg`New post`)}
+        label={_(msg`Compose new post`)}
         onPress={onPressCompose}
         size="large"
         variant="solid"
@@ -331,8 +335,16 @@ function ChatNavItem() {
     <NavItem
       href="/messages"
       count={numUnreadMessages.numUnread}
-      icon={<Message style={pal.text} width={NAV_ICON_WIDTH} />}
-      iconFilled={<MessageFilled style={pal.text} width={NAV_ICON_WIDTH} />}
+      icon={
+        <Message style={pal.text} aria-hidden={true} width={NAV_ICON_WIDTH} />
+      }
+      iconFilled={
+        <MessageFilled
+          style={pal.text}
+          aria-hidden={true}
+          width={NAV_ICON_WIDTH}
+        />
+      }
       label={_(msg`Chat`)}
     />
   )
@@ -351,6 +363,7 @@ export function DesktopLeftNav() {
 
   return (
     <View
+      role="navigation"
       style={[
         styles.leftNav,
         isTablet && styles.leftNavTablet,
@@ -371,23 +384,57 @@ export function DesktopLeftNav() {
 
           <NavItem
             href="/"
-            icon={<Home width={NAV_ICON_WIDTH} style={pal.text} />}
-            iconFilled={<HomeFilled width={NAV_ICON_WIDTH} style={pal.text} />}
+            icon={
+              <Home
+                aria-hidden={true}
+                width={NAV_ICON_WIDTH}
+                style={pal.text}
+              />
+            }
+            iconFilled={
+              <HomeFilled
+                aria-hidden={true}
+                width={NAV_ICON_WIDTH}
+                style={pal.text}
+              />
+            }
             label={_(msg`Home`)}
           />
           <NavItem
             href="/search"
-            icon={<MagnifyingGlass style={pal.text} width={NAV_ICON_WIDTH} />}
+            icon={
+              <MagnifyingGlass
+                style={pal.text}
+                aria-hidden={true}
+                width={NAV_ICON_WIDTH}
+              />
+            }
             iconFilled={
-              <MagnifyingGlassFilled style={pal.text} width={NAV_ICON_WIDTH} />
+              <MagnifyingGlassFilled
+                style={pal.text}
+                aria-hidden={true}
+                width={NAV_ICON_WIDTH}
+              />
             }
             label={_(msg`Search`)}
           />
           <NavItem
             href="/notifications"
             count={numUnreadNotifications}
-            icon={<Bell width={NAV_ICON_WIDTH} style={pal.text} />}
-            iconFilled={<BellFilled width={NAV_ICON_WIDTH} style={pal.text} />}
+            icon={
+              <Bell
+                aria-hidden={true}
+                width={NAV_ICON_WIDTH}
+                style={pal.text}
+              />
+            }
+            iconFilled={
+              <BellFilled
+                aria-hidden={true}
+                width={NAV_ICON_WIDTH}
+                style={pal.text}
+              />
+            }
             label={_(msg`Notifications`)}
           />
           <ChatNavItem />
@@ -396,12 +443,14 @@ export function DesktopLeftNav() {
             icon={
               <Hashtag
                 style={pal.text as FontAwesomeIconStyle}
+                aria-hidden={true}
                 width={NAV_ICON_WIDTH}
               />
             }
             iconFilled={
               <HashtagFilled
                 style={pal.text as FontAwesomeIconStyle}
+                aria-hidden={true}
                 width={NAV_ICON_WIDTH}
               />
             }
@@ -409,23 +458,55 @@ export function DesktopLeftNav() {
           />
           <NavItem
             href="/lists"
-            icon={<List style={pal.text} width={NAV_ICON_WIDTH} />}
-            iconFilled={<ListFilled style={pal.text} width={NAV_ICON_WIDTH} />}
+            icon={
+              <List
+                style={pal.text}
+                aria-hidden={true}
+                width={NAV_ICON_WIDTH}
+              />
+            }
+            iconFilled={
+              <ListFilled
+                style={pal.text}
+                aria-hidden={true}
+                width={NAV_ICON_WIDTH}
+              />
+            }
             label={_(msg`Lists`)}
           />
           <NavItem
             href={currentAccount ? makeProfileLink(currentAccount) : '/'}
-            icon={<UserCircle width={NAV_ICON_WIDTH} style={pal.text} />}
+            icon={
+              <UserCircle
+                aria-hidden={true}
+                width={NAV_ICON_WIDTH}
+                style={pal.text}
+              />
+            }
             iconFilled={
-              <UserCircleFilled width={NAV_ICON_WIDTH} style={pal.text} />
+              <UserCircleFilled
+                aria-hidden={true}
+                width={NAV_ICON_WIDTH}
+                style={pal.text}
+              />
             }
             label={_(msg`Profile`)}
           />
           <NavItem
             href="/settings"
-            icon={<Settings width={NAV_ICON_WIDTH} style={pal.text} />}
+            icon={
+              <Settings
+                aria-hidden={true}
+                width={NAV_ICON_WIDTH}
+                style={pal.text}
+              />
+            }
             iconFilled={
-              <SettingsFilled width={NAV_ICON_WIDTH} style={pal.text} />
+              <SettingsFilled
+                aria-hidden={true}
+                width={NAV_ICON_WIDTH}
+                style={pal.text}
+              />
             }
             label={_(msg`Settings`)}
           />

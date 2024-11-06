@@ -1,29 +1,16 @@
 import React from 'react'
 import type {MeasuredDimensions} from 'react-native-reanimated'
-import {AppBskyActorDefs} from '@atproto/api'
+import {nanoid} from 'nanoid/non-secure'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
+import {ImageSource} from '#/view/com/lightbox/ImageViewing/@types'
 
-type ProfileImageLightbox = {
-  type: 'profile-image'
-  profile: AppBskyActorDefs.ProfileViewDetailed
-  thumbDims: null
-}
-
-type ImagesLightboxItem = {
-  uri: string
-  thumbUri: string
-  alt?: string
-}
-
-type ImagesLightbox = {
-  type: 'images'
-  images: ImagesLightboxItem[]
+export type Lightbox = {
+  id: string
+  images: ImageSource[]
   thumbDims: MeasuredDimensions | null
   index: number
 }
-
-type Lightbox = ProfileImageLightbox | ImagesLightbox
 
 const LightboxContext = React.createContext<{
   activeLightbox: Lightbox | null
@@ -32,7 +19,7 @@ const LightboxContext = React.createContext<{
 })
 
 const LightboxControlContext = React.createContext<{
-  openLightbox: (lightbox: Lightbox) => void
+  openLightbox: (lightbox: Omit<Lightbox, 'id'>) => void
   closeLightbox: () => boolean
 }>({
   openLightbox: () => {},
@@ -44,9 +31,11 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     null,
   )
 
-  const openLightbox = useNonReactiveCallback((lightbox: Lightbox) => {
-    setActiveLightbox(lightbox)
-  })
+  const openLightbox = useNonReactiveCallback(
+    (lightbox: Omit<Lightbox, 'id'>) => {
+      setActiveLightbox({...lightbox, id: nanoid()})
+    },
+  )
 
   const closeLightbox = useNonReactiveCallback(() => {
     let wasActive = !!activeLightbox
