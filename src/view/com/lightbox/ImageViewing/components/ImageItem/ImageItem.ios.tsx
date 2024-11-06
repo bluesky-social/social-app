@@ -139,6 +139,8 @@ const ImageItem = ({
         showsVerticalScrollIndicator={false}
         maximumZoomScale={maxZoomScale}
         onScroll={scrollHandler}
+        bounces={scaled}
+        bouncesZoom={true}
         centerContent>
         <ActivityIndicator size="small" color="#FFF" style={styles.loading} />
         <AnimatedImage
