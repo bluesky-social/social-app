@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-05 02:08\n"
+"PO-Revision-Date: 2024-11-06 03:28\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -120,9 +120,13 @@ msgstr "本週加入了 {0} 人"
 msgid "{0} of {1}"
 msgstr "第 {0} 個（共 {1} 個）"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:478
+#: src/screens/StarterPack/StarterPackScreen.tsx:479
 msgid "{0} people have used this starter pack!"
 msgstr "{0} 人已使用此新手包！"
+
+#: src/view/shell/bottom-bar/BottomBar.tsx:203
+msgid "{0} unread items"
+msgstr "{0} 條未讀"
 
 #: src/view/com/util/UserAvatar.tsx:435
 msgid "{0}'s avatar"
@@ -161,9 +165,17 @@ msgstr "{0}個月前"
 msgid "{0}s"
 msgstr "{0}秒前"
 
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:252
+msgid "{badge} unread items"
+msgstr "{badge} 條未讀"
+
 #: src/components/LabelingServiceCard/index.tsx:96
 msgid "{count, plural, one {Liked by # user} other {Liked by # users}}"
 msgstr "{count, plural, one {# 個用戶表示喜歡} other {# 個用戶表示喜歡}}"
+
+#: src/view/shell/desktop/LeftNav.tsx:223
+msgid "{count} unread items"
+msgstr "{count} 條未讀"
 
 #: src/lib/generate-starterpack.ts:108
 #: src/screens/StarterPack/Wizard/index.tsx:183
@@ -284,6 +296,10 @@ msgstr "{likeCount, plural, one {# 個用戶表示喜歡} other {# 個用戶表�
 #: src/view/shell/Drawer.tsx:477
 msgid "{numUnreadNotifications} unread"
 msgstr "{numUnreadNotifications} 個未讀通知"
+
+#: src/view/shell/bottom-bar/BottomBar.tsx:230
+msgid "{numUnreadNotifications} unread items"
+msgstr "{numUnreadNotifications} 條通知未讀"
 
 #: src/components/NewskieDialog.tsx:116
 msgid "{profileName} joined Bluesky {0} ago"
@@ -864,7 +880,7 @@ msgstr "您確定要刪除這個應用程式專用密碼「{name}」嗎？"
 msgid "Are you sure you want to delete this message? The message will be deleted for you, but not for the other participant."
 msgstr "您確定要刪除這則訊息嗎？該訊息將為您刪除，但不會為其他參與者刪除。"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:632
+#: src/screens/StarterPack/StarterPackScreen.tsx:633
 msgid "Are you sure you want to delete this starter pack?"
 msgstr "您確定要刪除這個新手包嗎？"
 
@@ -1266,7 +1282,7 @@ msgstr "變更您的電子郵件地址"
 
 #: src/Navigation.tsx:373
 #: src/view/shell/bottom-bar/BottomBar.tsx:200
-#: src/view/shell/desktop/LeftNav.tsx:336
+#: src/view/shell/desktop/LeftNav.tsx:348
 #: src/view/shell/Drawer.tsx:446
 msgid "Chat"
 msgstr "對話"
@@ -1490,6 +1506,10 @@ msgstr "完成初始設定並開始使用您的帳號"
 #: src/screens/Signup/index.tsx:144
 msgid "Complete the challenge"
 msgstr "完成驗證"
+
+#: src/view/shell/desktop/LeftNav.tsx:314
+msgid "Compose new post"
+msgstr "撰寫新貼文"
 
 #: src/view/com/composer/Composer.tsx:773
 msgid "Compose posts up to {MAX_GRAPHEME_LENGTH} characters in length"
@@ -1891,9 +1911,9 @@ msgstr "預設"
 
 #: src/components/dms/MessageMenu.tsx:151
 #: src/screens/Settings/AppPasswords.tsx:204
-#: src/screens/StarterPack/StarterPackScreen.tsx:584
-#: src/screens/StarterPack/StarterPackScreen.tsx:663
-#: src/screens/StarterPack/StarterPackScreen.tsx:743
+#: src/screens/StarterPack/StarterPackScreen.tsx:585
+#: src/screens/StarterPack/StarterPackScreen.tsx:664
+#: src/screens/StarterPack/StarterPackScreen.tsx:744
 #: src/view/com/util/forms/PostDropdownBtn.tsx:673
 #: src/view/screens/AppPasswords.tsx:290
 #: src/view/screens/ProfileList.tsx:726
@@ -1955,12 +1975,12 @@ msgstr "刪除我的帳號…"
 msgid "Delete post"
 msgstr "刪除貼文"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:578
-#: src/screens/StarterPack/StarterPackScreen.tsx:734
+#: src/screens/StarterPack/StarterPackScreen.tsx:579
+#: src/screens/StarterPack/StarterPackScreen.tsx:735
 msgid "Delete starter pack"
 msgstr "刪除新手包"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:629
+#: src/screens/StarterPack/StarterPackScreen.tsx:630
 msgid "Delete starter pack?"
 msgstr "要刪除新手包嗎？"
 
@@ -2260,7 +2280,7 @@ msgid "Each code works once. You'll receive more invite codes periodically."
 msgstr "每個邀請碼只能使用一次。您將定期收到更多的邀請碼。"
 
 #: src/screens/Settings/AccountSettings.tsx:102
-#: src/screens/StarterPack/StarterPackScreen.tsx:573
+#: src/screens/StarterPack/StarterPackScreen.tsx:574
 #: src/screens/StarterPack/Wizard/index.tsx:560
 #: src/screens/StarterPack/Wizard/index.tsx:567
 #: src/view/screens/Feeds.tsx:386
@@ -2333,7 +2353,7 @@ msgstr "編輯個人檔案"
 msgid "Edit Profile"
 msgstr "編輯個人檔案"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:565
+#: src/screens/StarterPack/StarterPackScreen.tsx:566
 msgid "Edit starter pack"
 msgstr "編輯新手包"
 
@@ -2708,7 +2728,7 @@ msgstr "無法刪除訊息"
 msgid "Failed to delete post, please try again"
 msgstr "無法刪除貼文，請再試一次"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:697
+#: src/screens/StarterPack/StarterPackScreen.tsx:698
 msgid "Failed to delete starter pack"
 msgstr "無法刪除新手包"
 
@@ -2807,7 +2827,7 @@ msgstr "意見回饋已送出！"
 #: src/view/screens/Feeds.tsx:552
 #: src/view/screens/Profile.tsx:232
 #: src/view/screens/Search/Search.tsx:537
-#: src/view/shell/desktop/LeftNav.tsx:408
+#: src/view/shell/desktop/LeftNav.tsx:457
 #: src/view/shell/Drawer.tsx:505
 msgid "Feeds"
 msgstr "動態源"
@@ -2900,7 +2920,7 @@ msgid "Follow Account"
 msgstr "跟隨帳號"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:427
-#: src/screens/StarterPack/StarterPackScreen.tsx:434
+#: src/screens/StarterPack/StarterPackScreen.tsx:435
 msgid "Follow all"
 msgstr "全部跟隨"
 
@@ -3108,7 +3128,7 @@ msgstr "返回"
 #: src/screens/List/ListHiddenScreen.tsx:210
 #: src/screens/Profile/ErrorState.tsx:62
 #: src/screens/Profile/ErrorState.tsx:66
-#: src/screens/StarterPack/StarterPackScreen.tsx:756
+#: src/screens/StarterPack/StarterPackScreen.tsx:757
 #: src/view/screens/NotFound.tsx:56
 #: src/view/screens/ProfileFeed.tsx:118
 #: src/view/screens/ProfileList.tsx:1034
@@ -3314,7 +3334,7 @@ msgstr "等一下！我們正在逐步開放影片功能，您還在等候名單
 #: src/Navigation.tsx:585
 #: src/Navigation.tsx:605
 #: src/view/shell/bottom-bar/BottomBar.tsx:158
-#: src/view/shell/desktop/LeftNav.tsx:376
+#: src/view/shell/desktop/LeftNav.tsx:401
 #: src/view/shell/Drawer.tsx:420
 msgid "Home"
 msgstr "首頁"
@@ -3537,8 +3557,8 @@ msgstr "工作"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:201
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:207
-#: src/screens/StarterPack/StarterPackScreen.tsx:454
-#: src/screens/StarterPack/StarterPackScreen.tsx:465
+#: src/screens/StarterPack/StarterPackScreen.tsx:455
+#: src/screens/StarterPack/StarterPackScreen.tsx:466
 msgid "Join Bluesky"
 msgstr "加入 Bluesky"
 
@@ -3778,7 +3798,7 @@ msgstr "已解除靜音列表"
 #: src/Navigation.tsx:133
 #: src/view/screens/Profile.tsx:227
 #: src/view/screens/Profile.tsx:234
-#: src/view/shell/desktop/LeftNav.tsx:414
+#: src/view/shell/desktop/LeftNav.tsx:475
 #: src/view/shell/Drawer.tsx:520
 msgid "Lists"
 msgstr "列表"
@@ -4275,11 +4295,10 @@ msgstr "新貼文"
 #: src/view/screens/ProfileFeed.tsx:433
 #: src/view/screens/ProfileList.tsx:248
 #: src/view/screens/ProfileList.tsx:287
-#: src/view/shell/desktop/LeftNav.tsx:310
 msgid "New post"
 msgstr "新貼文"
 
-#: src/view/shell/desktop/LeftNav.tsx:318
+#: src/view/shell/desktop/LeftNav.tsx:322
 msgctxt "action"
 msgid "New Post"
 msgstr "新貼文"
@@ -4514,7 +4533,7 @@ msgstr "通知音效"
 #: src/view/screens/Notifications.tsx:153
 #: src/view/screens/Notifications.tsx:199
 #: src/view/shell/bottom-bar/BottomBar.tsx:226
-#: src/view/shell/desktop/LeftNav.tsx:391
+#: src/view/shell/desktop/LeftNav.tsx:438
 #: src/view/shell/Drawer.tsx:473
 msgid "Notifications"
 msgstr "通知"
@@ -4677,7 +4696,7 @@ msgstr "開啟導覽"
 msgid "Open post options menu"
 msgstr "開啟貼文選項選單"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:551
+#: src/screens/StarterPack/StarterPackScreen.tsx:552
 msgid "Open starter pack menu"
 msgstr "開啟新手包選單"
 
@@ -5260,7 +5279,7 @@ msgid "profile"
 msgstr "個人檔案"
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:271
-#: src/view/shell/desktop/LeftNav.tsx:422
+#: src/view/shell/desktop/LeftNav.tsx:493
 #: src/view/shell/Drawer.tsx:71
 #: src/view/shell/Drawer.tsx:545
 msgid "Profile"
@@ -5639,8 +5658,8 @@ msgstr "檢舉訊息"
 msgid "Report post"
 msgstr "檢舉貼文"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:604
-#: src/screens/StarterPack/StarterPackScreen.tsx:607
+#: src/screens/StarterPack/StarterPackScreen.tsx:605
+#: src/screens/StarterPack/StarterPackScreen.tsx:608
 msgid "Report starter pack"
 msgstr "檢舉新手包"
 
@@ -5686,7 +5705,7 @@ msgstr "轉發"
 msgid "Repost"
 msgstr "轉發"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:546
+#: src/screens/StarterPack/StarterPackScreen.tsx:547
 #: src/view/com/util/post-ctrls/RepostButton.tsx:95
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:49
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:104
@@ -5820,7 +5839,7 @@ msgstr "重試"
 
 #: src/components/Error.tsx:74
 #: src/screens/List/ListHiddenScreen.tsx:205
-#: src/screens/StarterPack/StarterPackScreen.tsx:750
+#: src/screens/StarterPack/StarterPackScreen.tsx:751
 #: src/view/screens/ProfileList.tsx:1030
 msgid "Return to previous page"
 msgstr "返回上一頁"
@@ -5854,7 +5873,7 @@ msgstr "返回上一頁"
 msgid "Save"
 msgstr "儲存"
 
-#: src/view/com/lightbox/ImageViewing/index.tsx:218
+#: src/view/com/lightbox/ImageViewing/index.tsx:227
 #: src/view/com/modals/CreateOrEditList.tsx:325
 msgctxt "action"
 msgid "Save"
@@ -5947,7 +5966,7 @@ msgstr "捲動到頂部"
 #: src/view/com/modals/ListAddRemoveUsers.tsx:76
 #: src/view/screens/Search/Search.tsx:594
 #: src/view/shell/bottom-bar/BottomBar.tsx:178
-#: src/view/shell/desktop/LeftNav.tsx:384
+#: src/view/shell/desktop/LeftNav.tsx:419
 #: src/view/shell/Drawer.tsx:394
 msgid "Search"
 msgstr "搜尋"
@@ -6228,7 +6247,7 @@ msgstr "設定用於重設密碼的電子郵件"
 #: src/Navigation.tsx:158
 #: src/screens/Settings/Settings.tsx:57
 #: src/view/screens/Settings/index.tsx:312
-#: src/view/shell/desktop/LeftNav.tsx:430
+#: src/view/shell/desktop/LeftNav.tsx:511
 #: src/view/shell/Drawer.tsx:558
 msgid "Settings"
 msgstr "設定"
@@ -6243,7 +6262,7 @@ msgstr "性暗示"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:175
 #: src/screens/StarterPack/StarterPackScreen.tsx:422
-#: src/screens/StarterPack/StarterPackScreen.tsx:593
+#: src/screens/StarterPack/StarterPackScreen.tsx:594
 #: src/view/com/profile/ProfileMenu.tsx:195
 #: src/view/com/profile/ProfileMenu.tsx:204
 #: src/view/com/util/forms/PostDropdownBtn.tsx:452
@@ -6253,7 +6272,7 @@ msgstr "性暗示"
 msgid "Share"
 msgstr "分享"
 
-#: src/view/com/lightbox/ImageViewing/index.tsx:227
+#: src/view/com/lightbox/ImageViewing/index.tsx:236
 msgctxt "action"
 msgid "Share"
 msgstr "分享"
@@ -6279,7 +6298,7 @@ msgstr "分享動態源"
 
 #: src/components/StarterPack/ShareDialog.tsx:124
 #: src/components/StarterPack/ShareDialog.tsx:131
-#: src/screens/StarterPack/StarterPackScreen.tsx:597
+#: src/screens/StarterPack/StarterPackScreen.tsx:598
 msgid "Share link"
 msgstr "分享連結"
 
@@ -6446,9 +6465,9 @@ msgstr "顯示警告並從動態中篩選"
 #: src/view/shell/bottom-bar/BottomBar.tsx:311
 #: src/view/shell/bottom-bar/BottomBar.tsx:312
 #: src/view/shell/bottom-bar/BottomBar.tsx:314
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:204
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:205
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:207
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:206
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:208
 #: src/view/shell/NavSignupCard.tsx:57
 #: src/view/shell/NavSignupCard.tsx:62
 msgid "Sign in"
@@ -6489,9 +6508,9 @@ msgstr "登出？"
 #: src/view/shell/bottom-bar/BottomBar.tsx:301
 #: src/view/shell/bottom-bar/BottomBar.tsx:302
 #: src/view/shell/bottom-bar/BottomBar.tsx:304
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:194
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:195
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:197
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:196
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:198
 #: src/view/shell/NavSignupCard.tsx:47
 #: src/view/shell/NavSignupCard.tsx:52
 msgid "Sign up"
@@ -6629,7 +6648,7 @@ msgstr "由 {0} 建立的新手包"
 msgid "Starter pack by you"
 msgstr "由您建立的新手包"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:714
+#: src/screens/StarterPack/StarterPackScreen.tsx:715
 msgid "Starter pack is invalid"
 msgstr "無效的新手包"
 
@@ -6923,7 +6942,7 @@ msgstr "隱私權政策已移動到 <0/>"
 msgid "The selected video is larger than 50MB."
 msgstr "選擇的影片檔案大小超過 50MB。"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:724
+#: src/screens/StarterPack/StarterPackScreen.tsx:725
 msgid "The starter pack that you are trying to view is invalid. You may delete this starter pack instead."
 msgstr "您正在嘗試查看的新手包無效。您可以考慮刪除這個新手包。"
 
@@ -7358,7 +7377,7 @@ msgstr "取消靜音列表"
 msgid "Unable to contact your service. Please check your Internet connection."
 msgstr "無法連線到服務，請檢查您的網路連線。"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:648
+#: src/screens/StarterPack/StarterPackScreen.tsx:649
 msgid "Unable to delete"
 msgstr "無法刪除"
 
@@ -8097,7 +8116,7 @@ msgstr "開"
 msgid "Yes, deactivate"
 msgstr "確定並停用"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:660
+#: src/screens/StarterPack/StarterPackScreen.tsx:661
 msgid "Yes, delete this starter pack"
 msgstr "是，刪除這個新手包"
 
