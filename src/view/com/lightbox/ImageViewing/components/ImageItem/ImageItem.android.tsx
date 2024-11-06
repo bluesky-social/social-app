@@ -26,7 +26,7 @@ import {
   TransformMatrix,
 } from '../../transforms'
 
-const MIN_DOUBLE_TAP_SCALE = 2
+const MIN_SCREEN_ZOOM = 2
 const MAX_ORIGINAL_IMAGE_ZOOM = 2
 
 const initialTransform = createTransform()
@@ -166,8 +166,10 @@ const ImageItem = ({
       // Don't let the picture zoom in so close that it gets blurry.
       // Also, like in stock Android apps, don't let the user zoom out further than 1:1.
       const [, , committedScale] = readTransform(committedTransform.value)
-      const maxCommittedScale =
-        (imageDimensions.width / screenSize.width) * MAX_ORIGINAL_IMAGE_ZOOM
+      const maxCommittedScale = Math.max(
+        MIN_SCREEN_ZOOM,
+        (imageDimensions.width / screenSize.width) * MAX_ORIGINAL_IMAGE_ZOOM,
+      )
       const minPinchScale = 1 / committedScale
       const maxPinchScale = maxCommittedScale / committedScale
       const nextPinchScale = Math.min(
@@ -277,11 +279,13 @@ const ImageItem = ({
       const candidateScale = Math.max(
         imageAspect / screenAspect,
         screenAspect / imageAspect,
-        MIN_DOUBLE_TAP_SCALE,
+        MIN_SCREEN_ZOOM,
       )
       // But don't zoom in so close that the picture gets blurry.
-      const maxScale =
-        (imageDimensions.width / screenSize.width) * MAX_ORIGINAL_IMAGE_ZOOM
+      const maxScale = Math.max(
+        MIN_SCREEN_ZOOM,
+        (imageDimensions.width / screenSize.width) * MAX_ORIGINAL_IMAGE_ZOOM,
+      )
       const scale = Math.min(candidateScale, maxScale)
 
       // Calculate where we would be if the user pinched into the double tapped point.
