@@ -138,7 +138,7 @@ function ImageView({
         style={styles.pager}>
         {images.map(imageSrc => (
           <View key={imageSrc.uri}>
-            <ImageItem
+            <LightboxImage
               onTap={onTap}
               onZoom={onZoom}
               imageSrc={imageSrc}
@@ -164,6 +164,36 @@ function ImageView({
         </Animated.View>
       </View>
     </View>
+  )
+}
+
+function LightboxImage({
+  imageSrc,
+  onTap,
+  onZoom,
+  onRequestClose,
+  isScrollViewBeingDragged,
+  showControls,
+  safeAreaRef,
+}: {
+  imageSrc: ImageSource
+  onRequestClose: () => void
+  onTap: () => void
+  onZoom: (scaled: boolean) => void
+  isScrollViewBeingDragged: boolean
+  showControls: boolean
+  safeAreaRef: AnimatedRef<View>
+}) {
+  return (
+    <ImageItem
+      imageSrc={imageSrc}
+      onTap={onTap}
+      onZoom={onZoom}
+      onRequestClose={onRequestClose}
+      isScrollViewBeingDragged={isScrollViewBeingDragged}
+      showControls={showControls}
+      safeAreaRef={safeAreaRef}
+    />
   )
 }
 
