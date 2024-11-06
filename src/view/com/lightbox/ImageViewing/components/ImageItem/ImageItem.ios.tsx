@@ -56,10 +56,13 @@ const ImageItem = ({
     src: imageSrc.uri,
     knownDimensions: imageSrc.dimensions,
   })
-  const maxZoomScale = imageDimensions
-    ? (imageDimensions.width / screenSizeDelayedForJSThreadOnly.width) *
-      MAX_ORIGINAL_IMAGE_ZOOM
-    : 1
+  const maxZoomScale = Math.max(
+    imageDimensions
+      ? (imageDimensions.width / screenSizeDelayedForJSThreadOnly.width) *
+          MAX_ORIGINAL_IMAGE_ZOOM
+      : 1,
+    MIN_DOUBLE_TAP_SCALE,
+  )
 
   const animatedStyle = useAnimatedStyle(() => {
     return {
