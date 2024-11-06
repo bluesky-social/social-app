@@ -1,19 +1,25 @@
-import React from 'react'
-import {View} from 'react-native'
+import React, {useState} from 'react'
+import {LayoutAnimation, View} from 'react-native'
 import {Linking} from 'react-native'
 import {AppBskyActorDefs, moderateProfile} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useNavigation} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
+import {IS_INTERNAL} from '#/lib/app-info'
 import {HELP_DESK_URL} from '#/lib/constants'
-import {CommonNavigatorParams} from '#/lib/routes/types'
+import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
+import {clearStorage} from '#/state/persisted'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
+import {useDeleteActorDeclaration} from '#/state/queries/messages/actor-declaration'
 import {useProfileQuery, useProfilesQuery} from '#/state/queries/profile'
 import {useSession, useSessionApi} from '#/state/session'
+import {useOnboardingDispatch} from '#/state/shell'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
+import * as Toast from '#/view/com/util/Toast'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {ProfileHeaderDisplayName} from '#/screens/Profile/Header/DisplayName'
 import {ProfileHeaderHandle} from '#/screens/Profile/Header/Handle'
@@ -24,6 +30,7 @@ import {SwitchAccountDialog} from '#/components/dialogs/SwitchAccount'
 import {Accessibility_Stroke2_Corner2_Rounded as AccessibilityIcon} from '#/components/icons/Accessibility'
 import {BubbleInfo_Stroke2_Corner2_Rounded as BubbleInfoIcon} from '#/components/icons/BubbleInfo'
 import {CircleQuestion_Stroke2_Corner2_Rounded as CircleQuestionIcon} from '#/components/icons/CircleQuestion'
+import {CodeBrackets_Stroke2_Corner2_Rounded as CodeBracketsIcon} from '#/components/icons/CodeBrackets'
 import {Earth_Stroke2_Corner2_Rounded as EarthIcon} from '#/components/icons/Globe'
 import {Lock_Stroke2_Corner2_Rounded as LockIcon} from '#/components/icons/Lock'
 import {PaintRoller_Stroke2_Corner2_Rounded as PaintRollerIcon} from '#/components/icons/PaintRoller'
@@ -46,6 +53,7 @@ export function SettingsScreen({}: Props) {
   const {data: profile} = useProfileQuery({did: currentAccount?.did})
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const closeEverything = useCloseAllActiveElements()
+  const [showDevOptions, setShowDevOptions] = useState(false)
 
   const onAddAnotherAccount = () => {
     setShowLoggedOut(true)
@@ -175,6 +183,25 @@ export function SettingsScreen({}: Props) {
               <Trans>Sign out</Trans>
             </SettingsList.ItemText>
           </SettingsList.PressableItem>
+          {IS_INTERNAL && (
+            <>
+              <SettingsList.Divider />
+              <SettingsList.PressableItem
+                onPress={() => {
+                  LayoutAnimation.configureNext(
+                    LayoutAnimation.Presets.easeInEaseOut,
+                  )
+                  setShowDevOptions(d => !d)
+                }}
+                label={_(msg`Developer options`)}>
+                <SettingsList.ItemIcon icon={CodeBracketsIcon} />
+                <SettingsList.ItemText>
+                  <Trans>Developer options</Trans>
+                </SettingsList.ItemText>
+              </SettingsList.PressableItem>
+              {showDevOptions && <DevOptions />}
+            </>
+          )}
         </SettingsList.Container>
       </Layout.Content>
 
@@ -279,5 +306,70 @@ function AvatarStack({profiles}: {profiles: string[]}) {
         </View>
       ))}
     </View>
+  )
+}
+
+function DevOptions() {
+  const {_} = useLingui()
+  const onboardingDispatch = useOnboardingDispatch()
+  const navigation = useNavigation<NavigationProp>()
+  const {mutate: deleteChatDeclarationRecord} = useDeleteActorDeclaration()
+
+  const resetOnboarding = async () => {
+    navigation.navigate('Home')
+    onboardingDispatch({type: 'start'})
+    Toast.show(_(msg`Onboarding reset`))
+  }
+
+  const clearAllStorage = async () => {
+    await clearStorage()
+    Toast.show(_(msg`Storage cleared, you need to restart the app now.`))
+  }
+
+  return (
+    <>
+      <SettingsList.PressableItem
+        onPress={() => navigation.navigate('Log')}
+        label={_(msg`Open system log`)}>
+        <SettingsList.ItemText>
+          <Trans>System log</Trans>
+        </SettingsList.ItemText>
+      </SettingsList.PressableItem>
+      <SettingsList.PressableItem
+        onPress={() => navigation.navigate('Debug')}
+        label={_(msg`Open storybook page`)}>
+        <SettingsList.ItemText>
+          <Trans>Storybook</Trans>
+        </SettingsList.ItemText>
+      </SettingsList.PressableItem>
+      <SettingsList.PressableItem
+        onPress={() => navigation.navigate('DebugMod')}
+        label={_(msg`Open moderation debug page`)}>
+        <SettingsList.ItemText>
+          <Trans>Debug Moderation</Trans>
+        </SettingsList.ItemText>
+      </SettingsList.PressableItem>
+      <SettingsList.PressableItem
+        onPress={() => deleteChatDeclarationRecord()}
+        label={_(msg`Open storybook page`)}>
+        <SettingsList.ItemText>
+          <Trans>Delete chat declaration record</Trans>
+        </SettingsList.ItemText>
+      </SettingsList.PressableItem>
+      <SettingsList.PressableItem
+        onPress={() => resetOnboarding()}
+        label={_(msg`Reset onboarding state`)}>
+        <SettingsList.ItemText>
+          <Trans>Reset onboarding state</Trans>
+        </SettingsList.ItemText>
+      </SettingsList.PressableItem>
+      <SettingsList.PressableItem
+        onPress={() => clearAllStorage()}
+        label={_(msg`Clear all storage data`)}>
+        <SettingsList.ItemText>
+          <Trans>Clear all storage data (restart after this)</Trans>
+        </SettingsList.ItemText>
+      </SettingsList.PressableItem>
+    </>
   )
 }
