@@ -14,7 +14,7 @@ import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {clearStorage} from '#/state/persisted'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useDeleteActorDeclaration} from '#/state/queries/messages/actor-declaration'
-import {useProfileQuery, useProfilesQuery} from '#/state/queries/profile'
+import {useProfileQuery} from '#/state/queries/profile'
 import {useSession, useSessionApi} from '#/state/session'
 import {useOnboardingDispatch} from '#/state/shell'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
@@ -24,7 +24,8 @@ import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {ProfileHeaderDisplayName} from '#/screens/Profile/Header/DisplayName'
 import {ProfileHeaderHandle} from '#/screens/Profile/Header/Handle'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a} from '#/alf'
+import {AvatarStack} from '#/components/AvatarStack'
 import {useDialogControl} from '#/components/Dialog'
 import {SwitchAccountDialog} from '#/components/dialogs/SwitchAccount'
 import {Accessibility_Stroke2_Corner2_Rounded as AccessibilityIcon} from '#/components/icons/Accessibility'
@@ -242,70 +243,6 @@ function ProfilePreview({
       <ProfileHeaderDisplayName profile={shadow} moderation={moderation} />
       <ProfileHeaderHandle profile={shadow} />
     </>
-  )
-}
-
-const AVI_SIZE = 26
-const HALF_AVI_SIZE = AVI_SIZE / 2
-
-function AvatarStack({profiles}: {profiles: string[]}) {
-  const {data, error} = useProfilesQuery({handles: profiles})
-  const t = useTheme()
-  const moderationOpts = useModerationOpts()
-
-  if (error) {
-    console.error(error)
-    return null
-  }
-
-  const isPending = !data || !moderationOpts
-
-  const items = isPending
-    ? Array.from({length: profiles.length}).map((_, i) => ({
-        key: i,
-        profile: null,
-        moderation: null,
-      }))
-    : data.profiles.map(item => ({
-        key: item.did,
-        profile: item,
-        moderation: moderateProfile(item, moderationOpts),
-      }))
-
-  return (
-    <View
-      style={[
-        a.flex_row,
-        a.align_center,
-        a.relative,
-        {width: AVI_SIZE + (items.length - 1) * HALF_AVI_SIZE},
-      ]}>
-      {items.map((item, i) => (
-        <View
-          key={item.key}
-          style={[
-            t.atoms.bg_contrast_25,
-            a.relative,
-            {
-              width: AVI_SIZE,
-              height: AVI_SIZE,
-              left: i * -HALF_AVI_SIZE,
-              borderWidth: 1,
-              borderColor: t.atoms.bg.backgroundColor,
-              borderRadius: 999,
-              zIndex: 3 - i,
-            },
-          ]}>
-          {item.profile && (
-            <UserAvatar
-              size={AVI_SIZE - 2}
-              avatar={item.profile.avatar}
-              moderation={item.moderation.ui('avatar')}
-            />
-          )}
-        </View>
-      ))}
-    </View>
   )
 }
 
