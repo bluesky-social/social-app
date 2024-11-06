@@ -5309,7 +5309,7 @@ msgstr "Profil zapisany"
 
 #: src/view/screens/Settings/index.tsx:985
 msgid "Protect your account by verifying your email."
-msgstr "Weryfikacja adresu email pomaga chronić Twoje konto."
+msgstr "Zweryfikowanie adresu email pomaga chronić Twoje konto."
 
 #: src/screens/Onboarding/StepFinished.tsx:237
 msgid "Public"
@@ -5379,7 +5379,7 @@ msgstr "Cytaty tego wpisu"
 #: src/screens/Settings/ThreadPreferences.tsx:89
 #: src/view/screens/PreferencesThreads.tsx:91
 msgid "Random (aka \"Poster's Roulette\")"
-msgstr "Losowe (znane także jako \"Posterska Ruletka\")"
+msgstr "Losowe (znane także jako \"Ruletka Internauty\")"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:566
 msgid "Rate limit exceeded – you've tried to change your handle too many times in a short period. Please wait a minute before trying again."
@@ -7570,7 +7570,7 @@ msgstr "Zamiast tego ustaw zdjęcie"
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:453
 #: src/view/com/modals/ChangeHandle.tsx:441
 msgid "Upload a text file to:"
-msgstr "Prześlij plik tekstowy do:"
+msgstr "Prześlij plik tekstowy na:"
 
 #: src/view/com/util/UserAvatar.tsx:371
 #: src/view/com/util/UserAvatar.tsx:374
