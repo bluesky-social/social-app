@@ -224,9 +224,11 @@ export function SettingsScreen({}: Props) {
               <SettingsList.Divider />
               <SettingsList.PressableItem
                 onPress={() => {
-                  LayoutAnimation.configureNext(
-                    LayoutAnimation.Presets.easeInEaseOut,
-                  )
+                  if (!reducedMotion) {
+                    LayoutAnimation.configureNext(
+                      LayoutAnimation.Presets.easeInEaseOut,
+                    )
+                  }
                   setShowDevOptions(d => !d)
                 }}
                 label={_(msg`Developer options`)}>
