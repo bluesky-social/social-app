@@ -19,11 +19,10 @@ import Animated, {
 import {useSafeAreaFrame} from 'react-native-safe-area-context'
 import {Image} from 'expo-image'
 
-const AnimatedImage = Animated.createAnimatedComponent(Image)
-
 import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
-import {useImageDimensions} from '#/lib/media/image-sizes'
-import {ImageSource} from '../../@types'
+import {Dimensions as ImageDimensions,ImageSource} from '../../@types'
+
+const AnimatedImage = Animated.createAnimatedComponent(Image)
 
 const MAX_ORIGINAL_IMAGE_ZOOM = 2
 const MIN_SCREEN_ZOOM = 2
@@ -36,6 +35,8 @@ type Props = {
   isScrollViewBeingDragged: boolean
   showControls: boolean
   safeAreaRef: AnimatedRef<View>
+  imageAspect: number | undefined
+  imageDimensions: ImageDimensions | undefined
 }
 
 const ImageItem = ({
@@ -44,14 +45,12 @@ const ImageItem = ({
   onZoom,
   showControls,
   safeAreaRef,
+  imageAspect,
+  imageDimensions,
 }: Props) => {
   const scrollViewRef = useAnimatedRef<Animated.ScrollView>()
   const [scaled, setScaled] = useState(false)
   const screenSizeDelayedForJSThreadOnly = useSafeAreaFrame()
-  const [imageAspect, imageDimensions] = useImageDimensions({
-    src: imageSrc.uri,
-    knownDimensions: imageSrc.dimensions,
-  })
   const maxZoomScale = Math.max(
     MIN_SCREEN_ZOOM,
     imageDimensions

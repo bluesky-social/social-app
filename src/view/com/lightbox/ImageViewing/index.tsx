@@ -21,6 +21,7 @@ import {Edge, SafeAreaView} from 'react-native-safe-area-context'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Trans} from '@lingui/macro'
 
+import {useImageDimensions} from '#/lib/media/image-sizes'
 import {colors, s} from '#/lib/styles'
 import {isIOS} from '#/platform/detection'
 import {Lightbox} from '#/state/lightbox'
@@ -184,6 +185,10 @@ function LightboxImage({
   showControls: boolean
   safeAreaRef: AnimatedRef<View>
 }) {
+  const [imageAspect, imageDimensions] = useImageDimensions({
+    src: imageSrc.uri,
+    knownDimensions: imageSrc.dimensions,
+  })
   return (
     <ImageItem
       imageSrc={imageSrc}
@@ -193,6 +198,8 @@ function LightboxImage({
       isScrollViewBeingDragged={isScrollViewBeingDragged}
       showControls={showControls}
       safeAreaRef={safeAreaRef}
+      imageAspect={imageAspect}
+      imageDimensions={imageDimensions}
     />
   )
 }
