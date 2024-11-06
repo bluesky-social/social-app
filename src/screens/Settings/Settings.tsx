@@ -1,6 +1,7 @@
 import React, {useState} from 'react'
 import {LayoutAnimation, Pressable, View} from 'react-native'
 import {Linking} from 'react-native'
+import {useReducedMotion} from 'react-native-reanimated'
 import {AppBskyActorDefs, moderateProfile} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -55,6 +56,7 @@ import * as Prompt from '#/components/Prompt'
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Settings'>
 export function SettingsScreen({}: Props) {
   const {_} = useLingui()
+  const reducedMotion = useReducedMotion()
   const {logoutEveryAccount} = useSessionApi()
   const {accounts, currentAccount} = useSession()
   const switchAccountControl = useDialogControl()
@@ -94,9 +96,11 @@ export function SettingsScreen({}: Props) {
                   msg`Show other accounts you can switch to`,
                 )}
                 onPress={() => {
-                  LayoutAnimation.configureNext(
-                    LayoutAnimation.Presets.easeInEaseOut,
-                  )
+                  if (!reducedMotion) {
+                    LayoutAnimation.configureNext(
+                      LayoutAnimation.Presets.easeInEaseOut,
+                    )
+                  }
                   setShowAccounts(s => !s)
                 }}>
                 <SettingsList.ItemIcon icon={PersonGroupIcon} />
