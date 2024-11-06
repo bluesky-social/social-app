@@ -318,7 +318,7 @@ let PostCtrls = ({
             likeCount={post.likeCount ?? 0}
             big={big}
             isLiked={Boolean(post.viewer?.like)}
-            isToggle={hasLikeIconBeenToggled}
+            hasBeenToggled={hasLikeIconBeenToggled}
           />
         </Pressable>
       </View>
