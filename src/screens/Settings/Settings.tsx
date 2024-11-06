@@ -32,6 +32,7 @@ import {useDialogControl} from '#/components/Dialog'
 import {SwitchAccountDialog} from '#/components/dialogs/SwitchAccount'
 import {Accessibility_Stroke2_Corner2_Rounded as AccessibilityIcon} from '#/components/icons/Accessibility'
 import {BubbleInfo_Stroke2_Corner2_Rounded as BubbleInfoIcon} from '#/components/icons/BubbleInfo'
+import {ChevronTop_Stroke2_Corner0_Rounded as ChevronUpIcon} from '#/components/icons/Chevron'
 import {CircleQuestion_Stroke2_Corner2_Rounded as CircleQuestionIcon} from '#/components/icons/CircleQuestion'
 import {CodeBrackets_Stroke2_Corner2_Rounded as CodeBracketsIcon} from '#/components/icons/CodeBrackets'
 import {DotGrid_Stroke2_Corner0_Rounded as DotsHorizontal} from '#/components/icons/DotGrid'
@@ -89,6 +90,9 @@ export function SettingsScreen({}: Props) {
             <>
               <SettingsList.PressableItem
                 label={_(msg`Switch account`)}
+                accessibilityHint={_(
+                  msg`Show other accounts you can switch to`,
+                )}
                 onPress={() => {
                   LayoutAnimation.configureNext(
                     LayoutAnimation.Presets.easeInEaseOut,
@@ -99,7 +103,9 @@ export function SettingsScreen({}: Props) {
                 <SettingsList.ItemText>
                   <Trans>Switch account</Trans>
                 </SettingsList.ItemText>
-                {!showAccounts && (
+                {showAccounts ? (
+                  <SettingsList.ItemIcon icon={ChevronUpIcon} size="md" />
+                ) : (
                   <AvatarStack
                     profiles={accounts
                       .map(acc => acc.did)
