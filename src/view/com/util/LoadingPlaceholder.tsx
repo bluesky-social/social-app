@@ -139,8 +139,9 @@ export function NotificationLoadingPlaceholder({
 }) {
   const pal = usePalette('default')
   return (
-    <View style={[styles.notification, pal.view, style]}>
-      <View style={[{width: 70}, a.align_end, a.pr_sm, a.pt_2xs]}>
+    <View
+      style={[styles.notification, a.border_b, pal.view, pal.border, style]}>
+      <View style={[{width: 60}, a.align_end, a.pr_sm, a.pt_2xs]}>
         <HeartIconFilled
           size="xl"
           style={{color: pal.colors.backgroundLight}}
@@ -149,13 +150,17 @@ export function NotificationLoadingPlaceholder({
       <View style={{flex: 1}}>
         <View style={[a.flex_row, s.mb10]}>
           <LoadingPlaceholder
-            width={30}
-            height={30}
+            width={35}
+            height={35}
             style={styles.smallAvatar}
           />
         </View>
-        <LoadingPlaceholder width="90%" height={6} style={[s.mb5]} />
-        <LoadingPlaceholder width="70%" height={6} style={[s.mb5]} />
+        <LoadingPlaceholder width="90%" height={8} style={[s.mb5]} />
+        <LoadingPlaceholder
+          width={`${Math.floor(Math.random() * 50 + 30)}%`}
+          height={8}
+          style={[s.mb5]}
+        />
       </View>
     </View>
   )
@@ -290,7 +295,7 @@ const styles = StyleSheet.create({
   post: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    paddingHorizontal: 10,
+    paddingLeft: 10,
     paddingTop: 20,
     paddingBottom: 5,
     paddingRight: 15,
@@ -328,7 +333,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   smallAvatar: {
-    borderRadius: 15,
+    borderRadius: 18,
     marginRight: 10,
   },
 })
