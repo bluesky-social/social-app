@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-05 10:30+0900\n"
+"PO-Revision-Date: 2024-11-06 10:13+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -118,6 +118,10 @@ msgstr "{0} / {1}"
 msgid "{0} people have used this starter pack!"
 msgstr "{0}人がこのスターターパックを使用しました！"
 
+#: src/view/shell/bottom-bar/BottomBar.tsx:203
+msgid "{0} unread items"
+msgstr "{0}件の未読アイテム"
+
 #: src/view/com/util/UserAvatar.tsx:435
 msgid "{0}'s avatar"
 msgstr "{0}のアバター"
@@ -155,9 +159,17 @@ msgstr "{0}ヶ月"
 msgid "{0}s"
 msgstr "{0}秒"
 
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:252
+msgid "{badge} unread items"
+msgstr "{badge}件の未読アイテム"
+
 #: src/components/LabelingServiceCard/index.tsx:96
 msgid "{count, plural, one {Liked by # user} other {Liked by # users}}"
 msgstr "{count, plural, other {#人のユーザーがいいね}}"
+
+#: src/view/shell/desktop/LeftNav.tsx:223
+msgid "{count} unread items"
+msgstr "{count}件の未読アイテム"
 
 #: src/lib/generate-starterpack.ts:108
 #: src/screens/StarterPack/Wizard/index.tsx:183
@@ -278,6 +290,10 @@ msgstr "{likeCount, plural, other {#人のユーザーがいいね}}"
 #: src/view/shell/Drawer.tsx:477
 msgid "{numUnreadNotifications} unread"
 msgstr "{numUnreadNotifications}件の未読"
+
+#: src/view/shell/bottom-bar/BottomBar.tsx:230
+msgid "{numUnreadNotifications} unread items"
+msgstr "{numUnreadNotifications}件の未読アイテム"
 
 #: src/components/NewskieDialog.tsx:116
 msgid "{profileName} joined Bluesky {0} ago"
@@ -1456,6 +1472,10 @@ msgstr "初期設定を完了してアカウントを使い始める"
 #: src/screens/Signup/index.tsx:144
 msgid "Complete the challenge"
 msgstr "テストをクリアしてください"
+
+#: src/view/shell/desktop/LeftNav.tsx:314
+msgid "Compose new post"
+msgstr "新しい投稿を作成"
 
 #: src/view/com/composer/Composer.tsx:632
 msgid "Compose posts up to {MAX_GRAPHEME_LENGTH} characters in length"
