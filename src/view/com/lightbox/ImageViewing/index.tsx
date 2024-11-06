@@ -8,24 +8,22 @@
 // Original code copied and simplified from the link below as the codebase is currently not maintained:
 // https://github.com/jobtoday/react-native-image-viewing
 
-import React, {useCallback, useMemo, useState} from 'react'
-import {
-  Dimensions,
-  LayoutAnimation,
-  Platform,
-  StyleSheet,
-  View,
-} from 'react-native'
+import React, {useCallback, useState} from 'react'
+import {LayoutAnimation, Platform, StyleSheet, View} from 'react-native'
 import PagerView from 'react-native-pager-view'
-import {MeasuredDimensions} from 'react-native-reanimated'
-import Animated, {useAnimatedStyle, withSpring} from 'react-native-reanimated'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import Animated, {
+  AnimatedRef,
+  useAnimatedRef,
+  useAnimatedStyle,
+  withSpring,
+} from 'react-native-reanimated'
 import {Edge, SafeAreaView} from 'react-native-safe-area-context'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Trans} from '@lingui/macro'
 
 import {colors, s} from '#/lib/styles'
 import {isIOS} from '#/platform/detection'
+import {Lightbox} from '#/state/lightbox'
 import {Button} from '#/view/com/util/forms/Button'
 import {Text} from '#/view/com/util/text/Text'
 import {ScrollView} from '#/view/com/util/Views'
@@ -33,37 +31,68 @@ import {ImageSource} from './@types'
 import ImageDefaultHeader from './components/ImageDefaultHeader'
 import ImageItem from './components/ImageItem/ImageItem'
 
-type Props = {
-  images: ImageSource[]
-  thumbDims: MeasuredDimensions | null
-  initialImageIndex: number
-  visible: boolean
-  onRequestClose: () => void
-  backgroundColor?: string
-  onPressSave: (uri: string) => void
-  onPressShare: (uri: string) => void
-}
+const EDGES =
+  Platform.OS === 'android'
+    ? (['top', 'bottom', 'left', 'right'] satisfies Edge[])
+    : (['left', 'right'] satisfies Edge[]) // iOS, so no top/bottom safe area
 
-const SCREEN_HEIGHT = Dimensions.get('window').height
-const DEFAULT_BG_COLOR = '#000'
-
-function ImageViewing({
-  images,
-  thumbDims: _thumbDims, // TODO: Pass down and use for animation.
-  initialImageIndex,
-  visible,
+export default function ImageViewRoot({
+  lightbox,
   onRequestClose,
-  backgroundColor = DEFAULT_BG_COLOR,
   onPressSave,
   onPressShare,
-}: Props) {
+}: {
+  lightbox: Lightbox | null
+  onRequestClose: () => void
+  onPressSave: (uri: string) => void
+  onPressShare: (uri: string) => void
+}) {
+  const ref = useAnimatedRef<View>()
+  return (
+    // Keep it always mounted to avoid flicker on the first frame.
+    <SafeAreaView
+      style={[styles.screen, !lightbox && styles.screenHidden]}
+      edges={EDGES}
+      aria-modal
+      accessibilityViewIsModal
+      aria-hidden={!lightbox}>
+      <Animated.View ref={ref} style={{flex: 1}} collapsable={false}>
+        {lightbox && (
+          <ImageView
+            key={lightbox.id}
+            lightbox={lightbox}
+            onRequestClose={onRequestClose}
+            onPressSave={onPressSave}
+            onPressShare={onPressShare}
+            safeAreaRef={ref}
+          />
+        )}
+      </Animated.View>
+    </SafeAreaView>
+  )
+}
+
+function ImageView({
+  lightbox,
+  onRequestClose,
+  onPressSave,
+  onPressShare,
+  safeAreaRef,
+}: {
+  lightbox: Lightbox
+  onRequestClose: () => void
+  onPressSave: (uri: string) => void
+  onPressShare: (uri: string) => void
+  safeAreaRef: AnimatedRef<View>
+}) {
+  const {images, index: initialImageIndex} = lightbox
   const [isScaled, setIsScaled] = useState(false)
   const [isDragging, setIsDragging] = useState(false)
   const [imageIndex, setImageIndex] = useState(initialImageIndex)
   const [showControls, setShowControls] = useState(true)
 
   const animatedHeaderStyle = useAnimatedStyle(() => ({
-    pointerEvents: showControls ? 'auto' : 'none',
+    pointerEvents: showControls ? 'box-none' : 'none',
     opacity: withClampedSpring(showControls ? 1 : 0),
     transform: [
       {
@@ -72,7 +101,8 @@ function ImageViewing({
     ],
   }))
   const animatedFooterStyle = useAnimatedStyle(() => ({
-    pointerEvents: showControls ? 'auto' : 'none',
+    flexGrow: 1,
+    pointerEvents: showControls ? 'box-none' : 'none',
     opacity: withClampedSpring(showControls ? 1 : 0),
     transform: [
       {
@@ -92,53 +122,39 @@ function ImageViewing({
     }
   }, [])
 
-  const edges = useMemo(() => {
-    if (Platform.OS === 'android') {
-      return ['top', 'bottom', 'left', 'right'] satisfies Edge[]
-    }
-    return ['left', 'right'] satisfies Edge[] // iOS, so no top/bottom safe area
-  }, [])
-
-  if (!visible) {
-    return null
-  }
-
   return (
-    <SafeAreaView
-      style={styles.screen}
-      edges={edges}
-      aria-modal
-      accessibilityViewIsModal>
-      <View style={[styles.container, {backgroundColor}]}>
-        <Animated.View style={[styles.header, animatedHeaderStyle]}>
+    <View style={[styles.container]}>
+      <PagerView
+        scrollEnabled={!isScaled}
+        initialPage={initialImageIndex}
+        onPageSelected={e => {
+          setImageIndex(e.nativeEvent.position)
+          setIsScaled(false)
+        }}
+        onPageScrollStateChanged={e => {
+          setIsDragging(e.nativeEvent.pageScrollState !== 'idle')
+        }}
+        overdrag={true}
+        style={styles.pager}>
+        {images.map(imageSrc => (
+          <View key={imageSrc.uri}>
+            <ImageItem
+              onTap={onTap}
+              onZoom={onZoom}
+              imageSrc={imageSrc}
+              onRequestClose={onRequestClose}
+              isScrollViewBeingDragged={isDragging}
+              showControls={showControls}
+              safeAreaRef={safeAreaRef}
+            />
+          </View>
+        ))}
+      </PagerView>
+      <View style={styles.controls}>
+        <Animated.View style={animatedHeaderStyle}>
           <ImageDefaultHeader onRequestClose={onRequestClose} />
         </Animated.View>
-        <PagerView
-          scrollEnabled={!isScaled}
-          initialPage={initialImageIndex}
-          onPageSelected={e => {
-            setImageIndex(e.nativeEvent.position)
-            setIsScaled(false)
-          }}
-          onPageScrollStateChanged={e => {
-            setIsDragging(e.nativeEvent.pageScrollState !== 'idle')
-          }}
-          overdrag={true}
-          style={styles.pager}>
-          {images.map(imageSrc => (
-            <View key={imageSrc.uri}>
-              <ImageItem
-                onTap={onTap}
-                onZoom={onZoom}
-                imageSrc={imageSrc}
-                onRequestClose={onRequestClose}
-                isScrollViewBeingDragged={isDragging}
-                showControls={showControls}
-              />
-            </View>
-          ))}
-        </PagerView>
-        <Animated.View style={[styles.footer, animatedFooterStyle]}>
+        <Animated.View style={animatedFooterStyle}>
           <LightboxFooter
             images={images}
             index={imageIndex}
@@ -147,7 +163,7 @@ function ImageViewing({
           />
         </Animated.View>
       </View>
-    </SafeAreaView>
+    </View>
   )
 }
 
@@ -164,17 +180,10 @@ function LightboxFooter({
 }) {
   const {alt: altText, uri} = images[index]
   const [isAltExpanded, setAltExpanded] = React.useState(false)
-  const insets = useSafeAreaInsets()
-  const svMaxHeight = SCREEN_HEIGHT - insets.top - 50
   const isMomentumScrolling = React.useRef(false)
   return (
     <ScrollView
-      style={[
-        {
-          backgroundColor: '#000d',
-        },
-        {maxHeight: svMaxHeight},
-      ]}
+      style={styles.footerScrollView}
       scrollEnabled={isAltExpanded}
       onMomentumScrollBegin={() => {
         isMomentumScrolling.current = true
@@ -183,51 +192,52 @@ function LightboxFooter({
         isMomentumScrolling.current = false
       }}
       contentContainerStyle={{
-        paddingTop: 16,
-        paddingBottom: insets.bottom + 10,
+        paddingVertical: 12,
         paddingHorizontal: 24,
       }}>
-      {altText ? (
-        <View accessibilityRole="button" style={styles.footerText}>
-          <Text
-            style={[s.gray3]}
-            numberOfLines={isAltExpanded ? undefined : 3}
-            selectable
-            onPress={() => {
-              if (isMomentumScrolling.current) {
-                return
-              }
-              LayoutAnimation.configureNext({
-                duration: 450,
-                update: {type: 'spring', springDamping: 1},
-              })
-              setAltExpanded(prev => !prev)
-            }}
-            onLongPress={() => {}}>
-            {altText}
-          </Text>
+      <SafeAreaView edges={['bottom']}>
+        {altText ? (
+          <View accessibilityRole="button" style={styles.footerText}>
+            <Text
+              style={[s.gray3]}
+              numberOfLines={isAltExpanded ? undefined : 3}
+              selectable
+              onPress={() => {
+                if (isMomentumScrolling.current) {
+                  return
+                }
+                LayoutAnimation.configureNext({
+                  duration: 450,
+                  update: {type: 'spring', springDamping: 1},
+                })
+                setAltExpanded(prev => !prev)
+              }}
+              onLongPress={() => {}}>
+              {altText}
+            </Text>
+          </View>
+        ) : null}
+        <View style={styles.footerBtns}>
+          <Button
+            type="primary-outline"
+            style={styles.footerBtn}
+            onPress={() => onPressSave(uri)}>
+            <FontAwesomeIcon icon={['far', 'floppy-disk']} style={s.white} />
+            <Text type="xl" style={s.white}>
+              <Trans context="action">Save</Trans>
+            </Text>
+          </Button>
+          <Button
+            type="primary-outline"
+            style={styles.footerBtn}
+            onPress={() => onPressShare(uri)}>
+            <FontAwesomeIcon icon="arrow-up-from-bracket" style={s.white} />
+            <Text type="xl" style={s.white}>
+              <Trans context="action">Share</Trans>
+            </Text>
+          </Button>
         </View>
-      ) : null}
-      <View style={styles.footerBtns}>
-        <Button
-          type="primary-outline"
-          style={styles.footerBtn}
-          onPress={() => onPressSave(uri)}>
-          <FontAwesomeIcon icon={['far', 'floppy-disk']} style={s.white} />
-          <Text type="xl" style={s.white}>
-            <Trans context="action">Save</Trans>
-          </Text>
-        </Button>
-        <Button
-          type="primary-outline"
-          style={styles.footerBtn}
-          onPress={() => onPressShare(uri)}>
-          <FontAwesomeIcon icon="arrow-up-from-bracket" style={s.white} />
-          <Text type="xl" style={s.white}>
-            <Trans context="action">Share</Trans>
-          </Text>
-        </Button>
-      </View>
+      </SafeAreaView>
     </ScrollView>
   )
 }
@@ -240,9 +250,23 @@ const styles = StyleSheet.create({
     bottom: 0,
     right: 0,
   },
+  screenHidden: {
+    opacity: 0,
+    pointerEvents: 'none',
+  },
   container: {
     flex: 1,
     backgroundColor: '#000',
+  },
+  controls: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    gap: 20,
+    zIndex: 1,
+    pointerEvents: 'box-none',
   },
   pager: {
     flex: 1,
@@ -250,15 +274,22 @@ const styles = StyleSheet.create({
   header: {
     position: 'absolute',
     width: '100%',
-    zIndex: 1,
     top: 0,
     pointerEvents: 'box-none',
   },
   footer: {
     position: 'absolute',
     width: '100%',
-    zIndex: 1,
+    maxHeight: '100%',
     bottom: 0,
+  },
+  footerScrollView: {
+    backgroundColor: '#000d',
+    flex: 1,
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
+    maxHeight: '100%',
   },
   footerText: {
     paddingBottom: isIOS ? 20 : 16,
@@ -277,13 +308,7 @@ const styles = StyleSheet.create({
   },
 })
 
-const EnhancedImageViewing = (props: Props) => (
-  <ImageViewing key={props.initialImageIndex} {...props} />
-)
-
 function withClampedSpring(value: any) {
   'worklet'
   return withSpring(value, {overshootClamping: true, stiffness: 300})
 }
-
-export default EnhancedImageViewing
