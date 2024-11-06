@@ -366,7 +366,7 @@ function AccountRow({
 }: {
   profile?: AppBskyActorDefs.ProfileViewDetailed
   account: SessionAccount
-  pendingDid?: string
+  pendingDid: string | null
   onPressSwitchAccount: (
     account: SessionAccount,
     logContext: 'Settings',
