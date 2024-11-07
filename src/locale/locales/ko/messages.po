@@ -5302,11 +5302,6 @@ msgstr "프로필"
 msgid "Profile updated"
 msgstr "프로필 업데이트됨"
 
-#: src/screens/Settings/AccountSettings.tsx:76
-#: src/screens/Settings/AccountSettings.tsx:92
-#~ msgid "Protect your account"
-#~ msgstr "내 계정 보호하기"
-
 #: src/view/screens/Settings/index.tsx:985
 msgid "Protect your account by verifying your email."
 msgstr "이메일을 인증하여 계정을 보호하세요."
@@ -7740,10 +7735,6 @@ msgstr "값:"
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:131
 msgid "Verified email required"
 msgstr "이메일 인증 필요"
-
-#: src/screens/Settings/AccountSettings.tsx:58
-#~ msgid "Verify"
-#~ msgstr "인증"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:497
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:518
