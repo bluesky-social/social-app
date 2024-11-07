@@ -314,25 +314,23 @@ const ImageItem = ({
 
   return (
     <GestureDetector gesture={composedGesture}>
-      <Animated.View renderToHardwareTextureAndroid>
-        <Animated.View
-          ref={containerRef}
-          // Necessary to make opacity work for both children together.
-          renderToHardwareTextureAndroid
-          style={[styles.container, animatedStyle]}>
-          <ActivityIndicator size="small" color="#FFF" style={styles.loading} />
-          <AnimatedImage
-            contentFit="cover"
-            source={{uri: imageSrc.uri}}
-            placeholderContentFit="cover"
-            placeholder={{uri: imageSrc.thumbUri}}
-            style={imageStyle}
-            accessibilityLabel={imageSrc.alt}
-            accessibilityHint=""
-            accessibilityIgnoresInvertColors
-            cachePolicy="memory"
-          />
-        </Animated.View>
+      <Animated.View
+        ref={containerRef}
+        // Necessary to make opacity work for both children together.
+        renderToHardwareTextureAndroid
+        style={[styles.container, animatedStyle]}>
+        <ActivityIndicator size="small" color="#FFF" style={styles.loading} />
+        <AnimatedImage
+          contentFit="cover"
+          source={{uri: imageSrc.uri}}
+          placeholderContentFit="cover"
+          placeholder={{uri: imageSrc.thumbUri}}
+          style={imageStyle}
+          accessibilityLabel={imageSrc.alt}
+          accessibilityHint=""
+          accessibilityIgnoresInvertColors
+          cachePolicy="memory"
+        />
       </Animated.View>
     </GestureDetector>
   )
