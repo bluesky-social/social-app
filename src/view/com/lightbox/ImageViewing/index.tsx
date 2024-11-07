@@ -10,11 +10,19 @@
 
 import React, {useCallback, useState} from 'react'
 import {LayoutAnimation, Platform, StyleSheet, View} from 'react-native'
+import {Gesture} from 'react-native-gesture-handler'
 import PagerView from 'react-native-pager-view'
 import Animated, {
   AnimatedRef,
+  cancelAnimation,
+  measure,
+  runOnJS,
+  SharedValue,
+  useAnimatedReaction,
   useAnimatedRef,
   useAnimatedStyle,
+  useSharedValue,
+  withDecay,
   withSpring,
 } from 'react-native-reanimated'
 import {Edge, SafeAreaView} from 'react-native-safe-area-context'
@@ -91,26 +99,54 @@ function ImageView({
   const [isDragging, setIsDragging] = useState(false)
   const [imageIndex, setImageIndex] = useState(initialImageIndex)
   const [showControls, setShowControls] = useState(true)
+  const dismissSwipeTranslateY = useSharedValue(0)
+  const isFlyingAway = useSharedValue(false)
 
-  const animatedHeaderStyle = useAnimatedStyle(() => ({
-    pointerEvents: showControls ? 'box-none' : 'none',
-    opacity: withClampedSpring(showControls ? 1 : 0),
-    transform: [
-      {
-        translateY: withClampedSpring(showControls ? 0 : -30),
-      },
-    ],
-  }))
-  const animatedFooterStyle = useAnimatedStyle(() => ({
-    flexGrow: 1,
-    pointerEvents: showControls ? 'box-none' : 'none',
-    opacity: withClampedSpring(showControls ? 1 : 0),
-    transform: [
-      {
-        translateY: withClampedSpring(showControls ? 0 : 30),
-      },
-    ],
-  }))
+  const containerStyle = useAnimatedStyle(() => {
+    if (isFlyingAway.value) {
+      return {pointerEvents: 'none'}
+    }
+    return {pointerEvents: 'auto'}
+  })
+  const backdropStyle = useAnimatedStyle(() => {
+    const screenSize = measure(safeAreaRef)
+    let opacity = 1
+    if (screenSize) {
+      const dragProgress = Math.min(
+        Math.abs(dismissSwipeTranslateY.value) / (screenSize.height / 2),
+        1,
+      )
+      opacity -= dragProgress
+    }
+    return {
+      opacity,
+    }
+  })
+  const animatedHeaderStyle = useAnimatedStyle(() => {
+    const show = showControls && dismissSwipeTranslateY.value === 0
+    return {
+      pointerEvents: show ? 'box-none' : 'none',
+      opacity: withClampedSpring(show ? 1 : 0),
+      transform: [
+        {
+          translateY: withClampedSpring(show ? 0 : -30),
+        },
+      ],
+    }
+  })
+  const animatedFooterStyle = useAnimatedStyle(() => {
+    const show = showControls && dismissSwipeTranslateY.value === 0
+    return {
+      flexGrow: 1,
+      pointerEvents: show ? 'box-none' : 'none',
+      opacity: withClampedSpring(show ? 1 : 0),
+      transform: [
+        {
+          translateY: withClampedSpring(show ? 0 : 30),
+        },
+      ],
+    }
+  })
 
   const onTap = useCallback(() => {
     setShowControls(show => !show)
@@ -124,7 +160,8 @@ function ImageView({
   }, [])
 
   return (
-    <View style={[styles.container]}>
+    <View style={[styles.container, containerStyle]}>
+      <Animated.View style={[styles.backdrop, backdropStyle]} />
       <PagerView
         scrollEnabled={!isScaled}
         initialPage={initialImageIndex}
@@ -137,7 +174,7 @@ function ImageView({
         }}
         overdrag={true}
         style={styles.pager}>
-        {images.map(imageSrc => (
+        {images.map((imageSrc, i) => (
           <View key={imageSrc.uri}>
             <LightboxImage
               onTap={onTap}
@@ -147,6 +184,10 @@ function ImageView({
               isScrollViewBeingDragged={isDragging}
               showControls={showControls}
               safeAreaRef={safeAreaRef}
+              isScaled={isScaled}
+              isFlyingAway={isFlyingAway}
+              isActive={i === imageIndex}
+              dismissSwipeTranslateY={dismissSwipeTranslateY}
             />
           </View>
         ))}
@@ -174,20 +215,76 @@ function LightboxImage({
   onZoom,
   onRequestClose,
   isScrollViewBeingDragged,
+  isScaled,
+  isFlyingAway,
+  isActive,
   showControls,
   safeAreaRef,
+  dismissSwipeTranslateY,
 }: {
   imageSrc: ImageSource
   onRequestClose: () => void
   onTap: () => void
   onZoom: (scaled: boolean) => void
   isScrollViewBeingDragged: boolean
+  isScaled: boolean
+  isActive: boolean
+  isFlyingAway: SharedValue<boolean>
   showControls: boolean
   safeAreaRef: AnimatedRef<View>
+  dismissSwipeTranslateY: SharedValue<number>
 }) {
   const [imageAspect, imageDimensions] = useImageDimensions({
     src: imageSrc.uri,
     knownDimensions: imageSrc.dimensions,
+  })
+
+  const dismissSwipePan = Gesture.Pan()
+    .enabled(isActive && !isScaled)
+    .activeOffsetY([-10, 10])
+    .failOffsetX([-10, 10])
+    .maxPointers(1)
+    .onUpdate(e => {
+      'worklet'
+      dismissSwipeTranslateY.value = e.translationY
+    })
+    .onEnd(e => {
+      'worklet'
+      if (Math.abs(e.velocityY) > 1000) {
+        isFlyingAway.value = true
+        dismissSwipeTranslateY.value = withDecay({
+          velocity: e.velocityY,
+          velocityFactor: Math.max(3000 / Math.abs(e.velocityY), 1), // Speed up if it's too slow.
+          deceleration: 1, // Danger! This relies on the reaction below stopping it.
+        })
+      } else {
+        dismissSwipeTranslateY.value = withSpring(0, {
+          stiffness: 700,
+          damping: 50,
+        })
+      }
+    })
+  useAnimatedReaction(
+    () => {
+      const screenSize = measure(safeAreaRef)
+      return (
+        !screenSize ||
+        Math.abs(dismissSwipeTranslateY.value) > screenSize.height
+      )
+    },
+    (isOut, wasOut) => {
+      if (isOut && !wasOut) {
+        // Stop the animation from blocking the screen forever.
+        cancelAnimation(dismissSwipeTranslateY)
+        runOnJS(onRequestClose)()
+      }
+    },
+  )
+
+  const imageStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{translateY: dismissSwipeTranslateY.value}],
+    }
   })
   return (
     <ImageItem
@@ -200,6 +297,8 @@ function LightboxImage({
       safeAreaRef={safeAreaRef}
       imageAspect={imageAspect}
       imageDimensions={imageDimensions}
+      imageStyle={imageStyle}
+      dismissSwipePan={dismissSwipePan}
     />
   )
 }
@@ -293,7 +392,14 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
+  },
+  backdrop: {
     backgroundColor: '#000',
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
   },
   controls: {
     position: 'absolute',

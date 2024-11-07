@@ -1,6 +1,10 @@
 import React, {useState} from 'react'
-import {ActivityIndicator, StyleSheet, View} from 'react-native'
-import {Gesture, GestureDetector} from 'react-native-gesture-handler'
+import {ActivityIndicator, StyleProp, StyleSheet, View} from 'react-native'
+import {
+  Gesture,
+  GestureDetector,
+  PanGesture,
+} from 'react-native-gesture-handler'
 import Animated, {
   AnimatedRef,
   measure,
@@ -9,10 +13,9 @@ import Animated, {
   useAnimatedRef,
   useAnimatedStyle,
   useSharedValue,
-  withDecay,
   withSpring,
 } from 'react-native-reanimated'
-import {Image} from 'expo-image'
+import {Image, ImageStyle} from 'expo-image'
 
 import type {Dimensions as ImageDimensions, ImageSource} from '../../@types'
 import {
@@ -24,6 +27,8 @@ import {
   readTransform,
   TransformMatrix,
 } from '../../transforms'
+
+const AnimatedImage = Animated.createAnimatedComponent(Image)
 
 const MIN_SCREEN_ZOOM = 2
 const MAX_ORIGINAL_IMAGE_ZOOM = 2
@@ -40,16 +45,19 @@ type Props = {
   safeAreaRef: AnimatedRef<View>
   imageAspect: number | undefined
   imageDimensions: ImageDimensions | undefined
+  imageStyle: StyleProp<ImageStyle>
+  dismissSwipePan: PanGesture
 }
 const ImageItem = ({
   imageSrc,
   onTap,
   onZoom,
-  onRequestClose,
   isScrollViewBeingDragged,
   safeAreaRef,
   imageAspect,
   imageDimensions,
+  imageStyle,
+  dismissSwipePan,
 }: Props) => {
   const [isScaled, setIsScaled] = useState(false)
   const committedTransform = useSharedValue(initialTransform)
@@ -57,7 +65,6 @@ const ImageItem = ({
   const pinchOrigin = useSharedValue({x: 0, y: 0})
   const pinchScale = useSharedValue(1)
   const pinchTranslation = useSharedValue({x: 0, y: 0})
-  const dismissSwipeTranslateY = useSharedValue(0)
   const containerRef = useAnimatedRef()
 
   // Keep track of when we're entering or leaving scaled rendering.
@@ -96,19 +103,8 @@ const ImageItem = ({
     prependPinch(t, pinchScale.value, pinchOrigin.value, pinchTranslation.value)
     prependTransform(t, committedTransform.value)
     const [translateX, translateY, scale] = readTransform(t)
-
-    const dismissDistance = dismissSwipeTranslateY.value
-    const screenSize = measure(safeAreaRef)
-    const dismissProgress = screenSize
-      ? Math.min(Math.abs(dismissDistance) / (screenSize.height / 2), 1)
-      : 0
     return {
-      opacity: 1 - dismissProgress,
-      transform: [
-        {translateX},
-        {translateY: translateY + dismissDistance},
-        {scale},
-      ],
+      transform: [{translateX}, {translateY: translateY}, {scale}],
     }
   })
 
@@ -306,28 +302,6 @@ const ImageItem = ({
       committedTransform.value = withClampedSpring(finalTransform)
     })
 
-  const dismissSwipePan = Gesture.Pan()
-    .enabled(!isScaled)
-    .activeOffsetY([-10, 10])
-    .failOffsetX([-10, 10])
-    .maxPointers(1)
-    .onUpdate(e => {
-      'worklet'
-      dismissSwipeTranslateY.value = e.translationY
-    })
-    .onEnd(e => {
-      'worklet'
-      if (Math.abs(e.velocityY) > 1000) {
-        dismissSwipeTranslateY.value = withDecay({velocity: e.velocityY})
-        runOnJS(onRequestClose)()
-      } else {
-        dismissSwipeTranslateY.value = withSpring(0, {
-          stiffness: 700,
-          damping: 50,
-        })
-      }
-    })
-
   const composedGesture = isScrollViewBeingDragged
     ? // If the parent is not at rest, provide a no-op gesture.
       Gesture.Manual()
@@ -339,26 +313,28 @@ const ImageItem = ({
       )
 
   return (
-    <Animated.View
-      ref={containerRef}
-      // Necessary to make opacity work for both children together.
-      renderToHardwareTextureAndroid
-      style={[styles.container, animatedStyle]}>
-      <ActivityIndicator size="small" color="#FFF" style={styles.loading} />
-      <GestureDetector gesture={composedGesture}>
-        <Image
-          contentFit="contain"
-          source={{uri: imageSrc.uri}}
-          placeholderContentFit="contain"
-          placeholder={{uri: imageSrc.thumbUri}}
-          style={styles.image}
-          accessibilityLabel={imageSrc.alt}
-          accessibilityHint=""
-          accessibilityIgnoresInvertColors
-          cachePolicy="memory"
-        />
-      </GestureDetector>
-    </Animated.View>
+    <GestureDetector gesture={composedGesture}>
+      <Animated.View style={imageStyle}>
+        <Animated.View
+          ref={containerRef}
+          // Necessary to make opacity work for both children together.
+          renderToHardwareTextureAndroid
+          style={[styles.container, animatedStyle]}>
+          <ActivityIndicator size="small" color="#FFF" style={styles.loading} />
+          <AnimatedImage
+            contentFit="contain"
+            source={{uri: imageSrc.uri}}
+            placeholderContentFit="contain"
+            placeholder={{uri: imageSrc.thumbUri}}
+            style={[styles.image]}
+            accessibilityLabel={imageSrc.alt}
+            accessibilityHint=""
+            accessibilityIgnoresInvertColors
+            cachePolicy="memory"
+          />
+        </Animated.View>
+      </Animated.View>
+    </GestureDetector>
   )
 }
 

@@ -7,8 +7,12 @@
  */
 
 import React, {useState} from 'react'
-import {ActivityIndicator, StyleSheet, View} from 'react-native'
-import {Gesture, GestureDetector} from 'react-native-gesture-handler'
+import {ActivityIndicator, StyleProp, StyleSheet, View} from 'react-native'
+import {
+  Gesture,
+  GestureDetector,
+  PanGesture,
+} from 'react-native-gesture-handler'
 import Animated, {
   AnimatedRef,
   measure,
@@ -17,10 +21,10 @@ import Animated, {
   useAnimatedStyle,
 } from 'react-native-reanimated'
 import {useSafeAreaFrame} from 'react-native-safe-area-context'
-import {Image} from 'expo-image'
+import {Image, ImageStyle} from 'expo-image'
 
 import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
-import {Dimensions as ImageDimensions,ImageSource} from '../../@types'
+import {Dimensions as ImageDimensions, ImageSource} from '../../@types'
 
 const AnimatedImage = Animated.createAnimatedComponent(Image)
 
@@ -37,6 +41,8 @@ type Props = {
   safeAreaRef: AnimatedRef<View>
   imageAspect: number | undefined
   imageDimensions: ImageDimensions | undefined
+  imageStyle: StyleProp<ImageStyle>
+  dismissSwipePan: PanGesture
 }
 
 const ImageItem = ({
@@ -47,6 +53,8 @@ const ImageItem = ({
   safeAreaRef,
   imageAspect,
   imageDimensions,
+  imageStyle,
+  dismissSwipePan,
 }: Props) => {
   const scrollViewRef = useAnimatedRef<Animated.ScrollView>()
   const [scaled, setScaled] = useState(false)
@@ -126,7 +134,11 @@ const ImageItem = ({
       runOnJS(zoomTo)(nextZoomRect)
     })
 
-  const composedGesture = Gesture.Exclusive(doubleTap, singleTap)
+  const composedGesture = Gesture.Exclusive(
+    dismissSwipePan,
+    doubleTap,
+    singleTap,
+  )
 
   return (
     <GestureDetector gesture={composedGesture}>
@@ -140,6 +152,7 @@ const ImageItem = ({
         onScroll={scrollHandler}
         bounces={scaled}
         bouncesZoom={true}
+        style={imageStyle}
         centerContent>
         <ActivityIndicator size="small" color="#FFF" style={styles.loading} />
         <AnimatedImage
