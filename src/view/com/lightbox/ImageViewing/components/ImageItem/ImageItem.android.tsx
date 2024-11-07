@@ -314,7 +314,7 @@ const ImageItem = ({
 
   return (
     <GestureDetector gesture={composedGesture}>
-      <Animated.View style={imageStyle}>
+      <Animated.View style={imageStyle} renderToHardwareTextureAndroid>
         <Animated.View
           ref={containerRef}
           // Necessary to make opacity work for both children together.

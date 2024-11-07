@@ -99,6 +99,7 @@ function ImageView({
   const [isDragging, setIsDragging] = useState(false)
   const [imageIndex, setImageIndex] = useState(initialImageIndex)
   const [showControls, setShowControls] = useState(true)
+  const [isAltExpanded, setAltExpanded] = React.useState(false)
   const dismissSwipeTranslateY = useSharedValue(0)
   const isFlyingAway = useSharedValue(false)
 
@@ -161,7 +162,10 @@ function ImageView({
 
   return (
     <View style={[styles.container, containerStyle]}>
-      <Animated.View style={[styles.backdrop, backdropStyle]} />
+      <Animated.View
+        style={[styles.backdrop, backdropStyle]}
+        renderToHardwareTextureAndroid
+      />
       <PagerView
         scrollEnabled={!isScaled}
         initialPage={initialImageIndex}
@@ -193,13 +197,19 @@ function ImageView({
         ))}
       </PagerView>
       <View style={styles.controls}>
-        <Animated.View style={animatedHeaderStyle}>
+        <Animated.View
+          style={animatedHeaderStyle}
+          renderToHardwareTextureAndroid>
           <ImageDefaultHeader onRequestClose={onRequestClose} />
         </Animated.View>
-        <Animated.View style={animatedFooterStyle}>
+        <Animated.View
+          style={animatedFooterStyle}
+          renderToHardwareTextureAndroid={!isAltExpanded}>
           <LightboxFooter
             images={images}
             index={imageIndex}
+            isAltExpanded={isAltExpanded}
+            toggleAltExpanded={() => setAltExpanded(e => !e)}
             onPressSave={onPressSave}
             onPressShare={onPressShare}
           />
@@ -306,16 +316,19 @@ function LightboxImage({
 function LightboxFooter({
   images,
   index,
+  isAltExpanded,
+  toggleAltExpanded,
   onPressSave,
   onPressShare,
 }: {
   images: ImageSource[]
   index: number
+  isAltExpanded: boolean
+  toggleAltExpanded: () => void
   onPressSave: (uri: string) => void
   onPressShare: (uri: string) => void
 }) {
   const {alt: altText, uri} = images[index]
-  const [isAltExpanded, setAltExpanded] = React.useState(false)
   const isMomentumScrolling = React.useRef(false)
   return (
     <ScrollView
@@ -346,7 +359,7 @@ function LightboxFooter({
                   duration: 450,
                   update: {type: 'spring', springDamping: 1},
                 })
-                setAltExpanded(prev => !prev)
+                toggleAltExpanded()
               }}
               onLongPress={() => {}}>
               {altText}
