@@ -1,5 +1,5 @@
 import React from 'react'
-import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import {StyleSheet, View} from 'react-native'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
@@ -104,6 +104,7 @@ function ProfileCard() {
 const HIDDEN_BACK_BNT_ROUTES = ['StarterPackWizard', 'StarterPackEdit']
 
 function BackBtn() {
+  const t = useTheme()
   const {isTablet} = useWebMediaQueries()
   const pal = usePalette('default')
   const navigation = useNavigation<NavigationProp>()
@@ -125,11 +126,13 @@ function BackBtn() {
   if (!shouldShow || isTablet) {
     return <></>
   }
+
   return (
-    <TouchableOpacity
-      testID="viewHeaderBackOrMenuBtn"
+    <PressableWithHover
+      testID="viewHeaderBackBtn"
       onPress={onPressBack}
-      style={styles.backBtn}
+      style={[styles.backBtn, a.rounded_full, a.align_center, a.justify_center]}
+      hoverStyle={t.atoms.bg_contrast_25}
       accessibilityRole="button"
       accessibilityLabel={_(msg`Go back`)}
       accessibilityHint="">
@@ -138,7 +141,7 @@ function BackBtn() {
         icon="angle-left"
         style={pal.text as FontAwesomeIconStyle}
       />
-    </TouchableOpacity>
+    </PressableWithHover>
   )
 }
 
@@ -539,7 +542,6 @@ const styles = StyleSheet.create({
     width: 76,
     alignItems: 'center',
   },
-
   profileCard: {
     marginVertical: 10,
     width: 90,
@@ -548,7 +550,6 @@ const styles = StyleSheet.create({
   profileCardTablet: {
     width: 70,
   },
-
   backBtn: {
     position: 'absolute',
     top: 12,
