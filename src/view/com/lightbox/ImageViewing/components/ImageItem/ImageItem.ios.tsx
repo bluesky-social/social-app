@@ -7,18 +7,13 @@
  */
 
 import React, {useState} from 'react'
-import {ActivityIndicator, StyleProp, StyleSheet, View} from 'react-native'
+import {ActivityIndicator, StyleProp, StyleSheet} from 'react-native'
 import {
   Gesture,
   GestureDetector,
   PanGesture,
 } from 'react-native-gesture-handler'
-import Animated, {
-  AnimatedRef,
-  measure,
-  runOnJS,
-  useAnimatedRef,
-} from 'react-native-reanimated'
+import Animated, {runOnJS, useAnimatedRef} from 'react-native-reanimated'
 import {useSafeAreaFrame} from 'react-native-safe-area-context'
 import {Image, ImageStyle} from 'expo-image'
 
@@ -37,7 +32,12 @@ type Props = {
   onZoom: (scaled: boolean) => void
   isScrollViewBeingDragged: boolean
   showControls: boolean
-  safeAreaRef: AnimatedRef<View>
+  measureSafeArea: () => {
+    x: number
+    y: number
+    width: number
+    height: number
+  }
   imageAspect: number | undefined
   imageDimensions: ImageDimensions | undefined
   imageStyle: StyleProp<ImageStyle>
@@ -49,7 +49,7 @@ const ImageItem = ({
   onTap,
   onZoom,
   showControls,
-  safeAreaRef,
+  measureSafeArea,
   imageAspect,
   imageDimensions,
   imageStyle,
@@ -103,10 +103,7 @@ const ImageItem = ({
     .numberOfTaps(2)
     .onEnd(e => {
       'worklet'
-      const screenSize = measure(safeAreaRef)
-      if (!screenSize) {
-        return
-      }
+      const screenSize = measureSafeArea()
       const {absoluteX, absoluteY} = e
       let nextZoomRect = {
         x: 0,

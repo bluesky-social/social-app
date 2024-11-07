@@ -1,13 +1,11 @@
 import React, {useState} from 'react'
-import {ActivityIndicator, StyleProp, StyleSheet, View} from 'react-native'
+import {ActivityIndicator, StyleProp, StyleSheet} from 'react-native'
 import {
   Gesture,
   GestureDetector,
   PanGesture,
 } from 'react-native-gesture-handler'
 import Animated, {
-  AnimatedRef,
-  measure,
   runOnJS,
   useAnimatedReaction,
   useAnimatedRef,
@@ -42,7 +40,12 @@ type Props = {
   onZoom: (isZoomed: boolean) => void
   isScrollViewBeingDragged: boolean
   showControls: boolean
-  safeAreaRef: AnimatedRef<View>
+  measureSafeArea: () => {
+    x: number
+    y: number
+    width: number
+    height: number
+  }
   imageAspect: number | undefined
   imageDimensions: ImageDimensions | undefined
   imageStyle: StyleProp<ImageStyle>
@@ -53,7 +56,7 @@ const ImageItem = ({
   onTap,
   onZoom,
   isScrollViewBeingDragged,
-  safeAreaRef,
+  measureSafeArea,
   imageAspect,
   imageDimensions,
   imageStyle,
@@ -143,10 +146,7 @@ const ImageItem = ({
   const pinch = Gesture.Pinch()
     .onStart(e => {
       'worklet'
-      const screenSize = measure(safeAreaRef)
-      if (!screenSize) {
-        return
-      }
+      const screenSize = measureSafeArea()
       pinchOrigin.value = {
         x: e.focalX - screenSize.width / 2,
         y: e.focalY - screenSize.height / 2,
@@ -154,8 +154,8 @@ const ImageItem = ({
     })
     .onChange(e => {
       'worklet'
-      const screenSize = measure(safeAreaRef)
-      if (!imageDimensions || !screenSize) {
+      const screenSize = measureSafeArea()
+      if (!imageDimensions) {
         return
       }
       // Don't let the picture zoom in so close that it gets blurry.
@@ -213,8 +213,8 @@ const ImageItem = ({
     .minPointers(isScaled ? 1 : 2)
     .onChange(e => {
       'worklet'
-      const screenSize = measure(safeAreaRef)
-      if (!imageDimensions || !screenSize) {
+      const screenSize = measureSafeArea()
+      if (!imageDimensions) {
         return
       }
 
@@ -257,8 +257,8 @@ const ImageItem = ({
     .numberOfTaps(2)
     .onEnd(e => {
       'worklet'
-      const screenSize = measure(safeAreaRef)
-      if (!imageDimensions || !imageAspect || !screenSize) {
+      const screenSize = measureSafeArea()
+      if (!imageDimensions || !imageAspect) {
         return
       }
       const [, , committedScale] = readTransform(committedTransform.value)

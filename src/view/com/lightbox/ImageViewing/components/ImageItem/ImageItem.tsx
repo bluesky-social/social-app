@@ -3,7 +3,6 @@
 import React from 'react'
 import {ImageStyle, StyleProp, View} from 'react-native'
 import {PanGesture} from 'react-native-gesture-handler'
-import {AnimatedRef} from 'react-native-reanimated'
 
 import {Dimensions as ImageDimensions, ImageSource} from '../../@types'
 
@@ -14,7 +13,12 @@ type Props = {
   onZoom: (scaled: boolean) => void
   isScrollViewBeingDragged: boolean
   showControls: boolean
-  safeAreaRef: AnimatedRef<View>
+  measureSafeArea: () => {
+    x: number
+    y: number
+    width: number
+    height: number
+  }
   imageAspect: number | undefined
   imageDimensions: ImageDimensions | undefined
   imageStyle: StyleProp<ImageStyle>

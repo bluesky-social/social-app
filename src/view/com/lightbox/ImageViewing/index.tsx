@@ -33,7 +33,12 @@ import Animated, {
   withDecay,
   withSpring,
 } from 'react-native-reanimated'
-import {Edge, SafeAreaView} from 'react-native-safe-area-context'
+import {
+  Edge,
+  SafeAreaView,
+  useSafeAreaFrame,
+  useSafeAreaInsets,
+} from 'react-native-safe-area-context'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Trans} from '@lingui/macro'
 
@@ -48,6 +53,8 @@ import {PlatformInfo} from '../../../../../modules/expo-bluesky-swiss-army'
 import {ImageSource} from './@types'
 import ImageDefaultHeader from './components/ImageDefaultHeader'
 import ImageItem from './components/ImageItem/ImageItem'
+
+type Rect = {x: number; y: number; width: number; height: number}
 
 const PIXEL_RATIO = PixelRatio.get()
 const SLOW_SPRING = {stiffness: 120}
@@ -340,13 +347,35 @@ function LightboxImage({
     knownDimensions: imageSrc.dimensions,
   })
 
+  const safeFrameDelayedForJSThreadOnly = useSafeAreaFrame()
+  const safeInsetsDelayedForJSThreadOnly = useSafeAreaInsets()
+  const measureSafeArea = React.useCallback(() => {
+    'worklet'
+    let safeArea: Rect | null = measure(safeAreaRef)
+    if (!safeArea) {
+      if (_WORKLET) {
+        console.error('Expected to always be able to measure safe area.')
+      }
+      const frame = safeFrameDelayedForJSThreadOnly
+      const insets = safeInsetsDelayedForJSThreadOnly
+      safeArea = {
+        x: frame.x + insets.left,
+        y: frame.y + insets.top,
+        width: frame.width - insets.left - insets.right,
+        height: frame.height - insets.top - insets.bottom,
+      }
+    }
+    return safeArea
+  }, [
+    safeFrameDelayedForJSThreadOnly,
+    safeInsetsDelayedForJSThreadOnly,
+    safeAreaRef,
+  ])
+
   const {thumbRect, dimensions} = imageSrc
   const interpolation = useDerivedValue(() => {
     'worklet'
-    const safeArea = measure(safeAreaRef)
-    if (!safeArea) {
-      return {transform: [], width: 0, height: 0}
-    }
+    const safeArea = measureSafeArea()
     const finalWidth = safeArea.width
     const finalHeight = imageAspect ? safeArea.width / imageAspect : undefined
     if (isActive && thumbRect && dimensions && openProgress.value < 1) {
@@ -431,7 +460,7 @@ function LightboxImage({
         onRequestClose={onRequestClose}
         isScrollViewBeingDragged={isScrollViewBeingDragged}
         showControls={showControls}
-        safeAreaRef={safeAreaRef}
+        measureSafeArea={measureSafeArea}
         imageAspect={imageAspect}
         imageDimensions={imageDimensions}
         imageStyle={imageStyle}
