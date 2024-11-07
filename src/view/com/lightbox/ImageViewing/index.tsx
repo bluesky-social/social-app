@@ -161,7 +161,7 @@ function ImageView({
   }, [])
 
   return (
-    <View style={[styles.container, containerStyle]}>
+    <Animated.View style={[styles.container, containerStyle]}>
       <Animated.View
         style={[styles.backdrop, backdropStyle]}
         renderToHardwareTextureAndroid
@@ -215,7 +215,7 @@ function ImageView({
           />
         </Animated.View>
       </View>
-    </View>
+    </Animated.View>
   )
 }
 
