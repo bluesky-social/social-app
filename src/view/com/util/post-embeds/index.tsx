@@ -180,7 +180,10 @@ export function PostEmbeds({
         const image = images[0]
         return (
           <ContentHider modui={moderation?.ui('contentMedia')}>
-            <Animated.View ref={containerRef} style={[a.mt_sm, style]}>
+            <Animated.View
+              ref={containerRef}
+              collapsable={false}
+              style={[a.mt_sm, style]}>
               <AutoSizedImage
                 crop={
                   viewContext === PostEmbedViewContext.ThreadHighlighted

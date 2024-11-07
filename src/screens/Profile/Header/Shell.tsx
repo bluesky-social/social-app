@@ -1,5 +1,12 @@
 import React, {memo} from 'react'
 import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native'
+import Animated, {
+  measure,
+  MeasuredDimensions,
+  runOnJS,
+  runOnUI,
+  useAnimatedRef,
+} from 'react-native-reanimated'
 import {AppBskyActorDefs, ModerationDecision} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg} from '@lingui/macro'
@@ -42,6 +49,7 @@ let ProfileHeaderShell = ({
   const {openLightbox} = useLightboxControls()
   const navigation = useNavigation<NavigationProp>()
   const {isDesktop} = useWebMediaQueries()
+  const aviRef = useAnimatedRef()
 
   const onPressBack = React.useCallback(() => {
     if (navigation.canGoBack()) {
@@ -51,15 +59,14 @@ let ProfileHeaderShell = ({
     }
   }, [navigation])
 
-  const onPressAvi = React.useCallback(() => {
-    const modui = moderation.ui('avatar')
-    if (profile.avatar && !(modui.blur && modui.noOverride)) {
+  const _openLightbox = React.useCallback(
+    (uri: string, thumbRect: MeasuredDimensions | null) => {
       openLightbox({
         images: [
           {
-            uri: profile.avatar,
-            thumbUri: profile.avatar,
-            thumbRect: null,
+            uri,
+            thumbUri: uri,
+            thumbRect,
             dimensions: {
               // It's fine if it's actually smaller but we know it's 1:1.
               height: 1000,
@@ -70,8 +77,21 @@ let ProfileHeaderShell = ({
         ],
         index: 0,
       })
+    },
+    [openLightbox],
+  )
+
+  const onPressAvi = React.useCallback(() => {
+    const modui = moderation.ui('avatar')
+    const avatar = profile.avatar
+    if (avatar && !(modui.blur && modui.noOverride)) {
+      runOnUI(() => {
+        'worklet'
+        const rect = measure(aviRef)
+        runOnJS(_openLightbox)(avatar, rect)
+      })()
     }
-  }, [openLightbox, profile, moderation])
+  }, [profile, moderation, _openLightbox, aviRef])
 
   const isMe = React.useMemo(
     () => currentAccount?.did === profile.did,
@@ -149,12 +169,14 @@ let ProfileHeaderShell = ({
               styles.avi,
               profile.associated?.labeler && styles.aviLabeler,
             ]}>
-            <UserAvatar
-              type={profile.associated?.labeler ? 'labeler' : 'user'}
-              size={90}
-              avatar={profile.avatar}
-              moderation={moderation.ui('avatar')}
-            />
+            <Animated.View ref={aviRef} collapsable={false}>
+              <UserAvatar
+                type={profile.associated?.labeler ? 'labeler' : 'user'}
+                size={90}
+                avatar={profile.avatar}
+                moderation={moderation.ui('avatar')}
+              />
+            </Animated.View>
           </View>
         </TouchableWithoutFeedback>
       </GrowableAvatar>
