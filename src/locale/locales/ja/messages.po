@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-06 10:13+0900\n"
+"PO-Revision-Date: 2024-11-07 10:00+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -1985,6 +1985,11 @@ msgstr "引用を切り離す"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:731
 msgid "Detach quote post?"
 msgstr "引用投稿を切り離しますか？"
+
+#: src/screens/Settings/Settings.tsx:196
+#: src/screens/Settings/Settings.tsx:199
+msgid "Developer options"
+msgstr "開発者用オプション"
 
 #: src/components/WhoCanReply.tsx:175
 msgid "Dialog: adjust who can interact with this post"
@@ -4582,6 +4587,10 @@ msgstr "アプリ内ブラウザでリンクを開く"
 msgid "Open message options"
 msgstr "メッセージのオプションを開く"
 
+#: src/screens/Settings/Settings.tsx:347
+msgid "Open moderation debug page"
+msgstr "モデレーションデバッグページを開く"
+
 #: src/screens/Moderation/index.tsx:231
 msgid "Open muted words and tags settings"
 msgstr "ミュートしたワードとタグの設定を開く"
@@ -5182,11 +5191,6 @@ msgstr "プロフィール"
 #: src/screens/Profile/Header/EditProfileDialog.tsx:191
 msgid "Profile updated"
 msgstr "プロフィールを更新しました"
-
-#: src/screens/Settings/AccountSettings.tsx:79
-#: src/screens/Settings/AccountSettings.tsx:95
-msgid "Protect your account"
-msgstr "アカウントを保護する"
 
 #: src/view/screens/Settings/index.tsx:976
 msgid "Protect your account by verifying your email."
@@ -7585,10 +7589,6 @@ msgstr "値："
 msgid "Verified email required"
 msgstr "メールアドレスの確認が必要"
 
-#: src/screens/Settings/AccountSettings.tsx:61
-msgid "Verify"
-msgstr "確認"
-
 #: src/view/com/modals/ChangeHandle.tsx:497
 msgid "Verify DNS Record"
 msgstr "DNSレコードを確認"
@@ -7622,6 +7622,11 @@ msgstr "確認する"
 #: src/view/com/modals/ChangeHandle.tsx:498
 msgid "Verify Text File"
 msgstr "テキストファイルを確認"
+
+#: src/screens/Settings/AccountSettings.tsx:68
+#: src/screens/Settings/AccountSettings.tsx:84
+msgid "Verify your email"
+msgstr "メールアドレスを確認"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:71
 #: src/view/com/modals/VerifyEmail.tsx:111
