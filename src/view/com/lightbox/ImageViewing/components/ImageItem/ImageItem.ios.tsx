@@ -28,7 +28,7 @@ import {ImageSource} from '../../@types'
 const SWIPE_CLOSE_OFFSET = 75
 const SWIPE_CLOSE_VELOCITY = 1
 const MAX_ORIGINAL_IMAGE_ZOOM = 2
-const MIN_DOUBLE_TAP_SCALE = 2
+const MIN_SCREEN_ZOOM = 2
 
 type Props = {
   imageSrc: ImageSource
@@ -56,10 +56,13 @@ const ImageItem = ({
     src: imageSrc.uri,
     knownDimensions: imageSrc.dimensions,
   })
-  const maxZoomScale = imageDimensions
-    ? (imageDimensions.width / screenSizeDelayedForJSThreadOnly.width) *
-      MAX_ORIGINAL_IMAGE_ZOOM
-    : 1
+  const maxZoomScale = Math.max(
+    MIN_SCREEN_ZOOM,
+    imageDimensions
+      ? (imageDimensions.width / screenSizeDelayedForJSThreadOnly.width) *
+          MAX_ORIGINAL_IMAGE_ZOOM
+      : 1,
+  )
 
   const animatedStyle = useAnimatedStyle(() => {
     return {
@@ -218,7 +221,7 @@ const getZoomRectAfterDoubleTap = (
   const zoom = Math.max(
     imageAspect / screenAspect,
     screenAspect / imageAspect,
-    MIN_DOUBLE_TAP_SCALE,
+    MIN_SCREEN_ZOOM,
   )
   // Unlike in the Android version, we don't constrain the *max* zoom level here.
   // Instead, this is done in the ScrollView props so that it constraints pinch too.
