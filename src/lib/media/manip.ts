@@ -178,15 +178,20 @@ async function doResize(localUri: string, opts: DoResizeOpts): Promise<Image> {
     height: imageRes.height,
   })
 
-  for (let i = 0; i < 9; i++) {
-    // nearest 10th
-    const quality = Math.round((1 - 0.1 * i) * 10) / 10
+  let minQualityPercentage = 0
+  let maxQualityPercentage = 101 // exclusive
+  let newDataUri
+
+  while (maxQualityPercentage - minQualityPercentage > 1) {
+    const qualityPercentage = Math.round(
+      (maxQualityPercentage + minQualityPercentage) / 2,
+    )
     const resizeRes = await manipulateAsync(
       localUri,
       [{resize: newDimensions}],
       {
         format: SaveFormat.JPEG,
-        compress: quality,
+        compress: qualityPercentage / 100,
       },
     )
 
@@ -198,8 +203,8 @@ async function doResize(localUri: string, opts: DoResizeOpts): Promise<Image> {
     }
 
     if (fileInfo.size < opts.maxSize) {
-      safeDeleteAsync(imageRes.uri)
-      return {
+      minQualityPercentage = qualityPercentage
+      newDataUri = {
         path: normalizePath(resizeRes.uri),
         mime: 'image/jpeg',
         size: fileInfo.size,
@@ -207,9 +212,17 @@ async function doResize(localUri: string, opts: DoResizeOpts): Promise<Image> {
         height: resizeRes.height,
       }
     } else {
-      safeDeleteAsync(resizeRes.uri)
+      maxQualityPercentage = qualityPercentage
     }
+
+    safeDeleteAsync(resizeRes.uri)
   }
+
+  if (newDataUri) {
+    safeDeleteAsync(imageRes.uri)
+    return newDataUri
+  }
+
   throw new Error(
     `This image is too big! We couldn't compress it down to ${opts.maxSize} bytes`,
   )
