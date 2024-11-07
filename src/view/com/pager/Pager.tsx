@@ -15,7 +15,7 @@ const AnimatedPagerView = Animated.createAnimatedComponent(PagerView)
 export interface PagerRef {
   setPage: (
     index: number,
-    reason: LogEvents['home:feedDisplayed:sampled']['reason'],
+    reason: LogEvents['home:feedDisplayed']['reason'],
   ) => void
 }
 
@@ -32,7 +32,7 @@ interface Props {
   onPageSelected?: (index: number) => void
   onPageSelecting?: (
     index: number,
-    reason: LogEvents['home:feedDisplayed:sampled']['reason'],
+    reason: LogEvents['home:feedDisplayed']['reason'],
   ) => void
   onPageScrollStateChanged?: (
     scrollState: 'idle' | 'dragging' | 'settling',
@@ -61,7 +61,7 @@ export const Pager = forwardRef<PagerRef, React.PropsWithChildren<Props>>(
     React.useImperativeHandle(ref, () => ({
       setPage: (
         index: number,
-        reason: LogEvents['home:feedDisplayed:sampled']['reason'],
+        reason: LogEvents['home:feedDisplayed']['reason'],
       ) => {
         pagerView.current?.setPage(index)
         onPageSelecting?.(index, reason)
