@@ -302,11 +302,6 @@ const ImageItem = ({
       committedTransform.value = withClampedSpring(finalTransform)
     })
 
-  const innerStyle = useAnimatedStyle(() => ({
-    width: '100%',
-    aspectRatio: imageAspect,
-  }))
-
   const composedGesture = isScrollViewBeingDragged
     ? // If the parent is not at rest, provide a no-op gesture.
       Gesture.Manual()
@@ -317,12 +312,9 @@ const ImageItem = ({
         singleTap,
       )
 
-  const type = imageSrc.type
-  const borderRadius =
-    type === 'circle-avi' ? 1e5 : type === 'rect-avi' ? 20 : 0
   return (
     <GestureDetector gesture={composedGesture}>
-      <Animated.View style={imageStyle} renderToHardwareTextureAndroid>
+      <Animated.View renderToHardwareTextureAndroid>
         <Animated.View
           ref={containerRef}
           // Necessary to make opacity work for both children together.
@@ -330,11 +322,11 @@ const ImageItem = ({
           style={[styles.container, animatedStyle]}>
           <ActivityIndicator size="small" color="#FFF" style={styles.loading} />
           <AnimatedImage
-            contentFit="contain"
+            contentFit="cover"
             source={{uri: imageSrc.uri}}
-            placeholderContentFit="contain"
+            placeholderContentFit="cover"
             placeholder={{uri: imageSrc.thumbUri}}
-            style={[innerStyle, {borderRadius}]}
+            style={imageStyle}
             accessibilityLabel={imageSrc.alt}
             accessibilityHint=""
             accessibilityIgnoresInvertColors

@@ -18,7 +18,6 @@ import Animated, {
   measure,
   runOnJS,
   useAnimatedRef,
-  useAnimatedStyle,
 } from 'react-native-reanimated'
 import {useSafeAreaFrame} from 'react-native-safe-area-context'
 import {Image, ImageStyle} from 'expo-image'
@@ -66,16 +65,6 @@ const ImageItem = ({
           MAX_ORIGINAL_IMAGE_ZOOM
       : 1,
   )
-
-  const animatedStyle = useAnimatedStyle(() => {
-    const screenSize = measure(safeAreaRef) ?? screenSizeDelayedForJSThreadOnly
-    return {
-      width: screenSize.width,
-      maxHeight: screenSize.height,
-      alignSelf: 'center',
-      aspectRatio: imageAspect,
-    }
-  })
 
   const scrollHandler = useAnimatedScrollHandler({
     onScroll(e) {
@@ -143,9 +132,6 @@ const ImageItem = ({
     singleTap,
   )
 
-  const type = imageSrc.type
-  const borderRadius =
-    type === 'circle-avi' ? 1e5 : type === 'rect-avi' ? 20 : 0
   return (
     <GestureDetector gesture={composedGesture}>
       <Animated.ScrollView
@@ -158,15 +144,14 @@ const ImageItem = ({
         onScroll={scrollHandler}
         bounces={scaled}
         bouncesZoom={true}
-        style={imageStyle}
         centerContent>
         <ActivityIndicator size="small" color="#FFF" style={styles.loading} />
         <AnimatedImage
-          contentFit="contain"
+          contentFit="cover"
           source={{uri: imageSrc.uri}}
-          placeholderContentFit="contain"
+          placeholderContentFit="cover"
           placeholder={{uri: imageSrc.thumbUri}}
-          style={[animatedStyle, {borderRadius}]}
+          style={imageStyle}
           accessibilityLabel={imageSrc.alt}
           accessibilityHint=""
           enableLiveTextInteraction={showControls && !scaled}
