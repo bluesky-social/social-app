@@ -6,6 +6,7 @@ import {
   PanGesture,
 } from 'react-native-gesture-handler'
 import Animated, {
+  BaseAnimationBuilder,
   runOnJS,
   useAnimatedReaction,
   useAnimatedRef,
@@ -50,6 +51,7 @@ type Props = {
   imageDimensions: ImageDimensions | undefined
   imageStyle: StyleProp<ImageStyle>
   dismissSwipePan: PanGesture
+  layoutAnimationAndroid: BaseAnimationBuilder
 }
 const ImageItem = ({
   imageSrc,
@@ -61,6 +63,7 @@ const ImageItem = ({
   imageDimensions,
   imageStyle,
   dismissSwipePan,
+  layoutAnimationAndroid,
 }: Props) => {
   const [isScaled, setIsScaled] = useState(false)
   const committedTransform = useSharedValue(initialTransform)
@@ -326,6 +329,7 @@ const ImageItem = ({
           placeholderContentFit="cover"
           placeholder={{uri: imageSrc.thumbUri}}
           style={imageStyle}
+          layout={layoutAnimationAndroid}
           accessibilityLabel={imageSrc.alt}
           accessibilityHint=""
           accessibilityIgnoresInvertColors

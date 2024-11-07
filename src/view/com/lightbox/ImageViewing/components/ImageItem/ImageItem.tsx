@@ -3,6 +3,7 @@
 import React from 'react'
 import {ImageStyle, StyleProp, View} from 'react-native'
 import {PanGesture} from 'react-native-gesture-handler'
+import {BaseAnimationBuilder} from 'react-native-reanimated'
 
 import {Dimensions as ImageDimensions, ImageSource} from '../../@types'
 
@@ -23,6 +24,7 @@ type Props = {
   imageDimensions: ImageDimensions | undefined
   imageStyle: StyleProp<ImageStyle>
   dismissSwipePan: PanGesture
+  layoutAnimationAndroid: BaseAnimationBuilder
 }
 
 const ImageItem = (_props: Props) => {
