@@ -7047,7 +7047,7 @@ msgstr "Sistema"
 
 #: src/view/screens/Settings/index.tsx:818
 msgid "System log"
-msgstr "Log del sistema"
+msgstr "Registro del sistema"
 
 #: src/components/dialogs/MutedWords.tsx:323
 #~ msgid "tag"
