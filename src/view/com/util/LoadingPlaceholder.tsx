@@ -139,8 +139,7 @@ export function NotificationLoadingPlaceholder({
 }) {
   const pal = usePalette('default')
   return (
-    <View
-      style={[styles.notification, a.border_b, pal.view, pal.border, style]}>
+    <View style={[styles.notification, pal.view, style]}>
       <View style={[{width: 60}, a.align_end, a.pr_sm, a.pt_2xs]}>
         <HeartIconFilled
           size="xl"
