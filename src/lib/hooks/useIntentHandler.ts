@@ -127,9 +127,12 @@ export function useComposeIntent() {
           return {uri, width: Number(width), height: Number(height)}
         })
 
+      // Replace <br> with \n in the text parameter
+      const formattedText = text?.replace(/<br>/g, '\n') ?? undefined
+
       setTimeout(() => {
         openComposer({
-          text: text ?? undefined,
+          text: formattedText,
           imageUris: isNative ? imageUris : undefined,
         })
       }, 500)
