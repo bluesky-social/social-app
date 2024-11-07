@@ -133,7 +133,7 @@ msgstr "{0} de {1}"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:478
 msgid "{0} people have used this starter pack!"
-msgstr "¡{0} personas han usado este pack de inicio!"
+msgstr "¡{0} personas han usado este paquete de inicio!"
 
 #: src/view/screens/ProfileList.tsx:286
 #~ msgid "{0} your feeds"
@@ -149,7 +149,7 @@ msgstr "Los feeds y personas favoritas de {0}, ¡únete a mí!"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:47
 msgid "{0}'s starter pack"
-msgstr "pack de inicio de {0}"
+msgstr "paquete de inicio de {0}"
 
 #. How many days have passed, displayed in a narrow form
 #: src/lib/hooks/useTimeAgo.ts:158
@@ -203,7 +203,7 @@ msgstr "{count, plural, one {Le ha gustado a # usuario} other {Les han gustado a
 #: src/lib/generate-starterpack.ts:108
 #: src/screens/StarterPack/Wizard/index.tsx:183
 msgid "{displayName}'s Starter Pack"
-msgstr "Pack de inicio de {displayName}"
+msgstr "Paquete de inicio de {displayName}"
 
 #: src/screens/SignupQueued.tsx:207
 msgid "{estimatedTimeHrs, plural, one {hour} other {hours}}"
@@ -238,7 +238,7 @@ msgstr "{profileName} se unió a Bluesky hace {0}"
 
 #: src/components/NewskieDialog.tsx:111
 msgid "{profileName} joined Bluesky using a starter pack {0} ago"
-msgstr "{profileName} se unió a Bluesky usando un pack de inicio hace {0}"
+msgstr "{profileName} se unió a Bluesky usando un paquete de inicio hace {0}"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:67
 #~ msgid "{value, plural, =0 {Show all replies} one {Show replies with at least # like} other {Show replies with at least # likes}}"
@@ -422,7 +422,7 @@ msgstr "Agregar {0} más para continuar"
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:59
 msgid "Add {displayName} to starter pack"
-msgstr "Agregar {displayName} al pack de inicio"
+msgstr "Agregar {displayName} al paquete de inicio"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:108
 #: src/view/com/composer/labels/LabelsBtn.tsx:113
@@ -638,7 +638,7 @@ msgstr "Se ha producido un error"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:422
 msgid "An error occurred"
-msgstr "Ocurrió un error"
+msgstr "Se produjo un error"
 
 #: src/view/com/composer/state/video.ts:412
 msgid "An error occurred while compressing the video."
@@ -646,15 +646,15 @@ msgstr "Se produjo un error al comprimir el video."
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:316
 msgid "An error occurred while generating your starter pack. Want to try again?"
-msgstr "Se produjo un error al generar su pack de inicio. ¿Quieres intentarlo de nuevo?"
+msgstr "Se produjo un error al generar su paquete de inicio. ¿Quieres intentarlo de nuevo?"
 
 #: src/view/com/util/post-embeds/VideoEmbed.tsx:135
 msgid "An error occurred while loading the video. Please try again later."
-msgstr "Un error ocurrió al cargar el video. Por favor, intente denuevo."
+msgstr "Se produjo un error al cargar el video. Por favor, inténtelo de nuevo."
 
 #: src/view/com/util/post-embeds/VideoEmbed.web.tsx:174
 msgid "An error occurred while loading the video. Please try again."
-msgstr "Un error ocurrió mientras cargaba el video. Por favor, intente denuevo."
+msgstr "Se produjo un error mientras cargaba el video. Por favor, inténtelo de nuevo."
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:250
 #~ msgid "An error occurred while saving the image!"
@@ -671,16 +671,16 @@ msgstr "¡Se produjo un error al guardar el código QR!"
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:87
 msgid "An error occurred while selecting the video"
-msgstr "Un error ocurrió mientras seleccionaba el video"
+msgstr "Se produjo un error mientras seleccionaba el video"
 
 #: src/components/dms/MessageMenu.tsx:134
 #~ msgid "An error occurred while trying to delete the message. Please try again."
-#~ msgstr "Ocurrió un error al intentar eliminar el mensaje. Inténtalo de nuevo."
+#~ msgstr "Se produjo un error al intentar eliminar el mensaje. Inténtalo de nuevo."
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:347
 #: src/screens/StarterPack/StarterPackScreen.tsx:369
 msgid "An error occurred while trying to follow all"
-msgstr "Un error ocurrió mientras intentaba seguir a todos"
+msgstr "Se produjo un error mientras intentaba seguir a todos"
 
 #: src/view/com/composer/state/video.ts:449
 msgid "An error occurred while uploading the video."
@@ -709,7 +709,7 @@ msgstr "Ocurrió un problema. Inténtalo de nuevo."
 
 #: src/screens/Onboarding/StepInterests/index.tsx:185
 msgid "an unknown error occurred"
-msgstr "Ocurrió un error desconocido"
+msgstr "Se produjo un error desconocido"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:158
 #: src/components/moderation/ModerationDetailsDialog.tsx:154
@@ -831,7 +831,7 @@ msgstr "¿Estás seguro de que quieres eliminar este mensaje? El mensaje se elim
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:632
 msgid "Are you sure you want to delete this starter pack?"
-msgstr "¿Estás seguro de que quieres eliminar este pack de inicio?"
+msgstr "¿Estás seguro de que quieres eliminar este paquete de inicio?"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:82
 msgid "Are you sure you want to discard your changes?"
@@ -1783,17 +1783,17 @@ msgstr "Crear una nueva cuenta de Bluesky"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:153
 msgid "Create a QR code for a starter pack"
-msgstr "Crear un código QR para pack de inicio"
+msgstr "Crear un código QR para paquete de inicio"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:166
 #: src/components/StarterPack/ProfileStarterPacks.tsx:260
 #: src/Navigation.tsx:367
 msgid "Create a starter pack"
-msgstr "Crea un pack de inicio"
+msgstr "Crea un paquete de inicio"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:247
 msgid "Create a starter pack for me"
-msgstr "Crea un pack de inicio para mí"
+msgstr "Crea un paquete de inicio para mí"
 
 #: src/view/com/auth/SplashScreen.tsx:56
 #: src/view/com/auth/SplashScreen.web.tsx:116
@@ -1975,11 +1975,11 @@ msgstr "Borrar un post"
 #: src/screens/StarterPack/StarterPackScreen.tsx:578
 #: src/screens/StarterPack/StarterPackScreen.tsx:734
 msgid "Delete starter pack"
-msgstr "Borrar pack de inicio"
+msgstr "Borrar paquete de inicio"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:629
 msgid "Delete starter pack?"
-msgstr "¿Borrar pack de inicio?"
+msgstr "¿Borrar paquete de inicio?"
 
 #: src/view/screens/ProfileList.tsx:721
 msgid "Delete this list?"
@@ -2379,7 +2379,7 @@ msgstr "Editar quien puede responder"
 
 #: src/Navigation.tsx:372
 msgid "Edit your starter pack"
-msgstr "Edita tu pack de inicio"
+msgstr "Edita tu paquete de inicio"
 
 #: src/screens/Onboarding/index.tsx:31
 #: src/screens/Onboarding/state.ts:88
@@ -2567,7 +2567,7 @@ msgstr ""
 
 #: src/view/screens/Settings/ExportCarDialog.tsx:46
 msgid "Error occurred while saving file"
-msgstr "Ocurrió un error al guardar el archivo"
+msgstr "Se produjo un error al guardar el archivo"
 
 #: src/screens/Signup/StepCaptcha/index.tsx:56
 msgid "Error receiving captcha response."
@@ -2709,7 +2709,7 @@ msgstr "Error al crear la contraseña de la aplicación."
 #: src/screens/StarterPack/Wizard/index.tsx:238
 #: src/screens/StarterPack/Wizard/index.tsx:246
 msgid "Failed to create starter pack"
-msgstr "Error al crear el pack de inicio."
+msgstr "Error al crear el paquete de inicio."
 
 #: src/view/com/modals/CreateOrEditList.tsx:186
 msgid "Failed to create the list. Check your internet connection and try again."
@@ -3136,7 +3136,7 @@ msgstr "Galería"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:280
 msgid "Generate a starter pack"
-msgstr "Genera un pack de inicio"
+msgstr "Genera un paquete de inicio"
 
 #: src/view/shell/Drawer.tsx:352
 msgid "Get help"
@@ -4328,7 +4328,7 @@ msgstr "Navegar a {0}"
 
 #: src/view/com/util/post-embeds/ExternalLinkEmbed.tsx:86
 #~ msgid "Navigate to starter pack"
-#~ msgstr "Navegar al pack de inicio"
+#~ msgstr "Navegar al paquete de inicio"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:166
 #: src/screens/Login/LoginForm.tsx:316
@@ -4811,7 +4811,7 @@ msgstr "Abrir menú de opciones del post"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:551
 msgid "Open starter pack menu"
-msgstr "Abrir menú del pack de inicio"
+msgstr "Abrir menú del paquete de inicio"
 
 #: src/view/screens/Settings/index.tsx:827
 #: src/view/screens/Settings/index.tsx:837
@@ -5832,7 +5832,7 @@ msgstr "Denunciar publicación"
 #: src/screens/StarterPack/StarterPackScreen.tsx:604
 #: src/screens/StarterPack/StarterPackScreen.tsx:607
 msgid "Report starter pack"
-msgstr "Denunciar pack de inicio"
+msgstr "Denunciar paquete de inicio"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:43
 msgid "Report this content"
@@ -5858,7 +5858,7 @@ msgstr "Denunciar esta publicación"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:59
 msgid "Report this starter pack"
-msgstr "Denunciar este pack de inicio"
+msgstr "Denunciar este paquete de inicio"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:47
 msgid "Report this user"
@@ -6561,11 +6561,11 @@ msgstr "Compartir código QR"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:415
 msgid "Share this starter pack"
-msgstr "Compartir este pack de inicio"
+msgstr "Compartir este paquete de inicio"
 
 #: src/components/StarterPack/ShareDialog.tsx:100
 msgid "Share this starter pack and help people join your community on Bluesky."
-msgstr "Comparte este pack de inicio y ayuda a las personas a unirse a tu comunidad en Bluesky."
+msgstr "Comparte este paquete de inicio y ayuda a las personas a unirse a tu comunidad en Bluesky."
 
 #: src/components/dms/ChatEmptyPill.tsx:34
 msgid "Share your favorite feed!"
@@ -6795,12 +6795,12 @@ msgstr "Sesión iniciada como @{0}"
 
 #: src/view/com/notifications/FeedItem.tsx:218
 msgid "signed up with your starter pack"
-msgstr "se ha registrado con tu pack de inicio"
+msgstr "se ha registrado con tu paquete de inicio"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:299
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:306
 msgid "Signup without a starter pack"
-msgstr "Registrarse sin un pack de inicio"
+msgstr "Registrarse sin un paquete de inicio"
 
 #: src/components/FeedInterstitials.tsx:316
 msgid "Similar accounts"
@@ -6839,23 +6839,23 @@ msgstr "Algunas personas pueden responder"
 
 #: src/screens/Messages/Conversation.tsx:109
 msgid "Something went wrong"
-msgstr "Ocurrió un error"
+msgstr "Se produjo un error"
 
 #: src/screens/Deactivated.tsx:94
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:59
 msgid "Something went wrong, please try again"
-msgstr "Ocurrió un error. Por favor, inténtalo de nuevo"
+msgstr "Se produjo un error. Por favor, inténtalo de nuevo"
 
 #: src/components/ReportDialog/index.tsx:54
 #: src/screens/Moderation/index.tsx:117
 #: src/screens/Profile/Sections/Labels.tsx:87
 msgid "Something went wrong, please try again."
-msgstr "Ocurrió un error. Inténtalo de nuevo."
+msgstr "Se produjo un error. Inténtalo de nuevo."
 
 #: src/components/Lists.tsx:200
 #: src/view/screens/NotificationsSettings.tsx:49
 msgid "Something went wrong!"
-msgstr "¡Ocurrió un error!"
+msgstr "¡Se produjo un error!"
 
 #: src/App.native.tsx:112
 #: src/App.web.tsx:95
@@ -6920,19 +6920,19 @@ msgstr "Iniciar chat con {displayName}"
 #: src/Navigation.tsx:362
 #: src/screens/StarterPack/Wizard/index.tsx:191
 msgid "Starter Pack"
-msgstr "Pack de inicio"
+msgstr "Paquete de inicio"
 
 #: src/components/StarterPack/StarterPackCard.tsx:81
 msgid "Starter pack by {0}"
-msgstr "Pack de inicio de {0}"
+msgstr "Paquete de inicio de {0}"
 
 #: src/components/StarterPack/StarterPackCard.tsx:80
 msgid "Starter pack by you"
-msgstr "Pack de inicio creado por ti"
+msgstr "Paquete de inicio creado por ti"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:714
 msgid "Starter pack is invalid"
-msgstr "El pack de inicio es inválido"
+msgstr "El paquete de inicio es inválido"
 
 #: src/view/screens/Profile.tsx:233
 msgid "Starter Packs"
@@ -7187,7 +7187,7 @@ msgstr "Este nombre de usuario ya está en uso."
 #: src/screens/StarterPack/Wizard/index.tsx:107
 #: src/screens/StarterPack/Wizard/index.tsx:117
 msgid "That starter pack could not be found."
-msgstr "No se pudo encontrar ese pack de inicio."
+msgstr "No se pudo encontrar ese paquete de inicio."
 
 #: src/view/com/post-thread/PostQuotes.tsx:133
 msgid "That's all, folks!"
@@ -7263,7 +7263,7 @@ msgstr "El video seleccionado es mayor de 50MB."
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:724
 msgid "The starter pack that you are trying to view is invalid. You may delete this starter pack instead."
-msgstr "El pack de inicio que intentas ver es inválido. Puedes eliminar este pack de inicio en su lugar."
+msgstr "El paquete de inicio que intentas ver es inválido. Puedes eliminar este paquete de inicio en su lugar."
 
 #: src/view/screens/Support.tsx:37
 msgid "The support form has been moved. If you need help, please <0/> or visit {HELP_DESK_URL} to get in touch with us."
@@ -8409,7 +8409,7 @@ msgstr "¿Cuáles son tus intereses?"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:42
 msgid "What do you want to call your starter pack?"
-msgstr "¿Cómo quieres llamar a tu pack de inicio?"
+msgstr "¿Cómo quieres llamar a tu paquete de inicio?"
 
 #: src/view/com/auth/SplashScreen.tsx:39
 #: src/view/com/auth/SplashScreen.web.tsx:98
@@ -8473,7 +8473,7 @@ msgstr "¿Por qué crees que este post debe ser revisado?"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:60
 msgid "Why should this starter pack be reviewed?"
-msgstr "¿Por qué crees que este pack de inicio debe ser revisado?"
+msgstr "¿Por qué crees que este paquete de inicio debe ser revisado?"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:48
 msgid "Why should this user be reviewed?"
@@ -8519,7 +8519,7 @@ msgstr "Sí, desactivar"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:660
 msgid "Yes, delete this starter pack"
-msgstr "Sí, eliminar este pack de inicio"
+msgstr "Sí, eliminar este paquete de inicio"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:736
 msgid "Yes, detach"
@@ -8696,7 +8696,7 @@ msgstr "Has alcanzado temporalmente el límite de subidas de videos. Por favor, 
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:236
 msgid "You haven't created a starter pack yet!"
-msgstr "¡Aún no has creado un pack de inicio!"
+msgstr "¡Aún no has creado un paquete de inicio!"
 
 #: src/components/dialogs/MutedWords.tsx:398
 msgid "You haven't muted any words or tags yet"
@@ -8745,7 +8745,7 @@ msgstr "Tienes que tener 13 años o más para poder crear una cuenta."
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:307
 msgid "You must be following at least seven other people to generate a starter pack."
-msgstr "Debes seguir al menos a siete personas más para generar un pack de inicio."
+msgstr "Debes seguir al menos a siete personas más para generar un paquete de inicio."
 
 #: src/components/StarterPack/QrCodeDialog.tsx:60
 msgid "You must grant access to your photo library to save a QR code"
@@ -8869,7 +8869,7 @@ msgstr "Tu fecha de nacimiento"
 
 #: src/view/com/util/post-embeds/VideoEmbed.web.tsx:171
 msgid "Your browser does not support the video format. Please try a different browser."
-msgstr "Tu navegador no soporta este formato de video. Por favor, intenta con uno diferente"
+msgstr "Tu navegador no soporta este formato de video. Por favor, inténtalo con uno diferente"
 
 #: src/screens/Messages/components/ChatDisabled.tsx:25
 msgid "Your chats have been disabled"
