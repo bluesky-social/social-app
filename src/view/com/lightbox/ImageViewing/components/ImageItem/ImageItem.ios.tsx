@@ -68,8 +68,11 @@ const ImageItem = ({
   )
 
   const animatedStyle = useAnimatedStyle(() => {
+    const screenSize = measure(safeAreaRef) ?? screenSizeDelayedForJSThreadOnly
     return {
-      width: '100%',
+      width: screenSize.width,
+      maxHeight: screenSize.height,
+      alignSelf: 'center',
       aspectRatio: imageAspect,
     }
   })
