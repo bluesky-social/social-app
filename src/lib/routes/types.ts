@@ -11,7 +11,6 @@ export type CommonNavigatorParams = {
   ModerationMutedAccounts: undefined
   ModerationBlockedAccounts: undefined
   Settings: undefined
-  LanguageSettings: undefined
   Profile: {name: string; hideBackButton?: boolean}
   ProfileFollowers: {name: string}
   ProfileFollows: {name: string}
@@ -33,6 +32,7 @@ export type CommonNavigatorParams = {
   TermsOfService: undefined
   CommunityGuidelines: undefined
   CopyrightPolicy: undefined
+  LanguageSettings: undefined
   AppPasswords: undefined
   SavedFeeds: undefined
   PreferencesFollowingFeed: undefined
@@ -40,11 +40,15 @@ export type CommonNavigatorParams = {
   PreferencesExternalEmbeds: undefined
   AccessibilitySettings: undefined
   AppearanceSettings: undefined
+  AccountSettings: undefined
+  PrivacyAndSecuritySettings: undefined
+  ContentAndMediaSettings: undefined
+  AboutSettings: undefined
   Search: {q?: string}
   Hashtag: {tag: string; author?: string}
   MessagesConversation: {conversation: string; embed?: string}
   MessagesSettings: undefined
-  NotificationsSettings: undefined
+  NotificationSettings: undefined
   Feeds: undefined
   Start: {name: string; rkey: string}
   StarterPack: {name: string; rkey: string; new?: boolean}

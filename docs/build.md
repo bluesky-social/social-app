@@ -1,6 +1,17 @@
 # Build instructions
 
-## App Build
+## Running Web App
+
+- `yarn`
+- `yarn web`
+
+You're all set!
+
+## iOS/Android Build
+
+### Native Environment Setup
+
+This is NOT required when developing for web.
 
 - Set up your environment [using the expo instructions](https://docs.expo.dev/guides/local-app-development/).
   - make sure that the JAVA_HOME points to the zulu-17 directory in your `.zshrc` or `.bashrc` file: `export JAVA_HOME=/Library/Java/JavaVirtualMachines/zulu-17.jdk/Contents/Home`. DO NOT use another JDK or you will encounter build errors.
@@ -22,7 +33,68 @@
 - After initial setup:
   - Copy `google-services.json.example` to `google-services.json` or provide your own `google-services.json`. (A real firebase project is NOT required)
   - `npx expo prebuild` -> you will also need to run this anytime `app.json` or native `package.json` deps change
-  - `yarn intl:build` -> you will also need to run this anytime `./src/locale/{locale}/messages.po` change
+ 
+### Running the Native App
+
+- iOS: `yarn ios`
+  - Xcode must be installed for this to run.
+    - A simulator must be preconfigured in Xcode settings.
+      - if no iOS versions are available, install the iOS runtime at `Xcode > Settings > Platforms`.
+      - if the simulator download keeps failing you can download it from the developer website.
+        - [Apple Developer](https://developer.apple.com/download/all/?q=Simulator%20Runtime)
+        - `xcode-select -s /Applications/Xcode.app`
+        - `xcodebuild -runFirstLaunch`
+        - `xcrun simctl runtime add "~/Downloads/iOS_17.4_Simulator_Runtime.dmg"` (adapt the path to the downloaded file)
+    - In addition, ensure Xcode Command Line Tools are installed using `xcode-select --install`.
+  - Expo will require you to configure Xcode Signing. Follow the linked instructions. Error messages in Xcode related to the signing process can be safely ignored when installing on the iOS Simulator; Expo merely requires the profile to exist in order to install the app on the Simulator.
+    - Make sure you do have a certificate: open Xcode > Settings > Accounts > (sign-in) > Manage Certificates > + > Apple Development > Done.
+    - If you still encounter issues, try `rm -rf ios` before trying to build again (`yarn ios`)
+- Android: `yarn android`
+  - Install "Android Studio"
+    - Make sure you have the Android SDK installed (Android Studio > Tools > Android SDK).
+      - In "SDK Platforms": "Android x" (where x is Android's current version).
+      - In "SDK Tools": "Android SDK Build-Tools" and "Android Emulator" are required.
+      - Add `export ANDROID_HOME=/Users/<your_username>/Library/Android/sdk` to your `.zshrc` or `.bashrc` (and restart your terminal).
+    - Setup an emulator (Android Studio > Tools > Device Manager).
+- Web: `yarn web` (see the top of this file).
+
+After you do `yarn ios` and `yarn android` once, you can later just run `yarn web` and then press either `i` or `a` to open iOS and Android emulators respectively which is much faster. However, if you make native changes, you'll have to do `yarn prebuild -p ios` and `yarn prebuild -p android` and then `yarn ios` and `yarn android` again before you can continue with the same workflow.
+
+### Tips
+
+- Copy the `.env.example` to `.env` and fill in any necessary tokens. (The Sentry token is NOT required; see instructions below if you want to enable Sentry.)
+- To run on the device, add `--device` to the command (e.g. `yarn android --device`). To build in production mode (slower build, faster app), also add `--variant release`.
+- If you want to use Expo EAS on your own builds without ejecting from Expo, make sure to change the `owner` and `extra.eas.projectId` properties. If you do not have an Expo account, you may remove these properties.
+- `npx react-native info` Checks what has been installed.
+- If the Android simulator frequently hangs or is very sluggish, [bump its memory limit](https://stackoverflow.com/a/40068396)
+- The Android simulator won't be able to access localhost services unless you run `adb reverse tcp:{PORT} tcp:{PORT}`
+  - For instance, the locally-hosted dev-wallet will need `adb reverse tcp:3001 tcp:3001`
+- For some reason, the typescript compiler chokes on platform-specific files (e.g. `foo.native.ts`) but only when compiling for Web thus far. Therefore we always have one version of the file that doesn't use a platform specifier, and that should be the Web version. ([More info](https://stackoverflow.com/questions/44001050/platform-specific-import-component-in-react-native-with-typescript).)
+
+### Running E2E Tests
+
+- Start in various console tabs:
+  - `yarn e2e:mock-server`
+  - `yarn e2e:metro`
+- Run once: `yarn e2e:build`
+- Each test run: `yarn e2e:run`
+
+### Adding Sentry
+
+Adding Sentry is NOT required. You can keep `SENTRY_AUTH_TOKEN=` in `.env` which will build the app without Sentry.
+
+However, if you're a part of the Bluesky team and want to enable Sentry, fill in `SENTRY_AUTH_TOKEN` in your `.env`. It can be created on the Sentry dashboard using [these instructions](https://docs.expo.dev/guides/using-sentry/#sign-up-for-a-sentry-account-and-create-a-project).
+
+If you change `SENTRY_AUTH_TOKEN`, you need to do `yarn prebuild` before running `yarn ios` or `yarn android` again.
+
+### Adding and Updating Locales
+
+- `yarn intl:build` -> you will also need to run this anytime `./src/locale/{locale}/messages.po` change
+
+## Running the Backend Locally
+
+This is NOT required for app development but if you also want to develop the Bluesky *backend* locally too, you'll need this.
+
 - Start the dev servers
   - `git clone git@github.com:bluesky-social/atproto.git`
   - `cd atproto`
@@ -33,54 +105,12 @@
   - Start the docker daemon (on MacOS this entails starting the Docker Desktop app)
   - Launch a Postgres database on port 5432
   - `cd packages/dev-env && pnpm start`
-- Run the dev app
-  - iOS: `yarn ios`
-    - Xcode must be installed for this to run.
-      - A simulator must be preconfigured in Xcode settings.
-        - if no iOS versions are available, install the iOS runtime at `Xcode > Settings > Platforms`.
-        - if the simulator download keeps failing you can download it from the developer website.
-          - [Apple Developer](https://developer.apple.com/download/all/?q=Simulator%20Runtime)
-          - `xcode-select -s /Applications/Xcode.app`
-          - `xcodebuild -runFirstLaunch`
-          - `xcrun simctl runtime add "~/Downloads/iOS_17.4_Simulator_Runtime.dmg"` (adapt the path to the downloaded file)
-      - In addition, ensure Xcode Command Line Tools are installed using `xcode-select --install`.
-    - Expo will require you to configure Xcode Signing. Follow the linked instructions. Error messages in Xcode related to the signing process can be safely ignored when installing on the iOS Simulator; Expo merely requires the profile to exist in order to install the app on the Simulator.
-      - Make sure you do have a certificate: open Xcode > Settings > Accounts > (sign-in) > Manage Certificates > + > Apple Development > Done.
-      - If you still encounter issues, try `rm -rf ios` before trying to build again (`yarn ios`)
-  - Android: `yarn android`
-    - Install "Android Studio"
-      - Make sure you have the Android SDK installed (Android Studio > Tools > Android SDK).
-        - In "SDK Platforms": "Android x" (where x is Android's current version).
-        - In "SDK Tools": "Android SDK Build-Tools" and "Android Emulator" are required.
-        - Add `export ANDROID_HOME=/Users/<your_username>/Library/Android/sdk` to your `.zshrc` or `.bashrc` (and restart your terminal).
-      - Setup an emulator (Android Studio > Tools > Device Manager).
-  - Web: `yarn web`
-- If you are cloning or forking this repo as an open-source developer, please check the tips below as well
-- Run e2e tests
-  - Start in various console tabs:
-    - `yarn e2e:mock-server`
-    - `yarn e2e:metro`
-  - Run once: `yarn e2e:build`
-  - Each test run: `yarn e2e:run`
-- Tips
-  - Copy the `.env.example` to `.env` and fill in any necessary tokens. (The Sentry token is NOT required; see instructions below if you want to enable Sentry.)
-  - To run on the device, add `--device` to the command (e.g. `yarn android --device`). To build in production mode (slower build, faster app), also add `--variant release`.
-  - If you want to use Expo EAS on your own builds without ejecting from Expo, make sure to change the `owner` and `extra.eas.projectId` properties. If you do not have an Expo account, you may remove these properties.
-  - `npx react-native info` Checks what has been installed.
-  - If the Android simulator frequently hangs or is very sluggish, [bump its memory limit](https://stackoverflow.com/a/40068396)
-  - The Android simulator won't be able to access localhost services unless you run `adb reverse tcp:{PORT} tcp:{PORT}`
-    - For instance, the locally-hosted dev-wallet will need `adb reverse tcp:3001 tcp:3001`
-  - For some reason, the typescript compiler chokes on platform-specific files (e.g. `foo.native.ts`) but only when compiling for Web thus far. Therefore we always have one version of the file that doesn't use a platform specifier, and that should be the Web version. ([More info](https://stackoverflow.com/questions/44001050/platform-specific-import-component-in-react-native-with-typescript).)
 
-### Adding Sentry
-
-Adding Sentry is NOT required. You can keep `SENTRY_AUTH_TOKEN=` in `.env` which will build the app without Sentry.
-
-However, if you're a part of the Bluesky team and want to enable Sentry, fill in `SENTRY_AUTH_TOKEN` in your `.env`. It can be created on the Sentry dashboard using [these instructions](https://docs.expo.dev/guides/using-sentry/#sign-up-for-a-sentry-account-and-create-a-project).
-
-If you change `SENTRY_AUTH_TOKEN`, you need to do `yarn prebuild` before running `yarn ios` or `yarn android` again.
+Then, when logging in or creating an account, point it to the localhost port of the devserver.
 
 ## Go-Server Build
+
+The Go server in this repository is only used for serving the web app in production. Usually you won't need to touch it.
 
 ### Prerequisites
 

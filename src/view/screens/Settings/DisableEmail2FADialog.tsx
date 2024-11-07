@@ -88,9 +88,7 @@ export function DisableEmail2FADialog({
             style={[a.text_2xl, a.font_bold, t.atoms.text]}>
             <Trans>Disable Email 2FA</Trans>
           </Text>
-          <P
-            nativeID="dialog-description"
-            style={[a.text_sm, t.atoms.text, a.leading_snug]}>
+          <P nativeID="dialog-description">
             {stage === Stages.ConfirmCode ? (
               <Trans>
                 An email has been sent to{' '}
@@ -108,7 +106,11 @@ export function DisableEmail2FADialog({
           {error ? <ErrorMessage message={error} /> : undefined}
 
           {stage === Stages.Email ? (
-            <View style={gtMobile && [a.flex_row, a.justify_end, a.gap_md]}>
+            <View
+              style={[
+                a.gap_sm,
+                gtMobile && [a.flex_row, a.justify_end, a.gap_md],
+              ]}>
               <Button
                 testID="sendEmailButton"
                 variant="solid"
@@ -157,7 +159,11 @@ export function DisableEmail2FADialog({
                   />
                 </TextField.Root>
               </View>
-              <View style={gtMobile && [a.flex_row, a.justify_end]}>
+              <View
+                style={[
+                  a.gap_sm,
+                  gtMobile && [a.flex_row, a.justify_end, a.gap_md],
+                ]}>
                 <Button
                   testID="resendCodeBtn"
                   variant="ghost"

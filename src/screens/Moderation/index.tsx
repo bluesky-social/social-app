@@ -7,6 +7,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
 
+import {IS_INTERNAL} from '#/lib/app-info'
 import {getLabelingServiceTitle} from '#/lib/moderation'
 import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
 import {logger} from '#/logger'
@@ -41,6 +42,7 @@ import {Filter_Stroke2_Corner0_Rounded as Filter} from '#/components/icons/Filte
 import {Group3_Stroke2_Corner0_Rounded as Group} from '#/components/icons/Group'
 import {Person_Stroke2_Corner0_Rounded as Person} from '#/components/icons/Person'
 import * as LabelingService from '#/components/LabelingServiceCard'
+import * as Layout from '#/components/Layout'
 import {InlineLinkText, Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {GlobalLabelPreference} from '#/components/moderation/LabelPreference'
@@ -94,31 +96,33 @@ export function ModerationScreen(
   const error = preferencesError
 
   return (
-    <CenteredView
-      testID="moderationScreen"
-      style={[
-        t.atoms.border_contrast_low,
-        t.atoms.bg,
-        {minHeight: height},
-        ...(gtMobile ? [a.border_l, a.border_r] : []),
-      ]}>
-      <ViewHeader title={_(msg`Moderation`)} showOnDesktop />
+    <Layout.Screen testID="moderationScreen">
+      <CenteredView
+        testID="moderationScreen"
+        style={[
+          t.atoms.border_contrast_low,
+          t.atoms.bg,
+          {minHeight: height},
+          ...(gtMobile ? [a.border_l, a.border_r] : []),
+        ]}>
+        <ViewHeader title={_(msg`Moderation`)} showOnDesktop />
 
-      {isLoading ? (
-        <View style={[a.w_full, a.align_center, a.pt_2xl]}>
-          <Loader size="xl" fill={t.atoms.text.color} />
-        </View>
-      ) : error || !preferences ? (
-        <ErrorState
-          error={
-            preferencesError?.toString() ||
-            _(msg`Something went wrong, please try again.`)
-          }
-        />
-      ) : (
-        <ModerationScreenInner preferences={preferences} />
-      )}
-    </CenteredView>
+        {isLoading ? (
+          <View style={[a.w_full, a.align_center, a.pt_2xl]}>
+            <Loader size="xl" fill={t.atoms.text.color} />
+          </View>
+        ) : error || !preferences ? (
+          <ErrorState
+            error={
+              preferencesError?.toString() ||
+              _(msg`Something went wrong, please try again.`)
+            }
+          />
+        ) : (
+          <ModerationScreenInner preferences={preferences} />
+        )}
+      </CenteredView>
+    </Layout.Screen>
   )
 }
 
@@ -466,18 +470,22 @@ export function ModerationScreenInner({
         </View>
       )}
 
-      <Text
-        style={[
-          a.text_md,
-          a.font_bold,
-          a.pt_2xl,
-          a.pb_md,
-          t.atoms.text_contrast_high,
-        ]}>
-        <Trans>Logged-out visibility</Trans>
-      </Text>
+      {!IS_INTERNAL && (
+        <>
+          <Text
+            style={[
+              a.text_md,
+              a.font_bold,
+              a.pt_2xl,
+              a.pb_md,
+              t.atoms.text_contrast_high,
+            ]}>
+            <Trans>Logged-out visibility</Trans>
+          </Text>
 
-      <PwiOptOut />
+          <PwiOptOut />
+        </>
+      )}
 
       <View style={{height: 200}} />
     </ScrollView>

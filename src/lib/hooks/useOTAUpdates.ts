@@ -10,9 +10,9 @@ import {
   useUpdates,
 } from 'expo-updates'
 
+import {IS_TESTFLIGHT} from '#/lib/app-info'
 import {logger} from '#/logger'
-import {IS_TESTFLIGHT} from 'lib/app-info'
-import {isIOS} from 'platform/detection'
+import {isIOS} from '#/platform/detection'
 
 const MINIMUM_MINIMIZE_TIME = 15 * 60e3
 

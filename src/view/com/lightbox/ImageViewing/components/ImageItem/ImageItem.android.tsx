@@ -1,7 +1,9 @@
 import React, {useState} from 'react'
-import {ActivityIndicator, Dimensions, StyleSheet} from 'react-native'
+import {ActivityIndicator, StyleSheet, View} from 'react-native'
 import {Gesture, GestureDetector} from 'react-native-gesture-handler'
 import Animated, {
+  AnimatedRef,
+  measure,
   runOnJS,
   useAnimatedReaction,
   useAnimatedRef,
@@ -12,8 +14,8 @@ import Animated, {
 } from 'react-native-reanimated'
 import {Image} from 'expo-image'
 
+import {useImageDimensions} from '#/lib/media/image-sizes'
 import type {Dimensions as ImageDimensions, ImageSource} from '../../@types'
-import useImageDimensions from '../../hooks/useImageDimensions'
 import {
   applyRounding,
   createTransform,
@@ -24,17 +26,9 @@ import {
   TransformMatrix,
 } from '../../transforms'
 
-const windowDim = Dimensions.get('window')
-const screenDim = Dimensions.get('screen')
-const statusBarHeight = windowDim.height - screenDim.height
-const SCREEN = {
-  width: windowDim.width,
-  height: windowDim.height + statusBarHeight,
-}
-const MIN_DOUBLE_TAP_SCALE = 2
+const MIN_SCREEN_ZOOM = 2
 const MAX_ORIGINAL_IMAGE_ZOOM = 2
 
-const AnimatedImage = Animated.createAnimatedComponent(Image)
 const initialTransform = createTransform()
 
 type Props = {
@@ -44,6 +38,7 @@ type Props = {
   onZoom: (isZoomed: boolean) => void
   isScrollViewBeingDragged: boolean
   showControls: boolean
+  safeAreaRef: AnimatedRef<View>
 }
 const ImageItem = ({
   imageSrc,
@@ -51,10 +46,13 @@ const ImageItem = ({
   onZoom,
   onRequestClose,
   isScrollViewBeingDragged,
+  safeAreaRef,
 }: Props) => {
   const [isScaled, setIsScaled] = useState(false)
-  const [isLoaded, setIsLoaded] = useState(false)
-  const imageDimensions = useImageDimensions(imageSrc)
+  const [imageAspect, imageDimensions] = useImageDimensions({
+    src: imageSrc.uri,
+    knownDimensions: imageSrc.dimensions,
+  })
   const committedTransform = useSharedValue(initialTransform)
   const panTranslation = useSharedValue({x: 0, y: 0})
   const pinchOrigin = useSharedValue({x: 0, y: 0})
@@ -101,10 +99,10 @@ const ImageItem = ({
     const [translateX, translateY, scale] = readTransform(t)
 
     const dismissDistance = dismissSwipeTranslateY.value
-    const dismissProgress = Math.min(
-      Math.abs(dismissDistance) / (SCREEN.height / 2),
-      1,
-    )
+    const screenSize = measure(safeAreaRef)
+    const dismissProgress = screenSize
+      ? Math.min(Math.abs(dismissDistance) / (screenSize.height / 2), 1)
+      : 0
     return {
       opacity: 1 - dismissProgress,
       transform: [
@@ -119,23 +117,28 @@ const ImageItem = ({
   // If the user tried to pan too hard, this function will provide the negative panning to stay in bounds.
   function getExtraTranslationToStayInBounds(
     candidateTransform: TransformMatrix,
+    screenSize: {width: number; height: number},
   ) {
     'worklet'
-    if (!imageDimensions) {
+    if (!imageAspect) {
       return [0, 0]
     }
     const [nextTranslateX, nextTranslateY, nextScale] =
       readTransform(candidateTransform)
-    const scaledDimensions = getScaledDimensions(imageDimensions, nextScale)
+    const scaledDimensions = getScaledDimensions(
+      imageAspect,
+      nextScale,
+      screenSize,
+    )
     const clampedTranslateX = clampTranslation(
       nextTranslateX,
       scaledDimensions.width,
-      SCREEN.width,
+      screenSize.width,
     )
     const clampedTranslateY = clampTranslation(
       nextTranslateY,
       scaledDimensions.height,
-      SCREEN.height,
+      screenSize.height,
     )
     const dx = clampedTranslateX - nextTranslateX
     const dy = clampedTranslateY - nextTranslateY
@@ -144,20 +147,29 @@ const ImageItem = ({
 
   const pinch = Gesture.Pinch()
     .onStart(e => {
+      'worklet'
+      const screenSize = measure(safeAreaRef)
+      if (!screenSize) {
+        return
+      }
       pinchOrigin.value = {
-        x: e.focalX - SCREEN.width / 2,
-        y: e.focalY - SCREEN.height / 2,
+        x: e.focalX - screenSize.width / 2,
+        y: e.focalY - screenSize.height / 2,
       }
     })
     .onChange(e => {
-      if (!imageDimensions) {
+      'worklet'
+      const screenSize = measure(safeAreaRef)
+      if (!imageDimensions || !screenSize) {
         return
       }
       // Don't let the picture zoom in so close that it gets blurry.
       // Also, like in stock Android apps, don't let the user zoom out further than 1:1.
       const [, , committedScale] = readTransform(committedTransform.value)
-      const maxCommittedScale =
-        (imageDimensions.width / SCREEN.width) * MAX_ORIGINAL_IMAGE_ZOOM
+      const maxCommittedScale = Math.max(
+        MIN_SCREEN_ZOOM,
+        (imageDimensions.width / screenSize.width) * MAX_ORIGINAL_IMAGE_ZOOM,
+      )
       const minPinchScale = 1 / committedScale
       const maxPinchScale = maxCommittedScale / committedScale
       const nextPinchScale = Math.min(
@@ -172,7 +184,7 @@ const ImageItem = ({
       prependPan(t, panTranslation.value)
       prependPinch(t, nextPinchScale, pinchOrigin.value, pinchTranslation.value)
       prependTransform(t, committedTransform.value)
-      const [dx, dy] = getExtraTranslationToStayInBounds(t)
+      const [dx, dy] = getExtraTranslationToStayInBounds(t, screenSize)
       if (dx !== 0 || dy !== 0) {
         pinchTranslation.value = {
           x: pinchTranslation.value.x + dx,
@@ -181,6 +193,7 @@ const ImageItem = ({
       }
     })
     .onEnd(() => {
+      'worklet'
       // Commit just the pinch.
       let t = createTransform()
       prependPinch(
@@ -204,9 +217,12 @@ const ImageItem = ({
     // Unlike .enabled(isScaled), this ensures that an initial pinch can turn into a pan midway:
     .minPointers(isScaled ? 1 : 2)
     .onChange(e => {
-      if (!imageDimensions) {
+      'worklet'
+      const screenSize = measure(safeAreaRef)
+      if (!imageDimensions || !screenSize) {
         return
       }
+
       const nextPanTranslation = {x: e.translationX, y: e.translationY}
       let t = createTransform()
       prependPan(t, nextPanTranslation)
@@ -219,12 +235,13 @@ const ImageItem = ({
       prependTransform(t, committedTransform.value)
 
       // Prevent panning from going out of bounds.
-      const [dx, dy] = getExtraTranslationToStayInBounds(t)
+      const [dx, dy] = getExtraTranslationToStayInBounds(t, screenSize)
       nextPanTranslation.x += dx
       nextPanTranslation.y += dy
       panTranslation.value = nextPanTranslation
     })
     .onEnd(() => {
+      'worklet'
       // Commit just the pan.
       let t = createTransform()
       prependPan(t, panTranslation.value)
@@ -237,13 +254,16 @@ const ImageItem = ({
     })
 
   const singleTap = Gesture.Tap().onEnd(() => {
+    'worklet'
     runOnJS(onTap)()
   })
 
   const doubleTap = Gesture.Tap()
     .numberOfTaps(2)
     .onEnd(e => {
-      if (!imageDimensions) {
+      'worklet'
+      const screenSize = measure(safeAreaRef)
+      if (!imageDimensions || !imageAspect || !screenSize) {
         return
       }
       const [, , committedScale] = readTransform(committedTransform.value)
@@ -255,29 +275,33 @@ const ImageItem = ({
       }
 
       // Try to zoom in so that we get rid of the black bars (whatever the orientation was).
-      const imageAspect = imageDimensions.width / imageDimensions.height
-      const screenAspect = SCREEN.width / SCREEN.height
+      const screenAspect = screenSize.width / screenSize.height
       const candidateScale = Math.max(
         imageAspect / screenAspect,
         screenAspect / imageAspect,
-        MIN_DOUBLE_TAP_SCALE,
+        MIN_SCREEN_ZOOM,
       )
       // But don't zoom in so close that the picture gets blurry.
-      const maxScale =
-        (imageDimensions.width / SCREEN.width) * MAX_ORIGINAL_IMAGE_ZOOM
+      const maxScale = Math.max(
+        MIN_SCREEN_ZOOM,
+        (imageDimensions.width / screenSize.width) * MAX_ORIGINAL_IMAGE_ZOOM,
+      )
       const scale = Math.min(candidateScale, maxScale)
 
       // Calculate where we would be if the user pinched into the double tapped point.
       // We won't use this transform directly because it may go out of bounds.
       const candidateTransform = createTransform()
       const origin = {
-        x: e.absoluteX - SCREEN.width / 2,
-        y: e.absoluteY - SCREEN.height / 2,
+        x: e.absoluteX - screenSize.width / 2,
+        y: e.absoluteY - screenSize.height / 2,
       }
       prependPinch(candidateTransform, scale, origin, {x: 0, y: 0})
 
       // Now we know how much we went out of bounds, so we can shoot correctly.
-      const [dx, dy] = getExtraTranslationToStayInBounds(candidateTransform)
+      const [dx, dy] = getExtraTranslationToStayInBounds(
+        candidateTransform,
+        screenSize,
+      )
       const finalTransform = createTransform()
       prependPinch(finalTransform, scale, origin, {x: dx, y: dy})
       committedTransform.value = withClampedSpring(finalTransform)
@@ -289,9 +313,11 @@ const ImageItem = ({
     .failOffsetX([-10, 10])
     .maxPointers(1)
     .onUpdate(e => {
+      'worklet'
       dismissSwipeTranslateY.value = e.translationY
     })
     .onEnd(e => {
+      'worklet'
       if (Math.abs(e.velocityY) > 1000) {
         dismissSwipeTranslateY.value = withDecay({velocity: e.velocityY})
         runOnJS(onRequestClose)()
@@ -313,20 +339,23 @@ const ImageItem = ({
         singleTap,
       )
 
-  const isLoading = !isLoaded || !imageDimensions
   return (
-    <Animated.View ref={containerRef} style={styles.container}>
-      {isLoading && (
-        <ActivityIndicator size="small" color="#FFF" style={styles.loading} />
-      )}
+    <Animated.View
+      ref={containerRef}
+      // Necessary to make opacity work for both children together.
+      renderToHardwareTextureAndroid
+      style={[styles.container, animatedStyle]}>
+      <ActivityIndicator size="small" color="#FFF" style={styles.loading} />
       <GestureDetector gesture={composedGesture}>
-        <AnimatedImage
+        <Image
           contentFit="contain"
           source={{uri: imageSrc.uri}}
-          style={[styles.image, animatedStyle]}
+          placeholderContentFit="contain"
+          placeholder={{uri: imageSrc.thumbUri}}
+          style={styles.image}
           accessibilityLabel={imageSrc.alt}
           accessibilityHint=""
-          onLoad={() => setIsLoaded(true)}
+          accessibilityIgnoresInvertColors
           cachePolicy="memory"
         />
       </GestureDetector>
@@ -336,8 +365,7 @@ const ImageItem = ({
 
 const styles = StyleSheet.create({
   container: {
-    width: SCREEN.width,
-    height: SCREEN.height,
+    height: '100%',
     overflow: 'hidden',
   },
   image: {
@@ -353,22 +381,22 @@ const styles = StyleSheet.create({
 })
 
 function getScaledDimensions(
-  imageDimensions: ImageDimensions,
+  imageAspect: number,
   scale: number,
+  screenSize: {width: number; height: number},
 ): ImageDimensions {
   'worklet'
-  const imageAspect = imageDimensions.width / imageDimensions.height
-  const screenAspect = SCREEN.width / SCREEN.height
+  const screenAspect = screenSize.width / screenSize.height
   const isLandscape = imageAspect > screenAspect
   if (isLandscape) {
     return {
-      width: scale * SCREEN.width,
-      height: (scale * SCREEN.width) / imageAspect,
+      width: scale * screenSize.width,
+      height: (scale * screenSize.width) / imageAspect,
     }
   } else {
     return {
-      width: scale * SCREEN.height * imageAspect,
-      height: scale * SCREEN.height,
+      width: scale * screenSize.height * imageAspect,
+      height: scale * screenSize.height,
     }
   }
 }

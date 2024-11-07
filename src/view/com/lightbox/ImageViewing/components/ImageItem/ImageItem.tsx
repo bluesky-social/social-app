@@ -2,6 +2,8 @@
 
 import React from 'react'
 import {View} from 'react-native'
+import {AnimatedRef} from 'react-native-reanimated'
+
 import {ImageSource} from '../../@types'
 
 type Props = {
@@ -11,6 +13,7 @@ type Props = {
   onZoom: (scaled: boolean) => void
   isScrollViewBeingDragged: boolean
   showControls: boolean
+  safeAreaRef: AnimatedRef<View>
 }
 
 const ImageItem = (_props: Props) => {

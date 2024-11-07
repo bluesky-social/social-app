@@ -73,7 +73,10 @@ export function HomeHeaderLayoutMobile({
           ]}>
           {IS_DEV && (
             <>
-              <Link label="View storybook" to="/sys/debug">
+              <Link
+                label="View storybook"
+                to="/sys/debug"
+                testID="storybookBtn">
                 <ColorPalette size="md" />
               </Link>
             </>

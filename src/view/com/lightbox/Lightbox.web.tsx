@@ -2,30 +2,26 @@ import React, {useCallback, useEffect, useState} from 'react'
 import {
   Image,
   ImageStyle,
+  Pressable,
+  StyleSheet,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  StyleSheet,
   View,
-  Pressable,
   ViewStyle,
 } from 'react-native'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {colors, s} from 'lib/styles'
-import ImageDefaultHeader from './ImageViewing/components/ImageDefaultHeader'
-import {Text} from '../util/text/Text'
-import {useLingui} from '@lingui/react'
 import {msg} from '@lingui/macro'
-import {
-  useLightbox,
-  useLightboxControls,
-  ImagesLightbox,
-  ProfileImageLightbox,
-} from '#/state/lightbox'
+import {useLingui} from '@lingui/react'
+
 import {useWebBodyScrollLock} from '#/lib/hooks/useWebBodyScrollLock'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {colors, s} from '#/lib/styles'
+import {useLightbox, useLightboxControls} from '#/state/lightbox'
+import {Text} from '../util/text/Text'
+import ImageDefaultHeader from './ImageViewing/components/ImageDefaultHeader'
 
 interface Img {
   uri: string
@@ -42,24 +38,8 @@ export function Lightbox() {
     return null
   }
 
-  const initialIndex =
-    activeLightbox instanceof ImagesLightbox ? activeLightbox.index : 0
-
-  let imgs: Img[] | undefined
-  if (activeLightbox instanceof ProfileImageLightbox) {
-    const opts = activeLightbox
-    if (opts.profile.avatar) {
-      imgs = [{uri: opts.profile.avatar}]
-    }
-  } else if (activeLightbox instanceof ImagesLightbox) {
-    const opts = activeLightbox
-    imgs = opts.images
-  }
-
-  if (!imgs) {
-    return null
-  }
-
+  const initialIndex = activeLightbox.index
+  const imgs = activeLightbox.images
   return (
     <LightboxInner
       imgs={imgs}

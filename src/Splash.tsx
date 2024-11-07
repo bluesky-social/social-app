@@ -1,28 +1,27 @@
 import React, {useCallback, useEffect} from 'react'
 import {
-  View,
-  StyleSheet,
-  Image as RNImage,
   AccessibilityInfo,
+  Image as RNImage,
+  StyleSheet,
   useColorScheme,
+  View,
 } from 'react-native'
-import * as SplashScreen from 'expo-splash-screen'
-import {Image} from 'expo-image'
 import Animated, {
+  Easing,
   interpolate,
   runOnJS,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
-  Easing,
 } from 'react-native-reanimated'
-import MaskedView from '@react-native-masked-view/masked-view'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import Svg, {Path, SvgProps} from 'react-native-svg'
+import {Image} from 'expo-image'
+import * as SplashScreen from 'expo-splash-screen'
+import MaskedView from '@react-native-masked-view/masked-view'
 
 import {isAndroid} from '#/platform/detection'
 import {Logotype} from '#/view/icons/Logotype'
-
 // @ts-ignore
 import splashImagePointer from '../assets/splash.png'
 // @ts-ignore
@@ -57,6 +56,7 @@ type Props = {
 const AnimatedLogo = Animated.createAnimatedComponent(Logo)
 
 export function Splash(props: React.PropsWithChildren<Props>) {
+  'use no memo'
   const insets = useSafeAreaInsets()
   const intro = useSharedValue(0)
   const outroLogo = useSharedValue(0)

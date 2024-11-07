@@ -11,7 +11,7 @@ import {
 
 import {HITSLOP_20} from '#/lib/constants'
 import {mergeRefs} from '#/lib/merge-refs'
-import {android, atoms as a, useTheme, web} from '#/alf'
+import {android, atoms as a, TextStyleProp, useTheme, web} from '#/alf'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {Props as SVGIconProps} from '#/components/icons/common'
 import {Text} from '#/components/Typography'
@@ -123,6 +123,11 @@ export function useSharedInputStyles() {
 
 export type InputProps = Omit<TextInputProps, 'value' | 'onChangeText'> & {
   label: string
+  /**
+   * @deprecated Controlled inputs are *strongly* discouraged. Use `defaultValue` instead where possible.
+   *
+   * See https://github.com/facebook/react-native-website/pull/4247
+   */
   value?: string
   onChangeText?: (value: string) => void
   isInvalid?: boolean
@@ -309,16 +314,20 @@ export function SuffixText({
   children,
   label,
   accessibilityHint,
-}: React.PropsWithChildren<{
-  label: string
-  accessibilityHint?: AccessibilityProps['accessibilityHint']
-}>) {
+  style,
+}: React.PropsWithChildren<
+  TextStyleProp & {
+    label: string
+    accessibilityHint?: AccessibilityProps['accessibilityHint']
+  }
+>) {
   const t = useTheme()
   const ctx = React.useContext(Context)
   return (
     <Text
       accessibilityLabel={label}
       accessibilityHint={accessibilityHint}
+      numberOfLines={1}
       style={[
         a.z_20,
         a.pr_sm,
@@ -335,6 +344,7 @@ export function SuffixText({
               color: t.palette.contrast_800,
             }
           : {},
+        style,
       ]}>
       {children}
     </Text>

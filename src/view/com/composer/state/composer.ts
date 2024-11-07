@@ -1,7 +1,10 @@
 import {ImagePickerAsset} from 'expo-image-picker'
 import {AppBskyFeedPostgate, RichText} from '@atproto/api'
+import {nanoid} from 'nanoid/non-secure'
 
+import {SelfLabel} from '#/lib/moderation'
 import {insertMentionAt} from '#/lib/strings/mention-manip'
+import {shortenLinks} from '#/lib/strings/rich-text-manip'
 import {
   isBskyPostUrl,
   postUriToRelativePath,
@@ -46,19 +49,17 @@ export type EmbedDraft = {
   link: Link | undefined
 }
 
-export type ComposerDraft = {
+export type PostDraft = {
+  id: string
   richtext: RichText
-  labels: string[]
-  postgate: AppBskyFeedPostgate.Record
-  threadgate: ThreadgateAllowUISetting[]
+  labels: SelfLabel[]
   embed: EmbedDraft
+  shortenedGraphemeLength: number
 }
 
-export type ComposerAction =
+export type PostAction =
   | {type: 'update_richtext'; richtext: RichText}
-  | {type: 'update_labels'; labels: string[]}
-  | {type: 'update_postgate'; postgate: AppBskyFeedPostgate.Record}
-  | {type: 'update_threadgate'; threadgate: ThreadgateAllowUISetting[]}
+  | {type: 'update_labels'; labels: SelfLabel[]}
   | {type: 'embed_add_images'; images: ComposerImage[]}
   | {type: 'embed_update_image'; image: ComposerImage}
   | {type: 'embed_remove_image'; image: ComposerImage}
@@ -76,35 +77,160 @@ export type ComposerAction =
   | {type: 'embed_update_gif'; alt: string}
   | {type: 'embed_remove_gif'}
 
+export type ThreadDraft = {
+  posts: PostDraft[]
+  postgate: AppBskyFeedPostgate.Record
+  threadgate: ThreadgateAllowUISetting[]
+}
+
+export type ComposerState = {
+  thread: ThreadDraft
+  activePostIndex: number
+  mutableNeedsFocusActive: boolean
+}
+
+export type ComposerAction =
+  | {type: 'update_postgate'; postgate: AppBskyFeedPostgate.Record}
+  | {type: 'update_threadgate'; threadgate: ThreadgateAllowUISetting[]}
+  | {
+      type: 'update_post'
+      postId: string
+      postAction: PostAction
+    }
+  | {
+      type: 'add_post'
+    }
+  | {
+      type: 'remove_post'
+      postId: string
+    }
+  | {
+      type: 'focus_post'
+      postId: string
+    }
+
 export const MAX_IMAGES = 4
 
 export function composerReducer(
-  state: ComposerDraft,
+  state: ComposerState,
   action: ComposerAction,
-): ComposerDraft {
+): ComposerState {
+  switch (action.type) {
+    case 'update_postgate': {
+      return {
+        ...state,
+        thread: {
+          ...state.thread,
+          postgate: action.postgate,
+        },
+      }
+    }
+    case 'update_threadgate': {
+      return {
+        ...state,
+        thread: {
+          ...state.thread,
+          threadgate: action.threadgate,
+        },
+      }
+    }
+    case 'update_post': {
+      let nextPosts = state.thread.posts
+      const postIndex = state.thread.posts.findIndex(
+        p => p.id === action.postId,
+      )
+      if (postIndex !== -1) {
+        nextPosts = state.thread.posts.slice()
+        nextPosts[postIndex] = postReducer(
+          state.thread.posts[postIndex],
+          action.postAction,
+        )
+      }
+      return {
+        ...state,
+        thread: {
+          ...state.thread,
+          posts: nextPosts,
+        },
+      }
+    }
+    case 'add_post': {
+      const activePostIndex = state.activePostIndex
+      const nextPosts = [...state.thread.posts]
+      nextPosts.splice(activePostIndex + 1, 0, {
+        id: nanoid(),
+        richtext: new RichText({text: ''}),
+        shortenedGraphemeLength: 0,
+        labels: [],
+        embed: {
+          quote: undefined,
+          media: undefined,
+          link: undefined,
+        },
+      })
+      return {
+        ...state,
+        thread: {
+          ...state.thread,
+          posts: nextPosts,
+        },
+      }
+    }
+    case 'remove_post': {
+      if (state.thread.posts.length < 2) {
+        return state
+      }
+      let nextActivePostIndex = state.activePostIndex
+      const indexToRemove = state.thread.posts.findIndex(
+        p => p.id === action.postId,
+      )
+      let nextPosts = [...state.thread.posts]
+      if (indexToRemove !== -1) {
+        const postToRemove = state.thread.posts[indexToRemove]
+        if (postToRemove.embed.media?.type === 'video') {
+          postToRemove.embed.media.video.abortController.abort()
+        }
+        nextPosts.splice(indexToRemove, 1)
+        nextActivePostIndex = Math.max(0, indexToRemove - 1)
+      }
+      return {
+        ...state,
+        activePostIndex: nextActivePostIndex,
+        mutableNeedsFocusActive: true,
+        thread: {
+          ...state.thread,
+          posts: nextPosts,
+        },
+      }
+    }
+    case 'focus_post': {
+      const nextActivePostIndex = state.thread.posts.findIndex(
+        p => p.id === action.postId,
+      )
+      if (nextActivePostIndex === -1) {
+        return state
+      }
+      return {
+        ...state,
+        activePostIndex: nextActivePostIndex,
+      }
+    }
+  }
+}
+
+function postReducer(state: PostDraft, action: PostAction): PostDraft {
   switch (action.type) {
     case 'update_richtext': {
       return {
         ...state,
         richtext: action.richtext,
+        shortenedGraphemeLength: getShortenedLength(action.richtext),
       }
     }
     case 'update_labels': {
       return {
         ...state,
         labels: action.labels,
-      }
-    }
-    case 'update_postgate': {
-      return {
-        ...state,
-        postgate: action.postgate,
-      }
-    }
-    case 'update_threadgate': {
-      return {
-        ...state,
-        threadgate: action.threadgate,
       }
     }
     case 'embed_add_images': {
@@ -157,6 +283,7 @@ export function composerReducer(
     }
     case 'embed_remove_image': {
       const prevMedia = state.embed.media
+      let nextLabels = state.labels
       if (prevMedia?.type === 'images') {
         const removedImage = action.image
         let nextMedia: ImagesMedia | undefined = {
@@ -167,9 +294,13 @@ export function composerReducer(
         }
         if (nextMedia.images.length === 0) {
           nextMedia = undefined
+          if (!state.embed.link) {
+            nextLabels = []
+          }
         }
         return {
           ...state,
+          labels: nextLabels,
           embed: {
             ...state.embed,
             media: nextMedia,
@@ -217,10 +348,16 @@ export function composerReducer(
       const prevMedia = state.embed.media
       let nextMedia = prevMedia
       if (prevMedia?.type === 'video') {
+        prevMedia.video.abortController.abort()
         nextMedia = undefined
+      }
+      let nextLabels = state.labels
+      if (!state.embed.link) {
+        nextLabels = []
       }
       return {
         ...state,
+        labels: nextLabels,
         embed: {
           ...state.embed,
           media: nextMedia,
@@ -257,8 +394,13 @@ export function composerReducer(
       }
     }
     case 'embed_remove_link': {
+      let nextLabels = state.labels
+      if (!state.embed.media) {
+        nextLabels = []
+      }
       return {
         ...state,
+        labels: nextLabels,
         embed: {
           ...state.embed,
           link: undefined,
@@ -323,8 +465,6 @@ export function composerReducer(
         },
       }
     }
-    default:
-      return state
   }
 }
 
@@ -338,7 +478,7 @@ export function createComposerState({
   initMention: string | undefined
   initImageUris: ComposerOpts['imageUris']
   initQuoteUri: string | undefined
-}): ComposerDraft {
+}): ComposerState {
   let media: ImagesMedia | undefined
   if (initImageUris?.length) {
     media = {
@@ -369,14 +509,28 @@ export function createComposerState({
       : '',
   })
   return {
-    richtext: initRichText,
-    labels: [],
-    postgate: createPostgateRecord({post: ''}),
-    threadgate: threadgateViewToAllowUISetting(undefined),
-    embed: {
-      quote,
-      media,
-      link: undefined,
+    activePostIndex: 0,
+    mutableNeedsFocusActive: false,
+    thread: {
+      posts: [
+        {
+          id: nanoid(),
+          richtext: initRichText,
+          shortenedGraphemeLength: getShortenedLength(initRichText),
+          labels: [],
+          embed: {
+            quote,
+            media,
+            link: undefined,
+          },
+        },
+      ],
+      postgate: createPostgateRecord({post: ''}),
+      threadgate: threadgateViewToAllowUISetting(undefined),
     },
   }
+}
+
+function getShortenedLength(rt: RichText) {
+  return shortenLinks(rt).graphemeLength
 }

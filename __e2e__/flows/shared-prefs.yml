@@ -8,7 +8,10 @@ appId: xyz.blueskyweb.app
     file: ../setupApp.yml
 - tapOn:
     id: "e2eSignInAlice"
-- tapOn: "/sys/debug"
+- assertVisible:
+      id: "storybookBtn"
+- tapOn:
+    id: "storybookBtn"
 - tapOn:
     id: "sharedPrefsTestOpenBtn"
 - tapOn:
@@ -16,7 +19,7 @@ appId: xyz.blueskyweb.app
 - assertVisible: "Hello"
 - tapOn:
     id: "removeStringBtn"
-- assertVisible: "null"
+- assertVisible: "undefined"
 - tapOn:
     id: "setBoolBtn"
 - assertVisible: "true"
