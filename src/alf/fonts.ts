@@ -3,7 +3,7 @@ import {TextStyle} from 'react-native'
 import {isAndroid, isWeb} from '#/platform/detection'
 import {Device, device} from '#/storage'
 
-const WEB_FONT_FAMILIES = `-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji"`
+const WEB_FONT_FAMILIES = `-apple-system, BlinkMacSystemFont, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"`
 
 const factor = 0.0625 // 1 - (15/16)
 const fontScaleMultipliers: Record<Device['fontScale'], number> = {
