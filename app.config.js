@@ -100,6 +100,7 @@ module.exports = function (config) {
         },
         entitlements: {
           'com.apple.developer.kernel.increased-memory-limit': true,
+          'com.apple.developer.kernel.extended-virtual-addressing': true,
           'com.apple.security.application-groups': 'group.app.bsky',
         },
         privacyManifests: {
