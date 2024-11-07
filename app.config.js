@@ -99,6 +99,7 @@ module.exports = function (config) {
           dark: DARK_SPLASH_CONFIG,
         },
         entitlements: {
+          'com.apple.developer.kernel.increased-memory-limit': true,
           'com.apple.security.application-groups': 'group.app.bsky',
         },
         privacyManifests: {
