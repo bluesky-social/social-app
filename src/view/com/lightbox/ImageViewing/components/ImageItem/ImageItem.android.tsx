@@ -334,7 +334,7 @@ const ImageItem = ({
             source={{uri: imageSrc.uri}}
             placeholderContentFit="contain"
             placeholder={{uri: imageSrc.thumbUri}}
-            style={[innerStyle, {borderRadius, backgroundColor: 'red'}]}
+            style={[innerStyle, {borderRadius}]}
             accessibilityLabel={imageSrc.alt}
             accessibilityHint=""
             accessibilityIgnoresInvertColors
