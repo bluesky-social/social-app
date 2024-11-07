@@ -335,17 +335,17 @@ function LightboxImage({
   const {thumbRect, dimensions} = imageSrc
   const interpolation = useDerivedValue(() => {
     'worklet'
-    const screenSize = measure(safeAreaRef)
-    if (!screenSize) {
+    const safeArea = measure(safeAreaRef)
+    if (!safeArea) {
       return {transform: [], width: 0, height: 0}
     }
-    const finalWidth = screenSize.width
-    const finalHeight = imageAspect ? screenSize.width / imageAspect : undefined
+    const finalWidth = safeArea.width
+    const finalHeight = imageAspect ? safeArea.width / imageAspect : undefined
     if (isActive && thumbRect && dimensions && openProgress.value < 1) {
       return interpolateTransform(
         openProgress.value,
         thumbRect,
-        screenSize,
+        safeArea,
         dimensions,
       )
     }
@@ -602,7 +602,7 @@ function interpolateTransform(
     pageY: number
     height: number
   },
-  screenSize: {width: number; height: number},
+  safeArea: {width: number; height: number; x: number; y: number},
   imageDims: {width: number; height: number},
 ) {
   'worklet'
@@ -617,18 +617,20 @@ function interpolateTransform(
     uncroppedInitialWidth = thumbnailDims.width
     uncroppedInitialHeight = thumbnailDims.width / imageAspect
   }
-  const finalWidth = screenSize.width
-  const finalHeight = screenSize.width / imageAspect
+  const finalWidth = safeArea.width
+  const finalHeight = safeArea.width / imageAspect
   const initialScale = Math.min(
     uncroppedInitialWidth / finalWidth,
     uncroppedInitialHeight / finalHeight,
   )
   const croppedFinalWidth = thumbnailDims.width / initialScale
   const croppedFinalHeight = thumbnailDims.height / initialScale
-  const screenCenterX = screenSize.width / 2
-  const screenCenterY = screenSize.height / 2
-  const thumbnailCenterX = thumbnailDims.pageX + thumbnailDims.width / 2
-  const thumbnailCenterY = thumbnailDims.pageY + thumbnailDims.height / 2
+  const screenCenterX = safeArea.width / 2
+  const screenCenterY = safeArea.height / 2
+  const thumbnailSafeAreaX = thumbnailDims.pageX - safeArea.x
+  const thumbnailSafeAreaY = thumbnailDims.pageY - safeArea.y
+  const thumbnailCenterX = thumbnailSafeAreaX + thumbnailDims.width / 2
+  const thumbnailCenterY = thumbnailSafeAreaY + thumbnailDims.height / 2
   const initialTranslateX = thumbnailCenterX - screenCenterX
   const initialTranslateY = thumbnailCenterY - screenCenterY
   const scale = interpolate(progress, [0, 1], [initialScale, 1])
