@@ -59,6 +59,7 @@ let ProfileHeaderShell = ({
           {
             uri: profile.avatar,
             thumbUri: profile.avatar,
+            thumbRect: null,
             dimensions: {
               // It's fine if it's actually smaller but we know it's 1:1.
               height: 1000,
@@ -68,7 +69,6 @@ let ProfileHeaderShell = ({
           },
         ],
         index: 0,
-        thumbDims: null,
       })
     }
   }, [openLightbox, profile, moderation])
