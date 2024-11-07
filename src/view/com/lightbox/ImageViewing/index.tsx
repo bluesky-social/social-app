@@ -50,6 +50,8 @@ import ImageDefaultHeader from './components/ImageDefaultHeader'
 import ImageItem from './components/ImageItem/ImageItem'
 
 const PIXEL_RATIO = PixelRatio.get()
+const SLOW_SPRING = {stiffness: 120}
+const FAST_SPRING = {stiffness: 700}
 const EDGES =
   Platform.OS === 'android'
     ? (['top', 'bottom', 'left', 'right'] satisfies Edge[])
@@ -82,9 +84,9 @@ export default function ImageViewRoot({
       !PlatformInfo.getIsReducedMotionEnabled() &&
       nextLightbox.images.every(img => img.dimensions && img.thumbRect)
     if (canAnimate) {
-      openProgress.value = withClampedSpring(1)
+      openProgress.value = withClampedSpring(1, SLOW_SPRING)
       return () => {
-        openProgress.value = withClampedSpring(0)
+        openProgress.value = withClampedSpring(0, SLOW_SPRING)
       }
     } else {
       openProgress.value = 1
@@ -187,10 +189,13 @@ function ImageView({
     const show = showControls && dismissSwipeTranslateY.value === 0
     return {
       pointerEvents: show ? 'box-none' : 'none',
-      opacity: withClampedSpring(show && openProgress.value === 1 ? 1 : 0),
+      opacity: withClampedSpring(
+        show && openProgress.value === 1 ? 1 : 0,
+        FAST_SPRING,
+      ),
       transform: [
         {
-          translateY: withClampedSpring(show ? 0 : -30),
+          translateY: withClampedSpring(show ? 0 : -30, FAST_SPRING),
         },
       ],
     }
@@ -200,10 +205,13 @@ function ImageView({
     return {
       flexGrow: 1,
       pointerEvents: show ? 'box-none' : 'none',
-      opacity: withClampedSpring(show && openProgress.value === 1 ? 1 : 0),
+      opacity: withClampedSpring(
+        show && openProgress.value === 1 ? 1 : 0,
+        FAST_SPRING,
+      ),
       transform: [
         {
-          translateY: withClampedSpring(show ? 0 : 30),
+          translateY: withClampedSpring(show ? 0 : 30, FAST_SPRING),
         },
       ],
     }
@@ -659,7 +667,7 @@ function interpolateTransform(
   }
 }
 
-function withClampedSpring(value: any) {
+function withClampedSpring(value: any, {stiffness}: {stiffness: number}) {
   'worklet'
-  return withSpring(value, {overshootClamping: true, stiffness: 120})
+  return withSpring(value, {overshootClamping: true, stiffness})
 }
