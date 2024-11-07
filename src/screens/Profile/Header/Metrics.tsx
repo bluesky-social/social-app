@@ -20,6 +20,10 @@ export function ProfileHeaderMetrics({
   const {_, i18n} = useLingui()
   const following = formatCount(i18n, profile.followsCount || 0)
   const followers = formatCount(i18n, profile.followersCount || 0)
+  const postCount = formatCount(i18n, profile.postsCount || 0)
+  const followingFull = Intl.NumberFormat().format(profile.followsCount || 0)
+  const followersFull = Intl.NumberFormat().format(profile.followersCount || 0)
+  const postCountFull = Intl.NumberFormat().format(profile.postsCount || 0)
   const pluralizedFollowers = plural(profile.followersCount || 0, {
     one: 'follower',
     other: 'followers',
@@ -28,16 +32,21 @@ export function ProfileHeaderMetrics({
     one: 'following',
     other: 'following',
   })
+  const pluralizedPostCount = plural(profile.postsCount || 0, {
+    one: 'post',
+    other: 'posts',
+  })
 
   return (
     <View
-      style={[a.flex_row, a.gap_sm, a.align_center, a.pb_md]}
+      style={[a.flex_row, a.gap_sm, a.align_center, a.pb_md, {zIndex: 1}]}
       pointerEvents="box-none">
       <InlineLinkText
         testID="profileHeaderFollowersButton"
         style={[a.flex_row, t.atoms.text]}
         to={makeProfileLink(profile, 'followers')}
-        label={`${followers} ${pluralizedFollowers}`}>
+        label={`${followers} ${pluralizedFollowers}`}
+        title={followersFull}>
         <Text style={[a.font_bold, a.text_md]}>{followers} </Text>
         <Text style={[t.atoms.text_contrast_medium, a.text_md]}>
           {pluralizedFollowers}
@@ -47,17 +56,18 @@ export function ProfileHeaderMetrics({
         testID="profileHeaderFollowsButton"
         style={[a.flex_row, t.atoms.text]}
         to={makeProfileLink(profile, 'follows')}
-        label={_(msg`${following} following`)}>
+        label={_(msg`${following} following`)}
+        title={followingFull}>
         <Text style={[a.font_bold, a.text_md]}>{following} </Text>
         <Text style={[t.atoms.text_contrast_medium, a.text_md]}>
           {pluralizedFollowings}
         </Text>
       </InlineLinkText>
-      <Text style={[a.font_bold, t.atoms.text, a.text_md]}>
-        {formatCount(i18n, profile.postsCount || 0)}{' '}
-        <Text style={[t.atoms.text_contrast_medium, a.font_normal, a.text_md]}>
-          {plural(profile.postsCount || 0, {one: 'post', other: 'posts'})}
-        </Text>
+      <Text
+        style={[t.atoms.text_contrast_medium, a.text_md]}
+        title={postCountFull}>
+        <Text style={[t.atoms.text, a.font_bold, a.text_md]}>{postCount} </Text>
+        {pluralizedPostCount}
       </Text>
     </View>
   )
