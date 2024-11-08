@@ -253,7 +253,7 @@ function ImageView({
       if (isOut && !wasOut) {
         // Stop the animation from blocking the screen forever.
         cancelAnimation(dismissSwipeTranslateY)
-        runOnJS(onRequestClose)()
+        onFlyAway()
       }
     },
   )
@@ -283,7 +283,6 @@ function ImageView({
               onZoom={onZoom}
               imageSrc={imageSrc}
               onRequestClose={onRequestClose}
-              onFlyAway={onFlyAway}
               isScrollViewBeingDragged={isDragging}
               showControls={showControls}
               safeAreaRef={safeAreaRef}
@@ -324,7 +323,6 @@ function LightboxImage({
   onTap,
   onZoom,
   onRequestClose,
-  onFlyAway,
   isScrollViewBeingDragged,
   isScaled,
   isFlyingAway,
@@ -338,7 +336,6 @@ function LightboxImage({
   onRequestClose: () => void
   onTap: () => void
   onZoom: (scaled: boolean) => void
-  onFlyAway: () => void
   isScrollViewBeingDragged: boolean
   isScaled: boolean
   isActive: boolean
@@ -415,7 +412,7 @@ function LightboxImage({
     })
     .onEnd(e => {
       'worklet'
-      if (isFlyingAway.value || isFlyingAway.value) {
+      if (openProgress.value !== 1 || isFlyingAway.value) {
         return
       }
       if (Math.abs(e.velocityY) > 1000) {
