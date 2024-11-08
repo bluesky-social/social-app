@@ -7,26 +7,27 @@
  */
 
 import React, {useState} from 'react'
-import {ActivityIndicator, StyleSheet, View} from 'react-native'
-import {Gesture, GestureDetector} from 'react-native-gesture-handler'
+import {ActivityIndicator, StyleProp, StyleSheet, View} from 'react-native'
+import {
+  Gesture,
+  GestureDetector,
+  PanGesture,
+} from 'react-native-gesture-handler'
 import Animated, {
   AnimatedRef,
-  interpolate,
   measure,
   runOnJS,
   useAnimatedRef,
   useAnimatedStyle,
-  useSharedValue,
 } from 'react-native-reanimated'
 import {useSafeAreaFrame} from 'react-native-safe-area-context'
-import {Image} from 'expo-image'
+import {Image, ImageStyle} from 'expo-image'
 
 import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
-import {useImageDimensions} from '#/lib/media/image-sizes'
-import {ImageSource} from '../../@types'
+import {Dimensions as ImageDimensions, ImageSource} from '../../@types'
 
-const SWIPE_CLOSE_OFFSET = 75
-const SWIPE_CLOSE_VELOCITY = 1
+const AnimatedImage = Animated.createAnimatedComponent(Image)
+
 const MAX_ORIGINAL_IMAGE_ZOOM = 2
 const MIN_SCREEN_ZOOM = 2
 
@@ -38,24 +39,26 @@ type Props = {
   isScrollViewBeingDragged: boolean
   showControls: boolean
   safeAreaRef: AnimatedRef<View>
+  imageAspect: number | undefined
+  imageDimensions: ImageDimensions | undefined
+  imageStyle: StyleProp<ImageStyle>
+  dismissSwipePan: PanGesture
 }
 
 const ImageItem = ({
   imageSrc,
   onTap,
   onZoom,
-  onRequestClose,
   showControls,
   safeAreaRef,
+  imageAspect,
+  imageDimensions,
+  imageStyle,
+  dismissSwipePan,
 }: Props) => {
   const scrollViewRef = useAnimatedRef<Animated.ScrollView>()
-  const translationY = useSharedValue(0)
   const [scaled, setScaled] = useState(false)
   const screenSizeDelayedForJSThreadOnly = useSafeAreaFrame()
-  const [imageAspect, imageDimensions] = useImageDimensions({
-    src: imageSrc.uri,
-    knownDimensions: imageSrc.dimensions,
-  })
   const maxZoomScale = Math.max(
     MIN_SCREEN_ZOOM,
     imageDimensions
@@ -65,32 +68,20 @@ const ImageItem = ({
   )
 
   const animatedStyle = useAnimatedStyle(() => {
+    const screenSize = measure(safeAreaRef) ?? screenSizeDelayedForJSThreadOnly
     return {
-      flex: 1,
-      opacity: interpolate(
-        translationY.value,
-        [-SWIPE_CLOSE_OFFSET, 0, SWIPE_CLOSE_OFFSET],
-        [0.5, 1, 0.5],
-      ),
+      width: screenSize.width,
+      maxHeight: screenSize.height,
+      alignSelf: 'center',
+      aspectRatio: imageAspect,
     }
   })
 
   const scrollHandler = useAnimatedScrollHandler({
     onScroll(e) {
       const nextIsScaled = e.zoomScale > 1
-      translationY.value = nextIsScaled ? 0 : e.contentOffset.y
       if (scaled !== nextIsScaled) {
         runOnJS(handleZoom)(nextIsScaled)
-      }
-    },
-    onEndDrag(e) {
-      const velocityY = e.velocity?.y ?? 0
-      const nextIsScaled = e.zoomScale > 1
-      if (scaled !== nextIsScaled) {
-        runOnJS(handleZoom)(nextIsScaled)
-      }
-      if (!nextIsScaled && Math.abs(velocityY) > SWIPE_CLOSE_VELOCITY) {
-        runOnJS(onRequestClose)()
       }
     },
   })
@@ -146,8 +137,15 @@ const ImageItem = ({
       runOnJS(zoomTo)(nextZoomRect)
     })
 
-  const composedGesture = Gesture.Exclusive(doubleTap, singleTap)
+  const composedGesture = Gesture.Exclusive(
+    dismissSwipePan,
+    doubleTap,
+    singleTap,
+  )
 
+  const type = imageSrc.type
+  const borderRadius =
+    type === 'circle-avi' ? 1e5 : type === 'rect-avi' ? 20 : 0
   return (
     <GestureDetector gesture={composedGesture}>
       <Animated.ScrollView
@@ -158,21 +156,22 @@ const ImageItem = ({
         showsVerticalScrollIndicator={false}
         maximumZoomScale={maxZoomScale}
         onScroll={scrollHandler}
-        contentContainerStyle={styles.scrollContainer}>
-        <Animated.View style={animatedStyle}>
-          <ActivityIndicator size="small" color="#FFF" style={styles.loading} />
-          <Image
-            contentFit="contain"
-            source={{uri: imageSrc.uri}}
-            placeholderContentFit="contain"
-            placeholder={{uri: imageSrc.thumbUri}}
-            style={styles.image}
-            accessibilityLabel={imageSrc.alt}
-            accessibilityHint=""
-            enableLiveTextInteraction={showControls && !scaled}
-            accessibilityIgnoresInvertColors
-          />
-        </Animated.View>
+        bounces={scaled}
+        bouncesZoom={true}
+        style={imageStyle}
+        centerContent>
+        <ActivityIndicator size="small" color="#FFF" style={styles.loading} />
+        <AnimatedImage
+          contentFit="contain"
+          source={{uri: imageSrc.uri}}
+          placeholderContentFit="contain"
+          placeholder={{uri: imageSrc.thumbUri}}
+          style={[animatedStyle, {borderRadius}]}
+          accessibilityLabel={imageSrc.alt}
+          accessibilityHint=""
+          enableLiveTextInteraction={showControls && !scaled}
+          accessibilityIgnoresInvertColors
+        />
       </Animated.ScrollView>
     </GestureDetector>
   )
@@ -185,9 +184,6 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-  },
-  scrollContainer: {
-    flex: 1,
   },
   image: {
     flex: 1,
