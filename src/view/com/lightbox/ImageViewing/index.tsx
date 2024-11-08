@@ -179,6 +179,7 @@ function ImageView({
     }
     return {pointerEvents: 'auto'}
   })
+
   const backdropStyle = useAnimatedStyle(() => {
     const screenSize = measure(safeAreaRef)
     let opacity = 1
@@ -191,10 +192,12 @@ function ImageView({
       )
       opacity -= dragProgress
     }
+    const factor = isIOS ? 100 : 50
     return {
-      opacity,
+      opacity: Math.round(opacity * factor) / factor,
     }
   })
+
   const animatedHeaderStyle = useAnimatedStyle(() => {
     const show = showControls && dismissSwipeTranslateY.value === 0
     return {

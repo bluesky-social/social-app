@@ -377,7 +377,7 @@ const ImageItem = ({
         ref={containerRef}
         style={[styles.container]}
         renderToHardwareTextureAndroid>
-        <Animated.View style={containerStyle}>
+        <Animated.View style={containerStyle} renderToHardwareTextureAndroid>
           {showLoader && (
             <ActivityIndicator
               size="small"
@@ -385,8 +385,9 @@ const ImageItem = ({
               style={styles.loading}
             />
           )}
-          <Animated.View style={imageCropStyle}>
+          <Animated.View style={imageCropStyle} renderToHardwareTextureAndroid>
             <AnimatedImage
+              renderToHardwareTextureAndroid
               contentFit="cover"
               source={{uri: imageSrc.uri}}
               placeholderContentFit="cover"
