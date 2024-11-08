@@ -224,6 +224,7 @@ const ImageItem = ({
             enableLiveTextInteraction={showControls && !scaled}
             accessibilityIgnoresInvertColors
             onLoad={() => setHasLoaded(true)}
+            cachePolicy="memory-disk"
           />
         </Animated.View>
       </Animated.ScrollView>
