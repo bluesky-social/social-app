@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-08 01:32\n"
+"PO-Revision-Date: 2024-11-08 02:17\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -8132,23 +8132,23 @@ msgstr "启用"
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:106
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:108
 msgid "Yes, deactivate"
-msgstr "是的，请停用"
+msgstr "确定并停用"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:661
 msgid "Yes, delete this starter pack"
-msgstr "是的，删除此新手包"
+msgstr "确定删除此新手包"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:736
 msgid "Yes, detach"
-msgstr "是的，分离"
+msgstr "确定并分离"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:746
 msgid "Yes, hide"
-msgstr "是的，隐藏"
+msgstr "确定并隐藏"
 
 #: src/screens/Deactivated.tsx:153
 msgid "Yes, reactivate my account"
-msgstr "是的，重新启用我的账户"
+msgstr "确定并重新启用我的账户"
 
 #: src/components/dms/DateDivider.tsx:46
 msgid "Yesterday"

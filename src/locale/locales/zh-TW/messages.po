@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-08 01:32\n"
+"PO-Revision-Date: 2024-11-08 02:18\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -8136,15 +8136,15 @@ msgstr "確定並停用"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:661
 msgid "Yes, delete this starter pack"
-msgstr "是，刪除這個新手包"
+msgstr "確定並刪除這個新手包"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:736
 msgid "Yes, detach"
-msgstr "是，分離"
+msgstr "確定並分離"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:746
 msgid "Yes, hide"
-msgstr "是，隱藏"
+msgstr "確定並隱藏"
 
 #: src/screens/Deactivated.tsx:153
 msgid "Yes, reactivate my account"
