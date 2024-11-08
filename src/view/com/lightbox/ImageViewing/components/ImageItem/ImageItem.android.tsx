@@ -302,6 +302,11 @@ const ImageItem = ({
       committedTransform.value = withClampedSpring(finalTransform)
     })
 
+  const innerStyle = useAnimatedStyle(() => ({
+    width: '100%',
+    aspectRatio: imageAspect,
+  }))
+
   const composedGesture = isScrollViewBeingDragged
     ? // If the parent is not at rest, provide a no-op gesture.
       Gesture.Manual()
@@ -312,6 +317,9 @@ const ImageItem = ({
         singleTap,
       )
 
+  const type = imageSrc.type
+  const borderRadius =
+    type === 'circle-avi' ? 1e5 : type === 'rect-avi' ? 20 : 0
   return (
     <GestureDetector gesture={composedGesture}>
       <Animated.View style={imageStyle} renderToHardwareTextureAndroid>
@@ -326,7 +334,7 @@ const ImageItem = ({
             source={{uri: imageSrc.uri}}
             placeholderContentFit="contain"
             placeholder={{uri: imageSrc.thumbUri}}
-            style={[styles.image]}
+            style={[innerStyle, {borderRadius}]}
             accessibilityLabel={imageSrc.alt}
             accessibilityHint=""
             accessibilityIgnoresInvertColors
@@ -342,9 +350,7 @@ const styles = StyleSheet.create({
   container: {
     height: '100%',
     overflow: 'hidden',
-  },
-  image: {
-    flex: 1,
+    justifyContent: 'center',
   },
   loading: {
     position: 'absolute',

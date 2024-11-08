@@ -143,6 +143,9 @@ const ImageItem = ({
     singleTap,
   )
 
+  const type = imageSrc.type
+  const borderRadius =
+    type === 'circle-avi' ? 1e5 : type === 'rect-avi' ? 20 : 0
   return (
     <GestureDetector gesture={composedGesture}>
       <Animated.ScrollView
@@ -163,7 +166,7 @@ const ImageItem = ({
           source={{uri: imageSrc.uri}}
           placeholderContentFit="contain"
           placeholder={{uri: imageSrc.thumbUri}}
-          style={animatedStyle}
+          style={[animatedStyle, {borderRadius}]}
           accessibilityLabel={imageSrc.alt}
           accessibilityHint=""
           enableLiveTextInteraction={showControls && !scaled}
