@@ -7,7 +7,6 @@ import {usePalette} from '#/lib/hooks/usePalette'
 import {useModalControls, useModals} from '#/state/modals'
 import {FullWindowOverlay} from '#/components/FullWindowOverlay'
 import {createCustomBackdrop} from '../util/BottomSheetCustomBackdrop'
-import * as AddAppPassword from './AddAppPasswords'
 import * as ChangeEmailModal from './ChangeEmail'
 import * as ChangePasswordModal from './ChangePassword'
 import * as CreateOrEditListModal from './CreateOrEditList'
@@ -71,9 +70,6 @@ export function ModalsContainer() {
   } else if (activeModal?.name === 'invite-codes') {
     snapPoints = InviteCodesModal.snapPoints
     element = <InviteCodesModal.Component />
-  } else if (activeModal?.name === 'add-app-password') {
-    snapPoints = AddAppPassword.snapPoints
-    element = <AddAppPassword.Component />
   } else if (activeModal?.name === 'content-languages-settings') {
     snapPoints = ContentLanguagesSettingsModal.snapPoints
     element = <ContentLanguagesSettingsModal.Component />

@@ -56,10 +56,6 @@ export interface InviteCodesModal {
   name: 'invite-codes'
 }
 
-export interface AddAppPasswordModal {
-  name: 'add-app-password'
-}
-
 export interface ContentLanguagesSettingsModal {
   name: 'content-languages-settings'
 }
@@ -96,7 +92,6 @@ export interface InAppBrowserConsentModal {
 
 export type Modal =
   // Account
-  | AddAppPasswordModal
   | DeleteAccountModal
   | VerifyEmailModal
   | ChangeEmailModal
