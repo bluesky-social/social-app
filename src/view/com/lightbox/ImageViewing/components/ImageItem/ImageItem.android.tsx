@@ -1,22 +1,26 @@
 import React, {useState} from 'react'
-import {ActivityIndicator, StyleProp, StyleSheet} from 'react-native'
+import {ActivityIndicator, StyleSheet} from 'react-native'
 import {
   Gesture,
   GestureDetector,
   PanGesture,
 } from 'react-native-gesture-handler'
 import Animated, {
-  BaseAnimationBuilder,
   runOnJS,
+  SharedValue,
   useAnimatedReaction,
   useAnimatedRef,
   useAnimatedStyle,
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated'
-import {Image, ImageStyle} from 'expo-image'
+import {Image} from 'expo-image'
 
-import type {Dimensions as ImageDimensions, ImageSource} from '../../@types'
+import type {
+  Dimensions as ImageDimensions,
+  ImageSource,
+  Transform,
+} from '../../@types'
 import {
   applyRounding,
   createTransform,
@@ -49,9 +53,15 @@ type Props = {
   }
   imageAspect: number | undefined
   imageDimensions: ImageDimensions | undefined
-  imageStyle: StyleProp<ImageStyle>
   dismissSwipePan: PanGesture
-  layoutAnimationAndroid: BaseAnimationBuilder
+  transforms: Readonly<
+    SharedValue<{
+      scaleAndMoveTransform: Transform
+      cropFrameTransform: Transform
+      cropContentTransform: Transform
+      isResting: boolean
+    }>
+  >
 }
 const ImageItem = ({
   imageSrc,
@@ -61,9 +71,8 @@ const ImageItem = ({
   measureSafeArea,
   imageAspect,
   imageDimensions,
-  imageStyle,
   dismissSwipePan,
-  layoutAnimationAndroid,
+  transforms,
 }: Props) => {
   const [isScaled, setIsScaled] = useState(false)
   const committedTransform = useSharedValue(initialTransform)
@@ -100,19 +109,6 @@ const ImageItem = ({
     setIsScaled(nextIsScaled)
     onZoom(nextIsScaled)
   }
-
-  const animatedStyle = useAnimatedStyle(() => {
-    // Apply the active adjustments on top of the committed transform before the gestures.
-    // This is matrix multiplication, so operations are applied in the reverse order.
-    let t = createTransform()
-    prependPan(t, panTranslation.value)
-    prependPinch(t, pinchScale.value, pinchOrigin.value, pinchTranslation.value)
-    prependTransform(t, committedTransform.value)
-    const [translateX, translateY, scale] = readTransform(t)
-    return {
-      transform: [{translateX}, {translateY: translateY}, {scale}],
-    }
-  })
 
   // On Android, stock apps prevent going "out of bounds" on pan or pinch. You should "bump" into edges.
   // If the user tried to pan too hard, this function will provide the negative panning to stay in bounds.
@@ -315,26 +311,92 @@ const ImageItem = ({
         singleTap,
       )
 
+  const containerStyle = useAnimatedStyle(() => {
+    const {scaleAndMoveTransform} = transforms.value
+    // Apply the active adjustments on top of the committed transform before the gestures.
+    // This is matrix multiplication, so operations are applied in the reverse order.
+    let t = createTransform()
+    prependPan(t, panTranslation.value)
+    prependPinch(t, pinchScale.value, pinchOrigin.value, pinchTranslation.value)
+    prependTransform(t, committedTransform.value)
+    const [translateX, translateY, scale] = readTransform(t)
+    const manipulationTransform = [
+      {translateX},
+      {translateY: translateY},
+      {scale},
+    ]
+    return {
+      width: '100%',
+      aspectRatio: imageAspect,
+      transform: scaleAndMoveTransform.concat(manipulationTransform),
+    }
+  })
+
+  const imageCropStyle = useAnimatedStyle(() => {
+    const {cropFrameTransform} = transforms.value
+    return {
+      flex: 1,
+      overflow: 'hidden',
+      transform: cropFrameTransform,
+    }
+  })
+
+  const type = imageSrc.type
+  const borderRadius =
+    type === 'circle-avi' ? 1e5 : type === 'rect-avi' ? 20 : 0
+  const imageStyle = useAnimatedStyle(() => {
+    const {cropContentTransform} = transforms.value
+    return {
+      flex: 1,
+      borderRadius,
+      transform: cropContentTransform,
+    }
+  })
+
+  const [showLoader, setShowLoader] = useState(false)
+  const [hasLoaded, setHasLoaded] = useState(false)
+  useAnimatedReaction(
+    () => {
+      return transforms.value.isResting && !hasLoaded
+    },
+    (show, prevShow) => {
+      if (show && !prevShow) {
+        runOnJS(setShowLoader)(false)
+      } else if (!prevShow && show) {
+        runOnJS(setShowLoader)(true)
+      }
+    },
+  )
+
   return (
     <GestureDetector gesture={composedGesture}>
       <Animated.View
         ref={containerRef}
-        // Necessary to make opacity work for both children together.
-        renderToHardwareTextureAndroid
-        style={[styles.container, animatedStyle]}>
-        <ActivityIndicator size="small" color="#FFF" style={styles.loading} />
-        <AnimatedImage
-          contentFit="cover"
-          source={{uri: imageSrc.uri}}
-          placeholderContentFit="cover"
-          placeholder={{uri: imageSrc.thumbUri}}
-          style={imageStyle}
-          layout={layoutAnimationAndroid}
-          accessibilityLabel={imageSrc.alt}
-          accessibilityHint=""
-          accessibilityIgnoresInvertColors
-          cachePolicy="memory"
-        />
+        style={[styles.container]}
+        renderToHardwareTextureAndroid>
+        <Animated.View style={containerStyle}>
+          {showLoader && (
+            <ActivityIndicator
+              size="small"
+              color="#FFF"
+              style={styles.loading}
+            />
+          )}
+          <Animated.View style={imageCropStyle}>
+            <AnimatedImage
+              contentFit="cover"
+              source={{uri: imageSrc.uri}}
+              placeholderContentFit="cover"
+              placeholder={{uri: imageSrc.thumbUri}}
+              accessibilityLabel={imageSrc.alt}
+              onLoad={() => setHasLoaded(false)}
+              style={imageStyle}
+              accessibilityHint=""
+              accessibilityIgnoresInvertColors
+              cachePolicy="memory"
+            />
+          </Animated.View>
+        </Animated.View>
       </Animated.View>
     </GestureDetector>
   )
@@ -352,6 +414,7 @@ const styles = StyleSheet.create({
     right: 0,
     top: 0,
     bottom: 0,
+    justifyContent: 'center',
   },
 })
 

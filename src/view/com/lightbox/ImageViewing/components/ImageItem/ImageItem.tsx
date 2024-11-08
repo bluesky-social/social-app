@@ -1,11 +1,15 @@
 // default implementation fallback for web
 
 import React from 'react'
-import {ImageStyle, StyleProp, View} from 'react-native'
+import {View} from 'react-native'
 import {PanGesture} from 'react-native-gesture-handler'
-import {BaseAnimationBuilder} from 'react-native-reanimated'
+import {SharedValue} from 'react-native-reanimated'
 
-import {Dimensions as ImageDimensions, ImageSource} from '../../@types'
+import {
+  Dimensions as ImageDimensions,
+  ImageSource,
+  Transform,
+} from '../../@types'
 
 type Props = {
   imageSrc: ImageSource
@@ -22,9 +26,15 @@ type Props = {
   }
   imageAspect: number | undefined
   imageDimensions: ImageDimensions | undefined
-  imageStyle: StyleProp<ImageStyle>
   dismissSwipePan: PanGesture
-  layoutAnimationAndroid: BaseAnimationBuilder
+  transforms: Readonly<
+    SharedValue<{
+      scaleAndMoveTransform: Transform
+      cropFrameTransform: Transform
+      cropContentTransform: Transform
+      isResting: boolean
+    }>
+  >
 }
 
 const ImageItem = (_props: Props) => {

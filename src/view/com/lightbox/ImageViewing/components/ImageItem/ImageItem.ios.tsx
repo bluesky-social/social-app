@@ -7,18 +7,28 @@
  */
 
 import React, {useState} from 'react'
-import {ActivityIndicator, StyleProp, StyleSheet} from 'react-native'
+import {ActivityIndicator, StyleSheet} from 'react-native'
 import {
   Gesture,
   GestureDetector,
   PanGesture,
 } from 'react-native-gesture-handler'
-import Animated, {runOnJS, useAnimatedRef} from 'react-native-reanimated'
+import Animated, {
+  runOnJS,
+  SharedValue,
+  useAnimatedReaction,
+  useAnimatedRef,
+  useAnimatedStyle,
+} from 'react-native-reanimated'
 import {useSafeAreaFrame} from 'react-native-safe-area-context'
-import {Image, ImageStyle} from 'expo-image'
+import {Image} from 'expo-image'
 
 import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
-import {Dimensions as ImageDimensions, ImageSource} from '../../@types'
+import {
+  Dimensions as ImageDimensions,
+  ImageSource,
+  Transform,
+} from '../../@types'
 
 const AnimatedImage = Animated.createAnimatedComponent(Image)
 
@@ -40,8 +50,15 @@ type Props = {
   }
   imageAspect: number | undefined
   imageDimensions: ImageDimensions | undefined
-  imageStyle: StyleProp<ImageStyle>
   dismissSwipePan: PanGesture
+  transforms: Readonly<
+    SharedValue<{
+      scaleAndMoveTransform: Transform
+      cropFrameTransform: Transform
+      cropContentTransform: Transform
+      isResting: boolean
+    }>
+  >
 }
 
 const ImageItem = ({
@@ -52,8 +69,8 @@ const ImageItem = ({
   measureSafeArea,
   imageAspect,
   imageDimensions,
-  imageStyle,
   dismissSwipePan,
+  transforms,
 }: Props) => {
   const scrollViewRef = useAnimatedRef<Animated.ScrollView>()
   const [scaled, setScaled] = useState(false)
@@ -129,6 +146,55 @@ const ImageItem = ({
     singleTap,
   )
 
+  const containerStyle = useAnimatedStyle(() => {
+    const {scaleAndMoveTransform} = transforms.value
+    return {
+      flex: 1,
+      transform: scaleAndMoveTransform,
+    }
+  })
+
+  const imageCropStyle = useAnimatedStyle(() => {
+    const screenSize = measureSafeArea()
+    const {cropFrameTransform} = transforms.value
+    return {
+      overflow: 'hidden',
+      transform: cropFrameTransform,
+      width: screenSize.width,
+      maxHeight: screenSize.height,
+      aspectRatio: imageAspect,
+      alignSelf: 'center',
+    }
+  })
+
+  const type = imageSrc.type
+  const borderRadius =
+    type === 'circle-avi' ? 1e5 : type === 'rect-avi' ? 20 : 0
+  const imageStyle = useAnimatedStyle(() => {
+    const {cropContentTransform} = transforms.value
+    return {
+      borderRadius,
+      transform: cropContentTransform,
+      width: '100%',
+      aspectRatio: imageAspect,
+    }
+  })
+
+  const [showLoader, setShowLoader] = useState(false)
+  const [hasLoaded, setHasLoaded] = useState(false)
+  useAnimatedReaction(
+    () => {
+      return transforms.value.isResting && !hasLoaded
+    },
+    (show, prevShow) => {
+      if (show && !prevShow) {
+        runOnJS(setShowLoader)(false)
+      } else if (!prevShow && show) {
+        runOnJS(setShowLoader)(true)
+      }
+    },
+  )
+
   return (
     <GestureDetector gesture={composedGesture}>
       <Animated.ScrollView
@@ -139,21 +205,27 @@ const ImageItem = ({
         showsVerticalScrollIndicator={false}
         maximumZoomScale={maxZoomScale}
         onScroll={scrollHandler}
+        style={containerStyle}
         bounces={scaled}
         bouncesZoom={true}
         centerContent>
-        <ActivityIndicator size="small" color="#FFF" style={styles.loading} />
-        <AnimatedImage
-          contentFit="cover"
-          source={{uri: imageSrc.uri}}
-          placeholderContentFit="cover"
-          placeholder={{uri: imageSrc.thumbUri}}
-          style={imageStyle}
-          accessibilityLabel={imageSrc.alt}
-          accessibilityHint=""
-          enableLiveTextInteraction={showControls && !scaled}
-          accessibilityIgnoresInvertColors
-        />
+        {showLoader && (
+          <ActivityIndicator size="small" color="#FFF" style={styles.loading} />
+        )}
+        <Animated.View style={imageCropStyle}>
+          <AnimatedImage
+            contentFit="contain"
+            source={{uri: imageSrc.uri}}
+            placeholderContentFit="contain"
+            placeholder={{uri: imageSrc.thumbUri}}
+            style={imageStyle}
+            accessibilityLabel={imageSrc.alt}
+            accessibilityHint=""
+            enableLiveTextInteraction={showControls && !scaled}
+            accessibilityIgnoresInvertColors
+            onLoad={() => setHasLoaded(true)}
+          />
+        </Animated.View>
       </Animated.ScrollView>
     </GestureDetector>
   )

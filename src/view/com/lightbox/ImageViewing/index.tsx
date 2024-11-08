@@ -22,7 +22,6 @@ import Animated, {
   AnimatedRef,
   cancelAnimation,
   interpolate,
-  LinearTransition,
   measure,
   runOnJS,
   SharedValue,
@@ -45,13 +44,13 @@ import {Trans} from '@lingui/macro'
 
 import {useImageDimensions} from '#/lib/media/image-sizes'
 import {colors, s} from '#/lib/styles'
-import {isAndroid, isIOS} from '#/platform/detection'
+import {isIOS} from '#/platform/detection'
 import {Lightbox} from '#/state/lightbox'
 import {Button} from '#/view/com/util/forms/Button'
 import {Text} from '#/view/com/util/text/Text'
 import {ScrollView} from '#/view/com/util/Views'
 import {PlatformInfo} from '../../../../../modules/expo-bluesky-swiss-army'
-import {ImageSource} from './@types'
+import {ImageSource, Transform} from './@types'
 import ImageDefaultHeader from './components/ImageDefaultHeader'
 import ImageItem from './components/ImageItem/ImageItem'
 
@@ -65,9 +64,6 @@ const EDGES =
 
 const SLOW_SPRING = {stiffness: 120}
 const FAST_SPRING = {stiffness: 700}
-const SLOW_SPRING_AS_TRANSITION = LinearTransition.springify()
-  .overshootClamping(true as any /* Typings are wrong */)
-  .stiffness(SLOW_SPRING.stiffness)
 
 export default function ImageViewRoot({
   lightbox: nextLightbox,
@@ -84,23 +80,10 @@ export default function ImageViewRoot({
   const ref = useAnimatedRef<View>()
   const [activeLightbox, setActiveLightbox] = useState(nextLightbox)
   const openProgress = useSharedValue(0)
-  const openProgressTo = useSharedValue(0)
 
   if (!activeLightbox && nextLightbox) {
     setActiveLightbox(nextLightbox)
   }
-
-  const updateOpenProgress = React.useCallback(
-    (toValue: number, animate: boolean) => {
-      'worklet'
-      // These *must* always be updated together.
-      openProgressTo.value = toValue
-      openProgress.value = animate
-        ? withClampedSpring(toValue, SLOW_SPRING)
-        : toValue
-    },
-    [openProgress, openProgressTo],
-  )
 
   React.useEffect(() => {
     if (!nextLightbox) {
@@ -111,11 +94,17 @@ export default function ImageViewRoot({
       !PlatformInfo.getIsReducedMotionEnabled() &&
       nextLightbox.images.every(img => img.dimensions && img.thumbRect)
 
-    updateOpenProgress(1, canAnimate)
+    // https://github.com/software-mansion/react-native-reanimated/issues/6677
+    requestAnimationFrame(() => {
+      openProgress.value = canAnimate ? withClampedSpring(1, SLOW_SPRING) : 1
+    })
     return () => {
-      updateOpenProgress(0, canAnimate)
+      // https://github.com/software-mansion/react-native-reanimated/issues/6677
+      requestAnimationFrame(() => {
+        openProgress.value = canAnimate ? withClampedSpring(0, SLOW_SPRING) : 0
+      })
     }
-  }, [nextLightbox, updateOpenProgress])
+  }, [nextLightbox, openProgress])
 
   useAnimatedReaction(
     () => openProgress.value === 0,
@@ -128,9 +117,9 @@ export default function ImageViewRoot({
 
   const onFlyAway = React.useCallback(() => {
     'worklet'
-    updateOpenProgress(0, false)
+    openProgress.value = 0
     runOnJS(onRequestClose)()
-  }, [onRequestClose, updateOpenProgress])
+  }, [onRequestClose, openProgress])
 
   return (
     // Keep it always mounted to avoid flicker on the first frame.
@@ -151,7 +140,6 @@ export default function ImageViewRoot({
             onFlyAway={onFlyAway}
             safeAreaRef={ref}
             openProgress={openProgress}
-            openProgressTo={openProgressTo}
           />
         )}
       </Animated.View>
@@ -167,7 +155,6 @@ function ImageView({
   onFlyAway,
   safeAreaRef,
   openProgress,
-  openProgressTo,
 }: {
   lightbox: Lightbox
   onRequestClose: () => void
@@ -176,7 +163,6 @@ function ImageView({
   onFlyAway: () => void
   safeAreaRef: AnimatedRef<View>
   openProgress: SharedValue<number>
-  openProgressTo: SharedValue<number>
 }) {
   const {images, index: initialImageIndex} = lightbox
   const [isScaled, setIsScaled] = useState(false)
@@ -303,7 +289,6 @@ function ImageView({
               isActive={i === imageIndex}
               dismissSwipeTranslateY={dismissSwipeTranslateY}
               openProgress={openProgress}
-              openProgressTo={openProgressTo}
             />
           </View>
         ))}
@@ -344,7 +329,6 @@ function LightboxImage({
   showControls,
   safeAreaRef,
   openProgress,
-  openProgressTo,
   dismissSwipeTranslateY,
 }: {
   imageSrc: ImageSource
@@ -359,7 +343,6 @@ function LightboxImage({
   showControls: boolean
   safeAreaRef: AnimatedRef<View>
   openProgress: SharedValue<number>
-  openProgressTo: SharedValue<number>
   dismissSwipeTranslateY: SharedValue<number>
 }) {
   const [imageAspect, imageDimensions] = useImageDimensions({
@@ -392,48 +375,26 @@ function LightboxImage({
     safeAreaRef,
   ])
 
-  const {thumbRect, dimensions} = imageSrc
-  const interpolation = useDerivedValue(() => {
+  const {thumbRect} = imageSrc
+  const transforms = useDerivedValue(() => {
     'worklet'
     const safeArea = measureSafeArea()
-    const finalWidth = safeArea.width
-    const finalHeight = imageAspect ? safeArea.width / imageAspect : undefined
     const dismissTranslateY =
       isActive && openProgress.value === 1 ? dismissSwipeTranslateY.value : 0
-    if (isActive && thumbRect && dimensions) {
+
+    if (isActive && thumbRect && imageAspect && openProgress.value < 1) {
       return interpolateTransform(
         openProgress.value,
-        openProgressTo.value,
         thumbRect,
         safeArea,
-        dimensions,
-        dismissTranslateY,
+        imageAspect,
       )
     }
     return {
-      transform: [{translateY: dismissTranslateY}],
-      width: finalWidth,
-      height: finalHeight,
-    }
-  })
-
-  const containerStyle = useAnimatedStyle(() => {
-    const {transform} = interpolation.value
-    return {
-      flex: 1,
-      transform,
-    }
-  })
-
-  const type = imageSrc.type
-  const borderRadius =
-    type === 'circle-avi' ? 1e5 : type === 'rect-avi' ? 20 : 0
-  const imageStyle = useAnimatedStyle(() => {
-    const {width, height} = interpolation.value
-    return {
-      borderRadius,
-      width,
-      height,
+      isResting: dismissTranslateY === 0,
+      scaleAndMoveTransform: [{translateY: dismissTranslateY}],
+      cropFrameTransform: [],
+      cropContentTransform: [],
     }
   })
 
@@ -475,22 +436,19 @@ function LightboxImage({
     })
 
   return (
-    <Animated.View style={containerStyle}>
-      <ImageItem
-        imageSrc={imageSrc}
-        onTap={onTap}
-        onZoom={onZoom}
-        onRequestClose={onRequestClose}
-        isScrollViewBeingDragged={isScrollViewBeingDragged}
-        showControls={showControls}
-        measureSafeArea={measureSafeArea}
-        imageAspect={imageAspect}
-        imageDimensions={imageDimensions}
-        imageStyle={imageStyle}
-        dismissSwipePan={dismissSwipePan}
-        layoutAnimationAndroid={SLOW_SPRING_AS_TRANSITION}
-      />
-    </Animated.View>
+    <ImageItem
+      imageSrc={imageSrc}
+      onTap={onTap}
+      onZoom={onZoom}
+      onRequestClose={onRequestClose}
+      isScrollViewBeingDragged={isScrollViewBeingDragged}
+      showControls={showControls}
+      measureSafeArea={measureSafeArea}
+      imageAspect={imageAspect}
+      imageDimensions={imageDimensions}
+      dismissSwipePan={dismissSwipePan}
+      transforms={transforms}
+    />
   )
 }
 
@@ -657,7 +615,6 @@ function interpolatePx(
 
 function interpolateTransform(
   progress: number,
-  progressTo: number,
   thumbnailDims: {
     pageX: number
     width: number
@@ -665,11 +622,14 @@ function interpolateTransform(
     height: number
   },
   safeArea: {width: number; height: number; x: number; y: number},
-  imageDims: {width: number; height: number},
-  dismissTranslateY: number,
-) {
+  imageAspect: number,
+): {
+  scaleAndMoveTransform: Transform
+  cropFrameTransform: Transform
+  cropContentTransform: Transform
+  isResting: boolean
+} {
   'worklet'
-  const imageAspect = imageDims.width / imageDims.height
   const thumbAspect = thumbnailDims.width / thumbnailDims.height
   let uncroppedInitialWidth
   let uncroppedInitialHeight
@@ -699,34 +659,21 @@ function interpolateTransform(
   const scale = interpolate(progress, [0, 1], [initialScale, 1])
   const translateX = interpolatePx(progress, [0, 1], [initialTranslateX, 0])
   const translateY = interpolatePx(progress, [0, 1], [initialTranslateY, 0])
-  const cropTranslateX = interpolatePx(
+  const cropScaleX = interpolate(
     progress,
     [0, 1],
-    [(finalWidth - croppedFinalWidth) / 2, 0],
+    [croppedFinalWidth / finalWidth, 1],
   )
-  let width
-  let height
-  if (isAndroid) {
-    // On Android, interpolating `progress` here is too slow and choppy.
-    // Instead, we'll use discrete `progressTo` and rely on `layout` animation.
-    width = progressTo === 0 ? croppedFinalWidth : finalWidth
-    height = progressTo === 0 ? croppedFinalHeight : finalHeight
-  } else {
-    // On iOS, interpolating these directly works fine.
-    // In fact, using the above approach would lead to incorrect positions.
-    width = interpolatePx(progress, [0, 1], [croppedFinalWidth, finalWidth])
-    height = interpolatePx(progress, [0, 1], [croppedFinalHeight, finalHeight])
-  }
+  const cropScaleY = interpolate(
+    progress,
+    [0, 1],
+    [croppedFinalHeight / finalHeight, 1],
+  )
   return {
-    transform: [
-      {translateY: dismissTranslateY},
-      {translateX},
-      {translateY},
-      {scale},
-      {translateX: cropTranslateX},
-    ],
-    width,
-    height,
+    isResting: progress === 1,
+    scaleAndMoveTransform: [{translateX}, {translateY}, {scale}],
+    cropFrameTransform: [{scaleX: cropScaleX}, {scaleY: cropScaleY}],
+    cropContentTransform: [{scaleX: 1 / cropScaleX}, {scaleY: 1 / cropScaleY}],
   }
 }
 

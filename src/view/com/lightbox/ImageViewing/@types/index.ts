@@ -6,6 +6,7 @@
  *
  */
 
+import {TransformsStyle} from 'react-native'
 import {MeasuredDimensions} from 'react-native-reanimated'
 
 export type Dimensions = {
@@ -26,3 +27,8 @@ export type ImageSource = {
   dimensions: Dimensions | null
   type: 'image' | 'circle-avi' | 'rect-avi'
 }
+
+export type Transform = Exclude<
+  TransformsStyle['transform'],
+  string | undefined
+>
