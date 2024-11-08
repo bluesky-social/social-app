@@ -29,8 +29,11 @@ import {useComposerControls} from '#/state/shell/composer'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
 import {PostThreadFollowBtn} from '#/view/com/post-thread/PostThreadFollowBtn'
 import {atoms as a, useTheme} from '#/alf'
+import {colors} from '#/components/Admonition'
+import {CalendarClock_Stroke2_Corner0_Rounded as CalendarClockIcon} from '#/components/icons/CalendarClock'
 import {InlineLinkText} from '#/components/Link'
 import {AppModerationCause} from '#/components/Pills'
+import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
 import {SubtleWebHover} from '#/components/SubtleWebHover'
 import {Text as NewText} from '#/components/Typography'
@@ -723,7 +726,7 @@ function ExpandedPostDetails({
 }) {
   const t = useTheme()
   const pal = usePalette('default')
-  const {_, i18n} = useLingui()
+  const {_} = useLingui()
   const openLink = useOpenLink()
   const isRootPost = !('reply' in post.record)
 
@@ -733,9 +736,7 @@ function ExpandedPostDetails({
 
   return (
     <View style={[a.flex_row, a.align_center, a.flex_wrap, a.gap_sm, a.pt_md]}>
-      <NewText style={[a.text_sm, t.atoms.text_contrast_medium]}>
-        {niceDate(i18n, post.indexedAt)}
-      </NewText>
+      <PostTimestamp post={post} />
       {isRootPost && (
         <WhoCanReply post={post} isThreadAuthor={isThreadAuthor} />
       )}
@@ -755,6 +756,67 @@ function ExpandedPostDetails({
         </>
       )}
     </View>
+  )
+}
+
+function PostTimestamp({post}: {post: AppBskyFeedDefs.PostView}) {
+  const t = useTheme()
+  const {_, i18n} = useLingui()
+  const control = Prompt.usePromptControl()
+
+  const indexedAt = new Date()
+  const createdAt = AppBskyFeedPost.isRecord(post.record)
+    ? new Date(post.record.createdAt)
+    : new Date(post.indexedAt)
+
+  // backdated if createdAt is 24 hours or more before indexedAt
+  const isBackdated =
+    indexedAt.getTime() - createdAt.getTime() > 24 * 60 * 60 * 1000
+
+  if (isBackdated) {
+    const orange =
+      t.name === 'light' ? colors.warning.dark : colors.warning.light
+    return (
+      <>
+        <NewText
+          style={[a.text_sm, t.atoms.text_contrast_medium]}
+          onPress={() => control.open()}
+          accessibilityHint={_(
+            msg`Show information about when this post was created`,
+          )}>
+          <Trans>
+            <CalendarClockIcon
+              fill={orange}
+              size="sm"
+              style={[{marginBottom: -3}]}
+            />{' '}
+            <NewText style={[a.font_bold, t.atoms.text_contrast_medium]}>
+              Archival
+            </NewText>{' '}
+            &middot; {niceDate(i18n, createdAt)}
+          </Trans>
+        </NewText>
+        <Prompt.Basic
+          control={control}
+          title={_(msg`Archival post`)}
+          description={_(
+            msg`This post claims to have been created at ${niceDate(
+              i18n,
+              createdAt,
+            )}, but was first seen by Bluesky at ${niceDate(i18n, indexedAt)}.`,
+          )}
+          confirmButtonCta={_(msg`Okay`)}
+          onConfirm={() => {}}
+          showCancel={false}
+        />
+      </>
+    )
+  }
+
+  return (
+    <NewText style={[a.text_sm, t.atoms.text_contrast_medium]}>
+      {niceDate(i18n, post.indexedAt)}
+    </NewText>
   )
 }
 
