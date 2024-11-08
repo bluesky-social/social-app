@@ -8,7 +8,7 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-07 14:26+0900\n"
+"PO-Revision-Date: 2024-11-08 14:21+0900\n"
 "Last-Translator: quiple\n"
 "Language-Team: quiple, lens0021, HaruChanHeart, hazzzi, heartade\n"
 "Plural-Forms: \n"
@@ -946,7 +946,7 @@ msgstr "동영상 및 GIF 자동 재생"
 #: src/screens/Login/SetNewPasswordForm.tsx:160
 #: src/screens/Messages/components/ChatDisabled.tsx:133
 #: src/screens/Messages/components/ChatDisabled.tsx:134
-#: src/screens/Profile/Header/Shell.tsx:94
+#: src/screens/Profile/Header/Shell.tsx:95
 #: src/screens/Signup/BackNextButtons.tsx:42
 #: src/screens/StarterPack/Wizard/index.tsx:307
 #: src/view/com/util/ViewHeader.tsx:87
@@ -1102,7 +1102,7 @@ msgstr "다른 피드 탐색하기"
 msgid "Business"
 msgstr "비즈니스"
 
-#: src/view/com/profile/ProfileSubpageHeader.tsx:174
+#: src/view/com/profile/ProfileSubpageHeader.tsx:175
 msgid "by —"
 msgstr "— 님이 만듦"
 
@@ -1110,7 +1110,7 @@ msgstr "— 님이 만듦"
 msgid "By {0}"
 msgstr "{0} 님이 만듦"
 
-#: src/view/com/profile/ProfileSubpageHeader.tsx:178
+#: src/view/com/profile/ProfileSubpageHeader.tsx:179
 msgid "by <0/>"
 msgstr "<0/> 님이 만듦"
 
@@ -1126,7 +1126,7 @@ msgstr "계정을 만들면 <0>서비스 이용약관</0> 및 <1>개인정보 �
 msgid "By creating an account you agree to the <0>Terms of Service</0>."
 msgstr "계정을 만들면 <0>서비스 이용약관</0>에 동의하는 것입니다."
 
-#: src/view/com/profile/ProfileSubpageHeader.tsx:176
+#: src/view/com/profile/ProfileSubpageHeader.tsx:177
 msgid "by you"
 msgstr "내가 만듦"
 
@@ -1444,7 +1444,7 @@ msgstr "GIF 대화 상자 닫기"
 msgid "Close image"
 msgstr "이미지 닫기"
 
-#: src/view/com/lightbox/Lightbox.web.tsx:109
+#: src/view/com/lightbox/Lightbox.web.tsx:107
 msgid "Close image viewer"
 msgstr "이미지 뷰어 닫기"
 
@@ -2618,7 +2618,7 @@ msgstr "핸들 변경 프로세스를 종료합니다"
 msgid "Exits image cropping process"
 msgstr "이미지 자르기 프로세스를 종료합니다"
 
-#: src/view/com/lightbox/Lightbox.web.tsx:110
+#: src/view/com/lightbox/Lightbox.web.tsx:108
 msgid "Exits image view"
 msgstr "이미지 보기를 종료합니다"
 
@@ -2626,7 +2626,7 @@ msgstr "이미지 보기를 종료합니다"
 msgid "Exits inputting search query"
 msgstr "검색어 입력을 종료합니다"
 
-#: src/view/com/lightbox/Lightbox.web.tsx:163
+#: src/view/com/lightbox/Lightbox.web.tsx:182
 msgid "Expand alt text"
 msgstr "대체 텍스트 확장"
 
@@ -3385,7 +3385,7 @@ msgstr "내 도메인을 가지고 있습니다"
 msgid "I understand"
 msgstr "확인"
 
-#: src/view/com/lightbox/Lightbox.web.tsx:165
+#: src/view/com/lightbox/Lightbox.web.tsx:184
 msgid "If alt text is long, toggles alt text expanded state"
 msgstr "대체 텍스트가 긴 경우 대체 텍스트 확장 상태를 전환합니다"
 
@@ -4344,7 +4344,7 @@ msgstr "뉴스"
 msgid "Next"
 msgstr "다음"
 
-#: src/view/com/lightbox/Lightbox.web.tsx:149
+#: src/view/com/lightbox/Lightbox.web.tsx:167
 msgid "Next image"
 msgstr "다음 이미지"
 
@@ -4685,7 +4685,7 @@ msgstr "{niceUrl} 링크 열기"
 msgid "Open links with in-app browser"
 msgstr "링크를 인앱 브라우저로 열기"
 
-#: src/components/dms/ActionsWrapper.tsx:87
+#: src/components/dms/ActionsWrapper.tsx:88
 msgid "Open message options"
 msgstr "메시지 옵션 열기"
 
@@ -5229,7 +5229,7 @@ msgstr "다시 시도하려면 누르기"
 msgid "Press to view followers of this account that you also follow"
 msgstr "내가 팔로우하는 이 계정의 팔로워를 보려면 누르세요"
 
-#: src/view/com/lightbox/Lightbox.web.tsx:130
+#: src/view/com/lightbox/Lightbox.web.tsx:148
 msgid "Previous image"
 msgstr "이전 이미지"
 
@@ -5882,7 +5882,7 @@ msgstr "이전 페이지로 돌아갑니다"
 msgid "Save"
 msgstr "저장"
 
-#: src/view/com/lightbox/ImageViewing/index.tsx:227
+#: src/view/com/lightbox/ImageViewing/index.tsx:376
 #: src/view/com/modals/CreateOrEditList.tsx:325
 msgctxt "action"
 msgid "Save"
@@ -6281,7 +6281,7 @@ msgstr "외설적"
 msgid "Share"
 msgstr "공유"
 
-#: src/view/com/lightbox/ImageViewing/index.tsx:236
+#: src/view/com/lightbox/ImageViewing/index.tsx:385
 msgctxt "action"
 msgid "Share"
 msgstr "공유"
@@ -7828,7 +7828,7 @@ msgstr "동영상: {0}"
 msgid "Videos must be less than 60 seconds long"
 msgstr "동영상 길이는 60초 미만이어야 합니다."
 
-#: src/screens/Profile/Header/Shell.tsx:142
+#: src/screens/Profile/Header/Shell.tsx:143
 msgid "View {0}'s avatar"
 msgstr "{0} 님의 아바타 보기"
 
@@ -7887,7 +7887,7 @@ msgstr "이 라벨에 대한 정보 보기"
 msgid "View profile"
 msgstr "프로필 보기"
 
-#: src/view/com/profile/ProfileSubpageHeader.tsx:141
+#: src/view/com/profile/ProfileSubpageHeader.tsx:142
 msgid "View the avatar"
 msgstr "아바타 보기"
 
