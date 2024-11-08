@@ -1,6 +1,7 @@
 import React, {useState} from 'react'
-import {LayoutAnimation, View} from 'react-native'
+import {LayoutAnimation, Pressable, View} from 'react-native'
 import {Linking} from 'react-native'
+import {useReducedMotion} from 'react-native-reanimated'
 import {AppBskyActorDefs, moderateProfile} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -9,13 +10,15 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {IS_INTERNAL} from '#/lib/app-info'
 import {HELP_DESK_URL} from '#/lib/constants'
+import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
 import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
+import {sanitizeHandle} from '#/lib/strings/handles'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {clearStorage} from '#/state/persisted'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useDeleteActorDeclaration} from '#/state/queries/messages/actor-declaration'
 import {useProfileQuery, useProfilesQuery} from '#/state/queries/profile'
-import {useSession, useSessionApi} from '#/state/session'
+import {SessionAccount, useSession, useSessionApi} from '#/state/session'
 import {useOnboardingDispatch} from '#/state/shell'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
@@ -24,41 +27,49 @@ import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {ProfileHeaderDisplayName} from '#/screens/Profile/Header/DisplayName'
 import {ProfileHeaderHandle} from '#/screens/Profile/Header/Handle'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, tokens, useTheme} from '#/alf'
+import {AvatarStack} from '#/components/AvatarStack'
 import {useDialogControl} from '#/components/Dialog'
 import {SwitchAccountDialog} from '#/components/dialogs/SwitchAccount'
 import {Accessibility_Stroke2_Corner2_Rounded as AccessibilityIcon} from '#/components/icons/Accessibility'
 import {BubbleInfo_Stroke2_Corner2_Rounded as BubbleInfoIcon} from '#/components/icons/BubbleInfo'
+import {ChevronTop_Stroke2_Corner0_Rounded as ChevronUpIcon} from '#/components/icons/Chevron'
 import {CircleQuestion_Stroke2_Corner2_Rounded as CircleQuestionIcon} from '#/components/icons/CircleQuestion'
 import {CodeBrackets_Stroke2_Corner2_Rounded as CodeBracketsIcon} from '#/components/icons/CodeBrackets'
+import {DotGrid_Stroke2_Corner0_Rounded as DotsHorizontal} from '#/components/icons/DotGrid'
 import {Earth_Stroke2_Corner2_Rounded as EarthIcon} from '#/components/icons/Globe'
 import {Lock_Stroke2_Corner2_Rounded as LockIcon} from '#/components/icons/Lock'
 import {PaintRoller_Stroke2_Corner2_Rounded as PaintRollerIcon} from '#/components/icons/PaintRoller'
 import {
   Person_Stroke2_Corner2_Rounded as PersonIcon,
   PersonGroup_Stroke2_Corner2_Rounded as PersonGroupIcon,
+  PersonPlus_Stroke2_Corner2_Rounded as PersonPlusIcon,
+  PersonX_Stroke2_Corner0_Rounded as PersonXIcon,
 } from '#/components/icons/Person'
 import {RaisingHand4Finger_Stroke2_Corner2_Rounded as HandIcon} from '#/components/icons/RaisingHand'
 import {Window_Stroke2_Corner2_Rounded as WindowIcon} from '#/components/icons/Window'
 import * as Layout from '#/components/Layout'
+import {Loader} from '#/components/Loader'
+import * as Menu from '#/components/Menu'
 import * as Prompt from '#/components/Prompt'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Settings'>
 export function SettingsScreen({}: Props) {
   const {_} = useLingui()
+  const reducedMotion = useReducedMotion()
   const {logoutEveryAccount} = useSessionApi()
   const {accounts, currentAccount} = useSession()
   const switchAccountControl = useDialogControl()
   const signOutPromptControl = Prompt.usePromptControl()
   const {data: profile} = useProfileQuery({did: currentAccount?.did})
-  const {setShowLoggedOut} = useLoggedOutViewControls()
-  const closeEverything = useCloseAllActiveElements()
+  const {data: otherProfiles} = useProfilesQuery({
+    handles: accounts
+      .filter(acc => acc.did !== currentAccount?.did)
+      .map(acc => acc.handle),
+  })
+  const {pendingDid, onPressSwitchAccount} = useAccountSwitcher()
+  const [showAccounts, setShowAccounts] = useState(false)
   const [showDevOptions, setShowDevOptions] = useState(false)
-
-  const onAddAnotherAccount = () => {
-    setShowLoggedOut(true)
-    closeEverything()
-  }
 
   return (
     <Layout.Screen>
@@ -77,34 +88,59 @@ export function SettingsScreen({}: Props) {
             ]}>
             {profile && <ProfilePreview profile={profile} />}
           </View>
-          <SettingsList.PressableItem
-            label={
-              accounts.length > 1
-                ? _(msg`Switch account`)
-                : _(msg`Add another account`)
-            }
-            onPress={() =>
-              accounts.length > 1
-                ? switchAccountControl.open()
-                : onAddAnotherAccount()
-            }>
-            <SettingsList.ItemIcon icon={PersonGroupIcon} />
-            <SettingsList.ItemText>
-              {accounts.length > 1 ? (
-                <Trans>Switch account</Trans>
-              ) : (
-                <Trans>Add another account</Trans>
+          {accounts.length > 1 ? (
+            <>
+              <SettingsList.PressableItem
+                label={_(msg`Switch account`)}
+                accessibilityHint={_(
+                  msg`Show other accounts you can switch to`,
+                )}
+                onPress={() => {
+                  if (!reducedMotion) {
+                    LayoutAnimation.configureNext(
+                      LayoutAnimation.Presets.easeInEaseOut,
+                    )
+                  }
+                  setShowAccounts(s => !s)
+                }}>
+                <SettingsList.ItemIcon icon={PersonGroupIcon} />
+                <SettingsList.ItemText>
+                  <Trans>Switch account</Trans>
+                </SettingsList.ItemText>
+                {showAccounts ? (
+                  <SettingsList.ItemIcon icon={ChevronUpIcon} size="md" />
+                ) : (
+                  <AvatarStack
+                    profiles={accounts
+                      .map(acc => acc.did)
+                      .filter(did => did !== currentAccount?.did)
+                      .slice(0, 5)}
+                  />
+                )}
+              </SettingsList.PressableItem>
+              {showAccounts && (
+                <>
+                  <SettingsList.Divider />
+                  {accounts
+                    .filter(acc => acc.did !== currentAccount?.did)
+                    .map(account => (
+                      <AccountRow
+                        key={account.did}
+                        account={account}
+                        profile={otherProfiles?.profiles?.find(
+                          p => p.did === account.did,
+                        )}
+                        pendingDid={pendingDid}
+                        onPressSwitchAccount={onPressSwitchAccount}
+                      />
+                    ))}
+                  <AddAccountRow />
+                </>
               )}
-            </SettingsList.ItemText>
-            {accounts.length > 1 && (
-              <AvatarStack
-                profiles={accounts
-                  .map(acc => acc.did)
-                  .filter(did => did !== currentAccount?.did)
-                  .slice(0, 5)}
-              />
-            )}
-          </SettingsList.PressableItem>
+            </>
+          ) : (
+            <AddAccountRow />
+          )}
           <SettingsList.Divider />
           <SettingsList.LinkItem to="/settings/account" label={_(msg`Account`)}>
             <SettingsList.ItemIcon icon={PersonIcon} />
@@ -188,9 +224,11 @@ export function SettingsScreen({}: Props) {
               <SettingsList.Divider />
               <SettingsList.PressableItem
                 onPress={() => {
-                  LayoutAnimation.configureNext(
-                    LayoutAnimation.Presets.easeInEaseOut,
-                  )
+                  if (!reducedMotion) {
+                    LayoutAnimation.configureNext(
+                      LayoutAnimation.Presets.easeInEaseOut,
+                    )
+                  }
                   setShowDevOptions(d => !d)
                 }}
                 label={_(msg`Developer options`)}>
@@ -242,70 +280,6 @@ function ProfilePreview({
       <ProfileHeaderDisplayName profile={shadow} moderation={moderation} />
       <ProfileHeaderHandle profile={shadow} />
     </>
-  )
-}
-
-const AVI_SIZE = 26
-const HALF_AVI_SIZE = AVI_SIZE / 2
-
-function AvatarStack({profiles}: {profiles: string[]}) {
-  const {data, error} = useProfilesQuery({handles: profiles})
-  const t = useTheme()
-  const moderationOpts = useModerationOpts()
-
-  if (error) {
-    console.error(error)
-    return null
-  }
-
-  const isPending = !data || !moderationOpts
-
-  const items = isPending
-    ? Array.from({length: profiles.length}).map((_, i) => ({
-        key: i,
-        profile: null,
-        moderation: null,
-      }))
-    : data.profiles.map(item => ({
-        key: item.did,
-        profile: item,
-        moderation: moderateProfile(item, moderationOpts),
-      }))
-
-  return (
-    <View
-      style={[
-        a.flex_row,
-        a.align_center,
-        a.relative,
-        {width: AVI_SIZE + (items.length - 1) * HALF_AVI_SIZE},
-      ]}>
-      {items.map((item, i) => (
-        <View
-          key={item.key}
-          style={[
-            t.atoms.bg_contrast_25,
-            a.relative,
-            {
-              width: AVI_SIZE,
-              height: AVI_SIZE,
-              left: i * -HALF_AVI_SIZE,
-              borderWidth: 1,
-              borderColor: t.atoms.bg.backgroundColor,
-              borderRadius: 999,
-              zIndex: 3 - i,
-            },
-          ]}>
-          {item.profile && (
-            <UserAvatar
-              size={AVI_SIZE - 2}
-              avatar={item.profile.avatar}
-              moderation={item.moderation.ui('avatar')}
-            />
-          )}
-        </View>
-      ))}
-    </View>
   )
 }
 
@@ -371,5 +345,119 @@ function DevOptions() {
         </SettingsList.ItemText>
       </SettingsList.PressableItem>
     </>
+  )
+}
+
+function AddAccountRow() {
+  const {_} = useLingui()
+  const {setShowLoggedOut} = useLoggedOutViewControls()
+  const closeEverything = useCloseAllActiveElements()
+
+  const onAddAnotherAccount = () => {
+    setShowLoggedOut(true)
+    closeEverything()
+  }
+
+  return (
+    <SettingsList.PressableItem
+      onPress={onAddAnotherAccount}
+      label={_(msg`Add another account`)}>
+      <SettingsList.ItemIcon icon={PersonPlusIcon} />
+      <SettingsList.ItemText>
+        <Trans>Add another account</Trans>
+      </SettingsList.ItemText>
+    </SettingsList.PressableItem>
+  )
+}
+
+function AccountRow({
+  profile,
+  account,
+  pendingDid,
+  onPressSwitchAccount,
+}: {
+  profile?: AppBskyActorDefs.ProfileViewDetailed
+  account: SessionAccount
+  pendingDid: string | null
+  onPressSwitchAccount: (
+    account: SessionAccount,
+    logContext: 'Settings',
+  ) => void
+}) {
+  const {_} = useLingui()
+  const t = useTheme()
+
+  const moderationOpts = useModerationOpts()
+  const removePromptControl = Prompt.usePromptControl()
+  const {removeAccount} = useSessionApi()
+
+  const onSwitchAccount = () => {
+    if (pendingDid) return
+    onPressSwitchAccount(account, 'Settings')
+  }
+
+  return (
+    <View style={[a.relative]}>
+      <SettingsList.PressableItem
+        onPress={onSwitchAccount}
+        label={_(msg`Switch account`)}>
+        {moderationOpts && profile ? (
+          <UserAvatar
+            size={28}
+            avatar={profile.avatar}
+            moderation={moderateProfile(profile, moderationOpts).ui('avatar')}
+          />
+        ) : (
+          <View style={[{width: 28}]} />
+        )}
+        <SettingsList.ItemText>
+          <Trans>{sanitizeHandle(account.handle, '@')}</Trans>
+        </SettingsList.ItemText>
+        {pendingDid === account.did && <SettingsList.ItemIcon icon={Loader} />}
+      </SettingsList.PressableItem>
+      {!pendingDid && (
+        <Menu.Root>
+          <Menu.Trigger label={_(msg`Account options`)}>
+            {({props, state}) => (
+              <Pressable
+                {...props}
+                style={[
+                  a.absolute,
+                  {top: 10, right: tokens.space.lg},
+                  a.p_xs,
+                  a.rounded_full,
+                  (state.hovered || state.pressed) && t.atoms.bg_contrast_25,
+                ]}>
+                <DotsHorizontal size="md" style={t.atoms.text} />
+              </Pressable>
+            )}
+          </Menu.Trigger>
+          <Menu.Outer showCancel>
+            <Menu.Item
+              label={_(msg`Remove account`)}
+              onPress={() => removePromptControl.open()}>
+              <Menu.ItemText>
+                <Trans>Remove account</Trans>
+              </Menu.ItemText>
+              <Menu.ItemIcon icon={PersonXIcon} />
+            </Menu.Item>
+          </Menu.Outer>
+        </Menu.Root>
+      )}
+
+      <Prompt.Basic
+        control={removePromptControl}
+        title={_(msg`Remove from quick access?`)}
+        description={_(
+          msg`This will remove @${account.handle} from the quick access list.`,
+        )}
+        onConfirm={() => {
+          removeAccount(account)
+          Toast.show(_(msg`Account removed from quick access`))
+        }}
+        confirmButtonCta={_(msg`Remove`)}
+        confirmButtonColor="negative"
+      />
+    </View>
   )
 }
