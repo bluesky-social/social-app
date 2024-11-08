@@ -55,6 +55,7 @@ type Props = {
       cropFrameTransform: Transform
       cropContentTransform: Transform
       isResting: boolean
+      isHidden: boolean
     }>
   >
 }
@@ -145,10 +146,11 @@ const ImageItem = ({
   )
 
   const containerStyle = useAnimatedStyle(() => {
-    const {scaleAndMoveTransform} = transforms.value
+    const {scaleAndMoveTransform, isHidden} = transforms.value
     return {
       flex: 1,
       transform: scaleAndMoveTransform,
+      opacity: isHidden ? 0 : 1,
     }
   })
 

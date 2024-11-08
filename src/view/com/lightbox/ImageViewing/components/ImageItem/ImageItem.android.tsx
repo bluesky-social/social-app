@@ -58,6 +58,7 @@ type Props = {
       cropFrameTransform: Transform
       cropContentTransform: Transform
       isResting: boolean
+      isHidden: boolean
     }>
   >
 }
@@ -310,7 +311,7 @@ const ImageItem = ({
       )
 
   const containerStyle = useAnimatedStyle(() => {
-    const {scaleAndMoveTransform} = transforms.value
+    const {scaleAndMoveTransform, isHidden} = transforms.value
     // Apply the active adjustments on top of the committed transform before the gestures.
     // This is matrix multiplication, so operations are applied in the reverse order.
     let t = createTransform()
@@ -325,6 +326,7 @@ const ImageItem = ({
     ]
     const screenSize = measureSafeArea()
     return {
+      opacity: isHidden ? 0 : 1,
       transform: scaleAndMoveTransform.concat(manipulationTransform),
       width: screenSize.width,
       maxHeight: screenSize.height,

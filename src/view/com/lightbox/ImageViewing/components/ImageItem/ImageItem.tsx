@@ -33,6 +33,7 @@ type Props = {
       cropFrameTransform: Transform
       cropContentTransform: Transform
       isResting: boolean
+      isHidden: boolean
     }>
   >
 }

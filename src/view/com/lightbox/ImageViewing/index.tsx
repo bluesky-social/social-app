@@ -382,6 +382,16 @@ function LightboxImage({
     const dismissTranslateY =
       isActive && openProgress.value === 1 ? dismissSwipeTranslateY.value : 0
 
+    if (openProgress.value === 0 && isFlyingAway.value) {
+      return {
+        isHidden: true,
+        isResting: false,
+        scaleAndMoveTransform: [],
+        cropFrameTransform: [],
+        cropContentTransform: [],
+      }
+    }
+
     if (isActive && thumbRect && imageAspect && openProgress.value < 1) {
       return interpolateTransform(
         openProgress.value,
@@ -391,6 +401,7 @@ function LightboxImage({
       )
     }
     return {
+      isHidden: false,
       isResting: dismissTranslateY === 0,
       scaleAndMoveTransform: [{translateY: dismissTranslateY}],
       cropFrameTransform: [],
@@ -628,6 +639,7 @@ function interpolateTransform(
   cropFrameTransform: Transform
   cropContentTransform: Transform
   isResting: boolean
+  isHidden: boolean
 } {
   'worklet'
   const thumbAspect = thumbnailDims.width / thumbnailDims.height
@@ -678,6 +690,7 @@ function interpolateTransform(
     [croppedFinalHeight / finalHeight, 1],
   )
   return {
+    isHidden: false,
     isResting: progress === 1,
     scaleAndMoveTransform: [{translateX}, {translateY}, {scale}],
     cropFrameTransform: [{scaleX: cropScaleX}, {scaleY: cropScaleY}],
