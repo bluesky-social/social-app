@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-07 01:34\n"
+"PO-Revision-Date: 2024-11-08 01:33\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional, Hong Kong\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -1365,7 +1365,7 @@ msgstr "清除所有儲存資料"
 #: src/screens/Settings/Settings.tsx:370
 #: src/view/screens/Settings/index.tsx:889
 msgid "Clear all storage data (restart after this)"
-msgstr "清除所有儲存資料（之後重新啟動）"
+msgstr "剷晒啲儲存資料（跟住重啓）"
 
 #: src/components/forms/SearchInput.tsx:70
 msgid "Clear search query"
@@ -5806,7 +5806,7 @@ msgstr "重設驗證碼"
 #: src/view/screens/Settings/index.tsx:876
 #: src/view/screens/Settings/index.tsx:879
 msgid "Reset onboarding state"
-msgstr "重設初始設定狀態"
+msgstr "去返引導流程重設個人檔案"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:80
 msgid "Reset password"
@@ -5819,7 +5819,7 @@ msgstr "重設設定狀態"
 
 #: src/view/screens/Settings/index.tsx:877
 msgid "Resets the onboarding state"
-msgstr "重設初始設定狀態"
+msgstr "去返引導流程重設個人檔案"
 
 #: src/view/screens/Settings/index.tsx:857
 msgid "Resets the preferences state"

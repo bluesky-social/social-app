@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-07 01:33\n"
+"PO-Revision-Date: 2024-11-08 01:32\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -8117,7 +8117,7 @@ msgstr "作家"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:337
 msgid "Wrong DID returned from server. Received: {0}"
-msgstr "从服务器返回错误的 DID。收到的信息： {0}"
+msgstr "服务器返回了错误的 DID。接收到的 DID： {0}"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:78
 #: src/view/screens/PreferencesFollowingFeed.tsx:81

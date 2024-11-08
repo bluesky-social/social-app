@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-07 01:34\n"
+"PO-Revision-Date: 2024-11-08 01:32\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -25,7 +25,7 @@ msgstr "（含有嵌入內容）"
 #: src/screens/Settings/AccountSettings.tsx:58
 #: src/view/com/modals/VerifyEmail.tsx:150
 msgid "(no email)"
-msgstr "（沒有電子郵件）"
+msgstr "（沒有電子信箱）"
 
 #: src/lib/hooks/useTimeAgo.ts:156
 msgid "{0, plural, one {# day} other {# days}}"
@@ -126,7 +126,7 @@ msgstr "{0} 人已使用此新手包！"
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:203
 msgid "{0} unread items"
-msgstr "{0} 個未讀"
+msgstr "{0} 則未讀訊息"
 
 #: src/view/com/util/UserAvatar.tsx:435
 msgid "{0}'s avatar"
@@ -167,7 +167,7 @@ msgstr "{0}秒前"
 
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:252
 msgid "{badge} unread items"
-msgstr "{badge} 個未讀"
+msgstr "{badge} 則未讀通知"
 
 #: src/components/LabelingServiceCard/index.tsx:96
 msgid "{count, plural, one {Liked by # user} other {Liked by # users}}"
@@ -175,7 +175,7 @@ msgstr "{count, plural, one {# 個用戶表示喜歡} other {# 個用戶表示�
 
 #: src/view/shell/desktop/LeftNav.tsx:223
 msgid "{count} unread items"
-msgstr "{count} 個未讀"
+msgstr "{count} 則未讀"
 
 #: src/lib/generate-starterpack.ts:108
 #: src/screens/StarterPack/Wizard/index.tsx:183
@@ -295,11 +295,11 @@ msgstr "{likeCount, plural, one {# 個用戶表示喜歡} other {# 個用戶表�
 
 #: src/view/shell/Drawer.tsx:477
 msgid "{numUnreadNotifications} unread"
-msgstr "{numUnreadNotifications} 個未讀通知"
+msgstr "{numUnreadNotifications} 則未讀通知"
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:230
 msgid "{numUnreadNotifications} unread items"
-msgstr "{numUnreadNotifications} 個未讀通知"
+msgstr "{numUnreadNotifications} 則未讀通知"
 
 #: src/components/NewskieDialog.tsx:116
 msgid "{profileName} joined Bluesky {0} ago"
@@ -503,7 +503,7 @@ msgstr "新增替代文字（可選）"
 #: src/screens/Settings/Settings.tsx:84
 #: src/screens/Settings/Settings.tsx:96
 msgid "Add another account"
-msgstr "新增另一個帳號"
+msgstr "新增其他帳號"
 
 #: src/view/com/composer/Composer.tsx:692
 msgid "Add another post"
@@ -672,11 +672,11 @@ msgstr "替代文字過長，將被截斷。字數限制：{0} 個字元。"
 #: src/view/com/modals/VerifyEmail.tsx:132
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:93
 msgid "An email has been sent to {0}. It includes a confirmation code which you can enter below."
-msgstr "電子郵件已傳送至 {0}。請查閱郵件並在下方輸入驗證碼。"
+msgstr "一封電子郵件已傳送至 {0}。請查閱郵件並在下方輸入驗證碼。"
 
 #: src/view/com/modals/ChangeEmail.tsx:114
 msgid "An email has been sent to your previous address, {0}. It includes a confirmation code which you can enter below."
-msgstr "電子郵件已傳送至先前填寫的電子郵件地址 {0}。請查閱郵件並在下方輸入驗證碼。"
+msgstr "一封電子郵件已傳送至先前填寫的信箱地址 {0}。請查閱郵件並在下方輸入驗證碼。"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:77
 msgid "An email has been sent! Please enter the confirmation code included in the email below."
@@ -1242,7 +1242,7 @@ msgstr "變更"
 #: src/screens/Settings/AccountSettings.tsx:90
 #: src/screens/Settings/AccountSettings.tsx:94
 msgid "Change email"
-msgstr "變更電子郵件"
+msgstr "變更電子信箱"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:147
 msgid "Change email address"
@@ -1315,11 +1315,11 @@ msgstr "檢查我的狀態"
 
 #: src/screens/Login/LoginForm.tsx:275
 msgid "Check your email for a login code and enter it here."
-msgstr "在這裡輸入傳送至您電子郵件的驗證碼。"
+msgstr "在這裡輸入傳送至您電子信箱的驗證碼。"
 
 #: src/view/com/modals/DeleteAccount.tsx:232
 msgid "Check your inbox for an email with the confirmation code to enter below:"
-msgstr "在下方輸入傳送至您電子郵件地址的驗證碼："
+msgstr "在下方輸入傳送至您電子信箱的驗證碼："
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:370
 msgid "Choose domain verification method"
@@ -1503,7 +1503,7 @@ msgstr "社群規範"
 
 #: src/screens/Onboarding/StepFinished.tsx:284
 msgid "Complete onboarding and start using your account"
-msgstr "完成初始設定並開始使用您的帳號"
+msgstr "完成引導流程並開始使用您的帳號"
 
 #: src/screens/Signup/index.tsx:144
 msgid "Complete the challenge"
@@ -1670,7 +1670,7 @@ msgstr "已複製"
 #: src/screens/Settings/AboutSettings.tsx:66
 #: src/view/screens/Settings/index.tsx:243
 msgid "Copied build version to clipboard"
-msgstr "已複製建構版本號至剪貼簿"
+msgstr "已複製組建版本號至剪貼簿"
 
 #: src/components/dms/MessageMenu.tsx:57
 #: src/lib/sharing.ts:25
@@ -1706,7 +1706,7 @@ msgstr "複製應用程式專用密碼"
 
 #: src/screens/Settings/AboutSettings.tsx:61
 msgid "Copy build version to clipboard"
-msgstr "複製建構版本號至剪貼簿"
+msgstr "複製組建版本號至剪貼簿"
 
 #: src/components/dialogs/Embed.tsx:122
 #: src/components/dialogs/Embed.tsx:141
@@ -2067,7 +2067,7 @@ msgstr "關閉觸覺回饋"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:385
 msgid "Disable subtitles"
-msgstr "停用字幕"
+msgstr "關閉字幕"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:32
 #: src/lib/moderation/useLabelBehaviorDescription.ts:42
@@ -2262,7 +2262,7 @@ msgstr "例如：alice.com"
 
 #: src/view/com/modals/EditProfile.tsx:198
 msgid "e.g. Artist, dog-lover, and avid reader."
-msgstr "例如：藝術家、愛狗人士和狂熱讀者。"
+msgstr "例如：藝術家、狗派人士或書迷。"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:43
 msgid "E.g. artistic nudes."
@@ -2395,7 +2395,7 @@ msgstr "教育"
 #: src/screens/Signup/StepInfo/index.tsx:170
 #: src/view/com/modals/ChangeEmail.tsx:136
 msgid "Email"
-msgstr "電子郵件"
+msgstr "電子信箱"
 
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:64
 msgid "Email 2FA disabled"
@@ -2416,23 +2416,23 @@ msgstr "重新傳送電子郵件"
 #: src/view/com/modals/ChangeEmail.tsx:54
 #: src/view/com/modals/ChangeEmail.tsx:83
 msgid "Email updated"
-msgstr "電子郵件已更新"
+msgstr "電子信箱已更新"
 
 #: src/view/com/modals/ChangeEmail.tsx:106
 msgid "Email Updated"
-msgstr "電子郵件已更新"
+msgstr "電子信箱已更新"
 
 #: src/view/com/modals/VerifyEmail.tsx:85
 msgid "Email verified"
-msgstr "電子郵件已驗證"
+msgstr "電子信箱驗證成功"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:79
 msgid "Email Verified"
-msgstr "電子郵件地址已驗證"
+msgstr "電子信箱驗證成功"
 
 #: src/view/screens/Settings/index.tsx:329
 msgid "Email:"
-msgstr "電子郵件："
+msgstr "電子信箱："
 
 #: src/components/dialogs/Embed.tsx:113
 msgid "Embed HTML code"
@@ -2482,7 +2482,7 @@ msgstr "啟用優先通知"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:386
 msgid "Enable subtitles"
-msgstr "啟用字幕"
+msgstr "開啟字幕"
 
 #: src/components/dialogs/EmbedConsent.tsx:93
 msgid "Enable this source only"
@@ -2534,7 +2534,7 @@ msgstr "輸入您想使用的網域"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:113
 msgid "Enter the email you used to create your account. We'll send you a \"reset code\" so you can set a new password."
-msgstr "輸入您用於建立帳號的電子郵件。我們將向您傳送一個「重設碼」，來讓您設定新密碼。"
+msgstr "輸入您用於建立帳號的電子郵件地址。我們將向您傳送一個「重設碼」，來讓您設定新密碼。"
 
 #: src/components/dialogs/BirthDateSettings.tsx:107
 msgid "Enter your birth date"
@@ -3041,15 +3041,15 @@ msgstr "食物"
 
 #: src/view/com/modals/DeleteAccount.tsx:129
 msgid "For security reasons, we'll need to send a confirmation code to your email address."
-msgstr "為了保護您的帳號安全，我們將傳送一組驗證碼到您的電子郵件。"
+msgstr "為了確保您的帳號安全，我們將傳送一組驗證碼到您的電子郵件地址。"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:209
 msgid "For security reasons, you won't be able to view this again. If you lose this app password, you'll need to generate a new one."
-msgstr "為了保護您的帳號安全，將無法再次查看此密碼。如果您不慎丟失了，則需要再產生一個新的密碼。"
+msgstr "為了確保您的帳號安全，將無法再次查看此密碼。如果您不慎丟失了，則需要再產生一個新的密碼。"
 
 #: src/view/com/modals/AddAppPasswords.tsx:233
 msgid "For security reasons, you won't be able to view this again. If you lose this password, you'll need to generate a new one."
-msgstr "為了保護您的帳號安全，將無法再次查看此密碼。如果您不慎丟失了，則需要再產生一個新的密碼。"
+msgstr "為了確保您的帳號安全，將無法再次查看此密碼。如果您不慎丟失了，則需要再產生一個新的密碼。"
 
 #: src/components/dialogs/nuxs/NeueTypography.tsx:73
 #: src/screens/Settings/AppearanceSettings.tsx:127
@@ -3416,7 +3416,7 @@ msgstr "如果您想變更密碼，我們將向您傳送一組驗證碼，以確
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:92
 msgid "If you're trying to change your handle or email, do so before you deactivate."
-msgstr "如果您想變更帳號代碼或電子郵件，請在停用帳號前變更。"
+msgstr "如果您想變更帳號代碼或電子信箱，請記得在停用帳號之前變更。"
 
 #: src/lib/moderation/useReportOptions.ts:38
 msgid "Illegal and Urgent"
@@ -3546,7 +3546,7 @@ msgstr "邀請，但更具個人風格"
 
 #: src/screens/Signup/StepInfo/index.tsx:80
 msgid "It looks like you may have entered your email address incorrectly. Are you sure it's right?"
-msgstr "您似乎輸入了錯誤的電子郵件地址，您確定這是正確的嗎？"
+msgstr "您似乎輸入了錯誤的電子郵件地址，確定這個地址是正確的嗎？"
 
 #: src/screens/Signup/StepInfo/index.tsx:241
 msgid "It's correct"
@@ -4798,7 +4798,7 @@ msgstr "開啟帳號刪除確認的彈出式視窗"
 
 #: src/view/screens/Settings/index.tsx:806
 msgid "Opens modal for account deletion confirmation. Requires email code"
-msgstr "開啟帳號刪除確認的彈出式視窗。需要電子郵件驗證碼"
+msgstr "開啟帳號刪除確認的彈出式視窗。需要驗證電子信箱"
 
 #: src/view/screens/Settings/index.tsx:741
 msgid "Opens modal for changing your Bluesky password"
@@ -5059,7 +5059,7 @@ msgstr "請完成 Captcha 驗證。"
 
 #: src/view/com/modals/ChangeEmail.tsx:65
 msgid "Please confirm your email before changing it. This is a temporary requirement while email-updating tools are added, and it will soon be removed."
-msgstr "變更前請先確認您的電子郵件地址。這是電子郵件更新工具的臨時要求，此限制很快就會被移除。"
+msgstr "請在變更前確認您的電子郵件地址。這是在電子郵件更新工具加入前的暫時性要求，很快就會被移除。"
 
 #: src/view/com/modals/AddAppPasswords.tsx:94
 msgid "Please enter a name for your app password. All spaces is not allowed."
@@ -5080,7 +5080,7 @@ msgstr "請輸入有效的文字或標籤進行靜音"
 #: src/screens/Signup/state.ts:196
 #: src/screens/Signup/StepInfo/index.tsx:102
 msgid "Please enter your email."
-msgstr "請輸入您的電子郵件。"
+msgstr "請輸入您的電子郵件地址。"
 
 #: src/screens/Signup/StepInfo/index.tsx:96
 msgid "Please enter your invite code."
@@ -5105,7 +5105,7 @@ msgstr "請以 @{0} 的身分登入"
 
 #: src/view/com/modals/VerifyEmail.tsx:109
 msgid "Please Verify Your Email"
-msgstr "請驗證您的電子郵件地址"
+msgstr "請驗證您的電子信箱"
 
 #: src/screens/Onboarding/index.tsx:34
 #: src/screens/Onboarding/state.ts:98
@@ -5309,7 +5309,7 @@ msgstr "個人檔案已更新"
 
 #: src/view/screens/Settings/index.tsx:985
 msgid "Protect your account by verifying your email."
-msgstr "透過驗證電子郵件地址來保護您的帳號。"
+msgstr "透過驗證電子郵件地址來確保帳號安全。"
 
 #: src/screens/Onboarding/StepFinished.tsx:237
 msgid "Public"
@@ -5806,7 +5806,7 @@ msgstr "重設碼"
 #: src/view/screens/Settings/index.tsx:876
 #: src/view/screens/Settings/index.tsx:879
 msgid "Reset onboarding state"
-msgstr "重設初始設定進行狀態"
+msgstr "重設引導流程狀態"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:80
 msgid "Reset password"
@@ -5819,7 +5819,7 @@ msgstr "重設偏好狀態"
 
 #: src/view/screens/Settings/index.tsx:877
 msgid "Resets the onboarding state"
-msgstr "重設初始設定狀態"
+msgstr "重設引導流程狀態"
 
 #: src/view/screens/Settings/index.tsx:857
 msgid "Resets the preferences state"
@@ -5947,7 +5947,7 @@ msgstr "儲存到您的動態源"
 
 #: src/view/com/modals/EditProfile.tsx:220
 msgid "Saves any changes to your profile"
-msgstr "儲存對您個人檔案的任何變更"
+msgstr "儲存您對個人檔案的所有變更"
 
 #: src/view/com/modals/ChangeHandle.tsx:159
 msgid "Saves handle change to {handle}"
@@ -6452,7 +6452,7 @@ msgstr "顯示轉發貼文"
 #: src/screens/Settings/FollowingFeedPreferences.tsx:122
 #: src/screens/Settings/FollowingFeedPreferences.tsx:132
 msgid "Show samples of your saved feeds in your Following feed"
-msgstr "在「Following」動態源中顯示您已儲存的動態源中的選錄貼文"
+msgstr "在「Following」動態源中顯示您已儲存動態源中的精選貼文"
 
 #: src/components/moderation/ContentHider.tsx:130
 #: src/components/moderation/PostHider.tsx:79
@@ -6517,7 +6517,7 @@ msgstr "登出所有帳戶"
 
 #: src/screens/Settings/Settings.tsx:210
 msgid "Sign out?"
-msgstr "是否登出？"
+msgstr "確定要登出嗎？"
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:301
 #: src/view/shell/bottom-bar/BottomBar.tsx:302
@@ -7085,7 +7085,7 @@ msgstr "Bluesky 迎來了大量新用戶！我們將盡快啟用您的帳號。"
 
 #: src/screens/Settings/FollowingFeedPreferences.tsx:55
 msgid "These settings only apply to the Following feed."
-msgstr "這些偏好設定僅適用於「Following」動態源。"
+msgstr "這些設定只會影響「Following」動態源。"
 
 #: src/components/moderation/ScreenHider.tsx:111
 msgid "This {screenDescription} has been flagged:"
@@ -7362,11 +7362,11 @@ msgstr "電視節目"
 
 #: src/view/screens/Settings/index.tsx:721
 msgid "Two-factor authentication"
-msgstr "雙重驗證"
+msgstr "雙重認證"
 
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:49
 msgid "Two-factor authentication (2FA)"
-msgstr "雙重驗證（2FA）"
+msgstr "雙重認證 (2FA)"
 
 #: src/screens/Messages/components/MessageInput.tsx:141
 msgid "Type your message here"
@@ -7545,7 +7545,7 @@ msgstr "更新列表中的 <0>{displayName}</0>"
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:495
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:516
 msgid "Update to {domain}"
-msgstr "更新至 {domain}"
+msgstr "變更至 {domain}"
 
 #: src/view/com/modals/ChangeHandle.tsx:495
 msgid "Update to {handle}"
@@ -7782,7 +7782,7 @@ msgstr "驗證文字檔案"
 #: src/screens/Settings/AccountSettings.tsx:68
 #: src/screens/Settings/AccountSettings.tsx:84
 msgid "Verify your email"
-msgstr "驗證您的電子郵件"
+msgstr "驗證您的電子信箱"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:71
 #: src/view/com/modals/VerifyEmail.tsx:111
@@ -8117,7 +8117,7 @@ msgstr "作家"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:337
 msgid "Wrong DID returned from server. Received: {0}"
-msgstr "伺服器傳回錯誤的 DID，訊息：{0}"
+msgstr "伺服器返回了錯誤的 DID。接收到的 DID: {0}"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:78
 #: src/view/screens/PreferencesFollowingFeed.tsx:81
@@ -8350,7 +8350,7 @@ msgstr "您之前停用了 @{0}。"
 
 #: src/screens/Settings/Settings.tsx:211
 msgid "You will be signed out of all your accounts."
-msgstr "您將登出所有帳號。"
+msgstr "您即將登出所有帳號。"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:222
 msgid "You will no longer receive notifications for this thread"
