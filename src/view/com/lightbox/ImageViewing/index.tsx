@@ -268,6 +268,11 @@ function LightboxImage({
       }
       if (Math.abs(e.velocityY) > 1000) {
         isFlyingAway.value = true
+        if (dismissSwipeTranslateY.value === 0) {
+          // HACK: If the initial value is 0, withDecay() animation doesn't start.
+          // This is a bug in Reanimated, but for now we'll work around it like this.
+          dismissSwipeTranslateY.value = 1
+        }
         dismissSwipeTranslateY.value = withDecay({
           velocity: e.velocityY,
           velocityFactor: Math.max(3000 / Math.abs(e.velocityY), 1), // Speed up if it's too slow.
