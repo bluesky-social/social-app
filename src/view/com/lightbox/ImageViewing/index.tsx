@@ -640,8 +640,16 @@ function interpolateTransform(
     uncroppedInitialWidth = thumbnailDims.width
     uncroppedInitialHeight = thumbnailDims.width / imageAspect
   }
-  const finalWidth = safeArea.width
-  const finalHeight = safeArea.width / imageAspect
+  const safeAreaAspect = safeArea.width / safeArea.height
+  let finalWidth
+  let finalHeight
+  if (safeAreaAspect > imageAspect) {
+    finalWidth = safeArea.height * imageAspect
+    finalHeight = safeArea.height
+  } else {
+    finalWidth = safeArea.width
+    finalHeight = safeArea.width / imageAspect
+  }
   const initialScale = Math.min(
     uncroppedInitialWidth / finalWidth,
     uncroppedInitialHeight / finalHeight,

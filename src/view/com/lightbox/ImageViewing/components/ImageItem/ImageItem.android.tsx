@@ -325,10 +325,13 @@ const ImageItem = ({
       {translateY: translateY},
       {scale},
     ]
+    const screenSize = measureSafeArea()
     return {
-      width: '100%',
-      aspectRatio: imageAspect,
       transform: scaleAndMoveTransform.concat(manipulationTransform),
+      width: screenSize.width,
+      maxHeight: screenSize.height,
+      aspectRatio: imageAspect,
+      alignSelf: 'center',
     }
   })
 
