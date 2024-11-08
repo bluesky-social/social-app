@@ -160,6 +160,23 @@ function ImageView({
     }
   }, [])
 
+  useAnimatedReaction(
+    () => {
+      const screenSize = measure(safeAreaRef)
+      return (
+        !screenSize ||
+        Math.abs(dismissSwipeTranslateY.value) > screenSize.height
+      )
+    },
+    (isOut, wasOut) => {
+      if (isOut && !wasOut) {
+        // Stop the animation from blocking the screen forever.
+        cancelAnimation(dismissSwipeTranslateY)
+        runOnJS(onRequestClose)()
+      }
+    },
+  )
+
   return (
     <Animated.View style={[styles.container, containerStyle]}>
       <Animated.View
@@ -256,12 +273,23 @@ function LightboxImage({
     .maxPointers(1)
     .onUpdate(e => {
       'worklet'
+      if (isFlyingAway.value) {
+        return
+      }
       dismissSwipeTranslateY.value = e.translationY
     })
     .onEnd(e => {
       'worklet'
+      if (isFlyingAway.value) {
+        return
+      }
       if (Math.abs(e.velocityY) > 1000) {
         isFlyingAway.value = true
+        if (dismissSwipeTranslateY.value === 0) {
+          // HACK: If the initial value is 0, withDecay() animation doesn't start.
+          // This is a bug in Reanimated, but for now we'll work around it like this.
+          dismissSwipeTranslateY.value = 1
+        }
         dismissSwipeTranslateY.value = withDecay({
           velocity: e.velocityY,
           velocityFactor: Math.max(3000 / Math.abs(e.velocityY), 1), // Speed up if it's too slow.
@@ -274,22 +302,6 @@ function LightboxImage({
         })
       }
     })
-  useAnimatedReaction(
-    () => {
-      const screenSize = measure(safeAreaRef)
-      return (
-        !screenSize ||
-        Math.abs(dismissSwipeTranslateY.value) > screenSize.height
-      )
-    },
-    (isOut, wasOut) => {
-      if (isOut && !wasOut) {
-        // Stop the animation from blocking the screen forever.
-        cancelAnimation(dismissSwipeTranslateY)
-        runOnJS(onRequestClose)()
-      }
-    },
-  )
 
   const imageStyle = useAnimatedStyle(() => {
     return {
