@@ -31,8 +31,6 @@ import {
   TransformMatrix,
 } from '../../transforms'
 
-const AnimatedImage = Animated.createAnimatedComponent(Image)
-
 const MIN_SCREEN_ZOOM = 2
 const MAX_ORIGINAL_IMAGE_ZOOM = 2
 
@@ -344,14 +342,10 @@ const ImageItem = ({
     }
   })
 
-  const type = imageSrc.type
-  const borderRadius =
-    type === 'circle-avi' ? 1e5 : type === 'rect-avi' ? 20 : 0
   const imageStyle = useAnimatedStyle(() => {
     const {cropContentTransform} = transforms.value
     return {
       flex: 1,
-      borderRadius,
       transform: cropContentTransform,
     }
   })
@@ -371,13 +365,17 @@ const ImageItem = ({
     },
   )
 
+  const type = imageSrc.type
+  const borderRadius =
+    type === 'circle-avi' ? 1e5 : type === 'rect-avi' ? 20 : 0
+
   return (
     <GestureDetector gesture={composedGesture}>
       <Animated.View
         ref={containerRef}
         style={[styles.container]}
         renderToHardwareTextureAndroid>
-        <Animated.View style={containerStyle} renderToHardwareTextureAndroid>
+        <Animated.View style={containerStyle}>
           {showLoader && (
             <ActivityIndicator
               size="small"
@@ -385,20 +383,21 @@ const ImageItem = ({
               style={styles.loading}
             />
           )}
-          <Animated.View style={imageCropStyle} renderToHardwareTextureAndroid>
-            <AnimatedImage
-              renderToHardwareTextureAndroid
-              contentFit="cover"
-              source={{uri: imageSrc.uri}}
-              placeholderContentFit="cover"
-              placeholder={{uri: imageSrc.thumbUri}}
-              accessibilityLabel={imageSrc.alt}
-              onLoad={() => setHasLoaded(false)}
-              style={imageStyle}
-              accessibilityHint=""
-              accessibilityIgnoresInvertColors
-              cachePolicy="memory"
-            />
+          <Animated.View style={imageCropStyle}>
+            <Animated.View style={imageStyle}>
+              <Image
+                contentFit="cover"
+                source={{uri: imageSrc.uri}}
+                placeholderContentFit="cover"
+                placeholder={{uri: imageSrc.thumbUri}}
+                accessibilityLabel={imageSrc.alt}
+                onLoad={() => setHasLoaded(false)}
+                style={{flex: 1, borderRadius}}
+                accessibilityHint=""
+                accessibilityIgnoresInvertColors
+                cachePolicy="memory"
+              />
+            </Animated.View>
           </Animated.View>
         </Animated.View>
       </Animated.View>

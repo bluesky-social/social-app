@@ -30,8 +30,6 @@ import {
   Transform,
 } from '../../@types'
 
-const AnimatedImage = Animated.createAnimatedComponent(Image)
-
 const MAX_ORIGINAL_IMAGE_ZOOM = 2
 const MIN_SCREEN_ZOOM = 2
 
@@ -167,13 +165,9 @@ const ImageItem = ({
     }
   })
 
-  const type = imageSrc.type
-  const borderRadius =
-    type === 'circle-avi' ? 1e5 : type === 'rect-avi' ? 20 : 0
   const imageStyle = useAnimatedStyle(() => {
     const {cropContentTransform} = transforms.value
     return {
-      borderRadius,
       transform: cropContentTransform,
       width: '100%',
       aspectRatio: imageAspect,
@@ -195,6 +189,10 @@ const ImageItem = ({
     },
   )
 
+  const type = imageSrc.type
+  const borderRadius =
+    type === 'circle-avi' ? 1e5 : type === 'rect-avi' ? 20 : 0
+
   return (
     <GestureDetector gesture={composedGesture}>
       <Animated.ScrollView
@@ -213,19 +211,20 @@ const ImageItem = ({
           <ActivityIndicator size="small" color="#FFF" style={styles.loading} />
         )}
         <Animated.View style={imageCropStyle}>
-          <AnimatedImage
-            contentFit="contain"
-            source={{uri: imageSrc.uri}}
-            placeholderContentFit="contain"
-            placeholder={{uri: imageSrc.thumbUri}}
-            style={imageStyle}
-            accessibilityLabel={imageSrc.alt}
-            accessibilityHint=""
-            enableLiveTextInteraction={showControls && !scaled}
-            accessibilityIgnoresInvertColors
-            onLoad={() => setHasLoaded(true)}
-            cachePolicy="memory-disk"
-          />
+          <Animated.View style={imageStyle}>
+            <Image
+              contentFit="contain"
+              source={{uri: imageSrc.uri}}
+              placeholderContentFit="contain"
+              placeholder={{uri: imageSrc.thumbUri}}
+              style={{flex: 1, borderRadius}}
+              accessibilityLabel={imageSrc.alt}
+              accessibilityHint=""
+              enableLiveTextInteraction={showControls && !scaled}
+              accessibilityIgnoresInvertColors
+              onLoad={() => setHasLoaded(true)}
+            />
+          </Animated.View>
         </Animated.View>
       </Animated.ScrollView>
     </GestureDetector>
