@@ -27,11 +27,10 @@ export function ImageLayoutGrid({style, ...props}: ImageLayoutGridProps) {
         ? a.gap_xs
         : a.gap_2xs
       : a.gap_xs
-  const count = props.images.length
-  const aspectRatio = count === 3 ? 2 : undefined
+
   return (
     <View style={style}>
-      <View style={[gap, a.rounded_md, a.overflow_hidden, {aspectRatio}]}>
+      <View style={[gap, a.rounded_md, a.overflow_hidden]}>
         <ImageLayoutGridInner {...props} gap={gap} />
       </View>
     </View>
@@ -78,14 +77,14 @@ function ImageLayoutGridInner(props: ImageLayoutGridInnerProps) {
     case 3:
       return (
         <View style={[a.flex_1, a.flex_row, gap]}>
-          <View style={[a.flex_1]}>
+          <View style={[a.flex_1, {aspectRatio: 1}]}>
             <GalleryItem
               {...props}
               index={0}
               insetBorderStyle={noCorners(['topRight', 'bottomRight'])}
             />
           </View>
-          <View style={[a.flex_1, gap]}>
+          <View style={[a.flex_1, {aspectRatio: 1}, gap]}>
             <View style={[a.flex_1]}>
               <GalleryItem
                 {...props}
