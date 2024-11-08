@@ -448,7 +448,9 @@ let Row = function RowImpl<ItemT>({
   onItemSeen: ((item: any) => void) | undefined
 }): React.ReactNode {
   const rowRef = React.useRef(null)
-  const intersectionTimeout = React.useRef<NodeJS.Timer | undefined>(undefined)
+  const intersectionTimeout = React.useRef<
+    ReturnType<typeof setTimeout> | undefined
+  >(undefined)
 
   const handleIntersection = useNonReactiveCallback(
     (entries: IntersectionObserverEntry[]) => {
