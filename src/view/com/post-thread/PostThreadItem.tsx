@@ -30,6 +30,7 @@ import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replie
 import {PostThreadFollowBtn} from '#/view/com/post-thread/PostThreadFollowBtn'
 import {atoms as a, useTheme} from '#/alf'
 import {colors} from '#/components/Admonition'
+import {Button} from '#/components/Button'
 import {CalendarClock_Stroke2_Corner0_Rounded as CalendarClockIcon} from '#/components/icons/CalendarClock'
 import {InlineLinkText} from '#/components/Link'
 import {AppModerationCause} from '#/components/Pills'
@@ -773,50 +774,67 @@ function PostTimestamp({post}: {post: AppBskyFeedDefs.PostView}) {
   const isBackdated =
     indexedAt.getTime() - createdAt.getTime() > 24 * 60 * 60 * 1000
 
-  if (isBackdated) {
-    const orange =
-      t.name === 'light' ? colors.warning.dark : colors.warning.light
-    return (
-      <>
-        <NewText
-          style={[a.text_sm, t.atoms.text_contrast_medium]}
-          onPress={() => control.open()}
-          accessibilityHint={_(
-            msg`Show information about when this post was created`,
-          )}>
-          <Trans>
-            <CalendarClockIcon
-              fill={orange}
-              size="sm"
-              style={[{marginBottom: -3}]}
-            />{' '}
-            <NewText style={[a.font_bold, t.atoms.text_contrast_medium]}>
-              Archival
-            </NewText>{' '}
-            &middot; {niceDate(i18n, createdAt)}
-          </Trans>
-        </NewText>
-        <Prompt.Basic
-          control={control}
-          title={_(msg`Archival post`)}
-          description={_(
-            msg`This post claims to have been created at ${niceDate(
-              i18n,
-              createdAt,
-            )}, but was first seen by Bluesky at ${niceDate(i18n, indexedAt)}.`,
-          )}
-          confirmButtonCta={_(msg`Okay`)}
-          onConfirm={() => {}}
-          showCancel={false}
-        />
-      </>
-    )
-  }
+  const orange = t.name === 'light' ? colors.warning.dark : colors.warning.light
 
   return (
-    <NewText style={[a.text_sm, t.atoms.text_contrast_medium]}>
-      {niceDate(i18n, post.indexedAt)}
-    </NewText>
+    <>
+      {isBackdated && (
+        <Button
+          label={_(msg`Archival post`)}
+          accessibilityHint={_(
+            msg`Show information about when this post was created`,
+          )}
+          onPress={e => {
+            e.preventDefault()
+            e.stopPropagation()
+            control.open()
+          }}>
+          {({hovered, pressed}) => (
+            <View
+              style={[
+                a.flex_row,
+                a.align_center,
+                a.rounded_full,
+                t.atoms.bg_contrast_25,
+                (hovered || pressed) && t.atoms.bg_contrast_50,
+                {
+                  gap: 3,
+                  paddingHorizontal: 6,
+                  paddingVertical: 3,
+                },
+              ]}>
+              <CalendarClockIcon fill={orange} size="sm" />
+              <NewText
+                style={[
+                  a.text_xs,
+                  a.font_bold,
+                  a.leading_tight,
+                  t.atoms.text_contrast_medium,
+                ]}>
+                <Trans>Archival</Trans>
+              </NewText>
+            </View>
+          )}
+        </Button>
+      )}
+      <NewText style={[a.text_sm, t.atoms.text_contrast_medium]}>
+        {niceDate(i18n, post.indexedAt)}
+      </NewText>
+
+      <Prompt.Basic
+        control={control}
+        title={_(msg`Archival post`)}
+        description={_(
+          msg`This post claims to have been created at ${niceDate(
+            i18n,
+            createdAt,
+          )}, but was first seen by Bluesky at ${niceDate(i18n, indexedAt)}.`,
+        )}
+        confirmButtonCta={_(msg`Okay`)}
+        onConfirm={() => {}}
+        showCancel={false}
+      />
+    </>
   )
 }
 
