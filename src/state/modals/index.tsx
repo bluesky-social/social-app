@@ -48,11 +48,6 @@ export interface DeleteAccountModal {
   name: 'delete-account'
 }
 
-export interface ChangeHandleModal {
-  name: 'change-handle'
-  onChanged: () => void
-}
-
 export interface WaitlistModal {
   name: 'waitlist'
 }
@@ -102,7 +97,6 @@ export interface InAppBrowserConsentModal {
 export type Modal =
   // Account
   | AddAppPasswordModal
-  | ChangeHandleModal
   | DeleteAccountModal
   | VerifyEmailModal
   | ChangeEmailModal
