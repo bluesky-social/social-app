@@ -144,19 +144,19 @@ function DialogInner({
                 }}>
                 <View style={[a.gap_sm]}>
                   <Toggle.Item name="sexual" label={_(msg`Suggestive`)}>
-                    <Toggle.Radio />
+                    <Toggle.Checkbox />
                     <Toggle.LabelText>
                       <Trans>Suggestive</Trans>
                     </Toggle.LabelText>
                   </Toggle.Item>
                   <Toggle.Item name="nudity" label={_(msg`Nudity`)}>
-                    <Toggle.Radio />
+                    <Toggle.Checkbox />
                     <Toggle.LabelText>
                       <Trans>Nudity</Trans>
                     </Toggle.LabelText>
                   </Toggle.Item>
                   <Toggle.Item name="porn" label={_(msg`Porn`)}>
-                    <Toggle.Radio />
+                    <Toggle.Checkbox />
                     <Toggle.LabelText>
                       <Trans>Adult</Trans>
                     </Toggle.LabelText>
