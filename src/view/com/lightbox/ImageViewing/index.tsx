@@ -160,6 +160,23 @@ function ImageView({
     }
   }, [])
 
+  useAnimatedReaction(
+    () => {
+      const screenSize = measure(safeAreaRef)
+      return (
+        !screenSize ||
+        Math.abs(dismissSwipeTranslateY.value) > screenSize.height
+      )
+    },
+    (isOut, wasOut) => {
+      if (isOut && !wasOut) {
+        // Stop the animation from blocking the screen forever.
+        cancelAnimation(dismissSwipeTranslateY)
+        runOnJS(onRequestClose)()
+      }
+    },
+  )
+
   return (
     <Animated.View style={[styles.container, containerStyle]}>
       <Animated.View
@@ -285,22 +302,6 @@ function LightboxImage({
         })
       }
     })
-  useAnimatedReaction(
-    () => {
-      const screenSize = measure(safeAreaRef)
-      return (
-        !screenSize ||
-        Math.abs(dismissSwipeTranslateY.value) > screenSize.height
-      )
-    },
-    (isOut, wasOut) => {
-      if (isOut && !wasOut) {
-        // Stop the animation from blocking the screen forever.
-        cancelAnimation(dismissSwipeTranslateY)
-        runOnJS(onRequestClose)()
-      }
-    },
-  )
 
   const imageStyle = useAnimatedStyle(() => {
     return {
