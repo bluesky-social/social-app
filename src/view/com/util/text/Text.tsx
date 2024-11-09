@@ -44,8 +44,6 @@ export function Text({
   ...props
 }: React.PropsWithChildren<CustomTextProps>) {
   const theme = useTheme()
-  const typography = theme.typography[type]
-  const lineHeightStyle = lineHeight ? lh(theme, type, lineHeight) : undefined
   const {fonts} = useAlf()
 
   if (IS_DEV) {
@@ -61,6 +59,9 @@ export function Text({
   }
 
   const textProps = React.useMemo(() => {
+    const typography = theme.typography[type]
+    const lineHeightStyle = lineHeight ? lh(theme, type, lineHeight) : undefined
+
     const flattened = StyleSheet.flatten([
       s.black,
       typography,
@@ -80,25 +81,24 @@ export function Text({
       )
     }
 
-    const shared = {
+    return {
       uiTextView: selectable && isIOS,
       selectable,
       style: flattened,
       dataSet: Object.assign({tooltip: title}, dataSet || {}),
       ...props,
     }
-
-    return shared
   }, [
     dataSet,
     fonts.family,
     fonts.scaleMultiplier,
-    lineHeightStyle,
+    lineHeight,
     props,
     selectable,
     style,
+    theme,
     title,
-    typography,
+    type,
   ])
 
   if (selectable && isIOS) {
