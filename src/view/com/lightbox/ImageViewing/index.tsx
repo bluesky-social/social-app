@@ -9,23 +9,36 @@
 // https://github.com/jobtoday/react-native-image-viewing
 
 import React, {useCallback, useState} from 'react'
-import {LayoutAnimation, Platform, StyleSheet, View} from 'react-native'
+import {
+  LayoutAnimation,
+  PixelRatio,
+  Platform,
+  StyleSheet,
+  View,
+} from 'react-native'
 import {Gesture} from 'react-native-gesture-handler'
 import PagerView from 'react-native-pager-view'
 import Animated, {
   AnimatedRef,
   cancelAnimation,
+  interpolate,
   measure,
   runOnJS,
   SharedValue,
   useAnimatedReaction,
   useAnimatedRef,
   useAnimatedStyle,
+  useDerivedValue,
   useSharedValue,
   withDecay,
   withSpring,
 } from 'react-native-reanimated'
-import {Edge, SafeAreaView} from 'react-native-safe-area-context'
+import {
+  Edge,
+  SafeAreaView,
+  useSafeAreaFrame,
+  useSafeAreaInsets,
+} from 'react-native-safe-area-context'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Trans} from '@lingui/macro'
 
@@ -36,17 +49,24 @@ import {Lightbox} from '#/state/lightbox'
 import {Button} from '#/view/com/util/forms/Button'
 import {Text} from '#/view/com/util/text/Text'
 import {ScrollView} from '#/view/com/util/Views'
-import {ImageSource} from './@types'
+import {PlatformInfo} from '../../../../../modules/expo-bluesky-swiss-army'
+import {ImageSource, Transform} from './@types'
 import ImageDefaultHeader from './components/ImageDefaultHeader'
 import ImageItem from './components/ImageItem/ImageItem'
 
+type Rect = {x: number; y: number; width: number; height: number}
+
+const PIXEL_RATIO = PixelRatio.get()
 const EDGES =
   Platform.OS === 'android'
     ? (['top', 'bottom', 'left', 'right'] satisfies Edge[])
     : (['left', 'right'] satisfies Edge[]) // iOS, so no top/bottom safe area
 
+const SLOW_SPRING = {stiffness: 120}
+const FAST_SPRING = {stiffness: 700}
+
 export default function ImageViewRoot({
-  lightbox,
+  lightbox: nextLightbox,
   onRequestClose,
   onPressSave,
   onPressShare,
@@ -56,24 +76,70 @@ export default function ImageViewRoot({
   onPressSave: (uri: string) => void
   onPressShare: (uri: string) => void
 }) {
+  'use no memo'
   const ref = useAnimatedRef<View>()
+  const [activeLightbox, setActiveLightbox] = useState(nextLightbox)
+  const openProgress = useSharedValue(0)
+
+  if (!activeLightbox && nextLightbox) {
+    setActiveLightbox(nextLightbox)
+  }
+
+  React.useEffect(() => {
+    if (!nextLightbox) {
+      return
+    }
+
+    const canAnimate =
+      !PlatformInfo.getIsReducedMotionEnabled() &&
+      nextLightbox.images.every(img => img.dimensions && img.thumbRect)
+
+    // https://github.com/software-mansion/react-native-reanimated/issues/6677
+    requestAnimationFrame(() => {
+      openProgress.value = canAnimate ? withClampedSpring(1, SLOW_SPRING) : 1
+    })
+    return () => {
+      // https://github.com/software-mansion/react-native-reanimated/issues/6677
+      requestAnimationFrame(() => {
+        openProgress.value = canAnimate ? withClampedSpring(0, SLOW_SPRING) : 0
+      })
+    }
+  }, [nextLightbox, openProgress])
+
+  useAnimatedReaction(
+    () => openProgress.value === 0,
+    (isGone, wasGone) => {
+      if (isGone && !wasGone) {
+        runOnJS(setActiveLightbox)(null)
+      }
+    },
+  )
+
+  const onFlyAway = React.useCallback(() => {
+    'worklet'
+    openProgress.value = 0
+    runOnJS(onRequestClose)()
+  }, [onRequestClose, openProgress])
+
   return (
     // Keep it always mounted to avoid flicker on the first frame.
     <SafeAreaView
-      style={[styles.screen, !lightbox && styles.screenHidden]}
+      style={[styles.screen, !activeLightbox && styles.screenHidden]}
       edges={EDGES}
       aria-modal
       accessibilityViewIsModal
-      aria-hidden={!lightbox}>
+      aria-hidden={!activeLightbox}>
       <Animated.View ref={ref} style={{flex: 1}} collapsable={false}>
-        {lightbox && (
+        {activeLightbox && (
           <ImageView
-            key={lightbox.id}
-            lightbox={lightbox}
+            key={activeLightbox.id}
+            lightbox={activeLightbox}
             onRequestClose={onRequestClose}
             onPressSave={onPressSave}
             onPressShare={onPressShare}
+            onFlyAway={onFlyAway}
             safeAreaRef={ref}
+            openProgress={openProgress}
           />
         )}
       </Animated.View>
@@ -86,13 +152,17 @@ function ImageView({
   onRequestClose,
   onPressSave,
   onPressShare,
+  onFlyAway,
   safeAreaRef,
+  openProgress,
 }: {
   lightbox: Lightbox
   onRequestClose: () => void
   onPressSave: (uri: string) => void
   onPressShare: (uri: string) => void
+  onFlyAway: () => void
   safeAreaRef: AnimatedRef<View>
+  openProgress: SharedValue<number>
 }) {
   const {images, index: initialImageIndex} = lightbox
   const [isScaled, setIsScaled] = useState(false)
@@ -104,33 +174,41 @@ function ImageView({
   const isFlyingAway = useSharedValue(false)
 
   const containerStyle = useAnimatedStyle(() => {
-    if (isFlyingAway.value) {
+    if (openProgress.value < 1 || isFlyingAway.value) {
       return {pointerEvents: 'none'}
     }
     return {pointerEvents: 'auto'}
   })
+
   const backdropStyle = useAnimatedStyle(() => {
     const screenSize = measure(safeAreaRef)
     let opacity = 1
-    if (screenSize) {
+    if (openProgress.value < 1) {
+      opacity = Math.sqrt(openProgress.value)
+    } else if (screenSize) {
       const dragProgress = Math.min(
         Math.abs(dismissSwipeTranslateY.value) / (screenSize.height / 2),
         1,
       )
       opacity -= dragProgress
     }
+    const factor = isIOS ? 100 : 50
     return {
-      opacity,
+      opacity: Math.round(opacity * factor) / factor,
     }
   })
+
   const animatedHeaderStyle = useAnimatedStyle(() => {
     const show = showControls && dismissSwipeTranslateY.value === 0
     return {
       pointerEvents: show ? 'box-none' : 'none',
-      opacity: withClampedSpring(show ? 1 : 0),
+      opacity: withClampedSpring(
+        show && openProgress.value === 1 ? 1 : 0,
+        FAST_SPRING,
+      ),
       transform: [
         {
-          translateY: withClampedSpring(show ? 0 : -30),
+          translateY: withClampedSpring(show ? 0 : -30, FAST_SPRING),
         },
       ],
     }
@@ -140,10 +218,13 @@ function ImageView({
     return {
       flexGrow: 1,
       pointerEvents: show ? 'box-none' : 'none',
-      opacity: withClampedSpring(show ? 1 : 0),
+      opacity: withClampedSpring(
+        show && openProgress.value === 1 ? 1 : 0,
+        FAST_SPRING,
+      ),
       transform: [
         {
-          translateY: withClampedSpring(show ? 0 : 30),
+          translateY: withClampedSpring(show ? 0 : 30, FAST_SPRING),
         },
       ],
     }
@@ -172,7 +253,7 @@ function ImageView({
       if (isOut && !wasOut) {
         // Stop the animation from blocking the screen forever.
         cancelAnimation(dismissSwipeTranslateY)
-        runOnJS(onRequestClose)()
+        onFlyAway()
       }
     },
   )
@@ -209,6 +290,7 @@ function ImageView({
               isFlyingAway={isFlyingAway}
               isActive={i === imageIndex}
               dismissSwipeTranslateY={dismissSwipeTranslateY}
+              openProgress={openProgress}
             />
           </View>
         ))}
@@ -247,6 +329,7 @@ function LightboxImage({
   isActive,
   showControls,
   safeAreaRef,
+  openProgress,
   dismissSwipeTranslateY,
 }: {
   imageSrc: ImageSource
@@ -259,11 +342,71 @@ function LightboxImage({
   isFlyingAway: SharedValue<boolean>
   showControls: boolean
   safeAreaRef: AnimatedRef<View>
+  openProgress: SharedValue<number>
   dismissSwipeTranslateY: SharedValue<number>
 }) {
   const [imageAspect, imageDimensions] = useImageDimensions({
     src: imageSrc.uri,
     knownDimensions: imageSrc.dimensions,
+  })
+
+  const safeFrameDelayedForJSThreadOnly = useSafeAreaFrame()
+  const safeInsetsDelayedForJSThreadOnly = useSafeAreaInsets()
+  const measureSafeArea = React.useCallback(() => {
+    'worklet'
+    let safeArea: Rect | null = measure(safeAreaRef)
+    if (!safeArea) {
+      if (_WORKLET) {
+        console.error('Expected to always be able to measure safe area.')
+      }
+      const frame = safeFrameDelayedForJSThreadOnly
+      const insets = safeInsetsDelayedForJSThreadOnly
+      safeArea = {
+        x: frame.x + insets.left,
+        y: frame.y + insets.top,
+        width: frame.width - insets.left - insets.right,
+        height: frame.height - insets.top - insets.bottom,
+      }
+    }
+    return safeArea
+  }, [
+    safeFrameDelayedForJSThreadOnly,
+    safeInsetsDelayedForJSThreadOnly,
+    safeAreaRef,
+  ])
+
+  const {thumbRect} = imageSrc
+  const transforms = useDerivedValue(() => {
+    'worklet'
+    const safeArea = measureSafeArea()
+    const dismissTranslateY =
+      isActive && openProgress.value === 1 ? dismissSwipeTranslateY.value : 0
+
+    if (openProgress.value === 0 && isFlyingAway.value) {
+      return {
+        isHidden: true,
+        isResting: false,
+        scaleAndMoveTransform: [],
+        cropFrameTransform: [],
+        cropContentTransform: [],
+      }
+    }
+
+    if (isActive && thumbRect && imageAspect && openProgress.value < 1) {
+      return interpolateTransform(
+        openProgress.value,
+        thumbRect,
+        safeArea,
+        imageAspect,
+      )
+    }
+    return {
+      isHidden: false,
+      isResting: dismissTranslateY === 0,
+      scaleAndMoveTransform: [{translateY: dismissTranslateY}],
+      cropFrameTransform: [],
+      cropContentTransform: [],
+    }
   })
 
   const dismissSwipePan = Gesture.Pan()
@@ -273,14 +416,14 @@ function LightboxImage({
     .maxPointers(1)
     .onUpdate(e => {
       'worklet'
-      if (isFlyingAway.value) {
+      if (openProgress.value !== 1 || isFlyingAway.value) {
         return
       }
       dismissSwipeTranslateY.value = e.translationY
     })
     .onEnd(e => {
       'worklet'
-      if (isFlyingAway.value) {
+      if (openProgress.value !== 1 || isFlyingAway.value) {
         return
       }
       if (Math.abs(e.velocityY) > 1000) {
@@ -303,11 +446,6 @@ function LightboxImage({
       }
     })
 
-  const imageStyle = useAnimatedStyle(() => {
-    return {
-      transform: [{translateY: dismissSwipeTranslateY.value}],
-    }
-  })
   return (
     <ImageItem
       imageSrc={imageSrc}
@@ -316,11 +454,11 @@ function LightboxImage({
       onRequestClose={onRequestClose}
       isScrollViewBeingDragged={isScrollViewBeingDragged}
       showControls={showControls}
-      safeAreaRef={safeAreaRef}
+      measureSafeArea={measureSafeArea}
       imageAspect={imageAspect}
       imageDimensions={imageDimensions}
-      imageStyle={imageStyle}
       dismissSwipePan={dismissSwipePan}
+      transforms={transforms}
     />
   )
 }
@@ -476,7 +614,91 @@ const styles = StyleSheet.create({
   },
 })
 
-function withClampedSpring(value: any) {
+function interpolatePx(
+  px: number,
+  inputRange: readonly number[],
+  outputRange: readonly number[],
+) {
   'worklet'
-  return withSpring(value, {overshootClamping: true, stiffness: 300})
+  const value = interpolate(px, inputRange, outputRange)
+  return Math.round(value * PIXEL_RATIO) / PIXEL_RATIO
+}
+
+function interpolateTransform(
+  progress: number,
+  thumbnailDims: {
+    pageX: number
+    width: number
+    pageY: number
+    height: number
+  },
+  safeArea: {width: number; height: number; x: number; y: number},
+  imageAspect: number,
+): {
+  scaleAndMoveTransform: Transform
+  cropFrameTransform: Transform
+  cropContentTransform: Transform
+  isResting: boolean
+  isHidden: boolean
+} {
+  'worklet'
+  const thumbAspect = thumbnailDims.width / thumbnailDims.height
+  let uncroppedInitialWidth
+  let uncroppedInitialHeight
+  if (imageAspect > thumbAspect) {
+    uncroppedInitialWidth = thumbnailDims.height * imageAspect
+    uncroppedInitialHeight = thumbnailDims.height
+  } else {
+    uncroppedInitialWidth = thumbnailDims.width
+    uncroppedInitialHeight = thumbnailDims.width / imageAspect
+  }
+  const safeAreaAspect = safeArea.width / safeArea.height
+  let finalWidth
+  let finalHeight
+  if (safeAreaAspect > imageAspect) {
+    finalWidth = safeArea.height * imageAspect
+    finalHeight = safeArea.height
+  } else {
+    finalWidth = safeArea.width
+    finalHeight = safeArea.width / imageAspect
+  }
+  const initialScale = Math.min(
+    uncroppedInitialWidth / finalWidth,
+    uncroppedInitialHeight / finalHeight,
+  )
+  const croppedFinalWidth = thumbnailDims.width / initialScale
+  const croppedFinalHeight = thumbnailDims.height / initialScale
+  const screenCenterX = safeArea.width / 2
+  const screenCenterY = safeArea.height / 2
+  const thumbnailSafeAreaX = thumbnailDims.pageX - safeArea.x
+  const thumbnailSafeAreaY = thumbnailDims.pageY - safeArea.y
+  const thumbnailCenterX = thumbnailSafeAreaX + thumbnailDims.width / 2
+  const thumbnailCenterY = thumbnailSafeAreaY + thumbnailDims.height / 2
+  const initialTranslateX = thumbnailCenterX - screenCenterX
+  const initialTranslateY = thumbnailCenterY - screenCenterY
+  const scale = interpolate(progress, [0, 1], [initialScale, 1])
+  const translateX = interpolatePx(progress, [0, 1], [initialTranslateX, 0])
+  const translateY = interpolatePx(progress, [0, 1], [initialTranslateY, 0])
+  const cropScaleX = interpolate(
+    progress,
+    [0, 1],
+    [croppedFinalWidth / finalWidth, 1],
+  )
+  const cropScaleY = interpolate(
+    progress,
+    [0, 1],
+    [croppedFinalHeight / finalHeight, 1],
+  )
+  return {
+    isHidden: false,
+    isResting: progress === 1,
+    scaleAndMoveTransform: [{translateX}, {translateY}, {scale}],
+    cropFrameTransform: [{scaleX: cropScaleX}, {scaleY: cropScaleY}],
+    cropContentTransform: [{scaleX: 1 / cropScaleX}, {scaleY: 1 / cropScaleY}],
+  }
+}
+
+function withClampedSpring(value: any, {stiffness}: {stiffness: number}) {
+  'worklet'
+  return withSpring(value, {overshootClamping: true, stiffness})
 }

@@ -1,5 +1,6 @@
 import React from 'react'
 import {DimensionValue, Pressable, View} from 'react-native'
+import Animated, {AnimatedRef, useAnimatedRef} from 'react-native-reanimated'
 import {Image} from 'expo-image'
 import {AppBskyEmbedImages} from '@atproto/api'
 import {msg} from '@lingui/macro'
@@ -92,7 +93,7 @@ export function AutoSizedImage({
   image: AppBskyEmbedImages.ViewImage
   crop?: 'none' | 'square' | 'constrained'
   hideBadge?: boolean
-  onPress?: () => void
+  onPress?: (containerRef: AnimatedRef<React.Component<{}, {}, any>>) => void
   onLongPress?: () => void
   onPressIn?: () => void
 }) {
@@ -107,12 +108,14 @@ export function AutoSizedImage({
     src: image.thumb,
     knownDimensions: image.aspectRatio ?? null,
   })
+  const containerRef = useAnimatedRef()
+
   const cropDisabled = crop === 'none'
   const isCropped = rawIsCropped && !cropDisabled
   const hasAlt = !!image.alt
 
   const contents = (
-    <>
+    <Animated.View ref={containerRef} collapsable={false}>
       <Image
         style={[a.w_full, a.h_full]}
         source={image.thumb}
@@ -185,13 +188,13 @@ export function AutoSizedImage({
           )}
         </View>
       ) : null}
-    </>
+    </Animated.View>
   )
 
   if (cropDisabled) {
     return (
       <Pressable
-        onPress={onPress}
+        onPress={() => onPress?.(containerRef)}
         onLongPress={onLongPress}
         onPressIn={onPressIn}
         // alt here is what screen readers actually use
@@ -213,7 +216,7 @@ export function AutoSizedImage({
         fullBleed={crop === 'square'}
         aspectRatio={constrained ?? 1}>
         <Pressable
-          onPress={onPress}
+          onPress={() => onPress?.(containerRef)}
           onLongPress={onLongPress}
           onPressIn={onPressIn}
           // alt here is what screen readers actually use
