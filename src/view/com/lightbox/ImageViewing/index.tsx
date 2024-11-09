@@ -42,7 +42,7 @@ import {
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Trans} from '@lingui/macro'
 
-import {useImageDimensions} from '#/lib/media/image-sizes'
+import {Dimensions} from '#/lib/media/types'
 import {colors, s} from '#/lib/styles'
 import {isIOS} from '#/platform/detection'
 import {Lightbox} from '#/state/lightbox'
@@ -92,7 +92,9 @@ export default function ImageViewRoot({
 
     const canAnimate =
       !PlatformInfo.getIsReducedMotionEnabled() &&
-      nextLightbox.images.every(img => img.dimensions && img.thumbRect)
+      nextLightbox.images.every(
+        img => img.thumbRect && (img.dimensions || img.thumbDimensions),
+      )
 
     // https://github.com/software-mansion/react-native-reanimated/issues/6677
     requestAnimationFrame(() => {
@@ -345,10 +347,15 @@ function LightboxImage({
   openProgress: SharedValue<number>
   dismissSwipeTranslateY: SharedValue<number>
 }) {
-  const [imageAspect, imageDimensions] = useImageDimensions({
-    src: imageSrc.uri,
-    knownDimensions: imageSrc.dimensions,
-  })
+  const [fetchedDims, setFetchedDims] = React.useState<Dimensions | null>(null)
+  const dims = fetchedDims ?? imageSrc.dimensions ?? imageSrc.thumbDimensions
+  let imageAspect: number | undefined
+  if (dims) {
+    imageAspect = dims.width / dims.height
+    if (Number.isNaN(imageAspect)) {
+      imageAspect = undefined
+    }
+  }
 
   const safeFrameDelayedForJSThreadOnly = useSafeAreaFrame()
   const safeInsetsDelayedForJSThreadOnly = useSafeAreaInsets()
@@ -452,11 +459,12 @@ function LightboxImage({
       onTap={onTap}
       onZoom={onZoom}
       onRequestClose={onRequestClose}
+      onLoad={setFetchedDims}
       isScrollViewBeingDragged={isScrollViewBeingDragged}
       showControls={showControls}
       measureSafeArea={measureSafeArea}
       imageAspect={imageAspect}
-      imageDimensions={imageDimensions}
+      imageDimensions={dims ?? undefined}
       dismissSwipePan={dismissSwipePan}
       transforms={transforms}
     />

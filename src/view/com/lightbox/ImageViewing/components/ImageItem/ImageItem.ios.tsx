@@ -38,6 +38,7 @@ type Props = {
   onRequestClose: () => void
   onTap: () => void
   onZoom: (scaled: boolean) => void
+  onLoad: (dims: ImageDimensions) => void
   isScrollViewBeingDragged: boolean
   showControls: boolean
   measureSafeArea: () => {
@@ -64,6 +65,7 @@ const ImageItem = ({
   imageSrc,
   onTap,
   onZoom,
+  onLoad,
   showControls,
   measureSafeArea,
   imageAspect,
@@ -162,8 +164,9 @@ const ImageItem = ({
       transform: cropFrameTransform,
       width: screenSize.width,
       maxHeight: screenSize.height,
-      aspectRatio: imageAspect,
       alignSelf: 'center',
+      aspectRatio: imageAspect ?? 1 /* force onLoad */,
+      opacity: imageAspect === undefined ? 0 : 1,
     }
   })
 
@@ -172,7 +175,8 @@ const ImageItem = ({
     return {
       transform: cropContentTransform,
       width: '100%',
-      aspectRatio: imageAspect,
+      aspectRatio: imageAspect ?? 1 /* force onLoad */,
+      opacity: imageAspect === undefined ? 0 : 1,
     }
   })
 
@@ -224,7 +228,10 @@ const ImageItem = ({
               accessibilityHint=""
               enableLiveTextInteraction={showControls && !scaled}
               accessibilityIgnoresInvertColors
-              onLoad={() => setHasLoaded(true)}
+              onLoad={e => {
+                setHasLoaded(true)
+                onLoad({width: e.source.width, height: e.source.height})
+              }}
             />
           </Animated.View>
         </Animated.View>
