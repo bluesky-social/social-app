@@ -20,6 +20,16 @@ export const space = {
   _5xl: 40,
 } as const
 
+export const outerInset = {
+  _2xs: -1,
+  xs: -2,
+  sm: -4,
+  md: -6,
+  lg: -8,
+  xl: -10,
+  _2xl: -12,
+} as const
+
 export const fontSize = {
   _2xs: 10,
   xs: 12,

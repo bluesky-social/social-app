@@ -73,6 +73,7 @@ export const SearchInput = React.forwardRef<TextInput, SearchInputProps>(
               shape="round"
               variant="ghost"
               color="secondary">
+              <View style={[a.absolute, a.inset_outer_md, a.rounded_full]} />
               <ButtonIcon icon={X} size="xs" />
             </Button>
           </View>
