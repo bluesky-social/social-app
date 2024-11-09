@@ -558,41 +558,4 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
   },
-
-  navItemWrapper: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 12,
-    padding: 12,
-    borderRadius: 8,
-    gap: 10,
-  },
-  navItemIconWrapper: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: 28,
-    height: 24,
-    marginTop: 2,
-    zIndex: 1,
-  },
-  navItemIconWrapperTablet: {
-    width: 40,
-    height: 40,
-  },
-  navItemCount: {
-    position: 'absolute',
-    top: 0,
-    left: 15,
-    backgroundColor: colors.blue3,
-    color: colors.white,
-    fontSize: 12,
-    fontWeight: 'bold',
-    paddingHorizontal: 4,
-    borderRadius: 6,
-    overflow: 'hidden',
-  },
-  navItemCountTablet: {
-    left: 18,
-    fontSize: 14,
-  },
 })
