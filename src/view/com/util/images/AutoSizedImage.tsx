@@ -101,7 +101,7 @@ export function AutoSizedImage({
   }
 
   const cropDisabled = crop === 'none'
-  const isCropped = rawIsCropped
+  const isCropped = rawIsCropped && !cropDisabled
   const hasAlt = !!image.alt
 
   const contents = (
