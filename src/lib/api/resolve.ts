@@ -1,7 +1,6 @@
 import {
-  AppBskyActorDefs,
-  AppBskyFeedPost,
-  AppBskyGraphStarterpack,
+  AppBskyFeedDefs,
+  AppBskyGraphDefs,
   ComAtprotoRepoStrongRef,
 } from '@atproto/api'
 import {AtUri} from '@atproto/api'
@@ -41,28 +40,36 @@ type ResolvedPostRecord = {
   type: 'record'
   record: ComAtprotoRepoStrongRef.Main
   kind: 'post'
-  meta: {
-    text: string
-    indexedAt: string
-    author: AppBskyActorDefs.ProfileViewBasic
-  }
+  view: AppBskyFeedDefs.PostView
 }
 
-type ResolvedOtherRecord = {
+type ResolvedFeedRecord = {
   type: 'record'
   record: ComAtprotoRepoStrongRef.Main
-  kind: 'other'
-  meta: {
-    // We should replace this with a hydrated record (e.g. feed, list, starter pack)
-    // and change the composer preview to use the actual post embed components:
-    title: string
-  }
+  kind: 'feed'
+  view: AppBskyFeedDefs.GeneratorView
+}
+
+type ResolvedListRecord = {
+  type: 'record'
+  record: ComAtprotoRepoStrongRef.Main
+  kind: 'list'
+  view: AppBskyGraphDefs.ListView
+}
+
+type ResolvedStarterPackRecord = {
+  type: 'record'
+  record: ComAtprotoRepoStrongRef.Main
+  kind: 'starter-pack'
+  view: AppBskyGraphDefs.StarterPackView
 }
 
 export type ResolvedLink =
   | ResolvedExternalLink
   | ResolvedPostRecord
-  | ResolvedOtherRecord
+  | ResolvedFeedRecord
+  | ResolvedListRecord
+  | ResolvedStarterPackRecord
 
 export class EmbeddingDisabledError extends Error {
   constructor() {
@@ -92,11 +99,7 @@ export async function resolveLink(
         uri: post.uri,
       },
       kind: 'post',
-      meta: {
-        text: AppBskyFeedPost.isRecord(post.record) ? post.record.text : '',
-        indexedAt: post.indexedAt,
-        author: post.author,
-      },
+      view: post,
     }
   }
   if (isBskyCustomFeedUrl(uri)) {
@@ -111,11 +114,8 @@ export async function resolveLink(
         uri: res.data.view.uri,
         cid: res.data.view.cid,
       },
-      kind: 'other',
-      meta: {
-        // TODO: Include hydrated content instead.
-        title: res.data.view.displayName,
-      },
+      kind: 'feed',
+      view: res.data.view,
     }
   }
   if (isBskyListUrl(uri)) {
@@ -130,11 +130,8 @@ export async function resolveLink(
         uri: res.data.list.uri,
         cid: res.data.list.cid,
       },
-      kind: 'other',
-      meta: {
-        // TODO: Include hydrated content instead.
-        title: res.data.list.name,
-      },
+      kind: 'list',
+      view: res.data.list,
     }
   }
   if (isBskyStartUrl(uri) || isBskyStarterPackUrl(uri)) {
@@ -147,20 +144,14 @@ export async function resolveLink(
     const did = await fetchDid(parsed.name)
     const starterPack = createStarterPackUri({did, rkey: parsed.rkey})
     const res = await agent.app.bsky.graph.getStarterPack({starterPack})
-    const record = res.data.starterPack.record
     return {
       type: 'record',
       record: {
         uri: res.data.starterPack.uri,
         cid: res.data.starterPack.cid,
       },
-      kind: 'other',
-      meta: {
-        // TODO: Include hydrated content instead.
-        title: AppBskyGraphStarterpack.isRecord(record)
-          ? record.name
-          : 'Starter Pack',
-      },
+      kind: 'starter-pack',
+      view: res.data.starterPack,
     }
   }
   return resolveExternal(agent, uri)

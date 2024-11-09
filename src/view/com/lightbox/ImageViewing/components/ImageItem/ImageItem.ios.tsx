@@ -7,29 +7,29 @@
  */
 
 import React, {useState} from 'react'
-
-import {Dimensions, StyleSheet} from 'react-native'
-import {Image} from 'expo-image'
+import {ActivityIndicator, StyleProp, StyleSheet, View} from 'react-native'
+import {
+  Gesture,
+  GestureDetector,
+  PanGesture,
+} from 'react-native-gesture-handler'
 import Animated, {
-  interpolate,
+  AnimatedRef,
+  measure,
   runOnJS,
   useAnimatedRef,
   useAnimatedStyle,
-  useSharedValue,
 } from 'react-native-reanimated'
+import {useSafeAreaFrame} from 'react-native-safe-area-context'
+import {Image, ImageStyle} from 'expo-image'
+
 import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
-import {Gesture, GestureDetector} from 'react-native-gesture-handler'
+import {Dimensions as ImageDimensions, ImageSource} from '../../@types'
 
-import useImageDimensions from '../../hooks/useImageDimensions'
+const AnimatedImage = Animated.createAnimatedComponent(Image)
 
-import {ImageSource, Dimensions as ImageDimensions} from '../../@types'
-import {ImageLoading} from './ImageLoading'
-
-const SWIPE_CLOSE_OFFSET = 75
-const SWIPE_CLOSE_VELOCITY = 1
-const SCREEN = Dimensions.get('screen')
 const MAX_ORIGINAL_IMAGE_ZOOM = 2
-const MIN_DOUBLE_TAP_SCALE = 2
+const MIN_SCREEN_ZOOM = 2
 
 type Props = {
   imageSrc: ImageSource
@@ -38,52 +38,50 @@ type Props = {
   onZoom: (scaled: boolean) => void
   isScrollViewBeingDragged: boolean
   showControls: boolean
+  safeAreaRef: AnimatedRef<View>
+  imageAspect: number | undefined
+  imageDimensions: ImageDimensions | undefined
+  imageStyle: StyleProp<ImageStyle>
+  dismissSwipePan: PanGesture
 }
-
-const AnimatedImage = Animated.createAnimatedComponent(Image)
 
 const ImageItem = ({
   imageSrc,
   onTap,
   onZoom,
-  onRequestClose,
   showControls,
+  safeAreaRef,
+  imageAspect,
+  imageDimensions,
+  imageStyle,
+  dismissSwipePan,
 }: Props) => {
   const scrollViewRef = useAnimatedRef<Animated.ScrollView>()
-  const translationY = useSharedValue(0)
-  const [loaded, setLoaded] = useState(false)
   const [scaled, setScaled] = useState(false)
-  const imageDimensions = useImageDimensions(imageSrc)
-  const maxZoomScale = imageDimensions
-    ? (imageDimensions.width / SCREEN.width) * MAX_ORIGINAL_IMAGE_ZOOM
-    : 1
+  const screenSizeDelayedForJSThreadOnly = useSafeAreaFrame()
+  const maxZoomScale = Math.max(
+    MIN_SCREEN_ZOOM,
+    imageDimensions
+      ? (imageDimensions.width / screenSizeDelayedForJSThreadOnly.width) *
+          MAX_ORIGINAL_IMAGE_ZOOM
+      : 1,
+  )
 
   const animatedStyle = useAnimatedStyle(() => {
+    const screenSize = measure(safeAreaRef) ?? screenSizeDelayedForJSThreadOnly
     return {
-      opacity: interpolate(
-        translationY.value,
-        [-SWIPE_CLOSE_OFFSET, 0, SWIPE_CLOSE_OFFSET],
-        [0.5, 1, 0.5],
-      ),
+      width: screenSize.width,
+      maxHeight: screenSize.height,
+      alignSelf: 'center',
+      aspectRatio: imageAspect,
     }
   })
 
   const scrollHandler = useAnimatedScrollHandler({
     onScroll(e) {
       const nextIsScaled = e.zoomScale > 1
-      translationY.value = nextIsScaled ? 0 : e.contentOffset.y
       if (scaled !== nextIsScaled) {
         runOnJS(handleZoom)(nextIsScaled)
-      }
-    },
-    onEndDrag(e) {
-      const velocityY = e.velocity?.y ?? 0
-      const nextIsScaled = e.zoomScale > 1
-      if (scaled !== nextIsScaled) {
-        runOnJS(handleZoom)(nextIsScaled)
-      }
-      if (!nextIsScaled && Math.abs(velocityY) > SWIPE_CLOSE_VELOCITY) {
-        runOnJS(onRequestClose)()
       }
     },
   })
@@ -93,24 +91,13 @@ const ImageItem = ({
     setScaled(nextIsScaled)
   }
 
-  function handleDoubleTap(absoluteX: number, absoluteY: number) {
+  function zoomTo(nextZoomRect: {
+    x: number
+    y: number
+    width: number
+    height: number
+  }) {
     const scrollResponderRef = scrollViewRef?.current?.getScrollResponder()
-    let nextZoomRect = {
-      x: 0,
-      y: 0,
-      width: SCREEN.width,
-      height: SCREEN.height,
-    }
-
-    const willZoom = !scaled
-    if (willZoom) {
-      nextZoomRect = getZoomRectAfterDoubleTap(
-        imageDimensions,
-        absoluteX,
-        absoluteY,
-      )
-    }
-
     // @ts-ignore
     scrollResponderRef?.scrollResponderZoomTo({
       ...nextZoomRect, // This rect is in screen coordinates
@@ -119,39 +106,71 @@ const ImageItem = ({
   }
 
   const singleTap = Gesture.Tap().onEnd(() => {
+    'worklet'
     runOnJS(onTap)()
   })
 
   const doubleTap = Gesture.Tap()
     .numberOfTaps(2)
     .onEnd(e => {
+      'worklet'
+      const screenSize = measure(safeAreaRef)
+      if (!screenSize) {
+        return
+      }
       const {absoluteX, absoluteY} = e
-      runOnJS(handleDoubleTap)(absoluteX, absoluteY)
+      let nextZoomRect = {
+        x: 0,
+        y: 0,
+        width: screenSize.width,
+        height: screenSize.height,
+      }
+      const willZoom = !scaled
+      if (willZoom) {
+        nextZoomRect = getZoomRectAfterDoubleTap(
+          imageAspect,
+          absoluteX,
+          absoluteY,
+          screenSize,
+        )
+      }
+      runOnJS(zoomTo)(nextZoomRect)
     })
 
-  const composedGesture = Gesture.Exclusive(doubleTap, singleTap)
+  const composedGesture = Gesture.Exclusive(
+    dismissSwipePan,
+    doubleTap,
+    singleTap,
+  )
 
+  const type = imageSrc.type
+  const borderRadius =
+    type === 'circle-avi' ? 1e5 : type === 'rect-avi' ? 20 : 0
   return (
     <GestureDetector gesture={composedGesture}>
       <Animated.ScrollView
         // @ts-ignore Something's up with the types here
         ref={scrollViewRef}
-        style={styles.listItem}
         pinchGestureEnabled
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
         maximumZoomScale={maxZoomScale}
-        contentContainerStyle={styles.imageScrollContainer}
-        onScroll={scrollHandler}>
-        {(!loaded || !imageDimensions) && <ImageLoading />}
+        onScroll={scrollHandler}
+        bounces={scaled}
+        bouncesZoom={true}
+        style={imageStyle}
+        centerContent>
+        <ActivityIndicator size="small" color="#FFF" style={styles.loading} />
         <AnimatedImage
           contentFit="contain"
           source={{uri: imageSrc.uri}}
-          style={[styles.image, animatedStyle]}
+          placeholderContentFit="contain"
+          placeholder={{uri: imageSrc.thumbUri}}
+          style={[animatedStyle, {borderRadius}]}
           accessibilityLabel={imageSrc.alt}
           accessibilityHint=""
-          onLoad={() => setLoaded(true)}
           enableLiveTextInteraction={showControls && !scaled}
+          accessibilityIgnoresInvertColors
         />
       </Animated.ScrollView>
     </GestureDetector>
@@ -159,71 +178,71 @@ const ImageItem = ({
 }
 
 const styles = StyleSheet.create({
-  imageScrollContainer: {
-    height: SCREEN.height,
-  },
-  listItem: {
-    width: SCREEN.width,
-    height: SCREEN.height,
+  loading: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
   },
   image: {
-    width: SCREEN.width,
-    height: SCREEN.height,
+    flex: 1,
   },
 })
 
 const getZoomRectAfterDoubleTap = (
-  imageDimensions: ImageDimensions | null,
+  imageAspect: number | undefined,
   touchX: number,
   touchY: number,
+  screenSize: {width: number; height: number},
 ): {
   x: number
   y: number
   width: number
   height: number
 } => {
-  if (!imageDimensions) {
+  'worklet'
+  if (!imageAspect) {
     return {
       x: 0,
       y: 0,
-      width: SCREEN.width,
-      height: SCREEN.height,
+      width: screenSize.width,
+      height: screenSize.height,
     }
   }
 
   // First, let's figure out how much we want to zoom in.
   // We want to try to zoom in at least close enough to get rid of black bars.
-  const imageAspect = imageDimensions.width / imageDimensions.height
-  const screenAspect = SCREEN.width / SCREEN.height
+  const screenAspect = screenSize.width / screenSize.height
   const zoom = Math.max(
     imageAspect / screenAspect,
     screenAspect / imageAspect,
-    MIN_DOUBLE_TAP_SCALE,
+    MIN_SCREEN_ZOOM,
   )
   // Unlike in the Android version, we don't constrain the *max* zoom level here.
   // Instead, this is done in the ScrollView props so that it constraints pinch too.
 
   // Next, we'll be calculating the rectangle to "zoom into" in screen coordinates.
   // We already know the zoom level, so this gives us the rectangle size.
-  let rectWidth = SCREEN.width / zoom
-  let rectHeight = SCREEN.height / zoom
+  let rectWidth = screenSize.width / zoom
+  let rectHeight = screenSize.height / zoom
 
   // Before we settle on the zoomed rect, figure out the safe area it has to be inside.
   // We don't want to introduce new black bars or make existing black bars unbalanced.
   let minX = 0
   let minY = 0
-  let maxX = SCREEN.width - rectWidth
-  let maxY = SCREEN.height - rectHeight
+  let maxX = screenSize.width - rectWidth
+  let maxY = screenSize.height - rectHeight
   if (imageAspect >= screenAspect) {
     // The image has horizontal black bars. Exclude them from the safe area.
-    const renderedHeight = SCREEN.width / imageAspect
-    const horizontalBarHeight = (SCREEN.height - renderedHeight) / 2
+    const renderedHeight = screenSize.width / imageAspect
+    const horizontalBarHeight = (screenSize.height - renderedHeight) / 2
     minY += horizontalBarHeight
     maxY -= horizontalBarHeight
   } else {
     // The image has vertical black bars. Exclude them from the safe area.
-    const renderedWidth = SCREEN.height * imageAspect
-    const verticalBarWidth = (SCREEN.width - renderedWidth) / 2
+    const renderedWidth = screenSize.height * imageAspect
+    const verticalBarWidth = (screenSize.width - renderedWidth) / 2
     minX += verticalBarWidth
     maxX -= verticalBarWidth
   }
@@ -238,7 +257,7 @@ const getZoomRectAfterDoubleTap = (
     rectX = Math.max(rectX, minX)
   } else {
     // Keep the rect centered on the screen so that black bars are balanced.
-    rectX = SCREEN.width / 2 - rectWidth / 2
+    rectX = screenSize.width / 2 - rectWidth / 2
   }
   let rectY
   if (maxY >= minY) {
@@ -249,7 +268,7 @@ const getZoomRectAfterDoubleTap = (
     rectY = Math.max(rectY, minY)
   } else {
     // Keep the rect centered on the screen so that black bars are balanced.
-    rectY = SCREEN.height / 2 - rectHeight / 2
+    rectY = screenSize.height / 2 - rectHeight / 2
   }
 
   return {

@@ -15,9 +15,10 @@ import {MAX_LABELERS} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
 import {isAppLabeler} from '#/lib/moderation'
 import {logger} from '#/logger'
-import {isIOS} from '#/platform/detection'
+import {isIOS, isWeb} from '#/platform/detection'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {Shadow} from '#/state/cache/types'
+import {useModalControls} from '#/state/modals'
 import {useLabelerSubscriptionMutation} from '#/state/queries/labeler'
 import {useLikeMutation, useUnlikeMutation} from '#/state/queries/like'
 import {usePreferencesQuery} from '#/state/queries/preferences'
@@ -108,7 +109,7 @@ let ProfileHeaderLabeler = ({
     } catch (e: any) {
       Toast.show(
         _(
-          msg`There was an an issue contacting the server, please check your internet connection and try again.`,
+          msg`There was an issue contacting the server, please check your internet connection and try again.`,
         ),
         'xmark',
       )
@@ -116,10 +117,19 @@ let ProfileHeaderLabeler = ({
     }
   }, [labeler, playHaptic, likeUri, unlikeMod, likeMod, _])
 
+  const {openModal} = useModalControls()
   const editProfileControl = useDialogControl()
   const onPressEditProfile = React.useCallback(() => {
-    editProfileControl.open()
-  }, [editProfileControl])
+    if (isWeb) {
+      // temp, while we figure out the nested dialog bug
+      openModal({
+        name: 'edit-profile',
+        profile,
+      })
+    } else {
+      editProfileControl.open()
+    }
+  }, [editProfileControl, openModal, profile])
 
   const onPressSubscribe = React.useCallback(
     () =>

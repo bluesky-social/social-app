@@ -50,7 +50,6 @@ export function Composer({winHeight}: {winHeight: number}) {
         replyTo={state.replyTo}
         onPost={state.onPost}
         quote={state.quote}
-        quoteCount={state.quoteCount}
         mention={state.mention}
         text={state.text}
         imageUris={state.imageUris}

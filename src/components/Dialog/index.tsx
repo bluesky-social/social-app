@@ -15,10 +15,12 @@ import {
   useKeyboardHandler,
 } from 'react-native-keyboard-controller'
 import {runOnJS} from 'react-native-reanimated'
+import {ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript/hook/commonTypes'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {ScrollProvider} from '#/lib/ScrollContext'
 import {logger} from '#/logger'
 import {isAndroid, isIOS} from '#/platform/detection'
 import {useA11y} from '#/state/a11y'
@@ -228,6 +230,9 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
       nativeSnapPoint === BottomSheetSnapPoint.Full ? fullPadding : basePading
 
     const onScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+      if (!isAndroid) {
+        return
+      }
       const {contentOffset} = e.nativeEvent
       if (contentOffset.y > 0 && !disableDrag) {
         setDisableDrag(true)
@@ -262,21 +267,40 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
 
 export const InnerFlatList = React.forwardRef<
   ListMethods,
-  ListProps<any> & {webInnerStyle?: StyleProp<ViewStyle>}
+  ListProps<any> & {
+    webInnerStyle?: StyleProp<ViewStyle>
+    webInnerContentContainerStyle?: StyleProp<ViewStyle>
+  }
 >(function InnerFlatList({style, ...props}, ref) {
   const insets = useSafeAreaInsets()
-  const {nativeSnapPoint} = useDialogContext()
+  const {nativeSnapPoint, disableDrag, setDisableDrag} = useDialogContext()
+
+  const onScroll = (e: ReanimatedScrollEvent) => {
+    'worklet'
+    if (!isAndroid) {
+      return
+    }
+    const {contentOffset} = e
+    if (contentOffset.y > 0 && !disableDrag) {
+      runOnJS(setDisableDrag)(true)
+    } else if (contentOffset.y <= 1 && disableDrag) {
+      runOnJS(setDisableDrag)(false)
+    }
+  }
+
   return (
-    <List
-      keyboardShouldPersistTaps="handled"
-      bounces={nativeSnapPoint === BottomSheetSnapPoint.Full}
-      ListFooterComponent={
-        <View style={{height: insets.bottom + a.pt_5xl.paddingTop}} />
-      }
-      ref={ref}
-      {...props}
-      style={[style]}
-    />
+    <ScrollProvider onScroll={onScroll}>
+      <List
+        keyboardShouldPersistTaps="handled"
+        bounces={nativeSnapPoint === BottomSheetSnapPoint.Full}
+        ListFooterComponent={
+          <View style={{height: insets.bottom + a.pt_5xl.paddingTop}} />
+        }
+        ref={ref}
+        {...props}
+        style={[style]}
+      />
+    </ScrollProvider>
   )
 })
 

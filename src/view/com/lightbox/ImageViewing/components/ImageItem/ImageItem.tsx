@@ -1,8 +1,11 @@
 // default implementation fallback for web
 
 import React from 'react'
-import {View} from 'react-native'
-import {ImageSource} from '../../@types'
+import {ImageStyle, StyleProp, View} from 'react-native'
+import {PanGesture} from 'react-native-gesture-handler'
+import {AnimatedRef} from 'react-native-reanimated'
+
+import {Dimensions as ImageDimensions, ImageSource} from '../../@types'
 
 type Props = {
   imageSrc: ImageSource
@@ -11,6 +14,11 @@ type Props = {
   onZoom: (scaled: boolean) => void
   isScrollViewBeingDragged: boolean
   showControls: boolean
+  safeAreaRef: AnimatedRef<View>
+  imageAspect: number | undefined
+  imageDimensions: ImageDimensions | undefined
+  imageStyle: StyleProp<ImageStyle>
+  dismissSwipePan: PanGesture
 }
 
 const ImageItem = (_props: Props) => {

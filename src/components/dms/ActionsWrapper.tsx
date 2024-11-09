@@ -12,8 +12,8 @@ import {ChatBskyConvoDefs} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {HITSLOP_10} from 'lib/constants'
-import {useHaptics} from 'lib/haptics'
+import {HITSLOP_10} from '#/lib/constants'
+import {useHaptics} from '#/lib/haptics'
 import {atoms as a} from '#/alf'
 import {MessageMenu} from '#/components/dms/MessageMenu'
 import {useMenuControl} from '#/components/Menu'
@@ -53,9 +53,11 @@ export function ActionsWrapper({
     .numberOfTaps(2)
     .hitSlop(HITSLOP_10)
     .onEnd(open)
+    .runOnJS(true)
 
   const pressAndHoldGesture = Gesture.LongPress()
     .onStart(() => {
+      'worklet'
       scale.value = withTiming(1.05, {duration: 200}, finished => {
         if (!finished) return
         runOnJS(open)()
@@ -65,7 +67,6 @@ export function ActionsWrapper({
     .onTouchesUp(shrink)
     .onTouchesMove(shrink)
     .cancelsTouchesInView(false)
-    .runOnJS(true)
 
   const composedGestures = Gesture.Exclusive(
     doubleTapGesture,

@@ -1,7 +1,6 @@
 import React from 'react'
 import {Linking, View} from 'react-native'
 import {useSafeAreaFrame} from 'react-native-safe-area-context'
-import {ComAtprotoLabelDefs} from '@atproto/api'
 import {LABELS} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -17,11 +16,6 @@ import {
   UsePreferencesQueryResponse,
   usePreferencesSetAdultContentMutation,
 } from '#/state/queries/preferences'
-import {
-  useProfileQuery,
-  useProfileUpdateMutation,
-} from '#/state/queries/profile'
-import {useSession} from '#/state/session'
 import {isNonConfigurableModerationAuthority} from '#/state/session/additional-moderation-authorities'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
@@ -468,127 +462,7 @@ export function ModerationScreenInner({
           })}
         </View>
       )}
-
-      <Text
-        style={[
-          a.text_md,
-          a.font_bold,
-          a.pt_2xl,
-          a.pb_md,
-          t.atoms.text_contrast_high,
-        ]}>
-        <Trans>Logged-out visibility</Trans>
-      </Text>
-
-      <PwiOptOut />
-
       <View style={{height: 200}} />
     </ScrollView>
-  )
-}
-
-function PwiOptOut() {
-  const t = useTheme()
-  const {_} = useLingui()
-  const {currentAccount} = useSession()
-  const {data: profile} = useProfileQuery({did: currentAccount?.did})
-  const updateProfile = useProfileUpdateMutation()
-
-  const isOptedOut =
-    profile?.labels?.some(l => l.val === '!no-unauthenticated') || false
-  const canToggle = profile && !updateProfile.isPending
-
-  const onToggleOptOut = React.useCallback(() => {
-    if (!profile) {
-      return
-    }
-    let wasAdded = false
-    updateProfile.mutate({
-      profile,
-      updates: existing => {
-        // create labels attr if needed
-        existing.labels = ComAtprotoLabelDefs.isSelfLabels(existing.labels)
-          ? existing.labels
-          : {
-              $type: 'com.atproto.label.defs#selfLabels',
-              values: [],
-            }
-
-        // toggle the label
-        const hasLabel = existing.labels.values.some(
-          l => l.val === '!no-unauthenticated',
-        )
-        if (hasLabel) {
-          wasAdded = false
-          existing.labels.values = existing.labels.values.filter(
-            l => l.val !== '!no-unauthenticated',
-          )
-        } else {
-          wasAdded = true
-          existing.labels.values.push({val: '!no-unauthenticated'})
-        }
-
-        // delete if no longer needed
-        if (existing.labels.values.length === 0) {
-          delete existing.labels
-        }
-        return existing
-      },
-      checkCommitted: res => {
-        const exists = !!res.data.labels?.some(
-          l => l.val === '!no-unauthenticated',
-        )
-        return exists === wasAdded
-      },
-    })
-  }, [updateProfile, profile])
-
-  return (
-    <View style={[a.pt_sm]}>
-      <View style={[a.flex_row, a.align_center, a.justify_between, a.gap_lg]}>
-        <Toggle.Item
-          disabled={!canToggle}
-          value={isOptedOut}
-          onChange={onToggleOptOut}
-          name="logged_out_visibility"
-          style={a.flex_1}
-          label={_(
-            msg`Discourage apps from showing my account to logged-out users`,
-          )}>
-          <Toggle.Switch />
-          <Toggle.LabelText style={[a.text_md, a.flex_1]}>
-            <Trans>
-              Discourage apps from showing my account to logged-out users
-            </Trans>
-          </Toggle.LabelText>
-        </Toggle.Item>
-
-        {updateProfile.isPending && <Loader />}
-      </View>
-
-      <View style={[a.pt_md, a.gap_md, {paddingLeft: 38}]}>
-        <Text style={[a.leading_snug, t.atoms.text_contrast_high]}>
-          <Trans>
-            Bluesky will not show your profile and posts to logged-out users.
-            Other apps may not honor this request. This does not make your
-            account private.
-          </Trans>
-        </Text>
-        <Text style={[a.font_bold, a.leading_snug, t.atoms.text_contrast_high]}>
-          <Trans>
-            Note: Bluesky is an open and public network. This setting only
-            limits the visibility of your content on the Bluesky app and
-            website, and other apps may not respect this setting. Your content
-            may still be shown to logged-out users by other apps and websites.
-          </Trans>
-        </Text>
-
-        <InlineLinkText
-          label={_(msg`Learn more about what is public on Bluesky.`)}
-          to="https://blueskyweb.zendesk.com/hc/en-us/articles/15835264007693-Data-Privacy">
-          <Trans>Learn more about what is public on Bluesky.</Trans>
-        </InlineLinkText>
-      </View>
-    </View>
   )
 }

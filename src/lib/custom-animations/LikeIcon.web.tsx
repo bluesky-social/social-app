@@ -2,7 +2,7 @@ import React from 'react'
 import {View} from 'react-native'
 import {useReducedMotion} from 'react-native-reanimated'
 
-import {s} from 'lib/styles'
+import {s} from '#/lib/styles'
 import {useTheme} from '#/alf'
 import {
   Heart2_Filled_Stroke2_Corner0_Rounded as HeartIconFilled,
@@ -41,15 +41,15 @@ const circle2Keyframe = [
 export function AnimatedLikeIcon({
   isLiked,
   big,
-  isToggle,
+  hasBeenToggled,
 }: {
   isLiked: boolean
   big?: boolean
-  isToggle: boolean
+  hasBeenToggled: boolean
 }) {
   const t = useTheme()
   const size = big ? 22 : 18
-  const shouldAnimate = !useReducedMotion() && isToggle
+  const shouldAnimate = !useReducedMotion() && hasBeenToggled
   const prevIsLiked = React.useRef(isLiked)
 
   const likeIconRef = React.useRef<HTMLDivElement>(null)

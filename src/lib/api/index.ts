@@ -4,21 +4,27 @@ import {
   AppBskyEmbedRecord,
   AppBskyEmbedRecordWithMedia,
   AppBskyEmbedVideo,
+  AppBskyFeedPost,
   AtUri,
   BlobRef,
   BskyAgent,
   ComAtprotoLabelDefs,
+  ComAtprotoRepoApplyWrites,
   ComAtprotoRepoStrongRef,
   RichText,
 } from '@atproto/api'
+import {TID} from '@atproto/common-web'
+import * as dcbor from '@ipld/dag-cbor'
 import {t} from '@lingui/macro'
 import {QueryClient} from '@tanstack/react-query'
+import {sha256} from 'js-sha256'
+import {CID} from 'multiformats/cid'
+import * as Hasher from 'multiformats/hashes/hasher'
 
 import {isNetworkError} from '#/lib/strings/errors'
 import {shortenLinks, stripInvalidMentions} from '#/lib/strings/rich-text-manip'
 import {logger} from '#/logger'
 import {compressImage} from '#/state/gallery'
-import {writePostgateRecord} from '#/state/queries/postgate'
 import {
   fetchResolveGifQuery,
   fetchResolveLinkQuery,
@@ -26,16 +32,19 @@ import {
 import {
   createThreadgateRecord,
   threadgateAllowUISettingToAllowRecordValue,
-  writeThreadgateRecord,
 } from '#/state/queries/threadgate'
-import {ComposerDraft, EmbedDraft} from '#/view/com/composer/state/composer'
+import {
+  EmbedDraft,
+  PostDraft,
+  ThreadDraft,
+} from '#/view/com/composer/state/composer'
 import {createGIFDescription} from '../gif-alt-text'
 import {uploadBlob} from './upload-blob'
 
 export {uploadBlob}
 
 interface PostOpts {
-  draft: ComposerDraft
+  thread: ThreadDraft
   replyTo?: string
   onStateChange?: (state: string) => void
   langs?: string[]
@@ -46,53 +55,16 @@ export async function post(
   queryClient: QueryClient,
   opts: PostOpts,
 ) {
-  const draft = opts.draft
-  let reply
-  let rt = new RichText(
-    {text: draft.richtext.text.trimEnd()},
-    {cleanNewlines: true},
-  )
-
+  const thread = opts.thread
   opts.onStateChange?.(t`Processing...`)
 
-  await rt.detectFacets(agent)
-
-  rt = shortenLinks(rt)
-  rt = stripInvalidMentions(rt)
-
-  const embed = await resolveEmbed(
-    agent,
-    queryClient,
-    draft,
-    opts.onStateChange,
-  )
-
-  // add replyTo if post is a reply to another post
+  let replyPromise:
+    | Promise<AppBskyFeedPost.Record['reply']>
+    | AppBskyFeedPost.Record['reply']
+    | undefined
   if (opts.replyTo) {
-    const replyToUrip = new AtUri(opts.replyTo)
-    const parentPost = await agent.getPost({
-      repo: replyToUrip.host,
-      rkey: replyToUrip.rkey,
-    })
-    if (parentPost) {
-      const parentRef = {
-        uri: parentPost.uri,
-        cid: parentPost.cid,
-      }
-      reply = {
-        root: parentPost.value.reply?.root || parentRef,
-        parent: parentRef,
-      }
-    }
-  }
-
-  // set labels
-  let labels: ComAtprotoLabelDefs.SelfLabels | undefined
-  if (draft.labels.length) {
-    labels = {
-      $type: 'com.atproto.label.defs#selfLabels',
-      values: draft.labels.map(val => ({val})),
-    }
+    // Not awaited to avoid waterfalls.
+    replyPromise = resolveReply(agent, opts.replyTo)
   }
 
   // add top 3 languages from user preferences if langs is provided
@@ -101,16 +73,108 @@ export async function post(
     langs = opts.langs.slice(0, 3)
   }
 
-  let res
-  try {
-    opts.onStateChange?.(t`Posting...`)
-    res = await agent.post({
+  const did = agent.assertDid
+  const writes: ComAtprotoRepoApplyWrites.Create[] = []
+  const uris: string[] = []
+
+  let now = new Date()
+  let tid: TID | undefined
+
+  for (let i = 0; i < thread.posts.length; i++) {
+    const draft = thread.posts[i]
+
+    // Not awaited to avoid waterfalls.
+    const rtPromise = resolveRT(agent, draft.richtext)
+    const embedPromise = resolveEmbed(
+      agent,
+      queryClient,
+      draft,
+      opts.onStateChange,
+    )
+    let labels: ComAtprotoLabelDefs.SelfLabels | undefined
+    if (draft.labels.length) {
+      labels = {
+        $type: 'com.atproto.label.defs#selfLabels',
+        values: draft.labels.map(val => ({val})),
+      }
+    }
+
+    // The sorting behavior for multiple posts sharing the same createdAt time is
+    // undefined, so what we'll do here is increment the time by 1 for every post
+    now.setMilliseconds(now.getMilliseconds() + 1)
+    tid = TID.next(tid)
+    const rkey = tid.toString()
+    const uri = `at://${did}/app.bsky.feed.post/${rkey}`
+    uris.push(uri)
+
+    const rt = await rtPromise
+    const embed = await embedPromise
+    const reply = await replyPromise
+    const record: AppBskyFeedPost.Record = {
+      // IMPORTANT: $type has to exist, CID is calculated with the `$type` field
+      // present and will produce the wrong CID if you omit it.
+      $type: 'app.bsky.feed.post',
+      createdAt: now.toISOString(),
       text: rt.text,
       facets: rt.facets,
       reply,
       embed,
       langs,
       labels,
+    }
+    writes.push({
+      $type: 'com.atproto.repo.applyWrites#create',
+      collection: 'app.bsky.feed.post',
+      rkey: rkey,
+      value: record,
+    })
+
+    if (i === 0 && thread.threadgate.some(tg => tg.type !== 'everybody')) {
+      writes.push({
+        $type: 'com.atproto.repo.applyWrites#create',
+        collection: 'app.bsky.feed.threadgate',
+        rkey: rkey,
+        value: createThreadgateRecord({
+          createdAt: now.toISOString(),
+          post: uri,
+          allow: threadgateAllowUISettingToAllowRecordValue(thread.threadgate),
+        }),
+      })
+    }
+
+    if (
+      thread.postgate.embeddingRules?.length ||
+      thread.postgate.detachedEmbeddingUris?.length
+    ) {
+      writes.push({
+        $type: 'com.atproto.repo.applyWrites#create',
+        collection: 'app.bsky.feed.postgate',
+        rkey: rkey,
+        value: {
+          ...thread.postgate,
+          $type: 'app.bsky.feed.postgate',
+          createdAt: now.toISOString(),
+          post: uri,
+        },
+      })
+    }
+
+    // Prepare a ref to the current post for the next post in the thread.
+    const ref = {
+      cid: await computeCid(record),
+      uri,
+    }
+    replyPromise = {
+      root: reply?.root ?? ref,
+      parent: ref,
+    }
+  }
+
+  try {
+    await agent.com.atproto.repo.applyWrites({
+      repo: agent.assertDid,
+      writes: writes,
+      validate: true,
     })
   } catch (e: any) {
     logger.error(`Failed to create post`, {
@@ -125,60 +189,40 @@ export async function post(
     }
   }
 
-  if (draft.threadgate.some(tg => tg.type !== 'everybody')) {
-    try {
-      // TODO: this needs to be batch-created with the post!
-      await writeThreadgateRecord({
-        agent,
-        postUri: res.uri,
-        threadgate: createThreadgateRecord({
-          post: res.uri,
-          allow: threadgateAllowUISettingToAllowRecordValue(draft.threadgate),
-        }),
-      })
-    } catch (e: any) {
-      logger.error(`Failed to create threadgate`, {
-        context: 'composer',
-        safeMessage: e.message,
-      })
-      throw new Error(
-        t`Failed to save post interaction settings. Your post was created but users may be able to interact with it.`,
-      )
+  return {uris}
+}
+
+async function resolveRT(agent: BskyAgent, richtext: RichText) {
+  let rt = new RichText({text: richtext.text.trimEnd()}, {cleanNewlines: true})
+  await rt.detectFacets(agent)
+
+  rt = shortenLinks(rt)
+  rt = stripInvalidMentions(rt)
+  return rt
+}
+
+async function resolveReply(agent: BskyAgent, replyTo: string) {
+  const replyToUrip = new AtUri(replyTo)
+  const parentPost = await agent.getPost({
+    repo: replyToUrip.host,
+    rkey: replyToUrip.rkey,
+  })
+  if (parentPost) {
+    const parentRef = {
+      uri: parentPost.uri,
+      cid: parentPost.cid,
+    }
+    return {
+      root: parentPost.value.reply?.root || parentRef,
+      parent: parentRef,
     }
   }
-
-  if (
-    draft.postgate.embeddingRules?.length ||
-    draft.postgate.detachedEmbeddingUris?.length
-  ) {
-    try {
-      // TODO: this needs to be batch-created with the post!
-      await writePostgateRecord({
-        agent,
-        postUri: res.uri,
-        postgate: {
-          ...draft.postgate,
-          post: res.uri,
-        },
-      })
-    } catch (e: any) {
-      logger.error(`Failed to create postgate`, {
-        context: 'composer',
-        safeMessage: e.message,
-      })
-      throw new Error(
-        t`Failed to save post interaction settings. Your post was created but users may be able to interact with it.`,
-      )
-    }
-  }
-
-  return res
 }
 
 async function resolveEmbed(
   agent: BskyAgent,
   queryClient: QueryClient,
-  draft: ComposerDraft,
+  draft: PostDraft,
   onStateChange: ((state: string) => void) | undefined,
 ): Promise<
   | AppBskyEmbedImages.Main
@@ -356,4 +400,82 @@ async function resolveRecord(
     throw Error(t`Expected uri to resolve to a record`)
   }
   return resolvedLink.record
+}
+
+// The built-in hashing functions from multiformats (`multiformats/hashes/sha2`)
+// are meant for Node.js, this is the cross-platform equivalent.
+const mf_sha256 = Hasher.from({
+  name: 'sha2-256',
+  code: 0x12,
+  encode: input => {
+    const digest = sha256.arrayBuffer(input)
+    return new Uint8Array(digest)
+  },
+})
+
+async function computeCid(record: AppBskyFeedPost.Record): Promise<string> {
+  // IMPORTANT: `prepareObject` prepares the record to be hashed by removing
+  // fields with undefined value, and converting BlobRef instances to the
+  // right IPLD representation.
+  const prepared = prepareForHashing(record)
+  // 1. Encode the record into DAG-CBOR format
+  const encoded = dcbor.encode(prepared)
+  // 2. Hash the record in SHA-256 (code 0x12)
+  const digest = await mf_sha256.digest(encoded)
+  // 3. Create a CIDv1, specifying DAG-CBOR as content (code 0x71)
+  const cid = CID.createV1(0x71, digest)
+  // 4. Get the Base32 representation of the CID (`b` prefix)
+  return cid.toString()
+}
+
+// Returns a transformed version of the object for use in DAG-CBOR.
+function prepareForHashing(v: any): any {
+  // IMPORTANT: BlobRef#ipld() returns the correct object we need for hashing,
+  // the API client will convert this for you but we're hashing in the client,
+  // so we need it *now*.
+  if (v instanceof BlobRef) {
+    return v.ipld()
+  }
+
+  // Walk through arrays
+  if (Array.isArray(v)) {
+    let pure = true
+    const mapped = v.map(value => {
+      if (value !== (value = prepareForHashing(value))) {
+        pure = false
+      }
+      return value
+    })
+    return pure ? v : mapped
+  }
+
+  // Walk through plain objects
+  if (isPlainObject(v)) {
+    const obj: any = {}
+    let pure = true
+    for (const key in v) {
+      let value = v[key]
+      // `value` is undefined
+      if (value === undefined) {
+        pure = false
+        continue
+      }
+      // `prepareObject` returned a value that's different from what we had before
+      if (value !== (value = prepareForHashing(value))) {
+        pure = false
+      }
+      obj[key] = value
+    }
+    // Return as is if we haven't needed to tamper with anything
+    return pure ? v : obj
+  }
+  return v
+}
+
+function isPlainObject(v: any): boolean {
+  if (typeof v !== 'object' || v === null) {
+    return false
+  }
+  const proto = Object.getPrototypeOf(v)
+  return proto === Object.prototype || proto === null
 }

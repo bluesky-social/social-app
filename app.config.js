@@ -99,6 +99,8 @@ module.exports = function (config) {
           dark: DARK_SPLASH_CONFIG,
         },
         entitlements: {
+          'com.apple.developer.kernel.increased-memory-limit': true,
+          'com.apple.developer.kernel.extended-virtual-addressing': true,
           'com.apple.security.application-groups': 'group.app.bsky',
         },
         privacyManifests: {
@@ -236,6 +238,13 @@ module.exports = function (config) {
             fonts: [
               './assets/fonts/inter/InterVariable.ttf',
               './assets/fonts/inter/InterVariable-Italic.ttf',
+              // Android only
+              './assets/fonts/inter/Inter-Regular.otf',
+              './assets/fonts/inter/Inter-Italic.otf',
+              './assets/fonts/inter/Inter-SemiBold.otf',
+              './assets/fonts/inter/Inter-SemiBoldItalic.otf',
+              './assets/fonts/inter/Inter-ExtraBold.otf',
+              './assets/fonts/inter/Inter-ExtraBoldItalic.otf',
             ],
           },
         ],

@@ -23,7 +23,6 @@ appId: xyz.blueskyweb.app
     id: "editDescriptionInput"
 - inputText: "They good"
 - tapOn: "Save"
-- tapOn: "Save"
 - assertNotVisible:
     id: "createOrEditListModal"
 - tapOn: "About"
@@ -46,7 +45,6 @@ appId: xyz.blueskyweb.app
 - eraseText
 - inputText: "They bad"
 - tapOn: "Save"
-- tapOn: "Save"
 - assertNotVisible:
     id: "createOrEditListModal"
 - assertVisible: Bad Ppl
@@ -61,7 +59,6 @@ appId: xyz.blueskyweb.app
 - tapOn:
     id: "editDescriptionInput"
 - eraseText
-- tapOn: "Save"
 - tapOn: "Save"
 - assertNotVisible:
     id: "createOrEditListModal"
@@ -89,7 +86,6 @@ appId: xyz.blueskyweb.app
 - tapOn:
     id: "editDescriptionInput"
 - inputText: "They good"
-- tapOn: "Save"
 - tapOn: "Save"
 - assertNotVisible:
     id: "createOrEditListModal"

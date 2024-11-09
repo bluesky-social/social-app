@@ -16,4 +16,10 @@ export type Position = {
   y: number
 }
 
-export type ImageSource = {uri: string; alt?: string}
+export type ImageSource = {
+  uri: string
+  thumbUri: string
+  alt?: string
+  dimensions: Dimensions | null
+  type: 'image' | 'circle-avi' | 'rect-avi'
+}

@@ -6,11 +6,11 @@ import {sanitizeAppLanguageSetting} from '#/locale/helpers'
 import {APP_LANGUAGES} from '#/locale/languages'
 import {useLanguagePrefs, useLanguagePrefsApi} from '#/state/preferences'
 import {resetPostsFeedQueries} from '#/state/queries/post-feed'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, useTheme, ViewStyleProp} from '#/alf'
 import {ChevronBottom_Stroke2_Corner0_Rounded as ChevronDown} from '#/components/icons/Chevron'
 import {Text} from '#/components/Typography'
 
-export function AppLanguageDropdown() {
+export function AppLanguageDropdown({style}: ViewStyleProp) {
   const t = useTheme()
 
   const queryClient = useQueryClient()
@@ -40,6 +40,7 @@ export function AppLanguageDropdown() {
         // We don't have hitSlop here to increase the tap region,
         // alternative is negative margins.
         {height: 32, marginVertical: -((32 - 14) / 2)},
+        style,
       ]}>
       <View
         style={[

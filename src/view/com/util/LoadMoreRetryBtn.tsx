@@ -4,9 +4,10 @@ import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
+
+import {usePalette} from '#/lib/hooks/usePalette'
 import {Button} from './forms/Button'
 import {Text} from './text/Text'
-import {usePalette} from 'lib/hooks/usePalette'
 
 export function LoadMoreRetryBtn({
   label,

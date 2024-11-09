@@ -12,6 +12,7 @@ appId: xyz.blueskyweb.app
 # Navigate to another user profile via autocomplete
 - tapOn:
     id: "bottomBarSearchBtn"
+- assertVisible: "Search"
 - tapOn: "Search"
 - inputText: "b"
 - tapOn:

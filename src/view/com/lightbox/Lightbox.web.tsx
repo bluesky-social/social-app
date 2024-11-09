@@ -2,35 +2,27 @@ import React, {useCallback, useEffect, useState} from 'react'
 import {
   Image,
   ImageStyle,
+  Pressable,
+  StyleSheet,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  StyleSheet,
   View,
-  Pressable,
   ViewStyle,
 } from 'react-native'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {colors, s} from 'lib/styles'
-import ImageDefaultHeader from './ImageViewing/components/ImageDefaultHeader'
-import {Text} from '../util/text/Text'
-import {useLingui} from '@lingui/react'
 import {msg} from '@lingui/macro'
-import {
-  useLightbox,
-  useLightboxControls,
-  ImagesLightbox,
-  ProfileImageLightbox,
-} from '#/state/lightbox'
+import {useLingui} from '@lingui/react'
+
 import {useWebBodyScrollLock} from '#/lib/hooks/useWebBodyScrollLock'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-
-interface Img {
-  uri: string
-  alt?: string
-}
+import {colors, s} from '#/lib/styles'
+import {useLightbox, useLightboxControls} from '#/state/lightbox'
+import {Text} from '../util/text/Text'
+import {ImageSource} from './ImageViewing/@types'
+import ImageDefaultHeader from './ImageViewing/components/ImageDefaultHeader'
 
 export function Lightbox() {
   const {activeLightbox} = useLightbox()
@@ -42,24 +34,8 @@ export function Lightbox() {
     return null
   }
 
-  const initialIndex =
-    activeLightbox instanceof ImagesLightbox ? activeLightbox.index : 0
-
-  let imgs: Img[] | undefined
-  if (activeLightbox instanceof ProfileImageLightbox) {
-    const opts = activeLightbox
-    if (opts.profile.avatar) {
-      imgs = [{uri: opts.profile.avatar}]
-    }
-  } else if (activeLightbox instanceof ImagesLightbox) {
-    const opts = activeLightbox
-    imgs = opts.images
-  }
-
-  if (!imgs) {
-    return null
-  }
-
+  const initialIndex = activeLightbox.index
+  const imgs = activeLightbox.images
   return (
     <LightboxInner
       imgs={imgs}
@@ -74,7 +50,7 @@ function LightboxInner({
   initialIndex = 0,
   onClose,
 }: {
-  imgs: Img[]
+  imgs: ImageSource[]
   initialIndex: number
   onClose: () => void
 }) {
@@ -121,6 +97,8 @@ function LightboxInner({
     return isTabletOrDesktop ? 32 : 24
   }, [isTabletOrDesktop])
 
+  const img = imgs[index]
+  const isAvi = img.type === 'circle-avi' || img.type === 'rect-avi'
   return (
     <View style={styles.mask}>
       <TouchableWithoutFeedback
@@ -129,55 +107,76 @@ function LightboxInner({
         accessibilityLabel={_(msg`Close image viewer`)}
         accessibilityHint={_(msg`Exits image view`)}
         onAccessibilityEscape={onClose}>
-        <View style={styles.imageCenterer}>
-          <Image
-            accessibilityIgnoresInvertColors
-            source={imgs[index]}
-            style={styles.image as ImageStyle}
-            accessibilityLabel={imgs[index].alt}
-            accessibilityHint=""
-          />
-          {canGoLeft && (
-            <TouchableOpacity
-              onPress={onPressLeft}
-              style={[
-                styles.btn,
-                btnStyle,
-                styles.leftBtn,
-                styles.blurredBackground,
-              ]}
-              accessibilityRole="button"
-              accessibilityLabel={_(msg`Previous image`)}
-              accessibilityHint="">
-              <FontAwesomeIcon
-                icon="angle-left"
-                style={styles.icon as FontAwesomeIconStyle}
-                size={iconSize}
-              />
-            </TouchableOpacity>
-          )}
-          {canGoRight && (
-            <TouchableOpacity
-              onPress={onPressRight}
-              style={[
-                styles.btn,
-                btnStyle,
-                styles.rightBtn,
-                styles.blurredBackground,
-              ]}
-              accessibilityRole="button"
-              accessibilityLabel={_(msg`Next image`)}
-              accessibilityHint="">
-              <FontAwesomeIcon
-                icon="angle-right"
-                style={styles.icon as FontAwesomeIconStyle}
-                size={iconSize}
-              />
-            </TouchableOpacity>
-          )}
-        </View>
+        {isAvi ? (
+          <View style={styles.aviCenterer}>
+            <img
+              src={img.uri}
+              // @ts-ignore web-only
+              style={
+                {
+                  ...styles.avi,
+                  borderRadius:
+                    img.type === 'circle-avi'
+                      ? '50%'
+                      : img.type === 'rect-avi'
+                      ? '10%'
+                      : 0,
+                } as ImageStyle
+              }
+              alt={img.alt}
+            />
+          </View>
+        ) : (
+          <View style={styles.imageCenterer}>
+            <Image
+              accessibilityIgnoresInvertColors
+              source={img}
+              style={styles.image as ImageStyle}
+              accessibilityLabel={img.alt}
+              accessibilityHint=""
+            />
+            {canGoLeft && (
+              <TouchableOpacity
+                onPress={onPressLeft}
+                style={[
+                  styles.btn,
+                  btnStyle,
+                  styles.leftBtn,
+                  styles.blurredBackground,
+                ]}
+                accessibilityRole="button"
+                accessibilityLabel={_(msg`Previous image`)}
+                accessibilityHint="">
+                <FontAwesomeIcon
+                  icon="angle-left"
+                  style={styles.icon as FontAwesomeIconStyle}
+                  size={iconSize}
+                />
+              </TouchableOpacity>
+            )}
+            {canGoRight && (
+              <TouchableOpacity
+                onPress={onPressRight}
+                style={[
+                  styles.btn,
+                  btnStyle,
+                  styles.rightBtn,
+                  styles.blurredBackground,
+                ]}
+                accessibilityRole="button"
+                accessibilityLabel={_(msg`Next image`)}
+                accessibilityHint="">
+                <FontAwesomeIcon
+                  icon="angle-right"
+                  style={styles.icon as FontAwesomeIconStyle}
+                  size={iconSize}
+                />
+              </TouchableOpacity>
+            )}
+          </View>
+        )}
       </TouchableWithoutFeedback>
-      {imgs[index].alt ? (
+      {img.alt ? (
         <View style={styles.footer}>
           <Pressable
             accessibilityLabel={_(msg`Expand alt text`)}
@@ -191,7 +190,7 @@ function LightboxInner({
               style={s.white}
               numberOfLines={isAltExpanded ? 0 : 3}
               ellipsizeMode="tail">
-              {imgs[index].alt}
+              {img.alt}
             </Text>
           </Pressable>
         </View>
@@ -222,6 +221,19 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     resizeMode: 'contain',
+  },
+  aviCenterer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  avi: {
+    // @ts-ignore web-only
+    maxWidth: `calc(min(400px, 100vw))`,
+    // @ts-ignore web-only
+    maxHeight: `calc(min(400px, 100vh))`,
+    padding: 16,
+    boxSizing: 'border-box',
   },
   icon: {
     color: colors.white,

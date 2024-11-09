@@ -23,7 +23,9 @@ func ExpandPostText(post *appbsky.FeedPost) string {
 			}
 
 			// bail out if bounds checks fail
-			if int(facet.Index.ByteStart)+charsAdded > len(postText) || int(facet.Index.ByteEnd)+charsAdded > len(postText) {
+			if facet.Index.ByteStart > facet.Index.ByteEnd ||
+				int(facet.Index.ByteStart)+charsAdded > len(postText) ||
+				int(facet.Index.ByteEnd)+charsAdded > len(postText) {
 				return false
 			}
 			linkText := postText[int(facet.Index.ByteStart)+charsAdded : int(facet.Index.ByteEnd)+charsAdded]

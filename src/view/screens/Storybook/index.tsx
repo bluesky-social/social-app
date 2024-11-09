@@ -1,6 +1,8 @@
 import React from 'react'
 import {ScrollView, View} from 'react-native'
+import {useNavigation} from '@react-navigation/native'
 
+import {NavigationProp} from '#/lib/routes/types'
 import {isWeb} from '#/platform/detection'
 import {useSetThemePrefs} from '#/state/shell'
 import {CenteredView} from '#/view/com/util/Views'
@@ -16,6 +18,7 @@ import {Forms} from './Forms'
 import {Icons} from './Icons'
 import {Links} from './Links'
 import {Menus} from './Menus'
+import {Settings} from './Settings'
 import {Shadows} from './Shadows'
 import {Spacing} from './Spacing'
 import {Theming} from './Theming'
@@ -39,6 +42,7 @@ function StorybookInner() {
   const t = useTheme()
   const {setColorMode, setDarkTheme} = useSetThemePrefs()
   const [showContainedList, setShowContainedList] = React.useState(false)
+  const navigation = useNavigation<NavigationProp>()
 
   return (
     <CenteredView style={[t.atoms.bg]}>
@@ -86,7 +90,19 @@ function StorybookInner() {
               </Button>
             </View>
 
+            <Button
+              variant="solid"
+              color="primary"
+              size="small"
+              onPress={() => navigation.navigate('SharedPreferencesTester')}
+              label="two"
+              testID="sharedPrefsTestOpenBtn">
+              <ButtonText>Open Shared Prefs Tester</ButtonText>
+            </Button>
+
             <Admonitions />
+
+            <Settings />
 
             <ThemeProvider theme="light">
               <Theming />

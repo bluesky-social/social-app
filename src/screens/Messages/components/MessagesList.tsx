@@ -11,7 +11,7 @@ import {
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated'
-import {ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript/reanimated2/hook/commonTypes'
+import {ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript/hook/commonTypes'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {AppBskyEmbedRecord, AppBskyRichtextFacet, RichText} from '@atproto/api'
 
@@ -202,9 +202,9 @@ export function MessagesList({
       convoState.items.length,
       // these are stable
       flatListRef,
-      isAtTop.value,
-      isAtBottom.value,
-      layoutHeight.value,
+      isAtTop,
+      isAtBottom,
+      layoutHeight,
     ],
   )
 
@@ -212,7 +212,7 @@ export function MessagesList({
     if (hasScrolled && prevContentHeight.current > layoutHeight.value) {
       convoState.fetchMessageHistory()
     }
-  }, [convoState, hasScrolled, layoutHeight.value])
+  }, [convoState, hasScrolled, layoutHeight])
 
   const onScroll = React.useCallback(
     (e: ReanimatedScrollEvent) => {
@@ -374,7 +374,7 @@ export function MessagesList({
     },
     [
       flatListRef,
-      keyboardIsOpening.value,
+      keyboardIsOpening,
       layoutScrollWithoutAnimation,
       layoutHeight,
     ],

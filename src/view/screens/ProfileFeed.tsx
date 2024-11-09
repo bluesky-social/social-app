@@ -208,11 +208,11 @@ export function ProfileFeedScreenInner({
     } catch (err) {
       Toast.show(
         _(
-          msg`There was an an issue updating your feeds, please check your internet connection and try again.`,
+          msg`There was an issue updating your feeds, please check your internet connection and try again.`,
         ),
         'xmark',
       )
-      logger.error('Failed up update feeds', {message: err})
+      logger.error('Failed to update feeds', {message: err})
     }
   }, [_, playHaptic, feedInfo, removeFeed, addSavedFeeds, savedFeedConfig])
 
@@ -543,11 +543,11 @@ function AboutSection({
     } catch (err) {
       Toast.show(
         _(
-          msg`There was an an issue contacting the server, please check your internet connection and try again.`,
+          msg`There was an issue contacting the server, please check your internet connection and try again.`,
         ),
         'xmark',
       )
-      logger.error('Failed up toggle like', {message: err})
+      logger.error('Failed to toggle like', {message: err})
     }
   }, [playHaptic, isLiked, likeUri, unlikeFeed, likeFeed, feedInfo, _])
 

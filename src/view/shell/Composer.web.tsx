@@ -94,7 +94,6 @@ function Inner({state}: {state: ComposerOpts}) {
             cancelRef={ref}
             replyTo={state.replyTo}
             quote={state.quote}
-            quoteCount={state?.quoteCount}
             onPost={state.onPost}
             mention={state.mention}
             openEmojiPicker={onOpenPicker}
