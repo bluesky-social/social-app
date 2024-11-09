@@ -60,7 +60,7 @@ export function Text({
     }
   }
 
-  if (selectable && isIOS) {
+  const textProps = React.useMemo(() => {
     const flattened = StyleSheet.flatten([
       s.black,
       typography,
@@ -74,49 +74,46 @@ export function Text({
     // @ts-ignore
     if (flattened.fontSize) {
       // @ts-ignore
-      flattened.fontSize = flattened.fontSize * fonts.scaleMultiplier
+      flattened.fontSize = Math.round(
+        // @ts-ignore
+        flattened.fontSize * fonts.scaleMultiplier,
+      )
     }
 
     const shared = {
-      uiTextView: true,
+      uiTextView: selectable && isIOS,
       selectable,
       style: flattened,
+      dataSet: Object.assign({tooltip: title}, dataSet || {}),
       ...props,
     }
 
+    return shared
+  }, [
+    dataSet,
+    fonts.family,
+    fonts.scaleMultiplier,
+    lineHeightStyle,
+    props,
+    selectable,
+    style,
+    title,
+    typography,
+  ])
+
+  if (selectable && isIOS) {
     return (
-      <UITextView {...shared}>
-        {isIOS && emoji ? renderChildrenWithEmoji(children, shared) : children}
+      <UITextView {...textProps}>
+        {isIOS && emoji
+          ? renderChildrenWithEmoji(children, textProps)
+          : children}
       </UITextView>
     )
   }
 
-  const flattened = StyleSheet.flatten([
-    s.black,
-    typography,
-    lineHeightStyle,
-    style,
-  ])
-
-  applyFonts(flattened, fonts.family)
-
-  // should always be defined on `typography`
-  // @ts-ignore
-  if (flattened.fontSize) {
-    // @ts-ignore
-    flattened.fontSize = flattened.fontSize * fonts.scaleMultiplier
-  }
-
-  const shared = {
-    selectable,
-    style: flattened,
-    dataSet: Object.assign({tooltip: title}, dataSet || {}),
-    ...props,
-  }
-
   return (
-    <RNText {...shared}>
-      {isIOS && emoji ? renderChildrenWithEmoji(children, shared) : children}
+    <RNText {...textProps}>
+      {isIOS && emoji ? renderChildrenWithEmoji(children, textProps) : children}
     </RNText>
   )
 }
