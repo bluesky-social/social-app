@@ -87,6 +87,7 @@ export function ProfileSubpageHeader({
               height: 1000,
               width: 1000,
             },
+            thumbDimensions: null,
             type: 'rect-avi',
           },
         ],
