@@ -29,6 +29,7 @@ interface Props {
   viewContext?: PostEmbedViewContext
   insetBorderStyle?: StyleProp<ViewStyle>
   containerRefs: AnimatedRef<React.Component<{}, {}, any>>[]
+  thumbDimsRef: React.MutableRefObject<(Dimensions | null)[]>
 }
 
 export function GalleryItem({
@@ -41,11 +42,11 @@ export function GalleryItem({
   viewContext,
   insetBorderStyle,
   containerRefs,
+  thumbDimsRef,
 }: Props) {
   const t = useTheme()
   const {_} = useLingui()
   const largeAltBadge = useLargeAltBadgeEnabled()
-  const [fetchedDims, setFetchedDims] = React.useState<Dimensions | null>(null)
   const image = images[index]
   const hasAlt = !!image.alt
   const hideBadges =
@@ -58,7 +59,7 @@ export function GalleryItem({
       <Pressable
         onPress={
           onPress
-            ? () => onPress(index, containerRefs, [fetchedDims])
+            ? () => onPress(index, containerRefs, thumbDimsRef.current.slice())
             : undefined
         }
         onPressIn={onPressIn ? () => onPressIn(index) : undefined}
@@ -80,7 +81,10 @@ export function GalleryItem({
           accessibilityHint=""
           accessibilityIgnoresInvertColors
           onLoad={e => {
-            setFetchedDims({width: e.source.width, height: e.source.height})
+            thumbDimsRef.current[index] = {
+              width: e.source.width,
+              height: e.source.height,
+            }
           }}
         />
         <MediaInsetBorder style={insetBorderStyle} />
