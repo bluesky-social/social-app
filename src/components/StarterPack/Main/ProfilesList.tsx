@@ -54,6 +54,18 @@ export const ProfilesList = React.forwardRef<SectionRef, ProfilesListProps>(
         p => !isBlockedOrBlocking(p.subject) && !p.subject.associated?.labeler,
       )
       .map(p => p.subject)
+      .sort((first, second) => {
+        const isFollowingFirst = Boolean(first.viewer?.following)
+        const isFollowingSecond = Boolean(second.viewer?.following)
+
+        if (isFollowingFirst && !isFollowingSecond) {
+          return -1
+        } else if (!isFollowingFirst && isFollowingSecond) {
+          return 1
+        }
+
+        return 0
+      })
       .reverse()
     const isOwn = new AtUri(listUri).host === currentAccount?.did
 
