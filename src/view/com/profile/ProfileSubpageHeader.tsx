@@ -80,6 +80,7 @@ export function ProfileSubpageHeader({
               height: 1000,
               width: 1000,
             },
+            type: 'rect-avi',
           },
         ],
         index: 0,

@@ -21,4 +21,5 @@ export type ImageSource = {
   thumbUri: string
   alt?: string
   dimensions: Dimensions | null
+  type: 'image' | 'circle-avi' | 'rect-avi'
 }
