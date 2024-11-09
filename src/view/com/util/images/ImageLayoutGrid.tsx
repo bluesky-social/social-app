@@ -5,6 +5,7 @@ import {AppBskyEmbedImages} from '@atproto/api'
 
 import {PostEmbedViewContext} from '#/view/com/util/post-embeds/types'
 import {atoms as a, useBreakpoints} from '#/alf'
+import {Dimensions} from '../../lightbox/ImageViewing/@types'
 import {GalleryItem} from './Gallery'
 
 interface ImageLayoutGridProps {
@@ -12,6 +13,7 @@ interface ImageLayoutGridProps {
   onPress?: (
     index: number,
     containerRefs: AnimatedRef<React.Component<{}, {}, any>>[],
+    fetchedDims: (Dimensions | null)[],
   ) => void
   onLongPress?: (index: number) => void
   onPressIn?: (index: number) => void
@@ -42,6 +44,7 @@ interface ImageLayoutGridInnerProps {
   onPress?: (
     index: number,
     containerRefs: AnimatedRef<React.Component<{}, {}, any>>[],
+    fetchedDims: (Dimensions | null)[],
   ) => void
   onLongPress?: (index: number) => void
   onPressIn?: (index: number) => void
@@ -57,6 +60,7 @@ function ImageLayoutGridInner(props: ImageLayoutGridInnerProps) {
   const containerRef2 = useAnimatedRef()
   const containerRef3 = useAnimatedRef()
   const containerRef4 = useAnimatedRef()
+  const thumbDimsRef = React.useRef<(Dimensions | null)[]>([])
 
   switch (count) {
     case 2: {
@@ -69,6 +73,7 @@ function ImageLayoutGridInner(props: ImageLayoutGridInnerProps) {
               index={0}
               insetBorderStyle={noCorners(['topRight', 'bottomRight'])}
               containerRefs={containerRefs}
+              thumbDimsRef={thumbDimsRef}
             />
           </View>
           <View style={[a.flex_1, {aspectRatio: 1}]}>
@@ -77,6 +82,7 @@ function ImageLayoutGridInner(props: ImageLayoutGridInnerProps) {
               index={1}
               insetBorderStyle={noCorners(['topLeft', 'bottomLeft'])}
               containerRefs={containerRefs}
+              thumbDimsRef={thumbDimsRef}
             />
           </View>
         </View>
@@ -93,6 +99,7 @@ function ImageLayoutGridInner(props: ImageLayoutGridInnerProps) {
               index={0}
               insetBorderStyle={noCorners(['topRight', 'bottomRight'])}
               containerRefs={containerRefs}
+              thumbDimsRef={thumbDimsRef}
             />
           </View>
           <View style={[a.flex_1, {aspectRatio: 1}, gap]}>
@@ -106,6 +113,7 @@ function ImageLayoutGridInner(props: ImageLayoutGridInnerProps) {
                   'bottomRight',
                 ])}
                 containerRefs={containerRefs}
+                thumbDimsRef={thumbDimsRef}
               />
             </View>
             <View style={[a.flex_1]}>
@@ -118,6 +126,7 @@ function ImageLayoutGridInner(props: ImageLayoutGridInnerProps) {
                   'topRight',
                 ])}
                 containerRefs={containerRefs}
+                thumbDimsRef={thumbDimsRef}
               />
             </View>
           </View>
@@ -145,6 +154,7 @@ function ImageLayoutGridInner(props: ImageLayoutGridInnerProps) {
                   'bottomRight',
                 ])}
                 containerRefs={containerRefs}
+                thumbDimsRef={thumbDimsRef}
               />
             </View>
             <View style={[a.flex_1, {aspectRatio: 1.5}]}>
@@ -157,6 +167,7 @@ function ImageLayoutGridInner(props: ImageLayoutGridInnerProps) {
                   'bottomRight',
                 ])}
                 containerRefs={containerRefs}
+                thumbDimsRef={thumbDimsRef}
               />
             </View>
           </View>
@@ -171,6 +182,7 @@ function ImageLayoutGridInner(props: ImageLayoutGridInnerProps) {
                   'bottomRight',
                 ])}
                 containerRefs={containerRefs}
+                thumbDimsRef={thumbDimsRef}
               />
             </View>
             <View style={[a.flex_1, {aspectRatio: 1.5}]}>
@@ -183,6 +195,7 @@ function ImageLayoutGridInner(props: ImageLayoutGridInnerProps) {
                   'topRight',
                 ])}
                 containerRefs={containerRefs}
+                thumbDimsRef={thumbDimsRef}
               />
             </View>
           </View>

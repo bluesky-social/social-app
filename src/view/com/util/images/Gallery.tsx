@@ -6,6 +6,7 @@ import {AppBskyEmbedImages} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {Dimensions} from '#/lib/media/types'
 import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
 import {PostEmbedViewContext} from '#/view/com/util/post-embeds/types'
 import {atoms as a, useTheme} from '#/alf'
@@ -20,6 +21,7 @@ interface Props {
   onPress?: (
     index: number,
     containerRefs: AnimatedRef<React.Component<{}, {}, any>>[],
+    fetchedDims: (Dimensions | null)[],
   ) => void
   onLongPress?: EventFunction
   onPressIn?: EventFunction
@@ -27,6 +29,7 @@ interface Props {
   viewContext?: PostEmbedViewContext
   insetBorderStyle?: StyleProp<ViewStyle>
   containerRefs: AnimatedRef<React.Component<{}, {}, any>>[]
+  thumbDimsRef: React.MutableRefObject<(Dimensions | null)[]>
 }
 
 export function GalleryItem({
@@ -39,6 +42,7 @@ export function GalleryItem({
   viewContext,
   insetBorderStyle,
   containerRefs,
+  thumbDimsRef,
 }: Props) {
   const t = useTheme()
   const {_} = useLingui()
@@ -53,7 +57,11 @@ export function GalleryItem({
       ref={containerRefs[index]}
       collapsable={false}>
       <Pressable
-        onPress={onPress ? () => onPress(index, containerRefs) : undefined}
+        onPress={
+          onPress
+            ? () => onPress(index, containerRefs, thumbDimsRef.current.slice())
+            : undefined
+        }
         onPressIn={onPressIn ? () => onPressIn(index) : undefined}
         onLongPress={onLongPress ? () => onLongPress(index) : undefined}
         style={[
@@ -72,6 +80,12 @@ export function GalleryItem({
           accessibilityLabel={image.alt}
           accessibilityHint=""
           accessibilityIgnoresInvertColors
+          onLoad={e => {
+            thumbDimsRef.current[index] = {
+              width: e.source.width,
+              height: e.source.height,
+            }
+          }}
         />
         <MediaInsetBorder style={insetBorderStyle} />
       </Pressable>

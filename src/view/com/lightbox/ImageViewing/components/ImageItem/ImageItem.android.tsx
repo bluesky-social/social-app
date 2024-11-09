@@ -41,6 +41,7 @@ type Props = {
   onRequestClose: () => void
   onTap: () => void
   onZoom: (isZoomed: boolean) => void
+  onLoad: (dims: ImageDimensions) => void
   isScrollViewBeingDragged: boolean
   showControls: boolean
   measureSafeArea: () => {
@@ -66,6 +67,7 @@ const ImageItem = ({
   imageSrc,
   onTap,
   onZoom,
+  onLoad,
   isScrollViewBeingDragged,
   measureSafeArea,
   imageAspect,
@@ -330,8 +332,8 @@ const ImageItem = ({
       transform: scaleAndMoveTransform.concat(manipulationTransform),
       width: screenSize.width,
       maxHeight: screenSize.height,
-      aspectRatio: imageAspect,
       alignSelf: 'center',
+      aspectRatio: imageAspect ?? 1 /* force onLoad */,
     }
   })
 
@@ -349,6 +351,7 @@ const ImageItem = ({
     return {
       flex: 1,
       transform: cropContentTransform,
+      opacity: imageAspect === undefined ? 0 : 1,
     }
   })
 
@@ -393,7 +396,10 @@ const ImageItem = ({
                 placeholderContentFit="cover"
                 placeholder={{uri: imageSrc.thumbUri}}
                 accessibilityLabel={imageSrc.alt}
-                onLoad={() => setHasLoaded(false)}
+                onLoad={e => {
+                  setHasLoaded(true)
+                  onLoad({width: e.source.width, height: e.source.height})
+                }}
                 style={{flex: 1, borderRadius}}
                 accessibilityHint=""
                 accessibilityIgnoresInvertColors

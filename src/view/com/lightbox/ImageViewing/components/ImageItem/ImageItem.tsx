@@ -5,6 +5,7 @@ import {View} from 'react-native'
 import {PanGesture} from 'react-native-gesture-handler'
 import {SharedValue} from 'react-native-reanimated'
 
+import {Dimensions} from '#/lib/media/types'
 import {
   Dimensions as ImageDimensions,
   ImageSource,
@@ -16,6 +17,7 @@ type Props = {
   onRequestClose: () => void
   onTap: () => void
   onZoom: (scaled: boolean) => void
+  onLoad: (dims: Dimensions) => void
   isScrollViewBeingDragged: boolean
   showControls: boolean
   measureSafeArea: () => {
