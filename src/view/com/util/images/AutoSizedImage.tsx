@@ -7,37 +7,12 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useImageDimensions} from '#/lib/media/image-sizes'
-import {Dimensions} from '#/lib/media/types'
 import {isNative} from '#/platform/detection'
 import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {ArrowsDiagonalOut_Stroke2_Corner0_Rounded as Fullscreen} from '#/components/icons/ArrowsDiagonal'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {Text} from '#/components/Typography'
-
-function useImageAspectRatio({
-  src,
-  knownDimensions,
-}: {
-  src: string
-  knownDimensions: Dimensions | null
-}) {
-  const [raw] = useImageDimensions({src, knownDimensions})
-  let constrained: number | undefined
-  let max: number | undefined
-  let isCropped: boolean | undefined
-  if (raw !== undefined) {
-    const ratio = 1 / 2 // max of 1:2 ratio in feeds
-    constrained = Math.max(raw, ratio)
-    max = Math.max(raw, 0.25) // max of 1:4 in thread
-    isCropped = raw < constrained
-  }
-  return {
-    constrained,
-    max,
-    isCropped,
-  }
-}
 
 export function ConstrainedImage({
   aspectRatio,
@@ -100,18 +75,24 @@ export function AutoSizedImage({
   const t = useTheme()
   const {_} = useLingui()
   const largeAlt = useLargeAltBadgeEnabled()
-  const {
-    constrained,
-    max,
-    isCropped: rawIsCropped,
-  } = useImageAspectRatio({
+  const containerRef = useAnimatedRef()
+  const [raw] = useImageDimensions({
     src: image.thumb,
     knownDimensions: image.aspectRatio ?? null,
   })
-  const containerRef = useAnimatedRef()
+
+  let constrained: number | undefined
+  let max: number | undefined
+  let rawIsCropped: boolean | undefined
+  if (raw !== undefined) {
+    const ratio = 1 / 2 // max of 1:2 ratio in feeds
+    constrained = Math.max(raw, ratio)
+    max = Math.max(raw, 0.25) // max of 1:4 in thread
+    rawIsCropped = raw < constrained
+  }
 
   const cropDisabled = crop === 'none'
-  const isCropped = rawIsCropped && !cropDisabled
+  const isCropped = rawIsCropped
   const hasAlt = !!image.alt
 
   const contents = (
