@@ -974,7 +974,7 @@ msgstr "Bluesky è una rete aperta dove puoi scegliere il fornitore di hosting. 
 
 #: src/components/ProgressGuide/List.tsx:55
 msgid "Bluesky is better with friends!"
-msgstr "Bluesky è meglio cogli amici!"
+msgstr "Bluesky è meglio con gli amici!"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:283
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
@@ -6914,7 +6914,7 @@ msgstr "Completato - 10 like!"
 
 #: src/components/ProgressGuide/List.tsx:49
 msgid "Teach our algorithm what you like"
-msgstr "Impara all'algoritmo cosa ti piace"
+msgstr "Insegna all'algoritmo cosa ti piace"
 
 #: src/screens/Onboarding/index.tsx:36 src/screens/Onboarding/state.ts:101
 msgid "Tech"
