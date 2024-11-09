@@ -1,5 +1,6 @@
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
@@ -357,6 +358,7 @@ export function LeftNav() {
   const {_} = useLingui()
   const {isDesktop, isTablet} = useWebMediaQueries()
   const numUnreadNotifications = useUnreadNotifications()
+  const insets = useSafeAreaInsets()
 
   if (!hasSession && !isDesktop) {
     return null
@@ -370,6 +372,7 @@ export function LeftNav() {
         isTablet && styles.leftNavTablet,
         pal.view,
         pal.border,
+        {paddingTop: insets.top},
       ]}>
       {hasSession ? (
         <ProfileCard />

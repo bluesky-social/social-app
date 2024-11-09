@@ -37,7 +37,7 @@ import {
 } from '#/lib/routes/types'
 import {augmentSearchQuery} from '#/lib/strings/helpers'
 import {logger} from '#/logger'
-import {isNative, isWeb} from '#/platform/detection'
+import {isNative, isNativeTablet, isWeb} from '#/platform/detection'
 import {listenSoftReset} from '#/state/events'
 import {useLanguagePrefs} from '#/state/preferences/languages'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
@@ -874,7 +874,7 @@ export function SearchScreen(
         ]}
         sideBorders={gtMobile}>
         <View style={[a.flex_row, a.gap_sm]}>
-          {!gtMobile && (
+          {!gtMobile && !isNativeTablet && (
             <Button
               testID="viewHeaderBackOrMenuBtn"
               onPress={onPressMenu}
