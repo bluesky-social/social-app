@@ -1,3 +1,5 @@
+import {AppBskyActorDefs} from '@atproto/api'
+
 export function choose<U, T extends Record<string, U>>(
   value: keyof T,
   choices: T,
@@ -95,4 +97,20 @@ export function isPlainObject(o: any): o is Object {
 
 function hasObjectPrototype(o: any): boolean {
   return Object.prototype.toString.call(o) === '[object Object]'
+}
+
+export function sortProfiles(
+  first: AppBskyActorDefs.ProfileView,
+  second: AppBskyActorDefs.ProfileView,
+) {
+  const isFollowingFirst = Boolean(first.viewer?.following)
+  const isFollowingSecond = Boolean(second.viewer?.following)
+
+  if (isFollowingFirst && !isFollowingSecond) {
+    return -1
+  } else if (!isFollowingFirst && isFollowingSecond) {
+    return 1
+  }
+
+  return 0
 }
