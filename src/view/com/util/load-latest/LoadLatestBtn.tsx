@@ -1,14 +1,16 @@
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import Animated from 'react-native-reanimated'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {useMediaQuery} from 'react-responsive'
 
 import {HITSLOP_20} from '#/lib/constants'
 import {useMinimalShellFabTransform} from '#/lib/hooks/useMinimalShellTransform'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {clamp} from '#/lib/numbers'
 import {colors} from '#/lib/styles'
-import {isNativeTablet} from '#/platform/detection'
+import {isNativeTablet, isWeb} from '#/platform/detection'
 import {useSession} from '#/state/session'
 import {useTheme} from '#/alf'
 
@@ -28,6 +30,7 @@ export function LoadLatestBtn({
   const {hasSession} = useSession()
   const {isDesktop, isTablet, isMobile, isTabletOrMobile} = useWebMediaQueries()
   const fabMinimalShellTransform = useMinimalShellFabTransform()
+  const insets = useSafeAreaInsets()
 
   // move button inline if it starts overlapping the left nav
   const isTallViewport = useMediaQuery({minHeight: 700})
@@ -35,6 +38,10 @@ export function LoadLatestBtn({
   // Adjust height of the fab if we have a session only on mobile web. If we don't have a session, we want to adjust
   // it on both tablet and mobile since we are showing the bottom bar (see createNativeStackNavigatorWithAuth)
   const showBottomBar = hasSession ? isMobile : isTabletOrMobile
+
+  const bottomPosition = isTablet
+    ? {bottom: 50}
+    : {bottom: clamp(insets.bottom, 15, 60) + 15}
 
   return (
     <AnimatedTouchableOpacity
@@ -47,6 +54,7 @@ export function LoadLatestBtn({
         isTablet && !isNativeTablet && styles.loadLatestInline,
         t.atoms.border_contrast_high,
         t.atoms.bg,
+        bottomPosition,
         showBottomBar && fabMinimalShellTransform,
       ]}
       onPress={onPress}

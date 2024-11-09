@@ -18,6 +18,7 @@ import {getCurrentRoute, isStateAtTabRoot, isTab} from '#/lib/routes/helpers'
 import {makeProfileLink} from '#/lib/routes/links'
 import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
 import {isInvalidHandle} from '#/lib/strings/handles'
+import {isWeb} from '#/platform/detection'
 import {emitSoftReset} from '#/state/events'
 import {useFetchHandle} from '#/state/queries/handle'
 import {useUnreadMessageCount} from '#/state/queries/messages/list-converations'
@@ -475,7 +476,13 @@ export function LeftNav() {
             label={_(msg`Lists`)}
           />
           <NavItem
-            href={currentAccount ? makeProfileLink(currentAccount) : '/'}
+            href={
+              isWeb
+                ? currentAccount
+                  ? makeProfileLink(currentAccount)
+                  : '/'
+                : '/my-profile'
+            }
             icon={
               <UserCircle
                 aria-hidden={true}

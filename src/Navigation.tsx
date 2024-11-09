@@ -69,6 +69,7 @@ import {SupportScreen} from '#/view/screens/Support'
 import {TermsOfServiceScreen} from '#/view/screens/TermsOfService'
 import {BottomBar} from '#/view/shell/bottom-bar/BottomBar'
 import {createNativeStackNavigatorWithAuth} from '#/view/shell/createNativeStackNavigatorWithAuth'
+import {LeftNav} from '#/view/shell/desktop/LeftNav'
 import {SharedPreferencesTesterScreen} from '#/screens/E2E/SharedPreferencesTesterScreen'
 import HashtagScreen from '#/screens/Hashtag'
 import {MessagesScreen} from '#/screens/Messages/ChatList'
@@ -112,6 +113,7 @@ const MyProfileTab =
   createNativeStackNavigatorWithAuth<MyProfileTabNavigatorParams>()
 const MessagesTab =
   createNativeStackNavigatorWithAuth<MessagesTabNavigatorParams>()
+const FeedsTab = createNativeStackNavigatorWithAuth<FlatNavigatorParams>()
 const ListsTab = createNativeStackNavigatorWithAuth<FlatNavigatorParams>()
 const ModerationTab = createNativeStackNavigatorWithAuth<FlatNavigatorParams>()
 const SettingsTab = createNativeStackNavigatorWithAuth<FlatNavigatorParams>()
@@ -378,11 +380,6 @@ function commonScreens(
         options={{title: title(msg`Notification settings`), requireAuth: true}}
       />
       <Stack.Screen
-        name="Feeds"
-        getComponent={() => FeedsScreen}
-        options={{title: title(msg`Feeds`)}}
-      />
-      <Stack.Screen
         name="StarterPack"
         getComponent={() => StarterPackScreen}
         options={{title: title(msg`Starter Pack`)}}
@@ -408,6 +405,11 @@ function commonScreens(
             name="Moderation"
             getComponent={() => ModerationScreen}
             options={{title: title(msg`Moderation`), requireAuth: true}}
+          />
+          <Stack.Screen
+            name="Feeds"
+            getComponent={() => FeedsScreen}
+            options={{title: title(msg`Feeds`)}}
           />
           <Stack.Screen
             name="Lists"
@@ -453,8 +455,8 @@ function TabsNavigatorMobile() {
         getComponent={() => SearchTabNavigator}
       />
       <MobileTab.Screen
-        name="FeedsTab"
-        getComponent={() => FeedsTabNavigator}
+        name="MessagesTab"
+        getComponent={() => MessagesTabNavigator}
       />
       <MobileTab.Screen
         name="NotificationsTab"
@@ -463,10 +465,6 @@ function TabsNavigatorMobile() {
       <MobileTab.Screen
         name="MyProfileTab"
         getComponent={() => MyProfileTabNavigator}
-      />
-      <MobileTab.Screen
-        name="MessagesTab"
-        getComponent={() => MessagesTabNavigator}
       />
     </MobileTab.Navigator>
   )
