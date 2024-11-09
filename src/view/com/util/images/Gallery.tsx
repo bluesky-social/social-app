@@ -6,6 +6,7 @@ import {AppBskyEmbedImages} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {Dimensions} from '#/lib/media/types'
 import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
 import {PostEmbedViewContext} from '#/view/com/util/post-embeds/types'
 import {atoms as a, useTheme} from '#/alf'
@@ -20,6 +21,7 @@ interface Props {
   onPress?: (
     index: number,
     containerRefs: AnimatedRef<React.Component<{}, {}, any>>[],
+    fetchedDims: (Dimensions | null)[],
   ) => void
   onLongPress?: EventFunction
   onPressIn?: EventFunction
@@ -43,6 +45,7 @@ export function GalleryItem({
   const t = useTheme()
   const {_} = useLingui()
   const largeAltBadge = useLargeAltBadgeEnabled()
+  const [fetchedDims, setFetchedDims] = React.useState<Dimensions | null>(null)
   const image = images[index]
   const hasAlt = !!image.alt
   const hideBadges =
@@ -53,7 +56,11 @@ export function GalleryItem({
       ref={containerRefs[index]}
       collapsable={false}>
       <Pressable
-        onPress={onPress ? () => onPress(index, containerRefs) : undefined}
+        onPress={
+          onPress
+            ? () => onPress(index, containerRefs, [fetchedDims])
+            : undefined
+        }
         onPressIn={onPressIn ? () => onPressIn(index) : undefined}
         onLongPress={onLongPress ? () => onLongPress(index) : undefined}
         style={[
@@ -72,6 +79,9 @@ export function GalleryItem({
           accessibilityLabel={image.alt}
           accessibilityHint=""
           accessibilityIgnoresInvertColors
+          onLoad={e => {
+            setFetchedDims({width: e.source.width, height: e.source.height})
+          }}
         />
         <MediaInsetBorder style={insetBorderStyle} />
       </Pressable>

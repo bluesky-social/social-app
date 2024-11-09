@@ -5,6 +5,7 @@ import {AppBskyEmbedImages} from '@atproto/api'
 
 import {PostEmbedViewContext} from '#/view/com/util/post-embeds/types'
 import {atoms as a, useBreakpoints} from '#/alf'
+import {Dimensions} from '../../lightbox/ImageViewing/@types'
 import {GalleryItem} from './Gallery'
 
 interface ImageLayoutGridProps {
@@ -12,6 +13,7 @@ interface ImageLayoutGridProps {
   onPress?: (
     index: number,
     containerRefs: AnimatedRef<React.Component<{}, {}, any>>[],
+    fetchedDims: (Dimensions | null)[],
   ) => void
   onLongPress?: (index: number) => void
   onPressIn?: (index: number) => void
@@ -42,6 +44,7 @@ interface ImageLayoutGridInnerProps {
   onPress?: (
     index: number,
     containerRefs: AnimatedRef<React.Component<{}, {}, any>>[],
+    fetchedDims: (Dimensions | null)[],
   ) => void
   onLongPress?: (index: number) => void
   onPressIn?: (index: number) => void
