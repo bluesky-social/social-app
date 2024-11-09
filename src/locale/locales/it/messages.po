@@ -252,7 +252,6 @@ msgstr "<0>{0}, </0><1>{1}, </1>e {2, plural, one {# altro} other {# altri}} son
 #~ msgstr "<0>{0}, </0><1>{1}, </1>e {2} {3, plural, one {# altro} other {# altri}} sono inclusi nel tuo starter pack"
 
 #: src/view/shell/Drawer.tsx:97
->>>>>>> main
 msgid "<0>{0}</0> {1, plural, one {follower} other {followers}}"
 msgstr "<0>{0}</0> {1, plural, one {follower} other {followers}}"
 
@@ -269,7 +268,6 @@ msgstr "<0>{0}</0> e<1> </1><2>{1} </2>sono inclusi nel tuo starter pack"
 #~ msgstr "<0>{0}</0> seguito"
 
 #: src/screens/StarterPack/Wizard/index.tsx:509
->>>>>>> main
 msgid "<0>{0}</0> is included in your starter pack"
 msgstr "<0>{0}</0> è incluso nel tuo starter pack"
 
@@ -4798,7 +4796,6 @@ msgstr "Apre il modulo di reimpostazione della password"
 #~ msgstr "Apre la schermata per modificare i feed salvati"
 
 #: src/view/screens/Settings/index.tsx:584
->>>>>>> main
 msgid "Opens screen with all saved feeds"
 msgstr "Apre la schermata con tutti i feed salvati"
 
@@ -8422,7 +8419,7 @@ msgstr "Non hai ancora bloccato nessun account. Per bloccare un account, vai sul
 #~ msgstr "Non hai ancora bloccato nessun conto. Per bloccare un conto, vai al profilo e seleziona \"Blocca conto\" dal menu del suo conto."
 
 #: src/view/screens/AppPasswords.tsx:96
->>>>>>> main
+
 msgid "You have not created any app passwords yet. You can create one by pressing the button below."
 msgstr "Non hai ancora creato alcuna password per l'app. Puoi crearne uno premendo il pulsante qui sotto."
 
