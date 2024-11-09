@@ -105,7 +105,7 @@ export function AutoSizedImage({
   const hasAlt = !!image.alt
 
   const contents = (
-    <Animated.View ref={containerRef} collapsable={false}>
+    <Animated.View ref={containerRef} collapsable={false} style={{flex: 1}}>
       <Image
         style={[a.w_full, a.h_full]}
         source={image.thumb}
