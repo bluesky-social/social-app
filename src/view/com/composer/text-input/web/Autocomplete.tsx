@@ -5,6 +5,7 @@ import React, {
   useState,
 } from 'react'
 import {Pressable, StyleSheet, View} from 'react-native'
+import {AppBskyActorDefs} from '@atproto/api'
 import {Trans} from '@lingui/macro'
 import {ReactRenderer} from '@tiptap/react'
 import {
@@ -18,6 +19,7 @@ import {usePalette} from '#/lib/hooks/usePalette'
 import {ActorAutocompleteFn} from '#/state/queries/actor-autocomplete'
 import {Text} from '#/view/com/util/text/Text'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
+import {sortProfiles} from '../../../../../lib/functions'
 import {useGrapheme} from '../hooks/useGrapheme'
 
 interface MentionListRef {
@@ -95,7 +97,10 @@ export function createSuggestion({
 }
 
 const MentionList = forwardRef<MentionListRef, SuggestionProps>(
-  function MentionListImpl(props: SuggestionProps, ref) {
+  function MentionListImpl(
+    props: SuggestionProps<AppBskyActorDefs.ProfileView>,
+    ref,
+  ) {
     const [selectedIndex, setSelectedIndex] = useState(0)
     const pal = usePalette('default')
     const {getGraphemeString} = useGrapheme()
@@ -151,7 +156,7 @@ const MentionList = forwardRef<MentionListRef, SuggestionProps>(
       <div className="items">
         <View style={[pal.borderDark, pal.view, styles.container]}>
           {items.length > 0 ? (
-            items.map((item, index) => {
+            items.sort(sortProfiles).map((item, index) => {
               const {name: displayName} = getGraphemeString(
                 item.displayName ?? item.handle,
                 30, // Heuristic value; can be modified
