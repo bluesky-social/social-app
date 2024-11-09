@@ -6,13 +6,12 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
-import Animated, {
+import {
   AnimatedRef,
   measure,
   MeasuredDimensions,
   runOnJS,
   runOnUI,
-  useAnimatedRef,
 } from 'react-native-reanimated'
 import {Image} from 'expo-image'
 import {
@@ -69,7 +68,6 @@ export function PostEmbeds({
   viewContext?: PostEmbedViewContext
 }) {
   const {openLightbox} = useLightboxControls()
-  const containerRef = useAnimatedRef()
 
   // quote post with media
   // =
@@ -180,10 +178,7 @@ export function PostEmbeds({
         const image = images[0]
         return (
           <ContentHider modui={moderation?.ui('contentMedia')}>
-            <Animated.View
-              ref={containerRef}
-              collapsable={false}
-              style={[a.mt_sm, style]}>
+            <View style={[a.mt_sm, style]}>
               <AutoSizedImage
                 crop={
                   viewContext === PostEmbedViewContext.ThreadHighlighted
@@ -194,13 +189,13 @@ export function PostEmbeds({
                     : 'constrained'
                 }
                 image={image}
-                onPress={() => onPress(0, [containerRef])}
+                onPress={containerRef => onPress(0, [containerRef])}
                 onPressIn={() => onPressIn(0)}
                 hideBadge={
                   viewContext === PostEmbedViewContext.FeedEmbedRecordWithMedia
                 }
               />
-            </Animated.View>
+            </View>
           </ContentHider>
         )
       }
