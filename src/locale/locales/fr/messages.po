@@ -1890,7 +1890,7 @@ msgstr "Ne contient pas de contenu pour adultes."
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:213
 msgid "Does not contain graphic or disturbing content."
-msgstr "Ne contient pas de contenu graphique ou pertubant."
+msgstr "Ne contient pas de contenu graphique ou perturbant."
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:39
 msgid "Does not include nudity."
@@ -3114,7 +3114,7 @@ msgstr "Interaction limitée"
 
 #: src/components/dialogs/nuxs/NeueTypography.tsx:47
 msgid "Introducing new font settings"
-msgstr "Et voici les nouveaux paramètres de polices"
+msgstr "Voici les nouvelles options de police de caractères"
 
 #: src/screens/Login/LoginForm.tsx:142
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:70
@@ -6312,7 +6312,7 @@ msgstr "Champ de saisie de texte"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:82
 msgid "Thank you! Your email has been successfully verified."
-msgstr "Merci ! Votre e-mail a été vérifié avec succès."
+msgstr "Merci ! Votre adresse e-mail a été vérifiée avec succès."
 
 #: src/components/dms/ReportDialog.tsx:129
 #: src/components/ReportDialog/SubmitView.tsx:82
@@ -7564,7 +7564,7 @@ msgstr "Vous ne suivez personne."
 
 #: src/components/dialogs/nuxs/NeueTypography.tsx:61
 msgid "You can adjust these in your Appearance Settings later."
-msgstr "Vous pourrez les ajuster plus tard dans les paramètres d’apparence."
+msgstr "Vous pourrez les ajuster plus tard dans les paramètres d’affichage."
 
 #: src/view/com/posts/FollowingEmptyState.tsx:63
 #: src/view/com/posts/FollowingEndOfFeed.tsx:64
