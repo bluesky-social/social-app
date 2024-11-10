@@ -16743,8 +16743,10 @@ react-app-polyfill@^3.0.0:
     regenerator-runtime "^0.13.9"
     whatwg-fetch "^3.6.2"
 
-"react-compiler-runtime@file:./lib/react-compiler-runtime":
-  version "0.0.1"
+react-compiler-runtime@^19.0.0-beta-63b359f-20241101:
+  version "19.0.0-beta-63b359f-20241101"
+  resolved "https://registry.yarnpkg.com/react-compiler-runtime/-/react-compiler-runtime-19.0.0-beta-63b359f-20241101.tgz#9f0e92d3a9b00edd698ea56a56a5202d6e13223f"
+  integrity sha512-XxxpP4gqvvn2TQLWFTTqCKcbNFNJhsj+1tT2IFTiR0e13yTm1EF+qm4JSSsaSq++QZ+bIYh2exXsCN3fthd7VA==
 
 react-dev-utils@^12.0.1:
   version "12.0.1"
