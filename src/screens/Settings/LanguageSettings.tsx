@@ -6,7 +6,7 @@ import {useLingui} from '@lingui/react'
 
 import {APP_LANGUAGES, LANGUAGES} from '#/lib/../locale/languages'
 import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
-import {sanitizeAppLanguageSetting} from '#/locale/helpers'
+import {languageName, sanitizeAppLanguageSetting} from '#/locale/helpers'
 import {useModalControls} from '#/state/modals'
 import {useLanguagePrefs, useLanguagePrefsApi} from '#/state/preferences'
 import {atoms as a, useTheme, web} from '#/alf'
@@ -57,10 +57,10 @@ export function LanguageSettingsScreen({}: Props) {
         .map(lang => LANGUAGES.find(l => l.code2 === lang))
         .filter(Boolean)
         // @ts-ignore
-        .map(l => l.name)
+        .map(l => languageName(l, langPrefs.appLanguage))
         .join(', ')
     )
-  }, [langPrefs.contentLanguages])
+  }, [langPrefs.appLanguage, langPrefs.contentLanguages])
 
   return (
     <Layout.Screen testID="PreferencesLanguagesScreen">
@@ -169,7 +169,7 @@ export function LanguageSettingsScreen({}: Props) {
                   value={langPrefs.primaryLanguage}
                   onValueChange={onChangePrimaryLanguage}
                   items={LANGUAGES.filter(l => Boolean(l.code2)).map(l => ({
-                    label: l.name,
+                    label: languageName(l, langPrefs.appLanguage),
                     value: l.code2,
                     key: l.code2 + l.code3,
                   }))}
