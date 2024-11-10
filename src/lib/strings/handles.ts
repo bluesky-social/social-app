@@ -1,5 +1,7 @@
 // Regex from the go implementation
 // https://github.com/bluesky-social/indigo/blob/main/atproto/syntax/handle.go#L10
+import {t} from '@lingui/macro'
+
 import {forceLTR} from '#/lib/strings/bidi'
 
 const VALIDATE_REGEX =
@@ -25,7 +27,7 @@ export function isInvalidHandle(handle: string): boolean {
 
 export function sanitizeHandle(handle: string, prefix = ''): string {
   return isInvalidHandle(handle)
-    ? '⚠Invalid Handle'
+    ? t`⚠Invalid Handle`
     : forceLTR(`${prefix}${handle}`)
 }
 
