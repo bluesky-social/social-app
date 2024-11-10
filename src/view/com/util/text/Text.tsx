@@ -5,7 +5,7 @@ import {UITextView} from 'react-native-uitextview'
 import {lh, s} from '#/lib/styles'
 import {TypographyVariant, useTheme} from '#/lib/ThemeContext'
 import {logger} from '#/logger'
-import {isIOS} from '#/platform/detection'
+import {isIOS, isWeb} from '#/platform/detection'
 import {applyFonts, useAlf} from '#/alf'
 import {
   childHasEmoji,
@@ -85,7 +85,9 @@ export function Text({
       uiTextView: selectable && isIOS,
       selectable,
       style: flattened,
-      dataSet: Object.assign({tooltip: title}, dataSet || {}),
+      dataSet: isWeb
+        ? Object.assign({tooltip: title}, dataSet || {})
+        : undefined,
       ...props,
     }
   }, [
