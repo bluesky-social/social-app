@@ -206,9 +206,9 @@ module.exports = function (config) {
               newArchEnabled: false,
             },
             android: {
-              compileSdkVersion: 35,
-              targetSdkVersion: 35,
-              buildToolsVersion: '35.0.0',
+              compileSdkVersion: 34,
+              targetSdkVersion: 34,
+              buildToolsVersion: '34.0.0',
               newArchEnabled: false,
             },
           },

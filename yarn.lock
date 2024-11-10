@@ -3110,6 +3110,22 @@
     semver "7.3.2"
     tempy "0.3.0"
 
+"@expo/image-utils@^0.5.0":
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/@expo/image-utils/-/image-utils-0.5.1.tgz#06fade141facebcd8431355923d30f3839309942"
+  integrity sha512-U/GsFfFox88lXULmFJ9Shfl2aQGcwoKPF7fawSCLixIKtMCpsI+1r0h+5i0nQnmt9tHuzXZDL8+Dg1z6OhkI9A==
+  dependencies:
+    "@expo/spawn-async" "^1.7.2"
+    chalk "^4.0.0"
+    fs-extra "9.0.0"
+    getenv "^1.0.0"
+    jimp-compact "0.16.1"
+    node-fetch "^2.6.0"
+    parse-png "^2.1.0"
+    resolve-from "^5.0.0"
+    semver "^7.6.0"
+    tempy "0.3.0"
+
 "@expo/image-utils@^0.6.0":
   version "0.6.3"
   resolved "https://registry.yarnpkg.com/@expo/image-utils/-/image-utils-0.6.3.tgz#89c744460beefc686989b969121357bbd5520c8a"
@@ -3228,7 +3244,24 @@
     semver "7.5.3"
     xml2js "0.6.0"
 
-"@expo/prebuild-config@8.0.10", "@expo/prebuild-config@^8.0.9":
+"@expo/prebuild-config@7.0.8":
+  version "7.0.8"
+  resolved "https://registry.yarnpkg.com/@expo/prebuild-config/-/prebuild-config-7.0.8.tgz#8af72b19c92f05f1ab6c6c70d31f33159dacac39"
+  integrity sha512-wH9NVg6HiwF5y9x0TxiMEeBF+ITPGDXy5/i6OUheSrKpPgb0lF1Mwzl/f2fLPXBEpl+ZXOQ8LlLW32b7K9lrNg==
+  dependencies:
+    "@expo/config" "~9.0.0-beta.0"
+    "@expo/config-plugins" "~8.0.8"
+    "@expo/config-types" "^51.0.0-unreleased"
+    "@expo/image-utils" "^0.5.0"
+    "@expo/json-file" "^8.3.0"
+    "@react-native/normalize-colors" "0.74.85"
+    debug "^4.3.1"
+    fs-extra "^9.0.0"
+    resolve-from "^5.0.0"
+    semver "^7.6.0"
+    xml2js "0.6.0"
+
+"@expo/prebuild-config@^8.0.9":
   version "8.0.10"
   resolved "https://registry.yarnpkg.com/@expo/prebuild-config/-/prebuild-config-8.0.10.tgz#1be6ab21e1bb1d1e2b5bf1b953863d95eddd6d56"
   integrity sha512-9BQZ/nRTsxLG37VECSTG2JRSRtVn2QLyLcQExy2ZXsXo4lAkxQQkPrhlObj9mdCV5iIpCg9TfpiArByFMTzPrw==
@@ -5027,6 +5060,11 @@
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/@react-native/normalize-color/-/normalize-color-2.1.0.tgz#939b87a9849e81687d3640c5efa2a486ac266f91"
   integrity sha512-Z1jQI2NpdFJCVgpY+8Dq/Bt3d+YUi1928Q+/CZm/oh66fzM0RUl54vvuXlPJKybH4pdCZey1eDTPaLHkMPNgWA==
+
+"@react-native/normalize-colors@0.74.85":
+  version "0.74.85"
+  resolved "https://registry.yarnpkg.com/@react-native/normalize-colors/-/normalize-colors-0.74.85.tgz#62bcb9ab1b10b822ca0278fdfdf23d3b18e125da"
+  integrity sha512-pcE4i0X7y3hsAE0SpIl7t6dUc0B0NZLd1yv7ssm4FrLhWG+CGyIq4eFDXpmPU1XHmL5PPySxTAjEMiwv6tAmOw==
 
 "@react-native/normalize-colors@0.76.1":
   version "0.76.1"
@@ -10585,12 +10623,12 @@ expo-sharing@^13.0.0:
   resolved "https://registry.yarnpkg.com/expo-sharing/-/expo-sharing-13.0.0.tgz#fbc46f4afdaa265a2811fe88c2a589aae2d2de0f"
   integrity sha512-b23ymicRmYn/Pjj05sl9tFZHN5cH9I1f0yiqY1Yk8Q3oCx0Aznri82DnTYA4T/J6D9vrkraX0wQ4jWVMOffmlg==
 
-expo-splash-screen@~0.29.4:
-  version "0.29.5"
-  resolved "https://registry.yarnpkg.com/expo-splash-screen/-/expo-splash-screen-0.29.5.tgz#1fea37761d1edd2844bf294d34e44e53967ac162"
-  integrity sha512-sGAdc3bipDKJhiNM9FHrUy9gGZIBX72x7chALHJGISWTAb/1A9ylJN1CnRiwZjxBBYuBUdWAPoFP02Mh6npMbg==
+expo-splash-screen@~0.27.6:
+  version "0.27.6"
+  resolved "https://registry.yarnpkg.com/expo-splash-screen/-/expo-splash-screen-0.27.6.tgz#d57f3f80d22f4ada90fd2edf573bbc148f956f67"
+  integrity sha512-joUwZQS48k3VMnucQ0Y8Dle1t1FyIvluQA4kjuPx2x7l2dRrfctbo34ahTnC0p1o2go5oN2iEnSTOElY4wRQHw==
   dependencies:
-    "@expo/prebuild-config" "8.0.10"
+    "@expo/prebuild-config" "7.0.8"
 
 expo-status-bar@~2.0.0:
   version "2.0.0"

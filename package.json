@@ -137,7 +137,7 @@
     "expo-navigation-bar": "~4.0.1",
     "expo-notifications": "~0.29.5",
     "expo-sharing": "^13.0.0",
-    "expo-splash-screen": "~0.29.4",
+    "expo-splash-screen": "~0.27.6",
     "expo-status-bar": "~2.0.0",
     "expo-task-manager": "~12.0.1",
     "expo-updates": "~0.26.4",
