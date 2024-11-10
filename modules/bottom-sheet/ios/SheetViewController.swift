@@ -64,14 +64,14 @@ class SheetViewController: UIViewController {
 
   func updateDetents(contentHeight: CGFloat, preventExpansion: Bool) {
     if let sheet = self.sheetPresentationController {
-      // Added [weak self] to prevent a retain cycle. Without this, the closure strongly captures `self`,
-      // potentially causing the SheetViewController to never be deallocated.
-      sheet.animateChanges { [weak self] in
-        guard let self = self else { return }
-        self.setDetents(contentHeight: contentHeight, preventExpansion: preventExpansion)
-        if #available(iOS 16.0, *) {
-          sheet.invalidateDetents()
-        }
+      // Capture `self` weakly to prevent retain cycles.
+      // Also, capture `sheet` weakly to avoid potential strong references held by animateChanges.
+      sheet.animateChanges { [weak self, weak sheet] in
+          guard let weakSelf = self, let weakSheet = sheet else { return }
+          weakSelf.setDetents(contentHeight: contentHeight, preventExpansion: preventExpansion)
+          if #available(iOS 16.0, *) {
+              weakSheet.invalidateDetents()
+          }
       }
     }
   }
