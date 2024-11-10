@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-08 23:45\n"
+"PO-Revision-Date: 2024-11-10 13:38\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -5985,7 +5985,7 @@ msgstr "显示已隐藏的回复"
 
 #: src/screens/Settings/Settings.tsx:96
 msgid "Show other accounts you can switch to"
-msgstr "显示你可以切换的其他账户"
+msgstr "显示可供你切换的其他账户"
 
 #: src/screens/Settings/FollowingFeedPreferences.tsx:97
 #: src/screens/Settings/FollowingFeedPreferences.tsx:107
@@ -5998,8 +5998,8 @@ msgid "Show replies"
 msgstr "显示回复"
 
 #: src/screens/Settings/ThreadPreferences.tsx:113
-msgid "Show replies by people you follow before all other replies."
-msgstr "将你关注用户的回复置于其他回复之前。"
+msgid "Show replies by people you follow before all other replies"
+msgstr "将你关注用户的回复置于其他回复之前"
 
 #: src/screens/Settings/ThreadPreferences.tsx:138
 msgid "Show replies in a threaded view"
