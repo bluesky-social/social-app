@@ -18,9 +18,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import Svg, {Path, SvgProps} from 'react-native-svg'
 import {Image} from 'expo-image'
 import * as SplashScreen from 'expo-splash-screen'
-import MaskedView from '@react-native-masked-view/masked-view'
 
-import {isAndroid} from '#/platform/detection'
 import {Logotype} from '#/view/icons/Logotype'
 // @ts-ignore
 import splashImagePointer from '../assets/splash.png'
@@ -52,8 +50,6 @@ export const Logo = React.forwardRef(function LogoImpl(props: SvgProps, ref) {
 type Props = {
   isReady: boolean
 }
-
-const AnimatedLogo = Animated.createAnimatedComponent(Logo)
 
 export function Splash(props: React.PropsWithChildren<Props>) {
   'use no memo'
@@ -213,66 +209,31 @@ export function Splash(props: React.PropsWithChildren<Props>) {
         </View>
       )}
 
-      {isReady &&
-        (isAndroid || reduceMotion === true ? (
-          // Use a simple fade on older versions of android (work around a bug)
-          <>
-            <Animated.View style={[{flex: 1}, appAnimation]}>
-              {props.children}
-            </Animated.View>
+      {isReady && (
+        <>
+          <Animated.View style={[{flex: 1}, appAnimation]}>
+            {props.children}
+          </Animated.View>
 
-            {!isAnimationComplete && (
-              <Animated.View
-                style={[
-                  StyleSheet.absoluteFillObject,
-                  logoWrapperAnimation,
-                  {
-                    flex: 1,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    transform: [{translateY: -(insets.top / 2)}, {scale: 0.1}], // scale from 1000px to 100px
-                  },
-                ]}>
-                <AnimatedLogo
-                  fill={logoBg}
-                  style={[{opacity: 0}, logoAnimations]}
-                />
+          {!isAnimationComplete && (
+            <Animated.View
+              style={[
+                StyleSheet.absoluteFillObject,
+                logoWrapperAnimation,
+                {
+                  flex: 1,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  transform: [{translateY: -(insets.top / 2)}, {scale: 0.1}], // scale from 1000px to 100px
+                },
+              ]}>
+              <Animated.View style={[logoAnimations]}>
+                <Logo fill={logoBg} />
               </Animated.View>
-            )}
-          </>
-        ) : (
-          <MaskedView
-            style={[StyleSheet.absoluteFillObject]}
-            maskElement={
-              <Animated.View
-                style={[
-                  {
-                    // Transparent background because mask is based off alpha channel.
-                    backgroundColor: 'transparent',
-                    flex: 1,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    transform: [{translateY: -(insets.top / 2)}, {scale: 0.1}], // scale from 1000px to 100px
-                  },
-                ]}>
-                <AnimatedLogo fill={logoBg} style={[logoAnimations]} />
-              </Animated.View>
-            }>
-            {!isAnimationComplete && (
-              <View
-                style={[
-                  StyleSheet.absoluteFillObject,
-                  {
-                    backgroundColor: logoBg,
-                  },
-                ]}
-              />
-            )}
-            <Animated.View style={[{flex: 1}, appAnimation]}>
-              {props.children}
             </Animated.View>
-          </MaskedView>
-        ))}
+          )}
+        </>
+      )}
     </View>
   )
 }
