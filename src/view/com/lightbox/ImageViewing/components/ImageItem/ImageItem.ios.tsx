@@ -228,10 +228,14 @@ const ImageItem = ({
               accessibilityHint=""
               enableLiveTextInteraction={showControls && !scaled}
               accessibilityIgnoresInvertColors
-              onLoad={e => {
-                setHasLoaded(true)
-                onLoad({width: e.source.width, height: e.source.height})
-              }}
+              onLoad={
+                hasLoaded
+                  ? undefined
+                  : e => {
+                      setHasLoaded(true)
+                      onLoad({width: e.source.width, height: e.source.height})
+                    }
+              }
             />
           </Animated.View>
         </Animated.View>

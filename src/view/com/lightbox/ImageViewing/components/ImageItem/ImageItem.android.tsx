@@ -396,10 +396,14 @@ const ImageItem = ({
                 placeholderContentFit="cover"
                 placeholder={{uri: imageSrc.thumbUri}}
                 accessibilityLabel={imageSrc.alt}
-                onLoad={e => {
-                  setHasLoaded(true)
-                  onLoad({width: e.source.width, height: e.source.height})
-                }}
+                onLoad={
+                  hasLoaded
+                    ? undefined
+                    : e => {
+                        setHasLoaded(true)
+                        onLoad({width: e.source.width, height: e.source.height})
+                      }
+                }
                 style={{flex: 1, borderRadius}}
                 accessibilityHint=""
                 accessibilityIgnoresInvertColors
