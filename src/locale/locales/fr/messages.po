@@ -532,7 +532,7 @@ msgstr "Un e-mail a été envoyé à votre ancienne adresse, {0}. Il comprend un
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:77
 msgid "An email has been sent! Please enter the confirmation code included in the email below."
-msgstr "Un e-mail a été envoyé ! Veuillez entrer ci-dessous le code de confirmation présent dans l’e-mail."
+msgstr "Un e-mail a été envoyé ! Entrez ci-dessous le code de confirmation présent dans l’e-mail."
 
 #: src/components/dialogs/GifSelect.tsx:266
 msgid "An error has occurred"
@@ -2963,7 +2963,7 @@ msgstr "Hmm, nous n’arrivons pas à trouver ce fil d’actu. Il a peut-être �
 
 #: src/screens/Moderation/index.tsx:61
 msgid "Hmmmm, it seems we're having trouble loading this data. See below for more details. If this issue persists, please contact us."
-msgstr "Hmm, il semble que nous ayons des difficultés à charger ces données. Voir ci-dessous pour plus de détails. Si le problème persiste, veuillez nous contacter."
+msgstr "Hmm, il semble que nous ayons des difficultés à charger ces données. Voir ci-dessous pour plus de détails. Si le problème persiste, contactez-nous."
 
 #: src/screens/Profile/ErrorState.tsx:31
 msgid "Hmmmm, we couldn't load that moderation service."
@@ -4532,7 +4532,7 @@ msgstr "Permission d’accès à la pellicule requise."
 
 #: src/view/com/lightbox/Lightbox.tsx:85
 msgid "Permission to access camera roll was denied. Please enable it in your system settings."
-msgstr "Permission d’accès à la pellicule refusée. Veuillez l’activer dans les paramètres de votre système."
+msgstr "Permission d’accès à la pellicule refusée. Activez-la dans les paramètres de votre système pour continuer."
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:55
 msgid "Person toggle"
@@ -4649,16 +4649,16 @@ msgstr "Veuillez également entrer votre mot de passe :"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:265
 msgid "Please explain why you think this label was incorrectly applied by {0}"
-msgstr "Veuillez expliquer pourquoi vous pensez que cette étiquette a été appliquée à tort par {0}"
+msgstr "Expliquez-nous pourquoi vous pensez que cette étiquette a été appliquée à tort par {0}"
 
 #: src/screens/Messages/components/ChatDisabled.tsx:110
 msgid "Please explain why you think your chats were incorrectly disabled"
-msgstr "Veuillez expliquer pourquoi vous pensez que vos discussions ont été désactivées de manière indûe"
+msgstr "Expliquez-nous pourquoi vous pensez que vos discussions ont été désactivées de manière indûe"
 
 #: src/lib/hooks/useAccountSwitcher.ts:45
 #: src/lib/hooks/useAccountSwitcher.ts:55
 msgid "Please sign in as @{0}"
-msgstr "Veuillez vous identifier comme @{0}"
+msgstr "Identifiez-vous en tant que @{0}"
 
 #: src/view/com/modals/VerifyEmail.tsx:109
 msgid "Please Verify Your Email"
@@ -6422,7 +6422,7 @@ msgstr "Nos conditions d’utilisation ont été déplacées vers"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:94
 msgid "The verification code you have provided is invalid. Please make sure that you have used the correct verification link or request a new one."
-msgstr "Le code de vérification que vous avez fourni n’est pas valide. Veuillez vous assurer que vous avez utilisé le bon lien de vérification ou demandez-en un nouveau."
+msgstr "Le code de vérification que vous avez fourni n’est pas valide. Assurez-vous que vous avez utilisé le bon lien de vérification ou demandez-en un nouveau."
 
 #: src/components/dialogs/nuxs/NeueTypography.tsx:82
 #: src/screens/Settings/AppearanceSettings.tsx:152
@@ -6481,7 +6481,7 @@ msgstr "Il y a eu un problème lors de la suppression de ce fil d’actu. Vérif
 #: src/components/dms/ReportDialog.tsx:217
 #: src/components/ReportDialog/SubmitView.tsx:87
 msgid "There was an issue sending your report. Please check your internet connection."
-msgstr "Il y a eu un problème lors de l’envoi de votre rapport. Veuillez vérifier votre connexion internet."
+msgstr "Il y a eu un problème lors de l’envoi de votre rapport. Vérifiez votre connexion internet."
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:52
 #: src/view/com/posts/FeedShutdownMsg.tsx:71
@@ -6516,7 +6516,7 @@ msgstr "Il y a eu un problème ! {0}"
 #: src/view/screens/ProfileList.tsx:426
 #: src/view/screens/ProfileList.tsx:439
 msgid "There was an issue. Please check your internet connection and try again."
-msgstr "Il y a eu un problème. Veuillez vérifier votre connexion Internet et réessayez."
+msgstr "Il y a eu un problème. Vérifiez votre connexion Internet et réessayez."
 
 #: src/components/dialogs/GifSelect.tsx:271
 #: src/view/com/util/ErrorBoundary.tsx:59
@@ -6537,7 +6537,7 @@ msgstr "Ce compte a demandé aux personnes de se connecter pour voir son profil.
 
 #: src/components/dms/BlockedByListDialog.tsx:34
 msgid "This account is blocked by one or more of your moderation lists. To unblock, please visit the lists directly and remove this user."
-msgstr "Ce compte est bloqué par un ou plusieurs de vos listes de modération. Pour le débloquer, veuillez visiter les listes directement et en retirer ce compte."
+msgstr "Ce compte est bloqué par un ou plusieurs de vos listes de modération. Pour le débloquer, visitez vos listes directement et retirez-en ce compte."
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:246
 msgid "This appeal will be sent to <0>{sourceName}</0>."
@@ -6739,11 +6739,11 @@ msgstr "Préférences des fils de discussion"
 
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:101
 msgid "To disable the email 2FA method, please verify your access to the email address."
-msgstr "Pour désactiver le 2FA par e-mail, veuillez vérifier votre accès à l’adresse e-mail."
+msgstr "Pour désactiver le 2FA par e-mail, vérifiez votre accès à votre adresse e-mail."
 
 #: src/components/dms/ReportConversationPrompt.tsx:20
 msgid "To report a conversation, please report one of its messages via the conversation screen. This lets our moderators understand the context of your issue."
-msgstr "Pour signaler une conversation, veuillez signaler un de ses messages via l’écran de conversation. Cela permettra à la modération de comprendre le contexte du problème."
+msgstr "Pour signaler une conversation, signalez plutôt un de ses messages via l’écran de conversation. Cela permettra à la modération de comprendre le contexte du problème."
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:133
 msgid "To upload videos to Bluesky, you must first verify your email."
@@ -6815,7 +6815,7 @@ msgstr "Réafficher cette liste"
 #: src/screens/Signup/index.tsx:71
 #: src/view/com/modals/ChangePassword.tsx:71
 msgid "Unable to contact your service. Please check your Internet connection."
-msgstr "Impossible de contacter votre service. Veuillez vérifier votre connexion Internet."
+msgstr "Impossible de contacter votre service. Vérifiez votre connexion Internet."
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:648
 msgid "Unable to delete"
@@ -7393,7 +7393,7 @@ msgstr "Nous sommes ravis de vous accueillir !"
 
 #: src/view/screens/ProfileList.tsx:113
 msgid "We're sorry, but we were unable to resolve this list. If this persists, please contact the list creator, @{handleOrDid}."
-msgstr "Nous sommes désolés, mais nous n’avons pas pu charger cette liste. Si cela persiste, veuillez contacter l’origine de la liste, @{handleOrDid}."
+msgstr "Nous sommes désolés, mais nous n’avons pas pu charger cette liste. Si cela persiste, contactez plutôt @{handleOrDid}, à l’origine de la liste."
 
 #: src/components/dialogs/MutedWords.tsx:378
 msgid "We're sorry, but we weren't able to load your muted words at this time. Please try again."
@@ -7793,7 +7793,7 @@ msgstr "Vous êtes dans la file d’attente"
 #: src/screens/Deactivated.tsx:89
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:54
 msgid "You're logged in with an App Password. Please log in with your main password to continue deactivating your account."
-msgstr "Vous êtes connecté·e avec un mot de passe d’application. Veuillez vous connecter avec votre mot de passe principal pour continuer à désactiver votre compte."
+msgstr "Vous êtes connecté·e avec un mot de passe d’application. Connectez-vous plutôt avec votre mot de passe principal pour continuer à désactiver votre compte."
 
 #: src/screens/Onboarding/StepFinished.tsx:226
 msgid "You're ready to go!"
@@ -7838,7 +7838,7 @@ msgstr "Votre date de naissance"
 
 #: src/view/com/util/post-embeds/VideoEmbed.web.tsx:171
 msgid "Your browser does not support the video format. Please try a different browser."
-msgstr "Votre navigateur ne prend pas en charge le format vidéo. Veuillez essayer un autre navigateur."
+msgstr "Votre navigateur ne prend pas en charge le format vidéo. Essayez plutôt avec un autre navigateur."
 
 #: src/screens/Messages/components/ChatDisabled.tsx:25
 msgid "Your chats have been disabled"
