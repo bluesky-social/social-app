@@ -1,42 +1,3 @@
-diff --git a/node_modules/react-native/Libraries/Blob/RCTFileReaderModule.mm b/node_modules/react-native/Libraries/Blob/RCTFileReaderModule.mm
-index caa5540..c5d4e67 100644
---- a/node_modules/react-native/Libraries/Blob/RCTFileReaderModule.mm
-+++ b/node_modules/react-native/Libraries/Blob/RCTFileReaderModule.mm
-@@ -73,7 +73,7 @@ @implementation RCTFileReaderModule
-     } else {
-       NSString *type = [RCTConvert NSString:blob[@"type"]];
-       NSString *text = [NSString stringWithFormat:@"data:%@;base64,%@",
--                                                  type != nil && [type length] > 0 ? type : @"application/octet-stream",
-+                                                  ![type isEqual:[NSNull null]] && [type length] > 0 ? type : @"application/octet-stream",
-                                                   [data base64EncodedStringWithOptions:0]];
-
-       resolve(text);
-diff --git a/node_modules/react-native/Libraries/Text/TextInput/RCTBaseTextInputView.mm b/node_modules/react-native/Libraries/Text/TextInput/RCTBaseTextInputView.mm
-index b0d71dc..41b9a0e 100644
---- a/node_modules/react-native/Libraries/Text/TextInput/RCTBaseTextInputView.mm
-+++ b/node_modules/react-native/Libraries/Text/TextInput/RCTBaseTextInputView.mm
-@@ -377,10 +377,6 @@ - (void)textInputDidBeginEditing
-     self.backedTextInputView.attributedText = [NSAttributedString new];
-   }
-
--  if (_selectTextOnFocus) {
--    [self.backedTextInputView selectAll:nil];
--  }
--
-   [_eventDispatcher sendTextEventWithType:RCTTextEventTypeFocus
-                                  reactTag:self.reactTag
-                                      text:[self.backedTextInputView.attributedText.string copy]
-@@ -611,6 +607,10 @@ - (UIView *)reactAccessibilityElement
- - (void)reactFocus
- {
-   [self.backedTextInputView reactFocus];
-+
-+  if (_selectTextOnFocus) {
-+    [self.backedTextInputView selectAll:nil];
-+  }
- }
-
- - (void)reactBlur
 diff --git a/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.h b/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.h
 index e9b330f..ec5f58c 100644
 --- a/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.h
@@ -51,18 +12,18 @@ index e9b330f..ec5f58c 100644
 
  @end
 diff --git a/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.m b/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.m
-index b09e653..288e60c 100644
+index 53bfd04..ff1b1ed 100644
 --- a/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.m
 +++ b/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.m
-@@ -22,6 +22,7 @@ @implementation RCTRefreshControl {
-   NSString *_title;
+@@ -23,6 +23,7 @@ @implementation RCTRefreshControl {
    UIColor *_titleColor;
    CGFloat _progressViewOffset;
+   BOOL _hasMovedToWindow;
 +  UIColor *_customTintColor;
  }
 
  - (instancetype)init
-@@ -56,6 +57,12 @@ - (void)layoutSubviews
+@@ -58,6 +59,12 @@ - (void)layoutSubviews
    _isInitialRender = false;
  }
 
@@ -72,19 +33,13 @@ index b09e653..288e60c 100644
 +  [self setTintColor:_customTintColor];
 +}
 +
- - (void)beginRefreshingProgrammatically
+ - (void)didMoveToWindow
  {
-   UInt64 beginRefreshingTimestamp = _currentRefreshingStateTimestamp;
-@@ -203,4 +210,58 @@ - (void)refreshControlValueChanged
+   [super didMoveToWindow];
+@@ -221,4 +228,50 @@ - (void)refreshControlValueChanged
    }
  }
 
-+- (void)setCustomTintColor:(UIColor *)customTintColor
-+{
-+  _customTintColor = customTintColor;
-+  [self setTintColor:customTintColor];
-+}
-+
 +// Fix for https://github.com/facebook/react-native/issues/43388
 +// A bug in iOS 17.4 causes the haptic to not play when refreshing if the tintColor
 +// is set before the refresh control gets added to the scrollview. We'll call this
@@ -97,11 +52,9 @@ index b09e653..288e60c 100644
 +  }
 +}
 +
-+/*
-+ This method is used by Bluesky's ExpoScrollForwarder. This allows other React Native
-+ libraries to perform a refresh of a scrollview and access the refresh control's onRefresh
-+ function.
-+ */
++// This method is used by Bluesky's ExpoScrollForwarder. This allows other React Native
++// libraries to perform a refresh of a scrollview and access the refresh control's onRefresh
++// function.
 +- (void)forwarderBeginRefreshing
 +{
 +  _refreshingProgrammatically = NO;
@@ -152,19 +105,3 @@ index 40aaf9c..1c60164 100644
  RCT_EXPORT_METHOD(setNativeRefreshing : (nonnull NSNumber *)viewTag toRefreshing : (BOOL)refreshing)
  {
    [self.bridge.uiManager addUIBlock:^(RCTUIManager *uiManager, NSDictionary<NSNumber *, UIView *> *viewRegistry) {
-diff --git a/node_modules/react-native/ReactAndroid/src/main/java/com/facebook/react/modules/core/JavaTimerManager.java b/node_modules/react-native/ReactAndroid/src/main/java/com/facebook/react/modules/core/JavaTimerManager.java
-index 5f5e1ab..aac00b6 100644
---- a/node_modules/react-native/ReactAndroid/src/main/java/com/facebook/react/modules/core/JavaTimerManager.java
-+++ b/node_modules/react-native/ReactAndroid/src/main/java/com/facebook/react/modules/core/JavaTimerManager.java
-@@ -99,8 +99,9 @@ public class JavaTimerManager {
-       }
-
-       // If the JS thread is busy for multiple frames we cancel any other pending runnable.
--      if (mCurrentIdleCallbackRunnable != null) {
--        mCurrentIdleCallbackRunnable.cancel();
-+      IdleCallbackRunnable currentRunnable = mCurrentIdleCallbackRunnable;
-+      if (currentRunnable != null) {
-+        currentRunnable.cancel();
-       }
-
-       mCurrentIdleCallbackRunnable = new IdleCallbackRunnable(frameTimeNanos);

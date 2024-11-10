@@ -209,7 +209,7 @@ module.exports = function (config) {
               compileSdkVersion: 34,
               targetSdkVersion: 34,
               buildToolsVersion: '34.0.0',
-              kotlinVersion: '1.8.0',
+              // kotlinVersion: '1.8.0',
               newArchEnabled: false,
             },
           },
