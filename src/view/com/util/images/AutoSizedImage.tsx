@@ -113,9 +113,13 @@ export function AutoSizedImage({
         accessibilityIgnoresInvertColors
         accessibilityLabel={image.alt}
         accessibilityHint=""
-        onLoad={e => {
-          setFetchedDims({width: e.source.width, height: e.source.height})
-        }}
+        onLoad={
+          fetchedDims
+            ? undefined
+            : e => {
+                setFetchedDims({width: e.source.width, height: e.source.height})
+              }
+        }
       />
       <MediaInsetBorder />
 
