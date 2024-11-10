@@ -1,23 +1,26 @@
 import React, {useState} from 'react'
-import {ActivityIndicator, StyleProp, StyleSheet, View} from 'react-native'
+import {ActivityIndicator, StyleSheet} from 'react-native'
 import {
   Gesture,
   GestureDetector,
   PanGesture,
 } from 'react-native-gesture-handler'
 import Animated, {
-  AnimatedRef,
-  measure,
   runOnJS,
+  SharedValue,
   useAnimatedReaction,
   useAnimatedRef,
   useAnimatedStyle,
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated'
-import {Image, ImageStyle} from 'expo-image'
+import {Image} from 'expo-image'
 
-import type {Dimensions as ImageDimensions, ImageSource} from '../../@types'
+import type {
+  Dimensions as ImageDimensions,
+  ImageSource,
+  Transform,
+} from '../../@types'
 import {
   applyRounding,
   createTransform,
@@ -27,8 +30,6 @@ import {
   readTransform,
   TransformMatrix,
 } from '../../transforms'
-
-const AnimatedImage = Animated.createAnimatedComponent(Image)
 
 const MIN_SCREEN_ZOOM = 2
 const MAX_ORIGINAL_IMAGE_ZOOM = 2
@@ -40,24 +41,39 @@ type Props = {
   onRequestClose: () => void
   onTap: () => void
   onZoom: (isZoomed: boolean) => void
+  onLoad: (dims: ImageDimensions) => void
   isScrollViewBeingDragged: boolean
   showControls: boolean
-  safeAreaRef: AnimatedRef<View>
+  measureSafeArea: () => {
+    x: number
+    y: number
+    width: number
+    height: number
+  }
   imageAspect: number | undefined
   imageDimensions: ImageDimensions | undefined
-  imageStyle: StyleProp<ImageStyle>
   dismissSwipePan: PanGesture
+  transforms: Readonly<
+    SharedValue<{
+      scaleAndMoveTransform: Transform
+      cropFrameTransform: Transform
+      cropContentTransform: Transform
+      isResting: boolean
+      isHidden: boolean
+    }>
+  >
 }
 const ImageItem = ({
   imageSrc,
   onTap,
   onZoom,
+  onLoad,
   isScrollViewBeingDragged,
-  safeAreaRef,
+  measureSafeArea,
   imageAspect,
   imageDimensions,
-  imageStyle,
   dismissSwipePan,
+  transforms,
 }: Props) => {
   const [isScaled, setIsScaled] = useState(false)
   const committedTransform = useSharedValue(initialTransform)
@@ -95,19 +111,6 @@ const ImageItem = ({
     onZoom(nextIsScaled)
   }
 
-  const animatedStyle = useAnimatedStyle(() => {
-    // Apply the active adjustments on top of the committed transform before the gestures.
-    // This is matrix multiplication, so operations are applied in the reverse order.
-    let t = createTransform()
-    prependPan(t, panTranslation.value)
-    prependPinch(t, pinchScale.value, pinchOrigin.value, pinchTranslation.value)
-    prependTransform(t, committedTransform.value)
-    const [translateX, translateY, scale] = readTransform(t)
-    return {
-      transform: [{translateX}, {translateY: translateY}, {scale}],
-    }
-  })
-
   // On Android, stock apps prevent going "out of bounds" on pan or pinch. You should "bump" into edges.
   // If the user tried to pan too hard, this function will provide the negative panning to stay in bounds.
   function getExtraTranslationToStayInBounds(
@@ -143,10 +146,7 @@ const ImageItem = ({
   const pinch = Gesture.Pinch()
     .onStart(e => {
       'worklet'
-      const screenSize = measure(safeAreaRef)
-      if (!screenSize) {
-        return
-      }
+      const screenSize = measureSafeArea()
       pinchOrigin.value = {
         x: e.focalX - screenSize.width / 2,
         y: e.focalY - screenSize.height / 2,
@@ -154,8 +154,8 @@ const ImageItem = ({
     })
     .onChange(e => {
       'worklet'
-      const screenSize = measure(safeAreaRef)
-      if (!imageDimensions || !screenSize) {
+      const screenSize = measureSafeArea()
+      if (!imageDimensions) {
         return
       }
       // Don't let the picture zoom in so close that it gets blurry.
@@ -213,8 +213,8 @@ const ImageItem = ({
     .minPointers(isScaled ? 1 : 2)
     .onChange(e => {
       'worklet'
-      const screenSize = measure(safeAreaRef)
-      if (!imageDimensions || !screenSize) {
+      const screenSize = measureSafeArea()
+      if (!imageDimensions) {
         return
       }
 
@@ -257,8 +257,8 @@ const ImageItem = ({
     .numberOfTaps(2)
     .onEnd(e => {
       'worklet'
-      const screenSize = measure(safeAreaRef)
-      if (!imageDimensions || !imageAspect || !screenSize) {
+      const screenSize = measureSafeArea()
+      if (!imageDimensions || !imageAspect) {
         return
       }
       const [, , committedScale] = readTransform(committedTransform.value)
@@ -302,11 +302,6 @@ const ImageItem = ({
       committedTransform.value = withClampedSpring(finalTransform)
     })
 
-  const innerStyle = useAnimatedStyle(() => ({
-    width: '100%',
-    aspectRatio: imageAspect,
-  }))
-
   const composedGesture = isScrollViewBeingDragged
     ? // If the parent is not at rest, provide a no-op gesture.
       Gesture.Manual()
@@ -317,29 +312,101 @@ const ImageItem = ({
         singleTap,
       )
 
+  const containerStyle = useAnimatedStyle(() => {
+    const {scaleAndMoveTransform, isHidden} = transforms.value
+    // Apply the active adjustments on top of the committed transform before the gestures.
+    // This is matrix multiplication, so operations are applied in the reverse order.
+    let t = createTransform()
+    prependPan(t, panTranslation.value)
+    prependPinch(t, pinchScale.value, pinchOrigin.value, pinchTranslation.value)
+    prependTransform(t, committedTransform.value)
+    const [translateX, translateY, scale] = readTransform(t)
+    const manipulationTransform = [
+      {translateX},
+      {translateY: translateY},
+      {scale},
+    ]
+    const screenSize = measureSafeArea()
+    return {
+      opacity: isHidden ? 0 : 1,
+      transform: scaleAndMoveTransform.concat(manipulationTransform),
+      width: screenSize.width,
+      maxHeight: screenSize.height,
+      alignSelf: 'center',
+      aspectRatio: imageAspect ?? 1 /* force onLoad */,
+    }
+  })
+
+  const imageCropStyle = useAnimatedStyle(() => {
+    const {cropFrameTransform} = transforms.value
+    return {
+      flex: 1,
+      overflow: 'hidden',
+      transform: cropFrameTransform,
+    }
+  })
+
+  const imageStyle = useAnimatedStyle(() => {
+    const {cropContentTransform} = transforms.value
+    return {
+      flex: 1,
+      transform: cropContentTransform,
+      opacity: imageAspect === undefined ? 0 : 1,
+    }
+  })
+
+  const [showLoader, setShowLoader] = useState(false)
+  const [hasLoaded, setHasLoaded] = useState(false)
+  useAnimatedReaction(
+    () => {
+      return transforms.value.isResting && !hasLoaded
+    },
+    (show, prevShow) => {
+      if (show && !prevShow) {
+        runOnJS(setShowLoader)(false)
+      } else if (!prevShow && show) {
+        runOnJS(setShowLoader)(true)
+      }
+    },
+  )
+
   const type = imageSrc.type
   const borderRadius =
     type === 'circle-avi' ? 1e5 : type === 'rect-avi' ? 20 : 0
+
   return (
     <GestureDetector gesture={composedGesture}>
-      <Animated.View style={imageStyle} renderToHardwareTextureAndroid>
-        <Animated.View
-          ref={containerRef}
-          // Necessary to make opacity work for both children together.
-          renderToHardwareTextureAndroid
-          style={[styles.container, animatedStyle]}>
-          <ActivityIndicator size="small" color="#FFF" style={styles.loading} />
-          <AnimatedImage
-            contentFit="contain"
-            source={{uri: imageSrc.uri}}
-            placeholderContentFit="contain"
-            placeholder={{uri: imageSrc.thumbUri}}
-            style={[innerStyle, {borderRadius}]}
-            accessibilityLabel={imageSrc.alt}
-            accessibilityHint=""
-            accessibilityIgnoresInvertColors
-            cachePolicy="memory"
-          />
+      <Animated.View
+        ref={containerRef}
+        style={[styles.container]}
+        renderToHardwareTextureAndroid>
+        <Animated.View style={containerStyle}>
+          {showLoader && (
+            <ActivityIndicator
+              size="small"
+              color="#FFF"
+              style={styles.loading}
+            />
+          )}
+          <Animated.View style={imageCropStyle}>
+            <Animated.View style={imageStyle}>
+              <Image
+                contentFit="cover"
+                source={{uri: imageSrc.uri}}
+                placeholderContentFit="cover"
+                placeholder={{uri: imageSrc.thumbUri}}
+                accessibilityLabel={imageSrc.alt}
+                onLoad={e => {
+                  setHasLoaded(true)
+                  onLoad({width: e.source.width, height: e.source.height})
+                }}
+                style={{flex: 1, borderRadius}}
+                accessibilityHint=""
+                accessibilityIgnoresInvertColors
+                cachePolicy="memory"
+              />
+            </Animated.View>
+          </Animated.View>
         </Animated.View>
       </Animated.View>
     </GestureDetector>
@@ -358,6 +425,7 @@ const styles = StyleSheet.create({
     right: 0,
     top: 0,
     bottom: 0,
+    justifyContent: 'center',
   },
 })
 
