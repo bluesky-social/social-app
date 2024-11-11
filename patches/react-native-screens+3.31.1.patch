@@ -16,3 +16,4 @@ index c45adc0..338a571 100644
 +//        }
          return super.updateState(view, props, stateWrapper)
      }
+ 
