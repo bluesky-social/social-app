@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-10 13:39\n"
+"PO-Revision-Date: 2024-11-11 09:29\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -1084,7 +1084,7 @@ msgstr "建立帳號即表示您同意<0>服務條款</0>。"
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:177
 msgid "by you"
-msgstr "由您設定"
+msgstr "由您建立"
 
 #: src/view/com/composer/photos/OpenCameraBtn.tsx:72
 msgid "Camera"
