@@ -552,7 +552,7 @@ let Feed = ({
         onScrolledDownChange={onScrolledDownChange}
         indicatorStyle={theme.colorScheme === 'dark' ? 'white' : 'black'}
         onEndReached={onEndReached}
-        // onEndReachedThreshold={2} // number of posts left to trigger load more
+        onEndReachedThreshold={2} // number of posts left to trigger load more
         removeClippedSubviews={true}
         extraData={extraData}
         // @ts-ignore our .web version only -prf
