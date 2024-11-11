@@ -1,24 +1,43 @@
 // default implementation fallback for web
 
 import React from 'react'
-import {ImageStyle, StyleProp, View} from 'react-native'
+import {View} from 'react-native'
 import {PanGesture} from 'react-native-gesture-handler'
-import {AnimatedRef} from 'react-native-reanimated'
+import {SharedValue} from 'react-native-reanimated'
 
-import {Dimensions as ImageDimensions, ImageSource} from '../../@types'
+import {Dimensions} from '#/lib/media/types'
+import {
+  Dimensions as ImageDimensions,
+  ImageSource,
+  Transform,
+} from '../../@types'
 
 type Props = {
   imageSrc: ImageSource
   onRequestClose: () => void
   onTap: () => void
   onZoom: (scaled: boolean) => void
+  onLoad: (dims: Dimensions) => void
   isScrollViewBeingDragged: boolean
   showControls: boolean
-  safeAreaRef: AnimatedRef<View>
+  measureSafeArea: () => {
+    x: number
+    y: number
+    width: number
+    height: number
+  }
   imageAspect: number | undefined
   imageDimensions: ImageDimensions | undefined
-  imageStyle: StyleProp<ImageStyle>
   dismissSwipePan: PanGesture
+  transforms: Readonly<
+    SharedValue<{
+      scaleAndMoveTransform: Transform
+      cropFrameTransform: Transform
+      cropContentTransform: Transform
+      isResting: boolean
+      isHidden: boolean
+    }>
+  >
 }
 
 const ImageItem = (_props: Props) => {

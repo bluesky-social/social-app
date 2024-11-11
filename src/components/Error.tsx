@@ -32,7 +32,7 @@ export function Error({
   return (
     <CenteredView
       style={[
-        a.flex_1,
+        a.w_full,
         a.align_center,
         a.gap_5xl,
         !gtMobile && a.justify_between,

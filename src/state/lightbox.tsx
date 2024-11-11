@@ -1,5 +1,4 @@
 import React from 'react'
-import type {MeasuredDimensions} from 'react-native-reanimated'
 import {nanoid} from 'nanoid/non-secure'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
@@ -8,7 +7,6 @@ import {ImageSource} from '#/view/com/lightbox/ImageViewing/@types'
 export type Lightbox = {
   id: string
   images: ImageSource[]
-  thumbDims: MeasuredDimensions | null
   index: number
 }
 

@@ -1,17 +1,19 @@
 import React from 'react'
 import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
-import {AnimatedRef} from 'react-native-reanimated'
+import {AnimatedRef, useAnimatedRef} from 'react-native-reanimated'
 import {AppBskyEmbedImages} from '@atproto/api'
 
 import {PostEmbedViewContext} from '#/view/com/util/post-embeds/types'
 import {atoms as a, useBreakpoints} from '#/alf'
+import {Dimensions} from '../../lightbox/ImageViewing/@types'
 import {GalleryItem} from './Gallery'
 
 interface ImageLayoutGridProps {
   images: AppBskyEmbedImages.ViewImage[]
   onPress?: (
     index: number,
-    containerRef: AnimatedRef<React.Component<{}, {}, any>>,
+    containerRefs: AnimatedRef<React.Component<{}, {}, any>>[],
+    fetchedDims: (Dimensions | null)[],
   ) => void
   onLongPress?: (index: number) => void
   onPressIn?: (index: number) => void
@@ -41,7 +43,8 @@ interface ImageLayoutGridInnerProps {
   images: AppBskyEmbedImages.ViewImage[]
   onPress?: (
     index: number,
-    containerRef: AnimatedRef<React.Component<{}, {}, any>>,
+    containerRefs: AnimatedRef<React.Component<{}, {}, any>>[],
+    fetchedDims: (Dimensions | null)[],
   ) => void
   onLongPress?: (index: number) => void
   onPressIn?: (index: number) => void
@@ -53,8 +56,15 @@ function ImageLayoutGridInner(props: ImageLayoutGridInnerProps) {
   const gap = props.gap
   const count = props.images.length
 
+  const containerRef1 = useAnimatedRef()
+  const containerRef2 = useAnimatedRef()
+  const containerRef3 = useAnimatedRef()
+  const containerRef4 = useAnimatedRef()
+  const thumbDimsRef = React.useRef<(Dimensions | null)[]>([])
+
   switch (count) {
-    case 2:
+    case 2: {
+      const containerRefs = [containerRef1, containerRef2]
       return (
         <View style={[a.flex_1, a.flex_row, gap]}>
           <View style={[a.flex_1, {aspectRatio: 1}]}>
@@ -62,6 +72,8 @@ function ImageLayoutGridInner(props: ImageLayoutGridInnerProps) {
               {...props}
               index={0}
               insetBorderStyle={noCorners(['topRight', 'bottomRight'])}
+              containerRefs={containerRefs}
+              thumbDimsRef={thumbDimsRef}
             />
           </View>
           <View style={[a.flex_1, {aspectRatio: 1}]}>
@@ -69,12 +81,16 @@ function ImageLayoutGridInner(props: ImageLayoutGridInnerProps) {
               {...props}
               index={1}
               insetBorderStyle={noCorners(['topLeft', 'bottomLeft'])}
+              containerRefs={containerRefs}
+              thumbDimsRef={thumbDimsRef}
             />
           </View>
         </View>
       )
+    }
 
-    case 3:
+    case 3: {
+      const containerRefs = [containerRef1, containerRef2, containerRef3]
       return (
         <View style={[a.flex_1, a.flex_row, gap]}>
           <View style={[a.flex_1, {aspectRatio: 1}]}>
@@ -82,6 +98,8 @@ function ImageLayoutGridInner(props: ImageLayoutGridInnerProps) {
               {...props}
               index={0}
               insetBorderStyle={noCorners(['topRight', 'bottomRight'])}
+              containerRefs={containerRefs}
+              thumbDimsRef={thumbDimsRef}
             />
           </View>
           <View style={[a.flex_1, {aspectRatio: 1}, gap]}>
@@ -94,6 +112,8 @@ function ImageLayoutGridInner(props: ImageLayoutGridInnerProps) {
                   'bottomLeft',
                   'bottomRight',
                 ])}
+                containerRefs={containerRefs}
+                thumbDimsRef={thumbDimsRef}
               />
             </View>
             <View style={[a.flex_1]}>
@@ -105,13 +125,22 @@ function ImageLayoutGridInner(props: ImageLayoutGridInnerProps) {
                   'bottomLeft',
                   'topRight',
                 ])}
+                containerRefs={containerRefs}
+                thumbDimsRef={thumbDimsRef}
               />
             </View>
           </View>
         </View>
       )
+    }
 
-    case 4:
+    case 4: {
+      const containerRefs = [
+        containerRef1,
+        containerRef2,
+        containerRef3,
+        containerRef4,
+      ]
       return (
         <>
           <View style={[a.flex_row, gap]}>
@@ -124,6 +153,8 @@ function ImageLayoutGridInner(props: ImageLayoutGridInnerProps) {
                   'topRight',
                   'bottomRight',
                 ])}
+                containerRefs={containerRefs}
+                thumbDimsRef={thumbDimsRef}
               />
             </View>
             <View style={[a.flex_1, {aspectRatio: 1.5}]}>
@@ -135,6 +166,8 @@ function ImageLayoutGridInner(props: ImageLayoutGridInnerProps) {
                   'bottomLeft',
                   'bottomRight',
                 ])}
+                containerRefs={containerRefs}
+                thumbDimsRef={thumbDimsRef}
               />
             </View>
           </View>
@@ -148,6 +181,8 @@ function ImageLayoutGridInner(props: ImageLayoutGridInnerProps) {
                   'topRight',
                   'bottomRight',
                 ])}
+                containerRefs={containerRefs}
+                thumbDimsRef={thumbDimsRef}
               />
             </View>
             <View style={[a.flex_1, {aspectRatio: 1.5}]}>
@@ -159,11 +194,14 @@ function ImageLayoutGridInner(props: ImageLayoutGridInnerProps) {
                   'bottomLeft',
                   'topRight',
                 ])}
+                containerRefs={containerRefs}
+                thumbDimsRef={thumbDimsRef}
               />
             </View>
           </View>
         </>
       )
+    }
 
     default:
       return null
