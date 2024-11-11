@@ -32,8 +32,8 @@ function ShellInner() {
   const navigator = useNavigation<NavigationProp>()
   const closeAllActiveElements = useCloseAllActiveElements()
   const {_} = useLingui()
-
   const showDrawer = !isDesktop && isDrawerOpen
+
   useWebBodyScrollLock(showDrawer)
   useComposerKeyboardShortcut()
   useIntentHandler()
@@ -57,7 +57,7 @@ function ShellInner() {
       <Lightbox />
       <PortalOutlet />
 
-      {!isDesktop && isDrawerOpen && (
+      {showDrawer && (
         <TouchableWithoutFeedback
           onPress={ev => {
             // Only close if press happens outside of the drawer
