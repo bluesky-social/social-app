@@ -4,10 +4,11 @@ import {useKeyboardController} from 'react-native-keyboard-controller'
 import {AppBskyActorDefs, moderateProfile, ModerationOpts} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useFocusEffect} from '@react-navigation/native'
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
-import {CommonNavigatorParams} from '#/lib/routes/types'
+import {useEmail} from '#/lib/hooks/useEmail'
+import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
 import {isWeb} from '#/platform/detection'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {ConvoProvider, isConvoActive, useConvo} from '#/state/messages/convo'
@@ -19,6 +20,8 @@ import {useSetMinimalShellMode} from '#/state/shell'
 import {CenteredView} from '#/view/com/util/Views'
 import {MessagesList} from '#/screens/Messages/components/MessagesList'
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
+import {useDialogControl} from '#/components/Dialog'
+import {VerifyEmailDialog} from '#/components/dialogs/VerifyEmailDialog'
 import {MessagesListBlockedFooter} from '#/components/dms/MessagesListBlockedFooter'
 import {MessagesListHeader} from '#/components/dms/MessagesListHeader'
 import {Error} from '#/components/Error'
@@ -161,8 +164,12 @@ function InnerReady({
   hasScrolled: boolean
   setHasScrolled: React.Dispatch<React.SetStateAction<boolean>>
 }) {
+  const {_} = useLingui()
   const convoState = useConvo()
+  const navigation = useNavigation<NavigationProp>()
   const recipient = useProfileShadow(recipientUnshadowed)
+  const verifyEmailControl = useDialogControl()
+  const {needsEmailVerification} = useEmail()
 
   const moderation = React.useMemo(() => {
     return moderateProfile(recipient, moderationOpts)
@@ -178,6 +185,12 @@ function InnerReady({
       userBlock,
     }
   }, [moderation])
+
+  React.useEffect(() => {
+    if (needsEmailVerification) {
+      verifyEmailControl.open()
+    }
+  }, [needsEmailVerification, verifyEmailControl])
 
   return (
     <>
@@ -201,6 +214,15 @@ function InnerReady({
           }
         />
       )}
+      <VerifyEmailDialog
+        reasonText={_(
+          msg`Before you may message another user, you must first verify your email.`,
+        )}
+        control={verifyEmailControl}
+        onCloseWithoutVerifying={() => {
+          navigation.navigate('Home')
+        }}
+      />
     </>
   )
 }

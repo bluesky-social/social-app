@@ -35,7 +35,6 @@ export function MessageProfileButton({
     }
 
     if (needsEmailVerification) {
-      console.log('open')
       verifyEmailControl.open()
       return
     }
