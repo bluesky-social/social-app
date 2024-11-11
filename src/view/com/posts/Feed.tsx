@@ -37,7 +37,6 @@ import {
   SuggestedFeeds,
   SuggestedFollows,
 } from '#/components/FeedInterstitials'
-import {Text} from '#/components/Typography'
 import {List, ListRef} from '../util/List'
 import {PostFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
@@ -420,7 +419,6 @@ let Feed = ({
   }, [refetch, setIsPTRing, onHasNew, feed, feedType])
 
   const onEndReached = React.useCallback(async () => {
-    console.log('onEndReached')
     if (isFetching || !hasNextPage || isError) return
 
     logEvent('feed:endReached:sampled', {
@@ -534,10 +532,8 @@ let Feed = ({
     )
   }, [isFetchingNextPage, shouldRenderEndOfFeed, renderEndOfFeed, headerOffset])
 
-  console.log('desktopFixedHeightOffset: ', desktopFixedHeightOffset)
   return (
     <View testID={testID} style={style}>
-      <Text>test</Text>
       <List
         testID={testID ? `${testID}-flatlist` : undefined}
         ref={scrollElRef}
