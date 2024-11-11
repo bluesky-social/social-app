@@ -6335,8 +6335,8 @@ msgstr "탭하여 재생/일시 정지"
 msgid "Tap to toggle sound"
 msgstr "탭하여 소리 켜기/끄기"
 
-#: src/view/com/util/images/AutoSizedImage.tsx:195
-#: src/view/com/util/images/AutoSizedImage.tsx:217
+#: src/view/com/util/images/AutoSizedImage.tsx:199
+#: src/view/com/util/images/AutoSizedImage.tsx:221
 msgid "Tap to view full image"
 msgstr "탭하여 전체 이미지를 봅니다"
 
