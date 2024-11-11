@@ -26,7 +26,7 @@ export function CopyButton({
     if (hasBeenCopied) {
       const timeout = setTimeout(
         () => setHasBeenCopied(false),
-        !isReducedMotionEnabled ? 100 : 2000,
+        isReducedMotionEnabled ? 2000 : 100,
       )
       return () => clearTimeout(timeout)
     }
