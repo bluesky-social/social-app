@@ -94,7 +94,9 @@ class GifView(
             dataSource: DataSource,
             isFirstResource: Boolean
           ): Boolean {
-            isLoaded = true
+            placeholderRequest?.let {
+              glide.clear(it)
+            }
             return false
           }
 
