@@ -771,7 +771,7 @@ function BackdatedPostIndicator({post}: {post: AppBskyFeedDefs.PostView}) {
   const {_, i18n} = useLingui()
   const control = Prompt.usePromptControl()
 
-  const indexedAt = new Date()
+  const indexedAt = new Date(post.indexedAt)
   const createdAt = AppBskyFeedPost.isRecord(post.record)
     ? new Date(post.record.createdAt)
     : new Date(post.indexedAt)
