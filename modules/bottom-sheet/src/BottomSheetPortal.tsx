@@ -4,7 +4,7 @@ import {createPortalGroup_INTERNAL} from './lib/Portal'
 
 type PortalContext = React.ElementType<{children: React.ReactNode}>
 
-const Context = React.createContext({} as PortalContext)
+export const Context = React.createContext({} as PortalContext)
 
 export const useBottomSheetPortal_INTERNAL = () => React.useContext(Context)
 
