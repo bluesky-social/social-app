@@ -3,7 +3,7 @@
   "version": "1.94.0",
   "private": true,
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "packageManager": "yarn@1.22.19",
   "scripts": {
@@ -103,7 +103,7 @@
     "@tiptap/suggestion": "^2.6.6",
     "@types/invariant": "^2.2.37",
     "@types/lodash.throttle": "^4.1.9",
-    "@types/node": "^18.16.2",
+    "@types/node": "^20.14.3",
     "@zxing/text-encoding": "^0.9.0",
     "array.prototype.findlast": "^1.2.3",
     "await-lock": "^2.2.2",
