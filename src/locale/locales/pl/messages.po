@@ -3526,7 +3526,7 @@ msgstr "Polubione przez"
 
 #: src/view/screens/Profile.tsx:231
 msgid "Likes"
-msgstr "Polubienia"
+msgstr "Polubione"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:206
 msgid "Likes on this post"
@@ -3692,7 +3692,7 @@ msgstr "Oznacz jako przeczytane"
 
 #: src/view/screens/Profile.tsx:230
 msgid "Media"
-msgstr "Załączniki"
+msgstr "Media"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:208
 msgid "Media that may be disturbing or inappropriate for some audiences."
@@ -6214,7 +6214,7 @@ msgstr "Nieprawidłowy pakiet startowy"
 
 #: src/view/screens/Profile.tsx:233
 msgid "Starter Packs"
-msgstr "Pakiety startowe"
+msgstr "Pakiety"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:239
 msgid "Starter packs let you easily share your favorite feeds and people with your friends."
