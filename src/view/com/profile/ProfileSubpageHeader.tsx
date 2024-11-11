@@ -1,5 +1,12 @@
 import React from 'react'
 import {Pressable, StyleSheet, View} from 'react-native'
+import Animated, {
+  measure,
+  MeasuredDimensions,
+  runOnJS,
+  runOnUI,
+  useAnimatedRef,
+} from 'react-native-reanimated'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -53,6 +60,7 @@ export function ProfileSubpageHeader({
   const {openLightbox} = useLightboxControls()
   const pal = usePalette('default')
   const canGoBack = navigation.canGoBack()
+  const aviRef = useAnimatedRef()
 
   const onPressBack = React.useCallback(() => {
     if (navigation.canGoBack()) {
@@ -66,27 +74,40 @@ export function ProfileSubpageHeader({
     setDrawerOpen(true)
   }, [setDrawerOpen])
 
-  const onPressAvi = React.useCallback(() => {
-    if (
-      avatar // TODO && !(view.moderation.avatar.blur && view.moderation.avatar.noOverride)
-    ) {
+  const _openLightbox = React.useCallback(
+    (uri: string, thumbRect: MeasuredDimensions | null) => {
       openLightbox({
         images: [
           {
-            uri: avatar,
-            thumbUri: avatar,
+            uri,
+            thumbUri: uri,
+            thumbRect,
             dimensions: {
               // It's fine if it's actually smaller but we know it's 1:1.
               height: 1000,
               width: 1000,
             },
+            thumbDimensions: null,
+            type: 'rect-avi',
           },
         ],
         index: 0,
-        thumbDims: null,
       })
+    },
+    [openLightbox],
+  )
+
+  const onPressAvi = React.useCallback(() => {
+    if (
+      avatar // TODO && !(view.moderation.avatar.blur && view.moderation.avatar.noOverride)
+    ) {
+      runOnUI(() => {
+        'worklet'
+        const rect = measure(aviRef)
+        runOnJS(_openLightbox)(avatar, rect)
+      })()
     }
-  }, [openLightbox, avatar])
+  }, [_openLightbox, avatar, aviRef])
 
   return (
     <CenteredView style={pal.view}>
@@ -134,19 +155,21 @@ export function ProfileSubpageHeader({
           paddingBottom: 6,
           paddingHorizontal: isMobile ? 12 : 14,
         }}>
-        <Pressable
-          testID="headerAviButton"
-          onPress={onPressAvi}
-          accessibilityRole="image"
-          accessibilityLabel={_(msg`View the avatar`)}
-          accessibilityHint=""
-          style={{width: 58}}>
-          {avatarType === 'starter-pack' ? (
-            <StarterPack width={58} gradient="sky" />
-          ) : (
-            <UserAvatar type={avatarType} size={58} avatar={avatar} />
-          )}
-        </Pressable>
+        <Animated.View ref={aviRef} collapsable={false}>
+          <Pressable
+            testID="headerAviButton"
+            onPress={onPressAvi}
+            accessibilityRole="image"
+            accessibilityLabel={_(msg`View the avatar`)}
+            accessibilityHint=""
+            style={{width: 58}}>
+            {avatarType === 'starter-pack' ? (
+              <StarterPack width={58} gradient="sky" />
+            ) : (
+              <UserAvatar type={avatarType} size={58} avatar={avatar} />
+            )}
+          </Pressable>
+        </Animated.View>
         <View style={{flex: 1}}>
           {isLoading ? (
             <LoadingPlaceholder

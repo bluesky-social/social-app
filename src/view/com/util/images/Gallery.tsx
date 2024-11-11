@@ -1,11 +1,12 @@
 import React from 'react'
 import {Pressable, StyleProp, View, ViewStyle} from 'react-native'
-import Animated, {AnimatedRef, useAnimatedRef} from 'react-native-reanimated'
+import Animated, {AnimatedRef} from 'react-native-reanimated'
 import {Image, ImageStyle} from 'expo-image'
 import {AppBskyEmbedImages} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {Dimensions} from '#/lib/media/types'
 import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
 import {PostEmbedViewContext} from '#/view/com/util/post-embeds/types'
 import {atoms as a, useTheme} from '#/alf'
@@ -19,13 +20,16 @@ interface Props {
   index: number
   onPress?: (
     index: number,
-    containerRef: AnimatedRef<React.Component<{}, {}, any>>,
+    containerRefs: AnimatedRef<React.Component<{}, {}, any>>[],
+    fetchedDims: (Dimensions | null)[],
   ) => void
   onLongPress?: EventFunction
   onPressIn?: EventFunction
   imageStyle?: StyleProp<ImageStyle>
   viewContext?: PostEmbedViewContext
   insetBorderStyle?: StyleProp<ViewStyle>
+  containerRefs: AnimatedRef<React.Component<{}, {}, any>>[]
+  thumbDimsRef: React.MutableRefObject<(Dimensions | null)[]>
 }
 
 export function GalleryItem({
@@ -37,6 +41,8 @@ export function GalleryItem({
   onLongPress,
   viewContext,
   insetBorderStyle,
+  containerRefs,
+  thumbDimsRef,
 }: Props) {
   const t = useTheme()
   const {_} = useLingui()
@@ -45,11 +51,17 @@ export function GalleryItem({
   const hasAlt = !!image.alt
   const hideBadges =
     viewContext === PostEmbedViewContext.FeedEmbedRecordWithMedia
-  const containerRef = useAnimatedRef()
   return (
-    <Animated.View style={a.flex_1} ref={containerRef}>
+    <Animated.View
+      style={a.flex_1}
+      ref={containerRefs[index]}
+      collapsable={false}>
       <Pressable
-        onPress={onPress ? () => onPress(index, containerRef) : undefined}
+        onPress={
+          onPress
+            ? () => onPress(index, containerRefs, thumbDimsRef.current.slice())
+            : undefined
+        }
         onPressIn={onPressIn ? () => onPressIn(index) : undefined}
         onLongPress={onLongPress ? () => onLongPress(index) : undefined}
         style={[
@@ -68,6 +80,12 @@ export function GalleryItem({
           accessibilityLabel={image.alt}
           accessibilityHint=""
           accessibilityIgnoresInvertColors
+          onLoad={e => {
+            thumbDimsRef.current[index] = {
+              width: e.source.width,
+              height: e.source.height,
+            }
+          }}
         />
         <MediaInsetBorder style={insetBorderStyle} />
       </Pressable>

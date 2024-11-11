@@ -127,9 +127,7 @@ function Inner() {
             setHasScrolled={setHasScrolled}
           />
         ) : (
-          <>
-            <View style={[a.align_center, a.gap_sm, a.flex_1]} />
-          </>
+          <View style={[a.align_center, a.gap_sm, a.flex_1]} />
         )}
         {!readyToShow && (
           <View
