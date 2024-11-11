@@ -196,6 +196,7 @@ export const ProfileLists = React.forwardRef<SectionRef, ProfileListsProps>(
           // @ts-ignore our .web version only -prf
           desktopFixedHeight
           onEndReached={onEndReached}
+          onEndReachedThreshold={2}
         />
       </View>
     )
