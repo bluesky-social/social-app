@@ -830,9 +830,9 @@ function BackdatedPostIndicator({post}: {post: AppBskyFeedDefs.PostView}) {
         </Prompt.TitleText>
         <Prompt.DescriptionText>
           <Trans>
-            This post claims to have been created at{' '}
+            This post claims to have been created on{' '}
             <RNText style={[a.font_bold]}>{niceDate(i18n, createdAt)}</RNText>,
-            but was first seen by Bluesky at{' '}
+            but was first seen by Bluesky on{' '}
             <RNText style={[a.font_bold]}>{niceDate(i18n, indexedAt)}</RNText>.
           </Trans>
         </Prompt.DescriptionText>
