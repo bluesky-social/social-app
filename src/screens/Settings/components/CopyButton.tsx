@@ -1,6 +1,10 @@
 import React, {useCallback, useEffect, useState} from 'react'
 import {GestureResponderEvent, View} from 'react-native'
-import Animated, {FadeOutUp, ZoomIn} from 'react-native-reanimated'
+import Animated, {
+  FadeOutUp,
+  useReducedMotion,
+  ZoomIn,
+} from 'react-native-reanimated'
 import * as Clipboard from 'expo-clipboard'
 import {Trans} from '@lingui/macro'
 
@@ -16,13 +20,17 @@ export function CopyButton({
 }: ButtonProps & {value: string}) {
   const [hasBeenCopied, setHasBeenCopied] = useState(false)
   const t = useTheme()
+  const isReducedMotionEnabled = useReducedMotion()
 
   useEffect(() => {
     if (hasBeenCopied) {
-      const timeout = setTimeout(() => setHasBeenCopied(false), 100)
+      const timeout = setTimeout(
+        () => setHasBeenCopied(false),
+        !isReducedMotionEnabled ? 100 : 2000,
+      )
       return () => clearTimeout(timeout)
     }
-  }, [hasBeenCopied])
+  }, [hasBeenCopied, isReducedMotionEnabled])
 
   const onPress = useCallback(
     (evt: GestureResponderEvent) => {
