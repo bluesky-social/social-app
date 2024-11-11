@@ -1,3 +1,42 @@
+diff --git a/node_modules/react-native/Libraries/StyleSheet/StyleSheetTypes.d.ts b/node_modules/react-native/Libraries/StyleSheet/StyleSheetTypes.d.ts
+index 62f52a7..ca30165 100644
+--- a/node_modules/react-native/Libraries/StyleSheet/StyleSheetTypes.d.ts
++++ b/node_modules/react-native/Libraries/StyleSheet/StyleSheetTypes.d.ts
+@@ -426,9 +426,10 @@ export interface ViewStyle extends FlexStyle, ShadowStyleIOS, TransformsStyle {
+    */
+   pointerEvents?: 'box-none' | 'none' | 'box-only' | 'auto' | undefined;
+   isolation?: 'auto' | 'isolate' | undefined;
+-  cursor?: CursorValue | undefined;
++  cursor?: CursorValue | string | undefined;
+   boxShadow?: ReadonlyArray<BoxShadowValue> | string | undefined;
+   filter?: ReadonlyArray<FilterFunction> | string | undefined;
++  transformOrigin?: string | (string | number)[] | undefined;
+ }
+ 
+ export type FontVariant =
+@@ -536,7 +537,11 @@ export interface TextStyle extends TextStyleIOS, TextStyleAndroid, ViewStyle {
+   textShadowOffset?: {width: number; height: number} | undefined;
+   textShadowRadius?: number | undefined;
+   textTransform?: 'none' | 'capitalize' | 'uppercase' | 'lowercase' | undefined;
+-  userSelect?: 'auto' | 'none' | 'text' | 'contain' | 'all' | undefined;
++  userSelect?: 'auto' | 'none' | 'text' | 'contain' | 'all' | string | undefined;
++  cursor?: CursorValue | string | undefined;
++  boxShadow?: ReadonlyArray<BoxShadowValue> | string | undefined;
++  filter?: ReadonlyArray<FilterFunction> | string | undefined;
++  transformOrigin?: string | (string | number)[] | undefined;
+ }
+ 
+ /**
+@@ -558,5 +563,8 @@ export interface ImageStyle extends FlexStyle, ShadowStyleIOS, TransformsStyle {
+   tintColor?: ColorValue | undefined;
+   opacity?: AnimatableNumericValue | undefined;
+   objectFit?: 'cover' | 'contain' | 'fill' | 'scale-down' | undefined;
+-  cursor?: CursorValue | undefined;
++  cursor?: CursorValue | string | undefined;
++  boxShadow?: ReadonlyArray<BoxShadowValue> | string | undefined;
++  filter?: ReadonlyArray<FilterFunction> | string | undefined;
++  transformOrigin?: string | (string | number)[] | undefined;
+ }
 diff --git a/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.h b/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.h
 index e9b330f..ec5f58c 100644
 --- a/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.h
@@ -9,7 +48,7 @@ index e9b330f..ec5f58c 100644
 +@property (nonatomic, copy) UIColor *customTintColor;
 +
 +- (void)forwarderBeginRefreshing;
-
+ 
  @end
 diff --git a/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.m b/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.m
 index 53bfd04..ff1b1ed 100644
@@ -21,12 +60,12 @@ index 53bfd04..ff1b1ed 100644
    BOOL _hasMovedToWindow;
 +  UIColor *_customTintColor;
  }
-
+ 
  - (instancetype)init
 @@ -58,6 +59,12 @@ - (void)layoutSubviews
    _isInitialRender = false;
  }
-
+ 
 +- (void)didMoveToSuperview
 +{
 +  [super didMoveToSuperview];
@@ -39,7 +78,7 @@ index 53bfd04..ff1b1ed 100644
 @@ -221,4 +228,50 @@ - (void)refreshControlValueChanged
    }
  }
-
+ 
 +// Fix for https://github.com/facebook/react-native/issues/43388
 +// A bug in iOS 17.4 causes the haptic to not play when refreshing if the tintColor
 +// is set before the refresh control gets added to the scrollview. We'll call this
@@ -92,14 +131,14 @@ index 40aaf9c..1c60164 100644
 --- a/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControlManager.m
 +++ b/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControlManager.m
 @@ -22,11 +22,12 @@ - (UIView *)view
-
+ 
  RCT_EXPORT_VIEW_PROPERTY(onRefresh, RCTDirectEventBlock)
  RCT_EXPORT_VIEW_PROPERTY(refreshing, BOOL)
 -RCT_EXPORT_VIEW_PROPERTY(tintColor, UIColor)
  RCT_EXPORT_VIEW_PROPERTY(title, NSString)
  RCT_EXPORT_VIEW_PROPERTY(titleColor, UIColor)
  RCT_EXPORT_VIEW_PROPERTY(progressViewOffset, CGFloat)
-
+ 
 +RCT_REMAP_VIEW_PROPERTY(tintColor, customTintColor, UIColor)
 +
  RCT_EXPORT_METHOD(setNativeRefreshing : (nonnull NSNumber *)viewTag toRefreshing : (BOOL)refreshing)
