@@ -111,7 +111,7 @@ export function ThreadPreferencesScreen({}: Props) {
               style={[a.w_full, a.gap_md]}>
               <Toggle.LabelText style={[a.flex_1]}>
                 <Trans>
-                  Show replies by people you follow before all other replies.
+                  Show replies by people you follow before all other replies
                 </Trans>
               </Toggle.LabelText>
               <Toggle.Platform />
