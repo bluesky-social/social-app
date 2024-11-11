@@ -124,7 +124,7 @@ type GalleryItemProps = {
   image: ComposerImage
   altTextControlStyle?: ViewStyle
   imageControlsStyle?: ViewStyle
-  imageStyle?: ViewStyle
+  imageStyle?: ImageStyle
   onChange: (next: ComposerImage) => void
   onRemove: () => void
 }
@@ -221,7 +221,7 @@ const GalleryItem = ({
 
       <Image
         testID="selectedPhotoImage"
-        style={[styles.image, imageStyle] as ImageStyle}
+        style={[styles.image, imageStyle]}
         source={{
           uri: (image.transformed ?? image.source).path,
         }}
