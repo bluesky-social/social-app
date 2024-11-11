@@ -442,7 +442,7 @@ function LightboxImage({
         }
         dismissSwipeTranslateY.value = withDecay({
           velocity: e.velocityY,
-          velocityFactor: Math.max(3000 / Math.abs(e.velocityY), 1), // Speed up if it's too slow.
+          velocityFactor: Math.max(3500 / Math.abs(e.velocityY), 1), // Speed up if it's too slow.
           deceleration: 1, // Danger! This relies on the reaction below stopping it.
         })
       } else {
