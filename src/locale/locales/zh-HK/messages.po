@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-10 13:38\n"
+"PO-Revision-Date: 2024-11-11 09:18\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional, Hong Kong\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -142,7 +142,7 @@ msgstr "{0}至愛嘅人同動態源 - 快啲嚟加入！"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:47
 msgid "{0}'s starter pack"
-msgstr "{0} 嘅新手包"
+msgstr "{0}嘅新手包"
 
 #. How many days have passed, displayed in a narrow form
 #: src/lib/hooks/useTimeAgo.ts:158
@@ -184,7 +184,7 @@ msgstr "{count} 條未讀"
 #: src/lib/generate-starterpack.ts:108
 #: src/screens/StarterPack/Wizard/index.tsx:183
 msgid "{displayName}'s Starter Pack"
-msgstr "{displayName} 嘅新手包"
+msgstr "{displayName}嘅新手包"
 
 #: src/screens/SignupQueued.tsx:207
 msgid "{estimatedTimeHrs, plural, one {hour} other {hours}}"
@@ -2979,7 +2979,7 @@ msgstr "同 {0} 去對話"
 #: src/screens/Login/ForgotPasswordForm.tsx:165
 #: src/view/com/modals/ChangePassword.tsx:168
 msgid "Go to next"
-msgstr "去下一個"
+msgstr "去到下一步"
 
 #: src/components/dms/ConvoMenu.tsx:167
 msgid "Go to profile"
@@ -3990,7 +3990,7 @@ msgstr "導覽去 {0}"
 #: src/screens/Login/LoginForm.tsx:316
 #: src/view/com/modals/ChangePassword.tsx:169
 msgid "Navigates to the next screen"
-msgstr "導覽去下一個畫面"
+msgstr "去到下一個畫面"
 
 #: src/view/shell/Drawer.tsx:72
 msgid "Navigates to your profile"
@@ -4106,7 +4106,7 @@ msgstr "新聞"
 #: src/view/com/modals/ChangePassword.tsx:254
 #: src/view/com/modals/ChangePassword.tsx:256
 msgid "Next"
-msgstr "下一個"
+msgstr "下一步"
 
 #: src/view/com/lightbox/Lightbox.web.tsx:167
 msgid "Next image"
@@ -5665,7 +5665,7 @@ msgstr "揀一隻色"
 
 #: src/screens/Login/ChooseAccountForm.tsx:77
 msgid "Select account"
-msgstr "揀帳號"
+msgstr "揀選帳號"
 
 #: src/screens/Onboarding/StepProfile/AvatarCircle.tsx:66
 msgid "Select an avatar"
@@ -6059,7 +6059,7 @@ msgstr "以 {0} 身份登入"
 
 #: src/screens/Login/ChooseAccountForm.tsx:80
 msgid "Sign in as..."
-msgstr "以..."
+msgstr "登入用..."
 
 #: src/components/dialogs/Signin.tsx:75
 msgid "Sign in or create your account to join the conversation!"
@@ -6098,7 +6098,7 @@ msgstr "需要登入"
 #: src/lib/hooks/useAccountSwitcher.ts:41
 #: src/screens/Login/ChooseAccountForm.tsx:53
 msgid "Signed in as @{0}"
-msgstr "以 @{0} 身份登入"
+msgstr "用 @{0} 身份登入"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:299
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:306
