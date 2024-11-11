@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-10 13:38\n"
+"PO-Revision-Date: 2024-11-11 01:50\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -883,7 +883,7 @@ msgstr "艺术"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:170
 msgid "Artistic or non-erotic nudity."
-msgstr "艺术作品或非色情的裸体。"
+msgstr "带有艺术性或非色情的裸露。"
 
 #: src/screens/Signup/StepHandle.tsx:173
 msgid "At least 3 characters"
@@ -1263,7 +1263,7 @@ msgstr "选择用户"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:116
 msgid "Choose self-labels that are applicable for the media you are posting. If none are selected, this post is suitable for all audiences."
-msgstr "为媒体内容贴上合适的标签。如果没有贴上任何标签，则默认你发布的媒体内容为全年龄向。"
+msgstr "请为此媒体内容勾选合适的标签。若不勾选，则默认为全年龄向。"
 
 #: src/view/com/auth/server-input/index.tsx:76
 msgid "Choose Service"
@@ -4645,7 +4645,7 @@ msgstr "摄影"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:168
 msgid "Pictures meant for adults."
-msgstr "适合成年人的图像。"
+msgstr "不适合未成年人观看的图片"
 
 #: src/view/screens/ProfileFeed.tsx:293
 #: src/view/screens/ProfileList.tsx:676
