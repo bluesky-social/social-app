@@ -588,7 +588,7 @@ export const ComposePost = ({
           onClose()
         }}
         reasonText={_(
-          msg`Before you may create a post, you must first verify your email.`,
+          msg`Before creating a post, you must first verify your email.`,
         )}
       />
       <KeyboardAvoidingView
