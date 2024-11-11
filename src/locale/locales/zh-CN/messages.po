@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-11 09:29\n"
+"PO-Revision-Date: 2024-11-11 16:39\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -1271,7 +1271,7 @@ msgstr "选择服务"
 
 #: src/screens/Onboarding/StepFinished.tsx:271
 msgid "Choose the algorithms that power your custom feeds."
-msgstr "选择支持你的自定义动态源的算法。"
+msgstr "在动态源中自由挑选适合你的自定义算法"
 
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:107
 msgid "Choose this color as your avatar"
@@ -3046,7 +3046,7 @@ msgstr "帮助"
 
 #: src/screens/Onboarding/StepProfile/index.tsx:237
 msgid "Help people know you're not a bot by uploading a picture or creating an avatar."
-msgstr "通过上传图片或创建头像来帮助人们了解你不是机器人。"
+msgstr "通过上传图片或创建头像，让大家知道你不是机器人。"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:187
 msgid "Here is your app password!"
@@ -4006,7 +4006,7 @@ msgstr "需要举报侵犯版权行为吗？"
 
 #: src/screens/Onboarding/StepFinished.tsx:255
 msgid "Never lose access to your followers or data."
-msgstr "永远不会失去对你的关注者或数据的访问。"
+msgstr "永远不会失去对关注者或个人数据的掌控权。"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:533
 msgid "Nevermind, create a handle for me"
@@ -4394,7 +4394,7 @@ msgstr "Oops！"
 
 #: src/screens/Onboarding/StepFinished.tsx:251
 msgid "Open"
-msgstr "开启"
+msgstr "开放"
 
 #: src/view/com/posts/AviFollowButton.tsx:86
 msgid "Open {name} profile shortcut menu"
@@ -4951,7 +4951,7 @@ msgstr "个人资料已更新"
 
 #: src/screens/Onboarding/StepFinished.tsx:237
 msgid "Public"
-msgstr "公开内容"
+msgstr "公开"
 
 #: src/view/screens/ModerationModlists.tsx:63
 msgid "Public, shareable lists of users to mute or block in bulk."
@@ -7978,7 +7978,7 @@ msgstr "你的帖文已发布"
 
 #: src/screens/Onboarding/StepFinished.tsx:241
 msgid "Your posts, likes, and blocks are public. Mutes are private."
-msgstr "你的帖文、喜欢和屏蔽是公开可见的，而隐藏不可见。"
+msgstr "你发布的帖文、喜欢的内容和屏蔽都是公开可见的，而隐藏仅对你自己可见。"
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:75
 msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
