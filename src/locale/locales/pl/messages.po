@@ -8,9 +8,9 @@ msgstr ""
 "Language: pl\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: \n"
-"Last-Translator: \n"
-"Language-Team: \n"
+"PO-Revision-Date: Nov 11, 2024\n"
+"Last-Translator: axiand\n"
+"Language-Team: axiand\n"
 "Plural-Forms: \n"
 
 #: src/screens/Messages/components/ChatListItem.tsx:130
@@ -947,7 +947,7 @@ msgstr "Blokuj listę"
 
 #: src/view/screens/ProfileList.tsx:742
 msgid "Block these accounts?"
-msgstr "Zablokować tę konta?"
+msgstr "Zablokować konta?"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:83
 msgid "Blocked"
@@ -3692,7 +3692,7 @@ msgstr "Oznacz jako przeczytane"
 
 #: src/view/screens/Profile.tsx:230
 msgid "Media"
-msgstr "Media"
+msgstr "Załączniki"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:208
 msgid "Media that may be disturbing or inappropriate for some audiences."
@@ -5808,7 +5808,7 @@ msgstr "Wyślij email z weryfikacją"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:441
 #: src/view/com/util/forms/PostDropdownBtn.tsx:444
 msgid "Send via direct message"
-msgstr "Wyślij jako wiadomość prywatna"
+msgstr "Wyślij bezpośrednie"
 
 #: src/view/com/modals/DeleteAccount.tsx:151
 msgid "Sends email with confirmation code for account deletion"
@@ -6202,7 +6202,7 @@ msgstr "Pakiet startowy"
 
 #: src/components/StarterPack/StarterPackCard.tsx:81
 msgid "Starter pack by {0}"
-msgstr "Pakiet startowy autorstwa {0}"
+msgstr "Pakiet startowy {0}"
 
 #: src/components/StarterPack/StarterPackCard.tsx:80
 msgid "Starter pack by you"
