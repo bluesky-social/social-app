@@ -5164,11 +5164,11 @@ msgstr "저장한 피드에서 이 피드를 제거합니다"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:109
 msgid "Removed by author"
-msgstr "작성자에 의해 제거됨"
+msgstr "작성자가 제거함"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:107
 msgid "Removed by you"
-msgstr "나에 의해 제거됨"
+msgstr "내가 제거함"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:200
 #: src/view/com/modals/UserAddRemoveLists.tsx:170
