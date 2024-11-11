@@ -64,6 +64,7 @@ export const atoms = {
    * Used for the outermost components on screens, to ensure that they can fill
    * the screen and extend beyond.
    */
+  // @ts-expect-error - web only styles
   util_screen_outer: [
     web({
       minHeight: '100vh',
