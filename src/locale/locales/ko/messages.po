@@ -8,7 +8,7 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-10 17:23+0900\n"
+"PO-Revision-Date: 2024-11-11 22:10+0900\n"
 "Last-Translator: quiple\n"
 "Language-Team: quiple, lens0021, HaruChanHeart, hazzzi, heartade\n"
 "Plural-Forms: \n"
@@ -1591,7 +1591,7 @@ msgid "Copied to clipboard"
 msgstr "클립보드에 복사했습니다"
 
 #: src/components/dialogs/Embed.tsx:136
-#: src/screens/Settings/components/CopyButton.tsx:58
+#: src/screens/Settings/components/CopyButton.tsx:66
 msgid "Copied!"
 msgstr "복사했습니다!"
 
@@ -2988,7 +2988,7 @@ msgstr "사용자의 프로필로 가기"
 #: src/view/com/composer/labels/LabelsBtn.tsx:199
 #: src/view/com/composer/labels/LabelsBtn.tsx:202
 msgid "Graphic Media"
-msgstr "그래픽 미디어"
+msgstr "불쾌감을 주는 미디어"
 
 #: src/state/shell/progress-guide.tsx:161
 msgid "Half way there!"
