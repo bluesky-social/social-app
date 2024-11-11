@@ -1,5 +1,5 @@
 import React, {memo, useMemo} from 'react'
-import {StyleSheet, View} from 'react-native'
+import {StyleSheet, Text as RNText, View} from 'react-native'
 import {
   AppBskyFeedDefs,
   AppBskyFeedPost,
@@ -727,7 +727,7 @@ function ExpandedPostDetails({
 }) {
   const t = useTheme()
   const pal = usePalette('default')
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const openLink = useOpenLink()
   const isRootPost = !('reply' in post.record)
 
@@ -736,36 +736,41 @@ function ExpandedPostDetails({
   }, [openLink, translatorUrl])
 
   return (
-    <View style={[a.flex_row, a.align_center, a.flex_wrap, a.gap_sm, a.pt_md]}>
-      <PostTimestamp post={post} />
-      {isRootPost && (
-        <WhoCanReply post={post} isThreadAuthor={isThreadAuthor} />
-      )}
-      {needsTranslation && (
-        <>
-          <NewText style={[a.text_sm, t.atoms.text_contrast_medium]}>
-            &middot;
-          </NewText>
+    <View style={[a.gap_md, a.pt_md, a.align_start]}>
+      <BackdatedPostIndicator post={post} />
+      <View style={[a.flex_row, a.align_center, a.flex_wrap, a.gap_sm]}>
+        <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
+          {niceDate(i18n, post.indexedAt)}
+        </Text>
+        {isRootPost && (
+          <WhoCanReply post={post} isThreadAuthor={isThreadAuthor} />
+        )}
+        {needsTranslation && (
+          <>
+            <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
+              &middot;
+            </Text>
 
-          <InlineLinkText
-            to="#"
-            label={_(msg`Translate`)}
-            style={[a.text_sm, pal.link]}
-            onPress={onTranslatePress}>
-            <Trans>Translate</Trans>
-          </InlineLinkText>
-        </>
-      )}
+            <InlineLinkText
+              to="#"
+              label={_(msg`Translate`)}
+              style={[a.text_sm, pal.link]}
+              onPress={onTranslatePress}>
+              <Trans>Translate</Trans>
+            </InlineLinkText>
+          </>
+        )}
+      </View>
     </View>
   )
 }
 
-function PostTimestamp({post}: {post: AppBskyFeedDefs.PostView}) {
+function BackdatedPostIndicator({post}: {post: AppBskyFeedDefs.PostView}) {
   const t = useTheme()
   const {_, i18n} = useLingui()
   const control = Prompt.usePromptControl()
 
-  const indexedAt = new Date(post.indexedAt)
+  const indexedAt = new Date()
   const createdAt = AppBskyFeedPost.isRecord(post.record)
     ? new Date(post.record.createdAt)
     : new Date(post.indexedAt)
@@ -774,66 +779,77 @@ function PostTimestamp({post}: {post: AppBskyFeedDefs.PostView}) {
   const isBackdated =
     indexedAt.getTime() - createdAt.getTime() > 24 * 60 * 60 * 1000
 
+  if (!isBackdated) return null
+
   const orange = t.name === 'light' ? colors.warning.dark : colors.warning.light
 
   return (
     <>
-      {isBackdated && (
-        <Button
-          label={_(msg`Archival post`)}
-          accessibilityHint={_(
-            msg`Show information about when this post was created`,
-          )}
-          onPress={e => {
-            e.preventDefault()
-            e.stopPropagation()
-            control.open()
-          }}>
-          {({hovered, pressed}) => (
-            <View
-              style={[
-                a.flex_row,
-                a.align_center,
-                a.rounded_full,
-                t.atoms.bg_contrast_25,
-                (hovered || pressed) && t.atoms.bg_contrast_50,
-                {
-                  gap: 3,
-                  paddingHorizontal: 6,
-                  paddingVertical: 3,
-                },
-              ]}>
-              <CalendarClockIcon fill={orange} size="sm" aria-hidden />
-              <NewText
-                style={[
-                  a.text_xs,
-                  a.font_bold,
-                  a.leading_tight,
-                  t.atoms.text_contrast_medium,
-                ]}>
-                <Trans>Archival</Trans>
-              </NewText>
-            </View>
-          )}
-        </Button>
-      )}
-      <NewText style={[a.text_sm, t.atoms.text_contrast_medium]}>
-        {niceDate(i18n, post.indexedAt)}
-      </NewText>
-
-      <Prompt.Basic
-        control={control}
-        title={_(msg`Archival post`)}
-        description={_(
-          msg`This post claims to have been created at ${niceDate(
-            i18n,
-            createdAt,
-          )}, but was first seen by Bluesky at ${niceDate(i18n, indexedAt)}.`,
+      <Button
+        label={_(msg`Archived post`)}
+        accessibilityHint={_(
+          msg`Show information about when this post was created`,
         )}
-        confirmButtonCta={_(msg`Okay`)}
-        onConfirm={() => {}}
-        showCancel={false}
-      />
+        onPress={e => {
+          e.preventDefault()
+          e.stopPropagation()
+          control.open()
+        }}>
+        {({hovered, pressed}) => (
+          <View
+            style={[
+              a.flex_row,
+              a.align_center,
+              a.rounded_full,
+              t.atoms.bg_contrast_25,
+              (hovered || pressed) && t.atoms.bg_contrast_50,
+              {
+                gap: 3,
+                paddingHorizontal: 6,
+                paddingVertical: 3,
+              },
+            ]}>
+            <CalendarClockIcon fill={orange} size="sm" aria-hidden />
+            <Text
+              style={[
+                a.text_xs,
+                a.font_bold,
+                a.leading_tight,
+                t.atoms.text_contrast_medium,
+              ]}>
+              <Trans>Archived from {niceDate(i18n, createdAt)}</Trans>
+            </Text>
+          </View>
+        )}
+      </Button>
+
+      <Prompt.Outer control={control}>
+        <Prompt.TitleText>
+          <Trans>Archived post</Trans>
+        </Prompt.TitleText>
+        <Prompt.DescriptionText>
+          <Trans>
+            This post claims to have been created at{' '}
+            <RNText style={[a.font_bold]}>{niceDate(i18n, createdAt)}</RNText>,
+            but was first seen by Bluesky at{' '}
+            <RNText style={[a.font_bold]}>{niceDate(i18n, indexedAt)}</RNText>.
+          </Trans>
+        </Prompt.DescriptionText>
+        <Text
+          style={[
+            a.text_md,
+            a.leading_snug,
+            t.atoms.text_contrast_high,
+            a.pb_xl,
+          ]}>
+          <Trans>
+            Bluesky cannot confirm the authenticity of the claimed date.
+          </Trans>
+        </Text>
+        <Prompt.Actions>
+          <Prompt.Action cta={_(msg`Okay`)} onPress={() => {}} />
+        </Prompt.Actions>
+      </Prompt.Outer>
     </>
   )
 }
