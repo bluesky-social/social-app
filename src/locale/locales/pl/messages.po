@@ -1366,7 +1366,7 @@ msgstr "Zamknij zdjęcie"
 msgid "Close image viewer"
 msgstr "Zamknij przeglądarkę obrazu"
 
-#: src/view/shell/index.web.tsx:67
+#: src/view/shell/index.web.tsx:68
 msgid "Close navigation footer"
 msgstr "Zamknij stopkę"
 
@@ -1375,7 +1375,7 @@ msgstr "Zamknij stopkę"
 msgid "Close this dialog"
 msgstr "Zamknij ten dialog"
 
-#: src/view/shell/index.web.tsx:68
+#: src/view/shell/index.web.tsx:69
 msgid "Closes bottom navigation bar"
 msgstr "Zamyka stopkę nawigacji"
 
@@ -1591,7 +1591,7 @@ msgid "Copied to clipboard"
 msgstr "Skopiowano"
 
 #: src/components/dialogs/Embed.tsx:136
-#: src/screens/Settings/components/CopyButton.tsx:58
+#: src/screens/Settings/components/CopyButton.tsx:66
 msgid "Copied!"
 msgstr "Skopiowano!"
 
@@ -1865,6 +1865,11 @@ msgstr "Usunąć wpis?"
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:93
 msgid "Deleted"
 msgstr "Usunięto"
+
+#: src/components/dms/MessagesListHeader.tsx:150
+#: src/screens/Messages/components/ChatListItem.tsx:107
+msgid "Deleted Account"
+msgstr "Usunięte konto"
 
 #: src/view/com/post-thread/PostThread.tsx:398
 msgid "Deleted post."
@@ -3930,7 +3935,7 @@ msgstr "Wyciszone osoby"
 
 #: src/view/screens/ModerationMutedAccounts.tsx:116
 msgid "Muted accounts have their posts removed from your feed and from your notifications. Mutes are completely private."
-msgstr "Wyciszone osoby są wykluczone z twoich kanałów i powiadomień. Wyciszenia są prywatne."
+msgstr "Wyciszone osoby są wykluczone z kanałów i powiadomień. Wyciszenia są prywatne."
 
 #: src/lib/moderation/useModerationCauseDescription.ts:90
 msgid "Muted by \"{0}\""
