@@ -2919,7 +2919,7 @@ msgstr "Zaprezentuj swój profil"
 
 #: src/lib/moderation/useReportOptions.ts:39
 msgid "Glaring violations of law or terms of service"
-msgstr "Rażące łamanie prawa lub terminu korzystania z serwisu"
+msgstr "Rażące łamanie prawa lub regulaminu korzystania z serwisu"
 
 #: src/components/moderation/ScreenHider.tsx:154
 #: src/components/moderation/ScreenHider.tsx:163
@@ -5998,7 +5998,7 @@ msgstr "Pokaż jako pierwsze odpowiedzi od osób, które obserwujesz"
 
 #: src/screens/Settings/ThreadPreferences.tsx:138
 msgid "Show replies in a threaded view"
-msgstr "Pokaż odpowiedzi w formie rekurencyjnego \"drzewa\""
+msgstr "Pokaż odpowiedzi w formie drzewa"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:559
 #: src/view/com/util/forms/PostDropdownBtn.tsx:569
@@ -6058,7 +6058,7 @@ msgstr "Zaloguj się jako..."
 
 #: src/components/dialogs/Signin.tsx:75
 msgid "Sign in or create your account to join the conversation!"
-msgstr "Zarejestruj lub zaloguj się aby dołączyć do rozmowy!"
+msgstr "Zarejestruj lub zaloguj się i dołącz do rozmowy!"
 
 #: src/components/dialogs/Signin.tsx:46
 msgid "Sign into Bluesky or create a new account"
@@ -6251,19 +6251,19 @@ msgstr "Subskrybuj"
 
 #: src/screens/Profile/Sections/Labels.tsx:201
 msgid "Subscribe to @{0} to use these labels:"
-msgstr "Subskrybuj do @{0} aby użyć te etykiety:"
+msgstr "Subskrybuj @{0}, aby użyć te etykiety:"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:238
 msgid "Subscribe to Labeler"
-msgstr "Subskrybuj do usługi"
+msgstr "Subskrybuj usługę"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:204
 msgid "Subscribe to this labeler"
-msgstr "Subskrybuj do tej usługi moderacji"
+msgstr "Subskrybuj tą usługę moderacji"
 
 #: src/view/screens/ProfileList.tsx:699
 msgid "Subscribe to this list"
-msgstr "Subskrybuj do tej listy"
+msgstr "Subskrybuj tą listę"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:81
 msgid "Success!"
@@ -6502,7 +6502,7 @@ msgstr "Formularz pomocy technicznej został przeniesiony. Jeśli chcesz się z 
 
 #: src/view/screens/TermsOfService.tsx:35
 msgid "The Terms of Service have been moved to"
-msgstr "Termin korzystania z serwisu przeniesiony do"
+msgstr "Regulamin korzystania z serwisu przeniesiony do"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:94
 msgid "The verification code you have provided is invalid. Please make sure that you have used the correct verification link or request a new one."
@@ -6758,7 +6758,7 @@ msgstr "Odpowiedź będzie przeniesiona do ukrytej sekcji na dole wątka. Ty i i
 
 #: src/screens/Signup/StepInfo/Policies.tsx:37
 msgid "This service has not provided terms of service or a privacy policy."
-msgstr "Usługa jeszcze nie podała terminu lub polityki prywatności."
+msgstr "Usługa jeszcze nie podała regulaminu lub polityki prywatności."
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:437
 msgid "This should create a domain record at:"
