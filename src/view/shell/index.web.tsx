@@ -33,7 +33,8 @@ function ShellInner() {
   const closeAllActiveElements = useCloseAllActiveElements()
   const {_} = useLingui()
 
-  useWebBodyScrollLock(isDrawerOpen)
+  const showDrawer = !isDesktop && isDrawerOpen
+  useWebBodyScrollLock(showDrawer)
   useComposerKeyboardShortcut()
   useIntentHandler()
 
