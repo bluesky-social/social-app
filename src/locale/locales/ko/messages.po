@@ -8,7 +8,7 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-11 22:10+0900\n"
+"PO-Revision-Date: 2024-11-12 10:01+0900\n"
 "Last-Translator: quiple\n"
 "Language-Team: quiple, lens0021, HaruChanHeart, hazzzi, heartade\n"
 "Plural-Forms: \n"
@@ -1366,7 +1366,7 @@ msgstr "이미지 닫기"
 msgid "Close image viewer"
 msgstr "이미지 뷰어 닫기"
 
-#: src/view/shell/index.web.tsx:67
+#: src/view/shell/index.web.tsx:68
 msgid "Close navigation footer"
 msgstr "탐색 푸터 닫기"
 
@@ -1375,7 +1375,7 @@ msgstr "탐색 푸터 닫기"
 msgid "Close this dialog"
 msgstr "이 대화 상자 닫기"
 
-#: src/view/shell/index.web.tsx:68
+#: src/view/shell/index.web.tsx:69
 msgid "Closes bottom navigation bar"
 msgstr "하단 탐색 막대를 닫습니다"
 
@@ -1865,6 +1865,11 @@ msgstr "이 게시물을 삭제하시겠습니까?"
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:93
 msgid "Deleted"
 msgstr "삭제됨"
+
+#: src/components/dms/MessagesListHeader.tsx:150
+#: src/screens/Messages/components/ChatListItem.tsx:107
+msgid "Deleted Account"
+msgstr "삭제된 계정"
 
 #: src/view/com/post-thread/PostThread.tsx:398
 msgid "Deleted post."
@@ -5152,7 +5157,7 @@ msgstr "인용 제거"
 #: src/view/com/util/post-ctrls/RepostButton.tsx:102
 #: src/view/com/util/post-ctrls/RepostButton.tsx:118
 msgid "Remove repost"
-msgstr "재게시 취소하기"
+msgstr "재게시 취소"
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:260
 msgid "Remove subtitle file"
