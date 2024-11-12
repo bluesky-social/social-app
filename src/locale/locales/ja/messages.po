@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-11 09:55+0900\n"
+"PO-Revision-Date: 2024-11-12 09:56+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -1864,6 +1864,11 @@ msgstr "この投稿を削除しますか？"
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:92
 msgid "Deleted"
 msgstr "削除されています"
+
+#: src/components/dms/MessagesListHeader.tsx:150
+#: src/screens/Messages/components/ChatListItem.tsx:107
+msgid "Deleted Account"
+msgstr "削除されたアカウント"
 
 #: src/view/com/post-thread/PostThread.tsx:398
 msgid "Deleted post."
