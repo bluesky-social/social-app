@@ -16,9 +16,12 @@ import {
 import Animated, {
   runOnJS,
   SharedValue,
+  useAnimatedProps,
   useAnimatedReaction,
   useAnimatedRef,
   useAnimatedStyle,
+  setNativeProps,
+  useSharedValue,
 } from 'react-native-reanimated'
 import {useSafeAreaFrame} from 'react-native-safe-area-context'
 import {Image} from 'expo-image'
@@ -84,11 +87,74 @@ const ImageItem = ({
       : 1,
   )
 
+  const sp = useSharedValue({
+    centerContent: true,
+  })
+  const scrollProps = useAnimatedProps(() => {
+    return {...sp.value}
+  })
+
+  const needsReset = useSharedValue(false)
+  const lastValue = useSharedValue(null)
+  const weirdState = useSharedValue(0)
+
   const scrollHandler = useAnimatedScrollHandler({
     onScroll(e) {
+      console.log('scroll')
+
+      if (
+        lastValue.value &&
+        e.contentOffset.x === lastValue.value.contentOffset.x &&
+        e.contentOffset.y === lastValue.value.contentOffset.y &&
+        e.zoomScale === lastValue.value.zoomScale &&
+        weirdState.value === 1
+      ) {
+        weirdState.value = 2
+      } else {
+        weirdState.value = 0
+      }
+      lastValue.value = e
+      //   console.log('inside condition, set did nothing = true')
+      //   // setNativeProps(scrollViewRef, {
+      //   //   scrollEnabled: false,
+      //   // })
+      //   // setNativeProps(scrollViewRef, {
+      //   //   scrollEnabled: true,
+      //   // })
+      // } else {
+      //   console.log('set did nothing = false')
+      //   didNothing.value = false
+      // }
+
       const nextIsScaled = e.zoomScale > 1
       if (scaled !== nextIsScaled) {
         runOnJS(handleZoom)(nextIsScaled)
+      }
+    },
+    onBeginDrag() {
+      console.log('beg drag')
+      if (needsReset.value) {
+        console.log('reset!!')
+        needsReset.value = false
+        setNativeProps(scrollViewRef, {
+          scrollEnabled: false,
+        })
+        setNativeProps(scrollViewRef, {
+          scrollEnabled: true,
+        })
+      }
+    },
+    onEndDrag() {
+      console.log('end drag')
+    },
+    onMomentumBegin() {
+      console.log('beg mom')
+      weirdState.value = 1
+    },
+    onMomentumEnd() {
+      console.log('mom end')
+      if (weirdState.value === 2) {
+        weirdState.value = 3
       }
     },
   })
@@ -111,6 +177,33 @@ const ImageItem = ({
       animated: true,
     })
   }
+
+  const manual = Gesture.Manual()
+    .onTouchesDown(() => {
+      console.log(' -- touch down')
+      if (weirdState.value === 3) {
+        weirdState.value = 0
+        console.log('-- set needs reset')
+        needsReset.value = true
+        // setTimeout(() => {
+        //   setNativeProps(scrollViewRef, {
+        //     scrollEnabled: true,
+        //   })
+        // }, 100)
+      }
+    })
+    .onTouchesUp(() => {
+      console.log(' -- touch up')
+      // setNativeProps(scrollViewRef, {
+      //   scrollEnabled: true,
+      // })
+    })
+    .onTouchesCancelled(() => {
+      // setNativeProps(scrollViewRef, {
+      //   scrollEnabled: true,
+      // })
+      console.log(' -- touch can')
+    })
 
   const singleTap = Gesture.Tap().onEnd(() => {
     'worklet'
@@ -141,10 +234,9 @@ const ImageItem = ({
       runOnJS(zoomTo)(nextZoomRect)
     })
 
-  const composedGesture = Gesture.Exclusive(
-    dismissSwipePan,
-    doubleTap,
-    singleTap,
+  const composedGesture = Gesture.Simultaneous(
+    manual,
+    Gesture.Exclusive(dismissSwipePan, doubleTap, singleTap),
   )
 
   const containerStyle = useAnimatedStyle(() => {
