@@ -146,7 +146,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
         />
       ) : (
         <MagnifyingGlass
-          testID="bottomBarSearchBtn"
+          testID="bottomBarSearchTabItem"
           width={iconWidth + 2}
           style={[styles.ctrlIcon, pal.text, styles.searchIcon]}
         />
@@ -239,24 +239,24 @@ export function BottomBar({navigation}: BottomTabBarProps) {
         }}>
         {hasSession ? (
           <>
-            <Btn
-              testID="bottomBarHomeBtn"
+            <TabItem
+              testID="bottomBarHomeTabItem"
               renderIcon={renderHomeIcon}
               onPress={onPressHome}
               accessibilityRole="tab"
               accessibilityLabel={_(msg`Home`)}
               accessibilityHint=""
             />
-            <Btn
-              testID="bottomBarSearchBtn"
+            <TabItem
+              testID="bottomBarSearchTabItem"
               renderIcon={renderSearchIcon}
               onPress={onPressSearch}
               accessibilityRole="search"
               accessibilityLabel={_(msg`Search`)}
               accessibilityHint=""
             />
-            <Btn
-              testID="bottomBarMessagesBtn"
+            <TabItem
+              testID="bottomBarMessagesTabItem"
               renderIcon={renderMessagesIcon}
               onPress={onPressMessages}
               notificationCount={numUnreadMessages.numUnread}
@@ -269,8 +269,8 @@ export function BottomBar({navigation}: BottomTabBarProps) {
                   : ''
               }
             />
-            <Btn
-              testID="bottomBarNotificationsBtn"
+            <TabItem
+              testID="bottomBarNotificationsTabItem"
               renderIcon={renderNotificationsIcon}
               onPress={onPressNotifications}
               notificationCount={numUnreadNotifications}
@@ -283,8 +283,8 @@ export function BottomBar({navigation}: BottomTabBarProps) {
                   : _(msg`${numUnreadNotifications} unread items`)
               }
             />
-            <Btn
-              testID="bottomBarProfileBtn"
+            <TabItem
+              testID="bottomBarProfileTabItem"
               renderIcon={renderProfileIcon}
               onPress={onPressProfile}
               onLongPress={onLongPressProfile}
@@ -344,7 +344,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
   )
 }
 
-interface BtnProps
+interface TabItemProps
   extends Pick<
     ComponentProps<typeof PressableScale>,
     | 'accessible'
@@ -359,7 +359,7 @@ interface BtnProps
   onLongPress?: (event: GestureResponderEvent) => void
 }
 
-let Btn = ({
+function TabItem({
   testID,
   renderIcon,
   notificationCount,
@@ -368,7 +368,7 @@ let Btn = ({
   accessible,
   accessibilityHint,
   accessibilityLabel,
-}: BtnProps): React.ReactNode => {
+}: TabItemProps) {
   return (
     <PressableScale
       testID={testID}
@@ -388,4 +388,3 @@ let Btn = ({
     </PressableScale>
   )
 }
-Btn = React.memo(Btn)
