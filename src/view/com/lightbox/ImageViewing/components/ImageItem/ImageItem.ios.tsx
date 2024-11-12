@@ -14,13 +14,14 @@ import {
   PanGesture,
 } from 'react-native-gesture-handler'
 import Animated, {
+  interpolate,
   runOnJS,
+  setNativeProps,
   SharedValue,
   useAnimatedProps,
   useAnimatedReaction,
   useAnimatedRef,
   useAnimatedStyle,
-  setNativeProps,
   useSharedValue,
 } from 'react-native-reanimated'
 import {useSafeAreaFrame} from 'react-native-safe-area-context'
@@ -87,16 +88,47 @@ const ImageItem = ({
       : 1,
   )
 
-  const sp = useSharedValue({
-    centerContent: true,
-  })
-  const scrollProps = useAnimatedProps(() => {
-    return {...sp.value}
-  })
-
   const needsReset = useSharedValue(false)
   const lastValue = useSharedValue(null)
   const weirdState = useSharedValue(0)
+
+  function computeInsets(zoom) {
+    'worklet'
+    const screenSize = measureSafeArea()
+    let top = 0
+    let bottom = 0
+    if (imageAspect) {
+      const screenAspect = screenSize.width / screenSize.height
+      if (imageAspect >= screenAspect) {
+        // The image has horizontal black bars. Exclude them from the safe area.
+        const renderedHeight = screenSize.width / imageAspect
+        const horizontalBarHeight = (screenSize.height - renderedHeight) / 2
+
+        const finalZoomScale = screenSize.height / renderedHeight
+        const currentZoomScale = zoom
+
+        console.log(currentZoomScale, finalZoomScale)
+
+        top =
+          interpolate(
+            currentZoomScale,
+            [1, finalZoomScale],
+            [horizontalBarHeight, 0],
+          ) / currentZoomScale
+        bottom = top
+      }
+    }
+    return {top, bottom, left: 0, right: 0}
+  }
+
+  const insets = useSharedValue(computeInsets(1))
+
+  const animatedProps = useAnimatedProps(() => {
+    console.log('setting', insets.value)
+    return {
+      contentInsets: insets.value,
+    }
+  })
 
   const scrollHandler = useAnimatedScrollHandler({
     onScroll(e) {
@@ -144,8 +176,10 @@ const ImageItem = ({
         })
       }
     },
-    onEndDrag() {
+    onEndDrag(e) {
       console.log('end drag')
+
+      insets.value = computeInsets(e.zoomScale)
     },
     onMomentumBegin() {
       console.log('beg mom')
@@ -304,7 +338,7 @@ const ImageItem = ({
         style={containerStyle}
         bounces={scaled}
         bouncesZoom={true}
-        centerContent>
+        animatedProps={animatedProps}>
         {showLoader && (
           <ActivityIndicator size="small" color="#FFF" style={styles.loading} />
         )}
