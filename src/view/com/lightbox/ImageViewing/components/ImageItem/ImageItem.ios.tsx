@@ -88,51 +88,13 @@ const ImageItem = ({
       : 1,
   )
 
-  function computeInsets(zoom) {
-    'worklet'
-    const screenSize = measureSafeArea()
-    let top = 0
-    let bottom = 0
-    if (imageAspect) {
-      const screenAspect = screenSize.width / screenSize.height
-      if (imageAspect >= screenAspect) {
-        // The image has horizontal black bars. Exclude them from the safe area.
-        const renderedHeight = screenSize.width / imageAspect
-        const horizontalBarHeight = (screenSize.height - renderedHeight) / 2
-
-        const finalZoomScale = screenSize.height / renderedHeight
-        const currentZoomScale = zoom
-
-        top =
-          interpolate(
-            currentZoomScale,
-            [1, finalZoomScale],
-            [0, horizontalBarHeight],
-          ) * zoom
-
-        bottom = renderedHeight - top
-      }
-    }
-    return {top, bottom, left: 0, right: 0}
-  }
-
   const scrollHandler = useAnimatedScrollHandler({
     onScroll(e) {
       const nextIsScaled = e.zoomScale > 1
       if (scaled !== nextIsScaled) {
         runOnJS(handleZoom)(nextIsScaled)
       }
-
-      const insets = computeInsets(e.zoomScale)
-      console.log(e.contentOffset.y, insets.top, insets.bottom)
-
-      setNativeProps(scrollViewRef, {})
-      // const insets = computeInsets(e.zoomScale)
-      // setNativeProps(scrollViewRef, {
-      //   contentInset: insets,
-      // })
     },
-    onEndDrag(e) {},
   })
 
   function handleZoom(nextIsScaled: boolean) {
