@@ -10,6 +10,7 @@ import Animated, {
   Easing,
   interpolate,
   runOnJS,
+  runOnUI,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
@@ -146,30 +147,39 @@ export function Splash(props: React.PropsWithChildren<Props>) {
     if (isReady) {
       SplashScreen.hideAsync()
         .then(() => {
-          intro.value = withTiming(
-            1,
-            {duration: 400, easing: Easing.out(Easing.cubic)},
-            async () => {
-              // set these values to check animation at specific point
-              // outroLogo.value = 0.1
-              // outroApp.value = 0.1
-              outroLogo.value = withTiming(
+          runOnUI(() => {
+            'worklet'
+            intro.set(
+              withTiming(
                 1,
-                {duration: 1200, easing: Easing.in(Easing.cubic)},
+                {duration: 400, easing: Easing.out(Easing.cubic)},
                 () => {
-                  runOnJS(onFinish)()
+                  // set these values to check animation at specific point
+                  // outroLogo.value = 0.1
+                  // outroApp.value = 0.1
+                  outroLogo.set(
+                    withTiming(
+                      1,
+                      {duration: 1200, easing: Easing.in(Easing.cubic)},
+                      () => runOnJS(onFinish)(),
+                    ),
+                  )
+                  outroApp.set(
+                    withTiming(1, {
+                      duration: 1200,
+                      easing: Easing.inOut(Easing.cubic),
+                    }),
+                  )
+                  outroAppOpacity.set(
+                    withTiming(1, {
+                      duration: 1200,
+                      easing: Easing.in(Easing.cubic),
+                    }),
+                  )
                 },
-              )
-              outroApp.value = withTiming(1, {
-                duration: 1200,
-                easing: Easing.inOut(Easing.cubic),
-              })
-              outroAppOpacity.value = withTiming(1, {
-                duration: 1200,
-                easing: Easing.in(Easing.cubic),
-              })
-            },
-          )
+              ),
+            )
+          })()
         })
         .catch(() => {})
     }
