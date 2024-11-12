@@ -60,14 +60,15 @@ export function Link({
   ...props
 }: Props & Omit<LinkProps, 'to' | 'label'>) {
   const queryClient = useQueryClient()
+  const {i18n} = useLingui()
 
   const href = React.useMemo(() => {
     return createProfileFeedHref({feed: view})
   }, [view])
 
   React.useEffect(() => {
-    precacheFeedFromGeneratorView(queryClient, view)
-  }, [view, queryClient])
+    precacheFeedFromGeneratorView(i18n, queryClient, view)
+  }, [i18n, view, queryClient])
 
   return (
     <InternalLink
@@ -118,6 +119,7 @@ export function TitleAndByline({
   creator?: AppBskyActorDefs.ProfileViewBasic
 }) {
   const t = useTheme()
+  const {i18n} = useLingui()
 
   return (
     <View style={[a.flex_1]}>
@@ -131,7 +133,7 @@ export function TitleAndByline({
         <Text
           style={[a.leading_snug, t.atoms.text_contrast_medium]}
           numberOfLines={1}>
-          <Trans>Feed by {sanitizeHandle(creator.handle, '@')}</Trans>
+          <Trans>Feed by {sanitizeHandle(i18n, creator.handle, '@')}</Trans>
         </Text>
       )}
     </View>

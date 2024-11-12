@@ -52,14 +52,14 @@ export function Title({value}: {value: string}) {
 }
 
 export function Description({value, handle}: {value?: string; handle: string}) {
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   return value ? (
     <Text numberOfLines={2}>
       <RichText value={value} style={[a.leading_snug]} />
     </Text>
   ) : (
     <Text emoji style={[a.leading_snug]}>
-      {_(msg`By ${sanitizeHandle(handle, '@')}`)}
+      {_(msg`By ${sanitizeHandle(i18n, handle, '@')}`)}
     </Text>
   )
 }

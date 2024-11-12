@@ -38,7 +38,7 @@ export default function HashtagScreen({
   route,
 }: NativeStackScreenProps<CommonNavigatorParams, 'Hashtag'>) {
   const {tag, author} = route.params
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
 
   const fullTag = React.useMemo(() => {
     return `#${decodeURIComponent(tag)}`
@@ -50,8 +50,8 @@ export default function HashtagScreen({
 
   const sanitizedAuthor = React.useMemo(() => {
     if (!author) return
-    return sanitizeHandle(author)
-  }, [author])
+    return sanitizeHandle(i18n, author)
+  }, [author, i18n])
 
   const onShare = React.useCallback(() => {
     const url = new URL('https://bsky.app')

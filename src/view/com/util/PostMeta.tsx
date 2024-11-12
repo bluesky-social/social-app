@@ -97,7 +97,7 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
             <Text
               emoji
               style={[a.text_md, t.atoms.text_contrast_medium, a.leading_snug]}>
-              {NON_BREAKING_SPACE + sanitizeHandle(handle, '@')}
+              {NON_BREAKING_SPACE + sanitizeHandle(i18n, handle, '@')}
             </Text>
           </WebOnlyInlineLinkText>
         </Text>

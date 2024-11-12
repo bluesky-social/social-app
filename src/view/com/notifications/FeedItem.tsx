@@ -647,7 +647,7 @@ function ExpandedAuthorsList({
   visible: boolean
   authors: Author[]
 }) {
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const pal = usePalette('default')
   const heightInterp = useAnimatedValue(visible ? 1 : 0)
   const targetHeight =
@@ -698,7 +698,7 @@ function ExpandedAuthorsList({
                   )}
                 </Text>{' '}
                 <Text style={[pal.textLight]} lineHeight={1.2}>
-                  {sanitizeHandle(author.profile.handle, '@')}
+                  {sanitizeHandle(i18n, author.profile.handle, '@')}
                 </Text>
               </Text>
             </View>

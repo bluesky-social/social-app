@@ -1,6 +1,7 @@
 import React from 'react'
 import {StyleProp, StyleSheet, TextStyle} from 'react-native'
 import {AppBskyActorGetProfile as GetProfile} from '@atproto/api'
+import {useLingui} from '@lingui/react'
 
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
@@ -31,6 +32,7 @@ export function UserInfoText({
   attr = attr || 'handle'
   failed = failed || 'user'
 
+  const {i18n} = useLingui()
   const {data: profile, isError} = useProfileQuery({
     did,
     staleTime: STALE.INFINITY,
@@ -56,7 +58,7 @@ export function UserInfoText({
             {`${prefix || ''}${sanitizeDisplayName(
               typeof profile[attr] === 'string' && profile[attr]
                 ? (profile[attr] as string)
-                : sanitizeHandle(profile.handle),
+                : sanitizeHandle(i18n, profile.handle),
             )}`}
           </Text>
         }

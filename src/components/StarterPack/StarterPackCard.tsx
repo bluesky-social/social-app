@@ -53,7 +53,7 @@ export function Card({
 }) {
   const {record, creator, joinedAllTimeCount} = starterPack
 
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const t = useTheme()
   const {currentAccount} = useSession()
 
@@ -78,7 +78,13 @@ export function Card({
             numberOfLines={1}>
             {creator?.did === currentAccount?.did
               ? _(msg`Starter pack by you`)
-              : _(msg`Starter pack by ${sanitizeHandle(creator.handle, '@')}`)}
+              : _(
+                  msg`Starter pack by ${sanitizeHandle(
+                    i18n,
+                    creator.handle,
+                    '@',
+                  )}`,
+                )}
           </Text>
         </View>
       </View>

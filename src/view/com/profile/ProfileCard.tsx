@@ -5,6 +5,7 @@ import {
   moderateProfile,
   ModerationDecision,
 } from '@atproto/api'
+import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {usePalette} from '#/lib/hooks/usePalette'
@@ -52,6 +53,7 @@ export function ProfileCard({
   style?: StyleProp<ViewStyle>
   showKnownFollowers?: boolean
 }) {
+  const {i18n} = useLingui()
   const queryClient = useQueryClient()
   const pal = usePalette('default')
   const profile = useProfileShadow(profileUnshadowed)
@@ -109,12 +111,12 @@ export function ProfileCard({
             numberOfLines={1}
             lineHeight={1.2}>
             {sanitizeDisplayName(
-              profile.displayName || sanitizeHandle(profile.handle),
+              profile.displayName || sanitizeHandle(i18n, profile.handle),
               moderation.ui('displayName'),
             )}
           </Text>
           <Text emoji type="md" style={[pal.textLight]} numberOfLines={1}>
-            {sanitizeHandle(profile.handle, '@')}
+            {sanitizeHandle(i18n, profile.handle, '@')}
           </Text>
           <ProfileCardPills
             followedBy={!!profile.viewer?.followedBy}

@@ -169,7 +169,7 @@ function UserResult({
   ) => void | undefined
 }) {
   const pal = usePalette('default')
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const [isProcessing, setIsProcessing] = useState(false)
   const membership = React.useMemo(
     () => getMembership(memberships, list.uri, profile.did),
@@ -251,11 +251,11 @@ function UserResult({
           numberOfLines={1}
           lineHeight={1.2}>
           {sanitizeDisplayName(
-            profile.displayName || sanitizeHandle(profile.handle),
+            profile.displayName || sanitizeHandle(i18n, profile.handle),
           )}
         </Text>
         <Text type="md" style={[pal.textLight]} numberOfLines={1}>
-          {sanitizeHandle(profile.handle, '@')}
+          {sanitizeHandle(i18n, profile.handle, '@')}
         </Text>
         {!!profile.viewer?.followedBy && <View style={s.flexRow} />}
       </View>

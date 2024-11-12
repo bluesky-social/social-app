@@ -117,10 +117,10 @@ function Label({
   onPressAppeal: (label: ComAtprotoLabelDefs.Label) => void
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const {labeler, strings} = useLabelInfo(label)
   const sourceName = labeler
-    ? sanitizeHandle(labeler.creator.handle, '@')
+    ? sanitizeHandle(i18n, labeler.creator.handle, '@')
     : label.src
   return (
     <View
@@ -191,7 +191,7 @@ function AppealForm({
   control: Dialog.DialogOuterProps['control']
   onPressBack: () => void
 }) {
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const {labeler, strings} = useLabelInfo(label)
   const {gtMobile} = useBreakpoints()
   const [details, setDetails] = React.useState('')
@@ -199,7 +199,7 @@ function AppealForm({
   const isAccountReport = 'did' in subject
   const agent = useAgent()
   const sourceName = labeler
-    ? sanitizeHandle(labeler.creator.handle, '@')
+    ? sanitizeHandle(i18n, labeler.creator.handle, '@')
     : label.src
 
   const {mutate, isPending} = useMutation({
@@ -263,7 +263,9 @@ function AppealForm({
           label={_(msg`Text input field`)}
           placeholder={_(
             msg`Please explain why you think this label was incorrectly applied by ${
-              labeler ? sanitizeHandle(labeler.creator.handle, '@') : label.src
+              labeler
+                ? sanitizeHandle(i18n, labeler.creator.handle, '@')
+                : label.src
             }`,
           )}
           value={details}

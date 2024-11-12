@@ -104,7 +104,7 @@ function AccountItem({
   isPendingAccount: boolean
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
 
   const onPress = useCallback(() => {
     onSelect(account)
@@ -140,7 +140,7 @@ function AccountItem({
               )}
             </Text>{' '}
             <Text emoji style={[t.atoms.text_contrast_medium]}>
-              {sanitizeHandle(account.handle)}
+              {sanitizeHandle(i18n, account.handle)}
             </Text>
           </Text>
           {isCurrentAccount ? (

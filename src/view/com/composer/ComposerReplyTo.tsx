@@ -20,7 +20,7 @@ import {atoms as a, useTheme} from '#/alf'
 
 export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const {embed} = replyTo
 
   const [showFull, setShowFull] = React.useState(false)
@@ -81,7 +81,8 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
       <View style={styles.replyToPost}>
         <Text type="xl-medium" style={t.atoms.text} numberOfLines={1} emoji>
           {sanitizeDisplayName(
-            replyTo.author.displayName || sanitizeHandle(replyTo.author.handle),
+            replyTo.author.displayName ||
+              sanitizeHandle(i18n, replyTo.author.handle),
           )}
         </Text>
         <View style={styles.replyToBody}>

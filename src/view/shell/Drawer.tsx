@@ -90,7 +90,7 @@ let DrawerProfileCard = ({
           emoji
           style={[t.atoms.text_contrast_medium, a.text_md, a.leading_tight]}
           numberOfLines={1}>
-          {sanitizeHandle(account.handle, '@')}
+          {sanitizeHandle(i18n, account.handle, '@')}
         </Text>
       </View>
       <Text style={[a.text_md, t.atoms.text_contrast_medium]}>

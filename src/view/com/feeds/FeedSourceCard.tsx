@@ -97,7 +97,7 @@ export function FeedSourceCardLoaded({
 }) {
   const t = useTheme()
   const pal = usePalette('default')
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const removePromptControl = Prompt.usePromptControl()
   const navigation = useNavigationDeduped()
 
@@ -247,9 +247,13 @@ export function FeedSourceCardLoaded({
             </Text>
             <Text style={[pal.textLight]} numberOfLines={1}>
               {feed.type === 'feed' ? (
-                <Trans>Feed by {sanitizeHandle(feed.creatorHandle, '@')}</Trans>
+                <Trans>
+                  Feed by {sanitizeHandle(i18n, feed.creatorHandle, '@')}
+                </Trans>
               ) : (
-                <Trans>List by {sanitizeHandle(feed.creatorHandle, '@')}</Trans>
+                <Trans>
+                  List by {sanitizeHandle(i18n, feed.creatorHandle, '@')}
+                </Trans>
               )}
             </Text>
           </View>

@@ -3,6 +3,7 @@ import {View} from 'react-native'
 import Animated, {FadeInDown, FadeOut} from 'react-native-reanimated'
 import {AppBskyActorDefs} from '@atproto/api'
 import {Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
@@ -21,6 +22,7 @@ export function Autocomplete({
   onSelect: (item: string) => void
 }) {
   const t = useTheme()
+  const {i18n} = useLingui()
 
   const {getGraphemeString} = useGrapheme()
   const isActive = !!prefix
@@ -100,7 +102,7 @@ export function Autocomplete({
                   </Text>
                 </View>
                 <Text style={[t.atoms.text_contrast_medium]} numberOfLines={1}>
-                  {sanitizeHandle(displayHandle, '@')}
+                  {sanitizeHandle(i18n, displayHandle, '@')}
                 </Text>
               </PressableScale>
             </View>

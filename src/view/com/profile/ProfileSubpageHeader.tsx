@@ -55,7 +55,7 @@ export function ProfileSubpageHeader({
 }>) {
   const setDrawerOpen = useSetDrawerOpen()
   const navigation = useNavigation<NavigationProp>()
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const {isMobile} = useWebMediaQueries()
   const {openLightbox} = useLightboxControls()
   const pal = usePalette('default')
@@ -201,7 +201,7 @@ export function ProfileSubpageHeader({
                 <Trans>
                   by{' '}
                   <TextLink
-                    text={sanitizeHandle(creator.handle, '@')}
+                    text={sanitizeHandle(i18n, creator.handle, '@')}
                     href={makeProfileLink(creator)}
                     style={pal.textLight}
                   />

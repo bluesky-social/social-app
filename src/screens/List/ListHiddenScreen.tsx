@@ -31,7 +31,7 @@ export function ListHiddenScreen({
   list: AppBskyGraphDefs.ListView
   preferences: UsePreferencesQueryResponse
 }) {
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const t = useTheme()
   const {currentAccount} = useSession()
   const {gtMobile} = useBreakpoints()
@@ -138,7 +138,7 @@ export function ListHiddenScreen({
               <Text style={[a.text_md, !isOwner && a.font_bold]}>
                 {isOwner
                   ? _(msg`you`)
-                  : sanitizeHandle(list.creator.handle, '@')}
+                  : sanitizeHandle(i18n, list.creator.handle, '@')}
               </Text>{' '}
               - contains possible violations of Bluesky's community guidelines
               in its name or description.

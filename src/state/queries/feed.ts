@@ -8,6 +8,8 @@ import {
   moderateFeedGenerator,
   RichText,
 } from '@atproto/api'
+import {I18n} from '@lingui/core'
+import {useLingui} from '@lingui/react'
 import {
   InfiniteData,
   keepPreviousData,
@@ -81,6 +83,7 @@ const feedSourceNSIDs = {
 }
 
 export function hydrateFeedGenerator(
+  i18n: I18n,
   view: AppBskyFeedDefs.GeneratorView,
 ): FeedSourceInfo {
   const urip = new AtUri(view.uri)
@@ -102,7 +105,7 @@ export function hydrateFeedGenerator(
     avatar: view.avatar,
     displayName: view.displayName
       ? sanitizeDisplayName(view.displayName)
-      : `Feed by ${sanitizeHandle(view.creator.handle, '@')}`,
+      : `Feed by ${sanitizeHandle(i18n, view.creator.handle, '@')}`,
     description: new RichText({
       text: view.description || '',
       facets: (view.descriptionFacets || [])?.slice(),
@@ -114,7 +117,10 @@ export function hydrateFeedGenerator(
   }
 }
 
-export function hydrateList(view: AppBskyGraphDefs.ListView): FeedSourceInfo {
+export function hydrateList(
+  i18n: I18n,
+  view: AppBskyGraphDefs.ListView,
+): FeedSourceInfo {
   const urip = new AtUri(view.uri)
   const collection =
     urip.collection === 'app.bsky.feed.generator' ? 'feed' : 'lists'
@@ -140,7 +146,7 @@ export function hydrateList(view: AppBskyGraphDefs.ListView): FeedSourceInfo {
     creatorHandle: view.creator.handle,
     displayName: view.name
       ? sanitizeDisplayName(view.name)
-      : `User List by ${sanitizeHandle(view.creator.handle, '@')}`,
+      : `User List by ${sanitizeHandle(i18n, view.creator.handle, '@')}`,
   }
 }
 
@@ -156,6 +162,7 @@ export function getAvatarTypeFromUri(uri: string) {
 export function useFeedSourceInfoQuery({uri}: {uri: string}) {
   const type = getFeedTypeFromUri(uri)
   const agent = useAgent()
+  const {i18n} = useLingui()
 
   return useQuery({
     staleTime: STALE.INFINITY,
@@ -165,13 +172,13 @@ export function useFeedSourceInfoQuery({uri}: {uri: string}) {
 
       if (type === 'feed') {
         const res = await agent.app.bsky.feed.getFeedGenerator({feed: uri})
-        view = hydrateFeedGenerator(res.data.view)
+        view = hydrateFeedGenerator(i18n, res.data.view)
       } else {
         const res = await agent.app.bsky.graph.getList({
           list: uri,
           limit: 1,
         })
-        view = hydrateList(res.data.list)
+        view = hydrateList(i18n, res.data.list)
       }
 
       return view
@@ -221,6 +228,7 @@ export function useGetPopularFeedsQuery(options?: GetPopularFeedsOptions) {
     [hasSession, preferences?.savedFeeds, moderationOpts],
   )
   const lastPageCountRef = useRef(0)
+  const {i18n} = useLingui()
 
   const query = useInfiniteQuery<
     AppBskyUnspeccedGetPopularFeedGenerators.OutputSchema,
@@ -239,7 +247,7 @@ export function useGetPopularFeedsQuery(options?: GetPopularFeedsOptions) {
 
       // precache feeds
       for (const feed of res.data.feeds) {
-        const hydratedFeed = hydrateFeedGenerator(feed)
+        const hydratedFeed = hydrateFeedGenerator(i18n, feed)
         precacheFeed(queryClient, hydratedFeed)
       }
 
@@ -408,6 +416,7 @@ export function usePinnedFeedsInfos() {
   const agent = useAgent()
   const {data: preferences, isLoading: isLoadingPrefs} = usePreferencesQuery()
   const pinnedItems = preferences?.savedFeeds.filter(feed => feed.pinned) ?? []
+  const {i18n} = useLingui()
 
   return useQuery({
     staleTime: STALE.INFINITY,
@@ -435,7 +444,7 @@ export function usePinnedFeedsInfos() {
           .then(res => {
             for (let i = 0; i < res.data.feeds.length; i++) {
               const feedView = res.data.feeds[i]
-              resolved.set(feedView.uri, hydrateFeedGenerator(feedView))
+              resolved.set(feedView.uri, hydrateFeedGenerator(i18n, feedView))
             }
           })
       }
@@ -450,7 +459,7 @@ export function usePinnedFeedsInfos() {
           })
           .then(res => {
             const listView = res.data.list
-            resolved.set(listView.uri, hydrateList(listView))
+            resolved.set(listView.uri, hydrateList(i18n, listView))
           }),
       )
 
@@ -515,6 +524,7 @@ export function useSavedFeeds() {
   const {data: preferences, isLoading: isLoadingPrefs} = usePreferencesQuery()
   const savedItems = preferences?.savedFeeds ?? []
   const queryClient = useQueryClient()
+  const {i18n} = useLingui()
 
   return useQuery({
     staleTime: STALE.INFINITY,
@@ -564,7 +574,7 @@ export function useSavedFeeds() {
       await Promise.allSettled([feedsPromise, ...listsPromises])
 
       resolvedFeeds.forEach(feed => {
-        const hydratedFeed = hydrateFeedGenerator(feed)
+        const hydratedFeed = hydrateFeedGenerator(i18n, feed)
         precacheFeed(queryClient, hydratedFeed)
       })
       resolvedLists.forEach(list => {
@@ -633,9 +643,10 @@ export function precacheList(
 }
 
 export function precacheFeedFromGeneratorView(
+  i18n: I18n,
   queryClient: QueryClient,
   view: AppBskyFeedDefs.GeneratorView,
 ) {
-  const hydratedFeed = hydrateFeedGenerator(view)
+  const hydratedFeed = hydrateFeedGenerator(i18n, view)
   precacheFeed(queryClient, hydratedFeed)
 }

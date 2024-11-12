@@ -827,7 +827,7 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
   ) {
     const pal = usePalette('default')
     const t = useTheme()
-    const {_} = useLingui()
+    const {_, i18n} = useLingui()
     const {isMobile} = useWebMediaQueries()
     const {currentAccount} = useSession()
     const [isScrolledDown, setIsScrolledDown] = React.useState(false)
@@ -890,7 +890,11 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
                   <Trans>
                     User list by{' '}
                     <TextLink
-                      text={sanitizeHandle(list.creator.handle || '', '@')}
+                      text={sanitizeHandle(
+                        i18n,
+                        list.creator.handle || '',
+                        '@',
+                      )}
                       href={makeProfileLink(list.creator)}
                       style={pal.textLight}
                     />
@@ -902,7 +906,7 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
                 <Trans>
                   Moderation list by{' '}
                   <TextLink
-                    text={sanitizeHandle(list.creator.handle || '', '@')}
+                    text={sanitizeHandle(i18n, list.creator.handle || '', '@')}
                     href={makeProfileLink(list.creator)}
                     style={pal.textLight}
                   />
@@ -945,6 +949,7 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
         </View>
       )
     }, [
+      i18n,
       isMobile,
       pal.border,
       pal.textLight,

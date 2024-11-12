@@ -103,12 +103,12 @@ export function Link({
 }: {
   profile: AppBskyActorDefs.ProfileViewDetailed
 } & Omit<LinkProps, 'to' | 'label'>) {
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   return (
     <InternalLink
       label={_(
         msg`View ${
-          profile.displayName || sanitizeHandle(profile.handle)
+          profile.displayName || sanitizeHandle(i18n, profile.handle)
         }'s profile`,
       )}
       to={{
@@ -165,12 +165,13 @@ export function NameAndHandle({
   moderationOpts: ModerationOpts
 }) {
   const t = useTheme()
+  const {i18n} = useLingui()
   const moderation = moderateProfile(profile, moderationOpts)
   const name = sanitizeDisplayName(
-    profile.displayName || sanitizeHandle(profile.handle),
+    profile.displayName || sanitizeHandle(i18n, profile.handle),
     moderation.ui('displayName'),
   )
-  const handle = sanitizeHandle(profile.handle, '@')
+  const handle = sanitizeHandle(i18n, profile.handle, '@')
 
   return (
     <View style={[a.flex_1]}>

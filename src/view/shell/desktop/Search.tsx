@@ -93,6 +93,7 @@ let SearchProfileCard = ({
 }): React.ReactNode => {
   const pal = usePalette('default')
   const queryClient = useQueryClient()
+  const {i18n} = useLingui()
 
   const onPress = React.useCallback(() => {
     precacheProfile(queryClient, profile)
@@ -132,12 +133,12 @@ let SearchProfileCard = ({
             numberOfLines={1}
             lineHeight={1.2}>
             {sanitizeDisplayName(
-              profile.displayName || sanitizeHandle(profile.handle),
+              profile.displayName || sanitizeHandle(i18n, profile.handle),
               moderation.ui('displayName'),
             )}
           </Text>
           <Text type="md" style={[pal.textLight]} numberOfLines={1}>
-            {sanitizeHandle(profile.handle, '@')}
+            {sanitizeHandle(i18n, profile.handle, '@')}
           </Text>
         </View>
       </View>

@@ -1,6 +1,6 @@
 // Regex from the go implementation
 // https://github.com/bluesky-social/indigo/blob/main/atproto/syntax/handle.go#L10
-import {t} from '@lingui/macro'
+import {I18n} from '@lingui/core'
 
 import {forceLTR} from '#/lib/strings/bidi'
 
@@ -25,9 +25,13 @@ export function isInvalidHandle(handle: string): boolean {
   return handle === 'handle.invalid'
 }
 
-export function sanitizeHandle(handle: string, prefix = ''): string {
+export function sanitizeHandle(
+  i18n: I18n,
+  handle: string,
+  prefix = '',
+): string {
   return isInvalidHandle(handle)
-    ? t`⚠Invalid Handle`
+    ? i18n._(`⚠Invalid Handle`)
     : forceLTR(`${prefix}${handle}`)
 }
 
