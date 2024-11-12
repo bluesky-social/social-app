@@ -607,6 +607,7 @@ function MenuItem({icon, label, count, bold, onPress}: MenuItemProps) {
 
 function ExtraLinks() {
   const {_} = useLingui()
+  const t = useTheme()
   const kawaii = useKawaiiMode()
 
   return (
