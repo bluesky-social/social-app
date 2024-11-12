@@ -257,6 +257,11 @@ export function PostInteractionSettingsForm({
       newSelected.splice(i, 1)
     }
 
+    // if nothing is selected, default to 'everybody'
+    if (newSelected.length === 0) {
+      newSelected.push({type: 'everybody'})
+    }
+
     onChangeThreadgateAllowUISettings(newSelected)
   }
 
