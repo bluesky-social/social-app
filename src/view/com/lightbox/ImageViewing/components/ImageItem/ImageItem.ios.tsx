@@ -88,10 +88,6 @@ const ImageItem = ({
       : 1,
   )
 
-  const needsReset = useSharedValue(false)
-  const lastValue = useSharedValue(null)
-  const weirdState = useSharedValue(0)
-
   function computeInsets(zoom) {
     'worklet'
     const screenSize = measureSafeArea()
@@ -107,90 +103,36 @@ const ImageItem = ({
         const finalZoomScale = screenSize.height / renderedHeight
         const currentZoomScale = zoom
 
-        console.log(currentZoomScale, finalZoomScale)
-
         top =
           interpolate(
             currentZoomScale,
             [1, finalZoomScale],
-            [horizontalBarHeight, 0],
-          ) / currentZoomScale
-        bottom = top
+            [0, horizontalBarHeight],
+          ) * zoom
+
+        bottom = renderedHeight - top
       }
     }
     return {top, bottom, left: 0, right: 0}
   }
 
-  const insets = useSharedValue(computeInsets(1))
-
-  const animatedProps = useAnimatedProps(() => {
-    console.log('setting', insets.value)
-    return {
-      contentInsets: insets.value,
-    }
-  })
-
   const scrollHandler = useAnimatedScrollHandler({
     onScroll(e) {
-      console.log('scroll')
-
-      if (
-        lastValue.value &&
-        e.contentOffset.x === lastValue.value.contentOffset.x &&
-        e.contentOffset.y === lastValue.value.contentOffset.y &&
-        e.zoomScale === lastValue.value.zoomScale &&
-        weirdState.value === 1
-      ) {
-        weirdState.value = 2
-      } else {
-        weirdState.value = 0
-      }
-      lastValue.value = e
-      //   console.log('inside condition, set did nothing = true')
-      //   // setNativeProps(scrollViewRef, {
-      //   //   scrollEnabled: false,
-      //   // })
-      //   // setNativeProps(scrollViewRef, {
-      //   //   scrollEnabled: true,
-      //   // })
-      // } else {
-      //   console.log('set did nothing = false')
-      //   didNothing.value = false
-      // }
-
       const nextIsScaled = e.zoomScale > 1
       if (scaled !== nextIsScaled) {
         runOnJS(handleZoom)(nextIsScaled)
       }
-    },
-    onBeginDrag() {
-      console.log('beg drag')
-      if (needsReset.value) {
-        console.log('reset!!')
-        needsReset.value = false
-        setNativeProps(scrollViewRef, {
-          scrollEnabled: false,
-        })
-        setNativeProps(scrollViewRef, {
-          scrollEnabled: true,
-        })
-      }
-    },
-    onEndDrag(e) {
-      console.log('end drag')
 
-      insets.value = computeInsets(e.zoomScale)
+      const insets = computeInsets(e.zoomScale)
+      console.log(e.contentOffset.y, insets.top, insets.bottom)
+
+      setNativeProps(scrollViewRef, {})
+      // const insets = computeInsets(e.zoomScale)
+      // setNativeProps(scrollViewRef, {
+      //   contentInset: insets,
+      // })
     },
-    onMomentumBegin() {
-      console.log('beg mom')
-      weirdState.value = 1
-    },
-    onMomentumEnd() {
-      console.log('mom end')
-      if (weirdState.value === 2) {
-        weirdState.value = 3
-      }
-    },
+    onEndDrag(e) {},
   })
 
   function handleZoom(nextIsScaled: boolean) {
@@ -211,33 +153,6 @@ const ImageItem = ({
       animated: true,
     })
   }
-
-  const manual = Gesture.Manual()
-    .onTouchesDown(() => {
-      console.log(' -- touch down')
-      if (weirdState.value === 3) {
-        weirdState.value = 0
-        console.log('-- set needs reset')
-        needsReset.value = true
-        // setTimeout(() => {
-        //   setNativeProps(scrollViewRef, {
-        //     scrollEnabled: true,
-        //   })
-        // }, 100)
-      }
-    })
-    .onTouchesUp(() => {
-      console.log(' -- touch up')
-      // setNativeProps(scrollViewRef, {
-      //   scrollEnabled: true,
-      // })
-    })
-    .onTouchesCancelled(() => {
-      // setNativeProps(scrollViewRef, {
-      //   scrollEnabled: true,
-      // })
-      console.log(' -- touch can')
-    })
 
   const singleTap = Gesture.Tap().onEnd(() => {
     'worklet'
@@ -268,17 +183,19 @@ const ImageItem = ({
       runOnJS(zoomTo)(nextZoomRect)
     })
 
-  const composedGesture = Gesture.Simultaneous(
-    manual,
-    Gesture.Exclusive(dismissSwipePan, doubleTap, singleTap),
+  const composedGesture = Gesture.Exclusive(
+    dismissSwipePan,
+    doubleTap,
+    singleTap,
   )
 
   const containerStyle = useAnimatedStyle(() => {
     const {scaleAndMoveTransform, isHidden} = transforms.value
     return {
-      flex: 1,
+      // flex: 1,
       transform: scaleAndMoveTransform,
       opacity: isHidden ? 0 : 1,
+      backgroundColor: 'red',
     }
   })
 
@@ -336,9 +253,9 @@ const ImageItem = ({
         maximumZoomScale={maxZoomScale}
         onScroll={scrollHandler}
         style={containerStyle}
-        bounces={scaled}
-        bouncesZoom={true}
-        animatedProps={animatedProps}>
+        contentContainerStyle={{
+          flex: 1,
+        }}>
         {showLoader && (
           <ActivityIndicator size="small" color="#FFF" style={styles.loading} />
         )}
