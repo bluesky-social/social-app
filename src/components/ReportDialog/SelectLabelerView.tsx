@@ -59,6 +59,7 @@ function LabelerButton({
   const t = useTheme()
   const {hovered, pressed} = useButtonContext()
   const interacted = hovered || pressed
+  const {i18n} = useLingui()
 
   return (
     <LabelingServiceCard.Outer
@@ -72,6 +73,7 @@ function LabelerButton({
       <LabelingServiceCard.Content>
         <LabelingServiceCard.Title
           value={getLabelingServiceTitle({
+            i18n: i18n,
             displayName: labeler.creator.displayName,
             handle: labeler.creator.handle,
           })}

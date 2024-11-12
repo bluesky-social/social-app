@@ -124,12 +124,14 @@ export function Default({
   labeler,
   style,
 }: LabelingServiceProps & ViewStyleProp) {
+  const {i18n} = useLingui()
   return (
     <Outer style={style}>
       <Avatar avatar={labeler.creator.avatar} />
       <Content>
         <Title
           value={getLabelingServiceTitle({
+            i18n: i18n,
             displayName: labeler.creator.displayName,
             handle: labeler.creator.handle,
           })}
