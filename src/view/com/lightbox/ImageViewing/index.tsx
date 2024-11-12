@@ -499,15 +499,7 @@ function LightboxFooter({
   const isMomentumScrolling = React.useRef(false)
   return (
     <ScrollView
-      style={[
-        a.flex_1,
-        a.max_h_full,
-        a.w_full,
-        a.absolute,
-        a.bottom_0,
-        a.overflow_hidden,
-        {borderTopLeftRadius: 8, borderTopRightRadius: 8},
-      ]}
+      style={[a.flex_1, a.max_h_full, a.w_full, a.absolute, a.bottom_0]}
       scrollEnabled={isAltExpanded}
       onMomentumScrollBegin={() => {
         isMomentumScrolling.current = true
