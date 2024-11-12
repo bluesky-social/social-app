@@ -693,7 +693,10 @@ function PostOuterWrapper({
         <View style={a.flex_1}>
           <SubtleWebHover
             hover={hover}
-            style={{left: a.pl_sm.paddingLeft * -1}}
+            style={{
+              left: (depth === 1 ? 0 : 2) - a.pl_sm.paddingLeft,
+              right: -a.pr_sm.paddingRight,
+            }}
           />
           {children}
         </View>
