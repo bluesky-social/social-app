@@ -1,6 +1,6 @@
 import React, {isValidElement, memo, startTransition, useRef} from 'react'
 import {FlatListProps, StyleSheet, View, ViewProps} from 'react-native'
-import {ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript/reanimated2/hook/commonTypes'
+import {ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript/hook/commonTypes'
 
 import {batchedUpdates} from '#/lib/batchedUpdates'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
@@ -28,7 +28,7 @@ export type ListProps<ItemT> = Omit<
 }
 export type ListRef = React.MutableRefObject<any | null> // TODO: Better types.
 
-const ON_ITEM_SEEN_WAIT_DURATION = 1.5e3 // when we consider post to  be "seen"
+const ON_ITEM_SEEN_WAIT_DURATION = 0.5e3 // when we consider post to  be "seen"
 const ON_ITEM_SEEN_INTERSECTION_OPTS = {
   rootMargin: '-200px 0px -200px 0px',
 } // post must be 200px visible to be "seen"
@@ -448,7 +448,9 @@ let Row = function RowImpl<ItemT>({
   onItemSeen: ((item: any) => void) | undefined
 }): React.ReactNode {
   const rowRef = React.useRef(null)
-  const intersectionTimeout = React.useRef<NodeJS.Timer | undefined>(undefined)
+  const intersectionTimeout = React.useRef<
+    ReturnType<typeof setTimeout> | undefined
+  >(undefined)
 
   const handleIntersection = useNonReactiveCallback(
     (entries: IntersectionObserverEntry[]) => {
@@ -466,7 +468,7 @@ let Row = function RowImpl<ItemT>({
             }
           } else {
             if (intersectionTimeout.current) {
-              clearTimeout(intersectionTimeout.current)
+              clearTimeout(intersectionTimeout.current as NodeJS.Timeout)
               intersectionTimeout.current = undefined
             }
           }

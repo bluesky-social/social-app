@@ -44,6 +44,8 @@ interface TextInputProps extends ComponentProps<typeof RNTextInput> {
   richtext: RichText
   placeholder: string
   webForceMinHeight: boolean
+  hasRightPadding: boolean
+  isActive: boolean
   setRichText: (v: RichText) => void
   onPhotoPasted: (uri: string) => void
   onPressPublish: (richtext: RichText) => void
@@ -60,6 +62,7 @@ export const TextInput = forwardRef(function TextInputImpl(
   {
     richtext,
     placeholder,
+    hasRightPadding,
     setRichText,
     onPhotoPasted,
     onNewLink,
@@ -231,7 +234,7 @@ export const TextInput = forwardRef(function TextInputImpl(
   }, [t, richtext, inputTextStyle])
 
   return (
-    <View style={[a.flex_1, a.pl_md]}>
+    <View style={[a.flex_1, a.pl_md, hasRightPadding && a.pr_4xl]}>
       <PasteInput
         testID="composerTextInput"
         ref={textInput}
@@ -249,7 +252,11 @@ export const TextInput = forwardRef(function TextInputImpl(
         style={[
           inputTextStyle,
           a.w_full,
-          {textAlignVertical: 'top', minHeight: 60},
+          {
+            textAlignVertical: 'top',
+            minHeight: 60,
+            includeFontPadding: false,
+          },
         ]}
         {...props}>
         {textDecorated}

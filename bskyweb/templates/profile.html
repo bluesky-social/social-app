@@ -37,6 +37,7 @@
   {%- if requestHost %}
   <link rel="alternate" type="application/rss+xml" href="https://{{ requestHost }}/profile/{{ profileView.Did }}/rss">
   {% endif %}
+  <link rel="alternate" href="at://{{ profileView.Did }}/app.bsky.actor.profile/self" />
 {% endif -%}
 {%- endblock %}
 

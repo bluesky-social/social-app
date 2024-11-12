@@ -156,7 +156,7 @@ export const ExternalLinkEmbed = ({
                   style={[
                     a.transition_color,
                     a.text_xs,
-                    a.leading_tight,
+                    a.leading_snug,
                     hovered
                       ? t.atoms.text_contrast_high
                       : t.atoms.text_contrast_medium,

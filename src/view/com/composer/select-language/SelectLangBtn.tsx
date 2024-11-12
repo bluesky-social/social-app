@@ -7,6 +7,7 @@ import {
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {LANG_DROPDOWN_HITSLOP} from '#/lib/constants'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {isNative} from '#/platform/detection'
 import {useModalControls} from '#/state/modals'
@@ -102,6 +103,7 @@ export function SelectLangBtn() {
       items={items}
       openUpwards
       style={styles.button}
+      hitSlop={LANG_DROPDOWN_HITSLOP}
       accessibilityLabel={_(msg`Language selection`)}
       accessibilityHint="">
       {postLanguagesPref.length > 0 ? (
@@ -121,7 +123,7 @@ export function SelectLangBtn() {
 
 const styles = StyleSheet.create({
   button: {
-    paddingHorizontal: 15,
+    marginHorizontal: 15,
   },
   label: {
     maxWidth: 100,

@@ -6,8 +6,9 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {CommonNavigatorParams} from '#/lib/routes/types'
 import {useAppPasswordsQuery} from '#/state/queries/app-passwords'
+import {useSession} from '#/state/session'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
-import {atoms as a} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import * as Admonition from '#/components/Admonition'
 import {EyeSlash_Stroke2_Corner0_Rounded as EyeSlashIcon} from '#/components/icons/EyeSlash'
 import {Key_Stroke2_Corner2_Rounded as KeyIcon} from '#/components/icons/Key'
@@ -23,16 +24,30 @@ type Props = NativeStackScreenProps<
 >
 export function PrivacyAndSecuritySettingsScreen({}: Props) {
   const {_} = useLingui()
+  const t = useTheme()
   const {data: appPasswords} = useAppPasswordsQuery()
+  const {currentAccount} = useSession()
+
   return (
     <Layout.Screen>
       <Layout.Header title={_(msg`Privacy and Security`)} />
       <Layout.Content>
         <SettingsList.Container>
           <SettingsList.Item>
-            <SettingsList.ItemIcon icon={VerifiedIcon} />
+            <SettingsList.ItemIcon
+              icon={VerifiedIcon}
+              color={
+                currentAccount?.emailAuthFactor
+                  ? t.palette.primary_500
+                  : undefined
+              }
+            />
             <SettingsList.ItemText>
-              <Trans>Two-factor authentication (2FA)</Trans>
+              {currentAccount?.emailAuthFactor ? (
+                <Trans>Email 2FA enabled</Trans>
+              ) : (
+                <Trans>Two-factor authentication (2FA)</Trans>
+              )}
             </SettingsList.ItemText>
             <Email2FAToggle />
           </SettingsList.Item>

@@ -2,22 +2,18 @@ import React from 'react'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
-import {useQueryClient} from '@tanstack/react-query'
 
 import {CommonNavigatorParams} from '#/lib/routes/types'
 import {useModalControls} from '#/state/modals'
-import {RQKEY as RQKEY_PROFILE} from '#/state/queries/profile'
-import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
-import {ExportCarDialog} from '#/view/screens/Settings/ExportCarDialog'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
 import {atoms as a, useTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {BirthDateSettingsDialog} from '#/components/dialogs/BirthDateSettings'
+import {VerifyEmailDialog} from '#/components/dialogs/VerifyEmailDialog'
 import {At_Stroke2_Corner2_Rounded as AtIcon} from '#/components/icons/At'
 import {BirthdayCake_Stroke2_Corner2_Rounded as BirthdayCakeIcon} from '#/components/icons/BirthdayCake'
 import {Car_Stroke2_Corner2_Rounded as CarIcon} from '#/components/icons/Car'
-import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
 import {Envelope_Stroke2_Corner2_Rounded as EnvelopeIcon} from '#/components/icons/Envelope'
 import {Freeze_Stroke2_Corner2_Rounded as FreezeIcon} from '#/components/icons/Freeze'
 import {Lock_Stroke2_Corner2_Rounded as LockIcon} from '#/components/icons/Lock'
@@ -25,17 +21,19 @@ import {PencilLine_Stroke2_Corner2_Rounded as PencilIcon} from '#/components/ico
 import {Trash_Stroke2_Corner2_Rounded} from '#/components/icons/Trash'
 import {Verified_Stroke2_Corner2_Rounded as VerifiedIcon} from '#/components/icons/Verified'
 import * as Layout from '#/components/Layout'
+import {ChangeHandleDialog} from './components/ChangeHandleDialog'
 import {DeactivateAccountDialog} from './components/DeactivateAccountDialog'
+import {ExportCarDialog} from './components/ExportCarDialog'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AccountSettings'>
 export function AccountSettingsScreen({}: Props) {
   const t = useTheme()
   const {_} = useLingui()
   const {currentAccount} = useSession()
-  const queryClient = useQueryClient()
-  const {data: profile} = useProfileQuery({did: currentAccount?.did})
   const {openModal} = useModalControls()
+  const verifyEmailControl = useDialogControl()
   const birthdayControl = useDialogControl()
+  const changeHandleControl = useDialogControl()
   const exportCarControl = useDialogControl()
   const deactivateAccountControl = useDialogControl()
 
@@ -46,25 +44,48 @@ export function AccountSettingsScreen({}: Props) {
         <SettingsList.Container>
           <SettingsList.Item>
             <SettingsList.ItemIcon icon={EnvelopeIcon} />
-            <SettingsList.ItemText>
+            {/* Tricky flexbox situation here: we want the email to truncate, but by default it will make the "Email" text wrap instead.
+                For numberOfLines to work, we need flex: 1 on the BadgeText, but that means it goes to width: 50% because the
+                ItemText is also flex: 1. So we need to set flex: 0 on the ItemText to prevent it from growing, but if we did that everywhere
+                it wouldn't push the BadgeText/Chevron/whatever to the right.
+                TODO: find a general solution for this. workaround in this case is to set the ItemText to flex: 1 and BadgeText to flex: 0 -sfn */}
+            <SettingsList.ItemText style={[a.flex_0]}>
               <Trans>Email</Trans>
             </SettingsList.ItemText>
             {currentAccount && (
               <>
-                <SettingsList.BadgeText>
+                <SettingsList.BadgeText style={[a.flex_1]}>
                   {currentAccount.email || <Trans>(no email)</Trans>}
                 </SettingsList.BadgeText>
-                {currentAccount.emailConfirmed ? (
-                  <CheckIcon color={t.palette.positive_500} size="sm" />
-                ) : (
-                  <SettingsList.BadgeButton
-                    label={_(msg`Verify`)}
-                    onPress={() => {}}
-                  />
+                {currentAccount.emailConfirmed && (
+                  <VerifiedIcon fill={t.palette.primary_500} size="md" />
                 )}
               </>
             )}
           </SettingsList.Item>
+          {currentAccount && !currentAccount.emailConfirmed && (
+            <SettingsList.PressableItem
+              label={_(msg`Verify your email`)}
+              onPress={() => verifyEmailControl.open()}
+              style={[
+                a.my_xs,
+                a.mx_lg,
+                a.rounded_md,
+                {backgroundColor: t.palette.primary_50},
+              ]}
+              hoverStyle={[{backgroundColor: t.palette.primary_100}]}
+              contentContainerStyle={[a.rounded_md, a.px_lg]}>
+              <SettingsList.ItemIcon
+                icon={VerifiedIcon}
+                color={t.palette.primary_500}
+              />
+              <SettingsList.ItemText
+                style={[{color: t.palette.primary_500}, a.font_bold]}>
+                <Trans>Verify your email</Trans>
+              </SettingsList.ItemText>
+              <SettingsList.Chevron color={t.palette.primary_500} />
+            </SettingsList.PressableItem>
+          )}
           <SettingsList.PressableItem
             label={_(msg`Change email`)}
             onPress={() => openModal({name: 'change-email'})}>
@@ -74,27 +95,6 @@ export function AccountSettingsScreen({}: Props) {
             </SettingsList.ItemText>
             <SettingsList.Chevron />
           </SettingsList.PressableItem>
-          <SettingsList.LinkItem
-            to="/settings/privacy-and-security"
-            label={_(msg`Protect your account`)}
-            style={[
-              a.my_xs,
-              a.mx_lg,
-              a.rounded_md,
-              {backgroundColor: t.palette.primary_50},
-            ]}
-            chevronColor={t.palette.primary_500}
-            hoverStyle={[{backgroundColor: t.palette.primary_100}]}
-            contentContainerStyle={[a.rounded_md, a.px_lg]}>
-            <SettingsList.ItemIcon
-              icon={VerifiedIcon}
-              color={t.palette.primary_500}
-            />
-            <SettingsList.ItemText
-              style={[{color: t.palette.primary_500}, a.font_bold]}>
-              <Trans>Protect your account</Trans>
-            </SettingsList.ItemText>
-          </SettingsList.LinkItem>
           <SettingsList.Divider />
           <SettingsList.Item>
             <SettingsList.ItemIcon icon={BirthdayCakeIcon} />
@@ -117,26 +117,12 @@ export function AccountSettingsScreen({}: Props) {
           </SettingsList.PressableItem>
           <SettingsList.PressableItem
             label={_(msg`Handle`)}
-            onPress={() =>
-              openModal({
-                name: 'change-handle',
-                onChanged() {
-                  if (currentAccount) {
-                    // refresh my profile
-                    queryClient.invalidateQueries({
-                      queryKey: RQKEY_PROFILE(currentAccount.did),
-                    })
-                  }
-                },
-              })
-            }>
+            accessibilityHint={_(msg`Open change handle dialog`)}
+            onPress={() => changeHandleControl.open()}>
             <SettingsList.ItemIcon icon={AtIcon} />
             <SettingsList.ItemText>
               <Trans>Handle</Trans>
             </SettingsList.ItemText>
-            {profile && (
-              <SettingsList.BadgeText>@{profile.handle}</SettingsList.BadgeText>
-            )}
             <SettingsList.Chevron />
           </SettingsList.PressableItem>
           <SettingsList.Divider />
@@ -172,7 +158,9 @@ export function AccountSettingsScreen({}: Props) {
         </SettingsList.Container>
       </Layout.Content>
 
+      <VerifyEmailDialog control={verifyEmailControl} />
       <BirthDateSettingsDialog control={birthdayControl} />
+      <ChangeHandleDialog control={changeHandleControl} />
       <ExportCarDialog control={exportCarControl} />
       <DeactivateAccountDialog control={deactivateAccountControl} />
     </Layout.Screen>

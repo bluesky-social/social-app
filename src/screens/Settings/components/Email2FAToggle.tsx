@@ -4,9 +4,9 @@ import {useLingui} from '@lingui/react'
 
 import {useModalControls} from '#/state/modals'
 import {useAgent, useSession} from '#/state/session'
-import {DisableEmail2FADialog} from '#/view/screens/Settings/DisableEmail2FADialog'
 import {useDialogControl} from '#/components/Dialog'
 import * as Prompt from '#/components/Prompt'
+import {DisableEmail2FADialog} from './DisableEmail2FADialog'
 import * as SettingsList from './SettingsList'
 
 export function Email2FAToggle() {
@@ -57,7 +57,7 @@ export function Email2FAToggle() {
       />
       <SettingsList.BadgeButton
         label={
-          currentAccount?.emailAuthFactor ? _(msg`Disable`) : _(msg`Enable`)
+          currentAccount?.emailAuthFactor ? _(msg`Change`) : _(msg`Enable`)
         }
         onPress={onToggle}
       />

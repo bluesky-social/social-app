@@ -1,62 +1,18 @@
 import React from 'react'
 import {DimensionValue, Pressable, View} from 'react-native'
+import Animated, {AnimatedRef, useAnimatedRef} from 'react-native-reanimated'
 import {Image} from 'expo-image'
 import {AppBskyEmbedImages} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import * as imageSizes from '#/lib/media/image-sizes'
-import {Dimensions} from '#/lib/media/types'
+import type {Dimensions} from '#/lib/media/types'
 import {isNative} from '#/platform/detection'
 import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {ArrowsDiagonalOut_Stroke2_Corner0_Rounded as Fullscreen} from '#/components/icons/ArrowsDiagonal'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {Text} from '#/components/Typography'
-
-export function useImageAspectRatio({
-  src,
-  dimensions,
-}: {
-  src: string
-  dimensions: Dimensions | undefined
-}) {
-  const [raw, setAspectRatio] = React.useState<number>(
-    dimensions ? calc(dimensions) : 1,
-  )
-  // this basically controls the width of the image
-  const {isCropped, constrained, max} = React.useMemo(() => {
-    const ratio = 1 / 2 // max of 1:2 ratio in feeds
-    const constrained = Math.max(raw, ratio)
-    const max = Math.max(raw, 0.25) // max of 1:4 in thread
-    const isCropped = raw < constrained
-    return {
-      isCropped,
-      constrained,
-      max,
-    }
-  }, [raw])
-
-  React.useEffect(() => {
-    let aborted = false
-    if (dimensions) return
-    imageSizes.fetch(src).then(newDim => {
-      if (aborted) return
-      setAspectRatio(calc(newDim))
-    })
-    return () => {
-      aborted = true
-    }
-  }, [dimensions, setAspectRatio, src])
-
-  return {
-    dimensions,
-    raw,
-    constrained,
-    max,
-    isCropped,
-  }
-}
 
 export function ConstrainedImage({
   aspectRatio,
@@ -112,27 +68,44 @@ export function AutoSizedImage({
   image: AppBskyEmbedImages.ViewImage
   crop?: 'none' | 'square' | 'constrained'
   hideBadge?: boolean
-  onPress?: () => void
+  onPress?: (
+    containerRef: AnimatedRef<React.Component<{}, {}, any>>,
+    fetchedDims: Dimensions | null,
+  ) => void
   onLongPress?: () => void
   onPressIn?: () => void
 }) {
   const t = useTheme()
   const {_} = useLingui()
   const largeAlt = useLargeAltBadgeEnabled()
-  const {
-    constrained,
-    max,
-    isCropped: rawIsCropped,
-  } = useImageAspectRatio({
-    src: image.thumb,
-    dimensions: image.aspectRatio,
-  })
+  const containerRef = useAnimatedRef()
+
+  const [fetchedDims, setFetchedDims] = React.useState<Dimensions | null>(null)
+  const dims = fetchedDims ?? image.aspectRatio
+  let aspectRatio: number | undefined
+  if (dims) {
+    aspectRatio = dims.width / dims.height
+    if (Number.isNaN(aspectRatio)) {
+      aspectRatio = undefined
+    }
+  }
+
+  let constrained: number | undefined
+  let max: number | undefined
+  let rawIsCropped: boolean | undefined
+  if (aspectRatio !== undefined) {
+    const ratio = 1 / 2 // max of 1:2 ratio in feeds
+    constrained = Math.max(aspectRatio, ratio)
+    max = Math.max(aspectRatio, 0.25) // max of 1:4 in thread
+    rawIsCropped = aspectRatio < constrained
+  }
+
   const cropDisabled = crop === 'none'
   const isCropped = rawIsCropped && !cropDisabled
   const hasAlt = !!image.alt
 
   const contents = (
-    <>
+    <Animated.View ref={containerRef} collapsable={false} style={{flex: 1}}>
       <Image
         style={[a.w_full, a.h_full]}
         source={image.thumb}
@@ -140,6 +113,13 @@ export function AutoSizedImage({
         accessibilityIgnoresInvertColors
         accessibilityLabel={image.alt}
         accessibilityHint=""
+        onLoad={
+          fetchedDims
+            ? undefined
+            : e => {
+                setFetchedDims({width: e.source.width, height: e.source.height})
+              }
+        }
       />
       <MediaInsetBorder />
 
@@ -205,13 +185,13 @@ export function AutoSizedImage({
           )}
         </View>
       ) : null}
-    </>
+    </Animated.View>
   )
 
   if (cropDisabled) {
     return (
       <Pressable
-        onPress={onPress}
+        onPress={() => onPress?.(containerRef, fetchedDims)}
         onLongPress={onLongPress}
         onPressIn={onPressIn}
         // alt here is what screen readers actually use
@@ -222,16 +202,18 @@ export function AutoSizedImage({
           a.rounded_md,
           a.overflow_hidden,
           t.atoms.bg_contrast_25,
-          {aspectRatio: max},
+          {aspectRatio: max ?? 1},
         ]}>
         {contents}
       </Pressable>
     )
   } else {
     return (
-      <ConstrainedImage fullBleed={crop === 'square'} aspectRatio={constrained}>
+      <ConstrainedImage
+        fullBleed={crop === 'square'}
+        aspectRatio={constrained ?? 1}>
         <Pressable
-          onPress={onPress}
+          onPress={() => onPress?.(containerRef, fetchedDims)}
           onLongPress={onLongPress}
           onPressIn={onPressIn}
           // alt here is what screen readers actually use
@@ -243,11 +225,4 @@ export function AutoSizedImage({
       </ConstrainedImage>
     )
   }
-}
-
-function calc(dim: Dimensions) {
-  if (dim.width === 0 || dim.height === 0) {
-    return 1
-  }
-  return dim.width / dim.height
 }

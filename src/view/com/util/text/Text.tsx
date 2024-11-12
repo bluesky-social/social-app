@@ -5,7 +5,7 @@ import {UITextView} from 'react-native-uitextview'
 import {lh, s} from '#/lib/styles'
 import {TypographyVariant, useTheme} from '#/lib/ThemeContext'
 import {logger} from '#/logger'
-import {isIOS} from '#/platform/detection'
+import {isIOS, isWeb} from '#/platform/detection'
 import {applyFonts, useAlf} from '#/alf'
 import {
   childHasEmoji,
@@ -44,8 +44,6 @@ export function Text({
   ...props
 }: React.PropsWithChildren<CustomTextProps>) {
   const theme = useTheme()
-  const typography = theme.typography[type]
-  const lineHeightStyle = lineHeight ? lh(theme, type, lineHeight) : undefined
   const {fonts} = useAlf()
 
   if (IS_DEV) {
@@ -60,7 +58,10 @@ export function Text({
     }
   }
 
-  if (selectable && isIOS) {
+  const textProps = React.useMemo(() => {
+    const typography = theme.typography[type]
+    const lineHeightStyle = lineHeight ? lh(theme, type, lineHeight) : undefined
+
     const flattened = StyleSheet.flatten([
       s.black,
       typography,
@@ -74,49 +75,47 @@ export function Text({
     // @ts-ignore
     if (flattened.fontSize) {
       // @ts-ignore
-      flattened.fontSize = flattened.fontSize * fonts.scaleMultiplier
+      flattened.fontSize = Math.round(
+        // @ts-ignore
+        flattened.fontSize * fonts.scaleMultiplier,
+      )
     }
 
-    const shared = {
-      uiTextView: true,
+    return {
+      uiTextView: selectable && isIOS,
       selectable,
       style: flattened,
+      dataSet: isWeb
+        ? Object.assign({tooltip: title}, dataSet || {})
+        : undefined,
       ...props,
     }
+  }, [
+    dataSet,
+    fonts.family,
+    fonts.scaleMultiplier,
+    lineHeight,
+    props,
+    selectable,
+    style,
+    theme,
+    title,
+    type,
+  ])
 
+  if (selectable && isIOS) {
     return (
-      <UITextView {...shared}>
-        {isIOS && emoji ? renderChildrenWithEmoji(children, shared) : children}
+      <UITextView {...textProps}>
+        {isIOS && emoji
+          ? renderChildrenWithEmoji(children, textProps)
+          : children}
       </UITextView>
     )
   }
 
-  const flattened = StyleSheet.flatten([
-    s.black,
-    typography,
-    lineHeightStyle,
-    style,
-  ])
-
-  applyFonts(flattened, fonts.family)
-
-  // should always be defined on `typography`
-  // @ts-ignore
-  if (flattened.fontSize) {
-    // @ts-ignore
-    flattened.fontSize = flattened.fontSize * fonts.scaleMultiplier
-  }
-
-  const shared = {
-    selectable,
-    style: flattened,
-    dataSet: Object.assign({tooltip: title}, dataSet || {}),
-    ...props,
-  }
-
   return (
-    <RNText {...shared}>
-      {isIOS && emoji ? renderChildrenWithEmoji(children, shared) : children}
+    <RNText {...textProps}>
+      {isIOS && emoji ? renderChildrenWithEmoji(children, textProps) : children}
     </RNText>
   )
 }
