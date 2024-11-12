@@ -252,7 +252,11 @@ export const TextInput = forwardRef(function TextInputImpl(
         style={[
           inputTextStyle,
           a.w_full,
-          {textAlignVertical: 'top', minHeight: 60},
+          {
+            textAlignVertical: 'top',
+            minHeight: 60,
+            includeFontPadding: false,
+          },
         ]}
         {...props}>
         {textDecorated}
