@@ -11,9 +11,11 @@ import {colors, gradients, s} from '#/lib/styles'
 export const ConfirmLanguagesButton = ({
   onPress,
   extraText,
+  disabled,
 }: {
   onPress: () => void
   extraText?: string
+  disabled?: boolean
 }) => {
   const pal = usePalette('default')
   const {_} = useLingui()
@@ -33,9 +35,14 @@ export const ConfirmLanguagesButton = ({
         onPress={onPress}
         accessibilityRole="button"
         accessibilityLabel={_(msg`Confirm content language settings`)}
-        accessibilityHint="">
+        accessibilityHint={disabled ? _(msg`No languages selected`) : undefined}
+        disabled={disabled}>
         <LinearGradient
-          colors={[gradients.blueLight.start, gradients.blueLight.end]}
+          colors={
+            disabled
+              ? [colors.gray3, colors.gray3]
+              : [gradients.blueLight.start, gradients.blueLight.end]
+          }
           start={{x: 0, y: 0}}
           end={{x: 1, y: 1}}
           style={[styles.btn]}>

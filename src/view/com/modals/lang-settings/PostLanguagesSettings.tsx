@@ -17,7 +17,7 @@ import {Text} from '../../util/text/Text'
 import {ScrollView} from '../util'
 import {ConfirmLanguagesButton} from './ConfirmLanguagesButton'
 
-export const snapPoints = ['100%']
+export const snapPoints = ['90%']
 
 export function Component() {
   const {closeModal} = useModalControls()
@@ -108,7 +108,10 @@ export function Component() {
           }}
         />
       </ScrollView>
-      <ConfirmLanguagesButton onPress={onPressDone} />
+      <ConfirmLanguagesButton
+        onPress={onPressDone}
+        disabled={!langPrefs.postLanguage}
+      />
     </View>
   )
 }
