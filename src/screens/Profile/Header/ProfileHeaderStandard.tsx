@@ -9,7 +9,6 @@ import {
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {logger} from '#/logger'
 import {isIOS, isWeb} from '#/platform/detection'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
@@ -93,14 +92,6 @@ let ProfileHeaderStandard = ({
     requireAuth(async () => {
       try {
         await queueFollow()
-        Toast.show(
-          _(
-            msg`Following ${sanitizeDisplayName(
-              profile.displayName || profile.handle,
-              moderation.ui('displayName'),
-            )}`,
-          ),
-        )
       } catch (e: any) {
         if (e?.name !== 'AbortError') {
           logger.error('Failed to follow', {message: String(e)})
@@ -114,14 +105,6 @@ let ProfileHeaderStandard = ({
     requireAuth(async () => {
       try {
         await queueUnfollow()
-        Toast.show(
-          _(
-            msg`No longer following ${sanitizeDisplayName(
-              profile.displayName || profile.handle,
-              moderation.ui('displayName'),
-            )}`,
-          ),
-        )
       } catch (e: any) {
         if (e?.name !== 'AbortError') {
           logger.error('Failed to unfollow', {message: String(e)})
