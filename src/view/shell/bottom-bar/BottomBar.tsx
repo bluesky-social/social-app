@@ -359,7 +359,7 @@ interface TabItemProps
   onLongPress?: (event: GestureResponderEvent) => void
 }
 
-function TabItem({
+let TabItem = ({
   testID,
   renderIcon,
   notificationCount,
@@ -368,7 +368,7 @@ function TabItem({
   accessible,
   accessibilityHint,
   accessibilityLabel,
-}: TabItemProps) {
+}: TabItemProps): React.ReactNode => {
   return (
     <PressableScale
       testID={testID}
@@ -388,3 +388,4 @@ function TabItem({
     </PressableScale>
   )
 }
+TabItem = React.memo(TabItem)
