@@ -18323,12 +18323,12 @@ react-native-dotenv@^3.3.1:
   dependencies:
     dotenv "^16.3.1"
 
-react-native-drawer-layout@^4.0.0-alpha.3:
-  version "4.0.0-alpha.3"
-  resolved "https://registry.yarnpkg.com/react-native-drawer-layout/-/react-native-drawer-layout-4.0.0-alpha.3.tgz#0adf51e816f2ce094d415fe33d9f43c1e6df6ae2"
-  integrity sha512-BRlX8l2gDD41fs8RfaemjDBDV0PPspDMvej/3b9QWfp+JQ/H8tkSdWBtUBbSBzYdqyqy2bHV4epOCMb4t+0B0g==
+react-native-drawer-layout@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/react-native-drawer-layout/-/react-native-drawer-layout-4.0.1.tgz#5f2b4bae43b9be6c6b92544b63c5b4767b279933"
+  integrity sha512-395LypsQKNqcaMFHDj41jPXe3m9LbQRF7XKR1BzJh8B/kkc95OTZhwpXzMRBOLUiq4y4yL0loRzQtQRiruG+fQ==
   dependencies:
-    use-latest-callback "^0.1.9"
+    use-latest-callback "^0.2.1"
 
 react-native-gesture-handler@2.20.0:
   version "2.20.0"
@@ -21109,6 +21109,11 @@ use-latest-callback@^0.1.9:
   version "0.1.9"
   resolved "https://registry.yarnpkg.com/use-latest-callback/-/use-latest-callback-0.1.9.tgz#10191dc54257e65a8e52322127643a8940271e2a"
   integrity sha512-CL/29uS74AwreI/f2oz2hLTW7ZqVeV5+gxFeGudzQrgkCytrHw33G4KbnQOrRlAEzzAFXi7dDLMC9zhWcVpzmw==
+
+use-latest-callback@^0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/use-latest-callback/-/use-latest-callback-0.2.1.tgz#4d4e6a9e4817b13142834850dcfa8d24ca4569cf"
+  integrity sha512-QWlq8Is8BGWBf883QOEQP5HWYX/kMI+JTbJ5rdtvJLmXTIh9XoHIO3PQcmQl8BU44VKxow1kbQUHa6mQSMALDQ==
 
 use-latest@^1.2.1:
   version "1.2.1"
