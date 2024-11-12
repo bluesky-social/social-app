@@ -111,8 +111,8 @@ export function MessageInput({
         const max = windowHeight - -keyboardHeight.value - topInset - 150
         const availableSpace = max - measurement.height
 
-        maxHeight.value = max
-        isInputScrollable.value = availableSpace < 30
+        maxHeight.set(max)
+        isInputScrollable.set(availableSpace < 30)
       },
     },
     [windowHeight, topInset],

@@ -78,7 +78,7 @@ function ListImpl<ItemT>(
 
       const didScrollDown = e.contentOffset.y > SCROLLED_DOWN_LIMIT
       if (isScrolledDown.value !== didScrollDown) {
-        isScrolledDown.value = didScrollDown
+        isScrolledDown.set(didScrollDown)
         if (onScrolledDownChange != null) {
           runOnJS(handleScrolledDownChange)(didScrollDown)
         }

@@ -134,7 +134,7 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
       const currentScrollY = scrollY.value
       const forcedScrollY = Math.min(currentScrollY, headerOnlyHeight)
       if (lastForcedScrollY.value !== forcedScrollY) {
-        lastForcedScrollY.value = forcedScrollY
+        lastForcedScrollY.set(forcedScrollY)
         const refs = scrollRefs.value
         for (let i = 0; i < refs.length; i++) {
           const scollRef = refs[i]
@@ -167,7 +167,7 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
         const isPossiblyInvalid =
           headerHeight > 0 && Math.round(nextScrollY * 2) / 2 === -headerHeight
         if (!isPossiblyInvalid) {
-          scrollY.value = nextScrollY
+          scrollY.set(nextScrollY)
           runOnJS(queueThrottledOnScroll)()
         }
       },

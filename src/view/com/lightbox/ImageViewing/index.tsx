@@ -98,12 +98,12 @@ export default function ImageViewRoot({
 
     // https://github.com/software-mansion/react-native-reanimated/issues/6677
     requestAnimationFrame(() => {
-      openProgress.value = canAnimate ? withClampedSpring(1, SLOW_SPRING) : 1
+      openProgress.set(canAnimate ? withClampedSpring(1, SLOW_SPRING) : 1)
     })
     return () => {
       // https://github.com/software-mansion/react-native-reanimated/issues/6677
       requestAnimationFrame(() => {
-        openProgress.value = canAnimate ? withClampedSpring(0, SLOW_SPRING) : 0
+        openProgress.set(canAnimate ? withClampedSpring(0, SLOW_SPRING) : 0)
       })
     }
   }, [nextLightbox, openProgress])
@@ -119,7 +119,7 @@ export default function ImageViewRoot({
 
   const onFlyAway = React.useCallback(() => {
     'worklet'
-    openProgress.value = 0
+    openProgress.set(0)
     runOnJS(onRequestClose)()
   }, [onRequestClose, openProgress])
 
@@ -426,7 +426,7 @@ function LightboxImage({
       if (openProgress.value !== 1 || isFlyingAway.value) {
         return
       }
-      dismissSwipeTranslateY.value = e.translationY
+      dismissSwipeTranslateY.set(e.translationY)
     })
     .onEnd(e => {
       'worklet'
@@ -434,22 +434,26 @@ function LightboxImage({
         return
       }
       if (Math.abs(e.velocityY) > 1000) {
-        isFlyingAway.value = true
+        isFlyingAway.set(true)
         if (dismissSwipeTranslateY.value === 0) {
           // HACK: If the initial value is 0, withDecay() animation doesn't start.
           // This is a bug in Reanimated, but for now we'll work around it like this.
-          dismissSwipeTranslateY.value = 1
+          dismissSwipeTranslateY.set(1)
         }
-        dismissSwipeTranslateY.value = withDecay({
-          velocity: e.velocityY,
-          velocityFactor: Math.max(3000 / Math.abs(e.velocityY), 1), // Speed up if it's too slow.
-          deceleration: 1, // Danger! This relies on the reaction below stopping it.
-        })
+        dismissSwipeTranslateY.set(
+          withDecay({
+            velocity: e.velocityY,
+            velocityFactor: Math.max(3000 / Math.abs(e.velocityY), 1), // Speed up if it's too slow.
+            deceleration: 1, // Danger! This relies on the reaction below stopping it.
+          }),
+        )
       } else {
-        dismissSwipeTranslateY.value = withSpring(0, {
-          stiffness: 700,
-          damping: 50,
-        })
+        dismissSwipeTranslateY.set(
+          withSpring(0, {
+            stiffness: 700,
+            damping: 50,
+          }),
+        )
       }
     })
 

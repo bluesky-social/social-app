@@ -44,7 +44,7 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
     (v: boolean) => {
       'worklet'
       cancelAnimation(headerMode)
-      headerMode.value = v ? V1.value : V0.value
+      headerMode.set(v ? V1.value : V0.value)
     },
     [headerMode],
   )
@@ -52,9 +52,9 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
   useEffect(() => {
     if (isWeb) {
       return listenToForcedWindowScroll(() => {
-        startDragOffset.value = null
-        startMode.value = null
-        didJustRestoreScroll.value = true
+        startDragOffset.set(null)
+        startMode.set(null)
+        didJustRestoreScroll.set(true)
       })
     }
   })
@@ -67,8 +67,8 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
           return
         }
         const didScrollDown = e.contentOffset.y > startDragOffset.value
-        startDragOffset.value = null
-        startMode.value = null
+        startDragOffset.set(null)
+        startMode.set(null)
         if (e.contentOffset.y < headerHeight.value) {
           // If we're close to the top, show the shell.
           setMode(false)
@@ -88,8 +88,8 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
     (e: NativeScrollEvent) => {
       'worklet'
       if (isNative) {
-        startDragOffset.value = e.contentOffset.y
-        startMode.value = headerMode.value
+        startDragOffset.set(e.contentOffset.y)
+        startMode.set(headerMode.value)
       }
     },
     [headerMode, startDragOffset, startMode],
@@ -148,18 +148,18 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
           // Manually adjust the value. This won't be (and shouldn't be) animated.
           // Cancel any any existing animation
           cancelAnimation(headerMode)
-          headerMode.value = newValue
+          headerMode.set(newValue)
         }
       } else {
         if (didJustRestoreScroll.value) {
-          didJustRestoreScroll.value = false
+          didJustRestoreScroll.set(false)
           // Don't hide/show navbar based on scroll restoratoin.
           return
         }
         // On the web, we don't try to follow the drag because we don't know when it ends.
         // Instead, show/hide immediately based on whether we're scrolling up or down.
         const dy = e.contentOffset.y - (startDragOffset.value ?? 0)
-        startDragOffset.value = e.contentOffset.y
+        startDragOffset.set(e.contentOffset.y)
 
         if (dy < 0 || e.contentOffset.y < WEB_HIDE_SHELL_THRESHOLD) {
           setMode(false)

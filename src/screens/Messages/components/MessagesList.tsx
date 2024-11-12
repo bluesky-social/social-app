@@ -217,13 +217,13 @@ export function MessagesList({
   const onScroll = React.useCallback(
     (e: ReanimatedScrollEvent) => {
       'worklet'
-      layoutHeight.value = e.layoutMeasurement.height
+      layoutHeight.value.set(e.layoutMeasurement.height)
       const bottomOffset = e.contentOffset.y + e.layoutMeasurement.height
 
       // Most apps have a little bit of space the user can scroll past while still automatically scrolling ot the bottom
       // when a new message is added, hence the 100 pixel offset
-      isAtBottom.value = e.contentSize.height - 100 < bottomOffset
-      isAtTop.value = e.contentOffset.y <= 1
+      isAtBottom.set(e.contentSize.height - 100 < bottomOffset)
+      isAtTop.set(e.contentOffset.y <= 1)
 
       if (
         newMessagesPill.show &&
@@ -256,22 +256,22 @@ export function MessagesList({
       // Immediate updates - like opening the emoji picker - will have a duration of zero. In those cases, we should
       // just update the height here instead of having the `onMove` event do it (that event will not fire!)
       if (e.duration === 0) {
-        layoutScrollWithoutAnimation.value = true
-        keyboardHeight.value = e.height
+        layoutScrollWithoutAnimation.set(true)
+        keyboardHeight.set(e.height)
       } else {
-        keyboardIsOpening.value = true
+        keyboardIsOpening.set(true)
       }
     },
     onMove: e => {
       'worklet'
-      keyboardHeight.value = e.height
+      keyboardHeight.set(e.height)
       if (e.height > bottomOffset) {
         scrollTo(flatListRef, 0, 1e7, false)
       }
     },
     onEnd: () => {
       'worklet'
-      keyboardIsOpening.value = false
+      keyboardIsOpening.set(false)
     },
   })
 
@@ -363,13 +363,13 @@ export function MessagesList({
   // -- List layout changes (opening emoji keyboard, etc.)
   const onListLayout = React.useCallback(
     (e: LayoutChangeEvent) => {
-      layoutHeight.value = e.nativeEvent.layout.height
+      layoutHeight.set(e.nativeEvent.layout.height)
 
       if (isWeb || !keyboardIsOpening.value) {
         flatListRef.current?.scrollToEnd({
           animated: !layoutScrollWithoutAnimation.value,
         })
-        layoutScrollWithoutAnimation.value = false
+        layoutScrollWithoutAnimation.set(false)
       }
     },
     [

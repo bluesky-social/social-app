@@ -1,6 +1,7 @@
 import React from 'react'
 import Animated, {
   Easing,
+  runOnUI,
   useAnimatedProps,
   useSharedValue,
   withDelay,
@@ -40,14 +41,19 @@ export const AnimatedCheck = React.forwardRef<
 
   const play = React.useCallback(
     (cb?: () => void) => {
-      circleAnim.value = 0
-      checkAnim.value = 0
+      runOnUI(() => {
+        'worklet'
+        circleAnim.set(0)
+        checkAnim.set(0)
 
-      circleAnim.value = withTiming(1, {duration: 500, easing: Easing.linear})
-      checkAnim.value = withDelay(
-        500,
-        withTiming(1, {duration: 300, easing: Easing.linear}, cb),
-      )
+        circleAnim.set(withTiming(1, {duration: 500, easing: Easing.linear}))
+        checkAnim.set(
+          withDelay(
+            500,
+            withTiming(1, {duration: 300, easing: Easing.linear}, cb),
+          ),
+        )
+      })()
     },
     [circleAnim, checkAnim],
   )

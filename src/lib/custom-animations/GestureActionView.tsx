@@ -75,9 +75,11 @@ export function GestureActionView({
       return
     }
 
-    iconScale.value = withSequence(
-      withTiming(1.2, {duration: 175}),
-      withTiming(1, {duration: 100}),
+    iconScale.set(
+      withSequence(
+        withTiming(1.2, {duration: 175}),
+        withTiming(1, {duration: 100}),
+      ),
     )
   }
 
@@ -119,11 +121,11 @@ export function GestureActionView({
     .activeOffsetY([-200, 200])
     .onStart(() => {
       'worklet'
-      isActive.value = true
+      isActive.set(true)
     })
     .onChange(e => {
       'worklet'
-      transX.value = e.translationX
+      transX.set(e.translationX)
 
       if (e.translationX < 0) {
         // Left side
@@ -134,13 +136,13 @@ export function GestureActionView({
           ) {
             runPopAnimation()
             runOnJS(haptic)()
-            hitSecond.value = true
+            hitSecond.set(true)
           } else if (
             hitSecond.value &&
             e.translationX > -actions.leftSecond.threshold
           ) {
             runPopAnimation()
-            hitSecond.value = false
+            hitSecond.set(false)
           }
         }
 
@@ -151,12 +153,12 @@ export function GestureActionView({
           ) {
             runPopAnimation()
             runOnJS(haptic)()
-            hitFirst.value = true
+            hitFirst.set(true)
           } else if (
             hitFirst.value &&
             e.translationX > -actions.leftFirst.threshold
           ) {
-            hitFirst.value = false
+            hitFirst.set(false)
           }
         }
       } else if (e.translationX > 0) {
@@ -168,13 +170,13 @@ export function GestureActionView({
           ) {
             runPopAnimation()
             runOnJS(haptic)()
-            hitSecond.value = true
+            hitSecond.set(true)
           } else if (
             hitSecond.value &&
             e.translationX < actions.rightSecond.threshold
           ) {
             runPopAnimation()
-            hitSecond.value = false
+            hitSecond.set(false)
           }
         }
 
@@ -185,12 +187,12 @@ export function GestureActionView({
           ) {
             runPopAnimation()
             runOnJS(haptic)()
-            hitFirst.value = true
+            hitFirst.set(true)
           } else if (
             hitFirst.value &&
             e.translationX < actions.rightFirst.threshold
           ) {
-            hitFirst.value = false
+            hitFirst.set(false)
           }
         }
       }
@@ -210,10 +212,10 @@ export function GestureActionView({
           runOnJS(actions.rightFirst.action)()
         }
       }
-      transX.value = withTiming(0, {duration: 200})
-      hitFirst.value = false
-      hitSecond.value = false
-      isActive.value = false
+      transX.set(withTiming(0, {duration: 200}))
+      hitFirst.set(false)
+      hitSecond.set(false)
+      isActive.set(false)
     })
 
   const composedGesture = Gesture.Simultaneous(panGesture)
