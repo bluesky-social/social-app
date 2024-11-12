@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-12 03:39\n"
+"PO-Revision-Date: 2024-11-12 12:46\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -29,11 +29,11 @@ msgstr "(没有电子邮箱)"
 
 #: src/lib/hooks/useTimeAgo.ts:156
 msgid "{0, plural, one {# day} other {# days}}"
-msgstr "{0, plural, one {# 天} other {# 天}}"
+msgstr "{0, plural, one {#天} other {#天}}"
 
 #: src/lib/hooks/useTimeAgo.ts:146
 msgid "{0, plural, one {# hour} other {# hours}}"
-msgstr "{0, plural, one {# 时} other {# 时}}"
+msgstr "{0, plural, one {#小时} other {#小时}}"
 
 #: src/components/moderation/LabelsOnMe.tsx:54
 msgid "{0, plural, one {# label has been placed on this account} other {# labels have been placed on this account}}"
@@ -45,11 +45,11 @@ msgstr "{0, plural, one {# 个标签已标记到此内容} other {# 个标签已
 
 #: src/lib/hooks/useTimeAgo.ts:136
 msgid "{0, plural, one {# minute} other {# minutes}}"
-msgstr "{0, plural, one {# 分} other {# 分}}"
+msgstr "{0, plural, one {#分钟} other {#分钟}}"
 
 #: src/lib/hooks/useTimeAgo.ts:167
 msgid "{0, plural, one {# month} other {# months}}"
-msgstr "{0, plural, one {# 月} other {# 月}}"
+msgstr "{0, plural, one {#个月} other {#个月}}"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:73
 msgid "{0, plural, one {# repost} other {# reposts}}"
@@ -57,7 +57,7 @@ msgstr "{0, plural, one {# 条转发} other {# 条转发}}"
 
 #: src/lib/hooks/useTimeAgo.ts:126
 msgid "{0, plural, one {# second} other {# seconds}}"
-msgstr "{0, plural, one {# 秒} other {# 秒}}"
+msgstr "{0, plural, one {#秒} other {#秒}}"
 
 #: src/components/ProfileHoverCard/index.web.tsx:398
 #: src/screens/Profile/Header/Metrics.tsx:23
