@@ -4,8 +4,6 @@ import {StyleProp, StyleSheet, TextStyle, View, ViewStyle} from 'react-native'
 import ProgressCircle from 'react-native-progress/Circle'
 import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
 
-// @ts-ignore no type definition -prf
-// import ProgressPie from 'react-native-progress/Pie'
 import {MAX_GRAPHEME_LENGTH} from '#/lib/constants'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {atoms as a} from '#/alf'
@@ -60,7 +58,7 @@ export function CharProgress({
       {shouldShowText && (
         <Text
           style={[{color: textColor, fontSize: 14}, a.text_right, textStyle]}>
-          {maxLength - count}
+          {remainingCount}
         </Text>
       )}
     </View>
