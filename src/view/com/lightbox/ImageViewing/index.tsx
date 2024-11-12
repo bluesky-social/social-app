@@ -9,13 +9,7 @@
 // https://github.com/jobtoday/react-native-image-viewing
 
 import React, {useCallback, useState} from 'react'
-import {
-  LayoutAnimation,
-  PixelRatio,
-  Platform,
-  StyleSheet,
-  View,
-} from 'react-native'
+import {LayoutAnimation, PixelRatio, Platform, View} from 'react-native'
 import {Gesture} from 'react-native-gesture-handler'
 import PagerView from 'react-native-pager-view'
 import Animated, {
@@ -39,16 +33,18 @@ import {
   useSafeAreaFrame,
   useSafeAreaInsets,
 } from 'react-native-safe-area-context'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {Trans} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 import {Dimensions} from '#/lib/media/types'
-import {colors, s} from '#/lib/styles'
 import {isIOS} from '#/platform/detection'
 import {Lightbox} from '#/state/lightbox'
-import {Button} from '#/view/com/util/forms/Button'
-import {Text} from '#/view/com/util/text/Text'
 import {ScrollView} from '#/view/com/util/Views'
+import {atoms as a, ThemeProvider, useTheme} from '#/alf'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {ArrowOutOfBox_Stroke2_Corner0_Rounded as ShareIcon} from '#/components/icons/ArrowOutOfBox'
+import {FloppyDisk_Stroke2_Corner0_Rounded as SaveIcon} from '#/components/icons/FloppyDisk'
+import {Text} from '#/components/Typography'
 import {PlatformInfo} from '../../../../../modules/expo-bluesky-swiss-army'
 import {ImageSource, Transform} from './@types'
 import ImageDefaultHeader from './components/ImageDefaultHeader'
@@ -124,28 +120,34 @@ export default function ImageViewRoot({
   }, [onRequestClose, openProgress])
 
   return (
-    // Keep it always mounted to avoid flicker on the first frame.
-    <SafeAreaView
-      style={[styles.screen, !activeLightbox && styles.screenHidden]}
-      edges={EDGES}
-      aria-modal
-      accessibilityViewIsModal
-      aria-hidden={!activeLightbox}>
-      <Animated.View ref={ref} style={{flex: 1}} collapsable={false}>
-        {activeLightbox && (
-          <ImageView
-            key={activeLightbox.id}
-            lightbox={activeLightbox}
-            onRequestClose={onRequestClose}
-            onPressSave={onPressSave}
-            onPressShare={onPressShare}
-            onFlyAway={onFlyAway}
-            safeAreaRef={ref}
-            openProgress={openProgress}
-          />
-        )}
-      </Animated.View>
-    </SafeAreaView>
+    <ThemeProvider theme="dark">
+      {/* Keep it always mounted to avoid flicker on the first frame. */}
+      <SafeAreaView
+        style={[
+          a.absolute,
+          a.inset_0,
+          !activeLightbox && [a.opacity_0, a.pointer_events_none],
+        ]}
+        edges={EDGES}
+        aria-modal
+        accessibilityViewIsModal
+        aria-hidden={!activeLightbox}>
+        <Animated.View ref={ref} style={[a.flex_1]} collapsable={false}>
+          {activeLightbox && (
+            <ImageView
+              key={activeLightbox.id}
+              lightbox={activeLightbox}
+              onRequestClose={onRequestClose}
+              onPressSave={onPressSave}
+              onPressShare={onPressShare}
+              onFlyAway={onFlyAway}
+              safeAreaRef={ref}
+              openProgress={openProgress}
+            />
+          )}
+        </Animated.View>
+      </SafeAreaView>
+    </ThemeProvider>
   )
 }
 
@@ -208,11 +210,7 @@ function ImageView({
         show && openProgress.value === 1 ? 1 : 0,
         FAST_SPRING,
       ),
-      transform: [
-        {
-          translateY: withClampedSpring(show ? 0 : -30, FAST_SPRING),
-        },
-      ],
+      transform: [{translateY: withClampedSpring(show ? 0 : -30, FAST_SPRING)}],
     }
   })
   const animatedFooterStyle = useAnimatedStyle(() => {
@@ -224,11 +222,7 @@ function ImageView({
         show && openProgress.value === 1 ? 1 : 0,
         FAST_SPRING,
       ),
-      transform: [
-        {
-          translateY: withClampedSpring(show ? 0 : 30, FAST_SPRING),
-        },
-      ],
+      transform: [{translateY: withClampedSpring(show ? 0 : 30, FAST_SPRING)}],
     }
   })
 
@@ -261,9 +255,14 @@ function ImageView({
   )
 
   return (
-    <Animated.View style={[styles.container, containerStyle]}>
+    <Animated.View style={[a.flex_1, containerStyle]}>
       <Animated.View
-        style={[styles.backdrop, backdropStyle]}
+        style={[
+          a.absolute,
+          a.inset_0,
+          {backgroundColor: '#000'},
+          backdropStyle,
+        ]}
         renderToHardwareTextureAndroid
       />
       <PagerView
@@ -277,7 +276,7 @@ function ImageView({
           setIsDragging(e.nativeEvent.pageScrollState !== 'idle')
         }}
         overdrag={true}
-        style={styles.pager}>
+        style={[a.flex_1]}>
         {images.map((imageSrc, i) => (
           <View key={imageSrc.uri}>
             <LightboxImage
@@ -297,7 +296,14 @@ function ImageView({
           </View>
         ))}
       </PagerView>
-      <View style={styles.controls}>
+      <View
+        style={[
+          a.absolute,
+          a.inset_0,
+          a.gap_xl,
+          a.z_10,
+          a.pointer_events_box_none,
+        ]}>
         <Animated.View
           style={animatedHeaderStyle}
           renderToHardwareTextureAndroid>
@@ -486,11 +492,20 @@ function LightboxFooter({
   onPressSave: (uri: string) => void
   onPressShare: (uri: string) => void
 }) {
+  const {_} = useLingui()
+  const t = useTheme()
   const {alt: altText, uri} = images[index]
   const isMomentumScrolling = React.useRef(false)
   return (
     <ScrollView
-      style={styles.footerScrollView}
+      style={[
+        a.flex_1,
+        a.max_h_full,
+        a.w_full,
+        a.absolute,
+        a.bottom_0,
+        {backgroundColor: '#000d'},
+      ]}
       scrollEnabled={isAltExpanded}
       onMomentumScrollBegin={() => {
         isMomentumScrolling.current = true
@@ -498,15 +513,12 @@ function LightboxFooter({
       onMomentumScrollEnd={() => {
         isMomentumScrolling.current = false
       }}
-      contentContainerStyle={{
-        paddingVertical: 12,
-        paddingHorizontal: 24,
-      }}>
+      contentContainerStyle={[a.py_md, a.px_2xl]}>
       <SafeAreaView edges={['bottom']}>
         {altText ? (
-          <View accessibilityRole="button" style={styles.footerText}>
+          <View accessibilityRole="button" style={[isIOS ? a.pb_xl : a.pb_lg]}>
             <Text
-              style={[s.gray3]}
+              style={[t.atoms.text_contrast_high]}
               numberOfLines={isAltExpanded ? undefined : 3}
               selectable
               onPress={() => {
@@ -524,103 +536,36 @@ function LightboxFooter({
             </Text>
           </View>
         ) : null}
-        <View style={styles.footerBtns}>
-          <Button
-            type="primary-outline"
-            style={styles.footerBtn}
-            onPress={() => onPressSave(uri)}>
-            <FontAwesomeIcon icon={['far', 'floppy-disk']} style={s.white} />
-            <Text type="xl" style={s.white}>
-              <Trans context="action">Save</Trans>
-            </Text>
-          </Button>
-          <Button
-            type="primary-outline"
-            style={styles.footerBtn}
-            onPress={() => onPressShare(uri)}>
-            <FontAwesomeIcon icon="arrow-up-from-bracket" style={s.white} />
-            <Text type="xl" style={s.white}>
-              <Trans context="action">Share</Trans>
-            </Text>
-          </Button>
-        </View>
+        <ThemeProvider theme="light">
+          <View style={[a.w_full, a.flex_row, a.justify_center, a.gap_sm]}>
+            <Button
+              label={_(msg`Save`)}
+              color="secondary_inverted"
+              variant="solid"
+              size="small"
+              onPress={() => onPressSave(uri)}>
+              <ButtonIcon icon={SaveIcon} />
+              <ButtonText>
+                <Trans context="action">Save</Trans>
+              </ButtonText>
+            </Button>
+            <Button
+              label={_(msg`Share`)}
+              color="secondary_inverted"
+              variant="solid"
+              size="small"
+              onPress={() => onPressShare(uri)}>
+              <ButtonIcon icon={ShareIcon} />
+              <ButtonText>
+                <Trans context="action">Share</Trans>
+              </ButtonText>
+            </Button>
+          </View>
+        </ThemeProvider>
       </SafeAreaView>
     </ScrollView>
   )
 }
-
-const styles = StyleSheet.create({
-  screen: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    bottom: 0,
-    right: 0,
-  },
-  screenHidden: {
-    opacity: 0,
-    pointerEvents: 'none',
-  },
-  container: {
-    flex: 1,
-  },
-  backdrop: {
-    backgroundColor: '#000',
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-  },
-  controls: {
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-    gap: 20,
-    zIndex: 1,
-    pointerEvents: 'box-none',
-  },
-  pager: {
-    flex: 1,
-  },
-  header: {
-    position: 'absolute',
-    width: '100%',
-    top: 0,
-    pointerEvents: 'box-none',
-  },
-  footer: {
-    position: 'absolute',
-    width: '100%',
-    maxHeight: '100%',
-    bottom: 0,
-  },
-  footerScrollView: {
-    backgroundColor: '#000d',
-    flex: 1,
-    position: 'absolute',
-    bottom: 0,
-    width: '100%',
-    maxHeight: '100%',
-  },
-  footerText: {
-    paddingBottom: isIOS ? 20 : 16,
-  },
-  footerBtns: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    gap: 8,
-  },
-  footerBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    backgroundColor: 'transparent',
-    borderColor: colors.white,
-  },
-})
 
 function interpolatePx(
   px: number,
