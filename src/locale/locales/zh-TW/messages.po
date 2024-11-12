@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-12 12:47\n"
+"PO-Revision-Date: 2024-11-12 14:52\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -1060,7 +1060,7 @@ msgstr "商務"
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:197
 msgid "by —"
-msgstr "來自 —"
+msgstr "由 —"
 
 #: src/components/LabelingServiceCard/index.tsx:62
 msgid "By {0}"
@@ -1068,7 +1068,7 @@ msgstr "來自 {0}"
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:201
 msgid "by <0/>"
-msgstr "來自 <0/>"
+msgstr "由 <0/> 建立"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:81
 msgid "By creating an account you agree to the <0>Privacy Policy</0>."
@@ -2641,7 +2641,7 @@ msgstr "動態"
 #: src/components/FeedCard.tsx:134
 #: src/view/com/feeds/FeedSourceCard.tsx:250
 msgid "Feed by {0}"
-msgstr "{0} 建立的動態源"
+msgstr "由 {0} 建立的動態源"
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:55
 msgid "Feed toggle"

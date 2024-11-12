@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-12 12:46\n"
+"PO-Revision-Date: 2024-11-12 14:54\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -1006,7 +1006,7 @@ msgstr "Bluesky 是一个开放网络，你可以从中选择现有的托管服�
 
 #: src/components/ProgressGuide/List.tsx:55
 msgid "Bluesky is better with friends!"
-msgstr "Bluesky 因结识朋友而变得更好！"
+msgstr "与朋友互动让 Bluesky 变得更好！"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:283
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
@@ -1060,7 +1060,7 @@ msgstr "商务"
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:197
 msgid "by —"
-msgstr "来自 —"
+msgstr "由 —"
 
 #: src/components/LabelingServiceCard/index.tsx:62
 msgid "By {0}"
@@ -1068,7 +1068,7 @@ msgstr "来自 {0}"
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:201
 msgid "by <0/>"
-msgstr "来自 <0/>"
+msgstr "由 <0/> 创建"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:81
 msgid "By creating an account you agree to the <0>Privacy Policy</0>."
