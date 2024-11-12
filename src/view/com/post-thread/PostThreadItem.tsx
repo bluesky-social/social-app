@@ -668,12 +668,10 @@ function PostOuterWrapper({
         style={[
           a.flex_row,
           a.px_sm,
+          a.flex_row,
           t.atoms.border_contrast_low,
           styles.cursor,
-          {
-            flexDirection: 'row',
-            borderTopWidth: depth === 1 ? a.border_t.borderTopWidth : 0,
-          },
+          depth === 1 && a.border_t,
         ]}
         onPointerEnter={onHoverIn}
         onPointerLeave={onHoverOut}>
