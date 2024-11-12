@@ -123,9 +123,9 @@ export function SelectLangBtn() {
 
 const styles = StyleSheet.create({
   button: {
-    marginHorizontal: 10,
+    marginHorizontal: 15,
   },
   label: {
-    maxWidth: 90,
+    maxWidth: 100,
   },
 })

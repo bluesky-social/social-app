@@ -1,13 +1,15 @@
 import React from 'react'
-import {StyleProp, TextStyle, View, ViewStyle} from 'react-native'
+import {StyleProp, StyleSheet, TextStyle, View, ViewStyle} from 'react-native'
 // @ts-ignore no type definition -prf
 import ProgressCircle from 'react-native-progress/Circle'
+import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
 
 // @ts-ignore no type definition -prf
 // import ProgressPie from 'react-native-progress/Pie'
 import {MAX_GRAPHEME_LENGTH} from '#/lib/constants'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {atoms as a} from '#/alf'
+import {Text} from '#/components/Typography'
 
 export function CharProgress({
   count,
@@ -32,27 +34,47 @@ export function CharProgress({
 
   return (
     <View
-      style={[a.flex_row, a.align_center, a.justify_between, a.gap_sm, style]}>
-      <ProgressCircle
-        animated={false}
-        size={size ?? 30}
-        borderWidth={shouldShowCircle ? 1 : 0}
-        borderColor={pal.colors.border}
-        color={circleColor}
-        progress={shouldShowCircle ? Math.min(count / maxLength, 1) : 0}
-        showsText={shouldShowText}
-        formatText={() => remainingCount}
-        textStyle={[
-          {
-            color: textColor,
-            fontVariant: ['tabular-nums'],
-            fontSize: 14,
-            fontWeight: 400,
-          },
-          a.text_right,
-          textStyle,
-        ]}
-      />
+      style={[
+        a.flex_row,
+        a.align_center,
+        a.justify_between,
+        a.gap_sm,
+        styles.container,
+        style,
+      ]}>
+      {shouldShowCircle && (
+        <Animated.View
+          exiting={FadeOut.duration(200)}
+          entering={FadeIn.duration(200)}
+          style={styles.progressCircle}>
+          <ProgressCircle
+            animated={false}
+            size={size ?? 30}
+            borderWidth={0}
+            unfilledColor={pal.colors.border}
+            color={circleColor}
+            progress={Math.min(count / maxLength, 1)}
+          />
+        </Animated.View>
+      )}
+      {shouldShowText && (
+        <Text
+          style={[{color: textColor, fontSize: 14}, a.text_right, textStyle]}>
+          {maxLength - count}
+        </Text>
+      )}
     </View>
   )
 }
+
+const styles = StyleSheet.create({
+  container: {
+    display: 'flex',
+    justifyContent: 'center',
+    minWidth: 30,
+    height: 30,
+  },
+  progressCircle: {
+    position: 'absolute',
+  },
+})
