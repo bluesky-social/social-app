@@ -249,17 +249,19 @@ export function PostInteractionSettingsForm({
       threadgateAllowUISettings.filter(
         v => v.type !== 'nobody' && v.type !== 'everybody',
       )
-    // toggle
+    /**
+     * Handle updating the selected audience settings:
+     * - If the setting doesn't exist yet, add it to the list
+     * - If it's the only setting and being removed, revert to default (everybody)
+     * - If it exists and there are other settings, remove it from the list
+     */
     const i = newSelected.findIndex(v => isEqual(v, setting))
     if (i === -1) {
       newSelected.push(setting)
+    } else if (newSelected.length === 1) {
+      newSelected = [{type: 'everybody'}]
     } else {
       newSelected.splice(i, 1)
-    }
-
-    // if nothing is selected, default to 'everybody'
-    if (newSelected.length === 0) {
-      newSelected.push({type: 'everybody'})
     }
 
     onChangeThreadgateAllowUISettings(newSelected)
