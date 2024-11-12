@@ -21,8 +21,9 @@ export function Loader(props: Props) {
   }))
 
   React.useEffect(() => {
-    rotation.set(
-      withRepeat(withTiming(360, {duration: 500, easing: Easing.linear}), -1),
+    rotation.value = withRepeat(
+      withTiming(360, {duration: 500, easing: Easing.linear}),
+      -1,
     )
   }, [rotation])
 

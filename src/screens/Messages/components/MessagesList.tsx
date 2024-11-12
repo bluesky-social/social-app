@@ -217,7 +217,7 @@ export function MessagesList({
   const onScroll = React.useCallback(
     (e: ReanimatedScrollEvent) => {
       'worklet'
-      layoutHeight.value.set(e.layoutMeasurement.height)
+      layoutHeight.set(e.layoutMeasurement.height)
       const bottomOffset = e.contentOffset.y + e.layoutMeasurement.height
 
       // Most apps have a little bit of space the user can scroll past while still automatically scrolling ot the bottom
