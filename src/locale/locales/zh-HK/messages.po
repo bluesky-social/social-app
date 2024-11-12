@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-12 03:42\n"
+"PO-Revision-Date: 2024-11-12 09:27\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional, Hong Kong\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -719,7 +719,7 @@ msgstr "同人傾偈嗰陣出現問題"
 
 #: src/components/dms/dialogs/ShareViaChatDialog.tsx:47
 msgid "An issue occurred while trying to open the chat"
-msgstr "啓用傾偈室嗰陣出現問題"
+msgstr "開啓傾偈室嗰陣出現問題"
 
 #: src/components/hooks/useFollowMethods.ts:35
 #: src/components/hooks/useFollowMethods.ts:50
@@ -874,7 +874,7 @@ msgstr "你確定嗎？"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:61
 msgid "Are you writing in <0>{0}</0>?"
-msgstr "你係咪用 <0>{0}</0> 寫緊？"
+msgstr "你係咪用 <0>{0}</0> 寫嘢？"
 
 #: src/screens/Onboarding/index.tsx:23
 #: src/screens/Onboarding/state.ts:82
@@ -1154,7 +1154,7 @@ msgstr "唔再搵嘢"
 
 #: src/view/com/modals/LinkWarning.tsx:106
 msgid "Cancels opening the linked website"
-msgstr "取消打開連結咗嘅網站"
+msgstr "取消開啓網站連結"
 
 #: src/state/shell/composer/index.tsx:82
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:116
@@ -1200,7 +1200,7 @@ msgstr "變更密碼"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:74
 msgid "Change post language to {0}"
-msgstr "將帖文語言改為 {0}"
+msgstr "將帖文語言改成 {0}"
 
 #: src/view/com/modals/ChangeEmail.tsx:104
 msgid "Change Your Email"
@@ -1340,7 +1340,7 @@ msgstr "Clip 🐴 clop 🐴"
 #: src/view/com/modals/ChangePassword.tsx:271
 #: src/view/com/util/post-embeds/GifEmbed.tsx:197
 msgid "Close"
-msgstr "閂咗"
+msgstr "閂"
 
 #: src/components/Dialog/index.web.tsx:110
 #: src/components/Dialog/index.web.tsx:261
@@ -1441,7 +1441,7 @@ msgstr "撰寫回覆"
 
 #: src/view/com/composer/Composer.tsx:1592
 msgid "Compressing video..."
-msgstr "壓縮緊影片..."
+msgstr "壓縮緊條片..."
 
 #: src/components/moderation/LabelPreference.tsx:83
 msgid "Configure content filtering setting for category: {name}"
@@ -3660,7 +3660,7 @@ msgstr "由 <0>@sawaratsuki.bsky.social</0> 畫嘅 LOGO"
 
 #: src/components/RichText.tsx:227
 msgid "Long press to open tag menu for #{tag}"
-msgstr "長按打開 #{tag} 嘅標籤選單"
+msgstr "撳住打開 #{tag} 嘅標籤選單"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:110
 msgid "Looks like XXXXX-XXXXX"
@@ -4434,7 +4434,7 @@ msgstr "喺瀏覽器入面打開支援台"
 
 #: src/view/com/util/post-embeds/ExternalLinkEmbed.tsx:71
 msgid "Open link to {niceUrl}"
-msgstr "打開指向 {niceUrl} 嘅連結"
+msgstr "打開 {niceUrl} 嘅連結"
 
 #: src/components/dms/ActionsWrapper.tsx:88
 msgid "Open message options"
@@ -4509,7 +4509,7 @@ msgstr "打開流程嚟登入你現有嘅 Bluesky 帳號"
 
 #: src/view/com/composer/photos/SelectGifBtn.tsx:36
 msgid "Opens GIF select dialog"
-msgstr "打開 GIF 揀對話框"
+msgstr "打開 GIF 揀選對話框"
 
 #: src/view/com/modals/InviteCodes.tsx:173
 msgid "Opens list of invite codes"
@@ -4521,12 +4521,12 @@ msgstr "打開密碼重設表單"
 
 #: src/view/com/modals/LinkWarning.tsx:93
 msgid "Opens the linked website"
-msgstr "打開連結咗嘅網站"
+msgstr "打開網站連結"
 
 #: src/view/com/notifications/FeedItem.tsx:673
 #: src/view/com/util/UserAvatar.tsx:436
 msgid "Opens this profile"
-msgstr "打開呢個個人檔案"
+msgstr "打開呢個人嘅個人檔案"
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:107
 msgid "Opens video picker"
@@ -4871,22 +4871,22 @@ msgstr "設定儲存咗"
 
 #: src/screens/Messages/components/MessageListError.tsx:19
 msgid "Press to attempt reconnection"
-msgstr "撳一下就可以嘗試重新連線"
+msgstr "撳低呢度嘗試重新連線"
 
 #: src/components/forms/HostingProvider.tsx:46
 msgid "Press to change hosting provider"
-msgstr "撳一下就可以變更 hosting 供應商"
+msgstr "撳低呢度變更 hosting 供應商"
 
 #: src/components/Error.tsx:61
 #: src/components/Lists.tsx:93
 #: src/screens/Messages/components/MessageListError.tsx:24
 #: src/screens/Signup/BackNextButtons.tsx:48
 msgid "Press to retry"
-msgstr "撳嚟重試"
+msgstr "撳低呢度試多次"
 
 #: src/components/KnownFollowers.tsx:124
 msgid "Press to view followers of this account that you also follow"
-msgstr "撳嚟睇吓有邊啲你識嘅人跟咗呢個帳號"
+msgstr "撳低呢度睇吓有邊啲你識嘅人跟咗呢個帳號"
 
 #: src/view/com/lightbox/Lightbox.web.tsx:148
 msgid "Previous image"
@@ -6285,7 +6285,7 @@ msgstr "建議帳號"
 
 #: src/components/FeedInterstitials.tsx:318
 msgid "Suggested for you"
-msgstr "建議畀你"
+msgstr "估你心水"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:146
 #: src/view/com/composer/labels/LabelsBtn.tsx:149
@@ -6673,7 +6673,7 @@ msgstr "若然冇 Bluesky 帳號，就睇唔到呢啲內容。"
 
 #: src/screens/Messages/components/ChatListItem.tsx:266
 msgid "This conversation is with a deleted or a deactivated account. Press for options."
-msgstr "呢個對話係同一個刪除咗抑或停用咗嘅帳號進行。撳一下就可以睇到選項。"
+msgstr "呢個對話係同一個刪除咗抑或停用咗嘅帳號傾嘅。撳低呢度去睇選項。"
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:94
 msgid "This feature is in beta. You can read more about repository exports in <0>this blogpost</0>."
@@ -6801,7 +6801,7 @@ msgstr "呢個用戶包括喺你已經將佢靜音嘅 <0>{0}</0> 清單入邊。
 
 #: src/components/NewskieDialog.tsx:65
 msgid "This user is new here. Press for more info about when they joined."
-msgstr "呢個用户啱嚟冇耐，撳吓可以睇到更多佢哋幾時入嚟嘅資訊。"
+msgstr "呢個用户啱嚟冇耐，撳低呢度可以睇到更多佢哋幾時入嚟嘅資訊。"
 
 #: src/view/com/profile/ProfileFollows.tsx:96
 msgid "This user isn't following anyone."
@@ -7655,7 +7655,7 @@ msgstr "你遲啲可以喺你嘅外觀設定入邊調整呢啲。"
 #: src/view/com/posts/FollowingEmptyState.tsx:63
 #: src/view/com/posts/FollowingEndOfFeed.tsx:64
 msgid "You can also discover new Custom Feeds to follow."
-msgstr "你亦都可以探索同埋去跟新嘅自訂動態源。"
+msgstr "你亦都可以探索同埋去跟住啲新嘅自訂動態源。"
 
 #: src/view/com/modals/DeleteAccount.tsx:202
 msgid "You can also temporarily deactivate your account instead, and reactivate it at any time."
@@ -7848,11 +7848,11 @@ msgstr "你：{short}"
 
 #: src/screens/Signup/index.tsx:107
 msgid "You'll follow the suggested users and feeds once you finish creating your account!"
-msgstr "建立完帳號之後，你就會跟住建議嘅用戶同動態源！"
+msgstr "建立完帳號之後，你就會跟住啲建議嘅用戶同動態源！"
 
 #: src/screens/Signup/index.tsx:112
 msgid "You'll follow the suggested users once you finish creating your account!"
-msgstr "建立完帳號之後，你就會跟住建議嘅使用者！"
+msgstr "建立完帳號之後，你就會跟住啲建議嘅用戶！"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:232
 msgid "You'll follow these people and {0} others"
@@ -7908,7 +7908,7 @@ msgstr "你個帳號"
 
 #: src/view/com/modals/DeleteAccount.tsx:88
 msgid "Your account has been deleted"
-msgstr "你個帳號已經刪除咗"
+msgstr "你個帳號已經刪咗"
 
 #: src/view/com/composer/state/video.ts:442
 msgid "Your account is not yet old enough to upload videos. Please try again later."
