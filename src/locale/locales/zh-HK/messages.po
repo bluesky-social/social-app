@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-11 16:40\n"
+"PO-Revision-Date: 2024-11-12 03:42\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional, Hong Kong\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -911,7 +911,7 @@ msgstr "自動播放影片同 GIF"
 #: src/screens/Login/SetNewPasswordForm.tsx:160
 #: src/screens/Messages/components/ChatDisabled.tsx:133
 #: src/screens/Messages/components/ChatDisabled.tsx:134
-#: src/screens/Profile/Header/Shell.tsx:95
+#: src/screens/Profile/Header/Shell.tsx:116
 #: src/screens/Signup/BackNextButtons.tsx:42
 #: src/screens/StarterPack/Wizard/index.tsx:307
 #: src/view/com/util/ViewHeader.tsx:87
@@ -1058,7 +1058,7 @@ msgstr "瀏覽其他動態源"
 msgid "Business"
 msgstr "商業"
 
-#: src/view/com/profile/ProfileSubpageHeader.tsx:175
+#: src/view/com/profile/ProfileSubpageHeader.tsx:197
 msgid "by —"
 msgstr "由 —"
 
@@ -1066,7 +1066,7 @@ msgstr "由 —"
 msgid "By {0}"
 msgstr "由 {0}"
 
-#: src/view/com/profile/ProfileSubpageHeader.tsx:179
+#: src/view/com/profile/ProfileSubpageHeader.tsx:201
 msgid "by <0/>"
 msgstr "由 <0/>"
 
@@ -1082,7 +1082,7 @@ msgstr "建立帳號即係表示你同意<0>服務條款</0>同<1>私隱政策</
 msgid "By creating an account you agree to the <0>Terms of Service</0>."
 msgstr "建立帳號即係表示你同意<0>服務條款</0>。"
 
-#: src/view/com/profile/ProfileSubpageHeader.tsx:177
+#: src/view/com/profile/ProfileSubpageHeader.tsx:199
 msgid "by you"
 msgstr "由你建立"
 
@@ -1371,7 +1371,7 @@ msgstr "閂咗圖片"
 msgid "Close image viewer"
 msgstr "閂咗圖片檢視器"
 
-#: src/view/shell/index.web.tsx:67
+#: src/view/shell/index.web.tsx:68
 msgid "Close navigation footer"
 msgstr "閂咗導覽頁尾"
 
@@ -1380,7 +1380,7 @@ msgstr "閂咗導覽頁尾"
 msgid "Close this dialog"
 msgstr "閂咗呢個對話框"
 
-#: src/view/shell/index.web.tsx:68
+#: src/view/shell/index.web.tsx:69
 msgid "Closes bottom navigation bar"
 msgstr "閂咗底部導覽列"
 
@@ -1596,7 +1596,7 @@ msgid "Copied to clipboard"
 msgstr "複製咗去剪貼簿"
 
 #: src/components/dialogs/Embed.tsx:136
-#: src/screens/Settings/components/CopyButton.tsx:58
+#: src/screens/Settings/components/CopyButton.tsx:66
 msgid "Copied!"
 msgstr "複製咗喇!"
 
@@ -1870,6 +1870,11 @@ msgstr "刪除呢篇帖文？"
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:93
 msgid "Deleted"
 msgstr "剷咗"
+
+#: src/components/dms/MessagesListHeader.tsx:150
+#: src/screens/Messages/components/ChatListItem.tsx:107
+msgid "Deleted Account"
+msgstr "刪除咗嘅帳戶"
 
 #: src/view/com/post-thread/PostThread.tsx:398
 msgid "Deleted post."
@@ -3216,7 +3221,7 @@ msgstr "若然你想改咗你嘅帳號頭銜抑或電郵，喺你停用帳號之
 msgid "Illegal and Urgent"
 msgstr "非法"
 
-#: src/view/com/util/images/Gallery.tsx:62
+#: src/view/com/util/images/Gallery.tsx:74
 msgid "Image"
 msgstr "圖片"
 
@@ -5504,7 +5509,7 @@ msgstr "返去上一頁"
 msgid "Save"
 msgstr "儲存"
 
-#: src/view/com/lightbox/ImageViewing/index.tsx:388
+#: src/view/com/lightbox/ImageViewing/index.tsx:534
 #: src/view/com/modals/CreateOrEditList.tsx:325
 msgctxt "action"
 msgid "Save"
@@ -5866,7 +5871,7 @@ msgstr "性暗示"
 msgid "Share"
 msgstr "分享"
 
-#: src/view/com/lightbox/ImageViewing/index.tsx:397
+#: src/view/com/lightbox/ImageViewing/index.tsx:543
 msgctxt "action"
 msgid "Share"
 msgstr "分享"
@@ -7308,7 +7313,7 @@ msgstr "影片：{0}"
 msgid "Videos must be less than 60 seconds long"
 msgstr "影片長度一定要少過60秒鐘"
 
-#: src/screens/Profile/Header/Shell.tsx:143
+#: src/screens/Profile/Header/Shell.tsx:164
 msgid "View {0}'s avatar"
 msgstr "睇吓 {0} 嘅頭像"
 
@@ -7367,7 +7372,7 @@ msgstr "睇吓有關呢啲標籤嘅資料"
 msgid "View profile"
 msgstr "睇吓個人檔案"
 
-#: src/view/com/profile/ProfileSubpageHeader.tsx:142
+#: src/view/com/profile/ProfileSubpageHeader.tsx:163
 msgid "View the avatar"
 msgstr "睇吓頭像"
 
