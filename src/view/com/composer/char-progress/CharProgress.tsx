@@ -9,7 +9,7 @@ import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
 import {MAX_GRAPHEME_LENGTH} from '#/lib/constants'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {atoms as a} from '#/alf'
-import {Text} from '#/components/Typography'
+import {Text} from '../../util/text/Text'
 
 export function CharProgress({
   count,
@@ -35,9 +35,9 @@ export function CharProgress({
   return (
     <View
       style={[
-        a.flex_row,
+        a.flex,
         a.align_center,
-        a.justify_between,
+        a.justify_center,
         a.gap_sm,
         styles.container,
         style,
@@ -69,8 +69,6 @@ export function CharProgress({
 
 const styles = StyleSheet.create({
   container: {
-    display: 'flex',
-    justifyContent: 'center',
     minWidth: 30,
     height: 30,
   },
