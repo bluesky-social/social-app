@@ -49,6 +49,7 @@ import {PlatformInfo} from '../../../../../modules/expo-bluesky-swiss-army'
 import {ImageSource, Transform} from './@types'
 import ImageDefaultHeader from './components/ImageDefaultHeader'
 import ImageItem from './components/ImageItem/ImageItem'
+import {PlatformBackground} from './components/PlatformBackground'
 
 type Rect = {x: number; y: number; width: number; height: number}
 
@@ -504,7 +505,8 @@ function LightboxFooter({
         a.w_full,
         a.absolute,
         a.bottom_0,
-        {backgroundColor: '#000d'},
+        a.overflow_hidden,
+        {borderTopLeftRadius: 8, borderTopRightRadius: 8},
       ]}
       scrollEnabled={isAltExpanded}
       onMomentumScrollBegin={() => {
@@ -512,57 +514,60 @@ function LightboxFooter({
       }}
       onMomentumScrollEnd={() => {
         isMomentumScrolling.current = false
-      }}
-      contentContainerStyle={[a.py_md, a.px_2xl]}>
-      <SafeAreaView edges={['bottom']}>
-        {altText ? (
-          <View accessibilityRole="button" style={[isIOS ? a.pb_xl : a.pb_lg]}>
-            <Text
-              style={[t.atoms.text_contrast_high]}
-              numberOfLines={isAltExpanded ? undefined : 3}
-              selectable
-              onPress={() => {
-                if (isMomentumScrolling.current) {
-                  return
-                }
-                LayoutAnimation.configureNext({
-                  duration: 450,
-                  update: {type: 'spring', springDamping: 1},
-                })
-                toggleAltExpanded()
-              }}
-              onLongPress={() => {}}>
-              {altText}
-            </Text>
-          </View>
-        ) : null}
-        <ThemeProvider theme="light">
-          <View style={[a.w_full, a.flex_row, a.justify_center, a.gap_sm]}>
-            <Button
-              label={_(msg`Save`)}
-              color="secondary_inverted"
-              variant="solid"
-              size="small"
-              onPress={() => onPressSave(uri)}>
-              <ButtonIcon icon={SaveIcon} />
-              <ButtonText>
-                <Trans context="action">Save</Trans>
-              </ButtonText>
-            </Button>
-            <Button
-              label={_(msg`Share`)}
-              color="secondary_inverted"
-              variant="solid"
-              size="small"
-              onPress={() => onPressShare(uri)}>
-              <ButtonIcon icon={ShareIcon} />
-              <ButtonText>
-                <Trans context="action">Share</Trans>
-              </ButtonText>
-            </Button>
-          </View>
-        </ThemeProvider>
-      </SafeAreaView>
+      }}>
+      <PlatformBackground style={[a.py_md, a.px_2xl]}>
+        <SafeAreaView edges={['bottom']}>
+          {altText ? (
+            <View
+              accessibilityRole="button"
+              style={[isIOS ? a.pb_xl : a.pb_lg]}>
+              <Text
+                style={[t.atoms.text_contrast_high]}
+                numberOfLines={isAltExpanded ? undefined : 3}
+                selectable
+                onPress={() => {
+                  if (isMomentumScrolling.current) {
+                    return
+                  }
+                  LayoutAnimation.configureNext({
+                    duration: 450,
+                    update: {type: 'spring', springDamping: 1},
+                  })
+                  toggleAltExpanded()
+                }}
+                onLongPress={() => {}}>
+                {altText}
+              </Text>
+            </View>
+          ) : null}
+          <ThemeProvider theme="light">
+            <View style={[a.w_full, a.flex_row, a.justify_center, a.gap_sm]}>
+              <Button
+                label={_(msg`Save`)}
+                color="secondary_inverted"
+                variant="solid"
+                size="small"
+                onPress={() => onPressSave(uri)}>
+                <ButtonIcon icon={SaveIcon} />
+                <ButtonText>
+                  <Trans context="action">Save</Trans>
+                </ButtonText>
+              </Button>
+              <Button
+                label={_(msg`Share`)}
+                color="secondary_inverted"
+                variant="solid"
+                size="small"
+                onPress={() => onPressShare(uri)}>
+                <ButtonIcon icon={ShareIcon} />
+                <ButtonText>
+                  <Trans context="action">Share</Trans>
+                </ButtonText>
+              </Button>
+            </View>
+          </ThemeProvider>
+        </SafeAreaView>
+      </PlatformBackground>
     </ScrollView>
   )
 }
