@@ -5362,7 +5362,7 @@ msgstr "Postado por {0}"
 #: src/Navigation.tsx:212
 #: src/Navigation.tsx:219
 msgid "Post by @{0}"
-msgstr "Post por @{0}"
+msgstr "Postado por @{0}"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:180
 msgid "Post deleted"
@@ -5370,7 +5370,7 @@ msgstr "Postagem excluída"
 
 #: src/lib/api/index.ts:161
 msgid "Post failed to upload. Please check your Internet connection and try again."
-msgstr "Falha ao carregar o post. Por favor verifique sua conexão de internet e tente novamente."
+msgstr "Falha ao enviar o post. Por favor verifique sua conexão de internet e tente novamente."
 
 #: src/view/com/post-thread/PostThread.tsx:212
 msgid "Post hidden"
@@ -5880,29 +5880,29 @@ msgstr "Configurações de resposta são escolhidas pelo autor da thread"
 #: src/view/com/posts/FeedItem.tsx:285
 #~ msgctxt "description"
 #~ msgid "Reply to <0/>"
-#~ msgstr "Responder <0/>"
+#~ msgstr "Resposta para <0/>"
 
 #: src/view/com/post/Post.tsx:195
 #: src/view/com/posts/FeedItem.tsx:544
 msgctxt "description"
 msgid "Reply to <0><1/></0>"
-msgstr "Responder <0><1/></0>"
+msgstr "Resposta para <0><1/></0>"
 
 #: src/view/com/posts/FeedItem.tsx:535
 msgctxt "description"
 msgid "Reply to a blocked post"
-msgstr "Responder a uma postagem bloqueada"
+msgstr "Resposta para uma postagem bloqueada"
 
 #: src/view/com/posts/FeedItem.tsx:537
 msgctxt "description"
 msgid "Reply to a post"
-msgstr "Responder à uma postagem"
+msgstr "Resposta para uma postagem"
 
 #: src/view/com/post/Post.tsx:193
 #: src/view/com/posts/FeedItem.tsx:541
 msgctxt "description"
 msgid "Reply to you"
-msgstr "Responder para você"
+msgstr "Resposta para você"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:338
 msgid "Reply visibility updated"
@@ -6659,7 +6659,7 @@ msgstr "Compartilhe um fato divertido!"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:703
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:349
 msgid "Share anyway"
-msgstr "Compartilhar assim"
+msgstr "Compartilhar mesmo assim"
 
 #: src/view/screens/ProfileFeed.tsx:364
 #: src/view/screens/ProfileFeed.tsx:366
@@ -9025,7 +9025,7 @@ msgstr "Sua escolha será salva, mas você pode trocá-la nas configurações de
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:62
 #~ msgid "Your default feed is \"Following\""
-#~ msgstr "Seu feed inicial é o \"Seguindo\""
+#~ msgstr "Seu feed inicial é o \"Following\""
 
 #: src/screens/Login/ForgotPasswordForm.tsx:51
 #: src/screens/Signup/state.ts:203
