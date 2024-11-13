@@ -18,8 +18,14 @@ import {Text} from '#/components/Typography'
 
 export function VerifyEmailDialog({
   control,
+  onCloseWithoutVerifying,
+  onCloseAfterVerifying,
+  reasonText,
 }: {
   control: Dialog.DialogControlProps
+  onCloseWithoutVerifying?: () => void
+  onCloseAfterVerifying?: () => void
+  reasonText?: string
 }) {
   const agent = useAgent()
 
@@ -30,18 +36,24 @@ export function VerifyEmailDialog({
       control={control}
       onClose={async () => {
         if (!didVerify) {
+          onCloseWithoutVerifying?.()
           return
         }
 
         try {
           await agent.resumeSession(agent.session!)
+          onCloseAfterVerifying?.()
         } catch (e: unknown) {
           logger.error(String(e))
           return
         }
       }}>
       <Dialog.Handle />
-      <Inner control={control} setDidVerify={setDidVerify} />
+      <Inner
+        control={control}
+        setDidVerify={setDidVerify}
+        reasonText={reasonText}
+      />
     </Dialog.Outer>
   )
 }
@@ -49,9 +61,11 @@ export function VerifyEmailDialog({
 export function Inner({
   control,
   setDidVerify,
+  reasonText,
 }: {
   control: Dialog.DialogControlProps
   setDidVerify: (value: boolean) => void
+  reasonText?: string
 }) {
   const {_} = useLingui()
   const {currentAccount} = useSession()
@@ -135,26 +149,32 @@ export function Inner({
           <Text style={[a.text_md, a.leading_snug]}>
             {currentStep === 'StepOne' ? (
               <>
-                <Trans>
-                  You'll receive an email at{' '}
-                  <Text style={[a.text_md, a.leading_snug, a.font_bold]}>
-                    {currentAccount?.email}
-                  </Text>{' '}
-                  to verify it's you.
-                </Trans>{' '}
-                <InlineLinkText
-                  to="#"
-                  label={_(msg`Change email address`)}
-                  style={[a.text_md, a.leading_snug]}
-                  onPress={e => {
-                    e.preventDefault()
-                    control.close(() => {
-                      openModal({name: 'change-email'})
-                    })
-                    return false
-                  }}>
-                  <Trans>Need to change it?</Trans>
-                </InlineLinkText>
+                {!reasonText ? (
+                  <>
+                    <Trans>
+                      You'll receive an email at{' '}
+                      <Text style={[a.text_md, a.leading_snug, a.font_bold]}>
+                        {currentAccount?.email}
+                      </Text>{' '}
+                      to verify it's you.
+                    </Trans>{' '}
+                    <InlineLinkText
+                      to="#"
+                      label={_(msg`Change email address`)}
+                      style={[a.text_md, a.leading_snug]}
+                      onPress={e => {
+                        e.preventDefault()
+                        control.close(() => {
+                          openModal({name: 'change-email'})
+                        })
+                        return false
+                      }}>
+                      <Trans>Need to change it?</Trans>
+                    </InlineLinkText>
+                  </>
+                ) : (
+                  reasonText
+                )}
               </>
             ) : (
               uiStrings[currentStep].message
