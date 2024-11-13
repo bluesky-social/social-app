@@ -2030,19 +2030,19 @@ msgstr "Pokaż większe odznaki tekstu alt"
 #: src/screens/Profile/Header/EditProfileDialog.tsx:351
 #: src/view/com/modals/EditProfile.tsx:187
 msgid "Display name"
-msgstr "Nazwa wyświetlana"
+msgstr "Przydomek"
 
 #: src/view/com/modals/EditProfile.tsx:175
 msgid "Display Name"
-msgstr "Nazwa wyświetlana"
+msgstr "Przydomek"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:333
 msgid "Display name is too long"
-msgstr "Nazwa wyświetlana jest za długa"
+msgstr "Przydomek jest za długi"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:334
 msgid "Display name is too long. The maximum number of characters is {DISPLAY_NAME_MAX_GRAPHEMES}."
-msgstr "Nazwa wyświetlana jest za długa. Maksymalna długość wynosi {DISPLAY_NAME_MAX_GRAPHEMES}."
+msgstr "Przydomek jest za długi. Maksymalna długość wynosi {DISPLAY_NAME_MAX_GRAPHEMES} znaków."
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:373
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:375
@@ -2144,7 +2144,7 @@ msgstr "np. alice.com"
 
 #: src/view/com/modals/EditProfile.tsx:198
 msgid "e.g. Artist, dog-lover, and avid reader."
-msgstr "np. Artystka, wielbicielka psów i aktywna czytaczka książek."
+msgstr "np. Artystka, wielbicielka psów i zachłanna czytaczka."
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:43
 msgid "E.g. artistic nudes."
@@ -2258,7 +2258,7 @@ msgstr "Wybierz kto może odpowiadać"
 
 #: src/view/com/modals/EditProfile.tsx:188
 msgid "Edit your display name"
-msgstr "Edytuj nazwę wyświetlaną"
+msgstr "Edytuj przydomek"
 
 #: src/view/com/modals/EditProfile.tsx:206
 msgid "Edit your profile description"
