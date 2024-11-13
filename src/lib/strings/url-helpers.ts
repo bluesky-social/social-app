@@ -86,6 +86,16 @@ export function toShareUrl(url: string): string {
   return url
 }
 
+export function toShareUrlWithUserDomain(url: string): string {
+  if (!url.startsWith('https')) {
+    // Assume that user has set up ALIAS/CNAME called bsky to redirect.bsky.app
+    // This ensures that post links are controlled by the user
+    // See https://github.com/bluesky-social/social-app/issues/6250
+    url = url.replace('/profile/', 'https://bsky.')
+  }
+  return url
+}
+
 export function toBskyAppUrl(url: string): string {
   return new URL(url, BSKY_APP_HOST).toString()
 }
