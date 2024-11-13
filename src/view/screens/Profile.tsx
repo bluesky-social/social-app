@@ -364,9 +364,6 @@ function ProfileScreenLoaded({
       negative: 0,
       positive: 0,
     },
-    scales: {
-      // graySaturation: [30, 30, 30, 30, 30, 30, 30, 30, 34, 34, 38, 38, 38, 38],
-    },
   })
 
   const renderHeader = () => {
