@@ -7,12 +7,12 @@ import {useMediaQuery} from 'react-responsive'
 
 import {HITSLOP_20} from '#/lib/constants'
 import {useMinimalShellFabTransform} from '#/lib/hooks/useMinimalShellTransform'
-import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {clamp} from '#/lib/numbers'
 import {colors} from '#/lib/styles'
-import {isWeb} from '#/platform/detection'
+import {isNativeTablet, isWeb} from '#/platform/detection'
 import {useSession} from '#/state/session'
+import {useTheme} from '#/alf'
 
 const AnimatedTouchableOpacity =
   Animated.createAnimatedComponent(TouchableOpacity)
@@ -26,7 +26,7 @@ export function LoadLatestBtn({
   label: string
   showIndicator: boolean
 }) {
-  const pal = usePalette('default')
+  const t = useTheme()
   const {hasSession} = useSession()
   const {isDesktop, isTablet, isMobile, isTabletOrMobile} = useWebMediaQueries()
   const fabMinimalShellTransform = useMinimalShellFabTransform()
@@ -51,9 +51,9 @@ export function LoadLatestBtn({
           (isTallViewport
             ? styles.loadLatestOutOfLine
             : styles.loadLatestInline),
-        isTablet && styles.loadLatestInline,
-        pal.borderDark,
-        pal.view,
+        isTablet && !isNativeTablet && styles.loadLatestInline,
+        t.atoms.border_contrast_high,
+        t.atoms.bg,
         bottomPosition,
         showBottomBar && fabMinimalShellTransform,
       ]}
@@ -62,8 +62,10 @@ export function LoadLatestBtn({
       accessibilityRole="button"
       accessibilityLabel={label}
       accessibilityHint="">
-      <FontAwesomeIcon icon="angle-up" color={pal.colors.text} size={19} />
-      {showIndicator && <View style={[styles.indicator, pal.borderDark]} />}
+      <FontAwesomeIcon icon="angle-up" color={t.atoms.text.color} size={19} />
+      {showIndicator && (
+        <View style={[styles.indicator, t.atoms.border_contrast_high]} />
+      )}
     </AnimatedTouchableOpacity>
   )
 }
@@ -81,10 +83,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  loadLatestInline: {
-    // @ts-ignore web only
-    left: 'calc(50vw - 282px)',
-  },
+  // @ts-ignore web only
+  loadLatestInline: isWeb
+    ? {
+        left: 'calc(50vw - 282px)',
+      }
+    : {},
   loadLatestOutOfLine: {
     // @ts-ignore web only
     left: 'calc(50vw - 382px)',

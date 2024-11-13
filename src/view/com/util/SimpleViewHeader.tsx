@@ -12,7 +12,7 @@ import {useNavigation} from '@react-navigation/native'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {NavigationProp} from '#/lib/routes/types'
-import {isWeb} from '#/platform/detection'
+import {isNativeTablet, isWeb} from '#/platform/detection'
 import {useSetDrawerOpen} from '#/state/shell'
 import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
 import {CenteredView} from './Views'
@@ -70,9 +70,9 @@ export function SimpleViewHeader({
               icon="angle-left"
               style={[styles.backIcon, pal.text]}
             />
-          ) : (
+          ) : !isNativeTablet ? (
             <Menu size="lg" style={[{marginTop: 4}, pal.textLight]} />
-          )}
+          ) : null}
         </TouchableOpacity>
       ) : null}
       {children}

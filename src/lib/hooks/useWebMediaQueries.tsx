@@ -1,6 +1,6 @@
 import {useMediaQuery} from 'react-responsive'
 
-import {isNative} from '#/platform/detection'
+import {isNative, isNativeTablet} from '#/platform/detection'
 
 export function useWebMediaQueries() {
   const isDesktop = useMediaQuery({minWidth: 1300})
@@ -8,6 +8,15 @@ export function useWebMediaQueries() {
   const isMobile = useMediaQuery({maxWidth: 800 - 1})
   const isTabletOrMobile = isMobile || isTablet
   const isTabletOrDesktop = isDesktop || isTablet
+  if (isNativeTablet) {
+    return {
+      isMobile: false,
+      isTablet: true,
+      isTabletOrMobile: true,
+      isTabletOrDesktop: true,
+      isDesktop: false,
+    }
+  }
   if (isNative) {
     return {
       isMobile: true,

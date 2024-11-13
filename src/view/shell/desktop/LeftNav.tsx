@@ -1,5 +1,6 @@
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
@@ -18,6 +19,7 @@ import {getCurrentRoute, isStateAtTabRoot, isTab} from '#/lib/routes/helpers'
 import {makeProfileLink} from '#/lib/routes/links'
 import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
 import {isInvalidHandle} from '#/lib/strings/handles'
+import {isWeb} from '#/platform/detection'
 import {emitSoftReset} from '#/state/events'
 import {useFetchHandle} from '#/state/queries/handle'
 import {useUnreadMessageCount} from '#/state/queries/messages/list-converations'
@@ -350,12 +352,13 @@ function ChatNavItem() {
   )
 }
 
-export function DesktopLeftNav() {
+export function LeftNav() {
   const {hasSession, currentAccount} = useSession()
   const pal = usePalette('default')
   const {_} = useLingui()
   const {isDesktop, isTablet} = useWebMediaQueries()
   const numUnreadNotifications = useUnreadNotifications()
+  const insets = useSafeAreaInsets()
 
   if (!hasSession && !isDesktop) {
     return null
@@ -369,6 +372,7 @@ export function DesktopLeftNav() {
         isTablet && styles.leftNavTablet,
         pal.view,
         pal.border,
+        {paddingTop: insets.top},
       ]}>
       {hasSession ? (
         <ProfileCard />
@@ -475,7 +479,13 @@ export function DesktopLeftNav() {
             label={_(msg`Lists`)}
           />
           <NavItem
-            href={currentAccount ? makeProfileLink(currentAccount) : '/'}
+            href={
+              isWeb
+                ? currentAccount
+                  ? makeProfileLink(currentAccount)
+                  : '/'
+                : '/my-profile'
+            }
             icon={
               <UserCircle
                 aria-hidden={true}
@@ -519,17 +529,19 @@ export function DesktopLeftNav() {
 }
 
 const styles = StyleSheet.create({
-  leftNav: {
-    // @ts-ignore web only
-    position: 'fixed',
-    top: 10,
-    // @ts-ignore web only
-    left: 'calc(50vw - 300px - 220px - 20px)',
-    width: 220,
-    // @ts-ignore web only
-    maxHeight: 'calc(100vh - 10px)',
-    overflowY: 'auto',
-  },
+  // @ts-ignore web only
+  leftNav: isWeb
+    ? {
+        position: 'fixed',
+        top: 10,
+        left: 'calc(50vw - 300px - 220px - 20px)',
+        width: 220,
+        maxHeight: 'calc(100vh - 10px)',
+        overflowY: 'auto',
+      }
+    : {
+        paddingTop: 12,
+      },
   leftNavTablet: {
     top: 0,
     left: 0,

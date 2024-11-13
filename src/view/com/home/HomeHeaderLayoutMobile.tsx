@@ -7,7 +7,7 @@ import {useLingui} from '@lingui/react'
 import {HITSLOP_10} from '#/lib/constants'
 import {useMinimalShellHeaderTransform} from '#/lib/hooks/useMinimalShellTransform'
 import {usePalette} from '#/lib/hooks/usePalette'
-import {isWeb} from '#/platform/detection'
+import {isNativeTablet, isWeb} from '#/platform/detection'
 import {useSession} from '#/state/session'
 import {useSetDrawerOpen} from '#/state/shell/drawer-open'
 import {useShellLayout} from '#/state/shell/shell-layout'
@@ -46,19 +46,25 @@ export function HomeHeaderLayoutMobile({
         headerHeight.value = e.nativeEvent.layout.height
       }}>
       <View style={[pal.view, styles.topBar]}>
-        <View style={[pal.view, {width: 100}]}>
-          <TouchableOpacity
-            testID="viewHeaderDrawerBtn"
-            onPress={onPressAvi}
-            accessibilityRole="button"
-            accessibilityLabel={_(msg`Open navigation`)}
-            accessibilityHint={_(
-              msg`Access profile and other navigation links`,
-            )}
-            hitSlop={HITSLOP_10}>
-            <Menu size="lg" fill={t.atoms.text_contrast_medium.color} />
-          </TouchableOpacity>
-        </View>
+        {!isNativeTablet ? (
+          <View style={[pal.view, {width: 100}]}>
+            <TouchableOpacity
+              testID="viewHeaderDrawerBtn"
+              onPress={onPressAvi}
+              accessibilityRole="button"
+              accessibilityLabel={_(msg`Open navigation`)}
+              accessibilityHint={_(
+                msg`Access profile and other navigation links`,
+              )}
+              hitSlop={HITSLOP_10}>
+              <Menu size="lg" fill={t.atoms.text_contrast_medium.color} />
+            </TouchableOpacity>
+          </View>
+        ) : (
+          // subtract width of LeftNav
+          <View style={{width: 100 - 77}} />
+        )}
+
         <View>
           <Logo width={30} />
         </View>
