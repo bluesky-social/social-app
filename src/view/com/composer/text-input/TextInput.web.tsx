@@ -225,6 +225,7 @@ export const TextInput = React.forwardRef(function TextInputImpl(
       autofocus: 'end',
       editable: true,
       injectCSS: true,
+      shouldRerenderOnTransaction: false,
       onCreate({editor: editorProp}) {
         // HACK
         // the 'enter' animation sometimes causes autofocus to fail
