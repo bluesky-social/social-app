@@ -62,7 +62,7 @@ const EDGES =
     ? (['top', 'bottom', 'left', 'right'] satisfies Edge[])
     : (['left', 'right'] satisfies Edge[]) // iOS, so no top/bottom safe area
 
-const SLOW_SPRING = {stiffness: 180}
+const SLOW_SPRING = {stiffness: isIOS ? 180 : 250}
 const FAST_SPRING = {stiffness: 700}
 
 export default function ImageViewRoot({
