@@ -1276,7 +1276,7 @@ msgstr "Alterar Senha"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:73
 msgid "Change post language to {0}"
-msgstr "Alterar idioma do post para {0}"
+msgstr "Alterar idioma da postagem para {0}"
 
 #: src/view/com/modals/ChangeEmail.tsx:104
 msgid "Change Your Email"
@@ -1784,7 +1784,7 @@ msgstr "Copiar link da lista"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:452
 #: src/view/com/util/forms/PostDropdownBtn.tsx:461
 msgid "Copy link to post"
-msgstr "Copiar link do post"
+msgstr "Copiar link da postagem"
 
 #: src/components/dms/MessageMenu.tsx:110
 #: src/components/dms/MessageMenu.tsx:112
@@ -5370,7 +5370,7 @@ msgstr "Postagem excluída"
 
 #: src/lib/api/index.ts:161
 msgid "Post failed to upload. Please check your Internet connection and try again."
-msgstr "Falha ao enviar o post. Por favor verifique sua conexão de internet e tente novamente."
+msgstr "Falha ao enviar a postagem. Por favor verifique sua conexão de internet e tente novamente."
 
 #: src/view/com/post-thread/PostThread.tsx:212
 msgid "Post hidden"
