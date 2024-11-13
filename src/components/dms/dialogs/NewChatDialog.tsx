@@ -2,6 +2,7 @@ import React, {useCallback} from 'react'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {useEmail} from '#/lib/hooks/useEmail'
 import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {useGetConvoForMembers} from '#/state/queries/messages/get-convo-for-members'
@@ -9,6 +10,8 @@ import {FAB} from '#/view/com/util/fab/FAB'
 import * as Toast from '#/view/com/util/Toast'
 import {useTheme} from '#/alf'
 import * as Dialog from '#/components/Dialog'
+import {useDialogControl} from '#/components/Dialog'
+import {VerifyEmailDialog} from '#/components/dialogs/VerifyEmailDialog'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {SearchablePeopleList} from './SearchablePeopleList'
 
@@ -21,6 +24,8 @@ export function NewChat({
 }) {
   const t = useTheme()
   const {_} = useLingui()
+  const {needsEmailVerification} = useEmail()
+  const verifyEmailControl = useDialogControl()
 
   const {mutate: createChat} = useGetConvoForMembers({
     onSuccess: data => {
@@ -48,7 +53,13 @@ export function NewChat({
     <>
       <FAB
         testID="newChatFAB"
-        onPress={control.open}
+        onPress={() => {
+          if (needsEmailVerification) {
+            verifyEmailControl.open()
+          } else {
+            control.open()
+          }
+        }}
         icon={<Plus size="lg" fill={t.palette.white} />}
         accessibilityRole="button"
         accessibilityLabel={_(msg`New chat`)}
@@ -62,6 +73,13 @@ export function NewChat({
           onSelectChat={onCreateChat}
         />
       </Dialog.Outer>
+
+      <VerifyEmailDialog
+        reasonText={_(
+          msg`Before you may message another user, you must first verify your email.`,
+        )}
+        control={verifyEmailControl}
+      />
     </>
   )
 }
