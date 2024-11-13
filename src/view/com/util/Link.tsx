@@ -140,17 +140,19 @@ export const Link = memo(function Link({
 
   const Com = props.hoverStyle ? PressableWithHover : Pressable
   return (
-    <Com
-      testID={testID}
-      style={style}
-      onPress={onPress}
-      accessible={accessible}
-      accessibilityRole="link"
-      // @ts-ignore web only -prf
-      href={anchorHref}
-      {...props}>
-      {children ? children : <Text>{title || 'link'}</Text>}
-    </Com>
+    <WebAuxClickWrapper>
+      <Com
+        testID={testID}
+        style={style}
+        onPress={onPress}
+        accessible={accessible}
+        accessibilityRole="link"
+        // @ts-ignore web only -prf
+        href={anchorHref}
+        {...props}>
+        {children ? children : <Text>{title || 'link'}</Text>}
+      </Com>
+    </WebAuxClickWrapper>
   )
 })
 
