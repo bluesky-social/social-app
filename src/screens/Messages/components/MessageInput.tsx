@@ -18,6 +18,7 @@ import Graphemer from 'graphemer'
 
 import {HITSLOP_10, MAX_DM_GRAPHEME_LENGTH} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
+import {useEmail} from '#/lib/hooks/useEmail'
 import {isIOS} from '#/platform/detection'
 import {
   useMessageDraft,
@@ -61,10 +62,15 @@ export function MessageInput({
   const [message, setMessage] = React.useState(getDraft)
   const inputRef = useAnimatedRef<TextInput>()
 
+  const {needsEmailVerification} = useEmail()
+
   useSaveMessageDraft(message)
   useExtractEmbedFromFacets(message, setEmbed)
 
   const onSubmit = React.useCallback(() => {
+    if (needsEmailVerification) {
+      return
+    }
     if (!hasEmbed && message.trim() === '') {
       return
     }
@@ -84,6 +90,7 @@ export function MessageInput({
       inputRef.current?.focus()
     }, 100)
   }, [
+    needsEmailVerification,
     hasEmbed,
     message,
     clearDraft,
@@ -159,6 +166,7 @@ export function MessageInput({
           ref={inputRef}
           hitSlop={HITSLOP_10}
           animatedProps={animatedProps}
+          editable={!needsEmailVerification}
         />
         <Pressable
           accessibilityRole="button"
@@ -171,7 +179,8 @@ export function MessageInput({
             a.justify_center,
             {height: 30, width: 30, backgroundColor: t.palette.primary_500},
           ]}
-          onPress={onSubmit}>
+          onPress={onSubmit}
+          disabled={needsEmailVerification}>
           <PaperPlane fill={t.palette.white} style={[a.relative, {left: 1}]} />
         </Pressable>
       </View>

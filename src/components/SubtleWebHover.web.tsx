@@ -2,9 +2,12 @@ import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
 import {isTouchDevice} from '#/lib/browser'
-import {useTheme} from '#/alf'
+import {useTheme, ViewStyleProp} from '#/alf'
 
-export function SubtleWebHover({hover}: {hover: boolean}) {
+export function SubtleWebHover({
+  style,
+  hover,
+}: ViewStyleProp & {hover: boolean}) {
   const t = useTheme()
   if (isTouchDevice) {
     return null
@@ -26,9 +29,8 @@ export function SubtleWebHover({hover}: {hover: boolean}) {
       style={[
         t.atoms.bg_contrast_25,
         styles.container,
-        {
-          opacity: hover ? opacity : 0,
-        },
+        {opacity: hover ? opacity : 0},
+        style,
       ]}
     />
   )
