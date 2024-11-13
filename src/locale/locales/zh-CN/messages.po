@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-13 08:44\n"
+"PO-Revision-Date: 2024-11-13 15:25\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -3117,7 +3117,7 @@ msgstr "仅为我隐藏这则帖文"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:560
 #: src/view/com/util/forms/PostDropdownBtn.tsx:570
 msgid "Hide reply for everyone"
-msgstr "隐藏所有人的回复"
+msgstr "为所有人隐藏回复"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:542
 #: src/view/com/util/forms/PostDropdownBtn.tsx:548
@@ -6805,7 +6805,7 @@ msgstr "该个人资料只对已登录用户可见，未登录的用户将无法
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:743
 msgid "This reply will be sorted into a hidden section at the bottom of your thread and will mute notifications for subsequent replies - both for yourself and others."
-msgstr "这条回复将被归档到你帖文底部的隐藏显示部分，并且将隐藏后续回复的通知——无论是对你自己还是对其他人。"
+msgstr "这条回复将被折叠到你讨论串底部的隐藏部分，并且会对你自己和其他人隐藏后续回复的通知"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:37
 msgid "This service has not provided terms of service or a privacy policy."
