@@ -4119,7 +4119,7 @@ msgstr "Mídia"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:208
 msgid "Media that may be disturbing or inappropriate for some audiences."
-msgstr "Mídia que pode ser perturbadora ou inapropriada para alguns públicos."
+msgstr "Mídia que pode ser perturbadora ou inapropriada para algumas pessoas."
 
 #: src/components/WhoCanReply.tsx:254
 msgid "mentioned users"
