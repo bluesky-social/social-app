@@ -3945,7 +3945,7 @@ msgstr "curtiram seu feed customizado"
 
 #: src/view/com/notifications/FeedItem.tsx:178
 msgid "liked your post"
-msgstr "curtiu sua postagem"
+msgstr "curtiram sua postagem"
 
 #: src/view/screens/Profile.tsx:231
 msgid "Likes"
@@ -4941,7 +4941,7 @@ msgstr "Abre {numItems} opções"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:63
 msgid "Opens a dialog to add a content warning to your post"
-msgstr "Abre uma caixa de diálogo para adicionar um aviso de conteúdo para o seu post"
+msgstr "Abre uma caixa de diálogo para adicionar um aviso de conteúdo para a sua postagem"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:62
 msgid "Opens a dialog to choose who can reply to this thread"
@@ -6034,7 +6034,7 @@ msgstr "Repostado por você"
 
 #: src/view/com/notifications/FeedItem.tsx:180
 msgid "reposted your post"
-msgstr "repostou seu post"
+msgstr "repostaram sua postagem"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:209
 msgid "Reposts of this post"
