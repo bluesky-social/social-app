@@ -99,12 +99,15 @@ let ProfileHeaderShell = ({
 
   const pTheme = useProfileTheme()
 
+  const palette = t.name === 'light' ? pTheme.lightPalette : pTheme.darkPalette
+
   return (
     <View pointerEvents={isIOS ? 'auto' : 'box-none'}>
       <LinearGradient
+        key={t.name}
         colors={[
-          pTheme.lightPalette.primary_200,
-          pTheme.lightPalette.primary_200,
+          palette.primary_200,
+          palette.primary_200,
 
           t.atoms.bg.backgroundColor,
         ]}
