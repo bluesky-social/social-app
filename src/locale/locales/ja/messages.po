@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-12 09:56+0900\n"
+"PO-Revision-Date: 2024-11-13 09:41+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -827,6 +827,15 @@ msgstr "外観"
 msgid "Apply default recommended feeds"
 msgstr "デフォルトのおすすめフィードを追加"
 
+#: src/view/com/post-thread/PostThreadItem.tsx:821
+msgid "Archived from {0}"
+msgstr "{0}のアーカイブ"
+
+#: src/view/com/post-thread/PostThreadItem.tsx:790
+#: src/view/com/post-thread/PostThreadItem.tsx:829
+msgid "Archived post"
+msgstr "アーカイブ投稿"
+
 #: src/screens/Settings/AppPasswords.tsx:201
 msgid "Are you sure you want to delete the app password \"{0}\"?"
 msgstr "アプリパスワード「{0}」を本当に削除しますか？"
@@ -913,6 +922,25 @@ msgstr "ビデオとGIFの自動再生"
 msgid "Back"
 msgstr "戻る"
 
+#: src/view/screens/Lists.tsx:104
+#: src/view/screens/ModerationModlists.tsx:100
+msgid "Before creating a list, you must first verify your email."
+msgstr "リストを作る前に、まずメールアドレスを確認しなければなりません。"
+
+#: src/view/com/composer/Composer.tsx:591
+msgid "Before creating a post, you must first verify your email."
+msgstr "投稿する前に、まずメールアドレスを確認しなければなりません。"
+
+#: src/components/StarterPack/ProfileStarterPacks.tsx:340
+msgid "Before creating a starter pack, you must first verify your email."
+msgstr "スターターパックを作る前に、まずメールアドレスを確認しなければなりません。"
+
+#: src/components/dms/dialogs/NewChatDialog.tsx:79
+#: src/components/dms/MessageProfileButton.tsx:89
+#: src/screens/Messages/Conversation.tsx:219
+msgid "Before you may message another user, you must first verify your email."
+msgstr "他のユーザーにメッセージを送る前に、まずメールアドレスを確認しなければなりません。"
+
 #: src/components/dialogs/BirthDateSettings.tsx:106
 msgid "Birthday"
 msgstr "生年月日"
@@ -993,6 +1021,10 @@ msgstr "ブログ"
 #: src/view/com/auth/server-input/index.tsx:88
 msgid "Bluesky"
 msgstr "Bluesky"
+
+#: src/view/com/post-thread/PostThreadItem.tsx:846
+msgid "Bluesky cannot confirm the authenticity of the claimed date."
+msgstr "Blueskyは主張されている日付の信憑性を確認できません。"
 
 #: src/view/com/auth/server-input/index.tsx:151
 msgid "Bluesky is an open network where you can choose your hosting provider. If you're a developer, you can host your own server."
@@ -5936,6 +5968,10 @@ msgstr "バッジの表示とフィードからのフィルタリング"
 msgid "Show hidden replies"
 msgstr "非表示の返信を表示"
 
+#: src/view/com/post-thread/PostThreadItem.tsx:792
+msgid "Show information about when this post was created"
+msgstr "この投稿がいつ作成されたかについての情報を表示する"
+
 #: src/view/com/util/forms/PostDropdownBtn.tsx:491
 #: src/view/com/util/forms/PostDropdownBtn.tsx:493
 msgid "Show less like this"
@@ -6705,6 +6741,10 @@ msgstr "このリストは空です！"
 #: src/screens/Profile/ErrorState.tsx:40
 msgid "This moderation service is unavailable. See below for more details. If this issue persists, contact us."
 msgstr "このモデレーションのサービスはご利用できません。詳細は以下をご覧ください。この問題が解決しない場合は、サポートへお問い合わせください。"
+
+#: src/view/com/post-thread/PostThreadItem.tsx:832
+msgid "This post claims to have been created on <0>{0}</0>, but was first seen by Bluesky on <1>{1}</1>."
+msgstr "<0>{0}</0>に投稿されたと表示されていますが、Blueskyに初めて登場したのは<1>{1}</1>です。"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:139
 msgid "This post has been deleted."
