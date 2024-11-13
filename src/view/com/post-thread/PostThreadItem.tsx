@@ -382,9 +382,9 @@ let PostThreadItemLoaded = ({
               translatorUrl={translatorUrl}
               needsTranslation={needsTranslation}
             />
-            {post.repostCount !== 0 ||
-            post.likeCount !== 0 ||
-            post.quoteCount !== 0 ? (
+            {(typeof post.repostCount === 'number' && post.repostCount !== 0) ||
+            (typeof post.likeCount === 'number' && post.likeCount !== 0) ||
+            (typeof post.quoteCount === 'number' && post.quoteCount !== 0) ? (
               // Show this section unless we're *sure* it has no engagement.
               <View
                 style={[
