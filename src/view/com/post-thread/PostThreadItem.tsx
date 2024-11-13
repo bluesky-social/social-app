@@ -41,7 +41,7 @@ import {Button} from '#/components/Button'
 import {CalendarClock_Stroke2_Corner0_Rounded as CalendarClockIcon} from '#/components/icons/CalendarClock'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon} from '#/components/icons/Chevron'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
-import {InlineLinkText} from '#/components/Link'
+import {createStaticClick, InlineLinkText} from '#/components/Link'
 import {ContentHider} from '#/components/moderation/ContentHider'
 import {LabelsOnMyPost} from '#/components/moderation/LabelsOnMe'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
@@ -753,10 +753,9 @@ function ExpandedPostDetails({
             </Text>
 
             <InlineLinkText
-              to="#"
+              {...createStaticClick(onTranslatePress)}
               label={_(msg`Translate`)}
-              style={[a.text_sm, pal.link]}
-              onPress={onTranslatePress}>
+              style={[a.text_sm, pal.link]}>
               <Trans>Translate</Trans>
             </InlineLinkText>
           </>

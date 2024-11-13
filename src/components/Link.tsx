@@ -91,11 +91,6 @@ export function useLink({
 
       if (exitEarlyIfFalse === false) return
 
-      if (to === '#') {
-        e.preventDefault()
-        return
-      }
-
       const requiresWarning = Boolean(
         !disableMismatchWarning &&
           displayText &&
@@ -148,7 +143,6 @@ export function useLink({
     },
     [
       outerOnPress,
-      to,
       disableMismatchWarning,
       displayText,
       isExternal,
