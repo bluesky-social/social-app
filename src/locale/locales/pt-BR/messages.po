@@ -1361,7 +1361,7 @@ msgstr "Escolha Pessoas"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:116
 msgid "Choose self-labels that are applicable for the media you are posting. If none are selected, this post is suitable for all audiences."
-msgstr "Escolha rótulos que são aplicáveis à mídia que você está postando. Se nenhum for selecionado, significa que este post é adequado para todos os públicos."
+msgstr "Escolha rótulos que são aplicáveis à mídia que você está postando. Se nenhum for selecionado, significa que esta postagem é adequada para todos os públicos."
 
 #: src/view/com/auth/server-input/index.tsx:76
 msgid "Choose Service"
