@@ -174,7 +174,7 @@ msgstr "{count, plural, one {Polubione przez # osobę} few {Polubione przez # os
 
 #: src/view/shell/desktop/LeftNav.tsx:223
 msgid "{count} unread items"
-msgstr "{badge} nieprzeczytanych"
+msgstr "{count} nieprzeczytanych"
 
 #: src/lib/generate-starterpack.ts:108
 #: src/screens/StarterPack/Wizard/index.tsx:183
@@ -191,91 +191,91 @@ msgstr "{estimatedTimeHrs, plural, one {minuta} few {minuty} other {minut}}"
 
 #: src/view/com/notifications/FeedItem.tsx:300
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> followed you"
-msgstr "{firstAuthorLink} i <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} inny/a} other {{formattedAuthorsCount} innych}}</0> zaczęli cię obserwować"
+msgstr "{firstAuthorLink} i <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} inny/a} other {{formattedAuthorsCount} innych}}</0> zaczęli Cię obserwować"
 
 #: src/view/com/notifications/FeedItem.tsx:326
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> liked your custom feed"
-msgstr "{firstAuthorLink} i <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} inny/a} other {{formattedAuthorsCount} innych}}</0> polubili twój kanał"
+msgstr "{firstAuthorLink} i <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} inny/a} other {{formattedAuthorsCount} innych}}</0> polubili Twój kanał"
 
 #: src/view/com/notifications/FeedItem.tsx:222
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> liked your post"
-msgstr "{firstAuthorLink} i <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} inny/a} other {{formattedAuthorsCount} innych}}</0> polubili twój wpis"
+msgstr "{firstAuthorLink} i <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} inny/a} other {{formattedAuthorsCount} innych}}</0> polubili Twój wpis"
 
 #: src/view/com/notifications/FeedItem.tsx:246
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> reposted your post"
-msgstr "{firstAuthorLink} i <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} inny/a} other {{formattedAuthorsCount} innych}}</0> podali dalej twój wpis"
+msgstr "{firstAuthorLink} i <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} inny/a} other {{formattedAuthorsCount} innych}}</0> podali dalej Twój wpis"
 
 #: src/view/com/notifications/FeedItem.tsx:350
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> signed up with your starter pack"
-msgstr "{firstAuthorLink} i <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} inny/a} other {{formattedAuthorsCount} innych}}</0> zarejestrowali się z twoim pakietem startowym"
+msgstr "{firstAuthorLink} i <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} inny/a} other {{formattedAuthorsCount} innych}}</0> zarejestrowali się z Twoim pakietem startowym"
 
 #: src/view/com/notifications/FeedItem.tsx:312
 msgid "{firstAuthorLink} followed you"
-msgstr "{firstAuthorLink} teraz cię obserwuje"
+msgstr "{firstAuthorLink} teraz Cię obserwuje"
 
 #: src/view/com/notifications/FeedItem.tsx:289
 msgid "{firstAuthorLink} followed you back"
-msgstr "{firstAuthorLink} obserwuje cię w zamian"
+msgstr "{firstAuthorLink} obserwuje Cię w zamian"
 
 #: src/view/com/notifications/FeedItem.tsx:338
 msgid "{firstAuthorLink} liked your custom feed"
-msgstr "{firstAuthorLink} polubił(-a) twój kanał"
+msgstr "{firstAuthorLink} polubił(-a) Twój kanał"
 
 #: src/view/com/notifications/FeedItem.tsx:234
 msgid "{firstAuthorLink} liked your post"
-msgstr "{firstAuthorLink} polubił(-a) twój wpis"
+msgstr "{firstAuthorLink} polubił(-a) Twój wpis"
 
 #: src/view/com/notifications/FeedItem.tsx:258
 msgid "{firstAuthorLink} reposted your post"
-msgstr "{firstAuthorLink} podał(-a) dalej twój wpis"
+msgstr "{firstAuthorLink} podał(-a) dalej Twój wpis"
 
 #: src/view/com/notifications/FeedItem.tsx:362
 msgid "{firstAuthorLink} signed up with your starter pack"
-msgstr "{firstAuthorLink} zarejestrował(-a) się z twoim pakietem startowym"
+msgstr "{firstAuthorLink} zarejestrował(-a) się z Twoim pakietem startowym"
 
 #: src/view/com/notifications/FeedItem.tsx:293
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} followed you"
-msgstr "{firstAuthorName} i {additionalAuthorsCount, plural, one {{formattedAuthorsCount} inny/a} other {{formattedAuthorsCount} innych}} zaczęli cię obserwować"
+msgstr "{firstAuthorName} i {additionalAuthorsCount, plural, one {{formattedAuthorsCount} inny/a} other {{formattedAuthorsCount} innych}} zaczęli Cię obserwować"
 
 #: src/view/com/notifications/FeedItem.tsx:319
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} liked your custom feed"
-msgstr "{firstAuthorName} i {additionalAuthorsCount, plural, one {{formattedAuthorsCount} inny/a} other {{formattedAuthorsCount} innych}} polubili twój kanał"
+msgstr "{firstAuthorName} i {additionalAuthorsCount, plural, one {{formattedAuthorsCount} inny/a} other {{formattedAuthorsCount} innych}} polubili Twój kanał"
 
 #: src/view/com/notifications/FeedItem.tsx:215
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} liked your post"
-msgstr "{firstAuthorName} i {additionalAuthorsCount, plural, one {{formattedAuthorsCount} inny/a} other {{formattedAuthorsCount} innych}} polubili twój wpis"
+msgstr "{firstAuthorName} i {additionalAuthorsCount, plural, one {{formattedAuthorsCount} inny/a} other {{formattedAuthorsCount} innych}} polubili Twój wpis"
 
 #: src/view/com/notifications/FeedItem.tsx:239
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} reposted your post"
-msgstr "{firstAuthorName} i {additionalAuthorsCount, plural, one {{formattedAuthorsCount} inny/a} other {{formattedAuthorsCount} innych}} podali dalej twój wpis"
+msgstr "{firstAuthorName} i {additionalAuthorsCount, plural, one {{formattedAuthorsCount} inny/a} other {{formattedAuthorsCount} innych}} podali dalej Twój wpis"
 
 #: src/view/com/notifications/FeedItem.tsx:343
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} signed up with your starter pack"
-msgstr "{firstAuthorName} i {additionalAuthorsCount, plural, one {{formattedAuthorsCount} inny/a} other {{formattedAuthorsCount} innych}} zarejestrowali się z twoim pakietem startowym"
+msgstr "{firstAuthorName} i {additionalAuthorsCount, plural, one {{formattedAuthorsCount} inny/a} other {{formattedAuthorsCount} innych}} zarejestrowali się z Twoim pakietem startowym"
 
 #: src/view/com/notifications/FeedItem.tsx:298
 msgid "{firstAuthorName} followed you"
-msgstr "{firstAuthorName} teraz cię obserwuje"
+msgstr "{firstAuthorName} obserwuje Cię"
 
 #: src/view/com/notifications/FeedItem.tsx:288
 msgid "{firstAuthorName} followed you back"
-msgstr "{firstAuthorName} obserwuje cię w zamian"
+msgstr "{firstAuthorName} obserwuje Cię w zamian"
 
 #: src/view/com/notifications/FeedItem.tsx:324
 msgid "{firstAuthorName} liked your custom feed"
-msgstr "{firstAuthorName} polubił(-a) twój kanał"
+msgstr "{firstAuthorName} polubił(-a) Twój kanał"
 
 #: src/view/com/notifications/FeedItem.tsx:220
 msgid "{firstAuthorName} liked your post"
-msgstr "{firstAuthorName} polubił(-a) twój wpis"
+msgstr "{firstAuthorName} polubił(-a) Twój wpis"
 
 #: src/view/com/notifications/FeedItem.tsx:244
 msgid "{firstAuthorName} reposted your post"
-msgstr "{firstAuthorName} podał(-a) dalej twój wpis"
+msgstr "{firstAuthorName} podał(-a) dalej Twój wpis"
 
 #: src/view/com/notifications/FeedItem.tsx:348
 msgid "{firstAuthorName} signed up with your starter pack"
-msgstr "{firstAuthorName} zarejestrował(-a) się z twoim pakietem startowym"
+msgstr "{firstAuthorName} zarejestrował(-a) się z Twoim pakietem startowym"
 
 #: src/components/ProfileHoverCard/index.web.tsx:508
 #: src/screens/Profile/Header/Metrics.tsx:50
@@ -311,12 +311,12 @@ msgstr "{profileName} dołączył(-a) do Bluesky przy użyciu pakietu startowego
 #: src/screens/StarterPack/Wizard/index.tsx:475
 msgctxt "profiles"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
-msgstr "<0>{0}, </0><1>{1}, </1>i {2, plural, one {# inny/a} other {# innych}} są w twoim pakiecie startowym"
+msgstr "<0>{0}, </0><1>{1}, </1>i {2, plural, one {# inny/a} other {# innych}} są w Twoim pakiecie startowym"
 
 #: src/screens/StarterPack/Wizard/index.tsx:528
 msgctxt "feeds"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
-msgstr "<0>{0}, </0><1>{1}, </1>i {2, plural, one {# inny/a} other {# innych}} są w twoim pakiecie startowym"
+msgstr "<0>{0}, </0><1>{1}, </1>i {2, plural, one {# inny/a} other {# innych}} są w Twoim pakiecie startowym"
 
 #: src/view/shell/Drawer.tsx:97
 msgid "<0>{0}</0> {1, plural, one {follower} other {followers}}"
@@ -1952,7 +1952,7 @@ msgstr "Przyćmiony"
 
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:89
 msgid "Disable Email 2FA"
-msgstr "Wyłącz uwierzytelnianie dwuskładnikowe przez email"
+msgstr "Wyłącz uwierzytelnianie dwuskładnikowe (2FA) przez email"
 
 #: src/screens/Settings/AccessibilitySettings.tsx:84
 #: src/screens/Settings/AccessibilitySettings.tsx:89
@@ -2281,11 +2281,11 @@ msgstr "Email"
 
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:64
 msgid "Email 2FA disabled"
-msgstr "Uwi. dwuskł. przez email wył."
+msgstr "2FA przez email wył."
 
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:47
 msgid "Email 2FA enabled"
-msgstr "Uwi. dwuskł. przez email wł."
+msgstr "2FA przez email wł."
 
 #: src/screens/Login/ForgotPasswordForm.tsx:93
 msgid "Email address"
@@ -2341,7 +2341,7 @@ msgstr "Włącz treść dla dorosłych"
 
 #: src/screens/Settings/components/Email2FAToggle.tsx:53
 msgid "Enable Email 2FA"
-msgstr "Włącz uwierzytelnianie dwuskładnikowe przez email"
+msgstr "Włącz uwierzytelnianie dwuskładnikowe (2FA) przez email"
 
 #: src/components/dialogs/EmbedConsent.tsx:81
 #: src/components/dialogs/EmbedConsent.tsx:88
@@ -7791,7 +7791,7 @@ msgstr "Nie masz jeszcze wyciszonych użytkowników. Aby wyciszyć kogoś, wybie
 
 #: src/components/Lists.tsx:52
 msgid "You have reached the end"
-msgstr "Dotarłeś/aś do końca"
+msgstr "Dotarto do końca"
 
 #: src/lib/media/video/upload.shared.ts:56
 msgid "You have temporarily reached the limit for video uploads. Please try again later."
