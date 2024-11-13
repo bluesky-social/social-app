@@ -2834,12 +2834,12 @@ msgstr "Obserwujący, których znasz"
 #: src/view/screens/ProfileFollows.tsx:31
 #: src/view/screens/SavedFeeds.tsx:431
 msgid "Following"
-msgstr "Obserwujesz"
+msgstr "Obserwowane"
 
 #: src/components/ProfileCard.tsx:318
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:98
 msgid "Following {0}"
-msgstr "Obserwujesz {0}"
+msgstr "Obserwujący {0}"
 
 #: src/view/com/posts/AviFollowButton.tsx:50
 msgid "Following {name}"
@@ -5202,7 +5202,7 @@ msgstr "Usuń ten kanał z Twoich zapisanych"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:109
 msgid "Removed by author"
-msgstr "Usunięte przez autora"
+msgstr "Cytat odłączony"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:107
 msgid "Removed by you"
@@ -5211,22 +5211,22 @@ msgstr "Usunięte przez Ciebie"
 #: src/view/com/modals/ListAddRemoveUsers.tsx:200
 #: src/view/com/modals/UserAddRemoveLists.tsx:170
 msgid "Removed from list"
-msgstr "Usunięte z listy"
+msgstr "Usunięto z listy"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:138
 msgid "Removed from my feeds"
-msgstr "Usunięte z kanałów"
+msgstr "Usunięto z kanałów"
 
 #: src/screens/List/ListHiddenScreen.tsx:94
 #: src/screens/List/ListHiddenScreen.tsx:160
 msgid "Removed from saved feeds"
-msgstr "Usunięte z zapisanych kanałów"
+msgstr "Usunięto z zapisanych kanałów"
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:44
 #: src/view/screens/ProfileFeed.tsx:197
 #: src/view/screens/ProfileList.tsx:386
 msgid "Removed from your feeds"
-msgstr "Usunięte z Twoich kanałów"
+msgstr "Usunięto z Twoich kanałów"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:288
 msgid "Removes quoted post"
