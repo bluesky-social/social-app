@@ -8,6 +8,7 @@ import {
   ModerationDecision,
   ModerationOpts,
 } from '@atproto/api'
+import {PostView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
 import {QueryClient, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
@@ -262,6 +263,7 @@ function responseToThreadNodes(
   node: ThreadViewNode,
   depth = 0,
   direction: 'up' | 'down' | 'start' = 'start',
+  parentPost?: PostView,
 ): ThreadNode {
   if (
     AppBskyFeedDefs.isThreadViewPost(node) &&
@@ -288,7 +290,21 @@ function responseToThreadNodes(
       replies:
         node.replies?.length && direction !== 'up'
           ? node.replies
-              .map(reply => responseToThreadNodes(reply, depth + 1, 'down'))
+              .map(reply =>
+                responseToThreadNodes(
+                  reply,
+                  // Replies to the post author maintain the same level, otherwise indent
+                  AppBskyFeedDefs.isThreadViewPost(reply) &&
+                    parentPost?.author.did === reply.post.author.did
+                    ? depth
+                    : depth + 1,
+                  'down',
+                  // Pass reply as the new parent post for maintaining depth for self-replies
+                  AppBskyFeedDefs.isThreadViewPost(reply)
+                    ? reply.post
+                    : parentPost,
+                ),
+              )
               // do not show blocked posts in replies
               .filter(node => node.type !== 'blocked')
           : undefined,
