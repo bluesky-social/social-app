@@ -12,7 +12,6 @@ import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {MAX_POST_LINES} from '#/lib/constants'
-import {useOpenLink} from '#/lib/hooks/useOpenLink'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
@@ -41,7 +40,7 @@ import {Button} from '#/components/Button'
 import {CalendarClock_Stroke2_Corner0_Rounded as CalendarClockIcon} from '#/components/icons/CalendarClock'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon} from '#/components/icons/Chevron'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
-import {createStaticClick, InlineLinkText} from '#/components/Link'
+import {InlineLinkText} from '#/components/Link'
 import {ContentHider} from '#/components/moderation/ContentHider'
 import {LabelsOnMyPost} from '#/components/moderation/LabelsOnMe'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
@@ -729,12 +728,7 @@ function ExpandedPostDetails({
   const t = useTheme()
   const pal = usePalette('default')
   const {_, i18n} = useLingui()
-  const openLink = useOpenLink()
   const isRootPost = !('reply' in post.record)
-
-  const onTranslatePress = React.useCallback(() => {
-    openLink(translatorUrl)
-  }, [openLink, translatorUrl])
 
   return (
     <View style={[a.gap_md, a.pt_md, a.align_start]}>
@@ -753,7 +747,7 @@ function ExpandedPostDetails({
             </Text>
 
             <InlineLinkText
-              {...createStaticClick(onTranslatePress)}
+              to={translatorUrl}
               label={_(msg`Translate`)}
               style={[a.text_sm, pal.link]}>
               <Trans>Translate</Trans>
