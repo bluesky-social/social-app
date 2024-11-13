@@ -7474,7 +7474,7 @@ msgstr "Kolejny email weryfikacyjny został wysłany do <0>{0}</0>."
 
 #: src/screens/Onboarding/StepFinished.tsx:229
 msgid "We hope you have a wonderful time. Remember, Bluesky is:"
-msgstr "Mamy nadzieje, że będziesz miał(-a) cudowne wrażenia na Bluesky. Pamiętaj, że Bluesky jest:"
+msgstr "Mamy nadzieje, że znajdziesz cudowne wrażenia na Bluesky. Pamiętaj, że Bluesky jest:"
 
 #: src/view/com/posts/DiscoverFallbackHeader.tsx:30
 msgid "We ran out of posts from your follows. Here's the latest from <0/>."
