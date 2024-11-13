@@ -63,8 +63,12 @@ export const Context = React.createContext<Alf>({
 
 export function ThemeProvider({
   children,
-  theme: themeName,
-}: React.PropsWithChildren<{theme: ThemeName}>) {
+  themeName,
+  theme,
+}: React.PropsWithChildren<{
+  themeName: ThemeName
+  theme?: ReturnType<typeof createThemes>
+}>) {
   const [fontScale, setFontScale] = React.useState<Alf['fonts']['scale']>(() =>
     getFontScale(),
   )
@@ -74,6 +78,7 @@ export function ThemeProvider({
   const setFontScaleAndPersist = React.useCallback<
     Alf['fonts']['setFontScale']
   >(
+    // eslint-disable-next-line @typescript-eslint/no-shadow
     fontScale => {
       setFontScale(fontScale)
       persistFontScale(fontScale)
@@ -87,6 +92,7 @@ export function ThemeProvider({
   const setFontFamilyAndPersist = React.useCallback<
     Alf['fonts']['setFontFamily']
   >(
+    // eslint-disable-next-line @typescript-eslint/no-shadow
     fontFamily => {
       setFontFamily(fontFamily)
       persistFontFamily(fontFamily)
@@ -94,6 +100,9 @@ export function ThemeProvider({
     [setFontFamily],
   )
   const themes = React.useMemo(() => {
+    if (theme) {
+      return theme
+    }
     return createThemes({
       hues: {
         primary: BLUE_HUE,
@@ -101,7 +110,7 @@ export function ThemeProvider({
         positive: GREEN_HUE,
       },
     })
-  }, [])
+  }, [theme])
 
   const value = React.useMemo<Alf>(
     () => ({

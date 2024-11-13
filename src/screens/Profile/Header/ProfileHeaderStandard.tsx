@@ -22,7 +22,6 @@ import {
 import {useRequireAuth, useSession} from '#/state/session'
 import {ProfileMenu} from '#/view/com/profile/ProfileMenu'
 import * as Toast from '#/view/com/util/Toast'
-import {useProfileTheme} from '#/view/screens/Profile'
 import {atoms as a} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
@@ -47,6 +46,7 @@ interface Props {
   moderationOpts: ModerationOpts
   hideBackButton?: boolean
   isPlaceholderProfile?: boolean
+  backgroundColor: string
 }
 
 let ProfileHeaderStandard = ({
@@ -55,6 +55,7 @@ let ProfileHeaderStandard = ({
   moderationOpts,
   hideBackButton = false,
   isPlaceholderProfile,
+  backgroundColor,
 }: Props): React.ReactNode => {
   const profile: Shadow<AppBskyActorDefs.ProfileViewDetailed> =
     useProfileShadow(profileUnshadowed)
@@ -149,14 +150,13 @@ let ProfileHeaderStandard = ({
     [currentAccount, profile],
   )
 
-  const pTheme = useProfileTheme()
-
   return (
     <ProfileHeaderShell
       profile={profile}
       moderation={moderation}
       hideBackButton={hideBackButton}
-      isPlaceholderProfile={isPlaceholderProfile}>
+      isPlaceholderProfile={isPlaceholderProfile}
+      backgroundColor={backgroundColor}>
       <View
         style={[a.px_lg, a.pt_md, a.pb_sm, a.overflow_hidden]}
         pointerEvents={isIOS ? 'auto' : 'box-none'}>
@@ -179,8 +179,7 @@ let ProfileHeaderStandard = ({
                 color="secondary"
                 variant="solid"
                 onPress={onPressEditProfile}
-                label={_(msg`Edit profile`)}
-                style={[{backgroundColor: pTheme.lightPalette.primary_50}]}>
+                label={_(msg`Edit profile`)}>
                 <ButtonText>
                   <Trans>Edit Profile</Trans>
                 </ButtonText>
@@ -200,10 +199,7 @@ let ProfileHeaderStandard = ({
                 label={_(msg`Unblock`)}
                 disabled={!hasSession}
                 onPress={() => unblockPromptControl.open()}
-                style={[
-                  a.rounded_full,
-                  {backgroundColor: pTheme.lightPalette.primary_50},
-                ]}>
+                style={[a.rounded_full]}>
                 <ButtonText>
                   <Trans context="action">Unblock</Trans>
                 </ButtonText>
@@ -226,10 +222,7 @@ let ProfileHeaderStandard = ({
                 onPress={
                   profile.viewer?.following ? onPressUnfollow : onPressFollow
                 }
-                style={[
-                  a.rounded_full,
-                  {backgroundColor: pTheme.lightPalette.primary_50},
-                ]}>
+                style={[a.rounded_full]}>
                 <ButtonIcon
                   position="left"
                   icon={profile.viewer?.following ? Check : Plus}

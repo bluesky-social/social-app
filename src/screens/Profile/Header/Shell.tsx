@@ -19,7 +19,6 @@ import {useSession} from '#/state/session'
 import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {UserBanner} from '#/view/com/util/UserBanner'
-import {useProfileTheme} from '#/view/screens/Profile'
 import {atoms as a, useTheme} from '#/alf'
 import {LabelsOnMe} from '#/components/moderation/LabelsOnMe'
 import {ProfileHeaderAlerts} from '#/components/moderation/ProfileHeaderAlerts'
@@ -31,6 +30,7 @@ interface Props {
   moderation: ModerationDecision
   hideBackButton?: boolean
   isPlaceholderProfile?: boolean
+  backgroundColor: string
 }
 
 let ProfileHeaderShell = ({
@@ -39,6 +39,7 @@ let ProfileHeaderShell = ({
   moderation,
   hideBackButton = false,
   isPlaceholderProfile,
+  backgroundColor,
 }: React.PropsWithChildren<Props>): React.ReactNode => {
   const t = useTheme()
   const {currentAccount} = useSession()
@@ -97,20 +98,11 @@ let ProfileHeaderShell = ({
     [currentAccount, profile],
   )
 
-  const pTheme = useProfileTheme()
-
-  const palette = t.name === 'light' ? pTheme.lightPalette : pTheme.darkPalette
-
   return (
     <View pointerEvents={isIOS ? 'auto' : 'box-none'}>
       <LinearGradient
         key={t.name}
-        colors={[
-          palette.primary_200,
-          palette.primary_200,
-
-          t.atoms.bg.backgroundColor,
-        ]}
+        colors={[t.palette.primary_200, t.palette.primary_200, backgroundColor]}
         style={{
           position: 'absolute',
           top: 0,
@@ -184,7 +176,7 @@ let ProfileHeaderShell = ({
           <View
             style={[
               t.atoms.bg,
-              {borderColor: t.atoms.bg.backgroundColor},
+              {borderColor: t.palette.primary_400},
               styles.avi,
               profile.associated?.labeler && styles.aviLabeler,
             ]}>

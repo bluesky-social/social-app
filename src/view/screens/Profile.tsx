@@ -44,25 +44,13 @@ import {CenteredView} from '#/view/com/util/Views'
 import {ProfileHeader, ProfileHeaderLoading} from '#/screens/Profile/Header'
 import {ProfileFeedSection} from '#/screens/Profile/Sections/Feed'
 import {ProfileLabelsSection} from '#/screens/Profile/Sections/Labels'
-import {Palette, Theme, web} from '#/alf'
+import {ThemeProvider as Alf, useTheme, web} from '#/alf'
 import {createThemes} from '#/alf/themes'
 import * as Layout from '#/components/Layout'
 import {ScreenHider} from '#/components/moderation/ScreenHider'
 import {ProfileStarterPacks} from '#/components/StarterPack/ProfileStarterPacks'
 import {navigate} from '#/Navigation'
 import {ExpoScrollForwarderView} from '../../../modules/expo-scroll-forwarder'
-
-type ThemeType = {
-  lightPalette: Palette
-  darkPalette: Palette
-  dimPalette: Palette
-  light: Theme
-  dark: Theme
-  dim: Theme
-}
-
-const ProfileThemeContext = React.createContext<ThemeType>({} as ThemeType)
-export const useProfileTheme = () => React.useContext(ProfileThemeContext)
 
 interface SectionRef {
   scrollToTop: () => void
@@ -354,18 +342,37 @@ function ProfileScreenLoaded({
   // rendering
   // =
 
+  const [hue, setHue] = React.useState(0)
+  React.useEffect(() => {
+    const id = setInterval(() => {
+      setHue(h => {
+        const next = h + 1
+        if (next >= 360) {
+          return 0
+        }
+        return next
+      })
+    }, 100)
+    return () => clearInterval(id)
+  }, [])
+
+  const t = useTheme()
+
   const theme = createThemes({
     hues: {
-      primary: 350,
+      primary: hue,
       negative: 0,
       positive: 0,
+    },
+    scales: {
+      // graySaturation: [30, 30, 30, 30, 30, 30, 30, 30, 34, 34, 38, 38, 38, 38],
     },
   })
 
   const renderHeader = () => {
     return (
       <ExpoScrollForwarderView scrollViewTag={scrollViewTag}>
-        <ProfileThemeContext.Provider value={theme}>
+        <Alf themeName={t.name} theme={theme}>
           <ProfileHeader
             profile={profile}
             labeler={labelerInfo}
@@ -373,8 +380,9 @@ function ProfileScreenLoaded({
             moderationOpts={moderationOpts}
             hideBackButton={hideBackButton}
             isPlaceholderProfile={showPlaceholder}
+            backgroundColor={t.atoms.bg.backgroundColor}
           />
-        </ProfileThemeContext.Provider>
+        </Alf>
       </ExpoScrollForwarderView>
     )
   }
@@ -539,10 +547,10 @@ function useRichText(text: string): [RichTextAPI, boolean] {
     let ignore = false
     async function resolveRTFacets() {
       // new each time
-      const resolvedRT = new RichTextAPI({text})
-      await resolvedRT.detectFacets(agent)
+      const newRT = new RichTextAPI({text})
+      await newRT.detectFacets(agent)
       if (!ignore) {
-        setResolvedRT(resolvedRT)
+        setResolvedRT(newRT)
       }
     }
     resolveRTFacets()

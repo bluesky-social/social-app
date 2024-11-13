@@ -20,7 +20,6 @@ import {
 import {useSession} from '#/state/session'
 import {EventStopper} from '#/view/com/util/EventStopper'
 import * as Toast from '#/view/com/util/Toast'
-import {useProfileTheme} from '#/view/screens/Profile'
 import {Button, ButtonIcon} from '#/components/Button'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded as Share} from '#/components/icons/ArrowOutOfBox'
 import {DotGrid_Stroke2_Corner0_Rounded as Ellipsis} from '#/components/icons/DotGrid'
@@ -168,8 +167,6 @@ let ProfileMenu = ({
     reportDialogControl.open()
   }, [reportDialogControl])
 
-  const pTheme = useProfileTheme()
-
   return (
     <EventStopper onKeyDown={false}>
       <Menu.Root>
@@ -184,8 +181,7 @@ let ProfileMenu = ({
                 variant="solid"
                 color="secondary"
                 size="small"
-                shape="round"
-                style={{backgroundColor: pTheme.lightPalette.primary_50}}>
+                shape="round">
                 <ButtonIcon icon={Ellipsis} size="sm" />
               </Button>
             )
