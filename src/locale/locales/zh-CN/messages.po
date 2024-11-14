@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-14 07:49\n"
+"PO-Revision-Date: 2024-11-14 08:01\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -1768,7 +1768,7 @@ msgstr "创建新的账户"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:101
 msgid "Create report for {0}"
-msgstr "创建针对 {0} 的检举"
+msgstr "创建针对 {0} 的举报"
 
 #: src/screens/Settings/AppPasswords.tsx:166
 msgid "Created {0}"
@@ -4035,7 +4035,7 @@ msgstr "需要更改吗？"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:130
 msgid "Need to report a copyright violation?"
-msgstr "需要检举侵权行为吗？"
+msgstr "需要举报侵权行为吗？"
 
 #: src/screens/Onboarding/StepFinished.tsx:255
 msgid "Never lose access to your followers or data."
@@ -4601,7 +4601,7 @@ msgstr "其他..."
 
 #: src/screens/Messages/components/ChatDisabled.tsx:28
 msgid "Our moderators have reviewed reports and decided to disable your access to chats on Bluesky."
-msgstr "内容审核服务提供方已收到相关检举，并决定停用你的 Bluesky 私信功能。"
+msgstr "内容审核服务提供方已收到相关举报，并决定停用你的 Bluesky 私信功能。"
 
 #: src/components/Lists.tsx:216
 #: src/view/screens/NotFound.tsx:47
@@ -5306,75 +5306,75 @@ msgstr "已成功隐藏回复"
 #: src/components/dms/MessagesListBlockedFooter.tsx:77
 #: src/components/dms/MessagesListBlockedFooter.tsx:84
 msgid "Report"
-msgstr "检举"
+msgstr "举报"
 
 #: src/view/com/profile/ProfileMenu.tsx:299
 #: src/view/com/profile/ProfileMenu.tsx:302
 msgid "Report Account"
-msgstr "检举账户"
+msgstr "举报账户"
 
 #: src/components/dms/ConvoMenu.tsx:197
 #: src/components/dms/ConvoMenu.tsx:200
 #: src/components/dms/ReportConversationPrompt.tsx:18
 msgid "Report conversation"
-msgstr "检举对话"
+msgstr "举报对话"
 
 #: src/components/ReportDialog/index.tsx:44
 msgid "Report dialog"
-msgstr "检举页面"
+msgstr "举报页面"
 
 #: src/view/screens/ProfileFeed.tsx:354
 #: src/view/screens/ProfileFeed.tsx:356
 msgid "Report feed"
-msgstr "检举动态源"
+msgstr "举报动态源"
 
 #: src/view/screens/ProfileList.tsx:544
 msgid "Report List"
-msgstr "检举列表"
+msgstr "举报列表"
 
 #: src/components/dms/MessageMenu.tsx:130
 msgid "Report message"
-msgstr "检举私信"
+msgstr "举报私信"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:621
 #: src/view/com/util/forms/PostDropdownBtn.tsx:623
 msgid "Report post"
-msgstr "检举帖文"
+msgstr "举报帖文"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:605
 #: src/screens/StarterPack/StarterPackScreen.tsx:608
 msgid "Report starter pack"
-msgstr "检举新手包"
+msgstr "举报新手包"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:43
 msgid "Report this content"
-msgstr "检举这项内容"
+msgstr "举报这项内容"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:56
 msgid "Report this feed"
-msgstr "检举这个动态源"
+msgstr "举报这个动态源"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:53
 msgid "Report this list"
-msgstr "检举这个列表"
+msgstr "举报这个列表"
 
 #: src/components/dms/ReportDialog.tsx:44
 #: src/components/dms/ReportDialog.tsx:137
 #: src/components/ReportDialog/SelectReportOptionView.tsx:62
 msgid "Report this message"
-msgstr "检举这条私信"
+msgstr "举报这条私信"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:50
 msgid "Report this post"
-msgstr "检举这则帖文"
+msgstr "举报这则帖文"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:59
 msgid "Report this starter pack"
-msgstr "检举这个新手包"
+msgstr "举报这个新手包"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:47
 msgid "Report this user"
-msgstr "检举这个用户"
+msgstr "举报这个用户"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:72
 #: src/view/com/util/post-ctrls/RepostButton.tsx:103
@@ -5754,7 +5754,7 @@ msgstr "选择 {emojiName} 表情符号作为你的头像"
 
 #: src/components/ReportDialog/SubmitView.tsx:140
 msgid "Select the moderation service(s) to report to"
-msgstr "请选择你要向哪个内容审核服务提供方提交这个检举"
+msgstr "请选择你要向哪个内容审核服务提供方提交这个举报"
 
 #: src/view/com/auth/server-input/index.tsx:79
 msgid "Select the service that hosts your data."
@@ -5832,11 +5832,11 @@ msgstr "发送私信给..."
 #: src/components/ReportDialog/SubmitView.tsx:220
 #: src/components/ReportDialog/SubmitView.tsx:224
 msgid "Send report"
-msgstr "提交检举"
+msgstr "提交举报"
 
 #: src/components/ReportDialog/SelectLabelerView.tsx:43
 msgid "Send report to {0}"
-msgstr "给 {0} 提交检举"
+msgstr "给 {0} 提交举报"
 
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:120
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:123
@@ -6443,7 +6443,7 @@ msgstr "谢谢！你的电子邮箱已成功验证。"
 #: src/components/dms/ReportDialog.tsx:129
 #: src/components/ReportDialog/SubmitView.tsx:82
 msgid "Thank you. Your report has been sent."
-msgstr "谢谢，你的检举已提交。"
+msgstr "谢谢，你的举报已提交。"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:82
 msgid "Thanks, you have successfully verified your email address. You can close this dialog."
@@ -6612,7 +6612,7 @@ msgstr "更新动态源时出现问题，请检查你的互联网连接并重试
 #: src/components/dms/ReportDialog.tsx:217
 #: src/components/ReportDialog/SubmitView.tsx:87
 msgid "There was an issue sending your report. Please check your internet connection."
-msgstr "提交检举时出现问题，请检查你的网络连接。"
+msgstr "提交举报时出现问题，请检查你的网络连接。"
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:52
 #: src/view/com/posts/FeedShutdownMsg.tsx:71
@@ -6878,7 +6878,7 @@ msgstr "在关闭电子邮箱两步验证前，请首先验证你的电子邮箱
 
 #: src/components/dms/ReportConversationPrompt.tsx:20
 msgid "To report a conversation, please report one of its messages via the conversation screen. This lets our moderators understand the context of your issue."
-msgstr "要检举对话，请在会话界面里选择一条私信并提交检举。这有助于使内容审核服务提供方了解相关问题的前因后果。"
+msgstr "要举报对话，请在会话界面里选择一条私信并提交举报。这有助于使内容审核服务提供方了解相关问题的前因后果。"
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:133
 msgid "To upload videos to Bluesky, you must first verify your email."
@@ -6886,7 +6886,7 @@ msgstr "要上传视频至 Bluesky，你必须首先验证你的电子邮箱。"
 
 #: src/components/ReportDialog/SelectLabelerView.tsx:32
 msgid "To whom would you like to send this report?"
-msgstr "你想将向谁提交这份检举？"
+msgstr "你想将向谁提交这份举报？"
 
 #: src/components/dms/DateDivider.tsx:44
 msgid "Today"
@@ -7388,7 +7388,7 @@ msgstr "查看详情"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:134
 msgid "View details for reporting a copyright violation"
-msgstr "查看检举版权侵权的详情"
+msgstr "查看举报版权侵权的详情"
 
 #: src/view/com/posts/FeedSlice.tsx:154
 msgid "View full thread"
@@ -7848,7 +7848,7 @@ msgstr "你必须授权访问照片图库权限以保存图片。"
 
 #: src/components/ReportDialog/SubmitView.tsx:210
 msgid "You must select at least one labeler for a report"
-msgstr "你必须选择至少一个标记者来进行检举"
+msgstr "你必须选择至少一个标记者来进行举报"
 
 #: src/screens/Deactivated.tsx:134
 msgid "You previously deactivated @{0}."
@@ -8031,7 +8031,7 @@ msgstr "已发布你的回复"
 
 #: src/components/dms/ReportDialog.tsx:157
 msgid "Your report will be sent to the Bluesky Moderation Service"
-msgstr "你的检举将发送至 Bluesky 内容审核服务"
+msgstr "你的举报将发送至 Bluesky 内容审核服务"
 
 #: src/screens/Signup/index.tsx:142
 msgid "Your user handle"
