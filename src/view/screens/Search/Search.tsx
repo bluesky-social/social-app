@@ -845,6 +845,17 @@ export function SearchScreen(
     [selectedProfiles],
   )
 
+  const handleRemoveAllSearches = React.useCallback(async () => {
+    setSearchHistory([])
+    setSelectedProfiles([])
+
+    await AsyncStorage.multiRemove(['searchHistory', 'selectedProfiles']).catch(
+      e => {
+        logger.error('Failed to clear search history', {message: e})
+      },
+    )
+  }, [])
+
   const onSearchInputFocus = React.useCallback(() => {
     if (isWeb) {
       // Prevent a jump on iPad by ensuring that
@@ -949,6 +960,7 @@ export function SearchScreen(
             onProfileClick={handleProfileClick}
             onRemoveItemClick={handleRemoveHistoryItem}
             onRemoveProfileClick={handleRemoveProfile}
+            onRemoveAllClick={handleRemoveAllSearches}
           />
         )}
       </View>
@@ -1032,6 +1044,7 @@ function SearchHistory({
   onProfileClick,
   onRemoveItemClick,
   onRemoveProfileClick,
+  onRemoveAllClick,
 }: {
   searchHistory: string[]
   selectedProfiles: AppBskyActorDefs.ProfileViewBasic[]
@@ -1039,6 +1052,7 @@ function SearchHistory({
   onProfileClick: (profile: AppBskyActorDefs.ProfileViewBasic) => void
   onRemoveItemClick: (item: string) => void
   onRemoveProfileClick: (profile: AppBskyActorDefs.ProfileViewBasic) => void
+  onRemoveAllClick: () => void
 }) {
   const {isTabletOrDesktop, isMobile} = useWebMediaQueries()
   const pal = usePalette('default')
@@ -1053,9 +1067,25 @@ function SearchHistory({
       }}>
       <View style={styles.searchHistoryContainer}>
         {(searchHistory.length > 0 || selectedProfiles.length > 0) && (
-          <Text style={[pal.text, styles.searchHistoryTitle]}>
-            <Trans>Recent Searches</Trans>
-          </Text>
+          <View
+            style={[a.flex_row, a.justify_between, a.align_center, a.px_md]}>
+            <Text style={[pal.text, styles.searchHistoryTitle]}>
+              <Trans>Recent Searches</Trans>
+            </Text>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={_(msg`Clear all recent searches`)}
+              accessibilityHint={_(
+                msg`Removes all search history and recently viewed profiles`,
+              )}
+              onPress={onRemoveAllClick}
+              hitSlop={HITSLOP_10}
+              style={[a.py_sm, a.px_md]}>
+              <Text style={[pal.text, {opacity: 0.75, fontSize: 14}]}>
+                Clear all
+              </Text>
+            </Pressable>
+          </View>
         )}
         {selectedProfiles.length > 0 && (
           <View
