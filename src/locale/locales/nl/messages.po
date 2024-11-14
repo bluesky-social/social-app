@@ -2352,7 +2352,7 @@ msgstr "Gevolgd door <0>{0}</0>"
 
 #: src/components/KnownFollowers.tsx:186
 msgid "Followed by <0>{0}</0>, <1>{1}</1>, and {2, plural, one {# other} other {# others}}"
-msgstr "Gevolgd door <0>{0}</0>, <1>{1}</1>, en {2, plural, een {# other} andere {# others}}"
+msgstr "Gevolgd door <0>{0}</0>, <1>{1}</1>, en {2, plural, one {# andere} other {# anderen}}"
 
 #: src/components/KnownFollowers.tsx:204
 msgid "Followed by <0>{0}</0> and <1>{1}</1>"
@@ -2360,7 +2360,7 @@ msgstr "Gevolgd door <0>{0}</0> en <1>{1}</1>"
 
 #: src/components/KnownFollowers.tsx:217
 msgid "Followed by <0>{0}</0> and {1, plural, one {# other} other {# others}}"
-msgstr "Gevolgd door <0>{0}</0> en {1, plural, één {# other} andere {# others}}"
+msgstr "Gevolgd door <0>{0}</0> en {1, plural, one {# andere} other {# anderen}}"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:404
 msgid "Followed users"
@@ -7756,7 +7756,7 @@ msgstr "{0, plural, one {# seconde} other {# seconden}}"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:300
 msgid "{0, plural, one {Like (# like)} other {Like (# likes)}}"
-msgstr "{0, plural, one {Leuk (# like)} other {Leuk (# likes)}}"
+msgstr "{0, plural, one {Leuk (# leuk)} other {Leuk (# leuk)}}"
 
 #: src/components/FeedCard.tsx:213
 #: src/view/com/feeds/FeedSourceCard.tsx:300
@@ -7769,7 +7769,7 @@ msgstr "{0, plural, one {Reageer (# reactie)} other {Reageer (# reacties)}}"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:296
 msgid "{0, plural, one {Unlike (# like)} other {Unlike (# likes)}}"
-msgstr "{0, plural, one {Niet leuk (# like)} other {Niet leuk (# likes)}}"
+msgstr "{0, plural, one {Niet leuk (# leuk)} other {Niet leuk (# leuk)}}"
 
 #: src/components/ProfileHoverCard/index.web.tsx:398
 #: src/screens/Profile/Header/Metrics.tsx:23
