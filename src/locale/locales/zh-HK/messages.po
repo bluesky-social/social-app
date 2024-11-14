@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-14 03:23\n"
+"PO-Revision-Date: 2024-11-14 05:59\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional, Hong Kong\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -200,7 +200,7 @@ msgstr "{firstAuthorLink} 同<0>{additionalAuthorsCount, plural, one {另外 {fo
 
 #: src/view/com/notifications/FeedItem.tsx:326
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> liked your custom feed"
-msgstr "{firstAuthorLink}同<0>{additionalAuthorsCount, plural, one {另外 {formattedAuthorsCount} 個人} other {另外 {formattedAuthorsCount} 個人}}</0>讚咗你嘅自訂動態源"
+msgstr "{firstAuthorLink} 同<0>{additionalAuthorsCount, plural, one {另外 {formattedAuthorsCount} 個人} other {另外 {formattedAuthorsCount} 個人}}</0>讚咗你嘅自訂動態源"
 
 #: src/view/com/notifications/FeedItem.tsx:222
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> liked your post"
@@ -934,21 +934,21 @@ msgstr "返回"
 #: src/view/screens/Lists.tsx:104
 #: src/view/screens/ModerationModlists.tsx:100
 msgid "Before creating a list, you must first verify your email."
-msgstr "喺建立清单嗰陣，你必須先驗證你嘅電郵。"
+msgstr "喺建立清单之前，你必須驗證你嘅電郵先。"
 
 #: src/view/com/composer/Composer.tsx:591
 msgid "Before creating a post, you must first verify your email."
-msgstr "喺發文嗰陣，你必須先驗證你嘅電郵。"
+msgstr "喺發文之前，你必須驗證你嘅電郵先。"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:340
 msgid "Before creating a starter pack, you must first verify your email."
-msgstr "喺建立新手包嗰陣，你必須先驗證你嘅電郵。"
+msgstr "喺建立新手包之前，你必須驗證你嘅電郵先。"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:79
 #: src/components/dms/MessageProfileButton.tsx:89
 #: src/screens/Messages/Conversation.tsx:219
 msgid "Before you may message another user, you must first verify your email."
-msgstr "喺同人哋傾偈嗰陣，你必須先驗證你嘅電郵"
+msgstr "喺同人哋傾偈之前，你必須驗證你嘅電郵先。"
 
 #: src/components/dialogs/BirthDateSettings.tsx:106
 #: src/screens/Settings/AccountSettings.tsx:102
@@ -1042,7 +1042,7 @@ msgstr "Bluesky 係一個開放嘅網絡，你可以喺嗰度揀你嘅託管服�
 
 #: src/components/ProgressGuide/List.tsx:55
 msgid "Bluesky is better with friends!"
-msgstr "Bluesky 同朋友一齊玩先至正！"
+msgstr "Bluesky 同你班 friends 一齊玩先至正！"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:300
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
@@ -2474,7 +2474,7 @@ msgstr "過多抑或不受歡迎嘅訊息"
 
 #: src/components/dialogs/MutedWords.tsx:311
 msgid "Exclude users you follow"
-msgstr "排除你跟隨嘅用戶"
+msgstr "排除你跟咗嘅用戶"
 
 #: src/components/dialogs/MutedWords.tsx:514
 msgid "Excludes users you follow"
@@ -2953,7 +2953,7 @@ msgstr "GIF"
 
 #: src/screens/Onboarding/StepProfile/index.tsx:234
 msgid "Give your profile a face"
-msgstr "畀你個人檔案一個面孔"
+msgstr "整張相喺你嘅 profile 嗰度先啦"
 
 #: src/lib/moderation/useReportOptions.ts:39
 msgid "Glaring violations of law or terms of service"
@@ -6775,7 +6775,7 @@ msgstr "呢個審核服務用唔到，睇下低瞭解更多嘢。若然呢個問
 
 #: src/view/com/post-thread/PostThreadItem.tsx:836
 msgid "This post claims to have been created on <0>{0}</0>, but was first seen by Bluesky on <1>{1}</1>."
-msgstr "呢篇帖文聲稱發文喺 <0>{0}</0> ，但係首次出現喺 Bluesky 嘅時間係 <1>{1}</1>。"
+msgstr "呢篇帖文話係話喺 <0>{0}</0> 發佈嘅，但係最先出現喺 Bluesky 嘅時間係 <1>{1}</1>。"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:147
 msgid "This post has been deleted."
@@ -7474,7 +7474,7 @@ msgstr "我哋已經傳送咗另一封驗證電郵去 <0>{0}</0>。"
 
 #: src/screens/Onboarding/StepFinished.tsx:229
 msgid "We hope you have a wonderful time. Remember, Bluesky is:"
-msgstr "我哋希望你有個美好嘅時光。記住，Bluesky 係："
+msgstr "我哋希望你你玩得開心。唔好忘記，Bluesky 係："
 
 #: src/view/com/posts/DiscoverFallbackHeader.tsx:30
 msgid "We ran out of posts from your follows. Here's the latest from <0/>."
@@ -7502,7 +7502,7 @@ msgstr "我哋會喺你嘅帳號準備好嗰陣通知你。"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:134
 msgid "We'll use this to help customize your experience."
-msgstr "我哋會用呢個嚟幫你自訂你嘅體驗。"
+msgstr "我哋會用呢啲資料嚟幫你度身訂造體驗。"
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:87
 msgid "We're having network issues, try again"
@@ -7551,7 +7551,7 @@ msgstr "歡迎你，朋友！"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:126
 msgid "What are your interests?"
-msgstr "你有咩興趣？"
+msgstr "邊啲你鍾意？"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:42
 msgid "What do you want to call your starter pack?"
@@ -7919,7 +7919,7 @@ msgstr "你用咗個 App 密碼登入咗。請用你嘅主要密碼登入嚟繼�
 
 #: src/screens/Onboarding/StepFinished.tsx:226
 msgid "You're ready to go!"
-msgstr "你準備好出發喇！"
+msgstr "喂，攪掂喇！"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:107
 #: src/lib/moderation/useModerationCauseDescription.ts:106
