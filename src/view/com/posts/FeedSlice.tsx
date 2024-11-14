@@ -7,6 +7,8 @@ import {Trans} from '@lingui/macro'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {makeProfileLink} from '#/lib/routes/links'
 import {FeedPostSlice} from '#/state/queries/post-feed'
+import {useInteractionState} from '#/components/hooks/useInteractionState'
+import {SubtleWebHover} from '#/components/SubtleWebHover'
 import {Link} from '../util/Link'
 import {Text} from '../util/text/Text'
 import {FeedItem} from './FeedItem'
@@ -108,6 +110,11 @@ FeedSlice = memo(FeedSlice)
 export {FeedSlice}
 
 function ViewFullThread({uri}: {uri: string}) {
+  const {
+    state: hover,
+    onIn: onHoverIn,
+    onOut: onHoverOut,
+  } = useInteractionState()
   const pal = usePalette('default')
   const itemHref = React.useMemo(() => {
     const urip = new AtUri(uri)
@@ -115,7 +122,18 @@ function ViewFullThread({uri}: {uri: string}) {
   }, [uri])
 
   return (
-    <Link style={[styles.viewFullThread]} href={itemHref} asAnchor noFeedback>
+    <Link
+      style={[styles.viewFullThread]}
+      href={itemHref}
+      asAnchor
+      noFeedback
+      onPointerEnter={onHoverIn}
+      onPointerLeave={onHoverOut}>
+      <SubtleWebHover
+        hover={hover}
+        // adjust position for visual alignment - the actual box has lots of top padding and not much bottom padding -sfn
+        style={{top: 8, bottom: -5}}
+      />
       <View style={styles.viewFullThreadDots}>
         <Svg width="4" height="40">
           <Line

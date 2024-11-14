@@ -7,26 +7,28 @@
  */
 
 import React, {useState} from 'react'
-import {ActivityIndicator, StyleProp, StyleSheet, View} from 'react-native'
+import {ActivityIndicator, StyleSheet} from 'react-native'
 import {
   Gesture,
   GestureDetector,
   PanGesture,
 } from 'react-native-gesture-handler'
 import Animated, {
-  AnimatedRef,
-  measure,
   runOnJS,
+  SharedValue,
+  useAnimatedReaction,
   useAnimatedRef,
   useAnimatedStyle,
 } from 'react-native-reanimated'
 import {useSafeAreaFrame} from 'react-native-safe-area-context'
-import {Image, ImageStyle} from 'expo-image'
+import {Image} from 'expo-image'
 
 import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
-import {Dimensions as ImageDimensions, ImageSource} from '../../@types'
-
-const AnimatedImage = Animated.createAnimatedComponent(Image)
+import {
+  Dimensions as ImageDimensions,
+  ImageSource,
+  Transform,
+} from '../../@types'
 
 const MAX_ORIGINAL_IMAGE_ZOOM = 2
 const MIN_SCREEN_ZOOM = 2
@@ -36,25 +38,40 @@ type Props = {
   onRequestClose: () => void
   onTap: () => void
   onZoom: (scaled: boolean) => void
+  onLoad: (dims: ImageDimensions) => void
   isScrollViewBeingDragged: boolean
   showControls: boolean
-  safeAreaRef: AnimatedRef<View>
+  measureSafeArea: () => {
+    x: number
+    y: number
+    width: number
+    height: number
+  }
   imageAspect: number | undefined
   imageDimensions: ImageDimensions | undefined
-  imageStyle: StyleProp<ImageStyle>
   dismissSwipePan: PanGesture
+  transforms: Readonly<
+    SharedValue<{
+      scaleAndMoveTransform: Transform
+      cropFrameTransform: Transform
+      cropContentTransform: Transform
+      isResting: boolean
+      isHidden: boolean
+    }>
+  >
 }
 
 const ImageItem = ({
   imageSrc,
   onTap,
   onZoom,
+  onLoad,
   showControls,
-  safeAreaRef,
+  measureSafeArea,
   imageAspect,
   imageDimensions,
-  imageStyle,
   dismissSwipePan,
+  transforms,
 }: Props) => {
   const scrollViewRef = useAnimatedRef<Animated.ScrollView>()
   const [scaled, setScaled] = useState(false)
@@ -66,16 +83,6 @@ const ImageItem = ({
           MAX_ORIGINAL_IMAGE_ZOOM
       : 1,
   )
-
-  const animatedStyle = useAnimatedStyle(() => {
-    const screenSize = measure(safeAreaRef) ?? screenSizeDelayedForJSThreadOnly
-    return {
-      width: screenSize.width,
-      maxHeight: screenSize.height,
-      alignSelf: 'center',
-      aspectRatio: imageAspect,
-    }
-  })
 
   const scrollHandler = useAnimatedScrollHandler({
     onScroll(e) {
@@ -114,10 +121,7 @@ const ImageItem = ({
     .numberOfTaps(2)
     .onEnd(e => {
       'worklet'
-      const screenSize = measure(safeAreaRef)
-      if (!screenSize) {
-        return
-      }
+      const screenSize = measureSafeArea()
       const {absoluteX, absoluteY} = e
       let nextZoomRect = {
         x: 0,
@@ -143,9 +147,58 @@ const ImageItem = ({
     singleTap,
   )
 
+  const containerStyle = useAnimatedStyle(() => {
+    const {scaleAndMoveTransform, isHidden} = transforms.value
+    return {
+      flex: 1,
+      transform: scaleAndMoveTransform,
+      opacity: isHidden ? 0 : 1,
+    }
+  })
+
+  const imageCropStyle = useAnimatedStyle(() => {
+    const screenSize = measureSafeArea()
+    const {cropFrameTransform} = transforms.value
+    return {
+      overflow: 'hidden',
+      transform: cropFrameTransform,
+      width: screenSize.width,
+      maxHeight: screenSize.height,
+      alignSelf: 'center',
+      aspectRatio: imageAspect ?? 1 /* force onLoad */,
+      opacity: imageAspect === undefined ? 0 : 1,
+    }
+  })
+
+  const imageStyle = useAnimatedStyle(() => {
+    const {cropContentTransform} = transforms.value
+    return {
+      transform: cropContentTransform,
+      width: '100%',
+      aspectRatio: imageAspect ?? 1 /* force onLoad */,
+      opacity: imageAspect === undefined ? 0 : 1,
+    }
+  })
+
+  const [showLoader, setShowLoader] = useState(false)
+  const [hasLoaded, setHasLoaded] = useState(false)
+  useAnimatedReaction(
+    () => {
+      return transforms.value.isResting && !hasLoaded
+    },
+    (show, prevShow) => {
+      if (show && !prevShow) {
+        runOnJS(setShowLoader)(false)
+      } else if (!prevShow && show) {
+        runOnJS(setShowLoader)(true)
+      }
+    },
+  )
+
   const type = imageSrc.type
   const borderRadius =
     type === 'circle-avi' ? 1e5 : type === 'rect-avi' ? 20 : 0
+
   return (
     <GestureDetector gesture={composedGesture}>
       <Animated.ScrollView
@@ -156,22 +209,36 @@ const ImageItem = ({
         showsVerticalScrollIndicator={false}
         maximumZoomScale={maxZoomScale}
         onScroll={scrollHandler}
+        style={containerStyle}
         bounces={scaled}
         bouncesZoom={true}
-        style={imageStyle}
         centerContent>
-        <ActivityIndicator size="small" color="#FFF" style={styles.loading} />
-        <AnimatedImage
-          contentFit="contain"
-          source={{uri: imageSrc.uri}}
-          placeholderContentFit="contain"
-          placeholder={{uri: imageSrc.thumbUri}}
-          style={[animatedStyle, {borderRadius}]}
-          accessibilityLabel={imageSrc.alt}
-          accessibilityHint=""
-          enableLiveTextInteraction={showControls && !scaled}
-          accessibilityIgnoresInvertColors
-        />
+        {showLoader && (
+          <ActivityIndicator size="small" color="#FFF" style={styles.loading} />
+        )}
+        <Animated.View style={imageCropStyle}>
+          <Animated.View style={imageStyle}>
+            <Image
+              contentFit="contain"
+              source={{uri: imageSrc.uri}}
+              placeholderContentFit="contain"
+              placeholder={{uri: imageSrc.thumbUri}}
+              style={{flex: 1, borderRadius}}
+              accessibilityLabel={imageSrc.alt}
+              accessibilityHint=""
+              enableLiveTextInteraction={showControls && !scaled}
+              accessibilityIgnoresInvertColors
+              onLoad={
+                hasLoaded
+                  ? undefined
+                  : e => {
+                      setHasLoaded(true)
+                      onLoad({width: e.source.width, height: e.source.height})
+                    }
+              }
+            />
+          </Animated.View>
+        </Animated.View>
       </Animated.ScrollView>
     </GestureDetector>
   )
