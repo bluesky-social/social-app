@@ -61,6 +61,7 @@ import {SearchLinkCard, SearchProfileCard} from '#/view/shell/desktop/Search'
 import {makeSearchQuery, parseSearchQuery} from '#/screens/Search/utils'
 import {atoms as a, useBreakpoints, useTheme as useThemeNew, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {ClearButton} from '#/components/ClearSearchHistory'
 import * as FeedCard from '#/components/FeedCard'
 import {SearchInput} from '#/components/forms/SearchInput'
 import {ChevronBottom_Stroke2_Corner0_Rounded as ChevronDown} from '#/components/icons/Chevron'
@@ -1068,23 +1069,11 @@ function SearchHistory({
       <View style={styles.searchHistoryContainer}>
         {(searchHistory.length > 0 || selectedProfiles.length > 0) && (
           <View
-            style={[a.flex_row, a.justify_between, a.align_center, a.px_md]}>
+            style={[a.flex_row, a.justify_between, a.align_center, a.pr_md]}>
             <Text style={[pal.text, styles.searchHistoryTitle]}>
               <Trans>Recent Searches</Trans>
             </Text>
-            <Pressable
-              accessibilityRole="button"
-              accessibilityLabel={_(msg`Clear all recent searches`)}
-              accessibilityHint={_(
-                msg`Removes all search history and recently viewed profiles`,
-              )}
-              onPress={onRemoveAllClick}
-              hitSlop={HITSLOP_10}
-              style={[a.py_sm, a.px_md]}>
-              <Text style={[pal.text, {opacity: 0.75, fontSize: 14}]}>
-                Clear all
-              </Text>
-            </Pressable>
+            <ClearButton onClear={onRemoveAllClick} />
           </View>
         )}
         {selectedProfiles.length > 0 && (
