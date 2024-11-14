@@ -44,6 +44,7 @@ import {ContentHider} from '#/components/moderation/ContentHider'
 import {LabelsOnMyPost} from '#/components/moderation/LabelsOnMe'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {AppModerationCause} from '#/components/Pills'
+import {Link as PostLink} from '#/components/Post/Link'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {RichText} from '#/components/RichText'
 import {SubtleWebHover} from '#/components/SubtleWebHover'
@@ -239,15 +240,14 @@ let FeedItemInner = ({
     : undefined
 
   const [hover, setHover] = useState(false)
+
   return (
-    <Link
+    <PostLink
       testID={`feedItem-by-${post.author.handle}`}
+      post={post}
       style={outerStyles}
-      href={href}
-      noFeedback
-      accessible={false}
-      onBeforePress={onBeforePress}
-      dataSet={{feedContext}}
+      onPress={onBeforePress}
+      //dataSet={{feedContext}}
       onPointerEnter={() => {
         setHover(true)
       }}
@@ -428,7 +428,7 @@ let FeedItemInner = ({
           />
         </View>
       </View>
-    </Link>
+    </PostLink>
   )
 }
 FeedItemInner = memo(FeedItemInner)
