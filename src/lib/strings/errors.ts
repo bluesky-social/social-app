@@ -8,7 +8,11 @@ export function cleanError(str: any): string {
   if (isNetworkError(str)) {
     return 'Unable to connect. Please check your internet connection and try again.'
   }
-  if (str.includes('Upstream Failure')) {
+  if (
+    str.includes('Upstream Failure') ||
+    str.includes('NotEnoughResources') ||
+    str.includes('pipethrough network error')
+  ) {
     return 'The server appears to be experiencing issues. Please try again in a few moments.'
   }
   if (str.includes('Bad token scope')) {
