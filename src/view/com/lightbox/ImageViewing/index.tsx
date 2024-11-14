@@ -62,7 +62,7 @@ const EDGES =
     ? (['top', 'bottom', 'left', 'right'] satisfies Edge[])
     : (['left', 'right'] satisfies Edge[]) // iOS, so no top/bottom safe area
 
-const SLOW_SPRING = {stiffness: 120}
+const SLOW_SPRING = {stiffness: isIOS ? 180 : 250}
 const FAST_SPRING = {stiffness: 700}
 
 export default function ImageViewRoot({
@@ -433,7 +433,7 @@ function LightboxImage({
       if (openProgress.value !== 1 || isFlyingAway.value) {
         return
       }
-      if (Math.abs(e.velocityY) > 1000) {
+      if (Math.abs(e.velocityY) > 200) {
         isFlyingAway.value = true
         if (dismissSwipeTranslateY.value === 0) {
           // HACK: If the initial value is 0, withDecay() animation doesn't start.
@@ -442,7 +442,7 @@ function LightboxImage({
         }
         dismissSwipeTranslateY.value = withDecay({
           velocity: e.velocityY,
-          velocityFactor: Math.max(3000 / Math.abs(e.velocityY), 1), // Speed up if it's too slow.
+          velocityFactor: Math.max(3500 / Math.abs(e.velocityY), 1), // Speed up if it's too slow.
           deceleration: 1, // Danger! This relies on the reaction below stopping it.
         })
       } else {
