@@ -47,9 +47,6 @@ export function useListConvosQuery({
     },
     initialPageParam: undefined as RQPageParam,
     getNextPageParam: lastPage => lastPage.cursor,
-    // refetch every 60 seconds since we can't get *all* info from the logs
-    // i.e. reading chats on another device won't update the unread count
-    refetchInterval: 60_000,
   })
 }
 
