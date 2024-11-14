@@ -59,6 +59,7 @@ let ProfileHeaderLabeler = ({
   moderationOpts,
   hideBackButton = false,
   isPlaceholderProfile,
+  backgroundColor,
 }: Props): React.ReactNode => {
   const profile: Shadow<AppBskyActorDefs.ProfileViewDetailed> =
     useProfileShadow(profileUnshadowed)
