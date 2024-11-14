@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-14 05:59\n"
+"PO-Revision-Date: 2024-11-14 07:11\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -37,7 +37,7 @@ msgstr "{0, plural, one {#小时} other {#小时}}"
 
 #: src/components/moderation/LabelsOnMe.tsx:54
 msgid "{0, plural, one {# label has been placed on this account} other {# labels have been placed on this account}}"
-msgstr "{0, plural, one {已标记 # 个标签到该账户} other {已标记 # 个标签到该账户}}"
+msgstr "{0, plural, one {已标记 # 个标签到这个账户} other {已标记 # 个标签到这个账户}}"
 
 #: src/components/moderation/LabelsOnMe.tsx:60
 msgid "{0, plural, one {# label has been placed on this content} other {# labels have been placed on this content}}"
@@ -3472,7 +3472,7 @@ msgstr "了解更多有关自行托管 PDS 的详细信息。"
 #: src/components/moderation/ContentHider.tsx:127
 #: src/components/moderation/ContentHider.tsx:193
 msgid "Learn more about the moderation applied to this content."
-msgstr "了解更多有关审核应用于该内容的详细信息。"
+msgstr "了解更多有关审核套用于该内容的详细信息。"
 
 #: src/components/moderation/PostHider.tsx:100
 #: src/components/moderation/ScreenHider.tsx:127
@@ -4775,7 +4775,7 @@ msgstr "请输入你的密码："
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:265
 msgid "Please explain why you think this label was incorrectly applied by {0}"
-msgstr "请解释为什么你认为 {0} 错误应用了这个标记"
+msgstr "请解释为什么你认为 {0} 错误套用了这个标记"
 
 #: src/screens/Messages/components/ChatDisabled.tsx:110
 msgid "Please explain why you think your chats were incorrectly disabled"
@@ -5766,7 +5766,7 @@ msgstr "选择视频"
 
 #: src/components/dialogs/MutedWords.tsx:242
 msgid "Select what content this mute word should apply to."
-msgstr "选择将这个隐藏词汇应用于哪些内容。"
+msgstr "选择将这个隐藏词汇套用于哪些内容。"
 
 #: src/screens/Settings/LanguageSettings.tsx:245
 msgid "Select which languages you want your subscribed feeds to include. If none are selected, all languages will be shown."
@@ -6511,11 +6511,11 @@ msgstr "动态源已替换为 \"Discover\"。"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:58
 msgid "The following labels were applied to your account."
-msgstr "以下标记已应用到你的账户。"
+msgstr "以下标记已套用到你的账户。"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:59
 msgid "The following labels were applied to your content."
-msgstr "以下标记已应用到你的内容。"
+msgstr "以下标记已套用到你发布的内容。"
 
 #: src/screens/Onboarding/Layout.tsx:58
 msgid "The following steps will help customize your Bluesky experience."

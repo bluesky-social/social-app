@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-14 05:59\n"
+"PO-Revision-Date: 2024-11-14 07:16\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional, Hong Kong\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -1303,7 +1303,7 @@ msgstr "揀啲啱你呢個媒體內容嘅標籤。唔揀嘅話，就當係全年
 
 #: src/view/com/auth/server-input/index.tsx:76
 msgid "Choose Service"
-msgstr "揀服務"
+msgstr "揀選服務"
 
 #: src/screens/Onboarding/StepFinished.tsx:271
 msgid "Choose the algorithms that power your custom feeds."
@@ -2121,7 +2121,7 @@ msgstr "下載 CAR 檔案"
 
 #: src/view/com/composer/text-input/TextInput.web.tsx:327
 msgid "Drop to add images"
-msgstr "放低嚟加圖片"
+msgstr "拖放添加圖片"
 
 #: src/components/dialogs/MutedWords.tsx:153
 msgid "Duration:"
@@ -2145,7 +2145,7 @@ msgstr "例如：alice.com"
 
 #: src/view/com/modals/EditProfile.tsx:198
 msgid "e.g. Artist, dog-lover, and avid reader."
-msgstr "例如 : 藝術家、愛狗人士和狂熱讀者。"
+msgstr "例如 : 藝術家、愛狗人士同狂熱讀者。"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:43
 msgid "E.g. artistic nudes."
@@ -2482,23 +2482,23 @@ msgstr "排除你跟咗嘅用戶"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:403
 msgid "Exit fullscreen"
-msgstr "退出全螢幕"
+msgstr "離開全螢幕"
 
 #: src/view/com/modals/DeleteAccount.tsx:294
 msgid "Exits account deletion process"
-msgstr "退出帳號刪除過程"
+msgstr "離開帳號刪除流程"
 
 #: src/view/com/modals/CropImage.web.tsx:95
 msgid "Exits image cropping process"
-msgstr "退出圖片裁剪過程"
+msgstr "離開圖片裁剪流程"
 
 #: src/view/com/lightbox/Lightbox.web.tsx:108
 msgid "Exits image view"
-msgstr "退出圖片檢視"
+msgstr "離開圖片檢視"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:89
 msgid "Exits inputting search query"
-msgstr "退出輸入搵嘢查詢"
+msgstr "離開輸入搵嘢查詢"
 
 #: src/view/com/lightbox/Lightbox.web.tsx:182
 msgid "Expand alt text"
@@ -2715,7 +2715,7 @@ msgstr "喺動態源入邊篩選"
 
 #: src/screens/Onboarding/StepFinished.tsx:287
 msgid "Finalizing"
-msgstr "正在完成"
+msgstr "幫緊你幫緊你"
 
 #: src/view/com/posts/CustomFeedEmptyState.tsx:48
 #: src/view/com/posts/FollowingEmptyState.tsx:53
@@ -2764,7 +2764,7 @@ msgstr "跟住 {name}"
 
 #: src/components/ProgressGuide/List.tsx:54
 msgid "Follow 7 accounts"
-msgstr "跟住 7 個帳號"
+msgstr "跟 7 個人"
 
 #: src/view/com/profile/ProfileMenu.tsx:222
 #: src/view/com/profile/ProfileMenu.tsx:233
@@ -3068,7 +3068,7 @@ msgstr "標籤：#{tag}"
 
 #: src/screens/Signup/index.tsx:173
 msgid "Having trouble?"
-msgstr "有冇麻煩？"
+msgstr "遇到困難？"
 
 #: src/screens/Settings/Settings.tsx:199
 #: src/screens/Settings/Settings.tsx:203
@@ -3215,7 +3215,7 @@ msgstr "我有我自己嘅網域"
 #: src/components/dms/BlockedByListDialog.tsx:57
 #: src/components/dms/ReportConversationPrompt.tsx:22
 msgid "I understand"
-msgstr "我知悉"
+msgstr "我明"
 
 #: src/view/com/lightbox/Lightbox.web.tsx:184
 msgid "If alt text is long, toggles alt text expanded state"
@@ -3369,7 +3369,7 @@ msgstr "睇落好似你打錯咗你嘅電郵地址噃。你肯定佢冇錯？"
 
 #: src/screens/Signup/StepInfo/index.tsx:241
 msgid "It's correct"
-msgstr "係正確嘅"
+msgstr "係啱嘅"
 
 #: src/screens/StarterPack/Wizard/index.tsx:461
 msgid "It's just you right now! Add more people to your starter pack by searching above."
@@ -3676,7 +3676,7 @@ msgstr "登出可見度"
 
 #: src/components/AccountList.tsx:65
 msgid "Login to account that is not listed"
-msgstr "登入冇列出嘅帳號"
+msgstr "登入未有列出嘅帳號"
 
 #: src/view/shell/desktop/RightNav.tsx:104
 msgid "Logo by <0/>"
@@ -4414,7 +4414,7 @@ msgstr "只支援 WebVTT（.vtt）檔案"
 
 #: src/components/Lists.tsx:88
 msgid "Oops, something went wrong!"
-msgstr "哎呀，有啲嘢出事喇！"
+msgstr "弊傢伙，出咗事！"
 
 #: src/components/Lists.tsx:199
 #: src/components/StarterPack/ProfileStarterPacks.tsx:322
@@ -4424,7 +4424,7 @@ msgstr "哎呀，有啲嘢出事喇！"
 #: src/screens/Settings/NotificationSettings.tsx:41
 #: src/view/screens/Profile.tsx:128
 msgid "Oops!"
-msgstr "哎呀！"
+msgstr "大鑊！"
 
 #: src/screens/Onboarding/StepFinished.tsx:251
 msgid "Open"
@@ -4580,11 +4580,11 @@ msgstr "抑或加埋呢啲條件："
 
 #: src/screens/Deactivated.tsx:206
 msgid "Or, continue with another account."
-msgstr "抑或，繼續用另一個帳號。"
+msgstr "抑或用第個帳號繼續。"
 
 #: src/screens/Deactivated.tsx:193
 msgid "Or, log into one of your other accounts."
-msgstr "抑或，登入你嘅其他帳號。"
+msgstr "抑或登入你其他嘅帳號。"
 
 #: src/lib/moderation/useReportOptions.ts:27
 #: src/view/com/composer/labels/LabelsBtn.tsx:187
@@ -4899,22 +4899,22 @@ msgstr "設定儲存咗"
 
 #: src/screens/Messages/components/MessageListError.tsx:19
 msgid "Press to attempt reconnection"
-msgstr "撳低呢度嘗試重新連線"
+msgstr "撳呢度嘗試重新連線"
 
 #: src/components/forms/HostingProvider.tsx:46
 msgid "Press to change hosting provider"
-msgstr "撳低呢度變更 hosting 供應商"
+msgstr "撳呢度變更 hosting 供應商"
 
 #: src/components/Error.tsx:61
 #: src/components/Lists.tsx:93
 #: src/screens/Messages/components/MessageListError.tsx:24
 #: src/screens/Signup/BackNextButtons.tsx:48
 msgid "Press to retry"
-msgstr "撳低呢度試多次"
+msgstr "撳呢度試多次"
 
 #: src/components/KnownFollowers.tsx:124
 msgid "Press to view followers of this account that you also follow"
-msgstr "撳低呢度睇吓有邊啲你識嘅人跟咗呢個帳號"
+msgstr "撳呢度睇吓有邊啲你識嘅人跟咗呢個帳號"
 
 #: src/view/com/lightbox/Lightbox.web.tsx:148
 msgid "Previous image"
@@ -4996,15 +4996,15 @@ msgstr "公開而且可以共享嘅列表，可以作為動態源使用。"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:128
 msgid "QR code copied to your clipboard!"
-msgstr "QR code 複製咗去你嘅剪貼簿！"
+msgstr "QR code 複製咗去你嘅剪貼簿喇！"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:106
 msgid "QR code has been downloaded!"
-msgstr "QR code 已經下載咗！"
+msgstr "QR code 已經下載咗喇！"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:107
 msgid "QR code saved to your camera roll!"
-msgstr "QR code 儲存咗去你嘅相簿！"
+msgstr "QR code 儲存咗去你嘅相簿喇！"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:129
 #: src/view/com/util/post-ctrls/RepostButton.tsx:156
@@ -5088,7 +5088,7 @@ msgstr "近排嘅搵嘢結果"
 
 #: src/screens/Messages/components/MessageListError.tsx:20
 msgid "Reconnect"
-msgstr "重新連接"
+msgstr "重新連線"
 
 #: src/view/screens/Notifications.tsx:144
 msgid "Refresh notifications"
@@ -6234,7 +6234,7 @@ msgstr "開始新嘅傾偈室"
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:349
 msgid "Start chat with {displayName}"
-msgstr "開始同 {displayName} 聊天"
+msgstr "開始同 {displayName} 傾偈"
 
 #: src/Navigation.tsx:393
 #: src/Navigation.tsx:398
@@ -6363,24 +6363,24 @@ msgstr "只限標籤"
 
 #: src/components/ProgressGuide/Toast.tsx:150
 msgid "Tap to dismiss"
-msgstr "㩒一下就可以閂咗"
+msgstr "撳呢度閂咗佢"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:136
 msgid "Tap to enter full screen"
-msgstr "㩒一下就可以進入全螢幕"
+msgstr "撳呢度進入全螢幕"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:142
 msgid "Tap to play or pause"
-msgstr "㩒一下就可以播放抑或暫停"
+msgstr "撳呢度播放抑或暫停"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:159
 msgid "Tap to toggle sound"
-msgstr "㩒一下就可以切換聲音"
+msgstr "撳呢度切換聲音播放"
 
 #: src/view/com/util/images/AutoSizedImage.tsx:199
 #: src/view/com/util/images/AutoSizedImage.tsx:221
 msgid "Tap to view full image"
-msgstr "㩒一下就可以睇到完整圖片"
+msgstr "撳呢度去睇完整圖片"
 
 #: src/state/shell/progress-guide.tsx:166
 msgid "Task complete - 10 likes!"
@@ -6401,7 +6401,7 @@ msgstr "講個笑話！"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:352
 msgid "Tell us a bit about yourself"
-msgstr "講下你自己"
+msgstr "係噉以同我哋講吓你自己啦"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:63
 msgid "Tell us a little more"
@@ -6455,7 +6455,7 @@ msgstr "當中包含以下內容："
 
 #: src/screens/Signup/StepHandle.tsx:51
 msgid "That handle is already taken."
-msgstr "嗰個帳號頭銜已經攞咗。"
+msgstr "呢個帳號頭銜已經俾人用咗。"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:103
 #: src/screens/StarterPack/StarterPackScreen.tsx:104
@@ -6582,15 +6582,15 @@ msgstr "連接你嘅伺服器出現問題"
 
 #: src/view/com/notifications/Feed.tsx:129
 msgid "There was an issue fetching notifications. Tap here to try again."
-msgstr "攞通知嗰陣出現問題，㩒呢度試多一次。"
+msgstr "攞緊通知嗰陣出現問題，撳呢度試多一次。"
 
 #: src/view/com/posts/Feed.tsx:473
 msgid "There was an issue fetching posts. Tap here to try again."
-msgstr "攞帖文出現問題，㩒呢度試多一次。"
+msgstr "攞緊帖文嗰陣出現問題，撳呢度試多一次。"
 
 #: src/view/com/lists/ListMembers.tsx:169
 msgid "There was an issue fetching the list. Tap here to try again."
-msgstr "攞清單出現問題，㩒呢度試多一次。"
+msgstr "攞緊清單嗰陣出現問題，撳呢度試多一次。"
 
 #: src/screens/Settings/AppPasswords.tsx:52
 msgid "There was an issue fetching your app passwords"
@@ -6599,7 +6599,7 @@ msgstr "擷取你嘅 App 密碼嗰陣出現問題"
 #: src/view/com/feeds/ProfileFeedgens.tsx:150
 #: src/view/com/lists/ProfileLists.tsx:149
 msgid "There was an issue fetching your lists. Tap here to try again."
-msgstr "攞清單出現問題，㩒呢度試多一次。"
+msgstr "攞緊清單嗰陣出現問題，撳呢度試多一次。"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:102
 msgid "There was an issue fetching your service info"
@@ -6705,7 +6705,7 @@ msgstr "若然冇 Bluesky 帳號，就睇唔到呢啲內容。"
 
 #: src/screens/Messages/components/ChatListItem.tsx:266
 msgid "This conversation is with a deleted or a deactivated account. Press for options."
-msgstr "呢個對話係同一個刪除咗抑或停用咗嘅帳號傾嘅。撳低呢度去睇選項。"
+msgstr "呢個對話係同一個刪除咗抑或停用咗嘅帳號傾嘅。撳呢度去睇選項。"
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:94
 msgid "This feature is in beta. You can read more about repository exports in <0>this blogpost</0>."
@@ -6837,7 +6837,7 @@ msgstr "呢個用戶包括喺你已經將佢靜音嘅 <0>{0}</0> 清單入邊。
 
 #: src/components/NewskieDialog.tsx:65
 msgid "This user is new here. Press for more info about when they joined."
-msgstr "呢個用户啱嚟冇耐，撳低呢度可以睇到更多佢哋幾時入嚟嘅資訊。"
+msgstr "呢個用户啱嚟冇耐，撳呢度可以睇到更多佢哋幾時入嚟嘅資訊。"
 
 #: src/view/com/profile/ProfileFollows.tsx:96
 msgid "This user isn't following anyone."
@@ -6917,7 +6917,7 @@ msgstr "翻譯"
 #: src/view/com/util/error/ErrorScreen.tsx:83
 msgctxt "action"
 msgid "Try again"
-msgstr "再試多次"
+msgstr "試多一次"
 
 #: src/screens/Onboarding/state.ts:102
 msgid "TV"
@@ -7582,7 +7582,7 @@ msgstr "邊個可以回覆"
 #: src/screens/Home/NoFeedsPinned.tsx:79
 #: src/screens/Messages/ChatList.tsx:183
 msgid "Whoops!"
-msgstr "嘩！"
+msgstr "大檸樂！"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:44
 msgid "Why should this content be reviewed?"
@@ -7791,7 +7791,7 @@ msgstr "你仲未有靜音過任何帳號。若然想靜音帳號，去到佢個
 
 #: src/components/Lists.tsx:52
 msgid "You have reached the end"
-msgstr "你已經去到盡頭"
+msgstr "你睇晒所有嘢喇"
 
 #: src/lib/media/video/upload.shared.ts:56
 msgid "You have temporarily reached the limit for video uploads. Please try again later."
@@ -8011,11 +8011,11 @@ msgstr "你個密碼已經成功改咗！"
 
 #: src/view/com/composer/Composer.tsx:462
 msgid "Your post has been published"
-msgstr "你嘅帖文已經發佈咗"
+msgstr "你嘅帖文已經發佈咗喇"
 
 #: src/view/com/composer/Composer.tsx:459
 msgid "Your posts have been published"
-msgstr "你嘅帖文已經發佈咗"
+msgstr "你嘅帖文已經發佈咗喇"
 
 #: src/screens/Onboarding/StepFinished.tsx:241
 msgid "Your posts, likes, and blocks are public. Mutes are private."
@@ -8027,7 +8027,7 @@ msgstr "你嘅個人檔案、帖文、動態源同埋清單唔會再畀其他 Bl
 
 #: src/view/com/composer/Composer.tsx:461
 msgid "Your reply has been published"
-msgstr "你嘅回覆已經發佈咗"
+msgstr "你嘅回覆已經發佈咗喇"
 
 #: src/components/dms/ReportDialog.tsx:157
 msgid "Your report will be sent to the Bluesky Moderation Service"
