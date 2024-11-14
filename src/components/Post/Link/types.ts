@@ -9,4 +9,9 @@ export type Props = Pick<LinkProps, 'onPress' | 'style' | 'testID'> &
       | React.ReactElement
       | Iterable<React.ReactElement | null | undefined | boolean>
     post: AppBskyFeedDefs.PostView
+    reason?:
+      | AppBskyFeedDefs.ReasonRepost
+      | AppBskyFeedDefs.ReasonPin
+      | {[k: string]: unknown; $type: string}
+      | undefined
   }

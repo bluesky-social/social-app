@@ -245,6 +245,7 @@ let FeedItemInner = ({
     <PostLink
       testID={`feedItem-by-${post.author.handle}`}
       post={post}
+      reason={reason}
       style={outerStyles}
       onPress={onBeforePress}
       //dataSet={{feedContext}}
