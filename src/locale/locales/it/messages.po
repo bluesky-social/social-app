@@ -1056,7 +1056,7 @@ msgstr ""
 
 #: src/components/ProgressGuide/List.tsx:55
 msgid "Bluesky is better with friends!"
-msgstr "Bluesky è meglio cogli amici!"
+msgstr "Bluesky è meglio con gli amici!"
 
 #~ msgid "Bluesky is flexible."
 #~ msgstr "Bluesky è flessibile."
@@ -1162,15 +1162,15 @@ msgstr "di <0/>"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:81
 msgid "By creating an account you agree to the <0>Privacy Policy</0>."
-msgstr ""
+msgstr "Creando un account accetti la <0>Politica sulla Privacy</0>."
 
 #: src/screens/Signup/StepInfo/Policies.tsx:48
 msgid "By creating an account you agree to the <0>Terms of Service</0> and <1>Privacy Policy</1>."
-msgstr ""
+msgstr "Creando un account accetti i <0>Termini di Servizio</0> e la <1>Politica sulla Privacy</1>."
 
 #: src/screens/Signup/StepInfo/Policies.tsx:68
 msgid "By creating an account you agree to the <0>Terms of Service</0>."
-msgstr ""
+msgstr "Creando un account accetti i <0>Termini di Servizio</0>."
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:162
 msgid "by you"
@@ -1501,7 +1501,7 @@ msgstr "Clima"
 
 #: src/components/dms/ChatEmptyPill.tsx:39
 msgid "Clip 🐴 clop 🐴"
-msgstr ""
+msgstr "Clop 🐴 clop 🐴"
 
 #: src/components/dialogs/GifSelect.tsx:282
 #: src/components/dialogs/VerifyEmailDialog.tsx:246
@@ -1690,7 +1690,7 @@ msgstr "Codice di conferma"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:167
 msgid "Confirmation Code"
-msgstr ""
+msgstr "Codice di conferma"
 
 #~ msgid "Confirms signing up {email} to the waitlist"
 #~ msgstr "Conferma l'iscrizione di {email} alla lista d'attesa"
@@ -1922,7 +1922,7 @@ msgstr "Crea uno starter pack per me"
 #: src/view/com/auth/SplashScreen.tsx:56
 #: src/view/com/auth/SplashScreen.web.tsx:116
 msgid "Create account"
-msgstr ""
+msgstr "Crea un account"
 
 #: src/screens/Signup/index.tsx:93
 msgid "Create Account"
@@ -2042,7 +2042,7 @@ msgstr "Pannello per il debug"
 #: src/components/dialogs/nuxs/NeueTypography.tsx:99
 #: src/screens/Settings/AppearanceSettings.tsx:169
 msgid "Default"
-msgstr ""
+msgstr "Predefinito"
 
 #: src/components/dms/MessageMenu.tsx:151
 #: src/screens/StarterPack/StarterPackScreen.tsx:584
@@ -2147,11 +2147,11 @@ msgstr "Descrizione"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:364
 msgid "Description is too long"
-msgstr ""
+msgstr "Descrizione troppo lunga"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:365
 msgid "Description is too long. The maximum number of characters is {DESCRIPTION_MAX_GRAPHEMES}."
-msgstr ""
+msgstr "La descrizione è troppo lunga. Il numero massimo di caratteri è {DESCRIPTION_MAX_GRAPHEMES}."
 
 #: src/view/com/composer/GifAltText.tsx:150
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:114
@@ -2195,7 +2195,7 @@ msgstr "Soffuso"
 
 #: src/view/screens/AccessibilitySettings.tsx:109
 msgid "Disable autoplay for videos and GIFs"
-msgstr ""
+msgstr "Disabilita l'autoplay per i video e le GIF"
 
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:89
 msgid "Disable Email 2FA"
@@ -2225,10 +2225,10 @@ msgstr "Scartare"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:81
 msgid "Discard changes?"
-msgstr ""
+msgstr "Scartare le modifiche?"
 
 #~ msgid "Discard draft"
-#~ msgstr "Scarta la bozza"
+#~ msgstr "Scartare la bozza"
 
 #: src/view/com/composer/Composer.tsx:531
 msgid "Discard draft?"
@@ -2284,11 +2284,11 @@ msgstr "Nome visualizzato"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:333
 msgid "Display name is too long"
-msgstr ""
+msgstr "Il nome scelto è troppo lungo"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:334
 msgid "Display name is too long. The maximum number of characters is {DISPLAY_NAME_MAX_GRAPHEMES}."
-msgstr ""
+msgstr "Il nome scelto è troppo lungo. Il numero massimo di caratteri è {DISPLAY_NAME_MAX_GRAPHEMES}."
 
 #: src/view/com/modals/ChangeHandle.tsx:384
 msgid "DNS Panel"
@@ -2300,7 +2300,7 @@ msgstr "Non applicare questa parola silenziata agli utenti seguiti"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:174
 msgid "Does not contain adult content."
-msgstr ""
+msgstr "Non contiene materiale per adulti."
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:213
 msgid "Does not contain graphic or disturbing content."
@@ -7526,7 +7526,7 @@ msgstr "Completato - 10 like!"
 
 #: src/components/ProgressGuide/List.tsx:49
 msgid "Teach our algorithm what you like"
-msgstr "Impara all'algoritmo cosa ti piace"
+msgstr "Insegna all'algoritmo cosa ti piace"
 
 #: src/screens/Onboarding/index.tsx:36
 #: src/screens/Onboarding/state.ts:101
