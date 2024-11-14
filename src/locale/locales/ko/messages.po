@@ -8,7 +8,7 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-13 11:11+0900\n"
+"PO-Revision-Date: 2024-11-14 09:34+0900\n"
 "Last-Translator: quiple\n"
 "Language-Team: quiple, lens0021, HaruChanHeart, hazzzi, heartade\n"
 "Plural-Forms: \n"
@@ -68,7 +68,7 @@ msgstr "팔로우 중"
 msgid "{0, plural, one {Like (# like)} other {Like (# likes)}}"
 msgstr "좋아요 ({0, plural, other {#}}개)"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:441
+#: src/view/com/post-thread/PostThreadItem.tsx:442
 msgid "{0, plural, one {like} other {likes}}"
 msgstr "좋아요"
 
@@ -81,7 +81,7 @@ msgstr "{0, plural, other {#}}명의 사용자가 좋아함"
 msgid "{0, plural, one {post} other {posts}}"
 msgstr "게시물"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:425
+#: src/view/com/post-thread/PostThreadItem.tsx:426
 msgid "{0, plural, one {quote} other {quotes}}"
 msgstr "인용"
 
@@ -89,7 +89,7 @@ msgstr "인용"
 msgid "{0, plural, one {Reply (# reply)} other {Reply (# replies)}}"
 msgstr "답글 ({0, plural, other {#}}개)"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:407
+#: src/view/com/post-thread/PostThreadItem.tsx:408
 msgid "{0, plural, one {repost} other {reposts}}"
 msgstr "재게시"
 
@@ -558,6 +558,10 @@ msgstr "리스트에 추가됨"
 msgid "Added to my feeds"
 msgstr "내 피드에 추가됨"
 
+#: src/view/com/composer/labels/LabelsBtn.tsx:161
+msgid "Adult"
+msgstr "성인물"
+
 #: src/components/moderation/ContentHider.tsx:83
 #: src/lib/moderation/useGlobalLabelStrings.ts:34
 #: src/lib/moderation/useModerationCauseDescription.ts:144
@@ -569,12 +573,12 @@ msgstr "성인 콘텐츠"
 msgid "Adult content can only be enabled via the Web at <0>bsky.app</0>."
 msgstr "성인 콘텐츠는 <0>bsky.app</0>에서 웹을 통해서만 활성화할 수 있습니다."
 
-#: src/components/moderation/LabelPreference.tsx:243
+#: src/components/moderation/LabelPreference.tsx:242
 msgid "Adult content is disabled."
 msgstr "성인 콘텐츠가 비활성화되어 있습니다."
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:140
-#: src/view/com/composer/labels/LabelsBtn.tsx:194
+#: src/view/com/composer/labels/LabelsBtn.tsx:198
 msgid "Adult Content labels"
 msgstr "성인 콘텐츠 라벨"
 
@@ -827,12 +831,12 @@ msgstr "모양"
 msgid "Apply default recommended feeds"
 msgstr "기본 추천 피드 적용하기"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:821
+#: src/view/com/post-thread/PostThreadItem.tsx:825
 msgid "Archived from {0}"
 msgstr "{0}에 보관됨"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:790
-#: src/view/com/post-thread/PostThreadItem.tsx:829
+#: src/view/com/post-thread/PostThreadItem.tsx:794
+#: src/view/com/post-thread/PostThreadItem.tsx:833
 msgid "Archived post"
 msgstr "보관된 게시물"
 
@@ -885,7 +889,7 @@ msgstr "{0}(으)로 쓰고 있나요?"
 msgid "Art"
 msgstr "예술"
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:170
+#: src/view/com/composer/labels/LabelsBtn.tsx:173
 msgid "Artistic or non-erotic nudity."
 msgstr "선정적이지 않거나 예술적인 나체."
 
@@ -1023,7 +1027,7 @@ msgstr "블로그"
 msgid "Bluesky"
 msgstr "Bluesky"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:846
+#: src/view/com/post-thread/PostThreadItem.tsx:850
 msgid "Bluesky cannot confirm the authenticity of the claimed date."
 msgstr "Bluesky는 해당 날짜의 진위를 확인할 수 없습니다."
 
@@ -1470,11 +1474,11 @@ msgstr "답글 작성하기"
 msgid "Compressing video..."
 msgstr "동영상 압축 중..."
 
-#: src/components/moderation/LabelPreference.tsx:83
+#: src/components/moderation/LabelPreference.tsx:82
 msgid "Configure content filtering setting for category: {name}"
 msgstr "{name} 카테고리에 대한 콘텐츠 필터링 설정을 구성합니다."
 
-#: src/components/moderation/LabelPreference.tsx:245
+#: src/components/moderation/LabelPreference.tsx:244
 msgid "Configured in <0>moderation settings</0>."
 msgstr "<0>검토 설정</0>에서 설정합니다."
 
@@ -2053,14 +2057,6 @@ msgstr "DNS 패널"
 msgid "Do not apply this mute word to users you follow"
 msgstr "내가 팔로우하는 사용자에게는 이 뮤트 단어를 적용하지 않기"
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:174
-msgid "Does not contain adult content."
-msgstr "성인 콘텐츠가 포함되어 있지 않습니다."
-
-#: src/view/com/composer/labels/LabelsBtn.tsx:213
-msgid "Does not contain graphic or disturbing content."
-msgstr "선정적이거나 불쾌감을 주는 콘텐츠가 포함되어 있지 않습니다."
-
 #: src/lib/moderation/useGlobalLabelStrings.ts:39
 msgid "Does not include nudity."
 msgstr "나체를 포함하지 않습니다."
@@ -2083,8 +2079,8 @@ msgstr "도메인을 확인했습니다."
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:222
 #: src/view/com/auth/server-input/index.tsx:170
 #: src/view/com/auth/server-input/index.tsx:171
-#: src/view/com/composer/labels/LabelsBtn.tsx:223
-#: src/view/com/composer/labels/LabelsBtn.tsx:230
+#: src/view/com/composer/labels/LabelsBtn.tsx:225
+#: src/view/com/composer/labels/LabelsBtn.tsx:232
 #: src/view/com/composer/videos/SubtitleDialog.tsx:169
 #: src/view/com/composer/videos/SubtitleDialog.tsx:179
 #: src/view/com/modals/CropImage.web.tsx:112
@@ -3022,8 +3018,8 @@ msgid "Go to user's profile"
 msgstr "사용자의 프로필로 가기"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:46
-#: src/view/com/composer/labels/LabelsBtn.tsx:199
-#: src/view/com/composer/labels/LabelsBtn.tsx:202
+#: src/view/com/composer/labels/LabelsBtn.tsx:203
+#: src/view/com/composer/labels/LabelsBtn.tsx:206
 msgid "Graphic Media"
 msgstr "불쾌감을 주는 미디어"
 
@@ -3089,7 +3085,7 @@ msgid "Hidden list"
 msgstr "숨겨진 리스트"
 
 #: src/components/moderation/ContentHider.tsx:178
-#: src/components/moderation/LabelPreference.tsx:136
+#: src/components/moderation/LabelPreference.tsx:135
 #: src/components/moderation/PostHider.tsx:122
 #: src/lib/moderation/useLabelBehaviorDescription.ts:15
 #: src/lib/moderation/useLabelBehaviorDescription.ts:20
@@ -3317,7 +3313,7 @@ msgstr "잘못된 2단계 인증 코드입니다."
 msgid "Invalid handle. Please try a different one."
 msgstr "잘못된 핸들입니다. 다른 핸들을 사용하세요."
 
-#: src/view/com/post-thread/PostThreadItem.tsx:271
+#: src/view/com/post-thread/PostThreadItem.tsx:272
 msgid "Invalid or unsupported post record"
 msgstr "유효하지 않거나 지원되지 않는 게시물 기록"
 
@@ -3565,7 +3561,7 @@ msgstr "좋아요 표시한 사용자"
 msgid "Likes"
 msgstr "좋아요"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:211
+#: src/view/com/post-thread/PostThreadItem.tsx:212
 msgid "Likes on this post"
 msgstr "이 게시물을 좋아요 표시합니다"
 
@@ -3731,7 +3727,7 @@ msgstr "읽음으로 표시"
 msgid "Media"
 msgstr "미디어"
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:208
+#: src/view/com/composer/labels/LabelsBtn.tsx:212
 msgid "Media that may be disturbing or inappropriate for some audiences."
 msgstr "일부 사용자에게 불쾌감을 주거나 부적절할 수 있는 미디어."
 
@@ -3832,7 +3828,7 @@ msgstr "검토 리스트"
 msgid "Moderation Lists"
 msgstr "검토 리스트"
 
-#: src/components/moderation/LabelPreference.tsx:248
+#: src/components/moderation/LabelPreference.tsx:247
 msgid "moderation settings"
 msgstr "검토 설정"
 
@@ -3849,7 +3845,7 @@ msgstr "검토 도구"
 msgid "Moderator has chosen to set a general warning on the content."
 msgstr "검토자가 콘텐츠에 일반 경고를 설정했습니다."
 
-#: src/view/com/post-thread/PostThreadItem.tsx:627
+#: src/view/com/post-thread/PostThreadItem.tsx:628
 msgid "More"
 msgstr "더 보기"
 
@@ -4362,7 +4358,7 @@ msgid "OK"
 msgstr "확인"
 
 #: src/screens/Login/PasswordUpdatedForm.tsx:38
-#: src/view/com/post-thread/PostThreadItem.tsx:851
+#: src/view/com/post-thread/PostThreadItem.tsx:855
 msgid "Okay"
 msgstr "확인"
 
@@ -4586,7 +4582,7 @@ msgid "Or, log into one of your other accounts."
 msgstr "또는 다른 계정 중 하나로 로그인하세요."
 
 #: src/lib/moderation/useReportOptions.ts:27
-#: src/view/com/composer/labels/LabelsBtn.tsx:183
+#: src/view/com/composer/labels/LabelsBtn.tsx:187
 msgid "Other"
 msgstr "기타"
 
@@ -4676,7 +4672,7 @@ msgstr "반려동물"
 msgid "Photography"
 msgstr "사진"
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:168
+#: src/view/com/composer/labels/LabelsBtn.tsx:171
 msgid "Pictures meant for adults."
 msgstr "성인용 사진."
 
@@ -4795,7 +4791,6 @@ msgid "Politics"
 msgstr "정치"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:158
-#: src/view/com/composer/labels/LabelsBtn.tsx:161
 msgid "Porn"
 msgstr "음란물"
 
@@ -4814,7 +4809,7 @@ msgctxt "action"
 msgid "Post All"
 msgstr "모두 게시하기"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:203
+#: src/view/com/post-thread/PostThreadItem.tsx:204
 msgid "Post by {0}"
 msgstr "{0} 님의 게시물"
 
@@ -5042,7 +5037,7 @@ msgstr "인용 설정"
 msgid "Quotes"
 msgstr "인용"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:237
+#: src/view/com/post-thread/PostThreadItem.tsx:238
 msgid "Quotes of this post"
 msgstr "이 게시물의 인용"
 
@@ -5413,7 +5408,7 @@ msgstr "<0><1/></0> 님이 재게시함"
 msgid "Reposted by you"
 msgstr "내가 재게시함"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:216
+#: src/view/com/post-thread/PostThreadItem.tsx:217
 msgid "Reposts of this post"
 msgstr "이 게시물의 재게시물"
 
@@ -5879,7 +5874,7 @@ msgstr "비밀번호 재설정을 위한 이메일을 설정합니다"
 msgid "Settings"
 msgstr "설정"
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:172
+#: src/view/com/composer/labels/LabelsBtn.tsx:175
 msgid "Sexual activity or erotic nudity."
 msgstr "성행위 또는 선정적인 나체."
 
@@ -5964,7 +5959,7 @@ msgid "Shares the linked website"
 msgstr "연결된 웹사이트를 공유합니다"
 
 #: src/components/moderation/ContentHider.tsx:178
-#: src/components/moderation/LabelPreference.tsx:138
+#: src/components/moderation/LabelPreference.tsx:137
 #: src/components/moderation/PostHider.tsx:122
 msgid "Show"
 msgstr "표시"
@@ -5992,7 +5987,7 @@ msgstr "배지 표시 및 피드에서 필터링"
 msgid "Show hidden replies"
 msgstr "숨겨진 답글 표시"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:792
+#: src/view/com/post-thread/PostThreadItem.tsx:796
 msgid "Show information about when this post was created"
 msgstr "이 게시물이 언제 작성되었는지에 대한 정보를 표시합니다"
 
@@ -6005,7 +6000,7 @@ msgstr "이런 항목 덜 보기"
 msgid "Show list anyway"
 msgstr "무시하고 리스트 표시하기"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:587
+#: src/view/com/post-thread/PostThreadItem.tsx:588
 #: src/view/com/post/Post.tsx:242
 #: src/view/com/posts/FeedItem.tsx:509
 msgid "Show More"
@@ -6773,11 +6768,11 @@ msgstr "이 리스트는 비어 있습니다."
 msgid "This moderation service is unavailable. See below for more details. If this issue persists, contact us."
 msgstr "이 검토 서비스는 사용할 수 없습니다. 자세한 내용은 아래를 참조하세요. 이 문제가 지속되면 문의해 주세요."
 
-#: src/view/com/post-thread/PostThreadItem.tsx:832
+#: src/view/com/post-thread/PostThreadItem.tsx:836
 msgid "This post claims to have been created on <0>{0}</0>, but was first seen by Bluesky on <1>{1}</1>."
 msgstr "이 게시물은 <0>{0}</0>에 작성되었다고 주장하지만 Bluesky에서는 <1>{1}</1>에 처음 확인되었습니다."
 
-#: src/view/com/post-thread/PostThreadItem.tsx:146
+#: src/view/com/post-thread/PostThreadItem.tsx:147
 msgid "This post has been deleted."
 msgstr "이 게시물은 삭제되었습니다."
 
@@ -6907,8 +6902,8 @@ msgstr "인기"
 
 #: src/components/dms/MessageMenu.tsx:103
 #: src/components/dms/MessageMenu.tsx:105
-#: src/view/com/post-thread/PostThreadItem.tsx:757
-#: src/view/com/post-thread/PostThreadItem.tsx:760
+#: src/view/com/post-thread/PostThreadItem.tsx:761
+#: src/view/com/post-thread/PostThreadItem.tsx:764
 #: src/view/com/util/forms/PostDropdownBtn.tsx:422
 #: src/view/com/util/forms/PostDropdownBtn.tsx:424
 msgid "Translate"
@@ -7442,7 +7437,7 @@ msgstr "내가 뮤트한 계정 보기"
 msgid "Visit Site"
 msgstr "사이트 방문"
 
-#: src/components/moderation/LabelPreference.tsx:137
+#: src/components/moderation/LabelPreference.tsx:136
 #: src/lib/moderation/useLabelBehaviorDescription.ts:17
 #: src/lib/moderation/useLabelBehaviorDescription.ts:22
 msgid "Warn"
