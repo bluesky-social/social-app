@@ -177,6 +177,11 @@ export function ListConvosProviderInner({
                   }),
                 }
               } else {
+                /**
+                 * We received a message from an conversation old enough that
+                 * it doesn't exist in the query cache, meaning we need to
+                 * refetch and bump the old convo to the top.
+                 */
                 debouncedRefetch()
               }
             })
