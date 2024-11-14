@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-13 02:08\n"
+"PO-Revision-Date: 2024-11-14 01:27\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -73,7 +73,7 @@ msgstr "{0, plural, one {個跟隨中} other {個跟隨中}}"
 msgid "{0, plural, one {Like (# like)} other {Like (# likes)}}"
 msgstr "{0, plural, one {喜歡（# 個喜歡）} other {喜歡（# 個喜歡）}}"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:441
+#: src/view/com/post-thread/PostThreadItem.tsx:442
 msgid "{0, plural, one {like} other {likes}}"
 msgstr "{0, plural, one {個喜歡} other {個喜歡}}"
 
@@ -86,7 +86,7 @@ msgstr "{0, plural,one {# 個用戶表示喜歡} other {# 個用戶表示喜歡}
 msgid "{0, plural, one {post} other {posts}}"
 msgstr "{0, plural, one {則貼文} other {則貼文}}"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:425
+#: src/view/com/post-thread/PostThreadItem.tsx:426
 msgid "{0, plural, one {quote} other {quotes}}"
 msgstr "{0, plural, one {則引用} other {則引用}}"
 
@@ -94,7 +94,7 @@ msgstr "{0, plural, one {則引用} other {則引用}}"
 msgid "{0, plural, one {Reply (# reply)} other {Reply (# replies)}}"
 msgstr "{0, plural, one {回覆（# 個回覆）} other {回覆（# 個回覆）}}"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:407
+#: src/view/com/post-thread/PostThreadItem.tsx:408
 msgid "{0, plural, one {repost} other {reposts}}"
 msgstr "{0, plural, one {則轉發} other {則轉發}}"
 
@@ -563,6 +563,10 @@ msgstr "成功新增至列表"
 msgid "Added to my feeds"
 msgstr "成功新增到我的動態源"
 
+#: src/view/com/composer/labels/LabelsBtn.tsx:161
+msgid "Adult"
+msgstr "成人內容"
+
 #: src/components/moderation/ContentHider.tsx:83
 #: src/lib/moderation/useGlobalLabelStrings.ts:34
 #: src/lib/moderation/useModerationCauseDescription.ts:144
@@ -574,12 +578,12 @@ msgstr "成人內容"
 msgid "Adult content can only be enabled via the Web at <0>bsky.app</0>."
 msgstr "成人內容只能透過網頁版 (<0>bsky.app</0>) 啟用。"
 
-#: src/components/moderation/LabelPreference.tsx:243
+#: src/components/moderation/LabelPreference.tsx:242
 msgid "Adult content is disabled."
 msgstr "成人內容已停用。"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:140
-#: src/view/com/composer/labels/LabelsBtn.tsx:194
+#: src/view/com/composer/labels/LabelsBtn.tsx:198
 msgid "Adult Content labels"
 msgstr "成人內容標記"
 
@@ -832,12 +836,12 @@ msgstr "外觀"
 msgid "Apply default recommended feeds"
 msgstr "使用預設推薦的動態源"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:821
+#: src/view/com/post-thread/PostThreadItem.tsx:825
 msgid "Archived from {0}"
 msgstr "自 {0} 起被封存"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:790
-#: src/view/com/post-thread/PostThreadItem.tsx:829
+#: src/view/com/post-thread/PostThreadItem.tsx:794
+#: src/view/com/post-thread/PostThreadItem.tsx:833
 msgid "Archived post"
 msgstr "已封存的貼文"
 
@@ -890,7 +894,7 @@ msgstr "您正在使用 <0>{0}</0> 撰寫嗎？"
 msgid "Art"
 msgstr "藝術"
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:170
+#: src/view/com/composer/labels/LabelsBtn.tsx:173
 msgid "Artistic or non-erotic nudity."
 msgstr "帶有藝術性或非色情的裸露。"
 
@@ -1028,7 +1032,7 @@ msgstr "部落格"
 msgid "Bluesky"
 msgstr "Bluesky"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:846
+#: src/view/com/post-thread/PostThreadItem.tsx:850
 msgid "Bluesky cannot confirm the authenticity of the claimed date."
 msgstr "Bluesky 無法確認貼文聲稱的發布日期的真實性。"
 
@@ -1475,11 +1479,11 @@ msgstr "撰寫回覆"
 msgid "Compressing video..."
 msgstr "正在壓縮影片..."
 
-#: src/components/moderation/LabelPreference.tsx:83
+#: src/components/moderation/LabelPreference.tsx:82
 msgid "Configure content filtering setting for category: {name}"
 msgstr "設定 {name} 類別的內容篩選"
 
-#: src/components/moderation/LabelPreference.tsx:245
+#: src/components/moderation/LabelPreference.tsx:244
 msgid "Configured in <0>moderation settings</0>."
 msgstr "已在<0>內容管理設定</0>中設定。"
 
@@ -2058,14 +2062,6 @@ msgstr "DNS 控制台"
 msgid "Do not apply this mute word to users you follow"
 msgstr "不要使用此靜音字詞隱藏您所跟隨用戶的貼文"
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:174
-msgid "Does not contain adult content."
-msgstr "不包含成人內容。"
-
-#: src/view/com/composer/labels/LabelsBtn.tsx:213
-msgid "Does not contain graphic or disturbing content."
-msgstr "不包含敏感或令人不安的內容。"
-
 #: src/lib/moderation/useGlobalLabelStrings.ts:39
 msgid "Does not include nudity."
 msgstr "不包含裸露內容。"
@@ -2088,8 +2084,8 @@ msgstr "網域已驗證！"
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:222
 #: src/view/com/auth/server-input/index.tsx:170
 #: src/view/com/auth/server-input/index.tsx:171
-#: src/view/com/composer/labels/LabelsBtn.tsx:223
-#: src/view/com/composer/labels/LabelsBtn.tsx:230
+#: src/view/com/composer/labels/LabelsBtn.tsx:225
+#: src/view/com/composer/labels/LabelsBtn.tsx:232
 #: src/view/com/composer/videos/SubtitleDialog.tsx:169
 #: src/view/com/composer/videos/SubtitleDialog.tsx:179
 #: src/view/com/modals/CropImage.web.tsx:112
@@ -3027,8 +3023,8 @@ msgid "Go to user's profile"
 msgstr "前往用戶的個人檔案"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:46
-#: src/view/com/composer/labels/LabelsBtn.tsx:199
-#: src/view/com/composer/labels/LabelsBtn.tsx:202
+#: src/view/com/composer/labels/LabelsBtn.tsx:203
+#: src/view/com/composer/labels/LabelsBtn.tsx:206
 msgid "Graphic Media"
 msgstr "敏感媒體"
 
@@ -3094,7 +3090,7 @@ msgid "Hidden list"
 msgstr "隱藏列表"
 
 #: src/components/moderation/ContentHider.tsx:178
-#: src/components/moderation/LabelPreference.tsx:136
+#: src/components/moderation/LabelPreference.tsx:135
 #: src/components/moderation/PostHider.tsx:122
 #: src/lib/moderation/useLabelBehaviorDescription.ts:15
 #: src/lib/moderation/useLabelBehaviorDescription.ts:20
@@ -3322,7 +3318,7 @@ msgstr "無效的雙重驗證碼。"
 msgid "Invalid handle. Please try a different one."
 msgstr "無法使用這個帳號代碼，請選擇不同的代碼再試一次。"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:271
+#: src/view/com/post-thread/PostThreadItem.tsx:272
 msgid "Invalid or unsupported post record"
 msgstr "無效或不支援的貼文紀錄"
 
@@ -3570,7 +3566,7 @@ msgstr "表示喜歡的用戶"
 msgid "Likes"
 msgstr "喜歡"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:211
+#: src/view/com/post-thread/PostThreadItem.tsx:212
 msgid "Likes on this post"
 msgstr "這則貼文的喜歡數"
 
@@ -3736,7 +3732,7 @@ msgstr "標記為已讀"
 msgid "Media"
 msgstr "媒體"
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:208
+#: src/view/com/composer/labels/LabelsBtn.tsx:212
 msgid "Media that may be disturbing or inappropriate for some audiences."
 msgstr "可能會使某些受眾感到不安或造成不適的媒體內容。"
 
@@ -3837,7 +3833,7 @@ msgstr "內容管理列表"
 msgid "Moderation Lists"
 msgstr "內容管理列表"
 
-#: src/components/moderation/LabelPreference.tsx:248
+#: src/components/moderation/LabelPreference.tsx:247
 msgid "moderation settings"
 msgstr "內容管理設定"
 
@@ -3854,7 +3850,7 @@ msgstr "內容管理工具"
 msgid "Moderator has chosen to set a general warning on the content."
 msgstr "內容管理服務已將這項內容標記為普通警告。"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:627
+#: src/view/com/post-thread/PostThreadItem.tsx:628
 msgid "More"
 msgstr "更多"
 
@@ -4367,7 +4363,7 @@ msgid "OK"
 msgstr "好的"
 
 #: src/screens/Login/PasswordUpdatedForm.tsx:38
-#: src/view/com/post-thread/PostThreadItem.tsx:851
+#: src/view/com/post-thread/PostThreadItem.tsx:855
 msgid "Okay"
 msgstr "好的"
 
@@ -4591,7 +4587,7 @@ msgid "Or, log into one of your other accounts."
 msgstr "或登入您的其他帳號。"
 
 #: src/lib/moderation/useReportOptions.ts:27
-#: src/view/com/composer/labels/LabelsBtn.tsx:183
+#: src/view/com/composer/labels/LabelsBtn.tsx:187
 msgid "Other"
 msgstr "其他"
 
@@ -4681,7 +4677,7 @@ msgstr "寵物"
 msgid "Photography"
 msgstr "攝影"
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:168
+#: src/view/com/composer/labels/LabelsBtn.tsx:171
 msgid "Pictures meant for adults."
 msgstr "不適合未成年人的圖片。"
 
@@ -4800,7 +4796,6 @@ msgid "Politics"
 msgstr "政治"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:158
-#: src/view/com/composer/labels/LabelsBtn.tsx:161
 msgid "Porn"
 msgstr "色情"
 
@@ -4819,7 +4814,7 @@ msgctxt "action"
 msgid "Post All"
 msgstr "全部發布"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:203
+#: src/view/com/post-thread/PostThreadItem.tsx:204
 msgid "Post by {0}"
 msgstr "{0} 的貼文"
 
@@ -5047,7 +5042,7 @@ msgstr "引用設定"
 msgid "Quotes"
 msgstr "引用"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:237
+#: src/view/com/post-thread/PostThreadItem.tsx:238
 msgid "Quotes of this post"
 msgstr "引用這則貼文"
 
@@ -5418,7 +5413,7 @@ msgstr "由 <0><1/></0> 轉發"
 msgid "Reposted by you"
 msgstr "由您轉發"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:216
+#: src/view/com/post-thread/PostThreadItem.tsx:217
 msgid "Reposts of this post"
 msgstr "轉發這則貼文"
 
@@ -5884,7 +5879,7 @@ msgstr "設定用於重設密碼的電子郵件"
 msgid "Settings"
 msgstr "設定"
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:172
+#: src/view/com/composer/labels/LabelsBtn.tsx:175
 msgid "Sexual activity or erotic nudity."
 msgstr "性行為或色情裸露。"
 
@@ -5969,7 +5964,7 @@ msgid "Shares the linked website"
 msgstr "分享網站的連結"
 
 #: src/components/moderation/ContentHider.tsx:178
-#: src/components/moderation/LabelPreference.tsx:138
+#: src/components/moderation/LabelPreference.tsx:137
 #: src/components/moderation/PostHider.tsx:122
 msgid "Show"
 msgstr "顯示"
@@ -5997,7 +5992,7 @@ msgstr "顯示標記並從動態源中篩選"
 msgid "Show hidden replies"
 msgstr "顯示隱藏回覆"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:792
+#: src/view/com/post-thread/PostThreadItem.tsx:796
 msgid "Show information about when this post was created"
 msgstr "顯示有​​關此貼文建立時間的詳細資訊"
 
@@ -6010,7 +6005,7 @@ msgstr "減少顯示類似內容"
 msgid "Show list anyway"
 msgstr "仍然顯示列表"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:587
+#: src/view/com/post-thread/PostThreadItem.tsx:588
 #: src/view/com/post/Post.tsx:242
 #: src/view/com/posts/FeedItem.tsx:509
 msgid "Show More"
@@ -6778,11 +6773,11 @@ msgstr "這個列表為空！"
 msgid "This moderation service is unavailable. See below for more details. If this issue persists, contact us."
 msgstr "這項內容管理服務暫時無法使用，詳情請見下文。如果問題持續存在，請與我們聯絡。"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:832
+#: src/view/com/post-thread/PostThreadItem.tsx:836
 msgid "This post claims to have been created on <0>{0}</0>, but was first seen by Bluesky on <1>{1}</1>."
 msgstr "這則貼文聲稱發佈於 <0>{0}</0>，但首次出現在 Bluesky 的時間為 <1>{1}</1>。"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:146
+#: src/view/com/post-thread/PostThreadItem.tsx:147
 msgid "This post has been deleted."
 msgstr "這則貼文已被刪除。"
 
@@ -6912,8 +6907,8 @@ msgstr "熱門"
 
 #: src/components/dms/MessageMenu.tsx:103
 #: src/components/dms/MessageMenu.tsx:105
-#: src/view/com/post-thread/PostThreadItem.tsx:757
-#: src/view/com/post-thread/PostThreadItem.tsx:760
+#: src/view/com/post-thread/PostThreadItem.tsx:761
+#: src/view/com/post-thread/PostThreadItem.tsx:764
 #: src/view/com/util/forms/PostDropdownBtn.tsx:422
 #: src/view/com/util/forms/PostDropdownBtn.tsx:424
 msgid "Translate"
@@ -7447,7 +7442,7 @@ msgstr "檢視您靜音的帳號"
 msgid "Visit Site"
 msgstr "造訪網站"
 
-#: src/components/moderation/LabelPreference.tsx:137
+#: src/components/moderation/LabelPreference.tsx:136
 #: src/lib/moderation/useLabelBehaviorDescription.ts:17
 #: src/lib/moderation/useLabelBehaviorDescription.ts:22
 msgid "Warn"
