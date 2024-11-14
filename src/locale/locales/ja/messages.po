@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-13 09:41+0900\n"
+"PO-Revision-Date: 2024-11-14 11:20+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -556,6 +556,10 @@ msgstr "リストに追加"
 msgid "Added to my feeds"
 msgstr "マイフィードに追加"
 
+#: src/view/com/composer/labels/LabelsBtn.tsx:161
+msgid "Adult"
+msgstr "成人向け（ポルノ等）"
+
 #: src/components/moderation/ContentHider.tsx:83
 #: src/lib/moderation/useGlobalLabelStrings.ts:34
 #: src/lib/moderation/useModerationCauseDescription.ts:144
@@ -1024,7 +1028,7 @@ msgstr "Bluesky"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:846
 msgid "Bluesky cannot confirm the authenticity of the claimed date."
-msgstr "Blueskyは主張されている日付の信憑性を確認できません。"
+msgstr "Blueskyでは、この投稿日時の信憑性を確認できません。"
 
 #: src/view/com/auth/server-input/index.tsx:151
 msgid "Bluesky is an open network where you can choose your hosting provider. If you're a developer, you can host your own server."
@@ -2044,14 +2048,6 @@ msgstr "DNSパネルがある場合"
 #: src/components/dialogs/MutedWords.tsx:302
 msgid "Do not apply this mute word to users you follow"
 msgstr "このミュートワードはフォローしているユーザーには適用しない"
-
-#: src/view/com/composer/labels/LabelsBtn.tsx:174
-msgid "Does not contain adult content."
-msgstr "成人向けコンテンツは含んでいません。"
-
-#: src/view/com/composer/labels/LabelsBtn.tsx:213
-msgid "Does not contain graphic or disturbing content."
-msgstr "生々しい（グロい）、または困惑させるコンテンツを含んでいません。"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:39
 msgid "Does not include nudity."
