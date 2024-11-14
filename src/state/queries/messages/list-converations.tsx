@@ -39,7 +39,7 @@ export function useListConvosQuery({
     queryKey: RQKEY,
     queryFn: async ({pageParam}) => {
       const {data} = await agent.api.chat.bsky.convo.listConvos(
-        {cursor: pageParam},
+        {cursor: pageParam, limit: 20},
         {headers: DM_SERVICE_HEADERS},
       )
 
@@ -245,7 +245,7 @@ export function useUnreadMessageCount() {
   return useMemo(() => {
     return {
       count,
-      numUnread: count > 0 ? (count > 30 ? '30+' : String(count)) : undefined,
+      numUnread: count > 0 ? (count > 10 ? '10+' : String(count)) : undefined,
     }
   }, [count])
 }
