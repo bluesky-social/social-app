@@ -252,7 +252,7 @@ export function useUnreadMessageCount() {
   }, [count])
 }
 
-type ConvoListQueryData = {
+export type ConvoListQueryData = {
   pageParams: Array<string | undefined>
   pages: Array<ChatBskyConvoListConvos.OutputSchema>
 }
@@ -303,7 +303,7 @@ function optimisticDelete(chatId: string, old: ConvoListQueryData) {
   }
 }
 
-function getConvoFromQueryData(chatId: string, old: ConvoListQueryData) {
+export function getConvoFromQueryData(chatId: string, old: ConvoListQueryData) {
   for (const page of old.pages) {
     for (const convo of page.convos) {
       if (convo.id === chatId) {
