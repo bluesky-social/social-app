@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-14 07:11\n"
+"PO-Revision-Date: 2024-11-14 07:49\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -580,7 +580,7 @@ msgstr "仅可通过网页端（<0>bsky.app</0>）启用成人内容显示。"
 
 #: src/components/moderation/LabelPreference.tsx:242
 msgid "Adult content is disabled."
-msgstr "成人内容显示已被禁用。"
+msgstr "成人内容显示已禁用。"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:140
 #: src/view/com/composer/labels/LabelsBtn.tsx:198
@@ -779,7 +779,7 @@ msgstr "应用密码"
 
 #: src/screens/Settings/AppPasswords.tsx:139
 msgid "App password deleted"
-msgstr "已删除应用密码"
+msgstr "已删除此应用密码"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:84
 msgid "App password name must be unique"
@@ -988,7 +988,7 @@ msgstr "要屏蔽这些账户吗？"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:83
 msgid "Blocked"
-msgstr "已被屏蔽"
+msgstr "此帖文已被屏蔽"
 
 #: src/screens/Moderation/index.tsx:274
 msgid "Blocked accounts"
@@ -1009,7 +1009,7 @@ msgstr "已被屏蔽的账户无法在你的帖文下回复、提及你或以其
 
 #: src/view/com/post-thread/PostThread.tsx:412
 msgid "Blocked post."
-msgstr "已屏蔽帖文。"
+msgstr "此帖文已被屏蔽。"
 
 #: src/screens/Profile/Sections/Labels.tsx:173
 msgid "Blocking does not prevent this labeler from placing labels on your account."
@@ -1266,7 +1266,7 @@ msgstr "私信设置"
 
 #: src/components/dms/ConvoMenu.tsx:84
 msgid "Chat unmuted"
-msgstr "已解除隐藏对话"
+msgstr "已取消隐藏对话"
 
 #: src/screens/SignupQueued.tsx:78
 #: src/screens/SignupQueued.tsx:82
@@ -1414,7 +1414,7 @@ msgstr "关闭导航页脚"
 #: src/components/Menu/index.tsx:230
 #: src/components/TagMenu/index.tsx:261
 msgid "Close this dialog"
-msgstr "关闭该窗口"
+msgstr "关闭这个窗口"
 
 #: src/view/shell/index.web.tsx:69
 msgid "Closes bottom navigation bar"
@@ -1557,7 +1557,7 @@ msgstr "内容与媒体"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:18
 msgid "Content Blocked"
-msgstr "该内容已被屏蔽"
+msgstr "已屏蔽该内容"
 
 #: src/screens/Moderation/index.tsx:292
 msgid "Content filters"
@@ -2707,7 +2707,7 @@ msgstr "已更新动态源！"
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:43
 msgid "File saved successfully!"
-msgstr "已成功保存文件！"
+msgstr "成功保存文件！"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:66
 msgid "Filter from feeds"
@@ -3039,7 +3039,7 @@ msgstr "账户代码"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:557
 msgid "Handle already taken. Please try a different one."
-msgstr "该账户代码已被占用，请尝试输入另一个。"
+msgstr "账户代码已被占用，请尝试输入另一个。"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:188
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:325
@@ -3227,7 +3227,7 @@ msgstr "如果你根据所在国家的法规定义是未成年人，则你的父
 
 #: src/view/screens/ProfileList.tsx:723
 msgid "If you delete this list, you won't be able to recover it."
-msgstr "该列表删除后将无法恢复。"
+msgstr "如果你删除这个列表，则以后将无法恢复。"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:247
 msgid "If you have your own domain, you can use that as your handle. This lets you self-verify your identity – <0>learn more</0>."
@@ -3235,7 +3235,7 @@ msgstr "如果你拥有属于自己的域名，你可以将其用作自己的账
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:670
 msgid "If you remove this post, you won't be able to recover it."
-msgstr "该列表删除后将无法恢复。"
+msgstr "如果你删除这则帖文，则以后将无法恢复。"
 
 #: src/view/com/modals/ChangePassword.tsx:149
 msgid "If you want to change your password, we will send you a code to verify that this is your account."
@@ -3580,7 +3580,7 @@ msgstr "列表头像"
 
 #: src/view/screens/ProfileList.tsx:422
 msgid "List blocked"
-msgstr "该列表已被屏蔽"
+msgstr "已屏蔽该列表"
 
 #: src/components/ListCard.tsx:150
 #: src/view/com/feeds/FeedSourceCard.tsx:255
@@ -3589,11 +3589,11 @@ msgstr "由 {0} 创建的列表"
 
 #: src/view/screens/ProfileList.tsx:459
 msgid "List deleted"
-msgstr "该列表已删除"
+msgstr "已删除该列表"
 
 #: src/screens/List/ListHiddenScreen.tsx:126
 msgid "List has been hidden"
-msgstr "该列表已被隐藏"
+msgstr "已隐藏该列表"
 
 #: src/view/screens/ProfileList.tsx:170
 msgid "List Hidden"
@@ -3601,7 +3601,7 @@ msgstr "隐藏列表"
 
 #: src/view/screens/ProfileList.tsx:396
 msgid "List muted"
-msgstr "该列表已隐藏"
+msgstr "已隐藏该列表"
 
 #: src/view/com/modals/CreateOrEditList.tsx:255
 msgid "List Name"
@@ -3609,11 +3609,11 @@ msgstr "列表名称"
 
 #: src/view/screens/ProfileList.tsx:435
 msgid "List unblocked"
-msgstr "解除对该列表的屏蔽"
+msgstr "已取消屏蔽列表"
 
 #: src/view/screens/ProfileList.tsx:409
 msgid "List unmuted"
-msgstr "解除对该列表的隐藏"
+msgstr "已取消隐藏列表"
 
 #: src/Navigation.tsx:133
 #: src/view/screens/Profile.tsx:227
@@ -3700,7 +3700,7 @@ msgstr "看起来你还未保存任何动态源！来看看我们提供的建议
 
 #: src/screens/Home/NoFeedsPinned.tsx:83
 msgid "Looks like you unpinned all your feeds. But don't worry, you can add some below 😄"
-msgstr "看起来你已取消固定所有动态源。不过别担心，你仍然可以在下面添加一些😄"
+msgstr "看起来你已取消固定所有动态源。不过别担心，你仍然可以在下面再添加一些😄"
 
 #: src/screens/Feeds/NoFollowingFeed.tsx:37
 msgid "Looks like you're missing a following feed. <0>Click here to add one.</0>"
@@ -3937,11 +3937,11 @@ msgstr "隐藏这个词汇7天"
 
 #: src/components/dialogs/MutedWords.tsx:258
 msgid "Mute this word in post text and tags"
-msgstr "在帖文文本及标签中隐藏该词汇"
+msgstr "在帖文文本及标签中隐藏这个词汇"
 
 #: src/components/dialogs/MutedWords.tsx:274
 msgid "Mute this word in tags only"
-msgstr "仅在标签中隐藏该词汇"
+msgstr "仅在标签中隐藏这个词汇"
 
 #: src/components/dialogs/MutedWords.tsx:170
 msgid "Mute this word until you unmute it"
@@ -4267,7 +4267,7 @@ msgstr "目前还没有人转发这则帖文，或许你可以来做第一个！
 
 #: src/screens/StarterPack/Wizard/StepProfiles.tsx:102
 msgid "Nobody was found. Try searching for someone else."
-msgstr "未找到该用户，试试搜点其他关键字。"
+msgstr "找不到任何人，试试搜点其他关键字。"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:42
 msgid "Non-sexual Nudity"
@@ -4679,7 +4679,7 @@ msgstr "摄影"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:171
 msgid "Pictures meant for adults."
-msgstr "不适合未成年人的图片"
+msgstr "不适合未成年人的图片。"
 
 #: src/view/screens/ProfileFeed.tsx:293
 #: src/view/screens/ProfileList.tsx:676
@@ -5031,7 +5031,7 @@ msgstr "已关闭引用"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:312
 msgid "Quote posts enabled"
-msgstr "帖文引用已启用"
+msgstr "已启用帖文引用"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:296
 msgid "Quote settings"
@@ -5243,7 +5243,7 @@ msgstr "回复"
 
 #: src/components/WhoCanReply.tsx:69
 msgid "Replies disabled"
-msgstr "回复已被禁用"
+msgstr "已禁用回复"
 
 #: src/components/WhoCanReply.tsx:215
 msgid "Replies to this post are disabled."
@@ -5348,7 +5348,7 @@ msgstr "检举新手包"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:43
 msgid "Report this content"
-msgstr "检举该内容"
+msgstr "检举这项内容"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:56
 msgid "Report this feed"
@@ -5374,7 +5374,7 @@ msgstr "检举这个新手包"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:47
 msgid "Report this user"
-msgstr "检举该用户"
+msgstr "检举这个用户"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:72
 #: src/view/com/util/post-ctrls/RepostButton.tsx:103
@@ -6447,7 +6447,7 @@ msgstr "谢谢，你的检举已提交。"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:82
 msgid "Thanks, you have successfully verified your email address. You can close this dialog."
-msgstr "谢谢，你已成功验证电子邮箱地址，现在你可以关闭这个对话框。"
+msgstr "谢谢，你已成功验证电子邮箱地址，现在你可以关闭此对话框。"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:468
 msgid "That contains the following:"
@@ -6455,7 +6455,7 @@ msgstr "其中包含以下内容："
 
 #: src/screens/Signup/StepHandle.tsx:51
 msgid "That handle is already taken."
-msgstr "该账户代码已被占用。"
+msgstr "这个账户代码已被占用。"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:103
 #: src/screens/StarterPack/StarterPackScreen.tsx:104
@@ -6473,7 +6473,7 @@ msgstr "大功告成！"
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:279
 #: src/view/com/profile/ProfileMenu.tsx:329
 msgid "The account will be able to interact with you after unblocking."
-msgstr "解除屏蔽后，该账户将重新能够与你互动。"
+msgstr "取消屏蔽后，该账户将重新能够与你互动。"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:118
 #: src/lib/moderation/useModerationCauseDescription.ts:126
@@ -6668,7 +6668,7 @@ msgstr "该账户要求登录后才能查看其个人资料。"
 
 #: src/components/dms/BlockedByListDialog.tsx:34
 msgid "This account is blocked by one or more of your moderation lists. To unblock, please visit the lists directly and remove this user."
-msgstr "该账户已被你的一个或多个内容审核列表所屏蔽。要解除对该账户的屏蔽，请从内容审核列表中删除该账户。"
+msgstr "该账户已被你的一个或多个内容审核列表所屏蔽。要取消对该账户的屏蔽，请从内容审核列表中删除该账户。"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:246
 msgid "This appeal will be sent to <0>{sourceName}</0>."
@@ -6680,7 +6680,7 @@ msgstr "这个申诉将提交给 Bluesky 内容审核服务。"
 
 #: src/screens/Messages/components/MessageListError.tsx:18
 msgid "This chat was disconnected"
-msgstr "这个私信的连接已被断开"
+msgstr "对话连接已被断开"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:19
 msgid "This content has been hidden by the moderators."
@@ -6713,7 +6713,7 @@ msgstr "该功能正在测试，你可以在<0>这篇博客文章</0>中获得�
 
 #: src/view/com/posts/FeedErrorMessage.tsx:120
 msgid "This feed is currently receiving high traffic and is temporarily unavailable. Please try again later."
-msgstr "该动态源当前使用人数较多，服务暂时不可用。请稍后再试。"
+msgstr "目前这个动态源的使用人数较多，服务暂时不可用。请稍后再试。"
 
 #: src/view/com/posts/CustomFeedEmptyState.tsx:38
 msgid "This feed is empty! You may need to follow more users or tune your language settings."
@@ -6800,7 +6800,7 @@ msgstr "该个人资料只对已登录用户可见，未登录的用户将无法
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:743
 msgid "This reply will be sorted into a hidden section at the bottom of your thread and will mute notifications for subsequent replies - both for yourself and others."
-msgstr "这条回复将被折叠到你讨论串底部的隐藏部分，并且会对你自己和其他人隐藏后续回复的通知"
+msgstr "这条回复将被折叠到你讨论串底部的隐藏部分，并且会对你自己和其他人隐藏后续回复的通知。"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:37
 msgid "This service has not provided terms of service or a privacy policy."
@@ -7195,7 +7195,7 @@ msgstr "使用者："
 #: src/components/moderation/ModerationDetailsDialog.tsx:70
 #: src/lib/moderation/useModerationCauseDescription.ts:61
 msgid "User Blocked"
-msgstr "该用户已被屏蔽"
+msgstr "已屏蔽该用户"
 
 #: src/lib/moderation/useModerationCauseDescription.ts:53
 msgid "User Blocked by \"{0}\""
@@ -7586,7 +7586,7 @@ msgstr "糟糕！"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:44
 msgid "Why should this content be reviewed?"
-msgstr "为什么应该审核这个内容？"
+msgstr "为什么应该审核这项内容？"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:57
 msgid "Why should this feed be reviewed?"
