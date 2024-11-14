@@ -1335,7 +1335,7 @@ msgstr "Clima"
 
 #: src/components/dms/ChatEmptyPill.tsx:39
 msgid "Clip 🐴 clop 🐴"
-msgstr "Clip 🐴 clop 🐴"
+msgstr "Clop 🐴 clop 🐴"
 
 #: src/components/dialogs/GifSelect.tsx:281
 #: src/components/dialogs/VerifyEmailDialog.tsx:289
@@ -1702,7 +1702,7 @@ msgstr "Crea uno starter pack per me"
 #: src/view/com/auth/SplashScreen.tsx:56
 #: src/view/com/auth/SplashScreen.web.tsx:117
 msgid "Create account"
-msgstr "Crea account"
+msgstr "Crea un account"
 
 #: src/screens/Signup/index.tsx:93
 msgid "Create Account"
@@ -1882,7 +1882,7 @@ msgstr "Descrizione"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:364
 msgid "Description is too long"
-msgstr "La descrizione è troppo lunga"
+msgstr "Descrizione troppo lunga"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:365
 msgid "Description is too long. The maximum number of characters is {DESCRIPTION_MAX_GRAPHEMES}."
@@ -2015,6 +2015,14 @@ msgstr "Pannello DNS"
 #: src/components/dialogs/MutedWords.tsx:302
 msgid "Do not apply this mute word to users you follow"
 msgstr "Non applicare questa parola silenziata agli utenti seguiti"
+
+#: src/view/com/composer/labels/LabelsBtn.tsx:174
+msgid "Does not contain adult content."
+msgstr "Non contiene materiale per adulti."
+
+#: src/view/com/composer/labels/LabelsBtn.tsx:213
+msgid "Does not contain graphic or disturbing content."
+msgstr ""
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:39
 msgid "Does not include nudity."
