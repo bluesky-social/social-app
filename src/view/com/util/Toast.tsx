@@ -125,7 +125,7 @@ function Toast({
     pauseDestroy,
   ])
 
-  const topOffset = top + 6
+  const topOffset = top + 10
 
   useAnimatedReaction(
     () =>
