@@ -179,10 +179,16 @@ export const TextInput = React.forwardRef(function TextInputImpl(
 
           if (clipboardData) {
             if (clipboardData.types.includes('text/html')) {
-              // Rich-text formatting is pasted, try retrieving plain text
-              const text = clipboardData.getData('text/plain')
-              // `pasteText` will invoke this handler again, but `clipboardData` will be null.
-              view.pasteText(text)
+              const richText = clipboardData.getData('text/html')
+              if (richText) {
+                // Rich-text formatting is pasted, retrieve html and paste it
+                view.pasteHTML(richText)
+              } else {
+                // If data is not html, try retrieving plain text
+                const text = clipboardData.getData('text/plain')
+                // `pasteText` will invoke this handler again, but `clipboardData` will be null.
+                view.pasteText(text)
+              }
               preventDefault = true
             }
             getImageOrVideoFromUri(clipboardData.items, (uri: string) => {
