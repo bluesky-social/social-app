@@ -124,6 +124,7 @@ export function SignupQueued() {
                 a.px_2xl,
                 a.py_4xl,
                 a.mt_2xl,
+                a.mb_md,
                 a.border,
                 t.atoms.bg_contrast_25,
                 t.atoms.border_contrast_medium,
