@@ -629,11 +629,11 @@ msgstr ""
 #: src/screens/Messages/Settings.tsx:64
 #: src/screens/Messages/Settings.tsx:67
 msgid "Allow new messages from"
-msgstr ""
+msgstr "Yeni mesajlara izin ver"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:360
 msgid "Allow replies from:"
-msgstr ""
+msgstr "Yeni cevaplara izin ver:"
 
 #: src/view/screens/AppPasswords.tsx:272
 msgid "Allows access to direct messages"
@@ -1368,7 +1368,7 @@ msgstr "E-postanızı Değiştirin"
 #: src/view/shell/desktop/LeftNav.tsx:329
 #: src/view/shell/Drawer.tsx:446
 msgid "Chat"
-msgstr ""
+msgstr "Mesajlar"
 
 #: src/components/dms/ConvoMenu.tsx:82
 msgid "Chat muted"
@@ -1380,12 +1380,12 @@ msgstr ""
 #: src/screens/Messages/ChatList.tsx:88
 #: src/view/screens/Settings/index.tsx:605
 msgid "Chat settings"
-msgstr ""
+msgstr "Mesajlaşma ayarları"
 
 #: src/screens/Messages/Settings.tsx:61
 #: src/view/screens/Settings/index.tsx:614
 msgid "Chat Settings"
-msgstr ""
+msgstr "Mesajlaşma Ayarları"
 
 #: src/components/dms/ConvoMenu.tsx:84
 msgid "Chat unmuted"
@@ -2529,7 +2529,7 @@ msgstr "Resmi düzenle"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:632
 #: src/view/com/util/forms/PostDropdownBtn.tsx:647
 msgid "Edit interaction settings"
-msgstr ""
+msgstr "Etkileşim ayarlarını düzenle"
 
 #: src/view/screens/ProfileList.tsx:518
 msgid "Edit list details"
@@ -2641,7 +2641,7 @@ msgstr "E-posta doğrulandı"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:79
 msgid "Email Verified"
-msgstr ""
+msgstr "E-posta Doğrulandı"
 
 #: src/view/screens/Settings/index.tsx:320
 msgid "Email:"
@@ -2824,7 +2824,7 @@ msgstr ""
 #: src/screens/Messages/Settings.tsx:77
 #: src/screens/Messages/Settings.tsx:80
 msgid "Everyone"
-msgstr ""
+msgstr "Herkes"
 
 #: src/lib/moderation/useReportOptions.ts:73
 msgid "Excessive mentions or replies"
@@ -4412,7 +4412,7 @@ msgstr ""
 #: src/screens/Messages/ChatList.tsx:243
 #: src/screens/Messages/ChatList.tsx:314
 msgid "Messages"
-msgstr ""
+msgstr "Mesajlar"
 
 #: src/Navigation.tsx:307
 #~ msgid "Messaging settings"
@@ -4883,7 +4883,7 @@ msgstr "Henüz bildirim yok!"
 #: src/screens/Messages/Settings.tsx:95
 #: src/screens/Messages/Settings.tsx:98
 msgid "No one"
-msgstr ""
+msgstr "Hiç kimse"
 
 #: src/components/WhoCanReply.tsx:237
 msgid "No one but the author can quote this post."
@@ -5011,11 +5011,11 @@ msgstr ""
 
 #: src/screens/Messages/Settings.tsx:117
 msgid "Notification sounds"
-msgstr ""
+msgstr "Bildirim sesleri"
 
 #: src/screens/Messages/Settings.tsx:114
 msgid "Notification Sounds"
-msgstr ""
+msgstr "Bildirim Sesleri"
 
 #: src/Navigation.tsx:559
 #: src/view/screens/Notifications.tsx:143
@@ -5708,7 +5708,7 @@ msgstr ""
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:284
 msgid "Post interaction settings"
-msgstr ""
+msgstr "Gönderi etkileşim ayarları"
 
 #: src/view/com/composer/select-language/SelectLangBtn.tsx:88
 msgid "Post language"
@@ -8728,7 +8728,7 @@ msgstr ""
 #: src/screens/Messages/Settings.tsx:86
 #: src/screens/Messages/Settings.tsx:89
 msgid "Users I follow"
-msgstr ""
+msgstr "Takip ettiğim kişiler"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:417
 msgid "Users in \"{0}\""
@@ -9249,11 +9249,11 @@ msgstr ""
 
 #: src/components/dms/MessagesNUX.tsx:119
 #~ msgid "You can change this at any time."
-#~ msgstr ""
+#~ msgstr "Bunu istediğiniz zaman değiştirebilirsiniz."
 
 #: src/screens/Messages/Settings.tsx:105
 msgid "You can continue ongoing conversations regardless of which setting you choose."
-msgstr ""
+msgstr "Hangi ayarı seçerseniz seçin devam eden görüşmelere devam edebilirsiniz."
 
 #: src/screens/Login/index.tsx:155
 #: src/screens/Login/PasswordUpdatedForm.tsx:27
@@ -9294,7 +9294,7 @@ msgstr "Yazarı engellediniz veya yazar tarafından engellendiniz."
 
 #: src/components/dms/MessagesListBlockedFooter.tsx:58
 msgid "You have blocked this user"
-msgstr ""
+msgstr "Bu kullanıcıyı engellediniz"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:72
 #: src/lib/moderation/useModerationCauseDescription.ts:55
@@ -9638,7 +9638,7 @@ msgstr "Yanıtınız yayınlandı"
 
 #: src/components/dms/ReportDialog.tsx:157
 msgid "Your report will be sent to the Bluesky Moderation Service"
-msgstr ""
+msgstr "Raporunuz Bluesky Moderasyon Hizmetine gönderilecektir"
 
 #: src/screens/Signup/index.tsx:142
 msgid "Your user handle"
