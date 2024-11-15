@@ -710,6 +710,9 @@ export function ButtonIcon({
     <View
       style={[
         a.z_20,
+        a.flex,
+        a.justify_center,
+        a.align_center,
         {
           width: iconContainerSize,
           height: iconContainerSize,
@@ -720,20 +723,9 @@ export function ButtonIcon({
       ]}>
       <View
         style={[
-          a.absolute,
           {
             width: iconSize,
             height: iconSize,
-            top: '50%',
-            left: '50%',
-            transform: [
-              {
-                translateX: (iconSize / 2) * -1,
-              },
-              {
-                translateY: (iconSize / 2) * -1,
-              },
-            ],
           },
         ]}>
         <Comp
