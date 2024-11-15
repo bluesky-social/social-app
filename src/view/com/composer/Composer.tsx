@@ -1308,24 +1308,22 @@ function useScrollTracker({
     },
   })
 
-  const onScrollViewContentSizeChange = useCallback(
-    (_width: number, height: number) => {
-      if (stickyBottom) {
-        const contentHeightValue = contentHeight.get()
-        if (stickyBottom && height > contentHeightValue) {
-          const isFairlyCloseToBottom =
-            contentHeightValue - contentOffset.get() - 100 <=
-            scrollViewHeight.get()
-          if (isFairlyCloseToBottom) {
-            runOnUI(() => {
-              scrollTo(scrollViewRef, 0, contentHeightValue, true)
-            })()
-          }
+  const onScrollViewContentSizeChangeUIThread = useCallback(
+    (newContentHeight: number) => {
+      'worklet'
+      const oldContentHeight = contentHeight.get()
+      let shouldScrollToBottom = false
+      if (stickyBottom && newContentHeight > oldContentHeight) {
+        const isFairlyCloseToBottom =
+          oldContentHeight - contentOffset.get() - 100 <= scrollViewHeight.get()
+        if (isFairlyCloseToBottom) {
+          shouldScrollToBottom = true
         }
       }
-      showHideBottomBorder({
-        newContentHeight: height,
-      })
+      showHideBottomBorder({newContentHeight})
+      if (shouldScrollToBottom) {
+        scrollTo(scrollViewRef, 0, newContentHeight, true)
+      }
     },
     [
       showHideBottomBorder,
@@ -1335,6 +1333,13 @@ function useScrollTracker({
       contentOffset,
       scrollViewHeight,
     ],
+  )
+
+  const onScrollViewContentSizeChange = useCallback(
+    (_width: number, height: number) => {
+      runOnUI(onScrollViewContentSizeChangeUIThread)(height)
+    },
+    [onScrollViewContentSizeChangeUIThread],
   )
 
   const onScrollViewLayout = useCallback(
