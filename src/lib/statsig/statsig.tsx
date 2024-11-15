@@ -59,6 +59,7 @@ function createStatsigOptions(prefetchUsers: StatsigUser[]) {
     initTimeoutMs: 1,
     // Get fresh flags for other accounts as well, if any.
     prefetchUsers,
+    api: 'https://events.bsky.app/v2',
   }
 }
 
