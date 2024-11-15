@@ -386,12 +386,12 @@ msgstr "Erişilebilirlik"
 
 #: src/view/screens/Settings/index.tsx:455
 msgid "Accessibility settings"
-msgstr ""
+msgstr "Erişilebilirlik ayarları"
 
 #: src/Navigation.tsx:317
 #: src/view/screens/AccessibilitySettings.tsx:71
 msgid "Accessibility Settings"
-msgstr ""
+msgstr "Erişilebilirlik Ayarları"
 
 #: src/components/moderation/LabelsOnMe.tsx:42
 #~ msgid "account"
@@ -770,7 +770,7 @@ msgstr "Bir sorun oluştu, lütfen tekrar deneyin."
 
 #: src/screens/Onboarding/StepInterests/index.tsx:185
 msgid "an unknown error occurred"
-msgstr ""
+msgstr "bilinmeyen bir hata oluştu"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:158
 #: src/components/moderation/ModerationDetailsDialog.tsx:154
@@ -803,7 +803,7 @@ msgstr ""
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:49
 msgid "Anybody can interact"
-msgstr ""
+msgstr "Herkes etkileşime geçebilir"
 
 #: src/view/screens/LanguageSettings.tsx:94
 msgid "App Language"
@@ -875,11 +875,11 @@ msgstr "Görünüm"
 
 #: src/view/screens/Settings/index.tsx:476
 msgid "Appearance settings"
-msgstr ""
+msgstr "Görünüm ayarları"
 
 #: src/Navigation.tsx:325
 msgid "Appearance Settings"
-msgstr ""
+msgstr "Görünüm Ayarları"
 
 #: src/screens/Feeds/NoSavedFeedsOfAnyType.tsx:47
 #: src/screens/Home/NoFeedsPinned.tsx:93
@@ -888,7 +888,7 @@ msgstr ""
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:610
 #~ msgid "Are you sure you want delete this starter pack?"
-#~ msgstr ""
+#~ msgstr "Bu başlangıç paketini silmek istediğinize emin misiniz?"
 
 #: src/view/screens/AppPasswords.tsx:283
 msgid "Are you sure you want to delete the app password \"{name}\"?"
@@ -953,7 +953,7 @@ msgstr "Sanatsal veya erotik olmayan çıplaklık."
 
 #: src/screens/Signup/StepHandle.tsx:173
 msgid "At least 3 characters"
-msgstr ""
+msgstr "En az 3 karakter"
 
 #: src/components/dms/MessagesListHeader.tsx:75
 #: src/components/moderation/LabelsOnMeDialog.tsx:290
@@ -1087,7 +1087,7 @@ msgstr ""
 
 #: src/components/ProgressGuide/List.tsx:55
 msgid "Bluesky is better with friends!"
-msgstr ""
+msgstr "Bluesky arkadaşlarla daha güzel!"
 
 #: src/view/com/auth/onboarding/WelcomeDesktop.tsx:80
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:82
@@ -1422,7 +1422,7 @@ msgstr "Aşağıya gireceğiniz onay kodu içeren bir e-posta için gelen kutunu
 
 #: src/screens/Onboarding/StepInterests/index.tsx:191
 #~ msgid "Choose 3 or more:"
-#~ msgstr ""
+#~ msgstr "3 veya daha fazla seçin:"
 
 #: src/view/screens/Settings.tsx:691
 #~ msgid "Choose a new Bluesky username or create"
@@ -1430,7 +1430,7 @@ msgstr "Aşağıya gireceğiniz onay kodu içeren bir e-posta için gelen kutunu
 
 #: src/screens/Onboarding/StepInterests/index.tsx:326
 #~ msgid "Choose at least {0} more"
-#~ msgstr ""
+#~ msgstr "En az {0} tane daha seçin"
 
 #: src/screens/StarterPack/Wizard/index.tsx:199
 msgid "Choose Feeds"
@@ -2071,7 +2071,7 @@ msgstr "Karanlık mod"
 
 #: src/screens/Settings/AppearanceSettings.tsx:122
 msgid "Dark theme"
-msgstr ""
+msgstr "Karanlık tema"
 
 #: src/view/screens/Settings/index.tsx:473
 #~ msgid "Dark Theme"
@@ -2079,7 +2079,7 @@ msgstr ""
 
 #: src/screens/Signup/StepInfo/index.tsx:222
 msgid "Date of birth"
-msgstr ""
+msgstr "Doğum tarihi"
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:73
 #: src/view/screens/Settings/index.tsx:773
@@ -2246,11 +2246,11 @@ msgstr "Karart"
 
 #: src/view/screens/AccessibilitySettings.tsx:111
 #~ msgid "Disable autoplay for GIFs"
-#~ msgstr ""
+#~ msgstr "GIF'lerin otomatik oynatılmasını devre dışı bırak"
 
 #: src/view/screens/AccessibilitySettings.tsx:109
 msgid "Disable autoplay for videos and GIFs"
-msgstr ""
+msgstr "GIF'lerin ve videoların otomatik oynatılmasını devre dışı bırak"
 
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:89
 msgid "Disable Email 2FA"
@@ -2258,11 +2258,11 @@ msgstr ""
 
 #: src/view/screens/AccessibilitySettings.tsx:123
 msgid "Disable haptic feedback"
-msgstr ""
+msgstr "Dokunsal geri bildirimi devre dışı bırak"
 
 #: src/view/screens/Settings/index.tsx:697
 #~ msgid "Disable haptics"
-#~ msgstr ""
+#~ msgstr "Dokunuşları devre dışı bırak"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:388
 msgid "Disable subtitles"
@@ -2322,11 +2322,11 @@ msgstr ""
 
 #: src/components/Dialog/index.tsx:315
 msgid "Dismiss"
-msgstr ""
+msgstr "Yok say"
 
 #: src/view/com/composer/Composer.tsx:1265
 msgid "Dismiss error"
-msgstr ""
+msgstr "Hatayı yok say"
 
 #: src/components/ProgressGuide/List.tsx:40
 msgid "Dismiss getting started guide"
@@ -2334,7 +2334,7 @@ msgstr ""
 
 #: src/view/screens/AccessibilitySettings.tsx:97
 msgid "Display larger alt text badges"
-msgstr ""
+msgstr "Alternatif metin rozetlerini daha büyük görüntüle"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:314
 #: src/screens/Profile/Header/EditProfileDialog.tsx:320
@@ -2348,7 +2348,7 @@ msgstr "Görünen ad"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:333
 msgid "Display name is too long"
-msgstr ""
+msgstr "Görünen ad çok uzun"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:334
 msgid "Display name is too long. The maximum number of characters is {DISPLAY_NAME_MAX_GRAPHEMES}."
@@ -2476,7 +2476,7 @@ msgstr ""
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:43
 msgid "E.g. artistic nudes."
-msgstr ""
+msgstr "Örn: sanatsal çıplaklık."
 
 #: src/view/com/modals/CreateOrEditList.tsx:263
 msgid "e.g. Great Posters"
@@ -2794,11 +2794,11 @@ msgstr "Kullanıcı adınızı ve şifrenizi girin"
 
 #: src/view/com/composer/Composer.tsx:1350
 msgid "Error"
-msgstr ""
+msgstr "Hata"
 
 #: src/view/screens/Settings/ExportCarDialog.tsx:46
 msgid "Error occurred while saving file"
-msgstr ""
+msgstr "Dosya kaydedilirken bir hata oluştu"
 
 #: src/screens/Signup/StepCaptcha/index.tsx:56
 msgid "Error receiving captcha response."
@@ -2815,11 +2815,11 @@ msgstr "Herkes"
 
 #: src/components/WhoCanReply.tsx:67
 msgid "Everybody can reply"
-msgstr ""
+msgstr "Herkes cevaplayabilir"
 
 #: src/components/WhoCanReply.tsx:213
 msgid "Everybody can reply to this post."
-msgstr ""
+msgstr "Bu gönderiyi herkes cevaplayabilir."
 
 #: src/screens/Messages/Settings.tsx:77
 #: src/screens/Messages/Settings.tsx:80
@@ -2844,7 +2844,7 @@ msgstr ""
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:406
 msgid "Exit fullscreen"
-msgstr ""
+msgstr "Tam ekrandan çık"
 
 #: src/view/com/modals/DeleteAccount.tsx:293
 msgid "Exits account deletion process"
@@ -3531,7 +3531,7 @@ msgstr "Kullanıcı adı"
 
 #: src/view/screens/AccessibilitySettings.tsx:118
 msgid "Haptics"
-msgstr ""
+msgstr "Dokunuş"
 
 #: src/lib/moderation/useReportOptions.ts:34
 msgid "Harassment, trolling, or intolerance"
@@ -3815,7 +3815,7 @@ msgstr "Hesap silme için şifre girin"
 
 #: src/screens/Login/LoginForm.tsx:270
 msgid "Input the code which has been emailed to you"
-msgstr ""
+msgstr "Size e-posta olarak gönderilen kodu girin"
 
 #: src/screens/Login/LoginForm.tsx:221
 #~ msgid "Input the password tied to {identifier}"
@@ -3860,7 +3860,7 @@ msgstr ""
 #: src/screens/Login/LoginForm.tsx:142
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:70
 msgid "Invalid 2FA confirmation code."
-msgstr ""
+msgstr "Geçersiz 2FA onay kodu."
 
 #: src/view/com/post-thread/PostThreadItem.tsx:264
 msgid "Invalid or unsupported post record"
@@ -3873,7 +3873,7 @@ msgstr "Geçersiz kullanıcı adı veya şifre"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:91
 msgid "Invalid Verification Code"
-msgstr ""
+msgstr "Geçersiz Doğrulama Kodu"
 
 #: src/view/screens/Settings.tsx:411
 #~ msgid "Invite"
@@ -3917,7 +3917,7 @@ msgstr ""
 
 #: src/screens/Signup/StepInfo/index.tsx:80
 msgid "It looks like you may have entered your email address incorrectly. Are you sure it's right?"
-msgstr ""
+msgstr "Görünüşe göre e-posta adresinizi yanlış girdiniz. Doğru olduğuna emin misiniz?"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:65
 #~ msgid "It shows posts from the people you follow as they happen."
@@ -4356,7 +4356,7 @@ msgstr ""
 #: src/components/dms/ConvoMenu.tsx:151
 #: src/components/dms/ConvoMenu.tsx:158
 msgid "Mark as read"
-msgstr ""
+msgstr "Okundu olarak işaretle"
 
 #: src/view/screens/AccessibilitySettings.tsx:104
 #: src/view/screens/Profile.tsx:230
@@ -4383,7 +4383,7 @@ msgstr "Menü"
 
 #: src/components/dms/MessageProfileButton.tsx:62
 msgid "Message {0}"
-msgstr ""
+msgstr "Mesaj {0}"
 
 #: src/components/dms/MessageMenu.tsx:72
 #: src/screens/Messages/components/ChatListItem.tsx:165
@@ -4515,11 +4515,11 @@ msgstr "En çok beğenilen yanıtlar önce"
 
 #: src/screens/Onboarding/state.ts:92
 msgid "Movies"
-msgstr ""
+msgstr "Filmler"
 
 #: src/screens/Onboarding/state.ts:93
 msgid "Music"
-msgstr ""
+msgstr "Müzik"
 
 #: src/components/TagMenu/index.tsx:248
 msgid "Mute"
@@ -4572,7 +4572,7 @@ msgstr "Listeyi sessize al"
 #: src/components/dms/ConvoMenu.tsx:136
 #: src/components/dms/ConvoMenu.tsx:142
 #~ msgid "Mute notifications"
-#~ msgstr ""
+#~ msgstr "Bildirimleri sustur"
 
 #: src/view/screens/ProfileList.tsx:732
 msgid "Mute these accounts?"
@@ -4614,7 +4614,7 @@ msgstr "Konuyu sessize al"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:523
 #: src/view/com/util/forms/PostDropdownBtn.tsx:525
 msgid "Mute words & tags"
-msgstr ""
+msgstr "Kelimeleri ve etiketleri sustur"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:168
 #~ msgid "Muted"
@@ -4635,11 +4635,11 @@ msgstr "Sessize alınan hesapların gönderileri beslemenizden ve bildirimlerini
 
 #: src/lib/moderation/useModerationCauseDescription.ts:90
 msgid "Muted by \"{0}\""
-msgstr ""
+msgstr "\"{0}\" tarafından susturuldu"
 
 #: src/screens/Moderation/index.tsx:235
 msgid "Muted words & tags"
-msgstr ""
+msgstr "Sessize alınan kelimeler ve etkiketler"
 
 #: src/view/screens/ProfileList.tsx:734
 msgid "Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them."
@@ -4966,7 +4966,7 @@ msgstr ""
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:42
 msgid "Non-sexual Nudity"
-msgstr ""
+msgstr "Cinsel olmayan çıplaklık"
 
 #: src/view/com/modals/SelfLabel.tsx:135
 #~ msgid "Not Applicable."
@@ -5216,7 +5216,7 @@ msgstr ""
 
 #: src/view/screens/Settings/index.tsx:456
 msgid "Opens accessibility settings"
-msgstr ""
+msgstr "Erişilebilirlik ayarlarını açar"
 
 #: src/view/screens/Log.tsx:59
 msgid "Opens additional details for a debug entry"
@@ -5921,7 +5921,7 @@ msgstr ""
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:296
 msgid "Quote settings"
-msgstr ""
+msgstr "Alıntı ayarları"
 
 #: src/screens/Post/PostQuotes.tsx:32
 #: src/screens/Post/PostQuotes.tsx:33
@@ -5965,11 +5965,11 @@ msgstr ""
 
 #: src/components/dms/ReportDialog.tsx:169
 msgid "Reason:"
-msgstr ""
+msgstr "Sebep:"
 
 #: src/components/dms/MessageReportDialog.tsx:149
 #~ msgid "Reason: {0}"
-#~ msgstr ""
+#~ msgstr "Sebep: {0}"
 
 #: src/view/screens/Search/Search.tsx:1056
 msgid "Recent Searches"
@@ -5985,7 +5985,7 @@ msgstr ""
 
 #: src/screens/Messages/components/MessageListError.tsx:20
 msgid "Reconnect"
-msgstr ""
+msgstr "Yeniden bağlan"
 
 #: src/view/screens/Notifications.tsx:144
 msgid "Refresh notifications"
@@ -6025,7 +6025,7 @@ msgstr ""
 
 #: src/view/com/util/UserAvatar.tsx:403
 msgid "Remove Avatar"
-msgstr ""
+msgstr "Avatarı kaldır"
 
 #: src/view/com/util/UserBanner.tsx:155
 msgid "Remove Banner"
