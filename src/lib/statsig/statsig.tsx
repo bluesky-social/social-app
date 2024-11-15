@@ -59,6 +59,7 @@ function createStatsigOptions(prefetchUsers: StatsigUser[]) {
     initTimeoutMs: 1,
     // Get fresh flags for other accounts as well, if any.
     prefetchUsers,
+    api: 'https://events.bsky.app/v2',
   }
 }
 
@@ -89,51 +90,14 @@ export function toClout(n: number | null | undefined): number | undefined {
   }
 }
 
-const DOWNSAMPLE_RATE = 0.99 // 99% likely
-const DOWNSAMPLED_EVENTS: Set<keyof LogEvents> = new Set([
-  'router:navigate:notifications:sampled',
-  'state:background:sampled',
-  'state:foreground:sampled',
-  'home:feedDisplayed:sampled',
-  'feed:endReached:sampled',
-  'feed:refresh:sampled',
-  'discover:clickthrough:sampled',
-  'discover:engaged:sampled',
-  'discover:seen:sampled',
-  'post:like:sampled',
-  'post:unlike:sampled',
-  'post:repost:sampled',
-  'post:unrepost:sampled',
-  'profile:follow:sampled',
-  'profile:unfollow:sampled',
-])
-const isDownsampledSession = Math.random() < DOWNSAMPLE_RATE
-
 export function logEvent<E extends keyof LogEvents>(
   eventName: E & string,
   rawMetadata: LogEvents[E] & FlatJSONRecord,
 ) {
   try {
-    if (
-      process.env.NODE_ENV === 'development' &&
-      eventName.endsWith(':sampled') &&
-      !DOWNSAMPLED_EVENTS.has(eventName)
-    ) {
-      logger.error(
-        'Did you forget to add ' + eventName + ' to DOWNSAMPLED_EVENTS?',
-      )
-    }
-
-    const isDownsampledEvent = DOWNSAMPLED_EVENTS.has(eventName)
-    if (isDownsampledSession && isDownsampledEvent) {
-      return
-    }
     const fullMetadata = {
       ...rawMetadata,
     } as Record<string, string> // Statsig typings are unnecessarily strict here.
-    if (isDownsampledEvent) {
-      fullMetadata.downsampleRate = DOWNSAMPLE_RATE.toString()
-    }
     fullMetadata.routeName = getCurrentRouteName() ?? '(Uninitialized)'
     if (Statsig.initializeCalled()) {
       Statsig.logEvent(eventName, null, fullMetadata)
@@ -232,13 +196,13 @@ AppState.addEventListener('change', (state: AppStateStatus) => {
   lastState = state
   if (state === 'active') {
     lastActive = performance.now()
-    logEvent('state:foreground:sampled', {})
+    logEvent('state:foreground', {})
   } else {
     let secondsActive = 0
     if (lastActive != null) {
       secondsActive = Math.round((performance.now() - lastActive) / 1e3)
       lastActive = null
-      logEvent('state:background:sampled', {
+      logEvent('state:background', {
         secondsActive,
       })
     }
