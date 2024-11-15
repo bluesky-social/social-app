@@ -864,7 +864,7 @@ msgstr "Apel·la \"{0}\" etiqueta"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:337
 #: src/view/com/util/forms/PostDropdownBtn.tsx:346
 #~ msgid "Appeal content warning"
-#~ msgstr "Advertència d'apel·lació sobre el contingut"
+#~ msgstr "Advertència d'apel·lació s el contingut"
 
 #: src/view/com/modals/AppealLabel.tsx:65
 #~ msgid "Appeal Content Warning"
@@ -5249,7 +5249,7 @@ msgstr "Ostres!"
 
 #: src/screens/Onboarding/StepFinished.tsx:251
 msgid "Open"
-msgstr "Obre"
+msgstr "Obert"
 
 #: src/view/com/posts/AviFollowButton.tsx:86
 msgid "Open {name} profile shortcut menu"
