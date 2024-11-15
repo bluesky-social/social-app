@@ -1,5 +1,5 @@
 import {useEffect, useMemo, useRef, useState} from 'react'
-import {View} from 'react-native'
+import {AccessibilityInfo, View} from 'react-native'
 import {
   Gesture,
   GestureDetector,
@@ -34,6 +34,7 @@ export function show(
   icon: FontAwesomeProps['icon'] = 'check',
 ) {
   if (IS_TEST) return
+  AccessibilityInfo.announceForAccessibility(message)
   const item = new RootSiblings(
     <Toast message={message} icon={icon} destroy={() => item.destroy()} />,
   )
@@ -58,6 +59,13 @@ function Toast({
   // must not be the root component
   // so we need to wrap it in a view and unmount the toast ahead of time
   const [alive, setAlive] = useState(true)
+
+  const hideAndDestroyImmediately = () => {
+    setAlive(false)
+    setTimeout(() => {
+      destroy()
+    }, 1e3)
+  }
 
   const destroyTimeoutRef = useRef<ReturnType<typeof setTimeout>>()
   const hideAndDestroyAfterTimeout = useNonReactiveCallback(() => {
@@ -159,6 +167,11 @@ function Toast({
           style={[a.flex_1]}>
           <Animated.View
             onLayout={evt => setCardHeight(evt.nativeEvent.layout.height)}
+            accessibilityRole="alert"
+            accessible={true}
+            accessibilityLabel={message}
+            accessibilityHint=""
+            onAccessibilityEscape={hideAndDestroyImmediately}
             style={[
               a.flex_1,
               t.atoms.bg,
