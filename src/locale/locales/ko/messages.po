@@ -8,7 +8,7 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-14 09:34+0900\n"
+"PO-Revision-Date: 2024-11-15 16:09+0900\n"
 "Last-Translator: quiple\n"
 "Language-Team: quiple, lens0021, HaruChanHeart, hazzzi, heartade\n"
 "Plural-Forms: \n"
@@ -282,7 +282,7 @@ msgstr "{firstAuthorName} 님이 내 스타터 팩으로 가입했습니다"
 msgid "{following} following"
 msgstr "{following} 팔로우 중"
 
-#: src/components/dms/dialogs/SearchablePeopleList.tsx:384
+#: src/components/dms/dialogs/SearchablePeopleList.tsx:385
 msgid "{handle} can't be messaged"
 msgstr "{handle} 님에게 메시지를 보낼 수 없습니다"
 
@@ -5532,7 +5532,7 @@ msgstr "이전 페이지로 돌아갑니다"
 msgid "Save"
 msgstr "저장"
 
-#: src/view/com/lightbox/ImageViewing/index.tsx:534
+#: src/view/com/lightbox/ImageViewing/index.tsx:545
 #: src/view/com/modals/CreateOrEditList.tsx:325
 msgctxt "action"
 msgid "Save"
@@ -5610,7 +5610,7 @@ msgstr "과학"
 msgid "Scroll to top"
 msgstr "맨 위로 스크롤"
 
-#: src/components/dms/dialogs/SearchablePeopleList.tsx:483
+#: src/components/dms/dialogs/SearchablePeopleList.tsx:484
 #: src/components/forms/SearchInput.tsx:34
 #: src/components/forms/SearchInput.tsx:36
 #: src/Navigation.tsx:590
@@ -5642,8 +5642,8 @@ msgstr "사용자 검색하기"
 msgid "Search GIFs"
 msgstr "GIF 검색하기"
 
-#: src/components/dms/dialogs/SearchablePeopleList.tsx:503
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:504
+#: src/components/dms/dialogs/SearchablePeopleList.tsx:505
 msgid "Search profiles"
 msgstr "프로필 검색"
 
@@ -5894,7 +5894,7 @@ msgstr "외설적"
 msgid "Share"
 msgstr "공유"
 
-#: src/view/com/lightbox/ImageViewing/index.tsx:543
+#: src/view/com/lightbox/ImageViewing/index.tsx:554
 msgctxt "action"
 msgid "Share"
 msgstr "공유"
@@ -6227,7 +6227,7 @@ msgstr "스포츠"
 msgid "Start a new chat"
 msgstr "새 대화 시작하기"
 
-#: src/components/dms/dialogs/SearchablePeopleList.tsx:349
+#: src/components/dms/dialogs/SearchablePeopleList.tsx:350
 msgid "Start chat with {displayName}"
 msgstr "{displayName} 님과 대화 시작하기"
 
