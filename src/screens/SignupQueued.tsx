@@ -95,7 +95,7 @@ export function SignupQueued() {
       accessibilityHint=""
       style={[a.absolute, a.inset_0, a.flex_1, t.atoms.bg]}>
       <ScrollView
-        style={[a.h_full, a.w_full]}
+        style={[a.h_full, a.w_full, {paddingTop: insets.top}]}
         contentContainerStyle={{borderWidth: 0}}>
         <View
           style={[a.flex_row, a.justify_center, gtMobile ? a.pt_4xl : a.px_xl]}>
