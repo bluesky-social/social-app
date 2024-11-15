@@ -3,9 +3,9 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-11-05 16:01-0800\n"
-"PO-Revision-Date: \n"
-"Last-Translator: atiksoftware\n"
-"Language-Team: atiksoftware\n"
+"PO-Revision-Date: 2024-11-16 01:00+0300\n"
+"Last-Translator: mertssmnoglu\n"
+"Language-Team: atiksoftware,mertssmnoglu\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
@@ -896,11 +896,11 @@ msgstr "\"{name}\" uygulama şifresini silmek istediğinizden emin misiniz?"
 
 #: src/components/dms/MessageMenu.tsx:123
 #~ msgid "Are you sure you want to delete this message? The message will be deleted for you, but not for other participants."
-#~ msgstr ""
+#~ msgstr "Bu mesajı silmek istediğinize emin misiniz? Mesajınız sizin için silinecektir, ancak diğer katılımcılar için silinmeyecektir."
 
 #: src/components/dms/MessageMenu.tsx:149
 msgid "Are you sure you want to delete this message? The message will be deleted for you, but not for the other participant."
-msgstr ""
+msgstr "Bu mesajı silmek istediğinize emin misiniz? Mesajınız sizin için silinecektir, ancak diğer katılımcı için silinmeyecektir."
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:632
 msgid "Are you sure you want to delete this starter pack?"
@@ -912,11 +912,11 @@ msgstr ""
 
 #: src/components/dms/ConvoMenu.tsx:189
 #~ msgid "Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for other participants."
-#~ msgstr ""
+#~ msgstr "Bu görüşmeden ayrılmak istediğinize emin misiniz? Mesajlarınız sizin için silinecektir, ancak diğer katılımcılar için silinmeyecektir."
 
 #: src/components/dms/LeaveConvoPrompt.tsx:48
 msgid "Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for the other participant."
-msgstr ""
+msgstr "Bu görüşmeden ayrılmak istediğinize emin misiniz? Mesajlarınız sizin için silinecektir, ancak diğer katılımcı için silinmeyecektir."
 
 #: src/view/com/feeds/FeedSourceCard.tsx:313
 msgid "Are you sure you want to remove {0} from your feeds?"
@@ -1828,7 +1828,7 @@ msgstr "Sonraki adıma devam et"
 
 #: src/screens/Messages/components/ChatListItem.tsx:164
 msgid "Conversation deleted"
-msgstr ""
+msgstr "Görüşme silindi"
 
 #: src/screens/Onboarding/index.tsx:41
 msgid "Cooking"
@@ -2977,7 +2977,7 @@ msgstr ""
 
 #: src/screens/Messages/Conversation/MessageListError.tsx:28
 #~ msgid "Failed to load past messages."
-#~ msgstr ""
+#~ msgstr "Geçmiş mesajlar yüklenemedi."
 
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:110
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:143
@@ -3719,7 +3719,7 @@ msgstr "Kendi alan adım var"
 #: src/components/dms/BlockedByListDialog.tsx:57
 #: src/components/dms/ReportConversationPrompt.tsx:22
 msgid "I understand"
-msgstr ""
+msgstr "Anladım"
 
 #: src/view/com/lightbox/Lightbox.web.tsx:185
 msgid "If alt text is long, toggles alt text expanded state"
@@ -3949,7 +3949,7 @@ msgstr ""
 #: src/components/StarterPack/QrCode.tsx:61
 #: src/view/shell/NavSignupCard.tsx:40
 msgid "Join the conversation"
-msgstr ""
+msgstr "Görüşmeye katıl"
 
 #: src/view/com/modals/Waitlist.tsx:67
 #~ msgid "Join the waitlist"
@@ -4075,7 +4075,7 @@ msgstr "Bluesky'da neyin herkese açık olduğu hakkında daha fazla bilgi edini
 #: src/components/moderation/ContentHider.tsx:217
 #: src/view/com/auth/server-input/index.tsx:158
 msgid "Learn more."
-msgstr ""
+msgstr "Daha fazlasını öğren."
 
 #: src/components/dms/LeaveConvoPrompt.tsx:50
 msgid "Leave"
@@ -4092,7 +4092,7 @@ msgstr ""
 #: src/components/dms/ConvoMenu.tsx:211
 #: src/components/dms/LeaveConvoPrompt.tsx:46
 msgid "Leave conversation"
-msgstr ""
+msgstr "Görüşmeden ayrıl"
 
 #: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:83
 msgid "Leave them all unchecked to see any language."
@@ -4405,7 +4405,7 @@ msgstr ""
 
 #: src/screens/Messages/ChatList.tsx:318
 msgid "Message settings"
-msgstr ""
+msgstr "Mesaj ayarları"
 
 #: src/Navigation.tsx:564
 #: src/screens/Messages/ChatList.tsx:162
@@ -4551,7 +4551,7 @@ msgstr ""
 #: src/components/dms/ConvoMenu.tsx:172
 #: src/components/dms/ConvoMenu.tsx:178
 msgid "Mute conversation"
-msgstr ""
+msgstr "Görüşmeyi sustur"
 
 #: src/components/dialogs/MutedWords.tsx:148
 #~ msgid "Mute in tags only"
@@ -4870,11 +4870,11 @@ msgstr ""
 
 #: src/screens/Messages/components/ChatListItem.tsx:116
 msgid "No messages yet"
-msgstr ""
+msgstr "Henüz mesaj yok"
 
 #: src/screens/Messages/ChatList.tsx:271
 msgid "No more conversations to show"
-msgstr ""
+msgstr "Gösterilecek daha fazla görüşme yok"
 
 #: src/view/com/notifications/Feed.tsx:121
 msgid "No notifications yet!"
@@ -5153,7 +5153,7 @@ msgstr ""
 #: src/screens/Messages/components/ChatListItem.tsx:272
 #: src/screens/Messages/components/ChatListItem.tsx:273
 msgid "Open conversation options"
-msgstr ""
+msgstr "Görüşme seçeneklerini aç"
 
 #: src/screens/Messages/components/MessageInput.web.tsx:165
 #: src/view/com/composer/Composer.tsx:999
@@ -5778,7 +5778,7 @@ msgstr ""
 #: src/screens/Messages/Conversation/MessagesList.tsx:47
 #: src/screens/Messages/Conversation/MessagesList.tsx:53
 #~ msgid "Press to Retry"
-#~ msgstr ""
+#~ msgstr "Yeniden denemek için basınız"
 
 #: src/components/KnownFollowers.tsx:124
 msgid "Press to view followers of this account that you also follow"
@@ -5993,7 +5993,7 @@ msgstr ""
 
 #: src/screens/Messages/ChatList.tsx:198
 msgid "Reload conversations"
-msgstr ""
+msgstr "Görüşmeleri yeniden yükle"
 
 #: src/components/dialogs/MutedWords.tsx:438
 #: src/components/FeedCard.tsx:316
@@ -6268,7 +6268,7 @@ msgstr "Hesabı Raporla"
 #: src/components/dms/ConvoMenu.tsx:200
 #: src/components/dms/ReportConversationPrompt.tsx:18
 msgid "Report conversation"
-msgstr ""
+msgstr "Görüşmeyi bildir"
 
 #: src/components/ReportDialog/index.tsx:44
 msgid "Report dialog"
@@ -6606,7 +6606,7 @@ msgstr ""
 #: src/view/com/notifications/FeedItem.tsx:416
 #: src/view/com/notifications/FeedItem.tsx:441
 msgid "Say hello!"
-msgstr ""
+msgstr "Merhaba de!"
 
 #: src/screens/Onboarding/index.tsx:33
 #: src/screens/Onboarding/state.ts:99
@@ -7318,7 +7318,7 @@ msgstr "Olarak giriş yap..."
 
 #: src/components/dialogs/Signin.tsx:75
 msgid "Sign in or create your account to join the conversation!"
-msgstr ""
+msgstr "Görüşmeye katılmak için giriş yapınız veya hesabınızı oluşturun!"
 
 #: src/view/com/auth/login/LoginForm.tsx:134
 #~ msgid "Sign into"
@@ -7350,7 +7350,7 @@ msgstr "Kaydol"
 
 #: src/view/shell/NavSignupCard.tsx:47
 #~ msgid "Sign up or sign in to join the conversation"
-#~ msgstr "Konuşmaya katılmak için kaydolun veya giriş yapın"
+#~ msgstr "Görüşmeye katılmak için kaydolun veya giriş yapın"
 
 #: src/components/moderation/ScreenHider.tsx:91
 #: src/lib/moderation/useGlobalLabelStrings.ts:28
@@ -7420,7 +7420,7 @@ msgstr ""
 
 #: src/screens/Messages/Conversation.tsx:109
 msgid "Something went wrong"
-msgstr ""
+msgstr "Bir şeyler ters gitti"
 
 #: src/view/com/modals/ProfilePreview.tsx:62
 #~ msgid "Something went wrong and we're not sure what."
@@ -8466,7 +8466,7 @@ msgstr ""
 
 #: src/components/dms/ConvoMenu.tsx:176
 msgid "Unmute conversation"
-msgstr ""
+msgstr "Görüşmeyi sessizden çıkar"
 
 #: src/components/dms/ConvoMenu.tsx:140
 #~ msgid "Unmute notifications"
@@ -8957,7 +8957,7 @@ msgstr ""
 
 #: src/screens/Messages/Conversation.tsx:110
 msgid "We couldn't load this conversation"
-msgstr ""
+msgstr "Bu görüşmeyi yükleyemedik"
 
 #: src/screens/SignupQueued.tsx:139
 msgid "We estimate {estimatedTime} until your account is ready."
@@ -9151,7 +9151,7 @@ msgstr ""
 #: src/screens/Messages/components/MessageInput.tsx:142
 #: src/screens/Messages/components/MessageInput.web.tsx:198
 msgid "Write a message"
-msgstr ""
+msgstr "Bir mesaj yaz"
 
 #: src/view/com/composer/Composer.tsx:630
 msgid "Write post"
@@ -9332,7 +9332,7 @@ msgstr ""
 
 #: src/screens/Messages/ChatList.tsx:223
 msgid "You have no conversations yet. Start one!"
-msgstr ""
+msgstr "Henüz hiç görüşmeniz yok. Bir tane başlatın!"
 
 #: src/view/com/feeds/ProfileFeedgens.tsx:138
 msgid "You have no feeds."
@@ -9345,7 +9345,7 @@ msgstr "Listeniz yok."
 
 #: src/screens/Messages/List/index.tsx:200
 #~ msgid "You have no messages yet. Start a conversation with someone!"
-#~ msgstr ""
+#~ msgstr "Henüz hiç mesajınız yok. Birisiyle görüşme başlatın!"
 
 #: src/view/screens/ModerationBlockedAccounts.tsx:133
 msgid "You have not blocked any accounts yet. To block an account, go to their profile and select \"Block account\" from the menu on their account."
