@@ -1265,12 +1265,12 @@ function useScrollTracker({
   const contentHeight = useSharedValue(0)
 
   const hasScrolledToTop = useDerivedValue(() =>
-    withTiming(contentOffset.value === 0 ? 1 : 0),
+    withTiming(contentOffset.get() === 0 ? 1 : 0),
   )
 
   const hasScrolledToBottom = useDerivedValue(() =>
     withTiming(
-      contentHeight.value - contentOffset.value - 5 <= scrollViewHeight.value
+      contentHeight.get() - contentOffset.get() - 5 <= scrollViewHeight.get()
         ? 1
         : 0,
     ),
@@ -1288,11 +1288,11 @@ function useScrollTracker({
     }) => {
       'worklet'
       if (typeof newContentHeight === 'number')
-        contentHeight.value = Math.floor(newContentHeight)
+        contentHeight.set(Math.floor(newContentHeight))
       if (typeof newContentOffset === 'number')
-        contentOffset.value = Math.floor(newContentOffset)
+        contentOffset.set(Math.floor(newContentOffset))
       if (typeof newScrollViewHeight === 'number')
-        scrollViewHeight.value = Math.floor(newScrollViewHeight)
+        scrollViewHeight.set(Math.floor(newScrollViewHeight))
     },
     [contentHeight, contentOffset, scrollViewHeight],
   )
@@ -1310,14 +1310,17 @@ function useScrollTracker({
 
   const onScrollViewContentSizeChange = useCallback(
     (_width: number, height: number) => {
-      if (stickyBottom && height > contentHeight.value) {
-        const isFairlyCloseToBottom =
-          contentHeight.value - contentOffset.value - 100 <=
-          scrollViewHeight.value
-        if (isFairlyCloseToBottom) {
-          runOnUI(() => {
-            scrollTo(scrollViewRef, 0, contentHeight.value, true)
-          })()
+      if (stickyBottom) {
+        const contentHeightValue = contentHeight.get()
+        if (stickyBottom && height > contentHeightValue) {
+          const isFairlyCloseToBottom =
+            contentHeightValue - contentOffset.get() - 100 <=
+            scrollViewHeight.get()
+          if (isFairlyCloseToBottom) {
+            runOnUI(() => {
+              scrollTo(scrollViewRef, 0, contentHeightValue, true)
+            })()
+          }
         }
       }
       showHideBottomBorder({
@@ -1347,7 +1350,7 @@ function useScrollTracker({
     return {
       borderBottomWidth: StyleSheet.hairlineWidth,
       borderColor: interpolateColor(
-        hasScrolledToTop.value,
+        hasScrolledToTop.get(),
         [0, 1],
         [t.atoms.border_contrast_medium.borderColor, 'transparent'],
       ),
@@ -1357,7 +1360,7 @@ function useScrollTracker({
     return {
       borderTopWidth: StyleSheet.hairlineWidth,
       borderColor: interpolateColor(
-        hasScrolledToBottom.value,
+        hasScrolledToBottom.get(),
         [0, 1],
         [t.atoms.border_contrast_medium.borderColor, 'transparent'],
       ),
@@ -1602,7 +1605,7 @@ function VideoUploadToolbar({state}: {state: VideoState}) {
 
   const animatedStyle = useAnimatedStyle(() => {
     return {
-      transform: [{rotateZ: `${rotate.value}deg`}],
+      transform: [{rotateZ: `${rotate.get()}deg`}],
     }
   })
 
