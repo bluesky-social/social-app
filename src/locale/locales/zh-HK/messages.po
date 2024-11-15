@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-14 07:16\n"
+"PO-Revision-Date: 2024-11-15 07:48\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional, Hong Kong\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -4963,7 +4963,7 @@ msgstr "處理緊影片..."
 #: src/lib/api/index.ts:59
 #: src/screens/Login/ForgotPasswordForm.tsx:149
 msgid "Processing..."
-msgstr "處理緊..."
+msgstr "幫緊你幫緊你..."
 
 #: src/view/screens/DebugMod.tsx:913
 #: src/view/screens/Profile.tsx:363
