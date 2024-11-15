@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-15 07:49\n"
+"PO-Revision-Date: 2024-11-15 08:02\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -3419,7 +3419,7 @@ msgstr "已添加标记"
 
 #: src/screens/Profile/Sections/Labels.tsx:163
 msgid "Labels are annotations on users and content. They can be used to hide, warn, and categorize the network."
-msgstr "标记是对特定内容及用户的标注。可用于隐藏特定内容、显示警告及对网络进行分类。"
+msgstr "标记是对内容和用户的标注，可用于隐藏特定内容、显示警告及分类你的关系网。"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:71
 msgid "Labels on your account"
