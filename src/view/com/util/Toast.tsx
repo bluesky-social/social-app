@@ -151,7 +151,9 @@ function Toast({
     const translation = dismissSwipeTranslateY.get()
     return {
       transform: [
-        {translateY: translation > 0 ? translation / 2 : translation},
+        {
+          translateY: translation > 0 ? translation ** 0.7 : translation,
+        },
       ],
     }
   })
