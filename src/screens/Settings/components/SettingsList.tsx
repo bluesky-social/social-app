@@ -2,9 +2,11 @@ import React, {useContext, useMemo} from 'react'
 import {GestureResponderEvent, StyleProp, View, ViewStyle} from 'react-native'
 
 import {HITSLOP_10} from '#/lib/constants'
+import {isRTL} from '#/platform/detection'
 import {atoms as a, useTheme, ViewStyleProp} from '#/alf'
 import * as Button from '#/components/Button'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon} from '#/components/icons/Chevron'
+import {ChevronLeft_Stroke2_Corner0_Rounded as ChevronLeftIcon} from '#/components/icons/Chevron'
 import {Link, LinkProps} from '#/components/Link'
 import {createPortalGroup} from '#/components/Portal'
 import {Text} from '#/components/Typography'
@@ -261,7 +263,13 @@ export function Chevron({color: colorProp}: {color?: string}) {
   const t = useTheme()
   const color =
     colorProp ?? (destructive ? t.palette.negative_500 : t.palette.contrast_500)
-  return <ItemIcon icon={ChevronRightIcon} size="md" color={color} />
+  return (
+    <ItemIcon
+      icon={isRTL ? ChevronLeftIcon : ChevronRightIcon}
+      size="md"
+      color={color}
+    />
+  )
 }
 
 export function BadgeText({
