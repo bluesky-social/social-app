@@ -64,13 +64,13 @@ const EDGES =
     : (['left', 'right'] satisfies Edge[]) // iOS, so no top/bottom safe area
 
 const SLOW_SPRING: WithSpringConfig = {
-  mass: isIOS ? 1.5 : 1,
+  mass: isIOS ? 1.25 : 0.75,
   damping: 300,
   stiffness: 800,
   restDisplacementThreshold: 0.01,
 }
 const FAST_SPRING: WithSpringConfig = {
-  mass: isIOS ? 1.5 : 1,
+  mass: isIOS ? 1.25 : 0.75,
   damping: 150,
   stiffness: 900,
   restDisplacementThreshold: 0.01,
