@@ -61,7 +61,7 @@ export function useMarkAsReadMutation() {
       if (!convoId) throw new Error('No convoId provided')
       optimisticUpdate(convoId)
     },
-    onSettled(_data, _error, {convoId}) {
+    onSuccess(_, {convoId}) {
       if (!convoId) return
 
       queryClient.setQueryData(LIST_CONVOS_KEY, (old: ConvoListQueryData) => {
