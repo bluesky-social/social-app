@@ -109,12 +109,16 @@ export default function ImageViewRoot({
 
     // https://github.com/software-mansion/react-native-reanimated/issues/6677
     requestAnimationFrame(() => {
-      openProgress.set(canAnimate ? withClampedSpring(1, SLOW_SPRING) : 1)
+      openProgress.set(() =>
+        canAnimate ? withClampedSpring(1, SLOW_SPRING) : 1,
+      )
     })
     return () => {
       // https://github.com/software-mansion/react-native-reanimated/issues/6677
       requestAnimationFrame(() => {
-        openProgress.set(canAnimate ? withClampedSpring(0, SLOW_SPRING) : 0)
+        openProgress.set(() =>
+          canAnimate ? withClampedSpring(0, SLOW_SPRING) : 0,
+        )
       })
     }
   }, [nextLightbox, openProgress])
