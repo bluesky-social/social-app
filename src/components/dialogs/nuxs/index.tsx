@@ -53,7 +53,13 @@ export function NuxDialogs() {
   const onboardingActive = useOnboardingState().isActive
 
   const isLoading =
-    !currentAccount || !preferences || !profile || onboardingActive
+    onboardingActive ||
+    !currentAccount ||
+    !preferences ||
+    !profile ||
+    !profile.createdAt ||
+    profile.createdAt === '0001-01-01T00:00:00.000Z' // TODO: Fix this in AppView.
+
   return !isLoading ? (
     <Inner
       currentAccount={currentAccount}
