@@ -115,7 +115,7 @@ msgstr "{0, plural, other {रीपोस्ट}}"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:296
 msgid "{0, plural, one {Unlike (# like)} other {Unlike (# likes)}}"
-msgstr "{0, plural, other {नापसंद करें (# पसंद)}"
+msgstr "{0, plural, other {नापसंद करें (# पसंद)}}"
 
 #. Pattern: {wordValue} in tags
 #: src/components/dialogs/MutedWords.tsx:475
@@ -9661,11 +9661,11 @@ msgstr "आप अपने फ़ीड के अंत तक पहुँच �
 
 #: src/view/com/composer/state/video.ts:435
 msgid "You've reached your daily limit for video uploads (too many bytes)"
-msgstr "आप वीडियो अपलोड करने की दैनिक सीमा तक पहुँच गए {अत्यधिक बाइट}"
+msgstr "आप वीडियो अपलोड करने की दैनिक सीमा तक पहुँच गए (अत्यधिक बाइट)"
 
 #: src/view/com/composer/state/video.ts:439
 msgid "You've reached your daily limit for video uploads (too many videos)"
-msgstr "आप वीडियो अपलोड करने की दैनिक सीमा तक पहुँच गए {अत्यधिक वीडियो}"
+msgstr "आप वीडियो अपलोड करने की दैनिक सीमा तक पहुँच गए (अत्यधिक वीडियो)"
 
 #: src/screens/Signup/index.tsx:140
 msgid "Your account"
