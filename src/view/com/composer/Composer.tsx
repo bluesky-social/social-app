@@ -56,13 +56,18 @@ import {useQueryClient} from '@tanstack/react-query'
 import * as apilib from '#/lib/api/index'
 import {EmbeddingDisabledError} from '#/lib/api/resolve'
 import {until} from '#/lib/async/until'
-import {MAX_GRAPHEME_LENGTH} from '#/lib/constants'
+import {
+  MAX_GRAPHEME_LENGTH,
+  SUPPORTED_MIME_TYPES,
+  SupportedMimeTypes,
+} from '#/lib/constants'
 import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
 import {useEmail} from '#/lib/hooks/useEmail'
 import {useIsKeyboardVisible} from '#/lib/hooks/useIsKeyboardVisible'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {mimeToExt} from '#/lib/media/video/util'
 import {logEvent} from '#/lib/statsig/statsig'
 import {cleanError} from '#/lib/strings/errors'
 import {colors, s} from '#/lib/styles'
@@ -131,6 +136,7 @@ import {
 } from './state/composer'
 import {NO_VIDEO, NoVideoState, processVideo, VideoState} from './state/video'
 import {clearThumbnailCache} from './videos/VideoTranscodeBackdrop'
+import {getVideoMetadata} from './videos/pickVideo'
 
 type CancelRef = {
   onPressCancel: () => void
@@ -746,14 +752,24 @@ let ComposerPost = React.memo(function ComposerPost({
 
   const onPhotoPasted = useCallback(
     async (uri: string) => {
-      if (uri.startsWith('data:video/')) {
-        onSelectVideo(post.id, {uri, type: 'video', height: 0, width: 0})
+      if (uri.startsWith('data:video/') || uri.startsWith('data:image/gif')) {
+        if (isNative) return // web only
+        const [mimeType] = uri.slice('data:'.length).split(';')
+        if (!SUPPORTED_MIME_TYPES.includes(mimeType as SupportedMimeTypes)) {
+          Toast.show(_(msg`Unsupported video type`), 'xmark')
+          return
+        }
+        const name = `pasted.${mimeToExt(mimeType)}`
+        const file = await fetch(uri)
+          .then(res => res.blob())
+          .then(blob => new File([blob], name, {type: mimeType}))
+        onSelectVideo(post.id, await getVideoMetadata(file))
       } else {
         const res = await pasteImage(uri)
         onImageAdd([res])
       }
     },
-    [post.id, onSelectVideo, onImageAdd],
+    [post.id, onSelectVideo, onImageAdd, _],
   )
 
   return (

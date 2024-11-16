@@ -12,8 +12,6 @@ import * as Toast from '#/view/com/util/Toast'
 import {atoms as a} from '#/alf'
 import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
 
-const MAX_DURATION = 60
-
 export function VideoPreview({
   asset,
   video,
@@ -27,6 +25,8 @@ export function VideoPreview({
 }) {
   const ref = useRef<HTMLVideoElement>(null)
   const {_} = useLingui()
+  // TODO: figure out how to pause a GIF for reduced motion
+  // it's not possible using an img tag -sfn
   const autoplayDisabled = useAutoplayDisabled()
 
   useEffect(() => {
@@ -34,22 +34,6 @@ export function VideoPreview({
 
     const abortController = new AbortController()
     const {signal} = abortController
-    ref.current.addEventListener(
-      'loadedmetadata',
-      function () {
-        setDimensions(this.videoWidth, this.videoHeight)
-        if (!isNaN(this.duration)) {
-          if (this.duration > MAX_DURATION) {
-            Toast.show(
-              _(msg`Videos must be less than 60 seconds long`),
-              'xmark',
-            )
-            clear()
-          }
-        }
-      },
-      {signal},
-    )
     ref.current.addEventListener(
       'error',
       () => {
@@ -83,19 +67,30 @@ export function VideoPreview({
         a.relative,
       ]}>
       <ExternalEmbedRemoveBtn onRemove={clear} />
-      <video
-        ref={ref}
-        src={video.uri}
-        style={{width: '100%', height: '100%', objectFit: 'cover'}}
-        autoPlay={!autoplayDisabled}
-        loop
-        muted
-        playsInline
-      />
-      {autoplayDisabled && (
-        <View style={[a.absolute, a.inset_0, a.justify_center, a.align_center]}>
-          <PlayButtonIcon />
-        </View>
+      {video.mimeType === 'image/gif' ? (
+        <img
+          src={video.uri}
+          style={{width: '100%', height: '100%', objectFit: 'cover'}}
+          alt="GIF"
+        />
+      ) : (
+        <>
+          <video
+            ref={ref}
+            src={video.uri}
+            style={{width: '100%', height: '100%', objectFit: 'cover'}}
+            autoPlay={!autoplayDisabled}
+            loop
+            muted
+            playsInline
+          />
+          {autoplayDisabled && (
+            <View
+              style={[a.absolute, a.inset_0, a.justify_center, a.align_center]}>
+              <PlayButtonIcon />
+            </View>
+          )}
+        </>
       )}
     </View>
   )
