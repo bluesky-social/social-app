@@ -60,7 +60,8 @@ export const getVideoMetadata = (file: File): Promise<ImagePickerAsset> => {
           })
         }
         img.onerror = (_ev, _source, _lineno, _colno, error) => {
-          reject(new Error('Failed to grab GIF metadata', {cause: error}))
+          console.log('Failed to grab GIF metadata', error)
+          reject(new Error('Failed to grab GIF metadata'))
         }
         img.src = uri
       } else {
@@ -83,7 +84,8 @@ export const getVideoMetadata = (file: File): Promise<ImagePickerAsset> => {
         }
         video.onerror = (_ev, _source, _lineno, _colno, error) => {
           URL.revokeObjectURL(blobUrl)
-          reject(new Error('Failed to grab video metadata', {cause: error}))
+          console.log('Failed to grab video metadata', error)
+          reject(new Error('Failed to grab video metadata'))
         }
       }
     }

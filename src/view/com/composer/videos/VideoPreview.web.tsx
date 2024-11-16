@@ -62,7 +62,7 @@ export function VideoPreview({
             muted
             playsInline
             onError={err => {
-              console.error(new Error('Error loading video', {cause: err}))
+              console.error('Error loading video', err)
               Toast.show(_(msg`Could not process your video`), 'xmark')
               clear()
             }}
