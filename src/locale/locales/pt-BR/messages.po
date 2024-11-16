@@ -1784,7 +1784,7 @@ msgstr "Copiar link da lista"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:452
 #: src/view/com/util/forms/PostDropdownBtn.tsx:461
 msgid "Copy link to post"
-msgstr "Copiar link da postagem"
+msgstr "Copiar link do post"
 
 #: src/components/dms/MessageMenu.tsx:110
 #: src/components/dms/MessageMenu.tsx:112
