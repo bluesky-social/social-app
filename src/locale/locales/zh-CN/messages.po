@@ -1310,7 +1310,7 @@ msgstr "请为这个媒体内容勾选合适的标签。若不勾选，则默认
 msgid "Choose Service"
 msgstr "选择服务"
 
-#: src/screens/Onboarding/StepFinished.tsx:271
+#: src/screens/Onboarding/StepFinished.tsx:276
 msgid "Choose the algorithms that power your custom feeds."
 msgstr "在动态源中自由挑选适合你的自定义算法"
 
@@ -1460,7 +1460,7 @@ msgstr "漫画"
 msgid "Community Guidelines"
 msgstr "社群准则"
 
-#: src/screens/Onboarding/StepFinished.tsx:284
+#: src/screens/Onboarding/StepFinished.tsx:289
 msgid "Complete onboarding and start using your account"
 msgstr "完成入门引导并开始使用你的账户"
 
@@ -1829,7 +1829,6 @@ msgstr "调试内容审核"
 msgid "Debug panel"
 msgstr "调试面板"
 
-#: src/components/dialogs/nuxs/NeueTypography.tsx:99
 #: src/screens/Settings/AppearanceSettings.tsx:153
 msgid "Default"
 msgstr "默认"
@@ -2718,7 +2717,7 @@ msgstr "成功保存文件！"
 msgid "Filter from feeds"
 msgstr "从动态源中过滤"
 
-#: src/screens/Onboarding/StepFinished.tsx:287
+#: src/screens/Onboarding/StepFinished.tsx:292
 msgid "Finalizing"
 msgstr "正在完成"
 
@@ -2740,7 +2739,7 @@ msgstr "完成"
 msgid "Fitness"
 msgstr "健康"
 
-#: src/screens/Onboarding/StepFinished.tsx:267
+#: src/screens/Onboarding/StepFinished.tsx:272
 msgid "Flexible"
 msgstr "灵活"
 
@@ -2869,12 +2868,10 @@ msgstr "关注了你"
 msgid "Follows You"
 msgstr "关注了你"
 
-#: src/components/dialogs/nuxs/NeueTypography.tsx:71
 #: src/screens/Settings/AppearanceSettings.tsx:125
 msgid "Font"
 msgstr "字体"
 
-#: src/components/dialogs/nuxs/NeueTypography.tsx:91
 #: src/screens/Settings/AppearanceSettings.tsx:145
 msgid "Font size"
 msgstr "字体大小"
@@ -2892,7 +2889,6 @@ msgstr "出于安全原因，我们需要向你的电子邮箱发送验证码。
 msgid "For security reasons, you won't be able to view this again. If you lose this app password, you'll need to generate a new one."
 msgstr "出于安全原因，你将无法再次查看这个应用密码。如果你忘记了该密码，则需要重新生成。"
 
-#: src/components/dialogs/nuxs/NeueTypography.tsx:73
 #: src/screens/Settings/AppearanceSettings.tsx:127
 msgid "For the best experience, we recommend using the theme font."
 msgstr "为了获得最佳的用户体验，我们建议你使用主题字体。"
@@ -3311,8 +3307,8 @@ msgid "Interaction limited"
 msgstr "互动受限"
 
 #: src/components/dialogs/nuxs/NeueTypography.tsx:47
-msgid "Introducing new font settings"
-msgstr "介绍全新的字体设置"
+#~ msgid "Introducing new font settings"
+#~ msgstr "介绍全新的字体设置"
 
 #: src/screens/Login/LoginForm.tsx:142
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:70
@@ -3448,7 +3444,6 @@ msgstr "语言设置"
 msgid "Languages"
 msgstr "语言"
 
-#: src/components/dialogs/nuxs/NeueTypography.tsx:103
 #: src/screens/Settings/AppearanceSettings.tsx:157
 msgid "Larger"
 msgstr "更大"
@@ -3532,7 +3527,7 @@ msgstr "自定义"
 msgid "Let's get your password reset!"
 msgstr "让我们来重置你的密码！"
 
-#: src/screens/Onboarding/StepFinished.tsx:287
+#: src/screens/Onboarding/StepFinished.tsx:292
 msgid "Let's go!"
 msgstr "让我们开始吧！"
 
@@ -4042,7 +4037,7 @@ msgstr "需要更改吗？"
 msgid "Need to report a copyright violation?"
 msgstr "需要举报侵权行为吗？"
 
-#: src/screens/Onboarding/StepFinished.tsx:255
+#: src/screens/Onboarding/StepFinished.tsx:260
 msgid "Never lose access to your followers or data."
 msgstr "永远不会失去对你的关注者或个人数据的掌控权。"
 
@@ -4066,8 +4061,8 @@ msgid "New chat"
 msgstr "新私信"
 
 #: src/components/dialogs/nuxs/NeueTypography.tsx:51
-msgid "New font settings ✨"
-msgstr "全新字体设置 ✨"
+#~ msgid "New font settings ✨"
+#~ msgstr "全新字体设置 ✨"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:201
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:209
@@ -4431,7 +4426,7 @@ msgstr "糟糕，发生了一些错误！"
 msgid "Oops!"
 msgstr "糟糕！"
 
-#: src/screens/Onboarding/StepFinished.tsx:251
+#: src/screens/Onboarding/StepFinished.tsx:256
 msgid "Open"
 msgstr "开放"
 
@@ -4987,7 +4982,7 @@ msgstr "个人资料"
 msgid "Profile updated"
 msgstr "已更新个人资料"
 
-#: src/screens/Onboarding/StepFinished.tsx:237
+#: src/screens/Onboarding/StepFinished.tsx:242
 msgid "Public"
 msgstr "公开"
 
@@ -6160,7 +6155,6 @@ msgstr "跳过"
 msgid "Skip this flow"
 msgstr "跳过这段流程"
 
-#: src/components/dialogs/nuxs/NeueTypography.tsx:95
 #: src/screens/Settings/AppearanceSettings.tsx:149
 msgid "Smaller"
 msgstr "更小"
@@ -6346,7 +6340,6 @@ msgstr "切换账户"
 msgid "Switch Account"
 msgstr "切换账户"
 
-#: src/components/dialogs/nuxs/NeueTypography.tsx:78
 #: src/screens/Settings/AppearanceSettings.tsx:84
 #: src/screens/Settings/AppearanceSettings.tsx:132
 msgid "System"
@@ -6559,7 +6552,6 @@ msgstr "服务条款已迁移至"
 msgid "The verification code you have provided is invalid. Please make sure that you have used the correct verification link or request a new one."
 msgstr "你提供的验证码无效，请检查你所使用的验证链接是否正确，或是重试请求新的验证链接。"
 
-#: src/components/dialogs/nuxs/NeueTypography.tsx:82
 #: src/screens/Settings/AppearanceSettings.tsx:136
 msgid "Theme"
 msgstr "主题"
@@ -7489,7 +7481,7 @@ msgstr "我们估计还需要 {estimatedTime} 才能完成你的账户准备。"
 msgid "We have sent another verification email to <0>{0}</0>."
 msgstr "我们将发送另一封验证邮件至 <0>{0}</0>。"
 
-#: src/screens/Onboarding/StepFinished.tsx:229
+#: src/screens/Onboarding/StepFinished.tsx:234
 msgid "We hope you have a wonderful time. Remember, Bluesky is:"
 msgstr "我们希望你在此度过愉快的时光。请记住，Bluesky 是："
 
@@ -7526,8 +7518,8 @@ msgid "We're having network issues, try again"
 msgstr "我们遇到了网络问题，请再试一次"
 
 #: src/components/dialogs/nuxs/NeueTypography.tsx:54
-msgid "We're introducing a new theme font, along with adjustable font sizing."
-msgstr "隆重推出全新的主题字体及字体大小调整功能。"
+#~ msgid "We're introducing a new theme font, along with adjustable font sizing."
+#~ msgstr "隆重推出全新的主题字体及字体大小调整功能。"
 
 #: src/screens/Signup/index.tsx:94
 msgid "We're so excited to have you join us!"
@@ -7702,8 +7694,8 @@ msgid "You are not following anyone."
 msgstr "你没有关注任何账户。"
 
 #: src/components/dialogs/nuxs/NeueTypography.tsx:61
-msgid "You can adjust these in your Appearance Settings later."
-msgstr "你可以稍后在外观设置中重新调整这些选项。"
+#~ msgid "You can adjust these in your Appearance Settings later."
+#~ msgstr "你可以稍后在外观设置中重新调整这些选项。"
 
 #: src/view/com/posts/FollowingEmptyState.tsx:63
 #: src/view/com/posts/FollowingEndOfFeed.tsx:64
@@ -7934,7 +7926,7 @@ msgstr "轮到你了"
 msgid "You're logged in with an App Password. Please log in with your main password to continue deactivating your account."
 msgstr "你正在使用应用密码登录账户，请改用你的主密码登录以继续停用你的账户。"
 
-#: src/screens/Onboarding/StepFinished.tsx:226
+#: src/screens/Onboarding/StepFinished.tsx:231
 msgid "You're ready to go!"
 msgstr "你已设置完成！"
 
@@ -8034,7 +8026,7 @@ msgstr "已发布你的帖文"
 msgid "Your posts have been published"
 msgstr "已发布你的帖文"
 
-#: src/screens/Onboarding/StepFinished.tsx:241
+#: src/screens/Onboarding/StepFinished.tsx:246
 msgid "Your posts, likes, and blocks are public. Mutes are private."
 msgstr "你发布的帖文、喜欢的内容和屏蔽列表都是公开可见的，而隐藏列表仅对你自己可见。"
 
@@ -8053,4 +8045,3 @@ msgstr "你的举报将发送至 Bluesky 内容审核服务"
 #: src/screens/Signup/index.tsx:142
 msgid "Your user handle"
 msgstr "你的账户代码"
-
