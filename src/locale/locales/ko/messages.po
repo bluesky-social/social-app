@@ -1212,7 +1212,8 @@ msgstr "변경"
 msgid "Change email"
 msgstr "이메일 변경"
 
-#: src/components/dialogs/VerifyEmailDialog.tsx:163
+#: src/components/dialogs/VerifyEmailDialog.tsx:162
+#: src/components/dialogs/VerifyEmailDialog.tsx:187
 msgid "Change email address"
 msgstr "이메일 주소 변경"
 
@@ -1236,6 +1237,10 @@ msgstr "게시물 언어를 {0}(으)로 변경"
 #: src/view/com/modals/ChangeEmail.tsx:104
 msgid "Change Your Email"
 msgstr "이메일 변경"
+
+#: src/components/dialogs/VerifyEmailDialog.tsx:171
+msgid "Change your email address"
+msgstr ""
 
 #: src/Navigation.tsx:373
 #: src/view/shell/bottom-bar/BottomBar.tsx:200
@@ -1300,7 +1305,7 @@ msgstr "게시하는 미디어에 적용할 자체 라벨을 선택하세요. �
 msgid "Choose Service"
 msgstr "서비스 선택"
 
-#: src/screens/Onboarding/StepFinished.tsx:271
+#: src/screens/Onboarding/StepFinished.tsx:276
 msgid "Choose the algorithms that power your custom feeds."
 msgstr "맞춤 피드를 구동할 알고리즘을 선택하세요."
 
@@ -1361,7 +1366,7 @@ msgid "Clip 🐴 clop 🐴"
 msgstr "다그닥 🐴 다그닥 🐴"
 
 #: src/components/dialogs/GifSelect.tsx:281
-#: src/components/dialogs/VerifyEmailDialog.tsx:266
+#: src/components/dialogs/VerifyEmailDialog.tsx:289
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:263
 #: src/components/NewskieDialog.tsx:146
 #: src/components/NewskieDialog.tsx:153
@@ -1450,7 +1455,7 @@ msgstr "만화"
 msgid "Community Guidelines"
 msgstr "커뮤니티 가이드라인"
 
-#: src/screens/Onboarding/StepFinished.tsx:284
+#: src/screens/Onboarding/StepFinished.tsx:289
 msgid "Complete onboarding and start using your account"
 msgstr "온보딩 완료 후 계정 사용 시작"
 
@@ -1482,9 +1487,9 @@ msgstr "{name} 카테고리에 대한 콘텐츠 필터링 설정을 구성합니
 msgid "Configured in <0>moderation settings</0>."
 msgstr "<0>검토 설정</0>에서 설정합니다."
 
-#: src/components/dialogs/VerifyEmailDialog.tsx:230
-#: src/components/dialogs/VerifyEmailDialog.tsx:237
+#: src/components/dialogs/VerifyEmailDialog.tsx:253
 #: src/components/dialogs/VerifyEmailDialog.tsx:260
+#: src/components/dialogs/VerifyEmailDialog.tsx:283
 #: src/components/Prompt.tsx:172
 #: src/components/Prompt.tsx:175
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:185
@@ -1515,7 +1520,7 @@ msgstr "나이를 확인하세요:"
 msgid "Confirm your birthdate"
 msgstr "생년월일 확인"
 
-#: src/components/dialogs/VerifyEmailDialog.tsx:191
+#: src/components/dialogs/VerifyEmailDialog.tsx:214
 #: src/screens/Login/LoginForm.tsx:256
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:144
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:150
@@ -1526,7 +1531,7 @@ msgstr "생년월일 확인"
 msgid "Confirmation code"
 msgstr "인증 코드"
 
-#: src/components/dialogs/VerifyEmailDialog.tsx:187
+#: src/components/dialogs/VerifyEmailDialog.tsx:210
 msgid "Confirmation Code"
 msgstr "인증 코드"
 
@@ -1819,7 +1824,6 @@ msgstr "검토 디버그"
 msgid "Debug panel"
 msgstr "디버그 패널"
 
-#: src/components/dialogs/nuxs/NeueTypography.tsx:99
 #: src/screens/Settings/AppearanceSettings.tsx:153
 msgid "Default"
 msgstr "기본"
@@ -2708,7 +2712,7 @@ msgstr "파일을 성공적으로 저장했습니다!"
 msgid "Filter from feeds"
 msgstr "피드에서 필터링"
 
-#: src/screens/Onboarding/StepFinished.tsx:287
+#: src/screens/Onboarding/StepFinished.tsx:292
 msgid "Finalizing"
 msgstr "마무리 중"
 
@@ -2730,7 +2734,7 @@ msgstr "완료"
 msgid "Fitness"
 msgstr "건강"
 
-#: src/screens/Onboarding/StepFinished.tsx:267
+#: src/screens/Onboarding/StepFinished.tsx:272
 msgid "Flexible"
 msgstr "유연성"
 
@@ -2859,12 +2863,10 @@ msgstr "나를 팔로우함"
 msgid "Follows You"
 msgstr "나를 팔로우함"
 
-#: src/components/dialogs/nuxs/NeueTypography.tsx:71
 #: src/screens/Settings/AppearanceSettings.tsx:125
 msgid "Font"
 msgstr "글꼴"
 
-#: src/components/dialogs/nuxs/NeueTypography.tsx:91
 #: src/screens/Settings/AppearanceSettings.tsx:145
 msgid "Font size"
 msgstr "글꼴 크기"
@@ -2882,7 +2884,6 @@ msgstr "보안상의 이유로 이메일 주소로 인증 코드를 보내야 �
 msgid "For security reasons, you won't be able to view this again. If you lose this app password, you'll need to generate a new one."
 msgstr "보안상의 이유로 이 비밀번호는 다시 볼 수 없습니다. 이 앱 비밀번호를 분실한 경우 새로 생성해야 합니다."
 
-#: src/components/dialogs/nuxs/NeueTypography.tsx:73
 #: src/screens/Settings/AppearanceSettings.tsx:127
 msgid "For the best experience, we recommend using the theme font."
 msgstr "최상의 경험을 위해 테마 글꼴을 사용하는 것을 추천합니다."
@@ -3193,8 +3194,8 @@ msgstr "이 링크를 어떻게 여시겠습니까?"
 msgid "I have a code"
 msgstr "코드를 가지고 있습니다"
 
-#: src/components/dialogs/VerifyEmailDialog.tsx:216
-#: src/components/dialogs/VerifyEmailDialog.tsx:223
+#: src/components/dialogs/VerifyEmailDialog.tsx:239
+#: src/components/dialogs/VerifyEmailDialog.tsx:246
 msgid "I Have a Code"
 msgstr "코드를 가지고 있습니다"
 
@@ -3301,8 +3302,8 @@ msgid "Interaction limited"
 msgstr "상호작용 제한됨"
 
 #: src/components/dialogs/nuxs/NeueTypography.tsx:47
-msgid "Introducing new font settings"
-msgstr "새 글꼴 설정을 소개합니다"
+#~ msgid "Introducing new font settings"
+#~ msgstr "새 글꼴 설정을 소개합니다"
 
 #: src/screens/Login/LoginForm.tsx:142
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:70
@@ -3438,7 +3439,6 @@ msgstr "언어 설정"
 msgid "Languages"
 msgstr "언어"
 
-#: src/components/dialogs/nuxs/NeueTypography.tsx:103
 #: src/screens/Settings/AppearanceSettings.tsx:157
 msgid "Larger"
 msgstr "큼"
@@ -3522,7 +3522,7 @@ msgstr "직접 선택하기"
 msgid "Let's get your password reset!"
 msgstr "비밀번호를 재설정해 봅시다!"
 
-#: src/screens/Onboarding/StepFinished.tsx:287
+#: src/screens/Onboarding/StepFinished.tsx:292
 msgid "Let's go!"
 msgstr "출발!"
 
@@ -4024,7 +4024,7 @@ msgstr "다음 화면으로 이동합니다"
 msgid "Navigates to your profile"
 msgstr "내 프로필로 이동합니다"
 
-#: src/components/dialogs/VerifyEmailDialog.tsx:172
+#: src/components/dialogs/VerifyEmailDialog.tsx:196
 msgid "Need to change it?"
 msgstr "이메일을 변경하시겠어요?"
 
@@ -4032,7 +4032,7 @@ msgstr "이메일을 변경하시겠어요?"
 msgid "Need to report a copyright violation?"
 msgstr "저작권 위반을 신고해야 하나요?"
 
-#: src/screens/Onboarding/StepFinished.tsx:255
+#: src/screens/Onboarding/StepFinished.tsx:260
 msgid "Never lose access to your followers or data."
 msgstr "팔로워 또는 데이터에 대한 접근 권한을 잃지 않습니다."
 
@@ -4056,8 +4056,8 @@ msgid "New chat"
 msgstr "새 대화"
 
 #: src/components/dialogs/nuxs/NeueTypography.tsx:51
-msgid "New font settings ✨"
-msgstr "새 폰트 설정 ✨"
+#~ msgid "New font settings ✨"
+#~ msgstr "새 폰트 설정 ✨"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:201
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:209
@@ -4421,7 +4421,7 @@ msgstr "이런, 뭔가 잘못되었습니다!"
 msgid "Oops!"
 msgstr "이런!"
 
-#: src/screens/Onboarding/StepFinished.tsx:251
+#: src/screens/Onboarding/StepFinished.tsx:256
 msgid "Open"
 msgstr "공개성"
 
@@ -4977,7 +4977,7 @@ msgstr "프로필"
 msgid "Profile updated"
 msgstr "프로필 업데이트됨"
 
-#: src/screens/Onboarding/StepFinished.tsx:237
+#: src/screens/Onboarding/StepFinished.tsx:242
 msgid "Public"
 msgstr "공공성"
 
@@ -5444,8 +5444,8 @@ msgstr "내 지역에서 필수"
 msgid "Resend email"
 msgstr "이메일 다시 전송"
 
-#: src/components/dialogs/VerifyEmailDialog.tsx:244
-#: src/components/dialogs/VerifyEmailDialog.tsx:254
+#: src/components/dialogs/VerifyEmailDialog.tsx:267
+#: src/components/dialogs/VerifyEmailDialog.tsx:277
 #: src/components/intents/VerifyEmailIntentDialog.tsx:130
 msgid "Resend Email"
 msgstr "이메일 다시 전송"
@@ -5787,11 +5787,11 @@ msgstr "피드에서 번역을 위해 선호하는 언어를 선택합니다."
 msgid "Send a neat website!"
 msgstr "멋진 웹사이트 링크를 보내 보세요!"
 
-#: src/components/dialogs/VerifyEmailDialog.tsx:209
+#: src/components/dialogs/VerifyEmailDialog.tsx:232
 msgid "Send Confirmation"
 msgstr "인증 메일 보내기"
 
-#: src/components/dialogs/VerifyEmailDialog.tsx:202
+#: src/components/dialogs/VerifyEmailDialog.tsx:225
 msgid "Send confirmation email"
 msgstr "인증 이메일 보내기"
 
@@ -6150,7 +6150,6 @@ msgstr "건너뛰기"
 msgid "Skip this flow"
 msgstr "이 단계 건너뛰기"
 
-#: src/components/dialogs/nuxs/NeueTypography.tsx:95
 #: src/screens/Settings/AppearanceSettings.tsx:149
 msgid "Smaller"
 msgstr "작음"
@@ -6336,7 +6335,6 @@ msgstr "계정 전환"
 msgid "Switch Account"
 msgstr "계정 전환"
 
-#: src/components/dialogs/nuxs/NeueTypography.tsx:78
 #: src/screens/Settings/AppearanceSettings.tsx:84
 #: src/screens/Settings/AppearanceSettings.tsx:132
 msgid "System"
@@ -6529,6 +6527,10 @@ msgstr "개인정보 처리방침을 <0/>(으)로 이동했습니다"
 msgid "The selected video is larger than 50MB."
 msgstr "선택한 동영상이 50MB를 초과합니다."
 
+#: src/lib/strings/errors.ts:18
+msgid "The server appears to be experiencing issues. Please try again in a few moments."
+msgstr ""
+
 #: src/screens/StarterPack/StarterPackScreen.tsx:725
 msgid "The starter pack that you are trying to view is invalid. You may delete this starter pack instead."
 msgstr "이 스타터 팩은 유효하지 않습니다. 대신 이 스타터 팩을 삭제할 수 있습니다."
@@ -6545,7 +6547,6 @@ msgstr "서비스 이용약관을 다음으로 이동했습니다:"
 msgid "The verification code you have provided is invalid. Please make sure that you have used the correct verification link or request a new one."
 msgstr "입력한 인증 코드가 올바르지 않습니다. 올바른 인증 링크를 사용했는지 확인하거나 새 인증 링크를 요청하세요."
 
-#: src/components/dialogs/nuxs/NeueTypography.tsx:82
 #: src/screens/Settings/AppearanceSettings.tsx:136
 msgid "Theme"
 msgstr "테마"
@@ -6705,6 +6706,10 @@ msgstr "이 대화는 삭제되었거나 비활성화된 계정과의 대화입�
 #: src/screens/Settings/components/ExportCarDialog.tsx:94
 msgid "This feature is in beta. You can read more about repository exports in <0>this blogpost</0>."
 msgstr "이 기능은 베타 버전입니다. 저장소 내보내기에 대한 자세한 내용은 <0>이 블로그 글</0>에서 확인할 수 있습니다."
+
+#: src/lib/strings/errors.ts:21
+msgid "This feature is not available while using an App Password. Please sign in with your main password."
+msgstr ""
 
 #: src/view/com/posts/FeedErrorMessage.tsx:120
 msgid "This feed is currently receiving high traffic and is temporarily unavailable. Please try again later."
@@ -6937,6 +6942,10 @@ msgstr "리스트 차단 해제"
 #: src/view/screens/ProfileList.tsx:579
 msgid "Un-mute list"
 msgstr "리스트 언뮤트"
+
+#: src/lib/strings/errors.ts:11
+msgid "Unable to connect. Please check your internet connection and try again."
+msgstr ""
 
 #: src/screens/Login/ForgotPasswordForm.tsx:68
 #: src/screens/Login/index.tsx:76
@@ -7467,7 +7476,7 @@ msgstr "계정이 준비될 때까지 {estimatedTime}이(가) 걸릴 것으로 �
 msgid "We have sent another verification email to <0>{0}</0>."
 msgstr "<0>{0}</0>(으)로 또 다른 인증 이메일을 보냈습니다."
 
-#: src/screens/Onboarding/StepFinished.tsx:229
+#: src/screens/Onboarding/StepFinished.tsx:234
 msgid "We hope you have a wonderful time. Remember, Bluesky is:"
 msgstr "즐거운 시간 되시기 바랍니다. Bluesky의 다음 특징을 기억하세요."
 
@@ -7504,8 +7513,8 @@ msgid "We're having network issues, try again"
 msgstr "네트워크 문제가 발생했습니다. 다시 시도해 주세요"
 
 #: src/components/dialogs/nuxs/NeueTypography.tsx:54
-msgid "We're introducing a new theme font, along with adjustable font sizing."
-msgstr "글꼴 크기 조정 기능과 함께 새 테마 글꼴을 소개합니다."
+#~ msgid "We're introducing a new theme font, along with adjustable font sizing."
+#~ msgstr "글꼴 크기 조정 기능과 함께 새 테마 글꼴을 소개합니다."
 
 #: src/screens/Signup/index.tsx:94
 msgid "We're so excited to have you join us!"
@@ -7680,8 +7689,8 @@ msgid "You are not following anyone."
 msgstr "아무도 팔로우하지 않았습니다."
 
 #: src/components/dialogs/nuxs/NeueTypography.tsx:61
-msgid "You can adjust these in your Appearance Settings later."
-msgstr "나중에 모양 설정에서 수정할 수 있습니다."
+#~ msgid "You can adjust these in your Appearance Settings later."
+#~ msgstr "나중에 모양 설정에서 수정할 수 있습니다."
 
 #: src/view/com/posts/FollowingEmptyState.tsx:63
 #: src/view/com/posts/FollowingEndOfFeed.tsx:64
@@ -7893,7 +7902,7 @@ msgstr "다음 사람들 외 {0}명을 팔로우하게 됩니다"
 msgid "You'll follow these people right away"
 msgstr "다음 사람들을 바로 팔로우하게 됩니다"
 
-#: src/components/dialogs/VerifyEmailDialog.tsx:154
+#: src/components/dialogs/VerifyEmailDialog.tsx:178
 msgid "You'll receive an email at <0>{0}</0> to verify it's you."
 msgstr "본인 인증을 위해 <0>{0}</0>(으)로 이메일을 보냅니다."
 
@@ -7912,7 +7921,7 @@ msgstr "대기 중입니다"
 msgid "You're logged in with an App Password. Please log in with your main password to continue deactivating your account."
 msgstr "앱 비밀번호로 로그인했습니다. 계정 비활성화를 계속하려면 원래 비밀번호로 로그인하세요."
 
-#: src/screens/Onboarding/StepFinished.tsx:226
+#: src/screens/Onboarding/StepFinished.tsx:231
 msgid "You're ready to go!"
 msgstr "준비가 끝났습니다!"
 
@@ -8012,7 +8021,7 @@ msgstr "게시물을 게시했습니다"
 msgid "Your posts have been published"
 msgstr "게시물을 게시했습니다"
 
-#: src/screens/Onboarding/StepFinished.tsx:241
+#: src/screens/Onboarding/StepFinished.tsx:246
 msgid "Your posts, likes, and blocks are public. Mutes are private."
 msgstr "게시물, 좋아요, 차단 목록은 공개됩니다. 뮤트 목록은 공개되지 않습니다."
 
