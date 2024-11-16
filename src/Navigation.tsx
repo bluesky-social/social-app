@@ -696,7 +696,7 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
       onStateChange={() => {
         const routeName = getCurrentRouteName()
         if (routeName === 'Notifications') {
-          logEvent('router:navigate:notifications:sampled', {})
+          logEvent('router:navigate:notifications', {})
         }
       }}
       onReady={() => {
