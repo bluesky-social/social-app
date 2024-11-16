@@ -8,12 +8,15 @@ export function useEmail() {
 
   const {data: serviceConfig} = useServiceConfigQuery()
 
+  const checkEmailConfirmed = !!serviceConfig?.checkEmailConfirmed
+
   const isSelfHost =
-    serviceConfig?.checkEmailConfirmed &&
     currentAccount &&
     getHostnameFromUrl(currentAccount.service) !==
       getHostnameFromUrl(BSKY_SERVICE)
-  const needsEmailVerification = !isSelfHost && !currentAccount?.emailConfirmed
+
+  const needsEmailVerification =
+    checkEmailConfirmed && !isSelfHost && !currentAccount?.emailConfirmed
 
   return {needsEmailVerification}
 }
