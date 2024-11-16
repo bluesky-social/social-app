@@ -31,6 +31,10 @@ import {
 } from '#/components/icons/Bell'
 import {BulletList_Stroke2_Corner0_Rounded as List} from '#/components/icons/BulletList'
 import {
+  Gift1_Filled_Corner0_Rounded as GiftFilled,
+  Gift1_Stroke2_Corner0_Rounded as Gift,
+} from '#/components/icons/Gift1'
+import {
   Hashtag_Filled_Corner0_Rounded as HashtagFilled,
   Hashtag_Stroke2_Corner0_Rounded as Hashtag,
 } from '#/components/icons/Hashtag'
@@ -203,6 +207,11 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
     setDrawerOpen(false)
   }, [navigation, setDrawerOpen])
 
+  const onPressSubscriptions = React.useCallback(() => {
+    navigation.navigate('Subscriptions')
+    setDrawerOpen(false)
+  }, [navigation, setDrawerOpen])
+
   const onPressFeedback = React.useCallback(() => {
     Linking.openURL(
       FEEDBACK_FORM_URL({
@@ -264,6 +273,10 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
               onPress={onPressProfile}
             />
             <SettingsMenuItem onPress={onPressSettings} />
+            <SubscriptionsMenuItem
+              isActive={false}
+              onPress={onPressSubscriptions}
+            />
           </>
         ) : (
           <>
@@ -532,6 +545,31 @@ let SettingsMenuItem = ({onPress}: {onPress: () => void}): React.ReactNode => {
   )
 }
 SettingsMenuItem = React.memo(SettingsMenuItem)
+
+let SubscriptionsMenuItem = ({
+  isActive,
+  onPress,
+}: {
+  isActive: boolean
+  onPress: () => void
+}): React.ReactNode => {
+  const {_} = useLingui()
+  const t = useTheme()
+  return (
+    <MenuItem
+      icon={
+        isActive ? (
+          <GiftFilled style={[t.atoms.text]} width={iconWidth} />
+        ) : (
+          <Gift style={[t.atoms.text]} width={iconWidth} />
+        )
+      }
+      label={_(msg`Support Bluesky`)}
+      onPress={onPress}
+    />
+  )
+}
+SubscriptionsMenuItem = React.memo(SubscriptionsMenuItem)
 
 function MenuItem({icon, label, count, bold, onPress}: MenuItemProps) {
   const t = useTheme()
