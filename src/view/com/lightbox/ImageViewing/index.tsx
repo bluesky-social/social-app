@@ -32,6 +32,7 @@ import Animated, {
   useSharedValue,
   withDecay,
   withSpring,
+  WithSpringConfig,
 } from 'react-native-reanimated'
 import {
   Edge,
@@ -62,8 +63,18 @@ const EDGES =
     ? (['top', 'bottom', 'left', 'right'] satisfies Edge[])
     : (['left', 'right'] satisfies Edge[]) // iOS, so no top/bottom safe area
 
-const SLOW_SPRING = {stiffness: isIOS ? 180 : 250}
-const FAST_SPRING = {stiffness: 700}
+const SLOW_SPRING: WithSpringConfig = {
+  mass: isIOS ? 1.25 : 0.75,
+  damping: 300,
+  stiffness: 800,
+  restDisplacementThreshold: 0.01,
+}
+const FAST_SPRING: WithSpringConfig = {
+  mass: isIOS ? 1.25 : 0.75,
+  damping: 150,
+  stiffness: 900,
+  restDisplacementThreshold: 0.01,
+}
 
 export default function ImageViewRoot({
   lightbox: nextLightbox,
@@ -706,7 +717,7 @@ function interpolateTransform(
   }
 }
 
-function withClampedSpring(value: any, {stiffness}: {stiffness: number}) {
+function withClampedSpring(value: any, config: WithSpringConfig) {
   'worklet'
-  return withSpring(value, {overshootClamping: true, stiffness})
+  return withSpring(value, {...config, overshootClamping: true})
 }
