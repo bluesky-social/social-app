@@ -1573,7 +1573,7 @@ msgstr "Complete o captcha"
 
 #: src/view/com/composer/Composer.tsx:632
 msgid "Compose posts up to {MAX_GRAPHEME_LENGTH} characters in length"
-msgstr "Escreva postagens de até {MAX_GRAPHEME_LENGTH} caracteres"
+msgstr "Escreva posts de até {MAX_GRAPHEME_LENGTH} caracteres"
 
 #: src/view/com/post-thread/PostThreadComposePrompt.tsx:35
 msgid "Compose reply"
