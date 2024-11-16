@@ -200,7 +200,7 @@ export function Inner({
             </View>
           ) : (
             <Text style={[a.text_md, a.leading_snug]}>
-              uiStrings[currentStep].message
+              {uiStrings[currentStep].message}
             </Text>
           )}
         </View>
