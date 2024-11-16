@@ -15,7 +15,7 @@ export function useEmail() {
   // Date set for 11 AM PST on the 18th of November
   const isNewEnough =
     !!profile?.createdAt &&
-    Date.parse(profile.createdAt) >= Date.parse('2024-11-18T02:19:00.000Z')
+    Date.parse(profile.createdAt) >= Date.parse('2024-11-18T19:00:00.000Z')
 
   const isSelfHost =
     currentAccount &&
