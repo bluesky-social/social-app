@@ -4612,7 +4612,7 @@ msgstr "Ops!"
 
 #: src/screens/Onboarding/StepFinished.tsx:251
 msgid "Open"
-msgstr "Apri"
+msgstr "Aperto"
 
 #: src/view/com/posts/AviFollowButton.tsx:86
 msgid "Open {name} profile shortcut menu"
