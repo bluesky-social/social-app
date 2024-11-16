@@ -15,12 +15,12 @@ import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
 export function VideoPreview({
   asset,
   video,
-  setDimensions,
+
   clear,
 }: {
   asset: ImagePickerAsset
   video: CompressedVideo
-  setDimensions: (width: number, height: number) => void
+
   clear: () => void
 }) {
   const ref = useRef<HTMLVideoElement>(null)
@@ -46,7 +46,7 @@ export function VideoPreview({
     return () => {
       abortController.abort()
     }
-  }, [setDimensions, _, clear])
+  }, [_, clear])
 
   let aspectRatio = asset.width / asset.height
 

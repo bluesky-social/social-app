@@ -1025,17 +1025,6 @@ function ComposerEmbeds({
                   asset={video.asset}
                   video={video.video}
                   isActivePost={isActivePost}
-                  setDimensions={(width: number, height: number) => {
-                    dispatch({
-                      type: 'embed_update_video',
-                      videoAction: {
-                        type: 'update_dimensions',
-                        width,
-                        height,
-                        signal: video.abortController.signal,
-                      },
-                    })
-                  }}
                   clear={clearVideo}
                 />
               ) : null)}
