@@ -1276,7 +1276,7 @@ msgstr "Alterar Senha"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:73
 msgid "Change post language to {0}"
-msgstr "Alterar idioma da postagem para {0}"
+msgstr "Alterar idioma do post para {0}"
 
 #: src/view/com/modals/ChangeEmail.tsx:104
 msgid "Change Your Email"
