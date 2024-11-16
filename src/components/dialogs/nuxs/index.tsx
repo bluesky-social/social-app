@@ -19,7 +19,6 @@ import {useOnboardingState} from '#/state/shell'
 /*
  * NUXs
  */
-import {NeueTypography} from '#/components/dialogs/nuxs/NeueTypography'
 import {isSnoozed, snooze, unsnooze} from '#/components/dialogs/nuxs/snoozing'
 import {IS_DEV} from '#/env'
 
@@ -36,19 +35,7 @@ const queuedNuxs: {
     currentProfile: AppBskyActorDefs.ProfileViewDetailed
     preferences: UsePreferencesQueryResponse
   }) => boolean
-}[] = [
-  {
-    id: Nux.NeueTypography,
-    enabled(props) {
-      if (props.currentProfile.createdAt) {
-        if (new Date(props.currentProfile.createdAt) < new Date('2024-10-09')) {
-          return true
-        }
-      }
-      return false
-    },
-  },
-]
+}[] = []
 
 const Context = React.createContext<Context>({
   activeNux: undefined,
@@ -174,7 +161,7 @@ function Inner({
 
   return (
     <Context.Provider value={ctx}>
-      {activeNux === Nux.NeueTypography && <NeueTypography />}
+      {/*For example, activeNux === Nux.NeueTypography && <NeueTypography />*/}
     </Context.Provider>
   )
 }
