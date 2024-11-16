@@ -8,8 +8,8 @@ msgstr ""
 "Language: fr\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-09-16 16:30+0100\n"
-"Last-Translator: surfdude29\n"
+"PO-Revision-Date: 2024-11-09 19:42+0100\n"
+"Last-Translator: Stanislas Signoud (@signez.fr)\n"
 "Language-Team: Stanislas Signoud (@signez.fr), surfdude29\n"
 "Plural-Forms: \n"
 
@@ -236,11 +236,7 @@ msgstr "<0>{0}</0> membres"
 
 #: src/components/dms/DateDivider.tsx:69
 msgid "<0>{date}</0> at {time}"
-msgstr ""
-
-#: src/view/com/modals/SelfLabel.tsx:135
-#~ msgid "<0>Not Applicable.</0> This warning is only available for posts with media attached."
-#~ msgstr "<0>Pas applicable.</0> Cet avertissement est seulement disponible pour les posts qui ont des médias qui leur sont attachés."
+msgstr "<0>{date}</0> à {time}"
 
 #: src/screens/StarterPack/Wizard/index.tsx:466
 msgid "<0>You</0> and<1> </1><2>{0} </2>are included in your starter pack"
@@ -451,7 +447,7 @@ msgstr "Le contenu pour adultes est désactivé."
 #: src/view/com/composer/labels/LabelsBtn.tsx:140
 #: src/view/com/composer/labels/LabelsBtn.tsx:194
 msgid "Adult Content labels"
-msgstr ""
+msgstr "Étiquettes de contenu adulte"
 
 #: src/screens/Moderation/index.tsx:410
 #: src/view/screens/Settings/index.tsx:653
@@ -523,7 +519,7 @@ msgstr "Le texte alt décrit les images pour les personnes aveugles et malvoyant
 #: src/view/com/composer/GifAltText.tsx:179
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:139
 msgid "Alt text will be truncated. Limit: {0} characters."
-msgstr ""
+msgstr "Le texte alt sera tronqué. Limite : {0} caractères."
 
 #: src/view/com/modals/VerifyEmail.tsx:132
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:95
@@ -536,7 +532,7 @@ msgstr "Un e-mail a été envoyé à votre ancienne adresse, {0}. Il comprend un
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:77
 msgid "An email has been sent! Please enter the confirmation code included in the email below."
-msgstr ""
+msgstr "Un e-mail a été envoyé ! Entrez ci-dessous le code de confirmation présent dans l’e-mail."
 
 #: src/components/dialogs/GifSelect.tsx:266
 msgid "An error has occurred"
@@ -561,10 +557,6 @@ msgstr "Une erreur s’est produite lors du chargement de la vidéo. Veuillez r�
 #: src/view/com/util/post-embeds/VideoEmbed.web.tsx:174
 msgid "An error occurred while loading the video. Please try again."
 msgstr "Une erreur s’est produite lors du chargement de la vidéo. Veuillez réessayer."
-
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:250
-#~ msgid "An error occurred while saving the image!"
-#~ msgstr "Une erreur s’est produite lors de l’enregistrement de l’image !"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:71
 #: src/components/StarterPack/ShareDialog.tsx:80
@@ -636,7 +628,7 @@ msgstr "Comportement antisocial"
 #: src/view/screens/Search/Search.tsx:347
 #: src/view/screens/Search/Search.tsx:348
 msgid "Any language"
-msgstr ""
+msgstr "N’importe quelle langue"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:49
 msgid "Anybody can interact"
@@ -721,7 +713,7 @@ msgstr "Êtes-vous sûr de vouloir supprimer ce kit de démarrage ?"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:82
 msgid "Are you sure you want to discard your changes?"
-msgstr ""
+msgstr "Êtes-vous sûr de vouloir abandonner vos changements ?"
 
 #: src/components/dms/LeaveConvoPrompt.tsx:48
 msgid "Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for the other participant."
@@ -869,21 +861,13 @@ msgstr "Blog"
 msgid "Bluesky"
 msgstr "Bluesky"
 
-#: src/view/com/auth/server-input/index.tsx:154
-#~ msgid "Bluesky is an open network where you can choose your hosting provider. Custom hosting is now available in beta for developers."
-#~ msgstr "Bluesky est un réseau ouvert où vous pouvez choisir votre hébergeur. L’auto-hébergement est désormais disponible en version bêta pour les développeurs."
-
 #: src/view/com/auth/server-input/index.tsx:151
 msgid "Bluesky is an open network where you can choose your hosting provider. If you're a developer, you can host your own server."
-msgstr ""
+msgstr "Bluesky est un réseau ouvert où vous pouvez choisir votre hébergeur. Si vous êtes développeur, vous pouvez héberger votre propre serveur."
 
 #: src/components/ProgressGuide/List.tsx:55
 msgid "Bluesky is better with friends!"
 msgstr "Bluesky est meilleur entre ami·e·s !"
-
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:206
-#~ msgid "Bluesky now has over 10 million users, and I was #{0}!"
-#~ msgstr "Nous sommes désormais plus de 10 millions sur Bluesky, et j’étais n°{0} !"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:283
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
@@ -905,10 +889,6 @@ msgstr "Flouter les images et les filtrer des fils d’actu"
 #: src/screens/Onboarding/state.ts:83
 msgid "Books"
 msgstr "Livres"
-
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:614
-#~ msgid "Brag a little!"
-#~ msgstr "Soyez-en fier !"
 
 #: src/components/FeedInterstitials.tsx:350
 msgid "Browse more accounts on the Explore page"
@@ -951,21 +931,17 @@ msgstr "Par {0}"
 msgid "by <0/>"
 msgstr "par <0/>"
 
-#: src/screens/Signup/StepInfo/Policies.tsx:80
-#~ msgid "By creating an account you agree to the {els}."
-#~ msgstr "En créant un compte, vous acceptez les {els}."
-
 #: src/screens/Signup/StepInfo/Policies.tsx:81
 msgid "By creating an account you agree to the <0>Privacy Policy</0>."
-msgstr ""
+msgstr "En créant un compte, vous acceptez la <0>Politique de confidentialité</0>."
 
 #: src/screens/Signup/StepInfo/Policies.tsx:48
 msgid "By creating an account you agree to the <0>Terms of Service</0> and <1>Privacy Policy</1>."
-msgstr ""
+msgstr "En créant un compte, vous acceptez les <0>Conditions d’utilisation</0> et la <1>Politique de confidentialité</1>."
 
 #: src/screens/Signup/StepInfo/Policies.tsx:68
 msgid "By creating an account you agree to the <0>Terms of Service</0>."
-msgstr ""
+msgstr "En créant un compte, vous acceptez les <0>Conditions d’utilisation</0>."
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:162
 msgid "by you"
@@ -1025,10 +1001,6 @@ msgstr "Annuler le changement de pseudo"
 msgid "Cancel image crop"
 msgstr "Annuler le recadrage de l’image"
 
-#: src/view/com/modals/EditProfile.tsx:239
-#~ msgid "Cancel profile editing"
-#~ msgstr "Annuler la modification du profil"
-
 #: src/view/com/util/post-ctrls/RepostButton.tsx:161
 msgid "Cancel quote post"
 msgstr "Annuler la citation"
@@ -1061,10 +1033,6 @@ msgstr "Sous-titres (.vtt)"
 msgid "Captions & alt text"
 msgstr "Sous-titres et texte alt"
 
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:368
-#~ msgid "Celebrating {0} users"
-#~ msgstr "Célébrons les {0} comptes"
-
 #: src/view/com/modals/VerifyEmail.tsx:160
 msgid "Change"
 msgstr "Modifier"
@@ -1076,7 +1044,7 @@ msgstr "Modifier"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:147
 msgid "Change email address"
-msgstr ""
+msgstr "Modifier l’adresse e-mail"
 
 #: src/view/screens/Settings/index.tsx:685
 msgid "Change handle"
@@ -1163,7 +1131,7 @@ msgstr "Choisissez des personnes"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:116
 msgid "Choose self-labels that are applicable for the media you are posting. If none are selected, this post is suitable for all audiences."
-msgstr ""
+msgstr "Choisissez les auto-étiquettes qui sont pertinentes pour les médias que vous postez. Si aucune n’est sélectionnée, le post est adapté à tous les publics."
 
 #: src/view/com/auth/server-input/index.tsx:76
 msgid "Choose Service"
@@ -1275,10 +1243,6 @@ msgstr "Fermer l’image"
 msgid "Close image viewer"
 msgstr "Fermer la visionneuse d’images"
 
-#: src/components/dms/MessagesNUX.tsx:162
-#~ msgid "Close modal"
-#~ msgstr "Fermer la modale"
-
 #: src/view/shell/index.web.tsx:67
 msgid "Close navigation footer"
 msgstr "Fermer le pied de page de navigation"
@@ -1296,10 +1260,6 @@ msgstr "Ferme la barre de navigation du bas"
 msgid "Closes password update alert"
 msgstr "Ferme la notification de mise à jour du mot de passe"
 
-#: src/view/com/composer/Composer.tsx:552
-#~ msgid "Closes post composer and discards post draft"
-#~ msgstr "Ferme la fenêtre de rédaction et supprime le brouillon"
-
 #: src/view/com/lightbox/ImageViewing/components/ImageDefaultHeader.tsx:37
 msgid "Closes viewer for header image"
 msgstr "Ferme la visionneuse pour l’image d’en-tête"
@@ -1314,7 +1274,7 @@ msgstr "Réduit la liste des comptes pour une notification donnée"
 
 #: src/screens/Settings/AppearanceSettings.tsx:97
 msgid "Color mode"
-msgstr ""
+msgstr "Mode de couleur"
 
 #: src/screens/Onboarding/index.tsx:38
 #: src/screens/Onboarding/state.ts:84
@@ -1349,7 +1309,7 @@ msgstr "Rédiger une réponse"
 
 #: src/view/com/composer/Composer.tsx:1341
 msgid "Compressing video..."
-msgstr ""
+msgstr "Compression de la vidéo en cours…"
 
 #: src/components/moderation/LabelPreference.tsx:81
 msgid "Configure content filtering setting for category: {name}"
@@ -1405,7 +1365,7 @@ msgstr "Code de confirmation"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:167
 msgid "Confirmation Code"
-msgstr ""
+msgstr "Code de confirmation"
 
 #: src/screens/Login/LoginForm.tsx:309
 msgid "Connecting..."
@@ -1578,10 +1538,6 @@ msgid "Create"
 msgstr "Créer"
 
 #: src/view/com/auth/SplashScreen.tsx:57
-#: src/view/com/auth/SplashScreen.web.tsx:106
-#~ msgid "Create a new account"
-#~ msgstr "Créer un nouveau compte"
-
 #: src/view/screens/Settings/index.tsx:403
 msgid "Create a new Bluesky account"
 msgstr "Créer un compte Bluesky"
@@ -1603,7 +1559,7 @@ msgstr "Créer un kit de démarrage pour moi"
 #: src/view/com/auth/SplashScreen.tsx:56
 #: src/view/com/auth/SplashScreen.web.tsx:116
 msgid "Create account"
-msgstr ""
+msgstr "Créer un compte"
 
 #: src/screens/Signup/index.tsx:93
 msgid "Create Account"
@@ -1703,7 +1659,7 @@ msgstr "Panneau de débug"
 #: src/components/dialogs/nuxs/NeueTypography.tsx:99
 #: src/screens/Settings/AppearanceSettings.tsx:169
 msgid "Default"
-msgstr ""
+msgstr "Par défaut"
 
 #: src/components/dms/MessageMenu.tsx:151
 #: src/screens/StarterPack/StarterPackScreen.tsx:584
@@ -1802,11 +1758,11 @@ msgstr "Description"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:364
 msgid "Description is too long"
-msgstr ""
+msgstr "Description trop longue"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:365
 msgid "Description is too long. The maximum number of characters is {DESCRIPTION_MAX_GRAPHEMES}."
-msgstr ""
+msgstr "La description est trop longue. La longueur maximale est de {DESCRIPTION_MAX_GRAPHEMES} caractères."
 
 #: src/view/com/composer/GifAltText.tsx:150
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:114
@@ -1833,10 +1789,6 @@ msgstr "Vous vouliez dire quelque chose ?"
 #: src/screens/Settings/AppearanceSettings.tsx:126
 msgid "Dim"
 msgstr "Atténué"
-
-#: src/components/dms/MessagesNUX.tsx:88
-#~ msgid "Direct messages are here!"
-#~ msgstr "Les messages privés sont arrivés !"
 
 #: src/view/screens/AccessibilitySettings.tsx:109
 msgid "Disable autoplay for videos and GIFs"
@@ -1870,7 +1822,7 @@ msgstr "Abandonner"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:81
 msgid "Discard changes?"
-msgstr ""
+msgstr "Abandonner les changements ?"
 
 #: src/view/com/composer/Composer.tsx:531
 msgid "Discard draft?"
@@ -1896,7 +1848,7 @@ msgstr "Découvrir de nouveaux fils d’actu"
 
 #: src/components/Dialog/index.tsx:315
 msgid "Dismiss"
-msgstr ""
+msgstr "Ignorer"
 
 #: src/view/com/composer/Composer.tsx:1265
 msgid "Dismiss error"
@@ -1914,19 +1866,15 @@ msgstr "Afficher des badges de texte alt plus grands"
 #: src/screens/Profile/Header/EditProfileDialog.tsx:320
 #: src/screens/Profile/Header/EditProfileDialog.tsx:351
 msgid "Display name"
-msgstr "Afficher le nom"
-
-#: src/view/com/modals/EditProfile.tsx:175
-#~ msgid "Display Name"
-#~ msgstr "Afficher le nom"
+msgstr "Nom d’affichage"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:333
 msgid "Display name is too long"
-msgstr ""
+msgstr "Nom d’affichage trop long"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:334
 msgid "Display name is too long. The maximum number of characters is {DISPLAY_NAME_MAX_GRAPHEMES}."
-msgstr ""
+msgstr "Le nom d’affichage est trop long. La longueur maximale est de {DISPLAY_NAME_MAX_GRAPHEMES} caractères."
 
 #: src/view/com/modals/ChangeHandle.tsx:384
 msgid "DNS Panel"
@@ -1938,11 +1886,11 @@ msgstr "Ne pas appliquer ce mot masqué aux comptes que vous suivez"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:174
 msgid "Does not contain adult content."
-msgstr ""
+msgstr "Ne contient pas de contenu pour adultes."
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:213
 msgid "Does not contain graphic or disturbing content."
-msgstr ""
+msgstr "Ne contient pas de contenu graphique ou perturbant."
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:39
 msgid "Does not include nudity."
@@ -1993,7 +1941,7 @@ msgstr "Terminé{extraText}"
 
 #: src/components/Dialog/index.tsx:316
 msgid "Double tap to close the dialog"
-msgstr ""
+msgstr "Tapez deux fois pour fermer cette boîte de dialogue"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:317
 msgid "Download Bluesky"
@@ -2003,10 +1951,6 @@ msgstr "Télécharger Bluesky"
 #: src/view/screens/Settings/ExportCarDialog.tsx:80
 msgid "Download CAR file"
 msgstr "Télécharger le fichier CAR"
-
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:622
-#~ msgid "Download image"
-#~ msgstr "Télécharger l’image"
 
 #: src/view/com/composer/text-input/TextInput.web.tsx:300
 msgid "Drop to add images"
@@ -2022,19 +1966,11 @@ msgstr "ex. alice"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:321
 msgid "e.g. Alice Lastname"
-msgstr ""
-
-#: src/view/com/modals/EditProfile.tsx:180
-#~ msgid "e.g. Alice Roberts"
-#~ msgstr "ex. Alice Dupont"
+msgstr "ex. Alice Nomdefamille"
 
 #: src/view/com/modals/ChangeHandle.tsx:367
 msgid "e.g. alice.com"
 msgstr "ex. alice.fr"
-
-#: src/view/com/modals/EditProfile.tsx:198
-#~ msgid "e.g. Artist, dog-lover, and avid reader."
-#~ msgstr "ex. Artiste, amoureuse des chiens et lectrice passionnée."
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:43
 msgid "E.g. artistic nudes."
@@ -2108,10 +2044,6 @@ msgstr "Modifier la liste de modération"
 msgid "Edit My Feeds"
 msgstr "Modifier mes fils d’actu"
 
-#: src/view/com/modals/EditProfile.tsx:147
-#~ msgid "Edit my profile"
-#~ msgstr "Modifier mon profil"
-
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:109
 msgid "Edit People"
 msgstr "Modifier les personnes"
@@ -2144,14 +2076,6 @@ msgstr "Modifier la liste de comptes"
 #: src/components/WhoCanReply.tsx:87
 msgid "Edit who can reply"
 msgstr "Modifier qui peut répondre"
-
-#: src/view/com/modals/EditProfile.tsx:188
-#~ msgid "Edit your display name"
-#~ msgstr "Modifier votre nom d’affichage"
-
-#: src/view/com/modals/EditProfile.tsx:206
-#~ msgid "Edit your profile description"
-#~ msgstr "Modifier votre description de profil"
 
 #: src/Navigation.tsx:372
 msgid "Edit your starter pack"
@@ -2273,7 +2197,7 @@ msgstr "Saisir un mot ou un mot-clé"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:75
 msgid "Enter Code"
-msgstr ""
+msgstr "Entrer le code"
 
 #: src/view/com/modals/VerifyEmail.tsx:113
 msgid "Enter Confirmation Code"
@@ -2314,7 +2238,7 @@ msgstr "Entrez votre pseudo et votre mot de passe"
 
 #: src/view/com/composer/Composer.tsx:1350
 msgid "Error"
-msgstr ""
+msgstr "Erreur"
 
 #: src/view/screens/Settings/ExportCarDialog.tsx:46
 msgid "Error occurred while saving file"
@@ -2401,7 +2325,7 @@ msgstr "Développe ou réduit le post complet auquel vous répondez"
 
 #: src/lib/api/index.ts:376
 msgid "Expected uri to resolve to a record"
-msgstr ""
+msgstr "URI attendue pour résoudre un enregistrement"
 
 #: src/view/screens/NotificationsSettings.tsx:78
 msgid "Experimental: When this preference is enabled, you'll only receive reply and quote notifications from users you follow. We'll continue to add more controls here over time."
@@ -2502,7 +2426,7 @@ msgstr "Échec du chargement des suivis suggérés"
 
 #: src/state/queries/pinned-post.ts:75
 msgid "Failed to pin post"
-msgstr ""
+msgstr "Échec de l’épinglage du post"
 
 #: src/view/com/lightbox/Lightbox.tsx:97
 msgid "Failed to save image: {0}"
@@ -2561,7 +2485,7 @@ msgstr "Feedback"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:271
 #: src/view/com/util/forms/PostDropdownBtn.tsx:280
 msgid "Feedback sent!"
-msgstr ""
+msgstr "Feedback envoyé !"
 
 #: src/Navigation.tsx:352
 #: src/screens/StarterPack/StarterPackScreen.tsx:183
@@ -2629,15 +2553,7 @@ msgstr "Fitness"
 msgid "Flexible"
 msgstr "Flexible"
 
-#: src/view/com/modals/EditImage.tsx:116
-#~ msgid "Flip horizontal"
-#~ msgstr "Miroir horizontal"
-
 #: src/view/com/modals/EditImage.tsx:121
-#: src/view/com/modals/EditImage.tsx:288
-#~ msgid "Flip vertically"
-#~ msgstr "Miroir vertical"
-
 #. User is not following this account, click to follow
 #: src/components/ProfileCard.tsx:358
 #: src/components/ProfileHoverCard/index.web.tsx:449
@@ -2774,12 +2690,12 @@ msgstr "Vous suit"
 #: src/components/dialogs/nuxs/NeueTypography.tsx:71
 #: src/screens/Settings/AppearanceSettings.tsx:141
 msgid "Font"
-msgstr ""
+msgstr "Police de caractères"
 
 #: src/components/dialogs/nuxs/NeueTypography.tsx:91
 #: src/screens/Settings/AppearanceSettings.tsx:161
 msgid "Font size"
-msgstr ""
+msgstr "Taille de police"
 
 #: src/screens/Onboarding/index.tsx:40
 #: src/screens/Onboarding/state.ts:89
@@ -2797,7 +2713,7 @@ msgstr "Pour des raisons de sécurité, vous ne pourrez plus afficher ceci. Si v
 #: src/components/dialogs/nuxs/NeueTypography.tsx:73
 #: src/screens/Settings/AppearanceSettings.tsx:143
 msgid "For the best experience, we recommend using the theme font."
-msgstr ""
+msgstr "Pour une meilleure expérience, nous vous recommandons d’utiliser la police thématique."
 
 #: src/components/dialogs/MutedWords.tsx:178
 msgid "Forever"
@@ -2844,10 +2760,6 @@ msgstr "Générer un kit de démarrage"
 #: src/view/shell/Drawer.tsx:352
 msgid "Get help"
 msgstr "Obtenir de l’aide"
-
-#: src/components/dms/MessagesNUX.tsx:168
-#~ msgid "Get started"
-#~ msgstr "C’est parti"
 
 #: src/view/com/modals/VerifyEmail.tsx:197
 #: src/view/com/modals/VerifyEmail.tsx:199
@@ -3051,7 +2963,7 @@ msgstr "Hmm, nous n’arrivons pas à trouver ce fil d’actu. Il a peut-être �
 
 #: src/screens/Moderation/index.tsx:61
 msgid "Hmmmm, it seems we're having trouble loading this data. See below for more details. If this issue persists, please contact us."
-msgstr "Hmm, il semble que nous ayons des difficultés à charger ces données. Voir ci-dessous pour plus de détails. Si le problème persiste, veuillez nous contacter."
+msgstr "Hmm, il semble que nous ayons des difficultés à charger ces données. Voir ci-dessous pour plus de détails. Si le problème persiste, contactez-nous."
 
 #: src/screens/Profile/ErrorState.tsx:31
 msgid "Hmmmm, we couldn't load that moderation service."
@@ -3093,7 +3005,7 @@ msgstr "J’ai un code"
 #: src/components/dialogs/VerifyEmailDialog.tsx:196
 #: src/components/dialogs/VerifyEmailDialog.tsx:203
 msgid "I Have a Code"
-msgstr ""
+msgstr "J’ai un code"
 
 #: src/view/com/modals/VerifyEmail.tsx:224
 msgid "I have a confirmation code"
@@ -3111,10 +3023,6 @@ msgstr "Je comprends"
 #: src/view/com/lightbox/Lightbox.web.tsx:185
 msgid "If alt text is long, toggles alt text expanded state"
 msgstr "Si le texte alt est trop long, change son mode d’affichage"
-
-#: src/view/com/modals/SelfLabel.tsx:128
-#~ msgid "If none are selected, suitable for all ages."
-#~ msgstr "Si rien n’est sélectionné, il n’y a pas de restriction d’âge."
 
 #: src/screens/Signup/StepInfo/Policies.tsx:110
 msgid "If you are not yet an adult according to the laws of your country, your parent or legal guardian must read these Terms on your behalf."
@@ -3143,10 +3051,6 @@ msgstr "Illégal et urgent"
 #: src/view/com/util/images/Gallery.tsx:57
 msgid "Image"
 msgstr "Image"
-
-#: src/view/com/modals/AltImage.tsx:122
-#~ msgid "Image alt text"
-#~ msgstr "Texte alt de l’image"
 
 #: src/components/StarterPack/ShareDialog.tsx:77
 msgid "Image saved to your camera roll!"
@@ -3208,13 +3112,9 @@ msgstr "Entrez votre pseudo"
 msgid "Interaction limited"
 msgstr "Interaction limitée"
 
-#: src/components/dms/MessagesNUX.tsx:82
-#~ msgid "Introducing Direct Messages"
-#~ msgstr "Et voici les Messages Privés"
-
 #: src/components/dialogs/nuxs/NeueTypography.tsx:47
 msgid "Introducing new font settings"
-msgstr ""
+msgstr "Voici les nouvelles options de police de caractères"
 
 #: src/screens/Login/LoginForm.tsx:142
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:70
@@ -3268,11 +3168,11 @@ msgstr "Invitations, mais personnelles"
 
 #: src/screens/Signup/StepInfo/index.tsx:80
 msgid "It looks like you may have entered your email address incorrectly. Are you sure it's right?"
-msgstr ""
+msgstr "On dirait que vous vous êtes trompé en tapant votre adresse e-mail. Êtes-vous sûr que c’est bon ?"
 
 #: src/screens/Signup/StepInfo/index.tsx:241
 msgid "It's correct"
-msgstr ""
+msgstr "C’est correct"
 
 #: src/screens/StarterPack/Wizard/index.tsx:461
 msgid "It's just you right now! Add more people to your starter pack by searching above."
@@ -3298,10 +3198,6 @@ msgstr "Rejoignez Bluesky"
 msgid "Join the conversation"
 msgstr "Participez à la conversation"
 
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:492
-#~ msgid "Joined {0}"
-#~ msgstr "Inscrit·e le {0}"
-
 #: src/screens/Onboarding/index.tsx:21
 #: src/screens/Onboarding/state.ts:91
 msgid "Journalism"
@@ -3322,7 +3218,7 @@ msgstr "Étiquettes"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:74
 msgid "Labels added"
-msgstr ""
+msgstr "Étiquettes ajoutées"
 
 #: src/screens/Profile/Sections/Labels.tsx:163
 msgid "Labels are annotations on users and content. They can be used to hide, warn, and categorize the network."
@@ -3356,7 +3252,7 @@ msgstr "Langues"
 #: src/components/dialogs/nuxs/NeueTypography.tsx:103
 #: src/screens/Settings/AppearanceSettings.tsx:173
 msgid "Larger"
-msgstr ""
+msgstr "Plus grande"
 
 #: src/screens/Hashtag.tsx:98
 #: src/view/screens/Search/Search.tsx:521
@@ -3373,7 +3269,7 @@ msgstr "En savoir plus sur Bluesky"
 
 #: src/view/com/auth/server-input/index.tsx:156
 msgid "Learn more about self hosting your PDS."
-msgstr ""
+msgstr "En savoir plus sur l’auto-hébergement de PDS."
 
 #: src/components/moderation/ContentHider.tsx:127
 #: src/components/moderation/ContentHider.tsx:193
@@ -3594,11 +3490,11 @@ msgstr "Se connecter à un compte qui n’est pas listé"
 
 #: src/view/shell/desktop/RightNav.tsx:104
 msgid "Logo by <0/>"
-msgstr ""
+msgstr "Logo par <0/>"
 
 #: src/view/shell/Drawer.tsx:296
 msgid "Logo by <0>@sawaratsuki.bsky.social</0>"
-msgstr ""
+msgstr "Logo par <0>@sawaratsuki.bsky.social</0>"
 
 #: src/components/RichText.tsx:226
 msgid "Long press to open tag menu for #{tag}"
@@ -3644,7 +3540,7 @@ msgstr "Média"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:208
 msgid "Media that may be disturbing or inappropriate for some audiences."
-msgstr ""
+msgstr "Médias qui peuvent être perturbants ou inappropriés pour certains publics."
 
 #: src/components/WhoCanReply.tsx:254
 msgid "mentioned users"
@@ -3700,10 +3596,6 @@ msgstr "Compte trompeur"
 #: src/lib/moderation/useReportOptions.ts:67
 msgid "Misleading Post"
 msgstr "Post trompeur"
-
-#: src/screens/Settings/AppearanceSettings.tsx:78
-#~ msgid "Mode"
-#~ msgstr "Mode"
 
 #: src/Navigation.tsx:134
 #: src/screens/Moderation/index.tsx:107
@@ -3870,10 +3762,6 @@ msgstr "Masquer ce fil de discussion"
 msgid "Mute words & tags"
 msgstr "Masquer les mots et les mots-clés"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:168
-#~ msgid "Muted"
-#~ msgstr "Son désactivé"
-
 #: src/screens/Moderation/index.tsx:265
 msgid "Muted accounts"
 msgstr "Comptes masqués"
@@ -3945,10 +3833,6 @@ msgstr "Nature"
 msgid "Navigate to {0}"
 msgstr "Navigue vers {0}"
 
-#: src/view/com/util/post-embeds/ExternalLinkEmbed.tsx:86
-#~ msgid "Navigate to starter pack"
-#~ msgstr "Navigue vers le kit de démarrage"
-
 #: src/screens/Login/ForgotPasswordForm.tsx:166
 #: src/screens/Login/LoginForm.tsx:316
 #: src/view/com/modals/ChangePassword.tsx:169
@@ -3961,7 +3845,7 @@ msgstr "Navigue vers votre profil"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:156
 msgid "Need to change it?"
-msgstr ""
+msgstr "Besoin de la changer ?"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:130
 msgid "Need to report a copyright violation?"
@@ -3992,7 +3876,7 @@ msgstr "Nouvelle discussion"
 
 #: src/components/dialogs/nuxs/NeueTypography.tsx:51
 msgid "New font settings ✨"
-msgstr ""
+msgstr "Nouveaux paramètres de police ✨"
 
 #: src/components/dms/NewMessagesPill.tsx:92
 msgid "New messages"
@@ -4284,10 +4168,6 @@ msgstr "Oh non !"
 msgid "Oh no! Something went wrong."
 msgstr "Oh non ! Il y a eu un problème."
 
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:175
-#~ msgid "Oh no! We weren't able to generate an image for you to share. Rest assured, we're glad you're here 🦋"
-#~ msgstr "Oh non ! Nous n’avons pas réussi à générer une image à partager. Rassurez-vous, nous sommes heureux que vous soyez là 🦋"
-
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:337
 msgid "OK"
 msgstr "OK"
@@ -4326,7 +4206,7 @@ msgstr "Ne contient que des lettres, des chiffres et des traits d’union"
 
 #: src/lib/media/picker.shared.ts:29
 msgid "Only image files are supported"
-msgstr ""
+msgstr "Seuls les fichiers d’images sont pris en charge"
 
 #: src/view/com/composer/videos/SubtitleFilePicker.tsx:40
 msgid "Only WebVTT (.vtt) files are supported"
@@ -4374,7 +4254,7 @@ msgstr "Ouvrir le menu des options de fil d’actu"
 
 #: src/view/com/util/post-embeds/ExternalLinkEmbed.tsx:71
 msgid "Open link to {niceUrl}"
-msgstr ""
+msgstr "Ouvrir le lien vers {niceUrl}"
 
 #: src/view/screens/Settings/index.tsx:703
 msgid "Open links with in-app browser"
@@ -4415,7 +4295,7 @@ msgstr "Ouvre {numItems} options"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:63
 msgid "Opens a dialog to add a content warning to your post"
-msgstr ""
+msgstr "Ouvre une boîte de dialogue permettant d’ajouter un avertissement de contenu à votre post"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:62
 msgid "Opens a dialog to choose who can reply to this thread"
@@ -4652,7 +4532,7 @@ msgstr "Permission d’accès à la pellicule requise."
 
 #: src/view/com/lightbox/Lightbox.tsx:85
 msgid "Permission to access camera roll was denied. Please enable it in your system settings."
-msgstr "Permission d’accès à la pellicule refusée. Veuillez l’activer dans les paramètres de votre système."
+msgstr "Permission d’accès à la pellicule refusée. Activez-la dans les paramètres de votre système pour continuer."
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:55
 msgid "Person toggle"
@@ -4683,11 +4563,11 @@ msgstr "Ajouter à l’accueil"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:398
 #: src/view/com/util/forms/PostDropdownBtn.tsx:405
 msgid "Pin to your profile"
-msgstr ""
+msgstr "Épingler à votre profil"
 
 #: src/view/com/posts/FeedItem.tsx:354
 msgid "Pinned"
-msgstr ""
+msgstr "Épinglé"
 
 #: src/view/screens/SavedFeeds.tsx:130
 msgid "Pinned Feeds"
@@ -4769,24 +4649,20 @@ msgstr "Veuillez également entrer votre mot de passe :"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:265
 msgid "Please explain why you think this label was incorrectly applied by {0}"
-msgstr "Veuillez expliquer pourquoi vous pensez que cette étiquette a été appliquée à tort par {0}"
+msgstr "Expliquez-nous pourquoi vous pensez que cette étiquette a été appliquée à tort par {0}"
 
 #: src/screens/Messages/components/ChatDisabled.tsx:110
 msgid "Please explain why you think your chats were incorrectly disabled"
-msgstr "Veuillez expliquer pourquoi vous pensez que vos discussions ont été désactivées de manière indûe"
+msgstr "Expliquez-nous pourquoi vous pensez que vos discussions ont été désactivées de manière indûe"
 
 #: src/lib/hooks/useAccountSwitcher.ts:45
 #: src/lib/hooks/useAccountSwitcher.ts:55
 msgid "Please sign in as @{0}"
-msgstr "Veuillez vous identifier comme @{0}"
+msgstr "Identifiez-vous en tant que @{0}"
 
 #: src/view/com/modals/VerifyEmail.tsx:109
 msgid "Please Verify Your Email"
 msgstr "Veuillez vérifier votre e-mail"
-
-#: src/view/com/composer/Composer.tsx:359
-#~ msgid "Please wait for your link card to finish loading"
-#~ msgstr "Veuillez patienter le temps que votre carte de lien soit chargée"
 
 #: src/screens/Onboarding/index.tsx:34
 #: src/screens/Onboarding/state.ts:98
@@ -4826,7 +4702,7 @@ msgstr "Post supprimé"
 
 #: src/lib/api/index.ts:161
 msgid "Post failed to upload. Please check your Internet connection and try again."
-msgstr ""
+msgstr "Échec de l’envoi du post. Vérifiez votre connexion Internet et réessayez."
 
 #: src/view/com/post-thread/PostThread.tsx:212
 msgid "Post hidden"
@@ -4861,11 +4737,11 @@ msgstr "Post introuvable"
 
 #: src/state/queries/pinned-post.ts:59
 msgid "Post pinned"
-msgstr ""
+msgstr "Post épinglé"
 
 #: src/state/queries/pinned-post.ts:61
 msgid "Post unpinned"
-msgstr ""
+msgstr "Post désépinglé"
 
 #: src/components/TagMenu/index.tsx:252
 msgid "posts"
@@ -4940,13 +4816,9 @@ msgstr "Vie privée"
 msgid "Privacy Policy"
 msgstr "Charte de confidentialité"
 
-#: src/components/dms/MessagesNUX.tsx:91
-#~ msgid "Privately chat with other users."
-#~ msgstr "Discuter en privé avec d’autres comptes."
-
 #: src/view/com/composer/Composer.tsx:1347
 msgid "Processing video..."
-msgstr ""
+msgstr "Traitement de la vidéo en cours…"
 
 #: src/lib/api/index.ts:53
 #: src/screens/Login/ForgotPasswordForm.tsx:149
@@ -4984,14 +4856,6 @@ msgstr "Listes publiques et partageables de comptes à masquer ou à bloquer."
 #: src/view/screens/Lists.tsx:69
 msgid "Public, shareable lists which can drive feeds."
 msgstr "Les listes publiques et partageables qui peuvent alimenter les fils d’actu."
-
-#: src/view/com/composer/Composer.tsx:579
-#~ msgid "Publish post"
-#~ msgstr "Publier le post"
-
-#: src/view/com/composer/Composer.tsx:579
-#~ msgid "Publish reply"
-#~ msgstr "Publier la réponse"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:128
 msgid "QR code copied to your clipboard!"
@@ -5048,10 +4912,6 @@ msgstr "Citations de ce post"
 #: src/view/screens/PreferencesThreads.tsx:81
 msgid "Random (aka \"Poster's Roulette\")"
 msgstr "Aléatoire"
-
-#: src/view/com/modals/EditImage.tsx:237
-#~ msgid "Ratios"
-#~ msgstr "Ratios"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:585
 #: src/view/com/util/forms/PostDropdownBtn.tsx:595
@@ -5228,10 +5088,6 @@ msgstr "Supprimé de vos fils d’actu"
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:274
 msgid "Removes quoted post"
 msgstr "Supprime le post cité"
-
-#: src/view/com/composer/ExternalEmbedRemoveBtn.tsx:29
-#~ msgid "Removes the attachment"
-#~ msgstr "Supprime la pièce jointe"
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:129
 #: src/view/com/posts/FeedShutdownMsg.tsx:133
@@ -5446,7 +5302,7 @@ msgstr "Obligatoire pour cet hébergeur"
 
 #: src/components/LabelingServiceCard/index.tsx:80
 msgid "Required in your region"
-msgstr ""
+msgstr "Nécessaire dans votre région"
 
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:167
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:170
@@ -5559,10 +5415,6 @@ msgctxt "action"
 msgid "Save"
 msgstr "Enregistrer"
 
-#: src/view/com/modals/AltImage.tsx:132
-#~ msgid "Save alt text"
-#~ msgstr "Enregistrer le texte alt"
-
 #: src/components/dialogs/BirthDateSettings.tsx:118
 msgid "Save birthday"
 msgstr "Enregistrer la date de naissance"
@@ -5570,11 +5422,7 @@ msgstr "Enregistrer la date de naissance"
 #: src/view/screens/SavedFeeds.tsx:98
 #: src/view/screens/SavedFeeds.tsx:103
 msgid "Save changes"
-msgstr ""
-
-#: src/view/com/modals/EditProfile.tsx:227
-#~ msgid "Save Changes"
-#~ msgstr "Enregistrer les modifications"
+msgstr "Enregistrer les modifications"
 
 #: src/view/com/modals/ChangeHandle.tsx:158
 msgid "Save handle change"
@@ -5610,10 +5458,6 @@ msgstr "Enregistré dans votre photothèque"
 #: src/view/screens/ProfileList.tsx:366
 msgid "Saved to your feeds"
 msgstr "Enregistré à mes fils d’actu"
-
-#: src/view/com/modals/EditProfile.tsx:220
-#~ msgid "Saves any changes to your profile"
-#~ msgstr "Enregistre toutes les modifications apportées à votre profil"
 
 #: src/view/com/modals/ChangeHandle.tsx:159
 msgid "Saves handle change to {handle}"
@@ -5658,14 +5502,6 @@ msgstr "Recherche de « {query} »"
 #: src/view/screens/Search/Search.tsx:999
 msgid "Search for \"{searchText}\""
 msgstr "Recherche de « {searchText} »"
-
-#: src/components/TagMenu/index.tsx:155
-#~ msgid "Search for all posts by @{authorHandle} with tag {displayTag}"
-#~ msgstr "Rechercher tous les posts de @{authorHandle} avec le mot-clé {displayTag}"
-
-#: src/components/TagMenu/index.tsx:104
-#~ msgid "Search for all posts with tag {displayTag}"
-#~ msgstr "Rechercher tous les posts avec le mot-clé {displayTag}"
 
 #: src/screens/StarterPack/Wizard/index.tsx:500
 msgid "Search for feeds that you want to suggest to others."
@@ -5822,11 +5658,11 @@ msgstr "Envoyez un site chouette !"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:189
 msgid "Send Confirmation"
-msgstr ""
+msgstr "Envoyer la confirmation"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:182
 msgid "Send confirmation email"
-msgstr ""
+msgstr "Envoyer l’e-mail de confirmation"
 
 #: src/view/com/modals/VerifyEmail.tsx:210
 #: src/view/com/modals/VerifyEmail.tsx:212
@@ -5924,18 +5760,6 @@ msgstr "Définit le pseudo Bluesky"
 msgid "Sets email for password reset"
 msgstr "Définit l’e-mail pour la réinitialisation du mot de passe"
 
-#: src/view/com/modals/crop-image/CropImage.web.tsx:146
-#~ msgid "Sets image aspect ratio to square"
-#~ msgstr "Définit le rapport d’aspect de l’image comme étant carré"
-
-#: src/view/com/modals/crop-image/CropImage.web.tsx:136
-#~ msgid "Sets image aspect ratio to tall"
-#~ msgstr "Définit le rapport d’aspect de l’image comme portrait"
-
-#: src/view/com/modals/crop-image/CropImage.web.tsx:126
-#~ msgid "Sets image aspect ratio to wide"
-#~ msgstr "Définit le rapport d’aspect de l’image comme paysage"
-
 #: src/Navigation.tsx:154
 #: src/view/screens/Settings/index.tsx:303
 #: src/view/shell/desktop/LeftNav.tsx:423
@@ -5987,14 +5811,6 @@ msgstr "Partager quand même"
 msgid "Share feed"
 msgstr "Partager le fil d’actu"
 
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:621
-#~ msgid "Share image externally"
-#~ msgstr "Partager l’image ailleurs"
-
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:639
-#~ msgid "Share image in post"
-#~ msgstr "Partager l’image dans un post"
-
 #: src/components/StarterPack/ShareDialog.tsx:124
 #: src/components/StarterPack/ShareDialog.tsx:131
 #: src/screens/StarterPack/StarterPackScreen.tsx:597
@@ -6041,10 +5857,6 @@ msgstr "Partage le site web lié"
 #: src/view/screens/Settings/index.tsx:352
 msgid "Show"
 msgstr "Afficher"
-
-#: src/view/screens/Search/Search.tsx:889
-#~ msgid "Show advanced filters"
-#~ msgstr ""
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:178
 msgid "Show alt text"
@@ -6131,10 +5943,6 @@ msgstr "Afficher l’avertissement"
 msgid "Show warning and filter from feeds"
 msgstr "Afficher l’avertissement et filtrer des fils d’actu"
 
-#: src/view/com/post-thread/PostThreadFollowBtn.tsx:128
-#~ msgid "Shows posts from {0} in your feed"
-#~ msgstr "Affiche les posts de {0} dans votre fil d’actu"
-
 #: src/components/dialogs/Signin.tsx:97
 #: src/components/dialogs/Signin.tsx:99
 #: src/screens/Login/index.tsx:97
@@ -6191,10 +5999,6 @@ msgstr "Se déconnecter de tous les comptes"
 msgid "Sign up"
 msgstr "S’inscrire"
 
-#: src/view/shell/NavSignupCard.tsx:47
-#~ msgid "Sign up or sign in to join the conversation"
-#~ msgstr "S’inscrire ou se connecter pour participer à la conversation"
-
 #: src/components/moderation/ScreenHider.tsx:91
 #: src/lib/moderation/useGlobalLabelStrings.ts:28
 msgid "Sign-in Required"
@@ -6234,7 +6038,7 @@ msgstr "Passer cette étape"
 #: src/components/dialogs/nuxs/NeueTypography.tsx:95
 #: src/screens/Settings/AppearanceSettings.tsx:165
 msgid "Smaller"
-msgstr ""
+msgstr "Plus petite"
 
 #: src/screens/Onboarding/index.tsx:37
 #: src/screens/Onboarding/state.ts:87
@@ -6284,11 +6088,7 @@ msgstr "Trier les réponses au même post par :"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:168
 msgid "Source:"
-msgstr ""
-
-#: src/components/moderation/LabelsOnMeDialog.tsx:163
-#~ msgid "Source: <0>{sourceName}</0>"
-#~ msgstr "Source : <0>{sourceName}</0>"
+msgstr "Source :"
 
 #: src/lib/moderation/useReportOptions.ts:72
 #: src/lib/moderation/useReportOptions.ts:85
@@ -6304,10 +6104,6 @@ msgstr "Spam ; mentions ou réponses excessives"
 msgid "Sports"
 msgstr "Sports"
 
-#: src/view/com/modals/crop-image/CropImage.web.tsx:145
-#~ msgid "Square"
-#~ msgstr "Carré"
-
 #: src/components/dms/dialogs/NewChatDialog.tsx:61
 msgid "Start a new chat"
 msgstr "Démarrer une nouvelle discussion"
@@ -6315,10 +6111,6 @@ msgstr "Démarrer une nouvelle discussion"
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:349
 msgid "Start chat with {displayName}"
 msgstr "Démarrer une discussion avec {displayName}"
-
-#: src/components/dms/MessagesNUX.tsx:161
-#~ msgid "Start chatting"
-#~ msgstr "Démarrer les discussions"
 
 #: src/Navigation.tsx:357
 #: src/Navigation.tsx:362
@@ -6332,7 +6124,7 @@ msgstr "Kit de démarrage par {0}"
 
 #: src/components/StarterPack/StarterPackCard.tsx:80
 msgid "Starter pack by you"
-msgstr ""
+msgstr "Kit de démarrage par vous"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:714
 msgid "Starter pack is invalid"
@@ -6392,7 +6184,7 @@ msgstr "S’abonner à cette liste"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:81
 msgid "Success!"
-msgstr ""
+msgstr "Succès !"
 
 #: src/view/screens/Search/Explore.tsx:332
 msgid "Suggested accounts"
@@ -6444,10 +6236,6 @@ msgstr "Menu de mot-clé : {displayTag}"
 msgid "Tags only"
 msgstr "Mots-clés seulement"
 
-#: src/view/com/modals/crop-image/CropImage.web.tsx:135
-#~ msgid "Tall"
-#~ msgstr "Grand"
-
 #: src/components/ProgressGuide/Toast.tsx:150
 msgid "Tap to dismiss"
 msgstr "Tapper pour annuler"
@@ -6488,15 +6276,11 @@ msgstr "Racontez une blague !"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:352
 msgid "Tell us a bit about yourself"
-msgstr ""
+msgstr "Dites-nous en un peu à propos de vous"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:63
 msgid "Tell us a little more"
 msgstr "Dites-nous en un peu plus"
-
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:518
-#~ msgid "Ten Million"
-#~ msgstr "Dix millions"
 
 #: src/view/shell/desktop/RightNav.tsx:90
 msgid "Terms"
@@ -6528,24 +6312,16 @@ msgstr "Champ de saisie de texte"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:82
 msgid "Thank you! Your email has been successfully verified."
-msgstr ""
+msgstr "Merci ! Votre adresse e-mail a été vérifiée avec succès."
 
 #: src/components/dms/ReportDialog.tsx:129
 #: src/components/ReportDialog/SubmitView.tsx:82
 msgid "Thank you. Your report has been sent."
 msgstr "Nous vous remercions. Votre rapport a été envoyé."
 
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:593
-#~ msgid "Thanks for being one of our first 10 million users."
-#~ msgstr "Merci d’avoir été l’une des 10 premières millions de personnes à s’inscrire à Bluesky."
-
-#: src/components/intents/VerifyEmailIntentDialog.tsx:74
-#~ msgid "Thanks, you have successfully verified your email address."
-#~ msgstr "Merci, vous avez vérifié avec succès votre adresse e-mail."
-
 #: src/components/intents/VerifyEmailIntentDialog.tsx:82
 msgid "Thanks, you have successfully verified your email address. You can close this dialog."
-msgstr ""
+msgstr "Merci, vous avez vérifié avec succès votre adresse e-mail. Vous pouvez fermer cette fenêtre."
 
 #: src/view/com/modals/ChangeHandle.tsx:452
 msgid "That contains the following:"
@@ -6646,32 +6422,20 @@ msgstr "Nos conditions d’utilisation ont été déplacées vers"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:94
 msgid "The verification code you have provided is invalid. Please make sure that you have used the correct verification link or request a new one."
-msgstr "Le code de vérification que vous avez fourni n’est pas valide. Veuillez vous assurer que vous avez utilisé le bon lien de vérification ou demandez-en un nouveau."
+msgstr "Le code de vérification que vous avez fourni n’est pas valide. Assurez-vous que vous avez utilisé le bon lien de vérification ou demandez-en un nouveau."
 
 #: src/components/dialogs/nuxs/NeueTypography.tsx:82
 #: src/screens/Settings/AppearanceSettings.tsx:152
 msgid "Theme"
-msgstr ""
+msgstr "Thème"
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:86
 msgid "There is no time limit for account deactivation, come back any time."
 msgstr "Il n’y a pas de limite de temps pour la désactivation du compte, revenez quand vous voulez."
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:112
-#: src/view/screens/ProfileFeed.tsx:539
-#~ msgid "There was an an issue contacting the server, please check your internet connection and try again."
-#~ msgstr "Il y a eu un problème de connexion au serveur, veuillez vérifier votre connexion Internet et réessayez."
-
-#: src/view/com/posts/FeedErrorMessage.tsx:145
-#~ msgid "There was an an issue removing this feed. Please check your internet connection and try again."
-#~ msgstr "Il y a eu un problème lors de la suppression du fil, veuillez vérifier votre connexion Internet et réessayez."
-
 #: src/view/com/posts/FeedShutdownMsg.tsx:52
 #: src/view/com/posts/FeedShutdownMsg.tsx:71
-#: src/view/screens/ProfileFeed.tsx:204
-#~ msgid "There was an an issue updating your feeds, please check your internet connection and try again."
-#~ msgstr "Il y a eu un problème lors de la mise à jour de vos fils d’actu, veuillez vérifier votre connexion Internet et réessayez."
-
 #: src/components/dialogs/GifSelect.tsx:225
 msgid "There was an issue connecting to Tenor."
 msgstr "Il y a eu un problème de connexion à Tenor."
@@ -6686,7 +6450,7 @@ msgstr "Il y a eu un problème de connexion au serveur"
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:111
 #: src/view/screens/ProfileFeed.tsx:546
 msgid "There was an issue contacting the server, please check your internet connection and try again."
-msgstr ""
+msgstr "Il y a eu un problème de connexion au serveur, vérifiez votre connexion Internet et réessayez."
 
 #: src/view/com/feeds/FeedSourceCard.tsx:127
 #: src/view/com/feeds/FeedSourceCard.tsx:140
@@ -6712,18 +6476,18 @@ msgstr "Il y a eu un problème lors de la récupération de vos listes. Appuyez 
 
 #: src/view/com/posts/FeedErrorMessage.tsx:145
 msgid "There was an issue removing this feed. Please check your internet connection and try again."
-msgstr ""
+msgstr "Il y a eu un problème lors de la suppression de ce fil d’actu. Vérifiez votre connexion internet et réessayez."
 
 #: src/components/dms/ReportDialog.tsx:217
 #: src/components/ReportDialog/SubmitView.tsx:87
 msgid "There was an issue sending your report. Please check your internet connection."
-msgstr "Il y a eu un problème lors de l’envoi de votre rapport. Veuillez vérifier votre connexion internet."
+msgstr "Il y a eu un problème lors de l’envoi de votre rapport. Vérifiez votre connexion internet."
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:52
 #: src/view/com/posts/FeedShutdownMsg.tsx:71
 #: src/view/screens/ProfileFeed.tsx:211
 msgid "There was an issue updating your feeds, please check your internet connection and try again."
-msgstr ""
+msgstr "Il y a eu un problème lors de la mise-à-jour de vos fils d’actu. Vérifiez votre connexion internet et réessayez."
 
 #: src/view/screens/AppPasswords.tsx:75
 msgid "There was an issue with fetching your app passwords"
@@ -6752,7 +6516,7 @@ msgstr "Il y a eu un problème ! {0}"
 #: src/view/screens/ProfileList.tsx:426
 #: src/view/screens/ProfileList.tsx:439
 msgid "There was an issue. Please check your internet connection and try again."
-msgstr "Il y a eu un problème. Veuillez vérifier votre connexion Internet et réessayez."
+msgstr "Il y a eu un problème. Vérifiez votre connexion Internet et réessayez."
 
 #: src/components/dialogs/GifSelect.tsx:271
 #: src/view/com/util/ErrorBoundary.tsx:59
@@ -6773,7 +6537,7 @@ msgstr "Ce compte a demandé aux personnes de se connecter pour voir son profil.
 
 #: src/components/dms/BlockedByListDialog.tsx:34
 msgid "This account is blocked by one or more of your moderation lists. To unblock, please visit the lists directly and remove this user."
-msgstr "Ce compte est bloqué par un ou plusieurs de vos listes de modération. Pour le débloquer, veuillez visiter les listes directement et en retirer ce compte."
+msgstr "Ce compte est bloqué par un ou plusieurs de vos listes de modération. Pour le débloquer, visitez vos listes directement et retirez-en ce compte."
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:246
 msgid "This appeal will be sent to <0>{sourceName}</0>."
@@ -6975,11 +6739,11 @@ msgstr "Préférences des fils de discussion"
 
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:101
 msgid "To disable the email 2FA method, please verify your access to the email address."
-msgstr "Pour désactiver le 2FA par e-mail, veuillez vérifier votre accès à l’adresse e-mail."
+msgstr "Pour désactiver le 2FA par e-mail, vérifiez votre accès à votre adresse e-mail."
 
 #: src/components/dms/ReportConversationPrompt.tsx:20
 msgid "To report a conversation, please report one of its messages via the conversation screen. This lets our moderators understand the context of your issue."
-msgstr "Pour signaler une conversation, veuillez signaler un de ses messages via l’écran de conversation. Cela permettra à la modération de comprendre le contexte du problème."
+msgstr "Pour signaler une conversation, signalez plutôt un de ses messages via l’écran de conversation. Cela permettra à la modération de comprendre le contexte du problème."
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:133
 msgid "To upload videos to Bluesky, you must first verify your email."
@@ -6991,11 +6755,7 @@ msgstr "À qui souhaitez-vous envoyer ce rapport ?"
 
 #: src/components/dms/DateDivider.tsx:44
 msgid "Today"
-msgstr ""
-
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:597
-#~ msgid "Together, we're rebuilding the social internet. We're glad you're here."
-#~ msgstr "Ensemble, nous reconstruisons le web social. Nous sommes ravis que vous soyez parmi nous."
+msgstr "Aujourd’hui"
 
 #: src/view/com/util/forms/DropdownButton.tsx:255
 msgid "Toggle dropdown"
@@ -7009,10 +6769,6 @@ msgstr "Activer ou désactiver le contenu pour adultes"
 #: src/view/screens/Search/Search.tsx:511
 msgid "Top"
 msgstr "Meilleur"
-
-#: src/view/com/modals/EditImage.tsx:272
-#~ msgid "Transformations"
-#~ msgstr "Transformations"
 
 #: src/components/dms/MessageMenu.tsx:103
 #: src/components/dms/MessageMenu.tsx:105
@@ -7059,7 +6815,7 @@ msgstr "Réafficher cette liste"
 #: src/screens/Signup/index.tsx:71
 #: src/view/com/modals/ChangePassword.tsx:71
 msgid "Unable to contact your service. Please check your Internet connection."
-msgstr "Impossible de contacter votre service. Veuillez vérifier votre connexion Internet."
+msgstr "Impossible de contacter votre service. Vérifiez votre connexion Internet."
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:648
 msgid "Unable to delete"
@@ -7157,10 +6913,6 @@ msgstr "Réafficher ce fil de discussion"
 msgid "Unmute video"
 msgstr "Rétablir le son de la vidéo"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:168
-#~ msgid "Unmuted"
-#~ msgstr "Son rétabli"
-
 #: src/view/screens/ProfileFeed.tsx:296
 #: src/view/screens/ProfileList.tsx:676
 msgid "Unpin"
@@ -7173,7 +6925,7 @@ msgstr "Désépingler de l’accueil"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:397
 #: src/view/com/util/forms/PostDropdownBtn.tsx:404
 msgid "Unpin from profile"
-msgstr ""
+msgstr "Désépingler du profil"
 
 #: src/view/screens/ProfileList.tsx:559
 msgid "Unpin moderation list"
@@ -7210,12 +6962,8 @@ msgid "Unwanted Sexual Content"
 msgstr "Contenu sexuel non désiré"
 
 #: src/view/com/modals/UserAddRemoveLists.tsx:82
-#~ msgid "Update {displayName} in Lists"
-#~ msgstr "Mise à jour de {displayName} dans les listes"
-
-#: src/view/com/modals/UserAddRemoveLists.tsx:82
 msgid "Update <0>{displayName}</0> in Lists"
-msgstr ""
+msgstr "Mise à jour de <0>{displayName}</0> dans les listes"
 
 #: src/view/com/modals/ChangeHandle.tsx:495
 msgid "Update to {handle}"
@@ -7262,16 +7010,16 @@ msgstr "Envoyer à partir de la photothèque"
 
 #: src/lib/api/index.ts:272
 msgid "Uploading images..."
-msgstr ""
+msgstr "Envoi des images en cours…"
 
 #: src/lib/api/index.ts:326
 #: src/lib/api/index.ts:350
 msgid "Uploading link thumbnail..."
-msgstr ""
+msgstr "Envoi de la miniature du lien en cours…"
 
 #: src/view/com/composer/Composer.tsx:1344
 msgid "Uploading video..."
-msgstr ""
+msgstr "Envoi de la vidéo en cours…"
 
 #: src/view/com/modals/ChangeHandle.tsx:395
 msgid "Use a file on your server"
@@ -7465,7 +7213,7 @@ msgstr "Paramètres vidéo"
 
 #: src/view/com/composer/Composer.tsx:1354
 msgid "Video uploaded"
-msgstr ""
+msgstr "Vidéo envoyée"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:84
 msgid "Video: {0}"
@@ -7491,11 +7239,11 @@ msgstr "Voir le profil de {displayName}"
 
 #: src/components/TagMenu/index.tsx:149
 msgid "View all posts by @{authorHandle} with tag {displayTag}"
-msgstr ""
+msgstr "Voir tous les posts de @{authorHandle} avec le mot-clé {displayTag}"
 
 #: src/components/TagMenu/index.tsx:103
 msgid "View all posts with tag {displayTag}"
-msgstr ""
+msgstr "Voir tous les posts avec le mot-clé {displayTag}"
 
 #: src/components/ProfileHoverCard/index.web.tsx:433
 msgid "View blocked user's profile"
@@ -7637,7 +7385,7 @@ msgstr "Nous avons des soucis de réseau, réessayez"
 
 #: src/components/dialogs/nuxs/NeueTypography.tsx:54
 msgid "We're introducing a new theme font, along with adjustable font sizing."
-msgstr ""
+msgstr "Nous inaugurons une nouvelle police de caractères thématique, en même temps que la possibilité de régler sa taille."
 
 #: src/screens/Signup/index.tsx:94
 msgid "We're so excited to have you join us!"
@@ -7645,7 +7393,7 @@ msgstr "Nous sommes ravis de vous accueillir !"
 
 #: src/view/screens/ProfileList.tsx:113
 msgid "We're sorry, but we were unable to resolve this list. If this persists, please contact the list creator, @{handleOrDid}."
-msgstr "Nous sommes désolés, mais nous n’avons pas pu charger cette liste. Si cela persiste, veuillez contacter l’origine de la liste, @{handleOrDid}."
+msgstr "Nous sommes désolés, mais nous n’avons pas pu charger cette liste. Si cela persiste, contactez plutôt @{handleOrDid}, à l’origine de la liste."
 
 #: src/components/dialogs/MutedWords.tsx:378
 msgid "We're sorry, but we weren't able to load your muted words at this time. Please try again."
@@ -7703,10 +7451,6 @@ msgid "Who can interact with this post?"
 msgstr "Qui peut interagir avec ce post ?"
 
 #: src/components/dms/MessagesNUX.tsx:110
-#: src/components/dms/MessagesNUX.tsx:124
-#~ msgid "Who can message you?"
-#~ msgstr "Qui peut discuter avec vous ?"
-
 #: src/components/WhoCanReply.tsx:87
 msgid "Who can reply"
 msgstr "Qui peut répondre ?"
@@ -7743,10 +7487,6 @@ msgstr "Pourquoi ce kit de démarrage devrait-il être examiné ?"
 #: src/components/ReportDialog/SelectReportOptionView.tsx:48
 msgid "Why should this user be reviewed?"
 msgstr "Pourquoi ce compte doit-il être examiné ?"
-
-#: src/view/com/modals/crop-image/CropImage.web.tsx:125
-#~ msgid "Wide"
-#~ msgstr "Large"
 
 #: src/screens/Messages/components/MessageInput.tsx:142
 #: src/screens/Messages/components/MessageInput.web.tsx:198
@@ -7800,11 +7540,7 @@ msgstr "Oui, réactiver mon compte"
 
 #: src/components/dms/DateDivider.tsx:46
 msgid "Yesterday"
-msgstr ""
-
-#: src/components/dms/MessageItem.tsx:183
-#~ msgid "Yesterday, {time}"
-#~ msgstr "Hier, {time}"
+msgstr "Hier"
 
 #: src/screens/List/ListHiddenScreen.tsx:140
 msgid "you"
@@ -7828,7 +7564,7 @@ msgstr "Vous ne suivez personne."
 
 #: src/components/dialogs/nuxs/NeueTypography.tsx:61
 msgid "You can adjust these in your Appearance Settings later."
-msgstr ""
+msgstr "Vous pourrez les ajuster plus tard dans les paramètres d’affichage."
 
 #: src/view/com/posts/FollowingEmptyState.tsx:63
 #: src/view/com/posts/FollowingEndOfFeed.tsx:64
@@ -7838,10 +7574,6 @@ msgstr "Vous pouvez aussi découvrir de nouveaux fils d’actu personnalisés à
 #: src/view/com/modals/DeleteAccount.tsx:202
 msgid "You can also temporarily deactivate your account instead, and reactivate it at any time."
 msgstr "Vous pouvez également désactiver temporairement votre compte et le réactiver quand vous voulez."
-
-#: src/components/dms/MessagesNUX.tsx:119
-#~ msgid "You can change this at any time."
-#~ msgstr "Vous pouvez changer cela à tout moment."
 
 #: src/screens/Messages/Settings.tsx:105
 msgid "You can continue ongoing conversations regardless of which setting you choose."
@@ -7978,7 +7710,7 @@ msgstr "Vous ne pouvez ajouter que 3 fils d’actu au maximum"
 
 #: src/lib/media/picker.shared.ts:22
 msgid "You may only select up to 4 images"
-msgstr ""
+msgstr "Vous ne pouvez sélectionner qu’un total de 4 images."
 
 #: src/screens/Signup/StepInfo/Policies.tsx:106
 msgid "You must be 13 years of age or older to sign up."
@@ -8046,7 +7778,7 @@ msgstr "Vous suivrez ces personnes immédiatement"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:138
 msgid "You'll receive an email at <0>{0}</0> to verify it's you."
-msgstr ""
+msgstr "Vous recevrez un e-mail à <0>{0}</0> pour vérifier que c’est vous."
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:270
 msgid "You'll stay updated with these feeds"
@@ -8061,7 +7793,7 @@ msgstr "Vous êtes dans la file d’attente"
 #: src/screens/Deactivated.tsx:89
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:54
 msgid "You're logged in with an App Password. Please log in with your main password to continue deactivating your account."
-msgstr "Vous êtes connecté·e avec un mot de passe d’application. Veuillez vous connecter avec votre mot de passe principal pour continuer à désactiver votre compte."
+msgstr "Vous êtes connecté·e avec un mot de passe d’application. Connectez-vous plutôt avec votre mot de passe principal pour continuer à désactiver votre compte."
 
 #: src/screens/Onboarding/StepFinished.tsx:226
 msgid "You're ready to go!"
@@ -8106,7 +7838,7 @@ msgstr "Votre date de naissance"
 
 #: src/view/com/util/post-embeds/VideoEmbed.web.tsx:171
 msgid "Your browser does not support the video format. Please try a different browser."
-msgstr "Votre navigateur ne prend pas en charge le format vidéo. Veuillez essayer un autre navigateur."
+msgstr "Votre navigateur ne prend pas en charge le format vidéo. Essayez plutôt avec un autre navigateur."
 
 #: src/screens/Messages/components/ChatDisabled.tsx:25
 msgid "Your chats have been disabled"
