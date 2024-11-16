@@ -3945,7 +3945,7 @@ msgstr "curtiram seu feed customizado"
 
 #: src/view/com/notifications/FeedItem.tsx:178
 msgid "liked your post"
-msgstr "curtiram sua postagem"
+msgstr "curtiram seu post"
 
 #: src/view/screens/Profile.tsx:231
 msgid "Likes"
