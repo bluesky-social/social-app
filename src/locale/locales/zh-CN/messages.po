@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-15 08:02\n"
+"PO-Revision-Date: 2024-11-16 01:39\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -287,7 +287,7 @@ msgstr "{firstAuthorName} 使用你的新手包注册"
 msgid "{following} following"
 msgstr "{following} 位正在关注"
 
-#: src/components/dms/dialogs/SearchablePeopleList.tsx:384
+#: src/components/dms/dialogs/SearchablePeopleList.tsx:385
 msgid "{handle} can't be messaged"
 msgstr "目前无法向 {handle} 发送私信"
 
@@ -5537,7 +5537,7 @@ msgstr "回到上一页"
 msgid "Save"
 msgstr "保存"
 
-#: src/view/com/lightbox/ImageViewing/index.tsx:534
+#: src/view/com/lightbox/ImageViewing/index.tsx:545
 #: src/view/com/modals/CreateOrEditList.tsx:325
 msgctxt "action"
 msgid "Save"
@@ -5615,7 +5615,7 @@ msgstr "科学"
 msgid "Scroll to top"
 msgstr "滚动到顶部"
 
-#: src/components/dms/dialogs/SearchablePeopleList.tsx:483
+#: src/components/dms/dialogs/SearchablePeopleList.tsx:484
 #: src/components/forms/SearchInput.tsx:34
 #: src/components/forms/SearchInput.tsx:36
 #: src/Navigation.tsx:590
@@ -5647,8 +5647,8 @@ msgstr "搜索用户"
 msgid "Search GIFs"
 msgstr "搜索 GIF"
 
-#: src/components/dms/dialogs/SearchablePeopleList.tsx:503
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:504
+#: src/components/dms/dialogs/SearchablePeopleList.tsx:505
 msgid "Search profiles"
 msgstr "搜索个人资料"
 
@@ -5899,7 +5899,7 @@ msgstr "性暗示"
 msgid "Share"
 msgstr "分享"
 
-#: src/view/com/lightbox/ImageViewing/index.tsx:543
+#: src/view/com/lightbox/ImageViewing/index.tsx:554
 msgctxt "action"
 msgid "Share"
 msgstr "分享"
@@ -6232,7 +6232,7 @@ msgstr "运动"
 msgid "Start a new chat"
 msgstr "开始一个新私信"
 
-#: src/components/dms/dialogs/SearchablePeopleList.tsx:349
+#: src/components/dms/dialogs/SearchablePeopleList.tsx:350
 msgid "Start chat with {displayName}"
 msgstr "与 {displayName} 开始私信"
 
@@ -6534,6 +6534,10 @@ msgstr "隐私政策已迁移至 <0/>"
 msgid "The selected video is larger than 50MB."
 msgstr "选择的视频大小超过 50MB。"
 
+#: src/lib/strings/errors.ts:18
+msgid "The server appears to be experiencing issues. Please try again in a few moments."
+msgstr "服务器似乎遇到了问题，请稍后重试。"
+
 #: src/screens/StarterPack/StarterPackScreen.tsx:725
 msgid "The starter pack that you are trying to view is invalid. You may delete this starter pack instead."
 msgstr "你尝试查看的新手包无效，你可以删除这个新手包。"
@@ -6710,6 +6714,10 @@ msgstr "该对话的参与者已停用或删除账户，点击以获取更多详
 #: src/screens/Settings/components/ExportCarDialog.tsx:94
 msgid "This feature is in beta. You can read more about repository exports in <0>this blogpost</0>."
 msgstr "该功能正在测试，你可以在<0>这篇博客文章</0>中获得关于导出数据的更多详情。"
+
+#: src/lib/strings/errors.ts:21
+msgid "This feature is not available while using an App Password. Please sign in with your main password."
+msgstr "该功能在使用应用密码登录时不可用，请改用你的主密码登录。"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:120
 msgid "This feed is currently receiving high traffic and is temporarily unavailable. Please try again later."
@@ -6942,6 +6950,10 @@ msgstr "取消屏蔽列表"
 #: src/view/screens/ProfileList.tsx:579
 msgid "Un-mute list"
 msgstr "取消隐藏列表"
+
+#: src/lib/strings/errors.ts:11
+msgid "Unable to connect. Please check your internet connection and try again."
+msgstr "无法连接到服务器。请检查你的互联网连接并重试。"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:68
 #: src/screens/Login/index.tsx:76
