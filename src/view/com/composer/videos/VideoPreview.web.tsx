@@ -1,4 +1,3 @@
-import {useEffect, useRef} from 'react'
 import {View} from 'react-native'
 import {ImagePickerAsset} from 'expo-image-picker'
 import {msg} from '@lingui/macro'
@@ -23,30 +22,10 @@ export function VideoPreview({
 
   clear: () => void
 }) {
-  const ref = useRef<HTMLVideoElement>(null)
   const {_} = useLingui()
   // TODO: figure out how to pause a GIF for reduced motion
   // it's not possible using an img tag -sfn
   const autoplayDisabled = useAutoplayDisabled()
-
-  useEffect(() => {
-    if (!ref.current) return
-
-    const abortController = new AbortController()
-    const {signal} = abortController
-    ref.current.addEventListener(
-      'error',
-      () => {
-        Toast.show(_(msg`Could not process your video`), 'xmark')
-        clear()
-      },
-      {signal},
-    )
-
-    return () => {
-      abortController.abort()
-    }
-  }, [_, clear])
 
   let aspectRatio = asset.width / asset.height
 
@@ -76,13 +55,17 @@ export function VideoPreview({
       ) : (
         <>
           <video
-            ref={ref}
             src={video.uri}
             style={{width: '100%', height: '100%', objectFit: 'cover'}}
             autoPlay={!autoplayDisabled}
             loop
             muted
             playsInline
+            onError={err => {
+              console.error(new Error('Error loading video', {cause: err}))
+              Toast.show(_(msg`Could not process your video`), 'xmark')
+              clear()
+            }}
           />
           {autoplayDisabled && (
             <View
