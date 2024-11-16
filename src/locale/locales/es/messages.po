@@ -638,7 +638,7 @@ msgstr "Se ha producido un error"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:422
 msgid "An error occurred"
-msgstr "Ocurrió un error"
+msgstr "Se produjo un error"
 
 #: src/view/com/composer/state/video.ts:412
 msgid "An error occurred while compressing the video."
@@ -650,11 +650,11 @@ msgstr "Se produjo un error al generar su paquete de inicio. ¿Quieres intentarl
 
 #: src/view/com/util/post-embeds/VideoEmbed.tsx:135
 msgid "An error occurred while loading the video. Please try again later."
-msgstr "Un error ocurrió al cargar el video. Por favor intente denuevo."
+msgstr "Se produjo un error al cargar el video. Por favor, inténtelo de nuevo."
 
 #: src/view/com/util/post-embeds/VideoEmbed.web.tsx:174
 msgid "An error occurred while loading the video. Please try again."
-msgstr "Un error ocurrió mientras cargaba el video. Por favor intente denuevo."
+msgstr "Se produjo un error mientras cargaba el video. Por favor, inténtelo de nuevo."
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:250
 #~ msgid "An error occurred while saving the image!"
@@ -671,16 +671,16 @@ msgstr "¡Se produjo un error al guardar el código QR!"
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:87
 msgid "An error occurred while selecting the video"
-msgstr "Un error ocurrió mientras seleccionaba el video"
+msgstr "Se produjo un error mientras seleccionaba el video"
 
 #: src/components/dms/MessageMenu.tsx:134
 #~ msgid "An error occurred while trying to delete the message. Please try again."
-#~ msgstr "Ocurrió un error al intentar eliminar el mensaje. Intenta de nuevo."
+#~ msgstr "Se produjo un error al intentar eliminar el mensaje. Inténtalo de nuevo."
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:347
 #: src/screens/StarterPack/StarterPackScreen.tsx:369
 msgid "An error occurred while trying to follow all"
-msgstr "Un error ocurrió mientras intentaba seguir a todos"
+msgstr "Se produjo un error mientras intentaba seguir a todos"
 
 #: src/view/com/composer/state/video.ts:449
 msgid "An error occurred while uploading the video."
@@ -705,11 +705,11 @@ msgstr "Se produjo un problema mientras intentaba abrir el chat."
 #: src/view/com/profile/FollowButton.tsx:36
 #: src/view/com/profile/FollowButton.tsx:46
 msgid "An issue occurred, please try again."
-msgstr "Ocurrió un problema. Intenta de nuevo."
+msgstr "Ocurrió un problema. Inténtalo de nuevo."
 
 #: src/screens/Onboarding/StepInterests/index.tsx:185
 msgid "an unknown error occurred"
-msgstr "Ocurrió un error desconocido"
+msgstr "Se produjo un error desconocido"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:158
 #: src/components/moderation/ModerationDetailsDialog.tsx:154
@@ -1050,7 +1050,7 @@ msgstr "Explorar más sugerencias"
 #: src/components/FeedInterstitials.tsx:358
 #: src/components/FeedInterstitials.tsx:492
 msgid "Browse more suggestions on the Explore page"
-msgstr "Explore más sugerencias"
+msgstr "Explorar más sugerencias"
 
 #: src/screens/Home/NoFeedsPinned.tsx:103
 #: src/screens/Home/NoFeedsPinned.tsx:109
@@ -1103,7 +1103,7 @@ msgstr "Cámara"
 
 #: src/view/com/modals/AddAppPasswords.tsx:180
 msgid "Can only contain letters, numbers, spaces, dashes, and underscores. Must be at least 4 characters long, but no more than 32 characters long."
-msgstr "Sólo puede contener letras, números, espacios, guiones y guiones bajos. Debe tener al menos 4 caracteres, pero no más de 32."
+msgstr "Solo puede contener letras, números, espacios, guiones y guiones bajos. Debe tener al menos 4 caracteres, pero no más de 32."
 
 #: src/components/Menu/index.tsx:235
 #: src/components/Prompt.tsx:129
@@ -1783,7 +1783,7 @@ msgstr "Crear una nueva cuenta de Bluesky"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:153
 msgid "Create a QR code for a starter pack"
-msgstr "Crear un código QR para pack de inicio"
+msgstr "Crear un código QR para paquete de inicio"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:166
 #: src/components/StarterPack/ProfileStarterPacks.tsx:260
@@ -1979,7 +1979,7 @@ msgstr "Borrar paquete de inicio"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:629
 msgid "Delete starter pack?"
-msgstr "¿Borrar pack de inicio?"
+msgstr "¿Borrar paquete de inicio?"
 
 #: src/view/screens/ProfileList.tsx:721
 msgid "Delete this list?"
@@ -1987,7 +1987,7 @@ msgstr "¿Borrar esta lista?"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:668
 msgid "Delete this post?"
-msgstr "¿Borrar esta post?"
+msgstr "¿Borrar este post?"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:92
 msgid "Deleted"
@@ -2567,7 +2567,7 @@ msgstr ""
 
 #: src/view/screens/Settings/ExportCarDialog.tsx:46
 msgid "Error occurred while saving file"
-msgstr "Ocurrió un error al guardar el archivo"
+msgstr "Se produjo un error al guardar el archivo"
 
 #: src/screens/Signup/StepCaptcha/index.tsx:56
 msgid "Error receiving captcha response."
@@ -2721,7 +2721,7 @@ msgstr "Error al eliminar el mensaje."
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:200
 msgid "Failed to delete post, please try again"
-msgstr "Error al eliminar la publicación, por favor intenta de nuevo."
+msgstr "Error al eliminar la publicación. Por favor, inténtalo de nuevo."
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:697
 msgid "Failed to delete starter pack"
@@ -2763,7 +2763,7 @@ msgstr "Error al guardar la imagen: {0}"
 
 #: src/state/queries/notifications/settings.ts:39
 msgid "Failed to save notification preferences, please try again"
-msgstr "Error al guardar las preferencias de notificación, por favor intenta de nuevo."
+msgstr "Error al guardar las preferencias de notificación. Por favor, inténtalo de nuevo."
 
 #: src/components/dms/MessageItem.tsx:233
 msgid "Failed to send"
@@ -2776,11 +2776,11 @@ msgstr "Error al enviar"
 #: src/components/moderation/LabelsOnMeDialog.tsx:229
 #: src/screens/Messages/components/ChatDisabled.tsx:87
 msgid "Failed to submit appeal, please try again."
-msgstr "Error al enviar la apelación, por favor intenta de nuevo."
+msgstr "Error al enviar la apelación. Por favor, inténtalo de nuevo."
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:229
 msgid "Failed to toggle thread mute, please try again"
-msgstr "Error al cambiar el estado de silencio del hilo, por favor intenta de nuevo."
+msgstr "Error al cambiar el estado de silencio del hilo. Por favor, inténtalo de nuevo."
 
 #: src/components/FeedCard.tsx:276
 msgid "Failed to update feeds"
@@ -3377,7 +3377,7 @@ msgstr ""
 
 #: src/screens/Profile/ErrorState.tsx:31
 msgid "Hmmmm, we couldn't load that moderation service."
-msgstr "Hmmmm, parece que estamos teniendo problemas para cargar estos datos. Consulta a continuación para más detalles. Si este problema persiste, por favor contáctanos."
+msgstr "Hmmmm, parece que estamos teniendo problemas para cargar estos datos. Consulta a continuación para más detalles. Si este problema persiste, por favor, contáctanos."
 
 #: src/view/com/composer/state/video.ts:427
 msgid "Hold up! We’re gradually giving access to video, and you’re still waiting in line. Check back soon!"
@@ -5200,11 +5200,11 @@ msgstr "Introduce tu contraseña, también:"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:265
 msgid "Please explain why you think this label was incorrectly applied by {0}"
-msgstr "Por favor explica por qué crees que esta etiqueta fue aplicada incorrectamente por {0}"
+msgstr "Por favor, explica por qué crees que esta etiqueta fue aplicada incorrectamente por {0}"
 
 #: src/screens/Messages/components/ChatDisabled.tsx:110
 msgid "Please explain why you think your chats were incorrectly disabled"
-msgstr "Por favor explica por qué crees que tus chats fueron deshabilitados incorrectamente"
+msgstr "Por favor, explica por qué crees que tus chats fueron deshabilitados incorrectamente"
 
 #: src/lib/hooks/useAccountSwitcher.ts:45
 #: src/lib/hooks/useAccountSwitcher.ts:55
@@ -5458,13 +5458,13 @@ msgstr "Citar una publicación"
 
 #: src/view/com/modals/Repost.tsx:66
 #~ msgctxt "action"
-#~ msgid "Quote post"
-#~ msgstr "Citar una post"
+#~ msgid "Quote Post"
+#~ msgstr "Citar Post"
 
 #: src/view/com/modals/Repost.tsx:71
 #~ msgctxt "action"
 #~ msgid "Quote Post"
-#~ msgstr "Citar una post"
+#~ msgstr "Citar Post"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:308
 msgid "Quote post was re-attached"
@@ -5661,31 +5661,31 @@ msgstr "Remover este feed de tus feeds guardados"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:108
 msgid "Removed by author"
-msgstr "Removido por autor"
+msgstr "Eliminado por el autor"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:106
 msgid "Removed by you"
-msgstr "Removido por ti"
+msgstr "Eliminado por ti"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:200
 #: src/view/com/modals/UserAddRemoveLists.tsx:170
 msgid "Removed from list"
-msgstr "Removido de la lista"
+msgstr "Eliminado de la lista"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:138
 msgid "Removed from my feeds"
-msgstr "Removido de mis feeds"
+msgstr "Eliminado de mis feeds"
 
 #: src/screens/List/ListHiddenScreen.tsx:94
 #: src/screens/List/ListHiddenScreen.tsx:160
 msgid "Removed from saved feeds"
-msgstr "Removido de mis feeds guardados"
+msgstr "Eliminado de mis feeds guardados"
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:44
 #: src/view/screens/ProfileFeed.tsx:197
 #: src/view/screens/ProfileList.tsx:386
 msgid "Removed from your feeds"
-msgstr "Removido de tus feeds"
+msgstr "Eliminado de tus feeds"
 
 #: src/view/com/composer/ExternalEmbed.tsx:88
 #~ msgid "Removes default thumbnail from {0}"
@@ -5779,7 +5779,7 @@ msgstr "Responder a ti"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:338
 msgid "Reply visibility updated"
-msgstr "Visibilidad de la respuesta actualizada"
+msgstr "Visibilidad de la respuesta actualizada."
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:337
 msgid "Reply was successfully hidden"
@@ -6533,11 +6533,11 @@ msgstr "Compartir feed"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:621
 #~ msgid "Share image externally"
-#~ msgstr ""
+#~ msgstr "Compartir imagen"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:639
 #~ msgid "Share image in post"
-#~ msgstr ""
+#~ msgstr "Compartir imagen en un post"
 
 #: src/components/StarterPack/ShareDialog.tsx:124
 #: src/components/StarterPack/ShareDialog.tsx:131
@@ -6717,7 +6717,7 @@ msgstr "Mostrar advertencia y filtrar de los feeds"
 
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:128
 #~ msgid "Shows posts from {0} in your feed"
-#~ msgstr ""
+#~ msgstr "Mostrar los posts de {0} en tu feed"
 
 #: src/components/dialogs/Signin.tsx:97
 #: src/components/dialogs/Signin.tsx:99
@@ -6839,23 +6839,23 @@ msgstr "Algunas personas pueden responder"
 
 #: src/screens/Messages/Conversation.tsx:109
 msgid "Something went wrong"
-msgstr "Ocurrió un error"
+msgstr "Se produjo un error"
 
 #: src/screens/Deactivated.tsx:94
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:59
 msgid "Something went wrong, please try again"
-msgstr "Ocurrió un error, por favor intenta de nuevo"
+msgstr "Se produjo un error. Por favor, inténtalo de nuevo"
 
 #: src/components/ReportDialog/index.tsx:54
 #: src/screens/Moderation/index.tsx:117
 #: src/screens/Profile/Sections/Labels.tsx:87
 msgid "Something went wrong, please try again."
-msgstr "Ocurrió un error. Intenta de nuevo."
+msgstr "Se produjo un error. Inténtalo de nuevo."
 
 #: src/components/Lists.tsx:200
 #: src/view/screens/NotificationsSettings.tsx:49
 msgid "Something went wrong!"
-msgstr "¡Ocurrió un error!"
+msgstr "¡Se produjo un error!"
 
 #: src/App.native.tsx:112
 #: src/App.web.tsx:95
@@ -6936,11 +6936,11 @@ msgstr "El paquete de inicio es inválido"
 
 #: src/view/screens/Profile.tsx:233
 msgid "Starter Packs"
-msgstr "Paquetes de inicio"
+msgstr "Packs de inicio"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:239
 msgid "Starter packs let you easily share your favorite feeds and people with your friends."
-msgstr "Los paquetes de inicio te permiten compartir fácilmente tus feeds y personas favoritas con tus amigos."
+msgstr "Los packs de inicio te permiten compartir fácilmente tus feeds y personas favoritas con tus amigos."
 
 #: src/view/screens/Settings/index.tsx:918
 msgid "Status Page"
@@ -7047,7 +7047,7 @@ msgstr "Sistema"
 
 #: src/view/screens/Settings/index.tsx:818
 msgid "System log"
-msgstr "Bitácora del sistema"
+msgstr "Registro del sistema"
 
 #: src/components/dialogs/MutedWords.tsx:323
 #~ msgid "tag"
@@ -7109,7 +7109,7 @@ msgstr "¡Cuenta un chiste!"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:352
 msgid "Tell us a bit about yourself"
-msgstr ""
+msgstr "Cuéntanos un poco sobre ti"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:63
 msgid "Tell us a little more"
@@ -7267,7 +7267,7 @@ msgstr "El paquete de inicio que intentas ver es inválido. Puedes eliminar este
 
 #: src/view/screens/Support.tsx:37
 msgid "The support form has been moved. If you need help, please <0/> or visit {HELP_DESK_URL} to get in touch with us."
-msgstr "Se ha movido el formulario de soporte. Si necesitas ayuda, por favor <0/> o visita {HELP_DESK_URL} para ponerte en contacto con nosotros."
+msgstr "Se ha movido el formulario de soporte. Si necesitas ayuda, por favor, <0/> o visita {HELP_DESK_URL} para ponerte en contacto con nosotros."
 
 #: src/view/screens/TermsOfService.tsx:35
 msgid "The Terms of Service have been moved to"
@@ -7293,17 +7293,17 @@ msgstr "No hay límite de tiempo para la desactivación de la cuenta, regresa en
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:112
 #: src/view/screens/ProfileFeed.tsx:539
 #~ msgid "There was an an issue contacting the server, please check your internet connection and try again."
-#~ msgstr "Hubo un problema al contactar con el servidor, por favor verifica tu conexión a internet y vuelve a intentarlo."
+#~ msgstr "Hubo un problema al contactar con el servidor. Por favor, verifica tu conexión a internet y vuelve a intentarlo."
 
 #: src/view/com/posts/FeedErrorMessage.tsx:145
 #~ msgid "There was an an issue removing this feed. Please check your internet connection and try again."
-#~ msgstr "Hubo un problema al eliminar este feed. Por favor verifica tu conexión a internet y vuelve a intentarlo."
+#~ msgstr "Hubo un problema al eliminar este feed. Por favor, verifica tu conexión a internet y vuelve a intentarlo."
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:52
 #: src/view/com/posts/FeedShutdownMsg.tsx:71
 #: src/view/screens/ProfileFeed.tsx:204
 #~ msgid "There was an an issue updating your feeds, please check your internet connection and try again."
-#~ msgstr "Hubo un problema al actualizar tus feeds, por favor verifica tu conexión a internet y vuelve a intentarlo."
+#~ msgstr "Hubo un problema al actualizar tus feeds. Por favor, verifica tu conexión a internet y vuelve a intentarlo."
 
 #: src/components/dialogs/GifSelect.tsx:225
 msgid "There was an issue connecting to Tenor."
@@ -7323,7 +7323,7 @@ msgstr "Hubo un problema al contactar con el servidor"
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:111
 #: src/view/screens/ProfileFeed.tsx:546
 msgid "There was an issue contacting the server, please check your internet connection and try again."
-msgstr ""
+msgstr "Hubo un problema al contactar con el servidor. Por favor, verifica tu conexión a internet e inténtalo de nuevo."
 
 #: src/view/com/feeds/FeedSourceCard.tsx:127
 #: src/view/com/feeds/FeedSourceCard.tsx:140
@@ -7349,12 +7349,12 @@ msgstr "Hubo un problema al obtener tus listas. Toca aquí para intentar de nuev
 
 #: src/view/com/posts/FeedErrorMessage.tsx:145
 msgid "There was an issue removing this feed. Please check your internet connection and try again."
-msgstr ""
+msgstr "Hubo un problema al eliminar este feed. Por favor, verifica tu conexión a internet e inténtalo de nuevo."
 
 #: src/components/dms/ReportDialog.tsx:217
 #: src/components/ReportDialog/SubmitView.tsx:87
 msgid "There was an issue sending your report. Please check your internet connection."
-msgstr "Hubo un problema al enviar tu reporte. Por favor verifica tu conexión a internet."
+msgstr "Hubo un problema al enviar tu reporte. Por favor, verifica tu conexión a internet."
 
 #: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:65
 #~ msgid "There was an issue syncing your preferences with the server"
@@ -7393,7 +7393,7 @@ msgstr "Ocurrió un problema {0}"
 #: src/view/screens/ProfileList.tsx:426
 #: src/view/screens/ProfileList.tsx:439
 msgid "There was an issue. Please check your internet connection and try again."
-msgstr "Hubo un problema. Por favor verifica tu conexión a internet y vuelve a intentarlo."
+msgstr "Hubo un problema. Por favor, verifica tu conexión a internet y vuelve a intentarlo."
 
 #: src/components/dialogs/GifSelect.tsx:271
 #: src/view/com/util/ErrorBoundary.tsx:59
@@ -7418,7 +7418,7 @@ msgstr "Esta cuenta ha solicitado que los usuarios inicien sesión para ver su p
 
 #: src/components/dms/BlockedByListDialog.tsx:34
 msgid "This account is blocked by one or more of your moderation lists. To unblock, please visit the lists directly and remove this user."
-msgstr "Esta cuenta está bloqueada por una o más de tus listas de moderación. Para desbloquearla, por favor visita las listas directamente y elimina a este usuario."
+msgstr "Esta cuenta está bloqueada por una o más de tus listas de moderación. Para desbloquearla, por favor, visita las listas directamente y elimina a este usuario."
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:260
 #~ msgid "This appeal will be sent to <0>{0}</0>."
@@ -7471,7 +7471,7 @@ msgstr "Esta función está en beta. Puedes leer más sobre la exportación de r
 
 #: src/view/com/posts/FeedErrorMessage.tsx:120
 msgid "This feed is currently receiving high traffic and is temporarily unavailable. Please try again later."
-msgstr "Este feed está recibiendo mucho tráfico y no está disponible temporalmente. Intenta de nuevo más tarde."
+msgstr "Este feed está recibiendo mucho tráfico y no está disponible temporalmente. Inténtalo de nuevo más tarde."
 
 #: src/screens/Profile/Sections/Feed.tsx:59
 #: src/view/screens/ProfileFeed.tsx:471
@@ -7658,11 +7658,11 @@ msgstr "Preferencias de hilos"
 
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:101
 msgid "To disable the email 2FA method, please verify your access to the email address."
-msgstr "Para desactivar el método de 2FA por correo electrónico, por favor verifica tu acceso a la dirección de correo electrónico."
+msgstr "Para desactivar el método de 2FA por correo electrónico. Por favor, verifica tu acceso a la dirección de correo electrónico."
 
 #: src/components/dms/ReportConversationPrompt.tsx:20
 msgid "To report a conversation, please report one of its messages via the conversation screen. This lets our moderators understand the context of your issue."
-msgstr "Para denunciar una conversación, por favor denuncia uno de sus mensajes a través de la pantalla de la conversación. Esto permite a nuestros moderadores entender el contexto de tu problema."
+msgstr "Para denunciar una conversación. Por favor, denuncia uno de sus mensajes a través de la pantalla de la conversación. Esto permite a nuestros moderadores entender el contexto de tu problema."
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:133
 msgid "To upload videos to Bluesky, you must first verify your email."
@@ -7721,7 +7721,7 @@ msgstr "TV"
 
 #: src/view/screens/Settings/index.tsx:712
 msgid "Two-factor authentication"
-msgstr "Autenticación de dos factores"
+msgstr "Autenticación en dos pasos"
 
 #: src/screens/Messages/components/MessageInput.tsx:141
 msgid "Type your message here"
@@ -8332,11 +8332,11 @@ msgstr "Se acabaron los posts de tus seguidos. Aquí está lo último de <0/>."
 
 #: src/view/com/composer/state/video.ts:431
 msgid "We were unable to determine if you are allowed to upload videos. Please try again."
-msgstr "No pudimos determinar si tienes permiso para subir videos. Por favor, intenta de nuevo."
+msgstr "No pudimos determinar si tienes permiso para subir videos. Por favor, inténtalo de nuevo."
 
 #: src/components/dialogs/BirthDateSettings.tsx:51
 msgid "We were unable to load your birth date preferences. Please try again."
-msgstr "No pudimos cargar tus preferencias de fecha de nacimiento. Por favor, intenta de nuevo."
+msgstr "No pudimos cargar tus preferencias de fecha de nacimiento. Por favor, inténtalo de nuevo."
 
 #: src/screens/Moderation/index.tsx:420
 msgid "We were unable to load your configured labelers at this time."
@@ -8344,7 +8344,7 @@ msgstr "No pudimos cargar tus etiquetadores configurados en este momento."
 
 #: src/screens/Onboarding/StepInterests/index.tsx:129
 msgid "We weren't able to connect. Please try again to continue setting up your account. If it continues to fail, you can skip this flow."
-msgstr "No pudimos conectarnos. Por favor, intenta de nuevo para continuar configurando tu cuenta. Si sigue fallando, puedes omitir este proceso."
+msgstr "No pudimos conectarnos. Por favor, inténtalo de nuevo para continuar configurando tu cuenta. Si sigue fallando, puedes omitir este proceso."
 
 #: src/screens/SignupQueued.tsx:143
 msgid "We will let you know when your account is ready."
@@ -8356,7 +8356,7 @@ msgstr "Usaremos esto para ayudar a personalizar tu experiencia."
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:87
 msgid "We're having network issues, try again"
-msgstr "Estamos teniendo problemas de red, intenta de nuevo"
+msgstr "Estamos teniendo problemas de red, inténtalo de nuevo"
 
 #: src/components/dialogs/nuxs/NeueTypography.tsx:54
 msgid "We're introducing a new theme font, along with adjustable font sizing."
@@ -8368,15 +8368,15 @@ msgstr "¡Es nuestro placer tenerte aquí!"
 
 #: src/view/screens/ProfileList.tsx:113
 msgid "We're sorry, but we were unable to resolve this list. If this persists, please contact the list creator, @{handleOrDid}."
-msgstr "Lo sentimos, pero no pudimos resolver esta lista. Si esto persiste, por favor contacta al creador de la lista, @{handleOrDid}."
+msgstr "Lo sentimos, pero no pudimos resolver esta lista. Si esto persiste, por favor, contacta al creador de la lista, @{handleOrDid}."
 
 #: src/components/dialogs/MutedWords.tsx:378
 msgid "We're sorry, but we weren't able to load your muted words at this time. Please try again."
-msgstr "Lo sentimos, pero no pudimos cargar tus palabras silenciadas en este momento. Por favor, intenta de nuevo."
+msgstr "Lo sentimos, pero no pudimos cargar tus palabras silenciadas en este momento. Por favor, inténtalo de nuevo."
 
 #: src/view/screens/Search/Search.tsx:212
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
-msgstr "Lo sentimos, pero no se ha podido completar tu búsqueda. Intenta de nuevo en unos minutos."
+msgstr "Lo sentimos, pero no se ha podido completar tu búsqueda. Inténtalo de nuevo en unos minutos."
 
 #: src/view/com/composer/Composer.tsx:361
 msgid "We're sorry! The post you are replying to has been deleted."
@@ -8692,7 +8692,7 @@ msgstr "Has llegado al final"
 
 #: src/lib/media/video/upload.shared.ts:56
 msgid "You have temporarily reached the limit for video uploads. Please try again later."
-msgstr "Has alcanzado temporalmente el límite de subidas de videos. Por favor, intenta de nuevo más tarde."
+msgstr "Has alcanzado temporalmente el límite de subidas de videos. Por favor, inténtalo de nuevo más tarde."
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:236
 msgid "You haven't created a starter pack yet!"
@@ -8717,19 +8717,19 @@ msgstr "Puedes apelar estas etiquetas si sientes que fueron colocadas por error.
 
 #: src/screens/StarterPack/Wizard/State.tsx:79
 msgid "You may only add up to {STARTER_PACK_MAX_SIZE} profiles"
-msgstr "Sólo puedes añadir hasta {STARTER_PACK_MAX_SIZE} perfiles"
+msgstr "Solo puedes añadir hasta {STARTER_PACK_MAX_SIZE} perfiles"
 
 #: src/screens/StarterPack/Wizard/State.tsx:97
 msgid "You may only add up to 3 feeds"
-msgstr "Sólo puedes añadir hasta 3 feeds"
+msgstr "Solo puedes añadir hasta 3 feeds"
 
 #: src/screens/StarterPack/Wizard/State.tsx:95
 #~ msgid "You may only add up to 50 feeds"
-#~ msgstr "Sólo puedes añadir hasta 50 feeds"
+#~ msgstr "Solo puedes añadir hasta 50 feeds"
 
 #: src/screens/StarterPack/Wizard/State.tsx:78
 #~ msgid "You may only add up to 50 profiles"
-#~ msgstr "Sólo puedes añadir hasta 50 perfiles"
+#~ msgstr "Solo puedes añadir hasta 50 perfiles"
 
 #: src/lib/media/picker.shared.ts:22
 msgid "You may only select up to 4 images"
@@ -8869,7 +8869,7 @@ msgstr "Tu fecha de nacimiento"
 
 #: src/view/com/util/post-embeds/VideoEmbed.web.tsx:171
 msgid "Your browser does not support the video format. Please try a different browser."
-msgstr "Tu navegador no soporta este formato de video. Por favor intenta con uno diferente"
+msgstr "Tu navegador no soporta este formato de video. Por favor, inténtalo con uno diferente"
 
 #: src/screens/Messages/components/ChatDisabled.tsx:25
 msgid "Your chats have been disabled"
