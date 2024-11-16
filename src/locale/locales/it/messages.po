@@ -5616,7 +5616,7 @@ msgstr "Rispondi ad un post"
 #: src/view/com/post/Post.tsx:193 src/view/com/posts/FeedItem.tsx:541
 msgctxt "description"
 msgid "Reply to you"
-msgstr "Rispondi a te"
+msgstr "Risposta"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:338
 msgid "Reply visibility updated"
@@ -6343,7 +6343,7 @@ msgstr "Attività sessuale o nudità erotica."
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:38
 msgid "Sexually Suggestive"
-msgstr "Sessualmente suggestivo"
+msgstr "Sessualmente allusivo"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:175
 #: src/screens/StarterPack/StarterPackScreen.tsx:422
@@ -7470,7 +7470,7 @@ msgstr "Top"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:422
 #: src/view/com/util/forms/PostDropdownBtn.tsx:424
 msgid "Translate"
-msgstr "Tradurre"
+msgstr "Traduci"
 
 #: src/view/com/util/error/ErrorScreen.tsx:82
 msgctxt "action"
@@ -8862,7 +8862,7 @@ msgstr "Il tuo handle utente"
 #~ msgstr "Creando un account accetti i {els}."
 
 #~ msgid "Cancel add image alt text"
-#~ msgstr "Cancel·la afegir text a la imatge"
+#~ msgstr "Annulla inserimento testo alternativo immagine "
 
 #~ msgid "Cancel waitlist signup"
 #~ msgstr "Annulla l'iscrizione alla lista d'attesa"
