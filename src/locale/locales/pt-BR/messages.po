@@ -4453,7 +4453,7 @@ msgstr "Navega para seu perfil"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:156
 msgid "Need to change it?"
-msgstr "Precisa mudá-lo?"
+msgstr "Precisa mudar?"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:130
 msgid "Need to report a copyright violation?"
@@ -4941,7 +4941,7 @@ msgstr "Abre {numItems} opções"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:63
 msgid "Opens a dialog to add a content warning to your post"
-msgstr "Abre uma caixa de diálogo para adicionar um aviso de conteúdo para a sua postagem"
+msgstr "Abre uma caixa de diálogo para adicionar um aviso de conteúdo para o seu post"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:62
 msgid "Opens a dialog to choose who can reply to this thread"
@@ -5362,7 +5362,7 @@ msgstr "Postado por {0}"
 #: src/Navigation.tsx:212
 #: src/Navigation.tsx:219
 msgid "Post by @{0}"
-msgstr "Postado por @{0}"
+msgstr "Post por @{0}"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:180
 msgid "Post deleted"
@@ -5370,7 +5370,7 @@ msgstr "Postagem excluída"
 
 #: src/lib/api/index.ts:161
 msgid "Post failed to upload. Please check your Internet connection and try again."
-msgstr "Falha ao enviar a postagem. Por favor verifique sua conexão de internet e tente novamente."
+msgstr "Falha ao enviar o post. Por favor verifique sua conexão de internet e tente novamente."
 
 #: src/view/com/post-thread/PostThread.tsx:212
 msgid "Post hidden"
@@ -5886,23 +5886,23 @@ msgstr "Configurações de resposta são escolhidas pelo autor da thread"
 #: src/view/com/posts/FeedItem.tsx:544
 msgctxt "description"
 msgid "Reply to <0><1/></0>"
-msgstr "Resposta para <0><1/></0>"
+msgstr "Responder <0><1/></0>"
 
 #: src/view/com/posts/FeedItem.tsx:535
 msgctxt "description"
 msgid "Reply to a blocked post"
-msgstr "Resposta para uma postagem bloqueada"
+msgstr "Responder para um post bloqueado"
 
 #: src/view/com/posts/FeedItem.tsx:537
 msgctxt "description"
 msgid "Reply to a post"
-msgstr "Resposta para uma postagem"
+msgstr "Responder para um post"
 
 #: src/view/com/post/Post.tsx:193
 #: src/view/com/posts/FeedItem.tsx:541
 msgctxt "description"
 msgid "Reply to you"
-msgstr "Resposta para você"
+msgstr "Responder para você"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:338
 msgid "Reply visibility updated"
@@ -6034,7 +6034,7 @@ msgstr "Repostado por você"
 
 #: src/view/com/notifications/FeedItem.tsx:180
 msgid "reposted your post"
-msgstr "repostaram sua postagem"
+msgstr "repostaram seu post"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:209
 msgid "Reposts of this post"
@@ -8342,11 +8342,11 @@ msgstr "Ver perfil de {displayName}"
 
 #: src/components/TagMenu/index.tsx:149
 msgid "View all posts by @{authorHandle} with tag {displayTag}"
-msgstr "Ver todas as postagens de @{authorHandle} com a tag {displayTag}"
+msgstr "Ver todas os posts de @{authorHandle} com a tag {displayTag}"
 
 #: src/components/TagMenu/index.tsx:103
 msgid "View all posts with tag {displayTag}"
-msgstr "Ver todas as postagens com a tag {displayTag}"
+msgstr "Ver todas os posts com a tag {displayTag}"
 
 #: src/components/ProfileHoverCard/index.web.tsx:433
 msgid "View blocked user's profile"
