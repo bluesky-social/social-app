@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useRef} from 'react'
 import {
   findNodeHandle,
   ListRenderItemInfo,
@@ -62,12 +62,16 @@ export const ProfileLists = React.forwardRef<SectionRef, ProfileListsProps>(
     } = useProfileListsQuery(did, opts)
     const isEmpty = !isFetching && !data?.pages[0]?.lists.length
 
+    const lastItemsState = useRef<any[]>([])
+
     const items = React.useMemo(() => {
       let items: any[] = []
       if (isError && isEmpty) {
         items = items.concat([ERROR_ITEM])
       }
-      if (!isFetched && isFetching) {
+      if (isFetched && isFetching) {
+        return lastItemsState.current
+      } else if (!isFetched && isFetching) {
         items = items.concat([LOADING])
       } else if (isEmpty) {
         items = items.concat([EMPTY])
@@ -81,6 +85,8 @@ export const ProfileLists = React.forwardRef<SectionRef, ProfileListsProps>(
       }
       return items
     }, [isError, isEmpty, isFetched, isFetching, data])
+
+    lastItemsState.current = items
 
     // events
     // =
