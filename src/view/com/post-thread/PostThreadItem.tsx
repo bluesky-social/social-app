@@ -737,7 +737,7 @@ function ExpandedPostDetails({
   const isRootPost = !('reply' in post.record)
 
   const onTranslatePress = React.useCallback(() => {
-    openLink(translatorUrl)
+    openLink(translatorUrl, true)
   }, [openLink, translatorUrl])
 
   return (
