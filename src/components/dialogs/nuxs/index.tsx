@@ -57,6 +57,7 @@ export function NuxDialogs() {
     !currentAccount ||
     !preferences ||
     !profile ||
+    // Profile isn't legit ready until createdAt is a real date.
     !profile.createdAt ||
     profile.createdAt === '0001-01-01T00:00:00.000Z' // TODO: Fix this in AppView.
 
