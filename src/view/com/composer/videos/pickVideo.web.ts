@@ -72,13 +72,6 @@ export const getVideoMetadata = (file: File): Promise<ImagePickerAsset> => {
 
         video.onloadedmetadata = () => {
           URL.revokeObjectURL(blobUrl)
-          console.log({
-            uri,
-            mimeType: file.type,
-            width: video.videoWidth,
-            height: video.videoHeight,
-            duration: video.duration * 1000,
-          })
           resolve({
             uri,
             mimeType: file.type,
