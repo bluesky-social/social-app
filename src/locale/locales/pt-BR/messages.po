@@ -564,7 +564,7 @@ msgstr "O conteúdo adulto está desabilitado."
 #: src/view/com/composer/labels/LabelsBtn.tsx:140
 #: src/view/com/composer/labels/LabelsBtn.tsx:194
 msgid "Adult Content labels"
-msgstr ""
+msgstr "Rótulos de conteúdo adulto"
 
 #: src/screens/Moderation/index.tsx:410
 #: src/view/screens/Settings/index.tsx:653
@@ -654,7 +654,7 @@ msgstr "Um e-mail foi enviado para seu e-mail anterior, {0}. Ele inclui um códi
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:77
 msgid "An email has been sent! Please enter the confirmation code included in the email below."
-msgstr ""
+msgstr "Um email foi enviado! Por favor, insira abaixo o código de confirmação incluído no email."
 
 #: src/components/dialogs/GifSelect.tsx:266
 msgid "An error has occurred"
@@ -859,7 +859,7 @@ msgstr "Tem certeza de que deseja excluir este pacote inicial?"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:82
 msgid "Are you sure you want to discard your changes?"
-msgstr ""
+msgstr "Tem certeza de que quer descartar suas alterações?"
 
 #: src/components/dms/ConvoMenu.tsx:189
 #~ msgid "Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for other participants."
@@ -1250,7 +1250,7 @@ msgstr "Alterar"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:147
 msgid "Change email address"
-msgstr ""
+msgstr "Alterar endereço de email"
 
 #: src/view/screens/Settings/index.tsx:685
 msgid "Change handle"
@@ -1361,7 +1361,7 @@ msgstr "Escolha Pessoas"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:116
 msgid "Choose self-labels that are applicable for the media you are posting. If none are selected, this post is suitable for all audiences."
-msgstr ""
+msgstr "Escolha rótulos que são aplicáveis à mídia que você está postando. Se nenhum for selecionado, significa que esta postagem é adequada para todos os públicos."
 
 #: src/view/com/auth/server-input/index.tsx:76
 msgid "Choose Service"
@@ -1581,7 +1581,7 @@ msgstr "Escrever resposta"
 
 #: src/view/com/composer/Composer.tsx:1341
 msgid "Compressing video..."
-msgstr ""
+msgstr "Comprimindo vídeo..."
 
 #: src/view/com/composer/videos/VideoTranscodeProgress.tsx:51
 #~ msgid "Compressing..."
@@ -1645,7 +1645,7 @@ msgstr "Código de confirmação"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:167
 msgid "Confirmation Code"
-msgstr ""
+msgstr "Código de confirmação"
 
 #: src/screens/Login/LoginForm.tsx:309
 msgid "Connecting..."
@@ -2082,11 +2082,11 @@ msgstr "Descrição"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:364
 msgid "Description is too long"
-msgstr ""
+msgstr "Descrição muito longa"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:365
 msgid "Description is too long. The maximum number of characters is {DESCRIPTION_MAX_GRAPHEMES}."
-msgstr ""
+msgstr "Descrição muito longa. O número máximo de caracteres permitidos é {DESCRIPTION_MAX_GRAPHEMES}."
 
 #: src/view/com/composer/GifAltText.tsx:150
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:114
@@ -2162,7 +2162,7 @@ msgstr "Descartar"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:81
 msgid "Discard changes?"
-msgstr ""
+msgstr "Descartar alterações?"
 
 #: src/view/com/composer/Composer.tsx:531
 msgid "Discard draft?"
@@ -2218,11 +2218,11 @@ msgstr "Nome de exibição"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:333
 msgid "Display name is too long"
-msgstr ""
+msgstr "Nome de exibição muito longo"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:334
 msgid "Display name is too long. The maximum number of characters is {DISPLAY_NAME_MAX_GRAPHEMES}."
-msgstr ""
+msgstr "Nome de exibição muito longo. O número máximo de caracteres é {DISPLAY_NAME_MAX_GRAPHEMES}."
 
 #: src/view/com/modals/ChangeHandle.tsx:384
 msgid "DNS Panel"
@@ -2234,11 +2234,11 @@ msgstr "Não aplique esta palavra ocultada aos usuários que você segue"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:174
 msgid "Does not contain adult content."
-msgstr ""
+msgstr "Não contém conteúdo adulto."
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:213
 msgid "Does not contain graphic or disturbing content."
-msgstr ""
+msgstr "Não contém conteúdo gráfico ou perturbador."
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:39
 msgid "Does not include nudity."
@@ -2322,7 +2322,7 @@ msgstr "ex. alice"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:321
 msgid "e.g. Alice Lastname"
-msgstr ""
+msgstr "ex. Alice Sobrenome"
 
 #: src/view/com/modals/EditProfile.tsx:180
 #~ msgid "e.g. Alice Roberts"
@@ -2603,7 +2603,7 @@ msgstr "Digite uma palavra ou tag"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:75
 msgid "Enter Code"
-msgstr ""
+msgstr "Insira o código"
 
 #: src/view/com/modals/VerifyEmail.tsx:113
 msgid "Enter Confirmation Code"
@@ -2644,7 +2644,7 @@ msgstr "Digite seu nome de usuário e senha"
 
 #: src/view/com/composer/Composer.tsx:1350
 msgid "Error"
-msgstr ""
+msgstr "Erro"
 
 #: src/view/screens/Settings/ExportCarDialog.tsx:46
 msgid "Error occurred while saving file"
@@ -2908,7 +2908,7 @@ msgstr "Comentários"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:271
 #: src/view/com/util/forms/PostDropdownBtn.tsx:280
 msgid "Feedback sent!"
-msgstr ""
+msgstr "Comentário enviado!"
 
 #: src/Navigation.tsx:352
 #: src/screens/StarterPack/StarterPackScreen.tsx:183
@@ -3522,11 +3522,11 @@ msgstr "Eu tenho um código"
 #: src/components/dialogs/VerifyEmailDialog.tsx:196
 #: src/components/dialogs/VerifyEmailDialog.tsx:203
 msgid "I Have a Code"
-msgstr ""
+msgstr "Eu tenho um código"
 
 #: src/view/com/modals/VerifyEmail.tsx:224
 msgid "I have a confirmation code"
-msgstr "Eu tenho um código"
+msgstr "Eu tenho um código de confirmação"
 
 #: src/view/com/modals/ChangeHandle.tsx:271
 msgid "I have my own domain"
@@ -3767,7 +3767,7 @@ msgstr "Rótulos"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:74
 msgid "Labels added"
-msgstr ""
+msgstr "Rótulos adicionados"
 
 #: src/screens/Profile/Sections/Labels.tsx:163
 msgid "Labels are annotations on users and content. They can be used to hide, warn, and categorize the network."
@@ -3945,7 +3945,7 @@ msgstr "curtiram seu feed customizado"
 
 #: src/view/com/notifications/FeedItem.tsx:178
 msgid "liked your post"
-msgstr "curtiu sua postagem"
+msgstr "curtiram seu post"
 
 #: src/view/screens/Profile.tsx:231
 msgid "Likes"
@@ -4065,11 +4065,11 @@ msgstr "Fazer login em uma conta que não está listada"
 
 #: src/view/shell/desktop/RightNav.tsx:104
 msgid "Logo by <0/>"
-msgstr ""
+msgstr "Logo por <0/>"
 
 #: src/view/shell/Drawer.tsx:296
 msgid "Logo by <0>@sawaratsuki.bsky.social</0>"
-msgstr ""
+msgstr "Logo por <0>@sawaratsuki.bsky.social</0>"
 
 #: src/components/RichText.tsx:226
 msgid "Long press to open tag menu for #{tag}"
@@ -4119,7 +4119,7 @@ msgstr "Mídia"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:208
 msgid "Media that may be disturbing or inappropriate for some audiences."
-msgstr ""
+msgstr "Mídia que pode ser perturbadora ou inapropriada para algumas pessoas."
 
 #: src/components/WhoCanReply.tsx:254
 msgid "mentioned users"
@@ -4453,7 +4453,7 @@ msgstr "Navega para seu perfil"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:156
 msgid "Need to change it?"
-msgstr ""
+msgstr "Precisa mudar?"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:130
 msgid "Need to report a copyright violation?"
@@ -4852,7 +4852,7 @@ msgstr "Contém apenas letras, números e hífens"
 
 #: src/lib/media/picker.shared.ts:29
 msgid "Only image files are supported"
-msgstr ""
+msgstr "Apenas arquivos de imagem são suportados"
 
 #: src/view/com/composer/videos/SubtitleFilePicker.tsx:40
 msgid "Only WebVTT (.vtt) files are supported"
@@ -4900,7 +4900,7 @@ msgstr "Abrir opções do feed"
 
 #: src/view/com/util/post-embeds/ExternalLinkEmbed.tsx:71
 msgid "Open link to {niceUrl}"
-msgstr ""
+msgstr "Abrir link para {niceUrl}"
 
 #: src/view/screens/Settings/index.tsx:703
 msgid "Open links with in-app browser"
@@ -4924,7 +4924,7 @@ msgstr "Abrir opções da postagem"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:551
 msgid "Open starter pack menu"
-msgstr "Abra o menu do pacote inicial"
+msgstr "Abrir o menu do pacote inicial"
 
 #: src/view/screens/Settings/index.tsx:827
 #: src/view/screens/Settings/index.tsx:837
@@ -4941,7 +4941,7 @@ msgstr "Abre {numItems} opções"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:63
 msgid "Opens a dialog to add a content warning to your post"
-msgstr ""
+msgstr "Abre uma caixa de diálogo para adicionar um aviso de conteúdo para o seu post"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:62
 msgid "Opens a dialog to choose who can reply to this thread"
@@ -5370,7 +5370,7 @@ msgstr "Postagem excluída"
 
 #: src/lib/api/index.ts:161
 msgid "Post failed to upload. Please check your Internet connection and try again."
-msgstr ""
+msgstr "Falha ao enviar o post. Por favor verifique sua conexão de internet e tente novamente."
 
 #: src/view/com/post-thread/PostThread.tsx:212
 msgid "Post hidden"
@@ -5499,7 +5499,7 @@ msgstr "Política de Privacidade"
 
 #: src/view/com/composer/Composer.tsx:1347
 msgid "Processing video..."
-msgstr ""
+msgstr "Processando vídeo..."
 
 #: src/lib/api/index.ts:53
 #: src/screens/Login/ForgotPasswordForm.tsx:149
@@ -5880,7 +5880,7 @@ msgstr "Configurações de resposta são escolhidas pelo autor da thread"
 #: src/view/com/posts/FeedItem.tsx:285
 #~ msgctxt "description"
 #~ msgid "Reply to <0/>"
-#~ msgstr "Responder <0/>"
+#~ msgstr "Resposta para <0/>"
 
 #: src/view/com/post/Post.tsx:195
 #: src/view/com/posts/FeedItem.tsx:544
@@ -5891,12 +5891,12 @@ msgstr "Responder <0><1/></0>"
 #: src/view/com/posts/FeedItem.tsx:535
 msgctxt "description"
 msgid "Reply to a blocked post"
-msgstr "Responder a uma postagem bloqueada"
+msgstr "Responder para um post bloqueado"
 
 #: src/view/com/posts/FeedItem.tsx:537
 msgctxt "description"
 msgid "Reply to a post"
-msgstr "Responder à uma postagem"
+msgstr "Responder para um post"
 
 #: src/view/com/post/Post.tsx:193
 #: src/view/com/posts/FeedItem.tsx:541
@@ -6034,7 +6034,7 @@ msgstr "Repostado por você"
 
 #: src/view/com/notifications/FeedItem.tsx:180
 msgid "reposted your post"
-msgstr "repostou seu post"
+msgstr "repostaram seu post"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:209
 msgid "Reposts of this post"
@@ -6192,7 +6192,7 @@ msgstr "Salvar data de nascimento"
 #: src/view/screens/SavedFeeds.tsx:98
 #: src/view/screens/SavedFeeds.tsx:103
 msgid "Save changes"
-msgstr ""
+msgstr "Salvar alterações"
 
 #: src/view/com/modals/EditProfile.tsx:227
 #~ msgid "Save Changes"
@@ -6481,11 +6481,11 @@ msgstr "Envie um site bacana!"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:189
 msgid "Send Confirmation"
-msgstr ""
+msgstr "Enviar confirmação"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:182
 msgid "Send confirmation email"
-msgstr ""
+msgstr "Enviar email de confirmação"
 
 #: src/view/com/modals/VerifyEmail.tsx:210
 #: src/view/com/modals/VerifyEmail.tsx:212
@@ -6659,7 +6659,7 @@ msgstr "Compartilhe um fato divertido!"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:703
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:349
 msgid "Share anyway"
-msgstr "Compartilhar assim"
+msgstr "Compartilhar mesmo assim"
 
 #: src/view/screens/ProfileFeed.tsx:364
 #: src/view/screens/ProfileFeed.tsx:366
@@ -7128,7 +7128,7 @@ msgstr "Inscreva-se nesta lista"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:81
 msgid "Success!"
-msgstr ""
+msgstr "Sucesso!"
 
 #: src/view/screens/Search/Explore.tsx:332
 msgid "Suggested accounts"
@@ -7240,7 +7240,7 @@ msgstr "Conte uma piada!"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:352
 msgid "Tell us a bit about yourself"
-msgstr ""
+msgstr "Conte-nos um pouco sobre você"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:63
 msgid "Tell us a little more"
@@ -7284,7 +7284,7 @@ msgstr "Campo de entrada de texto"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:82
 msgid "Thank you! Your email has been successfully verified."
-msgstr ""
+msgstr "Obrigado! Seu email foi verificado com sucesso."
 
 #: src/components/dms/ReportDialog.tsx:129
 #: src/components/ReportDialog/SubmitView.tsx:82
@@ -7454,7 +7454,7 @@ msgstr "Tivemos um problema ao contatar o servidor deste feed"
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:111
 #: src/view/screens/ProfileFeed.tsx:546
 msgid "There was an issue contacting the server, please check your internet connection and try again."
-msgstr ""
+msgstr "Houve um problema ao comunicar com o servidor, por favor verifique sua conexão de internet e tente novamente."
 
 #: src/view/com/feeds/FeedSourceCard.tsx:127
 #: src/view/com/feeds/FeedSourceCard.tsx:140
@@ -7480,7 +7480,7 @@ msgstr "Tivemos um problema ao carregar suas listas. Toque aqui para tentar de n
 
 #: src/view/com/posts/FeedErrorMessage.tsx:145
 msgid "There was an issue removing this feed. Please check your internet connection and try again."
-msgstr ""
+msgstr "Houve um problema ao remover este feed. Por favor verifique sua conexão de internet e tente novamente."
 
 #: src/components/dms/ReportDialog.tsx:217
 #: src/components/ReportDialog/SubmitView.tsx:87
@@ -7495,7 +7495,7 @@ msgstr "Tivemos um problema ao enviar sua denúncia. Por favor, verifique sua co
 #: src/view/com/posts/FeedShutdownMsg.tsx:71
 #: src/view/screens/ProfileFeed.tsx:211
 msgid "There was an issue updating your feeds, please check your internet connection and try again."
-msgstr ""
+msgstr "Houve um problema ao atualizar seus feeds, por favor verifique sua conexão de internet e tente novamente."
 
 #: src/view/screens/AppPasswords.tsx:75
 msgid "There was an issue with fetching your app passwords"
@@ -8101,16 +8101,16 @@ msgstr "Carregar da galeria"
 
 #: src/lib/api/index.ts:272
 msgid "Uploading images..."
-msgstr ""
+msgstr "Enviando imagens..."
 
 #: src/lib/api/index.ts:326
 #: src/lib/api/index.ts:350
 msgid "Uploading link thumbnail..."
-msgstr ""
+msgstr "Enviando prévia de link..."
 
 #: src/view/com/composer/Composer.tsx:1344
 msgid "Uploading video..."
-msgstr ""
+msgstr "Enviando vídeo..."
 
 #: src/view/com/modals/ChangeHandle.tsx:395
 msgid "Use a file on your server"
@@ -8316,7 +8316,7 @@ msgstr "Configurações de vídeo"
 
 #: src/view/com/composer/Composer.tsx:1354
 msgid "Video uploaded"
-msgstr ""
+msgstr "Vídeo enviado"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:84
 msgid "Video: {0}"
@@ -8342,11 +8342,11 @@ msgstr "Ver perfil de {displayName}"
 
 #: src/components/TagMenu/index.tsx:149
 msgid "View all posts by @{authorHandle} with tag {displayTag}"
-msgstr ""
+msgstr "Ver todas os posts de @{authorHandle} com a tag {displayTag}"
 
 #: src/components/TagMenu/index.tsx:103
 msgid "View all posts with tag {displayTag}"
-msgstr ""
+msgstr "Ver todas os posts com a tag {displayTag}"
 
 #: src/components/ProfileHoverCard/index.web.tsx:433
 msgid "View blocked user's profile"
@@ -8877,7 +8877,7 @@ msgstr "Você pode adicionar no máximo 3 feeds"
 
 #: src/lib/media/picker.shared.ts:22
 msgid "You may only select up to 4 images"
-msgstr ""
+msgstr "Você só pode selecionar até 4 imagens"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:106
 msgid "You must be 13 years of age or older to sign up."
@@ -8949,7 +8949,7 @@ msgstr "Você seguirá estas pessoas imediatamente"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:138
 msgid "You'll receive an email at <0>{0}</0> to verify it's you."
-msgstr ""
+msgstr "Você vai receber um email em <0>{0}</0> para verificar que é você."
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:270
 msgid "You'll stay updated with these feeds"
@@ -9025,7 +9025,7 @@ msgstr "Sua escolha será salva, mas você pode trocá-la nas configurações de
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:62
 #~ msgid "Your default feed is \"Following\""
-#~ msgstr "Seu feed inicial é o \"Seguindo\""
+#~ msgstr "Seu feed inicial é o \"Following\""
 
 #: src/screens/Login/ForgotPasswordForm.tsx:51
 #: src/screens/Signup/state.ts:203
