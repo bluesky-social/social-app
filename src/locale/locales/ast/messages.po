@@ -180,7 +180,7 @@ msgstr "{estimatedTimeMins, plural, one {minutu} other {minutos}}"
 #: src/components/ProfileHoverCard/index.web.tsx:508
 #: src/screens/Profile/Header/Metrics.tsx:50
 msgid "{following} following"
-msgstr ""
+msgstr "Sigue a {following}"
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:384
 msgid "{handle} can't be messaged"
@@ -282,7 +282,7 @@ msgstr ""
 #: src/Navigation.tsx:317
 #: src/view/screens/AccessibilitySettings.tsx:71
 msgid "Accessibility Settings"
-msgstr ""
+msgstr "Configuración d'accesibilidá"
 
 #: src/screens/Login/LoginForm.tsx:176
 #: src/view/screens/Settings/index.tsx:316
@@ -317,7 +317,7 @@ msgstr ""
 
 #: src/view/com/util/AccountDropdownBtn.tsx:59
 msgid "Account removed from quick access"
-msgstr ""
+msgstr "Quitóse la cuenta del accesu rápidu"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:127
 #: src/view/com/profile/ProfileMenu.tsx:122
@@ -337,7 +337,7 @@ msgstr ""
 #: src/view/com/modals/UserAddRemoveLists.tsx:235
 #: src/view/screens/ProfileList.tsx:940
 msgid "Add"
-msgstr ""
+msgstr "Amestar"
 
 #: src/screens/StarterPack/Wizard/index.tsx:577
 msgid "Add {0} more to continue"
@@ -393,7 +393,7 @@ msgstr ""
 
 #: src/screens/Home/NoFeedsPinned.tsx:99
 msgid "Add recommended feeds"
-msgstr ""
+msgstr "Amestar los feeds aconseyaos"
 
 #: src/screens/StarterPack/Wizard/index.tsx:497
 msgid "Add some feeds to your starter pack!"
@@ -442,7 +442,7 @@ msgstr "El conteníu p'adultos namás se pue activar pela web en <0>bsky.app</0>
 
 #: src/components/moderation/LabelPreference.tsx:241
 msgid "Adult content is disabled."
-msgstr ""
+msgstr "El conteníu p'adultos ta desactiváu."
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:140
 #: src/view/com/composer/labels/LabelsBtn.tsx:194
@@ -604,7 +604,7 @@ msgstr "prodúxose un error desconocíu"
 #: src/components/moderation/ModerationDetailsDialog.tsx:158
 #: src/components/moderation/ModerationDetailsDialog.tsx:154
 msgid "an unknown labeler"
-msgstr ""
+msgstr "un etiquetador desconocíu"
 
 #: src/components/WhoCanReply.tsx:295
 #: src/view/com/notifications/FeedItem.tsx:231
@@ -672,7 +672,7 @@ msgstr ""
 #: src/components/moderation/LabelsOnMeDialog.tsx:233
 #: src/screens/Messages/components/ChatDisabled.tsx:91
 msgid "Appeal submitted"
-msgstr ""
+msgstr "Unvióse l'apellación"
 
 #: src/screens/Messages/components/ChatDisabled.tsx:51
 #: src/screens/Messages/components/ChatDisabled.tsx:53
@@ -729,7 +729,7 @@ msgstr ""
 
 #: src/view/com/composer/Composer.tsx:532
 msgid "Are you sure you'd like to discard this draft?"
-msgstr ""
+msgstr "¿De xuru que quies escartar esti borrador?"
 
 #: src/components/dialogs/MutedWords.tsx:433
 msgid "Are you sure?"
@@ -792,12 +792,12 @@ msgstr ""
 #: src/components/dms/ConvoMenu.tsx:188
 #: src/components/dms/ConvoMenu.tsx:192
 msgid "Block account"
-msgstr ""
+msgstr "Bloquiar la cuenta"
 
 #: src/view/com/profile/ProfileMenu.tsx:280
 #: src/view/com/profile/ProfileMenu.tsx:287
 msgid "Block Account"
-msgstr ""
+msgstr "Bloquiar la cuenta"
 
 #: src/view/com/profile/ProfileMenu.tsx:324
 msgid "Block Account?"
@@ -913,7 +913,7 @@ msgstr ""
 #: src/screens/Home/NoFeedsPinned.tsx:103
 #: src/screens/Home/NoFeedsPinned.tsx:109
 msgid "Browse other feeds"
-msgstr ""
+msgstr "Restolar otros feeds"
 
 #: src/view/com/auth/SplashScreen.web.tsx:167
 msgid "Business"
@@ -1321,7 +1321,7 @@ msgstr ""
 
 #: src/components/moderation/LabelPreference.tsx:243
 msgid "Configured in <0>moderation settings</0>."
-msgstr ""
+msgstr "Configuróse nes <0>opciones de moderación</0>."
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:210
 #: src/components/dialogs/VerifyEmailDialog.tsx:217
@@ -1391,7 +1391,7 @@ msgstr ""
 #: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:75
 #: src/view/screens/LanguageSettings.tsx:280
 msgid "Content Languages"
-msgstr ""
+msgstr "Llingües del conteníu"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:81
 #: src/lib/moderation/useModerationCauseDescription.ts:80
@@ -1443,7 +1443,7 @@ msgstr "Cocina"
 #: src/view/com/modals/AddAppPasswords.tsx:221
 #: src/view/com/modals/InviteCodes.tsx:183
 msgid "Copied"
-msgstr ""
+msgstr "Copióse"
 
 #: src/view/screens/Settings/index.tsx:234
 msgid "Copied build version to clipboard"
@@ -1457,7 +1457,7 @@ msgstr ""
 #: src/view/com/util/forms/PostDropdownBtn.tsx:240
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:380
 msgid "Copied to clipboard"
-msgstr ""
+msgstr "Copióse nel cartafueyu"
 
 #: src/components/dialogs/Embed.tsx:136
 msgid "Copied!"
@@ -1470,7 +1470,7 @@ msgstr ""
 #: src/components/StarterPack/QrCodeDialog.tsx:175
 #: src/view/com/modals/AddAppPasswords.tsx:214
 msgid "Copy"
-msgstr ""
+msgstr "Copiar"
 
 #: src/view/com/modals/ChangeHandle.tsx:467
 msgid "Copy {0}"
@@ -1523,11 +1523,11 @@ msgstr ""
 
 #: src/view/screens/ProfileFeed.tsx:104
 msgid "Could not load feed"
-msgstr ""
+msgstr "Nun se pudo cargar el feed"
 
 #: src/view/screens/ProfileList.tsx:1020
 msgid "Could not load list"
-msgstr ""
+msgstr "Nun se pudo cargar la llista"
 
 #: src/components/dms/ConvoMenu.tsx:88
 msgid "Could not mute chat"
@@ -1795,7 +1795,7 @@ msgstr ""
 
 #: src/view/screens/AccessibilitySettings.tsx:109
 msgid "Disable autoplay for videos and GIFs"
-msgstr ""
+msgstr "Desactivar la reproducción automática de vídeos y GIFs"
 
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:89
 msgid "Disable Email 2FA"
@@ -1803,7 +1803,7 @@ msgstr ""
 
 #: src/view/screens/AccessibilitySettings.tsx:123
 msgid "Disable haptic feedback"
-msgstr ""
+msgstr "Desactivar la rempuesta háptica"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:388
 msgid "Disable subtitles"
@@ -1909,7 +1909,7 @@ msgstr ""
 
 #: src/view/com/modals/ChangeHandle.tsx:475
 msgid "Domain verified!"
-msgstr ""
+msgstr "¡Verificóse'l dominiu!"
 
 #: src/components/dialogs/BirthDateSettings.tsx:118
 #: src/components/dialogs/BirthDateSettings.tsx:124
@@ -1961,7 +1961,7 @@ msgstr ""
 
 #: src/components/dialogs/MutedWords.tsx:153
 msgid "Duration:"
-msgstr ""
+msgstr "Duración:"
 
 #: src/view/com/modals/ChangeHandle.tsx:245
 msgid "e.g. alice"
@@ -2030,7 +2030,7 @@ msgstr ""
 #: src/view/com/util/forms/PostDropdownBtn.tsx:632
 #: src/view/com/util/forms/PostDropdownBtn.tsx:647
 msgid "Edit interaction settings"
-msgstr ""
+msgstr "Editar la configuración de les interaiciones"
 
 #: src/view/screens/ProfileList.tsx:518
 msgid "Edit list details"
@@ -2061,7 +2061,7 @@ msgstr ""
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:176
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:169
 msgid "Edit profile"
-msgstr ""
+msgstr "Edición del perfil"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:179
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:172
@@ -2152,7 +2152,7 @@ msgstr "Activar el conteníu p'adultos"
 #: src/components/dialogs/EmbedConsent.tsx:81
 #: src/components/dialogs/EmbedConsent.tsx:88
 msgid "Enable external media"
-msgstr "Activar los medios esternos"
+msgstr "Activar el conteníu multimedia esternu"
 
 #: src/view/screens/PreferencesExternalEmbeds.tsx:71
 msgid "Enable media players for"
@@ -2245,7 +2245,7 @@ msgstr "Error"
 
 #: src/view/screens/Settings/ExportCarDialog.tsx:46
 msgid "Error occurred while saving file"
-msgstr ""
+msgstr "Prodúxose un error mentanto se guardaba'l ficheru"
 
 #: src/screens/Signup/StepCaptcha/index.tsx:56
 msgid "Error receiving captcha response."
@@ -2362,22 +2362,22 @@ msgstr "Esportar los mios datos"
 #: src/components/dialogs/EmbedConsent.tsx:54
 #: src/components/dialogs/EmbedConsent.tsx:58
 msgid "External Media"
-msgstr "Medios esternos"
+msgstr "Conteníu multimedia esternu"
 
 #: src/components/dialogs/EmbedConsent.tsx:70
 #: src/view/screens/PreferencesExternalEmbeds.tsx:62
 msgid "External media may allow websites to collect information about you and your device. No information is sent or requested until you press the \"play\" button."
-msgstr "Los medios esternos puen permitir que los sitios web recueyan información de ti y del preséu. Nun s'unvia nin se solicita nenguna información hasta que nun primas el botón «Reproducir»."
+msgstr "El conteníu multimedia esternu pue permitir que los sitios web recueyan información de ti y del preséu. Nun s'unvia nin se solicita nenguna información hasta que nun primas el botón «Reproducir»."
 
 #: src/Navigation.tsx:309
 #: src/view/screens/PreferencesExternalEmbeds.tsx:51
 #: src/view/screens/Settings/index.tsx:646
 msgid "External Media Preferences"
-msgstr ""
+msgstr "Preferencies del conteníu multimedia esternu"
 
 #: src/view/screens/Settings/index.tsx:637
 msgid "External media settings"
-msgstr "Configuración de los medios esternos"
+msgstr "Configuración del conteníu multimedia esternu"
 
 #: src/view/com/modals/AddAppPasswords.tsx:119
 #: src/view/com/modals/AddAppPasswords.tsx:123
@@ -2474,7 +2474,7 @@ msgstr ""
 
 #: src/Navigation.tsx:225
 msgid "Feed"
-msgstr ""
+msgstr "Feed"
 
 #: src/components/FeedCard.tsx:134
 #: src/view/com/feeds/FeedSourceCard.tsx:250
@@ -2504,7 +2504,7 @@ msgstr ""
 #: src/view/shell/desktop/LeftNav.tsx:401
 #: src/view/shell/Drawer.tsx:505
 msgid "Feeds"
-msgstr ""
+msgstr "Feeds"
 
 #: src/view/screens/SavedFeeds.tsx:205
 msgid "Feeds are custom algorithms that users build with a little coding expertise. <0/> for more information."
@@ -2513,7 +2513,7 @@ msgstr "Los feeds son algoritmos personalizaos que los usuarios creen con poco c
 #: src/components/FeedCard.tsx:273
 #: src/view/screens/SavedFeeds.tsx:83
 msgid "Feeds updated!"
-msgstr ""
+msgstr "¡Anováronse los feeds!"
 
 #: src/view/com/modals/ChangeHandle.tsx:468
 msgid "File Contents"
@@ -2797,7 +2797,7 @@ msgstr ""
 #: src/view/screens/ProfileList.tsx:1029
 #: src/view/shell/desktop/LeftNav.tsx:134
 msgid "Go back"
-msgstr ""
+msgstr "Dir p'atrás"
 
 #: src/components/Error.tsx:79
 #: src/screens/List/ListHiddenScreen.tsx:210
@@ -2808,7 +2808,7 @@ msgstr ""
 #: src/view/screens/ProfileFeed.tsx:118
 #: src/view/screens/ProfileList.tsx:1034
 msgid "Go Back"
-msgstr ""
+msgstr "Dir p'atrás"
 
 #: src/components/dms/ReportDialog.tsx:149
 #: src/components/ReportDialog/SelectReportOptionView.tsx:80
@@ -2842,7 +2842,7 @@ msgstr ""
 
 #: src/components/dms/ConvoMenu.tsx:167
 msgid "Go to profile"
-msgstr ""
+msgstr "Dir al perfil"
 
 #: src/components/dms/ConvoMenu.tsx:164
 msgid "Go to user's profile"
@@ -2852,7 +2852,7 @@ msgstr ""
 #: src/view/com/composer/labels/LabelsBtn.tsx:199
 #: src/view/com/composer/labels/LabelsBtn.tsx:202
 msgid "Graphic Media"
-msgstr ""
+msgstr "Conteníu gráficu"
 
 #: src/state/shell/progress-guide.tsx:161
 msgid "Half way there!"
@@ -2864,7 +2864,7 @@ msgstr ""
 
 #: src/view/screens/AccessibilitySettings.tsx:118
 msgid "Haptics"
-msgstr ""
+msgstr "Función háptica"
 
 #: src/lib/moderation/useReportOptions.ts:34
 msgid "Harassment, trolling, or intolerance"
@@ -2923,7 +2923,7 @@ msgstr ""
 #: src/view/com/util/forms/PostDropdownBtn.tsx:560
 #: src/view/com/util/forms/PostDropdownBtn.tsx:570
 msgid "Hide reply for everyone"
-msgstr ""
+msgstr "Esconder la rempuesta pa tol mundu"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:542
 #: src/view/com/util/forms/PostDropdownBtn.tsx:548
@@ -2966,7 +2966,7 @@ msgstr ""
 
 #: src/view/com/posts/FeedErrorMessage.tsx:102
 msgid "Hmm, we're having trouble finding this feed. It may have been deleted."
-msgstr ""
+msgstr "Umm… Tenemos problemes p'atopar esti feed. Ye posible que lu desaniciaren."
 
 #: src/screens/Moderation/index.tsx:61
 msgid "Hmmmm, it seems we're having trouble loading this data. See below for more details. If this issue persists, please contact us."
@@ -2974,7 +2974,7 @@ msgstr ""
 
 #: src/screens/Profile/ErrorState.tsx:31
 msgid "Hmmmm, we couldn't load that moderation service."
-msgstr ""
+msgstr "Umm… Nun pudimos cargar el serviciu de moderación."
 
 #: src/view/com/composer/state/video.ts:427
 msgid "Hold up! We’re gradually giving access to video, and you’re still waiting in line. Check back soon!"
@@ -3264,7 +3264,7 @@ msgstr ""
 #: src/screens/Hashtag.tsx:98
 #: src/view/screens/Search/Search.tsx:521
 msgid "Latest"
-msgstr ""
+msgstr "Lo último"
 
 #: src/components/moderation/ScreenHider.tsx:140
 msgid "Learn More"
@@ -3313,11 +3313,11 @@ msgstr ""
 #: src/components/dms/ConvoMenu.tsx:211
 #: src/components/dms/LeaveConvoPrompt.tsx:46
 msgid "Leave conversation"
-msgstr ""
+msgstr "Colar de la conversación"
 
 #: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:83
 msgid "Leave them all unchecked to see any language."
-msgstr ""
+msgstr "Nun actives nenguna pa veles toes."
 
 #: src/view/com/modals/LinkWarning.tsx:65
 msgid "Leaving Bluesky"
@@ -3513,7 +3513,7 @@ msgstr ""
 
 #: src/screens/Feeds/NoSavedFeedsOfAnyType.tsx:39
 msgid "Looks like you haven't saved any feeds! Use our recommendations or browse more below."
-msgstr ""
+msgstr "¡Paez que nun guardesti nengún feed! Usa les nueses recomendaciones o restola más abaxo."
 
 #: src/screens/Home/NoFeedsPinned.tsx:83
 msgid "Looks like you unpinned all your feeds. But don't worry, you can add some below 😄"
@@ -3543,7 +3543,7 @@ msgstr ""
 #: src/view/screens/AccessibilitySettings.tsx:104
 #: src/view/screens/Profile.tsx:230
 msgid "Media"
-msgstr ""
+msgstr "Conteníu multimedia"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:208
 msgid "Media that may be disturbing or inappropriate for some audiences."
@@ -3634,7 +3634,7 @@ msgstr ""
 
 #: src/view/com/modals/CreateOrEditList.tsx:163
 msgid "Moderation list updated"
-msgstr ""
+msgstr "Anovóse la llista de moderación"
 
 #: src/screens/Moderation/index.tsx:250
 msgid "Moderation lists"
@@ -4493,7 +4493,7 @@ msgstr "Nun s'atopó la páxina"
 
 #: src/view/screens/NotFound.tsx:44
 msgid "Page Not Found"
-msgstr ""
+msgstr "Nun s'atopó la páxina"
 
 #: src/screens/Login/LoginForm.tsx:210
 #: src/screens/Signup/StepInfo/index.tsx:192
@@ -4504,11 +4504,11 @@ msgstr "Contraseña"
 
 #: src/view/com/modals/ChangePassword.tsx:143
 msgid "Password Changed"
-msgstr ""
+msgstr "La contraseña camudó"
 
 #: src/screens/Login/index.tsx:154
 msgid "Password updated"
-msgstr ""
+msgstr "Anovóse la contraseña"
 
 #: src/screens/Login/PasswordUpdatedForm.tsx:24
 msgid "Password updated!"
@@ -4527,7 +4527,7 @@ msgstr ""
 #: src/screens/StarterPack/StarterPackScreen.tsx:182
 #: src/view/screens/Search/Search.tsx:531
 msgid "People"
-msgstr ""
+msgstr "Persones"
 
 #: src/Navigation.tsx:179
 msgid "People followed by @{0}"
@@ -4560,7 +4560,7 @@ msgstr "Fotografía"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:168
 msgid "Pictures meant for adults."
-msgstr ""
+msgstr "Semeyes destinaes a adultos."
 
 #: src/view/screens/ProfileFeed.tsx:293
 #: src/view/screens/ProfileList.tsx:676
@@ -4614,7 +4614,7 @@ msgstr ""
 
 #: src/view/com/util/post-embeds/ExternalGifEmbed.tsx:127
 msgid "Plays the GIF"
-msgstr ""
+msgstr "Reproduz el GIF"
 
 #: src/screens/Signup/state.ts:217
 msgid "Please choose your handle."
@@ -4623,11 +4623,11 @@ msgstr ""
 #: src/screens/Signup/state.ts:210
 #: src/screens/Signup/StepInfo/index.tsx:114
 msgid "Please choose your password."
-msgstr ""
+msgstr "Escueyi una contraseña."
 
 #: src/screens/Signup/state.ts:231
 msgid "Please complete the verification captcha."
-msgstr ""
+msgstr "Completa'l captcha de verificación."
 
 #: src/view/com/modals/ChangeEmail.tsx:65
 msgid "Please confirm your email before changing it. This is a temporary requirement while email-updating tools are added, and it will soon be removed."
@@ -4648,11 +4648,11 @@ msgstr ""
 #: src/screens/Signup/state.ts:196
 #: src/screens/Signup/StepInfo/index.tsx:102
 msgid "Please enter your email."
-msgstr ""
+msgstr "Introduz la to direición de corréu eletrónicu."
 
 #: src/screens/Signup/StepInfo/index.tsx:96
 msgid "Please enter your invite code."
-msgstr ""
+msgstr "Introduz el to códigu d'invitación."
 
 #: src/view/com/modals/DeleteAccount.tsx:253
 msgid "Please enter your password as well:"
@@ -4689,7 +4689,7 @@ msgstr "Pornu"
 #: src/view/com/composer/Composer.tsx:717
 msgctxt "action"
 msgid "Post"
-msgstr ""
+msgstr "Espublizar"
 
 #: src/view/com/post-thread/PostThread.tsx:481
 msgctxt "description"
@@ -4781,11 +4781,11 @@ msgstr ""
 
 #: src/state/queries/notifications/settings.ts:44
 msgid "Preference saved"
-msgstr ""
+msgstr "Guardóse la preferencia"
 
 #: src/screens/Messages/components/MessageListError.tsx:19
 msgid "Press to attempt reconnection"
-msgstr ""
+msgstr "Primi pa tentar de volver conectate"
 
 #: src/components/forms/HostingProvider.tsx:46
 msgid "Press to change hosting provider"
@@ -4796,7 +4796,7 @@ msgstr "Primi pa camudar l'agospiador"
 #: src/screens/Messages/components/MessageListError.tsx:24
 #: src/screens/Signup/BackNextButtons.tsx:48
 msgid "Press to retry"
-msgstr ""
+msgstr "Primi pa volver tentalo"
 
 #: src/components/KnownFollowers.tsx:124
 msgid "Press to view followers of this account that you also follow"
@@ -4816,7 +4816,7 @@ msgstr ""
 
 #: src/view/screens/NotificationsSettings.tsx:60
 msgid "Priority notifications"
-msgstr ""
+msgstr "Avisos prioritarios"
 
 #: src/view/screens/Settings/index.tsx:621
 #: src/view/shell/desktop/RightNav.tsx:81
@@ -4843,22 +4843,22 @@ msgstr "Procesando…"
 #: src/view/screens/DebugMod.tsx:913
 #: src/view/screens/Profile.tsx:363
 msgid "profile"
-msgstr ""
+msgstr "perfil"
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:271
 #: src/view/shell/desktop/LeftNav.tsx:415
 #: src/view/shell/Drawer.tsx:71
 #: src/view/shell/Drawer.tsx:545
 msgid "Profile"
-msgstr ""
+msgstr "Perfil"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:191
 msgid "Profile updated"
-msgstr ""
+msgstr "Anovóse'l perfil"
 
 #: src/view/screens/Settings/index.tsx:976
 msgid "Protect your account by verifying your email."
-msgstr ""
+msgstr "Protexi la cuenta verificando la direición de corréu electrónicu."
 
 #: src/screens/Onboarding/StepFinished.tsx:237
 msgid "Public"
@@ -5032,7 +5032,7 @@ msgstr "¿Quies quitar el feed?"
 #: src/view/screens/ProfileList.tsx:502
 #: src/view/screens/SavedFeeds.tsx:351
 msgid "Remove from my feeds"
-msgstr ""
+msgstr "Quitar de los mios feeds"
 
 #: src/components/FeedCard.tsx:311
 #: src/view/com/feeds/FeedSourceCard.tsx:311
@@ -5091,7 +5091,7 @@ msgstr ""
 #: src/view/com/modals/ListAddRemoveUsers.tsx:200
 #: src/view/com/modals/UserAddRemoveLists.tsx:170
 msgid "Removed from list"
-msgstr ""
+msgstr "Quitóse de la llista"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:138
 msgid "Removed from my feeds"
@@ -5100,13 +5100,13 @@ msgstr ""
 #: src/screens/List/ListHiddenScreen.tsx:94
 #: src/screens/List/ListHiddenScreen.tsx:160
 msgid "Removed from saved feeds"
-msgstr ""
+msgstr "Quitóse de los feeds guardaos"
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:44
 #: src/view/screens/ProfileFeed.tsx:197
 #: src/view/screens/ProfileList.tsx:386
 msgid "Removed from your feeds"
-msgstr ""
+msgstr "Quitóse de los tos feeds"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:274
 msgid "Removes quoted post"
@@ -5119,7 +5119,7 @@ msgstr ""
 
 #: src/view/screens/Profile.tsx:229
 msgid "Replies"
-msgstr ""
+msgstr "Rempuestes"
 
 #: src/components/WhoCanReply.tsx:69
 msgid "Replies disabled"
@@ -5176,7 +5176,7 @@ msgstr ""
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:338
 msgid "Reply visibility updated"
-msgstr ""
+msgstr "Anovóse la visibilidá de les rempuestes"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:337
 msgid "Reply was successfully hidden"
@@ -5313,7 +5313,7 @@ msgstr ""
 
 #: src/view/screens/AccessibilitySettings.tsx:90
 msgid "Require alt text before posting"
-msgstr ""
+msgstr "Riquir un testu alternativu enantes d'espublizar"
 
 #: src/view/screens/Settings/Email2FAToggle.tsx:51
 msgid "Require email code to log into your account"
@@ -5832,7 +5832,7 @@ msgstr ""
 #: src/view/screens/ProfileFeed.tsx:364
 #: src/view/screens/ProfileFeed.tsx:366
 msgid "Share feed"
-msgstr ""
+msgstr "Compartir el feed"
 
 #: src/components/StarterPack/ShareDialog.tsx:124
 #: src/components/StarterPack/ShareDialog.tsx:131
@@ -5864,7 +5864,7 @@ msgstr ""
 
 #: src/components/dms/ChatEmptyPill.tsx:34
 msgid "Share your favorite feed!"
-msgstr ""
+msgstr "¡Comparti'l to feed preferíu!"
 
 #: src/Navigation.tsx:250
 msgid "Shared Preferences Tester"
@@ -5879,7 +5879,7 @@ msgstr ""
 #: src/components/moderation/PostHider.tsx:122
 #: src/view/screens/Settings/index.tsx:352
 msgid "Show"
-msgstr ""
+msgstr "Amosar"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:178
 msgid "Show alt text"
@@ -6408,15 +6408,15 @@ msgstr ""
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:58
 msgid "The following labels were applied to your account."
-msgstr ""
+msgstr "Aplicáronse les etiquetes siguientes a la to cuenta."
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:59
 msgid "The following labels were applied to your content."
-msgstr ""
+msgstr "Aplicáronse les etiquetes siguientes al to conteníu."
 
 #: src/screens/Onboarding/Layout.tsx:58
 msgid "The following steps will help customize your Bluesky experience."
-msgstr ""
+msgstr "Los pasos siguientes van ayudate a personalizar la to esperiencia en Bluesky."
 
 #: src/view/com/post-thread/PostThread.tsx:208
 #: src/view/com/post-thread/PostThread.tsx:220
@@ -6507,7 +6507,7 @@ msgstr ""
 #: src/view/com/posts/FeedShutdownMsg.tsx:71
 #: src/view/screens/ProfileFeed.tsx:211
 msgid "There was an issue updating your feeds, please check your internet connection and try again."
-msgstr ""
+msgstr "Hebo un error al anovar los feeds. Comprueba la conexón a internet y volvi tentalo."
 
 #: src/view/screens/AppPasswords.tsx:75
 msgid "There was an issue with fetching your app passwords"
@@ -6561,11 +6561,11 @@ msgstr ""
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:246
 msgid "This appeal will be sent to <0>{sourceName}</0>."
-msgstr ""
+msgstr "Esta apellación va unviase a <0>{sourceName}</0>."
 
 #: src/screens/Messages/components/ChatDisabled.tsx:104
 msgid "This appeal will be sent to Bluesky's moderation service."
-msgstr ""
+msgstr "Esta apellación va unviase al serviciu de moderación de Bluesky."
 
 #: src/screens/Messages/components/MessageListError.tsx:18
 msgid "This chat was disconnected"
@@ -6581,7 +6581,7 @@ msgstr ""
 
 #: src/components/dialogs/EmbedConsent.tsx:63
 msgid "This content is hosted by {0}. Do you want to enable external media?"
-msgstr "«{0}» agospia esti conteníu. ¿Quies activar los medios esternos?"
+msgstr "«{0}» agospia esti conteníu. ¿Quies activar el conteníu multimedia esternu?"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:83
 #: src/lib/moderation/useModerationCauseDescription.ts:82
@@ -6644,7 +6644,7 @@ msgstr "Esti etiquetador nun declaró qué etiquetes espubliza y ye posible que 
 
 #: src/view/com/modals/LinkWarning.tsx:72
 msgid "This link is taking you to the following website:"
-msgstr ""
+msgstr "Esti enllaz llévate al sitiu web siguiente:"
 
 #: src/screens/List/ListHiddenScreen.tsx:136
 msgid "This list - created by <0>{0}</0> - contains possible violations of Bluesky's community guidelines in its name or description."
@@ -6788,7 +6788,7 @@ msgstr ""
 #: src/screens/Hashtag.tsx:87
 #: src/view/screens/Search/Search.tsx:511
 msgid "Top"
-msgstr ""
+msgstr "Lo destacao"
 
 #: src/components/dms/MessageMenu.tsx:103
 #: src/components/dms/MessageMenu.tsx:105
@@ -6810,7 +6810,7 @@ msgstr "TV"
 
 #: src/view/screens/Settings/index.tsx:712
 msgid "Two-factor authentication"
-msgstr ""
+msgstr "Autenticación en dos pasos"
 
 #: src/screens/Messages/components/MessageInput.tsx:141
 msgid "Type your message here"
@@ -7060,16 +7060,16 @@ msgstr ""
 #: src/view/com/modals/InAppBrowserConsent.tsx:53
 #: src/view/com/modals/InAppBrowserConsent.tsx:55
 msgid "Use in-app browser"
-msgstr ""
+msgstr "Usar el restolador na aplicación"
 
 #: src/view/com/modals/InAppBrowserConsent.tsx:63
 #: src/view/com/modals/InAppBrowserConsent.tsx:65
 msgid "Use my default browser"
-msgstr ""
+msgstr "Usar el restolador predetermináu"
 
 #: src/screens/Feeds/NoSavedFeedsOfAnyType.tsx:53
 msgid "Use recommended"
-msgstr ""
+msgstr "Usar lo aconseyao"
 
 #: src/view/com/modals/ChangeHandle.tsx:387
 msgid "Use the DNS panel"
@@ -7279,7 +7279,7 @@ msgstr ""
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:139
 msgid "View details"
-msgstr ""
+msgstr "Ver los detalles"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:134
 msgid "View details for reporting a copyright violation"
@@ -7341,7 +7341,7 @@ msgstr ""
 #: src/lib/moderation/useLabelBehaviorDescription.ts:17
 #: src/lib/moderation/useLabelBehaviorDescription.ts:22
 msgid "Warn"
-msgstr ""
+msgstr "Alvertir"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:48
 msgid "Warn content"
@@ -7385,7 +7385,7 @@ msgstr ""
 
 #: src/screens/Moderation/index.tsx:420
 msgid "We were unable to load your configured labelers at this time."
-msgstr ""
+msgstr "Nesti momentu nun fuimos a cargar los etiquetadores configuraos."
 
 #: src/screens/Onboarding/StepInterests/index.tsx:129
 msgid "We weren't able to connect. Please try again to continue setting up your account. If it continues to fail, you can skip this flow."
@@ -7401,7 +7401,7 @@ msgstr "Vamos usar esta información pa personalizar la to esperiencia."
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:87
 msgid "We're having network issues, try again"
-msgstr ""
+msgstr "Tenemos problemes de rede. Volvi tentalo"
 
 #: src/components/dialogs/nuxs/NeueTypography.tsx:54
 msgid "We're introducing a new theme font, along with adjustable font sizing."
@@ -7692,7 +7692,7 @@ msgstr ""
 
 #: src/components/Lists.tsx:52
 msgid "You have reached the end"
-msgstr ""
+msgstr "Aportesti a la fin"
 
 #: src/lib/media/video/upload.shared.ts:56
 msgid "You have temporarily reached the limit for video uploads. Please try again later."
@@ -7725,11 +7725,11 @@ msgstr ""
 
 #: src/screens/StarterPack/Wizard/State.tsx:97
 msgid "You may only add up to 3 feeds"
-msgstr ""
+msgstr "Namás pues amestar hasta 3 feeds"
 
 #: src/lib/media/picker.shared.ts:22
 msgid "You may only select up to 4 images"
-msgstr ""
+msgstr "Namás pues seleicionar hasta 4 imáxenes"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:106
 msgid "You must be 13 years of age or older to sign up."
@@ -7741,11 +7741,11 @@ msgstr ""
 
 #: src/components/StarterPack/QrCodeDialog.tsx:60
 msgid "You must grant access to your photo library to save a QR code"
-msgstr ""
+msgstr "Tienes de conceder l'accesu a la biblioteca de semeyes pa guardar un códigu QR"
 
 #: src/components/StarterPack/ShareDialog.tsx:69
 msgid "You must grant access to your photo library to save the image."
-msgstr ""
+msgstr "Tienes de conceder l'accesu a la biblioteca de semeyes pa guardar la imaxe."
 
 #: src/components/ReportDialog/SubmitView.tsx:210
 msgid "You must select at least one labeler for a report"
