@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-16 01:40\n"
+"PO-Revision-Date: 2024-11-16 01:57\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional, Hong Kong\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -1217,7 +1217,8 @@ msgstr "變更"
 msgid "Change email"
 msgstr "變更電郵"
 
-#: src/components/dialogs/VerifyEmailDialog.tsx:163
+#: src/components/dialogs/VerifyEmailDialog.tsx:162
+#: src/components/dialogs/VerifyEmailDialog.tsx:187
 msgid "Change email address"
 msgstr "變更電郵"
 
@@ -1241,6 +1242,10 @@ msgstr "將帖文語言改成 {0}"
 #: src/view/com/modals/ChangeEmail.tsx:104
 msgid "Change Your Email"
 msgstr "變更你嘅電郵"
+
+#: src/components/dialogs/VerifyEmailDialog.tsx:171
+msgid "Change your email address"
+msgstr "變更你嘅電郵地址"
 
 #: src/Navigation.tsx:373
 #: src/view/shell/bottom-bar/BottomBar.tsx:200
@@ -1366,7 +1371,7 @@ msgid "Clip 🐴 clop 🐴"
 msgstr "Clip 🐴 clop 🐴"
 
 #: src/components/dialogs/GifSelect.tsx:281
-#: src/components/dialogs/VerifyEmailDialog.tsx:266
+#: src/components/dialogs/VerifyEmailDialog.tsx:289
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:263
 #: src/components/NewskieDialog.tsx:146
 #: src/components/NewskieDialog.tsx:153
@@ -1487,9 +1492,9 @@ msgstr "為 {name} 配置內容審核設定"
 msgid "Configured in <0>moderation settings</0>."
 msgstr "喺 <0>審核設定</0> 入邊設定咗。"
 
-#: src/components/dialogs/VerifyEmailDialog.tsx:230
-#: src/components/dialogs/VerifyEmailDialog.tsx:237
+#: src/components/dialogs/VerifyEmailDialog.tsx:253
 #: src/components/dialogs/VerifyEmailDialog.tsx:260
+#: src/components/dialogs/VerifyEmailDialog.tsx:283
 #: src/components/Prompt.tsx:172
 #: src/components/Prompt.tsx:175
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:185
@@ -1520,7 +1525,7 @@ msgstr "確認你嘅年齡："
 msgid "Confirm your birthdate"
 msgstr "確認你嘅出世日期"
 
-#: src/components/dialogs/VerifyEmailDialog.tsx:191
+#: src/components/dialogs/VerifyEmailDialog.tsx:214
 #: src/screens/Login/LoginForm.tsx:256
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:144
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:150
@@ -1531,7 +1536,7 @@ msgstr "確認你嘅出世日期"
 msgid "Confirmation code"
 msgstr "確認碼"
 
-#: src/components/dialogs/VerifyEmailDialog.tsx:187
+#: src/components/dialogs/VerifyEmailDialog.tsx:210
 msgid "Confirmation Code"
 msgstr "確認碼"
 
@@ -3198,8 +3203,8 @@ msgstr "我哋應該點樣打開呢個連結？"
 msgid "I have a code"
 msgstr "我有驗證碼"
 
-#: src/components/dialogs/VerifyEmailDialog.tsx:216
-#: src/components/dialogs/VerifyEmailDialog.tsx:223
+#: src/components/dialogs/VerifyEmailDialog.tsx:239
+#: src/components/dialogs/VerifyEmailDialog.tsx:246
 msgid "I Have a Code"
 msgstr "我有確認碼"
 
@@ -4029,7 +4034,7 @@ msgstr "去到下一個畫面"
 msgid "Navigates to your profile"
 msgstr "導覽去到你嘅個人檔案"
 
-#: src/components/dialogs/VerifyEmailDialog.tsx:172
+#: src/components/dialogs/VerifyEmailDialog.tsx:196
 msgid "Need to change it?"
 msgstr "需要改嗎？"
 
@@ -4039,7 +4044,7 @@ msgstr "需要上報侵犯版權？"
 
 #: src/screens/Onboarding/StepFinished.tsx:255
 msgid "Never lose access to your followers or data."
-msgstr "永遠唔會失去對你嘅擁躉抑或資料嘅存取權。\n"
+msgstr "永遠唔會失去對你嘅擁躉抑或資料嘅存取權。"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:533
 msgid "Nevermind, create a handle for me"
@@ -5449,8 +5454,8 @@ msgstr "你所在嘅區域必填"
 msgid "Resend email"
 msgstr "重新發送電郵"
 
-#: src/components/dialogs/VerifyEmailDialog.tsx:244
-#: src/components/dialogs/VerifyEmailDialog.tsx:254
+#: src/components/dialogs/VerifyEmailDialog.tsx:267
+#: src/components/dialogs/VerifyEmailDialog.tsx:277
 #: src/components/intents/VerifyEmailIntentDialog.tsx:130
 msgid "Resend Email"
 msgstr "重新發送電郵"
@@ -5792,11 +5797,11 @@ msgstr "揀你發文所用嘅語言。"
 msgid "Send a neat website!"
 msgstr "送個整齊嘅網站！"
 
-#: src/components/dialogs/VerifyEmailDialog.tsx:209
+#: src/components/dialogs/VerifyEmailDialog.tsx:232
 msgid "Send Confirmation"
 msgstr "傳送確認電郵"
 
-#: src/components/dialogs/VerifyEmailDialog.tsx:202
+#: src/components/dialogs/VerifyEmailDialog.tsx:225
 msgid "Send confirmation email"
 msgstr "傳送確認電郵"
 
@@ -7910,7 +7915,7 @@ msgstr "你會跟住呢啲人同另外 {0} 人"
 msgid "You'll follow these people right away"
 msgstr "你會即刻跟住呢啲人"
 
-#: src/components/dialogs/VerifyEmailDialog.tsx:154
+#: src/components/dialogs/VerifyEmailDialog.tsx:178
 msgid "You'll receive an email at <0>{0}</0> to verify it's you."
 msgstr "你會喺 <0>{0}</0> 收到一封電郵嚟驗證係你。"
 

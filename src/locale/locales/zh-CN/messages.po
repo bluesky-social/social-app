@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-16 01:39\n"
+"PO-Revision-Date: 2024-11-16 01:54\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -1217,7 +1217,8 @@ msgstr "更改"
 msgid "Change email"
 msgstr "更改电子邮箱"
 
-#: src/components/dialogs/VerifyEmailDialog.tsx:163
+#: src/components/dialogs/VerifyEmailDialog.tsx:162
+#: src/components/dialogs/VerifyEmailDialog.tsx:187
 msgid "Change email address"
 msgstr "更改电子邮箱地址"
 
@@ -1240,6 +1241,10 @@ msgstr "将帖文语言更改为 {0}"
 
 #: src/view/com/modals/ChangeEmail.tsx:104
 msgid "Change Your Email"
+msgstr "更改你的电子邮箱地址"
+
+#: src/components/dialogs/VerifyEmailDialog.tsx:171
+msgid "Change your email address"
 msgstr "更改你的电子邮箱地址"
 
 #: src/Navigation.tsx:373
@@ -1366,7 +1371,7 @@ msgid "Clip 🐴 clop 🐴"
 msgstr "哒哒🐴哒哒🐴"
 
 #: src/components/dialogs/GifSelect.tsx:281
-#: src/components/dialogs/VerifyEmailDialog.tsx:266
+#: src/components/dialogs/VerifyEmailDialog.tsx:289
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:263
 #: src/components/NewskieDialog.tsx:146
 #: src/components/NewskieDialog.tsx:153
@@ -1487,9 +1492,9 @@ msgstr "为类别 {name} 配置内容过滤设置"
 msgid "Configured in <0>moderation settings</0>."
 msgstr "在 <0>内容审核设置</0> 中进行配置。"
 
-#: src/components/dialogs/VerifyEmailDialog.tsx:230
-#: src/components/dialogs/VerifyEmailDialog.tsx:237
+#: src/components/dialogs/VerifyEmailDialog.tsx:253
 #: src/components/dialogs/VerifyEmailDialog.tsx:260
+#: src/components/dialogs/VerifyEmailDialog.tsx:283
 #: src/components/Prompt.tsx:172
 #: src/components/Prompt.tsx:175
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:185
@@ -1520,7 +1525,7 @@ msgstr "确认你的年龄："
 msgid "Confirm your birthdate"
 msgstr "确认你的出生日期"
 
-#: src/components/dialogs/VerifyEmailDialog.tsx:191
+#: src/components/dialogs/VerifyEmailDialog.tsx:214
 #: src/screens/Login/LoginForm.tsx:256
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:144
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:150
@@ -1531,7 +1536,7 @@ msgstr "确认你的出生日期"
 msgid "Confirmation code"
 msgstr "验证码"
 
-#: src/components/dialogs/VerifyEmailDialog.tsx:187
+#: src/components/dialogs/VerifyEmailDialog.tsx:210
 msgid "Confirmation Code"
 msgstr "验证码"
 
@@ -3198,8 +3203,8 @@ msgstr "我们该如何开启这条链接？"
 msgid "I have a code"
 msgstr "我有验证码"
 
-#: src/components/dialogs/VerifyEmailDialog.tsx:216
-#: src/components/dialogs/VerifyEmailDialog.tsx:223
+#: src/components/dialogs/VerifyEmailDialog.tsx:239
+#: src/components/dialogs/VerifyEmailDialog.tsx:246
 msgid "I Have a Code"
 msgstr "我有验证码"
 
@@ -4029,7 +4034,7 @@ msgstr "转到下一页"
 msgid "Navigates to your profile"
 msgstr "转到个人资料"
 
-#: src/components/dialogs/VerifyEmailDialog.tsx:172
+#: src/components/dialogs/VerifyEmailDialog.tsx:196
 msgid "Need to change it?"
 msgstr "需要更改吗？"
 
@@ -5449,8 +5454,8 @@ msgstr "你所在的地区有此要求"
 msgid "Resend email"
 msgstr "重新发送电子邮件"
 
-#: src/components/dialogs/VerifyEmailDialog.tsx:244
-#: src/components/dialogs/VerifyEmailDialog.tsx:254
+#: src/components/dialogs/VerifyEmailDialog.tsx:267
+#: src/components/dialogs/VerifyEmailDialog.tsx:277
 #: src/components/intents/VerifyEmailIntentDialog.tsx:130
 msgid "Resend Email"
 msgstr "重新发送电子邮件"
@@ -5792,11 +5797,11 @@ msgstr "选择你在订阅的动态源中翻译的目标语言。"
 msgid "Send a neat website!"
 msgstr "发送一个你认为很有趣的网站！"
 
-#: src/components/dialogs/VerifyEmailDialog.tsx:209
+#: src/components/dialogs/VerifyEmailDialog.tsx:232
 msgid "Send Confirmation"
 msgstr "发送验证"
 
-#: src/components/dialogs/VerifyEmailDialog.tsx:202
+#: src/components/dialogs/VerifyEmailDialog.tsx:225
 msgid "Send confirmation email"
 msgstr "发送验证电子邮件"
 
@@ -7910,7 +7915,7 @@ msgstr "你将关注这些用户以及其他 {0} 位"
 msgid "You'll follow these people right away"
 msgstr "你将立即关注这些人"
 
-#: src/components/dialogs/VerifyEmailDialog.tsx:154
+#: src/components/dialogs/VerifyEmailDialog.tsx:178
 msgid "You'll receive an email at <0>{0}</0> to verify it's you."
 msgstr "你将在 <0>{0}</0> 收到一封电子邮件，以验证你的身份。"
 
