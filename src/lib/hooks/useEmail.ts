@@ -24,7 +24,7 @@ export function useEmail() {
   const needsEmailVerification =
     !isSelfHost &&
     checkEmailConfirmed &&
-    !!currentAccount?.emailConfirmed &&
+    !currentAccount?.emailConfirmed &&
     isNewEnough
 
   return {needsEmailVerification}
