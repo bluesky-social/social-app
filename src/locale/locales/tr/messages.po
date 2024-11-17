@@ -15,7 +15,7 @@ msgstr ""
 
 #: src/screens/Messages/components/ChatListItem.tsx:130
 msgid "(contains embedded content)"
-msgstr ""
+msgstr "(gömülü içerik içeriyor)"
 
 #: src/screens/Settings/AccountSettings.tsx:58
 #: src/view/com/modals/VerifyEmail.tsx:150
@@ -120,7 +120,7 @@ msgstr ""
 
 #: src/screens/Settings/Settings.tsx:414
 msgid "{0}"
-msgstr ""
+msgstr "{0}"
 
 #. Pattern: {wordValue} in tags
 #: src/components/dialogs/MutedWords.tsx:475
@@ -142,7 +142,7 @@ msgstr ""
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:479
 msgid "{0} people have used this starter pack!"
-msgstr ""
+msgstr "{0} kişi bu başlangıç paketini kullandı!"
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:203
 msgid "{0} unread items"
@@ -167,27 +167,27 @@ msgstr ""
 #. How many days have passed, displayed in a narrow form
 #: src/lib/hooks/useTimeAgo.ts:158
 msgid "{0}d"
-msgstr ""
+msgstr "{0}g"
 
 #. How many hours have passed, displayed in a narrow form
 #: src/lib/hooks/useTimeAgo.ts:148
 msgid "{0}h"
-msgstr ""
+msgstr "{0}sa"
 
 #. How many minutes have passed, displayed in a narrow form
 #: src/lib/hooks/useTimeAgo.ts:138
 msgid "{0}m"
-msgstr ""
+msgstr "{0}dk"
 
 #. How many months have passed, displayed in a narrow form
 #: src/lib/hooks/useTimeAgo.ts:169
 msgid "{0}mo"
-msgstr ""
+msgstr "{0}ay"
 
 #. How many seconds have passed, displayed in a narrow form
 #: src/lib/hooks/useTimeAgo.ts:128
 msgid "{0}s"
-msgstr ""
+msgstr "{}sn"
 
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:252
 msgid "{badge} unread items"
@@ -304,7 +304,7 @@ msgstr ""
 
 #: src/view/com/notifications/FeedItem.tsx:288
 msgid "{firstAuthorName} followed you back"
-msgstr ""
+msgstr "{firstAuthorName} seni geri takip etti"
 
 #: src/view/com/notifications/FeedItem.tsx:324
 msgid "{firstAuthorName} liked your custom feed"
@@ -312,7 +312,7 @@ msgstr ""
 
 #: src/view/com/notifications/FeedItem.tsx:220
 msgid "{firstAuthorName} liked your post"
-msgstr ""
+msgstr "{firstAuthorName} gönderini beğendi"
 
 #: src/view/com/notifications/FeedItem.tsx:244
 msgid "{firstAuthorName} reposted your post"
@@ -320,7 +320,7 @@ msgstr ""
 
 #: src/view/com/notifications/FeedItem.tsx:348
 msgid "{firstAuthorName} signed up with your starter pack"
-msgstr ""
+msgstr "{firstAuthorName} senin başlangıç paketin ile kayıt oldu"
 
 #: src/components/ProfileHoverCard/index.web.tsx:508
 #: src/screens/Profile/Header/Metrics.tsx:50
@@ -806,7 +806,7 @@ msgstr "Alternatif metin"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:191
 msgid "Alt Text"
-msgstr ""
+msgstr "Alternatif Metin"
 
 #: src/view/com/composer/photos/Gallery.tsx:255
 msgid "Alt text describes images for blind and low-vision users, and helps give context to everyone."
@@ -828,7 +828,7 @@ msgstr "Önceki adresinize, {0} bir e-posta gönderildi. Aşağıda girebileceğ
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:91
 msgid "An email has been sent! Please enter the confirmation code included in the email below."
-msgstr ""
+msgstr "E-posta gönderildi! Lütfen e-postanızda yer alan onay kodunu girin."
 
 #: src/components/dialogs/GifSelect.tsx:265
 msgid "An error has occurred"
@@ -1078,7 +1078,7 @@ msgstr "Bu mesajı silmek istediğinize emin misiniz? Mesajınız sizin için si
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:633
 msgid "Are you sure you want to delete this starter pack?"
-msgstr ""
+msgstr "Bu başlangıç paketini silmek istediğinize emin misiniz?"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:82
 msgid "Are you sure you want to discard your changes?"
@@ -1135,12 +1135,12 @@ msgstr "En az 3 karakter"
 
 #: src/screens/Settings/AccessibilitySettings.tsx:98
 msgid "Autoplay options have moved to the <0>Content and Media settings</0>."
-msgstr ""
+msgstr "Otomatik oynatma seçenekleri <0>İçerik ve medya ayarları</0> bölümüne taşındı."
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:89
 #: src/screens/Settings/ContentAndMediaSettings.tsx:95
 msgid "Autoplay videos and GIFs"
-msgstr ""
+msgstr "Videoları ve GIFleri otomatik oynat"
 
 #: src/components/dms/MessagesListHeader.tsx:75
 #: src/components/moderation/LabelsOnMeDialog.tsx:290
@@ -1178,21 +1178,21 @@ msgstr "Geri"
 #: src/view/screens/Lists.tsx:104
 #: src/view/screens/ModerationModlists.tsx:100
 msgid "Before creating a list, you must first verify your email."
-msgstr ""
+msgstr "Bir liste oluşturmadan önce e-posta adresinizi doğrulamanız gerekir."
 
 #: src/view/com/composer/Composer.tsx:591
 msgid "Before creating a post, you must first verify your email."
-msgstr ""
+msgstr "Bir gönderi oluşturmadan önce e-posta adresinizi doğrulamanız gerekir."
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:340
 msgid "Before creating a starter pack, you must first verify your email."
-msgstr ""
+msgstr "Bir başlangıç ​​paketi oluşturmadan önce e-posta adresinizi doğrulamanız gerekir."
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:79
 #: src/components/dms/MessageProfileButton.tsx:89
 #: src/screens/Messages/Conversation.tsx:219
 msgid "Before you may message another user, you must first verify your email."
-msgstr ""
+msgstr "Başka bir kullanıcıya mesaj gönderebilmeniz için öncelikle e-posta adresinizi doğrulamanız gerekir."
 
 #: src/components/dialogs/BirthDateSettings.tsx:106
 #: src/screens/Settings/AccountSettings.tsx:102
@@ -1992,12 +1992,12 @@ msgstr "Destek ile iletişime geçin"
 #: src/screens/Settings/Settings.tsx:167
 #: src/screens/Settings/Settings.tsx:170
 msgid "Content and media"
-msgstr ""
+msgstr "İçerik ve medya"
 
 #: src/Navigation.tsx:353
 #: src/screens/Settings/ContentAndMediaSettings.tsx:36
 msgid "Content and Media"
-msgstr ""
+msgstr "İçerik ve Medya"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:18
 msgid "Content Blocked"
