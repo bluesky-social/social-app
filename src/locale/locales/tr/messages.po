@@ -320,7 +320,7 @@ msgstr ""
 
 #: src/view/com/notifications/FeedItem.tsx:348
 msgid "{firstAuthorName} signed up with your starter pack"
-msgstr "{firstAuthorName} senin başlangıç paketin ile kayıt oldu"
+msgstr "{firstAuthorName} senin başlangıç paketin ile kaydoldu"
 
 #: src/components/ProfileHoverCard/index.web.tsx:508
 #: src/screens/Profile/Header/Metrics.tsx:50
