@@ -29,35 +29,35 @@ msgstr "(fără email)"
 
 #: src/lib/hooks/useTimeAgo.ts:156
 msgid "{0, plural, one {# day} other {# days}}"
-msgstr "{0, plural, one {# zi} few {# zile} other {# de zile}}"
+msgstr "{0, plural, one {o zi} few {# zile} other {# de zile}}"
 
 #: src/lib/hooks/useTimeAgo.ts:146
 msgid "{0, plural, one {# hour} other {# hours}}"
-msgstr "{0, plural, one {# oră} few {# ore} other {# de ore}}"
+msgstr "{0, plural, one {o oră} few {# ore} other {# de ore}}"
 
 #: src/components/moderation/LabelsOnMe.tsx:54
 msgid "{0, plural, one {# label has been placed on this account} other {# labels have been placed on this account}}"
-msgstr "{0, plural, one {# etichetă a fost adăugată acestui cont} few {# etichete au fost adăugate acestui cont} other {# de etichete au fost adăugate acestui cont}}"
+msgstr "{0, plural, one {o etichetă a fost adăugată acestui cont} few {# etichete au fost adăugate acestui cont} other {# de etichete au fost adăugate acestui cont}}"
 
 #: src/components/moderation/LabelsOnMe.tsx:60
 msgid "{0, plural, one {# label has been placed on this content} other {# labels have been placed on this content}}"
-msgstr "{0, plural, one {# etichetă a fost adăugată acestui conținut} few {# etichete au fost adăugate acestui conținut} other {# de etichete au fost adăugate acestui conținut}}"
+msgstr "{0, plural, one {o etichetă a fost adăugată acestui conținut} few {# etichete au fost adăugate acestui conținut} other {# de etichete au fost adăugate acestui conținut}}"
 
 #: src/lib/hooks/useTimeAgo.ts:136
 msgid "{0, plural, one {# minute} other {# minutes}}"
-msgstr "{0, plural, one {# minut} few {# minute} other {# de minute}}"
+msgstr "{0, plural, one {un minut} few {# minute} other {# de minute}}"
 
 #: src/lib/hooks/useTimeAgo.ts:167
 msgid "{0, plural, one {# month} other {# months}}"
-msgstr "{0, plural, one {# lună} few {# luni} other {# luni}}"
+msgstr "{0, plural, one {o lună} few {# luni} other {# de luni}}"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:73
 msgid "{0, plural, one {# repost} other {# reposts}}"
-msgstr "{0, plural, one {# redistribuire} few {# redistribuiri} other {# redistribuiri}}"
+msgstr "{0, plural, one {o redistribuire} few {# redistribuiri} other {# de redistribuiri}}"
 
 #: src/lib/hooks/useTimeAgo.ts:126
 msgid "{0, plural, one {# second} other {# seconds}}"
-msgstr "{0, plural, one {# secundă} few {# secunde} other {# de secunde}} "
+msgstr "{0, plural, one {o secundă} few {# secunde} other {# de secunde}} "
 
 #: src/components/ProfileHoverCard/index.web.tsx:398
 #: src/screens/Profile/Header/Metrics.tsx:23
@@ -67,11 +67,11 @@ msgstr "{0, plural, one {urmăritor} few {urmăritori} other {de urmăritori}}"
 #: src/components/ProfileHoverCard/index.web.tsx:402
 #: src/screens/Profile/Header/Metrics.tsx:27
 msgid "{0, plural, one {following} other {following}}"
-msgstr "{0, plural, one {urmărit} few {urmăriți} other {de urmăriți}}"
+msgstr "{0, plural, one {urmărit} few {urmăriți} other {urmăriți}}"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:305
 msgid "{0, plural, one {Like (# like)} other {Like (# likes)}}"
-msgstr "{0, plural, one {Apreciere (# apreciere)} few {Aprecieri (# aprecieri)} other {Aprecieri (# de aprecieri)}}"
+msgstr "{0, plural, one {Apreciere (o apreciere)} few {Aprecieri (# aprecieri)} other {Aprecieri (# de aprecieri)}}"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:442
 msgid "{0, plural, one {like} other {likes}}"
@@ -80,11 +80,11 @@ msgstr "{0, plural, one {apreciere} few {aprecieri} other {de aprecieri}}"
 #: src/components/FeedCard.tsx:213
 #: src/view/com/feeds/FeedSourceCard.tsx:303
 msgid "{0, plural, one {Liked by # user} other {Liked by # users}}"
-msgstr "{0, plural, one {Apreciat de # utilizator} few {Apreciat de # utilizatori} other {Apreciat de # de utilizatori}}"
+msgstr "{0, plural, one {Apreciat de un utilizator} few {Apreciat de # utilizatori} other {Apreciat de # de utilizatori}}"
 
 #: src/screens/Profile/Header/Metrics.tsx:59
 msgid "{0, plural, one {post} other {posts}}"
-msgstr "{0, plural, one {postare} few {postări} other {de postări}}"
+msgstr "{0, plural, one {postare} few {postări} other {postări}}"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:426
 msgid "{0, plural, one {quote} other {quotes}}"
@@ -100,7 +100,7 @@ msgstr "{0, plural, one {repostare} few {repostări} other {de repostări}}"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:301
 msgid "{0, plural, one {Unlike (# like)} other {Unlike (# likes)}}"
-msgstr "{0, plural, one {Retragere apreciere (# apreciere)} few {Retragere aprecieri (# aprecieri)} other {Retragere aprecieri (# de aprecieri)}}"
+msgstr "{0, plural, one {Retragere apreciere (o apreciere)} few {Retragere aprecieri (# aprecieri)} other {Retragere aprecieri (# de aprecieri)}}"
 
 #: src/screens/Settings/Settings.tsx:414
 msgid "{0}"
@@ -175,7 +175,7 @@ msgstr "{badge} elemente necitite"
 
 #: src/components/LabelingServiceCard/index.tsx:96
 msgid "{count, plural, one {Liked by # user} other {Liked by # users}}"
-msgstr "{count, plural, one {Apreciat de # utilizator} other {Apreciat de # utilizatori}}"
+msgstr "{count, plural, one {Apreciat de un utilizator} few {Apreciat de # utilizatori} other {Apreciat de # de utilizatori}}"
 
 #: src/view/shell/desktop/LeftNav.tsx:223
 msgid "{count} unread items"
@@ -188,31 +188,31 @@ msgstr "Pachetul de start al lui {displayName}"
 
 #: src/screens/SignupQueued.tsx:207
 msgid "{estimatedTimeHrs, plural, one {hour} other {hours}}"
-msgstr "{estimatedTimeHrs, plural, one {oră} other {ore}}"
+msgstr "{estimatedTimeHrs, plural, one {oră} few {ore} other {de ore}}"
 
 #: src/screens/SignupQueued.tsx:213
 msgid "{estimatedTimeMins, plural, one {minute} other {minutes}}"
-msgstr "{estimatedTimeMins, plural, one {minut} other {minute}}"
+msgstr "{estimatedTimeMins, plural, one {minut} few {minute} other {de minute}}"
 
 #: src/view/com/notifications/FeedItem.tsx:300
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> followed you"
-msgstr "{firstAuthorLink} și <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} alt utilizator} other {{formattedAuthorsCount} alți utilizatori}}</0> te-au urmărit"
+msgstr "{firstAuthorLink} și <0>{additionalAuthorsCount, plural, one {un alt utilizator} few {alți {formattedAuthorsCount} utilizatori} other {alți {formattedAuthorsCount} de utilizatori}}</0> te-au urmărit"
 
 #: src/view/com/notifications/FeedItem.tsx:326
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> liked your custom feed"
-msgstr "{firstAuthorLink} și <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} alt utilizator} other {{formattedAuthorsCount} alți utilizatori}}</0> au apreciat feed-ul tău personalizat"
+msgstr "{firstAuthorLink} și <0>{additionalAuthorsCount, plural, one {un alt utilizator} few {alți {formattedAuthorsCount} utilizatori} other {alți {formattedAuthorsCount} de utilizatori}}</0> au apreciat feed-ul tău personalizat"
 
 #: src/view/com/notifications/FeedItem.tsx:222
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> liked your post"
-msgstr "{firstAuthorLink} și <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} alt utilizator} other {{formattedAuthorsCount} alți utilizatori}}</0> au apreciat postarea ta"
+msgstr "{firstAuthorLink} și <0>{additionalAuthorsCount, plural, one {un alt utilizator} few {alți {formattedAuthorsCount} utilizatori} other {alți {formattedAuthorsCount} de utilizatori}}</0> au apreciat postarea ta"
 
 #: src/view/com/notifications/FeedItem.tsx:246
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> reposted your post"
-msgstr "{firstAuthorLink} și <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} alt utilizator} other {{formattedAuthorsCount} alți utilizatori}}</0> au republicat postarea ta"
+msgstr "{firstAuthorLink} și <0>{additionalAuthorsCount, plural, one {un alt utilizator} few {alți {formattedAuthorsCount} utilizatori} other {alți {formattedAuthorsCount} de utilizatori}}</0> au republicat postarea ta"
 
 #: src/view/com/notifications/FeedItem.tsx:350
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> signed up with your starter pack"
-msgstr "{firstAuthorLink} și <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} alt utilizator} other {{formattedAuthorsCount} alți utilizatori}}</0> s-au înscris folosind pachetul tău de start"
+msgstr "{firstAuthorLink} și <0>{additionalAuthorsCount, plural, one {un alt utilizator} few {alți {formattedAuthorsCount} utilizatori} other {alți {formattedAuthorsCount} de utilizatori}}</0> s-au înscris folosind pachetul tău de start"
 
 #: src/view/com/notifications/FeedItem.tsx:312
 msgid "{firstAuthorLink} followed you"
@@ -240,23 +240,23 @@ msgstr "{firstAuthorLink} s-a înscris folosind pachetul tău de start"
 
 #: src/view/com/notifications/FeedItem.tsx:293
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} followed you"
-msgstr "{firstAuthorName} și {additionalAuthorsCount, plural, one {{formattedAuthorsCount} alt utilizator} other {{formattedAuthorsCount} alți utilizatori}} te-au urmărit"
+msgstr "{firstAuthorName} și {additionalAuthorsCount, plural, one {un alt utilizator} few {alți {formattedAuthorsCount} utilizatori} other {alți {formattedAuthorsCount} de utilizatori}} te-au urmărit"
 
 #: src/view/com/notifications/FeedItem.tsx:319
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} liked your custom feed"
-msgstr "{firstAuthorName} și {additionalAuthorsCount, plural, one {{formattedAuthorsCount} alt utilizator} other {{formattedAuthorsCount} alți utilizatori}} au apreciat feed-ul tău personalizat"
+msgstr "{firstAuthorName} și {additionalAuthorsCount, plural, one {un alt utilizator} few {alți {formattedAuthorsCount} utilizatori} other {alți {formattedAuthorsCount} de utilizatori}} au apreciat feed-ul tău personalizat"
 
 #: src/view/com/notifications/FeedItem.tsx:215
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} liked your post"
-msgstr "{firstAuthorName} și {additionalAuthorsCount, plural, one {{formattedAuthorsCount} alt utilizator} other {{formattedAuthorsCount} alți utilizatori}} au apreciat postarea ta"
+msgstr "{firstAuthorName} și {additionalAuthorsCount, plural, one {un alt utilizator} few {alți {formattedAuthorsCount} utilizatori} other {alți {formattedAuthorsCount} de utilizatori}} au apreciat postarea ta"
 
 #: src/view/com/notifications/FeedItem.tsx:239
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} reposted your post"
-msgstr "{firstAuthorName} și {additionalAuthorsCount, plural, one {{formattedAuthorsCount} alt utilizator} other {{formattedAuthorsCount} alți utilizatori}} au republicat postarea ta"
+msgstr "{firstAuthorName} și {additionalAuthorsCount, plural, one {un alt utilizator} few {alți {formattedAuthorsCount} utilizatori} other {alți {formattedAuthorsCount} de utilizatori}} au republicat postarea ta"
 
 #: src/view/com/notifications/FeedItem.tsx:343
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} signed up with your starter pack"
-msgstr "{firstAuthorName} și {additionalAuthorsCount, plural, one {{formattedAuthorsCount} alt utilizator} other {{formattedAuthorsCount} alți utilizatori}} s-au înscris folosind pachetul tău de start"
+msgstr "{firstAuthorName} și {additionalAuthorsCount, plural, one {un} alt utilizator} few {alți {formattedAuthorsCount} utilizatori} other {alți {formattedAuthorsCount} de utilizatori}} s-au înscris folosind pachetul tău de start"
 
 #: src/view/com/notifications/FeedItem.tsx:298
 msgid "{firstAuthorName} followed you"
@@ -295,7 +295,7 @@ msgstr "Nu poți trimite mesaje către {handle}"
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:307
 #: src/view/screens/ProfileFeed.tsx:591
 msgid "{likeCount, plural, one {Liked by # user} other {Liked by # users}}"
-msgstr "{likeCount, plural, one {Apreciat de # utilizator} other {Apreciat de # utilizatori}}"
+msgstr "{likeCount, plural, one {Apreciat de un utilizator} few {Apreciat de # utilizatori} other {Apreciat de # de utilizatori}}"
 
 #: src/view/shell/Drawer.tsx:448
 msgid "{numUnreadNotifications} unread"
@@ -316,20 +316,20 @@ msgstr "{profileName} s-a alăturat Bluesky folosind un pachet de start acum {0}
 #: src/screens/StarterPack/Wizard/index.tsx:475
 msgctxt "profiles"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
-msgstr "<0>{0}, </0><1>{1}, </1>și {2, plural, one {# alt utilizator} other {# alți utilizatori}} sunt incluși în pachetul tău de start"
+msgstr "<0>{0}, </0><1>{1}, </1>și {2, plural, one {un alt utilizator} few {alți # utilizatori} other {alți # de utilizatori}} sunt incluși în pachetul tău de start"
 
 #: src/screens/StarterPack/Wizard/index.tsx:528
 msgctxt "feeds"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
-msgstr "<0>{0}, </0><1>{1}, </1>și {2, plural, one {# alt feed} other {# alte feed-uri}} sunt incluse în pachetul tău de start"
+msgstr "<0>{0}, </0><1>{1}, </1>și {2, plural, one {un alt flux} few {alte # fluxuri} other {alte # de fluxuri}} sunt incluse în pachetul tău de start"
 
 #: src/view/shell/Drawer.tsx:97
 msgid "<0>{0}</0> {1, plural, one {follower} other {followers}}"
-msgstr "<0>{0}</0> {1, plural, one {urmăritor} other {urmăritori}}"
+msgstr "<0>{0}</0> {1, plural, one {urmăritor} other {urmăritori} other {de urmăritori}}"
 
 #: src/view/shell/Drawer.tsx:108
 msgid "<0>{0}</0> {1, plural, one {following} other {following}}"
-msgstr "<0>{0}</0> {1, plural, one {urmărește} other {urmăresc}}"
+msgstr "<0>{0}</0> {1, plural, one {urmărește} few {urmăresc} other {urmăresc}}"
 
 #: src/screens/StarterPack/Wizard/index.tsx:516
 msgid "<0>{0}</0> and<1> </1><2>{1} </2>are included in your starter pack"
@@ -2962,7 +2962,7 @@ msgstr "Urmărit de <0>{0}</0>"
 
 #: src/components/KnownFollowers.tsx:217
 msgid "Followed by <0>{0}</0> and {1, plural, one {# other} other {# others}}"
-msgstr "Urmărit de <0>{0}</0> și de {1, plural, one {# alt utilizator} other {# alți utilizatori}}"
+msgstr "Urmărit de <0>{0}</0> și de {1, plural, one {un alt utilizator} few {alți # utilizatori} other {alți # de utilizatori}}"
 
 #: src/components/KnownFollowers.tsx:204
 msgid "Followed by <0>{0}</0> and <1>{1}</1>"
@@ -2970,7 +2970,7 @@ msgstr "Urmărit de <0>{0}</0> și <1>{1}</1>"
 
 #: src/components/KnownFollowers.tsx:186
 msgid "Followed by <0>{0}</0>, <1>{1}</1>, and {2, plural, one {# other} other {# others}}"
-msgstr "Urmărit de <0>{0}</0>, <1>{1}</1> și de {2, plural, one {# alt utilizator} other {# alți utilizatori}}"
+msgstr "Urmărit de <0>{0}</0>, <1>{1}</1> și de {2, plural, one {un alt utilizator} few {alți # utilizatori} other {alți # utilizatori}}"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:404
 msgid "Followed users"
