@@ -23,9 +23,9 @@ import {Button, ButtonIcon, ButtonProps, ButtonText} from '#/components/Button'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {Link as InternalLink, LinkProps} from '#/components/Link'
+import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
-import {ProfileHoverCard} from './ProfileHoverCard'
 
 export function Default({
   profile,
