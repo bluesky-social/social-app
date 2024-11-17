@@ -21,7 +21,7 @@ export const STARTER_PACK_MAX_SIZE = 150
 // code and update this number with each release until we can get the
 // server route done.
 // -prf
-export const JOINED_THIS_WEEK = 650000 // estimate as of 10/28/24
+export const JOINED_THIS_WEEK = 3500000 // estimate as of 11/16/24
 
 export const DISCOVER_DEBUG_DIDS: Record<string, true> = {
   'did:plc:oisofpd7lj26yvgiivf3lxsi': true, // hailey.at
