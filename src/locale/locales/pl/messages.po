@@ -2061,14 +2061,6 @@ msgstr "Panel DNS"
 msgid "Do not apply this mute word to users you follow"
 msgstr "Wyklucz obserwowane konta z wyciszania"
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:174
-#~ msgid "Does not contain adult content."
-#~ msgstr "Nie zawiera treści dla dorosłych."
-
-#: src/view/com/composer/labels/LabelsBtn.tsx:213
-#~ msgid "Does not contain graphic or disturbing content."
-#~ msgstr "Nie zawiera drastycznych lub niepokojących treści."
-
 #: src/lib/moderation/useGlobalLabelStrings.ts:39
 msgid "Does not include nudity."
 msgstr "Nie zawiera nagości."
@@ -3309,10 +3301,6 @@ msgstr "Wpisz nazwę użytkownika"
 msgid "Interaction limited"
 msgstr "Interakcje są ograniczone"
 
-#: src/components/dialogs/nuxs/NeueTypography.tsx:47
-#~ msgid "Introducing new font settings"
-#~ msgstr "Przedstawiamy nowe ustawienia czcionki"
-
 #: src/screens/Login/LoginForm.tsx:142
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:70
 msgid "Invalid 2FA confirmation code."
@@ -4062,10 +4050,6 @@ msgstr "Utwórz"
 #: src/screens/Messages/ChatList.tsx:335
 msgid "New chat"
 msgstr "Nowa rozmowa"
-
-#: src/components/dialogs/nuxs/NeueTypography.tsx:51
-#~ msgid "New font settings ✨"
-#~ msgstr "Nowe ustawienia czcionki ✨"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:201
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:209
@@ -7520,10 +7504,6 @@ msgstr "Użyjemy Twoich wyborów, aby dostosować Bluesky dla Ciebie."
 msgid "We're having network issues, try again"
 msgstr "Mamy problemy z siecią, spróbuj ponownie"
 
-#: src/components/dialogs/nuxs/NeueTypography.tsx:54
-#~ msgid "We're introducing a new theme font, along with adjustable font sizing."
-#~ msgstr "Przedstawiamy nową czcionkę i motywu wraz ze zmiennym rozmiarem czcionki."
-
 #: src/screens/Signup/index.tsx:94
 msgid "We're so excited to have you join us!"
 msgstr "Nie możemy się doczekać, aż do nas dołączysz!"
@@ -7695,10 +7675,6 @@ msgstr "Nie możesz wysyłać wideo."
 #: src/view/com/profile/ProfileFollows.tsx:95
 msgid "You are not following anyone."
 msgstr "Nie obserwujesz nikogo."
-
-#: src/components/dialogs/nuxs/NeueTypography.tsx:61
-#~ msgid "You can adjust these in your Appearance Settings later."
-#~ msgstr "Możesz to później dostroić w ustawieniach wyglądu."
 
 #: src/view/com/posts/FollowingEmptyState.tsx:63
 #: src/view/com/posts/FollowingEndOfFeed.tsx:64
