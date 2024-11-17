@@ -9,20 +9,24 @@ if ('scrollRestoration' in history) {
 
 function createInitialScrollState() {
   return {
-    scrollYs: new Map(),
-    focusedKey: null as string | null,
+    // Not used for rendering.
+    // Treat it as a ref so that we can mutate it without upsetting the compiler.
+    current: {
+      scrollYs: new Map(),
+      focusedKey: null as string | null,
+    },
   }
 }
 
 export function useWebScrollRestoration() {
-  const [state] = useState(createInitialScrollState)
+  const [ref] = useState(createInitialScrollState)
   const navigation = useNavigation()
 
   useEffect(() => {
     function onDispatch() {
-      if (state.focusedKey) {
+      if (ref.current.focusedKey) {
         // Remember where we were for later.
-        state.scrollYs.set(state.focusedKey, window.scrollY)
+        ref.current.scrollYs.set(ref.current.focusedKey, window.scrollY)
         // TODO: Strictly speaking, this is a leak. We never clean up.
         // This is because I'm not sure when it's appropriate to clean it up.
         // It doesn't seem like popstate is enough because it can still Forward-Back again.
@@ -36,17 +40,17 @@ export function useWebScrollRestoration() {
     return () => {
       navigation.removeListener('__unsafe_action__' as any, onDispatch)
     }
-  }, [state, navigation])
+  }, [ref, navigation])
 
   const screenListeners = useMemo(
     () => ({
       focus(e: EventArg<'focus', boolean | undefined, unknown>) {
-        const scrollY = state.scrollYs.get(e.target) ?? 0
+        const scrollY = ref.current.scrollYs.get(e.target) ?? 0
         window.scrollTo(0, scrollY)
-        state.focusedKey = e.target ?? null
+        ref.current.focusedKey = e.target ?? null
       },
     }),
-    [state],
+    [ref],
   )
   return screenListeners
 }

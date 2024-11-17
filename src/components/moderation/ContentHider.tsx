@@ -68,6 +68,8 @@ export function ContentHider({
           if (hasAdultContentLabel) {
             return false
           }
+          // https://github.com/facebook/react/issues/31569
+          // eslint-disable-next-line react-compiler/react-compiler
           hasAdultContentLabel = true
         }
         return true

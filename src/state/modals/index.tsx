@@ -173,6 +173,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     return wasActive
   })
 
+  // FIXME
+  // eslint-disable-next-line react-compiler/react-compiler
   unstable__openModal = openModal
   unstable__closeModal = closeModal
 

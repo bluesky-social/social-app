@@ -129,15 +129,15 @@ export const Link = memo(function Link({
     )
   }
 
+  let dataSet = props.dataSet
   if (anchorNoUnderline) {
     // @ts-ignore web only -prf
-    props.dataSet = props.dataSet || {}
-    // @ts-ignore web only -prf
-    props.dataSet.noUnderline = 1
+    dataSet = {...dataSet, noUnderline: 1}
   }
 
-  if (title && !props.accessibilityLabel) {
-    props.accessibilityLabel = title
+  let accessibilityLabel = props.accessibilityLabel
+  if (title && !accessibilityLabel) {
+    accessibilityLabel = title
   }
 
   const Com = props.hoverStyle ? PressableWithHover : Pressable
@@ -150,7 +150,11 @@ export const Link = memo(function Link({
       accessibilityRole="link"
       // @ts-ignore web only -prf
       href={anchorHref}
-      {...props}>
+      {...props}
+      // @ts-ignore web only
+      dataSet={dataSet}
+      accessibilityLabel={accessibilityLabel}
+      accessibilityHint={props.accessibilityHint}>
       {children ? children : <Text>{title || 'link'}</Text>}
     </Com>
   )
@@ -164,7 +168,7 @@ export const TextLink = memo(function TextLink({
   text,
   numberOfLines,
   lineHeight,
-  dataSet,
+  dataSet: rawDataSet,
   title,
   onPress,
   onBeforePress,
@@ -187,7 +191,7 @@ export const TextLink = memo(function TextLink({
   anchorNoUnderline?: boolean
   onBeforePress?: () => void
 } & TextProps) {
-  const {...props} = useLinkProps({to: sanitizeUrl(href)})
+  let {...props} = useLinkProps({to: sanitizeUrl(href)})
   const navigation = useNavigationDeduped()
   const {openModal, closeModal} = useModalControls()
   const openLink = useOpenLink()
@@ -196,61 +200,68 @@ export const TextLink = memo(function TextLink({
     console.error('Unable to detect mismatching label')
   }
 
+  let dataSet = rawDataSet
   if (anchorNoUnderline) {
-    dataSet = dataSet ?? {}
-    dataSet.noUnderline = 1
+    dataSet = {
+      ...dataSet,
+      noUnderline: 1,
+    }
   }
 
-  props.onPress = React.useCallback(
-    (e?: Event) => {
-      const requiresWarning =
-        !disableMismatchWarning &&
-        linkRequiresWarning(href, typeof text === 'string' ? text : '')
-      if (requiresWarning) {
-        e?.preventDefault?.()
-        openModal({
-          name: 'link-warning',
-          text: typeof text === 'string' ? text : '',
-          href,
-        })
-      }
-      if (
-        isWeb &&
-        href !== '#' &&
-        e != null &&
-        isModifiedEvent(e as React.MouseEvent)
-      ) {
-        // Let the browser handle opening in new tab etc.
-        return
-      }
-      onBeforePress?.()
-      if (onPress) {
-        e?.preventDefault?.()
-        // @ts-ignore function signature differs by platform -prf
-        return onPress()
-      }
-      return onPressInner(
+  props = {
+    ...props,
+    onPress: React.useCallback(
+      (e?: Event) => {
+        const requiresWarning =
+          !disableMismatchWarning &&
+          linkRequiresWarning(href, typeof text === 'string' ? text : '')
+        if (requiresWarning) {
+          e?.preventDefault?.()
+          openModal({
+            name: 'link-warning',
+            text: typeof text === 'string' ? text : '',
+            href,
+          })
+        }
+        if (
+          isWeb &&
+          href !== '#' &&
+          e != null &&
+          isModifiedEvent(e as React.MouseEvent)
+        ) {
+          // Let the browser handle opening in new tab etc.
+          return
+        }
+        onBeforePress?.()
+        if (onPress) {
+          e?.preventDefault?.()
+          // @ts-ignore function signature differs by platform -prf
+          return onPress()
+        }
+        return onPressInner(
+          closeModal,
+          navigation,
+          sanitizeUrl(href),
+          navigationAction,
+          openLink,
+          e,
+        )
+      },
+      [
+        onBeforePress,
+        onPress,
         closeModal,
+        openModal,
         navigation,
-        sanitizeUrl(href),
+        href,
+        text,
+        disableMismatchWarning,
         navigationAction,
         openLink,
-        e,
-      )
-    },
-    [
-      onBeforePress,
-      onPress,
-      closeModal,
-      openModal,
-      navigation,
-      href,
-      text,
-      disableMismatchWarning,
-      navigationAction,
-      openLink,
-    ],
-  )
+      ],
+    ),
+  }
+
   const hrefAttrs = useMemo(() => {
     const isExternal = isExternalUrl(href)
     if (isExternal) {

@@ -56,7 +56,6 @@ type Props = {
 const AnimatedLogo = Animated.createAnimatedComponent(Logo)
 
 export function Splash(props: React.PropsWithChildren<Props>) {
-  'use no memo'
   const insets = useSafeAreaInsets()
   const intro = useSharedValue(0)
   const outroLogo = useSharedValue(0)

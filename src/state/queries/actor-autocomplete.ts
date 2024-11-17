@@ -18,14 +18,14 @@ const RQKEY_ROOT = 'actor-autocomplete'
 export const RQKEY = (prefix: string) => [RQKEY_ROOT, prefix]
 
 export function useActorAutocompleteQuery(
-  prefix: string,
+  rawPrefix: string,
   maintainData?: boolean,
   limit?: number,
 ) {
   const moderationOpts = useModerationOpts()
   const agent = useAgent()
 
-  prefix = prefix.toLowerCase().trim()
+  let prefix = rawPrefix.toLowerCase().trim()
   if (prefix.endsWith('.')) {
     // Going from "foo" to "foo." should not clear matches.
     prefix = prefix.slice(0, -1)
