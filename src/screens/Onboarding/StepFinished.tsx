@@ -127,31 +127,36 @@ export function StepFinished() {
         })(),
         (async () => {
           const {imageUri, imageMime} = profileStepResults
-          if (imageUri && imageMime) {
-            const blobPromise = uploadBlob(agent, imageUri, imageMime)
-            await agent.upsertProfile(async existing => {
-              existing = existing ?? {}
+          const blobPromise =
+            imageUri && imageMime
+              ? uploadBlob(agent, imageUri, imageMime)
+              : undefined
+
+          await agent.upsertProfile(async existing => {
+            existing = existing ?? {}
+
+            if (blobPromise) {
               const res = await blobPromise
               if (res.data.blob) {
                 existing.avatar = res.data.blob
               }
+            }
 
-              if (starterPack) {
-                existing.joinedViaStarterPack = {
-                  uri: starterPack.uri,
-                  cid: starterPack.cid,
-                }
+            if (starterPack) {
+              existing.joinedViaStarterPack = {
+                uri: starterPack.uri,
+                cid: starterPack.cid,
               }
+            }
 
-              existing.displayName = ''
-              // HACKFIX
-              // creating a bunch of identical profile objects is breaking the relay
-              // tossing this unspecced field onto it to reduce the size of the problem
-              // -prf
-              existing.createdAt = new Date().toISOString()
-              return existing
-            })
-          }
+            existing.displayName = ''
+            // HACKFIX
+            // creating a bunch of identical profile objects is breaking the relay
+            // tossing this unspecced field onto it to reduce the size of the problem
+            // -prf
+            existing.createdAt = new Date().toISOString()
+            return existing
+          })
 
           logEvent('onboarding:finished:avatarResult', {
             avatarResult: profileStepResults.isCreatedAvatar

@@ -1,5 +1,5 @@
-export const ACTIVE_POLL_INTERVAL = 3e3
-export const MESSAGE_SCREEN_POLL_INTERVAL = 10e3
+export const ACTIVE_POLL_INTERVAL = 4e3
+export const MESSAGE_SCREEN_POLL_INTERVAL = 30e3
 export const BACKGROUND_POLL_INTERVAL = 60e3
 export const INACTIVE_TIMEOUT = 60e3 * 5
 
