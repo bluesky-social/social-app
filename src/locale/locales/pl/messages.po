@@ -348,7 +348,7 @@ msgstr "<0>Eksperymentalne:</0> Kiedy ta opcja jest włączona, dostaniesz powia
 
 #: src/screens/StarterPack/Wizard/index.tsx:466
 msgid "<0>You</0> and<1> </1><2>{0} </2>are included in your starter pack"
-msgstr "<0>Ty</0> i<1> </1><2>{0} </2>jesteście w twoim pakiecie startowym"
+msgstr "<0>Ty</0> i<1> </1><2>{0} </2>jesteście w Twoim pakiecie startowym"
 
 #: src/screens/Profile/Header/Handle.tsx:53
 msgid "⚠Invalid Handle"
@@ -1041,7 +1041,7 @@ msgstr "Bluesky wybierze kilka rekomendowanych osób z Twojego okręgu."
 
 #: src/screens/Settings/components/PwiOptOut.tsx:92
 msgid "Bluesky will not show your profile and posts to logged-out users. Other apps may not honor this request. This does not make your account private."
-msgstr "Bluesky nie pokaże Twojego profilu niezalogowanym użytkownikom. Inne aplikacje mogą nie uwzględnić tej prośby; to nie uczynia twojego konta prywatnym."
+msgstr "Bluesky nie pokaże Twojego profilu niezalogowanym użytkownikom. Inne aplikacje mogą nie uwzględnić tej prośby; to nie uczynia Twojego konta prywatnym."
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:53
 msgid "Blur images"
