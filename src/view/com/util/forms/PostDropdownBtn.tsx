@@ -1,4 +1,4 @@
-import React, {memo, useCallback} from 'react'
+import React, {memo, useCallback, useState} from 'react'
 import {
   Platform,
   Pressable,
@@ -73,6 +73,7 @@ import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as Unmute} from '#/components/
 import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
 import {Warning_Stroke2_Corner0_Rounded as Warning} from '#/components/icons/Warning'
 import {Loader} from '#/components/Loader'
+import {useMenuControl} from '#/components/Menu'
 import * as Menu from '#/components/Menu'
 import * as Prompt from '#/components/Prompt'
 import {ReportDialog, useReportDialogControl} from '#/components/ReportDialog'
@@ -106,9 +107,14 @@ let PostDropdownBtn = ({
   const alf = useAlf()
   const {_} = useLingui()
   const defaultCtrlColor = theme.palette.default.postCtrl
+  const menuControl = useMenuControl()
+  const [hasBeenOpen, setHasBeenOpen] = useState(false)
+  if (menuControl.isOpen && !hasBeenOpen) {
+    setHasBeenOpen(true)
+  }
   return (
     <EventStopper onKeyDown={false}>
-      <Menu.Root>
+      <Menu.Root control={menuControl}>
         <Menu.Trigger label={_(msg`Open post options menu`)}>
           {({props, state}) => {
             return (
@@ -132,7 +138,8 @@ let PostDropdownBtn = ({
             )
           }}
         </Menu.Trigger>
-        <Menu.Outer>
+        {hasBeenOpen && (
+          // Lazily initialized. Once mounted, they stay mounted.
           <PostDropdownMenuItems
             testID={testID}
             post={post}
@@ -142,7 +149,7 @@ let PostDropdownBtn = ({
             timestamp={timestamp}
             threadgateRecord={threadgateRecord}
           />
-        </Menu.Outer>
+        )}
       </Menu.Root>
     </EventStopper>
   )
@@ -426,275 +433,277 @@ let PostDropdownMenuItems = ({
 
   return (
     <>
-      {isAuthor && (
-        <>
-          <Menu.Group>
-            <Menu.Item
-              testID="pinPostBtn"
-              label={
-                isPinned
-                  ? _(msg`Unpin from profile`)
-                  : _(msg`Pin to your profile`)
-              }
-              disabled={isPinPending}
-              onPress={onPressPin}>
-              <Menu.ItemText>
-                {isPinned
-                  ? _(msg`Unpin from profile`)
-                  : _(msg`Pin to your profile`)}
-              </Menu.ItemText>
-              <Menu.ItemIcon
-                icon={isPinPending ? Loader : PinIcon}
-                position="right"
-              />
-            </Menu.Item>
-          </Menu.Group>
-          <Menu.Divider />
-        </>
-      )}
-
-      <Menu.Group>
-        {(!hideInPWI || hasSession) && (
+      <Menu.Outer>
+        {isAuthor && (
           <>
-            <Menu.Item
-              testID="postDropdownTranslateBtn"
-              label={_(msg`Translate`)}
-              onPress={onPressTranslate}>
-              <Menu.ItemText>{_(msg`Translate`)}</Menu.ItemText>
-              <Menu.ItemIcon icon={Translate} position="right" />
-            </Menu.Item>
-
-            <Menu.Item
-              testID="postDropdownCopyTextBtn"
-              label={_(msg`Copy post text`)}
-              onPress={onCopyPostText}>
-              <Menu.ItemText>{_(msg`Copy post text`)}</Menu.ItemText>
-              <Menu.ItemIcon icon={ClipboardIcon} position="right" />
-            </Menu.Item>
+            <Menu.Group>
+              <Menu.Item
+                testID="pinPostBtn"
+                label={
+                  isPinned
+                    ? _(msg`Unpin from profile`)
+                    : _(msg`Pin to your profile`)
+                }
+                disabled={isPinPending}
+                onPress={onPressPin}>
+                <Menu.ItemText>
+                  {isPinned
+                    ? _(msg`Unpin from profile`)
+                    : _(msg`Pin to your profile`)}
+                </Menu.ItemText>
+                <Menu.ItemIcon
+                  icon={isPinPending ? Loader : PinIcon}
+                  position="right"
+                />
+              </Menu.Item>
+            </Menu.Group>
+            <Menu.Divider />
           </>
         )}
 
-        {hasSession && (
-          <Menu.Item
-            testID="postDropdownSendViaDMBtn"
-            label={_(msg`Send via direct message`)}
-            onPress={() => sendViaChatControl.open()}>
-            <Menu.ItemText>
-              <Trans>Send via direct message</Trans>
-            </Menu.ItemText>
-            <Menu.ItemIcon icon={Send} position="right" />
-          </Menu.Item>
-        )}
+        <Menu.Group>
+          {(!hideInPWI || hasSession) && (
+            <>
+              <Menu.Item
+                testID="postDropdownTranslateBtn"
+                label={_(msg`Translate`)}
+                onPress={onPressTranslate}>
+                <Menu.ItemText>{_(msg`Translate`)}</Menu.ItemText>
+                <Menu.ItemIcon icon={Translate} position="right" />
+              </Menu.Item>
 
-        <Menu.Item
-          testID="postDropdownShareBtn"
-          label={isWeb ? _(msg`Copy link to post`) : _(msg`Share`)}
-          onPress={() => {
-            if (showLoggedOutWarning) {
-              loggedOutWarningPromptControl.open()
-            } else {
-              onSharePost()
-            }
-          }}>
-          <Menu.ItemText>
-            {isWeb ? _(msg`Copy link to post`) : _(msg`Share`)}
-          </Menu.ItemText>
-          <Menu.ItemIcon icon={Share} position="right" />
-        </Menu.Item>
+              <Menu.Item
+                testID="postDropdownCopyTextBtn"
+                label={_(msg`Copy post text`)}
+                onPress={onCopyPostText}>
+                <Menu.ItemText>{_(msg`Copy post text`)}</Menu.ItemText>
+                <Menu.ItemIcon icon={ClipboardIcon} position="right" />
+              </Menu.Item>
+            </>
+          )}
 
-        {canEmbed && (
-          <Menu.Item
-            testID="postDropdownEmbedBtn"
-            label={_(msg`Embed post`)}
-            onPress={() => embedPostControl.open()}>
-            <Menu.ItemText>{_(msg`Embed post`)}</Menu.ItemText>
-            <Menu.ItemIcon icon={CodeBrackets} position="right" />
-          </Menu.Item>
-        )}
-      </Menu.Group>
-
-      {hasSession && feedFeedback.enabled && (
-        <>
-          <Menu.Divider />
-          <Menu.Group>
+          {hasSession && (
             <Menu.Item
-              testID="postDropdownShowMoreBtn"
-              label={_(msg`Show more like this`)}
-              onPress={onPressShowMore}>
-              <Menu.ItemText>{_(msg`Show more like this`)}</Menu.ItemText>
-              <Menu.ItemIcon icon={EmojiSmile} position="right" />
-            </Menu.Item>
-
-            <Menu.Item
-              testID="postDropdownShowLessBtn"
-              label={_(msg`Show less like this`)}
-              onPress={onPressShowLess}>
-              <Menu.ItemText>{_(msg`Show less like this`)}</Menu.ItemText>
-              <Menu.ItemIcon icon={EmojiSad} position="right" />
-            </Menu.Item>
-          </Menu.Group>
-        </>
-      )}
-
-      {hasSession && (
-        <>
-          <Menu.Divider />
-          <Menu.Group>
-            <Menu.Item
-              testID="postDropdownMuteThreadBtn"
-              label={
-                isThreadMuted ? _(msg`Unmute thread`) : _(msg`Mute thread`)
-              }
-              onPress={onToggleThreadMute}>
+              testID="postDropdownSendViaDMBtn"
+              label={_(msg`Send via direct message`)}
+              onPress={() => sendViaChatControl.open()}>
               <Menu.ItemText>
-                {isThreadMuted ? _(msg`Unmute thread`) : _(msg`Mute thread`)}
+                <Trans>Send via direct message</Trans>
               </Menu.ItemText>
-              <Menu.ItemIcon
-                icon={isThreadMuted ? Unmute : Mute}
-                position="right"
-              />
+              <Menu.ItemIcon icon={Send} position="right" />
             </Menu.Item>
+          )}
 
+          <Menu.Item
+            testID="postDropdownShareBtn"
+            label={isWeb ? _(msg`Copy link to post`) : _(msg`Share`)}
+            onPress={() => {
+              if (showLoggedOutWarning) {
+                loggedOutWarningPromptControl.open()
+              } else {
+                onSharePost()
+              }
+            }}>
+            <Menu.ItemText>
+              {isWeb ? _(msg`Copy link to post`) : _(msg`Share`)}
+            </Menu.ItemText>
+            <Menu.ItemIcon icon={Share} position="right" />
+          </Menu.Item>
+
+          {canEmbed && (
             <Menu.Item
-              testID="postDropdownMuteWordsBtn"
-              label={_(msg`Mute words & tags`)}
-              onPress={() => mutedWordsDialogControl.open()}>
-              <Menu.ItemText>{_(msg`Mute words & tags`)}</Menu.ItemText>
-              <Menu.ItemIcon icon={Filter} position="right" />
+              testID="postDropdownEmbedBtn"
+              label={_(msg`Embed post`)}
+              onPress={() => embedPostControl.open()}>
+              <Menu.ItemText>{_(msg`Embed post`)}</Menu.ItemText>
+              <Menu.ItemIcon icon={CodeBrackets} position="right" />
             </Menu.Item>
-          </Menu.Group>
-        </>
-      )}
+          )}
+        </Menu.Group>
 
-      {hasSession &&
-        (canHideReplyForEveryone || canDetachQuote || canHidePostForMe) && (
+        {hasSession && feedFeedback.enabled && (
           <>
             <Menu.Divider />
             <Menu.Group>
-              {canHidePostForMe && (
-                <Menu.Item
-                  testID="postDropdownHideBtn"
-                  label={
-                    isReply
-                      ? _(msg`Hide reply for me`)
-                      : _(msg`Hide post for me`)
-                  }
-                  onPress={() => hidePromptControl.open()}>
-                  <Menu.ItemText>
-                    {isReply
-                      ? _(msg`Hide reply for me`)
-                      : _(msg`Hide post for me`)}
-                  </Menu.ItemText>
-                  <Menu.ItemIcon icon={EyeSlash} position="right" />
-                </Menu.Item>
-              )}
-              {canHideReplyForEveryone && (
-                <Menu.Item
-                  testID="postDropdownHideBtn"
-                  label={
-                    isReplyHiddenByThreadgate
-                      ? _(msg`Show reply for everyone`)
-                      : _(msg`Hide reply for everyone`)
-                  }
-                  onPress={
-                    isReplyHiddenByThreadgate
-                      ? onToggleReplyVisibility
-                      : () => hideReplyConfirmControl.open()
-                  }>
-                  <Menu.ItemText>
-                    {isReplyHiddenByThreadgate
-                      ? _(msg`Show reply for everyone`)
-                      : _(msg`Hide reply for everyone`)}
-                  </Menu.ItemText>
-                  <Menu.ItemIcon
-                    icon={isReplyHiddenByThreadgate ? Eye : EyeSlash}
-                    position="right"
-                  />
-                </Menu.Item>
-              )}
+              <Menu.Item
+                testID="postDropdownShowMoreBtn"
+                label={_(msg`Show more like this`)}
+                onPress={onPressShowMore}>
+                <Menu.ItemText>{_(msg`Show more like this`)}</Menu.ItemText>
+                <Menu.ItemIcon icon={EmojiSmile} position="right" />
+              </Menu.Item>
 
-              {canDetachQuote && (
-                <Menu.Item
-                  disabled={isDetachPending}
-                  testID="postDropdownHideBtn"
-                  label={
-                    quoteEmbed.isDetached
-                      ? _(msg`Re-attach quote`)
-                      : _(msg`Detach quote`)
-                  }
-                  onPress={
-                    quoteEmbed.isDetached
-                      ? onToggleQuotePostAttachment
-                      : () => quotePostDetachConfirmControl.open()
-                  }>
-                  <Menu.ItemText>
-                    {quoteEmbed.isDetached
-                      ? _(msg`Re-attach quote`)
-                      : _(msg`Detach quote`)}
-                  </Menu.ItemText>
-                  <Menu.ItemIcon
-                    icon={
-                      isDetachPending
-                        ? Loader
-                        : quoteEmbed.isDetached
-                        ? Eye
-                        : EyeSlash
-                    }
-                    position="right"
-                  />
-                </Menu.Item>
-              )}
+              <Menu.Item
+                testID="postDropdownShowLessBtn"
+                label={_(msg`Show less like this`)}
+                onPress={onPressShowLess}>
+                <Menu.ItemText>{_(msg`Show less like this`)}</Menu.ItemText>
+                <Menu.ItemIcon icon={EmojiSad} position="right" />
+              </Menu.Item>
             </Menu.Group>
           </>
         )}
 
-      {hasSession && (
-        <>
-          <Menu.Divider />
-          <Menu.Group>
-            {!isAuthor && (
+        {hasSession && (
+          <>
+            <Menu.Divider />
+            <Menu.Group>
               <Menu.Item
-                testID="postDropdownReportBtn"
-                label={_(msg`Report post`)}
-                onPress={() => reportDialogControl.open()}>
-                <Menu.ItemText>{_(msg`Report post`)}</Menu.ItemText>
-                <Menu.ItemIcon icon={Warning} position="right" />
+                testID="postDropdownMuteThreadBtn"
+                label={
+                  isThreadMuted ? _(msg`Unmute thread`) : _(msg`Mute thread`)
+                }
+                onPress={onToggleThreadMute}>
+                <Menu.ItemText>
+                  {isThreadMuted ? _(msg`Unmute thread`) : _(msg`Mute thread`)}
+                </Menu.ItemText>
+                <Menu.ItemIcon
+                  icon={isThreadMuted ? Unmute : Mute}
+                  position="right"
+                />
               </Menu.Item>
-            )}
 
-            {isAuthor && (
-              <>
+              <Menu.Item
+                testID="postDropdownMuteWordsBtn"
+                label={_(msg`Mute words & tags`)}
+                onPress={() => mutedWordsDialogControl.open()}>
+                <Menu.ItemText>{_(msg`Mute words & tags`)}</Menu.ItemText>
+                <Menu.ItemIcon icon={Filter} position="right" />
+              </Menu.Item>
+            </Menu.Group>
+          </>
+        )}
+
+        {hasSession &&
+          (canHideReplyForEveryone || canDetachQuote || canHidePostForMe) && (
+            <>
+              <Menu.Divider />
+              <Menu.Group>
+                {canHidePostForMe && (
+                  <Menu.Item
+                    testID="postDropdownHideBtn"
+                    label={
+                      isReply
+                        ? _(msg`Hide reply for me`)
+                        : _(msg`Hide post for me`)
+                    }
+                    onPress={() => hidePromptControl.open()}>
+                    <Menu.ItemText>
+                      {isReply
+                        ? _(msg`Hide reply for me`)
+                        : _(msg`Hide post for me`)}
+                    </Menu.ItemText>
+                    <Menu.ItemIcon icon={EyeSlash} position="right" />
+                  </Menu.Item>
+                )}
+                {canHideReplyForEveryone && (
+                  <Menu.Item
+                    testID="postDropdownHideBtn"
+                    label={
+                      isReplyHiddenByThreadgate
+                        ? _(msg`Show reply for everyone`)
+                        : _(msg`Hide reply for everyone`)
+                    }
+                    onPress={
+                      isReplyHiddenByThreadgate
+                        ? onToggleReplyVisibility
+                        : () => hideReplyConfirmControl.open()
+                    }>
+                    <Menu.ItemText>
+                      {isReplyHiddenByThreadgate
+                        ? _(msg`Show reply for everyone`)
+                        : _(msg`Hide reply for everyone`)}
+                    </Menu.ItemText>
+                    <Menu.ItemIcon
+                      icon={isReplyHiddenByThreadgate ? Eye : EyeSlash}
+                      position="right"
+                    />
+                  </Menu.Item>
+                )}
+
+                {canDetachQuote && (
+                  <Menu.Item
+                    disabled={isDetachPending}
+                    testID="postDropdownHideBtn"
+                    label={
+                      quoteEmbed.isDetached
+                        ? _(msg`Re-attach quote`)
+                        : _(msg`Detach quote`)
+                    }
+                    onPress={
+                      quoteEmbed.isDetached
+                        ? onToggleQuotePostAttachment
+                        : () => quotePostDetachConfirmControl.open()
+                    }>
+                    <Menu.ItemText>
+                      {quoteEmbed.isDetached
+                        ? _(msg`Re-attach quote`)
+                        : _(msg`Detach quote`)}
+                    </Menu.ItemText>
+                    <Menu.ItemIcon
+                      icon={
+                        isDetachPending
+                          ? Loader
+                          : quoteEmbed.isDetached
+                          ? Eye
+                          : EyeSlash
+                      }
+                      position="right"
+                    />
+                  </Menu.Item>
+                )}
+              </Menu.Group>
+            </>
+          )}
+
+        {hasSession && (
+          <>
+            <Menu.Divider />
+            <Menu.Group>
+              {!isAuthor && (
                 <Menu.Item
-                  testID="postDropdownEditPostInteractions"
-                  label={_(msg`Edit interaction settings`)}
-                  onPress={() => postInteractionSettingsDialogControl.open()}
-                  {...(isAuthor
-                    ? Platform.select({
-                        web: {
-                          onHoverIn: prefetchPostInteractionSettings,
-                        },
-                        native: {
-                          onPressIn: prefetchPostInteractionSettings,
-                        },
-                      })
-                    : {})}>
-                  <Menu.ItemText>
-                    {_(msg`Edit interaction settings`)}
-                  </Menu.ItemText>
-                  <Menu.ItemIcon icon={Gear} position="right" />
+                  testID="postDropdownReportBtn"
+                  label={_(msg`Report post`)}
+                  onPress={() => reportDialogControl.open()}>
+                  <Menu.ItemText>{_(msg`Report post`)}</Menu.ItemText>
+                  <Menu.ItemIcon icon={Warning} position="right" />
                 </Menu.Item>
-                <Menu.Item
-                  testID="postDropdownDeleteBtn"
-                  label={_(msg`Delete post`)}
-                  onPress={() => deletePromptControl.open()}>
-                  <Menu.ItemText>{_(msg`Delete post`)}</Menu.ItemText>
-                  <Menu.ItemIcon icon={Trash} position="right" />
-                </Menu.Item>
-              </>
-            )}
-          </Menu.Group>
-        </>
-      )}
+              )}
+
+              {isAuthor && (
+                <>
+                  <Menu.Item
+                    testID="postDropdownEditPostInteractions"
+                    label={_(msg`Edit interaction settings`)}
+                    onPress={() => postInteractionSettingsDialogControl.open()}
+                    {...(isAuthor
+                      ? Platform.select({
+                          web: {
+                            onHoverIn: prefetchPostInteractionSettings,
+                          },
+                          native: {
+                            onPressIn: prefetchPostInteractionSettings,
+                          },
+                        })
+                      : {})}>
+                    <Menu.ItemText>
+                      {_(msg`Edit interaction settings`)}
+                    </Menu.ItemText>
+                    <Menu.ItemIcon icon={Gear} position="right" />
+                  </Menu.Item>
+                  <Menu.Item
+                    testID="postDropdownDeleteBtn"
+                    label={_(msg`Delete post`)}
+                    onPress={() => deletePromptControl.open()}>
+                    <Menu.ItemText>{_(msg`Delete post`)}</Menu.ItemText>
+                    <Menu.ItemIcon icon={Trash} position="right" />
+                  </Menu.Item>
+                </>
+              )}
+            </Menu.Group>
+          </>
+        )}
+      </Menu.Outer>
 
       <Prompt.Basic
         control={deletePromptControl}
