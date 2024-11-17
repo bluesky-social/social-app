@@ -22,9 +22,11 @@ import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Toggle from '#/components/forms/Toggle'
 import {Checkbox} from '#/components/forms/Toggle'
+import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {Text} from '#/components/Typography'
 
 function WizardListCard({
+  profile,
   type,
   btnType,
   displayName,
@@ -50,26 +52,8 @@ function WizardListCard({
   const t = useTheme()
   const {_} = useLingui()
 
-  return (
-    <Toggle.Item
-      name={type === 'user' ? _(msg`Person toggle`) : _(msg`Feed toggle`)}
-      label={
-        included
-          ? _(msg`Remove ${displayName} from starter pack`)
-          : _(msg`Add ${displayName} to starter pack`)
-      }
-      value={included}
-      disabled={btnType === 'remove' || disabled}
-      onChange={onPress}
-      style={[
-        a.flex_row,
-        a.align_center,
-        a.px_lg,
-        a.py_md,
-        a.gap_md,
-        a.border_b,
-        t.atoms.border_contrast_low,
-      ]}>
+  const userContent = (
+    <View style={[a.flex_row, a.align_center, a.gap_md]}>
       <UserAvatar
         size={45}
         avatar={avatar}
@@ -95,6 +79,36 @@ function WizardListCard({
           {subtitle}
         </Text>
       </View>
+    </View>
+  )
+
+  return (
+    <Toggle.Item
+      name={type === 'user' ? _(msg`Person toggle`) : _(msg`Feed toggle`)}
+      label={
+        included
+          ? _(msg`Remove ${displayName} from starter pack`)
+          : _(msg`Add ${displayName} to starter pack`)
+      }
+      value={included}
+      disabled={btnType === 'remove' || disabled}
+      onChange={onPress}
+      style={[
+        a.flex_row,
+        a.align_center,
+        a.px_lg,
+        a.py_md,
+        a.gap_md,
+        a.border_b,
+        t.atoms.border_contrast_low,
+      ]}>
+      {profile?.did ? (
+        <View style={{flexShrink: 0, flexGrow: 1}}>
+          <ProfileHoverCard did={profile.did}>{userContent}</ProfileHoverCard>
+        </View>
+      ) : (
+        userContent
+      )}
       {btnType === 'checkbox' ? (
         <Checkbox />
       ) : !disabled ? (
@@ -159,6 +173,7 @@ export function WizardProfileCard({
       subtitle={`@${sanitizeHandle(profile.handle)}`}
       onPress={onPress}
       avatar={profile.avatar}
+      profile={profile}
       included={included}
       disabled={disabled}
       moderationUi={moderationUi}

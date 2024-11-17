@@ -25,6 +25,7 @@ import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus
 import {Link as InternalLink, LinkProps} from '#/components/Link'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
+import {ProfileHoverCard} from './ProfileHoverCard'
 
 export function Default({
   profile,
@@ -60,8 +61,17 @@ export function Card({
   return (
     <Outer>
       <Header>
-        <Avatar profile={profile} moderationOpts={moderationOpts} />
-        <NameAndHandle profile={profile} moderationOpts={moderationOpts} />
+        <View style={{flexGrow: 1}}>
+          <ProfileHoverCard did={profile.did}>
+            <View style={[a.flex_row, a.justify_center, a.gap_md]}>
+              <Avatar profile={profile} moderationOpts={moderationOpts} />
+              <NameAndHandle
+                profile={profile}
+                moderationOpts={moderationOpts}
+              />
+            </View>
+          </ProfileHoverCard>
+        </View>
         <FollowButton
           profile={profile}
           moderationOpts={moderationOpts}
