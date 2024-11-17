@@ -7182,11 +7182,11 @@ msgstr "Użyj domyślną przeglądarkę"
 
 #: src/screens/Feeds/NoSavedFeedsOfAnyType.tsx:53
 msgid "Use recommended"
-msgstr "Użyj proponowane"
+msgstr "Użyj proponowanych"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:190
 msgid "Use this to sign into the other app along with your handle."
-msgstr "Użyj to z Twoją nazwą aby zalogować się."
+msgstr "Użyj tego razem z Twoją nazwą, aby zalogować się w innej aplikacji."
 
 #: src/view/com/modals/InviteCodes.tsx:201
 msgid "Used by:"
@@ -7384,7 +7384,7 @@ msgstr "Wyświetl wpis dziennika debugowania"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:139
 msgid "View details"
-msgstr "Wyświetl więcej informacji"
+msgstr "Wyświetl szczegóły"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:134
 msgid "View details for reporting a copyright violation"
@@ -7466,7 +7466,7 @@ msgstr "Błąd podczas pobierania rozmowy"
 
 #: src/screens/SignupQueued.tsx:139
 msgid "We estimate {estimatedTime} until your account is ready."
-msgstr "Szacowany czas zanim Twoje konto jest gotowe wynosi {estimatedTime}."
+msgstr "Szacowany czas zanim Twoje konto będzie gotowe wynosi {estimatedTime}."
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:107
 msgid "We have sent another verification email to <0>{0}</0>."
@@ -7482,11 +7482,11 @@ msgstr "Nie mamy już więcej wpisów od osób obserwowanych przez Ciebie. Oto o
 
 #: src/view/com/composer/state/video.ts:430
 msgid "We were unable to determine if you are allowed to upload videos. Please try again."
-msgstr "Błąd podczas pobierania statusu kwalifikacji do przesyłania wideo. Proszę spróbować ponownie."
+msgstr "Nie możemy potwierdzić, czy możesz przesyłać wideo. Proszę spróbować ponownie."
 
 #: src/components/dialogs/BirthDateSettings.tsx:51
 msgid "We were unable to load your birth date preferences. Please try again."
-msgstr "Błąd podczas pobierania daty urodzin."
+msgstr "Błąd podczas pobierania daty urodzenia. Proszę spróbować ponownie."
 
 #: src/screens/Moderation/index.tsx:414
 msgid "We were unable to load your configured labelers at this time."
@@ -7494,7 +7494,7 @@ msgstr "Błąd podczas pobierania zasubskrybowanych usług moderacji."
 
 #: src/screens/Onboarding/StepInterests/index.tsx:129
 msgid "We weren't able to connect. Please try again to continue setting up your account. If it continues to fail, you can skip this flow."
-msgstr "Błąd podczas łączenia. Proszę spróbować ponownie, możesz także pominąć ten krok."
+msgstr "Błąd podczas łączenia. Proszę spróbować ponownie, aby dokończyć konfigurowanie konta. Jeśli nadal występuje błąd, możesz pominąć ten krok."
 
 #: src/screens/SignupQueued.tsx:143
 msgid "We will let you know when your account is ready."
@@ -7502,15 +7502,15 @@ msgstr "Damy Ci znać, gdy Twoje konto jest gotowe."
 
 #: src/screens/Onboarding/StepInterests/index.tsx:134
 msgid "We'll use this to help customize your experience."
-msgstr "Użyjemy Twój wybór aby dostosować Bluesky dla Ciebie."
+msgstr "Użyjemy Twoich wyborów, aby dostosować Bluesky dla Ciebie."
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:87
 msgid "We're having network issues, try again"
-msgstr "Mamy awarię, spróbuj ponownie"
+msgstr "Mamy problemy z siecią, spróbuj ponownie"
 
 #: src/components/dialogs/nuxs/NeueTypography.tsx:54
 msgid "We're introducing a new theme font, along with adjustable font sizing."
-msgstr "Przedstawiamy nową czcionkę i ustawienia rozmiaru czcionki."
+msgstr "Przedstawiamy nową czcionkę i motywu wraz ze zmiennym rozmiarem czcionki."
 
 #: src/screens/Signup/index.tsx:94
 msgid "We're so excited to have you join us!"
@@ -7522,7 +7522,7 @@ msgstr "Przepraszamy, nie możemy pobrać tej listy. Jeśli ten błąd nie ustą
 
 #: src/components/dialogs/MutedWords.tsx:378
 msgid "We're sorry, but we weren't able to load your muted words at this time. Please try again."
-msgstr "Przepraszamy, nie możemy pobrać Twoich wyciszonych słów."
+msgstr "Przepraszamy, nie możemy pobrać Twoich wyciszonych słów. Proszę spróbować ponownie."
 
 #: src/view/screens/Search/Search.tsx:212
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
@@ -7535,7 +7535,7 @@ msgstr "Przepraszamy, wpis na który odpowiadasz został usunięty."
 #: src/components/Lists.tsx:220
 #: src/view/screens/NotFound.tsx:50
 msgid "We're sorry! We can't find the page you were looking for."
-msgstr "Przepraszamy, nie możemy znaleść tej strony."
+msgstr "Przepraszamy, nie możemy znaleźć tej strony."
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:341
 msgid "We're sorry! You can only subscribe to twenty labelers, and you've reached your limit of twenty."
@@ -7547,7 +7547,7 @@ msgstr "Witaj z powrotem!"
 
 #: src/components/NewskieDialog.tsx:103
 msgid "Welcome, friend!"
-msgstr "Halo, nowy przyjacielu!"
+msgstr "Witaj, nowy przyjacielu!"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:126
 msgid "What are your interests?"
@@ -7629,11 +7629,11 @@ msgstr "Napisz swoją odpowiedź"
 #: src/screens/Onboarding/index.tsx:25
 #: src/screens/Onboarding/state.ts:103
 msgid "Writers"
-msgstr "Pisarstwo"
+msgstr "Pisarze"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:337
 msgid "Wrong DID returned from server. Received: {0}"
-msgstr "Zły DID od serwera. Dostałem {0}"
+msgstr "Zły DID od serwera. Otrzymano: {0}"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:78
 msgid "Yes"
@@ -7658,7 +7658,7 @@ msgstr "Tak, ukryj"
 
 #: src/screens/Deactivated.tsx:153
 msgid "Yes, reactivate my account"
-msgstr "Reaktywuj moje konto"
+msgstr "Tak, reaktywuj moje konto"
 
 #: src/components/dms/DateDivider.tsx:46
 msgid "Yesterday"
@@ -7674,7 +7674,7 @@ msgstr "Ty"
 
 #: src/screens/SignupQueued.tsx:136
 msgid "You are in line."
-msgstr "Jesteś w linii."
+msgstr "Jesteś w kolejce."
 
 #: src/view/com/composer/state/video.ts:423
 msgid "You are not allowed to upload videos."
@@ -7720,7 +7720,7 @@ msgstr "Nie obserwujesz nikogo kto obserwuje @{name}."
 
 #: src/view/com/modals/InviteCodes.tsx:67
 msgid "You don't have any invite codes yet! We'll send you some when you've been on Bluesky for a little longer."
-msgstr "Nie masz jeszcze żadnych kodów zaproszenia. Wyślemy Ci kody, gdy jesteś na Bluesky chwilę dłużej."
+msgstr "Nie masz jeszcze żadnych kodów zaproszenia. Wyślemy Ci kody, gdy będziesz nieco dłużej na Bluesky."
 
 #: src/view/screens/SavedFeeds.tsx:144
 msgid "You don't have any pinned feeds."
@@ -7749,7 +7749,7 @@ msgstr "Zablokowałeś/aś tego użytkownika. Nie możesz wyświetlić tej treś
 #: src/view/com/modals/ChangePassword.tsx:88
 #: src/view/com/modals/ChangePassword.tsx:122
 msgid "You have entered an invalid code. It should look like XXXXX-XXXXX."
-msgstr "Zły kod. Powinien wyglądać tak: XXXXX-XXXXX."
+msgstr "Wprowadzono zły kod. Powinien wyglądać tak: XXXXX-XXXXX."
 
 #: src/lib/moderation/useModerationCauseDescription.ts:114
 msgid "You have hidden this post"
@@ -7762,15 +7762,15 @@ msgstr "Wpis ukryty przez Ciebie."
 #: src/components/moderation/ModerationDetailsDialog.tsx:103
 #: src/lib/moderation/useModerationCauseDescription.ts:97
 msgid "You have muted this account."
-msgstr "Konto ukryte przez Ciebie."
+msgstr "Konto wyciszone przez Ciebie."
 
 #: src/lib/moderation/useModerationCauseDescription.ts:91
 msgid "You have muted this user"
-msgstr "Osoba ukryta przez Ciebie"
+msgstr "Osoba wyciszona przez Ciebie"
 
 #: src/screens/Messages/ChatList.tsx:223
 msgid "You have no conversations yet. Start one!"
-msgstr "Nie masz jeszcze żadnych rozmów. Zacznij rozmowę!"
+msgstr "Nie masz jeszcze żadnych rozmów. Zacznij nową!"
 
 #: src/view/com/feeds/ProfileFeedgens.tsx:138
 msgid "You have no feeds."
@@ -7795,7 +7795,7 @@ msgstr "Dotarto do końca"
 
 #: src/lib/media/video/upload.shared.ts:56
 msgid "You have temporarily reached the limit for video uploads. Please try again later."
-msgstr "Osiągnięto limit wysyłania wideo. Proszę spróbować później."
+msgstr "Osiągnięto tymczasowy limit wysyłania wideo. Proszę spróbować później."
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:241
 msgid "You haven't created a starter pack yet!"
@@ -7860,15 +7860,15 @@ msgstr "Wylogujemy Cię ze wszystkich kont."
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:222
 msgid "You will no longer receive notifications for this thread"
-msgstr "Nie dostaniesz już powiadomień na temat tego wątka"
+msgstr "Nie dostaniesz już powiadomień na temat tego wątku"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:218
 msgid "You will now receive notifications for this thread"
-msgstr "Zaczniemy wysyłać Ci powiadomienia na temat tego wątka"
+msgstr "Zaczniemy wysyłać Ci powiadomienia na temat tego wątku"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:98
 msgid "You will receive an email with a \"reset code.\" Enter that code here, then enter your new password."
-msgstr "Dostaniesz wiadomość email z kodem autoryzacji. Wpisz ten kod tutaj, potem wpisz nowe hasło."
+msgstr "Dostaniesz wiadomość email z \"kodem resetu\". Wpisz ten kod tutaj, potem wpisz nowe hasło."
 
 #: src/screens/Messages/components/ChatListItem.tsx:124
 msgid "You: {0}"
@@ -7884,11 +7884,11 @@ msgstr "Ty: {short}"
 
 #: src/screens/Signup/index.tsx:107
 msgid "You'll follow the suggested users and feeds once you finish creating your account!"
-msgstr "Gdy Twoje konto jest w pełni utworzone, zaczniesz obserwować rekomendowane osoby i kanały!"
+msgstr "Gdy Twoje konto zostanie w pełni utworzone, zaczniesz obserwować rekomendowane osoby i kanały!"
 
 #: src/screens/Signup/index.tsx:112
 msgid "You'll follow the suggested users once you finish creating your account!"
-msgstr "Gdy Twoje konto jest w pełni utworzone, zaczniesz obserwować rekomendowane osoby!"
+msgstr "Gdy ukończysz tworzenie konta, zaczniesz obserwować rekomendowane osoby!"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:232
 msgid "You'll follow these people and {0} others"
@@ -7904,13 +7904,13 @@ msgstr "Dostaniesz wiadomość email na adres <0>{0}</0> w celu weryfikacji toż
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:270
 msgid "You'll stay updated with these feeds"
-msgstr "Przypniemy te kanały do Twojego pulpitu"
+msgstr "Będziesz na bieżąco dzięki tym kanałom"
 
 #: src/screens/SignupQueued.tsx:93
 #: src/screens/SignupQueued.tsx:94
 #: src/screens/SignupQueued.tsx:109
 msgid "You're in line"
-msgstr "Jesteś w linii"
+msgstr "Jesteś w kolejce"
 
 #: src/screens/Deactivated.tsx:89
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:54
@@ -7936,7 +7936,7 @@ msgstr "Osiągnięto codzienny limit wysyłania wideo (za dużo danych)"
 
 #: src/view/com/composer/state/video.ts:438
 msgid "You've reached your daily limit for video uploads (too many videos)"
-msgstr "Osiągnięto codzienny limit wysyłania wideo (za dużo plikó)"
+msgstr "Osiągnięto codzienny limit wysyłania wideo (za dużo plików)"
 
 #: src/screens/Signup/index.tsx:140
 msgid "Your account"
@@ -7960,7 +7960,7 @@ msgstr "Twoja data urodzin"
 
 #: src/view/com/util/post-embeds/VideoEmbed.web.tsx:171
 msgid "Your browser does not support the video format. Please try a different browser."
-msgstr "Twoja przeglądarka nie obsługiwuje tego typu wideo. Spróbuj inną."
+msgstr "Twoja przeglądarka nie obsługiwuje tego typu wideo. Spróbuj w innej."
 
 #: src/screens/Messages/components/ChatDisabled.tsx:25
 msgid "Your chats have been disabled"
@@ -7979,7 +7979,7 @@ msgstr "Twój adres email wygląda na nieprawidłowy."
 
 #: src/view/com/modals/ChangeEmail.tsx:120
 msgid "Your email has been updated but not verified. As a next step, please verify your new email."
-msgstr "Twój adres email był zaktualizowany, ale nie jest jeszcze zweryfikowany. Proszę zweryfikować teraz adres."
+msgstr "Twój adres email był zaktualizowany, ale nie jest jeszcze zweryfikowany. Proszę zweryfikować nowy adres."
 
 #: src/view/com/modals/VerifyEmail.tsx:122
 msgid "Your email has not yet been verified. This is an important security step which we recommend."
@@ -7995,11 +7995,11 @@ msgstr "Twój kanał osób obserwowanych jest pusty! Zaobserwuj trochę więcej 
 
 #: src/screens/Signup/StepHandle.tsx:125
 msgid "Your full handle will be"
-msgstr "Twoja pełna nazwa będzie wynosiła"
+msgstr "Twoja pełna nazwa to będzie"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:220
 msgid "Your full handle will be <0>@{0}</0>"
-msgstr "Twoja pełna nazwa będzie wynosiła <0>@{0}</0>"
+msgstr "Twoja pełna nazwa to będzie <0>@{0}</0>"
 
 #: src/components/dialogs/MutedWords.tsx:369
 msgid "Your muted words"
