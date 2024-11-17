@@ -78,8 +78,12 @@ export function useLink({
 }) {
   const navigation = useNavigationDeduped()
   const {href} = useLinkProps<AllNavigatorParams>({
-    to:
-      typeof to === 'string' ? convertBskyAppUrlIfNeeded(sanitizeUrl(to)) : to,
+    params: typeof to === 'string' ? undefined : to.params,
+    screen: typeof to === 'string' ? undefined : to.screen,
+    href:
+      typeof to === 'string'
+        ? convertBskyAppUrlIfNeeded(sanitizeUrl(to))
+        : undefined,
   })
   const isExternal = isExternalUrl(href)
   const {openModal, closeModal} = useModalControls()
