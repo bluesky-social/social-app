@@ -121,6 +121,107 @@ export function BottomBar({navigation}: BottomTabBarProps) {
     accountSwitchControl.open()
   }, [accountSwitchControl, playHaptic])
 
+  const renderHomeIcon = React.useCallback(
+    () =>
+      isAtHome ? (
+        <HomeFilled
+          width={iconWidth + 1}
+          style={[styles.ctrlIcon, pal.text, styles.homeIcon]}
+        />
+      ) : (
+        <Home
+          width={iconWidth + 1}
+          style={[styles.ctrlIcon, pal.text, styles.homeIcon]}
+        />
+      ),
+    [isAtHome, pal.text],
+  )
+
+  const renderSearchIcon = React.useCallback(
+    () =>
+      isAtSearch ? (
+        <MagnifyingGlassFilled
+          width={iconWidth + 2}
+          style={[styles.ctrlIcon, pal.text, styles.searchIcon]}
+        />
+      ) : (
+        <MagnifyingGlass
+          testID="bottomBarSearchTabItem"
+          width={iconWidth + 2}
+          style={[styles.ctrlIcon, pal.text, styles.searchIcon]}
+        />
+      ),
+    [isAtSearch, pal.text],
+  )
+
+  const renderMessagesIcon = React.useCallback(
+    () =>
+      isAtMessages ? (
+        <MessageFilled
+          width={iconWidth - 1}
+          style={[styles.ctrlIcon, pal.text, styles.feedsIcon]}
+        />
+      ) : (
+        <Message
+          width={iconWidth - 1}
+          style={[styles.ctrlIcon, pal.text, styles.feedsIcon]}
+        />
+      ),
+    [isAtMessages, pal.text],
+  )
+
+  const renderNotificationsIcon = React.useCallback(
+    () =>
+      isAtNotifications ? (
+        <BellFilled
+          width={iconWidth}
+          style={[styles.ctrlIcon, pal.text, styles.bellIcon]}
+        />
+      ) : (
+        <Bell
+          width={iconWidth}
+          style={[styles.ctrlIcon, pal.text, styles.bellIcon]}
+        />
+      ),
+    [isAtNotifications, pal.text],
+  )
+
+  const renderProfileIcon = React.useCallback(
+    () => (
+      <View style={styles.ctrlIconSizingWrapper}>
+        {isAtMyProfile ? (
+          <View
+            style={[
+              styles.ctrlIcon,
+              pal.text,
+              styles.profileIcon,
+              styles.onProfile,
+              {borderColor: pal.text.color},
+            ]}>
+            <UserAvatar
+              avatar={profile?.avatar}
+              size={iconWidth - 3}
+              // See https://github.com/bluesky-social/social-app/pull/1801:
+              usePlainRNImage={true}
+              type={profile?.associated?.labeler ? 'labeler' : 'user'}
+            />
+          </View>
+        ) : (
+          <View style={[styles.ctrlIcon, pal.text, styles.profileIcon]}>
+            <UserAvatar
+              avatar={profile?.avatar}
+              size={iconWidth - 3}
+              // See https://github.com/bluesky-social/social-app/pull/1801:
+              usePlainRNImage={true}
+              type={profile?.associated?.labeler ? 'labeler' : 'user'}
+            />
+          </View>
+        )}
+      </View>
+    ),
+    [isAtMyProfile, profile?.avatar, profile?.associated?.labeler, pal.text],
+  )
+
   return (
     <>
       <SwitchAccountDialog control={accountSwitchControl} />
@@ -133,66 +234,30 @@ export function BottomBar({navigation}: BottomTabBarProps) {
           {paddingBottom: clamp(safeAreaInsets.bottom, 15, 30)},
           footerMinimalShellTransform,
         ]}
-        onLayout={e => {
-          footerHeight.value = e.nativeEvent.layout.height
+        onLayout={evt => {
+          footerHeight.set(evt.nativeEvent.layout.height)
         }}>
         {hasSession ? (
           <>
-            <Btn
-              testID="bottomBarHomeBtn"
-              icon={
-                isAtHome ? (
-                  <HomeFilled
-                    width={iconWidth + 1}
-                    style={[styles.ctrlIcon, pal.text, styles.homeIcon]}
-                  />
-                ) : (
-                  <Home
-                    width={iconWidth + 1}
-                    style={[styles.ctrlIcon, pal.text, styles.homeIcon]}
-                  />
-                )
-              }
+            <TabItem
+              testID="bottomBarHomeTabItem"
+              renderIcon={renderHomeIcon}
               onPress={onPressHome}
               accessibilityRole="tab"
               accessibilityLabel={_(msg`Home`)}
               accessibilityHint=""
             />
-            <Btn
-              icon={
-                isAtSearch ? (
-                  <MagnifyingGlassFilled
-                    width={iconWidth + 2}
-                    style={[styles.ctrlIcon, pal.text, styles.searchIcon]}
-                  />
-                ) : (
-                  <MagnifyingGlass
-                    testID="bottomBarSearchBtn"
-                    width={iconWidth + 2}
-                    style={[styles.ctrlIcon, pal.text, styles.searchIcon]}
-                  />
-                )
-              }
+            <TabItem
+              testID="bottomBarSearchTabItem"
+              renderIcon={renderSearchIcon}
               onPress={onPressSearch}
               accessibilityRole="search"
               accessibilityLabel={_(msg`Search`)}
               accessibilityHint=""
             />
-            <Btn
-              testID="bottomBarMessagesBtn"
-              icon={
-                isAtMessages ? (
-                  <MessageFilled
-                    width={iconWidth - 1}
-                    style={[styles.ctrlIcon, pal.text, styles.feedsIcon]}
-                  />
-                ) : (
-                  <Message
-                    width={iconWidth - 1}
-                    style={[styles.ctrlIcon, pal.text, styles.feedsIcon]}
-                  />
-                )
-              }
+            <TabItem
+              testID="bottomBarMessagesTabItem"
+              renderIcon={renderMessagesIcon}
               onPress={onPressMessages}
               notificationCount={numUnreadMessages.numUnread}
               accessible={true}
@@ -204,21 +269,9 @@ export function BottomBar({navigation}: BottomTabBarProps) {
                   : ''
               }
             />
-            <Btn
-              testID="bottomBarNotificationsBtn"
-              icon={
-                isAtNotifications ? (
-                  <BellFilled
-                    width={iconWidth}
-                    style={[styles.ctrlIcon, pal.text, styles.bellIcon]}
-                  />
-                ) : (
-                  <Bell
-                    width={iconWidth}
-                    style={[styles.ctrlIcon, pal.text, styles.bellIcon]}
-                  />
-                )
-              }
+            <TabItem
+              testID="bottomBarNotificationsTabItem"
+              renderIcon={renderNotificationsIcon}
               onPress={onPressNotifications}
               notificationCount={numUnreadNotifications}
               accessible={true}
@@ -230,41 +283,9 @@ export function BottomBar({navigation}: BottomTabBarProps) {
                   : _(msg`${numUnreadNotifications} unread items`)
               }
             />
-            <Btn
-              testID="bottomBarProfileBtn"
-              icon={
-                <View style={styles.ctrlIconSizingWrapper}>
-                  {isAtMyProfile ? (
-                    <View
-                      style={[
-                        styles.ctrlIcon,
-                        pal.text,
-                        styles.profileIcon,
-                        styles.onProfile,
-                        {borderColor: pal.text.color},
-                      ]}>
-                      <UserAvatar
-                        avatar={profile?.avatar}
-                        size={iconWidth - 3}
-                        // See https://github.com/bluesky-social/social-app/pull/1801:
-                        usePlainRNImage={true}
-                        type={profile?.associated?.labeler ? 'labeler' : 'user'}
-                      />
-                    </View>
-                  ) : (
-                    <View
-                      style={[styles.ctrlIcon, pal.text, styles.profileIcon]}>
-                      <UserAvatar
-                        avatar={profile?.avatar}
-                        size={iconWidth - 3}
-                        // See https://github.com/bluesky-social/social-app/pull/1801:
-                        usePlainRNImage={true}
-                        type={profile?.associated?.labeler ? 'labeler' : 'user'}
-                      />
-                    </View>
-                  )}
-                </View>
-              }
+            <TabItem
+              testID="bottomBarProfileTabItem"
+              renderIcon={renderProfileIcon}
               onPress={onPressProfile}
               onLongPress={onLongPressProfile}
               accessibilityRole="tab"
@@ -323,7 +344,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
   )
 }
 
-interface BtnProps
+interface TabItemProps
   extends Pick<
     ComponentProps<typeof PressableScale>,
     | 'accessible'
@@ -332,22 +353,22 @@ interface BtnProps
     | 'accessibilityLabel'
   > {
   testID?: string
-  icon: JSX.Element
+  renderIcon: () => React.ReactNode
   notificationCount?: string
   onPress?: (event: GestureResponderEvent) => void
   onLongPress?: (event: GestureResponderEvent) => void
 }
 
-function Btn({
+let TabItem = ({
   testID,
-  icon,
+  renderIcon,
   notificationCount,
   onPress,
   onLongPress,
   accessible,
   accessibilityHint,
   accessibilityLabel,
-}: BtnProps) {
+}: TabItemProps): React.ReactNode => {
   return (
     <PressableScale
       testID={testID}
@@ -358,7 +379,7 @@ function Btn({
       accessibilityLabel={accessibilityLabel}
       accessibilityHint={accessibilityHint}
       targetScale={0.8}>
-      {icon}
+      {renderIcon()}
       {notificationCount ? (
         <View style={[styles.notificationCount, a.rounded_full]}>
           <Text style={styles.notificationCountLabel}>{notificationCount}</Text>
@@ -367,3 +388,4 @@ function Btn({
     </PressableScale>
   )
 }
+TabItem = React.memo(TabItem)
