@@ -1,4 +1,4 @@
-import React, {memo, useState} from 'react'
+import React, {memo, useMemo, useState} from 'react'
 import {
   Pressable,
   type PressableProps,
@@ -52,12 +52,21 @@ let PostDropdownBtn = ({
   const defaultCtrlColor = theme.palette.default.postCtrl
   const menuControl = useMenuControl()
   const [hasBeenOpen, setHasBeenOpen] = useState(false)
-  if (menuControl.isOpen && !hasBeenOpen) {
-    setHasBeenOpen(true)
-  }
+  const lazyMenuControl = useMemo(
+    () => ({
+      ...menuControl,
+      open() {
+        setHasBeenOpen(true)
+        // HACK. We need the state through to be flushed by the time
+        // menuControl.open() fires but RN doesn't expose flushSync.
+        setTimeout(menuControl.open)
+      },
+    }),
+    [menuControl, setHasBeenOpen],
+  )
   return (
     <EventStopper onKeyDown={false}>
-      <Menu.Root control={menuControl}>
+      <Menu.Root control={lazyMenuControl}>
         <Menu.Trigger label={_(msg`Open post options menu`)}>
           {({props, state}) => {
             return (
