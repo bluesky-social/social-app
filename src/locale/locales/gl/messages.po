@@ -145,7 +145,7 @@ msgstr "Avatar de {0}"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:68
 msgid "{0}'s favorite feeds and people - join me!"
-msgstr ""
+msgstr "As fontes e persoas favoritas de {0} - únete a min!"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:47
 msgid "{0}'s starter pack"
@@ -220,13 +220,13 @@ msgstr "{following} seguindo"
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:384
 msgid "{handle} can't be messaged"
-msgstr "{handle} non pode recibir mensaxes"
+msgstr "Non se pode enviar mensaxes a {handle}"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:284
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:297
 #: src/view/screens/ProfileFeed.tsx:591
 msgid "{likeCount, plural, one {Liked by # user} other {Liked by # users}}"
-msgstr "{likeCount, plural, one {Gustoulle a # usuario} other {Gustoulle a # usuarios}}"
+msgstr ""
 
 #: src/view/shell/Drawer.tsx:477
 msgid "{numUnreadNotifications} unread"
@@ -1269,7 +1269,7 @@ msgstr "Verificar o meu estado"
 
 #: src/screens/Login/LoginForm.tsx:275
 msgid "Check your email for a login code and enter it here."
-msgstr ""
+msgstr "Comproba se tes un correo cun código de inicio de sesión e insíreo aquí."
 
 #: src/view/com/modals/DeleteAccount.tsx:231
 msgid "Check your inbox for an email with the confirmation code to enter below:"
@@ -1549,7 +1549,7 @@ msgstr "Confirmar troco"
 
 #: src/view/com/modals/lang-settings/ConfirmLanguagesButton.tsx:35
 msgid "Confirm content language settings"
-msgstr ""
+msgstr "Confirmar axustes"
 
 #: src/view/com/modals/DeleteAccount.tsx:282
 msgid "Confirm delete account"
@@ -1645,11 +1645,11 @@ msgstr "Continuar no seguinte paso"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:158
 #~ msgid "Continue to the next step"
-#~ msgstr ""
+#~ msgstr "Continuar no seguinte paso"
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:199
 #~ msgid "Continue to the next step without following any accounts"
-#~ msgstr ""
+#~ msgstr "Continuar no seguinte paso sen seguir ningunha conta"
 
 #: src/screens/Messages/components/ChatListItem.tsx:164
 msgid "Conversation deleted"
@@ -2237,19 +2237,19 @@ msgstr "Duración:"
 
 #: src/view/com/modals/ChangeHandle.tsx:245
 msgid "e.g. alice"
-msgstr ""
+msgstr "p. ex. alice"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:321
 msgid "e.g. Alice Lastname"
-msgstr ""
+msgstr "p. ex. Alice Lastname"
 
 #: src/view/com/modals/EditProfile.tsx:180
 #~ msgid "e.g. Alice Roberts"
-#~ msgstr "p. ej. Alice Roberts"
+#~ msgstr "p. ex. Alice Roberts"
 
 #: src/view/com/modals/ChangeHandle.tsx:367
 msgid "e.g. alice.com"
-msgstr "p. ej. alice.com"
+msgstr "p. ex. alice.com"
 
 #: src/view/com/modals/EditProfile.tsx:198
 #~ msgid "e.g. Artist, dog-lover, and avid reader."
@@ -2257,27 +2257,27 @@ msgstr "p. ej. alice.com"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:43
 msgid "E.g. artistic nudes."
-msgstr "Ex. espidos artísticos."
+msgstr "P. Ex. espidos artísticos."
 
 #: src/view/com/modals/CreateOrEditList.tsx:263
 msgid "e.g. Great Posters"
-msgstr ""
+msgstr "p. ex. Os maiores publicadores"
 
 #: src/view/com/modals/CreateOrEditList.tsx:264
 msgid "e.g. Spammers"
-msgstr ""
+msgstr "p. ex. Spammers"
 
 #: src/view/com/modals/CreateOrEditList.tsx:292
 msgid "e.g. The posters who never miss."
-msgstr ""
+msgstr "p. ex. Os publicadores que sempre acertan."
 
 #: src/view/com/modals/CreateOrEditList.tsx:293
 msgid "e.g. Users that repeatedly reply with ads."
-msgstr ""
+msgstr "p. ex. Usuarios que responden de xeito constante con publicidade."
 
 #: src/view/com/modals/InviteCodes.tsx:97
 msgid "Each code works once. You'll receive more invite codes periodically."
-msgstr ""
+msgstr "Cada código funciona unha vez. Recibirás máis códigos de convite de xeito regular."
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:573
 #: src/screens/StarterPack/Wizard/index.tsx:560
@@ -2650,7 +2650,7 @@ msgstr ""
 
 #: src/lib/api/index.ts:376
 msgid "Expected uri to resolve to a record"
-msgstr ""
+msgstr "Uri agardada para resolver un rexistro"
 
 #: src/view/screens/NotificationsSettings.tsx:78
 msgid "Experimental: When this preference is enabled, you'll only receive reply and quote notifications from users you follow. We'll continue to add more controls here over time."
@@ -2658,15 +2658,15 @@ msgstr ""
 
 #: src/components/dialogs/MutedWords.tsx:500
 msgid "Expired"
-msgstr ""
+msgstr "Caducada"
 
 #: src/components/dialogs/MutedWords.tsx:502
 msgid "Expires {0}"
-msgstr ""
+msgstr "Caducada o {0}"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:47
 msgid "Explicit or potentially disturbing media."
-msgstr ""
+msgstr "Medios explícitos ou inapropiados."
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:35
 msgid "Explicit sexual images."
@@ -2684,22 +2684,22 @@ msgstr "Exportar os meus Datos"
 #: src/components/dialogs/EmbedConsent.tsx:54
 #: src/components/dialogs/EmbedConsent.tsx:58
 msgid "External Media"
-msgstr ""
+msgstr "Medios externos"
 
 #: src/components/dialogs/EmbedConsent.tsx:70
 #: src/view/screens/PreferencesExternalEmbeds.tsx:62
 msgid "External media may allow websites to collect information about you and your device. No information is sent or requested until you press the \"play\" button."
-msgstr ""
+msgstr "É posíbel que os medios externos permitan obter información a outros sitios web sobre ti e o teu dispositivo. Non se enviará información até que premas o botón \"reproducir\"."
 
 #: src/Navigation.tsx:309
 #: src/view/screens/PreferencesExternalEmbeds.tsx:51
 #: src/view/screens/Settings/index.tsx:646
 msgid "External Media Preferences"
-msgstr ""
+msgstr "Preferencias de medios externos"
 
 #: src/view/screens/Settings/index.tsx:637
 msgid "External media settings"
-msgstr ""
+msgstr "Axustes de medios externos"
 
 #: src/view/com/modals/AddAppPasswords.tsx:119
 #: src/view/com/modals/AddAppPasswords.tsx:123
@@ -3899,7 +3899,7 @@ msgstr "Listas"
 
 #: src/components/dms/BlockedByListDialog.tsx:39
 msgid "Lists blocking this user:"
-msgstr ""
+msgstr "Listas que bloquean este usuario:"
 
 #: src/view/screens/Search/Explore.tsx:131
 msgid "Load more"
@@ -3954,23 +3954,23 @@ msgstr ""
 
 #: src/view/shell/desktop/RightNav.tsx:104
 msgid "Logo by <0/>"
-msgstr ""
+msgstr "Logotipo por <0/>"
 
 #: src/view/shell/Drawer.tsx:296
 msgid "Logo by <0>@sawaratsuki.bsky.social</0>"
-msgstr ""
+msgstr "Logotipo por <0>@sawaratsuki.bsky.social</0>"
 
 #: src/components/RichText.tsx:226
 msgid "Long press to open tag menu for #{tag}"
-msgstr ""
+msgstr "Premer e manter para abrir o menú de etiquetas para #{tag}"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:110
 msgid "Looks like XXXXX-XXXXX"
-msgstr ""
+msgstr "Semella XXXXX-XXXXX"
 
 #: src/screens/Feeds/NoSavedFeedsOfAnyType.tsx:39
 msgid "Looks like you haven't saved any feeds! Use our recommendations or browse more below."
-msgstr ""
+msgstr "Semella que non gardaches ningunha fonte! Usa as nosas recomendacións ou procura abaixo máis"
 
 #: src/screens/Home/NoFeedsPinned.tsx:83
 msgid "Looks like you unpinned all your feeds. But don't worry, you can add some below 😄"
@@ -4549,9 +4549,9 @@ msgstr "Sen resultados para {query}"
 msgid "No search results found for \"{search}\"."
 msgstr "Sen resultados para \"{search}\"."
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:129
-#~ msgid "No self-labels can be applied to this post because it contains no media."
-#~ msgstr ""
+#: src/components/dms/NewChat.tsx:240
+#~ msgid "No search results found for \"{searchText}\"."
+#~ msgstr "Sen resultados para \"{searchText}\"."
 
 #: src/components/dialogs/EmbedConsent.tsx:104
 #: src/components/dialogs/EmbedConsent.tsx:111
@@ -4973,7 +4973,7 @@ msgstr "Abre este perfil"
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:107
 msgid "Opens video picker"
-msgstr ""
+msgstr "Abre o selector de vídeo"
 
 #: src/view/com/util/forms/DropdownButton.tsx:293
 msgid "Option {0} of {numItems}"
@@ -4990,15 +4990,15 @@ msgstr "Opcións:"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:389
 msgid "Or combine these options:"
-msgstr ""
+msgstr "Ou combina estas opcións:"
 
 #: src/screens/Deactivated.tsx:211
 msgid "Or, continue with another account."
-msgstr ""
+msgstr "Ou, continua con outra conta."
 
 #: src/screens/Deactivated.tsx:194
 msgid "Or, log into one of your other accounts."
-msgstr ""
+msgstr "Ou, inicia sesión con outras das túas contas."
 
 #: src/lib/moderation/useReportOptions.ts:27
 #: src/view/com/composer/labels/LabelsBtn.tsx:183
@@ -5082,7 +5082,7 @@ msgstr "Os permisos para acceder á galería foron denegados. Por favor, habilit
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:55
 msgid "Person toggle"
-msgstr ""
+msgstr "Alternar persoa"
 
 #: src/screens/Onboarding/index.tsx:28
 #: src/screens/Onboarding/state.ts:96
@@ -7676,6 +7676,14 @@ msgstr "A quen desexas enviar esta denuncia?"
 msgid "Today"
 msgstr "Hoxe"
 
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:597
+#~ msgid "Together, we're rebuilding the social internet. We're glad you're here."
+#~ msgstr "Xuntos estamos a reconstruír a internet social. Alédanos de que esteas aquí."
+
+#: src/components/dialogs/MutedWords.tsx:112
+#~ msgid "Toggle between muted word options."
+#~ msgstr "Alternar entre as opcións das palabras silenciadas."
+
 #: src/view/com/util/forms/DropdownButton.tsx:255
 msgid "Toggle dropdown"
 msgstr "Alternar o menú despregábel"
@@ -7779,7 +7787,7 @@ msgstr "Desbloquear a conta?"
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:72
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:76
 msgid "Undo repost"
-msgstr "Desfacer denunciar"
+msgstr ""
 
 #: src/view/com/profile/FollowButton.tsx:61
 msgctxt "action"
@@ -8324,27 +8332,27 @@ msgstr "Remataron as publicacións dos teus seguidos. Aquí tes o último de <0/
 
 #: src/view/com/composer/state/video.ts:431
 msgid "We were unable to determine if you are allowed to upload videos. Please try again."
-msgstr ""
+msgstr "Non puidemos determinar se tes permiso para subir vídeos. Téntao de novo."
 
 #: src/components/dialogs/BirthDateSettings.tsx:51
 msgid "We were unable to load your birth date preferences. Please try again."
-msgstr ""
+msgstr "Non puidemos cargar as túas preferencias da data de nacemento. Téntao de novo."
 
 #: src/screens/Moderation/index.tsx:420
 msgid "We were unable to load your configured labelers at this time."
-msgstr ""
+msgstr "Non puidemos cargar os teus etiquetados configurados neste intre."
 
 #: src/screens/Onboarding/StepInterests/index.tsx:129
 msgid "We weren't able to connect. Please try again to continue setting up your account. If it continues to fail, you can skip this flow."
-msgstr ""
+msgstr "Non puidemos conectar. Por favor, téntao de novo para continuar configurando a túa conta. Se o problema persiste, podes omitir este proceso."
 
 #: src/screens/SignupQueued.tsx:143
 msgid "We will let you know when your account is ready."
-msgstr ""
+msgstr "Informarémosche cando a túa conta estea lista."
 
 #: src/screens/Onboarding/StepInterests/index.tsx:134
 msgid "We'll use this to help customize your experience."
-msgstr ""
+msgstr "Empregaremos isto para axudar na personalización da túa experencia."
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:87
 msgid "We're having network issues, try again"
