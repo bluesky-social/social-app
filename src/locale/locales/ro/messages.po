@@ -7007,12 +7007,12 @@ msgstr "A apărut o problemă la contactarea serverului."
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:112
 #: src/view/screens/ProfileFeed.tsx:546
 msgid "There was an issue contacting the server, please check your internet connection and try again."
-msgstr "A apărut o problemă la contactarea serverului, vă rugăm să verificați conexiunea la internet și să încercați din nou."
+msgstr "A apărut o problemă la contactarea serverului, verifică conexiunea la internet și încearcă din nou."
 
 #: src/view/com/feeds/FeedSourceCard.tsx:127
 #: src/view/com/feeds/FeedSourceCard.tsx:140
 msgid "There was an issue contacting your server"
-msgstr "A apărut o problemă la contactarea serverului dvs."
+msgstr "A apărut o problemă la contactarea serverului tău."
 
 #: src/view/com/notifications/Feed.tsx:129
 msgid "There was an issue fetching notifications. Tap here to try again."
@@ -7033,26 +7033,26 @@ msgstr "A apărut o problemă la preluarea parolelor pentru aplicații."
 #: src/view/com/feeds/ProfileFeedgens.tsx:150
 #: src/view/com/lists/ProfileLists.tsx:149
 msgid "There was an issue fetching your lists. Tap here to try again."
-msgstr "A apărut o problemă la preluarea listelor dvs. Apăsați aici pentru a încerca din nou."
+msgstr "A apărut o problemă la preluarea listelor tale. Apasă aici pentru a încerca din nou."
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:102
 msgid "There was an issue fetching your service info"
-msgstr "A apărut o problemă la preluarea informațiilor despre serviciul dvs."
+msgstr "A apărut o problemă la preluarea informațiilor despre serviciul tău."
 
 #: src/view/com/posts/FeedErrorMessage.tsx:145
 msgid "There was an issue removing this feed. Please check your internet connection and try again."
-msgstr "A apărut o problemă la eliminarea acestui flux. Vă rugăm să verificați conexiunea la internet și să încercați din nou."
+msgstr "A apărut o problemă la eliminarea acestui flux. Verifică conexiunea la internet și încearcă din nou."
 
 #: src/components/dms/ReportDialog.tsx:217
 #: src/components/ReportDialog/SubmitView.tsx:87
 msgid "There was an issue sending your report. Please check your internet connection."
-msgstr "A apărut o problemă la trimiterea raportului dvs. Vă rugăm să verificați conexiunea la internet."
+msgstr "A apărut o problemă la trimiterea raportului. Verifică conexiunea la internet."
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:52
 #: src/view/com/posts/FeedShutdownMsg.tsx:71
 #: src/view/screens/ProfileFeed.tsx:211
 msgid "There was an issue updating your feeds, please check your internet connection and try again."
-msgstr "A apărut o problemă la actualizarea fluxurilor dvs., vă rugăm să verificați conexiunea la internet și să încercați din nou."
+msgstr "A apărut o problemă la actualizarea fluxurilor tale, verifică conexiunea la internet și încearcă din nou."
 
 #: src/view/screens/AppPasswords.tsx:75
 #~ msgid "There was an issue with fetching your app passwords"
@@ -7090,7 +7090,7 @@ msgstr "A apărut o problemă neașteptată în aplicație. Te rugăm să ne inf
 
 #: src/screens/SignupQueued.tsx:112
 msgid "There's been a rush of new users to Bluesky! We'll activate your account as soon as we can."
-msgstr "A fost o creștere a numărului de utilizatori noi pe Bluesky! Vă vom activa contul cât de curând posibil."
+msgstr "A fost o creștere a numărului de utilizatori noi pe Bluesky! Îți vom activa contul cât de curând posibil."
 
 #: src/screens/Settings/FollowingFeedPreferences.tsx:55
 msgid "These settings only apply to the Following feed."
@@ -7106,7 +7106,7 @@ msgstr "Acest cont a solicitat ca utilizatorii să se autentifice pentru a vedea
 
 #: src/components/dms/BlockedByListDialog.tsx:34
 msgid "This account is blocked by one or more of your moderation lists. To unblock, please visit the lists directly and remove this user."
-msgstr "Acest cont este blocat de una sau mai multe liste de moderare ale dvs. Pentru a debloca, vizitați direct listele și eliminați acest utilizator."
+msgstr "Acest cont este blocat de una sau mai multe liste de moderare ale tale. Pentru a debloca, vizitează direct listele și elimină acest utilizator."
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:246
 msgid "This appeal will be sent to <0>{sourceName}</0>."
@@ -7147,19 +7147,19 @@ msgstr "Această conversație este cu un cont șters sau dezactivat. Apăsați p
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:94
 msgid "This feature is in beta. You can read more about repository exports in <0>this blogpost</0>."
-msgstr "Această funcționalitate este în beta. Puteți citi mai multe despre exporturile de depozite în <0>acest articol de blog</0>."
+msgstr "Această funcționalitate este în beta. Poți citi mai multe despre exporturile de depozite în <0>acest articol de blog</0>."
 
 #: src/lib/strings/errors.ts:21
 msgid "This feature is not available while using an App Password. Please sign in with your main password."
-msgstr "Această funcționalitate nu este disponibilă în timp ce utilizați o parolă de aplicație. Vă rugăm să vă autentificați cu parola principală."
+msgstr "Această funcționalitate nu este disponibilă în timp ce utilizezi o parolă de aplicație. Autentifică-te cu parola principală."
 
 #: src/view/com/posts/FeedErrorMessage.tsx:120
 msgid "This feed is currently receiving high traffic and is temporarily unavailable. Please try again later."
-msgstr "Acest flux are în prezent un trafic mare și este temporar indisponibil. Vă rugăm să încercați mai târziu."
+msgstr "Acest flux are în prezent un trafic mare și este temporar indisponibil. Încearcă mai târziu."
 
 #: src/view/com/posts/CustomFeedEmptyState.tsx:38
 msgid "This feed is empty! You may need to follow more users or tune your language settings."
-msgstr "Acest flux este gol! Poate fi nevoie să urmăriți mai mulți utilizatori sau să ajustați setările de limbă."
+msgstr "Acest flux este gol! Poate fi nevoie să urmărești mai mulți utilizatori sau să ajustezi setările de limbă."
 
 #: src/components/StarterPack/Main/PostsList.tsx:36
 #: src/view/screens/ProfileFeed.tsx:478
@@ -7181,7 +7181,7 @@ msgstr "Aceste informații nu sunt partajate cu alți utilizatori."
 
 #: src/view/com/modals/VerifyEmail.tsx:127
 msgid "This is important in case you ever need to change your email or reset your password."
-msgstr "Acest lucru este important în cazul în care va trebui să vă schimbați adresa de e-mail sau să vă resetați parola."
+msgstr "Acest lucru este important în cazul în care va trebui să-ți schimbi adresa de e-mail sau să îți resetezi parola."
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:151
 msgid "This label was applied by <0>{0}</0>."
@@ -7193,7 +7193,7 @@ msgstr "Această etichetă a fost aplicată de autor."
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:163
 msgid "This label was applied by you."
-msgstr "Această etichetă a fost aplicată de dumneavoastră."
+msgstr "Această etichetă a fost aplicată de tine."
 
 #: src/screens/Profile/Sections/Labels.tsx:188
 msgid "This labeler hasn't declared what labels it publishes, and may not be active."
@@ -7201,7 +7201,7 @@ msgstr "Acest etichetator nu a declarat ce etichete publică și este posibil s�
 
 #: src/view/com/modals/LinkWarning.tsx:72
 msgid "This link is taking you to the following website:"
-msgstr "Acest link vă duce pe următorul site web:"
+msgstr "Acest link te duce pe următorul site web:"
 
 #: src/screens/List/ListHiddenScreen.tsx:136
 msgid "This list - created by <0>{0}</0> - contains possible violations of Bluesky's community guidelines in its name or description."
@@ -7246,7 +7246,7 @@ msgstr "Acest profil este vizibil doar pentru utilizatorii autentificați. Nu va
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:776
 msgid "This reply will be sorted into a hidden section at the bottom of your thread and will mute notifications for subsequent replies - both for yourself and others."
-msgstr "Acest răspuns va fi sortat într-o secțiune ascunsă în partea de jos a firului dvs. și va dezactiva notificările pentru răspunsurile ulterioare - atât pentru dvs., cât și pentru ceilalți."
+msgstr "Acest răspuns va fi sortat într-o secțiune ascunsă în partea de jos a firului tău și va dezactiva notificările pentru răspunsurile ulterioare - atât pentru tine, cât și pentru ceilalți."
 
 #: src/screens/Signup/StepInfo/Policies.tsx:37
 msgid "This service has not provided terms of service or a privacy policy."
@@ -7267,7 +7267,7 @@ msgstr "Acest utilizator v-a blocat."
 #: src/components/moderation/ModerationDetailsDialog.tsx:78
 #: src/lib/moderation/useModerationCauseDescription.ts:73
 msgid "This user has blocked you. You cannot view their content."
-msgstr "Acest utilizator v-a blocat. Nu puteți vizualiza conținutul lor."
+msgstr "Acest utilizator v-a blocat. Nu poți vizualiza conținutul său."
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:30
 msgid "This user has requested that their content only be shown to signed-in users."
@@ -7275,11 +7275,11 @@ msgstr "Acest utilizator a solicitat ca conținutul său să fie afișat doar ut
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:58
 msgid "This user is included in the <0>{0}</0> list which you have blocked."
-msgstr "Acest utilizator este inclus în lista <0>{0}</0> pe care ați blocat-o."
+msgstr "Acest utilizator este inclus în lista <0>{0}</0> pe care ai blocat-o."
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:90
 msgid "This user is included in the <0>{0}</0> list which you have muted."
-msgstr "Acest utilizator este inclus în lista <0>{0}</0> pe care ați dezactivat-o."
+msgstr "Acest utilizator este inclus în lista <0>{0}</0> pe care ai dezactivat-o."
 
 #: src/components/NewskieDialog.tsx:65
 msgid "This user is new here. Press for more info about when they joined."
@@ -7299,7 +7299,7 @@ msgstr "Aceasta va elimina @{0} din lista de acces rapid."
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:766
 msgid "This will remove your post from this quote post for all users, and replace it with a placeholder."
-msgstr "Aceasta va elimina postarea dvs. din acest citat pentru toți utilizatorii și o va înlocui cu un substitut."
+msgstr "Aceasta va elimina postarea ta din acest citat pentru toți utilizatorii și o va înlocui cu un substitut."
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:49
 #: src/screens/Settings/ContentAndMediaSettings.tsx:52
@@ -7324,19 +7324,19 @@ msgstr "Preferințe pentru fire"
 
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:99
 msgid "To disable the email 2FA method, please verify your access to the email address."
-msgstr "Pentru a dezactiva metoda 2FA prin e-mail, vă rugăm să verificați accesul la adresa de e-mail."
+msgstr "Pentru a dezactiva metoda 2FA prin e-mail, verifică accesul la adresa de e-mail."
 
 #: src/components/dms/ReportConversationPrompt.tsx:20
 msgid "To report a conversation, please report one of its messages via the conversation screen. This lets our moderators understand the context of your issue."
-msgstr "Pentru a raporta o conversație, vă rugăm să raportați unul dintre mesajele acesteia prin ecranul de conversație. Aceasta permite moderatorilor noștri să înțeleagă contextul problemei dvs."
+msgstr "Pentru a raporta o conversație, raportează unul dintre mesajele acesteia prin ecranul de conversație. Aceasta permite moderatorilor noștri să înțeleagă contextul problemei tale."
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:133
 msgid "To upload videos to Bluesky, you must first verify your email."
-msgstr "Pentru a încărca videoclipuri pe Bluesky, trebuie mai întâi să vă verificați adresa de e-mail."
+msgstr "Pentru a încărca videoclipuri pe Bluesky, trebuie mai întâi să verifici adresa de e-mail."
 
 #: src/components/ReportDialog/SelectLabelerView.tsx:32
 msgid "To whom would you like to send this report?"
-msgstr "Cui doriți să trimiteți acest raport?"
+msgstr "Cui dorești să trimiteți acest raport?"
 
 #: src/components/dms/DateDivider.tsx:44
 msgid "Today"
@@ -7348,7 +7348,7 @@ msgstr "Comută meniul derulant"
 
 #: src/screens/Moderation/index.tsx:340
 msgid "Toggle to enable or disable adult content"
-msgstr "Comutați pentru a activa sau dezactiva conținutul pentru adulți"
+msgstr "Comută pentru a activa sau dezactiva conținutul pentru adulți"
 
 #: src/screens/Hashtag.tsx:87
 #: src/view/screens/Search/Search.tsx:511
@@ -7383,7 +7383,7 @@ msgstr "Autentificare în doi pași (2FA)"
 
 #: src/screens/Messages/components/MessageInput.tsx:148
 msgid "Type your message here"
-msgstr "Scrieți mesajul aici"
+msgstr "Scrie mesajul aici"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:413
 msgid "Type:"
@@ -7399,7 +7399,7 @@ msgstr "Dezactivează mutarea listei"
 
 #: src/lib/strings/errors.ts:11
 msgid "Unable to connect. Please check your internet connection and try again."
-msgstr "Conexiune imposibilă. Vă rugăm să verificați conexiunea la internet și să încercați din nou."
+msgstr "Conexiune imposibilă. Verifică conexiunea la internet și încearcă din nou."
 
 #: src/screens/Login/ForgotPasswordForm.tsx:68
 #: src/screens/Login/index.tsx:76
@@ -7408,7 +7408,7 @@ msgstr "Conexiune imposibilă. Vă rugăm să verificați conexiunea la internet
 #: src/screens/Signup/index.tsx:71
 #: src/view/com/modals/ChangePassword.tsx:71
 msgid "Unable to contact your service. Please check your Internet connection."
-msgstr "Nu s-a putut contacta serviciul dvs. Vă rugăm să verificați conexiunea la internet."
+msgstr "Nu s-a putut contacta serviciul tău. Verifică conexiunea la internet."
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:649
 msgid "Unable to delete"
@@ -7666,7 +7666,7 @@ msgstr "Folosește recomandat"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:190
 msgid "Use this to sign into the other app along with your handle."
-msgstr "Folosiți acest lucru pentru a vă conecta la cealaltă aplicație împreună cu handle-ul dvs."
+msgstr "Folosește acest lucru pentru a te conecta la cealaltă aplicație împreună cu handle-ul tău."
 
 #: src/view/com/modals/InviteCodes.tsx:201
 msgid "Used by:"
@@ -7794,12 +7794,12 @@ msgstr "Verificați fișierul text"
 #: src/screens/Settings/AccountSettings.tsx:68
 #: src/screens/Settings/AccountSettings.tsx:84
 msgid "Verify your email"
-msgstr "Verificați e-mailul dvs."
+msgstr "Verifică-ți e-mailul"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:85
 #: src/view/com/modals/VerifyEmail.tsx:111
 msgid "Verify Your Email"
-msgstr "Verificați e-mailul dvs."
+msgstr "Verifică-ți e-mailul"
 
 #: src/screens/Settings/AboutSettings.tsx:60
 #: src/screens/Settings/AboutSettings.tsx:70
@@ -8014,7 +8014,7 @@ msgstr "Suntem foarte entuziasmați că ni te alături!"
 
 #: src/view/screens/ProfileList.tsx:113
 msgid "We're sorry, but we were unable to resolve this list. If this persists, please contact the list creator, @{handleOrDid}."
-msgstr "Ne pare rău, dar nu am reușit să rezolvăm această listă. Dacă problema persistă, vă rugăm să contactați creatorul listei, @{handleOrDid}."
+msgstr "Ne pare rău, dar nu am reușit să rezolvăm această listă. Dacă problema persistă, contactează creatorul listei, @{handleOrDid}."
 
 #: src/components/dialogs/MutedWords.tsx:378
 msgid "We're sorry, but we weren't able to load your muted words at this time. Please try again."
@@ -8200,7 +8200,7 @@ msgstr "Poți continua conversațiile în curs, indiferent de setarea pe care o 
 #: src/screens/Login/index.tsx:155
 #: src/screens/Login/PasswordUpdatedForm.tsx:27
 msgid "You can now sign in with your new password."
-msgstr "Acum vă puteți conecta cu noua parolă."
+msgstr "Acum te poți conecta cu noua parolă."
 
 #: src/screens/Deactivated.tsx:139
 msgid "You can reactivate your account to continue logging in. Your profile and posts will be visible to other users."
@@ -8228,87 +8228,87 @@ msgstr "Nu ai fluxuri salvate."
 
 #: src/view/com/post-thread/PostThread.tsx:214
 msgid "You have blocked the author or you have been blocked by the author."
-msgstr "Ați blocat autorul sau ați fost blocat de autor."
+msgstr "Ai blocat autorul sau ai fost blocat de autor."
 
 #: src/components/dms/MessagesListBlockedFooter.tsx:58
 msgid "You have blocked this user"
-msgstr "Ați blocat acest utilizator"
+msgstr "Ai blocat acest utilizator"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:72
 #: src/lib/moderation/useModerationCauseDescription.ts:55
 #: src/lib/moderation/useModerationCauseDescription.ts:63
 msgid "You have blocked this user. You cannot view their content."
-msgstr "Ați blocat acest utilizator. Nu puteți vedea conținutul lor."
+msgstr "Ai blocat acest utilizator. Nu poți vedea conținutul lui."
 
 #: src/screens/Login/SetNewPasswordForm.tsx:48
 #: src/screens/Login/SetNewPasswordForm.tsx:85
 #: src/view/com/modals/ChangePassword.tsx:88
 #: src/view/com/modals/ChangePassword.tsx:122
 msgid "You have entered an invalid code. It should look like XXXXX-XXXXX."
-msgstr "Ați introdus un cod invalid. Ar trebui să arate astfel: XXXXX-XXXXX."
+msgstr "ai introdus un cod invalid. Ar trebui să arate astfel: XXXXX-XXXXX."
 
 #: src/lib/moderation/useModerationCauseDescription.ts:114
 msgid "You have hidden this post"
-msgstr "Ați ascuns această postare"
+msgstr "Ai ascuns această postare"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:110
 msgid "You have hidden this post."
-msgstr "Ați ascuns această postare."
+msgstr "Ai ascuns această postare."
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:103
 #: src/lib/moderation/useModerationCauseDescription.ts:97
 msgid "You have muted this account."
-msgstr "Ați dezactivat acest cont."
+msgstr "Ai dezactivat acest cont."
 
 #: src/lib/moderation/useModerationCauseDescription.ts:91
 msgid "You have muted this user"
-msgstr "Ați dezactivat acest utilizator."
+msgstr "Ai dezactivat acest utilizator."
 
 #: src/screens/Messages/ChatList.tsx:223
 msgid "You have no conversations yet. Start one!"
-msgstr "Nu aveți încă conversații. Începeți una!"
+msgstr "Nu ai conversații încă. Începe una!"
 
 #: src/view/com/feeds/ProfileFeedgens.tsx:138
 msgid "You have no feeds."
-msgstr "Nu aveți fluxuri."
+msgstr "Nu ai fluxuri."
 
 #: src/view/com/lists/MyLists.tsx:90
 #: src/view/com/lists/ProfileLists.tsx:134
 msgid "You have no lists."
-msgstr "Nu aveți liste."
+msgstr "Nu ai liste."
 
 #: src/view/screens/ModerationBlockedAccounts.tsx:133
 msgid "You have not blocked any accounts yet. To block an account, go to their profile and select \"Block account\" from the menu on their account."
-msgstr "Nu ați blocat încă niciun cont. Pentru a bloca un cont, accesați profilul acestuia și selectați „Blochează contul” din meniul contului."
+msgstr "Nu ai blocat încă niciun cont. Pentru a bloca un cont, accesează profilul acestuia și selectează „Blochează contul” din meniul contului."
 
 #: src/view/screens/AppPasswords.tsx:96
 #~ msgid "You have not created any app passwords yet. You can create one by pressing the button below."
-#~ msgstr "Nu ați creat încă nicio parolă pentru aplicație. Puteți crea una apăsând butonul de mai jos."
+#~ msgstr "Nu ai creat încă nicio parolă pentru aplicație. Poți crea una apăsând butonul de mai jos."
 
 #: src/view/screens/ModerationMutedAccounts.tsx:132
 msgid "You have not muted any accounts yet. To mute an account, go to their profile and select \"Mute account\" from the menu on their account."
-msgstr "Nu ați dezactivat încă niciun cont. Pentru a dezactiva un cont, accesați profilul acestuia și selectați „Dezactivează contul” din meniul contului."
+msgstr "Nu ai dezactivat încă niciun cont. Pentru a dezactiva un cont, accesează profilul acestuia și selectează „Dezactivează contul” din meniul contului."
 
 #: src/components/Lists.tsx:52
 msgid "You have reached the end"
-msgstr "Ați ajuns la sfârșit"
+msgstr "Ai ajuns la sfârșit"
 
 #: src/lib/media/video/upload.shared.ts:56
 msgid "You have temporarily reached the limit for video uploads. Please try again later."
-msgstr "Ați atins temporar limita pentru încărcarea videoclipurilor. Vă rugăm să încercați din nou mai târziu."
+msgstr "Ai atins temporar limita pentru încărcarea videoclipurilor. Încearcă din nou mai târziu."
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:241
 msgid "You haven't created a starter pack yet!"
-msgstr "Nu ați creat încă un pachet de pornire!"
+msgstr "Nu ai creat încă un pachet de pornire!"
 
 #: src/components/dialogs/MutedWords.tsx:398
 msgid "You haven't muted any words or tags yet"
-msgstr "Nu ați dezactivat încă niciun cuvânt sau etichetă"
+msgstr "Nu ai dezactivat încă niciun cuvânt sau etichetă"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:117
 #: src/lib/moderation/useModerationCauseDescription.ts:125
 msgid "You hid this reply."
-msgstr "Ați ascuns acest răspuns."
+msgstr "Ai ascuns acest răspuns."
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:78
 msgid "You may appeal non-self labels if you feel they were placed in error."
@@ -8332,27 +8332,27 @@ msgstr "Poți selecta doar până la 4 imagini"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:106
 msgid "You must be 13 years of age or older to sign up."
-msgstr "Trebuie să aveți cel puțin 13 ani pentru a vă înregistra."
+msgstr "Trebuie să ai cel puțin 13 ani pentru a te înregistra."
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:324
 msgid "You must be following at least seven other people to generate a starter pack."
-msgstr "Trebuie să urmăriți cel puțin șapte persoane pentru a genera un pachet de pornire."
+msgstr "Trebuie să urmărești cel puțin șapte persoane pentru a genera un pachet de pornire."
 
 #: src/components/StarterPack/QrCodeDialog.tsx:60
 msgid "You must grant access to your photo library to save a QR code"
-msgstr "Trebuie să acordați acces la biblioteca foto pentru a salva un cod QR."
+msgstr "Trebuie să acorzi acces la biblioteca foto pentru a salva un cod QR."
 
 #: src/components/StarterPack/ShareDialog.tsx:69
 msgid "You must grant access to your photo library to save the image."
-msgstr "Trebuie să acordați acces la biblioteca foto pentru a salva imaginea."
+msgstr "Trebuie să acorzi acces la biblioteca foto pentru a salva imaginea."
 
 #: src/components/ReportDialog/SubmitView.tsx:210
 msgid "You must select at least one labeler for a report"
-msgstr "Trebuie să selectați cel puțin un etichetator pentru un raport."
+msgstr "Trebuie să selectezi cel puțin un etichetator pentru un raport."
 
 #: src/screens/Deactivated.tsx:134
 msgid "You previously deactivated @{0}."
-msgstr "Ați dezactivat anterior contul @{0}."
+msgstr "Ai dezactivat anterior contul @{0}."
 
 #: src/screens/Settings/Settings.tsx:249
 msgid "You will be signed out of all your accounts."
@@ -8424,19 +8424,19 @@ msgstr "Ești gata de pornire!"
 #: src/components/moderation/ModerationDetailsDialog.tsx:107
 #: src/lib/moderation/useModerationCauseDescription.ts:106
 msgid "You've chosen to hide a word or tag within this post."
-msgstr "Ați ales să ascundeți un cuvânt sau o etichetă în cadrul acestei postări."
+msgstr "Ai ales să ascunzi un cuvânt sau o etichetă în cadrul acestei postări."
 
 #: src/view/com/posts/FollowingEndOfFeed.tsx:44
 msgid "You've reached the end of your feed! Find some more accounts to follow."
-msgstr "Ați ajuns la sfârșitul fluxului! Găsiți mai multe conturi de urmărit."
+msgstr "Ai ajuns la sfârșitul fluxului! Caută mai multe conturi de urmărit."
 
 #: src/view/com/composer/state/video.ts:434
 msgid "You've reached your daily limit for video uploads (too many bytes)"
-msgstr "Ați atins limita zilnică pentru încărcarea videoclipurilor (prea mulți octeți)."
+msgstr "Ai atins limita zilnică pentru încărcarea videoclipurilor (prea mulți octeți)."
 
 #: src/view/com/composer/state/video.ts:438
 msgid "You've reached your daily limit for video uploads (too many videos)"
-msgstr "Ați atins limita zilnică pentru încărcarea videoclipurilor (prea multe videoclipuri)."
+msgstr "Ai atins limita zilnică pentru încărcarea videoclipurilor (prea multe videoclipuri)."
 
 #: src/screens/Signup/index.tsx:140
 msgid "Your account"
@@ -8448,7 +8448,7 @@ msgstr "Contul tău a fost șters."
 
 #: src/view/com/composer/state/video.ts:442
 msgid "Your account is not yet old enough to upload videos. Please try again later."
-msgstr "Contul tău nu este suficient de vechi pentru a încărca videoclipuri. Încercă mai târziu."
+msgstr "Contul tău nu este suficient de vechi pentru a încărca videoclipuri. Încearcă mai târziu."
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:65
 msgid "Your account repository, containing all public data records, can be downloaded as a \"CAR\" file. This file does not include media embeds, such as images, or your private data, which must be fetched separately."
@@ -8460,7 +8460,7 @@ msgstr "Data ta de naștere."
 
 #: src/view/com/util/post-embeds/VideoEmbed.web.tsx:171
 msgid "Your browser does not support the video format. Please try a different browser."
-msgstr "Browserul tău nu acceptă formatul video. Încercă un alt browser."
+msgstr "Browserul tău nu acceptă formatul video. Încearcă un alt browser."
 
 #: src/screens/Messages/components/ChatDisabled.tsx:25
 msgid "Your chats have been disabled"
@@ -8479,7 +8479,7 @@ msgstr "E-mailul tău pare a fi invalid."
 
 #: src/view/com/modals/ChangeEmail.tsx:120
 msgid "Your email has been updated but not verified. As a next step, please verify your new email."
-msgstr "E-mailul tău a fost actualizat, dar nu a fost verificat. Ca pas următor, vă rugăm să verificați noul e-mail."
+msgstr "E-mailul tău a fost actualizat, dar nu a fost verificat. Ca pas următor, verifică noul e-mail."
 
 #: src/view/com/modals/VerifyEmail.tsx:122
 msgid "Your email has not yet been verified. This is an important security step which we recommend."
