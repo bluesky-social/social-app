@@ -107,7 +107,7 @@ msgstr "Account genegeerd door lijst"
 
 #: src/view/com/profile/ProfileMenu.tsx:132
 msgid "Account blocked"
-msgstr "Geblokeerd account"
+msgstr "Geblokkeerd account"
 
 #: src/view/com/profile/ProfileMenu.tsx:145
 msgid "Account followed"
@@ -195,7 +195,7 @@ msgstr "Voeg aanbevolen feeds toe"
 
 #: src/screens/StarterPack/Wizard/index.tsx:497
 msgid "Add some feeds to your starter pack!"
-msgstr "Voeg enkele feeds toe aan uw startpakket!"
+msgstr "Voeg feeds toe aan uw startpakket!"
 
 #: src/screens/Feeds/NoFollowingFeed.tsx:41
 msgid "Add the default feed of only people you follow"
@@ -220,7 +220,7 @@ msgstr "Voeg toe aan mijn feeds"
 
 #: src/screens/StarterPack/Wizard/index.tsx:577
 msgid "Add {0} more to continue"
-msgstr "Voeg {0} meer toe om door te gaan"
+msgstr "Voeg nog {0} toe om door te gaan"
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:59
 msgid "Add {displayName} to starter pack"
@@ -275,12 +275,12 @@ msgstr "Alle feeds die u hebt opgeslagen, bij elkaar op één plek."
 #: src/view/com/modals/AddAppPasswords.tsx:188
 #: src/view/com/modals/AddAppPasswords.tsx:195
 msgid "Allow access to your direct messages"
-msgstr "Sta toegang tot uw privéberichten toe"
+msgstr "Geef toegang tot uw privéberichten"
 
 #: src/screens/Messages/Settings.tsx:64
 #: src/screens/Messages/Settings.tsx:67
 msgid "Allow new messages from"
-msgstr "Sta nieuwe privéberichten toe van"
+msgstr "Accepteer nieuwe privéberichten van"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:360
 msgid "Allow replies from:"
@@ -288,7 +288,7 @@ msgstr "Sta antwoorden toe van:"
 
 #: src/view/screens/AppPasswords.tsx:272
 msgid "Allows access to direct messages"
-msgstr "Geeft toegang tot privéberichten"
+msgstr "Staat toegang tot privéberichten toe"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:171
 #: src/view/com/modals/ChangePassword.tsx:171
@@ -327,7 +327,7 @@ msgstr "Er is een e-mail verzonden! Voer hieronder de bevestigingscode in die in
 
 #: src/view/com/modals/ChangeEmail.tsx:114
 msgid "An email has been sent to your previous address, {0}. It includes a confirmation code which you can enter below."
-msgstr "Er is een e-mail verzonden naar uw vorige adres {0}. Het bevat een bevestigingscode die u hieronder kunt invoeren."
+msgstr "Er is een e-mail verzonden naar uw vorige adres {0}. Deze bevat een bevestigingscode die u hieronder kunt invoeren."
 
 #: src/view/com/modals/VerifyEmail.tsx:132
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:95
@@ -482,7 +482,7 @@ msgstr "Weergave-instellingen"
 #: src/screens/Feeds/NoSavedFeedsOfAnyType.tsx:47
 #: src/screens/Home/NoFeedsPinned.tsx:93
 msgid "Apply default recommended feeds"
-msgstr "Standaard aanbevolen feeds toepassen"
+msgstr "Standaard aanbevolen feeds gebruiken"
 
 #: src/components/dialogs/MutedWords.tsx:433
 msgid "Are you sure?"
@@ -522,7 +522,7 @@ msgstr "Weet u zeker dat u {0} uit uw feeds wilt verwijderen?"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:60
 msgid "Are you writing in <0>{0}</0>?"
-msgstr "Schrijft u in <0>{0}</0>?"
+msgstr "Schrijft u in het <0>{0}</0>?"
 
 #: src/screens/Onboarding/index.tsx:23
 #: src/screens/Onboarding/state.ts:82
@@ -531,7 +531,7 @@ msgstr "Kunst"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:170
 msgid "Artistic or non-erotic nudity."
-msgstr "Artistieke of niet-erotische naaktheid."
+msgstr "Artistieke of niet-erotische bloot."
 
 #: src/screens/Signup/StepHandle.tsx:173
 msgid "At least 3 characters"
@@ -559,7 +559,7 @@ msgstr "Terug"
 
 #: src/view/screens/Settings/index.tsx:442
 msgid "Basics"
-msgstr "Basis"
+msgstr "Algemeen"
 
 #: src/components/dialogs/BirthDateSettings.tsx:106
 msgid "Birthday"
@@ -619,7 +619,7 @@ msgstr "Geblokkeerde accounts kunnen niet reageren op uw gesprekken, u niet verm
 
 #: src/view/screens/ModerationBlockedAccounts.tsx:116
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you. You will not see their content and they will be prevented from seeing yours."
-msgstr "Geblokkeerde accounts kunnen niet reageren op uw gesprekken, u niet vermelden en niet anderszins met u communiceren. U ziet hun content niet en zij kunnen de uwe niet zien."
+msgstr "Geblokkeerde accounts kunnen niet reageren op uw gesprekken, u niet vermelden en niet anderszins met u communiceren. U ziet hun tekst niet en zij kunnen de uwe niet zien."
 
 #: src/view/com/post-thread/PostThread.tsx:412
 msgid "Blocked post."
@@ -668,7 +668,7 @@ msgstr "Afbeeldingen vervagen"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:51
 msgid "Blur images and filter from feeds"
-msgstr "Afbeeldingen vervagen en filteren uit feeds"
+msgstr "Afbeeldingen vervagen en niet in feeds tonen"
 
 #: src/screens/Onboarding/index.tsx:30
 #: src/screens/Onboarding/state.ts:83
@@ -726,7 +726,7 @@ msgstr "Camera"
 
 #: src/view/com/modals/AddAppPasswords.tsx:180
 msgid "Can only contain letters, numbers, spaces, dashes, and underscores. Must be at least 4 characters long, but no more than 32 characters long."
-msgstr "Kan alleen letters, cijfers, spaties, streepjes en onderstrepingstekens bevatten. Moet minimaal 4 tekens lang zijn, maar niet meer dan 32 tekens."
+msgstr "Mag alleen letters, cijfers, spaties, streepjes en onderstrepingstekens bevatten. Moet minimaal 4 tekens lang zijn, maar niet meer dan 32 tekens."
 
 #: src/components/Menu/index.tsx:235
 #: src/components/Prompt.tsx:129
@@ -768,11 +768,11 @@ msgstr "Annuleeer accountverwijdering"
 
 #: src/view/com/modals/ChangeHandle.tsx:137
 msgid "Cancel change handle"
-msgstr "Annuleer wijzigen handle"
+msgstr "Annuleer wijzigen van handle"
 
 #: src/view/com/modals/CropImage.web.tsx:94
 msgid "Cancel image crop"
-msgstr "Annuleer afbeelding bijsnijden"
+msgstr "Annuleer bijsnijden van afbeelding"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:161
 msgid "Cancel quote post"
@@ -796,7 +796,7 @@ msgstr "Annuleert openen van de gelinkte website"
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:154
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:190
 msgid "Cannot interact with a blocked user"
-msgstr "Kan niet communiceren met een geblokkeerde gebruiker"
+msgstr "Kan geen interactie hebben met een geblokkeerde gebruiker"
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:56
 msgid "Captions & alt text"
@@ -892,7 +892,7 @@ msgstr "Controleer uw inbox voor een e-mail met de bevestigingscode om hieronder
 
 #: src/screens/StarterPack/Wizard/index.tsx:199
 msgid "Choose Feeds"
-msgstr "Kies Feeds"
+msgstr "Kies feeds"
 
 #: src/screens/StarterPack/Wizard/index.tsx:195
 msgid "Choose People"
@@ -908,11 +908,11 @@ msgstr "Kies voor mij"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:116
 msgid "Choose self-labels that are applicable for the media you are posting. If none are selected, this post is suitable for all audiences."
-msgstr "Kies labels die van toepassing zijn op de media die u plaatst. Dit bericht is geschikt voor alle doelgroepen als er geen zijn geselecteerd."
+msgstr "Kies labels die van toepassing zijn op de media die u plaatst. Dit bericht is geschikt voor alle doelgroepen als er geen labels zijn geselecteerd."
 
 #: src/screens/Onboarding/StepFinished.tsx:271
 msgid "Choose the algorithms that power your custom feeds."
-msgstr "Kies de algoritmen die uw aangepaste feeds aansturen."
+msgstr "Kies de algoritmen die uw gepersonaliseerde feeds aansturen."
 
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:107
 msgid "Choose this color as your avatar"
@@ -924,11 +924,11 @@ msgstr "Kies uw wachtwoord"
 
 #: src/view/screens/Settings/index.tsx:877
 msgid "Clear all storage data"
-msgstr "Wis alle opslaggegevens"
+msgstr "Wis alle opgeslagen gegevens"
 
 #: src/view/screens/Settings/index.tsx:880
 msgid "Clear all storage data (restart after this)"
-msgstr "Wis alle opslaggegevens (hierna opnieuw opstarten)"
+msgstr "Wis alle opgeslagen gegevens (hierna opnieuw opstarten)"
 
 #: src/components/forms/SearchInput.tsx:70
 msgid "Clear search query"
@@ -936,7 +936,7 @@ msgstr "Wis zoekopdracht"
 
 #: src/view/screens/Settings/index.tsx:878
 msgid "Clears all storage data"
-msgstr "Wist alle opslaggegevens"
+msgstr "Wist alle opgeslagen gegevens"
 
 #: src/view/com/modals/DeleteAccount.tsx:216
 msgid "Click here for more information."
@@ -952,11 +952,11 @@ msgstr "Klik hier om het tagmenu voor {tag} te openen"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:304
 msgid "Click to disable quote posts of this post."
-msgstr "Klik om citaatberichten voor dit bericht uit te schakelen."
+msgstr "Klik om citaatberichten voor dit bericht te verbieden."
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:305
 msgid "Click to enable quote posts of this post."
-msgstr "Klik om citaatberichten voor dit bericht in te schakelen."
+msgstr "Klik om citaatberichten voor dit bericht toe te staan."
 
 #: src/components/dms/MessageItem.tsx:240
 msgid "Click to retry failed message"
@@ -968,7 +968,7 @@ msgstr "Klimaat"
 
 #: src/components/dms/ChatEmptyPill.tsx:39
 msgid "Clip 🐴 clop 🐴"
-msgstr "Clip 🐴 clop 🐴"
+msgstr "Klik 🐴 klak 🐴"
 
 #: src/components/dialogs/GifSelect.tsx:282
 #: src/components/dialogs/VerifyEmailDialog.tsx:246
@@ -1014,7 +1014,7 @@ msgstr "Sluit afbeeldingsviewer"
 
 #: src/view/shell/index.web.tsx:67
 msgid "Close navigation footer"
-msgstr "Sluit navigatievoettekst"
+msgstr "Sluit onderste navigatiebalk"
 
 #: src/components/Menu/index.tsx:229
 #: src/components/TagMenu/index.tsx:261
@@ -1036,11 +1036,11 @@ msgstr "Sluit viewer voor headerafbeelding"
 
 #: src/view/com/notifications/FeedItem.tsx:265
 msgid "Collapse list of users"
-msgstr "Dichtvouwen gebruikerslijst"
+msgstr "Inklappen gebruikerslijst"
 
 #: src/view/com/notifications/FeedItem.tsx:470
 msgid "Collapses list of users for a given notification"
-msgstr "Dichtvouwen gebruikerslijst voor een bepaalde melding"
+msgstr "Inklappen gebruikerslijst voor een bepaalde melding"
 
 #: src/screens/Settings/AppearanceSettings.tsx:97
 msgid "Color mode"
@@ -1059,11 +1059,11 @@ msgstr "Stripboeken"
 #: src/Navigation.tsx:275
 #: src/view/screens/CommunityGuidelines.tsx:34
 msgid "Community Guidelines"
-msgstr "Communityrichtlijnen"
+msgstr "Gemeenschapsrichtlijnen"
 
 #: src/screens/Onboarding/StepFinished.tsx:284
 msgid "Complete onboarding and start using your account"
-msgstr "Voltooi de onboarding en begin met het gebruik van uw account"
+msgstr "Voltooi de onboarding en begin met het gebruiken van uw account"
 
 #: src/screens/Signup/index.tsx:144
 msgid "Complete the challenge"
@@ -1372,16 +1372,16 @@ msgstr "Cultuur"
 #: src/view/com/auth/server-input/index.tsx:94
 #: src/view/com/auth/server-input/index.tsx:96
 msgid "Custom"
-msgstr "Aangepast"
+msgstr "Gepersonaliseerd"
 
 #: src/view/com/modals/ChangeHandle.tsx:375
 msgid "Custom domain"
-msgstr "Aangepast domein"
+msgstr "Gepersonaliseerd domein"
 
 #: src/view/screens/Feeds.tsx:761
 #: src/view/screens/Search/Explore.tsx:391
 msgid "Custom feeds built by the community bring you new experiences and help you find the content you love."
-msgstr "Aangepaste feeds die door de community zijn gemaakt bieden u nieuwe ervaringen en helpen u de content te vinden die u leuk vindt."
+msgstr "Gepersonaliseerde feeds die door de gemeenschap zijn gemaakt bieden u nieuwe ervaringen en helpen u de inhoud te vinden die u leuk vindt."
 
 #: src/view/screens/PreferencesExternalEmbeds.tsx:54
 msgid "Customize media from external sites."
@@ -1613,7 +1613,7 @@ msgstr "Ontdek nieuwe feeds"
 #: src/view/com/posts/FollowingEmptyState.tsx:70
 #: src/view/com/posts/FollowingEndOfFeed.tsx:71
 msgid "Discover new custom feeds"
-msgstr "Ontdek nieuwe aangepaste feeds"
+msgstr "Ontdek nieuwe gepersonaliseerde feeds"
 
 #: src/view/screens/Search/Explore.tsx:389
 msgid "Discover new feeds"
@@ -1663,7 +1663,7 @@ msgstr "Bevat geen grafische of verontrustende inhoud."
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:39
 msgid "Does not include nudity."
-msgstr "Bevat geen naaktheid."
+msgstr "Bevat geen bloot."
 
 #: src/screens/Signup/StepHandle.tsx:159
 msgid "Doesn't begin or end with a hyphen"
@@ -2057,12 +2057,12 @@ msgstr "Alt-tekst uitbreiden"
 
 #: src/view/com/notifications/FeedItem.tsx:266
 msgid "Expand list of users"
-msgstr "Gebruikerslijst uitvouwen"
+msgstr "Gebruikerslijst uitklappen"
 
 #: src/view/com/composer/ComposerReplyTo.tsx:70
 #: src/view/com/composer/ComposerReplyTo.tsx:73
 msgid "Expand or collapse the full post you are replying to"
-msgstr "Uitvouwen of dichtvouwen van het volledige bericht waar u op reageert"
+msgstr "Uitklappen of inklappen van het volledige bericht waar u op reageert"
 
 #: src/lib/api/index.ts:376
 msgid "Expected uri to resolve to a record"
@@ -2243,7 +2243,7 @@ msgstr "Feeds"
 
 #: src/view/screens/SavedFeeds.tsx:205
 msgid "Feeds are custom algorithms that users build with a little coding expertise. <0/> for more information."
-msgstr "Feeds zijn aangepaste algoritmen die gebruikers met een beetje programmeerkennis bouwen. <0/> voor meer informatie."
+msgstr "Feeds zijn gepersonaliseerde algoritmen die gebruikers met een beetje programmeerkennis bouwen. <0/> voor meer informatie."
 
 #: src/components/FeedCard.tsx:273
 #: src/view/screens/SavedFeeds.tsx:83
@@ -3458,7 +3458,7 @@ msgstr "Negeer dit woord alleen in tags"
 
 #: src/components/dialogs/MutedWords.tsx:170
 msgid "Mute this word until you unmute it"
-msgstr "Negeer dit woord totdat u het opheft"
+msgstr "Negeer dit woord totdat u het niet meer negeert"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:507
 #: src/view/com/util/forms/PostDropdownBtn.tsx:513
@@ -3534,7 +3534,7 @@ msgstr "Naam is verplicht"
 #: src/lib/moderation/useReportOptions.ts:106
 #: src/lib/moderation/useReportOptions.ts:114
 msgid "Name or Description Violates Community Standards"
-msgstr "Naam of omschrijving schendt communitynormen"
+msgstr "Naam of omschrijving schendt gemeenschapsnormen"
 
 #: src/screens/Onboarding/index.tsx:22
 #: src/screens/Onboarding/state.ts:94
@@ -3794,7 +3794,7 @@ msgstr "Niemand gevonden. Probeer iemand anders te zoeken."
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:42
 msgid "Non-sexual Nudity"
-msgstr "Niet-seksuele naaktheid"
+msgstr "Niet-seksuele bloot"
 
 #: src/Navigation.tsx:124
 #: src/view/screens/Profile.tsx:128
@@ -3858,11 +3858,11 @@ msgstr "Nu"
 #: src/view/com/composer/labels/LabelsBtn.tsx:152
 #: src/view/com/composer/labels/LabelsBtn.tsx:155
 msgid "Nudity"
-msgstr "Naaktheid"
+msgstr "Bloot"
 
 #: src/lib/moderation/useReportOptions.ts:78
 msgid "Nudity or adult content not labeled as such"
-msgstr "Naaktheid of inhoud voor volwassenen die niet als zodanig is gelabeld"
+msgstr "Bloot of inhoud voor volwassenen die niet als zodanig is gelabeld"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:337
 msgid "OK"
@@ -5463,7 +5463,7 @@ msgstr "Instellingen"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:172
 msgid "Sexual activity or erotic nudity."
-msgstr "Seksuele activiteit of erotische naaktheid."
+msgstr "Seksuele activiteit of erotisch bloot."
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:38
 msgid "Sexually Suggestive"
@@ -5531,7 +5531,7 @@ msgstr "Deel dit startpakket"
 
 #: src/components/StarterPack/ShareDialog.tsx:100
 msgid "Share this starter pack and help people join your community on Bluesky."
-msgstr "Deel dit startpakket en help mensen lid te worden van uw community op Bluesky."
+msgstr "Deel dit startpakket en help mensen lid te worden van uw gemeenschap op Bluesky."
 
 #: src/components/dms/ChatEmptyPill.tsx:34
 msgid "Share your favorite feed!"
@@ -5993,7 +5993,7 @@ msgstr "Servicevoorwaarden"
 #: src/lib/moderation/useReportOptions.ts:107
 #: src/lib/moderation/useReportOptions.ts:115
 msgid "Terms used violate community standards"
-msgstr "De gebruikte termen schenden communitynormen"
+msgstr "De gebruikte termen schenden gemeenschapsnormen"
 
 #: src/components/dialogs/MutedWords.tsx:266
 msgid "Text & tags"
@@ -6044,7 +6044,7 @@ msgstr "De Bluesky-webapplicatie"
 
 #: src/view/screens/CommunityGuidelines.tsx:38
 msgid "The Community Guidelines have been moved to <0/>"
-msgstr "De communityrichtlijnen zijn verplaatst naar <0/>"
+msgstr "De gemeenschapsrichtlijnen zijn verplaatst naar <0/>"
 
 #: src/view/screens/CopyrightPolicy.tsx:35
 msgid "The Copyright Policy has been moved to <0/>"
@@ -6224,7 +6224,7 @@ msgstr "Dit account verzoekt gebruikers zich aan te melden vooraleer het profiel
 
 #: src/components/dms/BlockedByListDialog.tsx:34
 msgid "This account is blocked by one or more of your moderation lists. To unblock, please visit the lists directly and remove this user."
-msgstr "Dit account wordt geblokkeerd door een of meer van uw moderatielijsten. Om de blokkering op te heffen: ga rechtstreeks naar de lijsten en verwijder deze gebruiker."
+msgstr "Dit account wordt geblokkeerd door een of meer van uw moderatielijsten. Om dit account niet meer te blokkeren: ga rechtstreeks naar de lijsten en verwijder deze gebruiker."
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:246
 msgid "This appeal will be sent to <0>{sourceName}</0>."
@@ -6315,7 +6315,7 @@ msgstr "Deze link brengt u naar de volgende website:"
 
 #: src/screens/List/ListHiddenScreen.tsx:136
 msgid "This list - created by <0>{0}</0> - contains possible violations of Bluesky's community guidelines in its name or description."
-msgstr "Deze lijst - gemaakt door <0>{0}</0> - bevat mogelijke schendingen van Bluesky-communityrichtlijnen in de naam of omschrijving."
+msgstr "Deze lijst - gemaakt door <0>{0}</0> - bevat mogelijke schendingen van Bluesky-gemeenschapsrichtlijnen in de naam of omschrijving."
 
 #: src/view/screens/ProfileList.tsx:966
 msgid "This list is empty!"
@@ -6493,7 +6493,7 @@ msgstr "Deblokkeer lijst"
 
 #: src/view/screens/ProfileList.tsx:579
 msgid "Un-mute list"
-msgstr "Negeren opheffen-lijst"
+msgstr "Niet meer negeren-lijst"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:68
 #: src/screens/Login/index.tsx:76
@@ -6566,39 +6566,39 @@ msgstr "Vind deze feed niet meer leuk"
 #: src/components/TagMenu/index.tsx:248
 #: src/view/screens/ProfileList.tsx:692
 msgid "Unmute"
-msgstr "Negeren opheffen"
+msgstr "Niet meer negeren"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:156
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VolumeControl.tsx:93
 msgctxt "video"
 msgid "Unmute"
-msgstr "Negeren opheffen"
+msgstr "Niet meer negeren"
 
 #: src/view/com/profile/ProfileMenu.tsx:258
 #: src/view/com/profile/ProfileMenu.tsx:264
 msgid "Unmute Account"
-msgstr "Opheffen negeren account"
+msgstr "Account niet meer negeren"
 
 #: src/components/TagMenu/index.tsx:204
 msgid "Unmute all {displayTag} posts"
-msgstr "Negeren van alle {displayTag}-berichten opheffen"
+msgstr "Alle {displayTag}-berichten niet meer negeren"
 
 #: src/components/dms/ConvoMenu.tsx:176
 msgid "Unmute conversation"
-msgstr "Opheffen negeren gesprek"
+msgstr "Gesprek niet meer negeren"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:507
 #: src/view/com/util/forms/PostDropdownBtn.tsx:512
 msgid "Unmute thread"
-msgstr "Opheffen negeren gesprek"
+msgstr "Gesprek niet meer negeren"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:321
 msgid "Unmute video"
-msgstr "Video opheffen negeren"
+msgstr "Video niet meer negeren"
 
 #: src/components/TagMenu/index.web.tsx:115
 msgid "Unmute {truncatedTag}"
-msgstr "Negeren van {truncatedTag} opheffen"
+msgstr "{truncatedTag} niet meer negeren"
 
 #: src/view/screens/ProfileFeed.tsx:296
 #: src/view/screens/ProfileList.tsx:676
@@ -7315,7 +7315,7 @@ msgstr "U kunt deze later aanpassen in uw Weergave-instellingen."
 #: src/view/com/posts/FollowingEmptyState.tsx:63
 #: src/view/com/posts/FollowingEndOfFeed.tsx:64
 msgid "You can also discover new Custom Feeds to follow."
-msgstr "U kunt ook nieuwe aangepaste feeds ontdekken om te volgen."
+msgstr "U kunt ook nieuwe gepersonaliseerde feeds ontdekken om te volgen."
 
 #: src/view/com/modals/DeleteAccount.tsx:202
 msgid "You can also temporarily deactivate your account instead, and reactivate it at any time."
@@ -7674,7 +7674,7 @@ msgstr "nog te gaan."
 
 #: src/view/com/notifications/FeedItem.tsx:211
 msgid "liked your custom feed"
-msgstr "vond uw aangepaste feed leuk"
+msgstr "vond uw gepersonaliseerde feed leuk"
 
 #: src/view/com/notifications/FeedItem.tsx:178
 msgid "liked your post"
