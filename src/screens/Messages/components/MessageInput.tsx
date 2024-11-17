@@ -108,22 +108,22 @@ export function MessageInput({
         const measurement = measure(inputRef)
         if (!measurement) return
 
-        const max = windowHeight - -keyboardHeight.value - topInset - 150
+        const max = windowHeight - -keyboardHeight.get() - topInset - 150
         const availableSpace = max - measurement.height
 
-        maxHeight.value = max
-        isInputScrollable.value = availableSpace < 30
+        maxHeight.set(max)
+        isInputScrollable.set(availableSpace < 30)
       },
     },
     [windowHeight, topInset],
   )
 
   const animatedStyle = useAnimatedStyle(() => ({
-    maxHeight: maxHeight.value,
+    maxHeight: maxHeight.get(),
   }))
 
   const animatedProps = useAnimatedProps(() => ({
-    scrollEnabled: isInputScrollable.value,
+    scrollEnabled: isInputScrollable.get(),
   }))
 
   return (

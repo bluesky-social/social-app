@@ -38,6 +38,7 @@ import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
 import {colors} from '#/components/Admonition'
 import {Button} from '#/components/Button'
+import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {CalendarClock_Stroke2_Corner0_Rounded as CalendarClockIcon} from '#/components/icons/CalendarClock'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon} from '#/components/icons/Chevron'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
@@ -656,26 +657,24 @@ function PostOuterWrapper({
   hideTopBorder?: boolean
 }>) {
   const t = useTheme()
-  const [hover, setHover] = React.useState(false)
+  const {
+    state: hover,
+    onIn: onHoverIn,
+    onOut: onHoverOut,
+  } = useInteractionState()
   if (treeView && depth > 0) {
     return (
       <View
         style={[
           a.flex_row,
           a.px_sm,
+          a.flex_row,
           t.atoms.border_contrast_low,
           styles.cursor,
-          {
-            flexDirection: 'row',
-            borderTopWidth: depth === 1 ? a.border_t.borderTopWidth : 0,
-          },
+          depth === 1 && a.border_t,
         ]}
-        onPointerEnter={() => {
-          setHover(true)
-        }}
-        onPointerLeave={() => {
-          setHover(false)
-        }}>
+        onPointerEnter={onHoverIn}
+        onPointerLeave={onHoverOut}>
         {Array.from(Array(depth - 1)).map((_, n: number) => (
           <View
             key={`${post.uri}-padding-${n}`}
@@ -689,18 +688,23 @@ function PostOuterWrapper({
             ]}
           />
         ))}
-        <View style={{flex: 1}}>{children}</View>
+        <View style={a.flex_1}>
+          <SubtleWebHover
+            hover={hover}
+            style={{
+              left: (depth === 1 ? 0 : 2) - a.pl_sm.paddingLeft,
+              right: -a.pr_sm.paddingRight,
+            }}
+          />
+          {children}
+        </View>
       </View>
     )
   }
   return (
     <View
-      onPointerEnter={() => {
-        setHover(true)
-      }}
-      onPointerLeave={() => {
-        setHover(false)
-      }}
+      onPointerEnter={onHoverIn}
+      onPointerLeave={onHoverOut}
       style={[
         a.border_t,
         a.px_sm,
@@ -733,7 +737,7 @@ function ExpandedPostDetails({
   const isRootPost = !('reply' in post.record)
 
   const onTranslatePress = React.useCallback(() => {
-    openLink(translatorUrl)
+    openLink(translatorUrl, true)
   }, [openLink, translatorUrl])
 
   return (

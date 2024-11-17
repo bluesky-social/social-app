@@ -22,6 +22,7 @@ appId: xyz.blueskyweb.app
     id: "editDescriptionInput"
 - inputText: "Shhh"
 - tapOn: "Save"
+- tapOn: "Save"
 
 # view modlist
 - assertVisible: "Muted Users"
