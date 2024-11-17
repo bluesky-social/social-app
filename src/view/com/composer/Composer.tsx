@@ -558,11 +558,13 @@ export const ComposePost = ({
         isReply={!!replyTo}
         post={activePost}
         thread={composerState.thread}
+        isPublishing={isPublishing}
         dispatch={composerDispatch}
         bottomBarAnimatedStyle={bottomBarAnimatedStyle}
       />
       <ComposerFooter
         post={activePost}
+        isPublishing={isPublishing}
         dispatch={dispatch}
         showAddButton={
           !isEmptyPost(activePost) && (!nextPost || !isEmptyPost(nextPost))
@@ -1069,12 +1071,14 @@ function ComposerPills({
   isReply,
   thread,
   post,
+  isPublishing,
   dispatch,
   bottomBarAnimatedStyle,
 }: {
   isReply: boolean
   thread: ThreadDraft
   post: PostDraft
+  isPublishing: boolean
   dispatch: (action: ComposerAction) => void
   bottomBarAnimatedStyle: StyleProp<ViewStyle>
 }) {
@@ -1109,12 +1113,14 @@ function ComposerPills({
                 threadgate: nextThreadgate,
               })
             }}
+            disabled={isPublishing}
             style={bottomBarAnimatedStyle}
           />
         )}
         {hasMedia || hasLink ? (
           <LabelsBtn
             labels={post.labels}
+            disabled={isPublishing}
             onChange={nextLabels => {
               dispatch({
                 type: 'update_post',
@@ -1134,6 +1140,7 @@ function ComposerPills({
 
 function ComposerFooter({
   post,
+  isPublishing,
   dispatch,
   showAddButton,
   onEmojiButtonPress,
@@ -1142,6 +1149,7 @@ function ComposerFooter({
   onAddPost,
 }: {
   post: PostDraft
+  isPublishing: boolean
   dispatch: (action: PostAction) => void
   showAddButton: boolean
   onEmojiButtonPress: () => void
@@ -1194,29 +1202,40 @@ function ComposerFooter({
           <ToolbarWrapper style={[a.flex_row, a.align_center, a.gap_xs]}>
             <SelectPhotoBtn
               size={images.length}
-              disabled={media?.type === 'images' ? isMaxImages : !!media}
+              disabled={
+                media?.type === 'images' ? isMaxImages : !!media || isPublishing
+              }
               onAdd={onImageAdd}
             />
             <SelectVideoBtn
               onSelectVideo={asset => onSelectVideo(post.id, asset)}
-              disabled={!!media}
+              disabled={!!media || isPublishing}
               setError={onError}
             />
             <OpenCameraBtn
-              disabled={media?.type === 'images' ? isMaxImages : !!media}
+              disabled={
+                media?.type === 'images' ? isMaxImages : !!media || isPublishing
+              }
               onAdd={onImageAdd}
             />
-            <SelectGifBtn onSelectGif={onSelectGif} disabled={!!media} />
+            <SelectGifBtn
+              onSelectGif={onSelectGif}
+              disabled={!!media || isPublishing}
+            />
             {!isMobile ? (
               <Button
                 onPress={onEmojiButtonPress}
+                disabled={isPublishing}
                 style={a.p_sm}
                 label={_(msg`Open emoji picker`)}
                 accessibilityHint={_(msg`Open emoji picker`)}
                 variant="ghost"
                 shape="round"
                 color="primary">
-                <EmojiSmile size="lg" />
+                <EmojiSmile
+                  size="lg"
+                  style={isPublishing && t.atoms.text_contrast_low}
+                />
               </Button>
             ) : null}
           </ToolbarWrapper>
@@ -1227,6 +1246,7 @@ function ComposerFooter({
           <Button
             label={_(msg`Add new post`)}
             onPress={onAddPost}
+            disabled={isPublishing}
             style={[a.p_sm, a.m_2xs]}
             variant="ghost"
             shape="round"
@@ -1234,11 +1254,12 @@ function ComposerFooter({
             <FontAwesomeIcon
               icon="add"
               size={20}
-              color={t.palette.primary_500}
+              style={isPublishing && t.atoms.text_contrast_low}
+              color={isPublishing ? undefined : t.palette.primary_500}
             />
           </Button>
         )}
-        <SelectLangBtn />
+        <SelectLangBtn disabled={isPublishing} />
         <CharProgress
           count={post.shortenedGraphemeLength}
           style={{width: 65}}

@@ -21,9 +21,11 @@ import {Text} from '#/components/Typography'
 
 export function LabelsBtn({
   labels,
+  disabled,
   onChange,
 }: {
   labels: SelfLabel[]
+  disabled?: boolean
   onChange: (v: SelfLabel[]) => void
 }) {
   const control = Dialog.useDialogControl()
@@ -59,6 +61,7 @@ export function LabelsBtn({
           control.open()
         }}
         label={_(msg`Content warnings`)}
+        disabled={disabled}
         accessibilityHint={_(
           msg`Opens a dialog to add a content warning to your post`,
         )}

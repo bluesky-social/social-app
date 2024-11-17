@@ -19,6 +19,7 @@ export function ThreadgateBtn({
   onChangePostgate,
   threadgateAllowUISettings,
   onChangeThreadgateAllowUISettings,
+  disabled,
 }: {
   postgate: AppBskyFeedPostgate.Record
   onChangePostgate: (v: AppBskyFeedPostgate.Record) => void
@@ -26,6 +27,7 @@ export function ThreadgateBtn({
   threadgateAllowUISettings: ThreadgateAllowUISetting[]
   onChangeThreadgateAllowUISettings: (v: ThreadgateAllowUISetting[]) => void
 
+  disabled?: boolean
   style?: StyleProp<AnimatedStyle<ViewStyle>>
 }) {
   const {_} = useLingui()
@@ -58,6 +60,7 @@ export function ThreadgateBtn({
         testID="openReplyGateButton"
         onPress={onPress}
         label={label}
+        disabled={disabled}
         accessibilityHint={_(
           msg`Opens a dialog to choose who can reply to this thread`,
         )}

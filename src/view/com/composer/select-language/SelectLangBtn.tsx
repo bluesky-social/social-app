@@ -1,9 +1,6 @@
 import React, {useCallback, useMemo} from 'react'
 import {Keyboard, StyleSheet} from 'react-native'
-import {
-  FontAwesomeIcon,
-  FontAwesomeIconStyle,
-} from '@fortawesome/react-native-fontawesome'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -23,10 +20,12 @@ import {
   DropdownItemButton,
 } from '#/view/com/util/forms/DropdownButton'
 import {Text} from '#/view/com/util/text/Text'
+import {useTheme} from '#/alf'
 import {codeToLanguageName} from '../../../../locale/helpers'
 
-export function SelectLangBtn() {
+export function SelectLangBtn({disabled}: {disabled?: boolean}) {
   const pal = usePalette('default')
+  const t = useTheme()
   const {_} = useLingui()
   const {openModal} = useModalControls()
   const langPrefs = useLanguagePrefs()
@@ -103,17 +102,26 @@ export function SelectLangBtn() {
       items={items}
       openUpwards
       style={styles.button}
+      disabled={disabled}
       hitSlop={LANG_DROPDOWN_HITSLOP}
       accessibilityLabel={_(msg`Language selection`)}
       accessibilityHint="">
       {postLanguagesPref.length > 0 ? (
-        <Text type="lg-bold" style={[pal.link, styles.label]} numberOfLines={1}>
+        <Text
+          type="lg-bold"
+          style={[
+            pal.link,
+            styles.label,
+            disabled && t.atoms.text_contrast_low,
+          ]}
+          numberOfLines={1}>
           {postLanguagesPref.map(lang => codeToLanguageName(lang)).join(', ')}
         </Text>
       ) : (
         <FontAwesomeIcon
           icon="language"
-          style={pal.link as FontAwesomeIconStyle}
+          style={disabled && t.atoms.text_contrast_low}
+          color={disabled ? undefined : t.palette.primary_500}
           size={26}
         />
       )}
