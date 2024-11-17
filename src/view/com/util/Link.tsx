@@ -403,19 +403,21 @@ function onPressInner(
       closeModal() // close any active modals
 
       const [routeName, params] = router.matchPath(href)
-      const state = navigation.getState()
-      const tabState = getTabState(state, routeName)
-      if (tabState === TabState.InsideAtRoot) {
-        emitSoftReset()
-      } else if (navigationAction === 'push') {
+      if (navigationAction === 'push') {
         // @ts-ignore we're not able to type check on this one -prf
         navigation.dispatch(StackActions.push(routeName, params))
       } else if (navigationAction === 'replace') {
         // @ts-ignore we're not able to type check on this one -prf
         navigation.dispatch(StackActions.replace(routeName, params))
       } else if (navigationAction === 'navigate') {
-        // @ts-ignore we're not able to type check on this one -prf
-        navigation.navigate(routeName, params)
+        const state = navigation.getState()
+        const tabState = getTabState(state, routeName)
+        if (tabState === TabState.InsideAtRoot) {
+          emitSoftReset()
+        } else {
+          // @ts-ignore we're not able to type check on this one -prf
+          navigation.navigate(routeName, params)
+        }
       } else {
         throw Error('Unsupported navigator action.')
       }
