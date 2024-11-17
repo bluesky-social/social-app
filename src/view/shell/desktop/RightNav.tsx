@@ -9,8 +9,10 @@ import {useKawaiiMode} from '#/state/preferences/kawaii'
 import {useSession} from '#/state/session'
 import {DesktopFeeds} from '#/view/shell/desktop/Feeds'
 import {DesktopSearch} from '#/view/shell/desktop/Search'
-import {atoms as a, useTheme, web} from '#/alf'
-import {InlineLinkText} from '#/components/Link'
+import {atoms as a, tokens,useTheme, web} from '#/alf'
+import {GradientFill} from '#/components/GradientFill'
+import {Logotype} from '#/components/icons/BlueskyPlus'
+import {InlineLinkText, Link} from '#/components/Link'
 import {ProgressGuideList} from '#/components/ProgressGuide/List'
 import {Text} from '#/components/Typography'
 
@@ -57,6 +59,36 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
             </View>
           </>
         )}
+
+        {/* TODO NUX this */}
+        <View style={[a.pb_lg]}>
+          <Link
+            to="/subscriptions"
+            label={_(msg`Subscribe to Bluesky Plus`)}
+            style={[a.p_lg, a.overflow_hidden, a.rounded_md]}>
+            <GradientFill gradient={tokens.gradients.nordic} rotate="270deg" />
+            <View
+              style={[
+                a.absolute,
+                a.inset_0,
+                a.rounded_md,
+                {borderWidth: 2, borderColor: 'white', opacity: 0.1},
+              ]}
+            />
+
+            <View style={[a.flex_1, a.relative, a.z_10]}>
+              <Logotype width={100} fill={t.atoms.text.color} />
+
+              <View style={[a.pt_xs]}>
+                <Text style={[a.text_sm, a.leading_tight, {color: 'white'}]}>
+                  <Trans>
+                    Support Bluesky and get access to exclusive features.
+                  </Trans>
+                </Text>
+              </View>
+            </View>
+          </Link>
+        </View>
 
         <Text style={[a.leading_snug, t.atoms.text_contrast_low]}>
           {hasSession && (
