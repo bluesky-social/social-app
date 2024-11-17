@@ -130,6 +130,7 @@ import {
   ThreadDraft,
 } from './state/composer'
 import {NO_VIDEO, NoVideoState, processVideo, VideoState} from './state/video'
+import {clearThumbnailCache} from './videos/VideoTranscodeBackdrop'
 
 type CancelRef = {
   onPressCancel: () => void
@@ -249,7 +250,8 @@ export const ComposePost = ({
 
   const onClose = useCallback(() => {
     closeComposer()
-  }, [closeComposer])
+    clearThumbnailCache(queryClient)
+  }, [closeComposer, queryClient])
 
   const insets = useSafeAreaInsets()
   const viewStyles = useMemo(
