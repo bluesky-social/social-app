@@ -133,7 +133,7 @@ msgstr "{0} di {1}"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:479
 msgid "{0} people have used this starter pack!"
-msgstr "{0} persone hanno usat questo starter pack!"
+msgstr "{0} persone hanno usato questo starter pack!"
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:203
 msgid "{0} unread items"
@@ -336,7 +336,7 @@ msgstr "{likeCount, plural, one {# utente ha messo like} other {# utenti hanno m
 
 #: src/view/shell/Drawer.tsx:448
 msgid "{numUnreadNotifications} unread"
-msgstr "{numUnreadNotifications} non letto"
+msgstr "{numUnreadNotifications} non letto/i"
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:230
 msgid "{numUnreadNotifications} unread items"
@@ -588,7 +588,7 @@ msgstr "Aggiungi testo alternativo (opzionale)"
 #: src/screens/Settings/Settings.tsx:364
 #: src/screens/Settings/Settings.tsx:367
 msgid "Add another account"
-msgstr ""
+msgstr "Aggiungi un altro account"
 
 #: src/view/com/composer/Composer.tsx:713
 msgid "Add another post"
@@ -1005,14 +1005,14 @@ msgstr ""
 #: src/view/com/post-thread/PostThreadItem.tsx:794
 #: src/view/com/post-thread/PostThreadItem.tsx:833
 msgid "Archived post"
-msgstr ""
+msgstr "Post archiviati"
 
 #~ msgid "Are you sure you want delete this starter pack?"
 #~ msgstr "Sicuro di voler eliminare questo starter pack?"
 
 #: src/screens/Settings/AppPasswords.tsx:201
 msgid "Are you sure you want to delete the app password \"{0}\"?"
-msgstr ""
+msgstr "Sei sicuro di voler cancellare l'app password \"{0}\"?"
 
 #: src/view/screens/AppPasswords.tsx:283
 #~ msgid "Are you sure you want to delete the app password \"{name}\"?"
@@ -1121,17 +1121,17 @@ msgstr ""
 
 #: src/view/com/composer/Composer.tsx:591
 msgid "Before creating a post, you must first verify your email."
-msgstr ""
+msgstr "Prima di creare un post, devi verificare la tua email."
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:340
 msgid "Before creating a starter pack, you must first verify your email."
-msgstr ""
+msgstr "Prima di creare uno starter pack, devi verificare la tua email."
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:79
 #: src/components/dms/MessageProfileButton.tsx:89
 #: src/screens/Messages/Conversation.tsx:219
 msgid "Before you may message another user, you must first verify your email."
-msgstr ""
+msgstr "Prima di poter messaggiare un altro utente, devi verificare la tua email."
 
 #: src/components/dialogs/BirthDateSettings.tsx:106
 #: src/screens/Settings/AccountSettings.tsx:102
