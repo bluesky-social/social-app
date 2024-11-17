@@ -7024,25 +7024,25 @@ msgstr "Wycisz"
 
 #: src/components/TagMenu/index.web.tsx:115
 msgid "Unmute {truncatedTag}"
-msgstr "Przestań wyciszać {truncatedTag}"
+msgstr "Anuluj wyciszenie {truncatedTag}"
 
 #: src/view/com/profile/ProfileMenu.tsx:258
 #: src/view/com/profile/ProfileMenu.tsx:264
 msgid "Unmute Account"
-msgstr "Przestań wyciszać konto"
+msgstr "Anuluj wyciszenie konta"
 
 #: src/components/TagMenu/index.tsx:204
 msgid "Unmute all {displayTag} posts"
-msgstr "Przestań wyciszać wpisy {displayTag}"
+msgstr "Anuluj wyciszenie wpisów {displayTag}"
 
 #: src/components/dms/ConvoMenu.tsx:176
 msgid "Unmute conversation"
-msgstr "Przestań wyciszać rozmowę"
+msgstr "Anuluj wyciszenie rozmowy"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:507
 #: src/view/com/util/forms/PostDropdownBtn.tsx:512
 msgid "Unmute thread"
-msgstr "Przestań wyciszać wątek"
+msgstr "Anuluj wyciszenie wątku"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:318
 msgid "Unmute video"
