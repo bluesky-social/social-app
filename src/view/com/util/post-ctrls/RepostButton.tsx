@@ -9,7 +9,6 @@ import {useRequireAuth} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
-import {DialogOuterProps} from '#/components/Dialog'
 import {CloseQuote_Stroke2_Corner1_Rounded as Quote} from '#/components/icons/Quote'
 import {Repost_Stroke2_Corner2_Rounded as Repost} from '#/components/icons/Repost'
 import {Text} from '#/components/Typography'
@@ -94,7 +93,6 @@ let RepostButton = ({
           onRepost={onRepost}
           onQuote={onQuote}
           embeddingDisabled={embeddingDisabled}
-          dialogControl={dialogControl}
         />
       </Dialog.Outer>
     </>
@@ -108,20 +106,34 @@ let RepostButtonDialogInner = ({
   onRepost,
   onQuote,
   embeddingDisabled,
-  dialogControl,
 }: {
   isReposted: boolean
-  repostCount?: number
   onRepost: () => void
   onQuote: () => void
-  big?: boolean
   embeddingDisabled: boolean
-  dialogControl: DialogOuterProps['control']
 }): React.ReactNode => {
   const t = useTheme()
   const {_} = useLingui()
   const playHaptic = useHaptics()
-  const close = useCallback(() => dialogControl.close(), [dialogControl])
+  const control = Dialog.useDialogContext()
+
+  const onPressRepost = useCallback(() => {
+    if (!isReposted) playHaptic()
+
+    control.close(() => {
+      onRepost()
+    })
+  }, [control, isReposted, onRepost, playHaptic])
+
+  const onPressQuote = useCallback(() => {
+    playHaptic()
+    control.close(() => {
+      onQuote()
+    })
+  }, [control, onQuote, playHaptic])
+
+  const onPressClose = useCallback(() => control.close(), [control])
+
   return (
     <Dialog.ScrollableInner label={_(msg`Repost or quote post`)}>
       <View style={a.gap_xl}>
@@ -133,13 +145,7 @@ let RepostButtonDialogInner = ({
                 ? _(msg`Remove repost`)
                 : _(msg({message: `Repost`, context: 'action'}))
             }
-            onPress={() => {
-              if (!isReposted) playHaptic()
-
-              dialogControl.close(() => {
-                onRepost()
-              })
-            }}
+            onPress={onPressRepost}
             size="large"
             variant="ghost"
             color="primary">
@@ -159,12 +165,7 @@ let RepostButtonDialogInner = ({
                 ? _(msg`Quote posts disabled`)
                 : _(msg`Quote post`)
             }
-            onPress={() => {
-              playHaptic()
-              dialogControl.close(() => {
-                onQuote()
-              })
-            }}
+            onPress={onPressQuote}
             size="large"
             variant="ghost"
             color="primary">
@@ -190,7 +191,7 @@ let RepostButtonDialogInner = ({
         </View>
         <Button
           label={_(msg`Cancel quote post`)}
-          onPress={close}
+          onPress={onPressClose}
           size="large"
           variant="solid"
           color="primary">
