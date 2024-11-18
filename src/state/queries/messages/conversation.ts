@@ -3,7 +3,10 @@ import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {STALE} from '#/state/queries'
 import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
-import {useOnMarkAsRead} from '#/state/queries/messages/list-converations'
+import {
+  useOnMarkAsRead,
+  useOnMarkAsUnread,
+} from '#/state/queries/messages/list-converations'
 import {useAgent} from '#/state/session'
 import {
   ConvoListQueryData,
@@ -50,6 +53,44 @@ export function useMarkAsReadMutation() {
         {
           convoId,
           messageId,
+          unreadCount: 0, // TODO: figure out which field convo API uses
+        },
+        {
+          encoding: 'application/json',
+          headers: DM_SERVICE_HEADERS,
+        },
+      )
+    },
+    onMutate({convoId}) {
+      if (!convoId) throw new Error('No convoId provided')
+      optimisticUpdate(convoId)
+    },
+    onSettled() {
+      queryClient.invalidateQueries({queryKey: LIST_CONVOS_KEY})
+    },
+  })
+}
+
+export function useMarkAsUnreadMutation() {
+  const optimisticUpdate = useOnMarkAsUnread()
+  const queryClient = useQueryClient()
+  const agent = useAgent()
+
+  return useMutation({
+    mutationFn: async ({
+      convoId,
+      messageId,
+    }: {
+      convoId: string
+      messageId?: string
+    }) => {
+      if (!convoId) throw new Error('No convoId provided')
+
+      await agent.api.chat.bsky.convo.updateRead(
+        {
+          convoId,
+          messageId,
+          unreadCount: 1, // TODO: figure out which field convo API uses
         },
         {
           encoding: 'application/json',

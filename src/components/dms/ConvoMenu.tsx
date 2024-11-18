@@ -14,6 +14,7 @@ import {Shadow} from '#/state/cache/types'
 import {
   useConvoQuery,
   useMarkAsReadMutation,
+  useMarkAsUnreadMutation,
 } from '#/state/queries/messages/conversation'
 import {useMuteConvo} from '#/state/queries/messages/mute-conversation'
 import {useProfileBlockMutationQueue} from '#/state/queries/profile'
@@ -42,6 +43,7 @@ type Props = {
   control?: Menu.MenuControlProps
   currentScreen: 'list' | 'conversation'
   showMarkAsRead?: boolean
+  showMarkAsUnread?: boolean
   hideTrigger?: boolean
   blockInfo: {
     listBlocks: ModerationCause[]
@@ -56,6 +58,7 @@ export const ConvoMenu = React.memo(function ConvoMenu({
   control,
   currentScreen,
   showMarkAsRead,
+  showMarkAsUnread,
   hideTrigger,
   blockInfo,
   style,
@@ -67,6 +70,7 @@ export const ConvoMenu = React.memo(function ConvoMenu({
   const reportControl = Prompt.usePromptControl()
   const blockedByListControl = Prompt.usePromptControl()
   const {mutate: markAsRead} = useMarkAsReadMutation()
+  const {mutate: markAsUnread} = useMarkAsUnreadMutation()
 
   const {listBlocks, userBlock} = blockInfo
   const isBlocking = userBlock || !!listBlocks.length
@@ -158,6 +162,20 @@ export const ConvoMenu = React.memo(function ConvoMenu({
                   }>
                   <Menu.ItemText>
                     <Trans>Mark as read</Trans>
+                  </Menu.ItemText>
+                  <Menu.ItemIcon icon={Bubble} />
+                </Menu.Item>
+              )}
+              {showMarkAsUnread && (
+                <Menu.Item
+                  label={_(msg`Mark as unread`)}
+                  onPress={() =>
+                    markAsUnread({
+                      convoId: convo?.id,
+                    })
+                  }>
+                  <Menu.ItemText>
+                    <Trans>Mark as unread</Trans>
                   </Menu.ItemText>
                   <Menu.ItemIcon icon={Bubble} />
                 </Menu.Item>

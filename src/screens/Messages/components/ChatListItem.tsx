@@ -398,6 +398,7 @@ function ChatListItemReady({
           control={menuControl}
           currentScreen="list"
           showMarkAsRead={convo.unreadCount > 0}
+          showMarkAsUnread={convo.unreadCount === 0}
           hideTrigger={isNative}
           blockInfo={blockInfo}
           style={[
