@@ -8,6 +8,8 @@ import Svg, {
   Stop,
   SvgProps,
 } from 'react-native-svg'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 import {useTheme} from '#/alf'
 
@@ -24,15 +26,20 @@ export function Full(props: Props) {
   const {fill, ...rest} = props
   const gradient = fill === 'nordic'
   const styles = StyleSheet.flatten(props.style)
-  const _fill = gradient ? 'url(#nordic)' : fill || styles?.color || t.palette.primary_500
+  const _fill = gradient
+    ? 'url(#nordic)'
+    : fill || styles?.color || t.palette.primary_500
   // @ts-ignore it's fiiiiine
   const size = parseInt(rest.width || 100)
   const ratio = 90 / 448
+  const {_} = useLingui()
 
   return (
     <Svg
       fill="none"
       viewBox="0 0 448 90"
+      accessibilityLabel={_(msg`Bluesky Plus`)}
+      accessibilityHint=""
       {...rest}
       style={[styles, {width: size, height: size * ratio}]}>
       {gradient && <Gradients />}
@@ -54,15 +61,20 @@ export function Logotype(props: Props) {
   const {fill, ...rest} = props
   const gradient = fill === 'nordic'
   const styles = StyleSheet.flatten(props.style)
-  const _fill = gradient ? 'url(#nordic)' : fill || styles?.color || t.palette.primary_500
+  const _fill = gradient
+    ? 'url(#nordic)'
+    : fill || styles?.color || t.palette.primary_500
   // @ts-ignore it's fiiiiine
   const size = parseInt(rest.width || 100)
   const ratio = 78 / 330
+  const {_} = useLingui()
 
   return (
     <Svg
       fill="none"
       viewBox="0 0 330 78"
+      accessibilityLabel={_(msg`Bluesky Plus`)}
+      accessibilityHint=""
       {...rest}
       style={[styles, {width: size, height: size * ratio}]}>
       {gradient && <Gradients />}

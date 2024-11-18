@@ -6,22 +6,26 @@ import {useLingui} from '@lingui/react'
 import {FEEDBACK_FORM_URL, HELP_DESK_URL} from '#/lib/constants'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {useKawaiiMode} from '#/state/preferences/kawaii'
+import {useEntitlements} from '#/state/purchases/subscriptions/useEntitlements'
 import {useSession} from '#/state/session'
 import {DesktopFeeds} from '#/view/shell/desktop/Feeds'
 import {DesktopSearch} from '#/view/shell/desktop/Search'
-import {atoms as a, tokens,useTheme, web} from '#/alf'
+import {atoms as a, tokens, useTheme, web} from '#/alf'
+import {Button} from '#/components/Button'
+import {useDialogControl} from '#/components/Dialog'
+import {SubscriptionsDialog} from '#/components/dialogs/SubscriptionsDialog'
 import {GradientFill} from '#/components/GradientFill'
 import {Logotype} from '#/components/icons/BlueskyPlus'
-import {InlineLinkText, Link} from '#/components/Link'
+import {InlineLinkText} from '#/components/Link'
 import {ProgressGuideList} from '#/components/ProgressGuide/List'
 import {Text} from '#/components/Typography'
-import {useEntitlements} from '#/state/purchases/subscriptions/useEntitlements'
 
 export function DesktopRightNav({routeName}: {routeName: string}) {
   const t = useTheme()
   const {_} = useLingui()
   const {hasSession, currentAccount} = useSession()
-  const {data: entitlements, isLoading: isEntitlementsLoading} = useEntitlements()
+  const subscriptionsDialogControl = useDialogControl()
+  const {data: entitlements} = useEntitlements()
   const isSubscribed = entitlements?.some(e => e.id === 'core')
 
   const kawaii = useKawaiiMode()
@@ -66,11 +70,14 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
         {/* TODO NUX this */}
         {!isSubscribed && (
           <View style={[a.pb_lg]}>
-            <Link
-              to="/subscriptions"
+            <Button
+              onPress={() => subscriptionsDialogControl.open()}
               label={_(msg`Subscribe to Bluesky Plus`)}
               style={[a.p_lg, a.overflow_hidden, a.rounded_md]}>
-              <GradientFill gradient={tokens.gradients.nordic} rotate="270deg" />
+              <GradientFill
+                gradient={tokens.gradients.nordic}
+                rotate="270deg"
+              />
               <View
                 style={[
                   a.absolute,
@@ -81,7 +88,7 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
               />
 
               <View style={[a.flex_1, a.relative, a.z_10]}>
-                <Logotype width={100} fill='white' />
+                <Logotype width={100} fill="white" />
 
                 <View style={[a.pt_xs]}>
                   <Text style={[a.text_sm, a.leading_tight, {color: 'white'}]}>
@@ -91,7 +98,8 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
                   </Text>
                 </View>
               </View>
-            </Link>
+            </Button>
+            <SubscriptionsDialog control={subscriptionsDialogControl} />
           </View>
         )}
 
