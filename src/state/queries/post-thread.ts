@@ -216,6 +216,17 @@ export function sortThread(
         }
       }
 
+      const aPin = Boolean(a.record.text.trim() === '📌')
+      const bPin = Boolean(b.record.text.trim() === '📌')
+      if (aPin !== bPin) {
+        if (aPin) {
+          return 1
+        }
+        if (bPin) {
+          return -1
+        }
+      }
+
       if (opts.prioritizeFollowedUsers) {
         const af = a.post.author.viewer?.following
         const bf = b.post.author.viewer?.following

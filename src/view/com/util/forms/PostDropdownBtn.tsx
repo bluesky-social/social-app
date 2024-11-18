@@ -241,7 +241,7 @@ let PostDropdownBtn = ({
   }, [_, richText])
 
   const onPressTranslate = React.useCallback(async () => {
-    await openLink(translatorUrl)
+    await openLink(translatorUrl, true)
   }, [openLink, translatorUrl])
 
   const onHidePost = React.useCallback(() => {

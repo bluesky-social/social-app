@@ -55,13 +55,15 @@ export const ProgressGuideToast = React.forwardRef<
 
     // animate the opacity then set isOpen to false when done
     const setIsntOpen = () => setIsOpen(false)
-    opacity.value = withTiming(
-      0,
-      {
-        duration: 400,
-        easing: Easing.out(Easing.cubic),
-      },
-      () => runOnJS(setIsntOpen)(),
+    opacity.set(() =>
+      withTiming(
+        0,
+        {
+          duration: 400,
+          easing: Easing.out(Easing.cubic),
+        },
+        () => runOnJS(setIsntOpen)(),
+      ),
     )
   }, [setIsOpen, opacity])
 
@@ -71,20 +73,24 @@ export const ProgressGuideToast = React.forwardRef<
 
     // animate the vertical translation, the opacity, and the checkmark
     const playCheckmark = () => animatedCheckRef.current?.play()
-    opacity.value = 0
-    opacity.value = withTiming(
-      1,
-      {
-        duration: 100,
-        easing: Easing.out(Easing.cubic),
-      },
-      () => runOnJS(playCheckmark)(),
+    opacity.set(0)
+    opacity.set(() =>
+      withTiming(
+        1,
+        {
+          duration: 100,
+          easing: Easing.out(Easing.cubic),
+        },
+        () => runOnJS(playCheckmark)(),
+      ),
     )
-    translateY.value = 0
-    translateY.value = withTiming(insets.top + 10, {
-      duration: 500,
-      easing: Easing.out(Easing.cubic),
-    })
+    translateY.set(0)
+    translateY.set(() =>
+      withTiming(insets.top + 10, {
+        duration: 500,
+        easing: Easing.out(Easing.cubic),
+      }),
+    )
 
     // start the countdown timer to autoclose
     timeoutRef.current = setTimeout(close, visibleDuration || 5e3)
@@ -114,8 +120,8 @@ export const ProgressGuideToast = React.forwardRef<
   }, [winDim.width])
 
   const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{translateY: translateY.value}],
-    opacity: opacity.value,
+    transform: [{translateY: translateY.get()}],
+    opacity: opacity.get(),
   }))
 
   return (

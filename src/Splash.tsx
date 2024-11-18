@@ -81,40 +81,40 @@ export function Splash(props: React.PropsWithChildren<Props>) {
     return {
       transform: [
         {
-          scale: interpolate(intro.value, [0, 1], [0.8, 1], 'clamp'),
+          scale: interpolate(intro.get(), [0, 1], [0.8, 1], 'clamp'),
         },
         {
           scale: interpolate(
-            outroLogo.value,
+            outroLogo.get(),
             [0, 0.08, 1],
             [1, 0.8, 500],
             'clamp',
           ),
         },
       ],
-      opacity: interpolate(intro.value, [0, 1], [0, 1], 'clamp'),
+      opacity: interpolate(intro.get(), [0, 1], [0, 1], 'clamp'),
     }
   })
   const bottomLogoAnimation = useAnimatedStyle(() => {
     return {
-      opacity: interpolate(intro.value, [0, 1], [0, 1], 'clamp'),
+      opacity: interpolate(intro.get(), [0, 1], [0, 1], 'clamp'),
     }
   })
   const reducedLogoAnimation = useAnimatedStyle(() => {
     return {
       transform: [
         {
-          scale: interpolate(intro.value, [0, 1], [0.8, 1], 'clamp'),
+          scale: interpolate(intro.get(), [0, 1], [0.8, 1], 'clamp'),
         },
       ],
-      opacity: interpolate(intro.value, [0, 1], [0, 1], 'clamp'),
+      opacity: interpolate(intro.get(), [0, 1], [0, 1], 'clamp'),
     }
   })
 
   const logoWrapperAnimation = useAnimatedStyle(() => {
     return {
       opacity: interpolate(
-        outroAppOpacity.value,
+        outroAppOpacity.get(),
         [0, 0.1, 0.2, 1],
         [1, 1, 0, 0],
         'clamp',
@@ -126,11 +126,11 @@ export function Splash(props: React.PropsWithChildren<Props>) {
     return {
       transform: [
         {
-          scale: interpolate(outroApp.value, [0, 1], [1.1, 1], 'clamp'),
+          scale: interpolate(outroApp.get(), [0, 1], [1.1, 1], 'clamp'),
         },
       ],
       opacity: interpolate(
-        outroAppOpacity.value,
+        outroAppOpacity.get(),
         [0, 0.1, 0.2, 1],
         [0, 0, 1, 1],
         'clamp',
@@ -146,29 +146,37 @@ export function Splash(props: React.PropsWithChildren<Props>) {
     if (isReady) {
       SplashScreen.hideAsync()
         .then(() => {
-          intro.value = withTiming(
-            1,
-            {duration: 400, easing: Easing.out(Easing.cubic)},
-            async () => {
-              // set these values to check animation at specific point
-              // outroLogo.value = 0.1
-              // outroApp.value = 0.1
-              outroLogo.value = withTiming(
-                1,
-                {duration: 1200, easing: Easing.in(Easing.cubic)},
-                () => {
-                  runOnJS(onFinish)()
-                },
-              )
-              outroApp.value = withTiming(1, {
-                duration: 1200,
-                easing: Easing.inOut(Easing.cubic),
-              })
-              outroAppOpacity.value = withTiming(1, {
-                duration: 1200,
-                easing: Easing.in(Easing.cubic),
-              })
-            },
+          intro.set(() =>
+            withTiming(
+              1,
+              {duration: 400, easing: Easing.out(Easing.cubic)},
+              async () => {
+                // set these values to check animation at specific point
+                // outroLogo.set(0.1)
+                // outroApp.set(0.1)
+                outroLogo.set(() =>
+                  withTiming(
+                    1,
+                    {duration: 1200, easing: Easing.in(Easing.cubic)},
+                    () => {
+                      runOnJS(onFinish)()
+                    },
+                  ),
+                )
+                outroApp.set(() =>
+                  withTiming(1, {
+                    duration: 1200,
+                    easing: Easing.inOut(Easing.cubic),
+                  }),
+                )
+                outroAppOpacity.set(() =>
+                  withTiming(1, {
+                    duration: 1200,
+                    easing: Easing.in(Easing.cubic),
+                  }),
+                )
+              },
+            ),
           )
         })
         .catch(() => {})
