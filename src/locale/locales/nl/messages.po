@@ -448,23 +448,23 @@ msgstr "App-wachtwoordinstellingen"
 #: src/components/moderation/LabelsOnMeDialog.tsx:148
 #: src/components/moderation/LabelsOnMeDialog.tsx:151
 msgid "Appeal"
-msgstr "Beroep"
+msgstr "Bezwaar maken"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:243
 msgid "Appeal \"{0}\" label"
-msgstr "Beroep tegen \"{0}\"-label"
+msgstr "Bezwaar maken tegen \"{0}\"-label"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:233
 #: src/screens/Messages/components/ChatDisabled.tsx:91
 msgid "Appeal submitted"
-msgstr "Beroep ingediend"
+msgstr "Bezwaar ingediend"
 
 #: src/screens/Messages/components/ChatDisabled.tsx:51
 #: src/screens/Messages/components/ChatDisabled.tsx:53
 #: src/screens/Messages/components/ChatDisabled.tsx:99
 #: src/screens/Messages/components/ChatDisabled.tsx:101
 msgid "Appeal this decision"
-msgstr "Beroep aantekenen tegen deze beslissing"
+msgstr "Bezwaar maken tegen deze beslissing"
 
 #: src/screens/Settings/AppearanceSettings.tsx:89
 #: src/view/screens/Settings/index.tsx:485
@@ -998,7 +998,7 @@ msgstr "Sluit waarschuwing"
 
 #: src/view/com/util/BottomSheetCustomBackdrop.tsx:36
 msgid "Close bottom drawer"
-msgstr "Sluit onderste lade"
+msgstr "Sluit onderste drawer"
 
 #: src/components/dialogs/GifSelect.tsx:276
 msgid "Close dialog"
@@ -2186,7 +2186,7 @@ msgstr "Verzenden mislukt"
 #: src/components/moderation/LabelsOnMeDialog.tsx:229
 #: src/screens/Messages/components/ChatDisabled.tsx:87
 msgid "Failed to submit appeal, please try again."
-msgstr "Het indienen van beroep is mislukt, probeer het opnieuw."
+msgstr "Het indienen van bezwaar is mislukt, probeer het opnieuw."
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:229
 msgid "Failed to toggle thread mute, please try again"
@@ -6228,11 +6228,11 @@ msgstr "Dit account wordt geblokkeerd door een of meer van uw moderatielijsten. 
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:246
 msgid "This appeal will be sent to <0>{sourceName}</0>."
-msgstr "Dit beroep wordt verzonden naar <0>{sourceName}</0>."
+msgstr "Dit bezwaar wordt verzonden naar <0>{sourceName}</0>."
 
 #: src/screens/Messages/components/ChatDisabled.tsx:104
 msgid "This appeal will be sent to Bluesky's moderation service."
-msgstr "Dit beroep wordt doorgestuurd naar de moderatieservice van Bluesky."
+msgstr "Dit bezwaar wordt doorgestuurd naar de moderatieservice van Bluesky."
 
 #: src/screens/Messages/components/MessageListError.tsx:18
 msgid "This chat was disconnected"
@@ -7440,11 +7440,11 @@ msgstr "U heeft deze reactie verborgen."
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:78
 msgid "You may appeal non-self labels if you feel they were placed in error."
-msgstr "U kunt beroep aantekenen tegen labels geplaatst door anderen als u vindt dat ze ten onrechte zijn geplaatst."
+msgstr "U kunt bezwaar maken tegen labels geplaatst door anderen als u vindt dat ze ten onrechte zijn geplaatst."
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:83
 msgid "You may appeal these labels if you feel they were placed in error."
-msgstr "U kunt beroep aantekenen tegen deze labels als u vindt dat ze ten onrechte zijn geplaatst."
+msgstr "U kunt bezwaar maken tegen deze labels als u vindt dat ze ten onrechte zijn geplaatst."
 
 #: src/screens/StarterPack/Wizard/State.tsx:97
 msgid "You may only add up to 3 feeds"
