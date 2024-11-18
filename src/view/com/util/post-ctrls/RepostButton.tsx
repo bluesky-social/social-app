@@ -1,6 +1,6 @@
 import React, {memo, useCallback} from 'react'
 import {View} from 'react-native'
-import {msg, plural} from '@lingui/macro'
+import {msg, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {POST_CTRL_HITSLOP} from '#/lib/constants'
@@ -151,9 +151,11 @@ let RepostButtonDialogInner = ({
             color="primary">
             <Repost size="lg" fill={t.palette.primary_500} />
             <Text style={[a.font_bold, a.text_xl]}>
-              {isReposted
-                ? _(msg`Remove repost`)
-                : _(msg({message: `Repost`, context: 'action'}))}
+              {isReposted ? (
+                <Trans>Remove repost</Trans>
+              ) : (
+                <Trans context="action">Repost</Trans>
+              )}
             </Text>
           </Button>
           <Button
@@ -183,9 +185,11 @@ let RepostButtonDialogInner = ({
                 a.text_xl,
                 embeddingDisabled && t.atoms.text_contrast_low,
               ]}>
-              {embeddingDisabled
-                ? _(msg`Quote posts disabled`)
-                : _(msg`Quote post`)}
+              {embeddingDisabled ? (
+                <Trans>Quote posts disabled</Trans>
+              ) : (
+                <Trans>Quote post</Trans>
+              )}
             </Text>
           </Button>
         </View>
@@ -195,7 +199,9 @@ let RepostButtonDialogInner = ({
           size="large"
           variant="outline"
           color="primary">
-          <ButtonText>{_(msg`Cancel`)}</ButtonText>
+          <ButtonText>
+            <Trans>Cancel</Trans>
+          </ButtonText>
         </Button>
       </View>
     </Dialog.ScrollableInner>
