@@ -15,11 +15,14 @@ import {Logotype} from '#/components/icons/BlueskyPlus'
 import {InlineLinkText, Link} from '#/components/Link'
 import {ProgressGuideList} from '#/components/ProgressGuide/List'
 import {Text} from '#/components/Typography'
+import {useEntitlements} from '#/state/purchases/subscriptions/useEntitlements'
 
 export function DesktopRightNav({routeName}: {routeName: string}) {
   const t = useTheme()
   const {_} = useLingui()
   const {hasSession, currentAccount} = useSession()
+  const {data: entitlements, isLoading: isEntitlementsLoading} = useEntitlements()
+  const isSubscribed = entitlements?.some(e => e.id === 'core')
 
   const kawaii = useKawaiiMode()
 
@@ -61,34 +64,36 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
         )}
 
         {/* TODO NUX this */}
-        <View style={[a.pb_lg]}>
-          <Link
-            to="/subscriptions"
-            label={_(msg`Subscribe to Bluesky Plus`)}
-            style={[a.p_lg, a.overflow_hidden, a.rounded_md]}>
-            <GradientFill gradient={tokens.gradients.nordic} rotate="270deg" />
-            <View
-              style={[
-                a.absolute,
-                a.inset_0,
-                a.rounded_md,
-                {borderWidth: 2, borderColor: 'white', opacity: 0.1},
-              ]}
-            />
+        {!isSubscribed && (
+          <View style={[a.pb_lg]}>
+            <Link
+              to="/subscriptions"
+              label={_(msg`Subscribe to Bluesky Plus`)}
+              style={[a.p_lg, a.overflow_hidden, a.rounded_md]}>
+              <GradientFill gradient={tokens.gradients.nordic} rotate="270deg" />
+              <View
+                style={[
+                  a.absolute,
+                  a.inset_0,
+                  a.rounded_md,
+                  {borderWidth: 2, borderColor: 'white', opacity: 0.1},
+                ]}
+              />
 
-            <View style={[a.flex_1, a.relative, a.z_10]}>
-              <Logotype width={100} fill={t.atoms.text.color} />
+              <View style={[a.flex_1, a.relative, a.z_10]}>
+                <Logotype width={100} fill='white' />
 
-              <View style={[a.pt_xs]}>
-                <Text style={[a.text_sm, a.leading_tight, {color: 'white'}]}>
-                  <Trans>
-                    Support Bluesky and get access to exclusive features.
-                  </Trans>
-                </Text>
+                <View style={[a.pt_xs]}>
+                  <Text style={[a.text_sm, a.leading_tight, {color: 'white'}]}>
+                    <Trans>
+                      Support Bluesky and get access to exclusive features.
+                    </Trans>
+                  </Text>
+                </View>
               </View>
-            </View>
-          </Link>
-        </View>
+            </Link>
+          </View>
+        )}
 
         <Text style={[a.leading_snug, t.atoms.text_contrast_low]}>
           {hasSession && (
