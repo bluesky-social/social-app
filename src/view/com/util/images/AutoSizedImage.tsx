@@ -1,11 +1,11 @@
 import React from 'react'
 import {DimensionValue, Pressable, View} from 'react-native'
-import Animated, {AnimatedRef, useAnimatedRef} from 'react-native-reanimated'
 import {Image} from 'expo-image'
 import {AppBskyEmbedImages} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {HandleRef, useHandleRef} from '#/lib/hooks/useHandleRef'
 import type {Dimensions} from '#/lib/media/types'
 import {isNative} from '#/platform/detection'
 import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
@@ -68,17 +68,14 @@ export function AutoSizedImage({
   image: AppBskyEmbedImages.ViewImage
   crop?: 'none' | 'square' | 'constrained'
   hideBadge?: boolean
-  onPress?: (
-    containerRef: AnimatedRef<React.Component<{}, {}, any>>,
-    fetchedDims: Dimensions | null,
-  ) => void
+  onPress?: (containerRef: HandleRef, fetchedDims: Dimensions | null) => void
   onLongPress?: () => void
   onPressIn?: () => void
 }) {
   const t = useTheme()
   const {_} = useLingui()
   const largeAlt = useLargeAltBadgeEnabled()
-  const containerRef = useAnimatedRef()
+  const containerRef = useHandleRef()
 
   const [fetchedDims, setFetchedDims] = React.useState<Dimensions | null>(null)
   const dims = fetchedDims ?? image.aspectRatio
@@ -105,7 +102,7 @@ export function AutoSizedImage({
   const hasAlt = !!image.alt
 
   const contents = (
-    <Animated.View ref={containerRef} collapsable={false} style={{flex: 1}}>
+    <View ref={containerRef} collapsable={false} style={{flex: 1}}>
       <Image
         style={[a.w_full, a.h_full]}
         source={image.thumb}
@@ -185,7 +182,7 @@ export function AutoSizedImage({
           )}
         </View>
       ) : null}
-    </Animated.View>
+    </View>
   )
 
   if (cropDisabled) {
