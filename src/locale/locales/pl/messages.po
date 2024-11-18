@@ -7010,7 +7010,7 @@ msgstr "Odlub kanał"
 #: src/components/TagMenu/index.tsx:248
 #: src/view/screens/ProfileList.tsx:692
 msgid "Unmute"
-msgstr "Przestań wyciszać"
+msgstr "Anuluj wyciszenie"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:156
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VolumeControl.tsx:93
@@ -7094,7 +7094,7 @@ msgstr "Niechciana treść seksualna"
 
 #: src/view/com/modals/UserAddRemoveLists.tsx:82
 msgid "Update <0>{displayName}</0> in Lists"
-msgstr "Zaktualizuj <0>{displayName}</0> na listach"
+msgstr "Zaktualizuj <0>{displayName}</0> w listach"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:495
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:516
@@ -7103,7 +7103,7 @@ msgstr "Zaktualizuj na {domain}"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:311
 msgid "Updating quote attachment failed"
-msgstr "Błąd podczas zapisywania cytatu"
+msgstr "Błąd podczas dołączania cytatu"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:341
 msgid "Updating reply visibility failed"
@@ -7131,7 +7131,7 @@ msgstr "Prześlij z aparatu"
 #: src/view/com/util/UserAvatar.tsx:388
 #: src/view/com/util/UserBanner.tsx:140
 msgid "Upload from Files"
-msgstr "Prześlij z pliku"
+msgstr "Prześlij z plików"
 
 #: src/view/com/util/UserAvatar.tsx:382
 #: src/view/com/util/UserAvatar.tsx:386
@@ -7147,7 +7147,7 @@ msgstr "Przesyłanie zdjęć..."
 #: src/lib/api/index.ts:350
 #: src/lib/api/index.ts:374
 msgid "Uploading link thumbnail..."
-msgstr "Przesyłanie obrazu załącznika..."
+msgstr "Przesyłanie miniatury załącznika..."
 
 #: src/view/com/composer/Composer.tsx:1626
 msgid "Uploading video..."
@@ -7169,7 +7169,7 @@ msgstr "Użyj przeglądarkę w aplikacji"
 #: src/screens/Settings/ContentAndMediaSettings.tsx:75
 #: src/screens/Settings/ContentAndMediaSettings.tsx:81
 msgid "Use in-app browser to open links"
-msgstr "Użyj przeglądarkę w aplikacji aby otworzyć linki"
+msgstr "Użyj przeglądarkę w aplikacji aby otwierać linki"
 
 #: src/view/com/modals/InAppBrowserConsent.tsx:63
 #: src/view/com/modals/InAppBrowserConsent.tsx:65
@@ -7261,7 +7261,7 @@ msgstr "Osoby na liście \"{0}\""
 
 #: src/components/LikesDialog.tsx:83
 msgid "Users that have liked this content or profile"
-msgstr "Osoby które polubiły tą treść"
+msgstr "Osoby które polubiły tą treść lub profil"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:419
 msgid "Value:"
@@ -7303,7 +7303,7 @@ msgstr "Zweryfikuj swój adres email"
 #: src/components/dialogs/VerifyEmailDialog.tsx:85
 #: src/view/com/modals/VerifyEmail.tsx:111
 msgid "Verify Your Email"
-msgstr "Zweryfikuj adres email"
+msgstr "Zweryfikuj swój adres email"
 
 #: src/screens/Settings/AboutSettings.tsx:60
 #: src/screens/Settings/AboutSettings.tsx:70
@@ -7454,11 +7454,11 @@ msgstr "Ostrzeż o zawartości i wyklucz z kanałów"
 
 #: src/screens/Hashtag.tsx:218
 msgid "We couldn't find any results for that hashtag."
-msgstr "Brak wyników dla tego taga."
+msgstr "Brak wyników dla tego tagu."
 
 #: src/screens/Messages/Conversation.tsx:113
 msgid "We couldn't load this conversation"
-msgstr "Błąd podczas pobierania rozmowy"
+msgstr "Nie mogliśmy pobrać rozmowy"
 
 #: src/screens/SignupQueued.tsx:139
 msgid "We estimate {estimatedTime} until your account is ready."
@@ -7494,7 +7494,7 @@ msgstr "Błąd podczas łączenia. Proszę spróbować ponownie, aby dokończyć
 
 #: src/screens/SignupQueued.tsx:143
 msgid "We will let you know when your account is ready."
-msgstr "Damy Ci znać, gdy Twoje konto jest gotowe."
+msgstr "Damy Ci znać, gdy Twoje konto będzie gotowe."
 
 #: src/screens/Onboarding/StepInterests/index.tsx:134
 msgid "We'll use this to help customize your experience."
@@ -7518,7 +7518,7 @@ msgstr "Przepraszamy, nie możemy pobrać Twoich wyciszonych słów. Proszę spr
 
 #: src/view/screens/Search/Search.tsx:212
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
-msgstr "Przepraszamy, nie możemy ukończyć tego pytania. Proszę spróbować ponownie za moment."
+msgstr "Przepraszamy, nie możemy ukończyć tego wyszukiwania. Proszę spróbować ponownie za moment."
 
 #: src/view/com/composer/Composer.tsx:404
 msgid "We're sorry! The post you are replying to has been deleted."
@@ -7561,7 +7561,7 @@ msgstr "Które języki są użyte w tym wpisie?"
 
 #: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:78
 msgid "Which languages would you like to see in your algorithmic feeds?"
-msgstr "Które języki chcesz zobaczyć w kanałach?"
+msgstr "Które języki chcesz zobaczyć w swoich kanałach?"
 
 #: src/components/WhoCanReply.tsx:179
 msgid "Who can interact with this post?"
@@ -7578,27 +7578,27 @@ msgstr "Ups!"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:44
 msgid "Why should this content be reviewed?"
-msgstr "Dlaczego ta treść powinna być przejrzona?"
+msgstr "Dlaczego ta treść powinna być przejrzana?"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:57
 msgid "Why should this feed be reviewed?"
-msgstr "Dlaczego ten kanał powinien być przejrzony?"
+msgstr "Dlaczego ten kanał powinien być przejrzany?"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:54
 msgid "Why should this list be reviewed?"
-msgstr "Dlaczego ta lista powinna być przejrzona?"
+msgstr "Dlaczego ta lista powinna być przejrzana?"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:63
 msgid "Why should this message be reviewed?"
-msgstr "Dlaczego ta wiadomość powinna być przejrzona?"
+msgstr "Dlaczego ta wiadomość powinna być przejrzana?"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:51
 msgid "Why should this post be reviewed?"
-msgstr "Dlaczego ten wpis powinien być przejrzony?"
+msgstr "Dlaczego ten wpis powinien być przejrzany?"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:60
 msgid "Why should this starter pack be reviewed?"
-msgstr "Dlaczego ten pakiet startowy powinien być przejrzony?"
+msgstr "Dlaczego ten pakiet startowy powinien być przejrzany?"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:48
 msgid "Why should this user be reviewed?"
@@ -7683,7 +7683,7 @@ msgstr "Możesz też odszukać nowych kanałów do śledzenia."
 
 #: src/view/com/modals/DeleteAccount.tsx:202
 msgid "You can also temporarily deactivate your account instead, and reactivate it at any time."
-msgstr "Możesz też tymczasowo dezaktywować konto i je ponownie aktywować w dowolnym momencie."
+msgstr "Możesz też tymczasowo dezaktywować konto i ponownie je aktywować w dowolnym momencie."
 
 #: src/screens/Messages/Settings.tsx:105
 msgid "You can continue ongoing conversations regardless of which setting you choose."
@@ -7771,11 +7771,11 @@ msgstr "Nie masz list."
 
 #: src/view/screens/ModerationBlockedAccounts.tsx:133
 msgid "You have not blocked any accounts yet. To block an account, go to their profile and select \"Block account\" from the menu on their account."
-msgstr "Nie masz jeszcze zablokowanych użytkowników. Aby zablokować kogoś, wybierz opcję \"Zablokuj\" na menu w profilu."
+msgstr "Nie masz jeszcze zablokowanych użytkowników. Aby zablokować kogoś, wybierz opcję \"Zablokuj\" w menu na profilu"
 
 #: src/view/screens/ModerationMutedAccounts.tsx:132
 msgid "You have not muted any accounts yet. To mute an account, go to their profile and select \"Mute account\" from the menu on their account."
-msgstr "Nie masz jeszcze wyciszonych użytkowników. Aby wyciszyć kogoś, wybierz opcję \"Wycisz\" na menu w profilu."
+msgstr "Nie masz jeszcze wyciszonych użytkowników. Aby wyciszyć kogoś, wybierz opcję \"Wycisz\" w menu na profilu."
 
 #: src/components/Lists.tsx:52
 msgid "You have reached the end"
@@ -7828,11 +7828,11 @@ msgstr "Aby wygenerować pakiet startowy, musisz obserwować co najmniej siedem 
 
 #: src/components/StarterPack/QrCodeDialog.tsx:60
 msgid "You must grant access to your photo library to save a QR code"
-msgstr "Aby pobrać kod QR, musisz dać dostęp do galerii"
+msgstr "Aby pobrać kod QR, musisz udzielić nam dostęp do galerii"
 
 #: src/components/StarterPack/ShareDialog.tsx:69
 msgid "You must grant access to your photo library to save the image."
-msgstr "Aby pobrać treść, musisz dać dostęp do galerii."
+msgstr "Aby pobrać treść, musisz udzielić nam dostęp do galerii."
 
 #: src/components/ReportDialog/SubmitView.tsx:210
 msgid "You must select at least one labeler for a report"
@@ -7912,7 +7912,7 @@ msgstr "Wszystko gotowe!"
 #: src/components/moderation/ModerationDetailsDialog.tsx:107
 #: src/lib/moderation/useModerationCauseDescription.ts:106
 msgid "You've chosen to hide a word or tag within this post."
-msgstr "Słowo lub tag w tym wpisie jest ukryte przez Ciebie."
+msgstr "Słowo lub tag w tym wpisie zostało ukryte przez Ciebie."
 
 #: src/view/com/posts/FollowingEndOfFeed.tsx:44
 msgid "You've reached the end of your feed! Find some more accounts to follow."
@@ -7920,11 +7920,11 @@ msgstr "Dotarto do końca! Odnajdź trochę więcej osób do obserwowania."
 
 #: src/view/com/composer/state/video.ts:434
 msgid "You've reached your daily limit for video uploads (too many bytes)"
-msgstr "Osiągnięto codzienny limit wysyłania wideo (za dużo danych)"
+msgstr "Osiągnięto dzienny limit wysyłania wideo (za dużo danych)"
 
 #: src/view/com/composer/state/video.ts:438
 msgid "You've reached your daily limit for video uploads (too many videos)"
-msgstr "Osiągnięto codzienny limit wysyłania wideo (za dużo plików)"
+msgstr "Osiągnięto dzienny limit wysyłania wideo (za dużo plików)"
 
 #: src/screens/Signup/index.tsx:140
 msgid "Your account"
@@ -7936,7 +7936,7 @@ msgstr "Twoje konto zostało usunięte"
 
 #: src/view/com/composer/state/video.ts:442
 msgid "Your account is not yet old enough to upload videos. Please try again later."
-msgstr "Twoje konto jest za nowe aby móc wysyłać wideo. Proszę spróbować ponownie później."
+msgstr "Twoje konto jest zbyt nowe aby móc wysyłać wideo. Proszę spróbować ponownie później."
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:65
 msgid "Your account repository, containing all public data records, can be downloaded as a \"CAR\" file. This file does not include media embeds, such as images, or your private data, which must be fetched separately."
@@ -7944,7 +7944,7 @@ msgstr "Biblioteka Twojego konta, zawierająca wszystkie publiczne rekordy danyc
 
 #: src/screens/Signup/StepInfo/index.tsx:211
 msgid "Your birth date"
-msgstr "Twoja data urodzin"
+msgstr "Twoja data urodzenia"
 
 #: src/view/com/util/post-embeds/VideoEmbed.web.tsx:171
 msgid "Your browser does not support the video format. Please try a different browser."
@@ -7967,7 +7967,7 @@ msgstr "Twój adres email wygląda na nieprawidłowy."
 
 #: src/view/com/modals/ChangeEmail.tsx:120
 msgid "Your email has been updated but not verified. As a next step, please verify your new email."
-msgstr "Twój adres email był zaktualizowany, ale nie jest jeszcze zweryfikowany. Proszę zweryfikować nowy adres."
+msgstr "Twój adres email został zaktualizowany, ale nie jest jeszcze zweryfikowany. Proszę zweryfikować nowy adres."
 
 #: src/view/com/modals/VerifyEmail.tsx:122
 msgid "Your email has not yet been verified. This is an important security step which we recommend."
@@ -7983,11 +7983,11 @@ msgstr "Twój kanał osób obserwowanych jest pusty! Zaobserwuj trochę więcej 
 
 #: src/screens/Signup/StepHandle.tsx:125
 msgid "Your full handle will be"
-msgstr "Twoja pełna nazwa to będzie"
+msgstr "Twoją pełna nazwa będzie"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:220
 msgid "Your full handle will be <0>@{0}</0>"
-msgstr "Twoja pełna nazwa to będzie <0>@{0}</0>"
+msgstr "Twoją pełna nazwa będzie <0>@{0}</0>"
 
 #: src/components/dialogs/MutedWords.tsx:369
 msgid "Your muted words"
@@ -8011,7 +8011,7 @@ msgstr "Twoje polubienia, wpisy i lista zablokowanych osób są publiczne. Wycis
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:75
 msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
-msgstr "Twój profil, wpisy, kanały i listy będą już niewidoczne dla innych. Możesz w dowolnym momencie ponownie aktywować te konto poprzez zalogowanie się."
+msgstr "Twój profil, wpisy, kanały i listy nie będą już widoczne dla innych. Możesz w dowolnym momencie ponownie aktywować te konto poprzez zalogowanie się."
 
 #: src/view/com/composer/Composer.tsx:463
 msgid "Your reply has been published"
