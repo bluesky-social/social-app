@@ -6,13 +6,13 @@ import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
 import {
   useOnMarkAsRead,
   useOnMarkAsUnread,
-} from '#/state/queries/messages/list-converations'
+} from '#/state/queries/messages/list-conversations'
 import {useAgent} from '#/state/session'
 import {
   ConvoListQueryData,
   getConvoFromQueryData,
   RQKEY as LIST_CONVOS_KEY,
-} from './list-converations'
+} from './list-conversations'
 
 const RQKEY_ROOT = 'convo'
 export const RQKEY = (convoId: string) => [RQKEY_ROOT, convoId]
@@ -53,7 +53,6 @@ export function useMarkAsReadMutation() {
         {
           convoId,
           messageId,
-          unreadCount: 0, // TODO: figure out which field convo API uses
         },
         {
           encoding: 'application/json',
@@ -74,7 +73,7 @@ export function useMarkAsReadMutation() {
 export function useMarkAsUnreadMutation() {
   const optimisticUpdate = useOnMarkAsUnread()
   const queryClient = useQueryClient()
-  const agent = useAgent()
+  // const agent = useAgent()
 
   return useMutation({
     mutationFn: async ({
@@ -86,17 +85,8 @@ export function useMarkAsUnreadMutation() {
     }) => {
       if (!convoId) throw new Error('No convoId provided')
 
-      await agent.api.chat.bsky.convo.updateRead(
-        {
-          convoId,
-          messageId,
-          unreadCount: 1, // TODO: figure out which field convo API uses
-        },
-        {
-          encoding: 'application/json',
-          headers: DM_SERVICE_HEADERS,
-        },
-      )
+      // TODO: call agent.api.chat.bsky.convo.updateUnread
+      console.log('mark unread', {convoId, messageId})
     },
     onMutate({convoId}) {
       if (!convoId) throw new Error('No convoId provided')

@@ -237,6 +237,7 @@ export function useUnreadMessageCount() {
             convo.muted ||
             moderation.blocked ||
             otherMember.did === 'missing.invalid'
+          console.log('convo', {convo, shouldIgnore})
           const unreadCount = !shouldIgnore && convo.unreadCount > 0 ? 1 : 0
 
           return acc + unreadCount
