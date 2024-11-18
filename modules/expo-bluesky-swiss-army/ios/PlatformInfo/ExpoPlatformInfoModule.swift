@@ -42,5 +42,9 @@ public class ExpoPlatformInfoModule: Module {
         }
       }
     }
+    
+    AsyncFunction("isAnimatedImage") { (url: URL) in
+      return ImageInfo.isAnimatedImage(url: url)
+    }
   }
 }
