@@ -5,7 +5,7 @@
   "engines": {
     "node": ">=20"
   },
-  "packageManager": "yarn@1.22.19",
+  "packageManager": "yarn@4.5.1",
   "scripts": {
     "prepare": "is-ci || husky install",
     "postinstall": "patch-package && yarn intl:compile",
@@ -278,10 +278,6 @@
   },
   "resolutions": {
     "@types/react": "^18",
-    "**/zeed-dom": "0.10.9",
-    "**/zod": "3.23.8",
-    "**/expo-constants": "16.0.1",
-    "**/expo-device": "6.0.2",
     "@react-native/babel-preset": "0.74.1",
     "@radix-ui/react-focus-scope": "1.1.0"
   },

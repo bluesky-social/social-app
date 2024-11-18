@@ -45,7 +45,7 @@ jobs:
           token: ${{ secrets.EXPO_TOKEN }}
 
       - name: ⛏️ Setup EAS local builds
-        run: yarn global add eas-cli-local-build-plugin
+        run: yarn dlx add eas-cli-local-build-plugin
 
       - uses: actions/setup-java@v4
         with:

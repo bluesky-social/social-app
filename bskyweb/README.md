@@ -12,7 +12,7 @@ like:
     npm install --global yarn
 
     # setup tools and deps (in top level of this repo)
-    yarn install --frozen-lockfile
+    yarn install --immutable
 
     # run yarn web dev server, if you wanted
     yarn web
