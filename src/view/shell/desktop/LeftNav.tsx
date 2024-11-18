@@ -369,6 +369,7 @@ export function DesktopLeftNav() {
         isTablet && styles.leftNavTablet,
         pal.view,
         pal.border,
+        zIndex: 1,
       ]}>
       {hasSession ? (
         <ProfileCard />

@@ -138,6 +138,12 @@ function NativeStackNavigator({
 
   return (
     <NavigationContent>
+      {isWeb && !showBottomBar && (
+        <>
+          <DesktopLeftNav />
+          <DesktopRightNav routeName={activeRoute.name} />
+        </>
+      )}
       <View role="main" style={a.flex_1}>
         <NativeStackView
           {...rest}
@@ -147,12 +153,6 @@ function NativeStackNavigator({
         />
       </View>
       {isWeb && showBottomBar && <BottomBarWeb />}
-      {isWeb && !showBottomBar && (
-        <>
-          <DesktopLeftNav />
-          <DesktopRightNav routeName={activeRoute.name} />
-        </>
-      )}
     </NavigationContent>
   )
 }

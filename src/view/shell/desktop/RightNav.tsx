@@ -127,6 +127,7 @@ const styles = StyleSheet.create({
     width: 300,
     maxHeight: '100%',
     overflowY: 'auto',
+    zIndex: 1,
   },
 
   message: {
