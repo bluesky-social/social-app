@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useRef} from 'react'
 import {DimensionValue, Pressable, View} from 'react-native'
 import {Image} from 'expo-image'
 import {AppBskyEmbedImages} from '@atproto/api'
@@ -76,15 +76,19 @@ export function AutoSizedImage({
   const {_} = useLingui()
   const largeAlt = useLargeAltBadgeEnabled()
   const containerRef = useHandleRef()
+  const fetchedDimsRef = useRef<{width: number; height: number} | null>(null)
 
-  const [fetchedDims, setFetchedDims] = React.useState<Dimensions | null>(null)
-  const dims = fetchedDims ?? image.aspectRatio
   let aspectRatio: number | undefined
+  const dims = image.aspectRatio
   if (dims) {
     aspectRatio = dims.width / dims.height
     if (Number.isNaN(aspectRatio)) {
       aspectRatio = undefined
     }
+  } else {
+    // If we don't know it synchronously, treat it like a square.
+    // We won't use fetched dimensions to avoid a layout shift.
+    aspectRatio = 1
   }
 
   let constrained: number | undefined
@@ -110,13 +114,12 @@ export function AutoSizedImage({
         accessibilityIgnoresInvertColors
         accessibilityLabel={image.alt}
         accessibilityHint=""
-        onLoad={
-          fetchedDims
-            ? undefined
-            : e => {
-                setFetchedDims({width: e.source.width, height: e.source.height})
-              }
-        }
+        onLoad={e => {
+          fetchedDimsRef.current = {
+            width: e.source.width,
+            height: e.source.height,
+          }
+        }}
       />
       <MediaInsetBorder />
 
@@ -188,7 +191,7 @@ export function AutoSizedImage({
   if (cropDisabled) {
     return (
       <Pressable
-        onPress={() => onPress?.(containerRef, fetchedDims)}
+        onPress={() => onPress?.(containerRef, fetchedDimsRef.current)}
         onLongPress={onLongPress}
         onPressIn={onPressIn}
         // alt here is what screen readers actually use
@@ -210,7 +213,7 @@ export function AutoSizedImage({
         fullBleed={crop === 'square'}
         aspectRatio={constrained ?? 1}>
         <Pressable
-          onPress={() => onPress?.(containerRef, fetchedDims)}
+          onPress={() => onPress?.(containerRef, fetchedDimsRef.current)}
           onLongPress={onLongPress}
           onPressIn={onPressIn}
           // alt here is what screen readers actually use
