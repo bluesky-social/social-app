@@ -40,12 +40,18 @@ export function TagMenu({
   tag: string
   authorHandle?: string
 }>) {
+  const navigation = useNavigation<NavigationProp>()
   return (
     <>
       {children}
       <Dialog.Outer control={control}>
         <Dialog.Handle />
-        <TagMenuInner control={control} tag={tag} authorHandle={authorHandle} />
+        <TagMenuInner
+          control={control}
+          tag={tag}
+          authorHandle={authorHandle}
+          navigation={navigation}
+        />
       </Dialog.Outer>
     </>
   )
@@ -55,18 +61,16 @@ function TagMenuInner({
   control,
   tag,
   authorHandle,
+  navigation,
 }: {
   control: Dialog.DialogOuterProps['control']
-  /**
-   * This should be the sanitized tag value from the facet itself, not the
-   * "display" value with a leading `#`.
-   */
   tag: string
   authorHandle?: string
+  // Passed down because on native, we don't use real portals (and context would be wrong).
+  navigation: NavigationProp
 }) {
   const {_} = useLingui()
   const t = useTheme()
-  const navigation = useNavigation<NavigationProp>()
   const {isLoading: isPreferencesLoading, data: preferences} =
     usePreferencesQuery()
   const {
