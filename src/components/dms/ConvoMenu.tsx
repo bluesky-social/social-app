@@ -36,16 +36,7 @@ import * as Menu from '#/components/Menu'
 import * as Prompt from '#/components/Prompt'
 import {Bubble_Stroke2_Corner2_Rounded as Bubble} from '../icons/Bubble'
 
-let ConvoMenu = ({
-  convo: initialConvo,
-  profile,
-  control,
-  currentScreen,
-  showMarkAsRead,
-  hideTrigger,
-  blockInfo,
-  style,
-}: {
+type Props = {
   convo: ChatBskyConvoDefs.ConvoView
   profile: Shadow<AppBskyActorDefs.ProfileViewBasic>
   control?: Menu.MenuControlProps
@@ -57,7 +48,18 @@ let ConvoMenu = ({
     userBlock?: ModerationCause
   }
   style?: ViewStyleProp['style']
-}): React.ReactNode => {
+}
+
+export const ConvoMenu = React.memo(function ConvoMenu({
+  convo: initialConvo,
+  profile,
+  control,
+  currentScreen,
+  showMarkAsRead,
+  hideTrigger,
+  blockInfo,
+  style,
+}: Props) {
   const navigation = useNavigation<NavigationProp>()
   const {_} = useLingui()
   const t = useTheme()
@@ -229,7 +231,4 @@ let ConvoMenu = ({
       />
     </>
   )
-}
-ConvoMenu = React.memo(ConvoMenu)
-
-export {ConvoMenu}
+})

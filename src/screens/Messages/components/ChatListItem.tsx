@@ -40,11 +40,11 @@ import {useMenuControl} from '#/components/Menu'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {Text} from '#/components/Typography'
 
-export let ChatListItem = ({
-  convo,
-}: {
+type Props = {
   convo: ChatBskyConvoDefs.ConvoView
-}): React.ReactNode => {
+}
+
+export const ChatListItem = React.memo(function ChatListItem({convo}: Props) {
   const {currentAccount} = useSession()
   const moderationOpts = useModerationOpts()
 
@@ -63,9 +63,7 @@ export let ChatListItem = ({
       moderationOpts={moderationOpts}
     />
   )
-}
-
-ChatListItem = React.memo(ChatListItem)
+})
 
 function ChatListItemReady({
   convo,
