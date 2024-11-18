@@ -134,7 +134,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
           footerMinimalShellTransform,
         ]}
         onLayout={e => {
-          footerHeight.value = e.nativeEvent.layout.height
+          footerHeight.set(e.nativeEvent.layout.height)
         }}>
         {hasSession ? (
           <>

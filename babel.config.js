@@ -17,12 +17,7 @@ module.exports = function (api) {
     ],
     plugins: [
       'macros',
-      [
-        'babel-plugin-react-compiler',
-        {
-          runtimeModule: 'react-compiler-runtime',
-        },
-      ],
+      ['babel-plugin-react-compiler', {target: '18'}],
       [
         'module:react-native-dotenv',
         {
