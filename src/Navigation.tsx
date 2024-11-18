@@ -98,6 +98,7 @@ import {FollowingFeedPreferencesScreen} from './screens/Settings/FollowingFeedPr
 import {LanguageSettingsScreen} from './screens/Settings/LanguageSettings'
 import {PrivacyAndSecuritySettingsScreen} from './screens/Settings/PrivacyAndSecuritySettings'
 import {SettingsScreen} from './screens/Settings/Settings'
+import {StarterPacksPreferencesScreen} from './screens/Settings/StarterPacksPreferences'
 import {ThreadPreferencesScreen} from './screens/Settings/ThreadPreferences'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
@@ -313,6 +314,11 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
           title: title(msg`External Media Preferences`),
           requireAuth: true,
         }}
+      />
+      <Stack.Screen
+        name="PreferencesStarterPacks"
+        getComponent={() => StarterPacksPreferencesScreen}
+        options={{title: title(msg`Starter Packs`), requireAuth: true}}
       />
       <Stack.Screen
         name="AccessibilitySettings"

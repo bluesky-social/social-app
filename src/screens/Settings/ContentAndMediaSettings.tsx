@@ -17,6 +17,7 @@ import {Hashtag_Stroke2_Corner0_Rounded as HashtagIcon} from '#/components/icons
 import {Home_Stroke2_Corner2_Rounded as HomeIcon} from '#/components/icons/Home'
 import {Macintosh_Stroke2_Corner2_Rounded as MacintoshIcon} from '#/components/icons/Macintosh'
 import {Play_Stroke2_Corner2_Rounded as PlayIcon} from '#/components/icons/Play'
+import {StarterPack as StarterPackIcon} from '#/components/icons/StarterPack'
 import {Window_Stroke2_Corner2_Rounded as WindowIcon} from '#/components/icons/Window'
 import * as Layout from '#/components/Layout'
 
@@ -66,6 +67,14 @@ export function ContentAndMediaSettingsScreen({}: Props) {
             <SettingsList.ItemIcon icon={MacintoshIcon} />
             <SettingsList.ItemText>
               <Trans>External media</Trans>
+            </SettingsList.ItemText>
+          </SettingsList.LinkItem>
+          <SettingsList.LinkItem
+            to="/settings/starter-packs"
+            label={_(msg`Starter Packs`)}>
+            <SettingsList.ItemIcon icon={StarterPackIcon} />
+            <SettingsList.ItemText>
+              <Trans>Starter Packs</Trans>
             </SettingsList.ItemText>
           </SettingsList.LinkItem>
           <SettingsList.Divider />

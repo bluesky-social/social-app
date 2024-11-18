@@ -18,13 +18,24 @@ import {Text} from '#/components/Typography'
 
 export function Default({
   starterPack,
+  noIcon,
+  noAuthorInfo,
+  noDescription,
 }: {
   starterPack?: AppBskyGraphDefs.StarterPackViewBasic
+  noIcon?: boolean
+  noAuthorInfo?: boolean
+  noDescription?: boolean
 }) {
   if (!starterPack) return null
   return (
     <Link starterPack={starterPack}>
-      <Card starterPack={starterPack} />
+      <Card
+        starterPack={starterPack}
+        noIcon={noIcon}
+        noAuthorInfo={noAuthorInfo}
+        noDescription={noDescription}
+      />
     </Link>
   )
 }
@@ -45,10 +56,12 @@ export function Notification({
 export function Card({
   starterPack,
   noIcon,
+  noAuthorInfo,
   noDescription,
 }: {
   starterPack: AppBskyGraphDefs.StarterPackViewBasic
   noIcon?: boolean
+  noAuthorInfo?: boolean
   noDescription?: boolean
 }) {
   const {record, creator, joinedAllTimeCount} = starterPack
@@ -63,7 +76,7 @@ export function Card({
 
   return (
     <View style={[a.w_full, a.gap_md]}>
-      <View style={[a.flex_row, a.gap_sm, a.w_full]}>
+      <View style={[a.flex_row, a.align_center, a.gap_sm, a.w_full]}>
         {!noIcon ? <StarterPack width={40} gradient="sky" /> : null}
         <View style={[a.flex_1]}>
           <Text
@@ -72,14 +85,18 @@ export function Card({
             numberOfLines={2}>
             {record.name}
           </Text>
-          <Text
-            emoji
-            style={[a.leading_snug, t.atoms.text_contrast_medium]}
-            numberOfLines={1}>
-            {creator?.did === currentAccount?.did
-              ? _(msg`Starter pack by you`)
-              : _(msg`Starter pack by ${sanitizeHandle(creator.handle, '@')}`)}
-          </Text>
+          {!noAuthorInfo && (
+            <Text
+              emoji
+              style={[a.leading_snug, t.atoms.text_contrast_medium]}
+              numberOfLines={1}>
+              {creator?.did === currentAccount?.did
+                ? _(msg`Starter pack by you`)
+                : _(
+                    msg`Starter pack by ${sanitizeHandle(creator.handle, '@')}`,
+                  )}
+            </Text>
+          )}
         </View>
       </View>
       {!noDescription && record.description ? (
@@ -108,9 +125,9 @@ export function Link({
   const queryClient = useQueryClient()
   const {record} = starterPack
   const {rkey, handleOrDid} = React.useMemo(() => {
-    const rkey = new AtUri(starterPack.uri).rkey
+    const newRkey = new AtUri(starterPack.uri).rkey
     const {creator} = starterPack
-    return {rkey, handleOrDid: creator.handle || creator.did}
+    return {rkey: newRkey, handleOrDid: creator.handle || creator.did}
   }, [starterPack])
 
   if (!AppBskyGraphStarterpack.isRecord(record)) {
