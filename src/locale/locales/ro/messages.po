@@ -1309,31 +1309,31 @@ msgstr "Schimbă-ți adresa de email"
 #: src/view/shell/desktop/LeftNav.tsx:348
 #: src/view/shell/Drawer.tsx:417
 msgid "Chat"
-msgstr "Chat"
+msgstr "Conversații"
 
 #: src/components/dms/ConvoMenu.tsx:82
 msgid "Chat muted"
-msgstr "Chat cenzurat"
+msgstr "Conversație cenzurat"
 
 #: src/components/dms/ConvoMenu.tsx:112
 #: src/components/dms/MessageMenu.tsx:81
 #: src/Navigation.tsx:378
 #: src/screens/Messages/ChatList.tsx:88
 msgid "Chat settings"
-msgstr "Setări chat"
+msgstr "Setări conversație"
 
 #: src/screens/Messages/Settings.tsx:61
 msgid "Chat Settings"
-msgstr "Setările chat-ului"
+msgstr "Setări conversație"
 
 #: src/components/dms/ConvoMenu.tsx:84
 msgid "Chat unmuted"
-msgstr "Chat necenzurat"
+msgstr "Conversație necenzurată"
 
 #: src/screens/SignupQueued.tsx:78
 #: src/screens/SignupQueued.tsx:82
 msgid "Check my status"
-msgstr "Verifică-mi statusul"
+msgstr "Verifică-mi statutul"
 
 #: src/screens/Login/LoginForm.tsx:275
 msgid "Check your email for a login code and enter it here."
@@ -1781,7 +1781,7 @@ msgstr "Politica de Copyright"
 
 #: src/components/dms/LeaveConvoPrompt.tsx:39
 msgid "Could not leave chat"
-msgstr "Nu s-a putut părăsi chat-ul"
+msgstr "Nu s-a putut părăsi conversația"
 
 #: src/view/screens/ProfileFeed.tsx:104
 msgid "Could not load feed"
@@ -1793,7 +1793,7 @@ msgstr "Nu s-a putut încărca lista"
 
 #: src/components/dms/ConvoMenu.tsx:88
 msgid "Could not mute chat"
-msgstr "Chat-ul nu poate fi cenzurat"
+msgstr "Conversația nu poate fi cenzurată"
 
 #: src/view/com/composer/videos/VideoPreview.web.tsx:56
 msgid "Could not process your video"
@@ -1955,7 +1955,7 @@ msgstr "Șterge parola aplicației?"
 
 #: src/screens/Settings/Settings.tsx:330
 msgid "Delete chat declaration record"
-msgstr "Șterge înregistrarea declarației chat-ului"
+msgstr "Șterge înregistrarea declarației conversației"
 
 #: src/components/dms/MessageMenu.tsx:124
 msgid "Delete for me"
@@ -3685,7 +3685,7 @@ msgstr "Părăsește"
 #: src/components/dms/MessagesListBlockedFooter.tsx:66
 #: src/components/dms/MessagesListBlockedFooter.tsx:73
 msgid "Leave chat"
-msgstr "Părăsește chat-ul"
+msgstr "Ieși din conversație"
 
 #: src/components/dms/ConvoMenu.tsx:138
 #: src/components/dms/ConvoMenu.tsx:141
@@ -3693,7 +3693,7 @@ msgstr "Părăsește chat-ul"
 #: src/components/dms/ConvoMenu.tsx:211
 #: src/components/dms/LeaveConvoPrompt.tsx:46
 msgid "Leave conversation"
-msgstr "Părăsește conversația"
+msgstr "Ieși din conversație"
 
 #: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:83
 msgid "Leave them all unchecked to see any language."
@@ -4267,7 +4267,7 @@ msgstr "Nou"
 #: src/screens/Messages/ChatList.tsx:328
 #: src/screens/Messages/ChatList.tsx:335
 msgid "New chat"
-msgstr "Chat nou"
+msgstr "Conversație nouă"
 
 #: src/components/dialogs/nuxs/NeueTypography.tsx:51
 #~ msgid "New font settings ✨"
@@ -4908,7 +4908,7 @@ msgstr "Altul..."
 
 #: src/screens/Messages/components/ChatDisabled.tsx:28
 msgid "Our moderators have reviewed reports and decided to disable your access to chats on Bluesky."
-msgstr "Moderatorii noștri au analizat rapoartele și au decis să îți dezactiveze accesul la chat pe Bluesky."
+msgstr "Moderatorii noștri au analizat rapoartele și au decis să îți dezactiveze accesul la conversații pe Bluesky."
 
 #: src/components/Lists.tsx:216
 #: src/view/screens/NotFound.tsx:47
@@ -5094,7 +5094,7 @@ msgstr "Te rog să explici de ce crezi că această etichetă a fost aplicată g
 
 #: src/screens/Messages/components/ChatDisabled.tsx:110
 msgid "Please explain why you think your chats were incorrectly disabled"
-msgstr "Te rog să explici de ce crezi că chat-urile tale au fost dezactivate greșit."
+msgstr "Te rog să explici de ce crezi că conversațiile tale au fost dezactivate greșit."
 
 #: src/lib/hooks/useAccountSwitcher.ts:45
 #: src/lib/hooks/useAccountSwitcher.ts:55
@@ -6654,11 +6654,11 @@ msgstr "Sport"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:72
 msgid "Start a new chat"
-msgstr "Începe un chat nou"
+msgstr "Începe o nouă conversație"
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:350
 msgid "Start chat with {displayName}"
-msgstr "Începe un chat cu {displayName}"
+msgstr "Începe o conversație cu {displayName}"
 
 #: src/Navigation.tsx:393
 #: src/Navigation.tsx:398
@@ -7118,7 +7118,7 @@ msgstr "Această contestație va fi trimisă către serviciul de moderare al Blu
 
 #: src/screens/Messages/components/MessageListError.tsx:18
 msgid "This chat was disconnected"
-msgstr "Acest chat a fost deconectat."
+msgstr "Această conversație a fost deconectată"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:19
 msgid "This content has been hidden by the moderators."
@@ -8464,7 +8464,7 @@ msgstr "Browserul tău nu acceptă formatul video. Încearcă un alt browser."
 
 #: src/screens/Messages/components/ChatDisabled.tsx:25
 msgid "Your chats have been disabled"
-msgstr "Chat-urile tale au fost dezactivate."
+msgstr "Conversațiile tale au fost dezactivate."
 
 #: src/view/com/modals/InAppBrowserConsent.tsx:44
 msgid "Your choice will be saved, but can be changed later in settings."
