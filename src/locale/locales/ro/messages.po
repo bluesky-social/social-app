@@ -256,7 +256,7 @@ msgstr "{firstAuthorName} și {additionalAuthorsCount, plural, one {un alt utili
 
 #: src/view/com/notifications/FeedItem.tsx:343
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} signed up with your starter pack"
-msgstr "{firstAuthorName} și {additionalAuthorsCount, plural, one {un} alt utilizator} few {alți {formattedAuthorsCount} utilizatori} other {alți {formattedAuthorsCount} de utilizatori}} s-au înscris folosind pachetul tău de start"
+msgstr "{firstAuthorName} și {additionalAuthorsCount, plural, one {un alt utilizator} few {alți {formattedAuthorsCount} utilizatori} other {alți {formattedAuthorsCount} de utilizatori}} s-au înscris folosind pachetul tău de start"
 
 #: src/view/com/notifications/FeedItem.tsx:298
 msgid "{firstAuthorName} followed you"
@@ -423,16 +423,16 @@ msgstr "Cont urmărit"
 
 #: src/view/com/profile/ProfileMenu.tsx:108
 msgid "Account muted"
-msgstr "Cont redus la tăcere"
+msgstr "Cont cenzurate"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:102
 #: src/lib/moderation/useModerationCauseDescription.ts:96
 msgid "Account Muted"
-msgstr "Cont redus la tăcere"
+msgstr "Cont cenzurat"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:88
 msgid "Account Muted by List"
-msgstr "Cont redus la tăcere de către listă"
+msgstr "Cont conzurat de către listă"
 
 #: src/screens/Settings/Settings.tsx:420
 msgid "Account options"
@@ -453,7 +453,7 @@ msgstr "Cont neurmărit"
 
 #: src/view/com/profile/ProfileMenu.tsx:98
 msgid "Account unmuted"
-msgstr "Contul nu mai este redus la tăcere"
+msgstr "Contul nu mai este cenzurate"
 
 #: src/components/dialogs/MutedWords.tsx:328
 #: src/view/com/modals/ListAddRemoveUsers.tsx:269
@@ -519,11 +519,11 @@ msgstr "Adaugă parolă pentru aplicație"
 
 #: src/components/dialogs/MutedWords.tsx:321
 msgid "Add mute word for configured settings"
-msgstr "Adaugă cuvânt redus la tăcere pentru setările configurate"
+msgstr "Adaugă cuvânt cenzurat pentru setările configurate"
 
 #: src/components/dialogs/MutedWords.tsx:112
 msgid "Add muted words and tags"
-msgstr "Adaugă cuvinte și etichete reduse la tăcere"
+msgstr "Adaugă cuvinte și etichete cenzurate"
 
 #: src/view/com/composer/Composer.tsx:1228
 msgid "Add new post"
@@ -895,23 +895,23 @@ msgstr "Ești sigur că vrei să părăsești această conversație? Mesajele ta
 
 #: src/view/com/feeds/FeedSourceCard.tsx:316
 msgid "Are you sure you want to remove {0} from your feeds?"
-msgstr "Ești sigur că vrei să elimini {0} din fluxurile tale?"
+msgstr "Sigur că vrei să elimini {0} din fluxurile tale?"
 
 #: src/components/FeedCard.tsx:313
 msgid "Are you sure you want to remove this from your feeds?"
-msgstr "Ești sigur că vrei să elimini asta din fluxurile tale?"
+msgstr "Sigur vrei să elimini asta din fluxurile tale?"
 
 #: src/view/com/composer/Composer.tsx:664
 msgid "Are you sure you'd like to discard this draft?"
-msgstr "Ești sigur că vrei să renunți la acest proiect?"
+msgstr "Sigur vrei să să renunți la acestă ciornă?"
 
 #: src/view/com/composer/Composer.tsx:828
 msgid "Are you sure you'd like to discard this post?"
-msgstr "Ești sigur că vrei să renunți la această postare?"
+msgstr "Sigur vrei să renunți la această postare?"
 
 #: src/components/dialogs/MutedWords.tsx:433
 msgid "Are you sure?"
-msgstr "Ești sigur?"
+msgstr "Sigur?"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:61
 msgid "Are you writing in <0>{0}</0>?"
@@ -1313,7 +1313,7 @@ msgstr "Chat"
 
 #: src/components/dms/ConvoMenu.tsx:82
 msgid "Chat muted"
-msgstr "Chat dezactivat"
+msgstr "Chat cenzurat"
 
 #: src/components/dms/ConvoMenu.tsx:112
 #: src/components/dms/MessageMenu.tsx:81
@@ -1328,7 +1328,7 @@ msgstr "Setările chat-ului"
 
 #: src/components/dms/ConvoMenu.tsx:84
 msgid "Chat unmuted"
-msgstr "Chat reactivat"
+msgstr "Chat necenzurat"
 
 #: src/screens/SignupQueued.tsx:78
 #: src/screens/SignupQueued.tsx:82
@@ -1793,7 +1793,7 @@ msgstr "Nu s-a putut încărca lista"
 
 #: src/components/dms/ConvoMenu.tsx:88
 msgid "Could not mute chat"
-msgstr "Nu s-a putut dezactiva sunetul chat-ului"
+msgstr "Chat-ul nu poate fi cenzurat"
 
 #: src/view/com/composer/videos/VideoPreview.web.tsx:56
 msgid "Could not process your video"
@@ -2098,7 +2098,7 @@ msgstr "Dezactivat"
 #: src/view/com/composer/Composer.tsx:666
 #: src/view/com/composer/Composer.tsx:835
 msgid "Discard"
-msgstr "Anulează"
+msgstr "Renunț"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:81
 msgid "Discard changes?"
@@ -2173,7 +2173,7 @@ msgstr "Panou DNS"
 
 #: src/components/dialogs/MutedWords.tsx:302
 msgid "Do not apply this mute word to users you follow"
-msgstr "Nu aplica acest cuvânt blocat utilizatorilor pe care îi urmărești"
+msgstr "Nu aplica acest cuvânt cenzurat utilizatorilor urmăriți"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:174
 #~ msgid "Does not contain adult content."
@@ -2792,11 +2792,11 @@ msgstr "Trimiterea a eșuat"
 #: src/components/moderation/LabelsOnMeDialog.tsx:229
 #: src/screens/Messages/components/ChatDisabled.tsx:87
 msgid "Failed to submit appeal, please try again."
-msgstr "Încercarea de a trimite apelul a eșuat, te rugăm să încerci din nou."
+msgstr "Apelul a eșuat, încearcă din nou."
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:294
 msgid "Failed to toggle thread mute, please try again"
-msgstr "Nu s-a putut dezactiva notificarea pentru discuție, încearcă din nou."
+msgstr "Nu s-a putut activa/dezactiva discuția, încearcă din nou."
 
 #: src/components/FeedCard.tsx:276
 msgid "Failed to update feeds"
@@ -3318,23 +3318,23 @@ msgstr "Ascunde lista utilizatorilor"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:117
 msgid "Hmm, some kind of issue occurred when contacting the feed server. Please let the feed owner know about this issue."
-msgstr "Hm, a apărut o problemă atunci când am contactat serverul feed-ului. Te rugăm să informezi deținătorul feed-ului despre această problemă."
+msgstr "Hm, a apărut o problemă atunci când am contactat serverul fluxului. Informează deținătorul fluxului despre această problemă."
 
 #: src/view/com/posts/FeedErrorMessage.tsx:105
 msgid "Hmm, the feed server appears to be misconfigured. Please let the feed owner know about this issue."
-msgstr "Hm, serverul feed-ului pare a fi configurat greșit. Te rugăm să informezi deținătorul feed-ului despre această problemă."
+msgstr "Hm, serverul fluxului pare a fi configurat greșit. Informează deținătorul fluxului despre această problemă."
 
 #: src/view/com/posts/FeedErrorMessage.tsx:111
 msgid "Hmm, the feed server appears to be offline. Please let the feed owner know about this issue."
-msgstr "Hm, serverul feed-ului pare să fie offline. Te rugăm să informezi deținătorul feed-ului despre această problemă."
+msgstr "Hm, serverul fluxului pare să fie offline. Informează deținătorul fluxului despre această problemă."
 
 #: src/view/com/posts/FeedErrorMessage.tsx:108
 msgid "Hmm, the feed server gave a bad response. Please let the feed owner know about this issue."
-msgstr "Hm, serverul feed-ului a oferit un răspuns greșit. Te rugăm să informezi deținătorul feed-ului despre această problemă."
+msgstr "Hm, serverul fluxului a oferit un răspuns greșit. Informează deținătorul fluxului despre această problemă."
 
 #: src/view/com/posts/FeedErrorMessage.tsx:102
 msgid "Hmm, we're having trouble finding this feed. It may have been deleted."
-msgstr "Hm, avem dificultăți în găsirea acestui feed. Ar putea fi șters."
+msgstr "Hm, avem dificultăți în găsirea acestui flux. Ar putea fi șters."
 
 #: src/screens/Moderation/index.tsx:55
 msgid "Hmmmm, it seems we're having trouble loading this data. See below for more details. If this issue persists, please contact us."
@@ -3543,7 +3543,7 @@ msgstr "Invită oameni la acest starter pack!"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:35
 msgid "Invite your friends to follow your favorite feeds and people"
-msgstr "Invită-ți prietenii să urmărească feed-urile și persoanele tale preferate"
+msgstr "Invită-ți prietenii să urmărească fluxurile și persoanele tale preferate"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:32
 msgid "Invites, but personal"
@@ -3731,12 +3731,12 @@ msgstr "Apasă Like la 10 postări"
 #: src/state/shell/progress-guide.tsx:157
 #: src/state/shell/progress-guide.tsx:162
 msgid "Like 10 posts to train the Discover feed"
-msgstr "Apasă Like la 10 postări pentru a antrena feed-ul Discover"
+msgstr "Apasă Like la 10 postări pentru a antrena fluxul Discover"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:275
 #: src/view/screens/ProfileFeed.tsx:576
 msgid "Like this feed"
-msgstr "Îmi place acest feed"
+msgstr "Îmi place acest flux"
 
 #: src/components/LikesDialog.tsx:85
 #: src/Navigation.tsx:234
@@ -3753,7 +3753,7 @@ msgstr "Plăcut de"
 
 #: src/view/com/notifications/FeedItem.tsx:211
 #~ msgid "liked your custom feed"
-#~ msgstr "a apreciat feed-ul tău personalizat"
+#~ msgstr "a apreciat fluxul tău personalizat"
 
 #: src/view/com/notifications/FeedItem.tsx:178
 #~ msgid "liked your post"
@@ -3798,7 +3798,7 @@ msgstr "Listă ascunsă"
 
 #: src/view/screens/ProfileList.tsx:396
 msgid "List muted"
-msgstr "Listă redusă la tăcere"
+msgstr "Listă cenzurată"
 
 #: src/view/com/modals/CreateOrEditList.tsx:255
 msgid "List Name"
@@ -3806,11 +3806,11 @@ msgstr "Numele listei"
 
 #: src/view/screens/ProfileList.tsx:435
 msgid "List unblocked"
-msgstr "Listă deblocat"
+msgstr "Listă deblocată"
 
 #: src/view/screens/ProfileList.tsx:409
 msgid "List unmuted"
-msgstr "Listă ne-restricționată"
+msgstr "Listă ne-cenzurată"
 
 #: src/Navigation.tsx:133
 #: src/view/screens/Profile.tsx:227
@@ -3918,7 +3918,7 @@ msgstr "Gestionează fluxurile salvate"
 
 #: src/components/dialogs/MutedWords.tsx:108
 msgid "Manage your muted words and tags"
-msgstr "Gestionează cuvintele și etichetele dezactivate"
+msgstr "Gestionează cuvintele și etichetele cenzurate"
 
 #: src/components/dms/ConvoMenu.tsx:151
 #: src/components/dms/ConvoMenu.tsx:158
@@ -4151,7 +4151,7 @@ msgstr "Dezactivează acest cuvânt până îl reactivezi"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:546
 #: src/view/com/util/forms/PostDropdownBtn.tsx:550
 msgid "Mute thread"
-msgstr "Dezactivează notificările pentru fir"
+msgstr "Dezactivează notificările discuției"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:560
 #: src/view/com/util/forms/PostDropdownBtn.tsx:562
@@ -4169,7 +4169,7 @@ msgstr "Conturi dezactivate"
 
 #: src/view/screens/ModerationMutedAccounts.tsx:116
 msgid "Muted accounts have their posts removed from your feed and from your notifications. Mutes are completely private."
-msgstr "Conturile dezactivate nu mai apar în feed-ul tău sau în notificări. Dezactivările sunt complet private."
+msgstr "Conturile dezactivate nu mai apar în fluxul tău sau în notificări. Dezactivările sunt complet private."
 
 #: src/lib/moderation/useModerationCauseDescription.ts:90
 msgid "Muted by \"{0}\""
@@ -4177,7 +4177,7 @@ msgstr "Dezactivat de \"{0}\""
 
 #: src/screens/Moderation/index.tsx:229
 msgid "Muted words & tags"
-msgstr "Cuvinte și etichete dezactivate"
+msgstr "Cuvinte și etichete cenzurate"
 
 #: src/view/screens/ProfileList.tsx:734
 msgid "Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them."
@@ -4190,7 +4190,7 @@ msgstr "Ziua mea de naștere"
 
 #: src/view/screens/Feeds.tsx:732
 msgid "My Feeds"
-msgstr "Feed-urile mele"
+msgstr "Fluxurile mele"
 
 #: src/view/shell/desktop/LeftNav.tsx:85
 msgid "My Profile"
@@ -4198,11 +4198,11 @@ msgstr "Profilul meu"
 
 #: src/view/screens/Settings/index.tsx:583
 #~ msgid "My saved feeds"
-#~ msgstr "Feed-urile mele salvate"
+#~ msgstr "Fluxurile mele salvate"
 
 #: src/view/screens/Settings/index.tsx:589
 #~ msgid "My Saved Feeds"
-#~ msgstr "Feed-urile mele salvate"
+#~ msgstr "Fluxurile mele salvate"
 
 #: src/view/com/modals/CreateOrEditList.tsx:270
 msgid "Name"
@@ -4244,7 +4244,7 @@ msgstr "Trebuie să-l schimbi?"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:130
 msgid "Need to report a copyright violation?"
-msgstr "Trebuie să raportezi o încălcare a drepturilor de autor?"
+msgstr "Raportezi o încălcare a drepturilor de autor?"
 
 #: src/screens/Onboarding/StepFinished.tsx:260
 msgid "Never lose access to your followers or data."
@@ -4312,7 +4312,7 @@ msgstr "Postare nouă"
 #: src/view/shell/desktop/LeftNav.tsx:322
 msgctxt "action"
 msgid "New Post"
-msgstr "Postare Nouă"
+msgstr "Postare nouă"
 
 #: src/components/NewskieDialog.tsx:83
 msgid "New user info dialog"
@@ -4701,7 +4701,7 @@ msgstr "Deschide pagina de depanare pentru moderare"
 
 #: src/screens/Moderation/index.tsx:225
 msgid "Open muted words and tags settings"
-msgstr "Deschide setările pentru cuvinte și etichete silențioase"
+msgstr "Deschide setările pentru cuvinte și etichete cenzurate"
 
 #: src/view/com/home/HomeHeaderLayoutMobile.tsx:54
 msgid "Open navigation"
@@ -4734,7 +4734,7 @@ msgstr "Deschide un dialog pentru a adăuga un avertisment de conținut postări
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:62
 msgid "Opens a dialog to choose who can reply to this thread"
-msgstr "Deschide un dialog pentru a alege cine poate răspunde la acest fir"
+msgstr "Deschide un dialog pentru a alege cine poate răspunde la această discuție"
 
 #: src/view/screens/Settings/index.tsx:456
 #~ msgid "Opens accessibility settings"
@@ -4742,7 +4742,7 @@ msgstr "Deschide un dialog pentru a alege cine poate răspunde la acest fir"
 
 #: src/view/screens/Log.tsx:59
 msgid "Opens additional details for a debug entry"
-msgstr "Deschide detalii suplimentare pentru o intrare de depanare"
+msgstr "Arată detalii suplimentare pentru o înregistrare de depanare"
 
 #: src/view/screens/Settings/index.tsx:477
 #~ msgid "Opens appearance settings"
@@ -5155,7 +5155,7 @@ msgstr "Postarea este ascunsă"
 #: src/components/moderation/ModerationDetailsDialog.tsx:106
 #: src/lib/moderation/useModerationCauseDescription.ts:104
 msgid "Post Hidden by Muted Word"
-msgstr "Postare ascunsă de un cuvânt mutat"
+msgstr "Postare ascunsă de un cuvânt cenzurat"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:109
 #: src/lib/moderation/useModerationCauseDescription.ts:113
@@ -5592,7 +5592,7 @@ msgstr "Răspunde"
 #: src/components/moderation/ModerationDetailsDialog.tsx:115
 #: src/lib/moderation/useModerationCauseDescription.ts:123
 msgid "Reply Hidden by Thread Author"
-msgstr "Răspuns ascuns de autorul firului"
+msgstr "Răspuns ascuns de autorul discuției"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:114
 #: src/lib/moderation/useModerationCauseDescription.ts:122
@@ -5605,7 +5605,7 @@ msgstr "Setări pentru răspunsuri"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:341
 msgid "Reply settings are chosen by the author of the thread"
-msgstr "Setările pentru răspunsuri sunt alese de autorul firului"
+msgstr "Setările pentru răspunsuri sunt alese de autorul discuției"
 
 #: src/view/com/post/Post.tsx:204
 #: src/view/com/posts/FeedItem.tsx:553
@@ -6909,7 +6909,7 @@ msgstr "Contul va putea interacționa cu tine după deblocare."
 #: src/components/moderation/ModerationDetailsDialog.tsx:118
 #: src/lib/moderation/useModerationCauseDescription.ts:126
 msgid "The author of this thread has hidden this reply."
-msgstr "Autorul acestui fir a ascuns acest răspuns."
+msgstr "Autorul acestei discuții a ascuns acest răspuns."
 
 #: src/screens/Moderation/index.tsx:363
 msgid "The Bluesky web application"
@@ -7234,7 +7234,7 @@ msgstr "Această postare este vizibilă doar pentru utilizatorii autentificați.
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:714
 msgid "This post will be hidden from feeds and threads. This cannot be undone."
-msgstr "Această postare va fi ascunsă din fluxuri și fire de discuție. Acest lucru nu poate fi anulat."
+msgstr "Această postare va fi ascunsă din fluxuri și discuții. Acest lucru nu poate fi anulat."
 
 #: src/view/com/composer/Composer.tsx:405
 msgid "This post's author has disabled quote posts."
@@ -7246,7 +7246,7 @@ msgstr "Acest profil este vizibil doar pentru utilizatorii autentificați. Nu va
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:776
 msgid "This reply will be sorted into a hidden section at the bottom of your thread and will mute notifications for subsequent replies - both for yourself and others."
-msgstr "Acest răspuns va fi sortat într-o secțiune ascunsă în partea de jos a firului tău și va dezactiva notificările pentru răspunsurile ulterioare - atât pentru tine, cât și pentru ceilalți."
+msgstr "Acest răspuns va fi sortat într-o secțiune ascunsă în partea de jos a discuției tale și va dezactiva notificările pentru răspunsurile ulterioare - atât pentru tine, cât și pentru ceilalți."
 
 #: src/screens/Signup/StepInfo/Policies.tsx:37
 msgid "This service has not provided terms of service or a privacy policy."
@@ -7304,15 +7304,15 @@ msgstr "Aceasta va elimina postarea ta din acest citat pentru toți utilizatorii
 #: src/screens/Settings/ContentAndMediaSettings.tsx:49
 #: src/screens/Settings/ContentAndMediaSettings.tsx:52
 msgid "Thread preferences"
-msgstr "Preferințe pentru firul de discuție"
+msgstr "Preferințele discuție"
 
 #: src/screens/Settings/ThreadPreferences.tsx:42
 msgid "Thread Preferences"
-msgstr "Preferințe pentru fir"
+msgstr "Preferințele discuției"
 
 #: src/screens/Settings/ThreadPreferences.tsx:129
 msgid "Threaded mode"
-msgstr "Mod fir de discuție"
+msgstr "Mod discuție structurată"
 
 #: src/view/screens/PreferencesThreads.tsx:114
 #~ msgid "Threaded Mode"
@@ -7320,7 +7320,7 @@ msgstr "Mod fir de discuție"
 
 #: src/Navigation.tsx:307
 msgid "Threads Preferences"
-msgstr "Preferințe pentru fire"
+msgstr "Preferințe pentru discuții"
 
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:99
 msgid "To disable the email 2FA method, please verify your access to the email address."
@@ -7362,7 +7362,7 @@ msgstr "Sus"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:461
 #: src/view/com/util/forms/PostDropdownBtn.tsx:463
 msgid "Translate"
-msgstr "Traduce"
+msgstr "Tradu"
 
 #: src/view/com/util/error/ErrorScreen.tsx:83
 msgctxt "action"
@@ -7467,46 +7467,46 @@ msgstr "Nu mai urmări contul"
 
 #: src/view/screens/ProfileFeed.tsx:576
 msgid "Unlike this feed"
-msgstr "Elimină aprecierile pentru acest feed"
+msgstr "Dezapreciază acest flux"
 
 #: src/components/TagMenu/index.tsx:248
 #: src/view/screens/ProfileList.tsx:692
 msgid "Unmute"
-msgstr "Dezactivează mutarea"
+msgstr "Decenzurează"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:156
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VolumeControl.tsx:93
 msgctxt "video"
 msgid "Unmute"
-msgstr "Dezactivează mutarea"
+msgstr "Decenzurează"
 
 #: src/components/TagMenu/index.web.tsx:115
 msgid "Unmute {truncatedTag}"
-msgstr "Dezactivează mutarea pentru {truncatedTag}"
+msgstr "Decenzurează {truncatedTag}"
 
 #: src/view/com/profile/ProfileMenu.tsx:258
 #: src/view/com/profile/ProfileMenu.tsx:264
 msgid "Unmute Account"
-msgstr "Dezactivează mutarea contului"
+msgstr "Decenzurează contul"
 
 #: src/components/TagMenu/index.tsx:204
 msgid "Unmute all {displayTag} posts"
-msgstr "Dezactivează mutarea tuturor postărilor {displayTag}"
+msgstr "Decenzurează toate postările {displayTag}"
 
 #: src/components/dms/ConvoMenu.tsx:176
 msgid "Unmute conversation"
-msgstr "Dezactivează mutarea conversației"
+msgstr "Decenzurează conversația"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:546
 #: src/view/com/util/forms/PostDropdownBtn.tsx:550
 #: src/view/com/util/forms/PostDropdownBtn.tsx:546
 #: src/view/com/util/forms/PostDropdownBtn.tsx:550
 msgid "Unmute thread"
-msgstr "Dezactivează mutarea firului"
+msgstr "Decenzurează discuția"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:318
 msgid "Unmute video"
-msgstr "Dezactivează mutarea videoclipului"
+msgstr "Decenzurează video"
 
 #: src/view/screens/ProfileFeed.tsx:296
 #: src/view/screens/ProfileList.tsx:676
@@ -7579,7 +7579,7 @@ msgstr "Actualizarea vizibilității răspunsului a eșuat"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:180
 msgid "Updating..."
-msgstr "Se actualizează..."
+msgstr "Actualizare..."
 
 #: src/screens/Onboarding/StepProfile/index.tsx:290
 msgid "Upload a photo instead"
@@ -7847,52 +7847,52 @@ msgstr "Videoclipurile trebuie să aibă mai puțin de 60 de secunde"
 
 #: src/screens/Profile/Header/Shell.tsx:164
 msgid "View {0}'s avatar"
-msgstr "Vizualizați avatarul lui {0}"
+msgstr "Vezi avatarul lui {0}"
 
 #: src/components/ProfileCard.tsx:110
 #: src/view/com/notifications/FeedItem.tsx:408
 msgid "View {0}'s profile"
-msgstr "Vizualizați profilul lui {0}"
+msgstr "Vezi profilul lui {0}"
 
 #: src/components/dms/MessagesListHeader.tsx:160
 msgid "View {displayName}'s profile"
-msgstr "Vizualizați profilul lui {displayName}"
+msgstr "Vezi profilul lui {displayName}"
 
 #: src/components/TagMenu/index.tsx:149
 msgid "View all posts by @{authorHandle} with tag {displayTag}"
-msgstr "Vizualizați toate postările de la @{authorHandle} cu eticheta {displayTag}"
+msgstr "Vezi toate postările de la @{authorHandle} cu eticheta {displayTag}"
 
 #: src/components/TagMenu/index.tsx:103
 msgid "View all posts with tag {displayTag}"
-msgstr "Vizualizați toate postările cu eticheta {displayTag}"
+msgstr "Vezi toate postările cu eticheta {displayTag}"
 
 #: src/components/ProfileHoverCard/index.web.tsx:433
 msgid "View blocked user's profile"
-msgstr "Vizualizați profilul utilizatorului blocat"
+msgstr "Vezi profilul utilizatorului blocat"
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:98
 msgid "View blogpost for more details"
-msgstr "Vizualizați articolul pentru mai multe detalii"
+msgstr "Vezi articolul pentru mai multe detalii"
 
 #: src/view/screens/Log.tsx:57
 msgid "View debug entry"
-msgstr "Vizualizați intrarea de depanare"
+msgstr "Vezi intrarea de depanare"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:139
 msgid "View details"
-msgstr "Vizualizați detalii"
+msgstr "Vezi detalii"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:134
 msgid "View details for reporting a copyright violation"
-msgstr "Vizualizați detalii pentru raportarea unei încălcări a drepturilor de autor"
+msgstr "Vezi detaliile unui raportar privind încălcarea drepturilor de autor"
 
 #: src/view/com/posts/FeedSlice.tsx:154
 msgid "View full thread"
-msgstr "Vizualizați firul complet"
+msgstr "Vezi toată discuția"
 
 #: src/components/moderation/LabelsOnMe.tsx:47
 msgid "View information about these labels"
-msgstr "Vizualizați informații despre aceste etichete"
+msgstr "Vezi informații despre aceste etichete"
 
 #: src/components/ProfileHoverCard/index.web.tsx:419
 #: src/components/ProfileHoverCard/index.web.tsx:439
@@ -7902,23 +7902,23 @@ msgstr "Vizualizați informații despre aceste etichete"
 #: src/view/com/util/PostMeta.tsx:79
 #: src/view/com/util/PostMeta.tsx:94
 msgid "View profile"
-msgstr "Vizualizați profilul"
+msgstr "Vezi profilul"
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:163
 msgid "View the avatar"
-msgstr "Vizualizați avatarul"
+msgstr "Vezi avatarul"
 
 #: src/components/LabelingServiceCard/index.tsx:162
 msgid "View the labeling service provided by @{0}"
-msgstr "Vizualizați serviciul de etichetare furnizat de @{0}"
+msgstr "Vezi serviciul de etichetare furnizat de @{0}"
 
 #: src/view/screens/ProfileFeed.tsx:588
 msgid "View users who like this feed"
-msgstr "Vizualizați utilizatorii care apreciază acest flux"
+msgstr "Vezi utilizatorii care apreciază acest flux"
 
 #: src/screens/Moderation/index.tsx:269
 msgid "View your blocked accounts"
-msgstr "Vizualizați conturile blocate"
+msgstr "Vezi conturile blocate"
 
 #: src/view/com/home/HomeHeaderLayout.web.tsx:78
 #: src/view/com/home/HomeHeaderLayoutMobile.tsx:89
@@ -8120,7 +8120,7 @@ msgstr "Scrieți o postare"
 #: src/view/com/composer/Composer.tsx:712
 #: src/view/com/post-thread/PostThreadComposePrompt.tsx:71
 msgid "Write your reply"
-msgstr "Scrie răspunsul tău"
+msgstr "Răspunsul tău"
 
 #: src/screens/Onboarding/index.tsx:25
 #: src/screens/Onboarding/state.ts:103
@@ -8303,7 +8303,7 @@ msgstr "Nu ai creat încă un pachet de pornire!"
 
 #: src/components/dialogs/MutedWords.tsx:398
 msgid "You haven't muted any words or tags yet"
-msgstr "Nu ai dezactivat încă niciun cuvânt sau etichetă"
+msgstr "Încă nu ai cenzurate niciun cuvânt sau etichetă"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:117
 #: src/lib/moderation/useModerationCauseDescription.ts:125
@@ -8360,11 +8360,11 @@ msgstr "Vei fi deconectat din toate conturile tale."
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:287
 msgid "You will no longer receive notifications for this thread"
-msgstr "Nu vei mai primi notificări pentru acest fir de discuție."
+msgstr "Nu vei mai primi notificări pentru acestă discuție."
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:283
 msgid "You will now receive notifications for this thread"
-msgstr "Vei primi acum notificări pentru acest fir de discuție."
+msgstr "Acum vei notificări pentru acestă discuție."
 
 #: src/screens/Login/SetNewPasswordForm.tsx:98
 msgid "You will receive an email with a \"reset code.\" Enter that code here, then enter your new password."
@@ -8503,7 +8503,7 @@ msgstr "Numele tău complet va fi <0>@{0}</0>."
 
 #: src/components/dialogs/MutedWords.tsx:369
 msgid "Your muted words"
-msgstr "Cuvintele tale dezactivate."
+msgstr "Cuvinte cenzurate de tine."
 
 #: src/view/com/modals/ChangePassword.tsx:158
 msgid "Your password has been changed successfully!"
