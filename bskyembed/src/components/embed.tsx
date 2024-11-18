@@ -297,7 +297,7 @@ function ExternalEmbed({
     try {
       const urlp = new URL(url)
       return urlp.host ? urlp.host : url
-    } catch (e) {
+    } catch {
       return url
     }
   }
