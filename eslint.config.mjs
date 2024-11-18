@@ -99,7 +99,17 @@ export default tseslint.config(
           ],
         },
       ],
-      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+      //These should all be quick followed after eslint v9 upgrade
+      'no-dupe-else-if': 'off',
+      'no-empty': 'off',
+      'no-empty-pattern': 'off',
+      'no-unsafe-optional-chaining': 'off',
+      'prefer-const': 'off',
+      '@typescript-eslint/ban-ts-comment': "off",
+      "@typescript-eslint/no-empty-object-type": ["error", { "allowObjectTypes": "always" }],
+      '@typescript-eslint/no-explicit-any': 'warn',
+      "@typescript-eslint/no-require-imports": "off",
+      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_'  }],
     },
     settings: {
       react: {
