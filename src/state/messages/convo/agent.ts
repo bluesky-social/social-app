@@ -621,7 +621,7 @@ export class Convo {
           this.pastMessages.set(message.id, message)
         }
       }
-    } catch (e: any) {
+    } catch {
       logger.error('Convo: failed to fetch message history')
 
       this.fetchMessageHistoryError = {

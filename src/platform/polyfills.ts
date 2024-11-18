@@ -1,7 +1,8 @@
 import 'fast-text-encoding'
+
 // @ts-ignore no decl -prf
 import findLast from 'array.prototype.findlast'
-export {}
+export { }
 
 findLast.shim()
 
@@ -33,7 +34,7 @@ globalThis.atob = (str: string): string => {
     r1,
     r2,
     i = 0
-  for (; i < str.length; ) {
+  for (; i < str.length;) {
     bitmap =
       (b64.indexOf(str.charAt(i++)) << 18) |
       (b64.indexOf(str.charAt(i++)) << 12) |
@@ -44,8 +45,8 @@ globalThis.atob = (str: string): string => {
       r1 === 64
         ? String.fromCharCode((bitmap >> 16) & 255)
         : r2 === 64
-        ? String.fromCharCode((bitmap >> 16) & 255, (bitmap >> 8) & 255)
-        : String.fromCharCode(
+          ? String.fromCharCode((bitmap >> 16) & 255, (bitmap >> 8) & 255)
+          : String.fromCharCode(
             (bitmap >> 16) & 255,
             (bitmap >> 8) & 255,
             bitmap & 255,

@@ -81,7 +81,7 @@ export function parseEmbedPlayerFromUrl(
   let urlp
   try {
     urlp = new URL(url)
-  } catch (e) {
+  } catch {
     return undefined
   }
 

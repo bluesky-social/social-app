@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import {useEffect, useState} from 'react'
 import {View} from 'react-native'
 import Animated, {FadeInUp, FadeOutUp} from 'react-native-reanimated'
 import RootSiblings from 'react-native-root-siblings'

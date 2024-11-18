@@ -30,7 +30,7 @@ export function isSessionExpired(account: SessionAccount) {
         return didExpire
       }
     }
-  } catch (e) {
+  } catch {
     logger.error(`session: could not decode jwt`)
   }
   return true

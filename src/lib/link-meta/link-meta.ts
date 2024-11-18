@@ -46,7 +46,7 @@ export async function getLinkMeta(
       url = giphyMetaUri
       urlp = new URL(url)
     }
-  } catch (e) {
+  } catch {
     return {
       error: 'Invalid URL',
       likelyType: LikelyType.Other,
@@ -98,7 +98,7 @@ export function getLikelyType(url: URL | string): LikelyType {
   if (typeof url === 'string') {
     try {
       url = new URL(url)
-    } catch (e) {
+    } catch {
       return LikelyType.Other
     }
   }

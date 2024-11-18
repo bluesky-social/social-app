@@ -48,7 +48,7 @@ export function CaptchaWebView({
         return
       }
       onSuccess(code)
-    } catch (e: unknown) {
+    } catch {
       // We don't actually want to record an error here, because this will happen quite a bit. We will only be able to
       // get hte href of the iframe if it's on our domain, so all the hcaptcha requests will throw here, although it's
       // harmless. Our other indicators of time-to-complete and back press should be more reliable in catching issues.

@@ -25,7 +25,7 @@ export function useTimer(time: number, handler: () => void) {
   // start the timer immediately
   React.useEffect(() => {
     reset()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [])
 
   return [reset, cancel]

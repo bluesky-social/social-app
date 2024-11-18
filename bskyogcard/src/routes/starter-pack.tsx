@@ -1,6 +1,5 @@
 import assert from 'node:assert'
 
-import React from 'react'
 import {AppBskyGraphDefs, AtUri} from '@atproto/api'
 import resvg from '@resvg/resvg-js'
 import {Express} from 'express'

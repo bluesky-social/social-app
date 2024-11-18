@@ -55,7 +55,7 @@ export function toNiceDomain(url: string): string {
       return 'Bluesky Social'
     }
     return urlp.host ? urlp.host : url
-  } catch (e) {
+  } catch {
     return url
   }
 }
@@ -72,7 +72,7 @@ export function toShortUrl(url: string): string {
       return urlp.host + path.slice(0, 13) + '...'
     }
     return urlp.host + path
-  } catch (e) {
+  } catch {
     return url
   }
 }
@@ -344,7 +344,7 @@ export function getHostnameFromUrl(url: string | URL): string | null {
   let urlp
   try {
     urlp = new URL(url)
-  } catch (e) {
+  } catch {
     return null
   }
   return urlp.hostname

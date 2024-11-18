@@ -52,7 +52,7 @@ export function StepHandle() {
         })
         return
       }
-    } catch (e) {
+    } catch {
       // Don't have to handle
     } finally {
       dispatch({type: 'setIsLoading', value: false})

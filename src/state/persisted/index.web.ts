@@ -54,7 +54,7 @@ export async function write<K extends keyof Schema>(
       // This is good mostly because it avoids useless broadcasts to other tabs.
       return
     }
-  } catch (e) {
+  } catch {
     // Ignore and go through the normal path.
   }
   _state = normalizeData({
@@ -84,7 +84,7 @@ onUpdate satisfies PersistedApi['onUpdate']
 export async function clearStorage() {
   try {
     localStorage.removeItem(BSKY_STORAGE)
-  } catch (e: any) {
+  } catch {
     // Expected on the web in private mode.
   }
 }
@@ -121,7 +121,7 @@ function writeToStorage(value: Schema) {
   if (rawData) {
     try {
       localStorage.setItem(BSKY_STORAGE, rawData)
-    } catch (e) {
+    } catch {
       // Expected on the web in private mode.
     }
   }
@@ -133,7 +133,7 @@ function readFromStorage(): Schema | undefined {
   let rawData: string | null = null
   try {
     rawData = localStorage.getItem(BSKY_STORAGE)
-  } catch (e) {
+  } catch {
     // Expected on the web in private mode.
   }
   if (rawData) {

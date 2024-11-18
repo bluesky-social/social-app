@@ -141,7 +141,7 @@ export function EmojiPicker({state, close, pinToTop}: IProps) {
             right: 0,
           },
         ]}>
-        {/* eslint-disable-next-line react-native-a11y/has-valid-accessibility-descriptors */}
+        { }
         <TouchableWithoutFeedback onPress={e => e.stopPropagation()}>
           <View style={[{position: 'absolute'}, position]}>
             <DismissableLayer

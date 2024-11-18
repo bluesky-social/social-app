@@ -54,7 +54,7 @@ const MAINTAIN_VISIBLE_CONTENT_POSITION = {
 }
 
 const REPLY_PROMPT = {_reactKey: '__reply__'}
-const LOAD_MORE = {_reactKey: '__load_more__'}
+type LOAD_MORE = {_reactKey: '__load_more__'}
 const SHOW_HIDDEN_REPLIES = {_reactKey: '__show_hidden_replies__'}
 const SHOW_MUTED_REPLIES = {_reactKey: '__show_muted_replies__'}
 
@@ -74,7 +74,7 @@ type RowItem =
   | YieldedItem
   // TODO: TS doesn't actually enforce it's one of these, it only enforces matching shape.
   | typeof REPLY_PROMPT
-  | typeof LOAD_MORE
+  | LOAD_MORE
 
 type ThreadSkeletonParts = {
   parents: YieldedItem[]

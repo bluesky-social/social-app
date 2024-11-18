@@ -2,7 +2,9 @@ import { FlatCompat } from "@eslint/eslintrc";
 import eslint from '@eslint/js';
 import pluginLingui from 'eslint-plugin-lingui'
 import reactPlugin from 'eslint-plugin-react';
+import reactHooksPlugin from 'eslint-plugin-react-hooks';
 import reactCompilerPlugin from 'eslint-plugin-react-compiler';
+import reactNativeA11yPlugin from 'eslint-plugin-react-native-a11y';
 import simpleImportSort from "eslint-plugin-simple-import-sort";
 import path from "path";
 import tseslint from 'typescript-eslint';
@@ -30,8 +32,10 @@ export default tseslint.config(
     },
     // ...compat.plugins("bsky-internal"),
     plugins: {
+      'react-native-a11y': reactNativeA11yPlugin,
       "simple-import-sort": simpleImportSort,
       "react-compiler": reactCompilerPlugin,
+      'react-hooks': reactHooksPlugin,
     },
     rules: {
       'prettier/prettier': 0,
@@ -100,16 +104,29 @@ export default tseslint.config(
         },
       ],
       //These should all be quick followed after eslint v9 upgrade
+      'no-async-promise-executor': 'off',
+      'no-case-declarations': 'off',
+      'no-control-regex': 'off',
       'no-dupe-else-if': 'off',
       'no-empty': 'off',
       'no-empty-pattern': 'off',
+      'no-irregular-whitespace': 'off',
+      'no-prototype-builtins': 'off',
+      'no-sparse-arrays': 'off',
       'no-unsafe-optional-chaining': 'off',
+      'no-useless-escape': 'off',
+      'no-var': 'off',
       'prefer-const': 'off',
+      'prefer-rest-params': 'off',
       '@typescript-eslint/ban-ts-comment': "off",
       "@typescript-eslint/no-empty-object-type": ["error", { "allowObjectTypes": "always" }],
       '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/no-non-null-asserted-optional-chain': 'off',
+      '@typescript-eslint/no-unsafe-function-type': 'off',
+      '@typescript-eslint/no-unused-expressions':'off',
       "@typescript-eslint/no-require-imports": "off",
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_'  }],
+      '@typescript-eslint/no-wrapper-object-types': 'off'
     },
     settings: {
       react: {
@@ -119,8 +136,7 @@ export default tseslint.config(
     },
     ignores: [
       '**/__mocks__/*.ts',
-      'src/platform/polyfills.ts',
-      'src/third-party',
+      '**/src/third-party',
       'ios',
       'android',
       'coverage',

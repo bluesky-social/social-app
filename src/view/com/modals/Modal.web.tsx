@@ -1,4 +1,3 @@
-import React from 'react'
 import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native'
 import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
 
@@ -91,13 +90,13 @@ function Modal({modal}: {modal: ModalIface}) {
   }
 
   return (
-    // eslint-disable-next-line react-native-a11y/has-valid-accessibility-descriptors
+     
     <TouchableWithoutFeedback onPress={onPressMask}>
       <Animated.View
         style={styles.mask}
         entering={FadeIn.duration(150)}
         exiting={FadeOut}>
-        {/* eslint-disable-next-line react-native-a11y/has-valid-accessibility-descriptors */}
+        { }
         <TouchableWithoutFeedback onPress={onInnerPress}>
           <View
             style={[
