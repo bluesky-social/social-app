@@ -6,6 +6,7 @@ import {useEffect, useMemo, useRef, useState} from 'preact/hooks'
 
 import arrowBottom from '../../assets/arrowBottom_stroke2_corner0_rounded.svg'
 import logo from '../../assets/logo.svg'
+import {initColorMode} from '../color-mode'
 import {Container} from '../components/container'
 import {Link} from '../components/link'
 import {Post} from '../components/post'
@@ -21,14 +22,22 @@ export const EMBED_SCRIPT = `${EMBED_SERVICE}/static/embed.js`
 const root = document.getElementById('app')
 if (!root) throw new Error('No root element')
 
+initColorMode()
+
 const agent = new BskyAgent({
   service: 'https://public.api.bsky.app',
 })
 
 render(<LandingPage />, root)
 
+type ColorModeValues = 'auto' | 'light' | 'dark'
+function assertColorModeValues(value: string): value is ColorModeValues {
+  return ['auto', 'light', 'dark'].includes(value)
+}
+
 function LandingPage() {
   const [uri, setUri] = useState('')
+  const [colorMode, setColorMode] = useState<'auto' | 'light' | 'dark'>('auto')
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [thread, setThread] = useState<AppBskyFeedDefs.ThreadViewPost | null>(
@@ -108,7 +117,7 @@ function LandingPage() {
   }, [uri])
 
   return (
-    <main className="w-full min-h-screen flex flex-col items-center gap-8 py-14 px-4 md:pt-32">
+    <main className="w-full min-h-screen flex flex-col items-center gap-8 py-14 px-4 md:pt-32 dark:bg-dimmedBgDarken dark:text-slate-200">
       <Link
         href="https://bsky.social/about"
         className="transition-transform hover:scale-110">
@@ -121,20 +130,50 @@ function LandingPage() {
         type="text"
         value={uri}
         onInput={e => setUri(e.currentTarget.value)}
-        className="border rounded-lg py-3 w-full max-w-[600px] px-4"
+        className="border rounded-lg py-3 w-full max-w-[600px] px-4 dark:bg-dimmedBg dark:border-slate-500"
         placeholder={DEFAULT_POST}
       />
 
-      <img src={arrowBottom} className="w-6" />
+      <details className="group/options overflow-clip border rounded-lg dark:border-slate-500 w-full max-w-[600px] flex flex-col gap-2">
+        <summary className="px-4 py-2 cursor-pointer group-open/options:bg-neutral-100 dark:group-open/options:bg-dimmedBgLighten">
+          Want more customize?
+        </summary>
+        <div className="p-4 space-y-2">
+          <div>
+            <label className="block text-sm font-medium">Color mode</label>
+            <select
+              value={colorMode}
+              onChange={e => {
+                const value = e.currentTarget.value
+                if (assertColorModeValues(value)) {
+                  setColorMode(value)
+                }
+              }}
+              className="block border w-full rounded-lg text-sm px-3 py-2 dark:bg-dimmedBg dark:border-slate-500">
+              <option value="auto">Auto (Sync with device)</option>
+              <option value="light">Light</option>
+              <option value="dark">Dark</option>
+            </select>
+          </div>
+        </div>
+      </details>
+
+      <img src={arrowBottom} className="w-6 dark:invert" />
 
       {loading ? (
-        <Skeleton />
+        <div className={`${colorMode}w-full max-w-[600px]`}>
+          <Skeleton />
+        </div>
       ) : (
         <div className="w-full max-w-[600px] gap-8 flex flex-col">
-          {!error && thread && uri && <Snippet thread={thread} />}
-          {!error && thread && <Post thread={thread} key={thread.post.uri} />}
+          {!error && thread && uri && (
+            <Snippet thread={thread} colorMode={colorMode} />
+          )}
+          <div className={colorMode}>
+            {!error && thread && <Post thread={thread} key={thread.post.uri} />}
+          </div>
           {error && (
-            <div className="w-full border border-red-500 bg-red-50 px-4 py-3 rounded-lg">
+            <div className="w-full border border-red-500 bg-red-500/10 px-4 py-3 rounded-lg">
               <p className="text-red-500 text-center">{error}</p>
             </div>
           )}
@@ -149,21 +188,27 @@ function Skeleton() {
     <Container>
       <div className="flex-1 flex-col flex gap-2 pb-8">
         <div className="flex gap-2.5 items-center">
-          <div className="w-10 h-10 overflow-hidden rounded-full bg-neutral-100 shrink-0 animate-pulse" />
+          <div className="w-10 h-10 overflow-hidden rounded-full bg-neutral-100 dark:bg-slate-700 shrink-0 animate-pulse" />
           <div className="flex-1">
-            <div className="bg-neutral-100 animate-pulse w-64 h-4 rounded" />
-            <div className="bg-neutral-100 animate-pulse w-32 h-3 mt-1 rounded" />
+            <div className="bg-neutral-100 dark:bg-slate-700 animate-pulse w-64 h-4 rounded" />
+            <div className="bg-neutral-100 dark:bg-slate-700 animate-pulse w-32 h-3 mt-1 rounded" />
           </div>
         </div>
-        <div className="w-full h-4 mt-2 bg-neutral-100 rounded animate-pulse" />
-        <div className="w-5/6 h-4 bg-neutral-100 rounded animate-pulse" />
-        <div className="w-3/4 h-4 bg-neutral-100 rounded animate-pulse" />
+        <div className="w-full h-4 mt-2 bg-neutral-100 dark:bg-slate-700 rounded animate-pulse" />
+        <div className="w-5/6 h-4 bg-neutral-100 dark:bg-slate-700 rounded animate-pulse" />
+        <div className="w-3/4 h-4 bg-neutral-100 dark:bg-slate-700 rounded animate-pulse" />
       </div>
     </Container>
   )
 }
 
-function Snippet({thread}: {thread: AppBskyFeedDefs.ThreadViewPost}) {
+function Snippet({
+  thread,
+  colorMode,
+}: {
+  thread: AppBskyFeedDefs.ThreadViewPost
+  colorMode: 'auto' | 'light' | 'dark'
+}) {
   const ref = useRef<HTMLInputElement>(null)
   const [copied, setCopied] = useState(false)
 
@@ -199,9 +244,11 @@ function Snippet({thread}: {thread: AppBskyFeedDefs.ThreadViewPost}) {
     // x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x
     return `<blockquote class="bluesky-embed" data-bluesky-uri="${escapeHtml(
       thread.post.uri,
-    )}" data-bluesky-cid="${escapeHtml(thread.post.cid)}"><p lang="${escapeHtml(
-      lang,
-    )}">${escapeHtml(record.text)}${
+    )}" data-bluesky-cid="${escapeHtml(
+      thread.post.cid,
+    )}" data-bluesky-embed-color-mode="${escapeHtml(
+      colorMode,
+    )}"><p lang="${escapeHtml(lang)}">${escapeHtml(record.text)}${
       record.embed
         ? `<br><br><a href="${escapeHtml(href)}">[image or embed]</a>`
         : ''
@@ -212,7 +259,7 @@ function Snippet({thread}: {thread: AppBskyFeedDefs.ThreadViewPost}) {
     )}</a>) <a href="${escapeHtml(href)}">${escapeHtml(
       niceDate(thread.post.indexedAt),
     )}</a></blockquote><script async src="${EMBED_SCRIPT}" charset="utf-8"></script>`
-  }, [thread])
+  }, [thread, colorMode])
 
   return (
     <div className="flex gap-2 w-full">
@@ -220,7 +267,7 @@ function Snippet({thread}: {thread: AppBskyFeedDefs.ThreadViewPost}) {
         ref={ref}
         type="text"
         value={snippet}
-        className="border rounded-lg py-3 w-full px-4"
+        className="border rounded-lg py-3 w-full px-4 dark:bg-dimmedBg dark:border-slate-500"
         readOnly
         autoFocus
         onFocus={() => {
@@ -228,7 +275,7 @@ function Snippet({thread}: {thread: AppBskyFeedDefs.ThreadViewPost}) {
         }}
       />
       <button
-        className="rounded-lg bg-brand text-white color-white py-3 px-4 whitespace-nowrap min-w-28"
+        className="rounded-lg bg-brand text-white py-3 px-4 whitespace-nowrap min-w-28"
         onClick={() => {
           ref.current?.focus()
           ref.current?.select()
