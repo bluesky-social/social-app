@@ -1,8 +1,8 @@
 import React from 'react'
 import {StyleProp, ViewStyle} from 'react-native'
-import Animated, {FadeInDown, FadeOutDown} from 'react-native-reanimated'
+import {View} from 'react-native'
 
-import {atoms as a, native, useTheme} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
 
 /**
@@ -26,9 +26,7 @@ export function TimeIndicator({
   const seconds = String(time % 60).padStart(2, '0')
 
   return (
-    <Animated.View
-      entering={native(FadeInDown.duration(300))}
-      exiting={native(FadeOutDown.duration(500))}
+    <View
       pointerEvents="none"
       style={[
         {
@@ -52,6 +50,6 @@ export function TimeIndicator({
         ]}>
         {`${minutes}:${seconds}`}
       </Text>
-    </Animated.View>
+    </View>
   )
 }
