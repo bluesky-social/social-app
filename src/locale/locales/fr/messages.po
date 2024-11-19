@@ -62,7 +62,7 @@ msgstr "{0, plural, one {# seconde} other {# secondes}}"
 #: src/components/ProfileHoverCard/index.web.tsx:398
 #: src/screens/Profile/Header/Metrics.tsx:23
 msgid "{0, plural, one {follower} other {followers}}"
-msgstr "{0, plural, one {abonné·e} other {abonné·e·s}}"
+msgstr "{0, plural, one {abonné} other {abonnés}}"
 
 #: src/components/ProfileHoverCard/index.web.tsx:402
 #: src/screens/Profile/Header/Metrics.tsx:27
@@ -325,7 +325,7 @@ msgstr "<0>{0}, </0><1>{1} </1>et {2, plural, one {# autre} other {# autres}} so
 
 #: src/view/shell/Drawer.tsx:97
 msgid "<0>{0}</0> {1, plural, one {follower} other {followers}}"
-msgstr "<0>{0}</0> {1, plural, one {abonné·e} other {abonné·e·s}}"
+msgstr "<0>{0}</0> {1, plural, one {abonné} other {abonnés}}"
 
 #: src/view/shell/Drawer.tsx:108
 msgid "<0>{0}</0> {1, plural, one {following} other {following}}"
@@ -632,7 +632,7 @@ msgstr "Avez-vous déjà un code ?"
 
 #: src/screens/Login/ChooseAccountForm.tsx:43
 msgid "Already signed in as @{0}"
-msgstr "Déjà connecté·e en tant que @{0}"
+msgstr "Déjà connecté en tant que @{0}"
 
 #: src/view/com/composer/GifAltText.tsx:100
 #: src/view/com/composer/photos/Gallery.tsx:187
@@ -1078,7 +1078,7 @@ msgstr "Bluesky est un réseau ouvert où vous pouvez choisir votre hébergeur. 
 
 #: src/components/ProgressGuide/List.tsx:55
 msgid "Bluesky is better with friends!"
-msgstr "Bluesky est meilleur entre ami·e·s !"
+msgstr "Bluesky est meilleur entre amis !"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:300
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
@@ -2980,16 +2980,16 @@ msgstr "Comptes suivis"
 #: src/view/screens/ProfileFollowers.tsx:30
 #: src/view/screens/ProfileFollowers.tsx:31
 msgid "Followers"
-msgstr "Abonné·e·s"
+msgstr "Abonnés"
 
 #: src/Navigation.tsx:190
 msgid "Followers of @{0} that you know"
-msgstr "Abonné·e·s de @{0} que vous connaissez"
+msgstr "Abonnés de @{0} que vous connaissez"
 
 #: src/screens/Profile/KnownFollowers.tsx:110
 #: src/screens/Profile/KnownFollowers.tsx:120
 msgid "Followers you know"
-msgstr "Abonné·e·s que vous connaissez"
+msgstr "Abonnés que vous connaissez"
 
 #. User is following this account, click to unfollow
 #: src/components/ProfileCard.tsx:352
@@ -3537,7 +3537,7 @@ msgstr "Invitez les gens à ce kit de démarrage !"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:35
 msgid "Invite your friends to follow your favorite feeds and people"
-msgstr "Invitez vos ami·e·s à suivre vos fils d’actu et vos personnes préférées"
+msgstr "Invitez vos amis à suivre vos fils d’actu et vos personnes préférées"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:32
 msgid "Invites, but personal"
@@ -3586,7 +3586,7 @@ msgstr "Étiqueté par {0}."
 
 #: src/components/moderation/ContentHider.tsx:207
 msgid "Labeled by the author."
-msgstr "Étiqueté par l’auteur·ice."
+msgstr "Étiqueté par l’auteur."
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:76
 #: src/view/screens/Profile.tsx:226
@@ -4242,7 +4242,7 @@ msgstr "Besoin de signaler une violation des droits d’auteur ?"
 
 #: src/screens/Onboarding/StepFinished.tsx:260
 msgid "Never lose access to your followers or data."
-msgstr "Ne perdez jamais l’accès à vos abonné·e·s ou à vos données."
+msgstr "Ne perdez jamais l’accès à vos abonnés ou à vos données."
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:533
 msgid "Nevermind, create a handle for me"
@@ -4412,7 +4412,7 @@ msgstr "Personne"
 
 #: src/components/WhoCanReply.tsx:237
 msgid "No one but the author can quote this post."
-msgstr "Personne d’autre que l’auteur·ice ne peut citer ce post."
+msgstr "Personne d’autre que l’auteur ne peut citer ce post."
 
 #: src/screens/Profile/Sections/Feed.tsx:65
 msgid "No posts yet."
@@ -5515,7 +5515,7 @@ msgstr "Supprimer ce fil d’actu de vos fils d’actu enregistrés"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:109
 msgid "Removed by author"
-msgstr "Supprimé par l’auteur·ice"
+msgstr "Supprimé par l’auteur"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:107
 msgid "Removed by you"
@@ -5570,7 +5570,7 @@ msgstr "Répondre"
 #: src/components/moderation/ModerationDetailsDialog.tsx:115
 #: src/lib/moderation/useModerationCauseDescription.ts:123
 msgid "Reply Hidden by Thread Author"
-msgstr "Réponse cachée par l’auteur·ice du fil de discussion"
+msgstr "Réponse cachée par l’auteur du fil de discussion"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:114
 #: src/lib/moderation/useModerationCauseDescription.ts:122
@@ -5583,7 +5583,7 @@ msgstr "Paramètres de réponse"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:341
 msgid "Reply settings are chosen by the author of the thread"
-msgstr "Les paramètres de réponse sont choisis par l’auteur·ice du fil de discussion"
+msgstr "Les paramètres de réponse sont choisis par l’auteur du fil de discussion"
 
 #: src/view/com/post/Post.tsx:204
 #: src/view/com/posts/FeedItem.tsx:553
@@ -6534,7 +6534,7 @@ msgstr "Connecté en tant que @{0}"
 
 #: src/view/com/notifications/FeedItem.tsx:218
 #~ msgid "signed up with your starter pack"
-#~ msgstr "s’est inscrit·e avec votre kit de démarrage"
+#~ msgstr "s’est inscrit avec votre kit de démarrage"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:299
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:306
@@ -6662,7 +6662,7 @@ msgstr "Kits de démarrage"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:244
 msgid "Starter packs let you easily share your favorite feeds and people with your friends."
-msgstr "Les kits de démarrage vous permettent de partager facilement vos fils d’actu et vos personnes préférées avec vos ami·e·s."
+msgstr "Les kits de démarrage vous permettent de partager facilement vos fils d’actu et vos personnes préférées avec vos amis."
 
 #: src/screens/Settings/AboutSettings.tsx:46
 #: src/screens/Settings/AboutSettings.tsx:49
@@ -6887,7 +6887,7 @@ msgstr "Ce compte pourra interagir avec vous après le déblocage."
 #: src/components/moderation/ModerationDetailsDialog.tsx:118
 #: src/lib/moderation/useModerationCauseDescription.ts:126
 msgid "The author of this thread has hidden this reply."
-msgstr "L’auteur·ice de ce fil de discussion a masqué cette réponse."
+msgstr "L’auteur de ce fil de discussion a masqué cette réponse."
 
 #: src/screens/Moderation/index.tsx:363
 msgid "The Bluesky web application"
@@ -7167,7 +7167,7 @@ msgstr "Cette étiquette a été apposée par <0>{0}</0>."
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:146
 msgid "This label was applied by the author."
-msgstr "Cette étiquette a été apposée par l’auteur·ice."
+msgstr "Cette étiquette a été apposée par l’auteur."
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:163
 msgid "This label was applied by you."
@@ -7216,7 +7216,7 @@ msgstr "Ce post sera masqué des fils d’actu et des fils de discussion. C’es
 
 #: src/view/com/composer/Composer.tsx:405
 msgid "This post's author has disabled quote posts."
-msgstr "L’auteur·ice de ce post a désactivé les citations."
+msgstr "L’auteur de ce post a désactivé les citations."
 
 #: src/view/com/profile/ProfileMenu.tsx:350
 msgid "This profile is only visible to logged-in users. It won't be visible to people who aren't logged in."
@@ -7236,11 +7236,11 @@ msgstr "Cela devrait créer un enregistrement de domaine à :"
 
 #: src/view/com/profile/ProfileFollowers.tsx:96
 msgid "This user doesn't have any followers."
-msgstr "Ce compte n’a pas d’abonné·e·s."
+msgstr "Ce compte n’a pas d’abonnés."
 
 #: src/components/dms/MessagesListBlockedFooter.tsx:60
 msgid "This user has blocked you"
-msgstr "Ce compte vous a bloqué·e"
+msgstr "Ce compte vous a bloqué"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:78
 #: src/lib/moderation/useModerationCauseDescription.ts:73
@@ -8101,7 +8101,7 @@ msgstr "Rédigez votre réponse"
 #: src/screens/Onboarding/index.tsx:25
 #: src/screens/Onboarding/state.ts:103
 msgid "Writers"
-msgstr "Écrivain·e·s"
+msgstr "Écrivains"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:337
 msgid "Wrong DID returned from server. Received: {0}"
@@ -8184,7 +8184,7 @@ msgstr "Vous pouvez réactiver votre compte pour continuer à vous connecter. Vo
 
 #: src/view/com/profile/ProfileFollowers.tsx:95
 msgid "You do not have any followers."
-msgstr "Vous n’avez pas d’abonné·e·s."
+msgstr "Vous n’avez pas d’abonnés."
 
 #: src/screens/Profile/KnownFollowers.tsx:100
 msgid "You don't follow any users who follow @{name}."
@@ -8204,7 +8204,7 @@ msgstr "Vous n’avez encore aucun fil d’actu enregistré."
 
 #: src/view/com/post-thread/PostThread.tsx:214
 msgid "You have blocked the author or you have been blocked by the author."
-msgstr "Vous avez bloqué cet·te auteur·ice ou vous avez été bloqué par celui-ci."
+msgstr "Vous avez bloqué cet auteur ou vous avez été bloqué par celui-ci."
 
 #: src/components/dms/MessagesListBlockedFooter.tsx:58
 msgid "You have blocked this user"
@@ -8391,7 +8391,7 @@ msgstr "Vous êtes dans la file d’attente"
 #: src/screens/Deactivated.tsx:89
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:54
 msgid "You're logged in with an App Password. Please log in with your main password to continue deactivating your account."
-msgstr "Vous êtes connecté·e avec un mot de passe d’application. Connectez-vous plutôt avec votre mot de passe principal pour continuer à désactiver votre compte."
+msgstr "Vous êtes connecté avec un mot de passe d’application. Connectez-vous plutôt avec votre mot de passe principal pour continuer à désactiver votre compte."
 
 #: src/screens/Onboarding/StepFinished.tsx:231
 msgid "You're ready to go!"
