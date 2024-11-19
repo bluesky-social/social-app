@@ -7,3 +7,5 @@ export const LOG_LEVEL = (process.env.EXPO_PUBLIC_LOG_LEVEL || 'info') as
   | 'info'
   | 'warn'
   | 'error'
+
+export const PLUS_SERVICE_URL = process.env.EXPO_PUBLIC_PLUS_SERVICE_URL

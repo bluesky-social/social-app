@@ -9,7 +9,7 @@ import {CenteredView} from '#/view/com/util/Views'
 import {atoms as a} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
-import {SubscriptionsDialog} from '#/components/dialogs/SubscriptionsDialog'
+import {BlueskyPlus} from '#/components/dialogs/BlueskyPlus'
 import {Logotype} from '#/components/icons/BlueskyPlus'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import * as Layout from '#/components/Layout'
@@ -54,7 +54,7 @@ export function Subscriptions(_props: ScreenProps) {
                       <ButtonText>Subscribe</ButtonText>
                       <ButtonIcon icon={Plus} />
                     </Button>
-                    <SubscriptionsDialog control={control} />
+                    <BlueskyPlus control={control} />
                   </>
                 )}
               </>

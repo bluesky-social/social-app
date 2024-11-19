@@ -13,7 +13,7 @@ export function useEntitlements() {
     async queryFn() {
       const params = new URLSearchParams('/entitlements')
       params.set('did', currentAccount!.did)
-      const url = `/entitlements?${params.toString()}`
+      const url = `/account?${params.toString()}`
       const {data, error} = await api<{
         entitlements: {id: 'core'; platform: 'web'}[]
       }>(url).json()

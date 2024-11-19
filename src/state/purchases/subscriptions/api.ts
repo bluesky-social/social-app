@@ -1,5 +1,7 @@
 import {create} from 'gretchen'
 
+import {PLUS_SERVICE_URL} from '#/env'
+
 export const api = create({
-  baseURL: process.env.PLUS_SERVICE_URL,
+  baseURL: PLUS_SERVICE_URL,
 })
