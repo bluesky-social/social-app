@@ -20,6 +20,7 @@ window.addEventListener('message', event => {
     return
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const id = (event.data as {id: string}).id
   if (!id) {
     return
@@ -33,6 +34,7 @@ window.addEventListener('message', event => {
     return
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const height = (event.data as {height: number}).height
   if (height) {
     embed.style.height = `${height}px`
@@ -47,7 +49,7 @@ window.addEventListener('message', event => {
  * @returns
  */
 function scan(node = document) {
-  const embeds = node.querySelectorAll('[data-bluesky-uri]')
+  const embeds = node.querySelectorAll<HTMLIFrameElement>('[data-bluesky-uri]')
 
   for (let i = 0; i < embeds.length; i++) {
     const id = String(Math.random()).slice(2)
@@ -66,6 +68,7 @@ function scan(node = document) {
     if (ref_url.startsWith('http')) {
       searchParams.set('ref_url', encodeURIComponent(ref_url))
     }
+    searchParams.set('colorMode', embed.dataset.blueskyColorMode || 'auto')
 
     const iframe = document.createElement('iframe')
     iframe.setAttribute('data-bluesky-id', id)
