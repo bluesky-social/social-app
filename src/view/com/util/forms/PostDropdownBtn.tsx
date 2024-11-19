@@ -25,7 +25,7 @@ import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
 import {shareUrl} from '#/lib/sharing'
 import {logEvent} from '#/lib/statsig/statsig'
 import {richTextToString} from '#/lib/strings/rich-text-helpers'
-import {toShareUrl} from '#/lib/strings/url-helpers'
+import {toShareUrl, toShareUrlWithUserDomain} from '#/lib/strings/url-helpers'
 import {useTheme} from '#/lib/ThemeContext'
 import {getTranslatorLink} from '#/locale/helpers'
 import {logger} from '#/logger'
@@ -262,6 +262,11 @@ let PostDropdownBtn = ({
     shareUrl(url)
   }, [href])
 
+  const onSharePostWithUserDomain = React.useCallback(() => {
+    const url = toShareUrlWithUserDomain(href)
+    shareUrl(url)
+  }, [href])
+
   const onPressShowMore = React.useCallback(() => {
     feedFeedback.sendInteraction({
       event: 'app.bsky.feed.defs#requestMore',
@@ -459,6 +464,29 @@ let PostDropdownBtn = ({
               }}>
               <Menu.ItemText>
                 {isWeb ? _(msg`Copy link to post`) : _(msg`Share`)}
+              </Menu.ItemText>
+              <Menu.ItemIcon icon={Share} position="right" />
+            </Menu.Item>
+
+            <Menu.Item
+              testID="postDropdownShareBtn"
+              label={
+                isWeb
+                  ? _(msg`Copy link with user's domain`)
+                  : _(msg`Share with user's domain`)
+              }
+              onPress={() => {
+                if (showLoggedOutWarning) {
+                  loggedOutWarningPromptControl.open()
+                } else {
+                  onSharePostWithUserDomain()
+                }
+              }}>
+              <Menu.ItemText>
+                {href}{' '}
+                {isWeb
+                  ? _(msg`Copy link with user's domain`)
+                  : _(msg`Share with user's domain`)}
               </Menu.ItemText>
               <Menu.ItemIcon icon={Share} position="right" />
             </Menu.Item>
