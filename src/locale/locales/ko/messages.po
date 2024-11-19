@@ -8,7 +8,7 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-19 13:41+0900\n"
+"PO-Revision-Date: 2024-11-19 22:05+0900\n"
 "Last-Translator: quiple\n"
 "Language-Team: quiple, lens0021, HaruChanHeart, hazzzi, heartade\n"
 "Plural-Forms: \n"
@@ -406,15 +406,15 @@ msgstr "계정"
 
 #: src/view/com/profile/ProfileMenu.tsx:132
 msgid "Account blocked"
-msgstr "계정 차단됨"
+msgstr "계정을 차단했습니다"
 
 #: src/view/com/profile/ProfileMenu.tsx:145
 msgid "Account followed"
-msgstr "계정 팔로우함"
+msgstr "계정을 팔로우했습니다"
 
 #: src/view/com/profile/ProfileMenu.tsx:108
 msgid "Account muted"
-msgstr "계정 뮤트됨"
+msgstr "계정을 뮤트했습니다"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:102
 #: src/lib/moderation/useModerationCauseDescription.ts:96
@@ -436,15 +436,15 @@ msgstr "빠른 액세스에서 계정 제거"
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:137
 #: src/view/com/profile/ProfileMenu.tsx:122
 msgid "Account unblocked"
-msgstr "계정 차단 해제됨"
+msgstr "계정을 차단 해제했습니다"
 
 #: src/view/com/profile/ProfileMenu.tsx:157
 msgid "Account unfollowed"
-msgstr "계정 언팔로우함"
+msgstr "계정을 언팔로우했습니다"
 
 #: src/view/com/profile/ProfileMenu.tsx:98
 msgid "Account unmuted"
-msgstr "계정 언뮤트됨"
+msgstr "계정을 언뮤트했습니다"
 
 #: src/components/dialogs/MutedWords.tsx:328
 #: src/view/com/modals/ListAddRemoveUsers.tsx:269
@@ -552,11 +552,11 @@ msgstr "내 피드에 추가"
 #: src/view/com/modals/ListAddRemoveUsers.tsx:192
 #: src/view/com/modals/UserAddRemoveLists.tsx:162
 msgid "Added to list"
-msgstr "리스트에 추가됨"
+msgstr "리스트에 추가했습니다"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:125
 msgid "Added to my feeds"
-msgstr "내 피드에 추가됨"
+msgstr "내 피드에 추가했습니다"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:161
 msgid "Adult"
@@ -774,7 +774,7 @@ msgstr "앱 비밀번호"
 
 #: src/screens/Settings/AppPasswords.tsx:139
 msgid "App password deleted"
-msgstr "앱 비밀번호 삭제됨"
+msgstr "앱 비밀번호를 삭제했습니다"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:84
 msgid "App password name must be unique"
@@ -810,7 +810,7 @@ msgstr "\"{0}\" 라벨 이의신청"
 #: src/components/moderation/LabelsOnMeDialog.tsx:233
 #: src/screens/Messages/components/ChatDisabled.tsx:91
 msgid "Appeal submitted"
-msgstr "이의신청 제출함"
+msgstr "이의신청을 제출했습니다"
 
 #: src/screens/Messages/components/ChatDisabled.tsx:51
 #: src/screens/Messages/components/ChatDisabled.tsx:53
@@ -1251,7 +1251,7 @@ msgstr "대화"
 
 #: src/components/dms/ConvoMenu.tsx:82
 msgid "Chat muted"
-msgstr "대화 뮤트됨"
+msgstr "대화를 뮤트했습니다"
 
 #: src/components/dms/ConvoMenu.tsx:112
 #: src/components/dms/MessageMenu.tsx:81
@@ -1266,7 +1266,7 @@ msgstr "대화 설정"
 
 #: src/components/dms/ConvoMenu.tsx:84
 msgid "Chat unmuted"
-msgstr "대화 언뮤트됨"
+msgstr "대화를 언뮤트했습니다"
 
 #: src/screens/SignupQueued.tsx:78
 #: src/screens/SignupQueued.tsx:82
@@ -2298,7 +2298,7 @@ msgstr "이메일 다시 전송됨"
 #: src/view/com/modals/ChangeEmail.tsx:54
 #: src/view/com/modals/ChangeEmail.tsx:83
 msgid "Email updated"
-msgstr "이메일 변경됨"
+msgstr "이메일을 변경했습니다"
 
 #: src/view/com/modals/ChangeEmail.tsx:106
 msgid "Email Updated"
@@ -2306,7 +2306,7 @@ msgstr "이메일 변경됨"
 
 #: src/view/com/modals/VerifyEmail.tsx:85
 msgid "Email verified"
-msgstr "이메일 인증됨"
+msgstr "이메일을 인증했습니다"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:79
 msgid "Email Verified"
@@ -2702,7 +2702,7 @@ msgstr "피드는 사용자가 약간의 코딩 전문 지식만으로 구축할
 #: src/components/FeedCard.tsx:273
 #: src/view/screens/SavedFeeds.tsx:83
 msgid "Feeds updated!"
-msgstr "피드 업데이트됨"
+msgstr "피드를 업데이트했습니다"
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:43
 msgid "File saved successfully!"
@@ -3571,7 +3571,7 @@ msgstr "리스트 아바타"
 
 #: src/view/screens/ProfileList.tsx:422
 msgid "List blocked"
-msgstr "리스트 차단됨"
+msgstr "리스트를 차단했습니다"
 
 #: src/components/ListCard.tsx:150
 #: src/view/com/feeds/FeedSourceCard.tsx:255
@@ -3580,7 +3580,7 @@ msgstr "{0} 님의 리스트"
 
 #: src/view/screens/ProfileList.tsx:459
 msgid "List deleted"
-msgstr "리스트 삭제됨"
+msgstr "리스트를 삭제했습니다"
 
 #: src/screens/List/ListHiddenScreen.tsx:126
 msgid "List has been hidden"
@@ -3592,7 +3592,7 @@ msgstr "리스트 숨겨짐"
 
 #: src/view/screens/ProfileList.tsx:396
 msgid "List muted"
-msgstr "리스트 뮤트됨"
+msgstr "리스트를 뮤트했습니다"
 
 #: src/view/com/modals/CreateOrEditList.tsx:255
 msgid "List Name"
@@ -3600,11 +3600,11 @@ msgstr "리스트 이름"
 
 #: src/view/screens/ProfileList.tsx:435
 msgid "List unblocked"
-msgstr "리스트 차단 해제됨"
+msgstr "리스트를 차단 해제했습니다"
 
 #: src/view/screens/ProfileList.tsx:409
 msgid "List unmuted"
-msgstr "리스트 언뮤트됨"
+msgstr "리스트를 언뮤트했습니다"
 
 #: src/Navigation.tsx:133
 #: src/view/screens/Profile.tsx:227
@@ -3809,11 +3809,11 @@ msgstr "내 검토 리스트"
 
 #: src/view/com/modals/CreateOrEditList.tsx:177
 msgid "Moderation list created"
-msgstr "검토 리스트 생성됨"
+msgstr "검토 리스트를 생성했습니다"
 
 #: src/view/com/modals/CreateOrEditList.tsx:163
 msgid "Moderation list updated"
-msgstr "검토 리스트 업데이트됨"
+msgstr "검토 리스트를 업데이트했습니다"
 
 #: src/screens/Moderation/index.tsx:244
 msgid "Moderation lists"
@@ -3963,7 +3963,7 @@ msgstr "계정을 뮤트하면 피드와 알림에서 해당 계정의 게시물
 
 #: src/lib/moderation/useModerationCauseDescription.ts:90
 msgid "Muted by \"{0}\""
-msgstr "\"{0}\" 님이 뮤트함"
+msgstr "\"{0}\"에 의해 뮤트됨"
 
 #: src/screens/Moderation/index.tsx:229
 msgid "Muted words & tags"
@@ -4692,7 +4692,7 @@ msgstr "고정한 피드"
 
 #: src/view/screens/ProfileList.tsx:355
 msgid "Pinned to your feeds"
-msgstr "내 피드에 고정됨"
+msgstr "내 피드에 고정했습니다"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:43
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:141
@@ -4814,7 +4814,7 @@ msgstr "@{0} 님의 게시물"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:180
 msgid "Post deleted"
-msgstr "게시물 삭제됨"
+msgstr "게시물을 삭제했습니다"
 
 #: src/lib/api/index.ts:185
 msgid "Post failed to upload. Please check your Internet connection and try again."
@@ -4853,11 +4853,11 @@ msgstr "게시물을 찾을 수 없음"
 
 #: src/state/queries/pinned-post.ts:59
 msgid "Post pinned"
-msgstr "게시물 고정함"
+msgstr "게시물을 고정했습니다"
 
 #: src/state/queries/pinned-post.ts:61
 msgid "Post unpinned"
-msgstr "게시물 고정 해제함"
+msgstr "게시물을 고정 해제했습니다"
 
 #: src/components/TagMenu/index.tsx:268
 msgid "posts"
@@ -4882,7 +4882,7 @@ msgstr "오해의 소지가 있는 링크"
 
 #: src/state/queries/notifications/settings.ts:44
 msgid "Preference saved"
-msgstr "설정 저장됨"
+msgstr "설정을 저장했습니다"
 
 #: src/screens/Messages/components/MessageListError.tsx:19
 msgid "Press to attempt reconnection"
@@ -4967,7 +4967,7 @@ msgstr "프로필"
 #: src/screens/Profile/Header/EditProfileDialog.tsx:191
 #: src/view/com/modals/EditProfile.tsx:124
 msgid "Profile updated"
-msgstr "프로필 업데이트됨"
+msgstr "프로필을 업데이트했습니다"
 
 #: src/screens/Onboarding/StepFinished.tsx:242
 msgid "Public"
@@ -5198,22 +5198,22 @@ msgstr "내가 제거함"
 #: src/view/com/modals/ListAddRemoveUsers.tsx:200
 #: src/view/com/modals/UserAddRemoveLists.tsx:170
 msgid "Removed from list"
-msgstr "리스트에서 제거됨"
+msgstr "리스트에서 제거했습니다"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:138
 msgid "Removed from my feeds"
-msgstr "내 피드에서 제거됨"
+msgstr "내 피드에서 제거했습니다"
 
 #: src/screens/List/ListHiddenScreen.tsx:94
 #: src/screens/List/ListHiddenScreen.tsx:160
 msgid "Removed from saved feeds"
-msgstr "저장한 피드에서 제거됨"
+msgstr "저장한 피드에서 제거했습니다"
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:44
 #: src/view/screens/ProfileFeed.tsx:197
 #: src/view/screens/ProfileList.tsx:386
 msgid "Removed from your feeds"
-msgstr "내 피드에서 제거됨"
+msgstr "내 피드에서 제거했습니다"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:288
 msgid "Removes quoted post"
@@ -5283,7 +5283,7 @@ msgstr "나에게 보내는 답글"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:338
 msgid "Reply visibility updated"
-msgstr "답글 표시 여부 업데이트됨"
+msgstr "답글 표시 여부를 업데이트했습니다"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:337
 msgid "Reply was successfully hidden"
@@ -5571,12 +5571,12 @@ msgstr "저장한 피드"
 
 #: src/view/com/lightbox/Lightbox.tsx:44
 msgid "Saved to your camera roll"
-msgstr "내 사진 보관함에 저장됨"
+msgstr "내 사진 보관함에 저장했습니다"
 
 #: src/view/screens/ProfileFeed.tsx:206
 #: src/view/screens/ProfileList.tsx:366
 msgid "Saved to your feeds"
-msgstr "내 피드에 저장됨"
+msgstr "내 피드에 저장했습니다"
 
 #: src/view/com/modals/EditProfile.tsx:220
 msgid "Saves any changes to your profile"
@@ -7064,7 +7064,7 @@ msgstr "검토 리스트 고정 해제"
 
 #: src/view/screens/ProfileList.tsx:356
 msgid "Unpinned from your feeds"
-msgstr "내 피드에서 고정 해제됨"
+msgstr "내 피드에서 고정 해제했습니다"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:236
 msgid "Unsubscribe"
@@ -7081,7 +7081,7 @@ msgstr "이 라벨러 구독 취소하기"
 
 #: src/screens/List/ListHiddenScreen.tsx:86
 msgid "Unsubscribed from list"
-msgstr "리스트 구독 취소됨"
+msgstr "리스트를 구독 취소했습니다"
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:72
 msgid "Unsupported video type: {mimeType}"
@@ -7228,11 +7228,11 @@ msgstr "내 사용자 리스트"
 
 #: src/view/com/modals/CreateOrEditList.tsx:176
 msgid "User list created"
-msgstr "사용자 리스트 생성됨"
+msgstr "사용자 리스트를 생성했습니다"
 
 #: src/view/com/modals/CreateOrEditList.tsx:162
 msgid "User list updated"
-msgstr "사용자 리스트 업데이트됨"
+msgstr "사용자 리스트를 업데이트했습니다"
 
 #: src/view/screens/Lists.tsx:78
 msgid "User Lists"
