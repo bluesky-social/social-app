@@ -774,7 +774,7 @@ msgstr "Yeni mesajlara izin ver"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:360
 msgid "Allow replies from:"
-msgstr "Yeni cevaplara izin ver:"
+msgstr "Yeni yanıtlara izin ver:"
 
 #: src/screens/Settings/AppPasswords.tsx:192
 msgid "Allows access to direct messages"
@@ -3111,11 +3111,11 @@ msgstr "Herkes"
 
 #: src/components/WhoCanReply.tsx:67
 msgid "Everybody can reply"
-msgstr "Herkes cevaplayabilir"
+msgstr "Herkes yanıtlayabilir"
 
 #: src/components/WhoCanReply.tsx:213
 msgid "Everybody can reply to this post."
-msgstr "Bu gönderiyi herkes cevaplayabilir."
+msgstr "Bu gönderiyi herkes yanıtlayabilir."
 
 #: src/screens/Messages/Settings.tsx:77
 #: src/screens/Messages/Settings.tsx:80
