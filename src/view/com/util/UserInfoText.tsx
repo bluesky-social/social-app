@@ -1,4 +1,3 @@
-import React from 'react'
 import {StyleProp, StyleSheet, TextStyle} from 'react-native'
 import {AppBskyActorGetProfile as GetProfile} from '@atproto/api'
 
