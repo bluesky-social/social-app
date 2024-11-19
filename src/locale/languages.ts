@@ -25,10 +25,10 @@ export enum AppLanguage {
   th = 'th',
   tr = 'tr',
   uk = 'uk',
+  vi = 'vi',
   zh_CN = 'zh-CN',
   zh_HK = 'zh-HK',
   zh_TW = 'zh-TW',
-  vi = 'vi',
 }
 
 interface AppLanguageConfig {
@@ -57,10 +57,10 @@ export const APP_LANGUAGES: AppLanguageConfig[] = [
   {code2: AppLanguage.th, name: 'ภาษาไทย – Thai'},
   {code2: AppLanguage.tr, name: 'Türkçe – Turkish'},
   {code2: AppLanguage.uk, name: 'Українська – Ukrainian'},
+  {code2: AppLanguage.vi, name: 'Tiếng Việt – Vietnamese'},
   {code2: AppLanguage.zh_CN, name: '简体中文 – Simplified Chinese'},
   {code2: AppLanguage.zh_TW, name: '繁體中文 – Traditional Chinese'},
   {code2: AppLanguage.zh_HK, name: '粵文 – Cantonese'},
-  {code2: AppLanguage.vi, name: 'Tiếng Việt'},
 ]
 
 export const LANGUAGES: Language[] = [

@@ -31,12 +31,11 @@ import {messages as messagesRu} from '#/locale/locales/ru/messages'
 import {messages as messagesTh} from '#/locale/locales/th/messages'
 import {messages as messagesTr} from '#/locale/locales/tr/messages'
 import {messages as messagesUk} from '#/locale/locales/uk/messages'
+import {messages as messagesVi} from '#/locale/locales/vi/messages'
 import {messages as messagesZh_CN} from '#/locale/locales/zh-CN/messages'
 import {messages as messagesZh_HK} from '#/locale/locales/zh-HK/messages'
 import {messages as messagesZh_TW} from '#/locale/locales/zh-TW/messages'
 import {useLanguagePrefs} from '#/state/preferences'
-import {messages as messagesVi} from '#/locale/locales/vi/messages'
-
 
 /**
  * We do a dynamic import of just the catalog that we need
@@ -195,6 +194,14 @@ export async function dynamicActivate(locale: AppLanguage) {
       ])
       break
     }
+    case AppLanguage.vi: {
+      i18n.loadAndActivate({locale, messages: messagesVi})
+      await Promise.all([
+        import('@formatjs/intl-pluralrules/locale-data/vi'),
+        import('@formatjs/intl-numberformat/locale-data/vi'),
+      ])
+      break
+    }
     case AppLanguage.zh_CN: {
       i18n.loadAndActivate({locale, messages: messagesZh_CN})
       await Promise.all([
@@ -217,10 +224,6 @@ export async function dynamicActivate(locale: AppLanguage) {
         import('@formatjs/intl-pluralrules/locale-data/zh'),
         import('@formatjs/intl-numberformat/locale-data/zh'),
       ])
-      break
-    }
-    case AppLanguage.vi: {
-      i18n.loadAndActivate({locale, messages: messagesVi})
       break
     }
     default: {
