@@ -34,7 +34,7 @@ export function ActionsWrapper({
   const scale = useSharedValue(1)
 
   const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{scale: scale.value}],
+    transform: [{scale: scale.get()}],
   }))
 
   const open = React.useCallback(() => {
@@ -46,7 +46,7 @@ export function ActionsWrapper({
   const shrink = React.useCallback(() => {
     'worklet'
     cancelAnimation(scale)
-    scale.value = withTiming(1, {duration: 200})
+    scale.set(() => withTiming(1, {duration: 200}))
   }, [scale])
 
   const doubleTapGesture = Gesture.Tap()
@@ -58,11 +58,13 @@ export function ActionsWrapper({
   const pressAndHoldGesture = Gesture.LongPress()
     .onStart(() => {
       'worklet'
-      scale.value = withTiming(1.05, {duration: 200}, finished => {
-        if (!finished) return
-        runOnJS(open)()
-        shrink()
-      })
+      scale.set(() =>
+        withTiming(1.05, {duration: 200}, finished => {
+          if (!finished) return
+          runOnJS(open)()
+          shrink()
+        }),
+      )
     })
     .onTouchesUp(shrink)
     .onTouchesMove(shrink)

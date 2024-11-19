@@ -105,6 +105,7 @@ function ShellInner() {
             onOpen={onOpenDrawer}
             onClose={onCloseDrawer}
             swipeEdgeWidth={winDim.width / 2}
+            drawerType={isIOS ? 'slide' : 'front'}
             swipeEnabled={!canGoBack && hasSession && !isDrawerSwipeDisabled}
             overlayStyle={{
               backgroundColor: select(t.name, {
