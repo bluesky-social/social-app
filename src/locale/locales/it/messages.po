@@ -4786,7 +4786,7 @@ msgstr "Lingua principale"
 #: src/screens/Settings/ThreadPreferences.tsx:99
 #: src/screens/Settings/ThreadPreferences.tsx:104
 msgid "Prioritize your Follows"
-msgstr "Dai priorità ai chi segui"
+msgstr "Dai priorità a chi segui"
 
 #: src/screens/Settings/NotificationSettings.tsx:54
 msgid "Priority notifications"
