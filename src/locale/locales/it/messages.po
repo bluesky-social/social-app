@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Italian localization\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 11:44+0530\n"
-"PO-Revision-Date: 2024-11-19 12:34+0100\n"
+"PO-Revision-Date: 2024-11-19 14:23+0100\n"
 "Last-Translator: Michele Locati <michele@locati.it>\n"
 "Language-Team: Gabriella Nonino\n"
 "Language: it\n"
@@ -121,7 +121,7 @@ msgstr "{0} di {1}"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:479
 msgid "{0} people have used this starter pack!"
-msgstr "{0} persone hanno usat questo starter pack!"
+msgstr "{0} persone hanno usato questo starter pack!"
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:203
 msgid "{0} unread items"
@@ -294,7 +294,7 @@ msgstr "{likeCount, plural, one {# utente ha messo like} other {# utenti hanno m
 
 #: src/view/shell/Drawer.tsx:448
 msgid "{numUnreadNotifications} unread"
-msgstr "{numUnreadNotifications} non letto"
+msgstr "{numUnreadNotifications} non letto/i"
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:230
 msgid "{numUnreadNotifications} unread items"
@@ -832,7 +832,7 @@ msgstr "Eliminare la password dell'app \"{0}\"?"
 
 #: src/components/dms/MessageMenu.tsx:149
 msgid "Are you sure you want to delete this message? The message will be deleted for you, but not for the other participant."
-msgstr "Sicuro di voler cancellare questo messaggio? Il messaggio verrà cancellato per te, ma non per gli altri partecipanti."
+msgstr "Eliminare questo messaggio? Il messaggio verrà eliminato per te, ma non per gli altri partecipanti."
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:633
 msgid "Are you sure you want to delete this starter pack?"
@@ -916,17 +916,17 @@ msgstr ""
 
 #: src/view/com/composer/Composer.tsx:593
 msgid "Before creating a post, you must first verify your email."
-msgstr ""
+msgstr "Prima di creare un post, devi verificare la tua email."
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:340
 msgid "Before creating a starter pack, you must first verify your email."
-msgstr ""
+msgstr "Prima di creare uno starter pack, devi verificare la tua email."
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:79
 #: src/components/dms/MessageProfileButton.tsx:89
 #: src/screens/Messages/Conversation.tsx:219
 msgid "Before you may message another user, you must first verify your email."
-msgstr ""
+msgstr "Prima di poter inviare un messaggio a un altro utente, devi verificare la tua email."
 
 #: src/components/dialogs/BirthDateSettings.tsx:106
 #: src/screens/Settings/AccountSettings.tsx:102
@@ -1572,7 +1572,7 @@ msgstr "Vai al passaggio successivo"
 
 #: src/screens/Messages/components/ChatListItem.tsx:164
 msgid "Conversation deleted"
-msgstr "Conversazione cancellata"
+msgstr "Conversazione eliminata"
 
 #: src/screens/Onboarding/index.tsx:41
 msgid "Cooking"
@@ -1834,7 +1834,7 @@ msgstr "Elimina messaggio per me"
 
 #: src/view/com/modals/DeleteAccount.tsx:286
 msgid "Delete my account"
-msgstr "Cancellare account"
+msgstr "Elimina il mio account"
 
 #: src/view/com/composer/Composer.tsx:804
 #: src/view/com/util/forms/PostDropdownBtn.tsx:653
@@ -2497,7 +2497,7 @@ msgstr "Esporta i miei dati"
 #: src/screens/Settings/ContentAndMediaSettings.tsx:65
 #: src/screens/Settings/ContentAndMediaSettings.tsx:68
 msgid "External media"
-msgstr "Media esterno"
+msgstr "Media esterni"
 
 #: src/components/dialogs/EmbedConsent.tsx:54
 #: src/components/dialogs/EmbedConsent.tsx:58
@@ -2507,11 +2507,11 @@ msgstr "Media esterni"
 #: src/components/dialogs/EmbedConsent.tsx:70
 #: src/screens/Settings/ExternalMediaPreferences.tsx:34
 msgid "External media may allow websites to collect information about you and your device. No information is sent or requested until you press the \"play\" button."
-msgstr "I multimediali esterni possono consentire ai siti web di raccogliere informazioni su di te e sul tuo dispositivo. Nessuna informazione viene inviata o richiesta finché non si preme il pulsante \"Riproduci\"."
+msgstr "I media esterni possono consentire ai siti web di raccogliere informazioni su di te e sul tuo dispositivo. Nessuna informazione viene inviata o richiesta finché non si preme il pulsante \"Riproduci\"."
 
 #: src/Navigation.tsx:313 src/screens/Settings/ExternalMediaPreferences.tsx:29
 msgid "External Media Preferences"
-msgstr "Preferenze multimediali esterni"
+msgstr "Preferenze media esterni"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:553
 msgid "Failed to change handle. Please try again."
@@ -2532,7 +2532,7 @@ msgstr "Impossibile creare l'elenco. Controlla la connessione Internet e riprova
 
 #: src/components/dms/MessageMenu.tsx:73
 msgid "Failed to delete message"
-msgstr "Errore nel cancellare il messaggio"
+msgstr "Errore nell'eliminazione del messaggio"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:200
 msgid "Failed to delete post, please try again"
@@ -2540,7 +2540,7 @@ msgstr "Non possiamo eliminare il post, riprova di nuovo"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:698
 msgid "Failed to delete starter pack"
-msgstr "Impossibile cancellare lo starter pack"
+msgstr "Impossibile eliminare lo starter pack"
 
 #: src/view/screens/Search/Explore.tsx:427
 #: src/view/screens/Search/Explore.tsx:455
@@ -2636,7 +2636,7 @@ msgstr "Feed"
 
 #: src/view/screens/SavedFeeds.tsx:205
 msgid "Feeds are custom algorithms that users build with a little coding expertise. <0/> for more information."
-msgstr "I feed sono algoritmi personalizzati che gli utenti creano con un minimo di esperienza nella codifica. Vedi <0/> per ulteriori informazioni."
+msgstr "I feed sono algoritmi personalizzati che gli utenti creano con un minimo di competenza di programmazione. Vedi <0/> per ulteriori informazioni."
 
 #: src/components/FeedCard.tsx:273 src/view/screens/SavedFeeds.tsx:83
 msgid "Feeds updated!"
@@ -2820,7 +2820,7 @@ msgstr "Per motivi di sicurezza non potrai più visualizzarla. Se perdi questa p
 
 #: src/screens/Settings/AppearanceSettings.tsx:127
 msgid "For the best experience, we recommend using the theme font."
-msgstr "Per una migliore esperienza, consigliamo di usare un font del tema."
+msgstr "Per una migliore esperienza, consigliamo di usare il font del tema."
 
 #: src/components/dialogs/MutedWords.tsx:178
 msgid "Forever"
@@ -2935,11 +2935,11 @@ msgstr "Vai alla conversazione con {0}"
 #: src/screens/Login/ForgotPasswordForm.tsx:165
 #: src/view/com/modals/ChangePassword.tsx:168
 msgid "Go to next"
-msgstr "Seguente"
+msgstr "Prosegui"
 
 #: src/components/dms/ConvoMenu.tsx:167
 msgid "Go to profile"
-msgstr "Va al profilo"
+msgstr "Vai al profilo"
 
 #: src/components/dms/ConvoMenu.tsx:164
 msgid "Go to user's profile"
@@ -3077,11 +3077,11 @@ msgstr "Il server del feed ha dato una risposta negativa. Informa il proprietari
 
 #: src/view/com/posts/FeedErrorMessage.tsx:102
 msgid "Hmm, we're having trouble finding this feed. It may have been deleted."
-msgstr "Stiamo riscontrando problemi nel trovare questo feed. Potrebbe essere stato cancellato."
+msgstr "Stiamo riscontrando problemi nel trovare questo feed. Potrebbe essere stato eliminato."
 
 #: src/screens/Moderation/index.tsx:55
 msgid "Hmmmm, it seems we're having trouble loading this data. See below for more details. If this issue persists, please contact us."
-msgstr "Stiamo riscontrando problemi nel trovare questi dati. Guarda PI[U giù per trovare più dettagli. Se il problema continua mettiti in contatto."
+msgstr "Stiamo riscontrando problemi a caricare questi dati. Vedi sotto per maggiori dettagli. Se il problema persiste, contattaci."
 
 #: src/screens/Profile/ErrorState.tsx:31
 msgid "Hmmmm, we couldn't load that moderation service."
@@ -3194,7 +3194,7 @@ msgstr "Inserisci il codice inviato alla tua email per reimpostare la password"
 
 #: src/view/com/modals/DeleteAccount.tsx:247
 msgid "Input confirmation code for account deletion"
-msgstr "Inserisci il codice di conferma per la cancellazione dell'account"
+msgstr "Inserisci il codice di conferma per l'eliminazione dell'account"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:145
 msgid "Input new password"
@@ -3202,7 +3202,7 @@ msgstr "Inserisci la nuova password"
 
 #: src/view/com/modals/DeleteAccount.tsx:266
 msgid "Input password for account deletion"
-msgstr "Inserisci la password per la cancellazione dell'account"
+msgstr "Inserisci la password per l'eliminazione dell'account"
 
 #: src/screens/Login/LoginForm.tsx:270
 msgid "Input the code which has been emailed to you"
@@ -3279,7 +3279,7 @@ msgstr "Inviti, ma personali"
 
 #: src/screens/Signup/StepInfo/index.tsx:80
 msgid "It looks like you may have entered your email address incorrectly. Are you sure it's right?"
-msgstr "Sembra che tu abbia inserito il tuo indirizzo email in maniera non corretta. Se sicuro che sia giusto?"
+msgstr "Sembra che tu abbia inserito il tuo indirizzo email in modo errato. Se sicuro che sia corretto?"
 
 #: src/screens/Signup/StepInfo/index.tsx:241
 msgid "It's correct"
@@ -3356,7 +3356,7 @@ msgstr "Lingue"
 
 #: src/screens/Settings/AppearanceSettings.tsx:157
 msgid "Larger"
-msgstr "Molto largo"
+msgstr "Più grande"
 
 #: src/screens/Hashtag.tsx:98 src/view/screens/Search/Search.tsx:521
 msgid "Latest"
@@ -3492,7 +3492,7 @@ msgstr "Lista di {0}"
 
 #: src/view/screens/ProfileList.tsx:459
 msgid "List deleted"
-msgstr "Lista cancellata"
+msgstr "Lista eliminata"
 
 #: src/screens/List/ListHiddenScreen.tsx:126
 msgid "List has been hidden"
@@ -3629,7 +3629,7 @@ msgstr "Media"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:212
 msgid "Media that may be disturbing or inappropriate for some audiences."
-msgstr "Contenuti multimediali che potrebbero disturbare o risultare inappropriati per alcuni tipi di pubblico."
+msgstr "Media che potrebbero disturbare o risultare inappropriati per alcuni tipi di pubblico."
 
 #: src/components/WhoCanReply.tsx:254
 msgid "mentioned users"
@@ -3642,7 +3642,7 @@ msgstr "Utenti menzionati"
 #: src/components/Menu/index.tsx:95 src/view/com/util/ViewHeader.tsx:87
 #: src/view/screens/Search/Search.tsx:882
 msgid "Menu"
-msgstr "Menù"
+msgstr "Menu"
 
 #: src/components/dms/MessageProfileButton.tsx:82
 msgid "Message {0}"
@@ -3651,7 +3651,7 @@ msgstr "Messaggio {0}"
 #: src/components/dms/MessageMenu.tsx:72
 #: src/screens/Messages/components/ChatListItem.tsx:165
 msgid "Message deleted"
-msgstr "Messaggio cancellato"
+msgstr "Messaggio eliminato"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:201
 msgid "Message from server: {0}"
@@ -3681,7 +3681,7 @@ msgstr "Account Ingannevole"
 
 #: src/lib/moderation/useReportOptions.ts:67
 msgid "Misleading Post"
-msgstr "Post frainteso"
+msgstr "Post ingannevole"
 
 #: src/Navigation.tsx:138 src/screens/Moderation/index.tsx:101
 #: src/screens/Settings/Settings.tsx:159 src/screens/Settings/Settings.tsx:162
@@ -3917,7 +3917,7 @@ msgstr "Vai al tuo profilo"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:196
 msgid "Need to change it?"
-msgstr "Serve modificarlo?"
+msgstr "Hai bisogno di modificarla?"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:130
 msgid "Need to report a copyright violation?"
@@ -4015,11 +4015,11 @@ msgstr "Notizie"
 #: src/view/com/modals/ChangePassword.tsx:254
 #: src/view/com/modals/ChangePassword.tsx:256
 msgid "Next"
-msgstr "Seguente"
+msgstr "Avanti"
 
 #: src/view/com/lightbox/Lightbox.web.tsx:167
 msgid "Next image"
-msgstr "Immagine seguente"
+msgstr "Immagine successiva"
 
 #: src/screens/Settings/AppPasswords.tsx:100
 msgid "No app passwords yet"
@@ -4062,7 +4062,7 @@ msgstr "Ancora nessun messaggio"
 
 #: src/screens/Messages/ChatList.tsx:271
 msgid "No more conversations to show"
-msgstr "Nessuna conversazione da visualizzare"
+msgstr "Nessun'altra conversazione da visualizzare"
 
 #: src/view/com/notifications/Feed.tsx:121
 msgid "No notifications yet!"
@@ -4845,7 +4845,7 @@ msgstr "Elenchi pubblici e condivisibili di utenti da disattivare o bloccare in 
 
 #: src/view/screens/Lists.tsx:81
 msgid "Public, shareable lists which can drive feeds."
-msgstr "Liste pubbliche e condivisibili che possono impulsare i feed."
+msgstr "Liste pubbliche e condivisibili che possono guidare i feed."
 
 #: src/components/StarterPack/QrCodeDialog.tsx:128
 msgid "QR code copied to your clipboard!"
@@ -4967,7 +4967,7 @@ msgstr "Rimuovi {displayName} dallo starter pack"
 
 #: src/screens/Settings/Settings.tsx:437 src/screens/Settings/Settings.tsx:440
 msgid "Remove account"
-msgstr "Rimuovi l'account"
+msgstr "Rimuovi account"
 
 #: src/view/com/composer/ExternalEmbedRemoveBtn.tsx:16
 msgid "Remove attachment"
@@ -5288,7 +5288,7 @@ msgstr "Richiesto nella tuo paese"
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:173
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:176
 msgid "Resend email"
-msgstr "Rinvia l'email"
+msgstr "Rinvia email"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:267
 #: src/components/dialogs/VerifyEmailDialog.tsx:277
@@ -5348,7 +5348,7 @@ msgstr "Ritorna alla pagina precedente"
 
 #: src/view/screens/NotFound.tsx:61
 msgid "Returns to home page"
-msgstr "Ritorna su Home"
+msgstr "Ritorna alla home"
 
 #: src/view/screens/NotFound.tsx:60 src/view/screens/ProfileFeed.tsx:114
 msgid "Returns to previous page"
@@ -5435,7 +5435,7 @@ msgstr "Salva le impostazioni di ritaglio dell'immagine"
 #: src/view/com/notifications/FeedItem.tsx:539
 #: src/view/com/notifications/FeedItem.tsx:564
 msgid "Say hello!"
-msgstr "Di ciao!"
+msgstr "Di' ciao!"
 
 #: src/screens/Onboarding/index.tsx:33 src/screens/Onboarding/state.ts:99
 msgid "Science"
@@ -5473,7 +5473,7 @@ msgstr "Cerca utenti"
 
 #: src/components/dialogs/GifSelect.tsx:177
 msgid "Search GIFs"
-msgstr "Cerca i Gif"
+msgstr "Cerca GIF"
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:504
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:505
@@ -6172,24 +6172,24 @@ msgstr "Solo tag"
 
 #: src/components/ProgressGuide/Toast.tsx:156
 msgid "Tap to dismiss"
-msgstr "Clicca per ignorare"
+msgstr "Togga per ignorare"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:136
 msgid "Tap to enter full screen"
-msgstr "Clicca per entrare in modalità a schermo intero"
+msgstr "Tocca per entrare in modalità a schermo intero"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:142
 msgid "Tap to play or pause"
-msgstr "Premi per riprodurre o mettere in pausa"
+msgstr "Tocca per riprodurre o mettere in pausa"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:159
 msgid "Tap to toggle sound"
-msgstr "Clicca per attivare o disattivare l'audio"
+msgstr "Tocca per attivare o disattivare l'audio"
 
 #: src/view/com/util/images/AutoSizedImage.tsx:199
 #: src/view/com/util/images/AutoSizedImage.tsx:221
 msgid "Tap to view full image"
-msgstr "Premi per vedere a schermo intero"
+msgstr "Tocca per vedere a schermo intero"
 
 #: src/state/shell/progress-guide.tsx:166
 msgid "Task complete - 10 likes!"
@@ -6330,7 +6330,7 @@ msgstr "I passaggi seguenti ti aiuteranno a personalizzare la tua esperienza con
 #: src/view/com/post-thread/PostThread.tsx:208
 #: src/view/com/post-thread/PostThread.tsx:220
 msgid "The post may have been deleted."
-msgstr "Il post potrebbe essere stato cancellato."
+msgstr "Il post potrebbe essere stato eliminato."
 
 #: src/view/screens/PrivacyPolicy.tsx:35
 msgid "The Privacy Policy has been moved to <0/>"
@@ -6346,7 +6346,7 @@ msgstr ""
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:725
 msgid "The starter pack that you are trying to view is invalid. You may delete this starter pack instead."
-msgstr "Questo starter pack non è valido. Prova a cancellare questo starter pack invece."
+msgstr "Questo starter pack non è valido. Prova a eliminare questo starter pack invece."
 
 #: src/view/screens/Support.tsx:37
 msgid "The support form has been moved. If you need help, please <0/> or visit {HELP_DESK_URL} to get in touch with us."
@@ -6497,7 +6497,7 @@ msgstr "Questo contenuto ha ricevuto un avviso generale dai moderatori."
 
 #: src/components/dialogs/EmbedConsent.tsx:63
 msgid "This content is hosted by {0}. Do you want to enable external media?"
-msgstr "Questo contenuto è hosted da {0}. Vuoi abilitare i media esterni?"
+msgstr "Questo contenuto è ospitato da {0}. Abilitare i media esterni?"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:83
 #: src/lib/moderation/useModerationCauseDescription.ts:82
@@ -6510,7 +6510,7 @@ msgstr "Questo contenuto non è visualizzabile senza un account Bluesky."
 
 #: src/screens/Messages/components/ChatListItem.tsx:266
 msgid "This conversation is with a deleted or a deactivated account. Press for options."
-msgstr "L'utente di questa conversazione ha disattivato o cancellato l'account. Premi per le opzioni."
+msgstr "L'utente di questa conversazione ha disattivato o eliminato l'account. Premi per le opzioni."
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:94
 msgid "This feature is in beta. You can read more about repository exports in <0>this blogpost</0>."
@@ -6587,7 +6587,7 @@ msgstr ""
 
 #: src/view/com/post-thread/PostThreadItem.tsx:147
 msgid "This post has been deleted."
-msgstr "Questo post è stato cancellato."
+msgstr "Questo post è stato eliminato."
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:700
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:352
@@ -6973,7 +6973,7 @@ msgstr "Utilizza il browser dell'app"
 #: src/screens/Settings/ContentAndMediaSettings.tsx:75
 #: src/screens/Settings/ContentAndMediaSettings.tsx:81
 msgid "Use in-app browser to open links"
-msgstr ""
+msgstr "Utilizza il browser dell'app per aprire i link"
 
 #: src/view/com/modals/InAppBrowserConsent.tsx:63
 #: src/view/com/modals/InAppBrowserConsent.tsx:65
@@ -7323,7 +7323,7 @@ msgstr "Siamo spiacenti, ma non è stato possibile completare la ricerca. Riprov
 
 #: src/view/com/composer/Composer.tsx:404
 msgid "We're sorry! The post you are replying to has been deleted."
-msgstr "Ci dispiace! Il post a cui cerchi di rispondere è stato cancellato."
+msgstr "Ci dispiace! Il post a cui cerchi di rispondere è stato eliminato."
 
 #: src/components/Lists.tsx:220 src/view/screens/NotFound.tsx:50
 msgid "We're sorry! We can't find the page you were looking for."
@@ -7485,7 +7485,7 @@ msgstr "Puoi anche disattivare temporaneamente il tuo account, e riattivarlo in 
 
 #: src/screens/Messages/Settings.tsx:105
 msgid "You can continue ongoing conversations regardless of which setting you choose."
-msgstr "Puoi proseguire le conversazioni in corso indipendentemente da quale settaggio scegli."
+msgstr "Puoi proseguire le conversazioni in corso indipendentemente dall'impostazione scelta."
 
 #: src/screens/Login/index.tsx:155 src/screens/Login/PasswordUpdatedForm.tsx:27
 msgid "You can now sign in with your new password."
@@ -7684,7 +7684,7 @@ msgstr "Seguirai immediatamente queste persone"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:178
 msgid "You'll receive an email at <0>{0}</0> to verify it's you."
-msgstr "Riceverai un email a <0>{0}</0> per verificare che sia tu."
+msgstr "Riceverai un'email all'indirizzo <0>{0}</0> per verificare la tua identità."
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:270
 msgid "You'll stay updated with these feeds"
