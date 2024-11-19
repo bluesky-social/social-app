@@ -1,4 +1,3 @@
-import React from 'react'
 import {View} from 'react-native'
 import {Image} from 'expo-image'
 import {requestMediaLibraryPermissionsAsync} from 'expo-image-picker'
