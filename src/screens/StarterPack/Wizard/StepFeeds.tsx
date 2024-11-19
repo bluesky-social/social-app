@@ -97,6 +97,7 @@ export function StepFeeds({moderationOpts}: {moderationOpts: ModerationOpts}) {
           !query && !screenReaderEnabled ? () => fetchNextPage() : undefined
         }
         onEndReachedThreshold={2}
+        keyboardDismissMode="on-drag"
         renderScrollComponent={props => <KeyboardAwareScrollView {...props} />}
         keyboardShouldPersistTaps="handled"
         disableFullWindowScroll={true}
