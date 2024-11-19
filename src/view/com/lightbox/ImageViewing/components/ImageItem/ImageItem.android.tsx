@@ -87,11 +87,11 @@ const ImageItem = ({
   // Note: DO NOT move any logic reading animated values outside this function.
   useAnimatedReaction(
     () => {
-      if (pinchScale.value !== 1) {
+      if (pinchScale.get() !== 1) {
         // We're currently pinching.
         return true
       }
-      const [, , committedScale] = readTransform(committedTransform.value)
+      const [, , committedScale] = readTransform(committedTransform.get())
       if (committedScale !== 1) {
         // We started from a pinched in state.
         return true
@@ -147,10 +147,10 @@ const ImageItem = ({
     .onStart(e => {
       'worklet'
       const screenSize = measureSafeArea()
-      pinchOrigin.value = {
+      pinchOrigin.set({
         x: e.focalX - screenSize.width / 2,
         y: e.focalY - screenSize.height / 2,
-      }
+      })
     })
     .onChange(e => {
       'worklet'
@@ -160,7 +160,7 @@ const ImageItem = ({
       }
       // Don't let the picture zoom in so close that it gets blurry.
       // Also, like in stock Android apps, don't let the user zoom out further than 1:1.
-      const [, , committedScale] = readTransform(committedTransform.value)
+      const [, , committedScale] = readTransform(committedTransform.get())
       const maxCommittedScale = Math.max(
         MIN_SCREEN_ZOOM,
         (imageDimensions.width / screenSize.width) * MAX_ORIGINAL_IMAGE_ZOOM,
@@ -171,20 +171,21 @@ const ImageItem = ({
         Math.max(minPinchScale, e.scale),
         maxPinchScale,
       )
-      pinchScale.value = nextPinchScale
+      pinchScale.set(nextPinchScale)
 
       // Zooming out close to the corner could push us out of bounds, which we don't want on Android.
       // Calculate where we'll end up so we know how much to translate back to stay in bounds.
       const t = createTransform()
-      prependPan(t, panTranslation.value)
-      prependPinch(t, nextPinchScale, pinchOrigin.value, pinchTranslation.value)
-      prependTransform(t, committedTransform.value)
+      prependPan(t, panTranslation.get())
+      prependPinch(t, nextPinchScale, pinchOrigin.get(), pinchTranslation.get())
+      prependTransform(t, committedTransform.get())
       const [dx, dy] = getExtraTranslationToStayInBounds(t, screenSize)
       if (dx !== 0 || dy !== 0) {
-        pinchTranslation.value = {
-          x: pinchTranslation.value.x + dx,
-          y: pinchTranslation.value.y + dy,
-        }
+        const pt = pinchTranslation.get()
+        pinchTranslation.set({
+          x: pt.x + dx,
+          y: pt.y + dy,
+        })
       }
     })
     .onEnd(() => {
@@ -193,18 +194,18 @@ const ImageItem = ({
       let t = createTransform()
       prependPinch(
         t,
-        pinchScale.value,
-        pinchOrigin.value,
-        pinchTranslation.value,
+        pinchScale.get(),
+        pinchOrigin.get(),
+        pinchTranslation.get(),
       )
-      prependTransform(t, committedTransform.value)
+      prependTransform(t, committedTransform.get())
       applyRounding(t)
-      committedTransform.value = t
+      committedTransform.set(t)
 
       // Reset just the pinch.
-      pinchScale.value = 1
-      pinchOrigin.value = {x: 0, y: 0}
-      pinchTranslation.value = {x: 0, y: 0}
+      pinchScale.set(1)
+      pinchOrigin.set({x: 0, y: 0})
+      pinchTranslation.set({x: 0, y: 0})
     })
 
   const pan = Gesture.Pan()
@@ -223,29 +224,29 @@ const ImageItem = ({
       prependPan(t, nextPanTranslation)
       prependPinch(
         t,
-        pinchScale.value,
-        pinchOrigin.value,
-        pinchTranslation.value,
+        pinchScale.get(),
+        pinchOrigin.get(),
+        pinchTranslation.get(),
       )
-      prependTransform(t, committedTransform.value)
+      prependTransform(t, committedTransform.get())
 
       // Prevent panning from going out of bounds.
       const [dx, dy] = getExtraTranslationToStayInBounds(t, screenSize)
       nextPanTranslation.x += dx
       nextPanTranslation.y += dy
-      panTranslation.value = nextPanTranslation
+      panTranslation.set(nextPanTranslation)
     })
     .onEnd(() => {
       'worklet'
       // Commit just the pan.
       let t = createTransform()
-      prependPan(t, panTranslation.value)
-      prependTransform(t, committedTransform.value)
+      prependPan(t, panTranslation.get())
+      prependTransform(t, committedTransform.get())
       applyRounding(t)
-      committedTransform.value = t
+      committedTransform.set(t)
 
       // Reset just the pan.
-      panTranslation.value = {x: 0, y: 0}
+      panTranslation.set({x: 0, y: 0})
     })
 
   const singleTap = Gesture.Tap().onEnd(() => {
@@ -261,11 +262,11 @@ const ImageItem = ({
       if (!imageDimensions || !imageAspect) {
         return
       }
-      const [, , committedScale] = readTransform(committedTransform.value)
+      const [, , committedScale] = readTransform(committedTransform.get())
       if (committedScale !== 1) {
         // Go back to 1:1 using the identity vector.
         let t = createTransform()
-        committedTransform.value = withClampedSpring(t)
+        committedTransform.set(withClampedSpring(t))
         return
       }
 
@@ -299,7 +300,7 @@ const ImageItem = ({
       )
       const finalTransform = createTransform()
       prependPinch(finalTransform, scale, origin, {x: dx, y: dy})
-      committedTransform.value = withClampedSpring(finalTransform)
+      committedTransform.set(withClampedSpring(finalTransform))
     })
 
   const composedGesture = isScrollViewBeingDragged
@@ -313,13 +314,13 @@ const ImageItem = ({
       )
 
   const containerStyle = useAnimatedStyle(() => {
-    const {scaleAndMoveTransform, isHidden} = transforms.value
+    const {scaleAndMoveTransform, isHidden} = transforms.get()
     // Apply the active adjustments on top of the committed transform before the gestures.
     // This is matrix multiplication, so operations are applied in the reverse order.
     let t = createTransform()
-    prependPan(t, panTranslation.value)
-    prependPinch(t, pinchScale.value, pinchOrigin.value, pinchTranslation.value)
-    prependTransform(t, committedTransform.value)
+    prependPan(t, panTranslation.get())
+    prependPinch(t, pinchScale.get(), pinchOrigin.get(), pinchTranslation.get())
+    prependTransform(t, committedTransform.get())
     const [translateX, translateY, scale] = readTransform(t)
     const manipulationTransform = [
       {translateX},
@@ -338,7 +339,7 @@ const ImageItem = ({
   })
 
   const imageCropStyle = useAnimatedStyle(() => {
-    const {cropFrameTransform} = transforms.value
+    const {cropFrameTransform} = transforms.get()
     return {
       flex: 1,
       overflow: 'hidden',
@@ -347,7 +348,7 @@ const ImageItem = ({
   })
 
   const imageStyle = useAnimatedStyle(() => {
-    const {cropContentTransform} = transforms.value
+    const {cropContentTransform} = transforms.get()
     return {
       flex: 1,
       transform: cropContentTransform,
@@ -359,7 +360,7 @@ const ImageItem = ({
   const [hasLoaded, setHasLoaded] = useState(false)
   useAnimatedReaction(
     () => {
-      return transforms.value.isResting && !hasLoaded
+      return transforms.get().isResting && !hasLoaded
     },
     (show, prevShow) => {
       if (show && !prevShow) {

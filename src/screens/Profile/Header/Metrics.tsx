@@ -1,4 +1,3 @@
-import React from 'react'
 import {View} from 'react-native'
 import {AppBskyActorDefs} from '@atproto/api'
 import {msg, plural} from '@lingui/macro'

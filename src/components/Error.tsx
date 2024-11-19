@@ -1,4 +1,3 @@
-import React from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -32,7 +31,7 @@ export function Error({
   return (
     <CenteredView
       style={[
-        a.w_full,
+        a.h_full_vh,
         a.align_center,
         a.gap_5xl,
         !gtMobile && a.justify_between,
