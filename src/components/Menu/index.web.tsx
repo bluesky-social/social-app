@@ -1,5 +1,3 @@
-/* eslint-disable react/prop-types */
-
 import React from 'react'
 import {Pressable, StyleProp, View, ViewStyle} from 'react-native'
 import {msg} from '@lingui/macro'

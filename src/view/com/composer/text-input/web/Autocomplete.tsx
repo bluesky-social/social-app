@@ -1,9 +1,4 @@
-import React, {
-  forwardRef,
-  useEffect,
-  useImperativeHandle,
-  useState,
-} from 'react'
+import {forwardRef, useEffect, useImperativeHandle, useState} from 'react'
 import {Pressable, StyleSheet, View} from 'react-native'
 import {Trans} from '@lingui/macro'
 import {ReactRenderer} from '@tiptap/react'

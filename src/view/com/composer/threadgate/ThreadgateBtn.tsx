@@ -1,4 +1,3 @@
-import React from 'react'
 import {Keyboard, StyleProp, ViewStyle} from 'react-native'
 import {AnimatedStyle} from 'react-native-reanimated'
 import {AppBskyFeedPostgate} from '@atproto/api'
