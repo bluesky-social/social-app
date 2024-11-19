@@ -1,4 +1,3 @@
-version: '3.8'
 services:
   # An ephermerally-stored postgres database for single-use test runs
   db_test: &db_test
