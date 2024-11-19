@@ -5002,7 +5002,7 @@ msgstr "\"{0}\" tarafından susturuldu"
 
 #: src/screens/Moderation/index.tsx:229
 msgid "Muted words & tags"
-msgstr "Sessize alınan kelimeler ve etkiketler"
+msgstr "Sessize alınan kelimeler ve etiketler"
 
 #: src/view/screens/ProfileList.tsx:734
 msgid "Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them."
