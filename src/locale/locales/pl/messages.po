@@ -8011,7 +8011,7 @@ msgstr "Twoje polubienia, wpisy i lista zablokowanych osób są publiczne. Wycis
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:75
 msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
-msgstr "Twój profil, wpisy, kanały i listy nie będą już widoczne dla innych. Możesz w dowolnym momencie ponownie aktywować te konto poprzez zalogowanie się."
+msgstr "Twój profil, wpisy, kanały i listy nie będą już widoczne dla innych. Możesz w dowolnym momencie ponownie aktywować to konto poprzez zalogowanie się."
 
 #: src/view/com/composer/Composer.tsx:463
 msgid "Your reply has been published"
