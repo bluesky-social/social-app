@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Italian localization\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 11:44+0530\n"
-"PO-Revision-Date: 2024-11-19 14:23+0100\n"
+"PO-Revision-Date: 2024-11-19 14:38+0100\n"
 "Last-Translator: Michele Locati <michele@locati.it>\n"
 "Language-Team: Gabriella Nonino\n"
 "Language: it\n"
@@ -6172,7 +6172,7 @@ msgstr "Solo tag"
 
 #: src/components/ProgressGuide/Toast.tsx:156
 msgid "Tap to dismiss"
-msgstr "Togga per ignorare"
+msgstr "Tocca per ignorare"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:136
 msgid "Tap to enter full screen"
