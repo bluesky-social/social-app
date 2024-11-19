@@ -275,6 +275,8 @@ export const InnerFlatList = React.forwardRef<
   const insets = useSafeAreaInsets()
   const {nativeSnapPoint, disableDrag, setDisableDrag} = useDialogContext()
 
+  const basePadding = isIOS ? 30 : 50
+
   const onScroll = (e: ReanimatedScrollEvent) => {
     'worklet'
     if (!isAndroid) {
@@ -294,7 +296,9 @@ export const InnerFlatList = React.forwardRef<
         keyboardShouldPersistTaps="handled"
         bounces={nativeSnapPoint === BottomSheetSnapPoint.Full}
         ListFooterComponent={
-          <View style={{height: insets.bottom + a.pt_5xl.paddingTop}} />
+          <View
+            style={{height: insets.bottom + basePadding + a.pt_5xl.paddingTop}}
+          />
         }
         ref={ref}
         {...props}
