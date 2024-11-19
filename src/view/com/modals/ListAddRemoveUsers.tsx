@@ -24,6 +24,7 @@ import {
 } from '#/state/queries/list-memberships'
 import {SearchInput} from '#/components/forms/SearchInput'
 import {Link} from '#/components/Link'
+import {FollowsYou} from '#/components/Pills'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {Button} from '../util/forms/Button'
 import {Text} from '../util/text/Text'
@@ -47,7 +48,7 @@ export function Component({
   const {_} = useLingui()
   const {closeModal} = useModalControls()
   const {isMobile} = useWebMediaQueries()
-  const [query, setQuery] = useState('')
+  const [query, setQuery] = useState('aya')
   const autocomplete = useActorAutocompleteQuery(query)
   const {data: memberships} = useDangerousListMembershipsQuery()
   const [isKeyboardVisible] = useIsKeyboardVisible()
@@ -202,6 +203,9 @@ function UserResult({
     handle: profile.handle,
   })
 
+  const followedBy = !!profile.viewer?.followedBy
+  const blockHide = !!(profile.viewer?.blocking || profile.viewer?.blockedBy)
+
   return (
     <View
       style={[
@@ -247,7 +251,11 @@ function UserResult({
         <Text type="md" style={[pal.textLight]} numberOfLines={1}>
           {sanitizeHandle(profile.handle, '@')}
         </Text>
-        {!!profile.viewer?.followedBy && <View style={s.flexRow} />}
+        {followedBy && !blockHide && (
+          <View style={[s.flexRow, s.mt5]}>
+            <FollowsYou />
+          </View>
+        )}
       </View>
       <View>
         {isProcessing || typeof membership === 'undefined' ? (
