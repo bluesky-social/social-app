@@ -1,20 +1,13 @@
 import React, {useCallback, useState} from 'react'
-import {
-  ActivityIndicator,
-  Pressable,
-  SafeAreaView,
-  StyleSheet,
-  View,
-} from 'react-native'
+import {ActivityIndicator, SafeAreaView, StyleSheet, View} from 'react-native'
 import {AppBskyActorDefs, AppBskyGraphDefs} from '@atproto/api'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {HITSLOP_20} from '#/lib/constants'
 import {useIsKeyboardVisible} from '#/lib/hooks/useIsKeyboardVisible'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {cleanError} from '#/lib/strings/errors'
 import {sanitizeHandle} from '#/lib/strings/handles'
@@ -29,11 +22,14 @@ import {
   useListMembershipAddMutation,
   useListMembershipRemoveMutation,
 } from '#/state/queries/list-memberships'
+import {SearchInput} from '#/components/forms/SearchInput'
+import {Link} from '#/components/Link'
+import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {Button} from '../util/forms/Button'
 import {Text} from '../util/text/Text'
 import * as Toast from '../util/Toast'
 import {UserAvatar} from '../util/UserAvatar'
-import {ScrollView, TextInput} from './util'
+import {ScrollView} from './util'
 
 export const snapPoints = ['90%']
 
@@ -63,40 +59,23 @@ export function Component({
       testID="listAddUserModal"
       style={[pal.view, isWeb ? styles.fixedHeight : s.flex1]}>
       <View style={[s.flex1, isMobile && {paddingHorizontal: 18}]}>
-        <View style={[styles.searchContainer, pal.border]}>
-          <FontAwesomeIcon icon="search" size={16} />
-          <TextInput
-            testID="searchInput"
-            style={[styles.searchInput, pal.border, pal.text]}
-            placeholder={_(msg`Search for users`)}
-            placeholderTextColor={pal.colors.textLight}
-            value={query}
-            onChangeText={setQuery}
-            accessible={true}
-            accessibilityLabel={_(msg`Search`)}
-            accessibilityHint=""
-            autoFocus
-            autoCapitalize="none"
-            autoComplete="off"
-            autoCorrect={false}
-            selectTextOnFocus
-          />
-          {query ? (
-            <Pressable
-              onPress={onPressCancelSearch}
-              accessibilityRole="button"
-              accessibilityLabel={_(msg`Cancel search`)}
-              accessibilityHint={_(msg`Exits inputting search query`)}
-              onAccessibilityEscape={onPressCancelSearch}
-              hitSlop={HITSLOP_20}>
-              <FontAwesomeIcon
-                icon="xmark"
-                size={16}
-                color={pal.colors.textLight}
-              />
-            </Pressable>
-          ) : undefined}
-        </View>
+        <SearchInput
+          testID="searchInput"
+          style={[styles.searchInput, pal.border, pal.text]}
+          placeholder={_(msg`Search for users`)}
+          placeholderTextColor={pal.colors.textLight}
+          value={query}
+          onChangeText={setQuery}
+          accessible={true}
+          accessibilityLabel={_(msg`Search`)}
+          accessibilityHint=""
+          autoFocus
+          autoCapitalize="none"
+          autoComplete="off"
+          autoCorrect={false}
+          selectTextOnFocus
+          onClearText={onPressCancelSearch}
+        />
         <ScrollView
           style={[s.flex1]}
           keyboardDismissMode="none"
@@ -119,14 +98,16 @@ export function Component({
               ))}
             </>
           ) : (
-            <Text
-              type="xl"
-              style={[
-                pal.textLight,
-                {paddingHorizontal: 12, paddingVertical: 16},
-              ]}>
-              <Trans>No results found for {query}</Trans>
-            </Text>
+            query && (
+              <Text
+                type="xl"
+                style={[
+                  pal.textLight,
+                  {paddingHorizontal: 12, paddingVertical: 16},
+                ]}>
+                <Trans>No results found for {query}</Trans>
+              </Text>
+            )
           )}
         </ScrollView>
         <View
@@ -216,6 +197,11 @@ function UserResult({
     listMembershipRemoveMutation,
   ])
 
+  const profileURL = makeProfileLink({
+    did: profile.did,
+    handle: profile.handle,
+  })
+
   return (
     <View
       style={[
@@ -232,11 +218,15 @@ function UserResult({
           width: 54,
           paddingLeft: 4,
         }}>
-        <UserAvatar
-          size={40}
-          avatar={profile.avatar}
-          type={profile.associated?.labeler ? 'labeler' : 'user'}
-        />
+        <ProfileHoverCard did={profile.did}>
+          <Link to={profileURL} label={_(msg`View profile`)}>
+            <UserAvatar
+              size={40}
+              avatar={profile.avatar}
+              type={profile.associated?.labeler ? 'labeler' : 'user'}
+            />
+          </Link>
+        </ProfileHoverCard>
       </View>
       <View
         style={{
