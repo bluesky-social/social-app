@@ -12,7 +12,7 @@ import {Placeholder} from '@tiptap/extension-placeholder'
 import {Text as TiptapText} from '@tiptap/extension-text'
 import {generateJSON} from '@tiptap/html'
 import {EditorContent, JSONContent, useEditor} from '@tiptap/react'
-import sanitizeHtml from 'sanitize-html'
+import DOMPurify from 'dompurify'
 
 import {useColorSchemeStyle} from '#/lib/hooks/useColorSchemeStyle'
 import {usePalette} from '#/lib/hooks/usePalette'
@@ -185,9 +185,8 @@ export const TextInput = React.forwardRef(function TextInputImpl(
                 // Rich-text formatting is pasted, retrieve html and paste it
                 // Retrict to only allow <br> tags
                 view.pasteHTML(
-                  sanitizeHtml(richText, {
-                    allowedTags: ['br'],
-                    enforceHtmlBoundary: true,
+                  DOMPurify.sanitize(richText, {
+                    ALLOWED_TAGS: ['br'],
                   }),
                 )
               } else {
