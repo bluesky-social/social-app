@@ -2193,7 +2193,7 @@ msgstr "Modifica il profilo"
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:189
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:182
 msgid "Edit Profile"
-msgstr "Modifica il Profilo"
+msgstr "Modifica il profilo"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:566
 msgid "Edit starter pack"
@@ -3876,7 +3876,7 @@ msgstr "Il mio Compleanno"
 
 #: src/view/screens/Feeds.tsx:732
 msgid "My Feeds"
-msgstr "I miei Feed"
+msgstr "I miei feed"
 
 #: src/view/shell/desktop/LeftNav.tsx:85
 msgid "My Profile"
