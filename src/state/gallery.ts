@@ -14,9 +14,9 @@ import {nanoid} from 'nanoid/non-secure'
 
 import {POST_IMG_MAX} from '#/lib/constants'
 import {getImageDim} from '#/lib/media/manip'
-import {openCropper} from '#/lib/media/picker'
 import {getDataUriSize} from '#/lib/media/util'
 import {isIOS, isNative} from '#/platform/detection'
+import {CropImage} from '#/components/dialogs/CropImageDialog'
 
 export type ImageTransformation = {
   crop?: ActionCrop['crop']
@@ -117,7 +117,10 @@ export async function pasteImage(
   }
 }
 
-export async function cropImage(img: ComposerImage): Promise<ComposerImage> {
+export async function cropImage(
+  img: ComposerImage,
+  cropImage: CropImage,
+): Promise<ComposerImage> {
   if (!isNative) {
     return img
   }
@@ -136,7 +139,7 @@ export async function cropImage(img: ComposerImage): Promise<ComposerImage> {
   // @todo: we're always passing the original image here, does image-cropper
   // allows for setting initial crop dimensions? -mary
   try {
-    const cropped = await openCropper({
+    const cropped = await cropImage({
       mediaType: 'photo',
       path: source.path,
       freeStyleCropEnabled: true,

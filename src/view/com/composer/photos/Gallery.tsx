@@ -14,6 +14,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {openCropperNative} from '#/lib/media/picker'
 import {Dimensions} from '#/lib/media/types'
 import {colors, s} from '#/lib/styles'
 import {isNative} from '#/platform/detection'
@@ -145,7 +146,7 @@ const GalleryItem = ({
 
   const onImageEdit = () => {
     if (isNative) {
-      cropImage(image).then(next => {
+      cropImage(image, openCropperNative).then(next => {
         onChange(next)
       })
     } else {
