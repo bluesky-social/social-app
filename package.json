@@ -11,6 +11,8 @@
     "postinstall": "patch-package && yarn intl:compile",
     "prebuild": "expo prebuild --clean",
     "android": "expo run:android",
+    "android:prod": "expo run:android --variant release",
+    "android:profile": "BSKY_PROFILE=1 expo run:android --variant release",
     "ios": "expo run:ios",
     "web": "expo start --web",
     "use-build-number": "./scripts/useBuildNumberEnv.sh",
