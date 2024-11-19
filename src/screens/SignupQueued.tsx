@@ -95,7 +95,8 @@ export function SignupQueued() {
       {isIOS && <StatusBar style="light" />}
       <ScrollView
         style={[a.flex_1, t.atoms.bg]}
-        contentContainerStyle={{borderWidth: 0}}>
+        contentContainerStyle={{borderWidth: 0}}
+        bounces={false}>
         <View
           style={[
             a.flex_row,
