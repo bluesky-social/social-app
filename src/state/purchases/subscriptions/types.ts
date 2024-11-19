@@ -1,3 +1,5 @@
+import type { PurchasesStoreProduct } from 'react-native-purchases'
+
 export enum EntitlementId {
   Core = 'core',
 }
@@ -22,7 +24,7 @@ export type Offering =
       id: OfferingId
       platform: PlatformId.Ios | PlatformId.Android
       price: number
-      package: undefined
+      package: PurchasesStoreProduct
     }
   | {
       id: OfferingId

@@ -13,7 +13,7 @@ import {DesktopSearch} from '#/view/shell/desktop/Search'
 import {atoms as a, tokens, useTheme, web} from '#/alf'
 import {Button} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
-import {SubscriptionsDialog} from '#/components/dialogs/SubscriptionsDialog'
+import {BlueskyPlus} from '#/components/dialogs/BlueskyPlus'
 import {GradientFill} from '#/components/GradientFill'
 import {Logotype} from '#/components/icons/BlueskyPlus'
 import {InlineLinkText} from '#/components/Link'
@@ -99,7 +99,7 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
                 </View>
               </View>
             </Button>
-            <SubscriptionsDialog control={subscriptionsDialogControl} />
+            <BlueskyPlus control={subscriptionsDialogControl} />
           </View>
         )}
 

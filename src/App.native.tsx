@@ -2,6 +2,7 @@ import 'react-native-url-polyfill/auto'
 import '#/lib/sentry' // must be near top
 import '#/view/icons'
 
+import Purchases from 'react-native-purchases'
 import React, {useEffect, useState} from 'react'
 import {GestureHandlerRootView} from 'react-native-gesture-handler'
 import {RootSiblingParent} from 'react-native-root-siblings'
@@ -15,6 +16,8 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {KeyboardControllerProvider} from '#/lib/hooks/useEnableKeyboardController'
+import {isIOS, isAndroid} from '#/platform/detection'
+import {RC_APPLE_PUBLIC_KEY, RC_GOOGLE_PUBLIC_KEY} from '#/env'
 import {QueryProvider} from '#/lib/react-query'
 import {
   initialize,
@@ -25,7 +28,6 @@ import {s} from '#/lib/styles'
 import {ThemeProvider} from '#/lib/ThemeContext'
 import I18nProvider from '#/locale/i18nProvider'
 import {logger} from '#/logger'
-import {isIOS} from '#/platform/detection'
 import {Provider as A11yProvider} from '#/state/a11y'
 import {Provider as MutedThreadsProvider} from '#/state/cache/thread-mutes'
 import {Provider as DialogStateProvider} from '#/state/dialogs'
@@ -179,6 +181,14 @@ function App() {
     Promise.all([initPersistedState(), ensureGeolocationResolved()]).then(() =>
       setReady(true),
     )
+
+    Purchases.setLogLevel(Purchases.LOG_LEVEL.DEBUG)
+
+    if (isIOS) {
+      Purchases.configure({apiKey: RC_APPLE_PUBLIC_KEY})
+    } else if (isAndroid) {
+      Purchases.configure({apiKey: RC_GOOGLE_PUBLIC_KEY})
+    }
   }, [])
 
   if (!isReady) {

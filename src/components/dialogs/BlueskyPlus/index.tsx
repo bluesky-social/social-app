@@ -38,7 +38,7 @@ function DialogInner() {
   const t = useTheme()
 
   const [offeringId, setOfferingId] = React.useState<OfferingId>(OfferingId.CoreMonthly)
-  const {data: coreOffering} = useSubscriptionGroup(SubscriptionGroupId.Core)
+  const {data: coreOffering, error} = useSubscriptionGroup(SubscriptionGroupId.Core)
   const {mutateAsync: purchaseOffering, isPending} = usePurchaseOffering()
 
   const onPressSubscribe = async () => {
@@ -62,7 +62,7 @@ function DialogInner() {
 
   return (
     <Dialog.Inner label={_(msg`Bluesky Plus`)} style={[web({maxWidth: 1000})]}>
-      <View style={[a.flex_1, a.gap_xl, gtMobile && a.flex_row]}>
+      <View style={[a.gap_xl, gtMobile && a.flex_row]}>
         <View
           style={[
             a.flex_1,
@@ -76,7 +76,7 @@ function DialogInner() {
             <MarketingBlurb />
           </View>
         </View>
-        <View style={[a.flex_1, a.justify_end, a.gap_md]}>
+        <View style={[a.justify_end, a.gap_md]}>
           <Text style={[a.font_bold, a.text_3xl]}>
             <Trans>Early bird discount!</Trans>
           </Text>
@@ -116,7 +116,7 @@ function DialogInner() {
                         <Trans>Monthly plan</Trans>
                       </Text>
                       <Text style={[a.text_lg, a.leading_normal, a.font_bold]}>
-                        <Trans>$6/month</Trans>
+                        <Trans>$8/month</Trans>
                       </Text>
                     </View>
                     <Text
@@ -160,7 +160,7 @@ function DialogInner() {
                         <Trans>Annual plan</Trans>
                       </Text>
                       <Text style={[a.text_lg, a.leading_normal, a.font_bold]}>
-                        <Trans>$60/year</Trans>
+                        <Trans>$80/year</Trans>
                       </Text>
                     </View>
                     <Text

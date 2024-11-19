@@ -9,3 +9,7 @@ export const LOG_LEVEL = (process.env.EXPO_PUBLIC_LOG_LEVEL || 'info') as
   | 'error'
 
 export const PLUS_SERVICE_URL = process.env.EXPO_PUBLIC_PLUS_SERVICE_URL
+export const RC_GOOGLE_PUBLIC_KEY =
+  process.env.EXPO_PUBLIC_RC_GOOGLE_PUBLIC_KEY || ''
+export const RC_APPLE_PUBLIC_KEY =
+  process.env.EXPO_PUBLIC_RC_APPLE_PUBLIC_KEY || ''
