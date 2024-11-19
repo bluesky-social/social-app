@@ -48,7 +48,7 @@ export function Component({
   const {_} = useLingui()
   const {closeModal} = useModalControls()
   const {isMobile} = useWebMediaQueries()
-  const [query, setQuery] = useState('aya')
+  const [query, setQuery] = useState('')
   const autocomplete = useActorAutocompleteQuery(query)
   const {data: memberships} = useDangerousListMembershipsQuery()
   const [isKeyboardVisible] = useIsKeyboardVisible()
