@@ -3136,7 +3136,7 @@ msgstr "사용자 리스트 숨기기"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:117
 msgid "Hmm, some kind of issue occurred when contacting the feed server. Please let the feed owner know about this issue."
-msgstr "피드 서버에 연결하는 중 어떤 문제가 발생했습니다. 피드 소유자에게 이 문제에 대해 알려주세요."
+msgstr "피드 서버에 연결하는 동안 어떤 문제가 발생했습니다. 피드 소유자에게 이 문제에 대해 알려주세요."
 
 #: src/view/com/posts/FeedErrorMessage.tsx:105
 msgid "Hmm, the feed server appears to be misconfigured. Please let the feed owner know about this issue."
