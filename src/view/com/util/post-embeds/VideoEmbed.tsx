@@ -102,27 +102,29 @@ function InnerWrapper({embed}: Props) {
         ]}
         cachePolicy="memory-disk" // Preferring memory cache helps to avoid flicker when re-displaying on android
       >
-        <Button
-          style={[a.flex_1, a.align_center, a.justify_center]}
-          onPress={() => {
-            ref.current?.togglePlayback()
-          }}
-          label={_(msg`Play video`)}
-          color="secondary">
-          {showSpinner ? (
-            <View
-              style={[
-                a.rounded_full,
-                a.p_xs,
-                a.align_center,
-                a.justify_center,
-              ]}>
-              <Loader size="2xl" style={{color: 'white'}} />
-            </View>
-          ) : (
-            <PlayButtonIcon />
-          )}
-        </Button>
+        {showOverlay && (
+          <Button
+            style={[a.flex_1, a.align_center, a.justify_center]}
+            onPress={() => {
+              ref.current?.togglePlayback()
+            }}
+            label={_(msg`Play video`)}
+            color="secondary">
+            {showSpinner ? (
+              <View
+                style={[
+                  a.rounded_full,
+                  a.p_xs,
+                  a.align_center,
+                  a.justify_center,
+                ]}>
+                <Loader size="2xl" style={{color: 'white'}} />
+              </View>
+            ) : (
+              <PlayButtonIcon />
+            )}
+          </Button>
+        )}
       </ImageBackground>
     </>
   )
