@@ -40,6 +40,10 @@ import {useLanguagePrefs} from '#/state/preferences'
  */
 export async function dynamicActivate(locale: AppLanguage) {
   switch (locale) {
+    case AppLanguage.am: {
+      i18n.loadAndActivate({locale, messages: messagesAm})
+      break
+    }
     case AppLanguage.ca: {
       i18n.loadAndActivate({locale, messages: messagesCa})
       await Promise.all([

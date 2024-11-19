@@ -6,6 +6,7 @@ interface Language {
 
 export enum AppLanguage {
   en = 'en',
+  am = 'am',
   ca = 'ca',
   de = 'de',
   en_GB = 'en-GB',
