@@ -218,7 +218,6 @@
     "@react-native/typescript-config": "^0.74.1",
     "@testing-library/jest-native": "^5.4.1",
     "@testing-library/react-native": "^11.5.2",
-    "@types/he": "^1.1.2",
     "@types/jest": "^29.4.0",
     "@types/lodash.chunk": "^4.2.7",
     "@types/lodash.debounce": "^4.0.7",
