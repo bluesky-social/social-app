@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Italian localization\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 11:44+0530\n"
-"PO-Revision-Date: 2024-11-19 14:38+0100\n"
+"PO-Revision-Date: 2024-11-20 08:34+0100\n"
 "Last-Translator: Michele Locati <michele@locati.it>\n"
 "Language-Team: Gabriella Nonino\n"
 "Language: it\n"
@@ -302,7 +302,7 @@ msgstr ""
 
 #: src/components/NewskieDialog.tsx:116
 msgid "{profileName} joined Bluesky {0} ago"
-msgstr "{profileName} si è iscritto a Bluesky {0} giorno/i fa"
+msgstr "{profileName} si è iscritto a Bluesky {0} fa"
 
 #: src/components/NewskieDialog.tsx:111
 msgid "{profileName} joined Bluesky using a starter pack {0} ago"
@@ -5121,12 +5121,12 @@ msgstr "Le impostazioni delle risposte sono scelte dall'autore del thread"
 #: src/view/com/post/Post.tsx:204 src/view/com/posts/FeedItem.tsx:553
 msgctxt "description"
 msgid "Reply to <0><1/></0>"
-msgstr "Rispondi a <0><1/></0>"
+msgstr "Risposta a <0><1/></0>"
 
 #: src/view/com/posts/FeedItem.tsx:544
 msgctxt "description"
 msgid "Reply to a blocked post"
-msgstr "Rispondi ad un post bloccato"
+msgstr "Risposta ad un post bloccato"
 
 #: src/view/com/posts/FeedItem.tsx:546
 msgctxt "description"
@@ -5136,7 +5136,7 @@ msgstr "Rispondi ad un post"
 #: src/view/com/post/Post.tsx:202 src/view/com/posts/FeedItem.tsx:550
 msgctxt "description"
 msgid "Reply to you"
-msgstr "Risposta"
+msgstr "Risposta a te"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:338
 msgid "Reply visibility updated"
