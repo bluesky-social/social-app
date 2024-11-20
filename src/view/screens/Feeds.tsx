@@ -4,7 +4,6 @@ import {AppBskyFeedDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
-import debounce from 'lodash.debounce'
 
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
@@ -131,6 +130,16 @@ export function FeedsScreen(_props: Props) {
   } = useSearchPopularFeedsMutation()
   const {hasSession} = useSession()
   const listRef = React.useRef<FlatList>(null)
+
+  function debounce<T extends (...args: any[]) => void>(func: T, wait: number) {
+    let timeout: NodeJS.Timeout
+    return function (this: ThisParameterType<T>, ...args: Parameters<T>) {
+      clearTimeout(timeout)
+      timeout = setTimeout(() => {
+        func.apply(this, args)
+      }, wait)
+    }
+  }
 
   /**
    * A search query is present. We may not have search results yet.
