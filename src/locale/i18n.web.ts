@@ -110,7 +110,7 @@ export async function dynamicActivate(locale: AppLanguage) {
   i18n.activate(locale)
 }
 
-export async function useLocaleLanguage() {
+export function useLocaleLanguage() {
   const {appLanguage} = useLanguagePrefs()
   useEffect(() => {
     const sanitizedLanguage = sanitizeAppLanguageSetting(appLanguage)
