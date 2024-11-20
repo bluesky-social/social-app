@@ -227,9 +227,6 @@ export async function dynamicActivate(locale: AppLanguage) {
 export function useLocaleLanguage() {
   const {appLanguage} = useLanguagePrefs()
   useEffect(() => {
-    const activateLocale = async () => {
-      await dynamicActivate(sanitizeAppLanguageSetting(appLanguage))
-    }
-    activateLocale()
+    dynamicActivate(sanitizeAppLanguageSetting(appLanguage))
   }, [appLanguage])
 }
