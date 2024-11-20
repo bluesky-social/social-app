@@ -43,7 +43,7 @@ export function HomeHeaderLayoutMobile({
     <Animated.View
       style={[pal.view, pal.border, styles.tabBar, headerMinimalShellTransform]}
       onLayout={e => {
-        headerHeight.value = e.nativeEvent.layout.height
+        headerHeight.set(e.nativeEvent.layout.height)
       }}>
       <View style={[pal.view, styles.topBar]}>
         <View style={[pal.view, {width: 100}]}>

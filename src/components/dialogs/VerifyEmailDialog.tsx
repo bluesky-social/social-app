@@ -146,18 +146,17 @@ export function Inner({
               <ErrorMessage message={error} />
             </View>
           ) : null}
-          <Text style={[a.text_md, a.leading_snug]}>
-            {currentStep === 'StepOne' ? (
-              <>
-                {!reasonText ? (
-                  <>
-                    <Trans>
-                      You'll receive an email at{' '}
-                      <Text style={[a.text_md, a.leading_snug, a.font_bold]}>
-                        {currentAccount?.email}
-                      </Text>{' '}
-                      to verify it's you.
-                    </Trans>{' '}
+          {currentStep === 'StepOne' ? (
+            <View>
+              {reasonText ? (
+                <View style={[a.gap_sm]}>
+                  <Text style={[a.text_md, a.leading_snug]}>{reasonText}</Text>
+                  <Text style={[a.text_md, a.leading_snug]}>
+                    Don't have access to{' '}
+                    <Text style={[a.text_md, a.leading_snug, a.font_bold]}>
+                      {currentAccount?.email}
+                    </Text>
+                    ?{' '}
                     <InlineLinkText
                       to="#"
                       label={_(msg`Change email address`)}
@@ -169,17 +168,41 @@ export function Inner({
                         })
                         return false
                       }}>
-                      <Trans>Need to change it?</Trans>
+                      <Trans>Change your email address</Trans>
                     </InlineLinkText>
-                  </>
-                ) : (
-                  reasonText
-                )}
-              </>
-            ) : (
-              uiStrings[currentStep].message
-            )}
-          </Text>
+                    .
+                  </Text>
+                </View>
+              ) : (
+                <Text style={[a.text_md, a.leading_snug]}>
+                  <Trans>
+                    You'll receive an email at{' '}
+                    <Text style={[a.text_md, a.leading_snug, a.font_bold]}>
+                      {currentAccount?.email}
+                    </Text>{' '}
+                    to verify it's you.
+                  </Trans>{' '}
+                  <InlineLinkText
+                    to="#"
+                    label={_(msg`Change email address`)}
+                    style={[a.text_md, a.leading_snug]}
+                    onPress={e => {
+                      e.preventDefault()
+                      control.close(() => {
+                        openModal({name: 'change-email'})
+                      })
+                      return false
+                    }}>
+                    <Trans>Need to change it?</Trans>
+                  </InlineLinkText>
+                </Text>
+              )}
+            </View>
+          ) : (
+            <Text style={[a.text_md, a.leading_snug]}>
+              {uiStrings[currentStep].message}
+            </Text>
+          )}
         </View>
         {currentStep === 'StepTwo' ? (
           <View>

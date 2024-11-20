@@ -32,6 +32,37 @@ export function ContentHider({
   style?: StyleProp<ViewStyle>
   childContainerStyle?: StyleProp<ViewStyle>
 }>) {
+  const blur = modui?.blurs[0]
+  if (!blur || (ignoreMute && isJustAMute(modui))) {
+    return (
+      <View testID={testID} style={style}>
+        {children}
+      </View>
+    )
+  }
+  return (
+    <ContentHiderActive
+      testID={testID}
+      modui={modui}
+      style={style}
+      childContainerStyle={childContainerStyle}>
+      {children}
+    </ContentHiderActive>
+  )
+}
+
+function ContentHiderActive({
+  testID,
+  modui,
+  style,
+  childContainerStyle,
+  children,
+}: React.PropsWithChildren<{
+  testID?: string
+  modui: ModerationUI
+  style?: StyleProp<ViewStyle>
+  childContainerStyle?: StyleProp<ViewStyle>
+}>) {
   const t = useTheme()
   const {_} = useLingui()
   const {gtMobile} = useBreakpoints()
@@ -40,7 +71,6 @@ export function ContentHider({
   const {labelDefs} = useLabelDefinitions()
   const globalLabelStrings = useGlobalLabelStrings()
   const {i18n} = useLingui()
-
   const blur = modui?.blurs[0]
   const desc = useModerationCauseDescription(blur)
 
@@ -98,14 +128,6 @@ export function ContentHider({
     i18n.locale,
     globalLabelStrings,
   ])
-
-  if (!blur || (ignoreMute && isJustAMute(modui))) {
-    return (
-      <View testID={testID} style={style}>
-        {children}
-      </View>
-    )
-  }
 
   return (
     <View testID={testID} style={[a.overflow_hidden, style]}>
