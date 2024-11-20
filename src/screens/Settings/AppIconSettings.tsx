@@ -1,9 +1,8 @@
-import React from 'react'
 import {Text, View} from 'react-native'
-import AppIcon from 'react-native-dynamic-app-icon'
 import {Image} from 'expo-image'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import * as AppIcon from '@mozzius/expo-dynamic-app-icon'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
@@ -15,7 +14,7 @@ const icons = [
   'default',
   'bonfire',
   'midnight',
-  'nordic-light',
+  'nordic_light',
   'summer',
   'sunset',
   'classic',
