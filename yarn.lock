@@ -4937,10 +4937,10 @@
   resolved "https://registry.yarnpkg.com/@miblanchard/react-native-slider/-/react-native-slider-2.3.1.tgz#79e0f1f9b1ce43ef25ee51ee9256c012e5dfa412"
   integrity sha512-J/hZDBWmXq8fJeOnTVHqIUVDHshqMSpJVxJ4WqwuCBKl5Rke9OBYXIdkSlgi75OgtScAr8FKK5KNkDKHUf6JIg==
 
-"@mozzius/expo-dynamic-app-icon@^1.3.0":
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/@mozzius/expo-dynamic-app-icon/-/expo-dynamic-app-icon-1.3.0.tgz#79c2e64b02dde3f06a5a0e6e5238a63d0763e862"
-  integrity sha512-ZHUX2Iebl/oXOUfx4P22uMcinAtrVAIPI1aWE79K99MCrBl7DR+pRoYQVFfYGhkSPHX/CbSM0Wqd23v74XTqAQ==
+"@mozzius/expo-dynamic-app-icon@^1.3.1":
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/@mozzius/expo-dynamic-app-icon/-/expo-dynamic-app-icon-1.3.1.tgz#78f9a29365bd62a958e15bdd2d67a780739a02e1"
+  integrity sha512-gYTKieV75UDIVo4qagl3KZyJcmgbu3QShhEXK4iqY2unxdeitHn2+Ot5/y+fmSFkufRHnOqGRziA2hSozaKejg==
   dependencies:
     "@expo/image-utils" "^0.3.23"
     expo-modules-core "^1.0.3"
