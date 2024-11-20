@@ -157,6 +157,8 @@ export function sanitizeAppLanguageSetting(appLanguage: string): AppLanguage {
         return AppLanguage.tr
       case 'uk':
         return AppLanguage.uk
+      case 'vi':
+        return AppLanguage.vi
       case 'zh-CN':
         return AppLanguage.zh_CN
       case 'zh-HK':
