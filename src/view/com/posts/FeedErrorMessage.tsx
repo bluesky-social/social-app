@@ -25,7 +25,7 @@ export enum KnownError {
   FeedgenBadResponse = 'FeedgenBadResponse',
   FeedgenOffline = 'FeedgenOffline',
   FeedgenUnknown = 'FeedgenUnknown',
-  FeedNSFPublic = 'FeedNSFPublic',
+  FeedSignedInOnly = 'FeedSignedInOnly',
   FeedTooManyRequests = 'FeedTooManyRequests',
   Unknown = 'Unknown',
 }
@@ -110,8 +110,8 @@ function FeedgenErrorMessage({
         [KnownError.FeedgenOffline]: _l(
           msgLingui`Hmm, the feed server appears to be offline. Please let the feed owner know about this issue.`,
         ),
-        [KnownError.FeedNSFPublic]: _l(
-          msgLingui`This content is not viewable without a Bluesky account.`,
+        [KnownError.FeedSignedInOnly]: _l(
+          msgLingui`This content is only available to signed-in users. Please sign in to view this feed.`,
         ),
         [KnownError.FeedgenUnknown]: _l(
           msgLingui`Hmm, some kind of issue occurred when contacting the feed server. Please let the feed owner know about this issue.`,
@@ -152,7 +152,7 @@ function FeedgenErrorMessage({
 
   const cta = React.useMemo(() => {
     switch (knownError) {
-      case KnownError.FeedNSFPublic: {
+      case KnownError.FeedSignedInOnly: {
         return null
       }
       case KnownError.FeedgenDoesNotExist:
@@ -249,8 +249,8 @@ function detectKnownError(
   if (typeof error !== 'string') {
     error = error.toString()
   }
-  if (error.includes(KnownError.FeedNSFPublic)) {
-    return KnownError.FeedNSFPublic
+  if (error.includes(KnownError.FeedSignedInOnly)) {
+    return KnownError.FeedSignedInOnly
   }
   if (!feedDesc.startsWith('feedgen')) {
     return KnownError.Unknown
