@@ -92,6 +92,7 @@ module.exports = function (config) {
             'Used to save images to your library.',
           NSPhotoLibraryUsageDescription:
             'Used for profile pictures, posts, and other kinds of content',
+          CFBundleSpokenName: 'Blue Sky',
         },
         associatedDomains: ASSOCIATED_DOMAINS,
         splash: {

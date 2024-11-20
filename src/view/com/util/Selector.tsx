@@ -1,4 +1,4 @@
-import React, {createRef, useMemo, useRef, useState} from 'react'
+import {createRef, useMemo, useRef, useState} from 'react'
 import {Animated, Pressable, StyleSheet, View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
