@@ -8,6 +8,7 @@ module.exports = {
     'es',
     'fi',
     'fr',
+    'fr-CA',
     'ga',
     'hi',
     'hu',
