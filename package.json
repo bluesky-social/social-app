@@ -214,6 +214,7 @@
     "@lingui/cli": "^4.5.0",
     "@lingui/macro": "^4.5.0",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.11",
+    "@react-native-community/eslint-config": "^3.0.0",
     "@react-native/typescript-config": "^0.74.1",
     "@testing-library/jest-native": "^5.4.1",
     "@testing-library/react-native": "^11.5.2",
