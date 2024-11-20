@@ -5465,7 +5465,7 @@ msgstr "पोस्ट करें"
 #: src/view/com/post-thread/PostThread.tsx:481
 msgctxt "description"
 msgid "Post"
-msgstr "पोस्ट करें"
+msgstr "पोस्ट"
 
 #: src/view/com/composer/Composer.tsx:917
 msgctxt "action"
