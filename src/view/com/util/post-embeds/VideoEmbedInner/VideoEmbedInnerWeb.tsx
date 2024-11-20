@@ -13,11 +13,13 @@ export function VideoEmbedInnerWeb({
   active,
   setActive,
   onScreen,
+  lastKnownTime,
 }: {
   embed: AppBskyEmbedVideo.View
   active: boolean
   setActive: () => void
   onScreen: boolean
+  lastKnownTime: React.MutableRefObject<number | undefined>
 }) {
   const containerRef = useRef<HTMLDivElement>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
@@ -40,6 +42,12 @@ export function VideoEmbedInnerWeb({
     setHlsLoading,
   })
 
+  useEffect(() => {
+    if (lastKnownTime.current && videoRef.current) {
+      videoRef.current.currentTime = lastKnownTime.current
+    }
+  }, [lastKnownTime])
+
   return (
     <View style={[a.flex_1, a.rounded_md, a.overflow_hidden]}>
       <div ref={containerRef} style={{height: '100%', width: '100%'}}>
@@ -52,6 +60,9 @@ export function VideoEmbedInnerWeb({
             preload="none"
             muted={!focused}
             aria-labelledby={embed.alt ? figId : undefined}
+            onTimeUpdate={e => {
+              lastKnownTime.current = e.currentTarget.currentTime
+            }}
           />
           {embed.alt && (
             <figcaption

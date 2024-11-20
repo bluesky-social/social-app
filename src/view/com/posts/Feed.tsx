@@ -42,10 +42,11 @@ import {PostFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
 import {DiscoverFallbackHeader} from './DiscoverFallbackHeader'
 import {FeedErrorMessage} from './FeedErrorMessage'
+import {FeedItem} from './FeedItem'
 import {FeedShutdownMsg} from './FeedShutdownMsg'
-import {FeedSlice} from './FeedSlice'
+import {ViewFullThread} from './ViewFullThread'
 
-type FeedItem =
+type FeedRow =
   | {
       type: 'loading'
       key: string
@@ -70,6 +71,18 @@ type FeedItem =
       type: 'slice'
       key: string
       slice: FeedPostSlice
+    }
+  | {
+      type: 'sliceItem'
+      key: string
+      slice: FeedPostSlice
+      indexInSlice: number
+      showReplyTo: boolean
+    }
+  | {
+      type: 'sliceViewFullThread'
+      key: string
+      uri: string
     }
   | {
       type: 'interstitialFeeds'
@@ -101,7 +114,7 @@ const followInterstitialType = 'interstitialFollows'
 const progressGuideInterstitialType = 'interstitialProgressGuide'
 const interstials: Record<
   'following' | 'discover' | 'profile',
-  (FeedItem & {
+  (FeedRow & {
     type:
       | 'interstitialFeeds'
       | 'interstitialFollows'
@@ -139,9 +152,9 @@ const interstials: Record<
   ],
 }
 
-export function getFeedPostSlice(feedItem: FeedItem): FeedPostSlice | null {
-  if (feedItem.type === 'slice') {
-    return feedItem.slice
+export function getFeedPostSlice(feedRow: FeedRow): FeedPostSlice | null {
+  if (feedRow.type === 'sliceItem') {
+    return feedRow.slice
   } else {
     return null
   }
@@ -303,8 +316,8 @@ let Feed = ({
     }
   }, [pollInterval])
 
-  const feedItems: FeedItem[] = React.useMemo(() => {
-    let arr: FeedItem[] = []
+  const feedItems: FeedRow[] = React.useMemo(() => {
+    let arr: FeedRow[] = []
     if (KNOWN_SHUTDOWN_FEEDS.includes(feedUri)) {
       arr.push({
         type: 'feedShutdownMsg',
@@ -324,13 +337,50 @@ let Feed = ({
         })
       } else if (data) {
         for (const page of data?.pages) {
-          arr = arr.concat(
-            page.slices.map(s => ({
-              type: 'slice',
-              slice: s,
-              key: s._reactKey,
-            })),
-          )
+          for (const slice of page.slices) {
+            if (slice.isIncompleteThread && slice.items.length >= 3) {
+              const beforeLast = slice.items.length - 2
+              const last = slice.items.length - 1
+              arr.push({
+                type: 'sliceItem',
+                key: slice.items[0]._reactKey,
+                slice: slice,
+                indexInSlice: 0,
+                showReplyTo: false,
+              })
+              arr.push({
+                type: 'sliceViewFullThread',
+                key: slice._reactKey + '-viewFullThread',
+                uri: slice.items[0].uri,
+              })
+              arr.push({
+                type: 'sliceItem',
+                key: slice.items[beforeLast]._reactKey,
+                slice: slice,
+                indexInSlice: beforeLast,
+                showReplyTo:
+                  slice.items[beforeLast].parentAuthor?.did !==
+                  slice.items[beforeLast].post.author.did,
+              })
+              arr.push({
+                type: 'sliceItem',
+                key: slice.items[last]._reactKey,
+                slice: slice,
+                indexInSlice: last,
+                showReplyTo: false,
+              })
+            } else {
+              for (let i = 0; i < slice.items.length; i++) {
+                arr.push({
+                  type: 'sliceItem',
+                  key: slice.items[i]._reactKey,
+                  slice: slice,
+                  indexInSlice: i,
+                  showReplyTo: i === 0,
+                })
+              }
+            }
+          }
         }
       }
       if (isError && !isEmpty) {
@@ -454,10 +504,10 @@ let Feed = ({
   // =
 
   const renderItem = React.useCallback(
-    ({item, index}: ListRenderItemInfo<FeedItem>) => {
-      if (item.type === 'empty') {
+    ({item: row, index: rowIndex}: ListRenderItemInfo<FeedRow>) => {
+      if (row.type === 'empty') {
         return renderEmptyState()
-      } else if (item.type === 'error') {
+      } else if (row.type === 'error') {
         return (
           <FeedErrorMessage
             feedDesc={feed}
@@ -466,7 +516,7 @@ let Feed = ({
             savedFeedConfig={savedFeedConfig}
           />
         )
-      } else if (item.type === 'loadMoreError') {
+      } else if (row.type === 'loadMoreError') {
         return (
           <LoadMoreRetryBtn
             label={_(
@@ -475,25 +525,50 @@ let Feed = ({
             onPress={onPressRetryLoadMore}
           />
         )
-      } else if (item.type === 'loading') {
+      } else if (row.type === 'loading') {
         return <PostFeedLoadingPlaceholder />
-      } else if (item.type === 'feedShutdownMsg') {
+      } else if (row.type === 'feedShutdownMsg') {
         return <FeedShutdownMsg feedUri={feedUri} />
-      } else if (item.type === feedInterstitialType) {
+      } else if (row.type === feedInterstitialType) {
         return <SuggestedFeeds />
-      } else if (item.type === followInterstitialType) {
+      } else if (row.type === followInterstitialType) {
         return <SuggestedFollows feed={feed} />
-      } else if (item.type === progressGuideInterstitialType) {
+      } else if (row.type === progressGuideInterstitialType) {
         return <ProgressGuide />
-      } else if (item.type === 'slice') {
-        if (item.slice.isFallbackMarker) {
+      } else if (row.type === 'sliceItem') {
+        const slice = row.slice
+        if (slice.isFallbackMarker) {
           // HACK
           // tell the user we fell back to discover
           // see home.ts (feed api) for more info
           // -prf
           return <DiscoverFallbackHeader />
         }
-        return <FeedSlice slice={item.slice} hideTopBorder={index === 0} />
+        const indexInSlice = row.indexInSlice
+        const item = slice.items[indexInSlice]
+        return (
+          <FeedItem
+            post={item.post}
+            record={item.record}
+            reason={indexInSlice === 0 ? slice.reason : undefined}
+            feedContext={slice.feedContext}
+            moderation={item.moderation}
+            parentAuthor={item.parentAuthor}
+            showReplyTo={row.showReplyTo}
+            isThreadParent={isThreadParentAt(slice.items, indexInSlice)}
+            isThreadChild={isThreadChildAt(slice.items, indexInSlice)}
+            isThreadLastChild={
+              isThreadChildAt(slice.items, indexInSlice) &&
+              slice.items.length === indexInSlice + 1
+            }
+            isParentBlocked={item.isParentBlocked}
+            isParentNotFound={item.isParentNotFound}
+            hideTopBorder={rowIndex === 0 && indexInSlice === 0}
+            rootPost={slice.items[0].post}
+          />
+        )
+      } else if (row.type === 'sliceViewFullThread') {
+        return <ViewFullThread uri={row.uri} />
       } else {
         return null
       }
@@ -574,3 +649,17 @@ export {Feed}
 const styles = StyleSheet.create({
   feedFooter: {paddingTop: 20},
 })
+
+function isThreadParentAt<T>(arr: Array<T>, i: number) {
+  if (arr.length === 1) {
+    return false
+  }
+  return i < arr.length - 1
+}
+
+function isThreadChildAt<T>(arr: Array<T>, i: number) {
+  if (arr.length === 1) {
+    return false
+  }
+  return i > 0
+}

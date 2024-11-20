@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react'
+import {useEffect, useRef} from 'react'
 import {View} from 'react-native'
 import {ImagePickerAsset} from 'expo-image-picker'
 import {msg} from '@lingui/macro'
