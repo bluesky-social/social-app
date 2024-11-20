@@ -3189,7 +3189,7 @@ msgstr "<0>{0}</0> फ़ॉलो करते हैं"
 
 #: src/components/KnownFollowers.tsx:217
 msgid "Followed by <0>{0}</0> and {1, plural, one {# other} other {# others}}"
-msgstr "<0>{0}</0> and {1, plural, one {# other} other {# others}} फ़ॉलो करते हैं"
+msgstr "<0>{0}</0> और {1, plural, one {# अन्य} other {# अन्य}} फ़ॉलो करते हैं"
 
 #: src/components/KnownFollowers.tsx:204
 msgid "Followed by <0>{0}</0> and <1>{1}</1>"
@@ -3197,7 +3197,7 @@ msgstr "<0>{0}</0> और <1>{1}</1> फ़ॉलो करते हैं"
 
 #: src/components/KnownFollowers.tsx:186
 msgid "Followed by <0>{0}</0>, <1>{1}</1>, and {2, plural, one {# other} other {# others}}"
-msgstr "0>{0}</0>, <1>{1}</1>, और {2, plural, one {# other} other {# others}}फ़ॉलो करते हैं"
+msgstr "<0>{0}</0>, <1>{1}</1>, और {2, plural, one {# अन्य} other {# अन्य}} फ़ॉलो करते हैं"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:404
 msgid "Followed users"
