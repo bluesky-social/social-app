@@ -8,6 +8,7 @@ import {useFocusEffect} from '@react-navigation/native'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {ComposeIcon2} from '#/lib/icons'
+import {debounce} from '#/lib/lodash'
 import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
 import {s} from '#/lib/styles'
@@ -130,16 +131,6 @@ export function FeedsScreen(_props: Props) {
   } = useSearchPopularFeedsMutation()
   const {hasSession} = useSession()
   const listRef = React.useRef<FlatList>(null)
-
-  function debounce<T extends (...args: any[]) => void>(func: T, wait: number) {
-    let timeout: NodeJS.Timeout
-    return function (this: ThisParameterType<T>, ...args: Parameters<T>) {
-      clearTimeout(timeout)
-      timeout = setTimeout(() => {
-        func.apply(this, args)
-      }, wait)
-    }
-  }
 
   /**
    * A search query is present. We may not have search results yet.
