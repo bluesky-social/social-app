@@ -14,8 +14,10 @@ import {atoms as a, tokens, useTheme, web} from '#/alf'
 import {Button} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {BlueskyPlus} from '#/components/dialogs/BlueskyPlus'
+import {Divider} from '#/components/Divider'
 import {GradientFill} from '#/components/GradientFill'
-import {Logotype} from '#/components/icons/BlueskyPlus'
+import {Full as BlueskyPlusLogo} from '#/components/icons/BlueskyPlus'
+import {SquareArrowTopRight_Stroke2_Corner0_Rounded as SquareArrowTopRight} from '#/components/icons/SquareArrowTopRight'
 import {InlineLinkText} from '#/components/Link'
 import {ProgressGuideList} from '#/components/ProgressGuide/List'
 import {Text} from '#/components/Typography'
@@ -74,30 +76,57 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
               onPress={() => subscriptionsDialogControl.open()}
               label={_(msg`Subscribe to Bluesky Plus`)}
               style={[a.p_lg, a.overflow_hidden, a.rounded_md]}>
-              <GradientFill
-                gradient={tokens.gradients.nordic}
-                rotate="270deg"
-              />
-              <View
-                style={[
-                  a.absolute,
-                  a.inset_0,
-                  a.rounded_md,
-                  {borderWidth: 2, borderColor: 'white', opacity: 0.1},
-                ]}
-              />
+              {({hovered}) => (
+                <>
+                  <GradientFill gradient={tokens.gradients.nordic} />
+                  <View
+                    style={[
+                      a.absolute,
+                      t.atoms.bg,
+                      {
+                        borderRadius: 8,
+                        top: a.pt_xs.paddingTop,
+                        bottom: a.pt_xs.paddingTop,
+                        left: a.pt_xs.paddingTop,
+                        right: a.pt_xs.paddingTop,
+                      },
+                    ]}>
+                    {hovered && (
+                      <GradientFill
+                        gradient={tokens.gradients.nordic}
+                        style={{opacity: 0.1}}
+                      />
+                    )}
+                  </View>
 
-              <View style={[a.flex_1, a.relative, a.z_10]}>
-                <Logotype width={100} fill="white" />
+                  <View style={[a.flex_1, a.relative, a.z_10, a.gap_sm]}>
+                    <View style={[a.flex_row, a.justify_between]}>
+                      <BlueskyPlusLogo width={100} fill="nordic" />
+                      <SquareArrowTopRight
+                        fill={t.atoms.text_contrast_low.color}
+                        size="md"
+                      />
+                    </View>
 
-                <View style={[a.pt_xs]}>
-                  <Text style={[a.text_sm, a.leading_tight, {color: 'white'}]}>
-                    <Trans>
-                      Support Bluesky and get access to exclusive features.
-                    </Trans>
-                  </Text>
-                </View>
-              </View>
+                    <Divider />
+
+                    <View style={[a.flex_row, a.justify_between]}>
+                      <Text
+                        style={[
+                          a.text_sm,
+                          a.leading_snug,
+                          a.font_bold,
+                          t.atoms.text_contrast_medium,
+                        ]}>
+                        <Trans>Subscribe now</Trans>
+                      </Text>
+                      <Text style={[a.text_sm, a.leading_snug]}>
+                        <Trans>$8 / month</Trans>
+                      </Text>
+                    </View>
+                  </View>
+                </>
+              )}
             </Button>
             <BlueskyPlus control={subscriptionsDialogControl} />
           </View>

@@ -91,7 +91,7 @@ export function Logotype(props: Props) {
 function Gradients() {
   return (
     <Defs>
-      <LinearGradient id="nordic" x1="0" y1="1" x2="1" y2="0">
+      <LinearGradient id="nordic" x1="0" y1="1" x2="1" y2="1">
         <Stop offset="0" stopColor="#083367" stopOpacity="1" />
         <Stop offset="1" stopColor="#9EE8C1" stopOpacity="1" />
       </LinearGradient>

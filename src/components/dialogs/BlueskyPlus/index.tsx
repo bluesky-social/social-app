@@ -22,6 +22,7 @@ import {GradientFill} from '#/components/GradientFill'
 import {Full as BlueskyPlusLogo} from '#/components/icons/BlueskyPlus'
 import {CheckThick_Stroke2_Corner0_Rounded as CheckThink} from '#/components/icons/Check'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
+import {InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 
@@ -227,6 +228,31 @@ function DialogInner() {
             style={[t.atoms.text]}
           />
         </Button>
+      </View>
+
+      <View style={[a.pt_md]}>
+        <Text style={[a.text_xs]}>
+          <InlineLinkText
+            to="#"
+            label="TODO REPLACE"
+            style={[a.text_xs, t.atoms.text_contrast_low]}>
+            Terms and Conditions
+          </InlineLinkText>{' '}
+          &middot;{' '}
+          <InlineLinkText
+            to="#"
+            label="TODO REPLACE"
+            style={[a.text_xs, t.atoms.text_contrast_low]}>
+            Privacy Policy
+          </InlineLinkText>{' '}
+          &middot;{' '}
+          <InlineLinkText
+            to="#"
+            label="TODO REPLACE"
+            style={[a.text_xs, t.atoms.text_contrast_low]}>
+            EULA
+          </InlineLinkText>
+        </Text>
       </View>
 
       <Dialog.Close />
