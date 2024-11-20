@@ -162,6 +162,12 @@ export function SettingsScreen({}: Props) {
               <Trans>Moderation</Trans>
             </SettingsList.ItemText>
           </SettingsList.LinkItem>
+          <SettingsList.LinkItem to="/subscriptions" label={_(msg`Subscriptions`)}>
+            <SettingsList.ItemIcon icon={HandIcon} />
+            <SettingsList.ItemText>
+              <Trans>Subscriptions</Trans>
+            </SettingsList.ItemText>
+          </SettingsList.LinkItem>
           <SettingsList.LinkItem
             to="/settings/content-and-media"
             label={_(msg`Content and media`)}>

@@ -34,3 +34,12 @@ export type Offering =
         priceId: string
       }
     }
+
+export type Subscription = {
+  group: SubscriptionGroupId
+  platform: PlatformId
+  status: string
+  startsAt: number
+  endsAt: number
+  renewalStatus: string
+}
