@@ -1,8 +1,9 @@
 module.exports = {
   root: true,
   extends: [
-    '@react-native-community',
+    '@react-native',
     'plugin:react/recommended',
+    'plugin:react/jsx-runtime',
     'plugin:react-native-a11y/ios',
     'prettier',
   ],
@@ -19,6 +20,7 @@ module.exports = {
     // Temporary until https://github.com/facebook/react-native/pull/43756 gets into a release.
     'prettier/prettier': 0,
     'react/no-unescaped-entities': 0,
+    'react/prop-types': 0,
     'react-native/no-inline-styles': 0,
     'bsky-internal/avoid-unwrapped-text': [
       'error',
