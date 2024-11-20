@@ -1,4 +1,4 @@
-import {Text, View} from 'react-native'
+import {View} from 'react-native'
 import {Image} from 'expo-image'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -7,8 +7,9 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
 import {CommonNavigatorParams} from '#/lib/routes/types'
-import {atoms as a} from '#/alf'
+import {atoms as a, platform} from '#/alf'
 import * as Layout from '#/components/Layout'
+import {Text} from '#/components/Typography'
 
 const icons = [
   'default',
@@ -42,7 +43,8 @@ export function AppIconSettingsScreen({}: Props) {
               <Image
                 source={getImage(icon)}
                 style={[
-                  {width: 100, height: 100, borderRadius: 20},
+                  {width: 100, height: 100},
+                  platform({ios: {borderRadius: 20}, android: a.rounded_full}),
                   a.curve_continuous,
                 ]}
                 accessibilityIgnoresInvertColors
@@ -64,7 +66,7 @@ function getImage(icon: (typeof icons)[number]) {
       return require(`../../../assets/icon-bonfire.png`)
     case 'midnight':
       return require(`../../../assets/icon-midnight.png`)
-    case 'nordic-light':
+    case 'nordic_light':
       return require(`../../../assets/icon-nordic-light.png`)
     case 'summer':
       return require(`../../../assets/icon-summer.png`)
@@ -89,7 +91,7 @@ function IconName({icon}: {icon: (typeof icons)[number]}) {
     case 'midnight':
       name = _(msg`Midnight`)
       break
-    case 'nordic-light':
+    case 'nordic_light':
       name = _(msg`Nordic Light`)
       break
     case 'summer':
