@@ -1,14 +1,14 @@
 module.exports = {
   root: true,
   extends: [
+    '@react-native',
     'plugin:react/recommended',
-    'plugin:react-hooks/recommended',
     'plugin:react/jsx-runtime',
     'plugin:react-native-a11y/ios',
+    'prettier',
   ],
   parser: '@typescript-eslint/parser',
   plugins: [
-    '@react-native',
     '@typescript-eslint',
     'react',
     'lingui',
@@ -112,9 +112,6 @@ module.exports = {
   ],
   settings: {
     componentWrapperFunctions: ['observer'],
-    react: {
-      version: 'detect',
-    },
   },
   parserOptions: {
     sourceType: 'module',
