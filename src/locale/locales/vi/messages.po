@@ -419,7 +419,7 @@ msgstr "Tài khoản đã bị chặn"
 
 #: src/view/com/profile/ProfileMenu.tsx:145
 msgid "Account followed"
-msgstr "Taì khoản được theo dõi"
+msgstr "Tài khoản được theo dõi"
 
 #: src/view/com/profile/ProfileMenu.tsx:108
 msgid "Account muted"
@@ -539,7 +539,7 @@ msgstr "Thêm bảng tin từ gói khởi đầu của bạn!"
 
 #: src/screens/Feeds/NoFollowingFeed.tsx:41
 msgid "Add the default feed of only people you follow"
-msgstr "THêm bảng tin mặc định chỉ bao gồm người bạn theo dõi"
+msgstr "Thêm bảng tin mặc định chỉ bao gồm người bạn theo dõi"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:386
 msgid "Add the following DNS record to your domain:"
@@ -858,7 +858,7 @@ msgstr "Giao diện"
 #: src/screens/Feeds/NoSavedFeedsOfAnyType.tsx:47
 #: src/screens/Home/NoFeedsPinned.tsx:93
 msgid "Apply default recommended feeds"
-msgstr "Ap dụng bảng tin được đề xuất mặc định"
+msgstr "Áp dụng bảng tin được đề xuất mặc định"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:825
 msgid "Archived from {0}"
@@ -1369,7 +1369,7 @@ msgstr "Chọn dịch vụ"
 
 #: src/screens/Onboarding/StepFinished.tsx:276
 msgid "Choose the algorithms that power your custom feeds."
-msgstr "Chọn thuật toán để cung cấp năng lượng cho bảng tin tùy chỉnh của bạn."
+msgstr "Chọn thuật toán để vận hành các bảng tin tùy chỉnh của bạn."
 
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:107
 msgid "Choose this color as your avatar"
@@ -3255,7 +3255,7 @@ msgstr "Giúp đỡ"
 
 #: src/screens/Onboarding/StepProfile/index.tsx:237
 msgid "Help people know you're not a bot by uploading a picture or creating an avatar."
-msgstr "Giúp người khác biết bạn không phải là bot bằng cách tải tải lên hoặc tạo hình đại diện."
+msgstr "Giúp người khác biết bạn không phải là bot bằng cách tải lên hoặc tạo hình đại diện."
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:187
 msgid "Here is your app password!"
