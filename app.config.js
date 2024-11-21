@@ -222,7 +222,7 @@ module.exports = function (config) {
               'en',
               'ca',
               'de',
-              'en_GB',
+              'en-GB',
               'es',
               'fi',
               'fr',
