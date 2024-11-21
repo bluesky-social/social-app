@@ -1,31 +1,38 @@
 import {Linking} from 'react-native'
-import {useQuery, useMutation} from '@tanstack/react-query'
+import {useMutation,useQuery} from '@tanstack/react-query'
 
+import {api} from '#/state/purchases/api'
+import {
+  parseOfferingId,
+  PlatformId,
+  SubscriptionGroupId,
+  SubscriptionOffering,
+} from '#/state/purchases/types'
 import {IS_DEV} from '#/env'
-import {api} from '#/state/purchases/subscriptions/api'
-import {OfferingId, PlatformId, Offering, SubscriptionGroupId} from '#/state/purchases/subscriptions/types'
 
 export function useSubscriptionGroup(group: SubscriptionGroupId) {
-  return useQuery<{ offerings: Offering[] }>({
+  return useQuery<{offerings: SubscriptionOffering[]}>({
     queryKey: ['subscription-group', group],
     async queryFn() {
-      const { data, error } = await api(`/subscriptions/${group}?platform=web`).json()
+      const {data, error} = await api(
+        `/subscriptions/${group}?platform=web`,
+      ).json()
       if (error || !data) {
         throw new Error('Failed to fetch subscription group')
       }
 
-      const { offerings } = data
+      const {offerings} = data
 
       return {
         offerings: offerings.map((o: any) => ({
-          id: o.id as OfferingId,
+          id: parseOfferingId(o.id),
           platform: PlatformId.Web,
           package: {
             priceId: o.productId,
           },
         })),
       }
-    }
+    },
   })
 }
 
@@ -35,7 +42,11 @@ export function usePurchaseOffering() {
       did,
       email,
       offering,
-    }: { did: string, email: string, offering: Offering }) {
+    }: {
+      did: string
+      email: string
+      offering: SubscriptionOffering
+    }) {
       if (offering.platform !== PlatformId.Web) {
         throw new Error('Unsupported platform')
       }
@@ -59,6 +70,6 @@ export function usePurchaseOffering() {
       }
 
       Linking.openURL(data.checkoutUrl)
-    }
+    },
   })
 }

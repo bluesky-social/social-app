@@ -1,6 +1,6 @@
 import {Linking} from 'react-native'
-import {useMutation} from '@tanstack/react-query'
 import Purchases from 'react-native-purchases'
+import {useMutation} from '@tanstack/react-query'
 
 export function useManageSubscription() {
   return useMutation({

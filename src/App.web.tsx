@@ -30,6 +30,7 @@ import {init as initPersistedState} from '#/state/persisted'
 import {Provider as PrefsStateProvider} from '#/state/preferences'
 import {Provider as LabelDefsProvider} from '#/state/preferences/label-defs'
 import {Provider as ModerationOptsProvider} from '#/state/preferences/moderation-opts'
+import {Provider as PurchasesProvider} from '#/state/purchases'
 import {Provider as UnreadNotifsProvider} from '#/state/queries/notifications/unread'
 import {
   Provider as SessionProvider,
@@ -110,6 +111,8 @@ function InnerApp() {
                 // Resets the entire tree below when it changes:
                 key={currentAccount?.did}>
                 <QueryProvider currentDid={currentAccount?.did}>
+                  <PurchasesProvider>
+
                   <ComposerProvider>
                     <StatsigProvider>
                       <MessagesProvider>
@@ -139,6 +142,7 @@ function InnerApp() {
                       </MessagesProvider>
                     </StatsigProvider>
                   </ComposerProvider>
+                  </PurchasesProvider>
                 </QueryProvider>
                 <ToastContainer />
               </React.Fragment>

@@ -1,9 +1,9 @@
 import {Linking} from 'react-native'
 import {useMutation} from '@tanstack/react-query'
 
-import {IS_DEV} from '#/env'
+import {api} from '#/state/purchases/api'
 import {useSession} from '#/state/session'
-import {api} from '#/state/purchases/subscriptions/api'
+import {IS_DEV} from '#/env'
 
 export function useManageSubscription() {
   const {currentAccount} = useSession()
@@ -16,8 +16,10 @@ export function useManageSubscription() {
         method: 'POST',
         json: {
           did: currentAccount!.did,
-          redirecturl: IS_DEV ? 'http://localhost:19006/subscriptions' : 'https://bsky.app/subscriptions',
-        }
+          redirecturl: IS_DEV
+            ? 'http://localhost:19006/subscriptions'
+            : 'https://bsky.app/subscriptions',
+        },
       }).json()
 
       if (error || !data) {

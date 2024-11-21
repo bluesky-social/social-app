@@ -1,23 +1,29 @@
-import React from 'react'
-import {useQuery, useMutation} from '@tanstack/react-query'
-import Purchases, { PURCHASES_ERROR_CODE } from 'react-native-purchases'
+import Purchases, {PURCHASES_ERROR_CODE} from 'react-native-purchases'
+import {useMutation,useQuery} from '@tanstack/react-query'
 
 import {isIOS} from '#/platform/detection'
-import {api} from '#/state/purchases/subscriptions/api'
-import {OfferingId, PlatformId, Offering, SubscriptionGroupId} from '#/state/purchases/subscriptions/types'
+import {api} from '#/state/purchases/api'
+import {
+  parseOfferingId,
+  PlatformId,
+  SubscriptionGroupId,
+  SubscriptionOffering,
+} from '#/state/purchases/types'
 
 export function useSubscriptionGroup(group: SubscriptionGroupId) {
-  return useQuery<{ offerings: Offering[] }>({
+  return useQuery<{offerings: SubscriptionOffering[]}>({
     queryKey: ['subscription-group', group],
     async queryFn() {
       const platform = isIOS ? 'ios' : 'android'
-      const { data, error, response } = await api(`/subscriptions/${group}?platform=${platform}`).json()
+      const {data, error, response} = await api(
+        `/subscriptions/${group}?platform=${platform}`,
+      ).json()
       if (error || !data) {
         console.log(error, response)
         throw new Error('Failed to fetch subscription group')
       }
 
-      const { offerings } = data
+      const {offerings} = data
       const productIds = offerings.map((o: any) => {
         return isIOS ? o.productId : o.productId.split(':')[0]
       })
@@ -28,16 +34,18 @@ export function useSubscriptionGroup(group: SubscriptionGroupId) {
 
       return {
         offerings: offerings.map((o: any) => {
-          const product = products.find((p: any) => p.identifier === o.productId)
+          const product = products.find(
+            (p: any) => p.identifier === o.productId,
+          )
           return {
-            id: o.id as OfferingId,
+            id: parseOfferingId(o.id),
             platform: isIOS ? PlatformId.Ios : PlatformId.Android,
             price: product?.priceString,
             package: product,
           }
         }),
       }
-    }
+    },
   })
 }
 
@@ -47,7 +55,11 @@ export function usePurchaseOffering() {
       did,
       email,
       offering,
-    }: { did: string, email: string, offering: Offering }) {
+    }: {
+      did: string
+      email: string
+      offering: SubscriptionOffering
+    }) {
       if (offering.platform === PlatformId.Web) {
         throw new Error('Unsupported platform')
       }
@@ -63,6 +75,6 @@ export function usePurchaseOffering() {
 
         throw e
       }
-    }
+    },
   })
 }

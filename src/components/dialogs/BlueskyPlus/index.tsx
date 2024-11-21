@@ -1,17 +1,18 @@
 import React from 'react'
 import {View} from 'react-native'
+import {PURCHASES_ERROR_CODE} from 'react-native-purchases'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {
-  OfferingId,
-  SubscriptionGroupId,
-} from '#/state/purchases/subscriptions/types'
-import {
   usePurchaseOffering,
   useSubscriptionGroup,
-} from '#/state/purchases/subscriptions/useSubscriptionGroup'
-import {parseOfferingId} from '#/state/purchases/subscriptions/util'
+} from '#/state/purchases/hooks/useSubscriptionGroup'
+import {
+  SubscriptionGroupId,
+  SubscriptionOfferingId,
+} from '#/state/purchases/types'
+import {parseOfferingId} from '#/state/purchases/types'
 import {useSession} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, tokens, useBreakpoints, useTheme} from '#/alf'
@@ -22,7 +23,7 @@ import {GradientFill} from '#/components/GradientFill'
 import {Full as BlueskyPlusLogo} from '#/components/icons/BlueskyPlus'
 import {CheckThick_Stroke2_Corner0_Rounded as CheckThink} from '#/components/icons/Check'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
-import {InlineLinkText} from '#/components/Link'
+import {InlineLinkText, Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 
@@ -30,20 +31,20 @@ export function BlueskyPlus({control}: {control: Dialog.DialogControlProps}) {
   return (
     <Dialog.Outer control={control}>
       <Dialog.Handle />
-      <DialogInner />
+      <DialogInner control={control} />
     </Dialog.Outer>
   )
 }
 
-function DialogInner() {
+function DialogInner({control}: {control: Dialog.DialogControlProps}) {
   const t = useTheme()
   const {_} = useLingui()
   const {gtMobile} = useBreakpoints()
   const {currentAccount} = useSession()
   const copy = useCoreOfferingCopy()
 
-  const [offeringId, setOfferingId] = React.useState<OfferingId>(
-    OfferingId.CoreAnnual,
+  const [offeringId, setOfferingId] = React.useState<SubscriptionOfferingId>(
+    SubscriptionOfferingId.CoreAnnual,
   )
   const {data: coreOffering} = useSubscriptionGroup(SubscriptionGroupId.Core)
   const {mutateAsync: purchaseOffering, isPending} = usePurchaseOffering()
@@ -57,13 +58,29 @@ function DialogInner() {
         throw new Error('No offering')
       }
 
-      await purchaseOffering({
-        did: currentAccount.did,
-        email: currentAccount.email!,
-        offering,
+      control.close(async () => {
+        try {
+          await purchaseOffering({
+            did: currentAccount.did,
+            email: currentAccount.email!,
+            offering,
+          })
+        } catch (e: any) {
+          /**
+           * @see https://www.revenuecat.com/docs/test-and-launch/errors
+           */
+          if (e.code === PURCHASES_ERROR_CODE.PURCHASE_CANCELLED_ERROR) {
+            control.open()
+          } else {
+            Toast.show(
+              _(msg`Hmmmm, something went wrong. Please try again.`),
+              'xmark',
+            )
+          }
+        }
       })
     } catch (e: any) {
-      Toast.show(_(msg`Could not take you to checkout`), 'xmark')
+      Toast.show(_(msg`Hmmmm. We couldn't locate that subscription.`), 'xmark')
     }
   }
 
@@ -76,7 +93,7 @@ function DialogInner() {
       ]}>
       <BlueskyPlusLogo width={100} fill="nordic" />
 
-      <Text style={[a.text_3xl, a.font_heavy, a.pt_lg]}>
+      <Text style={[a.text_3xl, a.font_heavy, a.pt_md]}>
         <Trans>Let's build the social web.</Trans>
       </Text>
 
@@ -99,7 +116,10 @@ function DialogInner() {
         values={[offeringId]}
         onChange={values => setOfferingId(parseOfferingId(values[0]))}
         style={[a.w_full, a.gap_sm, a.pt_lg]}>
-        {[OfferingId.CoreMonthly, OfferingId.CoreAnnual].map(id => {
+        {[
+          SubscriptionOfferingId.CoreMonthly,
+          SubscriptionOfferingId.CoreAnnual,
+        ].map(id => {
           return (
             <Toggle.Item key={id} name={id} label={_(msg`Monthly plan`)}>
               {({selected, hovered}) => (
@@ -209,7 +229,18 @@ function DialogInner() {
         })}
       </Toggle.Group>
 
-      <View style={[a.pt_md]}>
+      <View style={[a.flex_row, a.pt_md, a.gap_sm]}>
+        <Link
+          to="/subscriptions"
+          label={_(msg`Learn more about Bluesky+`)}
+          variant="solid"
+          color="secondary"
+          size="large"
+          style={[a.flex_1]}>
+          <ButtonText style={[a.flex_1]}>
+            <Trans>Learn more</Trans>
+          </ButtonText>
+        </Link>
         <Button
           label={_(msg`Subscribe`)}
           variant="solid"
@@ -217,7 +248,7 @@ function DialogInner() {
           size="large"
           onPress={onPressSubscribe}
           disabled={isPending}
-          style={[a.overflow_hidden]}>
+          style={[a.flex_1, a.overflow_hidden]}>
           <GradientFill gradient={tokens.gradients.nordic} />
           <ButtonText style={[t.atoms.text]}>
             <Trans>Subscribe</Trans>
@@ -264,12 +295,12 @@ function useCoreOfferingCopy() {
   const {_} = useLingui()
   return React.useMemo(() => {
     return {
-      [OfferingId.CoreMonthly]: {
+      [SubscriptionOfferingId.CoreMonthly]: {
         title: _(msg`1 month`),
         price: _(msg`$8 / month`),
         discount: undefined,
       },
-      [OfferingId.CoreAnnual]: {
+      [SubscriptionOfferingId.CoreAnnual]: {
         title: _(msg`12 months`),
         price: _(msg`$72 / year`),
         discount: _(msg`Save 25%`),

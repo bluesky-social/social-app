@@ -6,7 +6,8 @@ import {useLingui} from '@lingui/react'
 import {FEEDBACK_FORM_URL, HELP_DESK_URL} from '#/lib/constants'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {useKawaiiMode} from '#/state/preferences/kawaii'
-import {useEntitlements} from '#/state/purchases/subscriptions/useEntitlements'
+import {usePurchases} from '#/state/purchases'
+import {EntitlementId} from '#/state/purchases/types'
 import {useSession} from '#/state/session'
 import {DesktopFeeds} from '#/view/shell/desktop/Feeds'
 import {DesktopSearch} from '#/view/shell/desktop/Search'
@@ -27,8 +28,10 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
   const {_} = useLingui()
   const {hasSession, currentAccount} = useSession()
   const subscriptionsDialogControl = useDialogControl()
-  const {data: entitlements} = useEntitlements()
-  const isSubscribed = entitlements?.some(e => e.id === 'core')
+  const purchases = usePurchases()
+  const isSubscribed =
+    purchases.status === 'ready' &&
+    purchases.entitlements?.some(e => e.id === EntitlementId.Core)
 
   const kawaii = useKawaiiMode()
 

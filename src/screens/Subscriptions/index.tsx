@@ -5,20 +5,27 @@ import {useLingui} from '@lingui/react'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {CommonNavigatorParams} from '#/lib/routes/types'
-import {useSubscriptionsState} from '#/state/purchases/subscriptions/useSubscriptionsState'
-import {useSyncPurchases} from '#/state/purchases/subscriptions/useSyncPurchases'
-import {useManageSubscription} from '#/state/purchases/subscriptions/useManageSubscription'
-import {Subscription} from '#/state/purchases/subscriptions/types'
+import {PurchasesState,usePurchases} from '#/state/purchases'
+import {useManageSubscription} from '#/state/purchases/hooks/useManageSubscription'
+import {SubscriptionGroupId} from '#/state/purchases/types'
+import {APISubscription} from '#/state/purchases/types'
 import {CenteredView} from '#/view/com/util/Views'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, tokens,useTheme} from '#/alf'
+import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {BlueskyPlus} from '#/components/dialogs/BlueskyPlus'
+import {GradientFill} from '#/components/GradientFill'
+import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as Rotate} from '#/components/icons/ArrowRotateCounterClockwise'
+import {Full as BlueskyPlusLogo} from '#/components/icons/BlueskyPlus'
+import {CheckThick_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
+import {Clock_Stroke2_Corner0_Rounded as Clock} from '#/components/icons/Clock'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
+import {SettingsGear2_Stroke2_Corner0_Rounded as Gear} from '#/components/icons/SettingsGear2'
 import * as Layout from '#/components/Layout'
+import {createStaticClick,InlineLinkText, Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
-import {InlineLinkText, createStaticClick} from '#/components/Link'
 
 export type ScreenProps = NativeStackScreenProps<
   CommonNavigatorParams,
@@ -27,22 +34,7 @@ export type ScreenProps = NativeStackScreenProps<
 
 export function Subscriptions(_props: ScreenProps) {
   const {_} = useLingui()
-  const {data: state, isLoading: isStateLoading} =
-    useSubscriptionsState()
-  const isSubscribed = state?.entitlements?.some(e => e.id === 'core')
-  const control = useDialogControl()
-
-  const {mutateAsync: syncPurchases} = useSyncPurchases()
-  const [data, setData] = React.useState<any>(null)
-
-  const sync = async () => {
-    try {
-      const data = await syncPurchases()
-      setData(data)
-    } catch (e: any) {
-      setData({ message: e.message })
-    }
-  }
+  const purchases = usePurchases()
 
   return (
     <Layout.Screen>
@@ -50,43 +42,14 @@ export function Subscriptions(_props: ScreenProps) {
 
       <Layout.Content>
         <CenteredView sideBorders={true} style={[a.util_screen_outer]}>
-          <View style={[a.px_xl, a.py_xl, a.gap_lg]}>
-              {isStateLoading ? (
-                <Loader />
-              ) : (
-                <>
-                  {isSubscribed ? (
-                    <CoreSubscriptions subscriptions={state!.subscriptions} />
-                  ) : (
-                    <>
-                      <Button
-                        label={_('Subscribe')}
-                        onPress={() => control.open()}
-                        size="large"
-                        variant="solid"
-                        color="primary">
-                        <ButtonText>Subscribe</ButtonText>
-                        <ButtonIcon icon={Plus} />
-                      </Button>
-                      <BlueskyPlus control={control} />
-                    </>
-                  )}
-                </>
-              )}
-
-              <Button
-                label={_('Subscribe')}
-                onPress={() => sync()}
-                size="large"
-                variant="solid"
-                color="secondary">
-                <ButtonText>Restore Purchase</ButtonText>
-                <ButtonIcon icon={Plus} />
-              </Button>
-
-              {data && (
-                <Text>{JSON.stringify(data, null, 2)}</Text>
-              )}
+          <View style={[a.px_xl, a.py_xl]}>
+            {purchases.status === 'loading' ? (
+              <Loader />
+            ) : purchases.status === 'error' ? (
+              <View />
+            ) : (
+              <Core state={purchases} />
+            )}
           </View>
         </CenteredView>
       </Layout.Content>
@@ -94,33 +57,263 @@ export function Subscriptions(_props: ScreenProps) {
   )
 }
 
-function CoreSubscriptions(props: { subscriptions: Subscription[] }) {
+function Core({
+  state,
+}: {
+  state: Exclude<PurchasesState, {status: 'loading' | 'error'}>
+}) {
+  const t = useTheme()
+  const {_} = useLingui()
+  const control = useDialogControl()
+  const coreSubscriptions = state.subscriptions.filter(
+    s => s.group === SubscriptionGroupId.Core,
+  )
+  const isSubscribedToCore = !!coreSubscriptions.length
+  console.log(state)
+
+  const features = [
+    {
+      available: true,
+      icon: Check,
+      text: _(msg`Bluesky+ supporter badge`),
+    },
+    {
+      available: true,
+      icon: Check,
+      text: _(msg`Custom app icons`),
+    },
+    {
+      available: true,
+      icon: Check,
+      text: _(msg`Profile customizations`),
+    },
+    {
+      available: true,
+      icon: Check,
+      text: _(msg`Higher video upload limits`),
+    },
+    {
+      available: true,
+      icon: Check,
+      text: _(msg`High quality video resolution`),
+    },
+    {
+      available: false,
+      icon: Clock,
+      text: _(msg`Inline post translations (coming soon)`),
+    },
+    {
+      available: false,
+      icon: Clock,
+      text: _(msg`Post analytics (coming soon)`),
+    },
+    {
+      available: false,
+      icon: Clock,
+      text: _(msg`Bookmark folders (coming soon)`),
+    },
+  ]
+
+  return (
+    <View style={[a.pt_sm]}>
+      <BlueskyPlusLogo width={130} fill="nordic" />
+
+      {isSubscribedToCore ? (
+        <View style={[a.pt_md]}>
+          <CoreSubscriptions subscriptions={state.subscriptions} />
+        </View>
+      ) : null}
+
+      {!isSubscribedToCore && (
+        <>
+          {state.config.nativePurchaseRestricted === 'yes' ? (
+            <View style={[a.pt_md]}>
+              <Admonition type="info">
+                <Trans>
+                  Another account on this device is already subscribed to
+                  Bluesky+. Please subscribe additional accounts through our web
+                  application.
+                </Trans>
+              </Admonition>
+            </View>
+          ) : (
+            <>
+              <Text style={[a.text_3xl, a.font_heavy, a.pt_md, a.pb_xs]}>
+                <Trans>Building a better internet needs your support.</Trans>
+              </Text>
+
+              <View style={[a.gap_xs]}>
+                <Text
+                  style={[
+                    a.text_md,
+                    a.leading_snug,
+                    a.pt_xs,
+                    t.atoms.text_contrast_medium,
+                  ]}>
+                  <Trans>
+                    Subscribing to Bluesky+ helps ensure that our work to build
+                    an open, secure, and user-first internet can continue.
+                  </Trans>
+                </Text>
+                <Text
+                  style={[
+                    a.text_md,
+                    a.leading_snug,
+                    a.pt_xs,
+                    t.atoms.text_contrast_medium,
+                  ]}>
+                  <Trans>Plus, you'll get access to exclusive features!</Trans>
+                </Text>
+              </View>
+
+              <View
+                style={[
+                  a.my_md,
+                  a.p_lg,
+                  a.gap_sm,
+                  a.rounded_sm,
+                  t.atoms.bg_contrast_25,
+                ]}>
+                {features.map(f => (
+                  <View key={f.text} style={[a.flex_row, a.gap_md]}>
+                    <View style={{paddingTop: 2}}>
+                      <f.icon
+                        fill={
+                          f.available
+                            ? t.palette.primary_500
+                            : t.atoms.text_contrast_low.color
+                        }
+                        size="sm"
+                      />
+                    </View>
+                    <Text
+                      style={[
+                        a.text_md,
+                        a.leading_snug,
+                        f.available
+                          ? t.atoms.text
+                          : t.atoms.text_contrast_medium,
+                      ]}>
+                      {f.text}
+                    </Text>
+                  </View>
+                ))}
+              </View>
+
+              <Button
+                label={_('Subscribe')}
+                onPress={() => control.open()}
+                size="large"
+                variant="solid"
+                color="primary"
+                style={[a.overflow_hidden]}>
+                <GradientFill gradient={tokens.gradients.nordic} />
+                <ButtonText style={[t.atoms.text]}>
+                  <Trans>Subscribe</Trans>
+                </ButtonText>
+                <ButtonIcon
+                  icon={Plus}
+                  position="right"
+                  style={[t.atoms.text]}
+                />
+              </Button>
+              <BlueskyPlus control={control} />
+            </>
+          )}
+        </>
+      )}
+
+      <View style={[a.pt_md]}>
+        <Text style={[a.mb_md, a.text_xs]}>
+          <InlineLinkText
+            to="#"
+            label="TODO REPLACE"
+            style={[a.text_xs, t.atoms.text_contrast_low]}>
+            Terms and Conditions
+          </InlineLinkText>{' '}
+          &middot;{' '}
+          <InlineLinkText
+            to="#"
+            label="TODO REPLACE"
+            style={[a.text_xs, t.atoms.text_contrast_low]}>
+            Privacy Policy
+          </InlineLinkText>{' '}
+          &middot;{' '}
+          <InlineLinkText
+            to="#"
+            label="TODO REPLACE"
+            style={[a.text_xs, t.atoms.text_contrast_low]}>
+            EULA
+          </InlineLinkText>
+        </Text>
+
+        <Admonition type="tip">
+          <Trans>
+            Learn more about Bluesky+ and our roadmap{' '}
+            <InlineLinkText
+              to="https://bsky.social/about"
+              label={_(msg`Learn more in our FAQ`)}>
+              here
+            </InlineLinkText>
+          </Trans>
+        </Admonition>
+      </View>
+    </View>
+  )
+}
+
+function CoreSubscriptions(props: {subscriptions: APISubscription[]}) {
   const t = useTheme()
   const {_, i18n} = useLingui()
   const {mutateAsync: manageSubscription} = useManageSubscription()
 
-  return props.subscriptions.map(sub => (
-    <View style={[a.p_lg, a.rounded_md, a.border, a.gap_xs, t.atoms.border_contrast_low]}>
-      <Text style={[a.text_lg, a.font_heavy]}>Bluesky+</Text>
+  return props.subscriptions.map(sub => {
+    const endDate = i18n.date(new Date(sub.periodEndsAt), {dateStyle: 'medium'})
+    const StatusIcon = sub.renews ? Rotate : Clock
+    return (
+      <View
+        key={sub.purchasedAt}
+        style={[
+          a.p_lg,
+          a.py_md,
+          a.rounded_md,
+          a.border,
+          a.gap_xs,
+          a.overflow_hidden,
+          t.atoms.border_contrast_low,
+        ]}>
+        <GradientFill
+          gradient={tokens.gradients.nordic}
+          style={{opacity: 0.1}}
+        />
 
-      {sub.renews ? (
-        <Text style={[a.text_sm]}>
-          <Text style={[a.text_sm, a.font_bold, t.atoms.text_contrast_medium]}><Trans>Renews:</Trans></Text>{' '}
-          <Text style={[a.text_sm]}>{i18n.date(new Date(sub.periodEndsAt), { dateStyle: "medium", timeStyle: "medium" })}</Text>
-        </Text>
-      ) : (
-        <Text style={[a.text_sm]}>
-          <Text style={[a.text_sm, a.font_bold, t.atoms.text_contrast_medium]}><Trans>Ends:</Trans></Text>{' '}
-          <Text style={[a.text_sm]}>{i18n.date(new Date(sub.periodEndsAt), { dateStyle: "medium" })}</Text>
-        </Text>
-      )}
+        <View style={[a.flex_row, a.justify_between, a.align_center]}>
+          <View>
+            <View style={[a.flex_row, a.align_center, a.gap_xs]}>
+              <Text
+                style={[a.text_md, a.font_bold, t.atoms.text_contrast_medium]}>
+                Active
+              </Text>
+            </View>
 
-      <InlineLinkText
-        label={_('Manage subscription')}
-        {...createStaticClick(() => {manageSubscription()})}
-      >
-        <Trans>Manage subscription</Trans>
-      </InlineLinkText>
-    </View>
-  ))
+            <View style={[a.flex_row, a.align_center, a.gap_xs]}>
+              <StatusIcon size="sm" fill={t.atoms.text_contrast_low.color} />
+              <Text style={[a.text_sm]}>{endDate}</Text>
+            </View>
+          </View>
+          <Link
+            label={_('Manage subscription')}
+            size="small"
+            variant="ghost"
+            shape="round"
+            {...createStaticClick(() => {
+              manageSubscription()
+            })}
+            style={[a.justify_center]}>
+            <ButtonIcon icon={Gear} size="lg" />
+          </Link>
+        </View>
+      </View>
+    )
+  })
 }
