@@ -436,14 +436,14 @@ function StarterPackEmbed({
 
 // from #/lib/strings/starter-pack.ts
 function getStarterPackImage(starterPack: AppBskyGraphDefs.StarterPackView) {
-  const rkey = getRkey(starterPack.uri)
+  const rkey = getRkey({uri: starterPack.uri})
   return `https://ogcard.cdn.bsky.app/start/${starterPack.creator.did}/${rkey}`
 }
 
 function getStarterPackHref(
   starterPack: AppBskyGraphDefs.StarterPackViewBasic,
 ) {
-  const rkey = getRkey(starterPack.uri)
+  const rkey = getRkey({uri: starterPack.uri})
   const handleOrDid = starterPack.creator.handle || starterPack.creator.did
   return `/starter-pack/${handleOrDid}/${rkey}`
 }
