@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Italian localization\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 11:44+0530\n"
-"PO-Revision-Date: 2024-11-21 10:10+0100\n"
+"POT-Creation-Date: 2024-11-20 10:25+0000\n"
+"PO-Revision-Date: 2024-11-21 11:08+0100\n"
 "Last-Translator: Michele Locati <michele@locati.it>\n"
 "Language-Team: \n"
 "Language: it\n"
@@ -29,7 +29,7 @@ msgstr "{0, plural, one {# giorno} other {# giorni}}"
 
 #: src/lib/hooks/useTimeAgo.ts:146
 msgid "{0, plural, one {# hour} other {# hours}}"
-msgstr "{0, plural, one {# hour} other {# hours}}"
+msgstr "{0, plural, one {# ora} other {# ore}}"
 
 #: src/components/moderation/LabelsOnMe.tsx:53
 msgid "{0, plural, one {# label has been placed on this account} other {# labels have been placed on this account}}"
@@ -41,7 +41,7 @@ msgstr "{0, plural, one {# etichetta è stata applicata a questo contenuto} othe
 
 #: src/lib/hooks/useTimeAgo.ts:136
 msgid "{0, plural, one {# minute} other {# minutes}}"
-msgstr "{0, plural, one {# minute} other {# minutes}}"
+msgstr "{0, plural, one {# minuto} other {# minuti}}"
 
 #: src/lib/hooks/useTimeAgo.ts:167
 msgid "{0, plural, one {# month} other {# months}}"
@@ -58,12 +58,12 @@ msgstr "{0, plural, one {# secondo} other {# secondi}}"
 #: src/components/ProfileHoverCard/index.web.tsx:398
 #: src/screens/Profile/Header/Metrics.tsx:22
 msgid "{0, plural, one {follower} other {followers}}"
-msgstr "{0, plural, one {follower} other {followers}}"
+msgstr "{0, plural, one {follower} other {follower}}"
 
 #: src/components/ProfileHoverCard/index.web.tsx:402
 #: src/screens/Profile/Header/Metrics.tsx:26
 msgid "{0, plural, one {following} other {following}}"
-msgstr "{0, plural, one {following} other {following}}"
+msgstr "{0, plural, one {seguito} other {seguiti}}"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:305
 msgid "{0, plural, one {Like (# like)} other {Like (# likes)}}"
@@ -71,23 +71,23 @@ msgstr "{0, plural, one {Like (# like)} other {Like (# like)}}"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:442
 msgid "{0, plural, one {like} other {likes}}"
-msgstr "{0, plural, one {like} other {likes}}"
+msgstr "{0, plural, one {like} other {like}}"
 
 #: src/components/FeedCard.tsx:213 src/view/com/feeds/FeedSourceCard.tsx:303
 msgid "{0, plural, one {Liked by # user} other {Liked by # users}}"
-msgstr "{0, plural, one {# utente ha messo like} other {# utenti hanno messo like}}"
+msgstr "{0, plural, one {Piace a # utente} other {Piace a # utenti}}"
 
 #: src/screens/Profile/Header/Metrics.tsx:58
 msgid "{0, plural, one {post} other {posts}}"
-msgstr "{0, plural, one {post} other {posts}}"
+msgstr "{0, plural, one {post} other {post}}"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:426
 msgid "{0, plural, one {quote} other {quotes}}"
-msgstr "{0, plural, one {quote} other {quotes}}"
+msgstr "{0, plural, one {citazione} other {citazioni}}"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:261
 msgid "{0, plural, one {Reply (# reply)} other {Reply (# replies)}}"
-msgstr "{0, plural, one {Reply (# risposta)} other {Reply (# risposte)}}"
+msgstr "{0, plural, one {Rispondi (# risposta)} other {Rispondi (# risposte)}}"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:408
 msgid "{0, plural, one {repost} other {reposts}}"
@@ -95,7 +95,7 @@ msgstr "{0, plural, one {repost} other {reposts}}"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:301
 msgid "{0, plural, one {Unlike (# like)} other {Unlike (# likes)}}"
-msgstr "{0, plural, one {Unlike (# like)} other {Unlike (# like)}}"
+msgstr "{0, plural, one {Togli like (# like)} other {Togli like (# like)}}"
 
 #: src/screens/Settings/Settings.tsx:414
 msgid "{0}"
@@ -170,7 +170,7 @@ msgstr "{badge} elementi non letti"
 
 #: src/components/LabelingServiceCard/index.tsx:96
 msgid "{count, plural, one {Liked by # user} other {Liked by # users}}"
-msgstr "{count, plural, one {# utente ha messo like} other {# utenti hanno messo like}}"
+msgstr "{count, plural, one {Piace a # utente} other {Piace a # utenti}}"
 
 #: src/view/shell/desktop/LeftNav.tsx:223
 msgid "{count} unread items"
@@ -183,39 +183,39 @@ msgstr "Starter Pack di {displayName}"
 
 #: src/screens/SignupQueued.tsx:220
 msgid "{estimatedTimeHrs, plural, one {hour} other {hours}}"
-msgstr "{estimatedTimeHrs, plural, one {hour} other {hours}}"
+msgstr "{estimatedTimeHrs, plural, one {ora} other {ore}}"
 
 #: src/screens/SignupQueued.tsx:226
 msgid "{estimatedTimeMins, plural, one {minute} other {minutes}}"
-msgstr "{estimatedTimeMins, plural, one {minute} other {minutes}}"
+msgstr "{estimatedTimeMins, plural, one {minuto} other {minuti}}"
 
 #: src/view/com/notifications/FeedItem.tsx:300
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> followed you"
-msgstr ""
+msgstr "{firstAuthorLink} e <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} altro {{formattedAuthorsCount} altri}}</0> ti hanno seguito"
 
 #: src/view/com/notifications/FeedItem.tsx:326
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> liked your custom feed"
-msgstr ""
+msgstr "A {firstAuthorLink} e <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} altro} other {{formattedAuthorsCount} altri}}</0> è piaciuto il tuo feed personalizzato"
 
 #: src/view/com/notifications/FeedItem.tsx:222
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> liked your post"
-msgstr ""
+msgstr "A {firstAuthorLink} e <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} altro} other {{formattedAuthorsCount} altri}}</0> è piaciuto il tuo post"
 
 #: src/view/com/notifications/FeedItem.tsx:246
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> reposted your post"
-msgstr ""
+msgstr "{firstAuthorLink} e <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} altro} other {{formattedAuthorsCount} altri}}</0> hanno ripubblicato il tuo post"
 
 #: src/view/com/notifications/FeedItem.tsx:350
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> signed up with your starter pack"
-msgstr ""
+msgstr "{firstAuthorLink} e <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} altro} other {{formattedAuthorsCount} altri}}</0> si sono iscritti al tuo starter pack"
 
 #: src/view/com/notifications/FeedItem.tsx:312
 msgid "{firstAuthorLink} followed you"
-msgstr ""
+msgstr "{firstAuthorLink} ha iniziato a seguirti"
 
 #: src/view/com/notifications/FeedItem.tsx:289
 msgid "{firstAuthorLink} followed you back"
-msgstr ""
+msgstr "{firstAuthorLink} ha iniziato a seguirti a sua volta"
 
 #: src/view/com/notifications/FeedItem.tsx:338
 msgid "{firstAuthorLink} liked your custom feed"
@@ -231,27 +231,27 @@ msgstr "{firstAuthorLink} ha ripubblicato il tuo post"
 
 #: src/view/com/notifications/FeedItem.tsx:362
 msgid "{firstAuthorLink} signed up with your starter pack"
-msgstr "{firstAuthorLink} si è iscritto con il tuo starter pack"
+msgstr "{firstAuthorLink} si è iscritto al tuo starter pack"
 
 #: src/view/com/notifications/FeedItem.tsx:293
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} followed you"
-msgstr ""
+msgstr "{firstAuthorName} e {additionalAuthorsCount, plural, one {{formattedAuthorsCount} altro} other {{formattedAuthorsCount} altri}} hanno iniziato a seguirti"
 
 #: src/view/com/notifications/FeedItem.tsx:319
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} liked your custom feed"
-msgstr ""
+msgstr "A {firstAuthorName} e {additionalAuthorsCount, plural, one {{formattedAuthorsCount} altro} other {{formattedAuthorsCount} altri}} è piaciuto il tuo feed personalizzato"
 
 #: src/view/com/notifications/FeedItem.tsx:215
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} liked your post"
-msgstr ""
+msgstr "A {firstAuthorName} e {additionalAuthorsCount, plural, one {{formattedAuthorsCount} altro} other {{formattedAuthorsCount} altri}} è piaciuto il tuo post"
 
 #: src/view/com/notifications/FeedItem.tsx:239
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} reposted your post"
-msgstr ""
+msgstr "{firstAuthorName} e {additionalAuthorsCount, plural, one {{formattedAuthorsCount} altro} other {{formattedAuthorsCount} altri}} hanno ripubblicato il tuo post"
 
 #: src/view/com/notifications/FeedItem.tsx:343
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} signed up with your starter pack"
-msgstr ""
+msgstr "{firstAuthorName} e {additionalAuthorsCount, plural, one {{formattedAuthorsCount} altro} other {{formattedAuthorsCount} altri}} si sono iscritti al tuo starter pack"
 
 #: src/view/com/notifications/FeedItem.tsx:298
 msgid "{firstAuthorName} followed you"
@@ -275,12 +275,12 @@ msgstr "{firstAuthorName} ha ripubblicato il tuo post"
 
 #: src/view/com/notifications/FeedItem.tsx:348
 msgid "{firstAuthorName} signed up with your starter pack"
-msgstr "{firstAuthorName} si è iscritto con il tuo starter pack"
+msgstr "{firstAuthorName} si è iscritto al tuo starter pack"
 
 #: src/components/ProfileHoverCard/index.web.tsx:508
 #: src/screens/Profile/Header/Metrics.tsx:49
 msgid "{following} following"
-msgstr "{following} following"
+msgstr "{following} seguiti"
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:385
 msgid "{handle} can't be messaged"
@@ -290,7 +290,7 @@ msgstr "{handle} non può ricevere messaggi"
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:307
 #: src/view/screens/ProfileFeed.tsx:591
 msgid "{likeCount, plural, one {Liked by # user} other {Liked by # users}}"
-msgstr "{likeCount, plural, one {# utente ha messo like} other {# utenti hanno messo like}}"
+msgstr "{likeCount, plural, one {Piaciuto a # utente} other {Piaciuto a # utenti}}"
 
 #: src/view/shell/Drawer.tsx:448
 msgid "{numUnreadNotifications} unread"
@@ -320,11 +320,11 @@ msgstr "<0>{0}, </0><1>{1}, </1>e {2, plural, one {# altro} other {# altri}} son
 
 #: src/view/shell/Drawer.tsx:97
 msgid "<0>{0}</0> {1, plural, one {follower} other {followers}}"
-msgstr "<0>{0}</0> {1, plural, one {follower} other {followers}}"
+msgstr "<0>{0}</0> {1, plural, one {follower} other {follower}}"
 
 #: src/view/shell/Drawer.tsx:108
 msgid "<0>{0}</0> {1, plural, one {following} other {following}}"
-msgstr "<0>{0}</0> {1, plural, one {following} other {following}}"
+msgstr "<0>{0}</0> {1, plural, one {seguito} other {seguiti}}"
 
 #: src/screens/StarterPack/Wizard/index.tsx:516
 msgid "<0>{0}</0> and<1> </1><2>{1} </2>are included in your starter pack"
@@ -344,7 +344,7 @@ msgstr "<0>{date}</0> alle {time}"
 
 #: src/screens/Settings/NotificationSettings.tsx:71
 msgid "<0>Experimental:</0> When this preference is enabled, you'll only receive reply and quote notifications from users you follow. We'll continue to add more controls here over time."
-msgstr ""
+msgstr "<0>Sperimentale:</0> Attivando questa opzione riceverai solo le notifiche di risposte e citazioni dagli utenti che segui. Col tempo continueremo ad aggiungere ulteriori controlli."
 
 #: src/screens/StarterPack/Wizard/index.tsx:466
 msgid "<0>You</0> and<1> </1><2>{0} </2>are included in your starter pack"
@@ -884,7 +884,7 @@ msgstr "Almeno 3 caratteri"
 
 #: src/screens/Settings/AccessibilitySettings.tsx:97
 msgid "Autoplay options have moved to the <0>Content and Media settings</0>."
-msgstr ""
+msgstr "Le opzioni di riproduzione automatica sono state spostate nelle <0>impostazioni di contenuti e media</0>."
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:88
 #: src/screens/Settings/ContentAndMediaSettings.tsx:94
@@ -1272,7 +1272,7 @@ msgstr "Scegli utenti"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:115
 msgid "Choose self-labels that are applicable for the media you are posting. If none are selected, this post is suitable for all audiences."
-msgstr ""
+msgstr "Scegli le etichette che si adattano meglio ai media che stai pubblicando. Se non ne viene selezionata nessuna, questo post è adatto a tutti i tipi di pubblico."
 
 #: src/view/com/auth/server-input/index.tsx:76
 msgid "Choose Service"
@@ -2617,7 +2617,7 @@ msgstr "Feed creato da {0}"
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:54
 msgid "Feed toggle"
-msgstr ""
+msgstr "Attiva/disattiva feed"
 
 #: src/view/shell/desktop/RightNav.tsx:69 src/view/shell/Drawer.tsx:319
 msgid "Feedback"
@@ -2771,12 +2771,12 @@ msgstr "Follower che conosci"
 #: src/view/screens/Feeds.tsx:632 src/view/screens/ProfileFollows.tsx:30
 #: src/view/screens/ProfileFollows.tsx:31 src/view/screens/SavedFeeds.tsx:431
 msgid "Following"
-msgstr "Following"
+msgstr "Seguito"
 
 #: src/components/ProfileCard.tsx:318
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:98
 msgid "Following {0}"
-msgstr "Seguiti {0}"
+msgstr "Stai seguendo {0}"
 
 #: src/view/com/posts/AviFollowButton.tsx:50
 msgid "Following {name}"
@@ -2785,11 +2785,11 @@ msgstr "Stai segendo {name}"
 #: src/screens/Settings/ContentAndMediaSettings.tsx:56
 #: src/screens/Settings/ContentAndMediaSettings.tsx:59
 msgid "Following feed preferences"
-msgstr "Preferenze del feed Following"
+msgstr "Preferenze del feed di chi segui"
 
 #: src/Navigation.tsx:300 src/screens/Settings/FollowingFeedPreferences.tsx:49
 msgid "Following Feed Preferences"
-msgstr "Preferenze del Following Feed"
+msgstr "Preferenze del feed di chi segui"
 
 #: src/screens/Profile/Header/Handle.tsx:32
 msgid "Follows you"
@@ -2903,7 +2903,7 @@ msgstr "Torna indietro"
 #: src/view/screens/NotFound.tsx:56 src/view/screens/ProfileFeed.tsx:118
 #: src/view/screens/ProfileList.tsx:1034
 msgid "Go Back"
-msgstr "Torna Indietro"
+msgstr "Torna indietro"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:529
 msgid "Go back to previous page"
@@ -2919,7 +2919,7 @@ msgstr "Torna al passaggio precedente"
 
 #: src/screens/StarterPack/Wizard/index.tsx:308
 msgid "Go back to the previous step"
-msgstr "Torna indietro"
+msgstr "Torna al passaggio precedente"
 
 #: src/view/screens/NotFound.tsx:57
 msgid "Go home"
@@ -3603,7 +3603,7 @@ msgstr "Sembra che tu non abbia più feed fissati. Ma non ti preoccupare, puoi a
 
 #: src/screens/Feeds/NoFollowingFeed.tsx:37
 msgid "Looks like you're missing a following feed. <0>Click here to add one.</0>"
-msgstr "Sembra che ti manchi un following feed. <0>Clicca qui per aggiungere uno.</0>"
+msgstr "Sembra che ti manchi un feed di chi segui. <0>Clicca qui per aggiungere uno.</0>"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:266
 msgid "Make one for me"
@@ -4246,7 +4246,7 @@ msgstr "Mostrare prima le risposte più vecchie"
 
 #: src/components/StarterPack/QrCode.tsx:75
 msgid "on<0><1/><2><3/></2></0>"
-msgstr ""
+msgstr "su<0><1/><2><3/></2></0>"
 
 #: src/screens/Settings/Settings.tsx:295
 msgid "Onboarding reset"
@@ -4254,7 +4254,7 @@ msgstr "Reimpostazione dell'onboarding"
 
 #: src/view/com/composer/Composer.tsx:325
 msgid "One or more GIFs is missing alt text."
-msgstr ""
+msgstr "Una o più GIF non hanno un testo alternativo."
 
 #: src/view/com/composer/Composer.tsx:322
 msgid "One or more images is missing alt text."
@@ -4262,7 +4262,7 @@ msgstr "A una o più immagini manca il testo alternativo."
 
 #: src/view/com/composer/Composer.tsx:332
 msgid "One or more videos is missing alt text."
-msgstr ""
+msgstr "In uno o più video manca il testo alternativo."
 
 #: src/screens/Onboarding/StepProfile/index.tsx:115
 msgid "Only .jpg and .png files are supported"
@@ -4278,7 +4278,7 @@ msgstr "Contiene solo lettere, numeri e trattini"
 
 #: src/lib/media/picker.shared.ts:29
 msgid "Only image files are supported"
-msgstr ""
+msgstr "Sono supportati solo i file immagine"
 
 #: src/view/com/composer/videos/SubtitleFilePicker.tsx:40
 msgid "Only WebVTT (.vtt) files are supported"
@@ -4304,7 +4304,7 @@ msgstr "Aperto"
 
 #: src/view/com/posts/AviFollowButton.tsx:86
 msgid "Open {name} profile shortcut menu"
-msgstr ""
+msgstr "Apri il menu di scelta rapida del profilo {name}"
 
 #: src/screens/Onboarding/StepProfile/index.tsx:286
 msgid "Open avatar creator"
@@ -4331,11 +4331,11 @@ msgstr "Apri il menu delle opzioni del feed"
 
 #: src/screens/Settings/Settings.tsx:200
 msgid "Open helpdesk in browser"
-msgstr ""
+msgstr "Apri l'helpdesk nel browser"
 
 #: src/view/com/util/post-embeds/ExternalLinkEmbed.tsx:71
 msgid "Open link to {niceUrl}"
-msgstr ""
+msgstr "Apri link verso {niceUrl}"
 
 #: src/components/dms/ActionsWrapper.tsx:90
 msgid "Open message options"
@@ -4343,7 +4343,7 @@ msgstr "Apri opzioni messaggio"
 
 #: src/screens/Settings/Settings.tsx:321
 msgid "Open moderation debug page"
-msgstr ""
+msgstr "Apri pagina di debug della moderazione"
 
 #: src/screens/Moderation/index.tsx:225
 msgid "Open muted words and tags settings"
@@ -4375,7 +4375,7 @@ msgstr "Apre le {numItems} opzioni"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:62
 msgid "Opens a dialog to add a content warning to your post"
-msgstr ""
+msgstr "Apre una finestra di dialogo per aggiungere un avviso sui contenuto al tuo post."
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:61
 msgid "Opens a dialog to choose who can reply to this thread"
@@ -4536,7 +4536,7 @@ msgstr "L'autorizzazione per accedere la cartella delle immagini è stata negata
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:54
 msgid "Person toggle"
-msgstr ""
+msgstr "Attiva/disattiva persona"
 
 #: src/screens/Onboarding/index.tsx:28 src/screens/Onboarding/state.ts:96
 msgid "Pets"
@@ -4621,7 +4621,7 @@ msgstr "Conferma la tua email prima di cambiarla. Si tratta di un requisito temp
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:114
 msgid "Please enter a unique name for this app password or use our randomly generated one."
-msgstr ""
+msgstr "Inserisci un nome univoco per questa password dell'app o utilizza quello generato casualmente."
 
 #: src/components/dialogs/MutedWords.tsx:86
 msgid "Please enter a valid word, tag, or phrase to mute"
@@ -4677,7 +4677,7 @@ msgstr "Post"
 #: src/view/com/composer/Composer.tsx:919
 msgctxt "action"
 msgid "Post All"
-msgstr ""
+msgstr "Posta tutti"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:204
 msgid "Post by {0}"
@@ -4694,7 +4694,7 @@ msgstr "Post eliminato"
 
 #: src/lib/api/index.ts:185
 msgid "Post failed to upload. Please check your Internet connection and try again."
-msgstr ""
+msgstr "Non è stato possibile inviare il post. Verifica la tua connessione a internet e riprova."
 
 #: src/view/com/post-thread/PostThread.tsx:212
 msgid "Post hidden"
@@ -5278,7 +5278,7 @@ msgstr "Richiedi il testo alternativo prima di pubblicare"
 
 #: src/screens/Settings/components/Email2FAToggle.tsx:54
 msgid "Require an email code to log in to your account."
-msgstr ""
+msgstr "Richiedi un codice inviato via email per accedere al tuo account."
 
 #: src/screens/Signup/StepInfo/index.tsx:159
 msgid "Required for this provider"
@@ -5518,7 +5518,7 @@ msgstr "Consulta questa guida"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/Scrubber.tsx:189
 msgid "Seek slider"
-msgstr ""
+msgstr "Cursore di ricerca"
 
 #: src/view/com/util/Selector.tsx:107
 msgid "Select {item}"
@@ -5823,7 +5823,7 @@ msgstr "Mostra risposte nascoste"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:796
 msgid "Show information about when this post was created"
-msgstr ""
+msgstr "Mostra informazioni sulla data di creazione di questo post."
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:455
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:457
@@ -5850,7 +5850,7 @@ msgstr "Mosta risposte silenziate"
 
 #: src/screens/Settings/Settings.tsx:96
 msgid "Show other accounts you can switch to"
-msgstr ""
+msgstr "Mostra gli altri account a cui puoi passare"
 
 #: src/screens/Settings/FollowingFeedPreferences.tsx:96
 #: src/screens/Settings/FollowingFeedPreferences.tsx:106
@@ -5878,12 +5878,12 @@ msgstr "Mostra risposta per tutti"
 #: src/screens/Settings/FollowingFeedPreferences.tsx:78
 #: src/screens/Settings/FollowingFeedPreferences.tsx:88
 msgid "Show reposts"
-msgstr ""
+msgstr "Mostra le ripubblicazioni"
 
 #: src/screens/Settings/FollowingFeedPreferences.tsx:121
 #: src/screens/Settings/FollowingFeedPreferences.tsx:131
 msgid "Show samples of your saved feeds in your Following feed"
-msgstr ""
+msgstr "Mostra un estratto dei tuoi feed salvati nel feed di chi segui"
 
 #: src/components/moderation/ContentHider.tsx:152
 #: src/components/moderation/PostHider.tsx:79
@@ -6346,7 +6346,7 @@ msgstr "Questo video è più grande di 50MB."
 
 #: src/lib/strings/errors.ts:18
 msgid "The server appears to be experiencing issues. Please try again in a few moments."
-msgstr ""
+msgstr "Sembra che ci siano problemi sul server. Riprova tra qualche istante."
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:725
 msgid "The starter pack that you are trying to view is invalid. You may delete this starter pack instead."
@@ -6384,7 +6384,7 @@ msgstr "Si è verificato un problema durante il contatto con il server"
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:112
 #: src/view/screens/ProfileFeed.tsx:546
 msgid "There was an issue contacting the server, please check your internet connection and try again."
-msgstr ""
+msgstr "Si è verificato un problema contattando il server, verifica la tua connessione a internet e riprova."
 
 #: src/view/com/feeds/FeedSourceCard.tsx:127
 #: src/view/com/feeds/FeedSourceCard.tsx:140
@@ -6418,7 +6418,7 @@ msgstr "Si è verificato un problema durante il recupero delle tue informazioni 
 
 #: src/view/com/posts/FeedErrorMessage.tsx:145
 msgid "There was an issue removing this feed. Please check your internet connection and try again."
-msgstr ""
+msgstr "Si è verificato un problema durante la rimozione di questo feed. Verifica la tua connessione a internet e riprova."
 
 #: src/components/dms/ReportDialog.tsx:217
 #: src/components/ReportDialog/SubmitView.tsx:87
@@ -6429,7 +6429,7 @@ msgstr "Si è verificato un problema durante l'invio della segnalazione. Verific
 #: src/view/com/posts/FeedShutdownMsg.tsx:71
 #: src/view/screens/ProfileFeed.tsx:211
 msgid "There was an issue updating your feeds, please check your internet connection and try again."
-msgstr ""
+msgstr "Si è verificato un problema durante l'aggiornamento dei tuoi feed. Verifica la tua connessione a internet e riprova."
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:107
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:128
@@ -6465,7 +6465,7 @@ msgstr "C'è stata un'ondata di nuovi utenti su Bluesky! Attiveremo il tuo accou
 
 #: src/screens/Settings/FollowingFeedPreferences.tsx:54
 msgid "These settings only apply to the Following feed."
-msgstr ""
+msgstr "Queste impostazioni si applicano solo al feed di chi segui."
 
 #: src/components/moderation/ScreenHider.tsx:111
 msgid "This {screenDescription} has been flagged:"
@@ -6522,7 +6522,7 @@ msgstr "Questa funzionalità è in versione beta. Puoi leggere ulteriori informa
 
 #: src/lib/strings/errors.ts:21
 msgid "This feature is not available while using an App Password. Please sign in with your main password."
-msgstr ""
+msgstr "Questa funzionalità non è disponibile quando si una una password delle app. Accedi con la tua password principale."
 
 #: src/view/com/posts/FeedErrorMessage.tsx:120
 msgid "This feed is currently receiving high traffic and is temporarily unavailable. Please try again later."
@@ -6587,7 +6587,7 @@ msgstr "Questo servizio di moderazione non è disponibile. Vedi giù per ulterio
 
 #: src/view/com/post-thread/PostThreadItem.tsx:836
 msgid "This post claims to have been created on <0>{0}</0>, but was first seen by Bluesky on <1>{1}</1>."
-msgstr ""
+msgstr "Questo post dichiara di essere stato creato il <0>{0}</0>, ma è stato visto per la prima volta da Bluesky il <1>{1}</1>."
 
 #: src/view/com/post-thread/PostThreadItem.tsx:147
 msgid "This post has been deleted."
@@ -6756,7 +6756,7 @@ msgstr "Riattiva questa lista"
 
 #: src/lib/strings/errors.ts:11
 msgid "Unable to connect. Please check your internet connection and try again."
-msgstr ""
+msgstr "Impossibile connettersi. Verifica la tua connessione a internet e riprova."
 
 #: src/screens/Login/ForgotPasswordForm.tsx:68 src/screens/Login/index.tsx:76
 #: src/screens/Login/LoginForm.tsx:152
@@ -6831,7 +6831,7 @@ msgstr "Riattiva"
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VolumeControl.tsx:93
 msgctxt "video"
 msgid "Unmute"
-msgstr ""
+msgstr "Attiva il suono"
 
 #: src/components/TagMenu/index.web.tsx:115
 msgid "Unmute {truncatedTag}"
@@ -6963,7 +6963,7 @@ msgstr "Caricamento del video..."
 
 #: src/screens/Settings/AppPasswords.tsx:59
 msgid "Use app passwords to sign in to other Bluesky clients without giving full access to your account or password."
-msgstr ""
+msgstr "Usa le password delle app per accedere ad altri client Bluesky senza fornire l'accesso completo al tuo account o alla tua password."
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:528
 msgid "Use default provider"
@@ -7427,7 +7427,7 @@ msgstr "Scrittori"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:337
 msgid "Wrong DID returned from server. Received: {0}"
-msgstr ""
+msgstr "Il server ha restituito un DID errato. Ricevuto: {0}"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:78
 msgid "Yes"
@@ -7645,7 +7645,7 @@ msgstr "Hai precedentemente disattivato @{0}."
 
 #: src/screens/Settings/Settings.tsx:249
 msgid "You will be signed out of all your accounts."
-msgstr ""
+msgstr "Verrai disconnesso da tutti i tuoi account."
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:211
 msgid "You will no longer receive notifications for this thread"
