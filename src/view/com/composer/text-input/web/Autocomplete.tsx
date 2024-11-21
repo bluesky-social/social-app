@@ -10,6 +10,7 @@ import {
 import tippy, {Instance as TippyInstance} from 'tippy.js'
 
 import {usePalette} from '#/lib/hooks/usePalette'
+import {sanitizeHandle} from '#/lib/strings/handles'
 import {ActorAutocompleteFn} from '#/state/queries/actor-autocomplete'
 import {Text} from '#/view/com/util/text/Text'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
@@ -148,7 +149,7 @@ const MentionList = forwardRef<MentionListRef, SuggestionProps>(
           {items.length > 0 ? (
             items.map((item, index) => {
               const {name: displayName} = getGraphemeString(
-                item.displayName ?? item.handle,
+                item.displayName || sanitizeHandle(item.handle),
                 30, // Heuristic value; can be modified
               )
               const isSelected = selectedIndex === index
