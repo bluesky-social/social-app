@@ -126,52 +126,52 @@ msgstr ""
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:479
 msgid "{0} people have used this starter pack!"
-msgstr ""
+msgstr "ይሄንን የጀማሪ ጥቅሎች {0} ሰዎች ተጠቅመውታል"
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:203
 msgid "{0} unread items"
-msgstr ""
+msgstr "{0} ያልተነበቡ ንጥሎች"
 
 #: src/view/com/util/UserAvatar.tsx:435
 msgid "{0}'s avatar"
-msgstr ""
+msgstr "የ{0} አምሳያ"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:68
 msgid "{0}'s favorite feeds and people - join me!"
-msgstr ""
+msgstr "የ{0} ተወዳጅ ምግቦች እና ሰዎች - ተቀላቀሉኝ!"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:47
 msgid "{0}'s starter pack"
-msgstr ""
+msgstr "የ{0} ጀማሪ ጥቅል"
 
 #. How many days have passed, displayed in a narrow form
 #: src/lib/hooks/useTimeAgo.ts:158
 msgid "{0}d"
-msgstr ""
+msgstr "{0}ቀ"
 
 #. How many hours have passed, displayed in a narrow form
 #: src/lib/hooks/useTimeAgo.ts:148
 msgid "{0}h"
-msgstr ""
+msgstr "{0}ሰ"
 
 #. How many minutes have passed, displayed in a narrow form
 #: src/lib/hooks/useTimeAgo.ts:138
 msgid "{0}m"
-msgstr ""
+msgstr "{0}ደ"
 
 #. How many months have passed, displayed in a narrow form
 #: src/lib/hooks/useTimeAgo.ts:169
 msgid "{0}mo"
-msgstr ""
+msgstr "{0}ወ"
 
 #. How many seconds have passed, displayed in a narrow form
 #: src/lib/hooks/useTimeAgo.ts:128
 msgid "{0}s"
-msgstr ""
+msgstr "{0}ሰከ"
 
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:252
 msgid "{badge} unread items"
-msgstr ""
+msgstr "{badge} ያልተነበቡ ንጥሎች"
 
 #: src/components/LabelingServiceCard/index.tsx:96
 msgid "{count, plural, one {Liked by # user} other {Liked by # users}}"
@@ -179,12 +179,12 @@ msgstr ""
 
 #: src/view/shell/desktop/LeftNav.tsx:223
 msgid "{count} unread items"
-msgstr ""
+msgstr "{count} ያልተነበቡ ንጥሎች"
 
 #: src/lib/generate-starterpack.ts:108
 #: src/screens/StarterPack/Wizard/index.tsx:183
 msgid "{displayName}'s Starter Pack"
-msgstr ""
+msgstr "የ{displayName} ጀማሪ ጥቅል"
 
 #: src/screens/SignupQueued.tsx:207
 msgid "{estimatedTimeHrs, plural, one {hour} other {hours}}"
@@ -216,27 +216,27 @@ msgstr ""
 
 #: src/view/com/notifications/FeedItem.tsx:312
 msgid "{firstAuthorLink} followed you"
-msgstr ""
+msgstr "{firstAuthorLink} ተከትሎዎታል"
 
 #: src/view/com/notifications/FeedItem.tsx:289
 msgid "{firstAuthorLink} followed you back"
-msgstr ""
+msgstr "{firstAuthorLink} እርሶን መልሰው ተከትሎዎታል"
 
 #: src/view/com/notifications/FeedItem.tsx:338
 msgid "{firstAuthorLink} liked your custom feed"
-msgstr ""
+msgstr "{firstAuthorLink} ብጁ ምግብዎን ወደውታል"
 
 #: src/view/com/notifications/FeedItem.tsx:234
 msgid "{firstAuthorLink} liked your post"
-msgstr ""
+msgstr "{firstAuthorLink} ልጥፎን ወደውታል"
 
 #: src/view/com/notifications/FeedItem.tsx:258
 msgid "{firstAuthorLink} reposted your post"
-msgstr ""
+msgstr "{firstAuthorLink} ልጥፉን በድጋሚ ለጥፈዋል"
 
 #: src/view/com/notifications/FeedItem.tsx:362
 msgid "{firstAuthorLink} signed up with your starter pack"
-msgstr ""
+msgstr "{firstAuthorLink} በአስጀማሪ ጥቅልዎ ተመዝግበዋል"
 
 #: src/view/com/notifications/FeedItem.tsx:293
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} followed you"
@@ -260,15 +260,15 @@ msgstr ""
 
 #: src/view/com/notifications/FeedItem.tsx:298
 msgid "{firstAuthorName} followed you"
-msgstr ""
+msgstr "{firstAuthorName} ተከትሎዎታል"
 
 #: src/view/com/notifications/FeedItem.tsx:288
 msgid "{firstAuthorName} followed you back"
-msgstr ""
+msgstr "{firstAuthorName} መልሰው ተከትሎዎታል"
 
 #: src/view/com/notifications/FeedItem.tsx:324
 msgid "{firstAuthorName} liked your custom feed"
-msgstr ""
+msgstr "{firstAuthorName} ብጁ ምግብዎን ወደውታል"
 
 #: src/view/com/notifications/FeedItem.tsx:220
 msgid "{firstAuthorName} liked your post"
@@ -276,20 +276,20 @@ msgstr ""
 
 #: src/view/com/notifications/FeedItem.tsx:244
 msgid "{firstAuthorName} reposted your post"
-msgstr ""
+msgstr "{firstAuthorName} ልጥፎትን ወድዶታል"
 
 #: src/view/com/notifications/FeedItem.tsx:348
 msgid "{firstAuthorName} signed up with your starter pack"
-msgstr ""
+msgstr "{firstAuthorName} በአስጀማሪ ጥቅልዎ ተመዝግበዋል"
 
 #: src/components/ProfileHoverCard/index.web.tsx:508
 #: src/screens/Profile/Header/Metrics.tsx:50
 msgid "{following} following"
-msgstr ""
+msgstr "{following} ተከታዮች"
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:385
 msgid "{handle} can't be messaged"
-msgstr ""
+msgstr "{handle} መላክ አይቻልም"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:294
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:307
@@ -299,19 +299,19 @@ msgstr ""
 
 #: src/view/shell/Drawer.tsx:448
 msgid "{numUnreadNotifications} unread"
-msgstr ""
+msgstr "{numUnreadNotifications} ያልተነበቡ"
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:230
 msgid "{numUnreadNotifications} unread items"
-msgstr ""
+msgstr "{numUnreadNotifications} ያልተነበቡ ንጥሎች"
 
 #: src/components/NewskieDialog.tsx:116
 msgid "{profileName} joined Bluesky {0} ago"
-msgstr ""
+msgstr "{profileName} ወደ bluesky ከ{0} በፊት ተቀላቅለዋል"
 
 #: src/components/NewskieDialog.tsx:111
 msgid "{profileName} joined Bluesky using a starter pack {0} ago"
-msgstr ""
+msgstr "{profileName} ወደ bluesky ከ{0} በፊት በአስጀማሪ ጥቅል ተቀላቅለዋል"
 
 #: src/screens/StarterPack/Wizard/index.tsx:475
 msgctxt "profiles"
@@ -337,15 +337,15 @@ msgstr ""
 
 #: src/screens/StarterPack/Wizard/index.tsx:509
 msgid "<0>{0}</0> is included in your starter pack"
-msgstr ""
+msgstr "<0>{0}</0> በእርስዎ ማስጀመሪያ ጥቅል ውስጥ ተካትቷል"
 
 #: src/components/WhoCanReply.tsx:274
 msgid "<0>{0}</0> members"
-msgstr ""
+msgstr "<0>{0}</0> አባላት"
 
 #: src/components/dms/DateDivider.tsx:69
 msgid "<0>{date}</0> at {time}"
-msgstr ""
+msgstr "<0>{date}</0> በ{time}"
 
 #: src/screens/Settings/NotificationSettings.tsx:72
 msgid "<0>Experimental:</0> When this preference is enabled, you'll only receive reply and quote notifications from users you follow. We'll continue to add more controls here over time."
@@ -357,45 +357,45 @@ msgstr ""
 
 #: src/screens/Profile/Header/Handle.tsx:53
 msgid "⚠Invalid Handle"
-msgstr ""
+msgstr "⚠ልክ ያልሆነ እጀታ"
 
 #: src/components/dialogs/MutedWords.tsx:193
 msgid "24 hours"
-msgstr ""
+msgstr "24 ሰዓታት"
 
 #: src/screens/Login/LoginForm.tsx:250
 msgid "2FA Confirmation"
-msgstr ""
+msgstr "2FA ማረጋገጫ"
 
 #: src/components/dialogs/MutedWords.tsx:232
 msgid "30 days"
-msgstr ""
+msgstr "30 ቀናት"
 
 #: src/components/dialogs/MutedWords.tsx:217
 msgid "7 days"
-msgstr ""
+msgstr "7 ቀናት"
 
 #: src/Navigation.tsx:361
 #: src/screens/Settings/AboutSettings.tsx:25
 #: src/screens/Settings/Settings.tsx:207
 #: src/screens/Settings/Settings.tsx:210
 msgid "About"
-msgstr ""
+msgstr "ስለ"
 
 #: src/view/com/util/ViewHeader.tsx:89
 #: src/view/screens/Search/Search.tsx:883
 msgid "Access navigation links and settings"
-msgstr ""
+msgstr "ወደ አሰሳ አገናኞችን እና ቅንብሮችን ይድረሱ"
 
 #: src/view/com/home/HomeHeaderLayoutMobile.tsx:56
 msgid "Access profile and other navigation links"
-msgstr ""
+msgstr "ወደ መገለጫ ገጽ እና ሌሎች የአሰሳ አገናኞችን ይድረሱ"
 
 #: src/screens/Settings/AccessibilitySettings.tsx:43
 #: src/screens/Settings/Settings.tsx:183
 #: src/screens/Settings/Settings.tsx:186
 msgid "Accessibility"
-msgstr ""
+msgstr "ተደራሽነት"
 
 #: src/view/screens/Settings/index.tsx:455
 #~ msgid "Accessibility settings"
@@ -403,7 +403,7 @@ msgstr ""
 
 #: src/Navigation.tsx:321
 msgid "Accessibility Settings"
-msgstr ""
+msgstr "የተደራሽነት ቅንብሮች"
 
 #: src/Navigation.tsx:337
 #: src/screens/Login/LoginForm.tsx:176
@@ -411,78 +411,78 @@ msgstr ""
 #: src/screens/Settings/Settings.tsx:145
 #: src/screens/Settings/Settings.tsx:148
 msgid "Account"
-msgstr ""
+msgstr "አካውንት"
 
 #: src/view/com/profile/ProfileMenu.tsx:132
 msgid "Account blocked"
-msgstr ""
+msgstr "አካውንት ታግዷል"
 
 #: src/view/com/profile/ProfileMenu.tsx:145
 msgid "Account followed"
-msgstr ""
+msgstr "የተከተሉት አካውንት"
 
 #: src/view/com/profile/ProfileMenu.tsx:108
 msgid "Account muted"
-msgstr ""
+msgstr "የታፈኑ አካውቶች"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:102
 #: src/lib/moderation/useModerationCauseDescription.ts:96
 msgid "Account Muted"
-msgstr ""
+msgstr "የታፈኑ አካውቶች"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:88
 msgid "Account Muted by List"
-msgstr ""
+msgstr "የታፈኑ አካውቶች በዝርዝር"
 
 #: src/screens/Settings/Settings.tsx:420
 msgid "Account options"
-msgstr ""
+msgstr "የአካውንት አማራጮች"
 
 #: src/screens/Settings/Settings.tsx:456
 msgid "Account removed from quick access"
-msgstr ""
+msgstr "አካውንት ከፈጣን መዳረሻ ተወግዷል"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:137
 #: src/view/com/profile/ProfileMenu.tsx:122
 msgid "Account unblocked"
-msgstr ""
+msgstr "አካውንት አልታገደም"
 
 #: src/view/com/profile/ProfileMenu.tsx:157
 msgid "Account unfollowed"
-msgstr ""
+msgstr "አካውንት መከተል አቆሙ"
 
 #: src/view/com/profile/ProfileMenu.tsx:98
 msgid "Account unmuted"
-msgstr ""
+msgstr "አካውንት አልታፈነም"
 
 #: src/components/dialogs/MutedWords.tsx:328
 #: src/view/com/modals/ListAddRemoveUsers.tsx:269
 #: src/view/com/modals/UserAddRemoveLists.tsx:235
 #: src/view/screens/ProfileList.tsx:940
 msgid "Add"
-msgstr ""
+msgstr "አክል"
 
 #: src/screens/StarterPack/Wizard/index.tsx:577
 msgid "Add {0} more to continue"
-msgstr ""
+msgstr "ለመቀጠል ተጨማሪ {0} ያክሉ"
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:59
 msgid "Add {displayName} to starter pack"
-msgstr ""
+msgstr "ወደ ማስጀመሪያ ጥቅል {displayName} ያክሉ"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:108
 #: src/view/com/composer/labels/LabelsBtn.tsx:113
 msgid "Add a content warning"
-msgstr ""
+msgstr "የይዘት ማስጠንቀቂያ ያክሉ"
 
 #: src/view/screens/ProfileList.tsx:930
 msgid "Add a user to this list"
-msgstr ""
+msgstr "ወደዚህ ዝርዝር ተጠቃሚውን ያክሉ"
 
 #: src/components/dialogs/SwitchAccount.tsx:55
 #: src/screens/Deactivated.tsx:198
 msgid "Add account"
-msgstr ""
+msgstr "አካውንት ያክሉ"
 
 #: src/view/com/composer/GifAltText.tsx:76
 #: src/view/com/composer/GifAltText.tsx:144
@@ -501,33 +501,33 @@ msgstr ""
 #: src/screens/Settings/Settings.tsx:364
 #: src/screens/Settings/Settings.tsx:367
 msgid "Add another account"
-msgstr ""
+msgstr "ሌላ አካውንት ይጨምሩ"
 
 #: src/view/com/composer/Composer.tsx:713
 msgid "Add another post"
-msgstr ""
+msgstr "ሌላ ልጥፍ ይጨምሩ"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:102
 msgid "Add app password"
-msgstr ""
+msgstr "የመተግበሪያ ይለፍ ቃል ይጨምሩ"
 
 #: src/screens/Settings/AppPasswords.tsx:67
 #: src/screens/Settings/AppPasswords.tsx:75
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:111
 msgid "Add App Password"
-msgstr ""
+msgstr "የመተግበሪያ ይለፍ ቃል ይጨምሩ"
 
 #: src/components/dialogs/MutedWords.tsx:321
 msgid "Add mute word for configured settings"
-msgstr ""
+msgstr "ማፈኛ ቃል ለተዋቀሩ ቅንብሮች ያክሉ"
 
 #: src/components/dialogs/MutedWords.tsx:112
 msgid "Add muted words and tags"
-msgstr ""
+msgstr "ማፈኛ ቃላት እና መለያዎችን ያክሉ"
 
 #: src/view/com/composer/Composer.tsx:1228
 msgid "Add new post"
-msgstr ""
+msgstr "አዲስ ልጥፍ ያክሉ"
 
 #: src/screens/Home/NoFeedsPinned.tsx:99
 msgid "Add recommended feeds"
@@ -552,31 +552,31 @@ msgstr ""
 #: src/view/com/profile/ProfileMenu.tsx:243
 #: src/view/com/profile/ProfileMenu.tsx:246
 msgid "Add to Lists"
-msgstr ""
+msgstr "ወደ ዝርዝሮች ያክሉ"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:269
 msgid "Add to my feeds"
-msgstr ""
+msgstr "ወደ ምግብዎ ይጨምሩ"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:192
 #: src/view/com/modals/UserAddRemoveLists.tsx:162
 msgid "Added to list"
-msgstr ""
+msgstr "ወደ ዝርዝር ያክሉ"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:125
 msgid "Added to my feeds"
-msgstr ""
+msgstr "ወደ ምግቦቼ ተጨምሯል"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:161
 msgid "Adult"
-msgstr ""
+msgstr "አዋቂ"
 
 #: src/components/moderation/ContentHider.tsx:83
 #: src/lib/moderation/useGlobalLabelStrings.ts:34
 #: src/lib/moderation/useModerationCauseDescription.ts:144
 #: src/view/com/composer/labels/LabelsBtn.tsx:129
 msgid "Adult Content"
-msgstr ""
+msgstr "የአዋቂዎች ይዘት"
 
 #: src/screens/Moderation/index.tsx:360
 msgid "Adult content can only be enabled via the Web at <0>bsky.app</0>."
@@ -593,11 +593,11 @@ msgstr ""
 
 #: src/screens/Moderation/index.tsx:404
 msgid "Advanced"
-msgstr ""
+msgstr "የላቀ"
 
 #: src/state/shell/progress-guide.tsx:171
 msgid "Algorithm training complete!"
-msgstr ""
+msgstr "የስልተ-ቀመር ስልጠና ተጠናቅቋል!"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:381
 msgid "All accounts have been followed!"
@@ -615,11 +615,11 @@ msgstr ""
 #: src/screens/Messages/Settings.tsx:64
 #: src/screens/Messages/Settings.tsx:67
 msgid "Allow new messages from"
-msgstr ""
+msgstr "አዳዲስ መልዕክቶችን ፍቀዱ"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:360
 msgid "Allow replies from:"
-msgstr ""
+msgstr "ምላሾችን ፍቀዱ"
 
 #: src/screens/Settings/AppPasswords.tsx:192
 msgid "Allows access to direct messages"
@@ -628,11 +628,11 @@ msgstr ""
 #: src/screens/Login/ForgotPasswordForm.tsx:171
 #: src/view/com/modals/ChangePassword.tsx:171
 msgid "Already have a code?"
-msgstr ""
+msgstr "ቀድሞውንም ኮድ አልዎት?"
 
 #: src/screens/Login/ChooseAccountForm.tsx:43
 msgid "Already signed in as @{0}"
-msgstr ""
+msgstr "እንደ @{0} ሆነው ገብተዋል"
 
 #: src/view/com/composer/GifAltText.tsx:100
 #: src/view/com/composer/photos/Gallery.tsx:187
@@ -749,12 +749,12 @@ msgstr ""
 
 #: src/components/WhoCanReply.tsx:295
 msgid "and"
-msgstr ""
+msgstr "እና"
 
 #: src/screens/Onboarding/index.tsx:29
 #: src/screens/Onboarding/state.ts:81
 msgid "Animals"
-msgstr ""
+msgstr "እንስሳት"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:149
 msgid "Animated GIF"
@@ -767,7 +767,7 @@ msgstr ""
 #: src/view/screens/Search/Search.tsx:347
 #: src/view/screens/Search/Search.tsx:348
 msgid "Any language"
-msgstr ""
+msgstr "ማንኛውም ቋንቋ"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:49
 msgid "Anybody can interact"
@@ -775,7 +775,7 @@ msgstr ""
 
 #: src/screens/Settings/LanguageSettings.tsx:72
 msgid "App Language"
-msgstr ""
+msgstr "መተግበሪያ ቋንቋ"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:122
 msgid "App Password"
@@ -1193,14 +1193,14 @@ msgstr "ካሜራ"
 #: src/view/com/util/post-ctrls/RepostButton.tsx:166
 #: src/view/screens/Search/Search.tsx:911
 msgid "Cancel"
-msgstr ""
+msgstr "ይቅር"
 
 #: src/view/com/modals/CreateOrEditList.tsx:340
 #: src/view/com/modals/DeleteAccount.tsx:174
 #: src/view/com/modals/DeleteAccount.tsx:297
 msgctxt "action"
 msgid "Cancel"
-msgstr ""
+msgstr "ይቅር"
 
 #: src/view/com/modals/DeleteAccount.tsx:170
 #: src/view/com/modals/DeleteAccount.tsx:293
@@ -1230,7 +1230,7 @@ msgstr ""
 #: src/view/com/modals/ListAddRemoveUsers.tsx:88
 #: src/view/screens/Search/Search.tsx:903
 msgid "Cancel search"
-msgstr ""
+msgstr "ፍለጋውን ይቅር"
 
 #: src/view/com/modals/LinkWarning.tsx:106
 msgid "Cancels opening the linked website"
@@ -1320,11 +1320,11 @@ msgstr ""
 #: src/Navigation.tsx:378
 #: src/screens/Messages/ChatList.tsx:88
 msgid "Chat settings"
-msgstr ""
+msgstr "የውይይት ቅንብሮች"
 
 #: src/screens/Messages/Settings.tsx:61
 msgid "Chat Settings"
-msgstr ""
+msgstr "የውይይት ቅንብሮች"
 
 #: src/components/dms/ConvoMenu.tsx:84
 msgid "Chat unmuted"
@@ -1349,15 +1349,15 @@ msgstr ""
 
 #: src/screens/StarterPack/Wizard/index.tsx:199
 msgid "Choose Feeds"
-msgstr ""
+msgstr "ምግቦችን ይምረጡ"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:308
 msgid "Choose for me"
-msgstr ""
+msgstr "ምረጥልኝ"
 
 #: src/screens/StarterPack/Wizard/index.tsx:195
 msgid "Choose People"
-msgstr ""
+msgstr "ሰዎችን ይምረጡ"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:116
 msgid "Choose self-labels that are applicable for the media you are posting. If none are selected, this post is suitable for all audiences."
@@ -1365,7 +1365,7 @@ msgstr ""
 
 #: src/view/com/auth/server-input/index.tsx:76
 msgid "Choose Service"
-msgstr ""
+msgstr "አገልግሎት ይምረጡ"
 
 #: src/screens/Onboarding/StepFinished.tsx:276
 msgid "Choose the algorithms that power your custom feeds."
@@ -1373,23 +1373,23 @@ msgstr ""
 
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:107
 msgid "Choose this color as your avatar"
-msgstr ""
+msgstr "ይህንን ቀለም እንደ አምሳያዎ ይምረጡ"
 
 #: src/screens/Signup/StepInfo/index.tsx:201
 msgid "Choose your password"
-msgstr ""
+msgstr "የይለፍ ቃልዎን ይምረጡ"
 
 #: src/screens/Settings/Settings.tsx:342
 msgid "Clear all storage data"
-msgstr ""
+msgstr "ሁሉንም የማከማቻ ውሂብ ያጽዱ"
 
 #: src/screens/Settings/Settings.tsx:344
 msgid "Clear all storage data (restart after this)"
-msgstr ""
+msgstr "ሁሉንም የማከማቻ ውሂብ ያጽዱ (ከዚህ በኋላ እንደገና ይጀምሩ)"
 
 #: src/components/forms/SearchInput.tsx:70
 msgid "Clear search query"
-msgstr ""
+msgstr "የፍለጋ መጠይቁን ያጽዱ"
 
 #: src/view/screens/Settings/index.tsx:878
 #~ msgid "Clears all storage data"
@@ -1397,7 +1397,7 @@ msgstr ""
 
 #: src/view/screens/Support.tsx:41
 msgid "click here"
-msgstr ""
+msgstr "እዚህ ጠቅ ያድርጉ"
 
 #: src/view/com/modals/DeleteAccount.tsx:208
 msgid "Click here for more information on deactivating your account"
@@ -1405,11 +1405,11 @@ msgstr ""
 
 #: src/view/com/modals/DeleteAccount.tsx:217
 msgid "Click here for more information."
-msgstr ""
+msgstr "ለበለጠ መረጃ እዚህ ጠቅ ያድርጉ።"
 
 #: src/components/TagMenu/index.web.tsx:152
 msgid "Click here to open tag menu for {tag}"
-msgstr ""
+msgstr "ለ{tag} የመለያ ምናሌ ለመክፈት እዚህ ጠቅ ያድርጉ"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:304
 msgid "Click to disable quote posts of this post."
@@ -1425,7 +1425,7 @@ msgstr ""
 
 #: src/screens/Onboarding/index.tsx:32
 msgid "Climate"
-msgstr ""
+msgstr "የአየር ንብረት"
 
 #: src/components/dms/ChatEmptyPill.tsx:39
 msgid "Clip 🐴 clop 🐴"
@@ -1442,7 +1442,7 @@ msgstr ""
 #: src/view/com/modals/ChangePassword.tsx:271
 #: src/view/com/util/post-embeds/GifEmbed.tsx:197
 msgid "Close"
-msgstr ""
+msgstr "ዝጋ"
 
 #: src/components/Dialog/index.web.tsx:110
 #: src/components/Dialog/index.web.tsx:261
@@ -1451,11 +1451,11 @@ msgstr ""
 
 #: src/screens/Login/PasswordUpdatedForm.tsx:32
 msgid "Close alert"
-msgstr ""
+msgstr "ማንቂያውን ዝጋ"
 
 #: src/view/com/util/BottomSheetCustomBackdrop.tsx:36
 msgid "Close bottom drawer"
-msgstr ""
+msgstr "የታችኛው መሳቢያን ዝጋ"
 
 #: src/components/dialogs/GifSelect.tsx:275
 msgid "Close dialog"
@@ -1467,15 +1467,15 @@ msgstr ""
 
 #: src/view/com/lightbox/ImageViewing/components/ImageDefaultHeader.tsx:36
 msgid "Close image"
-msgstr ""
+msgstr "ምስል ዝጋ"
 
 #: src/view/com/lightbox/Lightbox.web.tsx:107
 msgid "Close image viewer"
-msgstr ""
+msgstr "ምስል መመልከቻን ዝጋ"
 
 #: src/view/shell/index.web.tsx:68
 msgid "Close navigation footer"
-msgstr ""
+msgstr "የአሰሳ ግርጌን ዝጋ"
 
 #: src/components/Menu/index.tsx:230
 #: src/components/TagMenu/index.tsx:261
@@ -1484,11 +1484,11 @@ msgstr ""
 
 #: src/view/shell/index.web.tsx:69
 msgid "Closes bottom navigation bar"
-msgstr ""
+msgstr "የታችኛው ዳሰሳ አሞሌን ይዘጋል"
 
 #: src/screens/Login/PasswordUpdatedForm.tsx:33
 msgid "Closes password update alert"
-msgstr ""
+msgstr "የይለፍ ቃል ማዘመኛ ማንቂያን ይዘጋል"
 
 #: src/view/com/composer/Composer.tsx:552
 #~ msgid "Closes post composer and discards post draft"
@@ -1513,12 +1513,12 @@ msgstr ""
 #: src/screens/Onboarding/index.tsx:38
 #: src/screens/Onboarding/state.ts:84
 msgid "Comedy"
-msgstr ""
+msgstr "ኮሜዲ"
 
 #: src/screens/Onboarding/index.tsx:24
 #: src/screens/Onboarding/state.ts:85
 msgid "Comics"
-msgstr ""
+msgstr "ኮሚክስ"
 
 #: src/Navigation.tsx:279
 #: src/view/screens/CommunityGuidelines.tsx:34
@@ -1535,15 +1535,15 @@ msgstr ""
 
 #: src/view/shell/desktop/LeftNav.tsx:314
 msgid "Compose new post"
-msgstr ""
+msgstr "አዲስ ልጥፍ ያዘጋጁ"
 
 #: src/view/com/composer/Composer.tsx:794
 msgid "Compose posts up to {MAX_GRAPHEME_LENGTH} characters in length"
-msgstr ""
+msgstr "እስከ {MAX_GRAPHEME_LENGTH} ቁምፊዎች የሚደርስ ርዝመት ያላቸውን ልጥፎች ይጻፉ"
 
 #: src/view/com/post-thread/PostThreadComposePrompt.tsx:35
 msgid "Compose reply"
-msgstr ""
+msgstr "ምላሽ ይጻፉ"
 
 #: src/view/com/composer/Composer.tsx:1613
 msgid "Compressing video..."
@@ -1567,28 +1567,28 @@ msgstr ""
 #: src/view/com/modals/VerifyEmail.tsx:239
 #: src/view/com/modals/VerifyEmail.tsx:241
 msgid "Confirm"
-msgstr ""
+msgstr "ያረጋግጡ"
 
 #: src/view/com/modals/ChangeEmail.tsx:188
 #: src/view/com/modals/ChangeEmail.tsx:190
 msgid "Confirm Change"
-msgstr ""
+msgstr "ለውጡን ያረጋግጡ"
 
 #: src/view/com/modals/lang-settings/ConfirmLanguagesButton.tsx:35
 msgid "Confirm content language settings"
-msgstr ""
+msgstr "የይዘት ቋንቋ ቅንብሮችን ያረጋግጡ"
 
 #: src/view/com/modals/DeleteAccount.tsx:283
 msgid "Confirm delete account"
-msgstr ""
+msgstr "አካውንት መሰረዞን ያረጋግጡ"
 
 #: src/screens/Moderation/index.tsx:308
 msgid "Confirm your age:"
-msgstr ""
+msgstr "ዕድሜዎን ያረጋግጡ፡-"
 
 #: src/screens/Moderation/index.tsx:299
 msgid "Confirm your birthdate"
-msgstr ""
+msgstr "የልደት ቀንዎን ያረጋግጡ"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:214
 #: src/screens/Login/LoginForm.tsx:256
@@ -1599,15 +1599,15 @@ msgstr ""
 #: src/view/com/modals/DeleteAccount.tsx:245
 #: src/view/com/modals/VerifyEmail.tsx:173
 msgid "Confirmation code"
-msgstr ""
+msgstr "የማረጋገጫ ኮድ"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:210
 msgid "Confirmation Code"
-msgstr ""
+msgstr "የማረጋገጫ ኮድ"
 
 #: src/screens/Login/LoginForm.tsx:309
 msgid "Connecting..."
-msgstr ""
+msgstr "በማገናኘት ላይ..."
 
 #: src/screens/Signup/index.tsx:175
 #: src/screens/Signup/index.tsx:178
@@ -1618,12 +1618,12 @@ msgstr ""
 #: src/screens/Settings/Settings.tsx:167
 #: src/screens/Settings/Settings.tsx:170
 msgid "Content and media"
-msgstr ""
+msgstr "ድጋፍን ያግኙ"
 
 #: src/Navigation.tsx:353
 #: src/screens/Settings/ContentAndMediaSettings.tsx:36
 msgid "Content and Media"
-msgstr ""
+msgstr "ይዘት እና ሚዲያ"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:18
 msgid "Content Blocked"
@@ -1661,7 +1661,7 @@ msgstr ""
 #: src/screens/Onboarding/StepInterests/index.tsx:244
 #: src/screens/Onboarding/StepProfile/index.tsx:278
 msgid "Continue"
-msgstr ""
+msgstr "ይቀጥሉ"
 
 #: src/components/AccountList.tsx:121
 msgid "Continue as {0} (currently signed in)"
@@ -1683,11 +1683,11 @@ msgstr ""
 
 #: src/screens/Onboarding/index.tsx:41
 msgid "Cooking"
-msgstr ""
+msgstr "ማብሰል"
 
 #: src/view/com/modals/InviteCodes.tsx:183
 msgid "Copied"
-msgstr ""
+msgstr "ተገልብጧል"
 
 #: src/screens/Settings/AboutSettings.tsx:66
 msgid "Copied build version to clipboard"
@@ -1841,7 +1841,7 @@ msgstr ""
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:175
 msgid "Create another"
-msgstr ""
+msgstr "ሌላ ይፍጠሩ"
 
 #: src/view/com/modals/AddAppPasswords.tsx:243
 #~ msgid "Create App Password"
@@ -1863,12 +1863,12 @@ msgstr ""
 #: src/screens/Onboarding/index.tsx:26
 #: src/screens/Onboarding/state.ts:86
 msgid "Culture"
-msgstr ""
+msgstr "ባህል"
 
 #: src/view/com/auth/server-input/index.tsx:94
 #: src/view/com/auth/server-input/index.tsx:96
 msgid "Custom"
-msgstr ""
+msgstr "ብጁ"
 
 #: src/view/com/modals/ChangeHandle.tsx:375
 #~ msgid "Custom domain"
@@ -1890,11 +1890,11 @@ msgstr ""
 #: src/screens/Settings/AppearanceSettings.tsx:92
 #: src/screens/Settings/AppearanceSettings.tsx:113
 msgid "Dark"
-msgstr ""
+msgstr "ጨለማ"
 
 #: src/view/screens/Debug.tsx:70
 msgid "Dark mode"
-msgstr ""
+msgstr "ጨለማ ሁነታ"
 
 #: src/screens/Settings/AppearanceSettings.tsx:105
 msgid "Dark theme"
@@ -1902,7 +1902,7 @@ msgstr ""
 
 #: src/screens/Signup/StepInfo/index.tsx:222
 msgid "Date of birth"
-msgstr ""
+msgstr "የትውልድ ቀን"
 
 #: src/screens/Settings/AccountSettings.tsx:139
 #: src/screens/Settings/AccountSettings.tsx:144
@@ -1934,12 +1934,12 @@ msgstr ""
 #: src/view/com/util/forms/PostDropdownBtn.tsx:673
 #: src/view/screens/ProfileList.tsx:726
 msgid "Delete"
-msgstr ""
+msgstr "ሰርዝ"
 
 #: src/screens/Settings/AccountSettings.tsx:149
 #: src/screens/Settings/AccountSettings.tsx:154
 msgid "Delete account"
-msgstr ""
+msgstr "አካውንት ሰርዝ"
 
 #: src/view/com/modals/DeleteAccount.tsx:105
 msgid "Delete Account <0>\"</0><1>{0}</1><2>\"</2>"
@@ -1959,23 +1959,23 @@ msgstr ""
 
 #: src/components/dms/MessageMenu.tsx:124
 msgid "Delete for me"
-msgstr ""
+msgstr "ለኔ ሰርዝ"
 
 #: src/view/screens/ProfileList.tsx:530
 msgid "Delete List"
-msgstr ""
+msgstr "ዝርዝር ሰርዝ"
 
 #: src/components/dms/MessageMenu.tsx:147
 msgid "Delete message"
-msgstr ""
+msgstr "መልእክት ሰርዝ"
 
 #: src/components/dms/MessageMenu.tsx:122
 msgid "Delete message for me"
-msgstr ""
+msgstr "መልእክቱን ለኔ ሰርዝ"
 
 #: src/view/com/modals/DeleteAccount.tsx:286
 msgid "Delete my account"
-msgstr ""
+msgstr "አካውንቴን ሰርዝ"
 
 #: src/view/screens/Settings/index.tsx:807
 #~ msgid "Delete My Account…"
@@ -1985,7 +1985,7 @@ msgstr ""
 #: src/view/com/util/forms/PostDropdownBtn.tsx:653
 #: src/view/com/util/forms/PostDropdownBtn.tsx:655
 msgid "Delete post"
-msgstr ""
+msgstr "ልጥፍ ይሰረዝ"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:579
 #: src/screens/StarterPack/StarterPackScreen.tsx:735
@@ -1998,24 +1998,24 @@ msgstr ""
 
 #: src/view/screens/ProfileList.tsx:721
 msgid "Delete this list?"
-msgstr ""
+msgstr "ይህ ዝርዝር ይሰረዝ?"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:668
 msgid "Delete this post?"
-msgstr ""
+msgstr "ይህ ልጥፍ ይሰረዝ?"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:93
 msgid "Deleted"
-msgstr ""
+msgstr "ተሰርዟል"
 
 #: src/components/dms/MessagesListHeader.tsx:150
 #: src/screens/Messages/components/ChatListItem.tsx:107
 msgid "Deleted Account"
-msgstr ""
+msgstr "የተሰረዘ አካውንት"
 
 #: src/view/com/post-thread/PostThread.tsx:398
 msgid "Deleted post."
-msgstr ""
+msgstr "የተሰረዘ ልጥፍ"
 
 #: src/view/screens/Settings/index.tsx:858
 #~ msgid "Deletes the chat declaration record"
@@ -2027,15 +2027,15 @@ msgstr ""
 #: src/view/com/modals/EditProfile.tsx:193
 #: src/view/com/modals/EditProfile.tsx:205
 msgid "Description"
-msgstr ""
+msgstr "መግለጫ"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:364
 msgid "Description is too long"
-msgstr ""
+msgstr "መግለጫው በጣም ረጅም ነው።"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:365
 msgid "Description is too long. The maximum number of characters is {DESCRIPTION_MAX_GRAPHEMES}."
-msgstr ""
+msgstr "መግለጫ በጣም ረጅም ነው። ከፍተኛው የቁምፊዎች ብዛት {DISPLAY_NAME_MAX_GRAPHEMES} ነው።"
 
 #: src/view/com/composer/GifAltText.tsx:150
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:114
@@ -2066,7 +2066,7 @@ msgstr ""
 
 #: src/screens/Settings/AppearanceSettings.tsx:109
 msgid "Dim"
-msgstr ""
+msgstr "ደብዛዛ"
 
 #: src/view/screens/AccessibilitySettings.tsx:109
 #~ msgid "Disable autoplay for videos and GIFs"
@@ -2098,11 +2098,11 @@ msgstr ""
 #: src/view/com/composer/Composer.tsx:666
 #: src/view/com/composer/Composer.tsx:835
 msgid "Discard"
-msgstr ""
+msgstr "ይወገዱ"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:81
 msgid "Discard changes?"
-msgstr ""
+msgstr "ለውጦች ይወገዱ?"
 
 #: src/view/com/composer/Composer.tsx:663
 msgid "Discard draft?"
@@ -2152,19 +2152,19 @@ msgstr ""
 #: src/screens/Profile/Header/EditProfileDialog.tsx:351
 #: src/view/com/modals/EditProfile.tsx:187
 msgid "Display name"
-msgstr ""
+msgstr "ማሳያ ስም"
 
 #: src/view/com/modals/EditProfile.tsx:175
 msgid "Display Name"
-msgstr ""
+msgstr "ማሳያ ስም"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:333
 msgid "Display name is too long"
-msgstr ""
+msgstr "የማሳያ ስሙ በጣም ረጅም ነው"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:334
 msgid "Display name is too long. The maximum number of characters is {DISPLAY_NAME_MAX_GRAPHEMES}."
-msgstr ""
+msgstr "የማሳያ ስሙ በጣም ረጅም ነው። ከፍተኛው የቁምፊዎች ብዛት {DISPLAY_NAME_MAX_GRAPHEMES} ነው።"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:373
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:375
@@ -2218,14 +2218,14 @@ msgstr ""
 #: src/view/com/modals/InviteCodes.tsx:124
 #: src/view/com/modals/ListAddRemoveUsers.tsx:143
 msgid "Done"
-msgstr ""
+msgstr "ጨርስ"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:145
 #: src/view/com/modals/UserAddRemoveLists.tsx:113
 #: src/view/com/modals/UserAddRemoveLists.tsx:116
 msgctxt "action"
 msgid "Done"
-msgstr ""
+msgstr "ጨርስ"
 
 #: src/view/com/modals/lang-settings/ConfirmLanguagesButton.tsx:43
 msgid "Done{extraText}"
@@ -2250,19 +2250,19 @@ msgstr ""
 
 #: src/components/dialogs/MutedWords.tsx:153
 msgid "Duration:"
-msgstr ""
+msgstr "የቆይታ ጊዜ:"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:210
 msgid "e.g. alice"
-msgstr ""
+msgstr "ምሳሌ፣ ወንጉሻ"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:321
 msgid "e.g. Alice Lastname"
-msgstr ""
+msgstr "ምሳሌ፣ ወንጌል ጥላሁን"
 
 #: src/view/com/modals/EditProfile.tsx:180
 msgid "e.g. Alice Roberts"
-msgstr ""
+msgstr "ምሳሌ፣ ወንጌል ጥላሁን"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:357
 msgid "e.g. alice.com"
@@ -2303,17 +2303,17 @@ msgstr ""
 #: src/view/screens/Feeds.tsx:386
 #: src/view/screens/Feeds.tsx:454
 msgid "Edit"
-msgstr ""
+msgstr "አርትዕ"
 
 #: src/view/com/lists/ListMembers.tsx:146
 msgctxt "action"
 msgid "Edit"
-msgstr ""
+msgstr "አርትዕ"
 
 #: src/view/com/util/UserAvatar.tsx:347
 #: src/view/com/util/UserBanner.tsx:95
 msgid "Edit avatar"
-msgstr ""
+msgstr "አምሳያ አርትዕ"
 
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:111
 msgid "Edit Feeds"
@@ -2323,7 +2323,7 @@ msgstr ""
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:62
 #: src/view/com/composer/photos/Gallery.tsx:194
 msgid "Edit image"
-msgstr ""
+msgstr "ምስል አርትዕ"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:632
 #: src/view/com/util/forms/PostDropdownBtn.tsx:647
@@ -2347,11 +2347,11 @@ msgstr ""
 
 #: src/view/com/modals/EditProfile.tsx:147
 msgid "Edit my profile"
-msgstr ""
+msgstr "የኔን ገፅ አርትዕ"
 
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:109
 msgid "Edit People"
-msgstr ""
+msgstr "ሰዎችን አርትዕ""
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:66
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:204
@@ -2363,28 +2363,28 @@ msgstr ""
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:186
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:179
 msgid "Edit profile"
-msgstr ""
+msgstr "የኔን ገፅ አርትዕ"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:189
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:182
 msgid "Edit Profile"
-msgstr ""
+msgstr "የኔን ገፅ አርትዕ"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:566
 msgid "Edit starter pack"
-msgstr ""
+msgstr "ጀማሪ ጥቅል አርትዕ"
 
 #: src/view/com/modals/CreateOrEditList.tsx:225
 msgid "Edit User List"
-msgstr ""
+msgstr "የተጠቃሚ ዝርዝር አርትዕ"
 
 #: src/components/WhoCanReply.tsx:87
 msgid "Edit who can reply"
-msgstr ""
+msgstr "ማን ምላሽ መስጠት እንደሚችል አርትዕ"
 
 #: src/view/com/modals/EditProfile.tsx:188
 msgid "Edit your display name"
-msgstr ""
+msgstr "የማሳያ ስምህን አርትዕ"
 
 #: src/view/com/modals/EditProfile.tsx:206
 msgid "Edit your profile description"
@@ -2403,7 +2403,7 @@ msgstr ""
 #: src/screens/Signup/StepInfo/index.tsx:170
 #: src/view/com/modals/ChangeEmail.tsx:136
 msgid "Email"
-msgstr ""
+msgstr "ኢሜይል"
 
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:64
 msgid "Email 2FA disabled"
@@ -2415,28 +2415,28 @@ msgstr ""
 
 #: src/screens/Login/ForgotPasswordForm.tsx:93
 msgid "Email address"
-msgstr ""
+msgstr "የኢሜይል አድራሻ"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:104
 msgid "Email Resent"
-msgstr ""
+msgstr "ኢሜይል እንደገና ተልኳል"
 
 #: src/view/com/modals/ChangeEmail.tsx:54
 #: src/view/com/modals/ChangeEmail.tsx:83
 msgid "Email updated"
-msgstr ""
+msgstr "ኢሜይል ዘምኗል"
 
 #: src/view/com/modals/ChangeEmail.tsx:106
 msgid "Email Updated"
-msgstr ""
+msgstr "ኢሜይል ዘምኗል"
 
 #: src/view/com/modals/VerifyEmail.tsx:85
 msgid "Email verified"
-msgstr ""
+msgstr "ኢሜይል ተረጋግጧል"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:79
 msgid "Email Verified"
-msgstr ""
+msgstr "ኢሜይል ተረጋግጧል"
 
 #: src/view/screens/Settings/index.tsx:320
 #~ msgid "Email:"
@@ -2503,7 +2503,7 @@ msgstr ""
 
 #: src/screens/Profile/Sections/Feed.tsx:114
 msgid "End of feed"
-msgstr ""
+msgstr "የምግቡ መጨረሻ"
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:159
 msgid "Ensure you have selected a language for each subtitle file."
@@ -2515,20 +2515,20 @@ msgstr ""
 
 #: src/screens/Login/SetNewPasswordForm.tsx:133
 msgid "Enter a password"
-msgstr ""
+msgstr "የይለፍ ቃል ያስገቡ"
 
 #: src/components/dialogs/MutedWords.tsx:127
 #: src/components/dialogs/MutedWords.tsx:128
 msgid "Enter a word or tag"
-msgstr ""
+msgstr "ቃል ወይም መለያ ያስገቡ"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:89
 msgid "Enter Code"
-msgstr ""
+msgstr "ኮድ ያስገቡ"
 
 #: src/view/com/modals/VerifyEmail.tsx:113
 msgid "Enter Confirmation Code"
-msgstr ""
+msgstr "የማረጋገጫ ኮድ ያስገቡ"
 
 #: src/view/com/modals/ChangePassword.tsx:154
 msgid "Enter the code you received to change your password."
@@ -2544,28 +2544,28 @@ msgstr ""
 
 #: src/components/dialogs/BirthDateSettings.tsx:107
 msgid "Enter your birth date"
-msgstr ""
+msgstr "የትውልድ ቀንዎን ያስገቡ"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:99
 #: src/screens/Signup/StepInfo/index.tsx:182
 msgid "Enter your email address"
-msgstr ""
+msgstr "የኢሜይል አድራሻዎን ያስገቡ"
 
 #: src/view/com/modals/ChangeEmail.tsx:42
 msgid "Enter your new email above"
-msgstr ""
+msgstr "አዲሱን ኢሜይልዎን ከላይ ያስገቡ"
 
 #: src/view/com/modals/ChangeEmail.tsx:112
 msgid "Enter your new email address below."
-msgstr ""
+msgstr "አዲሱን የኢሜይል አድራሻዎን ከዚህ በታች ያስገቡ"
 
 #: src/screens/Login/index.tsx:98
 msgid "Enter your username and password"
-msgstr ""
+msgstr "የእርስዎን የተጠቃሚ ስም እና የይለፍ ቃል ያስገቡ"
 
 #: src/view/com/composer/Composer.tsx:1622
 msgid "Error"
-msgstr ""
+msgstr "ስህተት"
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:47
 msgid "Error occurred while saving file"
@@ -2578,24 +2578,24 @@ msgstr ""
 #: src/screens/Onboarding/StepInterests/index.tsx:183
 #: src/view/screens/Search/Search.tsx:122
 msgid "Error:"
-msgstr ""
+msgstr "ስህተት:"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:365
 msgid "Everybody"
-msgstr ""
+msgstr "ሁሉም"
 
 #: src/components/WhoCanReply.tsx:67
 msgid "Everybody can reply"
-msgstr ""
+msgstr "ሁሉም መመለስ ይችላል"
 
 #: src/components/WhoCanReply.tsx:213
 msgid "Everybody can reply to this post."
-msgstr ""
+msgstr "ሁሉም ሰው ለዚህ ልጥፍ ምላሽ መስጠት ይችላል"
 
 #: src/screens/Messages/Settings.tsx:77
 #: src/screens/Messages/Settings.tsx:80
 msgid "Everyone"
-msgstr ""
+msgstr "እያንዳንዱ ሰው"
 
 #: src/lib/moderation/useReportOptions.ts:73
 msgid "Excessive mentions or replies"
@@ -2665,11 +2665,11 @@ msgstr ""
 
 #: src/components/dialogs/MutedWords.tsx:500
 msgid "Expired"
-msgstr ""
+msgstr "ጊዜው ያለፈበት"
 
 #: src/components/dialogs/MutedWords.tsx:502
 msgid "Expires {0}"
-msgstr ""
+msgstr "ጊዜው የሚያበቃው {0}"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:47
 msgid "Explicit or potentially disturbing media."
@@ -2682,21 +2682,21 @@ msgstr ""
 #: src/screens/Settings/AccountSettings.tsx:130
 #: src/screens/Settings/AccountSettings.tsx:134
 msgid "Export my data"
-msgstr ""
+msgstr "ውሂቤን ላክ"
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:62
 msgid "Export My Data"
-msgstr ""
+msgstr "ውሂቤን ላክ"
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:65
 #: src/screens/Settings/ContentAndMediaSettings.tsx:68
 msgid "External media"
-msgstr ""
+msgstr "ውጫዊ ሚዲያ"
 
 #: src/components/dialogs/EmbedConsent.tsx:54
 #: src/components/dialogs/EmbedConsent.tsx:58
 msgid "External Media"
-msgstr ""
+msgstr "ውጫዊ ሚዲያ"
 
 #: src/components/dialogs/EmbedConsent.tsx:70
 #: src/screens/Settings/ExternalMediaPreferences.tsx:34
@@ -2824,7 +2824,7 @@ msgstr "ምግቦች"
 #: src/components/FeedCard.tsx:134
 #: src/view/com/feeds/FeedSourceCard.tsx:253
 msgid "Feed by {0}"
-msgstr "የ {0} ምግቦች"
+msgstr "የ{0} ምግቦች"
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:55
 msgid "Feed toggle"
@@ -3121,7 +3121,7 @@ msgstr "ይጀምሩ"
 
 #: src/components/ProgressGuide/List.tsx:33
 msgid "Getting started"
-msgstr ""
+msgstr "ለመጀመር"
 
 #: src/components/MediaPreview.tsx:122
 msgid "GIF"
@@ -3175,11 +3175,11 @@ msgstr ""
 
 #: src/view/screens/NotFound.tsx:57
 msgid "Go home"
-msgstr ""
+msgstr "ወደ መነሻ ገጽ ይሂዱ"
 
 #: src/view/screens/NotFound.tsx:56
 msgid "Go Home"
-msgstr ""
+msgstr "ወደ መነሻ ገጽ ይሂዱ"
 
 #: src/screens/Messages/components/ChatListItem.tsx:264
 msgid "Go to conversation with {0}"
@@ -3188,7 +3188,7 @@ msgstr ""
 #: src/screens/Login/ForgotPasswordForm.tsx:165
 #: src/view/com/modals/ChangePassword.tsx:168
 msgid "Go to next"
-msgstr ""
+msgstr "ወደሚቀጥለው ይሂዱ"
 
 #: src/components/dms/ConvoMenu.tsx:167
 msgid "Go to profile"
@@ -3211,7 +3211,7 @@ msgstr ""
 #: src/screens/Settings/AccountSettings.tsx:119
 #: src/screens/Settings/AccountSettings.tsx:124
 msgid "Handle"
-msgstr ""
+msgstr "መያዣ"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:557
 msgid "Handle already taken. Please try a different one."
@@ -3220,11 +3220,11 @@ msgstr ""
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:188
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:325
 msgid "Handle changed!"
-msgstr ""
+msgstr "መያዣ ተቀይሯል"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:561
 msgid "Handle too long. Please try a shorter one."
-msgstr ""
+msgstr "መያዣው በጣም ረጅም ነው። እባክዎ አጭር ይሞክሩ"
 
 #: src/screens/Settings/AccessibilitySettings.tsx:80
 msgid "Haptics"
@@ -3244,7 +3244,7 @@ msgstr "ሃሽ ታግ: #{tag}"
 
 #: src/screens/Signup/index.tsx:173
 msgid "Having trouble?"
-msgstr ""
+msgstr "ችግር እያጋጠመዎት?"
 
 #: src/screens/Settings/Settings.tsx:199
 #: src/screens/Settings/Settings.tsx:203
@@ -3267,7 +3267,7 @@ msgstr ""
 
 #: src/components/ListCard.tsx:130
 msgid "Hidden list"
-msgstr ""
+msgstr "የተደበቀ ዝርዝር"
 
 #: src/components/moderation/ContentHider.tsx:178
 #: src/components/moderation/LabelPreference.tsx:135
@@ -3278,12 +3278,12 @@ msgstr ""
 #: src/lib/moderation/useLabelBehaviorDescription.ts:30
 #: src/view/com/util/forms/PostDropdownBtn.tsx:684
 msgid "Hide"
-msgstr "ይደብቁ"
+msgstr "ደብቅ"
 
 #: src/view/com/notifications/FeedItem.tsx:600
 msgctxt "action"
 msgid "Hide"
-msgstr "ይደብቁ"
+msgstr "ደብቅ"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:543
 #: src/view/com/util/forms/PostDropdownBtn.tsx:549
@@ -3385,7 +3385,7 @@ msgstr ""
 
 #: src/view/com/modals/VerifyEmail.tsx:224
 msgid "I have a confirmation code"
-msgstr ""
+msgstr "የማረጋገጫ ኮድ አለኝ"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:261
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:267
@@ -3395,7 +3395,7 @@ msgstr ""
 #: src/components/dms/BlockedByListDialog.tsx:57
 #: src/components/dms/ReportConversationPrompt.tsx:22
 msgid "I understand"
-msgstr ""
+msgstr "ገብቶኛል"
 
 #: src/view/com/lightbox/Lightbox.web.tsx:184
 msgid "If alt text is long, toggles alt text expanded state"
@@ -3415,7 +3415,7 @@ msgstr ""
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:670
 msgid "If you remove this post, you won't be able to recover it."
-msgstr ""
+msgstr "ይህን ልጥፍ ካስወገዱት መልሰው ማግኘት አይችሉም።"
 
 #: src/view/com/modals/ChangePassword.tsx:149
 msgid "If you want to change your password, we will send you a code to verify that this is your account."
@@ -3431,7 +3431,7 @@ msgstr ""
 
 #: src/view/com/util/images/Gallery.tsx:74
 msgid "Image"
-msgstr ""
+msgstr "ምስል"
 
 #: src/components/StarterPack/ShareDialog.tsx:77
 msgid "Image saved to your camera roll!"
@@ -3728,7 +3728,7 @@ msgstr ""
 
 #: src/components/ProgressGuide/List.tsx:48
 msgid "Like 10 posts"
-msgstr ""
+msgstr "10 ልጥፎችን ይውደዱ"
 
 #: src/state/shell/progress-guide.tsx:157
 #: src/state/shell/progress-guide.tsx:162
@@ -3738,20 +3738,20 @@ msgstr ""
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:275
 #: src/view/screens/ProfileFeed.tsx:576
 msgid "Like this feed"
-msgstr ""
+msgstr "ምግቡን ይውደዱ"
 
 #: src/components/LikesDialog.tsx:85
 #: src/Navigation.tsx:234
 #: src/Navigation.tsx:239
 msgid "Liked by"
-msgstr ""
+msgstr "የተወደደ"
 
 #: src/screens/Post/PostLikedBy.tsx:32
 #: src/screens/Post/PostLikedBy.tsx:33
 #: src/screens/Profile/ProfileLabelerLikedBy.tsx:29
 #: src/view/screens/ProfileFeedLikedBy.tsx:30
 msgid "Liked By"
-msgstr ""
+msgstr "የተወደደ"
 
 #: src/view/com/notifications/FeedItem.tsx:211
 #~ msgid "liked your custom feed"
@@ -3763,7 +3763,7 @@ msgstr ""
 
 #: src/view/screens/Profile.tsx:231
 msgid "Likes"
-msgstr ""
+msgstr "የወደዱት"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:212
 msgid "Likes on this post"
@@ -4042,11 +4042,11 @@ msgstr ""
 
 #: src/Navigation.tsx:249
 msgid "Moderation states"
-msgstr ""
+msgstr "የማወያያ ሁኔታ"
 
 #: src/screens/Moderation/index.tsx:213
 msgid "Moderation tools"
-msgstr ""
+msgstr "ማወያያ መሳርያዎች"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:51
 #: src/lib/moderation/useModerationCauseDescription.ts:45
@@ -4059,7 +4059,7 @@ msgstr "ተጨማሪ"
 
 #: src/view/shell/desktop/Feeds.tsx:55
 msgid "More feeds"
-msgstr ""
+msgstr "ተጨማሪ ምግቦች"
 
 #: src/view/com/profile/ProfileMenu.tsx:179
 #: src/view/screens/ProfileList.tsx:712
@@ -4212,7 +4212,7 @@ msgstr "ስም"
 
 #: src/view/com/modals/CreateOrEditList.tsx:135
 msgid "Name is required"
-msgstr ""
+msgstr "ስም ያስፈልጋል"
 
 #: src/lib/moderation/useReportOptions.ts:59
 #: src/lib/moderation/useReportOptions.ts:98
@@ -4228,13 +4228,13 @@ msgstr "ተፈጥሮ"
 
 #: src/components/StarterPack/StarterPackCard.tsx:124
 msgid "Navigate to {0}"
-msgstr ""
+msgstr "ወደ {0} አስስ"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:166
 #: src/screens/Login/LoginForm.tsx:316
 #: src/view/com/modals/ChangePassword.tsx:169
 msgid "Navigates to the next screen"
-msgstr ""
+msgstr "ወደሚቀጥለው ማያ ገጽ ይንቀሳቀሳል"
 
 #: src/view/shell/Drawer.tsx:72
 msgid "Navigates to your profile"
@@ -4254,7 +4254,7 @@ msgstr ""
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:533
 msgid "Nevermind, create a handle for me"
-msgstr ""
+msgstr "ግድ የለውም ፣ እጀታ ፍጠርልኝ"
 
 #: src/view/screens/Lists.tsx:96
 msgctxt "action"
@@ -4273,13 +4273,13 @@ msgstr "አዲስ ውይይት"
 
 #: src/components/dialogs/nuxs/NeueTypography.tsx:51
 #~ msgid "New font settings ✨"
-#~ msgstr ""
+#~ msgstr "አዲስ የቅርጸ-ቁምፊ ቅንብሮች ✨"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:201
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:209
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:356
 msgid "New handle"
-msgstr ""
+msgstr "አዲስ እጀታ"
 
 #: src/components/dms/NewMessagesPill.tsx:92
 msgid "New messages"
@@ -4291,16 +4291,16 @@ msgstr ""
 
 #: src/view/com/modals/ChangePassword.tsx:213
 msgid "New password"
-msgstr ""
+msgstr "አዲስ የይለፍ ቃል"
 
 #: src/view/com/modals/ChangePassword.tsx:218
 msgid "New Password"
-msgstr ""
+msgstr "አዲስ የይለፍ ቃል"
 
 #: src/view/com/feeds/FeedPage.tsx:143
 msgctxt "action"
 msgid "New post"
-msgstr ""
+msgstr "አዲስ ልጥፍ"
 
 #: src/view/screens/Feeds.tsx:582
 #: src/view/screens/Notifications.tsx:224
@@ -4309,12 +4309,12 @@ msgstr ""
 #: src/view/screens/ProfileList.tsx:248
 #: src/view/screens/ProfileList.tsx:287
 msgid "New post"
-msgstr ""
+msgstr "አዲስ ልጥፍ"
 
 #: src/view/shell/desktop/LeftNav.tsx:322
 msgctxt "action"
 msgid "New Post"
-msgstr ""
+msgstr "አዲስ ልጥፍ"
 
 #: src/components/NewskieDialog.tsx:83
 msgid "New user info dialog"
@@ -4367,17 +4367,17 @@ msgstr "ቀጣይ ምስል"
 
 #: src/screens/Settings/AppPasswords.tsx:100
 msgid "No app passwords yet"
-msgstr ""
+msgstr "ገና ምንም የመተግበሪያ ይለፍ ቃል የለም"
 
 #: src/view/screens/ProfileFeed.tsx:565
 #: src/view/screens/ProfileList.tsx:882
 msgid "No description"
-msgstr ""
+msgstr "ምንም መግለጫ የለም"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:378
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:380
 msgid "No DNS Panel"
-msgstr ""
+msgstr "ምንም የዲ ኤን ኤስ ፓነል የለም"
 
 #: src/components/dialogs/GifSelect.tsx:231
 msgid "No featured GIFs found. There may be an issue with Tenor."
@@ -4403,7 +4403,7 @@ msgstr ""
 
 #: src/screens/Messages/components/ChatListItem.tsx:116
 msgid "No messages yet"
-msgstr ""
+msgstr "እስካሁን ምንም መልእክት የለም"
 
 #: src/screens/Messages/ChatList.tsx:271
 msgid "No more conversations to show"
@@ -4411,12 +4411,12 @@ msgstr ""
 
 #: src/view/com/notifications/Feed.tsx:121
 msgid "No notifications yet!"
-msgstr ""
+msgstr "እስካሁን ምንም ማሳወቂያዎች የሉም!"
 
 #: src/screens/Messages/Settings.tsx:95
 #: src/screens/Messages/Settings.tsx:98
 msgid "No one"
-msgstr ""
+msgstr "ማንም"
 
 #: src/components/WhoCanReply.tsx:237
 msgid "No one but the author can quote this post."
@@ -4424,11 +4424,11 @@ msgstr ""
 
 #: src/screens/Profile/Sections/Feed.tsx:65
 msgid "No posts yet."
-msgstr ""
+msgstr "ገና ምንም ልጥፎች የሉም።"
 
 #: src/view/com/post-thread/PostQuotes.tsx:106
 msgid "No quotes yet"
-msgstr ""
+msgstr "ገና ምንም ጥቅሶች የሉም"
 
 #: src/view/com/post-thread/PostRepostedBy.tsx:78
 msgid "No reposts yet"
@@ -4437,15 +4437,15 @@ msgstr ""
 #: src/view/com/composer/text-input/mobile/Autocomplete.tsx:111
 #: src/view/com/composer/text-input/web/Autocomplete.tsx:196
 msgid "No result"
-msgstr ""
+msgstr "ውጤት የለም"
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:199
 msgid "No results"
-msgstr ""
+msgstr "ውጤቶች የሉም"
 
 #: src/components/Lists.tsx:215
 msgid "No results found"
-msgstr ""
+msgstr "ምንም ውጤቶች አልተገኙም"
 
 #: src/view/screens/Feeds.tsx:513
 msgid "No results found for \"{query}\""
@@ -4469,11 +4469,11 @@ msgstr ""
 #: src/components/dialogs/EmbedConsent.tsx:104
 #: src/components/dialogs/EmbedConsent.tsx:111
 msgid "No thanks"
-msgstr ""
+msgstr "አልፈልግም፣አመሰግናለሁ"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:376
 msgid "Nobody"
-msgstr ""
+msgstr "ማንም"
 
 #: src/components/LikedByList.tsx:80
 #: src/components/LikesDialog.tsx:97
@@ -4491,27 +4491,27 @@ msgstr ""
 
 #: src/screens/StarterPack/Wizard/StepProfiles.tsx:102
 msgid "Nobody was found. Try searching for someone else."
-msgstr ""
+msgstr "ማንም ሰው አልተገኘም። ሌላ ሰው ለመፈለግ ይሞክሩ።""
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:42
 msgid "Non-sexual Nudity"
-msgstr ""
+msgstr "ወሲባዊ ያልሆነ እርቃንነት"
 
 #: src/Navigation.tsx:128
 #: src/view/screens/Profile.tsx:128
 msgid "Not Found"
-msgstr ""
+msgstr "አልተገኘም"
 
 #: src/view/com/modals/VerifyEmail.tsx:254
 #: src/view/com/modals/VerifyEmail.tsx:260
 msgid "Not right now"
-msgstr ""
+msgstr "አሁን አይደለም"
 
 #: src/view/com/profile/ProfileMenu.tsx:348
 #: src/view/com/util/forms/PostDropdownBtn.tsx:698
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:350
 msgid "Note about sharing"
-msgstr ""
+msgstr "ስለማጋራት ማስታወሻ"
 
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:81
 msgid "Note: Bluesky is an open and public network. This setting only limits the visibility of your content on the Bluesky app and website, and other apps may not respect this setting. Your content may still be shown to logged-out users by other apps and websites."
@@ -4519,28 +4519,28 @@ msgstr ""
 
 #: src/screens/Messages/ChatList.tsx:213
 msgid "Nothing here"
-msgstr ""
+msgstr "እዚህ ምንም የለም"
 
 #: src/screens/Settings/NotificationSettings.tsx:51
 msgid "Notification filters"
-msgstr ""
+msgstr "የማሳወቂያ ማጣሪያዎች"
 
 #: src/Navigation.tsx:383
 #: src/view/screens/Notifications.tsx:117
 msgid "Notification settings"
-msgstr ""
+msgstr "የማሳወቂያ ቅንብሮች"
 
 #: src/screens/Settings/NotificationSettings.tsx:37
 msgid "Notification Settings"
-msgstr ""
+msgstr "የማሳወቂያ ቅንብሮች"
 
 #: src/screens/Messages/Settings.tsx:117
 msgid "Notification sounds"
-msgstr ""
+msgstr "የማሳወቂያ ድምፆች"
 
 #: src/screens/Messages/Settings.tsx:114
 msgid "Notification Sounds"
-msgstr ""
+msgstr "የማሳወቂያ ድምፆች"
 
 #: src/Navigation.tsx:595
 #: src/view/screens/Notifications.tsx:143
@@ -4622,15 +4622,15 @@ msgstr ""
 
 #: src/components/WhoCanReply.tsx:217
 msgid "Only {0} can reply."
-msgstr ""
+msgstr "{0} ብቻ ነው መልስ መስጠት የሚችሉት።"
 
 #: src/screens/Signup/StepHandle.tsx:152
 msgid "Only contains letters, numbers, and hyphens"
-msgstr ""
+msgstr "ፊደሎችን፣ ቁጥሮችን እና ሰረዞችን ብቻ ይዟል"
 
 #: src/lib/media/picker.shared.ts:29
 msgid "Only image files are supported"
-msgstr ""
+msgstr "የምስል ፋይሎች ብቻ ናቸው የሚደገፉት"
 
 #: src/view/com/composer/videos/SubtitleFilePicker.tsx:40
 msgid "Only WebVTT (.vtt) files are supported"
@@ -4894,11 +4894,11 @@ msgstr ""
 #: src/lib/moderation/useReportOptions.ts:27
 #: src/view/com/composer/labels/LabelsBtn.tsx:187
 msgid "Other"
-msgstr ""
+msgstr "ሌላ"
 
 #: src/components/AccountList.tsx:83
 msgid "Other account"
-msgstr ""
+msgstr "ሌላ አካውንት"
 
 #: src/view/screens/Settings/index.tsx:380
 #~ msgid "Other accounts"
@@ -4906,7 +4906,7 @@ msgstr ""
 
 #: src/view/com/composer/select-language/SelectLangBtn.tsx:93
 msgid "Other..."
-msgstr ""
+msgstr "ሌላ..."
 
 #: src/screens/Messages/components/ChatDisabled.tsx:28
 msgid "Our moderators have reviewed reports and decided to disable your access to chats on Bluesky."
@@ -4915,11 +4915,11 @@ msgstr ""
 #: src/components/Lists.tsx:216
 #: src/view/screens/NotFound.tsx:47
 msgid "Page not found"
-msgstr ""
+msgstr "ገጽ አልተገኘም"
 
 #: src/view/screens/NotFound.tsx:44
 msgid "Page Not Found"
-msgstr ""
+msgstr "ገጽ አልተገኘም"
 
 #: src/screens/Login/LoginForm.tsx:210
 #: src/screens/Settings/AccountSettings.tsx:110
@@ -4928,42 +4928,42 @@ msgstr ""
 #: src/view/com/modals/DeleteAccount.tsx:258
 #: src/view/com/modals/DeleteAccount.tsx:265
 msgid "Password"
-msgstr ""
+msgstr "የይለፍ ቃል"
 
 #: src/view/com/modals/ChangePassword.tsx:143
 msgid "Password Changed"
-msgstr ""
+msgstr "የይለፍ ቃሉ ተቀይሯል"
 
 #: src/screens/Login/index.tsx:154
 msgid "Password updated"
-msgstr ""
+msgstr "የይለፍ ቃሉ ዘምኗል"
 
 #: src/screens/Login/PasswordUpdatedForm.tsx:24
 msgid "Password updated!"
-msgstr ""
+msgstr "የይለፍ ቃሉ ዘምኗል!"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:43
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:141
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:368
 msgid "Pause"
-msgstr ""
+msgstr "ለአፍታ አቁም"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:320
 msgid "Pause video"
-msgstr ""
+msgstr "ቪዲዮን ለአፍታ አቁም"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:182
 #: src/view/screens/Search/Search.tsx:531
 msgid "People"
-msgstr ""
+msgstr "ሰዎች"
 
 #: src/Navigation.tsx:183
 msgid "People followed by @{0}"
-msgstr ""
+msgstr "@{0} የሚከተላቸው ሰዎች"
 
 #: src/Navigation.tsx:176
 msgid "People following @{0}"
-msgstr ""
+msgstr "@{0}ን የሚከተሉ ሰዎች"
 
 #: src/view/com/lightbox/Lightbox.tsx:27
 msgid "Permission to access camera roll is required."
@@ -4980,24 +4980,24 @@ msgstr ""
 #: src/screens/Onboarding/index.tsx:28
 #: src/screens/Onboarding/state.ts:96
 msgid "Pets"
-msgstr ""
+msgstr "የቤት እንስሳት"
 
 #: src/screens/Onboarding/state.ts:97
 msgid "Photography"
-msgstr ""
+msgstr "ፎቶግራፊ"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:171
 msgid "Pictures meant for adults."
-msgstr ""
+msgstr "ለአዋቂዎች የታሰቡ ስዕሎች"
 
 #: src/view/screens/ProfileFeed.tsx:293
 #: src/view/screens/ProfileList.tsx:676
 msgid "Pin to home"
-msgstr ""
+msgstr "ወደ መነሻ ይሰኩት"
 
 #: src/view/screens/ProfileFeed.tsx:296
 msgid "Pin to Home"
-msgstr ""
+msgstr "ወደ መነሻ ይሰኩት"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:398
 #: src/view/com/util/forms/PostDropdownBtn.tsx:405
@@ -5006,11 +5006,11 @@ msgstr ""
 
 #: src/view/com/posts/FeedItem.tsx:363
 msgid "Pinned"
-msgstr ""
+msgstr "የተሰኩ"
 
 #: src/view/screens/SavedFeeds.tsx:130
 msgid "Pinned Feeds"
-msgstr ""
+msgstr "የተሰኩ ምግቦች"
 
 #: src/view/screens/ProfileList.tsx:355
 msgid "Pinned to your feeds"
@@ -5020,11 +5020,11 @@ msgstr ""
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:141
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:369
 msgid "Play"
-msgstr ""
+msgstr "ተጫወት"
 
 #: src/view/com/util/post-embeds/ExternalGifEmbed.tsx:128
 msgid "Play {0}"
-msgstr ""
+msgstr "{0} አጫውት"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:42
 msgid "Play or pause the GIF"
@@ -5033,12 +5033,12 @@ msgstr ""
 #: src/view/com/util/post-embeds/VideoEmbed.tsx:110
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:321
 msgid "Play video"
-msgstr ""
+msgstr "ቪዲዮ አጫውት"
 
 #: src/view/com/util/post-embeds/ExternalPlayerEmbed.tsx:58
 #: src/view/com/util/post-embeds/ExternalPlayerEmbed.tsx:59
 msgid "Play Video"
-msgstr ""
+msgstr "ቪዲዮ አጫውት"
 
 #: src/view/com/util/post-embeds/ExternalGifEmbed.tsx:127
 msgid "Plays the GIF"
@@ -5046,16 +5046,16 @@ msgstr ""
 
 #: src/screens/Signup/state.ts:217
 msgid "Please choose your handle."
-msgstr ""
+msgstr "እባክዎ እጀታዎን ይምረጡ"
 
 #: src/screens/Signup/state.ts:210
 #: src/screens/Signup/StepInfo/index.tsx:114
 msgid "Please choose your password."
-msgstr ""
+msgstr "እባክዎ የይለፍ ቃልዎን ይምረጡ"
 
 #: src/screens/Signup/state.ts:231
 msgid "Please complete the verification captcha."
-msgstr ""
+msgstr "እባክዎ የማረጋገጫ ካፕቻውን ያጠናቅቁ"
 
 #: src/view/com/modals/ChangeEmail.tsx:65
 msgid "Please confirm your email before changing it. This is a temporary requirement while email-updating tools are added, and it will soon be removed."
@@ -5075,20 +5075,20 @@ msgstr ""
 
 #: src/components/dialogs/MutedWords.tsx:86
 msgid "Please enter a valid word, tag, or phrase to mute"
-msgstr ""
+msgstr "እባክዎ ለማፈን የሚፈልጉትን ትክክለኛ ቃል፣ መለያ ወይም ሐረግ ያስገቡ"
 
 #: src/screens/Signup/state.ts:196
 #: src/screens/Signup/StepInfo/index.tsx:102
 msgid "Please enter your email."
-msgstr ""
+msgstr "እባኮትን ኢሜልዎን ያስገቡ"
 
 #: src/screens/Signup/StepInfo/index.tsx:96
 msgid "Please enter your invite code."
-msgstr ""
+msgstr "እባክዎ የግብዣ ኮድዎን ያስገቡ።"
 
 #: src/view/com/modals/DeleteAccount.tsx:254
 msgid "Please enter your password as well:"
-msgstr ""
+msgstr "እባኮትን የይለፍ ቃልዎንም ያስገቡ፡-"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:265
 msgid "Please explain why you think this label was incorrectly applied by {0}"
@@ -5101,50 +5101,50 @@ msgstr ""
 #: src/lib/hooks/useAccountSwitcher.ts:45
 #: src/lib/hooks/useAccountSwitcher.ts:55
 msgid "Please sign in as @{0}"
-msgstr ""
+msgstr "እባክዎ እንደ @{0} ይግቡ"
 
 #: src/view/com/modals/VerifyEmail.tsx:109
 msgid "Please Verify Your Email"
-msgstr ""
+msgstr "እባክዎ ኢሜልዎን ያረጋግጡ"
 
 #: src/screens/Onboarding/index.tsx:34
 #: src/screens/Onboarding/state.ts:98
 msgid "Politics"
-msgstr ""
+msgstr "ፖለቲካ"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:158
 msgid "Porn"
-msgstr ""
+msgstr "የወሲብ ፊልም "
 
 #: src/view/com/composer/Composer.tsx:919
 msgctxt "action"
 msgid "Post"
-msgstr ""
+msgstr "ለጥፍ"
 
 #: src/view/com/post-thread/PostThread.tsx:481
 msgctxt "description"
 msgid "Post"
-msgstr ""
+msgstr "ለጥፍ"
 
 #: src/view/com/composer/Composer.tsx:917
 msgctxt "action"
 msgid "Post All"
-msgstr ""
+msgstr "ሁሉንም ለጥፍ"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:204
 msgid "Post by {0}"
-msgstr ""
+msgstr "በ{0} የተለጠፈ"
 
 #: src/Navigation.tsx:202
 #: src/Navigation.tsx:209
 #: src/Navigation.tsx:216
 #: src/Navigation.tsx:223
 msgid "Post by @{0}"
-msgstr ""
+msgstr "በ@{0} የተለጠፈ"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:180
 msgid "Post deleted"
-msgstr ""
+msgstr "ልጥፍ ተሰርዟል"
 
 #: src/lib/api/index.ts:185
 msgid "Post failed to upload. Please check your Internet connection and try again."
@@ -5152,17 +5152,17 @@ msgstr ""
 
 #: src/view/com/post-thread/PostThread.tsx:212
 msgid "Post hidden"
-msgstr ""
+msgstr "ልጥፍ ተደብቋል"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:106
 #: src/lib/moderation/useModerationCauseDescription.ts:104
 msgid "Post Hidden by Muted Word"
-msgstr ""
+msgstr "ልጥፍ በታፈነ ቃል ተደብቋል"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:109
 #: src/lib/moderation/useModerationCauseDescription.ts:113
 msgid "Post Hidden by You"
-msgstr ""
+msgstr "ልጥፍ በእርስዎ ተደብቋል"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:284
 msgid "Post interaction settings"
@@ -5170,24 +5170,24 @@ msgstr ""
 
 #: src/view/com/composer/select-language/SelectLangBtn.tsx:89
 msgid "Post language"
-msgstr ""
+msgstr "የልጥፍ ቋንቋ"
 
 #: src/view/com/modals/lang-settings/PostLanguagesSettings.tsx:76
 msgid "Post Languages"
-msgstr ""
+msgstr የልጥፍ ቋንቋዎች"
 
 #: src/view/com/post-thread/PostThread.tsx:207
 #: src/view/com/post-thread/PostThread.tsx:219
 msgid "Post not found"
-msgstr ""
+msgstr "ልጥፍ አልተገኘም"
 
 #: src/state/queries/pinned-post.ts:59
 msgid "Post pinned"
-msgstr ""
+msgstr "ልጥፍ ተሰክቷል"
 
 #: src/state/queries/pinned-post.ts:61
 msgid "Post unpinned"
-msgstr ""
+msgstr "ልጥፍ ተነቅሏል"
 
 #: src/lib/api/index.ts:106
 #~ msgid "Posting..."
@@ -5212,11 +5212,11 @@ msgstr "የተደበቁ ልጥፎች"
 
 #: src/view/com/modals/LinkWarning.tsx:60
 msgid "Potentially Misleading Link"
-msgstr ""
+msgstr "አሳሳች ሊሆን የሚችል አገናኝ"
 
 #: src/state/queries/notifications/settings.ts:44
 msgid "Preference saved"
-msgstr ""
+msgstr "ምርጫ ተቀምጧል"
 
 #: src/screens/Messages/components/MessageListError.tsx:19
 msgid "Press to attempt reconnection"
@@ -5231,7 +5231,7 @@ msgstr ""
 #: src/screens/Messages/components/MessageListError.tsx:24
 #: src/screens/Signup/BackNextButtons.tsx:48
 msgid "Press to retry"
-msgstr ""
+msgstr "እንደገና ለመሞከር ይጫኑ"
 
 #: src/components/KnownFollowers.tsx:124
 msgid "Press to view followers of this account that you also follow"
@@ -5239,16 +5239,16 @@ msgstr ""
 
 #: src/view/com/lightbox/Lightbox.web.tsx:148
 msgid "Previous image"
-msgstr ""
+msgstr "የቀድሞ ምስል"
 
 #: src/screens/Settings/LanguageSettings.tsx:158
 msgid "Primary Language"
-msgstr ""
+msgstr "ዋና ቋንቋ"
 
 #: src/screens/Settings/ThreadPreferences.tsx:99
 #: src/screens/Settings/ThreadPreferences.tsx:104
 msgid "Prioritize your Follows"
-msgstr ""
+msgstr "የሚከተሉትን ቅድሚያ ይስጡ"
 
 #: src/view/screens/PreferencesThreads.tsx:92
 #~ msgid "Prioritize Your Follows"
@@ -5256,21 +5256,21 @@ msgstr ""
 
 #: src/screens/Settings/NotificationSettings.tsx:54
 msgid "Priority notifications"
-msgstr ""
+msgstr "ቅድሚያ የሚሰጡ ማስታወቂያዎች"
 
 #: src/view/shell/desktop/RightNav.tsx:81
 msgid "Privacy"
-msgstr ""
+msgstr "ግላዊነት"
 
 #: src/screens/Settings/Settings.tsx:153
 #: src/screens/Settings/Settings.tsx:156
 msgid "Privacy and security"
-msgstr ""
+msgstr "ግላዊነት እና ደህንነት"
 
 #: src/Navigation.tsx:345
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:33
 msgid "Privacy and Security"
-msgstr ""
+msgstr "ግላዊነት እና ደህንነት"
 
 #: src/Navigation.tsx:269
 #: src/screens/Settings/AboutSettings.tsx:38
@@ -5279,7 +5279,7 @@ msgstr ""
 #: src/view/shell/Drawer.tsx:624
 #: src/view/shell/Drawer.tsx:625
 msgid "Privacy Policy"
-msgstr ""
+msgstr "የግላዊነት ፖሊሲ"
 
 #: src/view/com/composer/Composer.tsx:1619
 msgid "Processing video..."
@@ -5293,19 +5293,19 @@ msgstr ""
 #: src/view/screens/DebugMod.tsx:913
 #: src/view/screens/Profile.tsx:363
 msgid "profile"
-msgstr ""
+msgstr "የኔ ገፅ"
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:271
 #: src/view/shell/desktop/LeftNav.tsx:493
 #: src/view/shell/Drawer.tsx:71
 #: src/view/shell/Drawer.tsx:516
 msgid "Profile"
-msgstr ""
+msgstr "የኔ ገፅ"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:191
 #: src/view/com/modals/EditProfile.tsx:124
 msgid "Profile updated"
-msgstr ""
+msgstr "የኔ ገፅ ዘምኗል"
 
 #: src/view/screens/Settings/index.tsx:976
 #~ msgid "Protect your account by verifying your email."
@@ -5313,7 +5313,7 @@ msgstr ""
 
 #: src/screens/Onboarding/StepFinished.tsx:242
 msgid "Public"
-msgstr ""
+msgstr "ለሁሉም"
 
 #: src/view/screens/ModerationModlists.tsx:75
 msgid "Public, shareable lists of users to mute or block in bulk."
@@ -5576,7 +5576,7 @@ msgstr ""
 
 #: src/view/screens/Profile.tsx:229
 msgid "Replies"
-msgstr ""
+msgstr "መልሶች"
 
 #: src/components/WhoCanReply.tsx:69
 msgid "Replies disabled"
@@ -5629,7 +5629,7 @@ msgstr ""
 #: src/view/com/posts/FeedItem.tsx:550
 msgctxt "description"
 msgid "Reply to you"
-msgstr ""
+msgstr "ለእርሶ መልስ"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:338
 msgid "Reply visibility updated"
@@ -5792,25 +5792,25 @@ msgstr ""
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:173
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:176
 msgid "Resend email"
-msgstr ""
+msgstr "ኢሜል በድጋሚ ላክ"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:267
 #: src/components/dialogs/VerifyEmailDialog.tsx:277
 #: src/components/intents/VerifyEmailIntentDialog.tsx:130
 msgid "Resend Email"
-msgstr ""
+msgstr "ኢሜል በድጋሚ ላክ"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:122
 msgid "Resend Verification Email"
-msgstr ""
+msgstr "የማረጋገጫ ኢሜይልን እንደገና ላክ"
 
 #: src/view/com/modals/ChangePassword.tsx:186
 msgid "Reset code"
-msgstr ""
+msgstr "ኮድ ዳግም አስጀምር"
 
 #: src/view/com/modals/ChangePassword.tsx:193
 msgid "Reset Code"
-msgstr ""
+msgstr "ኮድ ዳግም አስጀምር"
 
 #: src/screens/Settings/Settings.tsx:335
 #: src/screens/Settings/Settings.tsx:337
@@ -5819,7 +5819,7 @@ msgstr ""
 
 #: src/screens/Login/ForgotPasswordForm.tsx:80
 msgid "Reset password"
-msgstr ""
+msgstr "የይለፍ ቃል ዳግም አስጀምር"
 
 #: src/view/screens/Settings/index.tsx:847
 #: src/view/screens/Settings/index.tsx:850
@@ -5858,23 +5858,23 @@ msgstr ""
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoFallback.tsx:55
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoFallback.tsx:57
 msgid "Retry"
-msgstr ""
+msgstr "እንደገና ይሞክሩ"
 
 #: src/components/Error.tsx:74
 #: src/screens/List/ListHiddenScreen.tsx:205
 #: src/screens/StarterPack/StarterPackScreen.tsx:751
 #: src/view/screens/ProfileList.tsx:1030
 msgid "Return to previous page"
-msgstr ""
+msgstr "ወደ ቀደመው ገፅ ተመለስ"
 
 #: src/view/screens/NotFound.tsx:61
 msgid "Returns to home page"
-msgstr ""
+msgstr "ወደ መነሻ ገጽ ይመለሳል"
 
 #: src/view/screens/NotFound.tsx:60
 #: src/view/screens/ProfileFeed.tsx:114
 msgid "Returns to previous page"
-msgstr ""
+msgstr "ወደ ቀደመው ገጽ ይመለሳል"
 
 #: src/components/dialogs/BirthDateSettings.tsx:124
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:439
@@ -5893,26 +5893,26 @@ msgstr ""
 #: src/view/com/modals/EditProfile.tsx:219
 #: src/view/screens/SavedFeeds.tsx:103
 msgid "Save"
-msgstr ""
+msgstr "ማስቀመጥ"
 
 #: src/view/com/lightbox/ImageViewing/index.tsx:545
 #: src/view/com/modals/CreateOrEditList.tsx:325
 msgctxt "action"
 msgid "Save"
-msgstr ""
+msgstr "ያስቀምጡ"
 
 #: src/components/dialogs/BirthDateSettings.tsx:118
 msgid "Save birthday"
-msgstr ""
+msgstr "የልደት ቀን ያስቀምጡ"
 
 #: src/view/screens/SavedFeeds.tsx:98
 #: src/view/screens/SavedFeeds.tsx:103
 msgid "Save changes"
-msgstr ""
+msgstr "ለውጦችን ያስቀምጡ"
 
 #: src/view/com/modals/EditProfile.tsx:227
 msgid "Save Changes"
-msgstr ""
+msgstr "ለውጦችን ያስቀምጡ"
 
 #: src/view/com/modals/ChangeHandle.tsx:158
 #~ msgid "Save handle change"
@@ -5921,7 +5921,7 @@ msgstr ""
 #: src/components/StarterPack/ShareDialog.tsx:151
 #: src/components/StarterPack/ShareDialog.tsx:158
 msgid "Save image"
-msgstr ""
+msgstr "ምስል ያስቀምጡ"
 
 #: src/view/com/modals/CropImage.web.tsx:104
 msgid "Save image crop"
@@ -5933,25 +5933,25 @@ msgstr ""
 
 #: src/components/StarterPack/QrCodeDialog.tsx:179
 msgid "Save QR code"
-msgstr ""
+msgstr "የQR ኮድ አስቀምጥ"
 
 #: src/view/screens/ProfileFeed.tsx:338
 #: src/view/screens/ProfileFeed.tsx:344
 msgid "Save to my feeds"
-msgstr ""
+msgstr "ወደ ምግቦቼ አስቀምጥ"
 
 #: src/view/screens/SavedFeeds.tsx:171
 msgid "Saved Feeds"
-msgstr ""
+msgstr "ምግቦችን ያስቀምጡ"
 
 #: src/view/com/lightbox/Lightbox.tsx:44
 msgid "Saved to your camera roll"
-msgstr ""
+msgstr "ወደ ካሜራ ጥቅልዎ ተቀምጧል"
 
 #: src/view/screens/ProfileFeed.tsx:206
 #: src/view/screens/ProfileList.tsx:366
 msgid "Saved to your feeds"
-msgstr ""
+msgstr "ወደ ምግቦችዎ ተቀምጧል"
 
 #: src/view/com/modals/EditProfile.tsx:220
 msgid "Saves any changes to your profile"
@@ -5970,16 +5970,16 @@ msgstr ""
 #: src/view/com/notifications/FeedItem.tsx:539
 #: src/view/com/notifications/FeedItem.tsx:564
 msgid "Say hello!"
-msgstr ""
+msgstr "ሰላም በሉ"
 
 #: src/screens/Onboarding/index.tsx:33
 #: src/screens/Onboarding/state.ts:99
 msgid "Science"
-msgstr ""
+msgstr "ሳይንስ"
 
 #: src/view/screens/ProfileList.tsx:986
 msgid "Scroll to top"
-msgstr ""
+msgstr "ወደ ላይ ይሸብልሉ"
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:484
 #: src/components/forms/SearchInput.tsx:34
@@ -6007,7 +6007,7 @@ msgstr ""
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:71
 msgid "Search for users"
-msgstr ""
+msgstr "ተጠቃሚዎችን ይፈልጉ"
 
 #: src/components/dialogs/GifSelect.tsx:177
 msgid "Search GIFs"
@@ -6060,7 +6060,7 @@ msgstr ""
 
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:67
 msgid "Select a color"
-msgstr ""
+msgstr "ቀለም ይምረጡ"
 
 #: src/screens/Login/ChooseAccountForm.tsx:77
 msgid "Select account"
@@ -6096,15 +6096,15 @@ msgstr ""
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:245
 msgid "Select language..."
-msgstr ""
+msgstr "ቋንቋ ይምረጡ..."
 
 #: src/screens/Settings/LanguageSettings.tsx:266
 msgid "Select languages"
-msgstr ""
+msgstr "ቋንቋዎችን ይምረጡ"
 
 #: src/components/ReportDialog/SelectLabelerView.tsx:29
 msgid "Select moderator"
-msgstr ""
+msgstr "አወያይ ይምረጡ"
 
 #: src/view/com/util/Selector.tsx:108
 msgid "Select option {i} of {numItems}"
@@ -6128,7 +6128,7 @@ msgstr ""
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:106
 msgid "Select video"
-msgstr ""
+msgstr "ቪዲዮ ይምረጡ"
 
 #: src/components/dialogs/MutedWords.tsx:242
 msgid "Select what content this mute word should apply to."
@@ -6144,7 +6144,7 @@ msgstr ""
 
 #: src/screens/Signup/StepInfo/index.tsx:223
 msgid "Select your date of birth"
-msgstr ""
+msgstr "የልደት ቀንዎን ይምረጡ"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:192
 msgid "Select your interests from the options below"
@@ -6160,34 +6160,34 @@ msgstr ""
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:232
 msgid "Send Confirmation"
-msgstr ""
+msgstr "ማረጋገጫ ይላኩ"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:225
 msgid "Send confirmation email"
-msgstr ""
+msgstr "ማረጋገጫ ኢሜይል ይላኩ"
 
 #: src/view/com/modals/VerifyEmail.tsx:210
 #: src/view/com/modals/VerifyEmail.tsx:212
 msgid "Send Confirmation Email"
-msgstr ""
+msgstr "ማረጋገጫ ኢሜይል ይላኩ"
 
 #: src/view/com/modals/DeleteAccount.tsx:149
 msgid "Send email"
-msgstr ""
+msgstr "ኢሜይል ይላኩ"
 
 #: src/view/com/modals/DeleteAccount.tsx:162
 msgctxt "action"
 msgid "Send Email"
-msgstr ""
+msgstr "ኢሜይል ይላኩ"
 
 #: src/view/shell/Drawer.tsx:312
 msgid "Send feedback"
-msgstr ""
+msgstr "ግብረ መልስ ይላኩ"
 
 #: src/screens/Messages/components/MessageInput.tsx:173
 #: src/screens/Messages/components/MessageInput.web.tsx:219
 msgid "Send message"
-msgstr ""
+msgstr "መልዕክት ይላኩ"
 
 #: src/components/dms/dialogs/ShareViaChatDialog.tsx:62
 msgid "Send post to..."
@@ -6287,31 +6287,31 @@ msgstr ""
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:339
 #: src/view/screens/ProfileList.tsx:487
 msgid "Share"
-msgstr ""
+msgstr "ያካፍሉ"
 
 #: src/view/com/lightbox/ImageViewing/index.tsx:554
 msgctxt "action"
 msgid "Share"
-msgstr ""
+msgstr "ያካፍሉ"
 
 #: src/components/dms/ChatEmptyPill.tsx:37
 msgid "Share a cool story!"
-msgstr ""
+msgstr "አሪፍ ታሪክ አካፍሉ"
 
 #: src/components/dms/ChatEmptyPill.tsx:36
 msgid "Share a fun fact!"
-msgstr ""
+msgstr "አስደናቂ እውነታዎች አካፍሉ"
 
 #: src/view/com/profile/ProfileMenu.tsx:353
 #: src/view/com/util/forms/PostDropdownBtn.tsx:703
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:355
 msgid "Share anyway"
-msgstr ""
+msgstr "ለማንኛውም አካፍሉ"
 
 #: src/view/screens/ProfileFeed.tsx:364
 #: src/view/screens/ProfileFeed.tsx:366
 msgid "Share feed"
-msgstr ""
+msgstr "ምግብ አካፍሉን"
 
 #: src/components/StarterPack/ShareDialog.tsx:124
 #: src/components/StarterPack/ShareDialog.tsx:131
@@ -6357,7 +6357,7 @@ msgstr ""
 #: src/components/moderation/LabelPreference.tsx:137
 #: src/components/moderation/PostHider.tsx:122
 msgid "Show"
-msgstr ""
+msgstr "አሳይ"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:178
 msgid "Show alt text"
@@ -6682,7 +6682,7 @@ msgstr ""
 
 #: src/view/screens/Profile.tsx:233
 msgid "Starter Packs"
-msgstr ""
+msgstr "የጀማሪ ጥቅሎች"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:244
 msgid "Starter packs let you easily share your favorite feeds and people with your friends."
@@ -6711,7 +6711,7 @@ msgstr ""
 #: src/screens/Messages/components/ChatDisabled.tsx:142
 #: src/screens/Messages/components/ChatDisabled.tsx:143
 msgid "Submit"
-msgstr ""
+msgstr "አስገቡ"
 
 #: src/view/screens/ProfileList.tsx:703
 msgid "Subscribe"
@@ -6735,7 +6735,7 @@ msgstr ""
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:95
 msgid "Success!"
-msgstr ""
+msgstr "ስኬት!"
 
 #: src/view/screens/Search/Explore.tsx:332
 msgid "Suggested accounts"
@@ -6754,18 +6754,18 @@ msgstr ""
 #: src/view/screens/Support.tsx:31
 #: src/view/screens/Support.tsx:34
 msgid "Support"
-msgstr ""
+msgstr "ድጋፍ"
 
 #: src/screens/Settings/Settings.tsx:94
 #: src/screens/Settings/Settings.tsx:108
 #: src/screens/Settings/Settings.tsx:403
 msgid "Switch account"
-msgstr ""
+msgstr "አካውንት ይቀይሩ"
 
 #: src/components/dialogs/SwitchAccount.tsx:46
 #: src/components/dialogs/SwitchAccount.tsx:49
 msgid "Switch Account"
-msgstr ""
+msgstr "አካውንት ይቀይሩ"
 
 #: src/view/screens/Settings/index.tsx:131
 #~ msgid "Switch to {0}"
@@ -6773,18 +6773,18 @@ msgstr ""
 
 #: src/view/screens/Settings/index.tsx:132
 #~ msgid "Switches the account you are logged in to"
-#~ msgstr ""
+#~ msgstr "የገቡበትን አካውንት ይቀይራል።"
 
 #: src/screens/Settings/AppearanceSettings.tsx:84
 #: src/screens/Settings/AppearanceSettings.tsx:132
 msgid "System"
-msgstr ""
+msgstr "ስርዓት"
 
 #: src/screens/Settings/AboutSettings.tsx:53
 #: src/screens/Settings/AboutSettings.tsx:56
 #: src/screens/Settings/Settings.tsx:309
 msgid "System log"
-msgstr ""
+msgstr "የስርዓት መዝገብ"
 
 #: src/components/TagMenu/index.tsx:87
 msgid "Tag menu: {displayTag}"
@@ -6792,7 +6792,7 @@ msgstr ""
 
 #: src/components/dialogs/MutedWords.tsx:282
 msgid "Tags only"
-msgstr ""
+msgstr "መለያዎች ብቻ"
 
 #: src/components/ProgressGuide/Toast.tsx:150
 msgid "Tap to dismiss"
@@ -6821,28 +6821,28 @@ msgstr ""
 
 #: src/components/ProgressGuide/List.tsx:49
 msgid "Teach our algorithm what you like"
-msgstr ""
+msgstr "የሚወዱትን ስልተ-ቀመር ያስተምሩ"
 
 #: src/screens/Onboarding/index.tsx:36
 #: src/screens/Onboarding/state.ts:101
 msgid "Tech"
-msgstr ""
+msgstr "ቴክ"
 
 #: src/components/dms/ChatEmptyPill.tsx:35
 msgid "Tell a joke!"
-msgstr ""
+msgstr "አንድ ቀልድ ንገሩ!"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:352
 msgid "Tell us a bit about yourself"
-msgstr ""
+msgstr "ስለራስዎ ጥቂት ይንገሩን"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:63
 msgid "Tell us a little more"
-msgstr ""
+msgstr "ትንሽ ተጨማሪ ይንገሩን"
 
 #: src/view/shell/desktop/RightNav.tsx:90
 msgid "Terms"
-msgstr ""
+msgstr "ውሎች"
 
 #: src/Navigation.tsx:274
 #: src/screens/Settings/AboutSettings.tsx:30
@@ -6851,7 +6851,7 @@ msgstr ""
 #: src/view/shell/Drawer.tsx:617
 #: src/view/shell/Drawer.tsx:619
 msgid "Terms of Service"
-msgstr ""
+msgstr "የአገልግሎት ውል"
 
 #: src/lib/moderation/useReportOptions.ts:60
 #: src/lib/moderation/useReportOptions.ts:99
@@ -6862,33 +6862,33 @@ msgstr ""
 
 #: src/components/dialogs/MutedWords.tsx:266
 msgid "Text & tags"
-msgstr ""
+msgstr "ጽሑፍ እና መለያዎች"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:263
 #: src/screens/Messages/components/ChatDisabled.tsx:108
 msgid "Text input field"
-msgstr ""
+msgstr "የጽሑፍ ግብዓት መስክ"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:96
 msgid "Thank you! Your email has been successfully verified."
-msgstr ""
+msgstr "እናመሰግናለን! ኢሜልዎ በተሳካ ሁኔታ ተረጋግጧል"
 
 #: src/components/dms/ReportDialog.tsx:129
 #: src/components/ReportDialog/SubmitView.tsx:82
 msgid "Thank you. Your report has been sent."
-msgstr ""
+msgstr "እናመሰግናለን። የእርስዎ ሪፖርት ተልኳል።"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:82
 msgid "Thanks, you have successfully verified your email address. You can close this dialog."
-msgstr ""
+msgstr "እናመሰግናለን፣ የኢሜል አድራሻዎን በተሳካ ሁኔታ አረጋግጠዋል። ይህንን ንግግር መዝጋት ይችላሉ።"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:468
 msgid "That contains the following:"
-msgstr ""
+msgstr "ይህም የሚከተሉትን ያካትታል:"
 
 #: src/screens/Signup/StepHandle.tsx:51
 msgid "That handle is already taken."
-msgstr ""
+msgstr "ይሄ እጀታ አስቀድሞ ተወስዷል።"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:103
 #: src/screens/StarterPack/StarterPackScreen.tsx:104
@@ -7072,7 +7072,7 @@ msgstr ""
 #: src/view/com/profile/ProfileMenu.tsx:149
 #: src/view/com/profile/ProfileMenu.tsx:161
 msgid "There was an issue! {0}"
-msgstr ""
+msgstr "አንድ ችግር ነበር! {0}"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:182
 #: src/screens/List/ListHiddenScreen.tsx:63
@@ -7083,7 +7083,7 @@ msgstr ""
 #: src/view/screens/ProfileList.tsx:426
 #: src/view/screens/ProfileList.tsx:439
 msgid "There was an issue. Please check your internet connection and try again."
-msgstr ""
+msgstr "አንድ ችግር ነበር። እባክዎ የበይነመረብ ግንኙነትዎን ያረጋግጡ እና እንደገና ይሞክሩ።"
 
 #: src/components/dialogs/GifSelect.tsx:270
 #: src/view/com/util/ErrorBoundary.tsx:59
@@ -7120,7 +7120,7 @@ msgstr ""
 
 #: src/screens/Messages/components/MessageListError.tsx:18
 msgid "This chat was disconnected"
-msgstr ""
+msgstr "ይህ ውይይት ተቋርጧል"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:19
 msgid "This content has been hidden by the moderators."
@@ -7167,7 +7167,7 @@ msgstr ""
 #: src/view/screens/ProfileFeed.tsx:478
 #: src/view/screens/ProfileList.tsx:788
 msgid "This feed is empty."
-msgstr ""
+msgstr "ይህ ምግብ ባዶ ነው።"
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:99
 msgid "This feed is no longer online. We are showing <0>Discover</0> instead."
@@ -7364,16 +7364,16 @@ msgstr ""
 #: src/view/com/util/forms/PostDropdownBtn.tsx:422
 #: src/view/com/util/forms/PostDropdownBtn.tsx:424
 msgid "Translate"
-msgstr ""
+msgstr "ትርጉም"
 
 #: src/view/com/util/error/ErrorScreen.tsx:83
 msgctxt "action"
 msgid "Try again"
-msgstr ""
+msgstr "እንደገና ይሞክሩ"
 
 #: src/screens/Onboarding/state.ts:102
 msgid "TV"
-msgstr ""
+msgstr "ቲቪ"
 
 #: src/view/screens/Settings/index.tsx:712
 #~ msgid "Two-factor authentication"
@@ -7385,11 +7385,11 @@ msgstr ""
 
 #: src/screens/Messages/components/MessageInput.tsx:148
 msgid "Type your message here"
-msgstr ""
+msgstr "መልእክትዎን እዚህ ይተይቡ"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:413
 msgid "Type:"
-msgstr ""
+msgstr "ዓይነት:"
 
 #: src/view/screens/ProfileList.tsx:594
 msgid "Un-block list"
@@ -7425,27 +7425,27 @@ msgstr ""
 #: src/view/com/profile/ProfileMenu.tsx:341
 #: src/view/screens/ProfileList.tsx:685
 msgid "Unblock"
-msgstr ""
+msgstr "አታግድ"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:202
 msgctxt "action"
 msgid "Unblock"
-msgstr ""
+msgstr "አታግድ"
 
 #: src/components/dms/ConvoMenu.tsx:188
 #: src/components/dms/ConvoMenu.tsx:192
 msgid "Unblock account"
-msgstr ""
+msgstr "አካውንት አታግድ"
 
 #: src/view/com/profile/ProfileMenu.tsx:279
 #: src/view/com/profile/ProfileMenu.tsx:285
 msgid "Unblock Account"
-msgstr ""
+msgstr "አካውንት አታግድ"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:277
 #: src/view/com/profile/ProfileMenu.tsx:323
 msgid "Unblock Account?"
-msgstr ""
+msgstr "የአካውንት እገዳ ይነሳ?"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:71
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:72
@@ -7456,11 +7456,11 @@ msgstr ""
 #: src/view/com/profile/FollowButton.tsx:61
 msgctxt "action"
 msgid "Unfollow"
-msgstr ""
+msgstr "አትከተል"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:217
 msgid "Unfollow {0}"
-msgstr ""
+msgstr "{0}ን አትከተል"
 
 #: src/view/com/profile/ProfileMenu.tsx:221
 #: src/view/com/profile/ProfileMenu.tsx:231
@@ -7594,12 +7594,12 @@ msgstr ""
 #: src/view/com/util/UserBanner.tsx:123
 #: src/view/com/util/UserBanner.tsx:126
 msgid "Upload from Camera"
-msgstr ""
+msgstr "ከካሜራ ይጫኑ"
 
 #: src/view/com/util/UserAvatar.tsx:388
 #: src/view/com/util/UserBanner.tsx:140
 msgid "Upload from Files"
-msgstr ""
+msgstr "ከሰነዶች ይጫኑ"
 
 #: src/view/com/util/UserAvatar.tsx:382
 #: src/view/com/util/UserAvatar.tsx:386
@@ -7737,7 +7737,7 @@ msgstr ""
 #: src/screens/Messages/Settings.tsx:86
 #: src/screens/Messages/Settings.tsx:89
 msgid "Users I follow"
-msgstr ""
+msgstr "የምከተላቸው ሰዎች"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:417
 msgid "Users in \"{0}\""
@@ -7749,7 +7749,7 @@ msgstr ""
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:419
 msgid "Value:"
-msgstr ""
+msgstr "ዋጋ"
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:131
 msgid "Verified email required"
@@ -7762,7 +7762,7 @@ msgstr ""
 
 #: src/view/screens/Settings/index.tsx:937
 #~ msgid "Verify email"
-#~ msgstr ""
+#~ msgstr "ኢሜይል ያረጋግጡ"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:134
 #: src/components/intents/VerifyEmailIntentDialog.tsx:67
@@ -7780,11 +7780,11 @@ msgstr ""
 #: src/view/com/modals/ChangeEmail.tsx:200
 #: src/view/com/modals/ChangeEmail.tsx:202
 msgid "Verify New Email"
-msgstr ""
+msgstr "አዲስ ኢሜይል ያረጋግጡ"
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:135
 msgid "Verify now"
-msgstr ""
+msgstr "አሁን ያረጋግጡ"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:498
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:520
@@ -7794,12 +7794,12 @@ msgstr ""
 #: src/screens/Settings/AccountSettings.tsx:68
 #: src/screens/Settings/AccountSettings.tsx:84
 msgid "Verify your email"
-msgstr ""
+msgstr "ኢሜልዎን ያረጋግጡ"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:85
 #: src/view/com/modals/VerifyEmail.tsx:111
 msgid "Verify Your Email"
-msgstr ""
+msgstr "ኢሜልዎን ያረጋግጡ"
 
 #: src/screens/Settings/AboutSettings.tsx:60
 #: src/screens/Settings/AboutSettings.tsx:70
@@ -7813,7 +7813,7 @@ msgstr ""
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:84
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:135
 msgid "Video"
-msgstr ""
+msgstr "ቪዲዮ"
 
 #: src/view/com/composer/state/video.ts:371
 msgid "Video failed to process"
@@ -7822,28 +7822,28 @@ msgstr ""
 #: src/screens/Onboarding/index.tsx:39
 #: src/screens/Onboarding/state.ts:90
 msgid "Video Games"
-msgstr ""
+msgstr "የቪዲዮ ጨዋታዎች"
 
 #: src/view/com/util/post-embeds/VideoEmbed.web.tsx:167
 msgid "Video not found."
-msgstr ""
+msgstr "ቪድዮ አልተገኘም"
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:99
 msgid "Video settings"
-msgstr ""
+msgstr "የቪድዮ ቅንብሮች"
 
 #: src/view/com/composer/Composer.tsx:1626
 msgid "Video uploaded"
-msgstr ""
+msgstr "ቪድዮ ተጭኟል"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:84
 msgid "Video: {0}"
-msgstr ""
+msgstr "ቪድዮ: {0}"
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:79
 #: src/view/com/composer/videos/VideoPreview.web.tsx:44
 msgid "Videos must be less than 60 seconds long"
-msgstr ""
+msgstr "ቪዲዮዎች ከ60 ሰከንድ ያነሰ ርዝመት ሊኖራቸው ይገባል"
 
 #: src/screens/Profile/Header/Shell.tsx:164
 msgid "View {0}'s avatar"
@@ -7880,7 +7880,7 @@ msgstr ""
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:139
 msgid "View details"
-msgstr ""
+msgstr "ዝርዝሮችን አሳይ"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:134
 msgid "View details for reporting a copyright violation"
@@ -7942,7 +7942,7 @@ msgstr ""
 #: src/lib/moderation/useLabelBehaviorDescription.ts:17
 #: src/lib/moderation/useLabelBehaviorDescription.ts:22
 msgid "Warn"
-msgstr ""
+msgstr "አስጠንቅቅ"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:48
 msgid "Warn content"
@@ -8010,7 +8010,7 @@ msgstr ""
 
 #: src/screens/Signup/index.tsx:94
 msgid "We're so excited to have you join us!"
-msgstr ""
+msgstr "እኛን ስለተቀላቀሉን በጣም ደስ ብሎናል!"
 
 #: src/view/screens/ProfileList.tsx:113
 msgid "We're sorry, but we were unable to resolve this list. If this persists, please contact the list creator, @{handleOrDid}."
@@ -8111,21 +8111,21 @@ msgstr ""
 #: src/screens/Messages/components/MessageInput.tsx:149
 #: src/screens/Messages/components/MessageInput.web.tsx:198
 msgid "Write a message"
-msgstr ""
+msgstr "መልዕክት ፃፉ"
 
 #: src/view/com/composer/Composer.tsx:792
 msgid "Write post"
-msgstr ""
+msgstr "ልጥፍ ይፃፉ"
 
 #: src/view/com/composer/Composer.tsx:712
 #: src/view/com/post-thread/PostThreadComposePrompt.tsx:71
 msgid "Write your reply"
-msgstr ""
+msgstr "ምላሽዎን ይፃፉ"
 
 #: src/screens/Onboarding/index.tsx:25
 #: src/screens/Onboarding/state.ts:103
 msgid "Writers"
-msgstr ""
+msgstr "ጸሃፊዎች"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:337
 msgid "Wrong DID returned from server. Received: {0}"
@@ -8133,7 +8133,7 @@ msgstr ""
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:78
 msgid "Yes"
-msgstr ""
+msgstr "አዎ"
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:106
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:108
@@ -8146,11 +8146,11 @@ msgstr ""
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:736
 msgid "Yes, detach"
-msgstr ""
+msgstr "አዎ, ለይ"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:746
 msgid "Yes, hide"
-msgstr ""
+msgstr "አዎ, ደብቅ"
 
 #: src/screens/Deactivated.tsx:153
 msgid "Yes, reactivate my account"
@@ -8158,15 +8158,15 @@ msgstr ""
 
 #: src/components/dms/DateDivider.tsx:46
 msgid "Yesterday"
-msgstr ""
+msgstr "ትላንት"
 
 #: src/screens/List/ListHiddenScreen.tsx:140
 msgid "you"
-msgstr ""
+msgstr "እርሶ"
 
 #: src/components/NewskieDialog.tsx:43
 msgid "You"
-msgstr ""
+msgstr "እርሶ"
 
 #: src/screens/SignupQueued.tsx:136
 msgid "You are in line."
@@ -8178,7 +8178,7 @@ msgstr ""
 
 #: src/view/com/profile/ProfileFollows.tsx:95
 msgid "You are not following anyone."
-msgstr ""
+msgstr "ማንንም እየተከተሉ አይደሉም"
 
 #: src/components/dialogs/nuxs/NeueTypography.tsx:61
 #~ msgid "You can adjust these in your Appearance Settings later."
@@ -8228,17 +8228,17 @@ msgstr ""
 
 #: src/view/com/post-thread/PostThread.tsx:214
 msgid "You have blocked the author or you have been blocked by the author."
-msgstr ""
+msgstr "ጸሐፊውን አግደውታል ወይም በጸሐፊው ታግደዋል።"
 
 #: src/components/dms/MessagesListBlockedFooter.tsx:58
 msgid "You have blocked this user"
-msgstr ""
+msgstr "ይህን ተጠቃሚ አግደውታል"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:72
 #: src/lib/moderation/useModerationCauseDescription.ts:55
 #: src/lib/moderation/useModerationCauseDescription.ts:63
 msgid "You have blocked this user. You cannot view their content."
-msgstr ""
+msgstr "ይህን ተጠቃሚ አግደውታል። ይዘታቸውን ማየት አይችሉም።"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:48
 #: src/screens/Login/SetNewPasswordForm.tsx:85
@@ -8249,16 +8249,16 @@ msgstr ""
 
 #: src/lib/moderation/useModerationCauseDescription.ts:114
 msgid "You have hidden this post"
-msgstr ""
+msgstr "ይሄንን ልጥፍ ደብቀውታል"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:110
 msgid "You have hidden this post."
-msgstr ""
+msgstr "ይሄንን ልጥፍ ደብቀውታል"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:103
 #: src/lib/moderation/useModerationCauseDescription.ts:97
 msgid "You have muted this account."
-msgstr ""
+msgstr "ይሄንን አካውንት አፍነዋል"
 
 #: src/lib/moderation/useModerationCauseDescription.ts:91
 msgid "You have muted this user"
@@ -8291,7 +8291,7 @@ msgstr ""
 
 #: src/components/Lists.tsx:52
 msgid "You have reached the end"
-msgstr ""
+msgstr "መጨረሻው ላይ ደርሰዋል"
 
 #: src/lib/media/video/upload.shared.ts:56
 msgid "You have temporarily reached the limit for video uploads. Please try again later."
@@ -8303,12 +8303,12 @@ msgstr ""
 
 #: src/components/dialogs/MutedWords.tsx:398
 msgid "You haven't muted any words or tags yet"
-msgstr ""
+msgstr "እስካሁን ምንም ማፈኛ ቃላትን ወይም መለያዎችን አልተጠቀሙም"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:117
 #: src/lib/moderation/useModerationCauseDescription.ts:125
 msgid "You hid this reply."
-msgstr ""
+msgstr "ይህን ምላሽ ደብቀውታል"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:78
 msgid "You may appeal non-self labels if you feel they were placed in error."
@@ -8372,15 +8372,15 @@ msgstr ""
 
 #: src/screens/Messages/components/ChatListItem.tsx:124
 msgid "You: {0}"
-msgstr ""
+msgstr "እርሶ: {0}"
 
 #: src/screens/Messages/components/ChatListItem.tsx:153
 msgid "You: {defaultEmbeddedContentMessage}"
-msgstr ""
+msgstr "እርሶ: {defaultEmbeddedContentMessage}"
 
 #: src/screens/Messages/components/ChatListItem.tsx:146
 msgid "You: {short}"
-msgstr ""
+msgstr "እርሶ: {short}"
 
 #: src/screens/Signup/index.tsx:107
 msgid "You'll follow the suggested users and feeds once you finish creating your account!"
@@ -8410,7 +8410,7 @@ msgstr ""
 #: src/screens/SignupQueued.tsx:94
 #: src/screens/SignupQueued.tsx:109
 msgid "You're in line"
-msgstr ""
+msgstr "መስመር ላይ ነዎት"
 
 #: src/screens/Deactivated.tsx:89
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:54
@@ -8419,7 +8419,7 @@ msgstr ""
 
 #: src/screens/Onboarding/StepFinished.tsx:231
 msgid "You're ready to go!"
-msgstr ""
+msgstr "ለመሄድ ዝግጁ ነዎት"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:107
 #: src/lib/moderation/useModerationCauseDescription.ts:106
@@ -8440,11 +8440,11 @@ msgstr ""
 
 #: src/screens/Signup/index.tsx:140
 msgid "Your account"
-msgstr ""
+msgstr "አካውንትዎ"
 
 #: src/view/com/modals/DeleteAccount.tsx:88
 msgid "Your account has been deleted"
-msgstr ""
+msgstr "አካውንትዎ ተሰርዟል።"
 
 #: src/view/com/composer/state/video.ts:442
 msgid "Your account is not yet old enough to upload videos. Please try again later."
@@ -8456,7 +8456,7 @@ msgstr ""
 
 #: src/screens/Signup/StepInfo/index.tsx:211
 msgid "Your birth date"
-msgstr ""
+msgstr "የትውልድ ቀንዎ"
 
 #: src/view/com/util/post-embeds/VideoEmbed.web.tsx:171
 msgid "Your browser does not support the video format. Please try a different browser."
@@ -8475,19 +8475,19 @@ msgstr ""
 #: src/screens/Signup/StepInfo/index.tsx:108
 #: src/view/com/modals/ChangePassword.tsx:55
 msgid "Your email appears to be invalid."
-msgstr ""
+msgstr "ኢሜልዎ ልክ ያልሆነ ይመስላል"
 
 #: src/view/com/modals/ChangeEmail.tsx:120
 msgid "Your email has been updated but not verified. As a next step, please verify your new email."
-msgstr ""
+msgstr "ኢሜልዎ ተዘምኗል ግን አልተረጋገጠም። እንደ ቀጣዩ ደረጃ፣ እባክዎ አዲሱን ኢሜልዎን ያረጋግጡ"
 
 #: src/view/com/modals/VerifyEmail.tsx:122
 msgid "Your email has not yet been verified. This is an important security step which we recommend."
-msgstr ""
+msgstr "ኢሜልዎ እስካሁን አልተረጋገጠም። ይህ የምንመክረው አስፈላጊ የደህንነት እርምጃ ነው።"
 
 #: src/state/shell/progress-guide.tsx:156
 msgid "Your first like!"
-msgstr ""
+msgstr "የመጀመሪያ መውደድዎ!"
 
 #: src/view/com/posts/FollowingEmptyState.tsx:43
 msgid "Your following feed is empty! Follow more users to see what's happening."
@@ -8503,19 +8503,19 @@ msgstr ""
 
 #: src/components/dialogs/MutedWords.tsx:369
 msgid "Your muted words"
-msgstr ""
+msgstr "ያፈኗቸው ቃላት"
 
 #: src/view/com/modals/ChangePassword.tsx:158
 msgid "Your password has been changed successfully!"
-msgstr ""
+msgstr "የይለፍ ቃልዎ በተሳካ ሁኔታ ተቀይሯል!"
 
 #: src/view/com/composer/Composer.tsx:462
 msgid "Your post has been published"
-msgstr ""
+msgstr "ልጥፍዎ ታትሟል"
 
 #: src/view/com/composer/Composer.tsx:459
 msgid "Your posts have been published"
-msgstr ""
+msgstr "ልጥፎችዎ ታትመዋል"
 
 #: src/screens/Onboarding/StepFinished.tsx:246
 msgid "Your posts, likes, and blocks are public. Mutes are private."
@@ -8531,7 +8531,7 @@ msgstr ""
 
 #: src/view/com/composer/Composer.tsx:461
 msgid "Your reply has been published"
-msgstr ""
+msgstr "የእርስዎ ምላሽ ታትሟል"
 
 #: src/components/dms/ReportDialog.tsx:157
 msgid "Your report will be sent to the Bluesky Moderation Service"
@@ -8539,4 +8539,4 @@ msgstr ""
 
 #: src/screens/Signup/index.tsx:142
 msgid "Your user handle"
-msgstr ""
+msgstr "የተጠቃሚ እጀታዎ"
