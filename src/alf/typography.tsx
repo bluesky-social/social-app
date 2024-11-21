@@ -109,32 +109,26 @@ export function renderChildrenWithEmoji(
   if (!isIOS || !emoji) {
     return children
   }
-  return (
-    <UITextView {...props}>
-      {Children.map(children, child => {
-        if (typeof child !== 'string') return child
+  return Children.map(children, child => {
+    if (typeof child !== 'string') return child
 
-        const emojis = child.match(EMOJI)
+    const emojis = child.match(EMOJI)
 
-        if (emojis === null) {
-          return child
-        }
+    if (emojis === null) {
+      return child
+    }
 
-        return child.split(EMOJI).map((stringPart, index) => (
-          <UITextView key={index} {...props}>
-            {stringPart}
-            {emojis[index] ? (
-              <UITextView
-                {...props}
-                style={[props?.style, {color: 'black', fontFamily: 'System'}]}>
-                {emojis[index]}
-              </UITextView>
-            ) : null}
-          </UITextView>
-        ))
-      })}
-    </UITextView>
-  )
+    return child.split(EMOJI).map((stringPart, index) => [
+      stringPart,
+      emojis[index] ? (
+        <UITextView
+          {...props}
+          style={[props?.style, {color: 'black', fontFamily: 'System'}]}>
+          {emojis[index]}
+        </UITextView>
+      ) : null,
+    ])
+  })
 }
 
 export function isOnlyEmoji(text: string) {
