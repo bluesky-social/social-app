@@ -836,7 +836,7 @@ msgstr "कोई भी भाषा"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:49
 msgid "Anybody can interact"
-msgstr "कोई संपर्क कर सकता है"
+msgstr "कोई भी संपर्क कर सकता है"
 
 #: src/screens/Settings/LanguageSettings.tsx:72
 msgid "App Language"
@@ -852,7 +852,7 @@ msgstr "ऐप पासवर्ड मिटाया गया"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:84
 msgid "App password name must be unique"
-msgstr "ऐप पासवर्ड अद्वितीय होना चाहिए"
+msgstr "ऐप पासवर्ड नाम अद्वितीय होना चाहिए"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:62
 msgid "App password names can only contain letters, numbers, spaces, dashes, and underscores"
@@ -860,11 +860,11 @@ msgstr "ऐप पासवर्ड नाम में केवल अक्�
 
 #: src/view/com/modals/AddAppPasswords.tsx:138
 #~ msgid "App Password names can only contain letters, numbers, spaces, dashes, and underscores."
-#~ msgstr "ऐप पासवर्ड में केवल अक्षर, संख्या, स्पेस, डैश और अंडरस्कोर हो सकते हैं।"
+#~ msgstr "ऐप पासवर्ड नाम में केवल अक्षर, संख्या, स्पेस, डैश और अंडरस्कोर हो सकते हैं।"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:80
 msgid "App password names must be at least 4 characters long"
-msgstr "ऐप पासवर्ड में कम से कम 4 वर्ण होने चाहिए।"
+msgstr "ऐप पासवर्ड नाम में कम से कम 4 वर्ण होने चाहिए।"
 
 #: src/view/com/modals/AddAppPasswords.tsx:103
 #~ msgid "App Password names must be at least 4 characters long."
