@@ -224,7 +224,7 @@ msgstr "{firstAuthorLink} vous a suivi·e en retour"
 
 #: src/view/com/notifications/FeedItem.tsx:338
 msgid "{firstAuthorLink} liked your custom feed"
-msgstr "{firstAuthorLink} a aimé votre fil d'actu personnalisé"
+msgstr "{firstAuthorLink} a aimé votre fil d’actu personnalisé"
 
 #: src/view/com/notifications/FeedItem.tsx:234
 msgid "{firstAuthorLink} liked your post"
@@ -236,7 +236,7 @@ msgstr "{firstAuthorLink} a republié votre post"
 
 #: src/view/com/notifications/FeedItem.tsx:362
 msgid "{firstAuthorLink} signed up with your starter pack"
-msgstr "{firstAuthorLink} s'est inscrit·e à votre kit de démarrage"
+msgstr "{firstAuthorLink} s’est inscrit·e à votre kit de démarrage"
 
 #: src/view/com/notifications/FeedItem.tsx:293
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} followed you"
@@ -244,7 +244,7 @@ msgstr "{firstAuthorName} et {additionalAuthorsCount, plural, one {{formattedAut
 
 #: src/view/com/notifications/FeedItem.tsx:319
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} liked your custom feed"
-msgstr "{firstAuthorName} et {additionalAuthorsCount, plural, one {{formattedAuthorsCount} autre compte} other {{formattedAuthorsCount} autres comptes}} ont aimé votre fil d'actu personnalisé"
+msgstr "{firstAuthorName} et {additionalAuthorsCount, plural, one {{formattedAuthorsCount} autre compte} other {{formattedAuthorsCount} autres comptes}} ont aimé votre fil d’actu personnalisé"
 
 #: src/view/com/notifications/FeedItem.tsx:215
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} liked your post"
@@ -268,7 +268,7 @@ msgstr "{firstAuthorName} a suivi votre compte en retour"
 
 #: src/view/com/notifications/FeedItem.tsx:324
 msgid "{firstAuthorName} liked your custom feed"
-msgstr "{firstAuthorName} a aimé votre fil d'actu personnalisé"
+msgstr "{firstAuthorName} a aimé votre fil d’actu personnalisé"
 
 #: src/view/com/notifications/FeedItem.tsx:220
 msgid "{firstAuthorName} liked your post"
@@ -280,7 +280,7 @@ msgstr "{firstAuthorName} a republié votre post"
 
 #: src/view/com/notifications/FeedItem.tsx:348
 msgid "{firstAuthorName} signed up with your starter pack"
-msgstr "{firstAuthorLink} s'est inscrit·e à votre kit de démarrage"
+msgstr "{firstAuthorLink} s’est inscrit·e à votre kit de démarrage"
 
 #: src/components/ProfileHoverCard/index.web.tsx:508
 #: src/screens/Profile/Header/Metrics.tsx:50
@@ -509,7 +509,7 @@ msgstr "Ajouter un autre post"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:102
 msgid "Add app password"
-msgstr "Ajouter un mot de passe d'application"
+msgstr "Ajouter un mot de passe d’application"
 
 #: src/screens/Settings/AppPasswords.tsx:67
 #: src/screens/Settings/AppPasswords.tsx:75
@@ -787,7 +787,7 @@ msgstr "Mot de passe d’application supprimé"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:84
 msgid "App password name must be unique"
-msgstr "Le mot de passe d'application doit être unique"
+msgstr "Le mot de passe d’application doit être unique"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:62
 msgid "App password names can only contain letters, numbers, spaces, dashes, and underscores"
@@ -980,7 +980,7 @@ msgstr "Veuillez vérifier votre e-mail avant de créer un kit de démarrage."
 #: src/components/dms/MessageProfileButton.tsx:89
 #: src/screens/Messages/Conversation.tsx:219
 msgid "Before you may message another user, you must first verify your email."
-msgstr "Veuillez vérifier votre e-mail avant d'envoyer des messages à d'autres utilisateurs."
+msgstr "Veuillez vérifier votre e-mail avant d’envoyer des messages à d’autres utilisateurs."
 
 #: src/components/dialogs/BirthDateSettings.tsx:106
 #: src/screens/Settings/AccountSettings.tsx:102
@@ -1264,12 +1264,12 @@ msgstr "Modifier"
 #: src/screens/Settings/AccountSettings.tsx:90
 #: src/screens/Settings/AccountSettings.tsx:94
 msgid "Change email"
-msgstr "Modifier l'adresse e-mail"
+msgstr "Modifier votre adresse e-mail"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:162
 #: src/components/dialogs/VerifyEmailDialog.tsx:187
 msgid "Change email address"
-msgstr "Modifier l’adresse e-mail"
+msgstr "Modifier votre adresse e-mail"
 
 #: src/view/screens/Settings/index.tsx:685
 #~ msgid "Change handle"
@@ -1733,7 +1733,7 @@ msgstr "Copier le DID"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:405
 msgid "Copy host"
-msgstr "Copier l'hôte"
+msgstr "Copier l’hôte"
 
 #: src/components/StarterPack/ShareDialog.tsx:124
 msgid "Copy link"
@@ -3909,7 +3909,7 @@ msgstr "Assurez-vous que c’est bien là que vous avez l’intention d’aller�
 #: src/screens/Settings/ContentAndMediaSettings.tsx:41
 #: src/screens/Settings/ContentAndMediaSettings.tsx:44
 msgid "Manage saved feeds"
-msgstr "Gérer vos fils d'actu sauvegardés"
+msgstr "Gérer vos fils d’actu sauvegardés"
 
 #: src/components/dialogs/MutedWords.tsx:108
 msgid "Manage your muted words and tags"
@@ -4360,7 +4360,7 @@ msgstr "Image suivante"
 
 #: src/screens/Settings/AppPasswords.tsx:100
 msgid "No app passwords yet"
-msgstr "Aucun mot de passe d'application"
+msgstr "Aucun mot de passe d’application"
 
 #: src/view/screens/ProfileFeed.tsx:565
 #: src/view/screens/ProfileList.tsx:882
@@ -4383,7 +4383,7 @@ msgstr "Aucun fil d’actu n’a été trouvé. Essayez de chercher autre chose.
 #: src/components/LikedByList.tsx:78
 #: src/view/com/post-thread/PostLikedBy.tsx:85
 msgid "No likes yet"
-msgstr "Pas encore de mentions « j'aime »"
+msgstr "Pas encore de mentions « j’aime »"
 
 #: src/components/ProfileCard.tsx:338
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:119
@@ -4468,7 +4468,7 @@ msgstr "Personne"
 #: src/components/LikesDialog.tsx:97
 #: src/view/com/post-thread/PostLikedBy.tsx:87
 msgid "Nobody has liked this yet. Maybe you should be the first!"
-msgstr "Personne n’a encore mis « j'aime ». Peut-être devriez-vous ouvrir la voie !"
+msgstr "Personne n’a encore mis « j’aime ». Peut-être devriez-vous ouvrir la voie !"
 
 #: src/view/com/post-thread/PostQuotes.tsx:108
 msgid "Nobody has quoted this yet. Maybe you should be the first!"
@@ -4595,7 +4595,7 @@ msgstr "Réinitialiser le didacticiel"
 
 #: src/view/com/composer/Composer.tsx:323
 msgid "One or more GIFs is missing alt text."
-msgstr "Un ou plusieurs GIFs n'ont pas de texte alt."
+msgstr "Un ou plusieurs GIFs n’ont pas de texte alt."
 
 #: src/view/com/composer/Composer.tsx:320
 msgid "One or more images is missing alt text."
@@ -4603,7 +4603,7 @@ msgstr "Une ou plusieurs images n’ont pas de texte alt."
 
 #: src/view/com/composer/Composer.tsx:330
 msgid "One or more videos is missing alt text."
-msgstr "Une ou plusieurs vidéos n'ont pas de texte alt."
+msgstr "Une ou plusieurs vidéos n’ont pas de texte alt."
 
 #: src/screens/Onboarding/StepProfile/index.tsx:115
 msgid "Only .jpg and .png files are supported"
@@ -5056,7 +5056,7 @@ msgstr "Veuillez confirmer votre e-mail avant de le modifier. Ceci est temporair
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:114
 msgid "Please enter a unique name for this app password or use our randomly generated one."
-msgstr "Veuillez saisir un nom unique pour ce mot de passe d'application ou utiliser un nom généré de manière aléatoire."
+msgstr "Veuillez saisir un nom unique pour ce mot de passe d’application ou utiliser un nom généré de manière aléatoire."
 
 #: src/view/com/modals/AddAppPasswords.tsx:151
 #~ msgid "Please enter a unique name for this App Password or use our randomly generated one."
@@ -6361,7 +6361,7 @@ msgstr "Afficher les réponses cachées"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:796
 msgid "Show information about when this post was created"
-msgstr "Afficher l'information sur la date de création de ce post"
+msgstr "Afficher l’information sur la date de création de ce post"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:491
 #: src/view/com/util/forms/PostDropdownBtn.tsx:493
@@ -7007,7 +7007,7 @@ msgstr "Il y a eu un problème lors de la récupération de la liste. Appuyez ic
 
 #: src/screens/Settings/AppPasswords.tsx:52
 msgid "There was an issue fetching your app passwords"
-msgstr "Il y a eu un problème lors de la récupération de vos mots de passe d'application"
+msgstr "Il y a eu un problème lors de la récupération de vos mots de passe d’application"
 
 #: src/view/com/feeds/ProfileFeedgens.tsx:150
 #: src/view/com/lists/ProfileLists.tsx:149
@@ -7130,7 +7130,7 @@ msgstr "Cette fonctionnalité est en version bêta. Vous pouvez en savoir plus s
 
 #: src/lib/strings/errors.ts:21
 msgid "This feature is not available while using an App Password. Please sign in with your main password."
-msgstr "Cette fonctionnalité n'est pas disponible lorsque vous utilisez un mot de passe d'application. Veuillez vous connecter avec le mot de passe de votre compte."
+msgstr "Cette fonctionnalité n’est pas disponible lorsque vous utilisez un mot de passe d’application. Veuillez vous connecter avec le mot de passe de votre compte."
 
 #: src/view/com/posts/FeedErrorMessage.tsx:120
 msgid "This feed is currently receiving high traffic and is temporarily unavailable. Please try again later."
@@ -7446,7 +7446,7 @@ msgstr "Se désabonner du compte"
 
 #: src/view/screens/ProfileFeed.tsx:576
 msgid "Unlike this feed"
-msgstr "Retirer « j'aime » de ce fil d’actu"
+msgstr "Retirer « j’aime » de ce fil d’actu"
 
 #: src/components/TagMenu/index.tsx:248
 #: src/view/screens/ProfileList.tsx:692
@@ -8106,7 +8106,7 @@ msgstr "Écrivain·e·s"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:337
 msgid "Wrong DID returned from server. Received: {0}"
-msgstr "L'identifiant DID retourné du serveur est incorrect. Réponse : {0}"
+msgstr "L’identifiant DID retourné du serveur est incorrect. Réponse : {0}"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:78
 msgid "Yes"
@@ -8260,7 +8260,7 @@ msgstr "Vous n’avez pas encore bloqué de comptes. Pour bloquer un compte, all
 
 #: src/view/screens/AppPasswords.tsx:96
 #~ msgid "You have not created any app passwords yet. You can create one by pressing the button below."
-#~ msgstr "Vous n’avez encore créé aucun mot de passe d'application. Vous pouvez en créer un en cliquant sur le bouton suivant."
+#~ msgstr "Vous n’avez encore créé aucun mot de passe d’application. Vous pouvez en créer un en cliquant sur le bouton suivant."
 
 #: src/view/screens/ModerationMutedAccounts.tsx:132
 msgid "You have not muted any accounts yet. To mute an account, go to their profile and select \"Mute account\" from the menu on their account."
@@ -8464,7 +8464,7 @@ msgstr "Votre e-mail n’a pas encore été vérifié. Il s’agit d’une mesur
 
 #: src/state/shell/progress-guide.tsx:156
 msgid "Your first like!"
-msgstr "Votre première mention « j'aime » !"
+msgstr "Votre première mention « j’aime » !"
 
 #: src/view/com/posts/FollowingEmptyState.tsx:43
 msgid "Your following feed is empty! Follow more users to see what's happening."
@@ -8496,7 +8496,7 @@ msgstr "Vos posts ont été publiés"
 
 #: src/screens/Onboarding/StepFinished.tsx:246
 msgid "Your posts, likes, and blocks are public. Mutes are private."
-msgstr "Vos posts, les mentions j'aime et les blocages sont publics. Les silences (comptes masqués) sont privés."
+msgstr "Vos posts, les mentions j’aime et les blocages sont publics. Les silences (comptes masqués) sont privés."
 
 #: src/view/screens/Settings/index.tsx:119
 #~ msgid "Your profile"
