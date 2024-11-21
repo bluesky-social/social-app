@@ -7,6 +7,7 @@ import '@formatjs/intl-pluralrules/locale-data/en'
 import '@formatjs/intl-numberformat/locale-data/en'
 
 import {useEffect} from 'react'
+import {getLanguageAsync} from 'react-native-localization-settings'
 import {i18n} from '@lingui/core'
 
 import {sanitizeAppLanguageSetting} from '#/locale/helpers'
@@ -222,6 +223,25 @@ export async function dynamicActivate(locale: AppLanguage) {
       break
     }
   }
+}
+
+export function useSystemLanguage() {
+  const {appLanguage} = useLanguagePrefs()
+  useEffect(() => {
+    async function checkSystemLanguage() {
+      try {
+        const getSystemLanguage = await getLanguageAsync()
+        const systemLanguage = getSystemLanguage.replace('_', '-')
+
+        if (systemLanguage !== appLanguage) {
+          await dynamicActivate(sanitizeAppLanguageSetting(systemLanguage))
+        }
+      } catch (error) {
+        console.error('Failed to get system language:', error)
+      }
+    }
+    checkSystemLanguage()
+  }, [appLanguage])
 }
 
 export async function useLocaleLanguage() {
