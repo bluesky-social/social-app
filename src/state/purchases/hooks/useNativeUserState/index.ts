@@ -13,6 +13,9 @@ export function useNativeUserState() {
     async function check() {
       if (!currentAccount?.did) return
 
+      // reset on each run
+      setRestricted('unknown')
+
       try {
         // MUST ensure we're the correct user first
         await Purchases.logIn(currentAccount?.did)
