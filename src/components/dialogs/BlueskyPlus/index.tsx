@@ -3,6 +3,7 @@ import {View} from 'react-native'
 import {PURCHASES_ERROR_CODE} from 'react-native-purchases'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useNavigationState} from '@react-navigation/native'
 
 import {
   usePurchaseOffering,
@@ -42,6 +43,9 @@ function DialogInner({control}: {control: Dialog.DialogControlProps}) {
   const {gtMobile} = useBreakpoints()
   const {currentAccount} = useSession()
   const copy = useCoreOfferingCopy()
+  const routes = useNavigationState(state => state.routes)
+  const currentRoute = routes.at(routes.length - 1)
+  const isOnSubscriptionsPage = currentRoute?.name === 'Subscriptions'
 
   const [offeringId, setOfferingId] = React.useState<SubscriptionOfferingId>(
     SubscriptionOfferingId.CoreAnnual,
@@ -230,17 +234,19 @@ function DialogInner({control}: {control: Dialog.DialogControlProps}) {
       </Toggle.Group>
 
       <View style={[a.flex_row, a.pt_md, a.gap_sm]}>
-        <Link
-          to="/subscriptions"
-          label={_(msg`Learn more about Bluesky+`)}
-          variant="solid"
-          color="secondary"
-          size="large"
-          style={[a.flex_1]}>
-          <ButtonText style={[a.flex_1]}>
-            <Trans>Learn more</Trans>
-          </ButtonText>
-        </Link>
+        {!isOnSubscriptionsPage && (
+          <Link
+            to="/subscriptions"
+            label={_(msg`Learn more about Bluesky+`)}
+            variant="solid"
+            color="secondary"
+            size="large"
+            style={[a.flex_1]}>
+            <ButtonText style={[a.flex_1]}>
+              <Trans>Learn more</Trans>
+            </ButtonText>
+          </Link>
+        )}
         <Button
           label={_(msg`Subscribe`)}
           variant="solid"
