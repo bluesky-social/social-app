@@ -1,16 +1,15 @@
-import React from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {CommonNavigatorParams} from '#/lib/routes/types'
-import {PurchasesState,usePurchases} from '#/state/purchases'
+import {PurchasesState, usePurchases} from '#/state/purchases'
 import {useManageSubscription} from '#/state/purchases/hooks/useManageSubscription'
 import {SubscriptionGroupId} from '#/state/purchases/types'
 import {APISubscription} from '#/state/purchases/types'
 import {CenteredView} from '#/view/com/util/Views'
-import {atoms as a, tokens,useTheme} from '#/alf'
+import {atoms as a, tokens, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
@@ -23,7 +22,7 @@ import {Clock_Stroke2_Corner0_Rounded as Clock} from '#/components/icons/Clock'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {SettingsGear2_Stroke2_Corner0_Rounded as Gear} from '#/components/icons/SettingsGear2'
 import * as Layout from '#/components/Layout'
-import {createStaticClick,InlineLinkText, Link} from '#/components/Link'
+import {createStaticClick, InlineLinkText, Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 
@@ -69,7 +68,6 @@ function Core({
     s => s.group === SubscriptionGroupId.Core,
   )
   const isSubscribedToCore = !!coreSubscriptions.length
-  console.log(state)
 
   const features = [
     {
@@ -116,7 +114,7 @@ function Core({
 
   return (
     <View style={[a.pt_sm]}>
-      <BlueskyPlusLogo width={130} fill="nordic" />
+      <BlueskyPlusLogo width={130} gradient="nordic" />
 
       {isSubscribedToCore ? (
         <View style={[a.pt_md]}>
@@ -246,17 +244,6 @@ function Core({
             EULA
           </InlineLinkText>
         </Text>
-
-        <Admonition type="tip">
-          <Trans>
-            Learn more about Bluesky+ and our roadmap{' '}
-            <InlineLinkText
-              to="https://bsky.social/about"
-              label={_(msg`Learn more in our FAQ`)}>
-              here
-            </InlineLinkText>
-          </Trans>
-        </Admonition>
       </View>
     </View>
   )

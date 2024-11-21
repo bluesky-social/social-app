@@ -91,9 +91,9 @@ function DialogInner({control}: {control: Dialog.DialogControlProps}) {
         a.overflow_hidden,
         gtMobile ? {width: '100%', maxWidth: 400, minWidth: 200} : a.w_full,
       ]}>
-      <BlueskyPlusLogo width={100} fill="nordic" />
+      <BlueskyPlusLogo width={100} gradient="nordic" />
 
-      <Text style={[a.text_3xl, a.font_heavy, a.pt_md]}>
+      <Text style={[a.text_3xl, a.font_heavy, a.pt_lg]}>
         <Trans>Let's build the social web.</Trans>
       </Text>
 
