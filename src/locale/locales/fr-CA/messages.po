@@ -20,7 +20,7 @@ msgstr "(contient du contenu intégré)"
 #: src/screens/Settings/AccountSettings.tsx:57
 #: src/view/com/modals/VerifyEmail.tsx:150
 msgid "(no email)"
-msgstr "(pas d’e-mail)"
+msgstr "(pas de courriel)"
 
 #: src/lib/hooks/useTimeAgo.ts:156
 msgid "{0, plural, one {# day} other {# days}}"
@@ -656,15 +656,15 @@ msgstr "Le texte alt sera tronqué. Limite : {0} caractères."
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:93
 #: src/view/com/modals/VerifyEmail.tsx:132
 msgid "An email has been sent to {0}. It includes a confirmation code which you can enter below."
-msgstr "Un e-mail a été envoyé à {0}. Il comprend un code de confirmation que vous pouvez saisir ici."
+msgstr "Un courriel a été envoyé à {0}. Il comprend un code de confirmation que vous pouvez saisir ici."
 
 #: src/view/com/modals/ChangeEmail.tsx:114
 msgid "An email has been sent to your previous address, {0}. It includes a confirmation code which you can enter below."
-msgstr "Un e-mail a été envoyé à votre ancienne adresse, {0}. Il comprend un code de confirmation que vous pouvez saisir ici."
+msgstr "Un courriel a été envoyé à votre ancienne adresse, {0}. Il comprend un code de confirmation que vous pouvez saisir ici."
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:91
 msgid "An email has been sent! Please enter the confirmation code included in the email below."
-msgstr "Un e-mail a été envoyé! Entrez ci-dessous le code de confirmation présent dans l’e-mail."
+msgstr "Un courriel a été envoyé! Entrez ci-dessous le code de confirmation présent dans le courriel."
 
 #: src/components/dialogs/GifSelect.tsx:265
 msgid "An error has occurred"
@@ -929,21 +929,21 @@ msgstr "Arrière"
 #: src/view/screens/Lists.tsx:104
 #: src/view/screens/ModerationModlists.tsx:100
 msgid "Before creating a list, you must first verify your email."
-msgstr "Avant de créer une liste, vous devez d’abord vérifier votre email."
+msgstr "Avant de créer une liste, vous devez d’abord vérifier votre courriel."
 
 #: src/view/com/composer/Composer.tsx:593
 msgid "Before creating a post, you must first verify your email."
-msgstr "Avant de créer un post, vous devez d’abord vérifier votre e-mail."
+msgstr "Avant de créer un post, vous devez d’abord vérifier votre courriel."
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:340
 msgid "Before creating a starter pack, you must first verify your email."
-msgstr "Avant de créer un pack de démarrage, vous devez d’abord vérifier votre e-mail."
+msgstr "Avant de créer un pack de démarrage, vous devez d’abord vérifier votre courriel."
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:79
 #: src/components/dms/MessageProfileButton.tsx:89
 #: src/screens/Messages/Conversation.tsx:219
 msgid "Before you may message another user, you must first verify your email."
-msgstr "Avant de pouvoir envoyer un message à un autre utilisateur, vous devez d’abord vérifier votre adresse e-mail."
+msgstr "Avant de pouvoir envoyer un message à un autre utilisateur, vous devez d’abord vérifier votre courriel."
 
 #: src/components/dialogs/BirthDateSettings.tsx:106
 #: src/screens/Settings/AccountSettings.tsx:101
@@ -1210,12 +1210,12 @@ msgstr "Modifier"
 #: src/screens/Settings/AccountSettings.tsx:89
 #: src/screens/Settings/AccountSettings.tsx:93
 msgid "Change email"
-msgstr "Changer d’e-mail"
+msgstr "Changer de courriel"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:162
 #: src/components/dialogs/VerifyEmailDialog.tsx:187
 msgid "Change email address"
-msgstr "Modifier l’adresse e-mail"
+msgstr "Modifier le courriel"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:88
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:92
@@ -1224,7 +1224,7 @@ msgstr "Modifier le pseudo"
 
 #: src/view/com/modals/VerifyEmail.tsx:155
 msgid "Change my email"
-msgstr "Modifier mon e-mail"
+msgstr "Modifier mon courriel"
 
 #: src/view/com/modals/ChangePassword.tsx:142
 msgid "Change Password"
@@ -1236,11 +1236,11 @@ msgstr "Modifier la langue de post en {0}"
 
 #: src/view/com/modals/ChangeEmail.tsx:104
 msgid "Change Your Email"
-msgstr "Modifier votre e-mail"
+msgstr "Modifier votre courriel"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:171
 msgid "Change your email address"
-msgstr "Changez votre adresse e-mail"
+msgstr "Changez votre courriel"
 
 #: src/Navigation.tsx:373
 #: src/view/shell/bottom-bar/BottomBar.tsx:200
@@ -1275,11 +1275,11 @@ msgstr "Vérifier mon statut"
 
 #: src/screens/Login/LoginForm.tsx:275
 msgid "Check your email for a login code and enter it here."
-msgstr "Vérifiez votre boîte e-mail pour un code de connexion et saisissez-le ici."
+msgstr "Vérifiez votre courriel pour un code de connexion et saisissez-le ici."
 
 #: src/view/com/modals/DeleteAccount.tsx:232
 msgid "Check your inbox for an email with the confirmation code to enter below:"
-msgstr "Consultez votre boîte de réception, vous avez du recevoir un e-mail contenant un code de confirmation à saisir ci-dessous :"
+msgstr "Consultez votre boîte de réception, vous avez du recevoir un courriel contenant un code de confirmation à saisir ci-dessous :"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:369
 msgid "Choose domain verification method"
@@ -1960,7 +1960,7 @@ msgstr "Atténué"
 
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:89
 msgid "Disable Email 2FA"
-msgstr "Désactiver le 2FA par e-mail"
+msgstr "Désactiver le 2FA par courriel"
 
 #: src/screens/Settings/AccessibilitySettings.tsx:83
 #: src/screens/Settings/AccessibilitySettings.tsx:88
@@ -2277,40 +2277,40 @@ msgstr "Éducation"
 #: src/screens/Signup/StepInfo/index.tsx:170
 #: src/view/com/modals/ChangeEmail.tsx:136
 msgid "Email"
-msgstr "E-mail"
+msgstr "Courriel"
 
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:64
 msgid "Email 2FA disabled"
-msgstr "2FA par e-mail désactivé"
+msgstr "2FA par courriel désactivé"
 
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:46
 msgid "Email 2FA enabled"
-msgstr "2FA par e-mail activé"
+msgstr "2FA par courriel activé"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:93
 msgid "Email address"
-msgstr "Adresse e-mail"
+msgstr "Ccourriel"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:104
 msgid "Email Resent"
-msgstr "E-mail renvoyé"
+msgstr "Courriel renvoyé"
 
 #: src/view/com/modals/ChangeEmail.tsx:54
 #: src/view/com/modals/ChangeEmail.tsx:83
 msgid "Email updated"
-msgstr "Adresse e-mail mise à jour"
+msgstr "Courriel mis à jour"
 
 #: src/view/com/modals/ChangeEmail.tsx:106
 msgid "Email Updated"
-msgstr "Adresse e-mail mise à jour"
+msgstr "Courriel mis à jour"
 
 #: src/view/com/modals/VerifyEmail.tsx:85
 msgid "Email verified"
-msgstr "Adresse e-mail vérifiée"
+msgstr "Courriel vérifié"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:79
 msgid "Email Verified"
-msgstr "Adresse e-mail vérifiée"
+msgstr "Courriel vérifié"
 
 #: src/components/dialogs/Embed.tsx:113
 msgid "Embed HTML code"
@@ -2341,7 +2341,7 @@ msgstr "Activer le contenu pour adultes"
 
 #: src/screens/Settings/components/Email2FAToggle.tsx:53
 msgid "Enable Email 2FA"
-msgstr "Activer le 2FA par e-mail"
+msgstr "Activer le 2FA par courriel"
 
 #: src/components/dialogs/EmbedConsent.tsx:81
 #: src/components/dialogs/EmbedConsent.tsx:88
@@ -2406,7 +2406,7 @@ msgstr "Entrez le domaine que vous voulez utiliser"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:113
 msgid "Enter the email you used to create your account. We'll send you a \"reset code\" so you can set a new password."
-msgstr "Saisissez l’e-mail que vous avez utilisé pour créer votre compte. Nous vous enverrons un « code de réinitialisation » afin changer votre mot de passe."
+msgstr "Saisissez le courriel que vous avez utilisé pour créer votre compte. Nous vous enverrons un « code de réinitialisation » afin changer votre mot de passe."
 
 #: src/components/dialogs/BirthDateSettings.tsx:107
 msgid "Enter your birth date"
@@ -2415,15 +2415,15 @@ msgstr "Saisissez votre date de naissance"
 #: src/screens/Login/ForgotPasswordForm.tsx:99
 #: src/screens/Signup/StepInfo/index.tsx:182
 msgid "Enter your email address"
-msgstr "Entrez votre e-mail"
+msgstr "Entrez votre courriel"
 
 #: src/view/com/modals/ChangeEmail.tsx:42
 msgid "Enter your new email above"
-msgstr "Entrez votre nouvel e-mail ci-dessus"
+msgstr "Entrez votre nouveau courriel ci-dessus"
 
 #: src/view/com/modals/ChangeEmail.tsx:112
 msgid "Enter your new email address below."
-msgstr "Entrez votre nouvelle e-mail ci-dessous."
+msgstr "Entrez votre nouveau courriel ci-dessous."
 
 #: src/screens/Login/index.tsx:98
 msgid "Enter your username and password"
@@ -2878,7 +2878,7 @@ msgstr "Nourriture"
 
 #: src/view/com/modals/DeleteAccount.tsx:129
 msgid "For security reasons, we'll need to send a confirmation code to your email address."
-msgstr "Pour des raisons de sécurité, nous devrons envoyer un code de confirmation à votre e-mail."
+msgstr "Pour des raisons de sécurité, nous devrons envoyer un code de confirmation à votre courriel."
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:209
 msgid "For security reasons, you won't be able to view this again. If you lose this app password, you'll need to generate a new one."
@@ -3239,7 +3239,7 @@ msgstr "Si vous souhaitez modifier votre mot de passe, nous vous enverrons un co
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:92
 msgid "If you're trying to change your handle or email, do so before you deactivate."
-msgstr "Si vous essayez de changer de pseudo ou d’adresse e-mail, faites-le avant de désactiver votre compte."
+msgstr "Si vous essayez de changer de pseudo ou de courriel, faites-le avant de désactiver votre compte."
 
 #: src/lib/moderation/useReportOptions.ts:38
 msgid "Illegal and Urgent"
@@ -3267,7 +3267,7 @@ msgstr "Messages inappropriés ou liens explicites"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:121
 msgid "Input code sent to your email for password reset"
-msgstr "Entrez le code envoyé à votre e-mail pour réinitialiser le mot de passe"
+msgstr "Entrez le code envoyé à votre courriel pour réinitialiser le mot de passe"
 
 #: src/view/com/modals/DeleteAccount.tsx:247
 msgid "Input confirmation code for account deletion"
@@ -3283,11 +3283,11 @@ msgstr "Entrez le mot de passe pour la suppression du compte"
 
 #: src/screens/Login/LoginForm.tsx:270
 msgid "Input the code which has been emailed to you"
-msgstr "Entrez le code qui vous a été envoyé par e-mail"
+msgstr "Entrez le code qui vous a été envoyé par courriel"
 
 #: src/screens/Login/LoginForm.tsx:200
 msgid "Input the username or email address you used at signup"
-msgstr "Entrez le pseudo ou l’adresse e-mail que vous avez utilisé lors de l’inscription"
+msgstr "Entrez le pseudo ou le courriel que vous avez utilisé lors de l’inscription"
 
 #: src/screens/Login/LoginForm.tsx:225
 msgid "Input your password"
@@ -3357,7 +3357,7 @@ msgstr "Invitations, mais personnelles"
 
 #: src/screens/Signup/StepInfo/index.tsx:80
 msgid "It looks like you may have entered your email address incorrectly. Are you sure it's right?"
-msgstr "On dirait que vous vous êtes trompé en tapant votre adresse e-mail. Êtes-vous sûr que c’est bon?"
+msgstr "On dirait que vous vous êtes trompé en tapant votre courriel. Êtes-vous sûr que c’est bon?"
 
 #: src/screens/Signup/StepInfo/index.tsx:241
 msgid "It's correct"
@@ -4737,7 +4737,7 @@ msgstr "Veuillez compléter le captcha de vérification."
 
 #: src/view/com/modals/ChangeEmail.tsx:65
 msgid "Please confirm your email before changing it. This is a temporary requirement while email-updating tools are added, and it will soon be removed."
-msgstr "Veuillez confirmer votre e-mail avant de le modifier. Ceci est temporairement requis pendant que des outils de mise à jour d’e-mail sont ajoutés, cette étape ne sera bientôt plus nécessaire."
+msgstr "Veuillez confirmer votre courriel avant de le modifier. Ceci est temporairement requis pendant que des outils de mise à jour du courriel sont ajoutés, cette étape ne sera bientôt plus nécessaire."
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:114
 msgid "Please enter a unique name for this app password or use our randomly generated one."
@@ -4750,7 +4750,7 @@ msgstr "Veuillez entrer un mot, un mot-clé ou une phrase valide à masquer"
 #: src/screens/Signup/state.ts:196
 #: src/screens/Signup/StepInfo/index.tsx:102
 msgid "Please enter your email."
-msgstr "Veuillez entrer votre e-mail."
+msgstr "Veuillez entrer votre courriel."
 
 #: src/screens/Signup/StepInfo/index.tsx:96
 msgid "Please enter your invite code."
@@ -4775,7 +4775,7 @@ msgstr "Identifiez-vous en tant que @{0}"
 
 #: src/view/com/modals/VerifyEmail.tsx:109
 msgid "Please Verify Your Email"
-msgstr "Veuillez vérifier votre e-mail"
+msgstr "Veuillez vérifier votre courriel"
 
 #: src/screens/Onboarding/index.tsx:34
 #: src/screens/Onboarding/state.ts:98
@@ -5421,7 +5421,7 @@ msgstr "Nécessiter un texte alt avant de publier"
 
 #: src/screens/Settings/components/Email2FAToggle.tsx:54
 msgid "Require an email code to log in to your account."
-msgstr "Exigez un code par e-mail pour vous connecter à votre compte."
+msgstr "Exigez un code par courriel pour vous connecter à votre compte."
 
 #: src/screens/Signup/StepInfo/index.tsx:159
 msgid "Required for this provider"
@@ -5434,17 +5434,17 @@ msgstr "Nécessaire dans votre région"
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:173
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:176
 msgid "Resend email"
-msgstr "Renvoyer l’e-mail"
+msgstr "Renvoyer le courriel"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:267
 #: src/components/dialogs/VerifyEmailDialog.tsx:277
 #: src/components/intents/VerifyEmailIntentDialog.tsx:130
 msgid "Resend Email"
-msgstr "Renvoyer l’e-mail"
+msgstr "Renvoyer le courriel"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:122
 msgid "Resend Verification Email"
-msgstr "Renvoyer l’e-mail de vérification"
+msgstr "Renvoyer le courriel de vérification"
 
 #: src/view/com/modals/ChangePassword.tsx:186
 msgid "Reset code"
@@ -5785,21 +5785,21 @@ msgstr "Envoyer la confirmation"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:225
 msgid "Send confirmation email"
-msgstr "Envoyer l’e-mail de confirmation"
+msgstr "Envoyer le courriel de confirmation"
 
 #: src/view/com/modals/VerifyEmail.tsx:210
 #: src/view/com/modals/VerifyEmail.tsx:212
 msgid "Send Confirmation Email"
-msgstr "Envoyer un e-mail de confirmation"
+msgstr "Envoyer un courriel de confirmation"
 
 #: src/view/com/modals/DeleteAccount.tsx:149
 msgid "Send email"
-msgstr "Envoyer e-mail"
+msgstr "Envoyer le courriel"
 
 #: src/view/com/modals/DeleteAccount.tsx:162
 msgctxt "action"
 msgid "Send Email"
-msgstr "Envoyer l’e-mail"
+msgstr "Envoyer le courriel"
 
 #: src/view/shell/Drawer.tsx:312
 msgid "Send feedback"
@@ -5828,7 +5828,7 @@ msgstr "Envoyer le rapport à {0}"
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:120
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:123
 msgid "Send verification email"
-msgstr "Envoyer l’e-mail de vérification"
+msgstr "Envoyer le courriel de vérification"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:405
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:408
@@ -5837,7 +5837,7 @@ msgstr "Envoyer par message privé"
 
 #: src/view/com/modals/DeleteAccount.tsx:151
 msgid "Sends email with confirmation code for account deletion"
-msgstr "Envoie un e-mail avec le code de confirmation pour la suppression du compte"
+msgstr "Envoie un courriel avec le code de confirmation pour la suppression du compte"
 
 #: src/view/com/auth/server-input/index.tsx:111
 msgid "Server address"
@@ -5857,7 +5857,7 @@ msgstr "Créez votre compte"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:107
 msgid "Sets email for password reset"
-msgstr "Définit l’e-mail pour la réinitialisation du mot de passe"
+msgstr "Définit le courriel pour la réinitialisation du mot de passe"
 
 #: src/Navigation.tsx:158
 #: src/screens/Settings/Settings.tsx:76
@@ -6423,7 +6423,7 @@ msgstr "Champ de saisie de texte"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:96
 msgid "Thank you! Your email has been successfully verified."
-msgstr "Merci! Votre adresse e-mail a été vérifiée avec succès."
+msgstr "Merci! Votre courriel a été vérifiée avec succès."
 
 #: src/components/dms/ReportDialog.tsx:129
 #: src/components/ReportDialog/SubmitView.tsx:82
@@ -6432,7 +6432,7 @@ msgstr "Nous vous remercions. Votre rapport a été envoyé."
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:82
 msgid "Thanks, you have successfully verified your email address. You can close this dialog."
-msgstr "Merci, vous avez vérifié avec succès votre adresse e-mail. Vous pouvez fermer cette fenêtre."
+msgstr "Merci, vous avez vérifié avec succès votre courriel. Vous pouvez fermer cette fenêtre."
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:467
 msgid "That contains the following:"
@@ -6731,7 +6731,7 @@ msgstr "Ces informations ne sont pas partagées avec d’autres personnes."
 
 #: src/view/com/modals/VerifyEmail.tsx:127
 msgid "This is important in case you ever need to change your email or reset your password."
-msgstr "Ceci est important au cas où vous auriez besoin de changer d’e-mail ou de réinitialiser votre mot de passe."
+msgstr "Ceci est important au cas où vous auriez besoin de changer de courriel ou de réinitialiser votre mot de passe."
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:150
 msgid "This label was applied by <0>{0}</0>."
@@ -6866,7 +6866,7 @@ msgstr "Préférences des fils de discussion"
 
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:99
 msgid "To disable the email 2FA method, please verify your access to the email address."
-msgstr "Pour désactiver le 2FA par e-mail, vérifiez votre accès à votre adresse e-mail."
+msgstr "Pour désactiver le 2FA par courriel, vérifiez votre accès à votre courriel."
 
 #: src/components/dms/ReportConversationPrompt.tsx:19
 msgid "To report a conversation, please report one of its messages via the conversation screen. This lets our moderators understand the context of your issue."
@@ -6874,7 +6874,7 @@ msgstr "Pour signaler une conversation, signalez plutôt un de ses messages via 
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:133
 msgid "To upload videos to Bluesky, you must first verify your email."
-msgstr "Pour envoyer des vidéos sur Bluesky, vous devez d’abord vérifier votre e-mail."
+msgstr "Pour envoyer des vidéos sur Bluesky, vous devez d’abord vérifier votre courriel."
 
 #: src/components/ReportDialog/SelectLabelerView.tsx:31
 msgid "To whom would you like to send this report?"
@@ -7240,7 +7240,7 @@ msgstr "Listes de comptes"
 
 #: src/screens/Login/LoginForm.tsx:183
 msgid "Username or email address"
-msgstr "Pseudo ou e-mail"
+msgstr "Pseudo ou courriel"
 
 #: src/view/screens/ProfileList.tsx:924
 msgid "Users"
@@ -7269,7 +7269,7 @@ msgstr "Valeur :"
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:131
 msgid "Verified email required"
-msgstr "Vérification de l’adresse e-mail requise"
+msgstr "Vérification de courriel requise"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:496
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:517
@@ -7279,12 +7279,12 @@ msgstr "Vérifier l’enregistrement DNS"
 #: src/components/dialogs/VerifyEmailDialog.tsx:134
 #: src/components/intents/VerifyEmailIntentDialog.tsx:67
 msgid "Verify email dialog"
-msgstr "Boîte de dialogue de vérification de l’adresse e-mail"
+msgstr "Boîte de dialogue de vérification de du courriel"
 
 #: src/view/com/modals/ChangeEmail.tsx:200
 #: src/view/com/modals/ChangeEmail.tsx:202
 msgid "Verify New Email"
-msgstr "Confirmer le nouvel e-mail"
+msgstr "Confirmer le nouveau courriel"
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:135
 msgid "Verify now"
@@ -7298,12 +7298,12 @@ msgstr "Vérifier le fichier texte"
 #: src/screens/Settings/AccountSettings.tsx:67
 #: src/screens/Settings/AccountSettings.tsx:83
 msgid "Verify your email"
-msgstr "Verify Your Email"
+msgstr "Vérifiez votre courriel"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:85
 #: src/view/com/modals/VerifyEmail.tsx:111
 msgid "Verify Your Email"
-msgstr "Vérifiez votre e-mail"
+msgstr "Vérifiez votre courriel"
 
 #: src/screens/Settings/AboutSettings.tsx:59
 #: src/screens/Settings/AboutSettings.tsx:69
@@ -7466,7 +7466,7 @@ msgstr "Nous estimons que votre compte sera prêt dans {estimatedTime}."
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:107
 msgid "We have sent another verification email to <0>{0}</0>."
-msgstr "Nous avons envoyé un autre e-mail de vérification à <0>{0}</0>."
+msgstr "Nous avons envoyé un autre courriel de vérification à <0>{0}</0>."
 
 #: src/screens/Onboarding/StepFinished.tsx:234
 msgid "We hope you have a wonderful time. Remember, Bluesky is:"
@@ -7856,7 +7856,7 @@ msgstr "Vous recevrez désormais des notifications pour ce fil de discussion"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:98
 msgid "You will receive an email with a \"reset code.\" Enter that code here, then enter your new password."
-msgstr "Vous recevrez un e-mail contenant un « code de réinitialisation ». Saisissez ce code ici, puis votre nouveau mot de passe."
+msgstr "Vous recevrez un courriel contenant un « code de réinitialisation ». Saisissez ce code ici, puis votre nouveau mot de passe."
 
 #: src/screens/Messages/components/ChatListItem.tsx:124
 msgid "You: {0}"
@@ -7888,7 +7888,7 @@ msgstr "Vous suivrez ces personnes immédiatement"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:178
 msgid "You'll receive an email at <0>{0}</0> to verify it's you."
-msgstr "Vous recevrez un e-mail à <0>{0}</0> pour vérifier que c’est vous."
+msgstr "Vous recevrez un courriel à <0>{0}</0> pour vérifier que c’est vous."
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:270
 msgid "You'll stay updated with these feeds"
@@ -7961,15 +7961,15 @@ msgstr "Votre choix sera enregistré, mais vous pourrez le modifier ultérieurem
 #: src/screens/Signup/StepInfo/index.tsx:108
 #: src/view/com/modals/ChangePassword.tsx:55
 msgid "Your email appears to be invalid."
-msgstr "Votre e-mail semble être invalide."
+msgstr "Votre courriel semble être invalide."
 
 #: src/view/com/modals/ChangeEmail.tsx:120
 msgid "Your email has been updated but not verified. As a next step, please verify your new email."
-msgstr "Votre e-mail a été mis à jour, mais n’a pas été vérifié. L’étape suivante consiste à vérifier votre nouvel e-mail."
+msgstr "Votre courriel a été mis à jour, mais n’a pas été vérifié. L’étape suivante consiste à vérifier votre nouveau courriel."
 
 #: src/view/com/modals/VerifyEmail.tsx:122
 msgid "Your email has not yet been verified. This is an important security step which we recommend."
-msgstr "Votre e-mail n’a pas encore été vérifié. Il s’agit d’une mesure de sécurité importante que nous recommandons."
+msgstr "Votre courriel n’a pas encore été vérifié. Il s’agit d’une mesure de sécurité importante que nous recommandons."
 
 #: src/state/shell/progress-guide.tsx:156
 msgid "Your first like!"
