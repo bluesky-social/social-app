@@ -6820,11 +6820,6 @@
   resolved "https://registry.yarnpkg.com/@types/hammerjs/-/hammerjs-2.0.41.tgz#f6ecf57d1b12d2befcce00e928a6a097c22980aa"
   integrity sha512-ewXv/ceBaJprikMcxCmWU1FKyMAQ2X7a9Gtmzw8fcg2kIePI1crERDM818W+XYrxqdBBOdlf2rm137bU+BltCA==
 
-"@types/he@^1.1.2":
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/@types/he/-/he-1.2.0.tgz#3845193e597d943bab4e61ca5d7f3d8fc3d572a3"
-  integrity sha512-uH2smqTN4uGReAiKedIVzoLUAXIYLBTbSofhx3hbNqj74Ua6KqFsLYszduTrLCMEAEAozF73DbGi/SC1bzQq4g==
-
 "@types/html-minifier-terser@^6.0.0":
   version "6.1.0"
   resolved "https://registry.yarnpkg.com/@types/html-minifier-terser/-/html-minifier-terser-6.1.0.tgz#4fc33a00c1d0c16987b1a20cf92d20614c55ac35"
@@ -8007,7 +8002,7 @@ babel-plugin-polyfill-regenerator@^0.5.2:
   dependencies:
     "@babel/helper-define-polyfill-provider" "^0.4.2"
 
-babel-plugin-react-compiler@^19.0.0-beta-a7bf2bd-20241110:
+babel-plugin-react-compiler@19.0.0-beta-a7bf2bd-20241110:
   version "19.0.0-beta-a7bf2bd-20241110"
   resolved "https://registry.yarnpkg.com/babel-plugin-react-compiler/-/babel-plugin-react-compiler-19.0.0-beta-a7bf2bd-20241110.tgz#9e7abf2d9b6d0908cca7df010695678b830b36ae"
   integrity sha512-WdxXtLxsV4gh/GlEK4fuFDGkcED0Wb9UJEBB6Uc1SFqRFEmJNFKboW+Z4NUS5gYrPImqrjh4IwHAmgS6ZBg4Cg==
@@ -10055,7 +10050,7 @@ eslint-plugin-lingui@^0.2.0:
   dependencies:
     "@typescript-eslint/utils" "^5.61.0"
 
-eslint-plugin-react-compiler@^19.0.0-beta-a7bf2bd-20241110:
+eslint-plugin-react-compiler@19.0.0-beta-a7bf2bd-20241110:
   version "19.0.0-beta-a7bf2bd-20241110"
   resolved "https://registry.yarnpkg.com/eslint-plugin-react-compiler/-/eslint-plugin-react-compiler-19.0.0-beta-a7bf2bd-20241110.tgz#b03c043cc70cc9297e4f79f3370900aacd013d13"
   integrity sha512-b5/hRnOQlnH9CEnJQ6UrPoIAG4y/wIGv+OVEHTeAkbq+1uojfcuQyLToYvK1T9a6vz5WQHeMjQqFOZk3mtWorg==
@@ -15906,7 +15901,7 @@ rc@^1.0.1, rc@^1.1.6, rc@^1.2.7, rc@~1.2.7:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
-react-compiler-runtime@^19.0.0-beta-a7bf2bd-20241110:
+react-compiler-runtime@19.0.0-beta-a7bf2bd-20241110:
   version "19.0.0-beta-a7bf2bd-20241110"
   resolved "https://registry.yarnpkg.com/react-compiler-runtime/-/react-compiler-runtime-19.0.0-beta-a7bf2bd-20241110.tgz#58587b1a05d50f78f0a72f5e857d541f5dcb5cd1"
   integrity sha512-cSkrfz2eGcC9UZ/83mLf3aqKKDVjFkWJeA/kiYLwKTNp7B0Lq5M1FQ3vTfgSC027fK5ZutXU/JsCS5KxTwk8Mg==
