@@ -151,17 +151,14 @@ export function RichText({
         />,
       )
     } else {
-      els.push(
-        <Text key={key} emoji style={plainStyles}>
-          {segment.text}
-        </Text>,
-      )
+      els.push(segment.text)
     }
     key++
   }
 
   return (
     <Text
+      emoji
       selectable={selectable}
       testID={testID}
       style={plainStyles}
