@@ -1,5 +1,5 @@
 import React from 'react'
-import {StyleSheet, Text as RNText, TextProps} from 'react-native'
+import {StyleSheet, TextProps} from 'react-native'
 import {UITextView} from 'react-native-uitextview'
 
 import {lh, s} from '#/lib/styles'
@@ -107,19 +107,9 @@ function Text_DEPRECATED({
     type,
   ])
 
-  if (selectable && isIOS) {
-    return (
-      <UITextView {...textProps}>
-        {isIOS && emoji
-          ? renderChildrenWithEmoji(children, textProps)
-          : children}
-      </UITextView>
-    )
-  }
-
   return (
-    <RNText {...textProps}>
+    <UITextView {...textProps}>
       {isIOS && emoji ? renderChildrenWithEmoji(children, textProps) : children}
-    </RNText>
+    </UITextView>
   )
 }
