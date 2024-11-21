@@ -1,92 +1,16 @@
-import React from 'react'
-import {TextProps as RNTextProps} from 'react-native'
 import {UITextView} from 'react-native-uitextview'
-import createEmojiRegex from 'emoji-regex'
 
 import {logger} from '#/logger'
 import {isIOS} from '#/platform/detection'
 import {atoms, flatten, useAlf, useTheme, web} from '#/alf'
-import {normalizeTextStyles} from '#/alf/typography'
+import {
+  childHasEmoji,
+  childIsString,
+  normalizeTextStyles,
+  renderChildrenWithEmoji,
+  TextProps,
+} from '#/alf/typography'
 import {IS_DEV} from '#/env'
-
-export type StringChild = string | (string | null)[]
-
-export type TextProps = Omit<RNTextProps, 'children'> & {
-  /**
-   * Lets the user select text, to use the native copy and paste functionality.
-   */
-  selectable?: boolean
-  /**
-   * Provides `data-*` attributes to the underlying `UITextView` component on
-   * web only.
-   */
-  dataSet?: Record<string, string | number | undefined>
-  /**
-   * Appears as a small tooltip on web hover.
-   */
-  title?: string
-} & (
-    | {
-        emoji?: true
-        children: StringChild
-      }
-    | {
-        emoji?: false
-        children: RNTextProps['children']
-      }
-  )
-
-const EMOJI = createEmojiRegex()
-
-export function childHasEmoji(children: React.ReactNode) {
-  return (Array.isArray(children) ? children : [children]).some(
-    child => typeof child === 'string' && createEmojiRegex().test(child),
-  )
-}
-
-export function childIsString(
-  children: React.ReactNode,
-): children is StringChild {
-  return (
-    typeof children === 'string' ||
-    (Array.isArray(children) &&
-      children.every(child => typeof child === 'string' || child === null))
-  )
-}
-
-export function renderChildrenWithEmoji(
-  children: StringChild,
-  props: Omit<TextProps, 'children'> = {},
-) {
-  const normalized = Array.isArray(children) ? children : [children]
-
-  return (
-    <UITextView {...props}>
-      {normalized.map(child => {
-        if (typeof child !== 'string') return child
-
-        const emojis = child.match(EMOJI)
-
-        if (emojis === null) {
-          return child
-        }
-
-        return child.split(EMOJI).map((stringPart, index) => (
-          <UITextView key={index} {...props}>
-            {stringPart}
-            {emojis[index] ? (
-              <UITextView
-                {...props}
-                style={[props?.style, {color: 'black', fontFamily: 'System'}]}>
-                {emojis[index]}
-              </UITextView>
-            ) : null}
-          </UITextView>
-        ))
-      })}
-    </UITextView>
-  )
-}
 
 /**
  * Our main text component. Use this most of the time.
