@@ -71,7 +71,7 @@ msgstr "{0, plural, one {abonnement} other {abonnements}}"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:305
 msgid "{0, plural, one {Like (# like)} other {Like (# likes)}}"
-msgstr "{0, plural, one {« J'aime » (# like)} other {« J'aime » (# likes)}}"
+msgstr "{0, plural, one {Aimer (# ont aimé)} other {Aimer (# ont aimé)}}"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:442
 msgid "{0, plural, one {like} other {likes}}"
@@ -100,7 +100,7 @@ msgstr "{0, plural, one {repost} other {reposts}}"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:301
 msgid "{0, plural, one {Unlike (# like)} other {Unlike (# likes)}}"
-msgstr "{0, plural, one {Retirer « J'aime » (# like)} other {Retirer « J'aime » (# likes)}}"
+msgstr "{0, plural, one {Retirer la mention « J’aime » (# ont aimé)} other {Retirer la mention « J’aime » (# ont aimé)}}"
 
 #: src/screens/Settings/Settings.tsx:414
 msgid "{0}"
@@ -130,7 +130,7 @@ msgstr "{0} personnes ont utilisé ce kit de démarrage !"
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:203
 msgid "{0} unread items"
-msgstr "{0} items non lus"
+msgstr "{0} éléments non lus"
 
 #: src/view/com/util/UserAvatar.tsx:435
 msgid "{0}'s avatar"
@@ -171,7 +171,7 @@ msgstr "{0}s"
 
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:252
 msgid "{badge} unread items"
-msgstr "{badge} items non lus"
+msgstr "{badge} éléments non lus"
 
 #: src/components/LabelingServiceCard/index.tsx:96
 msgid "{count, plural, one {Liked by # user} other {Liked by # users}}"
@@ -179,7 +179,7 @@ msgstr "{count, plural, one {Aimé par # compte} other {Aimé par # comptes}}"
 
 #: src/view/shell/desktop/LeftNav.tsx:223
 msgid "{count} unread items"
-msgstr "{count} items non lus"
+msgstr "{count} éléments non lus"
 
 #: src/lib/generate-starterpack.ts:108
 #: src/screens/StarterPack/Wizard/index.tsx:183
@@ -200,27 +200,27 @@ msgstr "{firstAuthorLink} et <0>{additionalAuthorsCount, plural, one {{formatted
 
 #: src/view/com/notifications/FeedItem.tsx:326
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> liked your custom feed"
-msgstr "{firstAuthorLink} et <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> ont aimé votre fil d'actu personnalisé"
+msgstr "{firstAuthorLink} et <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} autre compte} other {{formattedAuthorsCount} autres comptes}}</0> ont aimé votre fil d’actu personnalisé"
 
 #: src/view/com/notifications/FeedItem.tsx:222
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> liked your post"
-msgstr "{firstAuthorLink} et <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> ont aimé votre post"
+msgstr "{firstAuthorLink} et <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} autre compte} other {{formattedAuthorsCount} autres comptes}}</0> ont aimé votre post"
 
 #: src/view/com/notifications/FeedItem.tsx:246
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> reposted your post"
-msgstr "{firstAuthorLink} et <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> ont republié votre post"
+msgstr "{firstAuthorLink} et <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} autre compte} other {{formattedAuthorsCount} autres comptes}}</0> ont republié votre post"
 
 #: src/view/com/notifications/FeedItem.tsx:350
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> signed up with your starter pack"
-msgstr "{firstAuthorLink} et <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> se sont abonnés à votre kit de démarrage"
+msgstr "{firstAuthorLink} et <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} autre compte} other {{formattedAuthorsCount} autres comptes}}</0> se sont abonnés à votre kit de démarrage"
 
 #: src/view/com/notifications/FeedItem.tsx:312
 msgid "{firstAuthorLink} followed you"
-msgstr "{firstAuthorLink} vous a suivi"
+msgstr "{firstAuthorLink} vous a suivi·e"
 
 #: src/view/com/notifications/FeedItem.tsx:289
 msgid "{firstAuthorLink} followed you back"
-msgstr "{firstAuthorLink} vous a suivi en retour"
+msgstr "{firstAuthorLink} vous a suivi·e en retour"
 
 #: src/view/com/notifications/FeedItem.tsx:338
 msgid "{firstAuthorLink} liked your custom feed"
@@ -240,31 +240,31 @@ msgstr "{firstAuthorLink} s'est inscrit·e à votre kit de démarrage"
 
 #: src/view/com/notifications/FeedItem.tsx:293
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} followed you"
-msgstr "{firstAuthorName} et {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} vous ont suivi"
+msgstr "{firstAuthorName} et {additionalAuthorsCount, plural, one {{formattedAuthorsCount} autre compte} other {{formattedAuthorsCount} autres comptes}} vous ont suivi"
 
 #: src/view/com/notifications/FeedItem.tsx:319
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} liked your custom feed"
-msgstr "{firstAuthorName} et {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} ont aimé votre fil d'actu personnalisé"
+msgstr "{firstAuthorName} et {additionalAuthorsCount, plural, one {{formattedAuthorsCount} autre compte} other {{formattedAuthorsCount} autres comptes}} ont aimé votre fil d'actu personnalisé"
 
 #: src/view/com/notifications/FeedItem.tsx:215
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} liked your post"
-msgstr "{firstAuthorName} et {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} ont aimé votre post"
+msgstr "{firstAuthorName} et {additionalAuthorsCount, plural, one {{formattedAuthorsCount} autre compte} other {{formattedAuthorsCount} autres comptes}} ont aimé votre post"
 
 #: src/view/com/notifications/FeedItem.tsx:239
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} reposted your post"
-msgstr "{firstAuthorName} et {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} ont republié votre post"
+msgstr "{firstAuthorName} et {additionalAuthorsCount, plural, one {{formattedAuthorsCount} autre compte} other {{formattedAuthorsCount} autres comptes}} ont republié votre post"
 
 #: src/view/com/notifications/FeedItem.tsx:343
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} signed up with your starter pack"
-msgstr "{firstAuthorName} et {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} se sont inscrit·e·s à votre kit de démarrage"
+msgstr "{firstAuthorName} et {additionalAuthorsCount, plural, one {{formattedAuthorsCount} autre compte} other {{formattedAuthorsCount} autres comptes}} se sont inscrit·e·s à votre kit de démarrage"
 
 #: src/view/com/notifications/FeedItem.tsx:298
 msgid "{firstAuthorName} followed you"
-msgstr "{firstAuthorName} vous a suivi"
+msgstr "{firstAuthorName} a suivi votre compte"
 
 #: src/view/com/notifications/FeedItem.tsx:288
 msgid "{firstAuthorName} followed you back"
-msgstr "{firstAuthorName} vous a suivi en retour"
+msgstr "{firstAuthorName} a suivi votre compte en retour"
 
 #: src/view/com/notifications/FeedItem.tsx:324
 msgid "{firstAuthorName} liked your custom feed"
@@ -303,7 +303,7 @@ msgstr "{numUnreadNotifications} non lus"
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:230
 msgid "{numUnreadNotifications} unread items"
-msgstr "{numUnreadNotifications} items non lus"
+msgstr "{numUnreadNotifications} éléments non lus"
 
 #: src/components/NewskieDialog.tsx:116
 msgid "{profileName} joined Bluesky {0} ago"
@@ -349,7 +349,7 @@ msgstr "<0>{date}</0> à {time}"
 
 #: src/screens/Settings/NotificationSettings.tsx:72
 msgid "<0>Experimental:</0> When this preference is enabled, you'll only receive reply and quote notifications from users you follow. We'll continue to add more controls here over time."
-msgstr "<0>Expérimental :</0>  lorsque cette préférence est activée, vous ne recevrez que les notifications de réponse et de citation des comptes que vous suivez. Nous continuerons à ajouter d’autres contrôles au fil du temps. "
+msgstr "<0>Expérimental :</0> lorsque cette préférence est activée, vous ne recevrez que les notifications de réponse et de citation des comptes que vous suivez. Nous continuerons à ajouter d’autres contrôles au fil du temps."
 
 #: src/screens/StarterPack/Wizard/index.tsx:466
 msgid "<0>You</0> and<1> </1><2>{0} </2>are included in your starter pack"
@@ -535,7 +535,7 @@ msgstr "Ajouter les fils d’actu recommandés"
 
 #: src/screens/StarterPack/Wizard/index.tsx:497
 msgid "Add some feeds to your starter pack!"
-msgstr "Ajoutez des fils d’actu à votre kit de démarrage !"
+msgstr "Ajoutez des fils d’actu à votre kit de démarrage !"
 
 #: src/screens/Feeds/NoFollowingFeed.tsx:41
 msgid "Add the default feed of only people you follow"
@@ -543,7 +543,7 @@ msgstr "Ajouter le fil d’actu par défaut avec seulement les comptes que vous 
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:387
 msgid "Add the following DNS record to your domain:"
-msgstr "Ajoutez l’enregistrement DNS suivant à votre domaine :"
+msgstr "Ajoutez l’enregistrement DNS suivant à votre domaine :"
 
 #: src/components/FeedCard.tsx:296
 msgid "Add this feed to your feeds"
@@ -597,11 +597,11 @@ msgstr "Avancé"
 
 #: src/state/shell/progress-guide.tsx:171
 msgid "Algorithm training complete!"
-msgstr "Entraînement de l’algorithme terminé !"
+msgstr "Entraînement de l’algorithme terminé !"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:381
 msgid "All accounts have been followed!"
-msgstr "Tous les comptes ont été suivis !"
+msgstr "Tous les comptes ont été suivis !"
 
 #: src/view/screens/Feeds.tsx:735
 msgid "All the feeds you've saved, right in one place."
@@ -619,7 +619,7 @@ msgstr "Autoriser les nouveaux messages de"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:360
 msgid "Allow replies from:"
-msgstr "Autoriser les réponses de :"
+msgstr "Autoriser les réponses de :"
 
 #: src/screens/Settings/AppPasswords.tsx:192
 msgid "Allows access to direct messages"
@@ -779,7 +779,7 @@ msgstr "Langue de l’application"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:122
 msgid "App Password"
-msgstr "Mot de Passe d'Application"
+msgstr "Mot de passe d’application"
 
 #: src/screens/Settings/AppPasswords.tsx:139
 msgid "App password deleted"
@@ -791,7 +791,7 @@ msgstr "Le mot de passe d'application doit être unique"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:62
 msgid "App password names can only contain letters, numbers, spaces, dashes, and underscores"
-msgstr "Le mot de passe d'application peut seulement contenir des lettres, chiffres, espaces, traits et tiret du bas."
+msgstr "Le mot de passe d’application peut seulement contenir des lettres, chiffres, espaces, traits et tiret du bas."
 
 #: src/view/com/modals/AddAppPasswords.tsx:138
 #~ msgid "App Password names can only contain letters, numbers, spaces, dashes, and underscores."
@@ -812,7 +812,7 @@ msgstr "Les noms de mots de passe d’application doivent comporter au moins 4 c
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:56
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:59
 msgid "App passwords"
-msgstr "Mot de passes d'applications"
+msgstr "Mots de passe d’application"
 
 #: src/Navigation.tsx:289
 #: src/screens/Settings/AppPasswords.tsx:47
@@ -907,7 +907,7 @@ msgstr "Êtes-vous sûr de vouloir rejeter ce brouillon ?"
 
 #: src/view/com/composer/Composer.tsx:828
 msgid "Are you sure you'd like to discard this post?"
-msgstr "Êtes-vous sûr de vouloir abandonner ce post?"
+msgstr "Êtes-vous sûr de vouloir abandonner ce post ?"
 
 #: src/components/dialogs/MutedWords.tsx:433
 msgid "Are you sure?"
@@ -932,7 +932,7 @@ msgstr "Au moins 3 caractères"
 
 #: src/screens/Settings/AccessibilitySettings.tsx:98
 msgid "Autoplay options have moved to the <0>Content and Media settings</0>."
-msgstr "Les options de la lecture automatique ont été dplacées dans "
+msgstr "Les options de la lecture automatique ont été déplacées dans les <0>paramètres Contenu et médias</0>."
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:89
 #: src/screens/Settings/ContentAndMediaSettings.tsx:95
@@ -1070,7 +1070,7 @@ msgstr "Bluesky"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:850
 msgid "Bluesky cannot confirm the authenticity of the claimed date."
-msgstr "Bluesky n'arrive pas à confirmer l'authenticité de la date déclarée."
+msgstr "Bluesky l’arrive pas à confirmer l’authenticité de la date déclarée."
 
 #: src/view/com/auth/server-input/index.tsx:151
 msgid "Bluesky is an open network where you can choose your hosting provider. If you're a developer, you can host your own server."
@@ -1614,12 +1614,12 @@ msgstr "Contacter le support"
 #: src/screens/Settings/Settings.tsx:167
 #: src/screens/Settings/Settings.tsx:170
 msgid "Content and media"
-msgstr "Contenu et Média"
+msgstr "Contenu et médias"
 
 #: src/Navigation.tsx:353
 #: src/screens/Settings/ContentAndMediaSettings.tsx:36
 msgid "Content and Media"
-msgstr "Contenu et Média"
+msgstr "Contenu et médias"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:18
 msgid "Content Blocked"
@@ -1716,11 +1716,11 @@ msgstr "Copier"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:196
 msgid "Copy App Password"
-msgstr "Copier mot de passe d'application"
+msgstr "Copier le mot de passe d’application"
 
 #: src/screens/Settings/AboutSettings.tsx:61
 msgid "Copy build version to clipboard"
-msgstr "Copier version de build dans le presse-papier"
+msgstr "Copier la version de build dans le presse-papier"
 
 #: src/components/dialogs/Embed.tsx:122
 #: src/components/dialogs/Embed.tsx:141
@@ -1729,7 +1729,7 @@ msgstr "Copier ce code"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:472
 msgid "Copy DID"
-msgstr "Copier DID"
+msgstr "Copier le DID"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:405
 msgid "Copy host"
@@ -1768,7 +1768,7 @@ msgstr "Copier le code QR"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:426
 msgid "Copy TXT record value"
-msgstr "Copier valeur du registre TXT"
+msgstr "Copier la valeur du registre TXT"
 
 #: src/Navigation.tsx:284
 #: src/view/screens/CopyrightPolicy.tsx:31
@@ -2107,7 +2107,7 @@ msgstr "Abandonner le brouillon ?"
 
 #: src/view/com/composer/Composer.tsx:827
 msgid "Discard post?"
-msgstr "Abandonner ce post?"
+msgstr "Abandonner ce post ?"
 
 #: src/screens/Settings/components/PwiOptOut.tsx:80
 #: src/screens/Settings/components/PwiOptOut.tsx:84
@@ -2153,7 +2153,7 @@ msgstr "Nom d’affichage"
 
 #: src/view/com/modals/EditProfile.tsx:175
 msgid "Display Name"
-msgstr "Nom d'affichage"
+msgstr "Nom d’affichage"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:333
 msgid "Display name is too long"
@@ -2267,7 +2267,7 @@ msgstr "ex. alice.fr"
 
 #: src/view/com/modals/EditProfile.tsx:198
 msgid "e.g. Artist, dog-lover, and avid reader."
-msgstr "ex. Artiste, ami des chiens et lecteur·rice passioné·e."
+msgstr "ex. Artiste, ami des chiens et lectrice passionnée."
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:43
 msgid "E.g. artistic nudes."
@@ -2381,7 +2381,7 @@ msgstr "Modifier qui peut répondre"
 
 #: src/view/com/modals/EditProfile.tsx:188
 msgid "Edit your display name"
-msgstr "Modifier votre nom d'affichage"
+msgstr "Modifier votre nom d’affichage"
 
 #: src/view/com/modals/EditProfile.tsx:206
 msgid "Edit your profile description"
@@ -2408,7 +2408,7 @@ msgstr "2FA par e-mail désactivé"
 
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:47
 msgid "Email 2FA enabled"
-msgstr "E-mail d'authentification à deux facteurs activé"
+msgstr "Auth. à deux facteurs par e-mail activé"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:93
 msgid "Email address"
@@ -2468,7 +2468,7 @@ msgstr "Activer le contenu pour adultes"
 
 #: src/screens/Settings/components/Email2FAToggle.tsx:53
 msgid "Enable Email 2FA"
-msgstr "Activer authentification à deux facteurs par e-mail"
+msgstr "Activer auth. à deux facteurs par e-mail"
 
 #: src/components/dialogs/EmbedConsent.tsx:81
 #: src/components/dialogs/EmbedConsent.tsx:88
@@ -2537,7 +2537,7 @@ msgstr "Entrez le domaine que vous voulez utiliser"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:113
 msgid "Enter the email you used to create your account. We'll send you a \"reset code\" so you can set a new password."
-msgstr "Saisissez l’e-mail que vous avez utilisé pour créer votre compte. Nous vous enverrons un « code de réinitialisation » afin changer votre mot de passe."
+msgstr "Saisissez l’e-mail que vous avez utilisé pour créer votre compte. Nous vous enverrons un « code de réinitialisation » pour vous permettre de changer de mot de passe."
 
 #: src/components/dialogs/BirthDateSettings.tsx:107
 msgid "Enter your birth date"
@@ -2720,7 +2720,7 @@ msgstr "Le changement de pseudo a échoué. Veuillez réessayer."
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:173
 msgid "Failed to create app password. Please try again."
-msgstr "La création du mot de pass de l'appli a échoué. Veuillez réessayer."
+msgstr "La création du mot de passe de l’appli a échoué. Veuillez réessayer."
 
 #: src/screens/StarterPack/Wizard/index.tsx:238
 #: src/screens/StarterPack/Wizard/index.tsx:246
@@ -3050,7 +3050,7 @@ msgstr "Pour des raisons de sécurité, nous devrons envoyer un code de confirma
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:209
 msgid "For security reasons, you won't be able to view this again. If you lose this app password, you'll need to generate a new one."
-msgstr "Pour des raisons de sécurité, vous ne pouvez consulter ceci qu'une seule fois. Si vous perdez le mot de passe de cette application, vous devrez générer un nouveau mot de passe."
+msgstr "Pour des raisons de sécurité, vous ne pouvez consulter ceci qu’une seule fois. Si vous perdez le mot de passe de cette application, vous devrez en générer un nouveau."
 
 
 #: src/view/com/modals/AddAppPasswords.tsx:233
@@ -3213,7 +3213,7 @@ msgstr "Ce pseudo est déjà utilisé. Veuillez utiliser un autre pseudo."
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:188
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:325
 msgid "Handle changed!"
-msgstr "Pseudo changé!"
+msgstr "Pseudo changé !"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:561
 msgid "Handle too long. Please try a shorter one."
@@ -3252,7 +3252,7 @@ msgstr "Aidez les gens à savoir que vous n’êtes pas un bot en envoyant une i
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:187
 msgid "Here is your app password!"
-msgstr "Voici votre mot de passe d'application!"
+msgstr "Voici votre mot de passe d’application !"
 
 #: src/view/com/modals/AddAppPasswords.tsx:204
 #~ msgid "Here is your app password."
@@ -3404,7 +3404,7 @@ msgstr "Si vous supprimez cette liste, vous ne pourrez pas la récupérer."
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:247
 msgid "If you have your own domain, you can use that as your handle. This lets you self-verify your identity – <0>learn more</0>."
-msgstr "Si vous possédez votre propre domaine, vous pouvez l'utiliser comme pseudonyme. Cela vous permets d'auto-vérifier votre identité - <0>En savoir plus</0>."
+msgstr "Si vous possédez votre propre domaine, vous pouvez l’utiliser comme pseudonyme. Cela vous permet d’auto-vérifier votre identité — <0>En savoir plus</0>."
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:670
 msgid "If you remove this post, you won't be able to recover it."
@@ -4061,7 +4061,7 @@ msgstr "Plus d’options"
 
 #: src/screens/Settings/ThreadPreferences.tsx:81
 msgid "Most-liked first"
-msgstr "Plus-aimé en premier"
+msgstr "Les plus aimés en premier"
 
 #: src/screens/Settings/ThreadPreferences.tsx:78
 msgid "Most-liked replies first"
@@ -4653,7 +4653,7 @@ msgstr "Ouvre le créateur d’avatar"
 
 #: src/screens/Settings/AccountSettings.tsx:120
 msgid "Open change handle dialog"
-msgstr "Ouvrir "
+msgstr "Ouvrir la boîte de dialogue de changement de pseudo"
 
 #: src/screens/Messages/components/ChatListItem.tsx:272
 #: src/screens/Messages/components/ChatListItem.tsx:273
@@ -4672,7 +4672,7 @@ msgstr "Ouvrir le menu des options de fil d’actu"
 
 #: src/screens/Settings/Settings.tsx:200
 msgid "Open helpdesk in browser"
-msgstr "Ouvrir le site de support dans un navigateur"
+msgstr "Ouvrir le site d’aide dans un navigateur"
 
 #: src/view/com/util/post-embeds/ExternalLinkEmbed.tsx:71
 msgid "Open link to {niceUrl}"
@@ -5118,7 +5118,7 @@ msgstr "Post"
 #: src/view/com/composer/Composer.tsx:917
 msgctxt "action"
 msgid "Post All"
-msgstr "Poster Tout"
+msgstr "Tout poster"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:204
 msgid "Post by {0}"
@@ -5932,7 +5932,7 @@ msgstr "Enregistré à mes fils d’actu"
 
 #: src/view/com/modals/EditProfile.tsx:220
 msgid "Saves any changes to your profile"
-msgstr "Enregistre  "
+msgstr "Enregistre les changements sur votre profil"
 
 #: src/view/com/modals/ChangeHandle.tsx:159
 #~ msgid "Saves handle change to {handle}"
@@ -6053,7 +6053,7 @@ msgstr "Sélectionner un emoji"
 
 #: src/screens/Settings/LanguageSettings.tsx:252
 msgid "Select content languages"
-msgstr "Sélectionner la langue de contenu"
+msgstr "Sélectionner les langues de contenu"
 
 #: src/screens/Login/index.tsx:117
 msgid "Select from an existing account"
@@ -6389,7 +6389,7 @@ msgstr "Afficher les réponses masquées"
 
 #: src/screens/Settings/Settings.tsx:96
 msgid "Show other accounts you can switch to"
-msgstr "Afficher des comptes vous pouvez "
+msgstr "Afficher les autres comptes vers lesquels vous pouvez basculer"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:155
 #~ msgid "Show Posts from My Feeds"
@@ -6423,7 +6423,7 @@ msgstr "Afficher les réponses de vos abonnements avant les autres réponses"
 
 #: src/screens/Settings/ThreadPreferences.tsx:138
 msgid "Show replies in a threaded view"
-msgstr "Afficher les réponses en mode fil de discussion"
+msgstr "Afficher les réponses sous forme de fils"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:559
 #: src/view/com/util/forms/PostDropdownBtn.tsx:569
@@ -6442,7 +6442,7 @@ msgstr "Afficher les reposts"
 #: src/screens/Settings/FollowingFeedPreferences.tsx:122
 #: src/screens/Settings/FollowingFeedPreferences.tsx:132
 msgid "Show samples of your saved feeds in your Following feed"
-msgstr "Afficher des extraits de vos fils d'actu enregistré dans votre fil d'abonnements"
+msgstr "Afficher des extraits de vos fils d’actu enregistrés dans votre fil d’abonnements"
 
 #: src/components/moderation/ContentHider.tsx:130
 #: src/components/moderation/PostHider.tsx:79
@@ -6506,7 +6506,7 @@ msgstr "Déconnexion"
 
 #: src/screens/Settings/Settings.tsx:248
 msgid "Sign out?"
-msgstr "Se déconnecter"
+msgstr "Se déconnecter ?"
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:301
 #: src/view/shell/bottom-bar/BottomBar.tsx:302
@@ -7016,7 +7016,7 @@ msgstr "Il y a eu un problème lors de la récupération de vos listes. Appuyez 
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:102
 msgid "There was an issue fetching your service info"
-msgstr "Il y a eu un problème lors de la récupération d'informations du service"
+msgstr "Il y a eu un problème lors de la récupération de vos informations de service"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:145
 msgid "There was an issue removing this feed. Please check your internet connection and try again."
@@ -7073,7 +7073,7 @@ msgstr "Il y a eu un afflux de nouveaux personnes sur Bluesky ! Nous activerons 
 
 #: src/screens/Settings/FollowingFeedPreferences.tsx:55
 msgid "These settings only apply to the Following feed."
-msgstr "Ces paramètres s'appliquent seulement pour le fil d'actu des abonnements"
+msgstr "Ces paramètres s’appliquent seulement pour le fil d’actu des abonnements."
 
 #: src/components/moderation/ScreenHider.tsx:111
 msgid "This {screenDescription} has been flagged:"
@@ -7291,7 +7291,7 @@ msgstr "Préférences des fils de discussion"
 
 #: src/screens/Settings/ThreadPreferences.tsx:129
 msgid "Threaded mode"
-msgstr "Mode fil de discussion"
+msgstr "Mode sous forme de fils"
 
 #: src/view/screens/PreferencesThreads.tsx:114
 #~ msgid "Threaded Mode"
@@ -7358,7 +7358,7 @@ msgstr "TV"
 
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:49
 msgid "Two-factor authentication (2FA)"
-msgstr "Authentification à deux facteurs (2FA)"
+msgstr "Auth. à deux facteurs (2FA)"
 
 #: src/screens/Messages/components/MessageInput.tsx:148
 msgid "Type your message here"
@@ -7608,7 +7608,7 @@ msgstr "Envoi de la vidéo en cours…"
 
 #: src/screens/Settings/AppPasswords.tsx:59
 msgid "Use app passwords to sign in to other Bluesky clients without giving full access to your account or password."
-msgstr "Utilisez des mot de passe d'application"
+msgstr "Utilisez des mots de passe d’application pour vous connecter à d’autres clients Bluesky sans donner l’accès complet à votre compte ou mot de passe."
 
 #: src/view/com/modals/ChangeHandle.tsx:506
 #~ msgid "Use bsky.social as hosting provider"
@@ -7626,7 +7626,7 @@ msgstr "Utiliser le navigateur interne à l’appli"
 #: src/screens/Settings/ContentAndMediaSettings.tsx:75
 #: src/screens/Settings/ContentAndMediaSettings.tsx:81
 msgid "Use in-app browser to open links"
-msgstr "Utiliser le navigateur intégrer pour accéder aux liens"
+msgstr "Utiliser le navigateur intégré pour ouvrir les liens"
 
 #: src/view/com/modals/InAppBrowserConsent.tsx:63
 #: src/view/com/modals/InAppBrowserConsent.tsx:65
@@ -8333,7 +8333,7 @@ msgstr "Vous avez précédemment désactivé @{0}."
 
 #: src/screens/Settings/Settings.tsx:249
 msgid "You will be signed out of all your accounts."
-msgstr "Vous serez déconnecté"
+msgstr "Vous serez déconnecté·e de tous vos comptes."
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:222
 msgid "You will no longer receive notifications for this thread"
