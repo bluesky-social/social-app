@@ -11,6 +11,7 @@ import {Paragraph} from '@tiptap/extension-paragraph'
 import {Placeholder} from '@tiptap/extension-placeholder'
 import {Text as TiptapText} from '@tiptap/extension-text'
 import {generateJSON} from '@tiptap/html'
+import {TextSelection} from '@tiptap/pm/state'
 import {EditorContent, JSONContent, useEditor} from '@tiptap/react'
 
 import {useColorSchemeStyle} from '#/lib/hooks/useColorSchemeStyle'
@@ -265,6 +266,33 @@ export const TextInput = React.forwardRef(function TextInputImpl(
       textInputWebEmitter.removeListener('emoji-inserted', onEmojiInserted)
     }
   }, [onEmojiInserted, isActive])
+
+  // thats fix cmd + left navigates back when the editor is focused in a @mention
+  React.useEffect(() => {
+    if (editor) {
+      const handleKeyDown = (event: KeyboardEvent) => {
+        if (
+          (event.metaKey || event.altKey) &&
+          event.code === 'ArrowLeft'
+        ) {
+          const {state, dispatch} = editor.view
+          const {selection} = state
+          const {$anchor} = selection
+          const {doc} = state
+
+          const pos = doc.resolve($anchor.before($anchor.depth))
+          const transaction = state.tr.setSelection(TextSelection.near(pos))
+          dispatch(transaction)
+          event.preventDefault()
+        }
+      }
+
+      document.addEventListener('keydown', handleKeyDown)
+      return () => {
+        document.removeEventListener('keydown', handleKeyDown)
+      }
+    }
+  }, [editor])
 
   React.useImperativeHandle(ref, () => ({
     focus: () => {
