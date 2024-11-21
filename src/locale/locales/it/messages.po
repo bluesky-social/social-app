@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Italian localization\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 11:44+0530\n"
-"PO-Revision-Date: 2024-11-20 14:05+0100\n"
+"PO-Revision-Date: 2024-11-21 10:10+0100\n"
 "Last-Translator: Michele Locati <michele@locati.it>\n"
 "Language-Team: \n"
 "Language: it\n"
@@ -147,7 +147,7 @@ msgstr "{0}g"
 #. How many hours have passed, displayed in a narrow form
 #: src/lib/hooks/useTimeAgo.ts:148
 msgid "{0}h"
-msgstr "{0}o"
+msgstr "{0}h"
 
 #. How many minutes have passed, displayed in a narrow form
 #: src/lib/hooks/useTimeAgo.ts:138
