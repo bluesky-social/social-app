@@ -5970,23 +5970,23 @@ msgstr "जवाब सेटिंग थ्रेड का लेखक च�
 #: src/view/com/posts/FeedItem.tsx:553
 msgctxt "description"
 msgid "Reply to <0><1/></0>"
-msgstr "<0><1/></0> को जवाब दें"
+msgstr "<0><1/></0> को जवाब"
 
 #: src/view/com/posts/FeedItem.tsx:544
 msgctxt "description"
 msgid "Reply to a blocked post"
-msgstr "अवरुद्ध पोस्ट को जवाब दें"
+msgstr "अवरुद्ध पोस्ट को जवाब"
 
 #: src/view/com/posts/FeedItem.tsx:546
 msgctxt "description"
 msgid "Reply to a post"
-msgstr "पोस्ट को जवाब दें"
+msgstr "पोस्ट को जवाब"
 
 #: src/view/com/post/Post.tsx:202
 #: src/view/com/posts/FeedItem.tsx:550
 msgctxt "description"
 msgid "Reply to you"
-msgstr "आपको जवाब दें"
+msgstr "आपको जवाब"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:338
 msgid "Reply visibility updated"
