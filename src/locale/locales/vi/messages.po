@@ -7355,7 +7355,7 @@ msgstr "Bật/tắt nội dung 18+"
 #: src/screens/Hashtag.tsx:87
 #: src/view/screens/Search/Search.tsx:511
 msgid "Top"
-msgstr "Trên cùng"
+msgstr "Hàng đầu"
 
 #: src/components/dms/MessageMenu.tsx:103
 #: src/components/dms/MessageMenu.tsx:105
