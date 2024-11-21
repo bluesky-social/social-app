@@ -4,7 +4,6 @@ import {logger} from '#/logger'
 import {atoms, flatten, useAlf, useTheme, web} from '#/alf'
 import {
   childHasEmoji,
-  childIsString,
   normalizeTextStyles,
   renderChildrenWithEmoji,
   TextProps,
@@ -37,10 +36,6 @@ export function Text({
       logger.warn(
         `Text: emoji detected but emoji not enabled: "${children}"\n\nPlease add <Text emoji />'`,
       )
-    }
-
-    if (emoji && !childIsString(children)) {
-      logger.error('Text: when <Text emoji />, children can only be strings.')
     }
   }
 

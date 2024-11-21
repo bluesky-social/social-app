@@ -58,7 +58,7 @@ export function normalizeTextStyles(
 }
 
 export type StringChild = string | (string | null)[]
-export type TextProps = Omit<RNTextProps, 'children'> & {
+export type TextProps = RNTextProps & {
   /**
    * Lets the user select text, to use the native copy and paste functionality.
    */
@@ -72,16 +72,11 @@ export type TextProps = Omit<RNTextProps, 'children'> & {
    * Appears as a small tooltip on web hover.
    */
   title?: string
-} & (
-    | {
-        emoji?: true
-        children: StringChild
-      }
-    | {
-        emoji?: false
-        children: RNTextProps['children']
-      }
-  )
+  /**
+   * Whether the children could possibly contain emoji.
+   */
+  emoji?: boolean
+}
 
 const EMOJI = createEmojiRegex()
 
@@ -93,16 +88,6 @@ export function childHasEmoji(children: React.ReactNode) {
     }
   })
   return hasEmoji
-}
-
-export function childIsString(
-  children: React.ReactNode,
-): children is StringChild {
-  return (
-    typeof children === 'string' ||
-    (Array.isArray(children) &&
-      children.every(child => typeof child === 'string' || child === null))
-  )
 }
 
 export function renderChildrenWithEmoji(

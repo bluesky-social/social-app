@@ -9,7 +9,6 @@ import {isIOS, isWeb} from '#/platform/detection'
 import {applyFonts, useAlf} from '#/alf'
 import {
   childHasEmoji,
-  childIsString,
   renderChildrenWithEmoji,
   StringChild,
 } from '#/alf/typography'
@@ -55,10 +54,6 @@ function Text_DEPRECATED({
       logger.warn(
         `Text: emoji detected but emoji not enabled: "${children}"\n\nPlease add <Text emoji />'`,
       )
-    }
-
-    if (emoji && !childIsString(children)) {
-      logger.error('Text: when <Text emoji />, children can only be strings.')
     }
   }
 
