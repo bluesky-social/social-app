@@ -1,6 +1,6 @@
 import React from 'react'
 import {useQuery, useMutation} from '@tanstack/react-query'
-import Purchases from 'react-native-purchases'
+import Purchases, { PURCHASES_ERROR_CODE } from 'react-native-purchases'
 
 import {isIOS} from '#/platform/detection'
 import {api} from '#/state/purchases/subscriptions/api'
@@ -52,9 +52,17 @@ export function usePurchaseOffering() {
         throw new Error('Unsupported platform')
       }
 
-      Purchases.logIn(did)
-      Purchases.setEmail(email)
-      Purchases.purchaseStoreProduct(offering.package)
+      try {
+        await Purchases.logIn(did)
+        await Purchases.setEmail(email)
+        await Purchases.purchaseStoreProduct(offering.package)
+      } catch (e: any) {
+        if (e.code === PURCHASES_ERROR_CODE.RECEIPT_ALREADY_IN_USE_ERROR) {
+          console.log('recipt error', e)
+        }
+
+        throw e
+      }
     }
   })
 }

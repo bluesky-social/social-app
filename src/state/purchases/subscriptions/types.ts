@@ -38,8 +38,8 @@ export type Offering =
 export type Subscription = {
   group: SubscriptionGroupId
   platform: PlatformId
-  status: string
-  startsAt: number
-  endsAt: number
-  renewalStatus: string
+  renews: boolean
+  periodDtartsAt: string
+  periodEndsAt: string
+  purchasedAt: string
 }

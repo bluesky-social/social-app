@@ -178,17 +178,15 @@ function App() {
   const [isReady, setReady] = useState(false)
 
   React.useEffect(() => {
-    Promise.all([initPersistedState(), ensureGeolocationResolved()]).then(() =>
-      setReady(true),
-    )
+    Promise.all([initPersistedState(), ensureGeolocationResolved(), Purchases.setLogLevel(Purchases.LOG_LEVEL.DEBUG)]).then(() => {
+      if (isIOS) {
+        Purchases.configure({apiKey: RC_APPLE_PUBLIC_KEY})
+      } else if (isAndroid) {
+        Purchases.configure({apiKey: RC_GOOGLE_PUBLIC_KEY})
+      }
 
-    Purchases.setLogLevel(Purchases.LOG_LEVEL.DEBUG)
-
-    if (isIOS) {
-      Purchases.configure({apiKey: RC_APPLE_PUBLIC_KEY})
-    } else if (isAndroid) {
-      Purchases.configure({apiKey: RC_GOOGLE_PUBLIC_KEY})
-    }
+      setReady(true)
+    })
   }, [])
 
   if (!isReady) {
