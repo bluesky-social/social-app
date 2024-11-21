@@ -32,7 +32,11 @@ export type CustomTextProps = Omit<TextProps, 'children'> & {
       }
   )
 
-export function Text({
+export {Text_DEPRECATED as Text}
+/**
+ * @deprecated use Text from Typography instead.
+ */
+function Text_DEPRECATED({
   type = 'md',
   children,
   emoji,
