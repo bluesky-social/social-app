@@ -264,6 +264,7 @@ let ProfileHeaderLabeler = ({
                   value={descriptionRT}
                   enableTags
                   authorHandle={profile.handle}
+                  dynamicColor
                 />
               </View>
             ) : undefined}

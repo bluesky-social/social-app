@@ -257,6 +257,7 @@ let ProfileHeaderStandard = ({
                   value={descriptionRT}
                   enableTags
                   authorHandle={profile.handle}
+                  dynamicColor
                 />
               </View>
             ) : undefined}
