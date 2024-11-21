@@ -109,7 +109,7 @@ function Text_DEPRECATED({
 
   return (
     <UITextView {...textProps}>
-      {isIOS && emoji ? renderChildrenWithEmoji(children, textProps) : children}
+      {renderChildrenWithEmoji(children, textProps, emoji ?? false)}
     </UITextView>
   )
 }

@@ -5,6 +5,7 @@ import {UITextView} from 'react-native-uitextview'
 import createEmojiRegex from 'emoji-regex'
 
 import {isNative} from '#/platform/detection'
+import {isIOS} from '#/platform/detection'
 import {Alf, applyFonts, atoms, flatten} from '#/alf'
 
 /**
@@ -103,7 +104,11 @@ export function childIsString(
 export function renderChildrenWithEmoji(
   children: React.ReactNode,
   props: Omit<TextProps, 'children'> = {},
+  emoji: boolean,
 ) {
+  if (!isIOS || !emoji) {
+    return children
+  }
   return (
     <UITextView {...props}>
       {Children.map(children, child => {

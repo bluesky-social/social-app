@@ -1,7 +1,6 @@
 import {UITextView} from 'react-native-uitextview'
 
 import {logger} from '#/logger'
-import {isIOS} from '#/platform/detection'
 import {atoms, flatten, useAlf, useTheme, web} from '#/alf'
 import {
   childHasEmoji,
@@ -55,7 +54,7 @@ export function Text({
 
   return (
     <UITextView {...shared}>
-      {isIOS && emoji ? renderChildrenWithEmoji(children, shared) : children}
+      {renderChildrenWithEmoji(children, shared, emoji ?? false)}
     </UITextView>
   )
 }
