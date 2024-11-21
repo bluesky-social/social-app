@@ -929,7 +929,7 @@ msgstr "Hayvanlar"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:149
 msgid "Animated GIF"
-msgstr ""
+msgstr "Animasyonlu GIF"
 
 #: src/lib/moderation/useReportOptions.ts:33
 msgid "Anti-Social Behavior"
@@ -2195,11 +2195,11 @@ msgstr "Liste yüklenemedi"
 
 #: src/components/dms/ConvoMenu.tsx:88
 msgid "Could not mute chat"
-msgstr ""
+msgstr "Sohbet sessize alınamadı"
 
 #: src/view/com/composer/videos/VideoPreview.web.tsx:56
 msgid "Could not process your video"
-msgstr ""
+msgstr "Videonuz işlenemedi"
 
 #: src/components/dms/ConvoMenu.tsx:68
 #~ msgid "Could not unmute chat"
@@ -2211,7 +2211,7 @@ msgstr ""
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:290
 msgid "Create"
-msgstr ""
+msgstr "Oluştur"
 
 #: src/view/com/auth/SplashScreen.tsx:57
 #: src/view/com/auth/SplashScreen.web.tsx:106
@@ -3747,11 +3747,11 @@ msgstr "Başlayın"
 
 #: src/components/ProgressGuide/List.tsx:33
 msgid "Getting started"
-msgstr ""
+msgstr "Başlarken"
 
 #: src/components/MediaPreview.tsx:122
 msgid "GIF"
-msgstr ""
+msgstr "GIF"
 
 #: src/screens/Onboarding/StepProfile/index.tsx:234
 msgid "Give your profile a face"
@@ -4896,7 +4896,7 @@ msgstr ""
 
 #: src/components/TagMenu/index.web.tsx:116
 msgid "Mute {truncatedTag}"
-msgstr ""
+msgstr "Sessize al {truncatedTag}"
 
 #: src/view/com/profile/ProfileMenu.tsx:259
 #: src/view/com/profile/ProfileMenu.tsx:266
@@ -4909,7 +4909,7 @@ msgstr "Hesapları sessize al"
 
 #: src/components/TagMenu/index.tsx:205
 msgid "Mute all {displayTag} posts"
-msgstr ""
+msgstr "Tüm {displayTag} gönderilerini sessize al"
 
 #: src/components/dms/ConvoMenu.tsx:172
 #: src/components/dms/ConvoMenu.tsx:178
@@ -4947,15 +4947,15 @@ msgstr "Bu hesapları sessize al?"
 
 #: src/components/dialogs/MutedWords.tsx:185
 msgid "Mute this word for 24 hours"
-msgstr ""
+msgstr "Bu kelimeyi 24 saatliğine sessize al"
 
 #: src/components/dialogs/MutedWords.tsx:224
 msgid "Mute this word for 30 days"
-msgstr ""
+msgstr "Bu kelimeyi 30 günlüğüne sessize al"
 
 #: src/components/dialogs/MutedWords.tsx:209
 msgid "Mute this word for 7 days"
-msgstr ""
+msgstr "Bu kelimeyi 7 günlüğüne sessize al"
 
 #: src/components/dialogs/MutedWords.tsx:258
 msgid "Mute this word in post text and tags"
@@ -4963,7 +4963,7 @@ msgstr ""
 
 #: src/components/dialogs/MutedWords.tsx:274
 msgid "Mute this word in tags only"
-msgstr ""
+msgstr "Bu kelimeyi yalnızca etiketlerde sessize al"
 
 #: src/components/dialogs/MutedWords.tsx:170
 msgid "Mute this word until you unmute it"
@@ -6007,7 +6007,7 @@ msgstr ""
 
 #: src/components/dialogs/MutedWords.tsx:86
 msgid "Please enter a valid word, tag, or phrase to mute"
-msgstr ""
+msgstr "Lütfen sessize almak istediğiniz geçerli bir kelime, etiket veya ifade giriniz"
 
 #: src/view/com/auth/create/state.ts:170
 #~ msgid "Please enter the code you received by SMS."
@@ -7188,11 +7188,11 @@ msgstr "GIF Seç"
 
 #: src/components/dialogs/GifSelect.tsx:306
 msgid "Select GIF \"{0}\""
-msgstr ""
+msgstr "GIF Seç \"{0}\""
 
 #: src/components/dialogs/MutedWords.tsx:142
 msgid "Select how long to mute this word for."
-msgstr ""
+msgstr "Bu kelimenin ne kadar süre sessize alınacağını seçin."
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:245
 msgid "Select language..."
@@ -7245,7 +7245,7 @@ msgstr "Video seç"
 
 #: src/components/dialogs/MutedWords.tsx:242
 msgid "Select what content this mute word should apply to."
-msgstr ""
+msgstr "Sessize alınan bu kelimenin hangi içeriğe uygulanacağını seçin."
 
 #: src/screens/Onboarding/StepModeration/index.tsx:63
 #~ msgid "Select what you want to see (or not see), and we’ll handle the rest."
@@ -7648,7 +7648,7 @@ msgstr "Bunun gibi daha fazla göster"
 
 #: src/view/com/post-thread/PostThreadShowHiddenReplies.tsx:23
 msgid "Show muted replies"
-msgstr ""
+msgstr "Sessize alınan yanıtları göster"
 
 #: src/screens/Settings/Settings.tsx:96
 msgid "Show other accounts you can switch to"
@@ -8016,7 +8016,7 @@ msgstr ""
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:715
 msgid "Starter pack is invalid"
-msgstr ""
+msgstr "Başlangıç paketi geçersiz"
 
 #: src/view/screens/Profile.tsx:233
 msgid "Starter Packs"
@@ -8033,7 +8033,7 @@ msgstr "Başlangıç paketleri favori kişilerinizi ve beslemelerinizi arkadaşl
 #: src/screens/Settings/AboutSettings.tsx:46
 #: src/screens/Settings/AboutSettings.tsx:49
 msgid "Status Page"
-msgstr ""
+msgstr "Durum Sayfası"
 
 #: src/screens/Signup/index.tsx:145
 #~ msgid "Step"
@@ -8931,7 +8931,7 @@ msgstr "Engeli kaldır"
 #: src/components/dms/ConvoMenu.tsx:188
 #: src/components/dms/ConvoMenu.tsx:192
 msgid "Unblock account"
-msgstr ""
+msgstr "Hesabın engelini kaldır"
 
 #: src/view/com/profile/ProfileMenu.tsx:279
 #: src/view/com/profile/ProfileMenu.tsx:285
@@ -8941,7 +8941,7 @@ msgstr "Hesabın engelini kaldır"
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:277
 #: src/view/com/profile/ProfileMenu.tsx:323
 msgid "Unblock Account?"
-msgstr ""
+msgstr "Hesabı Engelle?"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:71
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:72
@@ -8965,7 +8965,7 @@ msgstr "{0} adresini takibi bırak"
 #: src/view/com/profile/ProfileMenu.tsx:221
 #: src/view/com/profile/ProfileMenu.tsx:231
 msgid "Unfollow Account"
-msgstr ""
+msgstr "Hesabı Takibi Bırak"
 
 #: src/view/com/auth/create/state.ts:300
 #~ msgid "Unfortunately, you do not meet the requirements to create an account."
@@ -9115,7 +9115,7 @@ msgstr "Güncelleniyor..."
 
 #: src/screens/Onboarding/StepProfile/index.tsx:290
 msgid "Upload a photo instead"
-msgstr ""
+msgstr "Bunun yerine bir görsel ekle"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:453
 msgid "Upload a text file to:"
@@ -9126,23 +9126,23 @@ msgstr "Bir metin dosyası yükleyin:"
 #: src/view/com/util/UserBanner.tsx:123
 #: src/view/com/util/UserBanner.tsx:126
 msgid "Upload from Camera"
-msgstr ""
+msgstr "Kameradan Yükle"
 
 #: src/view/com/util/UserAvatar.tsx:388
 #: src/view/com/util/UserBanner.tsx:140
 msgid "Upload from Files"
-msgstr ""
+msgstr "Dosyalardan Yükle"
 
 #: src/view/com/util/UserAvatar.tsx:382
 #: src/view/com/util/UserAvatar.tsx:386
 #: src/view/com/util/UserBanner.tsx:134
 #: src/view/com/util/UserBanner.tsx:138
 msgid "Upload from Library"
-msgstr ""
+msgstr "Kütüphaneden Yükle"
 
 #: src/lib/api/index.ts:296
 msgid "Uploading images..."
-msgstr ""
+msgstr "Resimler yükleniyor..."
 
 #: src/lib/api/index.ts:350
 #: src/lib/api/index.ts:374
@@ -9151,7 +9151,7 @@ msgstr ""
 
 #: src/view/com/composer/Composer.tsx:1616
 msgid "Uploading video..."
-msgstr ""
+msgstr "Video yükleniyor..."
 
 #: src/view/com/modals/ChangeHandle.tsx:395
 #~ msgid "Use a file on your server"
@@ -9190,7 +9190,7 @@ msgstr "Varsayılan tarayıcımı kullan"
 
 #: src/screens/Feeds/NoSavedFeedsOfAnyType.tsx:53
 msgid "Use recommended"
-msgstr ""
+msgstr "Önerileni kullan"
 
 #: src/view/com/modals/ChangeHandle.tsx:387
 #~ msgid "Use the DNS panel"
@@ -9310,7 +9310,7 @@ msgstr ""
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:497
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:518
 msgid "Verify DNS Record"
-msgstr ""
+msgstr "DNS Kaydını Doğrula"
 
 #: src/view/screens/Settings/index.tsx:937
 #~ msgid "Verify email"
@@ -9341,7 +9341,7 @@ msgstr "Şimdi doğrula"
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:498
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:520
 msgid "Verify Text File"
-msgstr ""
+msgstr "Metin Dosyasını Doğrula"
 
 #: src/screens/Settings/AccountSettings.tsx:68
 #: src/screens/Settings/AccountSettings.tsx:84
