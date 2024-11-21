@@ -1,4 +1,4 @@
-.msgid ""
+msgid ""
 msgstr ""
 "POT-Creation-Date: 2023-12-20 21:42+0530\n"
 "MIME-Version: 1.0\n"
