@@ -194,7 +194,7 @@ export async function dynamicActivate(locale: AppLanguage) {
       ])
       break
     }
-    case AppLanguage.zh_CN: {
+    case AppLanguage.zh_Hans_CN: {
       i18n.loadAndActivate({locale, messages: messagesZh_CN})
       await Promise.all([
         import('@formatjs/intl-pluralrules/locale-data/zh'),
@@ -202,7 +202,7 @@ export async function dynamicActivate(locale: AppLanguage) {
       ])
       break
     }
-    case AppLanguage.zh_HK: {
+    case AppLanguage.zh_Hant_HK: {
       i18n.loadAndActivate({locale, messages: messagesZh_HK})
       await Promise.all([
         import('@formatjs/intl-pluralrules/locale-data/zh'),
@@ -210,7 +210,7 @@ export async function dynamicActivate(locale: AppLanguage) {
       ])
       break
     }
-    case AppLanguage.zh_TW: {
+    case AppLanguage.zh_Hant_TW: {
       i18n.loadAndActivate({locale, messages: messagesZh_TW})
       await Promise.all([
         import('@formatjs/intl-pluralrules/locale-data/zh'),

@@ -157,12 +157,12 @@ export function sanitizeAppLanguageSetting(appLanguage: string): AppLanguage {
         return AppLanguage.tr
       case 'uk':
         return AppLanguage.uk
-      case 'zh-CN':
-        return AppLanguage.zh_CN
-      case 'zh-HK':
-        return AppLanguage.zh_HK
-      case 'zh-TW':
-        return AppLanguage.zh_TW
+      case 'zh-Hans-CN':
+        return AppLanguage.zh_Hans_CN
+      case 'zh-Hant-HK':
+        return AppLanguage.zh_Hant_HK
+      case 'zh-Hant-TW':
+        return AppLanguage.zh_Hant_TW
       default:
         continue
     }
