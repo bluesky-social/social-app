@@ -11,9 +11,9 @@ import {useAgent} from '#/state/session'
 export {Nux} from '#/state/queries/nuxs/definitions'
 
 export function useNuxs() {
-  const {data, ...rest} = usePreferencesQuery()
+  const {data, isSuccess} = usePreferencesQuery()
 
-  if (data && rest.isSuccess) {
+  if (data && isSuccess) {
     const nuxs = data.bskyAppState.nuxs
       ?.map(parseAppNux)
       ?.filter(Boolean) as AppNux[]
@@ -21,34 +21,34 @@ export function useNuxs() {
     if (nuxs) {
       return {
         nuxs,
-        ...rest,
+        isSuccess,
       }
     }
   }
 
   return {
     nuxs: undefined,
-    ...rest,
+    isSuccess,
   }
 }
 
 export function useNux<T extends Nux>(id: T) {
-  const {nuxs, ...rest} = useNuxs()
+  const {nuxs, isSuccess} = useNuxs()
 
-  if (nuxs && rest.isSuccess) {
+  if (nuxs && isSuccess) {
     const nux = nuxs.find(nux => nux.id === id)
 
     if (nux) {
       return {
         nux: nux as Extract<AppNux, {id: T}>,
-        ...rest,
+        isSuccess,
       }
     }
   }
 
   return {
     nux: undefined,
-    ...rest,
+    isSuccess,
   }
 }
 
