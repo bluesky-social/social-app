@@ -1,7 +1,5 @@
-import {useRef} from 'react'
 import {View} from 'react-native'
 import Animated, {FadeInDown, FadeOut} from 'react-native-reanimated'
-import {AppBskyActorDefs} from '@atproto/api'
 import {Trans} from '@lingui/macro'
 
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
@@ -24,13 +22,10 @@ export function Autocomplete({
 
   const {getGraphemeString} = useGrapheme()
   const isActive = !!prefix
-  const {data: suggestions, isFetching} = useActorAutocompleteQuery(prefix)
-  const suggestionsRef = useRef<
-    AppBskyActorDefs.ProfileViewBasic[] | undefined
-  >(undefined)
-  if (suggestions) {
-    suggestionsRef.current = suggestions
-  }
+  const {data: suggestions, isFetching} = useActorAutocompleteQuery(
+    prefix,
+    true,
+  )
 
   if (!isActive) return null
 
@@ -46,8 +41,8 @@ export function Autocomplete({
         t.atoms.border_contrast_high,
         {marginLeft: -62},
       ]}>
-      {suggestionsRef.current?.length ? (
-        suggestionsRef.current.slice(0, 5).map((item, index, arr) => {
+      {suggestions?.length ? (
+        suggestions.slice(0, 5).map((item, index, arr) => {
           // Eventually use an average length
           const MAX_CHARS = 40
           const MAX_HANDLE_CHARS = 20
