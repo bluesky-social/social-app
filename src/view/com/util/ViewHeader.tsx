@@ -11,7 +11,7 @@ import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {NavigationProp} from '#/lib/routes/types'
 import {useSetDrawerOpen} from '#/state/shell'
-import {useTheme} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
 import {Text} from './text/Text'
 import {CenteredView} from './Views'
@@ -21,6 +21,7 @@ const BACK_HITSLOP = {left: 20, top: 20, right: 50, bottom: 20}
 export function ViewHeader({
   title,
   subtitle,
+  detail,
   canGoBack,
   showBackButton = true,
   hideOnScroll,
@@ -30,6 +31,7 @@ export function ViewHeader({
 }: {
   title: string
   subtitle?: string
+  detail?: React.ReactNode
   canGoBack?: boolean
   showBackButton?: boolean
   hideOnScroll?: boolean
@@ -99,10 +101,18 @@ export function ViewHeader({
                 ) : null}
               </TouchableOpacity>
             ) : null}
-            <View style={styles.titleContainer} pointerEvents="none">
+            <View
+              style={[
+                styles.titleContainer,
+                a.flex_row,
+                a.align_center,
+                a.gap_sm,
+              ]}
+              pointerEvents="none">
               <Text emoji type="title" style={[pal.text, styles.title]}>
                 {title}
               </Text>
+              {detail}
             </View>
             {renderButton ? (
               renderButton()

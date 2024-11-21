@@ -112,9 +112,11 @@ function ListFooterMaybeError({
 export function ListHeaderDesktop({
   title,
   subtitle,
+  detail,
 }: {
   title: string
   subtitle?: string
+  detail?: React.ReactNode
 }) {
   const {gtTablet} = useBreakpoints()
   const t = useTheme()
@@ -131,7 +133,10 @@ export function ListHeaderDesktop({
         a.justify_center,
         {minHeight: 50},
       ]}>
-      <Text style={[a.text_2xl, a.font_bold]}>{title}</Text>
+      <View style={[a.flex_row, a.align_center, a.gap_md]}>
+        <Text style={[a.text_2xl, a.font_bold]}>{title}</Text>
+        {detail}
+      </View>
       {subtitle ? (
         <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
           {subtitle}
