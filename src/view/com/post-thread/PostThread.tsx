@@ -217,7 +217,9 @@ export function PostThread({uri}: {uri: string | undefined}) {
     } else if (threadError?.message.startsWith('Post not found')) {
       return {
         title: _(msg`Post not found`),
-        message: _(msg`The post may have been deleted.`),
+        message: _(
+          msg`The post may have been deleted or the account may be deactivated.`,
+        ),
       }
     } else if (isThreadError) {
       return {
