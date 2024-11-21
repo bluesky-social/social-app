@@ -1,9 +1,8 @@
 import React from 'react'
-import {Linking, View} from 'react-native'
+import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useCreateCheckout} from '#/state/purchases/subscriptions/useCreateCheckout'
 import {useSession} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, tokens, useBreakpoints, useTheme, web} from '#/alf'
@@ -14,7 +13,6 @@ import {GradientFill} from '#/components/GradientFill'
 import {Full as BlueskyPlusLogo} from '#/components/icons/BlueskyPlus'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon} from '#/components/icons/Chevron'
 import {InlineLinkText} from '#/components/Link'
-import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 
 export function SubscriptionsDialog({
@@ -36,25 +34,9 @@ function DialogInner() {
   const t = useTheme()
   const [plan, setPlan] = React.useState<'monthly' | 'annual'>('monthly')
 
-  const {mutateAsync: createCheckout, isPending} = useCreateCheckout()
-
   const onPressSubscribe = async () => {
     try {
       if (!currentAccount) return
-      const data = await createCheckout({
-        did: currentAccount.did,
-        email: currentAccount.email!,
-        price:
-          plan === 'monthly'
-            ? 'price_1QLsNLAwTlpRxHkAhuUwbnlL'
-            : 'price_1QLsOjAwTlpRxHkAcrV8DL2P',
-      })
-
-      if (!data?.checkoutUrl) {
-        throw new Error('No checkout URL')
-      }
-
-      Linking.openURL(data.checkoutUrl)
     } catch (e: any) {
       Toast.show(_(msg`Could not take you to checkout`), 'xmark')
     }
@@ -181,12 +163,11 @@ function DialogInner() {
             variant="solid"
             color="primary"
             size="large"
-            onPress={onPressSubscribe}
-            disabled={isPending}>
+            onPress={onPressSubscribe}>
             <ButtonText>
               <Trans>Subscribe</Trans>
             </ButtonText>
-            <ButtonIcon icon={isPending ? Loader : ChevronRightIcon} />
+            <ButtonIcon icon={ChevronRightIcon} />
           </Button>
           <Text>
             <InlineLinkText to="#" label="TODO REPLACE">
