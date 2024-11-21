@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Italian localization\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-11-20 10:25+0000\n"
-"PO-Revision-Date: 2024-11-21 11:08+0100\n"
+"PO-Revision-Date: 2024-11-21 20:48+0100\n"
 "Last-Translator: Michele Locati <michele@locati.it>\n"
 "Language-Team: \n"
 "Language: it\n"
@@ -524,7 +524,7 @@ msgstr "Aggiungi dei feed al tuo starter pack!"
 msgid "Add the default feed of only people you follow"
 msgstr "Aggiungi il feed predefinito delle sole persone che segui"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:387
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:386
 msgid "Add the following DNS record to your domain:"
 msgstr "Aggiungi il seguente record DNS al tuo dominio:"
 
@@ -1196,7 +1196,7 @@ msgid "Change email address"
 msgstr "Cambia indirizzo email"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:88
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:93
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:92
 msgid "Change Handle"
 msgstr "Modifica il nome utente"
 
@@ -1254,7 +1254,7 @@ msgstr "Controlla la tua email per il codice di accesso e inseriscilo qui."
 msgid "Check your inbox for an email with the confirmation code to enter below:"
 msgstr "Controlla la tua posta in arrivo, dovrebbe contenere un'e-mail con il codice di conferma da inserire di seguito:"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:370
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:369
 msgid "Choose domain verification method"
 msgstr "Scegli il metodo di verifica del dominio"
 
@@ -1615,11 +1615,11 @@ msgstr "Copia versione build negli appunti"
 msgid "Copy code"
 msgstr "Copia il codice"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:472
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:471
 msgid "Copy DID"
 msgstr "Copia DID"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:405
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:404
 msgid "Copy host"
 msgstr "Copia host"
 
@@ -1654,7 +1654,7 @@ msgstr "Copia il testo del post"
 msgid "Copy QR code"
 msgstr "Copia codice QR"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:426
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:425
 msgid "Copy TXT record value"
 msgstr "Copia valore del record TXT"
 
@@ -2008,8 +2008,8 @@ msgstr "Il nome visualizzato è troppo lungo"
 msgid "Display name is too long. The maximum number of characters is {DISPLAY_NAME_MAX_GRAPHEMES}."
 msgstr "Il nome visualizzato è troppo lungo. Il numero massimo di caratteri è {DISPLAY_NAME_MAX_GRAPHEMES}."
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:373
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:375
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:372
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:374
 msgid "DNS Panel"
 msgstr "Pannello DNS"
 
@@ -2025,7 +2025,7 @@ msgstr "Non include nudità."
 msgid "Doesn't begin or end with a hyphen"
 msgstr "Non inizia o termina con un trattino"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:488
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:487
 msgid "Domain verified!"
 msgstr "Dominio verificato!"
 
@@ -2082,7 +2082,7 @@ msgstr "Trascina e rilascia per aggiungere immagini"
 msgid "Duration:"
 msgstr "Durata:"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:210
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:209
 msgid "e.g. alice"
 msgstr "e.g. alice"
 
@@ -2094,7 +2094,7 @@ msgstr "es. Mario Rossi"
 msgid "e.g. Alice Roberts"
 msgstr "e.g. Alice Roberts"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:357
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:356
 msgid "e.g. alice.com"
 msgstr "e.g. alice.com"
 
@@ -2350,7 +2350,7 @@ msgstr "Inserire il codice di conferma"
 msgid "Enter the code you received to change your password."
 msgstr "Inserisci il codice che hai ricevuto per modificare la tua password."
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:351
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:350
 msgid "Enter the domain you want to use"
 msgstr "Inserisci il dominio che vuoi utilizzare"
 
@@ -2514,7 +2514,7 @@ msgstr "I media esterni possono consentire ai siti web di raccogliere informazio
 msgid "External Media Preferences"
 msgstr "Preferenze media esterni"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:553
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:552
 msgid "Failed to change handle. Please try again."
 msgstr "Non è stato possibile cambiare il nome utente. Riprovare."
 
@@ -2603,7 +2603,7 @@ msgstr "Errore nell'aggiornamento delle impostazioni"
 msgid "Failed to upload video"
 msgstr "Errore nel caricamento video"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:341
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:340
 msgid "Failed to verify handle. Please try again."
 msgstr "Impossibile verificare il nome utente. Riprovare."
 
@@ -2905,7 +2905,7 @@ msgstr "Torna indietro"
 msgid "Go Back"
 msgstr "Torna indietro"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:529
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:528
 msgid "Go back to previous page"
 msgstr "Torna alla pagina precedente"
 
@@ -2961,16 +2961,16 @@ msgstr "Siamo a metà!"
 msgid "Handle"
 msgstr "Nome utente"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:557
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:556
 msgid "Handle already taken. Please try a different one."
 msgstr "Nome utente già in uso. Prova con uno diverso."
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:188
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:325
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:187
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:324
 msgid "Handle changed!"
 msgstr "Nome utente modificato!"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:561
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:560
 msgid "Handle too long. Please try a shorter one."
 msgstr "Nome utente troppo lungo. Provarne uno più breve."
 
@@ -3098,7 +3098,7 @@ msgstr "Un po' di pazienza: stiamo gradualmente dando accesso al video e tu sei 
 msgid "Home"
 msgstr "Home"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:398
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:397
 msgid "Host:"
 msgstr "Hosting:"
 
@@ -3127,8 +3127,8 @@ msgstr "Ho il Codice"
 msgid "I have a confirmation code"
 msgstr "Ho un codice di conferma"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:261
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:267
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:260
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:266
 msgid "I have my own domain"
 msgstr "Ho il mio dominio"
 
@@ -3149,7 +3149,7 @@ msgstr "Se non sei ancora maggiorenne secondo le leggi del tuo Paese, il tuo gen
 msgid "If you delete this list, you won't be able to recover it."
 msgstr "Se elimini questa lista, non potrai recuperarla."
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:247
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:246
 msgid "If you have your own domain, you can use that as your handle. This lets you self-verify your identity – <0>learn more</0>."
 msgstr "Se hai un tuo dominio, puoi usarlo come nome utente. Questo consente di auto-verificare la tua identità – <0>ulteriori informazioni</0>."
 
@@ -3230,7 +3230,7 @@ msgstr "Interazione limitata"
 msgid "Invalid 2FA confirmation code."
 msgstr "Codice di conferma 2FA non valido."
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:563
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:562
 msgid "Invalid handle. Please try a different one."
 msgstr "Nome utente non valido. Provarne un altro."
 
@@ -3364,7 +3364,7 @@ msgstr "Più grande"
 msgid "Latest"
 msgstr "Ultime"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:251
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:250
 msgid "learn more"
 msgstr "ulteriori informazioni"
 
@@ -3550,7 +3550,7 @@ msgstr "Carica più notifiche"
 #: src/view/com/feeds/FeedPage.tsx:132 src/view/screens/ProfileFeed.tsx:499
 #: src/view/screens/ProfileList.tsx:808
 msgid "Load new posts"
-msgstr "Carica nuovi posts"
+msgstr "Carica nuovi post"
 
 #: src/view/com/composer/text-input/mobile/Autocomplete.tsx:111
 msgid "Loading..."
@@ -3930,7 +3930,7 @@ msgstr "Hai bisogno di segnalare una violazione del copyright?"
 msgid "Never lose access to your followers or data."
 msgstr "Non perdere mai l'accesso ai tuoi follower o ai tuoi dati."
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:533
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:532
 msgid "Nevermind, create a handle for me"
 msgstr "Non importa, crea un nome utente per me"
 
@@ -3948,9 +3948,9 @@ msgstr "Nuova"
 msgid "New chat"
 msgstr "Nuova chat"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:201
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:209
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:356
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:200
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:208
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:355
 msgid "New handle"
 msgstr "Nuovo nome utente"
 
@@ -4032,8 +4032,8 @@ msgstr "Non è stata ancora definita alcuna password per le app"
 msgid "No description"
 msgstr "Senza descrizione"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:378
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:380
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:377
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:379
 msgid "No DNS Panel"
 msgstr "Nessun pannello DNS"
 
@@ -4292,7 +4292,7 @@ msgstr "Ops! Qualcosa è andato male!"
 #: src/components/StarterPack/ProfileStarterPacks.tsx:322
 #: src/components/StarterPack/ProfileStarterPacks.tsx:331
 #: src/screens/Settings/AppPasswords.tsx:51
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:101
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:100
 #: src/screens/Settings/NotificationSettings.tsx:40
 #: src/view/screens/Profile.tsx:128
 msgid "Oops!"
@@ -4906,7 +4906,7 @@ msgstr "Citazioni post"
 msgid "Random (aka \"Poster's Roulette\")"
 msgstr "Selezione a caso (nota anche come \"Poster's Roulette\")"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:566
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:565
 msgid "Rate limit exceeded – you've tried to change your handle too many times in a short period. Please wait a minute before trying again."
 msgstr "Limite di richieste superato: hai provato a cambiare il nome utente troppe volte in un breve lasso di tempo. Attendi un minuto prima di riprovare."
 
@@ -5363,7 +5363,7 @@ msgstr "Ritorna alla pagina precedente"
 #: src/components/StarterPack/QrCodeDialog.tsx:185
 #: src/screens/Profile/Header/EditProfileDialog.tsx:238
 #: src/screens/Profile/Header/EditProfileDialog.tsx:252
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:242
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:241
 #: src/view/com/composer/GifAltText.tsx:190
 #: src/view/com/composer/GifAltText.tsx:199
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:77
@@ -5402,7 +5402,7 @@ msgstr "Salva immagine"
 msgid "Save image crop"
 msgstr "Salva il ritaglio dell'immagine"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:228
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:227
 msgid "Save new handle"
 msgstr "Salva nuovo nome utente"
 
@@ -5502,11 +5502,11 @@ msgstr "Visualizza i post {truncatedTag} per utente"
 
 #: src/components/TagMenu/index.tsx:155
 msgid "See <0>{displayTag}</0> posts"
-msgstr "Vedi <0>{displayTag}</0> posts"
+msgstr "Vedi post su <0>{displayTag}</0>"
 
 #: src/components/TagMenu/index.tsx:203
 msgid "See <0>{displayTag}</0> posts by this user"
-msgstr "Vedi <0>{displayTag}</0> posts di questo utente"
+msgstr "Vedi post su <0>{displayTag}</0> di questo utente"
 
 #: src/view/com/auth/SplashScreen.web.tsx:176
 msgid "See jobs at Bluesky"
@@ -5519,10 +5519,6 @@ msgstr "Consulta questa guida"
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/Scrubber.tsx:189
 msgid "Seek slider"
 msgstr "Cursore di ricerca"
-
-#: src/view/com/util/Selector.tsx:107
-msgid "Select {item}"
-msgstr "Seleziona {item}"
 
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:67
 msgid "Select a color"
@@ -5571,10 +5567,6 @@ msgstr "Seleziona lingue"
 #: src/components/ReportDialog/SelectLabelerView.tsx:28
 msgid "Select moderator"
 msgstr "Seleziona moderatore"
-
-#: src/view/com/util/Selector.tsx:108
-msgid "Select option {i} of {numItems}"
-msgstr "Seleziona l'opzione {i} di {numItems}"
 
 #: src/view/com/composer/videos/SubtitleFilePicker.tsx:66
 msgid "Select subtitle file (.vtt)"
@@ -6259,7 +6251,7 @@ msgstr "Grazie. La tua segnalazione è stata inviata."
 msgid "Thanks, you have successfully verified your email address. You can close this dialog."
 msgstr "Grazie, hai verificato con successo il tuo indirizzo email. Puoi chiudere questa finestra."
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:468
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:467
 msgid "That contains the following:"
 msgstr "Che contiene il seguente:"
 
@@ -6412,7 +6404,7 @@ msgstr "Si è verificato un problema durante il recupero delle password dell'app
 msgid "There was an issue fetching your lists. Tap here to try again."
 msgstr "Si è verificato un problema durante il recupero delle tue liste. Tocca qui per riprovare."
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:102
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:101
 msgid "There was an issue fetching your service info"
 msgstr "Si è verificato un problema durante il recupero delle tue informazioni di servizio"
 
@@ -6541,7 +6533,7 @@ msgstr "Questo feed è vuoto."
 msgid "This feed is no longer online. We are showing <0>Discover</0> instead."
 msgstr "Questo feed non è più online. Stiamo mostrando <0>Discover</0> al suo posto."
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:559
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:558
 msgid "This handle is reserved. Please try a different one."
 msgstr "Questo nome utente è riservato. Prova con un altro nome utente."
 
@@ -6618,7 +6610,7 @@ msgstr "Questa risposta verrà spostata in una sezione nascosta in basso al thre
 msgid "This service has not provided terms of service or a privacy policy."
 msgstr "Questo servizio non ha fornito termini di servizio o un'informativa sulla privacy."
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:437
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:436
 msgid "This should create a domain record at:"
 msgstr "Questo dovrebbe creare un record di dominio in:"
 
@@ -6742,7 +6734,7 @@ msgstr "Autenticazione a due fattori (2FA)"
 msgid "Type your message here"
 msgstr "Scrivi il tuo messaggio qui"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:413
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:412
 msgid "Type:"
 msgstr "Tipo:"
 
@@ -6910,8 +6902,8 @@ msgstr "Contenuti Sessuali Indesiderati"
 msgid "Update <0>{displayName}</0> in Lists"
 msgstr "Aggiorna <0>{displayName}</0> nelle Liste"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:495
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:516
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:494
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:515
 msgid "Update to {domain}"
 msgstr "Aggiorna a {domain}"
 
@@ -6931,7 +6923,7 @@ msgstr "Aggiornamento..."
 msgid "Upload a photo instead"
 msgstr "Alternativamente carica una foto"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:453
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:452
 msgid "Upload a text file to:"
 msgstr "Carica una file di testo a:"
 
@@ -6965,7 +6957,7 @@ msgstr "Caricamento del video..."
 msgid "Use app passwords to sign in to other Bluesky clients without giving full access to your account or password."
 msgstr "Usa le password delle app per accedere ad altri client Bluesky senza fornire l'accesso completo al tuo account o alla tua password."
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:528
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:527
 msgid "Use default provider"
 msgstr "Utilizza il tuo provider predefinito"
 
@@ -7070,7 +7062,7 @@ msgstr "Utenti in «{0}»"
 msgid "Users that have liked this content or profile"
 msgstr "Utenti a cui è piaciuto questo contenuto o profilo"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:419
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:418
 msgid "Value:"
 msgstr "Valore:"
 
@@ -7078,8 +7070,8 @@ msgstr "Valore:"
 msgid "Verified email required"
 msgstr "Email verificata richiesta"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:497
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:518
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:496
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:517
 msgid "Verify DNS Record"
 msgstr "Verifica record DNS"
 
@@ -7097,8 +7089,8 @@ msgstr "Verifica la nuova email"
 msgid "Verify now"
 msgstr "Verifica ora"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:498
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:520
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:497
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:519
 msgid "Verify Text File"
 msgstr "Verifica file di testo"
 
@@ -7279,7 +7271,7 @@ msgstr "Speriamo di darti dei momenti dei bei momenti. Ricorda, Bluesky è:"
 
 #: src/view/com/posts/DiscoverFallbackHeader.tsx:29
 msgid "We ran out of posts from your follows. Here's the latest from <0/>."
-msgstr "Abbiamo esaurito i posts dei tuoi follower. Ecco le ultime novità da <0/>."
+msgstr "Abbiamo esaurito i post di chi segui. Ecco le ultime novità da <0/>."
 
 #: src/view/com/composer/state/video.ts:430
 msgid "We were unable to determine if you are allowed to upload videos. Please try again."
@@ -7369,7 +7361,7 @@ msgstr "Quali lingue vorresti vedere negli algoritmi dei tuoi feed?"
 
 #: src/components/WhoCanReply.tsx:179
 msgid "Who can interact with this post?"
-msgstr "Chi puo interagire a questo post?"
+msgstr "Chi puo interagire con questo post?"
 
 #: src/components/WhoCanReply.tsx:87
 msgid "Who can reply"
@@ -7425,7 +7417,7 @@ msgstr "Scrivi la tua risposta"
 msgid "Writers"
 msgstr "Scrittori"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:337
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:336
 msgid "Wrong DID returned from server. Received: {0}"
 msgstr "Il server ha restituito un DID errato. Ricevuto: {0}"
 
@@ -7783,7 +7775,7 @@ msgstr "Il tuo feed seguente è vuoto! Segui più utenti per vedere cosa sta suc
 msgid "Your full handle will be"
 msgstr "Il tuo nome utente completo sarà"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:220
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:219
 msgid "Your full handle will be <0>@{0}</0>"
 msgstr "Il tuo nome utente completo sarà <0>@{0}</0>"
 
