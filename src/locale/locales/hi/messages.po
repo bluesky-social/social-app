@@ -4049,14 +4049,14 @@ msgstr "इस फ़ीड को पसंद करें"
 #: src/Navigation.tsx:234
 #: src/Navigation.tsx:239
 msgid "Liked by"
-msgstr "इन उपयोगकर्ताओं ने पसंद किया: "
+msgstr "इन्होनें पसंद किया"
 
 #: src/screens/Post/PostLikedBy.tsx:32
 #: src/screens/Post/PostLikedBy.tsx:33
 #: src/screens/Profile/ProfileLabelerLikedBy.tsx:29
 #: src/view/screens/ProfileFeedLikedBy.tsx:30
 msgid "Liked By"
-msgstr "इन उपयोगकर्ताओं ने पसंद किया:"
+msgstr "इन्होनें पसंद किया"
 
 #: src/view/com/notifications/FeedItem.tsx:211
 #~ msgid "liked your custom feed"
