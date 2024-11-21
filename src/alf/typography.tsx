@@ -133,3 +133,10 @@ export function renderChildrenWithEmoji(
     </UITextView>
   )
 }
+
+export function isOnlyEmoji(text: string) {
+  return (
+    text.length <= 15 &&
+    /^[\p{Emoji_Presentation}\p{Extended_Pictographic}]+$/u.test(text)
+  )
+}
