@@ -11,6 +11,7 @@ import {
   TextProps,
 } from '#/alf/typography'
 import {IS_DEV} from '#/env'
+export type {TextProps}
 
 /**
  * Our main text component. Use this most of the time.
