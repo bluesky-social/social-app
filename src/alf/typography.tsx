@@ -1,10 +1,11 @@
-import React from 'react'
+import React, {Children} from 'react'
 import {TextProps as RNTextProps} from 'react-native'
 import {StyleProp, TextStyle} from 'react-native'
 import {UITextView} from 'react-native-uitextview'
 import createEmojiRegex from 'emoji-regex'
 
 import {isNative} from '#/platform/detection'
+import {isIOS} from '#/platform/detection'
 import {Alf, applyFonts, atoms, flatten} from '#/alf'
 
 /**
@@ -57,7 +58,7 @@ export function normalizeTextStyles(
 }
 
 export type StringChild = string | (string | null)[]
-export type TextProps = Omit<RNTextProps, 'children'> & {
+export type TextProps = RNTextProps & {
   /**
    * Lets the user select text, to use the native copy and paste functionality.
    */
@@ -71,65 +72,55 @@ export type TextProps = Omit<RNTextProps, 'children'> & {
    * Appears as a small tooltip on web hover.
    */
   title?: string
-} & (
-    | {
-        emoji?: true
-        children: StringChild
-      }
-    | {
-        emoji?: false
-        children: RNTextProps['children']
-      }
-  )
+  /**
+   * Whether the children could possibly contain emoji.
+   */
+  emoji?: boolean
+}
 
 const EMOJI = createEmojiRegex()
 
 export function childHasEmoji(children: React.ReactNode) {
-  return (Array.isArray(children) ? children : [children]).some(
-    child => typeof child === 'string' && createEmojiRegex().test(child),
-  )
-}
-
-export function childIsString(
-  children: React.ReactNode,
-): children is StringChild {
-  return (
-    typeof children === 'string' ||
-    (Array.isArray(children) &&
-      children.every(child => typeof child === 'string' || child === null))
-  )
+  let hasEmoji = false
+  Children.forEach(children, child => {
+    if (typeof child === 'string' && createEmojiRegex().test(child)) {
+      hasEmoji = true
+    }
+  })
+  return hasEmoji
 }
 
 export function renderChildrenWithEmoji(
-  children: StringChild,
+  children: React.ReactNode,
   props: Omit<TextProps, 'children'> = {},
+  emoji: boolean,
 ) {
-  const normalized = Array.isArray(children) ? children : [children]
+  if (!isIOS || !emoji) {
+    return children
+  }
+  return Children.map(children, child => {
+    if (typeof child !== 'string') return child
 
-  return (
-    <UITextView {...props}>
-      {normalized.map(child => {
-        if (typeof child !== 'string') return child
+    const emojis = child.match(EMOJI)
 
-        const emojis = child.match(EMOJI)
+    if (emojis === null) {
+      return child
+    }
 
-        if (emojis === null) {
-          return child
-        }
+    return child.split(EMOJI).map((stringPart, index) => [
+      stringPart,
+      emojis[index] ? (
+        <UITextView
+          {...props}
+          style={[props?.style, {color: 'black', fontFamily: 'System'}]}>
+          {emojis[index]}
+        </UITextView>
+      ) : null,
+    ])
+  })
+}
 
-        return child.split(EMOJI).map((stringPart, index) => (
-          <UITextView key={index} {...props}>
-            {stringPart}
-            {emojis[index] ? (
-              <UITextView
-                {...props}
-                style={[props?.style, {color: 'black', fontFamily: 'System'}]}>
-                {emojis[index]}
-              </UITextView>
-            ) : null}
-          </UITextView>
-        ))
-      })}
-    </UITextView>
-  )
+const SINGLE_EMOJI_RE = /^[\p{Emoji_Presentation}\p{Extended_Pictographic}]+$/u
+export function isOnlyEmoji(text: string) {
+  return text.length <= 15 && SINGLE_EMOJI_RE.test(text)
 }

@@ -9,6 +9,7 @@ import {NavigationProp} from '#/lib/routes/types'
 import {toShortUrl} from '#/lib/strings/url-helpers'
 import {isNative} from '#/platform/detection'
 import {atoms as a, flatten, native, TextStyleProp, useTheme, web} from '#/alf'
+import {isOnlyEmoji} from '#/alf/typography'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {InlineLinkText, LinkProps} from '#/components/Link'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
@@ -150,17 +151,14 @@ export function RichText({
         />,
       )
     } else {
-      els.push(
-        <Text key={key} emoji style={plainStyles}>
-          {segment.text}
-        </Text>,
-      )
+      els.push(segment.text)
     }
     key++
   }
 
   return (
     <Text
+      emoji
       selectable={selectable}
       testID={testID}
       style={plainStyles}
@@ -248,12 +246,5 @@ function RichTextTag({
         </Text>
       </TagMenu>
     </React.Fragment>
-  )
-}
-
-export function isOnlyEmoji(text: string) {
-  return (
-    text.length <= 15 &&
-    /^[\p{Emoji_Presentation}\p{Extended_Pictographic}]+$/u.test(text)
   )
 }
