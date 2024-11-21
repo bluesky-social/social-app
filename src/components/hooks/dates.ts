@@ -60,9 +60,9 @@ const locales: Record<AppLanguage, Locale | undefined> = {
   th,
   tr,
   uk,
-  ['zh-CN']: zhCN,
-  ['zh-HK']: zhHK,
-  ['zh-TW']: zhTW,
+  ['zh-Hans-CN']: zhCN,
+  ['zh-Hant-HK']: zhHK,
+  ['zh-Hant-TW']: zhTW,
 }
 
 /**
