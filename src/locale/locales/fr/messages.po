@@ -1729,7 +1729,7 @@ msgstr "Copier ce code"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:472
 msgid "Copy DID"
-msgstr "Copier SDA"
+msgstr "Copier DID"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:405
 msgid "Copy host"
@@ -8106,7 +8106,7 @@ msgstr "Écrivain·e·s"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:337
 msgid "Wrong DID returned from server. Received: {0}"
-msgstr "Mauvais SDA retourné du serveur. Réponse : {0}"
+msgstr "L'identifiant DID retourné du serveur est incorrect. Réponse : {0}"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:78
 msgid "Yes"
