@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {Children} from 'react'
 import {TextProps as RNTextProps} from 'react-native'
 import {StyleProp, TextStyle} from 'react-native'
 import {UITextView} from 'react-native-uitextview'
@@ -101,14 +101,12 @@ export function childIsString(
 }
 
 export function renderChildrenWithEmoji(
-  children: StringChild,
+  children: React.ReactNode,
   props: Omit<TextProps, 'children'> = {},
 ) {
-  const normalized = Array.isArray(children) ? children : [children]
-
   return (
     <UITextView {...props}>
-      {normalized.map(child => {
+      {Children.map(children, child => {
         if (typeof child !== 'string') return child
 
         const emojis = child.match(EMOJI)
