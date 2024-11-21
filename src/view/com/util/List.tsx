@@ -7,7 +7,7 @@ import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIX
 import {useDedupe} from '#/lib/hooks/useDedupe'
 import {useScrollHandlers} from '#/lib/ScrollContext'
 import {addStyle} from '#/lib/styles'
-import {isIOS} from '#/platform/detection'
+import {isAndroid, isIOS} from '#/platform/detection'
 import {useLightbox} from '#/state/lightbox'
 import {useTheme} from '#/alf'
 import {FlatList_INTERNAL} from './Views'
@@ -149,6 +149,7 @@ function ListImpl<ItemT>(
       scrollEventThrottle={1}
       onViewableItemsChanged={onViewableItemsChanged}
       viewabilityConfig={viewabilityConfig}
+      showsVerticalScrollIndicator={!isAndroid}
       style={style}
       ref={ref}
     />
