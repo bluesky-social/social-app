@@ -86,9 +86,13 @@ export type TextProps = Omit<RNTextProps, 'children'> & {
 const EMOJI = createEmojiRegex()
 
 export function childHasEmoji(children: React.ReactNode) {
-  return (Array.isArray(children) ? children : [children]).some(
-    child => typeof child === 'string' && createEmojiRegex().test(child),
-  )
+  let hasEmoji = false
+  Children.forEach(children, child => {
+    if (typeof child === 'string' && createEmojiRegex().test(child)) {
+      hasEmoji = true
+    }
+  })
+  return hasEmoji
 }
 
 export function childIsString(
