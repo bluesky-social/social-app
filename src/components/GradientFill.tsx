@@ -1,3 +1,4 @@
+import React from 'react'
 import {LinearGradient} from 'expo-linear-gradient'
 
 import {atoms as a, tokens, ViewStyleProp} from '#/alf'
