@@ -1,6 +1,6 @@
 {
   "name": "bsky.app",
-  "version": "1.94.0",
+  "version": "1.95.0",
   "private": true,
   "engines": {
     "node": ">=20"
@@ -214,11 +214,10 @@
     "@lingui/cli": "^4.5.0",
     "@lingui/macro": "^4.5.0",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.11",
-    "@react-native-community/eslint-config": "^3.0.0",
+    "@react-native/eslint-config": "^0.76.2",
     "@react-native/typescript-config": "^0.74.1",
     "@testing-library/jest-native": "^5.4.1",
     "@testing-library/react-native": "^11.5.2",
-    "@types/he": "^1.1.2",
     "@types/jest": "^29.4.0",
     "@types/lodash.chunk": "^4.2.7",
     "@types/lodash.debounce": "^4.0.7",
@@ -228,8 +227,8 @@
     "@types/react-dom": "^18.2.18",
     "@types/react-responsive": "^8.0.5",
     "@types/react-test-renderer": "^17.0.1",
-    "@typescript-eslint/eslint-plugin": "^5.48.2",
-    "@typescript-eslint/parser": "^5.48.2",
+    "@typescript-eslint/eslint-plugin": "^7.18.0",
+    "@typescript-eslint/parser": "^7.18.0",
     "babel-jest": "^29.7.0",
     "babel-plugin-macros": "^3.1.0",
     "babel-plugin-module-resolver": "^5.0.0",
