@@ -2880,7 +2880,7 @@ msgstr "Trouver des posts et comptes sur Bluesky"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:52
 #~ msgid "Fine-tune the content you see on your Following feed."
-#~ msgstr "Affine le contenu affiché sur votre fil d’actu « Following »."
+#~ msgstr "Affine le contenu affiché sur votre fil des abonnements."
 
 #: src/view/screens/PreferencesThreads.tsx:55
 #~ msgid "Fine-tune the discussion threads."
@@ -3016,12 +3016,12 @@ msgstr "Suit {name}"
 #: src/screens/Settings/ContentAndMediaSettings.tsx:57
 #: src/screens/Settings/ContentAndMediaSettings.tsx:60
 msgid "Following feed preferences"
-msgstr "Préférences du fil d’actu « Following »"
+msgstr "Préférences du fil des abonnements"
 
 #: src/Navigation.tsx:300
 #: src/screens/Settings/FollowingFeedPreferences.tsx:50
 msgid "Following Feed Preferences"
-msgstr "Préférences du fil d’actu « Following »"
+msgstr "Préférences du fil des abonnements"
 
 #: src/screens/Profile/Header/Handle.tsx:33
 msgid "Follows you"
@@ -3896,7 +3896,7 @@ msgstr "On dirait que vous avez désépinglé tous vos fils d’actu. Mais pas d
 
 #: src/screens/Feeds/NoFollowingFeed.tsx:37
 msgid "Looks like you're missing a following feed. <0>Click here to add one.</0>"
-msgstr "On dirait que vous n’avez plus de fil d’actu « Following ». <0>Cliquez ici pour en rajouter un.</0>"
+msgstr "On dirait que vous n’avez plus de fil des abonnements. <0>Cliquez ici pour en rajouter un.</0>"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:266
 msgid "Make one for me"
@@ -4827,7 +4827,7 @@ msgstr "Ouvre le formulaire de réinitialisation du mot de passe"
 
 #: src/view/screens/Settings/index.tsx:541
 #~ msgid "Opens the Following feed preferences"
-#~ msgstr "Ouvre les préférences du fil d’actu « Following »"
+#~ msgstr "Ouvre les préférences du fil des abonnements"
 
 #: src/view/com/modals/LinkWarning.tsx:93
 msgid "Opens the linked website"
@@ -6225,7 +6225,7 @@ msgstr "Définir un nouveau mot de passe"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:158
 #~ msgid "Set this setting to \"Yes\" to show samples of your saved feeds in your Following feed. This is an experimental feature."
-#~ msgstr "Choisissez « Oui » pour afficher des échantillons de vos fils d’actu enregistrés dans votre fil d’actu « Following ». C’est une fonctionnalité expérimentale."
+#~ msgstr "Choisissez « Oui » pour afficher des échantillons de vos fils d’actu enregistrés dans votre fil des abonnements. C’est une fonctionnalité expérimentale."
 
 #: src/screens/Onboarding/Layout.tsx:48
 msgid "Set up your account"
