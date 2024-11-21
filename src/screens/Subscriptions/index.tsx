@@ -1,12 +1,18 @@
+import React from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {CommonNavigatorParams} from '#/lib/routes/types'
+import {isAndroid, isIOS, isWeb} from '#/platform/detection'
 import {PurchasesState, usePurchases} from '#/state/purchases'
 import {useManageSubscription} from '#/state/purchases/hooks/useManageSubscription'
-import {SubscriptionGroupId} from '#/state/purchases/types'
+import {
+  PlatformId,
+  SubscriptionGroupId,
+  SubscriptionOfferingId,
+} from '#/state/purchases/types'
 import {APISubscription} from '#/state/purchases/types'
 import {CenteredView} from '#/view/com/util/Views'
 import {atoms as a, tokens, useTheme} from '#/alf'
@@ -14,15 +20,18 @@ import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {BlueskyPlus} from '#/components/dialogs/BlueskyPlus'
+import {Divider} from '#/components/Divider'
 import {GradientFill} from '#/components/GradientFill'
+import {AndroidLogo} from '#/components/icons/AndroidLogo'
+import {AppleLogo} from '#/components/icons/AppleLogo'
 import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as Rotate} from '#/components/icons/ArrowRotateCounterClockwise'
-import {Full as BlueskyPlusLogo} from '#/components/icons/BlueskyPlus'
+import {Full as BlueskyPlusLogo, Logotype} from '#/components/icons/BlueskyPlus'
 import {CheckThick_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {Clock_Stroke2_Corner0_Rounded as Clock} from '#/components/icons/Clock'
+import {Globe_Stroke2_Corner0_Rounded as Globe} from '#/components/icons/Globe'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
-import {SettingsGear2_Stroke2_Corner0_Rounded as Gear} from '#/components/icons/SettingsGear2'
 import * as Layout from '#/components/Layout'
-import {createStaticClick, InlineLinkText, Link} from '#/components/Link'
+import {createStaticClick, Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 
@@ -40,7 +49,7 @@ export function Subscriptions(_props: ScreenProps) {
       <Layout.Header title={_(msg`Subscriptions`)} />
 
       <Layout.Content>
-        <CenteredView sideBorders={true} style={[a.util_screen_outer]}>
+        <CenteredView style={[a.util_screen_outer]}>
           <View style={[a.px_xl, a.py_xl]}>
             {purchases.status === 'loading' ? (
               <Loader />
@@ -113,13 +122,9 @@ function Core({
   ]
 
   return (
-    <View style={[a.pt_sm]}>
-      <BlueskyPlusLogo width={130} gradient="nordic" />
-
+    <View style={[]}>
       {isSubscribedToCore ? (
-        <View style={[a.pt_md]}>
-          <CoreSubscriptions subscriptions={state.subscriptions} />
-        </View>
+        <CoreSubscriptions subscriptions={state.subscriptions} />
       ) : null}
 
       {!isSubscribedToCore && (
@@ -136,6 +141,8 @@ function Core({
             </View>
           ) : (
             <>
+              <BlueskyPlusLogo width={130} gradient="nordic" />
+
               <Text style={[a.text_3xl, a.font_heavy, a.pt_md, a.pb_xs]}>
                 <Trans>Building a better internet needs your support.</Trans>
               </Text>
@@ -221,6 +228,7 @@ function Core({
         </>
       )}
 
+      {/*
       <View style={[a.pt_md]}>
         <Text style={[a.mb_md, a.text_xs]}>
           <InlineLinkText
@@ -245,6 +253,7 @@ function Core({
           </InlineLinkText>
         </Text>
       </View>
+        */}
     </View>
   )
 }
@@ -254,51 +263,134 @@ function CoreSubscriptions(props: {subscriptions: APISubscription[]}) {
   const {_, i18n} = useLingui()
   const {mutateAsync: manageSubscription} = useManageSubscription()
 
+  const copy = React.useMemo(() => {
+    return {
+      [SubscriptionOfferingId.CoreMonthly]: {
+        title: _(msg`Monthly`),
+      },
+      [SubscriptionOfferingId.CoreAnnual]: {
+        title: _(msg`Annual`),
+      },
+    }
+  }, [_])
+
   return props.subscriptions.map(sub => {
     const endDate = i18n.date(new Date(sub.periodEndsAt), {dateStyle: 'medium'})
     const StatusIcon = sub.renews ? Rotate : Clock
+    const c = copy[sub.offering]
+    const canManage =
+      (isWeb && sub.platform === PlatformId.Web) ||
+      (isIOS && sub.platform === PlatformId.Ios) ||
+      (isAndroid && sub.platform === PlatformId.Android)
+    const PlatformIcon = {
+      [PlatformId.Ios]: AppleLogo,
+      [PlatformId.Android]: AndroidLogo,
+      [PlatformId.Web]: Globe,
+    }[sub.platform]
     return (
       <View
         key={sub.purchasedAt}
         style={[
-          a.p_lg,
-          a.py_md,
+          a.p_md,
+          a.px_lg,
           a.rounded_md,
           a.border,
           a.gap_xs,
           a.overflow_hidden,
           t.atoms.border_contrast_low,
         ]}>
-        <GradientFill
-          gradient={tokens.gradients.nordic}
-          style={{opacity: 0.1}}
-        />
+        <View
+          style={[
+            a.flex_row,
+            a.justify_between,
+            a.align_center,
+            {paddingBottom: 6},
+          ]}>
+          <View style={[a.flex_row, a.align_center, a.gap_sm]}>
+            <Logotype width={75} fill={t.atoms.text.color} />
 
-        <View style={[a.flex_row, a.justify_between, a.align_center]}>
-          <View>
-            <View style={[a.flex_row, a.align_center, a.gap_xs]}>
-              <Text
-                style={[a.text_md, a.font_bold, t.atoms.text_contrast_medium]}>
-                Active
-              </Text>
-            </View>
+            <Text
+              style={[
+                a.text_sm,
+                a.rounded_full,
+                a.font_bold,
+                {
+                  paddingVertical: 3,
+                  paddingHorizontal: 5,
+                  backgroundColor: tokens.blueskyPlus.dark,
+                  color: tokens.blueskyPlus.light,
+                },
+              ]}>
+              {c.title}
+            </Text>
 
-            <View style={[a.flex_row, a.align_center, a.gap_xs]}>
-              <StatusIcon size="sm" fill={t.atoms.text_contrast_low.color} />
-              <Text style={[a.text_sm]}>{endDate}</Text>
-            </View>
+            <Text
+              style={[
+                a.text_sm,
+                a.rounded_full,
+                a.font_bold,
+                {
+                  paddingVertical: 3,
+                  paddingHorizontal: 5,
+                  borderWidth: sub.renews ? 0 : a.border.borderWidth,
+                  borderColor: t.palette.negative_500,
+                  backgroundColor: sub.renews
+                    ? tokens.blueskyPlus.light
+                    : t.atoms.bg.backgroundColor,
+                  color: sub.renews
+                    ? tokens.blueskyPlus.dark
+                    : t.atoms.text.color,
+                },
+              ]}>
+              {sub.renews ? <Trans>Active</Trans> : <Trans>Cancelled</Trans>}
+            </Text>
           </View>
-          <Link
-            label={_('Manage subscription')}
-            size="small"
-            variant="ghost"
-            shape="round"
-            {...createStaticClick(() => {
-              manageSubscription()
-            })}
-            style={[a.justify_center]}>
-            <ButtonIcon icon={Gear} size="lg" />
-          </Link>
+
+          <View style={[a.flex_row, a.align_center, a.gap_xs]}>
+            <StatusIcon size="sm" fill={t.atoms.text_contrast_low.color} />
+            <Text style={[a.text_sm, a.font_bold]}>{endDate}</Text>
+          </View>
+        </View>
+
+        <Divider />
+
+        <View
+          style={[
+            a.flex_row,
+            a.justify_between,
+            a.align_center,
+            {paddingTop: 6},
+          ]}>
+          <View
+            style={[
+              a.flex_row,
+              a.justify_between,
+              a.align_center,
+              a.gap_xs,
+              {left: -1},
+            ]}>
+            <PlatformIcon size="md" fill={t.atoms.text_contrast_low.color} />
+            <Text
+              style={[a.text_sm, a.font_bold, t.atoms.text_contrast_medium]}>
+              <Trans>Managed via web</Trans>
+            </Text>
+          </View>
+
+          {canManage && (
+            <Link
+              label={_('Manage subscription')}
+              size="tiny"
+              variant="solid"
+              color="secondary_inverted"
+              {...createStaticClick(() => {
+                manageSubscription()
+              })}
+              style={[a.justify_center]}>
+              <ButtonText>
+                <Trans>Manage</Trans>
+              </ButtonText>
+            </Link>
+          )}
         </View>
       </View>
     )

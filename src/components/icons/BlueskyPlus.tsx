@@ -42,13 +42,13 @@ export function Logotype(props: Props) {
   const {fill, size: _size, style, gradient, ...rest} = useCommonSVGProps(props)
   // @ts-ignore it's fiiiiine
   const size = parseInt(rest.width || 100)
-  const ratio = 78 / 330
+  const ratio = 88 / 330
   const {_} = useLingui()
 
   return (
     <Svg
       fill="none"
-      viewBox="0 0 330 78"
+      viewBox="0 -10 330 88"
       accessibilityLabel={_(msg`Bluesky Plus`)}
       accessibilityHint=""
       {...rest}

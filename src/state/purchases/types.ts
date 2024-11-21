@@ -48,6 +48,7 @@ export type SubscriptionOffering =
 export type APISubscription = {
   group: SubscriptionGroupId
   platform: PlatformId
+  offering: SubscriptionOfferingId
   renews: boolean
   periodDtartsAt: string
   periodEndsAt: string

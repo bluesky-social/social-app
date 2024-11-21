@@ -5,6 +5,7 @@ import {HITSLOP_10} from '#/lib/constants'
 import {atoms as a, useTheme, ViewStyleProp} from '#/alf'
 import * as Button from '#/components/Button'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon} from '#/components/icons/Chevron'
+import {Props as IconProps} from '#/components/icons/common'
 import {Link, LinkProps} from '#/components/Link'
 import {createPortalGroup} from '#/components/Portal'
 import {Text} from '#/components/Typography'
@@ -177,8 +178,10 @@ export function ItemIcon({
   icon: Comp,
   size = 'xl',
   color: colorProp,
+  iconProps,
 }: Omit<React.ComponentProps<typeof Button.ButtonIcon>, 'position'> & {
   color?: string
+  iconProps?: Pick<IconProps, 'gradient'>
 }) {
   const t = useTheme()
   const {destructive, withinGroup} = useContext(ItemContext)
@@ -201,7 +204,7 @@ export function ItemIcon({
 
   const content = (
     <View style={[a.z_20, {width: iconSize, height: iconSize}]}>
-      <Comp width={iconSize} style={[{color}]} />
+      <Comp width={iconSize} style={[{color}]} {...iconProps} />
     </View>
   )
 

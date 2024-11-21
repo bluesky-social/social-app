@@ -39,6 +39,7 @@ import {CodeBrackets_Stroke2_Corner2_Rounded as CodeBracketsIcon} from '#/compon
 import {DotGrid_Stroke2_Corner0_Rounded as DotsHorizontal} from '#/components/icons/DotGrid'
 import {Earth_Stroke2_Corner2_Rounded as EarthIcon} from '#/components/icons/Globe'
 import {Lock_Stroke2_Corner2_Rounded as LockIcon} from '#/components/icons/Lock'
+import {Mark} from '#/components/icons/Logo'
 import {PaintRoller_Stroke2_Corner2_Rounded as PaintRollerIcon} from '#/components/icons/PaintRoller'
 import {
   Person_Stroke2_Corner2_Rounded as PersonIcon,
@@ -142,6 +143,18 @@ export function SettingsScreen({}: Props) {
             <AddAccountRow />
           )}
           <SettingsList.Divider />
+          <SettingsList.LinkItem
+            to="/subscriptions"
+            label={_(msg`Subscriptions`)}>
+            <SettingsList.ItemIcon
+              icon={Mark}
+              iconProps={{gradient: 'nordic'}}
+            />
+            <SettingsList.ItemText>
+              <Trans>Subscriptions</Trans>
+            </SettingsList.ItemText>
+          </SettingsList.LinkItem>
+          <SettingsList.Divider />
           <SettingsList.LinkItem to="/settings/account" label={_(msg`Account`)}>
             <SettingsList.ItemIcon icon={PersonIcon} />
             <SettingsList.ItemText>
@@ -160,12 +173,6 @@ export function SettingsScreen({}: Props) {
             <SettingsList.ItemIcon icon={HandIcon} />
             <SettingsList.ItemText>
               <Trans>Moderation</Trans>
-            </SettingsList.ItemText>
-          </SettingsList.LinkItem>
-          <SettingsList.LinkItem to="/subscriptions" label={_(msg`Subscriptions`)}>
-            <SettingsList.ItemIcon icon={HandIcon} />
-            <SettingsList.ItemText>
-              <Trans>Subscriptions</Trans>
             </SettingsList.ItemText>
           </SettingsList.LinkItem>
           <SettingsList.LinkItem
