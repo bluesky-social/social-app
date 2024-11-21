@@ -53,7 +53,6 @@ export function RichText({
   const plainStyles = [a.leading_snug, flattenedStyle]
   const interactiveStyles = [
     a.leading_snug,
-    a.pointer_events_auto,
     flatten(interactiveStyle),
     flattenedStyle,
   ]
@@ -194,11 +193,6 @@ function RichTextTag({
     onOut: onHoverOut,
   } = useInteractionState()
   const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
-  const {
-    state: pressed,
-    onIn: onPressIn,
-    onOut: onPressOut,
-  } = useInteractionState()
   const navigation = useNavigation<NavigationProp>()
 
   const navigateToPage = React.useCallback(() => {
@@ -228,8 +222,6 @@ function RichTextTag({
             accessibilityRole: isNative ? 'button' : undefined,
             onPress: navigateToPage,
             onLongPress: openDialog,
-            onPressIn: onPressIn,
-            onPressOut: onPressOut,
           })}
           {...web({
             onMouseEnter: onHoverIn,
@@ -243,10 +235,12 @@ function RichTextTag({
               cursor: 'pointer',
             }),
             {color: t.palette.primary_500},
-            (hovered || focused || pressed) && {
-              ...web({outline: 0}),
-              textDecorationLine: 'underline',
-              textDecorationColor: t.palette.primary_500,
+            (hovered || focused) && {
+              ...web({
+                outline: 0,
+                textDecorationLine: 'underline',
+                textDecorationColor: t.palette.primary_500,
+              }),
             },
             style,
           ]}>
