@@ -10,7 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "PO-Revision-Date: 2024-11-20T08:45:59.857Z\n"
 "Last-Translator: vnphanquang\n"
-"Language-Team: Translators in PR #2524, ManhNguyen98, vnphanquang\n"
+"Language-Team: Translators in PR #2524, ManhNguyen98, vinhphm, vnphanquang\n"
 "Plural-Forms: \n"
 
 #: src/screens/Messages/components/ChatListItem.tsx:130
