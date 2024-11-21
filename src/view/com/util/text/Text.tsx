@@ -12,7 +12,7 @@ import {
   childIsString,
   renderChildrenWithEmoji,
   StringChild,
-} from '#/components/Typography'
+} from '#/alf/typography'
 import {IS_DEV} from '#/env'
 
 export type CustomTextProps = Omit<TextProps, 'children'> & {
@@ -32,7 +32,11 @@ export type CustomTextProps = Omit<TextProps, 'children'> & {
       }
   )
 
-export function Text({
+export {Text_DEPRECATED as Text}
+/**
+ * @deprecated use Text from Typography instead.
+ */
+function Text_DEPRECATED({
   type = 'md',
   children,
   emoji,
