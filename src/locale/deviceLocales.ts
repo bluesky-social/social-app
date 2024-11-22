@@ -41,16 +41,16 @@ export function getLocales() {
     }
 
     if (typeof locale.languageTag === 'string') {
-      if (locale.languageTag === 'zh-Hans-CN') {
-        // Simplified Chinese (China)
+      if (locale.languageTag.startsWith('zh-Hans')) {
+        // Simplified Chinese to zh-CN
         locale.languageTag = 'zh-CN'
       }
-      if (locale.languageTag === 'zh-Hant-TW') {
-        // Traditional Chinese (Taiwan)
+      if (locale.languageTag.startsWith('zh-Hant')) {
+        // Traditional Chinese to zh-TW
         locale.languageTag = 'zh-TW'
       }
-      if (locale.languageTag === 'zh-Hant-HK') {
-        // Traditional Chinese (Hong Kong)
+      if (locale.languageTag.startsWith('yue')) {
+        // Cantonese (Yue) to zh-HK
         locale.languageTag = 'zh-HK'
       }
     }
