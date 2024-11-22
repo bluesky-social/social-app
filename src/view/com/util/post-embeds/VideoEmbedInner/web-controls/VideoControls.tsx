@@ -290,7 +290,6 @@ export function Controls({
 
   return (
     <div
-      aria-label={_(msg`Embedded video`)}
       style={{
         position: 'absolute',
         inset: 0,
