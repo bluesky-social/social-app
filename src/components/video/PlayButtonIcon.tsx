@@ -13,9 +13,12 @@ export function PlayButtonIcon({size = 32}: {size?: number}) {
       <View
         style={[
           a.rounded_full,
-          t.atoms.shadow_lg,
           {
             backgroundColor: bg,
+            shadowColor: 'black',
+            shadowRadius: 32,
+            shadowOpacity: 0.5,
+            elevation: 24,
             width: size + size / 1.5,
             height: size + size / 1.5,
             opacity: 0.7,
