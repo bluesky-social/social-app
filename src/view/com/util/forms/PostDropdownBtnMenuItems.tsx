@@ -29,6 +29,7 @@ import {getTranslatorLink} from '#/locale/helpers'
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
 import {Shadow} from '#/state/cache/post-shadow'
+import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {useLanguagePrefs} from '#/state/preferences'
 import {useHiddenPosts, useHiddenPostsApi} from '#/state/preferences'
@@ -124,7 +125,7 @@ let PostDropdownMenuItems = ({
 
   const postUri = post.uri
   const postCid = post.cid
-  const postAuthor = post.author
+  const postAuthor = useProfileShadow(post.author)
   const quoteEmbed = React.useMemo(() => {
     if (!currentAccount || !post.embed) return
     return getMaybeDetachedQuoteEmbed({
