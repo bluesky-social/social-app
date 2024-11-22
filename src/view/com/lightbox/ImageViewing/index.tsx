@@ -299,6 +299,7 @@ function ImageView({
       <StatusBar
         animated
         style="light"
+        hideTransitionAnimation="slide"
         backgroundColor="black"
         // hiding causes layout shifts on android,
         // so avoid until we add edge-to-edge mode
