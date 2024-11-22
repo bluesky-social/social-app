@@ -363,8 +363,10 @@ const ImageItem = ({
       return transforms.get().isResting && !hasLoaded
     },
     (show, prevShow) => {
-      if (show && !prevShow) {
-        runOnJS(setShowLoader)(show && !prevShow)
+      if (!prevShow && show) {
+        runOnJS(setShowLoader)(true)
+      } else if (prevShow && !show) {
+        runOnJS(setShowLoader)(false)
       }
     },
   )
