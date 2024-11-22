@@ -16,7 +16,7 @@ import {useQueryClient} from '@tanstack/react-query'
 
 import {DISCOVER_FEED_URI, KNOWN_SHUTDOWN_FEEDS} from '#/lib/constants'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
-import {logEvent, useGate} from '#/lib/statsig/statsig'
+import {logEvent} from '#/lib/statsig/statsig'
 import {useTheme} from '#/lib/ThemeContext'
 import {logger} from '#/logger'
 import {isIOS, isWeb} from '#/platform/detection'
@@ -32,11 +32,7 @@ import {
   usePostFeedQuery,
 } from '#/state/queries/post-feed'
 import {useSession} from '#/state/session'
-import {
-  ProgressGuide,
-  SuggestedFeeds,
-  SuggestedFollows,
-} from '#/components/FeedInterstitials'
+import {ProgressGuide, SuggestedFollows} from '#/components/FeedInterstitials'
 import {List, ListRef} from '../util/List'
 import {PostFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
@@ -85,72 +81,13 @@ type FeedRow =
       uri: string
     }
   | {
-      type: 'interstitialFeeds'
-      key: string
-      params: {
-        variant: 'default' | string
-      }
-      slot: number
-    }
-  | {
       type: 'interstitialFollows'
       key: string
-      params: {
-        variant: 'default' | string
-      }
-      slot: number
     }
   | {
       type: 'interstitialProgressGuide'
       key: string
-      params: {
-        variant: 'default' | string
-      }
-      slot: number
     }
-
-const feedInterstitialType = 'interstitialFeeds'
-const followInterstitialType = 'interstitialFollows'
-const progressGuideInterstitialType = 'interstitialProgressGuide'
-const interstials: Record<
-  'following' | 'discover' | 'profile',
-  (FeedRow & {
-    type:
-      | 'interstitialFeeds'
-      | 'interstitialFollows'
-      | 'interstitialProgressGuide'
-  })[]
-> = {
-  following: [],
-  discover: [
-    {
-      type: progressGuideInterstitialType,
-      params: {
-        variant: 'default',
-      },
-      key: progressGuideInterstitialType,
-      slot: 0,
-    },
-    {
-      type: followInterstitialType,
-      params: {
-        variant: 'default',
-      },
-      key: followInterstitialType,
-      slot: 20,
-    },
-  ],
-  profile: [
-    {
-      type: followInterstitialType,
-      params: {
-        variant: 'default',
-      },
-      key: followInterstitialType,
-      slot: 5,
-    },
-  ],
-}
 
 export function getFeedPostSlice(feedRow: FeedRow): FeedPostSlice | null {
   if (feedRow.type === 'sliceItem') {
@@ -217,7 +154,6 @@ let Feed = ({
   const checkForNewRef = React.useRef<(() => void) | null>(null)
   const lastFetchRef = React.useRef<number>(Date.now())
   const [feedType, feedUri, feedTab] = feed.split('|')
-  const gate = useGate()
 
   const opts = React.useMemo(
     () => ({enabled, ignoreFilterFor}),
@@ -317,6 +253,19 @@ let Feed = ({
   }, [pollInterval])
 
   const feedItems: FeedRow[] = React.useMemo(() => {
+    let feedKind: 'following' | 'discover' | 'profile' | undefined
+    if (feedType === 'following') {
+      feedKind = 'following'
+    } else if (feedUri === DISCOVER_FEED_URI) {
+      feedKind = 'discover'
+    } else if (
+      feedType === 'author' &&
+      (feedTab === 'posts_and_author_threads' ||
+        feedTab === 'posts_with_replies')
+    ) {
+      feedKind = 'profile'
+    }
+
     let arr: FeedRow[] = []
     if (KNOWN_SHUTDOWN_FEEDS.includes(feedUri)) {
       arr.push({
@@ -336,8 +285,34 @@ let Feed = ({
           key: 'empty',
         })
       } else if (data) {
+        let sliceIndex = -1
         for (const page of data?.pages) {
           for (const slice of page.slices) {
+            sliceIndex++
+
+            if (hasSession) {
+              if (feedKind === 'discover') {
+                if (sliceIndex === 0) {
+                  arr.push({
+                    type: 'interstitialProgressGuide',
+                    key: 'interstitial-' + sliceIndex + '-' + lastFetchedAt,
+                  })
+                } else if (sliceIndex === 20) {
+                  arr.push({
+                    type: 'interstitialFollows',
+                    key: 'interstitial-' + sliceIndex + '-' + lastFetchedAt,
+                  })
+                }
+              } else if (feedKind === 'profile') {
+                if (sliceIndex === 5) {
+                  arr.push({
+                    type: 'interstitialFollows',
+                    key: 'interstitial-' + sliceIndex + '-' + lastFetchedAt,
+                  })
+                }
+              }
+            }
+
             if (slice.isIncompleteThread && slice.items.length >= 3) {
               const beforeLast = slice.items.length - 2
               const last = slice.items.length - 1
@@ -396,45 +371,6 @@ let Feed = ({
       })
     }
 
-    if (hasSession) {
-      let feedKind: 'following' | 'discover' | 'profile' | undefined
-      if (feedType === 'following') {
-        feedKind = 'following'
-      } else if (feedUri === DISCOVER_FEED_URI) {
-        feedKind = 'discover'
-      } else if (
-        feedType === 'author' &&
-        (feedTab === 'posts_and_author_threads' ||
-          feedTab === 'posts_with_replies')
-      ) {
-        feedKind = 'profile'
-      }
-
-      if (feedKind) {
-        for (const interstitial of interstials[feedKind]) {
-          const shouldShow =
-            (interstitial.type === feedInterstitialType &&
-              gate('suggested_feeds_interstitial')) ||
-            interstitial.type === followInterstitialType ||
-            interstitial.type === progressGuideInterstitialType
-
-          if (shouldShow) {
-            const variant = 'default' // replace with experiment variant
-            const int = {
-              ...interstitial,
-              params: {variant},
-              // overwrite key with unique value
-              key: [interstitial.type, variant, lastFetchedAt].join(':'),
-            }
-
-            if (arr.length > interstitial.slot) {
-              arr.splice(interstitial.slot, 0, int)
-            }
-          }
-        }
-      }
-    }
-
     return arr
   }, [
     isFetched,
@@ -445,7 +381,6 @@ let Feed = ({
     feedType,
     feedUri,
     feedTab,
-    gate,
     hasSession,
   ])
 
@@ -529,11 +464,9 @@ let Feed = ({
         return <PostFeedLoadingPlaceholder />
       } else if (row.type === 'feedShutdownMsg') {
         return <FeedShutdownMsg feedUri={feedUri} />
-      } else if (row.type === feedInterstitialType) {
-        return <SuggestedFeeds />
-      } else if (row.type === followInterstitialType) {
+      } else if (row.type === 'interstitialFollows') {
         return <SuggestedFollows feed={feed} />
-      } else if (row.type === progressGuideInterstitialType) {
+      } else if (row.type === 'interstitialProgressGuide') {
         return <ProgressGuide />
       } else if (row.type === 'sliceItem') {
         const slice = row.slice
