@@ -103,35 +103,32 @@ export function ThemeProvider({
     })
   }, [])
 
-  return (
-    <Context.Provider
-      value={React.useMemo<Alf>(
-        () => ({
-          themes,
-          themeName: themeName,
-          theme: themes[themeName],
-          fonts: {
-            scale: fontScale,
-            scaleMultiplier: fontScaleMultiplier,
-            family: fontFamily,
-            setFontScale: setFontScaleAndPersist,
-            setFontFamily: setFontFamilyAndPersist,
-          },
-          flags: {},
-        }),
-        [
-          themeName,
-          themes,
-          fontScale,
-          setFontScaleAndPersist,
-          fontFamily,
-          setFontFamilyAndPersist,
-          fontScaleMultiplier,
-        ],
-      )}>
-      {children}
-    </Context.Provider>
+  const value = React.useMemo<Alf>(
+    () => ({
+      themes,
+      themeName: themeName,
+      theme: themes[themeName],
+      fonts: {
+        scale: fontScale,
+        scaleMultiplier: fontScaleMultiplier,
+        family: fontFamily,
+        setFontScale: setFontScaleAndPersist,
+        setFontFamily: setFontFamilyAndPersist,
+      },
+      flags: {},
+    }),
+    [
+      themeName,
+      themes,
+      fontScale,
+      setFontScaleAndPersist,
+      fontFamily,
+      setFontFamilyAndPersist,
+      fontScaleMultiplier,
+    ],
   )
+
+  return <Context.Provider value={value}>{children}</Context.Provider>
 }
 
 export function useAlf() {

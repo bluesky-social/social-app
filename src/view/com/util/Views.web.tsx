@@ -70,7 +70,9 @@ export const FlatList_INTERNAL = React.forwardRef(function FlatListImpl<ItemT>(
     contentOffset,
     desktopFixedHeight,
     ...props
-  }: React.PropsWithChildren<FlatListProps<ItemT> & AddedProps>,
+  }: React.PropsWithChildren<
+    Omit<FlatListProps<ItemT>, 'CellRendererComponent'> & AddedProps
+  >,
   ref: React.Ref<FlatList<ItemT>>,
 ) {
   const pal = usePalette('default')

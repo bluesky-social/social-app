@@ -1,4 +1,3 @@
-import React from 'react'
 import {StyleSheet, View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -41,7 +40,7 @@ export function DesktopFeeds() {
             onPress={() => {
               setSelectedFeed(feed)
               navigation.navigate('Home')
-              if (feed === selectedFeed) {
+              if (route.name === 'Home' && feed === selectedFeed) {
                 emitSoftReset()
               }
             }}

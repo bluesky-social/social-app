@@ -213,7 +213,6 @@ export function ItemIcon({
 }
 
 export function ItemText({
-  // eslint-disable-next-line react/prop-types
   style,
   ...props
 }: React.ComponentProps<typeof Button.ButtonText>) {
@@ -264,7 +263,13 @@ export function Chevron({color: colorProp}: {color?: string}) {
   return <ItemIcon icon={ChevronRightIcon} size="md" color={color} />
 }
 
-export function BadgeText({children}: {children: React.ReactNode}) {
+export function BadgeText({
+  children,
+  style,
+}: {
+  children: React.ReactNode
+  style?: StyleProp<ViewStyle>
+}) {
   const t = useTheme()
   return (
     <Text
@@ -273,6 +278,7 @@ export function BadgeText({children}: {children: React.ReactNode}) {
         a.text_md,
         a.text_right,
         a.leading_snug,
+        style,
       ]}
       numberOfLines={1}>
       {children}

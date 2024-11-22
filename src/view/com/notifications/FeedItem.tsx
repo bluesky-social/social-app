@@ -451,8 +451,9 @@ let FeedItem = ({
             <TimeElapsed timestamp={item.notification.indexedAt}>
               {({timeElapsed}) => (
                 <>
-                  <Text style={[a.ml_xs, pal.textLight]}>&middot;</Text>
-                  <Text style={[a.ml_xs, pal.textLight]} title={niceTimestamp}>
+                  {/* make sure there's whitespace around the middot -sfn */}
+                  <Text style={[pal.textLight]}> &middot; </Text>
+                  <Text style={[pal.textLight]} title={niceTimestamp}>
                     {timeElapsed}
                   </Text>
                 </>
@@ -466,7 +467,12 @@ let FeedItem = ({
         {item.type === 'feedgen-like' && item.subjectUri ? (
           <FeedSourceCard
             feedUri={item.subjectUri}
-            style={[pal.view, pal.border, styles.feedcard]}
+            style={[
+              t.atoms.bg,
+              t.atoms.border_contrast_low,
+              a.border,
+              styles.feedcard,
+            ]}
             showLikes
           />
         ) : null}
@@ -777,7 +783,6 @@ const styles = StyleSheet.create({
     opacity: 0.8,
   },
   feedcard: {
-    borderWidth: 1,
     borderRadius: 8,
     paddingVertical: 12,
     marginTop: 6,

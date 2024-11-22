@@ -92,6 +92,7 @@ module.exports = function (config) {
             'Used to save images to your library.',
           NSPhotoLibraryUsageDescription:
             'Used for profile pictures, posts, and other kinds of content',
+          CFBundleSpokenName: 'Blue Sky',
         },
         associatedDomains: ASSOCIATED_DOMAINS,
         splash: {
@@ -99,6 +100,8 @@ module.exports = function (config) {
           dark: DARK_SPLASH_CONFIG,
         },
         entitlements: {
+          'com.apple.developer.kernel.increased-memory-limit': true,
+          'com.apple.developer.kernel.extended-virtual-addressing': true,
           'com.apple.security.application-groups': 'group.app.bsky',
         },
         privacyManifests: {

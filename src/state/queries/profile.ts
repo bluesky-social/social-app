@@ -221,8 +221,8 @@ export function useProfileUpdateMutation() {
 
 export function useProfileFollowMutationQueue(
   profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>,
-  logContext: LogEvents['profile:follow:sampled']['logContext'] &
-    LogEvents['profile:follow:sampled']['logContext'],
+  logContext: LogEvents['profile:follow']['logContext'] &
+    LogEvents['profile:follow']['logContext'],
 ) {
   const agent = useAgent()
   const queryClient = useQueryClient()
@@ -293,7 +293,7 @@ export function useProfileFollowMutationQueue(
 }
 
 function useProfileFollowMutation(
-  logContext: LogEvents['profile:follow:sampled']['logContext'],
+  logContext: LogEvents['profile:follow']['logContext'],
   profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>,
 ) {
   const {currentAccount} = useSession()
@@ -308,7 +308,7 @@ function useProfileFollowMutation(
         ownProfile = findProfileQueryData(queryClient, currentAccount.did)
       }
       captureAction(ProgressGuideAction.Follow)
-      logEvent('profile:follow:sampled', {
+      logEvent('profile:follow', {
         logContext,
         didBecomeMutual: profile.viewer
           ? Boolean(profile.viewer.followedBy)
@@ -322,12 +322,12 @@ function useProfileFollowMutation(
 }
 
 function useProfileUnfollowMutation(
-  logContext: LogEvents['profile:unfollow:sampled']['logContext'],
+  logContext: LogEvents['profile:unfollow']['logContext'],
 ) {
   const agent = useAgent()
   return useMutation<void, Error, {did: string; followUri: string}>({
     mutationFn: async ({followUri}) => {
-      logEvent('profile:unfollow:sampled', {logContext})
+      logEvent('profile:unfollow', {logContext})
       return await agent.deleteFollow(followUri)
     },
   })

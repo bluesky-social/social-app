@@ -40,14 +40,11 @@ import {
   shouldRequestEmailConfirmation,
   snoozeEmailConfirmationPrompt,
 } from '#/state/shell/reminders'
-import {AccessibilitySettingsScreen} from '#/view/screens/AccessibilitySettings'
-import {AppPasswords} from '#/view/screens/AppPasswords'
 import {CommunityGuidelinesScreen} from '#/view/screens/CommunityGuidelines'
 import {CopyrightPolicyScreen} from '#/view/screens/CopyrightPolicy'
 import {DebugModScreen} from '#/view/screens/DebugMod'
 import {FeedsScreen} from '#/view/screens/Feeds'
 import {HomeScreen} from '#/view/screens/Home'
-import {LanguageSettingsScreen} from '#/view/screens/LanguageSettings'
 import {ListsScreen} from '#/view/screens/Lists'
 import {LogScreen} from '#/view/screens/Log'
 import {ModerationBlockedAccounts} from '#/view/screens/ModerationBlockedAccounts'
@@ -56,9 +53,6 @@ import {ModerationMutedAccounts} from '#/view/screens/ModerationMutedAccounts'
 import {NotFoundScreen} from '#/view/screens/NotFound'
 import {NotificationsScreen} from '#/view/screens/Notifications'
 import {PostThreadScreen} from '#/view/screens/PostThread'
-import {PreferencesExternalEmbeds} from '#/view/screens/PreferencesExternalEmbeds'
-import {PreferencesFollowingFeed} from '#/view/screens/PreferencesFollowingFeed'
-import {PreferencesThreads} from '#/view/screens/PreferencesThreads'
 import {PrivacyPolicyScreen} from '#/view/screens/PrivacyPolicy'
 import {ProfileScreen} from '#/view/screens/Profile'
 import {ProfileFeedScreen} from '#/view/screens/ProfileFeed'
@@ -68,7 +62,6 @@ import {ProfileFollowsScreen} from '#/view/screens/ProfileFollows'
 import {ProfileListScreen} from '#/view/screens/ProfileList'
 import {SavedFeeds} from '#/view/screens/SavedFeeds'
 import {SearchScreen} from '#/view/screens/Search'
-import {SettingsScreen} from '#/view/screens/Settings'
 import {Storybook} from '#/view/screens/Storybook'
 import {SupportScreen} from '#/view/screens/Support'
 import {TermsOfServiceScreen} from '#/view/screens/TermsOfService'
@@ -96,9 +89,16 @@ import {useTheme} from '#/alf'
 import {router} from '#/routes'
 import {Referrer} from '../modules/expo-bluesky-swiss-army'
 import {AboutSettingsScreen} from './screens/Settings/AboutSettings'
+import {AccessibilitySettingsScreen} from './screens/Settings/AccessibilitySettings'
 import {AccountSettingsScreen} from './screens/Settings/AccountSettings'
+import {AppPasswordsScreen} from './screens/Settings/AppPasswords'
 import {ContentAndMediaSettingsScreen} from './screens/Settings/ContentAndMediaSettings'
+import {ExternalMediaPreferencesScreen} from './screens/Settings/ExternalMediaPreferences'
+import {FollowingFeedPreferencesScreen} from './screens/Settings/FollowingFeedPreferences'
+import {LanguageSettingsScreen} from './screens/Settings/LanguageSettings'
 import {PrivacyAndSecuritySettingsScreen} from './screens/Settings/PrivacyAndSecuritySettings'
+import {SettingsScreen} from './screens/Settings/Settings'
+import {ThreadPreferencesScreen} from './screens/Settings/ThreadPreferences'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
 
@@ -285,7 +285,7 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
       />
       <Stack.Screen
         name="AppPasswords"
-        getComponent={() => AppPasswords}
+        getComponent={() => AppPasswordsScreen}
         options={{title: title(msg`App Passwords`), requireAuth: true}}
       />
       <Stack.Screen
@@ -295,7 +295,7 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
       />
       <Stack.Screen
         name="PreferencesFollowingFeed"
-        getComponent={() => PreferencesFollowingFeed}
+        getComponent={() => FollowingFeedPreferencesScreen}
         options={{
           title: title(msg`Following Feed Preferences`),
           requireAuth: true,
@@ -303,12 +303,12 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
       />
       <Stack.Screen
         name="PreferencesThreads"
-        getComponent={() => PreferencesThreads}
+        getComponent={() => ThreadPreferencesScreen}
         options={{title: title(msg`Threads Preferences`), requireAuth: true}}
       />
       <Stack.Screen
         name="PreferencesExternalEmbeds"
-        getComponent={() => PreferencesExternalEmbeds}
+        getComponent={() => ExternalMediaPreferencesScreen}
         options={{
           title: title(msg`External Media Preferences`),
           requireAuth: true,
@@ -696,7 +696,7 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
       onStateChange={() => {
         const routeName = getCurrentRouteName()
         if (routeName === 'Notifications') {
-          logEvent('router:navigate:notifications:sampled', {})
+          logEvent('router:navigate:notifications', {})
         }
       }}
       onReady={() => {

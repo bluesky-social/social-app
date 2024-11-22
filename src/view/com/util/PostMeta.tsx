@@ -49,6 +49,8 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
     precacheProfile(queryClient, opts.author)
   }, [queryClient, opts.author])
 
+  const timestampLabel = niceDate(i18n, opts.timestamp)
+
   return (
     <View
       style={[
@@ -115,8 +117,8 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
         {({timeElapsed}) => (
           <WebOnlyInlineLinkText
             to={opts.postHref}
-            label={niceDate(i18n, opts.timestamp)}
-            title={niceDate(i18n, opts.timestamp)}
+            label={timestampLabel}
+            title={timestampLabel}
             disableMismatchWarning
             disableUnderline
             onPress={onBeforePressPost}

@@ -1,5 +1,6 @@
 import React, {memo} from 'react'
 import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native'
+import {MeasuredDimensions, runOnJS, runOnUI} from 'react-native-reanimated'
 import {AppBskyActorDefs, ModerationDecision} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg} from '@lingui/macro'
@@ -7,6 +8,7 @@ import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
 import {BACK_HITSLOP} from '#/lib/constants'
+import {measureHandle, useHandleRef} from '#/lib/hooks/useHandleRef'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {NavigationProp} from '#/lib/routes/types'
 import {isIOS} from '#/platform/detection'
@@ -42,6 +44,7 @@ let ProfileHeaderShell = ({
   const {openLightbox} = useLightboxControls()
   const navigation = useNavigation<NavigationProp>()
   const {isDesktop} = useWebMediaQueries()
+  const aviRef = useHandleRef()
 
   const onPressBack = React.useCallback(() => {
     if (navigation.canGoBack()) {
@@ -51,16 +54,41 @@ let ProfileHeaderShell = ({
     }
   }, [navigation])
 
+  const _openLightbox = React.useCallback(
+    (uri: string, thumbRect: MeasuredDimensions | null) => {
+      openLightbox({
+        images: [
+          {
+            uri,
+            thumbUri: uri,
+            thumbRect,
+            dimensions: {
+              // It's fine if it's actually smaller but we know it's 1:1.
+              height: 1000,
+              width: 1000,
+            },
+            thumbDimensions: null,
+            type: 'circle-avi',
+          },
+        ],
+        index: 0,
+      })
+    },
+    [openLightbox],
+  )
+
   const onPressAvi = React.useCallback(() => {
     const modui = moderation.ui('avatar')
-    if (profile.avatar && !(modui.blur && modui.noOverride)) {
-      openLightbox({
-        type: 'profile-image',
-        profile: profile,
-        thumbDims: null,
-      })
+    const avatar = profile.avatar
+    if (avatar && !(modui.blur && modui.noOverride)) {
+      const aviHandle = aviRef.current
+      runOnUI(() => {
+        'worklet'
+        const rect = measureHandle(aviHandle)
+        runOnJS(_openLightbox)(avatar, rect)
+      })()
     }
-  }, [openLightbox, profile, moderation])
+  }, [profile, moderation, _openLightbox, aviRef])
 
   const isMe = React.useMemo(
     () => currentAccount?.did === profile.did,
@@ -138,12 +166,14 @@ let ProfileHeaderShell = ({
               styles.avi,
               profile.associated?.labeler && styles.aviLabeler,
             ]}>
-            <UserAvatar
-              type={profile.associated?.labeler ? 'labeler' : 'user'}
-              size={90}
-              avatar={profile.avatar}
-              moderation={moderation.ui('avatar')}
-            />
+            <View ref={aviRef} collapsable={false}>
+              <UserAvatar
+                type={profile.associated?.labeler ? 'labeler' : 'user'}
+                size={90}
+                avatar={profile.avatar}
+                moderation={moderation.ui('avatar')}
+              />
+            </View>
           </View>
         </TouchableWithoutFeedback>
       </GrowableAvatar>

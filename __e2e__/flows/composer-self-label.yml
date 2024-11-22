@@ -17,8 +17,8 @@ appId: xyz.blueskyweb.app
 - inputText: "Post with an image"
 - tapOn:
     id: "openGalleryBtn"
-- tapOn:
-    id: "labelsBtn"
+- tapOn: "Content warnings"
+- tapOn: "Content warnings"
 - tapOn: "Porn"
 - tapOn:
     label: "Tap on confirm"

@@ -18,12 +18,20 @@ const stateContext = React.createContext<StateContext>({
     addListener() {},
     removeListener() {},
     modify() {},
+    get() {
+      return 0
+    },
+    set() {},
   },
   footerMode: {
     value: 0,
     addListener() {},
     removeListener() {},
     modify() {},
+    get() {
+      return 0
+    },
+    set() {},
   },
 })
 const setContext = React.createContext<SetContext>((_: boolean) => {})
@@ -36,13 +44,17 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       'worklet'
       // Cancel any existing animation
       cancelAnimation(headerMode)
-      headerMode.value = withSpring(v ? 1 : 0, {
-        overshootClamping: true,
-      })
+      headerMode.set(() =>
+        withSpring(v ? 1 : 0, {
+          overshootClamping: true,
+        }),
+      )
       cancelAnimation(footerMode)
-      footerMode.value = withSpring(v ? 1 : 0, {
-        overshootClamping: true,
-      })
+      footerMode.set(() =>
+        withSpring(v ? 1 : 0, {
+          overshootClamping: true,
+        }),
+      )
     },
     [headerMode, footerMode],
   )

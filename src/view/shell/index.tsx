@@ -1,7 +1,6 @@
 import React from 'react'
 import {BackHandler, StyleSheet, useWindowDimensions, View} from 'react-native'
 import {Drawer} from 'react-native-drawer-layout'
-import Animated from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import * as NavigationBar from 'expo-navigation-bar'
 import {StatusBar} from 'expo-status-bar'
@@ -10,7 +9,6 @@ import {useNavigation, useNavigationState} from '@react-navigation/native'
 import {useDedupe} from '#/lib/hooks/useDedupe'
 import {useIntentHandler} from '#/lib/hooks/useIntentHandler'
 import {useNotificationsHandler} from '#/lib/hooks/useNotificationHandler'
-import {usePalette} from '#/lib/hooks/usePalette'
 import {useNotificationsRegistration} from '#/lib/notifications/notifications'
 import {isStateAtTabRoot} from '#/lib/routes/helpers'
 import {useTheme} from '#/lib/ThemeContext'
@@ -95,7 +93,7 @@ function ShellInner() {
 
   return (
     <>
-      <Animated.View style={[a.h_full]}>
+      <View style={[a.h_full]}>
         <ErrorBoundary
           style={{paddingTop: insets.top, paddingBottom: insets.bottom}}>
           <Drawer
@@ -105,6 +103,7 @@ function ShellInner() {
             onOpen={onOpenDrawer}
             onClose={onCloseDrawer}
             swipeEdgeWidth={winDim.width / 2}
+            drawerType={isIOS ? 'slide' : 'front'}
             swipeEnabled={!canGoBack && hasSession && !isDrawerSwipeDisabled}
             overlayStyle={{
               backgroundColor: select(t.name, {
@@ -118,7 +117,7 @@ function ShellInner() {
             <TabsNavigator />
           </Drawer>
         </ErrorBoundary>
-      </Animated.View>
+      </View>
       <Composer winHeight={winDim.height} />
       <ModalsContainer />
       <MutedWordsDialog />
@@ -132,7 +131,6 @@ function ShellInner() {
 
 export const Shell: React.FC = function ShellImpl() {
   const {fullyExpandedCount} = useDialogStateControlContext()
-  const pal = usePalette('default')
   const theme = useTheme()
   useIntentHandler()
 
@@ -146,7 +144,7 @@ export const Shell: React.FC = function ShellImpl() {
     }
   }, [theme])
   return (
-    <View testID="mobileShellView" style={[styles.outerContainer, pal.view]}>
+    <View testID="mobileShellView" style={[styles.outerContainer]}>
       <StatusBar
         style={
           theme.colorScheme === 'dark' || (isIOS && fullyExpandedCount > 0)
