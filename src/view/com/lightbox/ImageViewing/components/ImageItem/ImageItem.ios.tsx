@@ -16,9 +16,11 @@ import {
 import Animated, {
   runOnJS,
   SharedValue,
+  useAnimatedProps,
   useAnimatedReaction,
   useAnimatedRef,
   useAnimatedStyle,
+  useSharedValue,
 } from 'react-native-reanimated'
 import {useSafeAreaFrame} from 'react-native-safe-area-context'
 import {Image} from 'expo-image'
@@ -75,6 +77,7 @@ const ImageItem = ({
 }: Props) => {
   const scrollViewRef = useAnimatedRef<Animated.ScrollView>()
   const [scaled, setScaled] = useState(false)
+  const isDragging = useSharedValue(false)
   const screenSizeDelayedForJSThreadOnly = useSafeAreaFrame()
   const maxZoomScale = Math.max(
     MIN_SCREEN_ZOOM,
@@ -86,10 +89,19 @@ const ImageItem = ({
 
   const scrollHandler = useAnimatedScrollHandler({
     onScroll(e) {
+      'worklet'
       const nextIsScaled = e.zoomScale > 1
       if (scaled !== nextIsScaled) {
         runOnJS(handleZoom)(nextIsScaled)
       }
+    },
+    onBeginDrag() {
+      'worklet'
+      isDragging.value = true
+    },
+    onEndDrag() {
+      'worklet'
+      isDragging.value = false
     },
   })
 
@@ -199,6 +211,11 @@ const ImageItem = ({
   const borderRadius =
     type === 'circle-avi' ? 1e5 : type === 'rect-avi' ? 20 : 0
 
+  const scrollViewProps = useAnimatedProps(() => ({
+    // Don't allow bounce at 1:1 rest so it can be swiped away.
+    bounces: scaled || isDragging.value,
+  }))
+
   return (
     <GestureDetector gesture={composedGesture}>
       <Animated.ScrollView
@@ -210,8 +227,7 @@ const ImageItem = ({
         maximumZoomScale={maxZoomScale}
         onScroll={scrollHandler}
         style={containerStyle}
-        bounces={scaled}
-        bouncesZoom={true}
+        animatedProps={scrollViewProps}
         centerContent>
         {showLoader && (
           <ActivityIndicator size="small" color="#FFF" style={styles.loading} />
