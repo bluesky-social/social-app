@@ -10,6 +10,7 @@ import {
 import {isNative} from '#/platform/detection'
 import {useModalControls} from '#/state/modals'
 import {useInAppBrowser} from '#/state/preferences/in-app-browser'
+import {useOptOutOfUtm} from '#/state/preferences/opt-out-of-utm'
 import {useTheme} from '#/alf'
 import {useSheetWrapper} from '#/components/Dialog/sheet-wrapper'
 
@@ -18,6 +19,7 @@ export function useOpenLink() {
   const enabled = useInAppBrowser()
   const t = useTheme()
   const sheetWrapper = useSheetWrapper()
+  const optOutOfUtm = useOptOutOfUtm()
 
   const openLink = useCallback(
     async (url: string, override?: boolean) => {
@@ -26,6 +28,9 @@ export function useOpenLink() {
       }
 
       if (isNative && !url.startsWith('mailto:')) {
+        if (!optOutOfUtm) {
+          url = addUtmSource(url)
+        }
         if (override === undefined && enabled === undefined) {
           openModal({
             name: 'in-app-browser-consent',
@@ -33,7 +38,6 @@ export function useOpenLink() {
           })
           return
         } else if (override ?? enabled) {
-          url = addUtmSource(url)
           await sheetWrapper(
             WebBrowser.openBrowserAsync(url, {
               presentationStyle:
@@ -48,7 +52,7 @@ export function useOpenLink() {
       }
       Linking.openURL(url)
     },
-    [enabled, openModal, t, sheetWrapper],
+    [enabled, openModal, t, sheetWrapper, optOutOfUtm],
   )
 
   return openLink
