@@ -16019,6 +16019,11 @@ react-native-keyboard-controller@^1.14.0:
   resolved "https://registry.yarnpkg.com/react-native-keyboard-controller/-/react-native-keyboard-controller-1.14.0.tgz#f6faaa12b3736a10f4eec4236ed5b0343508b9a1"
   integrity sha512-JW9k2fehFXOpvLWh1YcgyubLodg/HPi6bR11sCZB/BOawf1tnbGnqk967B8XkxDOKHH6mg+z82quCvv8ALh1rg==
 
+react-native-localization-settings@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/react-native-localization-settings/-/react-native-localization-settings-1.2.0.tgz#89aa0a97102912b9c87a87f54aaa4643d1b4a865"
+  integrity sha512-pxX/mfokqjwIdb1zINuN6DLL4PeVHTaIGz2Tk833tS94fmpsSuPoYnkCmtXsfvZjxhDOSsRceao/JutJbIlpIQ==
+
 react-native-mmkv@^2.12.2:
   version "2.12.2"
   resolved "https://registry.yarnpkg.com/react-native-mmkv/-/react-native-mmkv-2.12.2.tgz#4bba0f5f04e2cf222494cce3a9794ba6a4894dee"
