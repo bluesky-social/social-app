@@ -75,7 +75,7 @@ msgstr "{0, plural, one {Aimer (# ont aimé)} other {Aimer (# ont aimé)}}"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:442
 msgid "{0, plural, one {like} other {likes}}"
-msgstr "{0, plural, one {like} other {likes}}"
+msgstr "{0, plural, one {a aimé} other {ont aimé}}"
 
 #: src/components/FeedCard.tsx:213
 #: src/view/com/feeds/FeedSourceCard.tsx:303
@@ -3756,11 +3756,11 @@ msgstr "Aimé par"
 
 #: src/view/screens/Profile.tsx:231
 msgid "Likes"
-msgstr "Likes"
+msgstr "Posts aimés"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:212
 msgid "Likes on this post"
-msgstr "Likes sur ce post"
+msgstr "Mentions « J’aime » sur ce post"
 
 #: src/Navigation.tsx:196
 msgid "List"
@@ -6794,7 +6794,7 @@ msgstr "Taper pour voir l’image complète"
 
 #: src/state/shell/progress-guide.tsx:166
 msgid "Task complete - 10 likes!"
-msgstr "Tâche accomplie - 10 likes !"
+msgstr "Tâche accomplie - 10 posts aimés !"
 
 #: src/components/ProgressGuide/List.tsx:49
 msgid "Teach our algorithm what you like"
