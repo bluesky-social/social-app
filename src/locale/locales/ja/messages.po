@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-14 11:20+0900\n"
+"PO-Revision-Date: 2024-11-22 09:59+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -1240,7 +1240,7 @@ msgstr "メールアドレスを変更"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:171
 msgid "Change your email address"
-msgstr ""
+msgstr "メールアドレスを変更"
 
 #: src/Navigation.tsx:373
 #: src/view/shell/bottom-bar/BottomBar.tsx:200
@@ -3301,10 +3301,6 @@ msgstr "あなたのユーザーハンドルを入力"
 msgid "Interaction limited"
 msgstr "反応が制限されています"
 
-#: src/components/dialogs/nuxs/NeueTypography.tsx:47
-#~ msgid "Introducing new font settings"
-#~ msgstr "新しいフォント設定の紹介"
-
 #: src/screens/Login/LoginForm.tsx:142
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:70
 msgid "Invalid 2FA confirmation code."
@@ -4054,10 +4050,6 @@ msgstr "新規"
 #: src/screens/Messages/ChatList.tsx:335
 msgid "New chat"
 msgstr "新しいチャット"
-
-#: src/components/dialogs/nuxs/NeueTypography.tsx:51
-#~ msgid "New font settings ✨"
-#~ msgstr "新しいフォント設定 ✨"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:201
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:209
@@ -5683,10 +5675,6 @@ msgstr "ガイドを見る"
 msgid "Seek slider"
 msgstr "シークバー"
 
-#: src/view/com/util/Selector.tsx:107
-msgid "Select {item}"
-msgstr "{item}を選択"
-
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:67
 msgid "Select a color"
 msgstr "色を選択"
@@ -5734,10 +5722,6 @@ msgstr "言語を選択"
 #: src/components/ReportDialog/SelectLabelerView.tsx:29
 msgid "Select moderator"
 msgstr "モデレーターを選択"
-
-#: src/view/com/util/Selector.tsx:108
-msgid "Select option {i} of {numItems}"
-msgstr "{numItems}個中{i}個目のオプションを選択"
 
 #: src/view/com/composer/videos/SubtitleFilePicker.tsx:66
 msgid "Select subtitle file (.vtt)"
@@ -6529,7 +6513,7 @@ msgstr "選択したビデオのサイズが50MBを超えています。"
 
 #: src/lib/strings/errors.ts:18
 msgid "The server appears to be experiencing issues. Please try again in a few moments."
-msgstr ""
+msgstr "サーバーで問題が発生しているようです。少し間をおいて再度試してください。"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:725
 msgid "The starter pack that you are trying to view is invalid. You may delete this starter pack instead."
@@ -6709,7 +6693,7 @@ msgstr "この機能はベータ版です。リポジトリのエクスポート
 
 #: src/lib/strings/errors.ts:21
 msgid "This feature is not available while using an App Password. Please sign in with your main password."
-msgstr ""
+msgstr "この機能はアプリパスワードでは利用できません。メインパスワードでサインインしてください。"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:120
 msgid "This feed is currently receiving high traffic and is temporarily unavailable. Please try again later."
@@ -6945,7 +6929,7 @@ msgstr "リストでのミュートを解除"
 
 #: src/lib/strings/errors.ts:11
 msgid "Unable to connect. Please check your internet connection and try again."
-msgstr ""
+msgstr "接続できません。インターネット接続をチェックして再度試してください。"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:68
 #: src/screens/Login/index.tsx:76
@@ -7512,10 +7496,6 @@ msgstr "これはあなたの体験をカスタマイズするために使用さ
 msgid "We're having network issues, try again"
 msgstr "ネットワークで問題が発生しています。もう一度試してください"
 
-#: src/components/dialogs/nuxs/NeueTypography.tsx:54
-#~ msgid "We're introducing a new theme font, along with adjustable font sizing."
-#~ msgstr "新しいテーマフォントを導入し、フォントサイズを調整可能にしました。"
-
 #: src/screens/Signup/index.tsx:94
 msgid "We're so excited to have you join us!"
 msgstr "私たちはあなたが参加してくれることをとても楽しみにしています！"
@@ -7687,10 +7667,6 @@ msgstr "あなたはビデオのアップロードを許可されていません
 #: src/view/com/profile/ProfileFollows.tsx:95
 msgid "You are not following anyone."
 msgstr "あなたはまだだれもフォローしていません。"
-
-#: src/components/dialogs/nuxs/NeueTypography.tsx:61
-#~ msgid "You can adjust these in your Appearance Settings later."
-#~ msgstr "これらは後で外観の設定で調整できます。"
 
 #: src/view/com/posts/FollowingEmptyState.tsx:63
 #: src/view/com/posts/FollowingEndOfFeed.tsx:64
