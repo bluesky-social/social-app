@@ -33,6 +33,7 @@ export function useOpenLink() {
           })
           return
         } else if (override ?? enabled) {
+          url = addUtmSource(url)
           await sheetWrapper(
             WebBrowser.openBrowserAsync(url, {
               presentationStyle:
@@ -51,4 +52,20 @@ export function useOpenLink() {
   )
 
   return openLink
+}
+
+function addUtmSource(url: string): string {
+  let parsedUrl
+  try {
+    parsedUrl = new URL(url)
+  } catch (e) {
+    return url
+  }
+  if (!parsedUrl.searchParams.has('utm_source')) {
+    parsedUrl.searchParams.set('utm_source', 'bluesky')
+    if (!parsedUrl.searchParams.has('utm_medium')) {
+      parsedUrl.searchParams.set('utm_medium', 'social')
+    }
+  }
+  return parsedUrl.toString()
 }
