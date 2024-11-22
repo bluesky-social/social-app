@@ -135,8 +135,8 @@ import {
   ThreadDraft,
 } from './state/composer'
 import {NO_VIDEO, NoVideoState, processVideo, VideoState} from './state/video'
-import {clearThumbnailCache} from './videos/VideoTranscodeBackdrop'
 import {getVideoMetadata} from './videos/pickVideo'
+import {clearThumbnailCache} from './videos/VideoTranscodeBackdrop'
 
 type CancelRef = {
   onPressCancel: () => void
