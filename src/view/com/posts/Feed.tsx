@@ -19,7 +19,7 @@ import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {logEvent, useGate} from '#/lib/statsig/statsig'
 import {useTheme} from '#/lib/ThemeContext'
 import {logger} from '#/logger'
-import {isWeb} from '#/platform/detection'
+import {isIOS, isWeb} from '#/platform/detection'
 import {listenPostCreated} from '#/state/events'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {STALE} from '#/state/queries'
@@ -636,7 +636,7 @@ let Feed = ({
         }
         initialNumToRender={initialNumToRenderOverride ?? initialNumToRender}
         windowSize={9}
-        maxToRenderPerBatch={5}
+        maxToRenderPerBatch={isIOS ? 5 : 1}
         updateCellsBatchingPeriod={40}
         onItemSeen={feedFeedback.onItemSeen}
       />
