@@ -1353,7 +1353,7 @@ msgstr "이 게시물의 인용 게시물을 비활성화하려면 클릭하세�
 msgid "Click to enable quote posts of this post."
 msgstr "이 게시물의 인용 게시물을 활성화하려면 클릭하세요."
 
-#: src/components/dms/MessageItem.tsx:240
+#: src/components/dms/MessageItem.tsx:241
 msgid "Click to retry failed message"
 msgstr "클릭하여 메시지를 다시 보내기"
 
@@ -2629,7 +2629,7 @@ msgstr "이미지를 저장하지 못함: {0}"
 msgid "Failed to save notification preferences, please try again"
 msgstr "알림 설정을 저장하지 못했습니다. 다시 시도해 주세요"
 
-#: src/components/dms/MessageItem.tsx:233
+#: src/components/dms/MessageItem.tsx:234
 msgid "Failed to send"
 msgstr "전송 실패"
 
@@ -2983,8 +2983,8 @@ msgstr "이전 페이지로 돌아갑니다"
 #: src/components/dms/ReportDialog.tsx:149
 #: src/components/ReportDialog/SelectReportOptionView.tsx:80
 #: src/components/ReportDialog/SubmitView.tsx:109
-#: src/screens/Onboarding/Layout.tsx:102
-#: src/screens/Onboarding/Layout.tsx:191
+#: src/screens/Onboarding/Layout.tsx:103
+#: src/screens/Onboarding/Layout.tsx:192
 #: src/screens/Signup/BackNextButtons.tsx:35
 msgid "Go back to previous step"
 msgstr "이전 단계로 돌아가기"
@@ -3058,7 +3058,7 @@ msgstr "괴롭힘, 분쟁 유발 또는 차별"
 msgid "Hashtag"
 msgstr "해시태그"
 
-#: src/components/RichText.tsx:226
+#: src/components/RichText.tsx:218
 msgid "Hashtag: #{tag}"
 msgstr "해시태그: #{tag}"
 
@@ -3641,7 +3641,7 @@ msgstr "새 알림 불러오기"
 msgid "Load new posts"
 msgstr "새 게시물 불러오기"
 
-#: src/view/com/composer/text-input/mobile/Autocomplete.tsx:111
+#: src/view/com/composer/text-input/mobile/Autocomplete.tsx:94
 msgid "Loading..."
 msgstr "불러오는 중…"
 
@@ -3677,7 +3677,7 @@ msgstr "<0/> 님의 로고"
 msgid "Logo by <0>@sawaratsuki.bsky.social</0>"
 msgstr "<0>@sawaratsuki.bsky.social</0> 님의 로고"
 
-#: src/components/RichText.tsx:227
+#: src/components/RichText.tsx:219
 msgid "Long press to open tag menu for #{tag}"
 msgstr "길게 눌러 #{tag}에 대한 태그 메뉴를 엽니다"
 
@@ -4201,8 +4201,8 @@ msgstr "아직 인용 없음"
 msgid "No reposts yet"
 msgstr "아직 재게시물 없음"
 
-#: src/view/com/composer/text-input/mobile/Autocomplete.tsx:111
-#: src/view/com/composer/text-input/web/Autocomplete.tsx:191
+#: src/view/com/composer/text-input/mobile/Autocomplete.tsx:94
+#: src/view/com/composer/text-input/web/Autocomplete.tsx:195
 msgid "No result"
 msgstr "결과 없음"
 
@@ -4319,7 +4319,7 @@ msgstr "알림"
 msgid "now"
 msgstr "지금"
 
-#: src/components/dms/MessageItem.tsx:197
+#: src/components/dms/MessageItem.tsx:198
 msgid "Now"
 msgstr "지금"
 
@@ -5472,7 +5472,7 @@ msgstr "로그인을 다시 시도합니다"
 msgid "Retries the last action, which errored out"
 msgstr "오류가 발생한 마지막 작업을 다시 시도합니다"
 
-#: src/components/dms/MessageItem.tsx:244
+#: src/components/dms/MessageItem.tsx:245
 #: src/components/Error.tsx:65
 #: src/components/Lists.tsx:104
 #: src/components/StarterPack/ProfileStarterPacks.tsx:336
@@ -5676,8 +5676,8 @@ msgid "Seek slider"
 msgstr "슬라이더 탐색"
 
 #: src/view/com/util/Selector.tsx:107
-msgid "Select {item}"
-msgstr "{item} 선택"
+#~ msgid "Select {item}"
+#~ msgstr "{item} 선택"
 
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:67
 msgid "Select a color"
@@ -5728,8 +5728,8 @@ msgid "Select moderator"
 msgstr "검토자 선택"
 
 #: src/view/com/util/Selector.tsx:108
-msgid "Select option {i} of {numItems}"
-msgstr "{numItems}개 중 {i}번째 옵션을 선택합니다"
+#~ msgid "Select option {i} of {numItems}"
+#~ msgstr "{numItems}개 중 {i}번째 옵션을 선택합니다"
 
 #: src/view/com/composer/videos/SubtitleFilePicker.tsx:66
 msgid "Select subtitle file (.vtt)"
@@ -5851,7 +5851,7 @@ msgstr "생년월일 설정"
 msgid "Set new password"
 msgstr "새 비밀번호 설정"
 
-#: src/screens/Onboarding/Layout.tsx:48
+#: src/screens/Onboarding/Layout.tsx:49
 msgid "Set up your account"
 msgstr "계정 설정하기"
 
@@ -6502,7 +6502,7 @@ msgstr "내 계정에 다음 라벨이 적용되었습니다."
 msgid "The following labels were applied to your content."
 msgstr "내 콘텐츠에 다음 라벨이 적용되었습니다."
 
-#: src/screens/Onboarding/Layout.tsx:58
+#: src/screens/Onboarding/Layout.tsx:59
 msgid "The following steps will help customize your Bluesky experience."
 msgstr "다음 단계는 Bluesky 환경을 맞춤 설정하는 데 도움이 됩니다."
 
@@ -7421,7 +7421,7 @@ msgid "View your blocked accounts"
 msgstr "내가 차단한 계정 보기"
 
 #: src/view/com/home/HomeHeaderLayout.web.tsx:78
-#: src/view/com/home/HomeHeaderLayoutMobile.tsx:89
+#: src/view/com/home/HomeHeaderLayoutMobile.tsx:88
 msgid "View your feeds and explore more"
 msgstr "내 피드를 보거나 새 피드 탐색하기"
 
