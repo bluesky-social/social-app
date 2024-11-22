@@ -111,7 +111,7 @@ function FeedgenErrorMessage({
           msgLingui`Hmm, the feed server appears to be offline. Please let the feed owner know about this issue.`,
         ),
         [KnownError.FeedSignedInOnly]: _l(
-          msgLingui`This content is only available to signed-in users. Please sign in to view this feed.`,
+          msgLingui`This content is not viewable without a Bluesky account.`,
         ),
         [KnownError.FeedgenUnknown]: _l(
           msgLingui`Hmm, some kind of issue occurred when contacting the feed server. Please let the feed owner know about this issue.`,
