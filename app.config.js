@@ -273,7 +273,7 @@ module.exports = function (config) {
               'th',
               'tr',
               'uk',
-              'zh-Hant-CN',
+              'zh-Hans-CN',
               'zh-Hant-TW',
               'yue-Hant',
             ],
