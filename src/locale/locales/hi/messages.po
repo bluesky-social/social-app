@@ -4089,7 +4089,7 @@ msgstr "सूची अवरुद्ध की गई"
 #: src/components/ListCard.tsx:150
 #: src/view/com/feeds/FeedSourceCard.tsx:255
 msgid "List by {0}"
-msgstr "{0} के अनुसार सूची"
+msgstr "{0} द्वारा सूची"
 
 #: src/view/screens/ProfileList.tsx:459
 msgid "List deleted"
