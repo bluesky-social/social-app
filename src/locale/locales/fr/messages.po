@@ -10,7 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "PO-Revision-Date: 2024-11-09 19:42+0100\n"
 "Last-Translator: Cereza Auclair (@cereza.zone)\n"
-"Language-Team: Stanislas Signoud (@signez.fr), surfdude29\n"
+"Language-Team: Stanislas Signoud (@signez.fr), surfdude29, Cereza Auclair (@cereza.zone)\n"
 "Plural-Forms: \n"
 
 #: src/screens/Messages/components/ChatListItem.tsx:130
@@ -196,7 +196,7 @@ msgstr "{estimatedTimeMins, plural, one {minute} other {minutes}}"
 
 #: src/view/com/notifications/FeedItem.tsx:300
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> followed you"
-msgstr "{firstAuthorLink} et <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> vous ont suivi"
+msgstr "{firstAuthorLink} et <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} autre compte} other {{formattedAuthorsCount} autres comptes}}</0> vous ont suivi"
 
 #: src/view/com/notifications/FeedItem.tsx:326
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> liked your custom feed"
@@ -212,7 +212,7 @@ msgstr "{firstAuthorLink} et <0>{additionalAuthorsCount, plural, one {{formatted
 
 #: src/view/com/notifications/FeedItem.tsx:350
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> signed up with your starter pack"
-msgstr "{firstAuthorLink} et <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} autre compte} other {{formattedAuthorsCount} autres comptes}}</0> se sont abonnés à votre kit de démarrage"
+msgstr "{firstAuthorLink} et <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} autre compte} other {{formattedAuthorsCount} autres comptes}}</0> se sont inscrits avec votre kit de démarrage"
 
 #: src/view/com/notifications/FeedItem.tsx:312
 msgid "{firstAuthorLink} followed you"
@@ -236,7 +236,7 @@ msgstr "{firstAuthorLink} a republié votre post"
 
 #: src/view/com/notifications/FeedItem.tsx:362
 msgid "{firstAuthorLink} signed up with your starter pack"
-msgstr "{firstAuthorLink} s’est inscrit·e à votre kit de démarrage"
+msgstr "{firstAuthorLink} s’est inscrit·e avec votre kit de démarrage"
 
 #: src/view/com/notifications/FeedItem.tsx:293
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} followed you"
@@ -256,7 +256,7 @@ msgstr "{firstAuthorName} et {additionalAuthorsCount, plural, one {{formattedAut
 
 #: src/view/com/notifications/FeedItem.tsx:343
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} signed up with your starter pack"
-msgstr "{firstAuthorName} et {additionalAuthorsCount, plural, one {{formattedAuthorsCount} autre compte} other {{formattedAuthorsCount} autres comptes}} se sont inscrit·e·s à votre kit de démarrage"
+msgstr "{firstAuthorName} et {additionalAuthorsCount, plural, one {{formattedAuthorsCount} autre compte} other {{formattedAuthorsCount} autres comptes}} se sont inscrits avec votre kit de démarrage"
 
 #: src/view/com/notifications/FeedItem.tsx:298
 msgid "{firstAuthorName} followed you"
@@ -280,7 +280,7 @@ msgstr "{firstAuthorName} a republié votre post"
 
 #: src/view/com/notifications/FeedItem.tsx:348
 msgid "{firstAuthorName} signed up with your starter pack"
-msgstr "{firstAuthorLink} s’est inscrit·e à votre kit de démarrage"
+msgstr "{firstAuthorLink} s’est inscrit·e avec votre kit de démarrage"
 
 #: src/components/ProfileHoverCard/index.web.tsx:508
 #: src/screens/Profile/Header/Metrics.tsx:50
@@ -787,11 +787,11 @@ msgstr "Mot de passe d’application supprimé"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:84
 msgid "App password name must be unique"
-msgstr "Le mot de passe d’application doit être unique"
+msgstr "Le nom du mot de passe d’application doit être unique"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:62
 msgid "App password names can only contain letters, numbers, spaces, dashes, and underscores"
-msgstr "Le mot de passe d’application peut seulement contenir des lettres, chiffres, espaces, traits et tiret du bas."
+msgstr "Les noms de mots de passe d’application peut seulement contenir des lettres, chiffres, espaces, traits et tiret du bas."
 
 #: src/view/com/modals/AddAppPasswords.tsx:138
 #~ msgid "App Password names can only contain letters, numbers, spaces, dashes, and underscores."
@@ -871,7 +871,7 @@ msgstr "Post archivé"
 
 #: src/screens/Settings/AppPasswords.tsx:201
 msgid "Are you sure you want to delete the app password \"{0}\"?"
-msgstr "Êtes-vous sûr de vouloir supprimer le mot de passe de l’application « {0} » ?"
+msgstr "Êtes-vous sûr de vouloir supprimer le mot de passe d’application « {0} » ?"
 
 #: src/view/screens/AppPasswords.tsx:283
 #~ msgid "Are you sure you want to delete the app password \"{name}\"?"
@@ -980,7 +980,7 @@ msgstr "Veuillez vérifier votre e-mail avant de créer un kit de démarrage."
 #: src/components/dms/MessageProfileButton.tsx:89
 #: src/screens/Messages/Conversation.tsx:219
 msgid "Before you may message another user, you must first verify your email."
-msgstr "Veuillez vérifier votre e-mail avant d’envoyer des messages à d’autres utilisateurs."
+msgstr "Veuillez vérifier votre e-mail avant d’envoyer des messages à d’autres personnes."
 
 #: src/components/dialogs/BirthDateSettings.tsx:106
 #: src/screens/Settings/AccountSettings.tsx:102
@@ -1733,7 +1733,7 @@ msgstr "Copier le DID"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:405
 msgid "Copy host"
-msgstr "Copier l’hôte"
+msgstr "Copier l’hébergeur"
 
 #: src/components/StarterPack/ShareDialog.tsx:124
 msgid "Copy link"
@@ -2267,7 +2267,7 @@ msgstr "ex. alice.fr"
 
 #: src/view/com/modals/EditProfile.tsx:198
 msgid "e.g. Artist, dog-lover, and avid reader."
-msgstr "ex. Artiste, ami des chiens et lectrice passionnée."
+msgstr "ex. Artiste, amie des chiens et lectrice passionnée."
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:43
 msgid "E.g. artistic nudes."
@@ -2720,7 +2720,7 @@ msgstr "Le changement de pseudo a échoué. Veuillez réessayer."
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:173
 msgid "Failed to create app password. Please try again."
-msgstr "La création du mot de passe de l’appli a échoué. Veuillez réessayer."
+msgstr "La création du mot de passe d’application a échoué. Veuillez réessayer."
 
 #: src/screens/StarterPack/Wizard/index.tsx:238
 #: src/screens/StarterPack/Wizard/index.tsx:246
@@ -3050,7 +3050,7 @@ msgstr "Pour des raisons de sécurité, nous devrons envoyer un code de confirma
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:209
 msgid "For security reasons, you won't be able to view this again. If you lose this app password, you'll need to generate a new one."
-msgstr "Pour des raisons de sécurité, vous ne pouvez consulter ceci qu’une seule fois. Si vous perdez le mot de passe de cette application, vous devrez en générer un nouveau."
+msgstr "Pour des raisons de sécurité, vous ne pouvez consulter ceci qu’une seule fois. Si vous perdez ce mot de passe d’application, vous devrez en générer un nouveau."
 
 
 #: src/view/com/modals/AddAppPasswords.tsx:233
@@ -3909,7 +3909,7 @@ msgstr "Assurez-vous que c’est bien là que vous avez l’intention d’aller�
 #: src/screens/Settings/ContentAndMediaSettings.tsx:41
 #: src/screens/Settings/ContentAndMediaSettings.tsx:44
 msgid "Manage saved feeds"
-msgstr "Gérer vos fils d’actu sauvegardés"
+msgstr "Gérer vos fils d’actu enregistrés"
 
 #: src/components/dialogs/MutedWords.tsx:108
 msgid "Manage your muted words and tags"
@@ -5367,7 +5367,7 @@ msgstr "Aléatoire"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:566
 msgid "Rate limit exceeded – you've tried to change your handle too many times in a short period. Please wait a minute before trying again."
-msgstr "Limite de changements dépassée - vous avez essayé de changer votre pseudo trop souvent dans une courte période. Veuillez attendre avant de réessayer." 
+msgstr "Limite de changements dépassée – vous avez essayé de changer votre pseudo trop souvent dans une courte période. Veuillez attendre avant de réessayer."
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:585
 #: src/view/com/util/forms/PostDropdownBtn.tsx:595
@@ -5889,7 +5889,7 @@ msgstr "Enregistrer les modifications"
 
 #: src/view/com/modals/EditProfile.tsx:227
 msgid "Save Changes"
-msgstr "Sauvegarder"
+msgstr "Enregistrer"
 
 #: src/view/com/modals/ChangeHandle.tsx:158
 #~ msgid "Save handle change"
@@ -5906,7 +5906,7 @@ msgstr "Enregistrer le recadrage de l’image"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:228
 msgid "Save new handle"
-msgstr "Sauvegarder votre nouveau pseudo"
+msgstr "Enregistrer votre nouveau pseudo"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:179
 msgid "Save QR code"
@@ -6415,7 +6415,7 @@ msgstr "Afficher les réponses"
 
 #: src/screens/Settings/ThreadPreferences.tsx:113
 msgid "Show replies by people you follow before all other replies"
-msgstr "Afficher les réponses de vos abonnements avant les autres réponses"
+msgstr "Afficher les réponses des comptes que vous suivez avant les autres réponses"
 
 #: src/view/screens/PreferencesThreads.tsx:95
 #~ msgid "Show replies by people you follow before all other replies."
@@ -6624,7 +6624,7 @@ msgstr "Spam"
 
 #: src/lib/moderation/useReportOptions.ts:55
 msgid "Spam; excessive mentions or replies"
-msgstr "Spam ; mentions ou réponses excessives"
+msgstr "Spam ; mentions ou réponses excessives"
 
 #: src/screens/Onboarding/index.tsx:27
 #: src/screens/Onboarding/state.ts:100
@@ -6942,7 +6942,7 @@ msgstr "Notre politique de confidentialité a été déplacée vers <0/>"
 
 #: src/view/com/composer/state/video.ts:408
 msgid "The selected video is larger than 50MB."
-msgstr "La vidéo sélectionnée a une taille supérieure à 50 Mo."
+msgstr "La vidéo sélectionnée a une taille supérieure à 50 Mo."
 
 #: src/lib/strings/errors.ts:18
 msgid "The server appears to be experiencing issues. Please try again in a few moments."
@@ -7073,7 +7073,7 @@ msgstr "Il y a eu un afflux de nouveaux personnes sur Bluesky ! Nous activerons
 
 #: src/screens/Settings/FollowingFeedPreferences.tsx:55
 msgid "These settings only apply to the Following feed."
-msgstr "Ces paramètres s’appliquent seulement pour le fil d’actu des abonnements."
+msgstr "Ces paramètres s’appliquent seulement pour votre fil d’abonnements."
 
 #: src/components/moderation/ScreenHider.tsx:111
 msgid "This {screenDescription} has been flagged:"
@@ -7200,7 +7200,7 @@ msgstr "Ce service de modération n’est pas disponible. Voir ci-dessous pour p
 
 #: src/view/com/post-thread/PostThreadItem.tsx:836
 msgid "This post claims to have been created on <0>{0}</0>, but was first seen by Bluesky on <1>{1}</1>."
-msgstr "Ce post déclare avoir été créé le <0>{0}</0>, mais a été vu pour la première fois sur Bluesky le <1>{1}</1>."
+msgstr "Ce post déclare avoir été créé le <0>{0}</0>, mais a été vu pour la première fois par Bluesky le <1>{1}</1>."
 
 #: src/view/com/post-thread/PostThreadItem.tsx:147
 msgid "This post has been deleted."
@@ -7626,7 +7626,7 @@ msgstr "Utiliser le navigateur interne à l’appli"
 #: src/screens/Settings/ContentAndMediaSettings.tsx:75
 #: src/screens/Settings/ContentAndMediaSettings.tsx:81
 msgid "Use in-app browser to open links"
-msgstr "Utiliser le navigateur intégré pour ouvrir les liens"
+msgstr "Utiliser le navigateur interne à l’appli pour ouvrir les liens"
 
 #: src/view/com/modals/InAppBrowserConsent.tsx:63
 #: src/view/com/modals/InAppBrowserConsent.tsx:65
@@ -8496,7 +8496,7 @@ msgstr "Vos posts ont été publiés"
 
 #: src/screens/Onboarding/StepFinished.tsx:246
 msgid "Your posts, likes, and blocks are public. Mutes are private."
-msgstr "Vos posts, les mentions j’aime et les blocages sont publics. Les silences (comptes masqués) sont privés."
+msgstr "Vos posts, vos mentions « j’aime » et vos blocages sont publics. Les silences (comptes masqués) sont privés."
 
 #: src/view/screens/Settings/index.tsx:119
 #~ msgid "Your profile"
