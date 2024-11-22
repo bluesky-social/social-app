@@ -4,6 +4,7 @@ import * as WebBrowser from 'expo-web-browser'
 
 import {
   createBskyAppAbsoluteUrl,
+  isBskyAppUrl,
   isBskyRSSUrl,
   isRelativeUrl,
 } from '#/lib/strings/url-helpers'
@@ -28,7 +29,7 @@ export function useOpenLink() {
       }
 
       if (isNative && !url.startsWith('mailto:')) {
-        if (!optOutOfUtm) {
+        if (!optOutOfUtm && !isBskyAppUrl(url) && url.startsWith('http')) {
           url = addUtmSource(url)
         }
         if (override === undefined && enabled === undefined) {
