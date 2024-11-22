@@ -44,7 +44,7 @@ export class Logger {
       contextFilter: process.env.EXPO_PUBLIC_LOG_DEBUG || '',
     })
     for (const transport of TRANSPORTS) {
-      logger.addTransport(transport)
+      //logger.addTransport(transport)
     }
     return logger
   }

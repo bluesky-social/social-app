@@ -114,7 +114,6 @@ function InnerApp() {
                 key={currentAccount?.did}>
                 <QueryProvider currentDid={currentAccount?.did}>
                   <ComposerProvider>
-                    <StatsigProvider>
                       <MessagesProvider>
                         {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
                         <LabelDefsProvider>
@@ -146,7 +145,6 @@ function InnerApp() {
                           </ModerationOptsProvider>
                         </LabelDefsProvider>
                       </MessagesProvider>
-                    </StatsigProvider>
                   </ComposerProvider>
                 </QueryProvider>
                 <ToastContainer />

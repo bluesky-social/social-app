@@ -155,6 +155,7 @@ type GateOptions = {
 export function useGate(): (gateName: Gate, options?: GateOptions) => boolean {
   const cache = React.useContext(GateCache)
   if (!cache) {
+    return (gateName: Gate, options: GateOptions = {}): boolean => { return false }
     throw Error('useGate() cannot be called outside StatsigProvider.')
   }
   const gate = React.useCallback(
@@ -263,6 +264,8 @@ export async function tryFetchGates(
 }
 
 export function initialize() {
+  Statsig.getStableID = () => 'fake-stable-id'
+  return new Promise((resolve, reject) => { /* do nothing */ })
   return Statsig.initialize(SDK_KEY, null, createStatsigOptions([]))
 }
 

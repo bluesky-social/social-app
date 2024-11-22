@@ -9,7 +9,7 @@ export function useServiceConfigQuery() {
     queryKey: ['service-config'],
     queryFn: async () => {
       const res = await fetch(
-        'https://api.bsky.app/xrpc/app.bsky.unspecced.getConfig',
+        'https://api.hukoubook.com/xrpc/app.bsky.unspecced.getConfig',
       )
       if (!res.ok) {
         return {

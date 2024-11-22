@@ -14,6 +14,11 @@ import * as Toast from '#/view/com/util/Toast'
  * clipboard.
  */
 export async function shareUrl(url: string) {
+  let new_url = new URL(url)
+  if (new_url.host === 'bsky.app') {
+    new_url.host = 'app.hukoubook.com'
+    url = new_url.toString()
+  }
   if (isAndroid) {
     await Share.share({message: url})
   } else if (isIOS) {
