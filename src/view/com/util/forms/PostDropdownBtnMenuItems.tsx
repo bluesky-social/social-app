@@ -38,8 +38,8 @@ import {
   useThreadMuteMutationQueue,
 } from '#/state/queries/post'
 import {useToggleQuoteDetachmentMutation} from '#/state/queries/postgate'
-import {useProfileBlockMutationQueue} from '#/state/queries/profile'
 import {getMaybeDetachedQuoteEmbed} from '#/state/queries/postgate/util'
+import {useProfileBlockMutationQueue} from '#/state/queries/profile'
 import {useToggleReplyVisibilityMutation} from '#/state/queries/threadgate'
 import {useSession} from '#/state/session'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
