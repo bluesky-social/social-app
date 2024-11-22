@@ -8,7 +8,7 @@
 // Original code copied and simplified from the link below as the codebase is currently not maintained:
 // https://github.com/jobtoday/react-native-image-viewing
 
-import React, {useCallback, useState} from 'react'
+import React, {useCallback, useEffect, useState} from 'react'
 import {
   LayoutAnimation,
   PixelRatio,
@@ -40,16 +40,19 @@ import {
   useSafeAreaFrame,
   useSafeAreaInsets,
 } from 'react-native-safe-area-context'
+import * as NavigationBar from 'expo-navigation-bar'
+import {StatusBar} from 'expo-status-bar'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Trans} from '@lingui/macro'
 
 import {Dimensions} from '#/lib/media/types'
 import {colors, s} from '#/lib/styles'
-import {isIOS} from '#/platform/detection'
+import {isAndroid, isIOS} from '#/platform/detection'
 import {Lightbox} from '#/state/lightbox'
 import {Button} from '#/view/com/util/forms/Button'
 import {Text} from '#/view/com/util/text/Text'
 import {ScrollView} from '#/view/com/util/Views'
+import {ios, useTheme} from '#/alf'
 import {PlatformInfo} from '../../../../../modules/expo-bluesky-swiss-army'
 import {ImageSource, Transform} from './@types'
 import ImageDefaultHeader from './components/ImageDefaultHeader'
@@ -276,8 +279,31 @@ function ImageView({
     },
   )
 
+  // style nav bar on android
+  const t = useTheme()
+  useEffect(() => {
+    if (isAndroid) {
+      NavigationBar.setBackgroundColorAsync('black')
+      NavigationBar.setBorderColorAsync('black')
+      NavigationBar.setButtonStyleAsync('light')
+      return () => {
+        NavigationBar.setBackgroundColorAsync(t.atoms.bg.backgroundColor)
+        NavigationBar.setBorderColorAsync(t.atoms.bg.backgroundColor)
+        NavigationBar.setButtonStyleAsync(t.name !== 'light' ? 'light' : 'dark')
+      }
+    }
+  }, [t])
+
   return (
     <Animated.View style={[styles.container, containerStyle]}>
+      <StatusBar
+        animated
+        style="light"
+        backgroundColor="black"
+        // hiding causes layout shifts on android,
+        // so avoid until we add edge-to-edge mode
+        hidden={ios(isScaled || !showControls)}
+      />
       <Animated.View
         style={[styles.backdrop, backdropStyle]}
         renderToHardwareTextureAndroid
