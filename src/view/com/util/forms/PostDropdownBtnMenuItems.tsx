@@ -21,7 +21,7 @@ import {useOpenLink} from '#/lib/hooks/useOpenLink'
 import {getCurrentRoute} from '#/lib/routes/helpers'
 import {makeProfileLink} from '#/lib/routes/links'
 import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
-import {shareUrl} from '#/lib/sharing'
+import {copyUrl, shareUrl} from '#/lib/sharing'
 import {logEvent} from '#/lib/statsig/statsig'
 import {richTextToString} from '#/lib/strings/rich-text-helpers'
 import {toShareUrl} from '#/lib/strings/url-helpers'
@@ -55,6 +55,7 @@ import {
 import {SendViaChatDialog} from '#/components/dms/dialogs/ShareViaChatDialog'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded as Share} from '#/components/icons/ArrowOutOfBox'
 import {BubbleQuestion_Stroke2_Corner0_Rounded as Translate} from '#/components/icons/Bubble'
+import {ChainLink3_Stroke2_Corner0_Rounded as ChainLink} from '#/components/icons/ChainLink'
 import {Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon} from '#/components/icons/Clipboard'
 import {CodeBrackets_Stroke2_Corner0_Rounded as CodeBrackets} from '#/components/icons/CodeBrackets'
 import {
@@ -114,7 +115,8 @@ let PostDropdownMenuItems = ({
   const reportDialogControl = useReportDialogControl()
   const deletePromptControl = useDialogControl()
   const hidePromptControl = useDialogControl()
-  const loggedOutWarningPromptControl = useDialogControl()
+  const sharePostLoggedOutWarningPromptControl = useDialogControl()
+  const copyPostUrlLoggedOutWarningPromptControl = useDialogControl()
   const embedPostControl = useDialogControl()
   const sendViaChatControl = useDialogControl()
   const postInteractionSettingsDialogControl = useDialogControl()
@@ -255,6 +257,11 @@ let PostDropdownMenuItems = ({
   const onSharePost = React.useCallback(() => {
     const url = toShareUrl(href)
     shareUrl(url)
+  }, [href])
+
+  const onCopyPostUrl = React.useCallback(() => {
+    const url = toShareUrl(href)
+    copyUrl(url)
   }, [href])
 
   const onPressShowMore = React.useCallback(() => {
@@ -429,20 +436,34 @@ let PostDropdownMenuItems = ({
             </Menu.Item>
           )}
 
+          {!isWeb && (
+            <Menu.Item
+              testID="postDropdownShareBtn"
+              label={_(msg`Share`)}
+              onPress={() => {
+                if (showLoggedOutWarning) {
+                  sharePostLoggedOutWarningPromptControl.open()
+                } else {
+                  onSharePost()
+                }
+              }}>
+              <Menu.ItemText>{_(msg`Share`)}</Menu.ItemText>
+              <Menu.ItemIcon icon={Share} position="right" />
+            </Menu.Item>
+          )}
+
           <Menu.Item
-            testID="postDropdownShareBtn"
-            label={isWeb ? _(msg`Copy link to post`) : _(msg`Share`)}
+            testID="postDropdownCopyLinkBtn"
+            label={_(msg`Copy link to post`)}
             onPress={() => {
               if (showLoggedOutWarning) {
-                loggedOutWarningPromptControl.open()
+                copyPostUrlLoggedOutWarningPromptControl.open()
               } else {
-                onSharePost()
+                onCopyPostUrl()
               }
             }}>
-            <Menu.ItemText>
-              {isWeb ? _(msg`Copy link to post`) : _(msg`Share`)}
-            </Menu.ItemText>
-            <Menu.ItemIcon icon={Share} position="right" />
+            <Menu.ItemText>{_(msg`Copy link to post`)}</Menu.ItemText>
+            <Menu.ItemIcon icon={ChainLink} position="right" />
           </Menu.Item>
 
           {canEmbed && (
@@ -682,12 +703,22 @@ let PostDropdownMenuItems = ({
       />
 
       <Prompt.Basic
-        control={loggedOutWarningPromptControl}
+        control={sharePostLoggedOutWarningPromptControl}
         title={_(msg`Note about sharing`)}
         description={_(
           msg`This post is only visible to logged-in users. It won't be visible to people who aren't logged in.`,
         )}
         onConfirm={onSharePost}
+        confirmButtonCta={_(msg`Share anyway`)}
+      />
+
+      <Prompt.Basic
+        control={copyPostUrlLoggedOutWarningPromptControl}
+        title={_(msg`Note about sharing`)}
+        description={_(
+          msg`This post is only visible to logged-in users. It won't be visible to people who aren't logged in.`,
+        )}
+        onConfirm={onCopyPostUrl}
         confirmButtonCta={_(msg`Share anyway`)}
       />
 
