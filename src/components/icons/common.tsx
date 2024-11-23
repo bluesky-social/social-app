@@ -1,4 +1,3 @@
-import React from 'react'
 import {StyleSheet, TextProps} from 'react-native'
 import type {PathProps, SvgProps} from 'react-native-svg'
 import {Defs, LinearGradient, Stop} from 'react-native-svg'

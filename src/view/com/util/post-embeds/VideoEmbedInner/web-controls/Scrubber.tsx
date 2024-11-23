@@ -186,7 +186,9 @@ export function Scrubber({
         </View>
         <div
           ref={circleRef}
-          aria-label={_(msg`Seek slider`)}
+          aria-label={_(
+            msg`Seek slider. Use the arrow keys to seek forwards and backwards, and space to play/pause`,
+          )}
           role="slider"
           aria-valuemax={duration}
           aria-valuemin={0}

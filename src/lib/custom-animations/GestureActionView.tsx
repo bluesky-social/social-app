@@ -61,7 +61,7 @@ export function GestureActionView({
   const clampedTransX = useDerivedValue(() => {
     const min = actions.leftFirst ? -MAX_WIDTH : 0
     const max = actions.rightFirst ? MAX_WIDTH : 0
-    return clamp(transX.value, min, max)
+    return clamp(transX.get(), min, max)
   })
 
   const iconScale = useSharedValue(1)
@@ -75,21 +75,23 @@ export function GestureActionView({
       return
     }
 
-    iconScale.value = withSequence(
-      withTiming(1.2, {duration: 175}),
-      withTiming(1, {duration: 100}),
+    iconScale.set(() =>
+      withSequence(
+        withTiming(1.2, {duration: 175}),
+        withTiming(1, {duration: 100}),
+      ),
     )
   }
 
   useAnimatedReaction(
     () => transX,
     () => {
-      if (transX.value === 0) {
+      if (transX.get() === 0) {
         runOnJS(setActiveAction)(null)
-      } else if (transX.value < 0) {
+      } else if (transX.get() < 0) {
         if (
           actions.leftSecond &&
-          transX.value <= -actions.leftSecond.threshold
+          transX.get() <= -actions.leftSecond.threshold
         ) {
           if (activeAction !== 'leftSecond') {
             runOnJS(setActiveAction)('leftSecond')
@@ -97,10 +99,10 @@ export function GestureActionView({
         } else if (activeAction !== 'leftFirst') {
           runOnJS(setActiveAction)('leftFirst')
         }
-      } else if (transX.value > 0) {
+      } else if (transX.get() > 0) {
         if (
           actions.rightSecond &&
-          transX.value > actions.rightSecond.threshold
+          transX.get() > actions.rightSecond.threshold
         ) {
           if (activeAction !== 'rightSecond') {
             runOnJS(setActiveAction)('rightSecond')
@@ -119,44 +121,44 @@ export function GestureActionView({
     .activeOffsetY([-200, 200])
     .onStart(() => {
       'worklet'
-      isActive.value = true
+      isActive.set(true)
     })
     .onChange(e => {
       'worklet'
-      transX.value = e.translationX
+      transX.set(e.translationX)
 
       if (e.translationX < 0) {
         // Left side
         if (actions.leftSecond) {
           if (
             e.translationX <= -actions.leftSecond.threshold &&
-            !hitSecond.value
+            !hitSecond.get()
           ) {
             runPopAnimation()
             runOnJS(haptic)()
-            hitSecond.value = true
+            hitSecond.set(true)
           } else if (
-            hitSecond.value &&
+            hitSecond.get() &&
             e.translationX > -actions.leftSecond.threshold
           ) {
             runPopAnimation()
-            hitSecond.value = false
+            hitSecond.set(false)
           }
         }
 
-        if (!hitSecond.value && actions.leftFirst) {
+        if (!hitSecond.get() && actions.leftFirst) {
           if (
             e.translationX <= -actions.leftFirst.threshold &&
-            !hitFirst.value
+            !hitFirst.get()
           ) {
             runPopAnimation()
             runOnJS(haptic)()
-            hitFirst.value = true
+            hitFirst.set(true)
           } else if (
-            hitFirst.value &&
+            hitFirst.get() &&
             e.translationX > -actions.leftFirst.threshold
           ) {
-            hitFirst.value = false
+            hitFirst.set(false)
           }
         }
       } else if (e.translationX > 0) {
@@ -164,33 +166,33 @@ export function GestureActionView({
         if (actions.rightSecond) {
           if (
             e.translationX >= actions.rightSecond.threshold &&
-            !hitSecond.value
+            !hitSecond.get()
           ) {
             runPopAnimation()
             runOnJS(haptic)()
-            hitSecond.value = true
+            hitSecond.set(true)
           } else if (
-            hitSecond.value &&
+            hitSecond.get() &&
             e.translationX < actions.rightSecond.threshold
           ) {
             runPopAnimation()
-            hitSecond.value = false
+            hitSecond.set(false)
           }
         }
 
-        if (!hitSecond.value && actions.rightFirst) {
+        if (!hitSecond.get() && actions.rightFirst) {
           if (
             e.translationX >= actions.rightFirst.threshold &&
-            !hitFirst.value
+            !hitFirst.get()
           ) {
             runPopAnimation()
             runOnJS(haptic)()
-            hitFirst.value = true
+            hitFirst.set(true)
           } else if (
-            hitFirst.value &&
+            hitFirst.get() &&
             e.translationX < actions.rightFirst.threshold
           ) {
-            hitFirst.value = false
+            hitFirst.set(false)
           }
         }
       }
@@ -198,29 +200,29 @@ export function GestureActionView({
     .onEnd(e => {
       'worklet'
       if (e.translationX < 0) {
-        if (hitSecond.value && actions.leftSecond) {
+        if (hitSecond.get() && actions.leftSecond) {
           runOnJS(actions.leftSecond.action)()
-        } else if (hitFirst.value && actions.leftFirst) {
+        } else if (hitFirst.get() && actions.leftFirst) {
           runOnJS(actions.leftFirst.action)()
         }
       } else if (e.translationX > 0) {
-        if (hitSecond.value && actions.rightSecond) {
+        if (hitSecond.get() && actions.rightSecond) {
           runOnJS(actions.rightSecond.action)()
-        } else if (hitSecond.value && actions.rightFirst) {
+        } else if (hitSecond.get() && actions.rightFirst) {
           runOnJS(actions.rightFirst.action)()
         }
       }
-      transX.value = withTiming(0, {duration: 200})
-      hitFirst.value = false
-      hitSecond.value = false
-      isActive.value = false
+      transX.set(() => withTiming(0, {duration: 200}))
+      hitFirst.set(false)
+      hitSecond.set(false)
+      isActive.set(false)
     })
 
   const composedGesture = Gesture.Simultaneous(panGesture)
 
   const animatedSliderStyle = useAnimatedStyle(() => {
     return {
-      transform: [{translateX: clampedTransX.value}],
+      transform: [{translateX: clampedTransX.get()}],
     }
   })
 
@@ -274,7 +276,7 @@ export function GestureActionView({
   const animatedBackgroundStyle = useAnimatedStyle(() => {
     return {
       backgroundColor: interpolateColor(
-        clampedTransX.value,
+        clampedTransX.get(),
         interpolation.inputRange,
         // @ts-expect-error - Weird type expected by reanimated, but this is okay
         interpolation.outputRange,
@@ -283,10 +285,10 @@ export function GestureActionView({
   })
 
   const animatedIconStyle = useAnimatedStyle(() => {
-    const absTransX = Math.abs(clampedTransX.value)
+    const absTransX = Math.abs(clampedTransX.get())
     return {
       opacity: interpolate(absTransX, [0, 75], [0.15, 1]),
-      transform: [{scale: iconScale.value}],
+      transform: [{scale: iconScale.get()}],
     }
   })
 

@@ -37,12 +37,6 @@ export type VideoAction =
     }
   | {type: 'update_progress'; progress: number; signal: AbortSignal}
   | {
-      type: 'update_dimensions'
-      width: number
-      height: number
-      signal: AbortSignal
-    }
-  | {
       type: 'update_alt_text'
       altText: string
       signal: AbortSignal
@@ -183,13 +177,6 @@ export function videoReducer(
       return {
         ...state,
         progress: action.progress,
-      }
-    }
-  } else if (action.type === 'update_dimensions') {
-    if (state.asset) {
-      return {
-        ...state,
-        asset: {...state.asset, width: action.width, height: action.height},
       }
     }
   } else if (action.type === 'update_alt_text') {
