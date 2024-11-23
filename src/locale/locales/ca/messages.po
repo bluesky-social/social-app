@@ -8852,7 +8852,7 @@ msgstr "Aquest servei de moderació no està disponible. Mira a continuació per
 
 #: src/view/com/post-thread/PostThreadItem.tsx:836
 msgid "This post claims to have been created on <0>{0}</0>, but was first seen by Bluesky on <1>{1}</1>."
-msgstr "Aquesta publicació afirma haver estat creada el <0>{0}, però va ser vista per primera vegada per Bluesky el <1>{1}."
+msgstr "Aquesta publicació afirma haver estat creada el <0>{0}</0>, però va ser vista per primera vegada per Bluesky el <1>{1}</1>."
 
 #: src/view/com/post-thread/PostThreadItem.tsx:147
 msgid "This post has been deleted."
