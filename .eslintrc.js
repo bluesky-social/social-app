@@ -1,3 +1,5 @@
+const reactCompilerConfig = require('./react-compiler.config.js')
+
 module.exports = {
   root: true,
   extends: [
@@ -79,7 +81,7 @@ module.exports = {
       },
     ],
     'simple-import-sort/exports': 'error',
-    'react-compiler/react-compiler': 'warn',
+    'react-compiler/react-compiler': ['error', reactCompilerConfig],
     'no-restricted-imports': [
       'error',
       {

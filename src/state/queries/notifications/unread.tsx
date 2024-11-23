@@ -8,6 +8,7 @@ import {useQueryClient} from '@tanstack/react-query'
 import EventEmitter from 'eventemitter3'
 
 import BroadcastChannel from '#/lib/broadcast'
+import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {resetBadgeCount} from '#/lib/notifications/notifications'
 import {logger} from '#/logger'
 import {useAgent, useSession} from '#/state/session'
@@ -50,7 +51,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
   const [numUnread, setNumUnread] = React.useState('')
 
-  const checkUnreadRef = React.useRef<ApiContext['checkUnread'] | null>(null)
   const cacheRef = React.useRef<CachedFeedPage>({
     usableInFeed: false,
     syncedAt: new Date(),
@@ -69,19 +69,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       emitter.removeListener('invalidate', markAsUnusable)
     }
   }, [])
-
-  // periodic sync
-  React.useEffect(() => {
-    if (!hasSession || !checkUnreadRef.current) {
-      return
-    }
-    checkUnreadRef.current() // fire on init
-    const interval = setInterval(
-      () => checkUnreadRef.current?.({isPoll: true}),
-      UPDATE_INTERVAL,
-    )
-    return () => clearInterval(interval)
-  }, [hasSession])
 
   // listen for broadcasts
   React.useEffect(() => {
@@ -190,7 +177,21 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       },
     }
   }, [setNumUnread, queryClient, moderationOpts, agent])
-  checkUnreadRef.current = api.checkUnread
+
+  const checkUnread = useNonReactiveCallback(api.checkUnread)
+
+  // periodic sync
+  React.useEffect(() => {
+    if (!hasSession) {
+      return
+    }
+    checkUnread() // fire on init
+    const interval = setInterval(
+      () => checkUnread({isPoll: true}),
+      UPDATE_INTERVAL,
+    )
+    return () => clearInterval(interval)
+  }, [hasSession, checkUnread])
 
   return (
     <stateContext.Provider value={numUnread}>

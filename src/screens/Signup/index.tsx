@@ -80,6 +80,8 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
   React.useEffect(() => {
     if (state.pendingSubmit) {
       if (!state.pendingSubmit.mutableProcessed) {
+        // FIXME
+        // eslint-disable-next-line react-compiler/react-compiler
         state.pendingSubmit.mutableProcessed = true
         submit(state, dispatch)
       }

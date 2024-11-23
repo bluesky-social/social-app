@@ -303,6 +303,8 @@ export const TextInput = React.forwardRef(function TextInputImpl(
   React.useLayoutEffect(() => {
     let node = editor?.view.dom
     if (node) {
+      // FIXME
+      // eslint-disable-next-line react-compiler/react-compiler
       node.style.minHeight = webForceMinHeight ? '140px' : ''
     }
   }, [editor, webForceMinHeight])

@@ -1,3 +1,5 @@
+const reactCompilerConfig = require('./react-compiler.config.js')
+
 module.exports = function (api) {
   api.cache(true)
   const isTestEnv = process.env.NODE_ENV === 'test'
@@ -17,7 +19,7 @@ module.exports = function (api) {
     ],
     plugins: [
       'macros',
-      ['babel-plugin-react-compiler', {target: '18'}],
+      ['babel-plugin-react-compiler', reactCompilerConfig],
       [
         'module:react-native-dotenv',
         {

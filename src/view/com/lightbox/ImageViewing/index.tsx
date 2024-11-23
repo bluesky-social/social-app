@@ -87,7 +87,6 @@ export default function ImageViewRoot({
   onPressSave: (uri: string) => void
   onPressShare: (uri: string) => void
 }) {
-  'use no memo'
   const ref = useAnimatedRef<View>()
   const [activeLightbox, setActiveLightbox] = useState(nextLightbox)
   const openProgress = useSharedValue(0)

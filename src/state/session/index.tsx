@@ -187,6 +187,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
   React.useEffect(() => {
     if (state.needsPersist) {
+      // FIXME
+      // eslint-disable-next-line react-compiler/react-compiler
       state.needsPersist = false
       const persistedData = {
         accounts: state.accounts,

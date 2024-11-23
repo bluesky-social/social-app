@@ -61,14 +61,17 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const {mutateAsync, variables, isPending} =
     useSetActiveProgressGuideMutation()
 
-  const activeProgressGuide = (
+  let activeProgressGuide = (
     isPending ? variables : preferences?.bskyAppState?.activeProgressGuide
   ) as ProgressGuide
 
   // ensure the unspecced attributes have the correct types
   if (activeProgressGuide?.guide === 'like-10-and-follow-7') {
-    activeProgressGuide.numLikes = Number(activeProgressGuide.numLikes) || 0
-    activeProgressGuide.numFollows = Number(activeProgressGuide.numFollows) || 0
+    activeProgressGuide = {
+      ...activeProgressGuide,
+      numLikes: Number(activeProgressGuide.numLikes) || 0,
+      numFollows: Number(activeProgressGuide.numFollows) || 0,
+    }
   }
 
   const [localGuideState, setLocalGuideState] =

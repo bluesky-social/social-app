@@ -100,6 +100,7 @@ function Inner({
 
   if (IS_DEV && typeof window !== 'undefined') {
     // @ts-ignore
+    // eslint-disable-next-line react-compiler/react-compiler
     window.clearNuxDialog = (id: Nux) => {
       if (!IS_DEV || !id) return
       removeNuxs([id])
