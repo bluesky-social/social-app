@@ -1902,11 +1902,11 @@ msgstr "सूची पर लिंक कॉपी करें"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:452
 #: src/view/com/util/forms/PostDropdownBtn.tsx:461
 msgid "Copy link to post"
-msgstr "पोस्ट पर लिंक कॉपी करें"
+msgstr "पोस्ट की लिंक कॉपी करें"
 
 #: src/view/com/profile/ProfileHeader.tsx:295
 #~ msgid "Copy link to profile"
-#~ msgstr "प्रोफ़ाइल पर लिंक कॉपी करें"
+#~ msgstr "प्रोफ़ाइल की लिंक कॉपी करें"
 
 #: src/components/dms/MessageMenu.tsx:110
 #: src/components/dms/MessageMenu.tsx:112
