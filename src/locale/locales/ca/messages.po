@@ -6960,7 +6960,7 @@ msgstr "Requereix un text alternatiu abans de publicar"
 
 #: src/screens/Settings/components/Email2FAToggle.tsx:54
 msgid "Require an email code to log in to your account."
-msgstr "Sol·licita el codi de correu per a iniciar sessió al teu compte"
+msgstr "Sol·licita el codi de correu per a iniciar sessió al teu compte."
 
 #: src/view/screens/Settings/Email2FAToggle.tsx:51
 #~ msgid "Require email code to log into your account"
