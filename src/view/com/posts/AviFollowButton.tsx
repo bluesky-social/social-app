@@ -88,14 +88,21 @@ export function AviFollowButton({
             a.rounded_full,
             a.absolute,
             {
-              bottom: -4,
-              right: -4,
+              bottom: -7,
+              right: -7,
             },
           ]}>
           <NativeDropdown items={items}>
             <View
               style={[
-                {width: 24, height: 24},
+                {
+                  // An asymmetric hit slop
+                  // to prioritize bottom right taps.
+                  paddingTop: 2,
+                  paddingLeft: 2,
+                  paddingBottom: 6,
+                  paddingRight: 6,
+                },
                 a.align_center,
                 a.justify_center,
                 a.rounded_full,
