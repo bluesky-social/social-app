@@ -4,6 +4,7 @@ module.exports = {
     'en',
     'ca',
     'de',
+    'el',
     'en-GB',
     'es',
     'fi',
