@@ -184,7 +184,7 @@ input:focus {
   animation: rotate 500ms linear infinite;
 }
 
-@keyframes avatarHoverFadeIn {
+@keyframes fadeIn {
   from {
     opacity: 0;
   }
@@ -193,7 +193,7 @@ input:focus {
   }
 }
 
-@keyframes avatarHoverFadeOut {
+@keyframes fadeOut {
   from {
     opacity: 1;
   }
