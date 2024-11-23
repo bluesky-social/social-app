@@ -313,13 +313,14 @@ export function Controls({
         onPointerEnter={onPointerMoveEmptySpace}
         onPointerMove={onPointerMoveEmptySpace}
         onPointerLeave={onPointerLeaveEmptySpace}
-        accessibilityHint={_(
+        accessibilityLabel={_(
           !focused
             ? msg`Unmute video`
             : playing
             ? msg`Pause video`
             : msg`Play video`,
         )}
+        accessibilityHint=""
         style={[
           a.flex_1,
           web({cursor: showCursor || !playing ? 'pointer' : 'none'}),
@@ -401,7 +402,7 @@ export function Controls({
             <ControlButton
               active={isFullscreen}
               activeLabel={_(msg`Exit fullscreen`)}
-              inactiveLabel={_(msg`Fullscreen`)}
+              inactiveLabel={_(msg`Enter fullscreen`)}
               activeIcon={ArrowsInIcon}
               inactiveIcon={ArrowsOutIcon}
               onPress={onPressFullscreen}
