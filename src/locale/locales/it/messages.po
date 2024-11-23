@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Italian localization\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-11-23 01:06+0000\n"
-"PO-Revision-Date: 2024-11-23 08:06+0000\n"
+"POT-Creation-Date: 2024-11-23 12:26+0000\n"
+"PO-Revision-Date: 2024-11-23 18:03+0000\n"
 "Last-Translator: Michele Locati <michele@locati.it>, 2024\n"
 "Language-Team: Italian (https://app.transifex.com/mlocati/teams/201833/it/)\n"
 "Language: it\n"
@@ -2536,7 +2536,7 @@ msgid "Expected uri to resolve to a record"
 msgstr "L'URI dovrebbe risolvere in un record"
 
 #: src/screens/Settings/FollowingFeedPreferences.tsx:115
-#: src/screens/Settings/ThreadPreferences.tsx:123
+#: src/screens/Settings/ThreadPreferences.tsx:129
 msgid "Experimental"
 msgstr "Sperimentale"
 
@@ -3202,6 +3202,11 @@ msgstr "Hosting:"
 #: src/screens/Signup/StepInfo/index.tsx:133
 msgid "Hosting provider"
 msgstr "Servizio di hosting"
+
+#: src/screens/Settings/ThreadPreferences.tsx:59
+#: src/screens/Settings/ThreadPreferences.tsx:62
+msgid "Hot replies first"
+msgstr "Prima le risposte più popolari"
 
 #: src/view/com/modals/InAppBrowserConsent.tsx:41
 msgid "How should we open this link?"
@@ -3873,11 +3878,11 @@ msgstr "Altri feed"
 msgid "More options"
 msgstr "Altre opzioni"
 
-#: src/screens/Settings/ThreadPreferences.tsx:80
+#: src/screens/Settings/ThreadPreferences.tsx:86
 msgid "Most-liked first"
 msgstr "Prima quelli con più like"
 
-#: src/screens/Settings/ThreadPreferences.tsx:77
+#: src/screens/Settings/ThreadPreferences.tsx:83
 msgid "Most-liked replies first"
 msgstr "Dai priorità alle risposte con più likes"
 
@@ -4119,8 +4124,8 @@ msgstr "Finestra informativa per nuovi utenti"
 msgid "New User List"
 msgstr "Nuova lista"
 
-#: src/screens/Settings/ThreadPreferences.tsx:69
-#: src/screens/Settings/ThreadPreferences.tsx:72
+#: src/screens/Settings/ThreadPreferences.tsx:75
+#: src/screens/Settings/ThreadPreferences.tsx:78
 msgid "Newest replies first"
 msgstr "Mostrare prima le risposte più recenti"
 
@@ -4373,8 +4378,8 @@ msgstr "OK"
 msgid "Okay"
 msgstr "Va bene"
 
-#: src/screens/Settings/ThreadPreferences.tsx:61
-#: src/screens/Settings/ThreadPreferences.tsx:64
+#: src/screens/Settings/ThreadPreferences.tsx:67
+#: src/screens/Settings/ThreadPreferences.tsx:70
 msgid "Oldest replies first"
 msgstr "Mostrare prima le risposte più vecchie"
 
@@ -4930,8 +4935,8 @@ msgstr "Immagine precedente"
 msgid "Primary Language"
 msgstr "Lingua principale"
 
-#: src/screens/Settings/ThreadPreferences.tsx:98
-#: src/screens/Settings/ThreadPreferences.tsx:103
+#: src/screens/Settings/ThreadPreferences.tsx:104
+#: src/screens/Settings/ThreadPreferences.tsx:109
 msgid "Prioritize your Follows"
 msgstr "Dai priorità a chi segui"
 
@@ -5052,8 +5057,8 @@ msgstr "Citazioni"
 msgid "Quotes of this post"
 msgstr "Citazioni post"
 
-#: src/screens/Settings/ThreadPreferences.tsx:85
-#: src/screens/Settings/ThreadPreferences.tsx:88
+#: src/screens/Settings/ThreadPreferences.tsx:91
+#: src/screens/Settings/ThreadPreferences.tsx:94
 msgid "Random (aka \"Poster's Roulette\")"
 msgstr "Selezione a caso (nota anche come \"Poster's Roulette\")"
 
@@ -6036,11 +6041,11 @@ msgstr "Mostra i post con citazione"
 msgid "Show replies"
 msgstr "Mostra risposte"
 
-#: src/screens/Settings/ThreadPreferences.tsx:112
+#: src/screens/Settings/ThreadPreferences.tsx:118
 msgid "Show replies by people you follow before all other replies"
 msgstr "Mostra risposte delle persone che segui prima delle altre risposte"
 
-#: src/screens/Settings/ThreadPreferences.tsx:137
+#: src/screens/Settings/ThreadPreferences.tsx:143
 msgid "Show replies in a threaded view"
 msgstr "Mostra risposte in modalità a thread"
 
@@ -6876,7 +6881,7 @@ msgstr "Preferenze delle discussioni"
 msgid "Thread Preferences"
 msgstr "Preferenze delle Discussioni"
 
-#: src/screens/Settings/ThreadPreferences.tsx:128
+#: src/screens/Settings/ThreadPreferences.tsx:134
 msgid "Threaded mode"
 msgstr "Modalità a thread"
 
