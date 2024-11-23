@@ -1,5 +1,10 @@
 import React, {memo, useMemo} from 'react'
-import {StyleSheet, Text as RNText, View} from 'react-native'
+import {
+  GestureResponderEvent,
+  StyleSheet,
+  Text as RNText,
+  View,
+} from 'react-native'
 import {
   AppBskyFeedDefs,
   AppBskyFeedPost,
@@ -12,6 +17,7 @@ import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {MAX_POST_LINES} from '#/lib/constants'
+import {useOpenLink} from '#/lib/hooks/useOpenLink'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
@@ -732,7 +738,17 @@ function ExpandedPostDetails({
   const t = useTheme()
   const pal = usePalette('default')
   const {_, i18n} = useLingui()
+  const openLink = useOpenLink()
   const isRootPost = !('reply' in post.record)
+
+  const onTranslatePress = React.useCallback(
+    (e: GestureResponderEvent) => {
+      e.preventDefault()
+      openLink(translatorUrl, true)
+      return false
+    },
+    [openLink, translatorUrl],
+  )
 
   return (
     <View style={[a.gap_md, a.pt_md, a.align_start]}>
@@ -753,7 +769,8 @@ function ExpandedPostDetails({
             <InlineLinkText
               to={translatorUrl}
               label={_(msg`Translate`)}
-              style={[a.text_sm, pal.link]}>
+              style={[a.text_sm, pal.link]}
+              onPress={onTranslatePress}>
               <Trans>Translate</Trans>
             </InlineLinkText>
           </>
