@@ -38,7 +38,7 @@ export const DropdownMenuTrigger = DropdownMenu.create(
         accessibilityRole="button"
         accessibilityLabel={props.accessibilityLabel}
         accessibilityHint={props.accessibilityHint}
-        style={({pressed}) => [{opacity: pressed ? 0.5 : 1}]}>
+        style={({pressed}) => [{opacity: pressed ? 0.8 : 1}]}>
         <DropdownMenu.Trigger action="press">
           <View>
             {props.children ? (
