@@ -42,5 +42,6 @@ export const formatCount = (i18n: I18n, num: number) => {
   return i18n.number(truncatedNum, {
     notation: 'compact',
     maximumFractionDigits: 1,
+    // Ideally we'd use roundingMode: 'trunc' but it isn't supported on RN.
   })
 }
