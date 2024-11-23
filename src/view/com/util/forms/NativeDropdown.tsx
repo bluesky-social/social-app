@@ -5,7 +5,6 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import * as DropdownMenu from 'zeego/dropdown-menu'
 import {MenuItemCommonProps} from 'zeego/lib/typescript/menu'
 
-import {HITSLOP_10} from '#/lib/constants'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useTheme} from '#/lib/ThemeContext'
 import {isIOS} from '#/platform/detection'
@@ -32,13 +31,14 @@ export const DropdownMenuTrigger = DropdownMenu.create(
     const defaultCtrlColor = theme.palette.default.postCtrl
 
     return (
+      // This Pressable doesn't actually do anything other than
+      // provide the "pressed state" visual feedback.
       <Pressable
         testID={props.testID}
         accessibilityRole="button"
         accessibilityLabel={props.accessibilityLabel}
         accessibilityHint={props.accessibilityHint}
-        style={({pressed}) => [{opacity: pressed ? 0.5 : 1}]}
-        hitSlop={HITSLOP_10}>
+        style={({pressed}) => [{opacity: pressed ? 0.5 : 1}]}>
         <DropdownMenu.Trigger action="press">
           <View>
             {props.children ? (
