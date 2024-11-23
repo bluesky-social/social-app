@@ -4953,7 +4953,7 @@ msgstr "Nadie ha citado esto todavía. ¡Quizás deberías ser el primero!"
 
 #: src/view/com/post-thread/PostRepostedBy.tsx:80
 msgid "Nobody has reposted this yet. Maybe you should be the first!"
-msgstr "Nadie ha vuelto a publicar esto todavía. ¡Quizás deberías ser el primero!"
+msgstr "Nadie ha republicado esto todavía. ¡Quizás deberías ser el primero!"
 
 #: src/screens/StarterPack/Wizard/StepProfiles.tsx:102
 msgid "Nobody was found. Try searching for someone else."
@@ -6293,41 +6293,41 @@ msgstr "Denunciar este usuario"
 #: src/view/com/util/post-ctrls/RepostButton.tsx:119
 msgctxt "action"
 msgid "Repost"
-msgstr "Volver a publicar"
+msgstr "Republicar"
 
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:72
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:76
 msgid "Repost"
-msgstr "Volver a publicar"
+msgstr "Republicar"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:547
 #: src/view/com/util/post-ctrls/RepostButton.tsx:95
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:49
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:104
 msgid "Repost or quote post"
-msgstr "Volver a publicar o citar publicación"
+msgstr "Republicar o citar publicación"
 
 #: src/screens/Post/PostRepostedBy.tsx:32
 #: src/screens/Post/PostRepostedBy.tsx:33
 msgid "Reposted By"
-msgstr "Vuelto a publicar por"
+msgstr "Republicado por"
 
 #: src/view/com/posts/FeedItem.tsx:303
 msgid "Reposted by {0}"
-msgstr "Vuelto a publicar por {0}"
+msgstr "Republicado por {0}"
 
 #: src/view/com/posts/FeedItem.tsx:322
 msgid "Reposted by <0><1/></0>"
-msgstr "Vuelto a publicar por <0><1/></0>"
+msgstr "Republicado por <0><1/></0>"
 
 #: src/view/com/posts/FeedItem.tsx:301
 #: src/view/com/posts/FeedItem.tsx:320
 msgid "Reposted by you"
-msgstr "Vuelto a publicar por ti"
+msgstr "Republicado por ti"
 
 #: src/view/com/notifications/FeedItem.tsx:180
 #~ msgid "reposted your post"
-#~ msgstr "volvió a publicar tu publicación"
+#~ msgstr "republicó tu publicación"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:217
 msgid "Reposts of this post"
@@ -6864,7 +6864,7 @@ msgstr "Establecer la contraseña nueva"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:88
 #~ msgid "Set this setting to \"No\" to hide all reposts from your feed."
-#~ msgstr "Establece este ajuste en \"No\" para ocultar todas las veces que se han vuelto a publicar desde tus noticias."
+#~ msgstr "Establece este ajuste en \"No\" para ocultar todas las republicaciones desde tus noticias."
 
 #: src/view/screens/PreferencesThreads.tsx:117
 #~ msgid "Set this setting to \"Yes\" to show replies in a threaded view. This is an experimental feature."
