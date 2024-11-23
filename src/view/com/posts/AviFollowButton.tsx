@@ -84,25 +84,22 @@ export function AviFollowButton({
       {!isFollowing && (
         <Button
           label={_(msg`Open ${name} profile shortcut menu`)}
-          hitSlop={{
-            top: 0,
-            left: 0,
-            right: 5,
-            bottom: 5,
-          }}
           style={[
             a.rounded_full,
             a.absolute,
             {
-              height: 30,
-              width: 30,
               bottom: -7,
               right: -7,
             },
           ]}>
           <NativeDropdown items={items}>
             <View
-              style={[a.h_full, a.w_full, a.justify_center, a.align_center]}>
+              style={[
+                {width: 30, height: 30},
+                a.align_center,
+                a.justify_center,
+                a.rounded_full,
+              ]}>
               <View
                 style={[
                   a.rounded_full,

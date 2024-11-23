@@ -1,6 +1,6 @@
 {
   "name": "bsky.app",
-  "version": "1.94.0",
+  "version": "1.95.0",
   "private": true,
   "engines": {
     "node": ">=20"
@@ -54,7 +54,7 @@
     "icons:optimize": "svgo -f ./assets/icons"
   },
   "dependencies": {
-    "@atproto/api": "^0.13.11",
+    "@atproto/api": "^0.13.18",
     "@braintree/sanitize-url": "^6.0.2",
     "@discord/bottom-sheet": "bluesky-social/react-native-bottom-sheet",
     "@emoji-mart/react": "^1.1.1",
@@ -163,7 +163,7 @@
     "postinstall-postinstall": "^2.1.0",
     "psl": "^1.9.0",
     "react": "18.2.0",
-    "react-compiler-runtime": "^19.0.0-beta-a7bf2bd-20241110",
+    "react-compiler-runtime": "19.0.0-beta-a7bf2bd-20241110",
     "react-dom": "^18.2.0",
     "react-image-crop": "^11.0.7",
     "react-keyed-flatten-children": "^3.0.0",
@@ -218,7 +218,6 @@
     "@react-native/typescript-config": "^0.74.1",
     "@testing-library/jest-native": "^5.4.1",
     "@testing-library/react-native": "^11.5.2",
-    "@types/he": "^1.1.2",
     "@types/jest": "^29.4.0",
     "@types/lodash.chunk": "^4.2.7",
     "@types/lodash.debounce": "^4.0.7",
@@ -233,14 +232,14 @@
     "babel-jest": "^29.7.0",
     "babel-plugin-macros": "^3.1.0",
     "babel-plugin-module-resolver": "^5.0.0",
-    "babel-plugin-react-compiler": "^19.0.0-beta-a7bf2bd-20241110",
+    "babel-plugin-react-compiler": "19.0.0-beta-a7bf2bd-20241110",
     "babel-preset-expo": "^10.0.0",
     "eslint": "^8.19.0",
     "eslint-plugin-bsky-internal": "link:./eslint",
     "eslint-plugin-ft-flow": "^2.0.3",
     "eslint-plugin-lingui": "^0.2.0",
     "eslint-plugin-react": "^7.33.2",
-    "eslint-plugin-react-compiler": "^19.0.0-beta-a7bf2bd-20241110",
+    "eslint-plugin-react-compiler": "19.0.0-beta-a7bf2bd-20241110",
     "eslint-plugin-react-native-a11y": "^3.3.0",
     "eslint-plugin-simple-import-sort": "^12.0.0",
     "file-loader": "6.2.0",
@@ -257,7 +256,7 @@
     "react-test-renderer": "18.2.0",
     "svgo": "^3.3.2",
     "ts-node": "^10.9.1",
-    "typescript": "^5.5.4",
+    "typescript": "^5.7.2",
     "webpack-bundle-analyzer": "^4.10.1"
   },
   "resolutions": {

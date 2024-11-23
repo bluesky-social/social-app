@@ -72,6 +72,20 @@
     tlds "^1.234.0"
     zod "^3.23.8"
 
+"@atproto/api@^0.13.18":
+  version "0.13.18"
+  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.13.18.tgz#cc537cc3b4c8d03f258a373f4d893fea11a77cdd"
+  integrity sha512-rrl5HhzGYWZ7fiC965TPBUOVItq9M4dxMb6qz8IvAVQliSkrJrKc7UD0QWL89QiiXaOBuX8w+4i5r4wrfBGddg==
+  dependencies:
+    "@atproto/common-web" "^0.3.1"
+    "@atproto/lexicon" "^0.4.3"
+    "@atproto/syntax" "^0.3.1"
+    "@atproto/xrpc" "^0.6.4"
+    await-lock "^2.2.2"
+    multiformats "^9.9.0"
+    tlds "^1.234.0"
+    zod "^3.23.8"
+
 "@atproto/aws@^0.2.7":
   version "0.2.7"
   resolved "https://registry.yarnpkg.com/@atproto/aws/-/aws-0.2.7.tgz#2f3e05c897ef49b4c46452ec8c36870193952998"
@@ -269,6 +283,17 @@
     multiformats "^9.9.0"
     zod "^3.23.8"
 
+"@atproto/lexicon@^0.4.3":
+  version "0.4.3"
+  resolved "https://registry.yarnpkg.com/@atproto/lexicon/-/lexicon-0.4.3.tgz#d69f6bb363a6326df7766c48132bfa30e22622d9"
+  integrity sha512-lFVZXe1S1pJP0dcxvJuHP3r/a+EAIBwwU7jUK+r8iLhIja+ml6NmYv8KeFHmIJATh03spEQ9s02duDmFVdCoXg==
+  dependencies:
+    "@atproto/common-web" "^0.3.1"
+    "@atproto/syntax" "^0.3.1"
+    iso-datestring-validator "^2.2.2"
+    multiformats "^9.9.0"
+    zod "^3.23.8"
+
 "@atproto/oauth-provider@^0.2.5":
   version "0.2.5"
   resolved "https://registry.yarnpkg.com/@atproto/oauth-provider/-/oauth-provider-0.2.5.tgz#7358398125f840404bcc02c966fd2f333869ad2f"
@@ -411,6 +436,11 @@
   resolved "https://registry.yarnpkg.com/@atproto/syntax/-/syntax-0.3.0.tgz#fafa2dbea9add37253005cb663e7373e05e618b3"
   integrity sha512-Weq0ZBxffGHDXHl9U7BQc2BFJi/e23AL+k+i5+D9hUq/bzT4yjGsrCejkjq0xt82xXDjmhhvQSZ0LqxyZ5woxA==
 
+"@atproto/syntax@^0.3.1":
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/@atproto/syntax/-/syntax-0.3.1.tgz#4346418728f9643d783d2ffcf7c77e132e1f53d4"
+  integrity sha512-fzW0Mg1QUOVCWUD3RgEsDt6d1OZ6DdFmbKcDdbzUfh0t4rhtRAC05KbZYmxuMPWDAiJ4BbbQ5dkAc/mNypMXkw==
+
 "@atproto/xrpc-server@^0.7.1":
   version "0.7.1"
   resolved "https://registry.yarnpkg.com/@atproto/xrpc-server/-/xrpc-server-0.7.1.tgz#e9750aab7bb531c3a82dc6048d47179de18dbdd9"
@@ -435,6 +465,14 @@
   integrity sha512-S3tRvOdA9amPkKLll3rc4vphlDitLrkN5TwWh5Tu/jzk7mnobVVE3akYgICV9XCNHKjWM+IAPxFFI2qi+VW6nQ==
   dependencies:
     "@atproto/lexicon" "^0.4.2"
+    zod "^3.23.8"
+
+"@atproto/xrpc@^0.6.4":
+  version "0.6.4"
+  resolved "https://registry.yarnpkg.com/@atproto/xrpc/-/xrpc-0.6.4.tgz#4cf59774f7c72e5bc821bc5f1d57f0a6ae2014db"
+  integrity sha512-9ZAJ8nsXTqC4XFyS0E1Wlg7bAvonhXQNQ3Ocs1L1LIwFLXvsw/4fNpIHXxvXvqTCVeyHLbImOnE9UiO1c/qIYA==
+  dependencies:
+    "@atproto/lexicon" "^0.4.3"
     zod "^3.23.8"
 
 "@aws-crypto/crc32@3.0.0":
@@ -6820,11 +6858,6 @@
   resolved "https://registry.yarnpkg.com/@types/hammerjs/-/hammerjs-2.0.41.tgz#f6ecf57d1b12d2befcce00e928a6a097c22980aa"
   integrity sha512-ewXv/ceBaJprikMcxCmWU1FKyMAQ2X7a9Gtmzw8fcg2kIePI1crERDM818W+XYrxqdBBOdlf2rm137bU+BltCA==
 
-"@types/he@^1.1.2":
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/@types/he/-/he-1.2.0.tgz#3845193e597d943bab4e61ca5d7f3d8fc3d572a3"
-  integrity sha512-uH2smqTN4uGReAiKedIVzoLUAXIYLBTbSofhx3hbNqj74Ua6KqFsLYszduTrLCMEAEAozF73DbGi/SC1bzQq4g==
-
 "@types/html-minifier-terser@^6.0.0":
   version "6.1.0"
   resolved "https://registry.yarnpkg.com/@types/html-minifier-terser/-/html-minifier-terser-6.1.0.tgz#4fc33a00c1d0c16987b1a20cf92d20614c55ac35"
@@ -8007,7 +8040,7 @@ babel-plugin-polyfill-regenerator@^0.5.2:
   dependencies:
     "@babel/helper-define-polyfill-provider" "^0.4.2"
 
-babel-plugin-react-compiler@^19.0.0-beta-a7bf2bd-20241110:
+babel-plugin-react-compiler@19.0.0-beta-a7bf2bd-20241110:
   version "19.0.0-beta-a7bf2bd-20241110"
   resolved "https://registry.yarnpkg.com/babel-plugin-react-compiler/-/babel-plugin-react-compiler-19.0.0-beta-a7bf2bd-20241110.tgz#9e7abf2d9b6d0908cca7df010695678b830b36ae"
   integrity sha512-WdxXtLxsV4gh/GlEK4fuFDGkcED0Wb9UJEBB6Uc1SFqRFEmJNFKboW+Z4NUS5gYrPImqrjh4IwHAmgS6ZBg4Cg==
@@ -10055,7 +10088,7 @@ eslint-plugin-lingui@^0.2.0:
   dependencies:
     "@typescript-eslint/utils" "^5.61.0"
 
-eslint-plugin-react-compiler@^19.0.0-beta-a7bf2bd-20241110:
+eslint-plugin-react-compiler@19.0.0-beta-a7bf2bd-20241110:
   version "19.0.0-beta-a7bf2bd-20241110"
   resolved "https://registry.yarnpkg.com/eslint-plugin-react-compiler/-/eslint-plugin-react-compiler-19.0.0-beta-a7bf2bd-20241110.tgz#b03c043cc70cc9297e4f79f3370900aacd013d13"
   integrity sha512-b5/hRnOQlnH9CEnJQ6UrPoIAG4y/wIGv+OVEHTeAkbq+1uojfcuQyLToYvK1T9a6vz5WQHeMjQqFOZk3mtWorg==
@@ -15906,7 +15939,7 @@ rc@^1.0.1, rc@^1.1.6, rc@^1.2.7, rc@~1.2.7:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
-react-compiler-runtime@^19.0.0-beta-a7bf2bd-20241110:
+react-compiler-runtime@19.0.0-beta-a7bf2bd-20241110:
   version "19.0.0-beta-a7bf2bd-20241110"
   resolved "https://registry.yarnpkg.com/react-compiler-runtime/-/react-compiler-runtime-19.0.0-beta-a7bf2bd-20241110.tgz#58587b1a05d50f78f0a72f5e857d541f5dcb5cd1"
   integrity sha512-cSkrfz2eGcC9UZ/83mLf3aqKKDVjFkWJeA/kiYLwKTNp7B0Lq5M1FQ3vTfgSC027fK5ZutXU/JsCS5KxTwk8Mg==
@@ -18246,10 +18279,10 @@ typed-emitter@^2.1.0:
   optionalDependencies:
     rxjs "^7.5.2"
 
-typescript@^5.5.4:
-  version "5.5.4"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.5.4.tgz#d9852d6c82bad2d2eda4fd74a5762a8f5909e9ba"
-  integrity sha512-Mtq29sKDAEYP7aljRgtPOpTvOfbwRWlS6dPRzwjdE+C0R4brX/GUyhHSecbHMFLNBLcJIPt9nl9yG5TZ1weH+Q==
+typescript@^5.7.2:
+  version "5.7.2"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.7.2.tgz#3169cf8c4c8a828cde53ba9ecb3d2b1d5dd67be6"
+  integrity sha512-i5t66RHxDvVN40HfDd1PsEThGNnlMCMT3jMUuoh9/0TaqWevNontacunWyN02LA9/fIbEWlcHZcgTKb9QoaLfg==
 
 ua-parser-js@^0.7.33:
   version "0.7.35"
