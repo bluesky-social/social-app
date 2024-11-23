@@ -264,11 +264,11 @@ msgstr "{firstAuthorLink} curtiu seu feed personalizado"
 
 #: src/view/com/notifications/FeedItem.tsx:234
 msgid "{firstAuthorLink} liked your post"
-msgstr "{firstAuthorLink} curtiu sua postagem"
+msgstr "{firstAuthorLink} curtiu seu post"
 
 #: src/view/com/notifications/FeedItem.tsx:258
 msgid "{firstAuthorLink} reposted your post"
-msgstr "{firstAuthorLink} repostou sua postagem"
+msgstr "{firstAuthorLink} repostou seu post"
 
 #: src/view/com/notifications/FeedItem.tsx:362
 msgid "{firstAuthorLink} signed up with your starter pack"
@@ -288,7 +288,7 @@ msgstr "{firstAuthorName} e {additionalAuthorsCount, plural, one {{formattedAuth
 
 #: src/view/com/notifications/FeedItem.tsx:239
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} reposted your post"
-msgstr "{firstAuthorName} e {additionalAuthorsCount, plural, one {{formattedAuthorsCount} outro} other {{formattedAuthorsCount} outros}} repostaram sua postagem"
+msgstr "{firstAuthorName} e {additionalAuthorsCount, plural, one {{formattedAuthorsCount} outro} other {{formattedAuthorsCount} outros}} repostaram seu post"
 
 #: src/view/com/notifications/FeedItem.tsx:343
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} signed up with your starter pack"
@@ -308,11 +308,11 @@ msgstr "{firstAuthorName} curtiu seu feed personalizado"
 
 #: src/view/com/notifications/FeedItem.tsx:220
 msgid "{firstAuthorName} liked your post"
-msgstr "{firstAuthorName} curtiu sua postagem"
+msgstr "{firstAuthorName} curtiu seu post"
 
 #: src/view/com/notifications/FeedItem.tsx:244
 msgid "{firstAuthorName} reposted your post"
-msgstr "{firstAuthorName} repostou sua postagem"
+msgstr "{firstAuthorName} repostou seu post"
 
 #: src/view/com/notifications/FeedItem.tsx:348
 msgid "{firstAuthorName} signed up with your starter pack"
@@ -602,7 +602,7 @@ msgstr "Adicionar outra conta"
 
 #: src/view/com/composer/Composer.tsx:713
 msgid "Add another post"
-msgstr "Adicionar outra postagem"
+msgstr "Adicionar outro post"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:102
 msgid "Add app password"
@@ -632,7 +632,7 @@ msgstr "Adicionar palavras/tags silenciadas"
 
 #: src/view/com/composer/Composer.tsx:1228
 msgid "Add new post"
-msgstr "Adicionar nova postagem"
+msgstr "Adicionar novo post"
 
 #: src/screens/StarterPack/Wizard/index.tsx:197
 #~ msgid "Add people to your starter pack that you think others will enjoy following"
@@ -1057,7 +1057,7 @@ msgstr "Tem certeza que deseja descartar este rascunho?"
 
 #: src/view/com/composer/Composer.tsx:828
 msgid "Are you sure you'd like to discard this post?"
-msgstr "Tem certeza de que deseja descartar esta postagem?"
+msgstr "Tem certeza de que deseja descartar este post?"
 
 #: src/components/dialogs/MutedWords.tsx:433
 msgid "Are you sure?"
@@ -1124,7 +1124,7 @@ msgstr "Você deve verificar seu email antes de criar uma lista."
 
 #: src/view/com/composer/Composer.tsx:591
 msgid "Before creating a post, you must first verify your email."
-msgstr "Você deve verificar seu email antes de criar uma postagem."
+msgstr "Você deve verificar seu email antes de criar um post."
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:340
 msgid "Before creating a starter pack, you must first verify your email."
@@ -2443,7 +2443,7 @@ msgstr "Descartar rascunho?"
 
 #: src/view/com/composer/Composer.tsx:827
 msgid "Discard post?"
-msgstr "Descartar postagem?"
+msgstr "Descartar post?"
 
 #: src/screens/Settings/components/PwiOptOut.tsx:80
 #: src/screens/Settings/components/PwiOptOut.tsx:84
@@ -8201,7 +8201,7 @@ msgstr "Este serviço de moderação está indisponível. Veja mais detalhes aba
 
 #: src/view/com/post-thread/PostThreadItem.tsx:836
 msgid "This post claims to have been created on <0>{0}</0>, but was first seen by Bluesky on <1>{1}</1>."
-msgstr "Esta postagem alega ter sido criada em <0>{0}</0>, mas ela apareceu no Bluesky em <1>{1}</1>."
+msgstr "Este post alega ter sido criado em <0>{0}</0>, mas ele apareceu no Bluesky em <1>{1}</1>."
 
 #: src/view/com/post-thread/PostThreadItem.tsx:147
 msgid "This post has been deleted."
@@ -9639,7 +9639,7 @@ msgstr "Sua postagem foi publicada"
 
 #: src/view/com/composer/Composer.tsx:459
 msgid "Your posts have been published"
-msgstr "Suas postagens foram publicadas"
+msgstr "Seus posts foram publicados"
 
 #: src/screens/Onboarding/StepFinished.tsx:246
 msgid "Your posts, likes, and blocks are public. Mutes are private."
