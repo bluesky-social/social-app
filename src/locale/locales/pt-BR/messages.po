@@ -240,11 +240,11 @@ msgstr "{firstAuthorLink} e <0>{additionalAuthorsCount, plural, one {{formattedA
 
 #: src/view/com/notifications/FeedItem.tsx:222
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> liked your post"
-msgstr "{firstAuthorLink} e <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} outro} other {{formattedAuthorsCount} outros}}</0> curtiram sua postagem"
+msgstr "{firstAuthorLink} e <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} outro} other {{formattedAuthorsCount} outros}}</0> curtiram seu post"
 
 #: src/view/com/notifications/FeedItem.tsx:246
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> reposted your post"
-msgstr "{firstAuthorLink} e <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} outro} other {{formattedAuthorsCount} outros}}</0> repostaram sua postagem"
+msgstr "{firstAuthorLink} e <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} outro} other {{formattedAuthorsCount} outros}}</0> repostaram seu post"
 
 #: src/view/com/notifications/FeedItem.tsx:350
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> signed up with your starter pack"
@@ -913,7 +913,7 @@ msgstr "Idioma do aplicativo"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:122
 msgid "App Password"
-msgstr "Senha de Aplicativo"
+msgstr "Senha do Aplicativo"
 
 #: src/screens/Settings/AppPasswords.tsx:139
 msgid "App password deleted"
@@ -921,11 +921,11 @@ msgstr "Senha de Aplicativo excluída"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:84
 msgid "App password name must be unique"
-msgstr "O nome da senha de aplicativo deve ser único"
+msgstr "O nome da senha do aplicativo deve ser único"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:62
 msgid "App password names can only contain letters, numbers, spaces, dashes, and underscores"
-msgstr "O nome da senha de aplicativo só pode conter letras, números, travessões e underline"
+msgstr "O nome da senha do aplicativo só pode conter letras, números, travessões e underline"
 
 #: src/view/com/modals/AddAppPasswords.tsx:138
 #~ msgid "App Password names can only contain letters, numbers, spaces, dashes, and underscores."
@@ -933,7 +933,7 @@ msgstr "O nome da senha de aplicativo só pode conter letras, números, travess�
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:80
 msgid "App password names must be at least 4 characters long"
-msgstr "O nome da senha de aplicativo deve ter pelo menos 4 caracteres"
+msgstr "O nome da senha do aplicativo deve ter pelo menos 4 caracteres"
 
 #: src/view/com/modals/AddAppPasswords.tsx:103
 #~ msgid "App Password names must be at least 4 characters long."
@@ -946,7 +946,7 @@ msgstr "O nome da senha de aplicativo deve ter pelo menos 4 caracteres"
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:56
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:59
 msgid "App passwords"
-msgstr "Senhas de aplicativo"
+msgstr "Senhas do aplicativo"
 
 #: src/Navigation.tsx:289
 #: src/screens/Settings/AppPasswords.tsx:47
@@ -1013,7 +1013,7 @@ msgstr "Post arquivado"
 
 #: src/screens/Settings/AppPasswords.tsx:201
 msgid "Are you sure you want to delete the app password \"{0}\"?"
-msgstr "Tem certeza de que deseja excluir a senha de aplicativo \"{0}\"?"
+msgstr "Tem certeza de que deseja excluir a senha do aplicativo \"{0}\"?"
 
 #: src/view/screens/AppPasswords.tsx:283
 #~ msgid "Are you sure you want to delete the app password \"{name}\"?"
@@ -2004,7 +2004,7 @@ msgstr "Copiar"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:196
 msgid "Copy App Password"
-msgstr "Copiar Senha de Aplicativo"
+msgstr "Copiar Senha do Aplicativo"
 
 #: src/screens/Settings/AboutSettings.tsx:61
 msgid "Copy build version to clipboard"
@@ -7200,7 +7200,7 @@ msgstr "Mostrar respostas ocultas"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:796
 msgid "Show information about when this post was created"
-msgstr "Mostrar informação sobre quando esta postagem foi criada"
+msgstr "Mostrar informação sobre quando este post foi criado"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:491
 #: src/view/com/util/forms/PostDropdownBtn.tsx:493
@@ -7978,7 +7978,7 @@ msgstr "Tivemos um problema ao carregar esta lista. Toque aqui para tentar de no
 
 #: src/screens/Settings/AppPasswords.tsx:52
 msgid "There was an issue fetching your app passwords"
-msgstr "Houve um problema ao recuperar suas senhas de aplicativo"
+msgstr "Houve um problema ao recuperar suas senhas do aplicativo"
 
 #: src/view/com/feeds/ProfileFeedgens.tsx:150
 #: src/view/com/lists/ProfileLists.tsx:149
@@ -8145,7 +8145,7 @@ msgstr "Este feed não funciona mais. Estamos te mostrando o conteúdo do <0>Dis
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:559
 msgid "This handle is reserved. Please try a different one."
-msgstr "Este usuário está reservado. Por favor tente um usuário diferente."
+msgstr "Este nome de usuário está reservado. Por favor tente um nome de usuário diferente."
 
 #: src/components/dialogs/BirthDateSettings.tsx:40
 msgid "This information is not shared with other users."
