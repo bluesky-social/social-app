@@ -265,7 +265,6 @@
     "@types/react": "^18",
     "**/expo-constants": "16.0.1",
     "**/expo-device": "6.0.2",
-    "**/zeed-dom": "0.10.9",
     "**/zod": "3.23.8"
   },
   "jest": {
