@@ -5577,7 +5577,7 @@ msgstr "Restableix la incorporació"
 
 #: src/view/com/composer/Composer.tsx:323
 msgid "One or more GIFs is missing alt text."
-msgstr "Falta el text alternatiu a un o més GIFs"
+msgstr "Falta el text alternatiu a un o més GIFs."
 
 #: src/view/com/composer/Composer.tsx:320
 msgid "One or more images is missing alt text."
