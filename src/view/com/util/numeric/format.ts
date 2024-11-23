@@ -2,24 +2,26 @@ import {I18n} from '@lingui/core'
 
 const truncateRounding = (num: number, factors: Array<number>): number => {
   for (let i = factors.length - 1; i >= 0; i--) {
-    const factor = factors[i]
+    let factor = factors[i]
     if (num >= 10 ** factor) {
       if (factor === 10) {
-        // Exception for ES and CA langs
-        return Math.floor(num / 10 ** (factor - 2)) * 10 ** (factor - 2)
+        // CA and ES abruptly jump from "9999,9 M" to "10 mil M"
+        factor--
       }
-      return Math.floor(num / 10 ** (factor - 1)) * 10 ** (factor - 1)
+      const precision = 1
+      const divisor = 10 ** (factor - precision)
+      return Math.floor(num / divisor) * divisor
     }
   }
   return num
 }
 
-const koFactors = [3, 4, 8]
-const hiFactors = [3, 5, 7, 9]
-const esCaFactors = [3, 6, 10]
-const itDeFactors = [6, 9]
-const jaZhFactors = [4, 8]
-const restFactors = [3, 6, 9]
+const koFactors = [3, 4, 8, 12]
+const hiFactors = [3, 5, 7, 9, 11, 13]
+const esCaFactors = [3, 6, 10, 12]
+const itDeFactors = [6, 9, 12]
+const jaZhFactors = [4, 8, 12]
+const restFactors = [3, 6, 9, 12]
 
 export const formatCount = (i18n: I18n, num: number) => {
   const locale = i18n.locale
