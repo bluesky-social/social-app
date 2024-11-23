@@ -56,6 +56,12 @@ export function ThreadPreferencesScreen({}: Props) {
                 values={sortReplies ? [sortReplies] : []}
                 onChange={values => setThreadViewPrefs({sort: values[0]})}>
                 <View style={[a.gap_sm, a.flex_1]}>
+                  <Toggle.Item name="hotness" label={_(msg`Hot replies first`)}>
+                    <Toggle.Radio />
+                    <Toggle.LabelText>
+                      <Trans>Hot replies first</Trans>
+                    </Toggle.LabelText>
+                  </Toggle.Item>
                   <Toggle.Item
                     name="oldest"
                     label={_(msg`Oldest replies first`)}>
