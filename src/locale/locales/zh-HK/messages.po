@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-22 05:52\n"
+"PO-Revision-Date: 2024-11-23 01:14\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional, Hong Kong\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -49,7 +49,7 @@ msgstr "{0, plural, one {#分鐘} other {#分鐘}}"
 
 #: src/lib/hooks/useTimeAgo.ts:167
 msgid "{0, plural, one {# month} other {# months}}"
-msgstr "{0, plural, one {#月} other {#月}}"
+msgstr "{0, plural, one {#個月} other {#個月}}"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:69
 msgid "{0, plural, one {# repost} other {# reposts}}"
@@ -120,7 +120,7 @@ msgstr "{0} <0>喺<1>文字同標籤</1></0>入邊"
 msgid "{0} joined this week"
 msgstr "呢個禮拜有 {0} 人加入"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/Scrubber.tsx:195
+#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/Scrubber.tsx:197
 msgid "{0} of {1}"
 msgstr "第 {0} 個（共 {1} 個）"
 
@@ -162,7 +162,7 @@ msgstr "{0}分鐘前"
 #. How many months have passed, displayed in a narrow form
 #: src/lib/hooks/useTimeAgo.ts:169
 msgid "{0}mo"
-msgstr "{0}月前"
+msgstr "{0}個月前"
 
 #. How many seconds have passed, displayed in a narrow form
 #: src/lib/hooks/useTimeAgo.ts:128
@@ -410,6 +410,7 @@ msgid "Account"
 msgstr "帳號"
 
 #: src/view/com/profile/ProfileMenu.tsx:132
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:360
 msgid "Account blocked"
 msgstr "已經封鎖帳號"
 
@@ -499,7 +500,7 @@ msgstr "新增 ALT 文字（可選）"
 msgid "Add another account"
 msgstr "加多個帳號"
 
-#: src/view/com/composer/Composer.tsx:715
+#: src/view/com/composer/Composer.tsx:721
 msgid "Add another post"
 msgstr "加多另一個帖文"
 
@@ -521,7 +522,7 @@ msgstr "喺配置好嘅設定入邊新增靜音文字"
 msgid "Add muted words and tags"
 msgstr "新增靜音文字同標籤"
 
-#: src/view/com/composer/Composer.tsx:1230
+#: src/view/com/composer/Composer.tsx:1235
 msgid "Add new post"
 msgstr "新開帖文"
 
@@ -675,11 +676,11 @@ msgstr "電郵已經送出！郵件入面有一條驗證碼，請你抄低個碼
 msgid "An error has occurred"
 msgstr "發生錯誤"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:419
+#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:420
 msgid "An error occurred"
 msgstr "發生錯誤"
 
-#: src/view/com/composer/state/video.ts:411
+#: src/view/com/composer/state/video.ts:398
 msgid "An error occurred while compressing the video."
 msgstr "壓縮影片嗰陣發生錯誤。"
 
@@ -700,7 +701,7 @@ msgstr "撈緊影片嗰陣發生錯誤。唔該試多一次。"
 msgid "An error occurred while saving the QR code!"
 msgstr "儲存 QR Code 嗰陣發生錯誤！"
 
-#: src/view/com/composer/videos/SelectVideoBtn.tsx:87
+#: src/view/com/composer/videos/SelectVideoBtn.tsx:81
 msgid "An error occurred while selecting the video"
 msgstr "揀緊條片嗰陣發生錯誤"
 
@@ -709,7 +710,7 @@ msgstr "揀緊條片嗰陣發生錯誤"
 msgid "An error occurred while trying to follow all"
 msgstr "試緊跟住所有帳號嗰陣發生錯誤"
 
-#: src/view/com/composer/state/video.ts:448
+#: src/view/com/composer/state/video.ts:435
 msgid "An error occurred while uploading the video."
 msgstr "上載影片嗰陣發生錯誤。"
 
@@ -873,11 +874,11 @@ msgstr "你確定要喺你嘅動態源入邊移除 {0} 嗎？"
 msgid "Are you sure you want to remove this from your feeds?"
 msgstr "你確定要喺你嘅動態源入邊移除呢個嗎？"
 
-#: src/view/com/composer/Composer.tsx:666
+#: src/view/com/composer/Composer.tsx:672
 msgid "Are you sure you'd like to discard this draft?"
 msgstr "你係咪唔想再要呢份草稿？"
 
-#: src/view/com/composer/Composer.tsx:830
+#: src/view/com/composer/Composer.tsx:846
 msgid "Are you sure you'd like to discard this post?"
 msgstr "你係咪唔想再發呢篇帖文？"
 
@@ -906,8 +907,8 @@ msgstr "至少有 3 個字元"
 msgid "Autoplay options have moved to the <0>Content and Media settings</0>."
 msgstr "自動播放選項已經移至<0>內容同媒體設定</0>。"
 
+#: src/screens/Settings/ContentAndMediaSettings.tsx:82
 #: src/screens/Settings/ContentAndMediaSettings.tsx:88
-#: src/screens/Settings/ContentAndMediaSettings.tsx:94
 msgid "Autoplay videos and GIFs"
 msgstr "自動播放影片同 GIF"
 
@@ -936,7 +937,7 @@ msgstr "返回"
 msgid "Before creating a list, you must first verify your email."
 msgstr "喺建立清单之前，你必須驗證你嘅電郵先。"
 
-#: src/view/com/composer/Composer.tsx:593
+#: src/view/com/composer/Composer.tsx:599
 msgid "Before creating a post, you must first verify your email."
 msgstr "喺發佈帖文之前，你必須驗證你嘅電郵先。"
 
@@ -957,11 +958,14 @@ msgstr "生日"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:283
 #: src/view/com/profile/ProfileMenu.tsx:341
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:744
 msgid "Block"
 msgstr "封鎖"
 
 #: src/components/dms/ConvoMenu.tsx:188
 #: src/components/dms/ConvoMenu.tsx:192
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:603
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:605
 msgid "Block account"
 msgstr "封鎖帳號"
 
@@ -971,6 +975,7 @@ msgid "Block Account"
 msgstr "封鎖帳號"
 
 #: src/view/com/profile/ProfileMenu.tsx:324
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:739
 msgid "Block Account?"
 msgstr "封鎖帳號？"
 
@@ -1000,6 +1005,7 @@ msgid "Blocked Accounts"
 msgstr "封鎖咗嘅帳號"
 
 #: src/view/com/profile/ProfileMenu.tsx:336
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:741
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
 msgstr "封鎖咗嘅帳號唔得喺你嘅討論串入邊回覆、提及你抑或用其他方式同你互動。"
 
@@ -1136,7 +1142,7 @@ msgstr "相機"
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:72
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:79
 #: src/screens/Settings/Settings.tsx:252
-#: src/view/com/composer/Composer.tsx:893
+#: src/view/com/composer/Composer.tsx:909
 #: src/view/com/modals/ChangeEmail.tsx:213
 #: src/view/com/modals/ChangeEmail.tsx:215
 #: src/view/com/modals/ChangePassword.tsx:268
@@ -1150,7 +1156,7 @@ msgstr "相機"
 #: src/view/com/modals/LinkWarning.tsx:107
 #: src/view/com/modals/VerifyEmail.tsx:255
 #: src/view/com/modals/VerifyEmail.tsx:261
-#: src/view/com/util/post-ctrls/RepostButton.tsx:198
+#: src/view/com/util/post-ctrls/RepostButton.tsx:203
 #: src/view/screens/Search/Search.tsx:911
 msgid "Cancel"
 msgstr "咪喇"
@@ -1175,7 +1181,7 @@ msgstr "取消圖片裁剪"
 msgid "Cancel profile editing"
 msgstr "取消編輯個人檔案"
 
-#: src/view/com/util/post-ctrls/RepostButton.tsx:193
+#: src/view/com/util/post-ctrls/RepostButton.tsx:197
 msgid "Cancel quote post"
 msgstr "唔再引用帖文"
 
@@ -1472,7 +1478,7 @@ msgstr "完成呢個挑戰"
 msgid "Compose new post"
 msgstr "寫新帖文"
 
-#: src/view/com/composer/Composer.tsx:796
+#: src/view/com/composer/Composer.tsx:812
 msgid "Compose posts up to {MAX_GRAPHEME_LENGTH} characters in length"
 msgstr "撰寫長度最多為 {MAX_GRAPHEME_LENGTH} 字元嘅帖文"
 
@@ -1480,7 +1486,7 @@ msgstr "撰寫長度最多為 {MAX_GRAPHEME_LENGTH} 字元嘅帖文"
 msgid "Compose reply"
 msgstr "撰寫回覆"
 
-#: src/view/com/composer/Composer.tsx:1623
+#: src/view/com/composer/Composer.tsx:1628
 msgid "Compressing video..."
 msgstr "壓縮緊條片..."
 
@@ -1556,7 +1562,7 @@ msgid "Content and media"
 msgstr "內容同媒體"
 
 #: src/Navigation.tsx:353
-#: src/screens/Settings/ContentAndMediaSettings.tsx:35
+#: src/screens/Settings/ContentAndMediaSettings.tsx:44
 msgid "Content and Media"
 msgstr "內容同媒體"
 
@@ -1631,7 +1637,7 @@ msgstr "將構建版本複製到剪貼簿"
 #: src/components/dms/MessageMenu.tsx:57
 #: src/lib/sharing.ts:25
 #: src/view/com/modals/InviteCodes.tsx:153
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:229
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:235
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:386
 msgid "Copied to clipboard"
 msgstr "複製咗去剪貼簿喇"
@@ -1678,8 +1684,8 @@ msgstr "複製連結"
 msgid "Copy link to list"
 msgstr "將連結複製去清單"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:416
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:425
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:434
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:443
 msgid "Copy link to post"
 msgstr "複製貼文連結"
 
@@ -1688,8 +1694,8 @@ msgstr "複製貼文連結"
 msgid "Copy message text"
 msgstr "複製訊息文字"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:394
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:396
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:412
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:414
 msgid "Copy post text"
 msgstr "複製帖文文字"
 
@@ -1722,7 +1728,7 @@ msgstr "撈唔到清單"
 msgid "Could not mute chat"
 msgstr "無法靜音傾偈室"
 
-#: src/view/com/composer/videos/VideoPreview.web.tsx:56
+#: src/view/com/composer/videos/VideoPreview.web.tsx:66
 msgid "Could not process your video"
 msgstr "處理唔到你嘅影片"
 
@@ -1838,7 +1844,7 @@ msgstr "預設"
 #: src/screens/StarterPack/StarterPackScreen.tsx:585
 #: src/screens/StarterPack/StarterPackScreen.tsx:664
 #: src/screens/StarterPack/StarterPackScreen.tsx:744
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:632
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:661
 #: src/view/screens/ProfileList.tsx:726
 msgid "Delete"
 msgstr "刪除"
@@ -1884,9 +1890,9 @@ msgstr "幫我刪除訊息"
 msgid "Delete my account"
 msgstr "刪除我嘅帳號"
 
-#: src/view/com/composer/Composer.tsx:804
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:613
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:615
+#: src/view/com/composer/Composer.tsx:820
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:642
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:644
 msgid "Delete post"
 msgstr "刪除帖文"
 
@@ -1903,7 +1909,7 @@ msgstr "刪除新手包？"
 msgid "Delete this list?"
 msgstr "刪除呢個清單？"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:627
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:656
 msgid "Delete this post?"
 msgstr "刪咗呢個帖文？"
 
@@ -1941,12 +1947,12 @@ msgstr "描述太長，最大字元數限制係 {DESCRIPTION_MAX_GRAPHEMES}。"
 msgid "Descriptive alt text"
 msgstr "描述 ALT 文字"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:548
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:558
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:566
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:576
 msgid "Detach quote"
 msgstr "拆開引用"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:690
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:719
 msgid "Detach quote post?"
 msgstr "係咪要拆開引文？"
 
@@ -1972,7 +1978,7 @@ msgstr "停用電郵雙重驗證"
 msgid "Disable haptic feedback"
 msgstr "停用觸覺反饋"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:385
+#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:386
 msgid "Disable subtitles"
 msgstr "停用字幕"
 
@@ -1986,8 +1992,8 @@ msgid "Disabled"
 msgstr "停用"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:84
-#: src/view/com/composer/Composer.tsx:668
-#: src/view/com/composer/Composer.tsx:837
+#: src/view/com/composer/Composer.tsx:674
+#: src/view/com/composer/Composer.tsx:853
 msgid "Discard"
 msgstr "棄置"
 
@@ -1995,11 +2001,11 @@ msgstr "棄置"
 msgid "Discard changes?"
 msgstr "棄置變更？"
 
-#: src/view/com/composer/Composer.tsx:665
+#: src/view/com/composer/Composer.tsx:671
 msgid "Discard draft?"
 msgstr "棄置草稿？"
 
-#: src/view/com/composer/Composer.tsx:829
+#: src/view/com/composer/Composer.tsx:845
 msgid "Discard post?"
 msgstr "係咪唔想再發嘢啦？"
 
@@ -2025,7 +2031,7 @@ msgstr "發掘新嘅動態源"
 msgid "Dismiss"
 msgstr "跳過"
 
-#: src/view/com/composer/Composer.tsx:1547
+#: src/view/com/composer/Composer.tsx:1552
 msgid "Dismiss error"
 msgstr "跳過錯誤"
 
@@ -2204,8 +2210,8 @@ msgstr "編輯動態源"
 msgid "Edit image"
 msgstr "編輯圖片"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:594
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:607
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:623
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:636
 msgid "Edit interaction settings"
 msgstr "編輯互動設定"
 
@@ -2322,14 +2328,18 @@ msgid "Embed HTML code"
 msgstr "嵌入 HTML 代碼"
 
 #: src/components/dialogs/Embed.tsx:97
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:433
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:435
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:451
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:453
 msgid "Embed post"
 msgstr "嵌入帖文"
 
 #: src/components/dialogs/Embed.tsx:101
 msgid "Embed this post in your website. Simply copy the following snippet and paste it into the HTML code of your website."
 msgstr "將呢篇帖文嵌入到你嘅網站嘅話，淨係需要複製下低程式碼片段，跟住將佢貼入你網站嘅 HTML 程式碼入邊。"
+
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerWeb.tsx:57
+msgid "Embedded video player"
+msgstr "嵌入式影片播放器"
 
 #: src/screens/Settings/components/Email2FAToggle.tsx:56
 #: src/screens/Settings/components/Email2FAToggle.tsx:60
@@ -2362,7 +2372,7 @@ msgstr "啓用媒體播放器"
 msgid "Enable priority notifications"
 msgstr "啓用優先通知"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:386
+#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:387
 msgid "Enable subtitles"
 msgstr "啓用字幕"
 
@@ -2401,6 +2411,10 @@ msgstr "輸入確認碼"
 msgid "Enter Confirmation Code"
 msgstr "輸入確認碼"
 
+#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:405
+msgid "Enter fullscreen"
+msgstr "進入全螢幕"
+
 #: src/view/com/modals/ChangePassword.tsx:154
 msgid "Enter the code you received to change your password."
 msgstr "輸入你收到嘅驗證碼嚟變更你嘅密碼。"
@@ -2434,7 +2448,7 @@ msgstr "喺下面輸入你嘅新電郵地址。"
 msgid "Enter your username and password"
 msgstr "輸入你嘅用戶名同密碼"
 
-#: src/view/com/composer/Composer.tsx:1632
+#: src/view/com/composer/Composer.tsx:1637
 msgid "Error"
 msgstr "錯誤"
 
@@ -2484,7 +2498,7 @@ msgstr "排除你跟咗嘅用戶"
 msgid "Excludes users you follow"
 msgstr "排除你跟咗嘅用戶"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:403
+#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:404
 msgid "Exit fullscreen"
 msgstr "離開全螢幕"
 
@@ -2551,8 +2565,8 @@ msgstr "匯出我嘅數據"
 msgid "Export My Data"
 msgstr "匯出我嘅數據"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:64
-#: src/screens/Settings/ContentAndMediaSettings.tsx:67
+#: src/screens/Settings/ContentAndMediaSettings.tsx:73
+#: src/screens/Settings/ContentAndMediaSettings.tsx:76
 msgid "External media"
 msgstr "外部媒體"
 
@@ -2592,7 +2606,7 @@ msgstr "建立唔到清單。請檢查你嘅互聯網連線，跟住試多一次
 msgid "Failed to delete message"
 msgstr "刪除唔到訊息"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:189
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:195
 msgid "Failed to delete post, please try again"
 msgstr "刪除唔到帖文，唔該試多一次"
 
@@ -2643,7 +2657,7 @@ msgstr "傳送唔到"
 msgid "Failed to submit appeal, please try again."
 msgstr "未能提交上訴，唔該試多一次。"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:218
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:224
 msgid "Failed to toggle thread mute, please try again"
 msgstr "切換唔到討論串靜音，唔該試多一次"
 
@@ -2684,8 +2698,8 @@ msgstr "切換動態源"
 msgid "Feedback"
 msgstr "反饋"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:260
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:269
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:266
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:275
 msgid "Feedback sent!"
 msgstr "反饋已經傳送咗！"
 
@@ -2850,8 +2864,8 @@ msgstr "跟緊 {0}"
 msgid "Following {name}"
 msgstr "跟緊 {name}"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:56
-#: src/screens/Settings/ContentAndMediaSettings.tsx:59
+#: src/screens/Settings/ContentAndMediaSettings.tsx:65
+#: src/screens/Settings/ContentAndMediaSettings.tsx:68
 msgid "Following feed preferences"
 msgstr "「Following」動態源設定"
 
@@ -2922,10 +2936,6 @@ msgstr "來自 @{sanitizedAuthor}"
 msgctxt "from-feed"
 msgid "From <0/>"
 msgstr "來自 <0/>"
-
-#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:404
-msgid "Fullscreen"
-msgstr "全螢幕"
 
 #: src/view/com/composer/photos/SelectPhotoBtn.tsx:50
 msgid "Gallery"
@@ -3082,6 +3092,10 @@ msgstr "協助"
 msgid "Help people know you're not a bot by uploading a picture or creating an avatar."
 msgstr "上載一張相抑或整張頭像，等大家知道你唔係機械人。"
 
+#: src/screens/Settings/ContentAndMediaSettings.tsx:127
+msgid "Helps external sites estimate traffic from Bluesky."
+msgstr "幫助外部網站估算嚟自 Bluesky 嘅流量。"
+
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:187
 msgid "Here is your app password!"
 msgstr "呢個係你嘅 App 密碼！"
@@ -3097,7 +3111,7 @@ msgstr "隱藏清單"
 #: src/lib/moderation/useLabelBehaviorDescription.ts:20
 #: src/lib/moderation/useLabelBehaviorDescription.ts:25
 #: src/lib/moderation/useLabelBehaviorDescription.ts:30
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:643
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:672
 msgid "Hide"
 msgstr "隱藏"
 
@@ -3106,18 +3120,18 @@ msgctxt "action"
 msgid "Hide"
 msgstr "隱藏"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:505
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:511
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:523
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:529
 msgid "Hide post for me"
 msgstr "幫我隱藏帖文"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:522
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:532
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:540
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:550
 msgid "Hide reply for everyone"
 msgstr "為所有人隱藏回覆"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:504
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:510
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:522
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:528
 msgid "Hide reply for me"
 msgstr "幫我隱藏回覆"
 
@@ -3126,12 +3140,12 @@ msgstr "幫我隱藏回覆"
 msgid "Hide the content"
 msgstr "隱藏內容"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:638
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:667
 msgid "Hide this post?"
 msgstr "隱藏呢篇帖文？"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:638
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:700
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:667
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:729
 msgid "Hide this reply?"
 msgstr "隱藏呢個回覆？"
 
@@ -3167,12 +3181,12 @@ msgstr "唔好意思，我哋好似喺撈緊數據嗰陣遇到問題。睇吓下
 msgid "Hmmmm, we couldn't load that moderation service."
 msgstr "唔好意思，我哋撈唔到嗰個審核服務。"
 
-#: src/view/com/composer/state/video.ts:426
+#: src/view/com/composer/state/video.ts:413
 msgid "Hold up! We’re gradually giving access to video, and you’re still waiting in line. Check back soon!"
 msgstr "幫緊你幫緊你！我哋而家逐步開放影片權限，而你仲喺等候名單嗰度。遲啲睇吓啦！"
 
-#: src/Navigation.tsx:585
-#: src/Navigation.tsx:605
+#: src/Navigation.tsx:579
+#: src/Navigation.tsx:599
 #: src/view/shell/bottom-bar/BottomBar.tsx:158
 #: src/view/shell/desktop/LeftNav.tsx:401
 #: src/view/shell/Drawer.tsx:391
@@ -3234,7 +3248,7 @@ msgstr "若然你移除咗呢個清單，之後就冇得恢復。"
 msgid "If you have your own domain, you can use that as your handle. This lets you self-verify your identity – <0>learn more</0>."
 msgstr "若然你有自己嘅網域，你可以用佢作爲你嘅帳號頭銜。同時亦都可以證明你嘅身份——<0> 進一步瞭解 </0>。"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:629
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:658
 msgid "If you remove this post, you won't be able to recover it."
 msgstr "若然你移除咗呢篇帖文，之後就冇得恢復。"
 
@@ -3372,7 +3386,7 @@ msgstr "係啱嘅"
 msgid "It's just you right now! Add more people to your starter pack by searching above."
 msgstr "而家淨係得你一個！利用上高搵嘢功能將更加多人擺到落你嘅新手包。"
 
-#: src/view/com/composer/Composer.tsx:1566
+#: src/view/com/composer/Composer.tsx:1571
 msgid "Job ID: {0}"
 msgstr "Job ID: {0}"
 
@@ -3710,8 +3724,8 @@ msgstr "幫我整一個"
 msgid "Make sure this is where you intend to go!"
 msgstr "確保呢度係你打算去嘅地方！"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:40
-#: src/screens/Settings/ContentAndMediaSettings.tsx:43
+#: src/screens/Settings/ContentAndMediaSettings.tsx:49
+#: src/screens/Settings/ContentAndMediaSettings.tsx:52
 msgid "Manage saved feeds"
 msgstr "管理儲存嘅動態源"
 
@@ -3772,7 +3786,7 @@ msgstr "訊息太長"
 msgid "Message settings"
 msgstr "訊息設定"
 
-#: src/Navigation.tsx:600
+#: src/Navigation.tsx:594
 #: src/screens/Messages/ChatList.tsx:162
 #: src/screens/Messages/ChatList.tsx:243
 #: src/screens/Messages/ChatList.tsx:314
@@ -3880,7 +3894,7 @@ msgid "Mute"
 msgstr "靜音"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:156
-#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VolumeControl.tsx:94
+#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VolumeControl.tsx:95
 msgctxt "video"
 msgid "Mute"
 msgstr "靜音"
@@ -3943,13 +3957,13 @@ msgstr "只限標籤入邊將呢個字靜音"
 msgid "Mute this word until you unmute it"
 msgstr "將呢個字靜音，直至你取消靜音為止"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:471
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:475
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:489
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:493
 msgid "Mute thread"
 msgstr "靜音討論串"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:485
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:487
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:503
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:505
 msgid "Mute words & tags"
 msgstr "靜音字詞同標籤"
 
@@ -4276,7 +4290,7 @@ msgid "Not right now"
 msgstr "而家唔係"
 
 #: src/view/com/profile/ProfileMenu.tsx:348
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:657
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:686
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:350
 msgid "Note about sharing"
 msgstr "關於分享嘅注意事項"
@@ -4310,7 +4324,7 @@ msgstr "通知聲"
 msgid "Notification Sounds"
 msgstr "通知聲"
 
-#: src/Navigation.tsx:595
+#: src/Navigation.tsx:589
 #: src/view/screens/Notifications.tsx:143
 #: src/view/screens/Notifications.tsx:153
 #: src/view/screens/Notifications.tsx:199
@@ -4372,15 +4386,15 @@ msgstr "喺<0><1/><2><3/></2></0>"
 msgid "Onboarding reset"
 msgstr "重新開始引導流程"
 
-#: src/view/com/composer/Composer.tsx:325
+#: src/view/com/composer/Composer.tsx:331
 msgid "One or more GIFs is missing alt text."
 msgstr "至少有一張圖片缺少 ALT 文字。"
 
-#: src/view/com/composer/Composer.tsx:322
+#: src/view/com/composer/Composer.tsx:328
 msgid "One or more images is missing alt text."
 msgstr "一張抑或多張圖片缺少 ALT 文字。"
 
-#: src/view/com/composer/Composer.tsx:332
+#: src/view/com/composer/Composer.tsx:338
 msgid "One or more videos is missing alt text."
 msgstr "至少有一段影片缺少 ALT 文字。"
 
@@ -4440,8 +4454,8 @@ msgid "Open conversation options"
 msgstr "打開對話選項"
 
 #: src/screens/Messages/components/MessageInput.web.tsx:165
-#: src/view/com/composer/Composer.tsx:1216
-#: src/view/com/composer/Composer.tsx:1217
+#: src/view/com/composer/Composer.tsx:1221
+#: src/view/com/composer/Composer.tsx:1222
 msgid "Open emoji picker"
 msgstr "打開 emoji 挑選器"
 
@@ -4549,7 +4563,7 @@ msgstr "打開網站連結"
 msgid "Opens this profile"
 msgstr "打開呢個人嘅個人檔案"
 
-#: src/view/com/composer/videos/SelectVideoBtn.tsx:107
+#: src/view/com/composer/videos/SelectVideoBtn.tsx:101
 msgid "Opens video picker"
 msgstr "打開影片挑選器"
 
@@ -4627,7 +4641,7 @@ msgstr "密碼更新咗喇！"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:43
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:140
-#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:368
+#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:369
 msgid "Pause"
 msgstr "暫停"
 
@@ -4682,8 +4696,8 @@ msgstr "固定到首頁"
 msgid "Pin to Home"
 msgstr "固定到首頁"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:362
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:369
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:380
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:387
 msgid "Pin to your profile"
 msgstr "固定到你嘅個人檔案"
 
@@ -4701,7 +4715,7 @@ msgstr "固定喺你嘅動態源"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:43
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:140
-#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:369
+#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:370
 msgid "Play"
 msgstr "播放"
 
@@ -4791,7 +4805,7 @@ msgstr "政治"
 msgid "Porn"
 msgstr "色情"
 
-#: src/view/com/composer/Composer.tsx:921
+#: src/view/com/composer/Composer.tsx:937
 msgctxt "action"
 msgid "Post"
 msgstr "發嘢"
@@ -4801,7 +4815,7 @@ msgctxt "description"
 msgid "Post"
 msgstr "帖文"
 
-#: src/view/com/composer/Composer.tsx:919
+#: src/view/com/composer/Composer.tsx:935
 msgctxt "action"
 msgid "Post All"
 msgstr "發晒佢哋"
@@ -4817,7 +4831,7 @@ msgstr "由 {0} 發表"
 msgid "Post by @{0}"
 msgstr "由 @{0} 發表"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:169
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:175
 msgid "Post deleted"
 msgstr "帖文刪除咗"
 
@@ -4948,7 +4962,7 @@ msgstr "私隱同安全"
 msgid "Privacy Policy"
 msgstr "私隱政策"
 
-#: src/view/com/composer/Composer.tsx:1629
+#: src/view/com/composer/Composer.tsx:1634
 msgid "Processing video..."
 msgstr "處理緊影片..."
 
@@ -4998,24 +5012,24 @@ msgstr "QR code 已經下載咗喇！"
 msgid "QR code saved to your camera roll!"
 msgstr "QR code 儲存咗去你嘅相簿喇！"
 
-#: src/view/com/util/post-ctrls/RepostButton.tsx:166
-#: src/view/com/util/post-ctrls/RepostButton.tsx:188
+#: src/view/com/util/post-ctrls/RepostButton.tsx:168
+#: src/view/com/util/post-ctrls/RepostButton.tsx:191
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:85
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:92
 msgid "Quote post"
 msgstr "引文"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:297
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:303
 msgid "Quote post was re-attached"
 msgstr "引文已經重新附上"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:296
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:302
 msgid "Quote post was successfully detached"
 msgstr "引文已經成功拆開"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:314
-#: src/view/com/util/post-ctrls/RepostButton.tsx:165
-#: src/view/com/util/post-ctrls/RepostButton.tsx:187
+#: src/view/com/util/post-ctrls/RepostButton.tsx:167
+#: src/view/com/util/post-ctrls/RepostButton.tsx:189
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:84
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:91
 msgid "Quote posts disabled"
@@ -5047,8 +5061,8 @@ msgstr "隨機顯示（又名試試手氣）"
 msgid "Rate limit exceeded – you've tried to change your handle too many times in a short period. Please wait a minute before trying again."
 msgstr "超過咗速率限制——你喺短時間內試過變更帳號頭銜太多次，請等一陣先再試。"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:547
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:557
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:565
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:575
 msgid "Re-attach quote"
 msgstr "重新附上引文"
 
@@ -5241,7 +5255,7 @@ msgstr "停用咗回覆"
 msgid "Replies to this post are disabled."
 msgstr "呢篇帖文嘅回覆已經停用。"
 
-#: src/view/com/composer/Composer.tsx:917
+#: src/view/com/composer/Composer.tsx:933
 msgctxt "action"
 msgid "Reply"
 msgstr "回覆"
@@ -5286,11 +5300,11 @@ msgctxt "description"
 msgid "Reply to you"
 msgstr "覆你"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:327
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:333
 msgid "Reply visibility updated"
 msgstr "回覆可見度更新咗喇"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:326
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:332
 msgid "Reply was successfully hidden"
 msgstr "回覆已經成功隱藏"
 
@@ -5328,8 +5342,8 @@ msgstr "上報清單"
 msgid "Report message"
 msgstr "上報訊息"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:583
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:585
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:611
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:613
 msgid "Report post"
 msgstr "上報帖文"
 
@@ -5370,7 +5384,7 @@ msgstr "上報呢個用戶"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:68
 #: src/view/com/util/post-ctrls/RepostButton.tsx:146
-#: src/view/com/util/post-ctrls/RepostButton.tsx:156
+#: src/view/com/util/post-ctrls/RepostButton.tsx:157
 msgctxt "action"
 msgid "Repost"
 msgstr "轉發"
@@ -5610,7 +5624,7 @@ msgstr "捲動去頂部"
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:484
 #: src/components/forms/SearchInput.tsx:34
 #: src/components/forms/SearchInput.tsx:36
-#: src/Navigation.tsx:590
+#: src/Navigation.tsx:584
 #: src/view/com/modals/ListAddRemoveUsers.tsx:76
 #: src/view/screens/Search/Search.tsx:594
 #: src/view/shell/bottom-bar/BottomBar.tsx:178
@@ -5676,9 +5690,9 @@ msgstr "喺 Bluesky 搵工"
 msgid "See this guide"
 msgstr "睇吓呢個指南"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/Scrubber.tsx:189
-msgid "Seek slider"
-msgstr "搵滑桿"
+#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/Scrubber.tsx:190
+msgid "Seek slider. Use the arrow keys to seek forwards and backwards, and space to play/pause"
+msgstr "播放進度條。用方向鍵嚟前進同後退，按空白鍵嚟播放同暫停。"
 
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:67
 msgid "Select a color"
@@ -5744,7 +5758,7 @@ msgstr "揀要上報嘅審核服務"
 msgid "Select the service that hosts your data."
 msgstr "揀 host 你資料嘅服務。"
 
-#: src/view/com/composer/videos/SelectVideoBtn.tsx:106
+#: src/view/com/composer/videos/SelectVideoBtn.tsx:100
 msgid "Select video"
 msgstr "揀影片"
 
@@ -5775,6 +5789,10 @@ msgstr "揀選你發嘢用嘅語言。"
 #: src/components/dms/ChatEmptyPill.tsx:38
 msgid "Send a neat website!"
 msgstr "送個整齊嘅網站！"
+
+#: src/screens/Settings/ContentAndMediaSettings.tsx:118
+msgid "Send Bluesky referrer"
+msgstr "發送 Bluesky 來源資訊"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:232
 msgid "Send Confirmation"
@@ -5827,8 +5845,8 @@ msgstr "將上報發送去 {0}"
 msgid "Send verification email"
 msgstr "傳送驗證電郵"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:405
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:408
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:423
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:426
 msgid "Send via direct message"
 msgstr "傳送到傾偈室度"
 
@@ -5876,8 +5894,8 @@ msgstr "性暗示"
 #: src/screens/StarterPack/StarterPackScreen.tsx:594
 #: src/view/com/profile/ProfileMenu.tsx:195
 #: src/view/com/profile/ProfileMenu.tsx:204
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:416
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:425
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:434
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:443
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:339
 #: src/view/screens/ProfileList.tsx:487
 msgid "Share"
@@ -5897,7 +5915,7 @@ msgid "Share a fun fact!"
 msgstr "分享一個有趣嘅事實！"
 
 #: src/view/com/profile/ProfileMenu.tsx:353
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:662
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:691
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:355
 msgid "Share anyway"
 msgstr "點都要分享"
@@ -5980,8 +5998,8 @@ msgstr "顯示隱藏嘅回覆"
 msgid "Show information about when this post was created"
 msgstr "顯示呢篇帖文幾時建立嘅資料"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:455
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:457
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:473
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:475
 msgid "Show less like this"
 msgstr "顯示少啲噉嘅嘢"
 
@@ -5995,8 +6013,8 @@ msgstr "點都要顯示呢個清單"
 msgid "Show More"
 msgstr "顯示更多"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:447
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:449
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:465
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:467
 msgid "Show more like this"
 msgstr "顯示多啲噉嘅嘢"
 
@@ -6026,8 +6044,8 @@ msgstr "優先顯示你跟嘅人個回覆喺其他人回覆之前"
 msgid "Show replies in a threaded view"
 msgstr "用樹狀視圖顯示回覆"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:521
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:531
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:539
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:549
 msgid "Show reply for everyone"
 msgstr "為所有人顯示回覆"
 
@@ -6205,6 +6223,10 @@ msgstr "垃圾訊息"
 #: src/lib/moderation/useReportOptions.ts:55
 msgid "Spam; excessive mentions or replies"
 msgstr "垃圾訊息、過度提及或回覆"
+
+#: src/screens/Settings/ContentAndMediaSettings.tsx:112
+msgid "Specify Bluesky as a referer"
+msgstr "允許 Bluesky 發送來源資訊"
 
 #: src/screens/Onboarding/index.tsx:27
 #: src/screens/Onboarding/state.ts:100
@@ -6512,7 +6534,7 @@ msgstr "呢篇帖文可能已經刪咗。"
 msgid "The Privacy Policy has been moved to <0/>"
 msgstr "私隱政策已經移至 <0/>"
 
-#: src/view/com/composer/state/video.ts:408
+#: src/view/com/composer/state/video.ts:395
 msgid "The selected video is larger than 50MB."
 msgstr "所選影片大過 50MB。"
 
@@ -6569,7 +6591,7 @@ msgstr "連接你嘅伺服器出現問題"
 msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr "攞緊通知嗰陣出現問題，撳呢度試多一次。"
 
-#: src/view/com/posts/Feed.tsx:523
+#: src/view/com/posts/Feed.tsx:458
 msgid "There was an issue fetching posts. Tap here to try again."
 msgstr "攞緊帖文嗰陣出現問題，撳呢度試多一次。"
 
@@ -6616,6 +6638,7 @@ msgstr "更新你嘅動態源嗰陣出現問題，請檢查你嘅互聯網連線
 #: src/view/com/profile/ProfileMenu.tsx:136
 #: src/view/com/profile/ProfileMenu.tsx:149
 #: src/view/com/profile/ProfileMenu.tsx:161
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:364
 msgid "There was an issue! {0}"
 msgstr "{0} 出現問題！"
 
@@ -6770,16 +6793,16 @@ msgstr "呢篇帖文話係話喺 <0>{0}</0> 發佈嘅，但係最先出現喺 Bl
 msgid "This post has been deleted."
 msgstr "呢篇帖文已經刪咗。"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:659
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:688
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:352
 msgid "This post is only visible to logged-in users. It won't be visible to people who aren't logged in."
 msgstr "呢篇帖文只會畀登入咗嘅用戶睇到，未登入嘅人唔會睇到。"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:640
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:669
 msgid "This post will be hidden from feeds and threads. This cannot be undone."
 msgstr "呢篇帖文將會喺討論串及動態源中俾隱藏，呢個操作無法撤銷。"
 
-#: src/view/com/composer/Composer.tsx:407
+#: src/view/com/composer/Composer.tsx:413
 msgid "This post's author has disabled quote posts."
 msgstr "呢篇帖文嘅發佈者唔俾人引用。"
 
@@ -6787,7 +6810,7 @@ msgstr "呢篇帖文嘅發佈者唔俾人引用。"
 msgid "This profile is only visible to logged-in users. It won't be visible to people who aren't logged in."
 msgstr "只有登入咗嘅用戶先可以睇到呢個帳號，登出咗嘅人就唔會睇到。"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:702
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:731
 msgid "This reply will be sorted into a hidden section at the bottom of your thread and will mute notifications for subsequent replies - both for yourself and others."
 msgstr "呢個回覆會被分類到你討論串下底嘅隱藏部分，兼且會為你自己同其他人靜音後續回覆嘅通知。"
 
@@ -6840,12 +6863,12 @@ msgstr "噉做會喺你啲靜音字入邊刪咗「{0}」去，你鍾意嘅話幾
 msgid "This will remove @{0} from the quick access list."
 msgstr "噉樣會喺快速存取清單入邊移除 @{0}。"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:692
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:721
 msgid "This will remove your post from this quote post for all users, and replace it with a placeholder."
 msgstr "噉樣會剷晒你對呢篇帖文嘅引用，同埋將佢換成一個佔位符。"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:48
-#: src/screens/Settings/ContentAndMediaSettings.tsx:51
+#: src/screens/Settings/ContentAndMediaSettings.tsx:57
+#: src/screens/Settings/ContentAndMediaSettings.tsx:60
 msgid "Thread preferences"
 msgstr "討論串設定"
 
@@ -6861,6 +6884,10 @@ msgstr "樹狀視圖模式"
 msgid "Threads Preferences"
 msgstr "討論串設定"
 
+#: src/view/com/util/post-embeds/VideoEmbedInner/TimeIndicator.tsx:33
+msgid "Time remaining: {time} seconds"
+msgstr "剩餘時間：{time} 秒鐘"
+
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:99
 msgid "To disable the email 2FA method, please verify your access to the email address."
 msgstr "若然要停用電郵雙重驗證，請驗證你嘅電郵地址。"
@@ -6869,7 +6896,7 @@ msgstr "若然要停用電郵雙重驗證，請驗證你嘅電郵地址。"
 msgid "To report a conversation, please report one of its messages via the conversation screen. This lets our moderators understand the context of your issue."
 msgstr "需要上報對話嘅話，請喺對話頁面入邊抽取其中一條去上報，咁樣我哋嘅管理員就知道件事嘅來龍去脈。"
 
-#: src/view/com/composer/videos/SelectVideoBtn.tsx:133
+#: src/view/com/composer/videos/SelectVideoBtn.tsx:127
 msgid "To upload videos to Bluesky, you must first verify your email."
 msgstr "想上載影片到 Bluesky 嘅話，你必須先驗證你嘅電郵。"
 
@@ -6898,8 +6925,8 @@ msgstr "TOP"
 #: src/components/dms/MessageMenu.tsx:105
 #: src/view/com/post-thread/PostThreadItem.tsx:761
 #: src/view/com/post-thread/PostThreadItem.tsx:764
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:386
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:388
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:404
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:406
 msgid "Translate"
 msgstr "翻譯"
 
@@ -7010,7 +7037,7 @@ msgid "Unmute"
 msgstr "取消靜音"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:155
-#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VolumeControl.tsx:93
+#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VolumeControl.tsx:94
 msgctxt "video"
 msgid "Unmute"
 msgstr "取消靜音"
@@ -7032,8 +7059,8 @@ msgstr "取消對所有 {displayTag} 帖文的靜音"
 msgid "Unmute conversation"
 msgstr "取消靜音對話"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:471
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:475
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:489
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:493
 msgid "Unmute thread"
 msgstr "取消靜音討論串"
 
@@ -7050,8 +7077,8 @@ msgstr "取消固定"
 msgid "Unpin from home"
 msgstr "喺首頁取消固定"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:361
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:368
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:379
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:386
 msgid "Unpin from profile"
 msgstr "喺個人檔案取消固定"
 
@@ -7080,9 +7107,13 @@ msgstr "取消訂閱呢個標記者"
 msgid "Unsubscribed from list"
 msgstr "已經喺清單入邊取消訂閱"
 
-#: src/view/com/composer/videos/SelectVideoBtn.tsx:72
-msgid "Unsupported video type: {mimeType}"
-msgstr "唔支援嘅影片類型：{mimeType}"
+#: src/view/com/composer/Composer.tsx:759
+msgid "Unsupported video type"
+msgstr "唔支援嘅影片類型"
+
+#: src/view/com/composer/videos/SelectVideoBtn.tsx:66
+msgid "Unsupported video type: {0}"
+msgstr "唔支援嘅影片類型：{0}"
 
 #: src/lib/moderation/useReportOptions.ts:77
 #: src/lib/moderation/useReportOptions.ts:90
@@ -7098,11 +7129,11 @@ msgstr "喺清單入邊更新 <0>{displayName}</0>"
 msgid "Update to {domain}"
 msgstr "更新到 {domain}"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:300
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:306
 msgid "Updating quote attachment failed"
 msgstr "更新引用附上狀態失敗"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:330
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:336
 msgid "Updating reply visibility failed"
 msgstr "回覆可見度更新失敗"
 
@@ -7146,7 +7177,7 @@ msgstr "上載緊圖片..."
 msgid "Uploading link thumbnail..."
 msgstr "上載緊連結縮圖..."
 
-#: src/view/com/composer/Composer.tsx:1626
+#: src/view/com/composer/Composer.tsx:1631
 msgid "Uploading video..."
 msgstr "上載緊條片..."
 
@@ -7163,8 +7194,8 @@ msgstr "使用預設供應商"
 msgid "Use in-app browser"
 msgstr "使用 App 入邊嘅瀏覽器"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:74
-#: src/screens/Settings/ContentAndMediaSettings.tsx:80
+#: src/screens/Settings/ContentAndMediaSettings.tsx:96
+#: src/screens/Settings/ContentAndMediaSettings.tsx:102
 msgid "Use in-app browser to open links"
 msgstr "使用 App 入邊嘅瀏覽器開啓連結"
 
@@ -7264,7 +7295,7 @@ msgstr "讚過呢個內容抑或個人檔案嘅用戶"
 msgid "Value:"
 msgstr "值："
 
-#: src/view/com/composer/videos/SelectVideoBtn.tsx:131
+#: src/view/com/composer/videos/SelectVideoBtn.tsx:125
 msgid "Verified email required"
 msgstr "需要驗證電郵"
 
@@ -7283,7 +7314,7 @@ msgstr "驗證電郵對話框"
 msgid "Verify New Email"
 msgstr "驗證新電郵"
 
-#: src/view/com/composer/videos/SelectVideoBtn.tsx:135
+#: src/view/com/composer/videos/SelectVideoBtn.tsx:129
 msgid "Verify now"
 msgstr "而家驗證"
 
@@ -7312,7 +7343,7 @@ msgstr "版本 {appVersion}"
 msgid "Video"
 msgstr "影片"
 
-#: src/view/com/composer/state/video.ts:371
+#: src/view/com/composer/state/video.ts:358
 msgid "Video failed to process"
 msgstr "影片處理唔到"
 
@@ -7329,7 +7360,7 @@ msgstr "搵唔到影片。"
 msgid "Video settings"
 msgstr "影片設定"
 
-#: src/view/com/composer/Composer.tsx:1636
+#: src/view/com/composer/Composer.tsx:1641
 msgid "Video uploaded"
 msgstr "影片上載咗"
 
@@ -7337,8 +7368,8 @@ msgstr "影片上載咗"
 msgid "Video: {0}"
 msgstr "影片：{0}"
 
-#: src/view/com/composer/videos/SelectVideoBtn.tsx:79
-#: src/view/com/composer/videos/VideoPreview.web.tsx:44
+#: src/view/com/composer/videos/SelectVideoBtn.tsx:58
+#: src/view/com/composer/videos/SelectVideoBtn.tsx:73
 msgid "Videos must be less than 60 seconds long"
 msgstr "影片長度一定要少過60秒鐘"
 
@@ -7435,6 +7466,10 @@ msgstr "睇吓你嘅靜音帳號"
 msgid "Visit Site"
 msgstr "去網站"
 
+#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VolumeControl.tsx:80
+msgid "Volume"
+msgstr "音量"
+
 #: src/components/moderation/LabelPreference.tsx:136
 #: src/lib/moderation/useLabelBehaviorDescription.ts:17
 #: src/lib/moderation/useLabelBehaviorDescription.ts:22
@@ -7473,7 +7508,7 @@ msgstr "我哋希望你你玩得開心。唔好忘記，Bluesky 係："
 msgid "We ran out of posts from your follows. Here's the latest from <0/>."
 msgstr "你已經睇晒你跟緊啲人嘅帖文。呢個係 <0/> 嘅最新消息。"
 
-#: src/view/com/composer/state/video.ts:430
+#: src/view/com/composer/state/video.ts:417
 msgid "We were unable to determine if you are allowed to upload videos. Please try again."
 msgstr "我哋決定唔到你係咪可以上載影片，請再試多次。"
 
@@ -7517,7 +7552,7 @@ msgstr "對唔住，我哋宜家撈唔到你啲靜音字詞。唔該試多一次
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr "唔好意思，你嘅搵嘢柯打未攪得掂。唔該等多幾分鐘試吓。"
 
-#: src/view/com/composer/Composer.tsx:404
+#: src/view/com/composer/Composer.tsx:410
 msgid "We're sorry! The post you are replying to has been deleted."
 msgstr "對唔住！你回覆緊嘅帖文已經俾人刪咗。"
 
@@ -7548,7 +7583,7 @@ msgstr "你想點叫你嘅新手包？"
 
 #: src/view/com/auth/SplashScreen.tsx:38
 #: src/view/com/auth/SplashScreen.web.tsx:99
-#: src/view/com/composer/Composer.tsx:716
+#: src/view/com/composer/Composer.tsx:722
 msgid "What's up?"
 msgstr "有咩大件事？"
 
@@ -7606,11 +7641,11 @@ msgstr "點解要審查呢個用戶？"
 msgid "Write a message"
 msgstr "寫個訊息"
 
-#: src/view/com/composer/Composer.tsx:794
+#: src/view/com/composer/Composer.tsx:810
 msgid "Write post"
 msgstr "寫個帖文"
 
-#: src/view/com/composer/Composer.tsx:714
+#: src/view/com/composer/Composer.tsx:720
 #: src/view/com/post-thread/PostThreadComposePrompt.tsx:70
 msgid "Write your reply"
 msgstr "寫低你嘅回覆"
@@ -7637,11 +7672,11 @@ msgstr "係，停用佢"
 msgid "Yes, delete this starter pack"
 msgstr "係，刪咗呢個新手包"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:695
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:724
 msgid "Yes, detach"
 msgstr "係，分離佢"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:705
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:734
 msgid "Yes, hide"
 msgstr "係，隱藏佢"
 
@@ -7665,7 +7700,7 @@ msgstr "你"
 msgid "You are in line."
 msgstr "你排緊隊。"
 
-#: src/view/com/composer/state/video.ts:423
+#: src/view/com/composer/state/video.ts:410
 msgid "You are not allowed to upload videos."
 msgstr "你唔可以上載影片。"
 
@@ -7843,11 +7878,11 @@ msgstr "你之前停用咗 @{0}。"
 msgid "You will be signed out of all your accounts."
 msgstr "你將會被登出所有帳號。"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:211
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:217
 msgid "You will no longer receive notifications for this thread"
 msgstr "你唔會再收到呢個討論串嘅通知"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:207
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:213
 msgid "You will now receive notifications for this thread"
 msgstr "你而家會收到呢個討論串嘅通知"
 
@@ -7913,11 +7948,11 @@ msgstr "你揀咗喺呢篇帖文入邊隱藏字詞抑或標籤。"
 msgid "You've reached the end of your feed! Find some more accounts to follow."
 msgstr "你已經睇晒你嘅動態源喇！去搵更多人嚟跟住佢哋啦。"
 
-#: src/view/com/composer/state/video.ts:434
+#: src/view/com/composer/state/video.ts:421
 msgid "You've reached your daily limit for video uploads (too many bytes)"
 msgstr "你已經達到每日上載影片嘅上限（總計影片大小過大）"
 
-#: src/view/com/composer/state/video.ts:438
+#: src/view/com/composer/state/video.ts:425
 msgid "You've reached your daily limit for video uploads (too many videos)"
 msgstr "你已經達到每日上載影片嘅上限（影片數量過多）"
 
@@ -7929,7 +7964,7 @@ msgstr "你個帳號"
 msgid "Your account has been deleted"
 msgstr "你個帳號已經刪咗"
 
-#: src/view/com/composer/state/video.ts:442
+#: src/view/com/composer/state/video.ts:429
 msgid "Your account is not yet old enough to upload videos. Please try again later."
 msgstr "你嘅帳號仲未夠上載影片。唔該遲啲試多一次。"
 
@@ -7992,11 +8027,11 @@ msgstr "你設定咗嘅靜音字"
 msgid "Your password has been changed successfully!"
 msgstr "你個密碼改好咗喇！"
 
-#: src/view/com/composer/Composer.tsx:464
+#: src/view/com/composer/Composer.tsx:470
 msgid "Your post has been published"
 msgstr "你嘅帖文已經發佈咗喇"
 
-#: src/view/com/composer/Composer.tsx:461
+#: src/view/com/composer/Composer.tsx:467
 msgid "Your posts have been published"
 msgstr "你嘅帖文已經發佈咗喇"
 
@@ -8008,7 +8043,7 @@ msgstr "你嘅帖文、讚好同封鎖都係公開嘅。之但係靜音嗰度淨
 msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
 msgstr "你嘅個人檔案、帖文、動態源同埋清單唔會再畀其他 Bluesky 用戶睇到。你幾時都可以登入重新啓用你嘅帳號。"
 
-#: src/view/com/composer/Composer.tsx:463
+#: src/view/com/composer/Composer.tsx:469
 msgid "Your reply has been published"
 msgstr "你嘅回覆已經發佈咗喇"
 
