@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-23 15:00\n"
+"PO-Revision-Date: 2024-11-23 17:34\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional, Hong Kong\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -2634,7 +2634,7 @@ msgstr "撈唔到建議嘅動態源"
 
 #: src/view/screens/Search/Explore.tsx:378
 msgid "Failed to load suggested follows"
-msgstr "撈唔到建議跟隨"
+msgstr "撈唔到建議你跟嘅人"
 
 #: src/state/queries/pinned-post.ts:75
 msgid "Failed to pin post"
@@ -2876,11 +2876,11 @@ msgstr "「Following」動態源設定"
 
 #: src/screens/Profile/Header/Handle.tsx:32
 msgid "Follows you"
-msgstr "跟住你"
+msgstr "跟緊你"
 
 #: src/components/Pills.tsx:175
 msgid "Follows You"
-msgstr "跟住你"
+msgstr "跟緊你"
 
 #: src/screens/Settings/AppearanceSettings.tsx:125
 msgid "Font"
@@ -3647,7 +3647,7 @@ msgstr "再撈啲建議動態源"
 
 #: src/view/screens/Search/Explore.tsx:217
 msgid "Load more suggested follows"
-msgstr "再撈啲建議跟隨"
+msgstr "再撈啲建議你跟嘅人"
 
 #: src/view/screens/Notifications.tsx:215
 msgid "Load new notifications"
