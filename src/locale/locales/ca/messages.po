@@ -5585,7 +5585,7 @@ msgstr "Falta el text alternatiu a una o més imatges."
 
 #: src/view/com/composer/Composer.tsx:330
 msgid "One or more videos is missing alt text."
-msgstr "Falta el text alternatiu a un o més videos"
+msgstr "Falta el text alternatiu a un o més videos."
 
 #: src/screens/Onboarding/StepProfile/index.tsx:115
 msgid "Only .jpg and .png files are supported"
