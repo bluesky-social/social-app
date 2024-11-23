@@ -139,7 +139,7 @@ export function NotificationLoadingPlaceholder({
   const pal = usePalette('default')
   return (
     <View style={[styles.notification, pal.view, style]}>
-      <View style={[{width: 70}, a.align_end, a.pr_sm, a.pt_2xs]}>
+      <View style={[{width: 60}, a.align_end, a.pr_sm, a.pt_2xs]}>
         <HeartIconFilled
           size="xl"
           style={{color: pal.colors.backgroundLight}}
@@ -148,8 +148,8 @@ export function NotificationLoadingPlaceholder({
       <View style={{flex: 1}}>
         <View style={[a.flex_row, s.mb10]}>
           <LoadingPlaceholder
-            width={30}
-            height={30}
+            width={35}
+            height={35}
             style={styles.smallAvatar}
           />
         </View>
@@ -309,7 +309,7 @@ const styles = StyleSheet.create({
     padding: 5,
   },
   avatar: {
-    borderRadius: 26,
+    borderRadius: 999,
     marginRight: 10,
     marginLeft: 8,
   },
@@ -323,11 +323,11 @@ const styles = StyleSheet.create({
     margin: 1,
   },
   profileCardAvi: {
-    borderRadius: 20,
+    borderRadius: 999,
     marginRight: 10,
   },
   smallAvatar: {
-    borderRadius: 15,
+    borderRadius: 999,
     marginRight: 10,
   },
 })
