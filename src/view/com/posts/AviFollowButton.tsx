@@ -88,14 +88,14 @@ export function AviFollowButton({
             a.rounded_full,
             a.absolute,
             {
-              bottom: -7,
-              right: -7,
+              bottom: -4,
+              right: -4,
             },
           ]}>
           <NativeDropdown items={items}>
             <View
               style={[
-                {width: 30, height: 30},
+                {width: 24, height: 24},
                 a.align_center,
                 a.justify_center,
                 a.rounded_full,
