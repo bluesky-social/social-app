@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-23 01:13\n"
+"PO-Revision-Date: 2024-11-23 12:25\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -3094,7 +3094,7 @@ msgstr "通过上传图片或生成头像，来让大家知道你不是机器人
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:127
 msgid "Helps external sites estimate traffic from Bluesky."
-msgstr "帮助外部站点估算来自 Bluesky 的流量。"
+msgstr "帮助外部站点分析来自 Bluesky 的访问流量。"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:187
 msgid "Here is your app password!"
@@ -5792,7 +5792,7 @@ msgstr "发送一个你认为很有趣的网站！"
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:118
 msgid "Send Bluesky referrer"
-msgstr "发送 Bluesky 访问来源标记"
+msgstr "发送 Bluesky 为流量来源"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:232
 msgid "Send Confirmation"
@@ -6226,7 +6226,7 @@ msgstr "垃圾内容；过于频繁的提及或回复"
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:112
 msgid "Specify Bluesky as a referer"
-msgstr "允许 Bluesky 发送访问来源标记"
+msgstr "把 Bluesky 设为流量来源"
 
 #: src/screens/Onboarding/index.tsx:27
 #: src/screens/Onboarding/state.ts:100

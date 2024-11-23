@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-23 01:14\n"
+"PO-Revision-Date: 2024-11-23 12:26\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -100,7 +100,7 @@ msgstr "{0, plural, one {則轉發} other {則轉發}}"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:301
 msgid "{0, plural, one {Unlike (# like)} other {Unlike (# likes)}}"
-msgstr "{0, plural, one {撤回喜歡 (# 個喜歡)} other {撤回喜歡 (# 個喜歡)}}"
+msgstr "{0, plural, one {取消喜歡 (# 個喜歡)} other {取消喜歡 (# 個喜歡)}}"
 
 #: src/screens/Settings/Settings.tsx:414
 msgid "{0}"
@@ -788,7 +788,7 @@ msgstr "應用程式密碼名稱不得與現有的重複"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:62
 msgid "App password names can only contain letters, numbers, spaces, dashes, and underscores"
-msgstr "應用程式專用密碼只能包含字母、數字、空格、連字號及底線"
+msgstr "應用程式專用密碼只能包含字母、數字、空格、連字號 (-)、底線 (_)"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:80
 msgid "App password names must be at least 4 characters long"
@@ -1322,7 +1322,7 @@ msgstr "選擇提供您自訂動態的演算法。"
 
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:107
 msgid "Choose this color as your avatar"
-msgstr "選擇這個顏色作為您的大頭貼照"
+msgstr "選擇這個顏色作為您的大頭貼照背景"
 
 #: src/screens/Signup/StepInfo/index.tsx:201
 msgid "Choose your password"
@@ -2078,7 +2078,7 @@ msgstr "不包含裸露內容。"
 
 #: src/screens/Signup/StepHandle.tsx:159
 msgid "Doesn't begin or end with a hyphen"
-msgstr "不以連字號開頭或結尾"
+msgstr "不以連字號 (-) 開頭或結尾"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:487
 msgid "Domain verified!"
@@ -3094,7 +3094,7 @@ msgstr "透過上傳圖片或建立大頭貼照，讓大家知道您不是機器
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:127
 msgid "Helps external sites estimate traffic from Bluesky."
-msgstr "幫助外部網站估算來自 Bluesky 的流量。"
+msgstr "幫助外部網站分析來自 Bluesky 的流量。"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:187
 msgid "Here is your app password!"
@@ -3586,7 +3586,7 @@ msgstr "列表"
 
 #: src/view/com/modals/CreateOrEditList.tsx:241
 msgid "List Avatar"
-msgstr "列表大頭貼照"
+msgstr "列表封面圖片"
 
 #: src/view/screens/ProfileList.tsx:422
 msgid "List blocked"
@@ -4297,7 +4297,7 @@ msgstr "關於分享的注意事項"
 
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:80
 msgid "Note: Bluesky is an open and public network. This setting only limits the visibility of your content on the Bluesky app and website, and other apps may not respect this setting. Your content may still be shown to logged-out users by other apps and websites."
-msgstr "注意：Bluesky 是一個開放且公開的網路。此設定僅限制您在 Bluesky 應用程式和網站上的內容可見度，其他應用程式可能不會遵循這個規則。您的內容仍可能由其他應用程式和網站顯示給未登入的用戶。"
+msgstr "注意：Bluesky 是一個開放的公共社群網路。這個設定僅限制您在 Bluesky 應用程式和網站上的內容可見度，其他應用程式可能不會遵循這個規則。您的內容仍可能被其他應用程式和網站顯示給未登入的用戶。"
 
 #: src/screens/Messages/ChatList.tsx:213
 msgid "Nothing here"
@@ -4408,7 +4408,7 @@ msgstr "只有{0}可以回覆。"
 
 #: src/screens/Signup/StepHandle.tsx:152
 msgid "Only contains letters, numbers, and hyphens"
-msgstr "只包含字母、數字和連字號"
+msgstr "只包含字母、數字和連字號 (-)"
 
 #: src/lib/media/picker.shared.ts:29
 msgid "Only image files are supported"
@@ -5692,7 +5692,7 @@ msgstr "檢視指南"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/Scrubber.tsx:190
 msgid "Seek slider. Use the arrow keys to seek forwards and backwards, and space to play/pause"
-msgstr "播放進度條。使用方向鍵來前進或後退，按空白鍵控製播放或暫停。"
+msgstr "播放進度條。使用方向鍵來前進或後退，按空白鍵控制播放或暫停。"
 
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:67
 msgid "Select a color"
@@ -5792,7 +5792,7 @@ msgstr "傳送一個有趣的網站吧！"
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:118
 msgid "Send Bluesky referrer"
-msgstr "發送 Bluesky 來源資訊"
+msgstr "傳送 Bluesky 為流量來源"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:232
 msgid "Send Confirmation"
@@ -6226,7 +6226,7 @@ msgstr "垃圾訊息、過多的提及或回覆"
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:112
 msgid "Specify Bluesky as a referer"
-msgstr "允許 Bluesky 發送來源資訊"
+msgstr "把 Bluesky 設為流量來源"
 
 #: src/screens/Onboarding/index.tsx:27
 #: src/screens/Onboarding/state.ts:100
