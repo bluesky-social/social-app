@@ -19,7 +19,7 @@ const hiFactors = [3, 5, 7, 9]
 const esCaFactors = [3, 6, 10]
 const itDeFactors = [6, 9]
 const jaZhFactors = [4, 8]
-const normalFactors = [3, 6, 9]
+const restFactors = [3, 6, 9]
 
 export const formatCount = (i18n: I18n, num: number) => {
   const locale = i18n.locale
@@ -35,7 +35,7 @@ export const formatCount = (i18n: I18n, num: number) => {
   } else if (locale === 'it' || locale === 'de') {
     truncatedNum = truncateRounding(num, itDeFactors)
   } else {
-    truncatedNum = truncateRounding(num, normalFactors)
+    truncatedNum = truncateRounding(num, restFactors)
   }
   return i18n.number(truncatedNum, {
     notation: 'compact',
