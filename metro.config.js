@@ -38,9 +38,10 @@ cfg.transformer.getTransformOptions = async () => ({
     inlineRequires: true,
     nonInlinedRequires: [
       // We can remove this option and rely on the default after
-      // https://github.com/facebook/metro/pull/1126 is released.
+      // https://github.com/facebook/metro/pull/1390 is released.
       'React',
       'react',
+      'react-compiler-runtime',
       'react/jsx-dev-runtime',
       'react/jsx-runtime',
       'react-native',

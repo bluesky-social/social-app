@@ -2,7 +2,6 @@ import React from 'react'
 import {Pressable, PressableProps, StyleProp, ViewStyle} from 'react-native'
 import Animated, {
   cancelAnimation,
-  runOnJS,
   useAnimatedStyle,
   useReducedMotion,
   useSharedValue,
@@ -32,27 +31,25 @@ export function PressableScale({
   const scale = useSharedValue(1)
 
   const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{scale: scale.value}],
+    transform: [{scale: scale.get()}],
   }))
 
   return (
     <AnimatedPressable
       accessibilityRole="button"
       onPressIn={e => {
-        'worklet'
         if (onPressIn) {
-          runOnJS(onPressIn)(e)
+          onPressIn(e)
         }
         cancelAnimation(scale)
-        scale.value = withTiming(targetScale, {duration: 100})
+        scale.set(() => withTiming(targetScale, {duration: 100}))
       }}
       onPressOut={e => {
-        'worklet'
         if (onPressOut) {
-          runOnJS(onPressOut)(e)
+          onPressOut(e)
         }
         cancelAnimation(scale)
-        scale.value = withTiming(1, {duration: 100})
+        scale.set(() => withTiming(1, {duration: 100}))
       }}
       style={[!reducedMotion && animatedStyle, style]}
       {...rest}>
