@@ -10,7 +10,6 @@
 import React from 'react'
 import {formatDistance, Locale} from 'date-fns'
 import {
-  an,
   ca,
   de,
   enGB,
