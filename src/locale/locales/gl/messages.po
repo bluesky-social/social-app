@@ -191,7 +191,7 @@ msgstr ""
 
 #: src/components/LabelingServiceCard/index.tsx:96
 msgid "{count, plural, one {Liked by # user} other {Liked by # users}}"
-msgstr "{count, plural, one {Liked by # user} outro {Liked by # users}}"
+msgstr "{count, plural, one {Liked by # user} other {Liked by # users}}"
 
 #: src/view/shell/desktop/LeftNav.tsx:223
 msgid "{count} unread items"
@@ -228,9 +228,7 @@ msgstr "{estimatedTimeHrs, plural, one {hour} other {hours}}"
 
 #: src/screens/SignupQueued.tsx:226
 msgid "{estimatedTimeMins, plural, one {minute} other {minutes}}"
-msgstr ""
-"{estimatedTimeMins, plural, one {minute} other {minutes}}\n"
-""
+msgstr "{estimatedTimeMins, plural, one {minute} other {minutes}}"
 
 #: src/view/com/notifications/FeedItem.tsx:300
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> followed you"
@@ -366,9 +364,7 @@ msgstr "{profileName} uniuse a Bluesky empregando un paquete de comezo fai {0}"
 #: src/screens/StarterPack/Wizard/index.tsx:475
 msgctxt "profiles"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
-msgstr ""
-"<0>{0}, </0><1>{1}, </1>e {2, plural, un {# outro} outro {# outros}} foron incluídos no teu paquete\n"
-""
+msgstr "<0>{0}, </0><1>{1}, </1>e {2, plural, one {# outro} other {# outros}} foron incluídos no teu paquete"
 
 #: src/screens/StarterPack/Wizard/index.tsx:528
 msgctxt "feeds"
@@ -381,15 +377,11 @@ msgstr "<0>{0}, </0><1>{1}, </1>e {2, plural, one {# other} other {# others}} in
 
 #: src/view/shell/Drawer.tsx:97
 msgid "<0>{0}</0> {1, plural, one {follower} other {followers}}"
-msgstr ""
-"<0>{0}</0> {1, plural, one {follower} outros {followers}}\n"
-""
+msgstr "<0>{0}</0> {1, plural, one {follower} other {followers}}"
 
 #: src/view/shell/Drawer.tsx:108
 msgid "<0>{0}</0> {1, plural, one {following} other {following}}"
-msgstr ""
-"<0>{0}</0> {1, plural, one {following} outro {following}}\n"
-""
+msgstr "<0>{0}</0> {1, plural, one {following} other {following}}"
 
 #: src/screens/StarterPack/Wizard/index.tsx:516
 msgid "<0>{0}</0> and<1> </1><2>{1} </2>are included in your starter pack"
