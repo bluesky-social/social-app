@@ -11,6 +11,7 @@ import {Paragraph} from '@tiptap/extension-paragraph'
 import {Placeholder} from '@tiptap/extension-placeholder'
 import {Text as TiptapText} from '@tiptap/extension-text'
 import {generateJSON} from '@tiptap/html'
+import {Fragment, Node, Slice} from '@tiptap/pm/model'
 import {EditorContent, JSONContent, useEditor} from '@tiptap/react'
 
 import {useColorSchemeStyle} from '#/lib/hooks/useColorSchemeStyle'
@@ -166,12 +167,31 @@ export const TextInput = React.forwardRef(function TextInputImpl(
   const editor = useEditor(
     {
       extensions,
+      coreExtensionOptions: {
+        clipboardTextSerializer: {
+          blockSeparator: '\n',
+        },
+      },
       onFocus() {
         onFocus?.()
       },
       editorProps: {
         attributes: {
           class: modeClass,
+        },
+        clipboardTextParser: (text, context) => {
+          const blocks = text.split(/(?:\r\n?|\n)/)
+          const nodes: Node[] = blocks.map(line => {
+            return Node.fromJSON(
+              context.doc.type.schema,
+              line.length > 0
+                ? {type: 'paragraph', content: [{type: 'text', text: line}]}
+                : {type: 'paragraph', content: []},
+            )
+          })
+
+          const fragment = Fragment.fromArray(nodes)
+          return Slice.maxOpen(fragment)
         },
         handlePaste: (view, event) => {
           const clipboardData = event.clipboardData
@@ -205,6 +225,7 @@ export const TextInput = React.forwardRef(function TextInputImpl(
       autofocus: 'end',
       editable: true,
       injectCSS: true,
+      shouldRerenderOnTransaction: false,
       onCreate({editor: editorProp}) {
         // HACK
         // the 'enter' animation sometimes causes autofocus to fail
@@ -297,15 +318,9 @@ export const TextInput = React.forwardRef(function TextInputImpl(
     style.lineHeight = style.lineHeight
       ? ((style.lineHeight + 'px') as unknown as number)
       : undefined
+    style.minHeight = webForceMinHeight ? 140 : undefined
     return style
-  }, [t, fonts])
-
-  React.useLayoutEffect(() => {
-    let node = editor?.view.dom
-    if (node) {
-      node.style.minHeight = webForceMinHeight ? '140px' : ''
-    }
-  }, [editor, webForceMinHeight])
+  }, [t, fonts, webForceMinHeight])
 
   return (
     <>

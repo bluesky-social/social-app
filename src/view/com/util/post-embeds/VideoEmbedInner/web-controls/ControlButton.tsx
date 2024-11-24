@@ -23,7 +23,8 @@ export function ControlButton({
   return (
     <PressableWithHover
       accessibilityRole="button"
-      accessibilityHint={active ? activeLabel : inactiveLabel}
+      accessibilityLabel={active ? activeLabel : inactiveLabel}
+      accessibilityHint=""
       onPress={onPress}
       style={[
         a.p_xs,
@@ -32,9 +33,9 @@ export function ControlButton({
       ]}
       hoverStyle={{backgroundColor: 'rgba(255, 255, 255, 0.2)'}}>
       {active ? (
-        <ActiveIcon fill={t.palette.white} width={20} />
+        <ActiveIcon fill={t.palette.white} width={20} aria-hidden />
       ) : (
-        <InactiveIcon fill={t.palette.white} width={20} />
+        <InactiveIcon fill={t.palette.white} width={20} aria-hidden />
       )}
     </PressableWithHover>
   )
