@@ -68,7 +68,7 @@ msgstr "팔로우 중"
 msgid "{0, plural, one {Like (# like)} other {Like (# likes)}}"
 msgstr "좋아요 ({0, plural, other {#}}개)"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:442
+#: src/view/com/post-thread/PostThreadItem.tsx:447
 msgid "{0, plural, one {like} other {likes}}"
 msgstr "좋아요"
 
@@ -81,7 +81,7 @@ msgstr "{0, plural, other {#}}명의 사용자가 좋아함"
 msgid "{0, plural, one {post} other {posts}}"
 msgstr "게시물"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:426
+#: src/view/com/post-thread/PostThreadItem.tsx:431
 msgid "{0, plural, one {quote} other {quotes}}"
 msgstr "인용"
 
@@ -89,7 +89,7 @@ msgstr "인용"
 msgid "{0, plural, one {Reply (# reply)} other {Reply (# replies)}}"
 msgstr "답글 ({0, plural, other {#}}개)"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:408
+#: src/view/com/post-thread/PostThreadItem.tsx:413
 msgid "{0, plural, one {repost} other {reposts}}"
 msgstr "재게시"
 
@@ -609,7 +609,7 @@ msgstr "다이렉트 메시지 접근 허용"
 msgid "Allow new messages from"
 msgstr "새 메시지를 허용할 대상"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:360
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:363
 msgid "Allow replies from:"
 msgstr "답글을 허용할 대상"
 
@@ -832,12 +832,12 @@ msgstr "모양"
 msgid "Apply default recommended feeds"
 msgstr "기본 추천 피드 적용하기"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:825
+#: src/view/com/post-thread/PostThreadItem.tsx:835
 msgid "Archived from {0}"
 msgstr "{0}에 보관됨"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:794
-#: src/view/com/post-thread/PostThreadItem.tsx:833
+#: src/view/com/post-thread/PostThreadItem.tsx:804
+#: src/view/com/post-thread/PostThreadItem.tsx:843
 msgid "Archived post"
 msgstr "보관된 게시물"
 
@@ -1033,7 +1033,7 @@ msgstr "블로그"
 msgid "Bluesky"
 msgstr "Bluesky"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:850
+#: src/view/com/post-thread/PostThreadItem.tsx:860
 msgid "Bluesky cannot confirm the authenticity of the claimed date."
 msgstr "Bluesky는 해당 날짜의 진위를 확인할 수 없습니다."
 
@@ -1351,11 +1351,11 @@ msgstr "자세한 내용을 보려면 이곳을 클릭하세요."
 msgid "Click here to open tag menu for {tag}"
 msgstr "이곳을 클릭하여 {tag}의 태그 메뉴 열기"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:304
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:307
 msgid "Click to disable quote posts of this post."
 msgstr "이 게시물의 인용 게시물을 비활성화하려면 클릭하세요."
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:305
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:308
 msgid "Click to enable quote posts of this post."
 msgstr "이 게시물의 인용 게시물을 활성화하려면 클릭하세요."
 
@@ -1384,8 +1384,8 @@ msgstr "다그닥 🐴 다그닥 🐴"
 msgid "Close"
 msgstr "닫기"
 
-#: src/components/Dialog/index.web.tsx:110
-#: src/components/Dialog/index.web.tsx:261
+#: src/components/Dialog/index.web.tsx:108
+#: src/components/Dialog/index.web.tsx:250
 msgid "Close active dialog"
 msgstr "열려 있는 대화 상자 닫기"
 
@@ -1795,7 +1795,7 @@ msgstr "사용자 지정"
 msgid "Custom feeds built by the community bring you new experiences and help you find the content you love."
 msgstr "커뮤니티에서 구축한 맞춤 피드는 새로운 경험을 제공하고 좋아하는 콘텐츠를 찾을 수 있도록 도와줍니다."
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:289
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:292
 msgid "Customize who can interact with this post."
 msgstr "이 게시물과 상호작용할 수 있는 사람을 사용자 지정합니다."
 
@@ -2124,7 +2124,7 @@ msgstr "Bluesky 다운로드"
 msgid "Download CAR file"
 msgstr "CAR 파일 다운로드"
 
-#: src/view/com/composer/text-input/TextInput.web.tsx:327
+#: src/view/com/composer/text-input/TextInput.web.tsx:342
 msgid "Drop to add images"
 msgstr "드롭하여 이미지 추가"
 
@@ -2460,7 +2460,7 @@ msgstr "캡차 응답을 수신하는 동안 오류가 발생했습니다."
 msgid "Error:"
 msgstr "오류:"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:365
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:368
 msgid "Everybody"
 msgstr "모두"
 
@@ -2819,7 +2819,7 @@ msgstr "<0>{0}</0> 님과 <1>{1}</1> 님이 팔로우함"
 msgid "Followed by <0>{0}</0>, <1>{1}</1>, and {2, plural, one {# other} other {# others}}"
 msgstr "<0>{0}</0> 님, <1>{1}</1> 님 외 {2, plural, other {#}}명이 팔로우함"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:404
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:407
 msgid "Followed users"
 msgstr "팔로우한 사용자"
 
@@ -3333,7 +3333,7 @@ msgstr "잘못된 2단계 인증 코드입니다."
 msgid "Invalid handle. Please try a different one."
 msgstr "잘못된 핸들입니다. 다른 핸들을 사용하세요."
 
-#: src/view/com/post-thread/PostThreadItem.tsx:272
+#: src/view/com/post-thread/PostThreadItem.tsx:277
 msgid "Invalid or unsupported post record"
 msgstr "유효하지 않거나 지원되지 않는 게시물 기록"
 
@@ -3580,7 +3580,7 @@ msgstr "좋아요 표시한 사용자"
 msgid "Likes"
 msgstr "좋아요"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:212
+#: src/view/com/post-thread/PostThreadItem.tsx:217
 msgid "Likes on this post"
 msgstr "이 게시물을 좋아요 표시합니다"
 
@@ -3754,7 +3754,7 @@ msgstr "일부 사용자에게 불쾌감을 주거나 부적절할 수 있는 �
 msgid "mentioned users"
 msgstr "멘션한 사용자"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:394
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:397
 msgid "Mentioned users"
 msgstr "멘션한 사용자"
 
@@ -3864,7 +3864,7 @@ msgstr "검토 도구"
 msgid "Moderator has chosen to set a general warning on the content."
 msgstr "검토자가 콘텐츠에 일반 경고를 설정했습니다."
 
-#: src/view/com/post-thread/PostThreadItem.tsx:628
+#: src/view/com/post-thread/PostThreadItem.tsx:633
 msgid "More"
 msgstr "더 보기"
 
@@ -4257,7 +4257,7 @@ msgstr "\"{search}\"에 대한 검색 결과를 찾을 수 없습니다."
 msgid "No thanks"
 msgstr "사용하지 않음"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:376
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:379
 msgid "Nobody"
 msgstr "없음"
 
@@ -4373,7 +4373,7 @@ msgid "OK"
 msgstr "확인"
 
 #: src/screens/Login/PasswordUpdatedForm.tsx:37
-#: src/view/com/post-thread/PostThreadItem.tsx:855
+#: src/view/com/post-thread/PostThreadItem.tsx:865
 msgid "Okay"
 msgstr "확인"
 
@@ -4584,7 +4584,7 @@ msgstr "선택 사항으로 아래에 추가 정보를 입력하세요."
 msgid "Options:"
 msgstr "옵션:"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:389
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:392
 msgid "Or combine these options:"
 msgstr "또는 다음 옵션을 결합하세요."
 
@@ -4824,7 +4824,7 @@ msgctxt "action"
 msgid "Post All"
 msgstr "모두 게시하기"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:204
+#: src/view/com/post-thread/PostThreadItem.tsx:209
 msgid "Post by {0}"
 msgstr "{0} 님의 게시물"
 
@@ -4857,7 +4857,7 @@ msgstr "뮤트한 단어로 숨겨진 게시물"
 msgid "Post Hidden by You"
 msgstr "내가 숨긴 게시물"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:284
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:287
 msgid "Post interaction settings"
 msgstr "게시물 상호작용 설정"
 
@@ -5031,7 +5031,7 @@ msgstr "인용을 다시 연결했습니다"
 msgid "Quote post was successfully detached"
 msgstr "인용을 성공적으로 해제했습니다"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:314
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:317
 #: src/view/com/util/post-ctrls/RepostButton.tsx:167
 #: src/view/com/util/post-ctrls/RepostButton.tsx:189
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:84
@@ -5039,11 +5039,11 @@ msgstr "인용을 성공적으로 해제했습니다"
 msgid "Quote posts disabled"
 msgstr "게시물 인용 비활성화됨"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:312
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:315
 msgid "Quote posts enabled"
 msgstr "게시물 인용 활성화됨"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:296
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:299
 msgid "Quote settings"
 msgstr "인용 설정"
 
@@ -5052,7 +5052,7 @@ msgstr "인용 설정"
 msgid "Quotes"
 msgstr "인용"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:238
+#: src/view/com/post-thread/PostThreadItem.tsx:243
 msgid "Quotes of this post"
 msgstr "이 게시물의 인용"
 
@@ -5274,11 +5274,11 @@ msgstr "스레드 작성자에 의해 답글 숨겨짐"
 msgid "Reply Hidden by You"
 msgstr "나에 의해 답글 숨겨짐"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:356
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:359
 msgid "Reply settings"
 msgstr "답글 설정"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:341
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:344
 msgid "Reply settings are chosen by the author of the thread"
 msgstr "답글 설정은 스레드 작성자가 선택합니다"
 
@@ -5423,7 +5423,7 @@ msgstr "<0><1/></0> 님이 재게시함"
 msgid "Reposted by you"
 msgstr "내가 재게시함"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:217
+#: src/view/com/post-thread/PostThreadItem.tsx:222
 msgid "Reposts of this post"
 msgstr "이 게시물의 재게시물"
 
@@ -5529,8 +5529,8 @@ msgid "Returns to previous page"
 msgstr "이전 페이지로 돌아갑니다"
 
 #: src/components/dialogs/BirthDateSettings.tsx:124
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:439
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:445
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:442
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:448
 #: src/components/StarterPack/QrCodeDialog.tsx:185
 #: src/screens/Profile/Header/EditProfileDialog.tsx:238
 #: src/screens/Profile/Header/EditProfileDialog.tsx:252
@@ -6002,7 +6002,7 @@ msgstr "배지 표시 및 피드에서 필터링"
 msgid "Show hidden replies"
 msgstr "숨겨진 답글 표시"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:796
+#: src/view/com/post-thread/PostThreadItem.tsx:806
 msgid "Show information about when this post was created"
 msgstr "이 게시물이 언제 작성되었는지에 대한 정보를 표시합니다"
 
@@ -6015,7 +6015,7 @@ msgstr "이런 항목 덜 보기"
 msgid "Show list anyway"
 msgstr "무시하고 리스트 표시하기"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:588
+#: src/view/com/post-thread/PostThreadItem.tsx:593
 #: src/view/com/post/Post.tsx:242
 #: src/view/com/posts/FeedItem.tsx:509
 msgid "Show More"
@@ -6611,8 +6611,8 @@ msgstr "리스트를 가져오는 동안 문제가 발생했습니다. 다시 �
 msgid "There was an issue fetching your app passwords"
 msgstr "앱 비밀번호를 가져오는 동안 문제가 발생했습니다"
 
-#: src/view/com/feeds/ProfileFeedgens.tsx:150
-#: src/view/com/lists/ProfileLists.tsx:149
+#: src/view/com/feeds/ProfileFeedgens.tsx:155
+#: src/view/com/lists/ProfileLists.tsx:154
 msgid "There was an issue fetching your lists. Tap here to try again."
 msgstr "리스트를 가져오는 동안 문제가 발생했습니다. 다시 시도하려면 이곳을 탭하세요."
 
@@ -6793,11 +6793,11 @@ msgstr "이 리스트는 비어 있습니다."
 msgid "This moderation service is unavailable. See below for more details. If this issue persists, contact us."
 msgstr "이 검토 서비스는 사용할 수 없습니다. 자세한 내용은 아래를 참조하세요. 이 문제가 지속되면 문의해 주세요."
 
-#: src/view/com/post-thread/PostThreadItem.tsx:836
+#: src/view/com/post-thread/PostThreadItem.tsx:846
 msgid "This post claims to have been created on <0>{0}</0>, but was first seen by Bluesky on <1>{1}</1>."
 msgstr "이 게시물은 <0>{0}</0>에 작성되었다고 주장하지만 Bluesky에서는 <1>{1}</1>에 처음 확인되었습니다."
 
-#: src/view/com/post-thread/PostThreadItem.tsx:147
+#: src/view/com/post-thread/PostThreadItem.tsx:152
 msgid "This post has been deleted."
 msgstr "이 게시물은 삭제되었습니다."
 
@@ -6931,8 +6931,8 @@ msgstr "인기"
 
 #: src/components/dms/MessageMenu.tsx:103
 #: src/components/dms/MessageMenu.tsx:105
-#: src/view/com/post-thread/PostThreadItem.tsx:761
-#: src/view/com/post-thread/PostThreadItem.tsx:764
+#: src/view/com/post-thread/PostThreadItem.tsx:771
+#: src/view/com/post-thread/PostThreadItem.tsx:774
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:404
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:406
 msgid "Translate"
@@ -7291,7 +7291,7 @@ msgstr "<0>@{0}</0> 님이 팔로우한 사용자"
 msgid "Users I follow"
 msgstr "내가 팔로우하는 사용자"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:417
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:420
 msgid "Users in \"{0}\""
 msgstr "\"{0}\"에 있는 사용자"
 
@@ -7800,12 +7800,12 @@ msgstr "내가 이 사용자를 뮤트했습니다"
 msgid "You have no conversations yet. Start one!"
 msgstr "아직 대화가 없습니다. 시작해 보세요!"
 
-#: src/view/com/feeds/ProfileFeedgens.tsx:138
+#: src/view/com/feeds/ProfileFeedgens.tsx:143
 msgid "You have no feeds."
 msgstr "피드가 없습니다."
 
 #: src/view/com/lists/MyLists.tsx:90
-#: src/view/com/lists/ProfileLists.tsx:134
+#: src/view/com/lists/ProfileLists.tsx:139
 msgid "You have no lists."
 msgstr "리스트가 없습니다."
 

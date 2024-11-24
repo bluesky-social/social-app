@@ -73,7 +73,7 @@ msgstr "{0, plural, one {個跟緊} other {個跟緊}}"
 msgid "{0, plural, one {Like (# like)} other {Like (# likes)}}"
 msgstr "{0, plural, one {讚佢（# 人讚佢）} other {讚佢（# 人讚佢）}}"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:442
+#: src/view/com/post-thread/PostThreadItem.tsx:447
 msgid "{0, plural, one {like} other {likes}}"
 msgstr "{0, plural, one {人讚佢} other {人讚佢}}"
 
@@ -86,7 +86,7 @@ msgstr "{0, plural,one {有 # 人讚佢} other {有 # 人讚佢}}"
 msgid "{0, plural, one {post} other {posts}}"
 msgstr "{0, plural, one {則帖文} other {則帖文}}"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:426
+#: src/view/com/post-thread/PostThreadItem.tsx:431
 msgid "{0, plural, one {quote} other {quotes}}"
 msgstr "{0, plural, one {人引用} other {人引用}}"
 
@@ -94,7 +94,7 @@ msgstr "{0, plural, one {人引用} other {人引用}}"
 msgid "{0, plural, one {Reply (# reply)} other {Reply (# replies)}}"
 msgstr "{0, plural, one {回覆（# 個回覆）} other {回覆（# 個回覆）}}"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:408
+#: src/view/com/post-thread/PostThreadItem.tsx:413
 msgid "{0, plural, one {repost} other {reposts}}"
 msgstr "{0, plural, one {次轉發} other {次轉發}}"
 
@@ -614,7 +614,7 @@ msgstr "允許存取你嘅私人訊息"
 msgid "Allow new messages from"
 msgstr "允許呢啲人同你傾偈"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:360
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:363
 msgid "Allow replies from:"
 msgstr "允許呢啲人回覆你嘅帖文："
 
@@ -837,12 +837,12 @@ msgstr "外觀"
 msgid "Apply default recommended feeds"
 msgstr "套用預設嘅推薦動態源"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:825
+#: src/view/com/post-thread/PostThreadItem.tsx:835
 msgid "Archived from {0}"
 msgstr "自 {0} 起被封存"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:794
-#: src/view/com/post-thread/PostThreadItem.tsx:833
+#: src/view/com/post-thread/PostThreadItem.tsx:804
+#: src/view/com/post-thread/PostThreadItem.tsx:843
 msgid "Archived post"
 msgstr "封存咗嘅帖文"
 
@@ -1038,7 +1038,7 @@ msgstr "網誌"
 msgid "Bluesky"
 msgstr "Bluesky"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:850
+#: src/view/com/post-thread/PostThreadItem.tsx:860
 msgid "Bluesky cannot confirm the authenticity of the claimed date."
 msgstr "Bluesky 無法確認貼文發佈日期嘅真實性。"
 
@@ -1356,11 +1356,11 @@ msgstr "撳呢度睇多啲資訊。"
 msgid "Click here to open tag menu for {tag}"
 msgstr "撳呢度打開 {tag} 嘅標籤選單"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:304
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:307
 msgid "Click to disable quote posts of this post."
 msgstr "撳一下就可以唔畀人引用呢篇帖文。"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:305
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:308
 msgid "Click to enable quote posts of this post."
 msgstr "撳一下就可以畀返人引用呢篇帖文。"
 
@@ -1389,8 +1389,8 @@ msgstr "Clip 🐴 clop 🐴"
 msgid "Close"
 msgstr "閂"
 
-#: src/components/Dialog/index.web.tsx:110
-#: src/components/Dialog/index.web.tsx:261
+#: src/components/Dialog/index.web.tsx:108
+#: src/components/Dialog/index.web.tsx:250
 msgid "Close active dialog"
 msgstr "閂咗有效對話框"
 
@@ -1800,7 +1800,7 @@ msgstr "自訂"
 msgid "Custom feeds built by the community bring you new experiences and help you find the content you love."
 msgstr "由社群建立嘅自訂動態源會爲你帶嚟新嘅體驗，同埋幫你搵到你鍾意嘅內容。"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:289
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:292
 msgid "Customize who can interact with this post."
 msgstr "自訂邊個可以喺呢篇帖文度互動。"
 
@@ -2129,7 +2129,7 @@ msgstr "下載 Bluesky"
 msgid "Download CAR file"
 msgstr "下載 CAR 檔案"
 
-#: src/view/com/composer/text-input/TextInput.web.tsx:327
+#: src/view/com/composer/text-input/TextInput.web.tsx:342
 msgid "Drop to add images"
 msgstr "拖放添加圖片"
 
@@ -2465,7 +2465,7 @@ msgstr "接收 CAPTCHA 回應嗰陣發生錯誤。"
 msgid "Error:"
 msgstr "錯誤："
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:365
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:368
 msgid "Everybody"
 msgstr "任何人"
 
@@ -2536,7 +2536,7 @@ msgid "Expected uri to resolve to a record"
 msgstr "URI 應解析爲記錄"
 
 #: src/screens/Settings/FollowingFeedPreferences.tsx:115
-#: src/screens/Settings/ThreadPreferences.tsx:123
+#: src/screens/Settings/ThreadPreferences.tsx:129
 msgid "Experimental"
 msgstr "實驗性"
 
@@ -2824,7 +2824,7 @@ msgstr "俾你識嘅 <0>{0}</0> 同 <1>{1}</1> 跟咗佢"
 msgid "Followed by <0>{0}</0>, <1>{1}</1>, and {2, plural, one {# other} other {# others}}"
 msgstr "俾你識嘅 <0>{0}</0>, <1>{1}</1> 同{2, plural, one {另外 # 人跟咗佢} other {另外 # 人跟咗佢}}"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:404
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:407
 msgid "Followed users"
 msgstr "跟咗嘅用戶"
 
@@ -3203,6 +3203,11 @@ msgstr "Host:"
 msgid "Hosting provider"
 msgstr "Hosting 供應商"
 
+#: src/screens/Settings/ThreadPreferences.tsx:59
+#: src/screens/Settings/ThreadPreferences.tsx:62
+msgid "Hot replies first"
+msgstr ""
+
 #: src/view/com/modals/InAppBrowserConsent.tsx:41
 msgid "How should we open this link?"
 msgstr "我哋應該點樣打開呢個連結？"
@@ -3329,7 +3334,7 @@ msgstr "雙重驗證確認碼無效。"
 msgid "Invalid handle. Please try a different one."
 msgstr "無效嘅帳號頭銜，請試下唔同嘅。"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:272
+#: src/view/com/post-thread/PostThreadItem.tsx:277
 msgid "Invalid or unsupported post record"
 msgstr "無效抑或唔受支援嘅帖文記錄"
 
@@ -3576,7 +3581,7 @@ msgstr "讚過"
 msgid "Likes"
 msgstr "讚好"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:212
+#: src/view/com/post-thread/PostThreadItem.tsx:217
 msgid "Likes on this post"
 msgstr "讚好呢篇帖文"
 
@@ -3750,7 +3755,7 @@ msgstr "可能會令某啲受眾感到不安抑或造成唔適嘅媒體內容。
 msgid "mentioned users"
 msgstr "提到嘅用戶"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:394
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:397
 msgid "Mentioned users"
 msgstr "提到嘅用戶"
 
@@ -3860,7 +3865,7 @@ msgstr "審核工具"
 msgid "Moderator has chosen to set a general warning on the content."
 msgstr "審核服務提供者已經將呢個內容標記爲普通警告。"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:628
+#: src/view/com/post-thread/PostThreadItem.tsx:633
 msgid "More"
 msgstr "更多"
 
@@ -3873,11 +3878,11 @@ msgstr "更多動態源"
 msgid "More options"
 msgstr "更多揀"
 
-#: src/screens/Settings/ThreadPreferences.tsx:80
+#: src/screens/Settings/ThreadPreferences.tsx:86
 msgid "Most-liked first"
 msgstr "顯示最多人讚嘅回覆先"
 
-#: src/screens/Settings/ThreadPreferences.tsx:77
+#: src/screens/Settings/ThreadPreferences.tsx:83
 msgid "Most-liked replies first"
 msgstr "顯示最多人讚嘅回覆先"
 
@@ -4119,8 +4124,8 @@ msgstr "新用戶資訊對話框"
 msgid "New User List"
 msgstr "新用戶清單"
 
-#: src/screens/Settings/ThreadPreferences.tsx:69
-#: src/screens/Settings/ThreadPreferences.tsx:72
+#: src/screens/Settings/ThreadPreferences.tsx:75
+#: src/screens/Settings/ThreadPreferences.tsx:78
 msgid "Newest replies first"
 msgstr "顯示最新嘅回覆先"
 
@@ -4253,7 +4258,7 @@ msgstr "搵唔到「{search}」嘅搵嘢結果。"
 msgid "No thanks"
 msgstr "唔係，多謝"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:376
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:379
 msgid "Nobody"
 msgstr "冇人"
 
@@ -4369,12 +4374,12 @@ msgid "OK"
 msgstr "好嘅"
 
 #: src/screens/Login/PasswordUpdatedForm.tsx:37
-#: src/view/com/post-thread/PostThreadItem.tsx:855
+#: src/view/com/post-thread/PostThreadItem.tsx:865
 msgid "Okay"
 msgstr "好嘅"
 
-#: src/screens/Settings/ThreadPreferences.tsx:61
-#: src/screens/Settings/ThreadPreferences.tsx:64
+#: src/screens/Settings/ThreadPreferences.tsx:67
+#: src/screens/Settings/ThreadPreferences.tsx:70
 msgid "Oldest replies first"
 msgstr "顯示最早嘅回覆先"
 
@@ -4580,7 +4585,7 @@ msgstr "可揀提供以下額外資料："
 msgid "Options:"
 msgstr "選項："
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:389
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:392
 msgid "Or combine these options:"
 msgstr "抑或加埋呢啲條件："
 
@@ -4820,7 +4825,7 @@ msgctxt "action"
 msgid "Post All"
 msgstr "發晒佢哋"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:204
+#: src/view/com/post-thread/PostThreadItem.tsx:209
 msgid "Post by {0}"
 msgstr "由 {0} 發表"
 
@@ -4853,7 +4858,7 @@ msgstr "帖文俾靜音字詞隱藏"
 msgid "Post Hidden by You"
 msgstr "你隱藏咗嘅帖文"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:284
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:287
 msgid "Post interaction settings"
 msgstr "帖文互動設定"
 
@@ -4930,8 +4935,8 @@ msgstr "上一張圖片"
 msgid "Primary Language"
 msgstr "首選語言"
 
-#: src/screens/Settings/ThreadPreferences.tsx:98
-#: src/screens/Settings/ThreadPreferences.tsx:103
+#: src/screens/Settings/ThreadPreferences.tsx:104
+#: src/screens/Settings/ThreadPreferences.tsx:109
 msgid "Prioritize your Follows"
 msgstr "優先睇你跟咗嘅人"
 
@@ -5027,7 +5032,7 @@ msgstr "引文已經重新附上"
 msgid "Quote post was successfully detached"
 msgstr "引文已經成功拆開"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:314
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:317
 #: src/view/com/util/post-ctrls/RepostButton.tsx:167
 #: src/view/com/util/post-ctrls/RepostButton.tsx:189
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:84
@@ -5035,11 +5040,11 @@ msgstr "引文已經成功拆開"
 msgid "Quote posts disabled"
 msgstr "引用帖文已經停用"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:312
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:315
 msgid "Quote posts enabled"
 msgstr "引用帖文已經啓用"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:296
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:299
 msgid "Quote settings"
 msgstr "引用設定"
 
@@ -5048,12 +5053,12 @@ msgstr "引用設定"
 msgid "Quotes"
 msgstr "引用"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:238
+#: src/view/com/post-thread/PostThreadItem.tsx:243
 msgid "Quotes of this post"
 msgstr "引用呢篇帖文"
 
-#: src/screens/Settings/ThreadPreferences.tsx:85
-#: src/screens/Settings/ThreadPreferences.tsx:88
+#: src/screens/Settings/ThreadPreferences.tsx:91
+#: src/screens/Settings/ThreadPreferences.tsx:94
 msgid "Random (aka \"Poster's Roulette\")"
 msgstr "隨機顯示（又名試試手氣）"
 
@@ -5270,11 +5275,11 @@ msgstr "回覆由呢個討論串嘅發佈者所隱藏"
 msgid "Reply Hidden by You"
 msgstr "回覆俾你隱藏咗"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:356
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:359
 msgid "Reply settings"
 msgstr "回覆設定"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:341
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:344
 msgid "Reply settings are chosen by the author of the thread"
 msgstr "回覆設定係由討論串嘅作者揀嘅"
 
@@ -5419,7 +5424,7 @@ msgstr "由 <0><1/></0> 轉發"
 msgid "Reposted by you"
 msgstr "由你轉發"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:217
+#: src/view/com/post-thread/PostThreadItem.tsx:222
 msgid "Reposts of this post"
 msgstr "呢篇帖文嘅轉發"
 
@@ -5525,8 +5530,8 @@ msgid "Returns to previous page"
 msgstr "返去上一頁"
 
 #: src/components/dialogs/BirthDateSettings.tsx:124
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:439
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:445
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:442
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:448
 #: src/components/StarterPack/QrCodeDialog.tsx:185
 #: src/screens/Profile/Header/EditProfileDialog.tsx:238
 #: src/screens/Profile/Header/EditProfileDialog.tsx:252
@@ -5994,7 +5999,7 @@ msgstr "喺動態源入邊顯示徽章同埋篩選器"
 msgid "Show hidden replies"
 msgstr "顯示隱藏嘅回覆"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:796
+#: src/view/com/post-thread/PostThreadItem.tsx:806
 msgid "Show information about when this post was created"
 msgstr "顯示呢篇帖文幾時建立嘅資料"
 
@@ -6007,7 +6012,7 @@ msgstr "顯示少啲噉嘅嘢"
 msgid "Show list anyway"
 msgstr "點都要顯示呢個清單"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:588
+#: src/view/com/post-thread/PostThreadItem.tsx:593
 #: src/view/com/post/Post.tsx:242
 #: src/view/com/posts/FeedItem.tsx:509
 msgid "Show More"
@@ -6036,11 +6041,11 @@ msgstr "顯示引文"
 msgid "Show replies"
 msgstr "顯示回覆"
 
-#: src/screens/Settings/ThreadPreferences.tsx:112
+#: src/screens/Settings/ThreadPreferences.tsx:118
 msgid "Show replies by people you follow before all other replies"
 msgstr "優先顯示你跟嘅人個回覆喺其他人回覆之前"
 
-#: src/screens/Settings/ThreadPreferences.tsx:137
+#: src/screens/Settings/ThreadPreferences.tsx:143
 msgid "Show replies in a threaded view"
 msgstr "用樹狀視圖顯示回覆"
 
@@ -6603,8 +6608,8 @@ msgstr "攞緊清單嗰陣出現問題，撳呢度試多一次。"
 msgid "There was an issue fetching your app passwords"
 msgstr "擷取你嘅 App 密碼嗰陣出現問題"
 
-#: src/view/com/feeds/ProfileFeedgens.tsx:150
-#: src/view/com/lists/ProfileLists.tsx:149
+#: src/view/com/feeds/ProfileFeedgens.tsx:155
+#: src/view/com/lists/ProfileLists.tsx:154
 msgid "There was an issue fetching your lists. Tap here to try again."
 msgstr "攞緊清單嗰陣出現問題，撳呢度試多一次。"
 
@@ -6785,11 +6790,11 @@ msgstr "呢個清單係空嘅！"
 msgid "This moderation service is unavailable. See below for more details. If this issue persists, contact us."
 msgstr "呢個審核服務用唔到，睇下低瞭解更多嘢。若然呢個問題仲有嘅話，請聯絡我哋。"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:836
+#: src/view/com/post-thread/PostThreadItem.tsx:846
 msgid "This post claims to have been created on <0>{0}</0>, but was first seen by Bluesky on <1>{1}</1>."
 msgstr "呢篇帖文話係話喺 <0>{0}</0> 發佈嘅，但係最先出現喺 Bluesky 嘅時間係 <1>{1}</1>。"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:147
+#: src/view/com/post-thread/PostThreadItem.tsx:152
 msgid "This post has been deleted."
 msgstr "呢篇帖文已經刪咗。"
 
@@ -6876,7 +6881,7 @@ msgstr "討論串設定"
 msgid "Thread Preferences"
 msgstr "討論串設定"
 
-#: src/screens/Settings/ThreadPreferences.tsx:128
+#: src/screens/Settings/ThreadPreferences.tsx:134
 msgid "Threaded mode"
 msgstr "樹狀視圖模式"
 
@@ -6923,8 +6928,8 @@ msgstr "TOP"
 
 #: src/components/dms/MessageMenu.tsx:103
 #: src/components/dms/MessageMenu.tsx:105
-#: src/view/com/post-thread/PostThreadItem.tsx:761
-#: src/view/com/post-thread/PostThreadItem.tsx:764
+#: src/view/com/post-thread/PostThreadItem.tsx:771
+#: src/view/com/post-thread/PostThreadItem.tsx:774
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:404
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:406
 msgid "Translate"
@@ -7283,7 +7288,7 @@ msgstr "俾 <0>@{0}</0> 跟咗嘅用戶"
 msgid "Users I follow"
 msgstr "我跟嘅用戶"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:417
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:420
 msgid "Users in \"{0}\""
 msgstr "「{0}」中嘅用戶"
 
@@ -7792,12 +7797,12 @@ msgstr "你已經將呢個用戶靜音"
 msgid "You have no conversations yet. Start one!"
 msgstr "你仲未同人傾過偈，試吓同其他人傾偈啦！"
 
-#: src/view/com/feeds/ProfileFeedgens.tsx:138
+#: src/view/com/feeds/ProfileFeedgens.tsx:143
 msgid "You have no feeds."
 msgstr "你仲未有任何動態源。"
 
 #: src/view/com/lists/MyLists.tsx:90
-#: src/view/com/lists/ProfileLists.tsx:134
+#: src/view/com/lists/ProfileLists.tsx:139
 msgid "You have no lists."
 msgstr "你仲未有清單。"
 
@@ -8054,4 +8059,3 @@ msgstr "你嘅上報會傳送去 Bluesky 審核服務"
 #: src/screens/Signup/index.tsx:142
 msgid "Your user handle"
 msgstr "你嘅帳號頭銜"
-

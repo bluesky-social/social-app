@@ -1,8 +1,8 @@
-# 
+#
 # Translators:
 # Alessio Restifo, 2024
 # Michele Locati <michele@locati.it>, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Italian localization\n"
@@ -73,7 +73,7 @@ msgstr "{0, plural, one {seguito} other {seguiti}}"
 msgid "{0, plural, one {Like (# like)} other {Like (# likes)}}"
 msgstr "{0, plural, one {Like (# like)} other {Like (# like)}}"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:442
+#: src/view/com/post-thread/PostThreadItem.tsx:447
 msgid "{0, plural, one {like} other {likes}}"
 msgstr "{0, plural, one {like} other {like}}"
 
@@ -86,7 +86,7 @@ msgstr "{0, plural, one {Piace a # utente} other {Piace a # utenti}}"
 msgid "{0, plural, one {post} other {posts}}"
 msgstr "{0, plural, one {post} other {post}}"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:426
+#: src/view/com/post-thread/PostThreadItem.tsx:431
 msgid "{0, plural, one {quote} other {quotes}}"
 msgstr "{0, plural, one {citazione} other {citazioni}}"
 
@@ -94,7 +94,7 @@ msgstr "{0, plural, one {citazione} other {citazioni}}"
 msgid "{0, plural, one {Reply (# reply)} other {Reply (# replies)}}"
 msgstr "{0, plural, one {Rispondi (# risposta)} other {Rispondi (# risposte)}}"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:408
+#: src/view/com/post-thread/PostThreadItem.tsx:413
 msgid "{0, plural, one {repost} other {reposts}}"
 msgstr "{0, plural, one {repost} other {reposts}}"
 
@@ -614,7 +614,7 @@ msgstr "Consenti l'accesso ai tuoi messaggi"
 msgid "Allow new messages from"
 msgstr "Consenti nuovi messaggi da"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:360
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:363
 msgid "Allow replies from:"
 msgstr "Consenti risposte da:"
 
@@ -837,12 +837,12 @@ msgstr "Aspetto"
 msgid "Apply default recommended feeds"
 msgstr "Applica i feed raccomandati predefiniti"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:825
+#: src/view/com/post-thread/PostThreadItem.tsx:835
 msgid "Archived from {0}"
 msgstr "Archiviato da {0}"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:794
-#: src/view/com/post-thread/PostThreadItem.tsx:833
+#: src/view/com/post-thread/PostThreadItem.tsx:804
+#: src/view/com/post-thread/PostThreadItem.tsx:843
 msgid "Archived post"
 msgstr "Post archiviato"
 
@@ -1038,7 +1038,7 @@ msgstr "Blog"
 msgid "Bluesky"
 msgstr "Bluesky"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:850
+#: src/view/com/post-thread/PostThreadItem.tsx:860
 msgid "Bluesky cannot confirm the authenticity of the claimed date."
 msgstr "Bluesky non può confermare l'autenticità della data dichiarata."
 
@@ -1356,11 +1356,11 @@ msgstr "Clicca qui per maggiori informazioni."
 msgid "Click here to open tag menu for {tag}"
 msgstr "Clicca qui per aprire il menu per {tag}"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:304
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:307
 msgid "Click to disable quote posts of this post."
 msgstr "Clicca per disattivare le citazioni di questo post."
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:305
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:308
 msgid "Click to enable quote posts of this post."
 msgstr "Clicca per attivare le citazioni di questo post."
 
@@ -1389,8 +1389,8 @@ msgstr "Clop 🐴 clop 🐴"
 msgid "Close"
 msgstr "Chiudi"
 
-#: src/components/Dialog/index.web.tsx:110
-#: src/components/Dialog/index.web.tsx:261
+#: src/components/Dialog/index.web.tsx:108
+#: src/components/Dialog/index.web.tsx:250
 msgid "Close active dialog"
 msgstr "Chiudi la finestra attiva"
 
@@ -1800,7 +1800,7 @@ msgstr "Personalizzato"
 msgid "Custom feeds built by the community bring you new experiences and help you find the content you love."
 msgstr "I feed personalizzati creati dalla comunità ti offrono nuove esperienze e ti aiutano a trovare contenuti interessanti."
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:289
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:292
 msgid "Customize who can interact with this post."
 msgstr "Personalizza chi può interagire con questo post."
 
@@ -2129,7 +2129,7 @@ msgstr "Scarica Bluesky"
 msgid "Download CAR file"
 msgstr "Scarica il file CAR"
 
-#: src/view/com/composer/text-input/TextInput.web.tsx:327
+#: src/view/com/composer/text-input/TextInput.web.tsx:342
 msgid "Drop to add images"
 msgstr "Trascina e rilascia per aggiungere immagini"
 
@@ -2465,7 +2465,7 @@ msgstr "Errore nella risposta del captcha."
 msgid "Error:"
 msgstr "Errore:"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:365
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:368
 msgid "Everybody"
 msgstr "Tutti"
 
@@ -2824,7 +2824,7 @@ msgstr "Seguito da <0>{0}</0> e <1>{1}</1>"
 msgid "Followed by <0>{0}</0>, <1>{1}</1>, and {2, plural, one {# other} other {# others}}"
 msgstr "Seguito da <0>{0}</0>, <1>{1}</1>, e {2, plural, one {# altro} other {# altri}}"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:404
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:407
 msgid "Followed users"
 msgstr "Utenti seguiti"
 
@@ -3334,7 +3334,7 @@ msgstr "Codice di conferma 2FA non valido."
 msgid "Invalid handle. Please try a different one."
 msgstr "Nome utente non valido. Provarne un altro."
 
-#: src/view/com/post-thread/PostThreadItem.tsx:272
+#: src/view/com/post-thread/PostThreadItem.tsx:277
 msgid "Invalid or unsupported post record"
 msgstr "Protocollo del post non valido o non supportato"
 
@@ -3581,7 +3581,7 @@ msgstr "Piace A"
 msgid "Likes"
 msgstr "Mi piace"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:212
+#: src/view/com/post-thread/PostThreadItem.tsx:217
 msgid "Likes on this post"
 msgstr "Mi Piace in questo post"
 
@@ -3755,7 +3755,7 @@ msgstr "Media che potrebbero disturbare o risultare inappropriati per alcuni tip
 msgid "mentioned users"
 msgstr "utenti menzionati"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:394
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:397
 msgid "Mentioned users"
 msgstr "Utenti menzionati"
 
@@ -3865,7 +3865,7 @@ msgstr "Strumenti di moderazione"
 msgid "Moderator has chosen to set a general warning on the content."
 msgstr "Il moderatore ha scelto di mettere un avviso generale sul contenuto."
 
-#: src/view/com/post-thread/PostThreadItem.tsx:628
+#: src/view/com/post-thread/PostThreadItem.tsx:633
 msgid "More"
 msgstr "Di più"
 
@@ -4258,7 +4258,7 @@ msgstr "Nessun risultato trovato per \"{search}\"."
 msgid "No thanks"
 msgstr "No grazie"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:376
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:379
 msgid "Nobody"
 msgstr "Nessuno"
 
@@ -4374,7 +4374,7 @@ msgid "OK"
 msgstr "OK"
 
 #: src/screens/Login/PasswordUpdatedForm.tsx:37
-#: src/view/com/post-thread/PostThreadItem.tsx:855
+#: src/view/com/post-thread/PostThreadItem.tsx:865
 msgid "Okay"
 msgstr "Va bene"
 
@@ -4585,7 +4585,7 @@ msgstr "Facoltativamente, fornisci ulteriori informazioni di seguito:"
 msgid "Options:"
 msgstr "Opzioni:"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:389
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:392
 msgid "Or combine these options:"
 msgstr "Oppure combina queste opzioni:"
 
@@ -4825,7 +4825,7 @@ msgctxt "action"
 msgid "Post All"
 msgstr "Posta tutti"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:204
+#: src/view/com/post-thread/PostThreadItem.tsx:209
 msgid "Post by {0}"
 msgstr "Pubblicato da {0}"
 
@@ -4858,7 +4858,7 @@ msgstr "Post nascosto dalla Parola Silenziata"
 msgid "Post Hidden by You"
 msgstr "Post nascosto da te"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:284
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:287
 msgid "Post interaction settings"
 msgstr "Impostazioni interazioni post"
 
@@ -5032,7 +5032,7 @@ msgstr "Citazione post riattaccata"
 msgid "Quote post was successfully detached"
 msgstr "Citazione post staccata con successo"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:314
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:317
 #: src/view/com/util/post-ctrls/RepostButton.tsx:167
 #: src/view/com/util/post-ctrls/RepostButton.tsx:189
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:84
@@ -5040,11 +5040,11 @@ msgstr "Citazione post staccata con successo"
 msgid "Quote posts disabled"
 msgstr "Citazioni post disattivate"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:312
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:315
 msgid "Quote posts enabled"
 msgstr "Citazioni post attivate"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:296
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:299
 msgid "Quote settings"
 msgstr "Impostazioni citazioni"
 
@@ -5053,7 +5053,7 @@ msgstr "Impostazioni citazioni"
 msgid "Quotes"
 msgstr "Citazioni"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:238
+#: src/view/com/post-thread/PostThreadItem.tsx:243
 msgid "Quotes of this post"
 msgstr "Citazioni post"
 
@@ -5275,11 +5275,11 @@ msgstr "Risposta nascosta dall'autore del thread"
 msgid "Reply Hidden by You"
 msgstr "Risposta nascosta da me"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:356
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:359
 msgid "Reply settings"
 msgstr "Impostazioni risposte"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:341
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:344
 msgid "Reply settings are chosen by the author of the thread"
 msgstr "Le impostazioni delle risposte sono scelte dall'autore del thread"
 
@@ -5424,7 +5424,7 @@ msgstr "Ripubblicato da <0><1/></0>"
 msgid "Reposted by you"
 msgstr "Ripubblicato da te"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:217
+#: src/view/com/post-thread/PostThreadItem.tsx:222
 msgid "Reposts of this post"
 msgstr "Ripubblicazioni di questo post"
 
@@ -5530,8 +5530,8 @@ msgid "Returns to previous page"
 msgstr "Ritorna alla pagina precedente"
 
 #: src/components/dialogs/BirthDateSettings.tsx:124
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:439
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:445
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:442
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:448
 #: src/components/StarterPack/QrCodeDialog.tsx:185
 #: src/screens/Profile/Header/EditProfileDialog.tsx:238
 #: src/screens/Profile/Header/EditProfileDialog.tsx:252
@@ -5999,7 +5999,7 @@ msgstr "Mostra badge e filtra dai feed"
 msgid "Show hidden replies"
 msgstr "Mostra risposte nascoste"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:796
+#: src/view/com/post-thread/PostThreadItem.tsx:806
 msgid "Show information about when this post was created"
 msgstr "Mostra informazioni sulla data di creazione di questo post."
 
@@ -6012,7 +6012,7 @@ msgstr "Mostra meno come questo"
 msgid "Show list anyway"
 msgstr "Mostra comunque lista"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:588
+#: src/view/com/post-thread/PostThreadItem.tsx:593
 #: src/view/com/post/Post.tsx:242
 #: src/view/com/posts/FeedItem.tsx:509
 msgid "Show More"
@@ -6608,8 +6608,8 @@ msgstr "Si è verificato un problema durante il recupero dell'elenco. Tocca qui 
 msgid "There was an issue fetching your app passwords"
 msgstr "Si è verificato un problema durante il recupero delle password dell'app"
 
-#: src/view/com/feeds/ProfileFeedgens.tsx:150
-#: src/view/com/lists/ProfileLists.tsx:149
+#: src/view/com/feeds/ProfileFeedgens.tsx:155
+#: src/view/com/lists/ProfileLists.tsx:154
 msgid "There was an issue fetching your lists. Tap here to try again."
 msgstr "Si è verificato un problema durante il recupero delle tue liste. Tocca qui per riprovare."
 
@@ -6790,11 +6790,11 @@ msgstr "Questa lista è vuota!"
 msgid "This moderation service is unavailable. See below for more details. If this issue persists, contact us."
 msgstr "Questo servizio di moderazione non è disponibile. Vedi giù per ulteriori dettagli. Se il problema persiste, contattaci."
 
-#: src/view/com/post-thread/PostThreadItem.tsx:836
+#: src/view/com/post-thread/PostThreadItem.tsx:846
 msgid "This post claims to have been created on <0>{0}</0>, but was first seen by Bluesky on <1>{1}</1>."
 msgstr "Questo post dichiara di essere stato creato il <0>{0}</0>, ma è stato visto per la prima volta da Bluesky il <1>{1}</1>."
 
-#: src/view/com/post-thread/PostThreadItem.tsx:147
+#: src/view/com/post-thread/PostThreadItem.tsx:152
 msgid "This post has been deleted."
 msgstr "Questo post è stato eliminato."
 
@@ -6928,8 +6928,8 @@ msgstr "Top"
 
 #: src/components/dms/MessageMenu.tsx:103
 #: src/components/dms/MessageMenu.tsx:105
-#: src/view/com/post-thread/PostThreadItem.tsx:761
-#: src/view/com/post-thread/PostThreadItem.tsx:764
+#: src/view/com/post-thread/PostThreadItem.tsx:771
+#: src/view/com/post-thread/PostThreadItem.tsx:774
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:404
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:406
 msgid "Translate"
@@ -7288,7 +7288,7 @@ msgstr "utenti seguiti da <0>@{0}</0>"
 msgid "Users I follow"
 msgstr "Utenti che seguo"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:417
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:420
 msgid "Users in \"{0}\""
 msgstr "Utenti in «{0}»"
 
@@ -7797,12 +7797,12 @@ msgstr "Hai silenziato questo utente"
 msgid "You have no conversations yet. Start one!"
 msgstr "Non hai ancora nessuna conversazione. Avviane una!"
 
-#: src/view/com/feeds/ProfileFeedgens.tsx:138
+#: src/view/com/feeds/ProfileFeedgens.tsx:143
 msgid "You have no feeds."
 msgstr "Non hai feed."
 
 #: src/view/com/lists/MyLists.tsx:90
-#: src/view/com/lists/ProfileLists.tsx:134
+#: src/view/com/lists/ProfileLists.tsx:139
 msgid "You have no lists."
 msgstr "Non hai liste."
 
