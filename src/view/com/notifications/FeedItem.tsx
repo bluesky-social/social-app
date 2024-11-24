@@ -694,22 +694,22 @@ function ExpandedAuthorsList({
               </ProfileHoverCard>
             </View>
             <View style={s.flex1}>
-              <ProfileHoverCard did={author.profile.did}>
-                <Text
-                  type="lg-bold"
-                  numberOfLines={1}
-                  style={pal.text}
-                  lineHeight={1.2}>
+              <Text
+                type="lg-bold"
+                numberOfLines={1}
+                style={pal.text}
+                lineHeight={1.2}>
+                <ProfileHoverCard did={author.profile.did}>
                   <Text emoji type="lg-bold" style={pal.text} lineHeight={1.2}>
                     {sanitizeDisplayName(
                       author.profile.displayName || author.profile.handle,
                     )}
-                  </Text>{' '}
-                  <Text style={[pal.textLight]} lineHeight={1.2}>
-                    {sanitizeHandle(author.profile.handle, '@')}
                   </Text>
+                </ProfileHoverCard>{' '}
+                <Text style={[pal.textLight]} lineHeight={1.2}>
+                  {sanitizeHandle(author.profile.handle, '@')}
                 </Text>
-              </ProfileHoverCard>
+              </Text>
             </View>
           </NewLink>
         ))}
