@@ -9,6 +9,11 @@ cfg.resolver.sourceExts = process.env.RN_SRC_EXT
 if (cfg.resolver.resolveRequest) {
   throw Error('Update this override because it is conflicting now.')
 }
+
+if (process.env.BSKY_PROFILE) {
+  cfg.cacheVersion += ':PROFILE'
+}
+
 cfg.resolver.resolveRequest = (context, moduleName, platform) => {
   // HACK: manually resolve a few packages that use `exports` in `package.json`.
   // A proper solution is to enable `unstable_enablePackageExports` but this needs careful testing.
@@ -28,6 +33,15 @@ cfg.resolver.resolveRequest = (context, moduleName, platform) => {
   }
   if (moduleName === '@ipld/dag-cbor') {
     return context.resolveRequest(context, '@ipld/dag-cbor/src', platform)
+  }
+  if (process.env.BSKY_PROFILE) {
+    if (moduleName.endsWith('ReactNativeRenderer-prod')) {
+      return context.resolveRequest(
+        context,
+        moduleName.replace('-prod', '-profiling'),
+        platform,
+      )
+    }
   }
   return context.resolveRequest(context, moduleName, platform)
 }

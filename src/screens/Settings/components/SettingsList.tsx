@@ -213,7 +213,6 @@ export function ItemIcon({
 }
 
 export function ItemText({
-  // eslint-disable-next-line react/prop-types
   style,
   ...props
 }: React.ComponentProps<typeof Button.ButtonText>) {

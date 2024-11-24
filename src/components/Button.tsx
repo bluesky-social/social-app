@@ -458,7 +458,6 @@ export const Button = React.forwardRef<View, ButtonProps>(
         // @ts-ignore - this will always be a pressable
         ref={ref}
         aria-label={label}
-        aria-pressed={state.pressed}
         accessibilityLabel={label}
         disabled={disabled || false}
         accessibilityState={{

@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo} from 'react'
+import {useCallback, useMemo} from 'react'
 import {View} from 'react-native'
 import RNPickerSelect, {PickerSelectProps} from 'react-native-picker-select'
 import {msg, Trans} from '@lingui/macro'

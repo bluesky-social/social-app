@@ -1,4 +1,3 @@
-import React from 'react'
 import {clearCache, createVideoThumbnail} from 'react-native-compressor'
 import Animated, {FadeIn} from 'react-native-reanimated'
 import {Image} from 'expo-image'

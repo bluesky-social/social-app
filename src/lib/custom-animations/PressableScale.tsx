@@ -1,4 +1,3 @@
-import React from 'react'
 import {Pressable, PressableProps, StyleProp, ViewStyle} from 'react-native'
 import Animated, {
   cancelAnimation,

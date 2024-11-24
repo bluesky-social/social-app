@@ -75,7 +75,7 @@ export function Outer({
       try {
         cb()
       } catch (e: any) {
-        logger.error('Error running close callback', e)
+        logger.error(e || 'Error running close callback')
       }
     }
 
