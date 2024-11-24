@@ -171,6 +171,7 @@ export function PostThread({uri}: {uri: string | undefined}) {
     () => new Set<string>(),
   )
 
+  const [stableOrderCache] = React.useState(() => new Map<string, number>())
   const skeleton = React.useMemo(() => {
     const threadViewPrefs = preferences?.threadViewPrefs
     if (!threadViewPrefs || !thread) return null
@@ -183,6 +184,7 @@ export function PostThread({uri}: {uri: string | undefined}) {
         currentDid,
         justPostedUris,
         threadgateHiddenReplies,
+        stableOrderCache,
       ),
       currentDid,
       treeView,
@@ -199,6 +201,7 @@ export function PostThread({uri}: {uri: string | undefined}) {
     hiddenRepliesState,
     justPostedUris,
     threadgateHiddenReplies,
+    stableOrderCache,
   ])
 
   const error = React.useMemo(() => {

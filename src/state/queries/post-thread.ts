@@ -150,6 +150,7 @@ export function sortThread(
   currentDid: string | undefined,
   justPostedUris: Set<string>,
   threadgateRecordHiddenReplies: Set<string>,
+  stableOrderCache: Map<string, number>,
 ): ThreadNode {
   if (node.type !== 'post') {
     return node
@@ -237,24 +238,35 @@ export function sortThread(
         }
       }
 
+      const cachedResult = stableOrderCache.get(a.uri + ':' + b.uri)
+      if (cachedResult !== undefined) {
+        return cachedResult
+      }
+
+      let result
       if (opts.sort === 'hotness') {
         const aHotness = getHotness(a.post)
         const bHotness = getHotness(b.post)
-        return bHotness - aHotness
+        result = bHotness - aHotness
       } else if (opts.sort === 'oldest') {
-        return a.post.indexedAt.localeCompare(b.post.indexedAt)
+        result = a.post.indexedAt.localeCompare(b.post.indexedAt)
       } else if (opts.sort === 'newest') {
-        return b.post.indexedAt.localeCompare(a.post.indexedAt)
+        result = b.post.indexedAt.localeCompare(a.post.indexedAt)
       } else if (opts.sort === 'most-likes') {
         if (a.post.likeCount === b.post.likeCount) {
-          return b.post.indexedAt.localeCompare(a.post.indexedAt) // newest
+          result = b.post.indexedAt.localeCompare(a.post.indexedAt) // newest
         } else {
-          return (b.post.likeCount || 0) - (a.post.likeCount || 0) // most likes
+          result = (b.post.likeCount || 0) - (a.post.likeCount || 0) // most likes
         }
       } else if (opts.sort === 'random') {
-        return 0.5 - Math.random() // this is vaguely criminal but we can get away with it
+        result = 0.5 - Math.random() // this is vaguely criminal but we can get away with it
+      } else {
+        result = b.post.indexedAt.localeCompare(a.post.indexedAt)
       }
-      return b.post.indexedAt.localeCompare(a.post.indexedAt)
+
+      stableOrderCache.set(a.uri + ':' + b.uri, result)
+      stableOrderCache.set(b.uri + ':' + a.uri, -1 * result)
+      return result
     })
     node.replies.forEach(reply =>
       sortThread(
@@ -264,6 +276,7 @@ export function sortThread(
         currentDid,
         justPostedUris,
         threadgateRecordHiddenReplies,
+        stableOrderCache,
       ),
     )
   }
