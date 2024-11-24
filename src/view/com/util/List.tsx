@@ -7,7 +7,8 @@ import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIX
 import {useDedupe} from '#/lib/hooks/useDedupe'
 import {useScrollHandlers} from '#/lib/ScrollContext'
 import {addStyle} from '#/lib/styles'
-import {isIOS} from '#/platform/detection'
+import {isAndroid, isIOS} from '#/platform/detection'
+import {useLightbox} from '#/state/lightbox'
 import {useTheme} from '#/alf'
 import {FlatList_INTERNAL} from './Views'
 
@@ -52,6 +53,7 @@ function ListImpl<ItemT>(
   const isScrolledDown = useSharedValue(false)
   const t = useTheme()
   const dedupe = useDedupe(400)
+  const {activeLightbox} = useLightbox()
 
   function handleScrolledDownChange(didScrollDown: boolean) {
     onScrolledDownChange?.(didScrollDown)
@@ -77,8 +79,8 @@ function ListImpl<ItemT>(
       onScrollFromContext?.(e, ctx)
 
       const didScrollDown = e.contentOffset.y > SCROLLED_DOWN_LIMIT
-      if (isScrolledDown.value !== didScrollDown) {
-        isScrolledDown.value = didScrollDown
+      if (isScrolledDown.get() !== didScrollDown) {
+        isScrolledDown.set(didScrollDown)
         if (onScrolledDownChange != null) {
           runOnJS(handleScrolledDownChange)(didScrollDown)
         }
@@ -143,9 +145,11 @@ function ListImpl<ItemT>(
       contentOffset={contentOffset}
       refreshControl={refreshControl}
       onScroll={scrollHandler}
+      scrollsToTop={!activeLightbox}
       scrollEventThrottle={1}
       onViewableItemsChanged={onViewableItemsChanged}
       viewabilityConfig={viewabilityConfig}
+      showsVerticalScrollIndicator={!isAndroid}
       style={style}
       ref={ref}
     />

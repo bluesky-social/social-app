@@ -41,12 +41,12 @@ export function HomeHeaderLayoutMobile({
 
   return (
     <Animated.View
-      style={[pal.view, pal.border, styles.tabBar, headerMinimalShellTransform]}
+      style={[pal.border, styles.tabBar, headerMinimalShellTransform]}
       onLayout={e => {
-        headerHeight.value = e.nativeEvent.layout.height
+        headerHeight.set(e.nativeEvent.layout.height)
       }}>
       <View style={[pal.view, styles.topBar]}>
-        <View style={[pal.view, {width: 100}]}>
+        <View style={[{width: 100}]}>
           <TouchableOpacity
             testID="viewHeaderDrawerBtn"
             onPress={onPressAvi}
@@ -68,7 +68,6 @@ export function HomeHeaderLayoutMobile({
             atoms.justify_end,
             atoms.align_center,
             atoms.gap_md,
-            pal.view,
             {width: 100},
           ]}>
           {IS_DEV && (

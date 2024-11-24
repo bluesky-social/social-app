@@ -618,10 +618,10 @@ const styles = StyleSheet.create({
   layout: {
     flexDirection: 'row',
     marginTop: 1,
-    gap: 10,
   },
   layoutAvi: {
     paddingLeft: 8,
+    paddingRight: 10,
     position: 'relative',
     zIndex: 999,
   },

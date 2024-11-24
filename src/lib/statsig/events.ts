@@ -21,11 +21,11 @@ export type LogEvents = {
     context: 'StartOnboarding' | 'AfterOnboarding' | 'Login' | 'Home'
     status: 'granted' | 'denied' | 'undetermined'
   }
-  'state:background:sampled': {
+  'state:background': {
     secondsActive: number
   }
-  'state:foreground:sampled': {}
-  'router:navigate:notifications:sampled': {}
+  'state:foreground': {}
+  'router:navigate:notifications': {}
   'deepLink:referrerReceived': {
     to: string
     referrer: string
@@ -76,7 +76,7 @@ export type LogEvents = {
   'onboarding:finished:avatarResult': {
     avatarResult: 'default' | 'created' | 'uploaded'
   }
-  'home:feedDisplayed:sampled': {
+  'home:feedDisplayed': {
     feedUrl: string
     feedType: string
     index: number
@@ -87,12 +87,12 @@ export type LogEvents = {
       | 'desktop-sidebar-click'
       | 'starter-pack-initial-feed'
   }
-  'feed:endReached:sampled': {
+  'feed:endReached': {
     feedUrl: string
     feedType: string
     itemCount: number
   }
-  'feed:refresh:sampled': {
+  'feed:refresh': {
     feedUrl: string
     feedType: string
     reason: 'pull-to-refresh' | 'soft-reset' | 'load-latest'
@@ -103,13 +103,13 @@ export type LogEvents = {
   'discover:showLess': {
     feedContext: string
   }
-  'discover:clickthrough:sampled': {
+  'discover:clickthrough': {
     count: number
   }
-  'discover:engaged:sampled': {
+  'discover:engaged': {
     count: number
   }
-  'discover:seen:sampled': {
+  'discover:seen': {
     count: number
   }
 
@@ -132,27 +132,27 @@ export type LogEvents = {
     postCount: number
     isReply: boolean
   }
-  'post:like:sampled': {
+  'post:like': {
     doesLikerFollowPoster: boolean | undefined
     doesPosterFollowLiker: boolean | undefined
     likerClout: number | undefined
     postClout: number | undefined
     logContext: 'FeedItem' | 'PostThreadItem' | 'Post'
   }
-  'post:repost:sampled': {
+  'post:repost': {
     logContext: 'FeedItem' | 'PostThreadItem' | 'Post'
   }
-  'post:unlike:sampled': {
+  'post:unlike': {
     logContext: 'FeedItem' | 'PostThreadItem' | 'Post'
   }
-  'post:unrepost:sampled': {
+  'post:unrepost': {
     logContext: 'FeedItem' | 'PostThreadItem' | 'Post'
   }
   'post:mute': {}
   'post:unmute': {}
   'post:pin': {}
   'post:unpin': {}
-  'profile:follow:sampled': {
+  'profile:follow': {
     didBecomeMutual: boolean | undefined
     followeeClout: number | undefined
     followerClout: number | undefined
@@ -169,7 +169,7 @@ export type LogEvents = {
       | 'FeedInterstitial'
       | 'ProfileHeaderSuggestedFollows'
   }
-  'profile:unfollow:sampled': {
+  'profile:unfollow': {
     logContext:
       | 'RecommendedFollowsItem'
       | 'PostThreadItem'

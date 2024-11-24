@@ -56,12 +56,18 @@ import {useQueryClient} from '@tanstack/react-query'
 import * as apilib from '#/lib/api/index'
 import {EmbeddingDisabledError} from '#/lib/api/resolve'
 import {until} from '#/lib/async/until'
-import {MAX_GRAPHEME_LENGTH} from '#/lib/constants'
+import {
+  MAX_GRAPHEME_LENGTH,
+  SUPPORTED_MIME_TYPES,
+  SupportedMimeTypes,
+} from '#/lib/constants'
 import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
+import {useEmail} from '#/lib/hooks/useEmail'
 import {useIsKeyboardVisible} from '#/lib/hooks/useIsKeyboardVisible'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {mimeToExt} from '#/lib/media/video/util'
 import {logEvent} from '#/lib/statsig/statsig'
 import {cleanError} from '#/lib/strings/errors'
 import {colors, s} from '#/lib/styles'
@@ -110,6 +116,8 @@ import * as Toast from '#/view/com/util/Toast'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, native, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {useDialogControl} from '#/components/Dialog'
+import {VerifyEmailDialog} from '#/components/dialogs/VerifyEmailDialog'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmile} from '#/components/icons/Emoji'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
@@ -127,6 +135,8 @@ import {
   ThreadDraft,
 } from './state/composer'
 import {NO_VIDEO, NoVideoState, processVideo, VideoState} from './state/video'
+import {getVideoMetadata} from './videos/pickVideo'
+import {clearThumbnailCache} from './videos/VideoTranscodeBackdrop'
 
 type CancelRef = {
   onPressCancel: () => void
@@ -246,7 +256,8 @@ export const ComposePost = ({
 
   const onClose = useCallback(() => {
     closeComposer()
-  }, [closeComposer])
+    clearThumbnailCache(queryClient)
+  }, [closeComposer, queryClient])
 
   const insets = useSafeAreaInsets()
   const viewStyles = useMemo(
@@ -296,6 +307,15 @@ export const ComposePost = ({
       backHandler.remove()
     }
   }, [onPressCancel, closeAllDialogs, closeAllModals])
+
+  const {needsEmailVerification} = useEmail()
+  const emailVerificationControl = useDialogControl()
+
+  useEffect(() => {
+    if (needsEmailVerification) {
+      emailVerificationControl.open()
+    }
+  }, [needsEmailVerification, emailVerificationControl])
 
   const missingAltError = useMemo(() => {
     if (!requireAltTextEnabled) {
@@ -570,6 +590,15 @@ export const ComposePost = ({
   const isWebFooterSticky = !isNative && thread.posts.length > 1
   return (
     <BottomSheetPortalProvider>
+      <VerifyEmailDialog
+        control={emailVerificationControl}
+        onCloseWithoutVerifying={() => {
+          onClose()
+        }}
+        reasonText={_(
+          msg`Before creating a post, you must first verify your email.`,
+        )}
+      />
       <KeyboardAvoidingView
         testID="composePostView"
         behavior={isIOS ? 'padding' : 'height'}
@@ -723,14 +752,24 @@ let ComposerPost = React.memo(function ComposerPost({
 
   const onPhotoPasted = useCallback(
     async (uri: string) => {
-      if (uri.startsWith('data:video/')) {
-        onSelectVideo(post.id, {uri, type: 'video', height: 0, width: 0})
+      if (uri.startsWith('data:video/') || uri.startsWith('data:image/gif')) {
+        if (isNative) return // web only
+        const [mimeType] = uri.slice('data:'.length).split(';')
+        if (!SUPPORTED_MIME_TYPES.includes(mimeType as SupportedMimeTypes)) {
+          Toast.show(_(msg`Unsupported video type`), 'xmark')
+          return
+        }
+        const name = `pasted.${mimeToExt(mimeType)}`
+        const file = await fetch(uri)
+          .then(res => res.blob())
+          .then(blob => new File([blob], name, {type: mimeType}))
+        onSelectVideo(post.id, await getVideoMetadata(file))
       } else {
         const res = await pasteImage(uri)
         onImageAdd([res])
       }
     },
-    [post.id, onSelectVideo, onImageAdd],
+    [post.id, onSelectVideo, onImageAdd, _],
   )
 
   return (
@@ -986,17 +1025,6 @@ function ComposerEmbeds({
                   asset={video.asset}
                   video={video.video}
                   isActivePost={isActivePost}
-                  setDimensions={(width: number, height: number) => {
-                    dispatch({
-                      type: 'embed_update_video',
-                      videoAction: {
-                        type: 'update_dimensions',
-                        width,
-                        height,
-                        signal: video.abortController.signal,
-                      },
-                    })
-                  }}
                   clear={clearVideo}
                 />
               ) : null)}
@@ -1241,12 +1269,12 @@ function useScrollTracker({
   const contentHeight = useSharedValue(0)
 
   const hasScrolledToTop = useDerivedValue(() =>
-    withTiming(contentOffset.value === 0 ? 1 : 0),
+    withTiming(contentOffset.get() === 0 ? 1 : 0),
   )
 
   const hasScrolledToBottom = useDerivedValue(() =>
     withTiming(
-      contentHeight.value - contentOffset.value - 5 <= scrollViewHeight.value
+      contentHeight.get() - contentOffset.get() - 5 <= scrollViewHeight.get()
         ? 1
         : 0,
     ),
@@ -1264,11 +1292,11 @@ function useScrollTracker({
     }) => {
       'worklet'
       if (typeof newContentHeight === 'number')
-        contentHeight.value = Math.floor(newContentHeight)
+        contentHeight.set(Math.floor(newContentHeight))
       if (typeof newContentOffset === 'number')
-        contentOffset.value = Math.floor(newContentOffset)
+        contentOffset.set(Math.floor(newContentOffset))
       if (typeof newScrollViewHeight === 'number')
-        scrollViewHeight.value = Math.floor(newScrollViewHeight)
+        scrollViewHeight.set(Math.floor(newScrollViewHeight))
     },
     [contentHeight, contentOffset, scrollViewHeight],
   )
@@ -1284,21 +1312,22 @@ function useScrollTracker({
     },
   })
 
-  const onScrollViewContentSizeChange = useCallback(
-    (_width: number, height: number) => {
-      if (stickyBottom && height > contentHeight.value) {
+  const onScrollViewContentSizeChangeUIThread = useCallback(
+    (newContentHeight: number) => {
+      'worklet'
+      const oldContentHeight = contentHeight.get()
+      let shouldScrollToBottom = false
+      if (stickyBottom && newContentHeight > oldContentHeight) {
         const isFairlyCloseToBottom =
-          contentHeight.value - contentOffset.value - 100 <=
-          scrollViewHeight.value
+          oldContentHeight - contentOffset.get() - 100 <= scrollViewHeight.get()
         if (isFairlyCloseToBottom) {
-          runOnUI(() => {
-            scrollTo(scrollViewRef, 0, contentHeight.value, true)
-          })()
+          shouldScrollToBottom = true
         }
       }
-      showHideBottomBorder({
-        newContentHeight: height,
-      })
+      showHideBottomBorder({newContentHeight})
+      if (shouldScrollToBottom) {
+        scrollTo(scrollViewRef, 0, newContentHeight, true)
+      }
     },
     [
       showHideBottomBorder,
@@ -1308,6 +1337,13 @@ function useScrollTracker({
       contentOffset,
       scrollViewHeight,
     ],
+  )
+
+  const onScrollViewContentSizeChange = useCallback(
+    (_width: number, height: number) => {
+      runOnUI(onScrollViewContentSizeChangeUIThread)(height)
+    },
+    [onScrollViewContentSizeChangeUIThread],
   )
 
   const onScrollViewLayout = useCallback(
@@ -1323,7 +1359,7 @@ function useScrollTracker({
     return {
       borderBottomWidth: StyleSheet.hairlineWidth,
       borderColor: interpolateColor(
-        hasScrolledToTop.value,
+        hasScrolledToTop.get(),
         [0, 1],
         [t.atoms.border_contrast_medium.borderColor, 'transparent'],
       ),
@@ -1333,7 +1369,7 @@ function useScrollTracker({
     return {
       borderTopWidth: StyleSheet.hairlineWidth,
       borderColor: interpolateColor(
-        hasScrolledToBottom.value,
+        hasScrolledToBottom.get(),
         [0, 1],
         [t.atoms.border_contrast_medium.borderColor, 'transparent'],
       ),
@@ -1578,7 +1614,7 @@ function VideoUploadToolbar({state}: {state: VideoState}) {
 
   const animatedStyle = useAnimatedStyle(() => {
     return {
-      transform: [{rotateZ: `${rotate.value}deg`}],
+      transform: [{rotateZ: `${rotate.get()}deg`}],
     }
   })
 
