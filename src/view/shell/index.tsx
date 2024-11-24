@@ -9,6 +9,7 @@ import {useNavigation, useNavigationState} from '@react-navigation/native'
 import {useDedupe} from '#/lib/hooks/useDedupe'
 import {useIntentHandler} from '#/lib/hooks/useIntentHandler'
 import {useNotificationsHandler} from '#/lib/hooks/useNotificationHandler'
+import {usePalette} from '#/lib/hooks/usePalette'
 import {useNotificationsRegistration} from '#/lib/notifications/notifications'
 import {isStateAtTabRoot} from '#/lib/routes/helpers'
 import {useTheme} from '#/lib/ThemeContext'
@@ -132,6 +133,7 @@ function ShellInner() {
 export const Shell: React.FC = function ShellImpl() {
   const {fullyExpandedCount} = useDialogStateControlContext()
   const theme = useTheme()
+  const pal = usePalette('default')
   useIntentHandler()
 
   React.useEffect(() => {
@@ -144,7 +146,7 @@ export const Shell: React.FC = function ShellImpl() {
     }
   }, [theme])
   return (
-    <View testID="mobileShellView" style={[styles.outerContainer]}>
+    <View testID="mobileShellView" style={[styles.outerContainer, pal.view]}>
       <StatusBar
         style={
           theme.colorScheme === 'dark' || (isIOS && fullyExpandedCount > 0)

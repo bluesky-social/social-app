@@ -256,6 +256,9 @@ export function PostInteractionSettingsForm({
     } else {
       newSelected.splice(i, 1)
     }
+    if (newSelected.length === 0) {
+      newSelected.push({type: 'everybody'})
+    }
 
     onChangeThreadgateAllowUISettings(newSelected)
   }

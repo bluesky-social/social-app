@@ -1,11 +1,6 @@
 import {useCallback} from 'react'
 import {Keyboard} from 'react-native'
-import {
-  ImagePickerAsset,
-  launchImageLibraryAsync,
-  MediaTypeOptions,
-  UIImagePickerPreferredAssetRepresentationMode,
-} from 'expo-image-picker'
+import {ImagePickerAsset} from 'expo-image-picker'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -22,6 +17,7 @@ import {useDialogControl} from '#/components/Dialog'
 import {VerifyEmailDialog} from '#/components/dialogs/VerifyEmailDialog'
 import {VideoClip_Stroke2_Corner0_Rounded as VideoClipIcon} from '#/components/icons/VideoClip'
 import * as Prompt from '#/components/Prompt'
+import {pickVideo} from './pickVideo'
 
 const VIDEO_MAX_DURATION = 60 * 1000 // 60s in milliseconds
 
@@ -52,24 +48,22 @@ export function SelectVideoBtn({onSelectVideo, disabled, setError}: Props) {
       Keyboard.dismiss()
       control.open()
     } else {
-      const response = await launchImageLibraryAsync({
-        exif: false,
-        mediaTypes: MediaTypeOptions.Videos,
-        quality: 1,
-        legacy: true,
-        preferredAssetRepresentationMode:
-          UIImagePickerPreferredAssetRepresentationMode.Current,
-      })
+      const response = await pickVideo()
       if (response.assets && response.assets.length > 0) {
         const asset = response.assets[0]
         try {
           if (isWeb) {
+            // asset.duration is null for gifs (see the TODO in pickVideo.web.ts)
+            if (asset.duration && asset.duration > VIDEO_MAX_DURATION) {
+              throw Error(_(msg`Videos must be less than 60 seconds long`))
+            }
             // compression step on native converts to mp4, so no need to check there
-            const mimeType = getMimeType(asset)
             if (
-              !SUPPORTED_MIME_TYPES.includes(mimeType as SupportedMimeTypes)
+              !SUPPORTED_MIME_TYPES.includes(
+                asset.mimeType as SupportedMimeTypes,
+              )
             ) {
-              throw Error(_(msg`Unsupported video type: ${mimeType}`))
+              throw Error(_(msg`Unsupported video type: ${asset.mimeType}`))
             }
           } else {
             if (typeof asset.duration !== 'number') {
@@ -141,18 +135,4 @@ function VerifyEmailPrompt({control}: {control: Prompt.PromptControlProps}) {
       <VerifyEmailDialog control={verifyEmailDialogControl} />
     </>
   )
-}
-
-function getMimeType(asset: ImagePickerAsset) {
-  if (isWeb) {
-    const [mimeType] = asset.uri.slice('data:'.length).split(';base64,')
-    if (!mimeType) {
-      throw new Error('Could not determine mime type')
-    }
-    return mimeType
-  }
-  if (!asset.mimeType) {
-    throw new Error('Could not determine mime type')
-  }
-  return asset.mimeType
 }

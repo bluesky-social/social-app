@@ -9,9 +9,16 @@ import {
   useInAppBrowser,
   useSetInAppBrowser,
 } from '#/state/preferences/in-app-browser'
+import {
+  useOptOutOfUtm,
+  useSetOptOutOfUtm,
+} from '#/state/preferences/opt-out-of-utm'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
+import {atoms as a} from '#/alf'
+import {Admonition} from '#/components/Admonition'
 import * as Toggle from '#/components/forms/Toggle'
 import {Bubbles_Stroke2_Corner2_Rounded as BubblesIcon} from '#/components/icons/Bubble'
+import {ChainLink3_Stroke2_Corner0_Rounded as ChainLinkIcon} from '#/components/icons/ChainLink'
 import {Hashtag_Stroke2_Corner0_Rounded as HashtagIcon} from '#/components/icons/Hashtag'
 import {Home_Stroke2_Corner2_Rounded as HomeIcon} from '#/components/icons/Home'
 import {Macintosh_Stroke2_Corner2_Rounded as MacintoshIcon} from '#/components/icons/Macintosh'
@@ -29,6 +36,8 @@ export function ContentAndMediaSettingsScreen({}: Props) {
   const setAutoplayDisabledPref = useSetAutoplayDisabled()
   const inAppBrowserPref = useInAppBrowser()
   const setUseInAppBrowser = useSetInAppBrowser()
+  const optOutOfUtm = useOptOutOfUtm()
+  const setOptOutOfUtm = useSetOptOutOfUtm()
 
   return (
     <Layout.Screen>
@@ -68,6 +77,19 @@ export function ContentAndMediaSettingsScreen({}: Props) {
             </SettingsList.ItemText>
           </SettingsList.LinkItem>
           <SettingsList.Divider />
+          <Toggle.Item
+            name="disable_autoplay"
+            label={_(msg`Autoplay videos and GIFs`)}
+            value={!autoplayDisabledPref}
+            onChange={value => setAutoplayDisabledPref(!value)}>
+            <SettingsList.Item>
+              <SettingsList.ItemIcon icon={PlayIcon} />
+              <SettingsList.ItemText>
+                <Trans>Autoplay videos and GIFs</Trans>
+              </SettingsList.ItemText>
+              <Toggle.Platform />
+            </SettingsList.Item>
+          </Toggle.Item>
           {isNative && (
             <Toggle.Item
               name="use_in_app_browser"
@@ -83,19 +105,31 @@ export function ContentAndMediaSettingsScreen({}: Props) {
               </SettingsList.Item>
             </Toggle.Item>
           )}
-          <Toggle.Item
-            name="disable_autoplay"
-            label={_(msg`Autoplay videos and GIFs`)}
-            value={!autoplayDisabledPref}
-            onChange={value => setAutoplayDisabledPref(!value)}>
+          {isNative && <SettingsList.Divider />}
+          {isNative && (
+            <Toggle.Item
+              name="allow_utm"
+              label={_(msg`Specify Bluesky as a referer`)}
+              value={!(optOutOfUtm ?? false)}
+              onChange={value => setOptOutOfUtm(!value)}>
+              <SettingsList.Item>
+                <SettingsList.ItemIcon icon={ChainLinkIcon} />
+                <SettingsList.ItemText>
+                  <Trans>Send Bluesky referrer</Trans>
+                </SettingsList.ItemText>
+                <Toggle.Platform />
+              </SettingsList.Item>
+            </Toggle.Item>
+          )}
+          {isNative && (
             <SettingsList.Item>
-              <SettingsList.ItemIcon icon={PlayIcon} />
-              <SettingsList.ItemText>
-                <Trans>Autoplay videos and GIFs</Trans>
-              </SettingsList.ItemText>
-              <Toggle.Platform />
+              <Admonition type="info" style={[a.flex_1]}>
+                <Trans>
+                  Helps external sites estimate traffic from Bluesky.
+                </Trans>
+              </Admonition>
             </SettingsList.Item>
-          </Toggle.Item>
+          )}
         </SettingsList.Container>
       </Layout.Content>
     </Layout.Screen>

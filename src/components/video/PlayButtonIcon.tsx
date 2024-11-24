@@ -9,39 +9,23 @@ export function PlayButtonIcon({size = 32}: {size?: number}) {
   const fg = t.name === 'light' ? t.palette.contrast_975 : t.palette.contrast_25
 
   return (
-    <View
-      style={[
-        a.rounded_full,
-        a.overflow_hidden,
-        a.align_center,
-        a.justify_center,
-        t.atoms.shadow_lg,
-        {
-          width: size + size / 1.5,
-          height: size + size / 1.5,
-        },
-      ]}>
+    <>
       <View
         style={[
-          a.absolute,
-          a.inset_0,
+          a.rounded_full,
           {
             backgroundColor: bg,
+            shadowColor: 'black',
+            shadowRadius: 32,
+            shadowOpacity: 0.5,
+            elevation: 24,
+            width: size + size / 1.5,
+            height: size + size / 1.5,
             opacity: 0.7,
           },
         ]}
       />
-      <PlayIcon
-        width={size}
-        fill={fg}
-        style={[
-          a.relative,
-          a.z_10,
-          {
-            left: size / 50,
-          },
-        ]}
-      />
-    </View>
+      <PlayIcon width={size} fill={fg} style={a.absolute} />
+    </>
   )
 }

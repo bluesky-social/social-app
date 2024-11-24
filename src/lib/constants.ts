@@ -154,6 +154,7 @@ export const SUPPORTED_MIME_TYPES = [
   'video/mpeg',
   'video/webm',
   'video/quicktime',
+  'image/gif',
 ] as const
 
 export type SupportedMimeTypes = (typeof SUPPORTED_MIME_TYPES)[number]
