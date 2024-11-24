@@ -824,7 +824,7 @@ msgstr "Text alternatiu"
 
 #: src/view/com/composer/photos/Gallery.tsx:255
 msgid "Alt text describes images for blind and low-vision users, and helps give context to everyone."
-msgstr "El text alternatiu descriu les imatges per a les persones cegues o amb problemes de visió, i ajuda a donar context a tothom."
+msgstr "El text alternatiu descriu les imatges per a les persones cegues o amb problemes de visió, i ajuda donar context a tothom."
 
 #: src/view/com/composer/GifAltText.tsx:179
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:139
@@ -1108,7 +1108,7 @@ msgstr "Estàs segur que vols descartar els canvis?"
 
 #: src/components/dms/LeaveConvoPrompt.tsx:47
 msgid "Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for the other participant."
-msgstr "Estàs segur que vols abandonar aquesta conversa? Els missatge s'esborraran per a tu, però no per a l'altre participant."
+msgstr "Estàs segur que vols abandonar aquesta conversa? Els missatges s'esborraran per a tu, però no per a l'altre participant."
 
 #: src/view/com/feeds/FeedSourceCard.tsx:316
 msgid "Are you sure you want to remove {0} from your feeds?"
@@ -2994,7 +2994,7 @@ msgstr "Incrusta aquesta publicació al teu lloc web. Copia el fragment següent
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerWeb.tsx:57
 msgid "Embedded video player"
-msgstr ""
+msgstr "Incrusta el reproductor de vídeo"
 
 #: src/screens/Settings/components/Email2FAToggle.tsx:56
 #: src/screens/Settings/components/Email2FAToggle.tsx:60
@@ -3097,7 +3097,7 @@ msgstr "Entra el codi de confirmació"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:405
 msgid "Enter fullscreen"
-msgstr ""
+msgstr "Entra a pantalla completa"
 
 #: src/view/com/auth/create/Step1.tsx:71
 #~ msgid "Enter the address of your provider:"
@@ -3962,7 +3962,7 @@ msgstr "Ajuda la gent a saber que no ets un bot penjant una imatge o creant un a
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:127
 msgid "Helps external sites estimate traffic from Bluesky."
-msgstr ""
+msgstr "Ajuda els llocs externs a estimar el trànsit de Bluesky."
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:140
 #~ msgid "Here are some accounts for you to follow"
@@ -4111,7 +4111,7 @@ msgstr "Proveïdor d'allotjament"
 #: src/screens/Settings/ThreadPreferences.tsx:59
 #: src/screens/Settings/ThreadPreferences.tsx:62
 msgid "Hot replies first"
-msgstr ""
+msgstr "Respostes candents primer"
 
 #: src/view/com/modals/InAppBrowserConsent.tsx:41
 msgid "How should we open this link?"
@@ -4777,11 +4777,11 @@ msgstr "Sembla que has deixat tots els teus canals sense fixar. No passa res, en
 
 #: src/screens/Feeds/NoFollowingFeed.tsx:38
 #~ msgid "Looks like you're missing a following feed."
-#~ msgstr "Sembla que et falta el canal del Seguits."
+#~ msgstr "Sembla que et falta el canal dels Seguits."
 
 #: src/screens/Feeds/NoFollowingFeed.tsx:37
 msgid "Looks like you're missing a following feed. <0>Click here to add one.</0>"
-msgstr "Sembla que et falta el canal del Seguits. <0>Clica aquí per a afegir-ne un.</0>"
+msgstr "Sembla que et falta el canal dels Seguits. <0>Clica aquí per a afegir-ne un.</0>"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:266
 msgid "Make one for me"
@@ -6168,7 +6168,7 @@ msgstr "Explica per què creieu que aquesta etiqueta ha estat aplicada incorrect
 
 #: src/screens/Messages/components/ChatDisabled.tsx:110
 msgid "Please explain why you think your chats were incorrectly disabled"
-msgstr "Expliqueu perquè creus que els teus xats s'han desactivat incorrectament"
+msgstr "Expliqueu per què creus que els teus xats s'han desactivat incorrectament"
 
 #: src/lib/hooks/useAccountSwitcher.ts:45
 #: src/lib/hooks/useAccountSwitcher.ts:55
@@ -7325,7 +7325,7 @@ msgstr "Consulta aquesta guia"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/Scrubber.tsx:190
 msgid "Seek slider. Use the arrow keys to seek forwards and backwards, and space to play/pause"
-msgstr ""
+msgstr "Cerca el control lliscant. Utilitza les tecles de fletxa per cercar cap endavant i cap enrere, i l'espai per reproduir/pausar"
 
 #: src/view/com/util/Selector.tsx:107
 #~ msgid "Select {item}"
@@ -7398,7 +7398,7 @@ msgstr "Selecciona el moderador"
 
 #: src/view/com/composer/videos/SubtitleFilePicker.tsx:66
 msgid "Select subtitle file (.vtt)"
-msgstr "Tria el arxiu de subtítols (.vtt)"
+msgstr "Tria l'arxiu de subtítols (.vtt)"
 
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:83
 msgid "Select the {emojiName} emoji as your avatar"
@@ -7470,7 +7470,7 @@ msgstr "Envia un lloc web net!"
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:118
 msgid "Send Bluesky referrer"
-msgstr ""
+msgstr "Envia la referència de Bluesky"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:232
 msgid "Send Confirmation"
@@ -7744,11 +7744,11 @@ msgstr "Comparteix el codi QR"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:415
 msgid "Share this starter pack"
-msgstr "Comparteix aquets starter pack"
+msgstr "Comparteix aquest starter pack"
 
 #: src/components/StarterPack/ShareDialog.tsx:99
 msgid "Share this starter pack and help people join your community on Bluesky."
-msgstr "Comparteix aquets starter pack i ajuda a la gent de la teva comunitat a unir-se a Bluesky."
+msgstr "Comparteix aquest starter pack i ajuda la gent de la teva comunitat a unir-se a Bluesky."
 
 #: src/components/dms/ChatEmptyPill.tsx:34
 msgid "Share your favorite feed!"
@@ -8158,7 +8158,7 @@ msgstr "Brossa; excessives mencions o respostes"
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:112
 msgid "Specify Bluesky as a referer"
-msgstr ""
+msgstr "Especifica Bluesky com a referent"
 
 #: src/screens/Onboarding/index.tsx:27
 #: src/screens/Onboarding/state.ts:100
@@ -8557,7 +8557,7 @@ msgstr "La política de privacitat ha estat traslladada a <0/>"
 
 #: src/view/com/composer/state/video.ts:395
 msgid "The selected video is larger than 50MB."
-msgstr "El vídeo triat és més gran de 50MB."
+msgstr "El vídeo triat és més gran de 50 MB."
 
 #: src/lib/strings/errors.ts:18
 msgid "The server appears to be experiencing issues. Please try again in a few moments."
@@ -8780,7 +8780,7 @@ msgstr "Aquest contingut està allotjat a {0}. Vols habilitat els continguts ext
 #: src/components/moderation/ModerationDetailsDialog.tsx:82
 #: src/lib/moderation/useModerationCauseDescription.ts:82
 msgid "This content is not available because one of the users involved has blocked the other."
-msgstr "Aquest contingut no està disponible per culpa de que un dels usuaris involucrats ha bloquejat a l'altre."
+msgstr "Aquest contingut no està disponible per culpa que un dels usuaris involucrats ha bloquejat a l'altre."
 
 #: src/view/com/posts/FeedErrorMessage.tsx:114
 msgid "This content is not viewable without a Bluesky account."
@@ -8994,7 +8994,7 @@ msgstr "Això eliminarà @{0} de la llista d'accés ràpid."
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:721
 msgid "This will remove your post from this quote post for all users, and replace it with a placeholder."
-msgstr "Això eliminarà la teva publicació d'aquesta cita per a tots els usuaris i la substituirà per un marcador de posició."
+msgstr "Això eliminarà la teva publicació d'aquesta citació per a tots els usuaris i la substituirà per un marcador de posició."
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:57
 #: src/screens/Settings/ContentAndMediaSettings.tsx:60
@@ -9023,7 +9023,7 @@ msgstr "Preferències dels fils de debat"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/TimeIndicator.tsx:33
 msgid "Time remaining: {time} seconds"
-msgstr ""
+msgstr "Temps restant: {time} segons"
 
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:99
 msgid "To disable the email 2FA method, please verify your access to the email address."
@@ -9243,7 +9243,7 @@ msgstr "Deixa de silenciar el fil de debat"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:318
 msgid "Unmute video"
-msgstr "Deixa de silencia el vídeo"
+msgstr "Deixa de silenciar el vídeo"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:168
 #~ msgid "Unmuted"
@@ -9294,11 +9294,11 @@ msgstr "T'has dona't de baixa de la llista"
 
 #: src/view/com/composer/Composer.tsx:759
 msgid "Unsupported video type"
-msgstr ""
+msgstr "Tipus de vídeo no compatible"
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:66
 msgid "Unsupported video type: {0}"
-msgstr ""
+msgstr "Tipus de vídeo no compatible: {0}"
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:72
 #~ msgid "Unsupported video type: {mimeType}"
@@ -9514,7 +9514,7 @@ msgstr "usuaris seguits per <0>@{0}</0>"
 #: src/screens/Messages/Settings.tsx:86
 #: src/screens/Messages/Settings.tsx:89
 msgid "Users I follow"
-msgstr "Els usuaris als que segueixo"
+msgstr "Els usuaris als quals segueixo"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:420
 msgid "Users in \"{0}\""
@@ -9631,7 +9631,7 @@ msgstr "Vídeo: {0}"
 
 #: src/view/com/composer/videos/state.ts:27
 #~ msgid "Videos cannot be larger than 50MB"
-#~ msgstr "Els vídeos no poder ser de més de 50MB"
+#~ msgstr "Els vídeos no poder ser de més de 50 MB"
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:58
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:73
@@ -9716,11 +9716,11 @@ msgstr "Veure els teus comptes bloquejats"
 #: src/view/com/home/HomeHeaderLayout.web.tsx:78
 #: src/view/com/home/HomeHeaderLayoutMobile.tsx:88
 msgid "View your feeds and explore more"
-msgstr "Veure el teus canals i descobreix-ne més"
+msgstr "Veure els teus canals i descobreix-ne més"
 
 #: src/screens/Moderation/index.tsx:239
 msgid "View your moderation lists"
-msgstr "Veure els teves llistes de moderació"
+msgstr "Veure les teves llistes de moderació"
 
 #: src/screens/Moderation/index.tsx:254
 msgid "View your muted accounts"
@@ -9733,7 +9733,7 @@ msgstr "Visita el lloc web"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VolumeControl.tsx:80
 msgid "Volume"
-msgstr ""
+msgstr "Volum"
 
 #: src/components/moderation/LabelPreference.tsx:136
 #: src/lib/moderation/useLabelBehaviorDescription.ts:17
@@ -10027,7 +10027,7 @@ msgstr "Estàs a la cua."
 
 #: src/view/com/composer/state/video.ts:410
 msgid "You are not allowed to upload videos."
-msgstr "No t'és permés pujar vídeos."
+msgstr "No t'és permès pujar vídeos."
 
 #: src/view/com/profile/ProfileFollows.tsx:95
 msgid "You are not following anyone."
