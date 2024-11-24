@@ -1,28 +1,24 @@
 import {useCallback} from 'react'
-import {graphemeSegments} from 'unicode-segmenter/grapheme'
+import {splitGraphemes} from 'unicode-segmenter/grapheme'
 
 export const useGrapheme = () => {
   const getGraphemeString = useCallback((name: string, length: number) => {
     let remainingCharacters = 0
 
     if (name.length > length) {
-      const segments = [...graphemeSegments(name)]
-      const joinSegments = (
-        name: string,
-        {segment}: (typeof segments)[number],
-      ) => name + segment
+      const graphemes = [...splitGraphemes(name)]
 
       if (name.length > length) {
-        if (segments.length > length) {
+        if (graphemes.length > length) {
           remainingCharacters = 0
-          name = `${segments.slice(0, length).reduce(joinSegments, '')}…`
+          name = `${graphemes.slice(0, length).join('')}…`
         } else {
-          remainingCharacters = length - segments.length
-          name = segments.reduce(joinSegments, '')
+          remainingCharacters = length - graphemes.length
+          name = graphemes.join('')
         }
       } else {
-        remainingCharacters = length - segments.length
-        name = segments.reduce(joinSegments, '')
+        remainingCharacters = length - graphemes.length
+        name = graphemes.join('')
       }
     } else {
       remainingCharacters = length - name.length
