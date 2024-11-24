@@ -169,7 +169,7 @@ msgstr "Els canals i les persones preferits de {0}: uneix-te a mi!"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:46
 msgid "{0}'s starter pack"
-msgstr "Starter pack de {0}"
+msgstr "Starter pack de: {0}"
 
 #. How many days have passed, displayed in a narrow form
 #: src/lib/hooks/useTimeAgo.ts:158
@@ -231,7 +231,7 @@ msgstr "{count} elements sense llegir"
 #: src/lib/generate-starterpack.ts:108
 #: src/screens/StarterPack/Wizard/index.tsx:183
 msgid "{displayName}'s Starter Pack"
-msgstr "Starter Pack de {displayName}"
+msgstr "Starter Pack de: {displayName}"
 
 #: src/screens/SignupQueued.tsx:220
 msgid "{estimatedTimeHrs, plural, one {hour} other {hours}}"
@@ -1067,7 +1067,7 @@ msgstr "Aplica els canals recomanats per defecte"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:835
 msgid "Archived from {0}"
-msgstr "Arxivat de {0}"
+msgstr "Arxivat del dia {0}"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:804
 #: src/view/com/post-thread/PostThreadItem.tsx:843
@@ -5840,7 +5840,7 @@ msgstr "Obre la llista de codis d'invitació"
 
 #: src/view/screens/Settings/index.tsx:755
 #~ msgid "Opens modal for downloading your Bluesky account data (repository)"
-#~ msgstr "Obre el modal per a baixar les dades del vostre compte Bluesky (repositori)"
+#~ msgstr "Obre el modal per a baixar les dades del teu compte Bluesky (repositori)"
 
 #: src/view/screens/Settings/index.tsx:963
 #~ msgid "Opens modal for email verification"
@@ -6123,7 +6123,7 @@ msgstr "Confirma el teu correu abans de canviar-lo. Aquest és un requisit tempo
 
 #: src/view/com/modals/AddAppPasswords.tsx:94
 #~ msgid "Please enter a name for your app password. All spaces is not allowed."
-#~ msgstr "Introdueix un nom per a la contrasenya de la vostra aplicació. No es permeten tot en espais."
+#~ msgstr "Introdueix un nom per a la contrasenya de la teva aplicació. No es permeten tot en espais."
 
 #: src/view/com/auth/create/Step2.tsx:206
 #~ msgid "Please enter a phone number that can receive SMS text messages."
@@ -7918,7 +7918,7 @@ msgstr "Mostra republicacions"
 #: src/screens/Settings/FollowingFeedPreferences.tsx:121
 #: src/screens/Settings/FollowingFeedPreferences.tsx:131
 msgid "Show samples of your saved feeds in your Following feed"
-msgstr "Mostra mostres de les vostres fonts desades al canal Seguint"
+msgstr "Mostra mostres de les teves fonts desades al canal Seguint"
 
 #: src/components/moderation/ContentHider.tsx:152
 #: src/components/moderation/PostHider.tsx:79
@@ -8037,7 +8037,7 @@ msgstr "S'ha iniciat sessió com a @{0}"
 
 #: src/view/com/notifications/FeedItem.tsx:218
 #~ msgid "signed up with your starter pack"
-#~ msgstr "s'ha registrat amb el vostre starter pack"
+#~ msgstr "s'ha registrat amb el teu starter pack"
 
 #: src/view/com/modals/SwitchAccount.tsx:70
 #~ msgid "Signs {0} out of Bluesky"
@@ -8197,7 +8197,7 @@ msgstr "Starter pack"
 
 #: src/components/StarterPack/StarterPackCard.tsx:81
 msgid "Starter pack by {0}"
-msgstr "Starter pack de {0}"
+msgstr "Starter pack de: {0}"
 
 #: src/components/StarterPack/StarterPackCard.tsx:80
 msgid "Starter pack by you"
@@ -8658,7 +8658,7 @@ msgstr "Hi ha hagut un problema en obtenir les teves llistes. Toca aquí per a t
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:101
 msgid "There was an issue fetching your service info"
-msgstr "Hi ha hagut un problema en recuperar la informació del vostre servei"
+msgstr "Hi ha hagut un problema en recuperar la informació del teu servei"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:145
 msgid "There was an issue removing this feed. Please check your internet connection and try again."
@@ -9118,7 +9118,7 @@ msgstr "Deixa de silenciar la llista"
 
 #: src/lib/strings/errors.ts:11
 msgid "Unable to connect. Please check your internet connection and try again."
-msgstr "No s'ha pogut connectar. Comproveu la vostra connexió a Internet i torneu-ho a provar."
+msgstr "No s'ha pogut connectar. Comprova la teva connexió a Internet i torna-ho a provar."
 
 #: src/screens/Login/ForgotPasswordForm.tsx:68
 #: src/screens/Login/index.tsx:76
@@ -10257,7 +10257,7 @@ msgstr "Abans has desactivat @{0}."
 
 #: src/screens/Settings/Settings.tsx:249
 msgid "You will be signed out of all your accounts."
-msgstr "Se us tancarà la sessió de tots els vostres comptes."
+msgstr "Es tancarà la sessió de tots els teus comptes."
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:217
 msgid "You will no longer receive notifications for this thread"
@@ -10331,7 +10331,7 @@ msgstr "Has triat amagar una paraula o una etiqueta d'aquesta publicació."
 
 #: src/view/com/posts/FollowingEndOfFeed.tsx:44
 msgid "You've reached the end of your feed! Find some more accounts to follow."
-msgstr "Has arribat al final del vostre cabal! Cerca alguns comptes més per a seguir."
+msgstr "Has arribat al final del teu canal! Cerca alguns comptes més per a seguir."
 
 #: src/view/com/composer/state/video.ts:421
 msgid "You've reached your daily limit for video uploads (too many bytes)"
