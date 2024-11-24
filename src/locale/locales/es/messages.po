@@ -1,6 +1,5 @@
 msgid ""
-msgstr ""
-"POT-Creation-Date: 2023-12-22 01:56+0530\n"
+msgstr "POT-Creation-Date: 2023-12-22 01:56+0530\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1064,7 +1063,7 @@ msgstr "Las opciones de reproducción automática se han mudado a <0>Ajustes de 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:82
 #: src/screens/Settings/ContentAndMediaSettings.tsx:88
 msgid "Autoplay videos and GIFs"
-msgstr "Reproducir vídeos y GIFs automáticamente"
+msgstr "Reproducir videos y GIFs automáticamente"
 
 #: src/components/dms/MessagesListHeader.tsx:75
 #: src/components/moderation/LabelsOnMeDialog.tsx:290
@@ -1748,7 +1747,7 @@ msgstr "Redactar la respuesta"
 
 #: src/view/com/composer/Composer.tsx:1628
 msgid "Compressing video..."
-msgstr "Comprimiendo vídeo..."
+msgstr "Comprimiendo video..."
 
 #: src/view/com/composer/videos/VideoTranscodeProgress.tsx:51
 #~ msgid "Compressing..."
@@ -2647,7 +2646,7 @@ msgstr "Editar el perfil"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:566
 msgid "Edit starter pack"
-msgstr "Editar pack inicial"
+msgstr "Editar paquete de inicio"
 
 #: src/view/com/modals/CreateOrEditList.tsx:225
 msgid "Edit User List"
@@ -2659,7 +2658,7 @@ msgstr "Editar quien puede responder"
 
 #: src/view/com/modals/EditProfile.tsx:188
 msgid "Edit your display name"
-msgstr "Editar tu nombre para mostrar "
+msgstr "Editar tu nombre para mostrar"
 
 #: src/view/com/modals/EditProfile.tsx:206
 msgid "Edit your profile description"
@@ -2737,7 +2736,7 @@ msgstr "Incrusta esta publicación en tu sitio web. Simplemente copia el siguien
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerWeb.tsx:57
 msgid "Embedded video player"
-msgstr ""
+msgstr "Reproductor de video incrustado"
 
 #: src/screens/Settings/components/Email2FAToggle.tsx:56
 #: src/screens/Settings/components/Email2FAToggle.tsx:60
@@ -2836,7 +2835,7 @@ msgstr "Ingresa Código de Confirmación"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:405
 msgid "Enter fullscreen"
-msgstr ""
+msgstr "Entrar en la pantalla completa"
 
 #: src/view/com/modals/ChangePassword.tsx:154
 msgid "Enter the code you received to change your password."
@@ -3052,7 +3051,7 @@ msgstr "Error al eliminar la publicación. Por favor, inténtalo de nuevo."
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:698
 msgid "Failed to delete starter pack"
-msgstr "Error al eliminar el paquete inicial."
+msgstr "Error al eliminar el paquete de inicio."
 
 #: src/view/screens/Search/Explore.tsx:427
 #: src/view/screens/Search/Explore.tsx:455
@@ -3631,7 +3630,7 @@ msgstr "Ayuda a que las personas sepan que no eres un bot subiendo una foto o cr
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:127
 msgid "Helps external sites estimate traffic from Bluesky."
-msgstr ""
+msgstr "Ayuda a los sitios externos a estimar el tráfico procedente de Bluesky."
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:140
 #~ msgid "Here are some accounts for you to follow"
@@ -3764,7 +3763,7 @@ msgstr "Proveedor de alojamiento"
 #: src/screens/Settings/ThreadPreferences.tsx:59
 #: src/screens/Settings/ThreadPreferences.tsx:62
 msgid "Hot replies first"
-msgstr ""
+msgstr "Respuestas destacadas primero"
 
 #: src/view/com/modals/InAppBrowserConsent.tsx:41
 msgid "How should we open this link?"
@@ -3955,7 +3954,7 @@ msgstr "Códigos de invitación: 1 disponible"
 
 #: src/components/StarterPack/ShareDialog.tsx:96
 msgid "Invite people to this starter pack!"
-msgstr "¡Invita a personas a este paquete inicial!"
+msgstr "¡Invita a personas a este paquete de inicio!"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:34
 msgid "Invite your friends to follow your favorite feeds and people"
@@ -3979,7 +3978,7 @@ msgstr "Es correcto"
 
 #: src/screens/StarterPack/Wizard/index.tsx:461
 msgid "It's just you right now! Add more people to your starter pack by searching above."
-msgstr "¡Solo estás tú por ahora! Agrega más personas a tu paquete inicial buscando arriba."
+msgstr "¡Solo estás tú por ahora! Agrega más personas a tu paquete de inicio buscando arriba."
 
 #: src/view/com/composer/Composer.tsx:1571
 msgid "Job ID: {0}"
@@ -5127,7 +5126,7 @@ msgstr "Falta el texto alternativo en una o varias imágenes."
 
 #: src/view/com/composer/Composer.tsx:338
 msgid "One or more videos is missing alt text."
-msgstr "Falta el texto alternativo en uno o más vídeos."
+msgstr "Falta el texto alternativo en uno o más videos."
 
 #: src/screens/Onboarding/StepProfile/index.tsx:115
 msgid "Only .jpg and .png files are supported"
@@ -5831,7 +5830,7 @@ msgstr "Política de privacidad"
 
 #: src/view/com/composer/Composer.tsx:1634
 msgid "Processing video..."
-msgstr "Procesando vídeo..."
+msgstr "Procesando video..."
 
 #: src/lib/api/index.ts:59
 #: src/screens/Login/ForgotPasswordForm.tsx:149
@@ -6014,7 +6013,7 @@ msgstr "Eliminar"
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:57
 msgid "Remove {displayName} from starter pack"
-msgstr "Eliminar a {displayName} del paquete inicial"
+msgstr "Eliminar a {displayName} del paquete de inicio"
 
 #: src/screens/Settings/Settings.tsx:437
 #: src/screens/Settings/Settings.tsx:440
@@ -6683,7 +6682,7 @@ msgstr "Ver esta guía"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/Scrubber.tsx:190
 msgid "Seek slider. Use the arrow keys to seek forwards and backwards, and space to play/pause"
-msgstr ""
+msgstr "Control deslizante. Usa las flechas del teclado para avanzar o retroceder y la barra espaciadora para reproducir/pausa"
 
 #: src/view/com/util/Selector.tsx:107
 #~ msgid "Select {item}"
@@ -6811,7 +6810,7 @@ msgstr "¡Envía un sitio web interesante!"
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:118
 msgid "Send Bluesky referrer"
-msgstr ""
+msgstr "Enviar origen de referencia de Bluesky"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:232
 msgid "Send Confirmation"
@@ -7410,7 +7409,7 @@ msgstr "Spam; menciones o respuestas excesivas"
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:112
 msgid "Specify Bluesky as a referer"
-msgstr ""
+msgstr "Especificar Bluesky como origen de referencia"
 
 #: src/screens/Onboarding/index.tsx:27
 #: src/screens/Onboarding/state.ts:100
@@ -8220,7 +8219,7 @@ msgstr "Preferencias de hilos"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/TimeIndicator.tsx:33
 msgid "Time remaining: {time} seconds"
-msgstr ""
+msgstr "Tiempo restante: {time} segundos"
 
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:99
 msgid "To disable the email 2FA method, please verify your access to the email address."
@@ -8311,7 +8310,7 @@ msgstr "Demutear lista"
 
 #: src/lib/strings/errors.ts:11
 msgid "Unable to connect. Please check your internet connection and try again."
-msgstr "No es posible conectarse. Comprueba tu conexión a Internet e inténtalo de nuevo "
+msgstr "No es posible conectarse. Comprueba tu conexión a Internet e inténtalo de nuevo"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:68
 #: src/screens/Login/index.tsx:76
@@ -8475,11 +8474,11 @@ msgstr "Dado de baja de la lista"
 
 #: src/view/com/composer/Composer.tsx:759
 msgid "Unsupported video type"
-msgstr ""
+msgstr "Tipo de video no aceptado"
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:66
 msgid "Unsupported video type: {0}"
-msgstr ""
+msgstr "Tipo de video no aceptado: {0}"
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:72
 #~ msgid "Unsupported video type: {mimeType}"
@@ -8894,7 +8893,7 @@ msgstr "Visitar el sitio"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VolumeControl.tsx:80
 msgid "Volume"
-msgstr ""
+msgstr "Volumen"
 
 #: src/components/moderation/LabelPreference.tsx:136
 #: src/lib/moderation/useLabelBehaviorDescription.ts:17
@@ -9009,11 +9008,11 @@ msgstr "¡Lo sentimos! Solo puedes suscribirte a veinte etiquetadores, y has alc
 
 #: src/screens/Deactivated.tsx:131
 msgid "Welcome back!"
-msgstr "¡Bienvenido de nuevo!"
+msgstr "¡Hola de nuevo!"
 
 #: src/components/NewskieDialog.tsx:103
 msgid "Welcome, friend!"
-msgstr "¡Bienvenido, amigo!"
+msgstr "¡Qué gusto verte!"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:126
 msgid "What are your interests?"
