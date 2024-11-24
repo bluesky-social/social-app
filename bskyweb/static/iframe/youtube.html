@@ -31,7 +31,7 @@
     let videoId = url.searchParams.get('videoId')
     videoId = decodeURIComponent(videoId)
     videoId = videoId.replace(/[^a-zA-Z0-9_-]/g, "")
-    if (video.length !== 11) throw new Error("Invalid video ID")
+    if (videoId.length !== 11) throw new Error("Invalid video ID")
     player = new YT.Player('player', {
       width: "1000",
       height: "1000",
