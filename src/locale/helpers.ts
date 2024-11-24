@@ -147,6 +147,8 @@ export function sanitizeAppLanguageSetting(appLanguage: string): AppLanguage {
         return AppLanguage.ja
       case 'ko':
         return AppLanguage.ko
+      case 'nl':
+        return AppLanguage.nl
       case 'pl':
         return AppLanguage.pl
       case 'pt-BR':
