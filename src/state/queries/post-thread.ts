@@ -151,6 +151,8 @@ export function sortThread(
   justPostedUris: Set<string>,
   threadgateRecordHiddenReplies: Set<string>,
   stableOrderCache: Map<string, number>,
+  fetchedAtCache: Map<string, number>,
+  fetchedAt: number,
 ): ThreadNode {
   if (node.type !== 'post') {
     return node
@@ -238,13 +240,28 @@ export function sortThread(
         }
       }
 
+      // Keep already sorted items stable.
       const cachedResult = stableOrderCache.get(a.uri + ':' + b.uri)
       if (cachedResult !== undefined) {
         return cachedResult
       }
 
+      // Split items from different fetches into separate generations.
+      let aFetchedAt = fetchedAtCache.get(a.uri)
+      let bFetchedAt = fetchedAtCache.get(b.uri)
+      if (aFetchedAt === undefined) {
+        fetchedAtCache.set(a.uri, fetchedAt)
+        aFetchedAt = fetchedAt
+      }
+      if (bFetchedAt === undefined) {
+        fetchedAtCache.set(b.uri, fetchedAt)
+        bFetchedAt = fetchedAt
+      }
+
       let result
-      if (opts.sort === 'hotness') {
+      if (aFetchedAt !== bFetchedAt) {
+        result = aFetchedAt - bFetchedAt // older fetches first
+      } else if (opts.sort === 'hotness') {
         const aHotness = getHotness(a.post)
         const bHotness = getHotness(b.post)
         result = bHotness - aHotness
@@ -277,6 +294,8 @@ export function sortThread(
         justPostedUris,
         threadgateRecordHiddenReplies,
         stableOrderCache,
+        fetchedAtCache,
+        fetchedAt,
       ),
     )
   }
