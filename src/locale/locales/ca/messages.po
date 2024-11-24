@@ -655,7 +655,7 @@ msgstr "Afegeix una contrasenya d'aplicació"
 
 #: src/view/com/modals/report/Modal.tsx:194
 #~ msgid "Add details to report"
-#~ msgstr "Afegeix detalls a l'informe"
+#~ msgstr "Afegeix detalls a la denúncia"
 
 #: src/view/com/composer/Composer.tsx:467
 #~ msgid "Add link card"
@@ -2301,7 +2301,7 @@ msgstr "Crea un nou compte"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:101
 msgid "Create report for {0}"
-msgstr "Crea un informe per a {0}"
+msgstr "Crea una denúncia per a {0}"
 
 #: src/screens/Settings/AppPasswords.tsx:166
 msgid "Created {0}"
@@ -5185,7 +5185,7 @@ msgstr "Necessites canviar-lo?"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:130
 msgid "Need to report a copyright violation?"
-msgstr "Necessites informar d'una infracció dels drets d'autor?"
+msgstr "Necessites denunciar una infracció dels drets d'autor?"
 
 #: src/view/com/modals/EmbedConsent.tsx:107
 #: src/view/com/modals/EmbedConsent.tsx:123
@@ -5961,7 +5961,7 @@ msgstr "Un altre…"
 
 #: src/screens/Messages/components/ChatDisabled.tsx:28
 msgid "Our moderators have reviewed reports and decided to disable your access to chats on Bluesky."
-msgstr "Els nostres moderadors han revisat els informes i han decidit desactivar el teu accés als xats a Bluesky."
+msgstr "L'equip de moderació ha revisat denúncies i ha decidit desactivar-te l'accés als xats a Bluesky."
 
 #: src/components/Lists.tsx:216
 #: src/view/screens/NotFound.tsx:47
@@ -6826,84 +6826,84 @@ msgstr "La resposta s'ha amagat amb èxit"
 #: src/components/dms/MessagesListBlockedFooter.tsx:77
 #: src/components/dms/MessagesListBlockedFooter.tsx:84
 msgid "Report"
-msgstr "Informa"
+msgstr "Denuncia"
 
 #: src/view/com/modals/report/Modal.tsx:166
 #~ msgid "Report {collectionName}"
-#~ msgstr "Informa de {collectionName}"
+#~ msgstr "Denuncia {collectionName}"
 
 #: src/components/dms/ConvoMenu.tsx:146
 #: src/components/dms/ConvoMenu.tsx:150
 #~ msgid "Report account"
-#~ msgstr "Informa del compte"
+#~ msgstr "Denuncia el compte"
 
 #: src/view/com/profile/ProfileMenu.tsx:299
 #: src/view/com/profile/ProfileMenu.tsx:302
 msgid "Report Account"
-msgstr "Informa del compte"
+msgstr "Denuncia el compte"
 
 #: src/components/dms/ConvoMenu.tsx:197
 #: src/components/dms/ConvoMenu.tsx:200
 #: src/components/dms/ReportConversationPrompt.tsx:17
 msgid "Report conversation"
-msgstr "Informa d'aquesta conversa"
+msgstr "Denuncia aquesta conversa"
 
 #: src/components/ReportDialog/index.tsx:44
 msgid "Report dialog"
-msgstr "Diàleg de l'informe"
+msgstr "Diàleg de denúncia"
 
 #: src/view/screens/ProfileFeed.tsx:354
 #: src/view/screens/ProfileFeed.tsx:356
 msgid "Report feed"
-msgstr "Informa del canal"
+msgstr "Denuncia el canal"
 
 #: src/view/screens/ProfileList.tsx:544
 msgid "Report List"
-msgstr "Informa de la llista"
+msgstr "Denuncia la llista"
 
 #: src/components/dms/MessageMenu.tsx:130
 msgid "Report message"
-msgstr "Informa del missatge"
+msgstr "Denuncia el missatge"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:611
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:613
 msgid "Report post"
-msgstr "Informa de la publicació"
+msgstr "Denuncia la publicació"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:605
 #: src/screens/StarterPack/StarterPackScreen.tsx:608
 msgid "Report starter pack"
-msgstr "Informa sobre el paquet inicial"
+msgstr "Denuncia el paquet inicial"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:43
 msgid "Report this content"
-msgstr "Informa d'aquest contingut"
+msgstr "Denuncia aquest contingut"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:56
 msgid "Report this feed"
-msgstr "Informa d'aquest canal"
+msgstr "Denuncia el canal"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:53
 msgid "Report this list"
-msgstr "Informa d'aquesta llista"
+msgstr "Denuncia la llista"
 
 #: src/components/dms/ReportDialog.tsx:44
 #: src/components/dms/ReportDialog.tsx:137
 #: src/components/ReportDialog/SelectReportOptionView.tsx:62
 msgid "Report this message"
-msgstr "Informa d'aquest missatge"
+msgstr "Denuncia el missatge"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:50
 msgid "Report this post"
-msgstr "Informa d'aquesta publicació"
+msgstr "Denuncia la publicació"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:59
 msgid "Report this starter pack"
-msgstr "Informa sobre aquest paquet inicial"
+msgstr "Denuncia el paquet inicial"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:47
 msgid "Report this user"
-msgstr "Informa d'aquest usuari"
+msgstr "Denuncia l'usuari"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:68
 #: src/view/com/util/post-ctrls/RepostButton.tsx:146
@@ -7406,7 +7406,7 @@ msgstr "Selecciona el {emojiName} emoji com al teu avatar"
 
 #: src/components/ReportDialog/SubmitView.tsx:140
 msgid "Select the moderation service(s) to report to"
-msgstr "Selecciona els serveis de moderació als quals vols informar"
+msgstr "Selecciona els serveis de moderació als quals vols enviar la denúncia"
 
 #: src/view/com/auth/server-input/index.tsx:79
 msgid "Select the service that hosts your data."
@@ -7516,15 +7516,15 @@ msgstr "Envia el missatge a..."
 #: src/components/ReportDialog/SubmitView.tsx:220
 #: src/components/ReportDialog/SubmitView.tsx:224
 msgid "Send report"
-msgstr "Envia informe"
+msgstr "Envia la denúncia"
 
 #: src/view/com/modals/report/SendReportButton.tsx:45
 #~ msgid "Send Report"
-#~ msgstr "Envia informe"
+#~ msgstr "Envia la denúncia"
 
 #: src/components/ReportDialog/SelectLabelerView.tsx:42
 msgid "Send report to {0}"
-msgstr "Envia informe a {0}"
+msgstr "Envia la denúncia a {0}"
 
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:120
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:123
@@ -8456,7 +8456,7 @@ msgstr "Gràcies, el teu correu està verificat."
 #: src/components/dms/ReportDialog.tsx:129
 #: src/components/ReportDialog/SubmitView.tsx:82
 msgid "Thank you. Your report has been sent."
-msgstr "Gràcies. El teu informe s'ha enviat."
+msgstr "Gràcies. S'ha enviat la denúncia."
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:593
 #~ msgid "Thanks for being one of our first 10 million users."
@@ -8667,7 +8667,7 @@ msgstr "S'ha produït un problema en eliminar aquest canal. Comprova la teva con
 #: src/components/dms/ReportDialog.tsx:217
 #: src/components/ReportDialog/SubmitView.tsx:87
 msgid "There was an issue sending your report. Please check your internet connection."
-msgstr "S'ha produït un problema en enviar el teu informe. Comprova la teva connexió a Internet."
+msgstr "S'ha produït un problema en enviar la denúncia. Comprova la connexió a Internet."
 
 #: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:65
 #~ msgid "There was an issue syncing your preferences with the server"
@@ -9031,7 +9031,7 @@ msgstr "per a desactivar el mètode 2FA de correu, verifica el teu accés a l'ad
 
 #: src/components/dms/ReportConversationPrompt.tsx:19
 msgid "To report a conversation, please report one of its messages via the conversation screen. This lets our moderators understand the context of your issue."
-msgstr "Per informar d'una conversa, informa d'un dels seus missatges a través de la pantalla de conversa. Això permet als nostres moderadors entendre el context del teu problema."
+msgstr "Per a denunciar una conversa, denuncia un dels seus missatges a través de la pantalla de conversa. Això permet a l'equip de moderació entendre el context del teu problema."
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:127
 msgid "To upload videos to Bluesky, you must first verify your email."
@@ -9039,7 +9039,7 @@ msgstr "Primer has de verificar el teu correu per poder pujar vídeos a Bluesky.
 
 #: src/components/ReportDialog/SelectLabelerView.tsx:31
 msgid "To whom would you like to send this report?"
-msgstr "A qui vols enviar aquest informe?"
+msgstr "A qui vols enviar la denúncia?"
 
 #: src/components/dms/DateDivider.tsx:44
 msgid "Today"
@@ -9677,7 +9677,7 @@ msgstr "Veure els detalls"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:134
 msgid "View details for reporting a copyright violation"
-msgstr "Veure els detalls per a informar d'una infracció dels drets d'autor"
+msgstr "Mostra els detalls per a denunciar una infracció dels drets d'autor"
 
 #: src/view/com/posts/ViewFullThread.tsx:56
 msgid "View full thread"
@@ -10249,7 +10249,7 @@ msgstr "Has de concedir accés a la teva galeria per desar la imatge."
 
 #: src/components/ReportDialog/SubmitView.tsx:210
 msgid "You must select at least one labeler for a report"
-msgstr "Has d'escollir almenys un etiquetador per a un informe"
+msgstr "Has d'escollir almenys un etiquetador per a la denúncia"
 
 #: src/screens/Deactivated.tsx:134
 msgid "You previously deactivated @{0}."
@@ -10456,7 +10456,7 @@ msgstr "S'ha publicat la teva resposta"
 
 #: src/components/dms/ReportDialog.tsx:157
 msgid "Your report will be sent to the Bluesky Moderation Service"
-msgstr "El teu informe s'enviarà al servei de moderació de Bluesky"
+msgstr "La teva denúncia s'enviarà al servei de moderació de Bluesky"
 
 #: src/screens/Signup/index.tsx:142
 msgid "Your user handle"
