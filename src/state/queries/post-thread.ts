@@ -242,11 +242,11 @@ export function sortThread(
 
       // Split items from different fetches into separate generations.
       let aFetchedAt = fetchedAtCache.get(a.uri)
-      let bFetchedAt = fetchedAtCache.get(b.uri)
       if (aFetchedAt === undefined) {
         fetchedAtCache.set(a.uri, fetchedAt)
         aFetchedAt = fetchedAt
       }
+      let bFetchedAt = fetchedAtCache.get(b.uri)
       if (bFetchedAt === undefined) {
         fetchedAtCache.set(b.uri, fetchedAt)
         bFetchedAt = fetchedAt
@@ -256,7 +256,7 @@ export function sortThread(
         return aFetchedAt - bFetchedAt // older fetches first
       } else if (opts.sort === 'hotness') {
         const aHotness = getHotness(a.post, aFetchedAt)
-        const bHotness = getHotness(b.post, bFetchedAt)
+        const bHotness = getHotness(b.post, bFetchedAt /* same as aFetchedAt */)
         return bHotness - aHotness
       } else if (opts.sort === 'oldest') {
         return a.post.indexedAt.localeCompare(b.post.indexedAt)
