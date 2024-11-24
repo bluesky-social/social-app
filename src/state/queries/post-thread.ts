@@ -254,8 +254,8 @@ export function sortThread(
       if (aFetchedAt !== bFetchedAt) {
         return aFetchedAt - bFetchedAt // older fetches first
       } else if (opts.sort === 'hotness') {
-        const aHotness = getHotness(a.post)
-        const bHotness = getHotness(b.post)
+        const aHotness = getHotness(a.post, aFetchedAt)
+        const bHotness = getHotness(b.post, bFetchedAt)
         return bHotness - aHotness
       } else if (opts.sort === 'oldest') {
         return a.post.indexedAt.localeCompare(b.post.indexedAt)
@@ -296,10 +296,12 @@ export function sortThread(
 // We want to give recent comments a real chance (and not bury them deep below the fold)
 // while also surfacing well-liked comments from the past. In the future, we can explore
 // something more sophisticated, but we don't have much data on the client right now.
-function getHotness(post: AppBskyFeedDefs.PostView) {
-  const hoursAgo =
-    (new Date().getTime() - new Date(post.indexedAt).getTime()) /
-    (1000 * 60 * 60)
+function getHotness(post: AppBskyFeedDefs.PostView, fetchedAt: number) {
+  const hoursAgo = Math.max(
+    0,
+    (new Date(fetchedAt).getTime() - new Date(post.indexedAt).getTime()) /
+      (1000 * 60 * 60),
+  )
   const likeCount = post.likeCount ?? 0
   const likeOrder = Math.log(3 + likeCount)
   const timePenaltyExponent = 1.5 + 1.5 / (1 + Math.log(1 + likeCount))
