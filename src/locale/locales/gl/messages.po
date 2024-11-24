@@ -191,7 +191,7 @@ msgstr ""
 
 #: src/components/LabelingServiceCard/index.tsx:96
 msgid "{count, plural, one {Liked by # user} other {Liked by # users}}"
-msgstr "{count, plural, one {Liked by # user} outro {Liked by # users}}"
+msgstr ""
 
 #: src/view/shell/desktop/LeftNav.tsx:223
 msgid "{count} unread items"
@@ -367,8 +367,6 @@ msgstr "{profileName} uniuse a Bluesky empregando un paquete de comezo fai {0}"
 msgctxt "profiles"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
 msgstr ""
-"<0>{0}, </0><1>{1}, </1>e {2, plural, un {# outro} outro {# outros}} foron incluídos no teu paquete\n"
-""
 
 #: src/screens/StarterPack/Wizard/index.tsx:528
 msgctxt "feeds"
@@ -382,14 +380,10 @@ msgstr "<0>{0}, </0><1>{1}, </1>e {2, plural, one {# other} other {# others}} in
 #: src/view/shell/Drawer.tsx:97
 msgid "<0>{0}</0> {1, plural, one {follower} other {followers}}"
 msgstr ""
-"<0>{0}</0> {1, plural, one {follower} outros {followers}}\n"
-""
 
 #: src/view/shell/Drawer.tsx:108
 msgid "<0>{0}</0> {1, plural, one {following} other {following}}"
 msgstr ""
-"<0>{0}</0> {1, plural, one {following} outro {following}}\n"
-""
 
 #: src/screens/StarterPack/Wizard/index.tsx:516
 msgid "<0>{0}</0> and<1> </1><2>{1} </2>are included in your starter pack"
