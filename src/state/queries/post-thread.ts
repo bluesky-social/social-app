@@ -152,6 +152,7 @@ export function sortThread(
   threadgateRecordHiddenReplies: Set<string>,
   fetchedAtCache: Map<string, number>,
   fetchedAt: number,
+  randomCache: Map<string, number>,
 ): ThreadNode {
   if (node.type !== 'post') {
     return node
@@ -268,7 +269,18 @@ export function sortThread(
           return (b.post.likeCount || 0) - (a.post.likeCount || 0) // most likes
         }
       } else if (opts.sort === 'random') {
-        return 0.5 - Math.random() // this is vaguely criminal but we can get away with it
+        let aRandomScore = randomCache.get(a.uri)
+        if (aRandomScore === undefined) {
+          aRandomScore = Math.random()
+          randomCache.set(a.uri, aRandomScore)
+        }
+        let bRandomScore = randomCache.get(b.uri)
+        if (bRandomScore === undefined) {
+          bRandomScore = Math.random()
+          randomCache.set(b.uri, bRandomScore)
+        }
+        // this is vaguely criminal but we can get away with it
+        return aRandomScore - bRandomScore
       } else {
         return b.post.indexedAt.localeCompare(a.post.indexedAt)
       }
@@ -283,6 +295,7 @@ export function sortThread(
         threadgateRecordHiddenReplies,
         fetchedAtCache,
         fetchedAt,
+        randomCache,
       ),
     )
   }
