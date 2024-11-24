@@ -145,7 +145,7 @@ export function MessagesList({
     (_: number, height: number) => {
       // Because web does not have `maintainVisibleContentPosition` support, we will need to manually scroll to the
       // previous off whenever we add new content to the previous offset whenever we add new content to the list.
-      if (isWeb && isAtTop.value && hasScrolled) {
+      if (isWeb && isAtTop.get() && hasScrolled) {
         flatListRef.current?.scrollToOffset({
           offset: height - prevContentHeight.current,
           animated: false,
@@ -153,7 +153,7 @@ export function MessagesList({
       }
 
       // This number _must_ be the height of the MaybeLoader component
-      if (height > 50 && isAtBottom.value) {
+      if (height > 50 && isAtBottom.get()) {
         // If the size of the content is changing by more than the height of the screen, then we don't
         // want to scroll further than the start of all the new content. Since we are storing the previous offset,
         // we can just scroll the user to that offset and add a little bit of padding. We'll also show the pill
@@ -161,7 +161,7 @@ export function MessagesList({
         if (
           didBackground.current &&
           hasScrolled &&
-          height - prevContentHeight.current > layoutHeight.value - 50 &&
+          height - prevContentHeight.current > layoutHeight.get() - 50 &&
           convoState.items.length - prevItemCount.current > 1
         ) {
           flatListRef.current?.scrollToOffset({
@@ -209,7 +209,7 @@ export function MessagesList({
   )
 
   const onStartReached = useCallback(() => {
-    if (hasScrolled && prevContentHeight.current > layoutHeight.value) {
+    if (hasScrolled && prevContentHeight.current > layoutHeight.get()) {
       convoState.fetchMessageHistory()
     }
   }, [convoState, hasScrolled, layoutHeight])
@@ -217,18 +217,18 @@ export function MessagesList({
   const onScroll = React.useCallback(
     (e: ReanimatedScrollEvent) => {
       'worklet'
-      layoutHeight.value = e.layoutMeasurement.height
+      layoutHeight.set(e.layoutMeasurement.height)
       const bottomOffset = e.contentOffset.y + e.layoutMeasurement.height
 
       // Most apps have a little bit of space the user can scroll past while still automatically scrolling ot the bottom
       // when a new message is added, hence the 100 pixel offset
-      isAtBottom.value = e.contentSize.height - 100 < bottomOffset
-      isAtTop.value = e.contentOffset.y <= 1
+      isAtBottom.set(e.contentSize.height - 100 < bottomOffset)
+      isAtTop.set(e.contentOffset.y <= 1)
 
       if (
         newMessagesPill.show &&
         (e.contentOffset.y > newMessagesPill.startContentOffset + 200 ||
-          isAtBottom.value)
+          isAtBottom.get())
       ) {
         runOnJS(setNewMessagesPill)({
           show: false,
@@ -256,28 +256,28 @@ export function MessagesList({
       // Immediate updates - like opening the emoji picker - will have a duration of zero. In those cases, we should
       // just update the height here instead of having the `onMove` event do it (that event will not fire!)
       if (e.duration === 0) {
-        layoutScrollWithoutAnimation.value = true
-        keyboardHeight.value = e.height
+        layoutScrollWithoutAnimation.set(true)
+        keyboardHeight.set(e.height)
       } else {
-        keyboardIsOpening.value = true
+        keyboardIsOpening.set(true)
       }
     },
     onMove: e => {
       'worklet'
-      keyboardHeight.value = e.height
+      keyboardHeight.set(e.height)
       if (e.height > bottomOffset) {
         scrollTo(flatListRef, 0, 1e7, false)
       }
     },
     onEnd: () => {
       'worklet'
-      keyboardIsOpening.value = false
+      keyboardIsOpening.set(false)
     },
   })
 
   const animatedListStyle = useAnimatedStyle(() => ({
     marginBottom:
-      keyboardHeight.value > bottomOffset ? keyboardHeight.value : bottomOffset,
+      keyboardHeight.get() > bottomOffset ? keyboardHeight.get() : bottomOffset,
   }))
 
   // -- Message sending
@@ -363,13 +363,13 @@ export function MessagesList({
   // -- List layout changes (opening emoji keyboard, etc.)
   const onListLayout = React.useCallback(
     (e: LayoutChangeEvent) => {
-      layoutHeight.value = e.nativeEvent.layout.height
+      layoutHeight.set(e.nativeEvent.layout.height)
 
-      if (isWeb || !keyboardIsOpening.value) {
+      if (isWeb || !keyboardIsOpening.get()) {
         flatListRef.current?.scrollToEnd({
-          animated: !layoutScrollWithoutAnimation.value,
+          animated: !layoutScrollWithoutAnimation.get(),
         })
-        layoutScrollWithoutAnimation.value = false
+        layoutScrollWithoutAnimation.set(false)
       }
     },
     [

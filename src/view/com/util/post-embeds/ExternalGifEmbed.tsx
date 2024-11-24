@@ -1,16 +1,11 @@
 import React from 'react'
-import {
-  ActivityIndicator,
-  GestureResponderEvent,
-  LayoutChangeEvent,
-  Pressable,
-} from 'react-native'
-import {Image, ImageLoadEventData} from 'expo-image'
+import {ActivityIndicator, GestureResponderEvent, Pressable} from 'react-native'
+import {Image} from 'expo-image'
 import {AppBskyEmbedExternal} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {EmbedPlayerParams, getGifDims} from '#/lib/strings/embed-player'
+import {EmbedPlayerParams} from '#/lib/strings/embed-player'
 import {isIOS, isNative, isWeb} from '#/platform/detection'
 import {useExternalEmbedsPrefs} from '#/state/preferences'
 import {atoms as a, useTheme} from '#/alf'
@@ -28,12 +23,8 @@ export function ExternalGifEmbed({
 }) {
   const t = useTheme()
   const externalEmbedsPrefs = useExternalEmbedsPrefs()
-
   const {_} = useLingui()
   const consentDialogControl = useDialogControl()
-
-  const thumbHasLoaded = React.useRef(false)
-  const viewWidth = React.useRef(0)
 
   // Tracking if the placer has been activated
   const [isPlayerActive, setIsPlayerActive] = React.useState(false)
@@ -41,7 +32,6 @@ export function ExternalGifEmbed({
   const [isPrefetched, setIsPrefetched] = React.useState(false)
   // Tracking whether the image is animating
   const [isAnimating, setIsAnimating] = React.useState(true)
-  const [imageDims, setImageDims] = React.useState({height: 100, width: 1})
 
   // Used for controlling animation
   const imageRef = React.useRef<Image>(null)
@@ -93,16 +83,6 @@ export function ExternalGifEmbed({
     ],
   )
 
-  const onLoad = React.useCallback((e: ImageLoadEventData) => {
-    if (thumbHasLoaded.current) return
-    setImageDims(getGifDims(e.source.height, e.source.width, viewWidth.current))
-    thumbHasLoaded.current = true
-  }, [])
-
-  const onLayout = React.useCallback((e: LayoutChangeEvent) => {
-    viewWidth.current = e.nativeEvent.layout.width
-  }, [])
-
   return (
     <>
       <EmbedConsentDialog
@@ -113,7 +93,7 @@ export function ExternalGifEmbed({
 
       <Pressable
         style={[
-          {height: imageDims.height},
+          {height: 300},
           a.w_full,
           a.overflow_hidden,
           {
@@ -122,7 +102,6 @@ export function ExternalGifEmbed({
           },
         ]}
         onPress={onPlayPress}
-        onLayout={onLayout}
         accessibilityRole="button"
         accessibilityHint={_(msg`Plays the GIF`)}
         accessibilityLabel={_(msg`Play ${link.title}`)}>
@@ -135,7 +114,6 @@ export function ExternalGifEmbed({
           }} // Web uses the thumb to control playback
           style={{flex: 1}}
           ref={imageRef}
-          onLoad={onLoad}
           autoplay={isAnimating}
           contentFit="contain"
           accessibilityIgnoresInvertColors

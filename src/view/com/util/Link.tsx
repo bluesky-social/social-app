@@ -18,6 +18,7 @@ import {
   useNavigationDeduped,
 } from '#/lib/hooks/useNavigationDeduped'
 import {useOpenLink} from '#/lib/hooks/useOpenLink'
+import {getTabState, TabState} from '#/lib/routes/helpers'
 import {
   convertBskyAppUrlIfNeeded,
   isExternalUrl,
@@ -25,6 +26,7 @@ import {
 } from '#/lib/strings/url-helpers'
 import {TypographyVariant} from '#/lib/ThemeContext'
 import {isAndroid, isWeb} from '#/platform/detection'
+import {emitSoftReset} from '#/state/events'
 import {useModalControls} from '#/state/modals'
 import {WebAuxClickWrapper} from '#/view/com/util/WebAuxClickWrapper'
 import {useTheme} from '#/alf'
@@ -254,7 +256,7 @@ export const TextLink = memo(function TextLink({
     if (isExternal) {
       return {
         target: '_blank',
-        // rel: 'noopener noreferrer',
+        // rel: 'noopener',
       }
     }
     return {}
@@ -400,15 +402,22 @@ function onPressInner(
     } else {
       closeModal() // close any active modals
 
+      const [routeName, params] = router.matchPath(href)
       if (navigationAction === 'push') {
         // @ts-ignore we're not able to type check on this one -prf
-        navigation.dispatch(StackActions.push(...router.matchPath(href)))
+        navigation.dispatch(StackActions.push(routeName, params))
       } else if (navigationAction === 'replace') {
         // @ts-ignore we're not able to type check on this one -prf
-        navigation.dispatch(StackActions.replace(...router.matchPath(href)))
+        navigation.dispatch(StackActions.replace(routeName, params))
       } else if (navigationAction === 'navigate') {
-        // @ts-ignore we're not able to type check on this one -prf
-        navigation.navigate(...router.matchPath(href))
+        const state = navigation.getState()
+        const tabState = getTabState(state, routeName)
+        if (tabState === TabState.InsideAtRoot) {
+          emitSoftReset()
+        } else {
+          // @ts-ignore we're not able to type check on this one -prf
+          navigation.navigate(routeName, params)
+        }
       } else {
         throw Error('Unsupported navigator action.')
       }

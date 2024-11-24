@@ -15,8 +15,8 @@ export function useFollowMethods({
   logContext,
 }: {
   profile: Shadow<AppBskyActorDefs.ProfileViewBasic>
-  logContext: LogEvents['profile:follow:sampled']['logContext'] &
-    LogEvents['profile:unfollow:sampled']['logContext']
+  logContext: LogEvents['profile:follow']['logContext'] &
+    LogEvents['profile:unfollow']['logContext']
 }) {
   const {_} = useLingui()
   const requireAuth = useRequireAuth()

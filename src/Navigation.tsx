@@ -32,7 +32,7 @@ import {
 import {RouteParams, State} from '#/lib/routes/types'
 import {attachRouteToLogEvents, logEvent} from '#/lib/statsig/statsig'
 import {bskyTitle} from '#/lib/strings/headings'
-import {isAndroid, isNative, isWeb} from '#/platform/detection'
+import {isNative, isWeb} from '#/platform/detection'
 import {useModalControls} from '#/state/modals'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {useSession} from '#/state/session'
@@ -453,7 +453,6 @@ function HomeTabNavigator() {
   return (
     <HomeTab.Navigator
       screenOptions={{
-        animation: isAndroid ? 'ios' : undefined,
         animationDuration: 285,
         gestureEnabled: true,
         fullScreenGestureEnabled: true,
@@ -472,7 +471,6 @@ function SearchTabNavigator() {
   return (
     <SearchTab.Navigator
       screenOptions={{
-        animation: isAndroid ? 'ios' : undefined,
         animationDuration: 285,
         gestureEnabled: true,
         fullScreenGestureEnabled: true,
@@ -490,7 +488,6 @@ function NotificationsTabNavigator() {
   return (
     <NotificationsTab.Navigator
       screenOptions={{
-        animation: isAndroid ? 'ios' : undefined,
         animationDuration: 285,
         gestureEnabled: true,
         fullScreenGestureEnabled: true,
@@ -512,7 +509,6 @@ function MyProfileTabNavigator() {
   return (
     <MyProfileTab.Navigator
       screenOptions={{
-        animation: isAndroid ? 'ios' : undefined,
         animationDuration: 285,
         gestureEnabled: true,
         fullScreenGestureEnabled: true,
@@ -538,7 +534,6 @@ function MessagesTabNavigator() {
   return (
     <MessagesTab.Navigator
       screenOptions={{
-        animation: isAndroid ? 'ios' : undefined,
         animationDuration: 285,
         gestureEnabled: true,
         fullScreenGestureEnabled: true,
@@ -572,7 +567,6 @@ const FlatNavigator = () => {
     <Flat.Navigator
       screenListeners={screenListeners}
       screenOptions={{
-        animation: isAndroid ? 'ios' : undefined,
         animationDuration: 285,
         gestureEnabled: true,
         fullScreenGestureEnabled: true,
@@ -696,7 +690,7 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
       onStateChange={() => {
         const routeName = getCurrentRouteName()
         if (routeName === 'Notifications') {
-          logEvent('router:navigate:notifications:sampled', {})
+          logEvent('router:navigate:notifications', {})
         }
       }}
       onReady={() => {

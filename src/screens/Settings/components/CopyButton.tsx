@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react'
+import {useCallback, useEffect, useState} from 'react'
 import {GestureResponderEvent, View} from 'react-native'
 import Animated, {
   FadeOutUp,

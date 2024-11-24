@@ -17,10 +17,11 @@ import {
   useTheme,
   web,
 } from '#/alf'
+import {leading} from '#/alf/typography'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {ChevronLeft_Stroke2_Corner0_Rounded as ChevronLeft} from '#/components/icons/Chevron'
 import {createPortalGroup} from '#/components/Portal'
-import {leading, P, Text} from '#/components/Typography'
+import {P, Text} from '#/components/Typography'
 import {IS_DEV} from '#/env'
 
 const COL_WIDTH = 420
