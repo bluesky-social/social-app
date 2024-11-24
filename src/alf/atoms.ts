@@ -890,6 +890,9 @@ export const atoms = {
   outline_inset_1: {
     outlineOffset: '-1px',
   } as StyleProp<ViewStyle>,
+  outline_outset_1: {
+    outlineOffset: '1px',
+  } as StyleProp<ViewStyle>,
 
   /*
    * Text decoration

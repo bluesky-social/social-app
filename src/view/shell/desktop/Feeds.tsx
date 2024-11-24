@@ -10,6 +10,7 @@ import {emitSoftReset} from '#/state/events'
 import {usePinnedFeedsInfos} from '#/state/queries/feed'
 import {useSelectedFeed, useSetSelectedFeed} from '#/state/shell/selected-feed'
 import {TextLink} from '#/view/com/util/Link'
+import {atoms as a} from '#/alf'
 
 export function DesktopFeeds() {
   const pal = usePalette('default')
@@ -81,6 +82,7 @@ function FeedItem({
         style={[
           current ? pal.text : pal.textLight,
           {letterSpacing: 0.15, fontWeight: current ? '600' : '400'},
+          a.outline_outset_1,
         ]}
       />
     </View>

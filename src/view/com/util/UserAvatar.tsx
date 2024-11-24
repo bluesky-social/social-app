@@ -43,6 +43,7 @@ interface BaseUserAvatarProps {
 }
 
 interface UserAvatarProps extends BaseUserAvatarProps {
+  tabIndex?: 0 | -1
   moderation?: ModerationUI
   usePlainRNImage?: boolean
   onLoad?: () => void
@@ -178,6 +179,7 @@ let UserAvatar = ({
   moderation,
   usePlainRNImage = false,
   onLoad,
+  tabIndex,
 }: UserAvatarProps): React.ReactNode => {
   const pal = usePalette('default')
   const backgroundColor = pal.colors.backgroundLight
@@ -235,6 +237,7 @@ let UserAvatar = ({
           testID="userAvatarImage"
           style={aviStyle}
           contentFit="cover"
+          tabIndex={tabIndex}
           source={{
             uri: hackModifyThumbnailPath(avatar, size < 90),
           }}
@@ -252,7 +255,7 @@ let UserAvatar = ({
       {alert}
     </View>
   ) : (
-    <View style={{width: size, height: size}}>
+    <View style={{width: size, height: size}} tabIndex={tabIndex}>
       <DefaultAvatar type={type} shape={finalShape} size={size} />
       {alert}
     </View>
