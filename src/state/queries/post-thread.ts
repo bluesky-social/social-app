@@ -150,7 +150,6 @@ export function sortThread(
   currentDid: string | undefined,
   justPostedUris: Set<string>,
   threadgateRecordHiddenReplies: Set<string>,
-  stableOrderCache: Map<string, number>,
   fetchedAtCache: Map<string, number>,
   fetchedAt: number,
 ): ThreadNode {
@@ -240,12 +239,6 @@ export function sortThread(
         }
       }
 
-      // Keep already sorted items stable.
-      const cachedResult = stableOrderCache.get(a.uri + ':' + b.uri)
-      if (cachedResult !== undefined) {
-        return cachedResult
-      }
-
       // Split items from different fetches into separate generations.
       let aFetchedAt = fetchedAtCache.get(a.uri)
       let bFetchedAt = fetchedAtCache.get(b.uri)
@@ -258,32 +251,27 @@ export function sortThread(
         bFetchedAt = fetchedAt
       }
 
-      let result
       if (aFetchedAt !== bFetchedAt) {
-        result = aFetchedAt - bFetchedAt // older fetches first
+        return aFetchedAt - bFetchedAt // older fetches first
       } else if (opts.sort === 'hotness') {
         const aHotness = getHotness(a.post)
         const bHotness = getHotness(b.post)
-        result = bHotness - aHotness
+        return bHotness - aHotness
       } else if (opts.sort === 'oldest') {
-        result = a.post.indexedAt.localeCompare(b.post.indexedAt)
+        return a.post.indexedAt.localeCompare(b.post.indexedAt)
       } else if (opts.sort === 'newest') {
-        result = b.post.indexedAt.localeCompare(a.post.indexedAt)
+        return b.post.indexedAt.localeCompare(a.post.indexedAt)
       } else if (opts.sort === 'most-likes') {
         if (a.post.likeCount === b.post.likeCount) {
-          result = b.post.indexedAt.localeCompare(a.post.indexedAt) // newest
+          return b.post.indexedAt.localeCompare(a.post.indexedAt) // newest
         } else {
-          result = (b.post.likeCount || 0) - (a.post.likeCount || 0) // most likes
+          return (b.post.likeCount || 0) - (a.post.likeCount || 0) // most likes
         }
       } else if (opts.sort === 'random') {
-        result = 0.5 - Math.random() // this is vaguely criminal but we can get away with it
+        return 0.5 - Math.random() // this is vaguely criminal but we can get away with it
       } else {
-        result = b.post.indexedAt.localeCompare(a.post.indexedAt)
+        return b.post.indexedAt.localeCompare(a.post.indexedAt)
       }
-
-      stableOrderCache.set(a.uri + ':' + b.uri, result)
-      stableOrderCache.set(b.uri + ':' + a.uri, -1 * result)
-      return result
     })
     node.replies.forEach(reply =>
       sortThread(
@@ -293,7 +281,6 @@ export function sortThread(
         currentDid,
         justPostedUris,
         threadgateRecordHiddenReplies,
-        stableOrderCache,
         fetchedAtCache,
         fetchedAt,
       ),

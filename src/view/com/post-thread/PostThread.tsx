@@ -172,7 +172,6 @@ export function PostThread({uri}: {uri: string | undefined}) {
     () => new Set<string>(),
   )
 
-  const [stableOrderCache] = React.useState(() => new Map<string, number>())
   const [fetchedAtCache] = React.useState(() => new Map<string, number>())
   const skeleton = React.useMemo(() => {
     const threadViewPrefs = preferences?.threadViewPrefs
@@ -186,7 +185,6 @@ export function PostThread({uri}: {uri: string | undefined}) {
         currentDid,
         justPostedUris,
         threadgateHiddenReplies,
-        stableOrderCache,
         fetchedAtCache,
         fetchedAt,
       ),
@@ -205,7 +203,6 @@ export function PostThread({uri}: {uri: string | undefined}) {
     hiddenRepliesState,
     justPostedUris,
     threadgateHiddenReplies,
-    stableOrderCache,
     fetchedAtCache,
     fetchedAt,
   ])
