@@ -8,8 +8,10 @@ import {useLingui} from '@lingui/react'
 import {HandleRef, useHandleRef} from '#/lib/hooks/useHandleRef'
 import type {Dimensions} from '#/lib/media/types'
 import {isNative} from '#/platform/detection'
+import {isAndroid} from '#/platform/detection'
 import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {DeferReveal} from '#/components/DeferReveal'
 import {ArrowsDiagonalOut_Stroke2_Corner0_Rounded as Fullscreen} from '#/components/icons/ArrowsDiagonal'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {Text} from '#/components/Typography'
@@ -107,84 +109,86 @@ export function AutoSizedImage({
 
   const contents = (
     <View ref={containerRef} collapsable={false} style={{flex: 1}}>
-      <Image
-        style={[a.w_full, a.h_full]}
-        source={image.thumb}
-        accessible={true} // Must set for `accessibilityLabel` to work
-        accessibilityIgnoresInvertColors
-        accessibilityLabel={image.alt}
-        accessibilityHint=""
-        onLoad={e => {
-          fetchedDimsRef.current = {
-            width: e.source.width,
-            height: e.source.height,
-          }
-        }}
-      />
-      <MediaInsetBorder />
+      <DeferReveal defer={isAndroid} iVerifiedThereAreNoLayoutJumps>
+        <Image
+          style={[a.w_full, a.h_full]}
+          source={image.thumb}
+          accessible={true} // Must set for `accessibilityLabel` to work
+          accessibilityIgnoresInvertColors
+          accessibilityLabel={image.alt}
+          accessibilityHint=""
+          onLoad={e => {
+            fetchedDimsRef.current = {
+              width: e.source.width,
+              height: e.source.height,
+            }
+          }}
+        />
+        <MediaInsetBorder />
 
-      {(hasAlt || isCropped) && !hideBadge ? (
-        <View
-          accessible={false}
-          style={[
-            a.absolute,
-            a.flex_row,
-            {
-              bottom: a.p_xs.padding,
-              right: a.p_xs.padding,
-              gap: 3,
-            },
-            largeAlt && [
+        {(hasAlt || isCropped) && !hideBadge ? (
+          <View
+            accessible={false}
+            style={[
+              a.absolute,
+              a.flex_row,
               {
-                gap: 4,
+                bottom: a.p_xs.padding,
+                right: a.p_xs.padding,
+                gap: 3,
               },
-            ],
-          ]}>
-          {isCropped && (
-            <View
-              style={[
-                a.rounded_xs,
-                t.atoms.bg_contrast_25,
+              largeAlt && [
                 {
-                  padding: 3,
-                  opacity: 0.8,
+                  gap: 4,
                 },
-                largeAlt && [
+              ],
+            ]}>
+            {isCropped && (
+              <View
+                style={[
+                  a.rounded_xs,
+                  t.atoms.bg_contrast_25,
                   {
-                    padding: 5,
+                    padding: 3,
+                    opacity: 0.8,
                   },
-                ],
-              ]}>
-              <Fullscreen
-                fill={t.atoms.text_contrast_high.color}
-                width={largeAlt ? 18 : 12}
-              />
-            </View>
-          )}
-          {hasAlt && (
-            <View
-              style={[
-                a.justify_center,
-                a.rounded_xs,
-                t.atoms.bg_contrast_25,
-                {
-                  padding: 3,
-                  opacity: 0.8,
-                },
-                largeAlt && [
+                  largeAlt && [
+                    {
+                      padding: 5,
+                    },
+                  ],
+                ]}>
+                <Fullscreen
+                  fill={t.atoms.text_contrast_high.color}
+                  width={largeAlt ? 18 : 12}
+                />
+              </View>
+            )}
+            {hasAlt && (
+              <View
+                style={[
+                  a.justify_center,
+                  a.rounded_xs,
+                  t.atoms.bg_contrast_25,
                   {
-                    padding: 5,
+                    padding: 3,
+                    opacity: 0.8,
                   },
-                ],
-              ]}>
-              <Text
-                style={[a.font_heavy, largeAlt ? a.text_xs : {fontSize: 8}]}>
-                ALT
-              </Text>
-            </View>
-          )}
-        </View>
-      ) : null}
+                  largeAlt && [
+                    {
+                      padding: 5,
+                    },
+                  ],
+                ]}>
+                <Text
+                  style={[a.font_heavy, largeAlt ? a.text_xs : {fontSize: 8}]}>
+                  ALT
+                </Text>
+              </View>
+            )}
+          </View>
+        ) : null}
+      </DeferReveal>
     </View>
   )
 

@@ -9,12 +9,13 @@ import {parseAltFromGIFDescription} from '#/lib/gif-alt-text'
 import {shareUrl} from '#/lib/sharing'
 import {parseEmbedPlayerFromUrl} from '#/lib/strings/embed-player'
 import {toNiceDomain} from '#/lib/strings/url-helpers'
-import {isNative} from '#/platform/detection'
+import {isAndroid, isNative} from '#/platform/detection'
 import {useExternalEmbedsPrefs} from '#/state/preferences'
 import {ExternalGifEmbed} from '#/view/com/util/post-embeds/ExternalGifEmbed'
 import {ExternalPlayer} from '#/view/com/util/post-embeds/ExternalPlayerEmbed'
 import {GifEmbed} from '#/view/com/util/post-embeds/GifEmbed'
 import {atoms as a, useTheme} from '#/alf'
+import {DeferReveal} from '#/components/DeferReveal'
 import {Divider} from '#/components/Divider'
 import {Earth_Stroke2_Corner0_Rounded as Globe} from '#/components/icons/Globe'
 import {Link} from '#/components/Link'
@@ -87,13 +88,18 @@ export const ExternalLinkEmbed = ({
               : t.atoms.border_contrast_low,
           ]}>
           {imageUri && !embedPlayerParams ? (
-            <Image
+            <View
               style={{
                 aspectRatio: 1.91,
-              }}
-              source={{uri: imageUri}}
-              accessibilityIgnoresInvertColors
-            />
+              }}>
+              <DeferReveal defer={isAndroid} iVerifiedThereAreNoLayoutJumps>
+                <Image
+                  style={{flex: 1}}
+                  source={{uri: imageUri}}
+                  accessibilityIgnoresInvertColors
+                />
+              </DeferReveal>
+            </View>
           ) : undefined}
 
           {embedPlayerParams?.isGif ? (

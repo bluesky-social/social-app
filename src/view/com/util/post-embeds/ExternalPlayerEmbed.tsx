@@ -23,9 +23,10 @@ import {useNavigation} from '@react-navigation/native'
 
 import {NavigationProp} from '#/lib/routes/types'
 import {EmbedPlayerParams, getPlayerAspect} from '#/lib/strings/embed-player'
-import {isNative} from '#/platform/detection'
+import {isAndroid, isNative} from '#/platform/detection'
 import {useExternalEmbedsPrefs} from '#/state/preferences'
 import {atoms as a, useTheme} from '#/alf'
+import {DeferReveal} from '#/components/DeferReveal'
 import {useDialogControl} from '#/components/Dialog'
 import {EmbedConsentDialog} from '#/components/dialogs/EmbedConsent'
 import {Fill} from '#/components/Fill'
@@ -217,43 +218,45 @@ export function ExternalPlayer({
         ref={viewRef}
         collapsable={false}
         style={[aspect, a.overflow_hidden]}>
-        {link.thumb && (!isPlayerActive || isLoading) ? (
-          <>
-            <Image
-              style={[a.flex_1]}
-              source={{uri: link.thumb}}
-              accessibilityIgnoresInvertColors
-            />
+        <DeferReveal defer={isAndroid} iVerifiedThereAreNoLayoutJumps>
+          {link.thumb && (!isPlayerActive || isLoading) ? (
+            <>
+              <Image
+                style={[a.flex_1]}
+                source={{uri: link.thumb}}
+                accessibilityIgnoresInvertColors
+              />
+              <Fill
+                style={[
+                  t.name === 'light' ? t.atoms.bg_contrast_975 : t.atoms.bg,
+                  {
+                    opacity: 0.3,
+                  },
+                ]}
+              />
+            </>
+          ) : (
             <Fill
               style={[
-                t.name === 'light' ? t.atoms.bg_contrast_975 : t.atoms.bg,
                 {
+                  backgroundColor:
+                    t.name === 'light' ? t.palette.contrast_975 : 'black',
                   opacity: 0.3,
                 },
               ]}
             />
-          </>
-        ) : (
-          <Fill
-            style={[
-              {
-                backgroundColor:
-                  t.name === 'light' ? t.palette.contrast_975 : 'black',
-                opacity: 0.3,
-              },
-            ]}
+          )}
+          <PlaceholderOverlay
+            isLoading={isLoading}
+            isPlayerActive={isPlayerActive}
+            onPress={onPlayPress}
           />
-        )}
-        <PlaceholderOverlay
-          isLoading={isLoading}
-          isPlayerActive={isPlayerActive}
-          onPress={onPlayPress}
-        />
-        <Player
-          isPlayerActive={isPlayerActive}
-          params={params}
-          onLoad={onLoad}
-        />
+          <Player
+            isPlayerActive={isPlayerActive}
+            params={params}
+            onLoad={onLoad}
+          />
+        </DeferReveal>
       </Animated.View>
     </>
   )

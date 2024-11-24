@@ -12,10 +12,11 @@ import {useLingui} from '@lingui/react'
 
 import {HITSLOP_20} from '#/lib/constants'
 import {EmbedPlayerParams} from '#/lib/strings/embed-player'
-import {isWeb} from '#/platform/detection'
+import {isAndroid, isWeb} from '#/platform/detection'
 import {useAutoplayDisabled} from '#/state/preferences'
 import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
 import {atoms as a, useTheme} from '#/alf'
+import {DeferReveal} from '#/components/DeferReveal'
 import {Fill} from '#/components/Fill'
 import {Loader} from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
@@ -121,46 +122,48 @@ export function GifEmbed({
         {aspectRatio: params.dimensions!.width / params.dimensions!.height},
         style,
       ]}>
-      <View
-        style={[
-          a.absolute,
-          /*
-           * Aspect ratio was being clipped weirdly on web -esb
-           */
-          {
-            top: -2,
-            bottom: -2,
-            left: -2,
-            right: -2,
-          },
-        ]}>
-        <PlaybackControls
-          onPress={onPress}
-          isPlaying={playerState.isPlaying}
-          isLoaded={playerState.isLoaded}
-        />
-        <GifView
-          source={params.playerUri}
-          placeholderSource={thumb}
-          style={[a.flex_1]}
-          autoplay={!autoplayDisabled}
-          onPlayerStateChange={onPlayerStateChange}
-          ref={playerRef}
-          accessibilityHint={_(msg`Animated GIF`)}
-          accessibilityLabel={altText}
-        />
-        {!playerState.isPlaying && (
-          <Fill
-            style={[
-              t.name === 'light' ? t.atoms.bg_contrast_975 : t.atoms.bg,
-              {
-                opacity: 0.3,
-              },
-            ]}
+      <DeferReveal defer={isAndroid} iVerifiedThereAreNoLayoutJumps>
+        <View
+          style={[
+            a.absolute,
+            /*
+             * Aspect ratio was being clipped weirdly on web -esb
+             */
+            {
+              top: -2,
+              bottom: -2,
+              left: -2,
+              right: -2,
+            },
+          ]}>
+          <PlaybackControls
+            onPress={onPress}
+            isPlaying={playerState.isPlaying}
+            isLoaded={playerState.isLoaded}
           />
-        )}
-        {!hideAlt && isPreferredAltText && <AltText text={altText} />}
-      </View>
+          <GifView
+            source={params.playerUri}
+            placeholderSource={thumb}
+            style={[a.flex_1]}
+            autoplay={!autoplayDisabled}
+            onPlayerStateChange={onPlayerStateChange}
+            ref={playerRef}
+            accessibilityHint={_(msg`Animated GIF`)}
+            accessibilityLabel={altText}
+          />
+          {!playerState.isPlaying && (
+            <Fill
+              style={[
+                t.name === 'light' ? t.atoms.bg_contrast_975 : t.atoms.bg,
+                {
+                  opacity: 0.3,
+                },
+              ]}
+            />
+          )}
+          {!hideAlt && isPreferredAltText && <AltText text={altText} />}
+        </View>
+      </DeferReveal>
     </View>
   )
 }

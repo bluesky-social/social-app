@@ -7,9 +7,11 @@ import {useLingui} from '@lingui/react'
 
 import {HandleRef} from '#/lib/hooks/useHandleRef'
 import {Dimensions} from '#/lib/media/types'
+import {isAndroid} from '#/platform/detection'
 import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
 import {PostEmbedViewContext} from '#/view/com/util/post-embeds/types'
 import {atoms as a, useTheme} from '#/alf'
+import {DeferReveal} from '#/components/DeferReveal'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {Text} from '#/components/Typography'
 
@@ -70,20 +72,22 @@ export function GalleryItem({
         accessibilityRole="button"
         accessibilityLabel={image.alt || _(msg`Image`)}
         accessibilityHint="">
-        <Image
-          source={{uri: image.thumb}}
-          style={[a.flex_1]}
-          accessible={true}
-          accessibilityLabel={image.alt}
-          accessibilityHint=""
-          accessibilityIgnoresInvertColors
-          onLoad={e => {
-            thumbDimsRef.current[index] = {
-              width: e.source.width,
-              height: e.source.height,
-            }
-          }}
-        />
+        <DeferReveal defer={isAndroid} iVerifiedThereAreNoLayoutJumps>
+          <Image
+            source={{uri: image.thumb}}
+            style={[a.flex_1]}
+            accessible={true}
+            accessibilityLabel={image.alt}
+            accessibilityHint=""
+            accessibilityIgnoresInvertColors
+            onLoad={e => {
+              thumbDimsRef.current[index] = {
+                width: e.source.width,
+                height: e.source.height,
+              }
+            }}
+          />
+        </DeferReveal>
         <MediaInsetBorder style={insetBorderStyle} />
       </Pressable>
       {hasAlt && !hideBadges ? (
