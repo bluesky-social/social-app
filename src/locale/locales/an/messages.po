@@ -4091,7 +4091,7 @@ msgstr "Nomás contiene letras, numeros y guions"
 
 #: src/lib/media/picker.shared.ts:29
 msgid "Only image files are supported"
-msgstr "Nomás s'admiten fichers d'imachen"
+msgstr "Nomás s'admite fichers d'imachen"
 
 #: src/view/com/composer/videos/SubtitleFilePicker.tsx:40
 msgid "Only WebVTT (.vtt) files are supported"
