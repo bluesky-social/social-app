@@ -8311,7 +8311,7 @@ msgstr "Demutear lista"
 
 #: src/lib/strings/errors.ts:11
 msgid "Unable to connect. Please check your internet connection and try again."
-msgstr "No es posible conectarse. Comprueba tu conexión a Internet e inténtalo de nuevo"
+msgstr "No es posible conectarse. Comprueba tu conexión a Internet e inténtalo de nuevo."
 
 #: src/screens/Login/ForgotPasswordForm.tsx:68
 #: src/screens/Login/index.tsx:76
