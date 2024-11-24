@@ -5632,7 +5632,7 @@ msgstr "Només s'admeten fitxers d'imatge"
 
 #: src/view/com/composer/videos/SubtitleFilePicker.tsx:40
 msgid "Only WebVTT (.vtt) files are supported"
-msgstr "Només s'admeten arxius WebVTT (.vtt)"
+msgstr "Només s'admeten fitxers WebVTT (.vtt)"
 
 #: src/components/Lists.tsx:88
 msgid "Oops, something went wrong!"
@@ -6676,7 +6676,7 @@ msgstr "Elimina la republicació"
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:260
 msgid "Remove subtitle file"
-msgstr "Eliminar arxiu de subtítols"
+msgstr "Eliminar el fitxer de subtítols"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:175
 #~ msgid "Remove this feed from my feeds?"
@@ -7398,7 +7398,7 @@ msgstr "Selecciona el moderador"
 
 #: src/view/com/composer/videos/SubtitleFilePicker.tsx:66
 msgid "Select subtitle file (.vtt)"
-msgstr "Tria l'arxiu de subtítols (.vtt)"
+msgstr "Tria el fitxer de subtítols (.vtt)"
 
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:83
 msgid "Select the {emojiName} emoji as your avatar"
@@ -9364,7 +9364,7 @@ msgstr "Puja de la càmera"
 #: src/view/com/util/UserAvatar.tsx:388
 #: src/view/com/util/UserBanner.tsx:140
 msgid "Upload from Files"
-msgstr "Puja dels Arxius"
+msgstr "Puja dels Fitxers"
 
 #: src/view/com/util/UserAvatar.tsx:382
 #: src/view/com/util/UserAvatar.tsx:386
