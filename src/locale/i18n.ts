@@ -163,6 +163,7 @@ export async function dynamicActivate(locale: AppLanguage) {
         import('@formatjs/intl-numberformat/locale-data/nl'),
       ])
       break
+    }
     case AppLanguage.pl: {
       i18n.loadAndActivate({locale, messages: messagesPl})
       await Promise.all([
