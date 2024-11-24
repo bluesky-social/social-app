@@ -602,7 +602,7 @@ function assertSomePostsPassModeration(feed: AppBskyFeedDefs.FeedViewPost[]) {
   }
 
   if (!somePostsPassModeration) {
-    throw new Error(KnownError.FeedNSFPublic)
+    throw new Error(KnownError.FeedSignedInOnly)
   }
 }
 

@@ -1,5 +1,5 @@
 import React, {useCallback, useState} from 'react'
-import {View} from 'react-native'
+import {ActivityIndicator, View} from 'react-native'
 import {ImageBackground} from 'expo-image'
 import {AppBskyEmbedVideo} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
@@ -10,7 +10,6 @@ import {VideoEmbedInnerNative} from '#/view/com/util/post-embeds/VideoEmbedInner
 import {atoms as a} from '#/alf'
 import {Button} from '#/components/Button'
 import {useThrottledValue} from '#/components/hooks/useThrottledValue'
-import {Loader} from '#/components/Loader'
 import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
 import {ErrorBoundary} from '../ErrorBoundary'
 import * as VideoFallback from './VideoEmbedInner/VideoFallback'
@@ -89,12 +88,9 @@ function InnerWrapper({embed}: Props) {
         source={{uri: embed.thumbnail}}
         accessibilityIgnoresInvertColors
         style={[
+          a.absolute,
+          a.inset_0,
           {
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
             backgroundColor: 'transparent', // If you don't add `backgroundColor` to the styles here,
             // the play button won't show up on the first render on android 🥴😮‍💨
             display: showOverlay ? 'flex' : 'none',
@@ -102,27 +98,29 @@ function InnerWrapper({embed}: Props) {
         ]}
         cachePolicy="memory-disk" // Preferring memory cache helps to avoid flicker when re-displaying on android
       >
-        <Button
-          style={[a.flex_1, a.align_center, a.justify_center]}
-          onPress={() => {
-            ref.current?.togglePlayback()
-          }}
-          label={_(msg`Play video`)}
-          color="secondary">
-          {showSpinner ? (
-            <View
-              style={[
-                a.rounded_full,
-                a.p_xs,
-                a.align_center,
-                a.justify_center,
-              ]}>
-              <Loader size="2xl" style={{color: 'white'}} />
-            </View>
-          ) : (
-            <PlayButtonIcon />
-          )}
-        </Button>
+        {showOverlay && (
+          <Button
+            style={[a.flex_1, a.align_center, a.justify_center]}
+            onPress={() => {
+              ref.current?.togglePlayback()
+            }}
+            label={_(msg`Play video`)}
+            color="secondary">
+            {showSpinner ? (
+              <View
+                style={[
+                  a.rounded_full,
+                  a.p_xs,
+                  a.align_center,
+                  a.justify_center,
+                ]}>
+                <ActivityIndicator size="large" color="white" />
+              </View>
+            ) : (
+              <PlayButtonIcon />
+            )}
+          </Button>
+        )}
       </ImageBackground>
     </>
   )

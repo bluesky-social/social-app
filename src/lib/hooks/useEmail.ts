@@ -12,9 +12,10 @@ export function useEmail() {
 
   const checkEmailConfirmed = !!serviceConfig?.checkEmailConfirmed
 
+  // Date set for 11 AM PST on the 18th of November
   const isNewEnough =
     !!profile?.createdAt &&
-    Date.parse(profile.createdAt) >= Date.parse('2024-11-16T02:00:00.000Z')
+    Date.parse(profile.createdAt) >= Date.parse('2024-11-18T19:00:00.000Z')
 
   const isSelfHost =
     currentAccount &&
@@ -24,7 +25,7 @@ export function useEmail() {
   const needsEmailVerification =
     !isSelfHost &&
     checkEmailConfirmed &&
-    !!currentAccount?.emailConfirmed &&
+    !currentAccount?.emailConfirmed &&
     isNewEnough
 
   return {needsEmailVerification}

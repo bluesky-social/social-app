@@ -1,4 +1,3 @@
-import React from 'react'
 import {View} from 'react-native'
 // @ts-expect-error no type definition
 import ProgressPie from 'react-native-progress/Pie'

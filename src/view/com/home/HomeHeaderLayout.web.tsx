@@ -93,7 +93,7 @@ function HomeHeaderLayoutDesktopAndTablet({
       {tabBarAnchor}
       <Animated.View
         onLayout={e => {
-          headerHeight.value = e.nativeEvent.layout.height
+          headerHeight.set(e.nativeEvent.layout.height)
         }}
         style={[
           t.atoms.bg,

@@ -104,9 +104,7 @@ export const RepostButton = ({
       label={_(msg`Repost or quote post`)}
       style={{padding: 0}}
       hoverStyle={t.atoms.bg_contrast_25}
-      shape="round"
-      variant="ghost"
-      color="secondary">
+      shape="round">
       <RepostInner
         isReposted={isReposted}
         color={color}

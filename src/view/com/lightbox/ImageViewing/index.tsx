@@ -109,18 +109,22 @@ export default function ImageViewRoot({
 
     // https://github.com/software-mansion/react-native-reanimated/issues/6677
     requestAnimationFrame(() => {
-      openProgress.value = canAnimate ? withClampedSpring(1, SLOW_SPRING) : 1
+      openProgress.set(() =>
+        canAnimate ? withClampedSpring(1, SLOW_SPRING) : 1,
+      )
     })
     return () => {
       // https://github.com/software-mansion/react-native-reanimated/issues/6677
       requestAnimationFrame(() => {
-        openProgress.value = canAnimate ? withClampedSpring(0, SLOW_SPRING) : 0
+        openProgress.set(() =>
+          canAnimate ? withClampedSpring(0, SLOW_SPRING) : 0,
+        )
       })
     }
   }, [nextLightbox, openProgress])
 
   useAnimatedReaction(
-    () => openProgress.value === 0,
+    () => openProgress.get() === 0,
     (isGone, wasGone) => {
       if (isGone && !wasGone) {
         runOnJS(setActiveLightbox)(null)
@@ -130,7 +134,7 @@ export default function ImageViewRoot({
 
   const onFlyAway = React.useCallback(() => {
     'worklet'
-    openProgress.value = 0
+    openProgress.set(0)
     runOnJS(onRequestClose)()
   }, [onRequestClose, openProgress])
 
@@ -187,7 +191,7 @@ function ImageView({
   const isFlyingAway = useSharedValue(false)
 
   const containerStyle = useAnimatedStyle(() => {
-    if (openProgress.value < 1 || isFlyingAway.value) {
+    if (openProgress.get() < 1 || isFlyingAway.get()) {
       return {pointerEvents: 'none'}
     }
     return {pointerEvents: 'auto'}
@@ -196,11 +200,12 @@ function ImageView({
   const backdropStyle = useAnimatedStyle(() => {
     const screenSize = measure(safeAreaRef)
     let opacity = 1
-    if (openProgress.value < 1) {
-      opacity = Math.sqrt(openProgress.value)
+    const openProgressValue = openProgress.get()
+    if (openProgressValue < 1) {
+      opacity = Math.sqrt(openProgressValue)
     } else if (screenSize) {
       const dragProgress = Math.min(
-        Math.abs(dismissSwipeTranslateY.value) / (screenSize.height / 2),
+        Math.abs(dismissSwipeTranslateY.get()) / (screenSize.height / 2),
         1,
       )
       opacity -= dragProgress
@@ -212,11 +217,11 @@ function ImageView({
   })
 
   const animatedHeaderStyle = useAnimatedStyle(() => {
-    const show = showControls && dismissSwipeTranslateY.value === 0
+    const show = showControls && dismissSwipeTranslateY.get() === 0
     return {
       pointerEvents: show ? 'box-none' : 'none',
       opacity: withClampedSpring(
-        show && openProgress.value === 1 ? 1 : 0,
+        show && openProgress.get() === 1 ? 1 : 0,
         FAST_SPRING,
       ),
       transform: [
@@ -227,12 +232,12 @@ function ImageView({
     }
   })
   const animatedFooterStyle = useAnimatedStyle(() => {
-    const show = showControls && dismissSwipeTranslateY.value === 0
+    const show = showControls && dismissSwipeTranslateY.get() === 0
     return {
       flexGrow: 1,
       pointerEvents: show ? 'box-none' : 'none',
       opacity: withClampedSpring(
-        show && openProgress.value === 1 ? 1 : 0,
+        show && openProgress.get() === 1 ? 1 : 0,
         FAST_SPRING,
       ),
       transform: [
@@ -259,7 +264,7 @@ function ImageView({
       const screenSize = measure(safeAreaRef)
       return (
         !screenSize ||
-        Math.abs(dismissSwipeTranslateY.value) > screenSize.height
+        Math.abs(dismissSwipeTranslateY.get()) > screenSize.height
       )
     },
     (isOut, wasOut) => {
@@ -397,10 +402,11 @@ function LightboxImage({
   const transforms = useDerivedValue(() => {
     'worklet'
     const safeArea = measureSafeArea()
+    const openProgressValue = openProgress.get()
     const dismissTranslateY =
-      isActive && openProgress.value === 1 ? dismissSwipeTranslateY.value : 0
+      isActive && openProgressValue === 1 ? dismissSwipeTranslateY.get() : 0
 
-    if (openProgress.value === 0 && isFlyingAway.value) {
+    if (openProgressValue === 0 && isFlyingAway.get()) {
       return {
         isHidden: true,
         isResting: false,
@@ -410,9 +416,9 @@ function LightboxImage({
       }
     }
 
-    if (isActive && thumbRect && imageAspect && openProgress.value < 1) {
+    if (isActive && thumbRect && imageAspect && openProgressValue < 1) {
       return interpolateTransform(
-        openProgress.value,
+        openProgressValue,
         thumbRect,
         safeArea,
         imageAspect,
@@ -434,33 +440,37 @@ function LightboxImage({
     .maxPointers(1)
     .onUpdate(e => {
       'worklet'
-      if (openProgress.value !== 1 || isFlyingAway.value) {
+      if (openProgress.get() !== 1 || isFlyingAway.get()) {
         return
       }
-      dismissSwipeTranslateY.value = e.translationY
+      dismissSwipeTranslateY.set(e.translationY)
     })
     .onEnd(e => {
       'worklet'
-      if (openProgress.value !== 1 || isFlyingAway.value) {
+      if (openProgress.get() !== 1 || isFlyingAway.get()) {
         return
       }
       if (Math.abs(e.velocityY) > 200) {
-        isFlyingAway.value = true
-        if (dismissSwipeTranslateY.value === 0) {
+        isFlyingAway.set(true)
+        if (dismissSwipeTranslateY.get() === 0) {
           // HACK: If the initial value is 0, withDecay() animation doesn't start.
           // This is a bug in Reanimated, but for now we'll work around it like this.
-          dismissSwipeTranslateY.value = 1
+          dismissSwipeTranslateY.set(1)
         }
-        dismissSwipeTranslateY.value = withDecay({
-          velocity: e.velocityY,
-          velocityFactor: Math.max(3500 / Math.abs(e.velocityY), 1), // Speed up if it's too slow.
-          deceleration: 1, // Danger! This relies on the reaction below stopping it.
-        })
+        dismissSwipeTranslateY.set(() =>
+          withDecay({
+            velocity: e.velocityY,
+            velocityFactor: Math.max(3500 / Math.abs(e.velocityY), 1), // Speed up if it's too slow.
+            deceleration: 1, // Danger! This relies on the reaction below stopping it.
+          }),
+        )
       } else {
-        dismissSwipeTranslateY.value = withSpring(0, {
-          stiffness: 700,
-          damping: 50,
-        })
+        dismissSwipeTranslateY.set(() =>
+          withSpring(0, {
+            stiffness: 700,
+            damping: 50,
+          }),
+        )
       }
     })
 

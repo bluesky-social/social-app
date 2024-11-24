@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import {useEffect} from 'react'
 import {Animated, Easing, StyleSheet, View} from 'react-native'
 
 import {useAnimatedValue} from '#/lib/hooks/useAnimatedValue'
