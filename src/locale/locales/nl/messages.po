@@ -199,7 +199,7 @@ msgstr "Feeds toevoegen aan je startpakket!"
 
 #: src/screens/Feeds/NoFollowingFeed.tsx:41
 msgid "Add the default feed of only people you follow"
-msgstr "Standaardfeed toevoegen van alleen de mensen die je volgt"
+msgstr "Standaardfeed toevoegen van alleen de personen die je volgt"
 
 #: src/view/com/modals/ChangeHandle.tsx:403
 msgid "Add the following DNS record to your domain:"
@@ -323,16 +323,16 @@ msgstr "Alt-tekst wordt afgekapt. Limiet: {0} tekens."
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:77
 msgid "An email has been sent! Please enter the confirmation code included in the email below."
-msgstr "Er is een e-mail verzonden! Voer hieronder de bevestigingscode in die in de e-mail is opgenomen."
+msgstr "Er is een e-mail verzonden! Vul hieronder de bevestigingscode in die in de e-mail is opgenomen."
 
 #: src/view/com/modals/ChangeEmail.tsx:114
 msgid "An email has been sent to your previous address, {0}. It includes a confirmation code which you can enter below."
-msgstr "Er is een e-mail verzonden naar je vorige adres {0}. Deze bevat een bevestigingscode die je hieronder kunt invoeren."
+msgstr "Er is een e-mail verzonden naar je vorige adres {0}. Deze bevat een bevestigingscode die je hieronder kunt invullen."
 
 #: src/view/com/modals/VerifyEmail.tsx:132
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:95
 msgid "An email has been sent to {0}. It includes a confirmation code which you can enter below."
-msgstr "Er is een e-mail verzonden naar {0}. Deze bevat een bevestigingscode die je hieronder kunt invoeren."
+msgstr "Er is een e-mail verzonden naar {0}. Deze bevat een bevestigingscode die je hieronder kunt invullen."
 
 #: src/components/dialogs/GifSelect.tsx:266
 msgid "An error has occurred"
@@ -572,25 +572,25 @@ msgstr "Verjaardag:"
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:273
 #: src/view/com/profile/ProfileMenu.tsx:341
 msgid "Block"
-msgstr "Blokkeer"
+msgstr "Blokkeren"
 
 #: src/view/com/profile/ProfileMenu.tsx:280
 #: src/view/com/profile/ProfileMenu.tsx:287
 msgid "Block Account"
-msgstr "Blokkeer account"
+msgstr "Account blokkeren"
 
 #: src/view/com/profile/ProfileMenu.tsx:324
 msgid "Block Account?"
-msgstr "Blokkeer account?"
+msgstr "Account blokkeren?"
 
 #: src/components/dms/ConvoMenu.tsx:188
 #: src/components/dms/ConvoMenu.tsx:192
 msgid "Block account"
-msgstr "Blokkeer account"
+msgstr "Account blokkeren"
 
 #: src/view/screens/ProfileList.tsx:643
 msgid "Block accounts"
-msgstr "Blokkeer accounts"
+msgstr "Accounts blokkeren"
 
 #: src/view/screens/ProfileList.tsx:747
 msgid "Block list"
@@ -598,7 +598,7 @@ msgstr "Blokkeerlijst"
 
 #: src/view/screens/ProfileList.tsx:742
 msgid "Block these accounts?"
-msgstr "Blokkeer deze accounts?"
+msgstr "Deze accounts blokkeren?"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:82
 msgid "Blocked"
@@ -656,7 +656,7 @@ msgstr "Bluesky is leuker met vrienden!"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:283
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
-msgstr "Bluesky kiest een aantal aanbevolen accounts van mensen in je netwerk."
+msgstr "Bluesky kiest een aantal aanbevolen accounts van personen in je netwerk."
 
 #: src/screens/Moderation/index.tsx:571
 msgid "Bluesky will not show your profile and posts to logged-out users. Other apps may not honor this request. This does not make your account private."
@@ -818,36 +818,36 @@ msgstr "Wijzigen"
 #: src/view/com/modals/ChangeHandle.tsx:149
 #: src/view/screens/Settings/index.tsx:696
 msgid "Change Handle"
-msgstr "Wijzig handle"
+msgstr "Handle wijzigen"
 
 #: src/view/com/modals/ChangePassword.tsx:142
 #: src/view/screens/Settings/index.tsx:741
 msgid "Change Password"
-msgstr "Wijzig wachtwoord"
+msgstr "Wachtwoord wijzigen"
 
 #: src/view/com/modals/ChangeEmail.tsx:104
 msgid "Change Your Email"
-msgstr "Wijzig je e-mailadres"
+msgstr "Je e-mailadres wijzigen"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:147
 msgid "Change email address"
-msgstr "Wijzig e-mailadres"
+msgstr "E-mailadres wijzigen"
 
 #: src/view/screens/Settings/index.tsx:685
 msgid "Change handle"
-msgstr "Wijzig handle"
+msgstr "Handle wijzigen"
 
 #: src/view/com/modals/VerifyEmail.tsx:155
 msgid "Change my email"
-msgstr "Wijzig mijn e-mailadres"
+msgstr "Mijn e-mailadres wijzigen"
 
 #: src/view/screens/Settings/index.tsx:730
 msgid "Change password"
-msgstr "Wijzig wachtwoord"
+msgstr "Wachtwoord wijzigen"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:73
 msgid "Change post language to {0}"
-msgstr "Wijzig berichttaal naar {0}"
+msgstr "Berichttaal naar {0} wijzigen"
 
 #: src/Navigation.tsx:337
 #: src/view/shell/bottom-bar/BottomBar.tsx:200
@@ -884,43 +884,43 @@ msgstr "Controleer mijn status"
 
 #: src/screens/Login/LoginForm.tsx:275
 msgid "Check your email for a login code and enter it here."
-msgstr "Controleer je e-mail voor een aanmeldcode en voer deze hier in."
+msgstr "Controleer je e-mail voor een aanmeldcode en vul deze hier in."
 
 #: src/view/com/modals/DeleteAccount.tsx:231
 msgid "Check your inbox for an email with the confirmation code to enter below:"
-msgstr "Controleer je inbox voor een e-mail met de bevestigingscode om hieronder in te voeren:"
+msgstr "Controleer je inbox voor een e-mail met de bevestigingscode om hieronder in te vullen:"
 
 #: src/screens/StarterPack/Wizard/index.tsx:199
 msgid "Choose Feeds"
-msgstr "Kies feeds"
+msgstr "Feeds kiezen"
 
 #: src/screens/StarterPack/Wizard/index.tsx:195
 msgid "Choose People"
-msgstr "Kies mensen"
+msgstr "Personen kiezen"
 
 #: src/view/com/auth/server-input/index.tsx:76
 msgid "Choose Service"
-msgstr "Kies dienst"
+msgstr "Dienst kiezen"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:291
 msgid "Choose for me"
-msgstr "Kies voor mij"
+msgstr "Voor mij kiezen"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:116
 msgid "Choose self-labels that are applicable for the media you are posting. If none are selected, this post is suitable for all audiences."
-msgstr "Kies labels die van toepassing zijn op de media die je plaatst. Dit bericht is geschikt voor alle doelgroepen als er geen labels zijn geselecteerd."
+msgstr "Labels kiezen die van toepassing zijn op de media die je plaatst. Dit bericht is geschikt voor alle doelgroepen als er geen labels zijn geselecteerd."
 
 #: src/screens/Onboarding/StepFinished.tsx:271
 msgid "Choose the algorithms that power your custom feeds."
-msgstr "Kies de algoritmen die je gepersonaliseerde feeds aansturen."
+msgstr "De algoritmen kiezen die je gepersonaliseerde feeds aansturen."
 
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:107
 msgid "Choose this color as your avatar"
-msgstr "Kies deze kleur als je avatar"
+msgstr "Deze kleur kiezen als je avatar"
 
 #: src/screens/Signup/StepInfo/index.tsx:201
 msgid "Choose your password"
-msgstr "Kies je wachtwoord"
+msgstr "Je wachtwoord kiezen"
 
 #: src/view/screens/Settings/index.tsx:877
 msgid "Clear all storage data"
@@ -1104,7 +1104,7 @@ msgstr "Bevestig"
 #: src/view/com/modals/ChangeEmail.tsx:188
 #: src/view/com/modals/ChangeEmail.tsx:190
 msgid "Confirm Change"
-msgstr "Bevestig Wijziging"
+msgstr "Bevestig wijziging"
 
 #: src/view/com/modals/lang-settings/ConfirmLanguagesButton.tsx:35
 msgid "Confirm content language settings"
@@ -1236,47 +1236,47 @@ msgstr "Kopieert app-wachtwoord"
 #: src/components/StarterPack/QrCodeDialog.tsx:175
 #: src/view/com/modals/AddAppPasswords.tsx:214
 msgid "Copy"
-msgstr "Kopieer"
+msgstr "Kopiëren"
 
 #: src/components/StarterPack/ShareDialog.tsx:131
 msgid "Copy Link"
-msgstr "Kopieer link"
+msgstr "Link kopiëren"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:169
 msgid "Copy QR code"
-msgstr "Kopieer QR-code"
+msgstr "QR-code kopiëren"
 
 #: src/components/dialogs/Embed.tsx:122
 #: src/components/dialogs/Embed.tsx:141
 msgid "Copy code"
-msgstr "Kopieer code"
+msgstr "Code kopiëren"
 
 #: src/components/StarterPack/ShareDialog.tsx:124
 msgid "Copy link"
-msgstr "Kopieer link"
+msgstr "Link kopiëren"
 
 #: src/view/screens/ProfileList.tsx:487
 msgid "Copy link to list"
-msgstr "Kopieer link naar lijst"
+msgstr "Link naar lijst kopiëren"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:452
 #: src/view/com/util/forms/PostDropdownBtn.tsx:461
 msgid "Copy link to post"
-msgstr "Kopieer link naar bericht"
+msgstr "Link naar bericht kopiëren"
 
 #: src/components/dms/MessageMenu.tsx:110
 #: src/components/dms/MessageMenu.tsx:112
 msgid "Copy message text"
-msgstr "Kopieer tekst privébericht"
+msgstr "Tekst privébericht kopiëren"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:430
 #: src/view/com/util/forms/PostDropdownBtn.tsx:432
 msgid "Copy post text"
-msgstr "Kopieer berichttekst"
+msgstr "Berichttekst kopiëren"
 
 #: src/view/com/modals/ChangeHandle.tsx:467
 msgid "Copy {0}"
-msgstr "Kopieer {0}"
+msgstr "{0} kopiëren"
 
 #: src/Navigation.tsx:280
 #: src/view/screens/CopyrightPolicy.tsx:31
@@ -1621,7 +1621,7 @@ msgstr "Ontdek nieuwe feeds"
 
 #: src/components/Dialog/index.tsx:315
 msgid "Dismiss"
-msgstr "Afwijzen"
+msgstr "Afsluiten"
 
 #: src/view/com/composer/Composer.tsx:1265
 msgid "Dismiss error"
@@ -1629,7 +1629,7 @@ msgstr "Fout negeren"
 
 #: src/components/ProgressGuide/List.tsx:40
 msgid "Dismiss getting started guide"
-msgstr "Negeer starthandleiding"
+msgstr "Starthandleiding afsluiten"
 
 #: src/view/screens/AccessibilitySettings.tsx:97
 msgid "Display larger alt text badges"
@@ -1752,67 +1752,67 @@ msgstr "Bewerken"
 
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:111
 msgid "Edit Feeds"
-msgstr "Bewerk Feeds"
+msgstr "Feeds bewerken"
 
 #: src/view/com/modals/CreateOrEditList.tsx:230
 msgid "Edit Moderation List"
-msgstr "Bewerk moderatielijst"
+msgstr "Moderatielijst bewerken"
 
 #: src/Navigation.tsx:290
 #: src/view/screens/Feeds.tsx:384
 #: src/view/screens/Feeds.tsx:452
 #: src/view/screens/SavedFeeds.tsx:116
 msgid "Edit My Feeds"
-msgstr "Bewerk mijn feeds"
+msgstr "Mijn feeds bewerken"
 
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:109
 msgid "Edit People"
-msgstr "Bewerk mensen"
+msgstr "Personen bewerken"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:179
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:172
 msgid "Edit Profile"
-msgstr "Bewerk profiel"
+msgstr "Profiel bewerken"
 
 #: src/view/com/modals/CreateOrEditList.tsx:225
 msgid "Edit User List"
-msgstr "Bewerk gebruikerslijst"
+msgstr "Gebruikerslijst bewerken"
 
 #: src/view/com/util/UserAvatar.tsx:347
 #: src/view/com/util/UserBanner.tsx:95
 msgid "Edit avatar"
-msgstr "Bewerk avatar"
+msgstr "Avatar bewerken"
 
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:58
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:62
 #: src/view/com/composer/photos/Gallery.tsx:191
 msgid "Edit image"
-msgstr "Bewerk afbeelding"
+msgstr "Afbeelding bewerken"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:632
 #: src/view/com/util/forms/PostDropdownBtn.tsx:647
 msgid "Edit interaction settings"
-msgstr "Bewerk interactie-instellingen"
+msgstr "Interactie-instellingen bewerken"
 
 #: src/view/screens/ProfileList.tsx:518
 msgid "Edit list details"
-msgstr "Bewerk lijstdetails"
+msgstr "Lijstdetails bewerken"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:66
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:204
 msgid "Edit post interaction settings"
-msgstr "Bewerk berichtinteractie-instellingen"
+msgstr "Berichtinteractie-instellingen bewerken"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:269
 #: src/screens/Profile/Header/EditProfileDialog.tsx:275
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:176
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:169
 msgid "Edit profile"
-msgstr "Bewerk profiel"
+msgstr "Profiel bewerken"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:565
 msgid "Edit starter pack"
-msgstr "Bewerk startpakket"
+msgstr "Startpakket bewerken"
 
 #: src/components/WhoCanReply.tsx:87
 msgid "Edit who can reply"
@@ -1820,7 +1820,7 @@ msgstr "Bewerk wie kan reageren"
 
 #: src/Navigation.tsx:372
 msgid "Edit your starter pack"
-msgstr "Bewerk je startpakket"
+msgstr "Je startpakket bewerken"
 
 #: src/screens/Onboarding/index.tsx:31
 #: src/screens/Onboarding/state.ts:88
@@ -1925,57 +1925,57 @@ msgstr "Zorg ervoor dat je voor elk ondertitelbestand een taal selecteert."
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:75
 msgid "Enter Code"
-msgstr "Voer code in"
+msgstr "Vul code in"
 
 #: src/view/com/modals/VerifyEmail.tsx:113
 msgid "Enter Confirmation Code"
-msgstr "Voer bevestigingscode in"
+msgstr "Vul bevestigingscode in"
 
 #: src/view/com/modals/AddAppPasswords.tsx:161
 msgid "Enter a name for this App Password"
-msgstr "Voer een naam in voor dit app-wachtwoord"
+msgstr "Vul een naam in voor dit app-wachtwoord"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:133
 msgid "Enter a password"
-msgstr "Voer een wachtwoord in"
+msgstr "Vul een wachtwoord in"
 
 #: src/components/dialogs/MutedWords.tsx:127
 #: src/components/dialogs/MutedWords.tsx:128
 msgid "Enter a word or tag"
-msgstr "Voer een woord of tag in"
+msgstr "Vul een woord of tag in"
 
 #: src/view/com/modals/ChangePassword.tsx:154
 msgid "Enter the code you received to change your password."
-msgstr "Voer de code in die je hebt ontvangen voor het wijzigen van je wachtwoord."
+msgstr "Vul de code in die je hebt ontvangen voor het wijzigen van je wachtwoord."
 
 #: src/view/com/modals/ChangeHandle.tsx:357
 msgid "Enter the domain you want to use"
-msgstr "Voer het domein in dat je wilt gebruiken"
+msgstr "Vul het domein in dat je wilt gebruiken"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:113
 msgid "Enter the email you used to create your account. We'll send you a \"reset code\" so you can set a new password."
-msgstr "Voer het e-mailadres in dat je hebt gebruikt om je account aan te maken. We sturen je een \"resetcode\" zodat je een nieuw wachtwoord kunt instellen."
+msgstr "Vul het e-mailadres in dat je hebt gebruikt om je account aan te maken. We sturen je een \"resetcode\" zodat je een nieuw wachtwoord kunt instellen."
 
 #: src/components/dialogs/BirthDateSettings.tsx:107
 msgid "Enter your birth date"
-msgstr "Voer je geboortedatum in"
+msgstr "Vul je geboortedatum in"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:99
 #: src/screens/Signup/StepInfo/index.tsx:182
 msgid "Enter your email address"
-msgstr "Voer je e-mailadres in"
+msgstr "Vul je e-mailadres in"
 
 #: src/view/com/modals/ChangeEmail.tsx:42
 msgid "Enter your new email above"
-msgstr "Voer hierboven je nieuwe e-mailadres in"
+msgstr "Vul hierboven je nieuwe e-mailadres in"
 
 #: src/view/com/modals/ChangeEmail.tsx:112
 msgid "Enter your new email address below."
-msgstr "Voer hieronder je nieuwe e-mailadres in"
+msgstr "Vul hieronder je nieuwe e-mailadres in"
 
 #: src/screens/Login/index.tsx:98
 msgid "Enter your username and password"
-msgstr "Voer je gebruikersnaam en wachtwoord in"
+msgstr "Vul je gebruikersnaam en wachtwoord in"
 
 #: src/view/com/composer/Composer.tsx:1350
 msgid "Error"
@@ -2892,7 +2892,7 @@ msgstr "Nodig mensen uit voor dit startpakket!"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:35
 msgid "Invite your friends to follow your favorite feeds and people"
-msgstr "Nodig je vrienden uit om je favoriete feeds en mensen te volgen"
+msgstr "Nodig je vrienden uit om je favoriete feeds en personen te volgen"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:32
 msgid "Invites, but personal"
@@ -2904,7 +2904,7 @@ msgstr "Het klopt"
 
 #: src/screens/StarterPack/Wizard/index.tsx:461
 msgid "It's just you right now! Add more people to your starter pack by searching above."
-msgstr "Het is nu alleen jij! Voeg meer mensen toe aan je startpakket door hierboven te zoeken."
+msgstr "Het is nu alleen jij! Voeg meer personen toe aan je startpakket door hierboven te zoeken."
 
 #: src/screens/Signup/StepInfo/index.tsx:80
 msgid "It looks like you may have entered your email address incorrectly. Are you sure it's right?"
@@ -2928,7 +2928,7 @@ msgstr "Word lid van Bluesky"
 #: src/components/StarterPack/QrCode.tsx:61
 #: src/view/shell/NavSignupCard.tsx:40
 msgid "Join the conversation"
-msgstr "Neem deel aan het gesprek"
+msgstr "Aan het gesprek deelnemen"
 
 #: src/screens/Onboarding/index.tsx:21
 #: src/screens/Onboarding/state.ts:91
@@ -4058,31 +4058,31 @@ msgstr "Opent lijst met uitnodigingscodes"
 
 #: src/view/screens/Settings/index.tsx:775
 msgid "Opens modal for account deactivation confirmation"
-msgstr "Opent modaal venster voor bevestigen deactivering van account"
+msgstr "Opent dialoogvenster voor bevestigen deactivering van account"
 
 #: src/view/screens/Settings/index.tsx:797
 msgid "Opens modal for account deletion confirmation. Requires email code"
-msgstr "Opent modaal venster voor bevestigen verwijderen van het account. Vereist e-mailcode"
+msgstr "Opent dialoogvenster voor bevestigen verwijderen van het account. Vereist e-mailcode"
 
 #: src/view/screens/Settings/index.tsx:732
 msgid "Opens modal for changing your Bluesky password"
-msgstr "Opent modaal venster voor wijzigen van je Bluesky-wachtwoord"
+msgstr "Opent dialoogvenster voor wijzigen van je Bluesky-wachtwoord"
 
 #: src/view/screens/Settings/index.tsx:687
 msgid "Opens modal for choosing a new Bluesky handle"
-msgstr "Opent modaal venster voor kiezen van een nieuwe Bluesky-handle"
+msgstr "Opent dialoogvenster voor kiezen van een nieuwe Bluesky-handle"
 
 #: src/view/screens/Settings/index.tsx:755
 msgid "Opens modal for downloading your Bluesky account data (repository)"
-msgstr "Opent modaal venster voor downloaden van je Bluesky-accountgegevens (repository)"
+msgstr "Opent dialoogvenster voor downloaden van je Bluesky-accountgegevens (repository)"
 
 #: src/view/screens/Settings/index.tsx:963
 msgid "Opens modal for email verification"
-msgstr "Opent modaal venster voor e-mailverificatie"
+msgstr "Opent dialoogvenster voor e-mailverificatie"
 
 #: src/view/com/modals/ChangeHandle.tsx:269
 msgid "Opens modal for using custom domain"
-msgstr "Opent modaal venster voor gebruik van aangepast domein"
+msgstr "Opent dialoogvenster voor gebruik van aangepast domein"
 
 #: src/view/screens/Settings/index.tsx:523
 msgid "Opens moderation settings"
@@ -4221,15 +4221,15 @@ msgstr "Pauzeer video"
 #: src/screens/StarterPack/StarterPackScreen.tsx:182
 #: src/view/screens/Search/Search.tsx:531
 msgid "People"
-msgstr "Mensen"
+msgstr "Personen"
 
 #: src/Navigation.tsx:179
 msgid "People followed by @{0}"
-msgstr "Mensen gevolgd door @{0}"
+msgstr "Personen gevolgd door @{0}"
 
 #: src/Navigation.tsx:172
 msgid "People following @{0}"
-msgstr "Mensen die @{0} volgen"
+msgstr "Personen die @{0} volgen"
 
 #: src/view/com/lightbox/Lightbox.tsx:77
 msgid "Permission to access camera roll is required."
@@ -4316,12 +4316,12 @@ msgstr "Verifieer je e-mailadres"
 
 #: src/screens/Signup/state.ts:217
 msgid "Please choose your handle."
-msgstr "Kies je handle."
+msgstr "Je handle kiezen."
 
 #: src/screens/Signup/state.ts:210
 #: src/screens/Signup/StepInfo/index.tsx:114
 msgid "Please choose your password."
-msgstr "Kies je wachtwoord."
+msgstr "Je wachtwoord kiezen."
 
 #: src/screens/Signup/state.ts:231
 msgid "Please complete the verification captcha."
@@ -4333,28 +4333,28 @@ msgstr "Bevestig je e-mailadres voordat je het wijzigt. Dit is een tijdelijke ve
 
 #: src/view/com/modals/AddAppPasswords.tsx:94
 msgid "Please enter a name for your app password. All spaces is not allowed."
-msgstr "Voer een naam in voor je app-wachtwoord. Spaties zijn niet toegestaan."
+msgstr "Vul een naam in voor je app-wachtwoord. Spaties zijn niet toegestaan."
 
 #: src/view/com/modals/AddAppPasswords.tsx:151
 msgid "Please enter a unique name for this App Password or use our randomly generated one."
-msgstr "Voer een unieke naam in voor dit app-wachtwoord of gebruik onze willekeurig gegenereerde naam."
+msgstr "Vul een unieke naam in voor dit app-wachtwoord of gebruik onze willekeurig gegenereerde naam."
 
 #: src/components/dialogs/MutedWords.tsx:86
 msgid "Please enter a valid word, tag, or phrase to mute"
-msgstr "Voer een geldig woord, tag of woordgroep in om te negeren"
+msgstr "Vul een geldig woord, tag of woordgroep in om te negeren"
 
 #: src/screens/Signup/state.ts:196
 #: src/screens/Signup/StepInfo/index.tsx:102
 msgid "Please enter your email."
-msgstr "Voer je e-mailadres in."
+msgstr "Vul je e-mailadres in."
 
 #: src/screens/Signup/StepInfo/index.tsx:96
 msgid "Please enter your invite code."
-msgstr "Voer je uitnodigingscode in."
+msgstr "Vul je uitnodigingscode in."
 
 #: src/view/com/modals/DeleteAccount.tsx:253
 msgid "Please enter your password as well:"
-msgstr "Voer ook je wachtwoord in:"
+msgstr "Vul ook je wachtwoord in:"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:265
 msgid "Please explain why you think this label was incorrectly applied by {0}"
@@ -4870,7 +4870,7 @@ msgstr "Meld account"
 
 #: src/view/screens/ProfileList.tsx:544
 msgid "Report List"
-msgstr "Meld Lijst"
+msgstr "Lijst melden"
 
 #: src/components/dms/ConvoMenu.tsx:197
 #: src/components/dms/ConvoMenu.tsx:200
@@ -5111,20 +5111,20 @@ msgstr "Bewaar"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:179
 msgid "Save QR code"
-msgstr "Bewaar QR-code"
+msgstr "QR-code bewaren"
 
 #: src/components/dialogs/BirthDateSettings.tsx:118
 msgid "Save birthday"
-msgstr "Bewaar verjaardag"
+msgstr "Verjaardag bewaren"
 
 #: src/view/screens/SavedFeeds.tsx:98
 #: src/view/screens/SavedFeeds.tsx:103
 msgid "Save changes"
-msgstr "Bewaar wijzigingen"
+msgstr "Wijzigingen bewaren"
 
 #: src/view/com/modals/ChangeHandle.tsx:158
 msgid "Save handle change"
-msgstr "Bewaar handle-wijziging"
+msgstr "Handlewijziging bewaren"
 
 #: src/components/StarterPack/ShareDialog.tsx:151
 #: src/components/StarterPack/ShareDialog.tsx:158
@@ -5138,7 +5138,7 @@ msgstr "Opslaan afbeelding bijsnijden"
 #: src/view/screens/ProfileFeed.tsx:338
 #: src/view/screens/ProfileFeed.tsx:344
 msgid "Save to my feeds"
-msgstr "Bewaar in mijn feeds"
+msgstr "In mijn feeds bewaren"
 
 #: src/view/screens/SavedFeeds.tsx:171
 msgid "Saved Feeds"
@@ -5155,7 +5155,7 @@ msgstr "Bewaard in je feeds"
 
 #: src/view/com/modals/ChangeHandle.tsx:159
 msgid "Saves handle change to {handle}"
-msgstr "Bewaar handle-wijziging naar {handle}"
+msgstr "Handle-wijziging naar {handle} bewaren"
 
 #: src/view/com/modals/CropImage.web.tsx:105
 msgid "Saves image crop settings"
@@ -5195,7 +5195,7 @@ msgstr "Zoek GIF's"
 
 #: src/components/dialogs/GifSelect.tsx:178
 msgid "Search Tenor"
-msgstr "Zoek Tenor"
+msgstr "Tenor zoeken"
 
 #: src/view/shell/desktop/Search.tsx:201
 msgid "Search for \"{query}\""
@@ -5479,7 +5479,7 @@ msgstr "Seksueel suggestief"
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:333
 #: src/view/screens/ProfileList.tsx:487
 msgid "Share"
-msgstr "Deel"
+msgstr "Delen"
 
 #: src/view/com/lightbox/Lightbox.tsx:176
 msgctxt "action"
@@ -5489,45 +5489,45 @@ msgstr "Deel"
 #: src/view/com/modals/LinkWarning.tsx:89
 #: src/view/com/modals/LinkWarning.tsx:95
 msgid "Share Link"
-msgstr "Deel link"
+msgstr "Link delen"
 
 #: src/components/StarterPack/ShareDialog.tsx:135
 #: src/components/StarterPack/ShareDialog.tsx:146
 msgid "Share QR code"
-msgstr "Deel QR-code"
+msgstr "QR-code delen"
 
 #: src/components/dms/ChatEmptyPill.tsx:37
 msgid "Share a cool story!"
-msgstr "Deel een leuk verhaal!"
+msgstr "Een leuk verhaal delen!"
 
 #: src/components/dms/ChatEmptyPill.tsx:36
 msgid "Share a fun fact!"
-msgstr "Deel een leuk weetje!"
+msgstr "Een leuk weetje delen!"
 
 #: src/view/com/profile/ProfileMenu.tsx:353
 #: src/view/com/util/forms/PostDropdownBtn.tsx:703
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:349
 msgid "Share anyway"
-msgstr "Deel toch"
+msgstr "Toch delen"
 
 #: src/view/screens/ProfileFeed.tsx:364
 #: src/view/screens/ProfileFeed.tsx:366
 msgid "Share feed"
-msgstr "Deel feed"
+msgstr "Feed delen"
 
 #: src/components/StarterPack/ShareDialog.tsx:124
 #: src/components/StarterPack/ShareDialog.tsx:131
 #: src/screens/StarterPack/StarterPackScreen.tsx:597
 msgid "Share link"
-msgstr "Deel link"
+msgstr "Link delen"
 
 #: src/components/StarterPack/ShareDialog.tsx:88
 msgid "Share link dialog"
-msgstr "Deel link dialoog"
+msgstr "Dialog link delen"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:415
 msgid "Share this starter pack"
-msgstr "Deel dit startpakket"
+msgstr "Dit startpakket delen"
 
 #: src/components/StarterPack/ShareDialog.tsx:100
 msgid "Share this starter pack and help people join your community on Bluesky."
@@ -5535,7 +5535,7 @@ msgstr "Deel dit startpakket en help mensen lid te worden van je gemeenschap op 
 
 #: src/components/dms/ChatEmptyPill.tsx:34
 msgid "Share your favorite feed!"
-msgstr "Deel je favoriete feed!"
+msgstr "Je favoriete feed delen!"
 
 #: src/Navigation.tsx:250
 msgid "Shared Preferences Tester"
@@ -5617,7 +5617,7 @@ msgstr "Toon genegeerde antwoorden"
 
 #: src/view/screens/PreferencesThreads.tsx:95
 msgid "Show replies by people you follow before all other replies."
-msgstr "Toon reacties van mensen die je volgt vóór alle andere reacties."
+msgstr "Toon reacties van personen die je volgt vóór alle andere reacties."
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:559
 #: src/view/com/util/forms/PostDropdownBtn.tsx:569
@@ -5723,7 +5723,7 @@ msgstr "Overslaan"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:228
 msgid "Skip this flow"
-msgstr "Sla deze flow over"
+msgstr "Deze flow overslaan"
 
 #: src/components/dialogs/nuxs/NeueTypography.tsx:95
 #: src/screens/Settings/AppearanceSettings.tsx:165
@@ -5741,7 +5741,7 @@ msgstr "Enkele andere feeds die je wellicht leuk vindt"
 
 #: src/components/WhoCanReply.tsx:70
 msgid "Some people can reply"
-msgstr "Sommige mensen kunnen reageren"
+msgstr "Sommige personen kunnen reageren"
 
 #: src/screens/Messages/Conversation.tsx:109
 msgid "Something went wrong"
@@ -5826,7 +5826,7 @@ msgstr "Startpakket is ongeldig"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:239
 msgid "Starter packs let you easily share your favorite feeds and people with your friends."
-msgstr "Met startpakketten kun je eenvoudig je favoriete feeds en mensen delen met je vrienden."
+msgstr "Met startpakketten kun je eenvoudig je favoriete feeds en personen delen met je vrienden."
 
 #: src/view/screens/Settings/index.tsx:918
 msgid "Status Page"
@@ -6489,7 +6489,7 @@ msgstr "Typ hier je privébericht"
 
 #: src/view/screens/ProfileList.tsx:594
 msgid "Un-block list"
-msgstr "Deblokkeer lijst"
+msgstr "Lijst deblokkeren"
 
 #: src/view/screens/ProfileList.tsx:579
 msgid "Un-mute list"
@@ -6517,27 +6517,27 @@ msgstr "Kan niet verwijderen"
 #: src/view/com/profile/ProfileMenu.tsx:341
 #: src/view/screens/ProfileList.tsx:685
 msgid "Unblock"
-msgstr "Deblokkeer"
+msgstr "Deblokkeren"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:192
 msgctxt "action"
 msgid "Unblock"
-msgstr "Deblokkeer"
+msgstr "Deblokkeren"
 
 #: src/view/com/profile/ProfileMenu.tsx:279
 #: src/view/com/profile/ProfileMenu.tsx:285
 msgid "Unblock Account"
-msgstr "Deblokkeer account"
+msgstr "Account deblokkeren"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:267
 #: src/view/com/profile/ProfileMenu.tsx:323
 msgid "Unblock Account?"
-msgstr "Deblokkeer account?"
+msgstr "Account deblokkeren?"
 
 #: src/components/dms/ConvoMenu.tsx:188
 #: src/components/dms/ConvoMenu.tsx:192
 msgid "Unblock account"
-msgstr "Deblokkeer account"
+msgstr "Account deblokkeren"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:71
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:72
@@ -6984,21 +6984,21 @@ msgstr "Bekijk je genegeerde accounts"
 
 #: src/screens/Profile/Header/Shell.tsx:128
 msgid "View {0}'s avatar"
-msgstr "Bekijk {0}'s avatar"
+msgstr "Bekijk avatar van {0}"
 
 #: src/components/ProfileCard.tsx:110
 #: src/view/com/notifications/FeedItem.tsx:273
 msgid "View {0}'s profile"
-msgstr "Bekijk {0}'s profiel"
+msgstr "Bekijk profiel van {0}"
 
 #: src/components/dms/MessagesListHeader.tsx:160
 msgid "View {displayName}'s profile"
-msgstr "Bekijk {displayName}'s profiel"
+msgstr "Bekijk profiel van {displayName}"
 
 #: src/view/com/modals/LinkWarning.tsx:89
 #: src/view/com/modals/LinkWarning.tsx:95
 msgid "Visit Site"
-msgstr "Bezoek site"
+msgstr "Site bezoeken"
 
 #: src/components/moderation/LabelPreference.tsx:135
 #: src/lib/moderation/useLabelBehaviorDescription.ts:17
@@ -7238,11 +7238,11 @@ msgstr "Je volgt de voorgestelde gebruikers zodra je klaar bent met het aanmaken
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:232
 msgid "You'll follow these people and {0} others"
-msgstr "Je volgt deze mensen en {0} anderen"
+msgstr "Je volgt deze personen en {0} anderen"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:230
 msgid "You'll follow these people right away"
-msgstr "Je gaat deze mensen meteen volgen"
+msgstr "Je gaat deze personen meteen volgen"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:138
 msgid "You'll receive an email at <0>{0}</0> to verify it's you."
@@ -7492,7 +7492,7 @@ msgstr "Je ontvangt nu meldingen voor dit gesprek"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:98
 msgid "You will receive an email with a \"reset code.\" Enter that code here, then enter your new password."
-msgstr "Je ontvangt een e-mail met een 'resetcode'. Voer hier die code in en voer vervolgens je nieuwe wachtwoord in."
+msgstr "Je ontvangt een e-mail met een 'resetcode'. Vul hier die code in en vul vervolgens je nieuwe wachtwoord in."
 
 #: src/screens/Signup/index.tsx:140
 msgid "Your account"
@@ -7804,15 +7804,15 @@ msgstr "{0, plural, one {{formattedCount} andere} other {{formattedCount} andere
 
 #: src/view/com/util/UserAvatar.tsx:435
 msgid "{0}'s avatar"
-msgstr "{0}'s avatar"
+msgstr "Avatar van {0}"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:68
 msgid "{0}'s favorite feeds and people - join me!"
-msgstr "{0}'s favoriete feeds en mensen - doe mee!"
+msgstr "Favoriete feeds en personen van {0} - doe mee!"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:47
 msgid "{0}'s starter pack"
-msgstr "{0}'s startpakket"
+msgstr "Startpakket van {0}"
 
 #: src/components/dialogs/MutedWords.tsx:475
 msgid "{0} <0>in <1>tags</1></0>"
@@ -7832,7 +7832,7 @@ msgstr "{0} van {1}"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:478
 msgid "{0} people have used this starter pack!"
-msgstr "{0} mensen hebben dit startpakket gebruikt!"
+msgstr "{0} personen hebben dit startpakket gebruikt!"
 
 #: src/lib/hooks/useTimeAgo.ts:158
 msgid "{0}d"
@@ -7861,7 +7861,7 @@ msgstr "{count, plural, one {Leuk gevonden door # gebruiker} other {Leuk gevonde
 #: src/lib/generate-starterpack.ts:108
 #: src/screens/StarterPack/Wizard/index.tsx:183
 msgid "{displayName}'s Starter Pack"
-msgstr "{displayName}'s startpakket"
+msgstr "Startpakket van {displayName}"
 
 #: src/screens/SignupQueued.tsx:207
 msgid "{estimatedTimeHrs, plural, one {hour} other {hours}}"
