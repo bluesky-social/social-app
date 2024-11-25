@@ -63,10 +63,10 @@ module.exports = function (config) {
   return {
     expo: {
       version: VERSION,
-      name: 'Bluesky',
-      slug: 'bluesky',
-      scheme: 'bluesky',
-      owner: 'blueskysocial',
+      name: 'Romdoul',
+      slug: 'romdoul',
+      scheme: 'romdoul',
+      owner: 'romdoulsocial',
       runtimeVersion: {
         policy: 'appVersion',
       },
@@ -78,7 +78,7 @@ module.exports = function (config) {
       primaryColor: '#1083fe',
       ios: {
         supportsTablet: false,
-        bundleIdentifier: 'xyz.blueskyweb.app',
+        bundleIdentifier: 'com.romdoul.app',
         config: {
           usesNonExemptEncryption: false,
         },
@@ -92,7 +92,7 @@ module.exports = function (config) {
             'Used to save images to your library.',
           NSPhotoLibraryUsageDescription:
             'Used for profile pictures, posts, and other kinds of content',
-          CFBundleSpokenName: 'Blue Sky',
+          CFBundleSpokenName: 'Rom Doul',
           CFBundleLocalizations: [
             'en',
             'ca',
@@ -116,6 +116,7 @@ module.exports = function (config) {
             'zh_CN',
             'zh_HK',
             'zh_TW',
+            'km',
           ],
         },
         associatedDomains: ASSOCIATED_DOMAINS,
@@ -170,7 +171,7 @@ module.exports = function (config) {
           backgroundColor: '#1185FE',
         },
         googleServicesFile: './google-services.json',
-        package: 'xyz.blueskyweb.app',
+        package: 'com.romdoul.app',
         intentFilters: [
           {
             action: 'VIEW',
