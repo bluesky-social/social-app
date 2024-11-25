@@ -37,6 +37,7 @@ interface AppLanguageConfig {
 
 export const APP_LANGUAGES: AppLanguageConfig[] = [
   {code2: AppLanguage.en, name: 'English'},
+  {code2: AppLanguage.am, name: 'አማርኛ – Amharic'},
   {code2: AppLanguage.ca, name: 'Català – Catalan'},
   {code2: AppLanguage.de, name: 'Deutsch – German'},
   {code2: AppLanguage.en_GB, name: 'English (UK)'},
