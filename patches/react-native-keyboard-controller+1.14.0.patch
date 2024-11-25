@@ -1,5 +1,5 @@
 diff --git a/node_modules/react-native-keyboard-controller/src/animated.tsx b/node_modules/react-native-keyboard-controller/src/animated.tsx
-index d742c1d..e5b9ccb 100644
+index d742c1d..38f9fef 100644
 --- a/node_modules/react-native-keyboard-controller/src/animated.tsx
 +++ b/node_modules/react-native-keyboard-controller/src/animated.tsx
 @@ -63,9 +63,7 @@ type KeyboardProviderProps = {
@@ -13,29 +13,62 @@ index d742c1d..e5b9ccb 100644
     * Defaults to `true`.
     */
    enabled?: boolean;
-@@ -79,12 +77,12 @@ export const KeyboardProvider = ({
+@@ -79,12 +77,10 @@ export const KeyboardProvider = ({
    children,
    statusBarTranslucent,
    navigationBarTranslucent,
 -  enabled: initiallyEnabled = true,
-+  enabled: enabledProp = true,
++  enabled: enabled_PATCHED = true,
  }: KeyboardProviderProps) => {
    // ref
    const viewTagRef = useRef<React.Component<KeyboardControllerProps>>(null);
-   // state
+-  // state
 -  const [enabled, setEnabled] = useState(initiallyEnabled);
-+  const [enabled, setEnabled] = useState(enabledProp);
    // animated values
    const progress = useAnimatedValue(0);
    const height = useAnimatedValue(0);
-@@ -189,6 +187,10 @@ export const KeyboardProvider = ({
-     }
-   }, [enabled]);
+@@ -103,15 +99,19 @@ export const KeyboardProvider = ({
+   // memo
+   const context = useMemo<KeyboardAnimationContext>(
+     () => ({
+-      enabled,
++      enabled: enabled_PATCHED,
+       animated: { progress: progress, height: Animated.multiply(height, -1) },
+       reanimated: { progress: progressSV, height: heightSV },
+       layout,
+       setKeyboardHandlers,
+       setInputHandlers,
+-      setEnabled,
++      setEnabled: () => {
++        if (__DEV__) {
++          console.error('Do not useKeyboardController, instead change the `enabled` prop on the provider')
++        }
++      },
+     }),
+-    [enabled],
++    [enabled_PATCHED],
+   );
+   const style = useMemo(
+     () => [
+@@ -182,18 +182,18 @@ export const KeyboardProvider = ({
  
-+  useEffect(() => {
-+    setEnabled(enabledProp)
-+  }, [enabledProp])
-+
+   // effects
+   useEffect(() => {
+-    if (enabled) {
++    if (enabled_PATCHED) {
+       applyMonkeyPatch();
+     } else {
+       revertMonkeyPatch();
+     }
+-  }, [enabled]);
++  }, [enabled_PATCHED]);
+ 
    return (
      <KeyboardContext.Provider value={context}>
        <KeyboardControllerViewAnimated
+         ref={viewTagRef}
+-        enabled={enabled}
++        enabled={enabled_PATCHED}
+         navigationBarTranslucent={navigationBarTranslucent}
+         statusBarTranslucent={statusBarTranslucent}
+         style={styles.container}
