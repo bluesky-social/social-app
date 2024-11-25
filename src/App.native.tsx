@@ -4,7 +4,6 @@ import '#/view/icons'
 
 import React, {useEffect, useState} from 'react'
 import {GestureHandlerRootView} from 'react-native-gesture-handler'
-import {KeyboardProvider} from 'react-native-keyboard-controller'
 import {RootSiblingParent} from 'react-native-root-siblings'
 import {
   initialWindowMetrics,
@@ -70,6 +69,7 @@ import {Splash} from '#/Splash'
 import {BottomSheetProvider} from '../modules/bottom-sheet'
 import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
 import {AppProfiler} from './AppProfiler'
+import {KeyboardControllerProvider} from './lib/hooks/useEnableKeyboardController'
 
 SplashScreen.preventAutoHideAsync()
 
@@ -188,7 +188,7 @@ function App() {
     <AppProfiler>
       <GeolocationProvider>
         <A11yProvider>
-          <KeyboardProvider enabled={false} statusBarTranslucent={true}>
+          <KeyboardControllerProvider>
             <SessionProvider>
               <PrefsStateProvider>
                 <I18nProvider>
@@ -217,7 +217,7 @@ function App() {
                 </I18nProvider>
               </PrefsStateProvider>
             </SessionProvider>
-          </KeyboardProvider>
+          </KeyboardControllerProvider>
         </A11yProvider>
       </GeolocationProvider>
     </AppProfiler>

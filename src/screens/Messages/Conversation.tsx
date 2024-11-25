@@ -1,6 +1,5 @@
 import React, {useCallback} from 'react'
 import {View} from 'react-native'
-import {useKeyboardController} from 'react-native-keyboard-controller'
 import {AppBskyActorDefs, moderateProfile, ModerationOpts} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -8,6 +7,7 @@ import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {useEmail} from '#/lib/hooks/useEmail'
+import {useEnableKeyboardControllerScreen} from '#/lib/hooks/useEnableKeyboardController'
 import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
 import {isWeb} from '#/platform/detection'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
@@ -39,16 +39,7 @@ export function MessagesConversationScreen({route}: Props) {
   const convoId = route.params.conversation
   const {setCurrentConvoId} = useCurrentConvoId()
 
-  const {setEnabled} = useKeyboardController()
-  useFocusEffect(
-    useCallback(() => {
-      if (isWeb) return
-      setEnabled(true)
-      return () => {
-        setEnabled(false)
-      }
-    }, [setEnabled]),
-  )
+  useEnableKeyboardControllerScreen(true)
 
   useFocusEffect(
     useCallback(() => {

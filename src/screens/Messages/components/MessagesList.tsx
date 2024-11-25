@@ -250,30 +250,33 @@ export function MessagesList({
   // We use this value to keep track of when we want to disable the animation.
   const layoutScrollWithoutAnimation = useSharedValue(false)
 
-  useKeyboardHandler({
-    onStart: e => {
-      'worklet'
-      // Immediate updates - like opening the emoji picker - will have a duration of zero. In those cases, we should
-      // just update the height here instead of having the `onMove` event do it (that event will not fire!)
-      if (e.duration === 0) {
-        layoutScrollWithoutAnimation.set(true)
+  useKeyboardHandler(
+    {
+      onStart: e => {
+        'worklet'
+        // Immediate updates - like opening the emoji picker - will have a duration of zero. In those cases, we should
+        // just update the height here instead of having the `onMove` event do it (that event will not fire!)
+        if (e.duration === 0) {
+          layoutScrollWithoutAnimation.set(true)
+          keyboardHeight.set(e.height)
+        } else {
+          keyboardIsOpening.set(true)
+        }
+      },
+      onMove: e => {
+        'worklet'
         keyboardHeight.set(e.height)
-      } else {
-        keyboardIsOpening.set(true)
-      }
+        if (e.height > bottomOffset) {
+          scrollTo(flatListRef, 0, 1e7, false)
+        }
+      },
+      onEnd: () => {
+        'worklet'
+        keyboardIsOpening.set(false)
+      },
     },
-    onMove: e => {
-      'worklet'
-      keyboardHeight.set(e.height)
-      if (e.height > bottomOffset) {
-        scrollTo(flatListRef, 0, 1e7, false)
-      }
-    },
-    onEnd: () => {
-      'worklet'
-      keyboardIsOpening.set(false)
-    },
-  })
+    [bottomOffset],
+  )
 
   const animatedListStyle = useAnimatedStyle(() => ({
     marginBottom:
