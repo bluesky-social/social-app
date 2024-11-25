@@ -628,6 +628,12 @@ export function SearchScreen(
   const {_} = useLingui()
   const setDrawerOpen = useSetDrawerOpen()
   const setMinimalShellMode = useSetMinimalShellMode()
+  const {currentAccount} = useSession()
+
+  const SEARCH_HISTORY_KEY = React.useMemo(
+    () => `searchHistory:${currentAccount?.did || 'anon'}`,
+    [currentAccount],
+  )
 
   // Query terms
   const queryParam = props.route?.params?.q ?? ''
@@ -662,11 +668,11 @@ export function SearchScreen(
   React.useEffect(() => {
     const loadSearchHistory = async () => {
       try {
-        const history = await AsyncStorage.getItem('searchHistory')
+        const history = await AsyncStorage.getItem(`${SEARCH_HISTORY_KEY}/terms`)
         if (history !== null) {
           setSearchHistory(JSON.parse(history))
         }
-        const profiles = await AsyncStorage.getItem('selectedProfiles')
+        const profiles = await AsyncStorage.getItem(`${SEARCH_HISTORY_KEY}/selectedProfiles`)
         if (profiles !== null) {
           setSelectedProfiles(JSON.parse(profiles))
         }
@@ -676,7 +682,7 @@ export function SearchScreen(
     }
 
     loadSearchHistory()
-  }, [])
+  }, [SEARCH_HISTORY_KEY])
 
   const onPressMenu = React.useCallback(() => {
     textInput.current?.blur()
@@ -710,7 +716,7 @@ export function SearchScreen(
         setSearchHistory(newHistory)
         try {
           await AsyncStorage.setItem(
-            'searchHistory',
+            `${SEARCH_HISTORY_KEY}/terms`,
             JSON.stringify(newHistory),
           )
         } catch (e: any) {
@@ -718,7 +724,7 @@ export function SearchScreen(
         }
       }
     },
-    [searchHistory, setSearchHistory],
+    [SEARCH_HISTORY_KEY, searchHistory],
   )
 
   const updateSelectedProfiles = React.useCallback(
@@ -735,14 +741,14 @@ export function SearchScreen(
       setSelectedProfiles(newProfiles)
       try {
         await AsyncStorage.setItem(
-          'selectedProfiles',
+          `${SEARCH_HISTORY_KEY}/selectedProfiles`,
           JSON.stringify(newProfiles),
         )
       } catch (e: any) {
         logger.error('Failed to save selected profiles', {message: e})
       }
     },
-    [selectedProfiles, setSelectedProfiles],
+    [SEARCH_HISTORY_KEY, selectedProfiles],
   )
 
   const navigateToItem = React.useCallback(
@@ -820,13 +826,13 @@ export function SearchScreen(
       const updatedHistory = searchHistory.filter(item => item !== itemToRemove)
       setSearchHistory(updatedHistory)
       AsyncStorage.setItem(
-        'searchHistory',
+        `${SEARCH_HISTORY_KEY}/terms`,
         JSON.stringify(updatedHistory),
       ).catch(e => {
         logger.error('Failed to update search history', {message: e})
       })
     },
-    [searchHistory],
+    [SEARCH_HISTORY_KEY, searchHistory],
   )
 
   const handleRemoveProfile = React.useCallback(
@@ -836,13 +842,13 @@ export function SearchScreen(
       )
       setSelectedProfiles(updatedProfiles)
       AsyncStorage.setItem(
-        'selectedProfiles',
+        `${SEARCH_HISTORY_KEY}/selectedProfiles`,
         JSON.stringify(updatedProfiles),
       ).catch(e => {
         logger.error('Failed to update selected profiles', {message: e})
       })
     },
-    [selectedProfiles],
+    [SEARCH_HISTORY_KEY, selectedProfiles],
   )
 
   const onSearchInputFocus = React.useCallback(() => {
