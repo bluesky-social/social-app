@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-25 11:44\n"
+"PO-Revision-Date: 2024-11-25 12:11\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -29,7 +29,7 @@ msgstr "（没有电子邮箱）"
 
 #: src/lib/hooks/useTimeAgo.ts:156
 msgid "{0, plural, one {# day} other {# days}}"
-msgstr "{0, plural, one {#天} other {#天}}"
+msgstr "{0, plural, one {# 天} other {# 天}}"
 
 #: src/lib/hooks/useTimeAgo.ts:146
 msgid "{0, plural, one {# hour} other {# hours}}"
@@ -1056,7 +1056,7 @@ msgstr "Bluesky 将从你的关系网中选择一组推荐关注的账户。"
 
 #: src/screens/Settings/components/PwiOptOut.tsx:92
 msgid "Bluesky will not show your profile and posts to logged-out users. Other apps may not honor this request. This does not make your account private."
-msgstr "Bluesky 将不会向未登录的用户显示你的个人资料和帖文。但其他应用可能会忽略这个设置项，故启用后仍无法确保你的用户隐私。"
+msgstr "Bluesky 将不会向未登录的用户显示你的个人资料和帖文。但第三方应用未必会遵从该请求，这不会使你的账号转为非公开状态"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:53
 msgid "Blur images"
@@ -1976,7 +1976,7 @@ msgstr "停用电子邮箱两步验证"
 #: src/screens/Settings/AccessibilitySettings.tsx:83
 #: src/screens/Settings/AccessibilitySettings.tsx:88
 msgid "Disable haptic feedback"
-msgstr "停用触感反馈"
+msgstr "停用触觉反馈"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:386
 msgid "Disable subtitles"
@@ -2012,7 +2012,7 @@ msgstr "要放弃发布吗？"
 #: src/screens/Settings/components/PwiOptOut.tsx:80
 #: src/screens/Settings/components/PwiOptOut.tsx:84
 msgid "Discourage apps from showing my account to logged-out users"
-msgstr "要求平台不要向未登录用户显示我的账户"
+msgstr "阻止平台向未登录用户显示我的账户"
 
 #: src/view/com/posts/FollowingEmptyState.tsx:70
 #: src/view/com/posts/FollowingEndOfFeed.tsx:71
@@ -2159,7 +2159,7 @@ msgstr "例如：艺术家、爱狗人士和资深书虫。"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:43
 msgid "E.g. artistic nudes."
-msgstr "例如：艺术性的裸露。"
+msgstr "例如：裸体艺术。"
 
 #: src/view/com/modals/CreateOrEditList.tsx:263
 msgid "e.g. Great Posters"
@@ -2401,7 +2401,7 @@ msgstr "输入密码"
 #: src/components/dialogs/MutedWords.tsx:127
 #: src/components/dialogs/MutedWords.tsx:128
 msgid "Enter a word or tag"
-msgstr "输入一个字词或标签"
+msgstr "输入字词或标签"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:89
 msgid "Enter Code"
@@ -4302,7 +4302,7 @@ msgstr "分享注意事项"
 
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:80
 msgid "Note: Bluesky is an open and public network. This setting only limits the visibility of your content on the Bluesky app and website, and other apps may not respect this setting. Your content may still be shown to logged-out users by other apps and websites."
-msgstr "注意：Bluesky 是一个开放的社交网络。这个设置项仅限制你发布的内容在 Bluesky 应用及网页上的内容可见性，但其他应用可能会忽略这个设置项，仍可能会向未登录的用户显示你发布的内容。"
+msgstr "注意：Bluesky 是一个开放的社交网络。该设置项仅限制发布内容在 Bluesky 应用及网页上的可见性，但第三方应用未必会遵从该请求，仍可能会向未登录的用户显示你发布的内容。"
 
 #: src/screens/Messages/ChatList.tsx:213
 msgid "Nothing here"
@@ -6495,11 +6495,11 @@ msgstr "Bluesky 网页客户端"
 
 #: src/view/screens/CommunityGuidelines.tsx:38
 msgid "The Community Guidelines have been moved to <0/>"
-msgstr "社群准则已迁移至 <0/>"
+msgstr "社群准则已移动到 <0/>"
 
 #: src/view/screens/CopyrightPolicy.tsx:35
 msgid "The Copyright Policy has been moved to <0/>"
-msgstr "版权许可已迁移至 <0/>"
+msgstr "版权许可已移动到 <0/>"
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:102
 msgid "The Discover feed"
@@ -6537,7 +6537,7 @@ msgstr "这则帖文可能已被删除。"
 
 #: src/view/screens/PrivacyPolicy.tsx:35
 msgid "The Privacy Policy has been moved to <0/>"
-msgstr "隐私政策已迁移至 <0/>"
+msgstr "隐私政策已移动到 <0/>"
 
 #: src/view/com/composer/state/video.ts:395
 msgid "The selected video is larger than 50MB."
@@ -6553,11 +6553,11 @@ msgstr "你尝试查看的新手包无效，你可以考虑删除这个新手包
 
 #: src/view/screens/Support.tsx:37
 msgid "The support form has been moved. If you need help, please <0/> or visit {HELP_DESK_URL} to get in touch with us."
-msgstr "支持表单已迁移至别处。如果你需要更多帮助，请<0/>或访问{HELP_DESK_URL}与我们联系。"
+msgstr "支持表单已移动到别处。如果你需要更多帮助，请<0/>或访问{HELP_DESK_URL}与我们联系。"
 
 #: src/view/screens/TermsOfService.tsx:35
 msgid "The Terms of Service have been moved to"
-msgstr "服务条款已迁移至"
+msgstr "服务条款已移动到"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:94
 msgid "The verification code you have provided is invalid. Please make sure that you have used the correct verification link or request a new one."
