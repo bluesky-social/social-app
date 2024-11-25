@@ -267,6 +267,13 @@ export function MessagesList({
           scrollTo(flatListRef, 0, 1e7, false)
         }
       },
+      onInteractive: e => {
+        'worklet'
+        keyboardHeight.set(e.height)
+        if (e.height > bottomOffset) {
+          scrollTo(flatListRef, 0, 1e7, false)
+        }
+      },
       onEnd: e => {
         'worklet'
         keyboardHeight.set(e.height)
@@ -409,7 +416,7 @@ export function MessagesList({
           // The extra two items account for the header and the footer components
           initialNumToRender={isNative ? 32 : 62}
           maxToRenderPerBatch={isWeb ? 32 : 62}
-          keyboardDismissMode="on-drag"
+          keyboardDismissMode="interactive"
           keyboardShouldPersistTaps="handled"
           maintainVisibleContentPosition={{
             minIndexForVisible: 0,
