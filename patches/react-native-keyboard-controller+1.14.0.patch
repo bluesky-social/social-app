@@ -1,8 +1,21 @@
+diff --git a/node_modules/react-native-keyboard-controller/lib/typescript/animated.d.ts b/node_modules/react-native-keyboard-controller/lib/typescript/animated.d.ts
+index 662dfff..e6eb9aa 100644
+--- a/node_modules/react-native-keyboard-controller/lib/typescript/animated.d.ts
++++ b/node_modules/react-native-keyboard-controller/lib/typescript/animated.d.ts
+@@ -25,7 +25,7 @@ type KeyboardProviderProps = {
+      * To change the property in runtime use `useKeyboardController` hook and `setEnabled` method.
+      * Defaults to `true`.
+      */
+-    enabled?: boolean;
++    enabled_PATCHED?: boolean;
+ };
+ export declare const KeyboardProvider: ({ children, statusBarTranslucent, navigationBarTranslucent, enabled: initiallyEnabled, }: KeyboardProviderProps) => React.JSX.Element;
+ export {};
 diff --git a/node_modules/react-native-keyboard-controller/src/animated.tsx b/node_modules/react-native-keyboard-controller/src/animated.tsx
-index d742c1d..38f9fef 100644
+index d742c1d..7da4707 100644
 --- a/node_modules/react-native-keyboard-controller/src/animated.tsx
 +++ b/node_modules/react-native-keyboard-controller/src/animated.tsx
-@@ -63,9 +63,7 @@ type KeyboardProviderProps = {
+@@ -63,12 +63,10 @@ type KeyboardProviderProps = {
     */
    navigationBarTranslucent?: boolean;
    /**
@@ -12,13 +25,17 @@ index d742c1d..38f9fef 100644
 +   * A boolean prop indicating whether the module is enabled.
     * Defaults to `true`.
     */
-   enabled?: boolean;
+-  enabled?: boolean;
++  enabled_PATCHED?: boolean;
+ };
+ 
+ // capture `Platform.OS` in separate variable to avoid deep workletization of entire RN package
 @@ -79,12 +77,10 @@ export const KeyboardProvider = ({
    children,
    statusBarTranslucent,
    navigationBarTranslucent,
 -  enabled: initiallyEnabled = true,
-+  enabled: enabled_PATCHED = true,
++  enabled_PATCHED = true,
  }: KeyboardProviderProps) => {
    // ref
    const viewTagRef = useRef<React.Component<KeyboardControllerProps>>(null);

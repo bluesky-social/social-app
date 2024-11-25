@@ -35,7 +35,7 @@ export function KeyboardControllerProvider({
   return (
     <KeyboardControllerRefCountContext.Provider value={value}>
       <KeyboardProvider
-        enabled={refCount > 0}
+        enabled_PATCHED={refCount > 0}
         // I don't think this is necessary, but Chesterton's fence and all that -sfn
         statusBarTranslucent={true}>
         {children}
