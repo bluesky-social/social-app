@@ -225,6 +225,7 @@ export const TextInput = React.forwardRef(function TextInputImpl(
       autofocus: 'end',
       editable: true,
       injectCSS: true,
+      shouldRerenderOnTransaction: false,
       onCreate({editor: editorProp}) {
         // HACK
         // the 'enter' animation sometimes causes autofocus to fail
@@ -317,15 +318,9 @@ export const TextInput = React.forwardRef(function TextInputImpl(
     style.lineHeight = style.lineHeight
       ? ((style.lineHeight + 'px') as unknown as number)
       : undefined
+    style.minHeight = webForceMinHeight ? 140 : undefined
     return style
-  }, [t, fonts])
-
-  React.useLayoutEffect(() => {
-    let node = editor?.view.dom
-    if (node) {
-      node.style.minHeight = webForceMinHeight ? '140px' : ''
-    }
-  }, [editor, webForceMinHeight])
+  }, [t, fonts, webForceMinHeight])
 
   return (
     <>
