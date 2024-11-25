@@ -5,15 +5,10 @@ import {
   Pressable,
   ScrollView,
   StyleProp,
-  TextInput,
   View,
   ViewStyle,
 } from 'react-native'
-import {
-  KeyboardAwareScrollView,
-  useKeyboardController,
-  useKeyboardHandler,
-} from 'react-native-keyboard-controller'
+import {KeyboardAwareScrollView} from 'react-native-keyboard-controller'
 import {runOnJS} from 'react-native-reanimated'
 import {ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript/hook/commonTypes'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
@@ -22,18 +17,17 @@ import {useLingui} from '@lingui/react'
 
 import {ScrollProvider} from '#/lib/ScrollContext'
 import {logger} from '#/logger'
-import {isAndroid, isIOS} from '#/platform/detection'
+import {isAndroid} from '#/platform/detection'
 import {useA11y} from '#/state/a11y'
 import {useDialogStateControlContext} from '#/state/dialogs'
 import {List, ListMethods, ListProps} from '#/view/com/util/List'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, platform, useTheme} from '#/alf'
 import {Context, useDialogContext} from '#/components/Dialog/context'
 import {
   DialogControlProps,
   DialogInnerProps,
   DialogOuterProps,
 } from '#/components/Dialog/types'
-import {createInput} from '#/components/forms/TextField'
 import {BottomSheet, BottomSheetSnapPoint} from '../../../modules/bottom-sheet'
 import {
   BottomSheetSnapPointChangeEvent,
@@ -45,8 +39,8 @@ export {useDialogContext, useDialogControl} from '#/components/Dialog/context'
 export * from '#/components/Dialog/shared'
 export * from '#/components/Dialog/types'
 export * from '#/components/Dialog/utils'
-// @ts-ignore
-export const Input = createInput(TextInput)
+// holdover from when @gorhom/bottom-sheet required a special textinput
+export {Input} from '#/components/forms/TextField'
 
 export function Outer({
   children,
@@ -181,9 +175,7 @@ export function Inner({children, style, header}: DialogInnerProps) {
         style={[
           a.pt_2xl,
           a.px_xl,
-          {
-            paddingBottom: insets.bottom + insets.top,
-          },
+          {paddingBottom: insets.bottom + insets.top},
           style,
         ]}>
         {children}
@@ -199,35 +191,6 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
   ) {
     const {nativeSnapPoint, disableDrag, setDisableDrag} = useDialogContext()
     const insets = useSafeAreaInsets()
-    const {setEnabled} = useKeyboardController()
-
-    const [keyboardHeight, setKeyboardHeight] = React.useState(0)
-
-    React.useEffect(() => {
-      if (!isIOS) {
-        return
-      }
-
-      setEnabled(true)
-      return () => {
-        setEnabled(false)
-      }
-    })
-
-    useKeyboardHandler({
-      onEnd: e => {
-        'worklet'
-        runOnJS(setKeyboardHeight)(e.height)
-      },
-    })
-
-    const basePading =
-      (isIOS ? 30 : 50) + (isIOS ? keyboardHeight / 4 : keyboardHeight)
-    const fullPaddingBase = insets.bottom + insets.top + basePading
-    const fullPadding = isIOS ? fullPaddingBase : fullPaddingBase + 50
-
-    const paddingBottom =
-      nativeSnapPoint === BottomSheetSnapPoint.Full ? fullPadding : basePading
 
     const onScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
       if (!isAndroid) {
@@ -241,14 +204,23 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
       }
     }
 
+    const snapPointPadding = {
+      [BottomSheetSnapPoint.Hidden]: insets.bottom,
+      [BottomSheetSnapPoint.Partial]: insets.bottom,
+      [BottomSheetSnapPoint.Full]: insets.bottom + insets.top,
+    }
+
     return (
       <KeyboardAwareScrollView
         style={[style]}
         contentContainerStyle={[
           a.pt_2xl,
           a.px_xl,
-          {paddingBottom},
           contentContainerStyle,
+          platform({
+            ios: {paddingBottom: snapPointPadding[nativeSnapPoint] ?? 0},
+            android: a.pb_2xl,
+          }),
         ]}
         ref={ref}
         {...props}
@@ -256,6 +228,7 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
         bottomOffset={30}
         scrollEventThrottle={50}
         onScroll={isAndroid ? onScroll : undefined}
+        keyboardDismissMode="interactive"
         keyboardShouldPersistTaps="handled"
         stickyHeaderIndices={header ? [0] : undefined}>
         {header}

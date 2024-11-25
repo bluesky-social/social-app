@@ -1,9 +1,6 @@
 import React from 'react'
 import {Keyboard, TouchableOpacity, View} from 'react-native'
-import {
-  KeyboardAwareScrollView,
-  useKeyboardController,
-} from 'react-native-keyboard-controller'
+import {KeyboardAwareScrollView} from 'react-native-keyboard-controller'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {Image} from 'expo-image'
 import {
@@ -151,7 +148,6 @@ function WizardInner({
   const {_} = useLingui()
   const t = useTheme()
   const setMinimalShellMode = useSetMinimalShellMode()
-  const {setEnabled} = useKeyboardController()
   const [state, dispatch] = useWizardState()
   const {currentAccount} = useSession()
   const {data: currentProfile} = useProfileQuery({
@@ -168,14 +164,12 @@ function WizardInner({
 
   useFocusEffect(
     React.useCallback(() => {
-      setEnabled(true)
       setMinimalShellMode(true)
 
       return () => {
         setMinimalShellMode(false)
-        setEnabled(false)
       }
-    }, [setMinimalShellMode, setEnabled]),
+    }, [setMinimalShellMode]),
   )
 
   const getDefaultName = () => {
