@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-23 17:34\n"
+"PO-Revision-Date: 2024-11-25 08:43\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional, Hong Kong\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -3206,7 +3206,7 @@ msgstr "Hosting 供應商"
 #: src/screens/Settings/ThreadPreferences.tsx:59
 #: src/screens/Settings/ThreadPreferences.tsx:62
 msgid "Hot replies first"
-msgstr ""
+msgstr "顯示最熱門嘅回覆先"
 
 #: src/view/com/modals/InAppBrowserConsent.tsx:41
 msgid "How should we open this link?"
@@ -8059,3 +8059,4 @@ msgstr "你嘅上報會傳送去 Bluesky 審核服務"
 #: src/screens/Signup/index.tsx:142
 msgid "Your user handle"
 msgstr "你嘅帳號頭銜"
+
