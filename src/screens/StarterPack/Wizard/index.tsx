@@ -163,7 +163,7 @@ function WizardInner({
     })
   }, [navigation])
 
-  useEnableKeyboardControllerScreen()
+  useEnableKeyboardControllerScreen(true)
 
   useFocusEffect(
     React.useCallback(() => {

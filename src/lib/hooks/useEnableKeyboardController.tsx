@@ -72,13 +72,15 @@ function KeyboardControllerProviderInner({
   )
 }
 
-export function useEnableKeyboardController(shouldEnable = true) {
+export function useEnableKeyboardController(shouldEnable: boolean) {
   const {incrementRefCount, decrementRefCount} = useContext(
     KeyboardControllerRefCountContext,
   )
 
   useEffect(() => {
-    if (!shouldEnable) return
+    if (!shouldEnable) {
+      return
+    }
     incrementRefCount()
     return () => {
       decrementRefCount()
@@ -89,14 +91,16 @@ export function useEnableKeyboardController(shouldEnable = true) {
 /**
  * Like `useEnableKeyboardController`, but using `useFocusEffect`
  */
-export function useEnableKeyboardControllerScreen(shouldEnable = true) {
+export function useEnableKeyboardControllerScreen(shouldEnable: boolean) {
   const {incrementRefCount, decrementRefCount} = useContext(
     KeyboardControllerRefCountContext,
   )
 
   useFocusEffect(
     useCallback(() => {
-      if (!shouldEnable) return
+      if (!shouldEnable) {
+        return
+      }
       incrementRefCount()
       return () => {
         decrementRefCount()

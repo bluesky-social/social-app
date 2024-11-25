@@ -39,7 +39,7 @@ export function MessagesConversationScreen({route}: Props) {
   const convoId = route.params.conversation
   const {setCurrentConvoId} = useCurrentConvoId()
 
-  useEnableKeyboardControllerScreen()
+  useEnableKeyboardControllerScreen(true)
 
   useFocusEffect(
     useCallback(() => {
