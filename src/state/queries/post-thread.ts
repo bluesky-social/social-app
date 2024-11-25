@@ -150,6 +150,9 @@ export function sortThread(
   currentDid: string | undefined,
   justPostedUris: Set<string>,
   threadgateRecordHiddenReplies: Set<string>,
+  fetchedAtCache: Map<string, number>,
+  fetchedAt: number,
+  randomCache: Map<string, number>,
 ): ThreadNode {
   if (node.type !== 'post') {
     return node
@@ -237,9 +240,23 @@ export function sortThread(
         }
       }
 
-      if (opts.sort === 'hotness') {
-        const aHotness = getHotness(a.post)
-        const bHotness = getHotness(b.post)
+      // Split items from different fetches into separate generations.
+      let aFetchedAt = fetchedAtCache.get(a.uri)
+      if (aFetchedAt === undefined) {
+        fetchedAtCache.set(a.uri, fetchedAt)
+        aFetchedAt = fetchedAt
+      }
+      let bFetchedAt = fetchedAtCache.get(b.uri)
+      if (bFetchedAt === undefined) {
+        fetchedAtCache.set(b.uri, fetchedAt)
+        bFetchedAt = fetchedAt
+      }
+
+      if (aFetchedAt !== bFetchedAt) {
+        return aFetchedAt - bFetchedAt // older fetches first
+      } else if (opts.sort === 'hotness') {
+        const aHotness = getHotness(a.post, aFetchedAt)
+        const bHotness = getHotness(b.post, bFetchedAt /* same as aFetchedAt */)
         return bHotness - aHotness
       } else if (opts.sort === 'oldest') {
         return a.post.indexedAt.localeCompare(b.post.indexedAt)
@@ -252,9 +269,21 @@ export function sortThread(
           return (b.post.likeCount || 0) - (a.post.likeCount || 0) // most likes
         }
       } else if (opts.sort === 'random') {
-        return 0.5 - Math.random() // this is vaguely criminal but we can get away with it
+        let aRandomScore = randomCache.get(a.uri)
+        if (aRandomScore === undefined) {
+          aRandomScore = Math.random()
+          randomCache.set(a.uri, aRandomScore)
+        }
+        let bRandomScore = randomCache.get(b.uri)
+        if (bRandomScore === undefined) {
+          bRandomScore = Math.random()
+          randomCache.set(b.uri, bRandomScore)
+        }
+        // this is vaguely criminal but we can get away with it
+        return aRandomScore - bRandomScore
+      } else {
+        return b.post.indexedAt.localeCompare(a.post.indexedAt)
       }
-      return b.post.indexedAt.localeCompare(a.post.indexedAt)
     })
     node.replies.forEach(reply =>
       sortThread(
@@ -264,6 +293,9 @@ export function sortThread(
         currentDid,
         justPostedUris,
         threadgateRecordHiddenReplies,
+        fetchedAtCache,
+        fetchedAt,
+        randomCache,
       ),
     )
   }
@@ -277,10 +309,12 @@ export function sortThread(
 // We want to give recent comments a real chance (and not bury them deep below the fold)
 // while also surfacing well-liked comments from the past. In the future, we can explore
 // something more sophisticated, but we don't have much data on the client right now.
-function getHotness(post: AppBskyFeedDefs.PostView) {
-  const hoursAgo =
-    (new Date().getTime() - new Date(post.indexedAt).getTime()) /
-    (1000 * 60 * 60)
+function getHotness(post: AppBskyFeedDefs.PostView, fetchedAt: number) {
+  const hoursAgo = Math.max(
+    0,
+    (new Date(fetchedAt).getTime() - new Date(post.indexedAt).getTime()) /
+      (1000 * 60 * 60),
+  )
   const likeCount = post.likeCount ?? 0
   const likeOrder = Math.log(3 + likeCount)
   const timePenaltyExponent = 1.5 + 1.5 / (1 + Math.log(1 + likeCount))
