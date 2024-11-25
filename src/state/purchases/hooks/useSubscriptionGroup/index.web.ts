@@ -1,75 +1,43 @@
-import {Linking} from 'react-native'
-import {useMutation,useQuery} from '@tanstack/react-query'
+import {useQuery} from '@tanstack/react-query'
 
 import {api} from '#/state/purchases/api'
 import {
-  parseOfferingId,
+  APIOffering,
   PlatformId,
   SubscriptionGroupId,
   SubscriptionOffering,
 } from '#/state/purchases/types'
-import {IS_DEV} from '#/env'
 
 export function useSubscriptionGroup(group: SubscriptionGroupId) {
   return useQuery<{offerings: SubscriptionOffering[]}>({
     queryKey: ['subscription-group', group],
     async queryFn() {
-      const {data, error} = await api(
-        `/subscriptions/${group}?platform=web`,
-      ).json()
+      const {data, error} = await api<{
+        offerings: APIOffering[]
+      }>(`/subscriptions/${group}?platform=web`).json()
       if (error || !data) {
         throw new Error('Failed to fetch subscription group')
       }
 
       const {offerings} = data
 
-      return {
-        offerings: offerings.map((o: any) => ({
-          id: parseOfferingId(o.id),
-          platform: PlatformId.Web,
+      const parsed: SubscriptionOffering[] = []
+
+      for (const o of offerings) {
+        if (o.platform !== PlatformId.Web) continue
+
+        parsed.push({
+          id: o.id,
+          platform: o.platform,
           package: {
-            priceId: o.productId,
+            priceId: o.product,
           },
-        })),
-      }
-    },
-  })
-}
-
-export function usePurchaseOffering() {
-  return useMutation({
-    async mutationFn({
-      did,
-      email,
-      offering,
-    }: {
-      did: string
-      email: string
-      offering: SubscriptionOffering
-    }) {
-      if (offering.platform !== PlatformId.Web) {
-        throw new Error('Unsupported platform')
+        })
       }
 
-      const {data, error} = await api<{
-        checkoutUrl: string
-      }>('/checkout/create', {
-        method: 'POST',
-        json: {
-          did,
-          email,
-          price: offering.package.priceId,
-          redirectUrl: IS_DEV
-            ? `http://localhost:19006/subscriptions`
-            : `https://bsky.app/subscriptions`,
-        },
-      }).json()
-
-      if (error || !data) {
-        throw error
+      return {
+        offerings: parsed,
       }
-
-      Linking.openURL(data.checkoutUrl)
     },
   })
 }

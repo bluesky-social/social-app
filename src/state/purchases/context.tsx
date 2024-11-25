@@ -1,8 +1,6 @@
 import React from 'react'
 
-import {APIEntitlement,APISubscription} from '#/state/purchases/types'
-
-export type NativePurchaseRestricted = 'yes' | 'no' | 'unknown'
+import {APIEntitlement, APISubscription} from '#/state/purchases/types'
 
 export type PurchasesState =
   | {
@@ -17,9 +15,7 @@ export type PurchasesState =
       email?: string
       subscriptions: APISubscription[]
       entitlements: APIEntitlement[]
-      config: {
-        nativePurchaseRestricted: NativePurchaseRestricted
-      }
+      config: {}
     }
 
 export const Context = React.createContext<PurchasesState>({

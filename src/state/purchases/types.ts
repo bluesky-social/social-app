@@ -1,7 +1,7 @@
 import type {PurchasesStoreProduct} from 'react-native-purchases'
 
 /**
- * Primitives
+ * PRIMITIVES
  */
 
 export enum EntitlementId {
@@ -15,7 +15,7 @@ export enum PlatformId {
 }
 
 /**
- * Subscription primitives
+ * SUBSCRIPTION PRIMITIVES
  */
 
 export enum SubscriptionGroupId {
@@ -41,15 +41,18 @@ export type SubscriptionOffering =
       }
     }
 
+export type NativePurchaseRestricted = 'yes' | 'no' | 'unknown'
+
 /**
- * API types for our toy server
+ * API TYPES FROM OUR TOY SERVER
  */
 
 export type APISubscription = {
+  status: 'active' | 'paused' | 'expired' | 'unknown'
+  renewalStatus: 'will_renew' | 'will_not_renew' | 'will_pause' | 'unknown'
   group: SubscriptionGroupId
   platform: PlatformId
   offering: SubscriptionOfferingId
-  renews: boolean
   periodDtartsAt: string
   periodEndsAt: string
   purchasedAt: string
@@ -59,8 +62,25 @@ export type APIEntitlement = {
   id: EntitlementId
 }
 
+export type APIOffering = {
+  id: SubscriptionOfferingId
+  platform: PlatformId
+  product: string
+}
+
 /**
- * Parsers
+ * CUSTOM ERROR TYPES
+ */
+
+/**
+ * Thrown if the device already has active subscriptions for other accounts.
+ *
+ * @see https://www.revenuecat.com/docs/test-and-launch/errors#-receipt_already_in_use
+ */
+export class ReceiptAlreadyInUseError extends Error {}
+
+/**
+ * PARSERS
  */
 
 export function parseOfferingId(id: string): SubscriptionOfferingId {

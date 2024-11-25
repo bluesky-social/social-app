@@ -1,5 +1,11 @@
-export function useNativeUserState() {
+import {NativePurchaseRestricted} from '#/state/purchases/types'
+
+export function useNativeUserState(): {
+  loading: boolean
+  restricted: NativePurchaseRestricted
+} {
   return {
-    restricted: false,
+    loading: false,
+    restricted: 'no',
   }
 }

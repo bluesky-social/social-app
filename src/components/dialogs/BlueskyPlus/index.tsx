@@ -5,10 +5,8 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigationState} from '@react-navigation/native'
 
-import {
-  usePurchaseOffering,
-  useSubscriptionGroup,
-} from '#/state/purchases/hooks/useSubscriptionGroup'
+import {usePurchaseOffering} from '#/state/purchases/hooks/usePurchaseOffering'
+import {useSubscriptionGroup} from '#/state/purchases/hooks/useSubscriptionGroup'
 import {
   SubscriptionGroupId,
   SubscriptionOfferingId,
@@ -52,6 +50,8 @@ function DialogInner({control}: {control: Dialog.DialogControlProps}) {
   )
   const {data: coreOffering} = useSubscriptionGroup(SubscriptionGroupId.Core)
   const {mutateAsync: purchaseOffering, isPending} = usePurchaseOffering()
+
+  console.log({coreOffering})
 
   const onPressSubscribe = async () => {
     try {

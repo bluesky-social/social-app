@@ -1,5 +1,5 @@
 import React from 'react'
-import {View} from 'react-native'
+import {TextStyle,View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
@@ -8,12 +8,16 @@ import {CommonNavigatorParams} from '#/lib/routes/types'
 import {isAndroid, isIOS, isWeb} from '#/platform/detection'
 import {PurchasesState, usePurchases} from '#/state/purchases'
 import {useManageSubscription} from '#/state/purchases/hooks/useManageSubscription'
+import {useNativeUserState} from '#/state/purchases/hooks/useNativeUserState'
 import {
   PlatformId,
   SubscriptionGroupId,
   SubscriptionOfferingId,
 } from '#/state/purchases/types'
-import {APISubscription} from '#/state/purchases/types'
+import {
+  APISubscription,
+  NativePurchaseRestricted,
+} from '#/state/purchases/types'
 import {CenteredView} from '#/view/com/util/Views'
 import {atoms as a, tokens, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
@@ -25,7 +29,7 @@ import {GradientFill} from '#/components/GradientFill'
 import {AndroidLogo} from '#/components/icons/AndroidLogo'
 import {AppleLogo} from '#/components/icons/AppleLogo'
 import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as Rotate} from '#/components/icons/ArrowRotateCounterClockwise'
-import {Full as BlueskyPlusLogo, Logotype} from '#/components/icons/BlueskyPlus'
+import {Full as BlueskyPlusLogo} from '#/components/icons/BlueskyPlus'
 import {CheckThick_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {Clock_Stroke2_Corner0_Rounded as Clock} from '#/components/icons/Clock'
 import {Globe_Stroke2_Corner0_Rounded as Globe} from '#/components/icons/Globe'
@@ -43,6 +47,7 @@ export type ScreenProps = NativeStackScreenProps<
 export function Subscriptions(_props: ScreenProps) {
   const {_} = useLingui()
   const purchases = usePurchases()
+  const {loading, restricted} = useNativeUserState()
 
   return (
     <Layout.Screen>
@@ -51,12 +56,12 @@ export function Subscriptions(_props: ScreenProps) {
       <Layout.Content>
         <CenteredView style={[a.util_screen_outer]}>
           <View style={[a.px_xl, a.py_xl]}>
-            {purchases.status === 'loading' ? (
+            {purchases.status === 'loading' || loading ? (
               <Loader />
             ) : purchases.status === 'error' ? (
               <View />
             ) : (
-              <Core state={purchases} />
+              <Core state={purchases} restricted={restricted} />
             )}
           </View>
         </CenteredView>
@@ -67,16 +72,48 @@ export function Subscriptions(_props: ScreenProps) {
 
 function Core({
   state,
+  restricted,
 }: {
   state: Exclude<PurchasesState, {status: 'loading' | 'error'}>
+  restricted: NativePurchaseRestricted
 }) {
+  const coreSubscriptions = state.subscriptions
+    .filter(s => s.group === SubscriptionGroupId.Core)
+    .filter(s => {
+      return ['active', 'paused'].includes(s.status)
+    })
+  const isSubscribedToCore = coreSubscriptions.length > 0
+
+  return (
+    <View>
+      <BlueskyPlusLogo width={130} gradient="midnight" />
+
+      {restricted === 'yes' ? (
+        <Admonition type="info">
+          <Trans>
+            Another account on this device is already subscribed to Bluesky+.
+            Please subscribe additional accounts through our web application.
+          </Trans>
+        </Admonition>
+      ) : isSubscribedToCore ? null : (
+        <Purchase />
+      )}
+
+      {isSubscribedToCore ? (
+        <View style={[a.gap_sm]}>
+          {coreSubscriptions.map(sub => (
+            <Subscription key={sub.purchasedAt} subscription={sub} />
+          ))}
+        </View>
+      ) : null}
+    </View>
+  )
+}
+
+function Purchase() {
   const t = useTheme()
   const {_} = useLingui()
   const control = useDialogControl()
-  const coreSubscriptions = state.subscriptions.filter(
-    s => s.group === SubscriptionGroupId.Core,
-  )
-  const isSubscribedToCore = !!coreSubscriptions.length
 
   const features = [
     {
@@ -122,277 +159,264 @@ function Core({
   ]
 
   return (
-    <View style={[]}>
-      {isSubscribedToCore ? (
-        <CoreSubscriptions subscriptions={state.subscriptions} />
-      ) : null}
+    <>
+      <BlueskyPlusLogo width={130} gradient="nordic" />
 
-      {!isSubscribedToCore && (
-        <>
-          {state.config.nativePurchaseRestricted === 'yes' ? (
-            <View style={[a.pt_md]}>
-              <Admonition type="info">
-                <Trans>
-                  Another account on this device is already subscribed to
-                  Bluesky+. Please subscribe additional accounts through our web
-                  application.
-                </Trans>
-              </Admonition>
-            </View>
-          ) : (
-            <>
-              <BlueskyPlusLogo width={130} gradient="nordic" />
+      <Text style={[a.text_3xl, a.font_heavy, a.pt_md, a.pb_xs]}>
+        <Trans>Building a better internet needs your support.</Trans>
+      </Text>
 
-              <Text style={[a.text_3xl, a.font_heavy, a.pt_md, a.pb_xs]}>
-                <Trans>Building a better internet needs your support.</Trans>
-              </Text>
-
-              <View style={[a.gap_xs]}>
-                <Text
-                  style={[
-                    a.text_md,
-                    a.leading_snug,
-                    a.pt_xs,
-                    t.atoms.text_contrast_medium,
-                  ]}>
-                  <Trans>
-                    Subscribing to Bluesky+ helps ensure that our work to build
-                    an open, secure, and user-first internet can continue.
-                  </Trans>
-                </Text>
-                <Text
-                  style={[
-                    a.text_md,
-                    a.leading_snug,
-                    a.pt_xs,
-                    t.atoms.text_contrast_medium,
-                  ]}>
-                  <Trans>Plus, you'll get access to exclusive features!</Trans>
-                </Text>
-              </View>
-
-              <View
-                style={[
-                  a.my_md,
-                  a.p_lg,
-                  a.gap_sm,
-                  a.rounded_sm,
-                  t.atoms.bg_contrast_25,
-                ]}>
-                {features.map(f => (
-                  <View key={f.text} style={[a.flex_row, a.gap_md]}>
-                    <View style={{paddingTop: 2}}>
-                      <f.icon
-                        fill={
-                          f.available
-                            ? t.palette.primary_500
-                            : t.atoms.text_contrast_low.color
-                        }
-                        size="sm"
-                      />
-                    </View>
-                    <Text
-                      style={[
-                        a.text_md,
-                        a.leading_snug,
-                        f.available
-                          ? t.atoms.text
-                          : t.atoms.text_contrast_medium,
-                      ]}>
-                      {f.text}
-                    </Text>
-                  </View>
-                ))}
-              </View>
-
-              <Button
-                label={_('Subscribe')}
-                onPress={() => control.open()}
-                size="large"
-                variant="solid"
-                color="primary"
-                style={[a.overflow_hidden]}>
-                <GradientFill gradient={tokens.gradients.nordic} />
-                <ButtonText style={[t.atoms.text]}>
-                  <Trans>Subscribe</Trans>
-                </ButtonText>
-                <ButtonIcon
-                  icon={Plus}
-                  position="right"
-                  style={[t.atoms.text]}
-                />
-              </Button>
-              <BlueskyPlus control={control} />
-            </>
-          )}
-        </>
-      )}
-
-      {/*
-      <View style={[a.pt_md]}>
-        <Text style={[a.mb_md, a.text_xs]}>
-          <InlineLinkText
-            to="#"
-            label="TODO REPLACE"
-            style={[a.text_xs, t.atoms.text_contrast_low]}>
-            Terms and Conditions
-          </InlineLinkText>{' '}
-          &middot;{' '}
-          <InlineLinkText
-            to="#"
-            label="TODO REPLACE"
-            style={[a.text_xs, t.atoms.text_contrast_low]}>
-            Privacy Policy
-          </InlineLinkText>{' '}
-          &middot;{' '}
-          <InlineLinkText
-            to="#"
-            label="TODO REPLACE"
-            style={[a.text_xs, t.atoms.text_contrast_low]}>
-            EULA
-          </InlineLinkText>
+      <View style={[a.gap_xs]}>
+        <Text
+          style={[
+            a.text_md,
+            a.leading_snug,
+            a.pt_xs,
+            t.atoms.text_contrast_medium,
+          ]}>
+          <Trans>
+            Subscribing to Bluesky+ helps ensure that our work to build an open,
+            secure, and user-first internet can continue.
+          </Trans>
+        </Text>
+        <Text
+          style={[
+            a.text_md,
+            a.leading_snug,
+            a.pt_xs,
+            t.atoms.text_contrast_medium,
+          ]}>
+          <Trans>Plus, you'll get access to exclusive features!</Trans>
         </Text>
       </View>
-        */}
-    </View>
+
+      <View
+        style={[
+          a.my_md,
+          a.p_lg,
+          a.gap_sm,
+          a.rounded_sm,
+          t.atoms.bg_contrast_25,
+        ]}>
+        {features.map(f => (
+          <View key={f.text} style={[a.flex_row, a.gap_md]}>
+            <View style={{paddingTop: 2}}>
+              <f.icon
+                fill={
+                  f.available
+                    ? t.palette.primary_500
+                    : t.atoms.text_contrast_low.color
+                }
+                size="sm"
+              />
+            </View>
+            <Text
+              style={[
+                a.text_md,
+                a.leading_snug,
+                f.available ? t.atoms.text : t.atoms.text_contrast_medium,
+              ]}>
+              {f.text}
+            </Text>
+          </View>
+        ))}
+      </View>
+
+      <Button
+        label={_('Subscribe')}
+        onPress={() => control.open()}
+        size="large"
+        variant="solid"
+        color="primary"
+        style={[a.overflow_hidden]}>
+        <GradientFill gradient={tokens.gradients.nordic} />
+        <ButtonText style={[t.atoms.text]}>
+          <Trans>Subscribe</Trans>
+        </ButtonText>
+        <ButtonIcon icon={Plus} position="right" style={[t.atoms.text]} />
+      </Button>
+      <BlueskyPlus control={control} />
+    </>
   )
 }
 
-function CoreSubscriptions(props: {subscriptions: APISubscription[]}) {
-  const t = useTheme()
+export function useSubscriptionUI({
+  subscription: sub,
+}: {
+  subscription: APISubscription
+}) {
   const {_, i18n} = useLingui()
-  const {mutateAsync: manageSubscription} = useManageSubscription()
 
-  const copy = React.useMemo(() => {
-    return {
-      [SubscriptionOfferingId.CoreMonthly]: {
-        title: _(msg`Monthly`),
-      },
-      [SubscriptionOfferingId.CoreAnnual]: {
-        title: _(msg`Annual`),
-      },
-    }
-  }, [_])
-
-  return props.subscriptions.map(sub => {
-    const endDate = i18n.date(new Date(sub.periodEndsAt), {dateStyle: 'medium'})
-    const StatusIcon = sub.renews ? Rotate : Clock
-    const c = copy[sub.offering]
-    const canManage =
-      (isWeb && sub.platform === PlatformId.Web) ||
-      (isIOS && sub.platform === PlatformId.Ios) ||
-      (isAndroid && sub.platform === PlatformId.Android)
-    const PlatformIcon = {
+  return React.useMemo(() => {
+    const periodEndsAt = i18n.date(new Date(sub.periodEndsAt), {
+      dateStyle: 'short',
+    })
+    const title = {
+      [SubscriptionOfferingId.CoreMonthly]: _(msg`Monthly`),
+      [SubscriptionOfferingId.CoreAnnual]: _(msg`Annual`),
+    }[sub.offering]
+    const PlatformLogo = {
       [PlatformId.Ios]: AppleLogo,
       [PlatformId.Android]: AndroidLogo,
       [PlatformId.Web]: Globe,
     }[sub.platform]
-    return (
-      <View
-        key={sub.purchasedAt}
-        style={[
-          a.p_md,
-          a.px_lg,
-          a.rounded_md,
-          a.border,
-          a.gap_xs,
-          a.overflow_hidden,
-          t.atoms.border_contrast_low,
-        ]}>
-        <View
-          style={[
-            a.flex_row,
-            a.justify_between,
-            a.align_center,
-            {paddingBottom: 6},
-          ]}>
-          <View style={[a.flex_row, a.align_center, a.gap_sm]}>
-            <Logotype width={75} fill={t.atoms.text.color} />
+    const platformName = {
+      [PlatformId.Ios]: _('iOS'),
+      [PlatformId.Android]: _('Android'),
+      [PlatformId.Web]: _('Web'),
+    }[sub.platform]
+    const status = {
+      active: _(msg`Active`),
+      expired: _(msg`Expired`),
+      paused: _(msg`Paused`),
+      unknown: _(msg`Unknown`),
+    }[sub.status]
+    const renewalStatus = {
+      will_renew: _(msg`Renews ${periodEndsAt}`),
+      will_not_renew: {
+        active: _(msg`Expires ${periodEndsAt}`),
+        expired: _(msg`Expired ${periodEndsAt}`),
+        paused: _(msg`Expires ${periodEndsAt}`),
+        unknown: _(msg`Unknown`),
+      }[sub.status],
+      will_pause: _(msg`Pauses ${periodEndsAt}`),
+      unknown: _(msg`Unknown`),
+    }[sub.renewalStatus]
+    const RenewalStatusIcon = {
+      will_renew: Rotate,
+      will_not_renew: Clock,
+      will_pause: Clock,
+      unknown: Clock,
+    }[sub.renewalStatus]
 
-            <Text
-              style={[
-                a.text_sm,
-                a.rounded_full,
-                a.font_bold,
-                {
-                  paddingVertical: 3,
-                  paddingHorizontal: 5,
-                  backgroundColor: tokens.blueskyPlus.dark,
-                  color: tokens.blueskyPlus.light,
-                },
-              ]}>
-              {c.title}
-            </Text>
+    return {
+      title,
+      status,
+      renewalStatus,
+      platformName,
+      PlatformLogo,
+      RenewalStatusIcon,
+    }
+  }, [_, i18n, sub])
+}
 
-            <Text
-              style={[
-                a.text_sm,
-                a.rounded_full,
-                a.font_bold,
-                {
-                  paddingVertical: 3,
-                  paddingHorizontal: 5,
-                  borderWidth: sub.renews ? 0 : a.border.borderWidth,
-                  borderColor: t.palette.negative_500,
-                  backgroundColor: sub.renews
-                    ? tokens.blueskyPlus.light
-                    : t.atoms.bg.backgroundColor,
-                  color: sub.renews
-                    ? tokens.blueskyPlus.dark
-                    : t.atoms.text.color,
-                },
-              ]}>
-              {sub.renews ? <Trans>Active</Trans> : <Trans>Cancelled</Trans>}
-            </Text>
-          </View>
+export function Subscription({
+  subscription: sub,
+}: {
+  subscription: APISubscription
+}) {
+  const t = useTheme()
+  const {_} = useLingui()
+  const {mutateAsync: manageSubscription} = useManageSubscription()
+  const ui = useSubscriptionUI({subscription: sub})
 
-          <View style={[a.flex_row, a.align_center, a.gap_xs]}>
-            <StatusIcon size="sm" fill={t.atoms.text_contrast_low.color} />
-            <Text style={[a.text_sm, a.font_bold]}>{endDate}</Text>
-          </View>
+  const canManage =
+    (isWeb && sub.platform === PlatformId.Web) ||
+    (isIOS && sub.platform === PlatformId.Ios) ||
+    (isAndroid && sub.platform === PlatformId.Android)
+
+  const statusStyles = React.useMemo<TextStyle>(() => {
+    return {
+      active: {
+        color: tokens.blueskyPlus.dark,
+        backgroundColor: tokens.blueskyPlus.light,
+        borderWidth: undefined,
+        borderColor: undefined,
+      },
+      expired: {
+        color: t.atoms.text_contrast_medium.color,
+        backgroundColor: t.atoms.bg.backgroundColor,
+        borderWidth: a.border.borderWidth,
+        borderColor: t.atoms.border_contrast_high.borderColor,
+      },
+      paused: {
+        color: t.atoms.bg.backgroundColor,
+        backgroundColor: t.atoms.text_contrast_medium.color,
+        borderWidth: undefined,
+        borderColor: undefined,
+      },
+      unknown: {
+        color: t.atoms.text_contrast_medium.color,
+        backgroundColor: t.atoms.bg.backgroundColor,
+        borderWidth: a.border.borderWidth,
+        borderColor: t.atoms.border_contrast_high.borderColor,
+      },
+    }[sub.status]
+  }, [t, sub.status])
+
+  return (
+    <View
+      key={sub.purchasedAt}
+      style={[
+        a.px_lg,
+        a.rounded_md,
+        a.border,
+        a.overflow_hidden,
+        t.atoms.border_contrast_low,
+      ]}>
+      <View style={[a.flex_row, a.justify_between, a.align_center, a.py_sm]}>
+        <View style={[a.flex_row, a.align_center, a.gap_sm]}>
+          <Text style={[a.text_lg, a.font_heavy]}>{ui.title}</Text>
+
+          <Text
+            style={[
+              a.text_xs,
+              a.rounded_full,
+              a.font_bold,
+              {
+                paddingVertical: 2,
+                paddingHorizontal: 6,
+                ...statusStyles,
+              },
+            ]}>
+            {ui.status}
+          </Text>
         </View>
 
-        <Divider />
+        {canManage && (
+          <Link
+            label={_('Manage subscription')}
+            size="tiny"
+            variant="solid"
+            color="secondary_inverted"
+            {...createStaticClick(() => {
+              manageSubscription()
+            })}
+            style={[a.justify_center]}>
+            <ButtonText>
+              <Trans>Manage</Trans>
+            </ButtonText>
+          </Link>
+        )}
+      </View>
 
+      <Divider />
+
+      <View style={[a.py_sm, a.flex_row, a.justify_between, a.align_center]}>
         <View
           style={[
             a.flex_row,
             a.justify_between,
             a.align_center,
-            {paddingTop: 6},
+            a.gap_xs,
+            {left: -1},
           ]}>
-          <View
-            style={[
-              a.flex_row,
-              a.justify_between,
-              a.align_center,
-              a.gap_xs,
-              {left: -1},
-            ]}>
-            <PlatformIcon size="md" fill={t.atoms.text_contrast_low.color} />
-            <Text
-              style={[a.text_sm, a.font_bold, t.atoms.text_contrast_medium]}>
-              <Trans>Managed via web</Trans>
-            </Text>
-          </View>
+          <ui.PlatformLogo size="md" fill={t.atoms.text_contrast_low.color} />
+          <Text style={[a.text_sm, a.font_bold, t.atoms.text_contrast_medium]}>
+            {ui.platformName}
+          </Text>
+        </View>
 
-          {canManage && (
-            <Link
-              label={_('Manage subscription')}
-              size="tiny"
-              variant="solid"
-              color="secondary_inverted"
-              {...createStaticClick(() => {
-                manageSubscription()
-              })}
-              style={[a.justify_center]}>
-              <ButtonText>
-                <Trans>Manage</Trans>
-              </ButtonText>
-            </Link>
-          )}
+        <View style={[a.flex_row, a.align_center, a.gap_xs]}>
+          <ui.RenewalStatusIcon
+            size="sm"
+            fill={t.atoms.text_contrast_low.color}
+          />
+          <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
+            {ui.renewalStatus}
+          </Text>
         </View>
       </View>
-    )
-  })
+    </View>
+  )
 }
