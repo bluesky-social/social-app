@@ -9,6 +9,8 @@ import {
 import {KeyboardProvider} from 'react-native-keyboard-controller'
 import {useFocusEffect} from '@react-navigation/native'
 
+import {IS_DEV} from '#/env'
+
 const KeyboardControllerRefCountContext = createContext<{
   incrementRefCount: () => void
   decrementRefCount: () => void
@@ -27,7 +29,14 @@ export function KeyboardControllerProvider({
   const value = useMemo(
     () => ({
       incrementRefCount: () => setRef(count => count + 1),
-      decrementRefCount: () => setRef(count => Math.max(count - 1, 0)),
+      decrementRefCount: () =>
+        setRef(count => {
+          const next = count - 1
+          if (IS_DEV && next < 0) {
+            console.error('KeyboardController ref count < 0')
+          }
+          return next
+        }),
     }),
     [],
   )
