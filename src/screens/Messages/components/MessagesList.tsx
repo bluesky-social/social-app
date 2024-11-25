@@ -275,7 +275,7 @@ export function MessagesList({
         keyboardIsOpening.set(false)
       },
     },
-    [],
+    [bottomOffset],
   )
 
   const animatedListStyle = useAnimatedStyle(() => ({
