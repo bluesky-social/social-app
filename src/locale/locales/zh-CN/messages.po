@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-25 13:33\n"
+"PO-Revision-Date: 2024-11-25 13:49\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -612,7 +612,7 @@ msgstr "允许读取你的私信"
 #: src/screens/Messages/Settings.tsx:64
 #: src/screens/Messages/Settings.tsx:67
 msgid "Allow new messages from"
-msgstr "允许以下来源向你发起新对话"
+msgstr "允许这些来源向你发起新对话"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:314
 msgid "Allow quote posts"
@@ -620,7 +620,7 @@ msgstr "允许引用帖文"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:359
 msgid "Allow replies from:"
-msgstr "允许这些人回复："
+msgstr "允许这些来源回复："
 
 #: src/screens/Settings/AppPasswords.tsx:192
 msgid "Allows access to direct messages"
