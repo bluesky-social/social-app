@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-25 12:11\n"
+"PO-Revision-Date: 2024-11-25 12:45\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -6047,7 +6047,7 @@ msgstr "将你已关注用户的回复置于其他回复之前"
 
 #: src/screens/Settings/ThreadPreferences.tsx:143
 msgid "Show replies in a threaded view"
-msgstr "使用树状视图中显示回复"
+msgstr "使用树状视图显示回复"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:539
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:549
@@ -6883,7 +6883,7 @@ msgstr "讨论串首选项"
 
 #: src/screens/Settings/ThreadPreferences.tsx:134
 msgid "Threaded mode"
-msgstr "树状显示模式"
+msgstr "树状视图模式"
 
 #: src/Navigation.tsx:307
 msgid "Threads Preferences"
