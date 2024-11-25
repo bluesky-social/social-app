@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-25 08:43\n"
+"PO-Revision-Date: 2024-11-25 13:34\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional, Hong Kong\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -614,7 +614,11 @@ msgstr "允許存取你嘅私人訊息"
 msgid "Allow new messages from"
 msgstr "允許呢啲人同你傾偈"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:363
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:314
+msgid "Allow quote posts"
+msgstr "允許引文"
+
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:359
 msgid "Allow replies from:"
 msgstr "允許呢啲人回覆你嘅帖文："
 
@@ -1013,7 +1017,7 @@ msgstr "封鎖咗嘅帳號唔得喺你嘅討論串入邊回覆、提及你抑或
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you. You will not see their content and they will be prevented from seeing yours."
 msgstr "封鎖咗嘅帳號唔得喺你嘅討論串入邊回覆、提及你抑或用其他方式同你互動。你唔會睇到佢哋嘅內容，而且佢哋會都被阻止睇到你嘅內容。"
 
-#: src/view/com/post-thread/PostThread.tsx:412
+#: src/view/com/post-thread/PostThread.tsx:421
 msgid "Blocked post."
 msgstr "封鎖咗嘅帖文。"
 
@@ -1922,7 +1926,7 @@ msgstr "刪咗"
 msgid "Deleted Account"
 msgstr "刪除咗嘅帳戶"
 
-#: src/view/com/post-thread/PostThread.tsx:398
+#: src/view/com/post-thread/PostThread.tsx:407
 msgid "Deleted post."
 msgstr "刪咗嘅帖文。"
 
@@ -2465,7 +2469,7 @@ msgstr "接收 CAPTCHA 回應嗰陣發生錯誤。"
 msgid "Error:"
 msgstr "錯誤："
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:368
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:364
 msgid "Everybody"
 msgstr "任何人"
 
@@ -2824,7 +2828,7 @@ msgstr "俾你識嘅 <0>{0}</0> 同 <1>{1}</1> 跟咗佢"
 msgid "Followed by <0>{0}</0>, <1>{1}</1>, and {2, plural, one {# other} other {# others}}"
 msgstr "俾你識嘅 <0>{0}</0>, <1>{1}</1> 同{2, plural, one {另外 # 人跟咗佢} other {另外 # 人跟咗佢}}"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:407
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:403
 msgid "Followed users"
 msgstr "跟咗嘅用戶"
 
@@ -3755,7 +3759,7 @@ msgstr "可能會令某啲受眾感到不安抑或造成唔適嘅媒體內容。
 msgid "mentioned users"
 msgstr "提到嘅用戶"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:397
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:393
 msgid "Mentioned users"
 msgstr "提到嘅用戶"
 
@@ -4258,7 +4262,7 @@ msgstr "搵唔到「{search}」嘅搵嘢結果。"
 msgid "No thanks"
 msgstr "唔係，多謝"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:379
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:375
 msgid "Nobody"
 msgstr "冇人"
 
@@ -4585,7 +4589,7 @@ msgstr "可揀提供以下額外資料："
 msgid "Options:"
 msgstr "選項："
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:392
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:388
 msgid "Or combine these options:"
 msgstr "抑或加埋呢啲條件："
 
@@ -4815,7 +4819,7 @@ msgctxt "action"
 msgid "Post"
 msgstr "發嘢"
 
-#: src/view/com/post-thread/PostThread.tsx:481
+#: src/view/com/post-thread/PostThread.tsx:490
 msgctxt "description"
 msgid "Post"
 msgstr "帖文"
@@ -4844,7 +4848,7 @@ msgstr "帖文刪除咗"
 msgid "Post failed to upload. Please check your Internet connection and try again."
 msgstr "帖文發佈失敗。請檢查你嘅互聯網連線，跟住試多一次。"
 
-#: src/view/com/post-thread/PostThread.tsx:212
+#: src/view/com/post-thread/PostThread.tsx:221
 msgid "Post hidden"
 msgstr "帖文隱藏咗"
 
@@ -4870,8 +4874,8 @@ msgstr "帖文語言"
 msgid "Post Languages"
 msgstr "帖文語言"
 
-#: src/view/com/post-thread/PostThread.tsx:207
-#: src/view/com/post-thread/PostThread.tsx:219
+#: src/view/com/post-thread/PostThread.tsx:216
+#: src/view/com/post-thread/PostThread.tsx:228
 msgid "Post not found"
 msgstr "搵唔到帖文"
 
@@ -5032,17 +5036,12 @@ msgstr "引文已經重新附上"
 msgid "Quote post was successfully detached"
 msgstr "引文已經成功拆開"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:317
 #: src/view/com/util/post-ctrls/RepostButton.tsx:167
 #: src/view/com/util/post-ctrls/RepostButton.tsx:189
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:84
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:91
 msgid "Quote posts disabled"
 msgstr "引用帖文已經停用"
-
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:315
-msgid "Quote posts enabled"
-msgstr "引用帖文已經啓用"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:299
 msgid "Quote settings"
@@ -5275,11 +5274,11 @@ msgstr "回覆由呢個討論串嘅發佈者所隱藏"
 msgid "Reply Hidden by You"
 msgstr "回覆俾你隱藏咗"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:359
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:355
 msgid "Reply settings"
 msgstr "回覆設定"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:344
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:340
 msgid "Reply settings are chosen by the author of the thread"
 msgstr "回覆設定係由討論串嘅作者揀嘅"
 
@@ -5530,8 +5529,8 @@ msgid "Returns to previous page"
 msgstr "返去上一頁"
 
 #: src/components/dialogs/BirthDateSettings.tsx:124
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:442
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:448
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:438
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:444
 #: src/components/StarterPack/QrCodeDialog.tsx:185
 #: src/screens/Profile/Header/EditProfileDialog.tsx:238
 #: src/screens/Profile/Header/EditProfileDialog.tsx:252
@@ -6530,8 +6529,8 @@ msgstr "以下標籤已經套用到你嘅內容。"
 msgid "The following steps will help customize your Bluesky experience."
 msgstr "以下步驟會幫你自訂你嘅 Bluesky 體驗。"
 
-#: src/view/com/post-thread/PostThread.tsx:208
-#: src/view/com/post-thread/PostThread.tsx:220
+#: src/view/com/post-thread/PostThread.tsx:217
+#: src/view/com/post-thread/PostThread.tsx:229
 msgid "The post may have been deleted."
 msgstr "呢篇帖文可能已經刪咗。"
 
@@ -7288,7 +7287,7 @@ msgstr "俾 <0>@{0}</0> 跟咗嘅用戶"
 msgid "Users I follow"
 msgstr "我跟嘅用戶"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:420
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:416
 msgid "Users in \"{0}\""
 msgstr "「{0}」中嘅用戶"
 
@@ -7755,7 +7754,7 @@ msgstr "你未有任何固定嘅動態源。"
 msgid "You don't have any saved feeds."
 msgstr "你未有任何儲存咗嘅動態源。"
 
-#: src/view/com/post-thread/PostThread.tsx:214
+#: src/view/com/post-thread/PostThread.tsx:223
 msgid "You have blocked the author or you have been blocked by the author."
 msgstr "你已經封鎖咗作者，抑或你已經俾作者封鎖咗。"
 
