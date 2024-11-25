@@ -214,12 +214,15 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
       }
     })
 
-    useKeyboardHandler({
-      onEnd: e => {
-        'worklet'
-        runOnJS(setKeyboardHeight)(e.height)
+    useKeyboardHandler(
+      {
+        onEnd: e => {
+          'worklet'
+          runOnJS(setKeyboardHeight)(e.height)
+        },
       },
-    })
+      [],
+    )
 
     const basePading =
       (isIOS ? 30 : 50) + (isIOS ? keyboardHeight / 4 : keyboardHeight)
