@@ -4,9 +4,12 @@ import {
   useContext,
   useEffect,
   useMemo,
-  useState,
+  useRef,
 } from 'react'
-import {KeyboardProvider} from 'react-native-keyboard-controller'
+import {
+  KeyboardProvider,
+  useKeyboardController,
+} from 'react-native-keyboard-controller'
 import {useFocusEffect} from '@react-navigation/native'
 
 import {IS_DEV} from '#/env'
@@ -24,36 +27,52 @@ export function KeyboardControllerProvider({
 }: {
   children: React.ReactNode
 }) {
-  const [refCount, setRef] = useState(0)
+  return (
+    <KeyboardProvider
+      enabled={false}
+      // I don't think this is necessary, but Chesterton's fence and all that -sfn
+      statusBarTranslucent={true}>
+      <KeyboardControllerProviderInner>
+        {children}
+      </KeyboardControllerProviderInner>
+    </KeyboardProvider>
+  )
+}
+
+function KeyboardControllerProviderInner({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  const {setEnabled} = useKeyboardController()
+  const refCount = useRef(0)
 
   const value = useMemo(
     () => ({
-      incrementRefCount: () => setRef(count => count + 1),
-      decrementRefCount: () =>
-        setRef(count => {
-          const next = count - 1
-          if (IS_DEV && next < 0) {
-            console.error('KeyboardController ref count < 0')
-          }
-          return next
-        }),
+      incrementRefCount: () => {
+        refCount.current++
+        setEnabled(refCount.current > 0)
+      },
+      decrementRefCount: () => {
+        refCount.current--
+        setEnabled(refCount.current > 0)
+
+        if (IS_DEV && refCount.current < 0) {
+          console.error('KeyboardController ref count < 0')
+        }
+      },
     }),
-    [],
+    [setEnabled],
   )
 
   return (
     <KeyboardControllerRefCountContext.Provider value={value}>
-      <KeyboardProvider
-        enabled_PATCHED={refCount > 0}
-        // I don't think this is necessary, but Chesterton's fence and all that -sfn
-        statusBarTranslucent={true}>
-        {children}
-      </KeyboardProvider>
+      {children}
     </KeyboardControllerRefCountContext.Provider>
   )
 }
 
-export function useEnableKeyboardController(shouldEnable: boolean) {
+export function useEnableKeyboardController(shouldEnable = true) {
   const {incrementRefCount, decrementRefCount} = useContext(
     KeyboardControllerRefCountContext,
   )

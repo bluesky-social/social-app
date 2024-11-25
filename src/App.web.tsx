@@ -102,7 +102,7 @@ function InnerApp() {
   if (!isReady || !hasCheckedReferrer) return null
 
   return (
-    <KeyboardProvider enabled_PATCHED={false}>
+    <KeyboardProvider enabled={false}>
       <Alf theme={theme}>
         <ThemeProvider theme={theme}>
           <RootSiblingParent>
