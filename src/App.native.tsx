@@ -188,7 +188,7 @@ function App() {
     <AppProfiler>
       <GeolocationProvider>
         <A11yProvider>
-          <KeyboardProvider enabled={false} statusBarTranslucent={true}>
+          <KeyboardProvider statusBarTranslucent={true}>
             <SessionProvider>
               <PrefsStateProvider>
                 <I18nProvider>
