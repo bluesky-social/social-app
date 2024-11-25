@@ -1,0 +1,41 @@
+diff --git a/node_modules/react-native-keyboard-controller/src/animated.tsx b/node_modules/react-native-keyboard-controller/src/animated.tsx
+index d742c1d..e5b9ccb 100644
+--- a/node_modules/react-native-keyboard-controller/src/animated.tsx
++++ b/node_modules/react-native-keyboard-controller/src/animated.tsx
+@@ -63,9 +63,7 @@ type KeyboardProviderProps = {
+    */
+   navigationBarTranslucent?: boolean;
+   /**
+-   * A boolean prop indicating whether the module is enabled. It indicate only initial state,
+-   * i. e. if you try to change this prop after component mount it will not have any effect.
+-   * To change the property in runtime use `useKeyboardController` hook and `setEnabled` method.
++   * A boolean prop indicating whether the module is enabled.
+    * Defaults to `true`.
+    */
+   enabled?: boolean;
+@@ -79,12 +77,12 @@ export const KeyboardProvider = ({
+   children,
+   statusBarTranslucent,
+   navigationBarTranslucent,
+-  enabled: initiallyEnabled = true,
++  enabled: enabledProp = true,
+ }: KeyboardProviderProps) => {
+   // ref
+   const viewTagRef = useRef<React.Component<KeyboardControllerProps>>(null);
+   // state
+-  const [enabled, setEnabled] = useState(initiallyEnabled);
++  const [enabled, setEnabled] = useState(enabledProp);
+   // animated values
+   const progress = useAnimatedValue(0);
+   const height = useAnimatedValue(0);
+@@ -189,6 +187,10 @@ export const KeyboardProvider = ({
+     }
+   }, [enabled]);
+ 
++  useEffect(() => {
++    setEnabled(enabledProp)
++  }, [enabledProp])
++
+   return (
+     <KeyboardContext.Provider value={context}>
+       <KeyboardControllerViewAnimated

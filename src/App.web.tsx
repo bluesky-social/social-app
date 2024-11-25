@@ -3,7 +3,6 @@ import '#/view/icons'
 import './style.css'
 
 import React, {useEffect, useState} from 'react'
-import {KeyboardProvider} from 'react-native-keyboard-controller'
 import {RootSiblingParent} from 'react-native-root-siblings'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
 import {msg} from '@lingui/macro'
@@ -58,6 +57,7 @@ import {useStarterPackEntry} from '#/components/hooks/useStarterPackEntry'
 import {Provider as IntentDialogProvider} from '#/components/intents/IntentDialogs'
 import {Provider as PortalProvider} from '#/components/Portal'
 import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
+import {KeyboardControllerProvider} from './lib/hooks/useEnableKeyboardController'
 
 /**
  * Begin geolocation ASAP
@@ -102,7 +102,7 @@ function InnerApp() {
   if (!isReady || !hasCheckedReferrer) return null
 
   return (
-    <KeyboardProvider enabled={false}>
+    <KeyboardControllerProvider>
       <Alf theme={theme}>
         <ThemeProvider theme={theme}>
           <RootSiblingParent>
@@ -149,7 +149,7 @@ function InnerApp() {
           </RootSiblingParent>
         </ThemeProvider>
       </Alf>
-    </KeyboardProvider>
+    </KeyboardControllerProvider>
   )
 }
 

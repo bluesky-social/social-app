@@ -4,7 +4,6 @@ import '#/view/icons'
 
 import React, {useEffect, useState} from 'react'
 import {GestureHandlerRootView} from 'react-native-gesture-handler'
-import {KeyboardProvider} from 'react-native-keyboard-controller'
 import {RootSiblingParent} from 'react-native-root-siblings'
 import {
   initialWindowMetrics,
@@ -70,7 +69,7 @@ import {Splash} from '#/Splash'
 import {BottomSheetProvider} from '../modules/bottom-sheet'
 import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
 import {AppProfiler} from './AppProfiler'
-import {KeyboardControllerEnabledProvider} from './lib/hooks/useKeyboardControllerEnabled'
+import {KeyboardControllerProvider} from './lib/hooks/useEnableKeyboardController'
 
 SplashScreen.preventAutoHideAsync()
 
@@ -189,38 +188,36 @@ function App() {
     <AppProfiler>
       <GeolocationProvider>
         <A11yProvider>
-          <KeyboardProvider enabled={false} statusBarTranslucent={true}>
-            <KeyboardControllerEnabledProvider>
-              <SessionProvider>
-                <PrefsStateProvider>
-                  <I18nProvider>
-                    <ShellStateProvider>
-                      <InvitesStateProvider>
-                        <ModalStateProvider>
-                          <DialogStateProvider>
-                            <LightboxStateProvider>
-                              <PortalProvider>
-                                <BottomSheetProvider>
-                                  <StarterPackProvider>
-                                    <SafeAreaProvider
-                                      initialMetrics={initialWindowMetrics}>
-                                      <IntentDialogProvider>
-                                        <InnerApp />
-                                      </IntentDialogProvider>
-                                    </SafeAreaProvider>
-                                  </StarterPackProvider>
-                                </BottomSheetProvider>
-                              </PortalProvider>
-                            </LightboxStateProvider>
-                          </DialogStateProvider>
-                        </ModalStateProvider>
-                      </InvitesStateProvider>
-                    </ShellStateProvider>
-                  </I18nProvider>
-                </PrefsStateProvider>
-              </SessionProvider>
-            </KeyboardControllerEnabledProvider>
-          </KeyboardProvider>
+          <KeyboardControllerProvider>
+            <SessionProvider>
+              <PrefsStateProvider>
+                <I18nProvider>
+                  <ShellStateProvider>
+                    <InvitesStateProvider>
+                      <ModalStateProvider>
+                        <DialogStateProvider>
+                          <LightboxStateProvider>
+                            <PortalProvider>
+                              <BottomSheetProvider>
+                                <StarterPackProvider>
+                                  <SafeAreaProvider
+                                    initialMetrics={initialWindowMetrics}>
+                                    <IntentDialogProvider>
+                                      <InnerApp />
+                                    </IntentDialogProvider>
+                                  </SafeAreaProvider>
+                                </StarterPackProvider>
+                              </BottomSheetProvider>
+                            </PortalProvider>
+                          </LightboxStateProvider>
+                        </DialogStateProvider>
+                      </ModalStateProvider>
+                    </InvitesStateProvider>
+                  </ShellStateProvider>
+                </I18nProvider>
+              </PrefsStateProvider>
+            </SessionProvider>
+          </KeyboardControllerProvider>
         </A11yProvider>
       </GeolocationProvider>
     </AppProfiler>

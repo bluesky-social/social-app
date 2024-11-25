@@ -7,7 +7,7 @@ import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {useEmail} from '#/lib/hooks/useEmail'
-import {useEnableKeyboardControllerScreen} from '#/lib/hooks/useKeyboardControllerEnabled'
+import {useEnableKeyboardControllerScreen} from '#/lib/hooks/useEnableKeyboardController'
 import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
 import {isWeb} from '#/platform/detection'
 import {useProfileShadow} from '#/state/cache/profile-shadow'

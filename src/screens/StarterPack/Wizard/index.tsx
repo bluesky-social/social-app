@@ -17,7 +17,7 @@ import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {HITSLOP_10, STARTER_PACK_MAX_SIZE} from '#/lib/constants'
-import {useEnableKeyboardControllerScreen} from '#/lib/hooks/useKeyboardControllerEnabled'
+import {useEnableKeyboardControllerScreen} from '#/lib/hooks/useEnableKeyboardController'
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
 import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
 import {logEvent} from '#/lib/statsig/statsig'

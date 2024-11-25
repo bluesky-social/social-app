@@ -6,7 +6,7 @@ import {
   useMemo,
   useState,
 } from 'react'
-import {useKeyboardController} from 'react-native-keyboard-controller'
+import {KeyboardProvider} from 'react-native-keyboard-controller'
 import {useFocusEffect} from '@react-navigation/native'
 
 const KeyboardControllerRefCountContext = createContext<{
@@ -17,16 +17,12 @@ const KeyboardControllerRefCountContext = createContext<{
   decrementRefCount: () => {},
 })
 
-export function KeyboardControllerEnabledProvider({
+export function KeyboardControllerProvider({
   children,
-}: React.PropsWithChildren<{}>) {
+}: {
+  children: React.ReactNode
+}) {
   const [refCount, setRef] = useState(0)
-  const {enabled, setEnabled} = useKeyboardController()
-
-  const shouldBeEnabled = refCount > 0
-  if (enabled !== shouldBeEnabled) {
-    setEnabled(shouldBeEnabled)
-  }
 
   const value = useMemo(
     () => ({
@@ -38,7 +34,12 @@ export function KeyboardControllerEnabledProvider({
 
   return (
     <KeyboardControllerRefCountContext.Provider value={value}>
-      {children}
+      <KeyboardProvider
+        enabled={refCount > 0}
+        // I don't think this is necessary, but Chesterton's fence and all that -sfn
+        statusBarTranslucent={true}>
+        {children}
+      </KeyboardProvider>
     </KeyboardControllerRefCountContext.Provider>
   )
 }
