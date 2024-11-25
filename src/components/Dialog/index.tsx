@@ -208,9 +208,13 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
         return
       }
 
-      setEnabled(true)
+      let prevState: boolean
+      setEnabled(enabled => {
+        prevState = enabled
+        return true
+      })
       return () => {
-        setEnabled(false)
+        setEnabled(prevState)
       }
     })
 
