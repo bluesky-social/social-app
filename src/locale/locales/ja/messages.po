@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-24 14:22+0900\n"
+"PO-Revision-Date: 2024-11-25 10:40+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -2334,7 +2334,7 @@ msgstr "この投稿をあなたのウェブサイトに埋め込みます。以
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerWeb.tsx:57
 msgid "Embedded video player"
-msgstr ""
+msgstr "埋め込みビデオプレイヤー"
 
 #: src/screens/Settings/components/Email2FAToggle.tsx:56
 #: src/screens/Settings/components/Email2FAToggle.tsx:60
@@ -2408,7 +2408,7 @@ msgstr "確認コードを入力してください"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:405
 msgid "Enter fullscreen"
-msgstr ""
+msgstr "全画面表示にする"
 
 #: src/view/com/modals/ChangePassword.tsx:154
 msgid "Enter the code you received to change your password."
@@ -3089,7 +3089,7 @@ msgstr "画像をアップロードするかアバターを作ってあなたが
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:127
 msgid "Helps external sites estimate traffic from Bluesky."
-msgstr ""
+msgstr "外部サイトがBlueskyからのトラフィックの量を見積もるのを助ける。"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:187
 msgid "Here is your app password!"
@@ -3201,7 +3201,7 @@ msgstr "ホスティングプロバイダー"
 #: src/screens/Settings/ThreadPreferences.tsx:59
 #: src/screens/Settings/ThreadPreferences.tsx:62
 msgid "Hot replies first"
-msgstr ""
+msgstr "ホットな返信を先頭に"
 
 #: src/view/com/modals/InAppBrowserConsent.tsx:41
 msgid "How should we open this link?"
@@ -5692,7 +5692,7 @@ msgstr "ガイドを見る"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/Scrubber.tsx:190
 msgid "Seek slider. Use the arrow keys to seek forwards and backwards, and space to play/pause"
-msgstr ""
+msgstr "シークバー。矢印キーで使って早送りや早戻し、スペースで再生／停止"
 
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:67
 msgid "Select a color"
@@ -5792,7 +5792,7 @@ msgstr "素敵なウェブサイトを送って！"
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:118
 msgid "Send Bluesky referrer"
-msgstr ""
+msgstr "Blueskyのリファラーを送信"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:232
 msgid "Send Confirmation"
@@ -6226,7 +6226,7 @@ msgstr "スパム、過剰なメンションや返信"
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:112
 msgid "Specify Bluesky as a referer"
-msgstr ""
+msgstr "Blueskyをリファラーとして指定する"
 
 #: src/screens/Onboarding/index.tsx:27
 #: src/screens/Onboarding/state.ts:100
@@ -6886,7 +6886,7 @@ msgstr "スレッドの設定"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/TimeIndicator.tsx:33
 msgid "Time remaining: {time} seconds"
-msgstr ""
+msgstr "残り時間：{time}秒"
 
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:99
 msgid "To disable the email 2FA method, please verify your access to the email address."
@@ -7109,11 +7109,11 @@ msgstr "リストの登録を解除しました"
 
 #: src/view/com/composer/Composer.tsx:759
 msgid "Unsupported video type"
-msgstr ""
+msgstr "サポートしていないビデオ形式"
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:66
 msgid "Unsupported video type: {0}"
-msgstr ""
+msgstr "サポートしていないビデオ形式：{0}"
 
 #: src/lib/moderation/useReportOptions.ts:77
 #: src/lib/moderation/useReportOptions.ts:90
@@ -7468,7 +7468,7 @@ msgstr "サイトへアクセス"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VolumeControl.tsx:80
 msgid "Volume"
-msgstr ""
+msgstr "音量"
 
 #: src/components/moderation/LabelPreference.tsx:136
 #: src/lib/moderation/useLabelBehaviorDescription.ts:17
