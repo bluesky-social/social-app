@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-25 13:49\n"
+"PO-Revision-Date: 2024-11-25 14:17\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -62,12 +62,12 @@ msgstr "{0, plural, one {# 秒} other {# 秒}}"
 #: src/components/ProfileHoverCard/index.web.tsx:398
 #: src/screens/Profile/Header/Metrics.tsx:22
 msgid "{0, plural, one {follower} other {followers}}"
-msgstr "{0, plural, one {位关注者} other {位关注者}}"
+msgstr "{0, plural, one {关注者} other {关注者}}"
 
 #: src/components/ProfileHoverCard/index.web.tsx:402
 #: src/screens/Profile/Header/Metrics.tsx:26
 msgid "{0, plural, one {following} other {following}}"
-msgstr "{0, plural, one {位关注中} other {位关注中}}"
+msgstr "{0, plural, one {正在关注} other {正在关注}}"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:305
 msgid "{0, plural, one {Like (# like)} other {Like (# likes)}}"
@@ -285,7 +285,7 @@ msgstr "{firstAuthorName} 使用了你的新手包注册"
 #: src/components/ProfileHoverCard/index.web.tsx:508
 #: src/screens/Profile/Header/Metrics.tsx:49
 msgid "{following} following"
-msgstr "{following} 位关注中"
+msgstr "{following} 位正在关注"
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:385
 msgid "{handle} can't be messaged"
@@ -325,11 +325,11 @@ msgstr "<0>{0}、</0><1>{1}</1> 及{2, plural, one {其他 # } other {其他 # }
 
 #: src/view/shell/Drawer.tsx:97
 msgid "<0>{0}</0> {1, plural, one {follower} other {followers}}"
-msgstr "<0>{0}</0> {1, plural, one {位关注者} other {位关注者}}"
+msgstr "<0>{0}</0> {1, plural, one {关注者} other {关注者}}"
 
 #: src/view/shell/Drawer.tsx:108
 msgid "<0>{0}</0> {1, plural, one {following} other {following}}"
-msgstr "<0>{0}</0> {1, plural, one {位关注中} other {位关注中}}"
+msgstr "<0>{0}</0> {1, plural, one {正在关注} other {正在关注}}"
 
 #: src/screens/StarterPack/Wizard/index.tsx:516
 msgid "<0>{0}</0> and<1> </1><2>{1} </2>are included in your starter pack"
@@ -2857,7 +2857,7 @@ msgstr "你所认识的关注者"
 #: src/view/screens/ProfileFollows.tsx:31
 #: src/view/screens/SavedFeeds.tsx:431
 msgid "Following"
-msgstr "关注中"
+msgstr "正在关注"
 
 #: src/components/ProfileCard.tsx:318
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:98
