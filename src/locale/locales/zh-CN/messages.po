@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-25 12:45\n"
+"PO-Revision-Date: 2024-11-25 13:25\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -67,7 +67,7 @@ msgstr "{0, plural, one {位关注者} other {位关注者}}"
 #: src/components/ProfileHoverCard/index.web.tsx:402
 #: src/screens/Profile/Header/Metrics.tsx:26
 msgid "{0, plural, one {following} other {following}}"
-msgstr "{0, plural, one {位正在关注} other {位正在关注}}"
+msgstr "{0, plural, one {位关注中} other {位关注中}}"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:305
 msgid "{0, plural, one {Like (# like)} other {Like (# likes)}}"
@@ -285,7 +285,7 @@ msgstr "{firstAuthorName} 使用了你的新手包注册"
 #: src/components/ProfileHoverCard/index.web.tsx:508
 #: src/screens/Profile/Header/Metrics.tsx:49
 msgid "{following} following"
-msgstr "{following} 位正在关注"
+msgstr "{following} 位关注中"
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:385
 msgid "{handle} can't be messaged"
@@ -329,7 +329,7 @@ msgstr "<0>{0}</0> {1, plural, one {位关注者} other {位关注者}}"
 
 #: src/view/shell/Drawer.tsx:108
 msgid "<0>{0}</0> {1, plural, one {following} other {following}}"
-msgstr "<0>{0}</0> {1, plural, one {位正在关注} other {位正在关注}}"
+msgstr "<0>{0}</0> {1, plural, one {位关注中} other {位关注中}}"
 
 #: src/screens/StarterPack/Wizard/index.tsx:516
 msgid "<0>{0}</0> and<1> </1><2>{1} </2>are included in your starter pack"
@@ -708,7 +708,7 @@ msgstr "选择视频时发生错误"
 #: src/screens/StarterPack/StarterPackScreen.tsx:347
 #: src/screens/StarterPack/StarterPackScreen.tsx:369
 msgid "An error occurred while trying to follow all"
-msgstr "关注所有人时发生错误"
+msgstr "关注全部账户时发生错误"
 
 #: src/view/com/composer/state/video.ts:435
 msgid "An error occurred while uploading the video."
@@ -768,7 +768,7 @@ msgstr "任何发布语言"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:48
 msgid "Anybody can interact"
-msgstr "所有人都可以参与互动"
+msgstr "任何人都可以参与互动"
 
 #: src/screens/Settings/LanguageSettings.tsx:72
 msgid "App Language"
@@ -1932,15 +1932,15 @@ msgstr "这则帖文已删除。"
 #: src/view/com/modals/EditProfile.tsx:193
 #: src/view/com/modals/EditProfile.tsx:205
 msgid "Description"
-msgstr "描述文字"
+msgstr "简介"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:364
 msgid "Description is too long"
-msgstr "描述文字太长"
+msgstr "简介太长"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:365
 msgid "Description is too long. The maximum number of characters is {DESCRIPTION_MAX_GRAPHEMES}."
-msgstr "描述文字太长，限制的最大字数为 {DESCRIPTION_MAX_GRAPHEMES}。"
+msgstr "简介太长，限制的最大字数为 {DESCRIPTION_MAX_GRAPHEMES}。"
 
 #: src/view/com/composer/GifAltText.tsx:150
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:114
@@ -2471,11 +2471,11 @@ msgstr "所有人"
 
 #: src/components/WhoCanReply.tsx:67
 msgid "Everybody can reply"
-msgstr "所有人都可以回复"
+msgstr "任何人都可以回复"
 
 #: src/components/WhoCanReply.tsx:213
 msgid "Everybody can reply to this post."
-msgstr "所有人都可以回复这则帖文。"
+msgstr "任何人都可以回复这则帖文。"
 
 #: src/screens/Messages/Settings.tsx:77
 #: src/screens/Messages/Settings.tsx:80
@@ -2583,7 +2583,7 @@ msgstr "外部媒体可能会收集你或设备储存的个人信息。在你按
 #: src/Navigation.tsx:313
 #: src/screens/Settings/ExternalMediaPreferences.tsx:29
 msgid "External Media Preferences"
-msgstr "外部媒体首选项"
+msgstr "外部媒体偏好"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:552
 msgid "Failed to change handle. Please try again."
@@ -2617,7 +2617,7 @@ msgstr "无法删除新手包"
 #: src/view/screens/Search/Explore.tsx:427
 #: src/view/screens/Search/Explore.tsx:455
 msgid "Failed to load feeds preferences"
-msgstr "无法加载动态源首选项"
+msgstr "无法加载动态源偏好设置"
 
 #: src/components/dialogs/GifSelect.tsx:225
 msgid "Failed to load GIFs"
@@ -2646,7 +2646,7 @@ msgstr "无法保存图片：{0}"
 
 #: src/state/queries/notifications/settings.ts:39
 msgid "Failed to save notification preferences, please try again"
-msgstr "无法保存通知首选项，请重试"
+msgstr "无法保存通知偏好设置，请重试"
 
 #: src/components/dms/MessageItem.tsx:234
 msgid "Failed to send"
@@ -2716,7 +2716,7 @@ msgstr "动态源"
 
 #: src/view/screens/SavedFeeds.tsx:205
 msgid "Feeds are custom algorithms that users build with a little coding expertise. <0/> for more information."
-msgstr "动态源是一种自定义算法，用户仅需掌握一些编程基础知识即可轻松创建。<0/>以获取更多资讯。"
+msgstr "动态源是一种自定义算法，用户仅需掌握一些编程知识即可轻松创建。<0/>以获取更多资讯。"
 
 #: src/components/FeedCard.tsx:273
 #: src/view/screens/SavedFeeds.tsx:83
@@ -2792,7 +2792,7 @@ msgstr "关注账户"
 #: src/screens/StarterPack/StarterPackScreen.tsx:427
 #: src/screens/StarterPack/StarterPackScreen.tsx:435
 msgid "Follow all"
-msgstr "关注所有人"
+msgstr "全部关注"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:232
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:130
@@ -2853,7 +2853,7 @@ msgstr "你所认识的关注者"
 #: src/view/screens/ProfileFollows.tsx:31
 #: src/view/screens/SavedFeeds.tsx:431
 msgid "Following"
-msgstr "正在关注"
+msgstr "关注中"
 
 #: src/components/ProfileCard.tsx:318
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:98
@@ -2867,12 +2867,12 @@ msgstr "已关注 {name}"
 #: src/screens/Settings/ContentAndMediaSettings.tsx:65
 #: src/screens/Settings/ContentAndMediaSettings.tsx:68
 msgid "Following feed preferences"
-msgstr "“Following”动态源首选项"
+msgstr "“Following”动态源偏好"
 
 #: src/Navigation.tsx:300
 #: src/screens/Settings/FollowingFeedPreferences.tsx:49
 msgid "Following Feed Preferences"
-msgstr "“Following”动态源首选项"
+msgstr "“Following”动态源偏好"
 
 #: src/screens/Profile/Header/Handle.tsx:32
 msgid "Follows you"
@@ -3983,7 +3983,7 @@ msgstr "已隐藏账户"
 
 #: src/view/screens/ModerationMutedAccounts.tsx:116
 msgid "Muted accounts have their posts removed from your feed and from your notifications. Mutes are completely private."
-msgstr "已隐藏的账户将不会出现在你的通知或时间线当中，且隐藏账号仅对你自己可见。"
+msgstr "已隐藏的账户将不会出现在你的通知或时间线里面，且隐藏账号仅对你自己可见。"
 
 #: src/lib/moderation/useModerationCauseDescription.ts:90
 msgid "Muted by \"{0}\""
@@ -3995,7 +3995,7 @@ msgstr "隐藏字词和标签"
 
 #: src/view/screens/ProfileList.tsx:734
 msgid "Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them."
-msgstr "隐藏账号仅对你自己可见。他们仍然能与你互动，但他们将不会出现在你的通知或时间线当中。"
+msgstr "隐藏账号仅对你自己可见。他们虽仍然能与你互动，但将不会出现在你的通知或时间线里面。"
 
 #: src/components/dialogs/BirthDateSettings.tsx:34
 #: src/components/dialogs/BirthDateSettings.tsx:37
@@ -4054,7 +4054,7 @@ msgstr "需要举报侵权行为吗？"
 
 #: src/screens/Onboarding/StepFinished.tsx:260
 msgid "Never lose access to your followers or data."
-msgstr "永远不会失去对你的关注者或个人数据的掌控权。"
+msgstr "你永远不会失去对关注者或个人数据的掌控权。"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:532
 msgid "Nevermind, create a handle for me"
@@ -4906,7 +4906,7 @@ msgstr "潜在误导性链接"
 
 #: src/state/queries/notifications/settings.ts:44
 msgid "Preference saved"
-msgstr "已保存首选项"
+msgstr "已保存偏好设置"
 
 #: src/screens/Messages/components/MessageListError.tsx:19
 msgid "Press to attempt reconnection"
@@ -5481,7 +5481,7 @@ msgstr "重置码"
 #: src/screens/Settings/Settings.tsx:335
 #: src/screens/Settings/Settings.tsx:337
 msgid "Reset onboarding state"
-msgstr "重置入门引导流程状态"
+msgstr "重置入门引导流程"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:80
 msgid "Reset password"
@@ -5964,7 +5964,7 @@ msgstr "分享你最喜欢的动态源吧！"
 
 #: src/Navigation.tsx:254
 msgid "Shared Preferences Tester"
-msgstr "共享首选项测试器"
+msgstr "共享偏好测试器"
 
 #: src/view/com/modals/LinkWarning.tsx:92
 msgid "Shares the linked website"
@@ -6669,7 +6669,7 @@ msgstr "Bluesky 目前迎来了大量新用户！我们将尽快激活你的账�
 
 #: src/screens/Settings/FollowingFeedPreferences.tsx:54
 msgid "These settings only apply to the Following feed."
-msgstr "这些首选项只适用于\"Following\"动态源。"
+msgstr "这些偏好设置只适用于“Following”动态源。"
 
 #: src/components/moderation/ScreenHider.tsx:111
 msgid "This {screenDescription} has been flagged:"
@@ -6875,11 +6875,11 @@ msgstr "你对这则帖文的引用将会删除，并替换为一个占位符。
 #: src/screens/Settings/ContentAndMediaSettings.tsx:57
 #: src/screens/Settings/ContentAndMediaSettings.tsx:60
 msgid "Thread preferences"
-msgstr "讨论串首选项"
+msgstr "讨论串偏好"
 
 #: src/screens/Settings/ThreadPreferences.tsx:41
 msgid "Thread Preferences"
-msgstr "讨论串首选项"
+msgstr "讨论串偏好"
 
 #: src/screens/Settings/ThreadPreferences.tsx:134
 msgid "Threaded mode"
@@ -6887,7 +6887,7 @@ msgstr "树状视图模式"
 
 #: src/Navigation.tsx:307
 msgid "Threads Preferences"
-msgstr "讨论串首选项"
+msgstr "讨论串偏好"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/TimeIndicator.tsx:33
 msgid "Time remaining: {time} seconds"
@@ -7519,7 +7519,7 @@ msgstr "我们无法确定你是否有权上传视频，请重试。"
 
 #: src/components/dialogs/BirthDateSettings.tsx:51
 msgid "We were unable to load your birth date preferences. Please try again."
-msgstr "我们无法加载你的生日首选项，请重试。"
+msgstr "我们无法加载你的生日偏好设置，请重试。"
 
 #: src/screens/Moderation/index.tsx:414
 msgid "We were unable to load your configured labelers at this time."
