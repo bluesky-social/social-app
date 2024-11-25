@@ -216,7 +216,7 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
       return () => {
         setEnabled(prevState)
       }
-    })
+    }, [setEnabled])
 
     useKeyboardHandler(
       {
