@@ -12,10 +12,8 @@ import Animated, {
   useSharedValue,
 } from 'react-native-reanimated'
 import {ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript/hook/commonTypes'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {AppBskyEmbedRecord, AppBskyRichtextFacet, RichText} from '@atproto/api'
 
-import {clamp} from '#/lib/numbers'
 import {ScrollProvider} from '#/lib/ScrollContext'
 import {shortenLinks, stripInvalidMentions} from '#/lib/strings/rich-text-manip'
 import {
@@ -29,6 +27,7 @@ import {isConvoActive, useConvoActive} from '#/state/messages/convo'
 import {ConvoItem, ConvoStatus} from '#/state/messages/convo/types'
 import {useGetPost} from '#/state/queries/post'
 import {useAgent} from '#/state/session'
+import {useShellLayout} from '#/state/shell/shell-layout'
 import {
   EmojiPicker,
   EmojiPickerState,
@@ -244,8 +243,7 @@ export function MessagesList({
   )
 
   // -- Keyboard animation handling
-  const {bottom: bottomInset} = useSafeAreaInsets()
-  const bottomOffset = isWeb ? 0 : clamp(60 + bottomInset, 60, 75)
+  const {footerHeight} = useShellLayout()
 
   const keyboardHeight = useSharedValue(0)
   const keyboardIsOpening = useSharedValue(false)
@@ -272,27 +270,27 @@ export function MessagesList({
       onMove: e => {
         'worklet'
         keyboardHeight.set(e.height)
-        if (e.height > bottomOffset) {
+        if (e.height > footerHeight.get()) {
           scrollTo(flatListRef, 0, 1e7, false)
         }
       },
       onInteractive: e => {
         'worklet'
         keyboardHeight.set(e.height)
-        if (e.height > bottomOffset) {
+        if (e.height > footerHeight.get()) {
           scrollTo(flatListRef, 0, 1e7, false)
         }
       },
       onEnd: e => {
         'worklet'
         keyboardHeight.set(e.height)
-        if (e.height > bottomOffset) {
+        if (e.height > footerHeight.get()) {
           scrollTo(flatListRef, 0, 1e7, false)
         }
         keyboardIsOpening.set(false)
       },
     },
-    [bottomOffset],
+    [],
   )
 
   const animatedListStyle = useAnimatedStyle(() => ({
@@ -300,7 +298,9 @@ export function MessagesList({
   }))
 
   const animatedStickyViewStyle = useAnimatedStyle(() => ({
-    transform: [{translateY: -Math.max(keyboardHeight.get(), bottomOffset)}],
+    transform: [
+      {translateY: -Math.max(keyboardHeight.get(), footerHeight.get())},
+    ],
   }))
 
   // -- Message sending
