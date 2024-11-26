@@ -11,8 +11,9 @@ import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {NavigationProp} from '#/lib/routes/types'
 import {useSetDrawerOpen} from '#/state/shell'
-import {useTheme} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
+import {Text as NewText} from '#/components/Typography'
 import {Text} from './text/Text'
 import {CenteredView} from './Views'
 
@@ -141,40 +142,42 @@ function DesktopWebHeader({
   renderButton?: () => JSX.Element
   showBorder?: boolean
 }) {
-  const pal = usePalette('default')
   const t = useTheme()
   return (
     <CenteredView
       style={[
-        styles.header,
-        styles.desktopHeader,
-        pal.border,
+        a.w_full,
+        a.py_md,
+        a.px_lg,
+        a.gap_xs,
+        showBorder && a.border_b,
+        t.atoms.border_contrast_low,
         {
-          borderBottomWidth: showBorder ? StyleSheet.hairlineWidth : 0,
+          maxWidth: 600,
+          marginLeft: 'auto',
+          marginRight: 'auto',
         },
-        {display: 'flex', flexDirection: 'column'},
       ]}>
-      <View>
-        <View style={styles.titleContainer} pointerEvents="none">
-          <Text type="title-lg" style={[pal.text, styles.title]}>
-            {title}
-          </Text>
-        </View>
-        {renderButton?.()}
-      </View>
+      <NewText
+        style={[
+          a.text_lg,
+          a.font_heavy,
+          a.text_center,
+          {pointerEvents: 'none'},
+        ]}>
+        {title}
+      </NewText>
+      {renderButton?.()}
       {subtitle ? (
-        <View>
-          <View style={[styles.titleContainer]} pointerEvents="none">
-            <Text
-              style={[
-                pal.text,
-                styles.subtitleDesktop,
-                t.atoms.text_contrast_medium,
-              ]}>
-              {subtitle}
-            </Text>
-          </View>
-        </View>
+        <NewText
+          style={[
+            a.text_sm,
+            a.text_center,
+            t.atoms.text_contrast_medium,
+            {pointerEvents: 'none'},
+          ]}>
+          {subtitle}
+        </NewText>
       ) : null}
     </CenteredView>
   )
