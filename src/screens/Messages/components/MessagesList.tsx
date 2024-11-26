@@ -279,7 +279,6 @@ export function MessagesList({
       onInteractive: e => {
         'worklet'
         keyboardHeight.set(e.height)
-        console.log(e.height, bottomOffset)
         if (e.height > bottomOffset) {
           scrollTo(flatListRef, 0, 1e7, false)
         }
