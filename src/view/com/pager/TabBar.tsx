@@ -4,7 +4,6 @@ import {LayoutChangeEvent, ScrollView, StyleSheet, View} from 'react-native'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {PressableWithHover} from '../util/PressableWithHover'
 import {Text} from '../util/text/Text'
-import {DraggableScrollView} from './DraggableScrollView'
 
 export interface TabBarProps {
   testID?: string
@@ -72,7 +71,7 @@ export function TabBar({
       testID={testID}
       style={[pal.view, styles.outer]}
       accessibilityRole="tablist">
-      <DraggableScrollView
+      <ScrollView
         testID={`${testID}-selector`}
         horizontal={true}
         showsHorizontalScrollIndicator={false}
@@ -104,7 +103,7 @@ export function TabBar({
             </PressableWithHover>
           )
         })}
-      </DraggableScrollView>
+      </ScrollView>
       <View style={[pal.border, styles.outerBottomBorder]} />
     </View>
   )
