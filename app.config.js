@@ -162,7 +162,7 @@ module.exports = function (config) {
         backgroundColor: DARK_SPLASH_CONFIG_ANDROID.backgroundColor,
       },
       android: {
-        icon: './assets/icon.png',
+        icon: './assets/app-icons/android_icon_default_light.png',
         adaptiveIcon: {
           foregroundImage: './assets/icon-android-foreground.png',
           monochromeImage: './assets/icon-android-foreground.png',
@@ -276,28 +276,99 @@ module.exports = function (config) {
         [
           '@mozzius/expo-dynamic-app-icon',
           {
-            bonfire: {
-              image: './assets/icon-bonfire.png',
+            /**
+             * Default set
+             */
+            ios_icon_default_light: {
+              image: './assets/app-icons/ios_icon_default_light.png',
               prerendered: true,
             },
-            midnight: {
-              image: './assets/icon-midnight.png',
+            ios_icon_default_dark: {
+              image: './assets/app-icons/ios_icon_default_dark.png',
               prerendered: true,
             },
-            nordic_light: {
-              image: './assets/icon-nordic-light.png',
+            android_icon_default_light: {
+              image: './assets/app-icons/android_icon_default_light.png',
               prerendered: true,
             },
-            summer: {
-              image: './assets/icon-summer.png',
+            android_icon_default_dark: {
+              image: './assets/app-icons/android_icon_default_dark.png',
               prerendered: true,
             },
-            sunset: {
-              image: './assets/icon-sunset.png',
+
+            /**
+             * Bluesky+ core set
+             */
+            ios_icon_core_aurora: {
+              image: './assets/app-icons/ios_icon_core_aurora.png',
               prerendered: true,
             },
-            classic: {
-              image: './assets/icon-classic.png',
+            ios_icon_core_bonfire: {
+              image: './assets/app-icons/ios_icon_core_bonfire.png',
+              prerendered: true,
+            },
+            ios_icon_core_sunrise: {
+              image: './assets/app-icons/ios_icon_core_sunrise.png',
+              prerendered: true,
+            },
+            ios_icon_core_sunset: {
+              image: './assets/app-icons/ios_icon_core_sunset.png',
+              prerendered: true,
+            },
+            ios_icon_core_midnight: {
+              image: './assets/app-icons/ios_icon_core_midnight.png',
+              prerendered: true,
+            },
+            ios_icon_core_flat_blue: {
+              image: './assets/app-icons/ios_icon_core_flat_blue.png',
+              prerendered: true,
+            },
+            ios_icon_core_flat_white: {
+              image: './assets/app-icons/ios_icon_core_flat_white.png',
+              prerendered: true,
+            },
+            ios_icon_core_flat_black: {
+              image: './assets/app-icons/ios_icon_core_flat_black.png',
+              prerendered: true,
+            },
+            ios_icon_core_classic: {
+              image: './assets/app-icons/ios_icon_core_classic.png',
+              prerendered: true,
+            },
+            android_icon_core_aurora: {
+              image: './assets/app-icons/android_icon_core_aurora.png',
+              prerendered: true,
+            },
+            android_icon_core_bonfire: {
+              image: './assets/app-icons/android_icon_core_bonfire.png',
+              prerendered: true,
+            },
+            android_icon_core_sunrise: {
+              image: './assets/app-icons/android_icon_core_sunrise.png',
+              prerendered: true,
+            },
+            android_icon_core_sunset: {
+              image: './assets/app-icons/android_icon_core_sunset.png',
+              prerendered: true,
+            },
+            android_icon_core_midnight: {
+              image: './assets/app-icons/android_icon_core_midnight.png',
+              prerendered: true,
+            },
+            android_icon_core_flat_blue: {
+              image: './assets/app-icons/android_icon_core_flat_blue.png',
+              prerendered: true,
+            },
+            android_icon_core_flat_white: {
+              image: './assets/app-icons/android_icon_core_flat_white.png',
+              prerendered: true,
+            },
+            android_icon_core_flat_black: {
+              image: './assets/app-icons/android_icon_core_flat_black.png',
+              prerendered: true,
+            },
+            android_icon_core_classic: {
+              image: './assets/app-icons/android_icon_core_classic.png',
               prerendered: true,
             },
           },
