@@ -28,7 +28,11 @@ import {InlineLinkText, Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 
-export function BlueskyPlus({control}: {control: Dialog.DialogControlProps}) {
+export function BlueskyPlusCore({
+  control,
+}: {
+  control: Dialog.DialogControlProps
+}) {
   return (
     <Dialog.Outer control={control}>
       <Dialog.Handle />

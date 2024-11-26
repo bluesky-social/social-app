@@ -1,5 +1,5 @@
 import React from 'react'
-import {RefreshControl,TextStyle, View} from 'react-native'
+import {RefreshControl, TextStyle, View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
@@ -23,7 +23,7 @@ import {atoms as a, tokens, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
-import {BlueskyPlus} from '#/components/dialogs/BlueskyPlus'
+import {BlueskyPlusCore} from '#/components/dialogs/BlueskyPlusCore'
 import {Divider} from '#/components/Divider'
 import {GradientFill} from '#/components/GradientFill'
 import {AndroidLogo} from '#/components/icons/AndroidLogo'
@@ -243,7 +243,7 @@ function Purchase() {
         </ButtonText>
         <ButtonIcon icon={Plus} position="right" style={[{color: 'white'}]} />
       </Button>
-      <BlueskyPlus control={control} />
+      <BlueskyPlusCore control={control} />
     </>
   )
 }

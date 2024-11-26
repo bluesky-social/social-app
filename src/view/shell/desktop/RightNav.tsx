@@ -8,19 +8,19 @@ import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {useKawaiiMode} from '#/state/preferences/kawaii'
 import {usePurchases} from '#/state/purchases'
 import {EntitlementId} from '#/state/purchases/types'
-import {Nux, useNux, useResetNuxs,useSaveNux} from '#/state/queries/nuxs'
+import {Nux, useNux, useResetNuxs, useSaveNux} from '#/state/queries/nuxs'
 import {useSession} from '#/state/session'
 import {DesktopFeeds} from '#/view/shell/desktop/Feeds'
 import {DesktopSearch} from '#/view/shell/desktop/Search'
 import {atoms as a, tokens, useTheme, web} from '#/alf'
 import {Button} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
-import {BlueskyPlus} from '#/components/dialogs/BlueskyPlus'
+import {BlueskyPlusCore} from '#/components/dialogs/BlueskyPlusCore'
 import {Divider} from '#/components/Divider'
 import {GradientFill} from '#/components/GradientFill'
 import {Full as BlueskyPlusLogo} from '#/components/icons/BlueskyPlus'
 import {SquareArrowTopRight_Stroke2_Corner0_Rounded as SquareArrowTopRight} from '#/components/icons/SquareArrowTopRight'
-import {createStaticClick,InlineLinkText} from '#/components/Link'
+import {createStaticClick, InlineLinkText} from '#/components/Link'
 import {ProgressGuideList} from '#/components/ProgressGuide/List'
 import {Text} from '#/components/Typography'
 import {IS_DEV} from '#/env'
@@ -190,7 +190,7 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
           </>
         )}
 
-        <BlueskyPlus control={bskyPlusDialogControl} />
+        <BlueskyPlusCore control={bskyPlusDialogControl} />
 
         <Text style={[a.leading_snug, t.atoms.text_contrast_low]}>
           {hasSession && (
