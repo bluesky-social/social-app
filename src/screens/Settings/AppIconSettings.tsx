@@ -101,7 +101,7 @@ function IconName({icon}: {icon: (typeof icons)[number]}) {
       name = _(msg`Sunset`)
       break
     case 'classic':
-      name = _(msg`clouds.jpg`)
+      name = _(msg`Classic`)
       break
   }
 
