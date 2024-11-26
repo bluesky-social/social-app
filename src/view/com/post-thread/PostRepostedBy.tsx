@@ -1,4 +1,4 @@
-import {useCallback, useMemo, useState} from 'react'
+import {useCallback, useMemo} from 'react'
 import {AppBskyActorDefs as ActorDefs} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -24,8 +24,6 @@ export function PostRepostedBy({uri}: {uri: string}) {
   const {_} = useLingui()
   const initialNumToRender = useInitialNumToRender()
 
-  const [isPTRing, setIsPTRing] = useState(false)
-
   const {
     data: resolvedUri,
     error: resolveError,
@@ -39,6 +37,7 @@ export function PostRepostedBy({uri}: {uri: string}) {
     fetchNextPage,
     error,
     refetch,
+    isRefetching,
   } = usePostRepostedByQuery(resolvedUri?.uri)
 
   const isError = Boolean(resolveError || error)
@@ -51,14 +50,12 @@ export function PostRepostedBy({uri}: {uri: string}) {
   }, [data])
 
   const onRefresh = useCallback(async () => {
-    setIsPTRing(true)
     try {
       await refetch()
     } catch (err) {
       logger.error('Failed to refresh reposts', {message: err})
     }
-    setIsPTRing(false)
-  }, [refetch, setIsPTRing])
+  }, [refetch])
 
   const onEndReached = useCallback(async () => {
     if (isFetchingNextPage || !hasNextPage || isError) return
@@ -92,7 +89,7 @@ export function PostRepostedBy({uri}: {uri: string}) {
       data={repostedBy}
       renderItem={renderItem}
       keyExtractor={keyExtractor}
-      refreshing={isPTRing}
+      refreshing={isRefetching}
       onRefresh={onRefresh}
       onEndReached={onEndReached}
       onEndReachedThreshold={4}

@@ -23,7 +23,6 @@ function keyExtractor(item: GetLikes.Like) {
 export function LikedByList({uri}: {uri: string}) {
   const {_} = useLingui()
   const initialNumToRender = useInitialNumToRender()
-  const [isPTRing, setIsPTRing] = React.useState(false)
 
   const {
     data: resolvedUri,
@@ -38,6 +37,7 @@ export function LikedByList({uri}: {uri: string}) {
     fetchNextPage,
     error: likedByError,
     refetch,
+    isRefetching,
   } = useLikedByQuery(resolvedUri?.uri)
 
   const error = resolveError || likedByError
@@ -51,14 +51,12 @@ export function LikedByList({uri}: {uri: string}) {
   }, [data])
 
   const onRefresh = React.useCallback(async () => {
-    setIsPTRing(true)
     try {
       await refetch()
     } catch (err) {
       logger.error('Failed to refresh likes', {message: err})
     }
-    setIsPTRing(false)
-  }, [refetch, setIsPTRing])
+  }, [refetch])
 
   const onEndReached = React.useCallback(async () => {
     if (isFetchingNextPage || !hasNextPage || isError) return
@@ -90,7 +88,7 @@ export function LikedByList({uri}: {uri: string}) {
       data={likes}
       renderItem={renderItem}
       keyExtractor={keyExtractor}
-      refreshing={isPTRing}
+      refreshing={isRefetching}
       onRefresh={onRefresh}
       onEndReached={onEndReached}
       ListFooterComponent={

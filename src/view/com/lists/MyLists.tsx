@@ -45,8 +45,7 @@ export function MyLists({
   const t = useTheme()
   const {_} = useLingui()
   const moderationOpts = useModerationOpts()
-  const [isPTRing, setIsPTRing] = React.useState(false)
-  const {data, isFetching, isFetched, isError, error, refetch} =
+  const {data, isFetching, isFetched, isError, error, refetch, isRefetching} =
     useMyListsQuery(filter)
   const isEmpty = !isFetching && !data?.length
 
@@ -69,14 +68,12 @@ export function MyLists({
   // =
 
   const onRefresh = React.useCallback(async () => {
-    setIsPTRing(true)
     try {
       await refetch()
     } catch (err) {
       logger.error('Failed to refresh lists', {message: err})
     }
-    setIsPTRing(false)
-  }, [refetch, setIsPTRing])
+  }, [refetch])
 
   // rendering
   // =
@@ -133,7 +130,7 @@ export function MyLists({
             renderItem={renderItemInner}
             refreshControl={
               <RefreshControl
-                refreshing={isPTRing}
+                refreshing={isRefetching}
                 onRefresh={onRefresh}
                 tintColor={pal.colors.text}
                 titleColor={pal.colors.text}
@@ -156,7 +153,7 @@ export function MyLists({
             data={items}
             keyExtractor={item => (item.uri ? item.uri : item._reactKey)}
             renderItem={renderItemInner}
-            refreshing={isPTRing}
+            refreshing={isRefetching}
             onRefresh={onRefresh}
             contentContainerStyle={[s.contentContainer]}
             removeClippedSubviews={true}

@@ -1,4 +1,4 @@
-import {useCallback, useState} from 'react'
+import {useCallback} from 'react'
 import {
   AppBskyFeedDefs,
   AppBskyFeedPost,
@@ -44,7 +44,6 @@ function keyExtractor(item: {
 export function PostQuotes({uri}: {uri: string}) {
   const {_} = useLingui()
   const initialNumToRender = useInitialNumToRender()
-  const [isPTRing, setIsPTRing] = useState(false)
 
   const {
     data: resolvedUri,
@@ -59,6 +58,7 @@ export function PostQuotes({uri}: {uri: string}) {
     fetchNextPage,
     error,
     refetch,
+    isRefetching,
   } = usePostQuotesQuery(resolvedUri?.uri)
 
   const moderationOpts = useModerationOpts()
@@ -79,14 +79,12 @@ export function PostQuotes({uri}: {uri: string}) {
       .filter(item => item !== null) ?? []
 
   const onRefresh = useCallback(async () => {
-    setIsPTRing(true)
     try {
       await refetch()
     } catch (err) {
       logger.error('Failed to refresh quotes', {message: err})
     }
-    setIsPTRing(false)
-  }, [refetch, setIsPTRing])
+  }, [refetch])
 
   const onEndReached = useCallback(async () => {
     if (isFetchingNextPage || !hasNextPage || isError) return
@@ -120,7 +118,7 @@ export function PostQuotes({uri}: {uri: string}) {
       data={quotes}
       renderItem={renderItem}
       keyExtractor={keyExtractor}
-      refreshing={isPTRing}
+      refreshing={isRefetching}
       onRefresh={onRefresh}
       onEndReached={onEndReached}
       onEndReachedThreshold={4}
