@@ -19,7 +19,7 @@ import {
   NativePurchaseRestricted,
 } from '#/state/purchases/types'
 import {CenteredView} from '#/view/com/util/Views'
-import {atoms as a, tokens, useTheme} from '#/alf'
+import {atoms as a, tokens, useBreakpoints,useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
@@ -36,7 +36,7 @@ import {Globe_Stroke2_Corner0_Rounded as Globe} from '#/components/icons/Globe'
 import {Mark} from '#/components/icons/Logo'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import * as Layout from '#/components/Layout'
-import {createStaticClick, Link} from '#/components/Link'
+import {createStaticClick, InlineLinkText, Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 
@@ -102,8 +102,8 @@ function Core({
   return (
     <View>
       <View style={[a.flex_row, a.align_center, a.gap_xs]}>
-        <Mark width={26} gradient="nordic" />
-        <Logotype width={80} fill={t.atoms.text_contrast_medium.color} />
+        <Mark width={30} gradient="nordic" />
+        <Logotype width={90} fill={t.atoms.text.color} />
       </View>
 
       {restricted === 'yes' ? (
@@ -118,15 +118,122 @@ function Core({
       )}
 
       {isSubscribedToCore ? (
-        <View style={[a.gap_sm, a.pt_lg]}>
-          <Text style={[a.text_sm, a.font_bold, t.atoms.text_contrast_medium]}>
-            <Trans>Active subscriptions</Trans>
-          </Text>
-          {coreSubscriptions.map(sub => (
-            <Subscription key={sub.purchasedAt} subscription={sub} />
-          ))}
+        <View style={[a.pt_md, a.gap_lg]}>
+          <View style={[a.gap_sm]}>
+            {coreSubscriptions.map(sub => (
+              <Subscription key={sub.purchasedAt} subscription={sub} />
+            ))}
+          </View>
+
+          <Divider />
+
+          <InfoCards />
         </View>
       ) : null}
+
+      <View style={[a.pt_lg]}>
+        <Text style={[a.text_xs]}>
+          <InlineLinkText
+            to="#"
+            label="TODO REPLACE"
+            style={[a.text_xs, t.atoms.text_contrast_medium]}>
+            Terms and Conditions
+          </InlineLinkText>{' '}
+          &middot;{' '}
+          <InlineLinkText
+            to="#"
+            label="TODO REPLACE"
+            style={[a.text_xs, t.atoms.text_contrast_medium]}>
+            Privacy Policy
+          </InlineLinkText>{' '}
+          &middot;{' '}
+          <InlineLinkText
+            to="#"
+            label="TODO REPLACE"
+            style={[a.text_xs, t.atoms.text_contrast_medium]}>
+            EULA
+          </InlineLinkText>
+        </Text>
+      </View>
+    </View>
+  )
+}
+
+function InfoCards() {
+  const t = useTheme()
+  const {_} = useLingui()
+  const {gtPhone} = useBreakpoints()
+  const {features} = useFeatures()
+  const activeFeatures = features.filter(f => f.available)
+
+  return (
+    <View style={[a.flex_row, a.gap_md, a.flex_wrap]}>
+      <View
+        style={[
+          gtPhone ? a.flex_1 : a.w_full,
+          a.p_lg,
+          a.rounded_md,
+          a.gap_sm,
+          t.atoms.bg_contrast_25,
+        ]}>
+        <Text
+          style={[
+            a.text_sm,
+            a.font_bold,
+            a.leading_snug,
+            t.atoms.text_contrast_medium,
+          ]}>
+          <Trans>Features</Trans>
+        </Text>
+        <View style={[a.py_xs, a.gap_sm]}>
+          {activeFeatures.map(f => (
+            <View key={f.text} style={[a.flex_row, a.align_center, a.gap_xs]}>
+              <f.icon fill={t.atoms.text_contrast_low.color} size="xs" />
+              <Text style={[a.text_sm]}>{f.text}</Text>
+            </View>
+          ))}
+        </View>
+      </View>
+
+      <View
+        style={[
+          gtPhone ? a.flex_1 : a.w_full,
+          a.p_lg,
+          a.rounded_md,
+          a.border,
+          a.gap_sm,
+          t.atoms.border_contrast_low,
+        ]}>
+        <Text style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}>
+          <Trans>
+            Your support helps Bluesky build a better internet. Thanks for being
+            a part of the ATmosphere!
+          </Trans>
+        </Text>
+
+        <Link
+          to="https://blueskyweb.zendesk.com/hc/en-us"
+          label={_(msg`Contact support`)}
+          size="small"
+          variant="solid"
+          color="secondary"
+          style={[a.justify_center]}>
+          <ButtonText>
+            <Trans>Get support</Trans>
+          </ButtonText>
+        </Link>
+        <Link
+          to="https://blueskyweb.zendesk.com/hc/en-us"
+          label={_(msg`Subscriptions FAQ`)}
+          size="small"
+          variant="outline"
+          color="secondary"
+          style={[a.justify_center]}>
+          <ButtonText>
+            <Trans>FAQ</Trans>
+          </ButtonText>
+        </Link>
+      </View>
     </View>
   )
 }
@@ -135,49 +242,7 @@ function Purchase() {
   const t = useTheme()
   const {_} = useLingui()
   const control = useDialogControl()
-
-  const features = [
-    {
-      available: true,
-      icon: Check,
-      text: _(msg`Bluesky+ supporter badge`),
-    },
-    {
-      available: true,
-      icon: Check,
-      text: _(msg`Custom app icons`),
-    },
-    {
-      available: true,
-      icon: Check,
-      text: _(msg`Profile customizations`),
-    },
-    {
-      available: true,
-      icon: Check,
-      text: _(msg`Higher video upload limits`),
-    },
-    {
-      available: true,
-      icon: Check,
-      text: _(msg`High quality video resolution`),
-    },
-    {
-      available: false,
-      icon: Clock,
-      text: _(msg`Inline post translations (coming soon)`),
-    },
-    {
-      available: false,
-      icon: Clock,
-      text: _(msg`Post analytics (coming soon)`),
-    },
-    {
-      available: false,
-      icon: Clock,
-      text: _(msg`Bookmark folders (coming soon)`),
-    },
-  ]
+  const {features} = useFeatures()
 
   return (
     <>
@@ -355,14 +420,32 @@ export function Subscription({
   return (
     <View
       key={sub.purchasedAt}
-      style={[
-        a.px_lg,
-        a.rounded_md,
-        a.border,
-        a.overflow_hidden,
-        t.atoms.border_contrast_low,
-      ]}>
-      <View style={[a.flex_row, a.justify_between, a.align_center, a.py_sm]}>
+      style={[a.px_lg, a.rounded_md, a.overflow_hidden]}>
+      <GradientFill gradient={tokens.gradients.nordic} />
+      <View
+        style={[
+          a.absolute,
+          t.atoms.bg,
+          {
+            borderRadius: a.rounded_md.borderRadius - 2,
+            top: 2,
+            bottom: 2,
+            left: 2,
+            right: 2,
+          },
+        ]}
+      />
+
+      <View
+        style={[
+          a.flex_row,
+          a.justify_between,
+          a.align_center,
+          {
+            paddingTop: 10,
+            paddingBottom: 8,
+          },
+        ]}>
         <View style={[a.flex_row, a.align_center, a.gap_sm]}>
           <Text style={[a.text_lg, a.font_heavy]}>{ui.title}</Text>
 
@@ -400,7 +483,16 @@ export function Subscription({
 
       <Divider />
 
-      <View style={[a.py_sm, a.flex_row, a.justify_between, a.align_center]}>
+      <View
+        style={[
+          a.flex_row,
+          a.gap_md,
+          a.align_center,
+          {
+            paddingTop: 8,
+            paddingBottom: 10,
+          },
+        ]}>
         <View
           style={[
             a.flex_row,
@@ -409,8 +501,8 @@ export function Subscription({
             a.gap_xs,
             {left: -1},
           ]}>
-          <ui.PlatformLogo size="md" fill={t.atoms.text_contrast_low.color} />
-          <Text style={[a.text_sm, a.font_bold, t.atoms.text_contrast_medium]}>
+          <ui.PlatformLogo size="sm" fill={t.atoms.text_contrast_low.color} />
+          <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
             {ui.platformName}
           </Text>
         </View>
@@ -427,4 +519,55 @@ export function Subscription({
       </View>
     </View>
   )
+}
+
+function useFeatures() {
+  const {_} = useLingui()
+
+  const features = [
+    {
+      available: true,
+      icon: Check,
+      text: _(msg`Bluesky+ profile badge`),
+    },
+    {
+      available: true,
+      icon: Check,
+      text: _(msg`Custom app icons`),
+    },
+    {
+      available: true,
+      icon: Check,
+      text: _(msg`Profile customizations`),
+    },
+    {
+      available: true,
+      icon: Check,
+      text: _(msg`Higher video upload limits`),
+    },
+    {
+      available: true,
+      icon: Check,
+      text: _(msg`High quality video resolution`),
+    },
+    {
+      available: false,
+      icon: Clock,
+      text: _(msg`Inline post translations (coming soon)`),
+    },
+    {
+      available: false,
+      icon: Clock,
+      text: _(msg`Post analytics (coming soon)`),
+    },
+    {
+      available: false,
+      icon: Clock,
+      text: _(msg`Bookmark folders (coming soon)`),
+    },
+  ]
+
+  return {
+    features,
+  }
 }
