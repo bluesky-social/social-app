@@ -1,10 +1,7 @@
 import React, {useCallback, useRef} from 'react'
 import {LayoutChangeEvent, View} from 'react-native'
-import {
-  KeyboardStickyView,
-  useKeyboardHandler,
-} from 'react-native-keyboard-controller'
-import {
+import {useKeyboardHandler} from 'react-native-keyboard-controller'
+import Animated, {
   runOnJS,
   scrollTo,
   useAnimatedRef,
@@ -270,8 +267,12 @@ export function MessagesList({
           scrollTo(flatListRef, 0, 1e7, false)
         }
       },
-      onEnd: () => {
+      onEnd: e => {
         'worklet'
+        keyboardHeight.set(e.height)
+        if (e.height > bottomOffset) {
+          scrollTo(flatListRef, 0, 1e7, false)
+        }
         keyboardIsOpening.set(false)
       },
     },
@@ -279,8 +280,11 @@ export function MessagesList({
   )
 
   const animatedListStyle = useAnimatedStyle(() => ({
-    marginBottom:
-      keyboardHeight.get() > bottomOffset ? keyboardHeight.get() : bottomOffset,
+    marginBottom: Math.max(keyboardHeight.get(), bottomOffset),
+  }))
+
+  const animatedStickyViewStyle = useAnimatedStyle(() => ({
+    transform: [{translateY: -Math.max(keyboardHeight.get(), bottomOffset)}],
   }))
 
   // -- Message sending
@@ -422,7 +426,7 @@ export function MessagesList({
           }
         />
       </ScrollProvider>
-      <KeyboardStickyView offset={{closed: -bottomOffset, opened: 0}}>
+      <Animated.View style={animatedStickyViewStyle}>
         {convoState.status === ConvoStatus.Disabled ? (
           <ChatDisabled />
         ) : blocked ? (
@@ -441,7 +445,7 @@ export function MessagesList({
             </MessageInput>
           </>
         )}
-      </KeyboardStickyView>
+      </Animated.View>
 
       {isWeb && (
         <EmojiPicker
