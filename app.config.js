@@ -63,7 +63,7 @@ module.exports = function (config) {
   return {
     expo: {
       version: VERSION,
-      name: IS_DEV ? 'Bluesky (Dev)' : 'Bluesky',
+      name: 'Bluesky',
       slug: 'bluesky',
       scheme: 'bluesky',
       owner: 'blueskysocial',
