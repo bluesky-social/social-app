@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-26 13:12\n"
+"PO-Revision-Date: 2024-11-26 16:46\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -461,11 +461,11 @@ msgstr "新增"
 
 #: src/screens/StarterPack/Wizard/index.tsx:574
 msgid "Add {0} more to continue"
-msgstr "再新增至少 {0} 個以繼續"
+msgstr "再加入至少 {0} 個以繼續"
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:58
 msgid "Add {displayName} to starter pack"
-msgstr "新增 {displayName} 至新手包"
+msgstr "加入 {displayName} 至新手包"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:107
 #: src/view/com/composer/labels/LabelsBtn.tsx:112
@@ -474,7 +474,7 @@ msgstr "新增內容警告"
 
 #: src/view/screens/ProfileList.tsx:930
 msgid "Add a user to this list"
-msgstr "將用戶新增至這個列表"
+msgstr "將用戶加入這個列表"
 
 #: src/components/dialogs/SwitchAccount.tsx:55
 #: src/screens/Deactivated.tsx:198
@@ -528,15 +528,15 @@ msgstr "加入貼文"
 
 #: src/screens/Home/NoFeedsPinned.tsx:99
 msgid "Add recommended feeds"
-msgstr "新增推薦的動態源"
+msgstr "加入推薦的動態源"
 
 #: src/screens/StarterPack/Wizard/index.tsx:494
 msgid "Add some feeds to your starter pack!"
-msgstr "新增一些動態源至您的新手包！"
+msgstr "加入一些動態源至您的新手包！"
 
 #: src/screens/Feeds/NoFollowingFeed.tsx:41
 msgid "Add the default feed of only people you follow"
-msgstr "新增預設的動態源 (只顯示您跟隨的人)"
+msgstr "加入預設的動態源 (只顯示您跟隨的人)"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:386
 msgid "Add the following DNS record to your domain:"
@@ -544,12 +544,12 @@ msgstr "將以下 DNS 記錄新增到您的網域："
 
 #: src/components/FeedCard.tsx:296
 msgid "Add this feed to your feeds"
-msgstr "將此新增至您的動態源"
+msgstr "將此加入您的動態源"
 
 #: src/view/com/profile/ProfileMenu.tsx:243
 #: src/view/com/profile/ProfileMenu.tsx:246
 msgid "Add to Lists"
-msgstr "新增至列表"
+msgstr "加入列表"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:269
 msgid "Add to my feeds"
@@ -558,11 +558,11 @@ msgstr "加入到我的動態源"
 #: src/view/com/modals/ListAddRemoveUsers.tsx:192
 #: src/view/com/modals/UserAddRemoveLists.tsx:162
 msgid "Added to list"
-msgstr "成功新增至列表"
+msgstr "成功加入至列表"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:125
 msgid "Added to my feeds"
-msgstr "成功新增到我的動態源"
+msgstr "成功加入至我的動態源"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:160
 msgid "Adult"
@@ -1302,7 +1302,7 @@ msgstr "選擇動態源"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:308
 msgid "Choose for me"
-msgstr "為我選擇"
+msgstr "為我挑選"
 
 #: src/screens/StarterPack/Wizard/index.tsx:192
 msgid "Choose People"
@@ -2217,7 +2217,7 @@ msgstr "編輯互動設定"
 
 #: src/view/screens/ProfileList.tsx:518
 msgid "Edit list details"
-msgstr "編輯列表詳情"
+msgstr "編輯列表資訊"
 
 #: src/view/com/modals/CreateOrEditList.tsx:230
 msgid "Edit Moderation List"
@@ -2905,7 +2905,7 @@ msgstr "為了確保您的帳號安全，將無法再次查看此密碼。如果
 
 #: src/screens/Settings/AppearanceSettings.tsx:127
 msgid "For the best experience, we recommend using the theme font."
-msgstr "為了獲得最佳體驗，我們建議使用主題字型。"
+msgstr "我們建議使用主題字型，以享有最佳體驗。"
 
 #: src/components/dialogs/MutedWords.tsx:178
 msgid "Forever"
@@ -3880,7 +3880,7 @@ msgstr "最多喜歡數優先"
 
 #: src/screens/Settings/ThreadPreferences.tsx:83
 msgid "Most-liked replies first"
-msgstr "最多喜歡的回覆優先"
+msgstr "最多喜歡回覆優先"
 
 #: src/screens/Onboarding/state.ts:92
 msgid "Movies"
@@ -5037,7 +5037,7 @@ msgstr "已拒絕引用貼文"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:314
 msgid "Quote posts enabled"
-msgstr "已允許引用貼文"
+msgstr "允許引用貼文"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:299
 msgid "Quote settings"
@@ -5196,7 +5196,7 @@ msgstr "刪除引用貼文"
 #: src/view/com/util/post-ctrls/RepostButton.tsx:145
 #: src/view/com/util/post-ctrls/RepostButton.tsx:155
 msgid "Remove repost"
-msgstr "刪除轉發貼文"
+msgstr "刪除轉發"
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:260
 msgid "Remove subtitle file"
@@ -6205,7 +6205,7 @@ msgstr "回覆排序"
 
 #: src/screens/Settings/ThreadPreferences.tsx:51
 msgid "Sort replies to the same post by:"
-msgstr "對同一貼文的回覆進行排序："
+msgstr "對貼文下的回覆進行排序："
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:168
 msgid "Source:"
@@ -6849,7 +6849,7 @@ msgstr "這個用戶尚未跟隨任何人。"
 
 #: src/components/dialogs/MutedWords.tsx:435
 msgid "This will delete \"{0}\" from your muted words. You can always add it back later."
-msgstr "這將會把「{0}」從您的靜音字詞中刪除，您可以隨時重新新增回來。"
+msgstr "這將會把「{0}」從您的靜音字詞中刪除。您隨時可以重新新增回來。"
 
 #: src/screens/Settings/Settings.tsx:452
 msgid "This will remove @{0} from the quick access list."

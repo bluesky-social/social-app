@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-26 13:12\n"
+"PO-Revision-Date: 2024-11-26 16:45\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -5037,7 +5037,7 @@ msgstr "已停用帖文引用"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:314
 msgid "Quote posts enabled"
-msgstr "已启用帖文引用"
+msgstr "启用帖文引用"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:299
 msgid "Quote settings"
@@ -6857,7 +6857,7 @@ msgstr "这将从你的快速访问中移除 @{0}。"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:721
 msgid "This will remove your post from this quote post for all users, and replace it with a placeholder."
-msgstr "你对这则帖文的引用将会删除，并替换为一个占位符。"
+msgstr "你的帖文将从这则引用中删除，并替换为一个占位符。"
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:48
 #: src/screens/Settings/ContentAndMediaSettings.tsx:51

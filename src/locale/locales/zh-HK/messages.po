@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-26 13:13\n"
+"PO-Revision-Date: 2024-11-26 16:46\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional, Hong Kong\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -84,7 +84,7 @@ msgstr "{0, plural,one {有 # 人讚佢} other {有 # 人讚佢}}"
 
 #: src/screens/Profile/Header/Metrics.tsx:58
 msgid "{0, plural, one {post} other {posts}}"
-msgstr "{0, plural, one {則帖文} other {則帖文}}"
+msgstr "{0, plural, one {條帖文} other {條帖文}}"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:431
 msgid "{0, plural, one {quote} other {quotes}}"
@@ -109,12 +109,12 @@ msgstr "{0}"
 #. Pattern: {wordValue} in tags
 #: src/components/dialogs/MutedWords.tsx:475
 msgid "{0} <0>in <1>tags</1></0>"
-msgstr "{0} <0>喺<1>標籤</1></0>入邊"
+msgstr "{0} <0> - <1>標籤</1></0>"
 
 #. Pattern: {wordValue} in text, tags
 #: src/components/dialogs/MutedWords.tsx:465
 msgid "{0} <0>in <1>text & tags</1></0>"
-msgstr "{0} <0>喺<1>文字同標籤</1></0>入邊"
+msgstr "{0} <0> - <1>文字同標籤</1></0>"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:219
 msgid "{0} joined this week"
@@ -126,7 +126,7 @@ msgstr "第 {0} 個（共 {1} 個）"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:479
 msgid "{0} people have used this starter pack!"
-msgstr "有{0}個人用過呢個新手包！"
+msgstr "有 {0} 個人用過呢個新手包！"
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:203
 msgid "{0} unread items"
@@ -138,7 +138,7 @@ msgstr "{0} 嘅頭像"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:67
 msgid "{0}'s favorite feeds and people - join me!"
-msgstr "{0}至愛嘅人同動態源 - 快啲嚟加入！"
+msgstr "{0}至愛嘅人同動態源 - 快啲嚟加入啦！"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:46
 msgid "{0}'s starter pack"
@@ -349,7 +349,7 @@ msgstr "<0>{date}</0> {time}"
 
 #: src/screens/Settings/NotificationSettings.tsx:71
 msgid "<0>Experimental:</0> When this preference is enabled, you'll only receive reply and quote notifications from users you follow. We'll continue to add more controls here over time."
-msgstr "<0>實驗性選項：</0>啓用呢個設定之後，你淨係會收到你跟咗嘅用戶啲回覆同引用帖文通知。我哋會喺未來逐步增加更多控制選項。"
+msgstr "<0>實驗性選項：</0>啓用呢個設定之後，你淨係會收到你跟咗嘅用戶啲回覆同引用通知。我哋會喺未來逐步增加更多控制選項。"
 
 #: src/screens/StarterPack/Wizard/index.tsx:463
 msgid "<0>You</0> and<1> </1><2>{0} </2>are included in your starter pack"
@@ -385,11 +385,11 @@ msgstr "關於"
 #: src/view/com/util/ViewHeader.tsx:89
 #: src/view/screens/Search/Search.tsx:884
 msgid "Access navigation links and settings"
-msgstr "存取導覽連結同設定"
+msgstr "檢視導覽連結同設定"
 
 #: src/view/com/home/HomeHeaderLayoutMobile.tsx:56
 msgid "Access profile and other navigation links"
-msgstr "存取個人檔案同其他導覽連結"
+msgstr "檢視個人檔案同其他導覽連結"
 
 #: src/screens/Settings/AccessibilitySettings.tsx:42
 #: src/screens/Settings/Settings.tsx:183
@@ -412,24 +412,24 @@ msgstr "帳號"
 #: src/view/com/profile/ProfileMenu.tsx:132
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:360
 msgid "Account blocked"
-msgstr "已經封鎖帳號"
+msgstr "封鎖咗嘅帳號"
 
 #: src/view/com/profile/ProfileMenu.tsx:145
 msgid "Account followed"
-msgstr "已經跟隨帳號"
+msgstr "跟咗嘅帳號"
 
 #: src/view/com/profile/ProfileMenu.tsx:108
 msgid "Account muted"
-msgstr "已經靜音帳號"
+msgstr "靜音咗嘅帳號"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:101
 #: src/lib/moderation/useModerationCauseDescription.ts:96
 msgid "Account Muted"
-msgstr "已經靜音帳號"
+msgstr "靜音咗嘅帳號"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:87
 msgid "Account Muted by List"
-msgstr "帳號已經俾清單靜音"
+msgstr "俾個清單靜音咗嘅帳號"
 
 #: src/screens/Settings/Settings.tsx:420
 msgid "Account options"
@@ -437,20 +437,20 @@ msgstr "帳號設定"
 
 #: src/screens/Settings/Settings.tsx:456
 msgid "Account removed from quick access"
-msgstr "喺快速存取入邊移除咗帳號喇"
+msgstr "快速存取入邊移除咗嘅帳號"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:137
 #: src/view/com/profile/ProfileMenu.tsx:122
 msgid "Account unblocked"
-msgstr "已經解除封鎖帳戶"
+msgstr "唔再封鎖嘅帳戶"
 
 #: src/view/com/profile/ProfileMenu.tsx:157
 msgid "Account unfollowed"
-msgstr "已經唔再跟佢"
+msgstr "唔再跟佢嘅帳號"
 
 #: src/view/com/profile/ProfileMenu.tsx:98
 msgid "Account unmuted"
-msgstr "已經取消靜音帳號"
+msgstr "唔再靜音嘅帳號"
 
 #: src/components/dialogs/MutedWords.tsx:328
 #: src/view/com/modals/ListAddRemoveUsers.tsx:269
@@ -465,7 +465,7 @@ msgstr "加多至少 {0} 個繼續"
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:58
 msgid "Add {displayName} to starter pack"
-msgstr "新增 {displayName} 至新手包"
+msgstr "加入 {displayName} 到新手包"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:107
 #: src/view/com/composer/labels/LabelsBtn.tsx:112
@@ -474,7 +474,7 @@ msgstr "新增內容警告"
 
 #: src/view/screens/ProfileList.tsx:930
 msgid "Add a user to this list"
-msgstr "將用戶擺到落呢個清單"
+msgstr "將用戶擺到落呢個清單度"
 
 #: src/components/dialogs/SwitchAccount.tsx:55
 #: src/screens/Deactivated.tsx:198
@@ -502,7 +502,7 @@ msgstr "加多個帳號"
 
 #: src/view/com/composer/Composer.tsx:721
 msgid "Add another post"
-msgstr "加多另一個帖文"
+msgstr "加多另一條帖文"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:102
 msgid "Add app password"
@@ -516,7 +516,7 @@ msgstr "新增 App 密碼"
 
 #: src/components/dialogs/MutedWords.tsx:321
 msgid "Add mute word for configured settings"
-msgstr "喺配置好嘅設定入邊新增靜音文字"
+msgstr "喺設定入邊新增靜音字詞"
 
 #: src/components/dialogs/MutedWords.tsx:112
 msgid "Add muted words and tags"
@@ -528,7 +528,7 @@ msgstr "新開帖文"
 
 #: src/screens/Home/NoFeedsPinned.tsx:99
 msgid "Add recommended feeds"
-msgstr "新增推薦嘅動態源"
+msgstr "加入推薦嘅動態源"
 
 #: src/screens/StarterPack/Wizard/index.tsx:494
 msgid "Add some feeds to your starter pack!"
@@ -5037,7 +5037,7 @@ msgstr "引用帖文已經停用"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:314
 msgid "Quote posts enabled"
-msgstr "引用帖文已經啓用"
+msgstr "啓用引用帖文"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:299
 msgid "Quote settings"
@@ -6857,7 +6857,7 @@ msgstr "噉樣會喺快速存取清單入邊移除 @{0}。"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:721
 msgid "This will remove your post from this quote post for all users, and replace it with a placeholder."
-msgstr "噉樣會剷晒你對呢篇帖文嘅引用，同埋將佢換成一個佔位符。"
+msgstr "你嘅帖文會喺呢篇引用嘅帖文入邊刪除，兼且將佢換成一個佔位標記。"
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:48
 #: src/screens/Settings/ContentAndMediaSettings.tsx:51
