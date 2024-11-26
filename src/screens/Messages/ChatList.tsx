@@ -34,6 +34,7 @@ import {ListFooter} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {ChatListItem} from './components/ChatListItem'
+import * as Toggle from '#/components/forms/Toggle'
 
 type Props = NativeStackScreenProps<MessagesTabNavigatorParams, 'Messages'>
 
@@ -51,6 +52,7 @@ export function MessagesScreen({navigation, route}: Props) {
   const newChatControl = useDialogControl()
   const {gtMobile} = useBreakpoints()
   const pushToConversation = route.params?.pushToConversation
+  const [showOnlyUnread, setShowOnlyUnread] = useState(false)
 
   // Whenever we have `pushToConversation` set, it means we pressed a notification for a chat without being on
   // this tab. We should immediately push to the conversation after pressing the notification.
@@ -114,10 +116,13 @@ export function MessagesScreen({navigation, route}: Props) {
 
   const conversations = useMemo(() => {
     if (data?.pages) {
-      return data.pages.flatMap(page => page.convos)
+      const allConversations = data.pages.flatMap(page => page.convos)
+      return showOnlyUnread
+        ? allConversations.filter(convo => convo.unreadCount > 0)
+        : allConversations
     }
     return []
-  }, [data])
+  }, [data, showOnlyUnread])
 
   const onRefresh = useCallback(async () => {
     setIsPTRing(true)
@@ -156,6 +161,8 @@ export function MessagesScreen({navigation, route}: Props) {
             <DesktopHeader
               newChatControl={newChatControl}
               onNavigateToSettings={onNavigateToSettings}
+              showOnlyUnread={showOnlyUnread}
+              setShowOnlyUnread={setShowOnlyUnread}
             />
           ) : (
             <ViewHeader
@@ -258,6 +265,8 @@ export function MessagesScreen({navigation, route}: Props) {
           <DesktopHeader
             newChatControl={newChatControl}
             onNavigateToSettings={onNavigateToSettings}
+            showOnlyUnread={showOnlyUnread}
+            setShowOnlyUnread={setShowOnlyUnread}
           />
         }
         ListFooterComponent={
@@ -284,9 +293,13 @@ export function MessagesScreen({navigation, route}: Props) {
 function DesktopHeader({
   newChatControl,
   onNavigateToSettings,
+  showOnlyUnread,
+  setShowOnlyUnread,
 }: {
   newChatControl: DialogControlProps
   onNavigateToSettings: () => void
+  showOnlyUnread: boolean
+  setShowOnlyUnread: (value: boolean) => void
 }) {
   const t = useTheme()
   const {_} = useLingui()
@@ -311,9 +324,18 @@ function DesktopHeader({
         t.atoms.border_contrast_low,
       ]}>
       <Text style={[a.text_2xl, a.font_bold]}>
-        <Trans>Messages</Trans>
+        <Trans>Chat Messages</Trans>
       </Text>
       <View style={[a.flex_row, a.align_center, a.gap_sm]}>
+        <Toggle.Item
+          name="onlyUnread"
+          label={_(msg`Only unread`)}
+          value={showOnlyUnread}
+          onChange={setShowOnlyUnread}
+        >
+          <Toggle.Checkbox />
+          <Toggle.LabelText>{_(msg`Only unread`)}</Toggle.LabelText>
+        </Toggle.Item>
         <Button
           label={_(msg`Message settings`)}
           color="secondary"
