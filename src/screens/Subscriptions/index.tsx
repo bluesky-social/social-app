@@ -1,12 +1,12 @@
 import React from 'react'
-import {TextStyle, View} from 'react-native'
+import {RefreshControl,TextStyle, View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {CommonNavigatorParams} from '#/lib/routes/types'
 import {isAndroid, isIOS, isWeb} from '#/platform/detection'
-import {PurchasesState, usePurchases} from '#/state/purchases'
+import {PurchasesState, usePurchases, usePurchasesApi} from '#/state/purchases'
 import {useManageSubscription} from '#/state/purchases/hooks/useManageSubscription'
 import {useNativeUserState} from '#/state/purchases/hooks/useNativeUserState'
 import {
@@ -48,13 +48,26 @@ export type ScreenProps = NativeStackScreenProps<
 export function Subscriptions(_props: ScreenProps) {
   const {_} = useLingui()
   const purchases = usePurchases()
+  const {refetch} = usePurchasesApi()
   const {loading, restricted} = useNativeUserState()
+  const [refreshing, setRefreshing] = React.useState(false)
+  const onRefresh = async () => {
+    setRefreshing(true)
+    try {
+      await refetch()
+    } finally {
+      setRefreshing(false)
+    }
+  }
 
   return (
     <Layout.Screen>
       <Layout.Header title={_(msg`Subscriptions`)} />
 
-      <Layout.Content>
+      <Layout.Content
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }>
         <CenteredView style={[a.util_screen_outer]}>
           <View style={[a.px_xl, a.py_xl]}>
             {purchases.status === 'loading' || loading ? (

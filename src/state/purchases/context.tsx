@@ -12,12 +12,21 @@ export type PurchasesState =
     }
   | {
       status: 'ready'
+      refetching: boolean
       email?: string
       subscriptions: APISubscription[]
       entitlements: APIEntitlement[]
       config: {}
     }
 
-export const Context = React.createContext<PurchasesState>({
+export type PurchasesApi = {
+  refetch: () => Promise<void>
+}
+
+export const StateContext = React.createContext<PurchasesState>({
   status: 'loading',
+})
+
+export const ApiContext = React.createContext<PurchasesApi>({
+  refetch: async () => {},
 })

@@ -1,6 +1,11 @@
 import React from 'react'
 
-import {Context, PurchasesState} from '#/state/purchases/context'
+import {
+  ApiContext,
+  PurchasesApi,
+  PurchasesState,
+  StateContext,
+} from '#/state/purchases/context'
 import {useNativeEventsListener} from '#/state/purchases/hooks/useNativeEventsListener'
 import {usePurchasesState} from '#/state/purchases/hooks/usePurchasesState'
 
@@ -11,6 +16,7 @@ export function Provider({children}: {children: React.ReactNode}) {
     data: purchases,
     error: purchasesStateError,
     refetch,
+    isRefetching,
   } = usePurchasesState()
   const ctx = React.useMemo<PurchasesState>(() => {
     if (purchasesStateError) {
@@ -25,13 +31,22 @@ export function Provider({children}: {children: React.ReactNode}) {
     } else {
       return {
         status: 'ready',
+        refetching: isRefetching,
         email: purchases?.email,
         subscriptions: purchases?.subscriptions ?? [],
         entitlements: purchases?.entitlements ?? [],
         config: {},
       }
     }
-  }, [purchases, purchasesStateError])
+  }, [purchases, purchasesStateError, isRefetching])
+
+  const apiCtx = React.useMemo<PurchasesApi>(() => {
+    return {
+      refetch: async () => {
+        await refetch()
+      },
+    }
+  }, [refetch])
 
   useNativeEventsListener({
     onCustomerInfoUpdated() {
@@ -39,9 +54,17 @@ export function Provider({children}: {children: React.ReactNode}) {
     },
   })
 
-  return <Context.Provider value={ctx}>{children}</Context.Provider>
+  return (
+    <ApiContext.Provider value={apiCtx}>
+      <StateContext.Provider value={ctx}>{children}</StateContext.Provider>
+    </ApiContext.Provider>
+  )
 }
 
 export function usePurchases() {
-  return React.useContext(Context)
+  return React.useContext(StateContext)
+}
+
+export function usePurchasesApi() {
+  return React.useContext(ApiContext)
 }
