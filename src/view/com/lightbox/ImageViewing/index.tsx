@@ -40,19 +40,19 @@ import {
   useSafeAreaFrame,
   useSafeAreaInsets,
 } from 'react-native-safe-area-context'
-import * as NavigationBar from 'expo-navigation-bar'
 import {StatusBar} from 'expo-status-bar'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Trans} from '@lingui/macro'
 
 import {Dimensions} from '#/lib/media/types'
 import {colors, s} from '#/lib/styles'
-import {isAndroid, isIOS} from '#/platform/detection'
+import {isIOS} from '#/platform/detection'
 import {Lightbox} from '#/state/lightbox'
 import {Button} from '#/view/com/util/forms/Button'
 import {Text} from '#/view/com/util/text/Text'
 import {ScrollView} from '#/view/com/util/Views'
 import {ios, useTheme} from '#/alf'
+import {setNavigationBar} from '#/alf/util/navigationBar'
 import {PlatformInfo} from '../../../../../modules/expo-bluesky-swiss-army'
 import {ImageSource, Transform} from './@types'
 import ImageDefaultHeader from './components/ImageDefaultHeader'
@@ -282,15 +282,9 @@ function ImageView({
   // style nav bar on android
   const t = useTheme()
   useEffect(() => {
-    if (isAndroid) {
-      NavigationBar.setBackgroundColorAsync('black')
-      NavigationBar.setBorderColorAsync('black')
-      NavigationBar.setButtonStyleAsync('light')
-      return () => {
-        NavigationBar.setBackgroundColorAsync(t.atoms.bg.backgroundColor)
-        NavigationBar.setBorderColorAsync(t.atoms.bg.backgroundColor)
-        NavigationBar.setButtonStyleAsync(t.name !== 'light' ? 'light' : 'dark')
-      }
+    setNavigationBar('lightbox', t)
+    return () => {
+      setNavigationBar('theme', t)
     }
   }, [t])
 
