@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-25 15:04\n"
+"PO-Revision-Date: 2024-11-26 13:04\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -71,7 +71,7 @@ msgstr "{0, plural, one {正在关注} other {正在关注}}"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:305
 msgid "{0, plural, one {Like (# like)} other {Like (# likes)}}"
-msgstr "{0, plural, one {喜欢 (# 个喜欢)} other {喜欢 (# 个喜欢)}}"
+msgstr "{0, plural, one {喜欢（# 个喜欢）} other {喜欢（# 个喜欢）}}"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:447
 msgid "{0, plural, one {like} other {likes}}"
@@ -92,7 +92,7 @@ msgstr "{0, plural, one {次引用} other {次引用}}"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:261
 msgid "{0, plural, one {Reply (# reply)} other {Reply (# replies)}}"
-msgstr "{0, plural, one {回复 (# 则回复)} other {回复 (# 则回复)}}"
+msgstr "{0, plural, one {回复（# 则回复）} other {回复（# 则回复）}}"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:413
 msgid "{0, plural, one {repost} other {reposts}}"
@@ -100,7 +100,7 @@ msgstr "{0, plural, one {次转发} other {次转发}}"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:301
 msgid "{0, plural, one {Unlike (# like)} other {Unlike (# likes)}}"
-msgstr "{0, plural, one {取消喜欢 (# 个喜欢)} other {取消喜欢 (# 个喜欢)}}"
+msgstr "{0, plural, one {取消喜欢（# 个喜欢）} other {取消喜欢（# 个喜欢）}}"
 
 #: src/screens/Settings/Settings.tsx:414
 msgid "{0}"
@@ -109,12 +109,12 @@ msgstr "{0}"
 #. Pattern: {wordValue} in tags
 #: src/components/dialogs/MutedWords.tsx:475
 msgid "{0} <0>in <1>tags</1></0>"
-msgstr "{0} <0> —— <1>标签</1></0>"
+msgstr "{0} <0> - <1>标签</1></0>"
 
 #. Pattern: {wordValue} in text, tags
 #: src/components/dialogs/MutedWords.tsx:465
 msgid "{0} <0>in <1>text & tags</1></0>"
-msgstr "{0} <0> —— <1>文本及标签</1></0>"
+msgstr "{0} <0> - <1>文本及标签</1></0>"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:219
 msgid "{0} joined this week"
@@ -138,7 +138,7 @@ msgstr "{0}的头像"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:67
 msgid "{0}'s favorite feeds and people - join me!"
-msgstr "{0}最喜欢的动态源和用户 —— 跟我一起加入吧！"
+msgstr "{0}最喜欢的动态源和用户——跟我一起加入吧！"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:46
 msgid "{0}'s starter pack"
@@ -2550,7 +2550,7 @@ msgstr "已到期"
 
 #: src/components/dialogs/MutedWords.tsx:502
 msgid "Expires {0}"
-msgstr "已到期 {0}"
+msgstr "将于 {0} 到期"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:47
 msgid "Explicit or potentially disturbing media."
@@ -7665,7 +7665,7 @@ msgstr "服务器返回了错误的 DID。接收到的 DID： {0}"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:78
 msgid "Yes"
-msgstr "启用"
+msgstr "是"
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:106
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:108

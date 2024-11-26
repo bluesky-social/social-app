@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-25 13:34\n"
+"PO-Revision-Date: 2024-11-26 13:04\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -2550,7 +2550,7 @@ msgstr "已過期"
 
 #: src/components/dialogs/MutedWords.tsx:502
 msgid "Expires {0}"
-msgstr "已過期 {0}"
+msgstr "將於 {0} 過期"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:47
 msgid "Explicit or potentially disturbing media."
@@ -7665,7 +7665,7 @@ msgstr "伺服器返回了錯誤的 DID。接收到的 DID: {0}"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:78
 msgid "Yes"
-msgstr "開"
+msgstr "是"
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:106
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:108

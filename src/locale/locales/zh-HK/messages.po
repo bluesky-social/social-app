@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-25 13:34\n"
+"PO-Revision-Date: 2024-11-26 13:04\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional, Hong Kong\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -7665,7 +7665,7 @@ msgstr "由伺服器返嚟嘅 DID 錯誤，收到嘅 DID：{0}"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:78
 msgid "Yes"
-msgstr "啓用"
+msgstr "係"
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:106
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:108
