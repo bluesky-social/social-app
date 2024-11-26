@@ -4,6 +4,11 @@ import PagerView, {
   PagerViewOnPageSelectedEvent,
   PageScrollStateChangedNativeEvent,
 } from 'react-native-pager-view'
+import Animated, {
+  useEvent,
+  useHandler,
+  useSharedValue,
+} from 'react-native-reanimated'
 
 import {atoms as a, native} from '#/alf'
 
@@ -29,6 +34,9 @@ interface Props {
   ) => void
   testID?: string
 }
+
+const AnimatedPagerView = Animated.createAnimatedComponent(PagerView)
+
 export const Pager = forwardRef<PagerRef, React.PropsWithChildren<Props>>(
   function PagerImpl(
     {
@@ -43,6 +51,7 @@ export const Pager = forwardRef<PagerRef, React.PropsWithChildren<Props>>(
   ) {
     const [selectedPage, setSelectedPage] = React.useState(0)
     const pagerView = React.useRef<PagerView>(null)
+    const dragProgress = useSharedValue(selectedPage)
 
     React.useImperativeHandle(ref, () => ({
       setPage: (index: number) => {
@@ -72,21 +81,49 @@ export const Pager = forwardRef<PagerRef, React.PropsWithChildren<Props>>(
       [pagerView],
     )
 
+    const handlePageScroll = usePageScrollHandler(
+      {
+        onPageScroll(e: any) {
+          'worklet'
+          const progress = e.offset + e.position
+          dragProgress.value = progress
+        },
+      },
+      [],
+    )
+
     return (
       <View testID={testID} style={[a.flex_1, native(a.overflow_hidden)]}>
         {renderTabBar({
           selectedPage,
           onSelect: onTabBarSelect,
         })}
-        <PagerView
+        <AnimatedPagerView
           ref={pagerView}
           style={[a.flex_1]}
           initialPage={initialPage}
           onPageScrollStateChanged={handlePageScrollStateChanged}
-          onPageSelected={onPageSelectedInner}>
+          onPageSelected={onPageSelectedInner}
+          onPageScroll={handlePageScroll}>
           {children}
-        </PagerView>
+        </AnimatedPagerView>
       </View>
     )
   },
 )
+
+function usePageScrollHandler(handlers: any, dependencies: any): any {
+  const {context, doDependenciesDiffer} = useHandler(handlers, dependencies)
+  const subscribeForEvents = ['onPageScroll']
+  const {onPageScroll} = handlers
+  return useEvent(
+    event => {
+      'worklet'
+      if (event.eventName.endsWith('onPageScroll')) {
+        onPageScroll?.(event, context)
+      }
+    },
+    subscribeForEvents,
+    doDependenciesDiffer,
+  )
+}
