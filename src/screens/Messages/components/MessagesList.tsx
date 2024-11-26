@@ -1,5 +1,5 @@
 import React, {useCallback, useRef} from 'react'
-import {FlatList, LayoutChangeEvent, View} from 'react-native'
+import {LayoutChangeEvent, View} from 'react-native'
 import {
   KeyboardStickyView,
   useKeyboardHandler,
@@ -33,7 +33,7 @@ import {
   EmojiPicker,
   EmojiPickerState,
 } from '#/view/com/composer/text-input/web/EmojiPicker.web'
-import {List} from '#/view/com/util/List'
+import {List, ListMethods} from '#/view/com/util/List'
 import {ChatDisabled} from '#/screens/Messages/components/ChatDisabled'
 import {MessageInput} from '#/screens/Messages/components/MessageInput'
 import {MessageListError} from '#/screens/Messages/components/MessageListError'
@@ -94,7 +94,7 @@ export function MessagesList({
   const getPost = useGetPost()
   const {embedUri, setEmbed} = useMessageEmbed()
 
-  const flatListRef = useAnimatedRef<FlatList>()
+  const flatListRef = useAnimatedRef<ListMethods>()
 
   const [newMessagesPill, setNewMessagesPill] = React.useState({
     show: false,
