@@ -1,12 +1,25 @@
+import {DateTimeFormat} from '@formatjs/intl-datetimeformat'
 import {I18n} from '@lingui/core'
+
+import {isNative,isWeb} from '#/platform/detection'
 
 export function niceDate(i18n: I18n, date: number | string | Date) {
   const d = new Date(date)
 
-  return i18n.date(d, {
-    dateStyle: 'long',
-    timeStyle: 'short',
-  })
+  if (isWeb) {
+    return i18n.date(d, {
+      dateStyle: 'long',
+      timeStyle: 'short',
+    })
+  }
+
+  if (isNative) {
+    const dateFormatter = new DateTimeFormat(i18n.locale, {
+      dateStyle: 'long',
+      timeStyle: 'short',
+    })
+    return dateFormatter.format(d)
+  }
 }
 
 export function getAge(birthDate: Date): number {
