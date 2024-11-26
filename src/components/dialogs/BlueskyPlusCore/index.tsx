@@ -19,8 +19,11 @@ import {atoms as a, tokens, useBreakpoints, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
+import {Divider} from '#/components/Divider'
+import * as TextField from '#/components/forms/TextField'
 import * as Toggle from '#/components/forms/Toggle'
 import {GradientFill} from '#/components/GradientFill'
+import {At_Stroke2_Corner0_Rounded as At} from '#/components/icons/At'
 import {Full as BlueskyPlusLogo} from '#/components/icons/BlueskyPlus'
 import {CheckThick_Stroke2_Corner0_Rounded as CheckThink} from '#/components/icons/Check'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
@@ -50,7 +53,12 @@ function DialogInner({control}: {control: Dialog.DialogControlProps}) {
   const routes = useNavigationState(state => state.routes)
   const currentRoute = routes.at(routes.length - 1)
   const isOnSubscriptionsPage = currentRoute?.name === 'Subscriptions'
+  // TODO if 3p PDS
+  const needsEmail = !currentAccount?.email
+  const needsConfirmEmail = !currentAccount?.emailConfirmed
+  const isDisabled = needsEmail || needsConfirmEmail
 
+  const [email, setEmail] = React.useState('')
   const [error, setError] = React.useState<string>('')
   const [offeringId, setOfferingId] = React.useState<SubscriptionOfferingId>(
     SubscriptionOfferingId.CoreAnnual,
@@ -59,22 +67,40 @@ function DialogInner({control}: {control: Dialog.DialogControlProps}) {
   const {mutateAsync: purchaseOffering, isPending} = usePurchaseOffering()
 
   const onPressSubscribe = async () => {
+    setError('')
+
     async function purchase() {
       if (!currentAccount) return
 
       const offering = coreOffering?.offerings.find(o => o.id === offeringId)
 
       if (!offering) {
-        Toast.show(
-          _(msg`Hmmmm. We couldn't locate that subscription.`),
-          'xmark',
+        const message = _(msg`Hmmmm. We couldn't locate that subscription.`)
+        if (isWeb) {
+          setError(message)
+        } else {
+          Toast.show(message, 'xmark')
+        }
+        return
+      }
+
+      const emailValue = email ?? currentAccount.email
+
+      if (!emailValue) {
+        const message = _(
+          msg`Hmmm. Something went wrong, sorry about that. Please try again.`,
         )
+        if (isWeb) {
+          setError(message)
+        } else {
+          Toast.show(message, 'xmark')
+        }
         return
       }
 
       await purchaseOffering({
         did: currentAccount.did,
-        email: currentAccount.email!,
+        email: emailValue,
         offering,
       })
     }
@@ -263,6 +289,47 @@ function DialogInner({control}: {control: Dialog.DialogControlProps}) {
         })}
       </Toggle.Group>
 
+      {needsEmail ? (
+        <View style={[a.pt_md]}>
+          <Divider />
+          <View style={[a.py_md, a.gap_xs]}>
+            <Text
+              style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}>
+              <Trans>
+                A real email is required in order to receive support and updates
+                for your subscription.
+              </Trans>
+            </Text>
+            <TextField.Root>
+              <TextField.Icon icon={At} />
+              <TextField.Input
+                label={_(
+                  msg`Enter your email for support and updates to your subscription.`,
+                )}
+                placeholder={_(msg`Email`)}
+                onChangeText={setEmail}
+              />
+            </TextField.Root>
+          </View>
+
+          <Divider />
+        </View>
+      ) : needsConfirmEmail ? (
+        <View style={[a.pt_sm]}>
+          <Admonition type="warning" style={[a.flex_1]}>
+            <Trans>
+              You must verify your email to continue. Without a valid email, we
+              can provide no support for your subscription.
+            </Trans>{' '}
+            <InlineLinkText
+              to="/settings/account"
+              label={_(msg`Visit account settings`)}>
+              <Trans>Click here to begin.</Trans>
+            </InlineLinkText>
+          </Admonition>
+        </View>
+      ) : null}
+
       <View style={[a.flex_row, a.pt_md, a.gap_sm]}>
         {!isOnSubscriptionsPage && (
           <Link
@@ -283,7 +350,7 @@ function DialogInner({control}: {control: Dialog.DialogControlProps}) {
           color="secondary"
           size="large"
           onPress={onPressSubscribe}
-          disabled={isPending}
+          disabled={isPending || isDisabled}
           style={[a.flex_1, a.overflow_hidden]}>
           <GradientFill gradient={tokens.gradients.nordic} />
           <ButtonText style={[{color: 'white'}]}>
