@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-26 13:04\n"
+"PO-Revision-Date: 2024-11-26 13:12\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -182,7 +182,7 @@ msgid "{count} unread items"
 msgstr "{count} 个未读"
 
 #: src/lib/generate-starterpack.ts:108
-#: src/screens/StarterPack/Wizard/index.tsx:183
+#: src/screens/StarterPack/Wizard/index.tsx:180
 msgid "{displayName}'s Starter Pack"
 msgstr "{displayName}的新手包"
 
@@ -313,12 +313,12 @@ msgstr "{profileName}在{0}前加入了 Bluesky"
 msgid "{profileName} joined Bluesky using a starter pack {0} ago"
 msgstr "{profileName}在{0}前使用新手包加入了 Bluesky"
 
-#: src/screens/StarterPack/Wizard/index.tsx:475
+#: src/screens/StarterPack/Wizard/index.tsx:472
 msgctxt "profiles"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
 msgstr "<0>{0}、</0><1>{1}</1> 及{2, plural, one {其他 # } other {其他 # }}人包含在你的新手包中"
 
-#: src/screens/StarterPack/Wizard/index.tsx:528
+#: src/screens/StarterPack/Wizard/index.tsx:525
 msgctxt "feeds"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
 msgstr "<0>{0}、</0><1>{1}</1> 及{2, plural, one {其他 # } other {其他 # }}个动态源包含在你的新手包中"
@@ -331,11 +331,11 @@ msgstr "<0>{0}</0> {1, plural, one {关注者} other {关注者}}"
 msgid "<0>{0}</0> {1, plural, one {following} other {following}}"
 msgstr "<0>{0}</0> {1, plural, one {正在关注} other {正在关注}}"
 
-#: src/screens/StarterPack/Wizard/index.tsx:516
+#: src/screens/StarterPack/Wizard/index.tsx:513
 msgid "<0>{0}</0> and<1> </1><2>{1} </2>are included in your starter pack"
 msgstr "<0>{0}</0>及<1></1><2>{1} </2>已包含在你的新手包中"
 
-#: src/screens/StarterPack/Wizard/index.tsx:509
+#: src/screens/StarterPack/Wizard/index.tsx:506
 msgid "<0>{0}</0> is included in your starter pack"
 msgstr "<0>{0}</0> 已包含在你的新手包中"
 
@@ -351,7 +351,7 @@ msgstr "<0>{date}</0> {time}"
 msgid "<0>Experimental:</0> When this preference is enabled, you'll only receive reply and quote notifications from users you follow. We'll continue to add more controls here over time."
 msgstr "<0>实验性：</0>当你启用这个设置项后，你将只会收到已关注用户的回复及引用通知。我们会在这里持续添加更多设置项。"
 
-#: src/screens/StarterPack/Wizard/index.tsx:466
+#: src/screens/StarterPack/Wizard/index.tsx:463
 msgid "<0>You</0> and<1> </1><2>{0} </2>are included in your starter pack"
 msgstr "<0>你</0> 及<1> </1><2>{0} </2>已包含在你的新手包中"
 
@@ -383,7 +383,7 @@ msgid "About"
 msgstr "关于"
 
 #: src/view/com/util/ViewHeader.tsx:89
-#: src/view/screens/Search/Search.tsx:883
+#: src/view/screens/Search/Search.tsx:884
 msgid "Access navigation links and settings"
 msgstr "访问导航链接及设置"
 
@@ -459,7 +459,7 @@ msgstr "已取消隐藏该账户"
 msgid "Add"
 msgstr "添加"
 
-#: src/screens/StarterPack/Wizard/index.tsx:577
+#: src/screens/StarterPack/Wizard/index.tsx:574
 msgid "Add {0} more to continue"
 msgstr "再添加至少 {0} 个以继续"
 
@@ -530,7 +530,7 @@ msgstr "添加新的帖文"
 msgid "Add recommended feeds"
 msgstr "添加推荐的动态源"
 
-#: src/screens/StarterPack/Wizard/index.tsx:497
+#: src/screens/StarterPack/Wizard/index.tsx:494
 msgid "Add some feeds to your starter pack!"
 msgstr "添加一些推荐的动态源到你的新手包里面！"
 
@@ -613,10 +613,6 @@ msgstr "允许读取你的私信"
 #: src/screens/Messages/Settings.tsx:67
 msgid "Allow new messages from"
 msgstr "允许这些来源向你发起新对话"
-
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:314
-msgid "Allow quote posts"
-msgstr "允许引用帖文"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:359
 msgid "Allow replies from:"
@@ -911,8 +907,8 @@ msgstr "至少应有 3 个字符"
 msgid "Autoplay options have moved to the <0>Content and Media settings</0>."
 msgstr "自动播放选项已移动到<0>内容与媒体设置</0>。"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:82
 #: src/screens/Settings/ContentAndMediaSettings.tsx:88
+#: src/screens/Settings/ContentAndMediaSettings.tsx:94
 msgid "Autoplay videos and GIFs"
 msgstr "自动播放视频及 GIF"
 
@@ -931,7 +927,7 @@ msgstr "自动播放视频及 GIF"
 #: src/screens/Messages/components/ChatDisabled.tsx:134
 #: src/screens/Profile/Header/Shell.tsx:112
 #: src/screens/Signup/BackNextButtons.tsx:41
-#: src/screens/StarterPack/Wizard/index.tsx:307
+#: src/screens/StarterPack/Wizard/index.tsx:304
 #: src/view/com/util/ViewHeader.tsx:87
 msgid "Back"
 msgstr "返回"
@@ -951,7 +947,7 @@ msgstr "在创建新手包之前，你必须首先验证你的电子邮箱。"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:79
 #: src/components/dms/MessageProfileButton.tsx:89
-#: src/screens/Messages/Conversation.tsx:219
+#: src/screens/Messages/Conversation.tsx:210
 msgid "Before you may message another user, you must first verify your email."
 msgstr "在向其他人发送私信之前，你必须首先验证你的电子邮箱。"
 
@@ -1161,7 +1157,7 @@ msgstr "相机"
 #: src/view/com/modals/VerifyEmail.tsx:255
 #: src/view/com/modals/VerifyEmail.tsx:261
 #: src/view/com/util/post-ctrls/RepostButton.tsx:203
-#: src/view/screens/Search/Search.tsx:911
+#: src/view/screens/Search/Search.tsx:912
 msgid "Cancel"
 msgstr "取消"
 
@@ -1194,7 +1190,7 @@ msgid "Cancel reactivation and log out"
 msgstr "取消重新激活账户并登出"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:88
-#: src/view/screens/Search/Search.tsx:903
+#: src/view/screens/Search/Search.tsx:904
 msgid "Cancel search"
 msgstr "取消搜索"
 
@@ -1300,7 +1296,7 @@ msgstr "查看发送至你电子邮箱的验证邮件，并在下方输入收到
 msgid "Choose domain verification method"
 msgstr "选择验证域名的方式"
 
-#: src/screens/StarterPack/Wizard/index.tsx:199
+#: src/screens/StarterPack/Wizard/index.tsx:196
 msgid "Choose Feeds"
 msgstr "选择动态源"
 
@@ -1308,7 +1304,7 @@ msgstr "选择动态源"
 msgid "Choose for me"
 msgstr "帮我选择"
 
-#: src/screens/StarterPack/Wizard/index.tsx:195
+#: src/screens/StarterPack/Wizard/index.tsx:192
 msgid "Choose People"
 msgstr "选择用户"
 
@@ -1566,7 +1562,7 @@ msgid "Content and media"
 msgstr "内容与媒体"
 
 #: src/Navigation.tsx:353
-#: src/screens/Settings/ContentAndMediaSettings.tsx:44
+#: src/screens/Settings/ContentAndMediaSettings.tsx:35
 msgid "Content and Media"
 msgstr "内容与媒体"
 
@@ -2031,7 +2027,7 @@ msgstr "探索新的动态源"
 msgid "Discover New Feeds"
 msgstr "探索新的动态源"
 
-#: src/components/Dialog/index.tsx:318
+#: src/components/Dialog/index.tsx:311
 msgid "Dismiss"
 msgstr "跳过"
 
@@ -2120,7 +2116,7 @@ msgstr "完成"
 msgid "Done{extraText}"
 msgstr "完成{extraText}"
 
-#: src/components/Dialog/index.tsx:319
+#: src/components/Dialog/index.tsx:312
 msgid "Double tap to close the dialog"
 msgstr "双击以关闭对话框"
 
@@ -2187,8 +2183,8 @@ msgstr "每个邀请码仅可被使用一次。后续你将不定期获得新的
 
 #: src/screens/Settings/AccountSettings.tsx:104
 #: src/screens/StarterPack/StarterPackScreen.tsx:574
-#: src/screens/StarterPack/Wizard/index.tsx:560
-#: src/screens/StarterPack/Wizard/index.tsx:567
+#: src/screens/StarterPack/Wizard/index.tsx:557
+#: src/screens/StarterPack/Wizard/index.tsx:564
 #: src/view/screens/Feeds.tsx:386
 #: src/view/screens/Feeds.tsx:454
 msgid "Edit"
@@ -2569,8 +2565,8 @@ msgstr "导出账户数据"
 msgid "Export My Data"
 msgstr "导出账户数据"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:73
-#: src/screens/Settings/ContentAndMediaSettings.tsx:76
+#: src/screens/Settings/ContentAndMediaSettings.tsx:64
+#: src/screens/Settings/ContentAndMediaSettings.tsx:67
 msgid "External media"
 msgstr "外部媒体"
 
@@ -2597,8 +2593,8 @@ msgstr "无法更改账户代码，请重试。"
 msgid "Failed to create app password. Please try again."
 msgstr "无法创建应用密码。请重试。"
 
-#: src/screens/StarterPack/Wizard/index.tsx:238
-#: src/screens/StarterPack/Wizard/index.tsx:246
+#: src/screens/StarterPack/Wizard/index.tsx:235
+#: src/screens/StarterPack/Wizard/index.tsx:243
 msgid "Failed to create starter pack"
 msgstr "无法创建新手包"
 
@@ -2749,7 +2745,7 @@ msgstr "寻找一些账户来关注"
 msgid "Find posts and users on Bluesky"
 msgstr "在 Bluesky 寻找感兴趣的帖文和用户"
 
-#: src/screens/StarterPack/Wizard/index.tsx:200
+#: src/screens/StarterPack/Wizard/index.tsx:197
 msgid "Finish"
 msgstr "完成"
 
@@ -2868,8 +2864,8 @@ msgstr "已关注 {0}"
 msgid "Following {name}"
 msgstr "已关注 {name}"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:65
-#: src/screens/Settings/ContentAndMediaSettings.tsx:68
+#: src/screens/Settings/ContentAndMediaSettings.tsx:56
+#: src/screens/Settings/ContentAndMediaSettings.tsx:59
 msgid "Following feed preferences"
 msgstr "“Following”动态源偏好"
 
@@ -3008,7 +3004,7 @@ msgstr "返回上一步"
 msgid "Go back to previous step"
 msgstr "返回上一步"
 
-#: src/screens/StarterPack/Wizard/index.tsx:308
+#: src/screens/StarterPack/Wizard/index.tsx:305
 msgid "Go back to the previous step"
 msgstr "返回上一步"
 
@@ -3095,10 +3091,6 @@ msgstr "帮助"
 #: src/screens/Onboarding/StepProfile/index.tsx:237
 msgid "Help people know you're not a bot by uploading a picture or creating an avatar."
 msgstr "通过上传图片或生成头像，来让大家知道你不是机器人。"
-
-#: src/screens/Settings/ContentAndMediaSettings.tsx:127
-msgid "Helps external sites estimate traffic from Bluesky."
-msgstr "帮助外部站点分析来自 Bluesky 的访问流量。"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:187
 msgid "Here is your app password!"
@@ -3391,7 +3383,7 @@ msgstr "你可能输入了错误的电子邮箱地址。确认这个地址是正
 msgid "It's correct"
 msgstr "这是正确的电子邮箱地址"
 
-#: src/screens/StarterPack/Wizard/index.tsx:461
+#: src/screens/StarterPack/Wizard/index.tsx:458
 msgid "It's just you right now! Add more people to your starter pack by searching above."
 msgstr "现在只剩下你了！通过上面的列表搜索，将更多人添加到你的新手包里面。"
 
@@ -3733,8 +3725,8 @@ msgstr "帮我选择"
 msgid "Make sure this is where you intend to go!"
 msgstr "请确认目标页面地址是否正确！"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:49
-#: src/screens/Settings/ContentAndMediaSettings.tsx:52
+#: src/screens/Settings/ContentAndMediaSettings.tsx:40
+#: src/screens/Settings/ContentAndMediaSettings.tsx:43
 msgid "Manage saved feeds"
 msgstr "管理已保存的动态源"
 
@@ -3765,7 +3757,7 @@ msgstr "被提及的用户"
 
 #: src/components/Menu/index.tsx:95
 #: src/view/com/util/ViewHeader.tsx:87
-#: src/view/screens/Search/Search.tsx:882
+#: src/view/screens/Search/Search.tsx:883
 msgid "Menu"
 msgstr "菜单"
 
@@ -4147,10 +4139,10 @@ msgstr "新闻"
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:157
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:165
 #: src/screens/Signup/BackNextButtons.tsx:67
-#: src/screens/StarterPack/Wizard/index.tsx:192
-#: src/screens/StarterPack/Wizard/index.tsx:196
-#: src/screens/StarterPack/Wizard/index.tsx:367
-#: src/screens/StarterPack/Wizard/index.tsx:374
+#: src/screens/StarterPack/Wizard/index.tsx:189
+#: src/screens/StarterPack/Wizard/index.tsx:193
+#: src/screens/StarterPack/Wizard/index.tsx:364
+#: src/screens/StarterPack/Wizard/index.tsx:371
 #: src/view/com/modals/ChangePassword.tsx:254
 #: src/view/com/modals/ChangePassword.tsx:256
 msgid "Next"
@@ -4178,7 +4170,7 @@ msgstr "没有 DNS 面板"
 msgid "No featured GIFs found. There may be an issue with Tenor."
 msgstr "未找到精选 GIF，Tenor 可能存在问题。"
 
-#: src/screens/StarterPack/Wizard/StepFeeds.tsx:118
+#: src/screens/StarterPack/Wizard/StepFeeds.tsx:119
 msgid "No feeds found. Try searching for something else."
 msgstr "未找到动态源，尝试搜索点别的。"
 
@@ -4280,7 +4272,7 @@ msgstr "目前还没有人引用这则帖文，或许你可以来当第一个哦
 msgid "Nobody has reposted this yet. Maybe you should be the first!"
 msgstr "目前还没有人转发这则帖文，或许你可以来当第一个哦！"
 
-#: src/screens/StarterPack/Wizard/StepProfiles.tsx:102
+#: src/screens/StarterPack/Wizard/StepProfiles.tsx:103
 msgid "Nobody was found. Try searching for someone else."
 msgstr "找不到任何人，试试搜点其他关键字。"
 
@@ -5043,6 +5035,10 @@ msgstr "已成功分离引用帖文"
 msgid "Quote posts disabled"
 msgstr "已停用帖文引用"
 
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:314
+msgid "Quote posts enabled"
+msgstr "已启用帖文引用"
+
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:299
 msgid "Quote settings"
 msgstr "引用选项"
@@ -5092,7 +5088,7 @@ msgstr "浏览 Bluesky 使用条款"
 msgid "Reason:"
 msgstr "原因："
 
-#: src/view/screens/Search/Search.tsx:1057
+#: src/view/screens/Search/Search.tsx:1058
 msgid "Recent Searches"
 msgstr "最近的搜索结果"
 
@@ -5185,11 +5181,11 @@ msgstr "删除图片"
 msgid "Remove mute word from your list"
 msgstr "从你的隐藏字词列表中删除"
 
-#: src/view/screens/Search/Search.tsx:1101
+#: src/view/screens/Search/Search.tsx:1102
 msgid "Remove profile"
 msgstr "删除个人资料"
 
-#: src/view/screens/Search/Search.tsx:1103
+#: src/view/screens/Search/Search.tsx:1104
 msgid "Remove profile from search history"
 msgstr "从搜索历史中删除个人资料"
 
@@ -5641,11 +5637,11 @@ msgstr "搜索"
 msgid "Search for \"{query}\""
 msgstr "搜索“{query}”"
 
-#: src/view/screens/Search/Search.tsx:1000
+#: src/view/screens/Search/Search.tsx:1001
 msgid "Search for \"{searchText}\""
 msgstr "搜索“{searchText}”"
 
-#: src/screens/StarterPack/Wizard/index.tsx:500
+#: src/screens/StarterPack/Wizard/index.tsx:497
 msgid "Search for feeds that you want to suggest to others."
 msgstr "通过搜索来添加你想分享的动态源。"
 
@@ -5793,10 +5789,6 @@ msgstr "选择你在订阅的动态源中翻译的目标语言。"
 #: src/components/dms/ChatEmptyPill.tsx:38
 msgid "Send a neat website!"
 msgstr "发送一个你认为有趣的网站吧！"
-
-#: src/screens/Settings/ContentAndMediaSettings.tsx:118
-msgid "Send Bluesky referrer"
-msgstr "发送 Bluesky 为流量来源"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:232
 msgid "Send Confirmation"
@@ -6153,7 +6145,7 @@ msgid "Similar accounts"
 msgstr "类似账户"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:231
-#: src/screens/StarterPack/Wizard/index.tsx:200
+#: src/screens/StarterPack/Wizard/index.tsx:197
 msgid "Skip"
 msgstr "跳过"
 
@@ -6178,7 +6170,7 @@ msgstr "其他你可能喜欢的动态源"
 msgid "Some people can reply"
 msgstr "一些人可以回复"
 
-#: src/screens/Messages/Conversation.tsx:112
+#: src/screens/Messages/Conversation.tsx:103
 msgid "Something went wrong"
 msgstr "出了点问题"
 
@@ -6199,7 +6191,7 @@ msgid "Something went wrong!"
 msgstr "出了点问题！"
 
 #: src/App.native.tsx:113
-#: src/App.web.tsx:95
+#: src/App.web.tsx:94
 msgid "Sorry! Your session expired. Please log in again."
 msgstr "很抱歉，你的登录会话已过期，请重新登录。"
 
@@ -6228,10 +6220,6 @@ msgstr "垃圾内容"
 msgid "Spam; excessive mentions or replies"
 msgstr "垃圾内容、过于频繁的提及或回复"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:112
-msgid "Specify Bluesky as a referer"
-msgstr "把 Bluesky 设为流量来源"
-
 #: src/screens/Onboarding/index.tsx:27
 #: src/screens/Onboarding/state.ts:100
 msgid "Sports"
@@ -6247,7 +6235,7 @@ msgstr "与 {displayName} 开始私信"
 
 #: src/Navigation.tsx:393
 #: src/Navigation.tsx:398
-#: src/screens/StarterPack/Wizard/index.tsx:191
+#: src/screens/StarterPack/Wizard/index.tsx:188
 msgid "Starter Pack"
 msgstr "新手包"
 
@@ -6469,8 +6457,8 @@ msgstr "这个账户代码已被占用。"
 #: src/screens/StarterPack/StarterPackScreen.tsx:104
 #: src/screens/StarterPack/StarterPackScreen.tsx:148
 #: src/screens/StarterPack/StarterPackScreen.tsx:149
-#: src/screens/StarterPack/Wizard/index.tsx:107
-#: src/screens/StarterPack/Wizard/index.tsx:117
+#: src/screens/StarterPack/Wizard/index.tsx:105
+#: src/screens/StarterPack/Wizard/index.tsx:115
 msgid "That starter pack could not be found."
 msgstr "找不到那个新手包。"
 
@@ -6871,8 +6859,8 @@ msgstr "这将从你的快速访问中移除 @{0}。"
 msgid "This will remove your post from this quote post for all users, and replace it with a placeholder."
 msgstr "你对这则帖文的引用将会删除，并替换为一个占位符。"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:57
-#: src/screens/Settings/ContentAndMediaSettings.tsx:60
+#: src/screens/Settings/ContentAndMediaSettings.tsx:48
+#: src/screens/Settings/ContentAndMediaSettings.tsx:51
 msgid "Thread preferences"
 msgstr "讨论串偏好"
 
@@ -7198,8 +7186,8 @@ msgstr "使用默认提供商"
 msgid "Use in-app browser"
 msgstr "使用应用内浏览器"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:96
-#: src/screens/Settings/ContentAndMediaSettings.tsx:102
+#: src/screens/Settings/ContentAndMediaSettings.tsx:74
+#: src/screens/Settings/ContentAndMediaSettings.tsx:80
 msgid "Use in-app browser to open links"
 msgstr "使用应用内浏览器开启链接"
 
@@ -7492,7 +7480,7 @@ msgstr "警告内容并从动态源中过滤"
 msgid "We couldn't find any results for that hashtag."
 msgstr "我们找不到任何与该标签相关的结果。"
 
-#: src/screens/Messages/Conversation.tsx:113
+#: src/screens/Messages/Conversation.tsx:104
 msgid "We couldn't load this conversation"
 msgstr "我们目前无法加载这个对话"
 
