@@ -27,6 +27,18 @@ export const atoms = {
     right: 0,
     bottom: 0,
   },
+  top_0: {
+    top: 0,
+  },
+  left_0: {
+    left: 0,
+  },
+  right_0: {
+    right: 0,
+  },
+  bottom_0: {
+    bottom: 0,
+  },
   z_10: {
     zIndex: 10,
   },
@@ -48,13 +60,19 @@ export const atoms = {
   },
 
   /*
-   * Width
+   * Height / Width
    */
   w_full: {
     width: '100%',
   },
+  max_w_full: {
+    maxWidth: '100%',
+  },
   h_full: {
     height: '100%',
+  },
+  max_h_full: {
+    maxHeight: '100%',
   },
   h_full_vh: web({
     height: '100vh',
@@ -878,6 +896,9 @@ export const atoms = {
   pointer_events_auto: {
     pointerEvents: 'auto',
   },
+  pointer_events_box_none: {
+    pointerEvents: 'box-none',
+  },
   user_select_none: {
     userSelect: 'none',
   },
@@ -935,4 +956,23 @@ export const atoms = {
     transitionTimingFunction: 'cubic-bezier(0.17, 0.73, 0.14, 1)',
     transitionDuration: '100ms',
   }),
+
+  /*
+   * Opacity
+   */
+  opacity_0: {
+    opacity: 0,
+  },
+  opacity_25: {
+    opacity: 0.25,
+  },
+  opacity_50: {
+    opacity: 0.5,
+  },
+  opacity_75: {
+    opacity: 0.75,
+  },
+  opacity_100: {
+    opacity: 1,
+  },
 } as const
