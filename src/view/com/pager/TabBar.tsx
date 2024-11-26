@@ -1,5 +1,5 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react'
-import {LayoutChangeEvent, ScrollView, StyleSheet, View} from 'react-native'
+import {useCallback, useMemo, useRef} from 'react'
+import {ScrollView, StyleSheet, View} from 'react-native'
 
 import {usePalette} from '#/lib/hooks/usePalette'
 import {PressableWithHover} from '../util/PressableWithHover'
@@ -14,10 +14,6 @@ export interface TabBarProps {
   onPressSelected?: (index: number) => void
 }
 
-// How much of the previous/next item we're showing
-// to give the user a hint there's more to scroll.
-const OFFSCREEN_ITEM_WIDTH = 20
-
 export function TabBar({
   testID,
   selectedPage,
@@ -28,20 +24,10 @@ export function TabBar({
 }: TabBarProps) {
   const pal = usePalette('default')
   const scrollElRef = useRef<ScrollView>(null)
-  const [itemXs, setItemXs] = useState<number[]>([])
   const indicatorStyle = useMemo(
     () => ({borderBottomColor: indicatorColor || pal.colors.link}),
     [indicatorColor, pal],
   )
-
-  useEffect(() => {
-    // On native, the primary interaction is swiping.
-    // We adjust the scroll little by little on every tab change.
-    // Scroll into view but keep the end of the previous item visible.
-    let x = itemXs[selectedPage] || 0
-    x = Math.max(0, x - OFFSCREEN_ITEM_WIDTH)
-    scrollElRef.current?.scrollTo({x})
-  }, [scrollElRef, itemXs, selectedPage])
 
   const onPressItem = useCallback(
     (index: number) => {
@@ -51,19 +37,6 @@ export function TabBar({
       }
     },
     [onSelect, selectedPage, onPressSelected],
-  )
-
-  // calculates the x position of each item on mount and on layout change
-  const onItemLayout = React.useCallback(
-    (e: LayoutChangeEvent, index: number) => {
-      const x = e.nativeEvent.layout.x
-      setItemXs(prev => {
-        const Xs = [...prev]
-        Xs[index] = x
-        return Xs
-      })
-    },
-    [],
   )
 
   return (
@@ -83,7 +56,6 @@ export function TabBar({
             <PressableWithHover
               testID={`${testID}-selector-${i}`}
               key={`${item}-${i}`}
-              onLayout={e => onItemLayout(e, i)}
               style={styles.item}
               hoverStyle={pal.viewLight}
               onPress={() => onPressItem(i)}
