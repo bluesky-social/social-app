@@ -7,11 +7,13 @@ import {
 import Animated, {
   runOnJS,
   scrollTo,
+  useAnimatedProps,
   useAnimatedRef,
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated'
 import {ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript/hook/commonTypes'
+import {BlurView} from 'expo-blur'
 import {AppBskyEmbedRecord, AppBskyRichtextFacet, RichText} from '@atproto/api'
 
 import {ScrollProvider} from '#/lib/ScrollContext'
@@ -21,7 +23,7 @@ import {
   isBskyPostUrl,
 } from '#/lib/strings/url-helpers'
 import {logger} from '#/logger'
-import {isNative} from '#/platform/detection'
+import {isIOS, isNative} from '#/platform/detection'
 import {isWeb} from '#/platform/detection'
 import {isConvoActive, useConvoActive} from '#/state/messages/convo'
 import {ConvoItem, ConvoStatus} from '#/state/messages/convo/types'
@@ -32,11 +34,11 @@ import {
   EmojiPicker,
   EmojiPickerState,
 } from '#/view/com/composer/text-input/web/EmojiPicker.web'
-import {List, ListMethods} from '#/view/com/util/List'
+import {List, ListMethods, ListProps} from '#/view/com/util/List'
 import {ChatDisabled} from '#/screens/Messages/components/ChatDisabled'
 import {MessageInput} from '#/screens/Messages/components/MessageInput'
 import {MessageListError} from '#/screens/Messages/components/MessageListError'
-import {atoms as a, platform} from '#/alf'
+import {atoms as a, platform, useTheme} from '#/alf'
 import {ChatEmptyPill} from '#/components/dms/ChatEmptyPill'
 import {MessageItem} from '#/components/dms/MessageItem'
 import {NewMessagesPill} from '#/components/dms/NewMessagesPill'
@@ -293,9 +295,17 @@ export function MessagesList({
     [],
   )
 
-  const animatedListStyle = useAnimatedStyle(() => ({
-    marginBottom: Math.max(keyboardHeight.get(), bottomOffset),
-  }))
+  const animatedListProps = useAnimatedProps(
+    () =>
+      ({
+        contentInset: {
+          top: 0,
+          bottom: Math.max(keyboardHeight.get(), inputAreaHeight),
+          left: 0,
+          right: 0,
+        },
+      } satisfies Partial<ListProps>),
+  )
 
   const animatedStickyViewStyle = useAnimatedStyle(() => ({
     transform: [
@@ -423,9 +433,10 @@ export function MessagesList({
             data={convoState.items}
             renderItem={renderItem}
             keyExtractor={keyExtractor}
+            animatedProps={animatedListProps}
             disableFullWindowScroll={true}
+            style={{backgroundColor: 'red'}}
             disableVirtualization={true}
-            style={animatedListStyle}
             // The extra two items account for the header and the footer components
             initialNumToRender={isNative ? 32 : 62}
             maxToRenderPerBatch={isWeb ? 32 : 62}
@@ -452,24 +463,28 @@ export function MessagesList({
       <Animated.View
         style={animatedStickyViewStyle}
         onLayout={evt => setInputAreaHeight(evt.nativeEvent.layout.height)}>
-        {convoState.status === ConvoStatus.Disabled ? (
-          <ChatDisabled />
-        ) : blocked ? (
-          footer
-        ) : (
-          <>
-            {isConvoActive(convoState) &&
-              !convoState.isFetchingHistory &&
-              convoState.items.length === 0 && <ChatEmptyPill />}
-            <MessageInput
-              onSendMessage={onSendMessage}
-              hasEmbed={!!embedUri}
-              setEmbed={setEmbed}
-              openEmojiPicker={pos => setEmojiPickerState({isOpen: true, pos})}>
-              <MessageInputEmbed embedUri={embedUri} setEmbed={setEmbed} />
-            </MessageInput>
-          </>
-        )}
+        <BlurWrapper>
+          {convoState.status === ConvoStatus.Disabled ? (
+            <ChatDisabled />
+          ) : blocked ? (
+            footer
+          ) : (
+            <>
+              {isConvoActive(convoState) &&
+                !convoState.isFetchingHistory &&
+                convoState.items.length === 0 && <ChatEmptyPill />}
+              <MessageInput
+                onSendMessage={onSendMessage}
+                hasEmbed={!!embedUri}
+                setEmbed={setEmbed}
+                openEmojiPicker={pos =>
+                  setEmojiPickerState({isOpen: true, pos})
+                }>
+                <MessageInputEmbed embedUri={embedUri} setEmbed={setEmbed} />
+              </MessageInput>
+            </>
+          )}
+        </BlurWrapper>
       </Animated.View>
 
       {isWeb && (
@@ -483,4 +498,23 @@ export function MessagesList({
       {newMessagesPill.show && <NewMessagesPill onPress={scrollToEndOnPress} />}
     </>
   )
+}
+
+function BlurWrapper({children}: {children: React.ReactNode}) {
+  const t = useTheme()
+  if (isIOS) {
+    return (
+      <BlurView
+        intensity={45}
+        tint={
+          t.name === 'light'
+            ? 'systemThickMaterialLight'
+            : 'systemThickMaterialDark'
+        }>
+        {children}
+      </BlurView>
+    )
+  } else {
+    return <View style={[t.atoms.bg]}>{children}</View>
+  }
 }
