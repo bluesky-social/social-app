@@ -13,7 +13,7 @@ import {FlatListPropsWithLayout} from 'react-native-reanimated'
 export const FlatList_INTERNAL = Animated.FlatList
 export type FlatList_INTERNAL<ItemT = any> = Omit<
   FlatListComponent<ItemT, FlatListPropsWithLayout<ItemT>>,
-  'CellRendererComponent' | 'ref'
+  'CellRendererComponent'
 >
 export const ScrollView = Animated.ScrollView
 export type ScrollView = typeof Animated.ScrollView
