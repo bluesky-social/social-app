@@ -71,7 +71,7 @@ module.exports = function (config) {
         policy: 'appVersion',
       },
       orientation: 'portrait',
-      icon: './assets/icon.png',
+      icon: './assets/app-icons/ios_icon_default_light.png',
       userInterfaceStyle: 'automatic',
       splash: SPLASH_CONFIG,
       // hsl(211, 99%, 53%), same as palette.default.brandText
