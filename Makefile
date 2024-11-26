@@ -37,6 +37,6 @@ deps: ## Installs dependent libs using 'yarn install'
 
 .PHONY: nvm-setup
 nvm-setup: ## Use NVM to install and activate node+yarn
-	nvm install 18
-	nvm use 18
+	nvm install
+	nvm use
 	npm install --global yarn
