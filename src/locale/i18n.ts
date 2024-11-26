@@ -11,6 +11,7 @@ import {i18n} from '@lingui/core'
 
 import {sanitizeAppLanguageSetting} from '#/locale/helpers'
 import {AppLanguage} from '#/locale/languages'
+import {messages as messagesAm} from '#/locale/locales/am/messages'
 import {messages as messagesCa} from '#/locale/locales/ca/messages'
 import {messages as messagesDe} from '#/locale/locales/de/messages'
 import {messages as messagesEn} from '#/locale/locales/en/messages'
@@ -44,6 +45,14 @@ import {useLanguagePrefs} from '#/state/preferences'
  */
 export async function dynamicActivate(locale: AppLanguage) {
   switch (locale) {
+    case AppLanguage.am: {
+      i18n.loadAndActivate({locale, messages: messagesAm})
+      await Promise.all([
+        import('@formatjs/intl-pluralrules/locale-data/am'),
+        import('@formatjs/intl-numberformat/locale-data/am'),
+      ])
+      break
+    }
     case AppLanguage.ca: {
       i18n.loadAndActivate({locale, messages: messagesCa})
       await Promise.all([
