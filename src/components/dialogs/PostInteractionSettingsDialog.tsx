@@ -311,7 +311,7 @@ export function PostInteractionSettingsForm({
               onChange={onChangeQuotesEnabled}
               style={[a.justify_between, a.pt_xs]}>
               <Text style={[t.atoms.text_contrast_medium]}>
-                <Trans>Allow quote posts</Trans>
+                <Trans>Quote posts enabled</Trans>
               </Text>
               <Toggle.Switch />
             </Toggle.Item>
