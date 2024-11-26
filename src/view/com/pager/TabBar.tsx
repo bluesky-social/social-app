@@ -3,7 +3,6 @@ import {LayoutChangeEvent, ScrollView, StyleSheet, View} from 'react-native'
 
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {isNative} from '#/platform/detection'
 import {PressableWithHover} from '../util/PressableWithHover'
 import {Text} from '../util/text/Text'
 import {DraggableScrollView} from './DraggableScrollView'
@@ -31,7 +30,6 @@ export function TabBar({
 }: TabBarProps) {
   const pal = usePalette('default')
   const scrollElRef = useRef<ScrollView>(null)
-  const itemRefs = useRef<Array<Element>>([])
   const [itemXs, setItemXs] = useState<number[]>([])
   const indicatorStyle = useMemo(
     () => ({borderBottomColor: indicatorColor || pal.colors.link}),
@@ -41,57 +39,12 @@ export function TabBar({
   const styles = isDesktop || isTablet ? desktopStyles : mobileStyles
 
   useEffect(() => {
-    if (isNative) {
-      // On native, the primary interaction is swiping.
-      // We adjust the scroll little by little on every tab change.
-      // Scroll into view but keep the end of the previous item visible.
-      let x = itemXs[selectedPage] || 0
-      x = Math.max(0, x - OFFSCREEN_ITEM_WIDTH)
-      scrollElRef.current?.scrollTo({x})
-    } else {
-      // On the web, the primary interaction is tapping.
-      // Scrolling under tap feels disorienting so only adjust the scroll offset
-      // when tapping on an item out of view--and we adjust by almost an entire page.
-      const parent = scrollElRef?.current?.getScrollableNode?.()
-      if (!parent) {
-        return
-      }
-      const parentRect = parent.getBoundingClientRect()
-      if (!parentRect) {
-        return
-      }
-      const {
-        left: parentLeft,
-        right: parentRight,
-        width: parentWidth,
-      } = parentRect
-      const child = itemRefs.current[selectedPage]
-      if (!child) {
-        return
-      }
-      const childRect = child.getBoundingClientRect?.()
-      if (!childRect) {
-        return
-      }
-      const {left: childLeft, right: childRight, width: childWidth} = childRect
-      let dx = 0
-      if (childRight >= parentRight) {
-        dx += childRight - parentRight
-        dx += parentWidth - childWidth - OFFSCREEN_ITEM_WIDTH
-      } else if (childLeft <= parentLeft) {
-        dx -= parentLeft - childLeft
-        dx -= parentWidth - childWidth - OFFSCREEN_ITEM_WIDTH
-      }
-      let x = parent.scrollLeft + dx
-      x = Math.max(0, x)
-      x = Math.min(x, parent.scrollWidth - parentWidth)
-      if (dx !== 0) {
-        parent.scroll({
-          left: x,
-          behavior: 'smooth',
-        })
-      }
-    }
+    // On native, the primary interaction is swiping.
+    // We adjust the scroll little by little on every tab change.
+    // Scroll into view but keep the end of the previous item visible.
+    let x = itemXs[selectedPage] || 0
+    x = Math.max(0, x - OFFSCREEN_ITEM_WIDTH)
+    scrollElRef.current?.scrollTo({x})
   }, [scrollElRef, itemXs, selectedPage, styles])
 
   const onPressItem = useCallback(
@@ -134,7 +87,6 @@ export function TabBar({
             <PressableWithHover
               testID={`${testID}-selector-${i}`}
               key={`${item}-${i}`}
-              ref={node => (itemRefs.current[i] = node as any)}
               onLayout={e => onItemLayout(e, i)}
               style={styles.item}
               hoverStyle={pal.viewLight}
