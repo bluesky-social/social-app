@@ -11,7 +11,7 @@ import {
   HomeTabNavigatorParams,
   NativeStackScreenProps,
 } from '#/lib/routes/types'
-import {logEvent, LogEvents} from '#/lib/statsig/statsig'
+import {logEvent} from '#/lib/statsig/statsig'
 import {isWeb} from '#/platform/detection'
 import {emitSoftReset} from '#/state/events'
 import {SavedFeedSourceInfo, usePinnedFeedsInfos} from '#/state/queries/feed'
@@ -121,7 +121,7 @@ function HomeScreenReady({
     // This is supposed to only happen on the web when you use the right nav.
     if (selectedIndex !== lastPagerReportedIndexRef.current) {
       lastPagerReportedIndexRef.current = selectedIndex
-      pagerRef.current?.setPage(selectedIndex, 'desktop-sidebar-click')
+      pagerRef.current?.setPage(selectedIndex)
     }
   }, [selectedIndex])
 
@@ -158,21 +158,13 @@ function HomeScreenReady({
       const feed = allFeeds[index]
       setSelectedFeed(feed)
       lastPagerReportedIndexRef.current = index
-    },
-    [setDrawerSwipeDisabled, setSelectedFeed, setMinimalShellMode, allFeeds],
-  )
-
-  const onPageSelecting = React.useCallback(
-    (index: number, reason: LogEvents['home:feedDisplayed']['reason']) => {
-      const feed = allFeeds[index]
       logEvent('home:feedDisplayed', {
         index,
         feedType: feed.split('|')[0],
         feedUrl: feed,
-        reason,
       })
     },
-    [allFeeds],
+    [setDrawerSwipeDisabled, setSelectedFeed, setMinimalShellMode, allFeeds],
   )
 
   const onPressSelected = React.useCallback(() => {
@@ -228,7 +220,6 @@ function HomeScreenReady({
       ref={pagerRef}
       testID="homeScreen"
       initialPage={selectedIndex}
-      onPageSelecting={onPageSelecting}
       onPageSelected={onPageSelected}
       onPageScrollStateChanged={onPageScrollStateChanged}
       renderTabBar={renderTabBar}>
