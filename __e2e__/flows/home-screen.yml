@@ -1,4 +1,4 @@
-appId: xyz.blueskyweb.app
+appId: dev.xyz.blueskyweb.app
 ---
 - runScript:
     file: ../setupServer.js
