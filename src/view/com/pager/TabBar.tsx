@@ -2,7 +2,6 @@ import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {LayoutChangeEvent, ScrollView, StyleSheet, View} from 'react-native'
 
 import {usePalette} from '#/lib/hooks/usePalette'
-import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {PressableWithHover} from '../util/PressableWithHover'
 import {Text} from '../util/text/Text'
 import {DraggableScrollView} from './DraggableScrollView'
@@ -35,8 +34,6 @@ export function TabBar({
     () => ({borderBottomColor: indicatorColor || pal.colors.link}),
     [indicatorColor, pal],
   )
-  const {isDesktop, isTablet} = useWebMediaQueries()
-  const styles = isDesktop || isTablet ? desktopStyles : mobileStyles
 
   useEffect(() => {
     // On native, the primary interaction is swiping.
@@ -45,7 +42,7 @@ export function TabBar({
     let x = itemXs[selectedPage] || 0
     x = Math.max(0, x - OFFSCREEN_ITEM_WIDTH)
     scrollElRef.current?.scrollTo({x})
-  }, [scrollElRef, itemXs, selectedPage, styles])
+  }, [scrollElRef, itemXs, selectedPage])
 
   const onPressItem = useCallback(
     (index: number) => {
@@ -95,7 +92,7 @@ export function TabBar({
               <View style={[styles.itemInner, selected && indicatorStyle]}>
                 <Text
                   emoji
-                  type={isDesktop || isTablet ? 'xl-bold' : 'lg-bold'}
+                  type="lg-bold"
                   testID={testID ? `${testID}-${item}` : undefined}
                   style={[
                     selected ? pal.text : pal.textLight,
@@ -113,35 +110,7 @@ export function TabBar({
   )
 }
 
-const desktopStyles = StyleSheet.create({
-  outer: {
-    flexDirection: 'row',
-    width: 598,
-  },
-  contentContainer: {
-    paddingHorizontal: 0,
-    backgroundColor: 'transparent',
-  },
-  item: {
-    paddingTop: 14,
-    paddingHorizontal: 14,
-    justifyContent: 'center',
-  },
-  itemInner: {
-    paddingBottom: 12,
-    borderBottomWidth: 3,
-    borderBottomColor: 'transparent',
-  },
-  outerBottomBorder: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: '100%',
-    borderBottomWidth: StyleSheet.hairlineWidth,
-  },
-})
-
-const mobileStyles = StyleSheet.create({
+const styles = StyleSheet.create({
   outer: {
     flexDirection: 'row',
   },
