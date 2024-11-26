@@ -1,7 +1,6 @@
 import React, {useCallback, useEffect} from 'react'
 import {NativeScrollEvent} from 'react-native'
 import {
-  cancelAnimation,
   interpolate,
   makeMutable,
   useSharedValue,
@@ -43,7 +42,6 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
   const setMode = React.useCallback(
     (v: boolean) => {
       'worklet'
-      cancelAnimation(headerMode)
       headerMode.set(v ? V1.get() : V0.get())
     },
     [headerMode],
@@ -149,8 +147,6 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
         const newValue = clamp(startModeValue + dProgress, 0, 1)
         if (newValue !== headerMode.get()) {
           // Manually adjust the value. This won't be (and shouldn't be) animated.
-          // Cancel any any existing animation
-          cancelAnimation(headerMode)
           headerMode.set(newValue)
         }
       } else {

@@ -1,10 +1,5 @@
 import React from 'react'
-import {
-  cancelAnimation,
-  SharedValue,
-  useSharedValue,
-  withSpring,
-} from 'react-native-reanimated'
+import {SharedValue, useSharedValue, withSpring} from 'react-native-reanimated'
 
 type StateContext = {
   headerMode: SharedValue<number>
@@ -42,14 +37,11 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const setMode = React.useCallback(
     (v: boolean) => {
       'worklet'
-      // Cancel any existing animation
-      cancelAnimation(headerMode)
       headerMode.set(() =>
         withSpring(v ? 1 : 0, {
           overshootClamping: true,
         }),
       )
-      cancelAnimation(footerMode)
       footerMode.set(() =>
         withSpring(v ? 1 : 0, {
           overshootClamping: true,
