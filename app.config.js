@@ -63,7 +63,7 @@ module.exports = function (config) {
   return {
     expo: {
       version: VERSION,
-      name: 'Bluesky',
+      name: IS_DEV ? 'Bluesky (Dev)' : 'Bluesky',
       slug: 'bluesky',
       scheme: 'bluesky',
       owner: 'blueskysocial',
@@ -194,7 +194,7 @@ module.exports = function (config) {
         },
       },
       web: {
-        favicon: './assets/favicon.png',
+        favicon: IS_DEV ? './assets/favicon_dev.png' : './assets/favicon.png',
       },
       updates: {
         url: 'https://updates.bsky.app/manifest',
