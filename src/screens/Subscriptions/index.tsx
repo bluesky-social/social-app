@@ -1,5 +1,5 @@
 import React from 'react'
-import {TextStyle,View} from 'react-native'
+import {TextStyle, View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
@@ -29,10 +29,11 @@ import {GradientFill} from '#/components/GradientFill'
 import {AndroidLogo} from '#/components/icons/AndroidLogo'
 import {AppleLogo} from '#/components/icons/AppleLogo'
 import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as Rotate} from '#/components/icons/ArrowRotateCounterClockwise'
-import {Full as BlueskyPlusLogo} from '#/components/icons/BlueskyPlus'
+import {Logotype} from '#/components/icons/BlueskyPlus'
 import {CheckThick_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {Clock_Stroke2_Corner0_Rounded as Clock} from '#/components/icons/Clock'
 import {Globe_Stroke2_Corner0_Rounded as Globe} from '#/components/icons/Globe'
+import {Mark} from '#/components/icons/Logo'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import * as Layout from '#/components/Layout'
 import {createStaticClick, Link} from '#/components/Link'
@@ -77,6 +78,7 @@ function Core({
   state: Exclude<PurchasesState, {status: 'loading' | 'error'}>
   restricted: NativePurchaseRestricted
 }) {
+  const t = useTheme()
   const coreSubscriptions = state.subscriptions
     .filter(s => s.group === SubscriptionGroupId.Core)
     .filter(s => {
@@ -86,7 +88,10 @@ function Core({
 
   return (
     <View>
-      <BlueskyPlusLogo width={130} gradient="midnight" />
+      <View style={[a.flex_row, a.align_center, a.gap_xs]}>
+        <Mark width={26} gradient="nordic" />
+        <Logotype width={80} fill={t.atoms.text_contrast_medium.color} />
+      </View>
 
       {restricted === 'yes' ? (
         <Admonition type="info">
@@ -100,7 +105,10 @@ function Core({
       )}
 
       {isSubscribedToCore ? (
-        <View style={[a.gap_sm]}>
+        <View style={[a.gap_sm, a.pt_lg]}>
+          <Text style={[a.text_sm, a.font_bold, t.atoms.text_contrast_medium]}>
+            <Trans>Active subscriptions</Trans>
+          </Text>
           {coreSubscriptions.map(sub => (
             <Subscription key={sub.purchasedAt} subscription={sub} />
           ))}
@@ -160,32 +168,18 @@ function Purchase() {
 
   return (
     <>
-      <BlueskyPlusLogo width={130} gradient="nordic" />
-
       <Text style={[a.text_3xl, a.font_heavy, a.pt_md, a.pb_xs]}>
         <Trans>Building a better internet needs your support.</Trans>
       </Text>
 
       <View style={[a.gap_xs]}>
-        <Text
-          style={[
-            a.text_md,
-            a.leading_snug,
-            a.pt_xs,
-            t.atoms.text_contrast_medium,
-          ]}>
+        <Text style={[a.text_md, a.leading_snug, a.pt_xs]}>
           <Trans>
             Subscribing to Bluesky+ helps ensure that our work to build an open,
             secure, and user-first internet can continue.
           </Trans>
         </Text>
-        <Text
-          style={[
-            a.text_md,
-            a.leading_snug,
-            a.pt_xs,
-            t.atoms.text_contrast_medium,
-          ]}>
+        <Text style={[a.text_md, a.leading_snug, a.pt_xs]}>
           <Trans>Plus, you'll get access to exclusive features!</Trans>
         </Text>
       </View>
@@ -196,15 +190,16 @@ function Purchase() {
           a.p_lg,
           a.gap_sm,
           a.rounded_sm,
-          t.atoms.bg_contrast_25,
+          a.border,
+          t.atoms.border_contrast_low,
         ]}>
         {features.map(f => (
-          <View key={f.text} style={[a.flex_row, a.gap_md]}>
+          <View key={f.text} style={[a.flex_row, a.gap_sm]}>
             <View style={{paddingTop: 2}}>
               <f.icon
                 fill={
                   f.available
-                    ? t.palette.primary_500
+                    ? tokens.blueskyPlus.mid
                     : t.atoms.text_contrast_low.color
                 }
                 size="sm"
@@ -230,10 +225,10 @@ function Purchase() {
         color="primary"
         style={[a.overflow_hidden]}>
         <GradientFill gradient={tokens.gradients.nordic} />
-        <ButtonText style={[t.atoms.text]}>
+        <ButtonText style={[{color: 'white'}]}>
           <Trans>Subscribe</Trans>
         </ButtonText>
-        <ButtonIcon icon={Plus} position="right" style={[t.atoms.text]} />
+        <ButtonIcon icon={Plus} position="right" style={[{color: 'white'}]} />
       </Button>
       <BlueskyPlus control={control} />
     </>

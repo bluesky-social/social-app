@@ -126,5 +126,6 @@ export const gradients = {
 
 export const blueskyPlus = {
   dark: '#083367',
+  mid: '#67A59F',
   light: '#9EE8C1',
 }
