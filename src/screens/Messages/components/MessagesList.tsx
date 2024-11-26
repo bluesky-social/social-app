@@ -148,6 +148,12 @@ export function MessagesList({
   // we will not scroll whenever new items get prepended to the top.
   const onContentSizeChange = useCallback(
     (_: number, height: number) => {
+      // ignore very small changes
+      if (Math.abs(prevContentHeight.current - height) < 0.01) {
+        prevContentHeight.current = height
+        return
+      }
+
       // Because web does not have `maintainVisibleContentPosition` support, we will need to manually scroll to the
       // previous off whenever we add new content to the previous offset whenever we add new content to the list.
       if (isWeb && isAtTop.get() && hasScrolled) {
@@ -249,6 +255,7 @@ export function MessagesList({
 
   const keyboardHeight = useSharedValue(0)
   const keyboardIsOpening = useSharedValue(false)
+  const keyboardIsInteractive = useSharedValue(false)
 
   // In some cases - like when the emoji piker opens - we don't want to animate the scroll in the list onLayout event.
   // We use this value to keep track of when we want to disable the animation.
@@ -272,21 +279,27 @@ export function MessagesList({
       onMove: e => {
         'worklet'
         keyboardHeight.set(e.height)
-        if (e.height > footerHeight.get()) {
+        if (
+          (e.height > footerHeight.get() || isIOS) &&
+          !keyboardIsInteractive.get()
+        ) {
           scrollTo(flatListRef, 0, 1e7, false)
         }
       },
       onInteractive: e => {
         'worklet'
         keyboardHeight.set(e.height)
-        if (e.height > footerHeight.get()) {
-          scrollTo(flatListRef, 0, 1e7, false)
+        if (!keyboardIsInteractive.get()) {
+          keyboardIsInteractive.set(true)
         }
       },
       onEnd: e => {
         'worklet'
         keyboardHeight.set(e.height)
-        if (e.height > footerHeight.get()) {
+        if (
+          (e.height > footerHeight.get() || isIOS) &&
+          !keyboardIsInteractive.get()
+        ) {
           scrollTo(flatListRef, 0, 1e7, false)
         }
         keyboardIsOpening.set(false)
@@ -295,17 +308,17 @@ export function MessagesList({
     [],
   )
 
-  const animatedListProps = useAnimatedProps(
-    () =>
-      ({
-        contentInset: {
-          top: 0,
-          bottom: Math.max(keyboardHeight.get(), inputAreaHeight),
-          left: 0,
-          right: 0,
-        },
-      } satisfies Partial<ListProps>),
-  )
+  const animatedListProps = useAnimatedProps(() => {
+    return {
+      contentInset: {
+        top: 0,
+        bottom:
+          Math.max(keyboardHeight.get(), footerHeight.get()) + inputAreaHeight,
+        left: 0,
+        right: 0,
+      },
+    } satisfies Partial<ListProps>
+  })
 
   const animatedStickyViewStyle = useAnimatedStyle(() => ({
     transform: [
@@ -394,15 +407,24 @@ export function MessagesList({
   )
 
   // -- List layout changes (opening emoji keyboard, etc.)
+  const prevLayoutHeight = useRef(0)
   const onListLayout = useCallback(
     (e: LayoutChangeEvent) => {
+      const diff = e.nativeEvent.layout.height - prevLayoutHeight.current
+      // is there a better way to detect this? -sfn
+      const isInsetAdjustment = Math.abs(diff - inputAreaHeight) < 1
+
+      prevLayoutHeight.current = e.nativeEvent.layout.height
       layoutHeight.set(e.nativeEvent.layout.height)
 
-      if (isWeb || !keyboardIsOpening.get()) {
+      if (isWeb || (!keyboardIsOpening.get() && !isInsetAdjustment)) {
+        const skipAnimation = layoutScrollWithoutAnimation.get()
         flatListRef.current?.scrollToEnd({
-          animated: !layoutScrollWithoutAnimation.get(),
+          animated: !skipAnimation,
         })
-        layoutScrollWithoutAnimation.set(false)
+        if (skipAnimation) {
+          layoutScrollWithoutAnimation.set(false)
+        }
       }
     },
     [
@@ -410,7 +432,14 @@ export function MessagesList({
       keyboardIsOpening,
       layoutScrollWithoutAnimation,
       layoutHeight,
+      inputAreaHeight,
     ],
+  )
+
+  const onInputAreaLayout = useCallback(
+    (evt: LayoutChangeEvent) =>
+      setInputAreaHeight(evt.nativeEvent.layout.height),
+    [],
   )
 
   const scrollToEndOnPress = useCallback(() => {
@@ -434,8 +463,10 @@ export function MessagesList({
             renderItem={renderItem}
             keyExtractor={keyExtractor}
             animatedProps={animatedListProps}
+            // required - otherwise it will overwrite the value in animatedProps
+            automaticallyAdjustContentInsets={false}
+            automaticallyAdjustsScrollIndicatorInsets={false}
             disableFullWindowScroll={true}
-            style={{backgroundColor: 'red'}}
             disableVirtualization={true}
             // The extra two items account for the header and the footer components
             initialNumToRender={isNative ? 32 : 62}
@@ -461,8 +492,12 @@ export function MessagesList({
         </KeyboardGestureArea>
       </ScrollProvider>
       <Animated.View
-        style={animatedStickyViewStyle}
-        onLayout={evt => setInputAreaHeight(evt.nativeEvent.layout.height)}>
+        style={[
+          a.absolute,
+          {bottom: 0, left: 0, right: 0},
+          animatedStickyViewStyle,
+        ]}
+        onLayout={onInputAreaLayout}>
         <BlurWrapper>
           {convoState.status === ConvoStatus.Disabled ? (
             <ChatDisabled />
