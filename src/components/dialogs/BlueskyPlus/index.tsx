@@ -5,6 +5,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigationState} from '@react-navigation/native'
 
+import {isWeb} from '#/platform/detection'
 import {usePurchaseOffering} from '#/state/purchases/hooks/usePurchaseOffering'
 import {useSubscriptionGroup} from '#/state/purchases/hooks/useSubscriptionGroup'
 import {
@@ -15,6 +16,7 @@ import {parseOfferingId} from '#/state/purchases/types'
 import {useSession} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, tokens, useBreakpoints, useTheme} from '#/alf'
+import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as Toggle from '#/components/forms/Toggle'
@@ -45,46 +47,70 @@ function DialogInner({control}: {control: Dialog.DialogControlProps}) {
   const currentRoute = routes.at(routes.length - 1)
   const isOnSubscriptionsPage = currentRoute?.name === 'Subscriptions'
 
+  const [error, setError] = React.useState<string>('')
   const [offeringId, setOfferingId] = React.useState<SubscriptionOfferingId>(
     SubscriptionOfferingId.CoreAnnual,
   )
   const {data: coreOffering} = useSubscriptionGroup(SubscriptionGroupId.Core)
   const {mutateAsync: purchaseOffering, isPending} = usePurchaseOffering()
 
-  console.log({coreOffering})
-
   const onPressSubscribe = async () => {
-    try {
+    async function purchase() {
       if (!currentAccount) return
 
       const offering = coreOffering?.offerings.find(o => o.id === offeringId)
+
       if (!offering) {
-        throw new Error('No offering')
+        Toast.show(
+          _(msg`Hmmmm. We couldn't locate that subscription.`),
+          'xmark',
+        )
+        return
       }
 
+      await purchaseOffering({
+        did: currentAccount.did,
+        email: currentAccount.email!,
+        offering,
+      })
+    }
+
+    if (isWeb) {
+      try {
+        await purchase()
+        control.close()
+      } catch (e: any) {
+        setError(
+          _(
+            msg`Hmmm. Something went wrong, sorry about that. Please try again.`,
+          ),
+        )
+      }
+    } else {
       control.close(async () => {
         try {
-          await purchaseOffering({
-            did: currentAccount.did,
-            email: currentAccount.email!,
-            offering,
-          })
+          await purchase()
         } catch (e: any) {
           /**
            * @see https://www.revenuecat.com/docs/test-and-launch/errors
            */
-          if (e.code === PURCHASES_ERROR_CODE.PURCHASE_CANCELLED_ERROR) {
-            control.open()
-          } else {
-            Toast.show(
-              _(msg`Hmmmm, something went wrong. Please try again.`),
-              'xmark',
-            )
+          switch (e.code) {
+            case PURCHASES_ERROR_CODE.PURCHASE_CANCELLED_ERROR:
+              // do nothing, just reopen
+              break
+            default:
+              Toast.show(
+                _(
+                  msg`Hmmm. Something went wrong, sorry about that. Please try again.`,
+                ),
+                'xmark',
+              )
+              break
           }
+
+          control.open()
         }
       })
-    } catch (e: any) {
-      Toast.show(_(msg`Hmmmm. We couldn't locate that subscription.`), 'xmark')
     }
   }
 
@@ -256,16 +282,24 @@ function DialogInner({control}: {control: Dialog.DialogControlProps}) {
           disabled={isPending}
           style={[a.flex_1, a.overflow_hidden]}>
           <GradientFill gradient={tokens.gradients.nordic} />
-          <ButtonText style={[t.atoms.text]}>
+          <ButtonText style={[{color: 'white'}]}>
             <Trans>Subscribe</Trans>
           </ButtonText>
           <ButtonIcon
             icon={isPending ? Loader : Plus}
             position="right"
-            style={[t.atoms.text]}
+            style={[{color: 'white'}]}
           />
         </Button>
       </View>
+
+      {error && (
+        <View style={[a.flex_row, a.pt_md, a.gap_sm]}>
+          <Admonition type="error" style={[a.flex_1]}>
+            {error}
+          </Admonition>
+        </View>
+      )}
 
       <View style={[a.pt_md]}>
         <Text style={[a.text_xs]}>

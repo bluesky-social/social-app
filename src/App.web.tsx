@@ -112,36 +112,35 @@ function InnerApp() {
                 key={currentAccount?.did}>
                 <QueryProvider currentDid={currentAccount?.did}>
                   <PurchasesProvider>
-
-                  <ComposerProvider>
-                    <StatsigProvider>
-                      <MessagesProvider>
-                        {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
-                        <LabelDefsProvider>
-                          <ModerationOptsProvider>
-                            <LoggedOutViewProvider>
-                              <SelectedFeedProvider>
-                                <HiddenRepliesProvider>
-                                  <UnreadNotifsProvider>
-                                    <BackgroundNotificationPreferencesProvider>
-                                      <MutedThreadsProvider>
-                                        <SafeAreaProvider>
-                                          <ProgressGuideProvider>
-                                            <Shell />
-                                            <NuxDialogs />
-                                          </ProgressGuideProvider>
-                                        </SafeAreaProvider>
-                                      </MutedThreadsProvider>
-                                    </BackgroundNotificationPreferencesProvider>
-                                  </UnreadNotifsProvider>
-                                </HiddenRepliesProvider>
-                              </SelectedFeedProvider>
-                            </LoggedOutViewProvider>
-                          </ModerationOptsProvider>
-                        </LabelDefsProvider>
-                      </MessagesProvider>
-                    </StatsigProvider>
-                  </ComposerProvider>
+                    <ComposerProvider>
+                      <StatsigProvider>
+                        <MessagesProvider>
+                          {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
+                          <LabelDefsProvider>
+                            <ModerationOptsProvider>
+                              <LoggedOutViewProvider>
+                                <SelectedFeedProvider>
+                                  <HiddenRepliesProvider>
+                                    <UnreadNotifsProvider>
+                                      <BackgroundNotificationPreferencesProvider>
+                                        <MutedThreadsProvider>
+                                          <SafeAreaProvider>
+                                            <ProgressGuideProvider>
+                                              <Shell />
+                                              <NuxDialogs />
+                                            </ProgressGuideProvider>
+                                          </SafeAreaProvider>
+                                        </MutedThreadsProvider>
+                                      </BackgroundNotificationPreferencesProvider>
+                                    </UnreadNotifsProvider>
+                                  </HiddenRepliesProvider>
+                                </SelectedFeedProvider>
+                              </LoggedOutViewProvider>
+                            </ModerationOptsProvider>
+                          </LabelDefsProvider>
+                        </MessagesProvider>
+                      </StatsigProvider>
+                    </ComposerProvider>
                   </PurchasesProvider>
                 </QueryProvider>
                 <ToastContainer />
