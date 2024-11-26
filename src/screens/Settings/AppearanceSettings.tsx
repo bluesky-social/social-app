@@ -8,7 +8,9 @@ import Animated, {
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {DISCOVER_DEBUG_DIDS} from '#/lib/constants'
 import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
+import {useSession} from '#/state/session'
 import {useSetThemePrefs, useThemePrefs} from '#/state/shell'
 import {Logo} from '#/view/icons/Logo'
 import {atoms as a, native, useAlf, useTheme} from '#/alf'
@@ -70,6 +72,8 @@ export function AppearanceSettingsScreen({}: Props) {
     },
     [fonts],
   )
+
+  const {currentAccount} = useSession()
 
   return (
     <LayoutAnimationConfig skipExiting skipEntering>
@@ -165,16 +169,20 @@ export function AppearanceSettingsScreen({}: Props) {
                 onChange={onChangeFontScale}
               />
 
-              <SettingsList.Divider />
+              {DISCOVER_DEBUG_DIDS[currentAccount?.did ?? ''] && (
+                <>
+                  <SettingsList.Divider />
 
-              <SettingsList.LinkItem
-                to="/settings/app-icon"
-                label={_(msg`App Icon`)}>
-                <SettingsList.ItemIcon icon={Logo} />
-                <SettingsList.ItemText>
-                  <Trans>App Icon</Trans>
-                </SettingsList.ItemText>
-              </SettingsList.LinkItem>
+                  <SettingsList.LinkItem
+                    to="/settings/app-icon"
+                    label={_(msg`App Icon`)}>
+                    <SettingsList.ItemIcon icon={Logo} />
+                    <SettingsList.ItemText>
+                      <Trans>App Icon</Trans>
+                    </SettingsList.ItemText>
+                  </SettingsList.LinkItem>
+                </>
+              )}
             </Animated.View>
           </SettingsList.Container>
         </Layout.Content>
