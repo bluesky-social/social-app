@@ -267,7 +267,7 @@ export function MessagesList({
           scrollTo(flatListRef, 0, 1e7, false)
         }
       },
-      onEnd: () => {
+      onEnd: e => {
         'worklet'
         keyboardHeight.set(e.height)
         if (e.height > bottomOffset) {
