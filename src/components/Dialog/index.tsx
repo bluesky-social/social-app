@@ -11,7 +11,6 @@ import {
 } from 'react-native'
 import {
   KeyboardAwareScrollView,
-  useKeyboardController,
   useKeyboardHandler,
 } from 'react-native-keyboard-controller'
 import {runOnJS} from 'react-native-reanimated'
@@ -20,6 +19,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {useEnableKeyboardController} from '#/lib/hooks/useEnableKeyboardController'
 import {ScrollProvider} from '#/lib/ScrollContext'
 import {logger} from '#/logger'
 import {isAndroid, isIOS} from '#/platform/detection'
@@ -199,27 +199,20 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
   ) {
     const {nativeSnapPoint, disableDrag, setDisableDrag} = useDialogContext()
     const insets = useSafeAreaInsets()
-    const {setEnabled} = useKeyboardController()
+
+    useEnableKeyboardController(isIOS)
 
     const [keyboardHeight, setKeyboardHeight] = React.useState(0)
 
-    React.useEffect(() => {
-      if (!isIOS) {
-        return
-      }
-
-      setEnabled(true)
-      return () => {
-        setEnabled(false)
-      }
-    })
-
-    useKeyboardHandler({
-      onEnd: e => {
-        'worklet'
-        runOnJS(setKeyboardHeight)(e.height)
+    useKeyboardHandler(
+      {
+        onEnd: e => {
+          'worklet'
+          runOnJS(setKeyboardHeight)(e.height)
+        },
       },
-    })
+      [],
+    )
 
     const basePading =
       (isIOS ? 30 : 50) + (isIOS ? keyboardHeight / 4 : keyboardHeight)

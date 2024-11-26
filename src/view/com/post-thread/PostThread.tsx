@@ -104,6 +104,7 @@ export function PostThread({uri}: {uri: string | undefined}) {
     error: threadError,
     refetch,
     data: {thread, threadgate} = {},
+    dataUpdatedAt: fetchedAt,
   } = usePostThreadQuery(uri)
 
   const treeView = React.useMemo(
@@ -171,6 +172,8 @@ export function PostThread({uri}: {uri: string | undefined}) {
     () => new Set<string>(),
   )
 
+  const [fetchedAtCache] = React.useState(() => new Map<string, number>())
+  const [randomCache] = React.useState(() => new Map<string, number>())
   const skeleton = React.useMemo(() => {
     const threadViewPrefs = preferences?.threadViewPrefs
     if (!threadViewPrefs || !thread) return null
@@ -183,6 +186,9 @@ export function PostThread({uri}: {uri: string | undefined}) {
         currentDid,
         justPostedUris,
         threadgateHiddenReplies,
+        fetchedAtCache,
+        fetchedAt,
+        randomCache,
       ),
       currentDid,
       treeView,
@@ -199,6 +205,9 @@ export function PostThread({uri}: {uri: string | undefined}) {
     hiddenRepliesState,
     justPostedUris,
     threadgateHiddenReplies,
+    fetchedAtCache,
+    fetchedAt,
+    randomCache,
   ])
 
   const error = React.useMemo(() => {

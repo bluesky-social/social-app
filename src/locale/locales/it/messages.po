@@ -196,7 +196,7 @@ msgstr "{estimatedTimeMins, plural, one {minuto} other {minuti}}"
 
 #: src/view/com/notifications/FeedItem.tsx:300
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> followed you"
-msgstr "{firstAuthorLink} e <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} altro {{formattedAuthorsCount} altri}}</0> ti hanno seguito"
+msgstr "{firstAuthorLink} e <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} altro} other {{formattedAuthorsCount} altri}}</0> ti hanno seguito"
 
 #: src/view/com/notifications/FeedItem.tsx:326
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> liked your custom feed"
