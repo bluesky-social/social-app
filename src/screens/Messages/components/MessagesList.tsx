@@ -1,6 +1,9 @@
-import React, {useCallback, useRef} from 'react'
-import {LayoutChangeEvent, View} from 'react-native'
-import {useKeyboardHandler} from 'react-native-keyboard-controller'
+import {useCallback, useEffect, useRef, useState} from 'react'
+import {LayoutChangeEvent, Platform, View} from 'react-native'
+import {
+  KeyboardGestureArea,
+  useKeyboardHandler,
+} from 'react-native-keyboard-controller'
 import Animated, {
   runOnJS,
   scrollTo,
@@ -34,12 +37,17 @@ import {List, ListMethods} from '#/view/com/util/List'
 import {ChatDisabled} from '#/screens/Messages/components/ChatDisabled'
 import {MessageInput} from '#/screens/Messages/components/MessageInput'
 import {MessageListError} from '#/screens/Messages/components/MessageListError'
+import {atoms as a, platform} from '#/alf'
 import {ChatEmptyPill} from '#/components/dms/ChatEmptyPill'
 import {MessageItem} from '#/components/dms/MessageItem'
 import {NewMessagesPill} from '#/components/dms/NewMessagesPill'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {MessageInputEmbed, useMessageEmbed} from './MessageInputEmbed'
+
+// Interactive keyboard on Android only works for Android 11+
+const ANDROID_INTERACTIVE_KEYBOARD =
+  Platform.OS === 'android' && Platform.Version >= 30
 
 function MaybeLoader({isLoading}: {isLoading: boolean}) {
   return (
@@ -93,16 +101,15 @@ export function MessagesList({
 
   const flatListRef = useAnimatedRef<ListMethods>()
 
-  const [newMessagesPill, setNewMessagesPill] = React.useState({
+  const [newMessagesPill, setNewMessagesPill] = useState({
     show: false,
     startContentOffset: 0,
   })
 
-  const [emojiPickerState, setEmojiPickerState] =
-    React.useState<EmojiPickerState>({
-      isOpen: false,
-      pos: {top: 0, left: 0, right: 0, bottom: 0},
-    })
+  const [emojiPickerState, setEmojiPickerState] = useState<EmojiPickerState>({
+    isOpen: false,
+    pos: {top: 0, left: 0, right: 0, bottom: 0},
+  })
 
   // We need to keep track of when the scroll offset is at the bottom of the list to know when to scroll as new items
   // are added to the list. For example, if the user is scrolled up to 1iew older messages, we don't want to scroll to
@@ -119,8 +126,8 @@ export function MessagesList({
 
   // -- Keep track of background state and positioning for new pill
   const layoutHeight = useSharedValue(0)
-  const didBackground = React.useRef(false)
-  React.useEffect(() => {
+  const didBackground = useRef(false)
+  useEffect(() => {
     if (convoState.status === ConvoStatus.Backgrounded) {
       didBackground.current = true
     }
@@ -211,7 +218,7 @@ export function MessagesList({
     }
   }, [convoState, hasScrolled, layoutHeight])
 
-  const onScroll = React.useCallback(
+  const onScroll = useCallback(
     (e: ReanimatedScrollEvent) => {
       'worklet'
       layoutHeight.set(e.layoutMeasurement.height)
@@ -247,6 +254,8 @@ export function MessagesList({
   // We use this value to keep track of when we want to disable the animation.
   const layoutScrollWithoutAnimation = useSharedValue(false)
 
+  const [inputAreaHeight, setInputAreaHeight] = useState(0)
+
   useKeyboardHandler(
     {
       onStart: e => {
@@ -270,6 +279,7 @@ export function MessagesList({
       onInteractive: e => {
         'worklet'
         keyboardHeight.set(e.height)
+        console.log(e.height, bottomOffset)
         if (e.height > bottomOffset) {
           scrollTo(flatListRef, 0, 1e7, false)
         }
@@ -375,7 +385,7 @@ export function MessagesList({
   )
 
   // -- List layout changes (opening emoji keyboard, etc.)
-  const onListLayout = React.useCallback(
+  const onListLayout = useCallback(
     (e: LayoutChangeEvent) => {
       layoutHeight.set(e.nativeEvent.layout.height)
 
@@ -394,7 +404,7 @@ export function MessagesList({
     ],
   )
 
-  const scrollToEndOnPress = React.useCallback(() => {
+  const scrollToEndOnPress = useCallback(() => {
     flatListRef.current?.scrollToOffset({
       offset: prevContentHeight.current,
       animated: true,
@@ -405,35 +415,44 @@ export function MessagesList({
     <>
       {/* Custom scroll provider so that we can use the `onScroll` event in our custom List implementation */}
       <ScrollProvider onScroll={onScroll}>
-        <List
-          ref={flatListRef}
-          data={convoState.items}
-          renderItem={renderItem}
-          keyExtractor={keyExtractor}
-          disableFullWindowScroll={true}
-          disableVirtualization={true}
-          style={animatedListStyle}
-          // The extra two items account for the header and the footer components
-          initialNumToRender={isNative ? 32 : 62}
-          maxToRenderPerBatch={isWeb ? 32 : 62}
-          keyboardDismissMode="interactive"
-          keyboardShouldPersistTaps="handled"
-          maintainVisibleContentPosition={{
-            minIndexForVisible: 0,
-          }}
-          removeClippedSubviews={false}
-          sideBorders={false}
-          onContentSizeChange={onContentSizeChange}
-          onLayout={onListLayout}
-          onStartReached={onStartReached}
-          onScrollToIndexFailed={onScrollToIndexFailed}
-          scrollEventThrottle={100}
-          ListHeaderComponent={
-            <MaybeLoader isLoading={convoState.isFetchingHistory} />
-          }
-        />
+        <KeyboardGestureArea
+          interpolator="ios"
+          offset={inputAreaHeight}
+          style={[a.flex_1]}>
+          <List
+            ref={flatListRef}
+            data={convoState.items}
+            renderItem={renderItem}
+            keyExtractor={keyExtractor}
+            disableFullWindowScroll={true}
+            disableVirtualization={true}
+            style={animatedListStyle}
+            // The extra two items account for the header and the footer components
+            initialNumToRender={isNative ? 32 : 62}
+            maxToRenderPerBatch={isWeb ? 32 : 62}
+            keyboardDismissMode={platform({
+              android: ANDROID_INTERACTIVE_KEYBOARD ? 'interactive' : 'on-drag',
+              ios: 'interactive',
+              default: 'on-drag',
+            })}
+            keyboardShouldPersistTaps="handled"
+            maintainVisibleContentPosition={{minIndexForVisible: 0}}
+            removeClippedSubviews={false}
+            sideBorders={false}
+            onContentSizeChange={onContentSizeChange}
+            onLayout={onListLayout}
+            onStartReached={onStartReached}
+            onScrollToIndexFailed={onScrollToIndexFailed}
+            scrollEventThrottle={100}
+            ListHeaderComponent={
+              <MaybeLoader isLoading={convoState.isFetchingHistory} />
+            }
+          />
+        </KeyboardGestureArea>
       </ScrollProvider>
-      <Animated.View style={animatedStickyViewStyle}>
+      <Animated.View
+        style={animatedStickyViewStyle}
+        onLayout={evt => setInputAreaHeight(evt.nativeEvent.layout.height)}>
         {convoState.status === ConvoStatus.Disabled ? (
           <ChatDisabled />
         ) : blocked ? (
