@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-28 10:55+0900\n"
+"PO-Revision-Date: 2024-11-28 10:58+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -2932,10 +2932,6 @@ msgctxt "from-feed"
 msgid "From <0/>"
 msgstr "<0/>から"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:404
-#~ msgid "Fullscreen"
-#~ msgstr "全画面表示"
-
 #: src/view/com/composer/photos/SelectPhotoBtn.tsx:50
 msgid "Gallery"
 msgstr "ギャラリー"
@@ -3090,10 +3086,6 @@ msgstr "ヘルプ"
 #: src/screens/Onboarding/StepProfile/index.tsx:237
 msgid "Help people know you're not a bot by uploading a picture or creating an avatar."
 msgstr "画像をアップロードするかアバターを作ってあなたがbotではないことをみんなに知らせましょう。"
-
-#: src/screens/Settings/ContentAndMediaSettings.tsx:127
-#~ msgid "Helps external sites estimate traffic from Bluesky."
-#~ msgstr ""
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:187
 msgid "Here is your app password!"
@@ -3323,10 +3315,6 @@ msgstr "あなたのユーザーハンドルを入力"
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:49
 msgid "Interaction limited"
 msgstr "反応が制限されています"
-
-#: src/components/dialogs/nuxs/NeueTypography.tsx:47
-#~ msgid "Introducing new font settings"
-#~ msgstr "新しいフォント設定の紹介"
 
 #: src/screens/Login/LoginForm.tsx:142
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:70
@@ -4077,10 +4065,6 @@ msgstr "新規"
 #: src/screens/Messages/ChatList.tsx:335
 msgid "New chat"
 msgstr "新しいチャット"
-
-#: src/components/dialogs/nuxs/NeueTypography.tsx:51
-#~ msgid "New font settings ✨"
-#~ msgstr "新しいフォント設定 ✨"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:200
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:208
@@ -5701,17 +5685,9 @@ msgstr "Blueskyの求人を見る"
 msgid "See this guide"
 msgstr "ガイドを見る"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/Scrubber.tsx:189
-#~ msgid "Seek slider"
-#~ msgstr "シークバー"
-
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/Scrubber.tsx:190
 msgid "Seek slider. Use the arrow keys to seek forwards and backwards, and space to play/pause"
-msgstr "シークバー。矢印キーで使って早送りや早戻し、スペースで再生／停止"
-
-#: src/view/com/util/Selector.tsx:107
-#~ msgid "Select {item}"
-#~ msgstr "{item}を選択"
+msgstr "シークバー。矢印キーで早送りや早戻し、スペースで再生／一時停止"
 
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:67
 msgid "Select a color"
@@ -5761,10 +5737,6 @@ msgstr "言語を選択"
 msgid "Select moderator"
 msgstr "モデレーターを選択"
 
-#: src/view/com/util/Selector.tsx:108
-#~ msgid "Select option {i} of {numItems}"
-#~ msgstr "{numItems}個中{i}個目のオプションを選択"
-
 #: src/view/com/composer/videos/SubtitleFilePicker.tsx:66
 msgid "Select subtitle file (.vtt)"
 msgstr "字幕ファイル（.vtt）を選択"
@@ -5812,10 +5784,6 @@ msgstr "フィード内の翻訳に使用する言語を選択します。"
 #: src/components/dms/ChatEmptyPill.tsx:38
 msgid "Send a neat website!"
 msgstr "素敵なウェブサイトを送って！"
-
-#: src/screens/Settings/ContentAndMediaSettings.tsx:118
-#~ msgid "Send Bluesky referrer"
-#~ msgstr ""
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:232
 msgid "Send Confirmation"
@@ -6246,10 +6214,6 @@ msgstr "スパム"
 #: src/lib/moderation/useReportOptions.ts:55
 msgid "Spam; excessive mentions or replies"
 msgstr "スパム、過剰なメンションや返信"
-
-#: src/screens/Settings/ContentAndMediaSettings.tsx:112
-#~ msgid "Specify Bluesky as a referer"
-#~ msgstr ""
 
 #: src/screens/Onboarding/index.tsx:27
 #: src/screens/Onboarding/state.ts:100
@@ -7138,10 +7102,6 @@ msgstr "サポートしていないビデオ形式"
 msgid "Unsupported video type: {0}"
 msgstr "サポートしていないビデオ形式：{0}"
 
-#: src/view/com/composer/videos/SelectVideoBtn.tsx:72
-#~ msgid "Unsupported video type: {mimeType}"
-#~ msgstr "サポートしていないビデオ形式：{mimeType}"
-
 #: src/lib/moderation/useReportOptions.ts:77
 #: src/lib/moderation/useReportOptions.ts:90
 msgid "Unwanted Sexual Content"
@@ -7563,10 +7523,6 @@ msgstr "これはあなたの体験をカスタマイズするために使用さ
 msgid "We're having network issues, try again"
 msgstr "ネットワークで問題が発生しています。もう一度試してください"
 
-#: src/components/dialogs/nuxs/NeueTypography.tsx:54
-#~ msgid "We're introducing a new theme font, along with adjustable font sizing."
-#~ msgstr "新しいテーマフォントを導入し、フォントサイズを調整可能にしました。"
-
 #: src/screens/Signup/index.tsx:94
 msgid "We're so excited to have you join us!"
 msgstr "私たちはあなたが参加してくれることをとても楽しみにしています！"
@@ -7738,10 +7694,6 @@ msgstr "あなたはビデオのアップロードを許可されていません
 #: src/view/com/profile/ProfileFollows.tsx:95
 msgid "You are not following anyone."
 msgstr "あなたはまだだれもフォローしていません。"
-
-#: src/components/dialogs/nuxs/NeueTypography.tsx:61
-#~ msgid "You can adjust these in your Appearance Settings later."
-#~ msgstr "これらは後で外観の設定で調整できます。"
 
 #: src/view/com/posts/FollowingEmptyState.tsx:63
 #: src/view/com/posts/FollowingEndOfFeed.tsx:64
