@@ -173,6 +173,7 @@ function HomeScreenReady({
 
   const onPageScrollStateChanged = React.useCallback(
     (state: 'idle' | 'dragging' | 'settling') => {
+      'worklet'
       if (state === 'dragging') {
         setMinimalShellMode(false)
       }
