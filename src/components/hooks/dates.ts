@@ -46,6 +46,7 @@ import {useLanguagePrefs} from '#/state/preferences'
 const locales: Record<AppLanguage, Locale | undefined> = {
   en: undefined,
   ast,
+  an: undefined,
   ca,
   de,
   ['en-GB']: enGB,

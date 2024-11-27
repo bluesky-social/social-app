@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-23 14:59\n"
+"PO-Revision-Date: 2024-11-26 16:45\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -25,39 +25,39 @@ msgstr "（包含嵌入内容）"
 #: src/screens/Settings/AccountSettings.tsx:57
 #: src/view/com/modals/VerifyEmail.tsx:150
 msgid "(no email)"
-msgstr "(没有电子邮箱)"
+msgstr "（没有电子邮箱）"
 
 #: src/lib/hooks/useTimeAgo.ts:156
 msgid "{0, plural, one {# day} other {# days}}"
-msgstr "{0, plural, one {#天} other {#天}}"
+msgstr "{0, plural, one {# 天} other {# 天}}"
 
 #: src/lib/hooks/useTimeAgo.ts:146
 msgid "{0, plural, one {# hour} other {# hours}}"
-msgstr "{0, plural, one {#小时} other {#小时}}"
+msgstr "{0, plural, one {# 小时} other {# 小时}}"
 
 #: src/components/moderation/LabelsOnMe.tsx:53
 msgid "{0, plural, one {# label has been placed on this account} other {# labels have been placed on this account}}"
-msgstr "{0, plural, one {已标记 # 个标签到这个账户} other {已标记 # 个标签到这个账户}}"
+msgstr "{0, plural, one {该账户有 # 个标签} other {该账户有 # 个标签}}"
 
 #: src/components/moderation/LabelsOnMe.tsx:59
 msgid "{0, plural, one {# label has been placed on this content} other {# labels have been placed on this content}}"
-msgstr "{0, plural, one {已标记 # 个标签到该内容} other {已标记 # 个标签到该内容}}"
+msgstr "{0, plural, one {该内容有 # 个标签} other {该内容有 # 个标签}}"
 
 #: src/lib/hooks/useTimeAgo.ts:136
 msgid "{0, plural, one {# minute} other {# minutes}}"
-msgstr "{0, plural, one {#分钟} other {#分钟}}"
+msgstr "{0, plural, one {# 分钟} other {# 分钟}}"
 
 #: src/lib/hooks/useTimeAgo.ts:167
 msgid "{0, plural, one {# month} other {# months}}"
-msgstr "{0, plural, one {#个月} other {#个月}}"
+msgstr "{0, plural, one {# 个月} other {# 个月}}"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:69
 msgid "{0, plural, one {# repost} other {# reposts}}"
-msgstr "{0, plural, one {# 条转发} other {# 条转发}}"
+msgstr "{0, plural, one {# 次转发} other {# 次转发}}"
 
 #: src/lib/hooks/useTimeAgo.ts:126
 msgid "{0, plural, one {# second} other {# seconds}}"
-msgstr "{0, plural, one {#秒} other {#秒}}"
+msgstr "{0, plural, one {# 秒} other {# 秒}}"
 
 #: src/components/ProfileHoverCard/index.web.tsx:398
 #: src/screens/Profile/Header/Metrics.tsx:22
@@ -71,11 +71,11 @@ msgstr "{0, plural, one {正在关注} other {正在关注}}"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:305
 msgid "{0, plural, one {Like (# like)} other {Like (# likes)}}"
-msgstr "{0, plural, one {喜欢 (# 个喜欢)} other {喜欢 (# 个喜欢)}}"
+msgstr "{0, plural, one {喜欢（# 个喜欢）} other {喜欢（# 个喜欢）}}"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:447
 msgid "{0, plural, one {like} other {likes}}"
-msgstr "{0, plural, one {喜欢} other {喜欢}}"
+msgstr "{0, plural, one {个喜欢} other {个喜欢}}"
 
 #: src/components/FeedCard.tsx:213
 #: src/view/com/feeds/FeedSourceCard.tsx:303
@@ -88,19 +88,19 @@ msgstr "{0, plural, one {帖文} other {帖文}}"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:431
 msgid "{0, plural, one {quote} other {quotes}}"
-msgstr "{0, plural, one {引用} other {引用}}"
+msgstr "{0, plural, one {次引用} other {次引用}}"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:261
 msgid "{0, plural, one {Reply (# reply)} other {Reply (# replies)}}"
-msgstr "{0, plural, one {回复 (# 个回复)} other {回复 (# 个回复)}}"
+msgstr "{0, plural, one {回复（# 则回复）} other {回复（# 则回复）}}"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:413
 msgid "{0, plural, one {repost} other {reposts}}"
-msgstr "{0, plural, one {转发} other {转发}}"
+msgstr "{0, plural, one {次转发} other {次转发}}"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:301
 msgid "{0, plural, one {Unlike (# like)} other {Unlike (# likes)}}"
-msgstr "{0, plural, one {取消喜欢 (# 个喜欢)} other {取消喜欢 (# 个喜欢)}}"
+msgstr "{0, plural, one {取消喜欢（# 个喜欢）} other {取消喜欢（# 个喜欢）}}"
 
 #: src/screens/Settings/Settings.tsx:414
 msgid "{0}"
@@ -109,16 +109,16 @@ msgstr "{0}"
 #. Pattern: {wordValue} in tags
 #: src/components/dialogs/MutedWords.tsx:475
 msgid "{0} <0>in <1>tags</1></0>"
-msgstr "{0} <0>在<1>标签</1></0>中"
+msgstr "{0} <0> - <1>标签</1></0>"
 
 #. Pattern: {wordValue} in text, tags
 #: src/components/dialogs/MutedWords.tsx:465
 msgid "{0} <0>in <1>text & tags</1></0>"
-msgstr "{0} <0>在<1>文本及标签</1></0>中"
+msgstr "{0} <0> - <1>文本及标签</1></0>"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:219
 msgid "{0} joined this week"
-msgstr "在本周加入了 {0} 人"
+msgstr "本周加入了 {0} 人"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/Scrubber.tsx:197
 msgid "{0} of {1}"
@@ -126,11 +126,11 @@ msgstr "第 {0} 个（共 {1} 个）"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:479
 msgid "{0} people have used this starter pack!"
-msgstr "{0} 人已使用过这个新手包！"
+msgstr "{0} 人使用过这个新手包！"
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:203
 msgid "{0} unread items"
-msgstr "{0} 个未读"
+msgstr "{0} 条未读私信"
 
 #: src/view/com/util/UserAvatar.tsx:435
 msgid "{0}'s avatar"
@@ -138,7 +138,7 @@ msgstr "{0}的头像"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:67
 msgid "{0}'s favorite feeds and people - join me!"
-msgstr "{0}最喜欢的动态源和用户 - 来加入我们吧！"
+msgstr "{0}最喜欢的动态源和用户——跟我一起加入吧！"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:46
 msgid "{0}'s starter pack"
@@ -147,31 +147,31 @@ msgstr "{0}的新手包"
 #. How many days have passed, displayed in a narrow form
 #: src/lib/hooks/useTimeAgo.ts:158
 msgid "{0}d"
-msgstr "{0}天前"
+msgstr "{0} 天前"
 
 #. How many hours have passed, displayed in a narrow form
 #: src/lib/hooks/useTimeAgo.ts:148
 msgid "{0}h"
-msgstr "{0}小时前"
+msgstr "{0} 小时前"
 
 #. How many minutes have passed, displayed in a narrow form
 #: src/lib/hooks/useTimeAgo.ts:138
 msgid "{0}m"
-msgstr "{0}分钟前"
+msgstr "{0} 分钟前"
 
 #. How many months have passed, displayed in a narrow form
 #: src/lib/hooks/useTimeAgo.ts:169
 msgid "{0}mo"
-msgstr "{0}个月前"
+msgstr "{0} 个月前"
 
 #. How many seconds have passed, displayed in a narrow form
 #: src/lib/hooks/useTimeAgo.ts:128
 msgid "{0}s"
-msgstr "{0}秒前"
+msgstr "{0} 秒前"
 
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:252
 msgid "{badge} unread items"
-msgstr "{badge} 个未读"
+msgstr "{badge} 个未读通知"
 
 #: src/components/LabelingServiceCard/index.tsx:96
 msgid "{count, plural, one {Liked by # user} other {Liked by # users}}"
@@ -182,7 +182,7 @@ msgid "{count} unread items"
 msgstr "{count} 个未读"
 
 #: src/lib/generate-starterpack.ts:108
-#: src/screens/StarterPack/Wizard/index.tsx:183
+#: src/screens/StarterPack/Wizard/index.tsx:180
 msgid "{displayName}'s Starter Pack"
 msgstr "{displayName}的新手包"
 
@@ -236,7 +236,7 @@ msgstr "{firstAuthorLink} 转发了你的帖文"
 
 #: src/view/com/notifications/FeedItem.tsx:362
 msgid "{firstAuthorLink} signed up with your starter pack"
-msgstr "{firstAuthorLink} 使用你的新手包注册"
+msgstr "{firstAuthorLink} 使用了你的新手包注册"
 
 #: src/view/com/notifications/FeedItem.tsx:293
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} followed you"
@@ -280,7 +280,7 @@ msgstr "{firstAuthorName} 转发了你的帖文"
 
 #: src/view/com/notifications/FeedItem.tsx:348
 msgid "{firstAuthorName} signed up with your starter pack"
-msgstr "{firstAuthorName} 使用你的新手包注册"
+msgstr "{firstAuthorName} 使用了你的新手包注册"
 
 #: src/components/ProfileHoverCard/index.web.tsx:508
 #: src/screens/Profile/Header/Metrics.tsx:49
@@ -313,15 +313,15 @@ msgstr "{profileName}在{0}前加入了 Bluesky"
 msgid "{profileName} joined Bluesky using a starter pack {0} ago"
 msgstr "{profileName}在{0}前使用新手包加入了 Bluesky"
 
-#: src/screens/StarterPack/Wizard/index.tsx:475
+#: src/screens/StarterPack/Wizard/index.tsx:472
 msgctxt "profiles"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
-msgstr "<0>{0}、</0><1>{1}</1>及{2, plural, one {其他 # } other {其他 # }}人包含在你的新手包中"
+msgstr "<0>{0}、</0><1>{1}</1> 及{2, plural, one {其他 # } other {其他 # }}人包含在你的新手包中"
 
-#: src/screens/StarterPack/Wizard/index.tsx:528
+#: src/screens/StarterPack/Wizard/index.tsx:525
 msgctxt "feeds"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
-msgstr "<0>{0}、</0><1>{1}</1>及{2, plural, one {其他 # } other {其他 # }}个动态源包含在你的新手包中"
+msgstr "<0>{0}、</0><1>{1}</1> 及{2, plural, one {其他 # } other {其他 # }}个动态源包含在你的新手包中"
 
 #: src/view/shell/Drawer.tsx:97
 msgid "<0>{0}</0> {1, plural, one {follower} other {followers}}"
@@ -331,13 +331,13 @@ msgstr "<0>{0}</0> {1, plural, one {关注者} other {关注者}}"
 msgid "<0>{0}</0> {1, plural, one {following} other {following}}"
 msgstr "<0>{0}</0> {1, plural, one {正在关注} other {正在关注}}"
 
-#: src/screens/StarterPack/Wizard/index.tsx:516
+#: src/screens/StarterPack/Wizard/index.tsx:513
 msgid "<0>{0}</0> and<1> </1><2>{1} </2>are included in your starter pack"
-msgstr "<0>{0}</0>及<1></1><2>{1} </2>包含在你的新手包中"
+msgstr "<0>{0}</0>及<1></1><2>{1} </2>已包含在你的新手包中"
 
-#: src/screens/StarterPack/Wizard/index.tsx:509
+#: src/screens/StarterPack/Wizard/index.tsx:506
 msgid "<0>{0}</0> is included in your starter pack"
-msgstr "<0>{0}</0> 包含在你的新手包中"
+msgstr "<0>{0}</0> 已包含在你的新手包中"
 
 #: src/components/WhoCanReply.tsx:274
 msgid "<0>{0}</0> members"
@@ -349,11 +349,11 @@ msgstr "<0>{date}</0> {time}"
 
 #: src/screens/Settings/NotificationSettings.tsx:71
 msgid "<0>Experimental:</0> When this preference is enabled, you'll only receive reply and quote notifications from users you follow. We'll continue to add more controls here over time."
-msgstr "<0>实验性：</0>当你启用这个设置项后，你将仅收到已关注用户的回复及引用通知。我们会在这里持续添加更多设置项。"
+msgstr "<0>实验性：</0>当你启用这个设置项后，你将只会收到已关注用户的回复及引用通知。我们会在这里持续添加更多设置项。"
 
-#: src/screens/StarterPack/Wizard/index.tsx:466
+#: src/screens/StarterPack/Wizard/index.tsx:463
 msgid "<0>You</0> and<1> </1><2>{0} </2>are included in your starter pack"
-msgstr "<0>你</0> 及<1> </1><2>{0} </2>包含在你的新手包中"
+msgstr "<0>你</0> 及<1> </1><2>{0} </2>已包含在你的新手包中"
 
 #: src/screens/Profile/Header/Handle.tsx:52
 msgid "⚠Invalid Handle"
@@ -361,7 +361,7 @@ msgstr "⚠无效的账户代码"
 
 #: src/components/dialogs/MutedWords.tsx:193
 msgid "24 hours"
-msgstr "24小时"
+msgstr "24 小时"
 
 #: src/screens/Login/LoginForm.tsx:250
 msgid "2FA Confirmation"
@@ -369,11 +369,11 @@ msgstr "两步验证"
 
 #: src/components/dialogs/MutedWords.tsx:232
 msgid "30 days"
-msgstr "30天"
+msgstr "30 天"
 
 #: src/components/dialogs/MutedWords.tsx:217
 msgid "7 days"
-msgstr "7天"
+msgstr "7 天"
 
 #: src/Navigation.tsx:361
 #: src/screens/Settings/AboutSettings.tsx:24
@@ -383,7 +383,7 @@ msgid "About"
 msgstr "关于"
 
 #: src/view/com/util/ViewHeader.tsx:89
-#: src/view/screens/Search/Search.tsx:883
+#: src/view/screens/Search/Search.tsx:884
 msgid "Access navigation links and settings"
 msgstr "访问导航链接及设置"
 
@@ -459,7 +459,7 @@ msgstr "已取消隐藏该账户"
 msgid "Add"
 msgstr "添加"
 
-#: src/screens/StarterPack/Wizard/index.tsx:577
+#: src/screens/StarterPack/Wizard/index.tsx:574
 msgid "Add {0} more to continue"
 msgstr "再添加至少 {0} 个以继续"
 
@@ -474,7 +474,7 @@ msgstr "添加内容警告"
 
 #: src/view/screens/ProfileList.tsx:930
 msgid "Add a user to this list"
-msgstr "将用户添加至列表"
+msgstr "将用户添加至这个列表"
 
 #: src/components/dialogs/SwitchAccount.tsx:55
 #: src/screens/Deactivated.tsx:198
@@ -502,7 +502,7 @@ msgstr "添加其他账户"
 
 #: src/view/com/composer/Composer.tsx:721
 msgid "Add another post"
-msgstr "添加另一条帖文"
+msgstr "添加另一则帖文"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:102
 msgid "Add app password"
@@ -516,11 +516,11 @@ msgstr "添加应用密码"
 
 #: src/components/dialogs/MutedWords.tsx:321
 msgid "Add mute word for configured settings"
-msgstr "在设置中添加隐藏词汇"
+msgstr "在设置中添加隐藏字词"
 
 #: src/components/dialogs/MutedWords.tsx:112
 msgid "Add muted words and tags"
-msgstr "添加隐藏词汇和标签"
+msgstr "添加隐藏字词和标签"
 
 #: src/view/com/composer/Composer.tsx:1235
 msgid "Add new post"
@@ -528,9 +528,9 @@ msgstr "添加新的帖文"
 
 #: src/screens/Home/NoFeedsPinned.tsx:99
 msgid "Add recommended feeds"
-msgstr "添加我们推荐的动态源"
+msgstr "添加推荐的动态源"
 
-#: src/screens/StarterPack/Wizard/index.tsx:497
+#: src/screens/StarterPack/Wizard/index.tsx:494
 msgid "Add some feeds to your starter pack!"
 msgstr "添加一些推荐的动态源到你的新手包里面！"
 
@@ -581,7 +581,7 @@ msgstr "仅可通过网页端（<0>bsky.app</0>）启用成人内容显示。"
 
 #: src/components/moderation/LabelPreference.tsx:242
 msgid "Adult content is disabled."
-msgstr "成人内容显示已禁用。"
+msgstr "成人内容显示已停用。"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:139
 #: src/view/com/composer/labels/LabelsBtn.tsx:197
@@ -607,20 +607,20 @@ msgstr "以下是你已保存的动态源。"
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:146
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:153
 msgid "Allow access to your direct messages"
-msgstr "允许该应用读取你的私信"
+msgstr "允许读取你的私信"
 
 #: src/screens/Messages/Settings.tsx:64
 #: src/screens/Messages/Settings.tsx:67
 msgid "Allow new messages from"
-msgstr "允许以下来源向你发起新对话"
+msgstr "允许这些来源向你发起新对话"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:363
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:359
 msgid "Allow replies from:"
-msgstr "允许回复："
+msgstr "允许这些来源回复："
 
 #: src/screens/Settings/AppPasswords.tsx:192
 msgid "Allows access to direct messages"
-msgstr "允许该应用读取私信"
+msgstr "允许读取私信"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:171
 #: src/view/com/modals/ChangePassword.tsx:171
@@ -657,20 +657,20 @@ msgstr "为图片新增替代文本，从而帮助盲人及其他视障群体大
 #: src/view/com/composer/GifAltText.tsx:179
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:139
 msgid "Alt text will be truncated. Limit: {0} characters."
-msgstr "替代文本过长将被截断，限制的长度：{0}个字符。"
+msgstr "替代文本过长将被截断，字数限制：{0}个字符。"
 
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:93
 #: src/view/com/modals/VerifyEmail.tsx:132
 msgid "An email has been sent to {0}. It includes a confirmation code which you can enter below."
-msgstr "一封电子邮件已发送至 {0}。请查阅邮件内容，并复制其中的验证码至下方。"
+msgstr "一封电子邮件已发送至 {0}。请查阅邮件内容，并复制其中的验证码贴至下方。"
 
 #: src/view/com/modals/ChangeEmail.tsx:114
 msgid "An email has been sent to your previous address, {0}. It includes a confirmation code which you can enter below."
-msgstr "一封电子邮件已发送至先前填写的电子邮箱 {0}。请查阅邮件内容，并复制其中的验证码至下方。"
+msgstr "一封电子邮件已发送至先前填写的电子邮箱 {0}。请查阅邮件内容，并复制其中的验证码贴至下方。"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:91
 msgid "An email has been sent! Please enter the confirmation code included in the email below."
-msgstr "电子邮件已发送！请输入邮件中包含的验证码至下方。"
+msgstr "电子邮件已发送！请输入邮件中包含的验证码贴至下方。"
 
 #: src/components/dialogs/GifSelect.tsx:265
 msgid "An error has occurred"
@@ -708,7 +708,7 @@ msgstr "选择视频时发生错误"
 #: src/screens/StarterPack/StarterPackScreen.tsx:347
 #: src/screens/StarterPack/StarterPackScreen.tsx:369
 msgid "An error occurred while trying to follow all"
-msgstr "关注所有人时发生错误"
+msgstr "关注全部账户时发生错误"
 
 #: src/view/com/composer/state/video.ts:435
 msgid "An error occurred while uploading the video."
@@ -764,11 +764,11 @@ msgstr "反社会行为"
 #: src/view/screens/Search/Search.tsx:347
 #: src/view/screens/Search/Search.tsx:348
 msgid "Any language"
-msgstr "任何语言"
+msgstr "任何发布语言"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:48
 msgid "Anybody can interact"
-msgstr "所有人都可以参与互动"
+msgstr "任何人都可以参与互动"
 
 #: src/screens/Settings/LanguageSettings.tsx:72
 msgid "App Language"
@@ -784,11 +784,11 @@ msgstr "已删除此应用密码"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:84
 msgid "App password name must be unique"
-msgstr "应用密码名称必须是唯一的"
+msgstr "应用密码名称不得与现有的重复"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:62
 msgid "App password names can only contain letters, numbers, spaces, dashes, and underscores"
-msgstr "应用密码只能包含字母、数字、空格、破折号及下划线"
+msgstr "应用密码只能包含字母、数字、空格、连字符（-）及下划线（_）"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:80
 msgid "App password names must be at least 4 characters long"
@@ -811,7 +811,7 @@ msgstr "申诉"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:243
 msgid "Appeal \"{0}\" label"
-msgstr "申诉 \"{0}\" 标记"
+msgstr "对“{0}”标记提出申诉"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:233
 #: src/screens/Messages/components/ChatDisabled.tsx:91
@@ -848,7 +848,7 @@ msgstr "已归档的帖文"
 
 #: src/screens/Settings/AppPasswords.tsx:201
 msgid "Are you sure you want to delete the app password \"{0}\"?"
-msgstr "你确定要删除这条应用密码 \"{0}\" 吗？"
+msgstr "你确定要删除这个应用密码 \"{0}\" 吗？"
 
 #: src/components/dms/MessageMenu.tsx:149
 msgid "Are you sure you want to delete this message? The message will be deleted for you, but not for the other participant."
@@ -907,8 +907,8 @@ msgstr "至少应有 3 个字符"
 msgid "Autoplay options have moved to the <0>Content and Media settings</0>."
 msgstr "自动播放选项已移动到<0>内容与媒体设置</0>。"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:82
 #: src/screens/Settings/ContentAndMediaSettings.tsx:88
+#: src/screens/Settings/ContentAndMediaSettings.tsx:94
 msgid "Autoplay videos and GIFs"
 msgstr "自动播放视频及 GIF"
 
@@ -927,7 +927,7 @@ msgstr "自动播放视频及 GIF"
 #: src/screens/Messages/components/ChatDisabled.tsx:134
 #: src/screens/Profile/Header/Shell.tsx:112
 #: src/screens/Signup/BackNextButtons.tsx:41
-#: src/screens/StarterPack/Wizard/index.tsx:307
+#: src/screens/StarterPack/Wizard/index.tsx:304
 #: src/view/com/util/ViewHeader.tsx:87
 msgid "Back"
 msgstr "返回"
@@ -947,7 +947,7 @@ msgstr "在创建新手包之前，你必须首先验证你的电子邮箱。"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:79
 #: src/components/dms/MessageProfileButton.tsx:89
-#: src/screens/Messages/Conversation.tsx:219
+#: src/screens/Messages/Conversation.tsx:210
 msgid "Before you may message another user, you must first verify your email."
 msgstr "在向其他人发送私信之前，你必须首先验证你的电子邮箱。"
 
@@ -1013,9 +1013,9 @@ msgstr "已被屏蔽的账户无法在你的帖文下回复、提及你或以其
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you. You will not see their content and they will be prevented from seeing yours."
 msgstr "已被屏蔽的账户无法在你的帖文下回复、提及你或以其他方式与你互动。你将不会看到他们所发布的内容，同样他们也无法查看你发布的内容。"
 
-#: src/view/com/post-thread/PostThread.tsx:412
+#: src/view/com/post-thread/PostThread.tsx:421
 msgid "Blocked post."
-msgstr "此帖文已被屏蔽。"
+msgstr "这则帖文已被屏蔽。"
 
 #: src/screens/Profile/Sections/Labels.tsx:173
 msgid "Blocking does not prevent this labeler from placing labels on your account."
@@ -1023,7 +1023,7 @@ msgstr "屏蔽该用户不能阻止其继续标记你的账户。"
 
 #: src/view/screens/ProfileList.tsx:744
 msgid "Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
-msgstr "屏蔽是公开的。被屏蔽的账户无法在你的帖文下回复、提及你或以其他方式与你互动。"
+msgstr "屏蔽是公开可见的。被屏蔽的账户无法在你的帖文下回复、提及你或以其他方式与你互动。"
 
 #: src/view/com/profile/ProfileMenu.tsx:333
 msgid "Blocking will not prevent labels from being applied on your account, but it will stop this account from replying in your threads or interacting with you."
@@ -1044,7 +1044,7 @@ msgstr "Bluesky 无法确认帖文发布时间的真实性。"
 
 #: src/view/com/auth/server-input/index.tsx:151
 msgid "Bluesky is an open network where you can choose your hosting provider. If you're a developer, you can host your own server."
-msgstr "Bluesky 是一个开放网络，你可以自由选择托管服务提供商。如果你是开发人员，你还可以托管自己的服务器。"
+msgstr "Bluesky 是一个开放的社交网络，你可以自由选择托管服务提供商。如果你是开发者，你还可以托管自己的服务器。"
 
 #: src/components/ProgressGuide/List.tsx:54
 msgid "Bluesky is better with friends!"
@@ -1056,7 +1056,7 @@ msgstr "Bluesky 将从你的关系网中选择一组推荐关注的账户。"
 
 #: src/screens/Settings/components/PwiOptOut.tsx:92
 msgid "Bluesky will not show your profile and posts to logged-out users. Other apps may not honor this request. This does not make your account private."
-msgstr "Bluesky 将不会向未登录的用户显示你的个人资料和帖文。但第三方应用可能会忽略这个设置项，故启用后仍无法确保你的用户隐私。"
+msgstr "Bluesky 将不会向未登录的用户显示你的个人资料和帖文。但第三方应用未必会遵从该请求，这不会使你的账号转为非公开状态"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:53
 msgid "Blur images"
@@ -1157,7 +1157,7 @@ msgstr "相机"
 #: src/view/com/modals/VerifyEmail.tsx:255
 #: src/view/com/modals/VerifyEmail.tsx:261
 #: src/view/com/util/post-ctrls/RepostButton.tsx:203
-#: src/view/screens/Search/Search.tsx:911
+#: src/view/screens/Search/Search.tsx:912
 msgid "Cancel"
 msgstr "取消"
 
@@ -1190,7 +1190,7 @@ msgid "Cancel reactivation and log out"
 msgstr "取消重新激活账户并登出"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:88
-#: src/view/screens/Search/Search.tsx:903
+#: src/view/screens/Search/Search.tsx:904
 msgid "Cancel search"
 msgstr "取消搜索"
 
@@ -1243,7 +1243,7 @@ msgstr "更改密码"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:74
 msgid "Change post language to {0}"
-msgstr "将帖文语言更改为 {0}"
+msgstr "将帖文的发布语言更改为 {0}"
 
 #: src/view/com/modals/ChangeEmail.tsx:104
 msgid "Change Your Email"
@@ -1296,7 +1296,7 @@ msgstr "查看发送至你电子邮箱的验证邮件，并在下方输入收到
 msgid "Choose domain verification method"
 msgstr "选择验证域名的方式"
 
-#: src/screens/StarterPack/Wizard/index.tsx:199
+#: src/screens/StarterPack/Wizard/index.tsx:196
 msgid "Choose Feeds"
 msgstr "选择动态源"
 
@@ -1304,7 +1304,7 @@ msgstr "选择动态源"
 msgid "Choose for me"
 msgstr "帮我选择"
 
-#: src/screens/StarterPack/Wizard/index.tsx:195
+#: src/screens/StarterPack/Wizard/index.tsx:192
 msgid "Choose People"
 msgstr "选择用户"
 
@@ -1322,7 +1322,7 @@ msgstr "在动态源中自由挑选适合你的自定义算法"
 
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:107
 msgid "Choose this color as your avatar"
-msgstr "选择这个颜色作为你的头像"
+msgstr "选择这个颜色作为你的头像背景"
 
 #: src/screens/Signup/StepInfo/index.tsx:201
 msgid "Choose your password"
@@ -1354,11 +1354,11 @@ msgstr "点击这里以获取更多资讯。"
 
 #: src/components/TagMenu/index.web.tsx:152
 msgid "Click here to open tag menu for {tag}"
-msgstr "点按这里来开启 {tag} 的标签菜单"
+msgstr "点按此处来开启 {tag} 的标签菜单"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:307
 msgid "Click to disable quote posts of this post."
-msgstr "点击来关闭这则帖文的引用功能。"
+msgstr "点击来停用这则帖文的引用功能。"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:308
 msgid "Click to enable quote posts of this post."
@@ -1488,15 +1488,15 @@ msgstr "撰写回复"
 
 #: src/view/com/composer/Composer.tsx:1628
 msgid "Compressing video..."
-msgstr "正在压缩视频..."
+msgstr "正在压缩视频……"
 
 #: src/components/moderation/LabelPreference.tsx:82
 msgid "Configure content filtering setting for category: {name}"
-msgstr "为类别 {name} 配置内容过滤设置"
+msgstr "配置 {name} 类别的内容过滤设置"
 
 #: src/components/moderation/LabelPreference.tsx:244
 msgid "Configured in <0>moderation settings</0>."
-msgstr "在 <0>内容审核设置</0> 中进行配置。"
+msgstr "已在 <0>内容审核设置</0> 中进行配置。"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:253
 #: src/components/dialogs/VerifyEmailDialog.tsx:260
@@ -1548,7 +1548,7 @@ msgstr "验证码"
 
 #: src/screens/Login/LoginForm.tsx:309
 msgid "Connecting..."
-msgstr "连接中..."
+msgstr "连接中……"
 
 #: src/screens/Signup/index.tsx:175
 #: src/screens/Signup/index.tsx:178
@@ -1562,7 +1562,7 @@ msgid "Content and media"
 msgstr "内容与媒体"
 
 #: src/Navigation.tsx:353
-#: src/screens/Settings/ContentAndMediaSettings.tsx:44
+#: src/screens/Settings/ContentAndMediaSettings.tsx:35
 msgid "Content and Media"
 msgstr "内容与媒体"
 
@@ -1597,7 +1597,7 @@ msgstr "内容警告"
 
 #: src/components/Menu/index.web.tsx:81
 msgid "Context menu backdrop, click to close the menu."
-msgstr "上下文菜单背景，点击关闭菜单。"
+msgstr "上下文菜单背景，点击以关闭菜单。"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:244
 #: src/screens/Onboarding/StepProfile/index.tsx:278
@@ -1610,7 +1610,7 @@ msgstr "以 {0} 的身份继续（当前已登录）"
 
 #: src/view/com/post-thread/PostThreadLoadMore.tsx:52
 msgid "Continue thread..."
-msgstr "加载更多帖文串..."
+msgstr "加载更多帖文串……"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:241
 #: src/screens/Onboarding/StepProfile/index.tsx:275
@@ -1783,7 +1783,7 @@ msgstr "创建针对 {0} 的举报"
 
 #: src/screens/Settings/AppPasswords.tsx:166
 msgid "Created {0}"
-msgstr "已创建 {0}"
+msgstr "创建于 {0}"
 
 #: src/screens/Onboarding/index.tsx:26
 #: src/screens/Onboarding/state.ts:86
@@ -1802,7 +1802,7 @@ msgstr "由社群构建的动态源能为你带来与众不同的体验，并帮
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:292
 msgid "Customize who can interact with this post."
-msgstr "自定义谁可以参与这则帖文的互动。"
+msgstr "自定义哪些人可以参与这则帖文的互动。"
 
 #: src/screens/Settings/AppearanceSettings.tsx:92
 #: src/screens/Settings/AppearanceSettings.tsx:113
@@ -1819,7 +1819,7 @@ msgstr "深色模式"
 
 #: src/screens/Signup/StepInfo/index.tsx:222
 msgid "Date of birth"
-msgstr "生日"
+msgstr "出生日期"
 
 #: src/screens/Settings/AccountSettings.tsx:138
 #: src/screens/Settings/AccountSettings.tsx:143
@@ -1856,7 +1856,7 @@ msgstr "删除账户"
 
 #: src/view/com/modals/DeleteAccount.tsx:105
 msgid "Delete Account <0>\"</0><1>{0}</1><2>\"</2>"
-msgstr "删除账户 <0>\"</0><1>{0}</1><2>\"</2>"
+msgstr "删除账户 <0>“</0><1>{0}</1><2>”</2>"
 
 #: src/screens/Settings/AppPasswords.tsx:179
 msgid "Delete app password"
@@ -1894,16 +1894,16 @@ msgstr "删除我的账户"
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:642
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:644
 msgid "Delete post"
-msgstr "删除这则帖文"
+msgstr "删除帖文"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:579
 #: src/screens/StarterPack/StarterPackScreen.tsx:735
 msgid "Delete starter pack"
-msgstr "删除这个新手包"
+msgstr "删除新手包"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:630
 msgid "Delete starter pack?"
-msgstr "要删除这个新手包吗？"
+msgstr "要删除新手包吗？"
 
 #: src/view/screens/ProfileList.tsx:721
 msgid "Delete this list?"
@@ -1922,9 +1922,9 @@ msgstr "已删除"
 msgid "Deleted Account"
 msgstr "已删除的账户"
 
-#: src/view/com/post-thread/PostThread.tsx:398
+#: src/view/com/post-thread/PostThread.tsx:407
 msgid "Deleted post."
-msgstr "已删除的帖文。"
+msgstr "这则帖文已删除。"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:344
 #: src/view/com/modals/CreateOrEditList.tsx:280
@@ -1932,25 +1932,25 @@ msgstr "已删除的帖文。"
 #: src/view/com/modals/EditProfile.tsx:193
 #: src/view/com/modals/EditProfile.tsx:205
 msgid "Description"
-msgstr "描述文字"
+msgstr "简介"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:364
 msgid "Description is too long"
-msgstr "描述文字太长"
+msgstr "简介太长"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:365
 msgid "Description is too long. The maximum number of characters is {DESCRIPTION_MAX_GRAPHEMES}."
-msgstr "描述文字太长，限制的最大字数为 {DESCRIPTION_MAX_GRAPHEMES}。"
+msgstr "简介太长，限制的最大字数为 {DESCRIPTION_MAX_GRAPHEMES}。"
 
 #: src/view/com/composer/GifAltText.tsx:150
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:114
 msgid "Descriptive alt text"
-msgstr "描述替代文本"
+msgstr "扩充描述替代文本"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:566
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:576
 msgid "Detach quote"
-msgstr "分离引用帖文"
+msgstr "分离引用"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:719
 msgid "Detach quote post?"
@@ -1959,28 +1959,28 @@ msgstr "要分离引用帖文吗？"
 #: src/screens/Settings/Settings.tsx:234
 #: src/screens/Settings/Settings.tsx:237
 msgid "Developer options"
-msgstr "开发人员选项"
+msgstr "开发者选项"
 
 #: src/components/WhoCanReply.tsx:175
 msgid "Dialog: adjust who can interact with this post"
-msgstr "对话框：调整谁可以参与这则帖文的互动"
+msgstr "对话框：调整哪些人可以参与这则帖文的互动"
 
 #: src/screens/Settings/AppearanceSettings.tsx:109
 msgid "Dim"
-msgstr "暗淡"
+msgstr "昏暗"
 
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:89
 msgid "Disable Email 2FA"
-msgstr "关闭电子邮箱两步验证"
+msgstr "停用电子邮箱两步验证"
 
 #: src/screens/Settings/AccessibilitySettings.tsx:83
 #: src/screens/Settings/AccessibilitySettings.tsx:88
 msgid "Disable haptic feedback"
-msgstr "关闭触感反馈"
+msgstr "停用触觉反馈"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:386
 msgid "Disable subtitles"
-msgstr "禁用字幕"
+msgstr "停用字幕"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:32
 #: src/lib/moderation/useLabelBehaviorDescription.ts:42
@@ -1989,7 +1989,7 @@ msgstr "禁用字幕"
 #: src/screens/Messages/Settings.tsx:136
 #: src/screens/Moderation/index.tsx:350
 msgid "Disabled"
-msgstr "禁用"
+msgstr "停用"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:84
 #: src/view/com/composer/Composer.tsx:674
@@ -2012,7 +2012,7 @@ msgstr "要放弃发布吗？"
 #: src/screens/Settings/components/PwiOptOut.tsx:80
 #: src/screens/Settings/components/PwiOptOut.tsx:84
 msgid "Discourage apps from showing my account to logged-out users"
-msgstr "阻止平台向未登录用户展示我的个人资料信息"
+msgstr "阻止平台向未登录用户显示我的账户"
 
 #: src/view/com/posts/FollowingEmptyState.tsx:70
 #: src/view/com/posts/FollowingEndOfFeed.tsx:71
@@ -2027,17 +2027,17 @@ msgstr "探索新的动态源"
 msgid "Discover New Feeds"
 msgstr "探索新的动态源"
 
-#: src/components/Dialog/index.tsx:318
+#: src/components/Dialog/index.tsx:311
 msgid "Dismiss"
-msgstr "关闭"
+msgstr "跳过"
 
 #: src/view/com/composer/Composer.tsx:1552
 msgid "Dismiss error"
-msgstr "关闭错误"
+msgstr "跳过错误"
 
 #: src/components/ProgressGuide/List.tsx:39
 msgid "Dismiss getting started guide"
-msgstr "关闭入门指南"
+msgstr "跳过入门指南"
 
 #: src/screens/Settings/AccessibilitySettings.tsx:63
 #: src/screens/Settings/AccessibilitySettings.tsx:68
@@ -2070,7 +2070,7 @@ msgstr "DNS 面板"
 
 #: src/components/dialogs/MutedWords.tsx:302
 msgid "Do not apply this mute word to users you follow"
-msgstr "不使用这个隐藏词汇来隐藏你已关注用户的帖文"
+msgstr "不使用这个隐藏字词来隐藏你已关注用户的帖文"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:39
 msgid "Does not include nudity."
@@ -2078,11 +2078,11 @@ msgstr "不包含裸露内容。"
 
 #: src/screens/Signup/StepHandle.tsx:159
 msgid "Doesn't begin or end with a hyphen"
-msgstr "不使用连字符开头或结尾"
+msgstr "不以连字符（-）开头或结尾"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:487
 msgid "Domain verified!"
-msgstr "域名已通过认证！"
+msgstr "域名已通过验证！"
 
 #: src/components/dialogs/BirthDateSettings.tsx:118
 #: src/components/dialogs/BirthDateSettings.tsx:124
@@ -2116,7 +2116,7 @@ msgstr "完成"
 msgid "Done{extraText}"
 msgstr "完成{extraText}"
 
-#: src/components/Dialog/index.tsx:319
+#: src/components/Dialog/index.tsx:312
 msgid "Double tap to close the dialog"
 msgstr "双击以关闭对话框"
 
@@ -2159,7 +2159,7 @@ msgstr "例如：艺术家、爱狗人士和资深书虫。"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:43
 msgid "E.g. artistic nudes."
-msgstr "例如：艺术性的裸露。"
+msgstr "例如：裸体艺术。"
 
 #: src/view/com/modals/CreateOrEditList.tsx:263
 msgid "e.g. Great Posters"
@@ -2183,8 +2183,8 @@ msgstr "每个邀请码仅可被使用一次。后续你将不定期获得新的
 
 #: src/screens/Settings/AccountSettings.tsx:104
 #: src/screens/StarterPack/StarterPackScreen.tsx:574
-#: src/screens/StarterPack/Wizard/index.tsx:560
-#: src/screens/StarterPack/Wizard/index.tsx:567
+#: src/screens/StarterPack/Wizard/index.tsx:557
+#: src/screens/StarterPack/Wizard/index.tsx:564
 #: src/view/screens/Feeds.tsx:386
 #: src/view/screens/Feeds.tsx:454
 msgid "Edit"
@@ -2265,7 +2265,7 @@ msgstr "编辑用户列表"
 
 #: src/components/WhoCanReply.tsx:87
 msgid "Edit who can reply"
-msgstr "编辑谁可以回复"
+msgstr "编辑哪些人可以回复"
 
 #: src/view/com/modals/EditProfile.tsx:188
 msgid "Edit your display name"
@@ -2292,7 +2292,7 @@ msgstr "电子邮箱"
 
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:64
 msgid "Email 2FA disabled"
-msgstr "已关闭电子邮箱两步验证"
+msgstr "已停用电子邮箱两步验证"
 
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:46
 msgid "Email 2FA enabled"
@@ -2401,7 +2401,7 @@ msgstr "输入密码"
 #: src/components/dialogs/MutedWords.tsx:127
 #: src/components/dialogs/MutedWords.tsx:128
 msgid "Enter a word or tag"
-msgstr "输入一个词汇或标签"
+msgstr "输入字词或标签"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:89
 msgid "Enter Code"
@@ -2458,24 +2458,24 @@ msgstr "保存文件时发生错误"
 
 #: src/screens/Signup/StepCaptcha/index.tsx:56
 msgid "Error receiving captcha response."
-msgstr "Captcha 响应错误。"
+msgstr "CAPTCHA（人机验证）响应错误。"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:183
 #: src/view/screens/Search/Search.tsx:122
 msgid "Error:"
 msgstr "错误："
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:368
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:364
 msgid "Everybody"
 msgstr "所有人"
 
 #: src/components/WhoCanReply.tsx:67
 msgid "Everybody can reply"
-msgstr "所有人都可以回复"
+msgstr "任何人都可以回复"
 
 #: src/components/WhoCanReply.tsx:213
 msgid "Everybody can reply to this post."
-msgstr "所有人都可以回复这则帖文。"
+msgstr "任何人都可以回复这则帖文。"
 
 #: src/screens/Messages/Settings.tsx:77
 #: src/screens/Messages/Settings.tsx:80
@@ -2488,7 +2488,7 @@ msgstr "过于频繁的提及或回复"
 
 #: src/lib/moderation/useReportOptions.ts:86
 msgid "Excessive or unwanted messages"
-msgstr "过多或不受欢迎的信息"
+msgstr "过于频繁或不受欢迎的信息"
 
 #: src/components/dialogs/MutedWords.tsx:311
 msgid "Exclude users you follow"
@@ -2500,7 +2500,7 @@ msgstr "排除你已关注的用户"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:404
 msgid "Exit fullscreen"
-msgstr "退出全屏"
+msgstr "退出全屏模式"
 
 #: src/view/com/modals/DeleteAccount.tsx:294
 msgid "Exits account deletion process"
@@ -2529,7 +2529,7 @@ msgstr "展开用户列表"
 #: src/view/com/composer/ComposerReplyTo.tsx:70
 #: src/view/com/composer/ComposerReplyTo.tsx:73
 msgid "Expand or collapse the full post you are replying to"
-msgstr "展开或折叠你要回复的完整帖文"
+msgstr "展开或折叠你正在回复的完整帖文"
 
 #: src/lib/api/index.ts:400
 msgid "Expected uri to resolve to a record"
@@ -2546,15 +2546,15 @@ msgstr "已到期"
 
 #: src/components/dialogs/MutedWords.tsx:502
 msgid "Expires {0}"
-msgstr "已到期 {0}"
+msgstr "将于 {0} 到期"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:47
 msgid "Explicit or potentially disturbing media."
-msgstr "明确或可能引起不适的媒体内容。"
+msgstr "露骨或可能引起不适的媒体内容。"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:35
 msgid "Explicit sexual images."
-msgstr "明确的性暗示图片。"
+msgstr "露骨的色情图片。"
 
 #: src/screens/Settings/AccountSettings.tsx:129
 #: src/screens/Settings/AccountSettings.tsx:133
@@ -2565,8 +2565,8 @@ msgstr "导出账户数据"
 msgid "Export My Data"
 msgstr "导出账户数据"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:73
-#: src/screens/Settings/ContentAndMediaSettings.tsx:76
+#: src/screens/Settings/ContentAndMediaSettings.tsx:64
+#: src/screens/Settings/ContentAndMediaSettings.tsx:67
 msgid "External media"
 msgstr "外部媒体"
 
@@ -2578,23 +2578,23 @@ msgstr "外部媒体"
 #: src/components/dialogs/EmbedConsent.tsx:70
 #: src/screens/Settings/ExternalMediaPreferences.tsx:34
 msgid "External media may allow websites to collect information about you and your device. No information is sent or requested until you press the \"play\" button."
-msgstr "外部媒体可能会收集你或设备储存的个人信息。在你按下\"查看\"按钮之前，平台将不会发送任何请求给外部媒体。"
+msgstr "外部媒体可能会收集你或设备储存的个人信息。在你按下“播放”按钮之前，平台将不会发送任何请求给外部媒体。"
 
 #: src/Navigation.tsx:313
 #: src/screens/Settings/ExternalMediaPreferences.tsx:29
 msgid "External Media Preferences"
-msgstr "外部媒体首选项"
+msgstr "外部媒体偏好"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:552
 msgid "Failed to change handle. Please try again."
-msgstr "更改账户代码失败，请重试。"
+msgstr "无法更改账户代码，请重试。"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:173
 msgid "Failed to create app password. Please try again."
 msgstr "无法创建应用密码。请重试。"
 
-#: src/screens/StarterPack/Wizard/index.tsx:238
-#: src/screens/StarterPack/Wizard/index.tsx:246
+#: src/screens/StarterPack/Wizard/index.tsx:235
+#: src/screens/StarterPack/Wizard/index.tsx:243
 msgid "Failed to create starter pack"
 msgstr "无法创建新手包"
 
@@ -2617,7 +2617,7 @@ msgstr "无法删除新手包"
 #: src/view/screens/Search/Explore.tsx:427
 #: src/view/screens/Search/Explore.tsx:455
 msgid "Failed to load feeds preferences"
-msgstr "无法加载动态源首选项"
+msgstr "无法加载动态源偏好设置"
 
 #: src/components/dialogs/GifSelect.tsx:225
 msgid "Failed to load GIFs"
@@ -2625,7 +2625,7 @@ msgstr "无法加载 GIF"
 
 #: src/screens/Messages/components/MessageListError.tsx:23
 msgid "Failed to load past messages"
-msgstr "无法加载旧的私信"
+msgstr "无法加载过去的私信"
 
 #: src/view/screens/Search/Explore.tsx:420
 #: src/view/screens/Search/Explore.tsx:448
@@ -2638,15 +2638,15 @@ msgstr "无法加载建议关注"
 
 #: src/state/queries/pinned-post.ts:75
 msgid "Failed to pin post"
-msgstr "无法固定这则帖文"
+msgstr "无法固定帖文"
 
 #: src/view/com/lightbox/Lightbox.tsx:46
 msgid "Failed to save image: {0}"
-msgstr "无法保存这张图片：{0}"
+msgstr "无法保存图片：{0}"
 
 #: src/state/queries/notifications/settings.ts:39
 msgid "Failed to save notification preferences, please try again"
-msgstr "无法保存通知首选项，请重试"
+msgstr "无法保存通知偏好设置，请重试"
 
 #: src/components/dms/MessageItem.tsx:234
 msgid "Failed to send"
@@ -2678,7 +2678,7 @@ msgstr "无法上传视频"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:340
 msgid "Failed to verify handle. Please try again."
-msgstr "验证账户代码失败，请重试。"
+msgstr "无法验证账户代码，请重试。"
 
 #: src/Navigation.tsx:229
 msgid "Feed"
@@ -2716,7 +2716,7 @@ msgstr "动态源"
 
 #: src/view/screens/SavedFeeds.tsx:205
 msgid "Feeds are custom algorithms that users build with a little coding expertise. <0/> for more information."
-msgstr "创建动态源需要你掌握一些编程基础知识。<0/>以获取更多资讯。"
+msgstr "动态源是一种自定义算法，用户仅需掌握一些编程知识即可轻松创建。<0/>以获取更多资讯。"
 
 #: src/components/FeedCard.tsx:273
 #: src/view/screens/SavedFeeds.tsx:83
@@ -2725,7 +2725,7 @@ msgstr "已更新动态源！"
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:43
 msgid "File saved successfully!"
-msgstr "成功保存文件！"
+msgstr "已成功保存文件！"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:66
 msgid "Filter from feeds"
@@ -2745,7 +2745,7 @@ msgstr "寻找一些账户来关注"
 msgid "Find posts and users on Bluesky"
 msgstr "在 Bluesky 寻找感兴趣的帖文和用户"
 
-#: src/screens/StarterPack/Wizard/index.tsx:200
+#: src/screens/StarterPack/Wizard/index.tsx:197
 msgid "Finish"
 msgstr "完成"
 
@@ -2792,7 +2792,7 @@ msgstr "关注账户"
 #: src/screens/StarterPack/StarterPackScreen.tsx:427
 #: src/screens/StarterPack/StarterPackScreen.tsx:435
 msgid "Follow all"
-msgstr "关注所有人"
+msgstr "全部关注"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:232
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:130
@@ -2810,21 +2810,21 @@ msgstr "关注更多账户以找到你的兴趣，从而逐步建立属于你的
 
 #: src/components/KnownFollowers.tsx:231
 msgid "Followed by <0>{0}</0>"
-msgstr "被你认识的 <0>{0}</0> 所关注"
+msgstr "已被你认识的 <0>{0}</0> 关注"
 
 #: src/components/KnownFollowers.tsx:217
 msgid "Followed by <0>{0}</0> and {1, plural, one {# other} other {# others}}"
-msgstr "被你认识的 <0>{0}</0> 及{1, plural, one {其他#人} other {其他#人}}所关注"
+msgstr "已被你认识的 <0>{0}</0> 及{1, plural, one {其他#人} other {其他#人}}关注"
 
 #: src/components/KnownFollowers.tsx:204
 msgid "Followed by <0>{0}</0> and <1>{1}</1>"
-msgstr "被你认识的 <0>{0}</0> 及 <1>{1}</1> 所关注"
+msgstr "已被你认识的 <0>{0}</0> 及 <1>{1}</1> 关注"
 
 #: src/components/KnownFollowers.tsx:186
 msgid "Followed by <0>{0}</0>, <1>{1}</1>, and {2, plural, one {# other} other {# others}}"
-msgstr "被你认识的<0>{0}</0>、<1>{1}</1> 及{2, plural, one {其他#人} other {其他#人}}所关注"
+msgstr "已被你认识的<0>{0}</0>、<1>{1}</1> 及{2, plural, one {其他#人} other {其他#人}}关注"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:407
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:403
 msgid "Followed users"
 msgstr "已关注的用户"
 
@@ -2835,7 +2835,7 @@ msgstr "关注者"
 
 #: src/Navigation.tsx:190
 msgid "Followers of @{0} that you know"
-msgstr "被你认识的 @{0} 所关注"
+msgstr "已被你认识的 @{0} 关注"
 
 #: src/screens/Profile/KnownFollowers.tsx:110
 #: src/screens/Profile/KnownFollowers.tsx:120
@@ -2864,15 +2864,15 @@ msgstr "已关注 {0}"
 msgid "Following {name}"
 msgstr "已关注 {name}"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:65
-#: src/screens/Settings/ContentAndMediaSettings.tsx:68
+#: src/screens/Settings/ContentAndMediaSettings.tsx:56
+#: src/screens/Settings/ContentAndMediaSettings.tsx:59
 msgid "Following feed preferences"
-msgstr "\"Following\"动态源首选项"
+msgstr "“Following”动态源偏好"
 
 #: src/Navigation.tsx:300
 #: src/screens/Settings/FollowingFeedPreferences.tsx:49
 msgid "Following Feed Preferences"
-msgstr "\"Following\"动态源首选项"
+msgstr "“Following”动态源偏好"
 
 #: src/screens/Profile/Header/Handle.tsx:32
 msgid "Follows you"
@@ -2964,7 +2964,7 @@ msgstr "GIF"
 
 #: src/screens/Onboarding/StepProfile/index.tsx:234
 msgid "Give your profile a face"
-msgstr "添加头像到你的个人资料"
+msgstr "为你的个人资料选择头像"
 
 #: src/lib/moderation/useReportOptions.ts:39
 msgid "Glaring violations of law or terms of service"
@@ -3004,17 +3004,17 @@ msgstr "返回上一步"
 msgid "Go back to previous step"
 msgstr "返回上一步"
 
-#: src/screens/StarterPack/Wizard/index.tsx:308
+#: src/screens/StarterPack/Wizard/index.tsx:305
 msgid "Go back to the previous step"
 msgstr "返回上一步"
 
 #: src/view/screens/NotFound.tsx:57
 msgid "Go home"
-msgstr "返回主页"
+msgstr "转到主页"
 
 #: src/view/screens/NotFound.tsx:56
 msgid "Go Home"
-msgstr "返回主页"
+msgstr "转到主页"
 
 #: src/screens/Messages/components/ChatListItem.tsx:264
 msgid "Go to conversation with {0}"
@@ -3027,11 +3027,11 @@ msgstr "前往下一步"
 
 #: src/components/dms/ConvoMenu.tsx:167
 msgid "Go to profile"
-msgstr "前往个人资料"
+msgstr "转到个人资料"
 
 #: src/components/dms/ConvoMenu.tsx:164
 msgid "Go to user's profile"
-msgstr "前往用户个人资料"
+msgstr "转到用户个人资料"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:46
 #: src/view/com/composer/labels/LabelsBtn.tsx:202
@@ -3059,7 +3059,7 @@ msgstr "已更改账户代码！"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:560
 msgid "Handle too long. Please try a shorter one."
-msgstr "账户代码太长，请尝试输入较短的另一个。"
+msgstr "账户代码太长，请尝试输入较短的一个。"
 
 #: src/screens/Settings/AccessibilitySettings.tsx:79
 msgid "Haptics"
@@ -3092,13 +3092,9 @@ msgstr "帮助"
 msgid "Help people know you're not a bot by uploading a picture or creating an avatar."
 msgstr "通过上传图片或生成头像，来让大家知道你不是机器人。"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:127
-msgid "Helps external sites estimate traffic from Bluesky."
-msgstr "帮助外部站点分析来自 Bluesky 的访问流量。"
-
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:187
 msgid "Here is your app password!"
-msgstr "这是你的应用密码！"
+msgstr "以下是你的应用密码！"
 
 #: src/components/ListCard.tsx:130
 msgid "Hidden list"
@@ -3147,7 +3143,7 @@ msgstr "要隐藏这则帖文吗？"
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:667
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:729
 msgid "Hide this reply?"
-msgstr "要隐藏这条回复吗？"
+msgstr "要隐藏这则回复吗？"
 
 #: src/view/com/notifications/FeedItem.tsx:591
 msgid "Hide user list"
@@ -3206,7 +3202,7 @@ msgstr "托管服务提供商"
 #: src/screens/Settings/ThreadPreferences.tsx:59
 #: src/screens/Settings/ThreadPreferences.tsx:62
 msgid "Hot replies first"
-msgstr ""
+msgstr "优先显示最热回复"
 
 #: src/view/com/modals/InAppBrowserConsent.tsx:41
 msgid "How should we open this link?"
@@ -3239,7 +3235,7 @@ msgstr "我了解"
 
 #: src/view/com/lightbox/Lightbox.web.tsx:184
 msgid "If alt text is long, toggles alt text expanded state"
-msgstr "若替代文本过长，则切换替代文本的展开状态"
+msgstr "若替代文本过长，则会切换替代文本的展开状态"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:110
 msgid "If you are not yet an adult according to the laws of your country, your parent or legal guardian must read these Terms on your behalf."
@@ -3251,7 +3247,7 @@ msgstr "如果你删除这个列表，则以后将无法恢复。"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:246
 msgid "If you have your own domain, you can use that as your handle. This lets you self-verify your identity – <0>learn more</0>."
-msgstr "如果你拥有属于自己的域名，你可以将其用作自己的账户代码，同时还能帮助你验证自己的身份—— <0>了解更多</0>。"
+msgstr "如果你拥有属于自己的域名，你可以将其用作自己的账户代码，同时还能帮助你验证自己的身份——<0>了解详情</0>。"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:658
 msgid "If you remove this post, you won't be able to recover it."
@@ -3279,15 +3275,15 @@ msgstr "已保存这张图片到你的照片图库！"
 
 #: src/lib/moderation/useReportOptions.ts:49
 msgid "Impersonation or false claims about identity or affiliation"
-msgstr "冒充或虚假身份及从属关系"
+msgstr "冒充、虚假声明身份或隶属关系"
 
 #: src/lib/moderation/useReportOptions.ts:68
 msgid "Impersonation, misinformation, or false claims"
-msgstr "冒充他人、提供虚假信息或提出虚假声明"
+msgstr "冒充、提供虚假信息或提出虚假声明"
 
 #: src/lib/moderation/useReportOptions.ts:91
 msgid "Inappropriate messages or explicit links"
-msgstr "不适当的消息或诱导性链接"
+msgstr "不当消息或诱导性链接"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:121
 msgid "Input code sent to your email for password reset"
@@ -3323,7 +3319,7 @@ msgstr "输入你的账户代码"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:49
 msgid "Interaction limited"
-msgstr "互动受限"
+msgstr "已限制互动"
 
 #: src/screens/Login/LoginForm.tsx:142
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:70
@@ -3369,7 +3365,7 @@ msgstr "邀请码：1 个可用"
 
 #: src/components/StarterPack/ShareDialog.tsx:96
 msgid "Invite people to this starter pack!"
-msgstr "邀请朋友使用这个新手包！"
+msgstr "使用这个新手包来邀请其他人加入吧！"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:34
 msgid "Invite your friends to follow your favorite feeds and people"
@@ -3385,11 +3381,11 @@ msgstr "你可能输入了错误的电子邮箱地址。确认这个地址是正
 
 #: src/screens/Signup/StepInfo/index.tsx:241
 msgid "It's correct"
-msgstr "输入正确"
+msgstr "这是正确的电子邮箱地址"
 
-#: src/screens/StarterPack/Wizard/index.tsx:461
+#: src/screens/StarterPack/Wizard/index.tsx:458
 msgid "It's just you right now! Add more people to your starter pack by searching above."
-msgstr "现在只剩下你了！通过上面的列表将更多人添加到你的新手包里面。"
+msgstr "现在只剩下你了！通过上面的列表搜索，将更多人添加到你的新手包里面。"
 
 #: src/view/com/composer/Composer.tsx:1571
 msgid "Job ID: {0}"
@@ -3422,7 +3418,7 @@ msgstr "由 {0} 标记。"
 
 #: src/components/moderation/ContentHider.tsx:229
 msgid "Labeled by the author."
-msgstr "由帖文作者标记。"
+msgstr "由发布者标记。"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:75
 #: src/view/screens/Profile.tsx:226
@@ -3447,7 +3443,7 @@ msgstr "你内容上的标记"
 
 #: src/view/com/composer/select-language/SelectLangBtn.tsx:107
 msgid "Language selection"
-msgstr "选择语言"
+msgstr "语言选择"
 
 #: src/Navigation.tsx:163
 msgid "Language Settings"
@@ -3470,39 +3466,39 @@ msgstr "最新"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:250
 msgid "learn more"
-msgstr "了解更多"
+msgstr "了解详情"
 
 #: src/components/moderation/ScreenHider.tsx:140
 msgid "Learn More"
-msgstr "了解更多"
+msgstr "了解详情"
 
 #: src/view/com/auth/SplashScreen.web.tsx:166
 msgid "Learn more about Bluesky"
-msgstr "了解更多有关 Bluesky 的详细信息"
+msgstr "深入了解有关 Bluesky 的信息"
 
 #: src/view/com/auth/server-input/index.tsx:156
 msgid "Learn more about self hosting your PDS."
-msgstr "了解更多有关自行托管 PDS 的详细信息。"
+msgstr "深入了解有关自行托管 PDS 的信息。"
 
 #: src/components/moderation/ContentHider.tsx:149
 #: src/components/moderation/ContentHider.tsx:215
 msgid "Learn more about the moderation applied to this content."
-msgstr "了解更多有关审核套用于该内容的详细信息。"
+msgstr "深入了解有关审核应用于该内容的信息。"
 
 #: src/components/moderation/PostHider.tsx:100
 #: src/components/moderation/ScreenHider.tsx:127
 msgid "Learn more about this warning"
-msgstr "了解更多有关这个警告的详细信息"
+msgstr "深入了解有关这个警告的信息"
 
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:91
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:94
 msgid "Learn more about what is public on Bluesky."
-msgstr "了解更多有关 Bluesky 公开内容的详细信息。"
+msgstr "深入了解有关 Bluesky 公开内容的信息。"
 
 #: src/components/moderation/ContentHider.tsx:239
 #: src/view/com/auth/server-input/index.tsx:158
 msgid "Learn more."
-msgstr "了解更多。"
+msgstr "了解详情。"
 
 #: src/components/dms/LeaveConvoPrompt.tsx:49
 msgid "Leave"
@@ -3523,7 +3519,7 @@ msgstr "离开对话"
 
 #: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:83
 msgid "Leave them all unchecked to see any language."
-msgstr "全部留空以查看所有语言的帖文。"
+msgstr "全部留空以显示所有语言的帖文。"
 
 #: src/view/com/modals/LinkWarning.tsx:65
 msgid "Leaving Bluesky"
@@ -3540,7 +3536,7 @@ msgstr "自定义"
 #: src/screens/Login/index.tsx:127
 #: src/screens/Login/index.tsx:142
 msgid "Let's get your password reset!"
-msgstr "让我们来重置你的密码！"
+msgstr "让我们来重置你的密码吧！"
 
 #: src/screens/Onboarding/StepFinished.tsx:292
 msgid "Let's go!"
@@ -3548,16 +3544,16 @@ msgstr "让我们开始吧！"
 
 #: src/screens/Settings/AppearanceSettings.tsx:88
 msgid "Light"
-msgstr "亮色"
+msgstr "浅色"
 
 #: src/components/ProgressGuide/List.tsx:47
 msgid "Like 10 posts"
-msgstr "喜欢 10 条帖文"
+msgstr "喜欢 10 则帖文"
 
 #: src/state/shell/progress-guide.tsx:157
 #: src/state/shell/progress-guide.tsx:162
 msgid "Like 10 posts to train the Discover feed"
-msgstr "喜欢 10 条帖文，以训练 \"Discover\" 资讯源的算法推送"
+msgstr "喜欢 10 则帖文，以训练“Discover”资讯源的算法推送"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:275
 #: src/view/screens/ProfileFeed.tsx:576
@@ -3568,14 +3564,14 @@ msgstr "喜欢这个动态源"
 #: src/Navigation.tsx:234
 #: src/Navigation.tsx:239
 msgid "Liked by"
-msgstr "喜欢"
+msgstr "喜欢的用户"
 
 #: src/screens/Post/PostLikedBy.tsx:32
 #: src/screens/Post/PostLikedBy.tsx:33
 #: src/screens/Profile/ProfileLabelerLikedBy.tsx:29
 #: src/view/screens/ProfileFeedLikedBy.tsx:30
 msgid "Liked By"
-msgstr "喜欢"
+msgstr "喜欢的用户"
 
 #: src/view/screens/Profile.tsx:231
 msgid "Likes"
@@ -3667,7 +3663,7 @@ msgstr "加载新的帖文"
 
 #: src/view/com/composer/text-input/mobile/Autocomplete.tsx:94
 msgid "Loading..."
-msgstr "加载中..."
+msgstr "加载中……"
 
 #: src/Navigation.tsx:259
 msgid "Log"
@@ -3691,15 +3687,15 @@ msgstr "未登录用户可见性"
 
 #: src/components/AccountList.tsx:65
 msgid "Login to account that is not listed"
-msgstr "登录未列出的账户"
+msgstr "登录未在这里列出的账户"
 
 #: src/view/shell/desktop/RightNav.tsx:103
 msgid "Logo by <0/>"
-msgstr "由 <0/> 绘制的图标"
+msgstr "这个图标由 <0/> 绘制"
 
 #: src/view/shell/Drawer.tsx:629
 msgid "Logo by <0>@sawaratsuki.bsky.social</0>"
-msgstr "由 <0>@sawaratsuki.bsky.social</0> 绘制的图标"
+msgstr "这个图标由 <0>@sawaratsuki.bsky.social</0> 绘制"
 
 #: src/components/RichText.tsx:219
 msgid "Long press to open tag menu for #{tag}"
@@ -3715,11 +3711,11 @@ msgstr "看起来你还未保存任何动态源！来看看我们提供的建议
 
 #: src/screens/Home/NoFeedsPinned.tsx:83
 msgid "Looks like you unpinned all your feeds. But don't worry, you can add some below 😄"
-msgstr "看起来你已取消固定所有动态源。不过别担心，你仍然可以在下面再添加一些😄"
+msgstr "看起来你已取消固定所有动态源。不过别担心，你可以在下面再添加一些😄"
 
 #: src/screens/Feeds/NoFollowingFeed.tsx:37
 msgid "Looks like you're missing a following feed. <0>Click here to add one.</0>"
-msgstr "看起来你似乎缺少\"Following\"动态源。<0>点击这里来重新添加它。</0>"
+msgstr "看起来你似乎缺少“Following”动态源。<0>点击这里来重新添加它。</0>"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:266
 msgid "Make one for me"
@@ -3729,14 +3725,14 @@ msgstr "帮我选择"
 msgid "Make sure this is where you intend to go!"
 msgstr "请确认目标页面地址是否正确！"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:49
-#: src/screens/Settings/ContentAndMediaSettings.tsx:52
+#: src/screens/Settings/ContentAndMediaSettings.tsx:40
+#: src/screens/Settings/ContentAndMediaSettings.tsx:43
 msgid "Manage saved feeds"
 msgstr "管理已保存的动态源"
 
 #: src/components/dialogs/MutedWords.tsx:108
 msgid "Manage your muted words and tags"
-msgstr "管理你的隐藏词汇和标签"
+msgstr "管理你的隐藏字词和标签"
 
 #: src/components/dms/ConvoMenu.tsx:151
 #: src/components/dms/ConvoMenu.tsx:158
@@ -3749,25 +3745,25 @@ msgstr "媒体"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:211
 msgid "Media that may be disturbing or inappropriate for some audiences."
-msgstr "对于一部分受众而言，可能令人不安或造成不适的媒体内容。"
+msgstr "可能会令部分受众不安或造成不适的媒体内容。"
 
 #: src/components/WhoCanReply.tsx:254
 msgid "mentioned users"
-msgstr "提到的用户"
+msgstr "被提及的用户"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:397
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:393
 msgid "Mentioned users"
-msgstr "提到的用户"
+msgstr "被提及的用户"
 
 #: src/components/Menu/index.tsx:95
 #: src/view/com/util/ViewHeader.tsx:87
-#: src/view/screens/Search/Search.tsx:882
+#: src/view/screens/Search/Search.tsx:883
 msgid "Menu"
 msgstr "菜单"
 
 #: src/components/dms/MessageProfileButton.tsx:82
 msgid "Message {0}"
-msgstr "私信 {0}"
+msgstr "传送私信给 {0}"
 
 #: src/components/dms/MessageMenu.tsx:72
 #: src/screens/Messages/components/ChatListItem.tsx:165
@@ -3800,11 +3796,11 @@ msgstr "私信"
 
 #: src/lib/moderation/useReportOptions.ts:47
 msgid "Misleading Account"
-msgstr "具有误导性的账户"
+msgstr "误导性账户"
 
 #: src/lib/moderation/useReportOptions.ts:67
 msgid "Misleading Post"
-msgstr "具有误导性的帖文"
+msgstr "误导性帖文"
 
 #: src/Navigation.tsx:138
 #: src/screens/Moderation/index.tsx:101
@@ -3863,7 +3859,7 @@ msgstr "内容审核工具"
 #: src/components/moderation/ModerationDetailsDialog.tsx:50
 #: src/lib/moderation/useModerationCauseDescription.ts:45
 msgid "Moderator has chosen to set a general warning on the content."
-msgstr "由内容审核服务提供方对这段内容设置的一般警告。"
+msgstr "内容审核服务提供方已对该内容标记一般警告。"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:633
 msgid "More"
@@ -3919,7 +3915,7 @@ msgstr "隐藏账户"
 
 #: src/components/TagMenu/index.tsx:224
 msgid "Mute all {displayTag} posts"
-msgstr "隐藏所有 {displayTag} 的帖文"
+msgstr "将所有 {displayTag} 的帖文隐藏"
 
 #: src/components/dms/ConvoMenu.tsx:172
 #: src/components/dms/ConvoMenu.tsx:178
@@ -3940,27 +3936,27 @@ msgstr "要隐藏这些账户吗？"
 
 #: src/components/dialogs/MutedWords.tsx:185
 msgid "Mute this word for 24 hours"
-msgstr "隐藏这个词汇24小时"
+msgstr "将这个字词隐藏 24 小时"
 
 #: src/components/dialogs/MutedWords.tsx:224
 msgid "Mute this word for 30 days"
-msgstr "隐藏这个词汇30天"
+msgstr "将这个字词隐藏 30 天"
 
 #: src/components/dialogs/MutedWords.tsx:209
 msgid "Mute this word for 7 days"
-msgstr "隐藏这个词汇7天"
+msgstr "将这个字词隐藏 7 天"
 
 #: src/components/dialogs/MutedWords.tsx:258
 msgid "Mute this word in post text and tags"
-msgstr "在帖文文本及标签中隐藏这个词汇"
+msgstr "隐藏包含该字词的帖文和标签"
 
 #: src/components/dialogs/MutedWords.tsx:274
 msgid "Mute this word in tags only"
-msgstr "仅在标签中隐藏这个词汇"
+msgstr "仅隐藏包含该字词的标签"
 
 #: src/components/dialogs/MutedWords.tsx:170
 msgid "Mute this word until you unmute it"
-msgstr "隐藏这个词汇直到你取消为止"
+msgstr "将这个字词隐藏，直到你取消为止"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:489
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:493
@@ -3970,7 +3966,7 @@ msgstr "隐藏讨论串"
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:503
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:505
 msgid "Mute words & tags"
-msgstr "隐藏词汇和标签"
+msgstr "隐藏字词和标签"
 
 #: src/screens/Moderation/index.tsx:259
 msgid "Muted accounts"
@@ -3983,19 +3979,19 @@ msgstr "已隐藏账户"
 
 #: src/view/screens/ModerationMutedAccounts.tsx:116
 msgid "Muted accounts have their posts removed from your feed and from your notifications. Mutes are completely private."
-msgstr "已隐藏的账户将不会在你的通知或时间线中显示，而被隐藏的账户不会收到相关通知。"
+msgstr "已隐藏的账户将不会出现在你的通知或时间线里面，且隐藏账号仅对你自己可见。"
 
 #: src/lib/moderation/useModerationCauseDescription.ts:90
 msgid "Muted by \"{0}\""
-msgstr "被 \"{0}\" 隐藏"
+msgstr "被“{0}”隐藏"
 
 #: src/screens/Moderation/index.tsx:229
 msgid "Muted words & tags"
-msgstr "隐藏词汇和标签"
+msgstr "隐藏字词和标签"
 
 #: src/view/screens/ProfileList.tsx:734
 msgid "Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them."
-msgstr "被隐藏的账户将不会得知你已将他隐藏，已被隐藏的账户将不会在你的通知或时间线中显示。"
+msgstr "隐藏账号仅对你自己可见。他们虽仍然能与你互动，但将不会出现在你的通知或时间线里面。"
 
 #: src/components/dialogs/BirthDateSettings.tsx:34
 #: src/components/dialogs/BirthDateSettings.tsx:37
@@ -4054,7 +4050,7 @@ msgstr "需要举报侵权行为吗？"
 
 #: src/screens/Onboarding/StepFinished.tsx:260
 msgid "Never lose access to your followers or data."
-msgstr "永远不会失去对你的关注者或个人数据的掌控权。"
+msgstr "你永远不会失去对关注者或个人数据的掌控权。"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:532
 msgid "Nevermind, create a handle for me"
@@ -4127,7 +4123,7 @@ msgstr "新的用户列表"
 #: src/screens/Settings/ThreadPreferences.tsx:75
 #: src/screens/Settings/ThreadPreferences.tsx:78
 msgid "Newest replies first"
-msgstr "优先显示最新的回复"
+msgstr "优先显示最新回复"
 
 #: src/screens/Onboarding/index.tsx:20
 #: src/screens/Onboarding/state.ts:95
@@ -4143,10 +4139,10 @@ msgstr "新闻"
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:157
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:165
 #: src/screens/Signup/BackNextButtons.tsx:67
-#: src/screens/StarterPack/Wizard/index.tsx:192
-#: src/screens/StarterPack/Wizard/index.tsx:196
-#: src/screens/StarterPack/Wizard/index.tsx:367
-#: src/screens/StarterPack/Wizard/index.tsx:374
+#: src/screens/StarterPack/Wizard/index.tsx:189
+#: src/screens/StarterPack/Wizard/index.tsx:193
+#: src/screens/StarterPack/Wizard/index.tsx:364
+#: src/screens/StarterPack/Wizard/index.tsx:371
 #: src/view/com/modals/ChangePassword.tsx:254
 #: src/view/com/modals/ChangePassword.tsx:256
 msgid "Next"
@@ -4172,9 +4168,9 @@ msgstr "没有 DNS 面板"
 
 #: src/components/dialogs/GifSelect.tsx:231
 msgid "No featured GIFs found. There may be an issue with Tenor."
-msgstr "未找到精选 GIF，Tensor 可能存在问题。"
+msgstr "未找到精选 GIF，Tenor 可能存在问题。"
 
-#: src/screens/StarterPack/Wizard/StepFeeds.tsx:118
+#: src/screens/StarterPack/Wizard/StepFeeds.tsx:119
 msgid "No feeds found. Try searching for something else."
 msgstr "未找到动态源，尝试搜索点别的。"
 
@@ -4186,7 +4182,7 @@ msgstr "目前还没有喜欢"
 #: src/components/ProfileCard.tsx:338
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:119
 msgid "No longer following {0}"
-msgstr "不再关注 {0}"
+msgstr "已不再关注 {0}"
 
 #: src/screens/Signup/StepHandle.tsx:169
 msgid "No longer than 253 characters"
@@ -4211,7 +4207,7 @@ msgstr "仅限自己"
 
 #: src/components/WhoCanReply.tsx:237
 msgid "No one but the author can quote this post."
-msgstr "仅限帖文作者可以引用这则帖文。"
+msgstr "仅限发布者可以引用这则帖文。"
 
 #: src/screens/Profile/Sections/Feed.tsx:65
 msgid "No posts yet."
@@ -4240,7 +4236,7 @@ msgstr "未找到结果"
 
 #: src/view/screens/Feeds.tsx:513
 msgid "No results found for \"{query}\""
-msgstr "未找到\"{query}\"的结果"
+msgstr "未找到“{query}”的结果"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:128
 #: src/view/screens/Search/Search.tsx:239
@@ -4251,14 +4247,14 @@ msgstr "未找到 {query} 的结果"
 
 #: src/components/dialogs/GifSelect.tsx:229
 msgid "No search results found for \"{search}\"."
-msgstr "未找到 \"{search}\" 的搜索结果。"
+msgstr "未找到“{search}”的搜索结果。"
 
 #: src/components/dialogs/EmbedConsent.tsx:104
 #: src/components/dialogs/EmbedConsent.tsx:111
 msgid "No thanks"
 msgstr "不，谢谢"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:379
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:375
 msgid "Nobody"
 msgstr "仅限自己"
 
@@ -4266,23 +4262,23 @@ msgstr "仅限自己"
 #: src/components/LikesDialog.tsx:97
 #: src/view/com/post-thread/PostLikedBy.tsx:87
 msgid "Nobody has liked this yet. Maybe you should be the first!"
-msgstr "目前还没有人喜欢这则帖文，或许你可以来做第一个！"
+msgstr "目前还没有人喜欢这则帖文，或许你可以来当第一个哦！"
 
 #: src/view/com/post-thread/PostQuotes.tsx:108
 msgid "Nobody has quoted this yet. Maybe you should be the first!"
-msgstr "目前还没有人引用这则帖文，或许你可以来做第一个！"
+msgstr "目前还没有人引用这则帖文，或许你可以来当第一个哦！"
 
 #: src/view/com/post-thread/PostRepostedBy.tsx:80
 msgid "Nobody has reposted this yet. Maybe you should be the first!"
-msgstr "目前还没有人转发这则帖文，或许你可以来做第一个！"
+msgstr "目前还没有人转发这则帖文，或许你可以来当第一个哦！"
 
-#: src/screens/StarterPack/Wizard/StepProfiles.tsx:102
+#: src/screens/StarterPack/Wizard/StepProfiles.tsx:103
 msgid "Nobody was found. Try searching for someone else."
 msgstr "找不到任何人，试试搜点其他关键字。"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:42
 msgid "Non-sexual Nudity"
-msgstr "非性暗示裸露"
+msgstr "非色情裸露"
 
 #: src/Navigation.tsx:128
 #: src/view/screens/Profile.tsx:128
@@ -4302,7 +4298,7 @@ msgstr "分享注意事项"
 
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:80
 msgid "Note: Bluesky is an open and public network. This setting only limits the visibility of your content on the Bluesky app and website, and other apps may not respect this setting. Your content may still be shown to logged-out users by other apps and websites."
-msgstr "注意：Bluesky 是一个开放的社交网络。这个设置项仅限制你发布的内容在 Bluesky 官方应用及网页上的可见性，但第三方应用可能会忽略这个设置项，其仍可能会向未登录的用户展示你的资料信息。"
+msgstr "注意：Bluesky 是一个开放的社交网络。该设置项仅限制发布内容在 Bluesky 应用及网页上的可见性，但第三方应用未必会遵从该请求，仍可能会向未登录的用户显示你发布的内容。"
 
 #: src/screens/Messages/ChatList.tsx:213
 msgid "Nothing here"
@@ -4405,7 +4401,7 @@ msgstr "至少有一段视频缺失了替代文本。"
 
 #: src/screens/Onboarding/StepProfile/index.tsx:115
 msgid "Only .jpg and .png files are supported"
-msgstr "目前只支持上传 .jpg 或 .png 格式的图片文件"
+msgstr "目前只支持上传 .jpg 或 .png 格式的图片"
 
 #: src/components/WhoCanReply.tsx:217
 msgid "Only {0} can reply."
@@ -4413,7 +4409,7 @@ msgstr "仅限{0}可以回复。"
 
 #: src/screens/Signup/StepHandle.tsx:152
 msgid "Only contains letters, numbers, and hyphens"
-msgstr "仅限字母、数字和连字符"
+msgstr "只能包含字母、数字和连字符（-）"
 
 #: src/lib/media/picker.shared.ts:29
 msgid "Only image files are supported"
@@ -4486,7 +4482,7 @@ msgstr "开启内容审核调试页面"
 
 #: src/screens/Moderation/index.tsx:225
 msgid "Open muted words and tags settings"
-msgstr "开启隐藏词汇和标签设置"
+msgstr "开启隐藏字词和标签设置"
 
 #: src/view/com/home/HomeHeaderLayoutMobile.tsx:54
 msgid "Open navigation"
@@ -4519,7 +4515,7 @@ msgstr "开启对话框以向你的帖文内容添加警告"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:61
 msgid "Opens a dialog to choose who can reply to this thread"
-msgstr "开启对话框以选择谁可以回复这条讨论串"
+msgstr "开启对话框以选择哪些人可以回复这条讨论串"
 
 #: src/view/screens/Log.tsx:59
 msgid "Opens additional details for a debug entry"
@@ -4579,13 +4575,13 @@ msgstr "第 {0} 个选项，共 {numItems} 个"
 #: src/components/dms/ReportDialog.tsx:178
 #: src/components/ReportDialog/SubmitView.tsx:167
 msgid "Optionally provide additional information below:"
-msgstr "可选在下方提供额外信息："
+msgstr "在下方提供额外信息（可选）："
 
 #: src/components/dialogs/MutedWords.tsx:299
 msgid "Options:"
 msgstr "选项："
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:392
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:388
 msgid "Or combine these options:"
 msgstr "或者组合选择这些选项："
 
@@ -4608,7 +4604,7 @@ msgstr "其他账户"
 
 #: src/view/com/composer/select-language/SelectLangBtn.tsx:93
 msgid "Other..."
-msgstr "其他..."
+msgstr "其他……"
 
 #: src/screens/Messages/components/ChatDisabled.tsx:28
 msgid "Our moderators have reviewed reports and decided to disable your access to chats on Bluesky."
@@ -4661,7 +4657,7 @@ msgstr "用户"
 
 #: src/Navigation.tsx:183
 msgid "People followed by @{0}"
-msgstr "@{0} 关注的用户"
+msgstr "被 @{0} 关注的用户"
 
 #: src/Navigation.tsx:176
 msgid "People following @{0}"
@@ -4757,7 +4753,7 @@ msgstr "请设置你的密码。"
 
 #: src/screens/Signup/state.ts:231
 msgid "Please complete the verification captcha."
-msgstr "请完成 Captcha 验证。"
+msgstr "请完成 CAPTCHA（人机验证）。"
 
 #: src/view/com/modals/ChangeEmail.tsx:65
 msgid "Please confirm your email before changing it. This is a temporary requirement while email-updating tools are added, and it will soon be removed."
@@ -4769,7 +4765,7 @@ msgstr "请输入这个应用密码的唯一名称，或使用我们提供的随
 
 #: src/components/dialogs/MutedWords.tsx:86
 msgid "Please enter a valid word, tag, or phrase to mute"
-msgstr "请输入一个有效的词汇、标签或短语"
+msgstr "请输入有效的字词或标签以进行隐藏"
 
 #: src/screens/Signup/state.ts:196
 #: src/screens/Signup/StepInfo/index.tsx:102
@@ -4786,11 +4782,11 @@ msgstr "请输入你的密码："
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:265
 msgid "Please explain why you think this label was incorrectly applied by {0}"
-msgstr "请解释为什么你认为 {0} 错误套用了这个标记"
+msgstr "请解释为什么你认为 {0} 错误应用了这个标记"
 
 #: src/screens/Messages/components/ChatDisabled.tsx:110
 msgid "Please explain why you think your chats were incorrectly disabled"
-msgstr "请解释为什么你认为你的私信被错误禁用"
+msgstr "请解释为什么你认为你的私信被错误停用"
 
 #: src/lib/hooks/useAccountSwitcher.ts:45
 #: src/lib/hooks/useAccountSwitcher.ts:55
@@ -4808,14 +4804,14 @@ msgstr "政治"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:157
 msgid "Porn"
-msgstr "色情内容"
+msgstr "色情"
 
 #: src/view/com/composer/Composer.tsx:937
 msgctxt "action"
 msgid "Post"
 msgstr "发布"
 
-#: src/view/com/post-thread/PostThread.tsx:481
+#: src/view/com/post-thread/PostThread.tsx:490
 msgctxt "description"
 msgid "Post"
 msgstr "帖文"
@@ -4823,7 +4819,7 @@ msgstr "帖文"
 #: src/view/com/composer/Composer.tsx:935
 msgctxt "action"
 msgid "Post All"
-msgstr "发布全部"
+msgstr "全部发布"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:209
 msgid "Post by {0}"
@@ -4842,16 +4838,16 @@ msgstr "已删除帖文"
 
 #: src/lib/api/index.ts:185
 msgid "Post failed to upload. Please check your Internet connection and try again."
-msgstr "帖文上传失败，请检查你的互联网连接并重试。"
+msgstr "帖文发布失败，请检查你的互联网连接并重试。"
 
-#: src/view/com/post-thread/PostThread.tsx:212
+#: src/view/com/post-thread/PostThread.tsx:221
 msgid "Post hidden"
 msgstr "已隐藏帖文"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:105
 #: src/lib/moderation/useModerationCauseDescription.ts:104
 msgid "Post Hidden by Muted Word"
-msgstr "这则帖文已被隐藏词汇所隐藏"
+msgstr "这则帖文因配置的隐藏字词而被隐藏"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:108
 #: src/lib/moderation/useModerationCauseDescription.ts:113
@@ -4864,14 +4860,14 @@ msgstr "帖文互动选项"
 
 #: src/view/com/composer/select-language/SelectLangBtn.tsx:89
 msgid "Post language"
-msgstr "帖文语言"
+msgstr "帖文发布语言"
 
 #: src/view/com/modals/lang-settings/PostLanguagesSettings.tsx:76
 msgid "Post Languages"
-msgstr "帖文语言"
+msgstr "帖文发布语言"
 
-#: src/view/com/post-thread/PostThread.tsx:207
-#: src/view/com/post-thread/PostThread.tsx:219
+#: src/view/com/post-thread/PostThread.tsx:216
+#: src/view/com/post-thread/PostThread.tsx:228
 msgid "Post not found"
 msgstr "无法找到帖文"
 
@@ -4894,7 +4890,7 @@ msgstr "帖文"
 
 #: src/components/dialogs/MutedWords.tsx:115
 msgid "Posts can be muted based on their text, their tags, or both. We recommend avoiding common words that appear in many posts, since it can result in no posts being shown."
-msgstr "可以根据文本、标签或结合两者来屏蔽特定帖文。我们建议你避免添加常用词汇，因为这可能会导致你的主页不显示任何帖文。"
+msgstr "可以根据文本、标签或结合两者来隐藏帖文。我们建议你尽量避免添加常用字词，因为这可能会导致你的主页不显示任何帖文。"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:68
 msgid "Posts hidden"
@@ -4906,7 +4902,7 @@ msgstr "潜在误导性链接"
 
 #: src/state/queries/notifications/settings.ts:44
 msgid "Preference saved"
-msgstr "已保存首选项"
+msgstr "已保存偏好设置"
 
 #: src/screens/Messages/components/MessageListError.tsx:19
 msgid "Press to attempt reconnection"
@@ -4921,7 +4917,7 @@ msgstr "点按此处以变更托管提供商"
 #: src/screens/Messages/components/MessageListError.tsx:24
 #: src/screens/Signup/BackNextButtons.tsx:47
 msgid "Press to retry"
-msgstr "点按重试"
+msgstr "点按以重试"
 
 #: src/components/KnownFollowers.tsx:124
 msgid "Press to view followers of this account that you also follow"
@@ -4969,12 +4965,12 @@ msgstr "隐私政策"
 
 #: src/view/com/composer/Composer.tsx:1634
 msgid "Processing video..."
-msgstr "正在处理视频..."
+msgstr "正在处理视频……"
 
 #: src/lib/api/index.ts:59
 #: src/screens/Login/ForgotPasswordForm.tsx:149
 msgid "Processing..."
-msgstr "处理中..."
+msgstr "处理中……"
 
 #: src/view/screens/DebugMod.tsx:913
 #: src/view/screens/Profile.tsx:363
@@ -5032,17 +5028,16 @@ msgstr "已重新关联引用帖文"
 msgid "Quote post was successfully detached"
 msgstr "已成功分离引用帖文"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:317
 #: src/view/com/util/post-ctrls/RepostButton.tsx:167
 #: src/view/com/util/post-ctrls/RepostButton.tsx:189
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:84
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:91
 msgid "Quote posts disabled"
-msgstr "已关闭引用"
+msgstr "已停用帖文引用"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:315
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:314
 msgid "Quote posts enabled"
-msgstr "已启用帖文引用"
+msgstr "启用帖文引用"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:299
 msgid "Quote settings"
@@ -5060,11 +5055,11 @@ msgstr "引用这则帖文"
 #: src/screens/Settings/ThreadPreferences.tsx:91
 #: src/screens/Settings/ThreadPreferences.tsx:94
 msgid "Random (aka \"Poster's Roulette\")"
-msgstr "随机显示 (又名试试手气)"
+msgstr "随机显示（又名“试试手气”）"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:565
 msgid "Rate limit exceeded – you've tried to change your handle too many times in a short period. Please wait a minute before trying again."
-msgstr "超过速率限制——你在短时间内尝试修改账户代码太多次，请稍后再试。"
+msgstr "超过速率限制——你在短时间内尝试修改账户代码的次数过多，请稍后再试。"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:565
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:575
@@ -5091,11 +5086,11 @@ msgstr "浏览 Bluesky 使用条款"
 
 #: src/components/dms/ReportDialog.tsx:169
 msgid "Reason:"
-msgstr "结果："
+msgstr "原因："
 
-#: src/view/screens/Search/Search.tsx:1057
+#: src/view/screens/Search/Search.tsx:1058
 msgid "Recent Searches"
-msgstr "最近的搜索"
+msgstr "最近的搜索结果"
 
 #: src/screens/Messages/components/MessageListError.tsx:20
 msgid "Reconnect"
@@ -5184,13 +5179,13 @@ msgstr "删除图片"
 
 #: src/components/dialogs/MutedWords.tsx:523
 msgid "Remove mute word from your list"
-msgstr "从你的隐藏词汇列表中删除"
+msgstr "从你的隐藏字词列表中删除"
 
-#: src/view/screens/Search/Search.tsx:1101
+#: src/view/screens/Search/Search.tsx:1102
 msgid "Remove profile"
 msgstr "删除个人资料"
 
-#: src/view/screens/Search/Search.tsx:1103
+#: src/view/screens/Search/Search.tsx:1104
 msgid "Remove profile from search history"
 msgstr "从搜索历史中删除个人资料"
 
@@ -5213,16 +5208,16 @@ msgstr "将这个动态源从已保存的动态源中删除"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:109
 msgid "Removed by author"
-msgstr "已被帖文作者删除"
+msgstr "已被发布者删除"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:107
 msgid "Removed by you"
-msgstr "已被你删除"
+msgstr "已由你删除"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:200
 #: src/view/com/modals/UserAddRemoveLists.tsx:170
 msgid "Removed from list"
-msgstr "从列表中删除"
+msgstr "已从列表中删除"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:138
 msgid "Removed from my feeds"
@@ -5237,7 +5232,7 @@ msgstr "已从已保存的动态源中删除"
 #: src/view/screens/ProfileFeed.tsx:197
 #: src/view/screens/ProfileList.tsx:386
 msgid "Removed from your feeds"
-msgstr "从你的动态源中删除"
+msgstr "已从你的动态源中删除"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:288
 msgid "Removes quoted post"
@@ -5246,7 +5241,7 @@ msgstr "删除引用的帖文"
 #: src/view/com/posts/FeedShutdownMsg.tsx:129
 #: src/view/com/posts/FeedShutdownMsg.tsx:133
 msgid "Replace with Discover"
-msgstr "替换为 \"Discover\""
+msgstr "替换为“Discover”"
 
 #: src/view/screens/Profile.tsx:229
 msgid "Replies"
@@ -5254,11 +5249,11 @@ msgstr "回复"
 
 #: src/components/WhoCanReply.tsx:69
 msgid "Replies disabled"
-msgstr "已禁用回复"
+msgstr "已停用回复"
 
 #: src/components/WhoCanReply.tsx:215
 msgid "Replies to this post are disabled."
-msgstr "这则帖文的回复已被关闭。"
+msgstr "这则帖文的回复已被停用。"
 
 #: src/view/com/composer/Composer.tsx:933
 msgctxt "action"
@@ -5268,20 +5263,20 @@ msgstr "回复"
 #: src/components/moderation/ModerationDetailsDialog.tsx:114
 #: src/lib/moderation/useModerationCauseDescription.ts:123
 msgid "Reply Hidden by Thread Author"
-msgstr "已被这条讨论串的作者隐藏回复"
+msgstr "已被这条讨论串的发布者隐藏回复"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:113
 #: src/lib/moderation/useModerationCauseDescription.ts:122
 msgid "Reply Hidden by You"
-msgstr "回复被你隐藏"
+msgstr "这则回复已由你隐藏"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:359
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:355
 msgid "Reply settings"
 msgstr "回复选项"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:344
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:340
 msgid "Reply settings are chosen by the author of the thread"
-msgstr "由这条讨论串的作者设置的回复选项"
+msgstr "由这条讨论串的发布者设置的回复选项"
 
 #: src/view/com/post/Post.tsx:204
 #: src/view/com/posts/FeedItem.tsx:553
@@ -5441,7 +5436,7 @@ msgstr "验证码"
 #: src/screens/Settings/AccessibilitySettings.tsx:52
 #: src/screens/Settings/AccessibilitySettings.tsx:57
 msgid "Require alt text before posting"
-msgstr "发布时检查媒体是否存在替代文本"
+msgstr "发布时检查媒体是否提供替代文本"
 
 #: src/screens/Settings/components/Email2FAToggle.tsx:54
 msgid "Require an email code to log in to your account."
@@ -5481,7 +5476,7 @@ msgstr "重置码"
 #: src/screens/Settings/Settings.tsx:335
 #: src/screens/Settings/Settings.tsx:337
 msgid "Reset onboarding state"
-msgstr "重置入门引导流程状态"
+msgstr "重置入门引导流程"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:80
 msgid "Reset password"
@@ -5494,7 +5489,7 @@ msgstr "重试登录"
 #: src/view/com/util/error/ErrorMessage.tsx:57
 #: src/view/com/util/error/ErrorScreen.tsx:74
 msgid "Retries the last action, which errored out"
-msgstr "重试上次出错的操作"
+msgstr "重新执行上次出错的操作"
 
 #: src/components/dms/MessageItem.tsx:245
 #: src/components/Error.tsx:65
@@ -5518,20 +5513,20 @@ msgstr "重试"
 #: src/screens/StarterPack/StarterPackScreen.tsx:751
 #: src/view/screens/ProfileList.tsx:1030
 msgid "Return to previous page"
-msgstr "回到上一页"
+msgstr "返回上一页"
 
 #: src/view/screens/NotFound.tsx:61
 msgid "Returns to home page"
-msgstr "回到主页"
+msgstr "返回主页"
 
 #: src/view/screens/NotFound.tsx:60
 #: src/view/screens/ProfileFeed.tsx:114
 msgid "Returns to previous page"
-msgstr "回到上一页"
+msgstr "返回上一页"
 
 #: src/components/dialogs/BirthDateSettings.tsx:124
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:442
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:448
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:438
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:444
 #: src/components/StarterPack/QrCodeDialog.tsx:185
 #: src/screens/Profile/Header/EditProfileDialog.tsx:238
 #: src/screens/Profile/Header/EditProfileDialog.tsx:252
@@ -5615,7 +5610,7 @@ msgstr "保存图片裁剪设置"
 #: src/view/com/notifications/FeedItem.tsx:539
 #: src/view/com/notifications/FeedItem.tsx:564
 msgid "Say hello!"
-msgstr "说\"你好\"！"
+msgstr "问声好！"
 
 #: src/screens/Onboarding/index.tsx:33
 #: src/screens/Onboarding/state.ts:99
@@ -5640,13 +5635,13 @@ msgstr "搜索"
 
 #: src/view/shell/desktop/Search.tsx:201
 msgid "Search for \"{query}\""
-msgstr "搜索 \"{query}\""
+msgstr "搜索“{query}”"
 
-#: src/view/screens/Search/Search.tsx:1000
+#: src/view/screens/Search/Search.tsx:1001
 msgid "Search for \"{searchText}\""
-msgstr "搜索 \"{searchText}\""
+msgstr "搜索“{searchText}”"
 
-#: src/screens/StarterPack/Wizard/index.tsx:500
+#: src/screens/StarterPack/Wizard/index.tsx:497
 msgid "Search for feeds that you want to suggest to others."
 msgstr "通过搜索来添加你想分享的动态源。"
 
@@ -5677,7 +5672,7 @@ msgstr "查看 {truncatedTag} 的帖文"
 
 #: src/components/TagMenu/index.web.tsx:94
 msgid "See {truncatedTag} posts by user"
-msgstr "按用户查看 {truncatedTag} 的帖文"
+msgstr "查看该用户包含 {truncatedTag} 的帖文"
 
 #: src/components/TagMenu/index.tsx:155
 msgid "See <0>{displayTag}</0> posts"
@@ -5689,7 +5684,7 @@ msgstr "查看该用户 <0>{displayTag}</0> 的帖文"
 
 #: src/view/com/auth/SplashScreen.web.tsx:176
 msgid "See jobs at Bluesky"
-msgstr "查看 Bluesky 的招聘职缺"
+msgstr "查看 Bluesky 的工作职缺"
 
 #: src/view/screens/SavedFeeds.tsx:212
 msgid "See this guide"
@@ -5729,15 +5724,15 @@ msgstr "选择 GIF"
 
 #: src/components/dialogs/GifSelect.tsx:306
 msgid "Select GIF \"{0}\""
-msgstr "选择 GIF \"{0}\""
+msgstr "选择 GIF “{0}”"
 
 #: src/components/dialogs/MutedWords.tsx:142
 msgid "Select how long to mute this word for."
-msgstr "选择将这个词汇隐藏多长时间。"
+msgstr "选择要将这个字词隐藏多长时间。"
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:245
 msgid "Select language..."
-msgstr "选择语言..."
+msgstr "选择语言……"
 
 #: src/screens/Settings/LanguageSettings.tsx:266
 msgid "Select languages"
@@ -5769,15 +5764,15 @@ msgstr "选择视频"
 
 #: src/components/dialogs/MutedWords.tsx:242
 msgid "Select what content this mute word should apply to."
-msgstr "选择将这个隐藏词汇套用于哪些内容。"
+msgstr "选择将这个隐藏字词应用于哪些内容。"
 
 #: src/screens/Settings/LanguageSettings.tsx:245
 msgid "Select which languages you want your subscribed feeds to include. If none are selected, all languages will be shown."
-msgstr "选择你希望在动态源中显示的语言。如果未做任何选择，将默认显示全部帖文。"
+msgstr "选择你希望在动态源中显示的语言。如果留空，将默认显示全部语言的帖文。"
 
 #: src/screens/Settings/LanguageSettings.tsx:76
 msgid "Select your app language for the default text to display in the app."
-msgstr "选择你的默认显示语言。"
+msgstr "选择应用的默认显示语言。"
 
 #: src/screens/Signup/StepInfo/index.tsx:223
 msgid "Select your date of birth"
@@ -5793,11 +5788,7 @@ msgstr "选择你在订阅的动态源中翻译的目标语言。"
 
 #: src/components/dms/ChatEmptyPill.tsx:38
 msgid "Send a neat website!"
-msgstr "发送一个你认为很有趣的网站！"
-
-#: src/screens/Settings/ContentAndMediaSettings.tsx:118
-msgid "Send Bluesky referrer"
-msgstr "发送 Bluesky 为流量来源"
+msgstr "发送一个你认为有趣的网站吧！"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:232
 msgid "Send Confirmation"
@@ -5832,7 +5823,7 @@ msgstr "发送私信"
 
 #: src/components/dms/dialogs/ShareViaChatDialog.tsx:62
 msgid "Send post to..."
-msgstr "发送私信给..."
+msgstr "发送私信给……"
 
 #: src/components/dms/ReportDialog.tsx:229
 #: src/components/dms/ReportDialog.tsx:232
@@ -5843,7 +5834,7 @@ msgstr "提交举报"
 
 #: src/components/ReportDialog/SelectLabelerView.tsx:42
 msgid "Send report to {0}"
-msgstr "给 {0} 提交举报"
+msgstr "将举报提交给 {0}"
 
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:120
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:123
@@ -5865,7 +5856,7 @@ msgstr "服务器地址"
 
 #: src/screens/Moderation/index.tsx:311
 msgid "Set birthdate"
-msgstr "设置生日"
+msgstr "设置出生日期"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:96
 msgid "Set new password"
@@ -5913,11 +5904,11 @@ msgstr "分享"
 
 #: src/components/dms/ChatEmptyPill.tsx:37
 msgid "Share a cool story!"
-msgstr "分享一件很酷的事！"
+msgstr "分享一件很酷的事吧！"
 
 #: src/components/dms/ChatEmptyPill.tsx:36
 msgid "Share a fun fact!"
-msgstr "分享一个有趣的事实！"
+msgstr "分享一件趣闻吧！"
 
 #: src/view/com/profile/ProfileMenu.tsx:353
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:691
@@ -5960,11 +5951,11 @@ msgstr "分享这个新手包，以帮助其他人更快融入你在 Bluesky 上
 
 #: src/components/dms/ChatEmptyPill.tsx:34
 msgid "Share your favorite feed!"
-msgstr "分享你最喜欢的动态源！"
+msgstr "分享你最喜欢的动态源吧！"
 
 #: src/Navigation.tsx:254
 msgid "Shared Preferences Tester"
-msgstr "共享首选项测试器"
+msgstr "共享偏好测试器"
 
 #: src/view/com/modals/LinkWarning.tsx:92
 msgid "Shares the linked website"
@@ -6006,7 +5997,7 @@ msgstr "显示这则帖文的创建时间"
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:473
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:475
 msgid "Show less like this"
-msgstr "显示更少类似这样的"
+msgstr "显示更少类似内容"
 
 #: src/screens/List/ListHiddenScreen.tsx:172
 msgid "Show list anyway"
@@ -6021,7 +6012,7 @@ msgstr "显示更多"
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:465
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:467
 msgid "Show more like this"
-msgstr "显示更多类似这样的"
+msgstr "显示更多类似内容"
 
 #: src/view/com/post-thread/PostThreadShowHiddenReplies.tsx:22
 msgid "Show muted replies"
@@ -6043,11 +6034,11 @@ msgstr "显示回复"
 
 #: src/screens/Settings/ThreadPreferences.tsx:118
 msgid "Show replies by people you follow before all other replies"
-msgstr "将你关注用户的回复置于其他回复之前"
+msgstr "将你已关注用户的回复置于其他回复之前"
 
 #: src/screens/Settings/ThreadPreferences.tsx:143
 msgid "Show replies in a threaded view"
-msgstr "在树状视图中显示回复"
+msgstr "使用树状视图显示回复"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:539
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:549
@@ -6062,7 +6053,7 @@ msgstr "显示转发"
 #: src/screens/Settings/FollowingFeedPreferences.tsx:121
 #: src/screens/Settings/FollowingFeedPreferences.tsx:131
 msgid "Show samples of your saved feeds in your Following feed"
-msgstr "在你的\"Following\"动态源中显示你已保存的动态源中的精选帖文"
+msgstr "在你的“Following”动态源中显示你已保存的动态源中的精选帖文"
 
 #: src/components/moderation/ContentHider.tsx:152
 #: src/components/moderation/PostHider.tsx:79
@@ -6103,11 +6094,11 @@ msgstr "以 {0} 登录"
 
 #: src/screens/Login/ChooseAccountForm.tsx:80
 msgid "Sign in as..."
-msgstr "登录为..."
+msgstr "登录为……"
 
 #: src/components/dialogs/Signin.tsx:75
 msgid "Sign in or create your account to join the conversation!"
-msgstr "登录或创建你的账户以加入对话！"
+msgstr "登录或创建你的账户来加入对话吧！"
 
 #: src/components/dialogs/Signin.tsx:46
 msgid "Sign into Bluesky or create a new account"
@@ -6142,19 +6133,19 @@ msgstr "需要登录"
 #: src/lib/hooks/useAccountSwitcher.ts:41
 #: src/screens/Login/ChooseAccountForm.tsx:53
 msgid "Signed in as @{0}"
-msgstr "以 @{0} 身份登录"
+msgstr "以 @{0} 的身份登录"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:299
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:306
 msgid "Signup without a starter pack"
-msgstr "注册但不使用新手包"
+msgstr "不使用新手包注册"
 
 #: src/components/FeedInterstitials.tsx:316
 msgid "Similar accounts"
 msgstr "类似账户"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:231
-#: src/screens/StarterPack/Wizard/index.tsx:200
+#: src/screens/StarterPack/Wizard/index.tsx:197
 msgid "Skip"
 msgstr "跳过"
 
@@ -6179,7 +6170,7 @@ msgstr "其他你可能喜欢的动态源"
 msgid "Some people can reply"
 msgstr "一些人可以回复"
 
-#: src/screens/Messages/Conversation.tsx:112
+#: src/screens/Messages/Conversation.tsx:103
 msgid "Something went wrong"
 msgstr "出了点问题"
 
@@ -6200,7 +6191,7 @@ msgid "Something went wrong!"
 msgstr "出了点问题！"
 
 #: src/App.native.tsx:113
-#: src/App.web.tsx:95
+#: src/App.web.tsx:94
 msgid "Sorry! Your session expired. Please log in again."
 msgstr "很抱歉，你的登录会话已过期，请重新登录。"
 
@@ -6227,11 +6218,7 @@ msgstr "垃圾内容"
 
 #: src/lib/moderation/useReportOptions.ts:55
 msgid "Spam; excessive mentions or replies"
-msgstr "垃圾内容；过于频繁的提及或回复"
-
-#: src/screens/Settings/ContentAndMediaSettings.tsx:112
-msgid "Specify Bluesky as a referer"
-msgstr "把 Bluesky 设为流量来源"
+msgstr "垃圾内容、过于频繁的提及或回复"
 
 #: src/screens/Onboarding/index.tsx:27
 #: src/screens/Onboarding/state.ts:100
@@ -6248,7 +6235,7 @@ msgstr "与 {displayName} 开始私信"
 
 #: src/Navigation.tsx:393
 #: src/Navigation.tsx:398
-#: src/screens/StarterPack/Wizard/index.tsx:191
+#: src/screens/StarterPack/Wizard/index.tsx:188
 msgid "Starter Pack"
 msgstr "新手包"
 
@@ -6262,7 +6249,7 @@ msgstr "由你创建的新手包"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:715
 msgid "Starter pack is invalid"
-msgstr "新手包无效"
+msgstr "无效的新手包"
 
 #: src/view/screens/Profile.tsx:233
 msgid "Starter Packs"
@@ -6372,7 +6359,7 @@ msgstr "仅限标签"
 
 #: src/components/ProgressGuide/Toast.tsx:156
 msgid "Tap to dismiss"
-msgstr "点按关闭"
+msgstr "点按以跳过"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:135
 msgid "Tap to enter full screen"
@@ -6389,7 +6376,7 @@ msgstr "点按以切换声音播放"
 #: src/view/com/util/images/AutoSizedImage.tsx:199
 #: src/view/com/util/images/AutoSizedImage.tsx:221
 msgid "Tap to view full image"
-msgstr "点按来查看完整图片"
+msgstr "点按以查看完整图片"
 
 #: src/state/shell/progress-guide.tsx:166
 msgid "Task complete - 10 likes!"
@@ -6406,7 +6393,7 @@ msgstr "科技"
 
 #: src/components/dms/ChatEmptyPill.tsx:35
 msgid "Tell a joke!"
-msgstr "讲个笑话！"
+msgstr "讲个笑话吧！"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:352
 msgid "Tell us a bit about yourself"
@@ -6470,14 +6457,14 @@ msgstr "这个账户代码已被占用。"
 #: src/screens/StarterPack/StarterPackScreen.tsx:104
 #: src/screens/StarterPack/StarterPackScreen.tsx:148
 #: src/screens/StarterPack/StarterPackScreen.tsx:149
-#: src/screens/StarterPack/Wizard/index.tsx:107
-#: src/screens/StarterPack/Wizard/index.tsx:117
+#: src/screens/StarterPack/Wizard/index.tsx:105
+#: src/screens/StarterPack/Wizard/index.tsx:115
 msgid "That starter pack could not be found."
-msgstr "找不到这个新手包。"
+msgstr "找不到那个新手包。"
 
 #: src/view/com/post-thread/PostQuotes.tsx:133
 msgid "That's all, folks!"
-msgstr "大功告成！"
+msgstr "就这些，完毕！"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:279
 #: src/view/com/profile/ProfileMenu.tsx:329
@@ -6487,7 +6474,7 @@ msgstr "取消屏蔽后，该账户将重新能够与你互动。"
 #: src/components/moderation/ModerationDetailsDialog.tsx:117
 #: src/lib/moderation/useModerationCauseDescription.ts:126
 msgid "The author of this thread has hidden this reply."
-msgstr "这条讨论串的作者已隐藏这条回复。"
+msgstr "这条讨论串的发布者隐藏了这则回复。"
 
 #: src/screens/Moderation/index.tsx:363
 msgid "The Bluesky web application"
@@ -6495,49 +6482,49 @@ msgstr "Bluesky 网页客户端"
 
 #: src/view/screens/CommunityGuidelines.tsx:38
 msgid "The Community Guidelines have been moved to <0/>"
-msgstr "社群准则已迁移至 <0/>"
+msgstr "社群准则已移动到 <0/>"
 
 #: src/view/screens/CopyrightPolicy.tsx:35
 msgid "The Copyright Policy has been moved to <0/>"
-msgstr "版权许可已迁移至 <0/>"
+msgstr "版权许可已移动到 <0/>"
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:102
 msgid "The Discover feed"
-msgstr "\"Discover\" 动态源"
+msgstr "“Discover”动态源"
 
 #: src/state/shell/progress-guide.tsx:167
 #: src/state/shell/progress-guide.tsx:172
 msgid "The Discover feed now knows what you like"
-msgstr "现在 \"Discover\" 动态源已了解你的喜好"
+msgstr "现在“Discover”动态源了解你的喜好内容了"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:320
 msgid "The experience is better in the app. Download Bluesky now and we'll pick back up where you left off."
-msgstr "使用 App 的体验更好。请立即下载 Bluesky，我们将从你上次中断的地方继续。"
+msgstr "使用 App 的体验会更好。现在下载 Bluesky，我们将从你离开的的地方继续。"
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:67
 msgid "The feed has been replaced with Discover."
-msgstr "动态源已替换为 \"Discover\"。"
+msgstr "动态源已替换为“Discover”。"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:58
 msgid "The following labels were applied to your account."
-msgstr "以下标记已套用到你的账户。"
+msgstr "以下标记已应用到你的账户。"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:59
 msgid "The following labels were applied to your content."
-msgstr "以下标记已套用到你发布的内容。"
+msgstr "以下标记已应用到你发布的内容。"
 
 #: src/screens/Onboarding/Layout.tsx:59
 msgid "The following steps will help customize your Bluesky experience."
-msgstr "以下步骤将帮助定制你的 Bluesky 体验。"
+msgstr "以下步骤将帮助你自定义 Bluesky 体验。"
 
-#: src/view/com/post-thread/PostThread.tsx:208
-#: src/view/com/post-thread/PostThread.tsx:220
+#: src/view/com/post-thread/PostThread.tsx:217
+#: src/view/com/post-thread/PostThread.tsx:229
 msgid "The post may have been deleted."
 msgstr "这则帖文可能已被删除。"
 
 #: src/view/screens/PrivacyPolicy.tsx:35
 msgid "The Privacy Policy has been moved to <0/>"
-msgstr "隐私政策已迁移至 <0/>"
+msgstr "隐私政策已移动到 <0/>"
 
 #: src/view/com/composer/state/video.ts:395
 msgid "The selected video is larger than 50MB."
@@ -6549,15 +6536,15 @@ msgstr "服务器似乎遇到了问题，请稍后重试。"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:725
 msgid "The starter pack that you are trying to view is invalid. You may delete this starter pack instead."
-msgstr "你尝试查看的新手包无效，你可以删除这个新手包。"
+msgstr "你尝试查看的新手包无效，你可以考虑删除这个新手包。"
 
 #: src/view/screens/Support.tsx:37
 msgid "The support form has been moved. If you need help, please <0/> or visit {HELP_DESK_URL} to get in touch with us."
-msgstr "支持表单已被移除。如果你需要更多帮助，请<0/>或访问{HELP_DESK_URL}与我们联系。"
+msgstr "支持表单已移动到别处。如果你需要更多帮助，请<0/>或访问{HELP_DESK_URL}与我们联系。"
 
 #: src/view/screens/TermsOfService.tsx:35
 msgid "The Terms of Service have been moved to"
-msgstr "服务条款已迁移至"
+msgstr "服务条款已移动到"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:94
 msgid "The verification code you have provided is invalid. Please make sure that you have used the correct verification link or request a new one."
@@ -6569,7 +6556,7 @@ msgstr "主题"
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:86
 msgid "There is no time limit for account deactivation, come back any time."
-msgstr "停用账户没有时间限制，你可以随时决定回来。"
+msgstr "停用账户没有时间限制，你可以随时决定重新回来。"
 
 #: src/components/dialogs/GifSelect.tsx:226
 msgid "There was an issue connecting to Tenor."
@@ -6669,7 +6656,7 @@ msgstr "Bluesky 目前迎来了大量新用户！我们将尽快激活你的账�
 
 #: src/screens/Settings/FollowingFeedPreferences.tsx:54
 msgid "These settings only apply to the Following feed."
-msgstr "这些首选项只适用于\"Following\"动态源。"
+msgstr "这些偏好设置只适用于“Following”动态源。"
 
 #: src/components/moderation/ScreenHider.tsx:111
 msgid "This {screenDescription} has been flagged:"
@@ -6681,7 +6668,7 @@ msgstr "该账户要求登录后才能查看其个人资料。"
 
 #: src/components/dms/BlockedByListDialog.tsx:34
 msgid "This account is blocked by one or more of your moderation lists. To unblock, please visit the lists directly and remove this user."
-msgstr "该账户已被你的一个或多个内容审核列表所屏蔽。要取消对该账户的屏蔽，请从内容审核列表中删除该账户。"
+msgstr "该账户已被一个或多个内容审核列表所屏蔽。如要取消对该账户的屏蔽，请查看内容审核列表并从中删除该账户。"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:246
 msgid "This appeal will be sent to <0>{sourceName}</0>."
@@ -6693,7 +6680,7 @@ msgstr "这个申诉将提交给 Bluesky 内容审核服务。"
 
 #: src/screens/Messages/components/MessageListError.tsx:18
 msgid "This chat was disconnected"
-msgstr "对话连接已被断开"
+msgstr "对话已被断开"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:19
 msgid "This content has been hidden by the moderators."
@@ -6701,7 +6688,7 @@ msgstr "该内容已被内容审核服务提供方所隐藏。"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:24
 msgid "This content has received a general warning from moderators."
-msgstr "内容审核服务提供方已对该内容设置一般警告。"
+msgstr "内容审核服务提供方已对该内容标记一般警告。"
 
 #: src/components/dialogs/EmbedConsent.tsx:63
 msgid "This content is hosted by {0}. Do you want to enable external media?"
@@ -6710,11 +6697,11 @@ msgstr "该内容由 {0} 托管。要启用外部媒体吗？"
 #: src/components/moderation/ModerationDetailsDialog.tsx:82
 #: src/lib/moderation/useModerationCauseDescription.ts:82
 msgid "This content is not available because one of the users involved has blocked the other."
-msgstr "由于其中一个用户屏蔽了另一个用户，该内容不可用。"
+msgstr "由于有用户被另一个用户屏蔽，导致无法查看该内容。"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:114
 msgid "This content is not viewable without a Bluesky account."
-msgstr "没有 Bluesky 账户，无法查看该内容。"
+msgstr "该内容需要 Bluesky 账户方可查看。"
 
 #: src/screens/Messages/components/ChatListItem.tsx:266
 msgid "This conversation is with a deleted or a deactivated account. Press for options."
@@ -6764,7 +6751,7 @@ msgstr "这个标签是由 <0>{0}</0> 标记的。"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:145
 msgid "This label was applied by the author."
-msgstr "这个标签是由该作者标记的。"
+msgstr "这个标签是由该发布者标记的。"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:163
 msgid "This label was applied by you."
@@ -6772,7 +6759,7 @@ msgstr "这个标签是由你标记的。"
 
 #: src/screens/Profile/Sections/Labels.tsx:188
 msgid "This labeler hasn't declared what labels it publishes, and may not be active."
-msgstr "这个标记者尚未声明他发布的标记，并且可能处于非活跃状态。"
+msgstr "这个标记者尚未公开他发布的标记类型，也可能不再提供服务。"
 
 #: src/view/com/modals/LinkWarning.tsx:72
 msgid "This link is taking you to the following website:"
@@ -6784,7 +6771,7 @@ msgstr "这个列表由 <0>{0}</0> 创建，其名称或描述可能违反了 Bl
 
 #: src/view/screens/ProfileList.tsx:966
 msgid "This list is empty!"
-msgstr "这个列表为空！"
+msgstr "这个列表是空的！"
 
 #: src/screens/Profile/ErrorState.tsx:40
 msgid "This moderation service is unavailable. See below for more details. If this issue persists, contact us."
@@ -6801,7 +6788,7 @@ msgstr "这则帖文已被删除。"
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:688
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:352
 msgid "This post is only visible to logged-in users. It won't be visible to people who aren't logged in."
-msgstr "这则帖文只对已登录用户可见，未登录的用户将无法看到。"
+msgstr "这则帖文只对已登录用户可见，未登录的用户将无法看到内容。"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:669
 msgid "This post will be hidden from feeds and threads. This cannot be undone."
@@ -6809,7 +6796,7 @@ msgstr "这则帖文将从动态源和讨论串中隐藏。注意：这个操作
 
 #: src/view/com/composer/Composer.tsx:413
 msgid "This post's author has disabled quote posts."
-msgstr "这则帖文的作者已关闭引用帖文。"
+msgstr "这则帖文的发布者已停用引用帖文。"
 
 #: src/view/com/profile/ProfileMenu.tsx:350
 msgid "This profile is only visible to logged-in users. It won't be visible to people who aren't logged in."
@@ -6817,7 +6804,7 @@ msgstr "该个人资料只对已登录用户可见，未登录的用户将无法
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:731
 msgid "This reply will be sorted into a hidden section at the bottom of your thread and will mute notifications for subsequent replies - both for yourself and others."
-msgstr "这条回复将被折叠到你讨论串底部的隐藏部分，并且会对你自己和其他人隐藏后续回复的通知。"
+msgstr "这则回复将被折叠到你讨论串底部的隐藏部分，并且会对你自己和其他人隐藏后续回复的通知。"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:37
 msgid "This service has not provided terms of service or a privacy policy."
@@ -6825,7 +6812,7 @@ msgstr "该服务没有提供服务条款或隐私政策。"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:436
 msgid "This should create a domain record at:"
-msgstr "应该在以下位置创建一个域名记录："
+msgstr "这应该在以下位置创建一个域名记录："
 
 #: src/view/com/profile/ProfileFollowers.tsx:96
 msgid "This user doesn't have any followers."
@@ -6862,7 +6849,7 @@ msgstr "该账户目前没有关注任何人。"
 
 #: src/components/dialogs/MutedWords.tsx:435
 msgid "This will delete \"{0}\" from your muted words. You can always add it back later."
-msgstr "这将从你的隐藏词汇中删除 \"{0}\"。你随时可以将其重新添加回来。"
+msgstr "这将从你的隐藏字词中删除“{0}”。你随时可以将其重新添加回来。"
 
 #: src/screens/Settings/Settings.tsx:452
 msgid "This will remove @{0} from the quick access list."
@@ -6870,24 +6857,24 @@ msgstr "这将从你的快速访问中移除 @{0}。"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:721
 msgid "This will remove your post from this quote post for all users, and replace it with a placeholder."
-msgstr "你对这则帖文的引用将会删除，并替换为一个占位符。"
+msgstr "你的帖文将从这则引用中删除，并替换为一个占位符。"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:57
-#: src/screens/Settings/ContentAndMediaSettings.tsx:60
+#: src/screens/Settings/ContentAndMediaSettings.tsx:48
+#: src/screens/Settings/ContentAndMediaSettings.tsx:51
 msgid "Thread preferences"
-msgstr "讨论串首选项"
+msgstr "讨论串偏好"
 
 #: src/screens/Settings/ThreadPreferences.tsx:41
 msgid "Thread Preferences"
-msgstr "讨论串首选项"
+msgstr "讨论串偏好"
 
 #: src/screens/Settings/ThreadPreferences.tsx:134
 msgid "Threaded mode"
-msgstr "树状显示模式"
+msgstr "树状视图模式"
 
 #: src/Navigation.tsx:307
 msgid "Threads Preferences"
-msgstr "讨论串首选项"
+msgstr "讨论串偏好"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/TimeIndicator.tsx:33
 msgid "Time remaining: {time} seconds"
@@ -6895,7 +6882,7 @@ msgstr "剩余时间：{time} 秒"
 
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:99
 msgid "To disable the email 2FA method, please verify your access to the email address."
-msgstr "在关闭电子邮箱两步验证前，请首先验证你的电子邮箱地址。"
+msgstr "在停用电子邮箱两步验证前，请首先验证你的电子邮箱地址。"
 
 #: src/components/dms/ReportConversationPrompt.tsx:19
 msgid "To report a conversation, please report one of its messages via the conversation screen. This lets our moderators understand the context of your issue."
@@ -6919,7 +6906,7 @@ msgstr "切换下拉式菜单"
 
 #: src/screens/Moderation/index.tsx:340
 msgid "Toggle to enable or disable adult content"
-msgstr "切换以启用或禁用成人内容"
+msgstr "切换以启用或停用成人内容"
 
 #: src/screens/Hashtag.tsx:87
 #: src/view/screens/Search/Search.tsx:511
@@ -6966,7 +6953,7 @@ msgstr "取消隐藏列表"
 
 #: src/lib/strings/errors.ts:11
 msgid "Unable to connect. Please check your internet connection and try again."
-msgstr "无法连接到服务器。请检查你的互联网连接并重试。"
+msgstr "无法连接到服务器。请检查你的网络连接并重试。"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:68
 #: src/screens/Login/index.tsx:76
@@ -7127,7 +7114,7 @@ msgstr "不受欢迎的性内容"
 
 #: src/view/com/modals/UserAddRemoveLists.tsx:82
 msgid "Update <0>{displayName}</0> in Lists"
-msgstr "更新列表中的 <0>{displayName}</0>"
+msgstr "要把 <0>{displayName}</0> 更新或删除自哪些列表？"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:494
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:515
@@ -7144,7 +7131,7 @@ msgstr "更新回复可见性失败"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:180
 msgid "Updating..."
-msgstr "更新中..."
+msgstr "更新中……"
 
 #: src/screens/Onboarding/StepProfile/index.tsx:290
 msgid "Upload a photo instead"
@@ -7175,16 +7162,16 @@ msgstr "从照片图库上传"
 
 #: src/lib/api/index.ts:296
 msgid "Uploading images..."
-msgstr "正在上传图片..."
+msgstr "正在上传图片……"
 
 #: src/lib/api/index.ts:350
 #: src/lib/api/index.ts:374
 msgid "Uploading link thumbnail..."
-msgstr "正在上传链接缩略图..."
+msgstr "正在上传链接缩略图……"
 
 #: src/view/com/composer/Composer.tsx:1631
 msgid "Uploading video..."
-msgstr "正在上传视频..."
+msgstr "正在上传视频……"
 
 #: src/screens/Settings/AppPasswords.tsx:59
 msgid "Use app passwords to sign in to other Bluesky clients without giving full access to your account or password."
@@ -7199,8 +7186,8 @@ msgstr "使用默认提供商"
 msgid "Use in-app browser"
 msgstr "使用应用内浏览器"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:96
-#: src/screens/Settings/ContentAndMediaSettings.tsx:102
+#: src/screens/Settings/ContentAndMediaSettings.tsx:74
+#: src/screens/Settings/ContentAndMediaSettings.tsx:80
 msgid "Use in-app browser to open links"
 msgstr "使用应用内浏览器开启链接"
 
@@ -7228,7 +7215,7 @@ msgstr "已屏蔽该用户"
 
 #: src/lib/moderation/useModerationCauseDescription.ts:53
 msgid "User Blocked by \"{0}\""
-msgstr "该用户被 \"{0}\" 屏蔽"
+msgstr "该用户被“{0}”屏蔽"
 
 #: src/components/dms/BlockedByListDialog.tsx:27
 msgid "User blocked by list"
@@ -7288,9 +7275,9 @@ msgstr "被 <0>@{0}</0> 关注的用户"
 msgid "Users I follow"
 msgstr "我关注的用户"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:420
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:416
 msgid "Users in \"{0}\""
-msgstr "\"{0}\"中的用户"
+msgstr "“{0}”中的用户"
 
 #: src/components/LikesDialog.tsx:83
 msgid "Users that have liked this content or profile"
@@ -7376,24 +7363,24 @@ msgstr "视频：{0}"
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:58
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:73
 msgid "Videos must be less than 60 seconds long"
-msgstr "视频必须短于60秒"
+msgstr "视频长度必须短于 60 秒"
 
 #: src/screens/Profile/Header/Shell.tsx:160
 msgid "View {0}'s avatar"
-msgstr "查看{0}的头像"
+msgstr "查看 {0} 的头像"
 
 #: src/components/ProfileCard.tsx:110
 #: src/view/com/notifications/FeedItem.tsx:408
 msgid "View {0}'s profile"
-msgstr "查看{0}的个人资料"
+msgstr "查看 {0} 的个人资料"
 
 #: src/components/dms/MessagesListHeader.tsx:160
 msgid "View {displayName}'s profile"
-msgstr "查看{displayName}的个人资料"
+msgstr "查看 {displayName} 的个人资料"
 
 #: src/components/TagMenu/index.tsx:172
 msgid "View all posts by @{authorHandle} with tag {displayTag}"
-msgstr "查看所有由 @{authorHandle} 发布，并带有标签 {displayTag} 的帖文"
+msgstr "查看 @{authorHandle} 所有带有标签 {displayTag} 的帖文"
 
 #: src/components/TagMenu/index.tsx:126
 msgid "View all posts with tag {displayTag}"
@@ -7409,7 +7396,7 @@ msgstr "查看博客文章以获取更多资讯"
 
 #: src/view/screens/Log.tsx:57
 msgid "View debug entry"
-msgstr "查看调试入口"
+msgstr "查看调试项目"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:139
 msgid "View details"
@@ -7421,11 +7408,11 @@ msgstr "查看举报版权侵权的详情"
 
 #: src/view/com/posts/ViewFullThread.tsx:56
 msgid "View full thread"
-msgstr "查看整个讨论串"
+msgstr "查看完整讨论串"
 
 #: src/components/moderation/LabelsOnMe.tsx:46
 msgid "View information about these labels"
-msgstr "查看这个标记的详情"
+msgstr "查看关于这个标记的详细信息"
 
 #: src/components/ProfileHoverCard/index.web.tsx:419
 #: src/components/ProfileHoverCard/index.web.tsx:439
@@ -7443,7 +7430,7 @@ msgstr "查看头像"
 
 #: src/components/LabelingServiceCard/index.tsx:162
 msgid "View the labeling service provided by @{0}"
-msgstr "查看 @{0} 提供的标记服务。"
+msgstr "查看由 @{0} 提供的标记服务。"
 
 #: src/view/screens/ProfileFeed.tsx:588
 msgid "View users who like this feed"
@@ -7456,7 +7443,7 @@ msgstr "查看你已屏蔽的账户"
 #: src/view/com/home/HomeHeaderLayout.web.tsx:78
 #: src/view/com/home/HomeHeaderLayoutMobile.tsx:88
 msgid "View your feeds and explore more"
-msgstr "查看你的动态源并探索更多"
+msgstr "查看你的动态源并探索更多内容"
 
 #: src/screens/Moderation/index.tsx:239
 msgid "View your moderation lists"
@@ -7491,9 +7478,9 @@ msgstr "警告内容并从动态源中过滤"
 
 #: src/screens/Hashtag.tsx:218
 msgid "We couldn't find any results for that hashtag."
-msgstr "找不到任何与该标签相关的结果。"
+msgstr "我们找不到任何与该标签相关的结果。"
 
-#: src/screens/Messages/Conversation.tsx:113
+#: src/screens/Messages/Conversation.tsx:104
 msgid "We couldn't load this conversation"
 msgstr "我们目前无法加载这个对话"
 
@@ -7519,7 +7506,7 @@ msgstr "我们无法确定你是否有权上传视频，请重试。"
 
 #: src/components/dialogs/BirthDateSettings.tsx:51
 msgid "We were unable to load your birth date preferences. Please try again."
-msgstr "我们无法加载你的生日首选项，请重试。"
+msgstr "我们无法加载你的生日偏好设置，请重试。"
 
 #: src/screens/Moderation/index.tsx:414
 msgid "We were unable to load your configured labelers at this time."
@@ -7551,7 +7538,7 @@ msgstr "很抱歉，我们无法解析这个列表。如果问题持续发生，
 
 #: src/components/dialogs/MutedWords.tsx:378
 msgid "We're sorry, but we weren't able to load your muted words at this time. Please try again."
-msgstr "很抱歉，我们无法加载你的隐藏词汇列表。请重试。"
+msgstr "很抱歉，我们无法加载你的隐藏字词列表。请重试。"
 
 #: src/view/screens/Search/Search.tsx:212
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
@@ -7576,7 +7563,7 @@ msgstr "欢迎回来！"
 
 #: src/components/NewskieDialog.tsx:103
 msgid "Welcome, friend!"
-msgstr "欢迎新天友！"
+msgstr "欢迎新朋友！"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:126
 msgid "What are your interests?"
@@ -7602,11 +7589,11 @@ msgstr "你想在动态源算法中看到哪些语言？"
 
 #: src/components/WhoCanReply.tsx:179
 msgid "Who can interact with this post?"
-msgstr "谁可以参与这则帖文的互动？"
+msgstr "哪些人可以参与这则帖文的互动？"
 
 #: src/components/WhoCanReply.tsx:87
 msgid "Who can reply"
-msgstr "谁可以回复"
+msgstr "哪些人可以回复"
 
 #: src/screens/Home/NoFeedsPinned.tsx:79
 #: src/screens/Messages/ChatList.tsx:183
@@ -7644,7 +7631,7 @@ msgstr "为什么应该审核这个用户？"
 #: src/screens/Messages/components/MessageInput.tsx:149
 #: src/screens/Messages/components/MessageInput.web.tsx:198
 msgid "Write a message"
-msgstr "编写私信"
+msgstr "撰写私信"
 
 #: src/view/com/composer/Composer.tsx:810
 msgid "Write post"
@@ -7666,12 +7653,12 @@ msgstr "服务器返回了错误的 DID。接收到的 DID： {0}"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:78
 msgid "Yes"
-msgstr "启用"
+msgstr "是"
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:106
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:108
 msgid "Yes, deactivate"
-msgstr "确定并停用"
+msgstr "确定停用"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:661
 msgid "Yes, delete this starter pack"
@@ -7679,15 +7666,15 @@ msgstr "确定删除这个新手包"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:724
 msgid "Yes, detach"
-msgstr "确定并分离"
+msgstr "确定分离"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:734
 msgid "Yes, hide"
-msgstr "确定并隐藏"
+msgstr "确定隐藏"
 
 #: src/screens/Deactivated.tsx:153
 msgid "Yes, reactivate my account"
-msgstr "确定并重新启用我的账户"
+msgstr "确定重新启用我的账户"
 
 #: src/components/dms/DateDivider.tsx:46
 msgid "Yesterday"
@@ -7703,15 +7690,15 @@ msgstr "你"
 
 #: src/screens/SignupQueued.tsx:143
 msgid "You are in line."
-msgstr "轮到你了。"
+msgstr "你已在等待名单中。"
 
 #: src/view/com/composer/state/video.ts:410
 msgid "You are not allowed to upload videos."
-msgstr "你无法上传视频。"
+msgstr "你目前无法上传视频。"
 
 #: src/view/com/profile/ProfileFollows.tsx:95
 msgid "You are not following anyone."
-msgstr "你没有关注任何账户。"
+msgstr "你还没有关注任何账户。"
 
 #: src/view/com/posts/FollowingEmptyState.tsx:63
 #: src/view/com/posts/FollowingEndOfFeed.tsx:64
@@ -7741,7 +7728,7 @@ msgstr "你还没有任何关注者。"
 
 #: src/screens/Profile/KnownFollowers.tsx:100
 msgid "You don't follow any users who follow @{name}."
-msgstr "你没有关注任何关注 @{name} 的用户。"
+msgstr "你没有关注任何同样关注 @{name} 的用户。"
 
 #: src/view/com/modals/InviteCodes.tsx:67
 msgid "You don't have any invite codes yet! We'll send you some when you've been on Bluesky for a little longer."
@@ -7755,9 +7742,9 @@ msgstr "你还没有固定的动态源。"
 msgid "You don't have any saved feeds."
 msgstr "你还没有已保存的动态源。"
 
-#: src/view/com/post-thread/PostThread.tsx:214
+#: src/view/com/post-thread/PostThread.tsx:223
 msgid "You have blocked the author or you have been blocked by the author."
-msgstr "你已屏蔽该帖文作者，或是你已被该帖文作者屏蔽。"
+msgstr "你已屏蔽该发布者，或已被该发布者屏蔽。"
 
 #: src/components/dms/MessagesListBlockedFooter.tsx:58
 msgid "You have blocked this user"
@@ -7795,7 +7782,7 @@ msgstr "你已隐藏该用户"
 
 #: src/screens/Messages/ChatList.tsx:223
 msgid "You have no conversations yet. Start one!"
-msgstr "你还没有任何私信，立即与其他人展开对话吧！"
+msgstr "你还没有任何私信，试着与其他人展开对话吧！"
 
 #: src/view/com/feeds/ProfileFeedgens.tsx:143
 msgid "You have no feeds."
@@ -7808,11 +7795,11 @@ msgstr "你还没有建立任何列表。"
 
 #: src/view/screens/ModerationBlockedAccounts.tsx:133
 msgid "You have not blocked any accounts yet. To block an account, go to their profile and select \"Block account\" from the menu on their account."
-msgstr "你还没有屏蔽任何账户。要屏蔽账户，请转到其个人资料，并在账户上的菜单中选择 \"屏蔽账户\"。"
+msgstr "你还没有屏蔽任何账户。要屏蔽账户，请转到其个人资料，并在账户上的菜单中选择“屏蔽账户”。"
 
 #: src/view/screens/ModerationMutedAccounts.tsx:132
 msgid "You have not muted any accounts yet. To mute an account, go to their profile and select \"Mute account\" from the menu on their account."
-msgstr "你还没有隐藏任何账户。要隐藏账户，请转到其个人资料，并在账户上的菜单中选择 \"隐藏账户\"。"
+msgstr "你还没有隐藏任何账户。要隐藏账户，请转到其个人资料，并在账户上的菜单中选择“隐藏账户”。"
 
 #: src/components/Lists.tsx:52
 msgid "You have reached the end"
@@ -7828,20 +7815,20 @@ msgstr "你还没有创建任何新手包！"
 
 #: src/components/dialogs/MutedWords.tsx:398
 msgid "You haven't muted any words or tags yet"
-msgstr "你还没有隐藏任何词汇或标签"
+msgstr "你还没有隐藏任何字词或标签"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:116
 #: src/lib/moderation/useModerationCauseDescription.ts:125
 msgid "You hid this reply."
-msgstr "你隐藏了这条回复。"
+msgstr "你隐藏了这则回复。"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:78
 msgid "You may appeal non-self labels if you feel they were placed in error."
-msgstr "如果你认为由他人放置的标签信息有误，你可以提出申诉。"
+msgstr "如果你认为由他人放置的标签信息有误，你可以随时提出申诉。"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:83
 msgid "You may appeal these labels if you feel they were placed in error."
-msgstr "如果你认为标签的标记信息有误，你可以提出申诉。"
+msgstr "如果你认为标签的标记信息有误，你可以随时提出申诉。"
 
 #: src/screens/StarterPack/Wizard/State.tsx:79
 msgid "You may only add up to {STARTER_PACK_MAX_SIZE} profiles"
@@ -7877,7 +7864,7 @@ msgstr "你必须选择至少一个标记者来进行举报"
 
 #: src/screens/Deactivated.tsx:134
 msgid "You previously deactivated @{0}."
-msgstr "你之前已停用 @{0}。"
+msgstr "你之前停用了 @{0}。"
 
 #: src/screens/Settings/Settings.tsx:249
 msgid "You will be signed out of all your accounts."
@@ -7909,11 +7896,11 @@ msgstr "你：{short}"
 
 #: src/screens/Signup/index.tsx:107
 msgid "You'll follow the suggested users and feeds once you finish creating your account!"
-msgstr "完成创建账户后，你将关注建议的用户和动态源！"
+msgstr "当你完成创建账户后，你将自动关注建议的用户和动态源！"
 
 #: src/screens/Signup/index.tsx:112
 msgid "You'll follow the suggested users once you finish creating your account!"
-msgstr "完成创建账户后，你将关注建议的用户！"
+msgstr "当你完成创建账户后，你将关注建议的用户！"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:232
 msgid "You'll follow these people and {0} others"
@@ -7942,12 +7929,12 @@ msgstr "你正在使用应用密码登录账户，请改用你的主密码登录
 
 #: src/screens/Onboarding/StepFinished.tsx:231
 msgid "You're ready to go!"
-msgstr "你已设置完成！"
+msgstr "你已完成设置！"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:106
 #: src/lib/moderation/useModerationCauseDescription.ts:106
 msgid "You've chosen to hide a word or tag within this post."
-msgstr "你选择隐藏了这则帖文中的词汇或标签。"
+msgstr "你选择隐藏了这则帖文中的字词或标签。"
 
 #: src/view/com/posts/FollowingEndOfFeed.tsx:44
 msgid "You've reached the end of your feed! Find some more accounts to follow."
@@ -7975,7 +7962,7 @@ msgstr "你的账户注册时间过短，暂时无法上传视频。请稍后再
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:65
 msgid "Your account repository, containing all public data records, can be downloaded as a \"CAR\" file. This file does not include media embeds, such as images, or your private data, which must be fetched separately."
-msgstr "你可以将你的账户数据导出为一个\"CAR\"文件，该文件包含了该账户所有公开的数据记录，但不包括任何嵌入媒体，例如图像或你的私人资料，这些数据需要另外获取。"
+msgstr "你可以将你的账户数据导出为一个“CAR”文件，该文件包含了该账户所有公开的数据记录，但不包括任何嵌入媒体，例如图像或你的私人资料，这些数据需要另外获取。"
 
 #: src/screens/Signup/StepInfo/index.tsx:211
 msgid "Your birth date"
@@ -7983,7 +7970,7 @@ msgstr "你的生日"
 
 #: src/view/com/util/post-embeds/VideoEmbed.web.tsx:173
 msgid "Your browser does not support the video format. Please try a different browser."
-msgstr "你的浏览器不支持该视频格式，请更换其他浏览器。"
+msgstr "你的浏览器不支持该视频格式，请试试其他浏览器。"
 
 #: src/screens/Messages/components/ChatDisabled.tsx:25
 msgid "Your chats have been disabled"
@@ -8014,7 +8001,7 @@ msgstr "你的第一个喜欢！"
 
 #: src/view/com/posts/FollowingEmptyState.tsx:43
 msgid "Your following feed is empty! Follow more users to see what's happening."
-msgstr "你的\"Following\"动态源为空！关注更多用户去看看他们发了什么。"
+msgstr "你的“Following”动态源是空的！关注更多用户去看看他们发了什么。"
 
 #: src/screens/Signup/StepHandle.tsx:125
 msgid "Your full handle will be"
@@ -8026,7 +8013,7 @@ msgstr "你的完整账户代码将修改为 <0>@{0}</0>"
 
 #: src/components/dialogs/MutedWords.tsx:369
 msgid "Your muted words"
-msgstr "你的隐藏词汇"
+msgstr "你的隐藏字词"
 
 #: src/view/com/modals/ChangePassword.tsx:158
 msgid "Your password has been changed successfully!"
@@ -8059,3 +8046,4 @@ msgstr "你的举报将发送至 Bluesky 内容审核服务"
 #: src/screens/Signup/index.tsx:142
 msgid "Your user handle"
 msgstr "你的账户代码"
+
