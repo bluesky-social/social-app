@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Italian localization\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-11-26 01:09+0000\n"
-"PO-Revision-Date: 2024-11-27 09:31+0000\n"
+"PO-Revision-Date: 2024-11-27 14:39+0000\n"
 "Last-Translator: Michele Locati <michele@locati.it>, 2024\n"
 "Language-Team: Italian (https://app.transifex.com/mlocati/teams/201833/it/)\n"
 "Language: it\n"
@@ -1853,7 +1853,7 @@ msgstr "Elimina"
 #: src/screens/Settings/AccountSettings.tsx:148
 #: src/screens/Settings/AccountSettings.tsx:153
 msgid "Delete account"
-msgstr "Elimina l'account"
+msgstr "Elimina account"
 
 #: src/view/com/modals/DeleteAccount.tsx:105
 msgid "Delete Account <0>\"</0><1>{0}</1><2>\"</2>"
@@ -3260,7 +3260,7 @@ msgstr "Se vuoi modificare la password, ti invieremo un codice per verificare se
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:92
 msgid "If you're trying to change your handle or email, do so before you deactivate."
-msgstr "Se stai cercando di cambiare nome utente o email, fallo prima di disattivare l'account."
+msgstr "Se stai cercando di cambiare nome utente o email, puoi farlo prima di disattivare l'account."
 
 #: src/lib/moderation/useReportOptions.ts:38
 msgid "Illegal and Urgent"
@@ -3463,7 +3463,7 @@ msgstr "Più grande"
 #: src/screens/Hashtag.tsx:98
 #: src/view/screens/Search/Search.tsx:521
 msgid "Latest"
-msgstr "Ultime"
+msgstr "Recenti"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:250
 msgid "learn more"
@@ -4338,11 +4338,11 @@ msgstr "Notifiche"
 
 #: src/lib/hooks/useTimeAgo.ts:122
 msgid "now"
-msgstr "ora"
+msgstr "adesso"
 
 #: src/components/dms/MessageItem.tsx:198
 msgid "Now"
-msgstr "Ora"
+msgstr "Adesso"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:151
 #: src/view/com/composer/labels/LabelsBtn.tsx:154
@@ -4512,7 +4512,7 @@ msgstr "Apre le {numItems} opzioni"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:62
 msgid "Opens a dialog to add a content warning to your post"
-msgstr "Apre una finestra di dialogo per aggiungere un avviso sui contenuto al tuo post."
+msgstr "Apre una finestra di dialogo per aggiungere un avviso sul contenuto al tuo post"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:61
 msgid "Opens a dialog to choose who can reply to this thread"
@@ -5468,7 +5468,7 @@ msgstr "Rinvia email di verifica"
 
 #: src/view/com/modals/ChangePassword.tsx:186
 msgid "Reset code"
-msgstr "Reimpostare il codice"
+msgstr "Codice"
 
 #: src/view/com/modals/ChangePassword.tsx:193
 msgid "Reset Code"
@@ -6912,7 +6912,7 @@ msgstr "Seleziona per abilitare o disabilitare i contenuti per adulti"
 #: src/screens/Hashtag.tsx:87
 #: src/view/screens/Search/Search.tsx:511
 msgid "Top"
-msgstr "Top"
+msgstr "Popolari"
 
 #: src/components/dms/MessageMenu.tsx:103
 #: src/components/dms/MessageMenu.tsx:105
@@ -7176,7 +7176,7 @@ msgstr "Caricamento del video..."
 
 #: src/screens/Settings/AppPasswords.tsx:59
 msgid "Use app passwords to sign in to other Bluesky clients without giving full access to your account or password."
-msgstr "Usa le password per app di terze parti per accedere ad altri client Bluesky senza fornire l'accesso completo al tuo account o alla tua password personale."
+msgstr "Puoi generare una password per app di terze parti per accedere ad altri client Bluesky senza fornire l'accesso completo al tuo account o alla tua password personale."
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:527
 msgid "Use default provider"
