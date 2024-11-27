@@ -538,7 +538,6 @@ export function PostThread({uri}: {uri: string | undefined}) {
 function MobileComposePrompt({onPressReply}: {onPressReply: () => unknown}) {
   const safeAreaInsets = useSafeAreaInsets()
   const fabMinimalShellTransform = useMinimalShellFabTransform()
-  console.log()
   return (
     <Animated.View
       style={[
