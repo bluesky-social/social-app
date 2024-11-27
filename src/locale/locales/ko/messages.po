@@ -177,7 +177,7 @@ msgid "{count} unread items"
 msgstr "읽지 않은 항목 {count}개"
 
 #: src/lib/generate-starterpack.ts:108
-#: src/screens/StarterPack/Wizard/index.tsx:183
+#: src/screens/StarterPack/Wizard/index.tsx:180
 msgid "{displayName}'s Starter Pack"
 msgstr "{displayName} 님의 스타터 팩"
 
@@ -308,12 +308,12 @@ msgstr "{profileName} 님은 {0} 전에 Bluesky에 가입했습니다"
 msgid "{profileName} joined Bluesky using a starter pack {0} ago"
 msgstr "{profileName} 님은 {0} 전에 스타터 팩을 사용하여 Bluesky에 가입했습니다"
 
-#: src/screens/StarterPack/Wizard/index.tsx:475
+#: src/screens/StarterPack/Wizard/index.tsx:472
 msgctxt "profiles"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
 msgstr "<0>{0}, </0><1>{1} </1>외 {2, plural, other {#}}명이 스타터 팩에 포함됩니다"
 
-#: src/screens/StarterPack/Wizard/index.tsx:528
+#: src/screens/StarterPack/Wizard/index.tsx:525
 msgctxt "feeds"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
 msgstr "<0>{0}, </0><1>{1} </1>외 {2, plural, other {#}}개가 스타터 팩에 포함됩니다"
@@ -326,11 +326,11 @@ msgstr "<0>{0}</0> 팔로워"
 msgid "<0>{0}</0> {1, plural, one {following} other {following}}"
 msgstr "<0>{0}</0> 팔로우 중"
 
-#: src/screens/StarterPack/Wizard/index.tsx:516
+#: src/screens/StarterPack/Wizard/index.tsx:513
 msgid "<0>{0}</0> and<1> </1><2>{1} </2>are included in your starter pack"
 msgstr "<0>{0}</0> 및<1> </1><2>{1}</2>이(가) 스타터 팩에 포함됩니다"
 
-#: src/screens/StarterPack/Wizard/index.tsx:509
+#: src/screens/StarterPack/Wizard/index.tsx:506
 msgid "<0>{0}</0> is included in your starter pack"
 msgstr "<0>{0}</0>이(가) 스타터 팩에 포함됩니다"
 
@@ -346,7 +346,7 @@ msgstr "<0>{date}</0> {time}"
 msgid "<0>Experimental:</0> When this preference is enabled, you'll only receive reply and quote notifications from users you follow. We'll continue to add more controls here over time."
 msgstr "<0>실험적:</0> 이 설정을 활성화하면 내가 팔로우하는 사용자로부터만 답글 및 인용 알림을 받습니다. 시간이 지남에 따라 여기에 더 많은 제어 기능을 추가할 예정입니다."
 
-#: src/screens/StarterPack/Wizard/index.tsx:466
+#: src/screens/StarterPack/Wizard/index.tsx:463
 msgid "<0>You</0> and<1> </1><2>{0} </2>are included in your starter pack"
 msgstr "<0>나</0>와<1> </1><2>{0} </2>님이 스타터 팩에 포함됩니다"
 
@@ -378,7 +378,7 @@ msgid "About"
 msgstr "정보"
 
 #: src/view/com/util/ViewHeader.tsx:89
-#: src/view/screens/Search/Search.tsx:883
+#: src/view/screens/Search/Search.tsx:884
 msgid "Access navigation links and settings"
 msgstr "탐색 링크 및 설정으로 이동합니다"
 
@@ -454,7 +454,7 @@ msgstr "계정을 언뮤트했습니다"
 msgid "Add"
 msgstr "추가"
 
-#: src/screens/StarterPack/Wizard/index.tsx:577
+#: src/screens/StarterPack/Wizard/index.tsx:574
 msgid "Add {0} more to continue"
 msgstr "계속하려면 {0}명 더 추가하기"
 
@@ -525,7 +525,7 @@ msgstr "새 게시물 추가"
 msgid "Add recommended feeds"
 msgstr "추천 피드 추가"
 
-#: src/screens/StarterPack/Wizard/index.tsx:497
+#: src/screens/StarterPack/Wizard/index.tsx:494
 msgid "Add some feeds to your starter pack!"
 msgstr "스타터 팩에 피드를 추가해 보세요!"
 
@@ -609,7 +609,7 @@ msgstr "다이렉트 메시지 접근 허용"
 msgid "Allow new messages from"
 msgstr "새 메시지를 허용할 대상"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:363
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:359
 msgid "Allow replies from:"
 msgstr "답글을 허용할 대상"
 
@@ -902,8 +902,8 @@ msgstr "3자 이상"
 msgid "Autoplay options have moved to the <0>Content and Media settings</0>."
 msgstr "자동 재생 옵션은 <0>콘텐츠 및 미디어 설정</0>으로 이동했습니다."
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:82
 #: src/screens/Settings/ContentAndMediaSettings.tsx:88
+#: src/screens/Settings/ContentAndMediaSettings.tsx:94
 msgid "Autoplay videos and GIFs"
 msgstr "동영상 및 GIF 자동 재생"
 
@@ -922,7 +922,7 @@ msgstr "동영상 및 GIF 자동 재생"
 #: src/screens/Messages/components/ChatDisabled.tsx:134
 #: src/screens/Profile/Header/Shell.tsx:112
 #: src/screens/Signup/BackNextButtons.tsx:41
-#: src/screens/StarterPack/Wizard/index.tsx:307
+#: src/screens/StarterPack/Wizard/index.tsx:304
 #: src/view/com/util/ViewHeader.tsx:87
 msgid "Back"
 msgstr "뒤로"
@@ -942,7 +942,7 @@ msgstr "스타터 팩을 만들기 전에 먼저 이메일을 인증해야 합�
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:79
 #: src/components/dms/MessageProfileButton.tsx:89
-#: src/screens/Messages/Conversation.tsx:219
+#: src/screens/Messages/Conversation.tsx:210
 msgid "Before you may message another user, you must first verify your email."
 msgstr "다른 사용자에게 메시지를 보내기 전에 먼저 이메일을 인증해야 합니다."
 
@@ -1008,7 +1008,7 @@ msgstr "차단한 계정은 내 스레드에 답글을 달거나 나를 멘션�
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you. You will not see their content and they will be prevented from seeing yours."
 msgstr "차단한 계정은 내 스레드에 답글을 달거나 나를 멘션하거나 기타 다른 방식으로 나와 상호작용할 수 없습니다. 차단한 계정의 콘텐츠를 볼 수 없으며 해당 계정도 내 콘텐츠를 볼 수 없게 됩니다."
 
-#: src/view/com/post-thread/PostThread.tsx:412
+#: src/view/com/post-thread/PostThread.tsx:421
 msgid "Blocked post."
 msgstr "차단된 게시물."
 
@@ -1152,7 +1152,7 @@ msgstr "카메라"
 #: src/view/com/modals/VerifyEmail.tsx:255
 #: src/view/com/modals/VerifyEmail.tsx:261
 #: src/view/com/util/post-ctrls/RepostButton.tsx:203
-#: src/view/screens/Search/Search.tsx:911
+#: src/view/screens/Search/Search.tsx:912
 msgid "Cancel"
 msgstr "취소"
 
@@ -1185,7 +1185,7 @@ msgid "Cancel reactivation and log out"
 msgstr "재활성화 취소 및 로그아웃"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:88
-#: src/view/screens/Search/Search.tsx:903
+#: src/view/screens/Search/Search.tsx:904
 msgid "Cancel search"
 msgstr "검색 취소"
 
@@ -1291,7 +1291,7 @@ msgstr "받은 편지함에서 아래에 입력할 인증 코드가 포함된 �
 msgid "Choose domain verification method"
 msgstr "도메인 인증 방법 선택"
 
-#: src/screens/StarterPack/Wizard/index.tsx:199
+#: src/screens/StarterPack/Wizard/index.tsx:196
 msgid "Choose Feeds"
 msgstr "피드 선택"
 
@@ -1299,7 +1299,7 @@ msgstr "피드 선택"
 msgid "Choose for me"
 msgstr "임의로 선택하기"
 
-#: src/screens/StarterPack/Wizard/index.tsx:195
+#: src/screens/StarterPack/Wizard/index.tsx:192
 msgid "Choose People"
 msgstr "사람들 선택"
 
@@ -1557,7 +1557,7 @@ msgid "Content and media"
 msgstr "콘텐츠 및 미디어"
 
 #: src/Navigation.tsx:353
-#: src/screens/Settings/ContentAndMediaSettings.tsx:44
+#: src/screens/Settings/ContentAndMediaSettings.tsx:35
 msgid "Content and Media"
 msgstr "콘텐츠 및 미디어"
 
@@ -1917,7 +1917,7 @@ msgstr "삭제됨"
 msgid "Deleted Account"
 msgstr "삭제된 계정"
 
-#: src/view/com/post-thread/PostThread.tsx:398
+#: src/view/com/post-thread/PostThread.tsx:407
 msgid "Deleted post."
 msgstr "삭제된 게시물."
 
@@ -2022,7 +2022,7 @@ msgstr "새 피드 발견하기"
 msgid "Discover New Feeds"
 msgstr "새 피드 발견하기"
 
-#: src/components/Dialog/index.tsx:318
+#: src/components/Dialog/index.tsx:311
 msgid "Dismiss"
 msgstr "닫기"
 
@@ -2111,7 +2111,7 @@ msgstr "완료"
 msgid "Done{extraText}"
 msgstr "완료{extraText}"
 
-#: src/components/Dialog/index.tsx:319
+#: src/components/Dialog/index.tsx:312
 msgid "Double tap to close the dialog"
 msgstr "두 번 탭하여 대화 상자를 닫습니다"
 
@@ -2178,8 +2178,8 @@ msgstr "각 코드는 한 번만 사용할 수 있습니다. 주기적으로 더
 
 #: src/screens/Settings/AccountSettings.tsx:104
 #: src/screens/StarterPack/StarterPackScreen.tsx:574
-#: src/screens/StarterPack/Wizard/index.tsx:560
-#: src/screens/StarterPack/Wizard/index.tsx:567
+#: src/screens/StarterPack/Wizard/index.tsx:557
+#: src/screens/StarterPack/Wizard/index.tsx:564
 #: src/view/screens/Feeds.tsx:386
 #: src/view/screens/Feeds.tsx:454
 msgid "Edit"
@@ -2460,7 +2460,7 @@ msgstr "캡차 응답을 수신하는 동안 오류가 발생했습니다."
 msgid "Error:"
 msgstr "오류:"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:368
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:364
 msgid "Everybody"
 msgstr "모두"
 
@@ -2560,8 +2560,8 @@ msgstr "내 데이터 내보내기"
 msgid "Export My Data"
 msgstr "내 데이터 내보내기"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:73
-#: src/screens/Settings/ContentAndMediaSettings.tsx:76
+#: src/screens/Settings/ContentAndMediaSettings.tsx:64
+#: src/screens/Settings/ContentAndMediaSettings.tsx:67
 msgid "External media"
 msgstr "외부 미디어"
 
@@ -2588,8 +2588,8 @@ msgstr "핸들을 변경하지 못했습니다. 다시 시도해 주세요."
 msgid "Failed to create app password. Please try again."
 msgstr "앱 비밀번호를 만들지 못했습니다. 다시 시도해 주세요."
 
-#: src/screens/StarterPack/Wizard/index.tsx:238
-#: src/screens/StarterPack/Wizard/index.tsx:246
+#: src/screens/StarterPack/Wizard/index.tsx:235
+#: src/screens/StarterPack/Wizard/index.tsx:243
 msgid "Failed to create starter pack"
 msgstr "스타터 팩을 만들지 못했습니다"
 
@@ -2740,7 +2740,7 @@ msgstr "팔로우할 계정 찾아보기"
 msgid "Find posts and users on Bluesky"
 msgstr "Bluesky에서 게시물 및 사용자 찾기"
 
-#: src/screens/StarterPack/Wizard/index.tsx:200
+#: src/screens/StarterPack/Wizard/index.tsx:197
 msgid "Finish"
 msgstr "완료"
 
@@ -2819,7 +2819,7 @@ msgstr "<0>{0}</0> 님과 <1>{1}</1> 님이 팔로우함"
 msgid "Followed by <0>{0}</0>, <1>{1}</1>, and {2, plural, one {# other} other {# others}}"
 msgstr "<0>{0}</0> 님, <1>{1}</1> 님 외 {2, plural, other {#}}명이 팔로우함"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:407
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:403
 msgid "Followed users"
 msgstr "팔로우한 사용자"
 
@@ -2859,8 +2859,8 @@ msgstr "{0} 님을 팔로우했습니다"
 msgid "Following {name}"
 msgstr "{name} 님을 팔로우했습니다"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:65
-#: src/screens/Settings/ContentAndMediaSettings.tsx:68
+#: src/screens/Settings/ContentAndMediaSettings.tsx:56
+#: src/screens/Settings/ContentAndMediaSettings.tsx:59
 msgid "Following feed preferences"
 msgstr "팔로우 중 피드 설정"
 
@@ -2997,13 +2997,13 @@ msgstr "이전 페이지로 돌아갑니다"
 #: src/components/dms/ReportDialog.tsx:149
 #: src/components/ReportDialog/SelectReportOptionView.tsx:80
 #: src/components/ReportDialog/SubmitView.tsx:109
-#: src/screens/Onboarding/Layout.tsx:103
-#: src/screens/Onboarding/Layout.tsx:192
+#: src/screens/Onboarding/Layout.tsx:104
+#: src/screens/Onboarding/Layout.tsx:193
 #: src/screens/Signup/BackNextButtons.tsx:35
 msgid "Go back to previous step"
 msgstr "이전 단계로 돌아가기"
 
-#: src/screens/StarterPack/Wizard/index.tsx:308
+#: src/screens/StarterPack/Wizard/index.tsx:305
 msgid "Go back to the previous step"
 msgstr "이전 단계로 돌아갑니다"
 
@@ -3092,8 +3092,8 @@ msgid "Help people know you're not a bot by uploading a picture or creating an a
 msgstr "사진을 업로드하거나 아바타를 만들어 사람들이 내가 봇이 아니라는 사실을 알 수 있도록 하세요."
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:127
-msgid "Helps external sites estimate traffic from Bluesky."
-msgstr "외부 사이트에서 Bluesky의 트래픽을 파악하는 데 도움이 됩니다."
+#~ msgid "Helps external sites estimate traffic from Bluesky."
+#~ msgstr "외부 사이트에서 Bluesky의 트래픽을 파악하는 데 도움이 됩니다."
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:187
 msgid "Here is your app password!"
@@ -3386,7 +3386,7 @@ msgstr "이메일 주소를 잘못 입력한 것 같습니다. 올바른 주소�
 msgid "It's correct"
 msgstr "올바른 주소입니다"
 
-#: src/screens/StarterPack/Wizard/index.tsx:461
+#: src/screens/StarterPack/Wizard/index.tsx:458
 msgid "It's just you right now! Add more people to your starter pack by searching above."
 msgstr "아직은 나밖에 없습니다. 위에서 검색하여 스타터 팩에 더 많은 사람을 추가하세요."
 
@@ -3728,8 +3728,8 @@ msgstr "나를 위해 만들기"
 msgid "Make sure this is where you intend to go!"
 msgstr "이곳이 당신이 가고자 하는 곳인지 확인하세요!"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:49
-#: src/screens/Settings/ContentAndMediaSettings.tsx:52
+#: src/screens/Settings/ContentAndMediaSettings.tsx:40
+#: src/screens/Settings/ContentAndMediaSettings.tsx:43
 msgid "Manage saved feeds"
 msgstr "저장한 피드 관리"
 
@@ -3754,13 +3754,13 @@ msgstr "일부 사용자에게 불쾌감을 주거나 부적절할 수 있는 �
 msgid "mentioned users"
 msgstr "멘션한 사용자"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:397
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:393
 msgid "Mentioned users"
 msgstr "멘션한 사용자"
 
 #: src/components/Menu/index.tsx:95
 #: src/view/com/util/ViewHeader.tsx:87
-#: src/view/screens/Search/Search.tsx:882
+#: src/view/screens/Search/Search.tsx:883
 msgid "Menu"
 msgstr "메뉴"
 
@@ -4142,10 +4142,10 @@ msgstr "뉴스"
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:157
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:165
 #: src/screens/Signup/BackNextButtons.tsx:67
-#: src/screens/StarterPack/Wizard/index.tsx:192
-#: src/screens/StarterPack/Wizard/index.tsx:196
-#: src/screens/StarterPack/Wizard/index.tsx:367
-#: src/screens/StarterPack/Wizard/index.tsx:374
+#: src/screens/StarterPack/Wizard/index.tsx:189
+#: src/screens/StarterPack/Wizard/index.tsx:193
+#: src/screens/StarterPack/Wizard/index.tsx:364
+#: src/screens/StarterPack/Wizard/index.tsx:371
 #: src/view/com/modals/ChangePassword.tsx:254
 #: src/view/com/modals/ChangePassword.tsx:256
 msgid "Next"
@@ -4173,7 +4173,7 @@ msgstr "DNS 패널 없음"
 msgid "No featured GIFs found. There may be an issue with Tenor."
 msgstr "인기 GIF를 찾을 수 없습니다. Tenor에 문제가 있을 수 있습니다."
 
-#: src/screens/StarterPack/Wizard/StepFeeds.tsx:118
+#: src/screens/StarterPack/Wizard/StepFeeds.tsx:119
 msgid "No feeds found. Try searching for something else."
 msgstr "피드를 찾을 수 없습니다. 다른 피드를 검색해 보세요."
 
@@ -4257,7 +4257,7 @@ msgstr "\"{search}\"에 대한 검색 결과를 찾을 수 없습니다."
 msgid "No thanks"
 msgstr "사용하지 않음"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:379
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:375
 msgid "Nobody"
 msgstr "없음"
 
@@ -4275,7 +4275,7 @@ msgstr "아직 아무도 인용하지 않았습니다. 첫 번째가 되어 보�
 msgid "Nobody has reposted this yet. Maybe you should be the first!"
 msgstr "아직 아무도 재게시하지 않았습니다. 첫 번째가 되어 보세요!"
 
-#: src/screens/StarterPack/Wizard/StepProfiles.tsx:102
+#: src/screens/StarterPack/Wizard/StepProfiles.tsx:103
 msgid "Nobody was found. Try searching for someone else."
 msgstr "아무도 찾을 수 없습니다. 다른 사용자를 검색해 보세요."
 
@@ -4584,7 +4584,7 @@ msgstr "선택 사항으로 아래에 추가 정보를 입력하세요."
 msgid "Options:"
 msgstr "옵션:"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:392
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:388
 msgid "Or combine these options:"
 msgstr "또는 다음 옵션을 결합하세요."
 
@@ -4814,7 +4814,7 @@ msgctxt "action"
 msgid "Post"
 msgstr "게시하기"
 
-#: src/view/com/post-thread/PostThread.tsx:481
+#: src/view/com/post-thread/PostThread.tsx:490
 msgctxt "description"
 msgid "Post"
 msgstr "게시물"
@@ -4843,7 +4843,7 @@ msgstr "게시물을 삭제했습니다"
 msgid "Post failed to upload. Please check your Internet connection and try again."
 msgstr "게시물을 업로드하지 못했습니다. 인터넷 연결을 확인한 후 다시 시도해 주세요."
 
-#: src/view/com/post-thread/PostThread.tsx:212
+#: src/view/com/post-thread/PostThread.tsx:221
 msgid "Post hidden"
 msgstr "게시물 숨김"
 
@@ -4869,8 +4869,8 @@ msgstr "게시물 언어"
 msgid "Post Languages"
 msgstr "게시물 언어"
 
-#: src/view/com/post-thread/PostThread.tsx:207
-#: src/view/com/post-thread/PostThread.tsx:219
+#: src/view/com/post-thread/PostThread.tsx:216
+#: src/view/com/post-thread/PostThread.tsx:228
 msgid "Post not found"
 msgstr "게시물을 찾을 수 없음"
 
@@ -5031,7 +5031,6 @@ msgstr "인용을 다시 연결했습니다"
 msgid "Quote post was successfully detached"
 msgstr "인용을 성공적으로 해제했습니다"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:317
 #: src/view/com/util/post-ctrls/RepostButton.tsx:167
 #: src/view/com/util/post-ctrls/RepostButton.tsx:189
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:84
@@ -5039,7 +5038,7 @@ msgstr "인용을 성공적으로 해제했습니다"
 msgid "Quote posts disabled"
 msgstr "게시물 인용 비활성화됨"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:315
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:314
 msgid "Quote posts enabled"
 msgstr "게시물 인용 활성화됨"
 
@@ -5092,7 +5091,7 @@ msgstr "Bluesky 서비스 이용약관 읽기"
 msgid "Reason:"
 msgstr "이유:"
 
-#: src/view/screens/Search/Search.tsx:1057
+#: src/view/screens/Search/Search.tsx:1058
 msgid "Recent Searches"
 msgstr "최근 검색"
 
@@ -5185,11 +5184,11 @@ msgstr "이미지 제거"
 msgid "Remove mute word from your list"
 msgstr "목록에서 뮤트한 단어 제거"
 
-#: src/view/screens/Search/Search.tsx:1101
+#: src/view/screens/Search/Search.tsx:1102
 msgid "Remove profile"
 msgstr "프로필 제거"
 
-#: src/view/screens/Search/Search.tsx:1103
+#: src/view/screens/Search/Search.tsx:1104
 msgid "Remove profile from search history"
 msgstr "검색 기록에서 프로필을 제거합니다"
 
@@ -5274,11 +5273,11 @@ msgstr "스레드 작성자에 의해 답글 숨겨짐"
 msgid "Reply Hidden by You"
 msgstr "나에 의해 답글 숨겨짐"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:359
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:355
 msgid "Reply settings"
 msgstr "답글 설정"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:344
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:340
 msgid "Reply settings are chosen by the author of the thread"
 msgstr "답글 설정은 스레드 작성자가 선택합니다"
 
@@ -5529,8 +5528,8 @@ msgid "Returns to previous page"
 msgstr "이전 페이지로 돌아갑니다"
 
 #: src/components/dialogs/BirthDateSettings.tsx:124
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:442
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:448
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:438
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:444
 #: src/components/StarterPack/QrCodeDialog.tsx:185
 #: src/screens/Profile/Header/EditProfileDialog.tsx:238
 #: src/screens/Profile/Header/EditProfileDialog.tsx:252
@@ -5547,7 +5546,7 @@ msgstr "이전 페이지로 돌아갑니다"
 msgid "Save"
 msgstr "저장"
 
-#: src/view/com/lightbox/ImageViewing/index.tsx:555
+#: src/view/com/lightbox/ImageViewing/index.tsx:576
 #: src/view/com/modals/CreateOrEditList.tsx:325
 msgctxt "action"
 msgid "Save"
@@ -5641,11 +5640,11 @@ msgstr "검색"
 msgid "Search for \"{query}\""
 msgstr "\"{query}\"에 대한 검색 결과"
 
-#: src/view/screens/Search/Search.tsx:1000
+#: src/view/screens/Search/Search.tsx:1001
 msgid "Search for \"{searchText}\""
 msgstr "\"{searchText}\"에 대한 검색 결과"
 
-#: src/screens/StarterPack/Wizard/index.tsx:500
+#: src/screens/StarterPack/Wizard/index.tsx:497
 msgid "Search for feeds that you want to suggest to others."
 msgstr "다른 사람에게 추천할 피드를 검색하세요."
 
@@ -5799,8 +5798,8 @@ msgid "Send a neat website!"
 msgstr "멋진 웹사이트 링크를 보내 보세요!"
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:118
-msgid "Send Bluesky referrer"
-msgstr "Bluesky 리퍼러 보내기"
+#~ msgid "Send Bluesky referrer"
+#~ msgstr "Bluesky 리퍼러 보내기"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:232
 msgid "Send Confirmation"
@@ -5874,7 +5873,7 @@ msgstr "생년월일 설정"
 msgid "Set new password"
 msgstr "새 비밀번호 설정"
 
-#: src/screens/Onboarding/Layout.tsx:49
+#: src/screens/Onboarding/Layout.tsx:50
 msgid "Set up your account"
 msgstr "계정 설정하기"
 
@@ -5909,7 +5908,7 @@ msgstr "외설적"
 msgid "Share"
 msgstr "공유"
 
-#: src/view/com/lightbox/ImageViewing/index.tsx:564
+#: src/view/com/lightbox/ImageViewing/index.tsx:585
 msgctxt "action"
 msgid "Share"
 msgstr "공유"
@@ -6157,7 +6156,7 @@ msgid "Similar accounts"
 msgstr "비슷한 계정"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:231
-#: src/screens/StarterPack/Wizard/index.tsx:200
+#: src/screens/StarterPack/Wizard/index.tsx:197
 msgid "Skip"
 msgstr "건너뛰기"
 
@@ -6182,7 +6181,7 @@ msgstr "좋아할 만한 다른 피드"
 msgid "Some people can reply"
 msgstr "일부 사람들이 답글을 달 수 있음"
 
-#: src/screens/Messages/Conversation.tsx:112
+#: src/screens/Messages/Conversation.tsx:103
 msgid "Something went wrong"
 msgstr "알 수 없는 오류가 발생했습니다"
 
@@ -6203,7 +6202,7 @@ msgid "Something went wrong!"
 msgstr "문제가 발생했습니다!"
 
 #: src/App.native.tsx:113
-#: src/App.web.tsx:95
+#: src/App.web.tsx:94
 msgid "Sorry! Your session expired. Please log in again."
 msgstr "죄송합니다. 세션이 만료되었습니다. 다시 로그인해 주세요."
 
@@ -6233,8 +6232,8 @@ msgid "Spam; excessive mentions or replies"
 msgstr "스팸, 과도한 멘션 또는 답글"
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:112
-msgid "Specify Bluesky as a referer"
-msgstr "Bluesky를 리퍼러로 정의하기"
+#~ msgid "Specify Bluesky as a referer"
+#~ msgstr "Bluesky를 리퍼러로 정의하기"
 
 #: src/screens/Onboarding/index.tsx:27
 #: src/screens/Onboarding/state.ts:100
@@ -6251,7 +6250,7 @@ msgstr "{displayName} 님과 대화 시작하기"
 
 #: src/Navigation.tsx:393
 #: src/Navigation.tsx:398
-#: src/screens/StarterPack/Wizard/index.tsx:191
+#: src/screens/StarterPack/Wizard/index.tsx:188
 msgid "Starter Pack"
 msgstr "스타터 팩"
 
@@ -6473,8 +6472,8 @@ msgstr "이 핸들은 이미 사용 중입니다."
 #: src/screens/StarterPack/StarterPackScreen.tsx:104
 #: src/screens/StarterPack/StarterPackScreen.tsx:148
 #: src/screens/StarterPack/StarterPackScreen.tsx:149
-#: src/screens/StarterPack/Wizard/index.tsx:107
-#: src/screens/StarterPack/Wizard/index.tsx:117
+#: src/screens/StarterPack/Wizard/index.tsx:105
+#: src/screens/StarterPack/Wizard/index.tsx:115
 msgid "That starter pack could not be found."
 msgstr "스타터 팩을 찾을 수 없습니다."
 
@@ -6529,12 +6528,12 @@ msgstr "내 계정에 다음 라벨이 적용되었습니다."
 msgid "The following labels were applied to your content."
 msgstr "내 콘텐츠에 다음 라벨이 적용되었습니다."
 
-#: src/screens/Onboarding/Layout.tsx:59
+#: src/screens/Onboarding/Layout.tsx:60
 msgid "The following steps will help customize your Bluesky experience."
 msgstr "다음 단계는 Bluesky 환경을 맞춤 설정하는 데 도움이 됩니다."
 
-#: src/view/com/post-thread/PostThread.tsx:208
-#: src/view/com/post-thread/PostThread.tsx:220
+#: src/view/com/post-thread/PostThread.tsx:217
+#: src/view/com/post-thread/PostThread.tsx:229
 msgid "The post may have been deleted."
 msgstr "게시물이 삭제되었을 수 있습니다."
 
@@ -6875,8 +6874,8 @@ msgstr "빠른 액세스 목록에서 @{0}을(를) 제거합니다."
 msgid "This will remove your post from this quote post for all users, and replace it with a placeholder."
 msgstr "모든 사용자의 인용 게시물에서 해당 게시물이 삭제되고 자리 표시자로 대체됩니다."
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:57
-#: src/screens/Settings/ContentAndMediaSettings.tsx:60
+#: src/screens/Settings/ContentAndMediaSettings.tsx:48
+#: src/screens/Settings/ContentAndMediaSettings.tsx:51
 msgid "Thread preferences"
 msgstr "스레드 설정"
 
@@ -7202,8 +7201,8 @@ msgstr "기본 제공자 사용"
 msgid "Use in-app browser"
 msgstr "인앱 브라우저 사용"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:96
-#: src/screens/Settings/ContentAndMediaSettings.tsx:102
+#: src/screens/Settings/ContentAndMediaSettings.tsx:74
+#: src/screens/Settings/ContentAndMediaSettings.tsx:80
 msgid "Use in-app browser to open links"
 msgstr "인앱 브라우저를 사용하여 링크 열기"
 
@@ -7291,7 +7290,7 @@ msgstr "<0>@{0}</0> 님이 팔로우한 사용자"
 msgid "Users I follow"
 msgstr "내가 팔로우하는 사용자"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:420
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:416
 msgid "Users in \"{0}\""
 msgstr "\"{0}\"에 있는 사용자"
 
@@ -7496,7 +7495,7 @@ msgstr "콘텐츠 경고 및 피드에서 필터링"
 msgid "We couldn't find any results for that hashtag."
 msgstr "해당 해시태그에 대한 결과를 찾을 수 없습니다."
 
-#: src/screens/Messages/Conversation.tsx:113
+#: src/screens/Messages/Conversation.tsx:104
 msgid "We couldn't load this conversation"
 msgstr "이 대화를 불러올 수 없습니다"
 
@@ -7758,7 +7757,7 @@ msgstr "고정한 피드가 없습니다."
 msgid "You don't have any saved feeds."
 msgstr "저장한 피드가 없습니다."
 
-#: src/view/com/post-thread/PostThread.tsx:214
+#: src/view/com/post-thread/PostThread.tsx:223
 msgid "You have blocked the author or you have been blocked by the author."
 msgstr "작성자를 차단했거나 작성자가 나를 차단했습니다."
 

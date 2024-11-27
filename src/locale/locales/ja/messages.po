@@ -3087,10 +3087,6 @@ msgstr "ヘルプ"
 msgid "Help people know you're not a bot by uploading a picture or creating an avatar."
 msgstr "画像をアップロードするかアバターを作ってあなたがbotではないことをみんなに知らせましょう。"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:127
-msgid "Helps external sites estimate traffic from Bluesky."
-msgstr "外部サイトがBlueskyからのトラフィックの量を見積もるのを助ける。"
-
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:187
 msgid "Here is your app password!"
 msgstr "アプリパスワードをお知らせします！"
@@ -5790,10 +5786,6 @@ msgstr "フィード内の翻訳に使用する言語を選択します。"
 msgid "Send a neat website!"
 msgstr "素敵なウェブサイトを送って！"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:118
-msgid "Send Bluesky referrer"
-msgstr "Blueskyのリファラーを送信"
-
 #: src/components/dialogs/VerifyEmailDialog.tsx:232
 msgid "Send Confirmation"
 msgstr "確認を送信"
@@ -6223,10 +6215,6 @@ msgstr "スパム"
 #: src/lib/moderation/useReportOptions.ts:55
 msgid "Spam; excessive mentions or replies"
 msgstr "スパム、過剰なメンションや返信"
-
-#: src/screens/Settings/ContentAndMediaSettings.tsx:112
-msgid "Specify Bluesky as a referer"
-msgstr "Blueskyをリファラーとして指定する"
 
 #: src/screens/Onboarding/index.tsx:27
 #: src/screens/Onboarding/state.ts:100

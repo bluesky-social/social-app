@@ -1,5 +1,6 @@
 import React from 'react'
 import {View} from 'react-native'
+import Animated from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -35,7 +36,7 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
   const {gtMobile} = useBreakpoints()
   const onboardDispatch = useOnboardingDispatch()
   const {state, dispatch} = React.useContext(Context)
-  const scrollview = React.useRef<ScrollView>(null)
+  const scrollview = React.useRef<Animated.ScrollView>(null)
   const prevActiveStep = React.useRef<string>(state.activeStep)
 
   React.useEffect(() => {
