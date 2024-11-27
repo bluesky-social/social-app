@@ -538,13 +538,14 @@ export function PostThread({uri}: {uri: string | undefined}) {
 function MobileComposePrompt({onPressReply}: {onPressReply: () => unknown}) {
   const safeAreaInsets = useSafeAreaInsets()
   const fabMinimalShellTransform = useMinimalShellFabTransform()
+  console.log()
   return (
     <Animated.View
       style={[
         styles.prompt,
         fabMinimalShellTransform,
         {
-          bottom: clamp(safeAreaInsets.bottom, 15, 30),
+          bottom: clamp(safeAreaInsets.bottom, 13, 30),
         },
       ]}>
       <PostThreadComposePrompt onPressCompose={onPressReply} />
