@@ -55,7 +55,7 @@
   "dependencies": {
     "@atproto/api": "^0.13.11",
     "@braintree/sanitize-url": "^6.0.2",
-    "@discord/bottom-sheet": "bluesky-social/react-native-bottom-sheet",
+    "@gorhom/bottom-sheet": "5.0.6",
     "@emoji-mart/react": "^1.1.1",
     "@expo/html-elements": "^0.4.2",
     "@expo/webpack-config": "^19.0.0",
@@ -71,7 +71,7 @@
     "@haileyok/bluesky-video": "0.2.4",
     "@ipld/dag-cbor": "^9.2.0",
     "@lingui/react": "^4.5.0",
-    "@mattermost/react-native-paste-input": "^0.7.1",
+    "@mattermost/react-native-paste-input": "bluesky-social/react-native-paste-input",
     "@miblanchard/react-native-slider": "^2.3.1",
     "@radix-ui/react-dismissable-layer": "^1.1.1",
     "@radix-ui/react-dropdown-menu": "2.0.1",
@@ -201,7 +201,7 @@
     "tippy.js": "^6.3.7",
     "tlds": "^1.234.0",
     "tldts": "^6.1.46",
-    "zeego": "^1.6.2",
+    "zeego": "^1.10.0",
     "zod": "^3.20.2"
   },
   "devDependencies": {

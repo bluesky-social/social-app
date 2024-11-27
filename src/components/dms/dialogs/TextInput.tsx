@@ -1,1 +1,1 @@
-export {BottomSheetTextInput as TextInput} from '@discord/bottom-sheet/src'
+export {BottomSheetTextInput as TextInput} from '@gorhom/bottom-sheet/src'

@@ -1,0 +1,109 @@
+diff --git a/node_modules/@mattermost/react-native-paste-input/ios/PasteInputView.m b/node_modules/@mattermost/react-native-paste-input/ios/PasteInputView.m
+index e916023..811574c 100644
+--- a/node_modules/@mattermost/react-native-paste-input/ios/PasteInputView.m
++++ b/node_modules/@mattermost/react-native-paste-input/ios/PasteInputView.m
+@@ -22,6 +22,11 @@ - (instancetype)initWithBridge:(RCTBridge *)bridge
+     _backedTextInputView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+     _backedTextInputView.textInputDelegate = self;
+ 
++    // Disable inline predictions to prevent jank in the composer
++    if (@available(iOS 17.0, *)) {
++      _backedTextInputView.inlinePredictionType = UITextInlinePredictionTypeNo;
++    }
++
+     [self addSubview:_backedTextInputView];
+   }
+ 
+diff --git a/node_modules/@mattermost/react-native-paste-input/ios/PasteTextInput.h b/node_modules/@mattermost/react-native-paste-input/ios/PasteTextInput.h
+index de0ed87..057cb11 100644
+--- a/node_modules/@mattermost/react-native-paste-input/ios/PasteTextInput.h
++++ b/node_modules/@mattermost/react-native-paste-input/ios/PasteTextInput.h
+@@ -1,10 +1,10 @@
+ #ifdef RCT_NEW_ARCH_ENABLED
+-#import <React/RCTViewComponentView.h>
++#import <React/RCTTextInputComponentView.h>
+ #import <UIKit/UIKit.h>
+ 
+ NS_ASSUME_NONNULL_BEGIN
+ 
+-@interface PasteTextInput : RCTViewComponentView
++@interface PasteTextInput : RCTTextInputComponentView
+ 
+ @end
+ 
+diff --git a/node_modules/@mattermost/react-native-paste-input/ios/PasteTextInput.mm b/node_modules/@mattermost/react-native-paste-input/ios/PasteTextInput.mm
+index 65aa7d9..c088635 100644
+--- a/node_modules/@mattermost/react-native-paste-input/ios/PasteTextInput.mm
++++ b/node_modules/@mattermost/react-native-paste-input/ios/PasteTextInput.mm
+@@ -361,16 +361,12 @@ - (NSString *)textInputShouldChangeText:(NSString *)text inRange:(NSRange)range
+ 
+   if (!_backedTextInputView.textWasPasted) {
+     if (_eventEmitter) {
+-      KeyPressMetrics keyPressMetrics;
++      TextInputEventEmitter::KeyPressMetrics keyPressMetrics;
+       keyPressMetrics.text = RCTStringFromNSString(text);
+       keyPressMetrics.eventCount = _mostRecentEventCount;
+ 
+-        const auto eventEmitter = [self getEventEmitter];
+-      if (props.onKeyPressSync) {
+-        eventEmitter->onKeyPressSync(keyPressMetrics);
+-      } else {
+-        eventEmitter->onKeyPress(keyPressMetrics);
+-      }
++      const auto eventEmitter = [self getEventEmitter];
++      eventEmitter->onKeyPress(keyPressMetrics);
+     }
+   }
+ 
+@@ -416,12 +412,7 @@ - (void)textInputDidChange
+ 
+   if (_eventEmitter) {
+     const auto eventEmitter = [self getEventEmitter];
+-    const auto &props = static_cast<const PasteTextInputProps &>(*_props);
+-    if (props.onChangeSync) {
+-      eventEmitter->onChangeSync([self _textInputMetrics]);
+-    } else {
+-      eventEmitter->onChange([self _textInputMetrics]);
+-    }
++    eventEmitter->onChange([self _textInputMetrics]);
+   }
+ }
+ 
+@@ -551,9 +542,9 @@ - (void)handleInputAccessoryDoneButton
+ 
+ #pragma mark - Other
+ 
+-- (TextInputMetrics)_textInputMetrics
++- (TextInputEventEmitter::Metrics)_textInputMetrics
+ {
+-  TextInputMetrics metrics;
++  TextInputEventEmitter::Metrics metrics;
+   metrics.text = RCTStringFromNSString(_backedTextInputView.attributedText.string);
+   metrics.selectionRange = [self _selectionRange];
+   metrics.eventCount = _mostRecentEventCount;
+diff --git a/node_modules/@mattermost/react-native-paste-input/ios/PasteTextInputManager.mm b/node_modules/@mattermost/react-native-paste-input/ios/PasteTextInputManager.mm
+index d1aee72..ba8934e 100644
+--- a/node_modules/@mattermost/react-native-paste-input/ios/PasteTextInputManager.mm
++++ b/node_modules/@mattermost/react-native-paste-input/ios/PasteTextInputManager.mm
+@@ -10,20 +10,14 @@
+ #import <React/RCTUIManagerUtils.h>
+ #import <React/RCTShadowView+Layout.h>
+ #import <React/RCTShadowView.h>
++#import <React/RCTMultilineTextInputViewManager.h>
+ 
+ #import "PasteTextInput.h"
+ #import "PasteInputView.h"
+ 
+-#ifdef RCT_NEW_ARCH_ENABLED
+-@interface PasteTextInputManager : RCTViewManager
+-@end
+-#else
+-#import <React/RCTMultilineTextInputViewManager.h>
+-
+ @interface PasteTextInputManager : RCTMultilineTextInputViewManager
+ 
+ @end
+-#endif
+ 
+ @implementation PasteTextInputManager {
+     NSHashTable<RCTBaseTextInputShadowView *> *_shadowViews;

@@ -4030,13 +4030,6 @@
     pino "^8.11.0"
     pino-http "^8.3.3"
 
-"@discord/bottom-sheet@bluesky-social/react-native-bottom-sheet":
-  version "4.6.1"
-  resolved "https://codeload.github.com/bluesky-social/react-native-bottom-sheet/tar.gz/28a87d1bb55e10fc355fa1455545a30734995908"
-  dependencies:
-    "@gorhom/portal" "1.0.14"
-    invariant "^2.2.4"
-
 "@discoveryjs/json-ext@0.5.7", "@discoveryjs/json-ext@^0.5.0":
   version "0.5.7"
   resolved "https://registry.yarnpkg.com/@discoveryjs/json-ext/-/json-ext-0.5.7.tgz#1d572bfbbe14b7704e0ba0f39b74815b84870d70"
@@ -4909,6 +4902,14 @@
     humps "^2.0.1"
     prop-types "^15.7.2"
 
+"@gorhom/bottom-sheet@5.0.6":
+  version "5.0.6"
+  resolved "https://registry.yarnpkg.com/@gorhom/bottom-sheet/-/bottom-sheet-5.0.6.tgz#f20736502399c7bcf8c73ea09e6b571dc07fe0eb"
+  integrity sha512-SI/AhPvgRfnCWN6/+wbE6TXwRE4X8F2fLyE4L/0bRwgE34Zenq585qLT139uEcfCIyovC2swC3ICqQpkmWEcFA==
+  dependencies:
+    "@gorhom/portal" "1.0.14"
+    invariant "^2.2.4"
+
 "@gorhom/portal@1.0.14":
   version "1.0.14"
   resolved "https://registry.yarnpkg.com/@gorhom/portal/-/portal-1.0.14.tgz#1953edb76aaba80fb24021dc774550194a18e111"
@@ -5723,10 +5724,9 @@
     "@babel/runtime" "^7.20.13"
     "@lingui/core" "4.5.0"
 
-"@mattermost/react-native-paste-input@^0.7.1":
-  version "0.7.1"
-  resolved "https://registry.yarnpkg.com/@mattermost/react-native-paste-input/-/react-native-paste-input-0.7.1.tgz#f14585030b992cf7c9bbd0921225eefa501756ba"
-  integrity sha512-kY8LKtqRX2T/rtn/HNrzTitijuATvyzd6yl5WNWOsszmyzNcssKStjjCTBup04CyMxfwutUU1CWrYUb3hQO7oA==
+"@mattermost/react-native-paste-input@bluesky-social/react-native-paste-input":
+  version "0.8.1-rc.6"
+  resolved "https://codeload.github.com/bluesky-social/react-native-paste-input/tar.gz/d981210e33c9a5af94294b0f2f8f10f2bb9e721e"
   dependencies:
     semver "7.6.0"
 
@@ -20171,10 +20171,10 @@ setprototypeof@1.2.0:
   resolved "https://registry.yarnpkg.com/setprototypeof/-/setprototypeof-1.2.0.tgz#66c9a24a73f9fc28cbe66b09fed3d33dcaf1b424"
   integrity sha512-E5LDX7Wrp85Kil5bhZv46j8jOeboKq5JMmYM3gVGdGH8xFpPWXUMsNrlODCrkoxMEeNi/XZIwuRvY4XNwYMJpw==
 
-sf-symbols-typescript@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/sf-symbols-typescript/-/sf-symbols-typescript-1.0.0.tgz#94e9210bf27e7583f9749a0d07bd4f4937ea488f"
-  integrity sha512-DkS7q3nN68dEMb4E18HFPDAvyrjDZK9YAQQF2QxeFu9gp2xRDXFMF8qLJ1EmQ/qeEGQmop4lmMM1WtYJTIcCMw==
+sf-symbols-typescript@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/sf-symbols-typescript/-/sf-symbols-typescript-2.0.0.tgz#52548c84d124914faed1868c55bb71bffac472f1"
+  integrity sha512-Fc8Uhhl2plqXMw7GQ8q83t/zj1xhNCJvteDNJUDULaH/4a/Eqw5aW1UYEznyEIgkokw7QYXuQ9hOw8jhBLXL0A==
 
 shallow-clone@^3.0.0:
   version "3.0.1"
@@ -22748,14 +22748,14 @@ zeed-dom@0.10.9, zeed-dom@^0.10.9:
   dependencies:
     css-what "^6.1.0"
 
-zeego@^1.6.2:
-  version "1.7.0"
-  resolved "https://registry.yarnpkg.com/zeego/-/zeego-1.7.0.tgz#8034adb842199c4ccf21bcb19877800bff18606b"
-  integrity sha512-dZP/iUMeYLfKFnWMn+gNBJkHrR5Cu1ySyCeSkBAJmG9wjCsXoBVMyO7kV6/Y7P0ZhD5c/oS+0/Z6duxeDIos0g==
+zeego@^1.10.0:
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/zeego/-/zeego-1.10.0.tgz#4f787e269f3d85b4eb2fdfe58e6765d7e0e8dcf2"
+  integrity sha512-HrPv7DfyAubkp/NOy+Uwcb1rcS3DtkZEtNQFiSDduBoZt2EDf89+1N+aweACj1UnmGOOu+kk56WYiV9sliMpng==
   dependencies:
     "@radix-ui/react-context-menu" "^2.0.1"
     "@radix-ui/react-dropdown-menu" "^2.0.1"
-    sf-symbols-typescript "^1.0.0"
+    sf-symbols-typescript "^2.0.0"
 
 zod-validation-error@^3.0.3:
   version "3.3.0"
