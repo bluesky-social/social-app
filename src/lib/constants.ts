@@ -29,6 +29,7 @@ export const DISCOVER_DEBUG_DIDS: Record<string, true> = {
   'did:plc:p2cp5gopk7mgjegy6wadk3ep': true, // samuel.bsky.team
   'did:plc:ragtjsm2j2vknwkz3zp4oxrd': true, // pfrazee.com
   'did:plc:vpkhqolt662uhesyj6nxm7ys': true, // why.bsky.team
+  'did:plc:3jpt2mvvsumj2r7eqk4gzzjz': true, // esb.lol
 }
 
 const BASE_FEEDBACK_FORM_URL = `${HELP_DESK_URL}/requests/new`
