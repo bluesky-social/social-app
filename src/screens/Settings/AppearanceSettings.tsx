@@ -10,6 +10,7 @@ import {useLingui} from '@lingui/react'
 
 import {DISCOVER_DEBUG_DIDS} from '#/lib/constants'
 import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
+import {isNative} from '#/platform/detection'
 import {useSession} from '#/state/session'
 import {useSetThemePrefs, useThemePrefs} from '#/state/shell'
 import {Logo} from '#/view/icons/Logo'
@@ -169,7 +170,7 @@ export function AppearanceSettingsScreen({}: Props) {
                 onChange={onChangeFontScale}
               />
 
-              {DISCOVER_DEBUG_DIDS[currentAccount?.did ?? ''] && (
+              {isNative && DISCOVER_DEBUG_DIDS[currentAccount?.did ?? ''] && (
                 <>
                   <SettingsList.Divider />
 
