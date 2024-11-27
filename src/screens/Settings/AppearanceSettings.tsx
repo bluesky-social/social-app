@@ -5,11 +5,14 @@ import Animated, {
   LayoutAnimationConfig,
   LinearTransition,
 } from 'react-native-reanimated'
-import {msg} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {DISCOVER_DEBUG_DIDS} from '#/lib/constants'
 import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
+import {useSession} from '#/state/session'
 import {useSetThemePrefs, useThemePrefs} from '#/state/shell'
+import {Logo} from '#/view/icons/Logo'
 import {atoms as a, native, useAlf, useTheme} from '#/alf'
 import * as ToggleButton from '#/components/forms/ToggleButton'
 import {Props as SVGIconProps} from '#/components/icons/common'
@@ -70,6 +73,8 @@ export function AppearanceSettingsScreen({}: Props) {
     [fonts],
   )
 
+  const {currentAccount} = useSession()
+
   return (
     <LayoutAnimationConfig skipExiting skipEntering>
       <Layout.Screen testID="preferencesThreadsScreen">
@@ -121,6 +126,8 @@ export function AppearanceSettingsScreen({}: Props) {
             )}
 
             <Animated.View layout={native(LinearTransition)}>
+              <SettingsList.Divider />
+
               <AppearanceToggleButtonGroup
                 title={_(msg`Font`)}
                 description={_(
@@ -161,6 +168,21 @@ export function AppearanceSettingsScreen({}: Props) {
                 values={[fonts.scale]}
                 onChange={onChangeFontScale}
               />
+
+              {DISCOVER_DEBUG_DIDS[currentAccount?.did ?? ''] && (
+                <>
+                  <SettingsList.Divider />
+
+                  <SettingsList.LinkItem
+                    to="/settings/app-icon"
+                    label={_(msg`App Icon`)}>
+                    <SettingsList.ItemIcon icon={Logo} />
+                    <SettingsList.ItemText>
+                      <Trans>App Icon</Trans>
+                    </SettingsList.ItemText>
+                  </SettingsList.LinkItem>
+                </>
+              )}
             </Animated.View>
           </SettingsList.Container>
         </Layout.Content>

@@ -74,6 +74,7 @@
     "@lingui/react": "^4.5.0",
     "@mattermost/react-native-paste-input": "^0.7.1",
     "@miblanchard/react-native-slider": "^2.3.1",
+    "@mozzius/expo-dynamic-app-icon": "^1.4.1",
     "@radix-ui/react-dismissable-layer": "^1.1.1",
     "@radix-ui/react-dropdown-menu": "2.0.1",
     "@radix-ui/react-focus-guards": "^1.1.1",
