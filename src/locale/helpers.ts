@@ -121,6 +121,8 @@ export function sanitizeAppLanguageSetting(appLanguage: string): AppLanguage {
         return AppLanguage.en
       case 'an':
         return AppLanguage.an
+      case 'ast':
+        return AppLanguage.ast
       case 'ca':
         return AppLanguage.ca
       case 'de':
