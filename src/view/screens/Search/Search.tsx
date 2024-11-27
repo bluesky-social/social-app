@@ -679,6 +679,7 @@ export function SearchScreen(
   }, [])
 
   const onPressMenu = React.useCallback(() => {
+    textInput.current?.blur()
     setDrawerOpen(true)
   }, [setDrawerOpen])
 
@@ -804,6 +805,7 @@ export function SearchScreen(
     } else {
       setSearchText('')
       navigation.setParams({q: ''})
+      textInput.current?.focus()
     }
   }, [navigation])
 

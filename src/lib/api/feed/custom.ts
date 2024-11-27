@@ -128,7 +128,9 @@ async function loggedOutFetch({
       headers: {'Accept-Language': contentLangs, ...labelersHeader},
     },
   )
-  let data = res.ok ? jsonStringToLex(await res.text()) : null
+  let data = res.ok
+    ? (jsonStringToLex(await res.text()) as GetCustomFeed.OutputSchema)
+    : null
   if (data?.feed?.length) {
     return {
       success: true,
@@ -143,7 +145,9 @@ async function loggedOutFetch({
     }&limit=${limit}`,
     {method: 'GET', headers: {'Accept-Language': '', ...labelersHeader}},
   )
-  data = res.ok ? jsonStringToLex(await res.text()) : null
+  data = res.ok
+    ? (jsonStringToLex(await res.text()) as GetCustomFeed.OutputSchema)
+    : null
   if (data?.feed?.length) {
     return {
       success: true,

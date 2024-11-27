@@ -1,4 +1,3 @@
-import React from 'react'
 import {StyleProp, View, ViewStyle} from 'react-native'
 import {AppBskyFeedDefs, ComAtprotoLabelDefs} from '@atproto/api'
 import {msg, Plural} from '@lingui/macro'

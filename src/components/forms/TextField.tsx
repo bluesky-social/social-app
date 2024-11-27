@@ -326,6 +326,7 @@ export function SuffixText({
     <Text
       accessibilityLabel={label}
       accessibilityHint={accessibilityHint}
+      numberOfLines={1}
       style={[
         a.z_20,
         a.pr_sm,

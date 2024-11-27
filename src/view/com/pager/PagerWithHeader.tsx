@@ -131,11 +131,11 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
     const lastForcedScrollY = useSharedValue(0)
     const adjustScrollForOtherPages = () => {
       'worklet'
-      const currentScrollY = scrollY.value
+      const currentScrollY = scrollY.get()
       const forcedScrollY = Math.min(currentScrollY, headerOnlyHeight)
-      if (lastForcedScrollY.value !== forcedScrollY) {
-        lastForcedScrollY.value = forcedScrollY
-        const refs = scrollRefs.value
+      if (lastForcedScrollY.get() !== forcedScrollY) {
+        lastForcedScrollY.set(forcedScrollY)
+        const refs = scrollRefs.get()
         for (let i = 0; i < refs.length; i++) {
           const scollRef = refs[i]
           if (i !== currentPage && scollRef != null) {
@@ -167,7 +167,7 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
         const isPossiblyInvalid =
           headerHeight > 0 && Math.round(nextScrollY * 2) / 2 === -headerHeight
         if (!isPossiblyInvalid) {
-          scrollY.value = nextScrollY
+          scrollY.set(nextScrollY)
           runOnJS(queueThrottledOnScroll)()
         }
       },
@@ -246,7 +246,7 @@ let PagerTabBar = ({
   allowHeaderOverScroll?: boolean
 }): React.ReactNode => {
   const headerTransform = useAnimatedStyle(() => {
-    const translateY = Math.min(scrollY.value, headerOnlyHeight) * -1
+    const translateY = Math.min(scrollY.get(), headerOnlyHeight) * -1
     return {
       transform: [
         {

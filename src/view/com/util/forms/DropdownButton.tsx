@@ -2,6 +2,7 @@ import React, {PropsWithChildren, useMemo, useRef} from 'react'
 import {
   Dimensions,
   GestureResponderEvent,
+  Insets,
   StyleProp,
   StyleSheet,
   TouchableOpacity,
@@ -64,6 +65,7 @@ interface DropdownButtonProps {
   openUpwards?: boolean
   rightOffset?: number
   bottomOffset?: number
+  hitSlop?: Insets
   accessibilityLabel?: string
   accessibilityHint?: string
 }
@@ -80,6 +82,7 @@ export function DropdownButton({
   openUpwards = false,
   rightOffset = 0,
   bottomOffset = 0,
+  hitSlop = HITSLOP_10,
   accessibilityLabel,
 }: PropsWithChildren<DropdownButtonProps>) {
   const {_} = useLingui()
@@ -152,7 +155,7 @@ export function DropdownButton({
         testID={testID}
         style={style}
         onPress={onPress}
-        hitSlop={HITSLOP_10}
+        hitSlop={hitSlop}
         ref={ref1}
         accessibilityRole="button"
         accessibilityLabel={

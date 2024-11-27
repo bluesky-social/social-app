@@ -22,7 +22,7 @@ export function Outer({children}: React.PropsWithChildren<{}>) {
     <View
       style={[
         a.flex_row,
-        a.gap_md,
+        a.gap_sm,
         a.px_lg,
         a.py_lg,
         a.justify_between,
@@ -46,8 +46,10 @@ export function Content({
 
   return (
     <View style={[a.gap_xs, a.flex_1]}>
-      <Text style={[a.font_bold, gtPhone ? a.text_sm : a.text_md]}>{name}</Text>
-      <Text style={[t.atoms.text_contrast_medium, a.leading_snug]}>
+      <Text emoji style={[a.font_bold, gtPhone ? a.text_sm : a.text_md]}>
+        {name}
+      </Text>
+      <Text emoji style={[t.atoms.text_contrast_medium, a.leading_snug]}>
         {description}
       </Text>
 
@@ -72,10 +74,9 @@ export function Buttons({
   hideLabel?: string
 }) {
   const {_} = useLingui()
-  const {gtPhone} = useBreakpoints()
 
   return (
-    <View style={[{minHeight: 35}, gtPhone ? undefined : a.w_full]}>
+    <View style={[{minHeight: 35}, a.w_full]}>
       <ToggleButton.Group
         label={_(
           msg`Configure content filtering setting for category: ${name}`,
@@ -257,7 +258,7 @@ export function LabelerLabelPreference({
       </Content>
 
       {showConfig && (
-        <View style={[gtPhone ? undefined : a.w_full]}>
+        <>
           {cantConfigure ? (
             <View
               style={[
@@ -268,7 +269,7 @@ export function LabelerLabelPreference({
                 a.border,
                 t.atoms.border_contrast_low,
               ]}>
-              <Text style={[a.font_bold, t.atoms.text_contrast_low]}>
+              <Text emoji style={[a.font_bold, t.atoms.text_contrast_low]}>
                 {currentPrefLabel}
               </Text>
             </View>
@@ -288,7 +289,7 @@ export function LabelerLabelPreference({
               hideLabel={hideLabel}
             />
           )}
-        </View>
+        </>
       )}
     </Outer>
   )

@@ -274,11 +274,6 @@ export function InlineLinkText({
     onOut: onHoverOut,
   } = useInteractionState()
   const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
-  const {
-    state: pressed,
-    onIn: onPressIn,
-    onOut: onPressOut,
-  } = useInteractionState()
   const flattenedStyle = flatten(style) || {}
 
   return (
@@ -289,19 +284,20 @@ export function InlineLinkText({
       {...rest}
       style={[
         {color: t.palette.primary_500},
-        (hovered || focused || pressed) &&
+        (hovered || focused) &&
           !disableUnderline && {
-            ...web({outline: 0}),
-            textDecorationLine: 'underline',
-            textDecorationColor: flattenedStyle.color ?? t.palette.primary_500,
+            ...web({
+              outline: 0,
+              textDecorationLine: 'underline',
+              textDecorationColor:
+                flattenedStyle.color ?? t.palette.primary_500,
+            }),
           },
         flattenedStyle,
       ]}
       role="link"
       onPress={download ? undefined : onPress}
       onLongPress={onLongPress}
-      onPressIn={onPressIn}
-      onPressOut={onPressOut}
       onFocus={onFocus}
       onBlur={onBlur}
       onMouseEnter={onHoverIn}

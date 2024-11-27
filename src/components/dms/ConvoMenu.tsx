@@ -115,7 +115,7 @@ let ConvoMenu = ({
                   {...props}
                   onPress={() => {
                     Keyboard.dismiss()
-                    // eslint-disable-next-line react/prop-types -- eslint is confused by the name `props`
+
                     props.onPress()
                   }}
                   style={[

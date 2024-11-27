@@ -1,6 +1,7 @@
 import React from 'react'
 import {
   AccessibilityProps,
+  AccessibilityRole,
   GestureResponderEvent,
   PressableProps,
 } from 'react-native'
@@ -36,6 +37,7 @@ export type RadixPassThroughTriggerProps = {
 export type TriggerProps = {
   children(props: TriggerChildProps): React.ReactNode
   label: string
+  role?: AccessibilityRole
 }
 export type TriggerChildProps =
   | {
@@ -63,6 +65,7 @@ export type TriggerChildProps =
         onPressIn: () => void
         onPressOut: () => void
         accessibilityLabel: string
+        accessibilityRole: AccessibilityRole
       }
     }
   | {
@@ -83,6 +86,7 @@ export type TriggerChildProps =
         onMouseEnter: () => void
         onMouseLeave: () => void
         accessibilityLabel: string
+        accessibilityRole: AccessibilityRole
       }
     }
 

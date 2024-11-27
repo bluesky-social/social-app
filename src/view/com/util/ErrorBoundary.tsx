@@ -1,4 +1,4 @@
-import React, {Component, ErrorInfo, ReactNode} from 'react'
+import {Component, ErrorInfo, ReactNode} from 'react'
 import {StyleProp, ViewStyle} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'

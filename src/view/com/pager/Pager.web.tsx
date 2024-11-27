@@ -18,7 +18,7 @@ interface Props {
   onPageSelected?: (index: number) => void
   onPageSelecting?: (
     index: number,
-    reason: LogEvents['home:feedDisplayed:sampled']['reason'],
+    reason: LogEvents['home:feedDisplayed']['reason'],
   ) => void
 }
 export const Pager = React.forwardRef(function PagerImpl(
@@ -38,17 +38,14 @@ export const Pager = React.forwardRef(function PagerImpl(
   React.useImperativeHandle(ref, () => ({
     setPage: (
       index: number,
-      reason: LogEvents['home:feedDisplayed:sampled']['reason'],
+      reason: LogEvents['home:feedDisplayed']['reason'],
     ) => {
       onTabBarSelect(index, reason)
     },
   }))
 
   const onTabBarSelect = React.useCallback(
-    (
-      index: number,
-      reason: LogEvents['home:feedDisplayed:sampled']['reason'],
-    ) => {
+    (index: number, reason: LogEvents['home:feedDisplayed']['reason']) => {
       const scrollY = window.scrollY
       // We want to determine if the tabbar is already "sticking" at the top (in which
       // case we should preserve and restore scroll), or if it is somewhere below in the

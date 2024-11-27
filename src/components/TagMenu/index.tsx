@@ -40,9 +40,37 @@ export function TagMenu({
   tag: string
   authorHandle?: string
 }>) {
+  const navigation = useNavigation<NavigationProp>()
+  return (
+    <>
+      {children}
+      <Dialog.Outer control={control}>
+        <Dialog.Handle />
+        <TagMenuInner
+          control={control}
+          tag={tag}
+          authorHandle={authorHandle}
+          navigation={navigation}
+        />
+      </Dialog.Outer>
+    </>
+  )
+}
+
+function TagMenuInner({
+  control,
+  tag,
+  authorHandle,
+  navigation,
+}: {
+  control: Dialog.DialogOuterProps['control']
+  tag: string
+  authorHandle?: string
+  // Passed down because on native, we don't use real portals (and context would be wrong).
+  navigation: NavigationProp
+}) {
   const {_} = useLingui()
   const t = useTheme()
-  const navigation = useNavigation<NavigationProp>()
   const {isLoading: isPreferencesLoading, data: preferences} =
     usePreferencesQuery()
   const {
@@ -79,32 +107,75 @@ export function TagMenu({
   }, [tag, preferences?.moderationPrefs?.mutedWords])
 
   return (
-    <>
-      {children}
-
-      <Dialog.Outer control={control}>
-        <Dialog.Handle />
-        <Dialog.Inner label={_(msg`Tag menu: ${displayTag}`)}>
-          {isPreferencesLoading ? (
-            <View style={[a.w_full, a.align_center]}>
-              <Loader size="lg" />
-            </View>
-          ) : (
-            <>
+    <Dialog.Inner label={_(msg`Tag menu: ${displayTag}`)}>
+      {isPreferencesLoading ? (
+        <View style={[a.w_full, a.align_center]}>
+          <Loader size="lg" />
+        </View>
+      ) : (
+        <>
+          <View
+            style={[
+              a.rounded_md,
+              a.border,
+              a.mb_md,
+              t.atoms.border_contrast_low,
+              t.atoms.bg_contrast_25,
+            ]}>
+            <Link
+              label={_(msg`View all posts with tag ${displayTag}`)}
+              {...createStaticClick(() => {
+                control.close(() => {
+                  navigation.push('Hashtag', {
+                    tag: encodeURIComponent(tag),
+                  })
+                })
+              })}>
               <View
                 style={[
-                  a.rounded_md,
-                  a.border,
-                  a.mb_md,
-                  t.atoms.border_contrast_low,
-                  t.atoms.bg_contrast_25,
+                  a.w_full,
+                  a.flex_row,
+                  a.align_center,
+                  a.justify_start,
+                  a.gap_md,
+                  a.px_lg,
+                  a.py_md,
                 ]}>
+                <Search size="lg" style={[t.atoms.text_contrast_medium]} />
+                <Text
+                  numberOfLines={1}
+                  ellipsizeMode="middle"
+                  style={[
+                    a.flex_1,
+                    a.text_md,
+                    a.font_bold,
+                    native({top: 2}),
+                    t.atoms.text_contrast_medium,
+                  ]}>
+                  <Trans>
+                    See{' '}
+                    <Text style={[a.text_md, a.font_bold, t.atoms.text]}>
+                      {displayTag}
+                    </Text>{' '}
+                    posts
+                  </Trans>
+                </Text>
+              </View>
+            </Link>
+
+            {authorHandle && !isInvalidHandle(authorHandle) && (
+              <>
+                <Divider />
+
                 <Link
-                  label={_(msg`View all posts with tag ${displayTag}`)}
+                  label={_(
+                    msg`View all posts by @${authorHandle} with tag ${displayTag}`,
+                  )}
                   {...createStaticClick(() => {
                     control.close(() => {
                       navigation.push('Hashtag', {
                         tag: encodeURIComponent(tag),
+                        author: authorHandle,
                       })
                     })
                   })}>
@@ -118,7 +189,7 @@ export function TagMenu({
                       a.px_lg,
                       a.py_md,
                     ]}>
-                    <Search size="lg" style={[t.atoms.text_contrast_medium]} />
+                    <Person size="lg" style={[t.atoms.text_contrast_medium]} />
                     <Text
                       numberOfLines={1}
                       ellipsizeMode="middle"
@@ -134,143 +205,86 @@ export function TagMenu({
                         <Text style={[a.text_md, a.font_bold, t.atoms.text]}>
                           {displayTag}
                         </Text>{' '}
-                        posts
+                        posts by this user
                       </Trans>
                     </Text>
                   </View>
                 </Link>
+              </>
+            )}
 
-                {authorHandle && !isInvalidHandle(authorHandle) && (
-                  <>
-                    <Divider />
+            {preferences ? (
+              <>
+                <Divider />
 
-                    <Link
-                      label={_(
-                        msg`View all posts by @${authorHandle} with tag ${displayTag}`,
-                      )}
-                      {...createStaticClick(() => {
-                        control.close(() => {
-                          navigation.push('Hashtag', {
-                            tag: encodeURIComponent(tag),
-                            author: authorHandle,
-                          })
-                        })
-                      })}>
-                      <View
-                        style={[
-                          a.w_full,
-                          a.flex_row,
-                          a.align_center,
-                          a.justify_start,
-                          a.gap_md,
-                          a.px_lg,
-                          a.py_md,
-                        ]}>
-                        <Person
-                          size="lg"
-                          style={[t.atoms.text_contrast_medium]}
-                        />
-                        <Text
-                          numberOfLines={1}
-                          ellipsizeMode="middle"
-                          style={[
-                            a.flex_1,
-                            a.text_md,
-                            a.font_bold,
-                            native({top: 2}),
-                            t.atoms.text_contrast_medium,
-                          ]}>
-                          <Trans>
-                            See{' '}
-                            <Text
-                              style={[a.text_md, a.font_bold, t.atoms.text]}>
-                              {displayTag}
-                            </Text>{' '}
-                            posts by this user
-                          </Trans>
-                        </Text>
-                      </View>
-                    </Link>
-                  </>
-                )}
-
-                {preferences ? (
-                  <>
-                    <Divider />
-
-                    <Button
-                      label={
-                        isMuted
-                          ? _(msg`Unmute all ${displayTag} posts`)
-                          : _(msg`Mute all ${displayTag} posts`)
+                <Button
+                  label={
+                    isMuted
+                      ? _(msg`Unmute all ${displayTag} posts`)
+                      : _(msg`Mute all ${displayTag} posts`)
+                  }
+                  onPress={() => {
+                    control.close(() => {
+                      if (isMuted) {
+                        resetUpsert()
+                        removeMutedWords(removeableMuteWords)
+                      } else {
+                        resetRemove()
+                        upsertMutedWord([
+                          {
+                            value: tag,
+                            targets: ['tag'],
+                            actorTarget: 'all',
+                          },
+                        ])
                       }
-                      onPress={() => {
-                        control.close(() => {
-                          if (isMuted) {
-                            resetUpsert()
-                            removeMutedWords(removeableMuteWords)
-                          } else {
-                            resetRemove()
-                            upsertMutedWord([
-                              {
-                                value: tag,
-                                targets: ['tag'],
-                                actorTarget: 'all',
-                              },
-                            ])
-                          }
-                        })
-                      }}>
-                      <View
-                        style={[
-                          a.w_full,
-                          a.flex_row,
-                          a.align_center,
-                          a.justify_start,
-                          a.gap_md,
-                          a.px_lg,
-                          a.py_md,
-                        ]}>
-                        <Mute
-                          size="lg"
-                          style={[t.atoms.text_contrast_medium]}
-                        />
-                        <Text
-                          numberOfLines={1}
-                          ellipsizeMode="middle"
-                          style={[
-                            a.flex_1,
-                            a.text_md,
-                            a.font_bold,
-                            native({top: 2}),
-                            t.atoms.text_contrast_medium,
-                          ]}>
-                          {isMuted ? _(msg`Unmute`) : _(msg`Mute`)}{' '}
-                          <Text style={[a.text_md, a.font_bold, t.atoms.text]}>
-                            {displayTag}
-                          </Text>{' '}
-                          <Trans>posts</Trans>
-                        </Text>
-                      </View>
-                    </Button>
-                  </>
-                ) : null}
-              </View>
+                    })
+                  }}>
+                  <View
+                    style={[
+                      a.w_full,
+                      a.flex_row,
+                      a.align_center,
+                      a.justify_start,
+                      a.gap_md,
+                      a.px_lg,
+                      a.py_md,
+                    ]}>
+                    <Mute size="lg" style={[t.atoms.text_contrast_medium]} />
+                    <Text
+                      numberOfLines={1}
+                      ellipsizeMode="middle"
+                      style={[
+                        a.flex_1,
+                        a.text_md,
+                        a.font_bold,
+                        native({top: 2}),
+                        t.atoms.text_contrast_medium,
+                      ]}>
+                      {isMuted ? _(msg`Unmute`) : _(msg`Mute`)}{' '}
+                      <Text style={[a.text_md, a.font_bold, t.atoms.text]}>
+                        {displayTag}
+                      </Text>{' '}
+                      <Trans>posts</Trans>
+                    </Text>
+                  </View>
+                </Button>
+              </>
+            ) : null}
+          </View>
 
-              <Button
-                label={_(msg`Close this dialog`)}
-                size="small"
-                variant="ghost"
-                color="secondary"
-                onPress={() => control.close()}>
-                <ButtonText>
-                  <Trans>Cancel</Trans>
-                </ButtonText>
-              </Button>
-            </>
-          )}
-        </Dialog.Inner>
-      </Dialog.Outer>
-    </>
+          <Button
+            label={_(msg`Close this dialog`)}
+            size="small"
+            variant="ghost"
+            color="secondary"
+            onPress={() => control.close()}>
+            <ButtonText>
+              <Trans>Cancel</Trans>
+            </ButtonText>
+          </Button>
+        </>
+      )}
+    </Dialog.Inner>
   )
 }

@@ -66,7 +66,7 @@ function GrowableBannerInner({
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [
       {
-        scale: interpolate(scrollY.value, [-150, 0], [2, 1], {
+        scale: interpolate(scrollY.get(), [-150, 0], [2, 1], {
           extrapolateRight: Extrapolation.CLAMP,
         }),
       },
@@ -76,7 +76,7 @@ function GrowableBannerInner({
   const animatedBlurViewProps = useAnimatedProps(() => {
     return {
       intensity: interpolate(
-        scrollY.value,
+        scrollY.get(),
         [-300, -65, -15],
         [50, 40, 0],
         Extrapolation.CLAMP,
@@ -85,16 +85,17 @@ function GrowableBannerInner({
   })
 
   const animatedSpinnerStyle = useAnimatedStyle(() => {
+    const scrollYValue = scrollY.get()
     return {
-      display: scrollY.value < 0 ? 'flex' : 'none',
+      display: scrollYValue < 0 ? 'flex' : 'none',
       opacity: interpolate(
-        scrollY.value,
+        scrollYValue,
         [-60, -15],
         [1, 0],
         Extrapolation.CLAMP,
       ),
       transform: [
-        {translateY: interpolate(scrollY.value, [-150, 0], [-75, 0])},
+        {translateY: interpolate(scrollYValue, [-150, 0], [-75, 0])},
         {rotate: '90deg'},
       ],
     }
@@ -103,7 +104,7 @@ function GrowableBannerInner({
   const animatedBackButtonStyle = useAnimatedStyle(() => ({
     transform: [
       {
-        translateY: interpolate(scrollY.value, [-150, 60], [-150, 60], {
+        translateY: interpolate(scrollY.get(), [-150, 60], [-150, 60], {
           extrapolateRight: Extrapolation.CLAMP,
         }),
       },
@@ -168,7 +169,7 @@ function useShouldAnimateSpinner({
   const stickyIsOverscrolled = useStickyToggle(isOverscrolled, 10)
 
   useAnimatedReaction(
-    () => scrollY.value < -5,
+    () => scrollY.get() < -5,
     (value, prevValue) => {
       if (value !== prevValue) {
         runOnJS(setIsOverscrolled)(value)

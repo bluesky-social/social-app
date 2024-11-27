@@ -18,7 +18,7 @@ import {msg, plural} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {IS_INTERNAL} from '#/lib/app-info'
-import {POST_CTRL_HITSLOP} from '#/lib/constants'
+import {DISCOVER_DEBUG_DIDS, POST_CTRL_HITSLOP} from '#/lib/constants'
 import {CountWheel} from '#/lib/custom-animations/CountWheel'
 import {AnimatedLikeIcon} from '#/lib/custom-animations/LikeIcon'
 import {useHaptics} from '#/lib/haptics'
@@ -85,6 +85,8 @@ let PostCtrls = ({
   const {sendInteraction} = useFeedFeedbackContext()
   const {captureAction} = useProgressGuideControls()
   const playHaptic = useHaptics()
+  const isDiscoverDebugUser =
+    IS_INTERNAL || DISCOVER_DEBUG_DIDS[currentAccount?.did ?? '']
   const isBlocked = Boolean(
     post.author.viewer?.blocking ||
       post.author.viewer?.blockedBy ||
@@ -105,7 +107,8 @@ let PostCtrls = ({
     [t],
   ) as StyleProp<ViewStyle>
 
-  const [isToggleLikeIcon, setIsToggleLikeIcon] = React.useState(false)
+  const [hasLikeIconBeenToggled, setHasLikeIconBeenToggled] =
+    React.useState(false)
 
   const onPressToggleLike = React.useCallback(async () => {
     if (isBlocked) {
@@ -117,7 +120,7 @@ let PostCtrls = ({
     }
 
     try {
-      setIsToggleLikeIcon(true)
+      setHasLikeIconBeenToggled(true)
       if (!post.viewer?.like) {
         playHaptic('Light')
         sendInteraction({
@@ -254,6 +257,7 @@ let PostCtrls = ({
               requireAuth(() => onPressReply())
             }
           }}
+          accessibilityRole="button"
           accessibilityLabel={plural(post.replyCount || 0, {
             one: 'Reply (# reply)',
             other: 'Reply (# replies)',
@@ -291,6 +295,7 @@ let PostCtrls = ({
           testID="likeBtn"
           style={btnStyle}
           onPress={() => requireAuth(() => onPressToggleLike())}
+          accessibilityRole="button"
           accessibilityLabel={
             post.viewer?.like
               ? plural(post.likeCount || 0, {
@@ -307,13 +312,13 @@ let PostCtrls = ({
           <AnimatedLikeIcon
             isLiked={Boolean(post.viewer?.like)}
             big={big}
-            isToggle={isToggleLikeIcon}
+            hasBeenToggled={hasLikeIconBeenToggled}
           />
           <CountWheel
             likeCount={post.likeCount ?? 0}
             big={big}
             isLiked={Boolean(post.viewer?.like)}
-            isToggle={isToggleLikeIcon}
+            hasBeenToggled={hasLikeIconBeenToggled}
           />
         </Pressable>
       </View>
@@ -330,6 +335,7 @@ let PostCtrls = ({
                   onShare()
                 }
               }}
+              accessibilityRole="button"
               accessibilityLabel={_(msg`Share`)}
               accessibilityHint=""
               hitSlop={POST_CTRL_HITSLOP}>
@@ -363,7 +369,7 @@ let PostCtrls = ({
           threadgateRecord={threadgateRecord}
         />
       </View>
-      {IS_INTERNAL && feedContext && (
+      {isDiscoverDebugUser && feedContext && (
         <Pressable
           accessible={false}
           style={{

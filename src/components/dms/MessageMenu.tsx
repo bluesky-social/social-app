@@ -62,7 +62,7 @@ export let MessageMenu = ({
       message.text,
       langPrefs.primaryLanguage,
     )
-    openLink(translatorUrl)
+    openLink(translatorUrl, true)
   }, [langPrefs.primaryLanguage, message.text, openLink])
 
   const onDelete = React.useCallback(() => {

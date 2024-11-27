@@ -46,7 +46,7 @@ export function Root({
   return <Context.Provider value={context}>{children}</Context.Provider>
 }
 
-export function Trigger({children, label}: TriggerProps) {
+export function Trigger({children, label, role = 'button'}: TriggerProps) {
   const {control} = React.useContext(Context)
   const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
   const {
@@ -70,6 +70,7 @@ export function Trigger({children, label}: TriggerProps) {
       onPressIn,
       onPressOut,
       accessibilityLabel: label,
+      accessibilityRole: role,
     },
   })
 }
