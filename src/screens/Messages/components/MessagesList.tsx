@@ -148,12 +148,6 @@ export function MessagesList({
   // we will not scroll whenever new items get prepended to the top.
   const onContentSizeChange = useCallback(
     (_: number, height: number) => {
-      // ignore very small changes
-      if (Math.abs(prevContentHeight.current - height) < 0.01) {
-        prevContentHeight.current = height
-        return
-      }
-
       // Because web does not have `maintainVisibleContentPosition` support, we will need to manually scroll to the
       // previous off whenever we add new content to the previous offset whenever we add new content to the list.
       if (isWeb && isAtTop.get() && hasScrolled) {
