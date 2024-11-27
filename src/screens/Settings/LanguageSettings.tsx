@@ -4,7 +4,11 @@ import RNPickerSelect, {PickerSelectProps} from 'react-native-picker-select'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {APP_LANGUAGES, LANGUAGES} from '#/lib/../locale/languages'
+import {
+  APP_LANGUAGES,
+  LANGUAGES,
+  LANGUAGES_MAP,
+} from '#/lib/../locale/languages'
 import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
 import {languageName, sanitizeAppLanguageSetting} from '#/locale/helpers'
 import {useModalControls} from '#/state/modals'
@@ -54,7 +58,7 @@ export function LanguageSettingsScreen({}: Props) {
   const myLanguages = useMemo(() => {
     return (
       langPrefs.contentLanguages
-        .map(lang => LANGUAGES.find(l => l.code2 === lang))
+        .map(lang => LANGUAGES_MAP[lang])
         .filter(Boolean)
         // @ts-ignore
         .map(l => languageName(l, langPrefs.appLanguage))
@@ -177,10 +181,10 @@ export function LanguageSettingsScreen({}: Props) {
                   placeholder={{}}
                   value={langPrefs.primaryLanguage}
                   onValueChange={onChangePrimaryLanguage}
-                  items={LANGUAGES.filter(l => Boolean(l.code2)).map(l => ({
+                  items={LANGUAGES.map(l => ({
                     label: languageName(l, langPrefs.appLanguage),
-                    value: l.code2,
-                    key: l.code2 + l.code3,
+                    value: l.code,
+                    key: l.code,
                   }))}
                   style={{
                     inputAndroid: {

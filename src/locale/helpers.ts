@@ -6,30 +6,11 @@ import {hasProp} from '#/lib/type-guards'
 import {
   AppLanguage,
   type Language,
-  LANGUAGES_MAP_CODE2,
-  LANGUAGES_MAP_CODE3,
+  LANGUAGES_MAP,
 } from './languages'
 
-export function code2ToCode3(lang: string): string {
-  if (lang.length === 2) {
-    return LANGUAGES_MAP_CODE2[lang]?.code3 || lang
-  }
-  return lang
-}
-
-export function code3ToCode2(lang: string): string {
-  if (lang.length === 3) {
-    return LANGUAGES_MAP_CODE3[lang]?.code2 || lang
-  }
-  return lang
-}
-
-export function code3ToCode2Strict(lang: string): string | undefined {
-  if (lang.length === 3) {
-    return LANGUAGES_MAP_CODE3[lang]?.code2
-  }
-
-  return undefined
+function canonicalCode(lang: string): string {
+  return LANGUAGES_MAP[lang]?.code || lang
 }
 
 function getLocalizedLanguage(
@@ -62,14 +43,13 @@ export function languageName(language: Language, appLang: string): string {
     return language.name
   }
 
-  return getLocalizedLanguage(language.code2, appLang) || language.name
+  return getLocalizedLanguage(language.code, appLang) || language.name
 }
 
-export function codeToLanguageName(lang2or3: string, appLang: string): string {
-  const code2 = code3ToCode2(lang2or3)
-  const knownLanguage = LANGUAGES_MAP_CODE2[code2]
+export function codeToLanguageName(lang: string, appLang: string): string {
+  const knownLanguage = LANGUAGES_MAP[lang]
 
-  return knownLanguage ? languageName(knownLanguage, appLang) : code2
+  return knownLanguage ? languageName(knownLanguage, appLang) : lang
 }
 
 export function getPostLanguage(
@@ -89,6 +69,8 @@ export function getPostLanguage(
     candidates = post.record.langs
   }
 
+  candidates = candidates.map(canonicalCode)
+
   // if there's only one declared language, use that
   if (candidates?.length === 1) {
     return candidates[0]
@@ -106,13 +88,13 @@ export function getPostLanguage(
   if (candidates?.length) {
     langsProbabilityMap = langsProbabilityMap.filter(
       ([lang, _probability]: [string, number]) => {
-        return candidates.includes(code3ToCode2(lang))
+        return candidates.includes(canonicalCode(lang))
       },
     )
   }
 
   if (langsProbabilityMap[0]) {
-    return code3ToCode2(langsProbabilityMap[0][0])
+    return canonicalCode(langsProbabilityMap[0][0])
   }
 }
 

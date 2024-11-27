@@ -5,12 +5,12 @@ import {toPostLanguages, useLanguagePrefs} from '#/state/preferences/languages'
 import {ToggleButton} from '#/view/com/util/forms/ToggleButton'
 
 export function LanguageToggle({
-  code2,
+  code,
   name,
   onPress,
   langType,
 }: {
-  code2: string
+  code: string
   name: string
   onPress: () => void
   langType: 'contentLanguages' | 'postLanguages'
@@ -22,7 +22,7 @@ export function LanguageToggle({
     langType === 'contentLanguages'
       ? langPrefs.contentLanguages
       : toPostLanguages(langPrefs.postLanguage)
-  const isSelected = values.includes(code2)
+  const isSelected = values.includes(code)
 
   // enforce a max of 3 selections for post languages
   let isDisabled = false
