@@ -1,3 +1,37 @@
+diff --git a/node_modules/@mattermost/react-native-paste-input/android/src/main/jni/CMakeLists.txt b/node_modules/@mattermost/react-native-paste-input/android/src/main/jni/CMakeLists.txt
+index f9e4dfc..c71ef6e 100644
+--- a/node_modules/@mattermost/react-native-paste-input/android/src/main/jni/CMakeLists.txt
++++ b/node_modules/@mattermost/react-native-paste-input/android/src/main/jni/CMakeLists.txt
+@@ -20,26 +20,10 @@ target_include_directories(react_codegen_PasteTextInputSpecs PUBLIC . react/rend
+ 
+ target_link_libraries(
+   react_codegen_PasteTextInputSpecs
+-  fbjni
+-  folly_runtime
+-  glog
++  reactnative
+   jsi
+-  react_codegen_rncore
+-  react_debug
+-  react_nativemodule_core
+-  react_featureflags
+-  react_render_textlayoutmanager
+-  react_render_componentregistry
+-  react_render_core
+-  react_render_debug
+-  react_render_graphics
+-  react_render_imagemanager
+-  react_render_mapbuffer
+-  react_utils
+-  rrc_view
+-  rrc_text
+-  rrc_textinput
+-  yoga
++  fbjni
++  android
+   ${log-lib}
+ )
+ 
 diff --git a/node_modules/@mattermost/react-native-paste-input/ios/PasteInputView.m b/node_modules/@mattermost/react-native-paste-input/ios/PasteInputView.m
 index e916023..811574c 100644
 --- a/node_modules/@mattermost/react-native-paste-input/ios/PasteInputView.m
@@ -13,23 +47,6 @@ index e916023..811574c 100644
 +
      [self addSubview:_backedTextInputView];
    }
- 
-diff --git a/node_modules/@mattermost/react-native-paste-input/ios/PasteTextInput.h b/node_modules/@mattermost/react-native-paste-input/ios/PasteTextInput.h
-index de0ed87..057cb11 100644
---- a/node_modules/@mattermost/react-native-paste-input/ios/PasteTextInput.h
-+++ b/node_modules/@mattermost/react-native-paste-input/ios/PasteTextInput.h
-@@ -1,10 +1,10 @@
- #ifdef RCT_NEW_ARCH_ENABLED
--#import <React/RCTViewComponentView.h>
-+#import <React/RCTTextInputComponentView.h>
- #import <UIKit/UIKit.h>
- 
- NS_ASSUME_NONNULL_BEGIN
- 
--@interface PasteTextInput : RCTViewComponentView
-+@interface PasteTextInput : RCTTextInputComponentView
- 
- @end
  
 diff --git a/node_modules/@mattermost/react-native-paste-input/ios/PasteTextInput.mm b/node_modules/@mattermost/react-native-paste-input/ios/PasteTextInput.mm
 index 65aa7d9..c088635 100644
