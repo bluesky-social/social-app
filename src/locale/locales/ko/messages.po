@@ -3205,7 +3205,7 @@ msgstr "호스팅 제공자"
 #: src/screens/Settings/ThreadPreferences.tsx:59
 #: src/screens/Settings/ThreadPreferences.tsx:62
 msgid "Hot replies first"
-msgstr "인기 답글 먼저 표시"
+msgstr "인기 순"
 
 #: src/view/com/modals/InAppBrowserConsent.tsx:41
 msgid "How should we open this link?"
