@@ -1,10 +1,7 @@
 import React, {useCallback, useRef} from 'react'
-import {FlatList, LayoutChangeEvent, View} from 'react-native'
-import {
-  KeyboardStickyView,
-  useKeyboardHandler,
-} from 'react-native-keyboard-controller'
-import {
+import {LayoutChangeEvent, View} from 'react-native'
+import {useKeyboardHandler} from 'react-native-keyboard-controller'
+import Animated, {
   runOnJS,
   scrollTo,
   useAnimatedRef,
@@ -33,7 +30,7 @@ import {
   EmojiPicker,
   EmojiPickerState,
 } from '#/view/com/composer/text-input/web/EmojiPicker.web'
-import {List} from '#/view/com/util/List'
+import {List, ListMethods} from '#/view/com/util/List'
 import {ChatDisabled} from '#/screens/Messages/components/ChatDisabled'
 import {MessageInput} from '#/screens/Messages/components/MessageInput'
 import {MessageListError} from '#/screens/Messages/components/MessageListError'
@@ -94,7 +91,7 @@ export function MessagesList({
   const getPost = useGetPost()
   const {embedUri, setEmbed} = useMessageEmbed()
 
-  const flatListRef = useAnimatedRef<FlatList>()
+  const flatListRef = useAnimatedRef<ListMethods>()
 
   const [newMessagesPill, setNewMessagesPill] = React.useState({
     show: false,
@@ -270,8 +267,12 @@ export function MessagesList({
           scrollTo(flatListRef, 0, 1e7, false)
         }
       },
-      onEnd: () => {
+      onEnd: e => {
         'worklet'
+        keyboardHeight.set(e.height)
+        if (e.height > bottomOffset) {
+          scrollTo(flatListRef, 0, 1e7, false)
+        }
         keyboardIsOpening.set(false)
       },
     },
@@ -279,8 +280,11 @@ export function MessagesList({
   )
 
   const animatedListStyle = useAnimatedStyle(() => ({
-    marginBottom:
-      keyboardHeight.get() > bottomOffset ? keyboardHeight.get() : bottomOffset,
+    marginBottom: Math.max(keyboardHeight.get(), bottomOffset),
+  }))
+
+  const animatedStickyViewStyle = useAnimatedStyle(() => ({
+    transform: [{translateY: -Math.max(keyboardHeight.get(), bottomOffset)}],
   }))
 
   // -- Message sending
@@ -422,7 +426,7 @@ export function MessagesList({
           }
         />
       </ScrollProvider>
-      <KeyboardStickyView offset={{closed: -bottomOffset, opened: 0}}>
+      <Animated.View style={animatedStickyViewStyle}>
         {convoState.status === ConvoStatus.Disabled ? (
           <ChatDisabled />
         ) : blocked ? (
@@ -441,7 +445,7 @@ export function MessagesList({
             </MessageInput>
           </>
         )}
-      </KeyboardStickyView>
+      </Animated.View>
 
       {isWeb && (
         <EmojiPicker

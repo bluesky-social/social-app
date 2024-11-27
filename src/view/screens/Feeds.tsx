@@ -1,5 +1,5 @@
 import React from 'react'
-import {ActivityIndicator, type FlatList, StyleSheet, View} from 'react-native'
+import {ActivityIndicator, StyleSheet, View} from 'react-native'
 import {AppBskyFeedDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -25,7 +25,7 @@ import {useComposerControls} from '#/state/shell/composer'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {FAB} from '#/view/com/util/fab/FAB'
 import {TextLink} from '#/view/com/util/Link'
-import {List} from '#/view/com/util/List'
+import {List, ListMethods} from '#/view/com/util/List'
 import {FeedFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {Text} from '#/view/com/util/text/Text'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
@@ -130,7 +130,7 @@ export function FeedsScreen(_props: Props) {
     error: searchError,
   } = useSearchPopularFeedsMutation()
   const {hasSession} = useSession()
-  const listRef = React.useRef<FlatList>(null)
+  const listRef = React.useRef<ListMethods>(null)
 
   /**
    * A search query is present. We may not have search results yet.
