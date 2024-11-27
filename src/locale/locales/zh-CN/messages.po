@@ -2998,8 +2998,8 @@ msgstr "返回上一步"
 #: src/components/dms/ReportDialog.tsx:149
 #: src/components/ReportDialog/SelectReportOptionView.tsx:80
 #: src/components/ReportDialog/SubmitView.tsx:109
-#: src/screens/Onboarding/Layout.tsx:103
-#: src/screens/Onboarding/Layout.tsx:192
+#: src/screens/Onboarding/Layout.tsx:104
+#: src/screens/Onboarding/Layout.tsx:193
 #: src/screens/Signup/BackNextButtons.tsx:35
 msgid "Go back to previous step"
 msgstr "返回上一步"
@@ -5543,7 +5543,7 @@ msgstr "返回上一页"
 msgid "Save"
 msgstr "保存"
 
-#: src/view/com/lightbox/ImageViewing/index.tsx:555
+#: src/view/com/lightbox/ImageViewing/index.tsx:576
 #: src/view/com/modals/CreateOrEditList.tsx:325
 msgctxt "action"
 msgid "Save"
@@ -5862,7 +5862,7 @@ msgstr "设置出生日期"
 msgid "Set new password"
 msgstr "设置新密码"
 
-#: src/screens/Onboarding/Layout.tsx:49
+#: src/screens/Onboarding/Layout.tsx:50
 msgid "Set up your account"
 msgstr "设置你的账户"
 
@@ -5897,7 +5897,7 @@ msgstr "性暗示"
 msgid "Share"
 msgstr "分享"
 
-#: src/view/com/lightbox/ImageViewing/index.tsx:564
+#: src/view/com/lightbox/ImageViewing/index.tsx:585
 msgctxt "action"
 msgid "Share"
 msgstr "分享"
@@ -6513,7 +6513,7 @@ msgstr "以下标记已应用到你的账户。"
 msgid "The following labels were applied to your content."
 msgstr "以下标记已应用到你发布的内容。"
 
-#: src/screens/Onboarding/Layout.tsx:59
+#: src/screens/Onboarding/Layout.tsx:60
 msgid "The following steps will help customize your Bluesky experience."
 msgstr "以下步骤将帮助你自定义 Bluesky 体验。"
 
@@ -8046,4 +8046,3 @@ msgstr "你的举报将发送至 Bluesky 内容审核服务"
 #: src/screens/Signup/index.tsx:142
 msgid "Your user handle"
 msgstr "你的账户代码"
-

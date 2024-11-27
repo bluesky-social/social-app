@@ -202,7 +202,7 @@ msgstr ""
 #~ msgstr "{diffSeconds, plural, one {Sekunde} other {Sekunden}}"
 
 #: src/lib/generate-starterpack.ts:108
-#: src/screens/StarterPack/Wizard/index.tsx:183
+#: src/screens/StarterPack/Wizard/index.tsx:180
 msgid "{displayName}'s Starter Pack"
 msgstr "Startpaket von {displayName}"
 
@@ -341,12 +341,12 @@ msgstr "{profileName} ist vor {0} Bluesky mit einem Startpaket beigetreten"
 #~ msgid "<0/> members"
 #~ msgstr "<0/> Mitglieder"
 
-#: src/screens/StarterPack/Wizard/index.tsx:475
+#: src/screens/StarterPack/Wizard/index.tsx:472
 msgctxt "profiles"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
 msgstr "<0>{0}, </0><1>{1} </1>und {2, plural, one {# weitere Person} other {# weitere Personen}} sind in deinem Startpaket enthalten"
 
-#: src/screens/StarterPack/Wizard/index.tsx:528
+#: src/screens/StarterPack/Wizard/index.tsx:525
 msgctxt "feeds"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
 msgstr "<0>{0}, </0><1>{1} </1>und {2, plural, one {# weiterer Feed} other {# weitere Feeds}} sind in deinem Startpaket enthalten"
@@ -359,11 +359,11 @@ msgstr "<0>{0}</0> {1, plural, one {Follower} other {Follower}}"
 msgid "<0>{0}</0> {1, plural, one {following} other {following}}"
 msgstr "<0>{0}</0> {1, plural, one {Folge ich} other {Folge ich}}"
 
-#: src/screens/StarterPack/Wizard/index.tsx:516
+#: src/screens/StarterPack/Wizard/index.tsx:513
 msgid "<0>{0}</0> and<1> </1><2>{1} </2>are included in your starter pack"
 msgstr "<0>{0}</0> und<1> </1><2>{1} </2>sind in deinem Startpaket enthalten"
 
-#: src/screens/StarterPack/Wizard/index.tsx:509
+#: src/screens/StarterPack/Wizard/index.tsx:506
 msgid "<0>{0}</0> is included in your starter pack"
 msgstr "<0>{0}</0> ist in deinem Startpaket enthalten"
 
@@ -383,7 +383,7 @@ msgstr ""
 #~ msgid "<0>Not Applicable.</0> This warning is only available for posts with media attached."
 #~ msgstr "<0>Unzutreffend.</0> Diese Warnung ist nur für Beiträge mit angehängten Medien verfügbar."
 
-#: src/screens/StarterPack/Wizard/index.tsx:466
+#: src/screens/StarterPack/Wizard/index.tsx:463
 msgid "<0>You</0> and<1> </1><2>{0} </2>are included in your starter pack"
 msgstr "<0>Du</0> und<1> </1><2>{0} </2>seid in deinem Startpaket enthalten"
 
@@ -419,7 +419,7 @@ msgid "About"
 msgstr "Über"
 
 #: src/view/com/util/ViewHeader.tsx:89
-#: src/view/screens/Search/Search.tsx:883
+#: src/view/screens/Search/Search.tsx:884
 msgid "Access navigation links and settings"
 msgstr "Zugriff auf Navigationslinks und Einstellungen"
 
@@ -499,7 +499,7 @@ msgstr "Stummschaltung für Konto aufgehoben"
 msgid "Add"
 msgstr "Hinzufügen"
 
-#: src/screens/StarterPack/Wizard/index.tsx:577
+#: src/screens/StarterPack/Wizard/index.tsx:574
 msgid "Add {0} more to continue"
 msgstr "Füge {0} weitere hinzu, um fortzufahren"
 
@@ -570,7 +570,7 @@ msgstr ""
 msgid "Add recommended feeds"
 msgstr "Empfohlene Feeds hinzufügen"
 
-#: src/screens/StarterPack/Wizard/index.tsx:497
+#: src/screens/StarterPack/Wizard/index.tsx:494
 msgid "Add some feeds to your starter pack!"
 msgstr "Füge deinem Startpaket einige Feeds hinzu!"
 
@@ -658,7 +658,7 @@ msgstr "Erlaube den Zugriff auf deine Direktnachrichten"
 msgid "Allow new messages from"
 msgstr "Erlaube neue Nachrichten von"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:363
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:359
 msgid "Allow replies from:"
 msgstr ""
 
@@ -983,8 +983,8 @@ msgstr "Mindestens 3 Zeichen"
 msgid "Autoplay options have moved to the <0>Content and Media settings</0>."
 msgstr ""
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:82
 #: src/screens/Settings/ContentAndMediaSettings.tsx:88
+#: src/screens/Settings/ContentAndMediaSettings.tsx:94
 msgid "Autoplay videos and GIFs"
 msgstr ""
 
@@ -1003,7 +1003,7 @@ msgstr ""
 #: src/screens/Messages/components/ChatDisabled.tsx:134
 #: src/screens/Profile/Header/Shell.tsx:112
 #: src/screens/Signup/BackNextButtons.tsx:41
-#: src/screens/StarterPack/Wizard/index.tsx:307
+#: src/screens/StarterPack/Wizard/index.tsx:304
 #: src/view/com/util/ViewHeader.tsx:87
 msgid "Back"
 msgstr "Zurück"
@@ -1027,7 +1027,7 @@ msgstr ""
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:79
 #: src/components/dms/MessageProfileButton.tsx:89
-#: src/screens/Messages/Conversation.tsx:219
+#: src/screens/Messages/Conversation.tsx:210
 msgid "Before you may message another user, you must first verify your email."
 msgstr ""
 
@@ -1097,7 +1097,7 @@ msgstr "Blockierte Konten können nicht in deinen Threads antworten, dich erwäh
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you. You will not see their content and they will be prevented from seeing yours."
 msgstr "Blockierte Konten können nicht in deinen Threads antworten, dich erwähnen oder anderweitig mit dir interagieren. Du wirst ihre Inhalte nicht sehen und sie werden daran gehindert, deine zu sehen."
 
-#: src/view/com/post-thread/PostThread.tsx:412
+#: src/view/com/post-thread/PostThread.tsx:421
 msgid "Blocked post."
 msgstr "Blockierter Beitrag."
 
@@ -1261,7 +1261,7 @@ msgstr "Kamera"
 #: src/view/com/modals/VerifyEmail.tsx:255
 #: src/view/com/modals/VerifyEmail.tsx:261
 #: src/view/com/util/post-ctrls/RepostButton.tsx:203
-#: src/view/screens/Search/Search.tsx:911
+#: src/view/screens/Search/Search.tsx:912
 msgid "Cancel"
 msgstr "Abbrechen"
 
@@ -1298,7 +1298,7 @@ msgid "Cancel reactivation and log out"
 msgstr "Reaktivierung abbrechen und abmelden"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:88
-#: src/view/screens/Search/Search.tsx:903
+#: src/view/screens/Search/Search.tsx:904
 msgid "Cancel search"
 msgstr "Suche abbrechen"
 
@@ -1429,7 +1429,7 @@ msgstr "Überprüfe deinen Posteingang auf eine E-Mail mit dem Bestätigungscode
 msgid "Choose domain verification method"
 msgstr ""
 
-#: src/screens/StarterPack/Wizard/index.tsx:199
+#: src/screens/StarterPack/Wizard/index.tsx:196
 msgid "Choose Feeds"
 msgstr "Feeds wählen"
 
@@ -1437,7 +1437,7 @@ msgstr "Feeds wählen"
 msgid "Choose for me"
 msgstr "Wähle für mich"
 
-#: src/screens/StarterPack/Wizard/index.tsx:195
+#: src/screens/StarterPack/Wizard/index.tsx:192
 msgid "Choose People"
 msgstr "Menschen auswählen"
 
@@ -1728,7 +1728,7 @@ msgid "Content and media"
 msgstr "Inhalte und Medien"
 
 #: src/Navigation.tsx:353
-#: src/screens/Settings/ContentAndMediaSettings.tsx:44
+#: src/screens/Settings/ContentAndMediaSettings.tsx:35
 msgid "Content and Media"
 msgstr ""
 
@@ -2133,7 +2133,7 @@ msgstr "Gelöscht"
 msgid "Deleted Account"
 msgstr "Gelöschter Account"
 
-#: src/view/com/post-thread/PostThread.tsx:398
+#: src/view/com/post-thread/PostThread.tsx:407
 msgid "Deleted post."
 msgstr "Gelöschter Beitrag."
 
@@ -2262,7 +2262,7 @@ msgstr "Entdecke neue Feeds"
 msgid "Discover New Feeds"
 msgstr "Entdecke neue Feeds"
 
-#: src/components/Dialog/index.tsx:318
+#: src/components/Dialog/index.tsx:311
 msgid "Dismiss"
 msgstr ""
 
@@ -2363,7 +2363,7 @@ msgstr "Fertig"
 msgid "Done{extraText}"
 msgstr "Fertig{extraText}"
 
-#: src/components/Dialog/index.tsx:319
+#: src/components/Dialog/index.tsx:312
 msgid "Double tap to close the dialog"
 msgstr ""
 
@@ -2438,8 +2438,8 @@ msgstr "Jeder Code funktioniert einmal. Du erhältst regelmäßig neue Einladung
 
 #: src/screens/Settings/AccountSettings.tsx:104
 #: src/screens/StarterPack/StarterPackScreen.tsx:574
-#: src/screens/StarterPack/Wizard/index.tsx:560
-#: src/screens/StarterPack/Wizard/index.tsx:567
+#: src/screens/StarterPack/Wizard/index.tsx:557
+#: src/screens/StarterPack/Wizard/index.tsx:564
 #: src/view/screens/Feeds.tsx:386
 #: src/view/screens/Feeds.tsx:454
 msgid "Edit"
@@ -2740,7 +2740,7 @@ msgstr "Fehler beim Empfang der Captcha-Antwort."
 msgid "Error:"
 msgstr "Fehler:"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:368
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:364
 msgid "Everybody"
 msgstr "Alle"
 
@@ -2848,8 +2848,8 @@ msgstr "Meine Daten exportieren"
 msgid "Export My Data"
 msgstr "Meine Daten exportieren"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:73
-#: src/screens/Settings/ContentAndMediaSettings.tsx:76
+#: src/screens/Settings/ContentAndMediaSettings.tsx:64
+#: src/screens/Settings/ContentAndMediaSettings.tsx:67
 msgid "External media"
 msgstr ""
 
@@ -2885,8 +2885,8 @@ msgstr ""
 msgid "Failed to create app password. Please try again."
 msgstr ""
 
-#: src/screens/StarterPack/Wizard/index.tsx:238
-#: src/screens/StarterPack/Wizard/index.tsx:246
+#: src/screens/StarterPack/Wizard/index.tsx:235
+#: src/screens/StarterPack/Wizard/index.tsx:243
 msgid "Failed to create starter pack"
 msgstr "Startpaket konnte nicht erstellt werden"
 
@@ -3053,7 +3053,7 @@ msgstr "Finde Beiträge und Nutzer auf Bluesky"
 #~ msgid "Fine-tune the discussion threads."
 #~ msgstr "Passe die Diskussions-Threads an."
 
-#: src/screens/StarterPack/Wizard/index.tsx:200
+#: src/screens/StarterPack/Wizard/index.tsx:197
 msgid "Finish"
 msgstr "Beenden"
 
@@ -3149,7 +3149,7 @@ msgstr "Gefolgt von <0>{0}</0> und <1>{1}</1>"
 msgid "Followed by <0>{0}</0>, <1>{1}</1>, and {2, plural, one {# other} other {# others}}"
 msgstr "Gefolgt von <0>{0}</0>, <1>{1}</1> und {2, plural, one {# anderer} other {# andere}}"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:407
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:403
 msgid "Followed users"
 msgstr "Benutzer, denen ich folge"
 
@@ -3201,8 +3201,8 @@ msgstr "Ich folge {0}"
 msgid "Following {name}"
 msgstr "Ich folge {name}"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:65
-#: src/screens/Settings/ContentAndMediaSettings.tsx:68
+#: src/screens/Settings/ContentAndMediaSettings.tsx:56
+#: src/screens/Settings/ContentAndMediaSettings.tsx:59
 msgid "Following feed preferences"
 msgstr "Following-Feed-Einstellungen"
 
@@ -3355,13 +3355,13 @@ msgstr ""
 #: src/components/dms/ReportDialog.tsx:149
 #: src/components/ReportDialog/SelectReportOptionView.tsx:80
 #: src/components/ReportDialog/SubmitView.tsx:109
-#: src/screens/Onboarding/Layout.tsx:103
-#: src/screens/Onboarding/Layout.tsx:192
+#: src/screens/Onboarding/Layout.tsx:104
+#: src/screens/Onboarding/Layout.tsx:193
 #: src/screens/Signup/BackNextButtons.tsx:35
 msgid "Go back to previous step"
 msgstr "Zum vorherigen Schritt zurückgehen"
 
-#: src/screens/StarterPack/Wizard/index.tsx:308
+#: src/screens/StarterPack/Wizard/index.tsx:305
 msgid "Go back to the previous step"
 msgstr ""
 
@@ -3459,8 +3459,8 @@ msgid "Help people know you're not a bot by uploading a picture or creating an a
 msgstr ""
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:127
-msgid "Helps external sites estimate traffic from Bluesky."
-msgstr ""
+#~ msgid "Helps external sites estimate traffic from Bluesky."
+#~ msgstr ""
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:140
 #~ msgid "Here are some accounts for you to follow"
@@ -3823,7 +3823,7 @@ msgstr ""
 msgid "It's correct"
 msgstr ""
 
-#: src/screens/StarterPack/Wizard/index.tsx:461
+#: src/screens/StarterPack/Wizard/index.tsx:458
 msgid "It's just you right now! Add more people to your starter pack by searching above."
 msgstr ""
 
@@ -4233,8 +4233,8 @@ msgstr ""
 msgid "Make sure this is where you intend to go!"
 msgstr "Vergewissere dich, dass du auch wirklich dorthin gehen willst!"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:49
-#: src/screens/Settings/ContentAndMediaSettings.tsx:52
+#: src/screens/Settings/ContentAndMediaSettings.tsx:40
+#: src/screens/Settings/ContentAndMediaSettings.tsx:43
 msgid "Manage saved feeds"
 msgstr ""
 
@@ -4267,13 +4267,13 @@ msgstr ""
 msgid "mentioned users"
 msgstr "erwähnte Benutzer"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:397
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:393
 msgid "Mentioned users"
 msgstr "Erwähnte Benutzer"
 
 #: src/components/Menu/index.tsx:95
 #: src/view/com/util/ViewHeader.tsx:87
-#: src/view/screens/Search/Search.tsx:882
+#: src/view/screens/Search/Search.tsx:883
 msgid "Menu"
 msgstr "Menü"
 
@@ -4726,10 +4726,10 @@ msgstr "Aktuelles"
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:157
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:165
 #: src/screens/Signup/BackNextButtons.tsx:67
-#: src/screens/StarterPack/Wizard/index.tsx:192
-#: src/screens/StarterPack/Wizard/index.tsx:196
-#: src/screens/StarterPack/Wizard/index.tsx:367
-#: src/screens/StarterPack/Wizard/index.tsx:374
+#: src/screens/StarterPack/Wizard/index.tsx:189
+#: src/screens/StarterPack/Wizard/index.tsx:193
+#: src/screens/StarterPack/Wizard/index.tsx:364
+#: src/screens/StarterPack/Wizard/index.tsx:371
 #: src/view/com/modals/ChangePassword.tsx:254
 #: src/view/com/modals/ChangePassword.tsx:256
 msgid "Next"
@@ -4771,7 +4771,7 @@ msgstr ""
 msgid "No featured GIFs found. There may be an issue with Tenor."
 msgstr ""
 
-#: src/screens/StarterPack/Wizard/StepFeeds.tsx:118
+#: src/screens/StarterPack/Wizard/StepFeeds.tsx:119
 msgid "No feeds found. Try searching for something else."
 msgstr ""
 
@@ -4859,7 +4859,7 @@ msgstr ""
 msgid "No thanks"
 msgstr "Nein danke"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:379
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:375
 msgid "Nobody"
 msgstr "Niemand"
 
@@ -4881,7 +4881,7 @@ msgstr ""
 msgid "Nobody has reposted this yet. Maybe you should be the first!"
 msgstr ""
 
-#: src/screens/StarterPack/Wizard/StepProfiles.tsx:102
+#: src/screens/StarterPack/Wizard/StepProfiles.tsx:103
 msgid "Nobody was found. Try searching for someone else."
 msgstr ""
 
@@ -5348,7 +5348,7 @@ msgstr ""
 msgid "Options:"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:392
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:388
 msgid "Or combine these options:"
 msgstr "Oder kombiniere diese Optionen:"
 
@@ -5608,7 +5608,7 @@ msgctxt "action"
 msgid "Post"
 msgstr "Beitrag"
 
-#: src/view/com/post-thread/PostThread.tsx:481
+#: src/view/com/post-thread/PostThread.tsx:490
 msgctxt "description"
 msgid "Post"
 msgstr "Beitrag"
@@ -5637,7 +5637,7 @@ msgstr "Beitrag gelöscht"
 msgid "Post failed to upload. Please check your Internet connection and try again."
 msgstr ""
 
-#: src/view/com/post-thread/PostThread.tsx:212
+#: src/view/com/post-thread/PostThread.tsx:221
 msgid "Post hidden"
 msgstr "Beitrag ausgeblendet"
 
@@ -5663,8 +5663,8 @@ msgstr "Beitragssprache"
 msgid "Post Languages"
 msgstr "Beitragssprachen"
 
-#: src/view/com/post-thread/PostThread.tsx:207
-#: src/view/com/post-thread/PostThread.tsx:219
+#: src/view/com/post-thread/PostThread.tsx:216
+#: src/view/com/post-thread/PostThread.tsx:228
 msgid "Post not found"
 msgstr "Beitrag nicht gefunden"
 
@@ -5868,7 +5868,6 @@ msgstr ""
 msgid "Quote post was successfully detached"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:317
 #: src/view/com/util/post-ctrls/RepostButton.tsx:167
 #: src/view/com/util/post-ctrls/RepostButton.tsx:189
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:84
@@ -5876,7 +5875,7 @@ msgstr ""
 msgid "Quote posts disabled"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:315
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:314
 msgid "Quote posts enabled"
 msgstr ""
 
@@ -5937,7 +5936,7 @@ msgstr "Grund: "
 #~ msgid "Reason: {0}"
 #~ msgstr "Grund: {0}"
 
-#: src/view/screens/Search/Search.tsx:1057
+#: src/view/screens/Search/Search.tsx:1058
 msgid "Recent Searches"
 msgstr ""
 
@@ -6046,11 +6045,11 @@ msgstr "Bild entfernen"
 msgid "Remove mute word from your list"
 msgstr "Stummgeschaltetes Wort aus deiner Liste entfernen"
 
-#: src/view/screens/Search/Search.tsx:1101
+#: src/view/screens/Search/Search.tsx:1102
 msgid "Remove profile"
 msgstr "Profil entfernen"
 
-#: src/view/screens/Search/Search.tsx:1103
+#: src/view/screens/Search/Search.tsx:1104
 msgid "Remove profile from search history"
 msgstr "Profil vom Suchverlauf entfernen"
 
@@ -6167,11 +6166,11 @@ msgstr ""
 msgid "Reply Hidden by You"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:359
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:355
 msgid "Reply settings"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:344
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:340
 msgid "Reply settings are chosen by the author of the thread"
 msgstr ""
 
@@ -6474,8 +6473,8 @@ msgid "Returns to previous page"
 msgstr ""
 
 #: src/components/dialogs/BirthDateSettings.tsx:124
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:442
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:448
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:438
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:444
 #: src/components/StarterPack/QrCodeDialog.tsx:185
 #: src/screens/Profile/Header/EditProfileDialog.tsx:238
 #: src/screens/Profile/Header/EditProfileDialog.tsx:252
@@ -6492,7 +6491,7 @@ msgstr ""
 msgid "Save"
 msgstr "Speichern"
 
-#: src/view/com/lightbox/ImageViewing/index.tsx:555
+#: src/view/com/lightbox/ImageViewing/index.tsx:576
 #: src/view/com/modals/CreateOrEditList.tsx:325
 msgctxt "action"
 msgid "Save"
@@ -6602,7 +6601,7 @@ msgstr "Suche"
 msgid "Search for \"{query}\""
 msgstr "Nach \"{query}\" suchen"
 
-#: src/view/screens/Search/Search.tsx:1000
+#: src/view/screens/Search/Search.tsx:1001
 msgid "Search for \"{searchText}\""
 msgstr ""
 
@@ -6614,7 +6613,7 @@ msgstr ""
 #~ msgid "Search for all posts with tag {displayTag}"
 #~ msgstr "Nach allen Beiträgen mit dem Tag {displayTag} suchen"
 
-#: src/screens/StarterPack/Wizard/index.tsx:500
+#: src/screens/StarterPack/Wizard/index.tsx:497
 msgid "Search for feeds that you want to suggest to others."
 msgstr ""
 
@@ -6818,8 +6817,8 @@ msgid "Send a neat website!"
 msgstr ""
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:118
-msgid "Send Bluesky referrer"
-msgstr ""
+#~ msgid "Send Bluesky referrer"
+#~ msgstr ""
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:232
 msgid "Send Confirmation"
@@ -6951,7 +6950,7 @@ msgstr "Neues Passwort festlegen"
 #~ msgid "Set this setting to \"Yes\" to show samples of your saved feeds in your Following feed. This is an experimental feature."
 #~ msgstr "Setze diese Einstellung auf \"Ja\", um Beispiele für deine gespeicherten Feeds in deinem Following-Feed anzuzeigen. Dies ist eine experimentelle Funktion."
 
-#: src/screens/Onboarding/Layout.tsx:49
+#: src/screens/Onboarding/Layout.tsx:50
 msgid "Set up your account"
 msgstr "Dein Konto einrichten"
 
@@ -7031,7 +7030,7 @@ msgstr ""
 msgid "Share"
 msgstr "Teilen"
 
-#: src/view/com/lightbox/ImageViewing/index.tsx:564
+#: src/view/com/lightbox/ImageViewing/index.tsx:585
 msgctxt "action"
 msgid "Share"
 msgstr "Teilen"
@@ -7386,7 +7385,7 @@ msgid "Similar accounts"
 msgstr ""
 
 #: src/screens/Onboarding/StepInterests/index.tsx:231
-#: src/screens/StarterPack/Wizard/index.tsx:200
+#: src/screens/StarterPack/Wizard/index.tsx:197
 msgid "Skip"
 msgstr "Überspringen"
 
@@ -7415,7 +7414,7 @@ msgstr ""
 #~ msgid "Some subtitle"
 #~ msgstr ""
 
-#: src/screens/Messages/Conversation.tsx:112
+#: src/screens/Messages/Conversation.tsx:103
 msgid "Something went wrong"
 msgstr ""
 
@@ -7436,7 +7435,7 @@ msgid "Something went wrong!"
 msgstr "Es ist ein Fehler aufgetreten."
 
 #: src/App.native.tsx:113
-#: src/App.web.tsx:95
+#: src/App.web.tsx:94
 msgid "Sorry! Your session expired. Please log in again."
 msgstr "Entschuldigung! Deine Sitzung ist abgelaufen. Bitte logge dich erneut ein."
 
@@ -7478,8 +7477,8 @@ msgid "Spam; excessive mentions or replies"
 msgstr ""
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:112
-msgid "Specify Bluesky as a referer"
-msgstr ""
+#~ msgid "Specify Bluesky as a referer"
+#~ msgstr ""
 
 #: src/screens/Onboarding/index.tsx:27
 #: src/screens/Onboarding/state.ts:100
@@ -7508,7 +7507,7 @@ msgstr ""
 
 #: src/Navigation.tsx:393
 #: src/Navigation.tsx:398
-#: src/screens/StarterPack/Wizard/index.tsx:191
+#: src/screens/StarterPack/Wizard/index.tsx:188
 msgid "Starter Pack"
 msgstr ""
 
@@ -7791,8 +7790,8 @@ msgstr "Dieser Handle ist bereits besetzt."
 #: src/screens/StarterPack/StarterPackScreen.tsx:104
 #: src/screens/StarterPack/StarterPackScreen.tsx:148
 #: src/screens/StarterPack/StarterPackScreen.tsx:149
-#: src/screens/StarterPack/Wizard/index.tsx:107
-#: src/screens/StarterPack/Wizard/index.tsx:117
+#: src/screens/StarterPack/Wizard/index.tsx:105
+#: src/screens/StarterPack/Wizard/index.tsx:115
 msgid "That starter pack could not be found."
 msgstr ""
 
@@ -7851,12 +7850,12 @@ msgstr ""
 msgid "The following labels were applied to your content."
 msgstr ""
 
-#: src/screens/Onboarding/Layout.tsx:59
+#: src/screens/Onboarding/Layout.tsx:60
 msgid "The following steps will help customize your Bluesky experience."
 msgstr "Die folgenden Schritte helfen dir, dein Bluesky-Erlebnis anzupassen."
 
-#: src/view/com/post-thread/PostThread.tsx:208
-#: src/view/com/post-thread/PostThread.tsx:220
+#: src/view/com/post-thread/PostThread.tsx:217
+#: src/view/com/post-thread/PostThread.tsx:229
 msgid "The post may have been deleted."
 msgstr "Möglicherweise wurde der Post gelöscht."
 
@@ -8286,8 +8285,8 @@ msgstr ""
 msgid "This will remove your post from this quote post for all users, and replace it with a placeholder."
 msgstr ""
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:57
-#: src/screens/Settings/ContentAndMediaSettings.tsx:60
+#: src/screens/Settings/ContentAndMediaSettings.tsx:48
+#: src/screens/Settings/ContentAndMediaSettings.tsx:51
 msgid "Thread preferences"
 msgstr ""
 
@@ -8693,8 +8692,8 @@ msgstr "Standardanbieter verwenden"
 msgid "Use in-app browser"
 msgstr "In-App-Browser verwenden"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:96
-#: src/screens/Settings/ContentAndMediaSettings.tsx:102
+#: src/screens/Settings/ContentAndMediaSettings.tsx:74
+#: src/screens/Settings/ContentAndMediaSettings.tsx:80
 msgid "Use in-app browser to open links"
 msgstr ""
 
@@ -8794,7 +8793,7 @@ msgstr ""
 msgid "Users I follow"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:420
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:416
 msgid "Users in \"{0}\""
 msgstr "Benutzer in \"{0}\""
 
@@ -9031,7 +9030,7 @@ msgstr ""
 msgid "We couldn't find any results for that hashtag."
 msgstr "Wir konnten keine Ergebnisse für diesen Hashtag finden."
 
-#: src/screens/Messages/Conversation.tsx:113
+#: src/screens/Messages/Conversation.tsx:104
 msgid "We couldn't load this conversation"
 msgstr ""
 
@@ -9358,7 +9357,7 @@ msgstr "Du hast keine angehefteten Feeds."
 msgid "You don't have any saved feeds."
 msgstr "Du hast keine gespeicherten Feeds."
 
-#: src/view/com/post-thread/PostThread.tsx:214
+#: src/view/com/post-thread/PostThread.tsx:223
 msgid "You have blocked the author or you have been blocked by the author."
 msgstr "Du hast den Verfasser blockiert oder du wurdest vom Verfasser blockiert."
 

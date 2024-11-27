@@ -182,7 +182,7 @@ msgid "{count} unread items"
 msgstr "{count} mục chưa đọc"
 
 #: src/lib/generate-starterpack.ts:108
-#: src/screens/StarterPack/Wizard/index.tsx:183
+#: src/screens/StarterPack/Wizard/index.tsx:180
 msgid "{displayName}'s Starter Pack"
 msgstr "Gói khởi đầu của {displayName}"
 
@@ -313,12 +313,12 @@ msgstr "{profileName} đã tham gia Bluesky {0} trước"
 msgid "{profileName} joined Bluesky using a starter pack {0} ago"
 msgstr "{profileName} đã tham gia Bluesky bằng gói khởi đầu {0} trước"
 
-#: src/screens/StarterPack/Wizard/index.tsx:475
+#: src/screens/StarterPack/Wizard/index.tsx:472
 msgctxt "profiles"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
 msgstr "<0>{0}, </0><1>{1}, </1>và {2, plural, one {# người khác} other {# người khác}} nằm trong trong gói khởi đầu của bạn"
 
-#: src/screens/StarterPack/Wizard/index.tsx:528
+#: src/screens/StarterPack/Wizard/index.tsx:525
 msgctxt "feeds"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
 msgstr "<0>{0}, </0><1>{1}, </1>và {2, plural, one {# nguồn khác} other {# nguồn khác}} nằm trong trong gói khởi đầu của bạn"
@@ -331,11 +331,11 @@ msgstr "<0>{0}</0> {1, plural, one {người theo dõi} other {người theo dõ
 msgid "<0>{0}</0> {1, plural, one {following} other {following}}"
 msgstr "<0>{0}</0> {1, plural, one {đang theo dõi} other {đang theo dõi}}"
 
-#: src/screens/StarterPack/Wizard/index.tsx:516
+#: src/screens/StarterPack/Wizard/index.tsx:513
 msgid "<0>{0}</0> and<1> </1><2>{1} </2>are included in your starter pack"
 msgstr "<0>{0}</0> và<1> </1><2>{1} </2>nằm trong gói khởi đầu của bạn"
 
-#: src/screens/StarterPack/Wizard/index.tsx:509
+#: src/screens/StarterPack/Wizard/index.tsx:506
 msgid "<0>{0}</0> is included in your starter pack"
 msgstr "<0>{0}</0> nằm trong gói khởi đầu của bạn"
 
@@ -351,7 +351,7 @@ msgstr "<0>{date}</0> lúc {time}"
 msgid "<0>Experimental:</0> When this preference is enabled, you'll only receive reply and quote notifications from users you follow. We'll continue to add more controls here over time."
 msgstr "<0>Thử nghiệm:</0> Khi tùy chọn này được bật, bạn chỉ nhận thông báo về trả lời và trích dẫn từ người dùng bạn theo dõi. Các điều khiển khác sẽ được thêm trong tương lai."
 
-#: src/screens/StarterPack/Wizard/index.tsx:466
+#: src/screens/StarterPack/Wizard/index.tsx:463
 msgid "<0>You</0> and<1> </1><2>{0} </2>are included in your starter pack"
 msgstr "<0>Bạn</0> và<1> </1><2>{0} </2>nằm trong gói khởi đầu của bạn"
 
@@ -383,7 +383,7 @@ msgid "About"
 msgstr "Giới thiệu"
 
 #: src/view/com/util/ViewHeader.tsx:89
-#: src/view/screens/Search/Search.tsx:883
+#: src/view/screens/Search/Search.tsx:884
 msgid "Access navigation links and settings"
 msgstr "Truy cập liên kết điều hướng và cài đặt"
 
@@ -463,7 +463,7 @@ msgstr "Tài khoản đã được bật lại thông báo"
 msgid "Add"
 msgstr "Thêm"
 
-#: src/screens/StarterPack/Wizard/index.tsx:577
+#: src/screens/StarterPack/Wizard/index.tsx:574
 msgid "Add {0} more to continue"
 msgstr "Thêm {0} để tiếp tục"
 
@@ -534,7 +534,7 @@ msgstr "Thêm bài mới"
 msgid "Add recommended feeds"
 msgstr "Thêm bảng tin được đề xuất"
 
-#: src/screens/StarterPack/Wizard/index.tsx:497
+#: src/screens/StarterPack/Wizard/index.tsx:494
 msgid "Add some feeds to your starter pack!"
 msgstr "Thêm bảng tin từ gói khởi đầu của bạn!"
 
@@ -618,7 +618,7 @@ msgstr "Cho phép truy cập tin nhắn của bạn"
 msgid "Allow new messages from"
 msgstr "Cho phép tin nhắn mới từ"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:363
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:359
 msgid "Allow replies from:"
 msgstr "Cho phép trả lời từ:"
 
@@ -935,8 +935,8 @@ msgstr "Tối thiểu 3 ký tự"
 msgid "Autoplay options have moved to the <0>Content and Media settings</0>."
 msgstr "Tùy chọn tự động phát đã được chuyển sang <0>Cài đặt Nội dung và Phương tiện</0>."
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:82
 #: src/screens/Settings/ContentAndMediaSettings.tsx:88
+#: src/screens/Settings/ContentAndMediaSettings.tsx:94
 msgid "Autoplay videos and GIFs"
 msgstr "Tự động phát video và GIF"
 
@@ -955,7 +955,7 @@ msgstr "Tự động phát video và GIF"
 #: src/screens/Messages/components/ChatDisabled.tsx:134
 #: src/screens/Profile/Header/Shell.tsx:112
 #: src/screens/Signup/BackNextButtons.tsx:41
-#: src/screens/StarterPack/Wizard/index.tsx:307
+#: src/screens/StarterPack/Wizard/index.tsx:304
 #: src/view/com/util/ViewHeader.tsx:87
 msgid "Back"
 msgstr "Trở lại"
@@ -979,7 +979,7 @@ msgstr "Bạn cần xác minh email trước khi có thể tạo gói khởi đ�
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:79
 #: src/components/dms/MessageProfileButton.tsx:89
-#: src/screens/Messages/Conversation.tsx:219
+#: src/screens/Messages/Conversation.tsx:210
 msgid "Before you may message another user, you must first verify your email."
 msgstr "Bạn cần xác minh email trước khi có thể nhắn tin với người dùng khác."
 
@@ -1049,7 +1049,7 @@ msgstr "Tài khoản bị chặn không thể trả lời bài viết của bạ
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you. You will not see their content and they will be prevented from seeing yours."
 msgstr "Tài khoản bị chặn không thể trả lời bài viết của bạn, đề cập đến bạn hoặc tương tác với bạn. Bạn sẽ không thể xem nội dung của họ và họ sẽ không được phép xem nội dung của bạn."
 
-#: src/view/com/post-thread/PostThread.tsx:412
+#: src/view/com/post-thread/PostThread.tsx:421
 msgid "Blocked post."
 msgstr "Bài viết đã bị chặn."
 
@@ -1197,7 +1197,7 @@ msgstr "Máy ảnh"
 #: src/view/com/modals/VerifyEmail.tsx:255
 #: src/view/com/modals/VerifyEmail.tsx:261
 #: src/view/com/util/post-ctrls/RepostButton.tsx:203
-#: src/view/screens/Search/Search.tsx:911
+#: src/view/screens/Search/Search.tsx:912
 msgid "Cancel"
 msgstr "Hủy bỏ"
 
@@ -1234,7 +1234,7 @@ msgid "Cancel reactivation and log out"
 msgstr "Hủy kích hoạt lại và đăng xuất"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:88
-#: src/view/screens/Search/Search.tsx:903
+#: src/view/screens/Search/Search.tsx:904
 msgid "Cancel search"
 msgstr "Huỷ tìm kiếm"
 
@@ -1353,7 +1353,7 @@ msgstr "Kiểm tra hộp thư đến của bạn để nhận email với mã x�
 msgid "Choose domain verification method"
 msgstr "Chọn phương pháp xác minh tên miền"
 
-#: src/screens/StarterPack/Wizard/index.tsx:199
+#: src/screens/StarterPack/Wizard/index.tsx:196
 msgid "Choose Feeds"
 msgstr "Chọn bảng tin"
 
@@ -1361,7 +1361,7 @@ msgstr "Chọn bảng tin"
 msgid "Choose for me"
 msgstr "Chọn cho tôi"
 
-#: src/screens/StarterPack/Wizard/index.tsx:195
+#: src/screens/StarterPack/Wizard/index.tsx:192
 msgid "Choose People"
 msgstr "Chọn người"
 
@@ -1627,7 +1627,7 @@ msgid "Content and media"
 msgstr "Nội dung và phương tiện"
 
 #: src/Navigation.tsx:353
-#: src/screens/Settings/ContentAndMediaSettings.tsx:44
+#: src/screens/Settings/ContentAndMediaSettings.tsx:35
 msgid "Content and Media"
 msgstr "Nội dung và phương tiện"
 
@@ -2019,7 +2019,7 @@ msgstr "Đã xóa"
 msgid "Deleted Account"
 msgstr "Đã xóa tài khoản"
 
-#: src/view/com/post-thread/PostThread.tsx:398
+#: src/view/com/post-thread/PostThread.tsx:407
 msgid "Deleted post."
 msgstr "Đã xóa bài viết."
 
@@ -2136,7 +2136,7 @@ msgstr "Khám phá bảng tin mới"
 msgid "Discover New Feeds"
 msgstr "Khám phá bảng tin mới"
 
-#: src/components/Dialog/index.tsx:318
+#: src/components/Dialog/index.tsx:311
 msgid "Dismiss"
 msgstr "Bỏ qua"
 
@@ -2237,7 +2237,7 @@ msgstr "Xong"
 msgid "Done{extraText}"
 msgstr "Xong {extraText}"
 
-#: src/components/Dialog/index.tsx:319
+#: src/components/Dialog/index.tsx:312
 msgid "Double tap to close the dialog"
 msgstr "Nhấn đúp để đóng hộp thoại"
 
@@ -2304,8 +2304,8 @@ msgstr "Mỗi mã chỉ được dùng một lần. Bạn sẽ nhận thêm mã 
 
 #: src/screens/Settings/AccountSettings.tsx:104
 #: src/screens/StarterPack/StarterPackScreen.tsx:574
-#: src/screens/StarterPack/Wizard/index.tsx:560
-#: src/screens/StarterPack/Wizard/index.tsx:567
+#: src/screens/StarterPack/Wizard/index.tsx:557
+#: src/screens/StarterPack/Wizard/index.tsx:564
 #: src/view/screens/Feeds.tsx:386
 #: src/view/screens/Feeds.tsx:454
 msgid "Edit"
@@ -2594,7 +2594,7 @@ msgstr "Nhận được lỗi phản hồi captcha."
 msgid "Error:"
 msgstr "Lỗi:"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:368
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:364
 msgid "Everybody"
 msgstr "Mọi người"
 
@@ -2702,8 +2702,8 @@ msgstr "Xuất dữ liệu của tôi"
 msgid "Export My Data"
 msgstr "Xuất dữ liệu của tôi"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:73
-#: src/screens/Settings/ContentAndMediaSettings.tsx:76
+#: src/screens/Settings/ContentAndMediaSettings.tsx:64
+#: src/screens/Settings/ContentAndMediaSettings.tsx:67
 msgid "External media"
 msgstr "Phương tiện ngoại vi"
 
@@ -2739,8 +2739,8 @@ msgstr "Không tạo được tên người dùng. Vui lòng thử lại."
 msgid "Failed to create app password. Please try again."
 msgstr "Không tạo được mật khẩu ứng dụng. Vui lòng thử lại."
 
-#: src/screens/StarterPack/Wizard/index.tsx:238
-#: src/screens/StarterPack/Wizard/index.tsx:246
+#: src/screens/StarterPack/Wizard/index.tsx:235
+#: src/screens/StarterPack/Wizard/index.tsx:243
 msgid "Failed to create starter pack"
 msgstr "Không tạo được gói khởi đầu"
 
@@ -2908,7 +2908,7 @@ msgstr "Tìm bài viết và người dùng trên Bluesky"
 #~ msgid "Fine-tune the discussion threads."
 #~ msgstr "Tinh chỉnh các thảo luận."
 
-#: src/screens/StarterPack/Wizard/index.tsx:200
+#: src/screens/StarterPack/Wizard/index.tsx:197
 msgid "Finish"
 msgstr "Hoàn tất"
 
@@ -2987,7 +2987,7 @@ msgstr "Theo dõi bởi <0>{0}</0> và <1>{1}</1>"
 msgid "Followed by <0>{0}</0>, <1>{1}</1>, and {2, plural, one {# other} other {# others}}"
 msgstr "Theo dõi bởi <0>{0}</0>, <1>{1}</1>, và {2, plural, one {# người khác} other {# người khác}}"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:407
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:403
 msgid "Followed users"
 msgstr "Người dùng theo dõi"
 
@@ -3035,8 +3035,8 @@ msgstr "Đang theo dõi {0}"
 msgid "Following {name}"
 msgstr "Đang theo dõi {name}"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:65
-#: src/screens/Settings/ContentAndMediaSettings.tsx:68
+#: src/screens/Settings/ContentAndMediaSettings.tsx:56
+#: src/screens/Settings/ContentAndMediaSettings.tsx:59
 msgid "Following feed preferences"
 msgstr "Đang theo dõi cài đặt bảng tin"
 
@@ -3177,13 +3177,13 @@ msgstr "Quay lại trang trước"
 #: src/components/dms/ReportDialog.tsx:149
 #: src/components/ReportDialog/SelectReportOptionView.tsx:80
 #: src/components/ReportDialog/SubmitView.tsx:109
-#: src/screens/Onboarding/Layout.tsx:103
-#: src/screens/Onboarding/Layout.tsx:192
+#: src/screens/Onboarding/Layout.tsx:104
+#: src/screens/Onboarding/Layout.tsx:193
 #: src/screens/Signup/BackNextButtons.tsx:35
 msgid "Go back to previous step"
 msgstr "Quay lại bước trước"
 
-#: src/screens/StarterPack/Wizard/index.tsx:308
+#: src/screens/StarterPack/Wizard/index.tsx:305
 msgid "Go back to the previous step"
 msgstr "Quay lại bước trước"
 
@@ -3272,8 +3272,8 @@ msgid "Help people know you're not a bot by uploading a picture or creating an a
 msgstr "Giúp người khác biết bạn không phải là bot bằng cách tải lên hoặc tạo hình đại diện."
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:127
-msgid "Helps external sites estimate traffic from Bluesky."
-msgstr ""
+#~ msgid "Helps external sites estimate traffic from Bluesky."
+#~ msgstr ""
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:187
 msgid "Here is your app password!"
@@ -3582,7 +3582,7 @@ msgstr "Có vẻ bạn đã nhập sai địa chỉ email. Bạn có chắc ch�
 msgid "It's correct"
 msgstr "Đúng"
 
-#: src/screens/StarterPack/Wizard/index.tsx:461
+#: src/screens/StarterPack/Wizard/index.tsx:458
 msgid "It's just you right now! Add more people to your starter pack by searching above."
 msgstr "Chỉ mới có bạn thôi! Thêm người khác vào gói khởi đầu của bạn bằng cách tìm kiếm ở trên."
 
@@ -3936,8 +3936,8 @@ msgstr "Tạo cho tôi một cái"
 msgid "Make sure this is where you intend to go!"
 msgstr "Hãy chắc rằng đây là nơi bạn muốn đến!"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:49
-#: src/screens/Settings/ContentAndMediaSettings.tsx:52
+#: src/screens/Settings/ContentAndMediaSettings.tsx:40
+#: src/screens/Settings/ContentAndMediaSettings.tsx:43
 msgid "Manage saved feeds"
 msgstr "Quản lý bảng tin đã lưu"
 
@@ -3962,13 +3962,13 @@ msgstr "Phương tiện có thể gây phản cảm cho một số khán giả."
 msgid "mentioned users"
 msgstr "người dùng được đề cập"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:397
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:393
 msgid "Mentioned users"
 msgstr "Người dùng được đề cập"
 
 #: src/components/Menu/index.tsx:95
 #: src/view/com/util/ViewHeader.tsx:87
-#: src/view/screens/Search/Search.tsx:882
+#: src/view/screens/Search/Search.tsx:883
 msgid "Menu"
 msgstr "Trình đơn"
 
@@ -4366,10 +4366,10 @@ msgstr "Tin tức"
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:157
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:165
 #: src/screens/Signup/BackNextButtons.tsx:67
-#: src/screens/StarterPack/Wizard/index.tsx:192
-#: src/screens/StarterPack/Wizard/index.tsx:196
-#: src/screens/StarterPack/Wizard/index.tsx:367
-#: src/screens/StarterPack/Wizard/index.tsx:374
+#: src/screens/StarterPack/Wizard/index.tsx:189
+#: src/screens/StarterPack/Wizard/index.tsx:193
+#: src/screens/StarterPack/Wizard/index.tsx:364
+#: src/screens/StarterPack/Wizard/index.tsx:371
 #: src/view/com/modals/ChangePassword.tsx:254
 #: src/view/com/modals/ChangePassword.tsx:256
 msgid "Next"
@@ -4406,7 +4406,7 @@ msgstr "Không có bảng DNS"
 msgid "No featured GIFs found. There may be an issue with Tenor."
 msgstr "Không tìm thấy GIF nào. Có thể có vấn đề với Tenor."
 
-#: src/screens/StarterPack/Wizard/StepFeeds.tsx:118
+#: src/screens/StarterPack/Wizard/StepFeeds.tsx:119
 msgid "No feeds found. Try searching for something else."
 msgstr "Không tìm thấy bảng tin nào. Thử tìm gì đó khác xem."
 
@@ -4494,7 +4494,7 @@ msgstr "Không tìm thấy kết quả nào cho \"{search}\"."
 msgid "No thanks"
 msgstr "Không, cảm ơn"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:379
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:375
 msgid "Nobody"
 msgstr "Không ai"
 
@@ -4512,7 +4512,7 @@ msgstr "Chưa có ai trích dẫn bài viết này. Có lẽ bạn nên là ngư
 msgid "Nobody has reposted this yet. Maybe you should be the first!"
 msgstr "Chưa có ai đăng lại bài viết này. Có lẽ bạn nên là người đầu tiên!"
 
-#: src/screens/StarterPack/Wizard/StepProfiles.tsx:102
+#: src/screens/StarterPack/Wizard/StepProfiles.tsx:103
 msgid "Nobody was found. Try searching for someone else."
 msgstr "Không tìm thấy ai. Hãy thử tìm người khác."
 
@@ -4902,7 +4902,7 @@ msgstr "Cung cấp thêm thông tin bên dưới (không bắt buộc):"
 msgid "Options:"
 msgstr "Lựa chọn:"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:392
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:388
 msgid "Or combine these options:"
 msgstr "Hoặc kết hợp các lựa chọn sau:"
 
@@ -5144,7 +5144,7 @@ msgctxt "action"
 msgid "Post"
 msgstr "Đăng"
 
-#: src/view/com/post-thread/PostThread.tsx:481
+#: src/view/com/post-thread/PostThread.tsx:490
 msgctxt "description"
 msgid "Post"
 msgstr "Bài viết"
@@ -5173,7 +5173,7 @@ msgstr "Đã xóa bài viết"
 msgid "Post failed to upload. Please check your Internet connection and try again."
 msgstr "Không đăng bài viết được. Vui lòng kiểm tra kết nối mạng và thử lại."
 
-#: src/view/com/post-thread/PostThread.tsx:212
+#: src/view/com/post-thread/PostThread.tsx:221
 msgid "Post hidden"
 msgstr "Đã ẩn bài viết"
 
@@ -5199,8 +5199,8 @@ msgstr "Ngôn ngữ bài viết"
 msgid "Post Languages"
 msgstr "Ngôn ngữ bài viết"
 
-#: src/view/com/post-thread/PostThread.tsx:207
-#: src/view/com/post-thread/PostThread.tsx:219
+#: src/view/com/post-thread/PostThread.tsx:216
+#: src/view/com/post-thread/PostThread.tsx:228
 msgid "Post not found"
 msgstr "Không tìm thấy bài viết"
 
@@ -5381,7 +5381,6 @@ msgstr "Bài viết trích dẫn đã được đính kèm lại"
 msgid "Quote post was successfully detached"
 msgstr "Bài viết trích dẫn đã được gỡ thành công"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:317
 #: src/view/com/util/post-ctrls/RepostButton.tsx:167
 #: src/view/com/util/post-ctrls/RepostButton.tsx:189
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:84
@@ -5389,7 +5388,7 @@ msgstr "Bài viết trích dẫn đã được gỡ thành công"
 msgid "Quote posts disabled"
 msgstr "Bài viết trích dẫn đã bị tắt"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:315
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:314
 msgid "Quote posts enabled"
 msgstr "Bài viết trích dẫn đã được bật"
 
@@ -5442,7 +5441,7 @@ msgstr "Đọc Điều khoản dịch vụ của Bluesky"
 msgid "Reason:"
 msgstr "Lý do:"
 
-#: src/view/screens/Search/Search.tsx:1057
+#: src/view/screens/Search/Search.tsx:1058
 msgid "Recent Searches"
 msgstr "Tìm kiếm gần đây"
 
@@ -5535,11 +5534,11 @@ msgstr "Xóa hình"
 msgid "Remove mute word from your list"
 msgstr "Xóa từ cấm khỏi danh sách của bạn"
 
-#: src/view/screens/Search/Search.tsx:1101
+#: src/view/screens/Search/Search.tsx:1102
 msgid "Remove profile"
 msgstr "Xóa hồ sơ"
 
-#: src/view/screens/Search/Search.tsx:1103
+#: src/view/screens/Search/Search.tsx:1104
 msgid "Remove profile from search history"
 msgstr "Xóa hồ sơ khỏi lịch sử tìm kiếm"
 
@@ -5624,11 +5623,11 @@ msgstr "Trả lời bị ẩn bởi tác giả của thảo luận"
 msgid "Reply Hidden by You"
 msgstr "Trả lời bị ẩn bởi bạn"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:359
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:355
 msgid "Reply settings"
 msgstr "Cài đặt trả lời"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:344
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:340
 msgid "Reply settings are chosen by the author of the thread"
 msgstr "Cài đặt trả lời được chọn bởi tác giả của thảo luận"
 
@@ -5900,8 +5899,8 @@ msgid "Returns to previous page"
 msgstr "Trở về trang trước"
 
 #: src/components/dialogs/BirthDateSettings.tsx:124
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:442
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:448
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:438
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:444
 #: src/components/StarterPack/QrCodeDialog.tsx:185
 #: src/screens/Profile/Header/EditProfileDialog.tsx:238
 #: src/screens/Profile/Header/EditProfileDialog.tsx:252
@@ -5918,7 +5917,7 @@ msgstr "Trở về trang trước"
 msgid "Save"
 msgstr "Lưu"
 
-#: src/view/com/lightbox/ImageViewing/index.tsx:555
+#: src/view/com/lightbox/ImageViewing/index.tsx:576
 #: src/view/com/modals/CreateOrEditList.tsx:325
 msgctxt "action"
 msgid "Save"
@@ -6020,11 +6019,11 @@ msgstr "Tìm kiếm"
 msgid "Search for \"{query}\""
 msgstr "Tìm kiếm \"{query}\""
 
-#: src/view/screens/Search/Search.tsx:1000
+#: src/view/screens/Search/Search.tsx:1001
 msgid "Search for \"{searchText}\""
 msgstr "Tìm kiếm \"{searchText}\""
 
-#: src/screens/StarterPack/Wizard/index.tsx:500
+#: src/screens/StarterPack/Wizard/index.tsx:497
 msgid "Search for feeds that you want to suggest to others."
 msgstr "Tìm kiếm bảng tin bạn muốn đề xuất cho người khác."
 
@@ -6186,8 +6185,8 @@ msgid "Send a neat website!"
 msgstr "Gởi một trang web tuyệt vời!"
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:118
-msgid "Send Bluesky referrer"
-msgstr ""
+#~ msgid "Send Bluesky referrer"
+#~ msgstr ""
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:232
 msgid "Send Confirmation"
@@ -6281,7 +6280,7 @@ msgstr "Đặt mất khẩu mới"
 #~ msgid "Set this setting to \"Yes\" to show samples of your saved feeds in your Following feed. This is an experimental feature."
 #~ msgstr "Đặt cài đặt này thành \"Có\" để hiển thị mẫu từ bảng tin đã lưu vào bảng tin Đang theo dõi của bạn. Đây là một tính năng thử nghiệm."
 
-#: src/screens/Onboarding/Layout.tsx:49
+#: src/screens/Onboarding/Layout.tsx:50
 msgid "Set up your account"
 msgstr "Thiết lập tài khoản của bạn"
 
@@ -6320,7 +6319,7 @@ msgstr "Gợi ý khiêu dâm"
 msgid "Share"
 msgstr "Chia sẻ"
 
-#: src/view/com/lightbox/ImageViewing/index.tsx:564
+#: src/view/com/lightbox/ImageViewing/index.tsx:585
 msgctxt "action"
 msgid "Share"
 msgstr "Chia sẻ"
@@ -6601,7 +6600,7 @@ msgid "Similar accounts"
 msgstr "Tài khoản tương tự"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:231
-#: src/screens/StarterPack/Wizard/index.tsx:200
+#: src/screens/StarterPack/Wizard/index.tsx:197
 msgid "Skip"
 msgstr "Bỏ qua"
 
@@ -6626,7 +6625,7 @@ msgstr "Một số bảng tin khác bạn có thể thích"
 msgid "Some people can reply"
 msgstr "Một số người có thể trả lời"
 
-#: src/screens/Messages/Conversation.tsx:112
+#: src/screens/Messages/Conversation.tsx:103
 msgid "Something went wrong"
 msgstr "Có gì đó không đúng"
 
@@ -6647,7 +6646,7 @@ msgid "Something went wrong!"
 msgstr "Có gì đó không đúng!"
 
 #: src/App.native.tsx:113
-#: src/App.web.tsx:95
+#: src/App.web.tsx:94
 msgid "Sorry! Your session expired. Please log in again."
 msgstr "Xin lỗi! Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại"
 
@@ -6681,8 +6680,8 @@ msgid "Spam; excessive mentions or replies"
 msgstr "Spam; đề cập hoặc trả lời quá nhiều"
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:112
-msgid "Specify Bluesky as a referer"
-msgstr ""
+#~ msgid "Specify Bluesky as a referer"
+#~ msgstr ""
 
 #: src/screens/Onboarding/index.tsx:27
 #: src/screens/Onboarding/state.ts:100
@@ -6699,7 +6698,7 @@ msgstr "Bắt đầu trò chuyện với {displayName}"
 
 #: src/Navigation.tsx:393
 #: src/Navigation.tsx:398
-#: src/screens/StarterPack/Wizard/index.tsx:191
+#: src/screens/StarterPack/Wizard/index.tsx:188
 msgid "Starter Pack"
 msgstr "Gói khởi đầu"
 
@@ -6929,8 +6928,8 @@ msgstr "Handle đó đã được sử dụng."
 #: src/screens/StarterPack/StarterPackScreen.tsx:104
 #: src/screens/StarterPack/StarterPackScreen.tsx:148
 #: src/screens/StarterPack/StarterPackScreen.tsx:149
-#: src/screens/StarterPack/Wizard/index.tsx:107
-#: src/screens/StarterPack/Wizard/index.tsx:117
+#: src/screens/StarterPack/Wizard/index.tsx:105
+#: src/screens/StarterPack/Wizard/index.tsx:115
 msgid "That starter pack could not be found."
 msgstr "Không thể tìm thấy gói khởi đầu đó."
 
@@ -6985,12 +6984,12 @@ msgstr "Các nhãn sau đây đã được áp dụng cho tài khoản của b�
 msgid "The following labels were applied to your content."
 msgstr "Các nhãn sau đây đã được áp dụng cho nội dung của bạn."
 
-#: src/screens/Onboarding/Layout.tsx:59
+#: src/screens/Onboarding/Layout.tsx:60
 msgid "The following steps will help customize your Bluesky experience."
 msgstr "Các bước sau sẽ giúp tùy chỉnh trải nghiệm của bạn trên Bluesky."
 
-#: src/view/com/post-thread/PostThread.tsx:208
-#: src/view/com/post-thread/PostThread.tsx:220
+#: src/view/com/post-thread/PostThread.tsx:217
+#: src/view/com/post-thread/PostThread.tsx:229
 msgid "The post may have been deleted."
 msgstr "Bài viết có thể đã bị xóa."
 
@@ -7339,8 +7338,8 @@ msgstr "Tác vụ này sẽ xóa @{0} khỏi danh sách truy cập nhanh."
 msgid "This will remove your post from this quote post for all users, and replace it with a placeholder."
 msgstr "Tác vụ này sẽ xóa bài viết của bạn khỏi bài viết trích dẫn này cho tất cả người dùng, và thay thế nó bằng một chỗ trống."
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:57
-#: src/screens/Settings/ContentAndMediaSettings.tsx:60
+#: src/screens/Settings/ContentAndMediaSettings.tsx:48
+#: src/screens/Settings/ContentAndMediaSettings.tsx:51
 msgid "Thread preferences"
 msgstr "Cài đặt thảo luận"
 
@@ -7694,8 +7693,8 @@ msgstr "Sử dụng nhà cung cấp mặc định"
 msgid "Use in-app browser"
 msgstr "Sử dụng trình duyện trong ứng dụng"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:96
-#: src/screens/Settings/ContentAndMediaSettings.tsx:102
+#: src/screens/Settings/ContentAndMediaSettings.tsx:74
+#: src/screens/Settings/ContentAndMediaSettings.tsx:80
 msgid "Use in-app browser to open links"
 msgstr "Sử dụng trình duyệt trong ứng dụng để mở liên kết"
 
@@ -7787,7 +7786,7 @@ msgstr "người dùng theo dõi bởi <0>@{0}</0>"
 msgid "Users I follow"
 msgstr "Người dùng tôi theo dõi"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:420
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:416
 msgid "Users in \"{0}\""
 msgstr "Người dùng trong \"{0}\""
 
@@ -8008,7 +8007,7 @@ msgstr "Cảnh bảo nội dung và lọc từ bảng tin"
 msgid "We couldn't find any results for that hashtag."
 msgstr "Không tìm thấy nội dung nào cho hashtag."
 
-#: src/screens/Messages/Conversation.tsx:113
+#: src/screens/Messages/Conversation.tsx:104
 msgid "We couldn't load this conversation"
 msgstr "Không thể tải hội thoại này"
 
@@ -8278,7 +8277,7 @@ msgstr "Bạn không có bảng tin nào được ghim."
 msgid "You don't have any saved feeds."
 msgstr "Bạn không có bảng tin nào được lưu."
 
-#: src/view/com/post-thread/PostThread.tsx:214
+#: src/view/com/post-thread/PostThread.tsx:223
 msgid "You have blocked the author or you have been blocked by the author."
 msgstr "bạn đã chặn tác giả hoặc đã bị chặn bởi tác giả."
 
