@@ -111,14 +111,14 @@ export default function ImageViewRoot({
       )
 
     // https://github.com/software-mansion/react-native-reanimated/issues/6677
-    requestAnimationFrame(() => {
+    rAF_FIXED(() => {
       openProgress.set(() =>
         canAnimate ? withClampedSpring(1, SLOW_SPRING) : 1,
       )
     })
     return () => {
       // https://github.com/software-mansion/react-native-reanimated/issues/6677
-      requestAnimationFrame(() => {
+      rAF_FIXED(() => {
         openProgress.set(() =>
           canAnimate ? withClampedSpring(0, SLOW_SPRING) : 0,
         )
@@ -751,4 +751,33 @@ function interpolateTransform(
 function withClampedSpring(value: any, config: WithSpringConfig) {
   'worklet'
   return withSpring(value, {...config, overshootClamping: true})
+}
+
+// We have to do this because we can't trust RN's rAF to fire in order.
+// https://github.com/facebook/react-native/issues/48005
+let isFrameScheduled = false
+let pendingFrameCallbacks: Array<() => void> = []
+function rAF_FIXED(callback: () => void) {
+  pendingFrameCallbacks.push(callback)
+  if (!isFrameScheduled) {
+    isFrameScheduled = true
+    requestAnimationFrame(() => {
+      const callbacks = pendingFrameCallbacks.slice()
+      isFrameScheduled = false
+      pendingFrameCallbacks = []
+      let hasError = false
+      let error
+      for (let i = 0; i < callbacks.length; i++) {
+        try {
+          callbacks[i]()
+        } catch (e) {
+          hasError = true
+          error = e
+        }
+      }
+      if (hasError) {
+        throw error
+      }
+    })
+  }
 }
