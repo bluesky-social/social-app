@@ -3871,7 +3871,7 @@ msgstr "Provedor de hospedagem"
 #: src/screens/Settings/ThreadPreferences.tsx:59
 #: src/screens/Settings/ThreadPreferences.tsx:62
 msgid "Hot replies first"
-msgstr "Respostas populares primeiro"
+msgstr "Respostas em alta primeiro"
 
 #: src/view/com/modals/InAppBrowserConsent.tsx:41
 msgid "How should we open this link?"
