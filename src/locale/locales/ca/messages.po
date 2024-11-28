@@ -3719,7 +3719,7 @@ msgstr "Tipus de lletra"
 
 #: src/screens/Settings/AppearanceSettings.tsx:145
 msgid "Font size"
-msgstr "Moda de la lletra"
+msgstr "Mida de la lletra"
 
 #: src/screens/Onboarding/index.tsx:40
 #: src/screens/Onboarding/state.ts:89
