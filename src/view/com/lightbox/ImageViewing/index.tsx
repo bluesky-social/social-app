@@ -8,7 +8,7 @@
 // Original code copied and simplified from the link below as the codebase is currently not maintained:
 // https://github.com/jobtoday/react-native-image-viewing
 
-import React, {useCallback, useEffect, useState} from 'react'
+import React, {useCallback, useEffect, useMemo, useState} from 'react'
 import {
   LayoutAnimation,
   PixelRatio,
@@ -79,6 +79,15 @@ const FAST_SPRING: WithSpringConfig = {
   restDisplacementThreshold: 0.01,
 }
 
+function canAnimate(lightbox: Lightbox): boolean {
+  return (
+    !PlatformInfo.getIsReducedMotionEnabled() &&
+    lightbox.images.every(
+      img => img.thumbRect && (img.dimensions || img.thumbDimensions),
+    )
+  )
+}
+
 export default function ImageViewRoot({
   lightbox: nextLightbox,
   onRequestClose,
@@ -104,23 +113,19 @@ export default function ImageViewRoot({
       return
     }
 
-    const canAnimate =
-      !PlatformInfo.getIsReducedMotionEnabled() &&
-      nextLightbox.images.every(
-        img => img.thumbRect && (img.dimensions || img.thumbDimensions),
-      )
+    const isAnimated = canAnimate(nextLightbox)
 
     // https://github.com/software-mansion/react-native-reanimated/issues/6677
     rAF_FIXED(() => {
       openProgress.set(() =>
-        canAnimate ? withClampedSpring(1, SLOW_SPRING) : 1,
+        isAnimated ? withClampedSpring(1, SLOW_SPRING) : 1,
       )
     })
     return () => {
       // https://github.com/software-mansion/react-native-reanimated/issues/6677
       rAF_FIXED(() => {
         openProgress.set(() =>
-          canAnimate ? withClampedSpring(0, SLOW_SPRING) : 0,
+          isAnimated ? withClampedSpring(0, SLOW_SPRING) : 0,
         )
       })
     }
@@ -185,6 +190,7 @@ function ImageView({
   openProgress: SharedValue<number>
 }) {
   const {images, index: initialImageIndex} = lightbox
+  const isAnimated = useMemo(() => canAnimate(lightbox), [lightbox])
   const [isScaled, setIsScaled] = useState(false)
   const [isDragging, setIsDragging] = useState(false)
   const [imageIndex, setImageIndex] = useState(initialImageIndex)
@@ -194,10 +200,19 @@ function ImageView({
   const isFlyingAway = useSharedValue(false)
 
   const containerStyle = useAnimatedStyle(() => {
-    if (openProgress.get() < 1 || isFlyingAway.get()) {
-      return {pointerEvents: 'none'}
+    if (openProgress.get() < 1) {
+      return {
+        pointerEvents: 'none',
+        opacity: isAnimated ? 1 : 0,
+      }
     }
-    return {pointerEvents: 'auto'}
+    if (isFlyingAway.get()) {
+      return {
+        pointerEvents: 'none',
+        opacity: 1,
+      }
+    }
+    return {pointerEvents: 'auto', opacity: 1}
   })
 
   const backdropStyle = useAnimatedStyle(() => {

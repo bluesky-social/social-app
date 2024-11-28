@@ -85,10 +85,6 @@ export function AutoSizedImage({
     if (Number.isNaN(aspectRatio)) {
       aspectRatio = undefined
     }
-  } else {
-    // If we don't know it synchronously, treat it like a square.
-    // We won't use fetched dimensions to avoid a layout shift.
-    aspectRatio = 1
   }
 
   let constrained: number | undefined
@@ -103,11 +99,13 @@ export function AutoSizedImage({
 
   const cropDisabled = crop === 'none'
   const isCropped = rawIsCropped && !cropDisabled
+  const isContain = aspectRatio === undefined
   const hasAlt = !!image.alt
 
   const contents = (
     <View ref={containerRef} collapsable={false} style={{flex: 1}}>
       <Image
+        contentFit={isContain ? 'contain' : 'cover'}
         style={[a.w_full, a.h_full]}
         source={image.thumb}
         accessible={true} // Must set for `accessibilityLabel` to work
@@ -115,9 +113,11 @@ export function AutoSizedImage({
         accessibilityLabel={image.alt}
         accessibilityHint=""
         onLoad={e => {
-          fetchedDimsRef.current = {
-            width: e.source.width,
-            height: e.source.height,
+          if (!isContain) {
+            fetchedDimsRef.current = {
+              width: e.source.width,
+              height: e.source.height,
+            }
           }
         }}
       />
