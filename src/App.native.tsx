@@ -10,9 +10,11 @@ import {
   SafeAreaProvider,
 } from 'react-native-safe-area-context'
 import * as SplashScreen from 'expo-splash-screen'
+import * as SystemUI from 'expo-system-ui'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {KeyboardControllerProvider} from '#/lib/hooks/useEnableKeyboardController'
 import {QueryProvider} from '#/lib/react-query'
 import {
   initialize,
@@ -23,6 +25,7 @@ import {s} from '#/lib/styles'
 import {ThemeProvider} from '#/lib/ThemeContext'
 import I18nProvider from '#/locale/i18nProvider'
 import {logger} from '#/logger'
+import {isIOS} from '#/platform/detection'
 import {Provider as A11yProvider} from '#/state/a11y'
 import {Provider as MutedThreadsProvider} from '#/state/cache/thread-mutes'
 import {Provider as DialogStateProvider} from '#/state/dialogs'
@@ -65,13 +68,15 @@ import {NuxDialogs} from '#/components/dialogs/nuxs'
 import {useStarterPackEntry} from '#/components/hooks/useStarterPackEntry'
 import {Provider as IntentDialogProvider} from '#/components/intents/IntentDialogs'
 import {Provider as PortalProvider} from '#/components/Portal'
+import {AppProfiler} from '#/AppProfiler'
 import {Splash} from '#/Splash'
 import {BottomSheetProvider} from '../modules/bottom-sheet'
 import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
-import {AppProfiler} from './AppProfiler'
-import {KeyboardControllerProvider} from './lib/hooks/useEnableKeyboardController'
 
 SplashScreen.preventAutoHideAsync()
+if (isIOS) {
+  SystemUI.setBackgroundColorAsync('black')
+}
 
 /**
  * Begin geolocation ASAP
