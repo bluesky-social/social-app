@@ -394,6 +394,7 @@ function SearchLanguageDropdown({
 
   return (
     <RNPickerSelect
+      darkTheme={t.scheme === 'dark'}
       placeholder={{}}
       value={value}
       onValueChange={onChange}
