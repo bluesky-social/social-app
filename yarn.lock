@@ -3736,7 +3736,7 @@
   resolved "https://registry.yarnpkg.com/@expo/html-elements/-/html-elements-0.4.3.tgz#32b4ca05dd13582164ed1be34ae87e22adfd1d5b"
   integrity sha512-UwEEdnpyhUEIDe/AkFSBUmCuwcknjAuu73fd5L9Rm/BbHczYXCrtyZmzCNVBsAiHhwUjmhNWzFlr9cAkp/sxIA==
 
-"@expo/image-utils@0.3.23":
+"@expo/image-utils@0.3.23", "@expo/image-utils@^0.3.23":
   version "0.3.23"
   resolved "https://registry.yarnpkg.com/@expo/image-utils/-/image-utils-0.3.23.tgz#f14fd7e1f5ff6f8e4911a41e27dd274470665c3f"
   integrity sha512-nhUVvW0TrRE4jtWzHQl8TR4ox7kcmrc2I0itaeJGjxF5A54uk7avgA0wRt7jP1rdvqQo1Ke1lXyLYREdhN9tPw==
@@ -4936,6 +4936,15 @@
   version "2.3.1"
   resolved "https://registry.yarnpkg.com/@miblanchard/react-native-slider/-/react-native-slider-2.3.1.tgz#79e0f1f9b1ce43ef25ee51ee9256c012e5dfa412"
   integrity sha512-J/hZDBWmXq8fJeOnTVHqIUVDHshqMSpJVxJ4WqwuCBKl5Rke9OBYXIdkSlgi75OgtScAr8FKK5KNkDKHUf6JIg==
+
+"@mozzius/expo-dynamic-app-icon@^1.4.1":
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/@mozzius/expo-dynamic-app-icon/-/expo-dynamic-app-icon-1.4.1.tgz#245e54c31347e3ec2a1ce10f0df8cf07a0c1be6e"
+  integrity sha512-IiL6OiuW4kP5Jz/vrZ6U1t0m4gK1rW5VZAQzszdVcZy1cadX3EdR2/uA6jMU0qSwuesk028RhO6S0uBI9ckxBw==
+  dependencies:
+    "@expo/image-utils" "^0.3.23"
+    expo-modules-core "^1.0.3"
+    xcode "^3.0.1"
 
 "@nicolo-ribaudo/eslint-scope-5-internals@5.1.1-v1":
   version "5.1.1-v1"
@@ -10660,6 +10669,13 @@ expo-modules-core@1.12.11:
   version "1.12.11"
   resolved "https://registry.yarnpkg.com/expo-modules-core/-/expo-modules-core-1.12.11.tgz#71d7efb2f6a2a4d3b96defad52fc799b9804f829"
   integrity sha512-CF5G6hZo/6uIUz6tj4dNRlvE5L4lakYukXPqz5ZHQ+6fLk1NQVZbRdpHjMkxO/QSBQcKUzG/ngeytpoJus7poQ==
+  dependencies:
+    invariant "^2.2.4"
+
+expo-modules-core@^1.0.3:
+  version "1.12.26"
+  resolved "https://registry.yarnpkg.com/expo-modules-core/-/expo-modules-core-1.12.26.tgz#86c4087dc6246abfc4d7f5e61097dc8cc4b22262"
+  integrity sha512-y8yDWjOi+rQRdO+HY+LnUlz8qzHerUaw/LUjKPU/mX8PRXP4UUPEEp5fjAwBU44xjNmYSHWZDwet4IBBE+yQUA==
   dependencies:
     invariant "^2.2.4"
 
