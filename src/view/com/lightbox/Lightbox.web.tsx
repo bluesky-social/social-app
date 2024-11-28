@@ -74,6 +74,7 @@ function LightboxInner({
   const onKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
+        e.preventDefault()
         onClose()
       } else if (e.key === 'ArrowLeft') {
         onPressLeft()
@@ -101,6 +102,7 @@ function LightboxInner({
   const isAvi = img.type === 'circle-avi' || img.type === 'rect-avi'
   return (
     <View style={styles.mask}>
+      <Text style={{backgroundColor: 'blue'}}>this is a test</Text>
       <TouchableWithoutFeedback
         onPress={onClose}
         accessibilityRole="button"
