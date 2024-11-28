@@ -3041,12 +3041,12 @@ msgstr "Mostrar ou esconder a postagem a que você está respondendo"
 
 #: src/lib/api/index.ts:400
 msgid "Expected uri to resolve to a record"
-msgstr ""
+msgstr "Esperado que a URI seja resolvida para um registro"
 
 #: src/screens/Settings/FollowingFeedPreferences.tsx:115
 #: src/screens/Settings/ThreadPreferences.tsx:129
 msgid "Experimental"
-msgstr ""
+msgstr "Experimental"
 
 #: src/view/screens/NotificationsSettings.tsx:78
 #~ msgid "Experimental: When this preference is enabled, you'll only receive reply and quote notifications from users you follow. We'll continue to add more controls here over time."
@@ -6950,7 +6950,7 @@ msgstr "Envie um site bacana!"
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:118
 #~ msgid "Send Bluesky referrer"
-#~ msgstr ""
+#~ msgstr "Enviar referência do Bluesky"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:232
 msgid "Send Confirmation"
@@ -7541,7 +7541,7 @@ msgstr "Spam; menções ou respostas excessivas"
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:112
 #~ msgid "Specify Bluesky as a referer"
-#~ msgstr ""
+#~ msgstr "Especifique Bluesky como referência"
 
 #: src/screens/Onboarding/index.tsx:27
 #: src/screens/Onboarding/state.ts:100
