@@ -26,7 +26,7 @@ msgstr "7 dagen"
 
 #: src/screens/Settings/NotificationSettings.tsx:71
 msgid "<0>Experimental:</0> When this preference is enabled, you'll only receive reply and quote notifications from users you follow. We'll continue to add more controls here over time."
-msgstr "<0>Experimental:</0> When this preference is enabled, you'll only receive reply and quote notifications from users you follow. We'll continue to add more controls here over time."
+msgstr "<0>Experimenteel:</0> u ontvangt alleen antwoord- en citaatmeldingen van gebruikers die u volgt wanneer deze voorkeur is ingeschakeld. We zullen hier meer besturingselementen aan toevoegen in de loop van de tijd."
 
 #: src/screens/StarterPack/Wizard/index.tsx:463
 msgid "<0>You</0> and<1> </1><2>{0} </2>are included in your starter pack"
@@ -472,12 +472,12 @@ msgstr "App-wachtwoordnaam moet uniek zijn"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:62
 msgid "App password names can only contain letters, numbers, spaces, dashes, and underscores"
-msgstr "App password names can only contain letters, numbers, spaces, dashes, and underscores"
+msgstr "App-wachtwoordnamen mogen alleen letters, cijfers, spaties, streepjes en underscores bevatten"
 
 #: src/view/com/modals/AddAppPasswords.tsx:138
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:80
 msgid "App password names must be at least 4 characters long"
-msgstr "App password names must be at least 4 characters long"
+msgstr "App-wachtwoordnamen moeten minimaal 4 tekens lang zijn"
 
 #: src/view/com/modals/AddAppPasswords.tsx:103
 #: src/view/screens/Settings/index.tsx:664
@@ -540,11 +540,11 @@ msgstr "Weet je zeker dat je dit concept wilt weggooien?"
 
 #: src/view/com/composer/Composer.tsx:846
 msgid "Are you sure you'd like to discard this post?"
-msgstr "Are you sure you'd like to discard this post?"
+msgstr "Weet je zeker dat je dit bericht wilt weggooien?"
 
 #: src/screens/Settings/AppPasswords.tsx:201
 msgid "Are you sure you want to delete the app password \"{0}\"?"
-msgstr "Are you sure you want to delete the app password \"{0}\"?"
+msgstr "Weet je zeker dat je het app-wachtwoord \"{0}\" wilt verwijderen?"
 
 #: src/view/screens/AppPasswords.tsx:283
 #: src/components/dms/MessageMenu.tsx:149
@@ -590,12 +590,12 @@ msgstr "Minstens 3 tekens"
 
 #: src/screens/Settings/AccessibilitySettings.tsx:97
 msgid "Autoplay options have moved to the <0>Content and Media settings</0>."
-msgstr "Autoplay options have moved to the <0>Content and Media settings</0>."
+msgstr "De opties voor automatisch afspelen zijn verplaatst naar de <0>Instellingen voor inhoud en media</0>."
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:88
 #: src/screens/Settings/ContentAndMediaSettings.tsx:94
 msgid "Autoplay videos and GIFs"
-msgstr "Autoplay videos and GIFs"
+msgstr "Video's en GIF's automatisch afspelen"
 
 #: src/components/dms/MessagesListHeader.tsx:75
 #: src/components/moderation/LabelsOnMeDialog.tsx:290
@@ -621,21 +621,21 @@ msgstr "Terug"
 #: src/view/screens/Lists.tsx:104
 #: src/view/screens/ModerationModlists.tsx:100
 msgid "Before creating a list, you must first verify your email."
-msgstr "Before creating a list, you must first verify your email."
+msgstr "Je moet eerst je e-mailadres bevestigen voordat je een lijst maakt."
 
 #: src/view/com/composer/Composer.tsx:599
 msgid "Before creating a post, you must first verify your email."
-msgstr "Before creating a post, you must first verify your email."
+msgstr "Je moet eerst je e-mailadres bevestigen voordat je een bericht plaatst."
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:340
 msgid "Before creating a starter pack, you must first verify your email."
-msgstr "Before creating a starter pack, you must first verify your email."
+msgstr "Je moet eerst je e-mailadres bevestigen voordat je een startpakket maakt."
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:79
 #: src/components/dms/MessageProfileButton.tsx:89
 #: src/screens/Messages/Conversation.tsx:210
 msgid "Before you may message another user, you must first verify your email."
-msgstr "Before you may message another user, you must first verify your email."
+msgstr "Je moet eerst je e-mailadres bevestigen voordat je een andere gebruiker een privébericht stuurt."
 
 #: src/components/dialogs/BirthDateSettings.tsx:106
 #: src/screens/Settings/AccountSettings.tsx:101
@@ -727,7 +727,7 @@ msgstr "Bluesky"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:860
 msgid "Bluesky cannot confirm the authenticity of the claimed date."
-msgstr "Bluesky cannot confirm the authenticity of the claimed date."
+msgstr "Bluesky kan de echtheid van de geclaimde datum niet bevestigen."
 
 #: src/view/com/auth/server-input/index.tsx:151
 msgid "Bluesky is an open network where you can choose your hosting provider. If you're a developer, you can host your own server."
@@ -2565,7 +2565,7 @@ msgstr "Om veiligheidsredenen moeten we een bevestigingscode naar je e-mailadres
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:209
 msgid "For security reasons, you won't be able to view this again. If you lose this app password, you'll need to generate a new one."
-msgstr "For security reasons, you won't be able to view this again. If you lose this app password, you'll need to generate a new one."
+msgstr "Om veiligheidsredenen kun je dit niet meer bekijken. Je moet een nieuw app-wachtwoord genereren als je dit app-wachtwoord kwijtraakt."
 
 #: src/view/com/modals/AddAppPasswords.tsx:233
 #: src/screens/Settings/AppearanceSettings.tsx:127
@@ -2869,7 +2869,7 @@ msgstr "Hostingprovider"
 #: src/screens/Settings/ThreadPreferences.tsx:59
 #: src/screens/Settings/ThreadPreferences.tsx:62
 msgid "Hot replies first"
-msgstr "Hot replies first"
+msgstr "Eerst warme antwoorden"
 
 #: src/view/com/modals/InAppBrowserConsent.tsx:41
 msgid "How should we open this link?"
@@ -2918,7 +2918,7 @@ msgstr "Als je deze lijst verwijdert kun je deze niet meer herstellen."
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:246
 msgid "If you have your own domain, you can use that as your handle. This lets you self-verify your identity – <0>learn more</0>."
-msgstr "If you have your own domain, you can use that as your handle. This lets you self-verify your identity – <0>learn more</0>."
+msgstr "Als je je eigen domein hebt, kun je dat als je handle gebruiken. Hiermee kun je je identiteit zelf verifiëren – <0>leer meer</0>."
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:658
 msgid "If you remove this post, you won't be able to recover it."
@@ -4048,7 +4048,7 @@ msgstr "Introductie opnieuw tonen"
 
 #: src/view/com/composer/Composer.tsx:331
 msgid "One or more GIFs is missing alt text."
-msgstr "One or more GIFs is missing alt text."
+msgstr "Alt-tekst ontbreekt bij een of meer GIF's."
 
 #: src/view/com/composer/Composer.tsx:328
 msgid "One or more images is missing alt text."
@@ -4056,7 +4056,7 @@ msgstr "Bij een of meer afbeeldingen ontbreekt de alt-tekst."
 
 #: src/view/com/composer/Composer.tsx:338
 msgid "One or more videos is missing alt text."
-msgstr "One or more videos is missing alt text."
+msgstr "Alt-tekst ontbreekt bij een of meer video's."
 
 #: src/view/com/composer/videos/SubtitleFilePicker.tsx:40
 msgid "Only WebVTT (.vtt) files are supported"
@@ -4102,7 +4102,7 @@ msgstr "Avatar-maker openen"
 
 #: src/screens/Settings/AccountSettings.tsx:119
 msgid "Open change handle dialog"
-msgstr "Open change handle dialog"
+msgstr "Open dialoogvenster voor handle wijzigen"
 
 #: src/screens/Messages/components/ChatListItem.tsx:272
 #: src/screens/Messages/components/ChatListItem.tsx:273
@@ -4134,7 +4134,7 @@ msgstr "Privéberichtopties openen"
 
 #: src/screens/Settings/Settings.tsx:321
 msgid "Open moderation debug page"
-msgstr "Open moderation debug page"
+msgstr "Open moderatie debugpagina"
 
 #: src/screens/Moderation/index.tsx:225
 msgid "Open muted words and tags settings"
@@ -4447,7 +4447,7 @@ msgstr "Bevestig je e-mailadres voordat je het wijzigt. Dit is een tijdelijke ve
 #: src/view/com/modals/AddAppPasswords.tsx:94
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:114
 msgid "Please enter a unique name for this app password or use our randomly generated one."
-msgstr "Please enter a unique name for this app password or use our randomly generated one."
+msgstr "Voer een unieke naam in voor dit app-wachtwoord of gebruik ons willekeurig gegenereerde wachtwoord."
 
 #: src/view/com/modals/AddAppPasswords.tsx:151
 #: src/components/dialogs/MutedWords.tsx:86
@@ -4502,7 +4502,7 @@ msgstr "Bericht"
 #: src/view/com/composer/Composer.tsx:935
 msgctxt "action"
 msgid "Post All"
-msgstr "Post All"
+msgstr "Alles plaatsen"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:105
 #: src/lib/moderation/useModerationCauseDescription.ts:104
@@ -4613,7 +4613,7 @@ msgstr "Primaire taal"
 #: src/screens/Settings/ThreadPreferences.tsx:104
 #: src/screens/Settings/ThreadPreferences.tsx:109
 msgid "Prioritize your Follows"
-msgstr "Prioritize your Follows"
+msgstr "Prioriteit aan je volgers geven"
 
 #: src/view/screens/PreferencesThreads.tsx:92
 #: src/screens/Settings/NotificationSettings.tsx:53
@@ -4636,12 +4636,12 @@ msgstr "Privacybeleid"
 #: src/Navigation.tsx:345
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:32
 msgid "Privacy and Security"
-msgstr "Privacy and Security"
+msgstr "Privacy en beveiliging"
 
 #: src/screens/Settings/Settings.tsx:153
 #: src/screens/Settings/Settings.tsx:156
 msgid "Privacy and security"
-msgstr "Privacy and security"
+msgstr "Privacy en beveiliging"
 
 #: src/lib/api/index.ts:59
 #: src/screens/Login/ForgotPasswordForm.tsx:149
@@ -4735,7 +4735,7 @@ msgstr "Willekeurig (ook bekend als \"Berichtenroulette\")"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:565
 msgid "Rate limit exceeded – you've tried to change your handle too many times in a short period. Please wait a minute before trying again."
-msgstr "Rate limit exceeded – you've tried to change your handle too many times in a short period. Please wait a minute before trying again."
+msgstr "Snelheidslimiet overschreden - je hebt in korte tijd te vaak geprobeerd je handle te wijzigen. Wacht een minuut voordat je het opnieuw probeert."
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:565
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:575
@@ -5117,7 +5117,7 @@ msgstr "Alt-tekst vereisen voor het plaatsen"
 
 #: src/screens/Settings/components/Email2FAToggle.tsx:54
 msgid "Require an email code to log in to your account."
-msgstr "Require an email code to log in to your account."
+msgstr "Een e-mailcode is nodig om je aan te melden bij je account."
 
 #: src/view/screens/Settings/Email2FAToggle.tsx:51
 #: src/screens/Signup/StepInfo/index.tsx:159
@@ -5233,7 +5233,7 @@ msgstr "Opslaan"
 
 #: src/view/com/modals/EditProfile.tsx:227
 msgid "Save Changes"
-msgstr "Save Changes"
+msgstr "Wijzigingen opslaan"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:179
 msgid "Save QR code"
@@ -5260,7 +5260,7 @@ msgstr "Bijgesneden afbeelding opslaan"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:227
 msgid "Save new handle"
-msgstr "Save new handle"
+msgstr "Nieuwe handle opslaan"
 
 #: src/view/screens/ProfileFeed.tsx:338
 #: src/view/screens/ProfileFeed.tsx:344
@@ -5282,7 +5282,7 @@ msgstr "Opgeslagen in je feeds"
 
 #: src/view/com/modals/EditProfile.tsx:220
 msgid "Saves any changes to your profile"
-msgstr "Saves any changes to your profile"
+msgstr "Alle wijzigingen van je profiel opslaan"
 
 #: src/view/com/modals/ChangeHandle.tsx:159
 #: src/view/com/modals/CropImage.web.tsx:105
@@ -5377,7 +5377,7 @@ msgstr "{truncatedTag}-berichten van gebruiker bekijken"
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/Scrubber.tsx:189
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/Scrubber.tsx:190
 msgid "Seek slider. Use the arrow keys to seek forwards and backwards, and space to play/pause"
-msgstr "Seek slider. Use the arrow keys to seek forwards and backwards, and space to play/pause"
+msgstr "Zoekslider. Gebruik de pijltjestoetsen om vooruit en achteruit te zoeken en spatie om af te spelen/pauzeren"
 
 #: src/view/com/composer/photos/SelectGifBtn.tsx:35
 msgid "Select GIF"
@@ -5406,7 +5406,7 @@ msgstr "Selecteer een emoji"
 
 #: src/screens/Settings/LanguageSettings.tsx:252
 msgid "Select content languages"
-msgstr "Select content languages"
+msgstr "Inhoudstalen selecteren"
 
 #: src/screens/Login/index.tsx:117
 msgid "Select from an existing account"
@@ -5691,7 +5691,7 @@ msgstr "Verborgen reacties tonen"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:806
 msgid "Show information about when this post was created"
-msgstr "Show information about when this post was created"
+msgstr "Informatie tonen wanneer dit bericht is gemaakt"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:473
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:475
@@ -5713,29 +5713,29 @@ msgstr "Genegeerde reacties tonen"
 
 #: src/screens/Settings/Settings.tsx:96
 msgid "Show other accounts you can switch to"
-msgstr "Show other accounts you can switch to"
+msgstr "Andere accounts tonen waarnaar je kunt wisselen"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:155
 #: src/screens/Settings/FollowingFeedPreferences.tsx:96
 #: src/screens/Settings/FollowingFeedPreferences.tsx:106
 msgid "Show quote posts"
-msgstr "Show quote posts"
+msgstr "Citaatberichten tonen"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:119
 #: src/screens/Settings/FollowingFeedPreferences.tsx:60
 #: src/screens/Settings/FollowingFeedPreferences.tsx:70
 msgid "Show replies"
-msgstr "Show replies"
+msgstr "Antwoorden tonen"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:61
 #: src/screens/Settings/ThreadPreferences.tsx:118
 msgid "Show replies by people you follow before all other replies"
-msgstr "Show replies by people you follow before all other replies"
+msgstr "Antwoorden van mensen die je volgt weergeven vóór alle andere antwoorden"
 
 #: src/view/screens/PreferencesThreads.tsx:95
 #: src/screens/Settings/ThreadPreferences.tsx:143
 msgid "Show replies in a threaded view"
-msgstr "Show replies in a threaded view"
+msgstr "Antwoorden in gespreksweergave tonen"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:539
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:549
@@ -5745,13 +5745,13 @@ msgstr "Reactie voor iedereen tonen"
 #: src/screens/Settings/FollowingFeedPreferences.tsx:78
 #: src/screens/Settings/FollowingFeedPreferences.tsx:88
 msgid "Show reposts"
-msgstr "Show reposts"
+msgstr "Herplaatsingen tonen"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:85
 #: src/screens/Settings/FollowingFeedPreferences.tsx:121
 #: src/screens/Settings/FollowingFeedPreferences.tsx:131
 msgid "Show samples of your saved feeds in your Following feed"
-msgstr "Show samples of your saved feeds in your Following feed"
+msgstr "Voorbeelden van je opgeslagen feeds tonen in je Following-feed"
 
 #: src/components/moderation/ContentHider.tsx:152
 #: src/components/moderation/PostHider.tsx:79
@@ -5817,7 +5817,7 @@ msgstr "Afmelden"
 #: src/view/screens/Settings/index.tsx:431
 #: src/screens/Settings/Settings.tsx:248
 msgid "Sign out?"
-msgstr "Sign out?"
+msgstr "Afmelden?"
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:301
 #: src/view/shell/bottom-bar/BottomBar.tsx:302
@@ -5899,12 +5899,12 @@ msgstr "Sorry! Je sessie is verlopen. Meld je opnieuw aan."
 
 #: src/screens/Settings/ThreadPreferences.tsx:47
 msgid "Sort replies"
-msgstr "Sort replies"
+msgstr "Antwoorden sorteren"
 
 #: src/view/screens/PreferencesThreads.tsx:64
 #: src/screens/Settings/ThreadPreferences.tsx:54
 msgid "Sort replies by"
-msgstr "Sort replies by"
+msgstr "Antwoorden sorteren op"
 
 #: src/screens/Settings/ThreadPreferences.tsx:51
 msgid "Sort replies to the same post by:"
@@ -6039,7 +6039,7 @@ msgstr "Van account wisselen"
 #: src/screens/Settings/Settings.tsx:108
 #: src/screens/Settings/Settings.tsx:403
 msgid "Switch account"
-msgstr "Switch account"
+msgstr "Van account wisselen"
 
 #: src/view/screens/Settings/index.tsx:131
 #: src/view/screens/Settings/index.tsx:132
@@ -6245,7 +6245,7 @@ msgstr "De geselecteerde video is groter dan 50 MB."
 
 #: src/lib/strings/errors.ts:18
 msgid "The server appears to be experiencing issues. Please try again in a few moments."
-msgstr "The server appears to be experiencing issues. Please try again in a few moments."
+msgstr "Het lijkt erop dat er problemen zijn met de server. Probeer het over enkele ogenblikken opnieuw."
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:725
 msgid "The starter pack that you are trying to view is invalid. You may delete this starter pack instead."
@@ -6333,7 +6333,7 @@ msgstr "Er is een probleem opgetreden bij het ophalen van de lijst. Tik hier om 
 
 #: src/screens/Settings/AppPasswords.tsx:52
 msgid "There was an issue fetching your app passwords"
-msgstr "There was an issue fetching your app passwords"
+msgstr "Een probleem is opgetreden bij het ophalen van je app-wachtwoorden"
 
 #: src/view/com/feeds/ProfileFeedgens.tsx:155
 #: src/view/com/lists/ProfileLists.tsx:154
@@ -6342,7 +6342,7 @@ msgstr "Er is een probleem opgetreden bij het ophalen van je lijsten. Tik hier o
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:101
 msgid "There was an issue fetching your service info"
-msgstr "There was an issue fetching your service info"
+msgstr "Er is een probleem opgetreden bij het ophalen van uw servicegegevens"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:145
 msgid "There was an issue removing this feed. Please check your internet connection and try again."
@@ -6366,7 +6366,7 @@ msgstr "Er is een onverwacht probleem opgetreden in de applicatie. Laat het ons 
 
 #: src/screens/Settings/FollowingFeedPreferences.tsx:54
 msgid "These settings only apply to the Following feed."
-msgstr "These settings only apply to the Following feed."
+msgstr "Deze instellingen zijn alleen van toepassing op de volgende feed."
 
 #: src/components/moderation/ScreenHider.tsx:106
 msgid "This account has requested that users sign in to view their profile."
@@ -6419,7 +6419,7 @@ msgstr "Deze functie is in bèta. Je kunt meer lezen over repository-exporten in
 
 #: src/lib/strings/errors.ts:21
 msgid "This feature is not available while using an App Password. Please sign in with your main password."
-msgstr "This feature is not available while using an App Password. Please sign in with your main password."
+msgstr "Deze functie is niet beschikbaar bij gebruik van een app-wachtwoord. Meld je aan met je hoofdwachtwoord."
 
 #: src/view/com/posts/FeedErrorMessage.tsx:120
 msgid "This feed is currently receiving high traffic and is temporarily unavailable. Please try again later."
@@ -6441,7 +6441,7 @@ msgstr "Deze feed is niet langer online. We tonen <0>Ontdekken</0> in plaats van
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:558
 msgid "This handle is reserved. Please try a different one."
-msgstr "This handle is reserved. Please try a different one."
+msgstr "Dit handle is gereserveerd. Probeer een ander."
 
 #: src/components/dialogs/BirthDateSettings.tsx:40
 msgid "This information is not shared with other users."
@@ -6490,7 +6490,7 @@ msgstr "De auteur van dit bericht heeft het plaatsen van citaten uitgeschakeld."
 #: src/view/com/modals/AddAppPasswords.tsx:110
 #: src/view/com/post-thread/PostThreadItem.tsx:846
 msgid "This post claims to have been created on <0>{0}</0>, but was first seen by Bluesky on <1>{1}</1>."
-msgstr "This post claims to have been created on <0>{0}</0>, but was first seen by Bluesky on <1>{1}</1>."
+msgstr "Dit bericht beweert te zijn gemaakt op <0>{0}</0>, maar werd voor het eerst gezien door Bluesky op <1>{1}</1>."
 
 #: src/view/com/post-thread/PostThreadItem.tsx:152
 msgid "This post has been deleted."
@@ -6581,7 +6581,7 @@ msgstr "Gespreksvoorkeuren"
 
 #: src/screens/Settings/ThreadPreferences.tsx:134
 msgid "Threaded mode"
-msgstr "Threaded mode"
+msgstr "Gespreksmodus"
 
 #: src/view/screens/PreferencesThreads.tsx:114
 #: src/Navigation.tsx:307
@@ -6590,7 +6590,7 @@ msgstr "Gespreksvoorkeuren"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/TimeIndicator.tsx:33
 msgid "Time remaining: {time} seconds"
-msgstr "Time remaining: {time} seconds"
+msgstr "Resterende tijd: {time} seconden"
 
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:99
 msgid "To disable the email 2FA method, please verify your access to the email address."
@@ -6642,7 +6642,7 @@ msgstr "Opnieuw proberen"
 #: src/view/screens/Settings/index.tsx:712
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:48
 msgid "Two-factor authentication (2FA)"
-msgstr "Two-factor authentication (2FA)"
+msgstr "Tweefactorauthenticatie (2FA)"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:412
 msgid "Type:"
@@ -6662,7 +6662,7 @@ msgstr "Lijst niet meer negeren"
 
 #: src/lib/strings/errors.ts:11
 msgid "Unable to connect. Please check your internet connection and try again."
-msgstr "Unable to connect. Please check your internet connection and try again."
+msgstr "Kan geen verbinding maken. Controleer uw internetverbinding en probeer opnieuw."
 
 #: src/screens/Login/ForgotPasswordForm.tsx:68
 #: src/screens/Login/index.tsx:76
@@ -6810,11 +6810,11 @@ msgstr "Uitgeschreven voor lijst"
 
 #: src/view/com/composer/Composer.tsx:759
 msgid "Unsupported video type"
-msgstr "Unsupported video type"
+msgstr "Niet-ondersteund videotype"
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:66
 msgid "Unsupported video type: {0}"
-msgstr "Unsupported video type: {0}"
+msgstr "Niet-ondersteund videotype: {0}"
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:72
 #: src/lib/moderation/useReportOptions.ts:77
@@ -6829,7 +6829,7 @@ msgstr "<0>{displayName}</0> bijwerken in lijsten"
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:494
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:515
 msgid "Update to {domain}"
-msgstr "Update to {domain}"
+msgstr "Bijwerken naar {domain}"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:180
 msgid "Updating..."
@@ -6888,7 +6888,7 @@ msgstr "Video uploaden..."
 #: src/view/screens/AppPasswords.tsx:205
 #: src/screens/Settings/AppPasswords.tsx:59
 msgid "Use app passwords to sign in to other Bluesky clients without giving full access to your account or password."
-msgstr "Use app passwords to sign in to other Bluesky clients without giving full access to your account or password."
+msgstr "Gebruik app-wachtwoorden om aan te melden bij andere Bluesky-clients zonder dat je volledige toegang tot je account of wachtwoord hoeft te geven."
 
 #: src/view/com/modals/ChangeHandle.tsx:506
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:527
@@ -6903,7 +6903,7 @@ msgstr "In-app-browser gebruiken"
 #: src/screens/Settings/ContentAndMediaSettings.tsx:74
 #: src/screens/Settings/ContentAndMediaSettings.tsx:80
 msgid "Use in-app browser to open links"
-msgstr "Use in-app browser to open links"
+msgstr "In-app-browser gebruiken om links te openen"
 
 #: src/view/com/modals/InAppBrowserConsent.tsx:63
 #: src/view/com/modals/InAppBrowserConsent.tsx:65
@@ -7037,12 +7037,12 @@ msgstr "Nu verifiëren"
 #: src/screens/Settings/AccountSettings.tsx:67
 #: src/screens/Settings/AccountSettings.tsx:83
 msgid "Verify your email"
-msgstr "Verify your email"
+msgstr "Je e-mailadres verifiëren"
 
 #: src/screens/Settings/AboutSettings.tsx:59
 #: src/screens/Settings/AboutSettings.tsx:69
 msgid "Version {appVersion}"
-msgstr "Version {appVersion}"
+msgstr "Versie {appVersion}"
 
 #: src/view/screens/Settings/index.tsx:890
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:83
@@ -7365,7 +7365,7 @@ msgstr "Schrijvers"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:336
 msgid "Wrong DID returned from server. Received: {0}"
-msgstr "Wrong DID returned from server. Received: {0}"
+msgstr "Verkeerde DID teruggestuurd door server. Ontvangen: {0}"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:78
 msgid "Yes"
@@ -7648,7 +7648,7 @@ msgstr "Je hebt @{0} eerder gedeactiveerd."
 
 #: src/screens/Settings/Settings.tsx:249
 msgid "You will be signed out of all your accounts."
-msgstr "You will be signed out of all your accounts."
+msgstr "Je wordt afgemeld bij al je accounts."
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:217
 msgid "You will no longer receive notifications for this thread"
@@ -7743,7 +7743,7 @@ msgstr "Je berichten, vind-ik-leuks en blokkeringen zijn openbaar. Negeringen zi
 
 #: src/view/com/composer/Composer.tsx:467
 msgid "Your posts have been published"
-msgstr "Your posts have been published"
+msgstr "Je berichten zijn gepubliceerd"
 
 #: src/view/screens/Settings/index.tsx:119
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:75
@@ -7993,7 +7993,7 @@ msgstr "{0} personen hebben dit startpakket gebruikt!"
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:203
 msgid "{0} unread items"
-msgstr "{0} unread items"
+msgstr "{0} ongelezen items"
 
 #: src/lib/hooks/useTimeAgo.ts:158
 msgid "{0}d"
@@ -8017,7 +8017,7 @@ msgstr "{0}s"
 
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:252
 msgid "{badge} unread items"
-msgstr "{badge} unread items"
+msgstr "{badge} ongelezen items"
 
 #: src/components/LabelingServiceCard/index.tsx:96
 msgid "{count, plural, one {Liked by # user} other {Liked by # users}}"
@@ -8025,7 +8025,7 @@ msgstr "{count, plural, one {Leuk gevonden door # gebruiker} other {Leuk gevonde
 
 #: src/view/shell/desktop/LeftNav.tsx:223
 msgid "{count} unread items"
-msgstr "{count} unread items"
+msgstr "{count} ongelezen items"
 
 #: src/lib/generate-starterpack.ts:108
 #: src/screens/StarterPack/Wizard/index.tsx:180
@@ -8042,91 +8042,91 @@ msgstr "{estimatedTimeMins, plural, one {minuut} other {minuten}}"
 
 #: src/view/com/notifications/FeedItem.tsx:300
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> followed you"
-msgstr "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> followed you"
+msgstr "{firstAuthorLink} en <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} andere} other {{formattedAuthorsCount} anderen}}</0> hebben je gevolgd"
 
 #: src/view/com/notifications/FeedItem.tsx:326
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> liked your custom feed"
-msgstr "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> liked your custom feed"
+msgstr "{firstAuthorLink} en <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} andere} other {{formattedAuthorsCount} anderen}}</0> vonden je gepersonaliseerde feed leuk"
 
 #: src/view/com/notifications/FeedItem.tsx:222
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> liked your post"
-msgstr "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> liked your post"
+msgstr "{firstAuthorLink} en <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} andere} other {{formattedAuthorsCount} anderen}}</0> vonden je bericht leuk"
 
 #: src/view/com/notifications/FeedItem.tsx:246
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> reposted your post"
-msgstr "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> reposted your post"
+msgstr "{firstAuthorLink} en <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} andere} other {{formattedAuthorsCount} anderen}}</0> hebben je bericht opnieuw geplaatst"
 
 #: src/view/com/notifications/FeedItem.tsx:350
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> signed up with your starter pack"
-msgstr "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> signed up with your starter pack"
+msgstr "{firstAuthorLink} en <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} andere} other {{formattedAuthorsCount} anderen}}</0> hebben zich geregistreerd met je startpakket"
 
 #: src/view/com/notifications/FeedItem.tsx:312
 msgid "{firstAuthorLink} followed you"
-msgstr "{firstAuthorLink} followed you"
+msgstr "{firstAuthorLink} volgde je"
 
 #: src/view/com/notifications/FeedItem.tsx:289
 msgid "{firstAuthorLink} followed you back"
-msgstr "{firstAuthorLink} followed you back"
+msgstr "{firstAuthorLink} volgde je terug"
 
 #: src/view/com/notifications/FeedItem.tsx:338
 msgid "{firstAuthorLink} liked your custom feed"
-msgstr "{firstAuthorLink} liked your custom feed"
+msgstr "{firstAuthorLink} vond je gepersonaliseerde feed leuk"
 
 #: src/view/com/notifications/FeedItem.tsx:234
 msgid "{firstAuthorLink} liked your post"
-msgstr "{firstAuthorLink} liked your post"
+msgstr "{firstAuthorLink} vond je bericht leuk"
 
 #: src/view/com/notifications/FeedItem.tsx:258
 msgid "{firstAuthorLink} reposted your post"
-msgstr "{firstAuthorLink} reposted your post"
+msgstr "{firstAuthorLink} heeft je bericht opnieuw geplaatst"
 
 #: src/view/com/notifications/FeedItem.tsx:362
 msgid "{firstAuthorLink} signed up with your starter pack"
-msgstr "{firstAuthorLink} signed up with your starter pack"
+msgstr "{firstAuthorLink} registreerde zich met je startpakket"
 
 #: src/view/com/notifications/FeedItem.tsx:293
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} followed you"
-msgstr "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} followed you"
+msgstr "{firstAuthorName} en {additionalAuthorsCount, plural, one {{formattedAuthorsCount} andere} other {{formattedAuthorsCount} anderen}} volgden je"
 
 #: src/view/com/notifications/FeedItem.tsx:319
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} liked your custom feed"
-msgstr "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} liked your custom feed"
+msgstr "{firstAuthorName} en {additionalAuthorsCount, plural, one {{formattedAuthorsCount} andere} other {{formattedAuthorsCount} anderen}} vonden je gepersonaliseerde feed leuk"
 
 #: src/view/com/notifications/FeedItem.tsx:215
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} liked your post"
-msgstr "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} liked your post"
+msgstr "{firstAuthorName} en {additionalAuthorsCount, plural, one {{formattedAuthorsCount} andere} other {{formattedAuthorsCount} anderen}} vonden je bericht leuk"
 
 #: src/view/com/notifications/FeedItem.tsx:239
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} reposted your post"
-msgstr "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} reposted your post"
+msgstr "{firstAuthorName} en {additionalAuthorsCount, plural, one {{formattedAuthorsCount} andere} other {{formattedAuthorsCount} anderen}} hebben je bericht opnieuw geplaatst"
 
 #: src/view/com/notifications/FeedItem.tsx:343
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} signed up with your starter pack"
-msgstr "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} signed up with your starter pack"
+msgstr "{firstAuthorName} en {additionalAuthorsCount, plural, one {{formattedAuthorsCount} andere} other {{formattedAuthorsCount} anderen}} hebben zich geregistreerd met je startpakket"
 
 #: src/view/com/notifications/FeedItem.tsx:298
 msgid "{firstAuthorName} followed you"
-msgstr "{firstAuthorName} followed you"
+msgstr "{firstAuthorName} volgde je"
 
 #: src/view/com/notifications/FeedItem.tsx:288
 msgid "{firstAuthorName} followed you back"
-msgstr "{firstAuthorName} followed you back"
+msgstr "{firstAuthorName} volgde je terug"
 
 #: src/view/com/notifications/FeedItem.tsx:324
 msgid "{firstAuthorName} liked your custom feed"
-msgstr "{firstAuthorName} liked your custom feed"
+msgstr "{firstAuthorName} vond je gepersonaliseerde feed leuk"
 
 #: src/view/com/notifications/FeedItem.tsx:220
 msgid "{firstAuthorName} liked your post"
-msgstr "{firstAuthorName} liked your post"
+msgstr "{firstAuthorName} vond je bericht leuk"
 
 #: src/view/com/notifications/FeedItem.tsx:244
 msgid "{firstAuthorName} reposted your post"
-msgstr "{firstAuthorName} reposted your post"
+msgstr "{firstAuthorName} heeft je bericht opnieuw geplaatst"
 
 #: src/view/com/notifications/FeedItem.tsx:348
 msgid "{firstAuthorName} signed up with your starter pack"
-msgstr "{firstAuthorName} signed up with your starter pack"
+msgstr "{firstAuthorName} heeft zich geregistreerd met je startpakket"
 
 #: src/components/ProfileHoverCard/index.web.tsx:508
 #: src/screens/Profile/Header/Metrics.tsx:49
@@ -8149,7 +8149,7 @@ msgstr "{numUnreadNotifications} ongelezen"
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:230
 msgid "{numUnreadNotifications} unread items"
-msgstr "{numUnreadNotifications} unread items"
+msgstr "{numUnreadNotifications} ongelezen items"
 
 #: src/components/NewskieDialog.tsx:111
 msgid "{profileName} joined Bluesky using a starter pack {0} ago"
