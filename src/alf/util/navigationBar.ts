@@ -8,7 +8,7 @@ export function setNavigationBar(themeType: 'theme' | 'lightbox', t: Theme) {
     if (themeType === 'theme') {
       NavigationBar.setBackgroundColorAsync(t.atoms.bg.backgroundColor)
       NavigationBar.setBorderColorAsync(t.atoms.bg.backgroundColor)
-      NavigationBar.setButtonStyleAsync(t.name !== 'light' ? 'light' : 'dark')
+      NavigationBar.setButtonStyleAsync(t.scheme === 'dark' ? 'light' : 'dark')
     } else {
       NavigationBar.setBackgroundColorAsync('black')
       NavigationBar.setBorderColorAsync('black')

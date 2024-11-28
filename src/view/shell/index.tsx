@@ -141,7 +141,7 @@ export const Shell: React.FC = function ShellImpl() {
     <View testID="mobileShellView" style={[a.h_full, t.atoms.bg]}>
       <StatusBar
         style={
-          t.name !== 'light' || (isIOS && fullyExpandedCount > 0)
+          t.scheme === 'dark' || (isIOS && fullyExpandedCount > 0)
             ? 'light'
             : 'dark'
         }
