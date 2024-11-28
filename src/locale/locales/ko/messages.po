@@ -6057,7 +6057,7 @@ msgstr "답글 표시"
 
 #: src/screens/Settings/ThreadPreferences.tsx:118
 msgid "Show replies by people you follow before all other replies"
-msgstr "내가 팔로우하는 사람들의 답글을 다른 모든 답글보다 먼저 표시합니다"
+msgstr "내가 팔로우하는 사람들의 답글을 다른 모든 답글보다 먼저 표시"
 
 #: src/screens/Settings/ThreadPreferences.tsx:143
 msgid "Show replies in a threaded view"
