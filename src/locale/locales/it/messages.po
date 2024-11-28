@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Italian localization\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-11-28 01:11+0000\n"
-"PO-Revision-Date: 2024-11-28 10:50+0000\n"
+"PO-Revision-Date: 2024-11-28 15:07+0000\n"
 "Last-Translator: Michele Locati <michele@locati.it>, 2024\n"
 "Language-Team: Italian (https://app.transifex.com/mlocati/teams/201833/it/)\n"
 "Language: it\n"
@@ -883,7 +883,7 @@ msgstr "Sicuro di rimuoverlo dai tuoi feed?"
 
 #: src/view/com/composer/Composer.tsx:672
 msgid "Are you sure you'd like to discard this draft?"
-msgstr "Confermi di voler eliminare questa bozza?"
+msgstr "Confermi di voler scartare questa bozza?"
 
 #: src/view/com/composer/Composer.tsx:846
 msgid "Are you sure you'd like to discard this post?"
