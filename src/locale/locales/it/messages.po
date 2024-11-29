@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Italian localization\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-11-28 01:11+0000\n"
-"PO-Revision-Date: 2024-11-29 13:31+0000\n"
+"PO-Revision-Date: 2024-11-29 16:48+0000\n"
 "Last-Translator: Michele Locati <michele@locati.it>, 2024\n"
 "Language-Team: Italian (https://app.transifex.com/mlocati/teams/201833/it/)\n"
 "Language: it\n"
@@ -4890,7 +4890,7 @@ msgstr "Post fissato"
 
 #: src/state/queries/pinned-post.ts:61
 msgid "Post unpinned"
-msgstr "Post sbloccato"
+msgstr "Post non più fissato"
 
 #: src/components/TagMenu/index.tsx:268
 msgid "posts"
@@ -7085,24 +7085,24 @@ msgstr "Riattiva audio"
 #: src/view/screens/ProfileFeed.tsx:296
 #: src/view/screens/ProfileList.tsx:676
 msgid "Unpin"
-msgstr "Sblocca"
+msgstr "Non fissare più"
 
 #: src/view/screens/ProfileFeed.tsx:293
 msgid "Unpin from home"
-msgstr "Sblocca dalla Home"
+msgstr "Non fissare più nella home"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:379
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:386
 msgid "Unpin from profile"
-msgstr "Sblocca dal profilo"
+msgstr "Non fissare più nel profilo"
 
 #: src/view/screens/ProfileList.tsx:559
 msgid "Unpin moderation list"
-msgstr "Sblocca lista di moderazione"
+msgstr "Non fissare più la lista di moderazione"
 
 #: src/view/screens/ProfileList.tsx:356
 msgid "Unpinned from your feeds"
-msgstr "Sbloccati dai tuoi feed"
+msgstr "Non più fissato nei tuoi feed"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:236
 msgid "Unsubscribe"
