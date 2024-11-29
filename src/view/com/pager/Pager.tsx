@@ -99,6 +99,7 @@ export const Pager = forwardRef<PagerRef, React.PropsWithChildren<Props>>(
         onPageSelected(e: PagerViewOnPageSelectedEventData) {
           'worklet'
           dragPage.set(e.position)
+          dragProgress.set(0)
           runOnJS(onPageSelectedJSThread)(e.position)
         },
       },

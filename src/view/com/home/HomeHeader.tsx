@@ -62,6 +62,7 @@ export function HomeHeader(
         testID={props.testID}
         items={items}
         indicatorColor={pal.colors.link}
+        dragGesture={props.dragGesture}
       />
     </HomeHeaderLayout>
   )
