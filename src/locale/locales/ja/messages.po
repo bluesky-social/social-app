@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-28 11:05+0900\n"
+"PO-Revision-Date: 2024-11-29 15:18+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -3042,7 +3042,7 @@ msgstr "ユーザーのプロフィールへ移動"
 #: src/view/com/composer/labels/LabelsBtn.tsx:202
 #: src/view/com/composer/labels/LabelsBtn.tsx:205
 msgid "Graphic Media"
-msgstr "生々しいメディア"
+msgstr "生々しいメディア（グロ・事故・戦争・災害等）"
 
 #: src/state/shell/progress-guide.tsx:161
 msgid "Half way there!"
@@ -5128,7 +5128,7 @@ msgstr "{displayName}をスターターパックから削除"
 #: src/screens/Settings/Settings.tsx:437
 #: src/screens/Settings/Settings.tsx:440
 msgid "Remove account"
-msgstr "アカウントを削除"
+msgstr "アカウント切替リストから取り除く"
 
 #: src/view/com/composer/ExternalEmbedRemoveBtn.tsx:15
 msgid "Remove attachment"
@@ -6415,7 +6415,7 @@ msgstr "もう少し教えて"
 
 #: src/view/shell/desktop/RightNav.tsx:89
 msgid "Terms"
-msgstr "条件"
+msgstr "規約"
 
 #: src/Navigation.tsx:274
 #: src/screens/Settings/AboutSettings.tsx:29
