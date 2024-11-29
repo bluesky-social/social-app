@@ -80,6 +80,7 @@ export function LanguageSettingsScreen({}: Props) {
               </Text>
               <View style={[a.relative, web([a.w_full, {maxWidth: 400}])]}>
                 <RNPickerSelect
+                  darkTheme={t.scheme === 'dark'}
                   placeholder={{}}
                   value={sanitizeAppLanguageSetting(langPrefs.appLanguage)}
                   onValueChange={onChangeAppLanguage}
@@ -165,6 +166,7 @@ export function LanguageSettingsScreen({}: Props) {
               </Text>
               <View style={[a.relative, web([a.w_full, {maxWidth: 400}])]}>
                 <RNPickerSelect
+                  darkTheme={t.scheme === 'dark'}
                   placeholder={{}}
                   value={langPrefs.primaryLanguage}
                   onValueChange={onChangePrimaryLanguage}
