@@ -34,10 +34,19 @@ export function Container({
     }
   }, [])
 
+  let backgroundColorClass = 'bg-white hover:bg-neutral-50'
+  if (
+    window.matchMedia &&
+    window.matchMedia('(prefers-color-scheme: dark)').matches
+  ) {
+    backgroundColorClass = 'bg-[#161e27] hover:bg-[#202831] text-[#f1f3f5]'
+  }
+  const className = `w-full ${backgroundColorClass} relative transition-colors max-w-[600px] min-w-[300px] flex border rounded-xl`
+
   return (
     <div
       ref={ref}
-      className="w-full bg-white hover:bg-neutral-50 relative transition-colors max-w-[600px] min-w-[300px] flex border rounded-xl"
+      className={className}
       onClick={() => {
         if (ref.current && href) {
           // forwardRef requires preact/compat - let's keep it simple
