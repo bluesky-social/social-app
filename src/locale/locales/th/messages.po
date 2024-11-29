@@ -218,7 +218,7 @@ msgstr ""
 #~ msgstr ""
 
 #: src/lib/generate-starterpack.ts:108
-#: src/screens/StarterPack/Wizard/index.tsx:183
+#: src/screens/StarterPack/Wizard/index.tsx:180
 msgid "{displayName}'s Starter Pack"
 msgstr "ชุดเริ่มต้นของ {displayName}"
 
@@ -361,12 +361,12 @@ msgstr "{profileName} เข้าร่วม Bluesky โดยใช้ชุ�
 #~ msgid "<0>{0} </0>and<1> </1><2>{1} </2>are included in your starter pack"
 #~ msgstr ""
 
-#: src/screens/StarterPack/Wizard/index.tsx:475
+#: src/screens/StarterPack/Wizard/index.tsx:472
 msgctxt "profiles"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
 msgstr ""
 
-#: src/screens/StarterPack/Wizard/index.tsx:528
+#: src/screens/StarterPack/Wizard/index.tsx:525
 msgctxt "feeds"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
 msgstr ""
@@ -383,7 +383,7 @@ msgstr ""
 msgid "<0>{0}</0> {1, plural, one {following} other {following}}"
 msgstr ""
 
-#: src/screens/StarterPack/Wizard/index.tsx:516
+#: src/screens/StarterPack/Wizard/index.tsx:513
 msgid "<0>{0}</0> and<1> </1><2>{1} </2>are included in your starter pack"
 msgstr ""
 
@@ -391,7 +391,7 @@ msgstr ""
 #~ msgid "<0>{0}</0> following"
 #~ msgstr "<0>{0}</0> ติดตามอยู่"
 
-#: src/screens/StarterPack/Wizard/index.tsx:509
+#: src/screens/StarterPack/Wizard/index.tsx:506
 msgid "<0>{0}</0> is included in your starter pack"
 msgstr ""
 
@@ -432,7 +432,7 @@ msgstr ""
 #~ msgid "<0>Welcome to</0><1>Bluesky</1>"
 #~ msgstr ""
 
-#: src/screens/StarterPack/Wizard/index.tsx:466
+#: src/screens/StarterPack/Wizard/index.tsx:463
 msgid "<0>You</0> and<1> </1><2>{0} </2>are included in your starter pack"
 msgstr "<0>คุณ</0> และ<1> </1><2>{0} </2>ถูกรวมอยู่ในชุดเริ่มต้นของคุณ"
 
@@ -468,7 +468,7 @@ msgid "About"
 msgstr ""
 
 #: src/view/com/util/ViewHeader.tsx:89
-#: src/view/screens/Search/Search.tsx:883
+#: src/view/screens/Search/Search.tsx:884
 msgid "Access navigation links and settings"
 msgstr "เข้าถึงการค้นหาลิงก์และการตั้งค่า"
 
@@ -552,7 +552,7 @@ msgstr "เลิกปิดเสียงบัญชีแล้ว"
 msgid "Add"
 msgstr "เพิ่ม"
 
-#: src/screens/StarterPack/Wizard/index.tsx:577
+#: src/screens/StarterPack/Wizard/index.tsx:574
 msgid "Add {0} more to continue"
 msgstr "เพิ่มอีก {0} คนเพื่อดำเนินการต่อ"
 
@@ -639,7 +639,7 @@ msgstr ""
 msgid "Add recommended feeds"
 msgstr "เพิ่มฟีตที่แนะนำ"
 
-#: src/screens/StarterPack/Wizard/index.tsx:497
+#: src/screens/StarterPack/Wizard/index.tsx:494
 msgid "Add some feeds to your starter pack!"
 msgstr "เพิ่มบางฟีตจากตัวเริ่มต้น"
 
@@ -736,7 +736,7 @@ msgstr "อนุญาตให้คนเข้าถึงข้อควา
 msgid "Allow new messages from"
 msgstr "อนุญาตให้เข้าถึงข้อความใหม่จาก"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:363
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:359
 msgid "Allow replies from:"
 msgstr "อนุญาตให้ตอบกลับจาก"
 
@@ -1085,8 +1085,8 @@ msgstr "ต้องมีอย่างน้อย 3 ตัวอักษร
 msgid "Autoplay options have moved to the <0>Content and Media settings</0>."
 msgstr ""
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:82
 #: src/screens/Settings/ContentAndMediaSettings.tsx:88
+#: src/screens/Settings/ContentAndMediaSettings.tsx:94
 msgid "Autoplay videos and GIFs"
 msgstr ""
 
@@ -1105,7 +1105,7 @@ msgstr ""
 #: src/screens/Messages/components/ChatDisabled.tsx:134
 #: src/screens/Profile/Header/Shell.tsx:112
 #: src/screens/Signup/BackNextButtons.tsx:41
-#: src/screens/StarterPack/Wizard/index.tsx:307
+#: src/screens/StarterPack/Wizard/index.tsx:304
 #: src/view/com/util/ViewHeader.tsx:87
 msgid "Back"
 msgstr "กลับ"
@@ -1133,7 +1133,7 @@ msgstr ""
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:79
 #: src/components/dms/MessageProfileButton.tsx:89
-#: src/screens/Messages/Conversation.tsx:219
+#: src/screens/Messages/Conversation.tsx:210
 msgid "Before you may message another user, you must first verify your email."
 msgstr ""
 
@@ -1203,7 +1203,7 @@ msgstr "บัญชีที่ถูกบล็อกไม่สามาร
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you. You will not see their content and they will be prevented from seeing yours."
 msgstr "บัญชีที่ถูกบล็อกไม่สามารถตอบในกระทู้ของคุณ, กล่าวถึงคุณ, หรือมีปฏิสัมพันธ์กับคุณได้ คุณจะไม่เห็นเนื้อหาของพวกเขาและพวกเขาจะไม่เห็นเนื้อหาของคุณ"
 
-#: src/view/com/post-thread/PostThread.tsx:412
+#: src/view/com/post-thread/PostThread.tsx:421
 msgid "Blocked post."
 msgstr "โพสต์ที่ถูกบล็อก"
 
@@ -1390,7 +1390,7 @@ msgstr ""
 #: src/view/com/modals/VerifyEmail.tsx:255
 #: src/view/com/modals/VerifyEmail.tsx:261
 #: src/view/com/util/post-ctrls/RepostButton.tsx:203
-#: src/view/screens/Search/Search.tsx:911
+#: src/view/screens/Search/Search.tsx:912
 msgid "Cancel"
 msgstr "ยกเลิก"
 
@@ -1427,7 +1427,7 @@ msgid "Cancel reactivation and log out"
 msgstr "ยกเลิกการเปิดใช้งานใหม่และออกจากระบบ"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:88
-#: src/view/screens/Search/Search.tsx:903
+#: src/view/screens/Search/Search.tsx:904
 msgid "Cancel search"
 msgstr "ยกเลิกการค้นหา"
 
@@ -1574,7 +1574,7 @@ msgstr "ตรวจสอบกล่องขาเข้าของคุณ
 msgid "Choose domain verification method"
 msgstr ""
 
-#: src/screens/StarterPack/Wizard/index.tsx:199
+#: src/screens/StarterPack/Wizard/index.tsx:196
 msgid "Choose Feeds"
 msgstr "เลือกฟีด"
 
@@ -1582,7 +1582,7 @@ msgstr "เลือกฟีด"
 msgid "Choose for me"
 msgstr "เลือกให้ฉัน"
 
-#: src/screens/StarterPack/Wizard/index.tsx:195
+#: src/screens/StarterPack/Wizard/index.tsx:192
 msgid "Choose People"
 msgstr "เลือกผู้คน"
 
@@ -1898,7 +1898,7 @@ msgid "Content and media"
 msgstr ""
 
 #: src/Navigation.tsx:353
-#: src/screens/Settings/ContentAndMediaSettings.tsx:44
+#: src/screens/Settings/ContentAndMediaSettings.tsx:35
 msgid "Content and Media"
 msgstr ""
 
@@ -2331,7 +2331,7 @@ msgstr "ถูกลบ"
 msgid "Deleted Account"
 msgstr ""
 
-#: src/view/com/post-thread/PostThread.tsx:398
+#: src/view/com/post-thread/PostThread.tsx:407
 msgid "Deleted post."
 msgstr "โพสต์ถูกลบ."
 
@@ -2468,7 +2468,7 @@ msgstr "ค้นพบฟีดใหม่ๆ"
 msgid "Discover New Feeds"
 msgstr "ค้นพบฟีดใหม่"
 
-#: src/components/Dialog/index.tsx:318
+#: src/components/Dialog/index.tsx:311
 msgid "Dismiss"
 msgstr "ปิด"
 
@@ -2561,7 +2561,7 @@ msgstr "เสร็จสิ้น"
 msgid "Done{extraText}"
 msgstr "เสร็จสิ้น{extraText}"
 
-#: src/components/Dialog/index.tsx:319
+#: src/components/Dialog/index.tsx:312
 msgid "Double tap to close the dialog"
 msgstr "แตะสองครั้งเพื่อปิดหน้าต่าง"
 
@@ -2636,8 +2636,8 @@ msgstr "แต่ละรหัสใช้งานได้เพียงค
 
 #: src/screens/Settings/AccountSettings.tsx:104
 #: src/screens/StarterPack/StarterPackScreen.tsx:574
-#: src/screens/StarterPack/Wizard/index.tsx:560
-#: src/screens/StarterPack/Wizard/index.tsx:567
+#: src/screens/StarterPack/Wizard/index.tsx:557
+#: src/screens/StarterPack/Wizard/index.tsx:564
 #: src/view/screens/Feeds.tsx:386
 #: src/view/screens/Feeds.tsx:454
 msgid "Edit"
@@ -2956,7 +2956,7 @@ msgstr "เกิดข้อผิดพลาดการตอบสนอง
 msgid "Error:"
 msgstr "ข้อผิดพลาด :"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:368
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:364
 msgid "Everybody"
 msgstr "ทุกคน"
 
@@ -3064,8 +3064,8 @@ msgstr "ส่งออกข้อมูลของฉัน"
 msgid "Export My Data"
 msgstr "ส่งออกข้อมูลของฉัน"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:73
-#: src/screens/Settings/ContentAndMediaSettings.tsx:76
+#: src/screens/Settings/ContentAndMediaSettings.tsx:64
+#: src/screens/Settings/ContentAndMediaSettings.tsx:67
 msgid "External media"
 msgstr ""
 
@@ -3101,8 +3101,8 @@ msgstr ""
 msgid "Failed to create app password. Please try again."
 msgstr ""
 
-#: src/screens/StarterPack/Wizard/index.tsx:238
-#: src/screens/StarterPack/Wizard/index.tsx:246
+#: src/screens/StarterPack/Wizard/index.tsx:235
+#: src/screens/StarterPack/Wizard/index.tsx:243
 msgid "Failed to create starter pack"
 msgstr "สร้างชุดเริ่มต้นไม่สำเร็จ"
 
@@ -3306,7 +3306,7 @@ msgstr "ค้นหาโพสต์และบัญชีใน Bluesky"
 #~ msgid "Fine-tune the discussion threads."
 #~ msgstr "ปรับแต่งหัวข้อเธรต"
 
-#: src/screens/StarterPack/Wizard/index.tsx:200
+#: src/screens/StarterPack/Wizard/index.tsx:197
 msgid "Finish"
 msgstr "เสร็จสิ้น"
 
@@ -3418,7 +3418,7 @@ msgstr "ติดตามโดย <0>{0}</0> และ <1>{1}</1>"
 msgid "Followed by <0>{0}</0>, <1>{1}</1>, and {2, plural, one {# other} other {# others}}"
 msgstr "ติดตามโดย <0>{0}</0>, <1>{1}</1> และ {2, plural, one {# other} other {# others}}"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:407
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:403
 msgid "Followed users"
 msgstr "บัญชีที่ติดตาม"
 
@@ -3470,8 +3470,8 @@ msgstr "ติดตาม {0}"
 msgid "Following {name}"
 msgstr "ติดตาม {name}"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:65
-#: src/screens/Settings/ContentAndMediaSettings.tsx:68
+#: src/screens/Settings/ContentAndMediaSettings.tsx:56
+#: src/screens/Settings/ContentAndMediaSettings.tsx:59
 msgid "Following feed preferences"
 msgstr "การตั้งค่าฟีดการติดตาม"
 
@@ -3624,13 +3624,13 @@ msgstr ""
 #: src/components/dms/ReportDialog.tsx:149
 #: src/components/ReportDialog/SelectReportOptionView.tsx:80
 #: src/components/ReportDialog/SubmitView.tsx:109
-#: src/screens/Onboarding/Layout.tsx:103
-#: src/screens/Onboarding/Layout.tsx:192
+#: src/screens/Onboarding/Layout.tsx:104
+#: src/screens/Onboarding/Layout.tsx:193
 #: src/screens/Signup/BackNextButtons.tsx:35
 msgid "Go back to previous step"
 msgstr "กลับไปยังก่อนหน้า"
 
-#: src/screens/StarterPack/Wizard/index.tsx:308
+#: src/screens/StarterPack/Wizard/index.tsx:305
 msgid "Go back to the previous step"
 msgstr "กลับไปยังก่อนหน้า"
 
@@ -3728,8 +3728,8 @@ msgid "Help people know you're not a bot by uploading a picture or creating an a
 msgstr "ทำให้คนทราบว่าคุณไม่ใช่หุ่นยนต์โดยการอัพโหลตรูปภาพหรือการสร้างอวาตาร์"
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:127
-msgid "Helps external sites estimate traffic from Bluesky."
-msgstr ""
+#~ msgid "Helps external sites estimate traffic from Bluesky."
+#~ msgstr ""
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:140
 #~ msgid "Here are some accounts for you to follow"
@@ -4075,7 +4075,7 @@ msgstr "ดูเหมือนว่าอีเมลคุณจะกรอ
 msgid "It's correct"
 msgstr "ถูกต้อง"
 
-#: src/screens/StarterPack/Wizard/index.tsx:461
+#: src/screens/StarterPack/Wizard/index.tsx:458
 msgid "It's just you right now! Add more people to your starter pack by searching above."
 msgstr "ตอนนี้มีแค่คุณแล้ว! เพิ่มผู้คนในชุดเริ่มต้นของคุณโดยการค้นหาด้านบนนี้"
 
@@ -4467,8 +4467,8 @@ msgstr "สร้างสักหนึ่งอันสำหรับฉั
 msgid "Make sure this is where you intend to go!"
 msgstr "โปรดตรวจสอบให้แน่ใจว่านี่คือจุดหมายที่คุณต้องการไป"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:49
-#: src/screens/Settings/ContentAndMediaSettings.tsx:52
+#: src/screens/Settings/ContentAndMediaSettings.tsx:40
+#: src/screens/Settings/ContentAndMediaSettings.tsx:43
 msgid "Manage saved feeds"
 msgstr ""
 
@@ -4493,13 +4493,13 @@ msgstr ""
 msgid "mentioned users"
 msgstr "ผู้ใช้ที่ถูกกล่าวถึง"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:397
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:393
 msgid "Mentioned users"
 msgstr "ผู้ใช้ที่ถูกกล่าวถึง"
 
 #: src/components/Menu/index.tsx:95
 #: src/view/com/util/ViewHeader.tsx:87
-#: src/view/screens/Search/Search.tsx:882
+#: src/view/screens/Search/Search.tsx:883
 msgid "Menu"
 msgstr "เมนู"
 
@@ -4931,10 +4931,10 @@ msgstr "ข่าวสาร"
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:157
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:165
 #: src/screens/Signup/BackNextButtons.tsx:67
-#: src/screens/StarterPack/Wizard/index.tsx:192
-#: src/screens/StarterPack/Wizard/index.tsx:196
-#: src/screens/StarterPack/Wizard/index.tsx:367
-#: src/screens/StarterPack/Wizard/index.tsx:374
+#: src/screens/StarterPack/Wizard/index.tsx:189
+#: src/screens/StarterPack/Wizard/index.tsx:193
+#: src/screens/StarterPack/Wizard/index.tsx:364
+#: src/screens/StarterPack/Wizard/index.tsx:371
 #: src/view/com/modals/ChangePassword.tsx:254
 #: src/view/com/modals/ChangePassword.tsx:256
 msgid "Next"
@@ -4976,7 +4976,7 @@ msgstr "ไม่มีระบบชื่อโดเมน"
 msgid "No featured GIFs found. There may be an issue with Tenor."
 msgstr "ไม่พบ GIF ที่แนะนำ อาจมีปัญหากับ Tenor"
 
-#: src/screens/StarterPack/Wizard/StepFeeds.tsx:118
+#: src/screens/StarterPack/Wizard/StepFeeds.tsx:119
 msgid "No feeds found. Try searching for something else."
 msgstr "ไม่พบฟีต ลองค้นหาอย่างอื่นใหม่ดู"
 
@@ -5064,7 +5064,7 @@ msgstr "ไม่พบผลลัพธ์สำหรับ \"{search}\""
 msgid "No thanks"
 msgstr "ไม่เป็นไร ขอบคุณ"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:379
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:375
 msgid "Nobody"
 msgstr "ไม่มีใคร"
 
@@ -5086,7 +5086,7 @@ msgstr "ยังไม่มีใครคนโควท์โพสต์น
 msgid "Nobody has reposted this yet. Maybe you should be the first!"
 msgstr "ยังไม่มีใครคนรีโพสต์โพสต์นี้ คุณอาจได้เป็นคนแรก"
 
-#: src/screens/StarterPack/Wizard/StepProfiles.tsx:102
+#: src/screens/StarterPack/Wizard/StepProfiles.tsx:103
 msgid "Nobody was found. Try searching for someone else."
 msgstr "ไม่พบใครเลย ลองคนหาคนอื่นสิ"
 
@@ -5517,7 +5517,7 @@ msgstr "สามารถให้ข้อมูลเพิ่มเติม
 msgid "Options:"
 msgstr "ตัวเลือก :"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:392
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:388
 msgid "Or combine these options:"
 msgstr "หรือรวมตัวเลือกนี้ :"
 
@@ -5768,7 +5768,7 @@ msgctxt "action"
 msgid "Post"
 msgstr "โพสต์"
 
-#: src/view/com/post-thread/PostThread.tsx:481
+#: src/view/com/post-thread/PostThread.tsx:490
 msgctxt "description"
 msgid "Post"
 msgstr "โพสต์"
@@ -5797,7 +5797,7 @@ msgstr "โพสต์ถูกลบแล้ว"
 msgid "Post failed to upload. Please check your Internet connection and try again."
 msgstr ""
 
-#: src/view/com/post-thread/PostThread.tsx:212
+#: src/view/com/post-thread/PostThread.tsx:221
 msgid "Post hidden"
 msgstr "โพสต์ถูกซ่อนแล้ว"
 
@@ -5823,8 +5823,8 @@ msgstr "โพสต์ด้วยภาษา"
 msgid "Post Languages"
 msgstr "โพสต์ด้วยภาษา"
 
-#: src/view/com/post-thread/PostThread.tsx:207
-#: src/view/com/post-thread/PostThread.tsx:219
+#: src/view/com/post-thread/PostThread.tsx:216
+#: src/view/com/post-thread/PostThread.tsx:228
 msgid "Post not found"
 msgstr "ไม่พบโพสต์"
 
@@ -6028,7 +6028,6 @@ msgstr "โพสต์ที่อ้างอิงถูกแนบใหม
 msgid "Quote post was successfully detached"
 msgstr "โพสต์ที่อ้างอิงถูกแยกออกเรียบร้อยแล้ว"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:317
 #: src/view/com/util/post-ctrls/RepostButton.tsx:167
 #: src/view/com/util/post-ctrls/RepostButton.tsx:189
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:84
@@ -6036,7 +6035,7 @@ msgstr "โพสต์ที่อ้างอิงถูกแยกออก
 msgid "Quote posts disabled"
 msgstr "ยกเลิกการโควท"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:315
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:314
 msgid "Quote posts enabled"
 msgstr "เปิดใช้การโควท"
 
@@ -6097,7 +6096,7 @@ msgstr "เหตุผล:"
 #~ msgid "Reason: {0}"
 #~ msgstr ""
 
-#: src/view/screens/Search/Search.tsx:1057
+#: src/view/screens/Search/Search.tsx:1058
 msgid "Recent Searches"
 msgstr "ประวัติการค้นหา"
 
@@ -6202,11 +6201,11 @@ msgstr "ลบรูปภาพ"
 msgid "Remove mute word from your list"
 msgstr "ลบคำที่ปิดการมองเห็นจากลิสต์ของคุณ"
 
-#: src/view/screens/Search/Search.tsx:1101
+#: src/view/screens/Search/Search.tsx:1102
 msgid "Remove profile"
 msgstr "ลบโปรไฟล์"
 
-#: src/view/screens/Search/Search.tsx:1103
+#: src/view/screens/Search/Search.tsx:1104
 msgid "Remove profile from search history"
 msgstr "ลบโปรไฟล์จากการประวัติการค้นหา"
 
@@ -6315,11 +6314,11 @@ msgstr "การตอบกลับถูกซ่อนโดยผู้ส
 msgid "Reply Hidden by You"
 msgstr "การตอบกลับถูกซ่อนโดยคุณ"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:359
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:355
 msgid "Reply settings"
 msgstr "การตั้งค่าการตอบกลับ"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:344
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:340
 msgid "Reply settings are chosen by the author of the thread"
 msgstr "การตั้งค่าการตอบกลับถูกเลือกโดยผู้เขียนกระทู้"
 
@@ -6610,8 +6609,8 @@ msgid "Returns to previous page"
 msgstr "กลับไปยังหน้าก่อนหน้า"
 
 #: src/components/dialogs/BirthDateSettings.tsx:124
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:442
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:448
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:438
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:444
 #: src/components/StarterPack/QrCodeDialog.tsx:185
 #: src/screens/Profile/Header/EditProfileDialog.tsx:238
 #: src/screens/Profile/Header/EditProfileDialog.tsx:252
@@ -6628,7 +6627,7 @@ msgstr "กลับไปยังหน้าก่อนหน้า"
 msgid "Save"
 msgstr "บันทึก"
 
-#: src/view/com/lightbox/ImageViewing/index.tsx:555
+#: src/view/com/lightbox/ImageViewing/index.tsx:576
 #: src/view/com/modals/CreateOrEditList.tsx:325
 msgctxt "action"
 msgid "Save"
@@ -6738,7 +6737,7 @@ msgstr "ค้นหา"
 msgid "Search for \"{query}\""
 msgstr "ค้นหาจาก \"{query}\""
 
-#: src/view/screens/Search/Search.tsx:1000
+#: src/view/screens/Search/Search.tsx:1001
 msgid "Search for \"{searchText}\""
 msgstr "การค้นหาสำหรับ \"{query}\""
 
@@ -6750,7 +6749,7 @@ msgstr "การค้นหาสำหรับ \"{query}\""
 #~ msgid "Search for all posts with tag {displayTag}"
 #~ msgstr "การค้นหาโพสต์ทั้งหมดกับแท็ก {displayTag}"
 
-#: src/screens/StarterPack/Wizard/index.tsx:500
+#: src/screens/StarterPack/Wizard/index.tsx:497
 msgid "Search for feeds that you want to suggest to others."
 msgstr "ค้นหาสำหรับฟีตที่คุณต้องการแนะนำให้คนอื่น"
 
@@ -6945,8 +6944,8 @@ msgid "Send a neat website!"
 msgstr "ส่งเว็บไซต์ที่น่าสนใจมาให้หน่อย!"
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:118
-msgid "Send Bluesky referrer"
-msgstr ""
+#~ msgid "Send Bluesky referrer"
+#~ msgstr ""
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:232
 msgid "Send Confirmation"
@@ -7040,7 +7039,7 @@ msgstr "ตั้งรหัสผ่านใหม่"
 #~ msgid "Set this setting to \"Yes\" to show samples of your saved feeds in your Following feed. This is an experimental feature."
 #~ msgstr "ตั้งค่านี้เป็น \"Yes\" เพื่อแสดงตัวอย่างของฟีดที่คุณบันทึกไว้ในฟีดที่คุณติดตาม นี่เป็นฟีเจอร์ที่อยู่ในระหว่างทดลองใช้งาน"
 
-#: src/screens/Onboarding/Layout.tsx:49
+#: src/screens/Onboarding/Layout.tsx:50
 msgid "Set up your account"
 msgstr "ตั้งค่าบัญชีของคุณ"
 
@@ -7111,7 +7110,7 @@ msgstr "การชักชวนทางเพศ"
 msgid "Share"
 msgstr "แชร์"
 
-#: src/view/com/lightbox/ImageViewing/index.tsx:564
+#: src/view/com/lightbox/ImageViewing/index.tsx:585
 msgctxt "action"
 msgid "Share"
 msgstr "แชร์"
@@ -7452,7 +7451,7 @@ msgid "Similar accounts"
 msgstr "บัญชีที่คล้ายกัน"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:231
-#: src/screens/StarterPack/Wizard/index.tsx:200
+#: src/screens/StarterPack/Wizard/index.tsx:197
 msgid "Skip"
 msgstr "ข้าม"
 
@@ -7481,7 +7480,7 @@ msgstr "บางคนสามารถตอบได้"
 #~ msgid "Some subtitle"
 #~ msgstr ""
 
-#: src/screens/Messages/Conversation.tsx:112
+#: src/screens/Messages/Conversation.tsx:103
 msgid "Something went wrong"
 msgstr "เกิดข้อผิดพลาดบางอย่าง"
 
@@ -7502,7 +7501,7 @@ msgid "Something went wrong!"
 msgstr "เกิดข้อผิดพลาดบางอย่าง!"
 
 #: src/App.native.tsx:113
-#: src/App.web.tsx:95
+#: src/App.web.tsx:94
 msgid "Sorry! Your session expired. Please log in again."
 msgstr "ขออภัย! เซสชันของคุณหมดอายุ กรุณาเข้าสู่ระบบอีกครั้ง."
 
@@ -7544,8 +7543,8 @@ msgid "Spam; excessive mentions or replies"
 msgstr "สแปม; การกล่าวถึงหรือการตอบกลับที่มากเกินไป"
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:112
-msgid "Specify Bluesky as a referer"
-msgstr ""
+#~ msgid "Specify Bluesky as a referer"
+#~ msgstr ""
 
 #: src/screens/Onboarding/index.tsx:27
 #: src/screens/Onboarding/state.ts:100
@@ -7574,7 +7573,7 @@ msgstr "เริ่มแชทกับ {displayName}"
 
 #: src/Navigation.tsx:393
 #: src/Navigation.tsx:398
-#: src/screens/StarterPack/Wizard/index.tsx:191
+#: src/screens/StarterPack/Wizard/index.tsx:188
 msgid "Starter Pack"
 msgstr "ชุดเริ่มต้น"
 
@@ -7853,8 +7852,8 @@ msgstr "แฮนเดิ้ลนั้นมีคนใช้ไปแล้
 #: src/screens/StarterPack/StarterPackScreen.tsx:104
 #: src/screens/StarterPack/StarterPackScreen.tsx:148
 #: src/screens/StarterPack/StarterPackScreen.tsx:149
-#: src/screens/StarterPack/Wizard/index.tsx:107
-#: src/screens/StarterPack/Wizard/index.tsx:117
+#: src/screens/StarterPack/Wizard/index.tsx:105
+#: src/screens/StarterPack/Wizard/index.tsx:115
 msgid "That starter pack could not be found."
 msgstr "หาชุดเริ่มต้นไม่เจอ"
 
@@ -7913,12 +7912,12 @@ msgstr "สิ่งที่ตั้งต่อไปนี้ถูกใช
 msgid "The following labels were applied to your content."
 msgstr "สิ่งที่ตั้งต่อไปนี้ถูกใช้กับเนื้อหาของคุณ"
 
-#: src/screens/Onboarding/Layout.tsx:59
+#: src/screens/Onboarding/Layout.tsx:60
 msgid "The following steps will help customize your Bluesky experience."
 msgstr "ขั้นตอนต่อไปนี้จะช่วยปรับแต่งประสบการณ์การใช้งาน Bluesky ของคุณ"
 
-#: src/view/com/post-thread/PostThread.tsx:208
-#: src/view/com/post-thread/PostThread.tsx:220
+#: src/view/com/post-thread/PostThread.tsx:217
+#: src/view/com/post-thread/PostThread.tsx:229
 msgid "The post may have been deleted."
 msgstr "โพสต์ถูกลบแล้ว"
 
@@ -8332,8 +8331,8 @@ msgstr "นี่จะลบ @{0} ออกจากลิสต์เข้า
 msgid "This will remove your post from this quote post for all users, and replace it with a placeholder."
 msgstr "นี่จะลบโพสต์ของคุณออกจากโพสต์อ้างอิงนี้สำหรับผู้ใช้ทุกคน และแทนที่ด้วยข้อความแทน"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:57
-#: src/screens/Settings/ContentAndMediaSettings.tsx:60
+#: src/screens/Settings/ContentAndMediaSettings.tsx:48
+#: src/screens/Settings/ContentAndMediaSettings.tsx:51
 msgid "Thread preferences"
 msgstr "การตั้งค่าเธรด"
 
@@ -8727,8 +8726,8 @@ msgstr "ใช้ผู้ให้บริการเริ่มต้น"
 msgid "Use in-app browser"
 msgstr "ใช้เบราว์เซอร์ในแอป"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:96
-#: src/screens/Settings/ContentAndMediaSettings.tsx:102
+#: src/screens/Settings/ContentAndMediaSettings.tsx:74
+#: src/screens/Settings/ContentAndMediaSettings.tsx:80
 msgid "Use in-app browser to open links"
 msgstr ""
 
@@ -8824,7 +8823,7 @@ msgstr "ผู้ใช้ที่ติดตามโดย <0>@{0}</0>"
 msgid "Users I follow"
 msgstr "ผู้ใช้ที่ฉันติดตาม"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:420
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:416
 msgid "Users in \"{0}\""
 msgstr "ผู้ใช้ใน \"{0}\""
 
@@ -9057,7 +9056,7 @@ msgstr "เตือนเนื้อหาและกรองจากฟี
 msgid "We couldn't find any results for that hashtag."
 msgstr "เราไม่สามารถค้นหาผลลัพธ์ใดๆ สำหรับแฮชแท็กนั้นได้."
 
-#: src/screens/Messages/Conversation.tsx:113
+#: src/screens/Messages/Conversation.tsx:104
 msgid "We couldn't load this conversation"
 msgstr "เราไม่สามารถโหลดการสนทนานี้ได้"
 
@@ -9376,7 +9375,7 @@ msgstr "คุณยังไม่มีฟีดที่ติดหมุด
 msgid "You don't have any saved feeds."
 msgstr "คุณยังไม่มีฟีดที่บันทึก."
 
-#: src/view/com/post-thread/PostThread.tsx:214
+#: src/view/com/post-thread/PostThread.tsx:223
 msgid "You have blocked the author or you have been blocked by the author."
 msgstr "คุณได้บล็อกผู้เขียนหรือคุณถูกผู้เขียนบล็อก."
 
