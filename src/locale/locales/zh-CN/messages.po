@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-29 01:55\n"
+"PO-Revision-Date: 2024-11-29 06:14\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -147,27 +147,27 @@ msgstr "{0}的新手包"
 #. How many days have passed, displayed in a narrow form
 #: src/lib/hooks/useTimeAgo.ts:158
 msgid "{0}d"
-msgstr "{0}天前"
+msgstr "{0} 天前"
 
 #. How many hours have passed, displayed in a narrow form
 #: src/lib/hooks/useTimeAgo.ts:148
 msgid "{0}h"
-msgstr "{0}小时前"
+msgstr "{0} 小时前"
 
 #. How many minutes have passed, displayed in a narrow form
 #: src/lib/hooks/useTimeAgo.ts:138
 msgid "{0}m"
-msgstr "{0}分钟前"
+msgstr "{0} 分钟前"
 
 #. How many months have passed, displayed in a narrow form
 #: src/lib/hooks/useTimeAgo.ts:169
 msgid "{0}mo"
-msgstr "{0}个月前"
+msgstr "{0} 个月前"
 
 #. How many seconds have passed, displayed in a narrow form
 #: src/lib/hooks/useTimeAgo.ts:128
 msgid "{0}s"
-msgstr "{0}秒前"
+msgstr "{0} 秒前"
 
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:252
 msgid "{badge} unread items"
@@ -307,11 +307,11 @@ msgstr "{numUnreadNotifications} 个未读通知"
 
 #: src/components/NewskieDialog.tsx:116
 msgid "{profileName} joined Bluesky {0} ago"
-msgstr "{profileName}在{0}前加入了 Bluesky"
+msgstr "{profileName} 在 {0}前加入了 Bluesky"
 
 #: src/components/NewskieDialog.tsx:111
 msgid "{profileName} joined Bluesky using a starter pack {0} ago"
-msgstr "{profileName}在{0}前使用新手包加入了 Bluesky"
+msgstr "{profileName} 在 {0}前使用新手包加入了 Bluesky"
 
 #: src/screens/StarterPack/Wizard/index.tsx:472
 msgctxt "profiles"
@@ -540,11 +540,11 @@ msgstr "添加默认的动态源（仅显示你关注的人）"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:386
 msgid "Add the following DNS record to your domain:"
-msgstr "将以下记录添加到你的域名 DNS 里面："
+msgstr "向你的域名添加以下 DNS 记录："
 
 #: src/components/FeedCard.tsx:296
 msgid "Add this feed to your feeds"
-msgstr "将此添加到你的动态源"
+msgstr "添加到你的动态源"
 
 #: src/view/com/profile/ProfileMenu.tsx:243
 #: src/view/com/profile/ProfileMenu.tsx:246
@@ -553,7 +553,7 @@ msgstr "添加至列表"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:269
 msgid "Add to my feeds"
-msgstr "添加我的动态源"
+msgstr "添加至“我的动态源”"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:192
 #: src/view/com/modals/UserAddRemoveLists.tsx:162
@@ -562,7 +562,7 @@ msgstr "已添加至列表"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:125
 msgid "Added to my feeds"
-msgstr "已添加到我的动态源"
+msgstr "已添加至“我的动态源”"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:160
 msgid "Adult"
@@ -612,7 +612,7 @@ msgstr "允许读取你的私信"
 #: src/screens/Messages/Settings.tsx:64
 #: src/screens/Messages/Settings.tsx:67
 msgid "Allow new messages from"
-msgstr "允许这些来源向你发起新对话"
+msgstr "允许以下来源向你发送私信"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:359
 msgid "Allow replies from:"
@@ -629,7 +629,7 @@ msgstr "已经有验证码了？"
 
 #: src/screens/Login/ChooseAccountForm.tsx:43
 msgid "Already signed in as @{0}"
-msgstr "已经以@{0}身份登录"
+msgstr "已经以 @{0} 身份登录"
 
 #: src/view/com/composer/GifAltText.tsx:100
 #: src/view/com/composer/photos/Gallery.tsx:187
@@ -652,25 +652,25 @@ msgstr "替代文本"
 
 #: src/view/com/composer/photos/Gallery.tsx:255
 msgid "Alt text describes images for blind and low-vision users, and helps give context to everyone."
-msgstr "为图片新增替代文本，从而帮助盲人及其他视障群体大致了解图片内容。"
+msgstr "为图片新增替代文本，从而帮助视障者大致了解图片内容。"
 
 #: src/view/com/composer/GifAltText.tsx:179
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:139
 msgid "Alt text will be truncated. Limit: {0} characters."
-msgstr "替代文本过长将被截断，字数限制：{0}个字符。"
+msgstr "替代文本过长将被截断，字数限制：{0} 个字符。"
 
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:93
 #: src/view/com/modals/VerifyEmail.tsx:132
 msgid "An email has been sent to {0}. It includes a confirmation code which you can enter below."
-msgstr "一封电子邮件已发送至 {0}。请查阅邮件内容，并复制其中的验证码贴至下方。"
+msgstr "已发送一封电子邮件至 {0}。它包含你需要在下方输入的验证码。"
 
 #: src/view/com/modals/ChangeEmail.tsx:114
 msgid "An email has been sent to your previous address, {0}. It includes a confirmation code which you can enter below."
-msgstr "一封电子邮件已发送至先前填写的电子邮箱 {0}。请查阅邮件内容，并复制其中的验证码贴至下方。"
+msgstr "已发送一封电子邮件至先前填写的电子邮箱 {0}。它包含你需要在下方输入的验证码。"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:91
 msgid "An email has been sent! Please enter the confirmation code included in the email below."
-msgstr "电子邮件已发送！请输入邮件中包含的验证码贴至下方。"
+msgstr "已发送电子邮件！请在下方输入邮件中的验证码。"
 
 #: src/components/dialogs/GifSelect.tsx:265
 msgid "An error has occurred"
@@ -690,11 +690,11 @@ msgstr "创建新手包时发生错误，要再试一次吗？"
 
 #: src/view/com/util/post-embeds/VideoEmbed.tsx:133
 msgid "An error occurred while loading the video. Please try again later."
-msgstr "播放视频时出现问题，请重试。"
+msgstr "播放视频时发生错误，请重试。"
 
 #: src/view/com/util/post-embeds/VideoEmbed.web.tsx:176
 msgid "An error occurred while loading the video. Please try again."
-msgstr "播放视频时出现问题，请重试。"
+msgstr "播放视频时发生错误，请重试。"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:71
 #: src/components/StarterPack/ShareDialog.tsx:79
@@ -712,7 +712,7 @@ msgstr "关注全部账户时发生错误"
 
 #: src/view/com/composer/state/video.ts:435
 msgid "An error occurred while uploading the video."
-msgstr "上传视频时出现问题。"
+msgstr "上传视频时发生错误。"
 
 #: src/lib/moderation/useReportOptions.ts:28
 msgid "An issue not included in these options"
@@ -854,7 +854,7 @@ msgstr "已归档的帖文"
 
 #: src/screens/Settings/AppPasswords.tsx:201
 msgid "Are you sure you want to delete the app password \"{0}\"?"
-msgstr "你确定要删除这个应用密码 \"{0}\" 吗？"
+msgstr "你确定要删除这个应用密码“{0}”吗？"
 
 #: src/components/dms/MessageMenu.tsx:149
 msgid "Are you sure you want to delete this message? The message will be deleted for you, but not for the other participant."
@@ -1124,7 +1124,7 @@ msgstr "继续创建账户即代表你同意我们的<0>隐私政策</0>。"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:48
 msgid "By creating an account you agree to the <0>Terms of Service</0> and <1>Privacy Policy</1>."
-msgstr "继续创建账户即代表你同意我们的<0>服务条款</0>及<1>隐私政策</1>。"
+msgstr "继续创建账户即代表你同意我们的<0>服务条款</0>和<1>隐私政策</1>。"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:68
 msgid "By creating an account you agree to the <0>Terms of Service</0>."
@@ -1227,7 +1227,7 @@ msgstr "更改"
 
 #: src/screens/Settings/AppIconSettings.tsx:73
 msgid "Change app icon to \"{0}\""
-msgstr "将应用图标更改为 “{0}”"
+msgstr "将应用图标更改为“{0}”"
 
 #: src/screens/Settings/AccountSettings.tsx:89
 #: src/screens/Settings/AccountSettings.tsx:93
@@ -1867,7 +1867,7 @@ msgstr "删除账户"
 
 #: src/view/com/modals/DeleteAccount.tsx:105
 msgid "Delete Account <0>\"</0><1>{0}</1><2>\"</2>"
-msgstr "删除账户 <0>“</0><1>{0}</1><2>”</2>"
+msgstr "删除账户<0>“</0><1>{0}</1><2>”</2>"
 
 #: src/screens/Settings/AppPasswords.tsx:179
 msgid "Delete app password"
@@ -2515,7 +2515,7 @@ msgstr "退出全屏模式"
 
 #: src/view/com/modals/DeleteAccount.tsx:294
 msgid "Exits account deletion process"
-msgstr "退出删除账户流程"
+msgstr "退出删除账户"
 
 #: src/view/com/modals/CropImage.web.tsx:95
 msgid "Exits image cropping process"
@@ -3190,7 +3190,7 @@ msgstr "无法加载该内容审核提供服务。"
 
 #: src/view/com/composer/state/video.ts:413
 msgid "Hold up! We’re gradually giving access to video, and you’re still waiting in line. Check back soon!"
-msgstr "请稍等！我们正在逐步开放视频功能的上传权限。你目前仍在等待队伍中，请稍后再回来查看！"
+msgstr "请稍等！我们正在逐步开放上传视频的权限。你目前仍在等待队伍中，请稍后再回来查看！"
 
 #: src/Navigation.tsx:588
 #: src/Navigation.tsx:608
@@ -3396,7 +3396,7 @@ msgstr "这是正确的电子邮箱地址"
 
 #: src/screens/StarterPack/Wizard/index.tsx:458
 msgid "It's just you right now! Add more people to your starter pack by searching above."
-msgstr "现在只剩下你了！通过上面的列表搜索，将更多人添加到你的新手包里面。"
+msgstr "现在只有你一个！通过上面的列表将更多人添加到你的新手包里面。"
 
 #: src/view/com/composer/Composer.tsx:1571
 msgid "Job ID: {0}"
@@ -4677,11 +4677,11 @@ msgstr "关注 @{0} 的用户"
 
 #: src/view/com/lightbox/Lightbox.tsx:27
 msgid "Permission to access camera roll is required."
-msgstr "需要访问照片图库的权限。"
+msgstr "需要授权访问照片图库。"
 
 #: src/view/com/lightbox/Lightbox.tsx:35
 msgid "Permission to access camera roll was denied. Please enable it in your system settings."
-msgstr "访问照片图库的权限已被拒绝，请在系统设置中启用。"
+msgstr "已被拒绝访问照片图库，请在系统设置中授权。"
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:54
 msgid "Person toggle"
@@ -5135,7 +5135,7 @@ msgstr "从你的新手包中删除 {displayName}"
 #: src/screens/Settings/Settings.tsx:437
 #: src/screens/Settings/Settings.tsx:440
 msgid "Remove account"
-msgstr "删除账户"
+msgstr "移除账户"
 
 #: src/view/com/composer/ExternalEmbedRemoveBtn.tsx:15
 msgid "Remove attachment"
@@ -7873,11 +7873,11 @@ msgstr "你必须至少关注 7 个人以创建新手包。"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:60
 msgid "You must grant access to your photo library to save a QR code"
-msgstr "你必须授权访问照片图库权限以保存二维码"
+msgstr "你必须授权访问照片图库以保存二维码"
 
 #: src/components/StarterPack/ShareDialog.tsx:68
 msgid "You must grant access to your photo library to save the image."
-msgstr "你必须授权访问照片图库权限以保存图片。"
+msgstr "你必须授权访问照片图库以保存图片。"
 
 #: src/components/ReportDialog/SubmitView.tsx:210
 msgid "You must select at least one labeler for a report"
