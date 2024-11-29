@@ -218,7 +218,7 @@ function CreateDialogInner({passwords}: {passwords: string[]}) {
                   label={_(msg`Show Password`)}
                   size="small"
                   variant="ghost"
-                  color="primary"
+                  color="secondary"
                   onPress={() => setShowPassword(!showPassword)}
                   style={[a.flex_shrink]}>
                   <ButtonIcon icon={EyeIcon} />
