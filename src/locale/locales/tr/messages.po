@@ -4393,7 +4393,7 @@ msgstr ""
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:251
 msgid "learn more"
-msgstr ""
+msgstr "daha fazla öğren"
 
 #: src/view/com/util/moderation/ContentHider.tsx:103
 #~ msgid "Learn more"
@@ -4405,7 +4405,7 @@ msgstr "Daha Fazla Bilgi Edinin"
 
 #: src/view/com/auth/SplashScreen.web.tsx:166
 msgid "Learn more about Bluesky"
-msgstr ""
+msgstr "Bluesky hakkında daha fazlasını öğren"
 
 #: src/view/com/auth/server-input/index.tsx:156
 msgid "Learn more about self hosting your PDS."
@@ -4605,7 +4605,7 @@ msgstr ""
 
 #: src/view/screens/Search/Explore.tsx:131
 msgid "Load more"
-msgstr ""
+msgstr "Daha fazlasını yükle"
 
 #: src/view/com/post-thread/PostThread.tsx:281
 #: src/view/com/post-thread/PostThread.tsx:289
@@ -4677,7 +4677,7 @@ msgstr ""
 
 #: src/screens/Login/SetNewPasswordForm.tsx:110
 msgid "Looks like XXXXX-XXXXX"
-msgstr ""
+msgstr "XXXXX-XXXXX gibi gözüküyor"
 
 #: src/screens/Feeds/NoSavedFeedsOfAnyType.tsx:39
 msgid "Looks like you haven't saved any feeds! Use our recommendations or browse more below."
@@ -4797,7 +4797,7 @@ msgstr "Moderasyon"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:133
 msgid "Moderation details"
-msgstr ""
+msgstr "Moderasyon detayları"
 
 #: src/components/ListCard.tsx:149
 #: src/view/com/modals/UserAddRemoveLists.tsx:222
@@ -4832,7 +4832,7 @@ msgstr "Moderasyon Listeleri"
 
 #: src/components/moderation/LabelPreference.tsx:247
 msgid "moderation settings"
-msgstr ""
+msgstr "moderasyon araçları"
 
 #: src/view/screens/Settings/index.tsx:522
 #~ msgid "Moderation settings"
@@ -4840,11 +4840,11 @@ msgstr ""
 
 #: src/Navigation.tsx:249
 msgid "Moderation states"
-msgstr ""
+msgstr "Moderasyon durumları"
 
 #: src/screens/Moderation/index.tsx:213
 msgid "Moderation tools"
-msgstr ""
+msgstr "Moderasyon araçları"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:51
 #: src/lib/moderation/useModerationCauseDescription.ts:45
@@ -4853,7 +4853,7 @@ msgstr "Moderatör, içeriğe genel bir uyarı koymayı seçti."
 
 #: src/view/com/post-thread/PostThreadItem.tsx:628
 msgid "More"
-msgstr ""
+msgstr "Daha fazla"
 
 #: src/view/shell/desktop/Feeds.tsx:55
 msgid "More feeds"
@@ -5804,7 +5804,7 @@ msgstr "Veya başka bir hesapla devam edin."
 
 #: src/screens/Deactivated.tsx:193
 msgid "Or, log into one of your other accounts."
-msgstr ""
+msgstr "Veya, diğer hesaplarınızdan birine giriş yapın."
 
 #: src/lib/moderation/useReportOptions.ts:27
 #: src/view/com/composer/labels/LabelsBtn.tsx:187
@@ -5829,7 +5829,7 @@ msgstr "Diğer..."
 
 #: src/screens/Messages/components/ChatDisabled.tsx:28
 msgid "Our moderators have reviewed reports and decided to disable your access to chats on Bluesky."
-msgstr ""
+msgstr "Moderatörlerimiz raporları inceledi ve Bluesky'daki sohbetlere erişiminizi engellemeye karar verdi."
 
 #: src/components/Lists.tsx:216
 #: src/view/screens/NotFound.tsx:47
@@ -6527,7 +6527,7 @@ msgstr "Yeniden göndermeyi kaldır"
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:260
 msgid "Remove subtitle file"
-msgstr ""
+msgstr "Altyazı dosyasını kaldır"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:173
 #~ msgid "Remove this feed from my feeds?"
