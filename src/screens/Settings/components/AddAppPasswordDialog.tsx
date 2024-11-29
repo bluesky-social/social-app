@@ -210,7 +210,9 @@ function CreateDialogInner({passwords}: {passwords: string[]}) {
                   </CopyButton>
                 </View>
                 <Button
-                  label={_(msg`Show Password`)}
+                  label={
+                    showPassword ? _(msg`Hide Password`) : _(msg`Show Password`)
+                  }
                   size="small"
                   variant="ghost"
                   color="secondary"
