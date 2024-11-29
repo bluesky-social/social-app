@@ -197,7 +197,7 @@ function CreateDialogInner({passwords}: {passwords: string[]}) {
                   Use this to sign into the other app along with your handle.
                 </Trans>
               </Text>
-              <View style={[a.flex_row, a.align_center, a.gap_sm, a.w_full]}>
+              <View style={[a.flex_row, a.align_stretch, a.gap_sm, a.w_full]}>
                 <View style={[a.flex_grow, a.flex_shrink_0]}>
                   <CopyButton
                     value={data.password}
@@ -216,8 +216,7 @@ function CreateDialogInner({passwords}: {passwords: string[]}) {
                   size="small"
                   variant="ghost"
                   color="secondary"
-                  onPress={() => setShowPassword(!showPassword)}
-                  style={[a.flex_shrink]}>
+                  onPress={() => setShowPassword(!showPassword)}>
                   <ButtonIcon icon={EyeIcon} />
                 </Button>
               </View>
