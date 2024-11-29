@@ -1,4 +1,4 @@
-import {useMemo,useState} from 'react'
+import {useMemo, useState} from 'react'
 import {ListRenderItemInfo, View} from 'react-native'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-controller'
 import {AppBskyActorDefs, ModerationOpts} from '@atproto/api'
@@ -45,8 +45,9 @@ export function StepProfiles({
     const seen = new Set<string>()
     return topPages.pages
       .flatMap(p => p.actors)
+      .filter(p => !p.associated?.labeler)
       .filter(p => {
-        if (!p.associated?.labeler && !seen.has(p.did)) {
+        if (!seen.has(p.did)) {
           seen.add(p.did)
           return true
         }
@@ -61,13 +62,15 @@ export function StepProfiles({
   const results = useMemo(() => {
     if (!resultsUnfiltered) return []
     const seen = new Set<string>()
-    return resultsUnfiltered.filter(p => {
-      if (!p.associated?.labeler && !seen.has(p.did)) {
-        seen.add(p.did)
-        return true
-      }
-      return false
-    })
+    return resultsUnfiltered
+      .filter(p => !p.associated?.labeler)
+      .filter(p => {
+        if (!seen.has(p.did)) {
+          seen.add(p.did)
+          return true
+        }
+        return false
+      })
   }, [resultsUnfiltered])
 
   const isLoading = isLoadingTopPages || isFetchingResults
