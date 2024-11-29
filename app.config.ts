@@ -1,28 +1,30 @@
 const pkg = require('./package.json')
+import {ConfigContext} from '@expo/config'
+import type {ExpoConfig, Splash} from '@expo/config-types'
 
-const SPLASH_CONFIG = {
+const SPLASH_CONFIG: Splash = {
   backgroundColor: '#ffffff',
   image: './assets/splash.png',
   resizeMode: 'cover',
 }
-const DARK_SPLASH_CONFIG = {
+const DARK_SPLASH_CONFIG: Splash = {
   backgroundColor: '#001429',
   image: './assets/splash-dark.png',
   resizeMode: 'cover',
 }
 
-const SPLASH_CONFIG_ANDROID = {
+const SPLASH_CONFIG_ANDROID: Splash = {
   backgroundColor: '#0c7cff',
   image: './assets/splash.png',
   resizeMode: 'cover',
 }
-const DARK_SPLASH_CONFIG_ANDROID = {
+const DARK_SPLASH_CONFIG_ANDROID: Splash = {
   backgroundColor: '#0f141b',
   image: './assets/splash-dark.png',
   resizeMode: 'cover',
 }
 
-module.exports = function (config) {
+module.exports = function (_ctx: ConfigContext): {expo: ExpoConfig} {
   /**
    * App version number. Should be incremented as part of a release cycle.
    */
@@ -180,10 +182,12 @@ module.exports = function (config) {
                 scheme: 'https',
                 host: 'bsky.app',
               },
-              IS_DEV && {
-                scheme: 'http',
-                host: 'localhost:19006',
-              },
+              IS_DEV
+                ? {
+                    scheme: 'http',
+                    host: 'localhost:19006',
+                  }
+                : {},
             ],
             category: ['BROWSABLE', 'DEFAULT'],
           },
@@ -210,137 +214,143 @@ module.exports = function (config) {
             }
           : undefined,
         checkAutomatically: 'NEVER',
+        // @ts-expect-error
         channel: UPDATES_CHANNEL,
       },
-      plugins: [
-        'expo-localization',
-        USE_SENTRY && [
-          '@sentry/react-native/expo',
-          {
-            organization: 'blueskyweb',
-            project: 'react-native',
-            release: VERSION,
-            dist: SENTRY_DIST,
-          },
-        ],
+      plugins: (
         [
-          'expo-build-properties',
-          {
-            ios: {
-              deploymentTarget: '15.1',
-              newArchEnabled: false,
+          'expo-localization',
+          USE_SENTRY
+            ? [
+                '@sentry/react-native/expo',
+                {
+                  organization: 'blueskyweb',
+                  project: 'react-native',
+                  release: VERSION,
+                  dist: SENTRY_DIST,
+                },
+              ]
+            : '',
+          [
+            'expo-build-properties',
+            {
+              ios: {
+                deploymentTarget: '15.1',
+                newArchEnabled: false,
+              },
+              android: {
+                compileSdkVersion: 34,
+                targetSdkVersion: 34,
+                buildToolsVersion: '34.0.0',
+                kotlinVersion: '1.8.0',
+                newArchEnabled: false,
+              },
             },
-            android: {
-              compileSdkVersion: 34,
-              targetSdkVersion: 34,
-              buildToolsVersion: '34.0.0',
-              kotlinVersion: '1.8.0',
-              newArchEnabled: false,
+          ],
+          [
+            'expo-notifications',
+            {
+              icon: './assets/icon-android-notification.png',
+              color: '#1185fe',
+              sounds:
+                PLATFORM === 'ios' ? ['assets/dm.aiff'] : ['assets/dm.mp3'],
             },
-          },
-        ],
-        [
-          'expo-notifications',
-          {
-            icon: './assets/icon-android-notification.png',
-            color: '#1185fe',
-            sounds: PLATFORM === 'ios' ? ['assets/dm.aiff'] : ['assets/dm.mp3'],
-          },
-        ],
-        'react-native-compressor',
-        './plugins/starterPackAppClipExtension/withStarterPackAppClip.js',
-        './plugins/withAndroidManifestPlugin.js',
-        './plugins/withAndroidManifestFCMIconPlugin.js',
-        './plugins/withAndroidStylesWindowBackgroundPlugin.js',
-        './plugins/withAndroidStylesAccentColorPlugin.js',
-        './plugins/withAndroidSplashScreenStatusBarTranslucentPlugin.js',
-        './plugins/shareExtension/withShareExtensions.js',
-        './plugins/notificationsExtension/withNotificationsExtension.js',
-        './plugins/withAppDelegateReferrer.js',
-        [
-          'expo-font',
-          {
-            fonts: [
-              './assets/fonts/inter/InterVariable.ttf',
-              './assets/fonts/inter/InterVariable-Italic.ttf',
-              // Android only
-              './assets/fonts/inter/Inter-Regular.otf',
-              './assets/fonts/inter/Inter-Italic.otf',
-              './assets/fonts/inter/Inter-SemiBold.otf',
-              './assets/fonts/inter/Inter-SemiBoldItalic.otf',
-              './assets/fonts/inter/Inter-ExtraBold.otf',
-              './assets/fonts/inter/Inter-ExtraBoldItalic.otf',
-            ],
-          },
-        ],
-        [
-          '@mozzius/expo-dynamic-app-icon',
-          {
-            /**
-             * Default set
-             */
-            default_light: {
-              ios: './assets/app-icons/ios_icon_default_light.png',
-              android: './assets/app-icons/android_icon_default_light.png',
-              prerendered: true,
+          ],
+          'react-native-compressor',
+          './plugins/starterPackAppClipExtension/withStarterPackAppClip.js',
+          './plugins/withAndroidManifestPlugin.js',
+          './plugins/withAndroidManifestFCMIconPlugin.js',
+          './plugins/withAndroidStylesWindowBackgroundPlugin.js',
+          './plugins/withAndroidStylesAccentColorPlugin.js',
+          './plugins/withAndroidSplashScreenStatusBarTranslucentPlugin.js',
+          './plugins/shareExtension/withShareExtensions.js',
+          './plugins/notificationsExtension/withNotificationsExtension.js',
+          './plugins/withAppDelegateReferrer.js',
+          [
+            'expo-font',
+            {
+              fonts: [
+                './assets/fonts/inter/InterVariable.ttf',
+                './assets/fonts/inter/InterVariable-Italic.ttf',
+                // Android only
+                './assets/fonts/inter/Inter-Regular.otf',
+                './assets/fonts/inter/Inter-Italic.otf',
+                './assets/fonts/inter/Inter-SemiBold.otf',
+                './assets/fonts/inter/Inter-SemiBoldItalic.otf',
+                './assets/fonts/inter/Inter-ExtraBold.otf',
+                './assets/fonts/inter/Inter-ExtraBoldItalic.otf',
+              ],
             },
-            default_dark: {
-              ios: './assets/app-icons/ios_icon_default_dark.png',
-              android: './assets/app-icons/android_icon_default_dark.png',
-              prerendered: true,
-            },
+          ],
+          [
+            '@mozzius/expo-dynamic-app-icon',
+            {
+              /**
+               * Default set
+               */
+              default_light: {
+                ios: './assets/app-icons/ios_icon_default_light.png',
+                android: './assets/app-icons/android_icon_default_light.png',
+                prerendered: true,
+              },
+              default_dark: {
+                ios: './assets/app-icons/ios_icon_default_dark.png',
+                android: './assets/app-icons/android_icon_default_dark.png',
+                prerendered: true,
+              },
 
-            /**
-             * Bluesky+ core set
-             */
-            core_aurora: {
-              ios: './assets/app-icons/ios_icon_core_aurora.png',
-              android: './assets/app-icons/android_icon_core_aurora.png',
-              prerendered: true,
+              /**
+               * Bluesky+ core set
+               */
+              core_aurora: {
+                ios: './assets/app-icons/ios_icon_core_aurora.png',
+                android: './assets/app-icons/android_icon_core_aurora.png',
+                prerendered: true,
+              },
+              core_bonfire: {
+                ios: './assets/app-icons/ios_icon_core_bonfire.png',
+                android: './assets/app-icons/android_icon_core_bonfire.png',
+                prerendered: true,
+              },
+              core_sunrise: {
+                ios: './assets/app-icons/ios_icon_core_sunrise.png',
+                android: './assets/app-icons/android_icon_core_sunrise.png',
+                prerendered: true,
+              },
+              core_sunset: {
+                ios: './assets/app-icons/ios_icon_core_sunset.png',
+                android: './assets/app-icons/android_icon_core_sunset.png',
+                prerendered: true,
+              },
+              core_midnight: {
+                ios: './assets/app-icons/ios_icon_core_midnight.png',
+                android: './assets/app-icons/android_icon_core_midnight.png',
+                prerendered: true,
+              },
+              core_flat_blue: {
+                ios: './assets/app-icons/ios_icon_core_flat_blue.png',
+                android: './assets/app-icons/android_icon_core_flat_blue.png',
+                prerendered: true,
+              },
+              core_flat_white: {
+                ios: './assets/app-icons/ios_icon_core_flat_white.png',
+                android: './assets/app-icons/android_icon_core_flat_white.png',
+                prerendered: true,
+              },
+              core_flat_black: {
+                ios: './assets/app-icons/ios_icon_core_flat_black.png',
+                android: './assets/app-icons/android_icon_core_flat_black.png',
+                prerendered: true,
+              },
+              core_classic: {
+                ios: './assets/app-icons/ios_icon_core_classic.png',
+                android: './assets/app-icons/android_icon_core_classic.png',
+                prerendered: true,
+              },
             },
-            core_bonfire: {
-              ios: './assets/app-icons/ios_icon_core_bonfire.png',
-              android: './assets/app-icons/android_icon_core_bonfire.png',
-              prerendered: true,
-            },
-            core_sunrise: {
-              ios: './assets/app-icons/ios_icon_core_sunrise.png',
-              android: './assets/app-icons/android_icon_core_sunrise.png',
-              prerendered: true,
-            },
-            core_sunset: {
-              ios: './assets/app-icons/ios_icon_core_sunset.png',
-              android: './assets/app-icons/android_icon_core_sunset.png',
-              prerendered: true,
-            },
-            core_midnight: {
-              ios: './assets/app-icons/ios_icon_core_midnight.png',
-              android: './assets/app-icons/android_icon_core_midnight.png',
-              prerendered: true,
-            },
-            core_flat_blue: {
-              ios: './assets/app-icons/ios_icon_core_flat_blue.png',
-              android: './assets/app-icons/android_icon_core_flat_blue.png',
-              prerendered: true,
-            },
-            core_flat_white: {
-              ios: './assets/app-icons/ios_icon_core_flat_white.png',
-              android: './assets/app-icons/android_icon_core_flat_white.png',
-              prerendered: true,
-            },
-            core_flat_black: {
-              ios: './assets/app-icons/ios_icon_core_flat_black.png',
-              android: './assets/app-icons/android_icon_core_flat_black.png',
-              prerendered: true,
-            },
-            core_classic: {
-              ios: './assets/app-icons/ios_icon_core_classic.png',
-              android: './assets/app-icons/android_icon_core_classic.png',
-              prerendered: true,
-            },
-          },
-        ],
-      ].filter(Boolean),
+          ],
+        ] satisfies ExpoConfig['plugins']
+      ).filter(Boolean),
       extra: {
         eas: {
           build: {

@@ -1,5 +1,5 @@
 /**
- * @file Set accent color to primaryColor from app.config.js.
+ * @file Set accent color to primaryColor from app.config.ts.
  * This way we get a sane default color for spinners, text inputs, etc.
  */
 
