@@ -1,7 +1,7 @@
 import React, {useContext, useMemo} from 'react'
 import {View, ViewStyle} from 'react-native'
 import {StyleProp} from 'react-native'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {ViewHeader} from '#/view/com/util/ViewHeader'
 import {ScrollView} from '#/view/com/util/Views'
@@ -31,7 +31,6 @@ let Screen = ({
   disableTopPadding?: boolean
   style?: StyleProp<ViewStyle>
 }): React.ReactNode => {
-  const {top} = useSafeAreaInsets()
   const context = useMemo(
     () => ({
       withinScreen: true,
@@ -42,12 +41,9 @@ let Screen = ({
   )
   return (
     <LayoutContext.Provider value={context}>
-      <View
-        style={[
-          {paddingTop: disableTopPadding ? 0 : top},
-          a.util_screen_outer,
-          style,
-        ]}
+      <SafeAreaView
+        edges={disableTopPadding ? ['left', 'right', 'bottom'] : undefined}
+        style={[a.util_screen_outer, style]}
         {...props}
       />
     </LayoutContext.Provider>

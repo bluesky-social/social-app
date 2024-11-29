@@ -1,8 +1,8 @@
 import {useCallback, useEffect} from 'react'
 import {BackHandler, useWindowDimensions, View} from 'react-native'
 import {Drawer} from 'react-native-drawer-layout'
+import {SystemBars} from 'react-native-edge-to-edge'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {StatusBar} from 'expo-status-bar'
 import {useNavigation, useNavigationState} from '@react-navigation/native'
 
 import {useDedupe} from '#/lib/hooks/useDedupe'
@@ -23,7 +23,6 @@ import {Lightbox} from '#/view/com/lightbox/Lightbox'
 import {ModalsContainer} from '#/view/com/modals/Modal'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {atoms as a, select, useTheme} from '#/alf'
-import {setNavigationBar} from '#/alf/util/navigationBar'
 import {MutedWordsDialog} from '#/components/dialogs/MutedWords'
 import {SigninDialog} from '#/components/dialogs/Signin'
 import {Outlet as PortalOutlet} from '#/components/Portal'
@@ -133,19 +132,14 @@ export const Shell: React.FC = function ShellImpl() {
   const t = useTheme()
   useIntentHandler()
 
-  useEffect(() => {
-    setNavigationBar('theme', t)
-  }, [t])
-
   return (
     <View testID="mobileShellView" style={[a.h_full, t.atoms.bg]}>
-      <StatusBar
+      <SystemBars
         style={
-          t.name !== 'light' || (isIOS && fullyExpandedCount > 0)
+          t.scheme === 'dark' || (isIOS && fullyExpandedCount > 0)
             ? 'light'
             : 'dark'
         }
-        animated
       />
       <RoutesContainer>
         <ShellInner />

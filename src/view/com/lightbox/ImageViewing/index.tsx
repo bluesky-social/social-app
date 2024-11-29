@@ -16,6 +16,7 @@ import {
   StyleSheet,
   View,
 } from 'react-native'
+import {SystemBars} from 'react-native-edge-to-edge'
 import {Gesture} from 'react-native-gesture-handler'
 import PagerView from 'react-native-pager-view'
 import Animated, {
@@ -40,7 +41,6 @@ import {
   useSafeAreaFrame,
   useSafeAreaInsets,
 } from 'react-native-safe-area-context'
-import {StatusBar} from 'expo-status-bar'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Trans} from '@lingui/macro'
 
@@ -51,8 +51,6 @@ import {Lightbox} from '#/state/lightbox'
 import {Button} from '#/view/com/util/forms/Button'
 import {Text} from '#/view/com/util/text/Text'
 import {ScrollView} from '#/view/com/util/Views'
-import {ios, useTheme} from '#/alf'
-import {setNavigationBar} from '#/alf/util/navigationBar'
 import {PlatformInfo} from '../../../../../modules/expo-bluesky-swiss-army'
 import {ImageSource, Transform} from './@types'
 import ImageDefaultHeader from './components/ImageDefaultHeader'
@@ -294,26 +292,18 @@ function ImageView({
     },
   )
 
-  // style nav bar on android
-  const t = useTheme()
   useEffect(() => {
-    setNavigationBar('lightbox', t)
+    const entry = SystemBars.pushStackEntry({
+      style: 'light',
+      hidden: isScaled || !showControls,
+    })
     return () => {
-      setNavigationBar('theme', t)
+      SystemBars.popStackEntry(entry)
     }
-  }, [t])
+  }, [isScaled, showControls])
 
   return (
     <Animated.View style={[styles.container, containerStyle]}>
-      <StatusBar
-        animated
-        style="light"
-        hideTransitionAnimation="slide"
-        backgroundColor="black"
-        // hiding causes layout shifts on android,
-        // so avoid until we add edge-to-edge mode
-        hidden={ios(isScaled || !showControls)}
-      />
       <Animated.View
         style={[styles.backdrop, backdropStyle]}
         renderToHardwareTextureAndroid

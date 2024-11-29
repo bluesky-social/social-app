@@ -213,6 +213,7 @@ module.exports = function (config) {
         channel: UPDATES_CHANNEL,
       },
       plugins: [
+        'react-native-edge-to-edge',
         'expo-localization',
         USE_SENTRY && [
           '@sentry/react-native/expo',
