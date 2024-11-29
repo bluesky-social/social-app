@@ -8,7 +8,7 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-23 14:53+0900\n"
+"PO-Revision-Date: 2024-11-29 20:51+0900\n"
 "Last-Translator: quiple\n"
 "Language-Team: quiple, lens0021, HaruChanHeart, hazzzi, heartade\n"
 "Plural-Forms: \n"
@@ -378,7 +378,7 @@ msgid "About"
 msgstr "정보"
 
 #: src/view/com/util/ViewHeader.tsx:89
-#: src/view/screens/Search/Search.tsx:884
+#: src/view/screens/Search/Search.tsx:885
 msgid "Access navigation links and settings"
 msgstr "탐색 링크 및 설정으로 이동합니다"
 
@@ -1159,7 +1159,7 @@ msgstr "카메라"
 #: src/view/com/modals/VerifyEmail.tsx:255
 #: src/view/com/modals/VerifyEmail.tsx:261
 #: src/view/com/util/post-ctrls/RepostButton.tsx:203
-#: src/view/screens/Search/Search.tsx:912
+#: src/view/screens/Search/Search.tsx:913
 msgid "Cancel"
 msgstr "취소"
 
@@ -1192,7 +1192,7 @@ msgid "Cancel reactivation and log out"
 msgstr "재활성화 취소 및 로그아웃"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:88
-#: src/view/screens/Search/Search.tsx:904
+#: src/view/screens/Search/Search.tsx:905
 msgid "Cancel search"
 msgstr "검색 취소"
 
@@ -1580,7 +1580,7 @@ msgstr "콘텐츠 차단됨"
 msgid "Content filters"
 msgstr "콘텐츠 필터"
 
-#: src/screens/Settings/LanguageSettings.tsx:241
+#: src/screens/Settings/LanguageSettings.tsx:243
 #: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:75
 msgid "Content Languages"
 msgstr "콘텐츠 언어"
@@ -2714,7 +2714,7 @@ msgstr "피드백을 보냈습니다!"
 #: src/view/screens/Feeds.tsx:446
 #: src/view/screens/Feeds.tsx:552
 #: src/view/screens/Profile.tsx:232
-#: src/view/screens/Search/Search.tsx:537
+#: src/view/screens/Search/Search.tsx:538
 #: src/view/shell/desktop/LeftNav.tsx:458
 #: src/view/shell/Drawer.tsx:476
 msgid "Feeds"
@@ -2747,7 +2747,7 @@ msgstr "마무리 중"
 msgid "Find accounts to follow"
 msgstr "팔로우할 계정 찾아보기"
 
-#: src/view/screens/Search/Search.tsx:612
+#: src/view/screens/Search/Search.tsx:613
 msgid "Find posts and users on Bluesky"
 msgstr "Bluesky에서 게시물 및 사용자 찾기"
 
@@ -2943,10 +2943,6 @@ msgctxt "from-feed"
 msgid "From <0/>"
 msgstr "<0/>에서"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:404
-#~ msgid "Fullscreen"
-#~ msgstr "전체화면"
-
 #: src/view/com/composer/photos/SelectPhotoBtn.tsx:50
 msgid "Gallery"
 msgstr "갤러리"
@@ -3101,10 +3097,6 @@ msgstr "도움말"
 #: src/screens/Onboarding/StepProfile/index.tsx:237
 msgid "Help people know you're not a bot by uploading a picture or creating an avatar."
 msgstr "사진을 업로드하거나 아바타를 만들어 사람들이 내가 봇이 아니라는 사실을 알 수 있도록 하세요."
-
-#: src/screens/Settings/ContentAndMediaSettings.tsx:127
-#~ msgid "Helps external sites estimate traffic from Bluesky."
-#~ msgstr "외부 사이트에서 Bluesky의 트래픽을 파악하는 데 도움이 됩니다."
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:187
 msgid "Here is your app password!"
@@ -3474,7 +3466,7 @@ msgid "Larger"
 msgstr "큼"
 
 #: src/screens/Hashtag.tsx:98
-#: src/view/screens/Search/Search.tsx:521
+#: src/view/screens/Search/Search.tsx:522
 msgid "Latest"
 msgstr "최신"
 
@@ -3771,7 +3763,7 @@ msgstr "멘션한 사용자"
 
 #: src/components/Menu/index.tsx:95
 #: src/view/com/util/ViewHeader.tsx:87
-#: src/view/screens/Search/Search.tsx:883
+#: src/view/screens/Search/Search.tsx:884
 msgid "Menu"
 msgstr "메뉴"
 
@@ -4666,7 +4658,7 @@ msgid "Pause video"
 msgstr "동영상 일시 정지"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:182
-#: src/view/screens/Search/Search.tsx:531
+#: src/view/screens/Search/Search.tsx:532
 msgid "People"
 msgstr "사람들"
 
@@ -4942,7 +4934,7 @@ msgstr "내가 팔로우하는 이 계정의 팔로워를 보려면 누르세요
 msgid "Previous image"
 msgstr "이전 이미지"
 
-#: src/screens/Settings/LanguageSettings.tsx:158
+#: src/screens/Settings/LanguageSettings.tsx:159
 msgid "Primary Language"
 msgstr "주 언어"
 
@@ -5103,7 +5095,7 @@ msgstr "Bluesky 서비스 이용약관 읽기"
 msgid "Reason:"
 msgstr "이유:"
 
-#: src/view/screens/Search/Search.tsx:1058
+#: src/view/screens/Search/Search.tsx:1059
 msgid "Recent Searches"
 msgstr "최근 검색"
 
@@ -5196,11 +5188,11 @@ msgstr "이미지 제거"
 msgid "Remove mute word from your list"
 msgstr "목록에서 뮤트한 단어 제거"
 
-#: src/view/screens/Search/Search.tsx:1102
+#: src/view/screens/Search/Search.tsx:1103
 msgid "Remove profile"
 msgstr "프로필 제거"
 
-#: src/view/screens/Search/Search.tsx:1104
+#: src/view/screens/Search/Search.tsx:1105
 msgid "Remove profile from search history"
 msgstr "검색 기록에서 프로필을 제거합니다"
 
@@ -5558,7 +5550,7 @@ msgstr "이전 페이지로 돌아갑니다"
 msgid "Save"
 msgstr "저장"
 
-#: src/view/com/lightbox/ImageViewing/index.tsx:576
+#: src/view/com/lightbox/ImageViewing/index.tsx:591
 #: src/view/com/modals/CreateOrEditList.tsx:325
 msgctxt "action"
 msgid "Save"
@@ -5641,7 +5633,7 @@ msgstr "맨 위로 스크롤"
 #: src/components/forms/SearchInput.tsx:36
 #: src/Navigation.tsx:593
 #: src/view/com/modals/ListAddRemoveUsers.tsx:76
-#: src/view/screens/Search/Search.tsx:594
+#: src/view/screens/Search/Search.tsx:595
 #: src/view/shell/bottom-bar/BottomBar.tsx:178
 #: src/view/shell/desktop/LeftNav.tsx:420
 #: src/view/shell/Drawer.tsx:365
@@ -5652,7 +5644,7 @@ msgstr "검색"
 msgid "Search for \"{query}\""
 msgstr "\"{query}\"에 대한 검색 결과"
 
-#: src/view/screens/Search/Search.tsx:1001
+#: src/view/screens/Search/Search.tsx:1002
 msgid "Search for \"{searchText}\""
 msgstr "\"{searchText}\"에 대한 검색 결과"
 
@@ -5725,7 +5717,7 @@ msgstr "아바타 선택"
 msgid "Select an emoji"
 msgstr "이모티콘 선택"
 
-#: src/screens/Settings/LanguageSettings.tsx:252
+#: src/screens/Settings/LanguageSettings.tsx:254
 msgid "Select content languages"
 msgstr "콘텐츠 언어 선택"
 
@@ -5749,17 +5741,13 @@ msgstr "이 단어를 음소거할 기간 선택하기"
 msgid "Select language..."
 msgstr "언어 선택..."
 
-#: src/screens/Settings/LanguageSettings.tsx:266
+#: src/screens/Settings/LanguageSettings.tsx:268
 msgid "Select languages"
 msgstr "언어 선택"
 
 #: src/components/ReportDialog/SelectLabelerView.tsx:28
 msgid "Select moderator"
 msgstr "검토자 선택"
-
-#: src/view/com/util/Selector.tsx:108
-#~ msgid "Select option {i} of {numItems}"
-#~ msgstr "{numItems}개 중 {i}번째 옵션을 선택합니다"
 
 #: src/view/com/composer/videos/SubtitleFilePicker.tsx:66
 msgid "Select subtitle file (.vtt)"
@@ -5785,7 +5773,7 @@ msgstr "동영상 선택"
 msgid "Select what content this mute word should apply to."
 msgstr "이 뮤트 단어를 적용할 콘텐츠 선택하기"
 
-#: src/screens/Settings/LanguageSettings.tsx:245
+#: src/screens/Settings/LanguageSettings.tsx:247
 msgid "Select which languages you want your subscribed feeds to include. If none are selected, all languages will be shown."
 msgstr "구독하는 피드에 포함할 언어를 선택합니다. 선택하지 않으면 모든 언어가 표시됩니다."
 
@@ -5801,17 +5789,13 @@ msgstr "생년월일을 선택하세요"
 msgid "Select your interests from the options below"
 msgstr "아래 옵션에서 관심사를 선택하세요"
 
-#: src/screens/Settings/LanguageSettings.tsx:162
+#: src/screens/Settings/LanguageSettings.tsx:163
 msgid "Select your preferred language for translations in your feed."
 msgstr "피드에서 번역을 위해 선호하는 언어를 선택합니다."
 
 #: src/components/dms/ChatEmptyPill.tsx:38
 msgid "Send a neat website!"
 msgstr "멋진 웹사이트 링크를 보내 보세요!"
-
-#: src/screens/Settings/ContentAndMediaSettings.tsx:118
-#~ msgid "Send Bluesky referrer"
-#~ msgstr "Bluesky 리퍼러 보내기"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:232
 msgid "Send Confirmation"
@@ -5920,7 +5904,7 @@ msgstr "외설적"
 msgid "Share"
 msgstr "공유"
 
-#: src/view/com/lightbox/ImageViewing/index.tsx:585
+#: src/view/com/lightbox/ImageViewing/index.tsx:600
 msgctxt "action"
 msgid "Share"
 msgstr "공유"
@@ -6213,7 +6197,7 @@ msgstr "알 수 없는 오류가 발생했습니다. 다시 시도해 주세요.
 msgid "Something went wrong!"
 msgstr "문제가 발생했습니다!"
 
-#: src/App.native.tsx:113
+#: src/App.native.tsx:118
 #: src/App.web.tsx:94
 msgid "Sorry! Your session expired. Please log in again."
 msgstr "죄송합니다. 세션이 만료되었습니다. 다시 로그인해 주세요."
@@ -6242,10 +6226,6 @@ msgstr "스팸"
 #: src/lib/moderation/useReportOptions.ts:55
 msgid "Spam; excessive mentions or replies"
 msgstr "스팸, 과도한 멘션 또는 답글"
-
-#: src/screens/Settings/ContentAndMediaSettings.tsx:112
-#~ msgid "Specify Bluesky as a referer"
-#~ msgstr "Bluesky를 리퍼러로 정의하기"
 
 #: src/screens/Onboarding/index.tsx:27
 #: src/screens/Onboarding/state.ts:100
@@ -6945,7 +6925,7 @@ msgid "Toggle to enable or disable adult content"
 msgstr "성인 콘텐츠 활성화 또는 비활성화 전환"
 
 #: src/screens/Hashtag.tsx:87
-#: src/view/screens/Search/Search.tsx:511
+#: src/view/screens/Search/Search.tsx:512
 msgid "Top"
 msgstr "인기"
 
