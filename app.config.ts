@@ -1,28 +1,30 @@
 const pkg = require('./package.json')
+import {ConfigContext} from '@expo/config'
+import type {ExpoConfig, Splash} from '@expo/config-types'
 
-const SPLASH_CONFIG = {
+const SPLASH_CONFIG: Splash = {
   backgroundColor: '#ffffff',
   image: './assets/splash.png',
   resizeMode: 'cover',
 }
-const DARK_SPLASH_CONFIG = {
+const DARK_SPLASH_CONFIG: Splash = {
   backgroundColor: '#001429',
   image: './assets/splash-dark.png',
   resizeMode: 'cover',
 }
 
-const SPLASH_CONFIG_ANDROID = {
+const SPLASH_CONFIG_ANDROID: Splash = {
   backgroundColor: '#0c7cff',
   image: './assets/splash.png',
   resizeMode: 'cover',
 }
-const DARK_SPLASH_CONFIG_ANDROID = {
+const DARK_SPLASH_CONFIG_ANDROID: Splash = {
   backgroundColor: '#0f141b',
   image: './assets/splash-dark.png',
   resizeMode: 'cover',
 }
 
-module.exports = function (config) {
+module.exports = function (_ctx: ConfigContext): {expo: ExpoConfig} {
   /**
    * App version number. Should be incremented as part of a release cycle.
    */
@@ -180,10 +182,12 @@ module.exports = function (config) {
                 scheme: 'https',
                 host: 'bsky.app',
               },
-              IS_DEV && {
-                scheme: 'http',
-                host: 'localhost:19006',
-              },
+              IS_DEV
+                ? {
+                    scheme: 'http',
+                    host: 'localhost:19006',
+                  }
+                : {},
             ],
             category: ['BROWSABLE', 'DEFAULT'],
           },
@@ -210,19 +214,22 @@ module.exports = function (config) {
             }
           : undefined,
         checkAutomatically: 'NEVER',
+        // @ts-ignore
         channel: UPDATES_CHANNEL,
       },
       plugins: [
         'expo-localization',
-        USE_SENTRY && [
-          '@sentry/react-native/expo',
-          {
-            organization: 'blueskyweb',
-            project: 'react-native',
-            release: VERSION,
-            dist: SENTRY_DIST,
-          },
-        ],
+        USE_SENTRY
+          ? [
+              '@sentry/react-native/expo',
+              {
+                organization: 'blueskyweb',
+                project: 'react-native',
+                release: VERSION,
+                dist: SENTRY_DIST,
+              },
+            ]
+          : [],
         [
           'expo-build-properties',
           {
@@ -273,7 +280,7 @@ module.exports = function (config) {
             ],
           },
         ],
-      ].filter(Boolean),
+      ],
       extra: {
         eas: {
           build: {
