@@ -8,7 +8,7 @@
 // Original code copied and simplified from the link below as the codebase is currently not maintained:
 // https://github.com/jobtoday/react-native-image-viewing
 
-import React, {useCallback, useState} from 'react'
+import React, {useCallback, useEffect, useMemo, useState} from 'react'
 import {
   LayoutAnimation,
   PixelRatio,
@@ -40,6 +40,7 @@ import {
   useSafeAreaFrame,
   useSafeAreaInsets,
 } from 'react-native-safe-area-context'
+import {StatusBar} from 'expo-status-bar'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Trans} from '@lingui/macro'
 
@@ -50,6 +51,8 @@ import {Lightbox} from '#/state/lightbox'
 import {Button} from '#/view/com/util/forms/Button'
 import {Text} from '#/view/com/util/text/Text'
 import {ScrollView} from '#/view/com/util/Views'
+import {ios, useTheme} from '#/alf'
+import {setNavigationBar} from '#/alf/util/navigationBar'
 import {PlatformInfo} from '../../../../../modules/expo-bluesky-swiss-army'
 import {ImageSource, Transform} from './@types'
 import ImageDefaultHeader from './components/ImageDefaultHeader'
@@ -74,6 +77,15 @@ const FAST_SPRING: WithSpringConfig = {
   damping: 150,
   stiffness: 900,
   restDisplacementThreshold: 0.01,
+}
+
+function canAnimate(lightbox: Lightbox): boolean {
+  return (
+    !PlatformInfo.getIsReducedMotionEnabled() &&
+    lightbox.images.every(
+      img => img.thumbRect && (img.dimensions || img.thumbDimensions),
+    )
+  )
 }
 
 export default function ImageViewRoot({
@@ -101,26 +113,26 @@ export default function ImageViewRoot({
       return
     }
 
-    const canAnimate =
-      !PlatformInfo.getIsReducedMotionEnabled() &&
-      nextLightbox.images.every(
-        img => img.thumbRect && (img.dimensions || img.thumbDimensions),
-      )
+    const isAnimated = canAnimate(nextLightbox)
 
     // https://github.com/software-mansion/react-native-reanimated/issues/6677
-    requestAnimationFrame(() => {
-      openProgress.value = canAnimate ? withClampedSpring(1, SLOW_SPRING) : 1
+    rAF_FIXED(() => {
+      openProgress.set(() =>
+        isAnimated ? withClampedSpring(1, SLOW_SPRING) : 1,
+      )
     })
     return () => {
       // https://github.com/software-mansion/react-native-reanimated/issues/6677
-      requestAnimationFrame(() => {
-        openProgress.value = canAnimate ? withClampedSpring(0, SLOW_SPRING) : 0
+      rAF_FIXED(() => {
+        openProgress.set(() =>
+          isAnimated ? withClampedSpring(0, SLOW_SPRING) : 0,
+        )
       })
     }
   }, [nextLightbox, openProgress])
 
   useAnimatedReaction(
-    () => openProgress.value === 0,
+    () => openProgress.get() === 0,
     (isGone, wasGone) => {
       if (isGone && !wasGone) {
         runOnJS(setActiveLightbox)(null)
@@ -130,7 +142,7 @@ export default function ImageViewRoot({
 
   const onFlyAway = React.useCallback(() => {
     'worklet'
-    openProgress.value = 0
+    openProgress.set(0)
     runOnJS(onRequestClose)()
   }, [onRequestClose, openProgress])
 
@@ -178,6 +190,7 @@ function ImageView({
   openProgress: SharedValue<number>
 }) {
   const {images, index: initialImageIndex} = lightbox
+  const isAnimated = useMemo(() => canAnimate(lightbox), [lightbox])
   const [isScaled, setIsScaled] = useState(false)
   const [isDragging, setIsDragging] = useState(false)
   const [imageIndex, setImageIndex] = useState(initialImageIndex)
@@ -187,20 +200,30 @@ function ImageView({
   const isFlyingAway = useSharedValue(false)
 
   const containerStyle = useAnimatedStyle(() => {
-    if (openProgress.value < 1 || isFlyingAway.value) {
-      return {pointerEvents: 'none'}
+    if (openProgress.get() < 1) {
+      return {
+        pointerEvents: 'none',
+        opacity: isAnimated ? 1 : 0,
+      }
     }
-    return {pointerEvents: 'auto'}
+    if (isFlyingAway.get()) {
+      return {
+        pointerEvents: 'none',
+        opacity: 1,
+      }
+    }
+    return {pointerEvents: 'auto', opacity: 1}
   })
 
   const backdropStyle = useAnimatedStyle(() => {
     const screenSize = measure(safeAreaRef)
     let opacity = 1
-    if (openProgress.value < 1) {
-      opacity = Math.sqrt(openProgress.value)
+    const openProgressValue = openProgress.get()
+    if (openProgressValue < 1) {
+      opacity = Math.sqrt(openProgressValue)
     } else if (screenSize) {
       const dragProgress = Math.min(
-        Math.abs(dismissSwipeTranslateY.value) / (screenSize.height / 2),
+        Math.abs(dismissSwipeTranslateY.get()) / (screenSize.height / 2),
         1,
       )
       opacity -= dragProgress
@@ -212,11 +235,11 @@ function ImageView({
   })
 
   const animatedHeaderStyle = useAnimatedStyle(() => {
-    const show = showControls && dismissSwipeTranslateY.value === 0
+    const show = showControls && dismissSwipeTranslateY.get() === 0
     return {
       pointerEvents: show ? 'box-none' : 'none',
       opacity: withClampedSpring(
-        show && openProgress.value === 1 ? 1 : 0,
+        show && openProgress.get() === 1 ? 1 : 0,
         FAST_SPRING,
       ),
       transform: [
@@ -227,12 +250,12 @@ function ImageView({
     }
   })
   const animatedFooterStyle = useAnimatedStyle(() => {
-    const show = showControls && dismissSwipeTranslateY.value === 0
+    const show = showControls && dismissSwipeTranslateY.get() === 0
     return {
       flexGrow: 1,
       pointerEvents: show ? 'box-none' : 'none',
       opacity: withClampedSpring(
-        show && openProgress.value === 1 ? 1 : 0,
+        show && openProgress.get() === 1 ? 1 : 0,
         FAST_SPRING,
       ),
       transform: [
@@ -259,7 +282,7 @@ function ImageView({
       const screenSize = measure(safeAreaRef)
       return (
         !screenSize ||
-        Math.abs(dismissSwipeTranslateY.value) > screenSize.height
+        Math.abs(dismissSwipeTranslateY.get()) > screenSize.height
       )
     },
     (isOut, wasOut) => {
@@ -271,8 +294,26 @@ function ImageView({
     },
   )
 
+  // style nav bar on android
+  const t = useTheme()
+  useEffect(() => {
+    setNavigationBar('lightbox', t)
+    return () => {
+      setNavigationBar('theme', t)
+    }
+  }, [t])
+
   return (
     <Animated.View style={[styles.container, containerStyle]}>
+      <StatusBar
+        animated
+        style="light"
+        hideTransitionAnimation="slide"
+        backgroundColor="black"
+        // hiding causes layout shifts on android,
+        // so avoid until we add edge-to-edge mode
+        hidden={ios(isScaled || !showControls)}
+      />
       <Animated.View
         style={[styles.backdrop, backdropStyle]}
         renderToHardwareTextureAndroid
@@ -397,10 +438,11 @@ function LightboxImage({
   const transforms = useDerivedValue(() => {
     'worklet'
     const safeArea = measureSafeArea()
+    const openProgressValue = openProgress.get()
     const dismissTranslateY =
-      isActive && openProgress.value === 1 ? dismissSwipeTranslateY.value : 0
+      isActive && openProgressValue === 1 ? dismissSwipeTranslateY.get() : 0
 
-    if (openProgress.value === 0 && isFlyingAway.value) {
+    if (openProgressValue === 0 && isFlyingAway.get()) {
       return {
         isHidden: true,
         isResting: false,
@@ -410,9 +452,9 @@ function LightboxImage({
       }
     }
 
-    if (isActive && thumbRect && imageAspect && openProgress.value < 1) {
+    if (isActive && thumbRect && imageAspect && openProgressValue < 1) {
       return interpolateTransform(
-        openProgress.value,
+        openProgressValue,
         thumbRect,
         safeArea,
         imageAspect,
@@ -434,33 +476,37 @@ function LightboxImage({
     .maxPointers(1)
     .onUpdate(e => {
       'worklet'
-      if (openProgress.value !== 1 || isFlyingAway.value) {
+      if (openProgress.get() !== 1 || isFlyingAway.get()) {
         return
       }
-      dismissSwipeTranslateY.value = e.translationY
+      dismissSwipeTranslateY.set(e.translationY)
     })
     .onEnd(e => {
       'worklet'
-      if (openProgress.value !== 1 || isFlyingAway.value) {
+      if (openProgress.get() !== 1 || isFlyingAway.get()) {
         return
       }
       if (Math.abs(e.velocityY) > 200) {
-        isFlyingAway.value = true
-        if (dismissSwipeTranslateY.value === 0) {
+        isFlyingAway.set(true)
+        if (dismissSwipeTranslateY.get() === 0) {
           // HACK: If the initial value is 0, withDecay() animation doesn't start.
           // This is a bug in Reanimated, but for now we'll work around it like this.
-          dismissSwipeTranslateY.value = 1
+          dismissSwipeTranslateY.set(1)
         }
-        dismissSwipeTranslateY.value = withDecay({
-          velocity: e.velocityY,
-          velocityFactor: Math.max(3500 / Math.abs(e.velocityY), 1), // Speed up if it's too slow.
-          deceleration: 1, // Danger! This relies on the reaction below stopping it.
-        })
+        dismissSwipeTranslateY.set(() =>
+          withDecay({
+            velocity: e.velocityY,
+            velocityFactor: Math.max(3500 / Math.abs(e.velocityY), 1), // Speed up if it's too slow.
+            deceleration: 1, // Danger! This relies on the reaction below stopping it.
+          }),
+        )
       } else {
-        dismissSwipeTranslateY.value = withSpring(0, {
-          stiffness: 700,
-          damping: 50,
-        })
+        dismissSwipeTranslateY.set(() =>
+          withSpring(0, {
+            stiffness: 700,
+            damping: 50,
+          }),
+        )
       }
     })
 
@@ -720,4 +766,33 @@ function interpolateTransform(
 function withClampedSpring(value: any, config: WithSpringConfig) {
   'worklet'
   return withSpring(value, {...config, overshootClamping: true})
+}
+
+// We have to do this because we can't trust RN's rAF to fire in order.
+// https://github.com/facebook/react-native/issues/48005
+let isFrameScheduled = false
+let pendingFrameCallbacks: Array<() => void> = []
+function rAF_FIXED(callback: () => void) {
+  pendingFrameCallbacks.push(callback)
+  if (!isFrameScheduled) {
+    isFrameScheduled = true
+    requestAnimationFrame(() => {
+      const callbacks = pendingFrameCallbacks.slice()
+      isFrameScheduled = false
+      pendingFrameCallbacks = []
+      let hasError = false
+      let error
+      for (let i = 0; i < callbacks.length; i++) {
+        try {
+          callbacks[i]()
+        } catch (e) {
+          hasError = true
+          error = e
+        }
+      }
+      if (hasError) {
+        throw error
+      }
+    })
+  }
 }

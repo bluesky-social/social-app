@@ -1,4 +1,3 @@
-import React from 'react'
 import {Pressable, View} from 'react-native'
 import {useLingui} from '@lingui/react'
 

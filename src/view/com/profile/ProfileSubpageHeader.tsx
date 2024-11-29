@@ -1,18 +1,13 @@
 import React from 'react'
 import {Pressable, StyleSheet, View} from 'react-native'
-import Animated, {
-  measure,
-  MeasuredDimensions,
-  runOnJS,
-  runOnUI,
-  useAnimatedRef,
-} from 'react-native-reanimated'
+import {MeasuredDimensions, runOnJS, runOnUI} from 'react-native-reanimated'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
 import {BACK_HITSLOP} from '#/lib/constants'
+import {measureHandle, useHandleRef} from '#/lib/hooks/useHandleRef'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {makeProfileLink} from '#/lib/routes/links'
@@ -60,7 +55,7 @@ export function ProfileSubpageHeader({
   const {openLightbox} = useLightboxControls()
   const pal = usePalette('default')
   const canGoBack = navigation.canGoBack()
-  const aviRef = useAnimatedRef()
+  const aviRef = useHandleRef()
 
   const onPressBack = React.useCallback(() => {
     if (navigation.canGoBack()) {
@@ -101,9 +96,10 @@ export function ProfileSubpageHeader({
     if (
       avatar // TODO && !(view.moderation.avatar.blur && view.moderation.avatar.noOverride)
     ) {
+      const aviHandle = aviRef.current
       runOnUI(() => {
         'worklet'
-        const rect = measure(aviRef)
+        const rect = measureHandle(aviHandle)
         runOnJS(_openLightbox)(avatar, rect)
       })()
     }
@@ -155,7 +151,7 @@ export function ProfileSubpageHeader({
           paddingBottom: 6,
           paddingHorizontal: isMobile ? 12 : 14,
         }}>
-        <Animated.View ref={aviRef} collapsable={false}>
+        <View ref={aviRef} collapsable={false}>
           <Pressable
             testID="headerAviButton"
             onPress={onPressAvi}
@@ -169,7 +165,7 @@ export function ProfileSubpageHeader({
               <UserAvatar type={avatarType} size={58} avatar={avatar} />
             )}
           </Pressable>
-        </Animated.View>
+        </View>
         <View style={{flex: 1}}>
           {isLoading ? (
             <LoadingPlaceholder

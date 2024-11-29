@@ -22,6 +22,6 @@ export type ThreadViewPreferences = Pick<
   BskyThreadViewPreference,
   'prioritizeFollowedUsers'
 > & {
-  sort: 'oldest' | 'newest' | 'most-likes' | 'random' | string
+  sort: 'hotness' | 'oldest' | 'newest' | 'most-likes' | 'random' | string
   lab_treeViewEnabled?: boolean
 }

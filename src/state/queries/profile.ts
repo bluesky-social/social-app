@@ -409,7 +409,7 @@ function useProfileUnmuteMutation() {
 }
 
 export function useProfileBlockMutationQueue(
-  profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>,
+  profile: Shadow<AppBskyActorDefs.ProfileViewBasic>,
 ) {
   const queryClient = useQueryClient()
   const did = profile.did

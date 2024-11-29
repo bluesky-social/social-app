@@ -1,11 +1,11 @@
 import React from 'react'
 import {Pressable, StyleProp, View, ViewStyle} from 'react-native'
-import Animated, {AnimatedRef} from 'react-native-reanimated'
 import {Image, ImageStyle} from 'expo-image'
 import {AppBskyEmbedImages} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {HandleRef} from '#/lib/hooks/useHandleRef'
 import {Dimensions} from '#/lib/media/types'
 import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
 import {PostEmbedViewContext} from '#/view/com/util/post-embeds/types'
@@ -20,7 +20,7 @@ interface Props {
   index: number
   onPress?: (
     index: number,
-    containerRefs: AnimatedRef<React.Component<{}, {}, any>>[],
+    containerRefs: HandleRef[],
     fetchedDims: (Dimensions | null)[],
   ) => void
   onLongPress?: EventFunction
@@ -28,7 +28,7 @@ interface Props {
   imageStyle?: StyleProp<ImageStyle>
   viewContext?: PostEmbedViewContext
   insetBorderStyle?: StyleProp<ViewStyle>
-  containerRefs: AnimatedRef<React.Component<{}, {}, any>>[]
+  containerRefs: HandleRef[]
   thumbDimsRef: React.MutableRefObject<(Dimensions | null)[]>
 }
 
@@ -52,10 +52,7 @@ export function GalleryItem({
   const hideBadges =
     viewContext === PostEmbedViewContext.FeedEmbedRecordWithMedia
   return (
-    <Animated.View
-      style={a.flex_1}
-      ref={containerRefs[index]}
-      collapsable={false}>
+    <View style={a.flex_1} ref={containerRefs[index]} collapsable={false}>
       <Pressable
         onPress={
           onPress
@@ -118,6 +115,6 @@ export function GalleryItem({
           </Text>
         </View>
       ) : null}
-    </Animated.View>
+    </View>
   )
 }

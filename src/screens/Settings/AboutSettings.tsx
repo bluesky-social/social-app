@@ -1,4 +1,3 @@
-import React from 'react'
 import {Platform} from 'react-native'
 import {setStringAsync} from 'expo-clipboard'
 import {msg, Trans} from '@lingui/macro'

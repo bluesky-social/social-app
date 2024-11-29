@@ -17,13 +17,12 @@ export function Loader(props: Props) {
   const rotation = useSharedValue(0)
 
   const animatedStyles = useAnimatedStyle(() => ({
-    transform: [{rotate: rotation.value + 'deg'}],
+    transform: [{rotate: rotation.get() + 'deg'}],
   }))
 
   React.useEffect(() => {
-    rotation.value = withRepeat(
-      withTiming(360, {duration: 500, easing: Easing.linear}),
-      -1,
+    rotation.set(() =>
+      withRepeat(withTiming(360, {duration: 500, easing: Easing.linear}), -1),
     )
   }, [rotation])
 

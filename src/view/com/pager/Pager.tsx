@@ -1,5 +1,5 @@
 import React, {forwardRef} from 'react'
-import {Animated, View} from 'react-native'
+import {View} from 'react-native'
 import PagerView, {
   PagerViewOnPageScrollEvent,
   PagerViewOnPageSelectedEvent,
@@ -10,7 +10,6 @@ import {LogEvents} from '#/lib/statsig/events'
 import {atoms as a, native} from '#/alf'
 
 export type PageSelectedEvent = PagerViewOnPageSelectedEvent
-const AnimatedPagerView = Animated.createAnimatedComponent(PagerView)
 
 export interface PagerRef {
   setPage: (
@@ -138,7 +137,7 @@ export const Pager = forwardRef<PagerRef, React.PropsWithChildren<Props>>(
           selectedPage,
           onSelect: onTabBarSelect,
         })}
-        <AnimatedPagerView
+        <PagerView
           ref={pagerView}
           style={[a.flex_1]}
           initialPage={initialPage}
@@ -146,7 +145,7 @@ export const Pager = forwardRef<PagerRef, React.PropsWithChildren<Props>>(
           onPageSelected={onPageSelectedInner}
           onPageScroll={onPageScroll}>
           {children}
-        </AnimatedPagerView>
+        </PagerView>
       </View>
     )
   },

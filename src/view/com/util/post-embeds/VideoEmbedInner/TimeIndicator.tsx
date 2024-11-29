@@ -1,8 +1,9 @@
-import React from 'react'
 import {StyleProp, ViewStyle} from 'react-native'
-import Animated, {FadeInDown, FadeOutDown} from 'react-native-reanimated'
+import {View} from 'react-native'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
-import {atoms as a, native, useTheme} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
 
 /**
@@ -17,6 +18,7 @@ export function TimeIndicator({
   style?: StyleProp<ViewStyle>
 }) {
   const t = useTheme()
+  const {_} = useLingui()
 
   if (isNaN(time)) {
     return null
@@ -26,10 +28,10 @@ export function TimeIndicator({
   const seconds = String(time % 60).padStart(2, '0')
 
   return (
-    <Animated.View
-      entering={native(FadeInDown.duration(300))}
-      exiting={native(FadeOutDown.duration(500))}
+    <View
       pointerEvents="none"
+      accessibilityLabel={_(msg`Time remaining: ${time} seconds`)}
+      accessibilityHint=""
       style={[
         {
           backgroundColor: 'rgba(0, 0, 0, 0.5)',
@@ -52,6 +54,6 @@ export function TimeIndicator({
         ]}>
         {`${minutes}:${seconds}`}
       </Text>
-    </Animated.View>
+    </View>
   )
 }

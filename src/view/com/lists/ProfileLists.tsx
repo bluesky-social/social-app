@@ -1,8 +1,10 @@
 import React from 'react'
 import {
+  ActivityIndicator,
   findNodeHandle,
   ListRenderItemInfo,
   StyleProp,
+  StyleSheet,
   View,
   ViewStyle,
 } from 'react-native'
@@ -10,6 +12,7 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {isNative, isWeb} from '#/platform/detection'
@@ -56,10 +59,12 @@ export const ProfileLists = React.forwardRef<SectionRef, ProfileListsProps>(
       isFetched,
       hasNextPage,
       fetchNextPage,
+      isFetchingNextPage,
       isError,
       error,
       refetch,
     } = useProfileListsQuery(did, opts)
+    const {isMobile} = useWebMediaQueries()
     const isEmpty = !isFetching && !data?.pages[0]?.lists.length
 
     const items = React.useMemo(() => {
@@ -176,6 +181,12 @@ export const ProfileLists = React.forwardRef<SectionRef, ProfileListsProps>(
       }
     }, [enabled, scrollElRef, setScrollViewTag])
 
+    const ProfileListsFooter = React.useCallback(() => {
+      return isFetchingNextPage ? (
+        <ActivityIndicator style={[styles.footer]} />
+      ) : null
+    }, [isFetchingNextPage])
+
     return (
       <View testID={testID} style={style}>
         <List
@@ -184,12 +195,13 @@ export const ProfileLists = React.forwardRef<SectionRef, ProfileListsProps>(
           data={items}
           keyExtractor={(item: any) => item._reactKey || item.uri}
           renderItem={renderItemInner}
+          ListFooterComponent={ProfileListsFooter}
           refreshing={isPTRing}
           onRefresh={onRefresh}
           headerOffset={headerOffset}
           progressViewOffset={ios(0)}
           contentContainerStyle={
-            isNative && {paddingBottom: headerOffset + 100}
+            isMobile && {paddingBottom: headerOffset + 100}
           }
           indicatorStyle={t.name === 'light' ? 'black' : 'white'}
           removeClippedSubviews={true}
@@ -201,3 +213,7 @@ export const ProfileLists = React.forwardRef<SectionRef, ProfileListsProps>(
     )
   },
 )
+
+const styles = StyleSheet.create({
+  footer: {paddingTop: 20},
+})

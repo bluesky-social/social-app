@@ -13,7 +13,7 @@ export const useGrapheme = () => {
 
         if (graphemes.length > length) {
           remainingCharacters = 0
-          name = `${graphemes.slice(0, length).join('')}...`
+          name = `${graphemes.slice(0, length).join('')}…`
         } else {
           remainingCharacters = length - graphemes.length
           name = graphemes.join('')

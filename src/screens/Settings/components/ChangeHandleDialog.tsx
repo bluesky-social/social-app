@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo, useState} from 'react'
+import {useCallback, useMemo, useState} from 'react'
 import {useWindowDimensions, View} from 'react-native'
 import Animated, {
   FadeIn,
@@ -86,7 +86,6 @@ function ChangeHandleDialogInner() {
   return (
     <Dialog.ScrollableInner
       label={_(msg`Change Handle`)}
-      style={[a.overflow_hidden]}
       header={
         <Dialog.Header renderLeft={cancelButton}>
           <Dialog.HeaderText>

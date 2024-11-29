@@ -394,6 +394,7 @@ function SearchLanguageDropdown({
 
   return (
     <RNPickerSelect
+      darkTheme={t.scheme === 'dark'}
       placeholder={{}}
       value={value}
       onValueChange={onChange}
@@ -805,6 +806,7 @@ export function SearchScreen(
     } else {
       setSearchText('')
       navigation.setParams({q: ''})
+      textInput.current?.focus()
     }
   }, [navigation])
 

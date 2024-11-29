@@ -1,6 +1,5 @@
 import React, {useRef} from 'react'
 import {Pressable, StyleProp, View, ViewStyle} from 'react-native'
-import Animated, {FadeInDown} from 'react-native-reanimated'
 import {AppBskyEmbedVideo} from '@atproto/api'
 import {BlueskyVideoView} from '@haileyok/bluesky-video'
 import {msg} from '@lingui/macro'
@@ -182,8 +181,7 @@ function ControlButton({
   style?: StyleProp<ViewStyle>
 }) {
   return (
-    <Animated.View
-      entering={FadeInDown.duration(300)}
+    <View
       style={[
         a.absolute,
         a.rounded_full,
@@ -207,6 +205,6 @@ function ControlButton({
         hitSlop={HITSLOP_30}>
         {children}
       </Pressable>
-    </Animated.View>
+    </View>
   )
 }

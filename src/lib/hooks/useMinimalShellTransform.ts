@@ -10,15 +10,16 @@ export function useMinimalShellHeaderTransform() {
   const {headerHeight} = useShellLayout()
 
   const headerTransform = useAnimatedStyle(() => {
+    const headerModeValue = headerMode.get()
     return {
-      pointerEvents: headerMode.value === 0 ? 'auto' : 'none',
-      opacity: Math.pow(1 - headerMode.value, 2),
+      pointerEvents: headerModeValue === 0 ? 'auto' : 'none',
+      opacity: Math.pow(1 - headerModeValue, 2),
       transform: [
         {
           translateY: interpolate(
-            headerMode.value,
+            headerModeValue,
             [0, 1],
-            [0, -headerHeight.value],
+            [0, -headerHeight.get()],
           ),
         },
       ],
@@ -33,15 +34,16 @@ export function useMinimalShellFooterTransform() {
   const {footerHeight} = useShellLayout()
 
   const footerTransform = useAnimatedStyle(() => {
+    const footerModeValue = footerMode.get()
     return {
-      pointerEvents: footerMode.value === 0 ? 'auto' : 'none',
-      opacity: Math.pow(1 - footerMode.value, 2),
+      pointerEvents: footerModeValue === 0 ? 'auto' : 'none',
+      opacity: Math.pow(1 - footerModeValue, 2),
       transform: [
         {
           translateY: interpolate(
-            footerMode.value,
+            footerModeValue,
             [0, 1],
-            [0, footerHeight.value],
+            [0, footerHeight.get()],
           ),
         },
       ],
@@ -58,7 +60,7 @@ export function useMinimalShellFabTransform() {
     return {
       transform: [
         {
-          translateY: interpolate(footerMode.value, [0, 1], [-44, 0]),
+          translateY: interpolate(footerMode.get(), [0, 1], [-44, 0]),
         },
       ],
     }
