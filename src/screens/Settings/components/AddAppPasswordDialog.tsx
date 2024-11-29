@@ -100,6 +100,10 @@ function CreateDialogInner({passwords}: {passwords: string[]}) {
   const error =
     validationError || (!name.match(/^[a-zA-Z0-9-_ ]*$/) && regexFailError)
 
+  const renderedPassword = showPassword
+    ? data?.password
+    : '•'.repeat(data?.password.length || 8)
+
   return (
     <Dialog.ScrollableInner label={_(msg`Add app password`)}>
       <View style={[native(a.pt_md)]}>
@@ -201,16 +205,7 @@ function CreateDialogInner({passwords}: {passwords: string[]}) {
                     size="large"
                     variant="solid"
                     color="secondary">
-                    <ButtonText
-                      style={{
-                        color: showPassword
-                          ? t.atoms.text.color
-                          : 'transparent',
-                        textShadowColor: t.atoms.text.color,
-                        textShadowRadius: showPassword ? 0 : 8,
-                      }}>
-                      {data.password}
-                    </ButtonText>
+                    <ButtonText>{renderedPassword}</ButtonText>
                     <ButtonIcon icon={CopyIcon} />
                   </CopyButton>
                 </View>
