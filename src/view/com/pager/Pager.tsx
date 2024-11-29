@@ -76,18 +76,19 @@ export const Pager = forwardRef<PagerRef, React.PropsWithChildren<Props>>(
       [pagerView],
     )
 
+    const pendingPage = useSharedValue(selectedPage)
     const dragPage = useSharedValue(selectedPage)
     const dragProgress = useSharedValue(0)
     const dragState = useSharedValue<'idle' | 'settling' | 'dragging'>('idle')
     const handlePageScroll = usePagerHandlers(
+      // These events don't fire exactly the same way on Android and iOS.
+      // In these handlers we normalize the behavior to have consistent output values.
       {
         onPageScroll(e: PagerViewOnPageScrollEventData) {
           'worklet'
           let {position, offset} = e
-          if (position === dragPage.value) {
-            dragProgress.set(offset)
-          } else {
-            const offsetFromPage = position + offset - dragPage.value
+          if (offset !== 0) {
+            const offsetFromPage = offset + (position - dragPage.value)
             dragProgress.set(offsetFromPage)
           }
         },
@@ -95,12 +96,22 @@ export const Pager = forwardRef<PagerRef, React.PropsWithChildren<Props>>(
           'worklet'
           dragState.set(e.pageScrollState)
           parentOnPageScrollStateChanged?.(e.pageScrollState)
+          if (e.pageScrollState === 'idle') {
+            const page = pendingPage.get()
+            dragPage.set(page)
+            dragProgress.set(0)
+            runOnJS(onPageSelectedJSThread)(page)
+          }
         },
         onPageSelected(e: PagerViewOnPageSelectedEventData) {
           'worklet'
-          dragPage.set(e.position)
-          dragProgress.set(0)
-          runOnJS(onPageSelectedJSThread)(e.position)
+          pendingPage.set(e.position)
+          if (dragState.value === 'idle') {
+            const page = e.position
+            dragPage.set(page)
+            dragProgress.set(0)
+            runOnJS(onPageSelectedJSThread)(e.position)
+          }
         },
       },
       [parentOnPageScrollStateChanged],

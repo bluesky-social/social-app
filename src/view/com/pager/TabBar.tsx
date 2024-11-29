@@ -4,7 +4,6 @@ import Animated, {
   scrollTo,
   useAnimatedReaction,
   useAnimatedRef,
-  useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated'
 
@@ -47,23 +46,16 @@ export function TabBar({
   const {dragPage, dragProgress} = dragGesture
 
   useAnimatedReaction(
-    () => dragPage.get(),
-    (page, prevPage) => {
-      if (page !== prevPage) {
+    () => dragPage.get() + dragProgress.get(),
+    (next, prev) => {
+      if (next !== prev) {
         const offsetPerPage = contentSize.get() - containerSize.get()
-        const offset = (dragPage.get() / (itemsLength - 1)) * offsetPerPage
+        const offset = (next / (itemsLength - 1)) * offsetPerPage
         scrollTo(scrollElRef, offset, 0, false)
+        return
       }
     },
   )
-
-  const contentStyle = useAnimatedStyle(() => {
-    const offsetPerPage = contentSize.get() - containerSize.get()
-    const offset = (dragProgress.get() / (itemsLength - 1)) * offsetPerPage
-    return {
-      transform: [{translateX: -offset}],
-    }
-  })
 
   return (
     <View
@@ -83,12 +75,7 @@ export function TabBar({
           onLayout={e => {
             contentSize.set(e.nativeEvent.layout.width)
           }}
-          style={[
-            contentStyle,
-            {
-              flexDirection: 'row',
-            },
-          ]}>
+          style={{flexDirection: 'row'}}>
           {items.map((item, i) => {
             return (
               <TabBarItem
