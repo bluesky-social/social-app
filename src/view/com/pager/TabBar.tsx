@@ -16,7 +16,6 @@ export interface TabBarProps {
   testID?: string
   selectedPage: number
   items: string[]
-  indicatorColor?: string
   onSelect?: (index: number) => void
   onPressSelected?: (index: number) => void
 }
@@ -25,17 +24,12 @@ export function TabBar({
   testID,
   selectedPage,
   items,
-  indicatorColor,
   onSelect,
   onPressSelected,
   dragGesture,
 }: TabBarProps) {
   const pal = usePalette('default')
   const scrollElRef = useAnimatedRef()
-  const indicatorStyle = useMemo(
-    () => ({borderBottomColor: indicatorColor || pal.colors.link}),
-    [indicatorColor, pal],
-  )
 
   const onPressItem = useCallback(
     (index: number) => {
@@ -96,34 +90,59 @@ export function TabBar({
             },
           ]}>
           {items.map((item, i) => {
-            const selected = i === selectedPage
             return (
-              <PressableWithHover
-                testID={`${testID}-selector-${i}`}
-                key={`${item}-${i}`}
-                style={styles.item}
-                hoverStyle={pal.viewLight}
-                onPress={() => onPressItem(i)}
-                accessibilityRole="tab">
-                <View style={[styles.itemInner, selected && indicatorStyle]}>
-                  <Text
-                    emoji
-                    type="lg-bold"
-                    testID={testID ? `${testID}-${item}` : undefined}
-                    style={[
-                      selected ? pal.text : pal.textLight,
-                      {lineHeight: 20},
-                    ]}>
-                    {item}
-                  </Text>
-                </View>
-              </PressableWithHover>
+              <TabBarItem
+                key={i}
+                index={i}
+                testID={testID}
+                selected={i === selectedPage}
+                item={item}
+                onPressItem={onPressItem}
+              />
             )
           })}
         </Animated.View>
       </ScrollView>
       <View style={[pal.border, styles.outerBottomBorder]} />
     </View>
+  )
+}
+
+function TabBarItem({
+  index,
+  testID,
+  selected,
+  item,
+  onPressItem,
+}: {
+  index: number
+  testID: string | undefined
+  selected: boolean
+  item: string
+  onPressItem: (index: number) => void
+}) {
+  const pal = usePalette('default')
+  const indicatorStyle = useMemo(
+    () => ({borderBottomColor: pal.colors.link}),
+    [pal],
+  )
+  return (
+    <PressableWithHover
+      testID={`${testID}-selector-${index}`}
+      style={styles.item}
+      hoverStyle={pal.viewLight}
+      onPress={() => onPressItem(index)}
+      accessibilityRole="tab">
+      <View style={[styles.itemInner, selected && indicatorStyle]}>
+        <Text
+          emoji
+          type="lg-bold"
+          testID={testID ? `${testID}-${item}` : undefined}
+          style={[selected ? pal.text : pal.textLight, {lineHeight: 20}]}>
+          {item}
+        </Text>
+      </View>
+    </PressableWithHover>
   )
 }
 
