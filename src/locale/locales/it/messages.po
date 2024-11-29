@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Italian localization\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-11-28 01:11+0000\n"
-"PO-Revision-Date: 2024-11-29 17:19+0000\n"
+"PO-Revision-Date: 2024-11-29 21:16+0000\n"
 "Last-Translator: Michele Locati <michele@locati.it>, 2024\n"
 "Language-Team: Italian (https://app.transifex.com/mlocati/teams/201833/it/)\n"
 "Language: it\n"
@@ -3022,11 +3022,11 @@ msgstr "Torna al passaggio precedente"
 
 #: src/view/screens/NotFound.tsx:57
 msgid "Go home"
-msgstr "Torna alla home"
+msgstr "Vai alla home"
 
 #: src/view/screens/NotFound.tsx:56
 msgid "Go Home"
-msgstr "Torna alla Home"
+msgstr "Vai alla home"
 
 #: src/screens/Messages/components/ChatListItem.tsx:264
 msgid "Go to conversation with {0}"
@@ -4704,11 +4704,11 @@ msgstr "Immagini per adulti."
 #: src/view/screens/ProfileFeed.tsx:293
 #: src/view/screens/ProfileList.tsx:676
 msgid "Pin to home"
-msgstr "Fissa su Home"
+msgstr "Fissa su home"
 
 #: src/view/screens/ProfileFeed.tsx:296
 msgid "Pin to Home"
-msgstr "Fissa su Home"
+msgstr "Fissa su home"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:380
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:387
@@ -7089,12 +7089,12 @@ msgstr "Non fissare più"
 
 #: src/view/screens/ProfileFeed.tsx:293
 msgid "Unpin from home"
-msgstr "Non fissare più nella home"
+msgstr "Non fissare più su home"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:379
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:386
 msgid "Unpin from profile"
-msgstr "Non fissare più nel profilo"
+msgstr "Non fissare più sul profilo"
 
 #: src/view/screens/ProfileList.tsx:559
 msgid "Unpin moderation list"
