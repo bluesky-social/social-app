@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Italian localization\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-11-28 01:11+0000\n"
-"PO-Revision-Date: 2024-11-29 16:48+0000\n"
+"PO-Revision-Date: 2024-11-29 17:19+0000\n"
 "Last-Translator: Michele Locati <michele@locati.it>, 2024\n"
 "Language-Team: Italian (https://app.transifex.com/mlocati/teams/201833/it/)\n"
 "Language: it\n"
@@ -2360,7 +2360,7 @@ msgstr "Abilita"
 
 #: src/components/dialogs/EmbedConsent.tsx:100
 msgid "Enable {0} only"
-msgstr "Attiva {0} solo"
+msgstr "Abilita solo {0}"
 
 #: src/screens/Moderation/index.tsx:337
 msgid "Enable adult content"
