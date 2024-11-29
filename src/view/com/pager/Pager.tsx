@@ -3,9 +3,11 @@ import {View} from 'react-native'
 import PagerView, {
   PagerViewOnPageScrollEventData,
   PagerViewOnPageSelectedEvent,
+  PagerViewOnPageSelectedEventData,
   PageScrollStateChangedNativeEventData,
 } from 'react-native-pager-view'
 import Animated, {
+  runOnJS,
   useEvent,
   useHandler,
   useSharedValue,
@@ -45,14 +47,13 @@ export const Pager = forwardRef<PagerRef, React.PropsWithChildren<Props>>(
       initialPage = 0,
       renderTabBar,
       onPageScrollStateChanged: parentOnPageScrollStateChanged,
-      onPageSelected,
+      onPageSelected: parentOnPageSelected,
       testID,
     }: React.PropsWithChildren<Props>,
     ref,
   ) {
     const [selectedPage, setSelectedPage] = React.useState(0)
     const pagerView = React.useRef<PagerView>(null)
-    const dragProgress = useSharedValue(selectedPage)
 
     React.useImperativeHandle(ref, () => ({
       setPage: (index: number) => {
@@ -60,12 +61,12 @@ export const Pager = forwardRef<PagerRef, React.PropsWithChildren<Props>>(
       },
     }))
 
-    const onPageSelectedInner = React.useCallback(
-      (e: PageSelectedEvent) => {
-        setSelectedPage(e.nativeEvent.position)
-        onPageSelected?.(e.nativeEvent.position)
+    const onPageSelectedJSThread = React.useCallback(
+      (nextPosition: number) => {
+        setSelectedPage(nextPosition)
+        parentOnPageSelected?.(nextPosition)
       },
-      [setSelectedPage, onPageSelected],
+      [setSelectedPage, parentOnPageSelected],
     )
 
     const onTabBarSelect = React.useCallback(
@@ -75,16 +76,30 @@ export const Pager = forwardRef<PagerRef, React.PropsWithChildren<Props>>(
       [pagerView],
     )
 
+    const dragPage = useSharedValue(selectedPage)
+    const dragProgress = useSharedValue(0)
+    const dragState = useSharedValue<'idle' | 'settling' | 'dragging'>('idle')
     const handlePageScroll = usePagerHandlers(
       {
         onPageScroll(e: PagerViewOnPageScrollEventData) {
           'worklet'
-          const progress = e.offset + e.position
-          dragProgress.value = progress
+          let {position, offset} = e
+          if (position === dragPage.value) {
+            dragProgress.set(offset)
+          } else {
+            const offsetFromPage = position + offset - dragPage.value
+            dragProgress.set(offsetFromPage)
+          }
         },
         onPageScrollStateChanged(e: PageScrollStateChangedNativeEventData) {
           'worklet'
+          dragState.set(e.pageScrollState)
           parentOnPageScrollStateChanged?.(e.pageScrollState)
+        },
+        onPageSelected(e: PagerViewOnPageSelectedEventData) {
+          'worklet'
+          dragPage.set(e.position)
+          runOnJS(onPageSelectedJSThread)(e.position)
         },
       },
       [parentOnPageScrollStateChanged],
@@ -95,12 +110,16 @@ export const Pager = forwardRef<PagerRef, React.PropsWithChildren<Props>>(
         {renderTabBar({
           selectedPage,
           onSelect: onTabBarSelect,
+          dragGesture: {
+            dragPage,
+            dragProgress,
+            dragState,
+          },
         })}
         <AnimatedPagerView
           ref={pagerView}
           style={[a.flex_1]}
           initialPage={initialPage}
-          onPageSelected={onPageSelectedInner}
           onPageScroll={handlePageScroll}>
           {children}
         </AnimatedPagerView>
@@ -113,21 +132,28 @@ function usePagerHandlers(
   handlers: {
     onPageScroll: (e: PagerViewOnPageScrollEventData) => void
     onPageScrollStateChanged: (e: PageScrollStateChangedNativeEventData) => void
+    onPageSelected: (e: PagerViewOnPageSelectedEventData) => void
   },
   dependencies: unknown[],
 ) {
   const {doDependenciesDiffer} = useHandler(handlers as any, dependencies)
-  const subscribeForEvents = ['onPageScroll', 'onPageScrollStateChanged']
+  const subscribeForEvents = [
+    'onPageScroll',
+    'onPageScrollStateChanged',
+    'onPageSelected',
+  ]
   return useEvent(
     event => {
       'worklet'
-      const {onPageScroll, onPageScrollStateChanged} = handlers
+      const {onPageScroll, onPageScrollStateChanged, onPageSelected} = handlers
       if (event.eventName.endsWith('onPageScroll')) {
         onPageScroll(event as any as PagerViewOnPageScrollEventData)
       } else if (event.eventName.endsWith('onPageScrollStateChanged')) {
         onPageScrollStateChanged(
           event as any as PageScrollStateChangedNativeEventData,
         )
+      } else if (event.eventName.endsWith('onPageSelected')) {
+        onPageSelected(event as any as PagerViewOnPageSelectedEventData)
       }
     },
     subscribeForEvents,
