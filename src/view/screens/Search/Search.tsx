@@ -850,12 +850,13 @@ export function SearchScreen(
   const handleClearAll = React.useCallback(async () => {
     setSearchHistory([])
     setSelectedProfiles([])
-    try {
-      await AsyncStorage.setItem('searchHistory', JSON.stringify([]))
-      await AsyncStorage.setItem('selectedProfiles', JSON.stringify([]))
-    } catch (e) {
-      logger.error('Failed to clear search history and profiles', {message: e})
-    }
+    await AsyncStorage.multiRemove(['searchHistory', 'selectedProfiles']).catch(
+      e => {
+        logger.error('Failed to clear search history and profiles', {
+          message: e,
+        })
+      },
+    )
   }, [])
 
   const onSearchInputFocus = React.useCallback(() => {
