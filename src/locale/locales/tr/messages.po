@@ -146,7 +146,7 @@ msgstr "{0} kişi bu başlangıç paketini kullandı!"
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:203
 msgid "{0} unread items"
-msgstr ""
+msgstr "{0} okunmamış mesaj"
 
 #: src/view/screens/ProfileList.tsx:286
 #~ msgid "{0} your feeds"
@@ -614,20 +614,20 @@ msgstr "Alternatif metin ekle"
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:107
 msgid "Add alt text (optional)"
-msgstr ""
+msgstr "Alternatif metin ekle (isteğe bağlı)"
 
 #: src/screens/Settings/Settings.tsx:364
 #: src/screens/Settings/Settings.tsx:367
 msgid "Add another account"
-msgstr ""
+msgstr "Başka hesap ekle"
 
 #: src/view/com/composer/Composer.tsx:721
 msgid "Add another post"
-msgstr ""
+msgstr "Başka gönderi ekle"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:102
 msgid "Add app password"
-msgstr ""
+msgstr "Uygulama şifresi ekle"
 
 #: src/screens/Settings/AppPasswords.tsx:67
 #: src/screens/Settings/AppPasswords.tsx:75
@@ -662,7 +662,7 @@ msgstr ""
 
 #: src/view/com/composer/Composer.tsx:1235
 msgid "Add new post"
-msgstr ""
+msgstr "Yeni gönderi ekle"
 
 #: src/screens/StarterPack/Wizard/index.tsx:197
 #~ msgid "Add people to your starter pack that you think others will enjoy following"
@@ -731,11 +731,11 @@ msgstr "Yetişkin İçerik"
 
 #: src/screens/Moderation/index.tsx:360
 msgid "Adult content can only be enabled via the Web at <0>bsky.app</0>."
-msgstr ""
+msgstr "Yetişkin içerik yalnızca Web üzerinden <0>bsky.app</0> etkinleştirilebilir"
 
 #: src/components/moderation/LabelPreference.tsx:242
 msgid "Adult content is disabled."
-msgstr ""
+msgstr "Yetişkin içerik devre dışı bırakıldı."
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:139
 #: src/view/com/composer/labels/LabelsBtn.tsx:197
@@ -748,11 +748,11 @@ msgstr "Gelişmiş"
 
 #: src/state/shell/progress-guide.tsx:171
 msgid "Algorithm training complete!"
-msgstr ""
+msgstr "Algoritma eğitimi tamamlandı!"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:381
 msgid "All accounts have been followed!"
-msgstr ""
+msgstr "Tüm hesaplar takip edildi!"
 
 #: src/view/screens/Feeds.tsx:735
 msgid "All the feeds you've saved, right in one place."
@@ -761,7 +761,7 @@ msgstr ""
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:146
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:153
 msgid "Allow access to your direct messages"
-msgstr ""
+msgstr "Doğrudan mesajlarınıza erişime izin verin"
 
 #: src/screens/Messages/Settings.tsx:61
 #: src/screens/Messages/Settings.tsx:64
@@ -779,7 +779,7 @@ msgstr "Yeni yanıtlara izin ver:"
 
 #: src/screens/Settings/AppPasswords.tsx:192
 msgid "Allows access to direct messages"
-msgstr ""
+msgstr "Doğrudan mesajlara erişime izin verir"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:171
 #: src/view/com/modals/ChangePassword.tsx:171
@@ -816,7 +816,7 @@ msgstr "Alternatif metin, görme engelli ve düşük görme yeteneğine sahip ku
 #: src/view/com/composer/GifAltText.tsx:179
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:139
 msgid "Alt text will be truncated. Limit: {0} characters."
-msgstr ""
+msgstr "Alternatif metin sınırlandırılacaktır. Limit: {0} karakter."
 
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:93
 #: src/view/com/modals/VerifyEmail.tsx:132
@@ -833,7 +833,7 @@ msgstr "E-posta gönderildi! Lütfen e-postanızda yer alan onay kodunu girin."
 
 #: src/components/dialogs/GifSelect.tsx:265
 msgid "An error has occurred"
-msgstr ""
+msgstr "Bir hata oluştu"
 
 #: src/components/dialogs/GifSelect.tsx:252
 #~ msgid "An error occured"
@@ -1208,14 +1208,14 @@ msgstr "Doğum günü"
 #: src/view/com/profile/ProfileMenu.tsx:341
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:744
 msgid "Block"
-msgstr ""
+msgstr "Engelle"
 
 #: src/components/dms/ConvoMenu.tsx:188
 #: src/components/dms/ConvoMenu.tsx:192
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:603
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:605
 msgid "Block account"
-msgstr ""
+msgstr "Hesabı engelle"
 
 #: src/view/com/profile/ProfileMenu.tsx:280
 #: src/view/com/profile/ProfileMenu.tsx:287
@@ -1225,7 +1225,7 @@ msgstr "Hesabı Engelle"
 #: src/view/com/profile/ProfileMenu.tsx:324
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:739
 msgid "Block Account?"
-msgstr ""
+msgstr "Hesabı Engelle?"
 
 #: src/view/screens/ProfileList.tsx:643
 msgid "Block accounts"
@@ -1413,7 +1413,7 @@ msgstr ""
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:197
 msgid "by <0/>"
-msgstr "tarafından <0/>"
+msgstr "<0/> tarafından"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:80
 #~ msgid "By creating an account you agree to the {els}."
