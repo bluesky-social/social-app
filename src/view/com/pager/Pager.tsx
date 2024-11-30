@@ -76,23 +76,13 @@ export const Pager = forwardRef<PagerRef, React.PropsWithChildren<Props>>(
       [pagerView],
     )
 
-    const pendingPage = useSharedValue(selectedPage)
-    const dragPage = useSharedValue(selectedPage)
-    const dragProgress = useSharedValue(0)
     const dragState = useSharedValue<'idle' | 'settling' | 'dragging'>('idle')
+    const dragProgress = useSharedValue(selectedPage)
     const handlePageScroll = usePagerHandlers(
-      // These events don't fire exactly the same way on Android and iOS.
-      // In these handlers we normalize the behavior to have consistent output values.
       {
         onPageScroll(e: PagerViewOnPageScrollEventData) {
           'worklet'
-          let {position, offset} = e
-          if (offset !== 0) {
-            // Normalize so that we always track the offset according to the
-            // last settled page from the application point of view.
-            const offsetFromPage = offset + (position - dragPage.value)
-            dragProgress.set(offsetFromPage)
-          }
+          dragProgress.set(e.offset + e.position)
         },
         onPageScrollStateChanged(e: PageScrollStateChangedNativeEventData) {
           'worklet'
@@ -103,27 +93,10 @@ export const Pager = forwardRef<PagerRef, React.PropsWithChildren<Props>>(
           }
           dragState.set(e.pageScrollState)
           parentOnPageScrollStateChanged?.(e.pageScrollState)
-          if (e.pageScrollState === 'idle') {
-            // This is a good time to update the last known settled page.
-            const page = pendingPage.get()
-            dragPage.set(page)
-            dragProgress.set(0)
-            runOnJS(onPageSelectedJSThread)(page)
-          }
         },
         onPageSelected(e: PagerViewOnPageSelectedEventData) {
           'worklet'
-          // We don't usually emit the "page selected" event here because it fires
-          // prematurely on Android. We'll emit it in the idle state handler above.
-          pendingPage.set(e.position)
-          if (dragState.value === 'idle') {
-            // However, if we already *are* idle, this event is caused by the initial state.
-            // Let's fire it here since there will be no scroll state change event later.
-            const page = e.position
-            dragPage.set(page)
-            dragProgress.set(0)
-            runOnJS(onPageSelectedJSThread)(e.position)
-          }
+          runOnJS(onPageSelectedJSThread)(e.position)
         },
       },
       [parentOnPageScrollStateChanged],
@@ -135,7 +108,6 @@ export const Pager = forwardRef<PagerRef, React.PropsWithChildren<Props>>(
           selectedPage,
           onSelect: onTabBarSelect,
           dragGesture: {
-            dragPage,
             dragProgress,
             dragState,
           },

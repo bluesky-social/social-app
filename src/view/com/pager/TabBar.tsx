@@ -35,20 +35,20 @@ export function TabBar({
   const containerSize = useSharedValue(0)
   const scrollX = useSharedValue(0)
   const itemsLength = items.length
-  const {dragPage, dragProgress, dragState} = dragGesture
+  const {dragProgress, dragState} = dragGesture
 
   // When you swipe the pager, the tabbar should scroll automatically
   // as you're dragging the page and then even during deceleration.
   useAnimatedReaction(
-    () => dragPage.get() + dragProgress.get(),
-    (nextValue, prevValue) => {
+    () => dragProgress.get(),
+    (nextProgress, prevProgress) => {
       if (
-        nextValue !== prevValue &&
+        nextProgress !== prevProgress &&
         dragState.value !== 'idle' &&
         isSyncingScroll.get() === true
       ) {
         const offsetPerPage = contentSize.get() - containerSize.get()
-        const offset = (nextValue / (itemsLength - 1)) * offsetPerPage
+        const offset = (nextProgress / (itemsLength - 1)) * offsetPerPage
         scrollTo(scrollElRef, offset, 0, false)
         return
       }
@@ -69,8 +69,8 @@ export function TabBar({
         isSyncingScroll.get() === false
       ) {
         const offsetPerPage = contentSize.get() - containerSize.get()
-        const value = dragPage.get() + dragProgress.get()
-        const offset = (value / (itemsLength - 1)) * offsetPerPage
+        const progress = dragProgress.get()
+        const offset = (progress / (itemsLength - 1)) * offsetPerPage
         scrollTo(scrollElRef, offset, 0, true)
         isSyncingScroll.set(true)
       }
@@ -84,8 +84,8 @@ export function TabBar({
       'worklet'
       if (isSyncingScroll.get() === true) {
         const offsetPerPage = contentSize.get() - containerSize.get()
-        const valueDiff = index - dragPage.get()
-        const offsetDiff = (valueDiff / (itemsLength - 1)) * offsetPerPage
+        const progressDiff = index - dragProgress.get()
+        const offsetDiff = (progressDiff / (itemsLength - 1)) * offsetPerPage
         const offset = scrollX.get() + offsetDiff
         scrollTo(scrollElRef, offset, 0, true)
       }
@@ -98,7 +98,7 @@ export function TabBar({
       itemsLength,
       scrollElRef,
       scrollX,
-      dragPage,
+      dragProgress,
     ],
   )
 
