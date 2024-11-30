@@ -119,6 +119,10 @@ export function sanitizeAppLanguageSetting(appLanguage: string): AppLanguage {
     switch (fixLegacyLanguageCode(lang)) {
       case 'en':
         return AppLanguage.en
+      case 'an':
+        return AppLanguage.an
+      case 'ast':
+        return AppLanguage.ast
       case 'ca':
         return AppLanguage.ca
       case 'de':
