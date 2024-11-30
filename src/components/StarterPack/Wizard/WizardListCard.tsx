@@ -1,4 +1,3 @@
-import React from 'react'
 import {Keyboard, View} from 'react-native'
 import {
   AppBskyActorDefs,

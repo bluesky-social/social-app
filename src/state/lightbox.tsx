@@ -1,5 +1,4 @@
 import React from 'react'
-import type {MeasuredDimensions} from 'react-native-reanimated'
 import {nanoid} from 'nanoid/non-secure'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
@@ -8,7 +7,6 @@ import {ImageSource} from '#/view/com/lightbox/ImageViewing/@types'
 export type Lightbox = {
   id: string
   images: ImageSource[]
-  thumbDims: MeasuredDimensions | null
   index: number
 }
 
@@ -33,7 +31,15 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
   const openLightbox = useNonReactiveCallback(
     (lightbox: Omit<Lightbox, 'id'>) => {
-      setActiveLightbox({...lightbox, id: nanoid()})
+      setActiveLightbox(prevLightbox => {
+        if (prevLightbox) {
+          // Ignore duplicate open requests. If it's already open,
+          // the user has to explicitly close the previous one first.
+          return prevLightbox
+        } else {
+          return {...lightbox, id: nanoid()}
+        }
+      })
     },
   )
 

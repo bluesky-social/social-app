@@ -1,4 +1,3 @@
-import React from 'react'
 import {StyleSheet, View} from 'react-native'
 import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import {

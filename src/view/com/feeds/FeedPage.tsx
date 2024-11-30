@@ -74,7 +74,7 @@ export function FeedPage({
       scrollToTop()
       truncateAndInvalidate(queryClient, FEED_RQKEY(feed))
       setHasNew(false)
-      logEvent('feed:refresh:sampled', {
+      logEvent('feed:refresh', {
         feedType: feed.split('|')[0],
         feedUrl: feed,
         reason: 'soft-reset',
@@ -98,7 +98,7 @@ export function FeedPage({
     scrollToTop()
     truncateAndInvalidate(queryClient, FEED_RQKEY(feed))
     setHasNew(false)
-    logEvent('feed:refresh:sampled', {
+    logEvent('feed:refresh', {
       feedType: feed.split('|')[0],
       feedUrl: feed,
       reason: 'load-latest',

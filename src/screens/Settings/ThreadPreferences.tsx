@@ -1,4 +1,3 @@
-import React from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -57,6 +56,12 @@ export function ThreadPreferencesScreen({}: Props) {
                 values={sortReplies ? [sortReplies] : []}
                 onChange={values => setThreadViewPrefs({sort: values[0]})}>
                 <View style={[a.gap_sm, a.flex_1]}>
+                  <Toggle.Item name="hotness" label={_(msg`Hot replies first`)}>
+                    <Toggle.Radio />
+                    <Toggle.LabelText>
+                      <Trans>Hot replies first</Trans>
+                    </Toggle.LabelText>
+                  </Toggle.Item>
                   <Toggle.Item
                     name="oldest"
                     label={_(msg`Oldest replies first`)}>
@@ -111,7 +116,7 @@ export function ThreadPreferencesScreen({}: Props) {
               style={[a.w_full, a.gap_md]}>
               <Toggle.LabelText style={[a.flex_1]}>
                 <Trans>
-                  Show replies by people you follow before all other replies.
+                  Show replies by people you follow before all other replies
                 </Trans>
               </Toggle.LabelText>
               <Toggle.Platform />

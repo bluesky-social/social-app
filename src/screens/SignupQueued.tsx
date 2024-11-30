@@ -1,16 +1,17 @@
 import React from 'react'
-import {View} from 'react-native'
+import {Modal, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {StatusBar} from 'expo-status-bar'
 import {msg, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {logger} from '#/logger'
-import {isWeb} from '#/platform/detection'
+import {isIOS, isWeb} from '#/platform/detection'
 import {isSignupQueued, useAgent, useSessionApi} from '#/state/session'
 import {useOnboardingDispatch} from '#/state/shell'
 import {ScrollView} from '#/view/com/util/Views'
 import {Logo} from '#/view/icons/Logo'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, native, useBreakpoints, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {Loader} from '#/components/Loader'
 import {P, Text} from '#/components/Typography'
@@ -86,19 +87,22 @@ export function SignupQueued() {
   )
 
   return (
-    <View
-      aria-modal
-      role="dialog"
-      aria-role="dialog"
-      aria-label={_(msg`You're in line`)}
-      accessibilityLabel={_(msg`You're in line`)}
-      accessibilityHint=""
-      style={[a.absolute, a.inset_0, a.flex_1, t.atoms.bg]}>
+    <Modal
+      visible
+      animationType={native('slide')}
+      presentationStyle="formSheet"
+      style={[web(a.util_screen_outer)]}>
+      {isIOS && <StatusBar style="light" />}
       <ScrollView
-        style={[a.h_full, a.w_full]}
-        contentContainerStyle={{borderWidth: 0}}>
+        style={[a.flex_1, t.atoms.bg]}
+        contentContainerStyle={{borderWidth: 0}}
+        bounces={false}>
         <View
-          style={[a.flex_row, a.justify_center, gtMobile ? a.pt_4xl : a.px_xl]}>
+          style={[
+            a.flex_row,
+            a.justify_center,
+            gtMobile ? a.pt_4xl : [a.px_xl, a.pt_xl],
+          ]}>
           <View style={[a.flex_1, {maxWidth: COL_WIDTH}]}>
             <View
               style={[a.w_full, a.justify_center, a.align_center, a.my_4xl]}>
@@ -121,11 +125,14 @@ export function SignupQueued() {
                 a.px_2xl,
                 a.py_4xl,
                 a.mt_2xl,
-                t.atoms.bg_contrast_50,
+                a.mb_md,
+                a.border,
+                t.atoms.bg_contrast_25,
+                t.atoms.border_contrast_medium,
               ]}>
               {typeof placeInQueue === 'number' && (
                 <Text
-                  style={[a.text_5xl, a.text_center, a.font_bold, a.mb_2xl]}>
+                  style={[a.text_5xl, a.text_center, a.font_heavy, a.mb_2xl]}>
                   {placeInQueue}
                 </Text>
               )}
@@ -148,7 +155,14 @@ export function SignupQueued() {
             </View>
 
             {isWeb && gtMobile && (
-              <View style={[a.w_full, a.flex_row, a.justify_between, a.pt_5xl]}>
+              <View
+                style={[
+                  a.w_full,
+                  a.flex_row,
+                  a.justify_between,
+                  a.pt_5xl,
+                  {paddingBottom: 200},
+                ]}>
                 <Button
                   variant="ghost"
                   size="large"
@@ -162,8 +176,6 @@ export function SignupQueued() {
               </View>
             )}
           </View>
-
-          <View style={{height: 200}} />
         </View>
       </ScrollView>
 
@@ -171,6 +183,7 @@ export function SignupQueued() {
         <View
           style={[
             a.align_center,
+            t.atoms.bg,
             gtMobile ? a.px_5xl : a.px_xl,
             {
               paddingBottom: Math.max(insets.bottom, a.pb_5xl.paddingBottom),
@@ -190,7 +203,7 @@ export function SignupQueued() {
           </View>
         </View>
       )}
-    </View>
+    </Modal>
   )
 }
 

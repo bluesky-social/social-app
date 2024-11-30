@@ -234,21 +234,21 @@ function flushToStatsig(stats: AggregatedStats | null) {
   }
 
   if (stats.clickthroughCount > 0) {
-    logEvent('discover:clickthrough:sampled', {
+    logEvent('discover:clickthrough', {
       count: stats.clickthroughCount,
     })
     stats.clickthroughCount = 0
   }
 
   if (stats.engagedCount > 0) {
-    logEvent('discover:engaged:sampled', {
+    logEvent('discover:engaged', {
       count: stats.engagedCount,
     })
     stats.engagedCount = 0
   }
 
   if (stats.seenCount > 0) {
-    logEvent('discover:seen:sampled', {
+    logEvent('discover:seen', {
       count: stats.seenCount,
     })
     stats.seenCount = 0

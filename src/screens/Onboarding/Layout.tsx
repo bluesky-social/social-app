@@ -1,5 +1,6 @@
 import React from 'react'
 import {View} from 'react-native'
+import Animated from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -17,10 +18,11 @@ import {
   useTheme,
   web,
 } from '#/alf'
+import {leading} from '#/alf/typography'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {ChevronLeft_Stroke2_Corner0_Rounded as ChevronLeft} from '#/components/icons/Chevron'
 import {createPortalGroup} from '#/components/Portal'
-import {leading, P, Text} from '#/components/Typography'
+import {P, Text} from '#/components/Typography'
 import {IS_DEV} from '#/env'
 
 const COL_WIDTH = 420
@@ -34,7 +36,7 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
   const {gtMobile} = useBreakpoints()
   const onboardDispatch = useOnboardingDispatch()
   const {state, dispatch} = React.useContext(Context)
-  const scrollview = React.useRef<ScrollView>(null)
+  const scrollview = React.useRef<Animated.ScrollView>(null)
   const prevActiveStep = React.useRef<string>(state.activeStep)
 
   React.useEffect(() => {

@@ -1,4 +1,3 @@
-import React from 'react'
 import {
   DimensionValue,
   StyleProp,
@@ -314,7 +313,7 @@ const styles = StyleSheet.create({
     padding: 5,
   },
   avatar: {
-    borderRadius: 26,
+    borderRadius: 999,
     marginRight: 10,
     marginLeft: 8,
   },
@@ -328,11 +327,11 @@ const styles = StyleSheet.create({
     margin: 1,
   },
   profileCardAvi: {
-    borderRadius: 20,
+    borderRadius: 999,
     marginRight: 10,
   },
   smallAvatar: {
-    borderRadius: 18,
+    borderRadius: 999,
     marginRight: 10,
   },
 })

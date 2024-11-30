@@ -302,8 +302,8 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
   const animationStyle = {
     animation:
       currentState.stage === 'hiding'
-        ? `avatarHoverFadeOut ${HIDE_DURATION}ms both`
-        : `avatarHoverFadeIn ${SHOW_DURATION}ms both`,
+        ? `fadeOut ${HIDE_DURATION}ms both`
+        : `fadeIn ${SHOW_DURATION}ms both`,
   }
 
   return (

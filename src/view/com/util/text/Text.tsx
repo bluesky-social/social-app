@@ -1,18 +1,17 @@
 import React from 'react'
-import {StyleSheet, Text as RNText, TextProps} from 'react-native'
+import {StyleSheet, TextProps} from 'react-native'
 import {UITextView} from 'react-native-uitextview'
 
 import {lh, s} from '#/lib/styles'
 import {TypographyVariant, useTheme} from '#/lib/ThemeContext'
 import {logger} from '#/logger'
-import {isIOS} from '#/platform/detection'
+import {isIOS, isWeb} from '#/platform/detection'
 import {applyFonts, useAlf} from '#/alf'
 import {
   childHasEmoji,
-  childIsString,
   renderChildrenWithEmoji,
   StringChild,
-} from '#/components/Typography'
+} from '#/alf/typography'
 import {IS_DEV} from '#/env'
 
 export type CustomTextProps = Omit<TextProps, 'children'> & {
@@ -32,7 +31,11 @@ export type CustomTextProps = Omit<TextProps, 'children'> & {
       }
   )
 
-export function Text({
+export {Text_DEPRECATED as Text}
+/**
+ * @deprecated use Text from Typography instead.
+ */
+function Text_DEPRECATED({
   type = 'md',
   children,
   emoji,
@@ -44,8 +47,6 @@ export function Text({
   ...props
 }: React.PropsWithChildren<CustomTextProps>) {
   const theme = useTheme()
-  const typography = theme.typography[type]
-  const lineHeightStyle = lineHeight ? lh(theme, type, lineHeight) : undefined
   const {fonts} = useAlf()
 
   if (IS_DEV) {
@@ -54,13 +55,12 @@ export function Text({
         `Text: emoji detected but emoji not enabled: "${children}"\n\nPlease add <Text emoji />'`,
       )
     }
-
-    if (emoji && !childIsString(children)) {
-      logger.error('Text: when <Text emoji />, children can only be strings.')
-    }
   }
 
-  if (selectable && isIOS) {
+  const textProps = React.useMemo(() => {
+    const typography = theme.typography[type]
+    const lineHeightStyle = lineHeight ? lh(theme, type, lineHeight) : undefined
+
     const flattened = StyleSheet.flatten([
       s.black,
       typography,
@@ -74,49 +74,37 @@ export function Text({
     // @ts-ignore
     if (flattened.fontSize) {
       // @ts-ignore
-      flattened.fontSize = flattened.fontSize * fonts.scaleMultiplier
+      flattened.fontSize = Math.round(
+        // @ts-ignore
+        flattened.fontSize * fonts.scaleMultiplier,
+      )
     }
 
-    const shared = {
-      uiTextView: true,
+    return {
+      uiTextView: selectable && isIOS,
       selectable,
       style: flattened,
+      dataSet: isWeb
+        ? Object.assign({tooltip: title}, dataSet || {})
+        : undefined,
       ...props,
     }
-
-    return (
-      <UITextView {...shared}>
-        {isIOS && emoji ? renderChildrenWithEmoji(children, shared) : children}
-      </UITextView>
-    )
-  }
-
-  const flattened = StyleSheet.flatten([
-    s.black,
-    typography,
-    lineHeightStyle,
+  }, [
+    dataSet,
+    fonts.family,
+    fonts.scaleMultiplier,
+    lineHeight,
+    props,
+    selectable,
     style,
+    theme,
+    title,
+    type,
   ])
 
-  applyFonts(flattened, fonts.family)
-
-  // should always be defined on `typography`
-  // @ts-ignore
-  if (flattened.fontSize) {
-    // @ts-ignore
-    flattened.fontSize = flattened.fontSize * fonts.scaleMultiplier
-  }
-
-  const shared = {
-    selectable,
-    style: flattened,
-    dataSet: Object.assign({tooltip: title}, dataSet || {}),
-    ...props,
-  }
-
   return (
-    <RNText {...shared}>
-      {isIOS && emoji ? renderChildrenWithEmoji(children, shared) : children}
-    </RNText>
+    <UITextView {...textProps}>
+      {renderChildrenWithEmoji(children, textProps, emoji ?? false)}
+    </UITextView>
   )
 }

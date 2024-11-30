@@ -1,4 +1,3 @@
-import React from 'react'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
@@ -6,7 +5,6 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack'
 import {CommonNavigatorParams} from '#/lib/routes/types'
 import {useModalControls} from '#/state/modals'
 import {useSession} from '#/state/session'
-import {ExportCarDialog} from '#/view/screens/Settings/ExportCarDialog'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
 import {atoms as a, useTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
@@ -24,6 +22,7 @@ import {Verified_Stroke2_Corner2_Rounded as VerifiedIcon} from '#/components/ico
 import * as Layout from '#/components/Layout'
 import {ChangeHandleDialog} from './components/ChangeHandleDialog'
 import {DeactivateAccountDialog} from './components/DeactivateAccountDialog'
+import {ExportCarDialog} from './components/ExportCarDialog'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AccountSettings'>
 export function AccountSettingsScreen({}: Props) {
