@@ -88,15 +88,23 @@ export const Pager = forwardRef<PagerRef, React.PropsWithChildren<Props>>(
           'worklet'
           let {position, offset} = e
           if (offset !== 0) {
+            // Normalize so that we always track the offset according to the
+            // last settled page from the application point of view.
             const offsetFromPage = offset + (position - dragPage.value)
             dragProgress.set(offsetFromPage)
           }
         },
         onPageScrollStateChanged(e: PageScrollStateChangedNativeEventData) {
           'worklet'
+          if (dragState.get() === 'idle' && e.pageScrollState === 'settling') {
+            // This is a programmatic scroll on Android.
+            // Stay "idle" to match iOS and avoid confusing downstream code.
+            return
+          }
           dragState.set(e.pageScrollState)
           parentOnPageScrollStateChanged?.(e.pageScrollState)
           if (e.pageScrollState === 'idle') {
+            // This is a good time to update the last known settled page.
             const page = pendingPage.get()
             dragPage.set(page)
             dragProgress.set(0)
@@ -105,8 +113,12 @@ export const Pager = forwardRef<PagerRef, React.PropsWithChildren<Props>>(
         },
         onPageSelected(e: PagerViewOnPageSelectedEventData) {
           'worklet'
+          // We don't usually emit the "page selected" event here because it fires
+          // prematurely on Android. We'll emit it in the idle state handler above.
           pendingPage.set(e.position)
           if (dragState.value === 'idle') {
+            // However, if we already *are* idle, this event is caused by the initial state.
+            // Let's fire it here since there will be no scroll state change event later.
             const page = e.position
             dragPage.set(page)
             dragProgress.set(0)
