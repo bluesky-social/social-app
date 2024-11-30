@@ -1,6 +1,7 @@
 import {useCallback, useMemo} from 'react'
 import {ScrollView, StyleSheet, View} from 'react-native'
 import Animated, {
+  runOnUI,
   scrollTo,
   useAnimatedReaction,
   useAnimatedRef,
@@ -29,32 +30,87 @@ export function TabBar({
 }: TabBarProps) {
   const pal = usePalette('default')
   const scrollElRef = useAnimatedRef()
+  const isSyncingScroll = useSharedValue(true)
+  const contentSize = useSharedValue(0)
+  const containerSize = useSharedValue(0)
+  const scrollX = useSharedValue(0)
+  const itemsLength = items.length
+  const {dragPage, dragProgress, dragState} = dragGesture
+
+  // When you swipe the pager, the tabbar should scroll automatically
+  // as you're dragging the page and then even during deceleration.
+  useAnimatedReaction(
+    () => dragPage.get() + dragProgress.get(),
+    (nextValue, prevValue) => {
+      if (
+        nextValue !== prevValue &&
+        dragState.value !== 'idle' &&
+        isSyncingScroll.get() === true
+      ) {
+        const offsetPerPage = contentSize.get() - containerSize.get()
+        const offset = (nextValue / (itemsLength - 1)) * offsetPerPage
+        scrollTo(scrollElRef, offset, 0, false)
+        return
+      }
+    },
+  )
+
+  // If you manually scrolled the tabbar, we'll mark the scroll as unsynced.
+  // We'll re-sync it here (with an animation) if you interact with the pager again.
+  // From that point on, it'll remain synced again (unless you scroll the tabbar again).
+  useAnimatedReaction(
+    () => {
+      return dragState.value
+    },
+    (nextDragState, prevDragState) => {
+      if (
+        nextDragState !== prevDragState &&
+        nextDragState === 'idle' &&
+        isSyncingScroll.get() === false
+      ) {
+        const offsetPerPage = contentSize.get() - containerSize.get()
+        const value = dragPage.get() + dragProgress.get()
+        const offset = (value / (itemsLength - 1)) * offsetPerPage
+        scrollTo(scrollElRef, offset, 0, true)
+        isSyncingScroll.set(true)
+      }
+    },
+  )
+
+  // When you press on the item, we'll scroll into view -- unless you previously
+  // have scrolled the tabbar manually, in which case it'll re-sync on next press.
+  const onPressUIThread = useCallback(
+    (index: number) => {
+      'worklet'
+      if (isSyncingScroll.get() === true) {
+        const offsetPerPage = contentSize.get() - containerSize.get()
+        const valueDiff = index - dragPage.get()
+        const offsetDiff = (valueDiff / (itemsLength - 1)) * offsetPerPage
+        const offset = scrollX.get() + offsetDiff
+        scrollTo(scrollElRef, offset, 0, true)
+      }
+      isSyncingScroll.set(true)
+    },
+    [
+      contentSize,
+      containerSize,
+      isSyncingScroll,
+      itemsLength,
+      scrollElRef,
+      scrollX,
+      dragPage,
+    ],
+  )
 
   const onPressItem = useCallback(
     (index: number) => {
+      runOnUI(onPressUIThread)(index)
       onSelect?.(index)
       if (index === selectedPage) {
         onPressSelected?.(index)
       }
     },
-    [onSelect, selectedPage, onPressSelected],
-  )
-
-  const contentSize = useSharedValue(0)
-  const containerSize = useSharedValue(0)
-  const itemsLength = items.length
-  const {dragPage, dragProgress} = dragGesture
-
-  useAnimatedReaction(
-    () => dragPage.get() + dragProgress.get(),
-    (next, prev) => {
-      if (next !== prev) {
-        const offsetPerPage = contentSize.get() - containerSize.get()
-        const offset = (next / (itemsLength - 1)) * offsetPerPage
-        scrollTo(scrollElRef, offset, 0, false)
-        return
-      }
-    },
+    [onSelect, selectedPage, onPressSelected, onPressUIThread],
   )
 
   return (
@@ -70,6 +126,14 @@ export function TabBar({
         contentContainerStyle={styles.contentContainer}
         onLayout={e => {
           containerSize.set(e.nativeEvent.layout.width)
+        }}
+        onScrollBeginDrag={() => {
+          // Remember that you've manually messed with the tabbar scroll.
+          // This will disable auto-adjustment until after next pager swipe or item tap.
+          isSyncingScroll.set(false)
+        }}
+        onScroll={e => {
+          scrollX.value = Math.round(e.nativeEvent.contentOffset.x)
         }}>
         <Animated.View
           onLayout={e => {
