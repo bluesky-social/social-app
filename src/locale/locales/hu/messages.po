@@ -493,7 +493,7 @@ msgstr "Fióklehetőségek"
 
 #: src/screens/Settings/Settings.tsx:456
 msgid "Account removed from quick access"
-msgstr "Eltávolítva a fióklistáról"
+msgstr "Eltávolítottad a fiókot a listáról"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:137
 #: src/view/com/profile/ProfileMenu.tsx:122
@@ -614,7 +614,7 @@ msgstr "Felvétel a hírfolyamgyűjteménybe"
 #: src/view/com/modals/ListAddRemoveUsers.tsx:192
 #: src/view/com/modals/UserAddRemoveLists.tsx:162
 msgid "Added to list"
-msgstr "A felhasználó felkerült a listára"
+msgstr "Felvetted a felhasználót a listára"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:125
 msgid "Added to my feeds"
@@ -2849,11 +2849,11 @@ msgstr ""
 
 #: src/components/FeedCard.tsx:273 src/view/screens/SavedFeeds.tsx:83
 msgid "Feeds updated!"
-msgstr "Hírfolyamok frissítve"
+msgstr "A hírfolyamok frissítése megtörtént"
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:43
 msgid "File saved successfully!"
-msgstr "A fájl sikeresen elmentve!"
+msgstr "A fájl mentése sikeresen megtörtént"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:66
 msgid "Filter from feeds"
@@ -3441,7 +3441,7 @@ msgstr "Kép"
 
 #: src/components/StarterPack/ShareDialog.tsx:76
 msgid "Image saved to your camera roll!"
-msgstr "A kép mentése sikeres"
+msgstr "A kép mentése sikeresen megtörtént"
 
 #: src/lib/moderation/useReportOptions.ts:49
 msgid "Impersonation or false claims about identity or affiliation"
@@ -3786,7 +3786,7 @@ msgstr "Elrejtett lista"
 
 #: src/view/screens/ProfileList.tsx:396
 msgid "List muted"
-msgstr "Elnémítottad a listát"
+msgstr "Elnémítottad a listán szereplő személyeket"
 
 #: src/view/com/modals/CreateOrEditList.tsx:255
 msgid "List Name"
@@ -3798,7 +3798,7 @@ msgstr "Feloldottad a listán szereplő személyek letiltását"
 
 #: src/view/screens/ProfileList.tsx:409
 msgid "List unmuted"
-msgstr "Feloldottad a lista némítását"
+msgstr "Feloldottad a listán szereplő személyek némítását"
 
 #: src/Navigation.tsx:134 src/view/screens/Profile.tsx:227
 #: src/view/screens/Profile.tsx:234 src/view/shell/desktop/LeftNav.tsx:476
@@ -4564,7 +4564,7 @@ msgstr "ekkor:<0><1/><2><3/></2></0>"
 
 #: src/screens/Settings/Settings.tsx:295
 msgid "Onboarding reset"
-msgstr "Regisztrációs varázsló alaphelyzetbe állítása"
+msgstr "Alaphelyzetbe állítottad a regisztrációs varázslót"
 
 #: src/view/com/composer/Composer.tsx:331
 msgid "One or more GIFs is missing alt text."
@@ -4898,7 +4898,7 @@ msgstr "Kitűzött hírfolyamok"
 
 #: src/view/screens/ProfileList.tsx:355
 msgid "Pinned to your feeds"
-msgstr "Kitűzve a hírfolyamgyűjteményben"
+msgstr "Kitűzted a hírfolyamot"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:43
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:140
@@ -5210,7 +5210,7 @@ msgstr "A QR-kód letöltése megtörtént"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:107
 msgid "QR code saved to your camera roll!"
-msgstr "A QR-kód fotóalbumba mentése megtörtént"
+msgstr "A QR-kód fényképalbumba mentése megtörtént"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:168
 #: src/view/com/util/post-ctrls/RepostButton.tsx:191
@@ -5414,7 +5414,7 @@ msgstr "Eltávolítottad ezt a tartalmat"
 #: src/view/com/modals/ListAddRemoveUsers.tsx:200
 #: src/view/com/modals/UserAddRemoveLists.tsx:170
 msgid "Removed from list"
-msgstr "Eltávolítottad ezt a személyt a listáról"
+msgstr "Levetted a személyt a listáról"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:138
 msgid "Removed from my feeds"
@@ -6317,7 +6317,7 @@ msgstr "Bejelentkezés szükséges"
 #: src/lib/hooks/useAccountSwitcher.ts:41
 #: src/screens/Login/ChooseAccountForm.tsx:53
 msgid "Signed in as @{0}"
-msgstr "Bejelentkezve, mint @{0}"
+msgstr "Bejelentkeztél, mint @{0}"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:299
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:306
