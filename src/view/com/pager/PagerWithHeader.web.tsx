@@ -151,6 +151,8 @@ let PagerTabBar = ({
           selectedPage={currentPage}
           onSelect={onSelect}
           onPressSelected={onCurrentPageSelected}
+          dragProgress={undefined as any /* native-only */}
+          dragState={undefined as any /* native-only */}
         />
       </View>
     </>

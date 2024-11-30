@@ -8,6 +8,7 @@ import PagerView, {
 } from 'react-native-pager-view'
 import Animated, {
   runOnJS,
+  SharedValue,
   useEvent,
   useHandler,
   useSharedValue,
@@ -25,6 +26,8 @@ export interface RenderTabBarFnProps {
   selectedPage: number
   onSelect?: (index: number) => void
   tabBarAnchor?: JSX.Element | null | undefined // Ignored on native.
+  dragProgress: SharedValue<number> // Ignored on web.
+  dragState: SharedValue<'idle' | 'dragging' | 'settling'> // Ignored on web.
 }
 export type RenderTabBarFn = (props: RenderTabBarFnProps) => JSX.Element
 
@@ -107,10 +110,8 @@ export const Pager = forwardRef<PagerRef, React.PropsWithChildren<Props>>(
         {renderTabBar({
           selectedPage,
           onSelect: onTabBarSelect,
-          dragGesture: {
-            dragProgress,
-            dragState,
-          },
+          dragProgress,
+          dragState,
         })}
         <AnimatedPagerView
           ref={pagerView}
