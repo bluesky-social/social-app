@@ -39,7 +39,8 @@ export function Container({
     window.matchMedia &&
     window.matchMedia('(prefers-color-scheme: dark)').matches
   ) {
-    backgroundColorClass = 'bg-[#161e27] hover:bg-[#202831] text-[#f1f3f5]'
+    backgroundColorClass =
+      'bg-[#161e27] hover:bg-[#202831] text-[#f1f3f5] border-black'
   }
   const className = `w-full ${backgroundColorClass} relative transition-colors max-w-[600px] min-w-[300px] flex border rounded-xl`
 
