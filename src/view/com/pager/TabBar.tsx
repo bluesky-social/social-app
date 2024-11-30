@@ -56,6 +56,15 @@ export function TabBar({
     [scrollElRef],
   )
 
+  const progressToOffset = useCallback(
+    (progress: number) => {
+      'worklet'
+      const offsetPerPage = contentSize.get() - containerSize.get()
+      return (progress / (itemsLength - 1)) * offsetPerPage
+    },
+    [itemsLength, contentSize, containerSize],
+  )
+
   // When we know the entire layout for the first time, scroll selection into view.
   useAnimatedReaction(
     () => {
@@ -78,9 +87,8 @@ export function TabBar({
           didInitialScroll.get() === false
         ) {
           didInitialScroll.set(true)
-          const offsetPerPage = contentSize.get() - containerSize.get()
           const progress = dragProgress.get()
-          const offset = (progress / (itemsLength - 1)) * offsetPerPage
+          const offset = progressToOffset(progress)
           // It's unclear why we need to go back to JS here. It seems iOS-specific.
           runOnJS(scrollToOffsetJS)(offset)
         }
@@ -98,8 +106,7 @@ export function TabBar({
         dragState.value !== 'idle' &&
         isSyncingScroll.get() === true
       ) {
-        const offsetPerPage = contentSize.get() - containerSize.get()
-        const offset = (nextProgress / (itemsLength - 1)) * offsetPerPage
+        const offset = progressToOffset(nextProgress)
         scrollTo(scrollElRef, offset, 0, false)
         return
       }
@@ -117,9 +124,8 @@ export function TabBar({
         nextDragState === 'idle' &&
         isSyncingScroll.get() === false
       ) {
-        const offsetPerPage = contentSize.get() - containerSize.get()
         const progress = dragProgress.get()
-        const offset = (progress / (itemsLength - 1)) * offsetPerPage
+        const offset = progressToOffset(progress)
         scrollTo(scrollElRef, offset, 0, true)
         isSyncingScroll.set(true)
       }
@@ -132,24 +138,15 @@ export function TabBar({
     (index: number) => {
       'worklet'
       if (isSyncingScroll.get() === true) {
-        const offsetPerPage = contentSize.get() - containerSize.get()
         const progressDiff = index - dragProgress.get()
-        const offsetDiff = (progressDiff / (itemsLength - 1)) * offsetPerPage
+        const offsetDiff = progressToOffset(progressDiff)
         // TODO: Get into view if obscured
         const offset = scrollX.get() + offsetDiff
         scrollTo(scrollElRef, offset, 0, true)
       }
       isSyncingScroll.set(true)
     },
-    [
-      contentSize,
-      containerSize,
-      isSyncingScroll,
-      itemsLength,
-      scrollElRef,
-      scrollX,
-      dragProgress,
-    ],
+    [isSyncingScroll, scrollElRef, scrollX, dragProgress, progressToOffset],
   )
 
   const onItemLayout = useCallback(
