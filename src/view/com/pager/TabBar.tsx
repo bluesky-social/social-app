@@ -26,6 +26,9 @@ export interface TabBarProps {
   dragState: SharedValue<'idle' | 'dragging' | 'settling'>
 }
 
+const ITEM_PADDING = 10
+const CONTENT_PADDING = 6
+
 export function TabBar({
   testID,
   selectedPage,
@@ -59,7 +62,8 @@ export function TabBar({
   const progressToOffset = useCallback(
     (progress: number) => {
       'worklet'
-      const offsetPerPage = contentSize.get() - containerSize.get()
+      const offsetPerPage =
+        contentSize.get() + 2 * CONTENT_PADDING - containerSize.get()
       return (progress / (itemsLength - 1)) * offsetPerPage
     },
     [itemsLength, contentSize, containerSize],
@@ -187,7 +191,9 @@ export function TabBar({
           scaleX: interpolate(
             dragProgress.get(),
             layoutsValue.map((l, i) => i),
-            layoutsValue.map(l => (l.width - 12) / contentSize.get()),
+            layoutsValue.map(
+              l => (l.width - ITEM_PADDING * 2) / contentSize.get(),
+            ),
           ),
         },
       ],
@@ -330,11 +336,11 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     backgroundColor: 'transparent',
-    paddingHorizontal: 6,
+    paddingHorizontal: CONTENT_PADDING,
   },
   item: {
     paddingTop: 10,
-    paddingHorizontal: 10,
+    paddingHorizontal: ITEM_PADDING,
     justifyContent: 'center',
   },
   itemInner: {
