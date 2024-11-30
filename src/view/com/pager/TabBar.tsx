@@ -65,9 +65,7 @@ export function TabBar({
   // We'll re-sync it here (with an animation) if you interact with the pager again.
   // From that point on, it'll remain synced again (unless you scroll the tabbar again).
   useAnimatedReaction(
-    () => {
-      return dragState.value
-    },
+    () => dragState.value,
     (nextDragState, prevDragState) => {
       if (
         nextDragState !== prevDragState &&
@@ -121,6 +119,9 @@ export function TabBar({
   )
 
   const indicatorStyle = useAnimatedStyle(() => {
+    if (!_WORKLET) {
+      return {opacity: 0}
+    }
     const layoutsValue = layouts.get()
     if (
       layoutsValue.length !== itemsLength ||
@@ -238,14 +239,19 @@ function TabBarItem({
   onItemLayout: (index: number, layout: {x: number; width: number}) => void
 }) {
   const pal = usePalette('default')
-  const style = useAnimatedStyle(() => ({
-    opacity: interpolate(
-      dragProgress.get(),
-      [index - 1, index, index + 1],
-      [0.7, 1, 0.7],
-      'clamp',
-    ),
-  }))
+  const style = useAnimatedStyle(() => {
+    if (!_WORKLET) {
+      return {opacity: 0.7}
+    }
+    return {
+      opacity: interpolate(
+        dragProgress.get(),
+        [index - 1, index, index + 1],
+        [0.7, 1, 0.7],
+        'clamp',
+      ),
+    }
+  })
 
   const handleLayout = useCallback(
     (e: LayoutChangeEvent) => {
