@@ -144,13 +144,31 @@ export function TabBar({
       if (isSyncingScroll.get() === true) {
         const progressDiff = index - dragProgress.get()
         const offsetDiff = progressToOffset(progressDiff)
-        // TODO: Get into view if obscured
-        const offset = scrollX.get() + offsetDiff
+        let offset = scrollX.get() + offsetDiff
+        const itemLayout = layouts.get()[index]
+        if (itemLayout) {
+          if (
+            itemLayout.x < offset ||
+            itemLayout.x + itemLayout.width > offset + containerSize.get()
+          ) {
+            // If the proposed offset is still out of view, don't bother with
+            // proportional scroll and ensure the target is scrolled into view.
+            offset = progressToOffset(index)
+          }
+        }
         scrollTo(scrollElRef, offset, 0, true)
       }
       isSyncingScroll.set(true)
     },
-    [isSyncingScroll, scrollElRef, scrollX, dragProgress, progressToOffset],
+    [
+      isSyncingScroll,
+      scrollElRef,
+      scrollX,
+      dragProgress,
+      progressToOffset,
+      containerSize,
+      layouts,
+    ],
   )
 
   const onItemLayout = useCallback(
