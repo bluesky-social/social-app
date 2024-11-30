@@ -36,6 +36,7 @@ export const router = new Router({
   PreferencesFollowingFeed: '/settings/following-feed',
   PreferencesThreads: '/settings/threads',
   PreferencesExternalEmbeds: '/settings/external-embeds',
+  PreferencesStarterPacks: '/settings/starter-packs',
   AccessibilitySettings: '/settings/accessibility',
   AppearanceSettings: '/settings/appearance',
   SavedFeeds: '/settings/saved-feeds',

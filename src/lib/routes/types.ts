@@ -38,6 +38,7 @@ export type CommonNavigatorParams = {
   PreferencesFollowingFeed: undefined
   PreferencesThreads: undefined
   PreferencesExternalEmbeds: undefined
+  PreferencesStarterPacks: undefined
   AccessibilitySettings: undefined
   AppearanceSettings: undefined
   AccountSettings: undefined
