@@ -84,7 +84,7 @@ export function applyFonts(style: TextStyle, fontFamily: 'system' | 'theme') {
   } else {
     // fallback families only supported on web
     if (isWeb) {
-      style.fontFamily = style.fontFamily || WEB_FONT_FAMILIES
+      style.fontFamily = style.fontFamily || `system-ui`
     }
 
     /**
