@@ -59,7 +59,8 @@ export function HomeHeader(
         onSelect={onSelect}
         testID={props.testID}
         items={items}
-        dragGesture={props.dragGesture}
+        dragProgress={props.dragProgress}
+        dragState={props.dragState}
       />
     </HomeHeaderLayout>
   )

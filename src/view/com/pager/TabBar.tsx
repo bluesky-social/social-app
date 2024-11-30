@@ -21,6 +21,8 @@ export interface TabBarProps {
   items: string[]
   onSelect?: (index: number) => void
   onPressSelected?: (index: number) => void
+  dragProgress: SharedValue<number>
+  dragState: SharedValue<'idle' | 'dragging' | 'settling'>
 }
 
 export function TabBar({
@@ -29,17 +31,17 @@ export function TabBar({
   items,
   onSelect,
   onPressSelected,
-  dragGesture,
+  dragProgress,
+  dragState,
 }: TabBarProps) {
   const pal = usePalette('default')
-  const scrollElRef = useAnimatedRef()
+  const scrollElRef = useAnimatedRef<ScrollView>()
   const isSyncingScroll = useSharedValue(true)
   const contentSize = useSharedValue(0)
   const containerSize = useSharedValue(0)
   const scrollX = useSharedValue(0)
   const layouts = useSharedValue<{x: number; width: number}[]>([])
   const itemsLength = items.length
-  const {dragProgress, dragState} = dragGesture
 
   // When you swipe the pager, the tabbar should scroll automatically
   // as you're dragging the page and then even during deceleration.
