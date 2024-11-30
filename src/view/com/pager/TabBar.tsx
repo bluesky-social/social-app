@@ -1,5 +1,5 @@
-import {useCallback, useState} from 'react'
-import {ScrollView, StyleSheet, View} from 'react-native'
+import {useCallback} from 'react'
+import {LayoutChangeEvent, ScrollView, StyleSheet, View} from 'react-native'
 import Animated, {
   interpolate,
   runOnUI,
@@ -37,6 +37,7 @@ export function TabBar({
   const contentSize = useSharedValue(0)
   const containerSize = useSharedValue(0)
   const scrollX = useSharedValue(0)
+  const layouts = useSharedValue<{x: number; width: number}[]>([])
   const itemsLength = items.length
   const {dragProgress, dragState} = dragGesture
 
@@ -106,6 +107,48 @@ export function TabBar({
     ],
   )
 
+  const onItemLayout = useCallback(
+    (i: number, layout: {x: number; width: number}) => {
+      'worklet'
+      layouts.modify(ls => {
+        ls[i] = layout
+        return ls
+      })
+    },
+    [layouts],
+  )
+
+  const indicatorStyle = useAnimatedStyle(() => {
+    const layoutsValue = layouts.get()
+    if (
+      layoutsValue.length !== itemsLength ||
+      layoutsValue.some(l => l === undefined)
+    ) {
+      return {
+        opacity: 0,
+      }
+    }
+    return {
+      opacity: 1,
+      transform: [
+        {
+          translateX: interpolate(
+            dragProgress.get(),
+            layoutsValue.map((l, i) => i),
+            layoutsValue.map(l => l.x + l.width / 2 - contentSize.get() / 2),
+          ),
+        },
+        {
+          scaleX: interpolate(
+            dragProgress.get(),
+            layoutsValue.map((l, i) => i),
+            layoutsValue.map(l => (l.width - 12) / contentSize.get()),
+          ),
+        },
+      ],
+    }
+  })
+
   const onPressItem = useCallback(
     (index: number) => {
       runOnUI(onPressUIThread)(index)
@@ -116,46 +159,6 @@ export function TabBar({
     },
     [onSelect, selectedPage, onPressSelected, onPressUIThread],
   )
-
-  const [layouts, setLayouts] = useState([])
-  const didLayout =
-    layouts.length === items.length && layouts.every(l => l !== undefined)
-  const indicatorStyle = useAnimatedStyle(() => {
-    if (!didLayout) {
-      return {}
-    }
-    return {
-      transform: [
-        {
-          translateX: interpolate(
-            dragProgress.get(),
-            layouts.map((l, i) => i),
-            layouts.map(l => l.x + l.width / 2 - contentSize.get() / 2),
-          ),
-        },
-        {
-          scaleX: interpolate(
-            dragProgress.get(),
-            layouts.map((l, i) => i),
-            layouts.map(l => (l.width - 12) / contentSize.get()),
-          ),
-        },
-      ],
-    }
-  })
-
-  const onItemLayout = (e: LayoutChangeEvent, index: number) => {
-    const l = e.nativeEvent.layout
-    setLayouts(ls =>
-      items.map((item, i) => {
-        if (i === index) {
-          return l
-        } else {
-          return ls[i]
-        }
-      }),
-    )
-  }
 
   return (
     <View
@@ -186,32 +189,30 @@ export function TabBar({
           style={{flexDirection: 'row'}}>
           {items.map((item, i) => {
             return (
-              <View key={i} onLayout={e => onItemLayout(e, i)}>
-                <TabBarItem
-                  index={i}
-                  testID={testID}
-                  dragProgress={dragProgress}
-                  item={item}
-                  onPressItem={onPressItem}
-                />
-              </View>
+              <TabBarItem
+                key={i}
+                index={i}
+                testID={testID}
+                dragProgress={dragProgress}
+                item={item}
+                onPressItem={onPressItem}
+                onItemLayout={onItemLayout}
+              />
             )
           })}
-          {didLayout && (
-            <Animated.View
-              style={[
-                indicatorStyle,
-                {
-                  position: 'absolute',
-                  left: 0,
-                  bottom: 0,
-                  right: 0,
-                  borderBottomWidth: 3,
-                  borderColor: pal.link.color,
-                },
-              ]}
-            />
-          )}
+          <Animated.View
+            style={[
+              indicatorStyle,
+              {
+                position: 'absolute',
+                left: 0,
+                bottom: 0,
+                right: 0,
+                borderBottomWidth: 3,
+                borderColor: pal.link.color,
+              },
+            ]}
+          />
         </Animated.View>
       </ScrollView>
       <View style={[pal.border, styles.outerBottomBorder]} />
@@ -225,12 +226,14 @@ function TabBarItem({
   dragProgress,
   item,
   onPressItem,
+  onItemLayout,
 }: {
   index: number
   testID: string | undefined
   dragProgress: SharedValue<number>
   item: string
   onPressItem: (index: number) => void
+  onItemLayout: (index: number, layout: {x: number; width: number}) => void
 }) {
   const pal = usePalette('default')
   const style = useAnimatedStyle(() => ({
@@ -241,23 +244,33 @@ function TabBarItem({
       'clamp',
     ),
   }))
+
+  const handleLayout = useCallback(
+    (e: LayoutChangeEvent) => {
+      runOnUI(onItemLayout)(index, e.nativeEvent.layout)
+    },
+    [index, onItemLayout],
+  )
+
   return (
-    <PressableWithHover
-      testID={`${testID}-selector-${index}`}
-      style={styles.item}
-      hoverStyle={pal.viewLight}
-      onPress={() => onPressItem(index)}
-      accessibilityRole="tab">
-      <Animated.View style={[style, styles.itemInner]}>
-        <Text
-          emoji
-          type="lg-bold"
-          testID={testID ? `${testID}-${item}` : undefined}
-          style={[pal.text, {lineHeight: 20}]}>
-          {item}
-        </Text>
-      </Animated.View>
-    </PressableWithHover>
+    <View onLayout={handleLayout}>
+      <PressableWithHover
+        testID={`${testID}-selector-${index}`}
+        style={styles.item}
+        hoverStyle={pal.viewLight}
+        onPress={() => onPressItem(index)}
+        accessibilityRole="tab">
+        <Animated.View style={[style, styles.itemInner]}>
+          <Text
+            emoji
+            type="lg-bold"
+            testID={testID ? `${testID}-${item}` : undefined}
+            style={[pal.text, {lineHeight: 20}]}>
+            {item}
+          </Text>
+        </Animated.View>
+      </PressableWithHover>
+    </View>
   )
 }
 
