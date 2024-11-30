@@ -1,10 +1,12 @@
-import {useCallback, useMemo} from 'react'
+import {useCallback, useState} from 'react'
 import {ScrollView, StyleSheet, View} from 'react-native'
 import Animated, {
+  interpolate,
   runOnUI,
   scrollTo,
   useAnimatedReaction,
   useAnimatedRef,
+  useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated'
 
@@ -113,6 +115,46 @@ export function TabBar({
     [onSelect, selectedPage, onPressSelected, onPressUIThread],
   )
 
+  const [layouts, setLayouts] = useState([])
+  const didLayout =
+    layouts.length === items.length && layouts.every(l => l !== undefined)
+  const indicatorStyle = useAnimatedStyle(() => {
+    if (!didLayout) {
+      return {}
+    }
+    return {
+      transform: [
+        {
+          translateX: interpolate(
+            dragProgress.get(),
+            layouts.map((l, i) => i),
+            layouts.map(l => l.x + l.width / 2 - contentSize.get() / 2),
+          ),
+        },
+        {
+          scaleX: interpolate(
+            dragProgress.get(),
+            layouts.map((l, i) => i),
+            layouts.map(l => (l.width - 12) / contentSize.get()),
+          ),
+        },
+      ],
+    }
+  })
+
+  const onItemLayout = (e: LayoutChangeEvent, index: number) => {
+    const l = e.nativeEvent.layout
+    setLayouts(ls =>
+      items.map((item, i) => {
+        if (i === index) {
+          return l
+        } else {
+          return ls[i]
+        }
+      }),
+    )
+  }
+
   return (
     <View
       testID={testID}
@@ -142,16 +184,32 @@ export function TabBar({
           style={{flexDirection: 'row'}}>
           {items.map((item, i) => {
             return (
-              <TabBarItem
-                key={i}
-                index={i}
-                testID={testID}
-                selected={i === selectedPage}
-                item={item}
-                onPressItem={onPressItem}
-              />
+              <View key={i} onLayout={e => onItemLayout(e, i)}>
+                <TabBarItem
+                  index={i}
+                  testID={testID}
+                  selected={i === selectedPage}
+                  item={item}
+                  onPressItem={onPressItem}
+                />
+              </View>
             )
           })}
+          {didLayout && (
+            <Animated.View
+              style={[
+                indicatorStyle,
+                {
+                  position: 'absolute',
+                  left: 0,
+                  bottom: 0,
+                  right: 0,
+                  borderBottomWidth: 3,
+                  borderColor: pal.link.color,
+                },
+              ]}
+            />
+          )}
         </Animated.View>
       </ScrollView>
       <View style={[pal.border, styles.outerBottomBorder]} />
@@ -173,10 +231,6 @@ function TabBarItem({
   onPressItem: (index: number) => void
 }) {
   const pal = usePalette('default')
-  const indicatorStyle = useMemo(
-    () => ({borderBottomColor: pal.colors.link}),
-    [pal],
-  )
   return (
     <PressableWithHover
       testID={`${testID}-selector-${index}`}
@@ -184,7 +238,7 @@ function TabBarItem({
       hoverStyle={pal.viewLight}
       onPress={() => onPressItem(index)}
       accessibilityRole="tab">
-      <View style={[styles.itemInner, selected && indicatorStyle]}>
+      <View style={[styles.itemInner]}>
         <Text
           emoji
           type="lg-bold"
