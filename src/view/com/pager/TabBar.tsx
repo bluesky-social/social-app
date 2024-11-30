@@ -88,6 +88,7 @@ export function TabBar({
         const offsetPerPage = contentSize.get() - containerSize.get()
         const progressDiff = index - dragProgress.get()
         const offsetDiff = (progressDiff / (itemsLength - 1)) * offsetPerPage
+        // TODO: Get into view if obscured
         const offset = scrollX.get() + offsetDiff
         scrollTo(scrollElRef, offset, 0, true)
       }
