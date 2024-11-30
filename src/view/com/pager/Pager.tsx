@@ -52,7 +52,7 @@ export const Pager = forwardRef<PagerRef, React.PropsWithChildren<Props>>(
     }: React.PropsWithChildren<Props>,
     ref,
   ) {
-    const [selectedPage, setSelectedPage] = React.useState(0)
+    const [selectedPage, setSelectedPage] = React.useState(initialPage)
     const pagerView = React.useRef<PagerView>(null)
 
     React.useImperativeHandle(ref, () => ({
