@@ -4,6 +4,7 @@ import Animated, {
   interpolate,
   runOnUI,
   scrollTo,
+  SharedValue,
   useAnimatedReaction,
   useAnimatedRef,
   useAnimatedStyle,
@@ -189,7 +190,7 @@ export function TabBar({
                 <TabBarItem
                   index={i}
                   testID={testID}
-                  selected={i === selectedPage}
+                  dragProgress={dragProgress}
                   item={item}
                   onPressItem={onPressItem}
                 />
@@ -221,17 +222,25 @@ export function TabBar({
 function TabBarItem({
   index,
   testID,
-  selected,
+  dragProgress,
   item,
   onPressItem,
 }: {
   index: number
   testID: string | undefined
-  selected: boolean
+  dragProgress: SharedValue<number>
   item: string
   onPressItem: (index: number) => void
 }) {
   const pal = usePalette('default')
+  const style = useAnimatedStyle(() => ({
+    opacity: interpolate(
+      dragProgress.get(),
+      [index - 1, index, index + 1],
+      [0.7, 1, 0.7],
+      'clamp',
+    ),
+  }))
   return (
     <PressableWithHover
       testID={`${testID}-selector-${index}`}
@@ -239,15 +248,15 @@ function TabBarItem({
       hoverStyle={pal.viewLight}
       onPress={() => onPressItem(index)}
       accessibilityRole="tab">
-      <View style={[styles.itemInner]}>
+      <Animated.View style={[style, styles.itemInner]}>
         <Text
           emoji
           type="lg-bold"
           testID={testID ? `${testID}-${item}` : undefined}
-          style={[selected ? pal.text : pal.textLight, {lineHeight: 20}]}>
+          style={[pal.text, {lineHeight: 20}]}>
           {item}
         </Text>
-      </View>
+      </Animated.View>
     </PressableWithHover>
   )
 }
