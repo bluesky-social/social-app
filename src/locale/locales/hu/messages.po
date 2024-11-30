@@ -845,7 +845,7 @@ msgstr "Bárki kapcsolatba léphet"
 #: src/Navigation.tsx:370 src/screens/Settings/AppearanceSettings.tsx:179
 #: src/screens/Settings/AppearanceSettings.tsx:182
 msgid "App Icon"
-msgstr ""
+msgstr "Alkalmazásikon"
 
 #: src/screens/Settings/LanguageSettings.tsx:72
 msgid "App Language"
@@ -1340,10 +1340,8 @@ msgid "Change"
 msgstr "Megváltoztatás"
 
 #: src/screens/Settings/AppIconSettings.tsx:73
-#, fuzzy
-#| msgid "Change post language to {0}"
 msgid "Change app icon to \"{0}\""
-msgstr "Bejegyzés nyelvének megváltoztatása erre: {0}"
+msgstr "Alkalmazás ikonjának megváltoztatása erre: {0}"
 
 #: src/screens/Settings/AccountSettings.tsx:89
 #: src/screens/Settings/AccountSettings.tsx:93
@@ -2464,7 +2462,7 @@ msgstr ""
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerWeb.tsx:57
 msgid "Embedded video player"
-msgstr ""
+msgstr "Beágyazott videólejátszó"
 
 #: src/screens/Settings/components/Email2FAToggle.tsx:56
 #: src/screens/Settings/components/Email2FAToggle.tsx:60
@@ -2536,10 +2534,8 @@ msgid "Enter Confirmation Code"
 msgstr "Ellenőrzőkód megadása"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:405
-#, fuzzy
-#| msgid "Exit fullscreen"
 msgid "Enter fullscreen"
-msgstr "Kilépés a teljes képernyős módból"
+msgstr "Belépés teljes képernyős módba"
 
 #: src/view/com/modals/ChangePassword.tsx:154
 msgid "Enter the code you received to change your password."
@@ -3359,10 +3355,8 @@ msgstr "Tárhelyszolgáltató"
 
 #: src/screens/Settings/ThreadPreferences.tsx:59
 #: src/screens/Settings/ThreadPreferences.tsx:62
-#, fuzzy
-#| msgid "Newest replies first"
 msgid "Hot replies first"
-msgstr "A legújabb válaszok elöl"
+msgstr "A legfelkapottabb válaszok elöl"
 
 #: src/view/com/modals/InAppBrowserConsent.tsx:41
 msgid "How should we open this link?"
@@ -5882,6 +5876,8 @@ msgid ""
 "Seek slider. Use the arrow keys to seek forwards and backwards, and space to "
 "play/pause"
 msgstr ""
+"Lejátszásvezérlő sáv. Az előre-/visszatekeréshez használd a nyílbillentyűket "
+"és a szüneteltetéshez/lejátszáshoz nyomd meg a szóközt."
 
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:67
 msgid "Select a color"
@@ -6546,10 +6542,8 @@ msgstr "Csak címkék"
 
 #: src/screens/Settings/AppIconSettings.tsx:34
 #: src/screens/Settings/AppIconSettings.tsx:68
-#, fuzzy
-#| msgid "Need to change it?"
 msgid "Tap to change app icon"
-msgstr "Meg akarod változtatni?"
+msgstr "Koppints ide az alkalmazásikon megváltoztatásához"
 
 #: src/components/ProgressGuide/Toast.tsx:156
 msgid "Tap to dismiss"
@@ -6672,6 +6666,7 @@ msgstr ""
 #: src/screens/Settings/AppIconSettings.tsx:74
 msgid "The app will be restarted"
 msgstr ""
+"A beállítások érvénybeléptetése érdekében az alkalmazás újra lesz indítva"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:117
 #: src/lib/moderation/useModerationCauseDescription.ts:126
@@ -7197,7 +7192,7 @@ msgstr "Válaszlánc-beállítások"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/TimeIndicator.tsx:33
 msgid "Time remaining: {time} seconds"
-msgstr ""
+msgstr "Hátralévő idő: {time} mp"
 
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:99
 msgid ""
@@ -7428,16 +7423,12 @@ msgid "Unsubscribed from list"
 msgstr "Leiratkoztál a listáról"
 
 #: src/view/com/composer/Composer.tsx:759
-#, fuzzy
-#| msgid "Unsupported video type: {mimeType}"
 msgid "Unsupported video type"
-msgstr "Nem támogatott videóformátum: {mimeType}"
+msgstr "Nem támogatott videóformátum"
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:66
-#, fuzzy
-#| msgid "Unsupported video type: {mimeType}"
 msgid "Unsupported video type: {0}"
-msgstr "Nem támogatott videóformátum: {mimeType}"
+msgstr "Nem támogatott videóformátum: {0}"
 
 #: src/lib/moderation/useReportOptions.ts:77
 #: src/lib/moderation/useReportOptions.ts:90
@@ -7789,7 +7780,7 @@ msgstr "Honlap felkeresése"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VolumeControl.tsx:80
 msgid "Volume"
-msgstr ""
+msgstr "Hangerő"
 
 #: src/components/moderation/LabelPreference.tsx:136
 #: src/lib/moderation/useLabelBehaviorDescription.ts:17
@@ -8474,6 +8465,7 @@ msgstr "Saját felhasználónév"
 
 msgid "Helps external sites estimate traffic from Bluesky."
 msgstr ""
+"Ez segít a külső szolgáltatások számára megbecsülni a Bluesky forgalmát."
 
 #~ msgid ""
 #~ "{0, plural, one {{formattedCount} other} other {{formattedCount} others}}"
