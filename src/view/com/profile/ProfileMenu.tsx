@@ -171,8 +171,8 @@ let ProfileMenu = ({
     reportDialogControl.open()
   }, [reportDialogControl])
 
-  const onPressCopyATProtoUri = React.useCallback(() => {
-    Clipboard.setStringAsync(`at://${profile.did}`)
+  const onPressCopyDid = React.useCallback(() => {
+    Clipboard.setStringAsync(profile.did)
     Toast.show(_(msg`Copied to clipboard`), 'clipboard-check')
   }, [])
 
@@ -319,11 +319,11 @@ let ProfileMenu = ({
                   <>
                     <Menu.Divider />
                     <Menu.Item
-                      testID="profileHeaderDropdownCopyUri"
-                      label={_(msg`Copy ATProto URI`)}
-                      onPress={onPressCopyATProtoUri}>
+                      testID="profileHeaderDropdownCopyDid"
+                      label={_(msg`Copy DID`)}
+                      onPress={onPressCopyDid}>
                       <Menu.ItemText>
-                        <Trans>Copy ATProto URI</Trans>
+                        <Trans>Copy DID</Trans>
                       </Menu.ItemText>
                       <Menu.ItemIcon icon={ClipboardIcon} />
                     </Menu.Item>
