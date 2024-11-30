@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-29 06:14\n"
+"PO-Revision-Date: 2024-11-30 14:55\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -3078,7 +3078,7 @@ msgstr "触感"
 
 #: src/lib/moderation/useReportOptions.ts:34
 msgid "Harassment, trolling, or intolerance"
-msgstr "骚扰、恶作剧或其他无法容忍的行为"
+msgstr "骚扰、恶作剧或歧视行为"
 
 #: src/Navigation.tsx:377
 msgid "Hashtag"
@@ -3294,7 +3294,7 @@ msgstr "冒充、提供虚假信息或提出虚假声明"
 
 #: src/lib/moderation/useReportOptions.ts:91
 msgid "Inappropriate messages or explicit links"
-msgstr "不当消息或诱导性链接"
+msgstr "不当消息或敏感链接"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:121
 msgid "Input code sent to your email for password reset"

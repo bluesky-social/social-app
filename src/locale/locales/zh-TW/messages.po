@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-29 01:55\n"
+"PO-Revision-Date: 2024-11-30 14:56\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -716,7 +716,7 @@ msgstr "上傳影片時發生錯誤。"
 
 #: src/lib/moderation/useReportOptions.ts:28
 msgid "An issue not included in these options"
-msgstr "問題不在上述選項"
+msgstr "問題未包含在上述選項"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:41
 msgid "An issue occurred starting the chat"
@@ -2561,7 +2561,7 @@ msgstr "將於 {0} 過期"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:47
 msgid "Explicit or potentially disturbing media."
-msgstr "露骨或可能令人不安的媒體內容。"
+msgstr "血腥、露骨或災害等可能會導致不安的媒體內容。"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:35
 msgid "Explicit sexual images."
@@ -3048,7 +3048,7 @@ msgstr "前往用戶的個人檔案"
 #: src/view/com/composer/labels/LabelsBtn.tsx:202
 #: src/view/com/composer/labels/LabelsBtn.tsx:205
 msgid "Graphic Media"
-msgstr "敏感媒體"
+msgstr "敏感/駭人媒體"
 
 #: src/state/shell/progress-guide.tsx:161
 msgid "Half way there!"
@@ -3078,7 +3078,7 @@ msgstr "觸覺"
 
 #: src/lib/moderation/useReportOptions.ts:34
 msgid "Harassment, trolling, or intolerance"
-msgstr "騷擾、惡作劇或其他無法容忍的行為"
+msgstr "騷擾、惡作劇或歧視行為"
 
 #: src/Navigation.tsx:377
 msgid "Hashtag"
@@ -3190,7 +3190,7 @@ msgstr "抱歉，我們無法載入該內容管理服務。"
 
 #: src/view/com/composer/state/video.ts:413
 msgid "Hold up! We’re gradually giving access to video, and you’re still waiting in line. Check back soon!"
-msgstr "等一下！我們正在逐步開放影片功能，您還在等候名單中。請稍後再回來看看！"
+msgstr "等一下！我們正在逐步開放上傳影片功能。您還在等候名單中，請晚點再回來看看！"
 
 #: src/Navigation.tsx:588
 #: src/Navigation.tsx:608
@@ -3250,7 +3250,7 @@ msgstr "替代文字過長時，切換替代文字的展開狀態"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:110
 msgid "If you are not yet an adult according to the laws of your country, your parent or legal guardian must read these Terms on your behalf."
-msgstr "如果根據您所在國家的法律，您尚未成年，則您的家長或法定監護人必須代表您閱讀這些條款。"
+msgstr "如果您根據您所在國家的法律尚未成年，則您的父母或法定代理人必須代表您閱讀這些條款。"
 
 #: src/view/screens/ProfileList.tsx:723
 msgid "If you delete this list, you won't be able to recover it."
@@ -3286,15 +3286,15 @@ msgstr "圖片已儲存至您的裝置相簿！"
 
 #: src/lib/moderation/useReportOptions.ts:49
 msgid "Impersonation or false claims about identity or affiliation"
-msgstr "冒充或虛假聲明身分或隸屬關係"
+msgstr "冒充/偽造身分或其隸屬關係"
 
 #: src/lib/moderation/useReportOptions.ts:68
 msgid "Impersonation, misinformation, or false claims"
-msgstr "冒充、錯誤資訊或虛假聲明"
+msgstr "冒充他人、散播錯誤資訊或提出不實指控"
 
 #: src/lib/moderation/useReportOptions.ts:91
 msgid "Inappropriate messages or explicit links"
-msgstr "不當訊息或露骨連結"
+msgstr "低俗言論或敏感內容連結"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:121
 msgid "Input code sent to your email for password reset"
@@ -4361,7 +4361,7 @@ msgstr "裸露"
 
 #: src/lib/moderation/useReportOptions.ts:78
 msgid "Nudity or adult content not labeled as such"
-msgstr "未貼上這類標記的裸露或成人內容"
+msgstr "未貼上這類標記的裸露或色情內容"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:11
 msgid "Off"
@@ -6209,15 +6209,15 @@ msgstr "抱歉！您的登入狀態已過期。請重新登入。"
 
 #: src/screens/Settings/ThreadPreferences.tsx:47
 msgid "Sort replies"
-msgstr "回覆排序"
+msgstr "排序回覆"
 
 #: src/screens/Settings/ThreadPreferences.tsx:54
 msgid "Sort replies by"
-msgstr "回覆排序"
+msgstr "排序回覆"
 
 #: src/screens/Settings/ThreadPreferences.tsx:51
 msgid "Sort replies to the same post by:"
-msgstr "對貼文下的回覆進行排序："
+msgstr "貼文下回覆的排序方式："
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:168
 msgid "Source:"
@@ -6230,7 +6230,7 @@ msgstr "垃圾訊息"
 
 #: src/lib/moderation/useReportOptions.ts:55
 msgid "Spam; excessive mentions or replies"
-msgstr "垃圾訊息、過多的提及或回覆"
+msgstr "垃圾內容、過多的提及或回覆"
 
 #: src/screens/Onboarding/index.tsx:27
 #: src/screens/Onboarding/state.ts:100
@@ -7131,7 +7131,7 @@ msgstr "不支援的影片類型：{0}"
 #: src/lib/moderation/useReportOptions.ts:77
 #: src/lib/moderation/useReportOptions.ts:90
 msgid "Unwanted Sexual Content"
-msgstr "不受歡迎的色情內容"
+msgstr "不受歡迎的成人內容"
 
 #: src/view/com/modals/UserAddRemoveLists.tsx:82
 msgid "Update <0>{displayName}</0> in Lists"

@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-29 01:55\n"
+"PO-Revision-Date: 2024-11-30 14:57\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional, Hong Kong\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -2785,15 +2785,15 @@ msgstr "跟佢"
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:218
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:114
 msgid "Follow {0}"
-msgstr "跟住 {0}"
+msgstr "跟 {0}"
 
 #: src/view/com/posts/AviFollowButton.tsx:68
 msgid "Follow {name}"
-msgstr "跟住 {name}"
+msgstr "跟 {name}"
 
 #: src/components/ProgressGuide/List.tsx:53
 msgid "Follow 7 accounts"
-msgstr "跟住 7 個人"
+msgstr "跟 7 個人"
 
 #: src/view/com/profile/ProfileMenu.tsx:222
 #: src/view/com/profile/ProfileMenu.tsx:233
@@ -2887,11 +2887,11 @@ msgstr "「Following」動態源設定"
 
 #: src/screens/Profile/Header/Handle.tsx:32
 msgid "Follows you"
-msgstr "跟緊你"
+msgstr "跟你"
 
 #: src/components/Pills.tsx:175
 msgid "Follows You"
-msgstr "跟緊你"
+msgstr "跟你"
 
 #: src/screens/Settings/AppearanceSettings.tsx:133
 msgid "Font"
@@ -3078,7 +3078,7 @@ msgstr "觸覺"
 
 #: src/lib/moderation/useReportOptions.ts:34
 msgid "Harassment, trolling, or intolerance"
-msgstr "騷擾、惡搞抑或其他無法容忍嘅行爲"
+msgstr "騷擾、惡搞抑或歧視行爲"
 
 #: src/Navigation.tsx:377
 msgid "Hashtag"
@@ -3294,7 +3294,7 @@ msgstr "冒充、虛假資訊抑或虛假聲稱"
 
 #: src/lib/moderation/useReportOptions.ts:91
 msgid "Inappropriate messages or explicit links"
-msgstr "不當嘅訊息抑或詐騙連結"
+msgstr "不當嘅訊息抑或敏感內容連結"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:121
 msgid "Input code sent to your email for password reset"
