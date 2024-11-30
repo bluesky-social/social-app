@@ -1,6 +1,10 @@
 import * as React from 'react'
 import {ScrollView, StyleSheet, View} from 'react-native'
-import {useAnimatedRef} from 'react-native-reanimated'
+import {
+  useAnimatedRef,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated'
 
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
@@ -128,6 +132,13 @@ let PagerTabBar = ({
 }): React.ReactNode => {
   const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()
+  const pageOffset = useSharedValue(0)
+
+  React.useEffect(() => {
+    // animate TabBar indicator position and width upon click
+    pageOffset.value = withTiming(currentPage)
+  }, [currentPage, pageOffset])
+
   return (
     <>
       <View
@@ -156,6 +167,7 @@ let PagerTabBar = ({
           selectedPage={currentPage}
           onSelect={onSelect}
           onPressSelected={onCurrentPageSelected}
+          pageOffset={pageOffset}
         />
       </View>
     </>

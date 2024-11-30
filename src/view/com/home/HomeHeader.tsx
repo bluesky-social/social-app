@@ -16,7 +16,7 @@ export function HomeHeader(
     feeds: FeedSourceInfo[]
   },
 ) {
-  const {feeds} = props
+  const {feeds, pageOffset} = props
   const {hasSession} = useSession()
   const navigation = useNavigation<NavigationProp>()
   const pal = usePalette('default')
@@ -62,6 +62,7 @@ export function HomeHeader(
         testID={props.testID}
         items={items}
         indicatorColor={pal.colors.link}
+        pageOffset={pageOffset}
       />
     </HomeHeaderLayout>
   )

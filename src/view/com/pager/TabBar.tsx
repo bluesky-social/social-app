@@ -1,5 +1,10 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {LayoutChangeEvent, ScrollView, StyleSheet, View} from 'react-native'
+import Animated, {
+  interpolate,
+  SharedValue,
+  useAnimatedStyle,
+} from 'react-native-reanimated'
 
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
@@ -15,11 +20,15 @@ export interface TabBarProps {
   indicatorColor?: string
   onSelect?: (index: number) => void
   onPressSelected?: (index: number) => void
+  pageOffset: SharedValue<number>
 }
 
 // How much of the previous/next item we're showing
 // to give the user a hint there's more to scroll.
 const OFFSCREEN_ITEM_WIDTH = 20
+const ITEM_MOBILE_PADDING_HORIZONTAL = 10
+const ITEM_DESKTOP_PADDING_HORIZONTAL = 14
+const FALLBACK_INTERPOLATION_RANGE = [0, 0]
 
 export function TabBar({
   testID,
@@ -28,24 +37,66 @@ export function TabBar({
   indicatorColor,
   onSelect,
   onPressSelected,
+  pageOffset,
 }: TabBarProps) {
+  const {isDesktop, isTablet} = useWebMediaQueries()
+
   const pal = usePalette('default')
   const scrollElRef = useRef<ScrollView>(null)
   const itemRefs = useRef<Array<Element>>([])
-  const [itemXs, setItemXs] = useState<number[]>([])
-  const indicatorStyle = useMemo(
-    () => ({borderBottomColor: indicatorColor || pal.colors.link}),
-    [indicatorColor, pal],
-  )
-  const {isDesktop, isTablet} = useWebMediaQueries()
-  const styles = isDesktop || isTablet ? desktopStyles : mobileStyles
+  const [itemXsAndWidths, setItemXsAndWidths] = useState<
+    {x: number; width: number}[]
+  >([])
+
+  const shouldShowDesktopStyles = isDesktop || isTablet
+  const ITEM_PADDING_HORIZONTAL = shouldShowDesktopStyles
+    ? ITEM_DESKTOP_PADDING_HORIZONTAL
+    : ITEM_MOBILE_PADDING_HORIZONTAL
+
+  // ranges for indicator width and x position interpolation
+  const {inputRange, outputRangeWidth, outputRangeX} = useMemo(() => {
+    // before layout of items is captured; interpolation of inputs and outpouts always needs an array of at least 2 items
+    if (itemXsAndWidths.length < 2) {
+      return {
+        inputRange: FALLBACK_INTERPOLATION_RANGE,
+        outputRangeWidth: FALLBACK_INTERPOLATION_RANGE,
+        outputRangeX: FALLBACK_INTERPOLATION_RANGE,
+      }
+    }
+
+    return {
+      inputRange: itemXsAndWidths.map((_, i) => i),
+      outputRangeWidth: itemXsAndWidths.map(
+        item => item.width - ITEM_PADDING_HORIZONTAL * 2,
+      ),
+      outputRangeX: itemXsAndWidths?.map(
+        item => item.x + ITEM_PADDING_HORIZONTAL,
+      ),
+    }
+  }, [ITEM_PADDING_HORIZONTAL, itemXsAndWidths])
+
+  const tabIndicatorStyle = useAnimatedStyle(() => ({
+    width: interpolate(pageOffset.value, inputRange, outputRangeWidth, 'clamp'),
+    transform: [
+      {
+        translateX: interpolate(
+          pageOffset.value,
+          inputRange,
+          outputRangeX,
+          'clamp',
+        ),
+      },
+    ],
+  }))
+
+  const styles = shouldShowDesktopStyles ? desktopStyles : mobileStyles
 
   useEffect(() => {
     if (isNative) {
       // On native, the primary interaction is swiping.
       // We adjust the scroll little by little on every tab change.
       // Scroll into view but keep the end of the previous item visible.
-      let x = itemXs[selectedPage] || 0
+      let x = itemXsAndWidths[selectedPage]?.x || 0
       x = Math.max(0, x - OFFSCREEN_ITEM_WIDTH)
       scrollElRef.current?.scrollTo({x})
     } else {
@@ -92,7 +143,7 @@ export function TabBar({
         })
       }
     }
-  }, [scrollElRef, itemXs, selectedPage, styles])
+  }, [scrollElRef, selectedPage, styles, itemXsAndWidths])
 
   const onPressItem = useCallback(
     (index: number) => {
@@ -104,14 +155,15 @@ export function TabBar({
     [onSelect, selectedPage, onPressSelected],
   )
 
-  // calculates the x position of each item on mount and on layout change
+  // calculates the x position and width of each item on mount and on layout change
   const onItemLayout = React.useCallback(
     (e: LayoutChangeEvent, index: number) => {
       const x = e.nativeEvent.layout.x
-      setItemXs(prev => {
-        const Xs = [...prev]
-        Xs[index] = x
-        return Xs
+      const width = e.nativeEvent.layout.width
+      setItemXsAndWidths(prev => {
+        const itemsLayouts = [...prev]
+        itemsLayouts[index] = {x, width}
+        return itemsLayouts
       })
     },
     [],
@@ -140,7 +192,7 @@ export function TabBar({
               hoverStyle={pal.viewLight}
               onPress={() => onPressItem(i)}
               accessibilityRole="tab">
-              <View style={[styles.itemInner, selected && indicatorStyle]}>
+              <View style={styles.itemInner}>
                 <Text
                   emoji
                   type={isDesktop || isTablet ? 'xl-bold' : 'lg-bold'}
@@ -155,7 +207,15 @@ export function TabBar({
             </PressableWithHover>
           )
         })}
+        <Animated.View
+          style={[
+            tabIndicatorStyle,
+            mobileStyles.indicatorStyle,
+            {backgroundColor: indicatorColor || pal.colors.link},
+          ]}
+        />
       </DraggableScrollView>
+
       <View style={[pal.border, styles.outerBottomBorder]} />
     </View>
   )
@@ -172,13 +232,11 @@ const desktopStyles = StyleSheet.create({
   },
   item: {
     paddingTop: 14,
-    paddingHorizontal: 14,
+    paddingHorizontal: ITEM_DESKTOP_PADDING_HORIZONTAL,
     justifyContent: 'center',
   },
   itemInner: {
     paddingBottom: 12,
-    borderBottomWidth: 3,
-    borderBottomColor: 'transparent',
   },
   outerBottomBorder: {
     position: 'absolute',
@@ -199,13 +257,11 @@ const mobileStyles = StyleSheet.create({
   },
   item: {
     paddingTop: 10,
-    paddingHorizontal: 10,
+    paddingHorizontal: ITEM_MOBILE_PADDING_HORIZONTAL,
     justifyContent: 'center',
   },
   itemInner: {
     paddingBottom: 10,
-    borderBottomWidth: 3,
-    borderBottomColor: 'transparent',
   },
   outerBottomBorder: {
     position: 'absolute',
@@ -214,4 +270,5 @@ const mobileStyles = StyleSheet.create({
     top: '100%',
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
+  indicatorStyle: {height: 3, position: 'absolute', bottom: 0, left: 0},
 })

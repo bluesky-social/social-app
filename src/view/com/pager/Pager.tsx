@@ -1,10 +1,16 @@
 import React, {forwardRef} from 'react'
 import {View} from 'react-native'
 import PagerView, {
-  PagerViewOnPageScrollEvent,
   PagerViewOnPageSelectedEvent,
   PageScrollStateChangedNativeEvent,
 } from 'react-native-pager-view'
+import Animated, {
+  runOnJS,
+  SharedValue,
+  useEvent,
+  useHandler,
+  useSharedValue,
+} from 'react-native-reanimated'
 
 import {LogEvents} from '#/lib/statsig/events'
 import {atoms as a, native} from '#/alf'
@@ -19,6 +25,7 @@ export interface PagerRef {
 }
 
 export interface RenderTabBarFnProps {
+  pageOffset: SharedValue<number>
   selectedPage: number
   onSelect?: (index: number) => void
   tabBarAnchor?: JSX.Element | null | undefined // Ignored on native.
@@ -38,6 +45,9 @@ interface Props {
   ) => void
   testID?: string
 }
+
+const AnimatedPagerView = Animated.createAnimatedComponent(PagerView)
+
 export const Pager = forwardRef<PagerRef, React.PropsWithChildren<Props>>(
   function PagerImpl(
     {
@@ -56,6 +66,7 @@ export const Pager = forwardRef<PagerRef, React.PropsWithChildren<Props>>(
     const lastDirection = React.useRef(0)
     const scrollState = React.useRef('')
     const pagerView = React.useRef<PagerView>(null)
+    const pageOffset = useSharedValue(0)
 
     React.useImperativeHandle(ref, () => ({
       setPage: (
@@ -75,9 +86,13 @@ export const Pager = forwardRef<PagerRef, React.PropsWithChildren<Props>>(
       [setSelectedPage, onPageSelected],
     )
 
-    const onPageScroll = React.useCallback(
-      (e: PagerViewOnPageScrollEvent) => {
-        const {position, offset} = e.nativeEvent
+    const scrollHandler = usePagerScrollHandler({
+      onPageScroll: (e: any) => {
+        'worklet'
+        const {offset, position} = e
+        pageOffset.value = offset + position
+        console.log(e.offset, e.position)
+
         if (offset === 0) {
           // offset hits 0 in some awkward spots so we ignore it
           return
@@ -92,15 +107,19 @@ export const Pager = forwardRef<PagerRef, React.PropsWithChildren<Props>>(
         // -prf
         if (scrollState.current === 'settling') {
           if (lastDirection.current === -1 && offset < lastOffset.current) {
-            onPageSelecting?.(position, 'pager-swipe')
-            setSelectedPage(position)
+            if (onPageSelecting) {
+              runOnJS(onPageSelecting)(position, 'pager-swipe')
+            }
+            runOnJS(setSelectedPage)(position)
             lastDirection.current = 0
           } else if (
             lastDirection.current === 1 &&
             offset > lastOffset.current
           ) {
-            onPageSelecting?.(position + 1, 'pager-swipe')
-            setSelectedPage(position + 1)
+            if (onPageSelecting) {
+              runOnJS(onPageSelecting)(position + 1, 'pager-swipe')
+            }
+            runOnJS(setSelectedPage)(position + 1)
             lastDirection.current = 0
           }
         } else {
@@ -112,8 +131,7 @@ export const Pager = forwardRef<PagerRef, React.PropsWithChildren<Props>>(
         }
         lastOffset.current = offset
       },
-      [lastOffset, lastDirection, onPageSelecting],
-    )
+    })
 
     const handlePageScrollStateChanged = React.useCallback(
       (e: PageScrollStateChangedNativeEvent) => {
@@ -136,17 +154,36 @@ export const Pager = forwardRef<PagerRef, React.PropsWithChildren<Props>>(
         {renderTabBar({
           selectedPage,
           onSelect: onTabBarSelect,
+          pageOffset,
         })}
-        <PagerView
+        <AnimatedPagerView
           ref={pagerView}
           style={[a.flex_1]}
           initialPage={initialPage}
           onPageScrollStateChanged={handlePageScrollStateChanged}
           onPageSelected={onPageSelectedInner}
-          onPageScroll={onPageScroll}>
+          onPageScroll={scrollHandler}>
           {children}
-        </PagerView>
+        </AnimatedPagerView>
       </View>
     )
   },
 )
+
+// taken from official pager-view reanimated example https://github.com/callstack/react-native-pager-view/blob/master/example/src/ReanimatedOnPageScrollExample.tsx
+function usePagerScrollHandler(handlers: any, dependencies?: any) {
+  const {context, doDependenciesDiffer} = useHandler(handlers, dependencies)
+  const subscribeForEvents = ['onPageScroll']
+
+  return useEvent<any>(
+    event => {
+      'worklet'
+      const {onPageScroll} = handlers
+      if (onPageScroll && event.eventName.endsWith('onPageScroll')) {
+        onPageScroll(event, context)
+      }
+    },
+    subscribeForEvents,
+    doDependenciesDiffer,
+  )
+}

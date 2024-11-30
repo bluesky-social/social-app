@@ -97,6 +97,7 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
               scrollY={scrollY}
               testID={testID}
               allowHeaderOverScroll={allowHeaderOverScroll}
+              pageOffset={props.pageOffset}
             />
           </PagerHeaderProvider>
         )
@@ -231,6 +232,7 @@ let PagerTabBar = ({
   onCurrentPageSelected,
   onSelect,
   allowHeaderOverScroll,
+  pageOffset,
 }: {
   currentPage: number
   headerOnlyHeight: number
@@ -244,6 +246,7 @@ let PagerTabBar = ({
   onCurrentPageSelected?: (index: number) => void
   onSelect?: (index: number) => void
   allowHeaderOverScroll?: boolean
+  pageOffset: SharedValue<number>
 }): React.ReactNode => {
   const headerTransform = useAnimatedStyle(() => {
     const translateY = Math.min(scrollY.get(), headerOnlyHeight) * -1
@@ -302,6 +305,7 @@ let PagerTabBar = ({
           selectedPage={currentPage}
           onSelect={onSelect}
           onPressSelected={onCurrentPageSelected}
+          pageOffset={pageOffset}
         />
       </View>
     </Animated.View>
