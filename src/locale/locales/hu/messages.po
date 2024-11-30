@@ -397,7 +397,7 @@ msgstr "<0>{0}</0> szerepel a kezdőcsomagodban"
 
 #: src/components/WhoCanReply.tsx:274
 msgid "<0>{0}</0> members"
-msgstr "<0>{0}</0> tag"
+msgstr "a(z) <0>{0}</0> lista tagjai"
 
 #: src/components/dms/DateDivider.tsx:69
 msgid "<0>{date}</0> at {time}"
@@ -2032,7 +2032,7 @@ msgstr "Bejegyzés törlése"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:93
 msgid "Deleted"
-msgstr "Törölted a tartalmat"
+msgstr "Törölt tartalom"
 
 #: src/components/dms/MessagesListHeader.tsx:150
 #: src/screens/Messages/components/ChatListItem.tsx:107
@@ -3928,7 +3928,7 @@ msgstr ""
 
 #: src/components/WhoCanReply.tsx:254
 msgid "mentioned users"
-msgstr "megemlített felhasználó"
+msgstr "a megemlített felhasználók"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:393
 msgid "Mentioned users"
@@ -4584,7 +4584,7 @@ msgstr "Csak a .jpg és a .png formátumok támogatottak"
 
 #: src/components/WhoCanReply.tsx:217
 msgid "Only {0} can reply."
-msgstr "Csak {0} válaszolhat."
+msgstr "Csak {0} válaszolhatnak."
 
 #: src/screens/Signup/StepHandle.tsx:152
 msgid "Only contains letters, numbers, and hyphens"
@@ -7590,7 +7590,7 @@ msgstr "Felhasználók"
 
 #: src/components/WhoCanReply.tsx:258
 msgid "users followed by <0>@{0}</0>"
-msgstr "felhasználót követ <0>@{0}</0>"
+msgstr "a(z) <0>@{0}</0> által követett felhasználók"
 
 #: src/screens/Messages/Settings.tsx:86 src/screens/Messages/Settings.tsx:89
 msgid "Users I follow"
