@@ -2,6 +2,7 @@ import {useCallback} from 'react'
 import {LayoutChangeEvent, ScrollView, StyleSheet, View} from 'react-native'
 import Animated, {
   interpolate,
+  runOnJS,
   runOnUI,
   scrollTo,
   SharedValue,
@@ -37,11 +38,55 @@ export function TabBar({
   const pal = usePalette('default')
   const scrollElRef = useAnimatedRef<ScrollView>()
   const isSyncingScroll = useSharedValue(true)
+  const didInitialScroll = useSharedValue(false)
   const contentSize = useSharedValue(0)
   const containerSize = useSharedValue(0)
   const scrollX = useSharedValue(0)
   const layouts = useSharedValue<{x: number; width: number}[]>([])
   const itemsLength = items.length
+
+  const scrollToOffsetJS = useCallback(
+    (x: number) => {
+      scrollElRef.current?.scrollTo({
+        x,
+        y: 0,
+        animated: true,
+      })
+    },
+    [scrollElRef],
+  )
+
+  // When we know the entire layout for the first time, scroll selection into view.
+  useAnimatedReaction(
+    () => {
+      return {
+        layoutsLength: layouts.get().length,
+        containerSizeValue: containerSize.get(),
+        contentSizeValue: contentSize.get(),
+      }
+    },
+    (nextLayouts, prevLayouts) => {
+      if (
+        nextLayouts.containerSizeValue !== prevLayouts?.containerSizeValue ||
+        nextLayouts.contentSizeValue !== prevLayouts?.contentSizeValue ||
+        nextLayouts.layoutsLength !== prevLayouts?.layoutsLength
+      ) {
+        if (
+          nextLayouts.containerSizeValue !== 0 &&
+          nextLayouts.contentSizeValue !== 0 &&
+          nextLayouts.layoutsLength === itemsLength &&
+          didInitialScroll.get() === false
+        ) {
+          didInitialScroll.set(true)
+          const offsetPerPage = contentSize.get() - containerSize.get()
+          const progress = dragProgress.get()
+          const offset = (progress / (itemsLength - 1)) * offsetPerPage
+          // It's unclear why we need to go back to JS here. It seems iOS-specific.
+          runOnJS(scrollToOffsetJS)(offset)
+        }
+      }
+    },
+  )
 
   // When you swipe the pager, the tabbar should scroll automatically
   // as you're dragging the page and then even during deceleration.
