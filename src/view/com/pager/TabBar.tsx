@@ -224,6 +224,9 @@ export function TabBar({
         opacity: 0,
       }
     }
+    if (layoutsValue.length === 1) {
+      return {opacity: 1}
+    }
     return {
       opacity: 1,
       transform: [
