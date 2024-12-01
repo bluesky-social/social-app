@@ -13,6 +13,10 @@ import {
   ComAtprotoRepoStrongRef,
   RichText,
 } from '@atproto/api'
+
+// Add this type definition
+type ReplyRef = string
+
 import {TID} from '@atproto/common-web'
 import * as dcbor from '@ipld/dag-cbor'
 import {t} from '@lingui/macro'
@@ -23,6 +27,7 @@ import * as Hasher from 'multiformats/hashes/hasher'
 
 import {isNetworkError} from '#/lib/strings/errors'
 import {shortenLinks, stripInvalidMentions} from '#/lib/strings/rich-text-manip'
+import {getCurrentTime} from '#/lib/time/provider'
 import {logger} from '#/logger'
 import {compressImage} from '#/state/gallery'
 import {
@@ -36,18 +41,20 @@ import {
 import {
   EmbedDraft,
   PostDraft,
-  ThreadDraft,
+  ThreadDraft as Thread,
 } from '#/view/com/composer/state/composer'
 import {createGIFDescription} from '../gif-alt-text'
 import {uploadBlob} from './upload-blob'
 
 export {uploadBlob}
 
-interface PostOpts {
-  thread: ThreadDraft
-  replyTo?: string
-  onStateChange?: (state: string) => void
-  langs?: string[]
+export interface PostOpts {
+  thread: Thread
+  replyTo?: ReplyRef
+  quote?: string
+  customTimestamp?: string
+  onStateChange?: (msg: string) => void
+  langs?: string[] // Add the langs property as an optional string array
 }
 
 export async function post(
@@ -75,10 +82,10 @@ export async function post(
 
   const did = agent.assertDid
   const writes: ComAtprotoRepoApplyWrites.Create[] = []
-  const uris: string[] = []
 
-  let now = new Date()
-  let tid: TID | undefined
+  const now = getCurrentTime() // Replace direct Date usage
+  let tid = TID.next()
+  const uris: string[] = []
 
   for (let i = 0; i < thread.posts.length; i++) {
     const draft = thread.posts[i]
@@ -101,7 +108,6 @@ export async function post(
 
     // The sorting behavior for multiple posts sharing the same createdAt time is
     // undefined, so what we'll do here is increment the time by 1 for every post
-    now.setMilliseconds(now.getMilliseconds() + 1)
     tid = TID.next(tid)
     const rkey = tid.toString()
     const uri = `at://${did}/app.bsky.feed.post/${rkey}`
@@ -114,7 +120,7 @@ export async function post(
       // IMPORTANT: $type has to exist, CID is calculated with the `$type` field
       // present and will produce the wrong CID if you omit it.
       $type: 'app.bsky.feed.post',
-      createdAt: now.toISOString(),
+      createdAt: opts.customTimestamp || now.toISOString(),
       text: rt.text,
       facets: rt.facets,
       reply,

@@ -90,6 +90,7 @@ import {useComposerControls} from '#/state/shell/composer'
 import {ComposerOpts} from '#/state/shell/composer'
 import {CharProgress} from '#/view/com/composer/char-progress/CharProgress'
 import {ComposerReplyTo} from '#/view/com/composer/ComposerReplyTo'
+import {CustomTimestampPicker} from '#/view/com/composer/CustomTimestampPicker'
 import {
   ExternalEmbedGif,
   ExternalEmbedLink,
@@ -174,6 +175,7 @@ export const ComposePost = ({
   const [isPublishing, setIsPublishing] = useState(false)
   const [publishingStage, setPublishingStage] = useState('')
   const [error, setError] = useState('')
+  const [customTimestamp, setCustomTimestamp] = useState<string | undefined>()
 
   const [composerState, composerDispatch] = useReducer(
     composerReducer,
@@ -353,6 +355,10 @@ export const ComposePost = ({
         ),
     )
 
+  const handleTimestampChange = useCallback((date: Date | null) => {
+    setCustomTimestamp(date?.toISOString())
+  }, [])
+
   const onPressPublish = React.useCallback(async () => {
     if (isPublishing) {
       return
@@ -383,6 +389,7 @@ export const ComposePost = ({
         await apilib.post(agent, queryClient, {
           thread,
           replyTo: replyTo?.uri,
+          customTimestamp, // Add custom timestamp
           onStateChange: setPublishingStage,
           langs: toPostLanguages(langPrefs.postLanguage),
         })
@@ -482,6 +489,7 @@ export const ComposePost = ({
     replyTo,
     setLangPrefs,
     queryClient,
+    customTimestamp, // Add to dependencies
   ])
 
   // Preserves the referential identity passed to each post item.
@@ -640,6 +648,7 @@ export const ComposePost = ({
             onContentSizeChange={onScrollViewContentSizeChange}
             onLayout={onScrollViewLayout}>
             {replyTo ? <ComposerReplyTo replyTo={replyTo} /> : undefined}
+            <CustomTimestampPicker onTimestampChange={handleTimestampChange} />
             {thread.posts.map((post, index) => (
               <React.Fragment key={post.id}>
                 <ComposerPost
