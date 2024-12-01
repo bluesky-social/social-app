@@ -2,8 +2,7 @@
 module.exports = {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   darkMode: ['variant', [
-    '&:is(.dark *)',
-    '@media (prefers-color-scheme: dark) { &:not(.light *) }',
+    '&:is(.dark *):not(:is(.dark .light *))',
   ]],
   theme: {
     extend: {
