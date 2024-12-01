@@ -1,5 +1,6 @@
 import React, {memo} from 'react'
 import {StyleSheet, View} from 'react-native'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {
   AppBskyActorDefs,
   AppBskyLabelerDefs,
@@ -13,14 +14,19 @@ import {ProfileHeaderLabeler} from './ProfileHeaderLabeler'
 import {ProfileHeaderStandard} from './ProfileHeaderStandard'
 
 let ProfileHeaderLoading = (_props: {}): React.ReactNode => {
+  const {top: topInset} = useSafeAreaInsets()
   const t = useTheme()
   return (
     <View style={t.atoms.bg}>
-      <LoadingPlaceholder width="100%" height={150} style={{borderRadius: 0}} />
+      <LoadingPlaceholder
+        width="100%"
+        height={150 + topInset}
+        style={{borderRadius: 0}}
+      />
       <View
         style={[
           t.atoms.bg,
-          {borderColor: t.atoms.bg.backgroundColor},
+          {borderColor: t.atoms.bg.backgroundColor, top: 110 + topInset},
           styles.avi,
         ]}>
         <LoadingPlaceholder width={90} height={90} style={styles.br45} />
@@ -60,7 +66,6 @@ export {ProfileHeader}
 const styles = StyleSheet.create({
   avi: {
     position: 'absolute',
-    top: 110,
     left: 10,
     width: 94,
     height: 94,

@@ -32,11 +32,13 @@ export function UserBanner({
   banner,
   moderation,
   onSelectNewBanner,
+  topInset = 0,
 }: {
   type?: 'labeler' | 'default'
   banner?: string | null
   moderation?: ModerationUI
   onSelectNewBanner?: (img: RNImage | null) => void
+  topInset?: number
 }) {
   const pal = usePalette('default')
   const theme = useTheme()
@@ -45,6 +47,10 @@ export function UserBanner({
   const {requestCameraAccessIfNeeded} = useCameraPermission()
   const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
   const sheetWrapper = useSheetWrapper()
+
+  const bannerHeightStyle = {
+    height: 150 + topInset,
+  }
 
   const onOpenCamera = React.useCallback(async () => {
     if (!(await requestCameraAccessIfNeeded())) {
@@ -98,7 +104,7 @@ export function UserBanner({
               {banner ? (
                 <Image
                   testID="userBannerImage"
-                  style={styles.bannerImage}
+                  style={[styles.bannerImage, bannerHeightStyle]}
                   source={{uri: banner}}
                   accessible={true}
                   accessibilityIgnoresInvertColors
@@ -106,7 +112,11 @@ export function UserBanner({
               ) : (
                 <View
                   testID="userBannerFallback"
-                  style={[styles.bannerImage, t.atoms.bg_contrast_25]}
+                  style={[
+                    styles.placeholderImage,
+                    t.atoms.bg_contrast_25,
+                    bannerHeightStyle,
+                  ]}
                 />
               )}
               <View style={[styles.editButtonContainer, pal.btn]}>
@@ -168,6 +178,7 @@ export function UserBanner({
       testID="userBannerImage"
       style={[
         styles.bannerImage,
+        bannerHeightStyle,
         {backgroundColor: theme.palette.default.backgroundLight},
       ]}
       resizeMode="cover"
@@ -181,6 +192,7 @@ export function UserBanner({
       testID="userBannerFallback"
       style={[
         styles.bannerImage,
+        bannerHeightStyle,
         type === 'labeler' ? styles.labelerBanner : t.atoms.bg_contrast_25,
       ]}
     />
@@ -202,6 +214,10 @@ const styles = StyleSheet.create({
   bannerImage: {
     width: '100%',
     height: 150,
+  },
+  placeholderImage: {
+    width: '100%',
+    height: 100,
   },
   labelerBanner: {
     backgroundColor: tokens.color.temp_purple,

@@ -10,6 +10,7 @@ import Animated, {
   useAnimatedReaction,
   useAnimatedStyle,
 } from 'react-native-reanimated'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {BlurView} from 'expo-blur'
 import {useIsFetching} from '@tanstack/react-query'
 
@@ -60,13 +61,15 @@ function GrowableBannerInner({
   backButton?: React.ReactNode
   children: React.ReactNode
 }) {
+  const {top: topInset} = useSafeAreaInsets()
   const isFetching = useIsProfileFetching()
   const animateSpinner = useShouldAnimateSpinner({isFetching, scrollY})
+  const BASE_HEIGHT = -150 - topInset
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [
       {
-        scale: interpolate(scrollY.get(), [-150, 0], [2, 1], {
+        scale: interpolate(scrollY.get(), [BASE_HEIGHT, 0], [2, 1], {
           extrapolateRight: Extrapolation.CLAMP,
         }),
       },
@@ -95,7 +98,7 @@ function GrowableBannerInner({
         Extrapolation.CLAMP,
       ),
       transform: [
-        {translateY: interpolate(scrollYValue, [-150, 0], [-75, 0])},
+        {translateY: interpolate(scrollYValue, [BASE_HEIGHT, 0], [-75, 0])},
         {rotate: '90deg'},
       ],
     }
@@ -104,9 +107,14 @@ function GrowableBannerInner({
   const animatedBackButtonStyle = useAnimatedStyle(() => ({
     transform: [
       {
-        translateY: interpolate(scrollY.get(), [-150, 60], [-150, 60], {
-          extrapolateRight: Extrapolation.CLAMP,
-        }),
+        translateY: interpolate(
+          scrollY.get(),
+          [BASE_HEIGHT, 60],
+          [BASE_HEIGHT, 60],
+          {
+            extrapolateRight: Extrapolation.CLAMP,
+          },
+        ),
       },
     ],
   }))
@@ -117,7 +125,7 @@ function GrowableBannerInner({
         style={[
           a.absolute,
           {left: 0, right: 0, bottom: 0},
-          {height: 150},
+          {height: BASE_HEIGHT},
           {transformOrigin: 'bottom'},
           animatedStyle,
         ]}>

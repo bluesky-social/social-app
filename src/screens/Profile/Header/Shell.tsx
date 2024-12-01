@@ -1,6 +1,7 @@
 import React, {memo} from 'react'
 import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native'
 import {MeasuredDimensions, runOnJS, runOnUI} from 'react-native-reanimated'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {AppBskyActorDefs, ModerationDecision} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg} from '@lingui/macro'
@@ -45,6 +46,7 @@ let ProfileHeaderShell = ({
   const navigation = useNavigation<NavigationProp>()
   const {isDesktop} = useWebMediaQueries()
   const aviRef = useHandleRef()
+  const {top: topInset} = useSafeAreaInsets()
 
   const onPressBack = React.useCallback(() => {
     if (navigation.canGoBack()) {
@@ -99,26 +101,34 @@ let ProfileHeaderShell = ({
     <View style={t.atoms.bg} pointerEvents={isIOS ? 'auto' : 'box-none'}>
       <View
         pointerEvents={isIOS ? 'auto' : 'box-none'}
-        style={[a.relative, {height: 150}]}>
+        style={[a.relative, {height: 150 + topInset}]}>
         <GrowableBanner
           backButton={
             <>
               {!isDesktop && !hideBackButton && (
-                <TouchableWithoutFeedback
-                  testID="profileHeaderBackBtn"
-                  onPress={onPressBack}
-                  hitSlop={BACK_HITSLOP}
-                  accessibilityRole="button"
-                  accessibilityLabel={_(msg`Back`)}
-                  accessibilityHint="">
-                  <View style={styles.backBtnWrapper}>
-                    <FontAwesomeIcon
-                      size={18}
-                      icon="angle-left"
-                      color="white"
-                    />
-                  </View>
-                </TouchableWithoutFeedback>
+                <View
+                  style={[
+                    styles.backBtnWrapper,
+                    {
+                      top: topInset + 10,
+                    },
+                  ]}>
+                  <TouchableWithoutFeedback
+                    testID="profileHeaderBackBtn"
+                    onPress={onPressBack}
+                    hitSlop={BACK_HITSLOP}
+                    accessibilityRole="button"
+                    accessibilityLabel={_(msg`Back`)}
+                    accessibilityHint="">
+                    <View>
+                      <FontAwesomeIcon
+                        size={18}
+                        icon="angle-left"
+                        color="white"
+                      />
+                    </View>
+                  </TouchableWithoutFeedback>
+                </View>
               )}
             </>
           }>
@@ -133,6 +143,7 @@ let ProfileHeaderShell = ({
               type={profile.associated?.labeler ? 'labeler' : 'default'}
               banner={profile.banner}
               moderation={moderation.ui('banner')}
+              topInset={topInset}
             />
           )}
         </GrowableBanner>
@@ -152,7 +163,13 @@ let ProfileHeaderShell = ({
         </View>
       )}
 
-      <GrowableAvatar style={styles.aviPosition}>
+      <GrowableAvatar
+        style={[
+          styles.aviPosition,
+          {
+            top: 110 + topInset,
+          },
+        ]}>
         <TouchableWithoutFeedback
           testID="profileHeaderAviButton"
           onPress={onPressAvi}
