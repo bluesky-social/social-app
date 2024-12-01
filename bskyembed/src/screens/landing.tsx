@@ -129,7 +129,7 @@ function LandingPage() {
         placeholder={DEFAULT_POST}
       />
 
-      <details className="group/options overflow-clip border rounded-lg dark:border-slate-500 w-full max-w-[600px] flex flex-col gap-2">
+      <details className="group/options overflow-clip border rounded-lg dark:border-slate-500 w-full max-w-[600px] flex flex-col">
         <summary className="px-4 py-2 cursor-pointer group-open/options:bg-neutral-100 dark:group-open/options:bg-dimmedBgLighten">
           Want more customize?
         </summary>
