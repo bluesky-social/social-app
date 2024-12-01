@@ -166,13 +166,13 @@ export function NotificationLoadingPlaceholder({
         <Icon size="xl" style={{color: pal.colors.backgroundLight}} />
       </View>
       <View style={{flex: 1}}>
-        <View style={[a.flex_row, s.mb10]}>
-          {Array.from({length: Math.floor(Math.random() * 4 + 1)}, (_, i) => (
+        <View style={[a.flex_row, s.mb10, a.gap_xs]}>
+          {Array.from({length: Math.floor(Math.random() * 5 + 1)}, (_, i) => (
             <LoadingPlaceholder
               key={i}
               width={35}
               height={35}
-              style={styles.smallAvatar}
+              style={[a.rounded_full]}
             />
           ))}
         </View>
@@ -356,10 +356,6 @@ const styles = StyleSheet.create({
     margin: 1,
   },
   profileCardAvi: {
-    borderRadius: 999,
-    marginRight: 10,
-  },
-  smallAvatar: {
     borderRadius: 999,
     marginRight: 10,
   },
