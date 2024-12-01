@@ -193,6 +193,7 @@ function NavItem({count, href, icon, iconFilled, label}: NavItemProps) {
         a.rounded_sm,
         a.gap_sm,
         a.outline_inset_1,
+        a.transition_color,
       ]}
       hoverStyle={t.atoms.bg_contrast_25}
       // @ts-ignore the function signature differs on web -prf

@@ -544,7 +544,7 @@ function MobileComposePrompt({onPressReply}: {onPressReply: () => unknown}) {
         styles.prompt,
         fabMinimalShellTransform,
         {
-          bottom: clamp(safeAreaInsets.bottom, 15, 30),
+          bottom: clamp(safeAreaInsets.bottom, 13, 30),
         },
       ]}>
       <PostThreadComposePrompt onPressCompose={onPressReply} />
