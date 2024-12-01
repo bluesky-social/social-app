@@ -1,0 +1,16 @@
+diff --git a/node_modules/react-native-compressor/package.json b/node_modules/react-native-compressor/package.json
+index 8adf7dc..8dd43a6 100644
+--- a/node_modules/react-native-compressor/package.json
++++ b/node_modules/react-native-compressor/package.json
+@@ -197,11 +197,6 @@
+         "name": "RNCompressorSpec",
+         "type": "modules",
+         "jsSrcsDir": "src"
+-      },
+-      {
+-        "name": "RNVideoCompressorSpec",
+-        "type": "modules",
+-        "jsSrcsDir": "src"
+       }
+     ]
+   }
