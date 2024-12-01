@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-30 14:57\n"
+"PO-Revision-Date: 2024-12-01 13:20\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional, Hong Kong\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -2887,11 +2887,11 @@ msgstr "「Following」動態源設定"
 
 #: src/screens/Profile/Header/Handle.tsx:32
 msgid "Follows you"
-msgstr "跟你"
+msgstr "跟緊你"
 
 #: src/components/Pills.tsx:175
 msgid "Follows You"
-msgstr "跟你"
+msgstr "跟緊你"
 
 #: src/screens/Settings/AppearanceSettings.tsx:133
 msgid "Font"
@@ -6866,7 +6866,7 @@ msgstr "呢個用户啱嚟冇耐，撳呢度知多啲佢哋幾時入嚟嘅資訊
 
 #: src/view/com/profile/ProfileFollows.tsx:96
 msgid "This user isn't following anyone."
-msgstr "呢個用戶未有跟緊任何人。"
+msgstr "呢個用戶未有跟過任何人。"
 
 #: src/components/dialogs/MutedWords.tsx:435
 msgid "This will delete \"{0}\" from your muted words. You can always add it back later."
@@ -7719,7 +7719,7 @@ msgstr "你唔得上載影片。"
 
 #: src/view/com/profile/ProfileFollows.tsx:95
 msgid "You are not following anyone."
-msgstr "你未有跟過任何用戶。"
+msgstr "你未有跟過任何人。"
 
 #: src/view/com/posts/FollowingEmptyState.tsx:63
 #: src/view/com/posts/FollowingEndOfFeed.tsx:64

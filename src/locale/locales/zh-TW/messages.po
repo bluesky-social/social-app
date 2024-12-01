@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-30 14:56\n"
+"PO-Revision-Date: 2024-12-01 13:21\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -1288,7 +1288,7 @@ msgstr "對話設定"
 
 #: src/components/dms/ConvoMenu.tsx:84
 msgid "Chat unmuted"
-msgstr "成功解除靜音對話"
+msgstr "成功取消靜音對話"
 
 #: src/screens/SignupQueued.tsx:79
 #: src/screens/SignupQueued.tsx:83
@@ -2561,7 +2561,7 @@ msgstr "將於 {0} 過期"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:47
 msgid "Explicit or potentially disturbing media."
-msgstr "血腥、露骨或災害等可能會導致不安的媒體內容。"
+msgstr "血腥、露骨或災害等可能會使人反感的媒體內容。"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:35
 msgid "Explicit sexual images."
@@ -3048,7 +3048,7 @@ msgstr "前往用戶的個人檔案"
 #: src/view/com/composer/labels/LabelsBtn.tsx:202
 #: src/view/com/composer/labels/LabelsBtn.tsx:205
 msgid "Graphic Media"
-msgstr "敏感/駭人媒體"
+msgstr "敏感/寫實媒體"
 
 #: src/state/shell/progress-guide.tsx:161
 msgid "Half way there!"
@@ -3635,7 +3635,7 @@ msgstr "成功解除封鎖列表"
 
 #: src/view/screens/ProfileList.tsx:409
 msgid "List unmuted"
-msgstr "成功解除靜音列表"
+msgstr "成功取消靜音列表"
 
 #: src/Navigation.tsx:134
 #: src/view/screens/Profile.tsx:227
@@ -6213,11 +6213,11 @@ msgstr "排序回覆"
 
 #: src/screens/Settings/ThreadPreferences.tsx:54
 msgid "Sort replies by"
-msgstr "排序回覆"
+msgstr "回覆排序方式"
 
 #: src/screens/Settings/ThreadPreferences.tsx:51
 msgid "Sort replies to the same post by:"
-msgstr "貼文下回覆的排序方式："
+msgstr "貼文下的回覆顯示順序："
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:168
 msgid "Source:"
@@ -6274,7 +6274,7 @@ msgstr "新手包能讓您輕鬆地與朋友分享喜愛的動態源與人物。
 #: src/screens/Settings/AboutSettings.tsx:45
 #: src/screens/Settings/AboutSettings.tsx:48
 msgid "Status Page"
-msgstr "服務運作狀態頁面"
+msgstr "服務狀態頁面"
 
 #: src/screens/Signup/index.tsx:130
 msgid "Step {0} of {1}"
@@ -6456,7 +6456,7 @@ msgstr "謝謝！您的電子郵件地址已成功驗證。"
 #: src/components/dms/ReportDialog.tsx:129
 #: src/components/ReportDialog/SubmitView.tsx:82
 msgid "Thank you. Your report has been sent."
-msgstr "謝謝，您的檢舉已提交。"
+msgstr "謝謝，已送出您的檢舉。"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:82
 msgid "Thanks, you have successfully verified your email address. You can close this dialog."
@@ -6577,7 +6577,7 @@ msgstr "主題"
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:86
 msgid "There is no time limit for account deactivation, come back any time."
-msgstr "帳號停用沒有時間限制，隨時都可以重新啟用。"
+msgstr "停用帳號沒有時間限制，隨時歡迎您回來看看。"
 
 #: src/components/dialogs/GifSelect.tsx:226
 msgid "There was an issue connecting to Tenor."
@@ -7105,7 +7105,7 @@ msgstr "成功從您的動態源中取消釘選"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:236
 msgid "Unsubscribe"
-msgstr "取消套用"
+msgstr "取消訂閱"
 
 #: src/screens/List/ListHiddenScreen.tsx:184
 #: src/screens/List/ListHiddenScreen.tsx:194
@@ -7413,7 +7413,7 @@ msgstr "檢視已封鎖用戶的個人檔案"
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:98
 msgid "View blogpost for more details"
-msgstr "參閱部落格文章以瞭解詳細資訊"
+msgstr "閱讀部落格文章以瞭解更多資訊"
 
 #: src/view/screens/Log.tsx:57
 msgid "View debug entry"
@@ -7728,7 +7728,7 @@ msgstr "您也可以探索並跟隨一些自訂動態源。"
 
 #: src/view/com/modals/DeleteAccount.tsx:202
 msgid "You can also temporarily deactivate your account instead, and reactivate it at any time."
-msgstr "您也可以暫時停用帳號，然後隨時重新啟用。"
+msgstr "您也可以暫時停用帳號，日後隨時都可以重新啟用。"
 
 #: src/screens/Messages/Settings.tsx:105
 msgid "You can continue ongoing conversations regardless of which setting you choose."
@@ -7983,7 +7983,7 @@ msgstr "您的帳號太新以至於無法上傳影片。請稍後重試。"
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:65
 msgid "Your account repository, containing all public data records, can be downloaded as a \"CAR\" file. This file does not include media embeds, such as images, or your private data, which must be fetched separately."
-msgstr "您可以將您的帳號儲存庫下載為一個「CAR」檔案。該檔案包含了所有公開的資料紀錄，但不包括嵌入媒體，例如圖片或您的私人資料，目前這些資料必須另外擷取。"
+msgstr "您可以將帳號的所有公開資料匯出為一個「CAR」檔案。但請注意，這不包括嵌入媒體 (如圖片和影片) 或私人資料 (如對話紀錄)，這些資料需要單獨擷取。"
 
 #: src/screens/Signup/StepInfo/index.tsx:211
 msgid "Your birth date"
