@@ -142,15 +142,19 @@ const desktopStyles = StyleSheet.create({
     width: 598,
   },
   contentContainer: {
+    flexGrow: 1,
     paddingHorizontal: 0,
     backgroundColor: 'transparent',
   },
   item: {
+    flexGrow: 1,
+    alignItems: 'stretch',
     paddingTop: 14,
     paddingHorizontal: 14,
     justifyContent: 'center',
   },
   itemInner: {
+    alignItems: 'center',
     paddingBottom: 12,
     borderBottomWidth: 3,
     borderBottomColor: 'transparent',
@@ -169,15 +173,20 @@ const mobileStyles = StyleSheet.create({
     flexDirection: 'row',
   },
   contentContainer: {
+    flexGrow: 1,
     backgroundColor: 'transparent',
     paddingHorizontal: 6,
   },
   item: {
+    flexGrow: 1,
+    alignItems: 'stretch',
     paddingTop: 10,
     paddingHorizontal: 10,
     justifyContent: 'center',
   },
   itemInner: {
+    flexGrow: 1,
+    alignItems: 'center',
     paddingBottom: 10,
     borderBottomWidth: 3,
     borderBottomColor: 'transparent',
