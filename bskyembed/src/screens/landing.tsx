@@ -6,7 +6,11 @@ import {useEffect, useMemo, useRef, useState} from 'preact/hooks'
 
 import arrowBottom from '../../assets/arrowBottom_stroke2_corner0_rounded.svg'
 import logo from '../../assets/logo.svg'
-import {assertColorModeValues, initColorMode} from '../color-mode'
+import {
+  assertColorModeValues,
+  ColorModeValues,
+  initColorMode,
+} from '../color-mode'
 import {Container} from '../components/container'
 import {Link} from '../components/link'
 import {Post} from '../components/post'
@@ -202,7 +206,7 @@ function Snippet({
   colorMode,
 }: {
   thread: AppBskyFeedDefs.ThreadViewPost
-  colorMode: 'auto' | 'light' | 'dark'
+  colorMode: ColorModeValues
 }) {
   const ref = useRef<HTMLInputElement>(null)
   const [copied, setCopied] = useState(false)
