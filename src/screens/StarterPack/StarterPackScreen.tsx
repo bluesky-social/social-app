@@ -306,6 +306,7 @@ function Header({
   const {captureAction} = useProgressGuideControls()
 
   const [isProcessing, setIsProcessing] = React.useState(false)
+  const [areAllFollowed, setAreAllFollowed] = React.useState(false)
 
   const {record, creator} = starterPack
   const isOwn = creator?.did === currentAccount?.did
@@ -379,6 +380,7 @@ function Header({
       }
     })
     Toast.show(_(msg`All accounts have been followed!`))
+    setAreAllFollowed(true)
     captureAction(ProgressGuideAction.Follow, dids.length)
     logEvent('starterPack:followAll', {
       logContext: 'StarterPackProfilesList',
@@ -422,7 +424,7 @@ function Header({
                   <Trans>Share</Trans>
                 </ButtonText>
               </Button>
-            ) : (
+            ) : !areAllFollowed ? (
               <Button
                 label={_(msg`Follow all`)}
                 variant="solid"
@@ -436,6 +438,8 @@ function Header({
                 </ButtonText>
                 {isProcessing && <Loader size="xs" />}
               </Button>
+            ) : (
+              <></>
             )}
             <OverflowMenu
               routeParams={routeParams}
