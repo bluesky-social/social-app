@@ -5893,7 +5893,7 @@
     hermes-parser "0.23.1"
     nullthrows "^1.1.1"
 
-"@react-native/normalize-colors@0.74.85", "@react-native/normalize-colors@0.76.1", "@react-native/normalize-colors@0.76.3", "@react-native/normalize-colors@^0.73.0", "@react-native/normalize-colors@^0.74.1", "@react-native/normalize-colors@~0.74.83":
+"@react-native/normalize-colors@0.74.85", "@react-native/normalize-colors@0.76.1", "@react-native/normalize-colors@0.76.3", "@react-native/normalize-colors@^0.73.0", "@react-native/normalize-colors@^0.74.1":
   version "0.76.1"
   resolved "https://registry.yarnpkg.com/@react-native/normalize-colors/-/normalize-colors-0.76.1.tgz#df8d54d78917a9f075283382fec834f5ccaecefd"
   integrity sha512-/+CUk/wGWIdXbJYVLw/q6Fs8Z0x91zzfXIbNiZUdSW1TNEDmytkF371H8a1/Nx3nWa1RqCMVsaZHCG4zqxeDvg==
@@ -10777,12 +10777,12 @@ expo-structured-headers@~4.0.0:
   resolved "https://registry.yarnpkg.com/expo-structured-headers/-/expo-structured-headers-4.0.0.tgz#85537ae6daec61ebfb214ede4107c8841c6e16d0"
   integrity sha512-uPiwZjWq3AdFGgY52+I2nGPrNa6izxAglymPXHUZLekZW290GqIUOk7MBNDD4sg4JwUbSi3gdxEurpEvuq+FSg==
 
-expo-system-ui@^3.0.4:
-  version "3.0.4"
-  resolved "https://registry.yarnpkg.com/expo-system-ui/-/expo-system-ui-3.0.4.tgz#5ace49d38eb03c09a8041b3b82c581a6b974741a"
-  integrity sha512-v1n6hBO30k9qw6RE8/au4yNoovs71ExGuXizJUlR5KSo4Ruogpb+0/2q3uRZMDIYWWCANvms8L0UOh6fQJ5TXg==
+expo-system-ui@^4.0.4:
+  version "4.0.4"
+  resolved "https://registry.yarnpkg.com/expo-system-ui/-/expo-system-ui-4.0.4.tgz#b04b6e38310882f4ac4d4aafbdd0e487a559a707"
+  integrity sha512-HShVNcHhdxl2zwlophX2ghjDr40Kexxa2hdeDhZliBoQkOkVrmp28agY+2W8pibAmQDIjjGAEYai07C0U8xQ8w==
   dependencies:
-    "@react-native/normalize-colors" "~0.74.83"
+    "@react-native/normalize-colors" "0.76.3"
     debug "^4.3.2"
 
 expo-task-manager@~12.0.1:
