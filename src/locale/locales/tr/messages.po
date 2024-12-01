@@ -533,7 +533,7 @@ msgstr "Hesap engellendi"
 
 #: src/view/com/profile/ProfileMenu.tsx:145
 msgid "Account followed"
-msgstr ""
+msgstr "Hesap takip edildi"
 
 #: src/view/com/profile/ProfileMenu.tsx:108
 msgid "Account muted"
@@ -563,7 +563,7 @@ msgstr "Hesap engeli kaldırıldı"
 
 #: src/view/com/profile/ProfileMenu.tsx:157
 msgid "Account unfollowed"
-msgstr ""
+msgstr "Hesap takibi bırakıldı"
 
 #: src/view/com/profile/ProfileMenu.tsx:98
 msgid "Account unmuted"
@@ -578,7 +578,7 @@ msgstr "Ekle"
 
 #: src/screens/StarterPack/Wizard/index.tsx:574
 msgid "Add {0} more to continue"
-msgstr ""
+msgstr "Devam etmek için {0} tane daha ekleyin"
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:58
 msgid "Add {displayName} to starter pack"
@@ -984,7 +984,7 @@ msgstr ""
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:55
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:58
 msgid "App passwords"
-msgstr ""
+msgstr "Uygulama şifreleri"
 
 #: src/Navigation.tsx:289
 #: src/screens/Settings/AppPasswords.tsx:47
@@ -1347,7 +1347,7 @@ msgstr "Görüntüleri bulanıklaştır"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:51
 msgid "Blur images and filter from feeds"
-msgstr ""
+msgstr "Akışlardaki görüntüleri bulanıklaştır ve filtrele"
 
 #: src/screens/Onboarding/index.tsx:30
 #: src/screens/Onboarding/state.ts:83
@@ -1381,7 +1381,7 @@ msgstr ""
 #: src/screens/Home/NoFeedsPinned.tsx:103
 #: src/screens/Home/NoFeedsPinned.tsx:109
 msgid "Browse other feeds"
-msgstr ""
+msgstr "Diğer akışlara göz at"
 
 #: src/view/screens/Settings.tsx:841
 #~ msgid "Build version {0} {1}"
@@ -4769,7 +4769,7 @@ msgstr "Mesaj {0}"
 #: src/components/dms/MessageMenu.tsx:72
 #: src/screens/Messages/components/ChatListItem.tsx:165
 msgid "Message deleted"
-msgstr ""
+msgstr "Mesaj silindi"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:201
 msgid "Message from server: {0}"
@@ -4777,12 +4777,12 @@ msgstr "Sunucudan mesaj: {0}"
 
 #: src/screens/Messages/components/MessageInput.tsx:147
 msgid "Message input field"
-msgstr ""
+msgstr "Mesaj girdi alanı"
 
 #: src/screens/Messages/components/MessageInput.tsx:78
 #: src/screens/Messages/components/MessageInput.web.tsx:59
 msgid "Message is too long"
-msgstr ""
+msgstr "Mesaj çok uzun"
 
 #: src/screens/Messages/ChatList.tsx:318
 msgid "Message settings"
@@ -4801,11 +4801,11 @@ msgstr "Mesajlar"
 
 #: src/lib/moderation/useReportOptions.ts:47
 msgid "Misleading Account"
-msgstr ""
+msgstr "Yanıltıcı Hesap"
 
 #: src/lib/moderation/useReportOptions.ts:67
 msgid "Misleading Post"
-msgstr ""
+msgstr "Yanıltıcı Gönderi"
 
 #: src/screens/Settings/AppearanceSettings.tsx:78
 #~ msgid "Mode"
@@ -4893,7 +4893,7 @@ msgstr "Daha fazla seçenek"
 
 #: src/screens/Settings/ThreadPreferences.tsx:86
 msgid "Most-liked first"
-msgstr ""
+msgstr "Önce en çok beğenilen"
 
 #: src/screens/Settings/ThreadPreferences.tsx:83
 msgid "Most-liked replies first"
@@ -4909,7 +4909,7 @@ msgstr "Müzik"
 
 #: src/components/TagMenu/index.tsx:264
 msgid "Mute"
-msgstr ""
+msgstr "Sessize al"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:156
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VolumeControl.tsx:95
@@ -4949,7 +4949,7 @@ msgstr "Görüşmeyi sustur"
 
 #: src/components/dialogs/MutedWords.tsx:253
 msgid "Mute in:"
-msgstr ""
+msgstr "Sessize al:"
 
 #: src/view/screens/ProfileList.tsx:737
 msgid "Mute list"
@@ -4982,7 +4982,7 @@ msgstr "Bu kelimeyi 7 günlüğüne sessize al"
 
 #: src/components/dialogs/MutedWords.tsx:258
 msgid "Mute this word in post text and tags"
-msgstr ""
+msgstr "Gönderi metninde ve etiketlerde bu kelimeyi sessize al"
 
 #: src/components/dialogs/MutedWords.tsx:274
 msgid "Mute this word in tags only"
@@ -5143,7 +5143,7 @@ msgstr ""
 
 #: src/components/dms/NewMessagesPill.tsx:92
 msgid "New messages"
-msgstr ""
+msgstr "Yeni mesajlar"
 
 #: src/view/com/modals/CreateOrEditList.tsx:232
 msgid "New Moderation List"
@@ -5255,7 +5255,7 @@ msgstr ""
 #: src/components/LikedByList.tsx:78
 #: src/view/com/post-thread/PostLikedBy.tsx:85
 msgid "No likes yet"
-msgstr ""
+msgstr "Henüz beğeni yok"
 
 #: src/components/ProfileCard.tsx:338
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:119
@@ -5289,15 +5289,15 @@ msgstr ""
 
 #: src/screens/Profile/Sections/Feed.tsx:65
 msgid "No posts yet."
-msgstr ""
+msgstr "Henüz gönderi yok"
 
 #: src/view/com/post-thread/PostQuotes.tsx:106
 msgid "No quotes yet"
-msgstr ""
+msgstr "Henüz alıntı yok"
 
 #: src/view/com/post-thread/PostRepostedBy.tsx:78
 msgid "No reposts yet"
-msgstr ""
+msgstr "Henüz yeniden gönderme yok"
 
 #: src/view/com/composer/text-input/mobile/Autocomplete.tsx:94
 #: src/view/com/composer/text-input/web/Autocomplete.tsx:195
@@ -5306,11 +5306,11 @@ msgstr "Sonuç yok"
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:199
 msgid "No results"
-msgstr ""
+msgstr "Sonuç yok"
 
 #: src/components/Lists.tsx:215
 msgid "No results found"
-msgstr ""
+msgstr "Sonuç bulunamadı"
 
 #: src/view/screens/Feeds.tsx:513
 msgid "No results found for \"{query}\""
@@ -5325,7 +5325,7 @@ msgstr "{query} için sonuç bulunamadı"
 
 #: src/components/dialogs/GifSelect.tsx:229
 msgid "No search results found for \"{search}\"."
-msgstr ""
+msgstr "\"{search}\" aramanız için sonuç bulunamadı."
 
 #: src/components/dms/NewChat.tsx:240
 #~ msgid "No search results found for \"{searchText}\"."
@@ -5348,19 +5348,19 @@ msgstr "Hiç kimse"
 #: src/components/LikesDialog.tsx:97
 #: src/view/com/post-thread/PostLikedBy.tsx:87
 msgid "Nobody has liked this yet. Maybe you should be the first!"
-msgstr ""
+msgstr "Henüz bunu kimse beğenmedi. Belki de ilk sen olmalısın!"
 
 #: src/view/com/post-thread/PostQuotes.tsx:108
 msgid "Nobody has quoted this yet. Maybe you should be the first!"
-msgstr ""
+msgstr "Henüz bunu kimse alıntılamadı. Belki de ilk sen olmalısın!"
 
 #: src/view/com/post-thread/PostRepostedBy.tsx:80
 msgid "Nobody has reposted this yet. Maybe you should be the first!"
-msgstr ""
+msgstr "Henüz bunu kimse yeniden göndermedi. Belki de ilk sen olmalısın!"
 
 #: src/screens/StarterPack/Wizard/StepProfiles.tsx:103
 msgid "Nobody was found. Try searching for someone else."
-msgstr ""
+msgstr "Kimse bulunamadı. Başka birini aramayı deneyin."
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:42
 msgid "Non-sexual Nudity"
@@ -5396,16 +5396,16 @@ msgstr ""
 
 #: src/screens/Settings/NotificationSettings.tsx:50
 msgid "Notification filters"
-msgstr ""
+msgstr "Bildirim filtreleri"
 
 #: src/Navigation.tsx:383
 #: src/view/screens/Notifications.tsx:117
 msgid "Notification settings"
-msgstr ""
+msgstr "Bildirim ayarları"
 
 #: src/screens/Settings/NotificationSettings.tsx:36
 msgid "Notification Settings"
-msgstr ""
+msgstr "Bildirim Ayarları"
 
 #: src/screens/Messages/Settings.tsx:117
 msgid "Notification sounds"
@@ -5427,11 +5427,11 @@ msgstr "Bildirimler"
 
 #: src/lib/hooks/useTimeAgo.ts:122
 msgid "now"
-msgstr ""
+msgstr "şimdi"
 
 #: src/components/dms/MessageItem.tsx:198
 msgid "Now"
-msgstr ""
+msgstr "Şimdi"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:151
 #: src/view/com/composer/labels/LabelsBtn.tsx:154
@@ -5499,7 +5499,7 @@ msgstr "Onboarding sıfırlama"
 
 #: src/view/com/composer/Composer.tsx:331
 msgid "One or more GIFs is missing alt text."
-msgstr ""
+msgstr "Bir veya daha fazla GIF için alternatif metin eksik."
 
 #: src/view/com/composer/Composer.tsx:328
 msgid "One or more images is missing alt text."
@@ -5507,11 +5507,11 @@ msgstr "Bir veya daha fazla resimde alternatif metin eksik."
 
 #: src/view/com/composer/Composer.tsx:338
 msgid "One or more videos is missing alt text."
-msgstr ""
+msgstr "Bir veya daha fazla videoda alternatif metin eksik."
 
 #: src/screens/Onboarding/StepProfile/index.tsx:115
 msgid "Only .jpg and .png files are supported"
-msgstr ""
+msgstr "Yalnızca .jpg ve .png dosyaları desteklenmektedir"
 
 #: src/components/WhoCanReply.tsx:245
 #~ msgid "Only {0} can reply"
@@ -5527,11 +5527,11 @@ msgstr ""
 
 #: src/lib/media/picker.shared.ts:29
 msgid "Only image files are supported"
-msgstr ""
+msgstr "Yalnızca resim dosyaları desteklenmektedir"
 
 #: src/view/com/composer/videos/SubtitleFilePicker.tsx:40
 msgid "Only WebVTT (.vtt) files are supported"
-msgstr ""
+msgstr "Yalnızca WebVTT (.vtt) dosyaları desteklenmektedir"
 
 #: src/components/Lists.tsx:88
 msgid "Oops, something went wrong!"
@@ -7222,15 +7222,15 @@ msgstr "Bu kelimenin ne kadar süre sessize alınacağını seçin."
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:245
 msgid "Select language..."
-msgstr ""
+msgstr "Dil seç..."
 
 #: src/screens/Settings/LanguageSettings.tsx:266
 msgid "Select languages"
-msgstr ""
+msgstr "Dilleri seç"
 
 #: src/components/ReportDialog/SelectLabelerView.tsx:28
 msgid "Select moderator"
-msgstr ""
+msgstr "Moderatör seç"
 
 #: src/view/com/util/Selector.tsx:108
 #~ msgid "Select option {i} of {numItems}"
@@ -7251,7 +7251,7 @@ msgstr "Altyazı dosyası seç (.vtt)"
 
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:83
 msgid "Select the {emojiName} emoji as your avatar"
-msgstr ""
+msgstr "{emojiName} emojisini avatar olarak seç"
 
 #: src/components/ReportDialog/SubmitView.tsx:140
 msgid "Select the moderation service(s) to report to"
@@ -7287,7 +7287,7 @@ msgstr "Abone olduğunuz beslemelerin hangi dilleri içermesini istediğinizi se
 
 #: src/screens/Settings/LanguageSettings.tsx:76
 msgid "Select your app language for the default text to display in the app."
-msgstr ""
+msgstr "Uygulama dilinizi seçin, uygulamada görüntülenecek varsayılan metin."
 
 #: src/screens/Signup/StepInfo/index.tsx:223
 msgid "Select your date of birth"
