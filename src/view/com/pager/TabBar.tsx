@@ -59,14 +59,43 @@ export function TabBar({
     [scrollElRef],
   )
 
+  const indexToOffset = useCallback(
+    (index: number) => {
+      'worklet'
+      const layout = layouts.get()[index]
+      const availableSize = containerSize.get() - 2 * CONTENT_PADDING
+      if (!layout) {
+        const offsetPerPage = contentSize.get() - availableSize
+        return (index / (itemsLength - 1)) * offsetPerPage
+      }
+      const freeSpace = availableSize - layout.width
+      const accumulatingOffset = interpolate(
+        index,
+        // Gradually shift every next item to the left so that the first item
+        // is positioned like "left: 0" but the last item is like "right: 0".
+        [0, itemsLength - 1],
+        [0, freeSpace],
+        'clamp',
+      )
+      return layout.x - accumulatingOffset
+    },
+    [itemsLength, contentSize, containerSize, layouts],
+  )
+
   const progressToOffset = useCallback(
     (progress: number) => {
       'worklet'
-      const offsetPerPage =
-        contentSize.get() + 2 * CONTENT_PADDING - containerSize.get()
-      return (progress / (itemsLength - 1)) * offsetPerPage
+      return interpolate(
+        progress,
+        [Math.floor(progress), Math.ceil(progress)],
+        [
+          indexToOffset(Math.floor(progress)),
+          indexToOffset(Math.ceil(progress)),
+        ],
+        'clamp',
+      )
     },
-    [itemsLength, contentSize, containerSize],
+    [indexToOffset],
   )
 
   // When we know the entire layout for the first time, scroll selection into view.
