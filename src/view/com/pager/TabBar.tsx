@@ -28,6 +28,9 @@ export interface TabBarProps {
 
 const ITEM_PADDING = 10
 const CONTENT_PADDING = 6
+// How much of the previous/next item we're requiring
+// when deciding whether to scroll into view on tap.
+const OFFSCREEN_ITEM_WIDTH = 20
 
 export function TabBar({
   testID,
@@ -65,6 +68,7 @@ export function TabBar({
       const layout = layouts.get()[index]
       const availableSize = containerSize.get() - 2 * CONTENT_PADDING
       if (!layout) {
+        // Should not happen, but fall back to equal sizes.
         const offsetPerPage = contentSize.get() - availableSize
         return (index / (itemsLength - 1)) * offsetPerPage
       }
@@ -170,21 +174,18 @@ export function TabBar({
   const onPressUIThread = useCallback(
     (index: number) => {
       'worklet'
-      if (isSyncingScroll.get() === true) {
-        const progressDiff = index - dragProgress.get()
-        const offsetDiff = progressToOffset(progressDiff)
-        let offset = scrollX.get() + offsetDiff
-        const itemLayout = layouts.get()[index]
-        if (itemLayout) {
-          if (
-            itemLayout.x < offset ||
-            itemLayout.x + itemLayout.width > offset + containerSize.get()
-          ) {
-            // If the proposed offset is still out of view, don't bother with
-            // proportional scroll and ensure the target is scrolled into view.
-            offset = progressToOffset(index)
-          }
-        }
+      const itemLayout = layouts.get()[index]
+      if (!itemLayout) {
+        // Should not happen.
+        return
+      }
+      const leftEdge = itemLayout.x - OFFSCREEN_ITEM_WIDTH
+      const rightEdge = itemLayout.x + itemLayout.width + OFFSCREEN_ITEM_WIDTH
+      const scrollLeft = scrollX.get()
+      const scrollRight = scrollLeft + containerSize.get()
+      const scrollIntoView = leftEdge < scrollLeft || rightEdge > scrollRight
+      if (isSyncingScroll.get() === true || scrollIntoView) {
+        const offset = progressToOffset(index)
         scrollTo(scrollElRef, offset, 0, true)
       }
       isSyncingScroll.set(true)
@@ -193,7 +194,6 @@ export function TabBar({
       isSyncingScroll,
       scrollElRef,
       scrollX,
-      dragProgress,
       progressToOffset,
       containerSize,
       layouts,
