@@ -6,7 +6,7 @@ import {useEffect, useMemo, useRef, useState} from 'preact/hooks'
 
 import arrowBottom from '../../assets/arrowBottom_stroke2_corner0_rounded.svg'
 import logo from '../../assets/logo.svg'
-import {initColorMode} from '../color-mode'
+import {assertColorModeValues, initColorMode} from '../color-mode'
 import {Container} from '../components/container'
 import {Link} from '../components/link'
 import {Post} from '../components/post'
@@ -29,11 +29,6 @@ const agent = new BskyAgent({
 })
 
 render(<LandingPage />, root)
-
-type ColorModeValues = 'auto' | 'light' | 'dark'
-function assertColorModeValues(value: string): value is ColorModeValues {
-  return ['auto', 'light', 'dark'].includes(value)
-}
 
 function LandingPage() {
   const [uri, setUri] = useState('')
