@@ -160,7 +160,7 @@ function LandingPage() {
       <img src={arrowBottom} className="w-6 dark:invert" />
 
       {loading ? (
-        <div className={`${colorMode}w-full max-w-[600px]`}>
+        <div className={`${colorMode} w-full max-w-[600px]`}>
           <Skeleton />
         </div>
       ) : (
