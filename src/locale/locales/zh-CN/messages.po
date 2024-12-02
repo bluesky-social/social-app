@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-12-02 02:49\n"
+"PO-Revision-Date: 2024-12-02 03:00\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -37,11 +37,11 @@ msgstr "{0, plural, one {# 小时} other {# 小时}}"
 
 #: src/components/moderation/LabelsOnMe.tsx:53
 msgid "{0, plural, one {# label has been placed on this account} other {# labels have been placed on this account}}"
-msgstr "{0, plural, one {该账户有 # 个标签} other {该账户有 # 个标签}}"
+msgstr "{0, plural, one {该账户有 # 个标记} other {该账户有 # 个标记}}"
 
 #: src/components/moderation/LabelsOnMe.tsx:59
 msgid "{0, plural, one {# label has been placed on this content} other {# labels have been placed on this content}}"
-msgstr "{0, plural, one {该内容有 # 个标签} other {该内容有 # 个标签}}"
+msgstr "{0, plural, one {该内容有 # 个标记} other {该内容有 # 个标记}}"
 
 #: src/lib/hooks/useTimeAgo.ts:136
 msgid "{0, plural, one {# minute} other {# minutes}}"
@@ -586,7 +586,7 @@ msgstr "成人内容显示已停用。"
 #: src/view/com/composer/labels/LabelsBtn.tsx:139
 #: src/view/com/composer/labels/LabelsBtn.tsx:197
 msgid "Adult Content labels"
-msgstr "成人内容标签"
+msgstr "成人内容标记"
 
 #: src/screens/Moderation/index.tsx:404
 msgid "Advanced"
@@ -1025,7 +1025,7 @@ msgstr "这则帖文已被屏蔽。"
 
 #: src/screens/Profile/Sections/Labels.tsx:173
 msgid "Blocking does not prevent this labeler from placing labels on your account."
-msgstr "屏蔽该用户不能阻止其继续标记你的账户。"
+msgstr "屏蔽该用户不会阻止其继续标记你的账户。"
 
 #: src/view/screens/ProfileList.tsx:744
 msgid "Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
@@ -1033,7 +1033,7 @@ msgstr "屏蔽是公开可见的。被屏蔽的账户无法在你的帖文下回
 
 #: src/view/com/profile/ProfileMenu.tsx:333
 msgid "Blocking will not prevent labels from being applied on your account, but it will stop this account from replying in your threads or interacting with you."
-msgstr "屏蔽不会阻止其放置标记到你的账户上，但会阻止该账户在你发布的帖文下回复或与你互动。"
+msgstr "屏蔽不会阻止其继续标记你的账户，但会阻止该账户在你发布的帖文下回复或与你互动。"
 
 #: src/view/com/auth/SplashScreen.web.tsx:173
 msgid "Blog"
@@ -1321,7 +1321,7 @@ msgstr "选择用户"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:115
 msgid "Choose self-labels that are applicable for the media you are posting. If none are selected, this post is suitable for all audiences."
-msgstr "请为这个媒体内容勾选合适的标签。若不勾选，则默认为全年龄向。"
+msgstr "请为这个媒体内容勾选合适的标记。若不勾选，则默认为全年龄向。"
 
 #: src/view/com/auth/server-input/index.tsx:76
 msgid "Choose Service"
@@ -3442,7 +3442,7 @@ msgstr "已添加标记"
 
 #: src/screens/Profile/Sections/Labels.tsx:163
 msgid "Labels are annotations on users and content. They can be used to hide, warn, and categorize the network."
-msgstr "标记是对内容和用户的标注，可用于隐藏特定内容、显示警告及分类你的关系网。"
+msgstr "标记可用于隐藏特定内容、显示警告或分类用户和内容。"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:71
 msgid "Labels on your account"
@@ -7845,7 +7845,7 @@ msgstr "你隐藏了这则回复。"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:78
 msgid "You may appeal non-self labels if you feel they were placed in error."
-msgstr "如果你认为由他人放置的标签信息有误，你可以随时提出申诉。"
+msgstr "如果你认为任何由他人标记的信息有误，你可以随时提出申诉。"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:83
 msgid "You may appeal these labels if you feel they were placed in error."
