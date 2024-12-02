@@ -16109,7 +16109,7 @@ react-native-progress@bluesky-social/react-native-progress:
   dependencies:
     prop-types "^15.7.2"
 
-react-native-qrcode-styled@^0.3.2:
+react-native-qrcode-styled@^0.3.3:
   version "0.3.3"
   resolved "https://registry.yarnpkg.com/react-native-qrcode-styled/-/react-native-qrcode-styled-0.3.3.tgz#552b7fb85f8e570524ad3e89b4c0b4a8a82e0b67"
   integrity sha512-DjxFhFAJBY3y2FEBbWSpwtPaSjsEc5RutTHejxzfRNuyTzg1f5thplGyON8yx0kbi6h0h+57s8cH4aSFGj1mQg==
