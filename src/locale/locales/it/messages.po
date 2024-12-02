@@ -1,16 +1,16 @@
 # 
 # Translators:
 # arestifop, 2024
-# Michele Locati <michele@locati.it>, 2024
 # Francisco, 2024
+# Michele Locati <michele@locati.it>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Italian localization\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-11-28 01:11+0000\n"
-"PO-Revision-Date: 2024-12-01 12:59+0000\n"
-"Last-Translator: Francisco, 2024\n"
+"PO-Revision-Date: 2024-12-02 13:35+0000\n"
+"Last-Translator: Michele Locati <michele@locati.it>, 2024\n"
 "Language-Team: Italian (https://app.transifex.com/mlocati/teams/201833/it/)\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
@@ -567,7 +567,7 @@ msgstr "Aggiunto ai miei feed"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:160
 msgid "Adult"
-msgstr "Adulto"
+msgstr "Esplicito"
 
 #: src/components/moderation/ContentHider.tsx:113
 #: src/lib/moderation/useGlobalLabelStrings.ts:34
@@ -649,7 +649,7 @@ msgstr "Testo alternativo"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:191
 msgid "Alt Text"
-msgstr "Testo Alternativo"
+msgstr "Testo alternativo"
 
 #: src/view/com/composer/photos/Gallery.tsx:255
 msgid "Alt text describes images for blind and low-vision users, and helps give context to everyone."
@@ -1219,7 +1219,7 @@ msgstr "Sottotitoli (.vtt)"
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:56
 msgid "Captions & alt text"
-msgstr "Sottotitoli & testo alternativo"
+msgstr "Sottotitoli e testo alternativo"
 
 #: src/screens/Settings/components/Email2FAToggle.tsx:60
 #: src/view/com/modals/VerifyEmail.tsx:160
@@ -1644,7 +1644,7 @@ msgstr "Copiato"
 
 #: src/screens/Settings/AboutSettings.tsx:65
 msgid "Copied build version to clipboard"
-msgstr "Versione di build copiata negli appunti"
+msgstr "Versione della build copiata negli appunti"
 
 #: src/components/dms/MessageMenu.tsx:57
 #: src/lib/sharing.ts:25
@@ -1669,7 +1669,7 @@ msgstr "Copia password per app"
 
 #: src/screens/Settings/AboutSettings.tsx:60
 msgid "Copy build version to clipboard"
-msgstr "Copia versione build negli appunti"
+msgstr "Copia versione della build negli appunti"
 
 #: src/components/dialogs/Embed.tsx:122
 #: src/components/dialogs/Embed.tsx:141
@@ -2229,11 +2229,11 @@ msgstr "Modifica le impostazioni di interazione"
 
 #: src/view/screens/ProfileList.tsx:518
 msgid "Edit list details"
-msgstr "Modifica i dettagli della lista"
+msgstr "Modifica lista"
 
 #: src/view/com/modals/CreateOrEditList.tsx:230
 msgid "Edit Moderation List"
-msgstr "Modifica l'elenco di moderazione"
+msgstr "Modifica lista di moderazione"
 
 #: src/Navigation.tsx:295
 #: src/view/screens/Feeds.tsx:384
@@ -2487,7 +2487,7 @@ msgstr "Tutti possono rispondere"
 
 #: src/components/WhoCanReply.tsx:213
 msgid "Everybody can reply to this post."
-msgstr "Tutto possono rispondere a questo post."
+msgstr "Tutti possono rispondere a questo post."
 
 #: src/screens/Messages/Settings.tsx:77
 #: src/screens/Messages/Settings.tsx:80
@@ -3049,7 +3049,7 @@ msgstr "Vai al profilo dell'utente"
 #: src/view/com/composer/labels/LabelsBtn.tsx:202
 #: src/view/com/composer/labels/LabelsBtn.tsx:205
 msgid "Graphic Media"
-msgstr "Media grafici"
+msgstr "Contenuto sensibile"
 
 #: src/state/shell/progress-guide.tsx:161
 msgid "Half way there!"
@@ -3636,7 +3636,7 @@ msgstr "Lista sbloccata"
 
 #: src/view/screens/ProfileList.tsx:409
 msgid "List unmuted"
-msgstr "Lista non silenziata"
+msgstr "Lista riattivata"
 
 #: src/Navigation.tsx:134
 #: src/view/screens/Profile.tsx:227
@@ -3837,7 +3837,7 @@ msgstr "Lista di moderazione di <0/>"
 #: src/view/com/modals/UserAddRemoveLists.tsx:220
 #: src/view/screens/ProfileList.tsx:900
 msgid "Moderation list by you"
-msgstr "Le tue liste di moderazione"
+msgstr "La tua lista di moderazione"
 
 #: src/view/com/modals/CreateOrEditList.tsx:177
 msgid "Moderation list created"
@@ -4166,7 +4166,7 @@ msgstr "Immagine successiva"
 
 #: src/screens/Settings/AppPasswords.tsx:100
 msgid "No app passwords yet"
-msgstr "Non hai generato alcuna password per le app"
+msgstr "Ancora nessuna password per app"
 
 #: src/view/screens/ProfileFeed.tsx:565
 #: src/view/screens/ProfileList.tsx:882
@@ -4699,7 +4699,7 @@ msgstr "Foto"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:170
 msgid "Pictures meant for adults."
-msgstr "Immagini per adulti."
+msgstr "Immagini consigliate ad un pubblico adulto."
 
 #: src/view/screens/ProfileFeed.tsx:293
 #: src/view/screens/ProfileList.tsx:676
