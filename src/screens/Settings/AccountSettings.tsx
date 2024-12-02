@@ -38,8 +38,16 @@ export function AccountSettingsScreen({}: Props) {
 
   return (
     <Layout.Screen>
-      <Layout.Header title={_(msg`Account`)} />
       <Layout.Content>
+        <Layout.Header.Outer>
+          <Layout.Header.BackButton />
+          <Layout.Header.Content>
+            <Layout.Header.TitleText>
+              <Trans>Account</Trans>
+            </Layout.Header.TitleText>
+          </Layout.Header.Content>
+        </Layout.Header.Outer>
+
         <SettingsList.Container>
           <SettingsList.Item>
             <SettingsList.ItemIcon icon={EnvelopeIcon} />
