@@ -102,7 +102,7 @@ let ProfileHeaderShell = ({
     <View pointerEvents={isIOS ? 'auto' : 'box-none'}>
       <LinearGradient
         key={t.name}
-        colors={[t.palette.primary_200, t.palette.primary_200, backgroundColor]}
+        colors={[t.palette.primary_25, t.palette.primary_25, backgroundColor]}
         style={{
           position: 'absolute',
           top: 0,
