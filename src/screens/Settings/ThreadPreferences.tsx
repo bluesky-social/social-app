@@ -46,7 +46,6 @@ export function ThreadPreferencesScreen({}: Props) {
               <Trans>Thread Preferences</Trans>
             </Layout.Header.TitleText>
           </Layout.Header.Content>
-          <Layout.Header.Slot />
         </Layout.Header.Outer>
 
         <SettingsList.Container>

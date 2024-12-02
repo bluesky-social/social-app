@@ -7,13 +7,7 @@ import {useNavigation} from '@react-navigation/native'
 import {NavigationProp} from '#/lib/routes/types'
 import {isIOS} from '#/platform/detection'
 import {useSetDrawerOpen} from '#/state/shell'
-import {
-  atoms as a,
-  useBreakpoints,
-  useGutterStyles,
-  useTheme,
-  ViewStyleProp,
-} from '#/alf'
+import {atoms as a, useBreakpoints, useGutterStyles, useTheme} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeft} from '#/components/icons/Arrow'
 import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
@@ -63,8 +57,11 @@ export function Content({children}: {children: React.ReactNode}) {
 
 export function Slot({
   children,
-  style,
-}: {children?: React.ReactNode} & ViewStyleProp) {
+  position = 'left',
+}: {
+  children?: React.ReactNode
+  position?: 'left' | 'right'
+}) {
   return (
     <View
       style={[
@@ -73,9 +70,9 @@ export function Slot({
         a.z_50,
         {
           width: BUTTON_SIZE,
-          right: 'auto',
+          right: position === 'left' ? 'auto' : 0,
+          left: position === 'right' ? 'auto' : 0,
         },
-        style,
       ]}>
       {children}
     </View>
