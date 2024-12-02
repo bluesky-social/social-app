@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-12-01 13:20\n"
+"PO-Revision-Date: 2024-12-02 08:08\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional, Hong Kong\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -724,7 +724,7 @@ msgstr "同人傾偈嗰陣出現問題"
 
 #: src/components/dms/dialogs/ShareViaChatDialog.tsx:47
 msgid "An issue occurred while trying to open the chat"
-msgstr "開啓傾偈室嗰陣出現問題"
+msgstr "開啓傾偈嗰陣出現問題"
 
 #: src/components/hooks/useFollowMethods.ts:35
 #: src/components/hooks/useFollowMethods.ts:50
@@ -1269,26 +1269,26 @@ msgstr "變更你嘅電郵地址"
 #: src/view/shell/desktop/LeftNav.tsx:349
 #: src/view/shell/Drawer.tsx:417
 msgid "Chat"
-msgstr "傾偈室"
+msgstr "傾偈"
 
 #: src/components/dms/ConvoMenu.tsx:82
 msgid "Chat muted"
-msgstr "傾偈室已靜音"
+msgstr "傾偈靜咗音"
 
 #: src/components/dms/ConvoMenu.tsx:112
 #: src/components/dms/MessageMenu.tsx:81
 #: src/Navigation.tsx:387
 #: src/screens/Messages/ChatList.tsx:88
 msgid "Chat settings"
-msgstr "傾偈室設定"
+msgstr "傾偈設定"
 
 #: src/screens/Messages/Settings.tsx:61
 msgid "Chat Settings"
-msgstr "傾偈室設定"
+msgstr "傾偈設定"
 
 #: src/components/dms/ConvoMenu.tsx:84
 msgid "Chat unmuted"
-msgstr "傾偈室已經解除靜音"
+msgstr "傾偈唔再靜音"
 
 #: src/screens/SignupQueued.tsx:79
 #: src/screens/SignupQueued.tsx:83
@@ -1725,7 +1725,7 @@ msgstr "版權政策"
 
 #: src/components/dms/LeaveConvoPrompt.tsx:38
 msgid "Could not leave chat"
-msgstr "唔得離開對話"
+msgstr "唔得離開呢度嘅傾偈"
 
 #: src/view/screens/ProfileFeed.tsx:104
 msgid "Could not load feed"
@@ -1737,7 +1737,7 @@ msgstr "撈唔到清單"
 
 #: src/components/dms/ConvoMenu.tsx:88
 msgid "Could not mute chat"
-msgstr "靜音唔到傾偈室"
+msgstr "靜音唔到呢度嘅傾偈"
 
 #: src/view/com/composer/videos/VideoPreview.web.tsx:66
 msgid "Could not process your video"
@@ -1879,7 +1879,7 @@ msgstr "係咪要刪咗呢個 App 嘅密碼？"
 
 #: src/screens/Settings/Settings.tsx:330
 msgid "Delete chat declaration record"
-msgstr "刪除對話申報記錄"
+msgstr "刪除傾偈申報記錄"
 
 #: src/components/dms/MessageMenu.tsx:124
 msgid "Delete for me"
@@ -3518,7 +3518,7 @@ msgstr "離開"
 #: src/components/dms/MessagesListBlockedFooter.tsx:66
 #: src/components/dms/MessagesListBlockedFooter.tsx:73
 msgid "Leave chat"
-msgstr "離開傾偈室"
+msgstr "離開唔再傾偈"
 
 #: src/components/dms/ConvoMenu.tsx:138
 #: src/components/dms/ConvoMenu.tsx:141
@@ -3803,7 +3803,7 @@ msgstr "訊息設定"
 #: src/screens/Messages/ChatList.tsx:243
 #: src/screens/Messages/ChatList.tsx:314
 msgid "Messages"
-msgstr "傾偈室"
+msgstr "傾偈"
 
 #: src/lib/moderation/useReportOptions.ts:47
 msgid "Misleading Account"
@@ -4080,7 +4080,7 @@ msgstr "新增"
 #: src/screens/Messages/ChatList.tsx:328
 #: src/screens/Messages/ChatList.tsx:335
 msgid "New chat"
-msgstr "開新傾偈室"
+msgstr "同人傾偈"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:200
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:208
@@ -4620,7 +4620,7 @@ msgstr "其他..."
 
 #: src/screens/Messages/components/ChatDisabled.tsx:28
 msgid "Our moderators have reviewed reports and decided to disable your access to chats on Bluesky."
-msgstr "我哋嘅審核服務提供者已經睇過你嘅上報，決定停用你使用 Bluesky 嘅傾偈室功能。"
+msgstr "我哋嘅審核服務提供者已經睇過你嘅上報，決定停用你使用 Bluesky 嘅傾偈功能。"
 
 #: src/components/Lists.tsx:216
 #: src/view/screens/NotFound.tsx:47
@@ -4798,7 +4798,7 @@ msgstr "請解釋點解你以爲 {0} 唔應該用呢個標記"
 
 #: src/screens/Messages/components/ChatDisabled.tsx:110
 msgid "Please explain why you think your chats were incorrectly disabled"
-msgstr "請解釋你認爲我哋唔應該停用你傾偈室功能嘅原因"
+msgstr "請解釋點解你以爲我哋唔應該停用你傾偈功能嘅原因"
 
 #: src/lib/hooks/useAccountSwitcher.ts:45
 #: src/lib/hooks/useAccountSwitcher.ts:55
@@ -5856,7 +5856,7 @@ msgstr "傳送驗證電郵"
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:423
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:426
 msgid "Send via direct message"
-msgstr "傳送到傾偈室度"
+msgstr "將呢件嘢同人傾偈單獨講"
 
 #: src/view/com/modals/DeleteAccount.tsx:151
 msgid "Sends email with confirmation code for account deletion"
@@ -6239,7 +6239,7 @@ msgstr "運動"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:72
 msgid "Start a new chat"
-msgstr "開始新嘅傾偈室"
+msgstr "開始同人傾偈"
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:350
 msgid "Start chat with {displayName}"
@@ -6701,7 +6701,7 @@ msgstr "呢份上訴會提交到 Bluesky 嘅審核服務度。"
 
 #: src/screens/Messages/components/MessageListError.tsx:18
 msgid "This chat was disconnected"
-msgstr "呢個傾偈室已經中斷連線"
+msgstr "呢度嘅傾偈中斷咗連線"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:19
 msgid "This content has been hidden by the moderators."
@@ -7995,7 +7995,7 @@ msgstr "你個瀏覽器唔支援呢種影片格式，請試下用唔同嘅瀏覽
 
 #: src/screens/Messages/components/ChatDisabled.tsx:25
 msgid "Your chats have been disabled"
-msgstr "你嘅傾偈室已經停用咗"
+msgstr "你嘅傾偈俾人停用咗"
 
 #: src/view/com/modals/InAppBrowserConsent.tsx:44
 msgid "Your choice will be saved, but can be changed later in settings."
