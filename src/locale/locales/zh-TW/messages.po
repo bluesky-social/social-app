@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-12-01 13:21\n"
+"PO-Revision-Date: 2024-12-02 02:51\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -1050,7 +1050,7 @@ msgstr "Bluesky 無法確認貼文發布日期的真實性。"
 
 #: src/view/com/auth/server-input/index.tsx:151
 msgid "Bluesky is an open network where you can choose your hosting provider. If you're a developer, you can host your own server."
-msgstr "Bluesky 是一個開放的網路，您可以自行挑選託管服務提供者。如果您是開發人員，您可以託管自己的伺服器。"
+msgstr "Bluesky 是一個開放的網路，您可以自行挑選託管服務提供者。如果您是開發人員，也可以託管自己的伺服器。"
 
 #: src/components/ProgressGuide/List.tsx:54
 msgid "Bluesky is better with friends!"
@@ -1058,7 +1058,7 @@ msgstr "Bluesky 因朋友而更好！"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:300
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
-msgstr "Bluesky 將從您的個人社群網路中選擇一組推薦的帳號。"
+msgstr "Bluesky 將從您的個人社交網路中選擇一組推薦的帳號。"
 
 #: src/screens/Settings/components/PwiOptOut.tsx:92
 msgid "Bluesky will not show your profile and posts to logged-out users. Other apps may not honor this request. This does not make your account private."
@@ -1507,7 +1507,7 @@ msgstr "設定 {name} 類別的內容篩選"
 
 #: src/components/moderation/LabelPreference.tsx:244
 msgid "Configured in <0>moderation settings</0>."
-msgstr "已在<0>內容管理設定</0>中設定。"
+msgstr "在 <0>內容篩選</0> 中設定。"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:253
 #: src/components/dialogs/VerifyEmailDialog.tsx:260
@@ -3442,7 +3442,7 @@ msgstr "已加入標記"
 
 #: src/screens/Profile/Sections/Labels.tsx:163
 msgid "Labels are annotations on users and content. They can be used to hide, warn, and categorize the network."
-msgstr "標記是對用戶和內容的標註，可用於隱藏、警告和對網路進行分類。"
+msgstr "標記可用於隱藏、警告或分類用戶和內容。"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:71
 msgid "Labels on your account"
@@ -4309,7 +4309,7 @@ msgstr "關於分享的注意事項"
 
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:80
 msgid "Note: Bluesky is an open and public network. This setting only limits the visibility of your content on the Bluesky app and website, and other apps may not respect this setting. Your content may still be shown to logged-out users by other apps and websites."
-msgstr "注意：Bluesky 是一個開放的公共社群網路。這個設定僅限制您在 Bluesky 應用程式和網站上的內容可見度，其他應用程式可能不會遵循這個規則。您的內容仍可能被其他應用程式和網站顯示給未登入的用戶。"
+msgstr "注意：Bluesky 是一個開放的公共社群網路。這個設定僅限制您的內容在 Bluesky 應用程式和網站上的可見度，其他應用程式可能不會遵循這個規則。您的內容仍可能被其他應用程式和網站顯示給未登入的用戶。"
 
 #: src/screens/Messages/ChatList.tsx:213
 msgid "Nothing here"
@@ -6046,7 +6046,7 @@ msgstr "顯示回覆"
 
 #: src/screens/Settings/ThreadPreferences.tsx:118
 msgid "Show replies by people you follow before all other replies"
-msgstr "在所有其他回覆之前顯示您跟隨的人的回覆"
+msgstr "把您跟隨的人的回覆顯示在最前面"
 
 #: src/screens/Settings/ThreadPreferences.tsx:143
 msgid "Show replies in a threaded view"
@@ -7547,7 +7547,7 @@ msgstr "我們將使用這些資訊來協助訂製您的體驗。"
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:87
 msgid "We're having network issues, try again"
-msgstr "我們遇到網路問題，請再試一次"
+msgstr "我們遇到了網路問題，請再試一次"
 
 #: src/screens/Signup/index.tsx:94
 msgid "We're so excited to have you join us!"
