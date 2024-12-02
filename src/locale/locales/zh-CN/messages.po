@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-12-02 03:00\n"
+"PO-Revision-Date: 2024-12-02 03:07\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -3494,7 +3494,7 @@ msgstr "深入了解有关自行托管 PDS 的信息。"
 #: src/components/moderation/ContentHider.tsx:149
 #: src/components/moderation/ContentHider.tsx:215
 msgid "Learn more about the moderation applied to this content."
-msgstr "深入了解有关审核应用于该内容的信息。"
+msgstr "深入了解有关应用于该内容的内容审核信息。"
 
 #: src/components/moderation/PostHider.tsx:100
 #: src/components/moderation/ScreenHider.tsx:127
@@ -4794,11 +4794,11 @@ msgstr "请输入你的密码："
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:265
 msgid "Please explain why you think this label was incorrectly applied by {0}"
-msgstr "请解释为什么你认为 {0} 错误应用了这个标记"
+msgstr "请说明你为什么你认为 {0} 错误应用了这个标记"
 
 #: src/screens/Messages/components/ChatDisabled.tsx:110
 msgid "Please explain why you think your chats were incorrectly disabled"
-msgstr "请解释为什么你认为你的私信被错误停用"
+msgstr "请说明你为什么你认为你的私信被错误停用"
 
 #: src/lib/hooks/useAccountSwitcher.ts:45
 #: src/lib/hooks/useAccountSwitcher.ts:55
