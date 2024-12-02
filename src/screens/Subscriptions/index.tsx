@@ -19,7 +19,7 @@ import {
   NativePurchaseRestricted,
 } from '#/state/purchases/types'
 import {CenteredView} from '#/view/com/util/Views'
-import {atoms as a, tokens, useBreakpoints,useTheme} from '#/alf'
+import {atoms as a, tokens, useBreakpoints, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
@@ -73,7 +73,9 @@ export function Subscriptions(_props: ScreenProps) {
             {purchases.status === 'loading' || loading ? (
               <Loader />
             ) : purchases.status === 'error' ? (
-              <View />
+              <Admonition type="error">
+                {purchases.error?.message ?? 'Something went wrong.'}
+              </Admonition>
             ) : (
               <Core state={purchases} restricted={restricted} />
             )}
