@@ -5553,10 +5553,10 @@
   dependencies:
     merge-options "^3.0.4"
 
-"@react-native-menu/menu@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@react-native-menu/menu/-/menu-1.1.0.tgz#e89c0850f7e5aa4c671c44a9c10edafadb23c35a"
-  integrity sha512-vf9zp0M4nbAFnSKz5NJYKUPM5UzXWmLyGcjtuPaKWYxxloz9C0Pp6XdZRJnoOSlfRShE8NksX3bVY8W4wGnlCQ==
+"@react-native-menu/menu@^1.1.7":
+  version "1.1.7"
+  resolved "https://registry.yarnpkg.com/@react-native-menu/menu/-/menu-1.1.7.tgz#47c345038951712fd61f2bbb7d591c181c7e9742"
+  integrity sha512-TPu2iNrSK1Davw5BPhwzcSfMAI9NFggiISOgdlaeymA6L7aAjUGpsEaFVX+ZaHml/YtZUuC8U0zUJJc2/3VYAA==
 
 "@react-native-picker/picker@2.10.1":
   version "2.10.1"

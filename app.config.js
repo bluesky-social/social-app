@@ -73,8 +73,6 @@ module.exports = function (config) {
       orientation: 'portrait',
       icon: './assets/app-icons/ios_icon_default_light.png',
       userInterfaceStyle: 'automatic',
-      splash: SPLASH_CONFIG,
-      // hsl(211, 99%, 53%), same as palette.default.brandText
       primaryColor: '#1083fe',
       ios: {
         supportsTablet: false,
@@ -119,10 +117,6 @@ module.exports = function (config) {
           ],
         },
         associatedDomains: ASSOCIATED_DOMAINS,
-        splash: {
-          ...SPLASH_CONFIG,
-          dark: DARK_SPLASH_CONFIG,
-        },
         entitlements: {
           'com.apple.developer.kernel.increased-memory-limit': true,
           'com.apple.developer.kernel.extended-virtual-addressing': true,
@@ -188,10 +182,6 @@ module.exports = function (config) {
             category: ['BROWSABLE', 'DEFAULT'],
           },
         ],
-        splash: {
-          ...SPLASH_CONFIG_ANDROID,
-          dark: DARK_SPLASH_CONFIG_ANDROID,
-        },
       },
       web: {
         favicon: './assets/favicon.png',
@@ -250,7 +240,7 @@ module.exports = function (config) {
         './plugins/starterPackAppClipExtension/withStarterPackAppClip.js',
         './plugins/withAndroidManifestPlugin.js',
         './plugins/withAndroidManifestFCMIconPlugin.js',
-        './plugins/withAndroidStylesWindowBackgroundPlugin.js',
+        // './plugins/withAndroidStylesWindowBackgroundPlugin.js',
         './plugins/withAndroidStylesAccentColorPlugin.js',
         './plugins/withAndroidSplashScreenStatusBarTranslucentPlugin.js',
         './plugins/shareExtension/withShareExtensions.js',
@@ -271,6 +261,18 @@ module.exports = function (config) {
               './assets/fonts/inter/Inter-ExtraBoldItalic.otf',
             ],
           },
+        ],
+        [
+          'expo-splash-screen',
+          PLATFORM === 'ios'
+            ? {
+                ...SPLASH_CONFIG,
+                dark: DARK_SPLASH_CONFIG,
+              }
+            : {
+                ...SPLASH_CONFIG_ANDROID,
+                dark: DARK_SPLASH_CONFIG_ANDROID,
+              },
         ],
         [
           '@mozzius/expo-dynamic-app-icon',
