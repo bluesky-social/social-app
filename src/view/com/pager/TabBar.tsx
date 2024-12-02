@@ -104,23 +104,11 @@ export function TabBar({
 
   // When we know the entire layout for the first time, scroll selection into view.
   useAnimatedReaction(
-    () => {
-      return {
-        layoutsLength: layouts.get().length,
-        containerSizeValue: containerSize.get(),
-        contentSizeValue: contentSize.get(),
-      }
-    },
-    (nextLayouts, prevLayouts) => {
-      if (
-        nextLayouts.containerSizeValue !== prevLayouts?.containerSizeValue ||
-        nextLayouts.contentSizeValue !== prevLayouts?.contentSizeValue ||
-        nextLayouts.layoutsLength !== prevLayouts?.layoutsLength
-      ) {
+    () => layouts.get().length,
+    (nextLayoutsLength, prevLayoutsLength) => {
+      if (nextLayoutsLength !== prevLayoutsLength) {
         if (
-          nextLayouts.containerSizeValue !== 0 &&
-          nextLayouts.contentSizeValue !== 0 &&
-          nextLayouts.layoutsLength === itemsLength &&
+          nextLayoutsLength === itemsLength &&
           didInitialScroll.get() === false
         ) {
           didInitialScroll.set(true)
