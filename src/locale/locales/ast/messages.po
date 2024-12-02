@@ -772,7 +772,7 @@ msgstr "Cualesquier llingua"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:48
 msgid "Anybody can interact"
-msgstr "Naide pue interactuar"
+msgstr "Tol mundu pue interactuar"
 
 #: src/screens/Settings/LanguageSettings.tsx:72
 msgid "App Language"
