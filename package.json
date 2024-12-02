@@ -80,7 +80,6 @@
     "@radix-ui/react-focus-guards": "^1.1.1",
     "@radix-ui/react-focus-scope": "^1.1.0",
     "@react-native-async-storage/async-storage": "1.23.1",
-    "@react-native-masked-view/masked-view": "0.3.0",
     "@react-native-menu/menu": "^1.1.0",
     "@react-native-picker/picker": "2.6.1",
     "@react-navigation/bottom-tabs": "^6.5.20",
