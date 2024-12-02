@@ -43,7 +43,9 @@ export function TabBar({
 }: TabBarProps) {
   const pal = usePalette('default')
   const scrollElRef = useAnimatedRef<ScrollView>()
-  const syncScrollState = useSharedValue<'synced' | 'unsynced'>('synced')
+  const syncScrollState = useSharedValue<'synced' | 'unsynced' | 'needs-sync'>(
+    'synced',
+  )
   const didInitialScroll = useSharedValue(false)
   const contentSize = useSharedValue(0)
   const containerSize = useSharedValue(0)
@@ -129,6 +131,8 @@ export function TabBar({
       if (
         nextProgress !== prevProgress &&
         dragState.value !== 'idle' &&
+        // This is only OK to do when we're 100% sure we're synced.
+        // Otherwise, there would be a jump at the beginning of the swipe.
         syncScrollState.get() === 'synced'
       ) {
         const offset = progressToOffset(nextProgress)
@@ -138,16 +142,17 @@ export function TabBar({
     },
   )
 
-  // If you manually scrolled the tabbar, we'll mark the scroll as unsynced.
-  // We'll re-sync it here (with an animation) if you interact with the pager again.
-  // From that point on, it'll remain synced again (unless you scroll the tabbar again).
+  // If the syncing is currently off but you've just finished swiping,
+  // it's an opportunity to resync. It won't feel disruptive because
+  // you're not directly interacting with the tabbar at the moment.
   useAnimatedReaction(
     () => dragState.value,
     (nextDragState, prevDragState) => {
       if (
         nextDragState !== prevDragState &&
         nextDragState === 'idle' &&
-        syncScrollState.get() === 'unsynced'
+        (syncScrollState.get() === 'unsynced' ||
+          syncScrollState.get() === 'needs-sync')
       ) {
         const progress = dragProgress.get()
         const offset = progressToOffset(progress)
@@ -172,11 +177,19 @@ export function TabBar({
       const scrollLeft = scrollX.get()
       const scrollRight = scrollLeft + containerSize.get()
       const scrollIntoView = leftEdge < scrollLeft || rightEdge > scrollRight
-      if (syncScrollState.get() === 'synced' || scrollIntoView) {
+      if (
+        syncScrollState.get() === 'synced' ||
+        syncScrollState.get() === 'needs-sync' ||
+        scrollIntoView
+      ) {
         const offset = progressToOffset(index)
         scrollTo(scrollElRef, offset, 0, true)
+        syncScrollState.set('synced')
+      } else {
+        // The item is already in view so it's disruptive to
+        // scroll right now. Do it on the next opportunity.
+        syncScrollState.set('needs-sync')
       }
-      syncScrollState.set('synced')
     },
     [
       syncScrollState,
