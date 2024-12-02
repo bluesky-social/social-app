@@ -26,6 +26,7 @@ const LayoutContext = React.createContext({
 export type ScreenProps = React.ComponentProps<typeof View> & {
   disableTopPadding?: boolean
   style?: StyleProp<ViewStyle>
+  temp__enableWebBorders?: boolean
 }
 
 /**
@@ -36,6 +37,7 @@ export type ScreenProps = React.ComponentProps<typeof View> & {
 export const Screen = React.memo(function Screen({
   disableTopPadding = false,
   style,
+  temp__enableWebBorders,
   ...props
 }: ScreenProps) {
   const {top} = useSafeAreaInsets()
@@ -49,7 +51,7 @@ export const Screen = React.memo(function Screen({
   )
   return (
     <LayoutContext.Provider value={context}>
-      {isWeb && <WebCenterBorders />}
+      {isWeb && temp__enableWebBorders && <WebCenterBorders />}
       <View
         style={[
           {paddingTop: disableTopPadding ? 0 : top},

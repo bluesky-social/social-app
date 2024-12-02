@@ -63,7 +63,7 @@ export function LanguageSettingsScreen({}: Props) {
   }, [langPrefs.contentLanguages])
 
   return (
-    <Layout.Screen testID="PreferencesLanguagesScreen">
+    <Layout.Screen testID="PreferencesLanguagesScreen" temp__enableWebBorders>
       <Layout.Content>
         <Layout.Header.Outer>
           <Layout.Header.BackButton />
