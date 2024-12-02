@@ -137,7 +137,6 @@ export function TabBar({
       ) {
         const offset = progressToOffset(nextProgress)
         scrollTo(scrollElRef, offset, 0, false)
-        return
       }
     },
   )
