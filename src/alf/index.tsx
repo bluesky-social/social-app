@@ -20,6 +20,7 @@ export * from '#/alf/types'
 export * from '#/alf/util/flatten'
 export * from '#/alf/util/platform'
 export * from '#/alf/util/themeSelector'
+export * from '#/alf/util/useGutterStyles'
 
 export type Alf = {
   themeName: ThemeName
