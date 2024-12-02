@@ -1,9 +1,6 @@
 import React from 'react'
-import {StyleSheet, TouchableOpacity, View} from 'react-native'
-import {
-  FontAwesomeIcon,
-  FontAwesomeIconStyle,
-} from '@fortawesome/react-native-fontawesome'
+import {StyleSheet, View} from 'react-native'
+import {FontAwesomeIconStyle} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {
@@ -14,9 +11,9 @@ import {
 
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {getCurrentRoute, isStateAtTabRoot, isTab} from '#/lib/routes/helpers'
+import {getCurrentRoute, isTab} from '#/lib/routes/helpers'
 import {makeProfileLink} from '#/lib/routes/links'
-import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
+import {CommonNavigatorParams} from '#/lib/routes/types'
 import {isInvalidHandle} from '#/lib/strings/handles'
 import {emitSoftReset} from '#/state/events'
 import {useFetchHandle} from '#/state/queries/handle'
@@ -98,47 +95,6 @@ function ProfileCard() {
         style={{borderRadius: size}}
       />
     </View>
-  )
-}
-
-const HIDDEN_BACK_BNT_ROUTES = ['StarterPackWizard', 'StarterPackEdit']
-
-function BackBtn() {
-  const {isTablet} = useWebMediaQueries()
-  const pal = usePalette('default')
-  const navigation = useNavigation<NavigationProp>()
-  const {_} = useLingui()
-  const shouldShow = useNavigationState(
-    state =>
-      !isStateAtTabRoot(state) &&
-      !HIDDEN_BACK_BNT_ROUTES.includes(getCurrentRoute(state).name),
-  )
-
-  const onPressBack = React.useCallback(() => {
-    if (navigation.canGoBack()) {
-      navigation.goBack()
-    } else {
-      navigation.navigate('Home')
-    }
-  }, [navigation])
-
-  if (!shouldShow || isTablet) {
-    return <></>
-  }
-  return (
-    <TouchableOpacity
-      testID="viewHeaderBackOrMenuBtn"
-      onPress={onPressBack}
-      style={styles.backBtn}
-      accessibilityRole="button"
-      accessibilityLabel={_(msg`Go back`)}
-      accessibilityHint="">
-      <FontAwesomeIcon
-        size={24}
-        icon="angle-left"
-        style={pal.text as FontAwesomeIconStyle}
-      />
-    </TouchableOpacity>
   )
 }
 
@@ -381,8 +337,6 @@ export function DesktopLeftNav() {
 
       {hasSession && (
         <>
-          <BackBtn />
-
           <NavItem
             href="/"
             icon={
