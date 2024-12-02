@@ -384,7 +384,7 @@ let FeedItem = ({
               borderColor: pal.colors.unreadNotifBorder,
             },
         {borderTopWidth: hideTopBorder ? 0 : StyleSheet.hairlineWidth},
-        a.overflow_hidden,
+        a.overflow_visible,
       ]}
       href={itemHref}
       noFeedback

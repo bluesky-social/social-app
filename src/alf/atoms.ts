@@ -46,7 +46,9 @@ export const atoms = {
   overflow_hidden: {
     overflow: 'hidden',
   },
-
+  overflow_visible: {
+    overflow: 'visible',
+  },
   /*
    * Width
    */
