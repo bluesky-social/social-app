@@ -1,4 +1,4 @@
-import React, {Fragment, useEffect, useRef} from 'react'
+import {Fragment, useEffect, useRef} from 'react'
 import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import BottomSheet from '@discord/bottom-sheet/src'

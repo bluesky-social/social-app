@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import {useState} from 'react'
 import {View} from 'react-native'
 
 import {s} from '#/lib/styles'

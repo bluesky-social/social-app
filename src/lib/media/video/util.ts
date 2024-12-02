@@ -32,6 +32,8 @@ export function mimeToExt(mimeType: SupportedMimeTypes | (string & {})) {
       return 'mpeg'
     case 'video/quicktime':
       return 'mov'
+    case 'image/gif':
+      return 'gif'
     default:
       throw new Error(`Unsupported mime type: ${mimeType}`)
   }
@@ -47,6 +49,8 @@ export function extToMime(ext: string) {
       return 'video/mpeg'
     case 'mov':
       return 'video/quicktime'
+    case 'gif':
+      return 'image/gif'
     default:
       throw new Error(`Unsupported file extension: ${ext}`)
   }

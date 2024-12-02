@@ -1,5 +1,10 @@
 import React, {memo, useMemo} from 'react'
-import {StyleSheet, Text as RNText, View} from 'react-native'
+import {
+  GestureResponderEvent,
+  StyleSheet,
+  Text as RNText,
+  View,
+} from 'react-native'
 import {
   AppBskyFeedDefs,
   AppBskyFeedPost,
@@ -736,9 +741,14 @@ function ExpandedPostDetails({
   const openLink = useOpenLink()
   const isRootPost = !('reply' in post.record)
 
-  const onTranslatePress = React.useCallback(() => {
-    openLink(translatorUrl, true)
-  }, [openLink, translatorUrl])
+  const onTranslatePress = React.useCallback(
+    (e: GestureResponderEvent) => {
+      e.preventDefault()
+      openLink(translatorUrl, true)
+      return false
+    },
+    [openLink, translatorUrl],
+  )
 
   return (
     <View style={[a.gap_md, a.pt_md, a.align_start]}>
@@ -757,7 +767,7 @@ function ExpandedPostDetails({
             </Text>
 
             <InlineLinkText
-              to="#"
+              to={translatorUrl}
               label={_(msg`Translate`)}
               style={[a.text_sm, pal.link]}
               onPress={onTranslatePress}>

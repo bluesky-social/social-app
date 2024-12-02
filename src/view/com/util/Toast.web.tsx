@@ -3,7 +3,7 @@
  */
 
 import React, {useEffect, useState} from 'react'
-import {StyleSheet, Text, View} from 'react-native'
+import {Pressable, StyleSheet, Text, View} from 'react-native'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
@@ -43,6 +43,14 @@ export const ToastContainer: React.FC<ToastContainerProps> = ({}) => {
             style={styles.icon as FontAwesomeIconStyle}
           />
           <Text style={styles.text}>{activeToast.text}</Text>
+          <Pressable
+            style={styles.dismissBackdrop}
+            accessibilityLabel="Dismiss"
+            accessibilityHint=""
+            onPress={() => {
+              setActiveToast(undefined)
+            }}
+          />
         </View>
       )}
     </>
@@ -76,6 +84,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#000c',
     borderRadius: 10,
+  },
+  dismissBackdrop: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
   },
   icon: {
     color: '#fff',
