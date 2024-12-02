@@ -72,7 +72,7 @@ export function SettingsScreen({}: Props) {
   const [showDevOptions, setShowDevOptions] = useState(false)
 
   return (
-    <Layout.Screen>
+    <Layout.Screen temp__enableWebBorders>
       <Layout.Content>
         <Layout.Header.Outer>
           <Layout.Header.BackButton />

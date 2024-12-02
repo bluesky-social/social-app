@@ -37,7 +37,7 @@ export function ThreadPreferencesScreen({}: Props) {
   )
 
   return (
-    <Layout.Screen testID="threadPreferencesScreen">
+    <Layout.Screen testID="threadPreferencesScreen" temp__enableWebBorders>
       <Layout.Content>
         <Layout.Header.Outer>
           <Layout.Header.BackButton />

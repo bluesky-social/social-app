@@ -23,7 +23,9 @@ type Props = NativeStackScreenProps<
 >
 export function ExternalMediaPreferencesScreen({}: Props) {
   return (
-    <Layout.Screen testID="externalMediaPreferencesScreen">
+    <Layout.Screen
+      testID="externalMediaPreferencesScreen"
+      temp__enableWebBorders>
       <Layout.Content>
         <Layout.Header.Outer>
           <Layout.Header.BackButton />

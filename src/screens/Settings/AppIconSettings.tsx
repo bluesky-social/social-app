@@ -19,7 +19,7 @@ export function AppIconSettingsScreen({}: Props) {
   const sets = useAppIconSets()
 
   return (
-    <Layout.Screen>
+    <Layout.Screen temp__enableWebBorders>
       <Layout.Content
         contentContainerStyle={[a.py_2xl, a.px_xl, {paddingBottom: 100}]}>
         <Layout.Header.Outer>

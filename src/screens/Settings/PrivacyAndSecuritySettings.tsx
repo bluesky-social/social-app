@@ -28,7 +28,7 @@ export function PrivacyAndSecuritySettingsScreen({}: Props) {
   const {currentAccount} = useSession()
 
   return (
-    <Layout.Screen>
+    <Layout.Screen temp__enableWebBorders>
       <Layout.Content>
         <Layout.Header.Outer>
           <Layout.Header.BackButton />
