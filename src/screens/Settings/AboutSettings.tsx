@@ -21,8 +21,15 @@ export function AboutSettingsScreen({}: Props) {
 
   return (
     <Layout.Screen>
-      <Layout.Header title={_(msg`About`)} />
       <Layout.Content>
+        <Layout.Header.Outer>
+          <Layout.Header.BackButton />
+          <Layout.Header.Content>
+            <Layout.Header.TitleText>
+              <Trans>About</Trans>
+            </Layout.Header.TitleText>
+          </Layout.Header.Content>
+        </Layout.Header.Outer>
         <SettingsList.Container>
           <SettingsList.LinkItem
             to="https://bsky.social/about/support/tos"

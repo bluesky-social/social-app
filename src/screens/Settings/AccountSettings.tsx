@@ -39,14 +39,14 @@ export function AccountSettingsScreen({}: Props) {
   return (
     <Layout.Screen>
       <Layout.Content>
-        <Layout.HeaderNew.Outer>
-          <Layout.HeaderNew.BackButton />
-          <Layout.HeaderNew.Content>
-            <Layout.HeaderNew.TitleText>
+        <Layout.Header.Outer>
+          <Layout.Header.BackButton />
+          <Layout.Header.Content>
+            <Layout.Header.TitleText>
               <Trans>Account</Trans>
-            </Layout.HeaderNew.TitleText>
-          </Layout.HeaderNew.Content>
-        </Layout.HeaderNew.Outer>
+            </Layout.Header.TitleText>
+          </Layout.Header.Content>
+        </Layout.Header.Outer>
 
         <SettingsList.Container>
           <SettingsList.Item>

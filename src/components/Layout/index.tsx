@@ -9,11 +9,9 @@ import Animated, {AnimatedScrollViewProps} from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
 import {isWeb} from '#/platform/detection'
-import {ViewHeader} from '#/view/com/util/ViewHeader'
-import {CenteredView} from '#/view/com/util/Views'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 
-export * as HeaderNew from './Header'
+export * as Header from '#/components/Layout/Header'
 
 // Every screen should have a Layout component wrapping it.
 // This component provides a default padding for the top of the screen.
@@ -61,21 +59,6 @@ export const Screen = React.memo(function Screen({
       />
     </LayoutContext.Provider>
   )
-})
-
-export const Header = React.memo(function Header(
-  props: React.ComponentProps<typeof ViewHeader>,
-) {
-  const {withinScrollView} = useContext(LayoutContext)
-  if (!withinScrollView) {
-    return (
-      <CenteredView topBorder={false} sideBorders>
-        <ViewHeader showOnDesktop showBorder {...props} />
-      </CenteredView>
-    )
-  } else {
-    return <ViewHeader showOnDesktop showBorder {...props} />
-  }
 })
 
 export type ContentProps = AnimatedScrollViewProps & {
