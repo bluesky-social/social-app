@@ -13,7 +13,7 @@
     "@atproto/api": "0.12.19-next.0",
     "@atproto/common": "^0.4.0",
     "@resvg/resvg-js": "^2.6.2",
-    "express": "^4.19.2",
+    "express": "^4.21.1",
     "http-terminator": "^3.2.0",
     "pino": "^9.2.0",
     "react": "^18.3.1",
