@@ -81,10 +81,17 @@ export const Pager = forwardRef<PagerRef, React.PropsWithChildren<Props>>(
 
     const dragState = useSharedValue<'idle' | 'settling' | 'dragging'>('idle')
     const dragProgress = useSharedValue(selectedPage)
+    const didInit = useSharedValue(false)
     const handlePageScroll = usePagerHandlers(
       {
         onPageScroll(e: PagerViewOnPageScrollEventData) {
           'worklet'
+          if (didInit.get() === false) {
+            // On iOS, there's a spurious scroll event with 0 position
+            // even if a different page was supplied as the initial page.
+            // Ignore it and wait for the first confirmed selection instead.
+            return
+          }
           dragProgress.set(e.offset + e.position)
         },
         onPageScrollStateChanged(e: PageScrollStateChangedNativeEventData) {
@@ -99,6 +106,7 @@ export const Pager = forwardRef<PagerRef, React.PropsWithChildren<Props>>(
         },
         onPageSelected(e: PagerViewOnPageSelectedEventData) {
           'worklet'
+          didInit.set(true)
           runOnJS(onPageSelectedJSThread)(e.position)
         },
       },
