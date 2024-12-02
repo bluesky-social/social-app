@@ -29,8 +29,15 @@ export function PrivacyAndSecuritySettingsScreen({}: Props) {
 
   return (
     <Layout.Screen>
-      <Layout.Header title={_(msg`Privacy and Security`)} />
       <Layout.Content>
+        <Layout.Header.Outer>
+          <Layout.Header.BackButton />
+          <Layout.Header.Content>
+            <Layout.Header.TitleText>
+              <Trans>Privacy and Security</Trans>
+            </Layout.Header.TitleText>
+          </Layout.Header.Content>
+        </Layout.Header.Outer>
         <SettingsList.Container>
           <SettingsList.Item>
             <SettingsList.ItemIcon

@@ -79,8 +79,15 @@ export function AppearanceSettingsScreen({}: Props) {
   return (
     <LayoutAnimationConfig skipExiting skipEntering>
       <Layout.Screen testID="preferencesThreadsScreen">
-        <Layout.Header title={_(msg`Appearance`)} />
         <Layout.Content>
+          <Layout.Header.Outer>
+            <Layout.Header.BackButton />
+            <Layout.Header.Content>
+              <Layout.Header.TitleText>
+                <Trans>Appearance</Trans>
+              </Layout.Header.TitleText>
+            </Layout.Header.Content>
+          </Layout.Header.Outer>
           <SettingsList.Container>
             <AppearanceToggleButtonGroup
               title={_(msg`Color mode`)}

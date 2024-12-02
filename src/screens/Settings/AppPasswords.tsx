@@ -44,8 +44,15 @@ export function AppPasswordsScreen({}: Props) {
 
   return (
     <Layout.Screen testID="AppPasswordsScreen">
-      <Layout.Header title={_(msg`App Passwords`)} />
       <Layout.Content>
+        <Layout.Header.Outer>
+          <Layout.Header.BackButton />
+          <Layout.Header.Content>
+            <Layout.Header.TitleText>
+              <Trans>App Passwords</Trans>
+            </Layout.Header.TitleText>
+          </Layout.Header.Content>
+        </Layout.Header.Outer>
         {error ? (
           <ErrorScreen
             title={_(msg`Oops!`)}

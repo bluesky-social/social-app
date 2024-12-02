@@ -1,7 +1,7 @@
 import React from 'react'
 import {Alert, View} from 'react-native'
 import {Image} from 'expo-image'
-import {msg} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import * as AppIcon from '@mozzius/expo-dynamic-app-icon'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
@@ -20,9 +20,16 @@ export function AppIconSettingsScreen({}: Props) {
 
   return (
     <Layout.Screen>
-      <Layout.Header title={_('App Icon')} />
       <Layout.Content
         contentContainerStyle={[a.py_2xl, a.px_xl, {paddingBottom: 100}]}>
+        <Layout.Header.Outer>
+          <Layout.Header.BackButton />
+          <Layout.Header.Content>
+            <Layout.Header.TitleText>
+              <Trans>App Icon</Trans>
+            </Layout.Header.TitleText>
+          </Layout.Header.Content>
+        </Layout.Header.Outer>
         <Text style={[a.text_lg, a.font_heavy]}>Defaults</Text>
         <View style={[a.flex_row, a.flex_wrap]}>
           {sets.defaults.map(icon => (
