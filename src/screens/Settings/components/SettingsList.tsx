@@ -2,7 +2,7 @@ import React, {useContext, useMemo} from 'react'
 import {GestureResponderEvent, StyleProp, View, ViewStyle} from 'react-native'
 
 import {HITSLOP_10} from '#/lib/constants'
-import {atoms as a, useGutterStyles,useTheme, ViewStyleProp} from '#/alf'
+import {atoms as a, useTheme, ViewStyleProp} from '#/alf'
 import * as Button from '#/components/Button'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon} from '#/components/icons/Chevron'
 import {Link, LinkProps} from '#/components/Link'
@@ -80,7 +80,6 @@ export function Item({
   iconInset?: boolean
   style?: StyleProp<ViewStyle>
 }) {
-  const gutter = useGutterStyles()
   const context = useContext(ItemContext)
   const childContext = useMemo(() => {
     if (typeof destructive !== 'boolean') return context
@@ -89,7 +88,7 @@ export function Item({
   return (
     <View
       style={[
-        gutter,
+        a.px_xl,
         a.py_sm,
         a.align_center,
         a.gap_md,
