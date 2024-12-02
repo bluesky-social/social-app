@@ -31,11 +31,19 @@ type Item struct {
 	GUID        ItemGUID
 }
 
+type Image struct {
+	XMLName xml.Name `xml:"image"`
+	URL     string   `xml:"url"`
+	Title   string   `xml:"title"`
+	Link    string   `xml:"link"`
+}
+
 type rss struct {
 	Version     string `xml:"version,attr"`
 	Description string `xml:"channel>description,omitempty"`
 	Link        string `xml:"channel>link"`
 	Title       string `xml:"channel>title"`
+	Image       Image  `xml:"channel>image"`
 
 	Item []Item `xml:"channel>item"`
 }
@@ -130,11 +138,20 @@ func (srv *Server) WebProfileRSS(c echo.Context) error {
 	if pv.Description != nil {
 		desc = *pv.Description
 	}
+
+	profileLink := fmt.Sprintf("https://%s/profile/%s", req.Host, pv.Handle)
+	image := Image{
+		URL:   *pv.Avatar,
+		Title: title,
+		Link:  profileLink,
+	}
+
 	feed := &rss{
 		Version:     "2.0",
 		Description: desc,
-		Link:        fmt.Sprintf("https://%s/profile/%s", req.Host, pv.Handle),
+		Link:        profileLink,
 		Title:       title,
+		Image:       image,
 		Item:        posts,
 	}
 	return c.XML(http.StatusOK, feed)
