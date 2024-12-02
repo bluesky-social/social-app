@@ -917,6 +917,7 @@ function MockAccountScreen({
           profile={profile}
           moderationOpts={moderationOpts}
           descriptionRT={new RichText({text: profile.description as string})}
+          backgroundColor={t.atoms.bg.backgroundColor}
         />
       </ScreenHider>
     </View>
