@@ -43,7 +43,7 @@ export function TabBar({
 }: TabBarProps) {
   const pal = usePalette('default')
   const scrollElRef = useAnimatedRef<ScrollView>()
-  const isSyncingScroll = useSharedValue(true)
+  const syncScrollState = useSharedValue<'synced' | 'unsynced'>('synced')
   const didInitialScroll = useSharedValue(false)
   const contentSize = useSharedValue(0)
   const containerSize = useSharedValue(0)
@@ -129,7 +129,7 @@ export function TabBar({
       if (
         nextProgress !== prevProgress &&
         dragState.value !== 'idle' &&
-        isSyncingScroll.get() === true
+        syncScrollState.get() === 'synced'
       ) {
         const offset = progressToOffset(nextProgress)
         scrollTo(scrollElRef, offset, 0, false)
@@ -147,12 +147,12 @@ export function TabBar({
       if (
         nextDragState !== prevDragState &&
         nextDragState === 'idle' &&
-        isSyncingScroll.get() === false
+        syncScrollState.get() === 'unsynced'
       ) {
         const progress = dragProgress.get()
         const offset = progressToOffset(progress)
         scrollTo(scrollElRef, offset, 0, true)
-        isSyncingScroll.set(true)
+        syncScrollState.set('synced')
       }
     },
   )
@@ -172,14 +172,14 @@ export function TabBar({
       const scrollLeft = scrollX.get()
       const scrollRight = scrollLeft + containerSize.get()
       const scrollIntoView = leftEdge < scrollLeft || rightEdge > scrollRight
-      if (isSyncingScroll.get() === true || scrollIntoView) {
+      if (syncScrollState.get() === 'synced' || scrollIntoView) {
         const offset = progressToOffset(index)
         scrollTo(scrollElRef, offset, 0, true)
       }
-      isSyncingScroll.set(true)
+      syncScrollState.set('synced')
     },
     [
-      isSyncingScroll,
+      syncScrollState,
       scrollElRef,
       scrollX,
       progressToOffset,
@@ -266,7 +266,7 @@ export function TabBar({
         onScrollBeginDrag={() => {
           // Remember that you've manually messed with the tabbar scroll.
           // This will disable auto-adjustment until after next pager swipe or item tap.
-          isSyncingScroll.set(false)
+          syncScrollState.set('unsynced')
         }}
         onScroll={e => {
           scrollX.value = Math.round(e.nativeEvent.contentOffset.x)
