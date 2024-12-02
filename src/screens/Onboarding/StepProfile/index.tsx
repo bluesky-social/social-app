@@ -1,6 +1,5 @@
 import React from 'react'
 import {View} from 'react-native'
-import * as Clipboard from 'expo-clipboard'
 import {Image as ExpoImage} from 'expo-image'
 import {
   ImagePickerOptions,
@@ -10,7 +9,6 @@ import {
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {uploadBlob} from '#/lib/api'
 import {usePhotoLibraryPermission} from '#/lib/hooks/usePermissions'
 import {compressIfNeeded} from '#/lib/media/manip'
 import {openCropper} from '#/lib/media/picker'
@@ -18,7 +16,6 @@ import {getDataUriSize} from '#/lib/media/util'
 import {useRequestNotificationsPermission} from '#/lib/notifications/notifications'
 import {logEvent, useGate} from '#/lib/statsig/statsig'
 import {isNative, isWeb} from '#/platform/detection'
-import {useAgent} from '#/state/session'
 import {
   DescriptionText,
   OnboardingControls,
@@ -159,38 +156,7 @@ export function StepProfile() {
     logEvent('onboarding:profile:nextPressed', {})
   }, [avatar, dispatch])
 
-  const agent = useAgent()
-
-  const onDoneCreating = React.useCallback(async () => {
-    const imageUri = await canvasRef.current?.capture()
-    console.log(imageUri)
-    // copy to clipbaord
-    await Clipboard.setStringAsync(imageUri ?? '')
-
-    const blobPromise = await uploadBlob(agent, imageUri ?? '', 'image/jpeg')
-
-    const blob = blobPromise.data.blob
-
-    const command = `go run ./cmd/doppel addDefaultAvi --did ${agent.did} --cid ${blob.ref}`
-
-    await agent.upsertProfile(async existing => {
-      existing = existing ?? {}
-      if (blobPromise) {
-        const res = await blobPromise
-        if (res.data.blob) {
-          existing.avatar = res.data.blob
-        }
-      }
-
-      existing.displayName = ''
-      return existing
-    })
-
-    await Clipboard.setStringAsync(command)
-    console.log(command)
-
-    return
-
+  const onDoneCreating = React.useCallback(() => {
     setAvatar(prev => ({
       ...prev,
       image: undefined,
