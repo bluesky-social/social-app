@@ -7,18 +7,13 @@ import {
 } from 'react-native-keyboard-controller'
 import Animated, {AnimatedScrollViewProps} from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useNavigation} from '@react-navigation/native'
 
-import {NavigationProp} from '#/lib/routes/types'
 import {isWeb} from '#/platform/detection'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
 import {CenteredView} from '#/view/com/util/Views'
-import {atoms as a, useBreakpoints, useGutterStyles,useTheme} from '#/alf'
-import {Button, ButtonIcon} from '#/components/Button'
-import {ChevronLeft_Stroke2_Corner0_Rounded as ChevronLeft} from '#/components/icons/Chevron'
-import {Text} from '#/components/Typography'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+
+export * as HeaderNew from './Header'
 
 // Every screen should have a Layout component wrapping it.
 // This component provides a default padding for the top of the screen.
@@ -196,98 +191,6 @@ export const Center = React.forwardRef(function LayoutContent(
     </>
   )
 })
-
-export function HeaderNew({children}: {children: React.ReactNode}) {
-  const t = useTheme()
-  const gutter = useGutterStyles({top: true, bottom: true})
-
-  return (
-    <View style={[a.w_full, a.border_b, t.atoms.border_contrast_low]}>
-      <View style={[a.flex_row, a.align_start, gutter, {gap: 9}]}>
-        {children}
-      </View>
-    </View>
-  )
-}
-
-HeaderNew.BackButton = function HeaderBackButton() {
-  const {_} = useLingui()
-  const navigation = useNavigation<NavigationProp>()
-
-  const onPressBack = React.useCallback(() => {
-    if (navigation.canGoBack()) {
-      navigation.goBack()
-    } else {
-      navigation.navigate('Home')
-    }
-  }, [navigation])
-
-  return (
-    <Button
-      label={_(msg`Go back`)}
-      size="small"
-      variant="solid"
-      color="secondary"
-      shape="round"
-      onPress={onPressBack}
-      style={[{marginLeft: -3}]}>
-      <ButtonIcon icon={ChevronLeft} />
-    </Button>
-  )
-}
-
-HeaderNew.Content = function HeaderContent({
-  children,
-  right,
-}: {
-  children: React.ReactNode
-  right?: React.ReactNode
-}) {
-  return (
-    <View style={[a.flex_row, a.align_start, a.gap_xs]}>
-      <View style={[a.flex_1]}>{children}</View>
-      {right && <View style={[a.gap_xs, a.flex_1]}>{right}</View>}
-    </View>
-  )
-}
-
-HeaderNew.TitleText = function HeaderTitleText({
-  children,
-}: {
-  children: React.ReactNode
-}) {
-  const {gtMobile} = useBreakpoints()
-  return (
-    <Text
-      style={[
-        a.text_xl,
-        a.font_heavy,
-        a.leading_tight,
-        {paddingTop: 6},
-        gtMobile && [
-          a.text_3xl,
-          {
-            paddingTop: 2,
-          },
-        ],
-      ]}>
-      {children}
-    </Text>
-  )
-}
-
-HeaderNew.SubtitleText = function HeaderSubtitleText({
-  children,
-}: {
-  children: React.ReactNode
-}) {
-  const t = useTheme()
-  return (
-    <Text style={[a.text_sm, a.leading_tight, t.atoms.text_contrast_medium]}>
-      {children}
-    </Text>
-  )
-}
 
 const styles = StyleSheet.create({
   scrollViewCommonStyles: {
