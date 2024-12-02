@@ -30,6 +30,7 @@ import {Text} from '#/view/com/util/text/Text'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a} from '#/alf'
 import {SearchInput} from '#/components/forms/SearchInput'
+import {sortProfiles} from '../../../lib/functions'
 
 let SearchLinkCard = ({
   label,
@@ -206,7 +207,7 @@ export function DesktopSearch() {
                     : undefined
                 }
               />
-              {autocompleteData?.map(item => (
+              {autocompleteData?.sort(sortProfiles).map(item => (
                 <SearchProfileCard
                   key={item.did}
                   profile={item}
