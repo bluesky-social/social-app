@@ -7,13 +7,20 @@ import {useNavigation} from '@react-navigation/native'
 import {NavigationProp} from '#/lib/routes/types'
 import {isIOS} from '#/platform/detection'
 import {useSetDrawerOpen} from '#/state/shell'
-import {atoms as a, useBreakpoints, useGutterStyles, useTheme} from '#/alf'
+import {
+  atoms as a,
+  useBreakpoints,
+  useGutterStyles,
+  useTheme,
+  ViewStyleProp,
+} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeft} from '#/components/icons/Arrow'
 import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
 import {Text} from '#/components/Typography'
 
 const BUTTON_VISUAL_ALIGNMENT_OFFSET = 3
+const BUTTON_SIZE = 34 // small button
 
 export function Outer({children}: {children: React.ReactNode}) {
   const t = useTheme()
@@ -31,7 +38,7 @@ export function Outer({children}: {children: React.ReactNode}) {
         a.py_sm,
         t.atoms.border_contrast_low,
       ]}>
-      {children}
+      <View style={[a.flex_1]}>{children}</View>
     </View>
   )
 }
@@ -39,14 +46,40 @@ export function Outer({children}: {children: React.ReactNode}) {
 export function Content({children}: {children: React.ReactNode}) {
   return (
     <View
-      style={[a.flex_1, a.justify_center, a.py_xs, isIOS && a.align_center]}>
+      style={[
+        a.flex_1,
+        a.justify_center,
+        a.py_xs,
+        isIOS && a.align_center,
+        {
+          paddingHorizontal: BUTTON_SIZE + a.gap_sm.gap,
+          minHeight: BUTTON_SIZE,
+        },
+      ]}>
       {children}
     </View>
   )
 }
 
-export function Slot({children}: {children: React.ReactNode}) {
-  return <View style={[{width: 34}]}>{children}</View>
+export function Slot({
+  children,
+  style,
+}: {children?: React.ReactNode} & ViewStyleProp) {
+  return (
+    <View
+      style={[
+        a.absolute,
+        a.inset_0,
+        a.z_50,
+        {
+          width: BUTTON_SIZE,
+          right: 'auto',
+        },
+        style,
+      ]}>
+      {children}
+    </View>
+  )
 }
 
 export function BackButton() {
@@ -89,7 +122,7 @@ export function MenuButton() {
   return gtMobile ? null : (
     <Slot>
       <Button
-        label={_(msg`Go back`)}
+        label={_(msg`Open drawer menu`)}
         size="small"
         variant="ghost"
         color="secondary"
