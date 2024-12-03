@@ -63,7 +63,7 @@ describe('linkRequiresWarning', () => {
     // bad uri inputs, default to true
     ['', '', true],
     ['example.com', 'example.com', true],
-    ['/', 'Username', false],
+    ['/profile', 'Username', false],
     ['#', 'Show More', false],
     ['https://docs.bsky.app', 'https://docs.bsky.app', false],
     ['https://bsky.app/compose/intent?text=test', 'Compose a post', false],
