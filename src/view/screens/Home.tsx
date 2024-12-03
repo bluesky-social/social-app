@@ -156,8 +156,10 @@ function HomeScreenReady({
       setMinimalShellMode(false)
       setDrawerSwipeDisabled(index > 0)
       const feed = allFeeds[index]
-      setSelectedFeed(feed)
+      // Mutate the ref before setting state to avoid the imperative syncing effect
+      // above from starting a loop on Android when swiping back and forth.
       lastPagerReportedIndexRef.current = index
+      setSelectedFeed(feed)
       logEvent('home:feedDisplayed', {
         index,
         feedType: feed.split('|')[0],
@@ -173,6 +175,7 @@ function HomeScreenReady({
 
   const onPageScrollStateChanged = React.useCallback(
     (state: 'idle' | 'dragging' | 'settling') => {
+      'worklet'
       if (state === 'dragging') {
         setMinimalShellMode(false)
       }

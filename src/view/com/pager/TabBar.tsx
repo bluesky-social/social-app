@@ -1,5 +1,16 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react'
+import {useCallback} from 'react'
 import {LayoutChangeEvent, ScrollView, StyleSheet, View} from 'react-native'
+import Animated, {
+  interpolate,
+  runOnJS,
+  runOnUI,
+  scrollTo,
+  SharedValue,
+  useAnimatedReaction,
+  useAnimatedRef,
+  useAnimatedStyle,
+  useSharedValue,
+} from 'react-native-reanimated'
 
 import {usePalette} from '#/lib/hooks/usePalette'
 import {PressableWithHover} from '../util/PressableWithHover'
@@ -9,61 +20,245 @@ export interface TabBarProps {
   testID?: string
   selectedPage: number
   items: string[]
-  indicatorColor?: string
   onSelect?: (index: number) => void
   onPressSelected?: (index: number) => void
+  dragProgress: SharedValue<number>
+  dragState: SharedValue<'idle' | 'dragging' | 'settling'>
 }
 
-// How much of the previous/next item we're showing
-// to give the user a hint there's more to scroll.
+const ITEM_PADDING = 10
+const CONTENT_PADDING = 6
+// How much of the previous/next item we're requiring
+// when deciding whether to scroll into view on tap.
 const OFFSCREEN_ITEM_WIDTH = 20
 
 export function TabBar({
   testID,
   selectedPage,
   items,
-  indicatorColor,
   onSelect,
   onPressSelected,
+  dragProgress,
+  dragState,
 }: TabBarProps) {
   const pal = usePalette('default')
-  const scrollElRef = useRef<ScrollView>(null)
-  const [itemXs, setItemXs] = useState<number[]>([])
-  const indicatorStyle = useMemo(
-    () => ({borderBottomColor: indicatorColor || pal.colors.link}),
-    [indicatorColor, pal],
+  const scrollElRef = useAnimatedRef<ScrollView>()
+  const syncScrollState = useSharedValue<'synced' | 'unsynced' | 'needs-sync'>(
+    'synced',
+  )
+  const didInitialScroll = useSharedValue(false)
+  const contentSize = useSharedValue(0)
+  const containerSize = useSharedValue(0)
+  const scrollX = useSharedValue(0)
+  const layouts = useSharedValue<{x: number; width: number}[]>([])
+  const itemsLength = items.length
+
+  const scrollToOffsetJS = useCallback(
+    (x: number) => {
+      scrollElRef.current?.scrollTo({
+        x,
+        y: 0,
+        animated: true,
+      })
+    },
+    [scrollElRef],
   )
 
-  useEffect(() => {
-    // On native, the primary interaction is swiping.
-    // We adjust the scroll little by little on every tab change.
-    // Scroll into view but keep the end of the previous item visible.
-    let x = itemXs[selectedPage] || 0
-    x = Math.max(0, x - OFFSCREEN_ITEM_WIDTH)
-    scrollElRef.current?.scrollTo({x})
-  }, [scrollElRef, itemXs, selectedPage])
+  const indexToOffset = useCallback(
+    (index: number) => {
+      'worklet'
+      const layout = layouts.get()[index]
+      const availableSize = containerSize.get() - 2 * CONTENT_PADDING
+      if (!layout) {
+        // Should not happen, but fall back to equal sizes.
+        const offsetPerPage = contentSize.get() - availableSize
+        return (index / (itemsLength - 1)) * offsetPerPage
+      }
+      const freeSpace = availableSize - layout.width
+      const accumulatingOffset = interpolate(
+        index,
+        // Gradually shift every next item to the left so that the first item
+        // is positioned like "left: 0" but the last item is like "right: 0".
+        [0, itemsLength - 1],
+        [0, freeSpace],
+        'clamp',
+      )
+      return layout.x - accumulatingOffset
+    },
+    [itemsLength, contentSize, containerSize, layouts],
+  )
+
+  const progressToOffset = useCallback(
+    (progress: number) => {
+      'worklet'
+      return interpolate(
+        progress,
+        [Math.floor(progress), Math.ceil(progress)],
+        [
+          indexToOffset(Math.floor(progress)),
+          indexToOffset(Math.ceil(progress)),
+        ],
+        'clamp',
+      )
+    },
+    [indexToOffset],
+  )
+
+  // When we know the entire layout for the first time, scroll selection into view.
+  useAnimatedReaction(
+    () => layouts.get().length,
+    (nextLayoutsLength, prevLayoutsLength) => {
+      if (nextLayoutsLength !== prevLayoutsLength) {
+        if (
+          nextLayoutsLength === itemsLength &&
+          didInitialScroll.get() === false
+        ) {
+          didInitialScroll.set(true)
+          const progress = dragProgress.get()
+          const offset = progressToOffset(progress)
+          // It's unclear why we need to go back to JS here. It seems iOS-specific.
+          runOnJS(scrollToOffsetJS)(offset)
+        }
+      }
+    },
+  )
+
+  // When you swipe the pager, the tabbar should scroll automatically
+  // as you're dragging the page and then even during deceleration.
+  useAnimatedReaction(
+    () => dragProgress.get(),
+    (nextProgress, prevProgress) => {
+      if (
+        nextProgress !== prevProgress &&
+        dragState.value !== 'idle' &&
+        // This is only OK to do when we're 100% sure we're synced.
+        // Otherwise, there would be a jump at the beginning of the swipe.
+        syncScrollState.get() === 'synced'
+      ) {
+        const offset = progressToOffset(nextProgress)
+        scrollTo(scrollElRef, offset, 0, false)
+      }
+    },
+  )
+
+  // If the syncing is currently off but you've just finished swiping,
+  // it's an opportunity to resync. It won't feel disruptive because
+  // you're not directly interacting with the tabbar at the moment.
+  useAnimatedReaction(
+    () => dragState.value,
+    (nextDragState, prevDragState) => {
+      if (
+        nextDragState !== prevDragState &&
+        nextDragState === 'idle' &&
+        (syncScrollState.get() === 'unsynced' ||
+          syncScrollState.get() === 'needs-sync')
+      ) {
+        const progress = dragProgress.get()
+        const offset = progressToOffset(progress)
+        scrollTo(scrollElRef, offset, 0, true)
+        syncScrollState.set('synced')
+      }
+    },
+  )
+
+  // When you press on the item, we'll scroll into view -- unless you previously
+  // have scrolled the tabbar manually, in which case it'll re-sync on next press.
+  const onPressUIThread = useCallback(
+    (index: number) => {
+      'worklet'
+      const itemLayout = layouts.get()[index]
+      if (!itemLayout) {
+        // Should not happen.
+        return
+      }
+      const leftEdge = itemLayout.x - OFFSCREEN_ITEM_WIDTH
+      const rightEdge = itemLayout.x + itemLayout.width + OFFSCREEN_ITEM_WIDTH
+      const scrollLeft = scrollX.get()
+      const scrollRight = scrollLeft + containerSize.get()
+      const scrollIntoView = leftEdge < scrollLeft || rightEdge > scrollRight
+      if (
+        syncScrollState.get() === 'synced' ||
+        syncScrollState.get() === 'needs-sync' ||
+        scrollIntoView
+      ) {
+        const offset = progressToOffset(index)
+        scrollTo(scrollElRef, offset, 0, true)
+        syncScrollState.set('synced')
+      } else {
+        // The item is already in view so it's disruptive to
+        // scroll right now. Do it on the next opportunity.
+        syncScrollState.set('needs-sync')
+      }
+    },
+    [
+      syncScrollState,
+      scrollElRef,
+      scrollX,
+      progressToOffset,
+      containerSize,
+      layouts,
+    ],
+  )
+
+  const onItemLayout = useCallback(
+    (i: number, layout: {x: number; width: number}) => {
+      'worklet'
+      layouts.modify(ls => {
+        ls[i] = layout
+        return ls
+      })
+    },
+    [layouts],
+  )
+
+  const indicatorStyle = useAnimatedStyle(() => {
+    if (!_WORKLET) {
+      return {opacity: 0}
+    }
+    const layoutsValue = layouts.get()
+    if (
+      layoutsValue.length !== itemsLength ||
+      layoutsValue.some(l => l === undefined)
+    ) {
+      return {
+        opacity: 0,
+      }
+    }
+    if (layoutsValue.length === 1) {
+      return {opacity: 1}
+    }
+    return {
+      opacity: 1,
+      transform: [
+        {
+          translateX: interpolate(
+            dragProgress.get(),
+            layoutsValue.map((l, i) => i),
+            layoutsValue.map(l => l.x + l.width / 2 - contentSize.get() / 2),
+          ),
+        },
+        {
+          scaleX: interpolate(
+            dragProgress.get(),
+            layoutsValue.map((l, i) => i),
+            layoutsValue.map(
+              l => (l.width - ITEM_PADDING * 2) / contentSize.get(),
+            ),
+          ),
+        },
+      ],
+    }
+  })
 
   const onPressItem = useCallback(
     (index: number) => {
+      runOnUI(onPressUIThread)(index)
       onSelect?.(index)
       if (index === selectedPage) {
         onPressSelected?.(index)
       }
     },
-    [onSelect, selectedPage, onPressSelected],
-  )
-
-  // calculates the x position of each item on mount and on layout change
-  const onItemLayout = React.useCallback(
-    (e: LayoutChangeEvent, index: number) => {
-      const x = e.nativeEvent.layout.x
-      setItemXs(prev => {
-        const Xs = [...prev]
-        Xs[index] = x
-        return Xs
-      })
-    },
-    [],
+    [onSelect, selectedPage, onPressSelected, onPressUIThread],
   )
 
   return (
@@ -76,35 +271,111 @@ export function TabBar({
         horizontal={true}
         showsHorizontalScrollIndicator={false}
         ref={scrollElRef}
-        contentContainerStyle={styles.contentContainer}>
-        {items.map((item, i) => {
-          const selected = i === selectedPage
-          return (
-            <PressableWithHover
-              testID={`${testID}-selector-${i}`}
-              key={`${item}-${i}`}
-              onLayout={e => onItemLayout(e, i)}
-              style={styles.item}
-              hoverStyle={pal.viewLight}
-              onPress={() => onPressItem(i)}
-              accessibilityRole="tab">
-              <View style={[styles.itemInner, selected && indicatorStyle]}>
-                <Text
-                  emoji
-                  type="lg-bold"
-                  testID={testID ? `${testID}-${item}` : undefined}
-                  style={[
-                    selected ? pal.text : pal.textLight,
-                    {lineHeight: 20},
-                  ]}>
-                  {item}
-                </Text>
-              </View>
-            </PressableWithHover>
-          )
-        })}
+        contentContainerStyle={styles.contentContainer}
+        onLayout={e => {
+          containerSize.set(e.nativeEvent.layout.width)
+        }}
+        onScrollBeginDrag={() => {
+          // Remember that you've manually messed with the tabbar scroll.
+          // This will disable auto-adjustment until after next pager swipe or item tap.
+          syncScrollState.set('unsynced')
+        }}
+        onScroll={e => {
+          scrollX.value = Math.round(e.nativeEvent.contentOffset.x)
+        }}>
+        <Animated.View
+          onLayout={e => {
+            contentSize.set(e.nativeEvent.layout.width)
+          }}
+          style={{flexDirection: 'row'}}>
+          {items.map((item, i) => {
+            return (
+              <TabBarItem
+                key={i}
+                index={i}
+                testID={testID}
+                dragProgress={dragProgress}
+                item={item}
+                onPressItem={onPressItem}
+                onItemLayout={onItemLayout}
+              />
+            )
+          })}
+          <Animated.View
+            style={[
+              indicatorStyle,
+              {
+                position: 'absolute',
+                left: 0,
+                bottom: 0,
+                right: 0,
+                borderBottomWidth: 3,
+                borderColor: pal.link.color,
+              },
+            ]}
+          />
+        </Animated.View>
       </ScrollView>
       <View style={[pal.border, styles.outerBottomBorder]} />
+    </View>
+  )
+}
+
+function TabBarItem({
+  index,
+  testID,
+  dragProgress,
+  item,
+  onPressItem,
+  onItemLayout,
+}: {
+  index: number
+  testID: string | undefined
+  dragProgress: SharedValue<number>
+  item: string
+  onPressItem: (index: number) => void
+  onItemLayout: (index: number, layout: {x: number; width: number}) => void
+}) {
+  const pal = usePalette('default')
+  const style = useAnimatedStyle(() => {
+    if (!_WORKLET) {
+      return {opacity: 0.7}
+    }
+    return {
+      opacity: interpolate(
+        dragProgress.get(),
+        [index - 1, index, index + 1],
+        [0.7, 1, 0.7],
+        'clamp',
+      ),
+    }
+  })
+
+  const handleLayout = useCallback(
+    (e: LayoutChangeEvent) => {
+      runOnUI(onItemLayout)(index, e.nativeEvent.layout)
+    },
+    [index, onItemLayout],
+  )
+
+  return (
+    <View onLayout={handleLayout}>
+      <PressableWithHover
+        testID={`${testID}-selector-${index}`}
+        style={styles.item}
+        hoverStyle={pal.viewLight}
+        onPress={() => onPressItem(index)}
+        accessibilityRole="tab">
+        <Animated.View style={[style, styles.itemInner]}>
+          <Text
+            emoji
+            type="lg-bold"
+            testID={testID ? `${testID}-${item}` : undefined}
+            style={[pal.text, {lineHeight: 20}]}>
+            {item}
+          </Text>
+        </Animated.View>
+      </PressableWithHover>
     </View>
   )
 }
@@ -115,11 +386,11 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     backgroundColor: 'transparent',
-    paddingHorizontal: 6,
+    paddingHorizontal: CONTENT_PADDING,
   },
   item: {
     paddingTop: 10,
-    paddingHorizontal: 10,
+    paddingHorizontal: ITEM_PADDING,
     justifyContent: 'center',
   },
   itemInner: {
