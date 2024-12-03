@@ -29,6 +29,7 @@ export function AppIconSettingsScreen({}: Props) {
               <Trans>App Icon</Trans>
             </Layout.Header.TitleText>
           </Layout.Header.Content>
+          <Layout.Header.Slot />
         </Layout.Header.Outer>
         <Text style={[a.text_lg, a.font_heavy]}>Defaults</Text>
         <View style={[a.flex_row, a.flex_wrap]}>

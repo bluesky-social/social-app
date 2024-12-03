@@ -40,6 +40,7 @@ export function ContentAndMediaSettingsScreen({}: Props) {
               <Trans>Content & Media</Trans>
             </Layout.Header.TitleText>
           </Layout.Header.Content>
+          <Layout.Header.Slot />
         </Layout.Header.Outer>
         <SettingsList.Container>
           <SettingsList.LinkItem

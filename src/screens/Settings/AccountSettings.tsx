@@ -46,6 +46,7 @@ export function AccountSettingsScreen({}: Props) {
               <Trans>Account</Trans>
             </Layout.Header.TitleText>
           </Layout.Header.Content>
+          <Layout.Header.Slot />
         </Layout.Header.Outer>
 
         <SettingsList.Container>

@@ -32,46 +32,26 @@ export function Outer({children}: {children: React.ReactNode}) {
         a.py_sm,
         t.atoms.border_contrast_low,
       ]}>
-      <View style={[a.flex_1]}>{children}</View>
+      {children}
     </View>
   )
 }
 
 export function Content({children}: {children: React.ReactNode}) {
   return (
-    <View
-      style={[
-        a.flex_1,
-        a.justify_center,
-        a.py_xs,
-        isIOS && a.align_center,
-        {
-          paddingHorizontal: BUTTON_SIZE + a.gap_sm.gap,
-          minHeight: BUTTON_SIZE,
-        },
-      ]}>
+    <View style={[a.flex_1, a.justify_center, isIOS && a.align_center]}>
       {children}
     </View>
   )
 }
 
-export function Slot({
-  children,
-  position = 'left',
-}: {
-  children?: React.ReactNode
-  position?: 'left' | 'right'
-}) {
+export function Slot({children}: {children?: React.ReactNode}) {
   return (
     <View
       style={[
-        a.absolute,
-        a.inset_0,
         a.z_50,
         {
           width: BUTTON_SIZE,
-          right: position === 'left' ? 'auto' : 0,
-          left: position === 'right' ? 'auto' : 0,
         },
       ]}>
       {children}

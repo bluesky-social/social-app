@@ -72,6 +72,7 @@ export function LanguageSettingsScreen({}: Props) {
               <Trans>Languages</Trans>
             </Layout.Header.TitleText>
           </Layout.Header.Content>
+          <Layout.Header.Slot />
         </Layout.Header.Outer>
         <SettingsList.Container>
           <SettingsList.Group iconInset={false}>
