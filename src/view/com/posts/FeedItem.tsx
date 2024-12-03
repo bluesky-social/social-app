@@ -238,6 +238,15 @@ let FeedItemInner = ({
     ? rootPost.threadgate.record
     : undefined
 
+  const isThread = isThreadChild || isThreadParent || isThreadLastChild
+
+  const contentPadding = useMemo(() => {
+    if (isThread) {
+      return {paddingLeft: 50} // Adjust content padding for thread alignment
+    }
+    return {paddingLeft: 0}
+  }, [isThread])
+
   const [hover, setHover] = useState(false)
   return (
     <Link
@@ -256,22 +265,7 @@ let FeedItemInner = ({
       }}>
       <SubtleWebHover hover={hover} />
       <View style={{flexDirection: 'row', gap: 10, paddingLeft: 8}}>
-        <View style={{width: 42}}>
-          {isThreadChild && (
-            <View
-              style={[
-                styles.replyLine,
-                {
-                  flexGrow: 1,
-                  backgroundColor: pal.colors.replyLine,
-                  marginBottom: 4,
-                },
-              ]}
-            />
-          )}
-        </View>
-
-        <View style={{paddingTop: 12, flexShrink: 1}}>
+        <View style={{paddingTop: 6, paddingBottom: 6, flexShrink: 1}}>
           {isReasonFeedSource(reason) ? (
             <Link href={reason.href}>
               <Text
@@ -395,26 +389,41 @@ let FeedItemInner = ({
               profile={parentAuthor}
             />
           )}
-
         <LabelsOnMyPost post={post} />
-        <PostContent
-          moderation={moderation}
-          richText={richText}
-          postEmbed={post.embed}
-          postAuthor={post.author}
-          onOpenEmbed={onOpenEmbed}
-          post={post}
-          threadgateRecord={threadgateRecord}
-        />
-        <PostCtrls
-          post={post}
-          record={record}
-          richText={richText}
-          onPressReply={onPressReply}
-          logContext="FeedItem"
-          feedContext={feedContext}
-          threadgateRecord={threadgateRecord}
-        />
+        {isThreadParent && (
+          <View
+            style={[
+              styles.replyLine,
+              {
+                flexGrow: 1,
+                position: 'absolute',
+                height: '100%',
+                backgroundColor: pal.colors.replyLine,
+                marginTop: 40,
+              },
+            ]}
+          />
+        )}
+        <View style={[styles.contentContainer, contentPadding]}>
+          <PostContent
+            moderation={moderation}
+            richText={richText}
+            postEmbed={post.embed}
+            postAuthor={post.author}
+            onOpenEmbed={onOpenEmbed}
+            post={post}
+            threadgateRecord={threadgateRecord}
+          />
+          <PostCtrls
+            post={post}
+            record={record}
+            richText={richText}
+            onPressReply={onPressReply}
+            logContext="FeedItem"
+            feedContext={feedContext}
+            threadgateRecord={threadgateRecord}
+          />
+        </View>
       </View>
     </Link>
   )
@@ -593,8 +602,13 @@ const styles = StyleSheet.create({
   },
   replyLine: {
     width: 2,
-    marginLeft: 'auto',
-    marginRight: 'auto',
+    marginLeft: 20,
+    marginRight: 20,
+    flexGrow: 1,
+  },
+  replyContainer: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
   },
   includeReason: {
     flexDirection: 'row',
@@ -616,11 +630,6 @@ const styles = StyleSheet.create({
     paddingRight: 10,
     position: 'relative',
     zIndex: 999,
-  },
-  layoutContent: {
-    position: 'relative',
-    flex: 1,
-    zIndex: 0,
   },
   alert: {
     marginTop: 6,
@@ -645,5 +654,8 @@ const styles = StyleSheet.create({
   metaContent: {
     flex: 1,
     paddingLeft: 10,
+  },
+  contentContainer: {
+    flex: 1,
   },
 })
