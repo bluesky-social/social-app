@@ -106,7 +106,7 @@ export function RichText({
         <ProfileHoverCard key={key} inline did={mention.did}>
           <InlineLinkText
             selectable={selectable}
-            to={`/profile/${mention.did}`}
+            to={`/${mention.did}`}
             style={interactiveStyles}
             // @ts-ignore TODO
             dataSet={WORD_WRAP}

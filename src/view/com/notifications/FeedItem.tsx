@@ -94,20 +94,20 @@ let FeedItem = ({
     if (item.type === 'post-like' || item.type === 'repost') {
       if (item.subjectUri) {
         const urip = new AtUri(item.subjectUri)
-        return `/profile/${urip.host}/post/${urip.rkey}`
+        return `/${urip.host}/post/${urip.rkey}`
       }
     } else if (item.type === 'follow') {
       return makeProfileLink(item.notification.author)
     } else if (item.type === 'reply') {
       const urip = new AtUri(item.notification.uri)
-      return `/profile/${urip.host}/post/${urip.rkey}`
+      return `/${urip.host}/post/${urip.rkey}`
     } else if (
       item.type === 'feedgen-like' ||
       item.type === 'starterpack-joined'
     ) {
       if (item.subjectUri) {
         const urip = new AtUri(item.subjectUri)
-        return `/profile/${urip.host}/feed/${urip.rkey}`
+        return `/${urip.host}/feed/${urip.rkey}`
       }
     }
     return ''

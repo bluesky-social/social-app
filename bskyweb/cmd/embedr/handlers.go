@@ -168,7 +168,7 @@ func (srv *Server) WebOEmbed(c echo.Context) error {
 		Type:         "rich",
 		Version:      "1.0",
 		AuthorName:   "@" + post.Author.Handle,
-		AuthorURL:    fmt.Sprintf("https://bsky.app/profile/%s", post.Author.Handle),
+		AuthorURL:    fmt.Sprintf("https://bsky.app/%s", post.Author.Handle),
 		ProviderName: "Bluesky Social",
 		CacheAge:     86400,
 		Width:        &width,

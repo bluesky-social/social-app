@@ -476,7 +476,7 @@ function Header({
   }, [reportDialogControl])
 
   const onPressShare = useCallback(() => {
-    const url = toShareUrl(`/profile/${list.creator.did}/lists/${rkey}`)
+    const url = toShareUrl(`/${list.creator.did}/lists/${rkey}`)
     shareUrl(url)
   }, [list, rkey])
 

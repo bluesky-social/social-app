@@ -46,7 +46,7 @@ agent
   })
 
 function PwiOptOut({thread}: {thread: AppBskyFeedDefs.ThreadViewPost}) {
-  const href = `/profile/${thread.post.author.did}/post/${getRkey(thread.post)}`
+  const href = `/${thread.post.author.did}/post/${getRkey(thread.post)}`
   return (
     <Container href={href}>
       <Link

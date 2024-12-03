@@ -119,9 +119,7 @@ export function isBskyPostUrl(url: string): boolean {
   if (isBskyAppUrl(url)) {
     try {
       const urlp = new URL(url)
-      return /profile\/(?<name>[^/]+)\/post\/(?<rkey>[^/]+)/i.test(
-        urlp.pathname,
-      )
+      return /(?<name>[^/]+)\/post\/(?<rkey>[^/]+)/i.test(urlp.pathname)
     } catch {}
   }
   return false
@@ -131,9 +129,7 @@ export function isBskyCustomFeedUrl(url: string): boolean {
   if (isBskyAppUrl(url)) {
     try {
       const urlp = new URL(url)
-      return /profile\/(?<name>[^/]+)\/feed\/(?<rkey>[^/]+)/i.test(
-        urlp.pathname,
-      )
+      return /(?<name>[^/]+)\/feed\/(?<rkey>[^/]+)/i.test(urlp.pathname)
     } catch {}
   }
   return false
@@ -143,9 +139,7 @@ export function isBskyListUrl(url: string): boolean {
   if (isBskyAppUrl(url)) {
     try {
       const urlp = new URL(url)
-      return /profile\/(?<name>[^/]+)\/lists\/(?<rkey>[^/]+)/i.test(
-        urlp.pathname,
-      )
+      return /(?<name>[^/]+)\/lists\/(?<rkey>[^/]+)/i.test(urlp.pathname)
     } catch {
       console.error('Unexpected error in isBskyListUrl()', url)
     }
@@ -207,7 +201,7 @@ export function convertBskyAppUrlIfNeeded(url: string): string {
 export function listUriToHref(url: string): string {
   try {
     const {hostname, rkey} = new AtUri(url)
-    return `/profile/${hostname}/lists/${rkey}`
+    return `/${hostname}/lists/${rkey}`
   } catch {
     return ''
   }
@@ -216,7 +210,7 @@ export function listUriToHref(url: string): string {
 export function feedUriToHref(url: string): string {
   try {
     const {hostname, rkey} = new AtUri(url)
-    return `/profile/${hostname}/feed/${rkey}`
+    return `/${hostname}/feed/${rkey}`
   } catch {
     return ''
   }
@@ -232,7 +226,7 @@ export function postUriToRelativePath(
       options?.handle && !isInvalidHandle(options.handle)
         ? options.handle
         : hostname
-    return `/profile/${handleOrDid}/post/${rkey}`
+    return `/${handleOrDid}/post/${rkey}`
   } catch {
     return undefined
   }

@@ -63,7 +63,7 @@ func (srv *Server) WebProfileRSS(c echo.Context) error {
 				return echo.NewHTTPError(403, fmt.Sprintf("account does not allow public views: %s", handle))
 			}
 		}
-		return c.Redirect(http.StatusFound, fmt.Sprintf("/profile/%s/rss", pv.Did))
+		return c.Redirect(http.StatusFound, fmt.Sprintf("/%s/rss", pv.Did))
 	}
 
 	did, err := syntax.ParseDID(identParam)
@@ -112,7 +112,7 @@ func (srv *Server) WebProfileRSS(c echo.Context) error {
 			pubDate = createdAt.Time().Format(FullYearRFC822Z)
 		}
 		posts = append(posts, Item{
-			Link:        fmt.Sprintf("https://%s/profile/%s/post/%s", req.Host, pv.Handle, aturi.RecordKey().String()),
+			Link:        fmt.Sprintf("https://%s/%s/post/%s", req.Host, pv.Handle, aturi.RecordKey().String()),
 			Description: ExpandPostText(rec),
 			PubDate:     pubDate,
 			GUID: ItemGUID{
@@ -133,7 +133,7 @@ func (srv *Server) WebProfileRSS(c echo.Context) error {
 	feed := &rss{
 		Version:     "2.0",
 		Description: desc,
-		Link:        fmt.Sprintf("https://%s/profile/%s", req.Host, pv.Handle),
+		Link:        fmt.Sprintf("https://%s/%s", req.Host, pv.Handle),
 		Title:       title,
 		Item:        posts,
 	}

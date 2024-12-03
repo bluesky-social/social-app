@@ -77,7 +77,7 @@ export function Embed({
 
         return (
           <Link
-            href={`/profile/${record.author.did}/post/${getRkey(record)}`}
+            href={`/${record.author.did}/post/${getRkey(record)}`}
             className="transition-colors hover:bg-neutral-100 border rounded-lg p-2 gap-1.5 w-full flex flex-col">
             <div className="flex gap-1.5 items-center">
               <div className="w-4 h-4 overflow-hidden rounded-full bg-neutral-300 shrink-0">
@@ -112,7 +112,7 @@ export function Embed({
           <GenericWithImageEmbed
             image={record.avatar}
             title={record.name}
-            href={`/profile/${record.creator.did}/lists/${getRkey(record)}`}
+            href={`/${record.creator.did}/lists/${getRkey(record)}`}
             subtitle={
               record.purpose === AppBskyGraphDefs.MODLIST
                 ? `Moderation list by @${record.creator.handle}`
@@ -129,7 +129,7 @@ export function Embed({
           <GenericWithImageEmbed
             image={record.avatar}
             title={record.displayName}
-            href={`/profile/${record.creator.did}/feed/${getRkey(record)}`}
+            href={`/${record.creator.did}/feed/${getRkey(record)}`}
             subtitle={`Feed by @${record.creator.handle}`}
             description={`Liked by ${record.likeCount ?? 0} users`}
           />

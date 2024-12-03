@@ -3,7 +3,7 @@
 
 <https://oembed.com/>
 
-* URL scheme: `https://bsky.app/profile/*/post/*`
+* URL scheme: `https://bsky.app/*/post/*`
 * API endpoint: `https://embed.bsky.app/oembed`
 
 Request params:
@@ -35,7 +35,7 @@ Not used:
 Only `json` is supported; `xml` is a 501.
 
 ```
-<link rel="alternate" type="application/json+oembed" href="https://embed.bsky.app/oembed?format=json&url=https://bsky.app/profile/bnewbold.net/post/abc123" />
+<link rel="alternate" type="application/json+oembed" href="https://embed.bsky.app/oembed?format=json&url=https://bsky.app/bnewbold.net/post/abc123" />
 ```
 
 

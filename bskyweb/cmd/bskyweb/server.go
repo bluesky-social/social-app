@@ -272,23 +272,23 @@ func serve(cctx *cli.Context) error {
 	e.GET("/messages/:conversation", server.WebGeneric)
 
 	// profile endpoints; only first populates info
-	e.GET("/profile/:handleOrDID", server.WebProfile)
-	e.GET("/profile/:handleOrDID/follows", server.WebGeneric)
-	e.GET("/profile/:handleOrDID/followers", server.WebGeneric)
-	e.GET("/profile/:handleOrDID/known-followers", server.WebGeneric)
-	e.GET("/profile/:handleOrDID/lists/:rkey", server.WebGeneric)
-	e.GET("/profile/:handleOrDID/feed/:rkey", server.WebGeneric)
-	e.GET("/profile/:handleOrDID/feed/:rkey/liked-by", server.WebGeneric)
-	e.GET("/profile/:handleOrDID/labeler/liked-by", server.WebGeneric)
+	e.GET("/:handleOrDID", server.WebProfile)
+	e.GET("/:handleOrDID/follows", server.WebGeneric)
+	e.GET("/:handleOrDID/followers", server.WebGeneric)
+	e.GET("/:handleOrDID/known-followers", server.WebGeneric)
+	e.GET("/:handleOrDID/lists/:rkey", server.WebGeneric)
+	e.GET("/:handleOrDID/feed/:rkey", server.WebGeneric)
+	e.GET("/:handleOrDID/feed/:rkey/liked-by", server.WebGeneric)
+	e.GET("/:handleOrDID/labeler/liked-by", server.WebGeneric)
 
 	// profile RSS feed (DID not handle)
-	e.GET("/profile/:ident/rss", server.WebProfileRSS)
+	e.GET("/:ident/rss", server.WebProfileRSS)
 
 	// post endpoints; only first populates info
-	e.GET("/profile/:handleOrDID/post/:rkey", server.WebPost)
-	e.GET("/profile/:handleOrDID/post/:rkey/liked-by", server.WebGeneric)
-	e.GET("/profile/:handleOrDID/post/:rkey/reposted-by", server.WebGeneric)
-	e.GET("/profile/:handleOrDID/post/:rkey/quotes", server.WebGeneric)
+	e.GET("/:handleOrDID/post/:rkey", server.WebPost)
+	e.GET("/:handleOrDID/post/:rkey/liked-by", server.WebGeneric)
+	e.GET("/:handleOrDID/post/:rkey/reposted-by", server.WebGeneric)
+	e.GET("/:handleOrDID/post/:rkey/quotes", server.WebGeneric)
 
 	// starter packs
 	e.GET("/starter-pack/:handleOrDID/:rkey", server.WebStarterPack)
