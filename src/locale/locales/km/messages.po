@@ -5140,7 +5140,7 @@ msgstr "សូមពន្យល់ពីមូលហេតុដែលអ្ន
 #: src/lib/hooks/useAccountSwitcher.ts:45
 #: src/lib/hooks/useAccountSwitcher.ts:55
 msgid "Please sign in as @{0}"
-msgstr "សូមចូលជា @{0}"
+msgstr "សូមចូលគណនីជា @{0}"
 
 #: src/view/com/modals/VerifyEmail.tsx:109
 msgid "Please Verify Your Email"
@@ -6544,15 +6544,15 @@ msgstr "បង្ហាញការព្រមាន និងត្រងព�
 #: src/view/shell/NavSignupCard.tsx:57
 #: src/view/shell/NavSignupCard.tsx:62
 msgid "Sign in"
-msgstr "Sign in"
+msgstr "ចូលគណនី"
 
 #: src/components/AccountList.tsx:122
 msgid "Sign in as {0}"
-msgstr "ចូលជា {0}"
+msgstr "ចូលគណនីជា {0}"
 
 #: src/screens/Login/ChooseAccountForm.tsx:80
 msgid "Sign in as..."
-msgstr "ចូលជា..."
+msgstr "ចូលគណនីជា..."
 
 #: src/components/dialogs/Signin.tsx:75
 msgid "Sign in or create your account to join the conversation!"
