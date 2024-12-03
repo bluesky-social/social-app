@@ -1,5 +1,5 @@
 import {createSinglePathSVG} from './TEMPLATE'
 
 export const VideoClip_Stroke2_Corner0_Rounded = createSinglePathSVG({
-  path: 'M 3 4 a 1 1 0 0 1 1 -1 h 16 a 1 1 0 0 1 1 1 v 16 a 1 1 0 0 1 -1 1 H 4 a 1 1 0 0 1 -1 -1 V 4 Z m 2 1 v 2 h 2 V 5 H 5 Z m 4 0 v 6 h 6 V 5 H 9 Z m 8 0 v 2 h 2 V 5 h -2 Z m 2 4 h -2 v 2 h 2 V 9 Z m 0 4 h -2 v 2 h 2 V 13 Z m 0 4 h -2 V 19 h 2 Z M 15 19 v -6 H 9 v 6 h 6 Z m -8 0 v -2 H 5 v 2 h 2 Z m -2 -4 h 2 v -2 H 5 v 2 Z m 0 -4 h 2 V 9 H 5 v 2 Z',
+  path: 'M3 4a1 1 0 011-1h16a1 1 0 011 1v16a1 1 0 01-1 1H4a1 1 0 01-1-1V4Zm2 1v2h2V5H5Zm4 0v6h6V5H9Zm8 0v2h2V5h-2Zm2 4h-2v2h2V9Zm0 4h-2v2h2V13Zm0 4h-2V19h2ZM15 19v-6H9v6h6Zm-8 0v-2H5v2h2Zm-2-4h2v-2H5v2Zm0-4h2V9H5v2Z',
 })
