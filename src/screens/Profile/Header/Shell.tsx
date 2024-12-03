@@ -176,7 +176,7 @@ let ProfileHeaderShell = ({
           <View
             style={[
               t.atoms.bg,
-              {borderColor: t.palette.primary_400},
+              {borderColor: t.palette.primary_25},
               styles.avi,
               profile.associated?.labeler && styles.aviLabeler,
             ]}>
