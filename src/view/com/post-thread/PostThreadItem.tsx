@@ -23,9 +23,11 @@ import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {countLines} from '#/lib/strings/helpers'
-import {niceDate} from '#/lib/strings/time'
+import {niceDate as niceDateWebOriOS} from '#/lib/strings/time'
+import {niceDate as niceDateAndroid} from '#/lib/strings/time.android'
 import {s} from '#/lib/styles'
 import {getTranslatorLink, isPostInLanguage} from '#/locale/helpers'
+import {isAndroid} from '#/platform/detection'
 import {POST_TOMBSTONE, Shadow, usePostShadow} from '#/state/cache/post-shadow'
 import {useLanguagePrefs} from '#/state/preferences'
 import {ThreadPost} from '#/state/queries/post-thread'
@@ -740,6 +742,7 @@ function ExpandedPostDetails({
   const {_, i18n} = useLingui()
   const openLink = useOpenLink()
   const isRootPost = !('reply' in post.record)
+  const niceDate = isAndroid ? niceDateAndroid : niceDateWebOriOS
 
   const onTranslatePress = React.useCallback(
     (e: GestureResponderEvent) => {
@@ -784,6 +787,7 @@ function BackdatedPostIndicator({post}: {post: AppBskyFeedDefs.PostView}) {
   const t = useTheme()
   const {_, i18n} = useLingui()
   const control = Prompt.usePromptControl()
+  const niceDate = isAndroid ? niceDateAndroid : niceDateWebOriOS
 
   const indexedAt = new Date(post.indexedAt)
   const createdAt = AppBskyFeedPost.isRecord(post.record)
