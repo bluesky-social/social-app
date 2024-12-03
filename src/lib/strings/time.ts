@@ -1,36 +1,12 @@
-import {DateTimeFormat} from '@formatjs/intl-datetimeformat'
 import {I18n} from '@lingui/core'
 
-import {isNative, isWeb} from '#/platform/detection'
-
-/**
- * Formats the given date into a localized string.
- *
- * This function chooses different formatting approaches based on the platform:
- * - On the Web, it uses the `i18n.date` method to format the date.
- * - On Native, it adjusts the time zone offset and uses `DateTimeFormat` for formatting.
- *
- */
 export function niceDate(i18n: I18n, date: number | string | Date) {
   const d = new Date(date)
 
-  if (isWeb) {
-    return i18n.date(d, {
-      dateStyle: 'long',
-      timeStyle: 'short',
-    })
-  }
-
-  if (isNative) {
-    const timeZoneOffsetInMinutes = new Date().getTimezoneOffset()
-    d.setMinutes(d.getMinutes() - timeZoneOffsetInMinutes)
-
-    const dateFormatter = new DateTimeFormat(i18n.locale, {
-      dateStyle: 'long',
-      timeStyle: 'short',
-    })
-    return dateFormatter.format(d)
-  }
+  return i18n.date(d, {
+    dateStyle: 'long',
+    timeStyle: 'short',
+  })
 }
 
 export function getAge(birthDate: Date): number {
