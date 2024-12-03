@@ -515,7 +515,7 @@ export function FeedsScreen(_props: Props) {
               variant="ghost"
               color="secondary"
               shape="round"
-              style={[a.justify_center]}>
+              style={[a.justify_center, {right: -3}]}>
               <ButtonIcon icon={EditBig} size="lg" />
             </Link>
           </Layout.Header.Slot>
