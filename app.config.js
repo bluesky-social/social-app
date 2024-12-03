@@ -271,16 +271,15 @@ module.exports = function (config) {
         ],
         [
           'expo-splash-screen',
-          {
-            ios: {
-              ...SPLASH_CONFIG,
-              dark: DARK_SPLASH_CONFIG,
-            },
-            android: {
-              ...SPLASH_CONFIG_ANDROID,
-              dark: DARK_SPLASH_CONFIG_ANDROID,
-            },
-          },
+          PLATFORM === 'ios'
+            ? {
+                ...SPLASH_CONFIG,
+                dark: DARK_SPLASH_CONFIG,
+              }
+            : {
+                ...SPLASH_CONFIG_ANDROID,
+                dark: DARK_SPLASH_CONFIG_ANDROID,
+              },
         ],
         [
           '@mozzius/expo-dynamic-app-icon',
