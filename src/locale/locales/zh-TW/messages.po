@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-12-02 02:51\n"
+"PO-Revision-Date: 2024-12-03 02:11\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -845,7 +845,7 @@ msgstr "使用預設推薦的動態源"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:835
 msgid "Archived from {0}"
-msgstr "自 {0} 起被封存"
+msgstr "封存於 {0}"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:804
 #: src/view/com/post-thread/PostThreadItem.tsx:843
@@ -1491,7 +1491,7 @@ msgstr "撰寫新貼文"
 
 #: src/view/com/composer/Composer.tsx:812
 msgid "Compose posts up to {MAX_GRAPHEME_LENGTH} characters in length"
-msgstr "撰寫貼文的長度最多為 {MAX_GRAPHEME_LENGTH} 個字元"
+msgstr "撰寫貼文，不得超過 {MAX_GRAPHEME_LENGTH} 個字元"
 
 #: src/view/com/post-thread/PostThreadComposePrompt.tsx:34
 msgid "Compose reply"
@@ -3254,7 +3254,7 @@ msgstr "如果您根據您所在國家的法律尚未成年，則您的父母或
 
 #: src/view/screens/ProfileList.tsx:723
 msgid "If you delete this list, you won't be able to recover it."
-msgstr "如果您刪除這個列表，將無法復原。"
+msgstr "一旦您刪除這個列表，以後將無法再恢復。"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:246
 msgid "If you have your own domain, you can use that as your handle. This lets you self-verify your identity – <0>learn more</0>."
@@ -3262,7 +3262,7 @@ msgstr "如果您擁有自己的網域，可以將其設定為您的帳號代碼
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:658
 msgid "If you remove this post, you won't be able to recover it."
-msgstr "如果您刪除這則貼文，將無法復原。"
+msgstr "一旦您刪除這則貼文，以後將無法再恢復。"
 
 #: src/view/com/modals/ChangePassword.tsx:149
 msgid "If you want to change your password, we will send you a code to verify that this is your account."
@@ -3376,7 +3376,7 @@ msgstr "邀請碼：1 個可用"
 
 #: src/components/StarterPack/ShareDialog.tsx:96
 msgid "Invite people to this starter pack!"
-msgstr "用這個新手包來邀請他人！"
+msgstr "使用這個新手包來邀請更多人吧！"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:34
 msgid "Invite your friends to follow your favorite feeds and people"
@@ -3564,7 +3564,7 @@ msgstr "喜歡 10 則貼文"
 #: src/state/shell/progress-guide.tsx:157
 #: src/state/shell/progress-guide.tsx:162
 msgid "Like 10 posts to train the Discover feed"
-msgstr "喜歡 10 則貼文以訓練「Discover」動態源"
+msgstr "喜歡 10 則貼文，以訓練「Discover」動態源"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:275
 #: src/view/screens/ProfileFeed.tsx:576
@@ -3718,7 +3718,7 @@ msgstr "看起來像是 XXXXX-XXXXX"
 
 #: src/screens/Feeds/NoSavedFeedsOfAnyType.tsx:39
 msgid "Looks like you haven't saved any feeds! Use our recommendations or browse more below."
-msgstr "您似乎尚未儲存任何動態源！參考我們的建議或瀏覽下面的更多內容。"
+msgstr "看起來您尚未儲存任何動態源！請參考我們的建議或瀏覽下方以新增一些動態源。"
 
 #: src/screens/Home/NoFeedsPinned.tsx:83
 msgid "Looks like you unpinned all your feeds. But don't worry, you can add some below 😄"
@@ -6004,7 +6004,7 @@ msgstr "顯示隱藏回覆"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:806
 msgid "Show information about when this post was created"
-msgstr "顯示有關此貼文發布時間的詳細資訊"
+msgstr "顯示有關此貼文建立時間的資訊"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:473
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:475
@@ -6697,7 +6697,7 @@ msgstr "這份申訴將被提交至 <0>{sourceName}</0>。"
 
 #: src/screens/Messages/components/ChatDisabled.tsx:104
 msgid "This appeal will be sent to Bluesky's moderation service."
-msgstr "這份申訴將傳送至 Bluesky 的內容管理服務。"
+msgstr "這份申訴將被提交至 Bluesky 的內容管理服務。"
 
 #: src/screens/Messages/components/MessageListError.tsx:18
 msgid "This chat was disconnected"
@@ -6722,7 +6722,7 @@ msgstr "由於有用戶被另一個用戶封鎖，導致無法檢視這項內容
 
 #: src/view/com/posts/FeedErrorMessage.tsx:114
 msgid "This content is not viewable without a Bluesky account."
-msgstr "這項內容需要 Bluesky 帳號才能檢視。"
+msgstr "這項內容需要登入 Bluesky 帳號才能檢視。"
 
 #: src/screens/Messages/components/ChatListItem.tsx:266
 msgid "This conversation is with a deleted or a deactivated account. Press for options."
@@ -6813,7 +6813,7 @@ msgstr "只有登入用戶能見到這則貼文，未登入的人將看不到它
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:669
 msgid "This post will be hidden from feeds and threads. This cannot be undone."
-msgstr "這則貼文將會從動態源及討論串中隱藏，無法復原。"
+msgstr "這則貼文將會從動態及討論串中隱藏，之後將無法取消。"
 
 #: src/view/com/composer/Composer.tsx:413
 msgid "This post's author has disabled quote posts."
@@ -7219,7 +7219,7 @@ msgstr "使用我的預設瀏覽器"
 
 #: src/screens/Feeds/NoSavedFeedsOfAnyType.tsx:53
 msgid "Use recommended"
-msgstr "使用推薦"
+msgstr "新增推薦的動態源"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:190
 msgid "Use this to sign into the other app along with your handle."
