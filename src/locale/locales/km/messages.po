@@ -2816,7 +2816,7 @@ msgstr "បរាជ័យក្នុងការរក្សាទុកចំ
 
 #: src/components/dms/MessageItem.tsx:234
 msgid "Failed to send"
-msgstr "Failed to send"
+msgstr "បរាជ័យក្នុងកាផ្ញើ"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:229
 #: src/screens/Messages/components/ChatDisabled.tsx:87
