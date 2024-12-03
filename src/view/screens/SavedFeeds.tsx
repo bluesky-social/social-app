@@ -29,7 +29,7 @@ import {ScrollView} from '#/view/com/util/Views'
 import {NoFollowingFeed} from '#/screens/Feeds/NoFollowingFeed'
 import {NoSavedFeedsOfAnyType} from '#/screens/Feeds/NoSavedFeedsOfAnyType'
 import {atoms as a, useTheme} from '#/alf'
-import {Button, ButtonIcon} from '#/components/Button'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {FilterTimeline_Stroke2_Corner0_Rounded as FilterTimeline} from '#/components/icons/FilterTimeline'
 import {FloppyDisk_Stroke2_Corner0_Rounded as Save} from '#/components/icons/FloppyDisk'
 import * as Layout from '#/components/Layout'
@@ -97,26 +97,28 @@ function SavedFeedsInner({
             <Layout.Header.TitleText>
               <Trans>Edit My Feeds</Trans>
             </Layout.Header.TitleText>
-          </Layout.Header.Content>
-          <Layout.Header.Slot>
+
             {hasUnsavedChanges && (
               <Button
-                size="small"
+                size="tiny"
                 variant="solid"
                 color="primary"
-                shape="round"
                 onPress={onSaveChanges}
                 label={_(msg`Save changes`)}
                 disabled={isOverwritePending}
                 testID="saveChangesBtn"
-                style={[{right: -3}]}>
+                style={[a.mt_xs]}>
+                <ButtonText>
+                  <Trans>Save</Trans>
+                </ButtonText>
                 <ButtonIcon
                   icon={isOverwritePending ? Loader : Save}
-                  size="md"
+                  position="right"
                 />
               </Button>
             )}
-          </Layout.Header.Slot>
+          </Layout.Header.Content>
+          <Layout.Header.Slot />
         </Layout.Header.Outer>
 
         <ScrollView style={[a.flex_1]} contentContainerStyle={[a.border_0]}>

@@ -36,10 +36,10 @@ import * as FeedCard from '#/components/FeedCard'
 import {SearchInput} from '#/components/forms/SearchInput'
 import {IconCircle} from '#/components/IconCircle'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
-import {EditBig_Stroke2_Corner0_Rounded as EditBig} from '#/components/icons/EditBig'
 import {FilterTimeline_Stroke2_Corner0_Rounded as FilterTimeline} from '#/components/icons/FilterTimeline'
 import {ListMagnifyingGlass_Stroke2_Corner0_Rounded} from '#/components/icons/ListMagnifyingGlass'
 import {ListSparkle_Stroke2_Corner0_Rounded} from '#/components/icons/ListSparkle'
+import {SettingsGear2_Stroke2_Corner0_Rounded as Gear} from '#/components/icons/SettingsGear2'
 import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
 import * as ListCard from '#/components/ListCard'
@@ -516,7 +516,7 @@ export function FeedsScreen(_props: Props) {
               color="secondary"
               shape="round"
               style={[a.justify_center, {right: -3}]}>
-              <ButtonIcon icon={EditBig} size="lg" />
+              <ButtonIcon icon={Gear} size="lg" />
             </Link>
           </Layout.Header.Slot>
         </Layout.Header.Outer>
