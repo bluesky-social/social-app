@@ -62,12 +62,12 @@ msgstr ""
 #: src/components/ProfileHoverCard/index.web.tsx:398
 #: src/screens/Profile/Header/Metrics.tsx:22
 msgid "{0, plural, one {follower} other {followers}}"
-msgstr ""
+msgstr "{0, plural, one {អ្នកតាម} other {អ្នកតាម}}"
 
 #: src/components/ProfileHoverCard/index.web.tsx:402
 #: src/screens/Profile/Header/Metrics.tsx:26
 msgid "{0, plural, one {following} other {following}}"
-msgstr ""
+msgstr "{0, plural, one {អ្នកកំពុងតាម} other {អ្នកកំពុងតាម}}"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:305
 msgid "{0, plural, one {Like (# like)} other {Like (# likes)}}"
@@ -325,11 +325,11 @@ msgstr ""
 
 #: src/view/shell/Drawer.tsx:97
 msgid "<0>{0}</0> {1, plural, one {follower} other {followers}}"
-msgstr ""
+msgstr "<0>{0}</0> {1, plural, one {អ្នកតាម} other {អ្នកតាម}}"
 
 #: src/view/shell/Drawer.tsx:108
 msgid "<0>{0}</0> {1, plural, one {following} other {following}}"
-msgstr ""
+msgstr "<0>{0}</0> {1, plural, one {អ្នកកំពុងតាម} other {អ្នកកំពុងតាម}}"
 
 #: src/screens/StarterPack/Wizard/index.tsx:513
 msgid "<0>{0}</0> and<1> </1><2>{1} </2>are included in your starter pack"
