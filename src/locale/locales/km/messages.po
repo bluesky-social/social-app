@@ -399,11 +399,11 @@ msgstr "ភាពងាយស្រួល"
 
 #: src/view/screens/Settings/index.tsx:455
 #~ msgid "Accessibility settings"
-#~ msgstr "ការកំណត់ភាពងាយស្រួល"
+#~ msgstr ""
 
 #: src/Navigation.tsx:322
 msgid "Accessibility Settings"
-msgstr "ការកំណត់ភាពងាយស្រួល"
+msgstr "ការកំណត់មានភាពងាយស្រួល"
 
 #: src/Navigation.tsx:338
 #: src/screens/Login/LoginForm.tsx:176
@@ -4779,7 +4779,7 @@ msgstr "បើកប្រអប់មួយដើម្បីជ្រើសរ
 
 #: src/view/screens/Settings/index.tsx:456
 #~ msgid "Opens accessibility settings"
-#~ msgstr "បើកការកំណត់ភាពងាយស្រួល"
+#~ msgstr ""
 
 #: src/view/screens/Log.tsx:59
 msgid "Opens additional details for a debug entry"
