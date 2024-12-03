@@ -98,8 +98,11 @@
         var htmlWidth = html.getBoundingClientRect().width;
         var scrollbarWidth = (windowWidth - htmlWidth) / 2;
         var scrollbarOffset = scrollbarWidth / 2;
-        html.style.setProperty('--scrollbar-offset', `${scrollbarOffset}px`);
-        html.style.setProperty('--scrollbar-offset-negative', `-${scrollbarOffset}px`);
+        var isFF = /firefox/i.test(navigator.userAgent)
+        if (!isFF) {
+          html.style.setProperty('--scrollbar-offset', `${scrollbarOffset}px`);
+          html.style.setProperty('--scrollbar-offset-negative', `-${scrollbarOffset}px`);
+        }
       } catch (error) {}
     </script>
   </head>
