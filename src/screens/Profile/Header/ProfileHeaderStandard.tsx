@@ -176,7 +176,7 @@ let ProfileHeaderStandard = ({
               <Button
                 testID="profileHeaderEditProfileButton"
                 size="small"
-                color="secondary"
+                color="secondary_inverted"
                 variant="solid"
                 onPress={onPressEditProfile}
                 label={_(msg`Edit profile`)}>
@@ -212,7 +212,9 @@ let ProfileHeaderStandard = ({
               <Button
                 testID={profile.viewer?.following ? 'unfollowBtn' : 'followBtn'}
                 size="small"
-                color={profile.viewer?.following ? 'secondary' : 'primary'}
+                color={
+                  profile.viewer?.following ? 'secondary_inverted' : 'primary'
+                }
                 variant="solid"
                 label={
                   profile.viewer?.following
@@ -257,7 +259,6 @@ let ProfileHeaderStandard = ({
                   value={descriptionRT}
                   enableTags
                   authorHandle={profile.handle}
-                  dynamicColor
                 />
               </View>
             ) : undefined}
