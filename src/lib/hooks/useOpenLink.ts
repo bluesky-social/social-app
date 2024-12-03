@@ -2,10 +2,12 @@ import {useCallback} from 'react'
 import {Linking} from 'react-native'
 import * as WebBrowser from 'expo-web-browser'
 
+import {logEvent} from '#/lib/statsig/statsig'
 import {
   createBskyAppAbsoluteUrl,
   isBskyRSSUrl,
   isRelativeUrl,
+  toNiceDomain,
 } from '#/lib/strings/url-helpers'
 import {isNative} from '#/platform/detection'
 import {useModalControls} from '#/state/modals'
@@ -23,6 +25,13 @@ export function useOpenLink() {
     async (url: string, override?: boolean) => {
       if (isBskyRSSUrl(url) && isRelativeUrl(url)) {
         url = createBskyAppAbsoluteUrl(url)
+      }
+
+      if (!isBskyRSSUrl(url)) {
+        logEvent('link:clicked', {
+          domain: toNiceDomain(url),
+          url,
+        })
       }
 
       if (isNative && !url.startsWith('mailto:')) {
