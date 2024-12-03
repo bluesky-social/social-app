@@ -75,17 +75,12 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
       [onPageSelected, setCurrentPage],
     )
 
-    const onPageSelecting = React.useCallback((index: number) => {
-      setCurrentPage(index)
-    }, [])
-
     return (
       <Pager
         ref={ref}
         testID={testID}
         initialPage={initialPage}
         onPageSelected={onPageSelectedInner}
-        onPageSelecting={onPageSelecting}
         renderTabBar={renderTabBar}>
         {toArray(children)
           .filter(Boolean)
