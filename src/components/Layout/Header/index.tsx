@@ -116,8 +116,14 @@ export function TitleText({children}: {children: React.ReactNode}) {
   const {gtMobile} = useBreakpoints()
   return (
     <Text
-      style={[a.text_lg, a.font_heavy, a.leading_snug, gtMobile && [a.text_xl]]}
-      numberOfLines={1}>
+      style={[
+        a.text_lg,
+        a.font_heavy,
+        a.leading_tight,
+        a.text_center,
+        gtMobile && [a.text_xl],
+      ]}
+      numberOfLines={2}>
       {children}
     </Text>
   )
