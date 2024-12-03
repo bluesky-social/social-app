@@ -28,7 +28,7 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
   }
 
   return (
-    <View style={[styles.rightNav, pal.view]}>
+    <View style={[a.px_xl, styles.rightNav, pal.view]}>
       <View style={{paddingVertical: 20}}>
         {routeName === 'Search' ? (
           <View style={{marginBottom: 18}}>
@@ -122,8 +122,16 @@ const styles = StyleSheet.create({
     // @ts-ignore web only
     position: 'fixed',
     // @ts-ignore web only
-    left: 'calc(50vw + 300px + 20px)',
-    width: 300,
+    left: '50%',
+    transform: [
+      {
+        translateX: 300,
+      },
+      {
+        // @ts-ignore web only -esb
+        translateX: 'var(--scrollbar-offset-negative, 0px)',
+      },
+    ],
     maxHeight: '100%',
     overflowY: 'auto',
   },

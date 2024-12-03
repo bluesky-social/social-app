@@ -322,6 +322,7 @@ export function DesktopLeftNav() {
     <View
       role="navigation"
       style={[
+        a.px_xl,
         styles.leftNav,
         isTablet && styles.leftNavTablet,
         pal.view,
@@ -479,7 +480,19 @@ const styles = StyleSheet.create({
     position: 'fixed',
     top: 10,
     // @ts-ignore web only
-    left: 'calc(50vw - 300px - 220px - 20px)',
+    left: '50%',
+    transform: [
+      {
+        translateX: -300,
+      },
+      {
+        translateX: '-100%',
+      },
+      {
+        // @ts-ignore web only -esb
+        translateX: 'var(--scrollbar-offset-negative, 0px)',
+      },
+    ],
     width: 220,
     // @ts-ignore web only
     maxHeight: 'calc(100vh - 10px)',
@@ -492,7 +505,10 @@ const styles = StyleSheet.create({
     borderRightWidth: 1,
     height: '100%',
     width: 76,
+    paddingLeft: 0,
+    paddingRight: 0,
     alignItems: 'center',
+    transform: [],
   },
 
   profileCard: {
