@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {FlatList, ScrollView, StyleSheet, View} from 'react-native'
+import {ScrollView, StyleSheet, View} from 'react-native'
 import {useAnimatedRef} from 'react-native-reanimated'
 
 import {usePalette} from '#/lib/hooks/usePalette'
@@ -11,7 +11,7 @@ import {TabBar} from './TabBar'
 export interface PagerWithHeaderChildParams {
   headerHeight: number
   isFocused: boolean
-  scrollElRef: React.MutableRefObject<FlatList<any> | ScrollView | null>
+  scrollElRef: React.MutableRefObject<ListMethods | ScrollView | null>
 }
 
 export interface PagerWithHeaderProps {

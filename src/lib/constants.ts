@@ -21,7 +21,7 @@ export const STARTER_PACK_MAX_SIZE = 150
 // code and update this number with each release until we can get the
 // server route done.
 // -prf
-export const JOINED_THIS_WEEK = 3500000 // estimate as of 11/16/24
+export const JOINED_THIS_WEEK = 2880000 // estimate as of 11/26/24
 
 export const DISCOVER_DEBUG_DIDS: Record<string, true> = {
   'did:plc:oisofpd7lj26yvgiivf3lxsi': true, // hailey.at
@@ -29,6 +29,7 @@ export const DISCOVER_DEBUG_DIDS: Record<string, true> = {
   'did:plc:p2cp5gopk7mgjegy6wadk3ep': true, // samuel.bsky.team
   'did:plc:ragtjsm2j2vknwkz3zp4oxrd': true, // pfrazee.com
   'did:plc:vpkhqolt662uhesyj6nxm7ys': true, // why.bsky.team
+  'did:plc:3jpt2mvvsumj2r7eqk4gzzjz': true, // esb.lol
 }
 
 const BASE_FEEDBACK_FORM_URL = `${HELP_DESK_URL}/requests/new`
