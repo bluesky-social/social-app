@@ -4,11 +4,13 @@ const SPLASH_CONFIG = {
   backgroundColor: '#ffffff',
   image: './assets/splash.png',
   resizeMode: 'cover',
+  enableFullScreenImage_legacy: true,
 }
 const DARK_SPLASH_CONFIG = {
   backgroundColor: '#001429',
   image: './assets/splash-dark.png',
   resizeMode: 'cover',
+  enableFullScreenImage_legacy: true,
 }
 
 const SPLASH_CONFIG_ANDROID = {
