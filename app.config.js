@@ -1,22 +1,26 @@
 const pkg = require('./package.json')
 
 const SPLASH_CONFIG = {
+  enableFullScreenImage_legacy: true,
+}
+
+const SPLASH_CONFIG_IOS = {
   backgroundColor: '#ffffff',
   image: './assets/splash.png',
   resizeMode: 'cover',
-  enableFullScreenImage_legacy: true,
+  dark: DARK_SPLASH_CONFIG_IOS,
 }
-const DARK_SPLASH_CONFIG = {
+const DARK_SPLASH_CONFIG_IOS = {
   backgroundColor: '#001429',
   image: './assets/splash-dark.png',
   resizeMode: 'cover',
-  enableFullScreenImage_legacy: true,
 }
 
 const SPLASH_CONFIG_ANDROID = {
   backgroundColor: '#0c7cff',
   image: './assets/splash.png',
   resizeMode: 'cover',
+  dark: DARK_SPLASH_CONFIG_ANDROID,
 }
 const DARK_SPLASH_CONFIG_ANDROID = {
   backgroundColor: '#0f141b',
@@ -273,7 +277,8 @@ module.exports = function (config) {
           'expo-splash-screen',
           {
             ...SPLASH_CONFIG,
-            dark: DARK_SPLASH_CONFIG,
+            ios: SPLASH_CONFIG_IOS,
+            android: SPLASH_CONFIG_ANDROID,
           },
         ],
         [
