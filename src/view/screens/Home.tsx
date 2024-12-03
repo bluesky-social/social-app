@@ -233,7 +233,7 @@ function HomeScreenReady({
       onPageScrollStateChanged={onPageScrollStateChanged}
       renderTabBar={renderTabBar}>
       {pinnedFeedInfos.length ? (
-        pinnedFeedInfos.map(feedInfo => {
+        pinnedFeedInfos.map((feedInfo, index) => {
           const feed = feedInfo.feedDescriptor
           if (feed === 'following') {
             return (
@@ -241,6 +241,7 @@ function HomeScreenReady({
                 key={feed}
                 testID="followingFeedPage"
                 isPageFocused={selectedFeed === feed}
+                isPageAdjacent={Math.abs(selectedIndex - index) === 1}
                 feed={feed}
                 feedParams={homeFeedParams}
                 renderEmptyState={renderFollowingEmptyState}
@@ -254,6 +255,7 @@ function HomeScreenReady({
               key={feed}
               testID="customFeedPage"
               isPageFocused={selectedFeed === feed}
+              isPageAdjacent={Math.abs(selectedIndex - index) === 1}
               feed={feed}
               renderEmptyState={renderCustomFeedEmptyState}
               savedFeedConfig={savedFeedConfig}
@@ -273,6 +275,7 @@ function HomeScreenReady({
       <FeedPage
         testID="customFeedPage"
         isPageFocused
+        isPageAdjacent={false}
         feed={`feedgen|${PROD_DEFAULT_FEED('whats-hot')}`}
         renderEmptyState={renderCustomFeedEmptyState}
       />
