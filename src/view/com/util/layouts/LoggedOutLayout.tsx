@@ -5,7 +5,6 @@ import {useColorSchemeStyle} from '#/lib/hooks/useColorSchemeStyle'
 import {useIsKeyboardVisible} from '#/lib/hooks/useIsKeyboardVisible'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {isWeb} from '#/platform/detection'
 import {atoms as a} from '#/alf'
 import {Text} from '../text/Text'
 
@@ -79,9 +78,7 @@ export const LoggedOutLayout = ({
             contentContainerStyle={styles.scrollViewContentContainer}
             keyboardShouldPersistTaps="handled"
             keyboardDismissMode="on-drag">
-            <View style={[styles.contentWrapper, isWeb && a.my_auto]}>
-              {children}
-            </View>
+            <View style={[styles.contentWrapper]}>{children}</View>
           </ScrollView>
         </View>
       ) : (
@@ -98,6 +95,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     // @ts-ignore web only
     height: '100vh',
+    flex: 1,
   },
   side: {
     flex: 1,
@@ -114,8 +112,9 @@ const styles = StyleSheet.create({
     flex: 2,
   },
   scrollViewContentContainer: {
-    flex: 1,
+    flexGrow: 1,
     paddingHorizontal: 40,
+    justifyContent: 'center',
   },
   leadinText: {
     fontSize: 36,

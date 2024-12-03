@@ -10,7 +10,7 @@ import {useMinimalShellFabTransform} from '#/lib/hooks/useMinimalShellTransform'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {clamp} from '#/lib/numbers'
 import {gradients} from '#/lib/styles'
-import {isWeb} from '#/platform/detection'
+import {isNativeTablet, isWeb} from '#/platform/detection'
 import {ios} from '#/alf'
 
 export interface FABProps
@@ -37,7 +37,7 @@ export function FABInner({testID, icon, onPress, ...props}: FABProps) {
         styles.outer,
         size,
         tabletSpacing,
-        isMobile && fabMinimalShellTransform,
+        (isMobile || isNativeTablet) && fabMinimalShellTransform,
       ]}>
       <PressableScale
         testID={testID}

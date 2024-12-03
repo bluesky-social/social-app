@@ -3,7 +3,7 @@ import {LayoutChangeEvent, ScrollView, StyleSheet, View} from 'react-native'
 
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {isNative} from '#/platform/detection'
+import {isNative, isNativeTablet} from '#/platform/detection'
 import {PressableWithHover} from '../util/PressableWithHover'
 import {Text} from '../util/text/Text'
 import {DraggableScrollView} from './DraggableScrollView'
@@ -37,8 +37,9 @@ export function TabBar({
     () => ({borderBottomColor: indicatorColor || pal.colors.link}),
     [indicatorColor, pal],
   )
-  const {isDesktop, isTablet} = useWebMediaQueries()
-  const styles = isDesktop || isTablet ? desktopStyles : mobileStyles
+  const {isTabletOrDesktop} = useWebMediaQueries()
+  const styles =
+    isTabletOrDesktop && !isNativeTablet ? desktopStyles : mobileStyles
 
   useEffect(() => {
     if (isNative) {
@@ -143,7 +144,7 @@ export function TabBar({
               <View style={[styles.itemInner, selected && indicatorStyle]}>
                 <Text
                   emoji
-                  type={isDesktop || isTablet ? 'xl-bold' : 'lg-bold'}
+                  type={isTabletOrDesktop ? 'xl-bold' : 'lg-bold'}
                   testID={testID ? `${testID}-${item}` : undefined}
                   style={[
                     selected ? pal.text : pal.textLight,
