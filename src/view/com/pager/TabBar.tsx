@@ -12,9 +12,9 @@ import Animated, {
   useSharedValue,
 } from 'react-native-reanimated'
 
-import {usePalette} from '#/lib/hooks/usePalette'
-import {PressableWithHover} from '../util/PressableWithHover'
-import {Text} from '../util/text/Text'
+import {PressableWithHover} from '#/view/com/util/PressableWithHover'
+import {atoms as a, useTheme} from '#/alf'
+import {Text} from '#/components/Typography'
 
 export interface TabBarProps {
   testID?: string
@@ -41,7 +41,7 @@ export function TabBar({
   dragProgress,
   dragState,
 }: TabBarProps) {
-  const pal = usePalette('default')
+  const t = useTheme()
   const scrollElRef = useAnimatedRef<ScrollView>()
   const syncScrollState = useSharedValue<'synced' | 'unsynced' | 'needs-sync'>(
     'synced',
@@ -264,7 +264,7 @@ export function TabBar({
   return (
     <View
       testID={testID}
-      style={[pal.view, styles.outer]}
+      style={[t.atoms.bg, a.flex_row]}
       accessibilityRole="tablist">
       <ScrollView
         testID={`${testID}-selector`}
@@ -309,14 +309,14 @@ export function TabBar({
                 left: 0,
                 bottom: 0,
                 right: 0,
-                borderBottomWidth: 3,
-                borderColor: pal.link.color,
+                borderBottomWidth: 2,
+                borderColor: t.palette.primary_500,
               },
             ]}
           />
         </Animated.View>
       </ScrollView>
-      <View style={[pal.border, styles.outerBottomBorder]} />
+      <View style={[t.atoms.border_contrast_low, styles.outerBottomBorder]} />
     </View>
   )
 }
@@ -336,7 +336,7 @@ function TabBarItem({
   onPressItem: (index: number) => void
   onItemLayout: (index: number, layout: {x: number; width: number}) => void
 }) {
-  const pal = usePalette('default')
+  const t = useTheme()
   const style = useAnimatedStyle(() => {
     if (!_WORKLET) {
       return {opacity: 0.7}
@@ -363,15 +363,14 @@ function TabBarItem({
       <PressableWithHover
         testID={`${testID}-selector-${index}`}
         style={styles.item}
-        hoverStyle={pal.viewLight}
+        hoverStyle={t.atoms.bg_contrast_25}
         onPress={() => onPressItem(index)}
         accessibilityRole="tab">
         <Animated.View style={[style, styles.itemInner]}>
           <Text
             emoji
-            type="lg-bold"
             testID={testID ? `${testID}-${item}` : undefined}
-            style={[pal.text, {lineHeight: 20}]}>
+            style={[t.atoms.text, a.text_md, a.font_bold, {lineHeight: 20}]}>
             {item}
           </Text>
         </Animated.View>
@@ -381,9 +380,6 @@ function TabBarItem({
 }
 
 const styles = StyleSheet.create({
-  outer: {
-    flexDirection: 'row',
-  },
   contentContainer: {
     backgroundColor: 'transparent',
     paddingHorizontal: CONTENT_PADDING,
