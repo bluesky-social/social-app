@@ -424,16 +424,16 @@ msgstr "គណនីបានធ្វើតាម"
 
 #: src/view/com/profile/ProfileMenu.tsx:108
 msgid "Account muted"
-msgstr "គណនីត្រូវបានបិទ"
+msgstr "គណនីត្រូវបានបិទសំឡេង"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:101
 #: src/lib/moderation/useModerationCauseDescription.ts:96
 msgid "Account Muted"
-msgstr "គណនីត្រូវបានបិទ"
+msgstr "គណនីត្រូវបានបិទសំឡេង"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:87
 msgid "Account Muted by List"
-msgstr "គណនីត្រូវបានបិទដោយបញ្ជី"
+msgstr "គណនីត្រូវបានបិទសំឡេងដោយបញ្ជី"
 
 #: src/screens/Settings/Settings.tsx:420
 msgid "Account options"
