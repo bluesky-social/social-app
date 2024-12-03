@@ -366,9 +366,8 @@ let FeedItemInner = ({
           ) : null}
         </View>
       </View>
-
-      <View style={styles.layout}>
-        <View style={styles.layoutAvi}>
+      <View style={[styles.layout]}>
+        <View style={styles.layoutHeader}>
           <AviFollowButton author={post.author} moderation={moderation}>
             <PreviewableUserAvatar
               size={42}
@@ -378,55 +377,44 @@ let FeedItemInner = ({
               onBeforePress={onOpenAuthor}
             />
           </AviFollowButton>
-          {isThreadParent && (
-            <View
-              style={[
-                styles.replyLine,
-                {
-                  flexGrow: 1,
-                  backgroundColor: pal.colors.replyLine,
-                  marginTop: 4,
-                },
-              ]}
+          <View style={styles.metaContent}>
+            <PostMeta
+              author={post.author}
+              moderation={moderation}
+              timestamp={post.indexedAt}
+              postHref={href}
+              onOpenAuthor={onOpenAuthor}
+            />
+          </View>
+        </View>
+        {showReplyTo &&
+          (parentAuthor || isParentBlocked || isParentNotFound) && (
+            <ReplyToLabel
+              blocked={isParentBlocked}
+              notFound={isParentNotFound}
+              profile={parentAuthor}
             />
           )}
-        </View>
-        <View style={styles.layoutContent}>
-          <PostMeta
-            author={post.author}
-            moderation={moderation}
-            timestamp={post.indexedAt}
-            postHref={href}
-            onOpenAuthor={onOpenAuthor}
-          />
-          {showReplyTo &&
-            (parentAuthor || isParentBlocked || isParentNotFound) && (
-              <ReplyToLabel
-                blocked={isParentBlocked}
-                notFound={isParentNotFound}
-                profile={parentAuthor}
-              />
-            )}
-          <LabelsOnMyPost post={post} />
-          <PostContent
-            moderation={moderation}
-            richText={richText}
-            postEmbed={post.embed}
-            postAuthor={post.author}
-            onOpenEmbed={onOpenEmbed}
-            post={post}
-            threadgateRecord={threadgateRecord}
-          />
-          <PostCtrls
-            post={post}
-            record={record}
-            richText={richText}
-            onPressReply={onPressReply}
-            logContext="FeedItem"
-            feedContext={feedContext}
-            threadgateRecord={threadgateRecord}
-          />
-        </View>
+
+        <LabelsOnMyPost post={post} />
+        <PostContent
+          moderation={moderation}
+          richText={richText}
+          postEmbed={post.embed}
+          postAuthor={post.author}
+          onOpenEmbed={onOpenEmbed}
+          post={post}
+          threadgateRecord={threadgateRecord}
+        />
+        <PostCtrls
+          post={post}
+          record={record}
+          richText={richText}
+          onPressReply={onPressReply}
+          logContext="FeedItem"
+          feedContext={feedContext}
+          threadgateRecord={threadgateRecord}
+        />
       </View>
     </Link>
   )
@@ -598,8 +586,8 @@ function ReplyToLabel({
 
 const styles = StyleSheet.create({
   outer: {
-    paddingLeft: 10,
-    paddingRight: 15,
+    paddingLeft: 20,
+    paddingRight: 20,
     // @ts-ignore web only -prf
     cursor: 'pointer',
   },
@@ -616,11 +604,15 @@ const styles = StyleSheet.create({
     marginLeft: -16,
   },
   layout: {
+    width: '100%',
+    flexDirection: 'column',
+  },
+  layoutHeader: {
     flexDirection: 'row',
-    marginTop: 1,
+    alignItems: 'center',
+    marginBottom: 6,
   },
   layoutAvi: {
-    paddingLeft: 8,
     paddingRight: 10,
     position: 'relative',
     zIndex: 999,
@@ -649,5 +641,9 @@ const styles = StyleSheet.create({
   },
   translateLink: {
     marginBottom: 6,
+  },
+  metaContent: {
+    flex: 1,
+    paddingLeft: 10,
   },
 })
