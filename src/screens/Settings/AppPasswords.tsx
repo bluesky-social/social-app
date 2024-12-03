@@ -52,6 +52,7 @@ export function AppPasswordsScreen({}: Props) {
               <Trans>App Passwords</Trans>
             </Layout.Header.TitleText>
           </Layout.Header.Content>
+          <Layout.Header.Slot />
         </Layout.Header.Outer>
         {error ? (
           <ErrorScreen

@@ -87,6 +87,7 @@ export function AppearanceSettingsScreen({}: Props) {
                 <Trans>Appearance</Trans>
               </Layout.Header.TitleText>
             </Layout.Header.Content>
+            <Layout.Header.Slot />
           </Layout.Header.Outer>
           <SettingsList.Container>
             <AppearanceToggleButtonGroup

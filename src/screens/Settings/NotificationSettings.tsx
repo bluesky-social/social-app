@@ -41,6 +41,7 @@ export function NotificationSettingsScreen({}: Props) {
               <Trans>Notification Settings</Trans>
             </Layout.Header.TitleText>
           </Layout.Header.Content>
+          <Layout.Header.Slot />
         </Layout.Header.Outer>
         {isQueryError ? (
           <Error

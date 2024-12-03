@@ -34,6 +34,7 @@ export function ExternalMediaPreferencesScreen({}: Props) {
               <Trans>External Media Preferences</Trans>
             </Layout.Header.TitleText>
           </Layout.Header.Content>
+          <Layout.Header.Slot />
         </Layout.Header.Outer>
         <SettingsList.Container>
           <SettingsList.Item>

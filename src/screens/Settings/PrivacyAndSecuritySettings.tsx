@@ -37,6 +37,7 @@ export function PrivacyAndSecuritySettingsScreen({}: Props) {
               <Trans>Privacy and Security</Trans>
             </Layout.Header.TitleText>
           </Layout.Header.Content>
+          <Layout.Header.Slot />
         </Layout.Header.Outer>
         <SettingsList.Container>
           <SettingsList.Item>

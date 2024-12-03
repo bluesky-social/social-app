@@ -56,6 +56,7 @@ export function FollowingFeedPreferencesScreen({}: Props) {
               <Trans>Following Feed Preferences</Trans>
             </Layout.Header.TitleText>
           </Layout.Header.Content>
+          <Layout.Header.Slot />
         </Layout.Header.Outer>
         <SettingsList.Container>
           <SettingsList.Item>

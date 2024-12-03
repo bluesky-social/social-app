@@ -81,6 +81,7 @@ export function SettingsScreen({}: Props) {
               <Trans>Settings</Trans>
             </Layout.Header.TitleText>
           </Layout.Header.Content>
+          <Layout.Header.Slot />
         </Layout.Header.Outer>
 
         <SettingsList.Container>
