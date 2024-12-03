@@ -120,7 +120,7 @@ export function TitleText({children}: {children: React.ReactNode}) {
         a.text_lg,
         a.font_heavy,
         a.leading_tight,
-        a.text_center,
+        isIOS && a.text_center,
         gtMobile && [a.text_xl],
       ]}
       numberOfLines={2}>
@@ -132,7 +132,14 @@ export function TitleText({children}: {children: React.ReactNode}) {
 export function SubtitleText({children}: {children: React.ReactNode}) {
   const t = useTheme()
   return (
-    <Text style={[a.text_sm, a.leading_tight, t.atoms.text_contrast_medium]}>
+    <Text
+      style={[
+        a.text_sm,
+        a.leading_snug,
+        isIOS && a.text_center,
+        t.atoms.text_contrast_medium,
+      ]}
+      numberOfLines={2}>
       {children}
     </Text>
   )
