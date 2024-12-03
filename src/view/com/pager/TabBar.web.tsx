@@ -180,7 +180,7 @@ const mobileStyles = StyleSheet.create({
   },
   itemInner: {
     paddingBottom: 10,
-    borderBottomWidth: 3,
+    borderBottomWidth: 2,
     borderBottomColor: 'transparent',
   },
   outerBottomBorder: {
