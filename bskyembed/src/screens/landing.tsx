@@ -139,7 +139,7 @@ function LandingPage() {
         </summary>
         <div className="p-4 space-y-2">
           <div>
-            <label className="block text-sm font-medium">Color mode</label>
+            <label className="block pb-1 text-sm font-medium">Color mode</label>
             <select
               value={colorMode}
               onChange={e => {
