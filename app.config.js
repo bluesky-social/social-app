@@ -4,28 +4,28 @@ const SPLASH_CONFIG = {
   enableFullScreenImage_legacy: true,
 }
 
+const DARK_SPLASH_CONFIG_IOS = {
+  backgroundColor: '#001429',
+  image: './assets/splash-dark.png',
+  resizeMode: 'cover',
+}
 const SPLASH_CONFIG_IOS = {
   backgroundColor: '#ffffff',
   image: './assets/splash.png',
   resizeMode: 'cover',
   dark: DARK_SPLASH_CONFIG_IOS,
 }
-const DARK_SPLASH_CONFIG_IOS = {
-  backgroundColor: '#001429',
+
+const DARK_SPLASH_CONFIG_ANDROID = {
+  backgroundColor: '#0f141b',
   image: './assets/splash-dark.png',
   resizeMode: 'cover',
 }
-
 const SPLASH_CONFIG_ANDROID = {
   backgroundColor: '#0c7cff',
   image: './assets/splash.png',
   resizeMode: 'cover',
   dark: DARK_SPLASH_CONFIG_ANDROID,
-}
-const DARK_SPLASH_CONFIG_ANDROID = {
-  backgroundColor: '#0f141b',
-  image: './assets/splash-dark.png',
-  resizeMode: 'cover',
 }
 
 module.exports = function (config) {
