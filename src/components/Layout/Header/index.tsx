@@ -56,7 +56,13 @@ export function Outer({children}: {children: React.ReactNode}) {
 
 export function Content({children}: {children: React.ReactNode}) {
   return (
-    <View style={[a.flex_1, a.justify_center, isIOS && a.align_center]}>
+    <View
+      style={[
+        a.flex_1,
+        a.justify_center,
+        isIOS && a.align_center,
+        {minHeight: BUTTON_SIZE},
+      ]}>
       {children}
     </View>
   )
