@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Italian localization\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-11-28 01:11+0000\n"
-"PO-Revision-Date: 2024-12-02 13:35+0000\n"
+"PO-Revision-Date: 2024-12-03 15:09+0000\n"
 "Last-Translator: Michele Locati <michele@locati.it>, 2024\n"
 "Language-Team: Italian (https://app.transifex.com/mlocati/teams/201833/it/)\n"
 "Language: it\n"
@@ -400,7 +400,7 @@ msgstr "Accessibilità"
 
 #: src/Navigation.tsx:322
 msgid "Accessibility Settings"
-msgstr "Impostazioni di Accessibilità"
+msgstr "Impostazioni di accessibilità"
 
 #: src/Navigation.tsx:338
 #: src/screens/Login/LoginForm.tsx:176
@@ -1281,11 +1281,11 @@ msgstr "Conversazione silenziata"
 #: src/Navigation.tsx:387
 #: src/screens/Messages/ChatList.tsx:88
 msgid "Chat settings"
-msgstr "Impostazioni messaggi"
+msgstr "Impostazioni chat"
 
 #: src/screens/Messages/Settings.tsx:61
 msgid "Chat Settings"
-msgstr "Impostazioni messaggi"
+msgstr "Impostazioni chat"
 
 #: src/components/dms/ConvoMenu.tsx:84
 msgid "Chat unmuted"
@@ -2225,7 +2225,7 @@ msgstr "Modifica l'immagine"
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:623
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:636
 msgid "Edit interaction settings"
-msgstr "Modifica le impostazioni di interazione"
+msgstr "Modifica impostazioni di interazione"
 
 #: src/view/screens/ProfileList.tsx:518
 msgid "Edit list details"
@@ -2253,7 +2253,7 @@ msgstr "Modifica utenti"
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:66
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:204
 msgid "Edit post interaction settings"
-msgstr "Modifica le impostazioni di interazione del post"
+msgstr "Modifica impostazioni di interazione del post"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:269
 #: src/screens/Profile/Header/EditProfileDialog.tsx:275
@@ -2926,11 +2926,11 @@ msgstr "Per sempre"
 #: src/screens/Login/index.tsx:126
 #: src/screens/Login/index.tsx:141
 msgid "Forgot Password"
-msgstr "Hai dimenticato la password"
+msgstr "Password dimenticata"
 
 #: src/screens/Login/LoginForm.tsx:230
 msgid "Forgot password?"
-msgstr "Hai dimenticato la password?"
+msgstr "Password dimenticata?"
 
 #: src/screens/Login/LoginForm.tsx:241
 msgid "Forgot?"
@@ -3459,7 +3459,7 @@ msgstr "Seleziona la lingua"
 
 #: src/Navigation.tsx:164
 msgid "Language Settings"
-msgstr "Impostazione delle Lingue"
+msgstr "Impostazione delle lingue"
 
 #: src/screens/Settings/LanguageSettings.tsx:67
 #: src/screens/Settings/Settings.tsx:191
@@ -4323,11 +4323,11 @@ msgstr "Filtri notifiche"
 #: src/Navigation.tsx:392
 #: src/view/screens/Notifications.tsx:117
 msgid "Notification settings"
-msgstr "Notifiche"
+msgstr "Impostazioni notifiche"
 
 #: src/screens/Settings/NotificationSettings.tsx:36
 msgid "Notification Settings"
-msgstr "Notifiche"
+msgstr "Impostazioni notifiche"
 
 #: src/screens/Messages/Settings.tsx:117
 msgid "Notification sounds"
@@ -4869,7 +4869,7 @@ msgstr "Post nascosto da te"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:287
 msgid "Post interaction settings"
-msgstr "Impostazioni interazioni post"
+msgstr "Gestisci interazioni post"
 
 #: src/view/com/composer/select-language/SelectLangBtn.tsx:89
 msgid "Post language"
@@ -5050,11 +5050,11 @@ msgstr "Citazioni post disattivate"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:314
 msgid "Quote posts enabled"
-msgstr "Citazioni post attivate"
+msgstr "Consenti le citazioni al post"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:299
 msgid "Quote settings"
-msgstr "Impostazioni citazioni"
+msgstr "Impostazioni delle citazioni"
 
 #: src/screens/Post/PostQuotes.tsx:32
 #: src/screens/Post/PostQuotes.tsx:33
@@ -5285,7 +5285,7 @@ msgstr "Risposta nascosta da te"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:355
 msgid "Reply settings"
-msgstr "Impostazioni risposte"
+msgstr "Impostazioni delle risposte"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:340
 msgid "Reply settings are chosen by the author of the thread"
@@ -5480,7 +5480,7 @@ msgstr "Rinvia email di verifica"
 
 #: src/view/com/modals/ChangePassword.tsx:186
 msgid "Reset code"
-msgstr "Codice"
+msgstr "Codice di recupero"
 
 #: src/view/com/modals/ChangePassword.tsx:193
 msgid "Reset Code"
@@ -7902,7 +7902,7 @@ msgstr "Riceverai le notifiche per questo thread"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:98
 msgid "You will receive an email with a \"reset code.\" Enter that code here, then enter your new password."
-msgstr "Riceverai un'email con un \"codice di reset\". Inserisci il codice qui, poi inserisci la nuova password."
+msgstr "Riceverai un'email con un codice di recupero. Inserisci il codice qui, poi inserisci la tua nuova password."
 
 #: src/screens/Messages/components/ChatListItem.tsx:124
 msgid "You: {0}"
