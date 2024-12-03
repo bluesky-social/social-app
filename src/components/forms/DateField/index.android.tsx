@@ -50,11 +50,14 @@ export function DateField({
       />
 
       {open && (
+        // Android implementation of DatePicker currently does not change default button colors according to theme and only takes hex values for buttonColor
+        // Can remove the buttonColor setting if/when this PR is merged: https://github.com/henninghall/react-native-date-picker/pull/871
         <DatePicker
           modal
           open
           timeZoneOffsetInMinutes={0}
           theme={t.name === 'light' ? 'light' : 'dark'}
+          buttonColor={t.name === 'light' ? '#000000' : '#ffffff'}
           date={new Date(value)}
           onConfirm={onChangeInternal}
           onCancel={onCancel}
