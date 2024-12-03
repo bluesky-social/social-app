@@ -323,6 +323,7 @@ export function DesktopLeftNav() {
       role="navigation"
       style={[
         a.px_xl,
+        a.pr_5xl,
         styles.leftNav,
         isTablet && styles.leftNavTablet,
         pal.view,
@@ -493,7 +494,7 @@ const styles = StyleSheet.create({
         translateX: 'var(--scrollbar-offset-negative, 0px)',
       },
     ],
-    width: 220,
+    width: 240,
     // @ts-ignore web only
     maxHeight: 'calc(100vh - 10px)',
     overflowY: 'auto',
