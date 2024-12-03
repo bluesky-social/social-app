@@ -6,11 +6,7 @@ import {useEffect, useMemo, useRef, useState} from 'preact/hooks'
 
 import arrowBottom from '../../assets/arrowBottom_stroke2_corner0_rounded.svg'
 import logo from '../../assets/logo.svg'
-import {
-  assertColorModeValues,
-  ColorModeValues,
-  initColorMode,
-} from '../color-mode'
+import {initColorMode} from '../color-mode'
 import {Container} from '../components/container'
 import {Link} from '../components/link'
 import {Post} from '../components/post'
@@ -36,7 +32,6 @@ render(<LandingPage />, root)
 
 function LandingPage() {
   const [uri, setUri] = useState('')
-  const [colorMode, setColorMode] = useState<ColorModeValues>('auto')
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [thread, setThread] = useState<AppBskyFeedDefs.ThreadViewPost | null>(
@@ -133,44 +128,16 @@ function LandingPage() {
         placeholder={DEFAULT_POST}
       />
 
-      <details className="group/options overflow-clip border rounded-lg dark:border-slate-500 w-full max-w-[600px] flex flex-col">
-        <summary className="px-4 py-2 cursor-pointer group-open/options:bg-neutral-100 dark:group-open/options:bg-dimmedBgLighten">
-          Want to customize more?
-        </summary>
-        <div className="p-4 space-y-2">
-          <div>
-            <label className="block pb-1 text-sm font-medium">Color mode</label>
-            <select
-              value={colorMode}
-              onChange={e => {
-                const value = e.currentTarget.value
-                if (assertColorModeValues(value)) {
-                  setColorMode(value)
-                }
-              }}
-              className="block border w-full rounded-lg text-sm px-3 py-2 dark:bg-dimmedBg dark:border-slate-500">
-              <option value="auto">Auto (Sync with device)</option>
-              <option value="light">Light</option>
-              <option value="dark">Dark</option>
-            </select>
-          </div>
-        </div>
-      </details>
-
       <img src={arrowBottom} className="w-6 dark:invert" />
 
       {loading ? (
-        <div className={`${colorMode} w-full max-w-[600px]`}>
+        <div className="w-full max-w-[600px]">
           <Skeleton />
         </div>
       ) : (
         <div className="w-full max-w-[600px] gap-8 flex flex-col">
-          {!error && thread && uri && (
-            <Snippet thread={thread} colorMode={colorMode} />
-          )}
-          <div className={colorMode}>
-            {!error && thread && <Post thread={thread} key={thread.post.uri} />}
-          </div>
+          {!error && thread && uri && <Snippet thread={thread} />}
+          {!error && thread && <Post thread={thread} key={thread.post.uri} />}
           {error && (
             <div className="w-full border border-red-500 bg-red-500/10 px-4 py-3 rounded-lg">
               <p className="text-red-500 text-center">{error}</p>
@@ -201,13 +168,7 @@ function Skeleton() {
   )
 }
 
-function Snippet({
-  thread,
-  colorMode,
-}: {
-  thread: AppBskyFeedDefs.ThreadViewPost
-  colorMode: ColorModeValues
-}) {
+function Snippet({thread}: {thread: AppBskyFeedDefs.ThreadViewPost}) {
   const ref = useRef<HTMLInputElement>(null)
   const [copied, setCopied] = useState(false)
 
@@ -243,11 +204,9 @@ function Snippet({
     // x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x
     return `<blockquote class="bluesky-embed" data-bluesky-uri="${escapeHtml(
       thread.post.uri,
-    )}" data-bluesky-cid="${escapeHtml(
-      thread.post.cid,
-    )}" data-bluesky-embed-color-mode="${escapeHtml(
-      colorMode,
-    )}"><p lang="${escapeHtml(lang)}">${escapeHtml(record.text)}${
+    )}" data-bluesky-cid="${escapeHtml(thread.post.cid)}"><p lang="${escapeHtml(
+      lang,
+    )}">${escapeHtml(record.text)}${
       record.embed
         ? `<br><br><a href="${escapeHtml(href)}">[image or embed]</a>`
         : ''
@@ -258,7 +217,7 @@ function Snippet({
     )}</a>) <a href="${escapeHtml(href)}">${escapeHtml(
       niceDate(thread.post.indexedAt),
     )}</a></blockquote><script async src="${EMBED_SCRIPT}" charset="utf-8"></script>`
-  }, [thread, colorMode])
+  }, [thread])
 
   return (
     <div className="flex gap-2 w-full">
