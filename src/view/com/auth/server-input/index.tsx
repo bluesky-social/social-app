@@ -84,16 +84,6 @@ export function ServerInputDialog({
             <Trans>Select the service that hosts your data.</Trans>
           </P>
 
-          {isFirstTimeUser && (
-            <Admonition type="tip">
-              <Trans>
-                If you're new to Bluesky, we recommend using Bluesky Social as
-                your hosting provider. You can always change this later. If you
-                know what you're doing, please go ahead!
-              </Trans>
-            </Admonition>
-          )}
-
           <ToggleButton.Group
             label="Preferences"
             values={fixedOption}
@@ -112,6 +102,15 @@ export function ServerInputDialog({
               </ToggleButton.ButtonText>
             </ToggleButton.Button>
           </ToggleButton.Group>
+
+          {fixedOption[0] === BSKY_SERVICE && isFirstTimeUser && (
+            <Admonition type="tip">
+              <Trans>
+                If you're new to Bluesky, we recommend using Bluesky Social as
+                your account host. You can always change this later.
+              </Trans>
+            </Admonition>
+          )}
 
           {fixedOption[0] === 'custom' && (
             <View
