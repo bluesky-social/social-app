@@ -10,7 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "PO-Revision-Date: 2024-11-28 21:20+0000\n"
 "Last-Translator: \n"
-"Language-Team: claudiucristea.ro\n"
+"Language-Team: claudiucristea.ro; alextecplayz\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);\n"
 
 #: src/screens/Messages/components/ChatListItem.tsx:130
@@ -433,7 +433,7 @@ msgstr "Cont pus pe mut"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:87
 msgid "Account Muted by List"
-msgstr "Cont conzurat de către listă"
+msgstr "Cont pus pe mut de către listă"
 
 #: src/screens/Settings/Settings.tsx:420
 msgid "Account options"
@@ -2194,11 +2194,11 @@ msgstr "Nu aplica acest cuvânt pus pe mut utilizatorilor urmăriți"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:174
 #~ msgid "Does not contain adult content."
-#~ msgstr ""
+#~ msgstr "Nu include conținut pentru adulți."
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:213
 #~ msgid "Does not contain graphic or disturbing content."
-#~ msgstr ""
+#~ msgstr "Nu include conținut grafic sau tulburător."
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:39
 msgid "Does not include nudity."
@@ -2636,7 +2636,7 @@ msgstr "Exclude utilizatorii pe care îi urmărești"
 
 #: src/components/dialogs/MutedWords.tsx:514
 msgid "Excludes users you follow"
-msgstr "Exclud utilizatorii pe care îi urmărești"
+msgstr "Va exclude utilizatorii pe care îi urmărești"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:404
 msgid "Exit fullscreen"
@@ -2821,7 +2821,7 @@ msgstr "Apelul a eșuat, încearcă din nou."
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:224
 msgid "Failed to toggle thread mute, please try again"
-msgstr "Nu s-a putut activa/dezactiva discuția, încearcă din nou."
+msgstr "Nu s-a putut pune sau scoate de pe mut discuția, încearcă din nou."
 
 #: src/components/FeedCard.tsx:276
 msgid "Failed to update feeds"
@@ -3261,11 +3261,11 @@ msgstr "Hărțuire, trolling sau intoleranță"
 
 #: src/Navigation.tsx:377
 msgid "Hashtag"
-msgstr "Hashtag"
+msgstr "Etichetă"
 
 #: src/components/RichText.tsx:218
 msgid "Hashtag: #{tag}"
-msgstr "Hashtag: #{tag}"
+msgstr "Etichetă: #{tag}"
 
 #: src/screens/Signup/index.tsx:173
 msgid "Having trouble?"
@@ -4128,88 +4128,88 @@ msgstr "Dezactivează sunetul"
 
 #: src/components/TagMenu/index.web.tsx:116
 msgid "Mute {truncatedTag}"
-msgstr "Dezactivează {truncatedTag}"
+msgstr "Pune pe mut {truncatedTag}"
 
 #: src/view/com/profile/ProfileMenu.tsx:259
 #: src/view/com/profile/ProfileMenu.tsx:266
 msgid "Mute Account"
-msgstr "Dezactivează un cont"
+msgstr "Pune pe mut un cont"
 
 #: src/view/screens/ProfileList.tsx:631
 msgid "Mute accounts"
-msgstr "Dezactivează conturi"
+msgstr "Pune pe mut conturi"
 
 #: src/components/TagMenu/index.tsx:224
 msgid "Mute all {displayTag} posts"
-msgstr "Dezactivează toate postările cu {displayTag}"
+msgstr "Pune pe mut toate postările cu {displayTag}"
 
 #: src/components/dms/ConvoMenu.tsx:172
 #: src/components/dms/ConvoMenu.tsx:178
 msgid "Mute conversation"
-msgstr "Dezactivează conversația"
+msgstr "Pune pe mut conversația"
 
 #: src/components/dialogs/MutedWords.tsx:253
 msgid "Mute in:"
-msgstr "Dezactivează în:"
+msgstr "Pune pe mut în:"
 
 #: src/view/screens/ProfileList.tsx:737
 msgid "Mute list"
-msgstr "Dezactivează lista"
+msgstr "Pune pe mut lista"
 
 #: src/view/screens/ProfileList.tsx:732
 msgid "Mute these accounts?"
-msgstr "Dezactivezi aceste conturi?"
+msgstr "Pui pe mut aceste conturi?"
 
 #: src/components/dialogs/MutedWords.tsx:185
 msgid "Mute this word for 24 hours"
-msgstr "Dezactivează acest cuvânt pentru 24 de ore"
+msgstr "Pune pe mut acest cuvânt pentru 24 de ore"
 
 #: src/components/dialogs/MutedWords.tsx:224
 msgid "Mute this word for 30 days"
-msgstr "Dezactivează acest cuvânt pentru 30 de zile"
+msgstr "Pune pe mut acest cuvânt pentru 30 de zile"
 
 #: src/components/dialogs/MutedWords.tsx:209
 msgid "Mute this word for 7 days"
-msgstr "Dezactivează acest cuvânt pentru 7 zile"
+msgstr "Pune pe mut acest cuvânt pentru 7 zile"
 
 #: src/components/dialogs/MutedWords.tsx:258
 msgid "Mute this word in post text and tags"
-msgstr "Dezactivează acest cuvânt în textul postării și etichete"
+msgstr "Pune pe mut acest cuvânt în textul postării și etichete"
 
 #: src/components/dialogs/MutedWords.tsx:274
 msgid "Mute this word in tags only"
-msgstr "Dezactivează acest cuvânt doar în etichete"
+msgstr "Pune pe mut acest cuvânt doar în etichete"
 
 #: src/components/dialogs/MutedWords.tsx:170
 msgid "Mute this word until you unmute it"
-msgstr "Dezactivează acest cuvânt până îl reactivezi"
+msgstr "Pune pe mut acest cuvânt până îl reactivezi"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:489
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:493
 msgid "Mute thread"
-msgstr "Dezactivează notificările discuției"
+msgstr "Pune pe mut discuția"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:503
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:505
 msgid "Mute words & tags"
-msgstr "Dezactivează notificările pentru cuvinte și etichete"
+msgstr "Pune pe mut cuvinte și etichete"
 
 #: src/screens/Moderation/index.tsx:259
 msgid "Muted accounts"
-msgstr "Conturi dezactivate"
+msgstr "Conturi puse pe mut"
 
 #: src/Navigation.tsx:149
 #: src/view/screens/ModerationMutedAccounts.tsx:108
 msgid "Muted Accounts"
-msgstr "Conturi dezactivate"
+msgstr "Conturi puse pe mut"
 
 #: src/view/screens/ModerationMutedAccounts.tsx:116
 msgid "Muted accounts have their posts removed from your feed and from your notifications. Mutes are completely private."
-msgstr "Conturile dezactivate nu mai apar în fluxul tău sau în notificări. Dezactivările sunt complet private."
+msgstr "Conturile puse pe mut nu mai apar în fluxul tău sau în notificări. Lucrurile puse pe mut sunt complet private."
 
 #: src/lib/moderation/useModerationCauseDescription.ts:90
 msgid "Muted by \"{0}\""
-msgstr "Dezactivat de \"{0}\""
+msgstr "Pus pe mut de \"{0}\""
 
 #: src/screens/Moderation/index.tsx:229
 msgid "Muted words & tags"
@@ -4217,7 +4217,7 @@ msgstr "Cuvinte și etichete puse pe mut"
 
 #: src/view/screens/ProfileList.tsx:734
 msgid "Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them."
-msgstr "Dezactivarea este privată. Conturile dezactivate pot interacționa cu tine, dar nu vei vedea postările lor și nu vei primi notificări de la acestea."
+msgstr "Lucrurile puse pe mut sunt private. Conturile puse pe mut pot interacționa cu tine, dar nu vei vedea postările lor și nu vei primi notificări de la acestea."
 
 #: src/components/dialogs/BirthDateSettings.tsx:34
 #: src/components/dialogs/BirthDateSettings.tsx:37
@@ -5110,7 +5110,7 @@ msgstr "Te rog să introduci un nume unic pentru această parolă de aplicație 
 
 #: src/components/dialogs/MutedWords.tsx:86
 msgid "Please enter a valid word, tag, or phrase to mute"
-msgstr "Te rog să introduci un cuvânt, tag sau expresie validă pentru a le ascunde."
+msgstr "Te rog să introduci un cuvânt, tag sau expresie validă pentru a le pune pe mut."
 
 #: src/screens/Signup/state.ts:196
 #: src/screens/Signup/StepInfo/index.tsx:102
@@ -5164,7 +5164,7 @@ msgstr "Postare"
 #: src/view/com/composer/Composer.tsx:935
 msgctxt "action"
 msgid "Post All"
-msgstr "Posetază toate"
+msgstr "Posetază tot"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:209
 msgid "Post by {0}"
@@ -5239,7 +5239,7 @@ msgstr "Postări"
 
 #: src/components/dialogs/MutedWords.tsx:115
 msgid "Posts can be muted based on their text, their tags, or both. We recommend avoiding common words that appear in many posts, since it can result in no posts being shown."
-msgstr "Postările pot fi ascunse pe baza textului, tag-urilor sau amândurora. Îți recomandăm să eviți cuvintele comune care apar în multe postări, deoarece poate rezulta în ascunderea tuturor postărilor."
+msgstr "Postările pot fi puse pe mut pe baza textului, etichetelor sau amândurora. Îți recomandăm să eviți cuvintele comune care apar în multe postări, deoarece poate rezulta în ascunderea tuturor postărilor."
 
 #: src/view/com/posts/FeedErrorMessage.tsx:68
 msgid "Posts hidden"
@@ -5352,7 +5352,7 @@ msgstr "Public"
 
 #: src/view/screens/ModerationModlists.tsx:75
 msgid "Public, shareable lists of users to mute or block in bulk."
-msgstr "Liste publice, partajabile, de utilizatori pentru a-i ascunde sau bloca în masă."
+msgstr "Liste publice, partajabile, de utilizatori pentru a-i pune pe mut sau bloca în masă."
 
 #: src/view/screens/Lists.tsx:81
 msgid "Public, shareable lists which can drive feeds."
@@ -5544,7 +5544,7 @@ msgstr "Elimină imaginea"
 
 #: src/components/dialogs/MutedWords.tsx:523
 msgid "Remove mute word from your list"
-msgstr "Elimină cuvântul mut din lista ta"
+msgstr "Elimină cuvântul pus pe mut din lista ta"
 
 #: src/view/screens/Search/Search.tsx:1103
 msgid "Remove profile"
@@ -6130,7 +6130,7 @@ msgstr "Selectează GIF „{0}”"
 
 #: src/components/dialogs/MutedWords.tsx:142
 msgid "Select how long to mute this word for."
-msgstr "Selectează cât timp să fie mut acest cuvânt."
+msgstr "Selectează cât timp să fie pus pe mut acest cuvânt."
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:245
 msgid "Select language..."
@@ -6170,7 +6170,7 @@ msgstr "Selectează videoclipul"
 
 #: src/components/dialogs/MutedWords.tsx:242
 msgid "Select what content this mute word should apply to."
-msgstr "Selectează pentru ce conținut să se aplice acest cuvânt mut."
+msgstr "Selectează pentru ce conținut să se aplice acest cuvânt pus pe mut."
 
 #: src/screens/Settings/LanguageSettings.tsx:247
 msgid "Select which languages you want your subscribed feeds to include. If none are selected, all languages will be shown."
@@ -6450,7 +6450,7 @@ msgstr "Arată mai multe de acest tip"
 
 #: src/view/com/post-thread/PostThreadShowHiddenReplies.tsx:22
 msgid "Show muted replies"
-msgstr "Arată răspunsurile mut"
+msgstr "Arată răspunsurile puse pe mut"
 
 #: src/screens/Settings/Settings.tsx:96
 msgid "Show other accounts you can switch to"
@@ -7304,7 +7304,7 @@ msgstr "Acest profil este vizibil doar pentru utilizatorii autentificați. Nu va
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:731
 msgid "This reply will be sorted into a hidden section at the bottom of your thread and will mute notifications for subsequent replies - both for yourself and others."
-msgstr "Acest răspuns va fi sortat într-o secțiune ascunsă în partea de jos a discuției tale și va dezactiva notificările pentru răspunsurile ulterioare - atât pentru tine, cât și pentru ceilalți."
+msgstr "Acest răspuns va fi sortat într-o secțiune ascunsă în partea de jos a discuției tale și va pune pe mut notificările pentru răspunsurile ulterioare - atât pentru tine, cât și pentru ceilalți."
 
 #: src/screens/Signup/StepInfo/Policies.tsx:37
 msgid "This service has not provided terms of service or a privacy policy."
@@ -7337,7 +7337,7 @@ msgstr "Acest utilizator este inclus în lista <0>{0}</0> pe care ai blocat-o."
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:89
 msgid "This user is included in the <0>{0}</0> list which you have muted."
-msgstr "Acest utilizator este inclus în lista <0>{0}</0> pe care ai dezactivat-o."
+msgstr "Acest utilizator este inclus în lista <0>{0}</0> pe care ai pus-o pe mut."
 
 #: src/components/NewskieDialog.tsx:65
 msgid "This user is new here. Press for more info about when they joined."
@@ -7349,7 +7349,7 @@ msgstr "Acest utilizator nu urmărește pe nimeni."
 
 #: src/components/dialogs/MutedWords.tsx:435
 msgid "This will delete \"{0}\" from your muted words. You can always add it back later."
-msgstr "Aceasta va șterge \"{0}\" din cuvintele tale mute. Îl poți adăuga înapoi oricând."
+msgstr "Aceasta va șterge \"{0}\" din cuvintele tale puse pe mut. Îl poți adăuga înapoi oricând."
 
 #: src/screens/Settings/Settings.tsx:452
 msgid "This will remove @{0} from the quick access list."
@@ -7457,7 +7457,7 @@ msgstr "Deblochează lista"
 
 #: src/view/screens/ProfileList.tsx:579
 msgid "Un-mute list"
-msgstr "Dezactivează mutarea listei"
+msgstr "Pune pe mut lista"
 
 #: src/lib/strings/errors.ts:11
 msgid "Unable to connect. Please check your internet connection and try again."
@@ -7999,12 +7999,12 @@ msgstr "Vezi listele tale de moderare"
 
 #: src/screens/Moderation/index.tsx:254
 msgid "View your muted accounts"
-msgstr "Vezi conturile dezactivate"
+msgstr "Vezi conturile puse pe mut"
 
 #: src/view/com/modals/LinkWarning.tsx:89
 #: src/view/com/modals/LinkWarning.tsx:95
 msgid "Visit Site"
-msgstr "Vezi situl"
+msgstr "Vezi site-ul web"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VolumeControl.tsx:80
 msgid "Volume"
@@ -8026,7 +8026,7 @@ msgstr "Avertizează conținutul și filtrează din fluxuri"
 
 #: src/screens/Hashtag.tsx:218
 msgid "We couldn't find any results for that hashtag."
-msgstr "Nu am găsit rezultate pentru acel hashtag."
+msgstr "Nu am găsit rezultate pentru acea etichetă."
 
 #: src/screens/Messages/Conversation.tsx:104
 msgid "We couldn't load this conversation"
@@ -8078,7 +8078,7 @@ msgstr "Avem probleme de rețea, încearcă din nou"
 
 #: src/components/dialogs/nuxs/NeueTypography.tsx:54
 #~ msgid "We're introducing a new theme font, along with adjustable font sizing."
-#~ msgstr ""
+#~ msgstr "Introducem un font temat nou, împreună cu dimensiuni ajustabile pentru acesta."
 
 #: src/screens/Signup/index.tsx:94
 msgid "We're so excited to have you join us!"
@@ -8090,7 +8090,7 @@ msgstr "Ne pare rău, dar nu am reușit să rezolvăm această listă. Dacă pro
 
 #: src/components/dialogs/MutedWords.tsx:378
 msgid "We're sorry, but we weren't able to load your muted words at this time. Please try again."
-msgstr "Ne pare rău, dar nu am putut încărca cuvintele dezactivate în acest moment. Încearcă din nou."
+msgstr "Ne pare rău, dar nu am putut încărca cuvintele puse pe mut în acest moment. Încearcă din nou."
 
 #: src/view/screens/Search/Search.tsx:212
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
@@ -8254,7 +8254,7 @@ msgstr "Nu urmărești pe nimeni"
 
 #: src/components/dialogs/nuxs/NeueTypography.tsx:61
 #~ msgid "You can adjust these in your Appearance Settings later."
-#~ msgstr ""
+#~ msgstr "Poți ajusta acestea în setările de aspect mai târziu."
 
 #: src/view/com/posts/FollowingEmptyState.tsx:63
 #: src/view/com/posts/FollowingEndOfFeed.tsx:64
@@ -8317,7 +8317,7 @@ msgstr "Ai blocat acest utilizator. Nu poți vedea conținutul lui."
 #: src/view/com/modals/ChangePassword.tsx:88
 #: src/view/com/modals/ChangePassword.tsx:122
 msgid "You have entered an invalid code. It should look like XXXXX-XXXXX."
-msgstr "ai introdus un cod invalid. Ar trebui să arate astfel: XXXXX-XXXXX."
+msgstr "Ai introdus un cod invalid. Ar trebui să arate astfel: XXXXX-XXXXX."
 
 #: src/lib/moderation/useModerationCauseDescription.ts:114
 msgid "You have hidden this post"
@@ -8330,11 +8330,11 @@ msgstr "Ai ascuns această postare."
 #: src/components/moderation/ModerationDetailsDialog.tsx:102
 #: src/lib/moderation/useModerationCauseDescription.ts:97
 msgid "You have muted this account."
-msgstr "Ai dezactivat acest cont."
+msgstr "Ai pus pe mut acest cont."
 
 #: src/lib/moderation/useModerationCauseDescription.ts:91
 msgid "You have muted this user"
-msgstr "Ai dezactivat acest utilizator."
+msgstr "Ai pus pe mut acest utilizator."
 
 #: src/screens/Messages/ChatList.tsx:223
 msgid "You have no conversations yet. Start one!"
@@ -8355,11 +8355,11 @@ msgstr "Nu ai blocat încă niciun cont. Pentru a bloca un cont, accesează prof
 
 #: src/view/screens/AppPasswords.tsx:96
 #~ msgid "You have not created any app passwords yet. You can create one by pressing the button below."
-#~ msgstr ""
+#~ msgstr "Nu ai creat încă nici-o parolă de aplicație. Poți crea una dacă apeși butonul de mai jos."
 
 #: src/view/screens/ModerationMutedAccounts.tsx:132
 msgid "You have not muted any accounts yet. To mute an account, go to their profile and select \"Mute account\" from the menu on their account."
-msgstr "Nu ai dezactivat încă niciun cont. Pentru a dezactiva un cont, accesează profilul acestuia și selectează \"Dezactivează contul\" din meniul contului."
+msgstr "Nu ai pus pe mut încă niciun cont. Pentru a pune pe mut un cont, accesează profilul acestuia și selectează \"Pune contul pe mut\" din meniul contului."
 
 #: src/components/Lists.tsx:52
 msgid "You have reached the end"
@@ -8589,11 +8589,11 @@ msgstr "Postările tale au fost publicate."
 
 #: src/screens/Onboarding/StepFinished.tsx:246
 msgid "Your posts, likes, and blocks are public. Mutes are private."
-msgstr "Postările, aprecierile și blocările tale sunt publice. Dezactivările sunt private."
+msgstr "Postările, aprecierile și blocările tale sunt publice. Lucrurile puse pe mut sunt private."
 
 #: src/view/screens/Settings/index.tsx:119
 #~ msgid "Your profile"
-#~ msgstr ""
+#~ msgstr "Profilul tău"
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:75
 msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
