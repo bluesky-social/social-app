@@ -6,7 +6,7 @@ import {useLingui} from '@lingui/react'
 import {toNiceDomain} from '#/lib/strings/url-helpers'
 import {isAndroid} from '#/platform/detection'
 import {ServerInputDialog} from '#/view/com/auth/server-input'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, tokens, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {Globe_Stroke2_Corner0_Rounded as GlobeIcon} from '#/components/icons/Globe'
@@ -41,10 +41,9 @@ export function HostingProvider({
         onSelect={onSelectServiceUrl}
       />
       {minimal ? (
-        <View
-          style={[a.flex_row, a.gap_xs, a.align_center, a.flex_wrap, a.mt_xs]}>
+        <View style={[a.flex_row, a.align_center, a.flex_wrap]}>
           <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
-            Hosting provider:
+            You are creating an account on{' '}
           </Text>
           <Button
             label={toNiceDomain(serviceUrl)}
@@ -53,7 +52,7 @@ export function HostingProvider({
             variant="ghost"
             color="secondary"
             size="tiny"
-            style={[a.px_xs]}>
+            style={[a.px_xs, {marginLeft: tokens.space.xs * -1}]}>
             <ButtonText style={[a.text_sm]}>
               {toNiceDomain(serviceUrl)}
             </ButtonText>

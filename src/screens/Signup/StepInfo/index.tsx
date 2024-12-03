@@ -128,6 +128,11 @@ export function StepInfo({
     <ScreenTransition>
       <View style={[a.gap_md]}>
         <FormError error={state.error} />
+        <HostingProvider
+          minimal
+          serviceUrl={state.serviceUrl}
+          onSelectServiceUrl={v => dispatch({type: 'setServiceUrl', value: v})}
+        />
         {state.isLoading || isLoadingStarterPack ? (
           <View style={[a.align_center]}>
             <Loader size="xl" />
@@ -212,13 +217,6 @@ export function StepInfo({
                 accessibilityHint={_(msg`Select your date of birth`)}
               />
             </View>
-            <HostingProvider
-              minimal
-              serviceUrl={state.serviceUrl}
-              onSelectServiceUrl={v =>
-                dispatch({type: 'setServiceUrl', value: v})
-              }
-            />
             <Policies
               serviceDescription={state.serviceDescription}
               needsGuardian={!is18(state.dateOfBirth)}
