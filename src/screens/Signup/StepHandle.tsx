@@ -1,5 +1,5 @@
 import React, {useRef} from 'react'
-import {View} from 'react-native'
+import {LayoutAnimation, View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -109,6 +109,12 @@ export function StepHandle() {
               onChangeText={val => {
                 if (state.error) {
                   dispatch({type: 'setError', value: ''})
+                }
+
+                if (val === '' || handleValueRef.current === '') {
+                  LayoutAnimation.configureNext(
+                    LayoutAnimation.Presets.easeInEaseOut,
+                  )
                 }
 
                 // These need to always be in sync.
