@@ -112,7 +112,6 @@ module.exports = function (config) {
             'ko',
             'nl',
             'pl',
-            'pt',
             'pt-BR',
             'ro',
             'ru',
