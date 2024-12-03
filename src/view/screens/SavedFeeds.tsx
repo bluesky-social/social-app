@@ -25,13 +25,13 @@ import {FeedSourceCard} from '#/view/com/feeds/FeedSourceCard'
 import {TextLink} from '#/view/com/util/Link'
 import {Text} from '#/view/com/util/text/Text'
 import * as Toast from '#/view/com/util/Toast'
-import {ScrollView} from '#/view/com/util/Views'
+import {OldViewHeader as ViewHeader} from '#/view/com/util/ViewHeader'
+import {CenteredView, ScrollView} from '#/view/com/util/Views'
 import {NoFollowingFeed} from '#/screens/Feeds/NoFollowingFeed'
 import {NoSavedFeedsOfAnyType} from '#/screens/Feeds/NoSavedFeedsOfAnyType'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {FilterTimeline_Stroke2_Corner0_Rounded as FilterTimeline} from '#/components/icons/FilterTimeline'
-import {FloppyDisk_Stroke2_Corner0_Rounded as Save} from '#/components/icons/FloppyDisk'
 import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
 
@@ -51,7 +51,7 @@ function SavedFeedsInner({
 }) {
   const pal = usePalette('default')
   const {_} = useLingui()
-  const {isMobile} = useWebMediaQueries()
+  const {isMobile, isTabletOrDesktop, isDesktop} = useWebMediaQueries()
   const setMinimalShellMode = useSetMinimalShellMode()
   const {mutateAsync: overwriteSavedFeeds, isPending: isOverwritePending} =
     useOverwriteSavedFeedsMutation()
@@ -88,39 +88,36 @@ function SavedFeedsInner({
     }
   }, [_, overwriteSavedFeeds, currentFeeds, navigation])
 
+  const renderHeaderBtn = React.useCallback(() => {
+    return (
+      <Button
+        size="small"
+        variant={hasUnsavedChanges ? 'solid' : 'solid'}
+        color={hasUnsavedChanges ? 'primary' : 'secondary'}
+        onPress={onSaveChanges}
+        label={_(msg`Save changes`)}
+        disabled={isOverwritePending || !hasUnsavedChanges}
+        style={[isDesktop && a.mt_sm]}
+        testID="saveChangesBtn">
+        <ButtonText style={[isDesktop && a.text_md]}>
+          {isDesktop ? <Trans>Save changes</Trans> : <Trans>Save</Trans>}
+        </ButtonText>
+        {isOverwritePending && <ButtonIcon icon={Loader} />}
+      </Button>
+    )
+  }, [_, isDesktop, onSaveChanges, hasUnsavedChanges, isOverwritePending])
+
   return (
-    <Layout.Screen temp__enableWebBorders>
-      <Layout.Content>
-        <Layout.Header.Outer>
-          <Layout.Header.BackButton />
-          <Layout.Header.Content>
-            <Layout.Header.TitleText>
-              <Trans>Edit My Feeds</Trans>
-            </Layout.Header.TitleText>
-
-            {hasUnsavedChanges && (
-              <Button
-                size="tiny"
-                variant="solid"
-                color="primary"
-                onPress={onSaveChanges}
-                label={_(msg`Save changes`)}
-                disabled={isOverwritePending}
-                testID="saveChangesBtn"
-                style={[a.mt_xs]}>
-                <ButtonText>
-                  <Trans>Save</Trans>
-                </ButtonText>
-                <ButtonIcon
-                  icon={isOverwritePending ? Loader : Save}
-                  position="right"
-                />
-              </Button>
-            )}
-          </Layout.Header.Content>
-          <Layout.Header.Slot />
-        </Layout.Header.Outer>
-
+    <Layout.Screen>
+      <CenteredView
+        style={[a.util_screen_outer]}
+        sideBorders={isTabletOrDesktop}>
+        <ViewHeader
+          title={_(msg`Edit My Feeds`)}
+          showOnDesktop
+          showBorder
+          renderButton={renderHeaderBtn}
+        />
         <ScrollView style={[a.flex_1]} contentContainerStyle={[a.border_0]}>
           {noSavedFeedsOfAnyType && (
             <View style={[pal.border, a.border_b]}>
@@ -220,7 +217,7 @@ function SavedFeedsInner({
           </View>
           <View style={{height: 100}} />
         </ScrollView>
-      </Layout.Content>
+      </CenteredView>
     </Layout.Screen>
   )
 }
