@@ -5,6 +5,7 @@ import * as WebBrowser from 'expo-web-browser'
 import {logEvent} from '#/lib/statsig/statsig'
 import {
   createBskyAppAbsoluteUrl,
+  isBskyAppUrl,
   isBskyRSSUrl,
   isRelativeUrl,
   toNiceDomain,
@@ -27,7 +28,7 @@ export function useOpenLink() {
         url = createBskyAppAbsoluteUrl(url)
       }
 
-      if (!isBskyRSSUrl(url)) {
+      if (!isBskyAppUrl(url)) {
         logEvent('link:clicked', {
           domain: toNiceDomain(url),
           url,
