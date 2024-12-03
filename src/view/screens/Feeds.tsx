@@ -24,23 +24,24 @@ import {useSetMinimalShellMode} from '#/state/shell'
 import {useComposerControls} from '#/state/shell/composer'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {FAB} from '#/view/com/util/fab/FAB'
-import {TextLink} from '#/view/com/util/Link'
 import {List, ListMethods} from '#/view/com/util/List'
 import {FeedFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {Text} from '#/view/com/util/text/Text'
-import {ViewHeader} from '#/view/com/util/ViewHeader'
 import {NoFollowingFeed} from '#/screens/Feeds/NoFollowingFeed'
 import {NoSavedFeedsOfAnyType} from '#/screens/Feeds/NoSavedFeedsOfAnyType'
 import {atoms as a, useTheme} from '#/alf'
+import {ButtonIcon} from '#/components/Button'
 import {Divider} from '#/components/Divider'
 import * as FeedCard from '#/components/FeedCard'
 import {SearchInput} from '#/components/forms/SearchInput'
 import {IconCircle} from '#/components/IconCircle'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
+import {EditBig_Stroke2_Corner0_Rounded as EditBig} from '#/components/icons/EditBig'
 import {FilterTimeline_Stroke2_Corner0_Rounded as FilterTimeline} from '#/components/icons/FilterTimeline'
 import {ListMagnifyingGlass_Stroke2_Corner0_Rounded} from '#/components/icons/ListMagnifyingGlass'
 import {ListSparkle_Stroke2_Corner0_Rounded} from '#/components/icons/ListSparkle'
 import * as Layout from '#/components/Layout'
+import {Link} from '#/components/Link'
 import * as ListCard from '#/components/ListCard'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Feeds'>
@@ -374,22 +375,6 @@ export function FeedsScreen(_props: Props) {
     isUserSearching,
   ])
 
-  const renderHeaderBtn = React.useCallback(() => {
-    return (
-      <View style={styles.headerBtnGroup}>
-        <TextLink
-          testID="editFeedsBtn"
-          type="lg-medium"
-          href="/settings/saved-feeds"
-          accessibilityLabel={_(msg`Edit My Feeds`)}
-          accessibilityHint=""
-          text={_(msg`Edit`)}
-          style={[pal.link, a.pr_xs]}
-        />
-      </View>
-    )
-  }, [pal, _])
-
   const searchBarIndex = items.findIndex(
     item => item.type === 'popularFeedsHeader',
   )
@@ -430,36 +415,7 @@ export function FeedsScreen(_props: Props) {
           </View>
         )
       } else if (item.type === 'savedFeedsHeader') {
-        return (
-          <>
-            {!isMobile && (
-              <View
-                style={[
-                  pal.view,
-                  styles.header,
-                  pal.border,
-                  {
-                    borderBottomWidth: 1,
-                  },
-                ]}>
-                <Text type="title-lg" style={[pal.text, s.bold]}>
-                  <Trans>Feeds</Trans>
-                </Text>
-                <View style={styles.headerBtnGroup}>
-                  <TextLink
-                    type="lg"
-                    href="/settings/saved-feeds"
-                    accessibilityLabel={_(msg`Edit My Feeds`)}
-                    accessibilityHint=""
-                    text={_(msg`Edit`)}
-                    style={[pal.link]}
-                  />
-                </View>
-              </View>
-            )}
-            <FeedsSavedHeader />
-          </>
-        )
+        return <FeedsSavedHeader />
       } else if (item.type === 'savedFeedNoResults') {
         return (
           <View
@@ -530,13 +486,8 @@ export function FeedsScreen(_props: Props) {
       return null
     },
     [
-      isMobile,
-      pal.view,
       pal.border,
-      pal.text,
       pal.textLight,
-      pal.link,
-      _,
       query,
       onChangeQuery,
       onPressCancelSearch,
@@ -546,43 +497,60 @@ export function FeedsScreen(_props: Props) {
   )
 
   return (
-    <Layout.Screen testID="FeedsScreen">
-      {isMobile && (
-        <ViewHeader
-          title={_(msg`Feeds`)}
-          renderButton={renderHeaderBtn}
-          showBorder
-        />
-      )}
+    <Layout.Screen testID="FeedsScreen" temp__enableWebBorders>
+      <Layout.Content>
+        <Layout.Header.Outer>
+          <Layout.Header.BackButton />
+          <Layout.Header.Content>
+            <Layout.Header.TitleText>
+              <Trans>Feeds</Trans>
+            </Layout.Header.TitleText>
+          </Layout.Header.Content>
+          <Layout.Header.Slot>
+            <Link
+              testID="editFeedsBtn"
+              to="/settings/saved-feeds"
+              label={_(msg`Edit My Feeds`)}
+              size="small"
+              variant="ghost"
+              color="secondary"
+              shape="round"
+              style={[a.justify_center]}>
+              <ButtonIcon icon={EditBig} size="lg" />
+            </Link>
+          </Layout.Header.Slot>
+        </Layout.Header.Outer>
 
-      <List
-        ref={listRef}
-        style={[!isTabletOrDesktop && s.flex1, styles.list]}
-        data={items}
-        keyExtractor={item => item.key}
-        contentContainerStyle={styles.contentContainer}
-        renderItem={renderItem}
-        refreshing={isPTR}
-        onRefresh={isUserSearching ? undefined : onPullToRefresh}
-        initialNumToRender={10}
-        onEndReached={onEndReached}
-        // @ts-ignore our .web version only -prf
-        desktopFixedHeight
-        scrollIndicatorInsets={{right: 1}}
-        keyboardShouldPersistTaps="handled"
-        keyboardDismissMode="on-drag"
-      />
-
-      {hasSession && (
-        <FAB
-          testID="composeFAB"
-          onPress={onPressCompose}
-          icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
-          accessibilityRole="button"
-          accessibilityLabel={_(msg`New post`)}
-          accessibilityHint=""
+        <List
+          ref={listRef}
+          style={[!isTabletOrDesktop && s.flex1, styles.list]}
+          data={items}
+          keyExtractor={item => item.key}
+          contentContainerStyle={styles.contentContainer}
+          renderItem={renderItem}
+          refreshing={isPTR}
+          onRefresh={isUserSearching ? undefined : onPullToRefresh}
+          initialNumToRender={10}
+          onEndReached={onEndReached}
+          // @ts-ignore our .web version only -prf
+          desktopFixedHeight
+          scrollIndicatorInsets={{right: 1}}
+          keyboardShouldPersistTaps="handled"
+          keyboardDismissMode="on-drag"
+          sideBorders={false}
         />
-      )}
+
+        {hasSession && (
+          <FAB
+            testID="composeFAB"
+            onPress={onPressCompose}
+            icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
+            accessibilityRole="button"
+            accessibilityLabel={_(msg`New post`)}
+            accessibilityHint=""
+          />
+        )}
+      </Layout.Content>
     </Layout.Screen>
   )
 }
