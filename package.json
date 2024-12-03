@@ -169,7 +169,7 @@
     "react-keyed-flatten-children": "^3.0.0",
     "react-native": "0.74.1",
     "react-native-compressor": "^1.8.24",
-    "react-native-date-picker": "^4.4.2",
+    "react-native-date-picker": "^5.0.7",
     "react-native-drawer-layout": "^4.0.1",
     "react-native-gesture-handler": "2.20.0",
     "react-native-get-random-values": "~1.11.0",
