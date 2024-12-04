@@ -18,7 +18,6 @@ import {
 import {isNonConfigurableModerationAuthority} from '#/state/session/additional-moderation-authorities'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
-import {ScrollView} from '#/view/com/util/Views'
 import {atoms as a, useBreakpoints, useTheme, ViewStyleProp} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -86,9 +85,8 @@ export function ModerationScreen(
 
   return (
     <Layout.Screen testID="moderationScreen" temp__enableWebBorders>
-      <Layout.Center>
-        <ViewHeader title={_(msg`Moderation`)} showOnDesktop />
-
+      <ViewHeader title={_(msg`Moderation`)} showOnDesktop />
+      <Layout.Content>
         {isLoading ? (
           <ListMaybePlaceholder isLoading={true} sideBorders={false} />
         ) : error || !preferences ? (
@@ -101,7 +99,7 @@ export function ModerationScreen(
         ) : (
           <ModerationScreenInner preferences={preferences} />
         )}
-      </Layout.Center>
+      </Layout.Content>
     </Layout.Screen>
   )
 }
@@ -188,13 +186,7 @@ export function ModerationScreenInner({
   const disabledOnIOS = isIOS && !adultContentEnabled
 
   return (
-    <ScrollView
-      contentContainerStyle={[
-        a.border_0,
-        a.pt_2xl,
-        a.px_lg,
-        gtMobile && a.px_2xl,
-      ]}>
+    <View style={[a.pt_2xl, a.px_lg, gtMobile && a.px_2xl]}>
       <Text
         style={[a.text_md, a.font_bold, a.pb_md, t.atoms.text_contrast_high]}>
         <Trans>Moderation tools</Trans>
@@ -450,6 +442,6 @@ export function ModerationScreenInner({
         </View>
       )}
       <View style={{height: 150}} />
-    </ScrollView>
+    </View>
   )
 }
