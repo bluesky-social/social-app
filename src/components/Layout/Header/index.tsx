@@ -25,6 +25,7 @@ const BUTTON_SIZE = 34 // small button
 export function Outer({children}: {children: React.ReactNode}) {
   const t = useTheme()
   const gutter = useGutterStyles()
+  const {gtMobile} = useBreakpoints()
 
   return (
     <View
@@ -37,8 +38,7 @@ export function Outer({children}: {children: React.ReactNode}) {
         gutter,
         a.py_sm,
         t.atoms.border_contrast_low,
-        a.mx_auto,
-        {maxWidth: 600},
+        gtMobile && [a.mx_auto, {maxWidth: 600}],
       ]}>
       {children}
     </View>
