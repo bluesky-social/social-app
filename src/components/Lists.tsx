@@ -154,7 +154,7 @@ let ListMaybePlaceholder = ({
   onGoBack,
   hideBackButton,
   sideBorders,
-  topBorder = true,
+  topBorder = false,
 }: {
   isLoading: boolean
   noEmpty?: boolean

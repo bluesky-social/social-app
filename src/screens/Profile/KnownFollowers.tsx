@@ -21,8 +21,20 @@ import {
   ListMaybePlaceholder,
 } from '#/components/Lists'
 
-function renderItem({item}: {item: AppBskyActorDefs.ProfileViewBasic}) {
-  return <ProfileCardWithFollowBtn key={item.did} profile={item} />
+function renderItem({
+  item,
+  index,
+}: {
+  item: AppBskyActorDefs.ProfileViewBasic
+  index: number
+}) {
+  return (
+    <ProfileCardWithFollowBtn
+      key={item.did}
+      profile={item}
+      noBorder={index === 0}
+    />
+  )
 }
 
 function keyExtractor(item: AppBskyActorDefs.ProfileViewBasic) {
@@ -92,7 +104,8 @@ export const ProfileKnownFollowersScreen = ({route}: Props) => {
 
   if (followers.length < 1) {
     return (
-      <Layout.Screen>
+      <Layout.Screen temp__enableWebBorders>
+        <ViewHeader title={_(msg`Followers you know`)} />
         <ListMaybePlaceholder
           isLoading={isDidLoading || isFollowersLoading}
           isError={isError}
@@ -100,13 +113,15 @@ export const ProfileKnownFollowersScreen = ({route}: Props) => {
           emptyMessage={_(msg`You don't follow any users who follow @${name}.`)}
           errorMessage={cleanError(resolveError || error)}
           onRetry={isError ? refetch : undefined}
+          topBorder={false}
+          sideBorders={false}
         />
       </Layout.Screen>
     )
   }
 
   return (
-    <Layout.Screen>
+    <Layout.Screen temp__enableWebBorders>
       <ViewHeader title={_(msg`Followers you know`)} />
       <List
         data={followers}
@@ -130,6 +145,7 @@ export const ProfileKnownFollowersScreen = ({route}: Props) => {
         desktopFixedHeight
         initialNumToRender={initialNumToRender}
         windowSize={11}
+        sideBorders={false}
       />
     </Layout.Screen>
   )
