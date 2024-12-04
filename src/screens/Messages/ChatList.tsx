@@ -16,7 +16,6 @@ import {MESSAGE_SCREEN_POLL_INTERVAL} from '#/state/messages/convo/const'
 import {useMessagesEventBus} from '#/state/messages/events'
 import {useListConvosQuery} from '#/state/queries/messages/list-converations'
 import {List} from '#/view/com/util/List'
-import {CenteredView} from '#/view/com/util/Views'
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {DialogControlProps, useDialogControl} from '#/components/Dialog'
@@ -48,7 +47,6 @@ export function MessagesScreen({navigation, route}: Props) {
   const {_} = useLingui()
   const t = useTheme()
   const newChatControl = useDialogControl()
-  const {gtMobile} = useBreakpoints()
   const pushToConversation = route.params?.pushToConversation
 
   // Whenever we have `pushToConversation` set, it means we pressed a notification for a chat without being on
@@ -130,10 +128,9 @@ export function MessagesScreen({navigation, route}: Props) {
 
   if (conversations.length < 1) {
     return (
-      <Layout.Screen>
-        <CenteredView sideBorders={gtMobile} style={[a.h_full_vh]}>
-          <Header newChatControl={newChatControl} />
-
+      <Layout.Screen temp__enableWebBorders>
+        <Header newChatControl={newChatControl} />
+        <Layout.Center>
           {isLoading ? (
             <View style={[a.align_center, a.pt_3xl, web({paddingTop: '10vh'})]}>
               <Loader size="xl" />
@@ -195,7 +192,7 @@ export function MessagesScreen({navigation, route}: Props) {
               )}
             </>
           )}
-        </CenteredView>
+        </Layout.Center>
 
         {!isLoading && !isError && (
           <NewChat onNewChat={onNewChat} control={newChatControl} />
