@@ -5,10 +5,14 @@ import {
   KeyboardAwareScrollView,
   KeyboardAwareScrollViewProps,
 } from 'react-native-keyboard-controller'
-import Animated, {AnimatedScrollViewProps} from 'react-native-reanimated'
+import Animated, {
+  AnimatedScrollViewProps,
+  useAnimatedProps,
+} from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
 import {isWeb} from '#/platform/detection'
+import {useShellLayout} from '#/state/shell/shell-layout'
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 
 export * as Header from '#/components/Layout/Header'
@@ -80,10 +84,24 @@ export const Content = React.memo(function Content({
     () => ({...context, withinScrollView: true}),
     [context],
   )
+  const {footerHeight} = useShellLayout()
+  const animatedProps = useAnimatedProps(() => {
+    return {
+      scrollIndicatorInsets: {
+        bottom: footerHeight.get(),
+        top: 0,
+        right: 1,
+      },
+    } satisfies AnimatedScrollViewProps
+  })
+
   return (
     <LayoutContext.Provider value={newContext}>
       <Animated.ScrollView
         id="content"
+        automaticallyAdjustsScrollIndicatorInsets={false}
+        // sets the scroll inset to the height of the footer
+        animatedProps={animatedProps}
         style={[styles.scrollViewCommonStyles, style]}
         contentContainerStyle={[
           styles.scrollViewContentContainer,
