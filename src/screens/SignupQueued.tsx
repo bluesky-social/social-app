@@ -1,5 +1,5 @@
 import React from 'react'
-import {Modal, ScrollView,View} from 'react-native'
+import {Modal, ScrollView, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {StatusBar} from 'expo-status-bar'
 import {msg, plural, Trans} from '@lingui/macro'
