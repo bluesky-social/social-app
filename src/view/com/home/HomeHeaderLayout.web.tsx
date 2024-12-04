@@ -12,6 +12,7 @@ import {useShellLayout} from '#/state/shell/shell-layout'
 import {Logo} from '#/view/icons/Logo'
 import {atoms as a, useTheme} from '#/alf'
 import {Hashtag_Stroke2_Corner0_Rounded as FeedsIcon} from '#/components/icons/Hashtag'
+import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
 import {HomeHeaderLayoutMobile} from './HomeHeaderLayoutMobile'
 
@@ -44,51 +45,52 @@ function HomeHeaderLayoutDesktopAndTablet({
   return (
     <>
       {hasSession && (
-        <View
-          style={[
-            a.relative,
-            a.flex_row,
-            a.justify_end,
-            a.align_center,
-            a.pt_lg,
-            a.px_md,
-            a.pb_2xs,
-            t.atoms.bg,
-            t.atoms.border_contrast_low,
-            styles.bar,
-            kawaii && {paddingTop: 22, paddingBottom: 16},
-          ]}>
+        <Layout.Center>
           <View
             style={[
-              a.absolute,
-              a.inset_0,
+              a.relative,
+              a.flex_row,
+              a.justify_end,
+              a.align_center,
               a.pt_lg,
-              a.m_auto,
-              kawaii && {paddingTop: 4, paddingBottom: 0},
-              {
-                width: kawaii ? 84 : 28,
-              },
+              a.px_md,
+              a.pb_2xs,
+              t.atoms.bg,
+              styles.bar,
+              kawaii && {paddingTop: 22, paddingBottom: 16},
             ]}>
-            <Logo width={kawaii ? 60 : 28} />
-          </View>
+            <View
+              style={[
+                a.absolute,
+                a.inset_0,
+                a.pt_lg,
+                a.m_auto,
+                kawaii && {paddingTop: 4, paddingBottom: 0},
+                {
+                  width: kawaii ? 84 : 28,
+                },
+              ]}>
+              <Logo width={kawaii ? 60 : 28} />
+            </View>
 
-          <Link
-            to="/feeds"
-            hitSlop={10}
-            label={_(msg`View your feeds and explore more`)}
-            size="small"
-            variant="ghost"
-            color="secondary"
-            shape="square"
-            style={[
-              a.justify_center,
-              {
-                marginTop: -4,
-              },
-            ]}>
-            <FeedsIcon size="md" fill={t.atoms.text_contrast_medium.color} />
-          </Link>
-        </View>
+            <Link
+              to="/feeds"
+              hitSlop={10}
+              label={_(msg`View your feeds and explore more`)}
+              size="small"
+              variant="ghost"
+              color="secondary"
+              shape="square"
+              style={[
+                a.justify_center,
+                {
+                  marginTop: -4,
+                },
+              ]}>
+              <FeedsIcon size="md" fill={t.atoms.text_contrast_medium.color} />
+            </Link>
+          </View>
+        </Layout.Center>
       )}
       {tabBarAnchor}
       <Animated.View
@@ -97,12 +99,11 @@ function HomeHeaderLayoutDesktopAndTablet({
         }}
         style={[
           t.atoms.bg,
-          t.atoms.border_contrast_low,
           styles.bar,
           styles.tabBar,
           headerMinimalShellTransform,
         ]}>
-        {children}
+        <Layout.Center>{children}</Layout.Center>
       </Animated.View>
     </>
   )
@@ -113,8 +114,6 @@ const styles = StyleSheet.create({
     // @ts-ignore Web only
     left: 'calc(50% - 300px)',
     width: 600,
-    borderLeftWidth: 1,
-    borderRightWidth: 1,
   },
   topBar: {
     flexDirection: 'row',
@@ -130,8 +129,6 @@ const styles = StyleSheet.create({
     top: 0,
     flexDirection: 'column',
     alignItems: 'center',
-    borderLeftWidth: 1,
-    borderRightWidth: 1,
     zIndex: 1,
   },
 })

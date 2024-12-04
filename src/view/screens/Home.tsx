@@ -71,7 +71,7 @@ export function HomeScreen(props: Props) {
 
   if (preferences && pinnedFeedInfos && !isPinnedFeedsLoading) {
     return (
-      <Layout.Screen testID="HomeScreen">
+      <Layout.Screen testID="HomeScreen" temp__enableWebBorders>
         <HomeScreenReady
           {...props}
           preferences={preferences}
