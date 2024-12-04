@@ -15,8 +15,8 @@ import {
 } from '@fortawesome/react-native-fontawesome'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {RemoveScroll} from 'react-remove-scroll'
 
-import {useWebBodyScrollLock} from '#/lib/hooks/useWebBodyScrollLock'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {colors, s} from '#/lib/styles'
 import {useLightbox, useLightboxControls} from '#/state/lightbox'
@@ -28,7 +28,6 @@ export function Lightbox() {
   const {activeLightbox} = useLightbox()
   const {closeLightbox} = useLightboxControls()
   const isActive = !!activeLightbox
-  useWebBodyScrollLock(isActive)
 
   if (!isActive) {
     return null
@@ -37,11 +36,13 @@ export function Lightbox() {
   const initialIndex = activeLightbox.index
   const imgs = activeLightbox.images
   return (
-    <LightboxInner
-      imgs={imgs}
-      initialIndex={initialIndex}
-      onClose={closeLightbox}
-    />
+    <RemoveScroll>
+      <LightboxInner
+        imgs={imgs}
+        initialIndex={initialIndex}
+        onClose={closeLightbox}
+      />
+    </RemoveScroll>
   )
 }
 
