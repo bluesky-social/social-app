@@ -11,19 +11,20 @@ import {getStarterPackOgCard} from '#/lib/strings/starter-pack'
 import {precacheResolvedUri} from '#/state/queries/resolve-uri'
 import {precacheStarterPack} from '#/state/queries/starter-packs'
 import {useSession} from '#/state/session'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, useTheme, ViewStyleProp} from '#/alf'
 import {StarterPack} from '#/components/icons/StarterPack'
 import {Link as BaseLink, LinkProps as BaseLinkProps} from '#/components/Link'
 import {Text} from '#/components/Typography'
 
 export function Default({
   starterPack,
+  style,
 }: {
   starterPack?: AppBskyGraphDefs.StarterPackViewBasic
-}) {
+} & ViewStyleProp) {
   if (!starterPack) return null
   return (
-    <Link starterPack={starterPack}>
+    <Link starterPack={starterPack} style={style}>
       <Card starterPack={starterPack} />
     </Link>
   )
@@ -99,11 +100,12 @@ export function Card({
 export function Link({
   starterPack,
   children,
+  style,
 }: {
   starterPack: AppBskyGraphDefs.StarterPackViewBasic
   onPress?: () => void
   children: BaseLinkProps['children']
-}) {
+} & ViewStyleProp) {
   const {_} = useLingui()
   const queryClient = useQueryClient()
   const {record} = starterPack
@@ -130,7 +132,7 @@ export function Link({
         )
         precacheStarterPack(queryClient, starterPack)
       }}
-      style={[a.flex_col, a.align_start]}>
+      style={[a.flex_col, a.align_start, style]}>
       {children}
     </BaseLink>
   )

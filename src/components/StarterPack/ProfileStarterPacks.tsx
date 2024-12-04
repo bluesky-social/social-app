@@ -115,11 +115,10 @@ export const ProfileStarterPacks = React.forwardRef<
     return (
       <View
         style={[
-          a.p_lg,
           (isTabletOrDesktop || index !== 0) && a.border_t,
           t.atoms.border_contrast_low,
         ]}>
-        <StarterPackCard starterPack={item} />
+        <StarterPackCard starterPack={item} style={a.p_lg} />
       </View>
     )
   }
