@@ -204,34 +204,32 @@ export function MessagesScreen({navigation, route}: Props) {
   return (
     <Layout.Screen testID="messagesScreen" temp__enableWebBorders>
       <Header newChatControl={newChatControl} />
-      <Layout.Center>
-        <NewChat onNewChat={onNewChat} control={newChatControl} />
-        <List
-          data={conversations}
-          renderItem={renderItem}
-          keyExtractor={keyExtractor}
-          refreshing={isPTRing}
-          onRefresh={onRefresh}
-          onEndReached={onEndReached}
-          ListFooterComponent={
-            <ListFooter
-              isFetchingNextPage={isFetchingNextPage}
-              error={cleanError(error)}
-              onRetry={fetchNextPage}
-              style={{borderColor: 'transparent'}}
-              hasNextPage={hasNextPage}
-              showEndMessage={true}
-              endMessageText={_(msg`No more conversations to show`)}
-            />
-          }
-          onEndReachedThreshold={isNative ? 1.5 : 0}
-          initialNumToRender={initialNumToRender}
-          windowSize={11}
-          // @ts-ignore our .web version only -sfn
-          desktopFixedHeight
-          sideBorders={false}
-        />
-      </Layout.Center>
+      <NewChat onNewChat={onNewChat} control={newChatControl} />
+      <List
+        data={conversations}
+        renderItem={renderItem}
+        keyExtractor={keyExtractor}
+        refreshing={isPTRing}
+        onRefresh={onRefresh}
+        onEndReached={onEndReached}
+        ListFooterComponent={
+          <ListFooter
+            isFetchingNextPage={isFetchingNextPage}
+            error={cleanError(error)}
+            onRetry={fetchNextPage}
+            style={{borderColor: 'transparent'}}
+            hasNextPage={hasNextPage}
+            showEndMessage={true}
+            endMessageText={_(msg`No more conversations to show`)}
+          />
+        }
+        onEndReachedThreshold={isNative ? 1.5 : 0}
+        initialNumToRender={initialNumToRender}
+        windowSize={11}
+        // @ts-ignore our .web version only -sfn
+        desktopFixedHeight
+        sideBorders={false}
+      />
     </Layout.Screen>
   )
 }
