@@ -31,6 +31,8 @@ export function Outer({children}: {children: React.ReactNode}) {
         gutter,
         a.py_sm,
         t.atoms.border_contrast_low,
+        a.mx_auto,
+        {maxWidth: 600},
       ]}>
       {children}
     </View>
