@@ -18,3 +18,7 @@ module.
 Patching `RCTBaseTextInputView.m` to fix an issue where `selectTextOnFocus` does not work as expected on iOS 17. This
 patch _only_ fixes the Paper version of `TextInput`. If we migrate to Fabric and the fix has not been made upstream,
 we can apply the same fix. See https://github.com/facebook/react-native/pull/44307.
+
+## ScrollView centerContent fix
+
+Includes https://github.com/facebook/react-native/pull/47591 early. Delete when it's in a release.
