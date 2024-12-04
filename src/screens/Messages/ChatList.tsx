@@ -206,8 +206,8 @@ export function MessagesScreen({navigation, route}: Props) {
 
   return (
     <Layout.Screen testID="messagesScreen" temp__enableWebBorders>
+      <Header newChatControl={newChatControl} />
       <Layout.Center>
-        <Header newChatControl={newChatControl} />
         <NewChat onNewChat={onNewChat} control={newChatControl} />
         <List
           data={conversations}
