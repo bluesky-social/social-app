@@ -118,7 +118,8 @@ export function NotificationsScreen({route: {params}}: Props) {
               onPress={emitSoftReset}
               style={[a.justify_start]}>
               {({hovered}) => (
-                <Layout.Header.TitleText style={[hovered && a.underline]}>
+                <Layout.Header.TitleText
+                  style={[a.w_full, hovered && a.underline]}>
                   <Trans>Notifications</Trans>
                   {isWeb && gtTablet && hasNew && (
                     <View
