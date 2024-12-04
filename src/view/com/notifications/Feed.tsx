@@ -21,7 +21,6 @@ import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {List, ListRef} from '#/view/com/util/List'
 import {NotificationFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
-import {CenteredView} from '#/view/com/util/Views'
 import {FeedItem} from './FeedItem'
 
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
@@ -162,12 +161,10 @@ export function Feed({
   return (
     <View style={s.hContentRegion}>
       {error && (
-        <CenteredView>
-          <ErrorMessage
-            message={cleanError(error)}
-            onPressTryAgain={onPressTryAgain}
-          />
-        </CenteredView>
+        <ErrorMessage
+          message={cleanError(error)}
+          onPressTryAgain={onPressTryAgain}
+        />
       )}
       <List
         testID="notifsFeed"
