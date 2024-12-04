@@ -180,12 +180,14 @@ function NavItem({count, href, icon, iconFilled, label}: NavItemProps) {
             accessibilityLabel={_(msg`${count} unread items`)}
             accessibilityHint=""
             accessible={true}
+            numberOfLines={1}
             style={[
               a.absolute,
               a.text_xs,
               a.font_bold,
               a.rounded_full,
               a.text_center,
+              a.leading_tight,
               {
                 top: '-10%',
                 left: count.length === 1 ? '50%' : '40%',
@@ -323,7 +325,6 @@ export function DesktopLeftNav() {
       role="navigation"
       style={[
         a.px_xl,
-        a.pr_5xl,
         styles.leftNav,
         isTablet && styles.leftNavTablet,
         pal.view,
