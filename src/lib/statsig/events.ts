@@ -211,6 +211,10 @@ export type LogEvents = {
   'starterPack:opened': {
     starterPack: string
   }
+  'link:clicked': {
+    url: string
+    domain: string
+  }
 
   'feed:interstitial:profileCard:press': {}
   'feed:interstitial:feedCard:press': {}

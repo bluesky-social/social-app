@@ -1,10 +1,9 @@
-import {useCallback, useEffect, useMemo, useRef} from 'react'
+import {useCallback, useEffect, useRef} from 'react'
 import {ScrollView, StyleSheet, View} from 'react-native'
 
-import {usePalette} from '#/lib/hooks/usePalette'
-import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {Text} from '#/components/Typography'
 import {PressableWithHover} from '../util/PressableWithHover'
-import {Text} from '../util/text/Text'
 import {DraggableScrollView} from './DraggableScrollView'
 
 export interface TabBarProps {
@@ -12,6 +11,8 @@ export interface TabBarProps {
   selectedPage: number
   items: string[]
   indicatorColor?: string
+  backgroundColor?: string
+
   onSelect?: (index: number) => void
   onPressSelected?: (index: number) => void
 }
@@ -28,15 +29,14 @@ export function TabBar({
   onSelect,
   onPressSelected,
 }: TabBarProps) {
-  const pal = usePalette('default')
+  const t = useTheme()
   const scrollElRef = useRef<ScrollView>(null)
   const itemRefs = useRef<Array<Element>>([])
-  const indicatorStyle = useMemo(
-    () => ({borderBottomColor: indicatorColor || pal.colors.link}),
-    [indicatorColor, pal],
-  )
-  const {isDesktop, isTablet} = useWebMediaQueries()
-  const styles = isDesktop || isTablet ? desktopStyles : mobileStyles
+  const indicatorStyle = {
+    borderBottomColor: indicatorColor || t.palette.primary_500,
+  }
+  const {gtMobile} = useBreakpoints()
+  const styles = gtMobile ? desktopStyles : mobileStyles
 
   useEffect(() => {
     // On the web, the primary interaction is tapping.
@@ -96,7 +96,7 @@ export function TabBar({
   return (
     <View
       testID={testID}
-      style={[pal.view, styles.outer]}
+      style={[t.atoms.bg, styles.outer]}
       accessibilityRole="tablist">
       <DraggableScrollView
         testID={`${testID}-selector`}
@@ -112,16 +112,17 @@ export function TabBar({
               key={`${item}-${i}`}
               ref={node => (itemRefs.current[i] = node as any)}
               style={styles.item}
-              hoverStyle={pal.viewLight}
+              hoverStyle={t.atoms.bg_contrast_25}
               onPress={() => onPressItem(i)}
               accessibilityRole="tab">
               <View style={[styles.itemInner, selected && indicatorStyle]}>
                 <Text
                   emoji
-                  type={isDesktop || isTablet ? 'xl-bold' : 'lg-bold'}
                   testID={testID ? `${testID}-${item}` : undefined}
                   style={[
-                    selected ? pal.text : pal.textLight,
+                    selected ? t.atoms.text : t.atoms.text_contrast_medium,
+                    a.text_md,
+                    a.font_bold,
                     {lineHeight: 20},
                   ]}>
                   {item}
@@ -131,7 +132,7 @@ export function TabBar({
           )
         })}
       </DraggableScrollView>
-      <View style={[pal.border, styles.outerBottomBorder]} />
+      <View style={[t.atoms.border_contrast_low, styles.outerBottomBorder]} />
     </View>
   )
 }
@@ -179,7 +180,7 @@ const mobileStyles = StyleSheet.create({
   },
   itemInner: {
     paddingBottom: 10,
-    borderBottomWidth: 3,
+    borderBottomWidth: 2,
     borderBottomColor: 'transparent',
   },
   outerBottomBorder: {
