@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useContext} from 'react'
 import {View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -54,10 +54,26 @@ export function Outer({children}: {children: React.ReactNode}) {
   )
 }
 
-export function Content({children}: {children: React.ReactNode}) {
+const AlignmentContext = React.createContext<'platform' | 'left'>('platform')
+
+export function Content({
+  children,
+  align = 'platform',
+}: {
+  children: React.ReactNode
+  align?: 'platform' | 'left'
+}) {
   return (
-    <View style={[a.flex_1, a.justify_center, isIOS && a.align_center]}>
-      {children}
+    <View
+      style={[
+        a.flex_1,
+        a.justify_center,
+        isIOS && align === 'platform' && a.align_center,
+        {minHeight: BUTTON_SIZE},
+      ]}>
+      <AlignmentContext.Provider value={align}>
+        {children}
+      </AlignmentContext.Provider>
     </View>
   )
 }
@@ -134,14 +150,15 @@ export function TitleText({
   style,
 }: {children: React.ReactNode} & TextStyleProp) {
   const {gtMobile} = useBreakpoints()
+  const align = useContext(AlignmentContext)
   return (
     <Text
       style={[
         a.text_lg,
         a.font_heavy,
         a.leading_tight,
-        isIOS && a.text_center,
-        gtMobile && [a.text_xl],
+        isIOS && align === 'platform' && a.text_center,
+        gtMobile && a.text_xl,
         style,
       ]}
       numberOfLines={2}>
