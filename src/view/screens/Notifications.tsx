@@ -108,77 +108,75 @@ export function NotificationsScreen({route: {params}}: Props) {
 
   return (
     <Layout.Screen testID="notificationsScreen" temp__enableWebBorders>
-      <Layout.Center>
-        <Layout.Header.Outer>
-          <Layout.Header.MenuButton />
-          <Layout.Header.Content>
-            <Button
-              label={_(msg`Notifications`)}
-              accessibilityHint={_(msg`Refresh notifications`)}
-              onPress={emitSoftReset}
-              style={[a.justify_start]}>
-              {({hovered}) => (
-                <Layout.Header.TitleText
-                  style={[a.w_full, hovered && a.underline]}>
-                  <Trans>Notifications</Trans>
-                  {isWeb && gtTablet && hasNew && (
-                    <View
-                      style={[
-                        a.rounded_full,
-                        {
-                          width: 8,
-                          height: 8,
-                          bottom: 3,
-                          left: 6,
-                          backgroundColor: t.palette.primary_500,
-                        },
-                      ]}
-                    />
-                  )}
-                </Layout.Header.TitleText>
-              )}
-            </Button>
-          </Layout.Header.Content>
-          <Layout.Header.Slot>
-            <Link
-              to="/notifications/settings"
-              label={_(msg`Notification settings`)}
-              size="small"
-              variant="ghost"
-              color="secondary"
-              shape="round"
-              style={[a.justify_center]}>
-              <ButtonIcon
-                icon={isLoadingLatest ? Loader : SettingsIcon}
-                size="lg"
-              />
-            </Link>
-          </Layout.Header.Slot>
-        </Layout.Header.Outer>
+      <Layout.Header.Outer>
+        <Layout.Header.MenuButton />
+        <Layout.Header.Content>
+          <Button
+            label={_(msg`Notifications`)}
+            accessibilityHint={_(msg`Refresh notifications`)}
+            onPress={emitSoftReset}
+            style={[a.justify_start]}>
+            {({hovered}) => (
+              <Layout.Header.TitleText
+                style={[a.w_full, hovered && a.underline]}>
+                <Trans>Notifications</Trans>
+                {isWeb && gtTablet && hasNew && (
+                  <View
+                    style={[
+                      a.rounded_full,
+                      {
+                        width: 8,
+                        height: 8,
+                        bottom: 3,
+                        left: 6,
+                        backgroundColor: t.palette.primary_500,
+                      },
+                    ]}
+                  />
+                )}
+              </Layout.Header.TitleText>
+            )}
+          </Button>
+        </Layout.Header.Content>
+        <Layout.Header.Slot>
+          <Link
+            to="/notifications/settings"
+            label={_(msg`Notification settings`)}
+            size="small"
+            variant="ghost"
+            color="secondary"
+            shape="round"
+            style={[a.justify_center]}>
+            <ButtonIcon
+              icon={isLoadingLatest ? Loader : SettingsIcon}
+              size="lg"
+            />
+          </Link>
+        </Layout.Header.Slot>
+      </Layout.Header.Outer>
 
-        <MainScrollProvider>
-          <Feed
-            onScrolledDownChange={setIsScrolledDown}
-            scrollElRef={scrollElRef}
-            overridePriorityNotifications={params?.show === 'all'}
-          />
-        </MainScrollProvider>
-        {(isScrolledDown || hasNew) && (
-          <LoadLatestBtn
-            onPress={onPressLoadLatest}
-            label={_(msg`Load new notifications`)}
-            showIndicator={hasNew}
-          />
-        )}
-        <FAB
-          testID="composeFAB"
-          onPress={() => openComposer({})}
-          icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
-          accessibilityRole="button"
-          accessibilityLabel={_(msg`New post`)}
-          accessibilityHint=""
+      <MainScrollProvider>
+        <Feed
+          onScrolledDownChange={setIsScrolledDown}
+          scrollElRef={scrollElRef}
+          overridePriorityNotifications={params?.show === 'all'}
         />
-      </Layout.Center>
+      </MainScrollProvider>
+      {(isScrolledDown || hasNew) && (
+        <LoadLatestBtn
+          onPress={onPressLoadLatest}
+          label={_(msg`Load new notifications`)}
+          showIndicator={hasNew}
+        />
+      )}
+      <FAB
+        testID="composeFAB"
+        onPress={() => openComposer({})}
+        icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
+        accessibilityRole="button"
+        accessibilityLabel={_(msg`New post`)}
+        accessibilityHint=""
+      />
     </Layout.Screen>
   )
 }
