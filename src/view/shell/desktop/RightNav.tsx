@@ -127,10 +127,6 @@ const styles = StyleSheet.create({
       {
         translateX: 300,
       },
-      {
-        // @ts-ignore web only -esb
-        translateX: 'var(--scrollbar-offset, 0px)',
-      },
     ],
     maxHeight: '100%',
     overflowY: 'auto',

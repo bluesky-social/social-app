@@ -490,10 +490,6 @@ const styles = StyleSheet.create({
       {
         translateX: '-100%',
       },
-      {
-        // @ts-ignore web only -esb
-        translateX: 'var(--scrollbar-offset-negative, 0px)',
-      },
     ],
     width: 240,
     // @ts-ignore web only
