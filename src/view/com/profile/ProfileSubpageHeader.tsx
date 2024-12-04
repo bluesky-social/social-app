@@ -1,28 +1,24 @@
 import React from 'react'
-import {Pressable, StyleSheet, View} from 'react-native'
+import {Pressable, View} from 'react-native'
 import {MeasuredDimensions, runOnJS, runOnUI} from 'react-native-reanimated'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
-import {BACK_HITSLOP} from '#/lib/constants'
 import {measureHandle, useHandleRef} from '#/lib/hooks/useHandleRef'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {makeProfileLink} from '#/lib/routes/links'
 import {NavigationProp} from '#/lib/routes/types'
 import {sanitizeHandle} from '#/lib/strings/handles'
-import {isNative} from '#/platform/detection'
 import {emitSoftReset} from '#/state/events'
 import {useLightboxControls} from '#/state/lightbox'
-import {useSetDrawerOpen} from '#/state/shell'
-import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
+import {TextLink} from '#/view/com/util/Link'
+import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
+import {Text} from '#/view/com/util/text/Text'
+import {UserAvatar, UserAvatarType} from '#/view/com/util/UserAvatar'
 import {StarterPack} from '#/components/icons/StarterPack'
-import {TextLink} from '../util/Link'
-import {LoadingPlaceholder} from '../util/LoadingPlaceholder'
-import {Text} from '../util/text/Text'
-import {UserAvatar, UserAvatarType} from '../util/UserAvatar'
+import * as Layout from '#/components/Layout'
 
 export function ProfileSubpageHeader({
   isLoading,
@@ -47,7 +43,6 @@ export function ProfileSubpageHeader({
     | undefined
   avatarType: UserAvatarType | 'starter-pack'
 }>) {
-  const setDrawerOpen = useSetDrawerOpen()
   const navigation = useNavigation<NavigationProp>()
   const {_} = useLingui()
   const {isMobile} = useWebMediaQueries()
@@ -55,18 +50,6 @@ export function ProfileSubpageHeader({
   const pal = usePalette('default')
   const canGoBack = navigation.canGoBack()
   const aviRef = useHandleRef()
-
-  const onPressBack = React.useCallback(() => {
-    if (navigation.canGoBack()) {
-      navigation.goBack()
-    } else {
-      navigation.navigate('Home')
-    }
-  }, [navigation])
-
-  const onPressMenu = React.useCallback(() => {
-    setDrawerOpen(true)
-  }, [setDrawerOpen])
 
   const _openLightbox = React.useCallback(
     (uri: string, thumbRect: MeasuredDimensions | null) => {
@@ -107,39 +90,15 @@ export function ProfileSubpageHeader({
   return (
     <>
       {isMobile && (
-        <View
-          style={[
-            {
-              flexDirection: 'row',
-              alignItems: 'center',
-              borderBottomWidth: StyleSheet.hairlineWidth,
-              paddingTop: isNative ? 0 : 8,
-              paddingBottom: 8,
-              paddingHorizontal: isMobile ? 12 : 14,
-            },
-            pal.border,
-          ]}>
-          <Pressable
-            testID="headerDrawerBtn"
-            onPress={canGoBack ? onPressBack : onPressMenu}
-            hitSlop={BACK_HITSLOP}
-            style={canGoBack ? styles.backBtn : styles.backBtnWide}
-            accessibilityRole="button"
-            accessibilityLabel={canGoBack ? 'Back' : 'Menu'}
-            accessibilityHint="">
-            {canGoBack ? (
-              <FontAwesomeIcon
-                size={18}
-                icon="angle-left"
-                style={[styles.backIcon, pal.text]}
-              />
-            ) : (
-              <Menu size="lg" style={[{marginTop: 4}, pal.textLight]} />
-            )}
-          </Pressable>
-          <View style={{flex: 1}} />
+        <Layout.Header.Outer>
+          {canGoBack ? (
+            <Layout.Header.BackButton />
+          ) : (
+            <Layout.Header.MenuButton />
+          )}
+          <Layout.Header.Content />
           {children}
-        </View>
+        </Layout.Header.Outer>
       )}
       <View
         style={{
@@ -218,18 +177,3 @@ export function ProfileSubpageHeader({
     </>
   )
 }
-
-const styles = StyleSheet.create({
-  backBtn: {
-    width: 20,
-    height: 30,
-  },
-  backBtnWide: {
-    width: 20,
-    height: 30,
-    marginRight: 4,
-  },
-  backIcon: {
-    marginTop: 6,
-  },
-})
