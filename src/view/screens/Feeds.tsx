@@ -497,7 +497,7 @@ export function FeedsScreen(_props: Props) {
   )
 
   return (
-    <Layout.Screen testID="FeedsScreen" temp__enableWebBorders>
+    <Layout.Screen testID="FeedsScreen">
       <Layout.Center>
         <Layout.Header.Outer>
           <Layout.Header.BackButton />

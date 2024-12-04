@@ -24,7 +24,7 @@ export const PostLikedByScreen = ({route}: Props) => {
   )
 
   return (
-    <Layout.Screen temp__enableWebBorders>
+    <Layout.Screen>
       <ViewHeader title={_(msg`Liked By`)} />
       <PostLikedByComponent uri={uri} />
     </Layout.Screen>

@@ -37,7 +37,7 @@ export function AccountSettingsScreen({}: Props) {
   const deactivateAccountControl = useDialogControl()
 
   return (
-    <Layout.Screen temp__enableWebBorders>
+    <Layout.Screen>
       <Layout.Header.Outer>
         <Layout.Header.BackButton />
         <Layout.Header.Content>

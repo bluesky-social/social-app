@@ -31,7 +31,6 @@ const LayoutContext = React.createContext({
 export type ScreenProps = React.ComponentProps<typeof View> & {
   disableTopPadding?: boolean
   style?: StyleProp<ViewStyle>
-  temp__enableWebBorders?: boolean
 }
 
 /**

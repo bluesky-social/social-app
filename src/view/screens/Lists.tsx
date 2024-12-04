@@ -54,7 +54,7 @@ export function ListsScreen({}: Props) {
   }, [needsEmailVerification, control, openModal, navigation])
 
   return (
-    <Layout.Screen testID="listsScreen" temp__enableWebBorders>
+    <Layout.Screen testID="listsScreen">
       <Layout.Header.Outer>
         <Layout.Header.BackButton />
         <Layout.Header.Content align="left">

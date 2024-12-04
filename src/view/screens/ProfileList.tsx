@@ -88,7 +88,7 @@ interface SectionRef {
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileList'>
 export function ProfileListScreen(props: Props) {
   return (
-    <Layout.Screen testID="profileListScreen" temp__enableWebBorders>
+    <Layout.Screen testID="profileListScreen">
       <ProfileListScreenInner {...props} />
     </Layout.Screen>
   )

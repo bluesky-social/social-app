@@ -54,7 +54,7 @@ export function ModerationModlistsScreen({}: Props) {
   }, [needsEmailVerification, control, openModal, navigation])
 
   return (
-    <Layout.Screen testID="moderationModlistsScreen" temp__enableWebBorders>
+    <Layout.Screen testID="moderationModlistsScreen">
       <Layout.Header.Outer>
         <Layout.Header.BackButton />
         <Layout.Header.Content align="left">

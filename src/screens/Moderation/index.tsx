@@ -84,7 +84,7 @@ export function ModerationScreen(
   const error = preferencesError
 
   return (
-    <Layout.Screen testID="moderationScreen" temp__enableWebBorders>
+    <Layout.Screen testID="moderationScreen">
       <ViewHeader title={_(msg`Moderation`)} showOnDesktop />
       <Layout.Content>
         {isLoading ? (

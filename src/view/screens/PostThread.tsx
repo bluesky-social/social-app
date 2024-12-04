@@ -21,7 +21,7 @@ export function PostThreadScreen({route}: Props) {
   )
 
   return (
-    <Layout.Screen testID="postThreadScreen" temp__enableWebBorders>
+    <Layout.Screen testID="postThreadScreen">
       <PostThreadComponent uri={uri} />
     </Layout.Screen>
   )

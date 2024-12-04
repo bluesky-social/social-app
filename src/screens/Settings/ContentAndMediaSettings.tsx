@@ -31,7 +31,7 @@ export function ContentAndMediaSettingsScreen({}: Props) {
   const setUseInAppBrowser = useSetInAppBrowser()
 
   return (
-    <Layout.Screen temp__enableWebBorders>
+    <Layout.Screen>
       <Layout.Header.Outer>
         <Layout.Header.BackButton />
         <Layout.Header.Content>

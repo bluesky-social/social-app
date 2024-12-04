@@ -78,7 +78,7 @@ export function AppearanceSettingsScreen({}: Props) {
 
   return (
     <LayoutAnimationConfig skipExiting skipEntering>
-      <Layout.Screen testID="preferencesThreadsScreen" temp__enableWebBorders>
+      <Layout.Screen testID="preferencesThreadsScreen">
         <Layout.Header.Outer>
           <Layout.Header.BackButton />
           <Layout.Header.Content>

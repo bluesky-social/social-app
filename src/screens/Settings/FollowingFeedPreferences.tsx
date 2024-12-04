@@ -45,9 +45,7 @@ export function FollowingFeedPreferencesScreen({}: Props) {
   )
 
   return (
-    <Layout.Screen
-      testID="followingFeedPreferencesScreen"
-      temp__enableWebBorders>
+    <Layout.Screen testID="followingFeedPreferencesScreen">
       <Layout.Header.Outer>
         <Layout.Header.BackButton />
         <Layout.Header.Content>

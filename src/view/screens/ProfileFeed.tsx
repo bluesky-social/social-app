@@ -96,7 +96,7 @@ export function ProfileFeedScreen(props: Props) {
 
   if (error) {
     return (
-      <Layout.Screen testID="profileFeedScreenError" temp__enableWebBorders>
+      <Layout.Screen testID="profileFeedScreenError">
         <Layout.Content>
           <View style={[pal.view, pal.border, styles.notFoundContainer]}>
             <Text type="title-lg" style={[pal.text, s.mb10]}>
@@ -125,11 +125,11 @@ export function ProfileFeedScreen(props: Props) {
   }
 
   return resolvedUri ? (
-    <Layout.Screen temp__enableWebBorders>
+    <Layout.Screen>
       <ProfileFeedScreenIntermediate feedUri={resolvedUri.uri} />
     </Layout.Screen>
   ) : (
-    <Layout.Screen temp__enableWebBorders>
+    <Layout.Screen>
       <LoadingScreen />
     </Layout.Screen>
   )

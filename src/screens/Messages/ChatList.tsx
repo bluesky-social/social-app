@@ -128,7 +128,7 @@ export function MessagesScreen({navigation, route}: Props) {
 
   if (conversations.length < 1) {
     return (
-      <Layout.Screen temp__enableWebBorders>
+      <Layout.Screen>
         <Header newChatControl={newChatControl} />
         <Layout.Center>
           {isLoading ? (
@@ -202,7 +202,7 @@ export function MessagesScreen({navigation, route}: Props) {
   }
 
   return (
-    <Layout.Screen testID="messagesScreen" temp__enableWebBorders>
+    <Layout.Screen testID="messagesScreen">
       <Header newChatControl={newChatControl} />
       <NewChat onNewChat={onNewChat} control={newChatControl} />
       <List

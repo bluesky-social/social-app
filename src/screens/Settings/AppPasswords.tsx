@@ -43,7 +43,7 @@ export function AppPasswordsScreen({}: Props) {
   const createAppPasswordControl = useDialogControl()
 
   return (
-    <Layout.Screen testID="AppPasswordsScreen" temp__enableWebBorders>
+    <Layout.Screen testID="AppPasswordsScreen">
       <Layout.Header.Outer>
         <Layout.Header.BackButton />
         <Layout.Header.Content>

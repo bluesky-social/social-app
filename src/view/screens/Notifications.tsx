@@ -107,7 +107,7 @@ export function NotificationsScreen({route: {params}}: Props) {
   }, [onPressLoadLatest, isScreenFocused])
 
   return (
-    <Layout.Screen testID="notificationsScreen" temp__enableWebBorders>
+    <Layout.Screen testID="notificationsScreen">
       <Layout.Header.Outer>
         <Layout.Header.MenuButton />
         <Layout.Header.Content>

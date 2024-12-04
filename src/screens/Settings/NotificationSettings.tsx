@@ -32,7 +32,7 @@ export function NotificationSettingsScreen({}: Props) {
     : serverPriority
 
   return (
-    <Layout.Screen temp__enableWebBorders>
+    <Layout.Screen>
       <Layout.Header.Outer>
         <Layout.Header.BackButton />
         <Layout.Header.Content>

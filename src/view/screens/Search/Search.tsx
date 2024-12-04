@@ -840,7 +840,7 @@ export function SearchScreen(
   }, [setShowAutocomplete])
 
   return (
-    <Layout.Screen testID="searchScreen" temp__enableWebBorders>
+    <Layout.Screen testID="searchScreen">
       <View
         style={[
           web({

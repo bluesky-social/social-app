@@ -54,7 +54,7 @@ export function MessagesSettingsScreen({}: Props) {
   )
 
   return (
-    <Layout.Screen testID="messagesSettingsScreen" temp__enableWebBorders>
+    <Layout.Screen testID="messagesSettingsScreen">
       <Layout.Header.Outer>
         <Layout.Header.BackButton />
         <Layout.Header.Content>

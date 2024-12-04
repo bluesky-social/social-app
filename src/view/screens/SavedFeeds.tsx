@@ -88,7 +88,7 @@ function SavedFeedsInner({
   }, [_, overwriteSavedFeeds, currentFeeds, navigation])
 
   return (
-    <Layout.Screen temp__enableWebBorders>
+    <Layout.Screen>
       <Layout.Header.Outer>
         <Layout.Header.BackButton />
         <Layout.Header.Content align="left">

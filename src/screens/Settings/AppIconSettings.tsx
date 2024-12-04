@@ -19,7 +19,7 @@ export function AppIconSettingsScreen({}: Props) {
   const sets = useAppIconSets()
 
   return (
-    <Layout.Screen temp__enableWebBorders>
+    <Layout.Screen>
       <Layout.Header.Outer>
         <Layout.Header.BackButton />
         <Layout.Header.Content>

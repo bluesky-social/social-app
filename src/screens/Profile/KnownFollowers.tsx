@@ -100,7 +100,7 @@ export const ProfileKnownFollowersScreen = ({route}: Props) => {
 
   if (followers.length < 1) {
     return (
-      <Layout.Screen temp__enableWebBorders>
+      <Layout.Screen>
         <ViewHeader title={_(msg`Followers you know`)} />
         <ListMaybePlaceholder
           isLoading={isDidLoading || isFollowersLoading}
@@ -117,7 +117,7 @@ export const ProfileKnownFollowersScreen = ({route}: Props) => {
   }
 
   return (
-    <Layout.Screen temp__enableWebBorders>
+    <Layout.Screen>
       <ViewHeader title={_(msg`Followers you know`)} />
       <List
         data={followers}
