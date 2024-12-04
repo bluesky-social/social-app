@@ -15,11 +15,7 @@ import {ProfileCardWithFollowBtn} from '#/view/com/profile/ProfileCard'
 import {List} from '#/view/com/util/List'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
 import * as Layout from '#/components/Layout'
-import {
-  ListFooter,
-  ListHeaderDesktop,
-  ListMaybePlaceholder,
-} from '#/components/Lists'
+import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
 
 function renderItem({
   item,
@@ -131,9 +127,6 @@ export const ProfileKnownFollowersScreen = ({route}: Props) => {
         onRefresh={onRefresh}
         onEndReached={onEndReached}
         onEndReachedThreshold={4}
-        ListHeaderComponent={
-          <ListHeaderDesktop title={_(msg`Followers you know`)} />
-        }
         ListFooterComponent={
           <ListFooter
             isFetchingNextPage={isFetchingNextPage}
