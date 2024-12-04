@@ -169,12 +169,13 @@ export function TitleText({
 
 export function SubtitleText({children}: {children: React.ReactNode}) {
   const t = useTheme()
+  const align = useContext(AlignmentContext)
   return (
     <Text
       style={[
         a.text_sm,
         a.leading_snug,
-        isIOS && a.text_center,
+        isIOS && align === 'platform' && a.text_center,
         t.atoms.text_contrast_medium,
       ]}
       numberOfLines={2}>
