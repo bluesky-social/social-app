@@ -55,7 +55,6 @@ import {ProfileCardWithFollowBtn} from '#/view/com/profile/ProfileCard'
 import {Link} from '#/view/com/util/Link'
 import {List} from '#/view/com/util/List'
 import {Text} from '#/view/com/util/text/Text'
-import {ScrollView} from '#/view/com/util/Views'
 import {Explore} from '#/view/screens/Search/Explore'
 import {SearchLinkCard, SearchProfileCard} from '#/view/shell/desktop/Search'
 import {makeSearchQuery, parseSearchQuery} from '#/screens/Search/utils'
@@ -979,8 +978,7 @@ let AutocompleteResults = ({
       !moderationOpts ? (
         <Loader />
       ) : (
-        <ScrollView
-          style={{height: '100%'}}
+        <Layout.Content
           keyboardShouldPersistTaps="handled"
           keyboardDismissMode="on-drag">
           <SearchLinkCard
@@ -1005,7 +1003,7 @@ let AutocompleteResults = ({
             />
           ))}
           <View style={{height: 200}} />
-        </ScrollView>
+        </Layout.Content>
       )}
     </>
   )
