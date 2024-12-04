@@ -1,20 +1,23 @@
 import {Header} from '#/components/Layout'
 
+/**
+ * Legacy ViewHeader component. Use Layout.Header going forward.
+ *
+ * @deprecated
+ */
 export function ViewHeader({
   title,
-  canGoBack,
   renderButton,
 }: {
   title: string
   subtitle?: string
-  canGoBack?: boolean
   showOnDesktop?: boolean
   showBorder?: boolean
   renderButton?: () => JSX.Element
 }) {
   return (
     <Header.Outer>
-      {canGoBack ? <Header.BackButton /> : <Header.MenuButton />}
+      <Header.BackButton />
       <Header.Content>
         <Header.TitleText>{title}</Header.TitleText>
       </Header.Content>
