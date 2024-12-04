@@ -180,12 +180,14 @@ function NavItem({count, href, icon, iconFilled, label}: NavItemProps) {
             accessibilityLabel={_(msg`${count} unread items`)}
             accessibilityHint=""
             accessible={true}
+            numberOfLines={1}
             style={[
               a.absolute,
               a.text_xs,
               a.font_bold,
               a.rounded_full,
               a.text_center,
+              a.leading_tight,
               {
                 top: '-10%',
                 left: count.length === 1 ? '50%' : '40%',
@@ -322,9 +324,9 @@ export function DesktopLeftNav() {
     <View
       role="navigation"
       style={[
+        a.px_xl,
         styles.leftNav,
         isTablet && styles.leftNavTablet,
-        pal.view,
         pal.border,
       ]}>
       {hasSession ? (
@@ -479,8 +481,20 @@ const styles = StyleSheet.create({
     position: 'fixed',
     top: 10,
     // @ts-ignore web only
-    left: 'calc(50vw - 300px - 220px - 20px)',
-    width: 220,
+    left: '50%',
+    transform: [
+      {
+        translateX: -300,
+      },
+      {
+        translateX: '-100%',
+      },
+      {
+        // @ts-ignore web only -esb
+        translateX: 'calc(-1 * var(--removed-body-scroll-bar-size, 0px) / 2)',
+      },
+    ],
+    width: 240,
     // @ts-ignore web only
     maxHeight: 'calc(100vh - 10px)',
     overflowY: 'auto',
@@ -492,7 +506,10 @@ const styles = StyleSheet.create({
     borderRightWidth: 1,
     height: '100%',
     width: 76,
+    paddingLeft: 0,
+    paddingRight: 0,
     alignItems: 'center',
+    transform: [],
   },
 
   profileCard: {

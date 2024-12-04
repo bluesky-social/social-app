@@ -142,6 +142,10 @@ export const WebCenterBorders = React.forwardRef(function LayoutContent() {
             {
               translateX: '-50%',
             },
+            {
+              translateX:
+                'calc(-1 * var(--removed-body-scroll-bar-size, 0px) / 2)',
+            },
           ],
         }),
       ]}
@@ -165,6 +169,14 @@ export const Center = React.forwardRef(function LayoutContent(
           maxWidth: 600,
         },
         style,
+        web({
+          transform: [
+            {
+              translateX:
+                'calc(-1 * var(--removed-body-scroll-bar-size, 0px) / 2)',
+            },
+          ],
+        }),
       ]}
       {...props}>
       {children}

@@ -12,6 +12,7 @@ import {useLingui} from '@lingui/react'
 import {DismissableLayer} from '@radix-ui/react-dismissable-layer'
 import {useFocusGuards} from '@radix-ui/react-focus-guards'
 import {FocusScope} from '@radix-ui/react-focus-scope'
+import {RemoveScroll} from 'react-remove-scroll'
 
 import {logger} from '#/logger'
 import {useDialogStateControlContext} from '#/state/dialogs'
@@ -103,34 +104,36 @@ export function Outer({
       {isOpen && (
         <Portal>
           <Context.Provider value={context}>
-            <TouchableWithoutFeedback
-              accessibilityHint={undefined}
-              accessibilityLabel={_(msg`Close active dialog`)}
-              onPress={handleBackgroundPress}>
-              <View
-                style={[
-                  web(a.fixed),
-                  a.inset_0,
-                  a.z_10,
-                  a.align_center,
-                  gtMobile ? a.p_lg : a.p_md,
-                  {overflowY: 'auto'},
-                ]}>
-                <Backdrop />
+            <RemoveScroll>
+              <TouchableWithoutFeedback
+                accessibilityHint={undefined}
+                accessibilityLabel={_(msg`Close active dialog`)}
+                onPress={handleBackgroundPress}>
                 <View
                   style={[
-                    a.w_full,
-                    a.z_20,
-                    a.justify_center,
+                    web(a.fixed),
+                    a.inset_0,
+                    a.z_10,
                     a.align_center,
-                    {
-                      minHeight: web('calc(90vh - 36px)') || undefined,
-                    },
+                    gtMobile ? a.p_lg : a.p_md,
+                    {overflowY: 'auto'},
                   ]}>
-                  {children}
+                  <Backdrop />
+                  <View
+                    style={[
+                      a.w_full,
+                      a.z_20,
+                      a.justify_center,
+                      a.align_center,
+                      {
+                        minHeight: web('calc(90vh - 36px)') || undefined,
+                      },
+                    ]}>
+                    {children}
+                  </View>
                 </View>
-              </View>
-            </TouchableWithoutFeedback>
+              </TouchableWithoutFeedback>
+            </RemoveScroll>
           </Context.Provider>
         </Portal>
       )}
