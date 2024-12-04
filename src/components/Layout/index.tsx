@@ -15,6 +15,7 @@ import {isWeb} from '#/platform/detection'
 import {useShellLayout} from '#/state/shell/shell-layout'
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 
+export * from '#/components/Layout/const'
 export * as Header from '#/components/Layout/Header'
 
 // Every screen should have a Layout component wrapping it.
@@ -159,10 +160,7 @@ export const WebCenterBorders = React.forwardRef(function LayoutContent() {
             {
               translateX: '-50%',
             },
-            {
-              translateX:
-                'calc(-1 * var(--removed-body-scroll-bar-size, 0px) / 2)',
-            },
+            ...a.scrollbar_offset.transform,
           ],
         }),
       ]}
@@ -185,14 +183,7 @@ export const Center = React.forwardRef(function LayoutContent(
           maxWidth: 600,
         },
         style,
-        web({
-          transform: [
-            {
-              translateX:
-                'calc(-1 * var(--removed-body-scroll-bar-size, 0px) / 2)',
-            },
-          ],
-        }),
+        a.scrollbar_offset,
       ]}
       {...props}>
       {children}

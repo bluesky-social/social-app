@@ -489,10 +489,7 @@ const styles = StyleSheet.create({
       {
         translateX: '-100%',
       },
-      {
-        // @ts-ignore web only -esb
-        translateX: 'calc(-1 * var(--removed-body-scroll-bar-size, 0px) / 2)',
-      },
+      ...a.scrollbar_offset.transform,
     ],
     width: 240,
     // @ts-ignore web only

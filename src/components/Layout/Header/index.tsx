@@ -13,7 +13,6 @@ import {
   useBreakpoints,
   useGutterStyles,
   useTheme,
-  web,
 } from '#/alf'
 import {Button, ButtonIcon, ButtonProps} from '#/components/Button'
 import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeft} from '#/components/icons/Arrow'
@@ -40,14 +39,7 @@ export function Outer({children}: {children: React.ReactNode}) {
         a.py_sm,
         t.atoms.border_contrast_low,
         gtMobile && [a.mx_auto, {maxWidth: 600}],
-        web({
-          transform: [
-            {
-              translateX:
-                'calc(-1 * var(--removed-body-scroll-bar-size, 0px) / 2)',
-            },
-          ],
-        }),
+        a.scrollbar_offset,
       ]}>
       {children}
     </View>
