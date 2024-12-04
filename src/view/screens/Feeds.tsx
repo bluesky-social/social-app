@@ -498,7 +498,7 @@ export function FeedsScreen(_props: Props) {
 
   return (
     <Layout.Screen testID="FeedsScreen" temp__enableWebBorders>
-      <Layout.Content>
+      <Layout.Center>
         <Layout.Header.Outer>
           <Layout.Header.BackButton />
           <Layout.Header.Content>
@@ -550,7 +550,7 @@ export function FeedsScreen(_props: Props) {
             accessibilityHint=""
           />
         )}
-      </Layout.Content>
+      </Layout.Center>
     </Layout.Screen>
   )
 }
