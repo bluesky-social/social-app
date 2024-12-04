@@ -31,6 +31,9 @@ interface AddedProps {
   desktopFixedHeight?: boolean | number
 }
 
+/**
+ * @deprecated use `Layout` components
+ */
 export const CenteredView = React.forwardRef(function CenteredView(
   {
     style,
@@ -135,6 +138,9 @@ export const FlatList_INTERNAL = React.forwardRef(function FlatListImpl<ItemT>(
   )
 })
 
+/**
+ * @deprecated use `Layout` components
+ */
 export const ScrollView = React.forwardRef(function ScrollViewImpl(
   {contentContainerStyle, ...props}: React.PropsWithChildren<ScrollViewProps>,
   ref: React.Ref<Animated.ScrollView>,
