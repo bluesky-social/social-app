@@ -28,7 +28,7 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
   }
 
   return (
-    <View style={[a.px_xl, styles.rightNav, pal.view]}>
+    <View style={[a.px_xl, styles.rightNav]}>
       <View style={{paddingVertical: 20}}>
         {routeName === 'Search' ? (
           <View style={{marginBottom: 18}}>

@@ -327,7 +327,6 @@ export function DesktopLeftNav() {
         a.px_xl,
         styles.leftNav,
         isTablet && styles.leftNavTablet,
-        pal.view,
         pal.border,
       ]}>
       {hasSession ? (
