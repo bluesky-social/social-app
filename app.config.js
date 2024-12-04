@@ -1,32 +1,6 @@
 const pkg = require('./package.json')
 
-const SPLASH_CONFIG = {
-  enableFullScreenImage_legacy: true,
-}
-
-const DARK_SPLASH_CONFIG_IOS = {
-  backgroundColor: '#001429',
-  image: './assets/splash-dark.png',
-  resizeMode: 'cover',
-}
-const SPLASH_CONFIG_IOS = {
-  backgroundColor: '#ffffff',
-  image: './assets/splash.png',
-  resizeMode: 'cover',
-  dark: DARK_SPLASH_CONFIG_IOS,
-}
-
-const DARK_SPLASH_CONFIG_ANDROID = {
-  backgroundColor: '#0f141b',
-  image: './assets/splash-dark.png',
-  resizeMode: 'cover',
-}
-const SPLASH_CONFIG_ANDROID = {
-  backgroundColor: '#0c7cff',
-  image: './assets/splash.png',
-  resizeMode: 'cover',
-  dark: DARK_SPLASH_CONFIG_ANDROID,
-}
+const DARK_SPLASH_ANDROID_BACKGROUND = '#0f141b'
 
 module.exports = function (config) {
   /**
@@ -164,7 +138,7 @@ module.exports = function (config) {
       // Dark nav bar in light mode is better than light nav bar in dark mode
       androidNavigationBar: {
         barStyle: 'light-content',
-        backgroundColor: DARK_SPLASH_CONFIG_ANDROID.backgroundColor,
+        backgroundColor: DARK_SPLASH_ANDROID_BACKGROUND,
       },
       android: {
         icon: './assets/app-icons/android_icon_default_light.png',
@@ -275,9 +249,27 @@ module.exports = function (config) {
         [
           'expo-splash-screen',
           {
-            ...SPLASH_CONFIG,
-            ios: SPLASH_CONFIG_IOS,
-            android: SPLASH_CONFIG_ANDROID,
+            enableFullScreenImage_legacy: true,
+            ios: {
+              backgroundColor: '#ffffff',
+              image: './assets/splash.png',
+              resizeMode: 'cover',
+              dark: {
+                backgroundColor: '#001429',
+                image: './assets/splash-dark.png',
+                resizeMode: 'cover',
+              },
+            },
+            android: {
+              backgroundColor: '#0c7cff',
+              image: './assets/splash.png',
+              resizeMode: 'cover',
+              dark: {
+                backgroundColor: DARK_SPLASH_ANDROID_BACKGROUND,
+                image: './assets/splash-dark.png',
+                resizeMode: 'cover',
+              },
+            },
           },
         ],
         [
