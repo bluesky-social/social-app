@@ -60,7 +60,7 @@ export function Content({
   children,
   align = 'platform',
 }: {
-  children: React.ReactNode
+  children?: React.ReactNode
   align?: 'platform' | 'left'
 }) {
   return (
