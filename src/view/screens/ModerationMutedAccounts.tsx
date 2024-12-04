@@ -23,7 +23,6 @@ import {ProfileCard} from '#/view/com/profile/ProfileCard'
 import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
 import {Text} from '#/view/com/util/text/Text'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
-import {CenteredView} from '#/view/com/util/Views'
 import * as Layout from '#/components/Layout'
 
 type Props = NativeStackScreenProps<
@@ -97,14 +96,7 @@ export function ModerationMutedAccounts({}: Props) {
   )
   return (
     <Layout.Screen testID="mutedAccountsScreen">
-      <CenteredView
-        style={[
-          styles.container,
-          isTabletOrDesktop && styles.containerDesktop,
-          pal.view,
-          pal.border,
-        ]}
-        testID="mutedAccountsScreen">
+      <Layout.Content>
         <ViewHeader title={_(msg`Muted Accounts`)} showOnDesktop />
         <Text
           type="sm"
@@ -112,6 +104,9 @@ export function ModerationMutedAccounts({}: Props) {
             styles.description,
             pal.text,
             isTabletOrDesktop && styles.descriptionDesktop,
+            {
+              marginTop: 20,
+            },
           ]}>
           <Trans>
             Muted accounts have their posts removed from your feed and from your
@@ -165,21 +160,12 @@ export function ModerationMutedAccounts({}: Props) {
             desktopFixedHeight
           />
         )}
-      </CenteredView>
+      </Layout.Content>
     </Layout.Screen>
   )
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingBottom: 100,
-  },
-  containerDesktop: {
-    borderLeftWidth: 1,
-    borderRightWidth: 1,
-    paddingBottom: 0,
-  },
   title: {
     textAlign: 'center',
     marginTop: 12,
