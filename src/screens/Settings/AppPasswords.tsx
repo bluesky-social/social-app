@@ -44,16 +44,16 @@ export function AppPasswordsScreen({}: Props) {
 
   return (
     <Layout.Screen testID="AppPasswordsScreen" temp__enableWebBorders>
+      <Layout.Header.Outer>
+        <Layout.Header.BackButton />
+        <Layout.Header.Content>
+          <Layout.Header.TitleText>
+            <Trans>App Passwords</Trans>
+          </Layout.Header.TitleText>
+        </Layout.Header.Content>
+        <Layout.Header.Slot />
+      </Layout.Header.Outer>
       <Layout.Content>
-        <Layout.Header.Outer>
-          <Layout.Header.BackButton />
-          <Layout.Header.Content>
-            <Layout.Header.TitleText>
-              <Trans>App Passwords</Trans>
-            </Layout.Header.TitleText>
-          </Layout.Header.Content>
-          <Layout.Header.Slot />
-        </Layout.Header.Outer>
         {error ? (
           <ErrorScreen
             title={_(msg`Oops!`)}

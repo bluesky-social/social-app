@@ -39,16 +39,16 @@ export function AccessibilitySettingsScreen({}: Props) {
 
   return (
     <Layout.Screen temp__enableWebBorders>
+      <Layout.Header.Outer>
+        <Layout.Header.BackButton />
+        <Layout.Header.Content>
+          <Layout.Header.TitleText>
+            <Trans>Accessibility</Trans>
+          </Layout.Header.TitleText>
+        </Layout.Header.Content>
+        <Layout.Header.Slot />
+      </Layout.Header.Outer>
       <Layout.Content>
-        <Layout.Header.Outer>
-          <Layout.Header.BackButton />
-          <Layout.Header.Content>
-            <Layout.Header.TitleText>
-              <Trans>Accessibility</Trans>
-            </Layout.Header.TitleText>
-          </Layout.Header.Content>
-          <Layout.Header.Slot />
-        </Layout.Header.Outer>
         <SettingsList.Container>
           <SettingsList.Group contentContainerStyle={[a.gap_sm]}>
             <SettingsList.ItemIcon icon={AccessibilityIcon} />

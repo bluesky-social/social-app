@@ -32,16 +32,16 @@ export function ContentAndMediaSettingsScreen({}: Props) {
 
   return (
     <Layout.Screen temp__enableWebBorders>
+      <Layout.Header.Outer>
+        <Layout.Header.BackButton />
+        <Layout.Header.Content>
+          <Layout.Header.TitleText>
+            <Trans>Content & Media</Trans>
+          </Layout.Header.TitleText>
+        </Layout.Header.Content>
+        <Layout.Header.Slot />
+      </Layout.Header.Outer>
       <Layout.Content>
-        <Layout.Header.Outer>
-          <Layout.Header.BackButton />
-          <Layout.Header.Content>
-            <Layout.Header.TitleText>
-              <Trans>Content & Media</Trans>
-            </Layout.Header.TitleText>
-          </Layout.Header.Content>
-          <Layout.Header.Slot />
-        </Layout.Header.Outer>
         <SettingsList.Container>
           <SettingsList.LinkItem
             to="/settings/saved-feeds"

@@ -48,16 +48,16 @@ export function FollowingFeedPreferencesScreen({}: Props) {
     <Layout.Screen
       testID="followingFeedPreferencesScreen"
       temp__enableWebBorders>
+      <Layout.Header.Outer>
+        <Layout.Header.BackButton />
+        <Layout.Header.Content>
+          <Layout.Header.TitleText>
+            <Trans>Following Feed Preferences</Trans>
+          </Layout.Header.TitleText>
+        </Layout.Header.Content>
+        <Layout.Header.Slot />
+      </Layout.Header.Outer>
       <Layout.Content>
-        <Layout.Header.Outer>
-          <Layout.Header.BackButton />
-          <Layout.Header.Content>
-            <Layout.Header.TitleText>
-              <Trans>Following Feed Preferences</Trans>
-            </Layout.Header.TitleText>
-          </Layout.Header.Content>
-          <Layout.Header.Slot />
-        </Layout.Header.Outer>
         <SettingsList.Container>
           <SettingsList.Item>
             <Admonition type="tip" style={[a.flex_1]}>

@@ -38,17 +38,16 @@ export function ThreadPreferencesScreen({}: Props) {
 
   return (
     <Layout.Screen testID="threadPreferencesScreen" temp__enableWebBorders>
+      <Layout.Header.Outer>
+        <Layout.Header.BackButton />
+        <Layout.Header.Content>
+          <Layout.Header.TitleText>
+            <Trans>Thread Preferences</Trans>
+          </Layout.Header.TitleText>
+        </Layout.Header.Content>
+        <Layout.Header.Slot />
+      </Layout.Header.Outer>
       <Layout.Content>
-        <Layout.Header.Outer>
-          <Layout.Header.BackButton />
-          <Layout.Header.Content>
-            <Layout.Header.TitleText>
-              <Trans>Thread Preferences</Trans>
-            </Layout.Header.TitleText>
-          </Layout.Header.Content>
-          <Layout.Header.Slot />
-        </Layout.Header.Outer>
-
         <SettingsList.Container>
           <SettingsList.Group>
             <SettingsList.ItemIcon icon={BubblesIcon} />

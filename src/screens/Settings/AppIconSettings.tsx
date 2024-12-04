@@ -20,17 +20,17 @@ export function AppIconSettingsScreen({}: Props) {
 
   return (
     <Layout.Screen temp__enableWebBorders>
+      <Layout.Header.Outer>
+        <Layout.Header.BackButton />
+        <Layout.Header.Content>
+          <Layout.Header.TitleText>
+            <Trans>App Icon</Trans>
+          </Layout.Header.TitleText>
+        </Layout.Header.Content>
+        <Layout.Header.Slot />
+      </Layout.Header.Outer>
       <Layout.Content
         contentContainerStyle={[a.py_2xl, a.px_xl, {paddingBottom: 100}]}>
-        <Layout.Header.Outer>
-          <Layout.Header.BackButton />
-          <Layout.Header.Content>
-            <Layout.Header.TitleText>
-              <Trans>App Icon</Trans>
-            </Layout.Header.TitleText>
-          </Layout.Header.Content>
-          <Layout.Header.Slot />
-        </Layout.Header.Outer>
         <Text style={[a.text_lg, a.font_heavy]}>Defaults</Text>
         <View style={[a.flex_row, a.flex_wrap]}>
           {sets.defaults.map(icon => (
