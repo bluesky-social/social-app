@@ -15929,10 +15929,10 @@ react-native-dotenv@^3.4.11:
   dependencies:
     dotenv "^16.4.5"
 
-react-native-drawer-layout@^4.0.3:
-  version "4.0.3"
-  resolved "https://registry.yarnpkg.com/react-native-drawer-layout/-/react-native-drawer-layout-4.0.3.tgz#6f0b9e9327a023237a508e3bfd925dbc6d6de8b6"
-  integrity sha512-JCc3UtXQMpW9iQr7JqW2bGPt3+Dl/0z3+rDM43jbqE45kltwhyG/MmVM/ltD/ySfPkik2oVdHm5Uk82MLpo57A==
+react-native-drawer-layout@^4.0.4:
+  version "4.0.4"
+  resolved "https://registry.yarnpkg.com/react-native-drawer-layout/-/react-native-drawer-layout-4.0.4.tgz#b1b3f2dffd3653527def1d26f4a0cf3c98b9fb5e"
+  integrity sha512-yskKj1Kxbf5w5gInNEW4YtDkTUcMsoQ0FGH0wjQ3nHPAJ3AAVnr/QgZ1Hr4LeAQR+7vgaG058DX4/32WbwvQzA==
   dependencies:
     use-latest-callback "^0.2.1"
 
@@ -15989,10 +15989,10 @@ react-native-mmkv@^2.12.2:
   resolved "https://registry.yarnpkg.com/react-native-mmkv/-/react-native-mmkv-2.12.2.tgz#4bba0f5f04e2cf222494cce3a9794ba6a4894dee"
   integrity sha512-6058Aq0p57chPrUutLGe9fYoiDVDNMU2PKV+lLFUJ3GhoHvUrLdsS1PDSCLr00yqzL4WJQ7TTzH+V8cpyrNcfg==
 
-react-native-pager-view@6.6.0:
-  version "6.6.0"
-  resolved "https://registry.yarnpkg.com/react-native-pager-view/-/react-native-pager-view-6.6.0.tgz#5bf04ed469e635c3a9f95fed46d17b93bdad1a86"
-  integrity sha512-LmgZs9ihypMEot82u22n98nKGP4E3ixg6Q/VwS7lbrpVZw7pmC9cdplh10PqlyGMBwPHYt875y5n+3sIzQvUkg==
+react-native-pager-view@6.6.1:
+  version "6.6.1"
+  resolved "https://registry.yarnpkg.com/react-native-pager-view/-/react-native-pager-view-6.6.1.tgz#6b69c8801ddee8d122b121b6fb42e0a180c8ebb9"
+  integrity sha512-2dFulYs8JxEUecemv1PGWCUv+ZQuwSaQfFiSr2++KH8km5HzpuS8vJ3MVb0M6UhpqacFDj9OGe7z97ks/mr7gA==
 
 react-native-picker-select@^9.3.1:
   version "9.3.1"
