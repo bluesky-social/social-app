@@ -142,9 +142,6 @@ export const WebCenterBorders = React.forwardRef(function LayoutContent() {
             {
               translateX: '-50%',
             },
-            {
-              translateX: `var(--scrollbar-offset-negative)`,
-            },
           ],
         }),
       ]}
