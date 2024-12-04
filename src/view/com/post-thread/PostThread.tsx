@@ -32,7 +32,6 @@ import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
-import {CenteredView} from '#/view/com/util/Views'
 import {atoms as a, useTheme} from '#/alf'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
 import {Text} from '#/components/Typography'
@@ -484,7 +483,7 @@ export function PostThread({uri}: {uri: string | undefined}) {
   }
 
   return (
-    <CenteredView style={[a.flex_1]} sideBorders={true}>
+    <>
       {showHeader && (
         <ViewHeader
           title={_(msg({message: `Post`, context: 'description'}))}
@@ -531,7 +530,7 @@ export function PostThread({uri}: {uri: string | undefined}) {
       {isMobile && canReply && hasSession && (
         <MobileComposePrompt onPressReply={onPressReply} />
       )}
-    </CenteredView>
+    </>
   )
 }
 
