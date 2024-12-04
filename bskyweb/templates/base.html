@@ -82,21 +82,6 @@
     }
   </style>
 
-  <script>
-    try {
-      var windowWidth = window.innerWidth;
-      var html = document.documentElement;
-      var htmlWidth = html.getBoundingClientRect().width;
-      var scrollbarWidth = (windowWidth - htmlWidth) / 2;
-      var scrollbarOffset = scrollbarWidth / 2;
-      var isFF = /firefox/i.test(navigator.userAgent)
-      if (!isFF) {
-        html.style.setProperty('--scrollbar-offset', `${scrollbarOffset}px`);
-        html.style.setProperty('--scrollbar-offset-negative', `-${scrollbarOffset}px`);
-      }
-    } catch (error) {}
-  </script>
-
   {% include "scripts.html" %}
   <link rel="apple-touch-icon" sizes="180x180" href="{{ staticCDNHost }}/static/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="{{ staticCDNHost }}/static/favicon-32x32.png">
