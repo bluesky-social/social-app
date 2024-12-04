@@ -262,12 +262,12 @@ module.exports = function (config) {
             },
             android: {
               backgroundColor: '#0c7cff',
-              image: './assets/splash.png',
-              resizeMode: 'cover',
+              image: './assets/splash-android-icon.png',
+              imageWidth: 200,
               dark: {
-                backgroundColor: DARK_SPLASH_ANDROID_BACKGROUND,
-                image: './assets/splash-dark.png',
-                resizeMode: 'cover',
+                backgroundColor: '#0c2a49',
+                image: './assets/splash-android-icon-dark.png',
+                imageWidth: 200,
               },
             },
           },
