@@ -37,7 +37,6 @@ interface AddedProps {
 export const CenteredView = React.forwardRef(function CenteredView(
   {
     style,
-    sideBorders,
     topBorder,
     ...props
   }: React.PropsWithChildren<
@@ -49,13 +48,6 @@ export const CenteredView = React.forwardRef(function CenteredView(
   const {isMobile} = useWebMediaQueries()
   if (!isMobile) {
     style = addStyle(style, styles.container)
-  }
-  if (sideBorders && !isMobile) {
-    style = addStyle(style, {
-      borderLeftWidth: StyleSheet.hairlineWidth,
-      borderRightWidth: StyleSheet.hairlineWidth,
-    })
-    style = addStyle(style, pal.border)
   }
   if (topBorder) {
     style = addStyle(style, {
@@ -78,7 +70,6 @@ export const FlatList_INTERNAL = React.forwardRef(function FlatListImpl<ItemT>(
   >,
   ref: React.Ref<FlatList<ItemT>>,
 ) {
-  const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()
   if (!isMobile) {
     contentContainerStyle = addStyle(
@@ -126,11 +117,7 @@ export const FlatList_INTERNAL = React.forwardRef(function FlatListImpl<ItemT>(
   return (
     <Animated.FlatList
       ref={ref}
-      contentContainerStyle={[
-        styles.contentContainer,
-        contentContainerStyle,
-        pal.border,
-      ]}
+      contentContainerStyle={[styles.contentContainer, contentContainerStyle]}
       style={style}
       contentOffset={contentOffset}
       {...props}
@@ -145,8 +132,6 @@ export const ScrollView = React.forwardRef(function ScrollViewImpl(
   {contentContainerStyle, ...props}: React.PropsWithChildren<ScrollViewProps>,
   ref: React.Ref<Animated.ScrollView>,
 ) {
-  const pal = usePalette('default')
-
   const {isMobile} = useWebMediaQueries()
   if (!isMobile) {
     contentContainerStyle = addStyle(
@@ -156,11 +141,7 @@ export const ScrollView = React.forwardRef(function ScrollViewImpl(
   }
   return (
     <Animated.ScrollView
-      contentContainerStyle={[
-        styles.contentContainer,
-        contentContainerStyle,
-        pal.border,
-      ]}
+      contentContainerStyle={[styles.contentContainer, contentContainerStyle]}
       // @ts-ignore something is wrong with the reanimated types -prf
       ref={ref}
       {...props}
@@ -170,8 +151,6 @@ export const ScrollView = React.forwardRef(function ScrollViewImpl(
 
 const styles = StyleSheet.create({
   contentContainer: {
-    borderLeftWidth: StyleSheet.hairlineWidth,
-    borderRightWidth: StyleSheet.hairlineWidth,
     // @ts-ignore web only
     minHeight: '100vh',
   },
