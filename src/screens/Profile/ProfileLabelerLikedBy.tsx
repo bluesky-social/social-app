@@ -25,7 +25,7 @@ export function ProfileLabelerLikedByScreen({
   )
 
   return (
-    <Layout.Screen>
+    <Layout.Screen temp__enableWebBorders>
       <ViewHeader title={_(msg`Liked By`)} />
       <LikedByList uri={uri} />
     </Layout.Screen>
