@@ -23,7 +23,6 @@ import {TextLink} from '../util/Link'
 import {LoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {Text} from '../util/text/Text'
 import {UserAvatar, UserAvatarType} from '../util/UserAvatar'
-import {CenteredView} from '../util/Views'
 
 export function ProfileSubpageHeader({
   isLoading,
@@ -106,7 +105,7 @@ export function ProfileSubpageHeader({
   }, [_openLightbox, avatar, aviRef])
 
   return (
-    <CenteredView style={pal.view}>
+    <>
       {isMobile && (
         <View
           style={[
@@ -216,7 +215,7 @@ export function ProfileSubpageHeader({
           </View>
         )}
       </View>
-    </CenteredView>
+    </>
   )
 }
 
