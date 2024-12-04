@@ -3,6 +3,7 @@ import {View} from 'react-native'
 import {
   AppBskyActorDefs,
   AppBskyFeedDefs,
+  AppBskyGraphDefs,
   moderateProfile,
   ModerationDecision,
   ModerationOpts,
@@ -31,8 +32,12 @@ import {ArrowBottom_Stroke2_Corner0_Rounded as ArrowBottom} from '#/components/i
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {Props as SVGIconProps} from '#/components/icons/common'
 import {ListSparkle_Stroke2_Corner0_Rounded as ListSparkle} from '#/components/icons/ListSparkle'
+import {PersonGroup_Stroke2_Corner2_Rounded as PersonGroup} from '#/components/icons/Person'
+import {Trending2_Stroke2_Corner2_Rounded as Trending} from '#/components/icons/Trending2'
 import {UserCircle_Stroke2_Corner0_Rounded as Person} from '#/components/icons/UserCircle'
 import {Loader} from '#/components/Loader'
+import * as StarterPackSuggestions from '#/components/StarterPack/Suggestions'
+import * as TrendingTopics from '#/components/TrendingTopics'
 import {Text} from '#/components/Typography'
 
 function SuggestedItemsHeader({
@@ -240,6 +245,16 @@ type ExploreScreenItems =
       icon: React.ComponentType<SVGIconProps>
     }
   | {
+      type: 'trendingTopics'
+      key: string
+      topics: string[]
+    }
+  | {
+      type: 'suggestedStarterPacks'
+      key: string
+      starterPacks: AppBskyGraphDefs.StarterPackViewBasic[]
+    }
+  | {
       type: 'profile'
       key: string
       profile: AppBskyActorDefs.ProfileView
@@ -325,17 +340,108 @@ export function Explore() {
   ])
 
   const items = React.useMemo<ExploreScreenItems[]>(() => {
-    const i: ExploreScreenItems[] = [
-      {
-        type: 'header',
-        key: 'suggested-follows-header',
-        title: _(msg`Suggested accounts`),
-        description: _(
-          msg`Follow more accounts to get connected to your interests and build your network.`,
-        ),
-        icon: Person,
-      },
-    ]
+    const i: ExploreScreenItems[] = []
+
+    i.push({
+      type: 'header',
+      key: 'trending-topics-header',
+      title: _(msg`Trending (beta)`),
+      description: _(msg`What people are posting about now.`),
+      icon: Trending,
+    })
+    i.push({
+      type: 'trendingTopics',
+      key: `trending-topics`,
+      topics: [
+        '#atproto',
+        'South Korea',
+        'Wired',
+        'Basket Weaving',
+        'Coup',
+        'Chappel Roan',
+        'the juice',
+        'Superman',
+        '#FCF',
+        'Open Web',
+      ],
+    })
+
+    i.push({
+      type: 'header',
+      key: 'starter-packs-header',
+      title: _(msg`Starter packs`),
+      description: _(msg`Find accounts to follow based on your interests.`),
+      icon: PersonGroup,
+    })
+    i.push({
+      type: 'suggestedStarterPacks',
+      key: 'suggested-starter-packs',
+      starterPacks: [
+        {
+          uri: 'at://did:plc:ragtjsm2j2vknwkz3zp4oxrd/app.bsky.graph.starterpack/3kvaphb2hpf2u',
+          cid: '',
+          indexedAt: '',
+          record: {
+            $type: 'app.bsky.graph.starterpack',
+            description:
+              'Engineers who work on or discuss the ATProtocol, both at Bluesky and in the community',
+            list: 'at://did:plc:ragtjsm2j2vknwkz3zp4oxrd/app.bsky.graph.list/3kvaphagg4e2l',
+            name: 'ATProtocol Hackers',
+          },
+          creator: {
+            did: 'did:plc:ragtjsm2j2vknwkz3zp4oxrd',
+            handle: 'pfrazee.com',
+            displayName: 'Paul Frazee',
+          },
+        },
+        {
+          uri: 'at://did:plc:qrllvid7s54k4hnwtqxwetrf/app.bsky.graph.starterpack/3kvuh7u324m2c',
+          cid: '',
+          indexedAt: '',
+          record: {
+            $type: 'app.bsky.graph.starterpack',
+            createdAt: '2024-06-26T23:23:01.073Z',
+            description:
+              'Legal practice, scholarship, journalism, and argument',
+            feeds: [],
+            list: 'at://did:plc:qrllvid7s54k4hnwtqxwetrf/app.bsky.graph.list/3kvuh7twnjc2m',
+            name: 'Bluesky for Law',
+          },
+          creator: {
+            did: 'did:plc:qrllvid7s54k4hnwtqxwetrf',
+            handle: 'joshuajfriedman.com',
+            displayName: 'Joshua J. Friedman',
+          },
+        },
+        {
+          uri: 'at://did:plc:7exlcsle4mjfhu3wnhcgizz6/app.bsky.graph.starterpack/3laotg2fqva2h',
+          cid: '',
+          indexedAt: '',
+          record: {
+            $type: 'app.bsky.graph.starterpack',
+            createdAt: '2024-11-11T17:22:22.743Z',
+            description: 'people who work at the website, the verge dot com',
+            list: 'at://did:plc:7exlcsle4mjfhu3wnhcgizz6/app.bsky.graph.list/3laotg2bjok2d',
+            name: 'The Verge staff',
+          },
+          creator: {
+            did: 'did:plc:7exlcsle4mjfhu3wnhcgizz6',
+            handle: 'theverge.com',
+            displayName: 'The Verge',
+          },
+        },
+      ],
+    })
+
+    i.push({
+      type: 'header',
+      key: 'suggested-follows-header',
+      title: _(msg`Suggested accounts`),
+      description: _(
+        msg`Follow more accounts to get connected to your interests and build your network.`,
+      ),
+      icon: Person,
+    })
 
     if (profiles) {
       // Currently the responses contain duplicate items.
@@ -487,6 +593,18 @@ export function Explore() {
               description={item.description}
               style={item.style}
               icon={item.icon}
+            />
+          )
+        }
+        case 'trendingTopics': {
+          return <TrendingTopics.Grid topics={item.topics} />
+        }
+        case 'suggestedStarterPacks': {
+          return (
+            <StarterPackSuggestions.Grid
+              isSuggestionsLoading={false}
+              error={null}
+              starterPacks={item.starterPacks}
             />
           )
         }
