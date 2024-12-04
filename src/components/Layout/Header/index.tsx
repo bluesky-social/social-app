@@ -1,5 +1,5 @@
-import React, {useContext} from 'react'
-import {View} from 'react-native'
+import {createContext, useCallback, useContext} from 'react'
+import {GestureResponderEvent, View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
@@ -15,7 +15,7 @@ import {
   useTheme,
   web,
 } from '#/alf'
-import {Button, ButtonIcon} from '#/components/Button'
+import {Button, ButtonIcon, ButtonProps} from '#/components/Button'
 import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeft} from '#/components/icons/Arrow'
 import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
 import {Text} from '#/components/Typography'
@@ -54,7 +54,7 @@ export function Outer({children}: {children: React.ReactNode}) {
   )
 }
 
-const AlignmentContext = React.createContext<'platform' | 'left'>('platform')
+const AlignmentContext = createContext<'platform' | 'left'>('platform')
 
 export function Content({
   children,
@@ -92,17 +92,22 @@ export function Slot({children}: {children?: React.ReactNode}) {
   )
 }
 
-export function BackButton() {
+export function BackButton({onPress, style, ...props}: Partial<ButtonProps>) {
   const {_} = useLingui()
   const navigation = useNavigation<NavigationProp>()
 
-  const onPressBack = React.useCallback(() => {
-    if (navigation.canGoBack()) {
-      navigation.goBack()
-    } else {
-      navigation.navigate('Home')
-    }
-  }, [navigation])
+  const onPressBack = useCallback(
+    (evt: GestureResponderEvent) => {
+      onPress?.(evt)
+      if (evt.defaultPrevented) return
+      if (navigation.canGoBack()) {
+        navigation.goBack()
+      } else {
+        navigation.navigate('Home')
+      }
+    },
+    [onPress, navigation],
+  )
 
   return (
     <Slot>
@@ -113,7 +118,8 @@ export function BackButton() {
         color="secondary"
         shape="round"
         onPress={onPressBack}
-        style={[{marginLeft: -BUTTON_VISUAL_ALIGNMENT_OFFSET}]}>
+        style={[{marginLeft: -BUTTON_VISUAL_ALIGNMENT_OFFSET}, style]}
+        {...props}>
         <ButtonIcon icon={ArrowLeft} size="lg" />
       </Button>
     </Slot>
@@ -125,7 +131,7 @@ export function MenuButton() {
   const setDrawerOpen = useSetDrawerOpen()
   const {gtMobile} = useBreakpoints()
 
-  const onPress = React.useCallback(() => {
+  const onPress = useCallback(() => {
     setDrawerOpen(true)
   }, [setDrawerOpen])
 
