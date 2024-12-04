@@ -2,9 +2,8 @@ import * as React from 'react'
 import {ScrollView, StyleSheet, View} from 'react-native'
 import {useAnimatedRef} from 'react-native-reanimated'
 
-import {usePalette} from '#/lib/hooks/usePalette'
-import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {Pager, PagerRef, RenderTabBarFnProps} from '#/view/com/pager/Pager'
+import * as Layout from '#/components/Layout'
 import {ListMethods} from '../util/List'
 import {TabBar} from './TabBar'
 
@@ -121,39 +120,28 @@ let PagerTabBar = ({
   onSelect?: (index: number) => void
   tabBarAnchor?: JSX.Element | null | undefined
 }): React.ReactNode => {
-  const pal = usePalette('default')
-  const {isMobile} = useWebMediaQueries()
   return (
     <>
-      <View
-        style={[
-          !isMobile && styles.headerContainerDesktop,
-          pal.border,
-          !isHeaderReady && styles.loadingHeader,
-        ]}>
-        {renderHeader?.()}
-      </View>
+      <Layout.Center>{renderHeader?.()}</Layout.Center>
       {tabBarAnchor}
       <View
         style={[
           styles.tabBarContainer,
-          isMobile
-            ? styles.tabBarContainerMobile
-            : styles.tabBarContainerDesktop,
-          pal.border,
           {
             display: isHeaderReady ? undefined : 'none',
           },
         ]}>
-        <TabBar
-          testID={testID}
-          items={items}
-          selectedPage={currentPage}
-          onSelect={onSelect}
-          onPressSelected={onCurrentPageSelected}
-          dragProgress={undefined as any /* native-only */}
-          dragState={undefined as any /* native-only */}
-        />
+        <Layout.Center>
+          <TabBar
+            testID={testID}
+            items={items}
+            selectedPage={currentPage}
+            onSelect={onSelect}
+            onPressSelected={onCurrentPageSelected}
+            dragProgress={undefined as any /* native-only */}
+            dragState={undefined as any /* native-only */}
+          />
+        </Layout.Center>
       </View>
     </>
   )
@@ -181,26 +169,11 @@ function PagerItem({
 }
 
 const styles = StyleSheet.create({
-  headerContainerDesktop: {
-    marginHorizontal: 'auto',
-    width: 600,
-    borderLeftWidth: 1,
-    borderRightWidth: 1,
-  },
   tabBarContainer: {
     // @ts-ignore web-only
     position: 'sticky',
     top: 0,
     zIndex: 1,
-  },
-  tabBarContainerDesktop: {
-    marginHorizontal: 'auto',
-    width: 600,
-    borderLeftWidth: 1,
-    borderRightWidth: 1,
-  },
-  tabBarContainerMobile: {
-    paddingHorizontal: 0,
   },
   loadingHeader: {
     borderColor: 'transparent',
