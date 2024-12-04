@@ -2,6 +2,7 @@ import {Platform, StyleProp, StyleSheet, ViewStyle} from 'react-native'
 
 import * as tokens from '#/alf/tokens'
 import {ios, native, web} from '#/alf/util/platform'
+import * as Layout from '#/components/Layout'
 
 export const atoms = {
   debug: {
@@ -941,4 +942,22 @@ export const atoms = {
     transitionTimingFunction: 'cubic-bezier(0.17, 0.73, 0.14, 1)',
     transitionDuration: '100ms',
   }),
+
+  /**
+   * Debug
+   */
+  scrollbar_offset: {
+    transform: [
+      web({
+        translateX: Layout.SCROLLBAR_OFFSET,
+      }),
+    ],
+  } as {transform: Exclude<ViewStyle['transform'], string | undefined>},
+  scrollbar_offset_positive: {
+    transform: [
+      web({
+        translateX: Layout.SCROLLBAR_OFFSET_POSITIVE,
+      }),
+    ],
+  } as {transform: Exclude<ViewStyle['transform'], string | undefined>},
 } as const

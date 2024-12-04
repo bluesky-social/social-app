@@ -101,7 +101,7 @@ let MessageItem = ({
   }, [message.text, message.facets])
 
   return (
-    <>
+    <View style={[a.scrollbar_offset_positive]}>
       {isNewDay && <DateDivider date={message.sentAt} />}
       <View
         style={[
@@ -153,7 +153,7 @@ let MessageItem = ({
           />
         )}
       </View>
-    </>
+    </View>
   )
 }
 MessageItem = React.memo(MessageItem)
