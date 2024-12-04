@@ -1,7 +1,14 @@
-import {useState} from 'react'
+import {useMemo, useState} from 'react'
 import {LayoutAnimation, Pressable, View} from 'react-native'
 import {Linking} from 'react-native'
-import {useReducedMotion} from 'react-native-reanimated'
+import {Gesture, GestureDetector} from 'react-native-gesture-handler'
+import Animated, {
+  runOnJS,
+  useAnimatedStyle,
+  useReducedMotion,
+  useSharedValue,
+  withSpring,
+} from 'react-native-reanimated'
 import {AppBskyActorDefs, moderateProfile} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -10,6 +17,7 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {IS_INTERNAL} from '#/lib/app-info'
 import {HELP_DESK_URL} from '#/lib/constants'
+import {useHaptics} from '#/lib/haptics'
 import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
 import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
 import {sanitizeHandle} from '#/lib/strings/handles'
@@ -78,6 +86,7 @@ export function SettingsScreen({}: Props) {
         <SettingsList.Container>
           <View
             style={[
+              a.z_50,
               a.px_xl,
               a.pt_md,
               a.pb_md,
@@ -265,6 +274,40 @@ function ProfilePreview({
 }) {
   const shadow = useProfileShadow(profile)
   const moderationOpts = useModerationOpts()
+  const playHaptic = useHaptics()
+
+  const translateX = useSharedValue(0)
+  const translateY = useSharedValue(0)
+
+  const gesture = useMemo(
+    () =>
+      Gesture.Pan()
+        .activateAfterLongPress(1000)
+        .onStart(() => {
+          'worklet'
+          runOnJS(playHaptic)()
+        })
+        .onUpdate(evt => {
+          'worklet'
+          translateX.set(evt.translationX)
+          translateY.set(evt.translationY)
+        })
+        .onEnd(() => {
+          'worklet'
+          translateX.set(withSpring(0))
+          translateY.set(withSpring(0))
+        }),
+    [playHaptic, translateX, translateY],
+  )
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [
+        {translateX: translateX.get()},
+        {translateY: translateY.get()},
+      ],
+    }
+  })
 
   if (!moderationOpts) return null
 
@@ -272,11 +315,15 @@ function ProfilePreview({
 
   return (
     <>
-      <UserAvatar
-        size={80}
-        avatar={shadow.avatar}
-        moderation={moderation.ui('avatar')}
-      />
+      <GestureDetector gesture={gesture}>
+        <Animated.View style={[a.z_50, animatedStyle]}>
+          <UserAvatar
+            size={80}
+            avatar={shadow.avatar}
+            moderation={moderation.ui('avatar')}
+          />
+        </Animated.View>
+      </GestureDetector>
       <ProfileHeaderDisplayName profile={shadow} moderation={moderation} />
       <ProfileHeaderHandle profile={shadow} />
     </>
