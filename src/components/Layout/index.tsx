@@ -180,7 +180,6 @@ export const Center = React.forwardRef(function LayoutContent(
     <View
       ref={ref}
       style={[
-        a.util_screen_outer,
         a.w_full,
         a.mx_auto,
         gtMobile && {
