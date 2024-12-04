@@ -944,7 +944,7 @@ export const atoms = {
   }),
 
   /**
-   * Debug
+   * {@link Layout.SCROLLBAR_OFFSET}
    */
   scrollbar_offset: {
     transform: [
@@ -953,6 +953,9 @@ export const atoms = {
       }),
     ],
   } as {transform: Exclude<ViewStyle['transform'], string | undefined>},
+  /**
+   * {@link Layout.SCROLLBAR_OFFSET_POSITIVE}
+   */
   scrollbar_offset_positive: {
     transform: [
       web({
