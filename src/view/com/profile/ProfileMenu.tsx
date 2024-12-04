@@ -179,7 +179,7 @@ let ProfileMenu = ({
                 label={_(msg`More options`)}
                 hitSlop={HITSLOP_20}
                 variant="solid"
-                color="secondary"
+                color="secondary_inverted"
                 size="small"
                 shape="round">
                 <ButtonIcon icon={Ellipsis} size="sm" />

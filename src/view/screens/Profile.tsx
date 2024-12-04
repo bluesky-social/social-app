@@ -44,7 +44,8 @@ import {CenteredView} from '#/view/com/util/Views'
 import {ProfileHeader, ProfileHeaderLoading} from '#/screens/Profile/Header'
 import {ProfileFeedSection} from '#/screens/Profile/Sections/Feed'
 import {ProfileLabelsSection} from '#/screens/Profile/Sections/Labels'
-import {web} from '#/alf'
+import {ThemeProvider as Alf, useTheme, web} from '#/alf'
+import {createThemes} from '#/alf/themes'
 import * as Layout from '#/components/Layout'
 import {ScreenHider} from '#/components/moderation/ScreenHider'
 import {ProfileStarterPacks} from '#/components/StarterPack/ProfileStarterPacks'
@@ -341,6 +342,24 @@ function ProfileScreenLoaded({
   // rendering
   // =
 
+  const [hue, setHue] = React.useState(0)
+  React.useEffect(() => {
+    const id = setInterval(() => {
+      setHue(Math.random() * 360)
+    }, 5000)
+    return () => clearInterval(id)
+  }, [])
+
+  const t = useTheme()
+
+  const theme = createThemes({
+    hues: {
+      primary: hue,
+      negative: 0,
+      positive: 0,
+    },
+  })
+
   const renderHeader = () => {
     return (
       <ExpoScrollForwarderView scrollViewTag={scrollViewTag}>
@@ -351,6 +370,7 @@ function ProfileScreenLoaded({
           moderationOpts={moderationOpts}
           hideBackButton={hideBackButton}
           isPlaceholderProfile={showPlaceholder}
+          backgroundColor={t.atoms.bg.backgroundColor}
         />
       </ExpoScrollForwarderView>
     )
@@ -362,141 +382,143 @@ function ProfileScreenLoaded({
       style={styles.container}
       screenDescription={_(msg`profile`)}
       modui={moderation.ui('profileView')}>
-      <PagerWithHeader
-        testID="profilePager"
-        isHeaderReady={!showPlaceholder}
-        items={sectionTitles}
-        onPageSelected={onPageSelected}
-        onCurrentPageSelected={onCurrentPageSelected}
-        renderHeader={renderHeader}
-        allowHeaderOverScroll>
-        {showFiltersTab
-          ? ({headerHeight, isFocused, scrollElRef}) => (
-              <ProfileLabelsSection
-                ref={labelsSectionRef}
-                labelerInfo={labelerInfo}
-                labelerError={labelerError}
-                isLabelerLoading={isLabelerLoading}
-                moderationOpts={moderationOpts}
-                scrollElRef={scrollElRef as ListRef}
-                headerHeight={headerHeight}
-                isFocused={isFocused}
-                setScrollViewTag={setScrollViewTag}
-              />
-            )
-          : null}
-        {showListsTab && !!profile.associated?.labeler
-          ? ({headerHeight, isFocused, scrollElRef}) => (
-              <ProfileLists
-                ref={listsSectionRef}
-                did={profile.did}
-                scrollElRef={scrollElRef as ListRef}
-                headerOffset={headerHeight}
-                enabled={isFocused}
-                setScrollViewTag={setScrollViewTag}
-              />
-            )
-          : null}
-        {showPostsTab
-          ? ({headerHeight, isFocused, scrollElRef}) => (
-              <ProfileFeedSection
-                ref={postsSectionRef}
-                feed={`author|${profile.did}|posts_and_author_threads`}
-                headerHeight={headerHeight}
-                isFocused={isFocused}
-                scrollElRef={scrollElRef as ListRef}
-                ignoreFilterFor={profile.did}
-                setScrollViewTag={setScrollViewTag}
-              />
-            )
-          : null}
-        {showRepliesTab
-          ? ({headerHeight, isFocused, scrollElRef}) => (
-              <ProfileFeedSection
-                ref={repliesSectionRef}
-                feed={`author|${profile.did}|posts_with_replies`}
-                headerHeight={headerHeight}
-                isFocused={isFocused}
-                scrollElRef={scrollElRef as ListRef}
-                ignoreFilterFor={profile.did}
-                setScrollViewTag={setScrollViewTag}
-              />
-            )
-          : null}
-        {showMediaTab
-          ? ({headerHeight, isFocused, scrollElRef}) => (
-              <ProfileFeedSection
-                ref={mediaSectionRef}
-                feed={`author|${profile.did}|posts_with_media`}
-                headerHeight={headerHeight}
-                isFocused={isFocused}
-                scrollElRef={scrollElRef as ListRef}
-                ignoreFilterFor={profile.did}
-                setScrollViewTag={setScrollViewTag}
-              />
-            )
-          : null}
-        {showLikesTab
-          ? ({headerHeight, isFocused, scrollElRef}) => (
-              <ProfileFeedSection
-                ref={likesSectionRef}
-                feed={`likes|${profile.did}`}
-                headerHeight={headerHeight}
-                isFocused={isFocused}
-                scrollElRef={scrollElRef as ListRef}
-                ignoreFilterFor={profile.did}
-                setScrollViewTag={setScrollViewTag}
-              />
-            )
-          : null}
-        {showFeedsTab
-          ? ({headerHeight, isFocused, scrollElRef}) => (
-              <ProfileFeedgens
-                ref={feedsSectionRef}
-                did={profile.did}
-                scrollElRef={scrollElRef as ListRef}
-                headerOffset={headerHeight}
-                enabled={isFocused}
-                setScrollViewTag={setScrollViewTag}
-              />
-            )
-          : null}
-        {showStarterPacksTab
-          ? ({headerHeight, isFocused, scrollElRef}) => (
-              <ProfileStarterPacks
-                ref={starterPacksSectionRef}
-                isMe={isMe}
-                starterPacksQuery={starterPacksQuery}
-                scrollElRef={scrollElRef as ListRef}
-                headerOffset={headerHeight}
-                enabled={isFocused}
-                setScrollViewTag={setScrollViewTag}
-              />
-            )
-          : null}
-        {showListsTab && !profile.associated?.labeler
-          ? ({headerHeight, isFocused, scrollElRef}) => (
-              <ProfileLists
-                ref={listsSectionRef}
-                did={profile.did}
-                scrollElRef={scrollElRef as ListRef}
-                headerOffset={headerHeight}
-                enabled={isFocused}
-                setScrollViewTag={setScrollViewTag}
-              />
-            )
-          : null}
-      </PagerWithHeader>
-      {hasSession && (
-        <FAB
-          testID="composeFAB"
-          onPress={onPressCompose}
-          icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
-          accessibilityRole="button"
-          accessibilityLabel={_(msg`New post`)}
-          accessibilityHint=""
-        />
-      )}
+      <Alf themeName={t.name} theme={theme}>
+        <PagerWithHeader
+          testID="profilePager"
+          isHeaderReady={!showPlaceholder}
+          items={sectionTitles}
+          onPageSelected={onPageSelected}
+          onCurrentPageSelected={onCurrentPageSelected}
+          renderHeader={renderHeader}
+          allowHeaderOverScroll>
+          {showFiltersTab
+            ? ({headerHeight, isFocused, scrollElRef}) => (
+                <ProfileLabelsSection
+                  ref={labelsSectionRef}
+                  labelerInfo={labelerInfo}
+                  labelerError={labelerError}
+                  isLabelerLoading={isLabelerLoading}
+                  moderationOpts={moderationOpts}
+                  scrollElRef={scrollElRef as ListRef}
+                  headerHeight={headerHeight}
+                  isFocused={isFocused}
+                  setScrollViewTag={setScrollViewTag}
+                />
+              )
+            : null}
+          {showListsTab && !!profile.associated?.labeler
+            ? ({headerHeight, isFocused, scrollElRef}) => (
+                <ProfileLists
+                  ref={listsSectionRef}
+                  did={profile.did}
+                  scrollElRef={scrollElRef as ListRef}
+                  headerOffset={headerHeight}
+                  enabled={isFocused}
+                  setScrollViewTag={setScrollViewTag}
+                />
+              )
+            : null}
+          {showPostsTab
+            ? ({headerHeight, isFocused, scrollElRef}) => (
+                <ProfileFeedSection
+                  ref={postsSectionRef}
+                  feed={`author|${profile.did}|posts_and_author_threads`}
+                  headerHeight={headerHeight}
+                  isFocused={isFocused}
+                  scrollElRef={scrollElRef as ListRef}
+                  ignoreFilterFor={profile.did}
+                  setScrollViewTag={setScrollViewTag}
+                />
+              )
+            : null}
+          {showRepliesTab
+            ? ({headerHeight, isFocused, scrollElRef}) => (
+                <ProfileFeedSection
+                  ref={repliesSectionRef}
+                  feed={`author|${profile.did}|posts_with_replies`}
+                  headerHeight={headerHeight}
+                  isFocused={isFocused}
+                  scrollElRef={scrollElRef as ListRef}
+                  ignoreFilterFor={profile.did}
+                  setScrollViewTag={setScrollViewTag}
+                />
+              )
+            : null}
+          {showMediaTab
+            ? ({headerHeight, isFocused, scrollElRef}) => (
+                <ProfileFeedSection
+                  ref={mediaSectionRef}
+                  feed={`author|${profile.did}|posts_with_media`}
+                  headerHeight={headerHeight}
+                  isFocused={isFocused}
+                  scrollElRef={scrollElRef as ListRef}
+                  ignoreFilterFor={profile.did}
+                  setScrollViewTag={setScrollViewTag}
+                />
+              )
+            : null}
+          {showLikesTab
+            ? ({headerHeight, isFocused, scrollElRef}) => (
+                <ProfileFeedSection
+                  ref={likesSectionRef}
+                  feed={`likes|${profile.did}`}
+                  headerHeight={headerHeight}
+                  isFocused={isFocused}
+                  scrollElRef={scrollElRef as ListRef}
+                  ignoreFilterFor={profile.did}
+                  setScrollViewTag={setScrollViewTag}
+                />
+              )
+            : null}
+          {showFeedsTab
+            ? ({headerHeight, isFocused, scrollElRef}) => (
+                <ProfileFeedgens
+                  ref={feedsSectionRef}
+                  did={profile.did}
+                  scrollElRef={scrollElRef as ListRef}
+                  headerOffset={headerHeight}
+                  enabled={isFocused}
+                  setScrollViewTag={setScrollViewTag}
+                />
+              )
+            : null}
+          {showStarterPacksTab
+            ? ({headerHeight, isFocused, scrollElRef}) => (
+                <ProfileStarterPacks
+                  ref={starterPacksSectionRef}
+                  isMe={isMe}
+                  starterPacksQuery={starterPacksQuery}
+                  scrollElRef={scrollElRef as ListRef}
+                  headerOffset={headerHeight}
+                  enabled={isFocused}
+                  setScrollViewTag={setScrollViewTag}
+                />
+              )
+            : null}
+          {showListsTab && !profile.associated?.labeler
+            ? ({headerHeight, isFocused, scrollElRef}) => (
+                <ProfileLists
+                  ref={listsSectionRef}
+                  did={profile.did}
+                  scrollElRef={scrollElRef as ListRef}
+                  headerOffset={headerHeight}
+                  enabled={isFocused}
+                  setScrollViewTag={setScrollViewTag}
+                />
+              )
+            : null}
+        </PagerWithHeader>
+        {hasSession && (
+          <FAB
+            testID="composeFAB"
+            onPress={onPressCompose}
+            icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
+            accessibilityRole="button"
+            accessibilityLabel={_(msg`New post`)}
+            accessibilityHint=""
+          />
+        )}
+      </Alf>
     </ScreenHider>
   )
 }
@@ -516,10 +538,10 @@ function useRichText(text: string): [RichTextAPI, boolean] {
     let ignore = false
     async function resolveRTFacets() {
       // new each time
-      const resolvedRT = new RichTextAPI({text})
-      await resolvedRT.detectFacets(agent)
+      const newRT = new RichTextAPI({text})
+      await newRT.detectFacets(agent)
       if (!ignore) {
-        setResolvedRT(resolvedRT)
+        setResolvedRT(newRT)
       }
     }
     resolveRTFacets()

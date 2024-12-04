@@ -104,13 +104,13 @@ function StorybookInner() {
 
             <Settings />
 
-            <ThemeProvider theme="light">
+            <ThemeProvider themeName="light">
               <Theming />
             </ThemeProvider>
-            <ThemeProvider theme="dim">
+            <ThemeProvider themeName="dim">
               <Theming />
             </ThemeProvider>
-            <ThemeProvider theme="dark">
+            <ThemeProvider themeName="dark">
               <Theming />
             </ThemeProvider>
 

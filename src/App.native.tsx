@@ -122,7 +122,7 @@ function InnerApp() {
   }, [_])
 
   return (
-    <Alf theme={theme}>
+    <Alf themeName={theme}>
       <ThemeProvider theme={theme}>
         <Splash isReady={isReady && hasCheckedReferrer}>
           <RootSiblingParent>

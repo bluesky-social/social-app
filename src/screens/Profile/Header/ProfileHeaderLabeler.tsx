@@ -49,6 +49,7 @@ interface Props {
   moderationOpts: ModerationOpts
   hideBackButton?: boolean
   isPlaceholderProfile?: boolean
+  backgroundColor: string
 }
 
 let ProfileHeaderLabeler = ({
@@ -58,6 +59,7 @@ let ProfileHeaderLabeler = ({
   moderationOpts,
   hideBackButton = false,
   isPlaceholderProfile,
+  backgroundColor,
 }: Props): React.ReactNode => {
   const profile: Shadow<AppBskyActorDefs.ProfileViewDetailed> =
     useProfileShadow(profileUnshadowed)
@@ -168,7 +170,8 @@ let ProfileHeaderLabeler = ({
       profile={profile}
       moderation={moderation}
       hideBackButton={hideBackButton}
-      isPlaceholderProfile={isPlaceholderProfile}>
+      isPlaceholderProfile={isPlaceholderProfile}
+      backgroundColor={backgroundColor}>
       <View
         style={[a.px_lg, a.pt_md, a.pb_sm]}
         pointerEvents={isIOS ? 'auto' : 'box-none'}>
@@ -261,6 +264,7 @@ let ProfileHeaderLabeler = ({
                   value={descriptionRT}
                   enableTags
                   authorHandle={profile.handle}
+                  dynamicColor
                 />
               </View>
             ) : undefined}

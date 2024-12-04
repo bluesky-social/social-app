@@ -43,6 +43,7 @@ interface Props {
   moderationOpts: ModerationOpts
   hideBackButton?: boolean
   isPlaceholderProfile?: boolean
+  backgroundColor: string
 }
 
 let ProfileHeader = (props: Props): React.ReactNode => {

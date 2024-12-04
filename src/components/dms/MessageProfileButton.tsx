@@ -76,7 +76,7 @@ export function MessageProfileButton({
           accessibilityRole="button"
           testID="dmBtn"
           size="small"
-          color="secondary"
+          color="secondary_inverted"
           variant="solid"
           shape="round"
           label={_(msg`Message ${profile.handle}`)}
