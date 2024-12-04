@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-12-03 02:11\n"
+"PO-Revision-Date: 2024-12-04 01:30\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -903,7 +903,7 @@ msgstr "藝術"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:172
 msgid "Artistic or non-erotic nudity."
-msgstr "帶有藝術性或非色情的裸露。"
+msgstr "帶有藝術性或非色情的裸體。"
 
 #: src/screens/Signup/StepHandle.tsx:173
 msgid "At least 3 characters"
@@ -2028,15 +2028,15 @@ msgstr "阻止應用程式向未登入的用戶顯示我的帳號"
 #: src/view/com/posts/FollowingEmptyState.tsx:70
 #: src/view/com/posts/FollowingEndOfFeed.tsx:71
 msgid "Discover new custom feeds"
-msgstr "探索更多自訂動態源"
+msgstr "探索新的自訂動態源"
 
 #: src/view/screens/Search/Explore.tsx:389
 msgid "Discover new feeds"
-msgstr "探索更多動態源"
+msgstr "探索新的動態源"
 
 #: src/view/screens/Feeds.tsx:758
 msgid "Discover New Feeds"
-msgstr "探索更多動態源"
+msgstr "探索新的動態源"
 
 #: src/components/Dialog/index.tsx:311
 msgid "Dismiss"
@@ -3396,7 +3396,7 @@ msgstr "這是正確的電子郵件地址"
 
 #: src/screens/StarterPack/Wizard/index.tsx:458
 msgid "It's just you right now! Add more people to your starter pack by searching above."
-msgstr "現在只有您一個人！使用上面的搜尋功能，將更多人新增到您的新手包中。"
+msgstr "現在新手包裡只有您一個人！使用上面的搜尋功能，將更多人新增到您的新手包中。"
 
 #: src/view/com/composer/Composer.tsx:1571
 msgid "Job ID: {0}"
@@ -3655,7 +3655,7 @@ msgstr "載入更多"
 
 #: src/view/screens/Search/Explore.tsx:219
 msgid "Load more suggested feeds"
-msgstr "載入更多推薦動態"
+msgstr "載入更多推薦動態源"
 
 #: src/view/screens/Search/Explore.tsx:217
 msgid "Load more suggested follows"
@@ -3666,7 +3666,7 @@ msgid "Load new notifications"
 msgstr "載入更多通知"
 
 #: src/screens/Profile/Sections/Feed.tsx:96
-#: src/view/com/feeds/FeedPage.tsx:132
+#: src/view/com/feeds/FeedPage.tsx:134
 #: src/view/screens/ProfileFeed.tsx:499
 #: src/view/screens/ProfileList.tsx:808
 msgid "Load new posts"
@@ -3718,7 +3718,7 @@ msgstr "看起來像是 XXXXX-XXXXX"
 
 #: src/screens/Feeds/NoSavedFeedsOfAnyType.tsx:39
 msgid "Looks like you haven't saved any feeds! Use our recommendations or browse more below."
-msgstr "看起來您尚未儲存任何動態源！請參考我們的建議或瀏覽下方以新增一些動態源。"
+msgstr "看起來您還沒有儲存任何動態源！來參考我們的建議，或瀏覽下方以新增一些動態源。"
 
 #: src/screens/Home/NoFeedsPinned.tsx:83
 msgid "Looks like you unpinned all your feeds. But don't worry, you can add some below 😄"
@@ -3756,7 +3756,7 @@ msgstr "媒體"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:211
 msgid "Media that may be disturbing or inappropriate for some audiences."
-msgstr "可能會使某些受眾感到不安或造成不適的媒體內容。"
+msgstr "可能會使部分受眾感到不安或造成不適的媒體內容。"
 
 #: src/components/WhoCanReply.tsx:254
 msgid "mentioned users"
@@ -4104,7 +4104,7 @@ msgstr "新密碼"
 msgid "New Password"
 msgstr "新密碼"
 
-#: src/view/com/feeds/FeedPage.tsx:143
+#: src/view/com/feeds/FeedPage.tsx:145
 msgctxt "action"
 msgid "New post"
 msgstr "新貼文"
@@ -4698,7 +4698,7 @@ msgstr "攝影"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:170
 msgid "Pictures meant for adults."
-msgstr "不適合未成年人的圖片。"
+msgstr "可能會引發性聯想的內容。"
 
 #: src/view/screens/ProfileFeed.tsx:293
 #: src/view/screens/ProfileList.tsx:676
@@ -5102,7 +5102,7 @@ msgstr "原因："
 
 #: src/view/screens/Search/Search.tsx:1059
 msgid "Recent Searches"
-msgstr "最近的搜尋結果"
+msgstr "最近的搜尋記錄"
 
 #: src/screens/Messages/components/MessageListError.tsx:20
 msgid "Reconnect"
@@ -5891,7 +5891,7 @@ msgstr "設定"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:174
 msgid "Sexual activity or erotic nudity."
-msgstr "性行為或色情裸露。"
+msgstr "明確的性行為或色情裸體。"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:38
 msgid "Sexually Suggestive"
@@ -6065,7 +6065,7 @@ msgstr "顯示轉發貼文"
 #: src/screens/Settings/FollowingFeedPreferences.tsx:121
 #: src/screens/Settings/FollowingFeedPreferences.tsx:131
 msgid "Show samples of your saved feeds in your Following feed"
-msgstr "在「Following」動態源中顯示您已儲存動態源中的精選貼文"
+msgstr "在「Following」動態源中顯示您已儲存動態源的精選貼文"
 
 #: src/components/moderation/ContentHider.tsx:152
 #: src/components/moderation/PostHider.tsx:79
@@ -7219,7 +7219,7 @@ msgstr "使用我的預設瀏覽器"
 
 #: src/screens/Feeds/NoSavedFeedsOfAnyType.tsx:53
 msgid "Use recommended"
-msgstr "新增推薦的動態源"
+msgstr "新增建議的動態源"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:190
 msgid "Use this to sign into the other app along with your handle."

@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-12-02 08:07\n"
+"PO-Revision-Date: 2024-12-04 01:29\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -3666,7 +3666,7 @@ msgid "Load new notifications"
 msgstr "加载新的通知"
 
 #: src/screens/Profile/Sections/Feed.tsx:96
-#: src/view/com/feeds/FeedPage.tsx:132
+#: src/view/com/feeds/FeedPage.tsx:134
 #: src/view/screens/ProfileFeed.tsx:499
 #: src/view/screens/ProfileList.tsx:808
 msgid "Load new posts"
@@ -4104,7 +4104,7 @@ msgstr "新密码"
 msgid "New Password"
 msgstr "新密码"
 
-#: src/view/com/feeds/FeedPage.tsx:143
+#: src/view/com/feeds/FeedPage.tsx:145
 msgctxt "action"
 msgid "New post"
 msgstr "新帖文"
@@ -5102,7 +5102,7 @@ msgstr "原因："
 
 #: src/view/screens/Search/Search.tsx:1059
 msgid "Recent Searches"
-msgstr "最近的搜索结果"
+msgstr "最近的搜索记录"
 
 #: src/screens/Messages/components/MessageListError.tsx:20
 msgid "Reconnect"

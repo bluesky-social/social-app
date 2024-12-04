@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-12-02 08:08\n"
+"PO-Revision-Date: 2024-12-04 01:30\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional, Hong Kong\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -3061,7 +3061,7 @@ msgstr "帳號頭銜"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:556
 msgid "Handle already taken. Please try a different one."
-msgstr "呢個帳號頭銜已經俾人攞咗，唔該試吓用第個。"
+msgstr "呢個帳號頭銜已經俾人攞咗，唔該試下用第個。"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:187
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:324
@@ -3182,7 +3182,7 @@ msgstr "唔好意思，我哋搵唔到呢個動態源。佢可能已經刪咗。
 
 #: src/screens/Moderation/index.tsx:55
 msgid "Hmmmm, it seems we're having trouble loading this data. See below for more details. If this issue persists, please contact us."
-msgstr "唔好意思，我哋好似喺撈緊數據嗰陣遇到問題。睇吓下低資訊瞭解詳情。若然仲係有呢個問題，請聯絡我哋。"
+msgstr "唔好意思，我哋好似喺撈緊數據嗰陣遇到問題。睇下下低資訊瞭解詳情。若然仲係有呢個問題，請聯絡我哋。"
 
 #: src/screens/Profile/ErrorState.tsx:31
 msgid "Hmmmm, we couldn't load that moderation service."
@@ -3190,7 +3190,7 @@ msgstr "唔好意思，我哋撈唔到嗰個審核服務。"
 
 #: src/view/com/composer/state/video.ts:413
 msgid "Hold up! We’re gradually giving access to video, and you’re still waiting in line. Check back soon!"
-msgstr "幫緊你幫緊你！我哋而家逐步開放影片權限，而你仲喺等候名單嗰度。遲啲睇吓啦！"
+msgstr "幫緊你幫緊你！我哋而家逐步開放影片權限，而你仲喺等候名單嗰度。遲啲睇下啦！"
 
 #: src/Navigation.tsx:588
 #: src/Navigation.tsx:608
@@ -3339,7 +3339,7 @@ msgstr "雙重驗證確認碼無效。"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:562
 msgid "Invalid handle. Please try a different one."
-msgstr "無效嘅帳號頭銜，唔該試吓用第個。"
+msgstr "無效嘅帳號頭銜，唔該試下用第個。"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:277
 msgid "Invalid or unsupported post record"
@@ -3663,14 +3663,14 @@ msgstr "再撈啲建議你跟嘅人"
 
 #: src/view/screens/Notifications.tsx:215
 msgid "Load new notifications"
-msgstr "撈吓新嘅通知"
+msgstr "撈下新嘅通知"
 
 #: src/screens/Profile/Sections/Feed.tsx:96
-#: src/view/com/feeds/FeedPage.tsx:132
+#: src/view/com/feeds/FeedPage.tsx:134
 #: src/view/screens/ProfileFeed.tsx:499
 #: src/view/screens/ProfileList.tsx:808
 msgid "Load new posts"
-msgstr "撈吓新嘅帖文"
+msgstr "撈下新嘅帖文"
 
 #: src/view/com/composer/text-input/mobile/Autocomplete.tsx:94
 msgid "Loading..."
@@ -3718,7 +3718,7 @@ msgstr "似係 XXXXX-XXXXXX 噉"
 
 #: src/screens/Feeds/NoSavedFeedsOfAnyType.tsx:39
 msgid "Looks like you haven't saved any feeds! Use our recommendations or browse more below."
-msgstr "睇落你未有儲存任何動態源噃！試吓我哋嘅建議抑或喺下低睇住其他嘢先。"
+msgstr "睇落你未有儲存任何動態源噃！試下我哋嘅建議抑或喺下低睇住其他嘢先。"
 
 #: src/screens/Home/NoFeedsPinned.tsx:83
 msgid "Looks like you unpinned all your feeds. But don't worry, you can add some below 😄"
@@ -4053,7 +4053,7 @@ msgstr "去到你嘅個人檔案"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:196
 msgid "Need to change it?"
-msgstr "係咪要改吓佢？"
+msgstr "係咪要改下佢？"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:130
 msgid "Need to report a copyright violation?"
@@ -4104,7 +4104,7 @@ msgstr "新密碼"
 msgid "New Password"
 msgstr "新密碼"
 
-#: src/view/com/feeds/FeedPage.tsx:143
+#: src/view/com/feeds/FeedPage.tsx:145
 msgctxt "action"
 msgid "New post"
 msgstr "新帖文"
@@ -4183,7 +4183,7 @@ msgstr "搵唔到精選 GIF，Tenor 嗰度可能發生問題。"
 
 #: src/screens/StarterPack/Wizard/StepFeeds.tsx:119
 msgid "No feeds found. Try searching for something else."
-msgstr "搵唔到任何動態源，試吓搵過第啲。"
+msgstr "搵唔到任何動態源，試下搵過第啲。"
 
 #: src/components/LikedByList.tsx:78
 #: src/view/com/post-thread/PostLikedBy.tsx:85
@@ -4285,7 +4285,7 @@ msgstr "仲未有人轉發喎，一唔係你做第一個？"
 
 #: src/screens/StarterPack/Wizard/StepProfiles.tsx:103
 msgid "Nobody was found. Try searching for someone else."
-msgstr "搵唔到人，試吓搵第個。"
+msgstr "搵唔到人，試下搵第個。"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:42
 msgid "Non-sexual Nudity"
@@ -4918,7 +4918,7 @@ msgstr "偏好設定儲存咗喇"
 
 #: src/screens/Messages/components/MessageListError.tsx:19
 msgid "Press to attempt reconnection"
-msgstr "撳呢度試吓重新連線"
+msgstr "撳呢度試下重新連線"
 
 #: src/components/forms/HostingProvider.tsx:46
 msgid "Press to change hosting provider"
@@ -4933,7 +4933,7 @@ msgstr "撳呢度試多次"
 
 #: src/components/KnownFollowers.tsx:124
 msgid "Press to view followers of this account that you also follow"
-msgstr "撳呢度睇吓有邊啲你識嘅人跟咗呢個帳號"
+msgstr "撳呢度睇下有邊啲你識嘅人跟咗呢個帳號"
 
 #: src/view/com/lightbox/Lightbox.web.tsx:148
 msgid "Previous image"
@@ -5084,17 +5084,17 @@ msgstr "重新啓用你嘅帳號"
 
 #: src/view/com/auth/SplashScreen.web.tsx:171
 msgid "Read the Bluesky blog"
-msgstr "睇吓 Bluesky 網誌"
+msgstr "睇下 Bluesky 網誌"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:58
 #: src/screens/Signup/StepInfo/Policies.tsx:84
 msgid "Read the Bluesky Privacy Policy"
-msgstr "睇吓 Bluesky 私隱政策"
+msgstr "睇下 Bluesky 私隱政策"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:51
 #: src/screens/Signup/StepInfo/Policies.tsx:71
 msgid "Read the Bluesky Terms of Service"
-msgstr "睇吓 Bluesky 服務條款"
+msgstr "睇下 Bluesky 服務條款"
 
 #: src/components/dms/ReportDialog.tsx:169
 msgid "Reason:"
@@ -5102,7 +5102,7 @@ msgstr "原因："
 
 #: src/view/screens/Search/Search.tsx:1059
 msgid "Recent Searches"
-msgstr "近排嘅搵嘢結果"
+msgstr "近排嘅搵嘢記錄"
 
 #: src/screens/Messages/components/MessageListError.tsx:20
 msgid "Reconnect"
@@ -5680,19 +5680,19 @@ msgstr "需要安全步驟"
 
 #: src/components/TagMenu/index.web.tsx:77
 msgid "See {truncatedTag} posts"
-msgstr "睇吓 {truncatedTag} 嘅帖文"
+msgstr "睇下 {truncatedTag} 嘅帖文"
 
 #: src/components/TagMenu/index.web.tsx:94
 msgid "See {truncatedTag} posts by user"
-msgstr "睇吓呢位用戶嘅 {truncatedTag} 帖文"
+msgstr "睇下呢位用戶嘅 {truncatedTag} 帖文"
 
 #: src/components/TagMenu/index.tsx:155
 msgid "See <0>{displayTag}</0> posts"
-msgstr "睇吓 <0>{displayTag}</0> 帖文"
+msgstr "睇下 <0>{displayTag}</0> 帖文"
 
 #: src/components/TagMenu/index.tsx:203
 msgid "See <0>{displayTag}</0> posts by this user"
-msgstr "睇吓呢位用戶嘅 <0>{displayTag}</0> 帖文"
+msgstr "睇下呢位用戶嘅 <0>{displayTag}</0> 帖文"
 
 #: src/view/com/auth/SplashScreen.web.tsx:176
 msgid "See jobs at Bluesky"
@@ -5700,7 +5700,7 @@ msgstr "喺 Bluesky 度搵工"
 
 #: src/view/screens/SavedFeeds.tsx:212
 msgid "See this guide"
-msgstr "睇吓呢份指南"
+msgstr "睇下呢份指南"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/Scrubber.tsx:190
 msgid "Seek slider. Use the arrow keys to seek forwards and backwards, and space to play/pause"
@@ -5780,7 +5780,7 @@ msgstr "揀選呢個靜音字詞要套用到邊啲內容。"
 
 #: src/screens/Settings/LanguageSettings.tsx:247
 msgid "Select which languages you want your subscribed feeds to include. If none are selected, all languages will be shown."
-msgstr "揀吓邊啲語言你想喺你訂閱嘅動態源度出現。唔揀嘅話，就會顯示所有語言。"
+msgstr "揀下邊啲語言你想喺你訂閱嘅動態源度出現。唔揀嘅話，就會顯示所有語言。"
 
 #: src/screens/Settings/LanguageSettings.tsx:76
 msgid "Select your app language for the default text to display in the app."
@@ -5788,7 +5788,7 @@ msgstr "揀選你嘅 App 顯示語言。"
 
 #: src/screens/Signup/StepInfo/index.tsx:223
 msgid "Select your date of birth"
-msgstr "揀吓你個出世日期"
+msgstr "揀下你個出世日期"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:192
 msgid "Select your interests from the options below"
@@ -6401,7 +6401,7 @@ msgstr "攪掂晒 - 10 個讚！"
 
 #: src/components/ProgressGuide/List.tsx:48
 msgid "Teach our algorithm what you like"
-msgstr "敎吓我地嘅演算法去估你鍾意啲乜"
+msgstr "敎下我地嘅演算法去估你鍾意啲乜"
 
 #: src/screens/Onboarding/index.tsx:36
 #: src/screens/Onboarding/state.ts:101
@@ -6414,7 +6414,7 @@ msgstr "講個笑話！"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:352
 msgid "Tell us a bit about yourself"
-msgstr "係噉以同我哋講吓你自己啦"
+msgstr "係噉以同我哋講下你自己啦"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:62
 msgid "Tell us a little more"
@@ -6756,7 +6756,7 @@ msgstr "呢個動態源唔再用到，我哋改做顯示 <0>Discover</0>。"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:558
 msgid "This handle is reserved. Please try a different one."
-msgstr "呢個帳號頭銜預留咗畀其他地方用，唔該試吓第個。"
+msgstr "呢個帳號頭銜預留咗畀其他地方用，唔該試下第個。"
 
 #: src/components/dialogs/BirthDateSettings.tsx:40
 msgid "This information is not shared with other users."
@@ -7388,52 +7388,52 @@ msgstr "影片長度唔得超過 60 秒鐘"
 
 #: src/screens/Profile/Header/Shell.tsx:160
 msgid "View {0}'s avatar"
-msgstr "睇吓 {0} 嘅頭像"
+msgstr "睇下 {0} 嘅頭像"
 
 #: src/components/ProfileCard.tsx:110
 #: src/view/com/notifications/FeedItem.tsx:408
 msgid "View {0}'s profile"
-msgstr "睇吓 {0} 嘅個人檔案"
+msgstr "睇下 {0} 嘅個人檔案"
 
 #: src/components/dms/MessagesListHeader.tsx:160
 msgid "View {displayName}'s profile"
-msgstr "睇吓 {displayName} 嘅個人檔案"
+msgstr "睇下 {displayName} 嘅個人檔案"
 
 #: src/components/TagMenu/index.tsx:172
 msgid "View all posts by @{authorHandle} with tag {displayTag}"
-msgstr "睇吓 @{authorHandle} 所有用咗 {displayTag} 標籤嘅貼文"
+msgstr "睇下 @{authorHandle} 所有用咗 {displayTag} 標籤嘅貼文"
 
 #: src/components/TagMenu/index.tsx:126
 msgid "View all posts with tag {displayTag}"
-msgstr "睇吓所有用咗 {displayTag} 標籤嘅貼文"
+msgstr "睇下所有用咗 {displayTag} 標籤嘅貼文"
 
 #: src/components/ProfileHoverCard/index.web.tsx:433
 msgid "View blocked user's profile"
-msgstr "睇吓被封鎖用戶嘅個人檔案"
+msgstr "睇下被封鎖用戶嘅個人檔案"
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:98
 msgid "View blogpost for more details"
-msgstr "睇吓網誌文章嚟了解更多資訊"
+msgstr "睇下網誌文章嚟了解更多資訊"
 
 #: src/view/screens/Log.tsx:57
 msgid "View debug entry"
-msgstr "睇吓調試條目"
+msgstr "睇下調試條目"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:139
 msgid "View details"
-msgstr "睇吓詳細資訊"
+msgstr "睇下詳細資訊"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:134
 msgid "View details for reporting a copyright violation"
-msgstr "睇吓報告侵犯版權嘅詳細資訊"
+msgstr "睇下報告侵犯版權嘅詳細資訊"
 
 #: src/view/com/posts/ViewFullThread.tsx:56
 msgid "View full thread"
-msgstr "睇吓完整嘅討論串"
+msgstr "睇下完整嘅討論串"
 
 #: src/components/moderation/LabelsOnMe.tsx:46
 msgid "View information about these labels"
-msgstr "睇吓有關呢啲標籤嘅詳細資訊"
+msgstr "睇下有關呢啲標籤嘅詳細資訊"
 
 #: src/components/ProfileHoverCard/index.web.tsx:419
 #: src/components/ProfileHoverCard/index.web.tsx:439
@@ -7443,36 +7443,36 @@ msgstr "睇吓有關呢啲標籤嘅詳細資訊"
 #: src/view/com/util/PostMeta.tsx:79
 #: src/view/com/util/PostMeta.tsx:94
 msgid "View profile"
-msgstr "睇吓個人檔案"
+msgstr "睇下個人檔案"
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:159
 msgid "View the avatar"
-msgstr "睇吓頭像"
+msgstr "睇下頭像"
 
 #: src/components/LabelingServiceCard/index.tsx:162
 msgid "View the labeling service provided by @{0}"
-msgstr "睇吓 @{0} 提供嘅標籤服務"
+msgstr "睇下 @{0} 提供嘅標籤服務"
 
 #: src/view/screens/ProfileFeed.tsx:588
 msgid "View users who like this feed"
-msgstr "睇吓邊啲人讚過呢個動態源"
+msgstr "睇下邊啲人讚過呢個動態源"
 
 #: src/screens/Moderation/index.tsx:269
 msgid "View your blocked accounts"
-msgstr "睇吓你封鎖咗嘅帳號"
+msgstr "睇下你封鎖咗嘅帳號"
 
 #: src/view/com/home/HomeHeaderLayout.web.tsx:78
 #: src/view/com/home/HomeHeaderLayoutMobile.tsx:88
 msgid "View your feeds and explore more"
-msgstr "睇吓你嘅動態源同埋探索更多"
+msgstr "睇下你嘅動態源同埋探索更多"
 
 #: src/screens/Moderation/index.tsx:239
 msgid "View your moderation lists"
-msgstr "睇吓你嘅審核清單"
+msgstr "睇下你嘅審核清單"
 
 #: src/screens/Moderation/index.tsx:254
 msgid "View your muted accounts"
-msgstr "睇吓你嘅靜音帳號"
+msgstr "睇下你嘅靜音帳號"
 
 #: src/view/com/modals/LinkWarning.tsx:89
 #: src/view/com/modals/LinkWarning.tsx:95
@@ -7563,7 +7563,7 @@ msgstr "對唔住，我哋而家撈唔到你啲靜音字詞。唔該試多一次
 
 #: src/view/screens/Search/Search.tsx:212
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
-msgstr "對唔住，你嘅搵嘢任務未攪得掂。唔該等多幾分鐘試吓。"
+msgstr "對唔住，你嘅搵嘢任務未攪得掂。唔該等多幾分鐘試下。"
 
 #: src/view/com/composer/Composer.tsx:410
 msgid "We're sorry! The post you are replying to has been deleted."
@@ -7803,7 +7803,7 @@ msgstr "你已經將呢個用戶靜音"
 
 #: src/screens/Messages/ChatList.tsx:223
 msgid "You have no conversations yet. Start one!"
-msgstr "你仲未同人傾過偈，試吓同其他人傾偈啦！"
+msgstr "你仲未同人傾過偈，試下同其他人傾偈啦！"
 
 #: src/view/com/feeds/ProfileFeedgens.tsx:143
 msgid "You have no feeds."
@@ -8022,7 +8022,7 @@ msgstr "你嘅第一個讚！"
 
 #: src/view/com/posts/FollowingEmptyState.tsx:43
 msgid "Your following feed is empty! Follow more users to see what's happening."
-msgstr "你嘅「Following」動態源得個吉！跟多啲用戶睇吓發生緊啲咩事。"
+msgstr "你嘅「Following」動態源得個吉！跟多啲用戶睇下發生緊啲咩事。"
 
 #: src/screens/Signup/StepHandle.tsx:125
 msgid "Your full handle will be"
