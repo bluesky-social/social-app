@@ -15,7 +15,7 @@ import {
 import {isConvoActive} from '#/state/messages/convo/util'
 import {useMessagesEventBus} from '#/state/messages/events'
 import {useMarkAsReadMutation} from '#/state/queries/messages/conversation'
-import {RQKEY as ListConvosQueryKey} from '#/state/queries/messages/list-converations'
+import {RQKEY as ListConvosQueryKey} from '#/state/queries/messages/list-conversations'
 import {RQKEY as createProfileQueryKey} from '#/state/queries/profile'
 import {useAgent} from '#/state/session'
 
