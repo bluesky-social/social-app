@@ -15912,10 +15912,10 @@ react-keyed-flatten-children@^3.0.0:
   dependencies:
     react-is "^18.2.0"
 
-react-native-compressor@1.10.1:
-  version "1.10.1"
-  resolved "https://registry.yarnpkg.com/react-native-compressor/-/react-native-compressor-1.10.1.tgz#d4ccf1c766f1e516b97029a9825870864934ec38"
-  integrity sha512-rbwg4q04VfwnmSxLRv7T5tk2Rq86MpTzDh66Sa6ocN5cImeq7W9jqbFu4TMCq4EkyjoX9hLS5VLNayuLlDPVEQ==
+react-native-compressor@1.10.0:
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/react-native-compressor/-/react-native-compressor-1.10.0.tgz#275410707313f24fdcde7dba77ebc838d706d7a2"
+  integrity sha512-kfmLIhnrLCVrBROxqNiBSvYcPZ8YxYT014nXuS85r6pejVV9N32PJRnr1VNLd1wAQhnjvuOPkm+AtbKF356nIg==
 
 react-native-date-picker@^5.0.7:
   version "5.0.7"
