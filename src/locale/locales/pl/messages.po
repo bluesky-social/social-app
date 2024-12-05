@@ -944,7 +944,7 @@ msgstr "Potwierdź swój adres email przed utworzeniem pakietu startowego."
 #: src/components/dms/MessageProfileButton.tsx:89
 #: src/screens/Messages/Conversation.tsx:210
 msgid "Before you may message another user, you must first verify your email."
-msgstr "Potwierdź swój adres email przed wysłaniem wiadomości do innego użytkownika."
+msgstr "Potwierdź swój adres email przed wysłaniem wiadomości do innej osoby."
 
 #: src/components/dialogs/BirthDateSettings.tsx:106
 #: src/screens/Settings/AccountSettings.tsx:101
@@ -1198,7 +1198,7 @@ msgstr "Anuluje otwieranie strony internetowej"
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:157
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:193
 msgid "Cannot interact with a blocked user"
-msgstr "Nie można wchodzić w interakcje z zablokowanym użytkownikiem"
+msgstr "Nie można wchodzić w interakcje z zablokowaną osobą"
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:133
 msgid "Captions (.vtt)"
@@ -1436,11 +1436,11 @@ msgstr "Zamyka galerię zdjęć"
 
 #: src/view/com/notifications/FeedItem.tsx:400
 msgid "Collapse list of users"
-msgstr "Zwiń listę użytkowników"
+msgstr "Zwiń listę osób"
 
 #: src/view/com/notifications/FeedItem.tsx:593
 msgid "Collapses list of users for a given notification"
-msgstr "Zwija listę użytkowników dla danego powiadomienia"
+msgstr "Zwija listę osób dla danego powiadomienia"
 
 #: src/screens/Settings/AppearanceSettings.tsx:80
 msgid "Color mode"
@@ -2007,7 +2007,7 @@ msgstr "Odrzucić wpis?"
 #: src/screens/Settings/components/PwiOptOut.tsx:80
 #: src/screens/Settings/components/PwiOptOut.tsx:84
 msgid "Discourage apps from showing my account to logged-out users"
-msgstr "Poproś aplikacje o niepokazywanie mojego konta niezalogowanym użytkownikom"
+msgstr "Poproś aplikacje o niepokazywanie mojego konta niezalogowanym osobom"
 
 #: src/view/com/posts/FollowingEmptyState.tsx:70
 #: src/view/com/posts/FollowingEndOfFeed.tsx:71
@@ -2065,7 +2065,7 @@ msgstr "Panel DNS"
 
 #: src/components/dialogs/MutedWords.tsx:302
 msgid "Do not apply this mute word to users you follow"
-msgstr "Nie wyciszaj tego słowa wśród obserwowanych użytkowników"
+msgstr "Nie wyciszaj tego słowa wśród obserwowanych osób"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:39
 msgid "Does not include nudity."
@@ -2170,7 +2170,7 @@ msgstr "np. Osoby, które nigdy się nie mylą."
 
 #: src/view/com/modals/CreateOrEditList.tsx:293
 msgid "e.g. Users that repeatedly reply with ads."
-msgstr "np. Użytkownicy, którzy notorycznie wysyłają reklamy."
+msgstr "np. Osoby, które notorycznie wysyłają reklamy."
 
 #: src/view/com/modals/InviteCodes.tsx:97
 msgid "Each code works once. You'll receive more invite codes periodically."
@@ -2256,7 +2256,7 @@ msgstr "Edytuj pakiet startowy"
 
 #: src/view/com/modals/CreateOrEditList.tsx:225
 msgid "Edit User List"
-msgstr "Edytuj listę użytkowników"
+msgstr "Edytuj listę osób"
 
 #: src/components/WhoCanReply.tsx:87
 msgid "Edit who can reply"
@@ -2441,7 +2441,7 @@ msgstr "Wprowadź swój nowy adres email poniżej."
 
 #: src/screens/Login/index.tsx:98
 msgid "Enter your username and password"
-msgstr "Wprowadź swoją nazwę użytkownika i hasło"
+msgstr "Wprowadź swoją nazwę i hasło"
 
 #: src/view/com/composer/Composer.tsx:1637
 msgid "Error"
@@ -2487,11 +2487,11 @@ msgstr "Nadmierne lub niechciane wiadomości"
 
 #: src/components/dialogs/MutedWords.tsx:311
 msgid "Exclude users you follow"
-msgstr "Wyklucz obserwowanych użytkowników"
+msgstr "Wyklucz obserwowane osoby"
 
 #: src/components/dialogs/MutedWords.tsx:514
 msgid "Excludes users you follow"
-msgstr "Wyklucza obserwowanych użytkowników"
+msgstr "Wyklucza obserwowane osoby"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:404
 msgid "Exit fullscreen"
@@ -2519,7 +2519,7 @@ msgstr "Rozwiń tekst alternatywny"
 
 #: src/view/com/notifications/FeedItem.tsx:401
 msgid "Expand list of users"
-msgstr "Rozwiń listę użytkowników"
+msgstr "Rozwiń listę osób"
 
 #: src/view/com/composer/ComposerReplyTo.tsx:70
 #: src/view/com/composer/ComposerReplyTo.tsx:73
@@ -2629,7 +2629,7 @@ msgstr "Nie udało się wczytać sugerowanych kanałów"
 
 #: src/view/screens/Search/Explore.tsx:378
 msgid "Failed to load suggested follows"
-msgstr "Nie udało się wczytać sugerowanych użytkowników"
+msgstr "Nie udało się wczytać sugerowanych osób"
 
 #: src/state/queries/pinned-post.ts:75
 msgid "Failed to pin post"
@@ -2738,7 +2738,7 @@ msgstr "Znajdź konta do obserwowania"
 
 #: src/view/screens/Search/Search.tsx:612
 msgid "Find posts and users on Bluesky"
-msgstr "Znajdź wpisy i użytkowników na Bluesky"
+msgstr "Znajdź wpisy i osoby na Bluesky"
 
 #: src/screens/StarterPack/Wizard/index.tsx:197
 msgid "Finish"
@@ -2821,7 +2821,7 @@ msgstr "Obserwowane przez <0>{0}</0>, <1>{1}</1> i {2, plural, one {# innego/inn
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:403
 msgid "Followed users"
-msgstr "Obserwowani użytkownicy"
+msgstr "Obserwowane osoby"
 
 #: src/view/screens/ProfileFollowers.tsx:30
 #: src/view/screens/ProfileFollowers.tsx:31
@@ -2848,7 +2848,7 @@ msgstr "Obserwujący, których znasz"
 #: src/view/screens/ProfileFollows.tsx:31
 #: src/view/screens/SavedFeeds.tsx:431
 msgid "Following"
-msgstr "Obserwowani"
+msgstr "Obserwujesz"
 
 #: src/components/ProfileCard.tsx:318
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:98
@@ -3030,7 +3030,7 @@ msgstr "Przejdź do profilu"
 
 #: src/components/dms/ConvoMenu.tsx:164
 msgid "Go to user's profile"
-msgstr "Przejdź do profilu użytkownika"
+msgstr "Przejdź do profilu"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:46
 #: src/view/com/composer/labels/LabelsBtn.tsx:202
@@ -3150,7 +3150,7 @@ msgstr "Ukryć tą odpowiedź?"
 
 #: src/view/com/notifications/FeedItem.tsx:591
 msgid "Hide user list"
-msgstr "Ukryj listę użytkowników"
+msgstr "Ukryj listę osób"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:117
 msgid "Hmm, some kind of issue occurred when contacting the feed server. Please let the feed owner know about this issue."
@@ -3190,7 +3190,7 @@ msgstr "Poczekaj! Powoli udostępniamy materiały wideo, ale ty wciąż czekasz 
 #: src/view/shell/desktop/LeftNav.tsx:401
 #: src/view/shell/Drawer.tsx:391
 msgid "Home"
-msgstr "Strona główna"
+msgstr "Główna"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:397
 msgid "Host:"
@@ -3434,7 +3434,7 @@ msgstr "Etykiety dodane"
 
 #: src/screens/Profile/Sections/Labels.tsx:163
 msgid "Labels are annotations on users and content. They can be used to hide, warn, and categorize the network."
-msgstr "Etykiety to adnotacje dotyczące użytkowników i treści. Mogą być używane do ukrywania, ostrzegania i kategoryzowania sieci."
+msgstr "Etykiety to adnotacje dotyczące osób i treści. Mogą być używane do ukrywania, ostrzegania i kategoryzowania sieci."
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:71
 msgid "Labels on your account"
@@ -3639,7 +3639,7 @@ msgstr "Listy"
 
 #: src/components/dms/BlockedByListDialog.tsx:39
 msgid "Lists blocking this user:"
-msgstr "Listy blokujące tego użytkownika:"
+msgstr "Listy blokujące tą osobę:"
 
 #: src/view/screens/Search/Explore.tsx:131
 msgid "Load more"
@@ -3918,7 +3918,7 @@ msgstr "Wycisz konta"
 
 #: src/components/TagMenu/index.tsx:224
 msgid "Mute all {displayTag} posts"
-msgstr "Wycisz wszystkie wpisy na temat {displayTag}"
+msgstr "Wycisz wszystkie wpisy o {displayTag}"
 
 #: src/components/dms/ConvoMenu.tsx:172
 #: src/components/dms/ConvoMenu.tsx:178
@@ -4117,11 +4117,11 @@ msgstr "Nowy wpis"
 
 #: src/components/NewskieDialog.tsx:83
 msgid "New user info dialog"
-msgstr "Okno z informacjami o nowym użytkowniku"
+msgstr "Okno z informacjami o nowej osobie"
 
 #: src/view/com/modals/CreateOrEditList.tsx:227
 msgid "New User List"
-msgstr "Nowa lista użytkowników"
+msgstr "Nowa lista osób"
 
 #: src/screens/Settings/ThreadPreferences.tsx:75
 #: src/screens/Settings/ThreadPreferences.tsx:78
@@ -4301,7 +4301,7 @@ msgstr "Uwaga o udostępnianiu"
 
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:80
 msgid "Note: Bluesky is an open and public network. This setting only limits the visibility of your content on the Bluesky app and website, and other apps may not respect this setting. Your content may still be shown to logged-out users by other apps and websites."
-msgstr "Uwaga: Bluesky jest otwartą i publiczną społecznością. To ustawienie ogranicza jedynie widoczność Twoich treści w aplikacji i serwisie Bluesky, inne aplikacje mogą tego nie przestrzegać. Twoje treści mogą być nadal wyświetlane niezalogowanym użytkownikom przez inne aplikacje i strony internetowe."
+msgstr "Uwaga: Bluesky jest otwartą i publiczną społecznością. To ustawienie ogranicza jedynie widoczność Twoich treści w aplikacji i serwisie Bluesky, inne aplikacje mogą tego nie przestrzegać. Twoje treści mogą być nadal wyświetlane niezalogowanym osobom przez inne aplikacje i strony internetowe."
 
 #: src/screens/Messages/ChatList.tsx:213
 msgid "Nothing here"
@@ -4998,7 +4998,7 @@ msgstr "Publiczne"
 
 #: src/view/screens/ModerationModlists.tsx:75
 msgid "Public, shareable lists of users to mute or block in bulk."
-msgstr "Publiczne listy użytkowników do zbiorowego wyciszania lub blokowania."
+msgstr "Publiczne listy osób do zbiorowego wyciszania lub blokowania."
 
 #: src/view/screens/Lists.tsx:81
 msgid "Public, shareable lists which can drive feeds."
@@ -5383,7 +5383,7 @@ msgstr "Zgłoś ten pakiet startowy"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:47
 msgid "Report this user"
-msgstr "Zgłoś tego użytkownika"
+msgstr "Zgłoś tą osobę"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:68
 #: src/view/com/util/post-ctrls/RepostButton.tsx:146
@@ -5650,7 +5650,7 @@ msgstr "Szukaj kanałów, które chcesz polecać innym."
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:71
 msgid "Search for users"
-msgstr "Szukaj użytkowników"
+msgstr "Szukaj osób"
 
 #: src/components/dialogs/GifSelect.tsx:177
 msgid "Search GIFs"
@@ -5675,7 +5675,7 @@ msgstr "Zobacz wpisy na temat {truncatedTag}"
 
 #: src/components/TagMenu/index.web.tsx:94
 msgid "See {truncatedTag} posts by user"
-msgstr "Zobacz wpisy tego użytkownika na temat {truncatedTag}"
+msgstr "Zobacz wpisy tej osoby o {truncatedTag}"
 
 #: src/components/TagMenu/index.tsx:155
 msgid "See <0>{displayTag}</0> posts"
@@ -5683,7 +5683,7 @@ msgstr "Zobacz wpisy <0>{displayTag}</0>"
 
 #: src/components/TagMenu/index.tsx:203
 msgid "See <0>{displayTag}</0> posts by this user"
-msgstr "Zobacz wpisy tego użytkownika na temat <0>{displayTag}</0>"
+msgstr "Zobacz wpisy tej osoby o <0>{displayTag}</0>"
 
 #: src/view/com/auth/SplashScreen.web.tsx:176
 msgid "See jobs at Bluesky"
@@ -6276,7 +6276,7 @@ msgstr "Pakiet startowy jest nieprawidłowy"
 
 #: src/view/screens/Profile.tsx:233
 msgid "Starter Packs"
-msgstr "Pakiety startowe"
+msgstr "Pakiety"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:244
 msgid "Starter packs let you easily share your favorite feeds and people with your friends."
@@ -6675,7 +6675,7 @@ msgstr "Wystąpił nieoczekiwany błąd w aplikacji. Daj nam znać, jeśli tak s
 
 #: src/screens/SignupQueued.tsx:116
 msgid "There's been a rush of new users to Bluesky! We'll activate your account as soon as we can."
-msgstr "Do Bluesky dołączyło wielu nowych użytkowników! Aktywujemy Twoje konto tak szybko, jak to możliwe."
+msgstr "Do Bluesky dołączyło wiele nowych osób! Aktywujemy Twoje konto tak szybko, jak to możliwe."
 
 #: src/screens/Settings/FollowingFeedPreferences.tsx:54
 msgid "These settings only apply to the Following feed."
@@ -6687,11 +6687,11 @@ msgstr "Ten {screenDescription} został zgłoszony:"
 
 #: src/components/moderation/ScreenHider.tsx:106
 msgid "This account has requested that users sign in to view their profile."
-msgstr "Właściciel tego konta wymaga od użytkowników zalogowania się w celu wyświetlenia jego profilu."
+msgstr "Właściciel tego konta wymaga zalogowania się w celu wyświetlenia jego profilu."
 
 #: src/components/dms/BlockedByListDialog.tsx:34
 msgid "This account is blocked by one or more of your moderation lists. To unblock, please visit the lists directly and remove this user."
-msgstr "To konto jest blokowane przez jedną lub więcej list moderacji. Aby je odblokować, odwiedź te listy bezpośrednio i usuń tego użytkownika."
+msgstr "To konto jest blokowane przez jedną lub więcej list moderacji. Aby je odblokować, odwiedź te listy bezpośrednio i usuń tą osobę."
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:246
 msgid "This appeal will be sent to <0>{sourceName}</0>."
@@ -6744,7 +6744,7 @@ msgstr "Ten kanał jest teraz bardzo obciążony i nie jest chwilowo dostępny. 
 
 #: src/view/com/posts/CustomFeedEmptyState.tsx:38
 msgid "This feed is empty! You may need to follow more users or tune your language settings."
-msgstr "Ten kanał jest pusty! Może być konieczne zaobserwowanie więcej użytkowników lub dostosowanie ustawień językowych."
+msgstr "Ten kanał jest pusty! Możesz zaobserwować więcej osób lub dostosować ustawienia językowe."
 
 #: src/components/StarterPack/Main/PostsList.tsx:36
 #: src/view/screens/ProfileFeed.tsx:478
@@ -6762,7 +6762,7 @@ msgstr "Ta nazwa jest zarezerwowana. Wypróbuj inną."
 
 #: src/components/dialogs/BirthDateSettings.tsx:40
 msgid "This information is not shared with other users."
-msgstr "Informacje te nie są udostępniane innym użytkownikom."
+msgstr "Informacje te nie są udostępniane innym."
 
 #: src/view/com/modals/VerifyEmail.tsx:127
 msgid "This is important in case you ever need to change your email or reset your password."
@@ -6811,7 +6811,7 @@ msgstr "Ten wpis został usunięty."
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:688
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:352
 msgid "This post is only visible to logged-in users. It won't be visible to people who aren't logged in."
-msgstr "Ten wpis jest widoczny tylko dla zalogowanych użytkowników. Nie będzie widoczny dla osób niezalogowanych."
+msgstr "Ten wpis jest widoczny tylko dla zalogowanych. Nie będzie widoczny dla osób niezalogowanych."
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:669
 msgid "This post will be hidden from feeds and threads. This cannot be undone."
@@ -6823,11 +6823,11 @@ msgstr "Autor tego wpisu wyłączył możliwość cytowania."
 
 #: src/view/com/profile/ProfileMenu.tsx:350
 msgid "This profile is only visible to logged-in users. It won't be visible to people who aren't logged in."
-msgstr "Ten profil jest widoczny tylko dla zalogowanych użytkowników. Nie będzie widoczny dla osób niezalogowanych."
+msgstr "Ten profil jest widoczny tylko dla zalogowanych. Nie będzie widoczny dla osób niezalogowanych."
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:731
 msgid "This reply will be sorted into a hidden section at the bottom of your thread and will mute notifications for subsequent replies - both for yourself and others."
-msgstr "Ta odpowiedź trafi do ukrytej sekcji na dole wątku. Spowoduje to wyciszenie powiadomień o kolejnych odpowiedziach - zarówno dla Ciebie, jak i innych użytkowników."
+msgstr "Ta odpowiedź trafi do ukrytej sekcji na dole wątku. Spowoduje to wyciszenie powiadomień o kolejnych odpowiedziach - zarówno dla Ciebie, jak i innych."
 
 #: src/screens/Signup/StepInfo/Policies.tsx:37
 msgid "This service has not provided terms of service or a privacy policy."
@@ -6839,36 +6839,36 @@ msgstr "Powinno to spowodować utworzenie rekordu domeny pod adresem:"
 
 #: src/view/com/profile/ProfileFollowers.tsx:96
 msgid "This user doesn't have any followers."
-msgstr "Ten użytkownik nie ma żadnych obserwujących."
+msgstr "Ta osoba nie ma żadnych obserwujących."
 
 #: src/components/dms/MessagesListBlockedFooter.tsx:60
 msgid "This user has blocked you"
-msgstr "Ten użytkownik zablokował Cię"
+msgstr "Ta osoba Cię zablokowała"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:77
 #: src/lib/moderation/useModerationCauseDescription.ts:73
 msgid "This user has blocked you. You cannot view their content."
-msgstr "Ten użytkownik zablokował Cię. Nie możesz wyświetlać jego treści."
+msgstr "Ta osoba Cię zablokowała. Nie możesz wyświetlać jej treści."
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:30
 msgid "This user has requested that their content only be shown to signed-in users."
-msgstr "Treści tego użytkownika mogą być wyświetlane tylko zalogowanym użytkownikom."
+msgstr "Treści tej osoby mogą być wyświetlane tylko zalogowanym."
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:57
 msgid "This user is included in the <0>{0}</0> list which you have blocked."
-msgstr "Ten użytkownik znajduje się na liście <0>{0}</0>, która została zablokowana."
+msgstr "Ta osoba znajduje się na liście <0>{0}</0>, która została zablokowana."
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:89
 msgid "This user is included in the <0>{0}</0> list which you have muted."
-msgstr "Ten użytkownik znajduje się na liście <0>{0}</0>, która została wyciszona."
+msgstr "Ta osoba znajduje się na liście <0>{0}</0>, która została wyciszona."
 
 #: src/components/NewskieDialog.tsx:65
 msgid "This user is new here. Press for more info about when they joined."
-msgstr "Ten użytkownik jest tu nowy. Kliknij, aby uzyskać więcej informacji o tym, kiedy dołączył."
+msgstr "Ta osoba jest tu nowa. Kliknij, aby uzyskać więcej informacji o tym, kiedy dołączyła."
 
 #: src/view/com/profile/ProfileFollows.tsx:96
 msgid "This user isn't following anyone."
-msgstr "Ten użytkownik nikogo nie obserwuje."
+msgstr "Ta osoba nikogo nie obserwuje."
 
 #: src/components/dialogs/MutedWords.tsx:435
 msgid "This will delete \"{0}\" from your muted words. You can always add it back later."
@@ -6880,7 +6880,7 @@ msgstr "Spowoduje to usunięcie @{0} z listy szybkiego dostępu."
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:721
 msgid "This will remove your post from this quote post for all users, and replace it with a placeholder."
-msgstr "Spowoduje to usunięcie Twojego wpisu z tego cytatu dla wszystkich użytkowników i zastąpi go placeholderem."
+msgstr "Spowoduje to usunięcie Twojego wpisu z tego cytatu dla wszystkich i zastąpi go placeholderem."
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:48
 #: src/screens/Settings/ContentAndMediaSettings.tsx:51
@@ -7031,16 +7031,16 @@ msgstr "Cofnij repost"
 #: src/view/com/profile/FollowButton.tsx:60
 msgctxt "action"
 msgid "Unfollow"
-msgstr "Przestań obserwować"
+msgstr "Nie obserwuj"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:217
 msgid "Unfollow {0}"
-msgstr "Przestań obserwować {0}"
+msgstr "Nie obserwuj {0}"
 
 #: src/view/com/profile/ProfileMenu.tsx:221
 #: src/view/com/profile/ProfileMenu.tsx:231
 msgid "Unfollow Account"
-msgstr "Przestań obserwować"
+msgstr "Nie obserwuj"
 
 #: src/view/screens/ProfileFeed.tsx:576
 msgid "Unlike this feed"
@@ -7238,27 +7238,27 @@ msgstr "Wykorzystane przez:"
 #: src/components/moderation/ModerationDetailsDialog.tsx:69
 #: src/lib/moderation/useModerationCauseDescription.ts:61
 msgid "User Blocked"
-msgstr "Użytkownik zablokowany"
+msgstr "Osoba zablokowana"
 
 #: src/lib/moderation/useModerationCauseDescription.ts:53
 msgid "User Blocked by \"{0}\""
-msgstr "Użytkownik zablokowany przez \"{0}\""
+msgstr "Osoba zablokowana przez \"{0}\""
 
 #: src/components/dms/BlockedByListDialog.tsx:27
 msgid "User blocked by list"
-msgstr "Użytkownik zablokowany przez listę"
+msgstr "Osoba zablokowana przez listę"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:55
 msgid "User Blocked by List"
-msgstr "Użytkownik zablokowany przez listę"
+msgstr "Osoba zablokowana przez listę"
 
 #: src/lib/moderation/useModerationCauseDescription.ts:71
 msgid "User Blocking You"
-msgstr "Użytkownik blokujący Ciebie"
+msgstr "Osoba blokująca Ciebie"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:75
 msgid "User Blocks You"
-msgstr "Użytkownik blokujący Ciebie"
+msgstr "Osoba blokująca Ciebie"
 
 #: src/view/com/modals/UserAddRemoveLists.tsx:214
 msgid "User list by {0}"
@@ -7287,11 +7287,11 @@ msgstr "Listy"
 
 #: src/screens/Login/LoginForm.tsx:183
 msgid "Username or email address"
-msgstr "Nazwa użytkownika lub adres email"
+msgstr "Nazwa lub adres email"
 
 #: src/view/screens/ProfileList.tsx:924
 msgid "Users"
-msgstr "Użytkownicy"
+msgstr "Osoby"
 
 #: src/components/WhoCanReply.tsx:258
 msgid "users followed by <0>@{0}</0>"
@@ -7304,11 +7304,11 @@ msgstr "Obserwowani przeze mnie"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:416
 msgid "Users in \"{0}\""
-msgstr "Użytkownicy w \"{0}\""
+msgstr "Osoby w \"{0}\""
 
 #: src/components/LikesDialog.tsx:83
 msgid "Users that have liked this content or profile"
-msgstr "Użytkownicy, którzy polubili tą zawartość lub profil"
+msgstr "Osoby, które polubiły tą zawartość lub profil"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:418
 msgid "Value:"
@@ -7415,7 +7415,7 @@ msgstr "Wyświetl wszystkie wpisy zawierające {displayTag}"
 
 #: src/components/ProfileHoverCard/index.web.tsx:433
 msgid "View blocked user's profile"
-msgstr "Wyświetl profil zablokowanego użytkownika"
+msgstr "Wyświetl profil zablokowanej osoby"
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:98
 msgid "View blogpost for more details"
@@ -7461,7 +7461,7 @@ msgstr "Wyświetl usługę moderacji dostarczoną przez @{0}"
 
 #: src/view/screens/ProfileFeed.tsx:588
 msgid "View users who like this feed"
-msgstr "Wyświetl użytkowników, którzy lubią ten kanał"
+msgstr "Wyświetl osoby, które lubią ten kanał"
 
 #: src/screens/Moderation/index.tsx:269
 msgid "View your blocked accounts"
@@ -7653,7 +7653,7 @@ msgstr "Dlaczego ten pakiet startowy powinien być sprawdzony?"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:48
 msgid "Why should this user be reviewed?"
-msgstr "Dlaczego ten użytkownik powinien być sprawdzony?"
+msgstr "Dlaczego ta osoba powinna być sprawdzona?"
 
 #: src/screens/Messages/components/MessageInput.tsx:149
 #: src/screens/Messages/components/MessageInput.web.tsx:198
@@ -7747,7 +7747,7 @@ msgstr "Możesz teraz logować się przy użyciu nowego hasła."
 
 #: src/screens/Deactivated.tsx:139
 msgid "You can reactivate your account to continue logging in. Your profile and posts will be visible to other users."
-msgstr "Możesz ponownie aktywować swoje konto, aby się zalogować. Twój profil i wpisy znów będą widoczne dla innych użytkowników."
+msgstr "Możesz ponownie aktywować swoje konto, aby się zalogować. Twój profil i wpisy znów będą widoczne dla innych."
 
 #: src/view/com/profile/ProfileFollowers.tsx:95
 msgid "You do not have any followers."
@@ -7755,7 +7755,7 @@ msgstr "Nikt Cię nie obserwuje."
 
 #: src/screens/Profile/KnownFollowers.tsx:100
 msgid "You don't follow any users who follow @{name}."
-msgstr "Nie obserwujesz żadnych użytkowników, którzy obserwują @{name}."
+msgstr "Nie obserwujesz nikogo, kto obserwuje @{name}."
 
 #: src/view/com/modals/InviteCodes.tsx:67
 msgid "You don't have any invite codes yet! We'll send you some when you've been on Bluesky for a little longer."
@@ -7775,13 +7775,13 @@ msgstr "Autor został zablokowany albo Ty zostałeś zablokowany."
 
 #: src/components/dms/MessagesListBlockedFooter.tsx:58
 msgid "You have blocked this user"
-msgstr "Ten użytkownik został zablokowany"
+msgstr "Ta osoba została zablokowana"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:71
 #: src/lib/moderation/useModerationCauseDescription.ts:55
 #: src/lib/moderation/useModerationCauseDescription.ts:63
 msgid "You have blocked this user. You cannot view their content."
-msgstr "Ten użytkownik został zablokowany. Nie możesz wyświetlać jego treści."
+msgstr "Ta osoba została zablokowana. Nie możesz wyświetlać jej treści."
 
 #: src/screens/Login/SetNewPasswordForm.tsx:48
 #: src/screens/Login/SetNewPasswordForm.tsx:85
@@ -7805,7 +7805,7 @@ msgstr "To konto zostało wyciszone."
 
 #: src/lib/moderation/useModerationCauseDescription.ts:91
 msgid "You have muted this user"
-msgstr "Ten użytkownik został wyciszony"
+msgstr "Ta osoba została wyciszona"
 
 #: src/screens/Messages/ChatList.tsx:223
 msgid "You have no conversations yet. Start one!"
@@ -7923,11 +7923,11 @@ msgstr "Ty: {short}"
 
 #: src/screens/Signup/index.tsx:107
 msgid "You'll follow the suggested users and feeds once you finish creating your account!"
-msgstr "Po utworzeniu konta zaobserwujesz sugerowanych użytkowników i kanały!"
+msgstr "Po utworzeniu konta zaobserwujesz sugerowane osoby i kanały!"
 
 #: src/screens/Signup/index.tsx:112
 msgid "You'll follow the suggested users once you finish creating your account!"
-msgstr "Po utworzeniu konta zaobserwujesz sugerowanych użytkowników!"
+msgstr "Po utworzeniu konta zaobserwujesz sugerowane osoby!"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:232
 msgid "You'll follow these people and {0} others"
@@ -8028,7 +8028,7 @@ msgstr "Twoje pierwsze polubienie!"
 
 #: src/view/com/posts/FollowingEmptyState.tsx:43
 msgid "Your following feed is empty! Follow more users to see what's happening."
-msgstr "Twój kanał obserwowanych jest pusty! Zaobserwuj więcej użytkowników, aby zobaczyć, co się dzieje."
+msgstr "Twój kanał obserwowanych jest pusty! Zaobserwuj więcej osób, aby zobaczyć, co się dzieje."
 
 #: src/screens/Signup/StepHandle.tsx:125
 msgid "Your full handle will be"
@@ -8060,7 +8060,7 @@ msgstr "Twoje wpisy, polubienia i blokady są publiczne. Wyciszenia są prywatne
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:75
 msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
-msgstr "Twój profil, wpisy, kanały i listy nie będą już widoczne dla innych użytkowników Bluesky. Możesz ponownie aktywować swoje konto w dowolnym momencie po zalogowaniu."
+msgstr "Twój profil, wpisy, kanały i listy nie będą już widoczne dla innych na Bluesky. Możesz ponownie aktywować swoje konto w dowolnym momencie po zalogowaniu."
 
 #: src/view/com/composer/Composer.tsx:469
 msgid "Your reply has been published"
@@ -8072,4 +8072,4 @@ msgstr "Twoje zgłoszenie zostanie przesłane do moderacji Bluesky"
 
 #: src/screens/Signup/index.tsx:142
 msgid "Your user handle"
-msgstr "Twoja nazwa użytkownika"
+msgstr "Twoja nazwa"
