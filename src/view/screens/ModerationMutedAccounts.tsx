@@ -96,8 +96,8 @@ export function ModerationMutedAccounts({}: Props) {
   )
   return (
     <Layout.Screen testID="mutedAccountsScreen">
-      <Layout.Content>
-        <ViewHeader title={_(msg`Muted Accounts`)} showOnDesktop />
+      <ViewHeader title={_(msg`Muted Accounts`)} showOnDesktop />
+      <Layout.Center>
         <Text
           type="sm"
           style={[
@@ -114,7 +114,7 @@ export function ModerationMutedAccounts({}: Props) {
           </Trans>
         </Text>
         {isEmpty ? (
-          <View style={[pal.border, !isTabletOrDesktop && styles.flex1]}>
+          <View style={[pal.border]}>
             {isError ? (
               <ErrorScreen
                 title="Oops!"
@@ -160,7 +160,7 @@ export function ModerationMutedAccounts({}: Props) {
             desktopFixedHeight
           />
         )}
-      </Layout.Content>
+      </Layout.Center>
     </Layout.Screen>
   )
 }

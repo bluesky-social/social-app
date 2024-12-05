@@ -96,7 +96,7 @@ export function ModerationBlockedAccounts({}: Props) {
   )
   return (
     <Layout.Screen testID="blockedAccountsScreen">
-      <Layout.Content>
+      <Layout.Center>
         <ViewHeader title={_(msg`Blocked Accounts`)} showOnDesktop />
         <Text
           type="sm"
@@ -115,7 +115,7 @@ export function ModerationBlockedAccounts({}: Props) {
           </Trans>
         </Text>
         {isEmpty ? (
-          <View style={[pal.border, !isTabletOrDesktop && styles.flex1]}>
+          <View style={[pal.border]}>
             {isError ? (
               <ErrorScreen
                 title="Oops!"
@@ -161,7 +161,7 @@ export function ModerationBlockedAccounts({}: Props) {
             desktopFixedHeight
           />
         )}
-      </Layout.Content>
+      </Layout.Center>
     </Layout.Screen>
   )
 }
