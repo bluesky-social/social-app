@@ -251,23 +251,27 @@ module.exports = function (config) {
           {
             enableFullScreenImage_legacy: true,
             ios: {
+              enableFullScreenImage_legacy: true,
               backgroundColor: '#ffffff',
               image: './assets/splash.png',
               resizeMode: 'cover',
               dark: {
+                enableFullScreenImage_legacy: true,
                 backgroundColor: '#001429',
                 image: './assets/splash-dark.png',
                 resizeMode: 'cover',
               },
             },
             android: {
+              enableFullScreenImage_legacy: true,
               backgroundColor: '#0c7cff',
               image: './assets/splash.png',
-              imageWidth: 200,
+              resizeMode: 'cover',
               dark: {
+                enableFullScreenImage_legacy: true,
                 backgroundColor: '#0c2a49',
                 image: './assets/splash-dark.png',
-                imageWidth: 200,
+                resizeMode: 'cover',
               },
             },
           },
