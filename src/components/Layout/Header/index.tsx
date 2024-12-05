@@ -18,13 +18,20 @@ import {
 import {Button, ButtonIcon, ButtonProps} from '#/components/Button'
 import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeft} from '#/components/icons/Arrow'
 import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
+import {
+  BUTTON_VISUAL_ALIGNMENT_OFFSET,
+  HEADER_SLOT_SIZE,
+} from '#/components/Layout/const'
 import {ScrollbarOffsetContext} from '#/components/Layout/context'
 import {Text} from '#/components/Typography'
 
-const BUTTON_VISUAL_ALIGNMENT_OFFSET = 3
-const BUTTON_SIZE = 34 // small button
-
-export function Outer({children}: {children: React.ReactNode}) {
+export function Outer({
+  children,
+  noBottomBorder,
+}: {
+  children: React.ReactNode
+  noBottomBorder?: boolean
+}) {
   const t = useTheme()
   const gutter = useGutterStyles()
   const {gtMobile} = useBreakpoints()
@@ -34,7 +41,7 @@ export function Outer({children}: {children: React.ReactNode}) {
     <View
       style={[
         a.w_full,
-        a.border_b,
+        !noBottomBorder && a.border_b,
         a.flex_row,
         a.align_center,
         a.gap_sm,
@@ -67,7 +74,7 @@ export function Content({
         a.flex_1,
         a.justify_center,
         isIOS && align === 'platform' && a.align_center,
-        {minHeight: BUTTON_SIZE},
+        {minHeight: HEADER_SLOT_SIZE},
       ]}>
       <AlignmentContext.Provider value={align}>
         {children}
@@ -82,7 +89,7 @@ export function Slot({children}: {children?: React.ReactNode}) {
       style={[
         a.z_50,
         {
-          width: BUTTON_SIZE,
+          width: HEADER_SLOT_SIZE,
         },
       ]}>
       {children}
@@ -114,7 +121,7 @@ export function BackButton({onPress, style, ...props}: Partial<ButtonProps>) {
         size="small"
         variant="ghost"
         color="secondary"
-        shape="round"
+        shape="square"
         onPress={onPressBack}
         style={[{marginLeft: -BUTTON_VISUAL_ALIGNMENT_OFFSET}, style]}
         {...props}>
@@ -140,7 +147,7 @@ export function MenuButton() {
         size="small"
         variant="ghost"
         color="secondary"
-        shape="round"
+        shape="square"
         onPress={onPress}
         style={[{marginLeft: -BUTTON_VISUAL_ALIGNMENT_OFFSET}]}>
         <ButtonIcon icon={Menu} size="lg" />
