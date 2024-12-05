@@ -59,7 +59,7 @@ export const APP_LANGUAGES: AppLanguageConfig[] = [
   {code2: AppLanguage.it, name: 'Italiano – Italian'},
   {code2: AppLanguage.ja, name: '日本語 – Japanese'},
   {code2: AppLanguage.ko, name: '한국어 – Korean'},
-  {code2: AppLanguage.nl, name: 'Nederlands – Dutch' },
+  {code2: AppLanguage.nl, name: 'Nederlands – Dutch'},
   {code2: AppLanguage.np, name: 'नेपाली – Nepali'},
   {code2: AppLanguage.pl, name: 'Polski – Polish'},
   {code2: AppLanguage.pt_BR, name: 'Português (BR) – Portuguese (BR)'},
