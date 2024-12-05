@@ -175,7 +175,8 @@ export function TitleText({
         gtMobile && a.text_xl,
         style,
       ]}
-      numberOfLines={2}>
+      numberOfLines={2}
+      emoji>
       {children}
     </Text>
   )
