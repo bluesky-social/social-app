@@ -22,6 +22,9 @@ export const atoms = {
   relative: {
     position: 'relative',
   },
+  sticky: web({
+    position: 'sticky',
+  }),
   inset_0: {
     top: 0,
     left: 0,

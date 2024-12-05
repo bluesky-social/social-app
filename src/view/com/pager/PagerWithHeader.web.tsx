@@ -1,8 +1,9 @@
 import * as React from 'react'
-import {ScrollView, StyleSheet, View} from 'react-native'
+import {ScrollView, View} from 'react-native'
 import {useAnimatedRef} from 'react-native-reanimated'
 
 import {Pager, PagerRef, RenderTabBarFnProps} from '#/view/com/pager/Pager'
+import {atoms as a, web} from '#/alf'
 import * as Layout from '#/components/Layout'
 import {ListMethods} from '../util/List'
 import {TabBar} from './TabBar'
@@ -124,25 +125,25 @@ let PagerTabBar = ({
     <>
       <Layout.Center>{renderHeader?.()}</Layout.Center>
       {tabBarAnchor}
-      <View
-        style={[
-          styles.tabBarContainer,
+      <Layout.Center
+        style={web([
+          a.sticky,
+          a.z_10,
           {
+            top: 0,
             display: isHeaderReady ? undefined : 'none',
           },
-        ]}>
-        <Layout.Center>
-          <TabBar
-            testID={testID}
-            items={items}
-            selectedPage={currentPage}
-            onSelect={onSelect}
-            onPressSelected={onCurrentPageSelected}
-            dragProgress={undefined as any /* native-only */}
-            dragState={undefined as any /* native-only */}
-          />
-        </Layout.Center>
-      </View>
+        ])}>
+        <TabBar
+          testID={testID}
+          items={items}
+          selectedPage={currentPage}
+          onSelect={onSelect}
+          onPressSelected={onCurrentPageSelected}
+          dragProgress={undefined as any /* native-only */}
+          dragState={undefined as any /* native-only */}
+        />
+      </Layout.Center>
     </>
   )
 }
@@ -167,18 +168,6 @@ function PagerItem({
     >,
   })
 }
-
-const styles = StyleSheet.create({
-  tabBarContainer: {
-    // @ts-ignore web-only
-    position: 'sticky',
-    top: 0,
-    zIndex: 1,
-  },
-  loadingHeader: {
-    borderColor: 'transparent',
-  },
-})
 
 function toArray<T>(v: T | T[]): T[] {
   if (Array.isArray(v)) {

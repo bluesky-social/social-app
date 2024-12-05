@@ -13,13 +13,13 @@ import {shareUrl} from '#/lib/sharing'
 import {cleanError} from '#/lib/strings/errors'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {enforceLen} from '#/lib/strings/helpers'
-import {isWeb} from '#/platform/detection'
 import {useSearchPostsQuery} from '#/state/queries/search-posts'
 import {useSetDrawerSwipeDisabled, useSetMinimalShellMode} from '#/state/shell'
 import {Pager} from '#/view/com/pager/Pager'
 import {TabBar} from '#/view/com/pager/TabBar'
 import {Post} from '#/view/com/post/Post'
 import {List} from '#/view/com/util/List'
+import {atoms as a, web} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded as Share} from '#/components/icons/ArrowOutOfBox'
 import * as Layout from '#/components/Layout'
@@ -136,17 +136,7 @@ export default function HashtagScreen({
       <Pager
         onPageSelected={onPageSelected}
         renderTabBar={props => (
-          <Layout.Center
-            // @ts-ignore web only
-            style={
-              isWeb
-                ? {
-                    position: isWeb ? 'sticky' : '',
-                    top: 0,
-                    zIndex: 1,
-                  }
-                : undefined
-            }>
+          <Layout.Center style={web([a.sticky, a.z_10, {top: 0}])}>
             <TabBar items={sections.map(section => section.title)} {...props} />
           </Layout.Center>
         )}
