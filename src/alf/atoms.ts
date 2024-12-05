@@ -956,14 +956,4 @@ export const atoms = {
       },
     ],
   }) as {transform: Exclude<ViewStyle['transform'], string | undefined>},
-  /**
-   * {@link Layout.SCROLLBAR_OFFSET_POSITIVE}
-   */
-  scrollbar_offset_positive: web({
-    transform: [
-      {
-        translateX: Layout.SCROLLBAR_OFFSET_POSITIVE,
-      },
-    ],
-  }) as {transform: Exclude<ViewStyle['transform'], string | undefined>},
 } as const

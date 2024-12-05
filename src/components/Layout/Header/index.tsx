@@ -17,6 +17,7 @@ import {
 import {Button, ButtonIcon, ButtonProps} from '#/components/Button'
 import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeft} from '#/components/icons/Arrow'
 import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
+import {ScrollbarOffsetContext} from '#/components/Layout/context'
 import {Text} from '#/components/Typography'
 
 const BUTTON_VISUAL_ALIGNMENT_OFFSET = 3
@@ -26,6 +27,7 @@ export function Outer({children}: {children: React.ReactNode}) {
   const t = useTheme()
   const gutter = useGutterStyles()
   const {gtMobile} = useBreakpoints()
+  const {isWithinOffsetView} = useContext(ScrollbarOffsetContext)
 
   return (
     <View
@@ -39,7 +41,7 @@ export function Outer({children}: {children: React.ReactNode}) {
         a.py_sm,
         t.atoms.border_contrast_low,
         gtMobile && [a.mx_auto, {maxWidth: 600}],
-        a.scrollbar_offset,
+        !isWithinOffsetView && a.scrollbar_offset,
       ]}>
       {children}
     </View>

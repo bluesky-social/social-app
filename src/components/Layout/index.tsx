@@ -14,13 +14,10 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {isWeb} from '#/platform/detection'
 import {useShellLayout} from '#/state/shell/shell-layout'
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
+import {ScrollbarOffsetContext} from '#/components/Layout/context'
 
 export * from '#/components/Layout/const'
 export * as Header from '#/components/Layout/Header'
-
-// Every screen should have a Layout component wrapping it.
-// This component provides a default padding for the top of the screen.
-// This allows certain screens to avoid the top padding if they want to.
 
 const LayoutContext = React.createContext({
   withinScreen: false,
@@ -171,7 +168,9 @@ export const Center = React.forwardRef(function LayoutContent(
   {children, style, ...props}: ViewProps,
   ref: React.Ref<View>,
 ) {
+  const {isWithinOffsetView} = useContext(ScrollbarOffsetContext)
   const {gtMobile} = useBreakpoints()
+  const ctx = useMemo(() => ({isWithinOffsetView: true}), [])
   return (
     <View
       ref={ref}
@@ -182,10 +181,12 @@ export const Center = React.forwardRef(function LayoutContent(
           maxWidth: 600,
         },
         style,
-        a.scrollbar_offset,
+        !isWithinOffsetView && a.scrollbar_offset,
       ]}
       {...props}>
-      {children}
+      <ScrollbarOffsetContext.Provider value={ctx}>
+        {children}
+      </ScrollbarOffsetContext.Provider>
     </View>
   )
 })

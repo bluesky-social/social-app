@@ -89,17 +89,16 @@ export function ProfileSubpageHeader({
 
   return (
     <>
-      {isMobile && (
-        <Layout.Header.Outer>
-          {canGoBack ? (
-            <Layout.Header.BackButton />
-          ) : (
-            <Layout.Header.MenuButton />
-          )}
-          <Layout.Header.Content />
-          {children}
-        </Layout.Header.Outer>
-      )}
+      <Layout.Header.Outer>
+        {canGoBack ? (
+          <Layout.Header.BackButton />
+        ) : (
+          <Layout.Header.MenuButton />
+        )}
+        <Layout.Header.Content />
+        {children}
+      </Layout.Header.Outer>
+
       <View
         style={{
           flexDirection: 'row',
@@ -164,15 +163,6 @@ export function ProfileSubpageHeader({
             </Text>
           )}
         </View>
-        {!isMobile && (
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-            }}>
-            {children}
-          </View>
-        )}
       </View>
     </>
   )
