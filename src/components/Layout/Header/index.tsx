@@ -4,6 +4,7 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
+import {HITSLOP_30} from '#/lib/constants'
 import {NavigationProp} from '#/lib/routes/types'
 import {isIOS} from '#/platform/detection'
 import {useSetDrawerOpen} from '#/state/shell'
@@ -123,6 +124,7 @@ export function BackButton({onPress, style, ...props}: Partial<ButtonProps>) {
         color="secondary"
         shape="square"
         onPress={onPressBack}
+        hitSlop={HITSLOP_30}
         style={[{marginLeft: -BUTTON_VISUAL_ALIGNMENT_OFFSET}, style]}
         {...props}>
         <ButtonIcon icon={ArrowLeft} size="lg" />
@@ -149,6 +151,7 @@ export function MenuButton() {
         color="secondary"
         shape="square"
         onPress={onPress}
+        hitSlop={HITSLOP_30}
         style={[{marginLeft: -BUTTON_VISUAL_ALIGNMENT_OFFSET}]}>
         <ButtonIcon icon={Menu} size="lg" />
       </Button>
