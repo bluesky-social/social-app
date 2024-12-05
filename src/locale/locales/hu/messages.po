@@ -440,7 +440,7 @@ msgstr "7 napig"
 #: src/Navigation.tsx:362 src/screens/Settings/AboutSettings.tsx:24
 #: src/screens/Settings/Settings.tsx:207 src/screens/Settings/Settings.tsx:210
 msgid "About"
-msgstr "Súgó"
+msgstr "Névjegy"
 
 #: src/view/com/util/ViewHeader.tsx:89 src/view/screens/Search/Search.tsx:885
 msgid "Access navigation links and settings"
