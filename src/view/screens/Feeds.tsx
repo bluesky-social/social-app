@@ -103,7 +103,7 @@ type FlatlistSlice =
 export function FeedsScreen(_props: Props) {
   const pal = usePalette('default')
   const {openComposer} = useComposerControls()
-  const {isMobile, isTabletOrDesktop} = useWebMediaQueries()
+  const {isMobile} = useWebMediaQueries()
   const [query, setQuery] = React.useState('')
   const [isPTR, setIsPTR] = React.useState(false)
   const {
@@ -523,7 +523,6 @@ export function FeedsScreen(_props: Props) {
 
         <List
           ref={listRef}
-          style={[!isTabletOrDesktop && s.flex1, styles.list]}
           data={items}
           keyExtractor={item => item.key}
           contentContainerStyle={styles.contentContainer}
@@ -532,25 +531,23 @@ export function FeedsScreen(_props: Props) {
           onRefresh={isUserSearching ? undefined : onPullToRefresh}
           initialNumToRender={10}
           onEndReached={onEndReached}
-          // @ts-ignore our .web version only -prf
           desktopFixedHeight
-          scrollIndicatorInsets={{right: 1}}
           keyboardShouldPersistTaps="handled"
           keyboardDismissMode="on-drag"
           sideBorders={false}
         />
-
-        {hasSession && (
-          <FAB
-            testID="composeFAB"
-            onPress={onPressCompose}
-            icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
-            accessibilityRole="button"
-            accessibilityLabel={_(msg`New post`)}
-            accessibilityHint=""
-          />
-        )}
       </Layout.Center>
+
+      {hasSession && (
+        <FAB
+          testID="composeFAB"
+          onPress={onPressCompose}
+          icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
+          accessibilityRole="button"
+          accessibilityLabel={_(msg`New post`)}
+          accessibilityHint=""
+        />
+      )}
     </Layout.Screen>
   )
 }
@@ -696,7 +693,7 @@ function FeedsSavedHeader() {
       }>
       <IconCircle icon={ListSparkle_Stroke2_Corner0_Rounded} size="lg" />
       <View style={[a.flex_1, a.gap_xs]}>
-        <Text style={[a.flex_1, a.text_2xl, a.font_bold, t.atoms.text]}>
+        <Text style={[a.flex_1, a.text_2xl, a.font_heavy, t.atoms.text]}>
           <Trans>My Feeds</Trans>
         </Text>
         <Text style={[t.atoms.text_contrast_high]}>
@@ -722,7 +719,7 @@ function FeedsAboutHeader() {
         size="lg"
       />
       <View style={[a.flex_1, a.gap_sm]}>
-        <Text style={[a.flex_1, a.text_2xl, a.font_bold, t.atoms.text]}>
+        <Text style={[a.flex_1, a.text_2xl, a.font_heavy, t.atoms.text]}>
           <Trans>Discover New Feeds</Trans>
         </Text>
         <Text style={[t.atoms.text_contrast_high]}>
@@ -737,9 +734,6 @@ function FeedsAboutHeader() {
 }
 
 const styles = StyleSheet.create({
-  list: {
-    height: '100%',
-  },
   contentContainer: {
     paddingBottom: 100,
   },
