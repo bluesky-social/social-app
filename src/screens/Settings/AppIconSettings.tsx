@@ -55,7 +55,7 @@ export function AppIconSettingsScreen({}: Props) {
     <Layout.Screen>
       <Layout.Header title={_('App Icon')} />
       <Layout.Content contentContainerStyle={[a.px_lg]}>
-        <Text style={[a.text_xl, a.mt_lg, a.mb_sm, a.font_heavy]}>
+        <Text style={[a.text_xl, a.mt_lg, a.mb_md, a.font_heavy]}>
           <Trans>Default</Trans>
         </Text>
         <Group
@@ -72,7 +72,7 @@ export function AppIconSettingsScreen({}: Props) {
             </Row>
           ))}
         </Group>
-        <Text style={[a.text_xl, a.mt_lg, a.mb_sm, a.font_heavy]}>
+        <Text style={[a.text_xl, a.mt_lg, a.mb_md, a.font_heavy]}>
           <Trans>Bluesky+</Trans>
         </Text>
         <Group
