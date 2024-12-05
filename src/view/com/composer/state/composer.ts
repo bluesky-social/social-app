@@ -1,5 +1,5 @@
 import {ImagePickerAsset} from 'expo-image-picker'
-import {AppBskyFeedPostgate, RichText} from '@atproto/api'
+import {AppBskyFeedPostgate, AppBskyRichtextFacet, RichText} from '@atproto/api'
 import {nanoid} from 'nanoid/non-secure'
 
 import {SelfLabel} from '#/lib/moderation'
@@ -16,6 +16,10 @@ import {Gif} from '#/state/queries/tenor'
 import {threadgateViewToAllowUISetting} from '#/state/queries/threadgate'
 import {ThreadgateAllowUISetting} from '#/state/queries/threadgate'
 import {ComposerOpts} from '#/state/shell/composer'
+import {
+  LinkFacetMatch,
+  suggestLinkCardUri,
+} from '#/view/com/composer/text-input/text-input-util'
 import {createVideoState, VideoAction, videoReducer, VideoState} from './video'
 
 type ImagesMedia = {
@@ -508,6 +512,43 @@ export function createComposerState({
         )
       : '',
   })
+  initRichText.detectFacetsWithoutResolution()
+
+  let link: Link | undefined
+  {
+    const nextDetectedUris = new Map<string, LinkFacetMatch>()
+    if (initRichText.facets) {
+      for (const facet of initRichText.facets) {
+        for (const feature of facet.features) {
+          if (AppBskyRichtextFacet.isLink(feature)) {
+            nextDetectedUris.set(feature.uri, {facet, rt: initRichText})
+          }
+        }
+      }
+    }
+    const suggestedUri = suggestLinkCardUri(
+      true,
+      nextDetectedUris,
+      new Map(),
+      new Set(),
+    )
+    if (suggestedUri) {
+      if (isBskyPostUrl(suggestedUri)) {
+        if (!quote) {
+          quote = {
+            type: 'link',
+            uri: suggestedUri,
+          }
+        }
+      } else {
+        link = {
+          type: 'link',
+          uri: suggestedUri,
+        }
+      }
+    }
+  }
+
   return {
     activePostIndex: 0,
     mutableNeedsFocusActive: false,
@@ -521,7 +562,7 @@ export function createComposerState({
           embed: {
             quote,
             media,
-            link: undefined,
+            link,
           },
         },
       ],
