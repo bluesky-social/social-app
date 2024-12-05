@@ -946,21 +946,21 @@ export const atoms = {
   /**
    * {@link Layout.SCROLLBAR_OFFSET}
    */
-  scrollbar_offset: {
+  scrollbar_offset: web({
     transform: [
-      web({
+      {
         translateX: Layout.SCROLLBAR_OFFSET,
-      }),
+      },
     ],
-  } as {transform: Exclude<ViewStyle['transform'], string | undefined>},
+  }) as {transform: Exclude<ViewStyle['transform'], string | undefined>},
   /**
    * {@link Layout.SCROLLBAR_OFFSET_POSITIVE}
    */
-  scrollbar_offset_positive: {
+  scrollbar_offset_positive: web({
     transform: [
-      web({
+      {
         translateX: Layout.SCROLLBAR_OFFSET_POSITIVE,
-      }),
+      },
     ],
-  } as {transform: Exclude<ViewStyle['transform'], string | undefined>},
+  }) as {transform: Exclude<ViewStyle['transform'], string | undefined>},
 } as const
