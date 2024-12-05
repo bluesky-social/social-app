@@ -12,7 +12,7 @@ import {getTabState, TabState} from '#/lib/routes/helpers'
 import {NavigationProp} from '#/lib/routes/types'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {colors} from '#/lib/styles'
-import {isWeb} from '#/platform/detection'
+import {isAndroid, isWeb} from '#/platform/detection'
 import {emitSoftReset} from '#/state/events'
 import {useKawaiiMode} from '#/state/preferences/kawaii'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
@@ -82,18 +82,29 @@ let DrawerProfileCard = ({
       <View style={[a.gap_2xs]}>
         <Text
           emoji
-          style={[a.font_heavy, a.text_xl, a.mt_2xs, a.leading_tight]}
+          style={[
+            a.font_heavy,
+            a.text_xl,
+            a.mt_2xs,
+            a.leading_tight,
+            a.self_start,
+          ]}
           numberOfLines={1}>
           {profile?.displayName || account.handle}
         </Text>
         <Text
           emoji
-          style={[t.atoms.text_contrast_medium, a.text_md, a.leading_tight]}
+          style={[
+            t.atoms.text_contrast_medium,
+            a.text_md,
+            a.leading_tight,
+            a.self_start,
+          ]}
           numberOfLines={1}>
           {sanitizeHandle(account.handle, '@')}
         </Text>
       </View>
-      <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
+      <Text style={[a.text_md, t.atoms.text_contrast_medium, a.self_start]}>
         <Trans>
           <Text style={[a.text_md, a.font_bold]}>
             {formatCount(i18n, profile?.followersCount ?? 0)}
@@ -127,6 +138,7 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
   const insets = useSafeAreaInsets()
   const setDrawerOpen = useSetDrawerOpen()
   const navigation = useNavigation<NavigationProp>()
+  isAndroid
   const {
     isAtHome,
     isAtSearch,
@@ -593,6 +605,7 @@ function MenuItem({icon, label, count, bold, onPress}: MenuItemProps) {
             style={[
               a.flex_1,
               a.text_2xl,
+              a.text_left,
               bold && a.font_heavy,
               web(a.leading_snug),
             ]}
@@ -613,13 +626,13 @@ function ExtraLinks() {
   return (
     <View style={[a.flex_col, a.gap_md, a.flex_wrap]}>
       <InlineLinkText
-        style={[a.text_md]}
+        style={[a.text_md, a.self_start]}
         label={_(msg`Terms of Service`)}
         to="https://bsky.social/about/support/tos">
         <Trans>Terms of Service</Trans>
       </InlineLinkText>
       <InlineLinkText
-        style={[a.text_md]}
+        style={[a.text_md, a.self_start]}
         to="https://bsky.social/about/support/privacy-policy"
         label={_(msg`Privacy Policy`)}>
         <Trans>Privacy Policy</Trans>

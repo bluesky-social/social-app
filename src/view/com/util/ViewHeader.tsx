@@ -10,6 +10,7 @@ import {useMinimalShellHeaderTransform} from '#/lib/hooks/useMinimalShellTransfo
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {NavigationProp} from '#/lib/routes/types'
+import {isRTL} from '#/platform/detection'
 import {useSetDrawerOpen} from '#/state/shell'
 import {useTheme} from '#/alf'
 import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
@@ -91,7 +92,7 @@ export function ViewHeader({
                 {canGoBack ? (
                   <FontAwesomeIcon
                     size={18}
-                    icon="angle-left"
+                    icon={isRTL ? 'angle-right' : 'angle-left'}
                     style={[styles.backIcon, pal.text]}
                   />
                 ) : !isTablet ? (

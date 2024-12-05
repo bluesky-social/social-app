@@ -15,7 +15,7 @@ import {openCropper} from '#/lib/media/picker'
 import {getDataUriSize} from '#/lib/media/util'
 import {useRequestNotificationsPermission} from '#/lib/notifications/notifications'
 import {logEvent, useGate} from '#/lib/statsig/statsig'
-import {isNative, isWeb} from '#/platform/detection'
+import {isNative, isRTL, isWeb} from '#/platform/detection'
 import {
   DescriptionText,
   OnboardingControls,
@@ -35,6 +35,7 @@ import * as Dialog from '#/components/Dialog'
 import {useSheetWrapper} from '#/components/Dialog/sheet-wrapper'
 import {IconCircle} from '#/components/IconCircle'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
+import {ChevronLeft_Stroke2_Corner0_Rounded as ChevronLeft} from '#/components/icons/Chevron'
 import {CircleInfo_Stroke2_Corner0_Rounded} from '#/components/icons/CircleInfo'
 import {StreamingLive_Stroke2_Corner0_Rounded as StreamingLive} from '#/components/icons/StreamingLive'
 import {Text} from '#/components/Typography'
@@ -277,7 +278,10 @@ export function StepProfile() {
               <ButtonText>
                 <Trans>Continue</Trans>
               </ButtonText>
-              <ButtonIcon icon={ChevronRight} position="right" />
+              <ButtonIcon
+                icon={isRTL ? ChevronLeft : ChevronRight}
+                position="right"
+              />
             </Button>
             <Button
               variant="ghost"
