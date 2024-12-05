@@ -140,6 +140,7 @@ const MinimalHeader = React.memo(function MinimalHeader({
 
   return (
     <Animated.View
+      pointerEvents={visible ? 'auto' : 'none'}
       aria-hidden={!visible}
       accessibilityElementsHidden={!visible}
       importantForAccessibility={visible ? 'auto' : 'no-hide-descendants'}
