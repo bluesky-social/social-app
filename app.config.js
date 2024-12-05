@@ -250,6 +250,7 @@ module.exports = function (config) {
           'expo-splash-screen',
           {
             enableFullScreenImage_legacy: true,
+            resizeMode: 'cover', // Can be removed after https://github.com/expo/expo/pull/33472
             ios: {
               backgroundColor: '#ffffff',
               image: './assets/splash.png',
