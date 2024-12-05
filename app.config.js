@@ -250,7 +250,6 @@ module.exports = function (config) {
           'expo-splash-screen',
           {
             enableFullScreenImage_legacy: true,
-            resizeMode: 'cover', // Can be removed after https://github.com/expo/expo/pull/33472
             ios: {
               backgroundColor: '#ffffff',
               image: './assets/splash.png',
@@ -263,11 +262,11 @@ module.exports = function (config) {
             },
             android: {
               backgroundColor: '#0c7cff',
-              image: './assets/splash-android-icon.png',
+              image: './assets/splash.png',
               imageWidth: 200,
               dark: {
                 backgroundColor: '#0c2a49',
-                image: './assets/splash-android-icon-dark.png',
+                image: './assets/splash-dark.png',
                 imageWidth: 200,
               },
             },

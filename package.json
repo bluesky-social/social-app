@@ -118,7 +118,7 @@
     "emoji-mart": "^5.5.2",
     "emoji-regex": "^10.4.0",
     "eventemitter3": "^5.0.1",
-    "expo": "^52.0.14",
+    "expo": "~52.0.17",
     "expo-application": "^6.0.1",
     "expo-blur": "^14.0.1",
     "expo-build-properties": "^0.13.1",
