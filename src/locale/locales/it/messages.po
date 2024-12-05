@@ -1,16 +1,16 @@
 # 
 # Translators:
 # arestifop, 2024
-# Francisco, 2024
 # Michele Locati <michele@locati.it>, 2024
+# Francisco, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Italian localization\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-11-28 01:11+0000\n"
-"PO-Revision-Date: 2024-12-03 15:09+0000\n"
-"Last-Translator: Michele Locati <michele@locati.it>, 2024\n"
+"PO-Revision-Date: 2024-12-05 02:13+0000\n"
+"Last-Translator: Francisco, 2024\n"
 "Language-Team: Italian (https://app.transifex.com/mlocati/teams/201833/it/)\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
@@ -3871,7 +3871,7 @@ msgstr "Strumenti di moderazione"
 #: src/components/moderation/ModerationDetailsDialog.tsx:50
 #: src/lib/moderation/useModerationCauseDescription.ts:45
 msgid "Moderator has chosen to set a general warning on the content."
-msgstr "Il moderatore ha scelto di mettere un avviso generale sul contenuto."
+msgstr "Il moderatore ha messo un avviso generale sul contenuto."
 
 #: src/view/com/post-thread/PostThreadItem.tsx:633
 msgid "More"
@@ -5305,7 +5305,7 @@ msgstr "Risposta ad un post bloccato"
 #: src/view/com/posts/FeedItem.tsx:546
 msgctxt "description"
 msgid "Reply to a post"
-msgstr "Rispondi ad un post"
+msgstr "In risposta ad un post"
 
 #: src/view/com/post/Post.tsx:202
 #: src/view/com/posts/FeedItem.tsx:550
