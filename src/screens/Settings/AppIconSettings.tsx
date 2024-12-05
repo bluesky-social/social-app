@@ -18,7 +18,7 @@ export function AppIconSettingsScreen({}: Props) {
   const {_} = useLingui()
   const sets = useAppIconSets()
   const [currentAppIcon, setCurrentAppIcon] = useState(() =>
-    getCurrentAppIcon(),
+    getAppIconName(DynamicAppIcon.getAppIcon()),
   )
 
   const onSetAppIcon = (icon: string) => {
@@ -40,16 +40,14 @@ export function AppIconSettingsScreen({}: Props) {
           {
             text: _(msg`OK`),
             onPress: () => {
-              DynamicAppIcon.setAppIcon(icon)
-              setCurrentAppIcon(icon)
+              setCurrentAppIcon(setAppIcon(icon))
             },
             style: 'default',
           },
         ],
       )
     } else {
-      DynamicAppIcon.setAppIcon(icon)
-      setCurrentAppIcon(icon)
+      setCurrentAppIcon(setAppIcon(icon))
     }
   }
 
@@ -93,10 +91,20 @@ export function AppIconSettingsScreen({}: Props) {
   )
 }
 
-function getCurrentAppIcon() {
-  const icon = DynamicAppIcon.getAppIcon()
-  if (icon) return icon
-  else return 'default_light'
+function setAppIcon(icon: string) {
+  if (icon === 'default_light') {
+    return getAppIconName(DynamicAppIcon.setAppIcon(null))
+  } else {
+    return getAppIconName(DynamicAppIcon.setAppIcon(icon))
+  }
+}
+
+function getAppIconName(icon: string | false) {
+  if (!icon || icon === 'DEFAULT') {
+    return 'default_light'
+  } else {
+    return icon
+  }
 }
 
 function Group({
