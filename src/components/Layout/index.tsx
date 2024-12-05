@@ -19,48 +19,26 @@ import {ScrollbarOffsetContext} from '#/components/Layout/context'
 export * from '#/components/Layout/const'
 export * as Header from '#/components/Layout/Header'
 
-const LayoutContext = React.createContext({
-  withinScreen: false,
-  topPaddingDisabled: false,
-  withinScrollView: false,
-})
-
 export type ScreenProps = React.ComponentProps<typeof View> & {
-  disableTopPadding?: boolean
   style?: StyleProp<ViewStyle>
 }
 
 /**
- * Every screen should have a Layout.Screen component wrapping it.
- * This component provides a default padding for the top of the screen
- * and height/minHeight
+ * Outermost component of every screen
  */
 export const Screen = React.memo(function Screen({
-  disableTopPadding = false,
   style,
   ...props
 }: ScreenProps) {
   const {top} = useSafeAreaInsets()
-  const context = useMemo(
-    () => ({
-      withinScreen: true,
-      topPaddingDisabled: disableTopPadding,
-      withinScrollView: false,
-    }),
-    [disableTopPadding],
-  )
   return (
-    <LayoutContext.Provider value={context}>
+    <>
       {isWeb && <WebCenterBorders />}
       <View
-        style={[
-          {paddingTop: disableTopPadding ? 0 : top},
-          a.util_screen_outer,
-          style,
-        ]}
+        style={[a.util_screen_outer, {paddingTop: top}, style]}
         {...props}
       />
-    </LayoutContext.Provider>
+    </>
   )
 })
 
@@ -69,17 +47,15 @@ export type ContentProps = AnimatedScrollViewProps & {
   contentContainerStyle?: StyleProp<ViewStyle>
 }
 
+/**
+ * Default scroll view for simple pages
+ */
 export const Content = React.memo(function Content({
   children,
   style,
   contentContainerStyle,
   ...props
 }: ContentProps) {
-  const context = useContext(LayoutContext)
-  const newContext = useMemo(
-    () => ({...context, withinScrollView: true}),
-    [context],
-  )
   const {footerHeight} = useShellLayout()
   const animatedProps = useAnimatedProps(() => {
     return {
@@ -92,27 +68,34 @@ export const Content = React.memo(function Content({
   })
 
   return (
-    <LayoutContext.Provider value={newContext}>
-      <Animated.ScrollView
-        id="content"
-        automaticallyAdjustsScrollIndicatorInsets={false}
-        // sets the scroll inset to the height of the footer
-        animatedProps={animatedProps}
-        style={[styles.scrollViewCommonStyles, style]}
-        contentContainerStyle={[
-          styles.scrollViewContentContainer,
-          contentContainerStyle,
-        ]}
-        {...props}>
-        {isWeb ? (
-          // @ts-ignore web only -esb
-          <Center>{children}</Center>
-        ) : (
-          children
-        )}
-      </Animated.ScrollView>
-    </LayoutContext.Provider>
+    <Animated.ScrollView
+      id="content"
+      automaticallyAdjustsScrollIndicatorInsets={false}
+      // sets the scroll inset to the height of the footer
+      animatedProps={animatedProps}
+      style={[scrollViewStyles.common, style]}
+      contentContainerStyle={[
+        scrollViewStyles.contentContainer,
+        contentContainerStyle,
+      ]}
+      {...props}>
+      {isWeb ? (
+        // @ts-ignore web only -esb
+        <Center>{children}</Center>
+      ) : (
+        children
+      )}
+    </Animated.ScrollView>
   )
+})
+
+const scrollViewStyles = StyleSheet.create({
+  common: {
+    width: '100%',
+  },
+  contentContainer: {
+    paddingBottom: 100,
+  },
 })
 
 export type KeyboardAwareContentProps = KeyboardAwareScrollViewProps & {
@@ -120,15 +103,22 @@ export type KeyboardAwareContentProps = KeyboardAwareScrollViewProps & {
   contentContainerStyle?: StyleProp<ViewStyle>
 }
 
-export const KeyboardAwareContent = React.forwardRef(function LayoutScrollView(
-  {children, style, contentContainerStyle, ...props}: KeyboardAwareContentProps,
-  _ref: React.Ref<typeof KeyboardAwareScrollView>,
-) {
+/**
+ * Default scroll view for simple pages.
+ *
+ * BE SURE TO TEST THIS WHEN USING, it's untested as of writing this comment.
+ */
+export const KeyboardAwareContent = React.memo(function LayoutScrollView({
+  children,
+  style,
+  contentContainerStyle,
+  ...props
+}: KeyboardAwareContentProps) {
   return (
     <KeyboardAwareScrollView
-      style={[styles.scrollViewCommonStyles, style]}
+      style={[scrollViewStyles.common, style]}
       contentContainerStyle={[
-        styles.scrollViewContentContainer,
+        scrollViewStyles.contentContainer,
         contentContainerStyle,
       ]}
       keyboardShouldPersistTaps="handled"
@@ -138,7 +128,40 @@ export const KeyboardAwareContent = React.forwardRef(function LayoutScrollView(
   )
 })
 
-export const WebCenterBorders = React.forwardRef(function LayoutContent() {
+/**
+ * Utility component to center content within the screen
+ */
+export const Center = React.memo(function LayoutContent({
+  children,
+  style,
+  ...props
+}: ViewProps) {
+  const {isWithinOffsetView} = useContext(ScrollbarOffsetContext)
+  const {gtMobile} = useBreakpoints()
+  const ctx = useMemo(() => ({isWithinOffsetView: true}), [])
+  return (
+    <View
+      style={[
+        a.w_full,
+        a.mx_auto,
+        gtMobile && {
+          maxWidth: 600,
+        },
+        style,
+        !isWithinOffsetView && a.scrollbar_offset,
+      ]}
+      {...props}>
+      <ScrollbarOffsetContext.Provider value={ctx}>
+        {children}
+      </ScrollbarOffsetContext.Provider>
+    </View>
+  )
+})
+
+/**
+ * Only used within `Layout.Screen`, not for reuse
+ */
+const WebCenterBorders = React.memo(function LayoutContent() {
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
   return gtMobile ? (
@@ -162,40 +185,4 @@ export const WebCenterBorders = React.forwardRef(function LayoutContent() {
       ]}
     />
   ) : null
-})
-
-export const Center = React.forwardRef(function LayoutContent(
-  {children, style, ...props}: ViewProps,
-  ref: React.Ref<View>,
-) {
-  const {isWithinOffsetView} = useContext(ScrollbarOffsetContext)
-  const {gtMobile} = useBreakpoints()
-  const ctx = useMemo(() => ({isWithinOffsetView: true}), [])
-  return (
-    <View
-      ref={ref}
-      style={[
-        a.w_full,
-        a.mx_auto,
-        gtMobile && {
-          maxWidth: 600,
-        },
-        style,
-        !isWithinOffsetView && a.scrollbar_offset,
-      ]}
-      {...props}>
-      <ScrollbarOffsetContext.Provider value={ctx}>
-        {children}
-      </ScrollbarOffsetContext.Provider>
-    </View>
-  )
-})
-
-const styles = StyleSheet.create({
-  scrollViewCommonStyles: {
-    width: '100%',
-  },
-  scrollViewContentContainer: {
-    paddingBottom: 100,
-  },
 })
