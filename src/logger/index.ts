@@ -148,8 +148,6 @@ export const bitdriftTransport: Transport = (level, message) => {
     } as const
   )[level]
 
-  console.log(message.toString())
-
   log(message.toString())
 }
 
