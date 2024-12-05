@@ -14,18 +14,22 @@ import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
 import {List} from '../util/List'
 import {ProfileCardWithFollowBtn} from './ProfileCard'
 
-function renderItem({
-  item,
-  index,
-}: {
-  item: ActorDefs.ProfileViewBasic
-  index: number
-}) {
+function renderItem(
+  {
+    item,
+    index,
+  }: {
+    item: ActorDefs.ProfileViewBasic
+    index: number
+  },
+  hideFollowedBy: boolean,
+) {
   return (
     <ProfileCardWithFollowBtn
       key={item.did}
       profile={item}
       noBorder={index === 0 && !isWeb}
+      hideFollowedBy={hideFollowedBy}
     />
   )
 }
@@ -105,7 +109,7 @@ export function ProfileFollowers({name}: {name: string}) {
   return (
     <List
       data={followers}
-      renderItem={renderItem}
+      renderItem={info => renderItem(info, isMe)}
       keyExtractor={keyExtractor}
       refreshing={isPTRing}
       onRefresh={onRefresh}
