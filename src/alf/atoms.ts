@@ -1,7 +1,7 @@
 import {Platform, StyleProp, StyleSheet, ViewStyle} from 'react-native'
 
 import * as tokens from '#/alf/tokens'
-import {ios, native, web} from '#/alf/util/platform'
+import {ios, native, platform,web} from '#/alf/util/platform'
 import * as Layout from '#/components/Layout'
 
 export const atoms = {
@@ -949,11 +949,16 @@ export const atoms = {
   /**
    * {@link Layout.SCROLLBAR_OFFSET}
    */
-  scrollbar_offset: web({
-    transform: [
-      {
-        translateX: Layout.SCROLLBAR_OFFSET,
-      },
-    ],
+  scrollbar_offset: platform({
+    web: {
+      transform: [
+        {
+          translateX: Layout.SCROLLBAR_OFFSET,
+        },
+      ],
+    },
+    native: {
+      transform: [],
+    },
   }) as {transform: Exclude<ViewStyle['transform'], string | undefined>},
 } as const
