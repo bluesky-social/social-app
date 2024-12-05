@@ -9,6 +9,7 @@ import {isIOS} from '#/platform/detection'
 import {useSetDrawerOpen} from '#/state/shell'
 import {
   atoms as a,
+  platform,
   TextStyleProp,
   useBreakpoints,
   useGutterStyles,
@@ -38,7 +39,10 @@ export function Outer({children}: {children: React.ReactNode}) {
         a.align_center,
         a.gap_sm,
         gutter,
-        a.py_sm,
+        platform({
+          native: [a.pb_sm, a.pt_xs],
+          web: [a.py_sm],
+        }),
         t.atoms.border_contrast_low,
         gtMobile && [a.mx_auto, {maxWidth: 600}],
         !isWithinOffsetView && a.scrollbar_offset,
