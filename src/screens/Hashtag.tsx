@@ -20,7 +20,6 @@ import {Pager} from '#/view/com/pager/Pager'
 import {TabBar} from '#/view/com/pager/TabBar'
 import {Post} from '#/view/com/post/Post'
 import {List} from '#/view/com/util/List'
-import {CenteredView} from '#/view/com/util/Views'
 import {Button, ButtonIcon} from '#/components/Button'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded as Share} from '#/components/icons/ArrowOutOfBox'
 import * as Layout from '#/components/Layout'
@@ -110,37 +109,34 @@ export default function HashtagScreen({
 
   return (
     <Layout.Screen>
-      <CenteredView sideBorders={true}>
-        <Layout.Header.Outer>
-          <Layout.Header.BackButton />
-          <Layout.Header.Content>
-            <Layout.Header.TitleText>{headerTitle}</Layout.Header.TitleText>
-            {author && (
-              <Layout.Header.SubtitleText>
-                {_(msg`From @${sanitizedAuthor}`)}
-              </Layout.Header.SubtitleText>
-            )}
-          </Layout.Header.Content>
-          <Layout.Header.Slot>
-            <Button
-              label={_(msg`Share`)}
-              size="small"
-              variant="ghost"
-              color="primary"
-              shape="round"
-              onPress={onShare}
-              hitSlop={HITSLOP_10}
-              style={[{right: -3}]}>
-              <ButtonIcon icon={Share} size="md" />
-            </Button>
-          </Layout.Header.Slot>
-        </Layout.Header.Outer>
-      </CenteredView>
+      <Layout.Header.Outer>
+        <Layout.Header.BackButton />
+        <Layout.Header.Content>
+          <Layout.Header.TitleText>{headerTitle}</Layout.Header.TitleText>
+          {author && (
+            <Layout.Header.SubtitleText>
+              {_(msg`From @${sanitizedAuthor}`)}
+            </Layout.Header.SubtitleText>
+          )}
+        </Layout.Header.Content>
+        <Layout.Header.Slot>
+          <Button
+            label={_(msg`Share`)}
+            size="small"
+            variant="ghost"
+            color="primary"
+            shape="round"
+            onPress={onShare}
+            hitSlop={HITSLOP_10}
+            style={[{right: -3}]}>
+            <ButtonIcon icon={Share} size="md" />
+          </Button>
+        </Layout.Header.Slot>
+      </Layout.Header.Outer>
       <Pager
         onPageSelected={onPageSelected}
         renderTabBar={props => (
-          <CenteredView
-            sideBorders={true}
+          <Layout.Center
             // @ts-ignore web only
             style={
               isWeb
@@ -152,7 +148,7 @@ export default function HashtagScreen({
                 : undefined
             }>
             <TabBar items={sections.map(section => section.title)} {...props} />
-          </CenteredView>
+          </Layout.Center>
         )}
         initialPage={0}>
         {sections.map((section, i) => (
