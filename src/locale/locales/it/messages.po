@@ -1,16 +1,16 @@
 # 
 # Translators:
 # arestifop, 2024
-# Michele Locati <michele@locati.it>, 2024
 # Francisco, 2024
+# Michele Locati <michele@locati.it>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Italian localization\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-06 01:10+0000\n"
-"PO-Revision-Date: 2024-12-06 02:12+0000\n"
-"Last-Translator: Francisco, 2024\n"
+"PO-Revision-Date: 2024-12-06 08:17+0000\n"
+"Last-Translator: Michele Locati <michele@locati.it>, 2024\n"
 "Language-Team: Italian (https://app.transifex.com/mlocati/teams/201833/it/)\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
@@ -1407,7 +1407,7 @@ msgstr "Chiudi l'avviso"
 
 #: src/view/com/util/BottomSheetCustomBackdrop.tsx:36
 msgid "Close bottom drawer"
-msgstr "Chiudi il bottom drawer"
+msgstr "Apri il menu a scomparsa inferiore"
 
 #: src/components/dialogs/GifSelect.tsx:275
 msgid "Close dialog"
@@ -1564,7 +1564,7 @@ msgstr "Contatta il supporto"
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:39
 msgid "Content & Media"
-msgstr ""
+msgstr "Contenuti e media"
 
 #: src/screens/Settings/AccessibilitySettings.tsx:109
 #: src/screens/Settings/Settings.tsx:175
@@ -2052,7 +2052,7 @@ msgstr "Ignora la guida iniziale"
 #: src/screens/Settings/AccessibilitySettings.tsx:71
 #: src/screens/Settings/AccessibilitySettings.tsx:76
 msgid "Display larger alt text badges"
-msgstr "Ignora l'icona ALT più grande"
+msgstr "Aumenta la dimensione dei testi alternativi"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:314
 #: src/screens/Profile/Header/EditProfileDialog.tsx:320
@@ -4076,7 +4076,7 @@ msgstr "Nuovo nome utente"
 #: src/view/screens/Lists.tsx:69
 #: src/view/screens/ModerationModlists.tsx:71
 msgid "New list"
-msgstr ""
+msgstr "Nuova lista"
 
 #: src/components/dms/NewMessagesPill.tsx:92
 msgid "New messages"
@@ -4457,7 +4457,7 @@ msgstr "Apri opzioni conversazione"
 
 #: src/components/Layout/Header/index.tsx:148
 msgid "Open drawer menu"
-msgstr ""
+msgstr "Apri il menu a scomparsa"
 
 #: src/screens/Messages/components/MessageInput.web.tsx:165
 #: src/view/com/composer/Composer.tsx:1221
@@ -6537,7 +6537,7 @@ msgstr "L'informativa sulla privacy è stata spostata a <0/>"
 
 #: src/view/com/composer/state/video.ts:395
 msgid "The selected video is larger than 50MB."
-msgstr "Questo video è più grande di 50MB."
+msgstr "Il video selezionato è più grande di 50MB."
 
 #: src/lib/strings/errors.ts:18
 msgid "The server appears to be experiencing issues. Please try again in a few moments."
