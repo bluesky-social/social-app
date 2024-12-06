@@ -1222,7 +1222,7 @@ msgstr "Modifier"
 
 #: src/screens/Settings/AppIconSettings.tsx:81
 msgid "Change app icon to \"{0}\""
-msgstr "Changer l’icône de l’application pour \"{0}\""
+msgstr "Changer l’icône de l’application pour « {0} »"
 
 #: src/screens/Settings/AccountSettings.tsx:97
 #: src/screens/Settings/AccountSettings.tsx:101
