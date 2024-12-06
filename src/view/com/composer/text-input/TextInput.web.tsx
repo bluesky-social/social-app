@@ -13,6 +13,7 @@ import {Text as TiptapText} from '@tiptap/extension-text'
 import {generateJSON} from '@tiptap/html'
 import {Fragment, Node, Slice} from '@tiptap/pm/model'
 import {EditorContent, JSONContent, useEditor} from '@tiptap/react'
+import DOMPurify from 'dompurify'
 
 import {useColorSchemeStyle} from '#/lib/hooks/useColorSchemeStyle'
 import {usePalette} from '#/lib/hooks/usePalette'
@@ -199,10 +200,21 @@ export const TextInput = React.forwardRef(function TextInputImpl(
 
           if (clipboardData) {
             if (clipboardData.types.includes('text/html')) {
-              // Rich-text formatting is pasted, try retrieving plain text
-              const text = clipboardData.getData('text/plain')
-              // `pasteText` will invoke this handler again, but `clipboardData` will be null.
-              view.pasteText(text)
+              const richText = clipboardData.getData('text/html')
+              if (richText) {
+                // Rich-text formatting is pasted, retrieve html and paste it
+                // Retrict to only allow <br> tags
+                view.pasteHTML(
+                  DOMPurify.sanitize(richText, {
+                    ALLOWED_TAGS: ['br'],
+                  }),
+                )
+              } else {
+                // If data is not html, try retrieving plain text
+                const text = clipboardData.getData('text/plain')
+                // `pasteText` will invoke this handler again, but `clipboardData` will be null.
+                view.pasteText(text)
+              }
               preventDefault = true
             }
             getImageOrVideoFromUri(clipboardData.items, (uri: string) => {
