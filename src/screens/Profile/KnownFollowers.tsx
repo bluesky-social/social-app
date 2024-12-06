@@ -15,14 +15,22 @@ import {ProfileCardWithFollowBtn} from '#/view/com/profile/ProfileCard'
 import {List} from '#/view/com/util/List'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
 import * as Layout from '#/components/Layout'
-import {
-  ListFooter,
-  ListHeaderDesktop,
-  ListMaybePlaceholder,
-} from '#/components/Lists'
+import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
 
-function renderItem({item}: {item: AppBskyActorDefs.ProfileViewBasic}) {
-  return <ProfileCardWithFollowBtn key={item.did} profile={item} />
+function renderItem({
+  item,
+  index,
+}: {
+  item: AppBskyActorDefs.ProfileViewBasic
+  index: number
+}) {
+  return (
+    <ProfileCardWithFollowBtn
+      key={item.did}
+      profile={item}
+      noBorder={index === 0}
+    />
+  )
 }
 
 function keyExtractor(item: AppBskyActorDefs.ProfileViewBasic) {
@@ -93,6 +101,7 @@ export const ProfileKnownFollowersScreen = ({route}: Props) => {
   if (followers.length < 1) {
     return (
       <Layout.Screen>
+        <ViewHeader title={_(msg`Followers you know`)} />
         <ListMaybePlaceholder
           isLoading={isDidLoading || isFollowersLoading}
           isError={isError}
@@ -100,6 +109,8 @@ export const ProfileKnownFollowersScreen = ({route}: Props) => {
           emptyMessage={_(msg`You don't follow any users who follow @${name}.`)}
           errorMessage={cleanError(resolveError || error)}
           onRetry={isError ? refetch : undefined}
+          topBorder={false}
+          sideBorders={false}
         />
       </Layout.Screen>
     )
@@ -116,9 +127,6 @@ export const ProfileKnownFollowersScreen = ({route}: Props) => {
         onRefresh={onRefresh}
         onEndReached={onEndReached}
         onEndReachedThreshold={4}
-        ListHeaderComponent={
-          <ListHeaderDesktop title={_(msg`Followers you know`)} />
-        }
         ListFooterComponent={
           <ListFooter
             isFetchingNextPage={isFetchingNextPage}
@@ -130,6 +138,7 @@ export const ProfileKnownFollowersScreen = ({route}: Props) => {
         desktopFixedHeight
         initialNumToRender={initialNumToRender}
         windowSize={11}
+        sideBorders={false}
       />
     </Layout.Screen>
   )

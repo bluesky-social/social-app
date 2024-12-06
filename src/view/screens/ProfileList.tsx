@@ -69,7 +69,6 @@ import {LoadLatestBtn} from '#/view/com/util/load-latest/LoadLatestBtn'
 import {LoadingScreen} from '#/view/com/util/LoadingScreen'
 import {Text} from '#/view/com/util/text/Text'
 import * as Toast from '#/view/com/util/Toast'
-import {CenteredView} from '#/view/com/util/Views'
 import {ListHiddenScreen} from '#/screens/List/ListHiddenScreen'
 import {atoms as a, useTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
@@ -107,20 +106,20 @@ function ProfileListScreenInner(props: Props) {
 
   if (resolveError) {
     return (
-      <CenteredView>
+      <Layout.Content>
         <ErrorScreen
           error={_(
             msg`We're sorry, but we were unable to resolve this list. If this persists, please contact the list creator, @${handleOrDid}.`,
           )}
         />
-      </CenteredView>
+      </Layout.Content>
     )
   }
   if (listError) {
     return (
-      <CenteredView>
+      <Layout.Content>
         <ErrorScreen error={cleanError(listError)} />
-      </CenteredView>
+      </Layout.Content>
     )
   }
 
@@ -1010,7 +1009,6 @@ function ErrorScreen({error}: {error: string}) {
         pal.view,
         pal.border,
         {
-          marginTop: 10,
           paddingHorizontal: 18,
           paddingVertical: 14,
           borderTopWidth: StyleSheet.hairlineWidth,
