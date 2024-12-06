@@ -869,7 +869,7 @@ msgstr "Utiliser les fils d’actu recommandés par défaut"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:835
 msgid "Archived from {0}"
-msgstr "Archivé par {0}"
+msgstr "Archivé comme du {0}"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:804
 #: src/view/com/post-thread/PostThreadItem.tsx:843
@@ -1081,7 +1081,7 @@ msgstr "Bluesky"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:860
 msgid "Bluesky cannot confirm the authenticity of the claimed date."
-msgstr "Bluesky l’arrive pas à confirmer l’authenticité de la date déclarée."
+msgstr "Bluesky ne peut pas confirmer l’authenticité de la date déclarée."
 
 #: src/view/com/auth/server-input/index.tsx:151
 msgid "Bluesky is an open network where you can choose your hosting provider. If you're a developer, you can host your own server."
@@ -2290,7 +2290,7 @@ msgstr "ex. Artiste, amie des chiens et lectrice passionnée."
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:43
 msgid "E.g. artistic nudes."
-msgstr "Ex. nus artistiques."
+msgstr "Nus artistiques par exemple."
 
 #: src/view/com/modals/CreateOrEditList.tsx:263
 msgid "e.g. Great Posters"
@@ -2849,12 +2849,12 @@ msgstr "Ajouter/enlever le fil d’actu"
 #: src/view/shell/desktop/RightNav.tsx:69
 #: src/view/shell/Drawer.tsx:319
 msgid "Feedback"
-msgstr "Feedback"
+msgstr "Commentaires"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:266
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:275
 msgid "Feedback sent!"
-msgstr "Feedback envoyé !"
+msgstr "Commentaire envoyé !"
 
 #: src/Navigation.tsx:397
 #: src/screens/StarterPack/StarterPackScreen.tsx:183
@@ -4200,7 +4200,7 @@ msgstr "Masqué par « {0} »"
 
 #: src/screens/Moderation/index.tsx:208
 msgid "Muted words & tags"
-msgstr "Les mots et les mots-clés masqués"
+msgstr "Mots et les mots-clés masqués"
 
 #: src/view/screens/ProfileList.tsx:733
 msgid "Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them."
@@ -4434,7 +4434,7 @@ msgstr "Pas encore de messages"
 
 #: src/screens/Messages/ChatList.tsx:223
 msgid "No more conversations to show"
-msgstr "Plus aucune conversation à afficher"
+msgstr "Pas d’autre conversation à afficher"
 
 #: src/view/com/notifications/Feed.tsx:118
 msgid "No notifications yet!"
