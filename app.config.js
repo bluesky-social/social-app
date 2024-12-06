@@ -249,7 +249,6 @@ module.exports = function (config) {
         [
           'expo-splash-screen',
           {
-            enableFullScreenImage_legacy: true,
             ios: {
               enableFullScreenImage_legacy: true,
               backgroundColor: '#ffffff',
