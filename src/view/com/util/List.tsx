@@ -151,7 +151,7 @@ let List = React.forwardRef<ListMethods, ListProps>(
     return (
       <FlatList_INTERNAL
         {...props}
-        scrollIndicatorInsets={{right: 1}}
+        scrollIndicatorInsets={{top: headerOffset, right: 1}}
         contentOffset={contentOffset}
         refreshControl={refreshControl}
         onScroll={scrollHandler}

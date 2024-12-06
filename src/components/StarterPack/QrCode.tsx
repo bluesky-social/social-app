@@ -1,5 +1,6 @@
 import React from 'react'
 import {View} from 'react-native'
+// @ts-expect-error missing types
 import QRCode from 'react-native-qrcode-styled'
 import type ViewShot from 'react-native-view-shot'
 import {AppBskyGraphDefs, AppBskyGraphStarterpack} from '@atproto/api'

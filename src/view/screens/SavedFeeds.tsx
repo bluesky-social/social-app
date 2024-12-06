@@ -25,13 +25,12 @@ import {FeedSourceCard} from '#/view/com/feeds/FeedSourceCard'
 import {TextLink} from '#/view/com/util/Link'
 import {Text} from '#/view/com/util/text/Text'
 import * as Toast from '#/view/com/util/Toast'
-import {ViewHeader} from '#/view/com/util/ViewHeader'
-import {CenteredView, ScrollView} from '#/view/com/util/Views'
 import {NoFollowingFeed} from '#/screens/Feeds/NoFollowingFeed'
 import {NoSavedFeedsOfAnyType} from '#/screens/Feeds/NoSavedFeedsOfAnyType'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {FilterTimeline_Stroke2_Corner0_Rounded as FilterTimeline} from '#/components/icons/FilterTimeline'
+import {FloppyDisk_Stroke2_Corner0_Rounded as SaveIcon} from '#/components/icons/FloppyDisk'
 import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
 
@@ -51,7 +50,7 @@ function SavedFeedsInner({
 }) {
   const pal = usePalette('default')
   const {_} = useLingui()
-  const {isMobile, isTabletOrDesktop, isDesktop} = useWebMediaQueries()
+  const {isMobile, isDesktop} = useWebMediaQueries()
   const setMinimalShellMode = useSetMinimalShellMode()
   const {mutateAsync: overwriteSavedFeeds, isPending: isOverwritePending} =
     useOverwriteSavedFeedsMutation()
@@ -88,136 +87,128 @@ function SavedFeedsInner({
     }
   }, [_, overwriteSavedFeeds, currentFeeds, navigation])
 
-  const renderHeaderBtn = React.useCallback(() => {
-    return (
-      <Button
-        size="small"
-        variant={hasUnsavedChanges ? 'solid' : 'solid'}
-        color={hasUnsavedChanges ? 'primary' : 'secondary'}
-        onPress={onSaveChanges}
-        label={_(msg`Save changes`)}
-        disabled={isOverwritePending || !hasUnsavedChanges}
-        style={[isDesktop && a.mt_sm]}
-        testID="saveChangesBtn">
-        <ButtonText style={[isDesktop && a.text_md]}>
-          {isDesktop ? <Trans>Save changes</Trans> : <Trans>Save</Trans>}
-        </ButtonText>
-        {isOverwritePending && <ButtonIcon icon={Loader} />}
-      </Button>
-    )
-  }, [_, isDesktop, onSaveChanges, hasUnsavedChanges, isOverwritePending])
-
   return (
     <Layout.Screen>
-      <CenteredView
-        style={[a.util_screen_outer]}
-        sideBorders={isTabletOrDesktop}>
-        <ViewHeader
-          title={_(msg`Edit My Feeds`)}
-          showOnDesktop
-          showBorder
-          renderButton={renderHeaderBtn}
-        />
-        <ScrollView style={[a.flex_1]} contentContainerStyle={[a.border_0]}>
-          {noSavedFeedsOfAnyType && (
-            <View style={[pal.border, a.border_b]}>
-              <NoSavedFeedsOfAnyType />
+      <Layout.Header.Outer>
+        <Layout.Header.BackButton />
+        <Layout.Header.Content align="left">
+          <Layout.Header.TitleText>
+            <Trans>Feeds</Trans>
+          </Layout.Header.TitleText>
+        </Layout.Header.Content>
+        <Button
+          testID="saveChangesBtn"
+          size="small"
+          variant={hasUnsavedChanges ? 'solid' : 'solid'}
+          color={hasUnsavedChanges ? 'primary' : 'secondary'}
+          onPress={onSaveChanges}
+          label={_(msg`Save changes`)}
+          disabled={isOverwritePending || !hasUnsavedChanges}>
+          <ButtonIcon icon={isOverwritePending ? Loader : SaveIcon} />
+          <ButtonText>
+            {isDesktop ? <Trans>Save changes</Trans> : <Trans>Save</Trans>}
+          </ButtonText>
+        </Button>
+      </Layout.Header.Outer>
+
+      <Layout.Content>
+        {noSavedFeedsOfAnyType && (
+          <View style={[pal.border, a.border_b]}>
+            <NoSavedFeedsOfAnyType />
+          </View>
+        )}
+
+        <View style={[pal.text, pal.border, styles.title]}>
+          <Text type="title" style={pal.text}>
+            <Trans>Pinned Feeds</Trans>
+          </Text>
+        </View>
+
+        {preferences ? (
+          !pinnedFeeds.length ? (
+            <View
+              style={[
+                pal.border,
+                isMobile && s.flex1,
+                pal.viewLight,
+                styles.empty,
+              ]}>
+              <Text type="lg" style={[pal.text]}>
+                <Trans>You don't have any pinned feeds.</Trans>
+              </Text>
             </View>
-          )}
-
-          <View style={[pal.text, pal.border, styles.title]}>
-            <Text type="title" style={pal.text}>
-              <Trans>Pinned Feeds</Trans>
-            </Text>
-          </View>
-
-          {preferences ? (
-            !pinnedFeeds.length ? (
-              <View
-                style={[
-                  pal.border,
-                  isMobile && s.flex1,
-                  pal.viewLight,
-                  styles.empty,
-                ]}>
-                <Text type="lg" style={[pal.text]}>
-                  <Trans>You don't have any pinned feeds.</Trans>
-                </Text>
-              </View>
-            ) : (
-              pinnedFeeds.map(f => (
-                <ListItem
-                  key={f.id}
-                  feed={f}
-                  isPinned
-                  currentFeeds={currentFeeds}
-                  setCurrentFeeds={setCurrentFeeds}
-                  preferences={preferences}
-                />
-              ))
-            )
           ) : (
-            <ActivityIndicator style={{marginTop: 20}} />
-          )}
+            pinnedFeeds.map(f => (
+              <ListItem
+                key={f.id}
+                feed={f}
+                isPinned
+                currentFeeds={currentFeeds}
+                setCurrentFeeds={setCurrentFeeds}
+                preferences={preferences}
+              />
+            ))
+          )
+        ) : (
+          <ActivityIndicator style={{marginTop: 20}} />
+        )}
 
-          {noFollowingFeed && (
-            <View style={[pal.border, a.border_b]}>
-              <NoFollowingFeed />
+        {noFollowingFeed && (
+          <View style={[pal.border, a.border_b]}>
+            <NoFollowingFeed />
+          </View>
+        )}
+
+        <View style={[pal.text, pal.border, styles.title]}>
+          <Text type="title" style={pal.text}>
+            <Trans>Saved Feeds</Trans>
+          </Text>
+        </View>
+        {preferences ? (
+          !unpinnedFeeds.length ? (
+            <View
+              style={[
+                pal.border,
+                isMobile && s.flex1,
+                pal.viewLight,
+                styles.empty,
+              ]}>
+              <Text type="lg" style={[pal.text]}>
+                <Trans>You don't have any saved feeds.</Trans>
+              </Text>
             </View>
-          )}
-
-          <View style={[pal.text, pal.border, styles.title]}>
-            <Text type="title" style={pal.text}>
-              <Trans>Saved Feeds</Trans>
-            </Text>
-          </View>
-          {preferences ? (
-            !unpinnedFeeds.length ? (
-              <View
-                style={[
-                  pal.border,
-                  isMobile && s.flex1,
-                  pal.viewLight,
-                  styles.empty,
-                ]}>
-                <Text type="lg" style={[pal.text]}>
-                  <Trans>You don't have any saved feeds.</Trans>
-                </Text>
-              </View>
-            ) : (
-              unpinnedFeeds.map(f => (
-                <ListItem
-                  key={f.id}
-                  feed={f}
-                  isPinned={false}
-                  currentFeeds={currentFeeds}
-                  setCurrentFeeds={setCurrentFeeds}
-                  preferences={preferences}
-                />
-              ))
-            )
           ) : (
-            <ActivityIndicator style={{marginTop: 20}} />
-          )}
+            unpinnedFeeds.map(f => (
+              <ListItem
+                key={f.id}
+                feed={f}
+                isPinned={false}
+                currentFeeds={currentFeeds}
+                setCurrentFeeds={setCurrentFeeds}
+                preferences={preferences}
+              />
+            ))
+          )
+        ) : (
+          <ActivityIndicator style={{marginTop: 20}} />
+        )}
 
-          <View style={styles.footerText}>
-            <Text type="sm" style={pal.textLight}>
-              <Trans>
-                Feeds are custom algorithms that users build with a little
-                coding expertise.{' '}
-                <TextLink
-                  type="sm"
-                  style={pal.link}
-                  href="https://github.com/bluesky-social/feed-generator"
-                  text={_(msg`See this guide`)}
-                />{' '}
-                for more information.
-              </Trans>
-            </Text>
-          </View>
-          <View style={{height: 100}} />
-        </ScrollView>
-      </CenteredView>
+        <View style={styles.footerText}>
+          <Text type="sm" style={pal.textLight}>
+            <Trans>
+              Feeds are custom algorithms that users build with a little coding
+              expertise.{' '}
+              <TextLink
+                type="sm"
+                style={pal.link}
+                href="https://github.com/bluesky-social/feed-generator"
+                text={_(msg`See this guide`)}
+              />{' '}
+              for more information.
+            </Trans>
+          </Text>
+        </View>
+      </Layout.Content>
     </Layout.Screen>
   )
 }
@@ -456,7 +447,6 @@ const styles = StyleSheet.create({
   },
   footerText: {
     paddingHorizontal: 26,
-    paddingTop: 22,
-    paddingBottom: 100,
+    paddingVertical: 22,
   },
 })

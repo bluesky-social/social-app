@@ -2,7 +2,6 @@ import React from 'react'
 import {View} from 'react-native'
 import {flushSync} from 'react-dom'
 
-import {LogEvents} from '#/lib/statsig/events'
 import {s} from '#/lib/styles'
 
 export interface RenderTabBarFnProps {
@@ -16,10 +15,6 @@ interface Props {
   initialPage?: number
   renderTabBar: RenderTabBarFn
   onPageSelected?: (index: number) => void
-  onPageSelecting?: (
-    index: number,
-    reason: LogEvents['home:feedDisplayed']['reason'],
-  ) => void
 }
 export const Pager = React.forwardRef(function PagerImpl(
   {
@@ -27,7 +22,6 @@ export const Pager = React.forwardRef(function PagerImpl(
     initialPage = 0,
     renderTabBar,
     onPageSelected,
-    onPageSelecting,
   }: React.PropsWithChildren<Props>,
   ref,
 ) {
@@ -36,16 +30,13 @@ export const Pager = React.forwardRef(function PagerImpl(
   const anchorRef = React.useRef(null)
 
   React.useImperativeHandle(ref, () => ({
-    setPage: (
-      index: number,
-      reason: LogEvents['home:feedDisplayed']['reason'],
-    ) => {
-      onTabBarSelect(index, reason)
+    setPage: (index: number) => {
+      onTabBarSelect(index)
     },
   }))
 
   const onTabBarSelect = React.useCallback(
-    (index: number, reason: LogEvents['home:feedDisplayed']['reason']) => {
+    (index: number) => {
       const scrollY = window.scrollY
       // We want to determine if the tabbar is already "sticking" at the top (in which
       // case we should preserve and restore scroll), or if it is somewhere below in the
@@ -64,7 +55,6 @@ export const Pager = React.forwardRef(function PagerImpl(
       flushSync(() => {
         setSelectedPage(index)
         onPageSelected?.(index)
-        onPageSelecting?.(index, reason)
       })
       if (isSticking) {
         const restoredScrollY = scrollYs.current[index]
@@ -75,7 +65,7 @@ export const Pager = React.forwardRef(function PagerImpl(
         }
       }
     },
-    [selectedPage, setSelectedPage, onPageSelected, onPageSelecting],
+    [selectedPage, setSelectedPage, onPageSelected],
   )
 
   return (
@@ -83,7 +73,7 @@ export const Pager = React.forwardRef(function PagerImpl(
       {renderTabBar({
         selectedPage,
         tabBarAnchor: <View ref={anchorRef} />,
-        onSelect: e => onTabBarSelect(e, 'tabbar-click'),
+        onSelect: e => onTabBarSelect(e),
       })}
       {React.Children.map(children, (child, i) => (
         <View style={selectedPage === i ? s.flex1 : s.hidden} key={`page-${i}`}>

@@ -49,7 +49,6 @@ import {LoadLatestBtn} from '#/view/com/util/load-latest/LoadLatestBtn'
 import {LoadingScreen} from '#/view/com/util/LoadingScreen'
 import {Text} from '#/view/com/util/text/Text'
 import * as Toast from '#/view/com/util/Toast'
-import {CenteredView} from '#/view/com/util/Views'
 import {atoms as a, useTheme} from '#/alf'
 import {Button as NewButton, ButtonText} from '#/components/Button'
 import {useRichText} from '#/components/hooks/useRichText'
@@ -98,7 +97,7 @@ export function ProfileFeedScreen(props: Props) {
   if (error) {
     return (
       <Layout.Screen testID="profileFeedScreenError">
-        <CenteredView>
+        <Layout.Content>
           <View style={[pal.view, pal.border, styles.notFoundContainer]}>
             <Text type="title-lg" style={[pal.text, s.mb10]}>
               <Trans>Could not load feed</Trans>
@@ -120,7 +119,7 @@ export function ProfileFeedScreen(props: Props) {
               </Button>
             </View>
           </View>
-        </CenteredView>
+        </Layout.Content>
       </Layout.Screen>
     )
   }
@@ -394,7 +393,7 @@ export function ProfileFeedScreenInner({
   ])
 
   return (
-    <View style={s.hContentRegion}>
+    <>
       <ReportDialog
         control={reportDialogControl}
         params={{
@@ -434,7 +433,7 @@ export function ProfileFeedScreenInner({
           accessibilityHint=""
         />
       )}
-    </View>
+    </>
   )
 }
 

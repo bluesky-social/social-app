@@ -229,6 +229,7 @@ const getKey = (label: string, index: number, id?: string) => {
   return `${label}_${index}`
 }
 
+// @ts-expect-error - web only styles. the only style that should be broken here is `outline`
 const styles = StyleSheet.create({
   separator: {
     height: 1,
