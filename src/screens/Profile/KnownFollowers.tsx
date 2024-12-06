@@ -48,7 +48,6 @@ export const ProfileKnownFollowersScreen = ({route}: Props) => {
 
   const {name} = route.params
 
-  const [isPTRing, setIsPTRing] = React.useState(false)
   const {
     data: resolvedDid,
     isLoading: isDidLoading,
@@ -62,17 +61,16 @@ export const ProfileKnownFollowersScreen = ({route}: Props) => {
     fetchNextPage,
     error,
     refetch,
+    isRefetching,
   } = useProfileKnownFollowersQuery(resolvedDid)
 
   const onRefresh = React.useCallback(async () => {
-    setIsPTRing(true)
     try {
       await refetch()
     } catch (err) {
       logger.error('Failed to refresh followers', {message: err})
     }
-    setIsPTRing(false)
-  }, [refetch, setIsPTRing])
+  }, [refetch])
 
   const onEndReached = React.useCallback(async () => {
     if (isFetchingNextPage || !hasNextPage || !!error) return
@@ -123,7 +121,7 @@ export const ProfileKnownFollowersScreen = ({route}: Props) => {
         data={followers}
         renderItem={renderItem}
         keyExtractor={keyExtractor}
-        refreshing={isPTRing}
+        refreshing={isRefetching}
         onRefresh={onRefresh}
         onEndReached={onEndReached}
         onEndReachedThreshold={4}
