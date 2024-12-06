@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react'
+import React, {useCallback, useState} from 'react'
 import Animated, {
   FadeInUp,
   FadeOutUp,
@@ -7,13 +7,14 @@ import Animated, {
 } from 'react-native-reanimated'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import * as DynamicAppIcon from '@mozzius/expo-dynamic-app-icon'
+import {useFocusEffect} from '@react-navigation/native'
 
 import {DISCOVER_DEBUG_DIDS} from '#/lib/constants'
 import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
 import {isNative} from '#/platform/detection'
 import {useSession} from '#/state/session'
 import {useSetThemePrefs, useThemePrefs} from '#/state/shell'
-import {Logo} from '#/view/icons/Logo'
 import {atoms as a, native, useAlf, useTheme} from '#/alf'
 import * as ToggleButton from '#/components/forms/ToggleButton'
 import {Props as SVGIconProps} from '#/components/icons/common'
@@ -23,6 +24,7 @@ import {TextSize_Stroke2_Corner0_Rounded as TextSize} from '#/components/icons/T
 import {TitleCase_Stroke2_Corner0_Rounded as Aa} from '#/components/icons/TitleCase'
 import * as Layout from '#/components/Layout'
 import {Text} from '#/components/Typography'
+import {AppIcon, useAppIconSets} from './components/AppIcon'
 import * as SettingsList from './components/SettingsList'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AppearanceSettings'>
@@ -32,6 +34,23 @@ export function AppearanceSettingsScreen({}: Props) {
 
   const {colorMode, darkTheme} = useThemePrefs()
   const {setColorMode, setDarkTheme} = useSetThemePrefs()
+
+  const appIconSets = useAppIconSets()
+  const [currentAppIcon, setCurrentAppIcon] = useState(() =>
+    DynamicAppIcon.getAppIcon(),
+  )
+
+  const icon =
+    appIconSets.defaults.find(i => i.id === currentAppIcon) ??
+    appIconSets.core.find(i => i.id === currentAppIcon) ??
+    appIconSets.defaults[0]
+
+  // refresh current icon when screen is focused
+  useFocusEffect(
+    useCallback(() => {
+      setCurrentAppIcon(DynamicAppIcon.getAppIcon())
+    }, []),
+  )
 
   const onChangeAppearance = useCallback(
     (keys: string[]) => {
@@ -177,7 +196,7 @@ export function AppearanceSettingsScreen({}: Props) {
                   <SettingsList.LinkItem
                     to="/settings/app-icon"
                     label={_(msg`App Icon`)}>
-                    <SettingsList.ItemIcon icon={Logo} />
+                    <AppIcon icon={icon} size={28} />
                     <SettingsList.ItemText>
                       <Trans>App Icon</Trans>
                     </SettingsList.ItemText>
