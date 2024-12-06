@@ -1,16 +1,16 @@
 # 
 # Translators:
 # arestifop, 2024
-# Francisco, 2024
 # Michele Locati <michele@locati.it>, 2024
+# Francisco, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Italian localization\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-06 01:10+0000\n"
-"PO-Revision-Date: 2024-12-06 08:17+0000\n"
-"Last-Translator: Michele Locati <michele@locati.it>, 2024\n"
+"PO-Revision-Date: 2024-12-06 13:02+0000\n"
+"Last-Translator: Francisco, 2024\n"
 "Language-Team: Italian (https://app.transifex.com/mlocati/teams/201833/it/)\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
@@ -1407,7 +1407,7 @@ msgstr "Chiudi l'avviso"
 
 #: src/view/com/util/BottomSheetCustomBackdrop.tsx:36
 msgid "Close bottom drawer"
-msgstr "Apri il menu a scomparsa inferiore"
+msgstr "Chiudi menu a scomparsa inferiore"
 
 #: src/components/dialogs/GifSelect.tsx:275
 msgid "Close dialog"
@@ -2052,7 +2052,7 @@ msgstr "Ignora la guida iniziale"
 #: src/screens/Settings/AccessibilitySettings.tsx:71
 #: src/screens/Settings/AccessibilitySettings.tsx:76
 msgid "Display larger alt text badges"
-msgstr "Aumenta la dimensione dei testi alternativi"
+msgstr "Aumenta dimensione dell'icona del testo alternativo"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:314
 #: src/screens/Profile/Header/EditProfileDialog.tsx:320
