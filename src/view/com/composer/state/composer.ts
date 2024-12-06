@@ -512,38 +512,63 @@ export function createComposerState({
         )
       : '',
   })
-  initRichText.detectFacetsWithoutResolution()
 
   let link: Link | undefined
-  {
-    const nextDetectedUris = new Map<string, LinkFacetMatch>()
+
+  /**
+   * `initText` atm is only used for compose intents, meaning share links from
+   * external sources. If `initText` is defined, we want to extract links/posts
+   * from `initText` and suggest them as embeds.
+   *
+   * This checks for posts separately from other types of links so that posts
+   * can become quotes. The util `suggestLinkCardUri` is then applied to ensure
+   * we suggest at most 1 of each.
+   */
+  if (initText) {
+    initRichText.detectFacetsWithoutResolution()
+    const detectedExtUris = new Map<string, LinkFacetMatch>()
+    const detectedPostUris = new Map<string, LinkFacetMatch>()
     if (initRichText.facets) {
       for (const facet of initRichText.facets) {
         for (const feature of facet.features) {
           if (AppBskyRichtextFacet.isLink(feature)) {
-            nextDetectedUris.set(feature.uri, {facet, rt: initRichText})
+            if (isBskyPostUrl(feature.uri)) {
+              detectedPostUris.set(feature.uri, {facet, rt: initRichText})
+            } else {
+              detectedExtUris.set(feature.uri, {facet, rt: initRichText})
+            }
           }
         }
       }
     }
-    const suggestedUri = suggestLinkCardUri(
+    const pastSuggestedUris = new Set<string>()
+    const suggestedExtUri = suggestLinkCardUri(
       true,
-      nextDetectedUris,
+      detectedExtUris,
       new Map(),
-      new Set(),
+      pastSuggestedUris,
     )
-    if (suggestedUri) {
-      if (isBskyPostUrl(suggestedUri)) {
-        if (!quote) {
-          quote = {
-            type: 'link',
-            uri: suggestedUri,
-          }
-        }
-      } else {
-        link = {
+    if (suggestedExtUri) {
+      link = {
+        type: 'link',
+        uri: suggestedExtUri,
+      }
+    }
+    const suggestedPostUri = suggestLinkCardUri(
+      true,
+      detectedPostUris,
+      new Map(),
+      pastSuggestedUris,
+    )
+    if (suggestedPostUri) {
+      /*
+       * `initQuote` is only populated via in-app user action, but we're being
+       * future-defensive here.
+       */
+      if (!quote) {
+        quote = {
           type: 'link',
-          uri: suggestedUri,
+          uri: suggestedPostUri,
         }
       }
     }
