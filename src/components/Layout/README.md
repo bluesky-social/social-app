@@ -28,6 +28,10 @@ as the outermost component.
 > On web, `Layout.Screen` also provides the side borders on our central content
 > column. These borders are fixed position, 1px outside our center column width
 > of 600px.
+>
+> What this effectively means is that _nothing inside the center content column
+> needs (or should) define left/right borders._ That is now handled in one
+> place: within `Layout.Screen`.
 
 ### `Layout.Header.*`
 
