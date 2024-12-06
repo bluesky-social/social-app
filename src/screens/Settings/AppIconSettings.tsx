@@ -67,7 +67,7 @@ export function AppIconSettingsScreen({}: Props) {
               key={icon.id}
               icon={icon}
               isEnd={i === sets.defaults.length - 1}>
-              <AppIcon icon={icon} key={icon.id} size={50} />
+              <AppIcon icon={icon} key={icon.id} size={40} />
               <RowText>{icon.name}</RowText>
             </Row>
           ))}
@@ -81,7 +81,7 @@ export function AppIconSettingsScreen({}: Props) {
           onChange={onSetAppIcon}>
           {sets.core.map((icon, i) => (
             <Row key={icon.id} icon={icon} isEnd={i === sets.core.length - 1}>
-              <AppIcon icon={icon} key={icon.id} size={50} />
+              <AppIcon icon={icon} key={icon.id} size={40} />
               <RowText>{icon.name}</RowText>
             </Row>
           ))}
