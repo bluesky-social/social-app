@@ -18,9 +18,6 @@ jest.mock('react-native/Libraries/EventEmitter/NativeEventEmitter', () => {
   }
 })
 
-// Silence the warning: Animated: `useNativeDriver` is not supported
-jest.mock('react-native/Libraries/Animated/NativeAnimatedHelper')
-
 jest.mock('@fortawesome/react-native-fontawesome', () => ({
   FontAwesomeIcon: '',
 }))
@@ -51,7 +48,9 @@ jest.mock('expo-image-manipulator', () => ({
   manipulateAsync: jest.fn().mockResolvedValue({
     uri: 'file://resized-image',
   }),
-  SaveFormat: jest.requireActual('expo-image-manipulator').SaveFormat,
+  SaveFormat: {
+    JPEG: 'jpeg',
+  },
 }))
 
 jest.mock('expo-camera', () => ({
