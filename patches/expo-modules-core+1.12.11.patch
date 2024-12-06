@@ -24,3 +24,16 @@ index 109d3fe..c7fce9e 100644
  const nativeUuidv4 = globalThis?.expo?.uuidv4;
  const nativeUuidv5 = globalThis?.expo?.uuidv5;
  function uuidv4() {
+diff --git a/node_modules/expo-modules-core/android/src/main/java/expo/modules/kotlin/devtools/ExpoNetworkInspectOkHttpInterceptors.kt b/node_modules/expo-modules-core/android/src/main/java/expo/modules/kotlin/devtools/ExpoNetworkInspectOkHttpInterceptors.kt
+index 40a6327..b2f9f26 100644
+--- a/node_modules/expo-modules-core/android/src/main/java/expo/modules/kotlin/devtools/ExpoNetworkInspectOkHttpInterceptors.kt
++++ b/node_modules/expo-modules-core/android/src/main/java/expo/modules/kotlin/devtools/ExpoNetworkInspectOkHttpInterceptors.kt
+@@ -35,7 +35,7 @@ class ExpoNetworkInspectOkHttpNetworkInterceptor : Interceptor {
+           it.requestId = requestId
+           it.priorResponse = response
+         }
+-      } else {
++      } else if (request.url.encodedPath != "/bitdrift_public.protobuf.client.v1.ApiService/Mux") {
+         val body = peekResponseBody(response)
+         delegate.didReceiveResponse(requestId, request, response, body)
+         body?.close()
