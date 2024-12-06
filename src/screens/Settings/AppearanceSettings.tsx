@@ -1,4 +1,5 @@
 import React, {useCallback, useState} from 'react'
+import {View} from 'react-native'
 import Animated, {
   FadeInUp,
   FadeOutUp,
@@ -20,11 +21,12 @@ import * as ToggleButton from '#/components/forms/ToggleButton'
 import {Props as SVGIconProps} from '#/components/icons/common'
 import {Moon_Stroke2_Corner0_Rounded as MoonIcon} from '#/components/icons/Moon'
 import {Phone_Stroke2_Corner0_Rounded as PhoneIcon} from '#/components/icons/Phone'
+import {Shapes_Stroke2_Corner0_Rounded as Shapes} from '#/components/icons/Shapes'
 import {TextSize_Stroke2_Corner0_Rounded as TextSize} from '#/components/icons/TextSize'
 import {TitleCase_Stroke2_Corner0_Rounded as Aa} from '#/components/icons/TitleCase'
 import * as Layout from '#/components/Layout'
 import {Text} from '#/components/Typography'
-import {AppIcon, useAppIconSets} from './components/AppIcon'
+import {AppIconImage, useAppIconSets} from './components/AppIcon'
 import * as SettingsList from './components/SettingsList'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AppearanceSettings'>
@@ -195,11 +197,15 @@ export function AppearanceSettingsScreen({}: Props) {
 
                   <SettingsList.LinkItem
                     to="/settings/app-icon"
-                    label={_(msg`App Icon`)}>
-                    <AppIcon icon={icon} size={28} />
-                    <SettingsList.ItemText>
-                      <Trans>App Icon</Trans>
-                    </SettingsList.ItemText>
+                    label={_(msg`App Icon`)}
+                    contentContainerStyle={[a.align_start]}>
+                    <SettingsList.ItemIcon icon={Shapes} />
+                    <View style={[a.flex_1]}>
+                      <SettingsList.ItemText style={[a.pt_xs, a.pb_md]}>
+                        <Trans>App Icon</Trans>
+                      </SettingsList.ItemText>
+                      <AppIconImage icon={icon} size={60} />
+                    </View>
                   </SettingsList.LinkItem>
                 </>
               )}
