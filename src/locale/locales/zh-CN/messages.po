@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-12-06 01:15\n"
+"PO-Revision-Date: 2024-12-06 02:24\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -6755,7 +6755,7 @@ msgstr "这很重要，以防你将来需要更改电子邮箱或重置密码。
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:150
 msgid "This label was applied by <0>{0}</0>."
-msgstr "这个标签是由 <0>{0}</0> 标记的。"
+msgstr "由 <0>{0}</0> 应用的标记。"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:145
 msgid "This label was applied by the author."
