@@ -60,7 +60,7 @@ export function createThemes({
   dim: Theme
 } {
   const color = {
-    trueBlack: '#000000',
+    trueBlack: 'hsl(0, 0%, 0%)',
 
     gray_0: `hsl(${hues.primary}, 20%, ${defaultScale[14]}%)`,
     gray_25: `hsl(${hues.primary}, 20%, ${defaultScale[13]}%)`,

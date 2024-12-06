@@ -33,6 +33,7 @@ export type Alf = {
     setFontScale: (fontScale: Exclude<Device['fontScale'], undefined>) => void
     setFontFamily: (fontFamily: Device['fontFamily']) => void
   }
+  setHue: (hue: number) => void
   /**
    * Feature flags or other gated options
    */
@@ -59,6 +60,7 @@ export const Context = React.createContext<Alf>({
     setFontScale: () => {},
     setFontFamily: () => {},
   },
+  setHue: () => {},
   flags: {},
 })
 
@@ -94,20 +96,21 @@ export function ThemeProvider({
     },
     [setFontFamily],
   )
+  const [hue, setHue] = React.useState(BLUE_HUE)
   const themes = React.useMemo(() => {
     return createThemes({
       hues: {
-        primary: BLUE_HUE,
+        primary: hue,
         negative: RED_HUE,
         positive: GREEN_HUE,
       },
     })
-  }, [])
+  }, [hue])
 
   const value = React.useMemo<Alf>(
     () => ({
       themes,
-      themeName: themeName,
+      themeName,
       theme: themes[themeName],
       fonts: {
         scale: fontScale,
@@ -116,6 +119,7 @@ export function ThemeProvider({
         setFontScale: setFontScaleAndPersist,
         setFontFamily: setFontFamilyAndPersist,
       },
+      setHue: setHue,
       flags: {},
     }),
     [
@@ -126,6 +130,7 @@ export function ThemeProvider({
       fontFamily,
       setFontFamilyAndPersist,
       fontScaleMultiplier,
+      setHue,
     ],
   )
 
@@ -136,11 +141,11 @@ export function useAlf() {
   return React.useContext(Context)
 }
 
-export function useTheme(theme?: ThemeName) {
+export function useTheme(themeName?: ThemeName) {
   const alf = useAlf()
   return React.useMemo(() => {
-    return theme ? alf.themes[theme] : alf.theme
-  }, [theme, alf])
+    return themeName ? alf.themes[themeName] : alf.theme
+  }, [themeName, alf])
 }
 
 export function useBreakpoints() {
