@@ -108,7 +108,7 @@ export function FeedPage({
   }, [scrollToTop, feed, queryClient, setHasNew])
 
   return (
-    <View testID={testID} style={s.h100pct}>
+    <View testID={testID}>
       <MainScrollProvider>
         <FeedFeedbackProvider value={feedFeedback}>
           <Feed

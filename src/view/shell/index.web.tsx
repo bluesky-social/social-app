@@ -3,10 +3,10 @@ import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
+import {RemoveScrollBar} from 'react-remove-scroll-bar'
 
 import {useColorSchemeStyle} from '#/lib/hooks/useColorSchemeStyle'
 import {useIntentHandler} from '#/lib/hooks/useIntentHandler'
-import {useWebBodyScrollLock} from '#/lib/hooks/useWebBodyScrollLock'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {NavigationProp} from '#/lib/routes/types'
 import {colors} from '#/lib/styles'
@@ -34,7 +34,6 @@ function ShellInner() {
   const {_} = useLingui()
   const showDrawer = !isDesktop && isDrawerOpen
 
-  useWebBodyScrollLock(showDrawer)
   useComposerKeyboardShortcut()
   useIntentHandler()
 
@@ -58,31 +57,34 @@ function ShellInner() {
       <PortalOutlet />
 
       {showDrawer && (
-        <TouchableWithoutFeedback
-          onPress={ev => {
-            // Only close if press happens outside of the drawer
-            if (ev.target === ev.currentTarget) {
-              setDrawerOpen(false)
-            }
-          }}
-          accessibilityLabel={_(msg`Close navigation footer`)}
-          accessibilityHint={_(msg`Closes bottom navigation bar`)}>
-          <View
-            style={[
-              styles.drawerMask,
-              {
-                backgroundColor: select(t.name, {
-                  light: 'rgba(0, 57, 117, 0.1)',
-                  dark: 'rgba(1, 82, 168, 0.1)',
-                  dim: 'rgba(10, 13, 16, 0.8)',
-                }),
-              },
-            ]}>
-            <View style={styles.drawerContainer}>
-              <DrawerContent />
+        <>
+          <RemoveScrollBar />
+          <TouchableWithoutFeedback
+            onPress={ev => {
+              // Only close if press happens outside of the drawer
+              if (ev.target === ev.currentTarget) {
+                setDrawerOpen(false)
+              }
+            }}
+            accessibilityLabel={_(msg`Close navigation footer`)}
+            accessibilityHint={_(msg`Closes bottom navigation bar`)}>
+            <View
+              style={[
+                styles.drawerMask,
+                {
+                  backgroundColor: select(t.name, {
+                    light: 'rgba(0, 57, 117, 0.1)',
+                    dark: 'rgba(1, 82, 168, 0.1)',
+                    dim: 'rgba(10, 13, 16, 0.8)',
+                  }),
+                },
+              ]}>
+              <View style={styles.drawerContainer}>
+                <DrawerContent />
+              </View>
             </View>
-          </View>
-        </TouchableWithoutFeedback>
+          </TouchableWithoutFeedback>
+        </>
       )}
     </>
   )

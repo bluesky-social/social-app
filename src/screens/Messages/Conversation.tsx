@@ -17,7 +17,6 @@ import {useCurrentConvoId} from '#/state/messages/current-convo-id'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useSetMinimalShellMode} from '#/state/shell'
-import {CenteredView} from '#/view/com/util/Views'
 import {MessagesList} from '#/screens/Messages/components/MessagesList'
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
@@ -97,7 +96,7 @@ function Inner() {
 
   if (convoState.status === ConvoStatus.Error) {
     return (
-      <CenteredView style={[a.flex_1]} sideBorders>
+      <Layout.Center style={[a.flex_1]}>
         <MessagesListHeader />
         <Error
           title={_(msg`Something went wrong`)}
@@ -105,12 +104,12 @@ function Inner() {
           onRetry={() => convoState.error.retry()}
           sideBorders={false}
         />
-      </CenteredView>
+      </Layout.Center>
     )
   }
 
   return (
-    <CenteredView style={[a.flex_1]} sideBorders>
+    <Layout.Center style={[a.flex_1]}>
       {!readyToShow && <MessagesListHeader />}
       <View style={[a.flex_1]}>
         {moderationOpts && recipient ? (
@@ -140,7 +139,7 @@ function Inner() {
           </View>
         )}
       </View>
-    </CenteredView>
+    </Layout.Center>
   )
 }
 

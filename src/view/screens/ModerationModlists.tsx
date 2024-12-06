@@ -1,33 +1,26 @@
 import React from 'react'
-import {View} from 'react-native'
 import {AtUri} from '@atproto/api'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 
 import {useEmail} from '#/lib/hooks/useEmail'
-import {usePalette} from '#/lib/hooks/usePalette'
-import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
 import {NavigationProp} from '#/lib/routes/types'
-import {s} from '#/lib/styles'
 import {useModalControls} from '#/state/modals'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {MyLists} from '#/view/com/lists/MyLists'
-import {Button} from '#/view/com/util/forms/Button'
-import {SimpleViewHeader} from '#/view/com/util/SimpleViewHeader'
-import {Text} from '#/view/com/util/text/Text'
+import {atoms as a} from '#/alf'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {VerifyEmailDialog} from '#/components/dialogs/VerifyEmailDialog'
+import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
 import * as Layout from '#/components/Layout'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ModerationModlists'>
 export function ModerationModlistsScreen({}: Props) {
   const {_} = useLingui()
-  const pal = usePalette('default')
   const setMinimalShellMode = useSetMinimalShellMode()
-  const {isMobile} = useWebMediaQueries()
   const navigation = useNavigation<NavigationProp>()
   const {openModal} = useModalControls()
   const {needsEmailVerification} = useEmail()
@@ -62,39 +55,32 @@ export function ModerationModlistsScreen({}: Props) {
 
   return (
     <Layout.Screen testID="moderationModlistsScreen">
-      <SimpleViewHeader
-        showBackButton={isMobile}
-        style={
-          !isMobile && [pal.border, {borderLeftWidth: 1, borderRightWidth: 1}]
-        }>
-        <View style={{flex: 1}}>
-          <Text type="title-lg" style={[pal.text, {fontWeight: '600'}]}>
+      <Layout.Header.Outer>
+        <Layout.Header.BackButton />
+        <Layout.Header.Content align="left">
+          <Layout.Header.TitleText>
             <Trans>Moderation Lists</Trans>
-          </Text>
-          <Text style={pal.textLight}>
+          </Layout.Header.TitleText>
+          <Layout.Header.SubtitleText>
             <Trans>
               Public, shareable lists of users to mute or block in bulk.
             </Trans>
-          </Text>
-        </View>
-        <View style={[{marginLeft: 18}, isMobile && {marginLeft: 12}]}>
-          <Button
-            testID="newModListBtn"
-            type="default"
-            onPress={onPressNewList}
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              gap: 8,
-            }}>
-            <FontAwesomeIcon icon="plus" color={pal.colors.text} />
-            <Text type="button" style={pal.text}>
-              <Trans>New</Trans>
-            </Text>
-          </Button>
-        </View>
-      </SimpleViewHeader>
-      <MyLists filter="mod" style={s.flexGrow1} />
+          </Layout.Header.SubtitleText>
+        </Layout.Header.Content>
+        <Button
+          label={_(msg`New list`)}
+          testID="newModListBtn"
+          color="secondary"
+          variant="solid"
+          size="small"
+          onPress={onPressNewList}>
+          <ButtonIcon icon={PlusIcon} />
+          <ButtonText>
+            <Trans context="action">New</Trans>
+          </ButtonText>
+        </Button>
+      </Layout.Header.Outer>
+      <MyLists filter="mod" style={a.flex_grow} />
       <VerifyEmailDialog
         reasonText={_(
           msg`Before creating a list, you must first verify your email.`,
