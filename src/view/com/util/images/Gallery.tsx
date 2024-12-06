@@ -67,6 +67,7 @@ export function GalleryItem({
           t.atoms.bg_contrast_25,
           imageStyle,
         ]}
+        android_ripple={{foreground: true, borderless: true}}
         accessibilityRole="button"
         accessibilityLabel={image.alt || _(msg`Image`)}
         accessibilityHint="">

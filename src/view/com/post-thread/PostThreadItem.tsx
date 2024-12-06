@@ -490,6 +490,11 @@ let PostThreadItemLoaded = ({
         <PostHider
           testID={`postThreadItem-by-${post.author.handle}`}
           href={postHref}
+          style={{
+            paddingRight: a.px_sm.paddingRight,
+            paddingLeft:
+              a.px_sm.paddingLeft - (!treeView || depth <= 1 ? 0 : 2),
+          }}
           disabled={overrideBlur}
           modui={moderation.ui('contentList')}
           iconSize={isThreadedChild ? 24 : 42}
@@ -672,8 +677,7 @@ function PostOuterWrapper({
       <View
         style={[
           a.flex_row,
-          a.px_sm,
-          a.flex_row,
+          depth !== 1 && a.pl_sm,
           t.atoms.border_contrast_low,
           styles.cursor,
           depth === 1 && a.border_t,
@@ -688,19 +692,13 @@ function PostOuterWrapper({
               t.atoms.border_contrast_low,
               {
                 borderLeftWidth: 2,
-                paddingLeft: a.pl_sm.paddingLeft - 2, // minus border
+                paddingLeft: n === depth - 2 ? 0 : a.pl_sm.paddingLeft - 2, // minus border
               },
             ]}
           />
         ))}
         <View style={a.flex_1}>
-          <SubtleWebHover
-            hover={hover}
-            style={{
-              left: (depth === 1 ? 0 : 2) - a.pl_sm.paddingLeft,
-              right: -a.pr_sm.paddingRight,
-            }}
-          />
+          <SubtleWebHover hover={hover} />
           {children}
         </View>
       </View>
@@ -712,7 +710,6 @@ function PostOuterWrapper({
       onPointerLeave={onHoverOut}
       style={[
         a.border_t,
-        a.px_sm,
         t.atoms.border_contrast_low,
         showParentReplyLine && hasPrecedingItem && styles.noTopBorder,
         hideTopBorder && styles.noTopBorder,

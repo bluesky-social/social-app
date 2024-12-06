@@ -60,6 +60,7 @@ export function PostHider({
         style={style}
         href={href}
         accessible={false}
+        noFeedback
         onBeforePress={onBeforePress}
         {...props}>
         {children}
@@ -128,6 +129,7 @@ export function PostHider({
       testID={testID}
       style={addStyle(style, styles.child)}
       href={href}
+      noFeedback
       accessible={false}
       {...props}>
       {children}
