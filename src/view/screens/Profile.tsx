@@ -40,11 +40,9 @@ import {PagerWithHeader} from '#/view/com/pager/PagerWithHeader'
 import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
 import {FAB} from '#/view/com/util/fab/FAB'
 import {ListRef} from '#/view/com/util/List'
-import {CenteredView} from '#/view/com/util/Views'
 import {ProfileHeader, ProfileHeaderLoading} from '#/screens/Profile/Header'
 import {ProfileFeedSection} from '#/screens/Profile/Sections/Feed'
 import {ProfileLabelsSection} from '#/screens/Profile/Sections/Labels'
-import {web} from '#/alf'
 import * as Layout from '#/components/Layout'
 import {ScreenHider} from '#/components/moderation/ScreenHider'
 import {ProfileStarterPacks} from '#/components/StarterPack/ProfileStarterPacks'
@@ -116,9 +114,9 @@ function ProfileScreenInner({route}: Props) {
   // Most pushes will happen here, since we will have only placeholder data
   if (isLoadingDid || isLoadingProfile || starterPacksQuery.isLoading) {
     return (
-      <CenteredView sideBorders style={web({height: '100vh'})}>
+      <Layout.Content>
         <ProfileHeaderLoading />
-      </CenteredView>
+      </Layout.Content>
     )
   }
   if (resolveError || profileError) {
