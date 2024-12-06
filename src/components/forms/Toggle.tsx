@@ -104,17 +104,9 @@ export function Group({
 
   React.useEffect(() => {
     if (type === 'checkbox') {
-      if (
-        maxSelections &&
-        values.length >= maxSelections &&
-        maxReached === false
-      ) {
+      if (maxSelections && values.length >= maxSelections && !maxReached) {
         setMaxReached(true)
-      } else if (
-        maxSelections &&
-        values.length < maxSelections &&
-        maxReached === true
-      ) {
+      } else if (maxSelections && values.length < maxSelections && maxReached) {
         setMaxReached(false)
       }
     }
