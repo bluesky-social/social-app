@@ -778,7 +778,7 @@ msgstr "Tout le monde peut interagir"
 #: src/screens/Settings/AppearanceSettings.tsx:190
 #: src/screens/Settings/AppIconSettings.tsx:27
 msgid "App Icon"
-msgstr ""
+msgstr "Icône de l’application"
 
 #: src/screens/Settings/LanguageSettings.tsx:80
 msgid "App Language"
@@ -1275,7 +1275,7 @@ msgstr "Modifier"
 
 #: src/screens/Settings/AppIconSettings.tsx:81
 msgid "Change app icon to \"{0}\""
-msgstr ""
+msgstr "Changer l’icône de l’application pour \"{0}\""
 
 #: src/screens/Settings/AccountSettings.tsx:97
 #: src/screens/Settings/AccountSettings.tsx:101
@@ -1628,7 +1628,7 @@ msgstr "Contacter le support"
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:39
 msgid "Content & Media"
-msgstr ""
+msgstr "Contenu et médias"
 
 #: src/screens/Settings/AccessibilitySettings.tsx:109
 #: src/screens/Settings/Settings.tsx:175
@@ -2470,7 +2470,7 @@ msgstr "Intégrez ce post à votre site web. Il suffit de copier l’extrait sui
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerWeb.tsx:57
 msgid "Embedded video player"
-msgstr ""
+msgstr "Lecteur vidéo intégré"
 
 #: src/screens/Settings/components/Email2FAToggle.tsx:56
 #: src/screens/Settings/components/Email2FAToggle.tsx:60
@@ -2548,7 +2548,7 @@ msgstr "Entrer un code de confirmation"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:405
 msgid "Enter fullscreen"
-msgstr ""
+msgstr "Passer en plein écran"
 
 #: src/view/com/modals/ChangePassword.tsx:154
 msgid "Enter the code you received to change your password."
@@ -3389,7 +3389,7 @@ msgstr "Hébergeur"
 #: src/screens/Settings/ThreadPreferences.tsx:67
 #: src/screens/Settings/ThreadPreferences.tsx:70
 msgid "Hot replies first"
-msgstr ""
+msgstr "Réponses actives en premier"
 
 #: src/view/com/modals/InAppBrowserConsent.tsx:41
 msgid "How should we open this link?"
@@ -4306,7 +4306,7 @@ msgstr "Nouveau pseudo"
 #: src/view/screens/Lists.tsx:69
 #: src/view/screens/ModerationModlists.tsx:71
 msgid "New list"
-msgstr ""
+msgstr "Nouvelle liste"
 
 #: src/components/dms/NewMessagesPill.tsx:92
 msgid "New messages"
@@ -4696,7 +4696,7 @@ msgstr "Ouvrir les options de conversation"
 
 #: src/components/Layout/Header/index.tsx:148
 msgid "Open drawer menu"
-msgstr ""
+msgstr "Ouvre le menu latéral"
 
 #: src/screens/Messages/components/MessageInput.web.tsx:165
 #: src/view/com/composer/Composer.tsx:1221
@@ -6068,7 +6068,7 @@ msgstr "Voir ce guide"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/Scrubber.tsx:190
 msgid "Seek slider. Use the arrow keys to seek forwards and backwards, and space to play/pause"
-msgstr ""
+msgstr "Curseur de recherche. Utiliser les touches de flèches pour avancer ou reculer, et Espace pour la lecture/pause."
 
 #: src/view/com/util/Selector.tsx:107
 #~ msgid "Select {item}"
@@ -6822,7 +6822,7 @@ msgstr "Mots-clés seulement"
 #: src/screens/Settings/AppIconSettings.tsx:42
 #: src/screens/Settings/AppIconSettings.tsx:76
 msgid "Tap to change app icon"
-msgstr ""
+msgstr "Tapper pour changer l’icône de l’application"
 
 #: src/components/ProgressGuide/Toast.tsx:156
 msgid "Tap to dismiss"
@@ -6940,7 +6940,7 @@ msgstr "Ce compte pourra interagir avec vous après le déblocage."
 
 #: src/screens/Settings/AppIconSettings.tsx:82
 msgid "The app will be restarted"
-msgstr ""
+msgstr "L’application redémarrera."
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:117
 #: src/lib/moderation/useModerationCauseDescription.ts:126
@@ -7361,7 +7361,7 @@ msgstr "Préférences des fils de discussion"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/TimeIndicator.tsx:33
 msgid "Time remaining: {time} seconds"
-msgstr ""
+msgstr "Temps restant : {time} secondes"
 
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:99
 msgid "To disable the email 2FA method, please verify your access to the email address."
@@ -7588,11 +7588,11 @@ msgstr "Désabonné de la liste"
 
 #: src/view/com/composer/Composer.tsx:759
 msgid "Unsupported video type"
-msgstr ""
+msgstr "Type de vidéo non pris en charge"
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:66
 msgid "Unsupported video type: {0}"
-msgstr ""
+msgstr "Type de vidéo non pris en charge : {0}"
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:72
 #~ msgid "Unsupported video type: {mimeType}"
@@ -7987,7 +7987,7 @@ msgstr "Visiter le site"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VolumeControl.tsx:80
 msgid "Volume"
-msgstr ""
+msgstr "Volume"
 
 #: src/components/moderation/LabelPreference.tsx:136
 #: src/lib/moderation/useLabelBehaviorDescription.ts:17
