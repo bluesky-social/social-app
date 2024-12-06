@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-29 15:18+0900\n"
+"PO-Revision-Date: 2024-12-07 09:48+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -381,10 +381,6 @@ msgstr "このアプリについて"
 #: src/view/screens/Search/Search.tsx:884
 msgid "Access navigation links and settings"
 msgstr "ナビゲーションリンクと設定にアクセス"
-
-#: src/view/com/home/HomeHeaderLayoutMobile.tsx:56
-msgid "Access profile and other navigation links"
-msgstr "プロフィールと他のナビゲーションリンクにアクセス"
 
 #: src/screens/Settings/AccessibilitySettings.tsx:42
 #: src/screens/Settings/Settings.tsx:183
@@ -1559,6 +1555,10 @@ msgstr "接続中…"
 #: src/screens/Signup/index.tsx:178
 msgid "Contact support"
 msgstr "サポートに連絡"
+
+#: src/screens/Settings/ContentAndMediaSettings.tsx:39
+msgid "Content & Media"
+msgstr "コンテンツ＆メディア"
 
 #: src/screens/Settings/AccessibilitySettings.tsx:101
 #: src/screens/Settings/Settings.tsx:167
@@ -3788,10 +3788,6 @@ msgstr "メッセージを入力するフィールド"
 msgid "Message is too long"
 msgstr "メッセージが長すぎます"
 
-#: src/screens/Messages/ChatList.tsx:318
-msgid "Message settings"
-msgstr "メッセージの設定"
-
 #: src/Navigation.tsx:594
 #: src/screens/Messages/ChatList.tsx:162
 #: src/screens/Messages/ChatList.tsx:243
@@ -4066,10 +4062,6 @@ msgctxt "action"
 msgid "New"
 msgstr "新規"
 
-#: src/view/screens/ModerationModlists.tsx:92
-msgid "New"
-msgstr "新規"
-
 #: src/components/dms/dialogs/NewChatDialog.tsx:65
 #: src/screens/Messages/ChatList.tsx:328
 #: src/screens/Messages/ChatList.tsx:335
@@ -4081,6 +4073,11 @@ msgstr "新しいチャット"
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:355
 msgid "New handle"
 msgstr "新しいハンドル"
+
+#: src/view/screens/Lists.tsx:69
+#: src/view/screens/ModerationModlists.tsx:71
+msgid "New list"
+msgstr "新しいリスト"
 
 #: src/components/dms/NewMessagesPill.tsx:92
 msgid "New messages"
@@ -4459,6 +4456,10 @@ msgstr "ハンドル変更ダイアログを開く"
 msgid "Open conversation options"
 msgstr "会話のオプションを開く"
 
+#: src/components/Layout/Header/index.tsx:148
+msgid "Open drawer menu"
+msgstr "引き出しメニューを開く"
+
 #: src/screens/Messages/components/MessageInput.web.tsx:165
 #: src/view/com/composer/Composer.tsx:1221
 #: src/view/com/composer/Composer.tsx:1222
@@ -4488,10 +4489,6 @@ msgstr "モデレーションデバッグページを開く"
 #: src/screens/Moderation/index.tsx:225
 msgid "Open muted words and tags settings"
 msgstr "ミュートしたワードとタグの設定を開く"
-
-#: src/view/com/home/HomeHeaderLayoutMobile.tsx:54
-msgid "Open navigation"
-msgstr "ナビゲーションを開く"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:70
 msgid "Open post options menu"
@@ -7267,10 +7264,6 @@ msgstr "ユーザーリストを作成しました"
 #: src/view/com/modals/CreateOrEditList.tsx:162
 msgid "User list updated"
 msgstr "ユーザーリストを更新しました"
-
-#: src/view/screens/Lists.tsx:78
-msgid "User Lists"
-msgstr "ユーザーリスト"
 
 #: src/screens/Login/LoginForm.tsx:183
 msgid "Username or email address"
