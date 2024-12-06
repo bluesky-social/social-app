@@ -264,11 +264,11 @@ module.exports = function (config) {
             android: {
               backgroundColor: '#0c7cff',
               image: './assets/splash-android-icon.png',
-              imageWidth: 180,
+              imageWidth: 100,
               dark: {
                 backgroundColor: '#0c2a49',
                 image: './assets/splash-android-icon-dark.png',
-                imageWidth: 180,
+                imageWidth: 100,
               },
             },
           },
