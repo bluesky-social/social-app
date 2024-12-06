@@ -11,7 +11,6 @@ import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
-import {isWeb} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {usePostQuotesQuery} from '#/state/queries/post-quotes'
 import {useResolveUriQuery} from '#/state/queries/resolve-uri'
@@ -30,7 +29,7 @@ function renderItem({
   }
   index: number
 }) {
-  return <Post post={item.post} hideTopBorder={index === 0 && !isWeb} />
+  return <Post post={item.post} hideTopBorder={index === 0} />
 }
 
 function keyExtractor(item: {

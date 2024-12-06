@@ -193,6 +193,7 @@
     "react-native-web": "~0.19.11",
     "react-native-web-webview": "^1.0.2",
     "react-native-webview": "13.10.2",
+    "react-remove-scroll-bar": "^2.3.6",
     "react-responsive": "^9.0.2",
     "react-textarea-autosize": "^8.5.3",
     "rn-fetch-blob": "^0.12.0",
