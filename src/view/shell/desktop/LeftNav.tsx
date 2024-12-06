@@ -1,9 +1,6 @@
 import React from 'react'
-import {StyleSheet, TouchableOpacity, View} from 'react-native'
-import {
-  FontAwesomeIcon,
-  FontAwesomeIconStyle,
-} from '@fortawesome/react-native-fontawesome'
+import {StyleSheet, View} from 'react-native'
+import {FontAwesomeIconStyle} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {
@@ -14,9 +11,9 @@ import {
 
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {getCurrentRoute, isStateAtTabRoot, isTab} from '#/lib/routes/helpers'
+import {getCurrentRoute, isTab} from '#/lib/routes/helpers'
 import {makeProfileLink} from '#/lib/routes/links'
-import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
+import {CommonNavigatorParams} from '#/lib/routes/types'
 import {isInvalidHandle} from '#/lib/strings/handles'
 import {emitSoftReset} from '#/state/events'
 import {useFetchHandle} from '#/state/queries/handle'
@@ -101,47 +98,6 @@ function ProfileCard() {
   )
 }
 
-const HIDDEN_BACK_BNT_ROUTES = ['StarterPackWizard', 'StarterPackEdit']
-
-function BackBtn() {
-  const {isTablet} = useWebMediaQueries()
-  const pal = usePalette('default')
-  const navigation = useNavigation<NavigationProp>()
-  const {_} = useLingui()
-  const shouldShow = useNavigationState(
-    state =>
-      !isStateAtTabRoot(state) &&
-      !HIDDEN_BACK_BNT_ROUTES.includes(getCurrentRoute(state).name),
-  )
-
-  const onPressBack = React.useCallback(() => {
-    if (navigation.canGoBack()) {
-      navigation.goBack()
-    } else {
-      navigation.navigate('Home')
-    }
-  }, [navigation])
-
-  if (!shouldShow || isTablet) {
-    return <></>
-  }
-  return (
-    <TouchableOpacity
-      testID="viewHeaderBackOrMenuBtn"
-      onPress={onPressBack}
-      style={styles.backBtn}
-      accessibilityRole="button"
-      accessibilityLabel={_(msg`Go back`)}
-      accessibilityHint="">
-      <FontAwesomeIcon
-        size={24}
-        icon="angle-left"
-        style={pal.text as FontAwesomeIconStyle}
-      />
-    </TouchableOpacity>
-  )
-}
-
 interface NavItemProps {
   count?: string
   href: string
@@ -220,35 +176,44 @@ function NavItem({count, href, icon, iconFilled, label}: NavItemProps) {
         ]}>
         {isCurrent ? iconFilled : icon}
         {typeof count === 'string' && count ? (
-          <Text
-            accessibilityLabel={_(msg`${count} unread items`)}
-            accessibilityHint=""
-            accessible={true}
+          <View
             style={[
               a.absolute,
-              a.text_xs,
-              a.font_bold,
-              a.rounded_full,
-              a.text_center,
-              {
-                top: '-10%',
-                left: count.length === 1 ? '50%' : '40%',
-                backgroundColor: t.palette.primary_500,
-                color: t.palette.white,
-                lineHeight: a.text_sm.fontSize,
-                paddingHorizontal: 4,
-                paddingVertical: 1,
-                minWidth: 16,
-              },
-              isTablet && [
-                {
-                  top: '10%',
-                  left: count.length === 1 ? '50%' : '40%',
-                },
-              ],
+              a.inset_0,
+              {right: -20}, // more breathing room
             ]}>
-            {count}
-          </Text>
+            <Text
+              accessibilityLabel={_(msg`${count} unread items`)}
+              accessibilityHint=""
+              accessible={true}
+              numberOfLines={1}
+              style={[
+                a.absolute,
+                a.text_xs,
+                a.font_bold,
+                a.rounded_full,
+                a.text_center,
+                a.leading_tight,
+                {
+                  top: '-10%',
+                  left: count.length === 1 ? 12 : 8,
+                  backgroundColor: t.palette.primary_500,
+                  color: t.palette.white,
+                  lineHeight: a.text_sm.fontSize,
+                  paddingHorizontal: 4,
+                  paddingVertical: 1,
+                  minWidth: 16,
+                },
+                isTablet && [
+                  {
+                    top: '10%',
+                    left: count.length === 1 ? 20 : 16,
+                  },
+                ],
+              ]}>
+              {count}
+            </Text>
+          </View>
         ) : null}
       </View>
       {gtTablet && (
@@ -366,9 +331,9 @@ export function DesktopLeftNav() {
     <View
       role="navigation"
       style={[
+        a.px_xl,
         styles.leftNav,
         isTablet && styles.leftNavTablet,
-        pal.view,
         pal.border,
       ]}>
       {hasSession ? (
@@ -381,8 +346,6 @@ export function DesktopLeftNav() {
 
       {hasSession && (
         <>
-          <BackBtn />
-
           <NavItem
             href="/"
             icon={
@@ -525,8 +488,17 @@ const styles = StyleSheet.create({
     position: 'fixed',
     top: 10,
     // @ts-ignore web only
-    left: 'calc(50vw - 300px - 220px - 20px)',
-    width: 220,
+    left: '50%',
+    transform: [
+      {
+        translateX: -300,
+      },
+      {
+        translateX: '-100%',
+      },
+      ...a.scrollbar_offset.transform,
+    ],
+    width: 240,
     // @ts-ignore web only
     maxHeight: 'calc(100vh - 10px)',
     overflowY: 'auto',
@@ -538,7 +510,10 @@ const styles = StyleSheet.create({
     borderRightWidth: 1,
     height: '100%',
     width: 76,
+    paddingLeft: 0,
+    paddingRight: 0,
     alignItems: 'center',
+    transform: [],
   },
 
   profileCard: {

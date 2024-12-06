@@ -2,8 +2,8 @@
 module.exports = {
   locales: [
     'en',
-    'ast',
     'an',
+    'ast',
     'ca',
     'de',
     'en-GB',

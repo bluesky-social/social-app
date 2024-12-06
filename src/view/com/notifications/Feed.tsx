@@ -10,7 +10,6 @@ import {useLingui} from '@lingui/react'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {usePalette} from '#/lib/hooks/usePalette'
-import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {cleanError} from '#/lib/strings/errors'
 import {s} from '#/lib/styles'
 import {logger} from '#/logger'
@@ -22,7 +21,6 @@ import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {List, ListRef} from '#/view/com/util/List'
 import {NotificationFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
-import {CenteredView} from '#/view/com/util/Views'
 import {FeedItem} from './FeedItem'
 
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
@@ -46,7 +44,6 @@ export function Feed({
 
   const [isPTRing, setIsPTRing] = React.useState(false)
   const pal = usePalette('default')
-  const {isTabletOrMobile} = useWebMediaQueries()
 
   const {_} = useLingui()
   const moderationOpts = useModerationOpts()
@@ -133,11 +130,7 @@ export function Feed({
         )
       } else if (item === LOADING_ITEM) {
         return (
-          <View
-            style={[
-              pal.border,
-              !isTabletOrMobile && {borderTopWidth: StyleSheet.hairlineWidth},
-            ]}>
+          <View style={[pal.border]}>
             <NotificationFeedLoadingPlaceholder />
           </View>
         )
@@ -146,11 +139,11 @@ export function Feed({
         <FeedItem
           item={item}
           moderationOpts={moderationOpts!}
-          hideTopBorder={index === 0 && isTabletOrMobile}
+          hideTopBorder={index === 0}
         />
       )
     },
-    [moderationOpts, isTabletOrMobile, _, onPressRetryLoadMore, pal.border],
+    [moderationOpts, _, onPressRetryLoadMore, pal.border],
   )
 
   const FeedFooter = React.useCallback(
@@ -168,12 +161,10 @@ export function Feed({
   return (
     <View style={s.hContentRegion}>
       {error && (
-        <CenteredView>
-          <ErrorMessage
-            message={cleanError(error)}
-            onPressTryAgain={onPressTryAgain}
-          />
-        </CenteredView>
+        <ErrorMessage
+          message={cleanError(error)}
+          onPressTryAgain={onPressTryAgain}
+        />
       )}
       <List
         testID="notifsFeed"
