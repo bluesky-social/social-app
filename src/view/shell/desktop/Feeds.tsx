@@ -36,7 +36,11 @@ export function DesktopFeeds() {
         a.flex_1,
         a.gap_md,
         web({
-          paddingVertical: 2, // fixes overflow?
+          /*
+           * Small padding prevents overflow prior to actually overflowing the
+           * height of the screen with lots of feeds.
+           */
+          paddingVertical: 2,
           overflowY: 'auto',
         }),
       ]}>
