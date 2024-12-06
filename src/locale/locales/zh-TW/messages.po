@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-12-06 01:15\n"
+"PO-Revision-Date: 2024-12-06 16:16\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -2091,7 +2091,7 @@ msgstr "不以連字號 (-) 開頭或結尾"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:487
 msgid "Domain verified!"
-msgstr "網域驗證成功！"
+msgstr "成功驗證網域！"
 
 #: src/components/dialogs/BirthDateSettings.tsx:118
 #: src/components/dialogs/BirthDateSettings.tsx:124
@@ -2322,7 +2322,7 @@ msgstr "電子信箱更新成功"
 
 #: src/view/com/modals/VerifyEmail.tsx:85
 msgid "Email verified"
-msgstr "電子信箱驗證成功"
+msgstr "成功驗證電子信箱"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:79
 msgid "Email Verified"
@@ -2707,7 +2707,7 @@ msgstr "意見回饋"
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:266
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:275
 msgid "Feedback sent!"
-msgstr "意見回饋已送出！"
+msgstr "已送出意見回饋！"
 
 #: src/Navigation.tsx:397
 #: src/screens/StarterPack/StarterPackScreen.tsx:183
@@ -2731,7 +2731,7 @@ msgstr "成功更新動態源！"
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:43
 msgid "File saved successfully!"
-msgstr "檔案儲存成功！"
+msgstr "成功儲存檔案！"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:66
 msgid "Filter from feeds"
@@ -3059,7 +3059,7 @@ msgstr "帳號代碼已被佔用，請選擇不同的代碼再試一次。"
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:187
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:324
 msgid "Handle changed!"
-msgstr "帳號代碼變更成功！"
+msgstr "成功變更帳號代碼！"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:560
 msgid "Handle too long. Please try a shorter one."
@@ -5007,7 +5007,7 @@ msgstr "QR Code 已複製到您的剪貼簿！"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:106
 msgid "QR code has been downloaded!"
-msgstr "QR Code 下載成功！"
+msgstr "成功下載 QR Code！"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:107
 msgid "QR code saved to your camera roll!"
@@ -5026,7 +5026,7 @@ msgstr "引用已重新連結"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:302
 msgid "Quote post was successfully detached"
-msgstr "貼文引用已成功分離"
+msgstr "成功分離貼文引用"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:167
 #: src/view/com/util/post-ctrls/RepostButton.tsx:189
@@ -5305,7 +5305,7 @@ msgstr "成功更新回覆可見度"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:332
 msgid "Reply was successfully hidden"
-msgstr "回覆已成功隱藏"
+msgstr "成功隱藏回覆"
 
 #: src/components/dms/MessageMenu.tsx:132
 #: src/components/dms/MessagesListBlockedFooter.tsx:77
@@ -6438,7 +6438,7 @@ msgstr "文字輸入框"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:96
 msgid "Thank you! Your email has been successfully verified."
-msgstr "謝謝！您的電子郵件地址已成功驗證。"
+msgstr "謝謝！您的電子郵件地址已驗證成功。"
 
 #: src/components/dms/ReportDialog.tsx:129
 #: src/components/ReportDialog/SubmitView.tsx:82
@@ -6779,7 +6779,7 @@ msgstr "此列表由 <0>{0}</0> 建立，其名稱或說明中包含可能違反
 
 #: src/view/screens/ProfileList.tsx:965
 msgid "This list is empty!"
-msgstr "這個列表為空！"
+msgstr "這個列表是空的！"
 
 #: src/screens/Profile/ErrorState.tsx:40
 msgid "This moderation service is unavailable. See below for more details. If this issue persists, contact us."
@@ -7900,7 +7900,7 @@ msgstr "您：{short}"
 
 #: src/screens/Signup/index.tsx:107
 msgid "You'll follow the suggested users and feeds once you finish creating your account!"
-msgstr "當您成功建立帳號後，您將會自動跟隨建議的用戶和動態源！"
+msgstr "當您完成建立帳號後，您將會自動跟隨建議的用戶和動態源！"
 
 #: src/screens/Signup/index.tsx:112
 msgid "You'll follow the suggested users once you finish creating your account!"
@@ -8021,7 +8021,7 @@ msgstr "您的靜音字詞"
 
 #: src/view/com/modals/ChangePassword.tsx:158
 msgid "Your password has been changed successfully!"
-msgstr "您的密碼已成功變更！"
+msgstr "成功變更您的密碼！"
 
 #: src/view/com/composer/Composer.tsx:470
 msgid "Your post has been published"
