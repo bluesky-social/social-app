@@ -10,8 +10,6 @@ import {useUpdateActorDeclaration} from '#/state/queries/messages/actor-declarat
 import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
-import {ViewHeader} from '#/view/com/util/ViewHeader'
-import {ScrollView} from '#/view/com/util/Views'
 import {atoms as a} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Divider} from '#/components/Divider'
@@ -57,8 +55,16 @@ export function MessagesSettingsScreen({}: Props) {
 
   return (
     <Layout.Screen testID="messagesSettingsScreen">
-      <ScrollView stickyHeaderIndices={[0]}>
-        <ViewHeader title={_(msg`Chat Settings`)} showOnDesktop showBorder />
+      <Layout.Header.Outer>
+        <Layout.Header.BackButton />
+        <Layout.Header.Content>
+          <Layout.Header.TitleText>
+            <Trans>Chat Settings</Trans>
+          </Layout.Header.TitleText>
+        </Layout.Header.Content>
+        <Layout.Header.Slot />
+      </Layout.Header.Outer>
+      <Layout.Content>
         <View style={[a.p_lg, a.gap_md]}>
           <Text style={[a.text_lg, a.font_bold]}>
             <Trans>Allow new messages from</Trans>
@@ -142,7 +148,7 @@ export function MessagesSettingsScreen({}: Props) {
             </>
           )}
         </View>
-      </ScrollView>
+      </Layout.Content>
     </Layout.Screen>
   )
 }

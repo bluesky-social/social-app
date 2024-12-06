@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react'
+import React from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -6,7 +6,6 @@ import {useFocusEffect, useIsFocused} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {ComposeIcon2} from '#/lib/icons'
 import {
   NativeStackScreenProps,
@@ -14,7 +13,7 @@ import {
 } from '#/lib/routes/types'
 import {s} from '#/lib/styles'
 import {logger} from '#/logger'
-import {isNative} from '#/platform/detection'
+import {isNative, isWeb} from '#/platform/detection'
 import {emitSoftReset, listenSoftReset} from '#/state/events'
 import {RQKEY as NOTIFS_RQKEY} from '#/state/queries/notifications/feed'
 import {
@@ -29,28 +28,25 @@ import {FAB} from '#/view/com/util/fab/FAB'
 import {ListMethods} from '#/view/com/util/List'
 import {LoadLatestBtn} from '#/view/com/util/load-latest/LoadLatestBtn'
 import {MainScrollProvider} from '#/view/com/util/MainScrollProvider'
-import {ViewHeader} from '#/view/com/util/ViewHeader'
-import {CenteredView} from '#/view/com/util/Views'
-import {atoms as a, useTheme} from '#/alf'
-import {Button} from '#/components/Button'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {Button, ButtonIcon} from '#/components/Button'
 import {SettingsGear2_Stroke2_Corner0_Rounded as SettingsIcon} from '#/components/icons/SettingsGear2'
 import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
-import {Text} from '#/components/Typography'
 
 type Props = NativeStackScreenProps<
   NotificationsTabNavigatorParams,
   'Notifications'
 >
 export function NotificationsScreen({route: {params}}: Props) {
+  const t = useTheme()
+  const {gtTablet} = useBreakpoints()
   const {_} = useLingui()
   const setMinimalShellMode = useSetMinimalShellMode()
   const [isScrolledDown, setIsScrolledDown] = React.useState(false)
   const [isLoadingLatest, setIsLoadingLatest] = React.useState(false)
   const scrollElRef = React.useRef<ListMethods>(null)
-  const t = useTheme()
-  const {isDesktop} = useWebMediaQueries()
   const queryClient = useQueryClient()
   const unreadNotifs = useUnreadNotifications()
   const unreadApi = useUnreadNotificationsApi()
@@ -110,121 +106,77 @@ export function NotificationsScreen({route: {params}}: Props) {
     return listenSoftReset(onPressLoadLatest)
   }, [onPressLoadLatest, isScreenFocused])
 
-  const renderButton = useCallback(() => {
-    return (
-      <Link
-        to="/notifications/settings"
-        label={_(msg`Notification settings`)}
-        size="small"
-        variant="ghost"
-        color="secondary"
-        shape="square"
-        style={[a.justify_center]}>
-        <SettingsIcon size="md" style={t.atoms.text_contrast_medium} />
-      </Link>
-    )
-  }, [_, t])
-
-  const ListHeaderComponent = React.useCallback(() => {
-    if (isDesktop) {
-      return (
-        <View
-          style={[
-            t.atoms.bg,
-            a.flex_row,
-            a.align_center,
-            a.justify_between,
-            a.gap_lg,
-            a.px_lg,
-            a.pr_md,
-            a.py_sm,
-          ]}>
+  return (
+    <Layout.Screen testID="notificationsScreen">
+      <Layout.Header.Outer>
+        <Layout.Header.MenuButton />
+        <Layout.Header.Content>
           <Button
             label={_(msg`Notifications`)}
             accessibilityHint={_(msg`Refresh notifications`)}
-            onPress={emitSoftReset}>
-            {({hovered, pressed}) => (
-              <Text
-                style={[
-                  a.text_2xl,
-                  a.font_bold,
-                  (hovered || pressed) && a.underline,
-                ]}>
+            onPress={emitSoftReset}
+            style={[a.justify_start]}>
+            {({hovered}) => (
+              <Layout.Header.TitleText
+                style={[a.w_full, hovered && a.underline]}>
                 <Trans>Notifications</Trans>
-                {hasNew && (
+                {isWeb && gtTablet && hasNew && (
                   <View
-                    style={{
-                      left: 4,
-                      top: -8,
-                      backgroundColor: t.palette.primary_500,
-                      width: 8,
-                      height: 8,
-                      borderRadius: 4,
-                    }}
+                    style={[
+                      a.rounded_full,
+                      {
+                        width: 8,
+                        height: 8,
+                        bottom: 3,
+                        left: 6,
+                        backgroundColor: t.palette.primary_500,
+                      },
+                    ]}
                   />
                 )}
-              </Text>
+              </Layout.Header.TitleText>
             )}
           </Button>
-          <View style={[a.flex_row, a.align_center, a.gap_sm]}>
-            {isLoadingLatest ? <Loader size="md" /> : <></>}
-            {renderButton()}
-          </View>
-        </View>
-      )
-    }
-    return <></>
-  }, [isDesktop, t, hasNew, renderButton, _, isLoadingLatest])
+        </Layout.Header.Content>
+        <Layout.Header.Slot>
+          <Link
+            to="/notifications/settings"
+            label={_(msg`Notification settings`)}
+            size="small"
+            variant="ghost"
+            color="secondary"
+            shape="round"
+            style={[a.justify_center]}>
+            <ButtonIcon
+              icon={isLoadingLatest ? Loader : SettingsIcon}
+              size="lg"
+            />
+          </Link>
+        </Layout.Header.Slot>
+      </Layout.Header.Outer>
 
-  const renderHeaderSpinner = React.useCallback(() => {
-    return (
-      <View
-        style={[
-          {width: 30, height: 20},
-          a.flex_row,
-          a.align_center,
-          a.justify_end,
-          a.gap_md,
-        ]}>
-        {isLoadingLatest ? <Loader width={20} /> : <></>}
-        {renderButton()}
-      </View>
-    )
-  }, [renderButton, isLoadingLatest])
-
-  return (
-    <Layout.Screen testID="notificationsScreen">
-      <CenteredView style={[a.flex_1, {paddingTop: 2}]} sideBorders={true}>
-        <ViewHeader
-          title={_(msg`Notifications`)}
-          canGoBack={false}
-          showBorder={true}
-          renderButton={renderHeaderSpinner}
+      <MainScrollProvider>
+        <Feed
+          onScrolledDownChange={setIsScrolledDown}
+          scrollElRef={scrollElRef}
+          overridePriorityNotifications={params?.show === 'all'}
         />
-        <MainScrollProvider>
-          <Feed
-            onScrolledDownChange={setIsScrolledDown}
-            scrollElRef={scrollElRef}
-            ListHeaderComponent={ListHeaderComponent}
-            overridePriorityNotifications={params?.show === 'all'}
-          />
-        </MainScrollProvider>
-        {(isScrolledDown || hasNew) && (
-          <LoadLatestBtn
-            onPress={onPressLoadLatest}
-            label={_(msg`Load new notifications`)}
-            showIndicator={hasNew}
-          />
-        )}
-        <FAB
-          testID="composeFAB"
-          onPress={() => openComposer({})}
-          icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
-          accessibilityRole="button"
-          accessibilityLabel={_(msg`New post`)}
-          accessibilityHint=""
+      </MainScrollProvider>
+      {(isScrolledDown || hasNew) && (
+        <LoadLatestBtn
+          onPress={onPressLoadLatest}
+          label={_(msg`Load new notifications`)}
+          showIndicator={hasNew}
         />
-      </CenteredView>
+      )}
+      <FAB
+        testID="composeFAB"
+        onPress={() => openComposer({})}
+        icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
+        accessibilityRole="button"
+        accessibilityLabel={_(msg`New post`)}
+        accessibilityHint=""
+      />
     </Layout.Screen>
   )
 }

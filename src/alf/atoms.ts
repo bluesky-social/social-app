@@ -1,7 +1,8 @@
 import {Platform, StyleProp, StyleSheet, ViewStyle} from 'react-native'
 
 import * as tokens from '#/alf/tokens'
-import {ios, native, web} from '#/alf/util/platform'
+import {ios, native, platform, web} from '#/alf/util/platform'
+import * as Layout from '#/components/Layout'
 
 export const atoms = {
   debug: {
@@ -21,6 +22,9 @@ export const atoms = {
   relative: {
     position: 'relative',
   },
+  sticky: web({
+    position: 'sticky',
+  }),
   inset_0: {
     top: 0,
     left: 0,
@@ -941,4 +945,20 @@ export const atoms = {
     transitionTimingFunction: 'cubic-bezier(0.17, 0.73, 0.14, 1)',
     transitionDuration: '100ms',
   }),
+
+  /**
+   * {@link Layout.SCROLLBAR_OFFSET}
+   */
+  scrollbar_offset: platform({
+    web: {
+      transform: [
+        {
+          translateX: Layout.SCROLLBAR_OFFSET,
+        },
+      ],
+    },
+    native: {
+      transform: [],
+    },
+  }) as {transform: Exclude<ViewStyle['transform'], string | undefined>},
 } as const
