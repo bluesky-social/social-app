@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-12-06 01:15\n"
+"PO-Revision-Date: 2024-12-06 09:03\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional, Hong Kong\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -4456,7 +4456,7 @@ msgstr "打開對話選項"
 
 #: src/components/Layout/Header/index.tsx:148
 msgid "Open drawer menu"
-msgstr "打開抽屜選單"
+msgstr "打開櫃桶選單"
 
 #: src/screens/Messages/components/MessageInput.web.tsx:165
 #: src/view/com/composer/Composer.tsx:1221
