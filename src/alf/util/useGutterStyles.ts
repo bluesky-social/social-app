@@ -1,6 +1,6 @@
 import React from 'react'
 
-import {Breakpoint,tokens, useBreakpoints} from '#/alf'
+import {Breakpoint, tokens, useBreakpoints} from '#/alf'
 
 type Gutter = 'compact' | 'base' | 'wide' | 0
 
