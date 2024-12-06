@@ -155,8 +155,10 @@ slate.
 
 This handling becomes particularly thorny when we need to lock scroll, like when
 opening a dialog or dropdown. Radix uses the library `react-remove-scroll`
-internally, and we've adopted this for our own use in the app. This library adds
-some utility classes and CSS vars to the page when scroll is locked.
+internally, which in turn depends on
+[`react-remove-scroll-bar`](https://github.com/theKashey/react-remove-scroll-bar).
+We've opted to rely on this transient dependency. This library adds some utility
+classes and CSS vars to the page when scroll is locked.
 
 **It is this CSS variable that we use in `SCROLLBAR_OFFSET` values.** This
 ensures that elements do not shift relative to the screen when opening a

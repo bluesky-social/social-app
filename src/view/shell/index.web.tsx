@@ -3,7 +3,7 @@ import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
-import {RemoveScroll} from 'react-remove-scroll'
+import {RemoveScrollBar} from 'react-remove-scroll-bar'
 
 import {useColorSchemeStyle} from '#/lib/hooks/useColorSchemeStyle'
 import {useIntentHandler} from '#/lib/hooks/useIntentHandler'
@@ -57,7 +57,8 @@ function ShellInner() {
       <PortalOutlet />
 
       {showDrawer && (
-        <RemoveScroll>
+        <>
+          <RemoveScrollBar />
           <TouchableWithoutFeedback
             onPress={ev => {
               // Only close if press happens outside of the drawer
@@ -83,7 +84,7 @@ function ShellInner() {
               </View>
             </View>
           </TouchableWithoutFeedback>
-        </RemoveScroll>
+        </>
       )}
     </>
   )

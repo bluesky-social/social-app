@@ -3,7 +3,7 @@ import {StyleSheet, View} from 'react-native'
 import {DismissableLayer} from '@radix-ui/react-dismissable-layer'
 import {useFocusGuards} from '@radix-ui/react-focus-guards'
 import {FocusScope} from '@radix-ui/react-focus-scope'
-import {RemoveScroll} from 'react-remove-scroll'
+import {RemoveScrollBar} from 'react-remove-scroll-bar'
 
 import {useModals} from '#/state/modals'
 import {ComposerOpts, useComposerState} from '#/state/shell/composer'
@@ -28,9 +28,10 @@ export function Composer({}: {winHeight: number}) {
   }
 
   return (
-    <RemoveScroll>
+    <>
+      <RemoveScrollBar />
       <Inner state={state} />
-    </RemoveScroll>
+    </>
   )
 }
 

@@ -15,7 +15,7 @@ import {
 } from '@fortawesome/react-native-fontawesome'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {RemoveScroll} from 'react-remove-scroll'
+import {RemoveScrollBar} from 'react-remove-scroll-bar'
 
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {colors, s} from '#/lib/styles'
@@ -36,13 +36,14 @@ export function Lightbox() {
   const initialIndex = activeLightbox.index
   const imgs = activeLightbox.images
   return (
-    <RemoveScroll>
+    <>
+      <RemoveScrollBar />
       <LightboxInner
         imgs={imgs}
         initialIndex={initialIndex}
         onClose={closeLightbox}
       />
-    </RemoveScroll>
+    </>
   )
 }
 

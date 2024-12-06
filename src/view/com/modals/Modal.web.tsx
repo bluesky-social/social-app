@@ -1,6 +1,6 @@
 import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native'
 import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
-import {RemoveScroll} from 'react-remove-scroll'
+import {RemoveScrollBar} from 'react-remove-scroll-bar'
 
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
@@ -28,11 +28,12 @@ export function ModalsContainer() {
   }
 
   return (
-    <RemoveScroll>
+    <>
+      <RemoveScrollBar />
       {activeModals.map((modal, i) => (
         <Modal key={`modal-${i}`} modal={modal} />
       ))}
-    </RemoveScroll>
+    </>
   )
 }
 
