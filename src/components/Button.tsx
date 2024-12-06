@@ -15,6 +15,7 @@ import {
 import {LinearGradient} from 'expo-linear-gradient'
 
 import {atoms as a, flatten, select, tokens, useTheme} from '#/alf'
+import {compareAndContrast} from '#/alf/util/contrast'
 import {Props as SVGIconProps} from '#/components/icons/common'
 import {Text} from '#/components/Typography'
 
@@ -120,7 +121,6 @@ export const Button = React.forwardRef<View, ButtonProps>(
     },
     ref,
   ) => {
-    const t = useTheme()
     const [state, setState] = React.useState({
       pressed: false,
       hovered: false,
@@ -184,227 +184,6 @@ export const Button = React.forwardRef<View, ButtonProps>(
       }))
     }, [setState])
 
-    const {baseStyles, hoverStyles} = React.useMemo(() => {
-      const baseStyles: ViewStyle[] = []
-      const hoverStyles: ViewStyle[] = []
-
-      if (color === 'primary') {
-        if (variant === 'solid') {
-          if (!disabled) {
-            baseStyles.push({
-              backgroundColor: t.palette.primary_500,
-            })
-            hoverStyles.push({
-              backgroundColor: t.palette.primary_600,
-            })
-          } else {
-            baseStyles.push({
-              backgroundColor: select(t.name, {
-                light: t.palette.primary_700,
-                dim: t.palette.primary_300,
-                dark: t.palette.primary_300,
-              }),
-            })
-          }
-        } else if (variant === 'outline') {
-          baseStyles.push(a.border, t.atoms.bg, {
-            borderWidth: 1,
-          })
-
-          if (!disabled) {
-            baseStyles.push(a.border, {
-              borderColor: t.palette.primary_500,
-            })
-            hoverStyles.push(a.border, {
-              backgroundColor: t.palette.primary_50,
-            })
-          } else {
-            baseStyles.push(a.border, {
-              borderColor: t.palette.primary_200,
-            })
-          }
-        } else if (variant === 'ghost') {
-          if (!disabled) {
-            baseStyles.push(t.atoms.bg)
-            hoverStyles.push({
-              backgroundColor: t.palette.primary_100,
-            })
-          }
-        }
-      } else if (color === 'secondary') {
-        if (variant === 'solid') {
-          if (!disabled) {
-            baseStyles.push(t.atoms.bg_contrast_25)
-            hoverStyles.push(t.atoms.bg_contrast_50)
-          } else {
-            baseStyles.push(t.atoms.bg_contrast_100)
-          }
-        } else if (variant === 'outline') {
-          baseStyles.push(a.border, t.atoms.bg, {
-            borderWidth: 1,
-          })
-
-          if (!disabled) {
-            baseStyles.push(a.border, {
-              borderColor: t.palette.contrast_300,
-            })
-            hoverStyles.push(t.atoms.bg_contrast_50)
-          } else {
-            baseStyles.push(a.border, {
-              borderColor: t.palette.contrast_200,
-            })
-          }
-        } else if (variant === 'ghost') {
-          if (!disabled) {
-            baseStyles.push(t.atoms.bg)
-            hoverStyles.push({
-              backgroundColor: t.palette.contrast_25,
-            })
-          }
-        }
-      } else if (color === 'secondary_inverted') {
-        if (variant === 'solid') {
-          if (!disabled) {
-            baseStyles.push({
-              backgroundColor: t.palette.contrast_900,
-            })
-            hoverStyles.push({
-              backgroundColor: t.palette.contrast_950,
-            })
-          } else {
-            baseStyles.push({
-              backgroundColor: t.palette.contrast_600,
-            })
-          }
-        } else if (variant === 'outline') {
-          baseStyles.push(a.border, t.atoms.bg, {
-            borderWidth: 1,
-          })
-
-          if (!disabled) {
-            baseStyles.push(a.border, {
-              borderColor: t.palette.contrast_300,
-            })
-            hoverStyles.push(t.atoms.bg_contrast_50)
-          } else {
-            baseStyles.push(a.border, {
-              borderColor: t.palette.contrast_200,
-            })
-          }
-        } else if (variant === 'ghost') {
-          if (!disabled) {
-            baseStyles.push(t.atoms.bg)
-            hoverStyles.push({
-              backgroundColor: t.palette.contrast_25,
-            })
-          }
-        }
-      } else if (color === 'negative') {
-        if (variant === 'solid') {
-          if (!disabled) {
-            baseStyles.push({
-              backgroundColor: t.palette.negative_500,
-            })
-            hoverStyles.push({
-              backgroundColor: t.palette.negative_600,
-            })
-          } else {
-            baseStyles.push({
-              backgroundColor: select(t.name, {
-                light: t.palette.negative_700,
-                dim: t.palette.negative_300,
-                dark: t.palette.negative_300,
-              }),
-            })
-          }
-        } else if (variant === 'outline') {
-          baseStyles.push(a.border, t.atoms.bg, {
-            borderWidth: 1,
-          })
-
-          if (!disabled) {
-            baseStyles.push(a.border, {
-              borderColor: t.palette.negative_500,
-            })
-            hoverStyles.push(a.border, {
-              backgroundColor: t.palette.negative_50,
-            })
-          } else {
-            baseStyles.push(a.border, {
-              borderColor: t.palette.negative_200,
-            })
-          }
-        } else if (variant === 'ghost') {
-          if (!disabled) {
-            baseStyles.push(t.atoms.bg)
-            hoverStyles.push({
-              backgroundColor: t.palette.negative_100,
-            })
-          }
-        }
-      }
-
-      if (shape === 'default') {
-        if (size === 'large') {
-          baseStyles.push({
-            paddingVertical: 13,
-            paddingHorizontal: 20,
-            borderRadius: 8,
-            gap: 8,
-          })
-        } else if (size === 'small') {
-          baseStyles.push({
-            paddingVertical: 9,
-            paddingHorizontal: 12,
-            borderRadius: 6,
-            gap: 6,
-          })
-        } else if (size === 'tiny') {
-          baseStyles.push({
-            paddingVertical: 4,
-            paddingHorizontal: 8,
-            borderRadius: 4,
-            gap: 4,
-          })
-        }
-      } else if (shape === 'round' || shape === 'square') {
-        if (size === 'large') {
-          if (shape === 'round') {
-            baseStyles.push({height: 46, width: 46})
-          } else {
-            baseStyles.push({height: 44, width: 44})
-          }
-        } else if (size === 'small') {
-          if (shape === 'round') {
-            baseStyles.push({height: 34, width: 34})
-          } else {
-            baseStyles.push({height: 34, width: 34})
-          }
-        } else if (size === 'tiny') {
-          if (shape === 'round') {
-            baseStyles.push({height: 22, width: 22})
-          } else {
-            baseStyles.push({height: 21, width: 21})
-          }
-        }
-
-        if (shape === 'round') {
-          baseStyles.push(a.rounded_full)
-        } else if (shape === 'square') {
-          if (size === 'tiny') {
-            baseStyles.push(a.rounded_xs)
-          } else {
-            baseStyles.push(a.rounded_sm)
-          }
-        }
-      }
-
-      return {
-        baseStyles,
-        hoverStyles,
-      }
-    }, [t, variant, color, size, shape, disabled])
-
     const {gradientColors, gradientHoverColors, gradientLocations} =
       React.useMemo(() => {
         const colors: string[] = []
@@ -436,17 +215,19 @@ export const Button = React.forwardRef<View, ButtonProps>(
           gradientLocations: locations,
         }
       }, [variant, color])
-
     const context = React.useMemo<ButtonContext>(
       () => ({
         ...state,
         variant,
         color,
         size,
+        shape,
         disabled: disabled || false,
       }),
-      [state, variant, color, size, disabled],
+      [state, variant, color, size, shape, disabled],
     )
+    const {backgroundBase: baseStyles, textBase: hoverStyles} =
+      useButtonStyles(context)
 
     const flattenedBaseStyles = flatten([baseStyles, style])
 
@@ -508,143 +289,319 @@ export const Button = React.forwardRef<View, ButtonProps>(
 )
 Button.displayName = 'Button'
 
-export function useSharedButtonTextStyles() {
+export function useButtonStyles({
+  color,
+  variant,
+  disabled,
+  size,
+  shape,
+}: ButtonContext) {
   const t = useTheme()
-  const {color, variant, disabled, size} = useButtonContext()
   return React.useMemo(() => {
-    const baseStyles: TextStyle[] = []
+    const backgroundBase: ViewStyle[] = []
+    const backgroundHover: ViewStyle[] = []
+    const textBase: TextStyle[] = []
 
     if (color === 'primary') {
       if (variant === 'solid') {
         if (!disabled) {
-          baseStyles.push({color: t.palette.white})
+          backgroundBase.push({
+            backgroundColor: t.palette.primary_500,
+          })
+          backgroundHover.push({
+            backgroundColor: t.palette.primary_600,
+          })
+          textBase.push({color: t.palette.white})
         } else {
-          baseStyles.push({color: t.palette.white, opacity: 0.5})
+          backgroundBase.push({
+            backgroundColor: select(t.name, {
+              light: t.palette.primary_700,
+              dim: t.palette.primary_300,
+              dark: t.palette.primary_300,
+            }),
+          })
+          textBase.push({color: t.palette.white, opacity: 0.5})
         }
       } else if (variant === 'outline') {
+        backgroundBase.push(a.border, t.atoms.bg, {
+          borderWidth: 1,
+        })
+
         if (!disabled) {
-          baseStyles.push({
+          backgroundBase.push(a.border, {
+            borderColor: t.palette.primary_500,
+          })
+          backgroundHover.push(a.border, {
+            backgroundColor: t.palette.primary_50,
+          })
+          textBase.push({
             color: t.palette.primary_600,
           })
         } else {
-          baseStyles.push({color: t.palette.primary_600, opacity: 0.5})
+          backgroundBase.push(a.border, {
+            borderColor: t.palette.primary_200,
+          })
+          textBase.push({color: t.palette.primary_600, opacity: 0.5})
         }
       } else if (variant === 'ghost') {
         if (!disabled) {
-          baseStyles.push({color: t.palette.primary_600})
+          backgroundBase.push(t.atoms.bg)
+          backgroundHover.push({
+            backgroundColor: t.palette.primary_100,
+          })
+          textBase.push({color: t.palette.primary_600})
         } else {
-          baseStyles.push({color: t.palette.primary_600, opacity: 0.5})
+          textBase.push({color: t.palette.primary_600, opacity: 0.5})
         }
       }
     } else if (color === 'secondary') {
-      if (variant === 'solid' || variant === 'gradient') {
+      if (variant === 'solid') {
         if (!disabled) {
-          baseStyles.push({
+          backgroundBase.push(t.atoms.bg_contrast_25)
+          backgroundHover.push(t.atoms.bg_contrast_50)
+          textBase.push({
             color: t.palette.contrast_700,
           })
         } else {
-          baseStyles.push({
+          backgroundBase.push(t.atoms.bg_contrast_100)
+          textBase.push({
             color: t.palette.contrast_400,
           })
         }
       } else if (variant === 'outline') {
+        backgroundBase.push(a.border, t.atoms.bg, {
+          borderWidth: 1,
+        })
+
         if (!disabled) {
-          baseStyles.push({
+          backgroundBase.push(a.border, {
+            borderColor: t.palette.contrast_300,
+          })
+          backgroundHover.push(t.atoms.bg_contrast_50)
+          textBase.push({
             color: t.palette.contrast_600,
           })
         } else {
-          baseStyles.push({
+          backgroundBase.push(a.border, {
+            borderColor: t.palette.contrast_200,
+          })
+          textBase.push({
             color: t.palette.contrast_300,
           })
         }
       } else if (variant === 'ghost') {
         if (!disabled) {
-          baseStyles.push({
+          backgroundBase.push(t.atoms.bg)
+          backgroundHover.push({
+            backgroundColor: t.palette.contrast_25,
+          })
+          textBase.push({
             color: t.palette.contrast_600,
           })
         } else {
-          baseStyles.push({
+          textBase.push({
             color: t.palette.contrast_300,
           })
         }
       }
     } else if (color === 'secondary_inverted') {
-      if (variant === 'solid' || variant === 'gradient') {
+      if (variant === 'solid') {
         if (!disabled) {
-          baseStyles.push({
+          backgroundBase.push({
+            backgroundColor: t.palette.contrast_900,
+          })
+          backgroundHover.push({
+            backgroundColor: t.palette.contrast_950,
+          })
+          textBase.push({
             color: t.palette.contrast_100,
           })
         } else {
-          baseStyles.push({
+          backgroundBase.push({
+            backgroundColor: t.palette.contrast_600,
+          })
+          textBase.push({
             color: t.palette.contrast_400,
           })
         }
       } else if (variant === 'outline') {
+        backgroundBase.push(a.border, t.atoms.bg, {
+          borderWidth: 1,
+        })
+
         if (!disabled) {
-          baseStyles.push({
+          backgroundBase.push(a.border, {
+            borderColor: t.palette.contrast_300,
+          })
+          backgroundHover.push(t.atoms.bg_contrast_50)
+          textBase.push({
             color: t.palette.contrast_600,
           })
         } else {
-          baseStyles.push({
+          backgroundBase.push(a.border, {
+            borderColor: t.palette.contrast_200,
+          })
+          textBase.push({
             color: t.palette.contrast_300,
           })
         }
       } else if (variant === 'ghost') {
         if (!disabled) {
-          baseStyles.push({
+          backgroundBase.push(t.atoms.bg)
+          backgroundHover.push({
+            backgroundColor: t.palette.contrast_25,
+          })
+          textBase.push({
             color: t.palette.contrast_600,
           })
         } else {
-          baseStyles.push({
+          textBase.push({
             color: t.palette.contrast_300,
           })
         }
       }
     } else if (color === 'negative') {
-      if (variant === 'solid' || variant === 'gradient') {
+      if (variant === 'solid') {
         if (!disabled) {
-          baseStyles.push({color: t.palette.white})
+          backgroundBase.push({
+            backgroundColor: t.palette.negative_500,
+          })
+          backgroundHover.push({
+            backgroundColor: t.palette.negative_600,
+          })
+          textBase.push({color: t.palette.white})
         } else {
-          baseStyles.push({color: t.palette.white, opacity: 0.5})
+          backgroundBase.push({
+            backgroundColor: select(t.name, {
+              light: t.palette.negative_700,
+              dim: t.palette.negative_300,
+              dark: t.palette.negative_300,
+            }),
+          })
+          textBase.push({color: t.palette.white, opacity: 0.5})
         }
       } else if (variant === 'outline') {
+        backgroundBase.push(a.border, t.atoms.bg, {
+          borderWidth: 1,
+        })
+
         if (!disabled) {
-          baseStyles.push({color: t.palette.negative_400})
+          backgroundBase.push(a.border, {
+            borderColor: t.palette.negative_500,
+          })
+          backgroundHover.push(a.border, {
+            backgroundColor: t.palette.negative_50,
+          })
+          textBase.push({color: t.palette.negative_400})
         } else {
-          baseStyles.push({color: t.palette.negative_400, opacity: 0.5})
+          backgroundBase.push(a.border, {
+            borderColor: t.palette.negative_200,
+          })
+          textBase.push({color: t.palette.negative_400, opacity: 0.5})
         }
       } else if (variant === 'ghost') {
         if (!disabled) {
-          baseStyles.push({color: t.palette.negative_400})
+          backgroundBase.push(t.atoms.bg)
+          backgroundHover.push({
+            backgroundColor: t.palette.negative_100,
+          })
+          textBase.push({color: t.palette.negative_400})
         } else {
-          baseStyles.push({color: t.palette.negative_400, opacity: 0.5})
+          textBase.push({color: t.palette.negative_400, opacity: 0.5})
         }
       }
     } else {
       if (!disabled) {
-        baseStyles.push({color: t.palette.white})
+        textBase.push({color: t.palette.white})
       } else {
-        baseStyles.push({color: t.palette.white, opacity: 0.5})
+        textBase.push({color: t.palette.white, opacity: 0.5})
+      }
+    }
+
+    if (shape === 'default') {
+      if (size === 'large') {
+        backgroundBase.push({
+          paddingVertical: 13,
+          paddingHorizontal: 20,
+          borderRadius: 8,
+          gap: 8,
+        })
+      } else if (size === 'small') {
+        backgroundBase.push({
+          paddingVertical: 9,
+          paddingHorizontal: 12,
+          borderRadius: 6,
+          gap: 6,
+        })
+      } else if (size === 'tiny') {
+        backgroundBase.push({
+          paddingVertical: 4,
+          paddingHorizontal: 8,
+          borderRadius: 4,
+          gap: 4,
+        })
+      }
+    } else if (shape === 'round' || shape === 'square') {
+      if (size === 'large') {
+        if (shape === 'round') {
+          backgroundBase.push({height: 46, width: 46})
+        } else {
+          backgroundBase.push({height: 44, width: 44})
+        }
+      } else if (size === 'small') {
+        if (shape === 'round') {
+          backgroundBase.push({height: 34, width: 34})
+        } else {
+          backgroundBase.push({height: 34, width: 34})
+        }
+      } else if (size === 'tiny') {
+        if (shape === 'round') {
+          backgroundBase.push({height: 22, width: 22})
+        } else {
+          backgroundBase.push({height: 21, width: 21})
+        }
+      }
+
+      if (shape === 'round') {
+        backgroundBase.push(a.rounded_full)
+      } else if (shape === 'square') {
+        if (size === 'tiny') {
+          backgroundBase.push(a.rounded_xs)
+        } else {
+          backgroundBase.push(a.rounded_sm)
+        }
       }
     }
 
     if (size === 'large') {
-      baseStyles.push(a.text_md, a.leading_tight)
+      textBase.push(a.text_md, a.leading_tight)
     } else if (size === 'small') {
-      baseStyles.push(a.text_sm, a.leading_tight)
+      textBase.push(a.text_sm, a.leading_tight)
     } else if (size === 'tiny') {
-      baseStyles.push(a.text_xs, a.leading_tight)
+      textBase.push(a.text_xs, a.leading_tight)
     }
 
-    return StyleSheet.flatten(baseStyles)
-  }, [t, variant, color, size, disabled])
+    const styles = {
+      backgroundBase: StyleSheet.flatten(backgroundBase),
+      backgroundHover: StyleSheet.flatten(backgroundHover),
+      textBase: StyleSheet.flatten(textBase),
+    }
+
+    styles.textBase.color = compareAndContrast(
+      styles.backgroundBase.backgroundColor,
+      styles.textBase.color,
+    )
+
+    return styles
+  }, [t, variant, color, size, shape, disabled])
 }
 
 export function ButtonText({children, style, ...rest}: ButtonTextProps) {
-  const textStyles = useSharedButtonTextStyles()
+  const ctx = useButtonContext()
+  const {textBase} = useButtonStyles(ctx)
 
   return (
-    <Text {...rest} style={[a.font_bold, a.text_center, textStyles, style]}>
+    <Text {...rest} style={[a.font_bold, a.text_center, textBase, style]}>
       {children}
     </Text>
   )
@@ -660,7 +617,8 @@ export function ButtonIcon({
   size?: SVGIconProps['size']
 }) {
   const {size: buttonSize, disabled} = useButtonContext()
-  const textStyles = useSharedButtonTextStyles()
+  const ctx = useButtonContext()
+  const {textBase} = useButtonStyles(ctx)
   const {iconSize, iconContainerSize} = React.useMemo(() => {
     /**
      * Pre-set icon sizes for different button sizes
@@ -739,7 +697,7 @@ export function ButtonIcon({
           width={iconSize}
           style={[
             {
-              color: textStyles.color,
+              color: textBase.color,
               pointerEvents: 'none',
             },
           ]}
