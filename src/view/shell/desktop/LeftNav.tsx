@@ -176,37 +176,44 @@ function NavItem({count, href, icon, iconFilled, label}: NavItemProps) {
         ]}>
         {isCurrent ? iconFilled : icon}
         {typeof count === 'string' && count ? (
-          <Text
-            accessibilityLabel={_(msg`${count} unread items`)}
-            accessibilityHint=""
-            accessible={true}
-            numberOfLines={1}
+          <View
             style={[
               a.absolute,
-              a.text_xs,
-              a.font_bold,
-              a.rounded_full,
-              a.text_center,
-              a.leading_tight,
-              {
-                top: '-10%',
-                left: count.length === 1 ? '50%' : '40%',
-                backgroundColor: t.palette.primary_500,
-                color: t.palette.white,
-                lineHeight: a.text_sm.fontSize,
-                paddingHorizontal: 4,
-                paddingVertical: 1,
-                minWidth: 16,
-              },
-              isTablet && [
-                {
-                  top: '10%',
-                  left: count.length === 1 ? '50%' : '40%',
-                },
-              ],
+              a.inset_0,
+              {right: -20}, // more breathing room
             ]}>
-            {count}
-          </Text>
+            <Text
+              accessibilityLabel={_(msg`${count} unread items`)}
+              accessibilityHint=""
+              accessible={true}
+              numberOfLines={1}
+              style={[
+                a.absolute,
+                a.text_xs,
+                a.font_bold,
+                a.rounded_full,
+                a.text_center,
+                a.leading_tight,
+                {
+                  top: '-10%',
+                  left: count.length === 1 ? 12 : 8,
+                  backgroundColor: t.palette.primary_500,
+                  color: t.palette.white,
+                  lineHeight: a.text_sm.fontSize,
+                  paddingHorizontal: 4,
+                  paddingVertical: 1,
+                  minWidth: 16,
+                },
+                isTablet && [
+                  {
+                    top: '10%',
+                    left: count.length === 1 ? 20 : 16,
+                  },
+                ],
+              ]}>
+              {count}
+            </Text>
+          </View>
         ) : null}
       </View>
       {gtTablet && (
