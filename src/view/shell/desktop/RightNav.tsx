@@ -8,7 +8,7 @@ import {useKawaiiMode} from '#/state/preferences/kawaii'
 import {useSession} from '#/state/session'
 import {DesktopFeeds} from '#/view/shell/desktop/Feeds'
 import {DesktopSearch} from '#/view/shell/desktop/Search'
-import {atoms as a, useGutterStyles,useTheme, web} from '#/alf'
+import {atoms as a, useGutters, useTheme, web} from '#/alf'
 import {InlineLinkText} from '#/components/Link'
 import {ProgressGuideList} from '#/components/ProgressGuide/List'
 import {Text} from '#/components/Typography'
@@ -18,7 +18,7 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
   const {_} = useLingui()
   const {hasSession, currentAccount} = useSession()
   const kawaii = useKawaiiMode()
-  const gutter = useGutterStyles({top: true, bottom: true})
+  const gutters = useGutters(['base', 'wide'])
 
   const {isTablet} = useWebMediaQueries()
   if (isTablet) {
@@ -28,7 +28,7 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
   return (
     <View
       style={[
-        gutter,
+        gutters,
         web({
           position: 'fixed',
           left: '50%',
