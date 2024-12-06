@@ -9,6 +9,7 @@ import {emitSoftReset} from '#/state/events'
 import {usePinnedFeedsInfos} from '#/state/queries/feed'
 import {useSelectedFeed, useSetSelectedFeed} from '#/state/shell/selected-feed'
 import {atoms as a, useTheme, web} from '#/alf'
+import {SquareArrowTopRight_Stroke2_Corner0_Rounded as Link} from '#/components/icons/SquareArrowTopRight'
 import {InlineLinkText} from '#/components/Link'
 
 export function DesktopFeeds() {
@@ -71,6 +72,7 @@ export function DesktopFeeds() {
         label={_(msg`More feeds`)}
         style={[a.text_lg]}>
         {_(msg`More feeds`)}
+        <Link width={16} style={[a.relative, {marginBottom: -2, right: -4}]} />
       </InlineLinkText>
     </View>
   )

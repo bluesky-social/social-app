@@ -38,7 +38,7 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
             },
             ...a.scrollbar_offset.transform,
           ],
-          width: 280,
+          width: 300,
           maxHeight: '100%',
           overflowY: 'auto',
         }),
