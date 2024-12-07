@@ -236,12 +236,12 @@ export function Link({
   )
 }
 
-export type InlineLinkProps = React.PropsWithChildren<
-  BaseLinkProps & TextStyleProp & Pick<TextProps, 'selectable'>
-> &
+export type InlineLinkProps = BaseLinkProps &
+  TextStyleProp &
+  Pick<TextProps, 'selectable' | 'dataSet' | 'title' | 'emoji'> &
   Pick<ButtonProps, 'label'> & {
     disableUnderline?: boolean
-    title?: TextProps['title']
+    children: React.ReactNode
   }
 
 export function InlineLinkText({
@@ -313,6 +313,7 @@ export function InlineLinkText({
         dataSet: {
           // default to no underline, apply this ourselves
           noUnderline: '1',
+          ...(rest.dataSet || {}),
         },
       })}>
       {children}
@@ -350,6 +351,7 @@ export function WebOnlyInlineLinkText({
       {children}
     </InlineLinkText>
   ) : (
+    // @ts-expect-error can't determine type of `children` to infer `emoji`
     <Text {...props}>{children}</Text>
   )
 }
