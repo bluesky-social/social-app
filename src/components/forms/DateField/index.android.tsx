@@ -56,7 +56,8 @@ export function DateField({
           modal
           open
           timeZoneOffsetInMinutes={0}
-          theme={t.name === 'light' ? 'light' : 'dark'}
+          theme={t.scheme}
+          // @ts-ignore TODO
           buttonColor={t.name === 'light' ? '#000000' : '#ffffff'}
           date={new Date(value)}
           onConfirm={onChangeInternal}
