@@ -487,6 +487,7 @@ export function FeedsScreen(_props: Props) {
       return null
     },
     [
+      _,
       pal.border,
       pal.textLight,
       query,
