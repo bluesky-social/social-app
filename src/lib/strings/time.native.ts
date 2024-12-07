@@ -6,7 +6,7 @@ import {I18n} from '@lingui/core'
  *
  * This function chooses different formatting approaches based on the platform:
  * - On Web, it uses the `i18n.date` method to format the date.
- * - On Android, it adjusts the time zone offset and uses `DateTimeFormat` for formatting.
+ * - On Native, it adjusts the time zone offset and uses `DateTimeFormat` for formatting.
  *
  */
 
