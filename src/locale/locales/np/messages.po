@@ -28,86 +28,86 @@ msgstr "इमेल छैन"
 
 #: src/lib/hooks/useTimeAgo.ts:156
 msgid "{0, plural, one {# day} other {# days}}"
-msgstr "{0, plural, one {# दिन} अन्य {# दिनहरू}}"
+msgstr "{0, plural, one {# दिन} other {# दिनहरू}}"
 
 #: src/lib/hooks/useTimeAgo.ts:146
 msgid "{0, plural, one {# hour} other {# hours}}"
-msgstr "{0, plural, one {# घण्टा} अन्य {# घण्टाहरू}}"
+msgstr "{0, plural, one {# घण्टा} other {# घण्टाहरू}}"
 
 #: src/components/moderation/LabelsOnMe.tsx:55
 #~ msgid "{0, plural, one {# label has been placed on this account} other {# labels has been placed on this account}}"
-#~ msgstr "{0, plural, one {# लेबल यस खाता मा राखिएको छ} अन्य {# लेबलहरू यस खाता मा राखिएका छन्}}"
+#~ msgstr "{0, plural, one {# लेबल यस खाता मा राखिएको छ} other {# लेबलहरू यस खाता मा राखिएका छन्}}"
 
 #: src/components/moderation/LabelsOnMe.tsx:53
 msgid "{0, plural, one {# label has been placed on this account} other {# labels have been placed on this account}}"
-msgstr "{0, plural, one {# लेबल यस खाता मा राखिएको छ} अन्य {# लेबलहरू यस खाता मा राखिएका छन्}}"
+msgstr "{0, plural, one {# लेबल यस खाता मा राखिएको छ} other {# लेबलहरू यस खाता मा राखिएका छन्}}"
 
 #: src/components/moderation/LabelsOnMe.tsx:61
 #~ msgid "{0, plural, one {# label has been placed on this content} other {# labels has been placed on this content}}"
-#~ msgstr "{0, plural, one {# लेबल यस सामग्री मा राखिएको छ} अन्य {# लेबलहरू यस सामग्री मा राखिएका छन्}}"
+#~ msgstr "{0, plural, one {# लेबल यस सामग्री मा राखिएको छ} other {# लेबलहरू यस सामग्री मा राखिएका छन्}}"
 
 #: src/components/moderation/LabelsOnMe.tsx:59
 msgid "{0, plural, one {# label has been placed on this content} other {# labels have been placed on this content}}"
-msgstr "{0, plural, one {# लेबल यस सामग्री मा राखिएको छ} अन्य {# लेबलहरू यस सामग्री मा राखिएका छन्}}"
+msgstr "{0, plural, one {# लेबल यस सामग्री मा राखिएको छ} other {# लेबलहरू यस सामग्री मा राखिएका छन्}}"
 
 #: src/lib/hooks/useTimeAgo.ts:136
 msgid "{0, plural, one {# minute} other {# minutes}}"
-msgstr "{0, plural, one {# मिनेट} अन्य {# मिनेटहरू}}"
+msgstr "{0, plural, one {# मिनेट} other {# मिनेटहरू}}"
 
 #: src/lib/hooks/useTimeAgo.ts:167
 msgid "{0, plural, one {# month} other {# months}}"
-msgstr "{0, plural, one {# महिना} अन्य {# महिनाहरू}}"
+msgstr "{0, plural, one {# महिना} other {# महिनाहरू}}"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:69
 msgid "{0, plural, one {# repost} other {# reposts}}"
-msgstr "{0, plural, one {# पुन: पोष्ट} अन्य {# पुन: पोष्टहरू}}"
+msgstr "{0, plural, one {# पुन: पोष्ट} other {# पुन: पोष्टहरू}}"
 
 #: src/lib/hooks/useTimeAgo.ts:126
 msgid "{0, plural, one {# second} other {# seconds}}"
-msgstr "{0, plural, one {# सेकेन्ड} अन्य {# सेकेन्डहरू}}"
+msgstr "{0, plural, one {# सेकेन्ड} other {# सेकेन्डहरू}}"
 
 #: src/components/ProfileHoverCard/index.web.tsx:398
 #: src/screens/Profile/Header/Metrics.tsx:22
 msgid "{0, plural, one {follower} other {followers}}"
-msgstr "{0, plural, one {अनुगामी} अन्य {अनुगामीहरू}}"
+msgstr "{0, plural, one {अनुगामी} other {अनुगामीहरू}}"
 
 #: src/components/ProfileHoverCard/index.web.tsx:402
 #: src/screens/Profile/Header/Metrics.tsx:26
 msgid "{0, plural, one {following} other {following}}"
-msgstr "{0, plural, one {अनुगमन गरिरहेको} अन्य {अनुगमन गरिरहेका}}"
+msgstr "{0, plural, one {अनुगमन गरिरहेको} other {अनुगमन गरिरहेका}}"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:305
 msgid "{0, plural, one {Like (# like)} other {Like (# likes)}}"
-msgstr "{0, plural, one {मन पराउनु (# मन पराइएको)} अन्य {मन पराइएको (# मन पराइएका)}}"
+msgstr "{0, plural, one {मन पराउनु (# मन पराइएको)} other {मन पराइएको (# मन पराइएका)}}"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:447
 msgid "{0, plural, one {like} other {likes}}"
-msgstr "{0, plural, one {मन पराइएको} अन्य {मन पराइएका}}"
+msgstr "{0, plural, one {मन पराइएको} other {मन पराइएका}}"
 
 #: src/components/FeedCard.tsx:213
 #: src/view/com/feeds/FeedSourceCard.tsx:303
 msgid "{0, plural, one {Liked by # user} other {Liked by # users}}"
-msgstr "{0, plural, one {# प्रयोगकर्ताद्वारा मन पराइएको} अन्य {# प्रयोगकर्ताहरू द्वारा मन पराइएका}}"
+msgstr "{0, plural, one {# प्रयोगकर्ताद्वारा मन पराइएको} other {# प्रयोगकर्ताहरू द्वारा मन पराइएका}}"
 
 #: src/screens/Profile/Header/Metrics.tsx:58
 msgid "{0, plural, one {post} other {posts}}"
-msgstr "{0, plural, one {पोष्ट} अन्य {पोष्टहरू}}"
+msgstr "{0, plural, one {पोष्ट} other {पोष्टहरू}}"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:431
 msgid "{0, plural, one {quote} other {quotes}}"
-msgstr "{0, plural, one {उद्धरण} अन्य {उद्धरणहरू}}"
+msgstr "{0, plural, one {उद्धरण} other {उद्धरणहरू}}"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:261
 msgid "{0, plural, one {Reply (# reply)} other {Reply (# replies)}}"
-msgstr "{0, plural, one {जवाफ (# जवाफ)} अन्य {जवाफ (# जवाफहरू)}}"
+msgstr "{0, plural, one {जवाफ (# जवाफ)} other {जवाफ (# जवाफहरू)}}"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:413
 msgid "{0, plural, one {repost} other {reposts}}"
-msgstr "{0, plural, one {पुन: पोष्ट} अन्य {पुन: पोष्टहरू}}"
+msgstr "{0, plural, one {पुन: पोष्ट} other {पुन: पोष्टहरू}}"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:301
 msgid "{0, plural, one {Unlike (# like)} other {Unlike (# likes)}}"
-msgstr "{0, plural, one {मन नपरेको (# मन पराइएको छैन)} अन्य {मन पराइएको छैन (# मन पराइएका छैनन्)}}"
+msgstr "{0, plural, one {मन नपरेको (# मन पराइएको छैन)} other {मन पराइएको छैन (# मन पराइएका छैनन्)}}"
 
 #: src/screens/Settings/Settings.tsx:414
 msgid "{0}"
@@ -182,7 +182,7 @@ msgstr "{badge} अपठित वस्तुहरू"
 
 #: src/components/LabelingServiceCard/index.tsx:96
 msgid "{count, plural, one {Liked by # user} other {Liked by # users}}"
-msgstr "{count, plural, one {# प्रयोगकर्ताद्वारा मन पराइएको} अन्य {# प्रयोगकर्ताहरू द्वारा मन पराइएका}}"
+msgstr "{count, plural, one {# प्रयोगकर्ताद्वारा मन पराइएको} other {# प्रयोगकर्ताहरू द्वारा मन पराइएका}}"
 
 #: src/view/shell/desktop/LeftNav.tsx:223
 msgid "{count} unread items"
@@ -195,31 +195,31 @@ msgstr "{displayName} को स्टार्टर प्याक"
 
 #: src/screens/SignupQueued.tsx:220
 msgid "{estimatedTimeHrs, plural, one {hour} other {hours}}"
-msgstr "{estimatedTimeHrs, plural, one {घण्टा} अन्य {घण्टाहरू}}"
+msgstr "{estimatedTimeHrs, plural, one {घण्टा} other {घण्टाहरू}}"
 
 #: src/screens/SignupQueued.tsx:226
 msgid "{estimatedTimeMins, plural, one {minute} other {minutes}}"
-msgstr "{estimatedTimeMins, plural, one {मिनेट} अन्य {मिनेटहरू}}"
+msgstr "{estimatedTimeMins, plural, one {मिनेट} other {मिनेटहरू}}"
 
 #: src/view/com/notifications/FeedItem.tsx:300
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> followed you"
-msgstr "{firstAuthorLink} र <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} अन्य} अन्य {{formattedAuthorsCount} अन्यहरू}}</0> ले तपाईंलाई अनुसरण गरे"
+msgstr "{firstAuthorLink} र <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> ले तपाईंलाई अनुसरण गरे"
 
 #: src/view/com/notifications/FeedItem.tsx:326
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> liked your custom feed"
-msgstr "{firstAuthorLink} र <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} अन्य} अन्य {{formattedAuthorsCount} अन्यहरू}}</0> ले तपाईंको कस्टम फिडलाई मन पराए"
+msgstr "{firstAuthorLink} र <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> ले तपाईंको कस्टम फिडलाई मन पराए"
 
 #: src/view/com/notifications/FeedItem.tsx:222
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> liked your post"
-msgstr "{firstAuthorLink} र <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} अन्य} अन्य {{formattedAuthorsCount} अन्यहरू}}</0> ले तपाईंको पोस्टलाई मन पराए"
+msgstr "{firstAuthorLink} र <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> ले तपाईंको पोस्टलाई मन पराए"
 
 #: src/view/com/notifications/FeedItem.tsx:246
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> reposted your post"
-msgstr "{firstAuthorLink} र <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} अन्य} अन्य {{formattedAuthorsCount} अन्यहरू}}</0> ले तपाईंको पोस्टलाई पुन: पोस्ट गरे"
+msgstr "{firstAuthorLink} र <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> ले तपाईंको पोस्टलाई पुन: पोस्ट गरे"
 
 #: src/view/com/notifications/FeedItem.tsx:350
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> signed up with your starter pack"
-msgstr "{firstAuthorLink} र <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} अन्य} अन्य {{formattedAuthorsCount} अन्यहरू}}</0> ले तपाईंको स्टार्टर प्याकबाट साइन अप गरे"
+msgstr "{firstAuthorLink} र <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> ले तपाईंको स्टार्टर प्याकबाट साइन अप गरे"
 
 #: src/view/com/notifications/FeedItem.tsx:312
 msgid "{firstAuthorLink} followed you"
@@ -247,23 +247,23 @@ msgstr "{firstAuthorLink} ले तपाईंको स्टार्टर 
 
 #: src/view/com/notifications/FeedItem.tsx:293
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} followed you"
-msgstr "{firstAuthorName} र {additionalAuthorsCount, plural, one {{formattedAuthorsCount} अन्य} अन्य {{formattedAuthorsCount} अन्यहरू}} ले तपाईंलाई अनुसरण गरे"
+msgstr "{firstAuthorName} र {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} ले तपाईंलाई अनुसरण गरे"
 
 #: src/view/com/notifications/FeedItem.tsx:319
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} liked your custom feed"
-msgstr "{firstAuthorName} र {additionalAuthorsCount, plural, one {{formattedAuthorsCount} अन्य} अन्य {{formattedAuthorsCount} अन्यहरू}} ले तपाईंको कस्टम फिडलाई मन पराए"
+msgstr "{firstAuthorName} र {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} ले तपाईंको कस्टम फिडलाई मन पराए"
 
 #: src/view/com/notifications/FeedItem.tsx:215
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} liked your post"
-msgstr "{firstAuthorName} र {additionalAuthorsCount, plural, one {{formattedAuthorsCount} अन्य} अन्य {{formattedAuthorsCount} अन्यहरू}} ले तपाईंको पोस्टलाई मन पराए"
+msgstr "{firstAuthorName} र {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} ले तपाईंको पोस्टलाई मन पराए"
 
 #: src/view/com/notifications/FeedItem.tsx:239
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} reposted your post"
-msgstr "{firstAuthorName} र {additionalAuthorsCount, plural, one {{formattedAuthorsCount} अन्य} अन्य {{formattedAuthorsCount} अन्यहरू}} ले तपाईंको पोस्टलाई पुन: पोस्ट गरे"
+msgstr "{firstAuthorName} र {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} ले तपाईंको पोस्टलाई पुन: पोस्ट गरे"
 
 #: src/view/com/notifications/FeedItem.tsx:343
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} signed up with your starter pack"
-msgstr "{firstAuthorName} र {additionalAuthorsCount, plural, one {{formattedAuthorsCount} अन्य} अन्य {{formattedAuthorsCount} अन्यहरू}} ले तपाईंको स्टार्टर प्याकबाट साइन अप गरे"
+msgstr "{firstAuthorName} र {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} ले तपाईंको स्टार्टर प्याकबाट साइन अप गरे"
 
 #: src/view/com/notifications/FeedItem.tsx:298
 msgid "{firstAuthorName} followed you"
@@ -302,7 +302,7 @@ msgstr "{handle} लाई सन्देश पठाउन सकिदैन
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:307
 #: src/view/screens/ProfileFeed.tsx:591
 msgid "{likeCount, plural, one {Liked by # user} other {Liked by # users}}"
-msgstr "{likeCount, plural, one {# प्रयोगकर्ताले मन पराए} अन्य {# प्रयोगकर्ताहरूले मन पराए}}"
+msgstr "{likeCount, plural, one {# प्रयोगकर्ताले मन पराए} other {# प्रयोगकर्ताहरूले मन पराए}}"
 
 #: src/view/shell/Drawer.tsx:448
 msgid "{numUnreadNotifications} unread"
@@ -323,20 +323,20 @@ msgstr "{profileName} ले {0} अघि स्टार्टर प्या
 #: src/screens/StarterPack/Wizard/index.tsx:472
 msgctxt "profiles"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
-msgstr "<0>{0}, </0><1>{1}, </1> र {2, plural, one {# अर्को} अन्य {# अरूहरू}} तपाईंको स्टार्टर प्याकमा समावेश छन्"
+msgstr "<0>{0}, </0><1>{1}, </1> र {2, plural, one {# other} other {# others}} तपाईंको स्टार्टर प्याकमा समावेश छन्"
 
 #: src/screens/StarterPack/Wizard/index.tsx:525
 msgctxt "feeds"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
-msgstr "<0>{0}, </0><1>{1}, </1> र {2, plural, one {# अर्को} अन्य {# अरूहरू}} तपाईंको स्टार्टर प्याकमा समावेश छन्"
+msgstr "<0>{0}, </0><1>{1}, </1> र {2, plural, one {# other} other {# others}} तपाईंको स्टार्टर प्याकमा समावेश छन्"
 
 #: src/view/shell/Drawer.tsx:97
 msgid "<0>{0}</0> {1, plural, one {follower} other {followers}}"
-msgstr "<0>{0}</0> {1, plural, one {अनुगामी} अन्य {अनुगामीहरू}}"
+msgstr "<0>{0}</0> {1, plural, one {अनुगामी} other {अनुगामीहरू}}"
 
 #: src/view/shell/Drawer.tsx:108
 msgid "<0>{0}</0> {1, plural, one {following} other {following}}"
-msgstr "<0>{0}</0> {1, plural, one {पछ्याउँदै छन्} अन्य {पछ्याउँदै छन्}}"
+msgstr "<0>{0}</0> {1, plural, one {पछ्याउँदै छन्} other {पछ्याउँदै छन्}}"
 
 #: src/screens/StarterPack/Wizard/index.tsx:513
 msgid "<0>{0}</0> and<1> </1><2>{1} </2>are included in your starter pack"
@@ -3202,7 +3202,7 @@ msgstr "<0>{0}</0> ले अनुसरण गरेका छन्"
 
 #: src/components/KnownFollowers.tsx:217
 msgid "Followed by <0>{0}</0> and {1, plural, one {# other} other {# others}}"
-msgstr "<0>{0}</0> र {1, plural, one {# अन्य} other {# अन्यहरू}} ले अनुसरण गरेका छन्"
+msgstr "<0>{0}</0> र {1, plural, one {# other} other {# others}} ले अनुसरण गरेका छन्"
 
 #: src/components/KnownFollowers.tsx:204
 msgid "Followed by <0>{0}</0> and <1>{1}</1>"
@@ -3210,7 +3210,7 @@ msgstr "<0>{0}</0> र <1>{1}</1> ले अनुसरण गरेका छ�
 
 #: src/components/KnownFollowers.tsx:186
 msgid "Followed by <0>{0}</0>, <1>{1}</1>, and {2, plural, one {# other} other {# others}}"
-msgstr "<0>{0}</0>, <1>{1}</1>, र {2, plural, one {# अन्य} other {# अन्यहरू}} ले अनुसरण गरेका छन्"
+msgstr "<0>{0}</0>, <1>{1}</1>, र {2, plural, one {# other} other {# others}} ले अनुसरण गरेका छन्"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:403
 msgid "Followed users"
