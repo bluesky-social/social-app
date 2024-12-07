@@ -384,7 +384,6 @@ let FeedItem = ({
               borderColor: pal.colors.unreadNotifBorder,
             },
         {borderTopWidth: hideTopBorder ? 0 : StyleSheet.hairlineWidth},
-        a.overflow_hidden,
       ]}
       href={itemHref}
       noFeedback
@@ -721,7 +720,7 @@ function AdditionalPostText({post}: {post?: AppBskyFeedDefs.PostView}) {
     return (
       <>
         {text?.length > 0 && (
-          <Text emoji style={pal.textLight}>
+          <Text emoji style={[a.overflow_hidden, pal.textLight]}>
             {text}
           </Text>
         )}
