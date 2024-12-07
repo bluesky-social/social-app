@@ -34,7 +34,7 @@ export function DesktopFeeds() {
     <View
       style={[
         a.flex_1,
-        a.gap_md,
+        a.gap_sm,
         web({
           /*
            * Small padding prevents overflow prior to actually overflowing the
@@ -61,11 +61,13 @@ export function DesktopFeeds() {
               }
             }}
             style={[
-              a.text_lg,
+              a.text_md,
+              a.leading_snug,
               current
                 ? [a.font_heavy, t.atoms.text]
                 : [t.atoms.text_contrast_medium],
-            ]}>
+            ]}
+            numberOfLines={1}>
             {feedInfo.displayName}
           </InlineLinkText>
         )
@@ -74,7 +76,8 @@ export function DesktopFeeds() {
       <InlineLinkText
         to="/feeds"
         label={_(msg`More feeds`)}
-        style={[a.text_lg]}>
+        style={[a.text_md, a.leading_snug]}
+        numberOfLines={1}>
         {_(msg`More feeds`)}
         <Link width={16} style={[a.relative, {marginBottom: -2, right: -4}]} />
       </InlineLinkText>
