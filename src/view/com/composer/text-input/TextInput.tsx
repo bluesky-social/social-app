@@ -257,6 +257,10 @@ export const TextInput = forwardRef(function TextInputImpl(
             minHeight: 60,
             includeFontPadding: false,
           },
+          {
+            borderWidth: 1,
+            borderColor: 'transparent',
+          },
         ]}
         {...props}>
         {textDecorated}
