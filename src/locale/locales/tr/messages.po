@@ -9867,7 +9867,7 @@ msgstr ""
 
 #: src/screens/Messages/Settings.tsx:105
 msgid "You can continue ongoing conversations regardless of which setting you choose."
-msgstr "Hangi ayarı seçerseniz seçin devam eden görüşmelere devam edebilirsiniz."
+msgstr "Hangi ayarı seçerseniz seçin devam eden görüşmeleri sürdürebilirsiniz."
 
 #: src/screens/Login/index.tsx:155
 #: src/screens/Login/PasswordUpdatedForm.tsx:26
