@@ -7826,7 +7826,7 @@ msgstr "Olarak giriş yap..."
 
 #: src/components/dialogs/Signin.tsx:75
 msgid "Sign in or create your account to join the conversation!"
-msgstr "Görüşmeye katılmak için giriş yapınız veya hesabınızı oluşturun!"
+msgstr "Görüşmeye katılmak için giriş yapın veya hesabınızı oluşturun!"
 
 #: src/view/com/auth/login/LoginForm.tsx:134
 #~ msgid "Sign into"
