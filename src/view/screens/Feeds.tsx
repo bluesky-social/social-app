@@ -438,6 +438,7 @@ export function FeedsScreen(_props: Props) {
             <FeedsAboutHeader />
             <View style={{paddingHorizontal: 12, paddingBottom: 4}}>
               <SearchInput
+                placeholder={_(msg`Search feeds`)}
                 value={query}
                 onChangeText={onChangeQuery}
                 onClearText={onPressCancelSearch}
@@ -724,8 +725,8 @@ function FeedsAboutHeader() {
         </Text>
         <Text style={[t.atoms.text_contrast_high]}>
           <Trans>
-            Custom feeds built by the community bring you new experiences and
-            help you find the content you love.
+            Choose your own timeline! Feeds built by the community help you find
+            content you love.
           </Trans>
         </Text>
       </View>
