@@ -134,7 +134,7 @@ msgstr ""
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:219
 msgid "{0} joined this week"
-msgstr ""
+msgstr "{0} bu hafta katıldı"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/Scrubber.tsx:197
 msgid "{0} of {1}"
@@ -191,7 +191,7 @@ msgstr "{0}sn"
 
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:252
 msgid "{badge} unread items"
-msgstr ""
+msgstr "{badge} okunmamış öğe"
 
 #: src/components/LabelingServiceCard/index.tsx:96
 msgid "{count, plural, one {Liked by # user} other {Liked by # users}}"
@@ -199,7 +199,7 @@ msgstr ""
 
 #: src/view/shell/desktop/LeftNav.tsx:223
 msgid "{count} unread items"
-msgstr ""
+msgstr "{count} okunmamış öğe"
 
 #: src/lib/hooks/useTimeAgo.ts:69
 #~ msgid "{diff, plural, one {day} other {days}}"
@@ -256,11 +256,11 @@ msgstr ""
 
 #: src/view/com/notifications/FeedItem.tsx:312
 msgid "{firstAuthorLink} followed you"
-msgstr ""
+msgstr "{firstAuthorLink} seni takip etti"
 
 #: src/view/com/notifications/FeedItem.tsx:289
 msgid "{firstAuthorLink} followed you back"
-msgstr ""
+msgstr "{firstAuthorLink} seni geri takip etti"
 
 #: src/view/com/notifications/FeedItem.tsx:338
 msgid "{firstAuthorLink} liked your custom feed"
@@ -268,11 +268,11 @@ msgstr ""
 
 #: src/view/com/notifications/FeedItem.tsx:234
 msgid "{firstAuthorLink} liked your post"
-msgstr ""
+msgstr "{firstAuthorLink} gönderini beğendi"
 
 #: src/view/com/notifications/FeedItem.tsx:258
 msgid "{firstAuthorLink} reposted your post"
-msgstr ""
+msgstr "{firstAuthorLink} gönderini yeniden gönderdi"
 
 #: src/view/com/notifications/FeedItem.tsx:362
 msgid "{firstAuthorLink} signed up with your starter pack"
@@ -300,7 +300,7 @@ msgstr ""
 
 #: src/view/com/notifications/FeedItem.tsx:298
 msgid "{firstAuthorName} followed you"
-msgstr ""
+msgstr "{firstAuthorName} seni takip etti"
 
 #: src/view/com/notifications/FeedItem.tsx:288
 msgid "{firstAuthorName} followed you back"
@@ -316,7 +316,7 @@ msgstr "{firstAuthorName} gönderini beğendi"
 
 #: src/view/com/notifications/FeedItem.tsx:244
 msgid "{firstAuthorName} reposted your post"
-msgstr ""
+msgstr "{firstAuthorName} gönderini yeniden gönderdi"
 
 #: src/view/com/notifications/FeedItem.tsx:348
 msgid "{firstAuthorName} signed up with your starter pack"
@@ -355,7 +355,7 @@ msgstr "{numUnreadNotifications} okunmamış"
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:230
 msgid "{numUnreadNotifications} unread items"
-msgstr ""
+msgstr "{numUnreadNotifications} okunmamış öğe"
 
 #: src/components/NewskieDialog.tsx:116
 msgid "{profileName} joined Bluesky {0} ago"
@@ -731,7 +731,7 @@ msgstr "Yetişkin İçerik"
 
 #: src/screens/Moderation/index.tsx:360
 msgid "Adult content can only be enabled via the Web at <0>bsky.app</0>."
-msgstr "Yetişkin içerik yalnızca Web üzerinden <0>bsky.app</0> etkinleştirilebilir"
+msgstr "Yetişkin içerik yalnızca Web üzerinden <0>bsky.app</0> etkinleştirilebilir."
 
 #: src/components/moderation/LabelPreference.tsx:242
 msgid "Adult content is disabled."
@@ -1960,7 +1960,7 @@ msgstr "Yaşını doğrula:"
 
 #: src/screens/Moderation/index.tsx:299
 msgid "Confirm your birthdate"
-msgstr "Doğum tarihini doğrula:"
+msgstr "Doğum tarihini doğrula"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:214
 #: src/screens/Login/LoginForm.tsx:256
@@ -4412,7 +4412,7 @@ msgstr "Daha büyük"
 #: src/screens/Hashtag.tsx:98
 #: src/view/screens/Search/Search.tsx:521
 msgid "Latest"
-msgstr ""
+msgstr "En son"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:250
 msgid "learn more"
@@ -4456,7 +4456,7 @@ msgstr "Daha fazlasını öğren."
 
 #: src/components/dms/LeaveConvoPrompt.tsx:49
 msgid "Leave"
-msgstr ""
+msgstr "Ayrıl"
 
 #: src/components/dms/MessagesListBlockedFooter.tsx:66
 #: src/components/dms/MessagesListBlockedFooter.tsx:73
@@ -4489,7 +4489,7 @@ msgstr "kaldı."
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:313
 msgid "Let me choose"
-msgstr ""
+msgstr "Bana seçtir"
 
 #: src/screens/Login/index.tsx:127
 #: src/screens/Login/index.tsx:142
@@ -4514,12 +4514,12 @@ msgstr "Açık"
 
 #: src/components/ProgressGuide/List.tsx:47
 msgid "Like 10 posts"
-msgstr ""
+msgstr "10 gönderiyi beğen"
 
 #: src/state/shell/progress-guide.tsx:157
 #: src/state/shell/progress-guide.tsx:162
 msgid "Like 10 posts to train the Discover feed"
-msgstr ""
+msgstr "Keşfet akışını eğitmek için 10 gönderiyi beğen"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:275
 #: src/view/screens/ProfileFeed.tsx:576
@@ -5289,7 +5289,7 @@ msgstr ""
 
 #: src/screens/Profile/Sections/Feed.tsx:65
 msgid "No posts yet."
-msgstr "Henüz gönderi yok"
+msgstr "Henüz gönderi yok."
 
 #: src/view/com/post-thread/PostQuotes.tsx:106
 msgid "No quotes yet"
@@ -7593,7 +7593,7 @@ msgstr "Bu başlangıç paketini paylaş"
 
 #: src/components/StarterPack/ShareDialog.tsx:99
 msgid "Share this starter pack and help people join your community on Bluesky."
-msgstr "Bu başlangıç paketini paylaş ve insanların Bluesky'deki topluluğunuza katılmasına yardımcı olun"
+msgstr "Bu başlangıç paketini paylaş ve insanların Bluesky'deki topluluğunuza katılmasına yardımcı ol."
 
 #: src/components/dms/ChatEmptyPill.tsx:34
 msgid "Share your favorite feed!"
@@ -9429,7 +9429,7 @@ msgstr "Video Oyunları"
 
 #: src/view/com/util/post-embeds/VideoEmbed.web.tsx:169
 msgid "Video not found."
-msgstr "Video bulunamadı"
+msgstr "Video bulunamadı."
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:99
 msgid "Video settings"
