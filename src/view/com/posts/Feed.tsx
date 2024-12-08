@@ -216,7 +216,7 @@ let Feed = ({
     checkForNewRef.current = checkForNew
   }, [checkForNew])
   React.useEffect(() => {
-    if (enabled && !disablePoll) {
+    if (enabled) {
       const timeSinceFirstLoad = Date.now() - lastFetchRef.current
       // DISABLED need to check if this is causing random feed refreshes -prf
       /*if (timeSinceFirstLoad > REFRESH_AFTER) {
@@ -231,7 +231,7 @@ let Feed = ({
         checkForNewRef.current()
       }
     }
-  }, [enabled, disablePoll, feed, queryClient, scrollElRef])
+  }, [enabled, feed, queryClient, scrollElRef])
   React.useEffect(() => {
     let cleanup1: () => void | undefined, cleanup2: () => void | undefined
     const subscription = AppState.addEventListener('change', nextAppState => {
