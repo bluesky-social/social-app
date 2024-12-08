@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Italian localization\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-06 01:10+0000\n"
-"PO-Revision-Date: 2024-12-06 13:02+0000\n"
+"POT-Creation-Date: 2024-12-07 12:27+0000\n"
+"PO-Revision-Date: 2024-12-08 02:20+0000\n"
 "Last-Translator: Francisco, 2024\n"
 "Language-Team: Italian (https://app.transifex.com/mlocati/teams/201833/it/)\n"
 "Language: it\n"
@@ -596,7 +596,7 @@ msgstr "Allenamento dell'algoritmo completato!"
 msgid "All accounts have been followed!"
 msgstr "Tutti gli account sono stati seguiti!"
 
-#: src/view/screens/Feeds.tsx:700
+#: src/view/screens/Feeds.tsx:701
 msgid "All the feeds you've saved, right in one place."
 msgstr "Tutti i feed che hai salvato, in un unico posto."
 
@@ -1331,6 +1331,11 @@ msgstr "Scegli gli algoritmi che compilano i tuoi feed personalizzati."
 msgid "Choose this color as your avatar"
 msgstr "Scegli questo colore per il tuo avatar"
 
+#: src/view/screens/Feeds.tsx:727
+#: src/view/screens/Search/Explore.tsx:391
+msgid "Choose your own timeline! Feeds built by the community help you find content you love."
+msgstr "Personalizza la tua cronologia! I feed creati dalla collettività ti permettono di scoprire i contenuti di tuo interesse."
+
 #: src/screens/Signup/StepInfo/index.tsx:201
 msgid "Choose your password"
 msgstr "Scegli la tua password"
@@ -1805,11 +1810,6 @@ msgstr "Cultura"
 msgid "Custom"
 msgstr "Personalizzato"
 
-#: src/view/screens/Feeds.tsx:726
-#: src/view/screens/Search/Explore.tsx:391
-msgid "Custom feeds built by the community bring you new experiences and help you find the content you love."
-msgstr "I feed personalizzati creati dalla comunità ti offrono nuove esperienze e ti aiutano a trovare contenuti interessanti."
-
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:292
 msgid "Customize who can interact with this post."
 msgstr "Personalizza chi può interagire con questo post."
@@ -2033,7 +2033,7 @@ msgstr "Scopri nuovi feed personalizzati"
 msgid "Discover new feeds"
 msgstr "Scopri nuovi feed"
 
-#: src/view/screens/Feeds.tsx:723
+#: src/view/screens/Feeds.tsx:724
 msgid "Discover New Feeds"
 msgstr "Scopri nuovi feed"
 
@@ -2232,7 +2232,7 @@ msgid "Edit Moderation List"
 msgstr "Modifica lista di moderazione"
 
 #: src/Navigation.tsx:295
-#: src/view/screens/Feeds.tsx:513
+#: src/view/screens/Feeds.tsx:514
 msgid "Edit My Feeds"
 msgstr "Modifica i miei feed"
 
@@ -2712,7 +2712,7 @@ msgstr "Feedback inviato!"
 
 #: src/Navigation.tsx:397
 #: src/screens/StarterPack/StarterPackScreen.tsx:183
-#: src/view/screens/Feeds.tsx:506
+#: src/view/screens/Feeds.tsx:507
 #: src/view/screens/Profile.tsx:230
 #: src/view/screens/SavedFeeds.tsx:96
 #: src/view/screens/Search/Search.tsx:520
@@ -2854,7 +2854,7 @@ msgstr "Follower che conosci"
 #: src/components/ProfileHoverCard/index.web.tsx:459
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:230
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:135
-#: src/view/screens/Feeds.tsx:597
+#: src/view/screens/Feeds.tsx:598
 #: src/view/screens/ProfileFollows.tsx:29
 #: src/view/screens/SavedFeeds.tsx:422
 msgid "Following"
@@ -3407,7 +3407,7 @@ msgstr "Lavora con noi"
 msgid "Join Bluesky"
 msgstr "Entra in Bluesky"
 
-#: src/components/StarterPack/QrCode.tsx:61
+#: src/components/StarterPack/QrCode.tsx:62
 #: src/view/shell/NavSignupCard.tsx:40
 msgid "Join the conversation"
 msgstr "Entra nella conversazione"
@@ -3997,7 +3997,7 @@ msgstr "Silenziare un account è privato. Gli account silenziati possono interag
 msgid "My Birthday"
 msgstr "Il mio compleanno"
 
-#: src/view/screens/Feeds.tsx:697
+#: src/view/screens/Feeds.tsx:698
 msgid "My Feeds"
 msgstr "I miei feed"
 
@@ -4099,7 +4099,7 @@ msgctxt "action"
 msgid "New post"
 msgstr "Nuovo post"
 
-#: src/view/screens/Feeds.tsx:547
+#: src/view/screens/Feeds.tsx:548
 #: src/view/screens/Notifications.tsx:177
 #: src/view/screens/Profile.tsx:494
 #: src/view/screens/ProfileFeed.tsx:432
@@ -4235,7 +4235,7 @@ msgstr "Nessun risultato"
 msgid "No results found"
 msgstr "Nessun risultato trovato"
 
-#: src/view/screens/Feeds.tsx:469
+#: src/view/screens/Feeds.tsx:470
 msgid "No results found for \"{query}\""
 msgstr "Nessun risultato trovato per \"{query}\""
 
@@ -4380,7 +4380,7 @@ msgstr "Va bene"
 msgid "Oldest replies first"
 msgstr "Mostra prima le risposte meno recenti"
 
-#: src/components/StarterPack/QrCode.tsx:75
+#: src/components/StarterPack/QrCode.tsx:76
 msgid "on<0><1/><2><3/></2></0>"
 msgstr "su<0><1/><2><3/></2></0>"
 
@@ -5631,6 +5631,10 @@ msgstr "Scorri verso l'alto"
 #: src/view/shell/Drawer.tsx:365
 msgid "Search"
 msgstr "Cerca"
+
+#: src/view/screens/Feeds.tsx:441
+msgid "Search feeds"
+msgstr "Cerca feed"
 
 #: src/view/shell/desktop/Search.tsx:201
 msgid "Search for \"{query}\""
