@@ -148,7 +148,7 @@ export function Scrubber({
   return (
     <View
       testID="scrubber"
-      style={[{height: 18, width: '100%'}, a.flex_shrink_0, a.px_xs]}
+      style={[{height: 32, width: '100%'}, a.flex_shrink_0, a.px_xs]}
       onPointerEnter={onStartHover}
       onPointerLeave={onEndHover}>
       <div
