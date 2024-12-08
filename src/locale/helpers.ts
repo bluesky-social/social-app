@@ -3,37 +3,14 @@ import * as bcp47Match from 'bcp-47-match'
 import lande from 'lande'
 
 import {hasProp} from '#/lib/type-guards'
-import {
-  AppLanguage,
-  LANGUAGES_MAP_CODE2,
-  LANGUAGES_MAP_CODE3,
-} from './languages'
+import {AppLanguage, LANGUAGES_MAP} from './languages'
 
-export function code2ToCode3(lang: string): string {
-  if (lang.length === 2) {
-    return LANGUAGES_MAP_CODE2[lang]?.code3 || lang
-  }
-  return lang
-}
-
-export function code3ToCode2(lang: string): string {
-  if (lang.length === 3) {
-    return LANGUAGES_MAP_CODE3[lang]?.code2 || lang
-  }
-  return lang
-}
-
-export function code3ToCode2Strict(lang: string): string | undefined {
-  if (lang.length === 3) {
-    return LANGUAGES_MAP_CODE3[lang]?.code2
-  }
-
-  return undefined
+function canonicalCode(lang: string): string {
+  return LANGUAGES_MAP[lang]?.code || lang
 }
 
 export function codeToLanguageName(lang: string): string {
-  const lang2 = code3ToCode2(lang)
-  return LANGUAGES_MAP_CODE2[lang2]?.name || lang
+  return LANGUAGES_MAP[lang]?.name || lang
 }
 
 export function getPostLanguage(
@@ -53,6 +30,8 @@ export function getPostLanguage(
     candidates = post.record.langs
   }
 
+  candidates = candidates.map(canonicalCode)
+
   // if there's only one declared language, use that
   if (candidates?.length === 1) {
     return candidates[0]
@@ -70,13 +49,13 @@ export function getPostLanguage(
   if (candidates?.length) {
     langsProbabilityMap = langsProbabilityMap.filter(
       ([lang, _probability]: [string, number]) => {
-        return candidates.includes(code3ToCode2(lang))
+        return candidates.includes(canonicalCode(lang))
       },
     )
   }
 
   if (langsProbabilityMap[0]) {
-    return code3ToCode2(langsProbabilityMap[0][0])
+    return canonicalCode(langsProbabilityMap[0][0])
   }
 }
 

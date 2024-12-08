@@ -65,7 +65,7 @@ export function getLocales() {
 export const deviceLocales = getLocales()
 
 /**
- * BCP-47 language tag without region e.g. array of 2-char lang codes
+ * BCP-47 language tag without region
  *
  * {@link https://docs.expo.dev/versions/latest/sdk/localization/#locale}
  */
