@@ -1215,11 +1215,6 @@ msgstr "Sous-titres et texte alt"
 msgid "Change"
 msgstr "Modifier"
 
-#: src/view/screens/Settings/index.tsx:342
-#~ msgctxt "action"
-#~ msgid "Change"
-#~ msgstr "Modifier"
-
 #: src/screens/Settings/AppIconSettings.tsx:81
 msgid "Change app icon to \"{0}\""
 msgstr "Changer l’icône de l’application pour « {0} »"
@@ -3095,10 +3090,6 @@ msgstr "Aide"
 #: src/screens/Onboarding/StepProfile/index.tsx:237
 msgid "Help people know you're not a bot by uploading a picture or creating an avatar."
 msgstr "Aidez les gens à savoir que vous n’êtes pas un bot en envoyant une image ou en créant un avatar."
-
-#: src/screens/Settings/ContentAndMediaSettings.tsx:127
-#~ msgid "Helps external sites estimate traffic from Bluesky."
-#~ msgstr ""
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:187
 msgid "Here is your app password!"
@@ -5792,10 +5783,6 @@ msgstr "Sélectionnez votre langue préférée pour traduire votre fils d’actu
 msgid "Send a neat website!"
 msgstr "Envoyez un site chouette !"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:118
-#~ msgid "Send Bluesky referrer"
-#~ msgstr ""
-
 #: src/components/dialogs/VerifyEmailDialog.tsx:232
 msgid "Send Confirmation"
 msgstr "Envoyer la confirmation"
@@ -6226,10 +6213,6 @@ msgstr "Spam"
 #: src/lib/moderation/useReportOptions.ts:55
 msgid "Spam; excessive mentions or replies"
 msgstr "Spam ; mentions ou réponses excessives"
-
-#: src/screens/Settings/ContentAndMediaSettings.tsx:112
-#~ msgid "Specify Bluesky as a referer"
-#~ msgstr ""
 
 #: src/screens/Onboarding/index.tsx:27
 #: src/screens/Onboarding/state.ts:100
