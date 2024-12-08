@@ -1,6 +1,6 @@
 import 'react-image-crop/dist/ReactCrop.css'
 
-import React from 'react'
+import React, {memo} from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -17,16 +17,16 @@ import * as Dialog from '#/components/Dialog'
 import {Text} from '#/components/Typography'
 import {EditImageDialogProps} from './EditImageDialog'
 
-export const EditImageDialog = (props: EditImageDialogProps) => {
+export const EditImageDialog = memo((props: EditImageDialogProps) => {
   return (
     <Dialog.Outer control={props.control}>
       <Dialog.Handle />
       <EditImageInner key={props.image.source.id} {...props} />
     </Dialog.Outer>
   )
-}
+})
 
-const EditImageInner = ({control, image, onChange}: EditImageDialogProps) => {
+const EditImageInner = () => memo(({control, image, onChange}: EditImageDialogProps) => {
   const {_} = useLingui()
 
   const source = image.source
@@ -86,7 +86,7 @@ const EditImageInner = ({control, image, onChange}: EditImageDialogProps) => {
       </View>
     </Dialog.Inner>
   )
-}
+})
 
 const getInitialCrop = (
   source: ImageSource,

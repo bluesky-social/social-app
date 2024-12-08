@@ -19,8 +19,9 @@ import {Button, ButtonText} from '#/components/Button'
 import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {CenteredView} from '../util/Views'
+import {memo} from 'react'
 
-export const SplashScreen = ({
+export const SplashScreen = () => memo(({
   onDismiss,
   onPressSignin,
   onPressCreateAccount,
@@ -142,7 +143,7 @@ export const SplashScreen = ({
       />
     </>
   )
-}
+})
 
 function Footer() {
   const t = useTheme()

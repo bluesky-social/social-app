@@ -11,8 +11,9 @@ import {AppLanguageDropdown} from '#/components/AppLanguageDropdown'
 import {Button, ButtonText} from '#/components/Button'
 import {Text} from '#/components/Typography'
 import {CenteredView} from '../util/Views'
+import {memo} from 'react'
 
-export const SplashScreen = ({
+export const SplashScreen = () => memo(({
   onPressSignin,
   onPressCreateAccount,
 }: {
@@ -84,4 +85,4 @@ export const SplashScreen = ({
       </ErrorBoundary>
     </CenteredView>
   )
-}
+})
