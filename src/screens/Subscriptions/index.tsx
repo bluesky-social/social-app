@@ -530,42 +530,12 @@ function useFeatures() {
     {
       available: true,
       icon: Check,
-      text: _(msg`Bluesky+ profile badge`),
-    },
-    {
-      available: true,
-      icon: Check,
       text: _(msg`Custom app icons`),
     },
     {
-      available: true,
-      icon: Check,
-      text: _(msg`Profile customizations`),
-    },
-    {
-      available: true,
-      icon: Check,
-      text: _(msg`Higher video upload limits`),
-    },
-    {
-      available: true,
-      icon: Check,
-      text: _(msg`High quality video resolution`),
-    },
-    {
       available: false,
       icon: Clock,
-      text: _(msg`Inline post translations (coming soon)`),
-    },
-    {
-      available: false,
-      icon: Clock,
-      text: _(msg`Post analytics (coming soon)`),
-    },
-    {
-      available: false,
-      icon: Clock,
-      text: _(msg`Bookmark folders (coming soon)`),
+      text: _(msg`Feature feature feature`),
     },
   ]
 
