@@ -603,7 +603,7 @@ msgstr "Adicionar outra conta"
 
 #: src/view/com/composer/Composer.tsx:721
 msgid "Add another post"
-msgstr "Adicionar outro post"
+msgstr "Adicionar outra postagem"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:102
 msgid "Add app password"
@@ -633,7 +633,7 @@ msgstr "Adicionar palavras/tags silenciadas"
 
 #: src/view/com/composer/Composer.tsx:1235
 msgid "Add new post"
-msgstr "Adicionar novo post"
+msgstr "Adicionar nova postagem"
 
 #: src/screens/StarterPack/Wizard/index.tsx:197
 #~ msgid "Add people to your starter pack that you think others will enjoy following"
@@ -1502,7 +1502,7 @@ msgstr "Alterar Senha"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:74
 msgid "Change post language to {0}"
-msgstr "Alterar idioma do post para {0}"
+msgstr "Alterar idioma da postagem para {0}"
 
 #: src/view/com/modals/ChangeEmail.tsx:104
 msgid "Change Your Email"
@@ -1805,7 +1805,7 @@ msgstr "Complete o captcha"
 
 #: src/view/shell/desktop/LeftNav.tsx:314
 msgid "Compose new post"
-msgstr "Escrever novo post"
+msgstr "Escrever nova postagem"
 
 #: src/view/com/composer/Composer.tsx:812
 msgid "Compose posts up to {MAX_GRAPHEME_LENGTH} characters in length"
@@ -2044,7 +2044,7 @@ msgstr "Copiar link da lista"
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:434
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:443
 msgid "Copy link to post"
-msgstr "Copiar link do post"
+msgstr "Copiar link da postagem"
 
 #: src/components/dms/MessageMenu.tsx:110
 #: src/components/dms/MessageMenu.tsx:112
@@ -2917,7 +2917,7 @@ msgstr "Insira o código de confirmação"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:405
 msgid "Enter fullscreen"
-msgstr ""
+msgstr "Abrir tela cheia"
 
 #: src/view/com/modals/ChangePassword.tsx:154
 msgid "Enter the code you received to change your password."
@@ -3041,12 +3041,12 @@ msgstr "Mostrar ou esconder a postagem a que você está respondendo"
 
 #: src/lib/api/index.ts:400
 msgid "Expected uri to resolve to a record"
-msgstr ""
+msgstr "Esperava-se que o URI fosse resolvido para um registro"
 
 #: src/screens/Settings/FollowingFeedPreferences.tsx:115
 #: src/screens/Settings/ThreadPreferences.tsx:129
 msgid "Experimental"
-msgstr ""
+msgstr "Experimental"
 
 #: src/view/screens/NotificationsSettings.tsx:78
 #~ msgid "Experimental: When this preference is enabled, you'll only receive reply and quote notifications from users you follow. We'll continue to add more controls here over time."
@@ -3482,12 +3482,12 @@ msgstr "Seguindo {name}"
 #: src/screens/Settings/ContentAndMediaSettings.tsx:56
 #: src/screens/Settings/ContentAndMediaSettings.tsx:59
 msgid "Following feed preferences"
-msgstr "Configurações do feed principal"
+msgstr "Configurações do Feed Principal"
 
 #: src/Navigation.tsx:300
 #: src/screens/Settings/FollowingFeedPreferences.tsx:49
 msgid "Following Feed Preferences"
-msgstr "Configurações do feed principal"
+msgstr "Configurações do Feed Principal"
 
 #: src/tours/HomeTour.tsx:59
 #~ msgid "Following shows the latest posts from people you follow."
@@ -3860,7 +3860,7 @@ msgstr "Página Inicial"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:397
 msgid "Host:"
-msgstr "Host:"
+msgstr "Provedor:"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:83
 #: src/screens/Login/LoginForm.tsx:166
@@ -3871,7 +3871,7 @@ msgstr "Provedor de hospedagem"
 #: src/screens/Settings/ThreadPreferences.tsx:59
 #: src/screens/Settings/ThreadPreferences.tsx:62
 msgid "Hot replies first"
-msgstr ""
+msgstr "Melhores respostas primeiro"
 
 #: src/view/com/modals/InAppBrowserConsent.tsx:41
 msgid "How should we open this link?"
@@ -5800,7 +5800,7 @@ msgstr "Postagem excluída"
 
 #: src/lib/api/index.ts:185
 msgid "Post failed to upload. Please check your Internet connection and try again."
-msgstr "Falha ao enviar o post. Por favor verifique sua conexão de internet e tente novamente."
+msgstr "Falha ao enviar a postagem. Por favor verifique sua conexão de internet e tente novamente."
 
 #: src/view/com/post-thread/PostThread.tsx:221
 msgid "Post hidden"
