@@ -1,5 +1,4 @@
 import React from 'react'
-import {useMediaQuery} from 'react-responsive'
 
 import {
   computeFontScaleMultiplier,
@@ -14,13 +13,14 @@ import {BLUE_HUE, GREEN_HUE, RED_HUE} from '#/alf/util/colorGeneration'
 import {Device} from '#/storage'
 
 export {atoms} from '#/alf/atoms'
+export * from '#/alf/breakpoints'
 export * from '#/alf/fonts'
 export * as tokens from '#/alf/tokens'
 export * from '#/alf/types'
 export * from '#/alf/util/flatten'
 export * from '#/alf/util/platform'
 export * from '#/alf/util/themeSelector'
-export * from '#/alf/util/useGutterStyles'
+export * from '#/alf/util/useGutters'
 
 export type Alf = {
   themeName: ThemeName
@@ -141,15 +141,4 @@ export function useTheme(theme?: ThemeName) {
   return React.useMemo(() => {
     return theme ? alf.themes[theme] : alf.theme
   }, [theme, alf])
-}
-
-export function useBreakpoints() {
-  const gtPhone = useMediaQuery({minWidth: 500})
-  const gtMobile = useMediaQuery({minWidth: 800})
-  const gtTablet = useMediaQuery({minWidth: 1300})
-  return {
-    gtPhone,
-    gtMobile,
-    gtTablet,
-  }
 }
