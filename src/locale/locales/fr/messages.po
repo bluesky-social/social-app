@@ -590,7 +590,7 @@ msgstr "Entraînement de l’algorithme terminé !"
 msgid "All accounts have been followed!"
 msgstr "Tous les comptes ont été suivis !"
 
-#: src/view/screens/Feeds.tsx:700
+#: src/view/screens/Feeds.tsx:702
 msgid "All the feeds you've saved, right in one place."
 msgstr "Tous les fils d’actu que vous avez enregistrés, au même endroit."
 
@@ -996,7 +996,7 @@ msgid "Blocked accounts"
 msgstr "Comptes bloqués"
 
 #: src/Navigation.tsx:154
-#: src/view/screens/ModerationBlockedAccounts.tsx:100
+#: src/view/screens/ModerationBlockedAccounts.tsx:101
 msgid "Blocked Accounts"
 msgstr "Comptes bloqués"
 
@@ -1005,7 +1005,7 @@ msgstr "Comptes bloqués"
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
 msgstr "Les comptes bloqués ne peuvent pas répondre à vos discussions, vous mentionner ou interagir avec vous."
 
-#: src/view/screens/ModerationBlockedAccounts.tsx:111
+#: src/view/screens/ModerationBlockedAccounts.tsx:112
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you. You will not see their content and they will be prevented from seeing yours."
 msgstr "Les comptes bloqués ne peuvent pas répondre à vos discussions, vous mentionner ou interagir avec vous. Vous ne verrez pas leur contenu et ils ne pourront pas voir le vôtre."
 
@@ -1324,6 +1324,11 @@ msgstr "Choisissez les algorithmes qui alimentent vos fils d’actu personnalis�
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:107
 msgid "Choose this color as your avatar"
 msgstr "Choisir cette couleur comme avatar"
+
+#: src/view/screens/Feeds.tsx:728
+#: src/view/screens/Search/Explore.tsx:391
+msgid "Choose your own timeline! Feeds built by the community help you find content you love."
+msgstr ""
 
 #: src/screens/Signup/StepInfo/index.tsx:201
 msgid "Choose your password"
@@ -1801,8 +1806,8 @@ msgstr "Personnalisé"
 
 #: src/view/screens/Feeds.tsx:726
 #: src/view/screens/Search/Explore.tsx:391
-msgid "Custom feeds built by the community bring you new experiences and help you find the content you love."
-msgstr "Les fils d’actu personnalisés élaborés par la communauté vous font vivre de nouvelles expériences et vous aident à trouver le contenu que vous aimez."
+#~ msgid "Custom feeds built by the community bring you new experiences and help you find the content you love."
+#~ msgstr "Les fils d’actu personnalisés élaborés par la communauté vous font vivre de nouvelles expériences et vous aident à trouver le contenu que vous aimez."
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:292
 msgid "Customize who can interact with this post."
@@ -2027,7 +2032,7 @@ msgstr "Découvrir des fils d’actu personnalisés"
 msgid "Discover new feeds"
 msgstr "Découvrir de nouveaux fils d’actu"
 
-#: src/view/screens/Feeds.tsx:723
+#: src/view/screens/Feeds.tsx:725
 msgid "Discover New Feeds"
 msgstr "Découvrir de nouveaux fils d’actu"
 
@@ -2226,7 +2231,7 @@ msgid "Edit Moderation List"
 msgstr "Modifier la liste de modération"
 
 #: src/Navigation.tsx:295
-#: src/view/screens/Feeds.tsx:513
+#: src/view/screens/Feeds.tsx:515
 msgid "Edit My Feeds"
 msgstr "Modifier mes fils d’actu"
 
@@ -2706,7 +2711,7 @@ msgstr "Commentaire envoyé !"
 
 #: src/Navigation.tsx:397
 #: src/screens/StarterPack/StarterPackScreen.tsx:183
-#: src/view/screens/Feeds.tsx:506
+#: src/view/screens/Feeds.tsx:508
 #: src/view/screens/Profile.tsx:230
 #: src/view/screens/SavedFeeds.tsx:96
 #: src/view/screens/Search/Search.tsx:520
@@ -2848,7 +2853,7 @@ msgstr "Abonné·e·s que vous connaissez"
 #: src/components/ProfileHoverCard/index.web.tsx:459
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:230
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:135
-#: src/view/screens/Feeds.tsx:597
+#: src/view/screens/Feeds.tsx:599
 #: src/view/screens/ProfileFollows.tsx:29
 #: src/view/screens/SavedFeeds.tsx:422
 msgid "Following"
@@ -3401,7 +3406,7 @@ msgstr "Emplois"
 msgid "Join Bluesky"
 msgstr "Rejoignez Bluesky"
 
-#: src/components/StarterPack/QrCode.tsx:61
+#: src/components/StarterPack/QrCode.tsx:62
 #: src/view/shell/NavSignupCard.tsx:40
 msgid "Join the conversation"
 msgstr "Participez à la conversation"
@@ -3966,11 +3971,11 @@ msgid "Muted accounts"
 msgstr "Comptes masqués"
 
 #: src/Navigation.tsx:149
-#: src/view/screens/ModerationMutedAccounts.tsx:99
+#: src/view/screens/ModerationMutedAccounts.tsx:100
 msgid "Muted Accounts"
 msgstr "Comptes masqués"
 
-#: src/view/screens/ModerationMutedAccounts.tsx:111
+#: src/view/screens/ModerationMutedAccounts.tsx:112
 msgid "Muted accounts have their posts removed from your feed and from your notifications. Mutes are completely private."
 msgstr "Les comptes masqués voient leurs posts supprimés de votre fil d’actu et de vos notifications. Cette option est totalement privée."
 
@@ -3991,7 +3996,7 @@ msgstr "Ce que vous masquez reste privé. Les comptes masqués peuvent interagir
 msgid "My Birthday"
 msgstr "Ma date de naissance"
 
-#: src/view/screens/Feeds.tsx:697
+#: src/view/screens/Feeds.tsx:699
 msgid "My Feeds"
 msgstr "Mes fils d’actu"
 
@@ -4093,7 +4098,7 @@ msgctxt "action"
 msgid "New post"
 msgstr "Nouveau post"
 
-#: src/view/screens/Feeds.tsx:547
+#: src/view/screens/Feeds.tsx:549
 #: src/view/screens/Notifications.tsx:177
 #: src/view/screens/Profile.tsx:494
 #: src/view/screens/ProfileFeed.tsx:432
@@ -4229,7 +4234,7 @@ msgstr "Aucun résultat"
 msgid "No results found"
 msgstr "Aucun résultat trouvé"
 
-#: src/view/screens/Feeds.tsx:469
+#: src/view/screens/Feeds.tsx:470
 msgid "No results found for \"{query}\""
 msgstr "Aucun résultat trouvé pour « {query} »"
 
@@ -4374,7 +4379,7 @@ msgstr "OK"
 msgid "Oldest replies first"
 msgstr "Plus anciennes réponses en premier"
 
-#: src/components/StarterPack/QrCode.tsx:75
+#: src/components/StarterPack/QrCode.tsx:76
 msgid "on<0><1/><2><3/></2></0>"
 msgstr "sur<0><1/><2><3/></2></0>"
 
@@ -5625,6 +5630,10 @@ msgstr "Remonter en haut"
 #: src/view/shell/Drawer.tsx:365
 msgid "Search"
 msgstr "Recherche"
+
+#: src/view/screens/Feeds.tsx:441
+msgid "Search feeds"
+msgstr ""
 
 #: src/view/shell/desktop/Search.tsx:201
 msgid "Search for \"{query}\""
@@ -7792,11 +7801,11 @@ msgstr "Vous n’avez aucun fil d’actu."
 msgid "You have no lists."
 msgstr "Vous n’avez aucune liste."
 
-#: src/view/screens/ModerationBlockedAccounts.tsx:128
+#: src/view/screens/ModerationBlockedAccounts.tsx:129
 msgid "You have not blocked any accounts yet. To block an account, go to their profile and select \"Block account\" from the menu on their account."
 msgstr "Vous n’avez pas encore bloqué de comptes. Pour bloquer un compte, allez sur son profil et sélectionnez « Bloquer le compte » dans le menu de son compte."
 
-#: src/view/screens/ModerationMutedAccounts.tsx:127
+#: src/view/screens/ModerationMutedAccounts.tsx:128
 msgid "You have not muted any accounts yet. To mute an account, go to their profile and select \"Mute account\" from the menu on their account."
 msgstr "Vous n’avez encore masqué aucun compte. Pour masquer un compte, allez sur son profil et sélectionnez « Masquer le compte » dans le menu de son compte."
 
