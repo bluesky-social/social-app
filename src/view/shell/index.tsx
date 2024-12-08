@@ -90,6 +90,7 @@ function ShellInner() {
     }
   }, [dedupe, navigation])
 
+  const swipeEnabled = !canGoBack && hasSession && !isDrawerSwipeDisabled
   return (
     <>
       <View style={[a.h_full]}>
@@ -98,12 +99,19 @@ function ShellInner() {
           <Drawer
             renderDrawerContent={renderDrawerContent}
             drawerStyle={{width: Math.min(400, winDim.width * 0.8)}}
+            configureGestureHandler={handler => {
+              if (swipeEnabled && !isDrawerOpen) {
+                return handler.activeOffsetX(1).failOffsetX(-1)
+              } else {
+                return handler
+              }
+            }}
             open={isDrawerOpen}
             onOpen={onOpenDrawer}
             onClose={onCloseDrawer}
             swipeEdgeWidth={winDim.width / 2}
             drawerType={isIOS ? 'slide' : 'front'}
-            swipeEnabled={!canGoBack && hasSession && !isDrawerSwipeDisabled}
+            swipeEnabled={swipeEnabled}
             overlayStyle={{
               backgroundColor: select(t.name, {
                 light: 'rgba(0, 57, 117, 0.1)',
