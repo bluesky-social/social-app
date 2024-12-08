@@ -8,7 +8,7 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-12-06 10:34+0900\n"
+"PO-Revision-Date: 2024-12-08 10:46+0900\n"
 "Last-Translator: quiple\n"
 "Language-Team: quiple, lens0021, HaruChanHeart, hazzzi, heartade\n"
 "Plural-Forms: \n"
@@ -381,10 +381,6 @@ msgstr "정보"
 msgid "Access navigation links and settings"
 msgstr "탐색 링크 및 설정으로 이동합니다"
 
-#: src/view/com/home/HomeHeaderLayoutMobile.tsx:56
-#~ msgid "Access profile and other navigation links"
-#~ msgstr "프로필 및 기타 탐색 링크로 이동합니다"
-
 #: src/screens/Settings/AccessibilitySettings.tsx:46
 #: src/screens/Settings/Settings.tsx:191
 #: src/screens/Settings/Settings.tsx:194
@@ -594,7 +590,7 @@ msgstr "알고리즘 훈련 완료!"
 msgid "All accounts have been followed!"
 msgstr "모든 계정을 팔로우했습니다"
 
-#: src/view/screens/Feeds.tsx:700
+#: src/view/screens/Feeds.tsx:702
 msgid "All the feeds you've saved, right in one place."
 msgstr "저장한 모든 피드를 한 곳에서 확인하세요."
 
@@ -1000,7 +996,7 @@ msgid "Blocked accounts"
 msgstr "차단한 계정"
 
 #: src/Navigation.tsx:154
-#: src/view/screens/ModerationBlockedAccounts.tsx:100
+#: src/view/screens/ModerationBlockedAccounts.tsx:101
 msgid "Blocked Accounts"
 msgstr "차단한 계정"
 
@@ -1009,7 +1005,7 @@ msgstr "차단한 계정"
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
 msgstr "차단한 계정은 내 스레드에 답글을 달거나 나를 멘션하거나 기타 다른 방식으로 나와 상호작용할 수 없습니다."
 
-#: src/view/screens/ModerationBlockedAccounts.tsx:111
+#: src/view/screens/ModerationBlockedAccounts.tsx:112
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you. You will not see their content and they will be prevented from seeing yours."
 msgstr "차단한 계정은 내 스레드에 답글을 달거나 나를 멘션하거나 기타 다른 방식으로 나와 상호작용할 수 없습니다. 차단한 계정의 콘텐츠를 볼 수 없으며 해당 계정도 내 콘텐츠를 볼 수 없게 됩니다."
 
@@ -1328,6 +1324,11 @@ msgstr "맞춤 피드를 구동할 알고리즘을 선택하세요."
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:107
 msgid "Choose this color as your avatar"
 msgstr "이 색상을 아바타로 선택"
+
+#: src/view/screens/Feeds.tsx:728
+#: src/view/screens/Search/Explore.tsx:391
+msgid "Choose your own timeline! Feeds built by the community help you find content you love."
+msgstr "나만의 타임라인을 선택하세요! 커뮤니티에서 만든 피드를 통해 마음에 드는 콘텐츠를 찾을 수 있습니다."
 
 #: src/screens/Signup/StepInfo/index.tsx:201
 msgid "Choose your password"
@@ -1803,11 +1804,6 @@ msgstr "문화"
 msgid "Custom"
 msgstr "사용자 지정"
 
-#: src/view/screens/Feeds.tsx:726
-#: src/view/screens/Search/Explore.tsx:391
-msgid "Custom feeds built by the community bring you new experiences and help you find the content you love."
-msgstr "커뮤니티에서 구축한 맞춤 피드는 새로운 경험을 제공하고 좋아하는 콘텐츠를 찾을 수 있도록 도와줍니다."
-
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:292
 msgid "Customize who can interact with this post."
 msgstr "이 게시물과 상호작용할 수 있는 사람을 사용자 지정합니다."
@@ -2031,7 +2027,7 @@ msgstr "새로운 맞춤 피드 찾아보기"
 msgid "Discover new feeds"
 msgstr "새 피드 발견하기"
 
-#: src/view/screens/Feeds.tsx:723
+#: src/view/screens/Feeds.tsx:725
 msgid "Discover New Feeds"
 msgstr "새 피드 발견하기"
 
@@ -2230,7 +2226,7 @@ msgid "Edit Moderation List"
 msgstr "검토 리스트 편집"
 
 #: src/Navigation.tsx:295
-#: src/view/screens/Feeds.tsx:513
+#: src/view/screens/Feeds.tsx:515
 msgid "Edit My Feeds"
 msgstr "내 피드 편집"
 
@@ -2710,7 +2706,7 @@ msgstr "피드백을 보냈습니다!"
 
 #: src/Navigation.tsx:397
 #: src/screens/StarterPack/StarterPackScreen.tsx:183
-#: src/view/screens/Feeds.tsx:506
+#: src/view/screens/Feeds.tsx:508
 #: src/view/screens/Profile.tsx:230
 #: src/view/screens/SavedFeeds.tsx:96
 #: src/view/screens/Search/Search.tsx:520
@@ -2852,7 +2848,7 @@ msgstr "내가 아는 팔로워"
 #: src/components/ProfileHoverCard/index.web.tsx:459
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:230
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:135
-#: src/view/screens/Feeds.tsx:597
+#: src/view/screens/Feeds.tsx:599
 #: src/view/screens/ProfileFollows.tsx:29
 #: src/view/screens/SavedFeeds.tsx:422
 msgid "Following"
@@ -3405,7 +3401,7 @@ msgstr "채용"
 msgid "Join Bluesky"
 msgstr "Bluesky 가입하기"
 
-#: src/components/StarterPack/QrCode.tsx:61
+#: src/components/StarterPack/QrCode.tsx:62
 #: src/view/shell/NavSignupCard.tsx:40
 msgid "Join the conversation"
 msgstr "대화에 참여하기"
@@ -3785,10 +3781,6 @@ msgstr "메시지 입력 필드"
 msgid "Message is too long"
 msgstr "메시지가 너무 깁니다"
 
-#: src/screens/Messages/ChatList.tsx:318
-#~ msgid "Message settings"
-#~ msgstr "메시지 설정"
-
 #: src/Navigation.tsx:603
 #: src/screens/Messages/ChatList.tsx:260
 #: src/screens/Messages/ChatList.tsx:284
@@ -3974,11 +3966,11 @@ msgid "Muted accounts"
 msgstr "뮤트한 계정"
 
 #: src/Navigation.tsx:149
-#: src/view/screens/ModerationMutedAccounts.tsx:99
+#: src/view/screens/ModerationMutedAccounts.tsx:100
 msgid "Muted Accounts"
 msgstr "뮤트한 계정"
 
-#: src/view/screens/ModerationMutedAccounts.tsx:111
+#: src/view/screens/ModerationMutedAccounts.tsx:112
 msgid "Muted accounts have their posts removed from your feed and from your notifications. Mutes are completely private."
 msgstr "계정을 뮤트하면 피드와 알림에서 해당 계정의 게시물이 사라집니다. 뮤트 목록은 완전히 비공개로 유지됩니다."
 
@@ -3999,7 +3991,7 @@ msgstr "뮤트 목록은 비공개입니다. 뮤트한 계정은 나와 상호�
 msgid "My Birthday"
 msgstr "내 생년월일"
 
-#: src/view/screens/Feeds.tsx:697
+#: src/view/screens/Feeds.tsx:699
 msgid "My Feeds"
 msgstr "내 피드"
 
@@ -4063,10 +4055,6 @@ msgctxt "action"
 msgid "New"
 msgstr "새로 만들기"
 
-#: src/view/screens/ModerationModlists.tsx:92
-#~ msgid "New"
-#~ msgstr "새로 만들기"
-
 #: src/components/dms/dialogs/NewChatDialog.tsx:65
 #: src/screens/Messages/ChatList.tsx:267
 #: src/screens/Messages/ChatList.tsx:274
@@ -4105,7 +4093,7 @@ msgctxt "action"
 msgid "New post"
 msgstr "새 게시물"
 
-#: src/view/screens/Feeds.tsx:547
+#: src/view/screens/Feeds.tsx:549
 #: src/view/screens/Notifications.tsx:177
 #: src/view/screens/Profile.tsx:494
 #: src/view/screens/ProfileFeed.tsx:432
@@ -4241,7 +4229,7 @@ msgstr "결과 없음"
 msgid "No results found"
 msgstr "결과를 찾을 수 없음"
 
-#: src/view/screens/Feeds.tsx:469
+#: src/view/screens/Feeds.tsx:470
 msgid "No results found for \"{query}\""
 msgstr "\"{query}\"에 대한 결과를 찾을 수 없습니다"
 
@@ -4386,7 +4374,7 @@ msgstr "확인"
 msgid "Oldest replies first"
 msgstr "오래된 순"
 
-#: src/components/StarterPack/QrCode.tsx:75
+#: src/components/StarterPack/QrCode.tsx:76
 msgid "on<0><1/><2><3/></2></0>"
 msgstr "<0><1/><2><3/></2></0>"
 
@@ -4494,10 +4482,6 @@ msgstr "검토 디버그 페이지 열기"
 #: src/screens/Moderation/index.tsx:204
 msgid "Open muted words and tags settings"
 msgstr "뮤트한 단어 및 태그 설정 열기"
-
-#: src/view/com/home/HomeHeaderLayoutMobile.tsx:54
-#~ msgid "Open navigation"
-#~ msgstr "내비게이션 열기"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:70
 msgid "Open post options menu"
@@ -5641,6 +5625,10 @@ msgstr "맨 위로 스크롤"
 #: src/view/shell/Drawer.tsx:365
 msgid "Search"
 msgstr "검색"
+
+#: src/view/screens/Feeds.tsx:441
+msgid "Search feeds"
+msgstr "피드 검색"
 
 #: src/view/shell/desktop/Search.tsx:201
 msgid "Search for \"{query}\""
@@ -7273,10 +7261,6 @@ msgstr "사용자 리스트를 생성했습니다"
 msgid "User list updated"
 msgstr "사용자 리스트를 업데이트했습니다"
 
-#: src/view/screens/Lists.tsx:78
-#~ msgid "User Lists"
-#~ msgstr "사용자 리스트"
-
 #: src/screens/Login/LoginForm.tsx:183
 msgid "Username or email address"
 msgstr "사용자 이름 또는 이메일 주소"
@@ -7812,11 +7796,11 @@ msgstr "피드가 없습니다."
 msgid "You have no lists."
 msgstr "리스트가 없습니다."
 
-#: src/view/screens/ModerationBlockedAccounts.tsx:128
+#: src/view/screens/ModerationBlockedAccounts.tsx:129
 msgid "You have not blocked any accounts yet. To block an account, go to their profile and select \"Block account\" from the menu on their account."
 msgstr "아직 어떤 계정도 차단하지 않았습니다. 계정을 차단하려면 해당 계정의 프로필로 이동하여 계정 메뉴에서 \"계정 차단\"을 선택하세요."
 
-#: src/view/screens/ModerationMutedAccounts.tsx:127
+#: src/view/screens/ModerationMutedAccounts.tsx:128
 msgid "You have not muted any accounts yet. To mute an account, go to their profile and select \"Mute account\" from the menu on their account."
 msgstr "아직 어떤 계정도 뮤트하지 않았습니다. 계정을 뮤트하려면 해당 계정의 프로필로 이동하여 계정 메뉴에서 \"계정 뮤트\"를 선택하세요."
 
