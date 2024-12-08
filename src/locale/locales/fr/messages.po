@@ -836,7 +836,7 @@ msgstr "Utiliser les fils d’actu recommandés par défaut"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:835
 msgid "Archived from {0}"
-msgstr "Archivé comme du {0}"
+msgstr "Archive datée du {0}"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:804
 #: src/view/com/post-thread/PostThreadItem.tsx:843
