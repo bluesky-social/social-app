@@ -19,7 +19,7 @@ import {
   APISubscription,
   NativePurchaseRestricted,
 } from '#/state/purchases/types'
-import {atoms as a, tokens, useBreakpoints, useGutters,useTheme} from '#/alf'
+import {atoms as a, tokens, useBreakpoints, useGutters, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
@@ -38,6 +38,7 @@ import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus
 import * as Layout from '#/components/Layout'
 import {createStaticClick, InlineLinkText, Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
+import {SubduedFill} from '#/components/purchases/BlueskyPlusGradients'
 import {Text} from '#/components/Typography'
 
 export type ScreenProps = NativeStackScreenProps<
@@ -46,6 +47,8 @@ export type ScreenProps = NativeStackScreenProps<
 >
 
 export function Subscriptions(_props: ScreenProps) {
+  const t = useTheme()
+  const isDark = t.name !== 'light'
   const gutters = useGutters(['base', 'base'])
   const insets = useSafeAreaInsets()
   const purchases = usePurchases()
@@ -64,12 +67,16 @@ export function Subscriptions(_props: ScreenProps) {
   return (
     <Layout.Screen noPaddingTop>
       <Layout.Center>
-        <GradientFill gradient={tokens.gradients.nordic} />
+        <SubduedFill />
+
         <View style={{height: insets.top}} />
-        <Layout.Header.Outer noBottomBorder>
+        <Layout.Header.Outer>
           <Layout.Header.BackButton />
           <Layout.Header.Content>
-            <BlueskyPlusLogo width={100} fill="white" />
+            <BlueskyPlusLogo
+              width={100}
+              fill={isDark ? t.palette.white : t.atoms.text_contrast_high.color}
+            />
           </Layout.Header.Content>
           <Layout.Header.Slot />
         </Layout.Header.Outer>
@@ -114,17 +121,17 @@ function Core({
   const coreSubscriptions = state.subscriptions.filter(
     s => s.group === SubscriptionGroupId.Core,
   )
-  const activeCoreSubscriptions = coreSubscriptions.filter(
+  const activeSubscriptions = coreSubscriptions.filter(
     s => s.status === 'active' || s.status === 'paused',
   )
-  const inactiveCoreSubscriptions = coreSubscriptions.filter(
+  const inactiveSubscriptions = coreSubscriptions.filter(
     s => s.status !== 'active' && s.status !== 'paused',
   )
-  const hasActiveSubscriptions = activeCoreSubscriptions.length > 0
-  const hasInactiveCoreSubscriptions = inactiveCoreSubscriptions.length > 0
+  const hasActiveSubscriptions = activeSubscriptions.length > 0
+  const hasInactiveSubscriptions = inactiveSubscriptions.length > 0
 
   return (
-    <View style={[a.gap_md]}>
+    <View style={[isWeb ? a.gap_lg : a.gap_md]}>
       {restricted === 'yes' ? (
         <Admonition type="info">
           <Trans>
@@ -132,45 +139,60 @@ function Core({
             Please subscribe additional accounts through our web application.
           </Trans>
         </Admonition>
-      ) : hasActiveSubscriptions ? null : hasInactiveCoreSubscriptions ? (
-        <Repurchase />
+      ) : hasActiveSubscriptions ? null : hasInactiveSubscriptions ? (
+        <PurchaseHeader />
       ) : (
-        <Purchase />
+        <PurchaseHeader />
       )}
 
-      <Divider />
+      {hasActiveSubscriptions ||
+        (hasInactiveSubscriptions && (
+          <>
+            <Divider />
 
-      {hasActiveSubscriptions && (
-        <View style={[a.gap_sm]}>
-          <Text style={[a.text_md, a.font_bold, t.atoms.text_contrast_medium]}>
-            <Trans>My subscriptions</Trans>
-          </Text>
+            {hasActiveSubscriptions && (
+              <View style={[a.gap_sm]}>
+                <Text
+                  style={[
+                    a.text_md,
+                    a.font_bold,
+                    t.atoms.text_contrast_medium,
+                  ]}>
+                  <Trans>My subscriptions</Trans>
+                </Text>
 
-          <View style={[a.gap_lg]}>
-            <View style={[a.gap_sm]}>
-              {activeCoreSubscriptions.map(sub => (
-                <Subscription key={sub.purchasedAt} subscription={sub} />
-              ))}
-            </View>
-          </View>
-        </View>
-      )}
+                <View style={[a.gap_lg]}>
+                  <View style={[a.gap_sm]}>
+                    {activeSubscriptions.map(sub => (
+                      <Subscription key={sub.purchasedAt} subscription={sub} />
+                    ))}
+                  </View>
+                </View>
+              </View>
+            )}
 
-      {hasInactiveCoreSubscriptions && (
-        <View style={[a.gap_sm]}>
-          <Text style={[a.text_md, a.font_bold, t.atoms.text_contrast_medium]}>
-            <Trans>Past subscriptions</Trans>
-          </Text>
+            {hasInactiveSubscriptions && (
+              <View style={[a.gap_sm]}>
+                <Text
+                  style={[
+                    a.text_md,
+                    a.font_bold,
+                    t.atoms.text_contrast_medium,
+                  ]}>
+                  <Trans>Past subscriptions</Trans>
+                </Text>
 
-          <View style={[a.gap_lg]}>
-            <View style={[a.gap_sm]}>
-              {inactiveCoreSubscriptions.map(sub => (
-                <Subscription key={sub.purchasedAt} subscription={sub} />
-              ))}
-            </View>
-          </View>
-        </View>
-      )}
+                <View style={[a.gap_lg]}>
+                  <View style={[a.gap_sm]}>
+                    {inactiveSubscriptions.map(sub => (
+                      <Subscription key={sub.purchasedAt} subscription={sub} />
+                    ))}
+                  </View>
+                </View>
+              </View>
+            )}
+          </>
+        ))}
 
       <Divider />
 
@@ -219,6 +241,9 @@ function InfoCards() {
           a.p_lg,
           a.rounded_md,
           a.gap_sm,
+          a.overflow_hidden,
+          a.border,
+          t.atoms.border_contrast_low,
           t.atoms.bg_contrast_25,
         ]}>
         <Text
@@ -233,7 +258,7 @@ function InfoCards() {
         <View style={[a.py_xs, a.gap_sm]}>
           {activeFeatures.map(f => (
             <View key={f.text} style={[a.flex_row, a.align_center, a.gap_xs]}>
-              <f.icon fill={t.atoms.text_contrast_low.color} size="xs" />
+              <f.icon fill={tokens.blueskyPlus.mid} size="xs" />
               <Text style={[a.text_sm]}>{f.text}</Text>
             </View>
           ))}
@@ -283,14 +308,23 @@ function InfoCards() {
   )
 }
 
-function Repurchase() {
+function PurchaseHeader() {
+  const t = useTheme()
+  const isDark = t.name !== 'light'
   const {_} = useLingui()
   const control = useDialogControl()
+  const {gtMobile} = useBreakpoints()
+  const large = gtMobile
 
   return (
-    <View style={[a.gap_sm]}>
-      <Text style={[a.text_3xl, a.font_heavy]}>
-        <Trans>You're part of something bigger.</Trans>
+    <View style={[large ? [a.py_sm, a.gap_md] : a.gap_sm]}>
+      <Text
+        style={[
+          large ? a.text_5xl : a.text_3xl,
+          a.font_heavy,
+          isDark ? undefined : t.atoms.text_contrast_high,
+        ]}>
+        <Trans>Building a better internet needs your support.</Trans>
       </Text>
 
       <View style={[a.gap_xs]}>
@@ -317,81 +351,6 @@ function Repurchase() {
       </Button>
       <BlueskyPlusCore control={control} />
     </View>
-  )
-}
-
-function Purchase() {
-  const t = useTheme()
-  const {_} = useLingui()
-  const control = useDialogControl()
-  const {features} = useFeatures()
-
-  return (
-    <>
-      <Text style={[a.text_3xl, a.font_heavy, a.pb_xs]}>
-        <Trans>Building a better internet needs your support.</Trans>
-      </Text>
-
-      <View style={[a.gap_xs]}>
-        <Text style={[a.text_md, a.leading_snug, a.pt_xs]}>
-          <Trans>
-            Subscribing to Bluesky+ helps ensure that our work to build an open,
-            secure, and user-first internet can continue.
-          </Trans>
-        </Text>
-        <Text style={[a.text_md, a.leading_snug, a.pt_xs]}>
-          <Trans>Plus, you'll get access to exclusive features!</Trans>
-        </Text>
-      </View>
-
-      <View
-        style={[
-          a.my_md,
-          a.p_lg,
-          a.gap_sm,
-          a.rounded_sm,
-          a.border,
-          t.atoms.border_contrast_low,
-        ]}>
-        {features.map(f => (
-          <View key={f.text} style={[a.flex_row, a.gap_sm]}>
-            <View style={{paddingTop: 2}}>
-              <f.icon
-                fill={
-                  f.available
-                    ? tokens.blueskyPlus.mid
-                    : t.atoms.text_contrast_low.color
-                }
-                size="sm"
-              />
-            </View>
-            <Text
-              style={[
-                a.text_md,
-                a.leading_snug,
-                f.available ? t.atoms.text : t.atoms.text_contrast_medium,
-              ]}>
-              {f.text}
-            </Text>
-          </View>
-        ))}
-      </View>
-
-      <Button
-        label={_('Subscribe')}
-        onPress={() => control.open()}
-        size="large"
-        variant="solid"
-        color="primary"
-        style={[a.overflow_hidden]}>
-        <GradientFill gradient={tokens.gradients.nordic} />
-        <ButtonText style={[{color: 'white'}]}>
-          <Trans>Subscribe</Trans>
-        </ButtonText>
-        <ButtonIcon icon={Plus} position="right" style={[{color: 'white'}]} />
-      </Button>
-      <BlueskyPlusCore control={control} />
-    </>
   )
 }
 
@@ -464,12 +423,13 @@ export function Subscription({
   const {_} = useLingui()
   const {mutateAsync: manageSubscription} = useManageSubscription()
   const ui = useSubscriptionUI({subscription: sub})
+  const isExpired = sub.status !== 'active' && sub.status !== 'paused'
 
   const canManage =
     (isWeb && sub.platform === PlatformId.Web) ||
     (isIOS && sub.platform === PlatformId.Ios) ||
     (isAndroid && sub.platform === PlatformId.Android)
-  const showManage = canManage && sub.status !== 'expired'
+  const showManage = canManage && !isExpired
 
   const statusStyles = React.useMemo<TextStyle>(() => {
     return {
@@ -503,8 +463,13 @@ export function Subscription({
   return (
     <View
       key={sub.purchasedAt}
-      style={[a.px_lg, a.rounded_md, a.overflow_hidden]}>
-      <GradientFill gradient={tokens.gradients.nordic} />
+      style={[
+        a.px_lg,
+        a.rounded_md,
+        a.overflow_hidden,
+        isExpired && [a.border, t.atoms.border_contrast_low],
+      ]}>
+      {!isExpired && <GradientFill gradient={tokens.gradients.nordic} />}
       <View
         style={[
           a.absolute,
@@ -612,6 +577,11 @@ function useFeatures() {
       available: true,
       icon: Check,
       text: _(msg`Custom app icons`),
+    },
+    {
+      available: true,
+      icon: Check,
+      text: _(msg`Lorem ipsum dolor sit amet`),
     },
     {
       available: false,

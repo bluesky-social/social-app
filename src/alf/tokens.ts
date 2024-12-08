@@ -108,7 +108,7 @@ export const gradients = {
   nordic: {
     values: [
       [0, '#083367'],
-      [0.4, '#386D84'],
+      // [0.4, '#386D84'],
       [1, '#9EE8C1'],
     ],
     hover_value: '#3A7085',

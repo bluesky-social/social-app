@@ -1,12 +1,13 @@
 import {useMemo} from 'react'
 import {LinearGradient} from 'expo-linear-gradient'
 
-import {atoms as a, tokens} from '#/alf'
+import {atoms as a, tokens, ViewStyleProp} from '#/alf'
 
 export function GradientFill({
   gradient,
   rotate = '0deg',
-}: {
+  style,
+}: ViewStyleProp & {
   gradient:
     | typeof tokens.gradients.primary
     | typeof tokens.gradients.sky
@@ -75,7 +76,7 @@ export function GradientFill({
       }
       start={start}
       end={end}
-      style={[a.absolute, a.inset_0]}
+      style={[a.absolute, a.inset_0, style]}
     />
   )
 }

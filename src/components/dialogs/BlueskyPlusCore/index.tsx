@@ -29,6 +29,7 @@ import {CheckThick_Stroke2_Corner0_Rounded as CheckThink} from '#/components/ico
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {InlineLinkText, Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
+import {SubduedFill} from '#/components/purchases/BlueskyPlusGradients'
 import {Text} from '#/components/Typography'
 
 export function BlueskyPlusCore({
@@ -151,17 +152,43 @@ function DialogInner({control}: {control: Dialog.DialogControlProps}) {
         a.overflow_hidden,
         gtMobile ? {width: '100%', maxWidth: 400, minWidth: 200} : a.w_full,
       ]}>
-      <BlueskyPlusLogo width={100} gradient="nordic" />
+      <View style={[a.relative, a.pb_md]}>
+        <View
+          style={[
+            a.absolute,
+            a.overflow_hidden,
+            isWeb
+              ? undefined
+              : {borderTopLeftRadius: 20, borderTopRightRadius: 20},
+            {
+              top: (a.p_xl.padding + 4) * -1,
+              bottom: 0,
+              left: a.p_xl.padding * -1,
+              right: a.p_xl.padding * -1,
+            },
+          ]}>
+          <GradientFill gradient={tokens.gradients.nordic} />
+        </View>
 
-      <Text style={[a.text_3xl, a.font_heavy, a.pt_lg]}>
-        <Trans>Let's build the social web.</Trans>
-      </Text>
+        <BlueskyPlusLogo width={80} fill="white" style={[a.z_10]} />
+
+        <Text
+          style={[
+            a.text_5xl,
+            a.font_heavy,
+            a.leading_tight,
+            a.pt_lg,
+            {color: 'white'},
+          ]}>
+          <Trans>Let's build the social web.</Trans>
+        </Text>
+      </View>
 
       <Text
         style={[
           a.text_md,
           a.leading_snug,
-          a.pt_xs,
+          a.pt_lg,
           t.atoms.text_contrast_medium,
         ]}>
         <Trans>
@@ -196,10 +223,7 @@ function DialogInner({control}: {control: Dialog.DialogControlProps}) {
                       : t.atoms.border_contrast_low,
                   ]}>
                   {Boolean(selected || hovered) && (
-                    <GradientFill
-                      gradient={tokens.gradients.nordic}
-                      style={{opacity: 0.1}}
-                    />
+                    <SubduedFill style={{opacity: 0.2}} />
                   )}
                   <View
                     style={[
@@ -258,12 +282,14 @@ function DialogInner({control}: {control: Dialog.DialogControlProps}) {
                           a.align_center,
                           a.justify_center,
                           {height: 24, width: 24},
+                          {
+                            backgroundColor: t.atoms.bg.backgroundColor,
+                          },
                         ]}>
                         {selected ? (
                           <>
-                            <GradientFill gradient={tokens.gradients.nordic} />
                             <CheckThink
-                              fill="white"
+                              fill={t.atoms.text_contrast_high.color}
                               size="xs"
                               style={[a.z_10]}
                             />

@@ -20,6 +20,7 @@ export function usePurchaseOffering() {
 
   return useMutation<void, Error | ReceiptAlreadyInUseError, Params>({
     async mutationFn({did, email, offering}: Params) {
+      console.log(offering)
       if (offering.platform === PlatformId.Web) {
         throw new Error('Unsupported platform')
       }
