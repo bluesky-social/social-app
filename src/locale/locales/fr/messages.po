@@ -2168,7 +2168,7 @@ msgstr "ex. Artiste, amie des chiens et lectrice passionnée."
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:43
 msgid "E.g. artistic nudes."
-msgstr "Nus artistiques par exemple."
+msgstr "Nudité artistique par exemple."
 
 #: src/view/com/modals/CreateOrEditList.tsx:263
 msgid "e.g. Great Posters"
@@ -3989,7 +3989,7 @@ msgstr "Masqué par « {0} »"
 
 #: src/screens/Moderation/index.tsx:208
 msgid "Muted words & tags"
-msgstr "Mots et les mots-clés masqués"
+msgstr "Mots et mots-clés masqués"
 
 #: src/view/screens/ProfileList.tsx:733
 msgid "Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them."
@@ -6371,28 +6371,28 @@ msgstr "Mots-clés seulement"
 #: src/screens/Settings/AppIconSettings.tsx:42
 #: src/screens/Settings/AppIconSettings.tsx:76
 msgid "Tap to change app icon"
-msgstr "Tapper pour changer l’icône de l’application"
+msgstr "Appuyer pour changer l’icône de l’application"
 
 #: src/components/ProgressGuide/Toast.tsx:156
 msgid "Tap to dismiss"
-msgstr "Tapper pour annuler"
+msgstr "Appuyer pour annuler"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:135
 msgid "Tap to enter full screen"
-msgstr "Taper pour accéder au plein écran"
+msgstr "Appuyer pour accéder au plein écran"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:141
 msgid "Tap to play or pause"
-msgstr "Taper pour lire ou mettre en pause"
+msgstr "Appuyer pour lire ou mettre en pause"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:158
 msgid "Tap to toggle sound"
-msgstr "Taper pour désactiver ou rétablir le son"
+msgstr "Appuyer pour désactiver ou rétablir le son"
 
 #: src/view/com/util/images/AutoSizedImage.tsx:199
 #: src/view/com/util/images/AutoSizedImage.tsx:221
 msgid "Tap to view full image"
-msgstr "Taper pour voir l’image complète"
+msgstr "Appuyer pour voir l’image complète"
 
 #: src/state/shell/progress-guide.tsx:166
 msgid "Task complete - 10 likes!"
