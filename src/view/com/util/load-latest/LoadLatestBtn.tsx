@@ -13,6 +13,10 @@ import {colors} from '#/lib/styles'
 import {isWeb} from '#/platform/detection'
 import {useSession} from '#/state/session'
 
+// Breakpoints for responsive design
+const BREAKPOINT_HEIGHT = 700 // Minimum height for "tall" viewport
+const BREAKPOINT_WIDTH = 940 // Maximum width for "narrow" viewport
+
 const AnimatedTouchableOpacity =
   Animated.createAnimatedComponent(TouchableOpacity)
 
@@ -31,8 +35,9 @@ export function LoadLatestBtn({
   const fabMinimalShellTransform = useMinimalShellFabTransform()
   const insets = useSafeAreaInsets()
 
-  // move button inline if it starts overlapping the left nav
-  const isTallViewport = useMediaQuery({minHeight: 700})
+  // Move button inline if it starts overlapping the left nav
+  const isTallViewport = useMediaQuery({minHeight: BREAKPOINT_HEIGHT})
+  const isNarrowViewport = useMediaQuery({maxWidth: BREAKPOINT_WIDTH})
 
   // Adjust height of the fab if we have a session only on mobile web. If we don't have a session, we want to adjust
   // it on both tablet and mobile since we are showing the bottom bar (see createNativeStackNavigatorWithAuth)
@@ -50,7 +55,10 @@ export function LoadLatestBtn({
           (isTallViewport
             ? styles.loadLatestOutOfLine
             : styles.loadLatestInline),
-        isTablet && styles.loadLatestInline,
+        isTablet &&
+          (isNarrowViewport
+            ? styles.loadLatestInline
+            : styles.loadLatestOutOfLine),
         pal.borderDark,
         pal.view,
         bottomPosition,
