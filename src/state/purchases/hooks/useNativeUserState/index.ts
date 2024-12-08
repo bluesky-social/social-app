@@ -24,8 +24,14 @@ export function useNativeUserState() {
       }
 
       try {
-        // MUST ensure we're the correct user first
+        /**
+         * MUST ensure we're the correct user first.
+         */
         await Purchases.logIn(currentAccount.did)
+        /**
+         * Attempt to restore purchases for the identified user.
+         * @see https://www.revenuecat.com/docs/getting-started/restoring-purchases
+         */
         await Purchases.restorePurchases()
         return {restricted: 'no'}
       } catch (e: any) {
