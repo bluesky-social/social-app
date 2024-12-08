@@ -272,7 +272,7 @@ export const countryCodeToCurrency: Record<string, string> = {
  * otherwise falls back to the `persisted.appLanguage` setting, and geolocation
  * API for region.
  */
-export function useCurrencyFormatter(
+export function useFormatCurrency(
   options?: Parameters<typeof Intl.NumberFormat>[1],
 ) {
   const {geolocation} = useGeolocation()
@@ -285,7 +285,7 @@ export function useCurrencyFormatter(
       geolocation?.countryCode ||
       'us'
     ).toLowerCase()
-    const currency = countryCodeToCurrency[countryCode]
+    const currency = countryCodeToCurrency[countryCode] || 'usd'
     const format = new Intl.NumberFormat(languageTag, {
       ...(options || {}),
       style: 'currency',

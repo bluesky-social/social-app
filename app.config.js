@@ -1,26 +1,6 @@
 const pkg = require('./package.json')
 
-const SPLASH_CONFIG = {
-  backgroundColor: '#ffffff',
-  image: './assets/splash.png',
-  resizeMode: 'cover',
-}
-const DARK_SPLASH_CONFIG = {
-  backgroundColor: '#001429',
-  image: './assets/splash-dark.png',
-  resizeMode: 'cover',
-}
-
-const SPLASH_CONFIG_ANDROID = {
-  backgroundColor: '#0c7cff',
-  image: './assets/splash.png',
-  resizeMode: 'cover',
-}
-const DARK_SPLASH_CONFIG_ANDROID = {
-  backgroundColor: '#0f141b',
-  image: './assets/splash-dark.png',
-  resizeMode: 'cover',
-}
+const DARK_SPLASH_ANDROID_BACKGROUND = '#0f141b'
 
 module.exports = function (config) {
   /**
@@ -73,8 +53,6 @@ module.exports = function (config) {
       orientation: 'portrait',
       icon: './assets/app-icons/ios_icon_default_light.png',
       userInterfaceStyle: 'automatic',
-      splash: SPLASH_CONFIG,
-      // hsl(211, 99%, 53%), same as palette.default.brandText
       primaryColor: '#1083fe',
       ios: {
         supportsTablet: false,
@@ -124,10 +102,6 @@ module.exports = function (config) {
           ],
         },
         associatedDomains: ASSOCIATED_DOMAINS,
-        splash: {
-          ...SPLASH_CONFIG,
-          dark: DARK_SPLASH_CONFIG,
-        },
         entitlements: {
           'com.apple.developer.kernel.increased-memory-limit': true,
           'com.apple.developer.kernel.extended-virtual-addressing': true,
@@ -164,7 +138,7 @@ module.exports = function (config) {
       // Dark nav bar in light mode is better than light nav bar in dark mode
       androidNavigationBar: {
         barStyle: 'light-content',
-        backgroundColor: DARK_SPLASH_CONFIG_ANDROID.backgroundColor,
+        backgroundColor: DARK_SPLASH_ANDROID_BACKGROUND,
       },
       android: {
         icon: './assets/app-icons/android_icon_default_light.png',
@@ -193,10 +167,6 @@ module.exports = function (config) {
             category: ['BROWSABLE', 'DEFAULT'],
           },
         ],
-        splash: {
-          ...SPLASH_CONFIG_ANDROID,
-          dark: DARK_SPLASH_CONFIG_ANDROID,
-        },
       },
       web: {
         favicon: './assets/favicon.png',
@@ -236,10 +206,9 @@ module.exports = function (config) {
               newArchEnabled: false,
             },
             android: {
-              compileSdkVersion: 34,
-              targetSdkVersion: 34,
-              buildToolsVersion: '34.0.0',
-              kotlinVersion: '1.8.0',
+              compileSdkVersion: 35,
+              targetSdkVersion: 35,
+              buildToolsVersion: '35.0.0',
               newArchEnabled: false,
             },
           },
@@ -256,7 +225,6 @@ module.exports = function (config) {
         './plugins/starterPackAppClipExtension/withStarterPackAppClip.js',
         './plugins/withAndroidManifestPlugin.js',
         './plugins/withAndroidManifestFCMIconPlugin.js',
-        './plugins/withAndroidStylesWindowBackgroundPlugin.js',
         './plugins/withAndroidStylesAccentColorPlugin.js',
         './plugins/withAndroidSplashScreenStatusBarTranslucentPlugin.js',
         './plugins/shareExtension/withShareExtensions.js',
@@ -276,6 +244,33 @@ module.exports = function (config) {
               './assets/fonts/inter/Inter-ExtraBold.otf',
               './assets/fonts/inter/Inter-ExtraBoldItalic.otf',
             ],
+          },
+        ],
+        [
+          'expo-splash-screen',
+          {
+            ios: {
+              enableFullScreenImage_legacy: true,
+              backgroundColor: '#ffffff',
+              image: './assets/splash.png',
+              resizeMode: 'cover',
+              dark: {
+                enableFullScreenImage_legacy: true,
+                backgroundColor: '#001429',
+                image: './assets/splash-dark.png',
+                resizeMode: 'cover',
+              },
+            },
+            android: {
+              backgroundColor: '#0c7cff',
+              image: './assets/splash-android-icon.png',
+              imageWidth: 150,
+              dark: {
+                backgroundColor: '#0c2a49',
+                image: './assets/splash-android-icon-dark.png',
+                imageWidth: 150,
+              },
+            },
           },
         ],
         [
