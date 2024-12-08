@@ -1328,7 +1328,7 @@ msgstr "Choisir cette couleur comme avatar"
 #: src/view/screens/Feeds.tsx:728
 #: src/view/screens/Search/Explore.tsx:391
 msgid "Choose your own timeline! Feeds built by the community help you find content you love."
-msgstr ""
+msgstr "Construisez votre propre page d’accueil ! Abonnez-vous à des fils d’actu de la communauté pour y retrouver ce que vous aimez."
 
 #: src/screens/Signup/StepInfo/index.tsx:201
 msgid "Choose your password"
@@ -5633,7 +5633,7 @@ msgstr "Recherche"
 
 #: src/view/screens/Feeds.tsx:441
 msgid "Search feeds"
-msgstr ""
+msgstr "Rechercher des fils d’actu"
 
 #: src/view/shell/desktop/Search.tsx:201
 msgid "Search for \"{query}\""
