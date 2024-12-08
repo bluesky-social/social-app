@@ -23,6 +23,7 @@ import {ProfileCard} from '#/view/com/profile/ProfileCard'
 import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
 import {Text} from '#/view/com/util/text/Text'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
+import {atoms as a} from '#/alf'
 import * as Layout from '#/components/Layout'
 
 type Props = NativeStackScreenProps<
@@ -97,7 +98,7 @@ export function ModerationMutedAccounts({}: Props) {
   return (
     <Layout.Screen testID="mutedAccountsScreen">
       <ViewHeader title={_(msg`Muted Accounts`)} showOnDesktop />
-      <Layout.Center>
+      <Layout.Center style={[a.flex_1, {paddingBottom: 100}]}>
         <Text
           type="sm"
           style={[
