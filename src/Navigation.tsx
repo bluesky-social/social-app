@@ -630,6 +630,7 @@ const LINKING = {
 
     // build the path
     const route = router.matchName(node.name)
+
     if (typeof route === 'undefined') {
       return '/' // default to home
     }

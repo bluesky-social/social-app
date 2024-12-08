@@ -32,12 +32,12 @@ export function Post({thread}: Props) {
     record = post.record
   }
 
-  const href = `/profile/${post.author.did}/post/${getRkey(post)}`
+  const href = `/${post.author.did}/post/${getRkey(post)}`
   return (
     <Container href={href}>
       <div className="flex-1 flex-col flex gap-2" lang={record?.langs?.[0]}>
         <div className="flex gap-2.5 items-center cursor-pointer">
-          <Link href={`/profile/${post.author.did}`} className="rounded-full">
+          <Link href={`/${post.author.did}`} className="rounded-full">
             <div className="w-10 h-10 overflow-hidden rounded-full bg-neutral-300 shrink-0">
               <img
                 src={post.author.avatar}
@@ -47,12 +47,12 @@ export function Post({thread}: Props) {
           </Link>
           <div>
             <Link
-              href={`/profile/${post.author.did}`}
+              href={`/${post.author.did}`}
               className="font-bold text-[17px] leading-5 line-clamp-1 hover:underline underline-offset-2 decoration-2">
               <p>{post.author.displayName}</p>
             </Link>
             <Link
-              href={`/profile/${post.author.did}`}
+              href={`/${post.author.did}`}
               className="text-[15px] text-textLight hover:underline line-clamp-1">
               <p>@{post.author.handle}</p>
             </Link>
@@ -146,7 +146,7 @@ function PostContent({record}: {record: AppBskyFeedPost.Record | null}) {
       richText.push(
         <Link
           key={counter}
-          href={`/profile/${segment.mention.did}`}
+          href={`/${segment.mention.did}`}
           className="text-blue-500 hover:underline">
           {segment.text}
         </Link>,

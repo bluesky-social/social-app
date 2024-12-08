@@ -630,7 +630,7 @@ function ExtraLinks() {
             Logo by{' '}
             <InlineLinkText
               style={[a.text_md]}
-              to="/profile/sawaratsuki.bsky.social"
+              to="/sawaratsuki.bsky.social"
               label="@sawaratsuki.bsky.social">
               @sawaratsuki.bsky.social
             </InlineLinkText>

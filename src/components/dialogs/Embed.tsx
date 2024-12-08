@@ -67,7 +67,7 @@ function EmbedDialogInner({
     const urip = new AtUri(postUri)
     const href = toEmbedUrl(
       ['/profile', postAuthor.did, 'post', urip.rkey].join('/'),
-    )
+    ).replace('/profile/', '/')
 
     // x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x
     // DO NOT ADD ANY NEW INTERPOLATIONS BELOW WITHOUT ESCAPING THEM!

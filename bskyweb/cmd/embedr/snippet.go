@@ -64,8 +64,8 @@ func (srv *Server) postEmbedHTML(postView *appbsky.FeedDefs_PostView) (string, e
 		PostText:      post.Text,
 		PostAuthor:    authorName,
 		PostIndexedAt: sortAt,
-		ProfileURL:    template.URL(fmt.Sprintf("https://bsky.app/profile/%s?ref_src=embed", aturi.Authority())),
-		PostURL:       template.URL(fmt.Sprintf("https://bsky.app/profile/%s/post/%s?ref_src=embed", aturi.Authority(), aturi.RecordKey())),
+		ProfileURL:    template.URL(fmt.Sprintf("https://bsky.app/%s?ref_src=embed", aturi.Authority())),
+		PostURL:       template.URL(fmt.Sprintf("https://bsky.app/%s/post/%s?ref_src=embed", aturi.Authority(), aturi.RecordKey())),
 		WidgetURL:     template.URL("https://embed.bsky.app/static/embed.js"),
 	}
 

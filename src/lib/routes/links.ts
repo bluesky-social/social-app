@@ -13,7 +13,8 @@ export function makeProfileLink(
   if (info.handle && !isInvalidHandle(info.handle)) {
     handleSegment = info.handle
   }
-  return [`/profile`, handleSegment, ...segments].join('/')
+  const link = [`/profile`, handleSegment, ...segments].join('/')
+  return link.replace('/profile/', '/')
 }
 
 export function makeCustomFeedLink(
@@ -21,11 +22,13 @@ export function makeCustomFeedLink(
   rkey: string,
   ...segments: string[]
 ) {
-  return [`/profile`, did, 'feed', rkey, ...segments].join('/')
+  const link = [`/profile`, did, 'feed', rkey, ...segments].join('/')
+  return link.replace('/profile/', '/')
 }
 
 export function makeListLink(did: string, rkey: string, ...segments: string[]) {
-  return [`/profile`, did, 'lists', rkey, ...segments].join('/')
+  const link = [`/profile`, did, 'lists', rkey, ...segments].join('/')
+  return link.replace('/profile/', '/')
 }
 
 export function makeTagLink(did: string) {

@@ -11,7 +11,7 @@ import {Link} from '../components/link'
 import {Post} from '../components/post'
 import {niceDate} from '../utils'
 
-const DEFAULT_POST = 'https://bsky.app/profile/emilyliu.me/post/3jzn6g7ixgq2y'
+const DEFAULT_POST = 'https://bsky.app/emilyliu.me/post/3jzn6g7ixgq2y'
 const DEFAULT_URI =
   'at://did:plc:vjug55kidv6sye7ykr5faxxn/app.bsky.feed.post/3jzn6g7ixgq2y'
 
@@ -187,11 +187,11 @@ function Snippet({thread}: {thread: AppBskyFeedDefs.ThreadViewPost}) {
     const lang = record.langs && record.langs.length > 0 ? record.langs[0] : ''
     const profileHref = toShareUrl(
       ['/profile', thread.post.author.did].join('/'),
-    )
+    ).replace('/profile/', '/')
     const urip = new AtUri(thread.post.uri)
     const href = toShareUrl(
       ['/profile', thread.post.author.did, 'post', urip.rkey].join('/'),
-    )
+    ).replace('/profile/', '/')
 
     // x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x
     // DO NOT ADD ANY NEW INTERPOLATIONS BELOW WITHOUT ESCAPING THEM!

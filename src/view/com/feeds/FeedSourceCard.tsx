@@ -218,7 +218,7 @@ export function FeedSourceCardLoaded({
           if (feed.type === 'feed') {
             if (shouldOpenInNewTab) {
               Linking.openURL(
-                `/profile/${feed.creatorDid}/feed/${new AtUri(feed.uri).rkey}`,
+                `/${feed.creatorDid}/feed/${new AtUri(feed.uri).rkey}`,
               )
             } else {
               navigation.push('ProfileFeed', {
@@ -229,7 +229,7 @@ export function FeedSourceCardLoaded({
           } else if (feed.type === 'list') {
             if (shouldOpenInNewTab) {
               Linking.openURL(
-                `/profile/${feed.creatorDid}/lists/${new AtUri(feed.uri).rkey}`,
+                `/${feed.creatorDid}/lists/${new AtUri(feed.uri).rkey}`,
               )
             } else {
               navigation.push('ProfileList', {

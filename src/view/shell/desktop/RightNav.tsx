@@ -104,7 +104,7 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
                 Logo by{' '}
                 <TextLink
                   type="md"
-                  href="/profile/sawaratsuki.bsky.social"
+                  href="/sawaratsuki.bsky.social"
                   text="@sawaratsuki.bsky.social"
                   style={pal.link}
                 />
