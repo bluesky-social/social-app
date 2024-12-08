@@ -18,7 +18,6 @@ import {
   APISubscription,
   NativePurchaseRestricted,
 } from '#/state/purchases/types'
-import {CenteredView} from '#/view/com/util/Views'
 import {atoms as a, tokens, useBreakpoints, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -29,11 +28,11 @@ import {GradientFill} from '#/components/GradientFill'
 import {AndroidLogo} from '#/components/icons/AndroidLogo'
 import {AppleLogo} from '#/components/icons/AppleLogo'
 import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as Rotate} from '#/components/icons/ArrowRotateCounterClockwise'
-import {Logotype} from '#/components/icons/BlueskyPlus'
+import {Full as BlueskyPlusLogo} from '#/components/icons/BlueskyPlus'
 import {CheckThick_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {Clock_Stroke2_Corner0_Rounded as Clock} from '#/components/icons/Clock'
 import {Globe_Stroke2_Corner0_Rounded as Globe} from '#/components/icons/Globe'
-import {Mark} from '#/components/icons/Logo'
+// import {Mark} from '#/components/icons/Logo'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import * as Layout from '#/components/Layout'
 import {createStaticClick, InlineLinkText, Link} from '#/components/Link'
@@ -61,21 +60,29 @@ export function Subscriptions(_props: ScreenProps) {
 
   return (
     <Layout.Screen>
-      <Layout.Header.Outer>
-        <Layout.Header.BackButton />
-        <Layout.Header.Content>
-          <Layout.Header.TitleText>
-            <Trans>Subscriptions</Trans>
-          </Layout.Header.TitleText>
-        </Layout.Header.Content>
-        <Layout.Header.Slot />
-      </Layout.Header.Outer>
+      <Layout.Center>
+        <GradientFill gradient={tokens.gradients.nordic} />
+        <Layout.Header.Outer noBottomBorder>
+          <Layout.Header.BackButton />
+          <Layout.Header.Content>
+            <BlueskyPlusLogo width={100} fill='white' />
+          </Layout.Header.Content>
+          <Layout.Header.Slot />
+        </Layout.Header.Outer>
+
+        {/*
+        <View style={[
+          a.px_xl,
+        ]}>
+          <Divider style={{borderColor: 'white', opacity: 0.2}} />
+        </View>
+          */}
+      </Layout.Center>
 
       <Layout.Content
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }>
-        <CenteredView style={[a.util_screen_outer]}>
           <View style={[a.px_xl, a.py_xl]}>
             {purchases.status === 'loading' || loading ? (
               <Loader />
@@ -87,7 +94,6 @@ export function Subscriptions(_props: ScreenProps) {
               <Core state={purchases} restricted={restricted} />
             )}
           </View>
-        </CenteredView>
       </Layout.Content>
     </Layout.Screen>
   )
@@ -110,10 +116,15 @@ function Core({
 
   return (
     <View>
+      <Text style={[a.text_md, a.font_bold, t.atoms.text_contrast_medium]}>
+        <Trans>My subscriptions</Trans>
+      </Text>
+      {/*
       <View style={[a.flex_row, a.align_center, a.gap_xs]}>
         <Mark width={30} gradient="nordic" />
         <Logotype width={90} fill={t.atoms.text.color} />
       </View>
+        */}
 
       {restricted === 'yes' ? (
         <Admonition type="info">
