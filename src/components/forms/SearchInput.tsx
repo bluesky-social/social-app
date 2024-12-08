@@ -4,7 +4,9 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {HITSLOP_10} from '#/lib/constants'
+import {mergeRefs} from '#/lib/merge-refs'
 import {isNative} from '#/platform/detection'
+import {useSearchInputKeyboardShortcut} from '#/state/shell/useSearchInputKeyboardShortcut'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import * as TextField from '#/components/forms/TextField'
@@ -24,13 +26,15 @@ export const SearchInput = React.forwardRef<TextInput, SearchInputProps>(
     const t = useTheme()
     const {_} = useLingui()
     const showClear = value && value.length > 0
+    const inputRef = React.useRef<TextInput>(null)
+    useSearchInputKeyboardShortcut(inputRef)
 
     return (
       <View style={[a.w_full, a.relative]}>
         <TextField.Root>
           <TextField.Icon icon={MagnifyingGlassIcon} />
           <TextField.Input
-            inputRef={ref}
+            inputRef={mergeRefs([inputRef, ref])}
             label={label || _(msg`Search`)}
             value={value}
             placeholder={_(msg`Search`)}
