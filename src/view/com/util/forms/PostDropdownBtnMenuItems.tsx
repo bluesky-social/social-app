@@ -33,6 +33,7 @@ import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {useLanguagePrefs} from '#/state/preferences'
 import {useHiddenPosts, useHiddenPostsApi} from '#/state/preferences'
+import {useDeveloperModeEnabled} from '#/state/preferences'
 import {usePinnedPostMutation} from '#/state/queries/pinned-post'
 import {
   usePostDeleteMutation,
@@ -106,6 +107,7 @@ let PostDropdownMenuItems = ({
     usePinnedPostMutation()
   const hiddenPosts = useHiddenPosts()
   const {hidePost} = useHiddenPostsApi()
+  const developerModeEnabled = useDeveloperModeEnabled()
   const feedFeedback = useFeedFeedbackContext()
   const openLink = useOpenLink()
   const navigation = useNavigation<NavigationProp>()
@@ -365,6 +367,11 @@ let PostDropdownMenuItems = ({
       }
     }
   }, [_, queueBlock])
+  
+  const onPressCopyATProtoUri = React.useCallback(() => {
+    Clipboard.setStringAsync(post.uri)
+    Toast.show(_(msg`Copied to clipboard`), 'clipboard-check')
+  }, [])
 
   return (
     <>
@@ -649,6 +656,23 @@ let PostDropdownMenuItems = ({
             </Menu.Group>
           </>
         )}
+
+        {developerModeEnabled && (
+          <>
+            <Menu.Divider />
+            <Menu.Item
+              testID="profileHeaderDropdownCopyUri"
+              label={_(msg`Copy ATProto URI`)}
+              onPress={onPressCopyATProtoUri}>
+              <Menu.ItemText>
+                <Trans>Copy ATProto URI</Trans>
+              </Menu.ItemText>
+              <Menu.ItemIcon icon={ClipboardIcon} />
+            </Menu.Item>
+          </>
+        )}
+
+
       </Menu.Outer>
 
       <Prompt.Basic
