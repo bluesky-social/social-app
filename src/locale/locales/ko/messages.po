@@ -5583,7 +5583,7 @@ msgstr "저장한 피드"
 
 #: src/view/com/lightbox/Lightbox.tsx:44
 msgid "Saved to your camera roll"
-msgstr "내 사진 보관함에 저장했습니다"
+msgstr "사진 보관함에 저장했습니다"
 
 #: src/view/screens/ProfileFeed.tsx:205
 #: src/view/screens/ProfileList.tsx:365
