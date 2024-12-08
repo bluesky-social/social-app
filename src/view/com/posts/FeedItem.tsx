@@ -238,6 +238,15 @@ let FeedItemInner = ({
     ? rootPost.threadgate.record
     : undefined
 
+  const isThread = isThreadChild || isThreadParent || isThreadLastChild
+
+  const contentPadding = useMemo(() => {
+    if (isThread) {
+      return {paddingLeft: 50} // Adjust content padding for thread alignment
+    }
+    return {paddingLeft: 0}
+  }, [isThread])
+
   const [hover, setHover] = useState(false)
   return (
     <Link
@@ -256,22 +265,7 @@ let FeedItemInner = ({
       }}>
       <SubtleWebHover hover={hover} />
       <View style={{flexDirection: 'row', gap: 10, paddingLeft: 8}}>
-        <View style={{width: 42}}>
-          {isThreadChild && (
-            <View
-              style={[
-                styles.replyLine,
-                {
-                  flexGrow: 1,
-                  backgroundColor: pal.colors.replyLine,
-                  marginBottom: 4,
-                },
-              ]}
-            />
-          )}
-        </View>
-
-        <View style={{paddingTop: 12, flexShrink: 1}}>
+        <View style={{paddingTop: 6, paddingBottom: 6, flexShrink: 1}}>
           {isReasonFeedSource(reason) ? (
             <Link href={reason.href}>
               <Text
@@ -366,9 +360,8 @@ let FeedItemInner = ({
           ) : null}
         </View>
       </View>
-
-      <View style={styles.layout}>
-        <View style={styles.layoutAvi}>
+      <View style={[styles.layout]}>
+        <View style={styles.layoutHeader}>
           <AviFollowButton author={post.author} moderation={moderation}>
             <PreviewableUserAvatar
               size={42}
@@ -378,36 +371,40 @@ let FeedItemInner = ({
               onBeforePress={onOpenAuthor}
             />
           </AviFollowButton>
-          {isThreadParent && (
-            <View
-              style={[
-                styles.replyLine,
-                {
-                  flexGrow: 1,
-                  backgroundColor: pal.colors.replyLine,
-                  marginTop: 4,
-                },
-              ]}
+          <View style={styles.metaContent}>
+            <PostMeta
+              author={post.author}
+              moderation={moderation}
+              timestamp={post.indexedAt}
+              postHref={href}
+              onOpenAuthor={onOpenAuthor}
+            />
+          </View>
+        </View>
+        {showReplyTo &&
+          (parentAuthor || isParentBlocked || isParentNotFound) && (
+            <ReplyToLabel
+              blocked={isParentBlocked}
+              notFound={isParentNotFound}
+              profile={parentAuthor}
             />
           )}
-        </View>
-        <View style={styles.layoutContent}>
-          <PostMeta
-            author={post.author}
-            moderation={moderation}
-            timestamp={post.indexedAt}
-            postHref={href}
-            onOpenAuthor={onOpenAuthor}
+        <LabelsOnMyPost post={post} />
+        {isThreadParent && (
+          <View
+            style={[
+              styles.replyLine,
+              {
+                flexGrow: 1,
+                position: 'absolute',
+                height: '100%',
+                backgroundColor: pal.colors.replyLine,
+                marginTop: 40,
+              },
+            ]}
           />
-          {showReplyTo &&
-            (parentAuthor || isParentBlocked || isParentNotFound) && (
-              <ReplyToLabel
-                blocked={isParentBlocked}
-                notFound={isParentNotFound}
-                profile={parentAuthor}
-              />
-            )}
-          <LabelsOnMyPost post={post} />
+        )}
+        <View style={[styles.contentContainer, contentPadding]}>
           <PostContent
             moderation={moderation}
             richText={richText}
@@ -598,15 +595,20 @@ function ReplyToLabel({
 
 const styles = StyleSheet.create({
   outer: {
-    paddingLeft: 10,
-    paddingRight: 15,
+    paddingLeft: 20,
+    paddingRight: 20,
     // @ts-ignore web only -prf
     cursor: 'pointer',
   },
   replyLine: {
     width: 2,
-    marginLeft: 'auto',
-    marginRight: 'auto',
+    marginLeft: 20,
+    marginRight: 20,
+    flexGrow: 1,
+  },
+  replyContainer: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
   },
   includeReason: {
     flexDirection: 'row',
@@ -616,19 +618,18 @@ const styles = StyleSheet.create({
     marginLeft: -16,
   },
   layout: {
+    width: '100%',
+    flexDirection: 'column',
+  },
+  layoutHeader: {
     flexDirection: 'row',
-    marginTop: 1,
+    alignItems: 'center',
+    marginBottom: 6,
   },
   layoutAvi: {
-    paddingLeft: 8,
     paddingRight: 10,
     position: 'relative',
     zIndex: 999,
-  },
-  layoutContent: {
-    position: 'relative',
-    flex: 1,
-    zIndex: 0,
   },
   alert: {
     marginTop: 6,
@@ -649,5 +650,12 @@ const styles = StyleSheet.create({
   },
   translateLink: {
     marginBottom: 6,
+  },
+  metaContent: {
+    flex: 1,
+    paddingLeft: 10,
+  },
+  contentContainer: {
+    flex: 1,
   },
 })
