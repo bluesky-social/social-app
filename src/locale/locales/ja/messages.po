@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-12-07 09:48+0900\n"
+"PO-Revision-Date: 2024-12-08 09:43+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -1325,6 +1325,11 @@ msgstr "カスタムフィードのアルゴリズムを選択できます。"
 msgid "Choose this color as your avatar"
 msgstr "この色をアバターとして選択"
 
+#: src/view/screens/Feeds.tsx:728
+#: src/view/screens/Search/Explore.tsx:391
+msgid "Choose your own timeline! Feeds built by the community help you find content you love."
+msgstr "自分自身のタイムラインを選びましょう！コミュニティによって作成されたフィードは、あなたが好きなコンテンツを見つけるのに役立ちます。"
+
 #: src/screens/Signup/StepInfo/index.tsx:201
 msgid "Choose your password"
 msgstr "パスワードを入力"
@@ -1799,11 +1804,6 @@ msgstr "文化"
 #: src/view/com/auth/server-input/index.tsx:96
 msgid "Custom"
 msgstr "カスタム"
-
-#: src/view/screens/Feeds.tsx:761
-#: src/view/screens/Search/Explore.tsx:391
-msgid "Custom feeds built by the community bring you new experiences and help you find the content you love."
-msgstr "コミュニティによって作成されたカスタムフィードは、あなたに新しい体験をもたらし、あなたが好きなコンテンツを見つけるのに役立ちます。"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:292
 msgid "Customize who can interact with this post."
@@ -5634,6 +5634,10 @@ msgstr "一番上までスクロール"
 #: src/view/shell/Drawer.tsx:365
 msgid "Search"
 msgstr "検索"
+
+#: src/view/screens/Feeds.tsx:441
+msgid "Search feeds"
+msgstr "フィードを検索"
 
 #: src/view/shell/desktop/Search.tsx:201
 msgid "Search for \"{query}\""
