@@ -18,6 +18,7 @@ import {
   useIsDrawerSwipeDisabled,
   useSetDrawerOpen,
 } from '#/state/shell'
+import {useLightStatusBarRefCount} from '#/state/shell/light-status-bar'
 import {useCloseAnyActiveElement} from '#/state/util'
 import {Lightbox} from '#/view/com/lightbox/Lightbox'
 import {ModalsContainer} from '#/view/com/modals/Modal'
@@ -130,6 +131,7 @@ function ShellInner() {
 
 export const Shell: React.FC = function ShellImpl() {
   const {fullyExpandedCount} = useDialogStateControlContext()
+  const lightStatusBarRefCount = useLightStatusBarRefCount()
   const t = useTheme()
   useIntentHandler()
 
@@ -141,7 +143,9 @@ export const Shell: React.FC = function ShellImpl() {
     <View testID="mobileShellView" style={[a.h_full, t.atoms.bg]}>
       <StatusBar
         style={
-          t.name !== 'light' || (isIOS && fullyExpandedCount > 0)
+          t.name !== 'light' ||
+          (isIOS && fullyExpandedCount > 0) ||
+          lightStatusBarRefCount > 0
             ? 'light'
             : 'dark'
         }

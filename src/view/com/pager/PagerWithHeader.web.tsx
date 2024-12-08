@@ -21,7 +21,11 @@ export interface PagerWithHeaderProps {
     | ((props: PagerWithHeaderChildParams) => JSX.Element)
   items: string[]
   isHeaderReady: boolean
-  renderHeader?: () => JSX.Element
+  renderHeader?: ({
+    setMinimumHeight,
+  }: {
+    setMinimumHeight: () => void
+  }) => JSX.Element
   initialPage?: number
   onPageSelected?: (index: number) => void
   onCurrentPageSelected?: (index: number) => void
@@ -115,7 +119,11 @@ let PagerTabBar = ({
   currentPage: number
   items: string[]
   testID?: string
-  renderHeader?: () => JSX.Element
+  renderHeader?: ({
+    setMinimumHeight,
+  }: {
+    setMinimumHeight: () => void
+  }) => JSX.Element
   isHeaderReady: boolean
   onCurrentPageSelected?: (index: number) => void
   onSelect?: (index: number) => void
@@ -123,7 +131,7 @@ let PagerTabBar = ({
 }): React.ReactNode => {
   return (
     <>
-      <Layout.Center>{renderHeader?.()}</Layout.Center>
+      <Layout.Center>{renderHeader?.({setMinimumHeight: noop})}</Layout.Center>
       {tabBarAnchor}
       <Layout.Center
         style={web([
@@ -175,3 +183,5 @@ function toArray<T>(v: T | T[]): T[] {
   }
   return [v]
 }
+
+function noop() {}
