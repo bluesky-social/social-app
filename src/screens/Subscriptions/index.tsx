@@ -46,7 +46,6 @@ export type ScreenProps = NativeStackScreenProps<
 >
 
 export function Subscriptions(_props: ScreenProps) {
-  const {_} = useLingui()
   const purchases = usePurchases()
   const {refetch} = usePurchasesApi()
   const {loading, restricted} = useNativeUserState()
@@ -62,7 +61,15 @@ export function Subscriptions(_props: ScreenProps) {
 
   return (
     <Layout.Screen>
-      <Layout.Header title={_(msg`Subscriptions`)} />
+      <Layout.Header.Outer>
+        <Layout.Header.BackButton />
+        <Layout.Header.Content>
+          <Layout.Header.TitleText>
+            <Trans>Subscriptions</Trans>
+          </Layout.Header.TitleText>
+        </Layout.Header.Content>
+        <Layout.Header.Slot />
+      </Layout.Header.Outer>
 
       <Layout.Content
         refreshControl={
