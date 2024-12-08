@@ -1,5 +1,6 @@
 import React from 'react'
 import {RefreshControl, TextStyle, View} from 'react-native'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
@@ -45,6 +46,7 @@ export type ScreenProps = NativeStackScreenProps<
 >
 
 export function Subscriptions(_props: ScreenProps) {
+  const insets = useSafeAreaInsets()
   const purchases = usePurchases()
   const {refetch} = usePurchasesApi()
   const {loading, restricted} = useNativeUserState()
@@ -59,13 +61,14 @@ export function Subscriptions(_props: ScreenProps) {
   }
 
   return (
-    <Layout.Screen>
+    <Layout.Screen noPaddingTop>
       <Layout.Center>
         <GradientFill gradient={tokens.gradients.nordic} />
+        <View style={{height: insets.top}} />
         <Layout.Header.Outer noBottomBorder>
           <Layout.Header.BackButton />
           <Layout.Header.Content>
-            <BlueskyPlusLogo width={100} fill='white' />
+            <BlueskyPlusLogo width={100} fill="white" />
           </Layout.Header.Content>
           <Layout.Header.Slot />
         </Layout.Header.Outer>
@@ -83,17 +86,17 @@ export function Subscriptions(_props: ScreenProps) {
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }>
-          <View style={[a.px_xl, a.py_xl]}>
-            {purchases.status === 'loading' || loading ? (
-              <Loader />
-            ) : purchases.status === 'error' ? (
-              <Admonition type="error">
-                {purchases.error?.message ?? 'Something went wrong.'}
-              </Admonition>
-            ) : (
-              <Core state={purchases} restricted={restricted} />
-            )}
-          </View>
+        <View style={[a.px_xl, a.py_xl]}>
+          {purchases.status === 'loading' || loading ? (
+            <Loader />
+          ) : purchases.status === 'error' ? (
+            <Admonition type="error">
+              {purchases.error?.message ?? 'Something went wrong.'}
+            </Admonition>
+          ) : (
+            <Core state={purchases} restricted={restricted} />
+          )}
+        </View>
       </Layout.Content>
     </Layout.Screen>
   )
@@ -116,9 +119,6 @@ function Core({
 
   return (
     <View>
-      <Text style={[a.text_md, a.font_bold, t.atoms.text_contrast_medium]}>
-        <Trans>My subscriptions</Trans>
-      </Text>
       {/*
       <View style={[a.flex_row, a.align_center, a.gap_xs]}>
         <Mark width={30} gradient="nordic" />
@@ -138,17 +138,23 @@ function Core({
       )}
 
       {isSubscribedToCore ? (
-        <View style={[a.pt_md, a.gap_lg]}>
-          <View style={[a.gap_sm]}>
-            {coreSubscriptions.map(sub => (
-              <Subscription key={sub.purchasedAt} subscription={sub} />
-            ))}
+        <>
+          <Text style={[a.text_md, a.font_bold, t.atoms.text_contrast_medium]}>
+            <Trans>My subscriptions</Trans>
+          </Text>
+
+          <View style={[a.pt_md, a.gap_lg]}>
+            <View style={[a.gap_sm]}>
+              {coreSubscriptions.map(sub => (
+                <Subscription key={sub.purchasedAt} subscription={sub} />
+              ))}
+            </View>
+
+            <Divider />
+
+            <InfoCards />
           </View>
-
-          <Divider />
-
-          <InfoCards />
-        </View>
+        </>
       ) : null}
 
       <View style={[a.pt_lg]}>
