@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-12-06 16:16\n"
+"PO-Revision-Date: 2024-12-09 01:55\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -595,7 +595,7 @@ msgstr "演算法訓練完成！"
 msgid "All accounts have been followed!"
 msgstr "成功跟隨所有帳號！"
 
-#: src/view/screens/Feeds.tsx:700
+#: src/view/screens/Feeds.tsx:702
 msgid "All the feeds you've saved, right in one place."
 msgstr "以下是您儲存的動態源。"
 
@@ -1001,7 +1001,7 @@ msgid "Blocked accounts"
 msgstr "已封鎖帳號"
 
 #: src/Navigation.tsx:154
-#: src/view/screens/ModerationBlockedAccounts.tsx:100
+#: src/view/screens/ModerationBlockedAccounts.tsx:101
 msgid "Blocked Accounts"
 msgstr "已封鎖帳號"
 
@@ -1010,11 +1010,11 @@ msgstr "已封鎖帳號"
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
 msgstr "被封鎖的帳號無法在您的討論串中回覆、提及您，或以其他方式與您互動。"
 
-#: src/view/screens/ModerationBlockedAccounts.tsx:111
+#: src/view/screens/ModerationBlockedAccounts.tsx:112
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you. You will not see their content and they will be prevented from seeing yours."
 msgstr "被封鎖的帳號無法在您的討論串中回覆、提及您，或以其他方式與您互動。您將看不到他們的內容，他們也會被阻止看到您的內容。"
 
-#: src/view/com/post-thread/PostThread.tsx:420
+#: src/view/com/post-thread/PostThread.tsx:419
 msgid "Blocked post."
 msgstr "該貼文被封鎖。"
 
@@ -1329,6 +1329,11 @@ msgstr "選擇提供您自訂動態的演算法。"
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:107
 msgid "Choose this color as your avatar"
 msgstr "選擇這個顏色作為您的大頭貼照背景"
+
+#: src/view/screens/Feeds.tsx:728
+#: src/view/screens/Search/Explore.tsx:391
+msgid "Choose your own timeline! Feeds built by the community help you find content you love."
+msgstr "自訂您的河道！由社群打造的動態源能協助您找到喜愛的內容。"
 
 #: src/screens/Signup/StepInfo/index.tsx:201
 msgid "Choose your password"
@@ -1804,11 +1809,6 @@ msgstr "文化"
 msgid "Custom"
 msgstr "自訂"
 
-#: src/view/screens/Feeds.tsx:726
-#: src/view/screens/Search/Explore.tsx:391
-msgid "Custom feeds built by the community bring you new experiences and help you find the content you love."
-msgstr "由社群打造的自訂動態源為您帶來嶄新體驗，並協助您找到喜愛的內容。"
-
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:292
 msgid "Customize who can interact with this post."
 msgstr "調整哪些人能夠與這篇貼文互動。"
@@ -1931,7 +1931,7 @@ msgstr "已刪除"
 msgid "Deleted Account"
 msgstr "已刪除的帳號"
 
-#: src/view/com/post-thread/PostThread.tsx:406
+#: src/view/com/post-thread/PostThread.tsx:405
 msgid "Deleted post."
 msgstr "該貼文已刪除。"
 
@@ -2032,7 +2032,7 @@ msgstr "探索新的自訂動態源"
 msgid "Discover new feeds"
 msgstr "探索新的動態源"
 
-#: src/view/screens/Feeds.tsx:723
+#: src/view/screens/Feeds.tsx:725
 msgid "Discover New Feeds"
 msgstr "探索新的動態源"
 
@@ -2231,7 +2231,7 @@ msgid "Edit Moderation List"
 msgstr "編輯內容管理列表"
 
 #: src/Navigation.tsx:295
-#: src/view/screens/Feeds.tsx:513
+#: src/view/screens/Feeds.tsx:515
 msgid "Edit My Feeds"
 msgstr "編輯我的動態源"
 
@@ -2711,7 +2711,7 @@ msgstr "已送出意見回饋！"
 
 #: src/Navigation.tsx:397
 #: src/screens/StarterPack/StarterPackScreen.tsx:183
-#: src/view/screens/Feeds.tsx:506
+#: src/view/screens/Feeds.tsx:508
 #: src/view/screens/Profile.tsx:230
 #: src/view/screens/SavedFeeds.tsx:96
 #: src/view/screens/Search/Search.tsx:520
@@ -2853,7 +2853,7 @@ msgstr "您也認識的跟隨者"
 #: src/components/ProfileHoverCard/index.web.tsx:459
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:230
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:135
-#: src/view/screens/Feeds.tsx:597
+#: src/view/screens/Feeds.tsx:599
 #: src/view/screens/ProfileFollows.tsx:29
 #: src/view/screens/SavedFeeds.tsx:422
 msgid "Following"
@@ -3406,7 +3406,7 @@ msgstr "工作"
 msgid "Join Bluesky"
 msgstr "加入 Bluesky"
 
-#: src/components/StarterPack/QrCode.tsx:61
+#: src/components/StarterPack/QrCode.tsx:62
 #: src/view/shell/NavSignupCard.tsx:40
 msgid "Join the conversation"
 msgstr "加入對話"
@@ -3971,11 +3971,11 @@ msgid "Muted accounts"
 msgstr "已靜音帳號"
 
 #: src/Navigation.tsx:149
-#: src/view/screens/ModerationMutedAccounts.tsx:99
+#: src/view/screens/ModerationMutedAccounts.tsx:100
 msgid "Muted Accounts"
 msgstr "已靜音帳號"
 
-#: src/view/screens/ModerationMutedAccounts.tsx:111
+#: src/view/screens/ModerationMutedAccounts.tsx:112
 msgid "Muted accounts have their posts removed from your feed and from your notifications. Mutes are completely private."
 msgstr "被靜音的帳號將不會出現在您的通知或動態中，且靜音列表僅對您自己可見。"
 
@@ -3996,7 +3996,7 @@ msgstr "您靜音的帳號僅對自己可見。他們仍然可以與您互動，
 msgid "My Birthday"
 msgstr "我的生日"
 
-#: src/view/screens/Feeds.tsx:697
+#: src/view/screens/Feeds.tsx:699
 msgid "My Feeds"
 msgstr "我的動態源"
 
@@ -4098,7 +4098,7 @@ msgctxt "action"
 msgid "New post"
 msgstr "新貼文"
 
-#: src/view/screens/Feeds.tsx:547
+#: src/view/screens/Feeds.tsx:549
 #: src/view/screens/Notifications.tsx:177
 #: src/view/screens/Profile.tsx:494
 #: src/view/screens/ProfileFeed.tsx:432
@@ -4234,7 +4234,7 @@ msgstr "沒有結果"
 msgid "No results found"
 msgstr "找不到結果"
 
-#: src/view/screens/Feeds.tsx:469
+#: src/view/screens/Feeds.tsx:470
 msgid "No results found for \"{query}\""
 msgstr "找不到符合「{query}」的結果"
 
@@ -4379,7 +4379,7 @@ msgstr "好的"
 msgid "Oldest replies first"
 msgstr "最舊回覆優先"
 
-#: src/components/StarterPack/QrCode.tsx:75
+#: src/components/StarterPack/QrCode.tsx:76
 msgid "on<0><1/><2><3/></2></0>"
 msgstr "在<0><1/><2><3/></2></0>"
 
@@ -4811,7 +4811,7 @@ msgctxt "action"
 msgid "Post"
 msgstr "發布"
 
-#: src/view/com/post-thread/PostThread.tsx:489
+#: src/view/com/post-thread/PostThread.tsx:488
 msgctxt "description"
 msgid "Post"
 msgstr "貼文"
@@ -5630,6 +5630,10 @@ msgstr "捲動到頂部"
 #: src/view/shell/Drawer.tsx:365
 msgid "Search"
 msgstr "搜尋"
+
+#: src/view/screens/Feeds.tsx:441
+msgid "Search feeds"
+msgstr "搜尋動態源"
 
 #: src/view/shell/desktop/Search.tsx:201
 msgid "Search for \"{query}\""
@@ -7797,11 +7801,11 @@ msgstr "您還沒有建立任何動態源。"
 msgid "You have no lists."
 msgstr "您還沒有建立任何列表。"
 
-#: src/view/screens/ModerationBlockedAccounts.tsx:128
+#: src/view/screens/ModerationBlockedAccounts.tsx:129
 msgid "You have not blocked any accounts yet. To block an account, go to their profile and select \"Block account\" from the menu on their account."
 msgstr "您還沒有封鎖任何帳號。要封鎖帳號，請前往其個人檔案並在帳號上的選單中選擇「封鎖帳號」。"
 
-#: src/view/screens/ModerationMutedAccounts.tsx:127
+#: src/view/screens/ModerationMutedAccounts.tsx:128
 msgid "You have not muted any accounts yet. To mute an account, go to their profile and select \"Mute account\" from the menu on their account."
 msgstr "您還沒有靜音任何帳號。要靜音帳號，請前往其個人檔案並在帳號上的選單中選擇「靜音帳號」。"
 
