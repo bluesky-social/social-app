@@ -3,7 +3,6 @@ import {View} from 'react-native'
 import {PURCHASES_ERROR_CODE} from 'react-native-purchases'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useNavigationState} from '@react-navigation/native'
 
 import {isWeb} from '#/platform/detection'
 import {usePurchaseOffering} from '#/state/purchases/hooks/usePurchaseOffering'
@@ -15,7 +14,7 @@ import {
 import {parseOfferingId} from '#/state/purchases/types'
 import {useSession} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
-import {atoms as a, tokens, useBreakpoints, useGutters,useTheme} from '#/alf'
+import {atoms as a, tokens, useBreakpoints, useGutters, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -34,27 +33,32 @@ import {Text} from '#/components/Typography'
 
 export function BlueskyPlusCore({
   control,
+  showLearnMore,
 }: {
   control: Dialog.DialogControlProps
+  showLearnMore?: boolean
 }) {
   return (
     <Dialog.Outer control={control}>
       <Dialog.Handle />
-      <DialogInner control={control} />
+      <DialogInner control={control} showLearnMore={showLearnMore} />
     </Dialog.Outer>
   )
 }
 
-function DialogInner({control}: {control: Dialog.DialogControlProps}) {
+function DialogInner({
+  control,
+  showLearnMore,
+}: {
+  control: Dialog.DialogControlProps
+  showLearnMore?: boolean
+}) {
   const t = useTheme()
   const {_} = useLingui()
   const dialogGutters = useGutters(['wide'])
   const {gtMobile} = useBreakpoints()
   const {currentAccount} = useSession()
   const copy = useCoreOfferingCopy()
-  const routes = useNavigationState(state => state.routes)
-  const currentRoute = routes.at(routes.length - 1)
-  const isOnSubscriptionsPage = currentRoute?.name === 'Subscriptions'
   // TODO if 3p PDS
   const needsEmail = !currentAccount?.email
   const needsConfirmEmail = !currentAccount?.emailConfirmed
@@ -359,7 +363,7 @@ function DialogInner({control}: {control: Dialog.DialogControlProps}) {
       ) : null}
 
       <View style={[a.flex_row, a.pt_md, a.gap_sm]}>
-        {!isOnSubscriptionsPage && (
+        {showLearnMore && (
           <Link
             to="/subscriptions"
             label={_(msg`Learn more about Bluesky+`)}
