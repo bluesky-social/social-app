@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-12-09 01:54\n"
+"PO-Revision-Date: 2024-12-09 02:56\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -6779,7 +6779,7 @@ msgstr "这条链接将带你前往以下网站："
 
 #: src/screens/List/ListHiddenScreen.tsx:136
 msgid "This list - created by <0>{0}</0> - contains possible violations of Bluesky's community guidelines in its name or description."
-msgstr "这个列表由 <0>{0}</0> 创建，其名称或描述可能违反了 Bluesky 社区准则。"
+msgstr "这个列表由 <0>{0}</0> 创建，其名称或描述可能违反了 Bluesky 社群准则。"
 
 #: src/view/screens/ProfileList.tsx:965
 msgid "This list is empty!"

@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-12-09 01:55\n"
+"PO-Revision-Date: 2024-12-09 02:57\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional, Hong Kong\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -1333,7 +1333,7 @@ msgstr "用呢隻顏色作爲你嘅頭像"
 #: src/view/screens/Feeds.tsx:728
 #: src/view/screens/Search/Explore.tsx:391
 msgid "Choose your own timeline! Feeds built by the community help you find content you love."
-msgstr "自訂你嘅時間軸！由社群建立嘅動態源幫你搵到你鍾意嘅內容。"
+msgstr "自訂你嘅時間軸！社羣建立嘅動態源會幫你搵到啱心水嘅內容。"
 
 #: src/screens/Signup/StepInfo/index.tsx:201
 msgid "Choose your password"
@@ -1475,7 +1475,7 @@ msgstr "漫畫"
 #: src/Navigation.tsx:280
 #: src/view/screens/CommunityGuidelines.tsx:34
 msgid "Community Guidelines"
-msgstr "社群守則"
+msgstr "社羣守則"
 
 #: src/screens/Onboarding/StepFinished.tsx:289
 msgid "Complete onboarding and start using your account"
@@ -4017,7 +4017,7 @@ msgstr "個名點都要你填"
 #: src/lib/moderation/useReportOptions.ts:106
 #: src/lib/moderation/useReportOptions.ts:114
 msgid "Name or Description Violates Community Standards"
-msgstr "名稱或描述違反社群標準"
+msgstr "名稱或描述違反社羣標準"
 
 #: src/screens/Onboarding/index.tsx:22
 #: src/screens/Onboarding/state.ts:94
@@ -6429,7 +6429,7 @@ msgstr "服務條款"
 #: src/lib/moderation/useReportOptions.ts:107
 #: src/lib/moderation/useReportOptions.ts:115
 msgid "Terms used violate community standards"
-msgstr "所用嘅文字違反咗社群標準"
+msgstr "所用嘅文字違反咗社羣標準"
 
 #: src/components/dialogs/MutedWords.tsx:266
 msgid "Text & tags"
@@ -6494,7 +6494,7 @@ msgstr "Bluesky 網頁應用程式"
 
 #: src/view/screens/CommunityGuidelines.tsx:38
 msgid "The Community Guidelines have been moved to <0/>"
-msgstr "社群守則已經擺到去 <0/> 度"
+msgstr "社羣守則已經擺到去 <0/> 度"
 
 #: src/view/screens/CopyrightPolicy.tsx:35
 msgid "The Copyright Policy has been moved to <0/>"
@@ -6779,7 +6779,7 @@ msgstr "呢個連結會帶你去到下低嘅網站："
 
 #: src/screens/List/ListHiddenScreen.tsx:136
 msgid "This list - created by <0>{0}</0> - contains possible violations of Bluesky's community guidelines in its name or description."
-msgstr "呢個清單係 <0>{0}</0> 整嘅，喺佢嘅名稱抑或描述入邊可能違反咗 Bluesky 嘅社群守則 。"
+msgstr "呢個清單係 <0>{0}</0> 整嘅，喺佢嘅名稱抑或描述入邊可能違反咗 Bluesky 嘅社羣守則 。"
 
 #: src/view/screens/ProfileList.tsx:965
 msgid "This list is empty!"

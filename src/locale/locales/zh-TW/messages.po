@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-12-09 01:55\n"
+"PO-Revision-Date: 2024-12-09 02:57\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -1475,7 +1475,7 @@ msgstr "漫畫"
 #: src/Navigation.tsx:280
 #: src/view/screens/CommunityGuidelines.tsx:34
 msgid "Community Guidelines"
-msgstr "社群規範"
+msgstr "社群準則"
 
 #: src/screens/Onboarding/StepFinished.tsx:289
 msgid "Complete onboarding and start using your account"
@@ -4017,7 +4017,7 @@ msgstr "名稱是必填欄位"
 #: src/lib/moderation/useReportOptions.ts:106
 #: src/lib/moderation/useReportOptions.ts:114
 msgid "Name or Description Violates Community Standards"
-msgstr "名稱或描述違反社群規範"
+msgstr "名稱或描述違反社群準則"
 
 #: src/screens/Onboarding/index.tsx:22
 #: src/screens/Onboarding/state.ts:94
@@ -6429,7 +6429,7 @@ msgstr "服務條款"
 #: src/lib/moderation/useReportOptions.ts:107
 #: src/lib/moderation/useReportOptions.ts:115
 msgid "Terms used violate community standards"
-msgstr "所使用的文字違反了社群規範"
+msgstr "所使用的文字違反了社群準則"
 
 #: src/components/dialogs/MutedWords.tsx:266
 msgid "Text & tags"
@@ -6494,7 +6494,7 @@ msgstr "Bluesky 網頁應用程式"
 
 #: src/view/screens/CommunityGuidelines.tsx:38
 msgid "The Community Guidelines have been moved to <0/>"
-msgstr "社群規範已移動到 <0/>"
+msgstr "社群準則已移動到 <0/>"
 
 #: src/view/screens/CopyrightPolicy.tsx:35
 msgid "The Copyright Policy has been moved to <0/>"
