@@ -173,7 +173,7 @@ function DialogInner({
               right: dialogGutters.paddingRight * -1,
             },
           ]}>
-          <GradientFill gradient={tokens.gradients.nordic} />
+          <GradientFill gradient={tokens.gradients.nordic} rotate="45deg" />
         </View>
 
         <BlueskyPlusLogo width={80} fill="white" style={[a.z_10]} />
