@@ -15,7 +15,7 @@ import {
 import {parseOfferingId} from '#/state/purchases/types'
 import {useSession} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
-import {atoms as a, tokens, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, tokens, useBreakpoints, useGutters,useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -48,6 +48,7 @@ export function BlueskyPlusCore({
 function DialogInner({control}: {control: Dialog.DialogControlProps}) {
   const t = useTheme()
   const {_} = useLingui()
+  const dialogGutters = useGutters(['wide'])
   const {gtMobile} = useBreakpoints()
   const {currentAccount} = useSession()
   const copy = useCoreOfferingCopy()
@@ -162,10 +163,10 @@ function DialogInner({control}: {control: Dialog.DialogControlProps}) {
               ? undefined
               : {borderTopLeftRadius: 20, borderTopRightRadius: 20},
             {
-              top: (a.p_xl.padding + 4) * -1,
+              top: dialogGutters.paddingTop * -1,
               bottom: 0,
-              left: a.p_xl.padding * -1,
-              right: a.p_xl.padding * -1,
+              left: dialogGutters.paddingLeft * -1,
+              right: dialogGutters.paddingRight * -1,
             },
           ]}>
           <GradientFill gradient={tokens.gradients.nordic} />
