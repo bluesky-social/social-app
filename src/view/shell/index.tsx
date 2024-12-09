@@ -96,6 +96,9 @@ function ShellInner() {
         <ErrorBoundary
           style={{paddingTop: insets.top, paddingBottom: insets.bottom}}>
           <Drawer
+            configureGestureHandler={handler => {
+              return handler.activeOffsetX([-0, 0])
+            }}
             renderDrawerContent={renderDrawerContent}
             drawerStyle={{width: Math.min(400, winDim.width * 0.8)}}
             open={isDrawerOpen}
