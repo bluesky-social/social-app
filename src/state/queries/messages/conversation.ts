@@ -5,7 +5,11 @@ import {STALE} from '#/state/queries'
 import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
 import {useOnMarkAsRead} from '#/state/queries/messages/list-converations'
 import {useAgent} from '#/state/session'
-import {RQKEY as LIST_CONVOS_KEY} from './list-converations'
+import {
+  ConvoListQueryData,
+  getConvoFromQueryData,
+  RQKEY as LIST_CONVOS_KEY,
+} from './list-converations'
 
 const RQKEY_ROOT = 'convo'
 export const RQKEY = (convoId: string) => [RQKEY_ROOT, convoId]
@@ -57,8 +61,37 @@ export function useMarkAsReadMutation() {
       if (!convoId) throw new Error('No convoId provided')
       optimisticUpdate(convoId)
     },
-    onSettled() {
-      queryClient.invalidateQueries({queryKey: LIST_CONVOS_KEY})
+    onSuccess(_, {convoId}) {
+      if (!convoId) return
+
+      queryClient.setQueryData(LIST_CONVOS_KEY, (old: ConvoListQueryData) => {
+        if (!old) return old
+
+        const existingConvo = getConvoFromQueryData(convoId, old)
+
+        if (existingConvo) {
+          return {
+            ...old,
+            pages: old.pages.map(page => {
+              return {
+                ...page,
+                convos: page.convos.map(convo => {
+                  if (convo.id === convoId) {
+                    return {
+                      ...convo,
+                      unreadCount: 0,
+                    }
+                  }
+                  return convo
+                }),
+              }
+            }),
+          }
+        } else {
+          // If we somehow marked a convo as read that doesn't exist in the
+          // list, then we don't need to do anything.
+        }
+      })
     },
   })
 }

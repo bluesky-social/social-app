@@ -39,7 +39,7 @@ export function useListConvosQuery({
     queryKey: RQKEY,
     queryFn: async ({pageParam}) => {
       const {data} = await agent.api.chat.bsky.convo.listConvos(
-        {cursor: pageParam},
+        {cursor: pageParam, limit: 20},
         {headers: DM_SERVICE_HEADERS},
       )
 
@@ -47,9 +47,6 @@ export function useListConvosQuery({
     },
     initialPageParam: undefined as RQPageParam,
     getNextPageParam: lastPage => lastPage.cursor,
-    // refetch every 60 seconds since we can't get *all* info from the logs
-    // i.e. reading chats on another device won't update the unread count
-    refetchInterval: 60_000,
   })
 }
 
@@ -180,6 +177,11 @@ export function ListConvosProviderInner({
                   }),
                 }
               } else {
+                /**
+                 * We received a message from an conversation old enough that
+                 * it doesn't exist in the query cache, meaning we need to
+                 * refetch and bump the old convo to the top.
+                 */
                 debouncedRefetch()
               }
             })
@@ -245,12 +247,12 @@ export function useUnreadMessageCount() {
   return useMemo(() => {
     return {
       count,
-      numUnread: count > 0 ? (count > 30 ? '30+' : String(count)) : undefined,
+      numUnread: count > 0 ? (count > 10 ? '10+' : String(count)) : undefined,
     }
   }, [count])
 }
 
-type ConvoListQueryData = {
+export type ConvoListQueryData = {
   pageParams: Array<string | undefined>
   pages: Array<ChatBskyConvoListConvos.OutputSchema>
 }
@@ -301,7 +303,7 @@ function optimisticDelete(chatId: string, old: ConvoListQueryData) {
   }
 }
 
-function getConvoFromQueryData(chatId: string, old: ConvoListQueryData) {
+export function getConvoFromQueryData(chatId: string, old: ConvoListQueryData) {
   for (const page of old.pages) {
     for (const convo of page.convos) {
       if (convo.id === chatId) {

@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import {useState} from 'react'
 import {ListRenderItemInfo, View} from 'react-native'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-controller'
 import {AppBskyActorDefs, ModerationOpts} from '@atproto/api'
@@ -86,6 +86,7 @@ export function StepProfiles({
           !query && !screenReaderEnabled ? () => fetchNextPage() : undefined
         }
         onEndReachedThreshold={isNative ? 2 : 0.25}
+        keyboardDismissMode="on-drag"
         ListEmptyComponent={
           <View style={[a.flex_1, a.align_center, a.mt_lg, a.px_lg]}>
             {isLoading ? (

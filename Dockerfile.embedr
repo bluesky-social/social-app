@@ -5,7 +5,7 @@ WORKDIR /usr/src/social-app
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Node
-ENV NODE_VERSION=18
+ENV NODE_VERSION=20
 ENV NVM_DIR=/usr/share/nvm
 
 # Go

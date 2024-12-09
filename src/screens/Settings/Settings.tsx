@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import {useState} from 'react'
 import {LayoutAnimation, Pressable, View} from 'react-native'
 import {Linking} from 'react-native'
 import {useReducedMotion} from 'react-native-reanimated'
@@ -73,7 +73,15 @@ export function SettingsScreen({}: Props) {
 
   return (
     <Layout.Screen>
-      <Layout.Header title={_(msg`Settings`)} />
+      <Layout.Header.Outer>
+        <Layout.Header.BackButton />
+        <Layout.Header.Content>
+          <Layout.Header.TitleText>
+            <Trans>Settings</Trans>
+          </Layout.Header.TitleText>
+        </Layout.Header.Content>
+        <Layout.Header.Slot />
+      </Layout.Header.Outer>
       <Layout.Content>
         <SettingsList.Container>
           <View

@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react'
+import {useEffect, useMemo, useState} from 'react'
 import {useWindowDimensions, View} from 'react-native'
 import Animated, {
   FadeIn,

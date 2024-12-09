@@ -32,7 +32,7 @@ import {
 import {RouteParams, State} from '#/lib/routes/types'
 import {attachRouteToLogEvents, logEvent} from '#/lib/statsig/statsig'
 import {bskyTitle} from '#/lib/strings/headings'
-import {isAndroid, isNative, isWeb} from '#/platform/detection'
+import {isNative, isWeb} from '#/platform/detection'
 import {useModalControls} from '#/state/modals'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {useSession} from '#/state/session'
@@ -79,6 +79,7 @@ import {PostRepostedByScreen} from '#/screens/Post/PostRepostedBy'
 import {ProfileKnownFollowersScreen} from '#/screens/Profile/KnownFollowers'
 import {ProfileLabelerLikedByScreen} from '#/screens/Profile/ProfileLabelerLikedBy'
 import {AppearanceSettingsScreen} from '#/screens/Settings/AppearanceSettings'
+import {AppIconSettingsScreen} from '#/screens/Settings/AppIconSettings'
 import {NotificationSettingsScreen} from '#/screens/Settings/NotificationSettings'
 import {
   StarterPackScreen,
@@ -363,6 +364,14 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         }}
       />
       <Stack.Screen
+        name="AppIconSettings"
+        getComponent={() => AppIconSettingsScreen}
+        options={{
+          title: title(msg`App Icon`),
+          requireAuth: true,
+        }}
+      />
+      <Stack.Screen
         name="Hashtag"
         getComponent={() => HashtagScreen}
         options={{title: title(msg`Hashtag`)}}
@@ -453,7 +462,6 @@ function HomeTabNavigator() {
   return (
     <HomeTab.Navigator
       screenOptions={{
-        animation: isAndroid ? 'ios' : undefined,
         animationDuration: 285,
         gestureEnabled: true,
         fullScreenGestureEnabled: true,
@@ -472,7 +480,6 @@ function SearchTabNavigator() {
   return (
     <SearchTab.Navigator
       screenOptions={{
-        animation: isAndroid ? 'ios' : undefined,
         animationDuration: 285,
         gestureEnabled: true,
         fullScreenGestureEnabled: true,
@@ -490,7 +497,6 @@ function NotificationsTabNavigator() {
   return (
     <NotificationsTab.Navigator
       screenOptions={{
-        animation: isAndroid ? 'ios' : undefined,
         animationDuration: 285,
         gestureEnabled: true,
         fullScreenGestureEnabled: true,
@@ -512,7 +518,6 @@ function MyProfileTabNavigator() {
   return (
     <MyProfileTab.Navigator
       screenOptions={{
-        animation: isAndroid ? 'ios' : undefined,
         animationDuration: 285,
         gestureEnabled: true,
         fullScreenGestureEnabled: true,
@@ -538,7 +543,6 @@ function MessagesTabNavigator() {
   return (
     <MessagesTab.Navigator
       screenOptions={{
-        animation: isAndroid ? 'ios' : undefined,
         animationDuration: 285,
         gestureEnabled: true,
         fullScreenGestureEnabled: true,
@@ -572,7 +576,6 @@ const FlatNavigator = () => {
     <Flat.Navigator
       screenListeners={screenListeners}
       screenOptions={{
-        animation: isAndroid ? 'ios' : undefined,
         animationDuration: 285,
         gestureEnabled: true,
         fullScreenGestureEnabled: true,
@@ -696,7 +699,7 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
       onStateChange={() => {
         const routeName = getCurrentRouteName()
         if (routeName === 'Notifications') {
-          logEvent('router:navigate:notifications:sampled', {})
+          logEvent('router:navigate:notifications', {})
         }
       }}
       onReady={() => {

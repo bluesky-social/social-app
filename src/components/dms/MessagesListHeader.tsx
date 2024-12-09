@@ -65,25 +65,23 @@ export let MessagesListHeader = ({
         a.pr_lg,
         a.py_sm,
       ]}>
-      {!gtTablet && (
-        <TouchableOpacity
-          testID="conversationHeaderBackBtn"
-          onPress={onPressBack}
-          hitSlop={BACK_HITSLOP}
-          style={{width: 30, height: 30, marginTop: isWeb ? 6 : 4}}
-          accessibilityRole="button"
-          accessibilityLabel={_(msg`Back`)}
-          accessibilityHint="">
-          <FontAwesomeIcon
-            size={18}
-            icon="angle-left"
-            style={{
-              marginTop: 6,
-            }}
-            color={t.atoms.text.color}
-          />
-        </TouchableOpacity>
-      )}
+      <TouchableOpacity
+        testID="conversationHeaderBackBtn"
+        onPress={onPressBack}
+        hitSlop={BACK_HITSLOP}
+        style={{width: 30, height: 30, marginTop: isWeb ? 6 : 4}}
+        accessibilityRole="button"
+        accessibilityLabel={_(msg`Back`)}
+        accessibilityHint="">
+        <FontAwesomeIcon
+          size={18}
+          icon="angle-left"
+          style={{
+            marginTop: 6,
+          }}
+          color={t.atoms.text.color}
+        />
+      </TouchableOpacity>
 
       {profile && moderation && blockInfo ? (
         <HeaderReady
@@ -147,7 +145,7 @@ function HeaderReady({
 
   const isDeletedAccount = profile?.handle === 'missing.invalid'
   const displayName = isDeletedAccount
-    ? 'Deleted Account'
+    ? _(msg`Deleted Account`)
     : sanitizeDisplayName(
         profile.displayName || profile.handle,
         moderation.ui('displayName'),

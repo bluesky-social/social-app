@@ -97,6 +97,8 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
               scrollY={scrollY}
               testID={testID}
               allowHeaderOverScroll={allowHeaderOverScroll}
+              dragProgress={props.dragProgress}
+              dragState={props.dragState}
             />
           </PagerHeaderProvider>
         )
@@ -131,11 +133,11 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
     const lastForcedScrollY = useSharedValue(0)
     const adjustScrollForOtherPages = () => {
       'worklet'
-      const currentScrollY = scrollY.value
+      const currentScrollY = scrollY.get()
       const forcedScrollY = Math.min(currentScrollY, headerOnlyHeight)
-      if (lastForcedScrollY.value !== forcedScrollY) {
-        lastForcedScrollY.value = forcedScrollY
-        const refs = scrollRefs.value
+      if (lastForcedScrollY.get() !== forcedScrollY) {
+        lastForcedScrollY.set(forcedScrollY)
+        const refs = scrollRefs.get()
         for (let i = 0; i < refs.length; i++) {
           const scollRef = refs[i]
           if (i !== currentPage && scollRef != null) {
@@ -167,7 +169,7 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
         const isPossiblyInvalid =
           headerHeight > 0 && Math.round(nextScrollY * 2) / 2 === -headerHeight
         if (!isPossiblyInvalid) {
-          scrollY.value = nextScrollY
+          scrollY.set(nextScrollY)
           runOnJS(queueThrottledOnScroll)()
         }
       },
@@ -182,17 +184,12 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
       [onPageSelected, setCurrentPage],
     )
 
-    const onPageSelecting = React.useCallback((index: number) => {
-      setCurrentPage(index)
-    }, [])
-
     return (
       <Pager
         ref={ref}
         testID={testID}
         initialPage={initialPage}
         onPageSelected={onPageSelectedInner}
-        onPageSelecting={onPageSelecting}
         renderTabBar={renderTabBar}>
         {toArray(children)
           .filter(Boolean)
@@ -231,6 +228,8 @@ let PagerTabBar = ({
   onCurrentPageSelected,
   onSelect,
   allowHeaderOverScroll,
+  dragProgress,
+  dragState,
 }: {
   currentPage: number
   headerOnlyHeight: number
@@ -244,9 +243,11 @@ let PagerTabBar = ({
   onCurrentPageSelected?: (index: number) => void
   onSelect?: (index: number) => void
   allowHeaderOverScroll?: boolean
+  dragProgress: SharedValue<number>
+  dragState: SharedValue<'idle' | 'dragging' | 'settling'>
 }): React.ReactNode => {
   const headerTransform = useAnimatedStyle(() => {
-    const translateY = Math.min(scrollY.value, headerOnlyHeight) * -1
+    const translateY = Math.min(scrollY.get(), headerOnlyHeight) * -1
     return {
       transform: [
         {
@@ -302,6 +303,8 @@ let PagerTabBar = ({
           selectedPage={currentPage}
           onSelect={onSelect}
           onPressSelected={onCurrentPageSelected}
+          dragProgress={dragProgress}
+          dragState={dragState}
         />
       </View>
     </Animated.View>

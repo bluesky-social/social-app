@@ -1,12 +1,6 @@
 import React, {memo} from 'react'
 import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native'
-import Animated, {
-  measure,
-  MeasuredDimensions,
-  runOnJS,
-  runOnUI,
-  useAnimatedRef,
-} from 'react-native-reanimated'
+import {MeasuredDimensions, runOnJS, runOnUI} from 'react-native-reanimated'
 import {AppBskyActorDefs, ModerationDecision} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg} from '@lingui/macro'
@@ -14,6 +8,7 @@ import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
 import {BACK_HITSLOP} from '#/lib/constants'
+import {measureHandle, useHandleRef} from '#/lib/hooks/useHandleRef'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {NavigationProp} from '#/lib/routes/types'
 import {isIOS} from '#/platform/detection'
@@ -49,7 +44,7 @@ let ProfileHeaderShell = ({
   const {openLightbox} = useLightboxControls()
   const navigation = useNavigation<NavigationProp>()
   const {isDesktop} = useWebMediaQueries()
-  const aviRef = useAnimatedRef()
+  const aviRef = useHandleRef()
 
   const onPressBack = React.useCallback(() => {
     if (navigation.canGoBack()) {
@@ -86,9 +81,10 @@ let ProfileHeaderShell = ({
     const modui = moderation.ui('avatar')
     const avatar = profile.avatar
     if (avatar && !(modui.blur && modui.noOverride)) {
+      const aviHandle = aviRef.current
       runOnUI(() => {
         'worklet'
-        const rect = measure(aviRef)
+        const rect = measureHandle(aviHandle)
         runOnJS(_openLightbox)(avatar, rect)
       })()
     }
@@ -170,14 +166,14 @@ let ProfileHeaderShell = ({
               styles.avi,
               profile.associated?.labeler && styles.aviLabeler,
             ]}>
-            <Animated.View ref={aviRef} collapsable={false}>
+            <View ref={aviRef} collapsable={false}>
               <UserAvatar
                 type={profile.associated?.labeler ? 'labeler' : 'user'}
                 size={90}
                 avatar={profile.avatar}
                 moderation={moderation.ui('avatar')}
               />
-            </Animated.View>
+            </View>
           </View>
         </TouchableWithoutFeedback>
       </GrowableAvatar>

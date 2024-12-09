@@ -1,4 +1,3 @@
-import React from 'react'
 import {View} from 'react-native'
 
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'

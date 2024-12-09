@@ -104,7 +104,7 @@ function ChatListItemReady({
 
   const isDeletedAccount = profile.handle === 'missing.invalid'
   const displayName = isDeletedAccount
-    ? 'Deleted Account'
+    ? _(msg`Deleted Account`)
     : sanitizeDisplayName(
         profile.displayName || profile.handle,
         moderation.ui('displayName'),

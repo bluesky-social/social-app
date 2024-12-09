@@ -162,7 +162,10 @@ export function FeedSourceCardLoaded({
         style={[
           pal.border,
           {
-            borderTopWidth: showMinimalPlaceholder || hideTopBorder ? 0 : 1,
+            borderTopWidth:
+              showMinimalPlaceholder || hideTopBorder
+                ? 0
+                : StyleSheet.hairlineWidth,
             flexDirection: 'row',
             alignItems: 'center',
             flex: 1,

@@ -1,4 +1,3 @@
-import React from 'react'
 import {StyleProp, StyleSheet, TextStyle} from 'react-native'
 
 import {sanitizeDisplayName} from '#/lib/strings/display-names'

@@ -1,4 +1,3 @@
-import React from 'react'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
@@ -39,7 +38,15 @@ export function AccountSettingsScreen({}: Props) {
 
   return (
     <Layout.Screen>
-      <Layout.Header title={_(msg`Account`)} />
+      <Layout.Header.Outer>
+        <Layout.Header.BackButton />
+        <Layout.Header.Content>
+          <Layout.Header.TitleText>
+            <Trans>Account</Trans>
+          </Layout.Header.TitleText>
+        </Layout.Header.Content>
+        <Layout.Header.Slot />
+      </Layout.Header.Outer>
       <Layout.Content>
         <SettingsList.Container>
           <SettingsList.Item>

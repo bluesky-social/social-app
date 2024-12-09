@@ -9,7 +9,6 @@ import {
   AppBskyGraphDefs,
   AppBskyGraphStarterpack,
   AppBskyLabelerDefs,
-  AtUri,
 } from '@atproto/api'
 import {ComponentChildren, h} from 'preact'
 import {useMemo} from 'preact/hooks'
@@ -437,14 +436,14 @@ function StarterPackEmbed({
 
 // from #/lib/strings/starter-pack.ts
 function getStarterPackImage(starterPack: AppBskyGraphDefs.StarterPackView) {
-  const rkey = new AtUri(starterPack.uri).rkey
+  const rkey = getRkey({uri: starterPack.uri})
   return `https://ogcard.cdn.bsky.app/start/${starterPack.creator.did}/${rkey}`
 }
 
 function getStarterPackHref(
   starterPack: AppBskyGraphDefs.StarterPackViewBasic,
 ) {
-  const rkey = new AtUri(starterPack.uri).rkey
+  const rkey = getRkey({uri: starterPack.uri})
   const handleOrDid = starterPack.creator.handle || starterPack.creator.did
   return `/starter-pack/${handleOrDid}/${rkey}`
 }

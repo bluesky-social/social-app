@@ -177,7 +177,7 @@ export function BottomBarWeb() {
               alignItems: 'center',
               justifyContent: 'space-between',
               paddingTop: 14,
-              paddingBottom: 2,
+              paddingBottom: 14,
               paddingLeft: 14,
               paddingRight: 6,
               gap: 8,
