@@ -30,10 +30,10 @@ const gutters: Record<
 }
 
 type Gutters = {
-  paddingTop?: number
-  paddingRight?: number
-  paddingBottom?: number
-  paddingLeft?: number
+  paddingTop: number
+  paddingRight: number
+  paddingBottom: number
+  paddingLeft: number
 }
 
 export function useGutters([all]: [Gutter]): Gutters
@@ -56,16 +56,13 @@ export function useGutters([top, right, bottom, left]: Gutter[]) {
     }
 
     return {
-      paddingTop:
-        top === 0 ? undefined : gutters[top][activeBreakpoint || 'default'],
+      paddingTop: top === 0 ? 0 : gutters[top][activeBreakpoint || 'default'],
       paddingRight:
-        right === 0 ? undefined : gutters[right][activeBreakpoint || 'default'],
+        right === 0 ? 0 : gutters[right][activeBreakpoint || 'default'],
       paddingBottom:
-        bottom === 0
-          ? undefined
-          : gutters[bottom][activeBreakpoint || 'default'],
+        bottom === 0 ? 0 : gutters[bottom][activeBreakpoint || 'default'],
       paddingLeft:
-        left === 0 ? undefined : gutters[left][activeBreakpoint || 'default'],
+        left === 0 ? 0 : gutters[left][activeBreakpoint || 'default'],
     }
   }, [activeBreakpoint, top, bottom, left, right])
 }
