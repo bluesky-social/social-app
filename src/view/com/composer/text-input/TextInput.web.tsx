@@ -40,6 +40,7 @@ export interface TextInputRef {
 
 interface TextInputProps {
   richtext: RichText
+  language: string
   placeholder: string
   suggestedLinks: Set<string>
   webForceMinHeight: boolean
@@ -56,6 +57,7 @@ interface TextInputProps {
 export const TextInput = React.forwardRef(function TextInputImpl(
   {
     richtext,
+    language,
     placeholder,
     webForceMinHeight,
     hasRightPadding,
@@ -73,6 +75,7 @@ export const TextInput = React.forwardRef(function TextInputImpl(
   const autocomplete = useActorAutocompleteFn()
   const pal = usePalette('default')
   const modeClass = useColorSchemeStyle('ProseMirror-light', 'ProseMirror-dark')
+  const lang = language.includes(',') ? 'mul' : language
 
   const [isDropping, setIsDropping] = React.useState(false)
 
@@ -326,7 +329,7 @@ export const TextInput = React.forwardRef(function TextInputImpl(
     <>
       <View style={[styles.container, hasRightPadding && styles.rightPadding]}>
         {/* @ts-ignore inputStyle is fine */}
-        <EditorContent editor={editor} style={inputStyle} />
+        <EditorContent editor={editor} lang={lang} style={inputStyle} />
       </View>
 
       {isDropping && (
