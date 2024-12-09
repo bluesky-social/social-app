@@ -1,4 +1,4 @@
 export {
   BottomSheetScrollView as ScrollView,
   BottomSheetTextInput as TextInput,
-} from '@gorhom/bottom-sheet/src'
+} from '@discord/bottom-sheet/src'
