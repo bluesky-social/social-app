@@ -85,7 +85,7 @@ function DialogInner({control}: {control: Dialog.DialogControlProps}) {
         return
       }
 
-      const emailValue = email ?? currentAccount.email
+      const emailValue = email || currentAccount.email
 
       if (!emailValue) {
         const message = _(
@@ -109,6 +109,7 @@ function DialogInner({control}: {control: Dialog.DialogControlProps}) {
     if (isWeb) {
       try {
         await purchase()
+        // TODO handle errors the same for both platforms, throw and display
         control.close()
       } catch (e: any) {
         setError(

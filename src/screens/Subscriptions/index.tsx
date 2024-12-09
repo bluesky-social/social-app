@@ -145,54 +145,44 @@ function Core({
         <PurchaseHeader />
       )}
 
-      {hasActiveSubscriptions ||
-        (hasInactiveSubscriptions && (
-          <>
-            <Divider />
+      {(hasActiveSubscriptions || hasInactiveSubscriptions) && (
+        // TODO need a divider here if PurchaseHeader is present
+        <>
+          {hasActiveSubscriptions && (
+            <View style={[a.gap_sm]}>
+              <Text
+                style={[a.text_md, a.font_bold, t.atoms.text_contrast_medium]}>
+                <Trans>My subscriptions</Trans>
+              </Text>
 
-            {hasActiveSubscriptions && (
-              <View style={[a.gap_sm]}>
-                <Text
-                  style={[
-                    a.text_md,
-                    a.font_bold,
-                    t.atoms.text_contrast_medium,
-                  ]}>
-                  <Trans>My subscriptions</Trans>
-                </Text>
-
-                <View style={[a.gap_lg]}>
-                  <View style={[a.gap_sm]}>
-                    {activeSubscriptions.map(sub => (
-                      <Subscription key={sub.purchasedAt} subscription={sub} />
-                    ))}
-                  </View>
+              <View style={[a.gap_lg]}>
+                <View style={[a.gap_sm]}>
+                  {activeSubscriptions.map(sub => (
+                    <Subscription key={sub.purchasedAt} subscription={sub} />
+                  ))}
                 </View>
               </View>
-            )}
+            </View>
+          )}
 
-            {hasInactiveSubscriptions && (
-              <View style={[a.gap_sm]}>
-                <Text
-                  style={[
-                    a.text_md,
-                    a.font_bold,
-                    t.atoms.text_contrast_medium,
-                  ]}>
-                  <Trans>Past subscriptions</Trans>
-                </Text>
+          {hasInactiveSubscriptions && (
+            <View style={[a.gap_sm]}>
+              <Text
+                style={[a.text_md, a.font_bold, t.atoms.text_contrast_medium]}>
+                <Trans>Past subscriptions</Trans>
+              </Text>
 
-                <View style={[a.gap_lg]}>
-                  <View style={[a.gap_sm]}>
-                    {inactiveSubscriptions.map(sub => (
-                      <Subscription key={sub.purchasedAt} subscription={sub} />
-                    ))}
-                  </View>
+              <View style={[a.gap_lg]}>
+                <View style={[a.gap_sm]}>
+                  {inactiveSubscriptions.map(sub => (
+                    <Subscription key={sub.purchasedAt} subscription={sub} />
+                  ))}
                 </View>
               </View>
-            )}
-          </>
-        ))}
+            </View>
+          )}
+        </>
+      )}
 
       <Divider />
 
