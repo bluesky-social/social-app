@@ -105,6 +105,7 @@ export function RichText({
       els.push(
         <ProfileHoverCard key={key} inline did={mention.did}>
           <InlineLinkText
+            label={segment.text}
             selectable={selectable}
             to={`/profile/${mention.did}`}
             style={interactiveStyles}
@@ -116,11 +117,13 @@ export function RichText({
         </ProfileHoverCard>,
       )
     } else if (link && AppBskyRichtextFacet.validateLink(link).success) {
+      const url = toShortUrl(segment.text)
       if (disableLinks) {
-        els.push(toShortUrl(segment.text))
+        els.push(url)
       } else {
         els.push(
           <InlineLinkText
+            label={url}
             selectable={selectable}
             key={key}
             to={link.uri}
@@ -130,7 +133,7 @@ export function RichText({
             shareOnLongPress
             onPress={onLinkPress}
             emoji>
-            {toShortUrl(segment.text)}
+            {url}
           </InlineLinkText>,
         )
       }
