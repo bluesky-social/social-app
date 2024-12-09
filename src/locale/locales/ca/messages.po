@@ -3715,11 +3715,11 @@ msgstr "Et segueix"
 
 #: src/screens/Settings/AppearanceSettings.tsx:125
 msgid "Font"
-msgstr "Font"
+msgstr "Tipus de lletra"
 
 #: src/screens/Settings/AppearanceSettings.tsx:145
 msgid "Font size"
-msgstr "Moda de la font"
+msgstr "Mida de la lletra"
 
 #: src/screens/Onboarding/index.tsx:40
 #: src/screens/Onboarding/state.ts:89
@@ -7917,7 +7917,7 @@ msgstr "Mostra republicacions"
 #: src/screens/Settings/FollowingFeedPreferences.tsx:121
 #: src/screens/Settings/FollowingFeedPreferences.tsx:131
 msgid "Show samples of your saved feeds in your Following feed"
-msgstr "Mostra mostres de les teves fonts desades al canal Seguint"
+msgstr "Mostra mostres dels teus canals a Seguint"
 
 #: src/components/moderation/ContentHider.tsx:152
 #: src/components/moderation/PostHider.tsx:79
@@ -10447,7 +10447,7 @@ msgstr "Les teves publicacions, m'agrades i bloquejos són públics. Els comptes
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:75
 msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
-msgstr "El teu perfil, publicacions, fonts i llistes ja no seran visibles per a altres usuaris de Bluesky. Pots reactivar el teu compte en qualsevol moment iniciant sessió."
+msgstr "El teu perfil, publicacions, canals i llistes ja no seran visibles per a altres usuaris de Bluesky. Pots reactivar el teu compte en qualsevol moment iniciant sessió."
 
 #: src/view/com/composer/Composer.tsx:469
 msgid "Your reply has been published"
