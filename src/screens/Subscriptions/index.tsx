@@ -6,7 +6,7 @@ import {useLingui} from '@lingui/react'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {CommonNavigatorParams} from '#/lib/routes/types'
-import {isAndroid, isIOS, isNative,isWeb} from '#/platform/detection'
+import {isAndroid, isIOS, isNative, isWeb} from '#/platform/detection'
 import {PurchasesState, usePurchases, usePurchasesApi} from '#/state/purchases'
 import {useManageSubscription} from '#/state/purchases/hooks/useManageSubscription'
 import {useNativeUserState} from '#/state/purchases/hooks/useNativeUserState'
@@ -314,14 +314,14 @@ function PurchaseHeader() {
           a.font_heavy,
           isDark ? undefined : t.atoms.text_contrast_high,
         ]}>
-        <Trans>Building a better internet needs your support.</Trans>
+        <Trans>A century of gathering clouds</Trans>
       </Text>
 
       <View style={[a.gap_xs]}>
         <Text style={[a.text_md, a.leading_snug]}>
           <Trans>
-            Subscribing to Bluesky+ helps ensure that our work to build an open,
-            secure, and user-first internet can continue.
+            Ghost ships arriving and leaving. The sea deeper, vaster. The parrot
+            in the bamboo cage spoke several languages.
           </Trans>
         </Text>
       </View>

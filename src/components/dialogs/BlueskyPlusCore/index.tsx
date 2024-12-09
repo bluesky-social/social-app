@@ -186,7 +186,7 @@ function DialogInner({
             a.pt_lg,
             {color: 'white'},
           ]}>
-          <Trans>Let's build the social web.</Trans>
+          <Trans>A century of gathering clouds</Trans>
         </Text>
       </View>
 
@@ -198,8 +198,8 @@ function DialogInner({
           t.atoms.text_contrast_medium,
         ]}>
         <Trans>
-          Support Bluesky and get access to exclusive features, custom app
-          icons, higher video quality, and more!
+          Ghost ships arriving and leaving. The sea deeper, vaster. The parrot
+          in the bamboo cage spoke several languages.
         </Trans>
       </Text>
 
@@ -378,21 +378,16 @@ function DialogInner({
         )}
         <Button
           label={_(msg`Subscribe`)}
-          variant="solid"
-          color="secondary"
+          variant="gradient"
+          color="gradient_nordic"
           size="large"
           onPress={onPressSubscribe}
           disabled={isPending || isDisabled}
           style={[a.flex_1, a.overflow_hidden]}>
-          <GradientFill gradient={tokens.gradients.nordic} />
-          <ButtonText style={[{color: 'white'}]}>
+          <ButtonText>
             <Trans>Subscribe</Trans>
           </ButtonText>
-          <ButtonIcon
-            icon={isPending ? Loader : Plus}
-            position="right"
-            style={[{color: 'white'}]}
-          />
+          <ButtonIcon icon={isPending ? Loader : Plus} position="right" />
         </Button>
       </View>
 
@@ -440,12 +435,12 @@ function useCoreOfferingCopy() {
     return {
       [SubscriptionOfferingId.CoreMonthly]: {
         title: _(msg`1 month`),
-        price: _(msg`$8 / month`),
+        price: _(msg`$1337 / month`),
         discount: undefined,
       },
       [SubscriptionOfferingId.CoreAnnual]: {
         title: _(msg`12 months`),
-        price: _(msg`$72 / year`),
+        price: _(msg`$1337 / year`),
         discount: _(msg`Save 25%`),
       },
     }
