@@ -6,7 +6,7 @@ import {useLingui} from '@lingui/react'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {CommonNavigatorParams} from '#/lib/routes/types'
-import {isAndroid, isIOS, isWeb} from '#/platform/detection'
+import {isAndroid, isIOS, isNative,isWeb} from '#/platform/detection'
 import {PurchasesState, usePurchases, usePurchasesApi} from '#/state/purchases'
 import {useManageSubscription} from '#/state/purchases/hooks/useManageSubscription'
 import {useNativeUserState} from '#/state/purchases/hooks/useNativeUserState'
@@ -411,14 +411,17 @@ export function Subscription({
 }) {
   const t = useTheme()
   const {_} = useLingui()
-  const {mutateAsync: manageSubscription} = useManageSubscription()
+  const {mutateAsync: manageSubscription} = useManageSubscription({
+    platform: sub.platform,
+  })
   const ui = useSubscriptionUI({subscription: sub})
   const isExpired = sub.status !== 'active' && sub.status !== 'paused'
 
   const canManage =
     (isWeb && sub.platform === PlatformId.Web) ||
     (isIOS && sub.platform === PlatformId.Ios) ||
-    (isAndroid && sub.platform === PlatformId.Android)
+    (isAndroid && sub.platform === PlatformId.Android) ||
+    (isNative && sub.platform === PlatformId.Web)
   const showManage = canManage && !isExpired
 
   const statusStyles = React.useMemo<TextStyle>(() => {
