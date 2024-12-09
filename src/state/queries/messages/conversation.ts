@@ -3,13 +3,16 @@ import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {STALE} from '#/state/queries'
 import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
-import {useOnMarkAsRead} from '#/state/queries/messages/list-converations'
+import {
+  useOnMarkAsRead,
+  useOnMarkAsUnread,
+} from '#/state/queries/messages/list-conversations'
 import {useAgent} from '#/state/session'
 import {
   ConvoListQueryData,
   getConvoFromQueryData,
   RQKEY as LIST_CONVOS_KEY,
-} from './list-converations'
+} from './list-conversations'
 
 const RQKEY_ROOT = 'convo'
 export const RQKEY = (convoId: string) => [RQKEY_ROOT, convoId]
@@ -56,6 +59,34 @@ export function useMarkAsReadMutation() {
           headers: DM_SERVICE_HEADERS,
         },
       )
+    },
+    onMutate({convoId}) {
+      if (!convoId) throw new Error('No convoId provided')
+      optimisticUpdate(convoId)
+    },
+    onSettled() {
+      queryClient.invalidateQueries({queryKey: LIST_CONVOS_KEY})
+    },
+  })
+}
+
+export function useMarkAsUnreadMutation() {
+  const optimisticUpdate = useOnMarkAsUnread()
+  const queryClient = useQueryClient()
+  // const agent = useAgent()
+
+  return useMutation({
+    mutationFn: async ({
+      convoId,
+      messageId,
+    }: {
+      convoId: string
+      messageId?: string
+    }) => {
+      if (!convoId) throw new Error('No convoId provided')
+
+      // TODO: call agent.api.chat.bsky.convo.updateUnread
+      console.log('mark unread', {convoId, messageId})
     },
     onMutate({convoId}) {
       if (!convoId) throw new Error('No convoId provided')
