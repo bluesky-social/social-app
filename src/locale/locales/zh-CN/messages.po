@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-12-09 02:56\n"
+"PO-Revision-Date: 2024-12-09 15:52\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -1333,7 +1333,7 @@ msgstr "选择这个颜色作为你的头像背景"
 #: src/view/screens/Feeds.tsx:728
 #: src/view/screens/Search/Explore.tsx:391
 msgid "Choose your own timeline! Feeds built by the community help you find content you love."
-msgstr "自定义你的时间线！由社群构建的动态源能帮助你找到喜欢的内容。"
+msgstr "自定义专属于你的时间线！由社群打造的动态源能帮助你找到喜欢的内容。"
 
 #: src/screens/Signup/StepInfo/index.tsx:201
 msgid "Choose your password"

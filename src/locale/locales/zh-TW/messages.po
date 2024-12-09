@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-12-09 02:57\n"
+"PO-Revision-Date: 2024-12-09 15:54\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -1324,7 +1324,7 @@ msgstr "選擇服務"
 
 #: src/screens/Onboarding/StepFinished.tsx:276
 msgid "Choose the algorithms that power your custom feeds."
-msgstr "選擇提供您自訂動態的演算法。"
+msgstr "自由選擇提供您河道中內容的演算法。"
 
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:107
 msgid "Choose this color as your avatar"
@@ -1333,7 +1333,7 @@ msgstr "選擇這個顏色作為您的大頭貼照背景"
 #: src/view/screens/Feeds.tsx:728
 #: src/view/screens/Search/Explore.tsx:391
 msgid "Choose your own timeline! Feeds built by the community help you find content you love."
-msgstr "自訂您的河道！由社群打造的動態源能協助您找到喜愛的內容。"
+msgstr "自訂屬於您自己的河道！由社群打造的動態源能協助您找到喜愛的內容。"
 
 #: src/screens/Signup/StepInfo/index.tsx:201
 msgid "Choose your password"
@@ -2735,7 +2735,7 @@ msgstr "成功儲存檔案！"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:66
 msgid "Filter from feeds"
-msgstr "動態源中的篩選"
+msgstr "從動態中排除內容"
 
 #: src/screens/Onboarding/StepFinished.tsx:292
 msgid "Finalizing"
@@ -4172,7 +4172,7 @@ msgstr "找不到精選 GIF，Tenor 可能發生問題。"
 
 #: src/screens/StarterPack/Wizard/StepFeeds.tsx:119
 msgid "No feeds found. Try searching for something else."
-msgstr "找不到任何動態。試試以其他關鍵字搜尋。"
+msgstr "找不到任何動態源。試試以其他關鍵字搜尋。"
 
 #: src/components/LikedByList.tsx:84
 #: src/view/com/post-thread/PostLikedBy.tsx:84
@@ -4686,7 +4686,7 @@ msgstr "攝影"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:170
 msgid "Pictures meant for adults."
-msgstr "可能會引發成人性聯想的內容。"
+msgstr "可能會引發性方面聯想的內容。"
 
 #: src/view/screens/ProfileFeed.tsx:292
 #: src/view/screens/ProfileList.tsx:675
@@ -4999,7 +4999,7 @@ msgstr "公開且可分享的用戶列表，可供批次靜音或封鎖。"
 
 #: src/view/screens/Lists.tsx:65
 msgid "Public, shareable lists which can drive feeds."
-msgstr "公開且可分享的列表，也可作為動態源使用。"
+msgstr "公開且可分享的列表，也可作為動態源來使用。"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:128
 msgid "QR code copied to your clipboard!"
@@ -5203,7 +5203,7 @@ msgstr "移除字幕檔案"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:211
 msgid "Remove this feed from your saved feeds"
-msgstr "將這個動態源從您已儲存的動態源中刪除"
+msgstr "將這個動態源從已儲存的動態源中刪除"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:109
 msgid "Removed by author"
@@ -5240,7 +5240,7 @@ msgstr "刪除已轉發貼文"
 #: src/view/com/posts/FeedShutdownMsg.tsx:129
 #: src/view/com/posts/FeedShutdownMsg.tsx:133
 msgid "Replace with Discover"
-msgstr "用「Discover」動態源取代"
+msgstr "取代為「Discover」動態源"
 
 #: src/view/screens/Profile.tsx:227
 msgid "Replies"
@@ -7451,7 +7451,7 @@ msgstr "檢視您封鎖的帳號"
 #: src/view/com/home/HomeHeaderLayout.web.tsx:59
 #: src/view/com/home/HomeHeaderLayoutMobile.tsx:77
 msgid "View your feeds and explore more"
-msgstr "瀏覽您的動態並探索更多內容"
+msgstr "瀏覽您的動態源並探索更多內容"
 
 #: src/screens/Moderation/index.tsx:218
 msgid "View your moderation lists"

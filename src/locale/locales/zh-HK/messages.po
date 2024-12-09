@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-12-09 02:57\n"
+"PO-Revision-Date: 2024-12-09 15:55\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional, Hong Kong\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -6923,7 +6923,7 @@ msgstr "切換控制啓用抑或停用成人內容"
 #: src/screens/Hashtag.tsx:86
 #: src/view/screens/Search/Search.tsx:494
 msgid "Top"
-msgstr "TOP"
+msgstr "至 Hit"
 
 #: src/components/dms/MessageMenu.tsx:103
 #: src/components/dms/MessageMenu.tsx:105
