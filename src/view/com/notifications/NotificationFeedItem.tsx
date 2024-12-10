@@ -76,7 +76,7 @@ interface Author {
   moderation: ModerationDecision
 }
 
-let FeedItem = ({
+let NotificationFeedItem = ({
   item,
   moderationOpts,
   hideTopBorder,
@@ -494,8 +494,8 @@ let FeedItem = ({
     </Link>
   )
 }
-FeedItem = memo(FeedItem)
-export {FeedItem}
+NotificationFeedItem = memo(NotificationFeedItem)
+export {NotificationFeedItem}
 
 function ExpandListPressable({
   hasMultipleAuthors,

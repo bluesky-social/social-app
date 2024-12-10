@@ -37,9 +37,9 @@ import {List, ListRef} from '../util/List'
 import {PostFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
 import {DiscoverFallbackHeader} from './DiscoverFallbackHeader'
-import {FeedErrorMessage} from './FeedErrorMessage'
-import {FeedItem} from './FeedItem'
 import {FeedShutdownMsg} from './FeedShutdownMsg'
+import {PostFeedErrorMessage} from './PostFeedErrorMessage'
+import {PostFeedItem} from './PostFeedItem'
 import {ViewFullThread} from './ViewFullThread'
 
 type FeedRow =
@@ -101,7 +101,7 @@ export function getFeedPostSlice(feedRow: FeedRow): FeedPostSlice | null {
 // const REFRESH_AFTER = STALE.HOURS.ONE
 const CHECK_LATEST_AFTER = STALE.SECONDS.THIRTY
 
-let Feed = ({
+let PostFeed = ({
   feed,
   feedParams,
   ignoreFilterFor,
@@ -444,7 +444,7 @@ let Feed = ({
         return renderEmptyState()
       } else if (row.type === 'error') {
         return (
-          <FeedErrorMessage
+          <PostFeedErrorMessage
             feedDesc={feed}
             error={error ?? undefined}
             onPressTryAgain={onPressTryAgain}
@@ -480,7 +480,7 @@ let Feed = ({
         const indexInSlice = row.indexInSlice
         const item = slice.items[indexInSlice]
         return (
-          <FeedItem
+          <PostFeedItem
             post={item.post}
             record={item.record}
             reason={indexInSlice === 0 ? slice.reason : undefined}
@@ -576,8 +576,8 @@ let Feed = ({
     </View>
   )
 }
-Feed = memo(Feed)
-export {Feed}
+PostFeed = memo(PostFeed)
+export {PostFeed}
 
 const styles = StyleSheet.create({
   feedFooter: {paddingTop: 20},

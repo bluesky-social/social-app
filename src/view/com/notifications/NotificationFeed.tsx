@@ -21,13 +21,13 @@ import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {List, ListRef} from '#/view/com/util/List'
 import {NotificationFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
-import {FeedItem} from './FeedItem'
+import {NotificationFeedItem} from './NotificationFeedItem'
 
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
 const LOAD_MORE_ERROR_ITEM = {_reactKey: '__load_more_error__'}
 const LOADING_ITEM = {_reactKey: '__loading__'}
 
-export function Feed({
+export function NotificationFeed({
   scrollElRef,
   onPressTryAgain,
   onScrolledDownChange,
@@ -136,7 +136,7 @@ export function Feed({
         )
       }
       return (
-        <FeedItem
+        <NotificationFeedItem
           item={item}
           moderationOpts={moderationOpts!}
           hideTopBorder={index === 0}

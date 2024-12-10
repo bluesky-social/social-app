@@ -234,8 +234,8 @@ module.exports = function (config) {
           'expo-font',
           {
             fonts: [
-              './assets/fonts/inter/InterVariable.ttf',
-              './assets/fonts/inter/InterVariable-Italic.ttf',
+              './assets/fonts/inter/InterVariable.woff2',
+              './assets/fonts/inter/InterVariable-Italic.woff2',
               // Android only
               './assets/fonts/inter/Inter-Regular.otf',
               './assets/fonts/inter/Inter-Italic.otf',
