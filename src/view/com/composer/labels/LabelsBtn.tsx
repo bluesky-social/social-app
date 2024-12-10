@@ -17,8 +17,9 @@ import * as Toggle from '#/components/forms/Toggle'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {Shield_Stroke2_Corner0_Rounded} from '#/components/icons/Shield'
 import {Text} from '#/components/Typography'
+import {useCallback} from 'react'
 
-export function LabelsBtn({
+export const LabelsBtn = ({
   labels,
   onChange,
 }: {
@@ -38,14 +39,14 @@ export function LabelsBtn({
     ])
   }
 
-  const updateOtherLabels = (newLabels: OtherSelfLabel[]) => {
+  const updateOtherLabels = useCallback((newLabels: OtherSelfLabel[]) => {
     const newLabel = newLabels[newLabels.length - 1]
     const filtered = labels.filter(l => !OTHER_SELF_LABELS.includes(l))
     onChange([
       ...new Set([...filtered, newLabel].filter(Boolean) as SelfLabel[]),
     ])
-  }
-
+  }, [labels, onChange])
+  
   return (
     <>
       <Button
