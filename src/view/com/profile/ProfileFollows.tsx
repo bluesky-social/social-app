@@ -38,7 +38,6 @@ export function ProfileFollows({name}: {name: string}) {
   const initialNumToRender = useInitialNumToRender()
   const {currentAccount} = useSession()
 
-  const [isPTRing, setIsPTRing] = React.useState(false)
   const {
     data: resolvedDid,
     isLoading: isDidLoading,
@@ -52,6 +51,7 @@ export function ProfileFollows({name}: {name: string}) {
     fetchNextPage,
     error,
     refetch,
+    isRefetching,
   } = useProfileFollowsQuery(resolvedDid)
 
   const isError = !!resolveError || !!error
@@ -65,14 +65,12 @@ export function ProfileFollows({name}: {name: string}) {
   }, [data])
 
   const onRefresh = React.useCallback(async () => {
-    setIsPTRing(true)
     try {
       await refetch()
     } catch (err) {
       logger.error('Failed to refresh follows', {error: err})
     }
-    setIsPTRing(false)
-  }, [refetch, setIsPTRing])
+  }, [refetch])
 
   const onEndReached = React.useCallback(async () => {
     if (isFetchingNextPage || !hasNextPage || !!error) return
@@ -106,7 +104,7 @@ export function ProfileFollows({name}: {name: string}) {
       data={follows}
       renderItem={renderItem}
       keyExtractor={keyExtractor}
-      refreshing={isPTRing}
+      refreshing={isRefetching}
       onRefresh={onRefresh}
       onEndReached={onEndReached}
       onEndReachedThreshold={4}
