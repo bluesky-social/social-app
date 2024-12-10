@@ -102,16 +102,16 @@ function ShellInner() {
             configureGestureHandler={handler => {
               if (swipeEnabled) {
                 if (isDrawerOpen) {
-                  // You probably want to close it so activate on smallest pans.
                   return handler.activeOffsetX([-1, 1])
                 } else {
-                  // Disambiguate the drawer swipe from the pager swipe.
                   return (
                     handler
-                      // Any finger movement to the right activates it
-                      .activeOffsetX(1)
-                      // Any finger movement to the left insta-fails it
+                      // Any movement to the left is a pager swipe
+                      // so fail the drawer gesture immediately.
                       .failOffsetX(-1)
+                      // Don't rush declaring that a movement to the right
+                      // is a drawer swipe. It could be a vertical scroll.
+                      .activeOffsetX(5)
                   )
                 }
               } else {
@@ -125,6 +125,8 @@ function ShellInner() {
             onOpen={onOpenDrawer}
             onClose={onCloseDrawer}
             swipeEdgeWidth={winDim.width}
+            swipeMinVelocity={100}
+            swipeMinDistance={10}
             drawerType={isIOS ? 'slide' : 'front'}
             overlayStyle={{
               backgroundColor: select(t.name, {
