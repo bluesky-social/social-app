@@ -44,7 +44,7 @@ import {
 import * as Layout from '#/components/Layout'
 import {H1, H3, P, Text} from '#/components/Typography'
 import {ScreenHider} from '../../components/moderation/ScreenHider'
-import {FeedItem as NotifFeedItem} from '../com/notifications/FeedItem'
+import {NotificationFeedItem} from '../com/notifications/NotificationFeedItem'
 import {PostThreadItem} from '../com/post-thread/PostThreadItem'
 import {PostFeedItem} from '../com/posts/PostFeedItem'
 import {ProfileCard} from '../com/profile/ProfileCard'
@@ -872,7 +872,7 @@ function MockNotifItem({
       </P>
     )
   }
-  return <NotifFeedItem item={notif} moderationOpts={moderationOpts} />
+  return <NotificationFeedItem item={notif} moderationOpts={moderationOpts} />
 }
 
 function MockAccountCard({
