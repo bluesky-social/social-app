@@ -26,6 +26,7 @@ import {getStarterPackOgCard} from '#/lib/strings/starter-pack'
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
 import {updateProfileShadow} from '#/state/cache/profile-shadow'
+import {useModalControls} from '#/state/modals'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {getAllListMembers} from '#/state/queries/list-members'
 import {useResolvedStarterPackShortLink} from '#/state/queries/resolve-short-link'
@@ -51,6 +52,7 @@ import {useDialogControl} from '#/components/Dialog'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded as ArrowOutOfBox} from '#/components/icons/ArrowOutOfBox'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {DotGrid_Stroke2_Corner0_Rounded as Ellipsis} from '#/components/icons/DotGrid'
+import {ListSparkle_Stroke2_Corner0_Rounded as List} from '#/components/icons/ListSparkle'
 import {Pencil_Stroke2_Corner0_Rounded as Pencil} from '#/components/icons/Pencil'
 import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
 import * as Layout from '#/components/Layout'
@@ -184,18 +186,52 @@ function StarterPackScreenLoaded({
     ...(showPostsTab ? [_(msg`Posts`)] : []),
   ]
 
+  const {openModal} = useModalControls()
   const qrCodeDialogControl = useDialogControl()
   const shareDialogControl = useDialogControl()
 
   const shortenLink = useShortenLink()
   const [link, setLink] = React.useState<string>()
   const [imageLoaded, setImageLoaded] = React.useState(false)
+  const navigation = useNavigation<NavigationProp>()
+
+  const {currentAccount} = useSession()
 
   React.useEffect(() => {
     logEvent('starterPack:opened', {
       starterPack: starterPack.uri,
     })
   }, [starterPack.uri])
+
+  const onOpenConvertToListDialog = React.useCallback(() => {
+    if (!starterPack || !starterPack.list) {
+      console.error("Can't convert an empty starter pack to a list.")
+      return
+    }
+
+    if (!currentAccount) {
+      console.error(
+        "Can't convert a starter pack to a list without being logged in.",
+      )
+      return
+    }
+
+    openModal({
+      name: 'convert-starter-pack-to-list',
+      starterPack,
+      onSave: (uri: string) => {
+        try {
+          const urip = new AtUri(uri)
+          navigation.navigate('ProfileList', {
+            name: urip.hostname,
+            rkey: urip.rkey,
+          })
+        } catch {
+          console.error('Failed to navigate to new list')
+        }
+      },
+    })
+  }, [openModal, navigation, starterPack, currentAccount])
 
   const onOpenShareDialog = React.useCallback(() => {
     const rkey = new AtUri(starterPack.uri).rkey
@@ -231,6 +267,7 @@ function StarterPackScreenLoaded({
               starterPack={starterPack}
               routeParams={routeParams}
               onOpenShareDialog={onOpenShareDialog}
+              onOpenConvertToListDialog={onOpenConvertToListDialog}
             />
           )}>
           {showPeopleTab
@@ -291,10 +328,14 @@ function Header({
   starterPack,
   routeParams,
   onOpenShareDialog,
+  onOpenConvertToListDialog,
 }: {
   starterPack: AppBskyGraphDefs.StarterPackView
   routeParams: StarterPackScreeProps['route']['params']
   onOpenShareDialog: () => void
+  onOpenConvertToListDialog: (
+    starterPack: AppBskyGraphDefs.StarterPackView,
+  ) => void
 }) {
   const {_} = useLingui()
   const t = useTheme()
@@ -441,6 +482,7 @@ function Header({
               routeParams={routeParams}
               starterPack={starterPack}
               onOpenShareDialog={onOpenShareDialog}
+              onOpenConvertToListDialog={onOpenConvertToListDialog}
             />
           </View>
         ) : null}
@@ -493,10 +535,14 @@ function OverflowMenu({
   starterPack,
   routeParams,
   onOpenShareDialog,
+  onOpenConvertToListDialog,
 }: {
   starterPack: AppBskyGraphDefs.StarterPackView
   routeParams: StarterPackScreeProps['route']['params']
   onOpenShareDialog: () => void
+  onOpenConvertToListDialog: (
+    starterPack: AppBskyGraphDefs.StarterPackView,
+  ) => void
 }) {
   const t = useTheme()
   const {_} = useLingui()
@@ -599,7 +645,18 @@ function OverflowMenu({
                   </Menu.ItemText>
                   <Menu.ItemIcon icon={ArrowOutOfBox} position="right" />
                 </Menu.Item>
+                <Menu.Item
+                  label={_(msg`Convert to List`)}
+                  testID="convertToListStarterPackLinkBtn"
+                  onPress={() => onOpenConvertToListDialog(starterPack)}>
+                  <Menu.ItemText>
+                    <Trans>Convert to List</Trans>
+                  </Menu.ItemText>
+                  <Menu.ItemIcon icon={List} position="right" />
+                </Menu.Item>
               </Menu.Group>
+
+              <Menu.Divider />
 
               <Menu.Item
                 label={_(msg`Report starter pack`)}
