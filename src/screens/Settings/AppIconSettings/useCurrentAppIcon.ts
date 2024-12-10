@@ -2,7 +2,7 @@ import {useCallback, useMemo, useState} from 'react'
 import * as DynamicAppIcon from '@mozzius/expo-dynamic-app-icon'
 import {useFocusEffect} from '@react-navigation/native'
 
-import {useAppIconSets} from '#/screens/settings/AppIconSettings/useAppIconSets'
+import {useAppIconSets} from '#/screens/Settings/AppIconSettings/useAppIconSets'
 
 export function useCurrentAppIcon() {
   const appIconSets = useAppIconSets()
