@@ -5,8 +5,10 @@ import {useLingui} from '@lingui/react'
 import * as DynamicAppIcon from '@mozzius/expo-dynamic-app-icon'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
+import {DISCOVER_DEBUG_DIDS} from '#/lib/constants'
 import {CommonNavigatorParams} from '#/lib/routes/types'
 import {isAndroid} from '#/platform/detection'
+import {useSession} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
 import * as Toggle from '#/components/forms/Toggle'
 import * as Layout from '#/components/Layout'
@@ -15,8 +17,10 @@ import {AppIcon, AppIconSet, useAppIconSets} from './components/AppIcon'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AppIconSettings'>
 export function AppIconSettingsScreen({}: Props) {
+  const t = useTheme()
   const {_} = useLingui()
   const sets = useAppIconSets()
+  const {currentAccount} = useSession()
   const [currentAppIcon, setCurrentAppIcon] = useState(() =>
     getAppIconName(DynamicAppIcon.getAppIcon()),
   )
@@ -63,10 +67,7 @@ export function AppIconSettingsScreen({}: Props) {
         <Layout.Header.Slot />
       </Layout.Header.Outer>
 
-      <Layout.Content contentContainerStyle={[a.px_lg]}>
-        <Text style={[a.text_xl, a.mt_lg, a.mb_md, a.font_heavy]}>
-          <Trans>Default</Trans>
-        </Text>
+      <Layout.Content contentContainerStyle={[a.p_lg]}>
         <Group
           label={_(msg`Default icons`)}
           value={currentAppIcon}
@@ -81,20 +82,35 @@ export function AppIconSettingsScreen({}: Props) {
             </Row>
           ))}
         </Group>
-        <Text style={[a.text_xl, a.mt_lg, a.mb_md, a.font_heavy]}>
-          <Trans>Bluesky+</Trans>
-        </Text>
-        <Group
-          label={_(msg`Bluesky+ icons`)}
-          value={currentAppIcon}
-          onChange={onSetAppIcon}>
-          {sets.core.map((icon, i) => (
-            <Row key={icon.id} icon={icon} isEnd={i === sets.core.length - 1}>
-              <AppIcon icon={icon} key={icon.id} size={40} />
-              <RowText>{icon.name}</RowText>
-            </Row>
-          ))}
-        </Group>
+
+        {DISCOVER_DEBUG_DIDS[currentAccount?.did ?? ''] && (
+          <>
+            <Text
+              style={[
+                a.text_md,
+                a.mt_xl,
+                a.mb_sm,
+                a.font_bold,
+                t.atoms.text_contrast_medium,
+              ]}>
+              <Trans>Bluesky+</Trans>
+            </Text>
+            <Group
+              label={_(msg`Bluesky+ icons`)}
+              value={currentAppIcon}
+              onChange={onSetAppIcon}>
+              {sets.core.map((icon, i) => (
+                <Row
+                  key={icon.id}
+                  icon={icon}
+                  isEnd={i === sets.core.length - 1}>
+                  <AppIcon icon={icon} key={icon.id} size={40} />
+                  <RowText>{icon.name}</RowText>
+                </Row>
+              ))}
+            </Group>
+          </>
+        )}
       </Layout.Content>
     </Layout.Screen>
   )
@@ -161,10 +177,9 @@ function Row({
         <View
           style={[
             a.flex_1,
-            a.px_lg,
-            a.py_md,
+            a.p_md,
             a.flex_row,
-            a.gap_lg,
+            a.gap_md,
             a.align_center,
             t.atoms.bg_contrast_25,
             (hovered || pressed) && t.atoms.bg_contrast_50,
