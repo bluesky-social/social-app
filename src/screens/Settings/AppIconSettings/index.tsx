@@ -6,14 +6,17 @@ import * as DynamicAppIcon from '@mozzius/expo-dynamic-app-icon'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {DISCOVER_DEBUG_DIDS} from '#/lib/constants'
+import {PressableScale} from '#/lib/custom-animations/PressableScale'
 import {CommonNavigatorParams} from '#/lib/routes/types'
 import {isAndroid} from '#/platform/detection'
 import {useSession} from '#/state/session'
+import {AppIconImage} from '#/screens/Settings/AppIconSettings/AppIconImage'
+import {AppIconSet} from '#/screens/Settings/AppIconSettings/types'
+import {useAppIconSets} from '#/screens/Settings/AppIconSettings/useAppIconSets'
 import {atoms as a, useTheme} from '#/alf'
 import * as Toggle from '#/components/forms/Toggle'
 import * as Layout from '#/components/Layout'
 import {Text} from '#/components/Typography'
-import {AppIcon, AppIconSet, useAppIconSets} from './components/AppIcon'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AppIconSettings'>
 export function AppIconSettingsScreen({}: Props) {
@@ -202,5 +205,40 @@ function RowText({children}: {children: React.ReactNode}) {
       emoji>
       {children}
     </Text>
+  )
+}
+
+function AppIcon({icon, size = 50}: {icon: AppIconSet; size: number}) {
+  const {_} = useLingui()
+  return (
+    <PressableScale
+      accessibilityLabel={icon.name}
+      accessibilityHint={_(msg`Tap to change app icon`)}
+      targetScale={0.95}
+      onPress={() => {
+        if (isAndroid) {
+          Alert.alert(
+            _(msg`Change app icon to "${icon.name}"`),
+            _(msg`The app will be restarted`),
+            [
+              {
+                text: _(msg`Cancel`),
+                style: 'cancel',
+              },
+              {
+                text: _(msg`OK`),
+                onPress: () => {
+                  DynamicAppIcon.setAppIcon(icon.id)
+                },
+                style: 'default',
+              },
+            ],
+          )
+        } else {
+          DynamicAppIcon.setAppIcon(icon.id)
+        }
+      }}>
+      <AppIconImage icon={icon} size={size} />
+    </PressableScale>
   )
 }

@@ -1,21 +1,7 @@
 import {useMemo} from 'react'
-import {ImageSourcePropType} from 'react-native'
-import {Alert} from 'react-native'
-import {Image} from 'expo-image'
-import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import * as DynamicAppIcon from '@mozzius/expo-dynamic-app-icon'
 
-import {PressableScale} from '#/lib/custom-animations/PressableScale'
-import {isAndroid} from '#/platform/detection'
-import {atoms as a, platform, useTheme} from '#/alf'
-
-export type AppIconSet = {
-  id: string
-  name: string
-  iosImage: () => ImageSourcePropType
-  androidImage: () => ImageSourcePropType
-}
+import {AppIconSet} from '#/screens/Settings/AppIconSettings/types'
 
 export function useAppIconSets() {
   const {_} = useLingui()
@@ -145,68 +131,4 @@ export function useAppIconSets() {
       core,
     }
   }, [_])
-}
-
-export function AppIcon({icon, size = 50}: {icon: AppIconSet; size: number}) {
-  const {_} = useLingui()
-  return (
-    <PressableScale
-      accessibilityLabel={icon.name}
-      accessibilityHint={_(msg`Tap to change app icon`)}
-      targetScale={0.95}
-      onPress={() => {
-        if (isAndroid) {
-          Alert.alert(
-            _(msg`Change app icon to "${icon.name}"`),
-            _(msg`The app will be restarted`),
-            [
-              {
-                text: _(msg`Cancel`),
-                style: 'cancel',
-              },
-              {
-                text: _(msg`OK`),
-                onPress: () => {
-                  DynamicAppIcon.setAppIcon(icon.id)
-                },
-                style: 'default',
-              },
-            ],
-          )
-        } else {
-          DynamicAppIcon.setAppIcon(icon.id)
-        }
-      }}>
-      <AppIconImage icon={icon} size={size} />
-    </PressableScale>
-  )
-}
-
-export function AppIconImage({
-  icon,
-  size = 50,
-}: {
-  icon: AppIconSet
-  size: number
-}) {
-  const t = useTheme()
-  return (
-    <Image
-      source={platform({
-        ios: icon.iosImage(),
-        android: icon.androidImage(),
-      })}
-      style={[
-        {width: size, height: size},
-        platform({
-          ios: {borderRadius: size / 5},
-          android: a.rounded_full,
-        }),
-        a.curve_continuous,
-        t.atoms.border_contrast_medium,
-        a.border,
-      ]}
-      accessibilityIgnoresInvertColors
-    />
-  )
 }
