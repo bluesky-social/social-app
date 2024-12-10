@@ -144,13 +144,18 @@ export function PostThread({uri}: {uri: string | undefined}) {
   )
   const [maxReplies, setMaxReplies] = React.useState(50)
 
-  useSetTitle(
-    rootPost && !isNoPwi
-      ? `${sanitizeDisplayName(
-          rootPost.author.displayName || `@${rootPost.author.handle}`,
-        )}: "${rootPostRecord!.text}"`
-      : '',
-  )
+  let title = ''
+  if (rootPost && !isNoPwi) {
+    const name = sanitizeDisplayName(
+      rootPost.author.displayName || `@${rootPost.author.handle}`,
+    )
+    if (rootPostRecord!.text?.length > 0) {
+      title = `${name}: "${rootPostRecord!.text}"`
+    } else {
+      title = _(msg`Post by ${name}`)
+    }
+  }
+  useSetTitle(title)
 
   // On native, this is going to start out `true`. We'll toggle it to `false` after the initial render if flushed.
   // This ensures that the first render contains no parents--even if they are already available in the cache.
