@@ -30,7 +30,7 @@ export enum KnownError {
   Unknown = 'Unknown',
 }
 
-export function FeedErrorMessage({
+export function PostFeedErrorMessage({
   feedDesc,
   error,
   onPressTryAgain,

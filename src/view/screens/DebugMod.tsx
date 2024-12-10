@@ -46,7 +46,7 @@ import {H1, H3, P, Text} from '#/components/Typography'
 import {ScreenHider} from '../../components/moderation/ScreenHider'
 import {FeedItem as NotifFeedItem} from '../com/notifications/FeedItem'
 import {PostThreadItem} from '../com/post-thread/PostThreadItem'
-import {FeedItem} from '../com/posts/FeedItem'
+import {PostFeedItem} from '../com/posts/PostFeedItem'
 import {ProfileCard} from '../com/profile/ProfileCard'
 
 const LABEL_VALUES: (keyof typeof LABELS)[] = Object.keys(
@@ -817,7 +817,7 @@ function MockPostFeedItem({
     )
   }
   return (
-    <FeedItem
+    <PostFeedItem
       post={post}
       record={post.record as AppBskyFeedPost.Record}
       moderation={moderation}
