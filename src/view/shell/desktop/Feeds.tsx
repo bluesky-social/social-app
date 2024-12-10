@@ -9,7 +9,7 @@ import {emitSoftReset} from '#/state/events'
 import {usePinnedFeedsInfos} from '#/state/queries/feed'
 import {useSelectedFeed, useSetSelectedFeed} from '#/state/shell/selected-feed'
 import {atoms as a, useTheme, web} from '#/alf'
-import {InlineLinkText} from '#/components/Link'
+import {createStaticClick,InlineLinkText} from '#/components/Link'
 
 export function DesktopFeeds() {
   const t = useTheme()
@@ -50,15 +50,14 @@ export function DesktopFeeds() {
         return (
           <InlineLinkText
             key={feedInfo.uri}
-            to={'/?' + new URLSearchParams([['feed', feed]])}
             label={feedInfo.displayName}
-            onPress={() => {
+            {...createStaticClick(() => {
               setSelectedFeed(feed)
               navigation.navigate('Home')
               if (route.name === 'Home' && feed === selectedFeed) {
                 emitSoftReset()
               }
-            }}
+            })}
             style={[
               a.text_md,
               a.leading_snug,
