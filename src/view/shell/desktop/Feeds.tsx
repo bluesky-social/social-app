@@ -9,7 +9,6 @@ import {emitSoftReset} from '#/state/events'
 import {usePinnedFeedsInfos} from '#/state/queries/feed'
 import {useSelectedFeed, useSetSelectedFeed} from '#/state/shell/selected-feed'
 import {atoms as a, useTheme, web} from '#/alf'
-import {SquareArrowTopRight_Stroke2_Corner0_Rounded as Link} from '#/components/icons/SquareArrowTopRight'
 import {InlineLinkText} from '#/components/Link'
 
 export function DesktopFeeds() {
@@ -34,8 +33,8 @@ export function DesktopFeeds() {
     <View
       style={[
         a.flex_1,
-        a.gap_sm,
         web({
+          gap: 10,
           /*
            * Small padding prevents overflow prior to actually overflowing the
            * height of the screen with lots of feeds.
@@ -79,7 +78,6 @@ export function DesktopFeeds() {
         style={[a.text_md, a.leading_snug]}
         numberOfLines={1}>
         {_(msg`More feeds`)}
-        <Link width={16} style={[a.relative, {marginBottom: -2, right: -4}]} />
       </InlineLinkText>
     </View>
   )

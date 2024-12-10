@@ -18,7 +18,7 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
   const {_} = useLingui()
   const {hasSession, currentAccount} = useSession()
   const kawaii = useKawaiiMode()
-  const gutters = useGutters(['base', 'wide'])
+  const gutters = useGutters(['base', 0, 'base', 'wide'])
 
   const {isTablet} = useWebMediaQueries()
   if (isTablet) {
@@ -38,7 +38,7 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
             },
             ...a.scrollbar_offset.transform,
           ],
-          width: 300,
+          width: 300 + gutters.paddingLeft,
           maxHeight: '100%',
           overflowY: 'auto',
         }),
