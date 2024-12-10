@@ -335,6 +335,7 @@ export function DesktopLeftNav() {
         styles.leftNav,
         isTablet && styles.leftNavTablet,
         pal.border,
+        zIndex: 1,
       ]}>
       {hasSession ? (
         <ProfileCard />
