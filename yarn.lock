@@ -4258,6 +4258,15 @@
     "@formatjs/intl-localematcher" "0.5.4"
     tslib "^2.4.0"
 
+"@formatjs/intl-datetimeformat@6.12.6":
+  version "6.12.6"
+  resolved "https://registry.yarnpkg.com/@formatjs/intl-datetimeformat/-/intl-datetimeformat-6.12.6.tgz#45d12e1d95a5f631b4d911c9ab47a6aa032dcfbc"
+  integrity sha512-T7bEek4GXKXdTKcJdizgixLg9UNq3DRaFsi/yFG9x5K9ZtaGMXd7LTNrBaY6QpLjtFfapEGo3SwX7yEc0S0GwA==
+  dependencies:
+    "@formatjs/ecma402-abstract" "2.0.0"
+    "@formatjs/intl-localematcher" "0.5.4"
+    tslib "^2.4.0"
+
 "@formatjs/intl-enumerator@1.4.7":
   version "1.4.7"
   resolved "https://registry.yarnpkg.com/@formatjs/intl-enumerator/-/intl-enumerator-1.4.7.tgz#6ab697f3f8f18cf0cc6a6b028cb9c40db6001f3d"
