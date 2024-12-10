@@ -3,6 +3,7 @@ import {AppBskyActorDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
+import * as Clipboard from 'expo-clipboard'
 
 import {HITSLOP_20} from '#/lib/constants'
 import {makeProfileLink} from '#/lib/routes/links'
@@ -24,6 +25,7 @@ import {Button, ButtonIcon} from '#/components/Button'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded as Share} from '#/components/icons/ArrowOutOfBox'
 import {DotGrid_Stroke2_Corner0_Rounded as Ellipsis} from '#/components/icons/DotGrid'
 import {Flag_Stroke2_Corner0_Rounded as Flag} from '#/components/icons/Flag'
+import {Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon} from '#/components/icons/Clipboard'
 import {ListSparkle_Stroke2_Corner0_Rounded as List} from '#/components/icons/ListSparkle'
 import {Mute_Stroke2_Corner0_Rounded as Mute} from '#/components/icons/Mute'
 import {PeopleRemove2_Stroke2_Corner0_Rounded as UserMinus} from '#/components/icons/PeopleRemove2'
@@ -36,6 +38,7 @@ import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as Unmute} from '#/components/
 import * as Menu from '#/components/Menu'
 import * as Prompt from '#/components/Prompt'
 import {ReportDialog, useReportDialogControl} from '#/components/ReportDialog'
+import {useDeveloperModeEnabled} from '#/state/preferences'
 
 let ProfileMenu = ({
   profile,
@@ -52,6 +55,7 @@ let ProfileMenu = ({
   const isBlocked = profile.viewer?.blocking || profile.viewer?.blockedBy
   const isFollowingBlockedAccount = isFollowing && isBlocked
   const isLabelerAndNotBlocked = !!profile.associated?.labeler && !isBlocked
+  const developerModeEnabled = useDeveloperModeEnabled()
 
   const [queueMute, queueUnmute] = useProfileMuteMutationQueue(profile)
   const [queueBlock, queueUnblock] = useProfileBlockMutationQueue(profile)
@@ -166,6 +170,11 @@ let ProfileMenu = ({
   const onPressReportAccount = React.useCallback(() => {
     reportDialogControl.open()
   }, [reportDialogControl])
+
+  const onPressCopyDid = React.useCallback(() => {
+    Clipboard.setStringAsync(profile.did)
+    Toast.show(_(msg`Copied to clipboard`), 'clipboard-check')
+  }, [])
 
   return (
     <EventStopper onKeyDown={false}>
@@ -302,6 +311,21 @@ let ProfileMenu = ({
                         <Trans>Report Account</Trans>
                       </Menu.ItemText>
                       <Menu.ItemIcon icon={Flag} />
+                    </Menu.Item>
+                  </>
+                )}
+
+                {developerModeEnabled && (
+                  <>
+                    <Menu.Divider />
+                    <Menu.Item
+                      testID="profileHeaderDropdownCopyDid"
+                      label={_(msg`Copy DID`)}
+                      onPress={onPressCopyDid}>
+                      <Menu.ItemText>
+                        <Trans>Copy DID</Trans>
+                      </Menu.ItemText>
+                      <Menu.ItemIcon icon={ClipboardIcon} />
                     </Menu.Item>
                   </>
                 )}
