@@ -64,7 +64,15 @@ export function LanguageSettingsScreen({}: Props) {
 
   return (
     <Layout.Screen testID="PreferencesLanguagesScreen">
-      <Layout.Header title={_(msg`Languages`)} />
+      <Layout.Header.Outer>
+        <Layout.Header.BackButton />
+        <Layout.Header.Content>
+          <Layout.Header.TitleText>
+            <Trans>Languages</Trans>
+          </Layout.Header.TitleText>
+        </Layout.Header.Content>
+        <Layout.Header.Slot />
+      </Layout.Header.Outer>
       <Layout.Content>
         <SettingsList.Container>
           <SettingsList.Group iconInset={false}>
@@ -80,6 +88,7 @@ export function LanguageSettingsScreen({}: Props) {
               </Text>
               <View style={[a.relative, web([a.w_full, {maxWidth: 400}])]}>
                 <RNPickerSelect
+                  darkTheme={t.scheme === 'dark'}
                   placeholder={{}}
                   value={sanitizeAppLanguageSetting(langPrefs.appLanguage)}
                   onValueChange={onChangeAppLanguage}
@@ -165,6 +174,7 @@ export function LanguageSettingsScreen({}: Props) {
               </Text>
               <View style={[a.relative, web([a.w_full, {maxWidth: 400}])]}>
                 <RNPickerSelect
+                  darkTheme={t.scheme === 'dark'}
                   placeholder={{}}
                   value={langPrefs.primaryLanguage}
                   onValueChange={onChangePrimaryLanguage}

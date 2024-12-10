@@ -11,7 +11,6 @@ import {PostRepostedBy as PostRepostedByComponent} from '#/view/com/post-thread/
 import {ViewHeader} from '#/view/com/util/ViewHeader'
 import {CenteredView} from '#/view/com/util/Views'
 import * as Layout from '#/components/Layout'
-import {ListHeaderDesktop} from '#/components/Lists'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'PostRepostedBy'>
 export const PostRepostedByScreen = ({route}: Props) => {
@@ -29,7 +28,6 @@ export const PostRepostedByScreen = ({route}: Props) => {
   return (
     <Layout.Screen>
       <CenteredView sideBorders={true}>
-        <ListHeaderDesktop title={_(msg`Reposted By`)} />
         <ViewHeader title={_(msg`Reposted By`)} showBorder={!isWeb} />
         <PostRepostedByComponent uri={uri} />
       </CenteredView>

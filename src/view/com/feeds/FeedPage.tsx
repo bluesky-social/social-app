@@ -32,6 +32,7 @@ const POLL_FREQ = 60e3 // 60sec
 export function FeedPage({
   testID,
   isPageFocused,
+  isPageAdjacent,
   feed,
   feedParams,
   renderEmptyState,
@@ -42,6 +43,7 @@ export function FeedPage({
   feed: FeedDescriptor
   feedParams?: FeedParams
   isPageFocused: boolean
+  isPageAdjacent: boolean
   renderEmptyState: () => JSX.Element
   renderEndOfFeed?: () => JSX.Element
   savedFeedConfig?: AppBskyActorDefs.SavedFeed
@@ -105,17 +107,18 @@ export function FeedPage({
     })
   }, [scrollToTop, feed, queryClient, setHasNew])
 
+  const shouldPrefetch = isNative && isPageAdjacent
   return (
-    <View testID={testID} style={s.h100pct}>
+    <View testID={testID}>
       <MainScrollProvider>
         <FeedFeedbackProvider value={feedFeedback}>
           <Feed
             testID={testID ? `${testID}-feed` : undefined}
-            enabled={isPageFocused}
+            enabled={isPageFocused || shouldPrefetch}
             feed={feed}
             feedParams={feedParams}
             pollInterval={POLL_FREQ}
-            disablePoll={hasNew}
+            disablePoll={hasNew || !isPageFocused}
             scrollElRef={scrollElRef}
             onScrolledDownChange={setIsScrolledDown}
             onHasNew={setHasNew}
