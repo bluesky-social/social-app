@@ -109,7 +109,7 @@ function ShellInner() {
             open={isDrawerOpen}
             onOpen={onOpenDrawer}
             onClose={onCloseDrawer}
-            swipeEdgeWidth={winDim.width / 2}
+            swipeEdgeWidth={winDim.width}
             drawerType={isIOS ? 'slide' : 'front'}
             swipeEnabled={swipeEnabled}
             overlayStyle={{
