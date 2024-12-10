@@ -61,6 +61,7 @@ const locales: Record<AppLanguage, Locale | undefined> = {
   ja,
   ko,
   nl,
+  np: undefined,
   pl,
   ['pt-BR']: ptBR,
   ru,
