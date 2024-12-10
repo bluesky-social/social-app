@@ -21,7 +21,7 @@ import {useSession} from '#/state/session'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {useComposerControls} from '#/state/shell/composer'
 import {useHeaderOffset} from '#/components/hooks/useHeaderOffset'
-import {Feed} from '../posts/Feed'
+import {PostFeed} from '../posts/PostFeed'
 import {FAB} from '../util/fab/FAB'
 import {ListMethods} from '../util/List'
 import {LoadLatestBtn} from '../util/load-latest/LoadLatestBtn'
@@ -112,7 +112,7 @@ export function FeedPage({
     <View testID={testID}>
       <MainScrollProvider>
         <FeedFeedbackProvider value={feedFeedback}>
-          <Feed
+          <PostFeed
             testID={testID ? `${testID}-feed` : undefined}
             enabled={isPageFocused || shouldPrefetch}
             feed={feed}
