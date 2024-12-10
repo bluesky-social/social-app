@@ -100,7 +100,11 @@ function ShellInner() {
             renderDrawerContent={renderDrawerContent}
             drawerStyle={{width: Math.min(400, winDim.width * 0.8)}}
             configureGestureHandler={handler => {
-              if (swipeEnabled && !isDrawerOpen) {
+              if (!swipeEnabled) {
+                // This seems more reliable than the `swipeEnabled` prop.
+                // With `swipeEnabled` alone, the gesture may freeze after toggling off/on.
+                return handler.failOffsetX([0, 0]).failOffsetY([0, 0])
+              } else if (!isDrawerOpen) {
                 return handler.activeOffsetX(1).failOffsetX(-1)
               } else {
                 return handler
@@ -111,7 +115,6 @@ function ShellInner() {
             onClose={onCloseDrawer}
             swipeEdgeWidth={winDim.width}
             drawerType={isIOS ? 'slide' : 'front'}
-            swipeEnabled={swipeEnabled}
             overlayStyle={{
               backgroundColor: select(t.name, {
                 light: 'rgba(0, 57, 117, 0.1)',
