@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Italian localization\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-07 12:27+0000\n"
-"PO-Revision-Date: 2024-12-08 02:20+0000\n"
+"PO-Revision-Date: 2024-12-10 02:15+0000\n"
 "Last-Translator: Francisco, 2024\n"
 "Language-Team: Italian (https://app.transifex.com/mlocati/teams/201833/it/)\n"
 "Language: it\n"
@@ -5217,7 +5217,7 @@ msgstr "Rimosso da te"
 #: src/view/com/modals/ListAddRemoveUsers.tsx:200
 #: src/view/com/modals/UserAddRemoveLists.tsx:170
 msgid "Removed from list"
-msgstr "Elimina dalla lista"
+msgstr "Rimosso dalla lista"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:138
 msgid "Removed from my feeds"
