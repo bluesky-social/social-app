@@ -1,16 +1,16 @@
 # 
 # Translators:
 # arestifop, 2024
-# Michele Locati <michele@locati.it>, 2024
 # Francisco, 2024
+# Michele Locati <michele@locati.it>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Italian localization\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-07 12:27+0000\n"
-"PO-Revision-Date: 2024-12-10 02:15+0000\n"
-"Last-Translator: Francisco, 2024\n"
+"PO-Revision-Date: 2024-12-10 07:44+0000\n"
+"Last-Translator: Michele Locati <michele@locati.it>, 2024\n"
 "Language-Team: Italian (https://app.transifex.com/mlocati/teams/201833/it/)\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
@@ -5221,7 +5221,7 @@ msgstr "Rimosso dalla lista"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:138
 msgid "Removed from my feeds"
-msgstr "Rimuovere dai miei feed"
+msgstr "Rimosso dai miei feed"
 
 #: src/screens/List/ListHiddenScreen.tsx:94
 #: src/screens/List/ListHiddenScreen.tsx:160
