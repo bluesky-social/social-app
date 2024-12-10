@@ -12,6 +12,7 @@ import {formatDistance, Locale} from 'date-fns'
 import {
   ca,
   de,
+  el,
   enGB,
   es,
   fi,
@@ -48,6 +49,7 @@ const locales: Record<AppLanguage, Locale | undefined> = {
   ast: undefined,
   ca,
   de,
+  el,
   ['en-GB']: enGB,
   es,
   fi,
