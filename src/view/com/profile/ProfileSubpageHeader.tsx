@@ -154,7 +154,7 @@ export function ProfileSubpageHeader({
                 <Trans>
                   by{' '}
                   <TextLink
-                    text={sanitizeHandle(creator.handle, '@')}
+                    text={sanitizeHandle(creator.handle, '@', false)}
                     href={makeProfileLink(creator)}
                     style={pal.textLight}
                   />

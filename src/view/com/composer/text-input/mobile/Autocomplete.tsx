@@ -81,6 +81,7 @@ export function Autocomplete({
                       a.text_right,
                       {maxWidth: '50%'},
                     ]}
+                    emoji
                     numberOfLines={1}>
                     {sanitizeHandle(item.handle, '@')}
                   </Text>

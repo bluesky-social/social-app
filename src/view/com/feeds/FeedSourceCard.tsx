@@ -248,7 +248,7 @@ export function FeedSourceCardLoaded({
             <Text emoji style={[pal.text, s.bold]} numberOfLines={1}>
               {feed.displayName}
             </Text>
-            <Text style={[pal.textLight]} numberOfLines={1}>
+            <Text emoji style={[pal.textLight]} numberOfLines={1}>
               {feed.type === 'feed' ? (
                 <Trans>Feed by {sanitizeHandle(feed.creatorHandle, '@')}</Trans>
               ) : (
