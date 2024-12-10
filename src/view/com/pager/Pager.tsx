@@ -1,4 +1,4 @@
-import React, {forwardRef, useContext} from 'react'
+import React, {forwardRef, useCallback, useContext} from 'react'
 import {View} from 'react-native'
 import {DrawerGestureContext} from 'react-native-drawer-layout'
 import {Gesture, GestureDetector} from 'react-native-gesture-handler'
@@ -15,7 +15,9 @@ import Animated, {
   useHandler,
   useSharedValue,
 } from 'react-native-reanimated'
+import {useFocusEffect} from '@react-navigation/native'
 
+import {useSetDrawerSwipeDisabled} from '#/state/shell'
 import {atoms as a, native} from '#/alf'
 
 export type PageSelectedEvent = PagerViewOnPageSelectedEvent
@@ -60,6 +62,18 @@ export const Pager = forwardRef<PagerRef, React.PropsWithChildren<Props>>(
     const [selectedPage, setSelectedPage] = React.useState(initialPage)
     const pagerView = React.useRef<PagerView>(null)
 
+    const [isIdle, setIsIdle] = React.useState(true)
+    const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
+    useFocusEffect(
+      useCallback(() => {
+        const canSwipeDrawer = selectedPage === 0 && isIdle
+        setDrawerSwipeDisabled(!canSwipeDrawer)
+        return () => {
+          setDrawerSwipeDisabled(false)
+        }
+      }, [setDrawerSwipeDisabled, selectedPage, isIdle]),
+    )
+
     React.useImperativeHandle(ref, () => ({
       setPage: (index: number) => {
         pagerView.current?.setPage(index)
@@ -98,6 +112,7 @@ export const Pager = forwardRef<PagerRef, React.PropsWithChildren<Props>>(
         },
         onPageScrollStateChanged(e: PageScrollStateChangedNativeEventData) {
           'worklet'
+          runOnJS(setIsIdle)(e.pageScrollState === 'idle')
           if (dragState.get() === 'idle' && e.pageScrollState === 'settling') {
             // This is a programmatic scroll on Android.
             // Stay "idle" to match iOS and avoid confusing downstream code.
