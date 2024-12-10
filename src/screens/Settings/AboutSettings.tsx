@@ -7,17 +7,22 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack'
 import {appVersion, BUNDLE_DATE, bundleInfo} from '#/lib/app-info'
 import {STATUS_PAGE_URL} from '#/lib/constants'
 import {CommonNavigatorParams} from '#/lib/routes/types'
+import {useDeveloperModeEnabled, useSetDeveloperModeEnabled} from '#/state/preferences'
 import * as Toast from '#/view/com/util/Toast'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
+import * as Toggle from '#/components/forms/Toggle'
 import {CodeLines_Stroke2_Corner2_Rounded as CodeLinesIcon} from '#/components/icons/CodeLines'
 import {Globe_Stroke2_Corner0_Rounded as GlobeIcon} from '#/components/icons/Globe'
 import {Newspaper_Stroke2_Corner2_Rounded as NewspaperIcon} from '#/components/icons/Newspaper'
 import {Wrench_Stroke2_Corner2_Rounded as WrenchIcon} from '#/components/icons/Wrench'
+import {Atom_Stroke2_Corner0_Rounded as AtomIcon} from '#/components/icons/Atom'
 import * as Layout from '#/components/Layout'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AboutSettings'>
 export function AboutSettingsScreen({}: Props) {
   const {_} = useLingui()
+  const developerModeEnabledPref = useDeveloperModeEnabled()
+  const setdeveloperModeEnabledPref = useSetDeveloperModeEnabled()
 
   return (
     <Layout.Screen>
@@ -78,6 +83,19 @@ export function AboutSettingsScreen({}: Props) {
             </SettingsList.ItemText>
             <SettingsList.BadgeText>{bundleInfo}</SettingsList.BadgeText>
           </SettingsList.PressableItem>
+          <Toggle.Item
+            name="enable_developer_mode"
+            label={_(msg`Devloper Mode`)}
+            value={developerModeEnabledPref}
+            onChange={value => setdeveloperModeEnabledPref(value)}>
+            <SettingsList.Item>
+              <SettingsList.ItemIcon icon={AtomIcon} />
+              <SettingsList.ItemText>
+                <Trans>Developer mode</Trans>
+              </SettingsList.ItemText>
+              <Toggle.Platform />
+            </SettingsList.Item>
+          </Toggle.Item>
         </SettingsList.Container>
       </Layout.Content>
     </Layout.Screen>

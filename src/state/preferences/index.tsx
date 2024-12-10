@@ -11,6 +11,7 @@ import {Provider as LanguagesProvider} from './languages'
 import {Provider as LargeAltBadgeProvider} from './large-alt-badge'
 import {Provider as SubtitlesProvider} from './subtitles'
 import {Provider as UsedStarterPacksProvider} from './used-starter-packs'
+import {Provider as DeveloperModeProvider} from './developer-mode'
 
 export {
   useRequireAltTextEnabled,
@@ -26,6 +27,7 @@ export * from './hidden-posts'
 export {useLabelDefinitions} from './label-defs'
 export {useLanguagePrefs, useLanguagePrefsApi} from './languages'
 export {useSetSubtitlesEnabled, useSubtitlesEnabled} from './subtitles'
+export {useDeveloperModeEnabled, useSetDeveloperModeEnabled} from './developer-mode'
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
   return (
@@ -39,7 +41,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
                   <AutoplayProvider>
                     <UsedStarterPacksProvider>
                       <SubtitlesProvider>
-                        <KawaiiProvider>{children}</KawaiiProvider>
+                        <DeveloperModeProvider>
+                          <KawaiiProvider>{children}</KawaiiProvider>
+                        </DeveloperModeProvider>
                       </SubtitlesProvider>
                     </UsedStarterPacksProvider>
                   </AutoplayProvider>
