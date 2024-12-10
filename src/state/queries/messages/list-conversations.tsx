@@ -237,6 +237,7 @@ export function useUnreadMessageCount() {
             convo.muted ||
             moderation.blocked ||
             otherMember.did === 'missing.invalid'
+          console.log('convo', {convo, shouldIgnore})
           const unreadCount = !shouldIgnore && convo.unreadCount > 0 ? 1 : 0
 
           return acc + unreadCount
@@ -266,6 +267,22 @@ export function useOnMarkAsRead() {
         return optimisticUpdate(chatId, old, convo => ({
           ...convo,
           unreadCount: 0,
+        }))
+      })
+    },
+    [queryClient],
+  )
+}
+
+export function useOnMarkAsUnread() {
+  const queryClient = useQueryClient()
+
+  return useCallback(
+    (chatId: string) => {
+      queryClient.setQueryData(RQKEY, (old: ConvoListQueryData) => {
+        return optimisticUpdate(chatId, old, convo => ({
+          ...convo,
+          unreadCount: 1,
         }))
       })
     },

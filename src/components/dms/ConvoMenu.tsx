@@ -14,6 +14,7 @@ import {Shadow} from '#/state/cache/types'
 import {
   useConvoQuery,
   useMarkAsReadMutation,
+  useMarkAsUnreadMutation,
 } from '#/state/queries/messages/conversation'
 import {useMuteConvo} from '#/state/queries/messages/mute-conversation'
 import {useProfileBlockMutationQueue} from '#/state/queries/profile'
@@ -36,28 +37,32 @@ import * as Menu from '#/components/Menu'
 import * as Prompt from '#/components/Prompt'
 import {Bubble_Stroke2_Corner2_Rounded as Bubble} from '../icons/Bubble'
 
-let ConvoMenu = ({
-  convo: initialConvo,
-  profile,
-  control,
-  currentScreen,
-  showMarkAsRead,
-  hideTrigger,
-  blockInfo,
-  style,
-}: {
+type Props = {
   convo: ChatBskyConvoDefs.ConvoView
   profile: Shadow<AppBskyActorDefs.ProfileViewBasic>
   control?: Menu.MenuControlProps
   currentScreen: 'list' | 'conversation'
   showMarkAsRead?: boolean
+  showMarkAsUnread?: boolean
   hideTrigger?: boolean
   blockInfo: {
     listBlocks: ModerationCause[]
     userBlock?: ModerationCause
   }
   style?: ViewStyleProp['style']
-}): React.ReactNode => {
+}
+
+export const ConvoMenu = React.memo(function ConvoMenu({
+  convo: initialConvo,
+  profile,
+  control,
+  currentScreen,
+  showMarkAsRead,
+  showMarkAsUnread,
+  hideTrigger,
+  blockInfo,
+  style,
+}: Props) {
   const navigation = useNavigation<NavigationProp>()
   const {_} = useLingui()
   const t = useTheme()
@@ -65,6 +70,7 @@ let ConvoMenu = ({
   const reportControl = Prompt.usePromptControl()
   const blockedByListControl = Prompt.usePromptControl()
   const {mutate: markAsRead} = useMarkAsReadMutation()
+  const {mutate: markAsUnread} = useMarkAsUnreadMutation()
 
   const {listBlocks, userBlock} = blockInfo
   const isBlocking = userBlock || !!listBlocks.length
@@ -160,6 +166,20 @@ let ConvoMenu = ({
                   <Menu.ItemIcon icon={Bubble} />
                 </Menu.Item>
               )}
+              {showMarkAsUnread && (
+                <Menu.Item
+                  label={_(msg`Mark as unread`)}
+                  onPress={() =>
+                    markAsUnread({
+                      convoId: convo?.id,
+                    })
+                  }>
+                  <Menu.ItemText>
+                    <Trans>Mark as unread</Trans>
+                  </Menu.ItemText>
+                  <Menu.ItemIcon icon={Bubble} />
+                </Menu.Item>
+              )}
               <Menu.Item
                 label={_(msg`Go to user's profile`)}
                 onPress={onNavigateToProfile}>
@@ -229,7 +249,4 @@ let ConvoMenu = ({
       />
     </>
   )
-}
-ConvoMenu = React.memo(ConvoMenu)
-
-export {ConvoMenu}
+})
