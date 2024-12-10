@@ -665,10 +665,12 @@ export function ButtonIcon({
   icon: Comp,
   position,
   size,
+  style,
 }: {
   icon: React.ComponentType<SVGIconProps>
   position?: 'left' | 'right'
   size?: SVGIconProps['size']
+  style?: SVGIconProps['style']
 }) {
   const {size: buttonSize, disabled} = useButtonContext()
   const textStyles = useSharedButtonTextStyles()
@@ -753,6 +755,7 @@ export function ButtonIcon({
               color: textStyles.color,
               pointerEvents: 'none',
             },
+            style,
           ]}
         />
       </View>

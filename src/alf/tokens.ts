@@ -108,6 +108,7 @@ export const gradients = {
   nordic: {
     values: [
       [0, '#083367'],
+      // [0.4, '#386D84'],
       [1, '#9EE8C1'],
     ],
     hover_value: '#3A7085',
@@ -122,3 +123,9 @@ export const gradients = {
     hover_value: '#755B62',
   },
 } as const
+
+export const blueskyPlus = {
+  dark: '#083367',
+  mid: '#67A59F',
+  light: '#9EE8C1',
+}
