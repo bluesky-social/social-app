@@ -107,13 +107,14 @@ export function FeedPage({
     })
   }, [scrollToTop, feed, queryClient, setHasNew])
 
+  const shouldPrefetch = isNative && isPageAdjacent
   return (
     <View testID={testID}>
       <MainScrollProvider>
         <FeedFeedbackProvider value={feedFeedback}>
           <Feed
             testID={testID ? `${testID}-feed` : undefined}
-            enabled={isPageFocused || isPageAdjacent}
+            enabled={isPageFocused || shouldPrefetch}
             feed={feed}
             feedParams={feedParams}
             pollInterval={POLL_FREQ}
