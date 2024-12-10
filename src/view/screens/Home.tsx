@@ -19,7 +19,7 @@ import {FeedParams} from '#/state/queries/post-feed'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
 import {useSession} from '#/state/session'
-import {useSetDrawerSwipeDisabled, useSetMinimalShellMode} from '#/state/shell'
+import {useSetMinimalShellMode} from '#/state/shell'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useSelectedFeed, useSetSelectedFeed} from '#/state/shell/selected-feed'
 import {FeedPage} from '#/view/com/feeds/FeedPage'
@@ -127,15 +127,10 @@ function HomeScreenReady({
 
   const {hasSession} = useSession()
   const setMinimalShellMode = useSetMinimalShellMode()
-  const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
   useFocusEffect(
     React.useCallback(() => {
       setMinimalShellMode(false)
-      setDrawerSwipeDisabled(selectedIndex > 0)
-      return () => {
-        setDrawerSwipeDisabled(false)
-      }
-    }, [setDrawerSwipeDisabled, selectedIndex, setMinimalShellMode]),
+    }, [setMinimalShellMode]),
   )
 
   useFocusEffect(
@@ -154,7 +149,6 @@ function HomeScreenReady({
   const onPageSelected = React.useCallback(
     (index: number) => {
       setMinimalShellMode(false)
-      setDrawerSwipeDisabled(index > 0)
       const feed = allFeeds[index]
       // Mutate the ref before setting state to avoid the imperative syncing effect
       // above from starting a loop on Android when swiping back and forth.
@@ -166,7 +160,7 @@ function HomeScreenReady({
         feedUrl: feed,
       })
     },
-    [setDrawerSwipeDisabled, setSelectedFeed, setMinimalShellMode, allFeeds],
+    [setSelectedFeed, setMinimalShellMode, allFeeds],
   )
 
   const onPressSelected = React.useCallback(() => {
