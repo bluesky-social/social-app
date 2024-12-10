@@ -145,7 +145,6 @@ module.exports = function (config) {
         adaptiveIcon: {
           foregroundImage: './assets/icon-android-foreground.png',
           monochromeImage: './assets/icon-android-foreground.png',
-          backgroundImage: './assets/icon-android-background.png',
           backgroundColor: '#1185FE',
         },
         googleServicesFile: './google-services.json',
@@ -203,13 +202,13 @@ module.exports = function (config) {
           {
             ios: {
               deploymentTarget: '15.1',
-              newArchEnabled: false,
+              newArchEnabled: true,
             },
             android: {
               compileSdkVersion: 35,
               targetSdkVersion: 35,
               buildToolsVersion: '35.0.0',
-              newArchEnabled: false,
+              newArchEnabled: true,
             },
           },
         ],
