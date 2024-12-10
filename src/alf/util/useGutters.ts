@@ -44,11 +44,12 @@ export function useGutters([top, right, bottom, left]: [
   Gutter,
   Gutter,
 ]): Gutters
-export function useGutters([top, right, bottom, left]: Gutter[]) {
+export function useGutters(defs: Gutter[]) {
   const {activeBreakpoint} = useBreakpoints()
   return React.useMemo(() => {
+    let [top, right, bottom, left] = defs
+
     if (!right) {
-      // eslint-disable-next-line react-hooks/exhaustive-deps
       right = bottom = left = top
     } else if (!bottom || !left) {
       bottom = top
@@ -64,5 +65,5 @@ export function useGutters([top, right, bottom, left]: Gutter[]) {
       paddingLeft:
         left === 0 ? 0 : gutters[left][activeBreakpoint || 'default'],
     }
-  }, [activeBreakpoint, top, bottom, left, right])
+  }, [activeBreakpoint, defs])
 }
