@@ -1,14 +1,15 @@
 import React, {useRef} from 'react'
-import {View} from 'react-native'
+import {LayoutAnimation, View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {logEvent} from '#/lib/statsig/statsig'
 import {createFullHandle, validateHandle} from '#/lib/strings/handles'
-import {useAgent} from '#/state/session'
+import {useAgent, useSession} from '#/state/session'
 import {ScreenTransition} from '#/screens/Login/ScreenTransition'
 import {useSignupContext} from '#/screens/Signup/state'
 import {atoms as a, useTheme} from '#/alf'
+import {Admonition} from '#/components/Admonition'
 import * as TextField from '#/components/forms/TextField'
 import {useThrottledValue} from '#/components/hooks/useThrottledValue'
 import {At_Stroke2_Corner0_Rounded as At} from '#/components/icons/At'
@@ -25,6 +26,9 @@ export function StepHandle() {
   const handleValueRef = useRef<string>(state.handle)
   const [draftValue, setDraftValue] = React.useState(state.handle)
   const isLoading = useThrottledValue(state.isLoading, 500)
+  const {accounts} = useSession()
+
+  const isFirstTimeUser = accounts.length === 0
 
   const onNextPress = React.useCallback(async () => {
     const handle = handleValueRef.current.trim()
@@ -107,11 +111,18 @@ export function StepHandle() {
                   dispatch({type: 'setError', value: ''})
                 }
 
+                if (val === '' || handleValueRef.current === '') {
+                  LayoutAnimation.configureNext(
+                    LayoutAnimation.Presets.easeInEaseOut,
+                  )
+                }
+
                 // These need to always be in sync.
                 handleValueRef.current = val
                 setDraftValue(val)
               }}
               label={_(msg`Input your user handle`)}
+              placeholder={_(msg`e.g. alice`)}
               defaultValue={draftValue}
               autoCapitalize="none"
               autoCorrect={false}
@@ -120,61 +131,70 @@ export function StepHandle() {
             />
           </TextField.Root>
         </View>
-        {draftValue !== '' && (
-          <Text style={[a.text_md]}>
-            <Trans>Your full handle will be</Trans>{' '}
-            <Text style={[a.text_md, a.font_bold]}>
-              @{createFullHandle(draftValue, state.userDomain)}
-            </Text>
-          </Text>
-        )}
 
-        {draftValue !== '' && (
-          <View
-            style={[
-              a.w_full,
-              a.rounded_sm,
-              a.border,
-              a.p_md,
-              a.gap_sm,
-              t.atoms.border_contrast_low,
-            ]}>
-            {state.error ? (
-              <View style={[a.w_full, a.flex_row, a.align_center, a.gap_sm]}>
-                <IsValidIcon valid={false} />
-                <Text style={[a.text_md, a.flex_1]}>{state.error}</Text>
-              </View>
-            ) : undefined}
-            {validCheck.hyphenStartOrEnd ? (
-              <View style={[a.w_full, a.flex_row, a.align_center, a.gap_sm]}>
-                <IsValidIcon valid={validCheck.handleChars} />
-                <Text style={[a.text_md, a.flex_1]}>
-                  <Trans>Only contains letters, numbers, and hyphens</Trans>
-                </Text>
-              </View>
-            ) : (
-              <View style={[a.w_full, a.flex_row, a.align_center, a.gap_sm]}>
-                <IsValidIcon valid={validCheck.hyphenStartOrEnd} />
-                <Text style={[a.text_md, a.flex_1]}>
-                  <Trans>Doesn't begin or end with a hyphen</Trans>
-                </Text>
-              </View>
-            )}
-            <View style={[a.w_full, a.flex_row, a.align_center, a.gap_sm]}>
-              <IsValidIcon
-                valid={validCheck.frontLength && validCheck.totalLength}
-              />
-              {!validCheck.totalLength ? (
-                <Text style={[a.text_md, a.flex_1]}>
-                  <Trans>No longer than 253 characters</Trans>
-                </Text>
+        {draftValue === '' ? (
+          isFirstTimeUser && (
+            <Admonition type="tip">
+              <Trans>
+                Also known as a "username", this is the unique name for your
+                account. Pick something memorable!
+              </Trans>
+            </Admonition>
+          )
+        ) : (
+          <>
+            <Text style={[a.text_md]}>
+              <Trans>Your full handle will be</Trans>{' '}
+              <Text style={[a.text_md, a.font_bold]}>
+                @{createFullHandle(draftValue, state.userDomain)}
+              </Text>
+            </Text>
+            <View
+              style={[
+                a.w_full,
+                a.rounded_sm,
+                a.border,
+                a.p_md,
+                a.gap_sm,
+                t.atoms.border_contrast_low,
+              ]}>
+              {state.error ? (
+                <View style={[a.w_full, a.flex_row, a.align_center, a.gap_sm]}>
+                  <IsValidIcon valid={false} />
+                  <Text style={[a.text_md, a.flex_1]}>{state.error}</Text>
+                </View>
+              ) : undefined}
+              {validCheck.hyphenStartOrEnd ? (
+                <View style={[a.w_full, a.flex_row, a.align_center, a.gap_sm]}>
+                  <IsValidIcon valid={validCheck.handleChars} />
+                  <Text style={[a.text_md, a.flex_1]}>
+                    <Trans>Only contains letters, numbers, and hyphens</Trans>
+                  </Text>
+                </View>
               ) : (
-                <Text style={[a.text_md, a.flex_1]}>
-                  <Trans>At least 3 characters</Trans>
-                </Text>
+                <View style={[a.w_full, a.flex_row, a.align_center, a.gap_sm]}>
+                  <IsValidIcon valid={validCheck.hyphenStartOrEnd} />
+                  <Text style={[a.text_md, a.flex_1]}>
+                    <Trans>Doesn't begin or end with a hyphen</Trans>
+                  </Text>
+                </View>
               )}
+              <View style={[a.w_full, a.flex_row, a.align_center, a.gap_sm]}>
+                <IsValidIcon
+                  valid={validCheck.frontLength && validCheck.totalLength}
+                />
+                {!validCheck.totalLength ? (
+                  <Text style={[a.text_md, a.flex_1]}>
+                    <Trans>No longer than 253 characters</Trans>
+                  </Text>
+                ) : (
+                  <Text style={[a.text_md, a.flex_1]}>
+                    <Trans>At least 3 characters</Trans>
+                  </Text>
+                )}
+              </View>
             </View>
-          </View>
+          </>
         )}
       </View>
       <BackNextButtons
