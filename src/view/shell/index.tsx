@@ -100,14 +100,25 @@ function ShellInner() {
             renderDrawerContent={renderDrawerContent}
             drawerStyle={{width: Math.min(400, winDim.width * 0.8)}}
             configureGestureHandler={handler => {
-              if (!swipeEnabled) {
+              if (swipeEnabled) {
+                if (isDrawerOpen) {
+                  // You probably want to close it so activate on smallest pans.
+                  return handler.activeOffsetX([-1, 1])
+                } else {
+                  // Disambiguate the drawer swipe from the pager swipe.
+                  return (
+                    handler
+                      // Any finger movement to the right activates it
+                      .activeOffsetX(1)
+                      // Any finger movement to the left insta-fails it
+                      .failOffsetX(-1)
+                  )
+                }
+              } else {
+                // Fail the gesture immediately.
                 // This seems more reliable than the `swipeEnabled` prop.
                 // With `swipeEnabled` alone, the gesture may freeze after toggling off/on.
                 return handler.failOffsetX([0, 0]).failOffsetY([0, 0])
-              } else if (!isDrawerOpen) {
-                return handler.activeOffsetX(1).failOffsetX(-1)
-              } else {
-                return handler
               }
             }}
             open={isDrawerOpen}
