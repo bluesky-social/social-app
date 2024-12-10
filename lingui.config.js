@@ -19,6 +19,7 @@ module.exports = {
     'ja',
     'ko',
     'nl',
+    'np',
     'pl',
     'pt-BR',
     'ru',
