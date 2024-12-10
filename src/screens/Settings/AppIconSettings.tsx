@@ -53,7 +53,16 @@ export function AppIconSettingsScreen({}: Props) {
 
   return (
     <Layout.Screen>
-      <Layout.Header title={_('App Icon')} />
+      <Layout.Header.Outer>
+        <Layout.Header.BackButton />
+        <Layout.Header.Content>
+          <Layout.Header.TitleText>
+            <Trans>App Icon</Trans>
+          </Layout.Header.TitleText>
+        </Layout.Header.Content>
+        <Layout.Header.Slot />
+      </Layout.Header.Outer>
+
       <Layout.Content contentContainerStyle={[a.px_lg]}>
         <Text style={[a.text_xl, a.mt_lg, a.mb_md, a.font_heavy]}>
           <Trans>Default</Trans>

@@ -3,8 +3,8 @@ import {StyleSheet, View} from 'react-native'
 import {DismissableLayer} from '@radix-ui/react-dismissable-layer'
 import {useFocusGuards} from '@radix-ui/react-focus-guards'
 import {FocusScope} from '@radix-ui/react-focus-scope'
+import {RemoveScrollBar} from 'react-remove-scroll-bar'
 
-import {useWebBodyScrollLock} from '#/lib/hooks/useWebBodyScrollLock'
 import {useModals} from '#/state/modals'
 import {ComposerOpts, useComposerState} from '#/state/shell/composer'
 import {
@@ -20,8 +20,6 @@ export function Composer({}: {winHeight: number}) {
   const state = useComposerState()
   const isActive = !!state
 
-  useWebBodyScrollLock(isActive)
-
   // rendering
   // =
 
@@ -29,7 +27,12 @@ export function Composer({}: {winHeight: number}) {
     return <View />
   }
 
-  return <Inner state={state} />
+  return (
+    <>
+      <RemoveScrollBar />
+      <Inner state={state} />
+    </>
+  )
 }
 
 function Inner({state}: {state: ComposerOpts}) {

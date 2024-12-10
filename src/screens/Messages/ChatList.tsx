@@ -16,8 +16,6 @@ import {MESSAGE_SCREEN_POLL_INTERVAL} from '#/state/messages/convo/const'
 import {useMessagesEventBus} from '#/state/messages/events'
 import {useListConvosQuery} from '#/state/queries/messages/list-converations'
 import {List} from '#/view/com/util/List'
-import {ViewHeader} from '#/view/com/util/ViewHeader'
-import {CenteredView} from '#/view/com/util/Views'
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {DialogControlProps, useDialogControl} from '#/components/Dialog'
@@ -49,7 +47,6 @@ export function MessagesScreen({navigation, route}: Props) {
   const {_} = useLingui()
   const t = useTheme()
   const newChatControl = useDialogControl()
-  const {gtMobile} = useBreakpoints()
   const pushToConversation = route.params?.pushToConversation
 
   // Whenever we have `pushToConversation` set, it means we pressed a notification for a chat without being on
@@ -80,21 +77,6 @@ export function MessagesScreen({navigation, route}: Props) {
       }
     }, [messagesBus, isActive]),
   )
-
-  const renderButton = useCallback(() => {
-    return (
-      <Link
-        to="/messages/settings"
-        label={_(msg`Chat settings`)}
-        size="small"
-        variant="ghost"
-        color="secondary"
-        shape="square"
-        style={[a.justify_center]}>
-        <SettingsSlider size="md" style={[t.atoms.text_contrast_medium]} />
-      </Link>
-    )
-  }, [_, t])
 
   const initialNumToRender = useInitialNumToRender({minItemHeight: 80})
   const [isPTRing, setIsPTRing] = useState(false)
@@ -144,28 +126,11 @@ export function MessagesScreen({navigation, route}: Props) {
     [navigation],
   )
 
-  const onNavigateToSettings = useCallback(() => {
-    navigation.navigate('MessagesSettings')
-  }, [navigation])
-
   if (conversations.length < 1) {
     return (
       <Layout.Screen>
-        <CenteredView sideBorders={gtMobile} style={[a.h_full_vh]}>
-          {gtMobile ? (
-            <DesktopHeader
-              newChatControl={newChatControl}
-              onNavigateToSettings={onNavigateToSettings}
-            />
-          ) : (
-            <ViewHeader
-              title={_(msg`Messages`)}
-              renderButton={renderButton}
-              showBorder
-              canGoBack={false}
-            />
-          )}
-
+        <Header newChatControl={newChatControl} />
+        <Layout.Center>
           {isLoading ? (
             <View style={[a.align_center, a.pt_3xl, web({paddingTop: '10vh'})]}>
               <Loader size="xl" />
@@ -227,7 +192,7 @@ export function MessagesScreen({navigation, route}: Props) {
               )}
             </>
           )}
-        </CenteredView>
+        </Layout.Center>
 
         {!isLoading && !isError && (
           <NewChat onNewChat={onNewChat} control={newChatControl} />
@@ -238,14 +203,7 @@ export function MessagesScreen({navigation, route}: Props) {
 
   return (
     <Layout.Screen testID="messagesScreen">
-      {!gtMobile && (
-        <ViewHeader
-          title={_(msg`Messages`)}
-          renderButton={renderButton}
-          showBorder
-          canGoBack={false}
-        />
-      )}
+      <Header newChatControl={newChatControl} />
       <NewChat onNewChat={onNewChat} control={newChatControl} />
       <List
         data={conversations}
@@ -254,12 +212,6 @@ export function MessagesScreen({navigation, route}: Props) {
         refreshing={isPTRing}
         onRefresh={onRefresh}
         onEndReached={onEndReached}
-        ListHeaderComponent={
-          <DesktopHeader
-            newChatControl={newChatControl}
-            onNavigateToSettings={onNavigateToSettings}
-          />
-        }
         ListFooterComponent={
           <ListFooter
             isFetchingNextPage={isFetchingNextPage}
@@ -276,67 +228,65 @@ export function MessagesScreen({navigation, route}: Props) {
         windowSize={11}
         // @ts-ignore our .web version only -sfn
         desktopFixedHeight
+        sideBorders={false}
       />
     </Layout.Screen>
   )
 }
 
-function DesktopHeader({
-  newChatControl,
-  onNavigateToSettings,
-}: {
-  newChatControl: DialogControlProps
-  onNavigateToSettings: () => void
-}) {
-  const t = useTheme()
+function Header({newChatControl}: {newChatControl: DialogControlProps}) {
   const {_} = useLingui()
-  const {gtMobile, gtTablet} = useBreakpoints()
+  const {gtMobile} = useBreakpoints()
 
-  if (!gtMobile) {
-    return null
-  }
+  const settingsLink = (
+    <Link
+      to="/messages/settings"
+      label={_(msg`Chat settings`)}
+      size="small"
+      variant="ghost"
+      color="secondary"
+      shape="square"
+      style={[a.justify_center]}>
+      <ButtonIcon icon={SettingsSlider} size="md" />
+    </Link>
+  )
 
   return (
-    <View
-      style={[
-        t.atoms.bg,
-        a.flex_row,
-        a.align_center,
-        a.justify_between,
-        a.gap_lg,
-        a.px_lg,
-        a.pr_md,
-        a.py_sm,
-        a.border_b,
-        t.atoms.border_contrast_low,
-      ]}>
-      <Text style={[a.text_2xl, a.font_bold]}>
-        <Trans>Messages</Trans>
-      </Text>
-      <View style={[a.flex_row, a.align_center, a.gap_sm]}>
-        <Button
-          label={_(msg`Message settings`)}
-          color="secondary"
-          size="small"
-          variant="ghost"
-          shape="square"
-          onPress={onNavigateToSettings}>
-          <SettingsSlider size="md" style={[t.atoms.text_contrast_medium]} />
-        </Button>
-        {gtTablet && (
-          <Button
-            label={_(msg`New chat`)}
-            color="primary"
-            size="small"
-            variant="solid"
-            onPress={newChatControl.open}>
-            <ButtonIcon icon={Plus} position="left" />
-            <ButtonText>
-              <Trans>New chat</Trans>
-            </ButtonText>
-          </Button>
-        )}
-      </View>
-    </View>
+    <Layout.Header.Outer>
+      {gtMobile ? (
+        <>
+          <Layout.Header.Content>
+            <Layout.Header.TitleText>
+              <Trans>Messages</Trans>
+            </Layout.Header.TitleText>
+          </Layout.Header.Content>
+
+          <View style={[a.flex_row, a.align_center, a.gap_sm]}>
+            {settingsLink}
+            <Button
+              label={_(msg`New chat`)}
+              color="primary"
+              size="small"
+              variant="solid"
+              onPress={newChatControl.open}>
+              <ButtonIcon icon={Plus} position="left" />
+              <ButtonText>
+                <Trans>New chat</Trans>
+              </ButtonText>
+            </Button>
+          </View>
+        </>
+      ) : (
+        <>
+          <Layout.Header.MenuButton />
+          <Layout.Header.Content>
+            <Layout.Header.TitleText>
+              <Trans>Messages</Trans>
+            </Layout.Header.TitleText>
+          </Layout.Header.Content>
+          <Layout.Header.Slot>{settingsLink}</Layout.Header.Slot>
+        </>
+      )}
+    </Layout.Header.Outer>
   )
 }

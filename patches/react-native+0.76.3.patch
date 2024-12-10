@@ -1,0 +1,331 @@
+diff --git a/node_modules/react-native/Libraries/StyleSheet/StyleSheetTypes.d.ts b/node_modules/react-native/Libraries/StyleSheet/StyleSheetTypes.d.ts
+index 62f52a7..ca30165 100644
+--- a/node_modules/react-native/Libraries/StyleSheet/StyleSheetTypes.d.ts
++++ b/node_modules/react-native/Libraries/StyleSheet/StyleSheetTypes.d.ts
+@@ -426,9 +426,10 @@ export interface ViewStyle extends FlexStyle, ShadowStyleIOS, TransformsStyle {
+    */
+   pointerEvents?: 'box-none' | 'none' | 'box-only' | 'auto' | undefined;
+   isolation?: 'auto' | 'isolate' | undefined;
+-  cursor?: CursorValue | undefined;
++  cursor?: CursorValue | string | undefined;
+   boxShadow?: ReadonlyArray<BoxShadowValue> | string | undefined;
+   filter?: ReadonlyArray<FilterFunction> | string | undefined;
++  transformOrigin?: string | (string | number)[] | undefined;
+ }
+ 
+ export type FontVariant =
+@@ -536,7 +537,11 @@ export interface TextStyle extends TextStyleIOS, TextStyleAndroid, ViewStyle {
+   textShadowOffset?: {width: number; height: number} | undefined;
+   textShadowRadius?: number | undefined;
+   textTransform?: 'none' | 'capitalize' | 'uppercase' | 'lowercase' | undefined;
+-  userSelect?: 'auto' | 'none' | 'text' | 'contain' | 'all' | undefined;
++  userSelect?: 'auto' | 'none' | 'text' | 'contain' | 'all' | string | undefined;
++  cursor?: CursorValue | string | undefined;
++  boxShadow?: ReadonlyArray<BoxShadowValue> | string | undefined;
++  filter?: ReadonlyArray<FilterFunction> | string | undefined;
++  transformOrigin?: string | (string | number)[] | undefined;
+ }
+ 
+ /**
+@@ -558,5 +563,8 @@ export interface ImageStyle extends FlexStyle, ShadowStyleIOS, TransformsStyle {
+   tintColor?: ColorValue | undefined;
+   opacity?: AnimatableNumericValue | undefined;
+   objectFit?: 'cover' | 'contain' | 'fill' | 'scale-down' | undefined;
+-  cursor?: CursorValue | undefined;
++  cursor?: CursorValue | string | undefined;
++  boxShadow?: ReadonlyArray<BoxShadowValue> | string | undefined;
++  filter?: ReadonlyArray<FilterFunction> | string | undefined;
++  transformOrigin?: string | (string | number)[] | undefined;
+ }
+diff --git a/node_modules/react-native/React/Fabric/Mounting/ComponentViews/ScrollView/RCTEnhancedScrollView.mm b/node_modules/react-native/React/Fabric/Mounting/ComponentViews/ScrollView/RCTEnhancedScrollView.mm
+index 93af874..106f8ec 100644
+--- a/node_modules/react-native/React/Fabric/Mounting/ComponentViews/ScrollView/RCTEnhancedScrollView.mm
++++ b/node_modules/react-native/React/Fabric/Mounting/ComponentViews/ScrollView/RCTEnhancedScrollView.mm
+@@ -66,28 +66,51 @@ - (void)preserveContentOffsetWithBlock:(void (^)())block
+  * ScrollView, we force it to be centered, but when you zoom or the content otherwise
+  * becomes larger than the ScrollView, there is no padding around the content but it
+  * can still fill the whole view.
++ * This implementation is based on https://petersteinberger.com/blog/2013/how-to-center-uiscrollview/.
+  */
+-- (void)setContentOffset:(CGPoint)contentOffset
++-(void)centerContentIfNeeded
+ {
+-  if (_isSetContentOffsetDisabled) {
++  if (!_centerContent) {
+     return;
+   }
+ 
+-  if (_centerContent && !CGSizeEqualToSize(self.contentSize, CGSizeZero)) {
+-    CGSize scrollViewSize = self.bounds.size;
+-    if (self.contentSize.width <= scrollViewSize.width) {
+-      contentOffset.x = -(scrollViewSize.width - self.contentSize.width) / 2.0;
+-    }
+-    if (self.contentSize.height <= scrollViewSize.height) {
+-      contentOffset.y = -(scrollViewSize.height - self.contentSize.height) / 2.0;
+-    }
++  CGSize contentSize = self.contentSize;
++  CGSize boundsSize = self.bounds.size;
++  if (CGSizeEqualToSize(contentSize, CGSizeZero) ||
++      CGSizeEqualToSize(boundsSize, CGSizeZero)) {
++    return;
+   }
+ 
++  CGFloat top = 0, left = 0;
++  if (contentSize.width < boundsSize.width) {
++    left = (boundsSize.width - contentSize.width) * 0.5f;
++  }
++  if (contentSize.height < boundsSize.height) {
++    top = (boundsSize.height - contentSize.height) * 0.5f;
++  }
++  self.contentInset = UIEdgeInsetsMake(top, left, top, left);
++}
++
++- (void)setContentOffset:(CGPoint)contentOffset
++{
++  if (_isSetContentOffsetDisabled) {
++    return;
++  }
+   super.contentOffset = CGPointMake(
+       RCTSanitizeNaNValue(contentOffset.x, @"scrollView.contentOffset.x"),
+       RCTSanitizeNaNValue(contentOffset.y, @"scrollView.contentOffset.y"));
+ }
+ 
++- (void)setFrame:(CGRect)frame {
++  [super setFrame:frame];
++  [self centerContentIfNeeded];
++}
++
++- (void)didAddSubview:(UIView *)subview {
++  [super didAddSubview:subview];
++  [self centerContentIfNeeded];
++}
++
+ - (BOOL)touchesShouldCancelInContentView:(UIView *)view
+ {
+   if ([_overridingDelegate respondsToSelector:@selector(touchesShouldCancelInContentView:)]) {
+@@ -257,6 +280,10 @@ - (void)scrollViewWillEndDragging:(UIScrollView *)scrollView
+   }
+ }
+ 
++- (void)scrollViewDidZoom:(__unused UIScrollView *)scrollView {
++  [self centerContentIfNeeded];
++}
++
+ #pragma mark -
+ 
+ - (BOOL)isHorizontal:(UIScrollView *)scrollView
+diff --git a/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.h b/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.h
+index e9b330f..ec5f58c 100644
+--- a/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.h
++++ b/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.h
+@@ -15,5 +15,8 @@
+ @property (nonatomic, copy) NSString *title;
+ @property (nonatomic, copy) RCTDirectEventBlock onRefresh;
+ @property (nonatomic, weak) UIScrollView *scrollView;
++@property (nonatomic, copy) UIColor *customTintColor;
++
++- (void)forwarderBeginRefreshing;
+ 
+ @end
+diff --git a/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.m b/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.m
+index 53bfd04..ff1b1ed 100644
+--- a/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.m
++++ b/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.m
+@@ -23,6 +23,7 @@ @implementation RCTRefreshControl {
+   UIColor *_titleColor;
+   CGFloat _progressViewOffset;
+   BOOL _hasMovedToWindow;
++  UIColor *_customTintColor;
+ }
+ 
+ - (instancetype)init
+@@ -58,6 +59,12 @@ - (void)layoutSubviews
+   _isInitialRender = false;
+ }
+ 
++- (void)didMoveToSuperview
++{
++  [super didMoveToSuperview];
++  [self setTintColor:_customTintColor];
++}
++
+ - (void)didMoveToWindow
+ {
+   [super didMoveToWindow];
+@@ -221,4 +228,50 @@ - (void)refreshControlValueChanged
+   }
+ }
+ 
++// Fix for https://github.com/facebook/react-native/issues/43388
++// A bug in iOS 17.4 causes the haptic to not play when refreshing if the tintColor
++// is set before the refresh control gets added to the scrollview. We'll call this
++// function whenever the superview changes. We'll also call it if the value of customTintColor
++// changes.
++- (void)setTintColor:(UIColor *)tintColor
++{
++  if ([self.superview isKindOfClass:[UIScrollView class]] && self.tintColor != tintColor) {
++    [super setTintColor:tintColor];
++  }
++}
++
++// This method is used by Bluesky's ExpoScrollForwarder. This allows other React Native
++// libraries to perform a refresh of a scrollview and access the refresh control's onRefresh
++// function.
++- (void)forwarderBeginRefreshing
++{
++  _refreshingProgrammatically = NO;
++
++  [self sizeToFit];
++
++  if (!self.scrollView) {
++    return;
++  }
++
++  UIScrollView *scrollView = (UIScrollView *)self.scrollView;
++
++  [UIView animateWithDuration:0.3
++    delay:0
++    options:UIViewAnimationOptionBeginFromCurrentState
++    animations:^(void) {
++      // Whenever we call this method, the scrollview will always be at a position of
++      // -130 or less. Scrolling back to -65 simulates the default behavior of RCTRefreshControl
++      [scrollView setContentOffset:CGPointMake(0, -65)];
++    }
++    completion:^(__unused BOOL finished) {
++      [super beginRefreshing];
++      [self setCurrentRefreshingState:super.refreshing];
++
++      if (self->_onRefresh) {
++        self->_onRefresh(nil);
++      }
++    }
++  ];
++}
++
+ @end
+diff --git a/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControlManager.m b/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControlManager.m
+index 40aaf9c..1c60164 100644
+--- a/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControlManager.m
++++ b/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControlManager.m
+@@ -22,11 +22,12 @@ - (UIView *)view
+ 
+ RCT_EXPORT_VIEW_PROPERTY(onRefresh, RCTDirectEventBlock)
+ RCT_EXPORT_VIEW_PROPERTY(refreshing, BOOL)
+-RCT_EXPORT_VIEW_PROPERTY(tintColor, UIColor)
+ RCT_EXPORT_VIEW_PROPERTY(title, NSString)
+ RCT_EXPORT_VIEW_PROPERTY(titleColor, UIColor)
+ RCT_EXPORT_VIEW_PROPERTY(progressViewOffset, CGFloat)
+ 
++RCT_REMAP_VIEW_PROPERTY(tintColor, customTintColor, UIColor)
++
+ RCT_EXPORT_METHOD(setNativeRefreshing : (nonnull NSNumber *)viewTag toRefreshing : (BOOL)refreshing)
+ {
+   [self.bridge.uiManager addUIBlock:^(RCTUIManager *uiManager, NSDictionary<NSNumber *, UIView *> *viewRegistry) {
+diff --git a/node_modules/react-native/React/Views/ScrollView/RCTScrollView.m b/node_modules/react-native/React/Views/ScrollView/RCTScrollView.m
+index e9ce48c..ccd9ad6 100644
+--- a/node_modules/react-native/React/Views/ScrollView/RCTScrollView.m
++++ b/node_modules/react-native/React/Views/ScrollView/RCTScrollView.m
+@@ -159,26 +159,8 @@ - (BOOL)touchesShouldCancelInContentView:(__unused UIView *)view
+   return !shouldDisableScrollInteraction;
+ }
+ 
+-/*
+- * Automatically centers the content such that if the content is smaller than the
+- * ScrollView, we force it to be centered, but when you zoom or the content otherwise
+- * becomes larger than the ScrollView, there is no padding around the content but it
+- * can still fill the whole view.
+- */
+ - (void)setContentOffset:(CGPoint)contentOffset
+ {
+-  UIView *contentView = [self contentView];
+-  if (contentView && _centerContent && !CGSizeEqualToSize(contentView.frame.size, CGSizeZero)) {
+-    CGSize subviewSize = contentView.frame.size;
+-    CGSize scrollViewSize = self.bounds.size;
+-    if (subviewSize.width <= scrollViewSize.width) {
+-      contentOffset.x = -(scrollViewSize.width - subviewSize.width) / 2.0;
+-    }
+-    if (subviewSize.height <= scrollViewSize.height) {
+-      contentOffset.y = -(scrollViewSize.height - subviewSize.height) / 2.0;
+-    }
+-  }
+-
+   super.contentOffset = CGPointMake(
+       RCTSanitizeNaNValue(contentOffset.x, @"scrollView.contentOffset.x"),
+       RCTSanitizeNaNValue(contentOffset.y, @"scrollView.contentOffset.y"));
+@@ -427,6 +409,11 @@ - (void)setRemoveClippedSubviews:(__unused BOOL)removeClippedSubviews
+   // Does nothing
+ }
+ 
++- (void)setFrame:(CGRect)frame {
++  [super setFrame:frame];
++  [self centerContentIfNeeded];
++}
++
+ - (void)insertReactSubview:(UIView *)view atIndex:(NSInteger)atIndex
+ {
+   [super insertReactSubview:view atIndex:atIndex];
+@@ -443,6 +430,8 @@ - (void)insertReactSubview:(UIView *)view atIndex:(NSInteger)atIndex
+     _contentView = view;
+     RCTApplyTransformationAccordingLayoutDirection(_contentView, self.reactLayoutDirection);
+     [_scrollView addSubview:view];
++
++    [self centerContentIfNeeded];
+   }
+ }
+ 
+@@ -652,9 +641,46 @@ -(void)delegateMethod : (UIScrollView *)scrollView        \
+   }
+ 
+ RCT_SCROLL_EVENT_HANDLER(scrollViewWillBeginDecelerating, onMomentumScrollBegin)
+-RCT_SCROLL_EVENT_HANDLER(scrollViewDidZoom, onScroll)
+ RCT_SCROLL_EVENT_HANDLER(scrollViewDidScrollToTop, onScrollToTop)
+ 
++-(void)scrollViewDidZoom : (UIScrollView *)scrollView
++{
++  [self centerContentIfNeeded];
++
++  RCT_SEND_SCROLL_EVENT(onScroll, nil);
++  RCT_FORWARD_SCROLL_EVENT(scrollViewDidZoom : scrollView);
++}
++
++/*
++ * Automatically centers the content such that if the content is smaller than the
++ * ScrollView, we force it to be centered, but when you zoom or the content otherwise
++ * becomes larger than the ScrollView, there is no padding around the content but it
++ * can still fill the whole view.
++ * This implementation is based on https://petersteinberger.com/blog/2013/how-to-center-uiscrollview/.
++ */
++-(void)centerContentIfNeeded
++{
++  if (!_scrollView.centerContent) {
++    return;
++  }
++
++  CGSize contentSize = self.contentSize;
++  CGSize boundsSize = self.bounds.size;
++  if (CGSizeEqualToSize(contentSize, CGSizeZero) ||
++      CGSizeEqualToSize(boundsSize, CGSizeZero)) {
++    return;
++  }
++
++  CGFloat top = 0, left = 0;
++  if (contentSize.width < boundsSize.width) {
++    left = (boundsSize.width - contentSize.width) * 0.5f;
++  }
++  if (contentSize.height < boundsSize.height) {
++    top = (boundsSize.height - contentSize.height) * 0.5f;
++  }
++  _scrollView.contentInset = UIEdgeInsetsMake(top, left, top, left);
++}
++
+ - (void)addScrollListener:(NSObject<UIScrollViewDelegate> *)scrollListener
+ {
+   [_scrollListeners addObject:scrollListener];
+@@ -933,6 +959,7 @@ - (void)updateContentSizeIfNeeded
+   CGSize contentSize = self.contentSize;
+   if (!CGSizeEqualToSize(_scrollView.contentSize, contentSize)) {
+     _scrollView.contentSize = contentSize;
++    [self centerContentIfNeeded];
+   }
+ }
+ 
