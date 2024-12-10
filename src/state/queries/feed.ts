@@ -86,7 +86,7 @@ export function hydrateFeedGenerator(
   const urip = new AtUri(view.uri)
   const collection =
     urip.collection === 'app.bsky.feed.generator' ? 'feed' : 'lists'
-  const href = `/profile/${urip.hostname}/${collection}/${urip.rkey}`
+  const href = `/${urip.hostname}/${collection}/${urip.rkey}`
   const route = router.matchPath(href)
 
   return {
@@ -118,7 +118,7 @@ export function hydrateList(view: AppBskyGraphDefs.ListView): FeedSourceInfo {
   const urip = new AtUri(view.uri)
   const collection =
     urip.collection === 'app.bsky.feed.generator' ? 'feed' : 'lists'
-  const href = `/profile/${urip.hostname}/${collection}/${urip.rkey}`
+  const href = `/${urip.hostname}/${collection}/${urip.rkey}`
   const route = router.matchPath(href)
 
   return {

@@ -13,19 +13,7 @@ export const router = new Router({
   ModerationModlists: '/moderation/modlists',
   ModerationMutedAccounts: '/moderation/muted-accounts',
   ModerationBlockedAccounts: '/moderation/blocked-accounts',
-  // profiles, threads, lists
-  Profile: ['/profile/:name', '/profile/:name/rss'],
-  ProfileFollowers: '/profile/:name/followers',
-  ProfileFollows: '/profile/:name/follows',
-  ProfileKnownFollowers: '/profile/:name/known-followers',
-  ProfileList: '/profile/:name/lists/:rkey',
-  PostThread: '/profile/:name/post/:rkey',
-  PostLikedBy: '/profile/:name/post/:rkey/liked-by',
-  PostRepostedBy: '/profile/:name/post/:rkey/reposted-by',
-  PostQuotes: '/profile/:name/post/:rkey/quotes',
-  ProfileFeed: '/profile/:name/feed/:rkey',
-  ProfileFeedLikedBy: '/profile/:name/feed/:rkey/liked-by',
-  ProfileLabelerLikedBy: '/profile/:name/labeler/liked-by',
+
   // debug
   Debug: '/sys/debug',
   DebugMod: '/sys/debug-mod',
@@ -63,4 +51,33 @@ export const router = new Router({
   StarterPack: '/starter-pack/:name/:rkey',
   StarterPackShort: '/starter-pack-short/:code',
   StarterPackWizard: '/starter-pack/create',
+
+  // profiles, threads, lists
+  Profile: ['/:name', '/:name/rss', '/profile/:name', '/profile/:name/rss'],
+  ProfileFollowers: ['/:name/followers', '/profile/:name/followers'],
+  ProfileFollows: ['/:name/follows', '/profile/:name/follows'],
+  ProfileKnownFollowers: [
+    '/:name/known-followers',
+    '/profile/:name/known-followers',
+  ],
+  ProfileList: ['/:name/lists/:rkey', '/profile/:name/lists/:rkey'],
+  PostThread: ['/:name/post/:rkey', '/profile/:name/post/:rkey'],
+  PostLikedBy: [
+    '/:name/post/:rkey/liked-by',
+    '/profile/:name/post/:rkey/liked-by',
+  ],
+  PostRepostedBy: [
+    '/:name/post/:rkey/reposted-by',
+    '/profile/:name/post/:rkey/reposted-by',
+  ],
+  PostQuotes: ['/:name/post/:rkey/quotes', '/profile/:name/post/:rkey/quotes'],
+  ProfileFeed: ['/:name/feed/:rkey', '/profile/:name/feed/:rkey'],
+  ProfileFeedLikedBy: [
+    '/:name/feed/:rkey/liked-by',
+    '/profile/:name/feed/:rkey/liked-by',
+  ],
+  ProfileLabelerLikedBy: [
+    '/:name/labeler/liked-by',
+    '/profile/:name/labeler/liked-by',
+  ],
 })

@@ -161,5 +161,5 @@ export function createProfileListHref({
 }) {
   const urip = new AtUri(list.uri)
   const handleOrDid = list.creator.handle || list.creator.did
-  return `/profile/${handleOrDid}/lists/${urip.rkey}`
+  return `/${handleOrDid}/lists/${urip.rkey}`
 }

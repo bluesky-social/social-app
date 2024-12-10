@@ -327,5 +327,5 @@ export function createProfileFeedHref({
 }) {
   const urip = new AtUri(feed.uri)
   const handleOrDid = feed.creator.handle || feed.creator.did
-  return `/profile/${handleOrDid}/feed/${urip.rkey}`
+  return `/${handleOrDid}/feed/${urip.rkey}`
 }
