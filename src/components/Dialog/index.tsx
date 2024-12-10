@@ -26,7 +26,7 @@ import {isAndroid, isIOS} from '#/platform/detection'
 import {useA11y} from '#/state/a11y'
 import {useDialogStateControlContext} from '#/state/dialogs'
 import {List, ListMethods, ListProps} from '#/view/com/util/List'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, useGutters,useTheme} from '#/alf'
 import {Context, useDialogContext} from '#/components/Dialog/context'
 import {
   DialogControlProps,
@@ -197,6 +197,7 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
     {children, style, contentContainerStyle, header, ...props},
     ref,
   ) {
+    const gutters = useGutters(['wide'])
     const {nativeSnapPoint, disableDrag, setDisableDrag} = useDialogContext()
     const insets = useSafeAreaInsets()
 
@@ -238,8 +239,7 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
       <KeyboardAwareScrollView
         style={[style]}
         contentContainerStyle={[
-          a.pt_2xl,
-          a.px_xl,
+          gutters,
           {paddingBottom},
           contentContainerStyle,
         ]}

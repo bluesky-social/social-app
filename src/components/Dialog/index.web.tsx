@@ -16,7 +16,14 @@ import {RemoveScrollBar} from 'react-remove-scroll-bar'
 
 import {logger} from '#/logger'
 import {useDialogStateControlContext} from '#/state/dialogs'
-import {atoms as a, flatten, useBreakpoints, useTheme, web} from '#/alf'
+import {
+  atoms as a,
+  flatten,
+  useBreakpoints,
+  useGutters,
+  useTheme,
+  web,
+} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import {Context} from '#/components/Dialog/context'
 import {
@@ -150,8 +157,8 @@ export function Inner({
   contentContainerStyle,
 }: DialogInnerProps) {
   const t = useTheme()
+  const gutters = useGutters(['wide'])
   const {close} = React.useContext(Context)
-  const {gtMobile} = useBreakpoints()
   useFocusGuards()
   return (
     <FocusScope loop asChild trapped>
@@ -188,9 +195,7 @@ export function Inner({
           onDismiss={close}
           style={{display: 'flex', flexDirection: 'column'}}>
           {header}
-          <View style={[gtMobile ? a.p_2xl : a.p_xl, contentContainerStyle]}>
-            {children}
-          </View>
+          <View style={[gutters, contentContainerStyle]}>{children}</View>
         </DismissableLayer>
       </View>
     </FocusScope>

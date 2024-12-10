@@ -15,6 +15,7 @@ import {Breakpoints} from './Breakpoints'
 import {Buttons} from './Buttons'
 import {Dialogs} from './Dialogs'
 import {Forms} from './Forms'
+import {Gradients} from './Gradients'
 import {Icons} from './Icons'
 import {Links} from './Links'
 import {Menus} from './Menus'
@@ -126,6 +127,8 @@ function StorybookInner() {
             <Menus />
             <Breakpoints />
             <Dialogs />
+
+            <Gradients />
 
             <Button
               variant="solid"
