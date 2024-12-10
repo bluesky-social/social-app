@@ -5,7 +5,9 @@ import {useLingui} from '@lingui/react'
 
 import {BSKY_SERVICE} from '#/lib/constants'
 import * as persisted from '#/state/persisted'
+import {useSession} from '#/state/session'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {Admonition} from '#/components/Admonition'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
@@ -29,6 +31,9 @@ export function ServerInputDialog({
   )
   const [fixedOption, setFixedOption] = React.useState([BSKY_SERVICE])
   const [customAddress, setCustomAddress] = React.useState('')
+  const {accounts} = useSession()
+
+  const isFirstTimeUser = accounts.length === 0
 
   const onClose = React.useCallback(() => {
     let url
@@ -97,6 +102,15 @@ export function ServerInputDialog({
               </ToggleButton.ButtonText>
             </ToggleButton.Button>
           </ToggleButton.Group>
+
+          {fixedOption[0] === BSKY_SERVICE && isFirstTimeUser && (
+            <Admonition type="tip">
+              <Trans>
+                If you're new to Bluesky, we recommend using Bluesky Social as
+                your account host. You can always change this later.
+              </Trans>
+            </Admonition>
+          )}
 
           {fixedOption[0] === 'custom' && (
             <View
