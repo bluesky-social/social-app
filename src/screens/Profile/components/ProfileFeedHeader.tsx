@@ -250,59 +250,70 @@ export function ProfileFeedHeader({info}: {info: FeedSourceFeedInfo}) {
 
           {hasSession && (
             <Layout.Header.Slot>
-              <Menu.Root>
-                <Menu.Trigger label={_(msg`Open feed options menu`)}>
-                  {({props}) => {
-                    return (
-                      <Button
-                        {...props}
-                        label={_(msg`Open feed options menu`)}
-                        size="small"
-                        variant="ghost"
-                        shape="square"
-                        color="secondary">
-                        {isPinned ? (
-                          <PinFilled size="lg" fill={t.palette.primary_500} />
-                        ) : (
-                          <ButtonIcon icon={Pin} size="lg" />
-                        )}
-                      </Button>
-                    )
-                  }}
-                </Menu.Trigger>
+              {isPinned ? (
+                <Menu.Root>
+                  <Menu.Trigger label={_(msg`Open feed options menu`)}>
+                    {({props}) => {
+                      return (
+                        <Button
+                          {...props}
+                          label={_(msg`Open feed options menu`)}
+                          size="small"
+                          variant="ghost"
+                          shape="square"
+                          color="secondary">
+                          {isPinned ? (
+                            <PinFilled size="lg" fill={t.palette.primary_500} />
+                          ) : (
+                            <ButtonIcon icon={Pin} size="lg" />
+                          )}
+                        </Button>
+                      )
+                    }}
+                  </Menu.Trigger>
 
-                <Menu.Outer>
-                  <Menu.Item
-                    disabled={isFeedStateChangePending}
-                    label={
-                      isPinned ? _(msg`Unpin from home`) : _(msg`Pin to home`)
-                    }
-                    onPress={onTogglePinned}>
-                    <Menu.ItemText>
-                      {isPinned ? _(msg`Unpin from home`) : _(msg`Pin to home`)}
-                    </Menu.ItemText>
-                    <Menu.ItemIcon icon={isPinned ? X : Pin} position="right" />
-                  </Menu.Item>
-                  <Menu.Item
-                    disabled={isFeedStateChangePending}
-                    label={
-                      isSaved
-                        ? _(msg`Remove from my feeds`)
-                        : _(msg`Save to my feeds`)
-                    }
-                    onPress={onToggleSaved}>
-                    <Menu.ItemText>
-                      {isSaved
-                        ? _(msg`Remove from my feeds`)
-                        : _(msg`Save to my feeds`)}
-                    </Menu.ItemText>
-                    <Menu.ItemIcon
-                      icon={isSaved ? Trash : Plus}
-                      position="right"
-                    />
-                  </Menu.Item>
-                </Menu.Outer>
-              </Menu.Root>
+                  <Menu.Outer>
+                    <Menu.Item
+                      disabled={isFeedStateChangePending}
+                      label={_(msg`Unpin from Home`)}
+                      onPress={onTogglePinned}>
+                      <Menu.ItemText>{_(msg`Unpin from home`)}</Menu.ItemText>
+                      <Menu.ItemIcon
+                        icon={isPinned ? X : Pin}
+                        position="right"
+                      />
+                    </Menu.Item>
+                    <Menu.Item
+                      disabled={isFeedStateChangePending}
+                      label={
+                        isSaved
+                          ? _(msg`Remove from my feeds`)
+                          : _(msg`Save to my feeds`)
+                      }
+                      onPress={onToggleSaved}>
+                      <Menu.ItemText>
+                        {isSaved
+                          ? _(msg`Remove from my feeds`)
+                          : _(msg`Save to my feeds`)}
+                      </Menu.ItemText>
+                      <Menu.ItemIcon
+                        icon={isSaved ? Trash : Plus}
+                        position="right"
+                      />
+                    </Menu.Item>
+                  </Menu.Outer>
+                </Menu.Root>
+              ) : (
+                <Button
+                  label={_(msg`Pin to Home`)}
+                  size="small"
+                  variant="ghost"
+                  shape="square"
+                  color="secondary"
+                  onPress={onTogglePinned}>
+                  <ButtonIcon icon={Pin} size="lg" />
+                </Button>
+              )}
             </Layout.Header.Slot>
           )}
         </Layout.Header.Outer>
