@@ -6,7 +6,7 @@ import {atoms as a, useGutters, useTheme, ViewStyleProp} from '#/alf'
 import {Link as InternalLink, LinkProps} from '#/components/Link'
 import {Text} from '#/components/Typography'
 
-export function Topic({topic, style}: {topic: string} & ViewStyleProp) {
+export function TopicLarge({topic, style}: {topic: string} & ViewStyleProp) {
   const t = useTheme()
   return (
     <View
@@ -18,7 +18,30 @@ export function Topic({topic, style}: {topic: string} & ViewStyleProp) {
         t.atoms.border_contrast_medium,
         style,
       ]}>
-      <Text style={[a.text_md, a.font_bold, a.leading_snug]} numberOfLines={1}>
+      <Text
+        style={[a.flex_1, a.text_md, a.font_bold, a.leading_tight]}
+        numberOfLines={1}>
+        {topic}
+      </Text>
+    </View>
+  )
+}
+
+export function TopicSmall({topic, style}: {topic: string} & ViewStyleProp) {
+  const t = useTheme()
+  return (
+    <View
+      style={[
+        a.p_xs,
+        a.px_sm,
+        a.rounded_sm,
+        a.border,
+        t.atoms.border_contrast_medium,
+        style,
+      ]}>
+      <Text
+        style={[a.flex_1, a.text_sm, a.font_bold, a.leading_tight]}
+        numberOfLines={1}>
         {topic}
       </Text>
     </View>
@@ -56,7 +79,7 @@ export function Grid({topics}: {topics: string[]}) {
       {topics.map(topic => (
         <Link key={topic} topic={topic}>
           {({hovered}) => (
-            <Topic
+            <TopicLarge
               topic={topic}
               style={[
                 hovered && [
@@ -71,3 +94,17 @@ export function Grid({topics}: {topics: string[]}) {
     </View>
   )
 }
+
+// temp
+export const TOPICS = [
+  '#atproto',
+  'South Korea',
+  'Wired',
+  'Basket Weaving',
+  'Coup',
+  'Chappel Roan',
+  'the juice',
+  'Superman',
+  '#FCF',
+  'Open Web',
+]
