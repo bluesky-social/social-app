@@ -137,7 +137,7 @@ export function NotificationFeed({
         <NotificationFeedItem
           item={item}
           moderationOpts={moderationOpts!}
-          hideTopBorder={index === 0}
+          hideTopBorder={index === 0 && item.notification.isRead}
         />
       )
     },
