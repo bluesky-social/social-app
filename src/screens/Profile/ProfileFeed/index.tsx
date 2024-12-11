@@ -36,7 +36,7 @@ import {ListRef} from '#/view/com/util/List'
 import {LoadLatestBtn} from '#/view/com/util/load-latest/LoadLatestBtn'
 import {LoadingScreen} from '#/view/com/util/LoadingScreen'
 import {Text} from '#/view/com/util/text/Text'
-import {ProfileSubpageHeader as NewHeader} from '#/screens/Profile/components/ProfileSubpageHeader'
+import {ProfileFeedHeader} from '#/screens/Profile/components/ProfileFeedHeader'
 import * as Layout from '#/components/Layout'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileFeed'>
@@ -163,7 +163,7 @@ export function ProfileFeedScreenInner({
 
   return (
     <>
-      <NewHeader info={feedInfo} />
+      <ProfileFeedHeader info={feedInfo} />
 
       <FeedFeedbackProvider value={feedFeedback}>
         <PostFeed

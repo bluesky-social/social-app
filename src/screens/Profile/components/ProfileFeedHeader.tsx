@@ -51,7 +51,7 @@ import {ReportDialog, useReportDialogControl} from '#/components/ReportDialog'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
 
-export function ProfileSubpageHeader({info}: {info: FeedSourceFeedInfo}) {
+export function ProfileFeedHeader({info}: {info: FeedSourceFeedInfo}) {
   const t = useTheme()
   const {_, i18n} = useLingui()
   const {hasSession} = useSession()
