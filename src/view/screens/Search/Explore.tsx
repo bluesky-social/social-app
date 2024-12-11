@@ -25,9 +25,10 @@ import {
   ProfileCardFeedLoadingPlaceholder,
 } from '#/view/com/util/LoadingPlaceholder'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, useTheme, ViewStyleProp} from '#/alf'
+import {atoms as a, tokens,useTheme, ViewStyleProp} from '#/alf'
 import {Button} from '#/components/Button'
 import * as FeedCard from '#/components/FeedCard'
+import {GradientFill} from '#/components/GradientFill'
 import {ArrowBottom_Stroke2_Corner0_Rounded as ArrowBottom} from '#/components/icons/Arrow'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {Props as SVGIconProps} from '#/components/icons/common'
@@ -41,11 +42,13 @@ import {Text} from '#/components/Typography'
 
 function SuggestedItemsHeader({
   title,
+  titleChild,
   description,
   style,
   icon: Icon,
 }: {
   title: string
+  titleChild?: React.ReactNode
   description: string
   icon: React.ComponentType<SVGIconProps>
 } & ViewStyleProp) {
@@ -69,6 +72,7 @@ function SuggestedItemsHeader({
             style={{marginLeft: -2}}
           />
           <Text style={[a.text_2xl, a.font_heavy, t.atoms.text]}>{title}</Text>
+          {titleChild}
         </View>
         <Text style={[t.atoms.text_contrast_high, a.leading_snug]}>
           {description}
@@ -342,13 +346,6 @@ export function Explore() {
     const i: ExploreScreenItems[] = []
 
     i.push({
-      type: 'header',
-      key: 'trending-topics-header',
-      title: _(msg`Trending (beta)`),
-      description: _(msg`What people are posting about now.`),
-      icon: Trending,
-    })
-    i.push({
       type: 'trendingTopics',
       key: `trending-topics`,
       topics: [
@@ -598,7 +595,25 @@ export function Explore() {
           )
         }
         case 'trendingTopics': {
-          return <TrendingTopics.Grid topics={item.topics} />
+          return (
+            <>
+              <SuggestedItemsHeader
+                title={_(msg`Trending`)}
+                description={_(msg`What people are posting about now.`)}
+                icon={Trending}
+                titleChild={
+                  <View
+                    style={[a.py_xs, a.px_sm, a.rounded_sm, a.overflow_hidden]}>
+                    <GradientFill gradient={tokens.gradients.primary} />
+                    <Text style={[a.text_md, a.font_heavy]}>BETA</Text>
+                  </View>
+                }
+              />
+              <View style={[a.pt_md, a.pb_lg]}>
+                <TrendingTopics.Grid topics={item.topics} />
+              </View>
+            </>
+          )
         }
         case 'suggestedStarterPacks': {
           return (
@@ -680,7 +695,7 @@ export function Explore() {
         }
       }
     },
-    [t, moderationOpts],
+    [_, t, moderationOpts],
   )
 
   // note: actually not a screen, instead it's nested within
