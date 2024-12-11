@@ -14,7 +14,7 @@ import {
 import {s} from '#/lib/styles'
 import {logger} from '#/logger'
 import {isNative} from '#/platform/detection'
-import {listenSoftReset} from '#/state/events'
+import {emitSoftReset, listenSoftReset} from '#/state/events'
 import {RQKEY as NOTIFS_RQKEY} from '#/state/queries/notifications/feed'
 import {
   useUnreadNotifications,
@@ -80,6 +80,7 @@ export function NotificationsScreen({}: Props) {
         component: (
           <NotificationsTab
             filter="all"
+            isActive={activeTab === 0}
             hasNew={hasNew}
             setIsLoadingLatest={setIsLoadingAll}
             checkUnread={checkUnreadAll}
@@ -91,6 +92,7 @@ export function NotificationsScreen({}: Props) {
         component: (
           <NotificationsTab
             filter="mentions"
+            isActive={activeTab === 1}
             hasNew={hasNew}
             setIsLoadingLatest={setIsLoadingConversations}
             checkUnread={checkUnreadConversations}
@@ -98,7 +100,7 @@ export function NotificationsScreen({}: Props) {
         ),
       },
     ]
-  }, [_, hasNew, checkUnreadAll, checkUnreadConversations])
+  }, [_, hasNew, checkUnreadAll, checkUnreadConversations, activeTab])
 
   return (
     <Layout.Screen testID="notificationsScreen">
@@ -126,7 +128,11 @@ export function NotificationsScreen({}: Props) {
         onPageSelected={onPageSelected}
         renderTabBar={props => (
           <Layout.Center style={web([a.sticky, a.z_10, {top: 0}])}>
-            <TabBar items={sections.map(section => section.title)} {...props} />
+            <TabBar
+              {...props}
+              items={sections.map(section => section.title)}
+              onPressSelected={() => emitSoftReset()}
+            />
           </Layout.Center>
         )}
         initialPage={0}>
@@ -148,11 +154,13 @@ export function NotificationsScreen({}: Props) {
 
 function NotificationsTab({
   filter,
+  isActive,
   hasNew,
   checkUnread,
   setIsLoadingLatest,
 }: {
   filter: 'all' | 'mentions'
+  isActive: boolean
   hasNew: boolean
   checkUnread: ({invalidate}: {invalidate: boolean}) => Promise<void>
   setIsLoadingLatest: (v: boolean) => void
@@ -163,6 +171,7 @@ function NotificationsTab({
   const scrollElRef = React.useRef<ListMethods>(null)
   const queryClient = useQueryClient()
   const isScreenFocused = useIsFocused()
+  const isFocusedAndActive = isScreenFocused && isActive
 
   // event handlers
   // =
@@ -210,17 +219,19 @@ function NotificationsTab({
   // =
   useFocusEffect(
     React.useCallback(() => {
-      setMinimalShellMode(false)
-      logger.debug('NotificationsScreen: Focus')
-      onFocusCheckLatest()
-    }, [setMinimalShellMode, onFocusCheckLatest]),
+      if (isFocusedAndActive) {
+        setMinimalShellMode(false)
+        logger.debug('NotificationsScreen: Focus')
+        onFocusCheckLatest()
+      }
+    }, [setMinimalShellMode, onFocusCheckLatest, isFocusedAndActive]),
   )
   React.useEffect(() => {
-    if (!isScreenFocused) {
+    if (!isFocusedAndActive) {
       return
     }
     return listenSoftReset(onPressLoadLatest)
-  }, [onPressLoadLatest, isScreenFocused])
+  }, [onPressLoadLatest, isFocusedAndActive])
 
   return (
     <>
