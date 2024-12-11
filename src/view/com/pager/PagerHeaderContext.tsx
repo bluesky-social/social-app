@@ -9,7 +9,8 @@ export const PagerHeaderContext = React.createContext<{
 } | null>(null)
 
 /**
- * Passes information about the
+ * Passes information about the scroll position and header height down via
+ * context for the pager header to consume.
  *
  * @platform ios, android
  */

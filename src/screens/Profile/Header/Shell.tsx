@@ -23,6 +23,7 @@ import {LabelsOnMe} from '#/components/moderation/LabelsOnMe'
 import {ProfileHeaderAlerts} from '#/components/moderation/ProfileHeaderAlerts'
 import {GrowableAvatar} from './GrowableAvatar'
 import {GrowableBanner} from './GrowableBanner'
+import {StatusBarShadow} from './StatusBarShadow'
 
 interface Props {
   profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>
@@ -101,6 +102,7 @@ let ProfileHeaderShell = ({
       <View
         pointerEvents={isIOS ? 'auto' : 'box-none'}
         style={[a.relative, {height: 150}]}>
+        <StatusBarShadow />
         <GrowableBanner
           backButton={
             <>
