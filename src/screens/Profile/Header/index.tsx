@@ -15,11 +15,14 @@ import {
 } from '@atproto/api'
 import {useIsFocused} from '@react-navigation/native'
 
+import {sanitizeDisplayName} from '#/lib/strings/display-names'
+import {sanitizeHandle} from '#/lib/strings/handles'
 import {isNative} from '#/platform/detection'
 import {useSetLightStatusBar} from '#/state/shell/light-status-bar'
 import {usePagerHeaderContext} from '#/view/com/pager/PagerHeaderContext'
 import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {atoms as a, useTheme} from '#/alf'
+import {Header} from '#/components/Layout'
 import {ProfileHeaderLabeler} from './ProfileHeaderLabeler'
 import {ProfileHeaderStandard} from './ProfileHeaderStandard'
 
@@ -87,6 +90,8 @@ export {ProfileHeader}
 
 const MinimalHeader = React.memo(function MinimalHeader({
   onLayout,
+  profile,
+  hideBackButton,
 }: {
   onLayout: (e: LayoutChangeEvent) => void
   profile: AppBskyActorDefs.ProfileViewDetailed
@@ -156,8 +161,19 @@ const MinimalHeader = React.memo(function MinimalHeader({
           paddingTop: insets.top,
         },
         animatedStyle,
-      ]}
-    />
+      ]}>
+      <Header.Outer>
+        {!hideBackButton && <Header.BackButton />}
+        <Header.Content align="left">
+          <Header.TitleText>
+            {sanitizeDisplayName(profile.displayName || profile.handle)}
+          </Header.TitleText>
+          <Header.SubtitleText>
+            {sanitizeHandle(profile.handle, '@')}
+          </Header.SubtitleText>
+        </Header.Content>
+      </Header.Outer>
+    </Animated.View>
   )
 })
 MinimalHeader.displayName = 'MinimalHeader'
