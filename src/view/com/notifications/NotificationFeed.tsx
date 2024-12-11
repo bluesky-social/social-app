@@ -15,7 +15,6 @@ import {s} from '#/lib/styles'
 import {logger} from '#/logger'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useNotificationFeedQuery} from '#/state/queries/notifications/feed'
-import {useUnreadNotificationsApi} from '#/state/queries/notifications/unread'
 import {EmptyState} from '#/view/com/util/EmptyState'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {List, ListRef} from '#/view/com/util/List'
@@ -32,22 +31,19 @@ export function NotificationFeed({
   onPressTryAgain,
   onScrolledDownChange,
   ListHeaderComponent,
-  overridePriorityNotifications,
+  refreshNotifications,
 }: {
   scrollElRef?: ListRef
   onPressTryAgain?: () => void
   onScrolledDownChange: (isScrolledDown: boolean) => void
   ListHeaderComponent?: () => JSX.Element
-  overridePriorityNotifications?: boolean
+  refreshNotifications: () => Promise<void>
 }) {
   const initialNumToRender = useInitialNumToRender()
-
   const [isPTRing, setIsPTRing] = React.useState(false)
   const pal = usePalette('default')
-
   const {_} = useLingui()
   const moderationOpts = useModerationOpts()
-  const {checkUnread} = useUnreadNotificationsApi()
   const {
     data,
     isFetching,
@@ -59,7 +55,6 @@ export function NotificationFeed({
     fetchNextPage,
   } = useNotificationFeedQuery({
     enabled: !!moderationOpts,
-    overridePriorityNotifications,
   })
   const isEmpty = !isFetching && !data?.pages[0]?.items.length
 
@@ -85,7 +80,7 @@ export function NotificationFeed({
   const onRefresh = React.useCallback(async () => {
     try {
       setIsPTRing(true)
-      await checkUnread({invalidate: true})
+      await refreshNotifications()
     } catch (err) {
       logger.error('Failed to refresh notifications feed', {
         message: err,
@@ -93,7 +88,7 @@ export function NotificationFeed({
     } finally {
       setIsPTRing(false)
     }
-  }, [checkUnread, setIsPTRing])
+  }, [refreshNotifications, setIsPTRing])
 
   const onEndReached = React.useCallback(async () => {
     if (isFetching || !hasNextPage || isError) return

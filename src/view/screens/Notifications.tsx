@@ -126,8 +126,8 @@ function NotificationsTab({
   const [isScrolledDown, setIsScrolledDown] = React.useState(false)
   const scrollElRef = React.useRef<ListMethods>(null)
   const queryClient = useQueryClient()
-  const unreadApi = useUnreadNotificationsApi()
   const isScreenFocused = useIsFocused()
+  const {checkUnread} = useUnreadNotificationsApi()
 
   // event handlers
   // =
@@ -144,12 +144,11 @@ function NotificationsTab({
     } else {
       // check with the server
       setIsLoadingLatest(true)
-      unreadApi
-        .checkUnread({invalidate: true})
+      checkUnread({invalidate: true})
         .catch(() => undefined)
         .then(() => setIsLoadingLatest(false))
     }
-  }, [scrollToTop, queryClient, unreadApi, hasNew, setIsLoadingLatest])
+  }, [scrollToTop, queryClient, checkUnread, hasNew, setIsLoadingLatest])
 
   const onFocusCheckLatest = useNonReactiveCallback(() => {
     // on focus, check for latest, but only invalidate if the user
@@ -162,7 +161,7 @@ function NotificationsTab({
       // we're just going to look it up synchronously.
       currentIsScrolledDown = window.scrollY > 200
     }
-    unreadApi.checkUnread({invalidate: !currentIsScrolledDown})
+    checkUnread({invalidate: !currentIsScrolledDown})
   })
 
   // on-visible setup
@@ -185,9 +184,9 @@ function NotificationsTab({
     <>
       <MainScrollProvider>
         <NotificationFeed
+          refreshNotifications={() => checkUnread({invalidate: true})}
           onScrolledDownChange={setIsScrolledDown}
           scrollElRef={scrollElRef}
-          overridePriorityNotifications={false}
         />
       </MainScrollProvider>
       {(isScrolledDown || hasNew) && (
