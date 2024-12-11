@@ -14,6 +14,8 @@ if (process.env.BSKY_PROFILE) {
   cfg.cacheVersion += ':PROFILE'
 }
 
+cfg.resolver.assetExts = [...cfg.resolver.assetExts, 'woff2']
+
 cfg.resolver.resolveRequest = (context, moduleName, platform) => {
   // HACK: manually resolve a few packages that use `exports` in `package.json`.
   // A proper solution is to enable `unstable_enablePackageExports` but this needs careful testing.
