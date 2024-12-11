@@ -104,33 +104,3 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
     </View>
   )
 }
-<<<<<<< HEAD
-
-const styles = StyleSheet.create({
-  rightNav: {
-    // @ts-ignore web only
-    position: 'fixed',
-    // @ts-ignore web only
-    left: 'calc(50vw + 300px + 20px)',
-    width: 300,
-    maxHeight: '100%',
-    overflowY: 'auto',
-    zIndex: 1,
-  },
-
-  message: {
-    paddingVertical: 18,
-    paddingHorizontal: 12,
-  },
-  messageLine: {
-    marginBottom: 10,
-  },
-  desktopFeedsContainer: {
-    borderTopWidth: StyleSheet.hairlineWidth,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    marginTop: 18,
-    marginBottom: 18,
-  },
-})
-=======
->>>>>>> main
