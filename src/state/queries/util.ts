@@ -8,7 +8,7 @@ import {
 } from '@atproto/api'
 import {InfiniteData, QueryClient, QueryKey} from '@tanstack/react-query'
 
-export function truncateAndInvalidate<T = any>(
+export async function truncateAndInvalidate<T = any>(
   queryClient: QueryClient,
   queryKey: QueryKey,
 ) {
@@ -21,7 +21,7 @@ export function truncateAndInvalidate<T = any>(
     }
     return data
   })
-  queryClient.invalidateQueries({queryKey})
+  return queryClient.invalidateQueries({queryKey})
 }
 
 // Given an AtUri, this function will check if the AtUri matches a
