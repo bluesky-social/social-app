@@ -6,6 +6,7 @@ export function GradientFill({
   gradient,
 }: {
   gradient:
+    | typeof tokens.gradients.primary
     | typeof tokens.gradients.sky
     | typeof tokens.gradients.midnight
     | typeof tokens.gradients.sunrise
