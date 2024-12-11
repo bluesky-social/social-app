@@ -39,17 +39,11 @@ type Props = NativeStackScreenProps<
   NotificationsTabNavigatorParams,
   'Notifications'
 >
-export function NotificationsScreen({route: {params}}: Props) {
-  return (
-    <NotificationsTab overridePriorityNotifications={params?.show === 'all'} />
-  )
+export function NotificationsScreen({}: Props) {
+  return <NotificationsTab />
 }
 
-function NotificationsTab({
-  overridePriorityNotifications,
-}: {
-  overridePriorityNotifications: boolean
-}) {
+function NotificationsTab() {
   const t = useTheme()
   const {gtTablet} = useBreakpoints()
   const {_} = useLingui()
@@ -169,7 +163,7 @@ function NotificationsTab({
         <NotificationFeed
           onScrolledDownChange={setIsScrolledDown}
           scrollElRef={scrollElRef}
-          overridePriorityNotifications={overridePriorityNotifications}
+          overridePriorityNotifications={false}
         />
       </MainScrollProvider>
       {(isScrolledDown || hasNew) && (
