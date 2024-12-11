@@ -176,7 +176,8 @@ export function ProfileSubpageHeader({info}: {info: FeedSourceFeedInfo}) {
                       a.rounded_sm,
                       a.transition_transform,
                       t.atoms.bg_contrast_25,
-                      (hovered || pressed) && {
+                      pressed && t.atoms.bg_contrast_50,
+                      hovered && {
                         transform: [{scaleX: 1.01}, {scaleY: 1.1}],
                       },
                     ]}
