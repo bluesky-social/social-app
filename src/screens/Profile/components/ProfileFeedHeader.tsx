@@ -124,9 +124,9 @@ export function ProfileFeedHeader({info}: {info: FeedSourceFeedInfo}) {
         ])
 
         if (pinned) {
-          Toast.show(_(msg`Pinned to your home screen`))
+          Toast.show(_(msg`Pinned ${info.displayName} to Home`))
         } else {
-          Toast.show(_(msg`Un-pinned from your home screen`))
+          Toast.show(_(msg`Un-pinned ${info.displayName} from Home`))
         }
       } else {
         await addSavedFeeds([
@@ -136,7 +136,7 @@ export function ProfileFeedHeader({info}: {info: FeedSourceFeedInfo}) {
             pinned: true,
           },
         ])
-        Toast.show(_(msg`Pinned to your home screen`))
+        Toast.show(_(msg`Pinned ${info.displayName} to Home`))
       }
     } catch (e) {
       Toast.show(_(msg`There was an issue contacting the server`), 'xmark')
@@ -166,7 +166,10 @@ export function ProfileFeedHeader({info}: {info: FeedSourceFeedInfo}) {
                   paddingRight: 12,
                 },
               ]}
-              onPress={() => infoControl.open()}>
+              onPress={() => {
+                playHaptic()
+                infoControl.open()
+              }}>
               {({hovered, pressed}) => (
                 <>
                   <View
@@ -253,9 +256,7 @@ export function ProfileFeedHeader({info}: {info: FeedSourceFeedInfo}) {
                     return (
                       <Button
                         {...props}
-                        label={_(
-                          msg`Pin ${info.displayName} to your home screen`,
-                        )}
+                        label={_(msg`Open feed options menu`)}
                         size="small"
                         variant="ghost"
                         shape="square"
@@ -381,9 +382,10 @@ function DialogInner({
   }, [playHaptic, isLiked, likeUri, unlikeFeed, setLikeUri, likeFeed, info, _])
 
   const onPressShare = React.useCallback(() => {
+    playHaptic()
     const url = toShareUrl(info.route.href)
     shareUrl(url)
-  }, [info])
+  }, [info, playHaptic])
 
   const onPressReport = React.useCallback(() => {
     reportDialogControl.open()
@@ -459,7 +461,7 @@ function DialogInner({
           <View style={[a.flex_row, a.gap_sm, a.align_center, a.pt_sm]}>
             <Button
               disabled={isLikePending || isUnlikePending}
-              label={_(msg`Report feed`)}
+              label={_(msg`Like feed`)}
               size="small"
               variant="solid"
               color="secondary"
@@ -477,7 +479,7 @@ function DialogInner({
             </Button>
             <Button
               disabled={isFeedStateChangePending}
-              label={_(msg`Report feed`)}
+              label={isPinned ? _(msg`Unpin feed`) : _(msg`Pin feed`)}
               size="small"
               variant="solid"
               color={isPinned ? 'secondary' : 'primary'}
