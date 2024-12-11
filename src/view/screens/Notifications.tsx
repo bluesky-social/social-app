@@ -93,7 +93,7 @@ export function NotificationsScreen({}: Props) {
           <NotificationsTab
             filter="mentions"
             isActive={activeTab === 1}
-            hasNew={hasNew}
+            hasNew={false /* We don't know for sure */}
             setIsLoadingLatest={setIsLoadingConversations}
             checkUnread={checkUnreadConversations}
           />
