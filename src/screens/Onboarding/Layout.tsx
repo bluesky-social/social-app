@@ -1,12 +1,11 @@
 import React from 'react'
-import {View} from 'react-native'
+import {ScrollView, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {isWeb} from '#/platform/detection'
 import {useOnboardingDispatch} from '#/state/shell'
-import {ScrollView} from '#/view/com/util/Views'
 import {Context} from '#/screens/Onboarding/state'
 import {
   atoms as a,

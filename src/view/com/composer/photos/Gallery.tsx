@@ -124,7 +124,7 @@ type GalleryItemProps = {
   image: ComposerImage
   altTextControlStyle?: ViewStyle
   imageControlsStyle?: ViewStyle
-  imageStyle?: ViewStyle
+  imageStyle?: ImageStyle
   onChange: (next: ComposerImage) => void
   onRemove: () => void
 }
@@ -160,7 +160,7 @@ const GalleryItem = ({
 
   return (
     <View
-      style={imageStyle}
+      style={imageStyle as ViewStyle}
       // Fixes ALT and icons appearing with half opacity when the post is inactive
       renderToHardwareTextureAndroid>
       <TouchableOpacity
@@ -221,7 +221,7 @@ const GalleryItem = ({
 
       <Image
         testID="selectedPhotoImage"
-        style={[styles.image, imageStyle] as ImageStyle}
+        style={[styles.image, imageStyle]}
         source={{
           uri: (image.transformed ?? image.source).path,
         }}

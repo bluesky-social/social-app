@@ -32,7 +32,6 @@ import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
-import {CenteredView} from '#/view/com/util/Views'
 import {atoms as a, useTheme} from '#/alf'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
 import {Text} from '#/components/Typography'
@@ -90,7 +89,7 @@ export function PostThread({uri}: {uri: string | undefined}) {
   const {hasSession, currentAccount} = useSession()
   const {_} = useLingui()
   const t = useTheme()
-  const {isMobile, isTabletOrMobile} = useWebMediaQueries()
+  const {isMobile} = useWebMediaQueries()
   const initialNumToRender = useInitialNumToRender()
   const {height: windowHeight} = useWindowDimensions()
   const [hiddenRepliesState, setHiddenRepliesState] = React.useState(
@@ -104,6 +103,7 @@ export function PostThread({uri}: {uri: string | undefined}) {
     error: threadError,
     refetch,
     data: {thread, threadgate} = {},
+    dataUpdatedAt: fetchedAt,
   } = usePostThreadQuery(uri)
 
   const treeView = React.useMemo(
@@ -171,6 +171,8 @@ export function PostThread({uri}: {uri: string | undefined}) {
     () => new Set<string>(),
   )
 
+  const [fetchedAtCache] = React.useState(() => new Map<string, number>())
+  const [randomCache] = React.useState(() => new Map<string, number>())
   const skeleton = React.useMemo(() => {
     const threadViewPrefs = preferences?.threadViewPrefs
     if (!threadViewPrefs || !thread) return null
@@ -183,6 +185,9 @@ export function PostThread({uri}: {uri: string | undefined}) {
         currentDid,
         justPostedUris,
         threadgateHiddenReplies,
+        fetchedAtCache,
+        fetchedAt,
+        randomCache,
       ),
       currentDid,
       treeView,
@@ -199,6 +204,9 @@ export function PostThread({uri}: {uri: string | undefined}) {
     hiddenRepliesState,
     justPostedUris,
     threadgateHiddenReplies,
+    fetchedAtCache,
+    fetchedAt,
+    randomCache,
   ])
 
   const error = React.useMemo(() => {
@@ -359,8 +367,7 @@ export function PostThread({uri}: {uri: string | undefined}) {
     skeleton?.highlightedPost?.type === 'post' &&
     (skeleton.highlightedPost.ctx.isParentLoading ||
       Boolean(skeleton?.parents && skeleton.parents.length > 0))
-  const showHeader =
-    isNative || (isTabletOrMobile && (!hasParents || !isFetching))
+  const showHeader = isNative || !hasParents || !isFetching
 
   const renderItem = ({item, index}: {item: RowItem; index: number}) => {
     if (item === REPLY_PROMPT && hasSession) {
@@ -475,7 +482,7 @@ export function PostThread({uri}: {uri: string | undefined}) {
   }
 
   return (
-    <CenteredView style={[a.flex_1]} sideBorders={true}>
+    <>
       {showHeader && (
         <ViewHeader
           title={_(msg({message: `Post`, context: 'description'}))}
@@ -522,7 +529,7 @@ export function PostThread({uri}: {uri: string | undefined}) {
       {isMobile && canReply && hasSession && (
         <MobileComposePrompt onPressReply={onPressReply} />
       )}
-    </CenteredView>
+    </>
   )
 }
 
@@ -535,7 +542,7 @@ function MobileComposePrompt({onPressReply}: {onPressReply: () => unknown}) {
         styles.prompt,
         fabMinimalShellTransform,
         {
-          bottom: clamp(safeAreaInsets.bottom, 15, 30),
+          bottom: clamp(safeAreaInsets.bottom, 13, 30),
         },
       ]}>
       <PostThreadComposePrompt onPressCompose={onPressReply} />

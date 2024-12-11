@@ -388,7 +388,7 @@ export function Explore() {
       key: 'suggested-feeds-header',
       title: _(msg`Discover new feeds`),
       description: _(
-        msg`Custom feeds built by the community bring you new experiences and help you find the content you love.`,
+        msg`Choose your own timeline! Feeds built by the community help you find content you love.`,
       ),
       style: [a.pt_5xl],
       icon: ListSparkle,

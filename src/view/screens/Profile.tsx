@@ -32,7 +32,7 @@ import {resetProfilePostsQueries} from '#/state/queries/post-feed'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useResolveDidQuery} from '#/state/queries/resolve-uri'
 import {useAgent, useSession} from '#/state/session'
-import {useSetDrawerSwipeDisabled, useSetMinimalShellMode} from '#/state/shell'
+import {useSetMinimalShellMode} from '#/state/shell'
 import {useComposerControls} from '#/state/shell/composer'
 import {ProfileFeedgens} from '#/view/com/feeds/ProfileFeedgens'
 import {ProfileLists} from '#/view/com/lists/ProfileLists'
@@ -40,11 +40,9 @@ import {PagerWithHeader} from '#/view/com/pager/PagerWithHeader'
 import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
 import {FAB} from '#/view/com/util/fab/FAB'
 import {ListRef} from '#/view/com/util/List'
-import {CenteredView} from '#/view/com/util/Views'
 import {ProfileHeader, ProfileHeaderLoading} from '#/screens/Profile/Header'
 import {ProfileFeedSection} from '#/screens/Profile/Sections/Feed'
 import {ProfileLabelsSection} from '#/screens/Profile/Sections/Labels'
-import {web} from '#/alf'
 import * as Layout from '#/components/Layout'
 import {ScreenHider} from '#/components/moderation/ScreenHider'
 import {ProfileStarterPacks} from '#/components/StarterPack/ProfileStarterPacks'
@@ -116,9 +114,9 @@ function ProfileScreenInner({route}: Props) {
   // Most pushes will happen here, since we will have only placeholder data
   if (isLoadingDid || isLoadingProfile || starterPacksQuery.isLoading) {
     return (
-      <CenteredView sideBorders style={web({height: '100vh'})}>
+      <Layout.Content>
         <ProfileHeaderLoading />
-      </CenteredView>
+      </Layout.Content>
     )
   }
   if (resolveError || profileError) {
@@ -185,7 +183,6 @@ function ProfileScreenLoaded({
   })
   const [currentPage, setCurrentPage] = React.useState(0)
   const {_} = useLingui()
-  const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
 
   const [scrollViewTag, setScrollViewTag] = React.useState<number | null>(null)
 
@@ -307,15 +304,6 @@ function ProfileScreenLoaded({
         scrollSectionToTop(currentPage)
       })
     }, [setMinimalShellMode, currentPage, scrollSectionToTop]),
-  )
-
-  useFocusEffect(
-    React.useCallback(() => {
-      setDrawerSwipeDisabled(currentPage > 0)
-      return () => {
-        setDrawerSwipeDisabled(false)
-      }
-    }, [setDrawerSwipeDisabled, currentPage]),
   )
 
   // events

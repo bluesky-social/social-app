@@ -7,7 +7,7 @@ import {PROD_DEFAULT_FEED} from '#/lib/constants'
 import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {FeedDescriptor, FeedPostSliceItem} from '#/state/queries/post-feed'
-import {getFeedPostSlice} from '#/view/com/posts/Feed'
+import {getFeedPostSlice} from '#/view/com/posts/PostFeed'
 import {useAgent} from './session'
 
 type StateContext = {
