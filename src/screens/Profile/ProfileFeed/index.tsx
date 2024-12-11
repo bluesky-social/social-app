@@ -1,5 +1,5 @@
 import React, {useCallback, useMemo} from 'react'
-import {StyleSheet, View} from 'react-native'
+import {Dimensions, StyleSheet, View} from 'react-native'
 import {useAnimatedRef} from 'react-native-reanimated'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -93,9 +93,7 @@ export function ProfileFeedScreen(props: Props) {
 
   return resolvedUri ? (
     <Layout.Screen noInsetTop>
-      <Layout.Center>
-        <ProfileFeedScreenIntermediate feedUri={resolvedUri.uri} />
-      </Layout.Center>
+      <ProfileFeedScreenIntermediate feedUri={resolvedUri.uri} />
     </Layout.Screen>
   ) : (
     <Layout.Screen>
@@ -162,7 +160,12 @@ export function ProfileFeedScreenInner({
   }, [_])
 
   return (
-    <>
+    <View
+      style={[
+        isNative && {
+          height: Dimensions.get('window').height,
+        },
+      ]}>
       <ProfileFeedHeader info={feedInfo} />
 
       <FeedFeedbackProvider value={feedFeedback}>
@@ -201,7 +204,7 @@ export function ProfileFeedScreenInner({
           accessibilityHint=""
         />
       )}
-    </>
+    </View>
   )
 }
 
