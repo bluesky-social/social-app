@@ -190,7 +190,6 @@ export function ProfileSubpageHeader({info}: {info: FeedSourceFeedInfo}) {
                     )}
 
                     <View style={[a.flex_1]}>
-                      {/* Should roughly match Layout.Header.TitleText */}
                       <Text
                         style={[
                           a.text_md,
@@ -201,8 +200,7 @@ export function ProfileSubpageHeader({info}: {info: FeedSourceFeedInfo}) {
                         numberOfLines={2}>
                         {info.displayName}
                       </Text>
-                      {/* Should roughly match Layout.Header.SubtitleText */}
-                      <View style={[a.flex_row, a.gap_xs]}>
+                      <View style={[a.flex_row, {gap: 6}]}>
                         <Text
                           style={[
                             a.flex_shrink,
@@ -479,7 +477,7 @@ function DialogInner({
               onPress={onToggleLiked}
               style={[a.flex_1]}>
               {isLiked ? (
-                <HeartFilled size="sm" fill={t.palette.negative_500} />
+                <HeartFilled size="sm" fill={t.palette.like} />
               ) : (
                 <ButtonIcon icon={Heart} position="left" />
               )}
