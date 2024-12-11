@@ -1,11 +1,12 @@
 import React, {useCallback, useMemo} from 'react'
-import {Pressable, StyleSheet, View} from 'react-native'
+import {Pressable, StyleSheet, View, ScrollView} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useIsFocused, useNavigation} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 import {useQueryClient} from '@tanstack/react-query'
+import {useAnimatedRef} from 'react-native-reanimated'
 
 import {HITSLOP_20} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
@@ -38,7 +39,6 @@ import {useResolveUriQuery} from '#/state/queries/resolve-uri'
 import {truncateAndInvalidate} from '#/state/queries/util'
 import {useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
-import {PagerWithHeader} from '#/view/com/pager/PagerWithHeader'
 import {PostFeed} from '#/view/com/posts/PostFeed'
 import {ProfileSubpageHeader} from '#/view/com/profile/ProfileSubpageHeader'
 import {EmptyState} from '#/view/com/util/EmptyState'
@@ -66,7 +66,7 @@ import * as Menu from '#/components/Menu'
 import {ReportDialog, useReportDialogControl} from '#/components/ReportDialog'
 import {RichText} from '#/components/RichText'
 
-const SECTION_TITLES = ['Posts']
+import {ProfileSubpageHeader as NewHeader} from '#/screens/Profile/components/ProfileSubpageHeader'
 
 interface SectionRef {
   scrollToTop: () => void
@@ -125,8 +125,10 @@ export function ProfileFeedScreen(props: Props) {
   }
 
   return resolvedUri ? (
-    <Layout.Screen>
-      <ProfileFeedScreenIntermediate feedUri={resolvedUri.uri} />
+    <Layout.Screen noInsetTop>
+      <Layout.Center>
+        <ProfileFeedScreenIntermediate feedUri={resolvedUri.uri} />
+      </Layout.Center>
     </Layout.Screen>
   ) : (
     <Layout.Screen>
@@ -164,7 +166,6 @@ export function ProfileFeedScreenInner({
   const reportDialogControl = useReportDialogControl()
   const {openComposer} = useComposerControls()
   const playHaptic = useHaptics()
-  const feedSectionRef = React.useRef<SectionRef>(null)
   const isScreenFocused = useIsFocused()
 
   const {mutateAsync: addSavedFeeds, isPending: isAddSavedFeedPending} =
@@ -257,18 +258,9 @@ export function ProfileFeedScreenInner({
     reportDialogControl.open()
   }, [reportDialogControl])
 
-  const onCurrentPageSelected = React.useCallback(
-    (index: number) => {
-      if (index === 0) {
-        feedSectionRef.current?.scrollToTop()
-      }
-    },
-    [feedSectionRef],
-  )
-
   const renderHeader = useCallback(() => {
     return (
-      <>
+      <View>
         <ProfileSubpageHeader
           isLoading={false}
           href={feedInfo.route.href}
@@ -370,12 +362,13 @@ export function ProfileFeedScreenInner({
             </Menu.Root>
           </View>
         </ProfileSubpageHeader>
+
         <AboutSection
           feedOwnerDid={feedInfo.creatorDid}
           feedRkey={feedInfo.route.params.rkey}
           feedInfo={feedInfo}
         />
-      </>
+      </View>
     )
   }, [
     _,
@@ -392,6 +385,34 @@ export function ProfileFeedScreenInner({
     isPending,
   ])
 
+  const feed = `feedgen|${feedInfo.uri}` as FeedDescriptor
+
+    const [hasNew, setHasNew] = React.useState(false)
+    const [isScrolledDown, setIsScrolledDown] = React.useState(false)
+    const queryClient = useQueryClient()
+    const feedFeedback = useFeedFeedback(feed, hasSession)
+    const scrollElRef = useAnimatedRef() as ListRef
+
+    const onScrollToTop = useCallback(() => {
+      scrollElRef.current?.scrollToOffset({
+        animated: isNative,
+        offset: 0, // -headerHeight,
+      })
+      truncateAndInvalidate(queryClient, FEED_RQKEY(feed))
+      setHasNew(false)
+    }, [scrollElRef, queryClient, feed, setHasNew])
+
+    React.useEffect(() => {
+      if (!isScreenFocused) {
+        return
+      }
+      return listenSoftReset(onScrollToTop)
+    }, [onScrollToTop, isScreenFocused])
+
+    const renderPostsEmpty = useCallback(() => {
+      return <EmptyState icon="hashtag" message={_(msg`This feed is empty.`)} />
+    }, [_])
+
   return (
     <>
       <ReportDialog
@@ -402,21 +423,35 @@ export function ProfileFeedScreenInner({
           cid: feedInfo.cid,
         }}
       />
-      <PagerWithHeader
-        items={SECTION_TITLES}
-        isHeaderReady={true}
-        renderHeader={renderHeader}
-        onCurrentPageSelected={onCurrentPageSelected}>
-        {({headerHeight, scrollElRef, isFocused}) => (
-          <FeedSection
-            ref={feedSectionRef}
-            feed={`feedgen|${feedInfo.uri}`}
-            headerHeight={headerHeight}
-            scrollElRef={scrollElRef as ListRef}
-            isFocused={isScreenFocused && isFocused}
-          />
-        )}
-      </PagerWithHeader>
+
+      <NewHeader
+        title={feedInfo.displayName}
+        avatar={feedInfo.avatar}
+        creator={{did: feedInfo.creatorDid, handle: feedInfo.creatorHandle}}
+        likeCount={feedInfo.likeCount || 0}
+      />
+
+      <FeedFeedbackProvider value={feedFeedback}>
+        <PostFeed
+          feed={feed}
+          pollInterval={60e3}
+          disablePoll={hasNew}
+          onHasNew={setHasNew}
+          scrollElRef={scrollElRef}
+          onScrolledDownChange={setIsScrolledDown}
+          renderEmptyState={renderPostsEmpty}
+          ListHeaderComponent={renderHeader}
+        />
+      </FeedFeedbackProvider>
+
+      {(isScrolledDown || hasNew) && (
+        <LoadLatestBtn
+          onPress={onScrollToTop}
+          label={_(msg`Load new posts`)}
+          showIndicator={hasNew}
+        />
+      )}
+
       {hasSession && (
         <FAB
           testID="composeFAB"
@@ -436,73 +471,6 @@ export function ProfileFeedScreenInner({
     </>
   )
 }
-
-interface FeedSectionProps {
-  feed: FeedDescriptor
-  headerHeight: number
-  scrollElRef: ListRef
-  isFocused: boolean
-}
-const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
-  function FeedSectionImpl({feed, headerHeight, scrollElRef, isFocused}, ref) {
-    const {_} = useLingui()
-    const [hasNew, setHasNew] = React.useState(false)
-    const [isScrolledDown, setIsScrolledDown] = React.useState(false)
-    const queryClient = useQueryClient()
-    const isScreenFocused = useIsFocused()
-    const {hasSession} = useSession()
-    const feedFeedback = useFeedFeedback(feed, hasSession)
-
-    const onScrollToTop = useCallback(() => {
-      scrollElRef.current?.scrollToOffset({
-        animated: isNative,
-        offset: -headerHeight,
-      })
-      truncateAndInvalidate(queryClient, FEED_RQKEY(feed))
-      setHasNew(false)
-    }, [scrollElRef, headerHeight, queryClient, feed, setHasNew])
-
-    React.useImperativeHandle(ref, () => ({
-      scrollToTop: onScrollToTop,
-    }))
-
-    React.useEffect(() => {
-      if (!isScreenFocused) {
-        return
-      }
-      return listenSoftReset(onScrollToTop)
-    }, [onScrollToTop, isScreenFocused])
-
-    const renderPostsEmpty = useCallback(() => {
-      return <EmptyState icon="hashtag" message={_(msg`This feed is empty.`)} />
-    }, [_])
-
-    return (
-      <View>
-        <FeedFeedbackProvider value={feedFeedback}>
-          <PostFeed
-            enabled={isFocused}
-            feed={feed}
-            pollInterval={60e3}
-            disablePoll={hasNew}
-            scrollElRef={scrollElRef}
-            onHasNew={setHasNew}
-            onScrolledDownChange={setIsScrolledDown}
-            renderEmptyState={renderPostsEmpty}
-            headerOffset={headerHeight}
-          />
-        </FeedFeedbackProvider>
-        {(isScrolledDown || hasNew) && (
-          <LoadLatestBtn
-            onPress={onScrollToTop}
-            label={_(msg`Load new posts`)}
-            showIndicator={hasNew}
-          />
-        )}
-      </View>
-    )
-  },
-)
 
 function AboutSection({
   feedOwnerDid,
