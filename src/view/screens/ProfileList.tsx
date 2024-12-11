@@ -889,7 +889,11 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
                   <Trans>
                     User list by{' '}
                     <TextLink
-                      text={sanitizeHandle(list.creator.handle || '', '@')}
+                      text={sanitizeHandle(
+                        list.creator.handle || '',
+                        '@',
+                        false,
+                      )}
                       href={makeProfileLink(list.creator)}
                       style={pal.textLight}
                     />
@@ -901,7 +905,7 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
                 <Trans>
                   Moderation list by{' '}
                   <TextLink
-                    text={sanitizeHandle(list.creator.handle || '', '@')}
+                    text={sanitizeHandle(list.creator.handle || '', '@', false)}
                     href={makeProfileLink(list.creator)}
                     style={pal.textLight}
                   />

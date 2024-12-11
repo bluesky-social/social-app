@@ -702,7 +702,7 @@ function ExpandedAuthorsList({
                     author.profile.displayName || author.profile.handle,
                   )}
                 </Text>{' '}
-                <Text style={[pal.textLight]} lineHeight={1.2}>
+                <Text emoji style={[pal.textLight]} lineHeight={1.2}>
                   {sanitizeHandle(author.profile.handle, '@')}
                 </Text>
               </Text>

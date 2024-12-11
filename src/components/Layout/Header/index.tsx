@@ -186,6 +186,7 @@ export function SubtitleText({children}: {children: React.ReactNode}) {
   const align = useContext(AlignmentContext)
   return (
     <Text
+      emoji
       style={[
         a.text_sm,
         a.leading_snug,

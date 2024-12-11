@@ -131,7 +131,7 @@ export function TitleAndByline({
         <Text
           style={[a.leading_snug, t.atoms.text_contrast_medium]}
           numberOfLines={1}>
-          <Trans>Feed by {sanitizeHandle(creator.handle, '@')}</Trans>
+          <Trans>Feed by {sanitizeHandle(creator.handle, '@', false)}</Trans>
         </Text>
       )}
     </View>
@@ -174,14 +174,16 @@ export function Description({
   description,
   ...rest
 }: {description?: string} & Partial<RichTextProps>) {
-  const rt = React.useMemo(() => {
+  const rtMemo = React.useMemo(() => {
     if (!description) return
     const rt = new RichTextApi({text: description || ''})
     rt.detectFacetsWithoutResolution()
     return rt
   }, [description])
-  if (!rt) return null
-  return <RichText value={rt} style={[a.leading_snug]} disableLinks {...rest} />
+  if (!rtMemo) return null
+  return (
+    <RichText value={rtMemo} style={[a.leading_snug]} disableLinks {...rest} />
+  )
 }
 
 export function DescriptionPlaceholder() {

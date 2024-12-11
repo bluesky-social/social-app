@@ -136,7 +136,7 @@ let SearchProfileCard = ({
               moderation.ui('displayName'),
             )}
           </Text>
-          <Text type="md" style={[pal.textLight]} numberOfLines={1}>
+          <Text emoji type="md" style={[pal.textLight]} numberOfLines={1}>
             {sanitizeHandle(profile.handle, '@')}
           </Text>
         </View>
