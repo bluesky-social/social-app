@@ -13,8 +13,8 @@ import {
 } from '#/lib/routes/types'
 import {s} from '#/lib/styles'
 import {logger} from '#/logger'
-import {isNative, isWeb} from '#/platform/detection'
-import {emitSoftReset, listenSoftReset} from '#/state/events'
+import {isNative} from '#/platform/detection'
+import {listenSoftReset} from '#/state/events'
 import {RQKEY as NOTIFS_RQKEY} from '#/state/queries/notifications/feed'
 import {
   useUnreadNotifications,
@@ -30,9 +30,9 @@ import {FAB} from '#/view/com/util/fab/FAB'
 import {ListMethods} from '#/view/com/util/List'
 import {LoadLatestBtn} from '#/view/com/util/load-latest/LoadLatestBtn'
 import {MainScrollProvider} from '#/view/com/util/MainScrollProvider'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a} from '#/alf'
 import {web} from '#/alf'
-import {Button, ButtonIcon} from '#/components/Button'
+import {ButtonIcon} from '#/components/Button'
 import {SettingsGear2_Stroke2_Corner0_Rounded as SettingsIcon} from '#/components/icons/SettingsGear2'
 import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
@@ -44,8 +44,6 @@ type Props = NativeStackScreenProps<
 >
 export function NotificationsScreen({}: Props) {
   const {_} = useLingui()
-  const t = useTheme()
-  const {gtTablet} = useBreakpoints()
   const {openComposer} = useComposerControls()
   const unreadNotifs = useUnreadNotifications()
   const hasNew = !!unreadNotifs
@@ -104,35 +102,12 @@ export function NotificationsScreen({}: Props) {
 
   return (
     <Layout.Screen testID="notificationsScreen">
-      <Layout.Header.Outer>
+      <Layout.Header.Outer noBottomBorder>
         <Layout.Header.MenuButton />
         <Layout.Header.Content>
-          <Button
-            label={_(msg`Notifications`)}
-            accessibilityHint={_(msg`Refresh notifications`)}
-            onPress={emitSoftReset}
-            style={[a.justify_start]}>
-            {({hovered}) => (
-              <Layout.Header.TitleText
-                style={[a.w_full, hovered && a.underline]}>
-                <Trans>Notifications</Trans>
-                {isWeb && gtTablet && hasNew && (
-                  <View
-                    style={[
-                      a.rounded_full,
-                      {
-                        width: 8,
-                        height: 8,
-                        bottom: 3,
-                        left: 6,
-                        backgroundColor: t.palette.primary_500,
-                      },
-                    ]}
-                  />
-                )}
-              </Layout.Header.TitleText>
-            )}
-          </Button>
+          <Layout.Header.TitleText>
+            <Trans>Notifications</Trans>
+          </Layout.Header.TitleText>
         </Layout.Header.Content>
         <Layout.Header.Slot>
           <Link
