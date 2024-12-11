@@ -39,7 +39,7 @@ import {truncateAndInvalidate} from '#/state/queries/util'
 import {useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
 import {PagerWithHeader} from '#/view/com/pager/PagerWithHeader'
-import {Feed} from '#/view/com/posts/Feed'
+import {PostFeed} from '#/view/com/posts/PostFeed'
 import {ProfileSubpageHeader} from '#/view/com/profile/ProfileSubpageHeader'
 import {EmptyState} from '#/view/com/util/EmptyState'
 import {FAB} from '#/view/com/util/fab/FAB'
@@ -480,7 +480,7 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
     return (
       <View>
         <FeedFeedbackProvider value={feedFeedback}>
-          <Feed
+          <PostFeed
             enabled={isFocused}
             feed={feed}
             pollInterval={60e3}

@@ -23,7 +23,7 @@ import {
 import {truncateAndInvalidate} from '#/state/queries/util'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {useComposerControls} from '#/state/shell/composer'
-import {Feed} from '#/view/com/notifications/Feed'
+import {NotificationFeed} from '#/view/com/notifications/NotificationFeed'
 import {FAB} from '#/view/com/util/fab/FAB'
 import {ListMethods} from '#/view/com/util/List'
 import {LoadLatestBtn} from '#/view/com/util/load-latest/LoadLatestBtn'
@@ -156,7 +156,7 @@ export function NotificationsScreen({route: {params}}: Props) {
       </Layout.Header.Outer>
 
       <MainScrollProvider>
-        <Feed
+        <NotificationFeed
           onScrolledDownChange={setIsScrolledDown}
           scrollElRef={scrollElRef}
           overridePriorityNotifications={params?.show === 'all'}
