@@ -110,7 +110,9 @@ const MinimalHeader = React.memo(function MinimalHeader({
     }
     const pastThreshold = scrollY.get() > 100
     return {
-      opacity: pastThreshold ? withTiming(1) : withTiming(0),
+      opacity: pastThreshold
+        ? withTiming(1, {duration: 75})
+        : withTiming(0, {duration: 75}),
       transform: [
         {
           translateY: Math.min(
