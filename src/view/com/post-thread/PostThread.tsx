@@ -89,7 +89,7 @@ export function PostThread({uri}: {uri: string | undefined}) {
   const {hasSession, currentAccount} = useSession()
   const {_} = useLingui()
   const t = useTheme()
-  const {isMobile, isTabletOrMobile} = useWebMediaQueries()
+  const {isMobile} = useWebMediaQueries()
   const initialNumToRender = useInitialNumToRender()
   const {height: windowHeight} = useWindowDimensions()
   const [hiddenRepliesState, setHiddenRepliesState] = React.useState(
@@ -367,8 +367,7 @@ export function PostThread({uri}: {uri: string | undefined}) {
     skeleton?.highlightedPost?.type === 'post' &&
     (skeleton.highlightedPost.ctx.isParentLoading ||
       Boolean(skeleton?.parents && skeleton.parents.length > 0))
-  const showHeader =
-    isNative || (isTabletOrMobile && (!hasParents || !isFetching))
+  const showHeader = isNative || !hasParents || !isFetching
 
   const renderItem = ({item, index}: {item: RowItem; index: number}) => {
     if (item === REPLY_PROMPT && hasSession) {
