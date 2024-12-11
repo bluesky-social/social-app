@@ -821,6 +821,18 @@ export function SearchScreen(
     [selectedProfiles],
   )
 
+  const handleClearAll = React.useCallback(async () => {
+    setSearchHistory([])
+    setSelectedProfiles([])
+    await AsyncStorage.multiRemove(['searchHistory', 'selectedProfiles']).catch(
+      e => {
+        logger.error('Failed to clear search history and profiles', {
+          message: e,
+        })
+      },
+    )
+  }, [])
+
   const onSearchInputFocus = React.useCallback(() => {
     if (isWeb) {
       // Prevent a jump on iPad by ensuring that
@@ -931,6 +943,7 @@ export function SearchScreen(
             onProfileClick={handleProfileClick}
             onRemoveItemClick={handleRemoveHistoryItem}
             onRemoveProfileClick={handleRemoveProfile}
+            onClearAll={handleClearAll}
           />
         )}
       </View>
@@ -1011,6 +1024,7 @@ function SearchHistory({
   onProfileClick,
   onRemoveItemClick,
   onRemoveProfileClick,
+  onClearAll,
 }: {
   searchHistory: string[]
   selectedProfiles: AppBskyActorDefs.ProfileViewBasic[]
@@ -1018,6 +1032,7 @@ function SearchHistory({
   onProfileClick: (profile: AppBskyActorDefs.ProfileViewBasic) => void
   onRemoveItemClick: (item: string) => void
   onRemoveProfileClick: (profile: AppBskyActorDefs.ProfileViewBasic) => void
+  onClearAll: () => void
 }) {
   const {isMobile} = useWebMediaQueries()
   const pal = usePalette('default')
@@ -1027,9 +1042,21 @@ function SearchHistory({
     <Layout.Content>
       <View style={styles.searchHistoryContainer}>
         {(searchHistory.length > 0 || selectedProfiles.length > 0) && (
-          <Text style={[pal.text, styles.searchHistoryTitle]}>
-            <Trans>Recent Searches</Trans>
-          </Text>
+          <View style={[a.flex_row, a.justify_between, a.align_center]}>
+            <Text style={[pal.text, styles.searchHistoryTitle]}>
+              <Trans>Recent Searches</Trans>
+            </Text>
+            <Button
+              label={_(msg`Clear all`)}
+              size="tiny"
+              variant="ghost"
+              color="primary"
+              onPress={() => onClearAll()}>
+              <ButtonText>
+                <Trans>Clear all</Trans>
+              </ButtonText>
+            </Button>
+          </View>
         )}
         {selectedProfiles.length > 0 && (
           <View
