@@ -48,9 +48,7 @@ export const ProfileFollowsScreen = ({route}: Props) => {
         </Layout.Header.Content>
         <Layout.Header.Slot />
       </Layout.Header.Outer>
-      <Layout.Center>
-        <ProfileFollowsComponent name={name} />
-      </Layout.Center>
+      <ProfileFollowsComponent name={name} />
     </Layout.Screen>
   )
 }
