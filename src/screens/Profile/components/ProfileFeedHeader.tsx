@@ -1,7 +1,7 @@
 import React from 'react'
 import {View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {AtUri} from '@atproto/api'
+import {AppBskyActorDefs,AtUri} from '@atproto/api'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -30,6 +30,7 @@ import * as Dialog from '#/components/Dialog'
 import {Divider} from '#/components/Divider'
 import {useRichText} from '#/components/hooks/useRichText'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded as Share} from '#/components/icons/ArrowOutOfBox'
+import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {ChevronBottom_Stroke2_Corner0_Rounded as ChevronDown} from '#/components/icons/Chevron'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {
@@ -41,12 +42,9 @@ import {
   Pin_Stroke2_Corner0_Rounded as Pin,
 } from '#/components/icons/Pin'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
-import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
-import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
 import * as Layout from '#/components/Layout'
 import {InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
-import * as Menu from '#/components/Menu'
 import {ReportDialog, useReportDialogControl} from '#/components/ReportDialog'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
@@ -60,57 +58,25 @@ export function ProfileFeedHeader({info}: {info: FeedSourceFeedInfo}) {
   const infoControl = Dialog.useDialogControl()
   const playHaptic = useHaptics()
 
-  const {data: preferences} = usePreferencesQuery()
-
   const [likeUri, setLikeUri] = React.useState(info.likeUri || '')
   const isLiked = !!likeUri
   const likeCount =
     isLiked && likeUri ? (info.likeCount || 0) + 1 : info.likeCount || 0
 
-  const {mutateAsync: addSavedFeeds, isPending: isAddSavedFeedPending} =
-    useAddSavedFeedsMutation()
-  const {mutateAsync: removeFeed, isPending: isRemovePending} =
-    useRemoveFeedMutation()
-  const {mutateAsync: updateSavedFeeds, isPending: isUpdateFeedPending} =
-    useUpdateSavedFeedsMutation()
-
-  const isFeedStateChangePending =
-    isAddSavedFeedPending || isRemovePending || isUpdateFeedPending
+  const {data: preferences} = usePreferencesQuery()
   const savedFeedConfig = preferences?.savedFeeds?.find(
     f => f.value === info.uri,
   )
-  const isSaved = Boolean(savedFeedConfig)
   const isPinned = Boolean(savedFeedConfig?.pinned)
+  const {mutateAsync: addSavedFeeds, isPending: isAddSavedFeedPending} =
+    useAddSavedFeedsMutation()
+  const {mutateAsync: updateSavedFeeds, isPending: isUpdateFeedPending} =
+    useUpdateSavedFeedsMutation()
+  const isOuterPinPending = isAddSavedFeedPending || isUpdateFeedPending
 
-  const onToggleSaved = React.useCallback(async () => {
-    try {
-      playHaptic()
+  const onTogglePinned = async () => {
+    if (isOuterPinPending) return
 
-      if (savedFeedConfig) {
-        await removeFeed(savedFeedConfig)
-        Toast.show(_(msg`Removed from your feeds`))
-      } else {
-        await addSavedFeeds([
-          {
-            type: 'feed',
-            value: info.uri,
-            pinned: false,
-          },
-        ])
-        Toast.show(_(msg`Saved to your feeds`))
-      }
-    } catch (err) {
-      Toast.show(
-        _(
-          msg`There was an issue updating your feeds, please check your internet connection and try again.`,
-        ),
-        'xmark',
-      )
-      logger.error('Failed to update feeds', {message: err})
-    }
-  }, [_, playHaptic, info, removeFeed, addSavedFeeds, savedFeedConfig])
-
-  const onTogglePinned = React.useCallback(async () => {
     try {
       playHaptic()
 
@@ -124,9 +90,9 @@ export function ProfileFeedHeader({info}: {info: FeedSourceFeedInfo}) {
         ])
 
         if (pinned) {
-          Toast.show(_(msg`Pinned to your home screen`))
+          Toast.show(_(msg`Pinned ${info.displayName} to Home`))
         } else {
-          Toast.show(_(msg`Un-pinned from your home screen`))
+          Toast.show(_(msg`Un-pinned ${info.displayName} from Home`))
         }
       } else {
         await addSavedFeeds([
@@ -136,13 +102,13 @@ export function ProfileFeedHeader({info}: {info: FeedSourceFeedInfo}) {
             pinned: true,
           },
         ])
-        Toast.show(_(msg`Pinned to your home screen`))
+        Toast.show(_(msg`Pinned ${info.displayName} to Home`))
       }
     } catch (e) {
       Toast.show(_(msg`There was an issue contacting the server`), 'xmark')
       logger.error('Failed to toggle pinned feed', {message: e})
     }
-  }, [playHaptic, info, _, savedFeedConfig, updateSavedFeeds, addSavedFeeds])
+  }
 
   return (
     <>
@@ -166,7 +132,10 @@ export function ProfileFeedHeader({info}: {info: FeedSourceFeedInfo}) {
                   paddingRight: 12,
                 },
               ]}
-              onPress={() => infoControl.open()}>
+              onPress={() => {
+                playHaptic()
+                infoControl.open()
+              }}>
               {({hovered, pressed}) => (
                 <>
                   <View
@@ -247,61 +216,23 @@ export function ProfileFeedHeader({info}: {info: FeedSourceFeedInfo}) {
 
           {hasSession && (
             <Layout.Header.Slot>
-              <Menu.Root>
-                <Menu.Trigger label={_(msg`Open feed options menu`)}>
-                  {({props}) => {
-                    return (
-                      <Button
-                        {...props}
-                        label={_(
-                          msg`Pin ${info.displayName} to your home screen`,
-                        )}
-                        size="small"
-                        variant="ghost"
-                        shape="square"
-                        color="secondary">
-                        {isPinned ? (
-                          <PinFilled size="lg" fill={t.palette.primary_500} />
-                        ) : (
-                          <ButtonIcon icon={Pin} size="lg" />
-                        )}
-                      </Button>
-                    )
-                  }}
-                </Menu.Trigger>
-
-                <Menu.Outer>
-                  <Menu.Item
-                    disabled={isFeedStateChangePending}
-                    label={
-                      isPinned ? _(msg`Unpin from home`) : _(msg`Pin to home`)
-                    }
-                    onPress={onTogglePinned}>
-                    <Menu.ItemText>
-                      {isPinned ? _(msg`Unpin from home`) : _(msg`Pin to home`)}
-                    </Menu.ItemText>
-                    <Menu.ItemIcon icon={isPinned ? X : Pin} position="right" />
-                  </Menu.Item>
-                  <Menu.Item
-                    disabled={isFeedStateChangePending}
-                    label={
-                      isSaved
-                        ? _(msg`Remove from my feeds`)
-                        : _(msg`Save to my feeds`)
-                    }
-                    onPress={onToggleSaved}>
-                    <Menu.ItemText>
-                      {isSaved
-                        ? _(msg`Remove from my feeds`)
-                        : _(msg`Save to my feeds`)}
-                    </Menu.ItemText>
-                    <Menu.ItemIcon
-                      icon={isSaved ? Trash : Plus}
-                      position="right"
-                    />
-                  </Menu.Item>
-                </Menu.Outer>
-              </Menu.Root>
+              <Button
+                label={
+                  isPinned
+                    ? _(`Un-pin ${info.displayName} from Home`)
+                    : _(msg`Pin ${info.displayName} to Home`)
+                }
+                size="small"
+                variant="ghost"
+                shape="square"
+                color="secondary"
+                onPress={onTogglePinned}>
+                {isPinned ? (
+                  <PinFilled size="lg" fill={t.palette.primary_500} />
+                ) : (
+                  <ButtonIcon icon={Pin} size="lg" />
+                )}
+              </Button>
             </Layout.Header.Slot>
           )}
         </Layout.Header.Outer>
@@ -319,7 +250,8 @@ export function ProfileFeedHeader({info}: {info: FeedSourceFeedInfo}) {
             likeCount={likeCount}
             isPinned={isPinned}
             onTogglePinned={onTogglePinned}
-            isFeedStateChangePending={isFeedStateChangePending}
+            isOuterPinPending={isOuterPinPending}
+            savedFeedConfig={savedFeedConfig}
           />
         </Dialog.ScrollableInner>
       </Dialog.Outer>
@@ -334,7 +266,8 @@ function DialogInner({
   likeCount,
   isPinned,
   onTogglePinned,
-  isFeedStateChangePending,
+  isOuterPinPending,
+  savedFeedConfig,
 }: {
   info: FeedSourceFeedInfo
   likeUri: string
@@ -342,7 +275,8 @@ function DialogInner({
   likeCount: number
   isPinned: boolean
   onTogglePinned: () => void
-  isFeedStateChangePending: boolean
+  isOuterPinPending: boolean
+  savedFeedConfig: AppBskyActorDefs.SavedFeed | undefined
 }) {
   const t = useTheme()
   const {_} = useLingui()
@@ -380,14 +314,55 @@ function DialogInner({
     }
   }, [playHaptic, isLiked, likeUri, unlikeFeed, setLikeUri, likeFeed, info, _])
 
-  const onPressShare = React.useCallback(() => {
+  const isSaved = Boolean(savedFeedConfig)
+  const {mutateAsync: removeFeed, isPending: isRemovePending} =
+    useRemoveFeedMutation()
+  const {mutateAsync: addSavedFeeds, isPending: isAddSavedFeedPending} =
+    useAddSavedFeedsMutation()
+  const isFeedChangePending =
+    isOuterPinPending || isRemovePending || isAddSavedFeedPending
+  const onToggleSaved = async () => {
+    if (isFeedChangePending) return
+
+    try {
+      playHaptic()
+
+      if (savedFeedConfig) {
+        await removeFeed(savedFeedConfig)
+        Toast.show(_(msg`Removed from your feeds`))
+      } else {
+        await addSavedFeeds([
+          {
+            type: 'feed',
+            value: info.uri,
+            pinned: false,
+          },
+        ])
+        Toast.show(_(msg`Saved to your feeds`))
+      }
+    } catch (err) {
+      Toast.show(
+        _(
+          msg`There was an issue updating your feeds, please check your internet connection and try again.`,
+        ),
+        'xmark',
+      )
+      logger.error('Failed to update feeds', {message: err})
+    }
+  }
+  const onTogglePinnedInner = () => {
+    if (isFeedChangePending) return
+    onTogglePinned()
+  }
+
+  const onPressShare = () => {
     const url = toShareUrl(info.route.href)
     shareUrl(url)
-  }, [info])
+  }
 
-  const onPressReport = React.useCallback(() => {
+  const onPressReport = () => {
     reportDialogControl.open()
-  }, [reportDialogControl])
+  }
 
   return loading ? (
     <Loader size="xl" />
@@ -438,7 +413,23 @@ function DialogInner({
 
       <RichText value={rt} style={[a.text_md, a.leading_snug]} />
 
-      <View style={[a.flex_row, a.gap_sm, a.align_center]}>
+      <View style={[a.flex_row, a.gap_sm, a.align_center, {marginTop: -3}]}>
+        <Button
+          size="small"
+          variant="solid"
+          color="secondary"
+          shape="round"
+          label={isLiked ? _(msg`Unlike this feed`) : _(msg`Like this feed`)}
+          testID="toggleLikeBtn"
+          disabled={!hasSession || isLikePending || isUnlikePending}
+          onPress={onToggleLiked}>
+          {isLiked ? (
+            <HeartFilled size="md" fill={t.palette.like} />
+          ) : (
+            <Heart size="md" fill={t.atoms.text_contrast_medium.color} />
+          )}
+        </Button>
+
         {typeof likeCount === 'number' && (
           <InlineLinkText
             label={_(msg`View users who like this feed`)}
@@ -456,37 +447,44 @@ function DialogInner({
 
       {hasSession && (
         <>
-          <View style={[a.flex_row, a.gap_sm, a.align_center, a.pt_sm]}>
+          <View style={[a.flex_row, a.gap_sm, a.align_center]}>
             <Button
-              disabled={isLikePending || isUnlikePending}
-              label={_(msg`Report feed`)}
+              label={
+                isPinned
+                  ? _(`Remove ${info.displayName} from my saved feeds`)
+                  : _(msg`Add ${info.displayName} to my saved feeds`)
+              }
               size="small"
               variant="solid"
-              color="secondary"
-              onPress={onToggleLiked}
+              color={'secondary'}
+              onPress={onToggleSaved}
               style={[a.flex_1]}>
-              {isLiked ? (
-                <HeartFilled size="sm" fill={t.palette.like} />
-              ) : (
-                <ButtonIcon icon={Heart} position="left" />
-              )}
-
               <ButtonText>
-                {isLiked ? <Trans>Unlike</Trans> : <Trans>Like</Trans>}
+                {isSaved ? <Trans>Saved</Trans> : <Trans>Save feed</Trans>}
               </ButtonText>
+              <ButtonIcon icon={isSaved ? Check : Plus} position="right" />
             </Button>
             <Button
-              disabled={isFeedStateChangePending}
-              label={_(msg`Report feed`)}
+              label={
+                isPinned
+                  ? _(`Un-pin ${info.displayName} from Home`)
+                  : _(msg`Pin ${info.displayName} to Home`)
+              }
               size="small"
               variant="solid"
-              color={isPinned ? 'secondary' : 'primary'}
-              onPress={onTogglePinned}
+              color={isPinned ? 'secondary_inverted' : 'primary'}
+              onPress={onTogglePinnedInner}
               style={[a.flex_1]}>
               <ButtonText>
-                {isPinned ? <Trans>Unpin feed</Trans> : <Trans>Pin feed</Trans>}
+                {isPinned ? (
+                  <Trans>Pinned</Trans>
+                ) : isSaved ? (
+                  <Trans>Pin</Trans>
+                ) : (
+                  <Trans>Pin and save</Trans>
+                )}
               </ButtonText>
-              <ButtonIcon icon={Pin} position="right" />
+              <ButtonIcon icon={isPinned ? Check : Pin} position="right" />
             </Button>
           </View>
 
