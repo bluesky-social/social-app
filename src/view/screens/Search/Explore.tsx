@@ -32,7 +32,6 @@ import {ArrowBottom_Stroke2_Corner0_Rounded as ArrowBottom} from '#/components/i
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {Props as SVGIconProps} from '#/components/icons/common'
 import {ListSparkle_Stroke2_Corner0_Rounded as ListSparkle} from '#/components/icons/ListSparkle'
-import {PersonGroup_Stroke2_Corner2_Rounded as PersonGroup} from '#/components/icons/Person'
 import {Trending2_Stroke2_Corner2_Rounded as Trending} from '#/components/icons/Trending2'
 import {UserCircle_Stroke2_Corner0_Rounded as Person} from '#/components/icons/UserCircle'
 import {Loader} from '#/components/Loader'
@@ -366,6 +365,7 @@ export function Explore() {
       ],
     })
 
+    /*
     i.push({
       type: 'header',
       key: 'starter-packs-header',
@@ -432,6 +432,7 @@ export function Explore() {
         },
       ],
     })
+     */
 
     i.push({
       type: 'header',
