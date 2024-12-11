@@ -74,6 +74,7 @@ export function Content({
       style={[
         a.flex_1,
         a.justify_center,
+        a.z_20,
         isIOS && align === 'platform' && a.align_center,
         {minHeight: HEADER_SLOT_SIZE},
       ]}>
@@ -88,7 +89,7 @@ export function Slot({children}: {children?: React.ReactNode}) {
   return (
     <View
       style={[
-        a.z_50,
+        a.z_10,
         {
           width: HEADER_SLOT_SIZE,
         },
