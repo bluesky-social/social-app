@@ -9,8 +9,11 @@ import {useSession} from '#/state/session'
 import {DesktopFeeds} from '#/view/shell/desktop/Feeds'
 import {DesktopSearch} from '#/view/shell/desktop/Search'
 import {atoms as a, useGutters, useTheme, web} from '#/alf'
+import {Divider} from '#/components/Divider'
+import {Trending2_Stroke2_Corner2_Rounded as Graph} from '#/components/icons/Trending2'
 import {InlineLinkText} from '#/components/Link'
 import {ProgressGuideList} from '#/components/ProgressGuide/List'
+import * as Trending from '#/components/TrendingTopics'
 import {Text} from '#/components/Typography'
 
 export function DesktopRightNav({routeName}: {routeName: string}) {
@@ -19,6 +22,7 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
   const {hasSession, currentAccount} = useSession()
   const kawaii = useKawaiiMode()
   const gutters = useGutters(['base', 0, 'base', 'wide'])
+  const isSearchScreen = routeName === 'Search'
 
   const {isTablet} = useWebMediaQueries()
   if (isTablet) {
@@ -29,6 +33,7 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
     <View
       style={[
         gutters,
+        a.gap_lg,
         web({
           position: 'fixed',
           left: '50%',
@@ -43,18 +48,46 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
           overflowY: 'auto',
         }),
       ]}>
-      {routeName !== 'Search' && (
-        <View style={[a.pb_lg]}>
-          <DesktopSearch />
-        </View>
-      )}
+      {!isSearchScreen && <DesktopSearch />}
+
       {hasSession && (
         <>
-          <ProgressGuideList style={[a.pb_xl]} />
-          <View
-            style={[a.pb_lg, a.mb_lg, a.border_b, t.atoms.border_contrast_low]}>
-            <DesktopFeeds />
+          <ProgressGuideList />
+          <DesktopFeeds />
+          <Divider />
+        </>
+      )}
+
+      {!isSearchScreen && (
+        <>
+          <View style={[a.gap_md]}>
+            <View style={[a.flex_row, a.align_center, a.gap_xs]}>
+              <Graph size="sm" />
+              <Text
+                style={[a.text_sm, a.font_bold, t.atoms.text_contrast_medium]}>
+                <Trans>Trending</Trans>
+              </Text>
+            </View>
+
+            <View style={[a.flex_row, a.flex_wrap, a.gap_xs]}>
+              {Trending.TOPICS.slice(0, 8).map(topic => (
+                <Trending.Link key={topic} topic={topic}>
+                  {({hovered}) => (
+                    <Trending.TopicSmall
+                      topic={topic}
+                      style={[
+                        hovered && [
+                          t.atoms.border_contrast_high,
+                          t.atoms.bg_contrast_25,
+                        ],
+                      ]}
+                    />
+                  )}
+                </Trending.Link>
+              ))}
+            </View>
           </View>
+          <Divider />
         </>
       )}
 
