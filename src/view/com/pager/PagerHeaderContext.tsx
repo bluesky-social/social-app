@@ -6,6 +6,7 @@ import {isNative} from '#/platform/detection'
 export const PagerHeaderContext = React.createContext<{
   scrollY: SharedValue<number>
   headerHeight: number
+  minimumHeaderHeight: number
 } | null>(null)
 
 /**
@@ -17,15 +18,17 @@ export const PagerHeaderContext = React.createContext<{
 export function PagerHeaderProvider({
   scrollY,
   headerHeight,
+  minimumHeaderHeight,
   children,
 }: {
   scrollY: SharedValue<number>
   headerHeight: number
+  minimumHeaderHeight: number
   children: React.ReactNode
 }) {
   const value = React.useMemo(
-    () => ({scrollY, headerHeight}),
-    [scrollY, headerHeight],
+    () => ({scrollY, headerHeight, minimumHeaderHeight}),
+    [scrollY, headerHeight, minimumHeaderHeight],
   )
   return (
     <PagerHeaderContext.Provider value={value}>

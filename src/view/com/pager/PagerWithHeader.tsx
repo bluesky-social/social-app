@@ -66,6 +66,7 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
     const [currentPage, setCurrentPage] = React.useState(0)
     const [tabBarHeight, setTabBarHeight] = React.useState(0)
     const [headerOnlyHeight, setHeaderOnlyHeight] = React.useState(0)
+    const [minimumHeaderHeight, setMinimumHeaderHeight] = React.useState(0)
     const scrollY = useSharedValue(0)
     const headerHeight = headerOnlyHeight + tabBarHeight
 
@@ -89,7 +90,8 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
         return (
           <PagerHeaderProvider
             scrollY={scrollY}
-            headerHeight={headerOnlyHeight}>
+            headerHeight={headerOnlyHeight}
+            minimumHeaderHeight={minimumHeaderHeight}>
             <PagerTabBar
               headerOnlyHeight={headerOnlyHeight}
               items={items}
@@ -105,6 +107,8 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
               allowHeaderOverScroll={allowHeaderOverScroll}
               dragProgress={props.dragProgress}
               dragState={props.dragState}
+              minimumHeaderHeight={minimumHeaderHeight}
+              setMinimumHeaderHeight={setMinimumHeaderHeight}
             />
           </PagerHeaderProvider>
         )
@@ -121,6 +125,8 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
         scrollY,
         testID,
         allowHeaderOverScroll,
+        minimumHeaderHeight,
+        setMinimumHeaderHeight,
       ],
     )
 
@@ -236,6 +242,8 @@ let PagerTabBar = ({
   allowHeaderOverScroll,
   dragProgress,
   dragState,
+  minimumHeaderHeight,
+  setMinimumHeaderHeight,
 }: {
   currentPage: number
   headerOnlyHeight: number
@@ -255,8 +263,9 @@ let PagerTabBar = ({
   allowHeaderOverScroll?: boolean
   dragProgress: SharedValue<number>
   dragState: SharedValue<'idle' | 'dragging' | 'settling'>
+  minimumHeaderHeight: number
+  setMinimumHeaderHeight: (height: number) => void
 }): React.ReactNode => {
-  const [minimumHeaderHeight, setMinimumHeaderHeight] = React.useState(0)
   const headerTransform = useAnimatedStyle(() => {
     const translateY =
       Math.min(

@@ -97,7 +97,6 @@ const MinimalHeader = React.memo(function MinimalHeader({
   profile: AppBskyActorDefs.ProfileViewDetailed
   hideBackButton?: boolean
 }) {
-  const t = useTheme()
   const insets = useSafeAreaInsets()
   const ctx = usePagerHeaderContext()
   const [visible, setVisible] = useState(false)
@@ -153,7 +152,6 @@ const MinimalHeader = React.memo(function MinimalHeader({
       style={[
         a.absolute,
         a.z_50,
-        t.atoms.bg,
         {
           top: 0,
           left: 0,

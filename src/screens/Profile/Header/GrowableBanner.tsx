@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react'
 import {View} from 'react-native'
 import {ActivityIndicator} from 'react-native'
 import Animated, {
+  clamp,
   Extrapolation,
   interpolate,
   runOnJS,
@@ -14,7 +15,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {BlurView} from 'expo-blur'
 import {useIsFetching} from '@tanstack/react-query'
 
-import {isIOS} from '#/platform/detection'
+import {isIOS, isWeb} from '#/platform/detection'
 import {RQKEY_ROOT as STARTERPACK_RQKEY_ROOT} from '#/state/queries/actor-starter-packs'
 import {RQKEY_ROOT as FEED_RQKEY_ROOT} from '#/state/queries/post-feed'
 import {RQKEY_ROOT as FEEDGEN_RQKEY_ROOT} from '#/state/queries/profile-feedgens'
@@ -33,8 +34,8 @@ export function GrowableBanner({
 }) {
   const pagerContext = usePagerHeaderContext()
 
-  // plain non-growable mode for Android/Web
-  if (!pagerContext || !isIOS) {
+  // plain non-growable mode for Web
+  if (!pagerContext || isWeb) {
     return (
       <View style={[a.w_full, a.h_full]}>
         {children}
@@ -43,20 +44,28 @@ export function GrowableBanner({
     )
   }
 
-  const {scrollY} = pagerContext
+  const {scrollY, headerHeight, minimumHeaderHeight} = pagerContext
 
   return (
-    <GrowableBannerInner scrollY={scrollY} backButton={backButton}>
+    <GrowableBannerInner
+      scrollY={scrollY}
+      backButton={backButton}
+      headerHeight={headerHeight}
+      minimumHeaderHeight={minimumHeaderHeight}>
       {children}
     </GrowableBannerInner>
   )
 }
 
 function GrowableBannerInner({
+  headerHeight,
+  minimumHeaderHeight,
   scrollY,
   backButton,
   children,
 }: {
+  headerHeight: number
+  minimumHeaderHeight: number
   scrollY: SharedValue<number>
   backButton?: React.ReactNode
   children: React.ReactNode
@@ -68,20 +77,33 @@ function GrowableBannerInner({
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [
       {
-        scale: interpolate(scrollY.get(), [-150, 0], [2, 1], {
-          extrapolateRight: Extrapolation.CLAMP,
-        }),
+        scale: interpolate(
+          scrollY.get(),
+          [-150, 0],
+          [2, 1],
+          Extrapolation.CLAMP,
+        ),
+      },
+      {
+        translateY: clamp(scrollY.get() - minimumHeaderHeight, 0, headerHeight),
       },
     ],
   }))
 
   const animatedBlurViewProps = useAnimatedProps(() => {
+    console.log(
+      'scrollY',
+      scrollY.get(),
+      'headerHeight',
+      headerHeight,
+      topInset,
+    )
     return {
       intensity: interpolate(
         scrollY.get(),
-        [-300, -65, -15],
-        [50, 40, 0],
-        Extrapolation.CLAMP,
+        [-300, -65, -15, minimumHeaderHeight - 10, minimumHeaderHeight],
+        [50, 40, 0, 0, 50],
+        {extrapolateLeft: Extrapolation.CLAMP},
       ),
     }
   })
