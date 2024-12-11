@@ -52,24 +52,17 @@ const PAGE_SIZE = 30
 type RQPageParam = string | undefined
 
 const RQKEY_ROOT = 'notification-feed'
-export function RQKEY(priority?: false) {
-  return [RQKEY_ROOT, priority]
+export function RQKEY() {
+  return [RQKEY_ROOT]
 }
 
-export function useNotificationFeedQuery(opts?: {
-  enabled?: boolean
-  overridePriorityNotifications?: boolean
-}) {
+export function useNotificationFeedQuery(opts?: {enabled?: boolean}) {
   const agent = useAgent()
   const queryClient = useQueryClient()
   const moderationOpts = useModerationOpts()
   const unreads = useUnreadNotificationsApi()
   const enabled = opts?.enabled !== false
   const {uris: hiddenReplyUris} = useThreadgateHiddenReplyUris()
-
-  // false: force showing all notifications
-  // undefined: let the server decide
-  const priority = opts?.overridePriorityNotifications ? false : undefined
 
   const selectArgs = useMemo(() => {
     return {
@@ -91,7 +84,7 @@ export function useNotificationFeedQuery(opts?: {
     RQPageParam
   >({
     staleTime: STALE.INFINITY,
-    queryKey: RQKEY(priority),
+    queryKey: RQKEY(),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
       let page
       if (!pageParam) {
@@ -106,7 +99,7 @@ export function useNotificationFeedQuery(opts?: {
           queryClient,
           moderationOpts,
           fetchAdditionalData: true,
-          priority,
+          priority: undefined, // Rely on user preference
         })
         page = fetchedPage
       }
