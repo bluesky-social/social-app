@@ -33,7 +33,6 @@ function StatusBarShadowInnner({scrollY}: {scrollY: SharedValue<number>}) {
   const {top: topInset} = useSafeAreaInsets()
 
   const animatedStyle = useAnimatedStyle(() => {
-    console.log(scrollY.get())
     return {
       transform: [
         {
