@@ -59,9 +59,9 @@ export function toSanitizedUnicodeHandle(asciiHandle: string): string {
 /// homograph attack (https://en.wikipedia.org/wiki/IDN_homograph_attack)
 function isPossibleHomographAttack(unicodeLabel: string): boolean {
   let hasNonRFC2181Characters = false
-  // We check for characters belonging to any script that has problematic homoglyphs,
+  // We check for characters belonging to any script that has problematic homographs,
   // and only allow using __at most__ one of them.
-  // Legitimate domains in the wild not mix those scripts.
+  // Detection is based on the observation that legitimate domains in the wild do not mix those scripts.
   // Note: you can use https://symbl.cc/en/unicode-table/ as reference
   let hasLatin = false
   let hasIPA = false
