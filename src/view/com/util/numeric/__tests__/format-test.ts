@@ -1,3 +1,9 @@
+import '@formatjs/intl-locale/polyfill-force'
+import '@formatjs/intl-pluralrules/polyfill-force'
+import '@formatjs/intl-numberformat/polyfill-force'
+import '@formatjs/intl-pluralrules/locale-data/en'
+import '@formatjs/intl-numberformat/locale-data/en'
+
 import {describe, expect, it} from '@jest/globals'
 
 import {APP_LANGUAGES} from '#/locale/languages'
