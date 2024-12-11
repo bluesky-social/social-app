@@ -174,7 +174,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           // update & broadcast
           setNumUnread(unreadCountStr)
           if (invalidate) {
-            truncateAndInvalidate(queryClient, RQKEY_NOTIFS())
+            truncateAndInvalidate(queryClient, RQKEY_NOTIFS('all'))
           }
           broadcast.postMessage({event: unreadCountStr})
         } catch (e) {

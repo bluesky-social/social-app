@@ -55,6 +55,7 @@ export function NotificationFeed({
     fetchNextPage,
   } = useNotificationFeedQuery({
     enabled: !!moderationOpts,
+    filterTab: 'all',
   })
   const isEmpty = !isFetching && !data?.pages[0]?.items.length
 

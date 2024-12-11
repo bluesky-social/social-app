@@ -239,7 +239,7 @@ export function useNotificationsHandler() {
           )
           logEvent('notifications:openApp', {})
           invalidateCachedUnreadPage()
-          truncateAndInvalidate(queryClient, RQKEY_NOTIFS())
+          truncateAndInvalidate(queryClient, RQKEY_NOTIFS('all'))
           logger.debug('Notifications: handleNotification', {
             content: e.notification.request.content,
             payload: e.notification.request.trigger.payload,

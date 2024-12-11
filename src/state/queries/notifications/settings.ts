@@ -45,7 +45,7 @@ export function useNotificationSettingsMutation() {
     },
     onSettled: () => {
       invalidateCachedUnreadPage()
-      queryClient.invalidateQueries({queryKey: RQKEY_NOTIFS()})
+      queryClient.invalidateQueries({queryKey: RQKEY_NOTIFS('all')})
     },
   })
 }
@@ -54,7 +54,7 @@ function eagerlySetCachedPriority(
   queryClient: ReturnType<typeof useQueryClient>,
   enabled: boolean,
 ) {
-  queryClient.setQueryData(RQKEY_NOTIFS(), (old: any) => {
+  queryClient.setQueryData(RQKEY_NOTIFS('all'), (old: any) => {
     if (!old) return old
     return {
       ...old,
