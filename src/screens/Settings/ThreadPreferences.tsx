@@ -38,7 +38,15 @@ export function ThreadPreferencesScreen({}: Props) {
 
   return (
     <Layout.Screen testID="threadPreferencesScreen">
-      <Layout.Header title={_(msg`Thread Preferences`)} />
+      <Layout.Header.Outer>
+        <Layout.Header.BackButton />
+        <Layout.Header.Content>
+          <Layout.Header.TitleText>
+            <Trans>Thread Preferences</Trans>
+          </Layout.Header.TitleText>
+        </Layout.Header.Content>
+        <Layout.Header.Slot />
+      </Layout.Header.Outer>
       <Layout.Content>
         <SettingsList.Container>
           <SettingsList.Group>

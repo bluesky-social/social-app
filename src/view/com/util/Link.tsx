@@ -256,7 +256,7 @@ export const TextLink = memo(function TextLink({
     if (isExternal) {
       return {
         target: '_blank',
-        // rel: 'noopener',
+        // rel: 'noopener noreferrer',
       }
     }
     return {}

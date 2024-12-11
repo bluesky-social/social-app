@@ -1,6 +1,5 @@
-import React from 'react'
+import {Fragment, useCallback} from 'react'
 import {Linking, View} from 'react-native'
-import {useSafeAreaFrame} from 'react-native-safe-area-context'
 import {LABELS} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -19,8 +18,6 @@ import {
 import {isNonConfigurableModerationAuthority} from '#/state/session/additional-moderation-authorities'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
-import {CenteredView} from '#/view/com/util/Views'
-import {ScrollView} from '#/view/com/util/Views'
 import {atoms as a, useBreakpoints, useTheme, ViewStyleProp} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -37,6 +34,7 @@ import {Person_Stroke2_Corner0_Rounded as Person} from '#/components/icons/Perso
 import * as LabelingService from '#/components/LabelingServiceCard'
 import * as Layout from '#/components/Layout'
 import {InlineLinkText, Link} from '#/components/Link'
+import {ListMaybePlaceholder} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
 import {GlobalLabelPreference} from '#/components/moderation/LabelPreference'
 import {Text} from '#/components/Typography'
@@ -75,35 +73,22 @@ function ErrorState({error}: {error: string}) {
 export function ModerationScreen(
   _props: NativeStackScreenProps<CommonNavigatorParams, 'Moderation'>,
 ) {
-  const t = useTheme()
   const {_} = useLingui()
   const {
     isLoading: isPreferencesLoading,
     error: preferencesError,
     data: preferences,
   } = usePreferencesQuery()
-  const {gtMobile} = useBreakpoints()
-  const {height} = useSafeAreaFrame()
 
   const isLoading = isPreferencesLoading
   const error = preferencesError
 
   return (
     <Layout.Screen testID="moderationScreen">
-      <CenteredView
-        testID="moderationScreen"
-        style={[
-          t.atoms.border_contrast_low,
-          t.atoms.bg,
-          {minHeight: height},
-          ...(gtMobile ? [a.border_l, a.border_r] : []),
-        ]}>
-        <ViewHeader title={_(msg`Moderation`)} showOnDesktop />
-
+      <ViewHeader title={_(msg`Moderation`)} showOnDesktop />
+      <Layout.Content>
         {isLoading ? (
-          <View style={[a.w_full, a.align_center, a.pt_2xl]}>
-            <Loader size="xl" fill={t.atoms.text.color} />
-          </View>
+          <ListMaybePlaceholder isLoading={true} sideBorders={false} />
         ) : error || !preferences ? (
           <ErrorState
             error={
@@ -114,7 +99,7 @@ export function ModerationScreen(
         ) : (
           <ModerationScreenInner preferences={preferences} />
         )}
-      </CenteredView>
+      </Layout.Content>
     </Layout.Screen>
   )
 }
@@ -169,7 +154,7 @@ export function ModerationScreenInner({
   } = useMyLabelersQuery()
 
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       setMinimalShellMode(false)
     }, [setMinimalShellMode]),
   )
@@ -183,7 +168,7 @@ export function ModerationScreenInner({
   const ageNotSet = !preferences.userAge
   const isUnderage = (preferences.userAge || 0) < 18
 
-  const onToggleAdultContentEnabled = React.useCallback(
+  const onToggleAdultContentEnabled = useCallback(
     async (selected: boolean) => {
       try {
         await setAdultContentPref({
@@ -201,13 +186,7 @@ export function ModerationScreenInner({
   const disabledOnIOS = isIOS && !adultContentEnabled
 
   return (
-    <ScrollView
-      contentContainerStyle={[
-        a.border_0,
-        a.pt_2xl,
-        a.px_lg,
-        gtMobile && a.px_2xl,
-      ]}>
+    <View style={[a.pt_2xl, a.px_lg, gtMobile && a.px_2xl]}>
       <Text
         style={[a.text_md, a.font_bold, a.pb_md, t.atoms.text_contrast_high]}>
         <Trans>Moderation tools</Trans>
@@ -420,7 +399,7 @@ export function ModerationScreenInner({
         <View style={[a.rounded_sm, t.atoms.bg_contrast_25]}>
           {labelers.map((labeler, i) => {
             return (
-              <React.Fragment key={labeler.creator.did}>
+              <Fragment key={labeler.creator.did}>
                 {i !== 0 && <Divider />}
                 <LabelingService.Link labeler={labeler}>
                   {state => (
@@ -457,12 +436,12 @@ export function ModerationScreenInner({
                     </LabelingService.Outer>
                   )}
                 </LabelingService.Link>
-              </React.Fragment>
+              </Fragment>
             )
           })}
         </View>
       )}
-      <View style={{height: 200}} />
-    </ScrollView>
+      <View style={{height: 150}} />
+    </View>
   )
 }

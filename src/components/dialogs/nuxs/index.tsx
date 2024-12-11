@@ -3,12 +3,7 @@ import {AppBskyActorDefs} from '@atproto/api'
 
 import {useGate} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
-import {
-  Nux,
-  useNuxs,
-  useRemoveNuxsMutation,
-  useUpsertNuxMutation,
-} from '#/state/queries/nuxs'
+import {Nux, useNuxs, useResetNuxs, useSaveNux} from '#/state/queries/nuxs'
 import {
   usePreferencesQuery,
   UsePreferencesQueryResponse,
@@ -85,8 +80,8 @@ function Inner({
     return isSnoozed()
   })
   const [activeNux, setActiveNux] = React.useState<Nux | undefined>()
-  const {mutateAsync: upsertNux} = useUpsertNuxMutation()
-  const {mutate: removeNuxs} = useRemoveNuxsMutation()
+  const {mutateAsync: saveNux} = useSaveNux()
+  const {mutate: resetNuxs} = useResetNuxs()
 
   const snoozeNuxDialog = React.useCallback(() => {
     snooze()
@@ -102,7 +97,7 @@ function Inner({
     // @ts-ignore
     window.clearNuxDialog = (id: Nux) => {
       if (!IS_DEV || !id) return
-      removeNuxs([id])
+      resetNuxs([id])
       unsnooze()
     }
   }
@@ -136,7 +131,7 @@ function Inner({
       snoozeNuxDialog()
 
       // immediately update remote data (affects next reload)
-      upsertNux({
+      saveNux({
         id,
         completed: true,
         data: undefined,
@@ -152,7 +147,7 @@ function Inner({
     nuxs,
     snoozed,
     snoozeNuxDialog,
-    upsertNux,
+    saveNux,
     gate,
     currentAccount,
     currentProfile,

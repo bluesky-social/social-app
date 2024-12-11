@@ -223,7 +223,7 @@ export function Link({
       {...web({
         hrefAttrs: {
           target: download ? undefined : isExternal ? 'blank' : undefined,
-          rel: isExternal ? 'noopener' : undefined,
+          rel: isExternal ? 'noopener noreferrer' : undefined,
           download,
         },
         dataSet: {
@@ -237,7 +237,9 @@ export function Link({
 }
 
 export type InlineLinkProps = React.PropsWithChildren<
-  BaseLinkProps & TextStyleProp & Pick<TextProps, 'selectable'>
+  BaseLinkProps &
+    TextStyleProp &
+    Pick<TextProps, 'selectable' | 'numberOfLines'>
 > &
   Pick<ButtonProps, 'label'> & {
     disableUnderline?: boolean
@@ -273,7 +275,6 @@ export function InlineLinkText({
     onIn: onHoverIn,
     onOut: onHoverOut,
   } = useInteractionState()
-  const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
   const flattenedStyle = flatten(style) || {}
 
   return (
@@ -284,7 +285,7 @@ export function InlineLinkText({
       {...rest}
       style={[
         {color: t.palette.primary_500},
-        (hovered || focused) &&
+        hovered &&
           !disableUnderline && {
             ...web({
               outline: 0,
@@ -298,8 +299,6 @@ export function InlineLinkText({
       role="link"
       onPress={download ? undefined : onPress}
       onLongPress={onLongPress}
-      onFocus={onFocus}
-      onBlur={onBlur}
       onMouseEnter={onHoverIn}
       onMouseLeave={onHoverOut}
       accessibilityRole="link"
@@ -307,7 +306,7 @@ export function InlineLinkText({
       {...web({
         hrefAttrs: {
           target: download ? undefined : isExternal ? 'blank' : undefined,
-          rel: isExternal ? 'noopener' : undefined,
+          rel: isExternal ? 'noopener noreferrer' : undefined,
           download,
         },
         dataSet: {

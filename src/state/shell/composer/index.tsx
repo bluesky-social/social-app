@@ -83,7 +83,13 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         'exclamation-circle',
       )
     } else {
-      setState(opts)
+      setState(prevOpts => {
+        if (prevOpts) {
+          // Never replace an already open composer.
+          return prevOpts
+        }
+        return opts
+      })
     }
   })
 
