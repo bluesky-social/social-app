@@ -67,7 +67,7 @@ export function NotificationsScreen({}: Props) {
   const checkUnreadConversations = React.useCallback(
     async ({invalidate}: {invalidate: boolean}) => {
       if (invalidate) {
-        return truncateAndInvalidate(queryClient, NOTIFS_RQKEY('conversations'))
+        return truncateAndInvalidate(queryClient, NOTIFS_RQKEY('mentions'))
       } else {
         // TODO
       }
@@ -89,10 +89,10 @@ export function NotificationsScreen({}: Props) {
         ),
       },
       {
-        title: _(msg`Conversations`),
+        title: _(msg`Mentions`),
         component: (
           <NotificationsTab
-            filterTab="conversations"
+            filterTab="mentions"
             hasNew={hasNew}
             setIsLoadingLatest={setIsLoadingConversations}
             checkUnread={checkUnreadConversations}
@@ -177,7 +177,7 @@ function NotificationsTab({
   checkUnread,
   setIsLoadingLatest,
 }: {
-  filterTab: 'all' | 'conversations'
+  filterTab: 'all' | 'mentions'
   hasNew: boolean
   checkUnread: ({invalidate}: {invalidate: boolean}) => Promise<void>
   setIsLoadingLatest: (v: boolean) => void

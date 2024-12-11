@@ -34,7 +34,7 @@ export function NotificationFeed({
   ListHeaderComponent,
   refreshNotifications,
 }: {
-  filterTab: 'all' | 'conversations'
+  filterTab: 'all' | 'mentions'
   scrollElRef?: ListRef
   onPressTryAgain?: () => void
   onScrolledDownChange: (isScrolledDown: boolean) => void

@@ -52,13 +52,13 @@ const PAGE_SIZE = 30
 type RQPageParam = string | undefined
 
 const RQKEY_ROOT = 'notification-feed'
-export function RQKEY(group: 'all' | 'conversations') {
+export function RQKEY(group: 'all' | 'mentions') {
   return [RQKEY_ROOT, group]
 }
 
 export function useNotificationFeedQuery(opts: {
   enabled?: boolean
-  filterTab: 'all' | 'conversations'
+  filterTab: 'all' | 'mentions'
 }) {
   const agent = useAgent()
   const queryClient = useQueryClient()
@@ -97,7 +97,7 @@ export function useNotificationFeedQuery(opts: {
       }
       if (!page) {
         let filter: string[] = []
-        if (filterTab === 'conversations') {
+        if (filterTab === 'mentions') {
           filter = [
             // Anything that's a post
             'mention',
