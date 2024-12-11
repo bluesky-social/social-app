@@ -76,7 +76,6 @@ export type ButtonProps = Pick<
   | 'onHoverOut'
   | 'onPressIn'
   | 'onPressOut'
-  | 'onLayout'
 > &
   AccessibilityProps &
   VariantProps & {
