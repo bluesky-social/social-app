@@ -145,6 +145,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
             limit: 40,
             queryClient,
             moderationOpts,
+            reasons: [],
 
             // only fetch subjects when the page is going to be used
             // in the notifications query, otherwise skip it
