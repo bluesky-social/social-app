@@ -1,6 +1,5 @@
 import React from 'react'
-import {Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {Plural} from '@lingui/macro'
 import {useFocusEffect} from '@react-navigation/native'
 
 import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
@@ -15,7 +14,6 @@ type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileFollows'>
 export const ProfileFollowsScreen = ({route}: Props) => {
   const {name} = route.params
   const setMinimalShellMode = useSetMinimalShellMode()
-  const {i18n} = useLingui()
 
   const {data: resolvedDid} = useResolveDidQuery(name)
   const {data: profile} = useProfileQuery({
@@ -39,9 +37,11 @@ export const ProfileFollowsScreen = ({route}: Props) => {
                 {sanitizeDisplayName(profile.displayName || profile.handle)}
               </Layout.Header.TitleText>
               <Layout.Header.SubtitleText>
-                <Trans>
-                  {i18n.number(profile.followsCount ?? 0)} following
-                </Trans>
+                <Plural
+                  value={profile.followersCount ?? 0}
+                  one="# following"
+                  other="# following"
+                />
               </Layout.Header.SubtitleText>
             </>
           )}
