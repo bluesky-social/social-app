@@ -6,6 +6,7 @@ import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useHaptics} from '#/lib/haptics'
+import {makeProfileLink} from '#/lib/routes/links'
 import {makeCustomFeedLink} from '#/lib/routes/links'
 import {shareUrl} from '#/lib/sharing'
 import {sanitizeHandle} from '#/lib/strings/handles'
@@ -74,7 +75,7 @@ export function ProfileSubpageHeader({info}: {info: FeedSourceFeedInfo}) {
   const {mutateAsync: updateSavedFeeds, isPending: isUpdateFeedPending} =
     useUpdateSavedFeedsMutation()
 
-  const isPending =
+  const isFeedStateChangePending =
     isAddSavedFeedPending || isRemovePending || isUpdateFeedPending
   const savedFeedConfig = preferences?.savedFeeds?.find(
     f => f.value === info.uri,
@@ -273,7 +274,7 @@ export function ProfileSubpageHeader({info}: {info: FeedSourceFeedInfo}) {
 
                 <Menu.Outer>
                   <Menu.Item
-                    disabled={isPending}
+                    disabled={isFeedStateChangePending}
                     label={
                       isPinned ? _(msg`Unpin from home`) : _(msg`Pin to home`)
                     }
@@ -284,7 +285,7 @@ export function ProfileSubpageHeader({info}: {info: FeedSourceFeedInfo}) {
                     <Menu.ItemIcon icon={isPinned ? X : Pin} position="right" />
                   </Menu.Item>
                   <Menu.Item
-                    disabled={isPending}
+                    disabled={isFeedStateChangePending}
                     label={
                       isSaved
                         ? _(msg`Remove from my feeds`)
@@ -310,13 +311,18 @@ export function ProfileSubpageHeader({info}: {info: FeedSourceFeedInfo}) {
 
       <Dialog.Outer control={infoControl}>
         <Dialog.Handle />
-        <Dialog.ScrollableInner label={_(msg`Feed menu`)}>
+        <Dialog.ScrollableInner
+          label={_(msg`Feed menu`)}
+          style={[gtMobile ? {width: 'auto', minWidth: 450} : a.w_full]}>
           <DialogInner
             info={info}
             likeUri={likeUri}
             setLikeUri={setLikeUri}
             likeCount={likeCount}
             reportDialogControl={reportDialogControl}
+            isPinned={isPinned}
+            onTogglePinned={onTogglePinned}
+            isFeedStateChangePending={isFeedStateChangePending}
           />
         </Dialog.ScrollableInner>
       </Dialog.Outer>
@@ -339,13 +345,20 @@ function DialogInner({
   setLikeUri,
   likeCount,
   reportDialogControl,
+  isPinned,
+  onTogglePinned,
+  isFeedStateChangePending,
 }: {
   info: FeedSourceFeedInfo
   likeUri: string
   setLikeUri: (uri: string) => void
   likeCount: number
   reportDialogControl: Dialog.DialogOuterProps['control']
+  isPinned: boolean
+  onTogglePinned: () => void
+  isFeedStateChangePending: boolean
 }) {
+  const control = Dialog.useDialogContext()
   const t = useTheme()
   const {_} = useLingui()
   const {hasSession} = useSession()
@@ -405,7 +418,23 @@ function DialogInner({
           <Text
             style={[a.text_sm, a.leading_tight, t.atoms.text_contrast_medium]}
             numberOfLines={1}>
-            <Trans>By {sanitizeHandle(info.creatorHandle, '@')}</Trans>
+            <Trans>By</Trans>{' '}
+            <InlineLinkText
+              label={_(msg`View ${info.creatorHandle}'s profile`)}
+              to={makeProfileLink({
+                did: info.creatorDid,
+                handle: info.creatorHandle,
+              })}
+              style={[
+                a.text_sm,
+                a.leading_tight,
+                a.underline,
+                t.atoms.text_contrast_medium,
+              ]}
+              numberOfLines={1}
+              onPress={() => control.close()}>
+              {sanitizeHandle(info.creatorHandle, '@')}
+            </InlineLinkText>
           </Text>
         </View>
 
@@ -423,26 +452,12 @@ function DialogInner({
       <RichText value={rt} style={[a.text_md, a.leading_snug]} />
 
       <View style={[a.flex_row, a.gap_sm, a.align_center]}>
-        <Button
-          size="small"
-          variant="solid"
-          color="secondary"
-          shape="round"
-          label={isLiked ? _(msg`Unlike this feed`) : _(msg`Like this feed`)}
-          testID="toggleLikeBtn"
-          disabled={!hasSession || isLikePending || isUnlikePending}
-          onPress={onToggleLiked}>
-          {isLiked ? (
-            <HeartFilled size="md" fill={t.palette.negative_500} />
-          ) : (
-            <Heart size="md" fill={t.atoms.text_contrast_medium.color} />
-          )}
-        </Button>
         {typeof likeCount === 'number' && (
           <InlineLinkText
             label={_(msg`View users who like this feed`)}
             to={makeCustomFeedLink(info.creatorDid, feedRkey, 'liked-by')}
-            style={[t.atoms.text_contrast_medium, a.font_bold]}>
+            style={[a.underline, t.atoms.text_contrast_medium]}
+            onPress={() => control.close()}>
             <Plural
               value={likeCount}
               one="Liked by # user"
@@ -452,27 +467,66 @@ function DialogInner({
         )}
       </View>
 
-      <View style={[a.pt_xs, a.gap_lg]}>
-        <Divider />
+      {hasSession && (
+        <>
+          <View style={[a.flex_row, a.gap_sm, a.align_center, a.pt_sm]}>
+            <Button
+              disabled={isLikePending || isUnlikePending}
+              label={_(msg`Report feed`)}
+              size="small"
+              variant="solid"
+              color="secondary"
+              onPress={onToggleLiked}
+              style={[a.flex_1]}>
+              {isLiked ? (
+                <HeartFilled size="sm" fill={t.palette.negative_500} />
+              ) : (
+                <ButtonIcon icon={Heart} position="left" />
+              )}
 
-        <View style={[a.flex_row, a.align_center, a.gap_sm, a.justify_between]}>
-          <Text style={[a.italic, t.atoms.text_contrast_medium]}>
-            Something wrong? Let us know.
-          </Text>
+              <ButtonText>
+                {isLiked ? <Trans>Unlike</Trans> : <Trans>Like</Trans>}
+              </ButtonText>
+            </Button>
+            <Button
+              disabled={isFeedStateChangePending}
+              label={_(msg`Report feed`)}
+              size="small"
+              variant="solid"
+              color={isPinned ? 'secondary' : 'primary'}
+              onPress={onTogglePinned}
+              style={[a.flex_1]}>
+              <ButtonText>
+                {isPinned ? <Trans>Unpin feed</Trans> : <Trans>Pin feed</Trans>}
+              </ButtonText>
+              <ButtonIcon icon={Pin} position="right" />
+            </Button>
+          </View>
 
-          <Button
-            label={_(msg`Report feed`)}
-            size="small"
-            variant="solid"
-            color="secondary"
-            onPress={onPressReport}>
-            <ButtonText>
-              <Trans>Report feed</Trans>
-            </ButtonText>
-            <ButtonIcon icon={CircleInfo} position="right" />
-          </Button>
-        </View>
-      </View>
+          <View style={[a.pt_xs, a.gap_lg]}>
+            <Divider />
+
+            <View
+              style={[a.flex_row, a.align_center, a.gap_sm, a.justify_between]}>
+              <Text style={[a.italic, t.atoms.text_contrast_medium]}>
+                Something wrong? Let us know.
+              </Text>
+
+              <Button
+                label={_(msg`Report feed`)}
+                size="small"
+                variant="solid"
+                color="secondary"
+                onPress={onPressReport}>
+                <ButtonText>
+                  <Trans>Report feed</Trans>
+                </ButtonText>
+                <ButtonIcon icon={CircleInfo} position="right" />
+              </Button>
+            </View>
+          </View>
+        </>
+      )}
     </View>
   )
 }
