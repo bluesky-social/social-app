@@ -244,7 +244,7 @@ let ProfileHeaderStandard = ({
           <ProfileHeaderHandle profile={profile} />
         </View>
         {!isPlaceholderProfile && !isBlockedUser && (
-          <>
+          <View style={a.gap_md}>
             <ProfileHeaderMetrics profile={profile} />
             {descriptionRT && !moderation.ui('profileView').blur ? (
               <View pointerEvents="auto">
@@ -262,14 +262,14 @@ let ProfileHeaderStandard = ({
             {!isMe &&
               !isBlockedUser &&
               shouldShowKnownFollowers(profile.viewer?.knownFollowers) && (
-                <View style={[a.flex_row, a.align_center, a.gap_sm, a.pt_md]}>
+                <View style={[a.flex_row, a.align_center, a.gap_sm]}>
                   <KnownFollowers
                     profile={profile}
                     moderationOpts={moderationOpts}
                   />
                 </View>
               )}
-          </>
+          </View>
         )}
       </View>
       <Prompt.Basic
