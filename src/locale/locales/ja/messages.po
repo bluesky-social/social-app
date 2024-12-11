@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-12-08 09:43+0900\n"
+"PO-Revision-Date: 2024-12-11 09:38+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -3694,9 +3694,9 @@ msgstr "ログアウトしたユーザーからの可視性"
 msgid "Login to account that is not listed"
 msgstr "リストにないアカウントにログイン"
 
-#: src/view/shell/desktop/RightNav.tsx:103
-msgid "Logo by <0/>"
-msgstr "<0/>によるロゴ"
+#: src/view/shell/desktop/RightNav.tsx:97
+msgid "Logo by @sawaratsuki.bsky.social"
+msgstr "@sawaratsuki.bsky.socialによるロゴ"
 
 #: src/view/shell/Drawer.tsx:629
 msgid "Logo by <0>@sawaratsuki.bsky.social</0>"
