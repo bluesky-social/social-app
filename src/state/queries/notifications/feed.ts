@@ -52,24 +52,21 @@ const PAGE_SIZE = 30
 type RQPageParam = string | undefined
 
 const RQKEY_ROOT = 'notification-feed'
-export function RQKEY(priority?: false) {
-  return [RQKEY_ROOT, priority]
+export function RQKEY(group: 'all' | 'conversations') {
+  return [RQKEY_ROOT, group]
 }
 
-export function useNotificationFeedQuery(opts?: {
+export function useNotificationFeedQuery(opts: {
   enabled?: boolean
-  overridePriorityNotifications?: boolean
+  filterTab: 'all' | 'conversations'
 }) {
   const agent = useAgent()
   const queryClient = useQueryClient()
   const moderationOpts = useModerationOpts()
   const unreads = useUnreadNotificationsApi()
-  const enabled = opts?.enabled !== false
+  const enabled = opts.enabled !== false
+  const filterTab = opts.filterTab
   const {uris: hiddenReplyUris} = useThreadgateHiddenReplyUris()
-
-  // false: force showing all notifications
-  // undefined: let the server decide
-  const priority = opts?.overridePriorityNotifications ? false : undefined
 
   const selectArgs = useMemo(() => {
     return {
@@ -91,14 +88,23 @@ export function useNotificationFeedQuery(opts?: {
     RQPageParam
   >({
     staleTime: STALE.INFINITY,
-    queryKey: RQKEY(priority),
+    queryKey: RQKEY(filterTab),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
       let page
-      if (!pageParam) {
+      if (filterTab === 'all' && !pageParam) {
         // for the first page, we check the cached page held by the unread-checker first
         page = unreads.getCachedUnreadPage()
       }
       if (!page) {
+        let filter: string[] = []
+        if (filterTab === 'conversations') {
+          filter = [
+            // Anything that's a post
+            'mention',
+            'reply',
+            'quote',
+          ]
+        }
         const {page: fetchedPage} = await fetchPage({
           agent,
           limit: PAGE_SIZE,
@@ -106,13 +112,15 @@ export function useNotificationFeedQuery(opts?: {
           queryClient,
           moderationOpts,
           fetchAdditionalData: true,
-          priority,
+          priority: undefined, // Rely on user preference
+          // @ts-ignore Needs https://github.com/bluesky-social/atproto/pull/3222:
+          filter,
         })
         page = fetchedPage
       }
 
-      // if the first page has an unread, mark all read
-      if (!pageParam) {
+      if (filterTab === 'all' && !pageParam) {
+        // if the first page has an unread, mark all read
         unreads.markAllRead()
       }
 
