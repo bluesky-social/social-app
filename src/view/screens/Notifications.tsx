@@ -24,11 +24,14 @@ import {truncateAndInvalidate} from '#/state/queries/util'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {useComposerControls} from '#/state/shell/composer'
 import {NotificationFeed} from '#/view/com/notifications/NotificationFeed'
+import {Pager} from '#/view/com/pager/Pager'
+import {TabBar} from '#/view/com/pager/TabBar'
 import {FAB} from '#/view/com/util/fab/FAB'
 import {ListMethods} from '#/view/com/util/List'
 import {LoadLatestBtn} from '#/view/com/util/load-latest/LoadLatestBtn'
 import {MainScrollProvider} from '#/view/com/util/MainScrollProvider'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {web} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import {SettingsGear2_Stroke2_Corner0_Rounded as SettingsIcon} from '#/components/icons/SettingsGear2'
 import * as Layout from '#/components/Layout'
@@ -44,9 +47,60 @@ export function NotificationsScreen({}: Props) {
   const t = useTheme()
   const {gtTablet} = useBreakpoints()
   const {openComposer} = useComposerControls()
-  const [isLoadingLatest, setIsLoadingLatest] = React.useState(false)
   const unreadNotifs = useUnreadNotifications()
   const hasNew = !!unreadNotifs
+  const {checkUnread: checkUnreadAll} = useUnreadNotificationsApi()
+  const [isLoadingAll, setIsLoadingAll] = React.useState(false)
+  const [isLoadingConversations, setIsLoadingConversations] =
+    React.useState(false)
+  const [activeTab, setActiveTab] = React.useState(0)
+  const isLoading = activeTab === 0 ? isLoadingAll : isLoadingConversations
+
+  const onPageSelected = React.useCallback(
+    (index: number) => {
+      setActiveTab(index)
+    },
+    [setActiveTab],
+  )
+
+  const queryClient = useQueryClient()
+  const checkUnreadConversations = React.useCallback(
+    async ({invalidate}: {invalidate: boolean}) => {
+      if (invalidate) {
+        return truncateAndInvalidate(queryClient, NOTIFS_RQKEY('conversations'))
+      } else {
+        // TODO
+      }
+    },
+    [queryClient],
+  )
+
+  const sections = React.useMemo(() => {
+    return [
+      {
+        title: _(msg`All`),
+        component: (
+          <NotificationsTab
+            filterTab="all"
+            hasNew={hasNew}
+            setIsLoadingLatest={setIsLoadingAll}
+            checkUnread={checkUnreadAll}
+          />
+        ),
+      },
+      {
+        title: _(msg`Conversations`),
+        component: (
+          <NotificationsTab
+            filterTab="conversations"
+            hasNew={hasNew}
+            setIsLoadingLatest={setIsLoadingConversations}
+            checkUnread={checkUnreadConversations}
+          />
+        ),
+      },
+    ]
+  }, [_, hasNew, checkUnreadAll, checkUnreadConversations])
 
   return (
     <Layout.Screen testID="notificationsScreen">
@@ -89,19 +143,22 @@ export function NotificationsScreen({}: Props) {
             color="secondary"
             shape="round"
             style={[a.justify_center]}>
-            <ButtonIcon
-              icon={isLoadingLatest ? Loader : SettingsIcon}
-              size="lg"
-            />
+            <ButtonIcon icon={isLoading ? Loader : SettingsIcon} size="lg" />
           </Link>
         </Layout.Header.Slot>
       </Layout.Header.Outer>
-
-      <NotificationsTab
-        hasNew={hasNew}
-        setIsLoadingLatest={setIsLoadingLatest}
-      />
-
+      <Pager
+        onPageSelected={onPageSelected}
+        renderTabBar={props => (
+          <Layout.Center style={web([a.sticky, a.z_10, {top: 0}])}>
+            <TabBar items={sections.map(section => section.title)} {...props} />
+          </Layout.Center>
+        )}
+        initialPage={0}>
+        {sections.map((section, i) => (
+          <View key={i}>{section.component}</View>
+        ))}
+      </Pager>
       <FAB
         testID="composeFAB"
         onPress={() => openComposer({})}
@@ -115,10 +172,14 @@ export function NotificationsScreen({}: Props) {
 }
 
 function NotificationsTab({
+  filterTab,
   hasNew,
+  checkUnread,
   setIsLoadingLatest,
 }: {
+  filterTab: 'all' | 'conversations'
   hasNew: boolean
+  checkUnread: ({invalidate}: {invalidate: boolean}) => Promise<void>
   setIsLoadingLatest: (v: boolean) => void
 }) {
   const {_} = useLingui()
@@ -127,7 +188,6 @@ function NotificationsTab({
   const scrollElRef = React.useRef<ListMethods>(null)
   const queryClient = useQueryClient()
   const isScreenFocused = useIsFocused()
-  const {checkUnread} = useUnreadNotificationsApi()
 
   // event handlers
   // =
@@ -140,7 +200,7 @@ function NotificationsTab({
     scrollToTop()
     if (hasNew) {
       // render what we have now
-      truncateAndInvalidate(queryClient, NOTIFS_RQKEY('all'))
+      truncateAndInvalidate(queryClient, NOTIFS_RQKEY(filterTab))
     } else {
       // check with the server
       setIsLoadingLatest(true)
@@ -148,7 +208,14 @@ function NotificationsTab({
         .catch(() => undefined)
         .then(() => setIsLoadingLatest(false))
     }
-  }, [scrollToTop, queryClient, checkUnread, hasNew, setIsLoadingLatest])
+  }, [
+    scrollToTop,
+    queryClient,
+    checkUnread,
+    hasNew,
+    setIsLoadingLatest,
+    filterTab,
+  ])
 
   const onFocusCheckLatest = useNonReactiveCallback(() => {
     // on focus, check for latest, but only invalidate if the user
@@ -184,6 +251,7 @@ function NotificationsTab({
     <>
       <MainScrollProvider>
         <NotificationFeed
+          filterTab="all"
           refreshNotifications={() => checkUnread({invalidate: true})}
           onScrolledDownChange={setIsScrolledDown}
           scrollElRef={scrollElRef}
