@@ -1,18 +1,23 @@
+import React from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {FEEDBACK_FORM_URL, HELP_DESK_URL} from '#/lib/constants'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import * as persisted from '#/state/persisted'
 import {useKawaiiMode} from '#/state/preferences/kawaii'
 import {useSession} from '#/state/session'
 import {DesktopFeeds} from '#/view/shell/desktop/Feeds'
 import {DesktopSearch} from '#/view/shell/desktop/Search'
 import {atoms as a, useGutters, useTheme, web} from '#/alf'
+import {Button, ButtonIcon} from '#/components/Button'
 import {Divider} from '#/components/Divider'
+import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import {Trending2_Stroke2_Corner2_Rounded as Graph} from '#/components/icons/Trending2'
 import {InlineLinkText} from '#/components/Link'
 import {ProgressGuideList} from '#/components/ProgressGuide/List'
+import * as Prompt from '#/components/Prompt'
 import * as Trending from '#/components/TrendingTopics'
 import {Text} from '#/components/Typography'
 
@@ -58,38 +63,7 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
         </>
       )}
 
-      {!isSearchScreen && (
-        <>
-          <View style={[a.gap_md]}>
-            <View style={[a.flex_row, a.align_center, a.gap_xs]}>
-              <Graph size="sm" />
-              <Text
-                style={[a.text_sm, a.font_bold, t.atoms.text_contrast_medium]}>
-                <Trans>Trending</Trans>
-              </Text>
-            </View>
-
-            <View style={[a.flex_row, a.flex_wrap, a.gap_xs]}>
-              {Trending.TOPICS.slice(0, 8).map(topic => (
-                <Trending.Link key={topic} topic={topic}>
-                  {({hovered}) => (
-                    <Trending.TopicSmall
-                      topic={topic}
-                      style={[
-                        hovered && [
-                          t.atoms.border_contrast_high,
-                          t.atoms.bg_contrast_25,
-                        ],
-                      ]}
-                    />
-                  )}
-                </Trending.Link>
-              ))}
-            </View>
-          </View>
-          <Divider />
-        </>
-      )}
+      {!isSearchScreen && <TrendingTopics />}
 
       <Text style={[a.leading_snug, t.atoms.text_contrast_low]}>
         {hasSession && (
@@ -136,4 +110,83 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
       )}
     </View>
   )
+}
+
+function TrendingTopics() {
+  const t = useTheme()
+  const {_} = useLingui()
+  const trendingPrompt = Prompt.usePromptControl()
+
+  const [showTrending, setShowTrending] = React.useState(
+    () => !persisted.get('hideSidebarTrendingTopics'),
+  )
+
+  const onConfirmHideTrending = React.useCallback(() => {
+    setShowTrending(false)
+    persisted.write('hideSidebarTrendingTopics', true)
+  }, [setShowTrending])
+
+  // persisted.write('hideSidebarTrendingTopics', undefined)
+
+  React.useEffect(() => {
+    return persisted.onUpdate('hideSidebarTrendingTopics', value => {
+      setShowTrending(!value)
+    })
+  }, [setShowTrending])
+
+  return showTrending ? (
+    <>
+      <View style={[a.gap_md]}>
+        <View style={[a.flex_row, a.align_center, a.gap_xs]}>
+          <Graph size="sm" />
+          <Text
+            style={[
+              a.flex_1,
+              a.text_sm,
+              a.font_bold,
+              t.atoms.text_contrast_medium,
+            ]}>
+            <Trans>Trending</Trans>
+          </Text>
+          <Button
+            label={_(msg`Hide trending topics from your sidebar`)}
+            size="tiny"
+            variant="ghost"
+            color="secondary"
+            shape="round"
+            onPress={() => trendingPrompt.open()}>
+            <ButtonIcon icon={X} />
+          </Button>
+        </View>
+
+        <View style={[a.flex_row, a.flex_wrap, a.gap_xs]}>
+          {Trending.TOPICS.slice(0, 8).map(topic => (
+            <Trending.Link key={topic} topic={topic}>
+              {({hovered}) => (
+                <Trending.TopicSmall
+                  topic={topic}
+                  style={[
+                    hovered && [
+                      t.atoms.border_contrast_high,
+                      t.atoms.bg_contrast_25,
+                    ],
+                  ]}
+                />
+              )}
+            </Trending.Link>
+          ))}
+        </View>
+      </View>
+      <Prompt.Basic
+        control={trendingPrompt}
+        title={_(msg`Hide trending topics?`)}
+        description={_(
+          msg`This is a device setting, and will apply to all accounts on this device. You can update this later from your settings.`,
+        )}
+        confirmButtonCta={_(msg`Hide`)}
+        onConfirm={onConfirmHideTrending}
+      />
+      <Divider />
+    </>
+  ) : null
 }

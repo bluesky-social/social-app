@@ -125,6 +125,7 @@ const schema = z.object({
   subtitlesEnabled: z.boolean().optional(),
   /** @deprecated */
   mutedThreads: z.array(z.string()),
+  hideSidebarTrendingTopics: z.boolean().optional(),
 })
 export type Schema = z.infer<typeof schema>
 
