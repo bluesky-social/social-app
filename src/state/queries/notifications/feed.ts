@@ -58,14 +58,14 @@ export function RQKEY(group: 'all' | 'mentions') {
 
 export function useNotificationFeedQuery(opts: {
   enabled?: boolean
-  filterTab: 'all' | 'mentions'
+  filter: 'all' | 'mentions'
 }) {
   const agent = useAgent()
   const queryClient = useQueryClient()
   const moderationOpts = useModerationOpts()
   const unreads = useUnreadNotificationsApi()
   const enabled = opts.enabled !== false
-  const filterTab = opts.filterTab
+  const filter = opts.filter
   const {uris: hiddenReplyUris} = useThreadgateHiddenReplyUris()
 
   const selectArgs = useMemo(() => {
@@ -88,17 +88,17 @@ export function useNotificationFeedQuery(opts: {
     RQPageParam
   >({
     staleTime: STALE.INFINITY,
-    queryKey: RQKEY(filterTab),
+    queryKey: RQKEY(filter),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
       let page
-      if (filterTab === 'all' && !pageParam) {
+      if (filter === 'all' && !pageParam) {
         // for the first page, we check the cached page held by the unread-checker first
         page = unreads.getCachedUnreadPage()
       }
       if (!page) {
-        let filter: string[] = []
-        if (filterTab === 'mentions') {
-          filter = [
+        let reasons: string[] = []
+        if (filter === 'mentions') {
+          reasons = [
             // Anything that's a post
             'mention',
             'reply',
@@ -112,14 +112,12 @@ export function useNotificationFeedQuery(opts: {
           queryClient,
           moderationOpts,
           fetchAdditionalData: true,
-          priority: undefined, // Rely on user preference
-          // @ts-ignore Needs https://github.com/bluesky-social/atproto/pull/3222:
-          filter,
+          reasons,
         })
         page = fetchedPage
       }
 
-      if (filterTab === 'all' && !pageParam) {
+      if (filter === 'all' && !pageParam) {
         // if the first page has an unread, mark all read
         unreads.markAllRead()
       }

@@ -23,7 +23,7 @@ export function NotificationSettingsScreen({}: Props) {
     isError: isQueryError,
     refetch,
   } = useNotificationFeedQuery({
-    filterTab: 'all',
+    filter: 'all',
   })
   const serverPriority = data?.pages.at(0)?.priority
 

@@ -27,14 +27,14 @@ const LOAD_MORE_ERROR_ITEM = {_reactKey: '__load_more_error__'}
 const LOADING_ITEM = {_reactKey: '__loading__'}
 
 export function NotificationFeed({
-  filterTab,
+  filter,
   scrollElRef,
   onPressTryAgain,
   onScrolledDownChange,
   ListHeaderComponent,
   refreshNotifications,
 }: {
-  filterTab: 'all' | 'mentions'
+  filter: 'all' | 'mentions'
   scrollElRef?: ListRef
   onPressTryAgain?: () => void
   onScrolledDownChange: (isScrolledDown: boolean) => void
@@ -57,7 +57,7 @@ export function NotificationFeed({
     fetchNextPage,
   } = useNotificationFeedQuery({
     enabled: !!moderationOpts,
-    filterTab,
+    filter,
   })
   const isEmpty = !isFetching && !data?.pages[0]?.items.length
 

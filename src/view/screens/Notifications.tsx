@@ -81,7 +81,7 @@ export function NotificationsScreen({}: Props) {
         title: _(msg`All`),
         component: (
           <NotificationsTab
-            filterTab="all"
+            filter="all"
             hasNew={hasNew}
             setIsLoadingLatest={setIsLoadingAll}
             checkUnread={checkUnreadAll}
@@ -92,7 +92,7 @@ export function NotificationsScreen({}: Props) {
         title: _(msg`Mentions`),
         component: (
           <NotificationsTab
-            filterTab="mentions"
+            filter="mentions"
             hasNew={hasNew}
             setIsLoadingLatest={setIsLoadingConversations}
             checkUnread={checkUnreadConversations}
@@ -172,12 +172,12 @@ export function NotificationsScreen({}: Props) {
 }
 
 function NotificationsTab({
-  filterTab,
+  filter,
   hasNew,
   checkUnread,
   setIsLoadingLatest,
 }: {
-  filterTab: 'all' | 'mentions'
+  filter: 'all' | 'mentions'
   hasNew: boolean
   checkUnread: ({invalidate}: {invalidate: boolean}) => Promise<void>
   setIsLoadingLatest: (v: boolean) => void
@@ -200,7 +200,7 @@ function NotificationsTab({
     scrollToTop()
     if (hasNew) {
       // render what we have now
-      truncateAndInvalidate(queryClient, NOTIFS_RQKEY(filterTab))
+      truncateAndInvalidate(queryClient, NOTIFS_RQKEY(filter))
     } else {
       // check with the server
       setIsLoadingLatest(true)
@@ -214,7 +214,7 @@ function NotificationsTab({
     checkUnread,
     hasNew,
     setIsLoadingLatest,
-    filterTab,
+    filter,
   ])
 
   const onFocusCheckLatest = useNonReactiveCallback(() => {
@@ -251,7 +251,7 @@ function NotificationsTab({
     <>
       <MainScrollProvider>
         <NotificationFeed
-          filterTab="all"
+          filter="all"
           refreshNotifications={() => checkUnread({invalidate: true})}
           onScrolledDownChange={setIsScrolledDown}
           scrollElRef={scrollElRef}
