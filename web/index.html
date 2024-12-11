@@ -45,7 +45,6 @@
       }
       html {
         background-color: white;
-        scrollbar-gutter: stable both-edges;
       }
       @media (prefers-color-scheme: dark) {
         html {
@@ -81,9 +80,15 @@
         top: 50%;
         transform: translateX(-50%) translateY(-50%) translateY(-50px);
       }
-      /* We need this style to prevent web dropdowns from shifting the display when opening */
+      /**
+       * We need these styles to prevent shifting due to scrollbar show/hide on
+       * OSs that have them enabled by default. This also handles cases where the
+       * screen wouldn't otherwise scroll, and therefore hide the scrollbar and
+       * shift the content, by forcing the page to show a scrollbar.
+       */
       body {
         width: 100%;
+        overflow-y: scroll;
       }
     </style>
   </head>

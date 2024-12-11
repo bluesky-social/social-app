@@ -256,6 +256,9 @@ export function PostInteractionSettingsForm({
     } else {
       newSelected.splice(i, 1)
     }
+    if (newSelected.length === 0) {
+      newSelected.push({type: 'everybody'})
+    }
 
     onChangeThreadgateAllowUISettings(newSelected)
   }
@@ -308,11 +311,7 @@ export function PostInteractionSettingsForm({
               onChange={onChangeQuotesEnabled}
               style={[a.justify_between, a.pt_xs]}>
               <Text style={[t.atoms.text_contrast_medium]}>
-                {quotesEnabled ? (
-                  <Trans>Quote posts enabled</Trans>
-                ) : (
-                  <Trans>Quote posts disabled</Trans>
-                )}
+                <Trans>Quote posts enabled</Trans>
               </Text>
               <Toggle.Switch />
             </Toggle.Item>

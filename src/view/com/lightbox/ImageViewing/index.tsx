@@ -8,7 +8,7 @@
 // Original code copied and simplified from the link below as the codebase is currently not maintained:
 // https://github.com/jobtoday/react-native-image-viewing
 
-import React, {useCallback, useState} from 'react'
+import React, {useCallback, useEffect, useMemo, useState} from 'react'
 import {
   LayoutAnimation,
   PixelRatio,
@@ -40,6 +40,7 @@ import {
   useSafeAreaFrame,
   useSafeAreaInsets,
 } from 'react-native-safe-area-context'
+import {StatusBar} from 'expo-status-bar'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Trans} from '@lingui/macro'
 
@@ -50,6 +51,8 @@ import {Lightbox} from '#/state/lightbox'
 import {Button} from '#/view/com/util/forms/Button'
 import {Text} from '#/view/com/util/text/Text'
 import {ScrollView} from '#/view/com/util/Views'
+import {ios, useTheme} from '#/alf'
+import {setNavigationBar} from '#/alf/util/navigationBar'
 import {PlatformInfo} from '../../../../../modules/expo-bluesky-swiss-army'
 import {ImageSource, Transform} from './@types'
 import ImageDefaultHeader from './components/ImageDefaultHeader'
@@ -74,6 +77,15 @@ const FAST_SPRING: WithSpringConfig = {
   damping: 150,
   stiffness: 900,
   restDisplacementThreshold: 0.01,
+}
+
+function canAnimate(lightbox: Lightbox): boolean {
+  return (
+    !PlatformInfo.getIsReducedMotionEnabled() &&
+    lightbox.images.every(
+      img => img.thumbRect && (img.dimensions || img.thumbDimensions),
+    )
+  )
 }
 
 export default function ImageViewRoot({
@@ -101,23 +113,19 @@ export default function ImageViewRoot({
       return
     }
 
-    const canAnimate =
-      !PlatformInfo.getIsReducedMotionEnabled() &&
-      nextLightbox.images.every(
-        img => img.thumbRect && (img.dimensions || img.thumbDimensions),
-      )
+    const isAnimated = canAnimate(nextLightbox)
 
     // https://github.com/software-mansion/react-native-reanimated/issues/6677
-    requestAnimationFrame(() => {
+    rAF_FIXED(() => {
       openProgress.set(() =>
-        canAnimate ? withClampedSpring(1, SLOW_SPRING) : 1,
+        isAnimated ? withClampedSpring(1, SLOW_SPRING) : 1,
       )
     })
     return () => {
       // https://github.com/software-mansion/react-native-reanimated/issues/6677
-      requestAnimationFrame(() => {
+      rAF_FIXED(() => {
         openProgress.set(() =>
-          canAnimate ? withClampedSpring(0, SLOW_SPRING) : 0,
+          isAnimated ? withClampedSpring(0, SLOW_SPRING) : 0,
         )
       })
     }
@@ -182,6 +190,7 @@ function ImageView({
   openProgress: SharedValue<number>
 }) {
   const {images, index: initialImageIndex} = lightbox
+  const isAnimated = useMemo(() => canAnimate(lightbox), [lightbox])
   const [isScaled, setIsScaled] = useState(false)
   const [isDragging, setIsDragging] = useState(false)
   const [imageIndex, setImageIndex] = useState(initialImageIndex)
@@ -191,10 +200,19 @@ function ImageView({
   const isFlyingAway = useSharedValue(false)
 
   const containerStyle = useAnimatedStyle(() => {
-    if (openProgress.get() < 1 || isFlyingAway.get()) {
-      return {pointerEvents: 'none'}
+    if (openProgress.get() < 1) {
+      return {
+        pointerEvents: 'none',
+        opacity: isAnimated ? 1 : 0,
+      }
     }
-    return {pointerEvents: 'auto'}
+    if (isFlyingAway.get()) {
+      return {
+        pointerEvents: 'none',
+        opacity: 1,
+      }
+    }
+    return {pointerEvents: 'auto', opacity: 1}
   })
 
   const backdropStyle = useAnimatedStyle(() => {
@@ -276,8 +294,26 @@ function ImageView({
     },
   )
 
+  // style nav bar on android
+  const t = useTheme()
+  useEffect(() => {
+    setNavigationBar('lightbox', t)
+    return () => {
+      setNavigationBar('theme', t)
+    }
+  }, [t])
+
   return (
     <Animated.View style={[styles.container, containerStyle]}>
+      <StatusBar
+        animated
+        style="light"
+        hideTransitionAnimation="slide"
+        backgroundColor="black"
+        // hiding causes layout shifts on android,
+        // so avoid until we add edge-to-edge mode
+        hidden={ios(isScaled || !showControls)}
+      />
       <Animated.View
         style={[styles.backdrop, backdropStyle]}
         renderToHardwareTextureAndroid
@@ -730,4 +766,33 @@ function interpolateTransform(
 function withClampedSpring(value: any, config: WithSpringConfig) {
   'worklet'
   return withSpring(value, {...config, overshootClamping: true})
+}
+
+// We have to do this because we can't trust RN's rAF to fire in order.
+// https://github.com/facebook/react-native/issues/48005
+let isFrameScheduled = false
+let pendingFrameCallbacks: Array<() => void> = []
+function rAF_FIXED(callback: () => void) {
+  pendingFrameCallbacks.push(callback)
+  if (!isFrameScheduled) {
+    isFrameScheduled = true
+    requestAnimationFrame(() => {
+      const callbacks = pendingFrameCallbacks.slice()
+      isFrameScheduled = false
+      pendingFrameCallbacks = []
+      let hasError = false
+      let error
+      for (let i = 0; i < callbacks.length; i++) {
+        try {
+          callbacks[i]()
+        } catch (e) {
+          hasError = true
+          error = e
+        }
+      }
+      if (hasError) {
+        throw error
+      }
+    })
+  }
 }

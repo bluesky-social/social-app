@@ -363,10 +363,10 @@ const ImageItem = ({
       return transforms.get().isResting && !hasLoaded
     },
     (show, prevShow) => {
-      if (show && !prevShow) {
-        runOnJS(setShowLoader)(false)
-      } else if (!prevShow && show) {
+      if (!prevShow && show) {
         runOnJS(setShowLoader)(true)
+      } else if (prevShow && !show) {
+        runOnJS(setShowLoader)(false)
       }
     },
   )
@@ -392,9 +392,9 @@ const ImageItem = ({
           <Animated.View style={imageCropStyle}>
             <Animated.View style={imageStyle}>
               <Image
-                contentFit="cover"
+                contentFit="contain"
                 source={{uri: imageSrc.uri}}
-                placeholderContentFit="cover"
+                placeholderContentFit="contain"
                 placeholder={{uri: imageSrc.thumbUri}}
                 accessibilityLabel={imageSrc.alt}
                 onLoad={

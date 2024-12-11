@@ -86,7 +86,6 @@ function ChangeHandleDialogInner() {
   return (
     <Dialog.ScrollableInner
       label={_(msg`Change Handle`)}
-      style={[a.overflow_hidden]}
       header={
         <Dialog.Header renderLeft={cancelButton}>
           <Dialog.HeaderText>

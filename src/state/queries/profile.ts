@@ -30,7 +30,7 @@ import {
   ProgressGuideAction,
   useProgressGuideControls,
 } from '../shell/progress-guide'
-import {RQKEY as RQKEY_LIST_CONVOS} from './messages/list-converations'
+import {RQKEY as RQKEY_LIST_CONVOS} from './messages/list-conversations'
 import {RQKEY as RQKEY_MY_BLOCKED} from './my-blocked-accounts'
 import {RQKEY as RQKEY_MY_MUTED} from './my-muted-accounts'
 
@@ -409,7 +409,7 @@ function useProfileUnmuteMutation() {
 }
 
 export function useProfileBlockMutationQueue(
-  profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>,
+  profile: Shadow<AppBskyActorDefs.ProfileViewBasic>,
 ) {
   const queryClient = useQueryClient()
   const did = profile.did

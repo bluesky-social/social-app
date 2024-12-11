@@ -34,6 +34,7 @@ export function AppLanguageDropdown(_props: ViewStyleProp) {
   return (
     <View style={a.relative}>
       <RNPickerSelect
+        darkTheme={t.scheme === 'dark'}
         placeholder={{}}
         value={sanitizedLang}
         onValueChange={onChangeAppLanguage}

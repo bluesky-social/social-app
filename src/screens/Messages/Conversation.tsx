@@ -1,6 +1,5 @@
 import React, {useCallback} from 'react'
 import {View} from 'react-native'
-import {useKeyboardController} from 'react-native-keyboard-controller'
 import {AppBskyActorDefs, moderateProfile, ModerationOpts} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -8,6 +7,7 @@ import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {useEmail} from '#/lib/hooks/useEmail'
+import {useEnableKeyboardControllerScreen} from '#/lib/hooks/useEnableKeyboardController'
 import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
 import {isWeb} from '#/platform/detection'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
@@ -17,7 +17,6 @@ import {useCurrentConvoId} from '#/state/messages/current-convo-id'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useSetMinimalShellMode} from '#/state/shell'
-import {CenteredView} from '#/view/com/util/Views'
 import {MessagesList} from '#/screens/Messages/components/MessagesList'
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
@@ -39,16 +38,7 @@ export function MessagesConversationScreen({route}: Props) {
   const convoId = route.params.conversation
   const {setCurrentConvoId} = useCurrentConvoId()
 
-  const {setEnabled} = useKeyboardController()
-  useFocusEffect(
-    useCallback(() => {
-      if (isWeb) return
-      setEnabled(true)
-      return () => {
-        setEnabled(false)
-      }
-    }, [setEnabled]),
-  )
+  useEnableKeyboardControllerScreen(true)
 
   useFocusEffect(
     useCallback(() => {
@@ -106,7 +96,7 @@ function Inner() {
 
   if (convoState.status === ConvoStatus.Error) {
     return (
-      <CenteredView style={[a.flex_1]} sideBorders>
+      <Layout.Center style={[a.flex_1]}>
         <MessagesListHeader />
         <Error
           title={_(msg`Something went wrong`)}
@@ -114,12 +104,12 @@ function Inner() {
           onRetry={() => convoState.error.retry()}
           sideBorders={false}
         />
-      </CenteredView>
+      </Layout.Center>
     )
   }
 
   return (
-    <CenteredView style={[a.flex_1]} sideBorders>
+    <Layout.Center style={[a.flex_1]}>
       {!readyToShow && <MessagesListHeader />}
       <View style={[a.flex_1]}>
         {moderationOpts && recipient ? (
@@ -149,7 +139,7 @@ function Inner() {
           </View>
         )}
       </View>
-    </CenteredView>
+    </Layout.Center>
   )
 }
 

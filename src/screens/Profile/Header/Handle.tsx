@@ -23,7 +23,7 @@ export function ProfileHeaderHandle({
   const blockHide = profile.viewer?.blocking || profile.viewer?.blockedBy
   return (
     <View
-      style={[a.flex_row, a.gap_xs, a.align_center]}
+      style={[a.flex_row, a.gap_xs, a.align_center, {maxWidth: '100%'}]}
       pointerEvents={disableTaps ? 'none' : isIOS ? 'auto' : 'box-none'}>
       <NewskieDialog profile={profile} disabled={disableTaps} />
       {profile.viewer?.followedBy && !blockHide ? (

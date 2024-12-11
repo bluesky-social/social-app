@@ -31,7 +31,7 @@ import {
   suggestLinkCardUri,
 } from '#/view/com/composer/text-input/text-input-util'
 import {atoms as a, useAlf} from '#/alf'
-import {normalizeTextStyles} from '#/components/Typography'
+import {normalizeTextStyles} from '#/alf/typography'
 import {Autocomplete} from './mobile/Autocomplete'
 
 export interface TextInputRef {
@@ -256,6 +256,10 @@ export const TextInput = forwardRef(function TextInputImpl(
             textAlignVertical: 'top',
             minHeight: 60,
             includeFontPadding: false,
+          },
+          {
+            borderWidth: 1,
+            borderColor: 'transparent',
           },
         ]}
         {...props}>
