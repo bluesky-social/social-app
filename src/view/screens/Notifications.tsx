@@ -140,7 +140,7 @@ function NotificationsTab({
     scrollToTop()
     if (hasNew) {
       // render what we have now
-      truncateAndInvalidate(queryClient, NOTIFS_RQKEY())
+      truncateAndInvalidate(queryClient, NOTIFS_RQKEY('all'))
     } else {
       // check with the server
       setIsLoadingLatest(true)
