@@ -1,125 +1,478 @@
-import {View, Text as RNText} from 'react-native'
-import {useLingui} from '@lingui/react'
-import {msg, plural, Trans} from '@lingui/macro'
+import React from 'react'
+import {View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {AtUri} from '@atproto/api'
+import {msg, Plural, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
-import * as Layout from '#/components/Layout'
-import {atoms as a, useTheme, useBreakpoints, web} from '#/alf'
-import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {Text} from '#/components/Typography'
-import {Pin_Stroke2_Corner0_Rounded as Pin} from '#/components/icons/Pin'
-import {ChevronBottom_Stroke2_Corner0_Rounded as ChevronDown} from '#/components/icons/Chevron'
-import {Button, ButtonIcon} from '#/components/Button'
+import {useHaptics} from '#/lib/haptics'
+import {makeCustomFeedLink} from '#/lib/routes/links'
+import {shareUrl} from '#/lib/sharing'
 import {sanitizeHandle} from '#/lib/strings/handles'
+import {toShareUrl} from '#/lib/strings/url-helpers'
+import {logger} from '#/logger'
+import {FeedSourceFeedInfo} from '#/state/queries/feed'
+import {useLikeMutation, useUnlikeMutation} from '#/state/queries/like'
+import {
+  useAddSavedFeedsMutation,
+  usePreferencesQuery,
+  useRemoveFeedMutation,
+  useUpdateSavedFeedsMutation,
+} from '#/state/queries/preferences'
+import {useSession} from '#/state/session'
+import {formatCount} from '#/view/com/util/numeric/format'
+import * as Toast from '#/view/com/util/Toast'
+import {UserAvatar} from '#/view/com/util/UserAvatar'
+import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import * as Dialog from '#/components/Dialog'
+import {Divider} from '#/components/Divider'
+import {useRichText} from '#/components/hooks/useRichText'
+import {ArrowOutOfBox_Stroke2_Corner0_Rounded as Share} from '#/components/icons/ArrowOutOfBox'
+import {ChevronBottom_Stroke2_Corner0_Rounded as ChevronDown} from '#/components/icons/Chevron'
+import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
+import {
+  Heart2_Filled_Stroke2_Corner0_Rounded as HeartFilled,
+  Heart2_Stroke2_Corner0_Rounded as Heart,
+} from '#/components/icons/Heart2'
+import {
+  Pin_Filled_Corner0_Rounded as PinFilled,
+  Pin_Stroke2_Corner0_Rounded as Pin,
+} from '#/components/icons/Pin'
+import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
+import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
+import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
+import * as Layout from '#/components/Layout'
+import {InlineLinkText} from '#/components/Link'
+import {Loader} from '#/components/Loader'
+import * as Menu from '#/components/Menu'
+import {ReportDialog, useReportDialogControl} from '#/components/ReportDialog'
+import {RichText} from '#/components/RichText'
+import {Text} from '#/components/Typography'
 
-export function ProfileSubpageHeader({
-  title,
-  avatar,
-  creator,
-  likeCount,
-}: {
-  title: string
-  avatar?: string
-  creator: {did: string; handle: string}
-  likeCount: number
-}) {
+export function ProfileSubpageHeader({info}: {info: FeedSourceFeedInfo}) {
   const t = useTheme()
+  const {_, i18n} = useLingui()
+  const {hasSession} = useSession()
   const {gtPhone, gtMobile} = useBreakpoints()
-  const {_} = useLingui()
   const {top} = useSafeAreaInsets()
+  const infoControl = Dialog.useDialogControl()
+  const playHaptic = useHaptics()
+  const reportDialogControl = useReportDialogControl()
+
+  const {data: preferences} = usePreferencesQuery()
+
+  const [likeUri, setLikeUri] = React.useState(info.likeUri || '')
+  const isLiked = !!likeUri
+  const likeCount =
+    isLiked && likeUri ? (info.likeCount || 0) + 1 : info.likeCount || 0
+
+  const {mutateAsync: addSavedFeeds, isPending: isAddSavedFeedPending} =
+    useAddSavedFeedsMutation()
+  const {mutateAsync: removeFeed, isPending: isRemovePending} =
+    useRemoveFeedMutation()
+  const {mutateAsync: updateSavedFeeds, isPending: isUpdateFeedPending} =
+    useUpdateSavedFeedsMutation()
+
+  const isPending =
+    isAddSavedFeedPending || isRemovePending || isUpdateFeedPending
+  const savedFeedConfig = preferences?.savedFeeds?.find(
+    f => f.value === info.uri,
+  )
+  const isSaved = Boolean(savedFeedConfig)
+  const isPinned = Boolean(savedFeedConfig?.pinned)
+
+  const onToggleSaved = React.useCallback(async () => {
+    try {
+      playHaptic()
+
+      if (savedFeedConfig) {
+        await removeFeed(savedFeedConfig)
+        Toast.show(_(msg`Removed from your feeds`))
+      } else {
+        await addSavedFeeds([
+          {
+            type: 'feed',
+            value: info.uri,
+            pinned: false,
+          },
+        ])
+        Toast.show(_(msg`Saved to your feeds`))
+      }
+    } catch (err) {
+      Toast.show(
+        _(
+          msg`There was an issue updating your feeds, please check your internet connection and try again.`,
+        ),
+        'xmark',
+      )
+      logger.error('Failed to update feeds', {message: err})
+    }
+  }, [_, playHaptic, info, removeFeed, addSavedFeeds, savedFeedConfig])
+
+  const onTogglePinned = React.useCallback(async () => {
+    try {
+      playHaptic()
+
+      if (savedFeedConfig) {
+        const pinned = !savedFeedConfig.pinned
+        await updateSavedFeeds([
+          {
+            ...savedFeedConfig,
+            pinned,
+          },
+        ])
+
+        if (pinned) {
+          Toast.show(_(msg`Pinned to your home screen`))
+        } else {
+          Toast.show(_(msg`Un-pinned from your home screen`))
+        }
+      } else {
+        await addSavedFeeds([
+          {
+            type: 'feed',
+            value: info.uri,
+            pinned: true,
+          },
+        ])
+        Toast.show(_(msg`Pinned to your home screen`))
+      }
+    } catch (e) {
+      Toast.show(_(msg`There was an issue contacting the server`), 'xmark')
+      logger.error('Failed to toggle pinned feed', {message: e})
+    }
+  }, [playHaptic, info, _, savedFeedConfig, updateSavedFeeds, addSavedFeeds])
 
   return (
-    <Layout.Center
-      style={[t.atoms.bg, a.z_10, {paddingTop: top}, web([a.sticky, a.z_10, {top: 0}])]}
-    >
-      <Layout.Header.Outer>
-        <Layout.Header.BackButton />
-        <Layout.Header.Content align="left">
-          <Button
-            label={_(msg`Open feed info screen`)}
-            style={[
-              a.justify_start,
-              {
-                paddingVertical: 6,
-                paddingHorizontal: 8,
-                paddingRight: 12,
-              },
-            ]}>
-            {({hovered}) => (
-              <>
-                <View
-                  style={[
-                    a.absolute,
-                    a.inset_0,
-                    a.rounded_sm,
-                    a.transition_transform,
-                    t.atoms.bg_contrast_25,
-                    hovered && {
-                      transform: [{scaleX: 1.01}, {scaleY: 1.1}],
-                    },
-                  ]}
-                />
-
-                <View style={[a.flex_1, a.flex_row, a.align_center, a.gap_sm]}>
-                  {avatar && (
-                    <UserAvatar size={32} type="algo" avatar={avatar} />
-                  )}
-
-                  <View style={[a.flex_1]}>
-                    {/* Should roughly matchl Layout.Header.TitleText */}
-                    <Text
-                      style={[
-                        a.text_md,
-                        a.font_heavy,
-                        a.leading_tight,
-                        gtMobile && a.text_lg,
-                      ]}
-                      numberOfLines={2}>
-                      {title}
-                    </Text>
-                    {/* Should roughly matchl Layout.Header.SubtitleText */}
-                    <Text
-                      style={[
-                        a.flex_1,
-                        a.text_xs,
-                        a.leading_snug,
-                        t.atoms.text_contrast_medium,
-                        gtPhone && a.text_sm,
-                      ]}>
-                      <RNText numberOfLines={1}>
-                        <Trans>By {sanitizeHandle(creator.handle, '@')}</Trans>
-                      </RNText>
-                      {' • '}
-                      <RNText numberOfLines={1}>
-                        {plural(likeCount, {
-                          one: '# like',
-                          other: '# likes',
-                        })}
-                      </RNText>
-                    </Text>
-                  </View>
-
-                  <ChevronDown
-                    size="md"
-                    fill={t.atoms.text_contrast_low.color}
+    <>
+      <Layout.Center
+        style={[
+          t.atoms.bg,
+          a.z_10,
+          {paddingTop: top},
+          web([a.sticky, a.z_10, {top: 0}]),
+        ]}>
+        <Layout.Header.Outer>
+          <Layout.Header.BackButton />
+          <Layout.Header.Content align="left">
+            <Button
+              label={_(msg`Open feed info screen`)}
+              style={[
+                a.justify_start,
+                {
+                  paddingVertical: 6,
+                  paddingHorizontal: 8,
+                  paddingRight: 12,
+                },
+              ]}
+              onPress={() => infoControl.open()}>
+              {({hovered, pressed}) => (
+                <>
+                  <View
+                    style={[
+                      a.absolute,
+                      a.inset_0,
+                      a.rounded_sm,
+                      a.transition_transform,
+                      t.atoms.bg_contrast_25,
+                      (hovered || pressed) && {
+                        transform: [{scaleX: 1.01}, {scaleY: 1.1}],
+                      },
+                    ]}
                   />
-                </View>
-              </>
-            )}
-          </Button>
-        </Layout.Header.Content>
 
-        <Layout.Header.Slot>
+                  <View
+                    style={[a.flex_1, a.flex_row, a.align_center, a.gap_sm]}>
+                    {info.avatar && (
+                      <UserAvatar size={32} type="algo" avatar={info.avatar} />
+                    )}
+
+                    <View style={[a.flex_1]}>
+                      {/* Should roughly match Layout.Header.TitleText */}
+                      <Text
+                        style={[
+                          a.text_md,
+                          a.font_heavy,
+                          a.leading_tight,
+                          gtMobile && a.text_xl,
+                        ]}
+                        numberOfLines={2}>
+                        {info.displayName}
+                      </Text>
+                      {/* Should roughly match Layout.Header.SubtitleText */}
+                      <View style={[a.flex_row, a.gap_xs]}>
+                        <Text
+                          style={[
+                            a.flex_shrink,
+                            a.text_xs,
+                            a.leading_snug,
+                            t.atoms.text_contrast_medium,
+                            gtPhone && a.text_sm,
+                          ]}
+                          numberOfLines={1}>
+                          {sanitizeHandle(info.creatorHandle, '@')}
+                        </Text>
+                        <View style={[a.flex_row, a.align_center, {gap: 2}]}>
+                          <HeartFilled
+                            size="xs"
+                            fill={
+                              likeUri
+                                ? t.palette.like
+                                : t.atoms.text_contrast_low.color
+                            }
+                          />
+                          <Text
+                            style={[
+                              a.text_xs,
+                              a.leading_snug,
+                              t.atoms.text_contrast_medium,
+                              gtPhone && a.text_sm,
+                            ]}
+                            numberOfLines={1}>
+                            {formatCount(i18n, likeCount)}
+                          </Text>
+                        </View>
+                      </View>
+                    </View>
+
+                    <ChevronDown
+                      size="md"
+                      fill={t.atoms.text_contrast_low.color}
+                    />
+                  </View>
+                </>
+              )}
+            </Button>
+          </Layout.Header.Content>
+
+          {hasSession && (
+            <Layout.Header.Slot>
+              <Menu.Root>
+                <Menu.Trigger label={_(msg`Open feed options menu`)}>
+                  {({props}) => {
+                    return (
+                      <Button
+                        {...props}
+                        label={_(
+                          msg`Pin ${info.displayName} to your home screen`,
+                        )}
+                        size="small"
+                        variant="ghost"
+                        shape="square"
+                        color="secondary">
+                        {isPinned ? (
+                          <PinFilled size="lg" fill={t.palette.primary_500} />
+                        ) : (
+                          <ButtonIcon icon={Pin} size="lg" />
+                        )}
+                      </Button>
+                    )
+                  }}
+                </Menu.Trigger>
+
+                <Menu.Outer>
+                  <Menu.Item
+                    disabled={isPending}
+                    label={
+                      isPinned ? _(msg`Unpin from home`) : _(msg`Pin to home`)
+                    }
+                    onPress={onTogglePinned}>
+                    <Menu.ItemText>
+                      {isPinned ? _(msg`Unpin from home`) : _(msg`Pin to home`)}
+                    </Menu.ItemText>
+                    <Menu.ItemIcon icon={isPinned ? X : Pin} position="right" />
+                  </Menu.Item>
+                  <Menu.Item
+                    disabled={isPending}
+                    label={
+                      isSaved
+                        ? _(msg`Remove from my feeds`)
+                        : _(msg`Save to my feeds`)
+                    }
+                    onPress={onToggleSaved}>
+                    <Menu.ItemText>
+                      {isSaved
+                        ? _(msg`Remove from my feeds`)
+                        : _(msg`Save to my feeds`)}
+                    </Menu.ItemText>
+                    <Menu.ItemIcon
+                      icon={isSaved ? Trash : Plus}
+                      position="right"
+                    />
+                  </Menu.Item>
+                </Menu.Outer>
+              </Menu.Root>
+            </Layout.Header.Slot>
+          )}
+        </Layout.Header.Outer>
+      </Layout.Center>
+
+      <Dialog.Outer control={infoControl}>
+        <Dialog.Handle />
+        <Dialog.ScrollableInner label={_(msg`Feed menu`)}>
+          <DialogInner
+            info={info}
+            likeUri={likeUri}
+            setLikeUri={setLikeUri}
+            likeCount={likeCount}
+            reportDialogControl={reportDialogControl}
+          />
+        </Dialog.ScrollableInner>
+      </Dialog.Outer>
+
+      <ReportDialog
+        control={reportDialogControl}
+        params={{
+          type: 'feedgen',
+          uri: info.uri,
+          cid: info.cid,
+        }}
+      />
+    </>
+  )
+}
+
+function DialogInner({
+  info,
+  likeUri,
+  setLikeUri,
+  likeCount,
+  reportDialogControl,
+}: {
+  info: FeedSourceFeedInfo
+  likeUri: string
+  setLikeUri: (uri: string) => void
+  likeCount: number
+  reportDialogControl: Dialog.DialogOuterProps['control']
+}) {
+  const t = useTheme()
+  const {_} = useLingui()
+  const {hasSession} = useSession()
+  const playHaptic = useHaptics()
+  const [rt, loading] = useRichText(info.description.text)
+  const {mutateAsync: likeFeed, isPending: isLikePending} = useLikeMutation()
+  const {mutateAsync: unlikeFeed, isPending: isUnlikePending} =
+    useUnlikeMutation()
+
+  const isLiked = !!likeUri
+  const feedRkey = React.useMemo(() => new AtUri(info.uri).rkey, [info.uri])
+
+  const onToggleLiked = React.useCallback(async () => {
+    try {
+      playHaptic()
+
+      if (isLiked && likeUri) {
+        await unlikeFeed({uri: likeUri})
+        setLikeUri('')
+      } else {
+        const res = await likeFeed({uri: info.uri, cid: info.cid})
+        setLikeUri(res.uri)
+      }
+    } catch (err) {
+      Toast.show(
+        _(
+          msg`There was an issue contacting the server, please check your internet connection and try again.`,
+        ),
+        'xmark',
+      )
+      logger.error('Failed to toggle like', {message: err})
+    }
+  }, [playHaptic, isLiked, likeUri, unlikeFeed, setLikeUri, likeFeed, info, _])
+
+  const onPressShare = React.useCallback(() => {
+    const url = toShareUrl(info.route.href)
+    shareUrl(url)
+  }, [info])
+
+  const onPressReport = React.useCallback(() => {
+    reportDialogControl.open()
+  }, [reportDialogControl])
+
+  return loading ? (
+    <Loader size="xl" />
+  ) : (
+    <View style={[a.gap_md]}>
+      <View style={[a.flex_row, a.align_center, a.gap_md]}>
+        <UserAvatar type="algo" size={48} avatar={info.avatar} />
+
+        <View style={[a.flex_1, a.gap_2xs]}>
+          <Text
+            style={[a.text_2xl, a.font_heavy, a.leading_tight]}
+            numberOfLines={2}>
+            {info.displayName}
+          </Text>
+          <Text
+            style={[a.text_sm, a.leading_tight, t.atoms.text_contrast_medium]}
+            numberOfLines={1}>
+            <Trans>By {sanitizeHandle(info.creatorHandle, '@')}</Trans>
+          </Text>
+        </View>
+
+        <Button
+          label={_(msg`Share this feed`)}
+          size="small"
+          variant="ghost"
+          color="secondary"
+          shape="round"
+          onPress={onPressShare}>
+          <ButtonIcon icon={Share} size="lg" />
+        </Button>
+      </View>
+
+      <RichText value={rt} style={[a.text_md, a.leading_snug]} />
+
+      <View style={[a.flex_row, a.gap_sm, a.align_center]}>
+        <Button
+          size="small"
+          variant="solid"
+          color="secondary"
+          shape="round"
+          label={isLiked ? _(msg`Unlike this feed`) : _(msg`Like this feed`)}
+          testID="toggleLikeBtn"
+          disabled={!hasSession || isLikePending || isUnlikePending}
+          onPress={onToggleLiked}>
+          {isLiked ? (
+            <HeartFilled size="md" fill={t.palette.negative_500} />
+          ) : (
+            <Heart size="md" fill={t.atoms.text_contrast_medium.color} />
+          )}
+        </Button>
+        {typeof likeCount === 'number' && (
+          <InlineLinkText
+            label={_(msg`View users who like this feed`)}
+            to={makeCustomFeedLink(info.creatorDid, feedRkey, 'liked-by')}
+            style={[t.atoms.text_contrast_medium, a.font_bold]}>
+            <Plural
+              value={likeCount}
+              one="Liked by # user"
+              other="Liked by # users"
+            />
+          </InlineLinkText>
+        )}
+      </View>
+
+      <View style={[a.pt_xs, a.gap_lg]}>
+        <Divider />
+
+        <View style={[a.flex_row, a.align_center, a.gap_sm, a.justify_between]}>
+          <Text style={[a.italic, t.atoms.text_contrast_medium]}>
+            Something wrong? Let us know.
+          </Text>
+
           <Button
-            label={_(msg`Pin ${title} to your home screen`)}
+            label={_(msg`Report feed`)}
             size="small"
-            variant="ghost"
-            shape="square"
-            color="secondary">
-            <ButtonIcon icon={Pin} size="lg" />
+            variant="solid"
+            color="secondary"
+            onPress={onPressReport}>
+            <ButtonText>
+              <Trans>Report feed</Trans>
+            </ButtonText>
+            <ButtonIcon icon={CircleInfo} position="right" />
           </Button>
-        </Layout.Header.Slot>
-      </Layout.Header.Outer>
-    </Layout.Center>
+        </View>
+      </View>
+    </View>
   )
 }
