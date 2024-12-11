@@ -59,7 +59,6 @@ export function ProfileSubpageHeader({info}: {info: FeedSourceFeedInfo}) {
   const {top} = useSafeAreaInsets()
   const infoControl = Dialog.useDialogControl()
   const playHaptic = useHaptics()
-  const reportDialogControl = useReportDialogControl()
 
   const {data: preferences} = usePreferencesQuery()
 
@@ -317,22 +316,12 @@ export function ProfileSubpageHeader({info}: {info: FeedSourceFeedInfo}) {
             likeUri={likeUri}
             setLikeUri={setLikeUri}
             likeCount={likeCount}
-            reportDialogControl={reportDialogControl}
             isPinned={isPinned}
             onTogglePinned={onTogglePinned}
             isFeedStateChangePending={isFeedStateChangePending}
           />
         </Dialog.ScrollableInner>
       </Dialog.Outer>
-
-      <ReportDialog
-        control={reportDialogControl}
-        params={{
-          type: 'feedgen',
-          uri: info.uri,
-          cid: info.cid,
-        }}
-      />
     </>
   )
 }
@@ -342,7 +331,6 @@ function DialogInner({
   likeUri,
   setLikeUri,
   likeCount,
-  reportDialogControl,
   isPinned,
   onTogglePinned,
   isFeedStateChangePending,
@@ -351,16 +339,16 @@ function DialogInner({
   likeUri: string
   setLikeUri: (uri: string) => void
   likeCount: number
-  reportDialogControl: Dialog.DialogOuterProps['control']
   isPinned: boolean
   onTogglePinned: () => void
   isFeedStateChangePending: boolean
 }) {
-  const control = Dialog.useDialogContext()
   const t = useTheme()
   const {_} = useLingui()
   const {hasSession} = useSession()
   const playHaptic = useHaptics()
+  const control = Dialog.useDialogContext()
+  const reportDialogControl = useReportDialogControl()
   const [rt, loading] = useRichText(info.description.text)
   const {mutateAsync: likeFeed, isPending: isLikePending} = useLikeMutation()
   const {mutateAsync: unlikeFeed, isPending: isUnlikePending} =
@@ -522,6 +510,15 @@ function DialogInner({
                 <ButtonIcon icon={CircleInfo} position="right" />
               </Button>
             </View>
+
+            <ReportDialog
+              control={reportDialogControl}
+              params={{
+                type: 'feedgen',
+                uri: info.uri,
+                cid: info.cid,
+              }}
+            />
           </View>
         </>
       )}
