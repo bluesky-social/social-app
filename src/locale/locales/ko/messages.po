@@ -62,12 +62,9 @@ msgstr "{0, plural, other {#}}개월"
 msgid "{0, plural, one {# quote} other {# quotes}}"
 msgstr "{0, plural, other {#}} 인용"
 
+#: src/screens/Post/PostRepostedBy.tsx:41
 #: src/view/com/util/post-ctrls/RepostButton.tsx:69
 msgid "{0, plural, one {# repost} other {# reposts}}"
-msgstr "{0, plural, other {#}}개"
-
-#: src/screens/Post/PostRepostedBy.tsx:41
-msgid "{0, plural, one {# reposts} other {# reposts}}"
 msgstr "{0, plural, other {#}} 재게시"
 
 #: src/lib/hooks/useTimeAgo.ts:126
