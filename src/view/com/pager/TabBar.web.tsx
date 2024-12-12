@@ -115,12 +115,14 @@ export function TabBar({
               hoverStyle={t.atoms.bg_contrast_25}
               onPress={() => onPressItem(i)}
               accessibilityRole="tab">
-              <View style={[styles.itemInner, selected && indicatorStyle]}>
+              <View style={styles.itemInner}>
                 <Text
                   emoji
                   testID={testID ? `${testID}-${item}` : undefined}
                   style={[
+                    styles.itemText,
                     selected ? t.atoms.text : t.atoms.text_contrast_medium,
+                    selected && indicatorStyle,
                     a.text_md,
                     a.font_bold,
                     {lineHeight: 20},
@@ -143,15 +145,23 @@ const desktopStyles = StyleSheet.create({
     width: 598,
   },
   contentContainer: {
+    flexGrow: 1,
     paddingHorizontal: 0,
     backgroundColor: 'transparent',
   },
   item: {
+    flexGrow: 1,
+    alignItems: 'stretch',
     paddingTop: 14,
     paddingHorizontal: 14,
     justifyContent: 'center',
   },
   itemInner: {
+    alignItems: 'center',
+  },
+  itemText: {
+    textAlign: 'center',
+    minWidth: 45,
     paddingBottom: 12,
     borderBottomWidth: 3,
     borderBottomColor: 'transparent',
@@ -170,15 +180,24 @@ const mobileStyles = StyleSheet.create({
     flexDirection: 'row',
   },
   contentContainer: {
+    flexGrow: 1,
     backgroundColor: 'transparent',
     paddingHorizontal: 6,
   },
   item: {
+    flexGrow: 1,
+    alignItems: 'stretch',
     paddingTop: 10,
     paddingHorizontal: 10,
     justifyContent: 'center',
   },
   itemInner: {
+    flexGrow: 1,
+    alignItems: 'center',
+  },
+  itemText: {
+    textAlign: 'center',
+    minWidth: 45,
     paddingBottom: 10,
     borderBottomWidth: 2,
     borderBottomColor: 'transparent',
