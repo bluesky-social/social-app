@@ -872,7 +872,13 @@ function MockNotifItem({
       </P>
     )
   }
-  return <NotificationFeedItem item={notif} moderationOpts={moderationOpts} />
+  return (
+    <NotificationFeedItem
+      item={notif}
+      moderationOpts={moderationOpts}
+      highlightUnread
+    />
+  )
 }
 
 function MockAccountCard({
