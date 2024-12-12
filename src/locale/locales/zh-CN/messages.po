@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-12-12 02:26\n"
+"PO-Revision-Date: 2024-12-12 05:28\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -44,12 +44,12 @@ msgid "{0, plural, one {# hour} other {# hours}}"
 msgstr "{0, plural, one {# 小时} other {# 小时}}"
 
 #: src/components/moderation/LabelsOnMe.tsx:53
-msgid "{0, plural, one {# label has been placed on this account} other {# labels have been placed on this account}}"
-msgstr "{0, plural, one {该账户有 # 个标记} other {该账户有 # 个标记}}"
+msgid "{0, plural, one {# label has} other {# labels have}} been placed on this account"
+msgstr "该账户有 {0, plural, one {# 个标记} other {# 个标记}}"
 
-#: src/components/moderation/LabelsOnMe.tsx:59
-msgid "{0, plural, one {# label has been placed on this content} other {# labels have been placed on this content}}"
-msgstr "{0, plural, one {该内容有 # 个标记} other {该内容有 # 个标记}}"
+#: src/components/moderation/LabelsOnMe.tsx:62
+msgid "{0, plural, one {# label has} other {# labels have}} been placed on this content"
+msgstr "该内容有 {0, plural, one {# 个标记} other {# 个标记}}"
 
 #: src/screens/Post/PostLikedBy.tsx:41
 msgid "{0, plural, one {# like} other {# likes}}"
@@ -68,7 +68,6 @@ msgid "{0, plural, one {# quote} other {# quotes}}"
 msgstr "{0, plural, one {# 次引用} other {# 次引用}}"
 
 #: src/screens/Post/PostRepostedBy.tsx:41
-#: src/view/com/util/post-ctrls/RepostButton.tsx:69
 msgid "{0, plural, one {# repost} other {# reposts}}"
 msgstr "{0, plural, one {# 次转发} other {# 次转发}}"
 
@@ -86,18 +85,9 @@ msgstr "{0, plural, one {关注者} other {关注者}}"
 msgid "{0, plural, one {following} other {following}}"
 msgstr "{0, plural, one {正在关注} other {正在关注}}"
 
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:305
-msgid "{0, plural, one {Like (# like)} other {Like (# likes)}}"
-msgstr "{0, plural, one {喜欢（# 次喜欢）} other {喜欢（# 次喜欢）}}"
-
 #: src/view/com/post-thread/PostThreadItem.tsx:447
 msgid "{0, plural, one {like} other {likes}}"
 msgstr "{0, plural, one {喜欢} other {喜欢}}"
-
-#: src/components/FeedCard.tsx:213
-#: src/view/com/feeds/FeedSourceCard.tsx:303
-msgid "{0, plural, one {Liked by # user} other {Liked by # users}}"
-msgstr "{0, plural, one {# 位用户喜欢} other {# 位用户喜欢}}"
 
 #: src/screens/Profile/Header/Metrics.tsx:58
 msgid "{0, plural, one {post} other {posts}}"
@@ -107,17 +97,9 @@ msgstr "{0, plural, one {帖文} other {帖文}}"
 msgid "{0, plural, one {quote} other {quotes}}"
 msgstr "{0, plural, one {引用} other {引用}}"
 
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:261
-msgid "{0, plural, one {Reply (# reply)} other {Reply (# replies)}}"
-msgstr "{0, plural, one {回复（# 则回复）} other {回复（# 则回复）}}"
-
 #: src/view/com/post-thread/PostThreadItem.tsx:413
 msgid "{0, plural, one {repost} other {reposts}}"
 msgstr "{0, plural, one {转发} other {转发}}"
-
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:301
-msgid "{0, plural, one {Unlike (# like)} other {Unlike (# likes)}}"
-msgstr "{0, plural, one {取消喜欢（# 次喜欢）} other {取消喜欢（# 次喜欢）}}"
 
 #: src/screens/Settings/Settings.tsx:422
 msgid "{0}"
@@ -189,10 +171,6 @@ msgstr "{0} 秒前"
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:252
 msgid "{badge} unread items"
 msgstr "{badge} 条未读通知"
-
-#: src/components/LabelingServiceCard/index.tsx:96
-msgid "{count, plural, one {Liked by # user} other {Liked by # users}}"
-msgstr "{count, plural, one {# 位用户喜欢} other {# 位用户喜欢}}"
 
 #: src/view/shell/desktop/LeftNav.tsx:186
 msgid "{count} unread items"
@@ -307,12 +285,6 @@ msgstr "{following} 位正在关注"
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:385
 msgid "{handle} can't be messaged"
 msgstr "目前无法向 {handle} 发送私信"
-
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:294
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:307
-#: src/view/screens/ProfileFeed.tsx:590
-msgid "{likeCount, plural, one {Liked by # user} other {Liked by # users}}"
-msgstr "{likeCount, plural, one {# 位用户喜欢} other {# 位用户喜欢}}"
 
 #: src/view/shell/Drawer.tsx:448
 msgid "{numUnreadNotifications} unread"
@@ -554,7 +526,7 @@ msgstr "添加默认的动态源（仅显示你关注的人）"
 msgid "Add the following DNS record to your domain:"
 msgstr "向你的域名添加以下 DNS 记录："
 
-#: src/components/FeedCard.tsx:296
+#: src/components/FeedCard.tsx:295
 msgid "Add this feed to your feeds"
 msgstr "添加到你的动态源"
 
@@ -885,11 +857,11 @@ msgstr "你确定要放弃更改吗？"
 msgid "Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for the other participant."
 msgstr "你确定要离开这个对话吗？此操作将仅为你删除对话，而不会为其他参与者删除。"
 
-#: src/view/com/feeds/FeedSourceCard.tsx:316
+#: src/view/com/feeds/FeedSourceCard.tsx:319
 msgid "Are you sure you want to remove {0} from your feeds?"
 msgstr "你确定要从你的动态源中删除 {0} 吗？"
 
-#: src/components/FeedCard.tsx:313
+#: src/components/FeedCard.tsx:312
 msgid "Are you sure you want to remove this from your feeds?"
 msgstr "你确定要将此从你的动态源中删除吗？"
 
@@ -1184,7 +1156,7 @@ msgstr "相机"
 #: src/view/com/modals/LinkWarning.tsx:107
 #: src/view/com/modals/VerifyEmail.tsx:255
 #: src/view/com/modals/VerifyEmail.tsx:261
-#: src/view/com/util/post-ctrls/RepostButton.tsx:203
+#: src/view/com/util/post-ctrls/RepostButton.tsx:213
 #: src/view/screens/Search/Search.tsx:886
 msgid "Cancel"
 msgstr "取消"
@@ -1209,7 +1181,7 @@ msgstr "取消裁剪图片"
 msgid "Cancel profile editing"
 msgstr "取消编辑个人资料"
 
-#: src/view/com/util/post-ctrls/RepostButton.tsx:197
+#: src/view/com/util/post-ctrls/RepostButton.tsx:207
 msgid "Cancel quote post"
 msgstr "取消引用帖文"
 
@@ -1683,7 +1655,7 @@ msgstr "已复制构建版本号至剪贴板"
 #: src/lib/sharing.ts:25
 #: src/view/com/modals/InviteCodes.tsx:153
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:235
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:386
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:392
 msgid "Copied to clipboard"
 msgstr "已复制至剪贴板"
 
@@ -2702,7 +2674,7 @@ msgstr "无法提交申诉，请重试。"
 msgid "Failed to toggle thread mute, please try again"
 msgstr "无法隐藏讨论串，请重试"
 
-#: src/components/FeedCard.tsx:276
+#: src/components/FeedCard.tsx:275
 msgid "Failed to update feeds"
 msgstr "无法更新动态源"
 
@@ -2760,7 +2732,7 @@ msgstr "动态源"
 msgid "Feeds are custom algorithms that users build with a little coding expertise. <0/> for more information."
 msgstr "动态源是一种自定义算法，用户仅需掌握一点编程知识即可轻松创建。<0/>以获取更多资讯。"
 
-#: src/components/FeedCard.tsx:273
+#: src/components/FeedCard.tsx:272
 #: src/view/screens/SavedFeeds.tsx:82
 msgid "Feeds updated!"
 msgstr "已更新动态源！"
@@ -3582,6 +3554,10 @@ msgstr "让我们开始吧！"
 msgid "Light"
 msgstr "浅色"
 
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:310
+msgid "Like ({0, plural, one {# like} other {# likes}})"
+msgstr "喜欢（{0, plural, one {# 次喜欢} other {# 次喜欢}}）"
+
 #: src/components/ProgressGuide/List.tsx:47
 msgid "Like 10 posts"
 msgstr "喜欢 10 则帖文"
@@ -3607,6 +3583,18 @@ msgstr "喜欢的用户"
 #: src/view/screens/ProfileFeedLikedBy.tsx:30
 msgid "Liked By"
 msgstr "喜欢的用户"
+
+#: src/components/FeedCard.tsx:213
+#: src/view/com/feeds/FeedSourceCard.tsx:303
+msgid "Liked by {0, plural, one {# user} other {# users}}"
+msgstr "{0, plural, one {# 位用户} other {# 位用户}}喜欢"
+
+#: src/components/LabelingServiceCard/index.tsx:96
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:295
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:309
+#: src/view/screens/ProfileFeed.tsx:590
+msgid "Liked by {likeCount, plural, one {# user} other {# users}}"
+msgstr "{likeCount, plural, one {# 位用户} other {# 位用户}}喜欢"
 
 #: src/view/screens/Profile.tsx:228
 msgid "Likes"
@@ -4326,7 +4314,7 @@ msgstr "暂时不需要"
 
 #: src/view/com/profile/ProfileMenu.tsx:348
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:686
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:350
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:356
 msgid "Note about sharing"
 msgstr "分享注意事项"
 
@@ -4398,7 +4386,7 @@ msgstr "糟糕！"
 msgid "Oh no! Something went wrong."
 msgstr "糟糕！发生了一些错误。"
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:347
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:352
 #: src/screens/Settings/AppIconSettings/index.tsx:48
 #: src/screens/Settings/AppIconSettings/index.tsx:229
 msgid "OK"
@@ -5049,8 +5037,8 @@ msgstr "已下载二维码！"
 msgid "QR code saved to your camera roll!"
 msgstr "已保存二维码至你的照片图库！"
 
-#: src/view/com/util/post-ctrls/RepostButton.tsx:168
-#: src/view/com/util/post-ctrls/RepostButton.tsx:191
+#: src/view/com/util/post-ctrls/RepostButton.tsx:178
+#: src/view/com/util/post-ctrls/RepostButton.tsx:201
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:85
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:92
 msgid "Quote post"
@@ -5064,8 +5052,8 @@ msgstr "已重新关联引用帖文"
 msgid "Quote post was successfully detached"
 msgstr "已成功分离引用帖文"
 
-#: src/view/com/util/post-ctrls/RepostButton.tsx:167
-#: src/view/com/util/post-ctrls/RepostButton.tsx:189
+#: src/view/com/util/post-ctrls/RepostButton.tsx:177
+#: src/view/com/util/post-ctrls/RepostButton.tsx:199
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:84
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:91
 msgid "Quote posts disabled"
@@ -5140,11 +5128,11 @@ msgid "Reload conversations"
 msgstr "重新加载对话"
 
 #: src/components/dialogs/MutedWords.tsx:438
-#: src/components/FeedCard.tsx:316
+#: src/components/FeedCard.tsx:315
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:101
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:108
 #: src/screens/Settings/Settings.tsx:466
-#: src/view/com/feeds/FeedSourceCard.tsx:319
+#: src/view/com/feeds/FeedSourceCard.tsx:322
 #: src/view/com/modals/ListAddRemoveUsers.tsx:269
 #: src/view/com/modals/UserAddRemoveLists.tsx:235
 #: src/view/com/posts/PostFeedErrorMessage.tsx:213
@@ -5195,8 +5183,8 @@ msgstr "要删除动态源吗？"
 msgid "Remove from my feeds"
 msgstr "从我的动态源中删除"
 
-#: src/components/FeedCard.tsx:311
-#: src/view/com/feeds/FeedSourceCard.tsx:314
+#: src/components/FeedCard.tsx:310
+#: src/view/com/feeds/FeedSourceCard.tsx:317
 msgid "Remove from my feeds?"
 msgstr "要从我的动态源中删除吗？"
 
@@ -5228,8 +5216,8 @@ msgstr "从搜索历史中删除个人资料"
 msgid "Remove quote"
 msgstr "删除引用"
 
-#: src/view/com/util/post-ctrls/RepostButton.tsx:145
 #: src/view/com/util/post-ctrls/RepostButton.tsx:155
+#: src/view/com/util/post-ctrls/RepostButton.tsx:165
 msgid "Remove repost"
 msgstr "删除转发"
 
@@ -5294,6 +5282,10 @@ msgstr "这则帖文的回复已被停用。"
 msgctxt "action"
 msgid "Reply"
 msgstr "回复"
+
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:262
+msgid "Reply ({0, plural, one {# reply} other {# replies}})"
+msgstr "回复（{0, plural, one {# 则回复} other {# 则回复}}）"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:114
 #: src/lib/moderation/useModerationCauseDescription.ts:123
@@ -5417,9 +5409,8 @@ msgstr "举报这个新手包"
 msgid "Report this user"
 msgstr "举报这个用户"
 
-#: src/view/com/util/post-ctrls/RepostButton.tsx:68
-#: src/view/com/util/post-ctrls/RepostButton.tsx:146
-#: src/view/com/util/post-ctrls/RepostButton.tsx:157
+#: src/view/com/util/post-ctrls/RepostButton.tsx:156
+#: src/view/com/util/post-ctrls/RepostButton.tsx:167
 msgctxt "action"
 msgid "Repost"
 msgstr "转发"
@@ -5429,8 +5420,12 @@ msgstr "转发"
 msgid "Repost"
 msgstr "转发"
 
+#: src/view/com/util/post-ctrls/RepostButton.tsx:74
+msgid "Repost ({0, plural, one {# repost} other {# reposts}})"
+msgstr "转发（{0, plural, one {# 次转发} other {# 次转发}}）"
+
 #: src/screens/StarterPack/StarterPackScreen.tsx:547
-#: src/view/com/util/post-ctrls/RepostButton.tsx:138
+#: src/view/com/util/post-ctrls/RepostButton.tsx:148
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:49
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:104
 msgid "Repost or quote post"
@@ -5935,7 +5930,7 @@ msgstr "性暗示"
 #: src/view/com/profile/ProfileMenu.tsx:204
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:434
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:443
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:339
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:345
 #: src/view/screens/ProfileList.tsx:486
 msgid "Share"
 msgstr "分享"
@@ -5955,7 +5950,7 @@ msgstr "分享一件趣闻吧！"
 
 #: src/view/com/profile/ProfileMenu.tsx:353
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:691
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:355
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:361
 msgid "Share anyway"
 msgstr "仍然分享"
 
@@ -6233,7 +6228,7 @@ msgstr "出了点问题，请重试。"
 msgid "Something went wrong!"
 msgstr "出了点问题！"
 
-#: src/App.native.tsx:118
+#: src/App.native.tsx:119
 #: src/App.web.tsx:94
 msgid "Sorry! Your session expired. Please log in again."
 msgstr "很抱歉，你的登录会话已过期，请重新登录。"
@@ -6839,7 +6834,7 @@ msgid "This post has been deleted."
 msgstr "这则帖文已被删除。"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:688
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:352
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:358
 msgid "This post is only visible to logged-in users. It won't be visible to people who aren't logged in."
 msgstr "这则帖文只对已登录用户可见，未登录的用户将无法看到内容。"
 
@@ -7052,11 +7047,14 @@ msgstr "取消屏蔽账户"
 msgid "Unblock Account?"
 msgstr "要取消屏蔽账户吗？"
 
-#: src/view/com/util/post-ctrls/RepostButton.tsx:67
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:72
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:76
 msgid "Undo repost"
 msgstr "取消转发"
+
+#: src/view/com/util/post-ctrls/RepostButton.tsx:68
+msgid "Undo repost ({0, plural, one {# repost} other {# reposts}})"
+msgstr "取消转发（{0, plural, one {# 次转发} other {# 次转发}}）"
 
 #: src/view/com/profile/FollowButton.tsx:60
 msgctxt "action"
@@ -7071,6 +7069,10 @@ msgstr "取消关注 {0}"
 #: src/view/com/profile/ProfileMenu.tsx:231
 msgid "Unfollow Account"
 msgstr "取消关注账户"
+
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:304
+msgid "Unlike ({0, plural, one {# like} other {# likes}})"
+msgstr "取消喜欢（{0, plural, one {# 次喜欢} other {# 次喜欢}}）"
 
 #: src/view/screens/ProfileFeed.tsx:575
 msgid "Unlike this feed"
@@ -7477,7 +7479,7 @@ msgstr "查看个人资料"
 msgid "View the avatar"
 msgstr "查看头像"
 
-#: src/components/LabelingServiceCard/index.tsx:162
+#: src/components/LabelingServiceCard/index.tsx:164
 msgid "View the labeling service provided by @{0}"
 msgstr "查看由 @{0} 提供的标记服务。"
 
@@ -7602,7 +7604,7 @@ msgstr "很抱歉！你回复的帖文已被删除。"
 msgid "We're sorry! We can't find the page you were looking for."
 msgstr "很抱歉！我们找不到你正在寻找的页面。"
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:341
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:346
 msgid "We're sorry! You can only subscribe to twenty labelers, and you've reached your limit of twenty."
 msgstr "很抱歉！你目前只能订阅 20 个标记者，你已达到上限。"
 
