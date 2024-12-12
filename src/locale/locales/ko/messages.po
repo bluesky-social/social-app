@@ -32,7 +32,7 @@ msgstr "{0, plural, other {#}} 팔로워"
 
 #: src/screens/Profile/ProfileFollows.tsx:40
 msgid "{0, plural, one {# following} other {# following}}"
-msgstr "{0, plural, other {#}} 팔로워"
+msgstr "{0, plural, other {#}} 팔로우 중"
 
 #: src/lib/hooks/useTimeAgo.ts:146
 msgid "{0, plural, one {# hour} other {# hours}}"
