@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-12-11 01:15\n"
+"PO-Revision-Date: 2024-12-12 02:26\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional, Hong Kong\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -31,6 +31,14 @@ msgstr "（冇電郵）"
 msgid "{0, plural, one {# day} other {# days}}"
 msgstr "{0, plural, one {#日} other {#日}}"
 
+#: src/screens/Profile/ProfileFollowers.tsx:40
+msgid "{0, plural, one {# follower} other {# followers}}"
+msgstr "{0, plural, one {# 個擁躉} other {# 個擁躉}}"
+
+#: src/screens/Profile/ProfileFollows.tsx:40
+msgid "{0, plural, one {# following} other {# following}}"
+msgstr "{0, plural, one {# 個跟緊} other {# 個跟緊}}"
+
 #: src/lib/hooks/useTimeAgo.ts:146
 msgid "{0, plural, one {# hour} other {# hours}}"
 msgstr "{0, plural, one {#個鐘} other {#個鐘}}"
@@ -43,6 +51,10 @@ msgstr "{0, plural, one {呢個帳號黐咗 # 個標籤} other {呢個帳號黐�
 msgid "{0, plural, one {# label has been placed on this content} other {# labels have been placed on this content}}"
 msgstr "{0, plural, one {呢個內容黐咗 # 個標籤} other {呢個內容黐咗 # 個標籤}}"
 
+#: src/screens/Post/PostLikedBy.tsx:41
+msgid "{0, plural, one {# like} other {# likes}}"
+msgstr "{0, plural, one {# 人讚佢} other {# 人讚佢}}"
+
 #: src/lib/hooks/useTimeAgo.ts:136
 msgid "{0, plural, one {# minute} other {# minutes}}"
 msgstr "{0, plural, one {#分鐘} other {#分鐘}}"
@@ -51,6 +63,11 @@ msgstr "{0, plural, one {#分鐘} other {#分鐘}}"
 msgid "{0, plural, one {# month} other {# months}}"
 msgstr "{0, plural, one {#個月} other {#個月}}"
 
+#: src/screens/Post/PostQuotes.tsx:41
+msgid "{0, plural, one {# quote} other {# quotes}}"
+msgstr "{0, plural, one {# 人引用} other {# 人引用}}"
+
+#: src/screens/Post/PostRepostedBy.tsx:41
 #: src/view/com/util/post-ctrls/RepostButton.tsx:69
 msgid "{0, plural, one {# repost} other {# reposts}}"
 msgstr "{0, plural, one {# 次轉發} other {# 次轉發}}"
@@ -62,12 +79,12 @@ msgstr "{0, plural, one {#秒鐘} other {#秒鐘}}"
 #: src/components/ProfileHoverCard/index.web.tsx:398
 #: src/screens/Profile/Header/Metrics.tsx:22
 msgid "{0, plural, one {follower} other {followers}}"
-msgstr "{0, plural, one {個擁躉} other {個擁躉}}"
+msgstr "{0, plural, one {擁躉} other {擁躉}}"
 
 #: src/components/ProfileHoverCard/index.web.tsx:402
 #: src/screens/Profile/Header/Metrics.tsx:26
 msgid "{0, plural, one {following} other {following}}"
-msgstr "{0, plural, one {個跟緊} other {個跟緊}}"
+msgstr "{0, plural, one {跟緊} other {跟緊}}"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:305
 msgid "{0, plural, one {Like (# like)} other {Like (# likes)}}"
@@ -75,7 +92,7 @@ msgstr "{0, plural, one {讚佢（# 人讚佢）} other {讚佢（# 人讚佢）
 
 #: src/view/com/post-thread/PostThreadItem.tsx:447
 msgid "{0, plural, one {like} other {likes}}"
-msgstr "{0, plural, one {人讚佢} other {人讚佢}}"
+msgstr "{0, plural, one {讚佢} other {讚佢}}"
 
 #: src/components/FeedCard.tsx:213
 #: src/view/com/feeds/FeedSourceCard.tsx:303
@@ -88,7 +105,7 @@ msgstr "{0, plural, one {條帖文} other {條帖文}}"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:431
 msgid "{0, plural, one {quote} other {quotes}}"
-msgstr "{0, plural, one {人引用} other {人引用}}"
+msgstr "{0, plural, one {引用} other {引用}}"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:261
 msgid "{0, plural, one {Reply (# reply)} other {Reply (# replies)}}"
@@ -437,7 +454,7 @@ msgstr "快速存取入邊移除咗嘅帳號"
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:137
 #: src/view/com/profile/ProfileMenu.tsx:122
 msgid "Account unblocked"
-msgstr "唔再封鎖嘅帳戶"
+msgstr "解除咗封鎖嘅帳戶"
 
 #: src/view/com/profile/ProfileMenu.tsx:157
 msgid "Account unfollowed"
@@ -593,7 +610,7 @@ msgstr "演算法訓練完成！"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:381
 msgid "All accounts have been followed!"
-msgstr "你已經跟晒所有帳號！"
+msgstr "你跟晒所有帳號喇！"
 
 #: src/view/screens/Feeds.tsx:702
 msgid "All the feeds you've saved, right in one place."
@@ -657,15 +674,15 @@ msgstr "替代文字超過嘅內容會俾人剷，限制：{0} 個字元。"
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:93
 #: src/view/com/modals/VerifyEmail.tsx:132
 msgid "An email has been sent to {0}. It includes a confirmation code which you can enter below."
-msgstr "電郵已經送咗去 {0}。郵件入面有一條驗證碼，你可以抄低個碼跟住喺下低用咗佢。"
+msgstr "電郵送咗去 {0} 度。你可以抄低郵件入邊個驗證碼跟住喺下低用咗佢。"
 
 #: src/view/com/modals/ChangeEmail.tsx:114
 msgid "An email has been sent to your previous address, {0}. It includes a confirmation code which you can enter below."
-msgstr "電郵已經送咗去你之前嘅電郵地址，{0}。郵件入邊有一條驗證碼，你可以抄低個碼跟住喺下低用咗佢。"
+msgstr "電郵送咗去你之前嘅電郵地址度 {0}。你可以抄低郵件入邊個驗證碼跟住喺下低用咗佢。"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:91
 msgid "An email has been sent! Please enter the confirmation code included in the email below."
-msgstr "電郵已經送出！郵件入面有一條驗證碼，請你抄低個碼跟住喺下低用咗佢。"
+msgstr "電郵已經送出！請你抄低郵件入邊個驗證碼跟住喺下低用咗佢。"
 
 #: src/components/dialogs/GifSelect.tsx:265
 msgid "An error has occurred"
@@ -766,9 +783,9 @@ msgid "Anybody can interact"
 msgstr "所有人都可以參與互動"
 
 #: src/Navigation.tsx:370
-#: src/screens/Settings/AppearanceSettings.tsx:187
-#: src/screens/Settings/AppearanceSettings.tsx:190
-#: src/screens/Settings/AppIconSettings.tsx:27
+#: src/screens/Settings/AppIconSettings/index.tsx:67
+#: src/screens/Settings/AppIconSettings/SettingsListItem.tsx:18
+#: src/screens/Settings/AppIconSettings/SettingsListItem.tsx:23
 msgid "App Icon"
 msgstr "App 圖標"
 
@@ -818,7 +835,7 @@ msgstr "上訴「{0}」標籤"
 #: src/components/moderation/LabelsOnMeDialog.tsx:233
 #: src/screens/Messages/components/ChatDisabled.tsx:91
 msgid "Appeal submitted"
-msgstr "上訴已經提交"
+msgstr "上訴提交咗喇"
 
 #: src/screens/Messages/components/ChatDisabled.tsx:51
 #: src/screens/Messages/components/ChatDisabled.tsx:53
@@ -907,7 +924,7 @@ msgstr "至少 3 個字元"
 
 #: src/screens/Settings/AccessibilitySettings.tsx:105
 msgid "Autoplay options have moved to the <0>Content and Media settings</0>."
-msgstr "自動播放選項已經移至<0>內容同媒體設定</0>。"
+msgstr "自動播放選項擺咗去<0>內容同媒體設定</0>。"
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:96
 #: src/screens/Settings/ContentAndMediaSettings.tsx:102
@@ -1059,6 +1076,14 @@ msgstr "Bluesky 會喺你網絡入邊嘅人入邊揀一組推薦嘅帳號。"
 msgid "Bluesky will not show your profile and posts to logged-out users. Other apps may not honor this request. This does not make your account private."
 msgstr "Bluesky 唔會向登出咗嘅用戶顯示你嘅個人檔案同帖文，但其他 App 未必會聽佢支笛。你嘅帳號唔會成爲私帳。"
 
+#: src/screens/Settings/AppIconSettings/index.tsx:99
+msgid "Bluesky+"
+msgstr "Bluesky+"
+
+#: src/screens/Settings/AppIconSettings/index.tsx:102
+msgid "Bluesky+ icons"
+msgstr "Bluesky+ 圖標"
+
 #: src/lib/moderation/useLabelBehaviorDescription.ts:53
 msgid "Blur images"
 msgstr "模糊圖片"
@@ -1140,7 +1165,8 @@ msgstr "相機"
 #: src/screens/Deactivated.tsx:157
 #: src/screens/Profile/Header/EditProfileDialog.tsx:220
 #: src/screens/Profile/Header/EditProfileDialog.tsx:228
-#: src/screens/Settings/AppIconSettings.tsx:85
+#: src/screens/Settings/AppIconSettings/index.tsx:44
+#: src/screens/Settings/AppIconSettings/index.tsx:225
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:72
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:79
 #: src/screens/Settings/Settings.tsx:260
@@ -1220,7 +1246,12 @@ msgstr "字幕同替代文字"
 msgid "Change"
 msgstr "變更"
 
-#: src/screens/Settings/AppIconSettings.tsx:81
+#: src/screens/Settings/AppIconSettings/index.tsx:39
+msgid "Change app icon"
+msgstr "變更 App 圖標"
+
+#: src/screens/Settings/AppIconSettings/index.tsx:38
+#: src/screens/Settings/AppIconSettings/index.tsx:221
 msgid "Change app icon to \"{0}\""
 msgstr "將 App 圖標改成「{0}」"
 
@@ -1848,6 +1879,10 @@ msgstr "偵錯面板"
 msgid "Default"
 msgstr "預設"
 
+#: src/screens/Settings/AppIconSettings/index.tsx:75
+msgid "Default icons"
+msgstr "預設圖標"
+
 #: src/components/dms/MessageMenu.tsx:151
 #: src/screens/Settings/AppPasswords.tsx:212
 #: src/screens/StarterPack/StarterPackScreen.tsx:585
@@ -2091,7 +2126,7 @@ msgstr "唔得用連字號（-）開頭抑或結尾"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:487
 msgid "Domain verified!"
-msgstr "網域已經通過驗證！"
+msgstr "網域驗證咗喇！"
 
 #: src/components/dialogs/BirthDateSettings.tsx:118
 #: src/components/dialogs/BirthDateSettings.tsx:124
@@ -2835,10 +2870,6 @@ msgstr "你識嘅 <0>{0}</0>, <1>{1}</1> 同{2, plural, one {另外 # 人亦都�
 msgid "Followed users"
 msgstr "跟咗嘅用戶"
 
-#: src/view/screens/ProfileFollowers.tsx:29
-msgid "Followers"
-msgstr "擁躉"
-
 #: src/Navigation.tsx:191
 msgid "Followers of @{0} that you know"
 msgstr "你識嘅 @{0} 亦都跟咗佢"
@@ -2855,7 +2886,6 @@ msgstr "你識嘅擁躉"
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:230
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:135
 #: src/view/screens/Feeds.tsx:599
-#: src/view/screens/ProfileFollows.tsx:29
 #: src/view/screens/SavedFeeds.tsx:422
 msgid "Following"
 msgstr "跟緊"
@@ -3055,7 +3085,7 @@ msgstr "帳號頭銜"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:556
 msgid "Handle already taken. Please try a different one."
-msgstr "呢個帳號頭銜已經俾人攞咗，唔該試下用第個。"
+msgstr "呢個帳號頭銜俾人用咗，唔該試下用第個。"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:187
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:324
@@ -3572,7 +3602,7 @@ msgstr "讚好呢個動態源"
 msgid "Liked by"
 msgstr "讚過"
 
-#: src/screens/Post/PostLikedBy.tsx:28
+#: src/screens/Post/PostLikedBy.tsx:38
 #: src/screens/Profile/ProfileLabelerLikedBy.tsx:29
 #: src/view/screens/ProfileFeedLikedBy.tsx:30
 msgid "Liked By"
@@ -3609,7 +3639,7 @@ msgstr "刪除咗嘅清單"
 
 #: src/screens/List/ListHiddenScreen.tsx:126
 msgid "List has been hidden"
-msgstr "清單已隱藏"
+msgstr "清單已經隱藏咗"
 
 #: src/view/screens/ProfileList.tsx:169
 msgid "List Hidden"
@@ -4369,7 +4399,8 @@ msgid "Oh no! Something went wrong."
 msgstr "大鑊！出咗啲問題。"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:347
-#: src/screens/Settings/AppIconSettings.tsx:89
+#: src/screens/Settings/AppIconSettings/index.tsx:48
+#: src/screens/Settings/AppIconSettings/index.tsx:229
 msgid "OK"
 msgstr "好嘅"
 
@@ -4815,7 +4846,7 @@ msgctxt "action"
 msgid "Post"
 msgstr "發嘢"
 
-#: src/view/com/post-thread/PostThread.tsx:488
+#: src/view/com/post-thread/PostThread.tsx:489
 msgctxt "description"
 msgid "Post"
 msgstr "帖文"
@@ -4881,7 +4912,7 @@ msgstr "帖文固定咗喇"
 
 #: src/state/queries/pinned-post.ts:61
 msgid "Post unpinned"
-msgstr "帖文唔再固定喇"
+msgstr "已唔再固定帖文"
 
 #: src/components/TagMenu/index.tsx:268
 msgid "posts"
@@ -5027,7 +5058,7 @@ msgstr "引用帖文\n"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:303
 msgid "Quote post was re-attached"
-msgstr "引用帖文已經重新附上"
+msgstr "已重新連結引用帖文"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:302
 msgid "Quote post was successfully detached"
@@ -5048,7 +5079,7 @@ msgstr "允許引用帖文"
 msgid "Quote settings"
 msgstr "引用設定"
 
-#: src/screens/Post/PostQuotes.tsx:31
+#: src/screens/Post/PostQuotes.tsx:38
 msgid "Quotes"
 msgstr "引用"
 
@@ -5405,7 +5436,7 @@ msgstr "轉發"
 msgid "Repost or quote post"
 msgstr "轉發抑或引用帖文"
 
-#: src/screens/Post/PostRepostedBy.tsx:31
+#: src/screens/Post/PostRepostedBy.tsx:38
 msgid "Reposted By"
 msgstr "轉發"
 
@@ -5860,6 +5891,10 @@ msgstr "傳送包含刪除帳號確認碼嘅電郵"
 #: src/view/com/auth/server-input/index.tsx:111
 msgid "Server address"
 msgstr "伺服器位址"
+
+#: src/screens/Settings/AppIconSettings/index.tsx:178
+msgid "Set app icon to {0}"
+msgstr "將 App 圖標改成 {0}"
 
 #: src/screens/Moderation/index.tsx:290
 msgid "Set birthdate"
@@ -6365,8 +6400,7 @@ msgstr "標籤選單：{displayTag}"
 msgid "Tags only"
 msgstr "只限標籤"
 
-#: src/screens/Settings/AppIconSettings.tsx:42
-#: src/screens/Settings/AppIconSettings.tsx:76
+#: src/screens/Settings/AppIconSettings/index.tsx:216
 msgid "Tap to change app icon"
 msgstr "撳呢度變更 App 圖標"
 
@@ -6485,7 +6519,8 @@ msgstr "就噉先！"
 msgid "The account will be able to interact with you after unblocking."
 msgstr "解除封鎖之後，呢個帳號就可以同你互動。"
 
-#: src/screens/Settings/AppIconSettings.tsx:82
+#: src/screens/Settings/AppIconSettings/index.tsx:41
+#: src/screens/Settings/AppIconSettings/index.tsx:222
 msgid "The app will be restarted"
 msgstr "App 將會重啓"
 
@@ -6500,11 +6535,11 @@ msgstr "Bluesky 網頁應用程式"
 
 #: src/view/screens/CommunityGuidelines.tsx:38
 msgid "The Community Guidelines have been moved to <0/>"
-msgstr "社羣守則已經擺到去 <0/> 度"
+msgstr "社羣守則擺咗去 <0/>"
 
 #: src/view/screens/CopyrightPolicy.tsx:35
 msgid "The Copyright Policy has been moved to <0/>"
-msgstr "版權政策已經擺到去 <0/> 度"
+msgstr "版權政策擺咗去 <0/>"
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:102
 msgid "The Discover feed"
@@ -6542,7 +6577,7 @@ msgstr "呢條帖文可能已經刪咗。"
 
 #: src/view/screens/PrivacyPolicy.tsx:35
 msgid "The Privacy Policy has been moved to <0/>"
-msgstr "私隱政策已經擺到落 <0/> 度"
+msgstr "私隱政策擺咗去 <0/>"
 
 #: src/view/com/composer/state/video.ts:395
 msgid "The selected video is larger than 50MB."
@@ -6558,11 +6593,11 @@ msgstr "你想睇嘅新手包已經失效。你可以刪咗呢個新手包去。
 
 #: src/view/screens/Support.tsx:37
 msgid "The support form has been moved. If you need help, please <0/> or visit {HELP_DESK_URL} to get in touch with us."
-msgstr "支援表格擺咗去其他地方度。若然你需要協助，請 <0/> 抑或去 {HELP_DESK_URL} 同我哋聯絡。"
+msgstr "支援表格擺咗去其他地方度。若然你需要協助，請<0/>抑或去 {HELP_DESK_URL} 同我哋聯絡。"
 
 #: src/view/screens/TermsOfService.tsx:35
 msgid "The Terms of Service have been moved to"
-msgstr "服務條款擺到去"
+msgstr "服務條款擺咗去"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:94
 msgid "The verification code you have provided is invalid. Please make sure that you have used the correct verification link or request a new one."
@@ -7788,7 +7823,7 @@ msgstr "你已經隱藏咗呢條帖文。"
 #: src/components/moderation/ModerationDetailsDialog.tsx:102
 #: src/lib/moderation/useModerationCauseDescription.ts:97
 msgid "You have muted this account."
-msgstr "你已經將呢個帳號靜音。"
+msgstr "你已經靜音咗呢個帳號。"
 
 #: src/lib/moderation/useModerationCauseDescription.ts:91
 msgid "You have muted this user"
@@ -8003,7 +8038,7 @@ msgstr "你嘅電郵似乎無效。"
 
 #: src/view/com/modals/ChangeEmail.tsx:120
 msgid "Your email has been updated but not verified. As a next step, please verify your new email."
-msgstr "你嘅電郵已經更新但係仲未驗證過。跟住落嚟，請驗證你嘅新電郵先。"
+msgstr "你嘅電郵更新咗但係仲未驗證過。跟住落嚟，請驗證你嘅新電郵先。"
 
 #: src/view/com/modals/VerifyEmail.tsx:122
 msgid "Your email has not yet been verified. This is an important security step which we recommend."
@@ -8031,7 +8066,7 @@ msgstr "你設定咗嘅靜音字"
 
 #: src/view/com/modals/ChangePassword.tsx:158
 msgid "Your password has been changed successfully!"
-msgstr "你個密碼改好咗喇！"
+msgstr "你個密碼已經改好咗喇！"
 
 #: src/view/com/composer/Composer.tsx:470
 msgid "Your post has been published"

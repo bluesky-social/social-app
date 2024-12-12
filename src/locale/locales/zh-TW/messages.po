@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-12-11 01:15\n"
+"PO-Revision-Date: 2024-12-12 02:26\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -31,6 +31,14 @@ msgstr "（沒有電子信箱）"
 msgid "{0, plural, one {# day} other {# days}}"
 msgstr "{0, plural, one {# 天} other {# 天}}"
 
+#: src/screens/Profile/ProfileFollowers.tsx:40
+msgid "{0, plural, one {# follower} other {# followers}}"
+msgstr "{0, plural, one {個跟隨者} other {個跟隨者}}"
+
+#: src/screens/Profile/ProfileFollows.tsx:40
+msgid "{0, plural, one {# following} other {# following}}"
+msgstr "{0, plural, one {# 個跟隨中} other {# 個跟隨中}}"
+
 #: src/lib/hooks/useTimeAgo.ts:146
 msgid "{0, plural, one {# hour} other {# hours}}"
 msgstr "{0, plural, one {# 小時} other {# 小時}}"
@@ -43,6 +51,10 @@ msgstr "{0, plural, one {該帳號有 # 個標記} other {該帳號有 # 個標�
 msgid "{0, plural, one {# label has been placed on this content} other {# labels have been placed on this content}}"
 msgstr "{0, plural, one {該內容有 # 個標記} other {該內容有 # 個標記}}"
 
+#: src/screens/Post/PostLikedBy.tsx:41
+msgid "{0, plural, one {# like} other {# likes}}"
+msgstr "{0, plural, one {# 個喜歡} other {# 個喜歡}}"
+
 #: src/lib/hooks/useTimeAgo.ts:136
 msgid "{0, plural, one {# minute} other {# minutes}}"
 msgstr "{0, plural, one {# 分鐘} other {# 分鐘}}"
@@ -51,6 +63,11 @@ msgstr "{0, plural, one {# 分鐘} other {# 分鐘}}"
 msgid "{0, plural, one {# month} other {# months}}"
 msgstr "{0, plural, one {# 個月} other {# 個月}}"
 
+#: src/screens/Post/PostQuotes.tsx:41
+msgid "{0, plural, one {# quote} other {# quotes}}"
+msgstr "{0, plural, one {# 次引用} other {# 次引用}}"
+
+#: src/screens/Post/PostRepostedBy.tsx:41
 #: src/view/com/util/post-ctrls/RepostButton.tsx:69
 msgid "{0, plural, one {# repost} other {# reposts}}"
 msgstr "{0, plural, one {# 則轉發} other {# 則轉發}}"
@@ -62,12 +79,12 @@ msgstr "{0, plural, one {# 秒} other {# 秒}}"
 #: src/components/ProfileHoverCard/index.web.tsx:398
 #: src/screens/Profile/Header/Metrics.tsx:22
 msgid "{0, plural, one {follower} other {followers}}"
-msgstr "{0, plural, one {個跟隨者} other {個跟隨者}}"
+msgstr "{0, plural, one {跟隨者} other {跟隨者}}"
 
 #: src/components/ProfileHoverCard/index.web.tsx:402
 #: src/screens/Profile/Header/Metrics.tsx:26
 msgid "{0, plural, one {following} other {following}}"
-msgstr "{0, plural, one {個跟隨中} other {個跟隨中}}"
+msgstr "{0, plural, one {跟隨中} other {跟隨中}}"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:305
 msgid "{0, plural, one {Like (# like)} other {Like (# likes)}}"
@@ -75,7 +92,7 @@ msgstr "{0, plural, one {喜歡 (# 個喜歡)} other {喜歡 (# 個喜歡)}}"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:447
 msgid "{0, plural, one {like} other {likes}}"
-msgstr "{0, plural, one {個喜歡} other {個喜歡}}"
+msgstr "{0, plural, one {喜歡} other {喜歡}}"
 
 #: src/components/FeedCard.tsx:213
 #: src/view/com/feeds/FeedSourceCard.tsx:303
@@ -88,7 +105,7 @@ msgstr "{0, plural, one {則貼文} other {則貼文}}"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:431
 msgid "{0, plural, one {quote} other {quotes}}"
-msgstr "{0, plural, one {次引用} other {次引用}}"
+msgstr "{0, plural, one {引用} other {引用}}"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:261
 msgid "{0, plural, one {Reply (# reply)} other {Reply (# replies)}}"
@@ -766,9 +783,9 @@ msgid "Anybody can interact"
 msgstr "任何人都可以參與互動"
 
 #: src/Navigation.tsx:370
-#: src/screens/Settings/AppearanceSettings.tsx:187
-#: src/screens/Settings/AppearanceSettings.tsx:190
-#: src/screens/Settings/AppIconSettings.tsx:27
+#: src/screens/Settings/AppIconSettings/index.tsx:67
+#: src/screens/Settings/AppIconSettings/SettingsListItem.tsx:18
+#: src/screens/Settings/AppIconSettings/SettingsListItem.tsx:23
 msgid "App Icon"
 msgstr "應用程式圖示"
 
@@ -1059,6 +1076,14 @@ msgstr "Bluesky 將從您的個人社交網路中選擇一組推薦的帳號。"
 msgid "Bluesky will not show your profile and posts to logged-out users. Other apps may not honor this request. This does not make your account private."
 msgstr "Bluesky 的官方程式將不會向未登入的用戶顯示您的個人檔案和貼文。但其他應用程式可能不會遵循這個要求，這不會使您的帳號轉為非公開狀態。"
 
+#: src/screens/Settings/AppIconSettings/index.tsx:99
+msgid "Bluesky+"
+msgstr "Bluesky+"
+
+#: src/screens/Settings/AppIconSettings/index.tsx:102
+msgid "Bluesky+ icons"
+msgstr "Bluesky+ 圖示"
+
 #: src/lib/moderation/useLabelBehaviorDescription.ts:53
 msgid "Blur images"
 msgstr "模糊圖片"
@@ -1140,7 +1165,8 @@ msgstr "相機"
 #: src/screens/Deactivated.tsx:157
 #: src/screens/Profile/Header/EditProfileDialog.tsx:220
 #: src/screens/Profile/Header/EditProfileDialog.tsx:228
-#: src/screens/Settings/AppIconSettings.tsx:85
+#: src/screens/Settings/AppIconSettings/index.tsx:44
+#: src/screens/Settings/AppIconSettings/index.tsx:225
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:72
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:79
 #: src/screens/Settings/Settings.tsx:260
@@ -1220,7 +1246,12 @@ msgstr "字幕和替代文字"
 msgid "Change"
 msgstr "變更"
 
-#: src/screens/Settings/AppIconSettings.tsx:81
+#: src/screens/Settings/AppIconSettings/index.tsx:39
+msgid "Change app icon"
+msgstr "變更應用程式圖示"
+
+#: src/screens/Settings/AppIconSettings/index.tsx:38
+#: src/screens/Settings/AppIconSettings/index.tsx:221
 msgid "Change app icon to \"{0}\""
 msgstr "將應用程式圖示修改至「{0}」"
 
@@ -1847,6 +1878,10 @@ msgstr "偵錯面板"
 #: src/screens/Settings/AppearanceSettings.tsx:169
 msgid "Default"
 msgstr "預設"
+
+#: src/screens/Settings/AppIconSettings/index.tsx:75
+msgid "Default icons"
+msgstr "預設圖示"
 
 #: src/components/dms/MessageMenu.tsx:151
 #: src/screens/Settings/AppPasswords.tsx:212
@@ -2835,10 +2870,6 @@ msgstr "被您認識的 <0>{0}</0>, <1>{1}</1> 和{2, plural, one {其他 # 人�
 msgid "Followed users"
 msgstr "您跟隨的用戶"
 
-#: src/view/screens/ProfileFollowers.tsx:29
-msgid "Followers"
-msgstr "跟隨者"
-
 #: src/Navigation.tsx:191
 msgid "Followers of @{0} that you know"
 msgstr "您認識的這些人也跟隨了 @{0}"
@@ -2855,7 +2886,6 @@ msgstr "您也認識的跟隨者"
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:230
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:135
 #: src/view/screens/Feeds.tsx:599
-#: src/view/screens/ProfileFollows.tsx:29
 #: src/view/screens/SavedFeeds.tsx:422
 msgid "Following"
 msgstr "跟隨中"
@@ -3572,7 +3602,7 @@ msgstr "對這個動態源表示喜歡"
 msgid "Liked by"
 msgstr "表示喜歡的用戶"
 
-#: src/screens/Post/PostLikedBy.tsx:28
+#: src/screens/Post/PostLikedBy.tsx:38
 #: src/screens/Profile/ProfileLabelerLikedBy.tsx:29
 #: src/view/screens/ProfileFeedLikedBy.tsx:30
 msgid "Liked By"
@@ -4369,7 +4399,8 @@ msgid "Oh no! Something went wrong."
 msgstr "糟糕！發生錯誤。"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:347
-#: src/screens/Settings/AppIconSettings.tsx:89
+#: src/screens/Settings/AppIconSettings/index.tsx:48
+#: src/screens/Settings/AppIconSettings/index.tsx:229
 msgid "OK"
 msgstr "好的"
 
@@ -4815,7 +4846,7 @@ msgctxt "action"
 msgid "Post"
 msgstr "發布"
 
-#: src/view/com/post-thread/PostThread.tsx:488
+#: src/view/com/post-thread/PostThread.tsx:489
 msgctxt "description"
 msgid "Post"
 msgstr "貼文"
@@ -5048,7 +5079,7 @@ msgstr "允許引用貼文"
 msgid "Quote settings"
 msgstr "引用設定"
 
-#: src/screens/Post/PostQuotes.tsx:31
+#: src/screens/Post/PostQuotes.tsx:38
 msgid "Quotes"
 msgstr "引用"
 
@@ -5405,7 +5436,7 @@ msgstr "轉發"
 msgid "Repost or quote post"
 msgstr "轉發或引用貼文"
 
-#: src/screens/Post/PostRepostedBy.tsx:31
+#: src/screens/Post/PostRepostedBy.tsx:38
 msgid "Reposted By"
 msgstr "轉發"
 
@@ -5860,6 +5891,10 @@ msgstr "傳送包含帳號刪除確認碼的電子郵件"
 #: src/view/com/auth/server-input/index.tsx:111
 msgid "Server address"
 msgstr "伺服器位址"
+
+#: src/screens/Settings/AppIconSettings/index.tsx:178
+msgid "Set app icon to {0}"
+msgstr "將應用程式圖示修改至「{0}」"
 
 #: src/screens/Moderation/index.tsx:290
 msgid "Set birthdate"
@@ -6365,8 +6400,7 @@ msgstr "標籤選單：{displayTag}"
 msgid "Tags only"
 msgstr "僅限標籤"
 
-#: src/screens/Settings/AppIconSettings.tsx:42
-#: src/screens/Settings/AppIconSettings.tsx:76
+#: src/screens/Settings/AppIconSettings/index.tsx:216
 msgid "Tap to change app icon"
 msgstr "按下以修改應用程式圖示"
 
@@ -6485,7 +6519,8 @@ msgstr "就這些，完畢！"
 msgid "The account will be able to interact with you after unblocking."
 msgstr "解除封鎖後，該帳號將能夠重新與您進行互動。"
 
-#: src/screens/Settings/AppIconSettings.tsx:82
+#: src/screens/Settings/AppIconSettings/index.tsx:41
+#: src/screens/Settings/AppIconSettings/index.tsx:222
 msgid "The app will be restarted"
 msgstr "應用程式將重新啟動"
 

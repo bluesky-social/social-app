@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-12-11 01:15\n"
+"PO-Revision-Date: 2024-12-12 02:26\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -31,6 +31,14 @@ msgstr "（没有电子邮箱）"
 msgid "{0, plural, one {# day} other {# days}}"
 msgstr "{0, plural, one {# 天} other {# 天}}"
 
+#: src/screens/Profile/ProfileFollowers.tsx:40
+msgid "{0, plural, one {# follower} other {# followers}}"
+msgstr "{0, plural, one {# 位关注者} other {# 位关注者}}"
+
+#: src/screens/Profile/ProfileFollows.tsx:40
+msgid "{0, plural, one {# following} other {# following}}"
+msgstr "{0, plural, one {# 位正在关注} other {# 位正在关注}}"
+
 #: src/lib/hooks/useTimeAgo.ts:146
 msgid "{0, plural, one {# hour} other {# hours}}"
 msgstr "{0, plural, one {# 小时} other {# 小时}}"
@@ -43,6 +51,10 @@ msgstr "{0, plural, one {该账户有 # 个标记} other {该账户有 # 个标�
 msgid "{0, plural, one {# label has been placed on this content} other {# labels have been placed on this content}}"
 msgstr "{0, plural, one {该内容有 # 个标记} other {该内容有 # 个标记}}"
 
+#: src/screens/Post/PostLikedBy.tsx:41
+msgid "{0, plural, one {# like} other {# likes}}"
+msgstr "{0, plural, one {# 次喜欢} other {# 次喜欢}}"
+
 #: src/lib/hooks/useTimeAgo.ts:136
 msgid "{0, plural, one {# minute} other {# minutes}}"
 msgstr "{0, plural, one {# 分钟} other {# 分钟}}"
@@ -51,6 +63,11 @@ msgstr "{0, plural, one {# 分钟} other {# 分钟}}"
 msgid "{0, plural, one {# month} other {# months}}"
 msgstr "{0, plural, one {# 个月} other {# 个月}}"
 
+#: src/screens/Post/PostQuotes.tsx:41
+msgid "{0, plural, one {# quote} other {# quotes}}"
+msgstr "{0, plural, one {# 次引用} other {# 次引用}}"
+
+#: src/screens/Post/PostRepostedBy.tsx:41
 #: src/view/com/util/post-ctrls/RepostButton.tsx:69
 msgid "{0, plural, one {# repost} other {# reposts}}"
 msgstr "{0, plural, one {# 次转发} other {# 次转发}}"
@@ -766,9 +783,9 @@ msgid "Anybody can interact"
 msgstr "任何人都可以参与互动"
 
 #: src/Navigation.tsx:370
-#: src/screens/Settings/AppearanceSettings.tsx:187
-#: src/screens/Settings/AppearanceSettings.tsx:190
-#: src/screens/Settings/AppIconSettings.tsx:27
+#: src/screens/Settings/AppIconSettings/index.tsx:67
+#: src/screens/Settings/AppIconSettings/SettingsListItem.tsx:18
+#: src/screens/Settings/AppIconSettings/SettingsListItem.tsx:23
 msgid "App Icon"
 msgstr "应用图标"
 
@@ -1059,6 +1076,14 @@ msgstr "Bluesky 将从你的关系网中选择一组推荐关注的账户。"
 msgid "Bluesky will not show your profile and posts to logged-out users. Other apps may not honor this request. This does not make your account private."
 msgstr "Bluesky 将不会向未登录的用户显示你的个人资料和帖文。但第三方应用未必会遵从该请求，这不会使你的账号转为非公开状态"
 
+#: src/screens/Settings/AppIconSettings/index.tsx:99
+msgid "Bluesky+"
+msgstr "Bluesky+"
+
+#: src/screens/Settings/AppIconSettings/index.tsx:102
+msgid "Bluesky+ icons"
+msgstr "Bluesky+ 图标"
+
 #: src/lib/moderation/useLabelBehaviorDescription.ts:53
 msgid "Blur images"
 msgstr "模糊化图片"
@@ -1140,7 +1165,8 @@ msgstr "相机"
 #: src/screens/Deactivated.tsx:157
 #: src/screens/Profile/Header/EditProfileDialog.tsx:220
 #: src/screens/Profile/Header/EditProfileDialog.tsx:228
-#: src/screens/Settings/AppIconSettings.tsx:85
+#: src/screens/Settings/AppIconSettings/index.tsx:44
+#: src/screens/Settings/AppIconSettings/index.tsx:225
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:72
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:79
 #: src/screens/Settings/Settings.tsx:260
@@ -1220,7 +1246,12 @@ msgstr "字幕及替代文本"
 msgid "Change"
 msgstr "更改"
 
-#: src/screens/Settings/AppIconSettings.tsx:81
+#: src/screens/Settings/AppIconSettings/index.tsx:39
+msgid "Change app icon"
+msgstr "更改应用图标"
+
+#: src/screens/Settings/AppIconSettings/index.tsx:38
+#: src/screens/Settings/AppIconSettings/index.tsx:221
 msgid "Change app icon to \"{0}\""
 msgstr "将应用图标更改为“{0}”"
 
@@ -1847,6 +1878,10 @@ msgstr "调试面板"
 #: src/screens/Settings/AppearanceSettings.tsx:169
 msgid "Default"
 msgstr "默认"
+
+#: src/screens/Settings/AppIconSettings/index.tsx:75
+msgid "Default icons"
+msgstr "默认图标"
 
 #: src/components/dms/MessageMenu.tsx:151
 #: src/screens/Settings/AppPasswords.tsx:212
@@ -2835,10 +2870,6 @@ msgstr "已被你认识的<0>{0}</0>、<1>{1}</1> 及{2, plural, one {其他#人
 msgid "Followed users"
 msgstr "已关注的用户"
 
-#: src/view/screens/ProfileFollowers.tsx:29
-msgid "Followers"
-msgstr "关注者"
-
 #: src/Navigation.tsx:191
 msgid "Followers of @{0} that you know"
 msgstr "已被你认识的 @{0} 关注"
@@ -2855,7 +2886,6 @@ msgstr "你认识的关注者"
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:230
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:135
 #: src/view/screens/Feeds.tsx:599
-#: src/view/screens/ProfileFollows.tsx:29
 #: src/view/screens/SavedFeeds.tsx:422
 msgid "Following"
 msgstr "正在关注"
@@ -3572,7 +3602,7 @@ msgstr "喜欢这个动态源"
 msgid "Liked by"
 msgstr "喜欢的用户"
 
-#: src/screens/Post/PostLikedBy.tsx:28
+#: src/screens/Post/PostLikedBy.tsx:38
 #: src/screens/Profile/ProfileLabelerLikedBy.tsx:29
 #: src/view/screens/ProfileFeedLikedBy.tsx:30
 msgid "Liked By"
@@ -4369,7 +4399,8 @@ msgid "Oh no! Something went wrong."
 msgstr "糟糕！发生了一些错误。"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:347
-#: src/screens/Settings/AppIconSettings.tsx:89
+#: src/screens/Settings/AppIconSettings/index.tsx:48
+#: src/screens/Settings/AppIconSettings/index.tsx:229
 msgid "OK"
 msgstr "好的"
 
@@ -4815,7 +4846,7 @@ msgctxt "action"
 msgid "Post"
 msgstr "发布"
 
-#: src/view/com/post-thread/PostThread.tsx:488
+#: src/view/com/post-thread/PostThread.tsx:489
 msgctxt "description"
 msgid "Post"
 msgstr "帖文"
@@ -5048,7 +5079,7 @@ msgstr "允许引用帖文"
 msgid "Quote settings"
 msgstr "引用选项"
 
-#: src/screens/Post/PostQuotes.tsx:31
+#: src/screens/Post/PostQuotes.tsx:38
 msgid "Quotes"
 msgstr "引用"
 
@@ -5405,7 +5436,7 @@ msgstr "转发"
 msgid "Repost or quote post"
 msgstr "转发或引用帖文"
 
-#: src/screens/Post/PostRepostedBy.tsx:31
+#: src/screens/Post/PostRepostedBy.tsx:38
 msgid "Reposted By"
 msgstr "转发"
 
@@ -5860,6 +5891,10 @@ msgstr "发送包含删除账户验证码的电子邮件"
 #: src/view/com/auth/server-input/index.tsx:111
 msgid "Server address"
 msgstr "服务器地址"
+
+#: src/screens/Settings/AppIconSettings/index.tsx:178
+msgid "Set app icon to {0}"
+msgstr "将应用图标更改为 {0}"
 
 #: src/screens/Moderation/index.tsx:290
 msgid "Set birthdate"
@@ -6365,8 +6400,7 @@ msgstr "标签菜单：{displayTag}"
 msgid "Tags only"
 msgstr "仅限标签"
 
-#: src/screens/Settings/AppIconSettings.tsx:42
-#: src/screens/Settings/AppIconSettings.tsx:76
+#: src/screens/Settings/AppIconSettings/index.tsx:216
 msgid "Tap to change app icon"
 msgstr "点按以更改应用图标"
 
@@ -6485,7 +6519,8 @@ msgstr "就这些，完毕！"
 msgid "The account will be able to interact with you after unblocking."
 msgstr "取消屏蔽后，该账户将重新能够与你互动。"
 
-#: src/screens/Settings/AppIconSettings.tsx:82
+#: src/screens/Settings/AppIconSettings/index.tsx:41
+#: src/screens/Settings/AppIconSettings/index.tsx:222
 msgid "The app will be restarted"
 msgstr "应用将会重新启动"
 
