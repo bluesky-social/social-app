@@ -56,7 +56,7 @@ export function NotificationsScreen({}: Props) {
   const [isLoadingAll, setIsLoadingAll] = React.useState(false)
   const [isLoadingMentions, setIsLoadingMentions] = React.useState(false)
   const initialActiveTab = lastActiveTab
-  const [activeTab, setActiveTab] = React.useState(lastActiveTab)
+  const [activeTab, setActiveTab] = React.useState(initialActiveTab)
   const isLoading = activeTab === 0 ? isLoadingAll : isLoadingMentions
 
   const onPageSelected = React.useCallback(
