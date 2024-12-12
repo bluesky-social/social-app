@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-12-12 05:28\n"
+"PO-Revision-Date: 2024-12-12 11:07\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -78,16 +78,16 @@ msgstr "{0, plural, one {# 秒} other {# 秒}}"
 #: src/components/ProfileHoverCard/index.web.tsx:398
 #: src/screens/Profile/Header/Metrics.tsx:22
 msgid "{0, plural, one {follower} other {followers}}"
-msgstr "{0, plural, one {跟隨者} other {跟隨者}}"
+msgstr "{0, plural, one {個跟隨者} other {個跟隨者}}"
 
 #: src/components/ProfileHoverCard/index.web.tsx:402
 #: src/screens/Profile/Header/Metrics.tsx:26
 msgid "{0, plural, one {following} other {following}}"
-msgstr "{0, plural, one {跟隨中} other {跟隨中}}"
+msgstr "{0, plural, one {個跟隨中} other {個跟隨中}}"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:447
 msgid "{0, plural, one {like} other {likes}}"
-msgstr "{0, plural, one {喜歡} other {喜歡}}"
+msgstr "{0, plural, one {個喜歡} other {個喜歡}}"
 
 #: src/screens/Profile/Header/Metrics.tsx:58
 msgid "{0, plural, one {post} other {posts}}"
@@ -95,7 +95,7 @@ msgstr "{0, plural, one {則貼文} other {則貼文}}"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:431
 msgid "{0, plural, one {quote} other {quotes}}"
-msgstr "{0, plural, one {引用} other {引用}}"
+msgstr "{0, plural, one {次引用} other {次引用}}"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:413
 msgid "{0, plural, one {repost} other {reposts}}"
@@ -125,7 +125,7 @@ msgstr "第 {0} 個 (共 {1} 個)"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:479
 msgid "{0} people have used this starter pack!"
-msgstr "{0} 人已使用此新手包！"
+msgstr "有 {0} 個人使用過這個新手包！"
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:203
 msgid "{0} unread items"
@@ -504,7 +504,7 @@ msgstr "在設定中新增靜音字詞"
 
 #: src/components/dialogs/MutedWords.tsx:112
 msgid "Add muted words and tags"
-msgstr "新增靜音字詞及標籤"
+msgstr "新增靜音字詞和標籤"
 
 #: src/view/com/composer/Composer.tsx:1235
 msgid "Add new post"
@@ -2413,7 +2413,7 @@ msgstr "輸入密碼"
 #: src/components/dialogs/MutedWords.tsx:127
 #: src/components/dialogs/MutedWords.tsx:128
 msgid "Enter a word or tag"
-msgstr "輸入文字或標籤"
+msgstr "輸入字詞或標籤"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:89
 msgid "Enter Code"
@@ -4788,7 +4788,7 @@ msgstr "請為這個應用程式專用密碼選擇一個名稱，或使用我們
 
 #: src/components/dialogs/MutedWords.tsx:86
 msgid "Please enter a valid word, tag, or phrase to mute"
-msgstr "請輸入有效的文字或標籤進行靜音"
+msgstr "請輸入有效的字詞或標籤以靜音內容"
 
 #: src/screens/Signup/state.ts:196
 #: src/screens/Signup/StepInfo/index.tsx:102
@@ -5285,7 +5285,7 @@ msgstr "回覆"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:262
 msgid "Reply ({0, plural, one {# reply} other {# replies}})"
-msgstr "回覆 ({0, plural, one {# 個回覆} other {# 個回覆}})"
+msgstr "回覆 ({0, plural, one {# 則回覆} other {# 則回覆}})"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:114
 #: src/lib/moderation/useModerationCauseDescription.ts:123
@@ -5889,7 +5889,7 @@ msgstr "伺服器位址"
 
 #: src/screens/Settings/AppIconSettings/index.tsx:178
 msgid "Set app icon to {0}"
-msgstr "將應用程式圖示修改至「{0}」"
+msgstr "將應用程式圖示修改至 {0}"
 
 #: src/screens/Moderation/index.tsx:290
 msgid "Set birthdate"
@@ -7985,7 +7985,7 @@ msgstr "您已完成設定！"
 #: src/components/moderation/ModerationDetailsDialog.tsx:106
 #: src/lib/moderation/useModerationCauseDescription.ts:106
 msgid "You've chosen to hide a word or tag within this post."
-msgstr "這則貼文內容中包含您的靜音文字或標籤。"
+msgstr "這則貼文內容中包含您的靜音字詞或標籤。"
 
 #: src/view/com/posts/FollowingEndOfFeed.tsx:44
 msgid "You've reached the end of your feed! Find some more accounts to follow."
