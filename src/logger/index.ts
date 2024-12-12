@@ -1,9 +1,3 @@
-import {
-  debug as bdDebug,
-  error as bdError,
-  info as bdInfo,
-  warn as bdWarn,
-} from '@bitdrift/react-native'
 import format from 'date-fns/format'
 import {nanoid} from 'nanoid/non-secure'
 
@@ -135,20 +129,6 @@ export const consoleTransport: Transport = (
   } else {
     log(`${format(timestamp, 'HH:mm:ss')} ${message.toString()}${extra}`)
   }
-}
-
-export const bitdriftTransport: Transport = (level, message) => {
-  const log = (
-    {
-      [LogLevel.Debug]: bdDebug,
-      [LogLevel.Info]: bdInfo,
-      [LogLevel.Log]: bdInfo,
-      [LogLevel.Warn]: bdWarn,
-      [LogLevel.Error]: bdError,
-    } as const
-  )[level]
-
-  log(message.toString())
 }
 
 export const sentryTransport: Transport = (
@@ -347,10 +327,6 @@ export class Logger {
  *   `logger.enable()`
  */
 export const logger = new Logger()
-
-if (!env.IS_TEST) {
-  logger.addTransport(bitdriftTransport)
-}
 
 if (env.IS_DEV && !env.IS_TEST) {
   logger.addTransport(consoleTransport)
