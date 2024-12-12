@@ -74,34 +74,35 @@ function GrowableBannerInner({
   const isFetching = useIsProfileFetching()
   const animateSpinner = useShouldAnimateSpinner({isFetching, scrollY})
 
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [
-      {
-        scale: interpolate(
-          scrollY.get(),
-          [-150, 0],
-          [2, 1],
-          Extrapolation.CLAMP,
-        ),
-      },
-      {
-        translateY: clamp(scrollY.get() - minimumHeaderHeight, 0, headerHeight),
-      },
-    ],
-  }))
+  const animatedStyle = useAnimatedStyle(() => {
+    const scrollYValue = scrollY.get()
+    return {
+      zIndex: scrollYValue > 100 ? 100 : 0,
+      transform: [
+        {
+          scale: interpolate(
+            scrollYValue,
+            [-150, 0],
+            [2, 1],
+            Extrapolation.CLAMP,
+          ),
+        },
+        {
+          translateY: clamp(
+            scrollYValue - minimumHeaderHeight + topInset,
+            0,
+            headerHeight - minimumHeaderHeight,
+          ),
+        },
+      ],
+    }
+  })
 
   const animatedBlurViewProps = useAnimatedProps(() => {
-    console.log(
-      'scrollY',
-      scrollY.get(),
-      'headerHeight',
-      headerHeight,
-      topInset,
-    )
     return {
       intensity: interpolate(
         scrollY.get(),
-        [-300, -65, -15, minimumHeaderHeight - 10, minimumHeaderHeight],
+        [-300, -65, -15, minimumHeaderHeight - 10, minimumHeaderHeight + 30],
         [50, 40, 0, 0, 50],
         {extrapolateLeft: Extrapolation.CLAMP},
       ),
