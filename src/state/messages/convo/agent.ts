@@ -3,9 +3,11 @@ import {
   BskyAgent,
   ChatBskyConvoDefs,
   ChatBskyConvoGetLog,
+  ChatBskyConvoListConvos,
   ChatBskyConvoSendMessage,
 } from '@atproto/api'
 import {XRPCError} from '@atproto/xrpc'
+import {InfiniteData, QueryClient} from '@tanstack/react-query'
 import EventEmitter from 'eventemitter3'
 import {nanoid} from 'nanoid/non-secure'
 
@@ -33,6 +35,7 @@ import {
 import {MessagesEventBus} from '#/state/messages/events/agent'
 import {MessagesEventBusError} from '#/state/messages/events/types'
 import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
+import {RQKEY as RQKEY_LIST_CONVOS} from '#/state/queries/messages/list-conversations'
 
 export function isConvoItemMessage(
   item: ConvoItem,
@@ -83,6 +86,7 @@ export class Convo {
   sender: AppBskyActorDefs.ProfileViewBasic | undefined
   recipients: AppBskyActorDefs.ProfileViewBasic[] | undefined = undefined
   snapshot: ConvoState | undefined
+  queryClient: QueryClient | undefined
 
   constructor(params: ConvoParams) {
     this.id = nanoid(3)
@@ -90,6 +94,7 @@ export class Convo {
     this.agent = params.agent
     this.events = params.events
     this.senderUserDid = params.agent.session?.did!
+    this.queryClient = params.queryClient
 
     this.subscribe = this.subscribe.bind(this)
     this.getSnapshot = this.getSnapshot.bind(this)
@@ -99,6 +104,8 @@ export class Convo {
     this.ingestFirehose = this.ingestFirehose.bind(this)
     this.onFirehoseConnect = this.onFirehoseConnect.bind(this)
     this.onFirehoseError = this.onFirehoseError.bind(this)
+    this.optimisticFetchConvoFromCache =
+      this.optimisticFetchConvoFromCache.bind(this)
   }
 
   private commit() {
@@ -426,6 +433,8 @@ export class Convo {
 
   private async setup() {
     try {
+      this.optimisticFetchConvoFromCache()
+
       const {convo, sender, recipients} = await this.fetchConvo()
 
       this.convo = convo
@@ -508,6 +517,25 @@ export class Convo {
     }
   }
 
+  private optimisticFetchConvoFromCache() {
+    if (!this.queryClient) return
+    if (this.convo) return // bail if already loaded
+
+    const convoList =
+      this.queryClient.getQueryData<
+        InfiniteData<ChatBskyConvoListConvos.OutputSchema, string | undefined>
+      >(RQKEY_LIST_CONVOS)
+
+    const convo = convoList?.pages
+      ?.flatMap(c => c.convos)
+      ?.find(c => c.id === this.convoId)
+    if (convo) {
+      this.convo = convo
+      this.sender = convo.members.find(m => m.did === this.senderUserDid)
+      this.recipients = convo.members.filter(m => m.did !== this.senderUserDid)
+    }
+  }
+
   private pendingFetchConvo:
     | Promise<{
         convo: ChatBskyConvoDefs.ConvoView
@@ -525,7 +553,7 @@ export class Convo {
     }>(async (resolve, reject) => {
       try {
         const response = await networkRetry(2, () => {
-          return this.agent.api.chat.bsky.convo.getConvo(
+          return this.agent.chat.bsky.convo.getConvo(
             {
               convoId: this.convoId,
             },
@@ -592,7 +620,7 @@ export class Convo {
 
       const nextCursor = this.oldestRev // for TS
       const response = await networkRetry(2, () => {
-        return this.agent.api.chat.bsky.convo.getMessages(
+        return this.agent.chat.bsky.convo.getMessages(
           {
             cursor: nextCursor,
             convoId: this.convoId,
@@ -793,7 +821,7 @@ export class Convo {
 
       const {id, message} = pendingMessage
 
-      const response = await this.agent.api.chat.bsky.convo.sendMessage(
+      const response = await this.agent.chat.bsky.convo.sendMessage(
         {
           convoId: this.convoId,
           message,
@@ -888,7 +916,7 @@ export class Convo {
     )
 
     try {
-      const {data} = await this.agent.api.chat.bsky.convo.sendMessageBatch(
+      const {data} = await this.agent.chat.bsky.convo.sendMessageBatch(
         {
           items: messageArray.map(({message}) => ({
             convoId: this.convoId,
@@ -935,7 +963,7 @@ export class Convo {
 
     try {
       await networkRetry(2, () => {
-        return this.agent.api.chat.bsky.convo.deleteMessageForSelf(
+        return this.agent.chat.bsky.convo.deleteMessageForSelf(
           {
             convoId: this.convoId,
             messageId,

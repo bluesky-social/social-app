@@ -66,6 +66,7 @@ export function ConvoProvider({
         convoId,
         agent,
         events,
+        queryClient,
       }),
   )
   const service = useSyncExternalStore(convo.subscribe, convo.getSnapshot)

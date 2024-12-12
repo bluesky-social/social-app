@@ -9,6 +9,7 @@ import {
 } from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useQueryClient} from '@tanstack/react-query'
 
 import {GestureActionView} from '#/lib/custom-animations/GestureActionView'
 import {useHaptics} from '#/lib/haptics'
@@ -24,6 +25,7 @@ import {isNative} from '#/platform/detection'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useMarkAsReadMutation} from '#/state/queries/messages/conversation'
+import {precacheProfile} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import {TimeElapsed} from '#/view/com/util/TimeElapsed'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
@@ -77,6 +79,7 @@ function ChatListItemReady({
   moderationOpts: ModerationOpts
 }) {
   const t = useTheme()
+  const queryClient = useQueryClient()
   const {_} = useLingui()
   const {currentAccount} = useSession()
   const menuControl = useMenuControl()
@@ -189,6 +192,7 @@ function ChatListItemReady({
   const onPress = useCallback(
     (e: GestureResponderEvent) => {
       decrementBadgeCount(convo.unreadCount)
+      precacheProfile(queryClient, profile)
       if (isDeletedAccount) {
         e.preventDefault()
         menuControl.open()
@@ -197,7 +201,7 @@ function ChatListItemReady({
         logEvent('chat:open', {logContext: 'ChatsList'})
       }
     },
-    [convo.unreadCount, isDeletedAccount, menuControl],
+    [convo.unreadCount, isDeletedAccount, menuControl, queryClient, profile],
   )
 
   const onLongPress = useCallback(() => {

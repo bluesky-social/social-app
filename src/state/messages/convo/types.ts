@@ -4,6 +4,7 @@ import {
   ChatBskyConvoDefs,
   ChatBskyConvoSendMessage,
 } from '@atproto/api'
+import {QueryClient} from '@tanstack/react-query'
 
 import {MessagesEventBus} from '#/state/messages/events/agent'
 
@@ -11,6 +12,7 @@ export type ConvoParams = {
   convoId: string
   agent: BskyAgent
   events: MessagesEventBus
+  queryClient?: QueryClient
 }
 
 export enum ConvoStatus {

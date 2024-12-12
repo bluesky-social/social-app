@@ -1,6 +1,11 @@
 import React, {useCallback} from 'react'
 import {View} from 'react-native'
-import {AppBskyActorDefs, moderateProfile, ModerationOpts} from '@atproto/api'
+import {
+  AppBskyActorDefs,
+  moderateProfile,
+  ModerationCause,
+  ModerationDecision,
+} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
@@ -86,6 +91,23 @@ function Inner() {
       !convoState.isFetchingHistory &&
       convoState.items.length === 0)
 
+  const moderation = React.useMemo(() => {
+    if (!recipient || !moderationOpts) return
+    return moderateProfile(recipient, moderationOpts)
+  }, [recipient, moderationOpts])
+
+  const blockInfo = React.useMemo(() => {
+    if (!moderation) return
+    const modui = moderation.ui('profileView')
+    const blocks = modui.alerts.filter(alert => alert.type === 'blocking')
+    const listBlocks = blocks.filter(alert => alert.source.type === 'list')
+    const userBlock = blocks.find(alert => alert.source.type === 'user')
+    return {
+      listBlocks,
+      userBlock,
+    }
+  }, [moderation])
+
   // Any time that we re-render the `Initializing` state, we have to reset `hasScrolled` to false. After entering this
   // state, we know that we're resetting the list of messages and need to re-scroll to the bottom when they get added.
   React.useEffect(() => {
@@ -110,11 +132,18 @@ function Inner() {
 
   return (
     <Layout.Center style={[a.flex_1]}>
-      {!readyToShow && <MessagesListHeader />}
+      {!readyToShow && (
+        <MessagesListHeader
+          profile={recipient}
+          moderation={moderation}
+          blockInfo={blockInfo}
+        />
+      )}
       <View style={[a.flex_1]}>
-        {moderationOpts && recipient ? (
+        {moderation && blockInfo && recipient ? (
           <InnerReady
-            moderationOpts={moderationOpts}
+            moderation={moderation}
+            blockInfo={blockInfo}
             recipient={recipient}
             hasScrolled={hasScrolled}
             setHasScrolled={setHasScrolled}
@@ -144,12 +173,17 @@ function Inner() {
 }
 
 function InnerReady({
-  moderationOpts,
+  moderation,
+  blockInfo,
   recipient: recipientUnshadowed,
   hasScrolled,
   setHasScrolled,
 }: {
-  moderationOpts: ModerationOpts
+  moderation: ModerationDecision
+  blockInfo: {
+    listBlocks: ModerationCause[]
+    userBlock: ModerationCause | undefined
+  }
   recipient: AppBskyActorDefs.ProfileViewBasic
   hasScrolled: boolean
   setHasScrolled: React.Dispatch<React.SetStateAction<boolean>>
@@ -160,21 +194,6 @@ function InnerReady({
   const recipient = useProfileShadow(recipientUnshadowed)
   const verifyEmailControl = useDialogControl()
   const {needsEmailVerification} = useEmail()
-
-  const moderation = React.useMemo(() => {
-    return moderateProfile(recipient, moderationOpts)
-  }, [recipient, moderationOpts])
-
-  const blockInfo = React.useMemo(() => {
-    const modui = moderation.ui('profileView')
-    const blocks = modui.alerts.filter(alert => alert.type === 'blocking')
-    const listBlocks = blocks.filter(alert => alert.source.type === 'list')
-    const userBlock = blocks.find(alert => alert.source.type === 'user')
-    return {
-      listBlocks,
-      userBlock,
-    }
-  }, [moderation])
 
   React.useEffect(() => {
     if (needsEmailVerification) {
