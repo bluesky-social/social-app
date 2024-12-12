@@ -502,7 +502,7 @@ function DialogInner({
             <View
               style={[a.flex_row, a.align_center, a.gap_sm, a.justify_between]}>
               <Text style={[a.italic, t.atoms.text_contrast_medium]}>
-                Something wrong? Let us know.
+                <Trans>Something wrong? Let us know.</Trans>
               </Text>
 
               <Button
