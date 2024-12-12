@@ -126,7 +126,7 @@ export function ProfileFeedHeader({info}: {info: FeedSourceFeedInfo}) {
         if (pinned) {
           Toast.show(_(msg`Pinned ${info.displayName} to Home`))
         } else {
-          Toast.show(_(msg`Un-pinned ${info.displayName} from Home`))
+          Toast.show(_(msg`Unpinned ${info.displayName} from Home`))
         }
       } else {
         await addSavedFeeds([
