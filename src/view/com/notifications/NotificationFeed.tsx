@@ -135,13 +135,14 @@ export function NotificationFeed({
       }
       return (
         <NotificationFeedItem
+          highlightUnread={filter === 'all'}
           item={item}
           moderationOpts={moderationOpts!}
           hideTopBorder={index === 0 && item.notification.isRead}
         />
       )
     },
-    [moderationOpts, _, onPressRetryLoadMore, pal.border],
+    [moderationOpts, _, onPressRetryLoadMore, pal.border, filter],
   )
 
   const FeedFooter = React.useCallback(
