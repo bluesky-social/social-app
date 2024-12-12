@@ -262,11 +262,7 @@ export function ProfileFeedHeader({info}: {info: FeedSourceFeedInfo}) {
                           variant="ghost"
                           shape="square"
                           color="secondary">
-                          {isPinned ? (
-                            <PinFilled size="lg" fill={t.palette.primary_500} />
-                          ) : (
-                            <ButtonIcon icon={Pin} size="lg" />
-                          )}
+                          <PinFilled size="lg" fill={t.palette.primary_500} />
                         </Button>
                       )
                     }}
@@ -275,13 +271,10 @@ export function ProfileFeedHeader({info}: {info: FeedSourceFeedInfo}) {
                   <Menu.Outer>
                     <Menu.Item
                       disabled={isFeedStateChangePending}
-                      label={_(msg`Unpin from Home`)}
+                      label={_(msg`Unpin from home`)}
                       onPress={onTogglePinned}>
                       <Menu.ItemText>{_(msg`Unpin from home`)}</Menu.ItemText>
-                      <Menu.ItemIcon
-                        icon={isPinned ? X : Pin}
-                        position="right"
-                      />
+                      <Menu.ItemIcon icon={X} position="right" />
                     </Menu.Item>
                     <Menu.Item
                       disabled={isFeedStateChangePending}
