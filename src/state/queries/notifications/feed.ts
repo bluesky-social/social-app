@@ -52,8 +52,8 @@ const PAGE_SIZE = 30
 type RQPageParam = string | undefined
 
 const RQKEY_ROOT = 'notification-feed'
-export function RQKEY(group: 'all' | 'mentions') {
-  return [RQKEY_ROOT, group]
+export function RQKEY(filter: 'all' | 'mentions') {
+  return [RQKEY_ROOT, filter]
 }
 
 export function useNotificationFeedQuery(opts: {
