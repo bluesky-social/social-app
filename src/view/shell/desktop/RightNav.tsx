@@ -1,13 +1,12 @@
-import React from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {FEEDBACK_FORM_URL, HELP_DESK_URL} from '#/lib/constants'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import * as persisted from '#/state/persisted'
 import {useKawaiiMode} from '#/state/preferences/kawaii'
 import {useSession} from '#/state/session'
+import {useTrendingTopicsSidebarSetting} from '#/state/trending'
 import {DesktopFeeds} from '#/view/shell/desktop/Feeds'
 import {DesktopSearch} from '#/view/shell/desktop/Search'
 import {atoms as a, useGutters, useTheme, web} from '#/alf'
@@ -117,22 +116,7 @@ function TrendingTopics() {
   const {_} = useLingui()
   const trendingPrompt = Prompt.usePromptControl()
 
-  const [showTrending, setShowTrending] = React.useState(
-    () => !persisted.get('hideSidebarTrendingTopics'),
-  )
-
-  const onConfirmHideTrending = React.useCallback(() => {
-    setShowTrending(false)
-    persisted.write('hideSidebarTrendingTopics', true)
-  }, [setShowTrending])
-
-  // persisted.write('hideSidebarTrendingTopics', undefined)
-
-  React.useEffect(() => {
-    return persisted.onUpdate('hideSidebarTrendingTopics', value => {
-      setShowTrending(!value)
-    })
-  }, [setShowTrending])
+  const [showTrending, setShowTrending] = useTrendingTopicsSidebarSetting()
 
   return showTrending ? (
     <>
@@ -184,7 +168,7 @@ function TrendingTopics() {
           msg`This is a device setting, and will apply to all accounts on this device. You can update this later from your settings.`,
         )}
         confirmButtonCta={_(msg`Hide`)}
-        onConfirm={onConfirmHideTrending}
+        onConfirm={() => setShowTrending(false)}
       />
       <Divider />
     </>
