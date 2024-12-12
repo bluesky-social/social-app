@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-12-12 15:20+0900\n"
+"PO-Revision-Date: 2024-12-13 07:38+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -576,6 +576,10 @@ msgstr "高度な設定"
 msgid "Algorithm training complete!"
 msgstr "アルゴリズムのトレーニング完了！"
 
+#: src/view/screens/Notifications.tsx:86
+msgid "All"
+msgstr "すべて"
+
 #: src/screens/StarterPack/StarterPackScreen.tsx:381
 msgid "All accounts have been followed!"
 msgstr "すべてのアカウントをフォローしました！"
@@ -593,6 +597,10 @@ msgstr "ダイレクトメッセージへのアクセスを許可"
 #: src/screens/Messages/Settings.tsx:67
 msgid "Allow new messages from"
 msgstr "新しいメッセージを誰から受け取れるか："
+
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:314
+msgid "Allow quote posts"
+msgstr "引用を許可"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:359
 msgid "Allow replies from:"
@@ -1105,6 +1113,10 @@ msgstr "作成者：{0}"
 #: src/view/com/profile/ProfileSubpageHeader.tsx:197
 msgid "by <0/>"
 msgstr "作成者：<0/>"
+
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:414
+msgid "By <0>{0}</0>"
+msgstr "作成者：<0>{0}</0>"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:81
 msgid "By creating an account you agree to the <0>Privacy Policy</0>."
@@ -2699,6 +2711,10 @@ msgstr "フィード"
 msgid "Feed by {0}"
 msgstr "{0}によるフィード"
 
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:318
+msgid "Feed menu"
+msgstr "フィードメニュー"
+
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:54
 msgid "Feed toggle"
 msgstr "フィードの切り替え"
@@ -3551,6 +3567,10 @@ msgstr "さあ始めましょう！"
 msgid "Light"
 msgstr "ライト"
 
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:481
+msgid "Like"
+msgstr "いいねする"
+
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:310
 msgid "Like ({0, plural, one {# like} other {# likes}})"
 msgstr "いいねする ({0, plural, other {#個のいいね}})"
@@ -3563,6 +3583,10 @@ msgstr "10投稿をいいね"
 #: src/state/shell/progress-guide.tsx:162
 msgid "Like 10 posts to train the Discover feed"
 msgstr "Discoverフィードを訓練するために10投稿をいいねする"
+
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:468
+msgid "Like feed"
+msgstr "フィードをいいね"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:275
 #: src/view/screens/ProfileFeed.tsx:576
@@ -3775,6 +3799,10 @@ msgstr "メンションされたユーザー"
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:393
 msgid "Mentioned users"
 msgstr "メンションされたユーザー"
+
+#: src/view/screens/Notifications.tsx:99
+msgid "Mentions"
+msgstr "メンション"
 
 #: src/components/Menu/index.tsx:95
 #: src/view/com/util/ViewHeader.tsx:87
@@ -4111,17 +4139,17 @@ msgstr "新しいパスワード"
 msgid "New Password"
 msgstr "新しいパスワード"
 
-#: src/view/com/feeds/FeedPage.tsx:143
-msgctxt "action"
-msgid "New post"
-msgstr "新しい投稿"
-
 #: src/view/screens/Feeds.tsx:582
 #: src/view/screens/Notifications.tsx:224
 #: src/view/screens/Profile.tsx:496
 #: src/view/screens/ProfileFeed.tsx:433
 #: src/view/screens/ProfileList.tsx:248
 #: src/view/screens/ProfileList.tsx:287
+msgid "New post"
+msgstr "新しい投稿"
+
+#: src/view/com/feeds/FeedPage.tsx:143
+msgctxt "action"
 msgid "New post"
 msgstr "新しい投稿"
 
@@ -4482,6 +4510,10 @@ msgstr "引き出しメニューを開く"
 msgid "Open emoji picker"
 msgstr "絵文字を入力"
 
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:160
+msgid "Open feed info screen"
+msgstr "フィードを画面で開く"
+
 #: src/view/screens/ProfileFeed.tsx:301
 msgid "Open feed options menu"
 msgstr "フィードの設定メニューを開く"
@@ -4706,6 +4738,11 @@ msgstr "写真"
 msgid "Pictures meant for adults."
 msgstr "成人向けの画像です。"
 
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:486
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:493
+msgid "Pin feed"
+msgstr "フィードをピン留め"
+
 #: src/view/screens/ProfileFeed.tsx:293
 #: src/view/screens/ProfileList.tsx:676
 msgid "Pin to home"
@@ -4723,6 +4760,11 @@ msgstr "プロフィールに固定"
 #: src/view/com/posts/FeedItem.tsx:363
 msgid "Pinned"
 msgstr "固定"
+
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:127
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:139
+msgid "Pinned {0} to Home"
+msgstr "{0}をホームにピン留めしました"
 
 #: src/view/screens/SavedFeeds.tsx:130
 msgid "Pinned Feeds"
@@ -5053,10 +5095,6 @@ msgstr "引用投稿を切り離すことができました"
 msgid "Quote posts disabled"
 msgstr "引用投稿は無効です"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:314
-msgid "Quote posts enabled"
-msgstr "引用投稿は有効です"
-
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:299
 msgid "Quote settings"
 msgstr "引用の設定"
@@ -5113,10 +5151,6 @@ msgstr "検索履歴"
 #: src/screens/Messages/components/MessageListError.tsx:20
 msgid "Reconnect"
 msgstr "再接続"
-
-#: src/view/screens/Notifications.tsx:144
-msgid "Refresh notifications"
-msgstr "通知を更新"
 
 #: src/screens/Messages/ChatList.tsx:198
 msgid "Reload conversations"
@@ -5950,11 +5984,6 @@ msgstr "面白いことをシェアして！"
 msgid "Share anyway"
 msgstr "とにかく共有"
 
-#: src/view/screens/ProfileFeed.tsx:364
-#: src/view/screens/ProfileFeed.tsx:366
-msgid "Share feed"
-msgstr "フィードを共有"
-
 #: src/components/StarterPack/ShareDialog.tsx:123
 #: src/components/StarterPack/ShareDialog.tsx:130
 #: src/screens/StarterPack/StarterPackScreen.tsx:598
@@ -5974,6 +6003,10 @@ msgstr "リンク共有のダイアログ"
 #: src/components/StarterPack/ShareDialog.tsx:145
 msgid "Share QR code"
 msgstr "QRコードを共有"
+
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:437
+msgid "Share this feed"
+msgstr "このフィードを共有"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:415
 msgid "Share this starter pack"
@@ -6223,6 +6256,10 @@ msgstr "何らかの問題が発生したようなので、もう一度お試し
 #: src/screens/Settings/NotificationSettings.tsx:41
 msgid "Something went wrong!"
 msgstr "何らかの問題が発生したようです！"
+
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:505
+msgid "Something wrong? Let us know."
+msgstr "何か問題がありますか？お知らせください。"
 
 #: src/App.native.tsx:113
 #: src/App.web.tsx:94
@@ -7066,13 +7103,13 @@ msgstr "{0}のフォローを解除"
 msgid "Unfollow Account"
 msgstr "アカウントのフォローを解除"
 
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:481
+msgid "Unlike"
+msgstr "いいねを外す"
+
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:304
 msgid "Unlike ({0, plural, one {# like} other {# likes}})"
 msgstr "いいねを外す（{0, plural, other {#個のいいね}}）"
-
-#: src/view/screens/ProfileFeed.tsx:576
-msgid "Unlike this feed"
-msgstr "このフィードからいいねを外す"
 
 #: src/components/TagMenu/index.tsx:264
 #: src/view/screens/ProfileList.tsx:692
@@ -7116,6 +7153,11 @@ msgstr "ビデオのミュートを解除"
 msgid "Unpin"
 msgstr "ピン留めを解除"
 
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:486
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:493
+msgid "Unpin feed"
+msgstr "フィードのピン留めを外す"
+
 #: src/view/screens/ProfileFeed.tsx:293
 msgid "Unpin from home"
 msgstr "ホームからピン留めを解除"
@@ -7128,6 +7170,10 @@ msgstr "プロフィールから固定を解除"
 #: src/view/screens/ProfileList.tsx:559
 msgid "Unpin moderation list"
 msgstr "モデレーションリストのピン留めを解除"
+
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:129
+msgid "Unpinned {0} from Home"
+msgstr "{0}のピン留めを解除しました"
 
 #: src/view/screens/ProfileList.tsx:356
 msgid "Unpinned from your feeds"
