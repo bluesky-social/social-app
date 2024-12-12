@@ -4,7 +4,7 @@ import {AppBskyFeedDefs, AtpAgent} from '@atproto/api'
 import {h, render} from 'preact'
 
 import logo from '../../assets/logo.svg'
-import {initColorMode} from '../color-mode'
+import {applyTheme, assertColorModeValues, initColorMode} from '../color-mode'
 import {Container} from '../components/container'
 import {Link} from '../components/link'
 import {Post} from '../components/post'
@@ -22,7 +22,18 @@ if (!uri) {
   throw new Error('No uri in path')
 }
 
-initColorMode()
+const query = new URLSearchParams(window.location.search)
+const colorMode = query.get('colorMode')
+
+if (
+  colorMode != null &&
+  assertColorModeValues(colorMode) &&
+  colorMode !== 'auto'
+) {
+  applyTheme(colorMode)
+} else {
+  initColorMode()
+}
 
 agent
   .getPostThread({
