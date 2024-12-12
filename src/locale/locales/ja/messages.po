@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-12-12 10:02+0900\n"
+"PO-Revision-Date: 2024-12-12 11:58+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -65,10 +65,6 @@ msgstr "{0, plural, other {# 引用}}"
 #: src/view/com/util/post-ctrls/RepostButton.tsx:69
 msgid "{0, plural, one {# repost} other {# reposts}}"
 msgstr "{0, plural, other {#回のリポスト}}"
-
-#: src/screens/Post/PostRepostedBy.tsx:41
-msgid "{0, plural, one {# reposts} other {# reposts}}"
-msgstr "{0, plural, other {# リポスト}}"
 
 #: src/lib/hooks/useTimeAgo.ts:126
 msgid "{0, plural, one {# second} other {# seconds}}"
