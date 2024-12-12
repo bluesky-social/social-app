@@ -161,7 +161,7 @@ const desktopStyles = StyleSheet.create({
   },
   itemText: {
     textAlign: 'center',
-    minWidth: 60,
+    minWidth: 45,
     paddingBottom: 12,
     borderBottomWidth: 3,
     borderBottomColor: 'transparent',
@@ -197,7 +197,7 @@ const mobileStyles = StyleSheet.create({
   },
   itemText: {
     textAlign: 'center',
-    minWidth: 60,
+    minWidth: 45,
     paddingBottom: 10,
     borderBottomWidth: 2,
     borderBottomColor: 'transparent',

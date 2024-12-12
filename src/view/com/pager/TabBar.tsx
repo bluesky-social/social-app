@@ -422,7 +422,7 @@ const styles = StyleSheet.create({
   },
   itemText: {
     lineHeight: 20,
-    minWidth: 60,
+    minWidth: 45,
     textAlign: 'center',
   },
   outerBottomBorder: {
