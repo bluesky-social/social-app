@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-12-11 09:38+0900\n"
+"PO-Revision-Date: 2024-12-12 10:02+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -26,6 +26,14 @@ msgstr "（メールがありません）"
 msgid "{0, plural, one {# day} other {# days}}"
 msgstr "{0, plural, other {#日}}"
 
+#: src/screens/Profile/ProfileFollowers.tsx:40
+msgid "{0, plural, one {# follower} other {# followers}}"
+msgstr "{0, plural, other {# フォロワー}}"
+
+#: src/screens/Profile/ProfileFollows.tsx:40
+msgid "{0, plural, one {# following} other {# following}}"
+msgstr "{0, plural, other {# フォロー中}}"
+
 #: src/lib/hooks/useTimeAgo.ts:146
 msgid "{0, plural, one {# hour} other {# hours}}"
 msgstr "{0, plural, other {#時間}}"
@@ -38,6 +46,10 @@ msgstr "{0, plural, other {#個のラベルがこのアカウントに適用さ�
 msgid "{0, plural, one {# label has been placed on this content} other {# labels have been placed on this content}}"
 msgstr "{0, plural, other {#個のラベルがこのコンテンツに適用されています}}"
 
+#: src/screens/Post/PostLikedBy.tsx:41
+msgid "{0, plural, one {# like} other {# likes}}"
+msgstr "{0, plural, other {# いいね}}"
+
 #: src/lib/hooks/useTimeAgo.ts:136
 msgid "{0, plural, one {# minute} other {# minutes}}"
 msgstr "{0, plural, other {#分}}"
@@ -46,9 +58,17 @@ msgstr "{0, plural, other {#分}}"
 msgid "{0, plural, one {# month} other {# months}}"
 msgstr "{0, plural, other {#ヶ月}}"
 
+#: src/screens/Post/PostQuotes.tsx:41
+msgid "{0, plural, one {# quote} other {# quotes}}"
+msgstr "{0, plural, other {# 引用}}"
+
 #: src/view/com/util/post-ctrls/RepostButton.tsx:69
 msgid "{0, plural, one {# repost} other {# reposts}}"
 msgstr "{0, plural, other {#回のリポスト}}"
+
+#: src/screens/Post/PostRepostedBy.tsx:41
+msgid "{0, plural, one {# reposts} other {# reposts}}"
+msgstr "{0, plural, other {# リポスト}}"
 
 #: src/lib/hooks/useTimeAgo.ts:126
 msgid "{0, plural, one {# second} other {# seconds}}"
@@ -1055,6 +1075,14 @@ msgstr "Blueskyはあなたのつながっているユーザーからおすす�
 msgid "Bluesky will not show your profile and posts to logged-out users. Other apps may not honor this request. This does not make your account private."
 msgstr "Blueskyはログアウトしたユーザーにあなたのプロフィールや投稿を表示しません。他のアプリはこのリクエストに応じない場合があります。この設定はあなたのアカウントを非公開にするものではありません。"
 
+#: src/screens/Settings/AppIconSettings/index.tsx:99
+msgid "Bluesky+"
+msgstr "Bluesky+"
+
+#: src/screens/Settings/AppIconSettings/index.tsx:102
+msgid "Bluesky+ icons"
+msgstr "Bluesky+アイコン"
+
 #: src/lib/moderation/useLabelBehaviorDescription.ts:53
 msgid "Blur images"
 msgstr "画像をぼかす"
@@ -1214,6 +1242,10 @@ msgstr "キャプション＆ALTテキスト"
 #: src/view/com/modals/VerifyEmail.tsx:160
 msgid "Change"
 msgstr "変更"
+
+#: src/screens/Settings/AppIconSettings/index.tsx:39
+msgid "Change app icon"
+msgstr "アプリアイコンを変更"
 
 #: src/screens/Settings/AppIconSettings.tsx:73
 msgid "Change app icon to \"{0}\""
@@ -1843,6 +1875,10 @@ msgstr "デバッグパネル"
 #: src/screens/Settings/AppearanceSettings.tsx:153
 msgid "Default"
 msgstr "デフォルト"
+
+#: src/screens/Settings/AppIconSettings/index.tsx:75
+msgid "Default icons"
+msgstr "デフォルトアイコン"
 
 #: src/components/dms/MessageMenu.tsx:151
 #: src/screens/Settings/AppPasswords.tsx:204
@@ -2832,11 +2868,6 @@ msgstr "<0>{0}</0>、<1>{1}</1>および{2, plural, other {他#人}}がフォロ
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:403
 msgid "Followed users"
 msgstr "自分がフォローしているユーザー"
-
-#: src/view/screens/ProfileFollowers.tsx:30
-#: src/view/screens/ProfileFollowers.tsx:31
-msgid "Followers"
-msgstr "フォロワー"
 
 #: src/Navigation.tsx:190
 msgid "Followers of @{0} that you know"
@@ -5859,6 +5890,10 @@ msgstr "アカウントの削除の確認コードをメールに送信"
 #: src/view/com/auth/server-input/index.tsx:111
 msgid "Server address"
 msgstr "サーバーアドレス"
+
+#: src/screens/Settings/AppIconSettings/index.tsx:178
+msgid "Set app icon to {0}"
+msgstr "アプリアイコンを{0}に設定"
 
 #: src/screens/Moderation/index.tsx:311
 msgid "Set birthdate"
