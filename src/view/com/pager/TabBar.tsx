@@ -287,7 +287,7 @@ export function TabBar({
           onLayout={e => {
             contentSize.set(e.nativeEvent.layout.width)
           }}
-          style={{flexDirection: 'row'}}>
+          style={{flexDirection: 'row', flexGrow: 1}}>
           {items.map((item, i) => {
             return (
               <TabBarItem
@@ -359,7 +359,7 @@ function TabBarItem({
   )
 
   return (
-    <View onLayout={handleLayout}>
+    <View onLayout={handleLayout} style={{flexGrow: 1}}>
       <PressableWithHover
         testID={`${testID}-selector-${index}`}
         style={styles.item}
@@ -381,15 +381,19 @@ function TabBarItem({
 
 const styles = StyleSheet.create({
   contentContainer: {
+    flexGrow: 1,
     backgroundColor: 'transparent',
     paddingHorizontal: CONTENT_PADDING,
   },
   item: {
+    flexGrow: 1,
     paddingTop: 10,
     paddingHorizontal: ITEM_PADDING,
     justifyContent: 'center',
   },
   itemInner: {
+    alignItems: 'center',
+    flexGrow: 1,
     paddingBottom: 10,
     borderBottomWidth: 3,
     borderBottomColor: 'transparent',
