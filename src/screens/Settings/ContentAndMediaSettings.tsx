@@ -9,6 +9,7 @@ import {
   useInAppBrowser,
   useSetInAppBrowser,
 } from '#/state/preferences/in-app-browser'
+import {useTrendingTopicsSidebarSetting} from '#/state/trending'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
 import * as Toggle from '#/components/forms/Toggle'
 import {Bubbles_Stroke2_Corner2_Rounded as BubblesIcon} from '#/components/icons/Bubble'
@@ -16,6 +17,7 @@ import {Hashtag_Stroke2_Corner0_Rounded as HashtagIcon} from '#/components/icons
 import {Home_Stroke2_Corner2_Rounded as HomeIcon} from '#/components/icons/Home'
 import {Macintosh_Stroke2_Corner2_Rounded as MacintoshIcon} from '#/components/icons/Macintosh'
 import {Play_Stroke2_Corner2_Rounded as PlayIcon} from '#/components/icons/Play'
+import {Trending2_Stroke2_Corner2_Rounded as Graph} from '#/components/icons/Trending2'
 import {Window_Stroke2_Corner2_Rounded as WindowIcon} from '#/components/icons/Window'
 import * as Layout from '#/components/Layout'
 
@@ -29,6 +31,7 @@ export function ContentAndMediaSettingsScreen({}: Props) {
   const setAutoplayDisabledPref = useSetAutoplayDisabled()
   const inAppBrowserPref = useInAppBrowser()
   const setUseInAppBrowser = useSetInAppBrowser()
+  const [showTrending, setShowTrending] = useTrendingTopicsSidebarSetting()
 
   return (
     <Layout.Screen>
@@ -104,6 +107,24 @@ export function ContentAndMediaSettingsScreen({}: Props) {
               <Toggle.Platform />
             </SettingsList.Item>
           </Toggle.Item>
+          {!isNative && (
+            <>
+              <SettingsList.Divider />
+              <Toggle.Item
+                name="show_trending_topics"
+                label={_(msg`Show trending topics in your sidebar`)}
+                value={showTrending}
+                onChange={value => setShowTrending(value)}>
+                <SettingsList.Item>
+                  <SettingsList.ItemIcon icon={Graph} />
+                  <SettingsList.ItemText>
+                    <Trans>Show trending topics in your sidebar</Trans>
+                  </SettingsList.ItemText>
+                  <Toggle.Platform />
+                </SettingsList.Item>
+              </Toggle.Item>
+            </>
+          )}
         </SettingsList.Container>
       </Layout.Content>
     </Layout.Screen>
