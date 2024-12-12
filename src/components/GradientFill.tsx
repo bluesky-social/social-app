@@ -1,10 +1,11 @@
 import {LinearGradient} from 'expo-linear-gradient'
 
-import {atoms as a, tokens} from '#/alf'
+import {atoms as a, tokens, ViewStyleProp} from '#/alf'
 
 export function GradientFill({
   gradient,
-}: {
+  style,
+}: ViewStyleProp & {
   gradient:
     | typeof tokens.gradients.primary
     | typeof tokens.gradients.sky
@@ -27,7 +28,7 @@ export function GradientFill({
       }
       start={{x: 0, y: 0}}
       end={{x: 1, y: 1}}
-      style={[a.absolute, a.inset_0]}
+      style={[a.absolute, a.inset_0, style]}
     />
   )
 }

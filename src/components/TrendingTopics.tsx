@@ -16,6 +16,7 @@ export function TopicLarge({topic, style}: {topic: string} & ViewStyleProp) {
         a.rounded_md,
         a.border,
         t.atoms.border_contrast_medium,
+        t.atoms.bg,
         style,
       ]}>
       <Text
@@ -37,6 +38,7 @@ export function TopicSmall({topic, style}: {topic: string} & ViewStyleProp) {
         a.rounded_sm,
         a.border,
         t.atoms.border_contrast_medium,
+        t.atoms.bg,
         style,
       ]}>
       <Text
