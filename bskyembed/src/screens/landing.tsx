@@ -6,6 +6,7 @@ import {useEffect, useMemo, useRef, useState} from 'preact/hooks'
 
 import arrowBottom from '../../assets/arrowBottom_stroke2_corner0_rounded.svg'
 import logo from '../../assets/logo.svg'
+import {initColorMode} from '../color-mode'
 import {Container} from '../components/container'
 import {Link} from '../components/link'
 import {Post} from '../components/post'
@@ -20,6 +21,8 @@ export const EMBED_SCRIPT = `${EMBED_SERVICE}/static/embed.js`
 
 const root = document.getElementById('app')
 if (!root) throw new Error('No root element')
+
+initColorMode()
 
 const agent = new BskyAgent({
   service: 'https://public.api.bsky.app',
@@ -108,7 +111,7 @@ function LandingPage() {
   }, [uri])
 
   return (
-    <main className="w-full min-h-screen flex flex-col items-center gap-8 py-14 px-4 md:pt-32">
+    <main className="w-full min-h-screen flex flex-col items-center gap-8 py-14 px-4 md:pt-32 dark:bg-dimmedBgDarken dark:text-slate-200">
       <Link
         href="https://bsky.social/about"
         className="transition-transform hover:scale-110">
@@ -121,20 +124,22 @@ function LandingPage() {
         type="text"
         value={uri}
         onInput={e => setUri(e.currentTarget.value)}
-        className="border rounded-lg py-3 w-full max-w-[600px] px-4"
+        className="border rounded-lg py-3 w-full max-w-[600px] px-4 dark:bg-dimmedBg dark:border-slate-500"
         placeholder={DEFAULT_POST}
       />
 
-      <img src={arrowBottom} className="w-6" />
+      <img src={arrowBottom} className="w-6 dark:invert" />
 
       {loading ? (
-        <Skeleton />
+        <div className="w-full max-w-[600px]">
+          <Skeleton />
+        </div>
       ) : (
         <div className="w-full max-w-[600px] gap-8 flex flex-col">
           {!error && thread && uri && <Snippet thread={thread} />}
           {!error && thread && <Post thread={thread} key={thread.post.uri} />}
           {error && (
-            <div className="w-full border border-red-500 bg-red-50 px-4 py-3 rounded-lg">
+            <div className="w-full border border-red-500 bg-red-500/10 px-4 py-3 rounded-lg">
               <p className="text-red-500 text-center">{error}</p>
             </div>
           )}
@@ -149,15 +154,15 @@ function Skeleton() {
     <Container>
       <div className="flex-1 flex-col flex gap-2 pb-8">
         <div className="flex gap-2.5 items-center">
-          <div className="w-10 h-10 overflow-hidden rounded-full bg-neutral-100 shrink-0 animate-pulse" />
+          <div className="w-10 h-10 overflow-hidden rounded-full bg-neutral-100 dark:bg-slate-700 shrink-0 animate-pulse" />
           <div className="flex-1">
-            <div className="bg-neutral-100 animate-pulse w-64 h-4 rounded" />
-            <div className="bg-neutral-100 animate-pulse w-32 h-3 mt-1 rounded" />
+            <div className="bg-neutral-100 dark:bg-slate-700 animate-pulse w-64 h-4 rounded" />
+            <div className="bg-neutral-100 dark:bg-slate-700 animate-pulse w-32 h-3 mt-1 rounded" />
           </div>
         </div>
-        <div className="w-full h-4 mt-2 bg-neutral-100 rounded animate-pulse" />
-        <div className="w-5/6 h-4 bg-neutral-100 rounded animate-pulse" />
-        <div className="w-3/4 h-4 bg-neutral-100 rounded animate-pulse" />
+        <div className="w-full h-4 mt-2 bg-neutral-100 dark:bg-slate-700 rounded animate-pulse" />
+        <div className="w-5/6 h-4 bg-neutral-100 dark:bg-slate-700 rounded animate-pulse" />
+        <div className="w-3/4 h-4 bg-neutral-100 dark:bg-slate-700 rounded animate-pulse" />
       </div>
     </Container>
   )
@@ -220,7 +225,7 @@ function Snippet({thread}: {thread: AppBskyFeedDefs.ThreadViewPost}) {
         ref={ref}
         type="text"
         value={snippet}
-        className="border rounded-lg py-3 w-full px-4"
+        className="border rounded-lg py-3 w-full px-4 dark:bg-dimmedBg dark:border-slate-500"
         readOnly
         autoFocus
         onFocus={() => {
@@ -228,7 +233,7 @@ function Snippet({thread}: {thread: AppBskyFeedDefs.ThreadViewPost}) {
         }}
       />
       <button
-        className="rounded-lg bg-brand text-white color-white py-3 px-4 whitespace-nowrap min-w-28"
+        className="rounded-lg bg-brand text-white py-3 px-4 whitespace-nowrap min-w-28"
         onClick={() => {
           ref.current?.focus()
           ref.current?.select()

@@ -1,5 +1,6 @@
 import 'react-native-url-polyfill/auto'
 import '#/lib/sentry' // must be near top
+import '#/lib/bitdrift' // must be near top
 import '#/view/icons'
 
 import React, {useEffect, useState} from 'react'
@@ -53,6 +54,7 @@ import {
 import {readLastActiveAccount} from '#/state/session/util'
 import {Provider as ShellStateProvider} from '#/state/shell'
 import {Provider as ComposerProvider} from '#/state/shell/composer'
+import {Provider as LightStatusBarProvider} from '#/state/shell/light-status-bar'
 import {Provider as LoggedOutViewProvider} from '#/state/shell/logged-out'
 import {Provider as ProgressGuideProvider} from '#/state/shell/progress-guide'
 import {Provider as SelectedFeedProvider} from '#/state/shell/selected-feed'
@@ -208,7 +210,9 @@ function App() {
                                   <SafeAreaProvider
                                     initialMetrics={initialWindowMetrics}>
                                     <IntentDialogProvider>
-                                      <InnerApp />
+                                      <LightStatusBarProvider>
+                                        <InnerApp />
+                                      </LightStatusBarProvider>
                                     </IntentDialogProvider>
                                   </SafeAreaProvider>
                                 </StarterPackProvider>

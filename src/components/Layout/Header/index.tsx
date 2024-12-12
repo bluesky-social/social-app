@@ -13,7 +13,7 @@ import {
   platform,
   TextStyleProp,
   useBreakpoints,
-  useGutterStyles,
+  useGutters,
   useTheme,
 } from '#/alf'
 import {Button, ButtonIcon, ButtonProps} from '#/components/Button'
@@ -34,7 +34,7 @@ export function Outer({
   noBottomBorder?: boolean
 }) {
   const t = useTheme()
-  const gutter = useGutterStyles()
+  const gutters = useGutters([0, 'base'])
   const {gtMobile} = useBreakpoints()
   const {isWithinOffsetView} = useContext(ScrollbarOffsetContext)
 
@@ -46,10 +46,10 @@ export function Outer({
         a.flex_row,
         a.align_center,
         a.gap_sm,
-        gutter,
+        gutters,
         platform({
-          native: [a.pb_sm, a.pt_xs],
-          web: [a.py_sm],
+          native: [a.pb_xs, {minHeight: 48}],
+          web: [a.py_xs, {minHeight: 52}],
         }),
         t.atoms.border_contrast_low,
         gtMobile && [a.mx_auto, {maxWidth: 600}],
@@ -175,7 +175,8 @@ export function TitleText({
         gtMobile && a.text_xl,
         style,
       ]}
-      numberOfLines={2}>
+      numberOfLines={2}
+      emoji>
       {children}
     </Text>
   )

@@ -47,7 +47,7 @@ import {usePopularFeedsSearch} from '#/state/queries/feed'
 import {useSearchPostsQuery} from '#/state/queries/search-posts'
 import {useSession} from '#/state/session'
 import {useSetDrawerOpen} from '#/state/shell'
-import {useSetDrawerSwipeDisabled, useSetMinimalShellMode} from '#/state/shell'
+import {useSetMinimalShellMode} from '#/state/shell'
 import {Pager} from '#/view/com/pager/Pager'
 import {TabBar} from '#/view/com/pager/TabBar'
 import {Post} from '#/view/com/post/Post'
@@ -471,7 +471,6 @@ let SearchScreenInner = ({
 }): React.ReactNode => {
   const pal = usePalette('default')
   const setMinimalShellMode = useSetMinimalShellMode()
-  const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
   const {hasSession} = useSession()
   const {isDesktop} = useWebMediaQueries()
   const [activeTab, setActiveTab] = React.useState(0)
@@ -480,10 +479,9 @@ let SearchScreenInner = ({
   const onPageSelected = React.useCallback(
     (index: number) => {
       setMinimalShellMode(false)
-      setDrawerSwipeDisabled(index > 0)
       setActiveTab(index)
     },
-    [setDrawerSwipeDisabled, setMinimalShellMode],
+    [setMinimalShellMode],
   )
 
   const sections = React.useMemo(() => {

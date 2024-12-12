@@ -70,7 +70,7 @@ interface FeedItemProps {
   isParentNotFound?: boolean
 }
 
-export function FeedItem({
+export function PostFeedItem({
   post,
   record,
   reason,

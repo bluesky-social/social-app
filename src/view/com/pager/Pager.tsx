@@ -1,5 +1,7 @@
-import React, {forwardRef} from 'react'
+import React, {forwardRef, useCallback, useContext} from 'react'
 import {View} from 'react-native'
+import {DrawerGestureContext} from 'react-native-drawer-layout'
+import {Gesture, GestureDetector} from 'react-native-gesture-handler'
 import PagerView, {
   PagerViewOnPageScrollEventData,
   PagerViewOnPageSelectedEvent,
@@ -13,7 +15,9 @@ import Animated, {
   useHandler,
   useSharedValue,
 } from 'react-native-reanimated'
+import {useFocusEffect} from '@react-navigation/native'
 
+import {useSetDrawerSwipeDisabled} from '#/state/shell'
 import {atoms as a, native} from '#/alf'
 
 export type PageSelectedEvent = PagerViewOnPageSelectedEvent
@@ -58,6 +62,18 @@ export const Pager = forwardRef<PagerRef, React.PropsWithChildren<Props>>(
     const [selectedPage, setSelectedPage] = React.useState(initialPage)
     const pagerView = React.useRef<PagerView>(null)
 
+    const [isIdle, setIsIdle] = React.useState(true)
+    const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
+    useFocusEffect(
+      useCallback(() => {
+        const canSwipeDrawer = selectedPage === 0 && isIdle
+        setDrawerSwipeDisabled(!canSwipeDrawer)
+        return () => {
+          setDrawerSwipeDisabled(false)
+        }
+      }, [setDrawerSwipeDisabled, selectedPage, isIdle]),
+    )
+
     React.useImperativeHandle(ref, () => ({
       setPage: (index: number) => {
         pagerView.current?.setPage(index)
@@ -96,6 +112,7 @@ export const Pager = forwardRef<PagerRef, React.PropsWithChildren<Props>>(
         },
         onPageScrollStateChanged(e: PageScrollStateChangedNativeEventData) {
           'worklet'
+          runOnJS(setIsIdle)(e.pageScrollState === 'idle')
           if (dragState.get() === 'idle' && e.pageScrollState === 'settling') {
             // This is a programmatic scroll on Android.
             // Stay "idle" to match iOS and avoid confusing downstream code.
@@ -113,21 +130,29 @@ export const Pager = forwardRef<PagerRef, React.PropsWithChildren<Props>>(
       [parentOnPageScrollStateChanged],
     )
 
+    const drawerGesture = useContext(DrawerGestureContext)!
+    const nativeGesture =
+      Gesture.Native().requireExternalGestureToFail(drawerGesture)
+
     return (
       <View testID={testID} style={[a.flex_1, native(a.overflow_hidden)]}>
-        {renderTabBar({
-          selectedPage,
-          onSelect: onTabBarSelect,
-          dragProgress,
-          dragState,
-        })}
-        <AnimatedPagerView
-          ref={pagerView}
-          style={[a.flex_1]}
-          initialPage={initialPage}
-          onPageScroll={handlePageScroll}>
-          {children}
-        </AnimatedPagerView>
+        <View style={a.z_10 /* Let tabbar bottom border cover the glimmer */}>
+          {renderTabBar({
+            selectedPage,
+            onSelect: onTabBarSelect,
+            dragProgress,
+            dragState,
+          })}
+        </View>
+        <GestureDetector gesture={nativeGesture}>
+          <AnimatedPagerView
+            ref={pagerView}
+            style={[a.flex_1]}
+            initialPage={initialPage}
+            onPageScroll={handlePageScroll}>
+            {children}
+          </AnimatedPagerView>
+        </GestureDetector>
       </View>
     )
   },

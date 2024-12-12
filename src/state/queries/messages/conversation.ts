@@ -3,13 +3,13 @@ import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {STALE} from '#/state/queries'
 import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
-import {useOnMarkAsRead} from '#/state/queries/messages/list-converations'
+import {useOnMarkAsRead} from '#/state/queries/messages/list-conversations'
 import {useAgent} from '#/state/session'
 import {
   ConvoListQueryData,
   getConvoFromQueryData,
   RQKEY as LIST_CONVOS_KEY,
-} from './list-converations'
+} from './list-conversations'
 
 const RQKEY_ROOT = 'convo'
 export const RQKEY = (convoId: string) => [RQKEY_ROOT, convoId]
