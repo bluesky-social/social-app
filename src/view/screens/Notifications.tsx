@@ -49,10 +49,9 @@ export function NotificationsScreen({}: Props) {
   const hasNew = !!unreadNotifs
   const {checkUnread: checkUnreadAll} = useUnreadNotificationsApi()
   const [isLoadingAll, setIsLoadingAll] = React.useState(false)
-  const [isLoadingConversations, setIsLoadingConversations] =
-    React.useState(false)
+  const [isLoadingMentions, setIsLoadingMentions] = React.useState(false)
   const [activeTab, setActiveTab] = React.useState(0)
-  const isLoading = activeTab === 0 ? isLoadingAll : isLoadingConversations
+  const isLoading = activeTab === 0 ? isLoadingAll : isLoadingMentions
 
   const onPageSelected = React.useCallback(
     (index: number) => {
@@ -62,12 +61,13 @@ export function NotificationsScreen({}: Props) {
   )
 
   const queryClient = useQueryClient()
-  const checkUnreadConversations = React.useCallback(
+  const checkUnreadMentions = React.useCallback(
     async ({invalidate}: {invalidate: boolean}) => {
       if (invalidate) {
         return truncateAndInvalidate(queryClient, NOTIFS_RQKEY('mentions'))
       } else {
-        // TODO
+        // Background polling is not implemented for the mentions tab.
+        // Just ignore it.
       }
     },
     [queryClient],
@@ -81,6 +81,7 @@ export function NotificationsScreen({}: Props) {
           <NotificationsTab
             filter="all"
             isActive={activeTab === 0}
+            isLoading={isLoadingAll}
             hasNew={hasNew}
             setIsLoadingLatest={setIsLoadingAll}
             checkUnread={checkUnreadAll}
@@ -93,14 +94,23 @@ export function NotificationsScreen({}: Props) {
           <NotificationsTab
             filter="mentions"
             isActive={activeTab === 1}
+            isLoading={isLoadingMentions}
             hasNew={false /* We don't know for sure */}
-            setIsLoadingLatest={setIsLoadingConversations}
-            checkUnread={checkUnreadConversations}
+            setIsLoadingLatest={setIsLoadingMentions}
+            checkUnread={checkUnreadMentions}
           />
         ),
       },
     ]
-  }, [_, hasNew, checkUnreadAll, checkUnreadConversations, activeTab])
+  }, [
+    _,
+    hasNew,
+    checkUnreadAll,
+    checkUnreadMentions,
+    activeTab,
+    isLoadingAll,
+    isLoadingMentions,
+  ])
 
   return (
     <Layout.Screen testID="notificationsScreen">
@@ -155,12 +165,14 @@ export function NotificationsScreen({}: Props) {
 function NotificationsTab({
   filter,
   isActive,
+  isLoading,
   hasNew,
   checkUnread,
   setIsLoadingLatest,
 }: {
   filter: 'all' | 'mentions'
   isActive: boolean
+  isLoading: boolean
   hasNew: boolean
   checkUnread: ({invalidate}: {invalidate: boolean}) => Promise<void>
   setIsLoadingLatest: (v: boolean) => void
@@ -185,7 +197,7 @@ function NotificationsTab({
     if (hasNew) {
       // render what we have now
       truncateAndInvalidate(queryClient, NOTIFS_RQKEY(filter))
-    } else {
+    } else if (!isLoading) {
       // check with the server
       setIsLoadingLatest(true)
       checkUnread({invalidate: true})
@@ -197,6 +209,7 @@ function NotificationsTab({
     queryClient,
     checkUnread,
     hasNew,
+    isLoading,
     setIsLoadingLatest,
     filter,
   ])
