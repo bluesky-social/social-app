@@ -3,16 +3,16 @@ import {createContext, useContext, useEffect, useState} from 'react'
 import {isWeb} from '#/platform/detection'
 import {IS_DEV} from '#/env'
 
-const LightStatusBarRefCountContext = createContext<number>(0)
+const LightStatusBarRefCountContext = createContext<boolean>(false)
 const SetLightStatusBarRefCountContext = createContext<React.Dispatch<
   React.SetStateAction<number>
 > | null>(null)
 
-export function useLightStatusBarRefCount() {
+export function useLightStatusBar() {
   return useContext(LightStatusBarRefCountContext)
 }
 
-export function useLightStatusBar(enabled: boolean) {
+export function useSetLightStatusBar(enabled: boolean) {
   const setRefCount = useContext(SetLightStatusBarRefCountContext)
   useEffect(() => {
     // noop on web -sfn
@@ -37,7 +37,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
   return (
     <SetLightStatusBarRefCountContext.Provider value={setRefCount}>
-      <LightStatusBarRefCountContext.Provider value={refCount}>
+      <LightStatusBarRefCountContext.Provider value={refCount > 0}>
         {children}
       </LightStatusBarRefCountContext.Provider>
     </SetLightStatusBarRefCountContext.Provider>

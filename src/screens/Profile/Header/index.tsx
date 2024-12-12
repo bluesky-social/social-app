@@ -16,7 +16,7 @@ import {
 import {useIsFocused} from '@react-navigation/native'
 
 import {isNative} from '#/platform/detection'
-import {useLightStatusBar} from '#/state/shell/light-status-bar'
+import {useSetLightStatusBar} from '#/state/shell/light-status-bar'
 import {usePagerHeaderContext} from '#/view/com/pager/PagerHeaderContext'
 import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {atoms as a, useTheme} from '#/alf'
@@ -133,7 +133,7 @@ const MinimalHeader = React.memo(function MinimalHeader({
     },
   )
 
-  useLightStatusBar(isScreenFocused && !visible)
+  useSetLightStatusBar(isScreenFocused && !visible)
 
   return (
     <Animated.View
