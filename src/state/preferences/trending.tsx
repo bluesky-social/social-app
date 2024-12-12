@@ -3,51 +3,71 @@ import React from 'react'
 import * as persisted from '#/state/persisted'
 
 type StateContext = {
-  trendingSidebarHidden: persisted.Schema['trendingSidebarHidden']
+  trendingSidebarHidden: Exclude<
+    persisted.Schema['trendingSidebarHidden'],
+    undefined
+  >
+  trendingDiscoverHidden: Exclude<
+    persisted.Schema['trendingDiscoverHidden'],
+    undefined
+  >
 }
 type ApiContext = {
   setTrendingSidebarHidden(
     hidden: Exclude<persisted.Schema['trendingSidebarHidden'], undefined>,
   ): void
+  setTrendingDiscoverHidden(
+    hidden: Exclude<persisted.Schema['trendingDiscoverHidden'], undefined>,
+  ): void
 }
 
 const StateContext = React.createContext<StateContext>({
-  trendingSidebarHidden: persisted.defaults.trendingSidebarHidden,
+  trendingSidebarHidden: Boolean(persisted.defaults.trendingSidebarHidden),
+  trendingDiscoverHidden: Boolean(persisted.defaults.trendingDiscoverHidden),
 })
 const ApiContext = React.createContext<ApiContext>({
   setTrendingSidebarHidden() {},
+  setTrendingDiscoverHidden() {},
 })
 
-export function Provider({children}: React.PropsWithChildren<{}>) {
-  const [trendingSidebarHidden, _setTrendingSidebarHidden] = React.useState(
-    () => {
-      return Boolean(persisted.get('trendingSidebarHidden'))
-    },
-  )
-
-  const setTrendingSidebarHidden = React.useCallback<
-    ApiContext['setTrendingSidebarHidden']
+function usePersistedBooleanValue<T extends keyof persisted.Schema>(key: T) {
+  const [value, _set] = React.useState(() => {
+    return Boolean(persisted.get(key))
+  })
+  const set = React.useCallback<
+    (value: Exclude<persisted.Schema[T], undefined>) => void
   >(
     hidden => {
-      _setTrendingSidebarHidden(hidden)
-      persisted.write('trendingSidebarHidden', hidden)
+      _set(Boolean(hidden))
+      persisted.write(key, hidden)
     },
-    [_setTrendingSidebarHidden],
+    [key, _set],
   )
-
   React.useEffect(() => {
-    return persisted.onUpdate('trendingSidebarHidden', hidden => {
-      _setTrendingSidebarHidden(Boolean(hidden))
+    return persisted.onUpdate(key, hidden => {
+      _set(Boolean(hidden))
     })
-  }, [_setTrendingSidebarHidden])
+  }, [key, _set])
 
+  return [value, set] as const
+}
+
+export function Provider({children}: React.PropsWithChildren<{}>) {
+  const [trendingSidebarHidden, setTrendingSidebarHidden] =
+    usePersistedBooleanValue('trendingSidebarHidden')
+  const [trendingDiscoverHidden, setTrendingDiscoverHidden] =
+    usePersistedBooleanValue('trendingDiscoverHidden')
+
+  /*
+   * Context
+   */
   const state = React.useMemo(
-    () => ({trendingSidebarHidden}),
-    [trendingSidebarHidden],
+    () => ({trendingSidebarHidden, trendingDiscoverHidden}),
+    [trendingSidebarHidden, trendingDiscoverHidden],
   )
   const api = React.useMemo(
-    () => ({setTrendingSidebarHidden}),
-    [setTrendingSidebarHidden],
+    () => ({setTrendingSidebarHidden, setTrendingDiscoverHidden}),
+    [setTrendingSidebarHidden, setTrendingDiscoverHidden],
   )
 
   return (
