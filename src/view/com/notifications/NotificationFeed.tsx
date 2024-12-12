@@ -27,6 +27,7 @@ const LOADING_ITEM = {_reactKey: '__loading__'}
 
 export function NotificationFeed({
   filter,
+  enabled,
   scrollElRef,
   onPressTryAgain,
   onScrolledDownChange,
@@ -34,6 +35,7 @@ export function NotificationFeed({
   refreshNotifications,
 }: {
   filter: 'all' | 'mentions'
+  enabled: boolean
   scrollElRef?: ListRef
   onPressTryAgain?: () => void
   onScrolledDownChange: (isScrolledDown: boolean) => void
@@ -54,7 +56,7 @@ export function NotificationFeed({
     isFetchingNextPage,
     fetchNextPage,
   } = useNotificationFeedQuery({
-    enabled: !!moderationOpts,
+    enabled: enabled && !!moderationOpts,
     filter,
   })
   const isEmpty = !isFetching && !data?.pages[0]?.items.length

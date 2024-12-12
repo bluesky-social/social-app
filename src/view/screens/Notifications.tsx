@@ -257,6 +257,7 @@ function NotificationsTab({
     <>
       <MainScrollProvider>
         <NotificationFeed
+          enabled={isFocusedAndActive}
           filter={filter}
           refreshNotifications={() => checkUnread({invalidate: true})}
           onScrolledDownChange={setIsScrolledDown}
