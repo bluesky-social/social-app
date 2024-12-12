@@ -411,23 +411,25 @@ function DialogInner({
           <Text
             style={[a.text_sm, a.leading_tight, t.atoms.text_contrast_medium]}
             numberOfLines={1}>
-            <Trans>By</Trans>{' '}
-            <InlineLinkText
-              label={_(msg`View ${info.creatorHandle}'s profile`)}
-              to={makeProfileLink({
-                did: info.creatorDid,
-                handle: info.creatorHandle,
-              })}
-              style={[
-                a.text_sm,
-                a.leading_tight,
-                a.underline,
-                t.atoms.text_contrast_medium,
-              ]}
-              numberOfLines={1}
-              onPress={() => control.close()}>
-              {sanitizeHandle(info.creatorHandle, '@')}
-            </InlineLinkText>
+            <Trans>
+              By{' '}
+              <InlineLinkText
+                label={_(msg`View ${info.creatorHandle}'s profile`)}
+                to={makeProfileLink({
+                  did: info.creatorDid,
+                  handle: info.creatorHandle,
+                })}
+                style={[
+                  a.text_sm,
+                  a.leading_tight,
+                  a.underline,
+                  t.atoms.text_contrast_medium,
+                ]}
+                numberOfLines={1}
+                onPress={() => control.close()}>
+                {sanitizeHandle(info.creatorHandle, '@')}
+              </InlineLinkText>
+            </Trans>
           </Text>
         </View>
 
