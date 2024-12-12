@@ -48,8 +48,8 @@ export function Outer({
         a.gap_sm,
         gutters,
         platform({
-          native: [a.pb_sm, a.pt_xs],
-          web: [a.py_sm],
+          native: [a.pb_xs, {minHeight: 48}],
+          web: [a.py_xs, {minHeight: 52}],
         }),
         t.atoms.border_contrast_low,
         gtMobile && [a.mx_auto, {maxWidth: 600}],
