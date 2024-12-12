@@ -38,7 +38,7 @@ export const ProfileFollowsScreen = ({route}: Props) => {
               </Layout.Header.TitleText>
               <Layout.Header.SubtitleText>
                 <Plural
-                  value={profile.followersCount ?? 0}
+                  value={profile.followsCount ?? 0}
                   one="# following"
                   other="# following"
                 />
