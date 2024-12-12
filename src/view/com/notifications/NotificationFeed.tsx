@@ -9,7 +9,6 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
-import {usePalette} from '#/lib/hooks/usePalette'
 import {cleanError} from '#/lib/strings/errors'
 import {s} from '#/lib/styles'
 import {logger} from '#/logger'
@@ -43,7 +42,6 @@ export function NotificationFeed({
 }) {
   const initialNumToRender = useInitialNumToRender()
   const [isPTRing, setIsPTRing] = React.useState(false)
-  const pal = usePalette('default')
   const {_} = useLingui()
   const moderationOpts = useModerationOpts()
   const {
@@ -127,11 +125,7 @@ export function NotificationFeed({
           />
         )
       } else if (item === LOADING_ITEM) {
-        return (
-          <View style={[pal.border]}>
-            <NotificationFeedLoadingPlaceholder />
-          </View>
-        )
+        return <NotificationFeedLoadingPlaceholder />
       }
       return (
         <NotificationFeedItem
@@ -142,7 +136,7 @@ export function NotificationFeed({
         />
       )
     },
-    [moderationOpts, _, onPressRetryLoadMore, pal.border, filter],
+    [moderationOpts, _, onPressRetryLoadMore, filter],
   )
 
   const FeedFooter = React.useCallback(
