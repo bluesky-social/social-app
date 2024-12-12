@@ -38,6 +38,11 @@ import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 
+// We don't currently persist this across reloads since
+// you gotta visit All to clear the badge anyway.
+// But let's at least persist it during the sesssion.
+let lastActiveTab = 0
+
 type Props = NativeStackScreenProps<
   NotificationsTabNavigatorParams,
   'Notifications'
@@ -50,12 +55,14 @@ export function NotificationsScreen({}: Props) {
   const {checkUnread: checkUnreadAll} = useUnreadNotificationsApi()
   const [isLoadingAll, setIsLoadingAll] = React.useState(false)
   const [isLoadingMentions, setIsLoadingMentions] = React.useState(false)
-  const [activeTab, setActiveTab] = React.useState(0)
+  const initialActiveTab = lastActiveTab
+  const [activeTab, setActiveTab] = React.useState(lastActiveTab)
   const isLoading = activeTab === 0 ? isLoadingAll : isLoadingMentions
 
   const onPageSelected = React.useCallback(
     (index: number) => {
       setActiveTab(index)
+      lastActiveTab = index
     },
     [setActiveTab],
   )
@@ -145,7 +152,7 @@ export function NotificationsScreen({}: Props) {
             />
           </Layout.Center>
         )}
-        initialPage={0}>
+        initialPage={initialActiveTab}>
         {sections.map((section, i) => (
           <View key={i}>{section.component}</View>
         ))}
