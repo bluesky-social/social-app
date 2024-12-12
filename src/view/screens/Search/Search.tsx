@@ -586,7 +586,7 @@ let SearchScreenInner = ({
             style={pal.textLight}
           />
           <Text type="xl" style={[pal.textLight, {paddingHorizontal: 18}]}>
-            <Trans>Find posts and users on Bluesky</Trans>
+            <Trans>Find posts and users on Inspired</Trans>
           </Text>
         </View>
       </View>

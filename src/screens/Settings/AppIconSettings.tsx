@@ -65,7 +65,7 @@ export function AppIconSettingsScreen({}: Props) {
           ))}
         </View>
 
-        <Text style={[a.text_lg, a.font_heavy]}>Bluesky+</Text>
+        <Text style={[a.text_lg, a.font_heavy]}>Inspired+</Text>
         <View style={[a.flex_row, a.flex_wrap]}>
           {sets.core.map(icon => (
             <View
@@ -157,7 +157,7 @@ function useAppIconSets() {
     ]
 
     /**
-     * Bluesky+
+     * Inspired+
      */
     const core = [
       {

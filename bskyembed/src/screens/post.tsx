@@ -62,7 +62,7 @@ function PwiOptOut({thread}: {thread: AppBskyFeedDefs.ThreadViewPost}) {
         <Link
           href={href}
           className="max-w-80 rounded-lg bg-brand text-white color-white text-center py-1 px-4 w-full mx-auto">
-          View on Bluesky
+          View on Inspired
         </Link>
       </div>
     </Container>

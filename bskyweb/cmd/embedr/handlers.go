@@ -170,7 +170,7 @@ func (srv *Server) WebOEmbed(c echo.Context) error {
 		Version:      "1.0",
 		AuthorName:   "@" + post.Author.Handle,
 		AuthorURL:    fmt.Sprintf("https://bsky.app/profile/%s", post.Author.Handle),
-		ProviderName: "Bluesky Social",
+		ProviderName: "Inspired",
 		ProviderURL:  "https://bsky.app",
 		CacheAge:     86400,
 		Width:        &width,

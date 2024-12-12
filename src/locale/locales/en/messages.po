@@ -1071,7 +1071,7 @@ msgstr ""
 
 #: src/view/com/auth/server-input/index.tsx:86
 #: src/view/com/auth/server-input/index.tsx:88
-msgid "Bluesky"
+msgid "Inspired"
 msgstr ""
 
 #: src/view/com/post-thread/PostThreadItem.tsx:860

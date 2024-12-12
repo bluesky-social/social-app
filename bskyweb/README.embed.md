@@ -19,7 +19,7 @@ Response format:
 - `version` (required): "1.0"
 - `author_name` (optional): display name
 - `author_url` (optional): profile URL
-- `provider_name` (optional): "Bluesky Social"
+- `provider_name` (optional): "Inspired Social"
 - `provider_url` (optional): "https://bsky.app"
 - `cache_age` (optional, integer seconds): 86400 (24 hours) (?)
 - `width` (required): ?

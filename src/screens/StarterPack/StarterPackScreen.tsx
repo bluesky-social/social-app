@@ -463,7 +463,7 @@ function Header({
               color="primary"
               size="large">
               <ButtonText style={[a.text_lg]}>
-                <Trans>Join Bluesky</Trans>
+                <Trans>Join Inspired</Trans>
               </ButtonText>
             </Button>
           ) : null}

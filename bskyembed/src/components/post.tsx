@@ -1,3 +1,4 @@
+/* eslint-disable */
 import {
   AppBskyFeedDefs,
   AppBskyFeedPost,
@@ -99,8 +100,8 @@ export function Post({thread}: Props) {
             {post.replyCount
               ? `Read ${prettyNumber(post.replyCount)} ${
                   post.replyCount > 1 ? 'replies' : 'reply'
-                } on Bluesky`
-              : `View on Bluesky`}
+                } on Inspired`
+              : `View on Inspired`}
           </p>
           <p className="cursor-pointer text-brand font-bold hover:underline min-[450px]:hidden">
             <span className="hidden min-[380px]:inline">View on </span>Bluesky
