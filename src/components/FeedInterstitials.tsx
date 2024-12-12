@@ -6,7 +6,6 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
-import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {NavigationProp} from '#/lib/routes/types'
 import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
@@ -16,7 +15,6 @@ import {FeedDescriptor} from '#/state/queries/post-feed'
 import {useProfilesQuery} from '#/state/queries/profile'
 import {useSuggestedFollowsByActorQuery} from '#/state/queries/suggested-follows'
 import {useSession} from '#/state/session'
-import {useProgressGuide} from '#/state/shell/progress-guide'
 import * as userActionHistory from '#/state/userActionHistory'
 import {SeenPost} from '#/state/userActionHistory'
 import {atoms as a, useBreakpoints, useTheme, ViewStyleProp, web} from '#/alf'
@@ -506,23 +504,9 @@ export function SuggestedFeeds() {
 
 export function ProgressGuide() {
   const t = useTheme()
-  const {isDesktop} = useWebMediaQueries()
-  const guide = useProgressGuide('like-10-and-follow-7')
-
-  if (isDesktop) {
-    return null
-  }
-
-  return guide ? (
-    <View
-      style={[
-        a.border_t,
-        t.atoms.border_contrast_low,
-        a.px_lg,
-        a.py_lg,
-        a.pb_lg,
-      ]}>
+  return (
+    <View style={[t.atoms.border_contrast_low, a.px_lg, a.py_lg, a.pb_lg]}>
       <ProgressGuideList />
     </View>
-  ) : null
+  )
 }

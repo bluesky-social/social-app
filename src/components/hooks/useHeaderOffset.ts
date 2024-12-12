@@ -8,8 +8,8 @@ export function useHeaderOffset() {
   if (isDesktop || isTablet) {
     return 0
   }
-  const navBarHeight = 42
-  const tabBarPad = 10 + 10 + 6 // padding + arbitrary
+  const navBarHeight = 52
+  const tabBarPad = 10 + 10 + 3 // padding + border
   const normalLineHeight = 20 // matches tab bar
   const tabBarText = normalLineHeight * fontScale
   return navBarHeight + tabBarPad + tabBarText
