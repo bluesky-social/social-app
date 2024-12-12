@@ -40,7 +40,7 @@ export const PostRepostedByScreen = ({route}: Props) => {
               <Layout.Header.SubtitleText>
                 <Plural
                   value={quoteCount ?? 0}
-                  one="# reposts"
+                  one="# repost"
                   other="# reposts"
                 />
               </Layout.Header.SubtitleText>
