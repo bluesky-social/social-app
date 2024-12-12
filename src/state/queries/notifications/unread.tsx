@@ -2,7 +2,7 @@
  * A kind of companion API to ./feed.ts. See that file for more info.
  */
 
-import React from 'react'
+import React, {useRef} from 'react'
 import {AppState} from 'react-native'
 import {useQueryClient} from '@tanstack/react-query'
 import EventEmitter from 'eventemitter3'
@@ -105,6 +105,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     }
   }, [setNumUnread])
 
+  const isFetchingRef = useRef(false)
+
   // create API
   const api = React.useMemo<ApiContext>(() => {
     return {
@@ -137,6 +139,12 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
               return
             }
           }
+
+          if (isFetchingRef.current) {
+            return
+          }
+          // Do not move this without ensuring it gets a symmetrical reset in the finally block.
+          isFetchingRef.current = true
 
           // count
           const {page, indexedAt: lastIndexed} = await fetchPage({
@@ -180,6 +188,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           broadcast.postMessage({event: unreadCountStr})
         } catch (e) {
           logger.warn('Failed to check unread notifications', {error: e})
+        } finally {
+          isFetchingRef.current = false
         }
       },
 
