@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-12-12 11:58+0900\n"
+"PO-Revision-Date: 2024-12-12 15:20+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -39,12 +39,12 @@ msgid "{0, plural, one {# hour} other {# hours}}"
 msgstr "{0, plural, other {#時間}}"
 
 #: src/components/moderation/LabelsOnMe.tsx:53
-msgid "{0, plural, one {# label has been placed on this account} other {# labels have been placed on this account}}"
-msgstr "{0, plural, other {#個のラベルがこのアカウントに適用されています}}"
+msgid "{0, plural, one {# label has} other {# labels have}} been placed on this account"
+msgstr "{0, plural, other {#個のラベル}}がこのアカウントに適用されています"
 
-#: src/components/moderation/LabelsOnMe.tsx:59
-msgid "{0, plural, one {# label has been placed on this content} other {# labels have been placed on this content}}"
-msgstr "{0, plural, other {#個のラベルがこのコンテンツに適用されています}}"
+#: src/components/moderation/LabelsOnMe.tsx:62
+msgid "{0, plural, one {# label has} other {# labels have}} been placed on this content"
+msgstr "{0, plural, other {#個のラベル}}がこのコンテンツに適用されています"
 
 #: src/screens/Post/PostLikedBy.tsx:41
 msgid "{0, plural, one {# like} other {# likes}}"
@@ -64,7 +64,7 @@ msgstr "{0, plural, other {# 引用}}"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:69
 msgid "{0, plural, one {# repost} other {# reposts}}"
-msgstr "{0, plural, other {#回のリポスト}}"
+msgstr "{0, plural, other {# リポスト}}"
 
 #: src/lib/hooks/useTimeAgo.ts:126
 msgid "{0, plural, one {# second} other {# seconds}}"
@@ -80,18 +80,9 @@ msgstr "{0, plural, other {フォロワー}}"
 msgid "{0, plural, one {following} other {following}}"
 msgstr "{0, plural, other {フォロー中}}"
 
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:305
-msgid "{0, plural, one {Like (# like)} other {Like (# likes)}}"
-msgstr "{0, plural, other {いいね（#個のいいね）}}"
-
 #: src/view/com/post-thread/PostThreadItem.tsx:447
 msgid "{0, plural, one {like} other {likes}}"
 msgstr "{0, plural, other {いいね}}"
-
-#: src/components/FeedCard.tsx:213
-#: src/view/com/feeds/FeedSourceCard.tsx:303
-msgid "{0, plural, one {Liked by # user} other {Liked by # users}}"
-msgstr "{0, plural, other {#人のユーザーがいいね}}"
 
 #: src/screens/Profile/Header/Metrics.tsx:58
 msgid "{0, plural, one {post} other {posts}}"
@@ -101,17 +92,9 @@ msgstr "{0, plural, other {投稿}}"
 msgid "{0, plural, one {quote} other {quotes}}"
 msgstr "{0, plural, other {引用}}"
 
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:261
-msgid "{0, plural, one {Reply (# reply)} other {Reply (# replies)}}"
-msgstr "{0, plural, other {返信（#件の返信）}}"
-
 #: src/view/com/post-thread/PostThreadItem.tsx:413
 msgid "{0, plural, one {repost} other {reposts}}"
 msgstr "{0, plural, other {リポスト}}"
-
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:301
-msgid "{0, plural, one {Unlike (# like)} other {Unlike (# likes)}}"
-msgstr "{0, plural, other {いいねを外す（#個のいいね）}}"
 
 #: src/screens/Settings/Settings.tsx:414
 msgid "{0}"
@@ -183,10 +166,6 @@ msgstr "{0}秒"
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:252
 msgid "{badge} unread items"
 msgstr "{badge}件の未読アイテム"
-
-#: src/components/LabelingServiceCard/index.tsx:96
-msgid "{count, plural, one {Liked by # user} other {Liked by # users}}"
-msgstr "{count, plural, other {#人のユーザーがいいね}}"
 
 #: src/view/shell/desktop/LeftNav.tsx:223
 msgid "{count} unread items"
@@ -301,12 +280,6 @@ msgstr "{following} フォロー"
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:385
 msgid "{handle} can't be messaged"
 msgstr "{handle}にメッセージを送れません"
-
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:294
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:307
-#: src/view/screens/ProfileFeed.tsx:591
-msgid "{likeCount, plural, one {Liked by # user} other {Liked by # users}}"
-msgstr "{likeCount, plural, other {#人のユーザーがいいね}}"
 
 #: src/view/shell/Drawer.tsx:448
 msgid "{numUnreadNotifications} unread"
@@ -3578,6 +3551,10 @@ msgstr "さあ始めましょう！"
 msgid "Light"
 msgstr "ライト"
 
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:310
+msgid "Like ({0, plural, one {# like} other {# likes}})"
+msgstr "いいねする ({0, plural, other {#個のいいね}})"
+
 #: src/components/ProgressGuide/List.tsx:47
 msgid "Like 10 posts"
 msgstr "10投稿をいいね"
@@ -3604,6 +3581,18 @@ msgstr "いいねしたユーザー"
 #: src/view/screens/ProfileFeedLikedBy.tsx:30
 msgid "Liked By"
 msgstr "いいねしたユーザー"
+
+#: src/components/FeedCard.tsx:213
+#: src/view/com/feeds/FeedSourceCard.tsx:303
+msgid "Liked by {0, plural, one {# user} other {# users}}"
+msgstr "{0, plural, other {#人のユーザー}}がいいね"
+
+#: src/components/LabelingServiceCard/index.tsx:96
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:295
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:309
+#: src/view/screens/ProfileFeed.tsx:590
+msgid "Liked by {likeCount, plural, one {# user} other {# users}}"
+msgstr "{likeCount, plural, other {#人のユーザー}}がいいね"
 
 #: src/view/screens/Profile.tsx:231
 msgid "Likes"
@@ -5079,7 +5068,7 @@ msgstr "引用"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:243
 msgid "Quotes of this post"
-msgstr "この投稿の引用"
+msgstr "この投稿を引用する"
 
 #: src/screens/Settings/ThreadPreferences.tsx:91
 #: src/screens/Settings/ThreadPreferences.tsx:94
@@ -5289,6 +5278,10 @@ msgctxt "action"
 msgid "Reply"
 msgstr "返信"
 
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:262
+msgid "Reply ({0, plural, one {# reply} other {# replies}})"
+msgstr "返信する ({0, plural, other {#件の返信}})"
+
 #: src/components/moderation/ModerationDetailsDialog.tsx:114
 #: src/lib/moderation/useModerationCauseDescription.ts:123
 msgid "Reply Hidden by Thread Author"
@@ -5423,6 +5416,10 @@ msgstr "リポスト"
 msgid "Repost"
 msgstr "リポスト"
 
+#: src/view/com/util/post-ctrls/RepostButton.tsx:74
+msgid "Repost ({0, plural, one {# repost} other {# reposts}})"
+msgstr "リポストする（{0, plural, other {#件のリポスト}}）"
+
 #: src/screens/StarterPack/StarterPackScreen.tsx:547
 #: src/view/com/util/post-ctrls/RepostButton.tsx:138
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:49
@@ -5450,7 +5447,7 @@ msgstr "あなたのリポスト"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:222
 msgid "Reposts of this post"
-msgstr "この投稿をリポスト"
+msgstr "この投稿をリポストする"
 
 #: src/view/com/modals/ChangeEmail.tsx:176
 #: src/view/com/modals/ChangeEmail.tsx:178
@@ -7051,6 +7048,10 @@ msgstr "アカウントのブロックを解除しますか？"
 msgid "Undo repost"
 msgstr "リポストを元に戻す"
 
+#: src/view/com/util/post-ctrls/RepostButton.tsx:68
+msgid "Undo repost ({0, plural, one {# repost} other {# reposts}})"
+msgstr "リポストを元に戻す（{0, plural, other {#件のリポスト}}）"
+
 #: src/view/com/profile/FollowButton.tsx:60
 msgctxt "action"
 msgid "Unfollow"
@@ -7064,6 +7065,10 @@ msgstr "{0}のフォローを解除"
 #: src/view/com/profile/ProfileMenu.tsx:231
 msgid "Unfollow Account"
 msgstr "アカウントのフォローを解除"
+
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:304
+msgid "Unlike ({0, plural, one {# like} other {# likes}})"
+msgstr "いいねを外す（{0, plural, other {#個のいいね}}）"
 
 #: src/view/screens/ProfileFeed.tsx:576
 msgid "Unlike this feed"
