@@ -5,7 +5,7 @@ import {
   warn as bdWarn,
 } from '@bitdrift/react-native'
 
-import {LogLevel, Transport} from './index'
+import {LogLevel, Transport} from './types'
 
 export function createBitdriftTransport(): Transport {
   return (level, message) => {
