@@ -12,8 +12,20 @@ import {ProfileCardWithFollowBtn} from '#/view/com/profile/ProfileCard'
 import {List} from '#/view/com/util/List'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
 
-function renderItem({item}: {item: ActorDefs.ProfileViewBasic}) {
-  return <ProfileCardWithFollowBtn key={item.did} profile={item} />
+function renderItem({
+  item,
+  index,
+}: {
+  item: ActorDefs.ProfileViewBasic
+  index: number
+}) {
+  return (
+    <ProfileCardWithFollowBtn
+      key={item.did}
+      profile={item}
+      noBorder={index === 0}
+    />
+  )
 }
 
 function keyExtractor(item: ActorDefs.ProfileViewBasic) {

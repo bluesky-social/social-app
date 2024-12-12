@@ -32,7 +32,6 @@ import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
-import {CenteredView} from '#/view/com/util/Views'
 import {atoms as a, useTheme} from '#/alf'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
 import {Text} from '#/components/Typography'
@@ -90,7 +89,7 @@ export function PostThread({uri}: {uri: string | undefined}) {
   const {hasSession, currentAccount} = useSession()
   const {_} = useLingui()
   const t = useTheme()
-  const {isMobile, isTabletOrMobile} = useWebMediaQueries()
+  const {isMobile} = useWebMediaQueries()
   const initialNumToRender = useInitialNumToRender()
   const {height: windowHeight} = useWindowDimensions()
   const [hiddenRepliesState, setHiddenRepliesState] = React.useState(
@@ -368,8 +367,7 @@ export function PostThread({uri}: {uri: string | undefined}) {
     skeleton?.highlightedPost?.type === 'post' &&
     (skeleton.highlightedPost.ctx.isParentLoading ||
       Boolean(skeleton?.parents && skeleton.parents.length > 0))
-  const showHeader =
-    isNative || (isTabletOrMobile && (!hasParents || !isFetching))
+  const showHeader = isNative || !hasParents || !isFetching
 
   const renderItem = ({item, index}: {item: RowItem; index: number}) => {
     if (item === REPLY_PROMPT && hasSession) {
@@ -423,9 +421,6 @@ export function PostThread({uri}: {uri: string | undefined}) {
         </View>
       )
     } else if (isThreadPost(item)) {
-      if (!treeView && item.ctx.hasMoreSelfThread) {
-        return <PostThreadLoadMore post={item.post} />
-      }
       const prev = isThreadPost(posts[index - 1])
         ? (posts[index - 1] as ThreadPost)
         : undefined
@@ -437,6 +432,10 @@ export function PostThread({uri}: {uri: string | undefined}) {
         (item.ctx.depth < 0 && !!item.parent) || item.ctx.depth > 1
       const hasUnrevealedParents =
         index === 0 && skeleton?.parents && maxParents < skeleton.parents.length
+
+      if (!treeView && prev && item.ctx.hasMoreSelfThread) {
+        return <PostThreadLoadMore post={prev.post} />
+      }
 
       return (
         <View
@@ -484,7 +483,7 @@ export function PostThread({uri}: {uri: string | undefined}) {
   }
 
   return (
-    <CenteredView style={[a.flex_1]} sideBorders={true}>
+    <>
       {showHeader && (
         <ViewHeader
           title={_(msg({message: `Post`, context: 'description'}))}
@@ -531,7 +530,7 @@ export function PostThread({uri}: {uri: string | undefined}) {
       {isMobile && canReply && hasSession && (
         <MobileComposePrompt onPressReply={onPressReply} />
       )}
-    </CenteredView>
+    </>
   )
 }
 
