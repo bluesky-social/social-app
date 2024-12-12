@@ -2868,10 +2868,6 @@ msgstr "<0>{0}</0> 님, <1>{1}</1> 님 외 {2, plural, other {#}}명이 팔로�
 msgid "Followed users"
 msgstr "팔로우한 사용자"
 
-#: src/view/screens/ProfileFollowers.tsx:29
-#~ msgid "Followers"
-#~ msgstr "팔로워"
-
 #: src/Navigation.tsx:191
 msgid "Followers of @{0} that you know"
 msgstr "내가 아는 @{0} 님의 팔로워"
