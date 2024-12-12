@@ -1,3 +1,9 @@
+export type ColorModeValues = 'auto' | 'light' | 'dark'
+
+export function assertColorModeValues(value: string): value is ColorModeValues {
+  return ['auto', 'light', 'dark'].includes(value)
+}
+
 export function applyTheme(theme: 'light' | 'dark') {
   document.documentElement.classList.remove('light', 'dark')
   document.documentElement.classList.add(theme)
