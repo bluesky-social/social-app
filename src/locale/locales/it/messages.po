@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Italian localization\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-11 01:11+0000\n"
-"PO-Revision-Date: 2024-12-11 11:46+0000\n"
+"POT-Creation-Date: 2024-12-12 01:11+0000\n"
+"PO-Revision-Date: 2024-12-12 08:36+0000\n"
 "Last-Translator: Michele Locati <michele@locati.it>, 2024\n"
 "Language-Team: Italian (https://app.transifex.com/mlocati/teams/201833/it/)\n"
 "Language: it\n"
@@ -32,6 +32,14 @@ msgstr "(nessuna email)"
 msgid "{0, plural, one {# day} other {# days}}"
 msgstr "{0, plural, one {# giorno} other {# giorni}}"
 
+#: src/screens/Profile/ProfileFollowers.tsx:40
+msgid "{0, plural, one {# follower} other {# followers}}"
+msgstr "{0, plural, one {# follower} other {# follower}}"
+
+#: src/screens/Profile/ProfileFollows.tsx:40
+msgid "{0, plural, one {# following} other {# following}}"
+msgstr "{0, plural, one {# seguito} other {# seguiti}}"
+
 #: src/lib/hooks/useTimeAgo.ts:146
 msgid "{0, plural, one {# hour} other {# hours}}"
 msgstr "{0, plural, one {# ora} other {# ore}}"
@@ -44,6 +52,10 @@ msgstr "{0, plural, one {# etichetta è stata applicata a questo account} other 
 msgid "{0, plural, one {# label has been placed on this content} other {# labels have been placed on this content}}"
 msgstr "{0, plural, one {# etichetta è stata applicata a questo contenuto} other {# etichette sono state applicate a questo contenuto}}"
 
+#: src/screens/Post/PostLikedBy.tsx:41
+msgid "{0, plural, one {# like} other {# likes}}"
+msgstr "{0, plural, one {# mi piace} other {# mi piace}}"
+
 #: src/lib/hooks/useTimeAgo.ts:136
 msgid "{0, plural, one {# minute} other {# minutes}}"
 msgstr "{0, plural, one {# minuto} other {# minuti}}"
@@ -52,8 +64,16 @@ msgstr "{0, plural, one {# minuto} other {# minuti}}"
 msgid "{0, plural, one {# month} other {# months}}"
 msgstr "{0, plural, one {# mese} other {# mesi}}"
 
+#: src/screens/Post/PostQuotes.tsx:41
+msgid "{0, plural, one {# quote} other {# quotes}}"
+msgstr "{0, plural, one {# citazione} other {# citazioni}}"
+
 #: src/view/com/util/post-ctrls/RepostButton.tsx:69
 msgid "{0, plural, one {# repost} other {# reposts}}"
+msgstr "{0, plural, one {# ripubblicazione} other {# ripubblicazioni}}"
+
+#: src/screens/Post/PostRepostedBy.tsx:41
+msgid "{0, plural, one {# reposts} other {# reposts}}"
 msgstr "{0, plural, one {# ripubblicazione} other {# ripubblicazioni}}"
 
 #: src/lib/hooks/useTimeAgo.ts:126
@@ -767,9 +787,9 @@ msgid "Anybody can interact"
 msgstr "Tutti possono interagire"
 
 #: src/Navigation.tsx:370
-#: src/screens/Settings/AppearanceSettings.tsx:187
-#: src/screens/Settings/AppearanceSettings.tsx:190
-#: src/screens/Settings/AppIconSettings.tsx:27
+#: src/screens/Settings/AppIconSettings/index.tsx:67
+#: src/screens/Settings/AppIconSettings/SettingsListItem.tsx:18
+#: src/screens/Settings/AppIconSettings/SettingsListItem.tsx:23
 msgid "App Icon"
 msgstr "Icona app"
 
@@ -1060,6 +1080,14 @@ msgstr "Bluesky sceglierà un set di account consigliati dal tuo network."
 msgid "Bluesky will not show your profile and posts to logged-out users. Other apps may not honor this request. This does not make your account private."
 msgstr "Bluesky non mostrerà il tuo profilo e i tuoi post agli utenti non loggati. Altre applicazioni potrebbero non rispettare questa istruzione. Ciò non rende il tuo account privato."
 
+#: src/screens/Settings/AppIconSettings/index.tsx:99
+msgid "Bluesky+"
+msgstr "Bluesky+"
+
+#: src/screens/Settings/AppIconSettings/index.tsx:102
+msgid "Bluesky+ icons"
+msgstr "Icone Bluesky+"
+
 #: src/lib/moderation/useLabelBehaviorDescription.ts:53
 msgid "Blur images"
 msgstr "Sfoca le immagini"
@@ -1141,7 +1169,8 @@ msgstr "Fotocamera"
 #: src/screens/Deactivated.tsx:157
 #: src/screens/Profile/Header/EditProfileDialog.tsx:220
 #: src/screens/Profile/Header/EditProfileDialog.tsx:228
-#: src/screens/Settings/AppIconSettings.tsx:85
+#: src/screens/Settings/AppIconSettings/index.tsx:44
+#: src/screens/Settings/AppIconSettings/index.tsx:225
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:72
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:79
 #: src/screens/Settings/Settings.tsx:260
@@ -1221,7 +1250,12 @@ msgstr "Sottotitoli e testo alternativo"
 msgid "Change"
 msgstr "Cambia"
 
-#: src/screens/Settings/AppIconSettings.tsx:81
+#: src/screens/Settings/AppIconSettings/index.tsx:39
+msgid "Change app icon"
+msgstr "Cambia icona app"
+
+#: src/screens/Settings/AppIconSettings/index.tsx:38
+#: src/screens/Settings/AppIconSettings/index.tsx:221
 msgid "Change app icon to \"{0}\""
 msgstr "Cambia l'icona dell'app in \"{0}\""
 
@@ -1848,6 +1882,10 @@ msgstr "Pannello per il debug"
 #: src/screens/Settings/AppearanceSettings.tsx:169
 msgid "Default"
 msgstr "Predefinito"
+
+#: src/screens/Settings/AppIconSettings/index.tsx:75
+msgid "Default icons"
+msgstr "Icone predefinite"
 
 #: src/components/dms/MessageMenu.tsx:151
 #: src/screens/Settings/AppPasswords.tsx:212
@@ -2836,10 +2874,6 @@ msgstr "Seguito da <0>{0}</0>, <1>{1}</1>, e {2, plural, one {# altro} other {# 
 msgid "Followed users"
 msgstr "Utenti seguiti"
 
-#: src/view/screens/ProfileFollowers.tsx:29
-msgid "Followers"
-msgstr "Follower"
-
 #: src/Navigation.tsx:191
 msgid "Followers of @{0} that you know"
 msgstr "Follower di @{0} che conosci"
@@ -2856,7 +2890,6 @@ msgstr "Follower che conosci"
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:230
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:135
 #: src/view/screens/Feeds.tsx:599
-#: src/view/screens/ProfileFollows.tsx:29
 #: src/view/screens/SavedFeeds.tsx:422
 msgid "Following"
 msgstr "Following"
@@ -3573,7 +3606,7 @@ msgstr "Metti mi piace a questo feed"
 msgid "Liked by"
 msgstr "Piace a"
 
-#: src/screens/Post/PostLikedBy.tsx:28
+#: src/screens/Post/PostLikedBy.tsx:38
 #: src/screens/Profile/ProfileLabelerLikedBy.tsx:29
 #: src/view/screens/ProfileFeedLikedBy.tsx:30
 msgid "Liked By"
@@ -4370,7 +4403,8 @@ msgid "Oh no! Something went wrong."
 msgstr "Oh no! Qualcosa è andato male."
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:347
-#: src/screens/Settings/AppIconSettings.tsx:89
+#: src/screens/Settings/AppIconSettings/index.tsx:48
+#: src/screens/Settings/AppIconSettings/index.tsx:229
 msgid "OK"
 msgstr "OK"
 
@@ -4816,7 +4850,7 @@ msgctxt "action"
 msgid "Post"
 msgstr "Post"
 
-#: src/view/com/post-thread/PostThread.tsx:488
+#: src/view/com/post-thread/PostThread.tsx:489
 msgctxt "description"
 msgid "Post"
 msgstr "Post"
@@ -5049,7 +5083,7 @@ msgstr "Consenti le citazioni al post"
 msgid "Quote settings"
 msgstr "Impostazioni delle citazioni"
 
-#: src/screens/Post/PostQuotes.tsx:31
+#: src/screens/Post/PostQuotes.tsx:38
 msgid "Quotes"
 msgstr "Citazioni"
 
@@ -5406,7 +5440,7 @@ msgstr "Repost"
 msgid "Repost or quote post"
 msgstr "Repost o cita post"
 
-#: src/screens/Post/PostRepostedBy.tsx:31
+#: src/screens/Post/PostRepostedBy.tsx:38
 msgid "Reposted By"
 msgstr "Ripubblicato da"
 
@@ -5861,6 +5895,10 @@ msgstr "Invia un'email con il codice di conferma per l'eliminazione dell'account
 #: src/view/com/auth/server-input/index.tsx:111
 msgid "Server address"
 msgstr "Indirizzo del server"
+
+#: src/screens/Settings/AppIconSettings/index.tsx:178
+msgid "Set app icon to {0}"
+msgstr "Imposta icona app su {0}"
 
 #: src/screens/Moderation/index.tsx:290
 msgid "Set birthdate"
@@ -6366,8 +6404,7 @@ msgstr "Tag menu: {displayTag}"
 msgid "Tags only"
 msgstr "Solo tag"
 
-#: src/screens/Settings/AppIconSettings.tsx:42
-#: src/screens/Settings/AppIconSettings.tsx:76
+#: src/screens/Settings/AppIconSettings/index.tsx:216
 msgid "Tap to change app icon"
 msgstr "Tocca per cambiare l'icona dell'app"
 
@@ -6486,7 +6523,8 @@ msgstr "Questo è tutto, gente!"
 msgid "The account will be able to interact with you after unblocking."
 msgstr "L'account sarà in grado di interagire con te dopo lo sblocco."
 
-#: src/screens/Settings/AppIconSettings.tsx:82
+#: src/screens/Settings/AppIconSettings/index.tsx:41
+#: src/screens/Settings/AppIconSettings/index.tsx:222
 msgid "The app will be restarted"
 msgstr "L'app verrà riavviata"
 
