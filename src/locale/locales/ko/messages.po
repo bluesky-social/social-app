@@ -8,7 +8,7 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-12-11 09:19+0900\n"
+"PO-Revision-Date: 2024-12-12 10:59+0900\n"
 "Last-Translator: quiple\n"
 "Language-Team: quiple, lens0021, HaruChanHeart, hazzzi, heartade\n"
 "Plural-Forms: \n"
@@ -26,6 +26,14 @@ msgstr "(이메일 없음)"
 msgid "{0, plural, one {# day} other {# days}}"
 msgstr "{0, plural, other {#}}일"
 
+#: src/screens/Profile/ProfileFollowers.tsx:40
+msgid "{0, plural, one {# follower} other {# followers}}"
+msgstr "{0, plural, other {#}} 팔로워"
+
+#: src/screens/Profile/ProfileFollows.tsx:40
+msgid "{0, plural, one {# following} other {# following}}"
+msgstr "{0, plural, other {#}} 팔로워"
+
 #: src/lib/hooks/useTimeAgo.ts:146
 msgid "{0, plural, one {# hour} other {# hours}}"
 msgstr "{0, plural, other {#}}시간"
@@ -38,6 +46,10 @@ msgstr "이 계정에 {0, plural, other {#}}개의 라벨이 지정됨"
 msgid "{0, plural, one {# label has been placed on this content} other {# labels have been placed on this content}}"
 msgstr "이 콘텐츠에 {0, plural, other {#}}개의 라벨이 지정됨"
 
+#: src/screens/Post/PostLikedBy.tsx:41
+msgid "{0, plural, one {# like} other {# likes}}"
+msgstr "{0, plural, other {#}} 좋아요"
+
 #: src/lib/hooks/useTimeAgo.ts:136
 msgid "{0, plural, one {# minute} other {# minutes}}"
 msgstr "{0, plural, other {#}}분"
@@ -46,9 +58,17 @@ msgstr "{0, plural, other {#}}분"
 msgid "{0, plural, one {# month} other {# months}}"
 msgstr "{0, plural, other {#}}개월"
 
+#: src/screens/Post/PostQuotes.tsx:41
+msgid "{0, plural, one {# quote} other {# quotes}}"
+msgstr "{0, plural, other {#}} 인용"
+
 #: src/view/com/util/post-ctrls/RepostButton.tsx:69
 msgid "{0, plural, one {# repost} other {# reposts}}"
 msgstr "{0, plural, other {#}}개"
+
+#: src/screens/Post/PostRepostedBy.tsx:41
+msgid "{0, plural, one {# reposts} other {# reposts}}"
+msgstr "{0, plural, other {#}} 재게시"
 
 #: src/lib/hooks/useTimeAgo.ts:126
 msgid "{0, plural, one {# second} other {# seconds}}"
@@ -761,9 +781,9 @@ msgid "Anybody can interact"
 msgstr "누구나 상호작용할 수 있음"
 
 #: src/Navigation.tsx:370
-#: src/screens/Settings/AppearanceSettings.tsx:187
-#: src/screens/Settings/AppearanceSettings.tsx:190
-#: src/screens/Settings/AppIconSettings.tsx:27
+#: src/screens/Settings/AppIconSettings/index.tsx:67
+#: src/screens/Settings/AppIconSettings/SettingsListItem.tsx:18
+#: src/screens/Settings/AppIconSettings/SettingsListItem.tsx:23
 msgid "App Icon"
 msgstr "앱 아이콘"
 
@@ -1054,6 +1074,14 @@ msgstr "Bluesky가 네트워크에 있는 사람들 중에서 임의로 추천 �
 msgid "Bluesky will not show your profile and posts to logged-out users. Other apps may not honor this request. This does not make your account private."
 msgstr "로그아웃한 사용자에게 내 프로필과 게시물을 표시하지 않습니다. 다른 앱에서는 이 설정을 따르지 않을 수 있습니다. 내 계정을 비공개로 전환하지는 않습니다."
 
+#: src/screens/Settings/AppIconSettings/index.tsx:99
+msgid "Bluesky+"
+msgstr "Bluesky+"
+
+#: src/screens/Settings/AppIconSettings/index.tsx:102
+msgid "Bluesky+ icons"
+msgstr "Bluesky+ 아이콘"
+
 #: src/lib/moderation/useLabelBehaviorDescription.ts:53
 msgid "Blur images"
 msgstr "이미지 흐리게"
@@ -1135,7 +1163,8 @@ msgstr "카메라"
 #: src/screens/Deactivated.tsx:157
 #: src/screens/Profile/Header/EditProfileDialog.tsx:220
 #: src/screens/Profile/Header/EditProfileDialog.tsx:228
-#: src/screens/Settings/AppIconSettings.tsx:85
+#: src/screens/Settings/AppIconSettings/index.tsx:44
+#: src/screens/Settings/AppIconSettings/index.tsx:225
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:72
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:79
 #: src/screens/Settings/Settings.tsx:260
@@ -1215,7 +1244,12 @@ msgstr "자막 및 대체 텍스트"
 msgid "Change"
 msgstr "변경"
 
-#: src/screens/Settings/AppIconSettings.tsx:81
+#: src/screens/Settings/AppIconSettings/index.tsx:39
+msgid "Change app icon"
+msgstr "앱 아이콘을 변경합니다"
+
+#: src/screens/Settings/AppIconSettings/index.tsx:38
+#: src/screens/Settings/AppIconSettings/index.tsx:221
 msgid "Change app icon to \"{0}\""
 msgstr "앱 아이콘을 \"{0}\"(으)로 변경합니다"
 
@@ -1842,6 +1876,10 @@ msgstr "디버그 패널"
 #: src/screens/Settings/AppearanceSettings.tsx:169
 msgid "Default"
 msgstr "기본"
+
+#: src/screens/Settings/AppIconSettings/index.tsx:75
+msgid "Default icons"
+msgstr "기본 아이콘"
 
 #: src/components/dms/MessageMenu.tsx:151
 #: src/screens/Settings/AppPasswords.tsx:212
@@ -2831,8 +2869,8 @@ msgid "Followed users"
 msgstr "팔로우한 사용자"
 
 #: src/view/screens/ProfileFollowers.tsx:29
-msgid "Followers"
-msgstr "팔로워"
+#~ msgid "Followers"
+#~ msgstr "팔로워"
 
 #: src/Navigation.tsx:191
 msgid "Followers of @{0} that you know"
@@ -2850,7 +2888,6 @@ msgstr "내가 아는 팔로워"
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:230
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:135
 #: src/view/screens/Feeds.tsx:599
-#: src/view/screens/ProfileFollows.tsx:29
 #: src/view/screens/SavedFeeds.tsx:422
 msgid "Following"
 msgstr "팔로우 중"
@@ -3567,7 +3604,7 @@ msgstr "이 피드에 좋아요 표시"
 msgid "Liked by"
 msgstr "좋아요 표시한 사용자"
 
-#: src/screens/Post/PostLikedBy.tsx:28
+#: src/screens/Post/PostLikedBy.tsx:38
 #: src/screens/Profile/ProfileLabelerLikedBy.tsx:29
 #: src/view/screens/ProfileFeedLikedBy.tsx:30
 msgid "Liked By"
@@ -4364,7 +4401,8 @@ msgid "Oh no! Something went wrong."
 msgstr "이런! 뭔가 잘못되었습니다."
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:347
-#: src/screens/Settings/AppIconSettings.tsx:89
+#: src/screens/Settings/AppIconSettings/index.tsx:48
+#: src/screens/Settings/AppIconSettings/index.tsx:229
 msgid "OK"
 msgstr "확인"
 
@@ -4810,7 +4848,7 @@ msgctxt "action"
 msgid "Post"
 msgstr "게시하기"
 
-#: src/view/com/post-thread/PostThread.tsx:488
+#: src/view/com/post-thread/PostThread.tsx:489
 msgctxt "description"
 msgid "Post"
 msgstr "게시물"
@@ -5043,7 +5081,7 @@ msgstr "게시물 인용 활성화됨"
 msgid "Quote settings"
 msgstr "인용 설정"
 
-#: src/screens/Post/PostQuotes.tsx:31
+#: src/screens/Post/PostQuotes.tsx:38
 msgid "Quotes"
 msgstr "인용"
 
@@ -5400,7 +5438,7 @@ msgstr "재게시"
 msgid "Repost or quote post"
 msgstr "재게시 또는 게시물 인용"
 
-#: src/screens/Post/PostRepostedBy.tsx:31
+#: src/screens/Post/PostRepostedBy.tsx:38
 msgid "Reposted By"
 msgstr "재게시한 사용자"
 
@@ -5855,6 +5893,10 @@ msgstr "계정 삭제를 위한 확인 코드가 포함된 이메일을 전송�
 #: src/view/com/auth/server-input/index.tsx:111
 msgid "Server address"
 msgstr "서버 주소"
+
+#: src/screens/Settings/AppIconSettings/index.tsx:178
+msgid "Set app icon to {0}"
+msgstr "앱 아이콘을 {0}(으)로 설정"
 
 #: src/screens/Moderation/index.tsx:290
 msgid "Set birthdate"
@@ -6360,8 +6402,7 @@ msgstr "태그 메뉴: {displayTag}"
 msgid "Tags only"
 msgstr "태그만"
 
-#: src/screens/Settings/AppIconSettings.tsx:42
-#: src/screens/Settings/AppIconSettings.tsx:76
+#: src/screens/Settings/AppIconSettings/index.tsx:216
 msgid "Tap to change app icon"
 msgstr "탭하여 앱 아이콘 변경"
 
@@ -6480,7 +6521,8 @@ msgstr "이상입니다, 여러분!"
 msgid "The account will be able to interact with you after unblocking."
 msgstr "차단을 해제하면 이 계정이 나와 상호작용할 수 있게 됩니다."
 
-#: src/screens/Settings/AppIconSettings.tsx:82
+#: src/screens/Settings/AppIconSettings/index.tsx:41
+#: src/screens/Settings/AppIconSettings/index.tsx:222
 msgid "The app will be restarted"
 msgstr "앱을 다시 시작합니다"
 
