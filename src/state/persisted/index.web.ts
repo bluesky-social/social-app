@@ -63,8 +63,10 @@ export async function write<K extends keyof Schema>(
     [key]: value,
   })
   writeToStorage(_state)
-  broadcast.postMessage({event: {type: UPDATE_EVENT, key}})
-  broadcast.postMessage({event: UPDATE_EVENT}) // Backcompat while upgrading
+  setTimeout(() => {
+    broadcast.postMessage({event: {type: UPDATE_EVENT, key}})
+    broadcast.postMessage({event: UPDATE_EVENT}) // Backcompat while upgrading
+  }, 0)
 }
 write satisfies PersistedApi['write']
 

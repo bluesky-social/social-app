@@ -5,8 +5,11 @@ import {useLingui} from '@lingui/react'
 import {FEEDBACK_FORM_URL, HELP_DESK_URL} from '#/lib/constants'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {useKawaiiMode} from '#/state/preferences/kawaii'
+import {
+  useTrendingSettings,
+  useTrendingSettingsApi,
+} from '#/state/preferences/trending'
 import {useSession} from '#/state/session'
-import {useTrendingTopicsSidebarSetting} from '#/state/trending'
 import {DesktopFeeds} from '#/view/shell/desktop/Feeds'
 import {DesktopSearch} from '#/view/shell/desktop/Search'
 import {atoms as a, useGutters, useTheme, web} from '#/alf'
@@ -116,9 +119,10 @@ function TrendingTopics() {
   const {_} = useLingui()
   const trendingPrompt = Prompt.usePromptControl()
 
-  const [showTrending, setShowTrending] = useTrendingTopicsSidebarSetting()
+  const {trendingSidebarHidden} = useTrendingSettings()
+  const {setTrendingSidebarHidden} = useTrendingSettingsApi()
 
-  return showTrending ? (
+  return trendingSidebarHidden ? null : (
     <>
       <View style={[a.gap_md]}>
         <View style={[a.flex_row, a.align_center, a.gap_xs]}>
@@ -168,9 +172,9 @@ function TrendingTopics() {
           msg`This is a device setting, and will apply to all accounts on this device. You can update this later from your settings.`,
         )}
         confirmButtonCta={_(msg`Hide`)}
-        onConfirm={() => setShowTrending(false)}
+        onConfirm={() => setTrendingSidebarHidden(true)}
       />
       <Divider />
     </>
-  ) : null
+  )
 }
