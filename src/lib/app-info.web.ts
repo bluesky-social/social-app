@@ -1,7 +1,7 @@
 import {version} from '../../package.json'
 
-export const BUILD_ENV = process.env.EXPO_PUBLIC_ENV
-export const IS_DEV = process.env.EXPO_PUBLIC_ENV === 'development'
+export const BUILD_ENV = process.env.EXPO_PUBLIC_ENV || 'development'
+export const IS_DEV = process.env.EXPO_PUBLIC_ENV !== 'production'
 export const IS_TESTFLIGHT = false
 export const IS_INTERNAL = IS_DEV
 
