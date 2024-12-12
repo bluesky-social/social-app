@@ -237,8 +237,15 @@ export function TabBar({
         opacity: 0,
       }
     }
-    if (layoutsValue.length === 1) {
-      return {opacity: 1}
+    if (textLayoutsValue.length === 1) {
+      return {
+        opacity: 1,
+        transform: [
+          {
+            scaleX: textLayoutsValue[0].width / contentSize.get(),
+          },
+        ],
+      }
     }
     return {
       opacity: 1,
