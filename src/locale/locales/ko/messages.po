@@ -39,11 +39,11 @@ msgid "{0, plural, one {# hour} other {# hours}}"
 msgstr "{0, plural, other {#}}시간"
 
 #: src/components/moderation/LabelsOnMe.tsx:53
-msgid "{0, plural, one {# label has been placed on this account} other {# labels have been placed on this account}}"
+msgid "{0, plural, one {# label has} other {# labels have}} been placed on this account"
 msgstr "이 계정에 {0, plural, other {#}}개의 라벨이 지정됨"
 
-#: src/components/moderation/LabelsOnMe.tsx:59
-msgid "{0, plural, one {# label has been placed on this content} other {# labels have been placed on this content}}"
+#: src/components/moderation/LabelsOnMe.tsx:62
+msgid "{0, plural, one {# label has} other {# labels have}} been placed on this content"
 msgstr "이 콘텐츠에 {0, plural, other {#}}개의 라벨이 지정됨"
 
 #: src/screens/Post/PostLikedBy.tsx:41
@@ -63,7 +63,6 @@ msgid "{0, plural, one {# quote} other {# quotes}}"
 msgstr "{0, plural, other {#}} 인용"
 
 #: src/screens/Post/PostRepostedBy.tsx:41
-#: src/view/com/util/post-ctrls/RepostButton.tsx:69
 msgid "{0, plural, one {# repost} other {# reposts}}"
 msgstr "{0, plural, other {#}} 재게시"
 
@@ -81,18 +80,9 @@ msgstr "팔로워"
 msgid "{0, plural, one {following} other {following}}"
 msgstr "팔로우 중"
 
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:305
-msgid "{0, plural, one {Like (# like)} other {Like (# likes)}}"
-msgstr "좋아요 ({0, plural, other {#}}개)"
-
 #: src/view/com/post-thread/PostThreadItem.tsx:447
 msgid "{0, plural, one {like} other {likes}}"
 msgstr "좋아요"
-
-#: src/components/FeedCard.tsx:213
-#: src/view/com/feeds/FeedSourceCard.tsx:303
-msgid "{0, plural, one {Liked by # user} other {Liked by # users}}"
-msgstr "{0, plural, other {#}}명의 사용자가 좋아함"
 
 #: src/screens/Profile/Header/Metrics.tsx:58
 msgid "{0, plural, one {post} other {posts}}"
@@ -102,17 +92,9 @@ msgstr "게시물"
 msgid "{0, plural, one {quote} other {quotes}}"
 msgstr "인용"
 
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:261
-msgid "{0, plural, one {Reply (# reply)} other {Reply (# replies)}}"
-msgstr "답글 ({0, plural, other {#}}개)"
-
 #: src/view/com/post-thread/PostThreadItem.tsx:413
 msgid "{0, plural, one {repost} other {reposts}}"
 msgstr "재게시"
-
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:301
-msgid "{0, plural, one {Unlike (# like)} other {Unlike (# likes)}}"
-msgstr "좋아요 취소 ({0, plural, other {#}}개)"
 
 #: src/screens/Settings/Settings.tsx:422
 msgid "{0}"
@@ -184,10 +166,6 @@ msgstr "{0}초"
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:252
 msgid "{badge} unread items"
 msgstr "읽지 않은 항목 {badge}개"
-
-#: src/components/LabelingServiceCard/index.tsx:96
-msgid "{count, plural, one {Liked by # user} other {Liked by # users}}"
-msgstr "{count, plural, other {#}}명의 사용자가 좋아함"
 
 #: src/view/shell/desktop/LeftNav.tsx:186
 msgid "{count} unread items"
@@ -302,12 +280,6 @@ msgstr "{following} 팔로우 중"
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:385
 msgid "{handle} can't be messaged"
 msgstr "{handle} 님에게 메시지를 보낼 수 없습니다"
-
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:294
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:307
-#: src/view/screens/ProfileFeed.tsx:590
-msgid "{likeCount, plural, one {Liked by # user} other {Liked by # users}}"
-msgstr "{likeCount, plural, other {#}}명의 사용자가 좋아함"
 
 #: src/view/shell/Drawer.tsx:448
 msgid "{numUnreadNotifications} unread"
@@ -549,7 +521,7 @@ msgstr "내가 팔로우하는 사람의 기본 피드만 추가하기"
 msgid "Add the following DNS record to your domain:"
 msgstr "도메인에 다음 DNS 레코드를 추가하세요:"
 
-#: src/components/FeedCard.tsx:296
+#: src/components/FeedCard.tsx:295
 msgid "Add this feed to your feeds"
 msgstr "이 피드를 내 피드에 추가하기"
 
@@ -880,11 +852,11 @@ msgstr "변경 사항을 삭제하시겠습니까?"
 msgid "Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for the other participant."
 msgstr "정말 이 대화에서 나가시겠습니까? 나에게 보이는 메시지는 삭제되지만 상대방에게는 삭제되지 않습니다."
 
-#: src/view/com/feeds/FeedSourceCard.tsx:316
+#: src/view/com/feeds/FeedSourceCard.tsx:319
 msgid "Are you sure you want to remove {0} from your feeds?"
 msgstr "피드에서 {0}을(를) 제거하시겠습니까?"
 
-#: src/components/FeedCard.tsx:313
+#: src/components/FeedCard.tsx:312
 msgid "Are you sure you want to remove this from your feeds?"
 msgstr "내 피드에서 이 피드를 삭제하시겠습니까?"
 
@@ -1179,7 +1151,7 @@ msgstr "카메라"
 #: src/view/com/modals/LinkWarning.tsx:107
 #: src/view/com/modals/VerifyEmail.tsx:255
 #: src/view/com/modals/VerifyEmail.tsx:261
-#: src/view/com/util/post-ctrls/RepostButton.tsx:203
+#: src/view/com/util/post-ctrls/RepostButton.tsx:213
 #: src/view/screens/Search/Search.tsx:886
 msgid "Cancel"
 msgstr "취소"
@@ -1204,7 +1176,7 @@ msgstr "이미지 자르기 취소"
 msgid "Cancel profile editing"
 msgstr "프로필 편집 취소"
 
-#: src/view/com/util/post-ctrls/RepostButton.tsx:197
+#: src/view/com/util/post-ctrls/RepostButton.tsx:207
 msgid "Cancel quote post"
 msgstr "게시물 인용 취소"
 
@@ -1678,7 +1650,7 @@ msgstr "빌드 버전을 클립보드에 복사했습니다"
 #: src/lib/sharing.ts:25
 #: src/view/com/modals/InviteCodes.tsx:153
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:235
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:386
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:392
 msgid "Copied to clipboard"
 msgstr "클립보드에 복사했습니다"
 
@@ -2697,7 +2669,7 @@ msgstr "이의신청을 제출하지 못했습니다. 다시 시도해 주세요
 msgid "Failed to toggle thread mute, please try again"
 msgstr "스레드 뮤트를 전환하지 못했습니다. 다시 시도해 주세요"
 
-#: src/components/FeedCard.tsx:276
+#: src/components/FeedCard.tsx:275
 msgid "Failed to update feeds"
 msgstr "피드를 업데이트하지 못했습니다"
 
@@ -2755,7 +2727,7 @@ msgstr "피드"
 msgid "Feeds are custom algorithms that users build with a little coding expertise. <0/> for more information."
 msgstr "피드는 사용자가 약간의 코딩 전문 지식만으로 구축할 수 있는 맞춤 알고리즘입니다. <0/>에서 자세한 내용을 확인하세요."
 
-#: src/components/FeedCard.tsx:273
+#: src/components/FeedCard.tsx:272
 #: src/view/screens/SavedFeeds.tsx:82
 msgid "Feeds updated!"
 msgstr "피드를 업데이트했습니다"
@@ -3577,6 +3549,10 @@ msgstr "출발!"
 msgid "Light"
 msgstr "밝음"
 
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:310
+msgid "Like ({0, plural, one {# like} other {# likes}})"
+msgstr "좋아요 ({0, plural, other {#}}개)"
+
 #: src/components/ProgressGuide/List.tsx:47
 msgid "Like 10 posts"
 msgstr "10개 게시물에 좋아요 누르기"
@@ -3602,6 +3578,18 @@ msgstr "좋아요 표시한 사용자"
 #: src/view/screens/ProfileFeedLikedBy.tsx:30
 msgid "Liked By"
 msgstr "좋아요 표시한 사용자"
+
+#: src/components/FeedCard.tsx:213
+#: src/view/com/feeds/FeedSourceCard.tsx:303
+msgid "Liked by {0, plural, one {# user} other {# users}}"
+msgstr "{0, plural, other {#}}명의 사용자가 좋아함"
+
+#: src/components/LabelingServiceCard/index.tsx:96
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:295
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:309
+#: src/view/screens/ProfileFeed.tsx:590
+msgid "Liked by {likeCount, plural, one {# user} other {# users}}"
+msgstr "{likeCount, plural, other {#}}명의 사용자가 좋아함"
 
 #: src/view/screens/Profile.tsx:228
 msgid "Likes"
@@ -4321,7 +4309,7 @@ msgstr "나중에 하기"
 
 #: src/view/com/profile/ProfileMenu.tsx:348
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:686
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:350
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:356
 msgid "Note about sharing"
 msgstr "공유 관련 참고 사항"
 
@@ -4393,7 +4381,7 @@ msgstr "이런!"
 msgid "Oh no! Something went wrong."
 msgstr "이런! 뭔가 잘못되었습니다."
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:347
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:352
 #: src/screens/Settings/AppIconSettings/index.tsx:48
 #: src/screens/Settings/AppIconSettings/index.tsx:229
 msgid "OK"
@@ -5044,8 +5032,8 @@ msgstr "QR 코드를 다운로드했습니다."
 msgid "QR code saved to your camera roll!"
 msgstr "QR 코드를 사진 보관함에 저장했습니다."
 
-#: src/view/com/util/post-ctrls/RepostButton.tsx:168
-#: src/view/com/util/post-ctrls/RepostButton.tsx:191
+#: src/view/com/util/post-ctrls/RepostButton.tsx:178
+#: src/view/com/util/post-ctrls/RepostButton.tsx:201
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:85
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:92
 msgid "Quote post"
@@ -5059,8 +5047,8 @@ msgstr "인용을 다시 연결했습니다"
 msgid "Quote post was successfully detached"
 msgstr "인용을 성공적으로 해제했습니다"
 
-#: src/view/com/util/post-ctrls/RepostButton.tsx:167
-#: src/view/com/util/post-ctrls/RepostButton.tsx:189
+#: src/view/com/util/post-ctrls/RepostButton.tsx:177
+#: src/view/com/util/post-ctrls/RepostButton.tsx:199
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:84
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:91
 msgid "Quote posts disabled"
@@ -5135,11 +5123,11 @@ msgid "Reload conversations"
 msgstr "대화 다시 불러오기"
 
 #: src/components/dialogs/MutedWords.tsx:438
-#: src/components/FeedCard.tsx:316
+#: src/components/FeedCard.tsx:315
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:101
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:108
 #: src/screens/Settings/Settings.tsx:466
-#: src/view/com/feeds/FeedSourceCard.tsx:319
+#: src/view/com/feeds/FeedSourceCard.tsx:322
 #: src/view/com/modals/ListAddRemoveUsers.tsx:269
 #: src/view/com/modals/UserAddRemoveLists.tsx:235
 #: src/view/com/posts/PostFeedErrorMessage.tsx:213
@@ -5190,8 +5178,8 @@ msgstr "피드를 제거하시겠습니까?"
 msgid "Remove from my feeds"
 msgstr "내 피드에서 제거"
 
-#: src/components/FeedCard.tsx:311
-#: src/view/com/feeds/FeedSourceCard.tsx:314
+#: src/components/FeedCard.tsx:310
+#: src/view/com/feeds/FeedSourceCard.tsx:317
 msgid "Remove from my feeds?"
 msgstr "내 피드에서 제거하시겠습니까?"
 
@@ -5223,8 +5211,8 @@ msgstr "검색 기록에서 프로필을 제거합니다"
 msgid "Remove quote"
 msgstr "인용 제거"
 
-#: src/view/com/util/post-ctrls/RepostButton.tsx:145
 #: src/view/com/util/post-ctrls/RepostButton.tsx:155
+#: src/view/com/util/post-ctrls/RepostButton.tsx:165
 msgid "Remove repost"
 msgstr "재게시 취소"
 
@@ -5289,6 +5277,10 @@ msgstr "이 게시물에 대한 답글은 비활성화되어 있습니다."
 msgctxt "action"
 msgid "Reply"
 msgstr "답글 게시하기"
+
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:262
+msgid "Reply ({0, plural, one {# reply} other {# replies}})"
+msgstr "답글 ({0, plural, other {#}}개)"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:114
 #: src/lib/moderation/useModerationCauseDescription.ts:123
@@ -5412,9 +5404,8 @@ msgstr "이 스타터 팩 신고하기"
 msgid "Report this user"
 msgstr "이 사용자 신고하기"
 
-#: src/view/com/util/post-ctrls/RepostButton.tsx:68
-#: src/view/com/util/post-ctrls/RepostButton.tsx:146
-#: src/view/com/util/post-ctrls/RepostButton.tsx:157
+#: src/view/com/util/post-ctrls/RepostButton.tsx:156
+#: src/view/com/util/post-ctrls/RepostButton.tsx:167
 msgctxt "action"
 msgid "Repost"
 msgstr "재게시"
@@ -5424,8 +5415,12 @@ msgstr "재게시"
 msgid "Repost"
 msgstr "재게시"
 
+#: src/view/com/util/post-ctrls/RepostButton.tsx:74
+msgid "Repost ({0, plural, one {# repost} other {# reposts}})"
+msgstr "재게시 ({0, plural, other {#}}개)"
+
 #: src/screens/StarterPack/StarterPackScreen.tsx:547
-#: src/view/com/util/post-ctrls/RepostButton.tsx:138
+#: src/view/com/util/post-ctrls/RepostButton.tsx:148
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:49
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:104
 msgid "Repost or quote post"
@@ -5930,7 +5925,7 @@ msgstr "외설적"
 #: src/view/com/profile/ProfileMenu.tsx:204
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:434
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:443
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:339
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:345
 #: src/view/screens/ProfileList.tsx:486
 msgid "Share"
 msgstr "공유"
@@ -5950,7 +5945,7 @@ msgstr "재미있는 사실을 전하세요!"
 
 #: src/view/com/profile/ProfileMenu.tsx:353
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:691
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:355
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:361
 msgid "Share anyway"
 msgstr "무시하고 공유"
 
@@ -6834,7 +6829,7 @@ msgid "This post has been deleted."
 msgstr "이 게시물은 삭제되었습니다."
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:688
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:352
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:358
 msgid "This post is only visible to logged-in users. It won't be visible to people who aren't logged in."
 msgstr "이 게시물은 로그인한 사용자에게만 표시됩니다. 로그인하지 않은 사용자에게는 표시되지 않습니다."
 
@@ -7047,11 +7042,14 @@ msgstr "계정 차단 해제"
 msgid "Unblock Account?"
 msgstr "계정을 차단 해제하시겠습니까?"
 
-#: src/view/com/util/post-ctrls/RepostButton.tsx:67
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:72
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:76
 msgid "Undo repost"
 msgstr "재게시 취소"
+
+#: src/view/com/util/post-ctrls/RepostButton.tsx:68
+msgid "Undo repost ({0, plural, one {# repost} other {# reposts}})"
+msgstr "재게시 취소 ({0, plural, other {#}}개)"
 
 #: src/view/com/profile/FollowButton.tsx:60
 msgctxt "action"
@@ -7066,6 +7064,10 @@ msgstr "{0} 님을 언팔로우"
 #: src/view/com/profile/ProfileMenu.tsx:231
 msgid "Unfollow Account"
 msgstr "계정 언팔로우"
+
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:304
+msgid "Unlike ({0, plural, one {# like} other {# likes}})"
+msgstr "좋아요 취소 ({0, plural, other {#}}개)"
 
 #: src/view/screens/ProfileFeed.tsx:575
 msgid "Unlike this feed"
@@ -7472,7 +7474,7 @@ msgstr "프로필 보기"
 msgid "View the avatar"
 msgstr "아바타 보기"
 
-#: src/components/LabelingServiceCard/index.tsx:162
+#: src/components/LabelingServiceCard/index.tsx:164
 msgid "View the labeling service provided by @{0}"
 msgstr "{0} 님이 제공하는 라벨링 서비스 보기"
 
@@ -7597,7 +7599,7 @@ msgstr "죄송하지만 답글을 달려는 게시물이 삭제되었습니다."
 msgid "We're sorry! We can't find the page you were looking for."
 msgstr "죄송합니다. 페이지를 찾을 수 없습니다."
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:341
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:346
 msgid "We're sorry! You can only subscribe to twenty labelers, and you've reached your limit of twenty."
 msgstr "죄송합니다. 라벨러는 20개까지만 구독할 수 있으며 20개에 도달했습니다."
 
