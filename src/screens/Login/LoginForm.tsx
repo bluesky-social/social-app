@@ -257,7 +257,7 @@ export const LoginForm = ({
               autoCapitalize="none"
               autoFocus
               autoCorrect={false}
-              autoComplete="off"
+              autoComplete="one-time-code"
               returnKeyType="done"
               textContentType="username"
               blurOnSubmit={false} // prevents flickering due to onSubmitEditing going to next field

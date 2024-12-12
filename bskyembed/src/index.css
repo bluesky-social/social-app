@@ -5,3 +5,7 @@
 .break-word {
   word-break: break-word;
 }
+
+:root {
+  color-scheme: light dark;
+}
