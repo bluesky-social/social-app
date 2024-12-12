@@ -9,7 +9,10 @@ import {
   useInAppBrowser,
   useSetInAppBrowser,
 } from '#/state/preferences/in-app-browser'
-import {useTrendingTopicsSidebarSetting} from '#/state/trending'
+import {
+  useTrendingSettings,
+  useTrendingSettingsApi,
+} from '#/state/preferences/trending'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
 import * as Toggle from '#/components/forms/Toggle'
 import {Bubbles_Stroke2_Corner2_Rounded as BubblesIcon} from '#/components/icons/Bubble'
@@ -31,7 +34,8 @@ export function ContentAndMediaSettingsScreen({}: Props) {
   const setAutoplayDisabledPref = useSetAutoplayDisabled()
   const inAppBrowserPref = useInAppBrowser()
   const setUseInAppBrowser = useSetInAppBrowser()
-  const [showTrending, setShowTrending] = useTrendingTopicsSidebarSetting()
+  const {trendingSidebarHidden} = useTrendingSettings()
+  const {setTrendingSidebarHidden} = useTrendingSettingsApi()
 
   return (
     <Layout.Screen>
@@ -113,8 +117,8 @@ export function ContentAndMediaSettingsScreen({}: Props) {
               <Toggle.Item
                 name="show_trending_topics"
                 label={_(msg`Show trending topics in your sidebar`)}
-                value={showTrending}
-                onChange={value => setShowTrending(value)}>
+                value={!trendingSidebarHidden}
+                onChange={value => setTrendingSidebarHidden(!value)}>
                 <SettingsList.Item>
                   <SettingsList.ItemIcon icon={Graph} />
                   <SettingsList.ItemText>

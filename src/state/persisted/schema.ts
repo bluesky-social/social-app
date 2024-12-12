@@ -125,7 +125,7 @@ const schema = z.object({
   subtitlesEnabled: z.boolean().optional(),
   /** @deprecated */
   mutedThreads: z.array(z.string()),
-  hideSidebarTrendingTopics: z.boolean().optional(),
+  trendingSidebarHidden: z.boolean().optional(),
 })
 export type Schema = z.infer<typeof schema>
 
@@ -171,6 +171,7 @@ export const defaults: Schema = {
   kawaii: false,
   hasCheckedForStarterPack: false,
   subtitlesEnabled: true,
+  trendingSidebarHidden: false,
 }
 
 export function tryParse(rawData: string): Schema | undefined {
