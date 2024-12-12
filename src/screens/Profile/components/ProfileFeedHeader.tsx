@@ -458,11 +458,9 @@ function DialogInner({
             to={makeCustomFeedLink(info.creatorDid, feedRkey, 'liked-by')}
             style={[a.underline, t.atoms.text_contrast_medium]}
             onPress={() => control.close()}>
-            <Plural
-              value={likeCount}
-              one="Liked by # user"
-              other="Liked by # users"
-            />
+            <Trans>
+              Liked by <Plural value={likeCount} one="# user" other="# users" />
+            </Trans>
           </InlineLinkText>
         )}
       </View>
