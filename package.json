@@ -181,7 +181,7 @@
     "react-native-picker-select": "^9.3.1",
     "react-native-progress": "bluesky-social/react-native-progress",
     "react-native-qrcode-styled": "^0.3.3",
-    "react-native-reanimated": "^3.16.3",
+    "react-native-reanimated": "3.17.0-nightly-20241211-17e89ca24",
     "react-native-root-siblings": "^4.1.1",
     "react-native-safe-area-context": "4.14.0",
     "react-native-screens": "~4.3.0",

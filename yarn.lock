@@ -16047,10 +16047,10 @@ react-native-qrcode-styled@^0.3.3:
     qrcode "^1.5.4"
     react-fast-compare "^3.2.2"
 
-react-native-reanimated@^3.16.3:
-  version "3.16.3"
-  resolved "https://registry.yarnpkg.com/react-native-reanimated/-/react-native-reanimated-3.16.3.tgz#3b559dca49e9e40abcf5de834dc27fc05f856b66"
-  integrity sha512-OWlA6e1oHhytTpc7WiSZ7Tmb8OYwLKYZz29Sz6d6WAg60Hm5GuAiKIWUG7Ako7FLcYhFkA0pEQ2xPMEYUo9vlw==
+react-native-reanimated@3.17.0-nightly-20241211-17e89ca24:
+  version "3.17.0-nightly-20241211-17e89ca24"
+  resolved "https://registry.yarnpkg.com/react-native-reanimated/-/react-native-reanimated-3.17.0-nightly-20241211-17e89ca24.tgz#af0c36e278646eb2f79e28ad0047cfd80d0e29f5"
+  integrity sha512-5p7jr0DrnID1puOzMel3VZVRw5Hl/UdMUvPCI1sEG9IA2mUaWrgeoojS2wVwW1U0Pj6HXjPNEimDSXZneZKNuQ==
   dependencies:
     "@babel/plugin-transform-arrow-functions" "^7.0.0-0"
     "@babel/plugin-transform-class-properties" "^7.0.0-0"
