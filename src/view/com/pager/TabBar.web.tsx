@@ -199,7 +199,7 @@ const mobileStyles = StyleSheet.create({
     textAlign: 'center',
     minWidth: 45,
     paddingBottom: 10,
-    borderBottomWidth: 2,
+    borderBottomWidth: 3,
     borderBottomColor: 'transparent',
   },
   outerBottomBorder: {
