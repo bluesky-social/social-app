@@ -23,6 +23,7 @@ import {ProfileCard} from '#/view/com/profile/ProfileCard'
 import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
 import {Text} from '#/view/com/util/text/Text'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
+import {atoms as a} from '#/alf'
 import * as Layout from '#/components/Layout'
 
 type Props = NativeStackScreenProps<
@@ -96,7 +97,7 @@ export function ModerationBlockedAccounts({}: Props) {
   )
   return (
     <Layout.Screen testID="blockedAccountsScreen">
-      <Layout.Center>
+      <Layout.Center style={[a.flex_1, {paddingBottom: 100}]}>
         <ViewHeader title={_(msg`Blocked Accounts`)} showOnDesktop />
         <Text
           type="sm"

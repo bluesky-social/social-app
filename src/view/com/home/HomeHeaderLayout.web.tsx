@@ -10,7 +10,7 @@ import {useSession} from '#/state/session'
 import {useShellLayout} from '#/state/shell/shell-layout'
 import {HomeHeaderLayoutMobile} from '#/view/com/home/HomeHeaderLayoutMobile'
 import {Logo} from '#/view/icons/Logo'
-import {atoms as a, useBreakpoints, useGutterStyles, useTheme} from '#/alf'
+import {atoms as a, useBreakpoints, useGutters, useTheme} from '#/alf'
 import {ButtonIcon} from '#/components/Button'
 import {Hashtag_Stroke2_Corner0_Rounded as FeedsIcon} from '#/components/icons/Hashtag'
 import * as Layout from '#/components/Layout'
@@ -41,14 +41,14 @@ function HomeHeaderLayoutDesktopAndTablet({
   const {hasSession} = useSession()
   const {_} = useLingui()
   const kawaii = useKawaiiMode()
-  const gutter = useGutterStyles()
+  const gutters = useGutters([0, 'base'])
 
   return (
     <>
       {hasSession && (
         <Layout.Center>
           <View
-            style={[a.flex_row, a.align_center, a.pt_md, gutter, t.atoms.bg]}>
+            style={[a.flex_row, a.align_center, gutters, a.pt_md, t.atoms.bg]}>
             <View style={{width: 34}} />
             <View style={[a.flex_1, a.align_center, a.justify_center]}>
               <Logo width={kawaii ? 60 : 28} />

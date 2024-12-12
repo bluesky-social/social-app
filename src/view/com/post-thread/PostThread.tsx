@@ -89,7 +89,7 @@ export function PostThread({uri}: {uri: string | undefined}) {
   const {hasSession, currentAccount} = useSession()
   const {_} = useLingui()
   const t = useTheme()
-  const {isMobile, isTabletOrMobile} = useWebMediaQueries()
+  const {isMobile} = useWebMediaQueries()
   const initialNumToRender = useInitialNumToRender()
   const {height: windowHeight} = useWindowDimensions()
   const [hiddenRepliesState, setHiddenRepliesState] = React.useState(
@@ -367,8 +367,7 @@ export function PostThread({uri}: {uri: string | undefined}) {
     skeleton?.highlightedPost?.type === 'post' &&
     (skeleton.highlightedPost.ctx.isParentLoading ||
       Boolean(skeleton?.parents && skeleton.parents.length > 0))
-  const showHeader =
-    isNative || (isTabletOrMobile && (!hasParents || !isFetching))
+  const showHeader = isNative || !hasParents || !isFetching
 
   const renderItem = ({item, index}: {item: RowItem; index: number}) => {
     if (item === REPLY_PROMPT && hasSession) {
@@ -422,9 +421,6 @@ export function PostThread({uri}: {uri: string | undefined}) {
         </View>
       )
     } else if (isThreadPost(item)) {
-      if (!treeView && item.ctx.hasMoreSelfThread) {
-        return <PostThreadLoadMore post={item.post} />
-      }
       const prev = isThreadPost(posts[index - 1])
         ? (posts[index - 1] as ThreadPost)
         : undefined
@@ -436,6 +432,10 @@ export function PostThread({uri}: {uri: string | undefined}) {
         (item.ctx.depth < 0 && !!item.parent) || item.ctx.depth > 1
       const hasUnrevealedParents =
         index === 0 && skeleton?.parents && maxParents < skeleton.parents.length
+
+      if (!treeView && prev && item.ctx.hasMoreSelfThread) {
+        return <PostThreadLoadMore post={prev.post} />
+      }
 
       return (
         <View
