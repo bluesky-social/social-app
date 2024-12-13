@@ -9,13 +9,11 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
-import {usePalette} from '#/lib/hooks/usePalette'
 import {cleanError} from '#/lib/strings/errors'
 import {s} from '#/lib/styles'
 import {logger} from '#/logger'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useNotificationFeedQuery} from '#/state/queries/notifications/feed'
-import {useUnreadNotificationsApi} from '#/state/queries/notifications/unread'
 import {EmptyState} from '#/view/com/util/EmptyState'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {List, ListRef} from '#/view/com/util/List'
@@ -28,26 +26,26 @@ const LOAD_MORE_ERROR_ITEM = {_reactKey: '__load_more_error__'}
 const LOADING_ITEM = {_reactKey: '__loading__'}
 
 export function NotificationFeed({
+  filter,
+  enabled,
   scrollElRef,
   onPressTryAgain,
   onScrolledDownChange,
   ListHeaderComponent,
-  overridePriorityNotifications,
+  refreshNotifications,
 }: {
+  filter: 'all' | 'mentions'
+  enabled: boolean
   scrollElRef?: ListRef
   onPressTryAgain?: () => void
   onScrolledDownChange: (isScrolledDown: boolean) => void
   ListHeaderComponent?: () => JSX.Element
-  overridePriorityNotifications?: boolean
+  refreshNotifications: () => Promise<void>
 }) {
   const initialNumToRender = useInitialNumToRender()
-
   const [isPTRing, setIsPTRing] = React.useState(false)
-  const pal = usePalette('default')
-
   const {_} = useLingui()
   const moderationOpts = useModerationOpts()
-  const {checkUnread} = useUnreadNotificationsApi()
   const {
     data,
     isFetching,
@@ -58,8 +56,8 @@ export function NotificationFeed({
     isFetchingNextPage,
     fetchNextPage,
   } = useNotificationFeedQuery({
-    enabled: !!moderationOpts,
-    overridePriorityNotifications,
+    enabled: enabled && !!moderationOpts,
+    filter,
   })
   const isEmpty = !isFetching && !data?.pages[0]?.items.length
 
@@ -85,7 +83,7 @@ export function NotificationFeed({
   const onRefresh = React.useCallback(async () => {
     try {
       setIsPTRing(true)
-      await checkUnread({invalidate: true})
+      await refreshNotifications()
     } catch (err) {
       logger.error('Failed to refresh notifications feed', {
         message: err,
@@ -93,7 +91,7 @@ export function NotificationFeed({
     } finally {
       setIsPTRing(false)
     }
-  }, [checkUnread, setIsPTRing])
+  }, [refreshNotifications, setIsPTRing])
 
   const onEndReached = React.useCallback(async () => {
     if (isFetching || !hasNextPage || isError) return
@@ -129,21 +127,18 @@ export function NotificationFeed({
           />
         )
       } else if (item === LOADING_ITEM) {
-        return (
-          <View style={[pal.border]}>
-            <NotificationFeedLoadingPlaceholder />
-          </View>
-        )
+        return <NotificationFeedLoadingPlaceholder />
       }
       return (
         <NotificationFeedItem
+          highlightUnread={filter === 'all'}
           item={item}
           moderationOpts={moderationOpts!}
-          hideTopBorder={index === 0}
+          hideTopBorder={index === 0 && item.notification.isRead}
         />
       )
     },
-    [moderationOpts, _, onPressRetryLoadMore, pal.border],
+    [moderationOpts, _, onPressRetryLoadMore, filter],
   )
 
   const FeedFooter = React.useCallback(

@@ -4,6 +4,15 @@ import {describe, expect, it, jest} from '@jest/globals'
 import {agentToSessionAccountOrThrow} from '../agent'
 import {Action, getInitialState, reducer, State} from '../reducer'
 
+jest.mock('statsig-react-native-expo', () => ({
+  Statsig: {
+    initialize() {},
+    initializeCalled() {
+      return false
+    },
+  },
+}))
+
 jest.mock('jwt-decode', () => ({
   jwtDecode(_token: string) {
     return {}

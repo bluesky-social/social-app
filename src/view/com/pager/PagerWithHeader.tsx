@@ -21,6 +21,7 @@ import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {ScrollProvider} from '#/lib/ScrollContext'
 import {isIOS} from '#/platform/detection'
 import {Pager, PagerRef, RenderTabBarFnProps} from '#/view/com/pager/Pager'
+import {useTheme} from '#/alf'
 import {ListMethods} from '../util/List'
 import {PagerHeaderProvider} from './PagerHeaderContext'
 import {TabBar} from './TabBar'
@@ -38,7 +39,11 @@ export interface PagerWithHeaderProps {
     | ((props: PagerWithHeaderChildParams) => JSX.Element)
   items: string[]
   isHeaderReady: boolean
-  renderHeader?: () => JSX.Element
+  renderHeader?: ({
+    setMinimumHeight,
+  }: {
+    setMinimumHeight: (height: number) => void
+  }) => JSX.Element
   initialPage?: number
   onPageSelected?: (index: number) => void
   onCurrentPageSelected?: (index: number) => void
@@ -83,7 +88,9 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
     const renderTabBar = React.useCallback(
       (props: RenderTabBarFnProps) => {
         return (
-          <PagerHeaderProvider scrollY={scrollY}>
+          <PagerHeaderProvider
+            scrollY={scrollY}
+            headerHeight={headerOnlyHeight}>
             <PagerTabBar
               headerOnlyHeight={headerOnlyHeight}
               items={items}
@@ -237,7 +244,11 @@ let PagerTabBar = ({
   items: string[]
   testID?: string
   scrollY: SharedValue<number>
-  renderHeader?: () => JSX.Element
+  renderHeader?: ({
+    setMinimumHeight,
+  }: {
+    setMinimumHeight: (height: number) => void
+  }) => JSX.Element
   onHeaderOnlyLayout: (height: number) => void
   onTabBarLayout: (e: LayoutChangeEvent) => void
   onCurrentPageSelected?: (index: number) => void
@@ -246,8 +257,14 @@ let PagerTabBar = ({
   dragProgress: SharedValue<number>
   dragState: SharedValue<'idle' | 'dragging' | 'settling'>
 }): React.ReactNode => {
+  const t = useTheme()
+  const [minimumHeaderHeight, setMinimumHeaderHeight] = React.useState(0)
   const headerTransform = useAnimatedStyle(() => {
-    const translateY = Math.min(scrollY.get(), headerOnlyHeight) * -1
+    const translateY =
+      Math.min(
+        scrollY.get(),
+        Math.max(headerOnlyHeight - minimumHeaderHeight, 0),
+      ) * -1
     return {
       transform: [
         {
@@ -262,12 +279,12 @@ let PagerTabBar = ({
   return (
     <Animated.View
       pointerEvents={isIOS ? 'auto' : 'box-none'}
-      style={[styles.tabBarMobile, headerTransform]}>
+      style={[styles.tabBarMobile, headerTransform, t.atoms.bg]}>
       <View
         ref={headerRef}
         pointerEvents={isIOS ? 'auto' : 'box-none'}
         collapsable={false}>
-        {renderHeader?.()}
+        {renderHeader?.({setMinimumHeight: setMinimumHeaderHeight})}
         {
           // It wouldn't be enough to place `onLayout` on the parent node because
           // this would risk measuring before `isHeaderReady` has turned `true`.

@@ -1,6 +1,7 @@
 import React from 'react'
 import {Pressable, View} from 'react-native'
 import {MeasuredDimensions, runOnJS, runOnUI} from 'react-native-reanimated'
+import {AppBskyGraphDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
@@ -26,6 +27,7 @@ export function ProfileSubpageHeader({
   title,
   avatar,
   isOwner,
+  purpose,
   creator,
   avatarType,
   children,
@@ -35,6 +37,7 @@ export function ProfileSubpageHeader({
   title: string | undefined
   avatar: string | undefined
   isOwner: boolean | undefined
+  purpose: AppBskyGraphDefs.ListPurpose | undefined
   creator:
     | {
         did: string
@@ -105,7 +108,7 @@ export function ProfileSubpageHeader({
           alignItems: 'flex-start',
           gap: 10,
           paddingTop: 14,
-          paddingBottom: 6,
+          paddingBottom: 14,
           paddingHorizontal: isMobile ? 12 : 14,
         }}>
         <View ref={aviRef} collapsable={false}>
@@ -123,7 +126,7 @@ export function ProfileSubpageHeader({
             )}
           </Pressable>
         </View>
-        <View style={{flex: 1}}>
+        <View style={{flex: 1, gap: 4}}>
           {isLoading ? (
             <LoadingPlaceholder
               width={200}
@@ -142,24 +145,50 @@ export function ProfileSubpageHeader({
             />
           )}
 
-          {isLoading ? (
+          {isLoading || !creator ? (
             <LoadingPlaceholder width={50} height={8} />
           ) : (
-            <Text type="xl" style={[pal.textLight]} numberOfLines={1}>
-              {!creator ? (
-                <Trans>by —</Trans>
-              ) : isOwner ? (
-                <Trans>by you</Trans>
-              ) : (
-                <Trans>
-                  by{' '}
-                  <TextLink
-                    text={sanitizeHandle(creator.handle, '@')}
-                    href={makeProfileLink(creator)}
-                    style={pal.textLight}
-                  />
-                </Trans>
-              )}
+            <Text type="lg" style={[pal.textLight]} numberOfLines={1}>
+              {purpose === 'app.bsky.graph.defs#curatelist' ? (
+                isOwner ? (
+                  <Trans>List by you</Trans>
+                ) : (
+                  <Trans>
+                    List by{' '}
+                    <TextLink
+                      text={sanitizeHandle(creator.handle || '', '@')}
+                      href={makeProfileLink(creator)}
+                      style={pal.textLight}
+                    />
+                  </Trans>
+                )
+              ) : purpose === 'app.bsky.graph.defs#modlist' ? (
+                isOwner ? (
+                  <Trans>Moderation list by you</Trans>
+                ) : (
+                  <Trans>
+                    Moderation list by{' '}
+                    <TextLink
+                      text={sanitizeHandle(creator.handle || '', '@')}
+                      href={makeProfileLink(creator)}
+                      style={pal.textLight}
+                    />
+                  </Trans>
+                )
+              ) : purpose === 'app.bsky.graph.defs#referencelist' ? (
+                isOwner ? (
+                  <Trans>Starter pack by you</Trans>
+                ) : (
+                  <Trans>
+                    Starter pack by{' '}
+                    <TextLink
+                      text={sanitizeHandle(creator.handle || '', '@')}
+                      href={makeProfileLink(creator)}
+                      style={pal.textLight}
+                    />
+                  </Trans>
+                )
+              ) : null}
             </Text>
           )}
         </View>
