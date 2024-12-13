@@ -53,7 +53,12 @@ export function TrendingInterstitial() {
       </View>
 
       <View style={[a.flex_row, a.flex_wrap, a.gap_sm]}>
-        {Trending.TOPICS.slice(0, 8).map(topic => (
+        {Trending.TOP.slice(0, 8).map(topic => (
+          <Trending.Topic
+            topic={topic}
+          />
+        ))}
+        {/*Trending.TOPICS.slice(0, 8).map(topic => (
           <Trending.Link key={topic} topic={topic}>
             {({hovered}) => (
               <Trending.TopicLarge
@@ -67,7 +72,7 @@ export function TrendingInterstitial() {
               />
             )}
           </Trending.Link>
-        ))}
+        ))*/}
       </View>
 
       <Prompt.Basic
