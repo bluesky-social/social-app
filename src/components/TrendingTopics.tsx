@@ -3,6 +3,7 @@ import {View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {AtUri} from '@atproto/api'
+import {hasMutedWord} from '@atproto/api/dist/moderation/mutewords'
 
 import {atoms as a, useGutters, useTheme, ViewStyleProp} from '#/alf'
 import {Link as InternalLink, LinkProps} from '#/components/Link'
@@ -12,6 +13,7 @@ import {makeProfileLink, makeSearchLink} from '#/lib/routes/links'
 import {Hashtag_Stroke2_Corner0_Rounded as Hashtag} from '#/components/icons/Hashtag'
 import {MagnifyingGlass_Filled_Stroke2_Corner0_Rounded as Search} from '#/components/icons/MagnifyingGlass'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
+import {usePreferencesQuery} from '#/state/queries/preferences'
 
 export function TopicLarge({topic, style}: {topic: string} & ViewStyleProp) {
   const t = useTheme()
@@ -212,9 +214,22 @@ type Topic =
       uri: AtUri
     }
 
+export function useMutedWords() {
+  const {data: preferences} = usePreferencesQuery()
+  return React.useMemo(() => {
+    return preferences?.moderationPrefs?.mutedWords || []
+  }, [preferences?.moderationPrefs?.mutedWords])
+}
+
 export function useTopic(topic: RawTopic): Topic | undefined {
+  const mutedWords = useMutedWords()
   return React.useMemo(() => {
     const {name, uri} = topic
+
+    if (hasMutedWord({
+      mutedWords,
+      text: name
+    })) return
 
     if (uri.startsWith('https')) {
       const url = new URL(uri)
@@ -255,5 +270,5 @@ export function useTopic(topic: RawTopic): Topic | undefined {
         }
       }
     }
-  }, [topic])
+  }, [topic, mutedWords])
 }
