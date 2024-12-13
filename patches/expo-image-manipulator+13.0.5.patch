@@ -25,7 +25,7 @@ index 120d8d3..f8aa49c 100644
  
  export default ExpoImageManipulator.Context as typeof ImageManipulatorContext;
 diff --git a/node_modules/expo-image-manipulator/src/web/ImageManipulatorContext.web.ts b/node_modules/expo-image-manipulator/src/web/ImageManipulatorContext.web.ts
-index 428848c..a851332 100644
+index 428848c..363a57a 100644
 --- a/node_modules/expo-image-manipulator/src/web/ImageManipulatorContext.web.ts
 +++ b/node_modules/expo-image-manipulator/src/web/ImageManipulatorContext.web.ts
 @@ -41,7 +41,7 @@ export default class ImageManipulatorContext extends SharedObject {
@@ -42,7 +42,7 @@ index 428848c..a851332 100644
  
          resolve(new ImageManipulatorImageRef(url, canvas.width, canvas.height));
 -      });
-+      }, 'image/jpeg', compress);
++      }, typeof compress === 'number' ? 'image/jpeg' : undefined, compress);
      });
    }
  
