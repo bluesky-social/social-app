@@ -134,14 +134,16 @@ let PagerTabBar = ({
       <Layout.Center>{renderHeader?.({setMinimumHeight: noop})}</Layout.Center>
       {tabBarAnchor}
       <Layout.Center
-        style={web([
-          a.sticky,
+        style={[
           a.z_10,
-          {
-            top: 0,
-            display: isHeaderReady ? undefined : 'none',
-          },
-        ])}>
+          web([
+            a.sticky,
+            {
+              top: 0,
+              display: isHeaderReady ? undefined : 'none',
+            },
+          ]),
+        ]}>
         <TabBar
           testID={testID}
           items={items}
