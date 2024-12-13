@@ -17,7 +17,7 @@ import {useQueryClient} from '@tanstack/react-query'
 import {DISCOVER_FEED_URI, KNOWN_SHUTDOWN_FEEDS} from '#/lib/constants'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {logEvent} from '#/lib/statsig/statsig'
+import {logEvent, useGate} from '#/lib/statsig/statsig'
 import {useTheme} from '#/lib/ThemeContext'
 import {logger} from '#/logger'
 import {isIOS, isWeb} from '#/platform/detection'
@@ -254,7 +254,10 @@ let PostFeed = ({
     }
   }, [pollInterval])
 
-  const progressGuide = useProgressGuide('like-10-and-follow-7')
+  const gate = useGate()
+  const progressGuide = useProgressGuide(
+    gate('new_postonboarding') ? 'follow-10' : 'like-10-and-follow-7',
+  )
   const {isDesktop} = useWebMediaQueries()
   const showProgressIntersitial = progressGuide && !isDesktop
 

@@ -2,6 +2,7 @@ import {StyleProp, View, ViewStyle} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {useGate} from '#/lib/statsig/statsig'
 import {
   useProgressGuide,
   useProgressGuideControls,
@@ -15,7 +16,10 @@ import {ProgressGuideTask} from './Task'
 export function ProgressGuideList({style}: {style?: StyleProp<ViewStyle>}) {
   const t = useTheme()
   const {_} = useLingui()
-  const guide = useProgressGuide('like-10-and-follow-7')
+  const gate = useGate()
+  const guide = useProgressGuide(
+    gate('new_postonboarding') ? 'follow-10' : 'like-10-and-follow-7',
+  )
   const {endProgressGuide} = useProgressGuideControls()
 
   if (guide) {
@@ -41,18 +45,29 @@ export function ProgressGuideList({style}: {style?: StyleProp<ViewStyle>}) {
             <ButtonIcon icon={Times} size="sm" />
           </Button>
         </View>
-        <ProgressGuideTask
-          current={guide.numLikes + 1}
-          total={10 + 1}
-          title={_(msg`Like 10 posts`)}
-          subtitle={_(msg`Teach our algorithm what you like`)}
-        />
-        <ProgressGuideTask
-          current={guide.numFollows + 1}
-          total={7 + 1}
-          title={_(msg`Follow 7 accounts`)}
-          subtitle={_(msg`Bluesky is better with friends!`)}
-        />
+        {guide.guide === 'follow-10' ? (
+          <ProgressGuideTask
+            current={guide.numFollows + 1}
+            total={10 + 1}
+            title={_(msg`Follow 10 accounts`)}
+            subtitle={_(msg`Bluesky is better with friends!`)}
+          />
+        ) : (
+          <>
+            <ProgressGuideTask
+              current={guide.numLikes + 1}
+              total={10 + 1}
+              title={_(msg`Like 10 posts`)}
+              subtitle={_(msg`Teach our algorithm what you like`)}
+            />
+            <ProgressGuideTask
+              current={guide.numFollows + 1}
+              total={7 + 1}
+              title={_(msg`Follow 7 accounts`)}
+              subtitle={_(msg`Bluesky is better with friends!`)}
+            />
+          </>
+        )}
       </View>
     )
   }
