@@ -16,6 +16,7 @@ import {useQueryClient} from '@tanstack/react-query'
 
 import {DISCOVER_FEED_URI, KNOWN_SHUTDOWN_FEEDS} from '#/lib/constants'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {logEvent} from '#/lib/statsig/statsig'
 import {useTheme} from '#/lib/ThemeContext'
 import {logger} from '#/logger'
@@ -32,6 +33,7 @@ import {
   usePostFeedQuery,
 } from '#/state/queries/post-feed'
 import {useSession} from '#/state/session'
+import {useProgressGuide} from '#/state/shell/progress-guide'
 import {ProgressGuide, SuggestedFollows} from '#/components/FeedInterstitials'
 import {List, ListRef} from '../util/List'
 import {PostFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
@@ -252,6 +254,10 @@ let PostFeed = ({
     }
   }, [pollInterval])
 
+  const progressGuide = useProgressGuide('like-10-and-follow-7')
+  const {isDesktop} = useWebMediaQueries()
+  const showProgressIntersitial = progressGuide && !isDesktop
+
   const feedItems: FeedRow[] = React.useMemo(() => {
     let feedKind: 'following' | 'discover' | 'profile' | undefined
     if (feedType === 'following') {
@@ -292,7 +298,7 @@ let PostFeed = ({
 
             if (hasSession) {
               if (feedKind === 'discover') {
-                if (sliceIndex === 0) {
+                if (sliceIndex === 0 && showProgressIntersitial) {
                   arr.push({
                     type: 'interstitialProgressGuide',
                     key: 'interstitial-' + sliceIndex + '-' + lastFetchedAt,
@@ -382,6 +388,7 @@ let PostFeed = ({
     feedUri,
     feedTab,
     hasSession,
+    showProgressIntersitial,
   ])
 
   // events

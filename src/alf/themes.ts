@@ -60,6 +60,7 @@ export function createThemes({
   dim: Theme
 } {
   const color = {
+    like: '#ec4899',
     trueBlack: '#000000',
 
     gray_0: `hsl(${hues.primary}, 20%, ${defaultScale[14]}%)`,
@@ -124,6 +125,7 @@ export function createThemes({
   const lightPalette = {
     white: color.gray_0,
     black: color.gray_1000,
+    like: color.like,
 
     contrast_25: color.gray_25,
     contrast_50: color.gray_50,
@@ -185,6 +187,7 @@ export function createThemes({
   const darkPalette: Palette = {
     white: color.gray_25,
     black: color.trueBlack,
+    like: color.like,
 
     contrast_25: color.gray_975,
     contrast_50: color.gray_950,
@@ -246,6 +249,7 @@ export function createThemes({
   const dimPalette: Palette = {
     ...darkPalette,
     black: `hsl(${hues.primary}, 28%, ${dimScale[0]}%)`,
+    like: color.like,
 
     contrast_25: `hsl(${hues.primary}, 28%, ${dimScale[1]}%)`,
     contrast_50: `hsl(${hues.primary}, 28%, ${dimScale[2]}%)`,
