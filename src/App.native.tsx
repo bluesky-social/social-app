@@ -17,11 +17,7 @@ import {useLingui} from '@lingui/react'
 
 import {KeyboardControllerProvider} from '#/lib/hooks/useEnableKeyboardController'
 import {QueryProvider} from '#/lib/react-query'
-import {
-  initialize,
-  Provider as StatsigProvider,
-  tryFetchGates,
-} from '#/lib/statsig/statsig'
+import {Provider as StatsigProvider, tryFetchGates} from '#/lib/statsig/statsig'
 import {s} from '#/lib/styles'
 import {ThemeProvider} from '#/lib/ThemeContext'
 import I18nProvider from '#/locale/i18nProvider'
@@ -101,7 +97,6 @@ function InnerApp() {
         if (account) {
           await resumeSession(account)
         } else {
-          await initialize()
           await tryFetchGates(undefined, 'prefer-fresh-gates')
         }
       } catch (e) {
