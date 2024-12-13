@@ -125,37 +125,37 @@ function LandingPage() {
 
       <h1 className="text-4xl font-bold text-center">Embed a Bluesky Post</h1>
 
-      <input
-        type="text"
-        value={uri}
-        onInput={e => setUri(e.currentTarget.value)}
-        className="border rounded-lg py-3 w-full max-w-[600px] px-4 dark:bg-dimmedBg dark:border-slate-500"
-        placeholder={DEFAULT_POST}
-      />
+      <div className="flex flex-col w-full max-w-[600px] gap-4">
+        <input
+          type="text"
+          value={uri}
+          onInput={e => setUri(e.currentTarget.value)}
+          className="border rounded-lg py-3  px-4 dark:bg-dimmedBg dark:border-slate-500"
+          placeholder={DEFAULT_POST}
+        />
 
-      <details className="group/options overflow-clip border rounded-lg dark:border-slate-500 w-full max-w-[600px] flex flex-col">
-        <summary className="px-4 py-2 cursor-pointer group-open/options:bg-neutral-100 dark:group-open/options:bg-dimmedBgLighten">
-          Want to customize more?
-        </summary>
-        <div className="p-4 space-y-2">
-          <div>
-            <label className="block pb-1 text-sm font-medium">Color mode</label>
-            <select
-              value={colorMode}
-              onChange={e => {
-                const value = e.currentTarget.value
-                if (assertColorModeValues(value)) {
-                  setColorMode(value)
-                }
-              }}
-              className="block border w-full rounded-lg text-sm px-3 py-2 dark:bg-dimmedBg dark:border-slate-500">
-              <option value="auto">Auto (Sync with device)</option>
-              <option value="light">Light</option>
-              <option value="dark">Dark</option>
-            </select>
-          </div>
+        <div>
+          <label
+            className="block pb-1 text-sm font-medium"
+            for="colorModeSelect">
+            Theme
+          </label>
+          <select
+            value={colorMode}
+            onChange={e => {
+              const value = e.currentTarget.value
+              if (assertColorModeValues(value)) {
+                setColorMode(value)
+              }
+            }}
+            id="colorModeSelect"
+            className="block border w-full rounded-lg text-sm px-3 py-2 dark:bg-dimmedBg dark:border-slate-500">
+            <option value="auto">Auto (Sync with device)</option>
+            <option value="light">Light</option>
+            <option value="dark">Dark</option>
+          </select>
         </div>
-      </details>
+      </div>
 
       <img src={arrowBottom} className="w-6 dark:invert" />
 
