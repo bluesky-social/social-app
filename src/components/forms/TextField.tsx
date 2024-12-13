@@ -203,7 +203,7 @@ export function createInput(Component: typeof TextInput) {
               // paddingVertical doesn't work w/multiline - esb
               paddingTop: 12,
               paddingBottom: 13,
-              lineHeight: a.text_md.fontSize * 1.1875,
+              lineHeight: a.text_md.fontSize * 1.3,
               textAlignVertical: rest.multiline ? 'top' : undefined,
               minHeight: rest.multiline ? 80 : undefined,
               minWidth: 0,
