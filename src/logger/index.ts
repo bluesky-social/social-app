@@ -173,7 +173,7 @@ export class Logger {
   protected debugContextRegexes: RegExp[] = []
 
   constructor({
-    enabled = !env.IS_TEST,
+    enabled = process.env.NODE_ENV !== 'test',
     level = env.LOG_LEVEL as LogLevel,
     debug = env.LOG_DEBUG || '',
   }: {
@@ -266,11 +266,11 @@ export class Logger {
  */
 export const logger = new Logger()
 
-if (!env.IS_TEST) {
+if (process.env.NODE_ENV !== 'test') {
   logger.addTransport(createBitdriftTransport())
 }
 
-if (env.IS_DEV && !env.IS_TEST) {
+if (env.IS_DEV && process.env.NODE_ENV !== 'test') {
   logger.addTransport(consoleTransport)
 
   /*

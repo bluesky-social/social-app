@@ -5,7 +5,6 @@ import {nanoid} from 'nanoid/non-secure'
 import {Logger, LogLevel, sentryTransport} from '#/logger'
 
 jest.mock('#/env', () => ({
-  IS_TEST: true,
   IS_DEV: false,
   IS_PROD: false,
   /*

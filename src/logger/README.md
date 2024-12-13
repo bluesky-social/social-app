@@ -18,7 +18,7 @@ logger.error(error[, metadata])
 #### Modes
 
 The "modes" referred to here are inferred from the values exported from `#/env`.
-Basically, the booleans `IS_DEV`, `IS_TEST`, and `IS_PROD`.
+Basically, the booleans `IS_DEV` and `IS_PROD`.
 
 #### Log Levels
 

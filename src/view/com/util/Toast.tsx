@@ -25,7 +25,6 @@ import {
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {atoms as a, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
-import {IS_TEST} from '#/env'
 
 const TIMEOUT = 2e3
 
@@ -33,7 +32,9 @@ export function show(
   message: string,
   icon: FontAwesomeProps['icon'] = 'check',
 ) {
-  if (IS_TEST) return
+  if (process.env.NODE_ENV === 'test') {
+    return
+  }
   AccessibilityInfo.announceForAccessibility(message)
   const item = new RootSiblings(
     <Toast message={message} icon={icon} destroy={() => item.destroy()} />,
