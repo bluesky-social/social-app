@@ -36,7 +36,7 @@ render(<LandingPage />, root)
 
 function LandingPage() {
   const [uri, setUri] = useState('')
-  const [colorMode, setColorMode] = useState<ColorModeValues>('auto')
+  const [colorMode, setColorMode] = useState<ColorModeValues>('system')
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [thread, setThread] = useState<AppBskyFeedDefs.ThreadViewPost | null>(
@@ -150,7 +150,7 @@ function LandingPage() {
             }}
             id="colorModeSelect"
             className="block border w-full rounded-lg text-sm px-3 py-2 dark:bg-dimmedBg dark:border-slate-500">
-            <option value="auto">Auto (Sync with device)</option>
+            <option value="system">System</option>
             <option value="light">Light</option>
             <option value="dark">Dark</option>
           </select>

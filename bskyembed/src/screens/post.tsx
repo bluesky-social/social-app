@@ -28,7 +28,7 @@ const colorMode = query.get('colorMode')
 if (
   colorMode != null &&
   assertColorModeValues(colorMode) &&
-  colorMode !== 'auto'
+  colorMode !== 'system'
 ) {
   applyTheme(colorMode)
 } else {
