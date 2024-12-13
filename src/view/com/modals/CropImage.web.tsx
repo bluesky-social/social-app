@@ -1,7 +1,7 @@
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {Image as RNImage} from 'react-native-image-crop-picker'
-import {manipulateAsync, SaveFormat} from 'expo-image-manipulator'
+import {ImageManipulator, SaveFormat} from 'expo-image-manipulator'
 import {LinearGradient} from 'expo-linear-gradient'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -45,25 +45,21 @@ export function Component({
   const onPressDone = async () => {
     const img = imageRef.current!
 
-    const result = await manipulateAsync(
-      uri,
-      isEmpty
-        ? []
-        : [
-            {
-              crop: {
-                originX: (crop.x * img.naturalWidth) / 100,
-                originY: (crop.y * img.naturalHeight) / 100,
-                width: (crop.width * img.naturalWidth) / 100,
-                height: (crop.height * img.naturalHeight) / 100,
-              },
-            },
-          ],
-      {
-        base64: true,
-        format: SaveFormat.JPEG,
-      },
-    )
+    const context = ImageManipulator.manipulate(uri)
+
+    if (!isEmpty) {
+      context.crop({
+        originX: (crop.x * img.naturalWidth) / 100,
+        originY: (crop.y * img.naturalHeight) / 100,
+        width: (crop.width * img.naturalWidth) / 100,
+        height: (crop.height * img.naturalHeight) / 100,
+      })
+    }
+    const image = await context.renderAsync()
+    const result = await image.saveAsync({
+      base64: true,
+      format: SaveFormat.JPEG,
+    })
 
     onSelect({
       path: result.uri,
