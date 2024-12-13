@@ -1,5 +1,6 @@
 import React, {useCallback, useMemo} from 'react'
 import {Pressable, StyleSheet, View} from 'react-native'
+import {useAnimatedRef} from 'react-native-reanimated'
 import {
   AppBskyGraphDefs,
   AtUri,
@@ -77,7 +78,6 @@ import {ReportDialog, useReportDialogControl} from '#/components/ReportDialog'
 import {RichText} from '#/components/RichText'
 
 const SECTION_TITLES_CURATE = ['Posts', 'People']
-const SECTION_TITLES_MOD = ['People']
 
 interface SectionRef {
   scrollToTop: () => void
@@ -159,6 +159,7 @@ function ProfileListScreenLoaded({
   const isScreenFocused = useIsFocused()
   const isHidden = list.labels?.findIndex(l => l.val === '!hide') !== -1
   const isOwner = currentAccount?.did === list.creator.did
+  const scrollElRef = useAnimatedRef()
 
   const moderation = React.useMemo(() => {
     return moderateUserList(list, moderationOpts)
@@ -257,19 +258,13 @@ function ProfileListScreenLoaded({
       </Hider.Mask>
       <Hider.Content>
         <View style={s.hContentRegion}>
-          <PagerWithHeader
-            items={SECTION_TITLES_MOD}
-            isHeaderReady={true}
-            renderHeader={renderHeader}>
-            {({headerHeight, scrollElRef}) => (
-              <AboutSection
-                list={list}
-                scrollElRef={scrollElRef as ListRef}
-                onPressAddUser={onPressAddUser}
-                headerHeight={headerHeight}
-              />
-            )}
-          </PagerWithHeader>
+          <Layout.Center>{renderHeader()}</Layout.Center>
+          <AboutSection
+            list={list}
+            scrollElRef={scrollElRef as ListRef}
+            onPressAddUser={onPressAddUser}
+            headerHeight={0}
+          />
           <FAB
             testID="composeFAB"
             onPress={() => openComposer({})}
