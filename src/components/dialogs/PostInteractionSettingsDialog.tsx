@@ -204,7 +204,9 @@ export function PostInteractionSettingsDialogControlledInner(
       label={_(msg`Edit post interaction settings`)}
       style={[{maxWidth: 500}, a.w_full]}>
       {isLoading ? (
-        <Loader size="xl" />
+        <View style={[a.flex_1, a.py_4xl, a.align_center, a.justify_center]}>
+          <Loader size="xl" />
+        </View>
       ) : (
         <PostInteractionSettingsForm
           replySettingsDisabled={!isThreadgateOwnedByViewer}
@@ -231,7 +233,6 @@ export function PostInteractionSettingsForm({
 }: PostInteractionSettingsFormProps) {
   const t = useTheme()
   const {_} = useLingui()
-  const control = Dialog.useDialogContext()
   const {data: lists} = useMyListsQuery('curate')
   const [quotesEnabled, setQuotesEnabled] = React.useState(
     !(
@@ -254,6 +255,9 @@ export function PostInteractionSettingsForm({
       newSelected.push(setting)
     } else {
       newSelected.splice(i, 1)
+    }
+    if (newSelected.length === 0) {
+      newSelected.push({type: 'everybody'})
     }
 
     onChangeThreadgateAllowUISettings(newSelected)
@@ -305,13 +309,9 @@ export function PostInteractionSettingsForm({
               }
               value={quotesEnabled}
               onChange={onChangeQuotesEnabled}
-              style={[, a.justify_between, a.pt_xs]}>
+              style={[a.justify_between, a.pt_xs]}>
               <Text style={[t.atoms.text_contrast_medium]}>
-                {quotesEnabled ? (
-                  <Trans>Quote posts enabled</Trans>
-                ) : (
-                  <Trans>Quote posts disabled</Trans>
-                )}
+                <Trans>Allow quote posts</Trans>
               </Text>
               <Toggle.Switch />
             </Toggle.Item>
@@ -437,7 +437,6 @@ export function PostInteractionSettingsForm({
       <Button
         label={_(msg`Save`)}
         onPress={onSave}
-        onAccessibilityEscape={control.close}
         color="primary"
         size="large"
         variant="solid"
@@ -483,7 +482,7 @@ function Selectable({
             a.justify_between,
             a.rounded_sm,
             a.p_md,
-            {height: 40}, // for consistency with checkmark icon visible or not
+            {minHeight: 40}, // for consistency with checkmark icon visible or not
             t.atoms.bg_contrast_50,
             (hovered || focused) && t.atoms.bg_contrast_100,
             isSelected && {

@@ -1,9 +1,6 @@
 import React from 'react'
-import {Keyboard, TouchableOpacity, View} from 'react-native'
-import {
-  KeyboardAwareScrollView,
-  useKeyboardController,
-} from 'react-native-keyboard-controller'
+import {Keyboard, View} from 'react-native'
+import {KeyboardAwareScrollView} from 'react-native-keyboard-controller'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {Image} from 'expo-image'
 import {
@@ -13,45 +10,46 @@ import {
   ModerationOpts,
 } from '@atproto/api'
 import {GeneratorView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
-import {logger} from '#/logger'
-import {HITSLOP_10, STARTER_PACK_MAX_SIZE} from 'lib/constants'
-import {createSanitizedDisplayName} from 'lib/moderation/create-sanitized-display-name'
-import {CommonNavigatorParams, NavigationProp} from 'lib/routes/types'
-import {logEvent} from 'lib/statsig/statsig'
-import {sanitizeDisplayName} from 'lib/strings/display-names'
-import {sanitizeHandle} from 'lib/strings/handles'
-import {enforceLen} from 'lib/strings/helpers'
+import {STARTER_PACK_MAX_SIZE} from '#/lib/constants'
+import {useEnableKeyboardControllerScreen} from '#/lib/hooks/useEnableKeyboardController'
+import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
+import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
+import {logEvent} from '#/lib/statsig/statsig'
+import {sanitizeDisplayName} from '#/lib/strings/display-names'
+import {sanitizeHandle} from '#/lib/strings/handles'
+import {enforceLen} from '#/lib/strings/helpers'
 import {
   getStarterPackOgCard,
   parseStarterPackUri,
-} from 'lib/strings/starter-pack'
-import {isAndroid, isNative, isWeb} from 'platform/detection'
-import {useModerationOpts} from 'state/preferences/moderation-opts'
-import {useAllListMembersQuery} from 'state/queries/list-members'
-import {useProfileQuery} from 'state/queries/profile'
+} from '#/lib/strings/starter-pack'
+import {logger} from '#/logger'
+import {isNative} from '#/platform/detection'
+import {useModerationOpts} from '#/state/preferences/moderation-opts'
+import {useAllListMembersQuery} from '#/state/queries/list-members'
+import {useProfileQuery} from '#/state/queries/profile'
 import {
   useCreateStarterPackMutation,
   useEditStarterPackMutation,
   useStarterPackQuery,
-} from 'state/queries/starter-packs'
-import {useSession} from 'state/session'
-import {useSetMinimalShellMode} from 'state/shell'
+} from '#/state/queries/starter-packs'
+import {useSession} from '#/state/session'
+import {useSetMinimalShellMode} from '#/state/shell'
 import * as Toast from '#/view/com/util/Toast'
-import {UserAvatar} from 'view/com/util/UserAvatar'
-import {CenteredView} from 'view/com/util/Views'
+import {UserAvatar} from '#/view/com/util/UserAvatar'
+import {CenteredView} from '#/view/com/util/Views'
 import {useWizardState, WizardStep} from '#/screens/StarterPack/Wizard/State'
 import {StepDetails} from '#/screens/StarterPack/Wizard/StepDetails'
 import {StepFeeds} from '#/screens/StarterPack/Wizard/StepFeeds'
 import {StepProfiles} from '#/screens/StarterPack/Wizard/StepProfiles'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, useTheme, web} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
+import * as Layout from '#/components/Layout'
 import {ListMaybePlaceholder} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
 import {WizardEditListDialog} from '#/components/StarterPack/Wizard/WizardEditListDialog'
@@ -97,33 +95,41 @@ export function Wizard({
 
   if (!isReady) {
     return (
-      <ListMaybePlaceholder
-        isLoading={
-          isLoadingStarterPack || isLoadingProfiles || isLoadingProfile
-        }
-        isError={isErrorStarterPack || isErrorProfiles || isErrorProfile}
-        errorMessage={_(msg`That starter pack could not be found.`)}
-      />
+      <Layout.Screen>
+        <ListMaybePlaceholder
+          isLoading={
+            isLoadingStarterPack || isLoadingProfiles || isLoadingProfile
+          }
+          isError={isErrorStarterPack || isErrorProfiles || isErrorProfile}
+          errorMessage={_(msg`That starter pack could not be found.`)}
+        />
+      </Layout.Screen>
     )
   } else if (isEdit && starterPack?.creator.did !== currentAccount?.did) {
     return (
-      <ListMaybePlaceholder
-        isLoading={false}
-        isError={true}
-        errorMessage={_(msg`That starter pack could not be found.`)}
-      />
+      <Layout.Screen>
+        <ListMaybePlaceholder
+          isLoading={false}
+          isError={true}
+          errorMessage={_(msg`That starter pack could not be found.`)}
+        />
+      </Layout.Screen>
     )
   }
 
   return (
-    <Provider starterPack={starterPack} listItems={listItems}>
-      <WizardInner
-        currentStarterPack={starterPack}
-        currentListItems={listItems}
-        profile={profile}
-        moderationOpts={moderationOpts}
-      />
-    </Provider>
+    <Layout.Screen
+      testID="starterPackWizardScreen"
+      style={web([{minHeight: 0}, a.flex_1])}>
+      <Provider starterPack={starterPack} listItems={listItems}>
+        <WizardInner
+          currentStarterPack={starterPack}
+          currentListItems={listItems}
+          profile={profile}
+          moderationOpts={moderationOpts}
+        />
+      </Provider>
+    </Layout.Screen>
   )
 }
 
@@ -140,9 +146,7 @@ function WizardInner({
 }) {
   const navigation = useNavigation<NavigationProp>()
   const {_} = useLingui()
-  const t = useTheme()
   const setMinimalShellMode = useSetMinimalShellMode()
-  const {setEnabled} = useKeyboardController()
   const [state, dispatch] = useWizardState()
   const {currentAccount} = useSession()
   const {data: currentProfile} = useProfileQuery({
@@ -157,16 +161,16 @@ function WizardInner({
     })
   }, [navigation])
 
+  useEnableKeyboardControllerScreen(true)
+
   useFocusEffect(
     React.useCallback(() => {
-      setEnabled(true)
       setMinimalShellMode(true)
 
       return () => {
         setMinimalShellMode(false)
-        setEnabled(false)
       }
-    }, [setMinimalShellMode, setEnabled]),
+    }, [setMinimalShellMode]),
   )
 
   const getDefaultName = () => {
@@ -277,45 +281,24 @@ function WizardInner({
 
   return (
     <CenteredView style={[a.flex_1]} sideBorders>
-      <View
-        style={[
-          a.flex_row,
-          a.pb_sm,
-          a.px_md,
-          a.border_b,
-          t.atoms.border_contrast_medium,
-          a.gap_sm,
-          a.justify_between,
-          a.align_center,
-          isAndroid && a.pt_sm,
-          isWeb && [a.py_md],
-        ]}>
-        <View style={[{width: 65}]}>
-          <TouchableOpacity
-            testID="viewHeaderDrawerBtn"
-            hitSlop={HITSLOP_10}
-            accessibilityRole="button"
-            accessibilityLabel={_(msg`Back`)}
-            accessibilityHint={_(msg`Go back to the previous step`)}
-            onPress={() => {
-              if (state.currentStep === 'Details') {
-                navigation.pop()
-              } else {
-                dispatch({type: 'Back'})
-              }
-            }}>
-            <FontAwesomeIcon
-              size={18}
-              icon="angle-left"
-              color={t.atoms.text.color}
-            />
-          </TouchableOpacity>
-        </View>
-        <Text style={[a.flex_1, a.font_bold, a.text_lg, a.text_center]}>
-          {currUiStrings.header}
-        </Text>
-        <View style={[{width: 65}]} />
-      </View>
+      <Layout.Header.Outer>
+        <Layout.Header.BackButton
+          label={_(msg`Back`)}
+          accessibilityHint={_(msg`Go back to the previous step`)}
+          onPress={evt => {
+            if (state.currentStep !== 'Details') {
+              evt.preventDefault()
+              dispatch({type: 'Back'})
+            }
+          }}
+        />
+        <Layout.Header.Content>
+          <Layout.Header.TitleText>
+            {currUiStrings.header}
+          </Layout.Header.TitleText>
+        </Layout.Header.Content>
+        <Layout.Header.Slot />
+      </Layout.Header.Outer>
 
       <Container>
         {state.currentStep === 'Details' ? (
@@ -457,17 +440,17 @@ function Footer({
                 <Trans>
                   <Text style={[a.font_bold, textStyles]}>You</Text> and
                   <Text> </Text>
-                  <Text style={[a.font_bold, textStyles]}>
+                  <Text style={[a.font_bold, textStyles]} emoji>
                     {getName(items[1] /* [0] is self, skip it */)}{' '}
                   </Text>
                   are included in your starter pack
                 </Trans>
               ) : items.length > 2 ? (
                 <Trans context="profiles">
-                  <Text style={[a.font_bold, textStyles]}>
+                  <Text style={[a.font_bold, textStyles]} emoji>
                     {getName(items[1] /* [0] is self, skip it */)},{' '}
                   </Text>
-                  <Text style={[a.font_bold, textStyles]}>
+                  <Text style={[a.font_bold, textStyles]} emoji>
                     {getName(items[2])},{' '}
                   </Text>
                   and{' '}
@@ -498,29 +481,29 @@ function Footer({
               {
                 items.length === 1 ? (
                   <Trans>
-                    <Text style={[a.font_bold, textStyles]}>
+                    <Text style={[a.font_bold, textStyles]} emoji>
                       {getName(items[0])}
                     </Text>{' '}
                     is included in your starter pack
                   </Trans>
                 ) : items.length === 2 ? (
                   <Trans>
-                    <Text style={[a.font_bold, textStyles]}>
+                    <Text style={[a.font_bold, textStyles]} emoji>
                       {getName(items[0])}
                     </Text>{' '}
                     and
                     <Text> </Text>
-                    <Text style={[a.font_bold, textStyles]}>
+                    <Text style={[a.font_bold, textStyles]} emoji>
                       {getName(items[1])}{' '}
                     </Text>
                     are included in your starter pack
                   </Trans>
                 ) : items.length > 2 ? (
                   <Trans context="feeds">
-                    <Text style={[a.font_bold, textStyles]}>
+                    <Text style={[a.font_bold, textStyles]} emoji>
                       {getName(items[0])},{' '}
                     </Text>
-                    <Text style={[a.font_bold, textStyles]}>
+                    <Text style={[a.font_bold, textStyles]} emoji>
                       {getName(items[1])},{' '}
                     </Text>
                     and{' '}

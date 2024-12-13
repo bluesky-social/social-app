@@ -23,6 +23,7 @@ export const SearchInput = React.forwardRef<TextInput, SearchInputProps>(
   function SearchInput({value, label, onClearText, ...rest}, ref) {
     const t = useTheme()
     const {_} = useLingui()
+    const showClear = value && value.length > 0
 
     return (
       <View style={[a.w_full, a.relative]}>
@@ -41,15 +42,22 @@ export const SearchInput = React.forwardRef<TextInput, SearchInputProps>(
             autoCorrect={false}
             autoComplete="off"
             autoCapitalize="none"
+            style={[
+              showClear
+                ? {
+                    paddingRight: 24,
+                  }
+                : {},
+            ]}
             {...rest}
           />
         </TextField.Root>
 
-        {value && value.length > 0 && (
+        {showClear && (
           <View
             style={[
               a.absolute,
-              a.z_10,
+              a.z_20,
               a.my_auto,
               a.inset_0,
               a.justify_center,

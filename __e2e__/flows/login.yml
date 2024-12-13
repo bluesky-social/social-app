@@ -9,7 +9,7 @@ appId: xyz.blueskyweb.app
 - tapOn:
     id: "e2eOpenLoggedOutView"
 - tapOn: "Sign in"
-- tapOn: 
+- tapOn:
     id: "selectServiceButton"
 - tapOn: "Custom"
 - tapOn:

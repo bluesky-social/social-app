@@ -3,8 +3,8 @@ import {StyleProp, View, ViewStyle} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {cleanError} from 'lib/strings/errors'
-import {CenteredView} from 'view/com/util/Views'
+import {cleanError} from '#/lib/strings/errors'
+import {CenteredView} from '#/view/com/util/Views'
 import {atoms as a, flatten, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {Error} from '#/components/Error'
@@ -109,38 +109,6 @@ function ListFooterMaybeError({
   )
 }
 
-export function ListHeaderDesktop({
-  title,
-  subtitle,
-}: {
-  title: string
-  subtitle?: string
-}) {
-  const {gtTablet} = useBreakpoints()
-  const t = useTheme()
-
-  if (!gtTablet) return null
-
-  return (
-    <View
-      style={[
-        a.w_full,
-        a.py_sm,
-        a.px_xl,
-        a.gap_xs,
-        a.justify_center,
-        {minHeight: 50},
-      ]}>
-      <Text style={[a.text_2xl, a.font_bold]}>{title}</Text>
-      {subtitle ? (
-        <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
-          {subtitle}
-        </Text>
-      ) : undefined}
-    </View>
-  )
-}
-
 let ListMaybePlaceholder = ({
   isLoading,
   noEmpty,
@@ -154,7 +122,7 @@ let ListMaybePlaceholder = ({
   onGoBack,
   hideBackButton,
   sideBorders,
-  topBorder = true,
+  topBorder = false,
 }: {
   isLoading: boolean
   noEmpty?: boolean

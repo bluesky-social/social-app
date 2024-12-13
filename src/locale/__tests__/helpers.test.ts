@@ -1,4 +1,4 @@
-import {test, expect} from '@jest/globals'
+import {expect, test} from '@jest/globals'
 
 import {sanitizeAppLanguageSetting} from '#/locale/helpers'
 import {AppLanguage} from '#/locale/languages'
@@ -11,4 +11,5 @@ test('sanitizeAppLanguageSetting', () => {
   expect(sanitizeAppLanguageSetting('foo')).toBe(AppLanguage.en)
   expect(sanitizeAppLanguageSetting('en,foo')).toBe(AppLanguage.en)
   expect(sanitizeAppLanguageSetting('foo,en')).toBe(AppLanguage.en)
+  expect(sanitizeAppLanguageSetting('vi')).toBe(AppLanguage.vi)
 })

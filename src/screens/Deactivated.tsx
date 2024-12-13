@@ -17,13 +17,13 @@ import {
 } from '#/state/session'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
-import {ScrollView} from '#/view/com/util/Views'
 import {Logo} from '#/view/icons/Logo'
 import {atoms as a, useTheme} from '#/alf'
 import {AccountList} from '#/components/AccountList'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {Divider} from '#/components/Divider'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
+import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 
@@ -104,128 +104,114 @@ export function Deactivated() {
   }, [_, agent, setPending, setError, queryClient])
 
   return (
-    <View style={[a.h_full_vh, a.flex_1, t.atoms.bg]}>
-      <ScrollView
-        style={[a.h_full, a.w_full]}
-        contentContainerStyle={{borderWidth: 0}}>
+    <View style={[a.util_screen_outer, a.flex_1]}>
+      <Layout.Content
+        contentContainerStyle={[
+          a.px_2xl,
+          {
+            paddingTop: isWeb ? 64 : insets.top + 16,
+            paddingBottom: isWeb ? 64 : insets.bottom,
+          },
+        ]}>
         <View
-          style={[
-            a.px_2xl,
-            {
-              paddingTop: isWeb ? 64 : insets.top,
-              paddingBottom: isWeb ? 64 : insets.bottom,
-            },
-          ]}>
-          <View style={[a.flex_row, a.justify_center]}>
-            <View style={[a.w_full, {maxWidth: COL_WIDTH}]}>
-              <View
-                style={[a.w_full, a.justify_center, a.align_center, a.pb_5xl]}>
-                <Logo width={40} />
-              </View>
-
-              <View style={[a.gap_xs, a.pb_3xl]}>
-                <Text style={[a.text_xl, a.font_bold, a.leading_snug]}>
-                  <Trans>Welcome back!</Trans>
-                </Text>
-                <Text style={[a.text_sm, a.leading_snug]}>
-                  <Trans>
-                    You previously deactivated @{currentAccount?.handle}.
-                  </Trans>
-                </Text>
-                <Text style={[a.text_sm, a.leading_snug, a.pb_md]}>
-                  <Trans>
-                    You can reactivate your account to continue logging in. Your
-                    profile and posts will be visible to other users.
-                  </Trans>
-                </Text>
-
-                <View style={[a.gap_sm]}>
-                  <Button
-                    label={_(msg`Reactivate your account`)}
-                    size="large"
-                    variant="solid"
-                    color="primary"
-                    onPress={handleActivate}>
-                    <ButtonText>
-                      <Trans>Yes, reactivate my account</Trans>
-                    </ButtonText>
-                    {pending && <ButtonIcon icon={Loader} position="right" />}
-                  </Button>
-                  <Button
-                    label={_(msg`Cancel reactivation and log out`)}
-                    size="large"
-                    variant="solid"
-                    color="secondary"
-                    onPress={onPressLogout}>
-                    <ButtonText>
-                      <Trans>Cancel</Trans>
-                    </ButtonText>
-                  </Button>
-                </View>
-
-                {error && (
-                  <View
-                    style={[
-                      a.flex_row,
-                      a.gap_sm,
-                      a.mt_md,
-                      a.p_md,
-                      a.rounded_sm,
-                      t.atoms.bg_contrast_25,
-                    ]}>
-                    <CircleInfo size="md" fill={t.palette.negative_400} />
-                    <Text style={[a.flex_1, a.leading_snug]}>{error}</Text>
-                  </View>
-                )}
-              </View>
-
-              <View style={[a.pb_3xl]}>
-                <Divider />
-              </View>
-
-              {hasOtherAccounts ? (
-                <>
-                  <Text
-                    style={[
-                      t.atoms.text_contrast_medium,
-                      a.pb_md,
-                      a.leading_snug,
-                    ]}>
-                    <Trans>Or, log into one of your other accounts.</Trans>
-                  </Text>
-                  <AccountList
-                    onSelectAccount={onSelectAccount}
-                    onSelectOther={onPressAddAccount}
-                    otherLabel={_(msg`Add account`)}
-                    pendingDid={pendingDid}
-                  />
-                </>
-              ) : (
-                <>
-                  <Text
-                    style={[
-                      t.atoms.text_contrast_medium,
-                      a.pb_md,
-                      a.leading_snug,
-                    ]}>
-                    <Trans>Or, continue with another account.</Trans>
-                  </Text>
-                  <Button
-                    label={_(msg`Log in or sign up`)}
-                    size="large"
-                    variant="solid"
-                    color="secondary"
-                    onPress={() => setShowLoggedOut(true)}>
-                    <ButtonText>
-                      <Trans>Log in or sign up</Trans>
-                    </ButtonText>
-                  </Button>
-                </>
-              )}
-            </View>
+          style={[a.w_full, {marginHorizontal: 'auto', maxWidth: COL_WIDTH}]}>
+          <View style={[a.w_full, a.justify_center, a.align_center, a.pb_5xl]}>
+            <Logo width={40} />
           </View>
+
+          <View style={[a.gap_xs, a.pb_3xl]}>
+            <Text style={[a.text_xl, a.font_bold, a.leading_snug]}>
+              <Trans>Welcome back!</Trans>
+            </Text>
+            <Text style={[a.text_sm, a.leading_snug]}>
+              <Trans>
+                You previously deactivated @{currentAccount?.handle}.
+              </Trans>
+            </Text>
+            <Text style={[a.text_sm, a.leading_snug, a.pb_md]}>
+              <Trans>
+                You can reactivate your account to continue logging in. Your
+                profile and posts will be visible to other users.
+              </Trans>
+            </Text>
+
+            <View style={[a.gap_sm]}>
+              <Button
+                label={_(msg`Reactivate your account`)}
+                size="large"
+                variant="solid"
+                color="primary"
+                onPress={handleActivate}>
+                <ButtonText>
+                  <Trans>Yes, reactivate my account</Trans>
+                </ButtonText>
+                {pending && <ButtonIcon icon={Loader} position="right" />}
+              </Button>
+              <Button
+                label={_(msg`Cancel reactivation and log out`)}
+                size="large"
+                variant="solid"
+                color="secondary"
+                onPress={onPressLogout}>
+                <ButtonText>
+                  <Trans>Cancel</Trans>
+                </ButtonText>
+              </Button>
+            </View>
+
+            {error && (
+              <View
+                style={[
+                  a.flex_row,
+                  a.gap_sm,
+                  a.mt_md,
+                  a.p_md,
+                  a.rounded_sm,
+                  t.atoms.bg_contrast_25,
+                ]}>
+                <CircleInfo size="md" fill={t.palette.negative_400} />
+                <Text style={[a.flex_1, a.leading_snug]}>{error}</Text>
+              </View>
+            )}
+          </View>
+
+          <View style={[a.pb_3xl]}>
+            <Divider />
+          </View>
+
+          {hasOtherAccounts ? (
+            <>
+              <Text
+                style={[t.atoms.text_contrast_medium, a.pb_md, a.leading_snug]}>
+                <Trans>Or, log into one of your other accounts.</Trans>
+              </Text>
+              <AccountList
+                onSelectAccount={onSelectAccount}
+                onSelectOther={onPressAddAccount}
+                otherLabel={_(msg`Add account`)}
+                pendingDid={pendingDid}
+              />
+            </>
+          ) : (
+            <>
+              <Text
+                style={[t.atoms.text_contrast_medium, a.pb_md, a.leading_snug]}>
+                <Trans>Or, continue with another account.</Trans>
+              </Text>
+              <Button
+                label={_(msg`Log in or sign up`)}
+                size="large"
+                variant="solid"
+                color="secondary"
+                onPress={() => setShowLoggedOut(true)}>
+                <ButtonText>
+                  <Trans>Log in or sign up</Trans>
+                </ButtonText>
+              </Button>
+            </>
+          )}
         </View>
-      </ScrollView>
+      </Layout.Content>
     </View>
   )
 }

@@ -1,5 +1,10 @@
 import React, {memo, useMemo} from 'react'
-import {StyleSheet, View} from 'react-native'
+import {
+  GestureResponderEvent,
+  StyleSheet,
+  Text as RNText,
+  View,
+} from 'react-native'
 import {
   AppBskyFeedDefs,
   AppBskyFeedPost,
@@ -8,45 +13,51 @@ import {
   ModerationDecision,
   RichText as RichTextAPI,
 } from '@atproto/api'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {MAX_POST_LINES} from '#/lib/constants'
+import {useOpenLink} from '#/lib/hooks/useOpenLink'
 import {usePalette} from '#/lib/hooks/usePalette'
-import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {countLines} from '#/lib/strings/helpers'
 import {niceDate} from '#/lib/strings/time'
 import {s} from '#/lib/styles'
-import {isWeb} from '#/platform/detection'
+import {getTranslatorLink, isPostInLanguage} from '#/locale/helpers'
 import {POST_TOMBSTONE, Shadow, usePostShadow} from '#/state/cache/post-shadow'
 import {useLanguagePrefs} from '#/state/preferences'
-import {useOpenLink} from '#/state/preferences/in-app-browser'
 import {ThreadPost} from '#/state/queries/post-thread'
 import {useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
 import {PostThreadFollowBtn} from '#/view/com/post-thread/PostThreadFollowBtn'
-import {atoms as a} from '#/alf'
+import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
+import {Link, TextLink} from '#/view/com/util/Link'
+import {formatCount} from '#/view/com/util/numeric/format'
+import {PostCtrls} from '#/view/com/util/post-ctrls/PostCtrls'
+import {PostEmbeds, PostEmbedViewContext} from '#/view/com/util/post-embeds'
+import {PostMeta} from '#/view/com/util/PostMeta'
+import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
+import {atoms as a, useTheme} from '#/alf'
+import {colors} from '#/components/Admonition'
+import {Button} from '#/components/Button'
+import {useInteractionState} from '#/components/hooks/useInteractionState'
+import {CalendarClock_Stroke2_Corner0_Rounded as CalendarClockIcon} from '#/components/icons/CalendarClock'
+import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon} from '#/components/icons/Chevron'
+import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
+import {InlineLinkText} from '#/components/Link'
+import {ContentHider} from '#/components/moderation/ContentHider'
+import {LabelsOnMyPost} from '#/components/moderation/LabelsOnMe'
+import {PostAlerts} from '#/components/moderation/PostAlerts'
+import {PostHider} from '#/components/moderation/PostHider'
 import {AppModerationCause} from '#/components/Pills'
+import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
-import {ContentHider} from '../../../components/moderation/ContentHider'
-import {LabelsOnMyPost} from '../../../components/moderation/LabelsOnMe'
-import {PostAlerts} from '../../../components/moderation/PostAlerts'
-import {PostHider} from '../../../components/moderation/PostHider'
-import {WhoCanReply} from '../../../components/WhoCanReply'
-import {getTranslatorLink, isPostInLanguage} from '../../../locale/helpers'
-import {ErrorMessage} from '../util/error/ErrorMessage'
-import {Link, TextLink} from '../util/Link'
-import {formatCount} from '../util/numeric/format'
-import {PostCtrls} from '../util/post-ctrls/PostCtrls'
-import {PostEmbeds, PostEmbedViewContext} from '../util/post-embeds'
-import {PostMeta} from '../util/PostMeta'
-import {Text} from '../util/text/Text'
-import {PreviewableUserAvatar} from '../util/UserAvatar'
+import {SubtleWebHover} from '#/components/SubtleWebHover'
+import {Text} from '#/components/Typography'
+import {WhoCanReply} from '#/components/WhoCanReply'
 
 export function PostThreadItem({
   post,
@@ -124,19 +135,20 @@ export function PostThreadItem({
 }
 
 function PostThreadItemDeleted({hideTopBorder}: {hideTopBorder?: boolean}) {
-  const pal = usePalette('default')
+  const t = useTheme()
   return (
     <View
       style={[
-        styles.outer,
-        pal.border,
-        pal.view,
-        s.p20,
-        s.flexRow,
-        hideTopBorder && styles.noTopBorder,
+        t.atoms.bg,
+        t.atoms.border_contrast_low,
+        a.p_xl,
+        a.pl_lg,
+        a.flex_row,
+        a.gap_md,
+        !hideTopBorder && a.border_t,
       ]}>
-      <FontAwesomeIcon icon={['far', 'trash-can']} color={pal.colors.icon} />
-      <Text style={[pal.textLight, s.ml10]}>
+      <TrashIcon style={[t.atoms.text]} />
+      <Text style={[t.atoms.text_contrast_medium, a.mt_2xs]}>
         <Trans>This post has been deleted.</Trans>
       </Text>
     </View>
@@ -180,6 +192,7 @@ let PostThreadItemLoaded = ({
   hideTopBorder?: boolean
   threadgateRecord?: AppBskyFeedThreadgate.Record
 }): React.ReactNode => {
+  const t = useTheme()
   const pal = usePalette('default')
   const {_, i18n} = useLingui()
   const langPrefs = useLanguagePrefs()
@@ -268,8 +281,14 @@ let PostThreadItemLoaded = ({
     return (
       <>
         {rootUri !== post.uri && (
-          <View style={{paddingLeft: 16, flexDirection: 'row', height: 16}}>
-            <View style={{width: 38}}>
+          <View
+            style={[
+              a.pl_lg,
+              a.flex_row,
+              a.pb_xs,
+              {height: a.pt_lg.paddingTop},
+            ]}>
+            <View style={{width: 42}}>
               <View
                 style={[
                   styles.replyLine,
@@ -286,88 +305,74 @@ let PostThreadItemLoaded = ({
         <View
           testID={`postThreadItem-by-${post.author.handle}`}
           style={[
-            styles.outer,
-            styles.outerHighlighted,
-            pal.border,
-            pal.view,
-            rootUri === post.uri && styles.outerHighlightedRoot,
-            hideTopBorder && styles.noTopBorder,
-          ]}
-          accessible={false}>
-          <View style={[styles.layout]}>
-            <View style={[styles.layoutAvi, {paddingBottom: 8}]}>
-              <PreviewableUserAvatar
-                size={42}
-                profile={post.author}
-                moderation={moderation.ui('avatar')}
-                type={post.author.associated?.labeler ? 'labeler' : 'user'}
-              />
-            </View>
-            <View style={styles.layoutContent}>
-              <View
-                style={[styles.meta, styles.metaExpandedLine1, {zIndex: 1}]}>
-                <Link style={s.flex1} href={authorHref} title={authorTitle}>
-                  <Text
-                    emoji
-                    type="xl-bold"
-                    style={[pal.text, a.self_start]}
-                    numberOfLines={1}
-                    lineHeight={1.2}>
-                    {sanitizeDisplayName(
-                      post.author.displayName ||
-                        sanitizeHandle(post.author.handle),
-                      moderation.ui('displayName'),
-                    )}
-                  </Text>
-                </Link>
-              </View>
-              <View style={styles.meta}>
-                <Link style={s.flex1} href={authorHref} title={authorTitle}>
-                  <Text
-                    emoji
-                    type="md"
-                    style={[pal.textLight]}
-                    numberOfLines={1}>
-                    {sanitizeHandle(post.author.handle, '@')}
-                  </Text>
-                </Link>
-              </View>
+            a.px_lg,
+            t.atoms.border_contrast_low,
+            // root post styles
+            rootUri === post.uri && [a.pt_lg],
+          ]}>
+          <View style={[a.flex_row, a.gap_md, a.pb_md]}>
+            <PreviewableUserAvatar
+              size={42}
+              profile={post.author}
+              moderation={moderation.ui('avatar')}
+              type={post.author.associated?.labeler ? 'labeler' : 'user'}
+            />
+            <View style={[a.flex_1]}>
+              <Link style={s.flex1} href={authorHref} title={authorTitle}>
+                <Text
+                  emoji
+                  style={[a.text_lg, a.font_bold, a.leading_snug, a.self_start]}
+                  numberOfLines={1}>
+                  {sanitizeDisplayName(
+                    post.author.displayName ||
+                      sanitizeHandle(post.author.handle),
+                    moderation.ui('displayName'),
+                  )}
+                </Text>
+              </Link>
+              <Link style={s.flex1} href={authorHref} title={authorTitle}>
+                <Text
+                  emoji
+                  style={[
+                    a.text_md,
+                    a.leading_snug,
+                    t.atoms.text_contrast_medium,
+                  ]}
+                  numberOfLines={1}>
+                  {sanitizeHandle(post.author.handle, '@')}
+                </Text>
+              </Link>
             </View>
             {currentAccount?.did !== post.author.did && (
-              <PostThreadFollowBtn did={post.author.did} />
+              <View>
+                <PostThreadFollowBtn did={post.author.did} />
+              </View>
             )}
           </View>
-          <View style={[s.pl10, s.pr10, s.pb10]}>
-            <LabelsOnMyPost post={post} />
+          <View style={[a.pb_sm]}>
+            <LabelsOnMyPost post={post} style={[a.pb_sm]} />
             <ContentHider
               modui={moderation.ui('contentView')}
               ignoreMute
-              style={styles.contentHider}
-              childContainerStyle={styles.contentHiderChild}>
+              childContainerStyle={[a.pt_sm]}>
               <PostAlerts
                 modui={moderation.ui('contentView')}
                 size="lg"
                 includeMute
-                style={[a.pt_2xs, a.pb_sm]}
+                style={[a.pb_sm]}
                 additionalCauses={additionalPostAlerts}
               />
               {richText?.text ? (
-                <View
-                  style={[
-                    styles.postTextContainer,
-                    styles.postTextLargeContainer,
-                  ]}>
-                  <RichText
-                    enableTags
-                    selectable
-                    value={richText}
-                    style={[a.flex_1, a.text_xl]}
-                    authorHandle={post.author.handle}
-                  />
-                </View>
+                <RichText
+                  enableTags
+                  selectable
+                  value={richText}
+                  style={[a.flex_1, a.text_xl]}
+                  authorHandle={post.author.handle}
+                />
               ) : undefined}
               {post.embed && (
-                <View style={[a.pb_sm]}>
+                <View style={[a.py_xs]}>
                   <PostEmbeds
                     embed={post.embed}
                     moderation={moderation}
@@ -386,17 +391,23 @@ let PostThreadItemLoaded = ({
             post.likeCount !== 0 ||
             post.quoteCount !== 0 ? (
               // Show this section unless we're *sure* it has no engagement.
-              <View style={[styles.expandedInfo, pal.border]}>
+              <View
+                style={[
+                  a.flex_row,
+                  a.align_center,
+                  a.gap_lg,
+                  a.border_t,
+                  a.border_b,
+                  a.mt_md,
+                  a.py_md,
+                  t.atoms.border_contrast_low,
+                ]}>
                 {post.repostCount != null && post.repostCount !== 0 ? (
-                  <Link
-                    style={styles.expandedInfoItem}
-                    href={repostsHref}
-                    title={repostsTitle}>
+                  <Link href={repostsHref} title={repostsTitle}>
                     <Text
                       testID="repostCount-expanded"
-                      type="lg"
-                      style={pal.textLight}>
-                      <Text type="xl-bold" style={pal.text}>
+                      style={[a.text_md, t.atoms.text_contrast_medium]}>
+                      <Text style={[a.text_md, a.font_bold, t.atoms.text]}>
                         {formatCount(i18n, post.repostCount)}
                       </Text>{' '}
                       <Plural
@@ -410,15 +421,11 @@ let PostThreadItemLoaded = ({
                 {post.quoteCount != null &&
                 post.quoteCount !== 0 &&
                 !post.viewer?.embeddingDisabled ? (
-                  <Link
-                    style={styles.expandedInfoItem}
-                    href={quotesHref}
-                    title={quotesTitle}>
+                  <Link href={quotesHref} title={quotesTitle}>
                     <Text
                       testID="quoteCount-expanded"
-                      type="lg"
-                      style={pal.textLight}>
-                      <Text type="xl-bold" style={pal.text}>
+                      style={[a.text_md, t.atoms.text_contrast_medium]}>
+                      <Text style={[a.text_md, a.font_bold, t.atoms.text]}>
                         {formatCount(i18n, post.quoteCount)}
                       </Text>{' '}
                       <Plural
@@ -430,15 +437,11 @@ let PostThreadItemLoaded = ({
                   </Link>
                 ) : null}
                 {post.likeCount != null && post.likeCount !== 0 ? (
-                  <Link
-                    style={styles.expandedInfoItem}
-                    href={likesHref}
-                    title={likesTitle}>
+                  <Link href={likesHref} title={likesTitle}>
                     <Text
                       testID="likeCount-expanded"
-                      type="lg"
-                      style={pal.textLight}>
-                      <Text type="xl-bold" style={pal.text}>
+                      style={[a.text_md, t.atoms.text_contrast_medium]}>
+                      <Text style={[a.text_md, a.font_bold, t.atoms.text]}>
                         {formatCount(i18n, post.likeCount)}
                       </Text>{' '}
                       <Plural value={post.likeCount} one="like" other="likes" />
@@ -447,7 +450,14 @@ let PostThreadItemLoaded = ({
                 ) : null}
               </View>
             ) : null}
-            <View style={[s.pl10, s.pr10]}>
+            <View
+              style={[
+                a.pt_sm,
+                a.pb_2xs,
+                {
+                  marginLeft: -5,
+                },
+              ]}>
               <PostCtrls
                 big
                 post={post}
@@ -481,9 +491,8 @@ let PostThreadItemLoaded = ({
           testID={`postThreadItem-by-${post.author.handle}`}
           href={postHref}
           disabled={overrideBlur}
-          style={[pal.view]}
           modui={moderation.ui('contentList')}
-          iconSize={isThreadedChild ? 26 : 38}
+          iconSize={isThreadedChild ? 24 : 42}
           iconStyles={
             isThreadedChild ? {marginRight: 4} : {marginLeft: 2, marginRight: 2}
           }
@@ -496,7 +505,7 @@ let PostThreadItemLoaded = ({
               paddingLeft: 8,
               height: isThreadedChildAdjacentTop ? 8 : 16,
             }}>
-            <View style={{width: 38}}>
+            <View style={{width: 42}}>
               {!isThreadedChild && showParentReplyLine && (
                 <View
                   style={[
@@ -514,7 +523,9 @@ let PostThreadItemLoaded = ({
 
           <View
             style={[
-              styles.layout,
+              a.flex_row,
+              a.px_sm,
+              a.gap_md,
               {
                 paddingBottom:
                   showChildReplyLine && !isThreadedChild
@@ -526,9 +537,9 @@ let PostThreadItemLoaded = ({
             ]}>
             {/* If we are in threaded mode, the avatar is rendered in PostMeta */}
             {!isThreadedChild && (
-              <View style={styles.layoutAvi}>
+              <View>
                 <PreviewableUserAvatar
-                  size={38}
+                  size={42}
                   profile={post.author}
                   moderation={moderation.ui('avatar')}
                   type={post.author.associated?.labeler ? 'labeler' : 'user'}
@@ -549,12 +560,7 @@ let PostThreadItemLoaded = ({
               </View>
             )}
 
-            <View
-              style={
-                isThreadedChild
-                  ? styles.layoutContentThreaded
-                  : styles.layoutContent
-              }>
+            <View style={[a.flex_1]}>
               <PostMeta
                 author={post.author}
                 moderation={moderation}
@@ -563,20 +569,16 @@ let PostThreadItemLoaded = ({
                 showAvatar={isThreadedChild}
                 avatarModeration={moderation.ui('avatar')}
                 avatarSize={24}
-                style={
-                  isThreadedChild && {
-                    paddingBottom: isWeb ? 5 : 4,
-                  }
-                }
+                style={[a.pb_xs]}
               />
-              <LabelsOnMyPost post={post} />
+              <LabelsOnMyPost post={post} style={[a.pb_xs]} />
               <PostAlerts
                 modui={moderation.ui('contentList')}
-                style={[a.pt_2xs, a.pb_2xs]}
+                style={[a.pb_2xs]}
                 additionalCauses={additionalPostAlerts}
               />
               {richText?.text ? (
-                <View style={styles.postTextContainer}>
+                <View style={[a.pb_2xs, a.pr_sm]}>
                   <RichText
                     enableTags
                     value={richText}
@@ -626,13 +628,13 @@ let PostThreadItemLoaded = ({
               href={postHref}
               title={itemTitle}
               noFeedback>
-              <Text type="sm-medium" style={pal.textLight}>
+              <Text
+                style={[t.atoms.text_contrast_medium, a.font_bold, a.text_sm]}>
                 <Trans>More</Trans>
               </Text>
-              <FontAwesomeIcon
-                icon="angle-right"
-                color={pal.colors.textLight}
-                size={14}
+              <ChevronRightIcon
+                size="xs"
+                style={[t.atoms.text_contrast_medium]}
               />
             </Link>
           ) : undefined}
@@ -659,44 +661,64 @@ function PostOuterWrapper({
   hasPrecedingItem: boolean
   hideTopBorder?: boolean
 }>) {
-  const {isMobile} = useWebMediaQueries()
-  const pal = usePalette('default')
+  const t = useTheme()
+  const {
+    state: hover,
+    onIn: onHoverIn,
+    onOut: onHoverOut,
+  } = useInteractionState()
   if (treeView && depth > 0) {
     return (
       <View
         style={[
-          pal.border,
+          a.flex_row,
+          a.px_sm,
+          a.flex_row,
+          t.atoms.border_contrast_low,
           styles.cursor,
-          {
-            flexDirection: 'row',
-            paddingHorizontal: isMobile ? 10 : 6,
-            borderTopWidth: depth === 1 ? StyleSheet.hairlineWidth : 0,
-          },
-        ]}>
+          depth === 1 && a.border_t,
+        ]}
+        onPointerEnter={onHoverIn}
+        onPointerLeave={onHoverOut}>
         {Array.from(Array(depth - 1)).map((_, n: number) => (
           <View
             key={`${post.uri}-padding-${n}`}
-            style={{
-              borderLeftWidth: 2,
-              borderLeftColor: pal.colors.border,
-              marginLeft: isMobile ? 6 : 12,
-              paddingLeft: isMobile ? 6 : 8,
-            }}
+            style={[
+              a.ml_sm,
+              t.atoms.border_contrast_low,
+              {
+                borderLeftWidth: 2,
+                paddingLeft: a.pl_sm.paddingLeft - 2, // minus border
+              },
+            ]}
           />
         ))}
-        <View style={{flex: 1}}>{children}</View>
+        <View style={a.flex_1}>
+          <SubtleWebHover
+            hover={hover}
+            style={{
+              left: (depth === 1 ? 0 : 2) - a.pl_sm.paddingLeft,
+              right: -a.pr_sm.paddingRight,
+            }}
+          />
+          {children}
+        </View>
       </View>
     )
   }
   return (
     <View
+      onPointerEnter={onHoverIn}
+      onPointerLeave={onHoverOut}
       style={[
-        styles.outer,
-        pal.border,
+        a.border_t,
+        a.px_sm,
+        t.atoms.border_contrast_low,
         showParentReplyLine && hasPrecedingItem && styles.noTopBorder,
         hideTopBorder && styles.noTopBorder,
         styles.cursor,
       ]}>
+      <SubtleWebHover hover={hover} />
       {children}
     </View>
   )
@@ -713,44 +735,137 @@ function ExpandedPostDetails({
   needsTranslation: boolean
   translatorUrl: string
 }) {
+  const t = useTheme()
   const pal = usePalette('default')
   const {_, i18n} = useLingui()
   const openLink = useOpenLink()
   const isRootPost = !('reply' in post.record)
 
-  const onTranslatePress = React.useCallback(() => {
-    openLink(translatorUrl)
-  }, [openLink, translatorUrl])
+  const onTranslatePress = React.useCallback(
+    (e: GestureResponderEvent) => {
+      e.preventDefault()
+      openLink(translatorUrl, true)
+      return false
+    },
+    [openLink, translatorUrl],
+  )
 
   return (
-    <View
-      style={[
-        a.flex_row,
-        a.align_center,
-        a.flex_wrap,
-        a.gap_xs,
-        s.mt2,
-        s.mb10,
-      ]}>
-      <Text style={[a.text_sm, pal.textLight]}>
-        {niceDate(i18n, post.indexedAt)}
-      </Text>
-      {isRootPost && (
-        <WhoCanReply post={post} isThreadAuthor={isThreadAuthor} />
-      )}
-      {needsTranslation && (
-        <>
-          <Text style={[a.text_sm, pal.textLight]}>&middot;</Text>
+    <View style={[a.gap_md, a.pt_md, a.align_start]}>
+      <BackdatedPostIndicator post={post} />
+      <View style={[a.flex_row, a.align_center, a.flex_wrap, a.gap_sm]}>
+        <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
+          {niceDate(i18n, post.indexedAt)}
+        </Text>
+        {isRootPost && (
+          <WhoCanReply post={post} isThreadAuthor={isThreadAuthor} />
+        )}
+        {needsTranslation && (
+          <>
+            <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
+              &middot;
+            </Text>
 
-          <Text
-            style={[a.text_sm, pal.link]}
-            title={_(msg`Translate`)}
-            onPress={onTranslatePress}>
-            <Trans>Translate</Trans>
-          </Text>
-        </>
-      )}
+            <InlineLinkText
+              to={translatorUrl}
+              label={_(msg`Translate`)}
+              style={[a.text_sm, pal.link]}
+              onPress={onTranslatePress}>
+              <Trans>Translate</Trans>
+            </InlineLinkText>
+          </>
+        )}
+      </View>
     </View>
+  )
+}
+
+function BackdatedPostIndicator({post}: {post: AppBskyFeedDefs.PostView}) {
+  const t = useTheme()
+  const {_, i18n} = useLingui()
+  const control = Prompt.usePromptControl()
+
+  const indexedAt = new Date(post.indexedAt)
+  const createdAt = AppBskyFeedPost.isRecord(post.record)
+    ? new Date(post.record.createdAt)
+    : new Date(post.indexedAt)
+
+  // backdated if createdAt is 24 hours or more before indexedAt
+  const isBackdated =
+    indexedAt.getTime() - createdAt.getTime() > 24 * 60 * 60 * 1000
+
+  if (!isBackdated) return null
+
+  const orange = t.name === 'light' ? colors.warning.dark : colors.warning.light
+
+  return (
+    <>
+      <Button
+        label={_(msg`Archived post`)}
+        accessibilityHint={_(
+          msg`Show information about when this post was created`,
+        )}
+        onPress={e => {
+          e.preventDefault()
+          e.stopPropagation()
+          control.open()
+        }}>
+        {({hovered, pressed}) => (
+          <View
+            style={[
+              a.flex_row,
+              a.align_center,
+              a.rounded_full,
+              t.atoms.bg_contrast_25,
+              (hovered || pressed) && t.atoms.bg_contrast_50,
+              {
+                gap: 3,
+                paddingHorizontal: 6,
+                paddingVertical: 3,
+              },
+            ]}>
+            <CalendarClockIcon fill={orange} size="sm" aria-hidden />
+            <Text
+              style={[
+                a.text_xs,
+                a.font_bold,
+                a.leading_tight,
+                t.atoms.text_contrast_medium,
+              ]}>
+              <Trans>Archived from {niceDate(i18n, createdAt)}</Trans>
+            </Text>
+          </View>
+        )}
+      </Button>
+
+      <Prompt.Outer control={control}>
+        <Prompt.TitleText>
+          <Trans>Archived post</Trans>
+        </Prompt.TitleText>
+        <Prompt.DescriptionText>
+          <Trans>
+            This post claims to have been created on{' '}
+            <RNText style={[a.font_bold]}>{niceDate(i18n, createdAt)}</RNText>,
+            but was first seen by Bluesky on{' '}
+            <RNText style={[a.font_bold]}>{niceDate(i18n, indexedAt)}</RNText>.
+          </Trans>
+        </Prompt.DescriptionText>
+        <Text
+          style={[
+            a.text_md,
+            a.leading_snug,
+            t.atoms.text_contrast_high,
+            a.pb_xl,
+          ]}>
+          <Trans>
+            Bluesky cannot confirm the authenticity of the claimed date.
+          </Trans>
+        </Text>
+        <Prompt.Actions>
+          <Prompt.Action cta={_(msg`Okay`)} onPress={() => {}} />
+        </Prompt.Actions>
+      </Prompt.Outer>
+    </>
   )
 }
 
@@ -773,30 +888,8 @@ const styles = StyleSheet.create({
     borderTopWidth: StyleSheet.hairlineWidth,
     paddingLeft: 8,
   },
-  outerHighlighted: {
-    borderTopWidth: 0,
-    paddingTop: 4,
-    paddingLeft: 8,
-    paddingRight: 8,
-  },
-  outerHighlightedRoot: {
-    borderTopWidth: StyleSheet.hairlineWidth,
-    paddingTop: 16,
-  },
   noTopBorder: {
     borderTopWidth: 0,
-  },
-  layout: {
-    flexDirection: 'row',
-    paddingHorizontal: 8,
-  },
-  layoutAvi: {},
-  layoutContent: {
-    flex: 1,
-    marginLeft: 10,
-  },
-  layoutContentThreaded: {
-    flex: 1,
   },
   meta: {
     flexDirection: 'row',
@@ -804,42 +897,6 @@ const styles = StyleSheet.create({
   },
   metaExpandedLine1: {
     paddingVertical: 0,
-  },
-  alert: {
-    marginBottom: 6,
-  },
-  postTextContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flexWrap: 'wrap',
-    paddingBottom: 4,
-    paddingRight: 10,
-    overflow: 'hidden',
-  },
-  postTextLargeContainer: {
-    paddingHorizontal: 0,
-    paddingRight: 0,
-    paddingBottom: 10,
-  },
-  translateLink: {
-    marginBottom: 6,
-  },
-  contentHider: {
-    marginBottom: 6,
-  },
-  contentHiderChild: {
-    marginTop: 6,
-  },
-  expandedInfo: {
-    flexDirection: 'row',
-    padding: 10,
-    borderTopWidth: StyleSheet.hairlineWidth,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    marginTop: 5,
-    marginBottom: 10,
-  },
-  expandedInfoItem: {
-    marginRight: 10,
   },
   loadMore: {
     flexDirection: 'row',

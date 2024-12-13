@@ -7,11 +7,11 @@ import {
 import {Trans} from '@lingui/macro'
 import {useNavigation} from '@react-navigation/native'
 
-import {usePalette} from 'lib/hooks/usePalette'
-import {MagnifyingGlassIcon} from 'lib/icons'
-import {NavigationProp} from 'lib/routes/types'
-import {s} from 'lib/styles'
-import {isWeb} from 'platform/detection'
+import {usePalette} from '#/lib/hooks/usePalette'
+import {MagnifyingGlassIcon} from '#/lib/icons'
+import {NavigationProp} from '#/lib/routes/types'
+import {s} from '#/lib/styles'
+import {isWeb} from '#/platform/detection'
 import {Button} from '../util/forms/Button'
 import {Text} from '../util/text/Text'
 

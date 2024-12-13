@@ -23,10 +23,10 @@ const outputFile = entrypoints
     const ext = path.extname(file)
 
     if (ext === '.js') {
-      return `<script defer="defer" src="/static/js/${file}"></script>`
+      return `<script defer="defer" src="{{ staticCDNHost }}/static/js/${file}"></script>`
     }
     if (ext === '.css') {
-      return `<link rel="stylesheet" href="/static/css/${file}">`
+      return `<link rel="stylesheet" href="{{ staticCDNHost }}/static/css/${file}">`
     }
 
     return ''

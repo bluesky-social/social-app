@@ -2,13 +2,19 @@ import React from 'react'
 import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 import {AppBskyEmbedImages} from '@atproto/api'
 
+import {HandleRef, useHandleRef} from '#/lib/hooks/useHandleRef'
 import {PostEmbedViewContext} from '#/view/com/util/post-embeds/types'
 import {atoms as a, useBreakpoints} from '#/alf'
+import {Dimensions} from '../../lightbox/ImageViewing/@types'
 import {GalleryItem} from './Gallery'
 
 interface ImageLayoutGridProps {
   images: AppBskyEmbedImages.ViewImage[]
-  onPress?: (index: number) => void
+  onPress?: (
+    index: number,
+    containerRefs: HandleRef[],
+    fetchedDims: (Dimensions | null)[],
+  ) => void
   onLongPress?: (index: number) => void
   onPressIn?: (index: number) => void
   style?: StyleProp<ViewStyle>
@@ -23,22 +29,10 @@ export function ImageLayoutGrid({style, ...props}: ImageLayoutGridProps) {
         ? a.gap_xs
         : a.gap_2xs
       : a.gap_xs
-  const count = props.images.length
-  let aspectRatio
-  switch (count) {
-    case 2:
-      aspectRatio = 2
-      break
-    case 3:
-      aspectRatio = 2
-      break
-    case 4:
-      aspectRatio = undefined
-      break
-  }
+
   return (
     <View style={style}>
-      <View style={[gap, a.rounded_md, a.overflow_hidden, {aspectRatio}]}>
+      <View style={[gap, a.rounded_md, a.overflow_hidden]}>
         <ImageLayoutGridInner {...props} gap={gap} />
       </View>
     </View>
@@ -47,7 +41,11 @@ export function ImageLayoutGrid({style, ...props}: ImageLayoutGridProps) {
 
 interface ImageLayoutGridInnerProps {
   images: AppBskyEmbedImages.ViewImage[]
-  onPress?: (index: number) => void
+  onPress?: (
+    index: number,
+    containerRefs: HandleRef[],
+    fetchedDims: (Dimensions | null)[],
+  ) => void
   onLongPress?: (index: number) => void
   onPressIn?: (index: number) => void
   viewContext?: PostEmbedViewContext
@@ -58,8 +56,15 @@ function ImageLayoutGridInner(props: ImageLayoutGridInnerProps) {
   const gap = props.gap
   const count = props.images.length
 
+  const containerRef1 = useHandleRef()
+  const containerRef2 = useHandleRef()
+  const containerRef3 = useHandleRef()
+  const containerRef4 = useHandleRef()
+  const thumbDimsRef = React.useRef<(Dimensions | null)[]>([])
+
   switch (count) {
-    case 2:
+    case 2: {
+      const containerRefs = [containerRef1, containerRef2]
       return (
         <View style={[a.flex_1, a.flex_row, gap]}>
           <View style={[a.flex_1, {aspectRatio: 1}]}>
@@ -67,6 +72,8 @@ function ImageLayoutGridInner(props: ImageLayoutGridInnerProps) {
               {...props}
               index={0}
               insetBorderStyle={noCorners(['topRight', 'bottomRight'])}
+              containerRefs={containerRefs}
+              thumbDimsRef={thumbDimsRef}
             />
           </View>
           <View style={[a.flex_1, {aspectRatio: 1}]}>
@@ -74,22 +81,28 @@ function ImageLayoutGridInner(props: ImageLayoutGridInnerProps) {
               {...props}
               index={1}
               insetBorderStyle={noCorners(['topLeft', 'bottomLeft'])}
+              containerRefs={containerRefs}
+              thumbDimsRef={thumbDimsRef}
             />
           </View>
         </View>
       )
+    }
 
-    case 3:
+    case 3: {
+      const containerRefs = [containerRef1, containerRef2, containerRef3]
       return (
         <View style={[a.flex_1, a.flex_row, gap]}>
-          <View style={[a.flex_1]}>
+          <View style={[a.flex_1, {aspectRatio: 1}]}>
             <GalleryItem
               {...props}
               index={0}
               insetBorderStyle={noCorners(['topRight', 'bottomRight'])}
+              containerRefs={containerRefs}
+              thumbDimsRef={thumbDimsRef}
             />
           </View>
-          <View style={[a.flex_1, gap]}>
+          <View style={[a.flex_1, {aspectRatio: 1}, gap]}>
             <View style={[a.flex_1]}>
               <GalleryItem
                 {...props}
@@ -99,6 +112,8 @@ function ImageLayoutGridInner(props: ImageLayoutGridInnerProps) {
                   'bottomLeft',
                   'bottomRight',
                 ])}
+                containerRefs={containerRefs}
+                thumbDimsRef={thumbDimsRef}
               />
             </View>
             <View style={[a.flex_1]}>
@@ -110,13 +125,22 @@ function ImageLayoutGridInner(props: ImageLayoutGridInnerProps) {
                   'bottomLeft',
                   'topRight',
                 ])}
+                containerRefs={containerRefs}
+                thumbDimsRef={thumbDimsRef}
               />
             </View>
           </View>
         </View>
       )
+    }
 
-    case 4:
+    case 4: {
+      const containerRefs = [
+        containerRef1,
+        containerRef2,
+        containerRef3,
+        containerRef4,
+      ]
       return (
         <>
           <View style={[a.flex_row, gap]}>
@@ -129,6 +153,8 @@ function ImageLayoutGridInner(props: ImageLayoutGridInnerProps) {
                   'topRight',
                   'bottomRight',
                 ])}
+                containerRefs={containerRefs}
+                thumbDimsRef={thumbDimsRef}
               />
             </View>
             <View style={[a.flex_1, {aspectRatio: 1.5}]}>
@@ -140,6 +166,8 @@ function ImageLayoutGridInner(props: ImageLayoutGridInnerProps) {
                   'bottomLeft',
                   'bottomRight',
                 ])}
+                containerRefs={containerRefs}
+                thumbDimsRef={thumbDimsRef}
               />
             </View>
           </View>
@@ -153,6 +181,8 @@ function ImageLayoutGridInner(props: ImageLayoutGridInnerProps) {
                   'topRight',
                   'bottomRight',
                 ])}
+                containerRefs={containerRefs}
+                thumbDimsRef={thumbDimsRef}
               />
             </View>
             <View style={[a.flex_1, {aspectRatio: 1.5}]}>
@@ -164,11 +194,14 @@ function ImageLayoutGridInner(props: ImageLayoutGridInnerProps) {
                   'bottomLeft',
                   'topRight',
                 ])}
+                containerRefs={containerRefs}
+                thumbDimsRef={thumbDimsRef}
               />
             </View>
           </View>
         </>
       )
+    }
 
     default:
       return null

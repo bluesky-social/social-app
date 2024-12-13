@@ -1,6 +1,8 @@
 import React, {useEffect, useId, useRef, useState} from 'react'
 import {View} from 'react-native'
 import {AppBskyEmbedVideo} from '@atproto/api'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import type * as HlsTypes from 'hls.js'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
@@ -13,11 +15,13 @@ export function VideoEmbedInnerWeb({
   active,
   setActive,
   onScreen,
+  lastKnownTime,
 }: {
   embed: AppBskyEmbedVideo.View
   active: boolean
   setActive: () => void
   onScreen: boolean
+  lastKnownTime: React.MutableRefObject<number | undefined>
 }) {
   const containerRef = useRef<HTMLDivElement>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
@@ -25,6 +29,7 @@ export function VideoEmbedInnerWeb({
   const [hasSubtitleTrack, setHasSubtitleTrack] = useState(false)
   const [hlsLoading, setHlsLoading] = React.useState(false)
   const figId = useId()
+  const {_} = useLingui()
 
   // send error up to error boundary
   const [error, setError] = useState<Error | null>(null)
@@ -33,7 +38,6 @@ export function VideoEmbedInnerWeb({
   }
 
   const hlsRef = useHLS({
-    focused,
     playlist: embed.playlist,
     setHasSubtitleTrack,
     setError,
@@ -41,8 +45,17 @@ export function VideoEmbedInnerWeb({
     setHlsLoading,
   })
 
+  useEffect(() => {
+    if (lastKnownTime.current && videoRef.current) {
+      videoRef.current.currentTime = lastKnownTime.current
+    }
+  }, [lastKnownTime])
+
   return (
-    <View style={[a.flex_1, a.rounded_md, a.overflow_hidden]}>
+    <View
+      style={[a.flex_1, a.rounded_md, a.overflow_hidden]}
+      accessibilityLabel={_(msg`Embedded video player`)}
+      accessibilityHint="">
       <div ref={containerRef} style={{height: '100%', width: '100%'}}>
         <figure style={{margin: 0, position: 'absolute', inset: 0}}>
           <video
@@ -53,6 +66,9 @@ export function VideoEmbedInnerWeb({
             preload="none"
             muted={!focused}
             aria-labelledby={embed.alt ? figId : undefined}
+            onTimeUpdate={e => {
+              lastKnownTime.current = e.currentTarget.currentTime
+            }}
           />
           {embed.alt && (
             <figcaption
@@ -113,14 +129,12 @@ promiseForHls.then(Hls => {
 })
 
 function useHLS({
-  focused,
   playlist,
   setHasSubtitleTrack,
   setError,
   videoRef,
   setHlsLoading,
 }: {
-  focused: boolean
   playlist: string
   setHasSubtitleTrack: (v: boolean) => void
   setError: (v: Error | null) => void
@@ -155,8 +169,8 @@ function useHLS({
       if (!hlsRef.current) return
       const hls = hlsRef.current
 
-      if (focused && hls.nextAutoLevel > 0) {
-        // if the current quality level goes above 0, flush the low quality segments
+      // if the current quality level goes above 0, flush the low quality segments
+      if (hls.nextAutoLevel > 0) {
         const flushed: HlsTypes.Fragment[] = []
 
         for (const lowQualFrag of lowQualityFragments) {
@@ -179,6 +193,29 @@ function useHLS({
     },
   )
 
+  const flushOnLoop = useNonReactiveCallback(() => {
+    if (!Hls) return
+    if (!hlsRef.current) return
+    const hls = hlsRef.current
+    // the above callback will catch most stale frags, but there's a corner case -
+    // if there's only one segment in the video, it won't get flushed because it avoids
+    // flushing the currently active segment. Therefore, we have to catch it when we loop
+    if (
+      hls.nextAutoLevel > 0 &&
+      lowQualityFragments.length === 1 &&
+      lowQualityFragments[0].start === 0
+    ) {
+      const lowQualFrag = lowQualityFragments[0]
+
+      hls.trigger(Hls.Events.BUFFER_FLUSHING, {
+        startOffset: lowQualFrag.start,
+        endOffset: lowQualFrag.end,
+        type: 'video',
+      })
+      setLowQualityFragments([])
+    }
+  })
+
   useEffect(() => {
     if (!videoRef.current) return
     if (!Hls) return
@@ -197,16 +234,14 @@ function useHLS({
     hls.attachMedia(videoRef.current)
     hls.loadSource(playlist)
 
-    // initial value, later on it's managed by Controls
-    hls.autoLevelCapping = 0
-
     // manually loop, so if we've flushed the first buffer it doesn't get confused
     const abortController = new AbortController()
     const {signal} = abortController
     const videoNode = videoRef.current
     videoNode.addEventListener(
       'ended',
-      function () {
+      () => {
+        flushOnLoop()
         videoNode.currentTime = 0
         videoNode.play()
       },
@@ -248,7 +283,15 @@ function useHLS({
       hls.destroy()
       abortController.abort()
     }
-  }, [playlist, setError, setHasSubtitleTrack, videoRef, handleFragChange, Hls])
+  }, [
+    playlist,
+    setError,
+    setHasSubtitleTrack,
+    videoRef,
+    handleFragChange,
+    flushOnLoop,
+    Hls,
+  ])
 
   return hlsRef
 }

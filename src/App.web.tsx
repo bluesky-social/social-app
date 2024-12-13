@@ -3,13 +3,11 @@ import '#/view/icons'
 import './style.css'
 
 import React, {useEffect, useState} from 'react'
-import {KeyboardProvider} from 'react-native-keyboard-controller'
 import {RootSiblingParent} from 'react-native-root-siblings'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useIntentHandler} from '#/lib/hooks/useIntentHandler'
 import {QueryProvider} from '#/lib/react-query'
 import {Provider as StatsigProvider} from '#/lib/statsig/statsig'
 import {ThemeProvider} from '#/lib/ThemeContext'
@@ -41,7 +39,8 @@ import {
 } from '#/state/session'
 import {readLastActiveAccount} from '#/state/session/util'
 import {Provider as ShellStateProvider} from '#/state/shell'
-import {useComposerKeyboardShortcut} from '#/state/shell/composer/useComposerKeyboardShortcut'
+import {Provider as ComposerProvider} from '#/state/shell/composer'
+import {Provider as LightStatusBarProvider} from '#/state/shell/light-status-bar'
 import {Provider as LoggedOutViewProvider} from '#/state/shell/logged-out'
 import {Provider as ProgressGuideProvider} from '#/state/shell/progress-guide'
 import {Provider as SelectedFeedProvider} from '#/state/shell/selected-feed'
@@ -71,10 +70,7 @@ function InnerApp() {
   const {resumeSession} = useSessionApi()
   const theme = useColorModeTheme()
   const {_} = useLingui()
-  useIntentHandler()
   const hasCheckedReferrer = useStarterPackEntry()
-
-  useComposerKeyboardShortcut()
 
   // init
   useEffect(() => {
@@ -106,16 +102,16 @@ function InnerApp() {
   if (!isReady || !hasCheckedReferrer) return null
 
   return (
-    <KeyboardProvider enabled={false}>
-      <Alf theme={theme}>
-        <ThemeProvider theme={theme}>
-          <RootSiblingParent>
-            <VideoVolumeProvider>
-              <ActiveVideoProvider>
-                <React.Fragment
-                  // Resets the entire tree below when it changes:
-                  key={currentAccount?.did}>
-                  <QueryProvider currentDid={currentAccount?.did}>
+    <Alf theme={theme}>
+      <ThemeProvider theme={theme}>
+        <RootSiblingParent>
+          <VideoVolumeProvider>
+            <ActiveVideoProvider>
+              <React.Fragment
+                // Resets the entire tree below when it changes:
+                key={currentAccount?.did}>
+                <QueryProvider currentDid={currentAccount?.did}>
+                  <ComposerProvider>
                     <StatsigProvider>
                       <MessagesProvider>
                         {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
@@ -143,15 +139,15 @@ function InnerApp() {
                         </LabelDefsProvider>
                       </MessagesProvider>
                     </StatsigProvider>
-                  </QueryProvider>
-                  <ToastContainer />
-                </React.Fragment>
-              </ActiveVideoProvider>
-            </VideoVolumeProvider>
-          </RootSiblingParent>
-        </ThemeProvider>
-      </Alf>
-    </KeyboardProvider>
+                  </ComposerProvider>
+                </QueryProvider>
+                <ToastContainer />
+              </React.Fragment>
+            </ActiveVideoProvider>
+          </VideoVolumeProvider>
+        </RootSiblingParent>
+      </ThemeProvider>
+    </Alf>
   )
 }
 
@@ -186,7 +182,9 @@ function App() {
                         <PortalProvider>
                           <StarterPackProvider>
                             <IntentDialogProvider>
-                              <InnerApp />
+                              <LightStatusBarProvider>
+                                <InnerApp />
+                              </LightStatusBarProvider>
                             </IntentDialogProvider>
                           </StarterPackProvider>
                         </PortalProvider>

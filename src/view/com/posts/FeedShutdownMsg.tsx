@@ -49,11 +49,11 @@ export function FeedShutdownMsg({feedUri}: {feedUri: string}) {
     } catch (err: any) {
       Toast.show(
         _(
-          msg`There was an an issue updating your feeds, please check your internet connection and try again.`,
+          msg`There was an issue updating your feeds, please check your internet connection and try again.`,
         ),
         'exclamation-circle',
       )
-      logger.error('Failed up update feeds', {message: err})
+      logger.error('Failed to update feeds', {message: err})
     }
   }, [removeFeed, feedConfig, _, hasDiscoverPinned, setSelectedFeed])
 
@@ -68,11 +68,11 @@ export function FeedShutdownMsg({feedUri}: {feedUri: string}) {
     } catch (err: any) {
       Toast.show(
         _(
-          msg`There was an an issue updating your feeds, please check your internet connection and try again.`,
+          msg`There was an issue updating your feeds, please check your internet connection and try again.`,
         ),
         'exclamation-circle',
       )
-      logger.error('Failed up update feeds', {message: err})
+      logger.error('Failed to update feeds', {message: err})
     }
   }, [
     replaceFeedWithDiscover,

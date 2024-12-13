@@ -47,7 +47,7 @@ interface AppClipMessage {
   jsonToStore?: string
 }
 
-function postAppClipMessage(message: AppClipMessage) {
+export function postAppClipMessage(message: AppClipMessage) {
   // @ts-expect-error safari webview only
   window.webkit.messageHandlers.onMessage.postMessage(JSON.stringify(message))
 }
@@ -356,7 +356,7 @@ function LandingScreenLoaded({
   )
 }
 
-function AppClipOverlay({
+export function AppClipOverlay({
   visible,
   setIsVisible,
 }: {

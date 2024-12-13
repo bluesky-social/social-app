@@ -7,7 +7,7 @@ import Animated, {
   SlideInRight,
 } from 'react-native-reanimated'
 
-import {isWeb} from 'platform/detection'
+import {isWeb} from '#/platform/detection'
 
 export function ScreenTransition({
   direction,

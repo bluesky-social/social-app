@@ -7,10 +7,12 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
-import Animated, {FadeIn, FadeInDown} from 'react-native-reanimated'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {FocusScope} from '@tamagui/focus-scope'
+import {DismissableLayer} from '@radix-ui/react-dismissable-layer'
+import {useFocusGuards} from '@radix-ui/react-focus-guards'
+import {FocusScope} from '@radix-ui/react-focus-scope'
+import {RemoveScrollBar} from 'react-remove-scroll-bar'
 
 import {logger} from '#/logger'
 import {useDialogStateControlContext} from '#/state/dialogs'
@@ -26,11 +28,13 @@ import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import {Portal} from '#/components/Portal'
 
 export {useDialogContext, useDialogControl} from '#/components/Dialog/context'
+export * from '#/components/Dialog/shared'
 export * from '#/components/Dialog/types'
 export * from '#/components/Dialog/utils'
 export {Input} from '#/components/forms/TextField'
 
 const stopPropagation = (e: any) => e.stopPropagation()
+const preventDefault = (e: any) => e.preventDefault()
 
 export function Outer({
   children,
@@ -38,7 +42,6 @@ export function Outer({
   onClose,
 }: React.PropsWithChildren<DialogOuterProps>) {
   const {_} = useLingui()
-  const t = useTheme()
   const {gtMobile} = useBreakpoints()
   const [isOpen, setIsOpen] = React.useState(false)
   const {setDialogIsOpen} = useDialogStateControlContext()
@@ -85,24 +88,13 @@ export function Outer({
     [close, open],
   )
 
-  React.useEffect(() => {
-    if (!isOpen) return
-
-    function handler(e: KeyboardEvent) {
-      if (e.key === 'Escape') {
-        e.stopPropagation()
-        close()
-      }
-    }
-
-    document.addEventListener('keydown', handler)
-
-    return () => document.removeEventListener('keydown', handler)
-  }, [close, isOpen])
-
   const context = React.useMemo(
     () => ({
       close,
+      isNativeDialog: false,
+      nativeSnapPoint: 0,
+      disableDrag: false,
+      setDisableDrag: () => {},
     }),
     [close],
   )
@@ -112,6 +104,7 @@ export function Outer({
       {isOpen && (
         <Portal>
           <Context.Provider value={context}>
+            <RemoveScrollBar />
             <TouchableWithoutFeedback
               accessibilityHint={undefined}
               accessibilityLabel={_(msg`Close active dialog`)}
@@ -125,16 +118,7 @@ export function Outer({
                   gtMobile ? a.p_lg : a.p_md,
                   {overflowY: 'auto'},
                 ]}>
-                <Animated.View
-                  entering={FadeIn.duration(150)}
-                  // exiting={FadeOut.duration(150)}
-                  style={[
-                    web(a.fixed),
-                    a.inset_0,
-                    {opacity: 0.8, backgroundColor: t.palette.black},
-                  ]}
-                />
-
+                <Backdrop />
                 <View
                   style={[
                     a.w_full,
@@ -162,12 +146,16 @@ export function Inner({
   label,
   accessibilityLabelledBy,
   accessibilityDescribedBy,
+  header,
+  contentContainerStyle,
 }: DialogInnerProps) {
   const t = useTheme()
+  const {close} = React.useContext(Context)
   const {gtMobile} = useBreakpoints()
+  useFocusGuards()
   return (
-    <FocusScope loop enabled trapped>
-      <Animated.View
+    <FocusScope loop asChild trapped>
+      <View
         role="dialog"
         aria-role="dialog"
         aria-label={label}
@@ -177,14 +165,11 @@ export function Inner({
         onClick={stopPropagation}
         onStartShouldSetResponder={_ => true}
         onTouchEnd={stopPropagation}
-        entering={FadeInDown.duration(100)}
-        // exiting={FadeOut.duration(100)}
-        style={[
+        style={flatten([
           a.relative,
           a.rounded_md,
           a.w_full,
           a.border,
-          gtMobile ? a.p_2xl : a.p_xl,
           t.atoms.bg,
           {
             maxWidth: 600,
@@ -192,11 +177,22 @@ export function Inner({
             shadowColor: t.palette.black,
             shadowOpacity: t.name === 'light' ? 0.1 : 0.4,
             shadowRadius: 30,
+            // @ts-ignore web only
+            animation: 'fadeIn ease-out 0.1s',
           },
           flatten(style),
-        ]}>
-        {children}
-      </Animated.View>
+        ])}>
+        <DismissableLayer
+          onInteractOutside={preventDefault}
+          onFocusOutside={preventDefault}
+          onDismiss={close}
+          style={{display: 'flex', flexDirection: 'column'}}>
+          {header}
+          <View style={[gtMobile ? a.p_2xl : a.p_xl, contentContainerStyle]}>
+            {children}
+          </View>
+        </DismissableLayer>
+      </View>
     </FocusScope>
   )
 }
@@ -205,21 +201,26 @@ export const ScrollableInner = Inner
 
 export const InnerFlatList = React.forwardRef<
   FlatList,
-  FlatListProps<any> & {label: string} & {webInnerStyle?: StyleProp<ViewStyle>}
->(function InnerFlatList({label, style, webInnerStyle, ...props}, ref) {
+  FlatListProps<any> & {label: string} & {
+    webInnerStyle?: StyleProp<ViewStyle>
+    webInnerContentContainerStyle?: StyleProp<ViewStyle>
+  }
+>(function InnerFlatList(
+  {label, style, webInnerStyle, webInnerContentContainerStyle, ...props},
+  ref,
+) {
   const {gtMobile} = useBreakpoints()
   return (
     <Inner
       label={label}
       style={[
+        a.overflow_hidden,
+        a.px_0,
         // @ts-ignore web only -sfn
-        {
-          paddingHorizontal: 0,
-          maxHeight: 'calc(-36px + 100vh)',
-          overflow: 'hidden',
-        },
+        {maxHeight: 'calc(-36px + 100vh)'},
         webInnerStyle,
-      ]}>
+      ]}
+      contentContainerStyle={[a.px_0, webInnerContentContainerStyle]}>
       <FlatList
         ref={ref}
         style={[gtMobile ? a.px_2xl : a.px_xl, flatten(style)]}
@@ -228,10 +229,6 @@ export const InnerFlatList = React.forwardRef<
     </Inner>
   )
 })
-
-export function Handle() {
-  return null
-}
 
 export function Close() {
   const {_} = useLingui()
@@ -255,6 +252,32 @@ export function Close() {
         label={_(msg`Close active dialog`)}>
         <ButtonIcon icon={X} size="md" />
       </Button>
+    </View>
+  )
+}
+
+export function Handle() {
+  return null
+}
+
+function Backdrop() {
+  const t = useTheme()
+  return (
+    <View
+      style={{
+        opacity: 0.8,
+      }}>
+      <View
+        style={[
+          a.fixed,
+          a.inset_0,
+          {
+            backgroundColor: t.palette.black,
+            // @ts-ignore web only
+            animation: 'fadeIn ease-out 0.15s',
+          },
+        ]}
+      />
     </View>
   )
 }

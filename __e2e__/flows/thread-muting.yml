@@ -7,10 +7,11 @@ appId: xyz.blueskyweb.app
 - runFlow:
     file: ../setupApp.yml
 
-
 # Login, create a thread, and log out
 - tapOn:
     id: "e2eSignInAlice"
+- assertVisible:
+    id: "composeFAB"
 - tapOn:
     id: "composeFAB"
 - inputText: "Test thread"

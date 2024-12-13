@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import {useEffect} from 'react'
 import {Animated, Easing, StyleSheet, View} from 'react-native'
 
 import {useAnimatedValue} from '#/lib/hooks/useAnimatedValue'
@@ -50,7 +50,6 @@ export function Composer({winHeight}: {winHeight: number}) {
         replyTo={state.replyTo}
         onPost={state.onPost}
         quote={state.quote}
-        quoteCount={state.quoteCount}
         mention={state.mention}
         text={state.text}
         imageUris={state.imageUris}

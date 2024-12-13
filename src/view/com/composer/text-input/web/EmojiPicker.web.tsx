@@ -6,6 +6,7 @@ import {
   View,
 } from 'react-native'
 import Picker from '@emoji-mart/react'
+import {DismissableLayer} from '@radix-ui/react-dismissable-layer'
 
 import {textInputWebEmitter} from '#/view/com/composer/text-input/textInputWebEmitter'
 import {atoms as a} from '#/alf'
@@ -143,13 +144,17 @@ export function EmojiPicker({state, close, pinToTop}: IProps) {
         {/* eslint-disable-next-line react-native-a11y/has-valid-accessibility-descriptors */}
         <TouchableWithoutFeedback onPress={e => e.stopPropagation()}>
           <View style={[{position: 'absolute'}, position]}>
-            <Picker
-              data={async () => {
-                return (await import('./EmojiPickerData.json')).default
-              }}
-              onEmojiSelect={onInsert}
-              autoFocus={true}
-            />
+            <DismissableLayer
+              onFocusOutside={evt => evt.preventDefault()}
+              onDismiss={close}>
+              <Picker
+                data={async () => {
+                  return (await import('./EmojiPickerData.json')).default
+                }}
+                onEmojiSelect={onInsert}
+                autoFocus={true}
+              />
+            </DismissableLayer>
           </View>
         </TouchableWithoutFeedback>
       </View>

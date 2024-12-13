@@ -1,23 +1,28 @@
 import React from 'react'
 import {ScrollView, View} from 'react-native'
-import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
-import {ViewHeader} from '../com/util/ViewHeader'
-import {ThemeProvider, PaletteColorName} from 'lib/ThemeContext'
-import {usePalette} from 'lib/hooks/usePalette'
-import {s} from 'lib/styles'
-import * as Toast from 'view/com/util/Toast'
-import {Text} from '../com/util/text/Text'
-import {ViewSelector} from '../com/util/ViewSelector'
-import {EmptyState} from '../com/util/EmptyState'
-import * as LoadingPlaceholder from '../com/util/LoadingPlaceholder'
-import {Button, ButtonType} from '../com/util/forms/Button'
-import {DropdownButton, DropdownItem} from '../com/util/forms/DropdownButton'
-import {ToggleButton} from '../com/util/forms/ToggleButton'
-import {RadioGroup} from '../com/util/forms/RadioGroup'
-import {ErrorScreen} from '../com/util/error/ErrorScreen'
-import {ErrorMessage} from '../com/util/error/ErrorMessage'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+
+import {usePalette} from '#/lib/hooks/usePalette'
+import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
+import {s} from '#/lib/styles'
+import {PaletteColorName, ThemeProvider} from '#/lib/ThemeContext'
+import {EmptyState} from '#/view/com/util/EmptyState'
+import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
+import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
+import {Button, ButtonType} from '#/view/com/util/forms/Button'
+import {
+  DropdownButton,
+  DropdownItem,
+} from '#/view/com/util/forms/DropdownButton'
+import {RadioGroup} from '#/view/com/util/forms/RadioGroup'
+import {ToggleButton} from '#/view/com/util/forms/ToggleButton'
+import * as LoadingPlaceholder from '#/view/com/util/LoadingPlaceholder'
+import {Text} from '#/view/com/util/text/Text'
+import * as Toast from '#/view/com/util/Toast'
+import {ViewHeader} from '#/view/com/util/ViewHeader'
+import {ViewSelector} from '#/view/com/util/ViewSelector'
+import * as Layout from '#/components/Layout'
 
 const MAIN_VIEWS = ['Base', 'Controls', 'Error', 'Notifs']
 
@@ -33,10 +38,12 @@ export const DebugScreen = ({}: NativeStackScreenProps<
   }
   return (
     <ThemeProvider theme={colorScheme}>
-      <DebugInner
-        colorScheme={colorScheme}
-        onToggleColorScheme={onToggleColorScheme}
-      />
+      <Layout.Screen>
+        <DebugInner
+          colorScheme={colorScheme}
+          onToggleColorScheme={onToggleColorScheme}
+        />
+      </Layout.Screen>
     </ThemeProvider>
   )
 }

@@ -32,7 +32,9 @@ export function useFetchHandle() {
   )
 }
 
-export function useUpdateHandleMutation() {
+export function useUpdateHandleMutation(opts?: {
+  onSuccess?: (handle: string) => void
+}) {
   const queryClient = useQueryClient()
   const agent = useAgent()
 
@@ -41,6 +43,7 @@ export function useUpdateHandleMutation() {
       await agent.updateHandle({handle})
     },
     onSuccess(_data, variables) {
+      opts?.onSuccess?.(variables.handle)
       queryClient.invalidateQueries({
         queryKey: fetchHandleQueryKey(variables.handle),
       })

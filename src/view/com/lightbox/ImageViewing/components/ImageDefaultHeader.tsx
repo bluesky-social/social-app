@@ -5,11 +5,10 @@
  * LICENSE file in the root directory of this source tree.
  *
  */
-import React from 'react'
 import {
   SafeAreaView,
-  TouchableOpacity,
   StyleSheet,
+  TouchableOpacity,
   ViewStyle,
 } from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'

@@ -1,22 +1,23 @@
 import React from 'react'
 import {ActivityIndicator, Pressable, StyleSheet, View} from 'react-native'
+import Animated, {LinearTransition} from 'react-native-reanimated'
 import {AppBskyActorDefs} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
+import {useNavigation} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {useHaptics} from '#/lib/haptics'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {CommonNavigatorParams} from '#/lib/routes/types'
+import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
 import {colors, s} from '#/lib/styles'
 import {logger} from '#/logger'
 import {
   useOverwriteSavedFeedsMutation,
   usePreferencesQuery,
-  useUpdateSavedFeedsMutation,
 } from '#/state/queries/preferences'
 import {UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
 import {useSetMinimalShellMode} from '#/state/shell'
@@ -24,48 +25,45 @@ import {FeedSourceCard} from '#/view/com/feeds/FeedSourceCard'
 import {TextLink} from '#/view/com/util/Link'
 import {Text} from '#/view/com/util/text/Text'
 import * as Toast from '#/view/com/util/Toast'
-import {ViewHeader} from '#/view/com/util/ViewHeader'
-import {CenteredView, ScrollView} from '#/view/com/util/Views'
 import {NoFollowingFeed} from '#/screens/Feeds/NoFollowingFeed'
 import {NoSavedFeedsOfAnyType} from '#/screens/Feeds/NoSavedFeedsOfAnyType'
 import {atoms as a, useTheme} from '#/alf'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {FilterTimeline_Stroke2_Corner0_Rounded as FilterTimeline} from '#/components/icons/FilterTimeline'
-
-const HITSLOP_TOP = {
-  top: 20,
-  left: 20,
-  bottom: 5,
-  right: 20,
-}
-const HITSLOP_BOTTOM = {
-  top: 5,
-  left: 20,
-  bottom: 20,
-  right: 20,
-}
+import {FloppyDisk_Stroke2_Corner0_Rounded as SaveIcon} from '#/components/icons/FloppyDisk'
+import * as Layout from '#/components/Layout'
+import {Loader} from '#/components/Loader'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'SavedFeeds'>
 export function SavedFeeds({}: Props) {
+  const {data: preferences} = usePreferencesQuery()
+  if (!preferences) {
+    return <View />
+  }
+  return <SavedFeedsInner preferences={preferences} />
+}
+
+function SavedFeedsInner({
+  preferences,
+}: {
+  preferences: UsePreferencesQueryResponse
+}) {
   const pal = usePalette('default')
   const {_} = useLingui()
-  const {isMobile, isTabletOrDesktop} = useWebMediaQueries()
+  const {isMobile, isDesktop} = useWebMediaQueries()
   const setMinimalShellMode = useSetMinimalShellMode()
-  const {data: preferences} = usePreferencesQuery()
-  const {
-    mutateAsync: overwriteSavedFeeds,
-    variables: optimisticSavedFeedsResponse,
-    reset: resetSaveFeedsMutationState,
-    error: savedFeedsError,
-  } = useOverwriteSavedFeedsMutation()
+  const {mutateAsync: overwriteSavedFeeds, isPending: isOverwritePending} =
+    useOverwriteSavedFeedsMutation()
+  const navigation = useNavigation<NavigationProp>()
 
   /*
    * Use optimistic data if exists and no error, otherwise fallback to remote
    * data
    */
-  const currentFeeds =
-    optimisticSavedFeedsResponse && !savedFeedsError
-      ? optimisticSavedFeedsResponse
-      : preferences?.savedFeeds || []
+  const [currentFeeds, setCurrentFeeds] = React.useState(
+    () => preferences.savedFeeds || [],
+  )
+  const hasUnsavedChanges = currentFeeds !== preferences.savedFeeds
   const pinnedFeeds = currentFeeds.filter(f => f.pinned)
   const unpinnedFeeds = currentFeeds.filter(f => !f.pinned)
   const noSavedFeedsOfAnyType = pinnedFeeds.length + unpinnedFeeds.length === 0
@@ -78,18 +76,44 @@ export function SavedFeeds({}: Props) {
     }, [setMinimalShellMode]),
   )
 
+  const onSaveChanges = React.useCallback(async () => {
+    try {
+      await overwriteSavedFeeds(currentFeeds)
+      Toast.show(_(msg`Feeds updated!`))
+      navigation.navigate('Feeds')
+    } catch (e) {
+      Toast.show(_(msg`There was an issue contacting the server`), 'xmark')
+      logger.error('Failed to toggle pinned feed', {message: e})
+    }
+  }, [_, overwriteSavedFeeds, currentFeeds, navigation])
+
   return (
-    <CenteredView
-      style={[
-        s.hContentRegion,
-        pal.border,
-        isTabletOrDesktop && styles.desktopContainer,
-      ]}>
-      <ViewHeader title={_(msg`Edit My Feeds`)} showOnDesktop showBorder />
-      <ScrollView style={s.flex1} contentContainerStyle={[styles.noBorder]}>
+    <Layout.Screen>
+      <Layout.Header.Outer>
+        <Layout.Header.BackButton />
+        <Layout.Header.Content align="left">
+          <Layout.Header.TitleText>
+            <Trans>Feeds</Trans>
+          </Layout.Header.TitleText>
+        </Layout.Header.Content>
+        <Button
+          testID="saveChangesBtn"
+          size="small"
+          variant={hasUnsavedChanges ? 'solid' : 'solid'}
+          color={hasUnsavedChanges ? 'primary' : 'secondary'}
+          onPress={onSaveChanges}
+          label={_(msg`Save changes`)}
+          disabled={isOverwritePending || !hasUnsavedChanges}>
+          <ButtonIcon icon={isOverwritePending ? Loader : SaveIcon} />
+          <ButtonText>
+            {isDesktop ? <Trans>Save changes</Trans> : <Trans>Save</Trans>}
+          </ButtonText>
+        </Button>
+      </Layout.Header.Outer>
+
+      <Layout.Content>
         {noSavedFeedsOfAnyType && (
-          <View
-            style={[pal.border, {borderBottomWidth: StyleSheet.hairlineWidth}]}>
+          <View style={[pal.border, a.border_b]}>
             <NoSavedFeedsOfAnyType />
           </View>
         )}
@@ -119,9 +143,8 @@ export function SavedFeeds({}: Props) {
                 key={f.id}
                 feed={f}
                 isPinned
-                overwriteSavedFeeds={overwriteSavedFeeds}
-                resetSaveFeedsMutationState={resetSaveFeedsMutationState}
                 currentFeeds={currentFeeds}
+                setCurrentFeeds={setCurrentFeeds}
                 preferences={preferences}
               />
             ))
@@ -131,8 +154,7 @@ export function SavedFeeds({}: Props) {
         )}
 
         {noFollowingFeed && (
-          <View
-            style={[pal.border, {borderBottomWidth: StyleSheet.hairlineWidth}]}>
+          <View style={[pal.border, a.border_b]}>
             <NoFollowingFeed />
           </View>
         )}
@@ -161,9 +183,8 @@ export function SavedFeeds({}: Props) {
                 key={f.id}
                 feed={f}
                 isPinned={false}
-                overwriteSavedFeeds={overwriteSavedFeeds}
-                resetSaveFeedsMutationState={resetSaveFeedsMutationState}
                 currentFeeds={currentFeeds}
+                setCurrentFeeds={setCurrentFeeds}
                 preferences={preferences}
               />
             ))
@@ -187,9 +208,8 @@ export function SavedFeeds({}: Props) {
             </Trans>
           </Text>
         </View>
-        <View style={{height: 100}} />
-      </ScrollView>
-    </CenteredView>
+      </Layout.Content>
+    </Layout.Screen>
   )
 }
 
@@ -197,44 +217,27 @@ function ListItem({
   feed,
   isPinned,
   currentFeeds,
-  overwriteSavedFeeds,
-  resetSaveFeedsMutationState,
+  setCurrentFeeds,
 }: {
   feed: AppBskyActorDefs.SavedFeed
   isPinned: boolean
   currentFeeds: AppBskyActorDefs.SavedFeed[]
-  overwriteSavedFeeds: ReturnType<
-    typeof useOverwriteSavedFeedsMutation
-  >['mutateAsync']
-  resetSaveFeedsMutationState: ReturnType<
-    typeof useOverwriteSavedFeedsMutation
-  >['reset']
+  setCurrentFeeds: React.Dispatch<AppBskyActorDefs.SavedFeed[]>
   preferences: UsePreferencesQueryResponse
 }) {
-  const pal = usePalette('default')
   const {_} = useLingui()
+  const pal = usePalette('default')
   const playHaptic = useHaptics()
-  const {isPending: isUpdatePending, mutateAsync: updateSavedFeeds} =
-    useUpdateSavedFeedsMutation()
   const feedUri = feed.value
 
   const onTogglePinned = React.useCallback(async () => {
     playHaptic()
-
-    try {
-      resetSaveFeedsMutationState()
-
-      await updateSavedFeeds([
-        {
-          ...feed,
-          pinned: !feed.pinned,
-        },
-      ])
-    } catch (e) {
-      Toast.show(_(msg`There was an issue contacting the server`), 'xmark')
-      logger.error('Failed to toggle pinned feed', {message: e})
-    }
-  }, [_, playHaptic, feed, updateSavedFeeds, resetSaveFeedsMutationState])
+    setCurrentFeeds(
+      currentFeeds.map(f =>
+        f.id === feed.id ? {...feed, pinned: !feed.pinned} : f,
+      ),
+    )
+  }, [playHaptic, feed, currentFeeds, setCurrentFeeds])
 
   const onPressUp = React.useCallback(async () => {
     if (!isPinned) return
@@ -250,13 +253,8 @@ function ListItem({
       nextFeeds[index],
     ]
 
-    try {
-      await overwriteSavedFeeds(nextFeeds)
-    } catch (e) {
-      Toast.show(_(msg`There was an issue contacting the server`), 'xmark')
-      logger.error('Failed to set pinned feed order', {message: e})
-    }
-  }, [feed, isPinned, overwriteSavedFeeds, currentFeeds, _])
+    setCurrentFeeds(nextFeeds)
+  }, [feed, isPinned, setCurrentFeeds, currentFeeds])
 
   const onPressDown = React.useCallback(async () => {
     if (!isPinned) return
@@ -266,22 +264,25 @@ function ListItem({
     const index = ids.indexOf(feed.id)
     const nextIndex = index + 1
 
-    if (index === -1 || index >= nextFeeds.length - 1) return
+    if (index === -1 || index >= nextFeeds.filter(f => f.pinned).length - 1)
+      return
     ;[nextFeeds[index], nextFeeds[nextIndex]] = [
       nextFeeds[nextIndex],
       nextFeeds[index],
     ]
 
-    try {
-      await overwriteSavedFeeds(nextFeeds)
-    } catch (e) {
-      Toast.show(_(msg`There was an issue contacting the server`), 'xmark')
-      logger.error('Failed to set pinned feed order', {message: e})
-    }
-  }, [feed, isPinned, overwriteSavedFeeds, currentFeeds, _])
+    setCurrentFeeds(nextFeeds)
+  }, [feed, isPinned, setCurrentFeeds, currentFeeds])
+
+  const onPressRemove = React.useCallback(async () => {
+    playHaptic()
+    setCurrentFeeds(currentFeeds.filter(f => f.id !== feed.id))
+  }, [playHaptic, feed, currentFeeds, setCurrentFeeds])
 
   return (
-    <View style={[styles.itemContainer, pal.border]}>
+    <Animated.View
+      style={[styles.itemContainer, pal.border]}
+      layout={LinearTransition.duration(100)}>
       {feed.type === 'timeline' ? (
         <FollowingFeedCard />
       ) : (
@@ -290,26 +291,24 @@ function ListItem({
           feedUri={feedUri}
           style={[isPinned && {paddingRight: 8}]}
           showMinimalPlaceholder
-          showSaveBtn={!isPinned}
           hideTopBorder={true}
         />
       )}
       {isPinned ? (
         <>
           <Pressable
-            disabled={isUpdatePending}
             accessibilityRole="button"
             onPress={onPressUp}
-            hitSlop={HITSLOP_TOP}
+            hitSlop={5}
             style={state => ({
               backgroundColor: pal.viewLight.backgroundColor,
               paddingHorizontal: 12,
               paddingVertical: 10,
               borderRadius: 4,
               marginRight: 8,
-              opacity:
-                state.hovered || state.pressed || isUpdatePending ? 0.5 : 1,
-            })}>
+              opacity: state.hovered || state.pressed ? 0.5 : 1,
+            })}
+            testID={`feed-${feed.type}-moveUp`}>
             <FontAwesomeIcon
               icon="arrow-up"
               size={14}
@@ -317,19 +316,18 @@ function ListItem({
             />
           </Pressable>
           <Pressable
-            disabled={isUpdatePending}
             accessibilityRole="button"
             onPress={onPressDown}
-            hitSlop={HITSLOP_BOTTOM}
+            hitSlop={5}
             style={state => ({
               backgroundColor: pal.viewLight.backgroundColor,
               paddingHorizontal: 12,
               paddingVertical: 10,
               borderRadius: 4,
               marginRight: 8,
-              opacity:
-                state.hovered || state.pressed || isUpdatePending ? 0.5 : 1,
-            })}>
+              opacity: state.hovered || state.pressed ? 0.5 : 1,
+            })}
+            testID={`feed-${feed.type}-moveDown`}>
             <FontAwesomeIcon
               icon="arrow-down"
               size={14}
@@ -337,21 +335,41 @@ function ListItem({
             />
           </Pressable>
         </>
-      ) : null}
+      ) : (
+        <Pressable
+          testID={`feed-${feedUri}-toggleSave`}
+          accessibilityRole="button"
+          accessibilityLabel={_(msg`Remove from my feeds`)}
+          accessibilityHint=""
+          onPress={onPressRemove}
+          hitSlop={5}
+          style={state => ({
+            marginRight: 8,
+            paddingHorizontal: 12,
+            paddingVertical: 10,
+            borderRadius: 4,
+            opacity: state.hovered || state.focused ? 0.5 : 1,
+          })}>
+          <FontAwesomeIcon
+            icon={['far', 'trash-can']}
+            size={19}
+            color={pal.colors.icon}
+          />
+        </Pressable>
+      )}
       <View style={{paddingRight: 16}}>
         <Pressable
-          disabled={isUpdatePending}
           accessibilityRole="button"
-          hitSlop={10}
+          hitSlop={5}
           onPress={onTogglePinned}
           style={state => ({
             backgroundColor: pal.viewLight.backgroundColor,
             paddingHorizontal: 12,
             paddingVertical: 10,
             borderRadius: 4,
-            opacity:
-              state.hovered || state.focused || isUpdatePending ? 0.5 : 1,
-          })}>
+            opacity: state.hovered || state.focused ? 0.5 : 1,
+          })}
+          testID={`feed-${feed.type}-togglePin`}>
           <FontAwesomeIcon
             icon="thumb-tack"
             size={14}
@@ -359,7 +377,7 @@ function ListItem({
           />
         </Pressable>
       </View>
-    </View>
+    </Animated.View>
   )
 }
 
@@ -409,12 +427,6 @@ function FollowingFeedCard() {
 }
 
 const styles = StyleSheet.create({
-  desktopContainer: {
-    borderLeftWidth: 1,
-    borderRightWidth: 1,
-    // @ts-ignore only rendered on web
-    minHeight: '100vh',
-  },
   empty: {
     paddingHorizontal: 20,
     paddingVertical: 20,
@@ -435,13 +447,6 @@ const styles = StyleSheet.create({
   },
   footerText: {
     paddingHorizontal: 26,
-    paddingTop: 22,
-    paddingBottom: 100,
-  },
-  noBorder: {
-    borderBottomWidth: 0,
-    borderRightWidth: 0,
-    borderLeftWidth: 0,
-    borderTopWidth: 0,
+    paddingVertical: 22,
   },
 })

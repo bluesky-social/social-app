@@ -9,10 +9,10 @@ import Animated, {
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {ScaleAndFadeIn} from 'lib/custom-animations/ScaleAndFade'
-import {ShrinkAndPop} from 'lib/custom-animations/ShrinkAndPop'
-import {useHaptics} from 'lib/haptics'
-import {isWeb} from 'platform/detection'
+import {ScaleAndFadeIn} from '#/lib/custom-animations/ScaleAndFade'
+import {ShrinkAndPop} from '#/lib/custom-animations/ShrinkAndPop'
+import {useHaptics} from '#/lib/haptics'
+import {isWeb} from '#/platform/detection'
 import {atoms as a, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
 
@@ -42,12 +42,12 @@ export function ChatEmptyPill() {
 
   const onPressIn = React.useCallback(() => {
     if (isWeb) return
-    scale.value = withTiming(1.075, {duration: 100})
+    scale.set(() => withTiming(1.075, {duration: 100}))
   }, [scale])
 
   const onPressOut = React.useCallback(() => {
     if (isWeb) return
-    scale.value = withTiming(1, {duration: 100})
+    scale.set(() => withTiming(1, {duration: 100}))
   }, [scale])
 
   const onPress = React.useCallback(() => {
@@ -61,7 +61,7 @@ export function ChatEmptyPill() {
   }, [playHaptic, prompts.length])
 
   const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{scale: scale.value}],
+    transform: [{scale: scale.get()}],
   }))
 
   return (

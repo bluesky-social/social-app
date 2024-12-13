@@ -7,7 +7,7 @@ import {PROD_DEFAULT_FEED} from '#/lib/constants'
 import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {FeedDescriptor, FeedPostSliceItem} from '#/state/queries/post-feed'
-import {getFeedPostSlice} from '#/view/com/posts/Feed'
+import {getFeedPostSlice} from '#/view/com/posts/PostFeed'
 import {useAgent} from './session'
 
 type StateContext = {
@@ -72,7 +72,7 @@ export function useFeedFeedback(feed: FeedDescriptor, hasSession: boolean) {
 
   const sendToFeed = React.useMemo(
     () =>
-      throttle(sendToFeedNoDelay, 15e3, {
+      throttle(sendToFeedNoDelay, 10e3, {
         leading: false,
         trailing: true,
       }),
@@ -234,21 +234,21 @@ function flushToStatsig(stats: AggregatedStats | null) {
   }
 
   if (stats.clickthroughCount > 0) {
-    logEvent('discover:clickthrough:sampled', {
+    logEvent('discover:clickthrough', {
       count: stats.clickthroughCount,
     })
     stats.clickthroughCount = 0
   }
 
   if (stats.engagedCount > 0) {
-    logEvent('discover:engaged:sampled', {
+    logEvent('discover:engaged', {
       count: stats.engagedCount,
     })
     stats.engagedCount = 0
   }
 
   if (stats.seenCount > 0) {
-    logEvent('discover:seen:sampled', {
+    logEvent('discover:seen', {
       count: stats.seenCount,
     })
     stats.seenCount = 0

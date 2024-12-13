@@ -1,8 +1,9 @@
 module.exports = {
   root: true,
   extends: [
-    '@react-native-community',
+    '@react-native',
     'plugin:react/recommended',
+    'plugin:react/jsx-runtime',
     'plugin:react-native-a11y/ios',
     'prettier',
   ],
@@ -16,14 +17,22 @@ module.exports = {
     'eslint-plugin-react-compiler',
   ],
   rules: {
-    // Temporary until https://github.com/facebook/react-native/pull/43756 gets into a release.
-    'prettier/prettier': 0,
     'react/no-unescaped-entities': 0,
+    'react/prop-types': 0,
     'react-native/no-inline-styles': 0,
     'bsky-internal/avoid-unwrapped-text': [
       'error',
       {
-        impliedTextComponents: ['H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'P'],
+        impliedTextComponents: [
+          'H1',
+          'H2',
+          'H3',
+          'H4',
+          'H5',
+          'H6',
+          'P',
+          'Admonition',
+        ],
         impliedTextProps: [],
         suggestedTextWrappers: {
           Button: 'ButtonText',
@@ -33,9 +42,9 @@ module.exports = {
     ],
     'bsky-internal/use-exact-imports': 'error',
     'bsky-internal/use-typed-gates': 'error',
-    'bsky-internal/use-prefixed-imports': 'warn',
+    'bsky-internal/use-prefixed-imports': 'error',
     'simple-import-sort/imports': [
-      'warn',
+      'error',
       {
         groups: [
           // Side effect imports.
@@ -69,9 +78,8 @@ module.exports = {
         ],
       },
     ],
-    'simple-import-sort/exports': 'warn',
-    // TODO: Reenable when we figure out why it gets stuck on CI.
-    // 'react-compiler/react-compiler': 'error',
+    'simple-import-sort/exports': 'error',
+    'react-compiler/react-compiler': 'warn',
     'no-restricted-imports': [
       'error',
       {

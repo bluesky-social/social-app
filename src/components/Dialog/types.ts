@@ -4,9 +4,12 @@ import type {
   GestureResponderEvent,
   ScrollViewProps,
 } from 'react-native'
-import {BottomSheetProps} from '@discord/bottom-sheet/src'
+import {ViewStyle} from 'react-native'
+import {StyleProp} from 'react-native'
 
 import {ViewStyleProp} from '#/alf'
+import {BottomSheetViewProps} from '../../../modules/bottom-sheet'
+import {BottomSheetSnapPoint} from '../../../modules/bottom-sheet/src/BottomSheet.types'
 
 type A11yProps = Required<AccessibilityProps>
 
@@ -37,6 +40,10 @@ export type DialogControlProps = DialogControlRefProps & {
 
 export type DialogContextProps = {
   close: DialogControlProps['close']
+  isNativeDialog: boolean
+  nativeSnapPoint: BottomSheetSnapPoint
+  disableDrag: boolean
+  setDisableDrag: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export type DialogControlOpenOptions = {
@@ -52,9 +59,7 @@ export type DialogControlOpenOptions = {
 export type DialogOuterProps = {
   control: DialogControlProps
   onClose?: () => void
-  nativeOptions?: {
-    sheet?: Omit<BottomSheetProps, 'children'>
-  }
+  nativeOptions?: Omit<BottomSheetViewProps, 'children'>
   webOptions?: {}
   testID?: string
 }
@@ -66,10 +71,14 @@ export type DialogInnerProps =
       accessibilityLabelledBy: A11yProps['aria-labelledby']
       accessibilityDescribedBy: string
       keyboardDismissMode?: ScrollViewProps['keyboardDismissMode']
+      contentContainerStyle?: StyleProp<ViewStyle>
+      header?: React.ReactNode
     }>
   | DialogInnerPropsBase<{
       label: string
       accessibilityLabelledBy?: undefined
       accessibilityDescribedBy?: undefined
       keyboardDismissMode?: ScrollViewProps['keyboardDismissMode']
+      contentContainerStyle?: StyleProp<ViewStyle>
+      header?: React.ReactNode
     }>

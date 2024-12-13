@@ -1,6 +1,7 @@
-import {useDraggableScroll} from 'lib/hooks/useDraggableScrollView'
 import React, {ComponentProps} from 'react'
 import {ScrollView} from 'react-native'
+
+import {useDraggableScroll} from '#/lib/hooks/useDraggableScrollView'
 
 export const DraggableScrollView = React.forwardRef<
   ScrollView,

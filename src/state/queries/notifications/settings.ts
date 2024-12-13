@@ -9,7 +9,7 @@ import {invalidateCachedUnreadPage} from '#/state/queries/notifications/unread'
 import {useAgent} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
 
-export function useNotificationsSettingsMutation() {
+export function useNotificationSettingsMutation() {
   const {_} = useLingui()
   const agent = useAgent()
   const queryClient = useQueryClient()
@@ -45,7 +45,8 @@ export function useNotificationsSettingsMutation() {
     },
     onSettled: () => {
       invalidateCachedUnreadPage()
-      queryClient.invalidateQueries({queryKey: RQKEY_NOTIFS()})
+      queryClient.invalidateQueries({queryKey: RQKEY_NOTIFS('all')})
+      queryClient.invalidateQueries({queryKey: RQKEY_NOTIFS('mentions')})
     },
   })
 }
@@ -54,7 +55,7 @@ function eagerlySetCachedPriority(
   queryClient: ReturnType<typeof useQueryClient>,
   enabled: boolean,
 ) {
-  queryClient.setQueryData(RQKEY_NOTIFS(), (old: any) => {
+  function updateData(old: any) {
     if (!old) return old
     return {
       ...old,
@@ -65,5 +66,7 @@ function eagerlySetCachedPriority(
         }
       }),
     }
-  })
+  }
+  queryClient.setQueryData(RQKEY_NOTIFS('all'), updateData)
+  queryClient.setQueryData(RQKEY_NOTIFS('mentions'), updateData)
 }

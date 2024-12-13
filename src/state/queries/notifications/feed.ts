@@ -17,7 +17,12 @@
  */
 
 import {useCallback, useEffect, useMemo, useRef} from 'react'
-import {AppBskyActorDefs, AppBskyFeedDefs, AtUri} from '@atproto/api'
+import {
+  AppBskyActorDefs,
+  AppBskyFeedDefs,
+  AppBskyFeedPost,
+  AtUri,
+} from '@atproto/api'
 import {
   InfiniteData,
   QueryClient,
@@ -26,6 +31,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query'
 
+import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import {useAgent} from '#/state/session'
 import {useThreadgateHiddenReplyUris} from '#/state/threadgate-hidden-replies'
 import {useModerationOpts} from '../../preferences/moderation-opts'
@@ -46,30 +52,33 @@ const PAGE_SIZE = 30
 type RQPageParam = string | undefined
 
 const RQKEY_ROOT = 'notification-feed'
-export function RQKEY(priority?: false) {
-  return [RQKEY_ROOT, priority]
+export function RQKEY(filter: 'all' | 'mentions') {
+  return [RQKEY_ROOT, filter]
 }
 
-export function useNotificationFeedQuery(opts?: {
+export function useNotificationFeedQuery(opts: {
   enabled?: boolean
-  overridePriorityNotifications?: boolean
+  filter: 'all' | 'mentions'
 }) {
   const agent = useAgent()
   const queryClient = useQueryClient()
   const moderationOpts = useModerationOpts()
   const unreads = useUnreadNotificationsApi()
-  const enabled = opts?.enabled !== false
+  const enabled = opts.enabled !== false
+  const filter = opts.filter
   const {uris: hiddenReplyUris} = useThreadgateHiddenReplyUris()
-
-  // false: force showing all notifications
-  // undefined: let the server decide
-  const priority = opts?.overridePriorityNotifications ? false : undefined
 
   const selectArgs = useMemo(() => {
     return {
+      moderationOpts,
       hiddenReplyUris,
     }
-  }, [hiddenReplyUris])
+  }, [moderationOpts, hiddenReplyUris])
+  const lastRun = useRef<{
+    data: InfiniteData<FeedPage>
+    args: typeof selectArgs
+    result: InfiniteData<FeedPage>
+  } | null>(null)
 
   const query = useInfiniteQuery<
     FeedPage,
@@ -79,14 +88,23 @@ export function useNotificationFeedQuery(opts?: {
     RQPageParam
   >({
     staleTime: STALE.INFINITY,
-    queryKey: RQKEY(priority),
+    queryKey: RQKEY(filter),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
       let page
-      if (!pageParam) {
+      if (filter === 'all' && !pageParam) {
         // for the first page, we check the cached page held by the unread-checker first
         page = unreads.getCachedUnreadPage()
       }
       if (!page) {
+        let reasons: string[] = []
+        if (filter === 'mentions') {
+          reasons = [
+            // Anything that's a post
+            'mention',
+            'reply',
+            'quote',
+          ]
+        }
         const {page: fetchedPage} = await fetchPage({
           agent,
           limit: PAGE_SIZE,
@@ -94,13 +112,13 @@ export function useNotificationFeedQuery(opts?: {
           queryClient,
           moderationOpts,
           fetchAdditionalData: true,
-          priority,
+          reasons,
         })
         page = fetchedPage
       }
 
-      // if the first page has an unread, mark all read
-      if (!pageParam) {
+      if (filter === 'all' && !pageParam) {
+        // if the first page has an unread, mark all read
         unreads.markAllRead()
       }
 
@@ -111,7 +129,38 @@ export function useNotificationFeedQuery(opts?: {
     enabled,
     select: useCallback(
       (data: InfiniteData<FeedPage>) => {
-        const {hiddenReplyUris} = selectArgs
+        const {moderationOpts, hiddenReplyUris} = selectArgs
+
+        // Keep track of the last run and whether we can reuse
+        // some already selected pages from there.
+        let reusedPages = []
+        if (lastRun.current) {
+          const {
+            data: lastData,
+            args: lastArgs,
+            result: lastResult,
+          } = lastRun.current
+          let canReuse = true
+          for (let key in selectArgs) {
+            if (selectArgs.hasOwnProperty(key)) {
+              if ((selectArgs as any)[key] !== (lastArgs as any)[key]) {
+                // Can't do reuse anything if any input has changed.
+                canReuse = false
+                break
+              }
+            }
+          }
+          if (canReuse) {
+            for (let i = 0; i < data.pages.length; i++) {
+              if (data.pages[i] && lastData.pages[i] === data.pages[i]) {
+                reusedPages.push(lastResult.pages[i])
+                continue
+              }
+              // Stop as soon as pages stop matching up.
+              break
+            }
+          }
+        }
 
         // override 'isRead' using the first page's returned seenAt
         // we do this because the `markAllRead()` call above will
@@ -124,23 +173,49 @@ export function useNotificationFeedQuery(opts?: {
           }
         }
 
-        data = {
+        const result = {
           ...data,
-          pages: data.pages.map(page => {
-            return {
-              ...page,
-              items: page.items.filter(item => {
-                const isHiddenReply =
-                  item.type === 'reply' &&
-                  item.subjectUri &&
-                  hiddenReplyUris.has(item.subjectUri)
-                return !isHiddenReply
-              }),
-            }
-          }),
+          pages: [
+            ...reusedPages,
+            ...data.pages.slice(reusedPages.length).map(page => {
+              return {
+                ...page,
+                items: page.items
+                  .filter(item => {
+                    const isHiddenReply =
+                      item.type === 'reply' &&
+                      item.subjectUri &&
+                      hiddenReplyUris.has(item.subjectUri)
+                    return !isHiddenReply
+                  })
+                  .filter(item => {
+                    if (
+                      item.type === 'reply' ||
+                      item.type === 'mention' ||
+                      item.type === 'quote'
+                    ) {
+                      /*
+                       * The `isPostView` check will fail here bc we don't have
+                       * a `$type` field on the `subject`. But if the nested
+                       * `record` is a post, we know it's a post view.
+                       */
+                      if (AppBskyFeedPost.isRecord(item.subject?.record)) {
+                        const mod = moderatePost(item.subject, moderationOpts!)
+                        if (mod.ui('contentList').filter) {
+                          return false
+                        }
+                      }
+                    }
+                    return true
+                  }),
+              }
+            }),
+          ],
         }
 
-        return data
+        lastRun.current = {data, result, args: selectArgs}
+
+        return result
       },
       [selectArgs],
     ),

@@ -1,4 +1,3 @@
-import React from 'react'
 import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import {
@@ -6,10 +5,10 @@ import {
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
 
+import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {usePalette} from 'lib/hooks/usePalette'
-import {UserGroupIcon} from 'lib/icons'
-import {isWeb} from 'platform/detection'
+import {UserGroupIcon} from '#/lib/icons'
+import {isWeb} from '#/platform/detection'
 import {Growth_Stroke2_Corner0_Rounded as Growth} from '#/components/icons/Growth'
 import {Text} from './text/Text'
 

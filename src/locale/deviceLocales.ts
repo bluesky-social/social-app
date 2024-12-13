@@ -13,6 +13,12 @@ type LocalWithLanguageCode = Locale & {
  *
  * {@link https://github.com/bluesky-social/social-app/pull/4461}
  * {@link https://xml.coverpages.org/iso639a.html}
+ *
+ * Convert Chinese language tags for Native.
+ *
+ * {@link https://datatracker.ietf.org/doc/html/rfc5646#appendix-A}
+ * {@link https://developer.apple.com/documentation/packagedescription/languagetag}
+ * {@link https://gist.github.com/amake/0ac7724681ac1c178c6f95a5b09f03ce#new-locales-vs-old-locales-chinese}
  */
 export function getLocales() {
   const locales = defaultGetLocales?.() ?? []
@@ -32,10 +38,25 @@ export function getLocales() {
         // yiddish
         locale.languageCode = 'yi'
       }
-
-      // @ts-ignore checked above
-      output.push(locale)
     }
+
+    if (typeof locale.languageTag === 'string') {
+      if (locale.languageTag.startsWith('zh-Hans')) {
+        // Simplified Chinese to zh-CN
+        locale.languageTag = 'zh-CN'
+      }
+      if (locale.languageTag.startsWith('zh-Hant')) {
+        // Traditional Chinese to zh-TW
+        locale.languageTag = 'zh-TW'
+      }
+      if (locale.languageTag.startsWith('yue')) {
+        // Cantonese (Yue) to zh-HK
+        locale.languageTag = 'zh-HK'
+      }
+    }
+
+    // @ts-ignore checked above
+    output.push(locale)
   }
 
   return output

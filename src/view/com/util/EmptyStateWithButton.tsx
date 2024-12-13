@@ -1,14 +1,14 @@
-import React from 'react'
 import {StyleSheet, View} from 'react-native'
+import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {IconProp} from '@fortawesome/fontawesome-svg-core'
-import {Text} from './text/Text'
+
+import {usePalette} from '#/lib/hooks/usePalette'
+import {s} from '#/lib/styles'
 import {Button} from './forms/Button'
-import {usePalette} from 'lib/hooks/usePalette'
-import {s} from 'lib/styles'
+import {Text} from './text/Text'
 
 interface Props {
   testID?: string

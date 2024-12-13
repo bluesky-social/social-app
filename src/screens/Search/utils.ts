@@ -35,6 +35,7 @@ export function makeSearchQuery(query: string, params: Params) {
   return [
     query,
     Object.entries(params)
+      .filter(([_, value]) => value)
       .map(([name, value]) => `${name}:${value}`)
       .join(' '),
   ]

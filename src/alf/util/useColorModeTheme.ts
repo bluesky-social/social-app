@@ -1,9 +1,8 @@
 import React from 'react'
 import {ColorSchemeName, useColorScheme} from 'react-native'
-import * as SystemUI from 'expo-system-ui'
 
-import {isWeb} from 'platform/detection'
-import {useThemePrefs} from 'state/shell'
+import {isWeb} from '#/platform/detection'
+import {useThemePrefs} from '#/state/shell'
 import {dark, dim, light} from '#/alf/themes'
 import {ThemeName} from '#/alf/types'
 
@@ -12,7 +11,6 @@ export function useColorModeTheme(): ThemeName {
 
   React.useLayoutEffect(() => {
     updateDocument(theme)
-    SystemUI.setBackgroundColorAsync(getBackgroundColor(theme))
   }, [theme])
 
   return theme

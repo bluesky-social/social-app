@@ -5,7 +5,6 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
-import {createHitslop} from '#/lib/constants'
 import {NavigationProp} from '#/lib/routes/types'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
@@ -85,20 +84,29 @@ export function AviFollowButton({
       {!isFollowing && (
         <Button
           label={_(msg`Open ${name} profile shortcut menu`)}
-          hitSlop={createHitslop(3)}
           style={[
             a.rounded_full,
             a.absolute,
             {
-              height: 30,
-              width: 30,
               bottom: -7,
               right: -7,
             },
           ]}>
           <NativeDropdown items={items}>
             <View
-              style={[a.h_full, a.w_full, a.justify_center, a.align_center]}>
+              style={[
+                {
+                  // An asymmetric hit slop
+                  // to prioritize bottom right taps.
+                  paddingTop: 2,
+                  paddingLeft: 2,
+                  paddingBottom: 6,
+                  paddingRight: 6,
+                },
+                a.align_center,
+                a.justify_center,
+                a.rounded_full,
+              ]}>
               <View
                 style={[
                   a.rounded_full,

@@ -1,8 +1,8 @@
 import React from 'react'
 
-import {isWeb} from 'platform/detection'
-import {useSession} from 'state/session'
-import {useActiveStarterPack} from 'state/shell/starter-pack'
+import {isWeb} from '#/platform/detection'
+import {useSession} from '#/state/session'
+import {useActiveStarterPack} from '#/state/shell/starter-pack'
 
 type State = {
   showLoggedOut: boolean

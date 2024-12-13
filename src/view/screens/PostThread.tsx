@@ -1,12 +1,11 @@
 import React from 'react'
-import {View} from 'react-native'
 import {useFocusEffect} from '@react-navigation/native'
 
+import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
+import {makeRecordUri} from '#/lib/strings/url-helpers'
 import {useSetMinimalShellMode} from '#/state/shell'
-import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
-import {makeRecordUri} from 'lib/strings/url-helpers'
-import {s} from 'lib/styles'
-import {PostThread as PostThreadComponent} from '../com/post-thread/PostThread'
+import {PostThread as PostThreadComponent} from '#/view/com/post-thread/PostThread'
+import * as Layout from '#/components/Layout'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'PostThread'>
 export function PostThreadScreen({route}: Props) {
@@ -22,10 +21,8 @@ export function PostThreadScreen({route}: Props) {
   )
 
   return (
-    <View style={s.hContentRegion}>
-      <View style={s.flex1}>
-        <PostThreadComponent uri={uri} />
-      </View>
-    </View>
+    <Layout.Screen testID="postThreadScreen">
+      <PostThreadComponent uri={uri} />
+    </Layout.Screen>
   )
 }

@@ -54,7 +54,7 @@ import {useSetMinimalShellMode} from '#/state/shell'
 import {useComposerControls} from '#/state/shell/composer'
 import {ListMembers} from '#/view/com/lists/ListMembers'
 import {PagerWithHeader} from '#/view/com/pager/PagerWithHeader'
-import {Feed} from '#/view/com/posts/Feed'
+import {PostFeed} from '#/view/com/posts/PostFeed'
 import {ProfileSubpageHeader} from '#/view/com/profile/ProfileSubpageHeader'
 import {EmptyState} from '#/view/com/util/EmptyState'
 import {FAB} from '#/view/com/util/fab/FAB'
@@ -69,10 +69,10 @@ import {LoadLatestBtn} from '#/view/com/util/load-latest/LoadLatestBtn'
 import {LoadingScreen} from '#/view/com/util/LoadingScreen'
 import {Text} from '#/view/com/util/text/Text'
 import * as Toast from '#/view/com/util/Toast'
-import {CenteredView} from '#/view/com/util/Views'
 import {ListHiddenScreen} from '#/screens/List/ListHiddenScreen'
 import {atoms as a, useTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
+import * as Layout from '#/components/Layout'
 import * as Hider from '#/components/moderation/Hider'
 import * as Prompt from '#/components/Prompt'
 import {ReportDialog, useReportDialogControl} from '#/components/ReportDialog'
@@ -87,6 +87,14 @@ interface SectionRef {
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileList'>
 export function ProfileListScreen(props: Props) {
+  return (
+    <Layout.Screen testID="profileListScreen">
+      <ProfileListScreenInner {...props} />
+    </Layout.Screen>
+  )
+}
+
+function ProfileListScreenInner(props: Props) {
   const {_} = useLingui()
   const {name: handleOrDid, rkey} = props.route.params
   const {data: resolvedUri, error: resolveError} = useResolveUriQuery(
@@ -98,20 +106,20 @@ export function ProfileListScreen(props: Props) {
 
   if (resolveError) {
     return (
-      <CenteredView>
+      <Layout.Content>
         <ErrorScreen
           error={_(
             msg`We're sorry, but we were unable to resolve this list. If this persists, please contact the list creator, @${handleOrDid}.`,
           )}
         />
-      </CenteredView>
+      </Layout.Content>
     )
   }
   if (listError) {
     return (
-      <CenteredView>
+      <Layout.Content>
         <ErrorScreen error={cleanError(listError)} />
-      </CenteredView>
+      </Layout.Content>
     )
   }
 
@@ -781,7 +789,7 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
 
     return (
       <View>
-        <Feed
+        <PostFeed
           testID="listFeed"
           enabled={isFocused}
           feed={feed}
@@ -1001,7 +1009,6 @@ function ErrorScreen({error}: {error: string}) {
         pal.view,
         pal.border,
         {
-          marginTop: 10,
           paddingHorizontal: 18,
           paddingVertical: 14,
           borderTopWidth: StyleSheet.hairlineWidth,

@@ -10,19 +10,19 @@ appId: xyz.blueskyweb.app
     id: "e2eSignInAlice"
 
 # Post an image with the porn label
+- assertVisible:
+      id: "composeFAB"
 - tapOn:
     id: "composeFAB"
 - inputText: "Post with an image"
 - tapOn:
     id: "openGalleryBtn"
-- tapOn:
-    id: "labelsBtn"
-- tapOn:
-    label: "Tap on porn"
-    point: 78%,67%
+- tapOn: "Content warnings"
+- tapOn: "Content warnings"
+- tapOn: "Porn"
 - tapOn:
     label: "Tap on confirm"
-    point: 51%,92%
+    id: "confirmBtn"
 - tapOn:
     id: "composerPublishBtn"
 - tapOn:

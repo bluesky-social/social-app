@@ -32,6 +32,7 @@ import {
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
+import {useSheetWrapper} from '#/components/Dialog/sheet-wrapper'
 import {IconCircle} from '#/components/IconCircle'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
 import {CircleInfo_Stroke2_Corner0_Rounded} from '#/components/icons/CircleInfo'
@@ -89,15 +90,18 @@ export function StepProfile() {
     requestNotificationsPermission('StartOnboarding')
   }, [gate, requestNotificationsPermission])
 
+  const sheetWrapper = useSheetWrapper()
   const openPicker = React.useCallback(
     async (opts?: ImagePickerOptions) => {
-      const response = await launchImageLibraryAsync({
-        exif: false,
-        mediaTypes: MediaTypeOptions.Images,
-        quality: 1,
-        ...opts,
-        legacy: true,
-      })
+      const response = await sheetWrapper(
+        launchImageLibraryAsync({
+          exif: false,
+          mediaTypes: MediaTypeOptions.Images,
+          quality: 1,
+          ...opts,
+          legacy: true,
+        }),
+      )
 
       return (response.assets ?? [])
         .slice(0, 1)
@@ -121,7 +125,7 @@ export function StepProfile() {
           size: getDataUriSize(image.uri),
         }))
     },
-    [_, setError],
+    [_, setError, sheetWrapper],
   )
 
   const onContinue = React.useCallback(async () => {
@@ -168,9 +172,11 @@ export function StepProfile() {
 
     setError('')
 
-    const items = await openPicker({
-      aspect: [1, 1],
-    })
+    const items = await sheetWrapper(
+      openPicker({
+        aspect: [1, 1],
+      }),
+    )
     let image = items[0]
     if (!image) return
 
@@ -196,7 +202,13 @@ export function StepProfile() {
       image,
       useCreatedAvatar: false,
     }))
-  }, [requestPhotoAccessIfNeeded, setAvatar, openPicker, setError])
+  }, [
+    requestPhotoAccessIfNeeded,
+    setAvatar,
+    openPicker,
+    setError,
+    sheetWrapper,
+  ])
 
   const onSecondaryPress = React.useCallback(() => {
     if (avatar.useCreatedAvatar) {
@@ -286,7 +298,6 @@ export function StepProfile() {
       </View>
 
       <Dialog.Outer control={creatorControl}>
-        <Dialog.Handle />
         <Dialog.Inner
           label="Avatar creator"
           style={[

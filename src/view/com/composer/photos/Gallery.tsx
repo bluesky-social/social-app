@@ -21,7 +21,7 @@ import {ComposerImage, cropImage} from '#/state/gallery'
 import {Text} from '#/view/com/util/text/Text'
 import {useTheme} from '#/alf'
 import * as Dialog from '#/components/Dialog'
-import {ComposerAction} from '../state/composer'
+import {PostAction} from '../state/composer'
 import {EditImageDialog} from './EditImageDialog'
 import {ImageAltTextDialog} from './ImageAltTextDialog'
 
@@ -29,7 +29,7 @@ const IMAGE_GAP = 8
 
 interface GalleryProps {
   images: ComposerImage[]
-  dispatch: (action: ComposerAction) => void
+  dispatch: (action: PostAction) => void
 }
 
 export let Gallery = (props: GalleryProps): React.ReactNode => {
@@ -124,7 +124,7 @@ type GalleryItemProps = {
   image: ComposerImage
   altTextControlStyle?: ViewStyle
   imageControlsStyle?: ViewStyle
-  imageStyle?: ViewStyle
+  imageStyle?: ImageStyle
   onChange: (next: ComposerImage) => void
   onRemove: () => void
 }
@@ -159,7 +159,10 @@ const GalleryItem = ({
   }
 
   return (
-    <View style={imageStyle}>
+    <View
+      style={imageStyle as ViewStyle}
+      // Fixes ALT and icons appearing with half opacity when the post is inactive
+      renderToHardwareTextureAndroid>
       <TouchableOpacity
         testID="altTextButton"
         accessibilityRole="button"
@@ -218,7 +221,7 @@ const GalleryItem = ({
 
       <Image
         testID="selectedPhotoImage"
-        style={[styles.image, imageStyle] as ImageStyle}
+        style={[styles.image, imageStyle]}
         source={{
           uri: (image.transformed ?? image.source).path,
         }}

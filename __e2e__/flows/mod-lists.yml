@@ -28,18 +28,20 @@ appId: xyz.blueskyweb.app
 - assertVisible: "Muted Users"
 - assertVisible: "Shhh"
 
-# toggle mute subscription
 - tapOn:
-    point: "70%,9%"
+    label: "Dropdown"
+    point: "71%,9%"
+
 - tapOn: "Mute accounts"
 - tapOn: "Mute list"
 - tapOn: "Unmute"
 
-# toggle block subscription
 - tapOn:
-    point: "70%,9%"
+      label: "Dropdown"
+      point: "71%,9%"
+
 - tapOn: "Block accounts"
 - tapOn: "Block list"
 - tapOn: "Unblock"
- 
+
  # the rest of the behaviors are tested in curate-lists.yml

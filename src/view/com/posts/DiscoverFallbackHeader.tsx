@@ -1,10 +1,10 @@
-import React from 'react'
 import {View} from 'react-native'
 import {Trans} from '@lingui/macro'
-import {Text} from '../util/text/Text'
+
 import {usePalette} from '#/lib/hooks/usePalette'
-import {TextLink} from '../util/Link'
 import {InfoCircleIcon} from '#/lib/icons'
+import {TextLink} from '../util/Link'
+import {Text} from '../util/text/Text'
 
 export function DiscoverFallbackHeader() {
   const pal = usePalette('default')

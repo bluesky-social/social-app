@@ -11,7 +11,6 @@ export type CommonNavigatorParams = {
   ModerationMutedAccounts: undefined
   ModerationBlockedAccounts: undefined
   Settings: undefined
-  LanguageSettings: undefined
   Profile: {name: string; hideBackButton?: boolean}
   ProfileFollowers: {name: string}
   ProfileFollows: {name: string}
@@ -33,6 +32,7 @@ export type CommonNavigatorParams = {
   TermsOfService: undefined
   CommunityGuidelines: undefined
   CopyrightPolicy: undefined
+  LanguageSettings: undefined
   AppPasswords: undefined
   SavedFeeds: undefined
   PreferencesFollowingFeed: undefined
@@ -40,11 +40,16 @@ export type CommonNavigatorParams = {
   PreferencesExternalEmbeds: undefined
   AccessibilitySettings: undefined
   AppearanceSettings: undefined
+  AccountSettings: undefined
+  PrivacyAndSecuritySettings: undefined
+  ContentAndMediaSettings: undefined
+  AboutSettings: undefined
+  AppIconSettings: undefined
   Search: {q?: string}
   Hashtag: {tag: string; author?: string}
   MessagesConversation: {conversation: string; embed?: string}
   MessagesSettings: undefined
-  NotificationsSettings: undefined
+  NotificationSettings: undefined
   Feeds: undefined
   Start: {name: string; rkey: string}
   StarterPack: {name: string; rkey: string; new?: boolean}
@@ -70,7 +75,7 @@ export type SearchTabNavigatorParams = CommonNavigatorParams & {
 }
 
 export type NotificationsTabNavigatorParams = CommonNavigatorParams & {
-  Notifications: {show?: 'all'}
+  Notifications: undefined
 }
 
 export type MyProfileTabNavigatorParams = CommonNavigatorParams & {
@@ -85,7 +90,7 @@ export type FlatNavigatorParams = CommonNavigatorParams & {
   Home: undefined
   Search: {q?: string}
   Feeds: undefined
-  Notifications: {show?: 'all'}
+  Notifications: undefined
   Hashtag: {tag: string; author?: string}
   Messages: {pushToConversation?: string; animation?: 'push' | 'pop'}
 }
@@ -97,7 +102,7 @@ export type AllNavigatorParams = CommonNavigatorParams & {
   Search: {q?: string}
   Feeds: undefined
   NotificationsTab: undefined
-  Notifications: {show?: 'all'}
+  Notifications: undefined
   MyProfileTab: undefined
   Hashtag: {tag: string; author?: string}
   MessagesTab: undefined

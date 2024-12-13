@@ -1,6 +1,7 @@
 import React from 'react'
-import {isNative} from 'platform/detection'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {isNative} from '#/platform/detection'
 
 export const withBreakpoints = <P extends object>(
   Mobile: React.ComponentType<P>,

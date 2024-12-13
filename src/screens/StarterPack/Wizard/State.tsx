@@ -7,8 +7,8 @@ import {
 import {GeneratorView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
 import {msg} from '@lingui/macro'
 
-import {STARTER_PACK_MAX_SIZE} from 'lib/constants'
-import {useSession} from 'state/session'
+import {STARTER_PACK_MAX_SIZE} from '#/lib/constants'
+import {useSession} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
 
 const steps = ['Details', 'Profiles', 'Feeds'] as const

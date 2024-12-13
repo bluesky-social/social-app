@@ -14,17 +14,17 @@ import {
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {usePalette} from '#/lib/hooks/usePalette'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {makeProfileLink} from '#/lib/routes/links'
+import {cleanError} from '#/lib/strings/errors'
+import {isWeb} from '#/platform/detection'
 import {useInvitesAPI, useInvitesState} from '#/state/invites'
 import {useModalControls} from '#/state/modals'
 import {
   InviteCodesQueryResponse,
   useInviteCodesQuery,
 } from '#/state/queries/invites'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {cleanError} from 'lib/strings/errors'
-import {isWeb} from 'platform/detection'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {Button} from '../util/forms/Button'
 import {Link} from '../util/Link'

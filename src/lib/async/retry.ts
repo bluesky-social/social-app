@@ -1,4 +1,4 @@
-import {isNetworkError} from 'lib/strings/errors'
+import {isNetworkError} from '#/lib/strings/errors'
 
 export async function retry<P>(
   retries: number,

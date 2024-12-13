@@ -1,6 +1,5 @@
 import React, {useRef} from 'react'
 import {Pressable, StyleProp, View, ViewStyle} from 'react-native'
-import Animated, {FadeInDown} from 'react-native-reanimated'
 import {AppBskyEmbedVideo} from '@atproto/api'
 import {BlueskyVideoView} from '@haileyok/bluesky-video'
 import {msg} from '@lingui/macro'
@@ -8,7 +7,7 @@ import {useLingui} from '@lingui/react'
 
 import {HITSLOP_30} from '#/lib/constants'
 import {useAutoplayDisabled} from '#/state/preferences'
-import {useVideoMuteState} from 'view/com/util/post-embeds/VideoVolumeContext'
+import {useVideoMuteState} from '#/view/com/util/post-embeds/VideoVolumeContext'
 import {atoms as a, useTheme} from '#/alf'
 import {useIsWithinMessage} from '#/components/dms/MessageContext'
 import {Mute_Stroke2_Corner0_Rounded as MuteIcon} from '#/components/icons/Mute'
@@ -87,7 +86,7 @@ export const VideoEmbedInnerNative = React.forwardRef(
         />
         <VideoControls
           enterFullscreen={() => {
-            videoRef.current?.enterFullscreen()
+            videoRef.current?.enterFullscreen(true)
           }}
           toggleMuted={() => {
             videoRef.current?.toggleMuted()
@@ -182,8 +181,7 @@ function ControlButton({
   style?: StyleProp<ViewStyle>
 }) {
   return (
-    <Animated.View
-      entering={FadeInDown.duration(300)}
+    <View
       style={[
         a.absolute,
         a.rounded_full,
@@ -207,6 +205,6 @@ function ControlButton({
         hitSlop={HITSLOP_30}>
         {children}
       </Pressable>
-    </Animated.View>
+    </View>
   )
 }

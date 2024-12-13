@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react'
+import {useCallback, useState} from 'react'
 import {StyleProp, StyleSheet, TextStyle, View, ViewStyle} from 'react-native'
 import DatePicker from 'react-native-date-picker'
 import {
@@ -7,10 +7,10 @@ import {
 } from '@fortawesome/react-native-fontawesome'
 import {useLingui} from '@lingui/react'
 
-import {usePalette} from 'lib/hooks/usePalette'
-import {TypographyVariant} from 'lib/ThemeContext'
-import {useTheme} from 'lib/ThemeContext'
-import {isAndroid, isIOS} from 'platform/detection'
+import {usePalette} from '#/lib/hooks/usePalette'
+import {TypographyVariant} from '#/lib/ThemeContext'
+import {useTheme} from '#/lib/ThemeContext'
+import {isAndroid, isIOS} from '#/platform/detection'
 import {Text} from '../text/Text'
 import {Button, ButtonType} from './Button'
 

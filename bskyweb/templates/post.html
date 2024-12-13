@@ -38,6 +38,7 @@
   <meta name="article:published_time" content="{{ postView.IndexedAt }}">
   <meta name="article:published_time" content="{{ postView.IndexedAt }}">
   <link rel="alternate" type="application/json+oembed" href="https://embed.bsky.app/oembed?format=json&url={{ postView.Uri | urlencode }}" />
+  <link rel="alternate" href="{{ postView.Uri }}" />
 {% endif -%}
 {%- endblock %}
 

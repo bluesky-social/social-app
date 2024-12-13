@@ -1,27 +1,24 @@
 import React from 'react'
-import {Pressable, StyleSheet, View} from 'react-native'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {Pressable, View} from 'react-native'
+import {MeasuredDimensions, runOnJS, runOnUI} from 'react-native-reanimated'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
-import {BACK_HITSLOP} from '#/lib/constants'
+import {measureHandle, useHandleRef} from '#/lib/hooks/useHandleRef'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {makeProfileLink} from '#/lib/routes/links'
 import {NavigationProp} from '#/lib/routes/types'
 import {sanitizeHandle} from '#/lib/strings/handles'
-import {isNative} from '#/platform/detection'
 import {emitSoftReset} from '#/state/events'
-import {ImagesLightbox, useLightboxControls} from '#/state/lightbox'
-import {useSetDrawerOpen} from '#/state/shell'
-import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
+import {useLightboxControls} from '#/state/lightbox'
+import {TextLink} from '#/view/com/util/Link'
+import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
+import {Text} from '#/view/com/util/text/Text'
+import {UserAvatar, UserAvatarType} from '#/view/com/util/UserAvatar'
 import {StarterPack} from '#/components/icons/StarterPack'
-import {TextLink} from '../util/Link'
-import {LoadingPlaceholder} from '../util/LoadingPlaceholder'
-import {Text} from '../util/text/Text'
-import {UserAvatar, UserAvatarType} from '../util/UserAvatar'
-import {CenteredView} from '../util/Views'
+import * as Layout from '#/components/Layout'
 
 export function ProfileSubpageHeader({
   isLoading,
@@ -46,71 +43,62 @@ export function ProfileSubpageHeader({
     | undefined
   avatarType: UserAvatarType | 'starter-pack'
 }>) {
-  const setDrawerOpen = useSetDrawerOpen()
   const navigation = useNavigation<NavigationProp>()
   const {_} = useLingui()
   const {isMobile} = useWebMediaQueries()
   const {openLightbox} = useLightboxControls()
   const pal = usePalette('default')
   const canGoBack = navigation.canGoBack()
+  const aviRef = useHandleRef()
 
-  const onPressBack = React.useCallback(() => {
-    if (navigation.canGoBack()) {
-      navigation.goBack()
-    } else {
-      navigation.navigate('Home')
-    }
-  }, [navigation])
-
-  const onPressMenu = React.useCallback(() => {
-    setDrawerOpen(true)
-  }, [setDrawerOpen])
+  const _openLightbox = React.useCallback(
+    (uri: string, thumbRect: MeasuredDimensions | null) => {
+      openLightbox({
+        images: [
+          {
+            uri,
+            thumbUri: uri,
+            thumbRect,
+            dimensions: {
+              // It's fine if it's actually smaller but we know it's 1:1.
+              height: 1000,
+              width: 1000,
+            },
+            thumbDimensions: null,
+            type: 'rect-avi',
+          },
+        ],
+        index: 0,
+      })
+    },
+    [openLightbox],
+  )
 
   const onPressAvi = React.useCallback(() => {
     if (
       avatar // TODO && !(view.moderation.avatar.blur && view.moderation.avatar.noOverride)
     ) {
-      openLightbox(new ImagesLightbox([{uri: avatar}], 0))
+      const aviHandle = aviRef.current
+      runOnUI(() => {
+        'worklet'
+        const rect = measureHandle(aviHandle)
+        runOnJS(_openLightbox)(avatar, rect)
+      })()
     }
-  }, [openLightbox, avatar])
+  }, [_openLightbox, avatar, aviRef])
 
   return (
-    <CenteredView style={pal.view}>
-      {isMobile && (
-        <View
-          style={[
-            {
-              flexDirection: 'row',
-              alignItems: 'center',
-              borderBottomWidth: StyleSheet.hairlineWidth,
-              paddingTop: isNative ? 0 : 8,
-              paddingBottom: 8,
-              paddingHorizontal: isMobile ? 12 : 14,
-            },
-            pal.border,
-          ]}>
-          <Pressable
-            testID="headerDrawerBtn"
-            onPress={canGoBack ? onPressBack : onPressMenu}
-            hitSlop={BACK_HITSLOP}
-            style={canGoBack ? styles.backBtn : styles.backBtnWide}
-            accessibilityRole="button"
-            accessibilityLabel={canGoBack ? 'Back' : 'Menu'}
-            accessibilityHint="">
-            {canGoBack ? (
-              <FontAwesomeIcon
-                size={18}
-                icon="angle-left"
-                style={[styles.backIcon, pal.text]}
-              />
-            ) : (
-              <Menu size="lg" style={[{marginTop: 4}, pal.textLight]} />
-            )}
-          </Pressable>
-          <View style={{flex: 1}} />
-          {children}
-        </View>
-      )}
+    <>
+      <Layout.Header.Outer>
+        {canGoBack ? (
+          <Layout.Header.BackButton />
+        ) : (
+          <Layout.Header.MenuButton />
+        )}
+        <Layout.Header.Content />
+        {children}
+      </Layout.Header.Outer>
+
       <View
         style={{
           flexDirection: 'row',
@@ -120,19 +108,21 @@ export function ProfileSubpageHeader({
           paddingBottom: 6,
           paddingHorizontal: isMobile ? 12 : 14,
         }}>
-        <Pressable
-          testID="headerAviButton"
-          onPress={onPressAvi}
-          accessibilityRole="image"
-          accessibilityLabel={_(msg`View the avatar`)}
-          accessibilityHint=""
-          style={{width: 58}}>
-          {avatarType === 'starter-pack' ? (
-            <StarterPack width={58} gradient="sky" />
-          ) : (
-            <UserAvatar type={avatarType} size={58} avatar={avatar} />
-          )}
-        </Pressable>
+        <View ref={aviRef} collapsable={false}>
+          <Pressable
+            testID="headerAviButton"
+            onPress={onPressAvi}
+            accessibilityRole="image"
+            accessibilityLabel={_(msg`View the avatar`)}
+            accessibilityHint=""
+            style={{width: 58}}>
+            {avatarType === 'starter-pack' ? (
+              <StarterPack width={58} gradient="sky" />
+            ) : (
+              <UserAvatar type={avatarType} size={58} avatar={avatar} />
+            )}
+          </Pressable>
+        </View>
         <View style={{flex: 1}}>
           {isLoading ? (
             <LoadingPlaceholder
@@ -173,31 +163,7 @@ export function ProfileSubpageHeader({
             </Text>
           )}
         </View>
-        {!isMobile && (
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-            }}>
-            {children}
-          </View>
-        )}
       </View>
-    </CenteredView>
+    </>
   )
 }
-
-const styles = StyleSheet.create({
-  backBtn: {
-    width: 20,
-    height: 30,
-  },
-  backBtnWide: {
-    width: 20,
-    height: 30,
-    marginRight: 4,
-  },
-  backIcon: {
-    marginTop: 6,
-  },
-})

@@ -4,7 +4,7 @@ import {ModerationCause} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {listUriToHref} from 'lib/strings/url-helpers'
+import {listUriToHref} from '#/lib/strings/url-helpers'
 import {atoms as a, useTheme} from '#/alf'
 import * as Dialog from '#/components/Dialog'
 import {DialogControlProps} from '#/components/Dialog'

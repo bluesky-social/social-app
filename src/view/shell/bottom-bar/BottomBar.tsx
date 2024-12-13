@@ -17,7 +17,7 @@ import {clamp} from '#/lib/numbers'
 import {getTabState, TabState} from '#/lib/routes/helpers'
 import {s} from '#/lib/styles'
 import {emitSoftReset} from '#/state/events'
-import {useUnreadMessageCount} from '#/state/queries/messages/list-converations'
+import {useUnreadMessageCount} from '#/state/queries/messages/list-conversations'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
@@ -134,7 +134,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
           footerMinimalShellTransform,
         ]}
         onLayout={e => {
-          footerHeight.value = e.nativeEvent.layout.height
+          footerHeight.set(e.nativeEvent.layout.height)
         }}>
         {hasSession ? (
           <>
@@ -200,7 +200,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
               accessibilityLabel={_(msg`Chat`)}
               accessibilityHint={
                 numUnreadMessages.count > 0
-                  ? `${numUnreadMessages.numUnread} unread`
+                  ? _(msg`${numUnreadMessages.numUnread} unread items`)
                   : ''
               }
             />
@@ -227,7 +227,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
               accessibilityHint={
                 numUnreadNotifications === ''
                   ? ''
-                  : `${numUnreadNotifications} unread`
+                  : _(msg`${numUnreadNotifications} unread items`)
               }
             />
             <Btn
@@ -360,7 +360,7 @@ function Btn({
       targetScale={0.8}>
       {icon}
       {notificationCount ? (
-        <View style={[styles.notificationCount]}>
+        <View style={[styles.notificationCount, a.rounded_full]}>
           <Text style={styles.notificationCountLabel}>{notificationCount}</Text>
         </View>
       ) : undefined}

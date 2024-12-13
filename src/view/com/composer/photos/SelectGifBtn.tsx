@@ -1,4 +1,4 @@
-import React, {useCallback, useRef} from 'react'
+import {useCallback, useRef} from 'react'
 import {Keyboard} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -11,7 +11,7 @@ import {GifSelectDialog} from '#/components/dialogs/GifSelect'
 import {GifSquare_Stroke2_Corner0_Rounded as GifIcon} from '#/components/icons/Gif'
 
 type Props = {
-  onClose: () => void
+  onClose?: () => void
   onSelectGif: (gif: Gif) => void
   disabled?: boolean
 }

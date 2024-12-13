@@ -8,6 +8,8 @@ appId: xyz.blueskyweb.app
     file: ../setupApp.yml
 - tapOn:
     id: "e2eSignInAlice"
+- assertVisible:
+      id: "composeFAB"
 - tapOn:
     id: "composeFAB"
 - inputText: "Post text only"
@@ -60,7 +62,7 @@ appId: xyz.blueskyweb.app
     id: "repostBtn"
 - tapOn:
     id: "quoteBtn"
-- inputText: "QP text only"   
+- inputText: "QP text only"
 - tapOn:
     id: "composerPublishBtn"
 - assertVisible:

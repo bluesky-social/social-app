@@ -139,6 +139,16 @@ export function getContentLanguages() {
   return persisted.get('languagePrefs').contentLanguages
 }
 
+/**
+ * Be careful with this. It's used for the PWI home screen so that users can
+ * select a UI language and have it apply to the fetched Discover feed.
+ *
+ * We only support BCP-47 two-letter codes here, hence the split.
+ */
+export function getAppLanguageAsContentLanguage() {
+  return persisted.get('languagePrefs').appLanguage.split('-')[0]
+}
+
 export function toPostLanguages(postLanguage: string): string[] {
   // filter out empty strings if exist
   return postLanguage.split(',').filter(Boolean)

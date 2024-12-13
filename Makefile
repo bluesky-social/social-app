@@ -20,7 +20,7 @@ build-web-embed: ## Compile web embed bundle, copy to bskyweb/embedr* directorie
 
 .PHONY: test
 test: ## Run all tests
-	NODE_ENV=test EXPO_PUBLIC_ENV=test yarn test
+	NODE_ENV=test yarn test
 
 .PHONY: lint
 lint: ## Run style checks and verify syntax

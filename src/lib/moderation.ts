@@ -14,6 +14,14 @@ import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {AppModerationCause} from '#/components/Pills'
 
+export const ADULT_CONTENT_LABELS = ['sexual', 'nudity', 'porn']
+export const OTHER_SELF_LABELS = ['graphic-media']
+export const SELF_LABELS = [...ADULT_CONTENT_LABELS, ...OTHER_SELF_LABELS]
+
+export type AdultSelfLabel = (typeof ADULT_CONTENT_LABELS)[number]
+export type OtherSelfLabel = (typeof OTHER_SELF_LABELS)[number]
+export type SelfLabel = (typeof SELF_LABELS)[number]
+
 export function getModerationCauseKey(
   cause: ModerationCause | AppModerationCause,
 ): string {

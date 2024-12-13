@@ -1,7 +1,7 @@
 import {useWindowDimensions} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
-import {useBottomBarOffset} from 'lib/hooks/useBottomBarOffset'
+import {useBottomBarOffset} from '#/lib/hooks/useBottomBarOffset'
 
 const MIN_POST_HEIGHT = 100
 

@@ -87,6 +87,13 @@ func run(args []string) {
 					Value:    cli.NewStringSlice("https://bsky.app", "https://main.bsky.dev", "https://app.staging.bsky.dev"),
 					EnvVars:  []string{"CORS_ALLOWED_ORIGINS"},
 				},
+				&cli.StringFlag{
+					Name:     "static-cdn-host",
+					Usage:    "scheme, hostname, and port of static content CDN, don't end with a slash",
+					Required: false,
+					Value:    "",
+					EnvVars:  []string{"STATIC_CDN_HOST"},
+				},
 			},
 		},
 	}

@@ -1,4 +1,3 @@
-import React from 'react'
 import {View} from 'react-native'
 import {AppBskyActorDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
@@ -24,7 +23,7 @@ export function ProfileHeaderHandle({
   const blockHide = profile.viewer?.blocking || profile.viewer?.blockedBy
   return (
     <View
-      style={[a.flex_row, a.gap_xs, a.align_center]}
+      style={[a.flex_row, a.gap_xs, a.align_center, {maxWidth: '100%'}]}
       pointerEvents={disableTaps ? 'none' : isIOS ? 'auto' : 'box-none'}>
       <NewskieDialog profile={profile} disabled={disableTaps} />
       {profile.viewer?.followedBy && !blockHide ? (
@@ -47,7 +46,7 @@ export function ProfileHeaderHandle({
                 a.rounded_xs,
                 {borderColor: t.palette.contrast_200},
               ]
-            : [a.text_md, a.leading_tight, t.atoms.text_contrast_medium],
+            : [a.text_md, a.leading_snug, t.atoms.text_contrast_medium],
           web({wordBreak: 'break-all'}),
         ]}>
         {invalidHandle ? _(msg`⚠Invalid Handle`) : `@${profile.handle}`}

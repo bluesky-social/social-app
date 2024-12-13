@@ -1,7 +1,8 @@
-import {Platform, StyleSheet, ViewStyle} from 'react-native'
+import {Platform, StyleProp, StyleSheet, ViewStyle} from 'react-native'
 
 import * as tokens from '#/alf/tokens'
-import {native, web} from '#/alf/util/platform'
+import {ios, native, platform, web} from '#/alf/util/platform'
+import * as Layout from '#/components/Layout'
 
 export const atoms = {
   debug: {
@@ -21,6 +22,9 @@ export const atoms = {
   relative: {
     position: 'relative',
   },
+  sticky: web({
+    position: 'sticky',
+  }),
   inset_0: {
     top: 0,
     left: 0,
@@ -64,6 +68,7 @@ export const atoms = {
    * Used for the outermost components on screens, to ensure that they can fill
    * the screen and extend beyond.
    */
+  // @ts-ignore - web only minHeight string
   util_screen_outer: [
     web({
       minHeight: '100vh',
@@ -102,6 +107,9 @@ export const atoms = {
   /*
    * Flex
    */
+  gap_0: {
+    gap: 0,
+  },
   gap_2xs: {
     gap: tokens.space._2xs,
   },
@@ -276,13 +284,13 @@ export const atoms = {
     letterSpacing: tokens.TRACKING,
   },
   font_normal: {
-    fontWeight: tokens.fontWeight.regular,
+    fontWeight: tokens.fontWeight.normal,
   },
   font_bold: {
-    fontWeight: tokens.fontWeight.semibold,
+    fontWeight: tokens.fontWeight.bold,
   },
   font_heavy: {
-    fontWeight: tokens.fontWeight.extrabold,
+    fontWeight: tokens.fontWeight.heavy,
   },
   italic: {
     fontStyle: 'italic',
@@ -309,6 +317,12 @@ export const atoms = {
   border_r: {
     borderRightWidth: StyleSheet.hairlineWidth,
   },
+  curve_circular: ios({
+    borderCurve: 'circular',
+  }),
+  curve_continuous: ios({
+    borderCurve: 'continuous',
+  }),
 
   /*
    * Shadow
@@ -884,6 +898,9 @@ export const atoms = {
   user_select_all: {
     userSelect: 'all',
   },
+  outline_inset_1: {
+    outlineOffset: '-1px',
+  } as StyleProp<ViewStyle>,
 
   /*
    * Text decoration
@@ -929,4 +946,20 @@ export const atoms = {
     transitionTimingFunction: 'cubic-bezier(0.17, 0.73, 0.14, 1)',
     transitionDuration: '100ms',
   }),
+
+  /**
+   * {@link Layout.SCROLLBAR_OFFSET}
+   */
+  scrollbar_offset: platform({
+    web: {
+      transform: [
+        {
+          translateX: Layout.SCROLLBAR_OFFSET,
+        },
+      ],
+    },
+    native: {
+      transform: [],
+    },
+  }) as {transform: Exclude<ViewStyle['transform'], string | undefined>},
 } as const

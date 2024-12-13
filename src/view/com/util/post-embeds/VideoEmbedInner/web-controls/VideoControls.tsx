@@ -138,13 +138,10 @@ export function Controls({
   useEffect(() => {
     if (!hlsRef.current) return
     if (focused) {
-      // auto decide quality based on network conditions
-      hlsRef.current.autoLevelCapping = -1
       // allow 30s of buffering
       hlsRef.current.config.maxMaxBufferLength = 30
     } else {
       // back to what we initially set
-      hlsRef.current.autoLevelCapping = 0
       hlsRef.current.config.maxMaxBufferLength = 10
     }
   }, [hlsRef, focused])
@@ -316,13 +313,14 @@ export function Controls({
         onPointerEnter={onPointerMoveEmptySpace}
         onPointerMove={onPointerMoveEmptySpace}
         onPointerLeave={onPointerLeaveEmptySpace}
-        accessibilityHint={_(
+        accessibilityLabel={_(
           !focused
             ? msg`Unmute video`
             : playing
             ? msg`Pause video`
             : msg`Play video`,
         )}
+        accessibilityHint=""
         style={[
           a.flex_1,
           web({cursor: showCursor || !playing ? 'pointer' : 'none'}),
@@ -404,7 +402,7 @@ export function Controls({
             <ControlButton
               active={isFullscreen}
               activeLabel={_(msg`Exit fullscreen`)}
-              inactiveLabel={_(msg`Fullscreen`)}
+              inactiveLabel={_(msg`Enter fullscreen`)}
               activeIcon={ArrowsInIcon}
               inactiveIcon={ArrowsOutIcon}
               onPress={onPressFullscreen}

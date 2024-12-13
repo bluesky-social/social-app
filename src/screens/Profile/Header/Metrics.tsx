@@ -1,12 +1,11 @@
-import React from 'react'
 import {View} from 'react-native'
 import {AppBskyActorDefs} from '@atproto/api'
 import {msg, plural} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {makeProfileLink} from '#/lib/routes/links'
 import {Shadow} from '#/state/cache/types'
-import {makeProfileLink} from 'lib/routes/links'
-import {formatCount} from 'view/com/util/numeric/format'
+import {formatCount} from '#/view/com/util/numeric/format'
 import {atoms as a, useTheme} from '#/alf'
 import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
@@ -31,7 +30,7 @@ export function ProfileHeaderMetrics({
 
   return (
     <View
-      style={[a.flex_row, a.gap_sm, a.align_center, a.pb_md]}
+      style={[a.flex_row, a.gap_sm, a.align_center]}
       pointerEvents="box-none">
       <InlineLinkText
         testID="profileHeaderFollowersButton"

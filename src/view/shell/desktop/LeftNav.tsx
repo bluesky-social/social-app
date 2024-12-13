@@ -1,9 +1,6 @@
 import React from 'react'
-import {StyleSheet, TouchableOpacity, View} from 'react-native'
-import {
-  FontAwesomeIcon,
-  FontAwesomeIconStyle,
-} from '@fortawesome/react-native-fontawesome'
+import {StyleSheet, View} from 'react-native'
+import {FontAwesomeIconStyle} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {
@@ -14,13 +11,13 @@ import {
 
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {getCurrentRoute, isStateAtTabRoot, isTab} from '#/lib/routes/helpers'
+import {getCurrentRoute, isTab} from '#/lib/routes/helpers'
 import {makeProfileLink} from '#/lib/routes/links'
-import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
+import {CommonNavigatorParams} from '#/lib/routes/types'
 import {isInvalidHandle} from '#/lib/strings/handles'
 import {emitSoftReset} from '#/state/events'
 import {useFetchHandle} from '#/state/queries/handle'
-import {useUnreadMessageCount} from '#/state/queries/messages/list-converations'
+import {useUnreadMessageCount} from '#/state/queries/messages/list-conversations'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
@@ -101,47 +98,6 @@ function ProfileCard() {
   )
 }
 
-const HIDDEN_BACK_BNT_ROUTES = ['StarterPackWizard', 'StarterPackEdit']
-
-function BackBtn() {
-  const {isTablet} = useWebMediaQueries()
-  const pal = usePalette('default')
-  const navigation = useNavigation<NavigationProp>()
-  const {_} = useLingui()
-  const shouldShow = useNavigationState(
-    state =>
-      !isStateAtTabRoot(state) &&
-      !HIDDEN_BACK_BNT_ROUTES.includes(getCurrentRoute(state).name),
-  )
-
-  const onPressBack = React.useCallback(() => {
-    if (navigation.canGoBack()) {
-      navigation.goBack()
-    } else {
-      navigation.navigate('Home')
-    }
-  }, [navigation])
-
-  if (!shouldShow || isTablet) {
-    return <></>
-  }
-  return (
-    <TouchableOpacity
-      testID="viewHeaderBackOrMenuBtn"
-      onPress={onPressBack}
-      style={styles.backBtn}
-      accessibilityRole="button"
-      accessibilityLabel={_(msg`Go back`)}
-      accessibilityHint="">
-      <FontAwesomeIcon
-        size={24}
-        icon="angle-left"
-        style={pal.text as FontAwesomeIconStyle}
-      />
-    </TouchableOpacity>
-  )
-}
-
 interface NavItemProps {
   count?: string
   href: string
@@ -151,6 +107,7 @@ interface NavItemProps {
 }
 function NavItem({count, href, icon, iconFilled, label}: NavItemProps) {
   const t = useTheme()
+  const {_} = useLingui()
   const {currentAccount} = useSession()
   const {gtMobile, gtTablet} = useBreakpoints()
   const isTablet = gtMobile && !gtTablet
@@ -185,14 +142,22 @@ function NavItem({count, href, icon, iconFilled, label}: NavItemProps) {
 
   return (
     <PressableWithHover
-      style={[a.flex_row, a.align_center, a.p_md, a.rounded_sm, a.gap_sm]}
+      style={[
+        a.flex_row,
+        a.align_center,
+        a.p_md,
+        a.rounded_sm,
+        a.gap_sm,
+        a.outline_inset_1,
+        a.transition_color,
+      ]}
       hoverStyle={t.atoms.bg_contrast_25}
       // @ts-ignore the function signature differs on web -prf
       onPress={onPressWrapped}
       // @ts-ignore web only -prf
       href={href}
       dataSet={{noUnderline: 1}}
-      accessibilityRole="tab"
+      role="link"
       accessibilityLabel={label}
       accessibilityHint="">
       <View
@@ -211,32 +176,44 @@ function NavItem({count, href, icon, iconFilled, label}: NavItemProps) {
         ]}>
         {isCurrent ? iconFilled : icon}
         {typeof count === 'string' && count ? (
-          <Text
+          <View
             style={[
               a.absolute,
-              a.text_xs,
-              a.font_bold,
-              a.rounded_full,
-              a.text_center,
-              {
-                top: '-10%',
-                left: count.length === 1 ? '50%' : '40%',
-                backgroundColor: t.palette.primary_500,
-                color: t.palette.white,
-                lineHeight: a.text_sm.fontSize,
-                paddingHorizontal: 4,
-                paddingVertical: 1,
-                minWidth: 16,
-              },
-              isTablet && [
-                {
-                  top: '10%',
-                  left: count.length === 1 ? '50%' : '40%',
-                },
-              ],
+              a.inset_0,
+              {right: -20}, // more breathing room
             ]}>
-            {count}
-          </Text>
+            <Text
+              accessibilityLabel={_(msg`${count} unread items`)}
+              accessibilityHint=""
+              accessible={true}
+              numberOfLines={1}
+              style={[
+                a.absolute,
+                a.text_xs,
+                a.font_bold,
+                a.rounded_full,
+                a.text_center,
+                a.leading_tight,
+                {
+                  top: '-10%',
+                  left: count.length === 1 ? 12 : 8,
+                  backgroundColor: t.palette.primary_500,
+                  color: t.palette.white,
+                  lineHeight: a.text_sm.fontSize,
+                  paddingHorizontal: 4,
+                  paddingVertical: 1,
+                  minWidth: 16,
+                },
+                isTablet && [
+                  {
+                    top: '10%',
+                    left: count.length === 1 ? 20 : 16,
+                  },
+                ],
+              ]}>
+              {count}
+            </Text>
+          </View>
         ) : null}
       </View>
       {gtTablet && (
@@ -300,7 +277,7 @@ function ComposeBtn() {
     <View style={[a.flex_row, a.pl_md, a.pt_xl]}>
       <Button
         disabled={isFetchingHandle}
-        label={_(msg`New post`)}
+        label={_(msg`Compose new post`)}
         onPress={onPressCompose}
         size="large"
         variant="solid"
@@ -324,8 +301,16 @@ function ChatNavItem() {
     <NavItem
       href="/messages"
       count={numUnreadMessages.numUnread}
-      icon={<Message style={pal.text} width={NAV_ICON_WIDTH} />}
-      iconFilled={<MessageFilled style={pal.text} width={NAV_ICON_WIDTH} />}
+      icon={
+        <Message style={pal.text} aria-hidden={true} width={NAV_ICON_WIDTH} />
+      }
+      iconFilled={
+        <MessageFilled
+          style={pal.text}
+          aria-hidden={true}
+          width={NAV_ICON_WIDTH}
+        />
+      }
       label={_(msg`Chat`)}
     />
   )
@@ -344,43 +329,76 @@ export function DesktopLeftNav() {
 
   return (
     <View
+      role="navigation"
       style={[
+        a.px_xl,
         styles.leftNav,
         isTablet && styles.leftNavTablet,
-        pal.view,
         pal.border,
       ]}>
       {hasSession ? (
         <ProfileCard />
       ) : isDesktop ? (
-        <View style={{paddingHorizontal: 12}}>
+        <View style={[a.pt_xl]}>
           <NavSignupCard />
         </View>
       ) : null}
 
       {hasSession && (
         <>
-          <BackBtn />
-
           <NavItem
             href="/"
-            icon={<Home width={NAV_ICON_WIDTH} style={pal.text} />}
-            iconFilled={<HomeFilled width={NAV_ICON_WIDTH} style={pal.text} />}
+            icon={
+              <Home
+                aria-hidden={true}
+                width={NAV_ICON_WIDTH}
+                style={pal.text}
+              />
+            }
+            iconFilled={
+              <HomeFilled
+                aria-hidden={true}
+                width={NAV_ICON_WIDTH}
+                style={pal.text}
+              />
+            }
             label={_(msg`Home`)}
           />
           <NavItem
             href="/search"
-            icon={<MagnifyingGlass style={pal.text} width={NAV_ICON_WIDTH} />}
+            icon={
+              <MagnifyingGlass
+                style={pal.text}
+                aria-hidden={true}
+                width={NAV_ICON_WIDTH}
+              />
+            }
             iconFilled={
-              <MagnifyingGlassFilled style={pal.text} width={NAV_ICON_WIDTH} />
+              <MagnifyingGlassFilled
+                style={pal.text}
+                aria-hidden={true}
+                width={NAV_ICON_WIDTH}
+              />
             }
             label={_(msg`Search`)}
           />
           <NavItem
             href="/notifications"
             count={numUnreadNotifications}
-            icon={<Bell width={NAV_ICON_WIDTH} style={pal.text} />}
-            iconFilled={<BellFilled width={NAV_ICON_WIDTH} style={pal.text} />}
+            icon={
+              <Bell
+                aria-hidden={true}
+                width={NAV_ICON_WIDTH}
+                style={pal.text}
+              />
+            }
+            iconFilled={
+              <BellFilled
+                aria-hidden={true}
+                width={NAV_ICON_WIDTH}
+                style={pal.text}
+              />
+            }
             label={_(msg`Notifications`)}
           />
           <ChatNavItem />
@@ -389,12 +407,14 @@ export function DesktopLeftNav() {
             icon={
               <Hashtag
                 style={pal.text as FontAwesomeIconStyle}
+                aria-hidden={true}
                 width={NAV_ICON_WIDTH}
               />
             }
             iconFilled={
               <HashtagFilled
                 style={pal.text as FontAwesomeIconStyle}
+                aria-hidden={true}
                 width={NAV_ICON_WIDTH}
               />
             }
@@ -402,23 +422,55 @@ export function DesktopLeftNav() {
           />
           <NavItem
             href="/lists"
-            icon={<List style={pal.text} width={NAV_ICON_WIDTH} />}
-            iconFilled={<ListFilled style={pal.text} width={NAV_ICON_WIDTH} />}
+            icon={
+              <List
+                style={pal.text}
+                aria-hidden={true}
+                width={NAV_ICON_WIDTH}
+              />
+            }
+            iconFilled={
+              <ListFilled
+                style={pal.text}
+                aria-hidden={true}
+                width={NAV_ICON_WIDTH}
+              />
+            }
             label={_(msg`Lists`)}
           />
           <NavItem
             href={currentAccount ? makeProfileLink(currentAccount) : '/'}
-            icon={<UserCircle width={NAV_ICON_WIDTH} style={pal.text} />}
+            icon={
+              <UserCircle
+                aria-hidden={true}
+                width={NAV_ICON_WIDTH}
+                style={pal.text}
+              />
+            }
             iconFilled={
-              <UserCircleFilled width={NAV_ICON_WIDTH} style={pal.text} />
+              <UserCircleFilled
+                aria-hidden={true}
+                width={NAV_ICON_WIDTH}
+                style={pal.text}
+              />
             }
             label={_(msg`Profile`)}
           />
           <NavItem
             href="/settings"
-            icon={<Settings width={NAV_ICON_WIDTH} style={pal.text} />}
+            icon={
+              <Settings
+                aria-hidden={true}
+                width={NAV_ICON_WIDTH}
+                style={pal.text}
+              />
+            }
             iconFilled={
-              <SettingsFilled width={NAV_ICON_WIDTH} style={pal.text} />
+              <SettingsFilled
+                aria-hidden={true}
+                width={NAV_ICON_WIDTH}
+                style={pal.text}
+              />
             }
             label={_(msg`Settings`)}
           />
@@ -436,8 +488,17 @@ const styles = StyleSheet.create({
     position: 'fixed',
     top: 10,
     // @ts-ignore web only
-    left: 'calc(50vw - 300px - 220px - 20px)',
-    width: 220,
+    left: '50%',
+    transform: [
+      {
+        translateX: -300,
+      },
+      {
+        translateX: '-100%',
+      },
+      ...a.scrollbar_offset.transform,
+    ],
+    width: 240,
     // @ts-ignore web only
     maxHeight: 'calc(100vh - 10px)',
     overflowY: 'auto',
@@ -449,7 +510,10 @@ const styles = StyleSheet.create({
     borderRightWidth: 1,
     height: '100%',
     width: 76,
+    paddingLeft: 0,
+    paddingRight: 0,
     alignItems: 'center',
+    transform: [],
   },
 
   profileCard: {

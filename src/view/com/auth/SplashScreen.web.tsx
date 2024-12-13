@@ -9,6 +9,10 @@ import {useKawaiiMode} from '#/state/preferences/kawaii'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {Logo} from '#/view/icons/Logo'
 import {Logotype} from '#/view/icons/Logotype'
+import {
+  AppClipOverlay,
+  postAppClipMessage,
+} from '#/screens/StarterPack/StarterPackLandingScreen'
 import {atoms as a, useTheme} from '#/alf'
 import {AppLanguageDropdown} from '#/components/AppLanguageDropdown'
 import {Button, ButtonText} from '#/components/Button'
@@ -28,6 +32,18 @@ export const SplashScreen = ({
   const {_} = useLingui()
   const t = useTheme()
   const {isTabletOrMobile: isMobileWeb} = useWebMediaQueries()
+  const [showClipOverlay, setShowClipOverlay] = React.useState(false)
+
+  React.useEffect(() => {
+    const getParams = new URLSearchParams(window.location.search)
+    const clip = getParams.get('clip')
+    if (clip === 'true') {
+      setShowClipOverlay(true)
+      postAppClipMessage({
+        action: 'present',
+      })
+    }
+  }, [])
 
   const kawaii = useKawaiiMode()
 
@@ -66,6 +82,7 @@ export const SplashScreen = ({
             t.atoms.border_contrast_medium,
             a.align_center,
             a.gap_5xl,
+            a.flex_1,
           ]}>
           <ErrorBoundary>
             <View style={[a.justify_center, a.align_center]}>
@@ -119,6 +136,10 @@ export const SplashScreen = ({
         </View>
         <Footer />
       </CenteredView>
+      <AppClipOverlay
+        visible={showClipOverlay}
+        setIsVisible={setShowClipOverlay}
+      />
     </>
   )
 }

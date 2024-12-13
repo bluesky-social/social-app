@@ -5,7 +5,10 @@ import {
   jsonStringToLex,
 } from '@atproto/api'
 
-import {getContentLanguages} from '#/state/preferences/languages'
+import {
+  getAppLanguageAsContentLanguage,
+  getContentLanguages,
+} from '#/state/preferences/languages'
 import {FeedAPI, FeedAPIResponse} from './types'
 import {createBskyTopicsHeader, isBlueskyOwnedFeed} from './utils'
 
@@ -103,16 +106,31 @@ async function loggedOutFetch({
   limit: number
   cursor?: string
 }) {
-  let contentLangs = getContentLanguages().join(',')
+  let contentLangs = getAppLanguageAsContentLanguage()
+
+  /**
+   * Copied from our root `Agent` class
+   * @see https://github.com/bluesky-social/atproto/blob/60df3fc652b00cdff71dd9235d98a7a4bb828f05/packages/api/src/agent.ts#L120
+   */
+  const labelersHeader = {
+    'atproto-accept-labelers': BskyAgent.appLabelers
+      .map(l => `${l};redact`)
+      .join(', '),
+  }
 
   // manually construct fetch call so we can add the `lang` cache-busting param
   let res = await fetch(
     `https://api.bsky.app/xrpc/app.bsky.feed.getFeed?feed=${feed}${
       cursor ? `&cursor=${cursor}` : ''
     }&limit=${limit}&lang=${contentLangs}`,
-    {method: 'GET', headers: {'Accept-Language': contentLangs}},
+    {
+      method: 'GET',
+      headers: {'Accept-Language': contentLangs, ...labelersHeader},
+    },
   )
-  let data = res.ok ? jsonStringToLex(await res.text()) : null
+  let data = res.ok
+    ? (jsonStringToLex(await res.text()) as GetCustomFeed.OutputSchema)
+    : null
   if (data?.feed?.length) {
     return {
       success: true,
@@ -125,9 +143,11 @@ async function loggedOutFetch({
     `https://api.bsky.app/xrpc/app.bsky.feed.getFeed?feed=${feed}${
       cursor ? `&cursor=${cursor}` : ''
     }&limit=${limit}`,
-    {method: 'GET', headers: {'Accept-Language': ''}},
+    {method: 'GET', headers: {'Accept-Language': '', ...labelersHeader}},
   )
-  data = res.ok ? jsonStringToLex(await res.text()) : null
+  data = res.ok
+    ? (jsonStringToLex(await res.text()) as GetCustomFeed.OutputSchema)
+    : null
   if (data?.feed?.length) {
     return {
       success: true,

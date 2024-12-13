@@ -1,18 +1,19 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
-import {useNavigation} from '@react-navigation/native'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {Text} from '../util/text/Text'
-import {Button} from '../util/forms/Button'
-import {MagnifyingGlassIcon} from 'lib/icons'
-import {NavigationProp} from 'lib/routes/types'
-import {usePalette} from 'lib/hooks/usePalette'
-import {s} from 'lib/styles'
-import {isWeb} from 'platform/detection'
 import {Trans} from '@lingui/macro'
+import {useNavigation} from '@react-navigation/native'
+
+import {usePalette} from '#/lib/hooks/usePalette'
+import {MagnifyingGlassIcon} from '#/lib/icons'
+import {NavigationProp} from '#/lib/routes/types'
+import {s} from '#/lib/styles'
+import {isWeb} from '#/platform/detection'
+import {Button} from '../util/forms/Button'
+import {Text} from '../util/text/Text'
 
 export function CustomFeedEmptyState() {
   const pal = usePalette('default')

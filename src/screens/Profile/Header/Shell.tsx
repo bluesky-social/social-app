@@ -1,26 +1,29 @@
 import React, {memo} from 'react'
 import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native'
+import {MeasuredDimensions, runOnJS, runOnUI} from 'react-native-reanimated'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {AppBskyActorDefs, ModerationDecision} from '@atproto/api'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
 import {BACK_HITSLOP} from '#/lib/constants'
-import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {measureHandle, useHandleRef} from '#/lib/hooks/useHandleRef'
 import {NavigationProp} from '#/lib/routes/types'
 import {isIOS} from '#/platform/detection'
 import {Shadow} from '#/state/cache/types'
-import {ProfileImageLightbox, useLightboxControls} from '#/state/lightbox'
+import {useLightboxControls} from '#/state/lightbox'
 import {useSession} from '#/state/session'
 import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {UserBanner} from '#/view/com/util/UserBanner'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, platform, useTheme} from '#/alf'
+import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon} from '#/components/icons/Arrow'
 import {LabelsOnMe} from '#/components/moderation/LabelsOnMe'
 import {ProfileHeaderAlerts} from '#/components/moderation/ProfileHeaderAlerts'
 import {GrowableAvatar} from './GrowableAvatar'
 import {GrowableBanner} from './GrowableBanner'
+import {StatusBarShadow} from './StatusBarShadow'
 
 interface Props {
   profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>
@@ -41,7 +44,9 @@ let ProfileHeaderShell = ({
   const {_} = useLingui()
   const {openLightbox} = useLightboxControls()
   const navigation = useNavigation<NavigationProp>()
-  const {isDesktop} = useWebMediaQueries()
+  const {top: topInset} = useSafeAreaInsets()
+
+  const aviRef = useHandleRef()
 
   const onPressBack = React.useCallback(() => {
     if (navigation.canGoBack()) {
@@ -51,12 +56,41 @@ let ProfileHeaderShell = ({
     }
   }, [navigation])
 
+  const _openLightbox = React.useCallback(
+    (uri: string, thumbRect: MeasuredDimensions | null) => {
+      openLightbox({
+        images: [
+          {
+            uri,
+            thumbUri: uri,
+            thumbRect,
+            dimensions: {
+              // It's fine if it's actually smaller but we know it's 1:1.
+              height: 1000,
+              width: 1000,
+            },
+            thumbDimensions: null,
+            type: 'circle-avi',
+          },
+        ],
+        index: 0,
+      })
+    },
+    [openLightbox],
+  )
+
   const onPressAvi = React.useCallback(() => {
     const modui = moderation.ui('avatar')
-    if (profile.avatar && !(modui.blur && modui.noOverride)) {
-      openLightbox(new ProfileImageLightbox(profile))
+    const avatar = profile.avatar
+    if (avatar && !(modui.blur && modui.noOverride)) {
+      const aviHandle = aviRef.current
+      runOnUI(() => {
+        'worklet'
+        const rect = measureHandle(aviHandle)
+        runOnJS(_openLightbox)(avatar, rect)
+      })()
     }
-  }, [openLightbox, profile, moderation])
+  }, [profile, moderation, _openLightbox, aviRef])
 
   const isMe = React.useMemo(
     () => currentAccount?.did === profile.did,
@@ -66,12 +100,13 @@ let ProfileHeaderShell = ({
   return (
     <View style={t.atoms.bg} pointerEvents={isIOS ? 'auto' : 'box-none'}>
       <View
-        pointerEvents={isIOS ? 'auto' : 'none'}
+        pointerEvents={isIOS ? 'auto' : 'box-none'}
         style={[a.relative, {height: 150}]}>
+        <StatusBarShadow />
         <GrowableBanner
           backButton={
             <>
-              {!isDesktop && !hideBackButton && (
+              {!hideBackButton && (
                 <TouchableWithoutFeedback
                   testID="profileHeaderBackBtn"
                   onPress={onPressBack}
@@ -79,12 +114,17 @@ let ProfileHeaderShell = ({
                   accessibilityRole="button"
                   accessibilityLabel={_(msg`Back`)}
                   accessibilityHint="">
-                  <View style={styles.backBtnWrapper}>
-                    <FontAwesomeIcon
-                      size={18}
-                      icon="angle-left"
-                      color="white"
-                    />
+                  <View
+                    style={[
+                      styles.backBtnWrapper,
+                      {
+                        top: platform({
+                          web: 10,
+                          default: topInset,
+                        }),
+                      },
+                    ]}>
+                    <ArrowLeftIcon size="lg" fill="white" />
                   </View>
                 </TouchableWithoutFeedback>
               )}
@@ -134,12 +174,14 @@ let ProfileHeaderShell = ({
               styles.avi,
               profile.associated?.labeler && styles.aviLabeler,
             ]}>
-            <UserAvatar
-              type={profile.associated?.labeler ? 'labeler' : 'user'}
-              size={90}
-              avatar={profile.avatar}
-              moderation={moderation.ui('avatar')}
-            />
+            <View ref={aviRef} collapsable={false}>
+              <UserAvatar
+                type={profile.associated?.labeler ? 'labeler' : 'user'}
+                size={90}
+                avatar={profile.avatar}
+                moderation={moderation.ui('avatar')}
+              />
+            </View>
           </View>
         </TouchableWithoutFeedback>
       </GrowableAvatar>
@@ -152,7 +194,6 @@ export {ProfileHeaderShell}
 const styles = StyleSheet.create({
   backBtnWrapper: {
     position: 'absolute',
-    top: 10,
     left: 10,
     width: 30,
     height: 30,

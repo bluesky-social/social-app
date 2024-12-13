@@ -1,8 +1,8 @@
-import React from 'react'
 import {StyleSheet} from 'react-native'
-import {usePalette} from 'lib/hooks/usePalette'
-import {ToggleButton} from 'view/com/util/forms/ToggleButton'
-import {useLanguagePrefs, toPostLanguages} from '#/state/preferences/languages'
+
+import {usePalette} from '#/lib/hooks/usePalette'
+import {toPostLanguages, useLanguagePrefs} from '#/state/preferences/languages'
+import {ToggleButton} from '#/view/com/util/forms/ToggleButton'
 
 export function LanguageToggle({
   code2,

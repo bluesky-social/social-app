@@ -2,7 +2,7 @@ import {AppBskyFeedDefs, AppBskyFeedPost} from '@atproto/api'
 import * as bcp47Match from 'bcp-47-match'
 import lande from 'lande'
 
-import {hasProp} from 'lib/type-guards'
+import {hasProp} from '#/lib/type-guards'
 import {
   AppLanguage,
   LANGUAGES_MAP_CODE2,
@@ -101,7 +101,7 @@ export function getTranslatorLink(text: string, lang: string): string {
 /**
  * Returns a valid `appLanguage` value from an arbitrary string.
  *
- * Contenxt: post-refactor, we populated some user's `appLanguage` setting with
+ * Context: post-refactor, we populated some user's `appLanguage` setting with
  * `postLanguage`, which can be a comma-separated list of values. This breaks
  * `appLanguage` handling in the app, so we introduced this util to parse out a
  * valid `appLanguage` from the pre-populated `postLanguage` values.
@@ -119,10 +119,16 @@ export function sanitizeAppLanguageSetting(appLanguage: string): AppLanguage {
     switch (fixLegacyLanguageCode(lang)) {
       case 'en':
         return AppLanguage.en
+      case 'an':
+        return AppLanguage.an
+      case 'ast':
+        return AppLanguage.ast
       case 'ca':
         return AppLanguage.ca
       case 'de':
         return AppLanguage.de
+      case 'en-GB':
+        return AppLanguage.en_GB
       case 'es':
         return AppLanguage.es
       case 'fi':
@@ -131,8 +137,12 @@ export function sanitizeAppLanguageSetting(appLanguage: string): AppLanguage {
         return AppLanguage.fr
       case 'ga':
         return AppLanguage.ga
+      case 'gl':
+        return AppLanguage.gl
       case 'hi':
         return AppLanguage.hi
+      case 'hu':
+        return AppLanguage.hu
       case 'id':
         return AppLanguage.id
       case 'it':
@@ -141,16 +151,26 @@ export function sanitizeAppLanguageSetting(appLanguage: string): AppLanguage {
         return AppLanguage.ja
       case 'ko':
         return AppLanguage.ko
+      case 'nl':
+        return AppLanguage.nl
+      case 'pl':
+        return AppLanguage.pl
       case 'pt-BR':
         return AppLanguage.pt_BR
       case 'ru':
         return AppLanguage.ru
+      case 'th':
+        return AppLanguage.th
       case 'tr':
         return AppLanguage.tr
       case 'uk':
         return AppLanguage.uk
+      case 'vi':
+        return AppLanguage.vi
       case 'zh-CN':
         return AppLanguage.zh_CN
+      case 'zh-HK':
+        return AppLanguage.zh_HK
       case 'zh-TW':
         return AppLanguage.zh_TW
       default:

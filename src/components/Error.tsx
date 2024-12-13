@@ -1,10 +1,9 @@
-import React from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useGoBack} from 'lib/hooks/useGoBack'
-import {CenteredView} from 'view/com/util/Views'
+import {useGoBack} from '#/lib/hooks/useGoBack'
+import {CenteredView} from '#/view/com/util/Views'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {Text} from '#/components/Typography'
@@ -32,7 +31,7 @@ export function Error({
   return (
     <CenteredView
       style={[
-        a.flex_1,
+        a.h_full_vh,
         a.align_center,
         a.gap_5xl,
         !gtMobile && a.justify_between,

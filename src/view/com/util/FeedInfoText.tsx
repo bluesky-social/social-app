@@ -1,10 +1,10 @@
-import React from 'react'
 import {StyleProp, StyleSheet, TextStyle} from 'react-native'
+
+import {sanitizeDisplayName} from '#/lib/strings/display-names'
+import {TypographyVariant} from '#/lib/ThemeContext'
+import {useFeedSourceInfoQuery} from '#/state/queries/feed'
 import {TextLinkOnWebOnly} from './Link'
 import {LoadingPlaceholder} from './LoadingPlaceholder'
-import {TypographyVariant} from 'lib/ThemeContext'
-import {sanitizeDisplayName} from 'lib/strings/display-names'
-import {useFeedSourceInfoQuery} from '#/state/queries/feed'
 
 export function FeedNameText({
   type = 'md',

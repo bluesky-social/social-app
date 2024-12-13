@@ -8,13 +8,13 @@ import {
 } from '@atproto/api'
 import {InfiniteData, UseInfiniteQueryResult} from '@tanstack/react-query'
 
-import {useBottomBarOffset} from 'lib/hooks/useBottomBarOffset'
-import {useInitialNumToRender} from 'lib/hooks/useInitialNumToRender'
-import {isBlockedOrBlocking} from 'lib/moderation/blocked-and-muted'
-import {isNative, isWeb} from 'platform/detection'
-import {useAllListMembersQuery} from 'state/queries/list-members'
-import {useSession} from 'state/session'
-import {List, ListRef} from 'view/com/util/List'
+import {useBottomBarOffset} from '#/lib/hooks/useBottomBarOffset'
+import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
+import {isBlockedOrBlocking} from '#/lib/moderation/blocked-and-muted'
+import {isNative, isWeb} from '#/platform/detection'
+import {useAllListMembersQuery} from '#/state/queries/list-members'
+import {useSession} from '#/state/session'
+import {List, ListRef} from '#/view/com/util/List'
 import {SectionRef} from '#/screens/Profile/Sections/types'
 import {atoms as a, useTheme} from '#/alf'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
@@ -40,7 +40,7 @@ export const ProfilesList = React.forwardRef<SectionRef, ProfilesListProps>(
     ref,
   ) {
     const t = useTheme()
-    const bottomBarOffset = useBottomBarOffset(300)
+    const bottomBarOffset = useBottomBarOffset(headerHeight)
     const initialNumToRender = useInitialNumToRender()
     const {currentAccount} = useSession()
     const {data, refetch, isError} = useAllListMembersQuery(listUri)
