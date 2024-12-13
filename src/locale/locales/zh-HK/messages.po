@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-12-13 01:35\n"
+"PO-Revision-Date: 2024-12-13 05:46\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional, Hong Kong\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -29,7 +29,7 @@ msgstr "（冇電郵）"
 
 #: src/lib/hooks/useTimeAgo.ts:156
 msgid "{0, plural, one {# day} other {# days}}"
-msgstr "{0, plural, one {#日} other {#日}}"
+msgstr "{0, plural, one {# 日} other {# 日}}"
 
 #: src/screens/Profile/ProfileFollowers.tsx:40
 msgid "{0, plural, one {# follower} other {# followers}}"
@@ -57,15 +57,15 @@ msgstr "{0, plural, one {# 人讚佢} other {# 人讚佢}}"
 
 #: src/lib/hooks/useTimeAgo.ts:136
 msgid "{0, plural, one {# minute} other {# minutes}}"
-msgstr "{0, plural, one {#分鐘} other {#分鐘}}"
+msgstr "{0, plural, one {# 分鐘} other {# 分鐘}}"
 
 #: src/lib/hooks/useTimeAgo.ts:167
 msgid "{0, plural, one {# month} other {# months}}"
-msgstr "{0, plural, one {#個月} other {#個月}}"
+msgstr "{0, plural, one {# 個月} other {# 個月}}"
 
 #: src/screens/Post/PostQuotes.tsx:41
 msgid "{0, plural, one {# quote} other {# quotes}}"
-msgstr "{0, plural, one {# 人引用} other {# 人引用}}"
+msgstr "{0, plural, one {# 次引用} other {# 次引用}}"
 
 #: src/screens/Post/PostRepostedBy.tsx:41
 msgid "{0, plural, one {# repost} other {# reposts}}"
@@ -73,7 +73,7 @@ msgstr "{0, plural, one {# 次轉發} other {# 次轉發}}"
 
 #: src/lib/hooks/useTimeAgo.ts:126
 msgid "{0, plural, one {# second} other {# seconds}}"
-msgstr "{0, plural, one {#秒鐘} other {#秒鐘}}"
+msgstr "{0, plural, one {# 秒鐘} other {# 秒鐘}}"
 
 #: src/components/ProfileHoverCard/index.web.tsx:398
 #: src/screens/Profile/Header/Metrics.tsx:22
@@ -91,7 +91,7 @@ msgstr "{0, plural, one {讚佢} other {讚佢}}"
 
 #: src/screens/Profile/Header/Metrics.tsx:58
 msgid "{0, plural, one {post} other {posts}}"
-msgstr "{0, plural, one {條帖文} other {條帖文}}"
+msgstr "{0, plural, one {帖文} other {帖文}}"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:431
 msgid "{0, plural, one {quote} other {quotes}}"
@@ -99,7 +99,7 @@ msgstr "{0, plural, one {引用} other {引用}}"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:413
 msgid "{0, plural, one {repost} other {reposts}}"
-msgstr "{0, plural, one {次轉發} other {次轉發}}"
+msgstr "{0, plural, one {轉發} other {轉發}}"
 
 #: src/screens/Settings/Settings.tsx:422
 msgid "{0}"
@@ -604,7 +604,7 @@ msgstr "允許呢啲人同你傾偈"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:314
 msgid "Allow quote posts"
-msgstr "允許引文"
+msgstr "允許引用帖文"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:359
 msgid "Allow replies from:"
@@ -1120,7 +1120,7 @@ msgstr "由 <0/>"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:414
 msgid "By <0>{0}</0>"
-msgstr "由 <0>{0}</0>"
+msgstr "嚟自 <0>{0}</0>"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:81
 msgid "By creating an account you agree to the <0>Privacy Policy</0>."
@@ -6260,7 +6260,7 @@ msgstr "出咗問題！"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:505
 msgid "Something wrong? Let us know."
-msgstr "出咗問題？話我哋知。"
+msgstr "出咗問題？話畀我哋知啦。"
 
 #: src/App.native.tsx:120
 #: src/App.web.tsx:95
