@@ -108,7 +108,7 @@ export function ProfileSubpageHeader({
           alignItems: 'flex-start',
           gap: 10,
           paddingTop: 14,
-          paddingBottom: 8,
+          paddingBottom: 14,
           paddingHorizontal: isMobile ? 12 : 14,
         }}>
         <View ref={aviRef} collapsable={false}>

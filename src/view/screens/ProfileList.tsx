@@ -758,7 +758,7 @@ function Header({
         />
       </ProfileSubpageHeader>
       {descriptionRT ? (
-        <View style={[a.px_lg, a.pt_md, a.pb_sm, a.gap_md]}>
+        <View style={[a.px_lg, a.pt_sm, a.pb_sm, a.gap_md]}>
           <RichText value={descriptionRT} style={[a.text_md, a.leading_snug]} />
         </View>
       ) : null}
