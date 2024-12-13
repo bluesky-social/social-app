@@ -21,6 +21,7 @@ import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {ScrollProvider} from '#/lib/ScrollContext'
 import {isIOS} from '#/platform/detection'
 import {Pager, PagerRef, RenderTabBarFnProps} from '#/view/com/pager/Pager'
+import {useTheme} from '#/alf'
 import {ListMethods} from '../util/List'
 import {PagerHeaderProvider} from './PagerHeaderContext'
 import {TabBar} from './TabBar'
@@ -256,6 +257,7 @@ let PagerTabBar = ({
   dragProgress: SharedValue<number>
   dragState: SharedValue<'idle' | 'dragging' | 'settling'>
 }): React.ReactNode => {
+  const t = useTheme()
   const [minimumHeaderHeight, setMinimumHeaderHeight] = React.useState(0)
   const headerTransform = useAnimatedStyle(() => {
     const translateY =
@@ -277,7 +279,7 @@ let PagerTabBar = ({
   return (
     <Animated.View
       pointerEvents={isIOS ? 'auto' : 'box-none'}
-      style={[styles.tabBarMobile, headerTransform]}>
+      style={[styles.tabBarMobile, headerTransform, t.atoms.bg]}>
       <View
         ref={headerRef}
         pointerEvents={isIOS ? 'auto' : 'box-none'}
