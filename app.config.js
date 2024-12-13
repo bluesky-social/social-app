@@ -145,6 +145,7 @@ module.exports = function (config) {
         adaptiveIcon: {
           foregroundImage: './assets/icon-android-foreground.png',
           monochromeImage: './assets/icon-android-foreground.png',
+          backgroundImage: './assets/icon-android-background.png',
           backgroundColor: '#1185FE',
         },
         googleServicesFile: './google-services.json',

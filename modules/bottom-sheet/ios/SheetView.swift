@@ -5,7 +5,11 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
   // Views
   private var sheetVc: SheetViewController?
   private var innerView: UIView?
+#if RCT_NEW_ARCH_ENABLED
+  private var touchHandler: RCTSurfaceTouchHandler?
+#else
   private var touchHandler: RCTTouchHandler?
+#endif
 
   // Events
   private let onAttemptDismiss = EventDispatcher()
@@ -73,7 +77,11 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
   required init (appContext: AppContext? = nil) {
     super.init(appContext: appContext)
     self.maxHeight = Util.getScreenHeight()
+#if RCT_NEW_ARCH_ENABLED
+    self.touchHandler = RCTSurfaceTouchHandler()
+#else
     self.touchHandler = RCTTouchHandler(bridge: appContext?.reactBridge)
+#endif
     SheetManager.shared.add(self)
   }
 
@@ -87,6 +95,15 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
     self.touchHandler?.attach(to: subview)
     self.innerView = subview
   }
+    
+#if RCT_NEW_ARCH_ENABLED
+  override func mountChildComponentView(_ childComponentView: UIView, index: Int) {
+    self.touchHandler?.attach(to: childComponentView)
+    self.innerView = childComponentView
+  }
+    
+  override func unmountChildComponentView(_ childComponentView: UIView, index: Int) {}
+#endif
 
   // We'll grab the content height from here so we know the initial detent to set
   override func layoutSubviews() {
@@ -107,7 +124,9 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
     self.isClosing = false
     self.isOpen = false
     self.sheetVc = nil
-    self.touchHandler?.detach(from: self.innerView)
+    if let innerView = self.innerView {
+      self.touchHandler?.detach(from: innerView)
+    }
     self.touchHandler = nil
     self.innerView = nil
     SheetManager.shared.remove(self)

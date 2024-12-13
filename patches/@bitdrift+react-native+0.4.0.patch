@@ -1,0 +1,72 @@
+diff --git a/node_modules/@bitdrift/react-native/fabric/NativeBdReactNative.ts b/node_modules/@bitdrift/react-native/fabric/NativeBdReactNative.ts
+new file mode 100644
+index 0000000..564d2d1
+--- /dev/null
++++ b/node_modules/@bitdrift/react-native/fabric/NativeBdReactNative.ts
+@@ -0,0 +1,13 @@
++import type { TurboModule } from 'react-native';
++import { TurboModuleRegistry } from 'react-native';
++
++export type LogFields = {
++    [key: string]: string;
++};
++
++export interface Spec extends TurboModule {
++    init(key: string, url?: string): void;
++    log(level: number, message: string, fields?: LogFields): void;
++}
++
++export default TurboModuleRegistry.get<Spec>('BdReactNative');
+diff --git a/node_modules/@bitdrift/react-native/ios/BdReactNative.h b/node_modules/@bitdrift/react-native/ios/BdReactNative.h
+index f592481..1c81e58 100644
+--- a/node_modules/@bitdrift/react-native/ios/BdReactNative.h
++++ b/node_modules/@bitdrift/react-native/ios/BdReactNative.h
+@@ -1,6 +1,6 @@
+ 
+ #ifdef RCT_NEW_ARCH_ENABLED
+-#import "BdReactNativeSpec/BdReactNativeSpec.h"
++#import "rnbitdrift/rnbitdrift.h"
+ 
+ @interface BdReactNative : NSObject <NativeBdReactNativeSpec>
+ #else
+diff --git a/node_modules/@bitdrift/react-native/ios/BdReactNative.mm b/node_modules/@bitdrift/react-native/ios/BdReactNative.mm
+index 8c943ae..bb78ad4 100644
+--- a/node_modules/@bitdrift/react-native/ios/BdReactNative.mm
++++ b/node_modules/@bitdrift/react-native/ios/BdReactNative.mm
+@@ -11,13 +11,13 @@ @implementation BdReactNative
+   [CAPLogger logWithLevel:LogLevel(level) message:message fields:fields];
+ }
+ 
+-RCT_EXPORT_METHOD(init:(NSString*)apiKey
+-    apiURL:(NSString*)apiURL)
++RCT_EXPORT_METHOD(init:(NSString*)key
++                  url:(NSString*)url)
+ {
+   [CAPLogger 
+-    startWithAPIKey:apiKey
++    startWithAPIKey:key
+     sessionStrategy:[CAPSessionStrategy activityBased]
+-    apiURL:[NSURL URLWithString:apiURL]
++    apiURL:[NSURL URLWithString:url]
+   ];
+ }
+ 
+diff --git a/node_modules/@bitdrift/react-native/package.json b/node_modules/@bitdrift/react-native/package.json
+index a73f2c5..f0f8782 100644
+--- a/node_modules/@bitdrift/react-native/package.json
++++ b/node_modules/@bitdrift/react-native/package.json
+@@ -10,5 +10,13 @@
+   "main": "commonjs/index.js",
+   "module": "module/index.js",
+   "react-native": "commonjs/index.js",
+-  "types": "typescript/packages/react-native/src/index.d.ts"
++  "types": "typescript/packages/react-native/src/index.d.ts",
++  "codegenConfig": {
++    "name": "rnbitdrift",
++    "type": "all",
++    "jsSrcsDir": "./fabric",
++    "android": {
++      "javaPackageName": "com.bdreactnative"
++    }
++  }
+ }
