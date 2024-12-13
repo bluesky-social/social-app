@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-12-12 11:07\n"
+"PO-Revision-Date: 2024-12-13 01:35\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -119,7 +119,7 @@ msgstr "{0} <0> — <1>文字和標籤</1></0>"
 msgid "{0} joined this week"
 msgstr "本週加入了 {0} 人"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/Scrubber.tsx:197
+#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/Scrubber.tsx:201
 msgid "{0} of {1}"
 msgstr "第 {0} 個 (共 {1} 個)"
 
@@ -189,91 +189,91 @@ msgstr "{estimatedTimeHrs, plural, one {時} other {時}}"
 msgid "{estimatedTimeMins, plural, one {minute} other {minutes}}"
 msgstr "{estimatedTimeMins, plural, one {分} other {分}}"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:300
+#: src/view/com/notifications/NotificationFeedItem.tsx:301
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> followed you"
 msgstr "{firstAuthorLink} 和<0>{additionalAuthorsCount, plural, one {其他 {formattedAuthorsCount} 人} other {其他 {formattedAuthorsCount} 人}}</0>跟隨了您"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:326
+#: src/view/com/notifications/NotificationFeedItem.tsx:327
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> liked your custom feed"
 msgstr "{firstAuthorLink} 和<0>{additionalAuthorsCount, plural, one {其他 {formattedAuthorsCount} 人} other {其他 {formattedAuthorsCount} 人}}</0>對您的自訂動態源表示喜歡"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:222
+#: src/view/com/notifications/NotificationFeedItem.tsx:223
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> liked your post"
 msgstr "{firstAuthorLink} 和<0>{additionalAuthorsCount, plural, one {其他 {formattedAuthorsCount} 人} other {其他 {formattedAuthorsCount} 人}}</0>表示喜歡您的貼文"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:246
+#: src/view/com/notifications/NotificationFeedItem.tsx:247
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> reposted your post"
 msgstr "{firstAuthorLink} 和<0>{additionalAuthorsCount, plural, one {其他 {formattedAuthorsCount} 人} other {其他 {formattedAuthorsCount} 人}}</0>轉發了您的貼文"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:350
+#: src/view/com/notifications/NotificationFeedItem.tsx:351
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> signed up with your starter pack"
 msgstr "{firstAuthorLink} 和<0>{additionalAuthorsCount, plural, one {其他 {formattedAuthorsCount} 人} other {其他 {formattedAuthorsCount} 人}}</0>使用了您的新手包註冊"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:312
+#: src/view/com/notifications/NotificationFeedItem.tsx:313
 msgid "{firstAuthorLink} followed you"
 msgstr "{firstAuthorLink} 跟隨了您"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:289
+#: src/view/com/notifications/NotificationFeedItem.tsx:290
 msgid "{firstAuthorLink} followed you back"
 msgstr "{firstAuthorLink} 回跟了您"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:338
+#: src/view/com/notifications/NotificationFeedItem.tsx:339
 msgid "{firstAuthorLink} liked your custom feed"
 msgstr "{firstAuthorLink} 對您的自訂動態源表示喜歡"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:234
+#: src/view/com/notifications/NotificationFeedItem.tsx:235
 msgid "{firstAuthorLink} liked your post"
 msgstr "{firstAuthorLink} 對您的貼文表示喜歡"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:258
+#: src/view/com/notifications/NotificationFeedItem.tsx:259
 msgid "{firstAuthorLink} reposted your post"
 msgstr "{firstAuthorLink} 轉發了您的貼文"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:362
+#: src/view/com/notifications/NotificationFeedItem.tsx:363
 msgid "{firstAuthorLink} signed up with your starter pack"
 msgstr "{firstAuthorLink} 使用了您的新手包註冊"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:293
+#: src/view/com/notifications/NotificationFeedItem.tsx:294
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} followed you"
 msgstr "{firstAuthorName} 和{additionalAuthorsCount, plural, one {其他 {formattedAuthorsCount} 人} other {其他 {formattedAuthorsCount} 人}}跟隨了您"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:319
+#: src/view/com/notifications/NotificationFeedItem.tsx:320
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} liked your custom feed"
 msgstr "{firstAuthorName} 和{additionalAuthorsCount, plural, one {其他 {formattedAuthorsCount} 人} other {其他 {formattedAuthorsCount} 人}}對您的自訂動態源表示喜歡"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:215
+#: src/view/com/notifications/NotificationFeedItem.tsx:216
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} liked your post"
 msgstr "{firstAuthorName} 和{additionalAuthorsCount, plural, one {其他 {formattedAuthorsCount} 人} other {其他 {formattedAuthorsCount} 人}}對您的貼文表示喜歡"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:239
+#: src/view/com/notifications/NotificationFeedItem.tsx:240
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} reposted your post"
 msgstr "{firstAuthorName} 和{additionalAuthorsCount, plural, one {其他 {formattedAuthorsCount} 人} other {其他 {formattedAuthorsCount} 人}}轉發了您的貼文"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:343
+#: src/view/com/notifications/NotificationFeedItem.tsx:344
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} signed up with your starter pack"
 msgstr "{firstAuthorName} 和{additionalAuthorsCount, plural, one {其他 {formattedAuthorsCount} 人} other {其他 {formattedAuthorsCount} 人}}使用了您的新手包註冊"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:298
+#: src/view/com/notifications/NotificationFeedItem.tsx:299
 msgid "{firstAuthorName} followed you"
 msgstr "{firstAuthorName} 跟隨了您"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:288
+#: src/view/com/notifications/NotificationFeedItem.tsx:289
 msgid "{firstAuthorName} followed you back"
 msgstr "{firstAuthorName} 回跟了您"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:324
+#: src/view/com/notifications/NotificationFeedItem.tsx:325
 msgid "{firstAuthorName} liked your custom feed"
 msgstr "{firstAuthorName} 對您的自訂動態源表示喜歡"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:220
+#: src/view/com/notifications/NotificationFeedItem.tsx:221
 msgid "{firstAuthorName} liked your post"
 msgstr "{firstAuthorName} 對您的貼文表示喜歡"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:244
+#: src/view/com/notifications/NotificationFeedItem.tsx:245
 msgid "{firstAuthorName} reposted your post"
 msgstr "{firstAuthorName} 轉發了您的貼文"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:348
+#: src/view/com/notifications/NotificationFeedItem.tsx:349
 msgid "{firstAuthorName} signed up with your starter pack"
 msgstr "{firstAuthorName} 使用了您的新手包註冊"
 
@@ -336,7 +336,7 @@ msgstr "<0>{0}</0> 的成員"
 msgid "<0>{date}</0> at {time}"
 msgstr "<0>{date}</0> {time}"
 
-#: src/screens/Settings/NotificationSettings.tsx:79
+#: src/screens/Settings/NotificationSettings.tsx:85
 msgid "<0>Experimental:</0> When this preference is enabled, you'll only receive reply and quote notifications from users you follow. We'll continue to add more controls here over time."
 msgstr "<0>實驗性功能：</0>啟用後，您將只會收到來自您已跟隨用戶的回覆和引用通知。我們會逐步在這裡新增更多控制選項。"
 
@@ -580,6 +580,10 @@ msgstr "進階設定"
 msgid "Algorithm training complete!"
 msgstr "演算法訓練完成！"
 
+#: src/view/screens/Notifications.tsx:86
+msgid "All"
+msgstr "全部"
+
 #: src/screens/StarterPack/StarterPackScreen.tsx:381
 msgid "All accounts have been followed!"
 msgstr "成功跟隨所有帳號！"
@@ -597,6 +601,10 @@ msgstr "允許存取您的私人訊息"
 #: src/screens/Messages/Settings.tsx:73
 msgid "Allow new messages from"
 msgstr "允許這些人向您發起對話："
+
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:314
+msgid "Allow quote posts"
+msgstr "允許引用貼文"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:359
 msgid "Allow replies from:"
@@ -916,7 +924,7 @@ msgstr "自動播放影片和 GIF"
 #: src/screens/Login/SetNewPasswordForm.tsx:160
 #: src/screens/Messages/components/ChatDisabled.tsx:133
 #: src/screens/Messages/components/ChatDisabled.tsx:134
-#: src/screens/Profile/Header/Shell.tsx:112
+#: src/screens/Profile/Header/Shell.tsx:115
 #: src/screens/Signup/BackNextButtons.tsx:41
 #: src/screens/StarterPack/Wizard/index.tsx:286
 msgid "Back"
@@ -1069,23 +1077,23 @@ msgstr "模糊圖片，並從動態中排除內容"
 msgid "Books"
 msgstr "書籍"
 
-#: src/components/FeedInterstitials.tsx:350
+#: src/components/FeedInterstitials.tsx:348
 msgid "Browse more accounts on the Explore page"
 msgstr "在探索頁面瀏覽更多帳號"
 
-#: src/components/FeedInterstitials.tsx:483
+#: src/components/FeedInterstitials.tsx:481
 msgid "Browse more feeds on the Explore page"
 msgstr "在探索頁面瀏覽更多動態源"
 
-#: src/components/FeedInterstitials.tsx:332
-#: src/components/FeedInterstitials.tsx:335
-#: src/components/FeedInterstitials.tsx:465
-#: src/components/FeedInterstitials.tsx:468
+#: src/components/FeedInterstitials.tsx:330
+#: src/components/FeedInterstitials.tsx:333
+#: src/components/FeedInterstitials.tsx:463
+#: src/components/FeedInterstitials.tsx:466
 msgid "Browse more suggestions"
 msgstr "瀏覽更多建議"
 
-#: src/components/FeedInterstitials.tsx:358
-#: src/components/FeedInterstitials.tsx:492
+#: src/components/FeedInterstitials.tsx:356
+#: src/components/FeedInterstitials.tsx:490
 msgid "Browse more suggestions on the Explore page"
 msgstr "在探索頁面瀏覽更多建議"
 
@@ -1109,6 +1117,10 @@ msgstr "來自 {0}"
 #: src/view/com/profile/ProfileSubpageHeader.tsx:154
 msgid "by <0/>"
 msgstr "由 <0/> 建立"
+
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:414
+msgid "By <0>{0}</0>"
+msgstr "來自 <0>{0}</0>"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:81
 msgid "By creating an account you agree to the <0>Privacy Policy</0>."
@@ -1453,11 +1465,11 @@ msgstr "關閉密碼更新警告"
 msgid "Closes viewer for header image"
 msgstr "關閉標題圖片檢視器"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:400
+#: src/view/com/notifications/NotificationFeedItem.tsx:401
 msgid "Collapse list of users"
 msgstr "折疊用戶列表"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:593
+#: src/view/com/notifications/NotificationFeedItem.tsx:594
 msgid "Collapses list of users for a given notification"
 msgstr "折疊指定通知的用戶列表"
 
@@ -1612,7 +1624,7 @@ msgstr "內容警告"
 msgid "Content warnings"
 msgstr "內容警告"
 
-#: src/components/Menu/index.web.tsx:81
+#: src/components/Menu/index.web.tsx:82
 msgid "Context menu backdrop, click to close the menu."
 msgstr "彈出式選單背景，按下以關閉選單。"
 
@@ -1733,7 +1745,7 @@ msgstr "著作權政策"
 msgid "Could not leave chat"
 msgstr "無法離開對話"
 
-#: src/view/screens/ProfileFeed.tsx:103
+#: src/screens/Profile/ProfileFeed/index.tsx:70
 msgid "Could not load feed"
 msgstr "無法載入動態"
 
@@ -2379,8 +2391,8 @@ msgstr "啟用外部媒體"
 msgid "Enable media players for"
 msgstr "啟用媒體播放器"
 
-#: src/screens/Settings/NotificationSettings.tsx:68
-#: src/screens/Settings/NotificationSettings.tsx:71
+#: src/screens/Settings/NotificationSettings.tsx:74
+#: src/screens/Settings/NotificationSettings.tsx:77
 msgid "Enable priority notifications"
 msgstr "啟用優先通知"
 
@@ -2535,7 +2547,7 @@ msgstr "退出輸入搜尋查詢"
 msgid "Expand alt text"
 msgstr "展開替代文字"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:401
+#: src/view/com/notifications/NotificationFeedItem.tsx:402
 msgid "Expand list of users"
 msgstr "展開用戶列表"
 
@@ -2702,6 +2714,10 @@ msgstr "動態源"
 msgid "Feed by {0}"
 msgstr "由 {0} 建立的動態源"
 
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:318
+msgid "Feed menu"
+msgstr "動態源選單"
+
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:54
 msgid "Feed toggle"
 msgstr "切換動態源"
@@ -2720,7 +2736,7 @@ msgstr "已送出意見回饋！"
 #: src/Navigation.tsx:397
 #: src/screens/StarterPack/StarterPackScreen.tsx:183
 #: src/view/screens/Feeds.tsx:508
-#: src/view/screens/Profile.tsx:229
+#: src/view/screens/Profile.tsx:230
 #: src/view/screens/SavedFeeds.tsx:96
 #: src/view/screens/Search/Search.tsx:518
 #: src/view/shell/desktop/LeftNav.tsx:421
@@ -2980,9 +2996,9 @@ msgstr "明顯違反法律或服務條款"
 #: src/components/Layout/Header/index.tsx:121
 #: src/components/moderation/ScreenHider.tsx:154
 #: src/components/moderation/ScreenHider.tsx:163
+#: src/screens/Profile/ProfileFeed/index.tsx:79
 #: src/view/com/auth/LoggedOut.tsx:72
 #: src/view/screens/NotFound.tsx:57
-#: src/view/screens/ProfileFeed.tsx:112
 #: src/view/screens/ProfileList.tsx:1027
 msgid "Go back"
 msgstr "返回"
@@ -2991,9 +3007,9 @@ msgstr "返回"
 #: src/screens/List/ListHiddenScreen.tsx:210
 #: src/screens/Profile/ErrorState.tsx:62
 #: src/screens/Profile/ErrorState.tsx:66
+#: src/screens/Profile/ProfileFeed/index.tsx:84
 #: src/screens/StarterPack/StarterPackScreen.tsx:757
 #: src/view/screens/NotFound.tsx:56
-#: src/view/screens/ProfileFeed.tsx:117
 #: src/view/screens/ProfileList.tsx:1032
 msgid "Go Back"
 msgstr "返回"
@@ -3119,7 +3135,7 @@ msgstr "隱藏列表"
 msgid "Hide"
 msgstr "隱藏"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:600
+#: src/view/com/notifications/NotificationFeedItem.tsx:601
 msgctxt "action"
 msgid "Hide"
 msgstr "隱藏"
@@ -3153,7 +3169,7 @@ msgstr "要隱藏這則貼文嗎？"
 msgid "Hide this reply?"
 msgstr "要隱藏這則回覆嗎？"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:591
+#: src/view/com/notifications/NotificationFeedItem.tsx:592
 msgid "Hide user list"
 msgstr "隱藏用戶列表"
 
@@ -3429,7 +3445,7 @@ msgid "Labeled by the author."
 msgstr "由發布者標記。"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:75
-#: src/view/screens/Profile.tsx:223
+#: src/view/screens/Profile.tsx:224
 msgid "Labels"
 msgstr "標記"
 
@@ -3554,6 +3570,10 @@ msgstr "讓我們開始吧！"
 msgid "Light"
 msgstr "淺色"
 
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:481
+msgid "Like"
+msgstr "喜歡"
+
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:310
 msgid "Like ({0, plural, one {# like} other {# likes}})"
 msgstr "喜歡 ({0, plural, one {# 個喜歡} other {# 個喜歡}})"
@@ -3567,8 +3587,11 @@ msgstr "喜歡 10 則貼文"
 msgid "Like 10 posts to train the Discover feed"
 msgstr "喜歡 10 則貼文，以訓練「Discover」動態源"
 
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:468
+msgid "Like feed"
+msgstr "喜歡的動態源"
+
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:275
-#: src/view/screens/ProfileFeed.tsx:575
 msgid "Like this feed"
 msgstr "對這個動態源表示喜歡"
 
@@ -3590,13 +3613,13 @@ msgid "Liked by {0, plural, one {# user} other {# users}}"
 msgstr "{0, plural, one {# 個用戶} other {# 個用戶}}表示喜歡"
 
 #: src/components/LabelingServiceCard/index.tsx:96
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:456
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:295
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:309
-#: src/view/screens/ProfileFeed.tsx:590
 msgid "Liked by {likeCount, plural, one {# user} other {# users}}"
 msgstr "{likeCount, plural, one {# 個用戶} other {# 個用戶}}表示喜歡"
 
-#: src/view/screens/Profile.tsx:228
+#: src/view/screens/Profile.tsx:229
 msgid "Likes"
 msgstr "喜歡"
 
@@ -3651,8 +3674,8 @@ msgstr "成功取消靜音列表"
 
 #: src/Navigation.tsx:134
 #: src/view/screens/Lists.tsx:62
-#: src/view/screens/Profile.tsx:224
-#: src/view/screens/Profile.tsx:231
+#: src/view/screens/Profile.tsx:225
+#: src/view/screens/Profile.tsx:232
 #: src/view/shell/desktop/LeftNav.tsx:439
 #: src/view/shell/Drawer.tsx:491
 msgid "Lists"
@@ -3674,13 +3697,13 @@ msgstr "載入更多推薦動態源"
 msgid "Load more suggested follows"
 msgstr "載入更多推薦帳號"
 
-#: src/view/screens/Notifications.tsx:168
+#: src/view/screens/Notifications.tsx:270
 msgid "Load new notifications"
 msgstr "載入更多通知"
 
+#: src/screens/Profile/ProfileFeed/index.tsx:181
 #: src/screens/Profile/Sections/Feed.tsx:96
 #: src/view/com/feeds/FeedPage.tsx:135
-#: src/view/screens/ProfileFeed.tsx:498
 #: src/view/screens/ProfileList.tsx:807
 msgid "Load new posts"
 msgstr "載入更多貼文"
@@ -3764,7 +3787,7 @@ msgstr "管理您靜音的字詞和標籤"
 msgid "Mark as read"
 msgstr "標記為已讀"
 
-#: src/view/screens/Profile.tsx:227
+#: src/view/screens/Profile.tsx:228
 msgid "Media"
 msgstr "媒體"
 
@@ -3780,7 +3803,11 @@ msgstr "被提及的用戶"
 msgid "Mentioned users"
 msgstr "被提及的用戶"
 
-#: src/components/Menu/index.tsx:95
+#: src/view/screens/Notifications.tsx:99
+msgid "Mentions"
+msgstr "提及"
+
+#: src/components/Menu/index.tsx:96
 #: src/view/screens/Search/Search.tsx:855
 msgid "Menu"
 msgstr "選單"
@@ -4115,17 +4142,17 @@ msgstr "新密碼"
 msgid "New Password"
 msgstr "新密碼"
 
-#: src/view/com/feeds/FeedPage.tsx:146
-msgctxt "action"
+#: src/screens/Profile/ProfileFeed/index.tsx:198
+#: src/view/screens/Feeds.tsx:549
+#: src/view/screens/Notifications.tsx:165
+#: src/view/screens/Profile.tsx:490
+#: src/view/screens/ProfileList.tsx:247
+#: src/view/screens/ProfileList.tsx:286
 msgid "New post"
 msgstr "新貼文"
 
-#: src/view/screens/Feeds.tsx:549
-#: src/view/screens/Notifications.tsx:177
-#: src/view/screens/Profile.tsx:484
-#: src/view/screens/ProfileFeed.tsx:432
-#: src/view/screens/ProfileList.tsx:247
-#: src/view/screens/ProfileList.tsx:286
+#: src/view/com/feeds/FeedPage.tsx:146
+msgctxt "action"
 msgid "New post"
 msgstr "新貼文"
 
@@ -4178,7 +4205,6 @@ msgstr "下一張圖片"
 msgid "No app passwords yet"
 msgstr "目前還沒有應用程式專用密碼"
 
-#: src/view/screens/ProfileFeed.tsx:564
 #: src/view/screens/ProfileList.tsx:881
 msgid "No description"
 msgstr "沒有描述"
@@ -4218,7 +4244,7 @@ msgstr "目前還沒有訊息"
 msgid "No more conversations to show"
 msgstr "已經沒有對話啦！"
 
-#: src/view/com/notifications/NotificationFeed.tsx:118
+#: src/view/com/notifications/NotificationFeed.tsx:116
 msgid "No notifications yet!"
 msgstr "目前還沒有通知！"
 
@@ -4303,7 +4329,7 @@ msgid "Non-sexual Nudity"
 msgstr "非色情裸露"
 
 #: src/Navigation.tsx:129
-#: src/view/screens/Profile.tsx:126
+#: src/view/screens/Profile.tsx:127
 msgid "Not Found"
 msgstr "找不到"
 
@@ -4326,16 +4352,16 @@ msgstr "注意：Bluesky 是一個開放的公共社群網路。這個設定僅�
 msgid "Nothing here"
 msgstr "空空如也"
 
-#: src/screens/Settings/NotificationSettings.tsx:58
+#: src/screens/Settings/NotificationSettings.tsx:64
 msgid "Notification filters"
 msgstr "通知過濾"
 
 #: src/Navigation.tsx:392
-#: src/view/screens/Notifications.tsx:144
+#: src/view/screens/Notifications.tsx:134
 msgid "Notification settings"
 msgstr "通知設定"
 
-#: src/screens/Settings/NotificationSettings.tsx:40
+#: src/screens/Settings/NotificationSettings.tsx:46
 msgid "Notification Settings"
 msgstr "通知設定"
 
@@ -4348,8 +4374,7 @@ msgid "Notification Sounds"
 msgstr "通知音效"
 
 #: src/Navigation.tsx:598
-#: src/view/screens/Notifications.tsx:115
-#: src/view/screens/Notifications.tsx:122
+#: src/view/screens/Notifications.tsx:128
 #: src/view/shell/bottom-bar/BottomBar.tsx:226
 #: src/view/shell/desktop/LeftNav.tsx:402
 #: src/view/shell/Drawer.tsx:444
@@ -4451,8 +4476,8 @@ msgstr "糟糕，發生錯誤！"
 #: src/components/StarterPack/ProfileStarterPacks.tsx:331
 #: src/screens/Settings/AppPasswords.tsx:59
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:100
-#: src/screens/Settings/NotificationSettings.tsx:48
-#: src/view/screens/Profile.tsx:126
+#: src/screens/Settings/NotificationSettings.tsx:54
+#: src/view/screens/Profile.tsx:127
 msgid "Oops!"
 msgstr "糟糕！"
 
@@ -4487,7 +4512,12 @@ msgstr "開啟抽屜選單"
 msgid "Open emoji picker"
 msgstr "開啟表情符號選擇器"
 
-#: src/view/screens/ProfileFeed.tsx:300
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:160
+msgid "Open feed info screen"
+msgstr "開啟動態源資訊畫面"
+
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:255
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:260
 msgid "Open feed options menu"
 msgstr "開啟動態選項選單"
 
@@ -4582,7 +4612,7 @@ msgstr "開啟密碼重設表單"
 msgid "Opens the linked website"
 msgstr "開啟網站連結"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:678
+#: src/view/com/notifications/NotificationFeedItem.tsx:679
 #: src/view/com/util/UserAvatar.tsx:436
 msgid "Opens this profile"
 msgstr "開啟這個個人檔案"
@@ -4711,12 +4741,16 @@ msgstr "攝影"
 msgid "Pictures meant for adults."
 msgstr "可能會引發性方面聯想的內容。"
 
-#: src/view/screens/ProfileFeed.tsx:292
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:486
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:493
+msgid "Pin feed"
+msgstr "釘選動態源"
+
 #: src/view/screens/ProfileList.tsx:675
 msgid "Pin to home"
 msgstr "釘選到首頁"
 
-#: src/view/screens/ProfileFeed.tsx:295
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:301
 msgid "Pin to Home"
 msgstr "釘選到首頁"
 
@@ -4728,6 +4762,11 @@ msgstr "釘選到您的個人檔案"
 #: src/view/com/posts/PostFeedItem.tsx:363
 msgid "Pinned"
 msgstr "已釘選"
+
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:127
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:139
+msgid "Pinned {0} to Home"
+msgstr "釘選 {0} 到首頁"
 
 #: src/view/screens/SavedFeeds.tsx:123
 msgid "Pinned Feeds"
@@ -4907,7 +4946,7 @@ msgid "posts"
 msgstr "貼文"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:184
-#: src/view/screens/Profile.tsx:225
+#: src/view/screens/Profile.tsx:226
 msgid "Posts"
 msgstr "貼文"
 
@@ -4959,7 +4998,7 @@ msgstr "慣用語言"
 msgid "Prioritize your Follows"
 msgstr "優先顯示您跟隨的人"
 
-#: src/screens/Settings/NotificationSettings.tsx:61
+#: src/screens/Settings/NotificationSettings.tsx:67
 msgid "Priority notifications"
 msgstr "優先通知"
 
@@ -4996,8 +5035,8 @@ msgstr "正在處理影片..."
 msgid "Processing..."
 msgstr "處理中…"
 
-#: src/view/screens/DebugMod.tsx:913
-#: src/view/screens/Profile.tsx:351
+#: src/view/screens/DebugMod.tsx:919
+#: src/view/screens/Profile.tsx:357
 msgid "profile"
 msgstr "個人檔案"
 
@@ -5059,10 +5098,6 @@ msgstr "成功分離貼文引用"
 msgid "Quote posts disabled"
 msgstr "已拒絕引用貼文"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:314
-msgid "Quote posts enabled"
-msgstr "允許引用貼文"
-
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:299
 msgid "Quote settings"
 msgstr "引用設定"
@@ -5119,10 +5154,6 @@ msgstr "最近的搜尋記錄"
 msgid "Reconnect"
 msgstr "重新連線"
 
-#: src/view/screens/Notifications.tsx:116
-msgid "Refresh notifications"
-msgstr "重新整理通知"
-
 #: src/screens/Messages/ChatList.tsx:163
 msgid "Reload conversations"
 msgstr "重新載入對話"
@@ -5174,10 +5205,10 @@ msgstr "刪除動態源"
 msgid "Remove feed?"
 msgstr "要刪除動態源嗎？"
 
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:283
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:289
 #: src/view/com/feeds/FeedSourceCard.tsx:190
 #: src/view/com/feeds/FeedSourceCard.tsx:268
-#: src/view/screens/ProfileFeed.tsx:336
-#: src/view/screens/ProfileFeed.tsx:342
 #: src/view/screens/ProfileList.tsx:501
 #: src/view/screens/SavedFeeds.tsx:342
 msgid "Remove from my feeds"
@@ -5251,8 +5282,8 @@ msgstr "成功從我的動態源中刪除"
 msgid "Removed from saved feeds"
 msgstr "成功從儲存的動態源中刪除"
 
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:91
 #: src/view/com/posts/FeedShutdownMsg.tsx:44
-#: src/view/screens/ProfileFeed.tsx:196
 #: src/view/screens/ProfileList.tsx:385
 msgid "Removed from your feeds"
 msgstr "成功從您的動態源中刪除"
@@ -5266,7 +5297,7 @@ msgstr "刪除已轉發貼文"
 msgid "Replace with Discover"
 msgstr "取代為「Discover」動態源"
 
-#: src/view/screens/Profile.tsx:226
+#: src/view/screens/Profile.tsx:227
 msgid "Replies"
 msgstr "回覆"
 
@@ -5356,8 +5387,8 @@ msgstr "檢舉對話"
 msgid "Report dialog"
 msgstr "檢舉對話框"
 
-#: src/view/screens/ProfileFeed.tsx:353
-#: src/view/screens/ProfileFeed.tsx:355
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:509
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:515
 msgid "Report feed"
 msgstr "檢舉動態源"
 
@@ -5548,8 +5579,8 @@ msgstr "返回上一頁"
 msgid "Returns to home page"
 msgstr "返回首頁"
 
+#: src/screens/Profile/ProfileFeed/index.tsx:80
 #: src/view/screens/NotFound.tsx:60
-#: src/view/screens/ProfileFeed.tsx:113
 msgid "Returns to previous page"
 msgstr "返回上一頁"
 
@@ -5608,8 +5639,8 @@ msgstr "儲存新的帳號代碼"
 msgid "Save QR code"
 msgstr "儲存 QR Code"
 
-#: src/view/screens/ProfileFeed.tsx:337
-#: src/view/screens/ProfileFeed.tsx:343
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:284
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:290
 msgid "Save to my feeds"
 msgstr "儲存到我的動態源"
 
@@ -5621,7 +5652,7 @@ msgstr "已儲存的動態源"
 msgid "Saved to your camera roll"
 msgstr "成功儲存至裝置相簿"
 
-#: src/view/screens/ProfileFeed.tsx:205
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:100
 #: src/view/screens/ProfileList.tsx:365
 msgid "Saved to your feeds"
 msgstr "成功儲存到您的動態源"
@@ -5636,8 +5667,8 @@ msgstr "儲存圖片裁剪設定"
 
 #: src/components/dms/ChatEmptyPill.tsx:33
 #: src/components/NewskieDialog.tsx:105
-#: src/view/com/notifications/NotificationFeedItem.tsx:539
-#: src/view/com/notifications/NotificationFeedItem.tsx:564
+#: src/view/com/notifications/NotificationFeedItem.tsx:540
+#: src/view/com/notifications/NotificationFeedItem.tsx:565
 msgid "Say hello!"
 msgstr "說句「你好！👋」"
 
@@ -5723,7 +5754,7 @@ msgstr "瀏覽在 Bluesky 的工作機會"
 msgid "See this guide"
 msgstr "檢視指南"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/Scrubber.tsx:190
+#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/Scrubber.tsx:194
 msgid "Seek slider. Use the arrow keys to seek forwards and backwards, and space to play/pause"
 msgstr "播放進度條。使用方向鍵來前進或後退，按空白鍵控制播放或暫停。"
 
@@ -5954,11 +5985,6 @@ msgstr "分享一個趣聞！📰"
 msgid "Share anyway"
 msgstr "仍然分享"
 
-#: src/view/screens/ProfileFeed.tsx:363
-#: src/view/screens/ProfileFeed.tsx:365
-msgid "Share feed"
-msgstr "分享動態源"
-
 #: src/components/StarterPack/ShareDialog.tsx:123
 #: src/components/StarterPack/ShareDialog.tsx:130
 #: src/screens/StarterPack/StarterPackScreen.tsx:598
@@ -5978,6 +6004,10 @@ msgstr "分享連結對話框"
 #: src/components/StarterPack/ShareDialog.tsx:145
 msgid "Share QR code"
 msgstr "分享 QR Code"
+
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:437
+msgid "Share this feed"
+msgstr "分享這個動態源"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:415
 msgid "Share this starter pack"
@@ -6178,7 +6208,7 @@ msgstr "以 @{0} 的身分登入"
 msgid "Signup without a starter pack"
 msgstr "不使用新手包註冊"
 
-#: src/components/FeedInterstitials.tsx:316
+#: src/components/FeedInterstitials.tsx:314
 msgid "Similar accounts"
 msgstr "類似帳號"
 
@@ -6200,7 +6230,7 @@ msgstr "更小"
 msgid "Software Dev"
 msgstr "軟體開發"
 
-#: src/components/FeedInterstitials.tsx:447
+#: src/components/FeedInterstitials.tsx:445
 msgid "Some other feeds you might like"
 msgstr "其他您可能喜歡的動態源"
 
@@ -6210,26 +6240,30 @@ msgstr "僅部分人可以回覆"
 
 #: src/screens/Messages/Conversation.tsx:102
 msgid "Something went wrong"
-msgstr "發生問題"
+msgstr "發生錯誤"
 
 #: src/screens/Deactivated.tsx:94
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:59
 msgid "Something went wrong, please try again"
-msgstr "發生問題，請再試一次"
+msgstr "發生錯誤，請再試一次"
 
 #: src/components/ReportDialog/index.tsx:54
 #: src/screens/Moderation/index.tsx:96
 #: src/screens/Profile/Sections/Labels.tsx:88
 msgid "Something went wrong, please try again."
-msgstr "發生問題，請再試一次。"
+msgstr "發生錯誤，請再試一次。"
 
 #: src/components/Lists.tsx:168
-#: src/screens/Settings/NotificationSettings.tsx:49
+#: src/screens/Settings/NotificationSettings.tsx:55
 msgid "Something went wrong!"
-msgstr "發生問題！"
+msgstr "發生錯誤！"
 
-#: src/App.native.tsx:119
-#: src/App.web.tsx:94
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:505
+msgid "Something wrong? Let us know."
+msgstr "發生錯誤？請告訴我們。"
+
+#: src/App.native.tsx:120
+#: src/App.web.tsx:95
 msgid "Sorry! Your session expired. Please log in again."
 msgstr "抱歉！您的登入狀態已過期。請重新登入。"
 
@@ -6289,7 +6323,7 @@ msgstr "由您建立的新手包"
 msgid "Starter pack is invalid"
 msgstr "無效的新手包"
 
-#: src/view/screens/Profile.tsx:230
+#: src/view/screens/Profile.tsx:231
 msgid "Starter Packs"
 msgstr "新手包"
 
@@ -6350,7 +6384,7 @@ msgstr "完成！"
 msgid "Suggested accounts"
 msgstr "推薦帳號"
 
-#: src/components/FeedInterstitials.tsx:318
+#: src/components/FeedInterstitials.tsx:316
 msgid "Suggested for you"
 msgstr "為您推薦"
 
@@ -6610,15 +6644,15 @@ msgstr "停用帳號沒有時間限制，隨時歡迎您回來看看。"
 msgid "There was an issue connecting to Tenor."
 msgstr "連線到 Tenor 時發生問題。"
 
-#: src/view/screens/ProfileFeed.tsx:239
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:142
 #: src/view/screens/ProfileList.tsx:368
 #: src/view/screens/ProfileList.tsx:387
 #: src/view/screens/SavedFeeds.tsx:85
 msgid "There was an issue contacting the server"
 msgstr "連線伺服器時發生問題"
 
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:380
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:112
-#: src/view/screens/ProfileFeed.tsx:545
 msgid "There was an issue contacting the server, please check your internet connection and try again."
 msgstr "連線至伺服器時發生問題，請檢查您的網路連線，然後再試一次。"
 
@@ -6627,11 +6661,11 @@ msgstr "連線至伺服器時發生問題，請檢查您的網路連線，然後
 msgid "There was an issue contacting your server"
 msgstr "連線伺服器時發生問題"
 
-#: src/view/com/notifications/NotificationFeed.tsx:126
+#: src/view/com/notifications/NotificationFeed.tsx:124
 msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr "取得通知時發生問題，按這裡重試。"
 
-#: src/view/com/posts/PostFeed.tsx:458
+#: src/view/com/posts/PostFeed.tsx:465
 msgid "There was an issue fetching posts. Tap here to try again."
 msgstr "取得貼文時發生問題，按這裡重試。"
 
@@ -6661,9 +6695,9 @@ msgstr "刪除動態源時發生問題，請檢查您的網路連線，然後再
 msgid "There was an issue sending your report. Please check your internet connection."
 msgstr "提交您的檢舉時發生問題，請檢查您的網路連線。"
 
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:105
 #: src/view/com/posts/FeedShutdownMsg.tsx:52
 #: src/view/com/posts/FeedShutdownMsg.tsx:71
-#: src/view/screens/ProfileFeed.tsx:210
 msgid "There was an issue updating your feeds, please check your internet connection and try again."
 msgstr "更新動態源時發生問題，請檢查您的網路連線，然後再試一次。"
 
@@ -6772,7 +6806,7 @@ msgid "This feed is empty! You may need to follow more users or tune your langua
 msgstr "這個動態源是空的！您可能需要再跟隨一些用戶，或檢查您的語言設定。"
 
 #: src/components/StarterPack/Main/PostsList.tsx:36
-#: src/view/screens/ProfileFeed.tsx:477
+#: src/screens/Profile/ProfileFeed/index.tsx:159
 #: src/view/screens/ProfileList.tsx:787
 msgid "This feed is empty."
 msgstr "這裡是空的。"
@@ -7070,13 +7104,13 @@ msgstr "取消跟隨 {0}"
 msgid "Unfollow Account"
 msgstr "取消跟隨"
 
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:481
+msgid "Unlike"
+msgstr "取消喜歡"
+
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:304
 msgid "Unlike ({0, plural, one {# like} other {# likes}})"
 msgstr "取消喜歡 ({0, plural, one {# 個喜歡} other {# 個喜歡}})"
-
-#: src/view/screens/ProfileFeed.tsx:575
-msgid "Unlike this feed"
-msgstr "取消喜歡這個動態源"
 
 #: src/components/TagMenu/index.tsx:264
 #: src/view/screens/ProfileList.tsx:691
@@ -7115,12 +7149,17 @@ msgstr "取消靜音討論串"
 msgid "Unmute video"
 msgstr "取消靜音影片"
 
-#: src/view/screens/ProfileFeed.tsx:295
 #: src/view/screens/ProfileList.tsx:675
 msgid "Unpin"
 msgstr "取消釘選"
 
-#: src/view/screens/ProfileFeed.tsx:292
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:486
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:493
+msgid "Unpin feed"
+msgstr "取消釘選動態源"
+
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:274
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:276
 msgid "Unpin from home"
 msgstr "自首頁取消釘選"
 
@@ -7132,6 +7171,10 @@ msgstr "從您的個人檔案中取消釘選"
 #: src/view/screens/ProfileList.tsx:558
 msgid "Unpin moderation list"
 msgstr "取消釘選內容管理列表"
+
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:129
+msgid "Unpinned {0} from Home"
+msgstr "自首頁取消釘選 {0}"
 
 #: src/view/screens/ProfileList.tsx:355
 msgid "Unpinned from your feeds"
@@ -7416,12 +7459,13 @@ msgstr "影片：{0}"
 msgid "Videos must be less than 60 seconds long"
 msgstr "影片長度必須少於 60 秒"
 
-#: src/screens/Profile/Header/Shell.tsx:160
+#: src/screens/Profile/Header/Shell.tsx:168
 msgid "View {0}'s avatar"
 msgstr "檢視 {0} 的大頭貼照"
 
 #: src/components/ProfileCard.tsx:110
-#: src/view/com/notifications/NotificationFeedItem.tsx:408
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:417
+#: src/view/com/notifications/NotificationFeedItem.tsx:409
 msgid "View {0}'s profile"
 msgstr "檢視 {0} 的個人檔案"
 
@@ -7483,7 +7527,7 @@ msgstr "檢視大頭貼照"
 msgid "View the labeling service provided by @{0}"
 msgstr "檢視由 @{0} 提供的標記服務"
 
-#: src/view/screens/ProfileFeed.tsx:587
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:452
 msgid "View users who like this feed"
 msgstr "檢視喜歡這個動態源的用戶"
 
@@ -7491,7 +7535,7 @@ msgstr "檢視喜歡這個動態源的用戶"
 msgid "View your blocked accounts"
 msgstr "檢視您封鎖的帳號"
 
-#: src/view/com/home/HomeHeaderLayout.web.tsx:59
+#: src/view/com/home/HomeHeaderLayout.web.tsx:56
 #: src/view/com/home/HomeHeaderLayoutMobile.tsx:77
 msgid "View your feeds and explore more"
 msgstr "瀏覽您的動態源並探索更多內容"

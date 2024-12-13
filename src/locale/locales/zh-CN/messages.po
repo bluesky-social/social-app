@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-12-12 05:28\n"
+"PO-Revision-Date: 2024-12-13 01:35\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -119,7 +119,7 @@ msgstr "{0} <0> - <1>文本及标签</1></0>"
 msgid "{0} joined this week"
 msgstr "本周新加入了 {0} 人"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/Scrubber.tsx:197
+#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/Scrubber.tsx:201
 msgid "{0} of {1}"
 msgstr "第 {0} 个（共 {1} 个）"
 
@@ -189,91 +189,91 @@ msgstr "{estimatedTimeHrs, plural, one {时} other {时}}"
 msgid "{estimatedTimeMins, plural, one {minute} other {minutes}}"
 msgstr "{estimatedTimeMins, plural, one {分} other {分}}"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:300
+#: src/view/com/notifications/NotificationFeedItem.tsx:301
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> followed you"
 msgstr "{firstAuthorLink} 及<0>{additionalAuthorsCount, plural, one {其他 {formattedAuthorsCount} 人} other {其他 {formattedAuthorsCount} 人}}</0> 关注了你"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:326
+#: src/view/com/notifications/NotificationFeedItem.tsx:327
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> liked your custom feed"
 msgstr "{firstAuthorLink} 及<0>{additionalAuthorsCount, plural, one {其他 {formattedAuthorsCount} 人} other {其他 {formattedAuthorsCount} 人}}</0> 喜欢了你的自定义动态源"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:222
+#: src/view/com/notifications/NotificationFeedItem.tsx:223
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> liked your post"
 msgstr "{firstAuthorLink} 及<0>{additionalAuthorsCount, plural, one {其他 {formattedAuthorsCount} 人} other {其他 {formattedAuthorsCount} 人}}</0> 喜欢了你的帖文"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:246
+#: src/view/com/notifications/NotificationFeedItem.tsx:247
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> reposted your post"
 msgstr "{firstAuthorLink} 及<0>{additionalAuthorsCount, plural, one {其他 {formattedAuthorsCount} 人} other {其他 {formattedAuthorsCount} 人}}</0> 转发了你的帖文"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:350
+#: src/view/com/notifications/NotificationFeedItem.tsx:351
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> signed up with your starter pack"
 msgstr "{firstAuthorLink} 及<0>{additionalAuthorsCount, plural, one {其他 {formattedAuthorsCount} 人} other {其他 {formattedAuthorsCount} 人}}</0> 使用了你的新手包注册"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:312
+#: src/view/com/notifications/NotificationFeedItem.tsx:313
 msgid "{firstAuthorLink} followed you"
 msgstr "{firstAuthorLink} 关注了你"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:289
+#: src/view/com/notifications/NotificationFeedItem.tsx:290
 msgid "{firstAuthorLink} followed you back"
 msgstr "{firstAuthorLink} 回关了你"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:338
+#: src/view/com/notifications/NotificationFeedItem.tsx:339
 msgid "{firstAuthorLink} liked your custom feed"
 msgstr "{firstAuthorLink} 喜欢了你的自定义动态源"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:234
+#: src/view/com/notifications/NotificationFeedItem.tsx:235
 msgid "{firstAuthorLink} liked your post"
 msgstr "{firstAuthorLink} 喜欢了你的帖文"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:258
+#: src/view/com/notifications/NotificationFeedItem.tsx:259
 msgid "{firstAuthorLink} reposted your post"
 msgstr "{firstAuthorLink} 转发了你的帖文"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:362
+#: src/view/com/notifications/NotificationFeedItem.tsx:363
 msgid "{firstAuthorLink} signed up with your starter pack"
 msgstr "{firstAuthorLink} 使用了你的新手包注册"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:293
+#: src/view/com/notifications/NotificationFeedItem.tsx:294
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} followed you"
 msgstr "{firstAuthorName} 及{additionalAuthorsCount, plural, one {其他 {formattedAuthorsCount} 人} other {其他 {formattedAuthorsCount} 人}} 关注了你"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:319
+#: src/view/com/notifications/NotificationFeedItem.tsx:320
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} liked your custom feed"
 msgstr "{firstAuthorName} 及{additionalAuthorsCount, plural, one {其他 {formattedAuthorsCount} 人} other {其他 {formattedAuthorsCount} 人}} 喜欢了你的自定义动态源"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:215
+#: src/view/com/notifications/NotificationFeedItem.tsx:216
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} liked your post"
 msgstr "{firstAuthorName} 及{additionalAuthorsCount, plural, one {其他 {formattedAuthorsCount} 人} other {其他 {formattedAuthorsCount} 人}} 喜欢了你的帖文"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:239
+#: src/view/com/notifications/NotificationFeedItem.tsx:240
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} reposted your post"
 msgstr "{firstAuthorName} 及{additionalAuthorsCount, plural, one {其他 {formattedAuthorsCount} 人} other {其他 {formattedAuthorsCount} 人}} 转发了你的帖文"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:343
+#: src/view/com/notifications/NotificationFeedItem.tsx:344
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} signed up with your starter pack"
 msgstr "{firstAuthorName} 及{additionalAuthorsCount, plural, one {其他 {formattedAuthorsCount} 人} other {其他 {formattedAuthorsCount} 人}} 使用了你的新手包注册"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:298
+#: src/view/com/notifications/NotificationFeedItem.tsx:299
 msgid "{firstAuthorName} followed you"
 msgstr "{firstAuthorName} 关注了你"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:288
+#: src/view/com/notifications/NotificationFeedItem.tsx:289
 msgid "{firstAuthorName} followed you back"
 msgstr "{firstAuthorName} 回关了你"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:324
+#: src/view/com/notifications/NotificationFeedItem.tsx:325
 msgid "{firstAuthorName} liked your custom feed"
 msgstr "{firstAuthorName} 喜欢了你的自定义动态源"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:220
+#: src/view/com/notifications/NotificationFeedItem.tsx:221
 msgid "{firstAuthorName} liked your post"
 msgstr "{firstAuthorName} 喜欢了你的帖文"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:244
+#: src/view/com/notifications/NotificationFeedItem.tsx:245
 msgid "{firstAuthorName} reposted your post"
 msgstr "{firstAuthorName} 转发了你的帖文"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:348
+#: src/view/com/notifications/NotificationFeedItem.tsx:349
 msgid "{firstAuthorName} signed up with your starter pack"
 msgstr "{firstAuthorName} 使用了你的新手包注册"
 
@@ -336,7 +336,7 @@ msgstr "<0>{0}</0> 的成员"
 msgid "<0>{date}</0> at {time}"
 msgstr "<0>{date}</0> {time}"
 
-#: src/screens/Settings/NotificationSettings.tsx:79
+#: src/screens/Settings/NotificationSettings.tsx:85
 msgid "<0>Experimental:</0> When this preference is enabled, you'll only receive reply and quote notifications from users you follow. We'll continue to add more controls here over time."
 msgstr "<0>实验性：</0>启用后，你将只会收到已关注用户的回复及引用通知。我们会在逐步在这里添加更多设置项。"
 
@@ -580,6 +580,10 @@ msgstr "详细设置"
 msgid "Algorithm training complete!"
 msgstr "已完成算法训练！"
 
+#: src/view/screens/Notifications.tsx:86
+msgid "All"
+msgstr "全部"
+
 #: src/screens/StarterPack/StarterPackScreen.tsx:381
 msgid "All accounts have been followed!"
 msgstr "已关注所有账户！"
@@ -597,6 +601,10 @@ msgstr "允许读取你的私信"
 #: src/screens/Messages/Settings.tsx:73
 msgid "Allow new messages from"
 msgstr "允许以下来源向你发送私信"
+
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:314
+msgid "Allow quote posts"
+msgstr "允许引用帖文"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:359
 msgid "Allow replies from:"
@@ -916,7 +924,7 @@ msgstr "自动播放视频及 GIF"
 #: src/screens/Login/SetNewPasswordForm.tsx:160
 #: src/screens/Messages/components/ChatDisabled.tsx:133
 #: src/screens/Messages/components/ChatDisabled.tsx:134
-#: src/screens/Profile/Header/Shell.tsx:112
+#: src/screens/Profile/Header/Shell.tsx:115
 #: src/screens/Signup/BackNextButtons.tsx:41
 #: src/screens/StarterPack/Wizard/index.tsx:286
 msgid "Back"
@@ -1069,23 +1077,23 @@ msgstr "模糊化图片并从动态源中过滤"
 msgid "Books"
 msgstr "书籍"
 
-#: src/components/FeedInterstitials.tsx:350
+#: src/components/FeedInterstitials.tsx:348
 msgid "Browse more accounts on the Explore page"
 msgstr "在探索页面浏览更多账户"
 
-#: src/components/FeedInterstitials.tsx:483
+#: src/components/FeedInterstitials.tsx:481
 msgid "Browse more feeds on the Explore page"
 msgstr "在探索页面浏览更多动态源"
 
-#: src/components/FeedInterstitials.tsx:332
-#: src/components/FeedInterstitials.tsx:335
-#: src/components/FeedInterstitials.tsx:465
-#: src/components/FeedInterstitials.tsx:468
+#: src/components/FeedInterstitials.tsx:330
+#: src/components/FeedInterstitials.tsx:333
+#: src/components/FeedInterstitials.tsx:463
+#: src/components/FeedInterstitials.tsx:466
 msgid "Browse more suggestions"
 msgstr "浏览更多建议"
 
-#: src/components/FeedInterstitials.tsx:358
-#: src/components/FeedInterstitials.tsx:492
+#: src/components/FeedInterstitials.tsx:356
+#: src/components/FeedInterstitials.tsx:490
 msgid "Browse more suggestions on the Explore page"
 msgstr "在探索页面浏览更多建议"
 
@@ -1109,6 +1117,10 @@ msgstr "来自 {0}"
 #: src/view/com/profile/ProfileSubpageHeader.tsx:154
 msgid "by <0/>"
 msgstr "由 <0/> 创建"
+
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:414
+msgid "By <0>{0}</0>"
+msgstr "来自 <0>{0}</0>"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:81
 msgid "By creating an account you agree to the <0>Privacy Policy</0>."
@@ -1453,11 +1465,11 @@ msgstr "关闭密码更新警告"
 msgid "Closes viewer for header image"
 msgstr "关闭标题图片查看器"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:400
+#: src/view/com/notifications/NotificationFeedItem.tsx:401
 msgid "Collapse list of users"
 msgstr "折叠用户列表"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:593
+#: src/view/com/notifications/NotificationFeedItem.tsx:594
 msgid "Collapses list of users for a given notification"
 msgstr "折叠指定通知的用户列表"
 
@@ -1612,7 +1624,7 @@ msgstr "内容警告"
 msgid "Content warnings"
 msgstr "内容警告"
 
-#: src/components/Menu/index.web.tsx:81
+#: src/components/Menu/index.web.tsx:82
 msgid "Context menu backdrop, click to close the menu."
 msgstr "上下文菜单背景，点击以关闭菜单。"
 
@@ -1733,7 +1745,7 @@ msgstr "版权许可"
 msgid "Could not leave chat"
 msgstr "无法离开对话"
 
-#: src/view/screens/ProfileFeed.tsx:103
+#: src/screens/Profile/ProfileFeed/index.tsx:70
 msgid "Could not load feed"
 msgstr "无法加载动态源"
 
@@ -2379,8 +2391,8 @@ msgstr "启用外部媒体"
 msgid "Enable media players for"
 msgstr "启用媒体播放器"
 
-#: src/screens/Settings/NotificationSettings.tsx:68
-#: src/screens/Settings/NotificationSettings.tsx:71
+#: src/screens/Settings/NotificationSettings.tsx:74
+#: src/screens/Settings/NotificationSettings.tsx:77
 msgid "Enable priority notifications"
 msgstr "启用优先通知"
 
@@ -2535,7 +2547,7 @@ msgstr "退出搜索查询输入"
 msgid "Expand alt text"
 msgstr "展开替代文本"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:401
+#: src/view/com/notifications/NotificationFeedItem.tsx:402
 msgid "Expand list of users"
 msgstr "展开用户列表"
 
@@ -2702,6 +2714,10 @@ msgstr "动态源"
 msgid "Feed by {0}"
 msgstr "由 {0} 创建的动态源"
 
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:318
+msgid "Feed menu"
+msgstr "动态源菜单"
+
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:54
 msgid "Feed toggle"
 msgstr "切换动态源"
@@ -2720,7 +2736,7 @@ msgstr "已发送反馈！"
 #: src/Navigation.tsx:397
 #: src/screens/StarterPack/StarterPackScreen.tsx:183
 #: src/view/screens/Feeds.tsx:508
-#: src/view/screens/Profile.tsx:229
+#: src/view/screens/Profile.tsx:230
 #: src/view/screens/SavedFeeds.tsx:96
 #: src/view/screens/Search/Search.tsx:518
 #: src/view/shell/desktop/LeftNav.tsx:421
@@ -2980,9 +2996,9 @@ msgstr "明显违反法规或服务条款"
 #: src/components/Layout/Header/index.tsx:121
 #: src/components/moderation/ScreenHider.tsx:154
 #: src/components/moderation/ScreenHider.tsx:163
+#: src/screens/Profile/ProfileFeed/index.tsx:79
 #: src/view/com/auth/LoggedOut.tsx:72
 #: src/view/screens/NotFound.tsx:57
-#: src/view/screens/ProfileFeed.tsx:112
 #: src/view/screens/ProfileList.tsx:1027
 msgid "Go back"
 msgstr "返回"
@@ -2991,9 +3007,9 @@ msgstr "返回"
 #: src/screens/List/ListHiddenScreen.tsx:210
 #: src/screens/Profile/ErrorState.tsx:62
 #: src/screens/Profile/ErrorState.tsx:66
+#: src/screens/Profile/ProfileFeed/index.tsx:84
 #: src/screens/StarterPack/StarterPackScreen.tsx:757
 #: src/view/screens/NotFound.tsx:56
-#: src/view/screens/ProfileFeed.tsx:117
 #: src/view/screens/ProfileList.tsx:1032
 msgid "Go Back"
 msgstr "返回"
@@ -3119,7 +3135,7 @@ msgstr "隐藏列表"
 msgid "Hide"
 msgstr "隐藏"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:600
+#: src/view/com/notifications/NotificationFeedItem.tsx:601
 msgctxt "action"
 msgid "Hide"
 msgstr "隐藏"
@@ -3153,7 +3169,7 @@ msgstr "要隐藏这则帖文吗？"
 msgid "Hide this reply?"
 msgstr "要隐藏这则回复吗？"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:591
+#: src/view/com/notifications/NotificationFeedItem.tsx:592
 msgid "Hide user list"
 msgstr "隐藏用户列表"
 
@@ -3429,7 +3445,7 @@ msgid "Labeled by the author."
 msgstr "由发布者标记。"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:75
-#: src/view/screens/Profile.tsx:223
+#: src/view/screens/Profile.tsx:224
 msgid "Labels"
 msgstr "标记"
 
@@ -3554,6 +3570,10 @@ msgstr "让我们开始吧！"
 msgid "Light"
 msgstr "浅色"
 
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:481
+msgid "Like"
+msgstr "喜欢"
+
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:310
 msgid "Like ({0, plural, one {# like} other {# likes}})"
 msgstr "喜欢（{0, plural, one {# 次喜欢} other {# 次喜欢}}）"
@@ -3567,8 +3587,11 @@ msgstr "喜欢 10 则帖文"
 msgid "Like 10 posts to train the Discover feed"
 msgstr "喜欢 10 则帖文以训练“Discover”资讯源"
 
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:468
+msgid "Like feed"
+msgstr "喜欢的动态源"
+
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:275
-#: src/view/screens/ProfileFeed.tsx:575
 msgid "Like this feed"
 msgstr "喜欢这个动态源"
 
@@ -3590,13 +3613,13 @@ msgid "Liked by {0, plural, one {# user} other {# users}}"
 msgstr "{0, plural, one {# 位用户} other {# 位用户}}喜欢"
 
 #: src/components/LabelingServiceCard/index.tsx:96
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:456
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:295
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:309
-#: src/view/screens/ProfileFeed.tsx:590
 msgid "Liked by {likeCount, plural, one {# user} other {# users}}"
 msgstr "{likeCount, plural, one {# 位用户} other {# 位用户}}喜欢"
 
-#: src/view/screens/Profile.tsx:228
+#: src/view/screens/Profile.tsx:229
 msgid "Likes"
 msgstr "喜欢"
 
@@ -3651,8 +3674,8 @@ msgstr "已取消隐藏列表"
 
 #: src/Navigation.tsx:134
 #: src/view/screens/Lists.tsx:62
-#: src/view/screens/Profile.tsx:224
-#: src/view/screens/Profile.tsx:231
+#: src/view/screens/Profile.tsx:225
+#: src/view/screens/Profile.tsx:232
 #: src/view/shell/desktop/LeftNav.tsx:439
 #: src/view/shell/Drawer.tsx:491
 msgid "Lists"
@@ -3674,13 +3697,13 @@ msgstr "加载更多建议的动态源"
 msgid "Load more suggested follows"
 msgstr "加载更多建议关注"
 
-#: src/view/screens/Notifications.tsx:168
+#: src/view/screens/Notifications.tsx:270
 msgid "Load new notifications"
 msgstr "加载新的通知"
 
+#: src/screens/Profile/ProfileFeed/index.tsx:181
 #: src/screens/Profile/Sections/Feed.tsx:96
 #: src/view/com/feeds/FeedPage.tsx:135
-#: src/view/screens/ProfileFeed.tsx:498
 #: src/view/screens/ProfileList.tsx:807
 msgid "Load new posts"
 msgstr "加载新的帖文"
@@ -3764,7 +3787,7 @@ msgstr "管理你的隐藏字词和标签"
 msgid "Mark as read"
 msgstr "标记为已读"
 
-#: src/view/screens/Profile.tsx:227
+#: src/view/screens/Profile.tsx:228
 msgid "Media"
 msgstr "媒体"
 
@@ -3780,7 +3803,11 @@ msgstr "被提及的用户"
 msgid "Mentioned users"
 msgstr "被提及的用户"
 
-#: src/components/Menu/index.tsx:95
+#: src/view/screens/Notifications.tsx:99
+msgid "Mentions"
+msgstr "提及"
+
+#: src/components/Menu/index.tsx:96
 #: src/view/screens/Search/Search.tsx:855
 msgid "Menu"
 msgstr "菜单"
@@ -4115,17 +4142,17 @@ msgstr "新密码"
 msgid "New Password"
 msgstr "新密码"
 
-#: src/view/com/feeds/FeedPage.tsx:146
-msgctxt "action"
+#: src/screens/Profile/ProfileFeed/index.tsx:198
+#: src/view/screens/Feeds.tsx:549
+#: src/view/screens/Notifications.tsx:165
+#: src/view/screens/Profile.tsx:490
+#: src/view/screens/ProfileList.tsx:247
+#: src/view/screens/ProfileList.tsx:286
 msgid "New post"
 msgstr "新帖文"
 
-#: src/view/screens/Feeds.tsx:549
-#: src/view/screens/Notifications.tsx:177
-#: src/view/screens/Profile.tsx:484
-#: src/view/screens/ProfileFeed.tsx:432
-#: src/view/screens/ProfileList.tsx:247
-#: src/view/screens/ProfileList.tsx:286
+#: src/view/com/feeds/FeedPage.tsx:146
+msgctxt "action"
 msgid "New post"
 msgstr "新帖文"
 
@@ -4178,7 +4205,6 @@ msgstr "下一张图片"
 msgid "No app passwords yet"
 msgstr "目前还没有应用密码"
 
-#: src/view/screens/ProfileFeed.tsx:564
 #: src/view/screens/ProfileList.tsx:881
 msgid "No description"
 msgstr "没有描述"
@@ -4218,7 +4244,7 @@ msgstr "目前还没有私信"
 msgid "No more conversations to show"
 msgstr "没有更多对话可显示"
 
-#: src/view/com/notifications/NotificationFeed.tsx:118
+#: src/view/com/notifications/NotificationFeed.tsx:116
 msgid "No notifications yet!"
 msgstr "目前还没有通知！"
 
@@ -4303,7 +4329,7 @@ msgid "Non-sexual Nudity"
 msgstr "非色情裸露"
 
 #: src/Navigation.tsx:129
-#: src/view/screens/Profile.tsx:126
+#: src/view/screens/Profile.tsx:127
 msgid "Not Found"
 msgstr "未找到"
 
@@ -4326,16 +4352,16 @@ msgstr "注意：Bluesky 是一个开放的社交网络。该设置项仅限制�
 msgid "Nothing here"
 msgstr "这里什么也没有"
 
-#: src/screens/Settings/NotificationSettings.tsx:58
+#: src/screens/Settings/NotificationSettings.tsx:64
 msgid "Notification filters"
 msgstr "通知过滤器"
 
 #: src/Navigation.tsx:392
-#: src/view/screens/Notifications.tsx:144
+#: src/view/screens/Notifications.tsx:134
 msgid "Notification settings"
 msgstr "通知设置"
 
-#: src/screens/Settings/NotificationSettings.tsx:40
+#: src/screens/Settings/NotificationSettings.tsx:46
 msgid "Notification Settings"
 msgstr "通知设置"
 
@@ -4348,8 +4374,7 @@ msgid "Notification Sounds"
 msgstr "通知提示音"
 
 #: src/Navigation.tsx:598
-#: src/view/screens/Notifications.tsx:115
-#: src/view/screens/Notifications.tsx:122
+#: src/view/screens/Notifications.tsx:128
 #: src/view/shell/bottom-bar/BottomBar.tsx:226
 #: src/view/shell/desktop/LeftNav.tsx:402
 #: src/view/shell/Drawer.tsx:444
@@ -4384,7 +4409,7 @@ msgstr "糟糕！"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:124
 msgid "Oh no! Something went wrong."
-msgstr "糟糕！发生了一些错误。"
+msgstr "糟糕！出了点问题。"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:352
 #: src/screens/Settings/AppIconSettings/index.tsx:48
@@ -4444,15 +4469,15 @@ msgstr "仅支持 WebVTT（.vtt）格式"
 
 #: src/components/Lists.tsx:88
 msgid "Oops, something went wrong!"
-msgstr "糟糕，发生了一些错误！"
+msgstr "糟糕，出了点问题！"
 
 #: src/components/Lists.tsx:167
 #: src/components/StarterPack/ProfileStarterPacks.tsx:322
 #: src/components/StarterPack/ProfileStarterPacks.tsx:331
 #: src/screens/Settings/AppPasswords.tsx:59
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:100
-#: src/screens/Settings/NotificationSettings.tsx:48
-#: src/view/screens/Profile.tsx:126
+#: src/screens/Settings/NotificationSettings.tsx:54
+#: src/view/screens/Profile.tsx:127
 msgid "Oops!"
 msgstr "糟糕！"
 
@@ -4487,7 +4512,12 @@ msgstr "开启抽屉菜单"
 msgid "Open emoji picker"
 msgstr "开启表情符号选择器"
 
-#: src/view/screens/ProfileFeed.tsx:300
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:160
+msgid "Open feed info screen"
+msgstr "开启动态源详情页面"
+
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:255
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:260
 msgid "Open feed options menu"
 msgstr "开启动态源选项菜单"
 
@@ -4582,7 +4612,7 @@ msgstr "开启密码重置申请"
 msgid "Opens the linked website"
 msgstr "开启链接到的网页"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:678
+#: src/view/com/notifications/NotificationFeedItem.tsx:679
 #: src/view/com/util/UserAvatar.tsx:436
 msgid "Opens this profile"
 msgstr "开启该个人资料"
@@ -4711,12 +4741,16 @@ msgstr "摄影"
 msgid "Pictures meant for adults."
 msgstr "不适合未成年人的图片。"
 
-#: src/view/screens/ProfileFeed.tsx:292
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:486
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:493
+msgid "Pin feed"
+msgstr "固定动态源"
+
 #: src/view/screens/ProfileList.tsx:675
 msgid "Pin to home"
 msgstr "固定到主页"
 
-#: src/view/screens/ProfileFeed.tsx:295
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:301
 msgid "Pin to Home"
 msgstr "固定到主页"
 
@@ -4728,6 +4762,11 @@ msgstr "固定到你的个人资料"
 #: src/view/com/posts/PostFeedItem.tsx:363
 msgid "Pinned"
 msgstr "已固定"
+
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:127
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:139
+msgid "Pinned {0} to Home"
+msgstr "固定 {0} 到主页"
 
 #: src/view/screens/SavedFeeds.tsx:123
 msgid "Pinned Feeds"
@@ -4907,7 +4946,7 @@ msgid "posts"
 msgstr "帖文"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:184
-#: src/view/screens/Profile.tsx:225
+#: src/view/screens/Profile.tsx:226
 msgid "Posts"
 msgstr "帖文"
 
@@ -4959,7 +4998,7 @@ msgstr "首选语言"
 msgid "Prioritize your Follows"
 msgstr "优先显示你关注的人"
 
-#: src/screens/Settings/NotificationSettings.tsx:61
+#: src/screens/Settings/NotificationSettings.tsx:67
 msgid "Priority notifications"
 msgstr "优先通知"
 
@@ -4996,8 +5035,8 @@ msgstr "正在处理视频……"
 msgid "Processing..."
 msgstr "处理中……"
 
-#: src/view/screens/DebugMod.tsx:913
-#: src/view/screens/Profile.tsx:351
+#: src/view/screens/DebugMod.tsx:919
+#: src/view/screens/Profile.tsx:357
 msgid "profile"
 msgstr "个人资料"
 
@@ -5059,10 +5098,6 @@ msgstr "已成功分离引用帖文"
 msgid "Quote posts disabled"
 msgstr "已停用帖文引用"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:314
-msgid "Quote posts enabled"
-msgstr "允许引用帖文"
-
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:299
 msgid "Quote settings"
 msgstr "引用选项"
@@ -5119,10 +5154,6 @@ msgstr "最近的搜索记录"
 msgid "Reconnect"
 msgstr "重新连接"
 
-#: src/view/screens/Notifications.tsx:116
-msgid "Refresh notifications"
-msgstr "刷新通知"
-
 #: src/screens/Messages/ChatList.tsx:163
 msgid "Reload conversations"
 msgstr "重新加载对话"
@@ -5174,10 +5205,10 @@ msgstr "删除这个动态源"
 msgid "Remove feed?"
 msgstr "要删除动态源吗？"
 
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:283
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:289
 #: src/view/com/feeds/FeedSourceCard.tsx:190
 #: src/view/com/feeds/FeedSourceCard.tsx:268
-#: src/view/screens/ProfileFeed.tsx:336
-#: src/view/screens/ProfileFeed.tsx:342
 #: src/view/screens/ProfileList.tsx:501
 #: src/view/screens/SavedFeeds.tsx:342
 msgid "Remove from my feeds"
@@ -5251,8 +5282,8 @@ msgstr "已从我的动态源中删除"
 msgid "Removed from saved feeds"
 msgstr "已从已保存的动态源中删除"
 
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:91
 #: src/view/com/posts/FeedShutdownMsg.tsx:44
-#: src/view/screens/ProfileFeed.tsx:196
 #: src/view/screens/ProfileList.tsx:385
 msgid "Removed from your feeds"
 msgstr "已从你的动态源中删除"
@@ -5266,7 +5297,7 @@ msgstr "删除引用的帖文"
 msgid "Replace with Discover"
 msgstr "替换为“Discover”"
 
-#: src/view/screens/Profile.tsx:226
+#: src/view/screens/Profile.tsx:227
 msgid "Replies"
 msgstr "回复"
 
@@ -5356,8 +5387,8 @@ msgstr "举报对话"
 msgid "Report dialog"
 msgstr "举报页面"
 
-#: src/view/screens/ProfileFeed.tsx:353
-#: src/view/screens/ProfileFeed.tsx:355
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:509
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:515
 msgid "Report feed"
 msgstr "举报动态源"
 
@@ -5548,8 +5579,8 @@ msgstr "返回上一页"
 msgid "Returns to home page"
 msgstr "返回主页"
 
+#: src/screens/Profile/ProfileFeed/index.tsx:80
 #: src/view/screens/NotFound.tsx:60
-#: src/view/screens/ProfileFeed.tsx:113
 msgid "Returns to previous page"
 msgstr "返回上一页"
 
@@ -5608,8 +5639,8 @@ msgstr "保存新的账户代码"
 msgid "Save QR code"
 msgstr "保存二维码"
 
-#: src/view/screens/ProfileFeed.tsx:337
-#: src/view/screens/ProfileFeed.tsx:343
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:284
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:290
 msgid "Save to my feeds"
 msgstr "保存到我的动态源"
 
@@ -5621,7 +5652,7 @@ msgstr "已保存动态源"
 msgid "Saved to your camera roll"
 msgstr "保存到你的照片图库"
 
-#: src/view/screens/ProfileFeed.tsx:205
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:100
 #: src/view/screens/ProfileList.tsx:365
 msgid "Saved to your feeds"
 msgstr "已保存到你的动态源"
@@ -5636,8 +5667,8 @@ msgstr "保存图片裁剪设置"
 
 #: src/components/dms/ChatEmptyPill.tsx:33
 #: src/components/NewskieDialog.tsx:105
-#: src/view/com/notifications/NotificationFeedItem.tsx:539
-#: src/view/com/notifications/NotificationFeedItem.tsx:564
+#: src/view/com/notifications/NotificationFeedItem.tsx:540
+#: src/view/com/notifications/NotificationFeedItem.tsx:565
 msgid "Say hello!"
 msgstr "问声好！"
 
@@ -5723,7 +5754,7 @@ msgstr "查看 Bluesky 的工作职缺"
 msgid "See this guide"
 msgstr "查看指南"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/Scrubber.tsx:190
+#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/Scrubber.tsx:194
 msgid "Seek slider. Use the arrow keys to seek forwards and backwards, and space to play/pause"
 msgstr "播放进度条。使用方向键来前进或后退，按空格键控制播放或暂停。"
 
@@ -5954,11 +5985,6 @@ msgstr "分享一件趣闻吧！"
 msgid "Share anyway"
 msgstr "仍然分享"
 
-#: src/view/screens/ProfileFeed.tsx:363
-#: src/view/screens/ProfileFeed.tsx:365
-msgid "Share feed"
-msgstr "分享动态源"
-
 #: src/components/StarterPack/ShareDialog.tsx:123
 #: src/components/StarterPack/ShareDialog.tsx:130
 #: src/screens/StarterPack/StarterPackScreen.tsx:598
@@ -5978,6 +6004,10 @@ msgstr "分享链接对话框"
 #: src/components/StarterPack/ShareDialog.tsx:145
 msgid "Share QR code"
 msgstr "分享二维码"
+
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:437
+msgid "Share this feed"
+msgstr "分享这个动态源"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:415
 msgid "Share this starter pack"
@@ -6178,7 +6208,7 @@ msgstr "以 @{0} 的身份登录"
 msgid "Signup without a starter pack"
 msgstr "不使用新手包注册"
 
-#: src/components/FeedInterstitials.tsx:316
+#: src/components/FeedInterstitials.tsx:314
 msgid "Similar accounts"
 msgstr "类似账户"
 
@@ -6200,7 +6230,7 @@ msgstr "更小"
 msgid "Software Dev"
 msgstr "程序开发"
 
-#: src/components/FeedInterstitials.tsx:447
+#: src/components/FeedInterstitials.tsx:445
 msgid "Some other feeds you might like"
 msgstr "其他你可能喜欢的动态源"
 
@@ -6224,12 +6254,16 @@ msgid "Something went wrong, please try again."
 msgstr "出了点问题，请重试。"
 
 #: src/components/Lists.tsx:168
-#: src/screens/Settings/NotificationSettings.tsx:49
+#: src/screens/Settings/NotificationSettings.tsx:55
 msgid "Something went wrong!"
 msgstr "出了点问题！"
 
-#: src/App.native.tsx:119
-#: src/App.web.tsx:94
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:505
+msgid "Something wrong? Let us know."
+msgstr "出了点问题？请告诉我们。"
+
+#: src/App.native.tsx:120
+#: src/App.web.tsx:95
 msgid "Sorry! Your session expired. Please log in again."
 msgstr "很抱歉，你的登录会话已过期，请重新登录。"
 
@@ -6289,7 +6323,7 @@ msgstr "你创建的新手包"
 msgid "Starter pack is invalid"
 msgstr "无效的新手包"
 
-#: src/view/screens/Profile.tsx:230
+#: src/view/screens/Profile.tsx:231
 msgid "Starter Packs"
 msgstr "新手包"
 
@@ -6350,7 +6384,7 @@ msgstr "完成！"
 msgid "Suggested accounts"
 msgstr "建议的账户"
 
-#: src/components/FeedInterstitials.tsx:318
+#: src/components/FeedInterstitials.tsx:316
 msgid "Suggested for you"
 msgstr "为你推荐"
 
@@ -6610,15 +6644,15 @@ msgstr "停用账户没有时间限制，你可以随时决定重新回来。"
 msgid "There was an issue connecting to Tenor."
 msgstr "连接 Tenor 时出现问题。"
 
-#: src/view/screens/ProfileFeed.tsx:239
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:142
 #: src/view/screens/ProfileList.tsx:368
 #: src/view/screens/ProfileList.tsx:387
 #: src/view/screens/SavedFeeds.tsx:85
 msgid "There was an issue contacting the server"
 msgstr "连接服务器时出现问题"
 
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:380
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:112
-#: src/view/screens/ProfileFeed.tsx:545
 msgid "There was an issue contacting the server, please check your internet connection and try again."
 msgstr "连接至服务器时出现问题，请检查你的网络连接并重试。"
 
@@ -6627,11 +6661,11 @@ msgstr "连接至服务器时出现问题，请检查你的网络连接并重试
 msgid "There was an issue contacting your server"
 msgstr "连接服务器时出现问题"
 
-#: src/view/com/notifications/NotificationFeed.tsx:126
+#: src/view/com/notifications/NotificationFeed.tsx:124
 msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr "刷新通知时出现问题，点击重试。"
 
-#: src/view/com/posts/PostFeed.tsx:458
+#: src/view/com/posts/PostFeed.tsx:465
 msgid "There was an issue fetching posts. Tap here to try again."
 msgstr "刷新帖文时出现问题，点击重试。"
 
@@ -6661,9 +6695,9 @@ msgstr "更新动态源时出现问题，请检查你的网络连接并重试。
 msgid "There was an issue sending your report. Please check your internet connection."
 msgstr "提交举报时出现问题，请检查你的网络连接。"
 
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:105
 #: src/view/com/posts/FeedShutdownMsg.tsx:52
 #: src/view/com/posts/FeedShutdownMsg.tsx:71
-#: src/view/screens/ProfileFeed.tsx:210
 msgid "There was an issue updating your feeds, please check your internet connection and try again."
 msgstr "更新动态源时出现问题，请检查你的网络连接并重试。"
 
@@ -6772,7 +6806,7 @@ msgid "This feed is empty! You may need to follow more users or tune your langua
 msgstr "这个动态源是空的！你或许需要先关注更多的用户，或检查你的语言设置。"
 
 #: src/components/StarterPack/Main/PostsList.tsx:36
-#: src/view/screens/ProfileFeed.tsx:477
+#: src/screens/Profile/ProfileFeed/index.tsx:159
 #: src/view/screens/ProfileList.tsx:787
 msgid "This feed is empty."
 msgstr "这里是空的。"
@@ -7070,13 +7104,13 @@ msgstr "取消关注 {0}"
 msgid "Unfollow Account"
 msgstr "取消关注账户"
 
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:481
+msgid "Unlike"
+msgstr "取消喜欢"
+
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:304
 msgid "Unlike ({0, plural, one {# like} other {# likes}})"
 msgstr "取消喜欢（{0, plural, one {# 次喜欢} other {# 次喜欢}}）"
-
-#: src/view/screens/ProfileFeed.tsx:575
-msgid "Unlike this feed"
-msgstr "取消喜欢这个动态源"
 
 #: src/components/TagMenu/index.tsx:264
 #: src/view/screens/ProfileList.tsx:691
@@ -7115,12 +7149,17 @@ msgstr "取消隐藏讨论串"
 msgid "Unmute video"
 msgstr "取消隐藏视频"
 
-#: src/view/screens/ProfileFeed.tsx:295
 #: src/view/screens/ProfileList.tsx:675
 msgid "Unpin"
 msgstr "取消固定"
 
-#: src/view/screens/ProfileFeed.tsx:292
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:486
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:493
+msgid "Unpin feed"
+msgstr "取消固定动态源"
+
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:274
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:276
 msgid "Unpin from home"
 msgstr "从主页取消固定"
 
@@ -7132,6 +7171,10 @@ msgstr "从个人资料取消固定"
 #: src/view/screens/ProfileList.tsx:558
 msgid "Unpin moderation list"
 msgstr "取消固定限制列表"
+
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:129
+msgid "Unpinned {0} from Home"
+msgstr "从主页取消固定 {0}"
 
 #: src/view/screens/ProfileList.tsx:355
 msgid "Unpinned from your feeds"
@@ -7416,12 +7459,13 @@ msgstr "视频：{0}"
 msgid "Videos must be less than 60 seconds long"
 msgstr "视频长度必须短于 60 秒"
 
-#: src/screens/Profile/Header/Shell.tsx:160
+#: src/screens/Profile/Header/Shell.tsx:168
 msgid "View {0}'s avatar"
 msgstr "查看 {0} 的头像"
 
 #: src/components/ProfileCard.tsx:110
-#: src/view/com/notifications/NotificationFeedItem.tsx:408
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:417
+#: src/view/com/notifications/NotificationFeedItem.tsx:409
 msgid "View {0}'s profile"
 msgstr "查看 {0} 的个人资料"
 
@@ -7483,7 +7527,7 @@ msgstr "查看头像"
 msgid "View the labeling service provided by @{0}"
 msgstr "查看由 @{0} 提供的标记服务。"
 
-#: src/view/screens/ProfileFeed.tsx:587
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:452
 msgid "View users who like this feed"
 msgstr "查看这个动态源被谁喜欢"
 
@@ -7491,7 +7535,7 @@ msgstr "查看这个动态源被谁喜欢"
 msgid "View your blocked accounts"
 msgstr "查看你已屏蔽的账户"
 
-#: src/view/com/home/HomeHeaderLayout.web.tsx:59
+#: src/view/com/home/HomeHeaderLayout.web.tsx:56
 #: src/view/com/home/HomeHeaderLayoutMobile.tsx:77
 msgid "View your feeds and explore more"
 msgstr "查看你的动态源并探索更多内容"
