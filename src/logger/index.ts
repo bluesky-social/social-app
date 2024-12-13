@@ -270,13 +270,14 @@ if (process.env.NODE_ENV !== 'test') {
   logger.addTransport(createBitdriftTransport())
 }
 
-if (env.IS_DEV && process.env.NODE_ENV !== 'test') {
-  logger.addTransport(consoleTransport)
-
-  /*
-   * Comment this out to disable Sentry transport in dev
-   */
-  // logger.addTransport(sentryTransport)
-} else if (env.IS_PROD) {
-  logger.addTransport(sentryTransport)
+if (process.env.NODE_ENV !== 'test') {
+  if (__DEV__) {
+    logger.addTransport(consoleTransport)
+    /*
+     * Comment this out to enable Sentry transport in dev
+     */
+    // logger.addTransport(sentryTransport)
+  } else {
+    logger.addTransport(sentryTransport)
+  }
 }
