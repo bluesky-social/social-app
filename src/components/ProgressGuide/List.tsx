@@ -11,6 +11,7 @@ import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import {TimesLarge_Stroke2_Corner0_Rounded as Times} from '#/components/icons/Times'
 import {Text} from '#/components/Typography'
+import {FollowDialog} from './FollowDialog'
 import {ProgressGuideTask} from './Task'
 
 export function ProgressGuideList({style}: {style?: StyleProp<ViewStyle>}) {
@@ -45,14 +46,18 @@ export function ProgressGuideList({style}: {style?: StyleProp<ViewStyle>}) {
             <ButtonIcon icon={Times} size="sm" />
           </Button>
         </View>
-        {guide.guide === 'follow-10' ? (
-          <ProgressGuideTask
-            current={guide.numFollows + 1}
-            total={10 + 1}
-            title={_(msg`Follow 10 accounts`)}
-            subtitle={_(msg`Bluesky is better with friends!`)}
-          />
-        ) : (
+        {guide.guide === 'follow-10' && (
+          <>
+            <ProgressGuideTask
+              current={guide.numFollows + 1}
+              total={10 + 1}
+              title={_(msg`Follow 10 accounts`)}
+              subtitle={_(msg`Bluesky is better with friends!`)}
+            />
+            <FollowDialog />
+          </>
+        )}
+        {guide.guide === 'like-10-and-follow-7' && (
           <>
             <ProgressGuideTask
               current={guide.numLikes + 1}

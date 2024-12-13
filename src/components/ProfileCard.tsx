@@ -297,6 +297,7 @@ export function FollowButtonInner({
   profile: profileUnshadowed,
   moderationOpts,
   logContext,
+  onPress: onPressProp,
   ...rest
 }: FollowButtonProps) {
   const {_} = useLingui()
@@ -321,6 +322,7 @@ export function FollowButtonInner({
           )}`,
         ),
       )
+      onPressProp?.(e)
     } catch (err: any) {
       if (err?.name !== 'AbortError') {
         Toast.show(_(msg`An issue occurred, please try again.`), 'xmark')
@@ -341,6 +343,7 @@ export function FollowButtonInner({
           )}`,
         ),
       )
+      onPressProp?.(e)
     } catch (err: any) {
       if (err?.name !== 'AbortError') {
         Toast.show(_(msg`An issue occurred, please try again.`), 'xmark')
