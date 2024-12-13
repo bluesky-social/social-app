@@ -280,6 +280,10 @@ func serve(cctx *cli.Context) error {
 	e.GET("/profile/:handleOrDID/feed/:rkey", server.WebGeneric)
 	e.GET("/profile/:handleOrDID/feed/:rkey/liked-by", server.WebGeneric)
 	e.GET("/profile/:handleOrDID/labeler/liked-by", server.WebGeneric)
+	e.GET("/profile/:handleOrDID/vouches", server.WebGeneric)
+	e.GET("/profile/:handleOrDID/vouches/create", server.WebGeneric)
+	e.GET("/profile/:handleOrDID/vouches/issued", server.WebGeneric)
+	e.GET("/profile/:handleOrDID/vouches/received", server.WebGeneric)
 
 	// profile RSS feed (DID not handle)
 	e.GET("/profile/:ident/rss", server.WebProfileRSS)

@@ -4,7 +4,8 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {HITSLOP_20} from '#/lib/constants'
+import {HITSLOP_20, isInternalUser} from '#/lib/constants'
+import {useNavigationDeduped} from '#/lib/hooks/useNavigationDeduped'
 import {makeProfileLink} from '#/lib/routes/links'
 import {shareUrl} from '#/lib/sharing'
 import {toShareUrl} from '#/lib/strings/url-helpers'
@@ -52,6 +53,7 @@ let ProfileMenu = ({
   const isBlocked = profile.viewer?.blocking || profile.viewer?.blockedBy
   const isFollowingBlockedAccount = isFollowing && isBlocked
   const isLabelerAndNotBlocked = !!profile.associated?.labeler && !isBlocked
+  const navigation = useNavigationDeduped()
 
   const [queueMute, queueUnmute] = useProfileMuteMutationQueue(profile)
   const [queueBlock, queueUnblock] = useProfileBlockMutationQueue(profile)
@@ -79,6 +81,10 @@ let ProfileMenu = ({
   const onPressShare = React.useCallback(() => {
     shareUrl(toShareUrl(makeProfileLink(profile)))
   }, [profile])
+
+  const onPressManageVouches = React.useCallback(() => {
+    navigation.navigate('ProfileVouches', {name: profile.handle})
+  }, [navigation, profile.handle])
 
   const onPressAddRemoveLists = React.useCallback(() => {
     openModal({
@@ -247,6 +253,16 @@ let ProfileMenu = ({
                   </Menu.ItemText>
                   <Menu.ItemIcon icon={List} />
                 </Menu.Item>
+                {isInternalUser(currentAccount?.did) && (
+                  <Menu.Item
+                    label={_(msg`Manage my vouches`)}
+                    onPress={onPressManageVouches}>
+                    <Menu.ItemText>
+                      <Trans>Manage vouches</Trans>
+                    </Menu.ItemText>
+                    <Menu.ItemIcon icon={List} />
+                  </Menu.Item>
+                )}
                 {!isSelf && (
                   <>
                     {!profile.viewer?.blocking &&

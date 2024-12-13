@@ -78,6 +78,10 @@ import {ProfileFeedScreen} from '#/screens/Profile/ProfileFeed'
 import {ProfileFollowersScreen} from '#/screens/Profile/ProfileFollowers'
 import {ProfileFollowsScreen} from '#/screens/Profile/ProfileFollows'
 import {ProfileLabelerLikedByScreen} from '#/screens/Profile/ProfileLabelerLikedBy'
+import {Screen as ProfileVouches} from '#/screens/Profile/Vouches'
+import {Screen as ProfileVouchesCreate} from '#/screens/Profile/Vouches/Create'
+import {Screen as ProfileVouchesIssued} from '#/screens/Profile/Vouches/Issued'
+import {Screen as ProfileVouchesReceived} from '#/screens/Profile/Vouches/Received'
 import {AppearanceSettingsScreen} from '#/screens/Settings/AppearanceSettings'
 import {AppIconSettingsScreen} from '#/screens/Settings/AppIconSettings'
 import {NotificationSettingsScreen} from '#/screens/Settings/NotificationSettings'
@@ -238,6 +242,26 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         name="ProfileLabelerLikedBy"
         getComponent={() => ProfileLabelerLikedByScreen}
         options={{title: title(msg`Liked by`)}}
+      />
+      <Stack.Screen
+        name="ProfileVouches"
+        getComponent={() => ProfileVouches}
+        options={{title: title(msg`Vouches`)}}
+      />
+      <Stack.Screen
+        name="ProfileVouchesCreate"
+        getComponent={() => ProfileVouchesCreate}
+        options={{title: title(msg`Create Vouch`)}}
+      />
+      <Stack.Screen
+        name="ProfileVouchesIssued"
+        getComponent={() => ProfileVouchesIssued}
+        options={{title: title(msg`Issued Vouch`)}}
+      />
+      <Stack.Screen
+        name="ProfileVouchesReceived"
+        getComponent={() => ProfileVouchesReceived}
+        options={{title: title(msg`My Vouches`)}}
       />
       <Stack.Screen
         name="Debug"

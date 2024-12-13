@@ -23,6 +23,10 @@ export type CommonNavigatorParams = {
   ProfileFeed: {name: string; rkey: string}
   ProfileFeedLikedBy: {name: string; rkey: string}
   ProfileLabelerLikedBy: {name: string}
+  ProfileVouches: {name: string}
+  ProfileVouchesCreate: {name: string}
+  ProfileVouchesIssued: {name: string}
+  ProfileVouchesReceived: {name: string}
   Debug: undefined
   DebugMod: undefined
   SharedPreferencesTester: undefined

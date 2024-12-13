@@ -26,6 +26,11 @@ export const router = new Router({
   ProfileFeed: '/profile/:name/feed/:rkey',
   ProfileFeedLikedBy: '/profile/:name/feed/:rkey/liked-by',
   ProfileLabelerLikedBy: '/profile/:name/labeler/liked-by',
+  ProfileVouches: '/profile/:name/vouches',
+  ProfileVouchesCreate: '/profile/:name/vouches/create',
+  ProfileVouchesIssued: '/profile/:name/vouches/issued',
+  ProfileVouchesReceived: '/profile/:name/vouches/received',
+
   // debug
   Debug: '/sys/debug',
   DebugMod: '/sys/debug-mod',
