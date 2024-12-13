@@ -12,6 +12,7 @@ import {shareUrl} from '#/lib/sharing'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {toShareUrl} from '#/lib/strings/url-helpers'
 import {logger} from '#/logger'
+import {isWeb} from '#/platform/detection'
 import {FeedSourceFeedInfo} from '#/state/queries/feed'
 import {useLikeMutation, useUnlikeMutation} from '#/state/queries/like'
 import {
@@ -161,7 +162,7 @@ export function ProfileFeedHeader({info}: {info: FeedSourceFeedInfo}) {
               style={[
                 a.justify_start,
                 {
-                  paddingVertical: 6,
+                  paddingVertical: isWeb ? 4 : 6,
                   paddingHorizontal: 8,
                   paddingRight: 12,
                 },
@@ -198,7 +199,7 @@ export function ProfileFeedHeader({info}: {info: FeedSourceFeedInfo}) {
                           a.text_md,
                           a.font_heavy,
                           a.leading_tight,
-                          gtMobile && a.text_xl,
+                          gtMobile && a.text_lg,
                         ]}
                         numberOfLines={2}>
                         {info.displayName}
