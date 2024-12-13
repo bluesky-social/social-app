@@ -5,8 +5,6 @@ import {nanoid} from 'nanoid/non-secure'
 import {Logger, LogLevel, sentryTransport} from '#/logger'
 
 jest.mock('#/env', () => ({
-  IS_DEV: false,
-  IS_PROD: false,
   /*
    * Forces debug mode for tests using the default logger. Most tests create
    * their own logger instance.

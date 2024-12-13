@@ -21,7 +21,6 @@ import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {ChevronLeft_Stroke2_Corner0_Rounded as ChevronLeft} from '#/components/icons/Chevron'
 import {createPortalGroup} from '#/components/Portal'
 import {P, Text} from '#/components/Typography'
-import {IS_DEV} from '#/env'
 
 const COL_WIDTH = 420
 
@@ -64,7 +63,7 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
         a.flex_1,
         t.atoms.bg,
       ]}>
-      {IS_DEV && (
+      {__DEV__ && (
         <View style={[a.absolute, a.p_xl, a.z_10, {right: 0, top: insets.top}]}>
           <Button
             variant="ghost"

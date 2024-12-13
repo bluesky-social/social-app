@@ -17,8 +17,8 @@ logger.error(error[, metadata])
 
 #### Modes
 
-The "modes" referred to here are inferred from the values exported from `#/env`.
-Basically, the booleans `IS_DEV` and `IS_PROD`.
+The "modes" referred to here are inferred from `process.env.NODE_ENV`,
+which matches how React Native sets the `__DEV__` global.
 
 #### Log Levels
 
