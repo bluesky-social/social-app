@@ -2186,7 +2186,7 @@ msgstr "예: 예술적인 나체."
 
 #: src/view/com/modals/CreateOrEditList.tsx:263
 msgid "e.g. Great Posters"
-msgstr "예: 멋진 포스터"
+msgstr "예: 멋진 게시자"
 
 #: src/view/com/modals/CreateOrEditList.tsx:264
 msgid "e.g. Spammers"
@@ -2194,7 +2194,7 @@ msgstr "예: 스팸 계정"
 
 #: src/view/com/modals/CreateOrEditList.tsx:292
 msgid "e.g. The posters who never miss."
-msgstr "예: 놓칠 수 없는 포스터들."
+msgstr "예: 놓칠 수 없는 게시자들."
 
 #: src/view/com/modals/CreateOrEditList.tsx:293
 msgid "e.g. Users that repeatedly reply with ads."
