@@ -873,14 +873,7 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
                 style={[a.text_md]}
                 value={descriptionRT}
               />
-            ) : (
-              <Text
-                testID="listDescriptionEmpty"
-                type="lg"
-                style={[{fontStyle: 'italic'}, pal.textLight]}>
-                <Trans>No description</Trans>
-              </Text>
-            )}
+            ) : null}
             <Text type="md" style={[pal.textLight]} numberOfLines={1}>
               {isCurateList ? (
                 isOwner ? (
