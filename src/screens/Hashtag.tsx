@@ -107,7 +107,7 @@ export default function HashtagScreen({
 
   return (
     <Layout.Screen>
-      <Layout.Header.Outer>
+      <Layout.Header.Outer noBottomBorder>
         <Layout.Header.BackButton />
         <Layout.Header.Content>
           <Layout.Header.TitleText>{headerTitle}</Layout.Header.TitleText>

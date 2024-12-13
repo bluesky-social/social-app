@@ -1,10 +1,8 @@
 import React from 'react'
 import {View} from 'react-native'
-import Animated from 'react-native-reanimated'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useMinimalShellHeaderTransform} from '#/lib/hooks/useMinimalShellTransform'
 import {useKawaiiMode} from '#/state/preferences/kawaii'
 import {useSession} from '#/state/session'
 import {useShellLayout} from '#/state/shell/shell-layout'
@@ -36,7 +34,6 @@ function HomeHeaderLayoutDesktopAndTablet({
   tabBarAnchor: JSX.Element | null | undefined
 }) {
   const t = useTheme()
-  const headerMinimalShellTransform = useMinimalShellHeaderTransform()
   const {headerHeight} = useShellLayout()
   const {hasSession} = useSession()
   const {_} = useLingui()
@@ -69,14 +66,11 @@ function HomeHeaderLayoutDesktopAndTablet({
       )}
       {tabBarAnchor}
       <Layout.Center
-        style={[a.sticky, a.z_10, a.align_center, t.atoms.bg, {top: 0}]}>
-        <Animated.View
-          onLayout={e => {
-            headerHeight.set(e.nativeEvent.layout.height)
-          }}
-          style={[headerMinimalShellTransform]}>
-          {children}
-        </Animated.View>
+        style={[a.sticky, a.z_10, a.align_center, t.atoms.bg, {top: 0}]}
+        onLayout={e => {
+          headerHeight.set(e.nativeEvent.layout.height)
+        }}>
+        {children}
       </Layout.Center>
     </>
   )

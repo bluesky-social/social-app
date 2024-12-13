@@ -13,7 +13,7 @@ import {
 } from '#/lib/routes/types'
 import {s} from '#/lib/styles'
 import {logger} from '#/logger'
-import {isNative, isWeb} from '#/platform/detection'
+import {isNative} from '#/platform/detection'
 import {emitSoftReset, listenSoftReset} from '#/state/events'
 import {RQKEY as NOTIFS_RQKEY} from '#/state/queries/notifications/feed'
 import {
@@ -24,35 +24,173 @@ import {truncateAndInvalidate} from '#/state/queries/util'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {useComposerControls} from '#/state/shell/composer'
 import {NotificationFeed} from '#/view/com/notifications/NotificationFeed'
+import {Pager} from '#/view/com/pager/Pager'
+import {TabBar} from '#/view/com/pager/TabBar'
 import {FAB} from '#/view/com/util/fab/FAB'
 import {ListMethods} from '#/view/com/util/List'
 import {LoadLatestBtn} from '#/view/com/util/load-latest/LoadLatestBtn'
 import {MainScrollProvider} from '#/view/com/util/MainScrollProvider'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
-import {Button, ButtonIcon} from '#/components/Button'
+import {atoms as a} from '#/alf'
+import {web} from '#/alf'
+import {ButtonIcon} from '#/components/Button'
 import {SettingsGear2_Stroke2_Corner0_Rounded as SettingsIcon} from '#/components/icons/SettingsGear2'
 import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 
+// We don't currently persist this across reloads since
+// you gotta visit All to clear the badge anyway.
+// But let's at least persist it during the sesssion.
+let lastActiveTab = 0
+
 type Props = NativeStackScreenProps<
   NotificationsTabNavigatorParams,
   'Notifications'
 >
-export function NotificationsScreen({route: {params}}: Props) {
-  const t = useTheme()
-  const {gtTablet} = useBreakpoints()
+export function NotificationsScreen({}: Props) {
+  const {_} = useLingui()
+  const {openComposer} = useComposerControls()
+  const unreadNotifs = useUnreadNotifications()
+  const hasNew = !!unreadNotifs
+  const {checkUnread: checkUnreadAll} = useUnreadNotificationsApi()
+  const [isLoadingAll, setIsLoadingAll] = React.useState(false)
+  const [isLoadingMentions, setIsLoadingMentions] = React.useState(false)
+  const initialActiveTab = lastActiveTab
+  const [activeTab, setActiveTab] = React.useState(initialActiveTab)
+  const isLoading = activeTab === 0 ? isLoadingAll : isLoadingMentions
+
+  const onPageSelected = React.useCallback(
+    (index: number) => {
+      setActiveTab(index)
+      lastActiveTab = index
+    },
+    [setActiveTab],
+  )
+
+  const queryClient = useQueryClient()
+  const checkUnreadMentions = React.useCallback(
+    async ({invalidate}: {invalidate: boolean}) => {
+      if (invalidate) {
+        return truncateAndInvalidate(queryClient, NOTIFS_RQKEY('mentions'))
+      } else {
+        // Background polling is not implemented for the mentions tab.
+        // Just ignore it.
+      }
+    },
+    [queryClient],
+  )
+
+  const sections = React.useMemo(() => {
+    return [
+      {
+        title: _(msg`All`),
+        component: (
+          <NotificationsTab
+            filter="all"
+            isActive={activeTab === 0}
+            isLoading={isLoadingAll}
+            hasNew={hasNew}
+            setIsLoadingLatest={setIsLoadingAll}
+            checkUnread={checkUnreadAll}
+          />
+        ),
+      },
+      {
+        title: _(msg`Mentions`),
+        component: (
+          <NotificationsTab
+            filter="mentions"
+            isActive={activeTab === 1}
+            isLoading={isLoadingMentions}
+            hasNew={false /* We don't know for sure */}
+            setIsLoadingLatest={setIsLoadingMentions}
+            checkUnread={checkUnreadMentions}
+          />
+        ),
+      },
+    ]
+  }, [
+    _,
+    hasNew,
+    checkUnreadAll,
+    checkUnreadMentions,
+    activeTab,
+    isLoadingAll,
+    isLoadingMentions,
+  ])
+
+  return (
+    <Layout.Screen testID="notificationsScreen">
+      <Layout.Header.Outer noBottomBorder>
+        <Layout.Header.MenuButton />
+        <Layout.Header.Content>
+          <Layout.Header.TitleText>
+            <Trans>Notifications</Trans>
+          </Layout.Header.TitleText>
+        </Layout.Header.Content>
+        <Layout.Header.Slot>
+          <Link
+            to="/notifications/settings"
+            label={_(msg`Notification settings`)}
+            size="small"
+            variant="ghost"
+            color="secondary"
+            shape="round"
+            style={[a.justify_center]}>
+            <ButtonIcon icon={isLoading ? Loader : SettingsIcon} size="lg" />
+          </Link>
+        </Layout.Header.Slot>
+      </Layout.Header.Outer>
+      <Pager
+        onPageSelected={onPageSelected}
+        renderTabBar={props => (
+          <Layout.Center style={web([a.sticky, a.z_10, {top: 0}])}>
+            <TabBar
+              {...props}
+              items={sections.map(section => section.title)}
+              onPressSelected={() => emitSoftReset()}
+            />
+          </Layout.Center>
+        )}
+        initialPage={initialActiveTab}>
+        {sections.map((section, i) => (
+          <View key={i}>{section.component}</View>
+        ))}
+      </Pager>
+      <FAB
+        testID="composeFAB"
+        onPress={() => openComposer({})}
+        icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
+        accessibilityRole="button"
+        accessibilityLabel={_(msg`New post`)}
+        accessibilityHint=""
+      />
+    </Layout.Screen>
+  )
+}
+
+function NotificationsTab({
+  filter,
+  isActive,
+  isLoading,
+  hasNew,
+  checkUnread,
+  setIsLoadingLatest,
+}: {
+  filter: 'all' | 'mentions'
+  isActive: boolean
+  isLoading: boolean
+  hasNew: boolean
+  checkUnread: ({invalidate}: {invalidate: boolean}) => Promise<void>
+  setIsLoadingLatest: (v: boolean) => void
+}) {
   const {_} = useLingui()
   const setMinimalShellMode = useSetMinimalShellMode()
   const [isScrolledDown, setIsScrolledDown] = React.useState(false)
-  const [isLoadingLatest, setIsLoadingLatest] = React.useState(false)
   const scrollElRef = React.useRef<ListMethods>(null)
   const queryClient = useQueryClient()
-  const unreadNotifs = useUnreadNotifications()
-  const unreadApi = useUnreadNotificationsApi()
-  const hasNew = !!unreadNotifs
   const isScreenFocused = useIsFocused()
-  const {openComposer} = useComposerControls()
+  const isFocusedAndActive = isScreenFocused && isActive
 
   // event handlers
   // =
@@ -65,16 +203,23 @@ export function NotificationsScreen({route: {params}}: Props) {
     scrollToTop()
     if (hasNew) {
       // render what we have now
-      truncateAndInvalidate(queryClient, NOTIFS_RQKEY())
-    } else {
+      truncateAndInvalidate(queryClient, NOTIFS_RQKEY(filter))
+    } else if (!isLoading) {
       // check with the server
       setIsLoadingLatest(true)
-      unreadApi
-        .checkUnread({invalidate: true})
+      checkUnread({invalidate: true})
         .catch(() => undefined)
         .then(() => setIsLoadingLatest(false))
     }
-  }, [scrollToTop, queryClient, unreadApi, hasNew, setIsLoadingLatest])
+  }, [
+    scrollToTop,
+    queryClient,
+    checkUnread,
+    hasNew,
+    isLoading,
+    setIsLoadingLatest,
+    filter,
+  ])
 
   const onFocusCheckLatest = useNonReactiveCallback(() => {
     // on focus, check for latest, but only invalidate if the user
@@ -87,79 +232,36 @@ export function NotificationsScreen({route: {params}}: Props) {
       // we're just going to look it up synchronously.
       currentIsScrolledDown = window.scrollY > 200
     }
-    unreadApi.checkUnread({invalidate: !currentIsScrolledDown})
+    checkUnread({invalidate: !currentIsScrolledDown})
   })
 
   // on-visible setup
   // =
   useFocusEffect(
     React.useCallback(() => {
-      setMinimalShellMode(false)
-      logger.debug('NotificationsScreen: Focus')
-      onFocusCheckLatest()
-    }, [setMinimalShellMode, onFocusCheckLatest]),
+      if (isFocusedAndActive) {
+        setMinimalShellMode(false)
+        logger.debug('NotificationsScreen: Focus')
+        onFocusCheckLatest()
+      }
+    }, [setMinimalShellMode, onFocusCheckLatest, isFocusedAndActive]),
   )
   React.useEffect(() => {
-    if (!isScreenFocused) {
+    if (!isFocusedAndActive) {
       return
     }
     return listenSoftReset(onPressLoadLatest)
-  }, [onPressLoadLatest, isScreenFocused])
+  }, [onPressLoadLatest, isFocusedAndActive])
 
   return (
-    <Layout.Screen testID="notificationsScreen">
-      <Layout.Header.Outer>
-        <Layout.Header.MenuButton />
-        <Layout.Header.Content>
-          <Button
-            label={_(msg`Notifications`)}
-            accessibilityHint={_(msg`Refresh notifications`)}
-            onPress={emitSoftReset}
-            style={[a.justify_start]}>
-            {({hovered}) => (
-              <Layout.Header.TitleText
-                style={[a.w_full, hovered && a.underline]}>
-                <Trans>Notifications</Trans>
-                {isWeb && gtTablet && hasNew && (
-                  <View
-                    style={[
-                      a.rounded_full,
-                      {
-                        width: 8,
-                        height: 8,
-                        bottom: 3,
-                        left: 6,
-                        backgroundColor: t.palette.primary_500,
-                      },
-                    ]}
-                  />
-                )}
-              </Layout.Header.TitleText>
-            )}
-          </Button>
-        </Layout.Header.Content>
-        <Layout.Header.Slot>
-          <Link
-            to="/notifications/settings"
-            label={_(msg`Notification settings`)}
-            size="small"
-            variant="ghost"
-            color="secondary"
-            shape="round"
-            style={[a.justify_center]}>
-            <ButtonIcon
-              icon={isLoadingLatest ? Loader : SettingsIcon}
-              size="lg"
-            />
-          </Link>
-        </Layout.Header.Slot>
-      </Layout.Header.Outer>
-
+    <>
       <MainScrollProvider>
         <NotificationFeed
+          enabled={isFocusedAndActive}
+          filter={filter}
+          refreshNotifications={() => checkUnread({invalidate: true})}
           onScrolledDownChange={setIsScrolledDown}
           scrollElRef={scrollElRef}
-          overridePriorityNotifications={params?.show === 'all'}
         />
       </MainScrollProvider>
       {(isScrolledDown || hasNew) && (
@@ -169,14 +271,6 @@ export function NotificationsScreen({route: {params}}: Props) {
           showIndicator={hasNew}
         />
       )}
-      <FAB
-        testID="composeFAB"
-        onPress={() => openComposer({})}
-        icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
-        accessibilityRole="button"
-        accessibilityLabel={_(msg`New post`)}
-        accessibilityHint=""
-      />
-    </Layout.Screen>
+    </>
   )
 }
