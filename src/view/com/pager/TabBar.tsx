@@ -237,12 +237,25 @@ export function TabBar({
         opacity: 0,
       }
     }
+
+    function getScaleX(index: number) {
+      const textWidth = textLayoutsValue[index].width
+      const itemWidth = layoutsValue[index].width
+      const minIndicatorWidth = 45
+      const maxIndicatorWidth = itemWidth - 2 * CONTENT_PADDING
+      const indicatorWidth = Math.min(
+        Math.max(minIndicatorWidth, textWidth),
+        maxIndicatorWidth,
+      )
+      return indicatorWidth / contentSize.get()
+    }
+
     if (textLayoutsValue.length === 1) {
       return {
         opacity: 1,
         transform: [
           {
-            scaleX: textLayoutsValue[0].width / contentSize.get(),
+            scaleX: getScaleX(0),
           },
         ],
       }
@@ -261,7 +274,7 @@ export function TabBar({
           scaleX: interpolate(
             dragProgress.get(),
             textLayoutsValue.map((l, i) => i),
-            textLayoutsValue.map(l => l.width / contentSize.get()),
+            textLayoutsValue.map((l, i) => getScaleX(i)),
           ),
         },
       ],
@@ -429,7 +442,6 @@ const styles = StyleSheet.create({
   },
   itemText: {
     lineHeight: 20,
-    minWidth: 45,
     textAlign: 'center',
   },
   outerBottomBorder: {
