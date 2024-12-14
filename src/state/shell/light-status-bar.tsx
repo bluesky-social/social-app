@@ -1,7 +1,6 @@
 import {createContext, useContext, useEffect, useState} from 'react'
 
 import {isWeb} from '#/platform/detection'
-import {IS_DEV} from '#/env'
 
 const LightStatusBarRefCountContext = createContext<boolean>(false)
 const SetLightStatusBarRefCountContext = createContext<React.Dispatch<
@@ -19,7 +18,7 @@ export function useSetLightStatusBar(enabled: boolean) {
     if (isWeb) return
 
     if (!setRefCount) {
-      if (IS_DEV)
+      if (__DEV__)
         console.error(
           'useLightStatusBar was used without a SetLightStatusBarRefCountContext provider',
         )

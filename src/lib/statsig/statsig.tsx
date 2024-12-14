@@ -16,6 +16,8 @@ import {Gate} from './gates'
 
 const SDK_KEY = 'client-SXJakO39w9vIhl3D44u8UupyzFl4oZ2qPIkjwcvuPsV'
 
+export const initPromise = initialize()
+
 type StatsigUser = {
   userID: string | undefined
   // TODO: Remove when enough users have custom.platform:
@@ -219,9 +221,6 @@ export async function tryFetchGates(
       // Use this for less common operations where the user would be OK with a delay.
       timeoutMs = 1500
     }
-    // Note: This condition is currently false the very first render because
-    // Statsig has not initialized yet. In the future, we can fix this by
-    // doing the initialization ourselves instead of relying on the provider.
     if (Statsig.initializeCalled()) {
       await Promise.race([
         timeout(timeoutMs),
