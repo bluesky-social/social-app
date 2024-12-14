@@ -29,11 +29,11 @@ msgstr "(нет электронной почты)"
 
 #: src/lib/hooks/useTimeAgo.ts:156
 msgid "{0, plural, one {# day} other {# days}}"
-msgstr "{0, plural, one {# день} other {# дни}}"
+msgstr "{0, plural, one {# день} few {# дня} other {# дней}}"
 
 #: src/lib/hooks/useTimeAgo.ts:146
 msgid "{0, plural, one {# hour} other {# hours}}"
-msgstr "{0, plural, one {# час} other {# часы}}"
+msgstr "{0, plural, one {# час} few {# часа} other {# часов}}"
 
 #: src/components/moderation/LabelsOnMe.tsx:53
 msgid "{0, plural, one {# label has been placed on this account} other {# labels have been placed on this account}}"
@@ -45,62 +45,62 @@ msgstr "На это содержимое {0, plural, one {была устано�
 
 #: src/lib/hooks/useTimeAgo.ts:136
 msgid "{0, plural, one {# minute} other {# minutes}}"
-msgstr "{0, plural, one {# минута} other {# минуты}}"
+msgstr "{0, plural, one {# минуту} few {# минуты} other {# минут}} "
 
 #: src/lib/hooks/useTimeAgo.ts:167
 msgid "{0, plural, one {# month} other {# months}}"
-msgstr "{0, plural, one {# месяц} other {# месяцы}}"
+msgstr "{0, plural, one {# месяц} few {# месяца} other {# месяцев}}"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:69
 msgid "{0, plural, one {# repost} other {# reposts}}"
-msgstr "{0, plural, one {# репост} other {# репосты}}"
+msgstr "{0, plural, one {# репост} few {# репоста} other {# репостов}}"
 
 #: src/lib/hooks/useTimeAgo.ts:126
 msgid "{0, plural, one {# second} other {# seconds}}"
-msgstr "{0, plural, one {# секунда} other {# секунды}}"
+msgstr "{0, plural, one {# секунду} few {# секунды} other {# секунд}}"
 
 #: src/components/ProfileHoverCard/index.web.tsx:398
 #: src/screens/Profile/Header/Metrics.tsx:22
 msgid "{0, plural, one {follower} other {followers}}"
-msgstr "{1, plural, one {подписчик} other {подписчиков}}"
+msgstr "{0, plural, one {подписчик} few {подписчика} other {подписчиков}}"
 
 #: src/components/ProfileHoverCard/index.web.tsx:402
 #: src/screens/Profile/Header/Metrics.tsx:26
 msgid "{0, plural, one {following} other {following}}"
-msgstr "{0, plural, one {подписка} other {подписок}}"
+msgstr "{0, plural, one {подписка} few {подписки} other {подписок}}"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:305
 msgid "{0, plural, one {Like (# like)} other {Like (# likes)}}"
-msgstr "{0, plural, one {Нравится (# лайк)} other {Нравится (# лайки)}}"
+msgstr "{0, plural, one {Нравится (# лайк)} few {Нравится (# лайка)} other {Нравится (# лайков)}}"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:447
 msgid "{0, plural, one {like} other {likes}}"
-msgstr "{0, plural, one {лайк} other {лайков}}"
+msgstr "{0, plural, one {лайк} few {лайка} other {лайков}}"
 
 #: src/components/FeedCard.tsx:213
 #: src/view/com/feeds/FeedSourceCard.tsx:303
 msgid "{0, plural, one {Liked by # user} other {Liked by # users}}"
-msgstr "{0, plural, one {Понравилось # пользователю} other {Понравилось # пользователям}}"
+msgstr "{0, plural, one {Понравилось # пользователю} few {Понравилось # пользователям} other {Понравилось # пользователям}}"
 
 #: src/screens/Profile/Header/Metrics.tsx:58
 msgid "{0, plural, one {post} other {posts}}"
-msgstr "{0, plural, one {пост} other {постов}}"
+msgstr "{0, plural, one {пост} few {поста} other {постов}}"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:431
 msgid "{0, plural, one {quote} other {quotes}}"
-msgstr "{0, plural, one {цитирование} other {цитирований}}"
+msgstr "{0, plural, one {цитирование} few {цитирования} other {цитирований}}"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:261
 msgid "{0, plural, one {Reply (# reply)} other {Reply (# replies)}}"
-msgstr "{0, plural, one {Ответить (# ответ)} other {Ответить (# ответов)}}"
+msgstr "{0, plural, one {Ответить (# ответ)} few {Ответить (# ответа)} other {Ответить (# ответов)}}"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:413
 msgid "{0, plural, one {repost} other {reposts}}"
-msgstr "{0, plural, one {репост} other {репостов}}"
+msgstr "{0, plural, one {репост} few {репоста} other {репостов}}"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:301
 msgid "{0, plural, one {Unlike (# like)} other {Unlike (# likes)}}"
-msgstr "{0, plural, one {Убрать лайк (# лайк)} other {Убрать лайки (# лайков)}}"
+msgstr "{0, plural, one {Больше не нравится (# лайк)} few {Больше не нравится (# лайка)} other {Больше не нравится (# лайков)}}"
 
 #: src/screens/Settings/Settings.tsx:414
 msgid "{0}"
