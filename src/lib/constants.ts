@@ -33,7 +33,7 @@ export const DISCOVER_DEBUG_DIDS: Record<string, true> = {
   'did:plc:vjug55kidv6sye7ykr5faxxn': true, // emilyliu.me
 }
 export const isInternalUser = (did?: string) =>
-  did ? DISCOVER_DEBUG_DIDS[did] : false
+  __DEV__ ? true : did ? DISCOVER_DEBUG_DIDS[did] : false
 
 const BASE_FEEDBACK_FORM_URL = `${HELP_DESK_URL}/requests/new`
 export function FEEDBACK_FORM_URL({
