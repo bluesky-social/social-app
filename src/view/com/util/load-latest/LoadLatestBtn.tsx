@@ -1,10 +1,17 @@
+import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
-import Animated from 'react-native-reanimated'
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+  withTiming,
+} from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {useMediaQuery} from 'react-responsive'
 
 import {HITSLOP_20} from '#/lib/constants'
+import {useBottomBarOffset} from '#/lib/hooks/useBottomBarOffset'
 import {useMinimalShellFabTransform} from '#/lib/hooks/useMinimalShellTransform'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
@@ -30,17 +37,42 @@ export function LoadLatestBtn({
   const {isDesktop, isTablet, isMobile, isTabletOrMobile} = useWebMediaQueries()
   const fabMinimalShellTransform = useMinimalShellFabTransform()
   const insets = useSafeAreaInsets()
+  const translateY = useSharedValue(100)
+  const opacity = useSharedValue(0)
 
   // move button inline if it starts overlapping the left nav
   const isTallViewport = useMediaQuery({minHeight: 700})
 
-  // Adjust height of the fab if we have a session only on mobile web. If we don't have a session, we want to adjust
-  // it on both tablet and mobile since we are showing the bottom bar (see createNativeStackNavigatorWithAuth)
   const showBottomBar = hasSession ? isMobile : isTabletOrMobile
+  const bottomBarHeight = useBottomBarOffset()
 
-  const bottomPosition = isTablet
-    ? {bottom: 50}
-    : {bottom: clamp(insets.bottom, 15, 60) + 15}
+  // Get the actual bottom value for animation
+  const bottomValue = isTablet
+    ? 50
+    : clamp(insets.bottom, 15, 60 + bottomBarHeight) + 15 + 38
+
+  React.useEffect(() => {
+    // Animate in from below the button's resting position
+    translateY.value = withSpring(0, {
+      damping: 15,
+      stiffness: 100,
+    })
+    opacity.value = withTiming(1, {duration: 100})
+
+    return () => {
+      // Animate out to below the button's resting position
+      translateY.value = withSpring(bottomValue, {duration: 100})
+      opacity.value = withTiming(0, {duration: 100})
+    }
+  }, [translateY, opacity, bottomValue])
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{translateY: translateY.value}],
+      opacity: opacity.value,
+      bottom: bottomValue,
+    }
+  })
 
   return (
     <AnimatedTouchableOpacity
@@ -53,8 +85,8 @@ export function LoadLatestBtn({
         isTablet && styles.loadLatestInline,
         pal.borderDark,
         pal.view,
-        bottomPosition,
         showBottomBar && fabMinimalShellTransform,
+        animatedStyle,
       ]}
       onPress={onPress}
       hitSlop={HITSLOP_20}
