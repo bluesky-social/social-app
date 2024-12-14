@@ -138,7 +138,7 @@ msgstr "Аватар {0}"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:67
 msgid "{0}'s favorite feeds and people - join me!"
-msgstr "Любимые каналы и люди {0} - присоединяйтесь!"
+msgstr "Любимые ленты и люди {0} - присоединяйтесь!"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:46
 msgid "{0}'s starter pack"
@@ -349,7 +349,7 @@ msgstr "<0>{date}</0> в {time}"
 
 #: src/screens/Settings/NotificationSettings.tsx:71
 msgid "<0>Experimental:</0> When this preference is enabled, you'll only receive reply and quote notifications from users you follow. We'll continue to add more controls here over time."
-msgstr "<0> Экспериментально:</0> Когда это предпочтение включено, вы будете получать уведомления об ответах и цитатах только от тех пользователей, на которых вы подписаны. Со временем мы продолжим добавлять сюда дополнительные параметры."
+msgstr "<0> Экспериментально:</0> Когда эта настройка включена, вы будете получать уведомления об ответах и цитатах только от тех пользователей, на которых вы подписаны. Со временем мы продолжим добавлять сюда дополнительные настройки."
 
 #: src/view/com/modals/SelfLabel.tsx:135
 #~ msgid "<0>Not Applicable.</0> This warning is only available for posts with media attached."
@@ -1063,7 +1063,7 @@ msgstr "Заблокирован пост."
 
 #: src/screens/Profile/Sections/Labels.tsx:173
 msgid "Blocking does not prevent this labeler from placing labels on your account."
-msgstr "Блокировка не мешает этому маркировщику добавлять метку в вашу учётную запись."
+msgstr "Блокировка не мешает этому маркировщику добавлять метку на вашу учётную запись."
 
 #: src/view/screens/ProfileList.tsx:744
 msgid "Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
@@ -1071,7 +1071,7 @@ msgstr "Блокировка - это открытая информация. З�
 
 #: src/view/com/profile/ProfileMenu.tsx:333
 msgid "Blocking will not prevent labels from being applied on your account, but it will stop this account from replying in your threads or interacting with you."
-msgstr "Блокировка не помешает добавлять метки в вашу учётную запись, но она остановит возможность этой учётной записи комментировать ваши посты или взаимодействовать с вами."
+msgstr "Блокировка не помешает добавлять метки на вашу учётную запись, но она остановит возможность этой учётной записи комментировать ваши посты или взаимодействовать с вами."
 
 #: src/view/com/auth/SplashScreen.web.tsx:173
 msgid "Blog"
@@ -5235,7 +5235,7 @@ msgstr "Порнография"
 #: src/view/com/composer/Composer.tsx:937
 msgctxt "action"
 msgid "Post"
-msgstr "Запостить"
+msgstr "Опубликовать"
 
 #: src/view/com/post-thread/PostThread.tsx:490
 msgctxt "description"
@@ -6617,7 +6617,7 @@ msgstr "Показывать ответы людей, на которых вы �
 
 #: src/screens/Settings/ThreadPreferences.tsx:143
 msgid "Show replies in a threaded view"
-msgstr "Показывать ответы в потоковом представлении"
+msgstr "Показывать ответы в виде веток"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:539
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:549
@@ -7398,7 +7398,7 @@ msgstr "Эта лента пуста."
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:99
 msgid "This feed is no longer online. We are showing <0>Discover</0> instead."
-msgstr "Этот канал больше не работает. Вместо этого мы показываем <0>Discover</0>."
+msgstr "Эта лента больше не работает. Вместо этого мы показываем <0>Discover</0>."
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:558
 msgid "This handle is reserved. Please try a different one."
@@ -7533,11 +7533,11 @@ msgstr "Это удалит ваш пост из этой цитаты для в
 #: src/screens/Settings/ContentAndMediaSettings.tsx:48
 #: src/screens/Settings/ContentAndMediaSettings.tsx:51
 msgid "Thread preferences"
-msgstr "Настройка веток"
+msgstr "Настройки веток"
 
 #: src/screens/Settings/ThreadPreferences.tsx:41
 msgid "Thread Preferences"
-msgstr "Настройка веток"
+msgstr "Настройки веток"
 
 #: src/screens/Settings/ThreadPreferences.tsx:134
 msgid "Threaded mode"
@@ -7549,7 +7549,7 @@ msgstr "Режим веток"
 
 #: src/Navigation.tsx:307
 msgid "Threads Preferences"
-msgstr "Настройка обсуждений"
+msgstr "Настройки веток"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/TimeIndicator.tsx:33
 msgid "Time remaining: {time} seconds"
@@ -7590,7 +7590,7 @@ msgstr "Включить или отключить контент для взр�
 #: src/screens/Hashtag.tsx:87
 #: src/view/screens/Search/Search.tsx:511
 msgid "Top"
-msgstr "Вверх"
+msgstr "Лучшее"
 
 #: src/view/com/modals/EditImage.tsx:272
 #~ msgid "Transformations"
