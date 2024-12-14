@@ -12,8 +12,6 @@ import {
 } from 'react-native-keyboard-controller'
 import {useFocusEffect} from '@react-navigation/native'
 
-import {IS_DEV} from '#/env'
-
 const KeyboardControllerRefCountContext = createContext<{
   incrementRefCount: () => void
   decrementRefCount: () => void
@@ -57,7 +55,7 @@ function KeyboardControllerProviderInner({
         refCount.current--
         setEnabled(refCount.current > 0)
 
-        if (IS_DEV && refCount.current < 0) {
+        if (__DEV__ && refCount.current < 0) {
           console.error('KeyboardController ref count < 0')
         }
       },

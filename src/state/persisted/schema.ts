@@ -28,6 +28,7 @@ const accountSchema = z.object({
    */
   status: z.string().optional(),
   pdsUrl: z.string().optional(),
+  isSelfHosted: z.boolean().optional(),
 })
 export type PersistedAccount = z.infer<typeof accountSchema>
 

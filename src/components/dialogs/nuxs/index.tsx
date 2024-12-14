@@ -3,12 +3,7 @@ import {AppBskyActorDefs} from '@atproto/api'
 
 import {useGate} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
-import {
-  Nux,
-  useNuxs,
-  useRemoveNuxsMutation,
-  useUpsertNuxMutation,
-} from '#/state/queries/nuxs'
+import {Nux, useNuxs, useResetNuxs, useSaveNux} from '#/state/queries/nuxs'
 import {
   usePreferencesQuery,
   UsePreferencesQueryResponse,
@@ -20,7 +15,6 @@ import {useOnboardingState} from '#/state/shell'
  * NUXs
  */
 import {isSnoozed, snooze, unsnooze} from '#/components/dialogs/nuxs/snoozing'
-import {IS_DEV} from '#/env'
 
 type Context = {
   activeNux: Nux | undefined
@@ -85,8 +79,8 @@ function Inner({
     return isSnoozed()
   })
   const [activeNux, setActiveNux] = React.useState<Nux | undefined>()
-  const {mutateAsync: upsertNux} = useUpsertNuxMutation()
-  const {mutate: removeNuxs} = useRemoveNuxsMutation()
+  const {mutateAsync: saveNux} = useSaveNux()
+  const {mutate: resetNuxs} = useResetNuxs()
 
   const snoozeNuxDialog = React.useCallback(() => {
     snooze()
@@ -98,11 +92,11 @@ function Inner({
     setActiveNux(undefined)
   }, [activeNux, setActiveNux])
 
-  if (IS_DEV && typeof window !== 'undefined') {
+  if (__DEV__ && typeof window !== 'undefined') {
     // @ts-ignore
     window.clearNuxDialog = (id: Nux) => {
-      if (!IS_DEV || !id) return
-      removeNuxs([id])
+      if (!__DEV__ || !id) return
+      resetNuxs([id])
       unsnooze()
     }
   }
@@ -136,7 +130,7 @@ function Inner({
       snoozeNuxDialog()
 
       // immediately update remote data (affects next reload)
-      upsertNux({
+      saveNux({
         id,
         completed: true,
         data: undefined,
@@ -152,7 +146,7 @@ function Inner({
     nuxs,
     snoozed,
     snoozeNuxDialog,
-    upsertNux,
+    saveNux,
     gate,
     currentAccount,
     currentProfile,

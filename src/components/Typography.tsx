@@ -8,7 +8,6 @@ import {
   renderChildrenWithEmoji,
   TextProps,
 } from '#/alf/typography'
-import {IS_DEV} from '#/env'
 export type {TextProps}
 
 /**
@@ -31,7 +30,7 @@ export function Text({
     flags,
   })
 
-  if (IS_DEV) {
+  if (__DEV__) {
     if (!emoji && childHasEmoji(children)) {
       logger.warn(
         `Text: emoji detected but emoji not enabled: "${children}"\n\nPlease add <Text emoji />'`,

@@ -39,7 +39,15 @@ export function AccessibilitySettingsScreen({}: Props) {
 
   return (
     <Layout.Screen>
-      <Layout.Header title={_(msg`Accessibility`)} />
+      <Layout.Header.Outer>
+        <Layout.Header.BackButton />
+        <Layout.Header.Content>
+          <Layout.Header.TitleText>
+            <Trans>Accessibility</Trans>
+          </Layout.Header.TitleText>
+        </Layout.Header.Content>
+        <Layout.Header.Slot />
+      </Layout.Header.Outer>
       <Layout.Content>
         <SettingsList.Container>
           <SettingsList.Group contentContainerStyle={[a.gap_sm]}>
