@@ -872,12 +872,12 @@ msgstr "Имена паролей приложений должны состоя
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:63
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:66
 msgid "App passwords"
-msgstr "Пароли для приложений"
+msgstr "Пароли приложений"
 
 #: src/Navigation.tsx:291
 #: src/screens/Settings/AppPasswords.tsx:51
 msgid "App Passwords"
-msgstr "Пароли для приложений"
+msgstr "Пароли приложений"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:148
 #: src/components/moderation/LabelsOnMeDialog.tsx:151
@@ -1555,11 +1555,11 @@ msgstr "Нажмите здесь, чтобы открыть меню тегов
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:307
 msgid "Click to disable quote posts of this post."
-msgstr "Нажмите, чтобы отключить цитирование этого сообщения."
+msgstr "Нажмите, чтобы отключить цитирование этого поста."
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:308
 msgid "Click to enable quote posts of this post."
-msgstr "Нажмите, чтобы включить цитирование этого сообщения."
+msgstr "Нажмите, чтобы включить цитирование этого поста."
 
 #: src/components/dms/MessageItem.tsx:241
 msgid "Click to retry failed message"
@@ -2040,7 +2040,7 @@ msgstr "Пользовательский"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:292
 msgid "Customize who can interact with this post."
-msgstr "Настройте, кто может взаимодействовать с этим сообщением."
+msgstr "Настройте, кто может взаимодействовать с этим постом."
 
 #: src/screens/Settings/AppearanceSettings.tsx:105
 #: src/screens/Settings/AppearanceSettings.tsx:126
@@ -2217,7 +2217,7 @@ msgstr "Опции разработчика"
 
 #: src/components/WhoCanReply.tsx:175
 msgid "Dialog: adjust who can interact with this post"
-msgstr "Диалог: настройте, кто может взаимодействовать с этим сообщением"
+msgstr "Диалог: настройте, кто может взаимодействовать с этим постом"
 
 #: src/view/com/composer/Composer.tsx:325
 #~ msgid "Did you want to say anything?"
@@ -3662,7 +3662,7 @@ msgstr "Если вы хотите изменить пароль, мы отпр�
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:92
 msgid "If you're trying to change your handle or email, do so before you deactivate."
-msgstr "Если вы хотите изменить свой логин или электронную почту, сделайте это до деактивации."
+msgstr "Если вы хотите изменить свой псевдоним или электронную почту, сделайте это до деактивации."
 
 #: src/lib/moderation/useReportOptions.ts:38
 msgid "Illegal and Urgent"
@@ -3984,12 +3984,12 @@ msgstr ""
 
 #: src/components/ProgressGuide/List.tsx:63
 msgid "Like 10 posts"
-msgstr "Лайкните 10 сообщений"
+msgstr "Лайкните 10 постов"
 
 #: src/state/shell/progress-guide.tsx:212
 #: src/state/shell/progress-guide.tsx:217
 msgid "Like 10 posts to train the Discover feed"
-msgstr "Лайкните 10 сообщений, чтобы обучить ленту Discover"
+msgstr "Лайкните 10 постов, чтобы обучить ленту Discover"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:501
 msgid "Like feed"
@@ -4734,7 +4734,7 @@ msgstr "Никого"
 
 #: src/components/WhoCanReply.tsx:237
 msgid "No one but the author can quote this post."
-msgstr "Никто, кроме автора, не может цитировать это сообщение."
+msgstr "Никто, кроме автора, не может цитировать этот пост."
 
 #: src/screens/Profile/Sections/Feed.tsx:65
 msgid "No posts yet."
@@ -6424,7 +6424,7 @@ msgstr "Требуется код подтверждения"
 
 #: src/components/TagMenu/index.web.tsx:77
 msgid "See {truncatedTag} posts"
-msgstr "Просмотреть сообщения {truncatedTag}"
+msgstr "Просмотреть посты с {truncatedTag}"
 
 #: src/components/TagMenu/index.web.tsx:94
 msgid "See {truncatedTag} posts by user"
@@ -7782,7 +7782,7 @@ msgstr "Этот пост будет скрыт из лент и тем. Это 
 
 #: src/view/com/composer/Composer.tsx:413
 msgid "This post's author has disabled quote posts."
-msgstr "Автор этого поста отключил цитирование сообщений."
+msgstr "Автор этого поста отключил цитирование постов."
 
 #: src/view/com/profile/ProfileMenu.tsx:350
 msgid "This profile is only visible to logged-in users. It won't be visible to people who aren't logged in."
@@ -7843,7 +7843,7 @@ msgstr "Это удалит @{0} из списка быстрого доступ
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:721
 msgid "This will remove your post from this quote post for all users, and replace it with a placeholder."
-msgstr "Это удалит ваше сообщение из этой цитаты для всех пользователей и заменит его на место."
+msgstr "Это удалит ваш пост из этой цитаты для всех пользователей, и заменит его на заглушку."
 
 #: src/view/com/post-thread/PostThread.tsx:606
 #: src/view/com/post-thread/PostThread.tsx:609
@@ -8475,11 +8475,11 @@ msgstr "Показать профиль {displayName}"
 
 #: src/components/TagMenu/index.tsx:172
 msgid "View all posts by @{authorHandle} with tag {displayTag}"
-msgstr "Посмотреть все сообщения от @{authorHandle} с тегом {displayTag}"
+msgstr "Посмотреть все посты от @{authorHandle} с тегом {displayTag}"
 
 #: src/components/TagMenu/index.tsx:126
 msgid "View all posts with tag {displayTag}"
-msgstr "Посмотреть все сообщения с тегом {displayTag}"
+msgstr "Посмотреть все посты с тегом {displayTag}"
 
 #: src/components/ProfileHoverCard/index.web.tsx:433
 msgid "View blocked user's profile"
@@ -8650,7 +8650,7 @@ msgstr "Нам очень жаль, нам не удалось выполнит�
 
 #: src/view/com/composer/Composer.tsx:410
 msgid "We're sorry! The post you are replying to has been deleted."
-msgstr "Нам очень жаль! Сообщение, на которое вы отвечаете, было удалено."
+msgstr "Нам очень жаль! Пост, на который вы отвечаете, был удален."
 
 #: src/components/Lists.tsx:188
 #: src/view/screens/NotFound.tsx:50
@@ -8849,7 +8849,7 @@ msgstr "Теперь вы можете войти с помощью нового
 
 #: src/screens/Deactivated.tsx:132
 msgid "You can reactivate your account to continue logging in. Your profile and posts will be visible to other users."
-msgstr "Вы можете повторно активировать свой аккаунт, чтобы продолжить вход в систему. Ваш профиль и сообщения будут видны другим пользователям."
+msgstr "Вы можете повторно активировать свой аккаунт, чтобы продолжить вход в систему. Ваш профиль и посты будут видны другим пользователям."
 
 #: src/components/interstitials/Trending.tsx:112
 #: src/screens/Search/components/ExploreTrendingTopics.tsx:131
@@ -9175,7 +9175,7 @@ msgstr "Ваши посты были опубликованы"
 
 #: src/screens/Onboarding/StepFinished.tsx:250
 msgid "Your posts, likes, and blocks are public. Mutes are private."
-msgstr "Ваши сообщения, лайки и блокировки являются публичными. Игнорирования - приватные."
+msgstr "Ваши посты, лайки и блокировки являются публичными. Игнорирования - приватные."
 
 #: src/view/screens/Settings/index.tsx:119
 #~ msgid "Your profile"
@@ -9183,7 +9183,7 @@ msgstr "Ваши сообщения, лайки и блокировки явля
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:75
 msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
-msgstr "Ваш профиль, сообщения, ленты и списки больше не будут видны другим пользователям Bluesky. Вы можете активировать свой аккаунт в любое время, войдя в систему."
+msgstr "Ваш профиль, посты, ленты и списки больше не будут видны другим пользователям Bluesky. Вы можете активировать свой аккаунт в любое время, войдя в систему."
 
 #: src/view/com/composer/Composer.tsx:469
 msgid "Your reply has been published"
