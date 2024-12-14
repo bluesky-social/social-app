@@ -3242,7 +3242,7 @@ msgid "If you delete this list, you won't be able to recover it."
 msgstr "Si vous supprimez cette liste, vous ne pourrez pas la récupérer."
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:250
 msgid "If you have your own domain, you can use that as your handle. This lets you self-verify your identity. <0>Learn more here.</0>"
-msgstr "Si vous possédez votre propre domaine, vous pouvez l’utiliser comme pseudonyme. Cela vous permet d’auto-vérifier votre identité. <0>En savoir plus</0>"
+msgstr "Si vous possédez votre propre domaine, vous pouvez l’utiliser comme pseudo. Cela vous permet d’auto-vérifier votre identité. <0>En savoir plus</0>"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:658
 msgid "If you remove this post, you won't be able to recover it."
@@ -8040,7 +8040,7 @@ msgstr "Votre choix sera enregistré, mais vous pourrez le modifier ultérieurem
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:496
 msgid "Your current handle <0>{0}</0> will automatically remain reserved for you. You can switch back to it at any time from this account."
-msgstr "Votre pseudonyme actuel <0>{0}</0> sera automatiquement conservé et vous sera réservé. Vous pourrez y revenir à tout moment depuis ce compte."
+msgstr "Votre pseudo actuel <0>{0}</0> sera automatiquement conservé et vous sera réservé. Vous pourrez y revenir à tout moment depuis ce compte."
 
 #: src/screens/Login/ForgotPasswordForm.tsx:51
 #: src/screens/Signup/state.ts:203
