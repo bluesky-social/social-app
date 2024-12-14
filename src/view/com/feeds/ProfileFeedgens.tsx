@@ -54,7 +54,7 @@ export const ProfileFeedgens = React.forwardRef<
 ) {
   const {_} = useLingui()
   const t = useTheme()
-  const [isPTRing, setIsPTRing] = React.useState(false)
+
   const opts = React.useMemo(() => ({enabled}), [enabled])
   const {
     data,
@@ -66,6 +66,7 @@ export const ProfileFeedgens = React.forwardRef<
     isError,
     error,
     refetch,
+    isRefetching,
   } = useProfileFeedgensQuery(did, opts)
   const isEmpty = !isFetching && !data?.pages[0]?.feeds.length
   const {data: preferences} = usePreferencesQuery()
@@ -108,14 +109,12 @@ export const ProfileFeedgens = React.forwardRef<
   }))
 
   const onRefresh = React.useCallback(async () => {
-    setIsPTRing(true)
     try {
       await refetch()
     } catch (err) {
       logger.error('Failed to refresh feeds', {message: err})
     }
-    setIsPTRing(false)
-  }, [refetch, setIsPTRing])
+  }, [refetch])
 
   const onEndReached = React.useCallback(async () => {
     if (isFetching || !hasNextPage || isError) return
@@ -200,7 +199,7 @@ export const ProfileFeedgens = React.forwardRef<
         keyExtractor={(item: any) => item._reactKey || item.uri}
         renderItem={renderItem}
         ListFooterComponent={ProfileFeedgensFooter}
-        refreshing={isPTRing}
+        refreshing={isRefetching}
         onRefresh={onRefresh}
         headerOffset={headerOffset}
         progressViewOffset={ios(0)}

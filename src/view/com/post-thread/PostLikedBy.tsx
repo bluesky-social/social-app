@@ -1,4 +1,4 @@
-import {useCallback, useMemo, useState} from 'react'
+import {useCallback, useMemo} from 'react'
 import {AppBskyFeedGetLikes as GetLikes} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -30,8 +30,6 @@ export function PostLikedBy({uri}: {uri: string}) {
   const {_} = useLingui()
   const initialNumToRender = useInitialNumToRender()
 
-  const [isPTRing, setIsPTRing] = useState(false)
-
   const {
     data: resolvedUri,
     error: resolveError,
@@ -45,6 +43,7 @@ export function PostLikedBy({uri}: {uri: string}) {
     fetchNextPage,
     error,
     refetch,
+    isRefetching,
   } = useLikedByQuery(resolvedUri?.uri)
 
   const isError = Boolean(resolveError || error)
@@ -57,14 +56,12 @@ export function PostLikedBy({uri}: {uri: string}) {
   }, [data])
 
   const onRefresh = useCallback(async () => {
-    setIsPTRing(true)
     try {
       await refetch()
     } catch (err) {
       logger.error('Failed to refresh likes', {message: err})
     }
-    setIsPTRing(false)
-  }, [refetch, setIsPTRing])
+  }, [refetch])
 
   const onEndReached = useCallback(async () => {
     if (isFetchingNextPage || !hasNextPage || isError) return
@@ -97,7 +94,7 @@ export function PostLikedBy({uri}: {uri: string}) {
       data={likes}
       renderItem={renderItem}
       keyExtractor={keyExtractor}
-      refreshing={isPTRing}
+      refreshing={isRefetching}
       onRefresh={onRefresh}
       onEndReached={onEndReached}
       onEndReachedThreshold={4}
