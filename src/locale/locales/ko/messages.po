@@ -1101,17 +1101,9 @@ msgstr "다른 피드 탐색하기"
 msgid "Business"
 msgstr "비즈니스"
 
-#: src/view/com/profile/ProfileSubpageHeader.tsx:150
-#~ msgid "by —"
-#~ msgstr "— 님이 만듦"
-
 #: src/components/LabelingServiceCard/index.tsx:62
 msgid "By {0}"
 msgstr "{0} 님이 만듦"
-
-#: src/view/com/profile/ProfileSubpageHeader.tsx:154
-#~ msgid "by <0/>"
-#~ msgstr "<0/> 님이 만듦"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:415
 msgid "By <0>{0}</0>"
@@ -1128,10 +1120,6 @@ msgstr "계정을 만들면 <0>서비스 이용약관</0> 및 <1>개인정보 �
 #: src/screens/Signup/StepInfo/Policies.tsx:68
 msgid "By creating an account you agree to the <0>Terms of Service</0>."
 msgstr "계정을 만들면 <0>서비스 이용약관</0>에 동의하는 것입니다."
-
-#: src/view/com/profile/ProfileSubpageHeader.tsx:152
-#~ msgid "by you"
-#~ msgstr "내가 만듦"
 
 #: src/view/com/composer/photos/OpenCameraBtn.tsx:72
 msgid "Camera"
@@ -4207,10 +4195,6 @@ msgstr "다음 이미지"
 #: src/screens/Settings/AppPasswords.tsx:108
 msgid "No app passwords yet"
 msgstr "앱 비밀번호 없음"
-
-#: src/view/screens/ProfileList.tsx:881
-#~ msgid "No description"
-#~ msgstr "설명 없음"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:380
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:382
@@ -7343,10 +7327,6 @@ msgstr "나를 차단한 사용자"
 msgid "User list by {0}"
 msgstr "{0} 님의 사용자 리스트"
 
-#: src/view/screens/ProfileList.tsx:889
-#~ msgid "User list by <0/>"
-#~ msgstr "<0/> 님의 사용자 리스트"
-
 #: src/view/com/modals/UserAddRemoveLists.tsx:212
 msgid "User list by you"
 msgstr "내 사용자 리스트"
@@ -7362,10 +7342,6 @@ msgstr "사용자 리스트를 업데이트했습니다"
 #: src/screens/Login/LoginForm.tsx:185
 msgid "Username or email address"
 msgstr "사용자 이름 또는 이메일 주소"
-
-#: src/view/screens/ProfileList.tsx:923
-#~ msgid "Users"
-#~ msgstr "사용자"
 
 #: src/components/WhoCanReply.tsx:258
 msgid "users followed by <0>@{0}</0>"
