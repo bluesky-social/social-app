@@ -1,16 +1,16 @@
 # 
 # Translators:
 # arestifop, 2024
-# Michele Locati <michele@locati.it>, 2024
 # Francisco, 2024
+# Michele Locati <michele@locati.it>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Italian localization\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-14 00:45+0000\n"
-"PO-Revision-Date: 2024-12-14 02:09+0000\n"
-"Last-Translator: Francisco, 2024\n"
+"PO-Revision-Date: 2024-12-14 09:18+0000\n"
+"Last-Translator: Michele Locati <michele@locati.it>, 2024\n"
 "Language-Team: Italian (https://app.transifex.com/mlocati/teams/201833/it/)\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
@@ -3260,7 +3260,7 @@ msgstr "Se elimini questa lista, non potrai recuperarla."
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:250
 msgid "If you have your own domain, you can use that as your handle. This lets you self-verify your identity. <0>Learn more here.</0>"
-msgstr ""
+msgstr "Se hai un tuo dominio, puoi usarlo come nome utente. Questo consente di auto-verificare la tua identità. <0>Ulteriori informazioni.</0>"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:658
 msgid "If you remove this post, you won't be able to recover it."
@@ -3635,11 +3635,11 @@ msgstr "Lista di {0}"
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:156
 msgid "List by <0/>"
-msgstr ""
+msgstr "Lista di <0/>"
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:154
 msgid "List by you"
-msgstr ""
+msgstr "Lista tua"
 
 #: src/view/screens/ProfileList.tsx:451
 msgid "List deleted"
@@ -6310,7 +6310,7 @@ msgstr "Starter pack di {0}"
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:182
 msgid "Starter pack by <0/>"
-msgstr ""
+msgstr "Starter pack di <0/>"
 
 #: src/components/StarterPack/StarterPackCard.tsx:80
 #: src/view/com/profile/ProfileSubpageHeader.tsx:180
@@ -8066,7 +8066,7 @@ msgstr "La tua scelta verrà salvata, ma potrà essere modificata successivament
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:496
 msgid "Your current handle <0>{0}</0> will automatically remain reserved for you. You can switch back to it at any time from this account."
-msgstr ""
+msgstr "Il tuo attuale nome utente <0>{0}</0> rimarrà automaticamente riservato per te. Puoi tornare a utilizzarlo in qualsiasi momento da questo account."
 
 #: src/screens/Login/ForgotPasswordForm.tsx:51
 #: src/screens/Signup/state.ts:203
