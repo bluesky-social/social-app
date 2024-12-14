@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-12-13 07:38+0900\n"
+"PO-Revision-Date: 2024-12-14 09:15+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -1102,17 +1102,9 @@ msgstr "他のフィードを見る"
 msgid "Business"
 msgstr "ビジネス"
 
-#: src/view/com/profile/ProfileSubpageHeader.tsx:193
-msgid "by —"
-msgstr "作成者：-"
-
 #: src/components/LabelingServiceCard/index.tsx:62
 msgid "By {0}"
 msgstr "作成者：{0}"
-
-#: src/view/com/profile/ProfileSubpageHeader.tsx:197
-msgid "by <0/>"
-msgstr "作成者：<0/>"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:414
 msgid "By <0>{0}</0>"
@@ -1129,10 +1121,6 @@ msgstr "アカウントを作成することで、<0>利用規約</0>と<1>プ�
 #: src/screens/Signup/StepInfo/Policies.tsx:68
 msgid "By creating an account you agree to the <0>Terms of Service</0>."
 msgstr "アカウントを作成することで、<0>利用規約</0>に同意したものとみなされます。"
-
-#: src/view/com/profile/ProfileSubpageHeader.tsx:195
-msgid "by you"
-msgstr "作成者：あなた"
 
 #: src/view/com/composer/photos/OpenCameraBtn.tsx:72
 msgid "Camera"
@@ -3266,9 +3254,9 @@ msgstr "あなたがお住いの国の法律においてまだ成人していな
 msgid "If you delete this list, you won't be able to recover it."
 msgstr "このリストを削除すると、復元できなくなります。"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:246
-msgid "If you have your own domain, you can use that as your handle. This lets you self-verify your identity – <0>learn more</0>."
-msgstr "自分のドメインを持っていれば、ハンドルとして利用できます。これによりあなたのアイデンティティを自己証明できます - <0>詳しくはこちら</0>。"
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:250
+msgid "If you have your own domain, you can use that as your handle. This lets you self-verify your identity. <0>Learn more here.</0>"
+msgstr "自分のドメインを持っていれば、ハンドルとして利用できます。これによりあなたのアイデンティティを自己証明できます。<0>詳しくはこちら。</0>"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:658
 msgid "If you remove this post, you won't be able to recover it."
@@ -3642,6 +3630,14 @@ msgstr "リストをブロックしました"
 #: src/view/com/feeds/FeedSourceCard.tsx:255
 msgid "List by {0}"
 msgstr "{0}によるリスト"
+
+#: src/view/com/profile/ProfileSubpageHeader.tsx:156
+msgid "List by <0/>"
+msgstr "<0/>によるリスト"
+
+#: src/view/com/profile/ProfileSubpageHeader.tsx:154
+msgid "List by you"
+msgstr "あなたのリスト"
 
 #: src/view/screens/ProfileList.tsx:459
 msgid "List deleted"
@@ -4201,11 +4197,6 @@ msgstr "次の画像"
 #: src/screens/Settings/AppPasswords.tsx:100
 msgid "No app passwords yet"
 msgstr "アプリパスワードはまだありません"
-
-#: src/view/screens/ProfileFeed.tsx:565
-#: src/view/screens/ProfileList.tsx:882
-msgid "No description"
-msgstr "説明はありません"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:377
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:379
@@ -6314,6 +6305,10 @@ msgstr "スターターパック"
 msgid "Starter pack by {0}"
 msgstr "{0}によるスターターパック"
 
+#: src/view/com/profile/ProfileSubpageHeader.tsx:182
+msgid "Starter pack by <0/>"
+msgstr "<0/>によるスターターパック"
+
 #: src/components/StarterPack/StarterPackCard.tsx:80
 msgid "Starter pack by you"
 msgstr "自分のスターターパック"
@@ -7334,10 +7329,6 @@ msgstr "あなたをブロックしているユーザー"
 msgid "User list by {0}"
 msgstr "<0/>の作成したユーザーリスト"
 
-#: src/view/screens/ProfileList.tsx:890
-msgid "User list by <0/>"
-msgstr "<0/>の作成したユーザーリスト"
-
 #: src/view/com/modals/UserAddRemoveLists.tsx:212
 #: src/view/screens/ProfileList.tsx:888
 msgid "User list by you"
@@ -7354,10 +7345,6 @@ msgstr "ユーザーリストを更新しました"
 #: src/screens/Login/LoginForm.tsx:183
 msgid "Username or email address"
 msgstr "ユーザー名またはメールアドレス"
-
-#: src/view/screens/ProfileList.tsx:924
-msgid "Users"
-msgstr "ユーザー"
 
 #: src/components/WhoCanReply.tsx:258
 msgid "users followed by <0>@{0}</0>"
@@ -8072,6 +8059,10 @@ msgstr "あなたのチャットは無効化されています"
 #: src/view/com/modals/InAppBrowserConsent.tsx:44
 msgid "Your choice will be saved, but can be changed later in settings."
 msgstr "ここで選択した内容は保存されますが、あとから設定で変更できます。"
+
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:496
+msgid "Your current handle <0>{0}</0> will automatically remain reserved for you. You can switch back to it at any time from this account."
+msgstr "あなたの現在のハンドル<0>{0}</0>は自動的に予約されたままになります。いつでもこのアカウントに戻すことができます。"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:51
 #: src/screens/Signup/state.ts:203
