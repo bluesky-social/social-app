@@ -136,14 +136,12 @@ export const Pager = forwardRef<PagerRef, React.PropsWithChildren<Props>>(
 
     return (
       <View testID={testID} style={[a.flex_1, native(a.overflow_hidden)]}>
-        <View style={a.z_10 /* Let tabbar bottom border cover the glimmer */}>
-          {renderTabBar({
-            selectedPage,
-            onSelect: onTabBarSelect,
-            dragProgress,
-            dragState,
-          })}
-        </View>
+        {renderTabBar({
+          selectedPage,
+          onSelect: onTabBarSelect,
+          dragProgress,
+          dragState,
+        })}
         <GestureDetector gesture={nativeGesture}>
           <AnimatedPagerView
             ref={pagerView}
