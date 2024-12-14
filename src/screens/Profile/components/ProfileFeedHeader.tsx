@@ -45,7 +45,6 @@ import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
 import * as Layout from '#/components/Layout'
 import {InlineLinkText} from '#/components/Link'
-import {Loader} from '#/components/Loader'
 import * as Menu from '#/components/Menu'
 import {ReportDialog, useReportDialogControl} from '#/components/ReportDialog'
 import {RichText} from '#/components/RichText'
@@ -386,7 +385,7 @@ function DialogInner({
   const playHaptic = useHaptics()
   const control = Dialog.useDialogContext()
   const reportDialogControl = useReportDialogControl()
-  const [rt, loading] = useRichText(info.description.text)
+  const [rt] = useRichText(info.description.text)
   const {mutateAsync: likeFeed, isPending: isLikePending} = useLikeMutation()
   const {mutateAsync: unlikeFeed, isPending: isUnlikePending} =
     useUnlikeMutation()
@@ -426,9 +425,7 @@ function DialogInner({
     reportDialogControl.open()
   }, [reportDialogControl])
 
-  return loading ? (
-    <Loader size="xl" />
-  ) : (
+  return (
     <View style={[a.gap_md]}>
       <View style={[a.flex_row, a.align_center, a.gap_md]}>
         <UserAvatar type="algo" size={48} avatar={info.avatar} />
