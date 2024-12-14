@@ -8,8 +8,8 @@ msgstr ""
 "Language: fr\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-09 19:42+0100\n"
-"Last-Translator: Cereza Auclair (@cereza.zone)\n"
+"PO-Revision-Date: 2024-12-14 17:17+0100\n"
+"Last-Translator: Stanislas Signoud (@signez.fr)\n"
 "Language-Team: Stanislas Signoud (@signez.fr), surfdude29, Cereza Auclair (@cereza.zone)\n"
 "Plural-Forms: \n"
 
@@ -28,11 +28,11 @@ msgstr "{0, plural, one {# jour} other {# jours}}"
 
 #: src/screens/Profile/ProfileFollowers.tsx:40
 msgid "{0, plural, one {# follower} other {# followers}}"
-msgstr ""
+msgstr "{0, plural, one {# compte abonné} other {# comptes abonnés}}"
 
 #: src/screens/Profile/ProfileFollows.tsx:40
 msgid "{0, plural, one {# following} other {# following}}"
-msgstr ""
+msgstr "{0, plural, one {# compte suivi} other {# comptes suivis}}"
 
 #: src/lib/hooks/useTimeAgo.ts:146
 msgid "{0, plural, one {# hour} other {# hours}}"
@@ -48,15 +48,15 @@ msgstr "{0, plural, one {# heure} other {# heures}}"
 
 #: src/components/moderation/LabelsOnMe.tsx:53
 msgid "{0, plural, one {# label has} other {# labels have}} been placed on this account"
-msgstr ""
+msgstr "{0, plural, one {# étiquette a été placée} other {# étiquettes ont été placées}} sur ce compte"
 
 #: src/components/moderation/LabelsOnMe.tsx:62
 msgid "{0, plural, one {# label has} other {# labels have}} been placed on this content"
-msgstr ""
+msgstr "{0, plural, one {# étiquette a été placée} other {# étiquettes ont été placées}} sur ce contenu"
 
 #: src/screens/Post/PostLikedBy.tsx:41
 msgid "{0, plural, one {# like} other {# likes}}"
-msgstr ""
+msgstr "{0, plural, one {# compte} other {# comptes}} ont aimé"
 
 #: src/lib/hooks/useTimeAgo.ts:136
 msgid "{0, plural, one {# minute} other {# minutes}}"
@@ -68,7 +68,7 @@ msgstr "{0, plural, one {# mois} other {# mois}}"
 
 #: src/screens/Post/PostQuotes.tsx:41
 msgid "{0, plural, one {# quote} other {# quotes}}"
-msgstr ""
+msgstr "{0, plural, one {# citation} other {# citations}}"
 
 #: src/screens/Post/PostRepostedBy.tsx:41
 msgid "{0, plural, one {# repost} other {# reposts}}"
@@ -612,7 +612,7 @@ msgstr "Entraînement de l’algorithme terminé !"
 
 #: src/view/screens/Notifications.tsx:86
 msgid "All"
-msgstr ""
+msgstr "Toutes"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:381
 msgid "All accounts have been followed!"
@@ -634,7 +634,7 @@ msgstr "Autoriser les nouveaux messages de"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:314
 msgid "Allow quote posts"
-msgstr ""
+msgstr "Autoriser les citations"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:359
 msgid "Allow replies from:"
@@ -1088,11 +1088,11 @@ msgstr "Bluesky n’affichera pas votre profil et vos posts à des personnes non
 
 #: src/screens/Settings/AppIconSettings/index.tsx:99
 msgid "Bluesky+"
-msgstr ""
+msgstr "Bluesky+"
 
 #: src/screens/Settings/AppIconSettings/index.tsx:102
 msgid "Bluesky+ icons"
-msgstr ""
+msgstr "Icônes Bluesky+"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:53
 msgid "Blur images"
@@ -1150,7 +1150,7 @@ msgstr "Par {0}"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:415
 msgid "By <0>{0}</0>"
-msgstr ""
+msgstr "Par <0>{0}</0>"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:81
 msgid "By creating an account you agree to the <0>Privacy Policy</0>."
@@ -1262,7 +1262,7 @@ msgstr "Modifier"
 
 #: src/screens/Settings/AppIconSettings/index.tsx:39
 msgid "Change app icon"
-msgstr ""
+msgstr "Changer l’icône de l’application"
 
 #: src/screens/Settings/AppIconSettings/index.tsx:38
 #: src/screens/Settings/AppIconSettings/index.tsx:221
@@ -1900,7 +1900,7 @@ msgstr "Par défaut"
 
 #: src/screens/Settings/AppIconSettings/index.tsx:75
 msgid "Default icons"
-msgstr ""
+msgstr "Icônes par défaut"
 
 #: src/components/dms/MessageMenu.tsx:151
 #: src/screens/Settings/AppPasswords.tsx:212
@@ -2751,7 +2751,7 @@ msgstr "Fil d’actu par {0}"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:319
 msgid "Feed menu"
-msgstr ""
+msgstr "Menu du fil d’actu"
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:54
 msgid "Feed toggle"
@@ -3314,7 +3314,7 @@ msgstr "Si vous supprimez cette liste, vous ne pourrez pas la récupérer."
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:250
 msgid "If you have your own domain, you can use that as your handle. This lets you self-verify your identity. <0>Learn more here.</0>"
-msgstr ""
+msgstr "Si vous possédez votre propre domaine, vous pouvez l’utiliser comme pseudonyme. Cela vous permet d’auto-vérifier votre identité. <0>En savoir plus</0>"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:658
 msgid "If you remove this post, you won't be able to recover it."
@@ -3615,11 +3615,11 @@ msgstr "Clair"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:482
 msgid "Like"
-msgstr ""
+msgstr "Aimer"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:310
 msgid "Like ({0, plural, one {# like} other {# likes}})"
-msgstr ""
+msgstr "Aimer ({0, plural, one {# ont aimé} other {# ont aimé}})"
 
 #: src/components/ProgressGuide/List.tsx:47
 msgid "Like 10 posts"
@@ -3632,7 +3632,7 @@ msgstr "Aimez 10 posts afin de former le fil d’actu « Discover »"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:469
 msgid "Like feed"
-msgstr ""
+msgstr "Aimer le fil d’actu"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:275
 msgid "Like this feed"
@@ -3653,14 +3653,14 @@ msgstr "Aimé par"
 #: src/components/FeedCard.tsx:213
 #: src/view/com/feeds/FeedSourceCard.tsx:303
 msgid "Liked by {0, plural, one {# user} other {# users}}"
-msgstr ""
+msgstr "Aimé par {0, plural, one {# compte} other {# comptes}}"
 
 #: src/components/LabelingServiceCard/index.tsx:96
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:457
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:295
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:309
 msgid "Liked by {likeCount, plural, one {# user} other {# users}}"
-msgstr ""
+msgstr "Aimé par {likeCount, plural, one {# compte} other {# comptes}}"
 
 #: src/view/screens/Profile.tsx:229
 msgid "Likes"
@@ -3689,11 +3689,11 @@ msgstr "Liste par {0}"
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:156
 msgid "List by <0/>"
-msgstr ""
+msgstr "Liste par <0/>"
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:154
 msgid "List by you"
-msgstr ""
+msgstr "Liste par vous"
 
 #: src/view/screens/ProfileList.tsx:451
 msgid "List deleted"
@@ -3789,7 +3789,7 @@ msgstr "Se connecter à un compte qui n’est pas listé"
 
 #: src/view/shell/desktop/RightNav.tsx:97
 msgid "Logo by @sawaratsuki.bsky.social"
-msgstr ""
+msgstr "Logo par @sawaratsuki.bsky.social"
 
 #: src/view/shell/desktop/RightNav.tsx:103
 #~ msgid "Logo by <0/>"
@@ -3860,7 +3860,7 @@ msgstr "Comptes mentionnés"
 
 #: src/view/screens/Notifications.tsx:99
 msgid "Mentions"
-msgstr ""
+msgstr "Mentions"
 
 #: src/components/Menu/index.tsx:96
 #: src/view/screens/Search/Search.tsx:856
@@ -4570,7 +4570,7 @@ msgstr "Ouvrir le sélecteur d’emoji"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:161
 msgid "Open feed info screen"
-msgstr ""
+msgstr "Ouvrir l’écran des infos sur le fil d’actu"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:256
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:261
@@ -4800,7 +4800,7 @@ msgstr "Images destinées aux adultes."
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:487
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:494
 msgid "Pin feed"
-msgstr ""
+msgstr "Épingler le fil d’actu"
 
 #: src/view/screens/ProfileList.tsx:681
 msgid "Pin to home"
@@ -4822,7 +4822,7 @@ msgstr "Épinglé"
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:128
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:140
 msgid "Pinned {0} to Home"
-msgstr ""
+msgstr "{0} ajouté à l’accueil"
 
 #: src/view/screens/SavedFeeds.tsx:123
 msgid "Pinned Feeds"
@@ -5380,7 +5380,7 @@ msgstr "Répondre"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:262
 msgid "Reply ({0, plural, one {# reply} other {# replies}})"
-msgstr ""
+msgstr "Répondre ({0, plural, one {# réponse} other {# réponses}})"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:114
 #: src/lib/moderation/useModerationCauseDescription.ts:123
@@ -5517,7 +5517,7 @@ msgstr "Republier"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:74
 msgid "Repost ({0, plural, one {# repost} other {# reposts}})"
-msgstr ""
+msgstr "Republier ({0, plural, one {# repost} other {# reposts}})"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:548
 #: src/view/com/util/post-ctrls/RepostButton.tsx:148
@@ -5984,7 +5984,7 @@ msgstr "Adresse du serveur"
 
 #: src/screens/Settings/AppIconSettings/index.tsx:178
 msgid "Set app icon to {0}"
-msgstr ""
+msgstr "Définir l’icône de l’application comme {0}"
 
 #: src/screens/Moderation/index.tsx:290
 msgid "Set birthdate"
@@ -6076,7 +6076,7 @@ msgstr "Partager le code QR"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:438
 msgid "Share this feed"
-msgstr ""
+msgstr "Partager ce fil d’actu"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:416
 msgid "Share this starter pack"
@@ -6329,7 +6329,7 @@ msgstr "Quelque chose n’a pas marché !"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:506
 msgid "Something wrong? Let us know."
-msgstr ""
+msgstr "Un problème ? Dites-nous tout."
 
 #: src/App.native.tsx:115
 #: src/App.web.tsx:95
@@ -6386,7 +6386,7 @@ msgstr "Kit de démarrage par {0}"
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:182
 msgid "Starter pack by <0/>"
-msgstr ""
+msgstr "Kit de démarrage par <0/>"
 
 #: src/components/StarterPack/StarterPackCard.tsx:80
 #: src/view/com/profile/ProfileSubpageHeader.tsx:180
@@ -7162,7 +7162,7 @@ msgstr "Annuler le repost"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:68
 msgid "Undo repost ({0, plural, one {# repost} other {# reposts}})"
-msgstr ""
+msgstr "Annuler le repost ({0, plural, one {# repost} other {# reposts}})"
 
 #: src/view/com/profile/FollowButton.tsx:60
 msgctxt "action"
@@ -7180,11 +7180,11 @@ msgstr "Se désabonner du compte"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:482
 msgid "Unlike"
-msgstr ""
+msgstr "Retirer la mention « J’aime »"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:304
 msgid "Unlike ({0, plural, one {# like} other {# likes}})"
-msgstr ""
+msgstr "Retirer la mention « J’aime » ({0, plural, one {# ont aimé} other {# ont aimé}})"
 
 #: src/view/screens/ProfileFeed.tsx:575
 #~ msgid "Unlike this feed"
@@ -7234,7 +7234,7 @@ msgstr "Désépingler"
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:487
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:494
 msgid "Unpin feed"
-msgstr ""
+msgstr "Désépingler le fil d’actu"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:275
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:277
@@ -7252,7 +7252,7 @@ msgstr "Supprimer la liste de modération"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:130
 msgid "Unpinned {0} from Home"
-msgstr ""
+msgstr "{0} retiré de la page d’accueil"
 
 #: src/view/screens/ProfileList.tsx:348
 msgid "Unpinned from your feeds"
@@ -8154,7 +8154,7 @@ msgstr "Votre choix sera enregistré, mais vous pourrez le modifier ultérieurem
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:496
 msgid "Your current handle <0>{0}</0> will automatically remain reserved for you. You can switch back to it at any time from this account."
-msgstr ""
+msgstr "Votre pseudonyme actuel <0>{0}</0> sera automatiquement conservé et vous sera réservé. Vous pourrez y revenir à tout moment depuis ce compte."
 
 #: src/screens/Login/ForgotPasswordForm.tsx:51
 #: src/screens/Signup/state.ts:203
