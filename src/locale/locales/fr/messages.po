@@ -39,14 +39,6 @@ msgid "{0, plural, one {# hour} other {# hours}}"
 msgstr "{0, plural, one {# heure} other {# heures}}"
 
 #: src/components/moderation/LabelsOnMe.tsx:53
-#~ msgid "{0, plural, one {# label has been placed on this account} other {# labels have been placed on this account}}"
-#~ msgstr "{0, plural, one {# étiquette a été placée sur ce compte} other {# étiquettes ont été placées sur ce compte}}"
-
-#: src/components/moderation/LabelsOnMe.tsx:59
-#~ msgid "{0, plural, one {# label has been placed on this content} other {# labels have been placed on this content}}"
-#~ msgstr "{0, plural, one {# étiquette a été placée sur ce contenu} other {# étiquettes ont été placées sur ce contenu}}"
-
-#: src/components/moderation/LabelsOnMe.tsx:53
 msgid "{0, plural, one {# label has} other {# labels have}} been placed on this account"
 msgstr "{0, plural, one {# étiquette a été placée} other {# étiquettes ont été placées}} sur ce compte"
 
@@ -87,20 +79,9 @@ msgstr "{0, plural, one {abonné·e} other {abonné·e·s}}"
 #: src/screens/Profile/Header/Metrics.tsx:26
 msgid "{0, plural, one {following} other {following}}"
 msgstr "{0, plural, one {abonnement} other {abonnements}}"
-
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:305
-#~ msgid "{0, plural, one {Like (# like)} other {Like (# likes)}}"
-#~ msgstr "{0, plural, one {Aimer (# ont aimé)} other {Aimer (# ont aimé)}}"
-
 #: src/view/com/post-thread/PostThreadItem.tsx:447
 msgid "{0, plural, one {like} other {likes}}"
 msgstr "{0, plural, one {a aimé} other {ont aimé}}"
-
-#: src/components/FeedCard.tsx:213
-#: src/view/com/feeds/FeedSourceCard.tsx:303
-#~ msgid "{0, plural, one {Liked by # user} other {Liked by # users}}"
-#~ msgstr "{0, plural, one {Aimé par # compte} other {Aimé par # comptes}}"
-
 #: src/screens/Profile/Header/Metrics.tsx:58
 msgid "{0, plural, one {post} other {posts}}"
 msgstr "{0, plural, one {post} other {posts}}"
@@ -108,19 +89,9 @@ msgstr "{0, plural, one {post} other {posts}}"
 #: src/view/com/post-thread/PostThreadItem.tsx:431
 msgid "{0, plural, one {quote} other {quotes}}"
 msgstr "{0, plural, one {citation} other {citations}}"
-
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:261
-#~ msgid "{0, plural, one {Reply (# reply)} other {Reply (# replies)}}"
-#~ msgstr "{0, plural, one {Répondre (# réponse)} other {Répondre (# réponses)}}"
-
 #: src/view/com/post-thread/PostThreadItem.tsx:413
 msgid "{0, plural, one {repost} other {reposts}}"
 msgstr "{0, plural, one {repost} other {reposts}}"
-
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:301
-#~ msgid "{0, plural, one {Unlike (# like)} other {Unlike (# likes)}}"
-#~ msgstr "{0, plural, one {Retirer la mention « J’aime » (# ont aimé)} other {Retirer la mention « J’aime » (# ont aimé)}}"
-
 #: src/screens/Settings/Settings.tsx:422
 msgid "{0}"
 msgstr "{0}"
@@ -191,11 +162,6 @@ msgstr "{0}s"
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:252
 msgid "{badge} unread items"
 msgstr "{badge} éléments non lus"
-
-#: src/components/LabelingServiceCard/index.tsx:96
-#~ msgid "{count, plural, one {Liked by # user} other {Liked by # users}}"
-#~ msgstr "{count, plural, one {Aimé par # compte} other {Aimé par # comptes}}"
-
 #: src/view/shell/desktop/LeftNav.tsx:186
 msgid "{count} unread items"
 msgstr "{count} éléments non lus"
@@ -309,13 +275,6 @@ msgstr "{following} abonnements"
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:385
 msgid "{handle} can't be messaged"
 msgstr "{handle} ne peut être contacté par message"
-
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:294
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:307
-#: src/view/screens/ProfileFeed.tsx:590
-#~ msgid "{likeCount, plural, one {Liked by # user} other {Liked by # users}}"
-#~ msgstr "{likeCount, plural, one {Aimé par # compte} other {Aimé par # comptes}}"
-
 #: src/view/shell/Drawer.tsx:448
 msgid "{numUnreadNotifications} unread"
 msgstr "{numUnreadNotifications} non lus"
@@ -1135,19 +1094,9 @@ msgstr "Parcourir d’autres fils d’actu"
 #: src/view/com/auth/SplashScreen.web.tsx:168
 msgid "Business"
 msgstr "Affaires"
-
-#: src/view/com/profile/ProfileSubpageHeader.tsx:150
-#~ msgid "by —"
-#~ msgstr "par —"
-
 #: src/components/LabelingServiceCard/index.tsx:62
 msgid "By {0}"
 msgstr "Par {0}"
-
-#: src/view/com/profile/ProfileSubpageHeader.tsx:154
-#~ msgid "by <0/>"
-#~ msgstr "par <0/>"
-
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:415
 msgid "By <0>{0}</0>"
 msgstr "Par <0>{0}</0>"
@@ -1163,11 +1112,6 @@ msgstr "En créant un compte, vous acceptez les <0>Conditions d’utilisation</0
 #: src/screens/Signup/StepInfo/Policies.tsx:68
 msgid "By creating an account you agree to the <0>Terms of Service</0>."
 msgstr "En créant un compte, vous acceptez les <0>Conditions d’utilisation</0>."
-
-#: src/view/com/profile/ProfileSubpageHeader.tsx:152
-#~ msgid "by you"
-#~ msgstr "par vous"
-
 #: src/view/com/composer/photos/OpenCameraBtn.tsx:72
 msgid "Camera"
 msgstr "Caméra"
@@ -1853,12 +1797,6 @@ msgstr "Culture"
 #: src/view/com/auth/server-input/index.tsx:96
 msgid "Custom"
 msgstr "Personnalisé"
-
-#: src/view/screens/Feeds.tsx:726
-#: src/view/screens/Search/Explore.tsx:391
-#~ msgid "Custom feeds built by the community bring you new experiences and help you find the content you love."
-#~ msgstr "Les fils d’actu personnalisés élaborés par la communauté vous font vivre de nouvelles expériences et vous aident à trouver le contenu que vous aimez."
-
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:292
 msgid "Customize who can interact with this post."
 msgstr "Personnalisez les comptes qui peuvent interagir avec ce post."
@@ -2892,11 +2830,6 @@ msgstr "Suivi par <0>{0}</0>, <1>{1}</1> et {2, plural, one {# autre} other {# a
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:403
 msgid "Followed users"
 msgstr "Comptes suivis"
-
-#: src/view/screens/ProfileFollowers.tsx:29
-#~ msgid "Followers"
-#~ msgstr "Abonné·e·s"
-
 #: src/Navigation.tsx:191
 msgid "Followers of @{0} that you know"
 msgstr "Abonné·e·s de @{0} que vous connaissez"
@@ -3307,11 +3240,6 @@ msgstr "Si vous n’êtes pas encore un adulte selon les lois de votre pays, vos
 #: src/view/screens/ProfileList.tsx:732
 msgid "If you delete this list, you won't be able to recover it."
 msgstr "Si vous supprimez cette liste, vous ne pourrez pas la récupérer."
-
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:246
-#~ msgid "If you have your own domain, you can use that as your handle. This lets you self-verify your identity – <0>learn more</0>."
-#~ msgstr "Si vous possédez votre propre domaine, vous pouvez l’utiliser comme pseudonyme. Cela vous permet d’auto-vérifier votre identité — <0>En savoir plus</0>."
-
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:250
 msgid "If you have your own domain, you can use that as your handle. This lets you self-verify your identity. <0>Learn more here.</0>"
 msgstr "Si vous possédez votre propre domaine, vous pouvez l’utiliser comme pseudonyme. Cela vous permet d’auto-vérifier votre identité. <0>En savoir plus</0>"
@@ -3790,11 +3718,6 @@ msgstr "Se connecter à un compte qui n’est pas listé"
 #: src/view/shell/desktop/RightNav.tsx:97
 msgid "Logo by @sawaratsuki.bsky.social"
 msgstr "Logo par @sawaratsuki.bsky.social"
-
-#: src/view/shell/desktop/RightNav.tsx:103
-#~ msgid "Logo by <0/>"
-#~ msgstr "Logo par <0/>"
-
 #: src/view/shell/desktop/RightNav.tsx:94
 #: src/view/shell/Drawer.tsx:629
 msgid "Logo by <0>@sawaratsuki.bsky.social</0>"
@@ -4259,12 +4182,6 @@ msgstr "Image suivante"
 #: src/screens/Settings/AppPasswords.tsx:108
 msgid "No app passwords yet"
 msgstr "Aucun mot de passe d’application"
-
-#: src/view/screens/ProfileFeed.tsx:564
-#: src/view/screens/ProfileList.tsx:881
-#~ msgid "No description"
-#~ msgstr "Aucune description"
-
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:380
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:382
 msgid "No DNS Panel"
@@ -5153,11 +5070,6 @@ msgstr "La citation a été détachée avec succès"
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:91
 msgid "Quote posts disabled"
 msgstr "Citations désactivées"
-
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:314
-#~ msgid "Quote posts enabled"
-#~ msgstr "Citations activées"
-
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:299
 msgid "Quote settings"
 msgstr "Paramètres des citations"
@@ -5213,11 +5125,6 @@ msgstr "Recherches récentes"
 #: src/screens/Messages/components/MessageListError.tsx:20
 msgid "Reconnect"
 msgstr "Se reconnecter"
-
-#: src/view/screens/Notifications.tsx:116
-#~ msgid "Refresh notifications"
-#~ msgstr "Rafraîchir les notifications"
-
 #: src/screens/Messages/ChatList.tsx:163
 msgid "Reload conversations"
 msgstr "Rafraîchir les conversations"
@@ -6048,12 +5955,6 @@ msgstr "Partagez une anecdote insolite !"
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:361
 msgid "Share anyway"
 msgstr "Partager quand même"
-
-#: src/view/screens/ProfileFeed.tsx:363
-#: src/view/screens/ProfileFeed.tsx:365
-#~ msgid "Share feed"
-#~ msgstr "Partager le fil d’actu"
-
 #: src/components/StarterPack/ShareDialog.tsx:123
 #: src/components/StarterPack/ShareDialog.tsx:130
 #: src/screens/StarterPack/StarterPackScreen.tsx:599
@@ -7185,11 +7086,6 @@ msgstr "Retirer la mention « J’aime »"
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:304
 msgid "Unlike ({0, plural, one {# like} other {# likes}})"
 msgstr "Retirer la mention « J’aime » ({0, plural, one {# ont aimé} other {# ont aimé}})"
-
-#: src/view/screens/ProfileFeed.tsx:575
-#~ msgid "Unlike this feed"
-#~ msgstr "Retirer « j’aime » de ce fil d’actu"
-
 #: src/components/TagMenu/index.tsx:264
 #: src/view/screens/ProfileList.tsx:697
 msgid "Unmute"
@@ -7412,11 +7308,6 @@ msgstr "Compte qui vous bloque"
 #: src/view/com/modals/UserAddRemoveLists.tsx:214
 msgid "User list by {0}"
 msgstr "Liste de compte de {0}"
-
-#: src/view/screens/ProfileList.tsx:889
-#~ msgid "User list by <0/>"
-#~ msgstr "Liste de compte par <0/>"
-
 #: src/view/com/modals/UserAddRemoveLists.tsx:212
 msgid "User list by you"
 msgstr "Liste de compte par vous"
@@ -7432,11 +7323,6 @@ msgstr "Liste de compte mise à jour"
 #: src/screens/Login/LoginForm.tsx:185
 msgid "Username or email address"
 msgstr "Pseudo ou e-mail"
-
-#: src/view/screens/ProfileList.tsx:923
-#~ msgid "Users"
-#~ msgstr "Comptes"
-
 #: src/components/WhoCanReply.tsx:258
 msgid "users followed by <0>@{0}</0>"
 msgstr "comptes suivis par <0>@{0}</0>"
