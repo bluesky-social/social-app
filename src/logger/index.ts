@@ -173,7 +173,7 @@ export class Logger {
   protected debugContextRegexes: RegExp[] = []
 
   constructor({
-    enabled = !env.IS_TEST,
+    enabled = process.env.NODE_ENV !== 'test',
     level = env.LOG_LEVEL as LogLevel,
     debug = env.LOG_DEBUG || '',
   }: {
@@ -266,17 +266,18 @@ export class Logger {
  */
 export const logger = new Logger()
 
-if (!env.IS_TEST) {
+if (process.env.NODE_ENV !== 'test') {
   logger.addTransport(createBitdriftTransport())
 }
 
-if (env.IS_DEV && !env.IS_TEST) {
-  logger.addTransport(consoleTransport)
-
-  /*
-   * Comment this out to disable Sentry transport in dev
-   */
-  // logger.addTransport(sentryTransport)
-} else if (env.IS_PROD) {
-  logger.addTransport(sentryTransport)
+if (process.env.NODE_ENV !== 'test') {
+  if (__DEV__) {
+    logger.addTransport(consoleTransport)
+    /*
+     * Comment this out to enable Sentry transport in dev
+     */
+    // logger.addTransport(sentryTransport)
+  } else {
+    logger.addTransport(sentryTransport)
+  }
 }
