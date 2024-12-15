@@ -1,0 +1,48 @@
+diff --git a/node_modules/expo-image-manipulator/src/ImageManipulator.ts b/node_modules/expo-image-manipulator/src/ImageManipulator.ts
+index a80d9c8..babbb3b 100644
+--- a/node_modules/expo-image-manipulator/src/ImageManipulator.ts
++++ b/node_modules/expo-image-manipulator/src/ImageManipulator.ts
+@@ -43,7 +43,7 @@ export async function manipulateAsync(
+       context.extent(action.extent);
+     }
+   }
+-  const image = await context.renderAsync();
++  const image = await context.renderAsync(saveOptions.compress);
+   const result = await image.saveAsync({ format, ...rest });
+ 
+   // These shared objects will not be used anymore, so free up some memory.
+diff --git a/node_modules/expo-image-manipulator/src/ImageManipulatorContext.ts b/node_modules/expo-image-manipulator/src/ImageManipulatorContext.ts
+index 120d8d3..f8aa49c 100644
+--- a/node_modules/expo-image-manipulator/src/ImageManipulatorContext.ts
++++ b/node_modules/expo-image-manipulator/src/ImageManipulatorContext.ts
+@@ -52,7 +52,7 @@ export declare class ImageManipulatorContext extends SharedObject {
+   /**
+    * Awaits for all manipulation tasks to finish and resolves with a reference to the resulted native image.
+    */
+-  renderAsync(): Promise<ImageRef>;
++  renderAsync(compress?: number): Promise<ImageRef>;
+ }
+ 
+ export default ExpoImageManipulator.Context as typeof ImageManipulatorContext;
+diff --git a/node_modules/expo-image-manipulator/src/web/ImageManipulatorContext.web.ts b/node_modules/expo-image-manipulator/src/web/ImageManipulatorContext.web.ts
+index 428848c..363a57a 100644
+--- a/node_modules/expo-image-manipulator/src/web/ImageManipulatorContext.web.ts
++++ b/node_modules/expo-image-manipulator/src/web/ImageManipulatorContext.web.ts
+@@ -41,7 +41,7 @@ export default class ImageManipulatorContext extends SharedObject {
+     return this;
+   }
+ 
+-  async renderAsync(): Promise<ImageManipulatorImageRef> {
++  async renderAsync(compress?: number): Promise<ImageManipulatorImageRef> {
+     const canvas = await this.currentTask;
+ 
+     return new Promise((resolve) => {
+@@ -49,7 +49,7 @@ export default class ImageManipulatorContext extends SharedObject {
+         const url = blob ? URL.createObjectURL(blob) : canvas.toDataURL();
+ 
+         resolve(new ImageManipulatorImageRef(url, canvas.width, canvas.height));
+-      });
++      }, typeof compress === 'number' ? 'image/jpeg' : undefined, compress);
+     });
+   }
+ 
