@@ -1,6 +1,5 @@
 import React from 'react'
 import {View} from 'react-native'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {AtUri} from '@atproto/api'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -46,18 +45,53 @@ import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
 import * as Layout from '#/components/Layout'
 import {InlineLinkText} from '#/components/Link'
-import {Loader} from '#/components/Loader'
 import * as Menu from '#/components/Menu'
 import {ReportDialog, useReportDialogControl} from '#/components/ReportDialog'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
+
+export function ProfileFeedHeaderSkeleton() {
+  const t = useTheme()
+
+  return (
+    <Layout.Header.Outer>
+      <Layout.Header.BackButton />
+      <Layout.Header.Content>
+        <View
+          style={[
+            a.w_full,
+            a.rounded_sm,
+            t.atoms.bg_contrast_25,
+            {
+              height: 44,
+            },
+          ]}
+        />
+      </Layout.Header.Content>
+      <Layout.Header.Slot>
+        <View
+          style={[
+            a.justify_center,
+            a.align_center,
+            a.rounded_full,
+            t.atoms.bg_contrast_25,
+            {
+              height: 34,
+              width: 34,
+            },
+          ]}>
+          <Pin size="lg" fill={t.atoms.text_contrast_low.color} />
+        </View>
+      </Layout.Header.Slot>
+    </Layout.Header.Outer>
+  )
+}
 
 export function ProfileFeedHeader({info}: {info: FeedSourceFeedInfo}) {
   const t = useTheme()
   const {_, i18n} = useLingui()
   const {hasSession} = useSession()
   const {gtPhone, gtMobile} = useBreakpoints()
-  const {top} = useSafeAreaInsets()
   const infoControl = Dialog.useDialogControl()
   const playHaptic = useHaptics()
 
@@ -148,12 +182,7 @@ export function ProfileFeedHeader({info}: {info: FeedSourceFeedInfo}) {
   return (
     <>
       <Layout.Center
-        style={[
-          t.atoms.bg,
-          a.z_10,
-          {paddingTop: top},
-          web([a.sticky, a.z_10, {top: 0}]),
-        ]}>
+        style={[t.atoms.bg, a.z_10, web([a.sticky, a.z_10, {top: 0}])]}>
         <Layout.Header.Outer>
           <Layout.Header.BackButton />
           <Layout.Header.Content align="left">
@@ -356,7 +385,7 @@ function DialogInner({
   const playHaptic = useHaptics()
   const control = Dialog.useDialogContext()
   const reportDialogControl = useReportDialogControl()
-  const [rt, loading] = useRichText(info.description.text)
+  const [rt] = useRichText(info.description.text)
   const {mutateAsync: likeFeed, isPending: isLikePending} = useLikeMutation()
   const {mutateAsync: unlikeFeed, isPending: isUnlikePending} =
     useUnlikeMutation()
@@ -396,9 +425,7 @@ function DialogInner({
     reportDialogControl.open()
   }, [reportDialogControl])
 
-  return loading ? (
-    <Loader size="xl" />
-  ) : (
+  return (
     <View style={[a.gap_md]}>
       <View style={[a.flex_row, a.align_center, a.gap_md]}>
         <UserAvatar type="algo" size={48} avatar={info.avatar} />
