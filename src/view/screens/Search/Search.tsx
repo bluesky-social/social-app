@@ -532,7 +532,8 @@ let SearchScreenInner = ({
       renderTabBar={props => (
         <Layout.Center
           style={[
-            web([a.sticky, a.z_10]),
+            a.z_10,
+            web([a.sticky]),
             {top: isWeb ? headerHeight : undefined},
           ]}>
           <TabBar items={sections.map(section => section.title)} {...props} />
