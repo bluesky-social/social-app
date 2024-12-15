@@ -1058,7 +1058,10 @@ function SearchHistory({
                     asAnchor
                     anchorNoUnderline
                     onBeforePress={() => onProfileClick(profile)}
-                    style={styles.profilePressable}>
+                    style={[
+                      styles.profilePressable,
+                      isMobile && styles.profilePressableMobile,
+                    ]}>
                     <Image
                       source={{uri: profile.avatar}}
                       style={styles.profileAvatar as StyleProp<ImageStyle>}
@@ -1193,6 +1196,9 @@ const styles = StyleSheet.create({
   },
   profilePressable: {
     alignItems: 'center',
+  },
+  profilePressableMobile: {
+    width: '100%',
   },
   profileAvatar: {
     width: 60,
