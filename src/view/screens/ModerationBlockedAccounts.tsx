@@ -23,7 +23,7 @@ import {ProfileCard} from '#/view/com/profile/ProfileCard'
 import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
 import {Text} from '#/view/com/util/text/Text'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
-import {CenteredView} from '#/view/com/util/Views'
+import {atoms as a} from '#/alf'
 import * as Layout from '#/components/Layout'
 
 type Props = NativeStackScreenProps<
@@ -97,14 +97,7 @@ export function ModerationBlockedAccounts({}: Props) {
   )
   return (
     <Layout.Screen testID="blockedAccountsScreen">
-      <CenteredView
-        style={[
-          styles.container,
-          isTabletOrDesktop && styles.containerDesktop,
-          pal.view,
-          pal.border,
-        ]}
-        testID="blockedAccountsScreen">
+      <Layout.Center style={[a.flex_1, {paddingBottom: 100}]}>
         <ViewHeader title={_(msg`Blocked Accounts`)} showOnDesktop />
         <Text
           type="sm"
@@ -112,6 +105,9 @@ export function ModerationBlockedAccounts({}: Props) {
             styles.description,
             pal.text,
             isTabletOrDesktop && styles.descriptionDesktop,
+            {
+              marginTop: 20,
+            },
           ]}>
           <Trans>
             Blocked accounts cannot reply in your threads, mention you, or
@@ -120,7 +116,7 @@ export function ModerationBlockedAccounts({}: Props) {
           </Trans>
         </Text>
         {isEmpty ? (
-          <View style={[pal.border, !isTabletOrDesktop && styles.flex1]}>
+          <View style={[pal.border]}>
             {isError ? (
               <ErrorScreen
                 title="Oops!"
@@ -166,21 +162,12 @@ export function ModerationBlockedAccounts({}: Props) {
             desktopFixedHeight
           />
         )}
-      </CenteredView>
+      </Layout.Center>
     </Layout.Screen>
   )
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingBottom: 100,
-  },
-  containerDesktop: {
-    borderLeftWidth: 1,
-    borderRightWidth: 1,
-    paddingBottom: 0,
-  },
   title: {
     textAlign: 'center',
     marginTop: 12,

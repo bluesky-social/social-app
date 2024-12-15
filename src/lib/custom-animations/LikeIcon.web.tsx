@@ -41,15 +41,15 @@ const circle2Keyframe = [
 export function AnimatedLikeIcon({
   isLiked,
   big,
-  isToggle,
+  hasBeenToggled,
 }: {
   isLiked: boolean
   big?: boolean
-  isToggle: boolean
+  hasBeenToggled: boolean
 }) {
   const t = useTheme()
   const size = big ? 22 : 18
-  const shouldAnimate = !useReducedMotion() && isToggle
+  const shouldAnimate = !useReducedMotion() && hasBeenToggled
   const prevIsLiked = React.useRef(isLiked)
 
   const likeIconRef = React.useRef<HTMLDivElement>(null)

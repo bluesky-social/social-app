@@ -407,6 +407,7 @@ function Header({
         isOwner={isOwn}
         avatar={undefined}
         creator={creator}
+        purpose="app.bsky.graph.defs#referencelist"
         avatarType="starter-pack">
         {hasSession ? (
           <View style={[a.flex_row, a.gap_sm, a.align_center]}>
@@ -429,11 +430,12 @@ function Header({
                 color="primary"
                 size="small"
                 disabled={isProcessing}
-                onPress={onFollowAll}>
+                onPress={onFollowAll}
+                style={[a.flex_row, a.gap_xs, a.align_center]}>
                 <ButtonText>
                   <Trans>Follow all</Trans>
-                  {isProcessing && <Loader size="xs" />}
                 </ButtonText>
+                {isProcessing && <Loader size="xs" />}
               </Button>
             )}
             <OverflowMenu

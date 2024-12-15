@@ -32,21 +32,25 @@ export const AnimatedCheck = React.forwardRef<
   const checkAnim = useSharedValue(0)
 
   const circleAnimatedProps = useAnimatedProps(() => ({
-    strokeDashoffset: 166 - circleAnim.value * 166,
+    strokeDashoffset: 166 - circleAnim.get() * 166,
   }))
   const checkAnimatedProps = useAnimatedProps(() => ({
-    strokeDashoffset: 48 - 48 * checkAnim.value,
+    strokeDashoffset: 48 - 48 * checkAnim.get(),
   }))
 
   const play = React.useCallback(
     (cb?: () => void) => {
-      circleAnim.value = 0
-      checkAnim.value = 0
+      circleAnim.set(0)
+      checkAnim.set(0)
 
-      circleAnim.value = withTiming(1, {duration: 500, easing: Easing.linear})
-      checkAnim.value = withDelay(
-        500,
-        withTiming(1, {duration: 300, easing: Easing.linear}, cb),
+      circleAnim.set(() =>
+        withTiming(1, {duration: 500, easing: Easing.linear}),
+      )
+      checkAnim.set(() =>
+        withDelay(
+          500,
+          withTiming(1, {duration: 300, easing: Easing.linear}, cb),
+        ),
       )
     },
     [circleAnim, checkAnim],

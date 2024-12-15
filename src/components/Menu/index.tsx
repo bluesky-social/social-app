@@ -9,7 +9,12 @@ import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
-import {Context, ItemContext} from '#/components/Menu/context'
+import {
+  Context,
+  ItemContext,
+  useMenuContext,
+  useMenuItemContext,
+} from '#/components/Menu/context'
 import {
   ContextType,
   GroupProps,
@@ -24,10 +29,6 @@ export {
   type DialogControlProps as MenuControlProps,
   useDialogControl as useMenuControl,
 } from '#/components/Dialog'
-
-export function useMemoControlContext() {
-  return React.useContext(Context)
-}
 
 export function Root({
   children,
@@ -46,8 +47,8 @@ export function Root({
   return <Context.Provider value={context}>{children}</Context.Provider>
 }
 
-export function Trigger({children, label}: TriggerProps) {
-  const {control} = React.useContext(Context)
+export function Trigger({children, label, role = 'button'}: TriggerProps) {
+  const context = useMenuContext()
   const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
   const {
     state: pressed,
@@ -57,19 +58,20 @@ export function Trigger({children, label}: TriggerProps) {
 
   return children({
     isNative: true,
-    control,
+    control: context.control,
     state: {
       hovered: false,
       focused,
       pressed,
     },
     props: {
-      onPress: control.open,
+      onPress: context.control.open,
       onFocus,
       onBlur,
       onPressIn,
       onPressOut,
       accessibilityLabel: label,
+      accessibilityRole: role,
     },
   })
 }
@@ -81,7 +83,7 @@ export function Outer({
   showCancel?: boolean
   style?: StyleProp<ViewStyle>
 }>) {
-  const context = React.useContext(Context)
+  const context = useMenuContext()
   const {_} = useLingui()
 
   return (
@@ -104,7 +106,7 @@ export function Outer({
 
 export function Item({children, label, style, onPress, ...rest}: ItemProps) {
   const t = useTheme()
-  const {control} = React.useContext(Context)
+  const context = useMenuContext()
   const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
   const {
     state: pressed,
@@ -120,10 +122,9 @@ export function Item({children, label, style, onPress, ...rest}: ItemProps) {
       onFocus={onFocus}
       onBlur={onBlur}
       onPress={async e => {
-        await onPress(e)
-        if (!e.defaultPrevented) {
-          control?.close()
-        }
+        context.control.close(() => {
+          onPress?.(e)
+        })
       }}
       onPressIn={e => {
         onPressIn()
@@ -155,7 +156,7 @@ export function Item({children, label, style, onPress, ...rest}: ItemProps) {
 
 export function ItemText({children, style}: ItemTextProps) {
   const t = useTheme()
-  const {disabled} = React.useContext(ItemContext)
+  const {disabled} = useMenuItemContext()
   return (
     <Text
       numberOfLines={1}
@@ -176,7 +177,7 @@ export function ItemText({children, style}: ItemTextProps) {
 
 export function ItemIcon({icon: Comp}: ItemIconProps) {
   const t = useTheme()
-  const {disabled} = React.useContext(ItemContext)
+  const {disabled} = useMenuItemContext()
   return (
     <Comp
       size="lg"
@@ -222,7 +223,7 @@ export function Group({children, style}: GroupProps) {
 
 function Cancel() {
   const {_} = useLingui()
-  const {control} = React.useContext(Context)
+  const context = useMenuContext()
 
   return (
     <Button
@@ -230,7 +231,7 @@ function Cancel() {
       size="small"
       variant="ghost"
       color="secondary"
-      onPress={() => control.close()}>
+      onPress={() => context.control.close()}>
       <ButtonText>
         <Trans>Cancel</Trans>
       </ButtonText>

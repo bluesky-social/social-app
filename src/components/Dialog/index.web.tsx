@@ -7,12 +7,12 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
-import Animated, {FadeIn, FadeInDown} from 'react-native-reanimated'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {DismissableLayer} from '@radix-ui/react-dismissable-layer'
 import {useFocusGuards} from '@radix-ui/react-focus-guards'
 import {FocusScope} from '@radix-ui/react-focus-scope'
+import {RemoveScrollBar} from 'react-remove-scroll-bar'
 
 import {logger} from '#/logger'
 import {useDialogStateControlContext} from '#/state/dialogs'
@@ -42,7 +42,6 @@ export function Outer({
   onClose,
 }: React.PropsWithChildren<DialogOuterProps>) {
   const {_} = useLingui()
-  const t = useTheme()
   const {gtMobile} = useBreakpoints()
   const [isOpen, setIsOpen] = React.useState(false)
   const {setDialogIsOpen} = useDialogStateControlContext()
@@ -105,6 +104,7 @@ export function Outer({
       {isOpen && (
         <Portal>
           <Context.Provider value={context}>
+            <RemoveScrollBar />
             <TouchableWithoutFeedback
               accessibilityHint={undefined}
               accessibilityLabel={_(msg`Close active dialog`)}
@@ -118,16 +118,7 @@ export function Outer({
                   gtMobile ? a.p_lg : a.p_md,
                   {overflowY: 'auto'},
                 ]}>
-                <Animated.View
-                  entering={FadeIn.duration(150)}
-                  // exiting={FadeOut.duration(150)}
-                  style={[
-                    web(a.fixed),
-                    a.inset_0,
-                    {opacity: 0.8, backgroundColor: t.palette.black},
-                  ]}
-                />
-
+                <Backdrop />
                 <View
                   style={[
                     a.w_full,
@@ -164,7 +155,7 @@ export function Inner({
   useFocusGuards()
   return (
     <FocusScope loop asChild trapped>
-      <Animated.View
+      <View
         role="dialog"
         aria-role="dialog"
         aria-label={label}
@@ -174,8 +165,6 @@ export function Inner({
         onClick={stopPropagation}
         onStartShouldSetResponder={_ => true}
         onTouchEnd={stopPropagation}
-        entering={FadeInDown.duration(100)}
-        // exiting={FadeOut.duration(100)}
         style={flatten([
           a.relative,
           a.rounded_md,
@@ -188,6 +177,8 @@ export function Inner({
             shadowColor: t.palette.black,
             shadowOpacity: t.name === 'light' ? 0.1 : 0.4,
             shadowRadius: 30,
+            // @ts-ignore web only
+            animation: 'fadeIn ease-out 0.1s',
           },
           flatten(style),
         ])}>
@@ -201,7 +192,7 @@ export function Inner({
             {children}
           </View>
         </DismissableLayer>
-      </Animated.View>
+      </View>
     </FocusScope>
   )
 }
@@ -267,4 +258,26 @@ export function Close() {
 
 export function Handle() {
   return null
+}
+
+function Backdrop() {
+  const t = useTheme()
+  return (
+    <View
+      style={{
+        opacity: 0.8,
+      }}>
+      <View
+        style={[
+          a.fixed,
+          a.inset_0,
+          {
+            backgroundColor: t.palette.black,
+            // @ts-ignore web only
+            animation: 'fadeIn ease-out 0.15s',
+          },
+        ]}
+      />
+    </View>
+  )
 }

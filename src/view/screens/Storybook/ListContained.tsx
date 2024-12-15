@@ -1,15 +1,15 @@
 import React from 'react'
-import {FlatList, View} from 'react-native'
+import {View} from 'react-native'
 
 import {ScrollProvider} from '#/lib/ScrollContext'
-import {List} from '#/view/com/util/List'
+import {List, ListMethods} from '#/view/com/util/List'
 import {Button, ButtonText} from '#/components/Button'
 import * as Toggle from '#/components/forms/Toggle'
 import {Text} from '#/components/Typography'
 
 export function ListContained() {
   const [animated, setAnimated] = React.useState(false)
-  const ref = React.useRef<FlatList>(null)
+  const ref = React.useRef<ListMethods>(null)
 
   const data = React.useMemo(() => {
     return Array.from({length: 100}, (_, i) => ({

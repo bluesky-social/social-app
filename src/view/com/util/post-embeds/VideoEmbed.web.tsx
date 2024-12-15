@@ -24,6 +24,7 @@ export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
     useActiveVideoWeb()
   const [onScreen, setOnScreen] = useState(false)
   const [isFullscreen] = useFullscreen()
+  const lastKnownTime = useRef<number | undefined>()
 
   useEffect(() => {
     if (!ref.current) return
@@ -82,6 +83,7 @@ export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
               active={active}
               setActive={setActive}
               onScreen={onScreen}
+              lastKnownTime={lastKnownTime}
             />
           </ViewportObserver>
         </ErrorBoundary>

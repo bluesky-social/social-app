@@ -1,4 +1,3 @@
-import React from 'react'
 import {StyleSheet, View} from 'react-native'
 import {
   FontAwesomeIcon,
@@ -37,7 +36,9 @@ export function ErrorScreen({
 
   return (
     <>
-      {showHeader && isMobile && <ViewHeader title="Error" showBorder />}
+      {showHeader && isMobile && (
+        <ViewHeader title={_(msg`Error`)} showBorder />
+      )}
       <CenteredView testID={testID} style={[styles.outer, pal.view]}>
         <View style={styles.errorIconContainer}>
           <View

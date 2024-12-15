@@ -33,7 +33,7 @@ import {STALE} from '#/state/queries'
 import {DEFAULT_LOGGED_OUT_PREFERENCES} from '#/state/queries/preferences/const'
 import {useAgent} from '#/state/session'
 import * as userActionHistory from '#/state/userActionHistory'
-import {KnownError} from '#/view/com/posts/FeedErrorMessage'
+import {KnownError} from '#/view/com/posts/PostFeedErrorMessage'
 import {useFeedTuners} from '../preferences/feed-tuners'
 import {useModerationOpts} from '../preferences/moderation-opts'
 import {usePreferencesQuery} from './preferences'
@@ -602,7 +602,7 @@ function assertSomePostsPassModeration(feed: AppBskyFeedDefs.FeedViewPost[]) {
   }
 
   if (!somePostsPassModeration) {
-    throw new Error(KnownError.FeedNSFPublic)
+    throw new Error(KnownError.FeedSignedInOnly)
   }
 }
 

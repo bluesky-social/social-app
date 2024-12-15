@@ -12,12 +12,20 @@ const stateContext = React.createContext<StateContext>({
     addListener() {},
     removeListener() {},
     modify() {},
+    get() {
+      return 0
+    },
+    set() {},
   },
   footerHeight: {
     value: 0,
     addListener() {},
     removeListener() {},
     modify() {},
+    get() {
+      return 0
+    },
+    set() {},
   },
 })
 

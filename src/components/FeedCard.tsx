@@ -7,7 +7,7 @@ import {
   AtUri,
   RichText as RichTextApi,
 } from '@atproto/api'
-import {msg, plural, Trans} from '@lingui/macro'
+import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
@@ -210,10 +210,9 @@ export function Likes({count}: {count: number}) {
   const t = useTheme()
   return (
     <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
-      {plural(count || 0, {
-        one: 'Liked by # user',
-        other: 'Liked by # users',
-      })}
+      <Trans>
+        Liked by <Plural value={count || 0} one="# user" other="# users" />
+      </Trans>
     </Text>
   )
 }

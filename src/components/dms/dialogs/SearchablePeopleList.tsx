@@ -15,7 +15,7 @@ import {sanitizeHandle} from '#/lib/strings/handles'
 import {isWeb} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
-import {useListConvosQuery} from '#/state/queries/messages/list-converations'
+import {useListConvosQuery} from '#/state/queries/messages/list-conversations'
 import {useProfileFollowsQuery} from '#/state/queries/profile-follows'
 import {useSession} from '#/state/session'
 import {ListMethods} from '#/view/com/util/List'
@@ -278,7 +278,7 @@ export function SearchablePeopleList({
           ) : null}
         </View>
 
-        <View style={[, web([a.pt_xs])]}>
+        <View style={web([a.pt_xs])}>
           <SearchInput
             inputRef={inputRef}
             value={searchText}
@@ -313,6 +313,7 @@ export function SearchablePeopleList({
         web([a.py_0, {height: '100vh', maxHeight: 600}, a.px_0]),
         native({height: '100%'}),
       ]}
+      webInnerContentContainerStyle={a.py_0}
       webInnerStyle={[a.py_0, {maxWidth: 500, minWidth: 200}]}
       keyboardDismissMode="on-drag"
     />

@@ -1,4 +1,3 @@
-import React from 'react'
 import {View} from 'react-native'
 import Animated, {
   Keyframe,
@@ -71,15 +70,15 @@ const circle2Keyframe = new Keyframe({
 export function AnimatedLikeIcon({
   isLiked,
   big,
-  isToggle,
+  hasBeenToggled,
 }: {
   isLiked: boolean
   big?: boolean
-  isToggle: boolean
+  hasBeenToggled: boolean
 }) {
   const t = useTheme()
   const size = big ? 22 : 18
-  const shouldAnimate = !useReducedMotion() && isToggle
+  const shouldAnimate = !useReducedMotion() && hasBeenToggled
 
   return (
     <View>
@@ -95,12 +94,10 @@ export function AnimatedLikeIcon({
             width={size}
           />
         )}
-        {isLiked ? (
+        {isLiked && shouldAnimate ? (
           <>
             <Animated.View
-              entering={
-                shouldAnimate ? circle1Keyframe.duration(300) : undefined
-              }
+              entering={circle1Keyframe.duration(300)}
               style={{
                 position: 'absolute',
                 backgroundColor: s.likeColor.color,
@@ -114,9 +111,7 @@ export function AnimatedLikeIcon({
               }}
             />
             <Animated.View
-              entering={
-                shouldAnimate ? circle2Keyframe.duration(300) : undefined
-              }
+              entering={circle2Keyframe.duration(300)}
               style={{
                 position: 'absolute',
                 backgroundColor: t.atoms.bg.backgroundColor,

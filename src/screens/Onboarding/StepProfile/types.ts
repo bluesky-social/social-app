@@ -14,7 +14,6 @@ import {Lab_Stroke2_Corner0_Rounded as Lab} from '#/components/icons/Lab'
 import {Leaf_Stroke2_Corner0_Rounded as Leaf} from '#/components/icons/Leaf'
 import {MusicNote_Stroke2_Corner0_Rounded as MusicNote} from '#/components/icons/MusicNote'
 import {PiggyBank_Stroke2_Corner0_Rounded as PiggyBank} from '#/components/icons/PiggyBank'
-import {Pizza_Stroke2_Corner0_Rounded as Pizza} from '#/components/icons/Pizza'
 import {Poop_Stroke2_Corner0_Rounded as Poop} from '#/components/icons/Poop'
 import {Rose_Stroke2_Corner0_Rounded as Rose} from '#/components/icons/Rose'
 import {Shaka_Stroke2_Corner0_Rounded as Shaka} from '#/components/icons/Shaka'
@@ -38,7 +37,6 @@ export const emojiNames = [
   'gameController',
   'leaf',
   'musicNote',
-  'pizza',
   'rose',
   'shaka',
   'ufo',
@@ -98,10 +96,6 @@ export const emojiItems: Record<EmojiName, Emoji> = {
   musicNote: {
     name: 'musicNote',
     component: MusicNote,
-  },
-  pizza: {
-    name: 'pizza',
-    component: Pizza,
   },
   rose: {
     name: 'rose',

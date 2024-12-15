@@ -57,7 +57,7 @@ export const SearchInput = React.forwardRef<TextInput, SearchInputProps>(
           <View
             style={[
               a.absolute,
-              a.z_10,
+              a.z_20,
               a.my_auto,
               a.inset_0,
               a.justify_center,
