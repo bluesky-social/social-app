@@ -15,8 +15,10 @@ import {useNavigationTabState} from '#/lib/hooks/useNavigationTabState'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {clamp} from '#/lib/numbers'
 import {getTabState, TabState} from '#/lib/routes/helpers'
+import {useGate} from '#/lib/statsig/statsig'
 import {s} from '#/lib/styles'
 import {emitSoftReset} from '#/state/events'
+import {useHomeBadge} from '#/state/home-badge'
 import {useUnreadMessageCount} from '#/state/queries/messages/list-conversations'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {useProfileQuery} from '#/state/queries/profile'
@@ -73,6 +75,8 @@ export function BottomBar({navigation}: BottomTabBarProps) {
   const dedupe = useDedupe()
   const accountSwitchControl = useDialogControl()
   const playHaptic = useHaptics()
+  const hasHomeBadge = useHomeBadge()
+  const gate = useGate()
   const iconWidth = 28
 
   const showSignIn = React.useCallback(() => {
@@ -153,6 +157,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
                   />
                 )
               }
+              hasNew={hasHomeBadge && gate('remove_show_latest_button')}
               onPress={onPressHome}
               accessibilityRole="tab"
               accessibilityLabel={_(msg`Home`)}
@@ -334,6 +339,7 @@ interface BtnProps
   testID?: string
   icon: JSX.Element
   notificationCount?: string
+  hasNew?: boolean
   onPress?: (event: GestureResponderEvent) => void
   onLongPress?: (event: GestureResponderEvent) => void
 }
@@ -341,6 +347,7 @@ interface BtnProps
 function Btn({
   testID,
   icon,
+  hasNew,
   notificationCount,
   onPress,
   onLongPress,
@@ -363,7 +370,9 @@ function Btn({
         <View style={[styles.notificationCount, a.rounded_full]}>
           <Text style={styles.notificationCountLabel}>{notificationCount}</Text>
         </View>
-      ) : undefined}
+      ) : hasNew ? (
+        <View style={[styles.hasNewBadge, a.rounded_full]} />
+      ) : null}
     </PressableScale>
   )
 }
