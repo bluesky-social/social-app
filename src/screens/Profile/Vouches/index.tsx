@@ -1,18 +1,18 @@
-import {View, ScrollView} from 'react-native'
-import {Trans, msg} from '@lingui/macro'
+import {ScrollView,View} from 'react-native'
+import {msg,Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {Loader} from '#/components/Loader'
-import * as Layout from '#/components/Layout'
-import {Text} from '#/components/Typography'
-import {atoms as a, useTheme, useGutters} from '#/alf'
-import {Link} from '#/components/Link'
-import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
-import {useSession} from '#/state/session'
 import {useVouchesIssued} from '#/state/queries/vouches/useVouchesIssued'
-import {Button, ButtonText, ButtonIcon} from '#/components/Button'
-import {UserAvatar} from '#/view/com/util/UserAvatar'
+import {useSession} from '#/state/session'
+import {Vouch} from '#/screens/Profile/Vouches/components/Vouch'
+import {atoms as a, useGutters,useTheme} from '#/alf'
+import {ButtonIcon,ButtonText} from '#/components/Button'
 import {Divider} from '#/components/Divider'
+import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
+import * as Layout from '#/components/Layout'
+import {Link} from '#/components/Link'
+import {Loader} from '#/components/Loader'
+import {Text} from '#/components/Typography'
 
 export function Screen() {
   const t = useTheme()
@@ -79,66 +79,59 @@ export function VouchesIssued() {
 
   return (
     <View style={[]}>
-      <View style={[a.flex_row, a.align_center, a.justify_between, baseGutters]}>
-        <Text style={[a.text_md, a.font_bold, t.atoms.text_contrast_medium]}>
-          <Trans>Vouches Issued</Trans>
-        </Text>
+      <View style={[baseGutters, a.pb_md]}>
+        <View style={[a.flex_row, a.align_center, a.justify_between, a.pb_xs]}>
+          <Text style={[a.text_lg, a.font_heavy, t.atoms.text_contrast_medium]}>
+            <Trans>Vouches Issued</Trans>
+          </Text>
 
-        <Link
-          label={_(msg`View All`)}
-          to={{
-            screen: 'ProfileVouchesIssued',
-            params: {name: currentAccount!.handle},
-          }}
-          size="small"
-          variant="ghost"
-          color="secondary"
-          shape="round"
-          style={[a.flex_row, a.align_center, a.justify_center]}>
-          <ButtonIcon icon={ChevronRight} />
-        </Link>
+          <Link
+            label={_(msg`View All`)}
+            to={{
+              screen: 'ProfileVouchesIssued',
+              params: {name: currentAccount!.handle},
+            }}
+            size="small"
+            variant="ghost"
+            color="secondary"
+            style={[a.flex_row, a.align_center, a.justify_center]}>
+            <ButtonText>
+              <Trans>See all</Trans>
+            </ButtonText>
+            <ButtonIcon icon={ChevronRight} position="right" />
+          </Link>
+        </View>
+        <Divider />
       </View>
 
-      <View style={[a.gap_sm]}>
-        {isLoading ? (
+      {isLoading ? (
+        <View style={[baseGutters, a.py_lg]}>
           <Loader />
-        ) : error || !vouches ? (
-          <>
-            {error ? (
-              <Text>{error.toString()}</Text>
-            ) : (
-              <Text>
-                <Trans>Somthing went wrong</Trans>
-              </Text>
-            )}
-          </>
-        ) : vouches.length ? (
-          <ScrollView horizontal style={[baseGutters]}>
-            {vouches.map(v => (
-              <View style={[a.p_sm, a.rounded_md, a.flex_1, a.gap_sm, t.atoms.bg_contrast_25, {
-                maxWidth: 300,
-              }]}>
-                <View style={[a.flex_row, a.align_start, a.gap_sm]}>
-                  <UserAvatar size={32} avatar={v.subject?.avatar} />
-                  <View style={[a.gap_2xs]}>
-                    <Text style={[a.text_md, a.font_bold, a.leading_tight]}>@{v.subject?.handle}</Text>
-                    <Text style={[a.leading_tight, t.atoms.text_contrast_medium]}>{v.record.relationship}</Text>
-                  </View>
-                </View>
-                <Divider />
-                <View style={[a.flex_row, a.align_start, a.gap_xl]}>
-                  <Text style={[a.font_bold, a.leading_tight]}>{v.accept ? 'Accepted' : 'Pending'}</Text>
-                  <Text style={[a.leading_tight]}>{v.record.createdAt}</Text>
-                </View>
-              </View>
-            ))}
-          </ScrollView>
-        ) : (
-          <>
-            <Text>No vouches</Text>
-          </>
-        )}
-      </View>
+        </View>
+      ) : error || !vouches ? (
+        <View style={[baseGutters, a.py_lg]}>
+          {error ? (
+            <Text>{error.toString()}</Text>
+          ) : (
+            <Text>
+              <Trans>Somthing went wrong</Trans>
+            </Text>
+          )}
+        </View>
+      ) : vouches.pages.at(0)?.vouches?.length ? (
+        <ScrollView
+          horizontal
+          style={[baseGutters]}
+          contentContainerStyle={[a.gap_md]}>
+          {vouches.pages[0].vouches.map(v => (
+            <Vouch key={v.cid} vouch={v} subject={v.subject!} />
+          ))}
+        </ScrollView>
+      ) : (
+        <View style={[baseGutters, a.py_lg]}>
+          <Text>No vouches</Text>
+        </View>
+      )}
     </View>
   )
 }

@@ -1,17 +1,20 @@
 import React from 'react'
 import {View} from 'react-native'
-import {Trans, msg} from '@lingui/macro'
+import {msg,Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {ZodError} from 'zod'
 
-import * as Layout from '#/components/Layout'
-import {atoms as a, useGutters} from '#/alf'
-import {Button, ButtonText, ButtonIcon} from '#/components/Button'
-import * as TextField from '#/components/forms/TextField'
+import {useNavigationDeduped} from '#/lib/hooks/useNavigationDeduped'
 import {useCreateVouch} from '#/state/queries/vouches/useCreateVouch'
-import {Loader} from '#/components/Loader'
-import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
+import {useSession} from '#/state/session'
+import * as Toast from '#/view/com/util/Toast'
+import {atoms as a, useGutters} from '#/alf'
 import {Admonition} from '#/components/Admonition'
+import {Button, ButtonIcon,ButtonText} from '#/components/Button'
+import * as TextField from '#/components/forms/TextField'
+import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
+import * as Layout from '#/components/Layout'
+import {Loader} from '#/components/Loader'
 
 export function Screen() {
   const baseGutters = useGutters(['base'])
@@ -39,6 +42,8 @@ export function Screen() {
 
 function Form() {
   const {_} = useLingui()
+  const navigation = useNavigationDeduped()
+  const {currentAccount} = useSession()
   const [subject, setSubject] = React.useState('')
   const [relationship, setRelationship] = React.useState('')
   const [errors, setErrors] = React.useState<string[]>([])
@@ -49,6 +54,10 @@ function Form() {
     setErrors([])
     try {
       await createVouch({subject, relationship})
+      navigation.navigate('ProfileVouches', {
+        name: currentAccount!.handle,
+      })
+      Toast.show(_(`Vouch created`), 'check')
     } catch (e: any) {
       if (e instanceof ZodError) {
         setErrors(e.errors.map(err => err.message))
