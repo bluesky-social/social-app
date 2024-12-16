@@ -273,6 +273,8 @@ function DialogInner() {
                     size="small"
                     onPress={() => {
                       setSelectedInterest(interest)
+                      inputRef.current?.clear()
+                      setSearchText('')
                       listRef.current?.scrollToOffset({
                         offset: 0,
                         animated: false,
