@@ -9,15 +9,16 @@ import {GradientFill} from '#/components/GradientFill'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import {Trending2_Stroke2_Corner2_Rounded as Graph} from '#/components/icons/Trending2'
 import * as Prompt from '#/components/Prompt'
-import * as Trending from '#/components/TrendingTopics'
+import {TrendingTopic, TrendingTopicLink} from '#/components/TrendingTopics'
 import {Text} from '#/components/Typography'
+import {useTrendingTopics} from '#/state/queries/trending/useTrendingTopics'
 
 export function TrendingInterstitial() {
   const t = useTheme()
   const {_} = useLingui()
   const gutters = useGutters(['base'])
   const trendingPrompt = Prompt.usePromptControl()
-
+  const {data: topics, error, isLoading} = useTrendingTopics()
   const {setTrendingDiscoverHidden} = useTrendingSettingsApi()
 
   return (
@@ -53,26 +54,25 @@ export function TrendingInterstitial() {
       </View>
 
       <View style={[a.flex_row, a.flex_wrap, a.gap_sm]}>
-        {Trending.TOP.slice(0, 8).map(topic => (
-          <Trending.Topic
-            topic={topic}
-          />
-        ))}
-        {/*Trending.TOPICS.slice(0, 8).map(topic => (
-          <Trending.Link key={topic} topic={topic}>
-            {({hovered}) => (
-              <Trending.TopicLarge
-                topic={topic}
-                style={[
-                  hovered && [
-                    t.atoms.border_contrast_high,
-                    t.atoms.bg_contrast_25,
-                  ],
-                ]}
-              />
-            )}
-          </Trending.Link>
-        ))*/}
+        {isLoading ? null : error || !topics ? null : (
+          <>
+            {topics.map(topic => (
+              <TrendingTopicLink key={topic.link} topic={topic}>
+                {({hovered}) => (
+                  <TrendingTopic
+                    topic={topic}
+                    style={[
+                      hovered && [
+                        t.atoms.border_contrast_high,
+                        t.atoms.bg_contrast_25,
+                      ],
+                    ]}
+                  />
+                )}
+              </TrendingTopicLink>
+            ))}
+          </>
+        )}
       </View>
 
       <Prompt.Basic
