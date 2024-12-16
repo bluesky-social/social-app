@@ -139,7 +139,9 @@ function DialogInner() {
         // your page-rank too high, so you're at the top of half the categories -sfn
         if (
           !hasSearchText &&
-          profile.did === 'did:plc:tpg43qhh4lw4ksiffs4nbda3'
+          profile.did === 'did:plc:tpg43qhh4lw4ksiffs4nbda3' &&
+          // constrain to 'tech'
+          selectedInterest !== 'tech'
         )
           continue
         _items.push({
@@ -160,7 +162,14 @@ function DialogInner() {
     }
 
     return _items
-  }, [_, searchResults, isError, currentAccount?.did, hasSearchText])
+  }, [
+    _,
+    searchResults,
+    isError,
+    currentAccount?.did,
+    hasSearchText,
+    selectedInterest,
+  ])
 
   if (searchText && !isFetching && !items.length && !isError) {
     items.push({type: 'empty', key: 'empty', message: _(msg`No results`)})
