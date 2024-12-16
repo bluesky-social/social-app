@@ -14,8 +14,10 @@ import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {getCurrentRoute, isTab} from '#/lib/routes/helpers'
 import {makeProfileLink} from '#/lib/routes/links'
 import {CommonNavigatorParams} from '#/lib/routes/types'
+import {useGate} from '#/lib/statsig/statsig'
 import {isInvalidHandle} from '#/lib/strings/handles'
 import {emitSoftReset} from '#/state/events'
+import {useHomeBadge} from '#/state/home-badge'
 import {useFetchHandle} from '#/state/queries/handle'
 import {useUnreadMessageCount} from '#/state/queries/messages/list-conversations'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
@@ -100,12 +102,13 @@ function ProfileCard() {
 
 interface NavItemProps {
   count?: string
+  hasNew?: boolean
   href: string
   icon: JSX.Element
   iconFilled: JSX.Element
   label: string
 }
-function NavItem({count, href, icon, iconFilled, label}: NavItemProps) {
+function NavItem({count, hasNew, href, icon, iconFilled, label}: NavItemProps) {
   const t = useTheme()
   const {_} = useLingui()
   const {currentAccount} = useSession()
@@ -214,6 +217,24 @@ function NavItem({count, href, icon, iconFilled, label}: NavItemProps) {
               {count}
             </Text>
           </View>
+        ) : hasNew ? (
+          <View
+            style={[
+              a.absolute,
+              a.rounded_full,
+              {
+                backgroundColor: t.palette.primary_500,
+                width: 8,
+                height: 8,
+                right: -1,
+                top: -3,
+              },
+              isTablet && {
+                right: 6,
+                top: 4,
+              },
+            ]}
+          />
         ) : null}
       </View>
       {gtTablet && (
@@ -322,6 +343,8 @@ export function DesktopLeftNav() {
   const {_} = useLingui()
   const {isDesktop, isTablet} = useWebMediaQueries()
   const numUnreadNotifications = useUnreadNotifications()
+  const hasHomeBadge = useHomeBadge()
+  const gate = useGate()
 
   if (!hasSession && !isDesktop) {
     return null
@@ -348,6 +371,7 @@ export function DesktopLeftNav() {
         <>
           <NavItem
             href="/"
+            hasNew={hasHomeBadge && gate('remove_show_latest_button')}
             icon={
               <Home
                 aria-hidden={true}

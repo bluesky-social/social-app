@@ -34,9 +34,12 @@ import {FAB} from '#/view/com/util/fab/FAB'
 import {Button} from '#/view/com/util/forms/Button'
 import {ListRef} from '#/view/com/util/List'
 import {LoadLatestBtn} from '#/view/com/util/load-latest/LoadLatestBtn'
-import {LoadingScreen} from '#/view/com/util/LoadingScreen'
+import {PostFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {Text} from '#/view/com/util/text/Text'
-import {ProfileFeedHeader} from '#/screens/Profile/components/ProfileFeedHeader'
+import {
+  ProfileFeedHeader,
+  ProfileFeedHeaderSkeleton,
+} from '#/screens/Profile/components/ProfileFeedHeader'
 import * as Layout from '#/components/Layout'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileFeed'>
@@ -92,12 +95,15 @@ export function ProfileFeedScreen(props: Props) {
   }
 
   return resolvedUri ? (
-    <Layout.Screen noInsetTop>
+    <Layout.Screen>
       <ProfileFeedScreenIntermediate feedUri={resolvedUri.uri} />
     </Layout.Screen>
   ) : (
     <Layout.Screen>
-      <LoadingScreen />
+      <Layout.Content>
+        <ProfileFeedHeaderSkeleton />
+        <PostFeedLoadingPlaceholder />
+      </Layout.Content>
     </Layout.Screen>
   )
 }
@@ -107,7 +113,12 @@ function ProfileFeedScreenIntermediate({feedUri}: {feedUri: string}) {
   const {data: info} = useFeedSourceInfoQuery({uri: feedUri})
 
   if (!preferences || !info) {
-    return <LoadingScreen />
+    return (
+      <Layout.Content>
+        <ProfileFeedHeaderSkeleton />
+        <PostFeedLoadingPlaceholder />
+      </Layout.Content>
+    )
   }
 
   return (
