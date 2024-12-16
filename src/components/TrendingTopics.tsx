@@ -5,37 +5,16 @@ import {useLingui} from '@lingui/react'
 import {AtUri} from '@atproto/api'
 import {hasMutedWord} from '@atproto/api/dist/moderation/mutewords'
 
-import {atoms as a, useGutters, useTheme, ViewStyleProp} from '#/alf'
+import {atoms as a, useTheme, ViewStyleProp} from '#/alf'
 import {Link as InternalLink, LinkProps} from '#/components/Link'
 import {Text} from '#/components/Typography'
-import {BSKY_APP_HOST, feedUriToHref} from '#/lib/strings/url-helpers'
-import {makeProfileLink, makeSearchLink} from '#/lib/routes/links'
+import {feedUriToHref} from '#/lib/strings/url-helpers'
+import {makeProfileLink} from '#/lib/routes/links'
 import {Hashtag_Stroke2_Corner0_Rounded as Hashtag} from '#/components/icons/Hashtag'
 import {MagnifyingGlass_Filled_Stroke2_Corner0_Rounded as Search} from '#/components/icons/MagnifyingGlass'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {usePreferencesQuery} from '#/state/queries/preferences'
-
-export function TopicLarge({topic, style}: {topic: string} & ViewStyleProp) {
-  const t = useTheme()
-  return (
-    <View
-      style={[
-        a.p_sm,
-        a.px_md,
-        a.rounded_md,
-        a.border,
-        t.atoms.border_contrast_medium,
-        t.atoms.bg,
-        style,
-      ]}>
-      <Text
-        style={[a.flex_1, a.text_md, a.font_bold, a.leading_tight]}
-        numberOfLines={1}>
-        {topic}
-      </Text>
-    </View>
-  )
-}
+import type {TrendingTopic} from '#/state/queries/trending/useTrendingTopics'
 
 export function TopicSmall({topic, style}: {topic: string} & ViewStyleProp) {
   const t = useTheme()
@@ -59,11 +38,11 @@ export function TopicSmall({topic, style}: {topic: string} & ViewStyleProp) {
   )
 }
 
-export function Topic({
+export function TrendingTopic({
   topic: raw,
   size,
   style,
-}: {topic: RawTopic; size?: 'large' | 'small'} & ViewStyleProp) {
+}: {topic: TrendingTopic; size?: 'large' | 'small'} & ViewStyleProp) {
   const t = useTheme()
   const topic = useTopic(raw)
 
@@ -111,6 +90,29 @@ export function Topic({
   )
 }
 
+export function TrendingTopicLink({
+  topic: raw,
+  children,
+  style,
+  ...rest
+}: {
+  topic: TrendingTopic
+} & Omit<LinkProps, 'to' | 'label'>) {
+  const topic = useTopic(raw)
+
+  if (!topic) return null
+
+  return (
+    <InternalLink
+      label={topic.label}
+      to={topic.url}
+      style={[a.flex_col, style]}
+      {...rest}>
+      {children}
+    </InternalLink>
+  )
+}
+
 export function Link({
   topic,
   children,
@@ -134,30 +136,6 @@ export function Link({
   )
 }
 
-export function Grid({topics}: {topics: string[]}) {
-  const t = useTheme()
-  const gutters = useGutters([0, 'compact'])
-  return (
-    <View style={[a.flex_row, a.flex_wrap, a.gap_sm, gutters]}>
-      {topics.map(topic => (
-        <Link key={topic} topic={topic}>
-          {({hovered}) => (
-            <TopicLarge
-              topic={topic}
-              style={[
-                hovered && [
-                  t.atoms.border_contrast_high,
-                  t.atoms.bg_contrast_25,
-                ],
-              ]}
-            />
-          )}
-        </Link>
-      ))}
-    </View>
-  )
-}
-
 // temp
 export const TOPICS = [
   '#atproto',
@@ -172,43 +150,17 @@ export const TOPICS = [
   'Open Web',
 ]
 
-export const TOP = [
-  {
-    name: '#atproto',
-    uri: 'https://bsky.app/hashtag/atproto',
-  },
-  {
-    name: 'South Korea',
-    uri: BSKY_APP_HOST + makeSearchLink({query: 'South Korea'}),
-  },
-  {
-    name: 'Paul Frazee',
-    uri: 'at://did:plc:ragtjsm2j2vknwkz3zp4oxrd/app.bsky.actor.profile/self'
-  },
-  {
-    name: 'Wired',
-    uri: BSKY_APP_HOST + makeSearchLink({query: 'Wired'}),
-  },
-  {
-    name: 'Quiet Posters',
-    uri: 'at://did:plc:vpkhqolt662uhesyj6nxm7ys/app.bsky.feed.generator/infreq',
-  },
-]
-
-type RawTopic = {
-  name: string
-  uri: string
-}
-
-type Topic =
+type ParsedTrendingTopic =
   | {
       type: 'topic' | 'tag'
+      label: string
       name: string
       url: string
       uri: undefined
     }
   | {
       type: 'profile' | 'feed'
+      label: string
       name: string
       url: string
       uri: AtUri
@@ -221,32 +173,34 @@ export function useMutedWords() {
   }, [preferences?.moderationPrefs?.mutedWords])
 }
 
-export function useTopic(topic: RawTopic): Topic | undefined {
+export function useTopic(raw: TrendingTopic): ParsedTrendingTopic | undefined {
+  const {_} = useLingui()
   const mutedWords = useMutedWords()
+
   return React.useMemo(() => {
-    const {name, uri} = topic
+    const {topic: name, link: uri} = raw
 
     if (hasMutedWord({
       mutedWords,
       text: name
     })) return
 
-    if (uri.startsWith('https')) {
-      const url = new URL(uri)
-      if (url.origin !== BSKY_APP_HOST) return
-      if (url.pathname.startsWith('/search')) {
+    if (!uri.startsWith('at://')) {
+      if (uri.startsWith('/search')) {
         return {
           type: 'topic',
+          label: _(msg`Browse posts about ${name}`),
           name,
-          url: url.pathname,
           uri: undefined,
+          url: uri,
         }
-      } else if (url.pathname.startsWith('/hashtag')) {
+      } else if (uri.startsWith('/hashtag')) {
         return {
           type: 'tag',
+          label: _(msg`Browse posts tagged with ${name}`),
           name: name.replace(/^#/, ''),
-          url: url.pathname,
           uri: undefined,
+          url: uri,
         }
       }
     } else {
@@ -255,6 +209,7 @@ export function useTopic(topic: RawTopic): Topic | undefined {
         case 'app.bsky.actor.profile': {
           return {
             type: 'profile',
+            label: _(msg`View ${name}'s profile`),
             name,
             uri: urip,
             url: makeProfileLink({did: urip.host, handle: urip.host}),
@@ -263,6 +218,7 @@ export function useTopic(topic: RawTopic): Topic | undefined {
         case 'app.bsky.feed.generator': {
           return {
             type: 'feed',
+            label: _(msg`Browse the ${name} feed`),
             name,
             uri: urip,
             url: feedUriToHref(uri),
@@ -270,5 +226,5 @@ export function useTopic(topic: RawTopic): Topic | undefined {
         }
       }
     }
-  }, [topic, mutedWords])
+  }, [raw, mutedWords])
 }

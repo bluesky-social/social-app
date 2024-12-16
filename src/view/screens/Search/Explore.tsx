@@ -39,6 +39,7 @@ import {Loader} from '#/components/Loader'
 import * as StarterPackSuggestions from '#/components/StarterPack/Suggestions'
 import * as TrendingTopics from '#/components/TrendingTopics'
 import {Text} from '#/components/Typography'
+import {ExploreTrendingTopics} from "#/screens/Search/components/ExploreTrendingTopics"
 
 function SuggestedItemsHeader({
   title,
@@ -610,7 +611,7 @@ export function Explore() {
                 }
               />
               <View style={[a.pt_md, a.pb_lg]}>
-                <TrendingTopics.Grid topics={item.topics} />
+                <ExploreTrendingTopics />
               </View>
             </>
           )
