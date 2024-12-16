@@ -213,7 +213,6 @@
     "@babel/runtime": "^7.26.0",
     "@did-plc/server": "^0.0.1",
     "@expo/config-plugins": "9.0.10",
-    "@expo/prebuild-config": "8.0.22",
     "@lingui/cli": "^4.14.1",
     "@lingui/macro": "^4.14.1",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.15",
