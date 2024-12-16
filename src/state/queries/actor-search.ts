@@ -1,6 +1,7 @@
 import {AppBskyActorDefs, AppBskyActorSearchActors} from '@atproto/api'
 import {
   InfiniteData,
+  keepPreviousData,
   QueryClient,
   QueryKey,
   useInfiniteQuery,
@@ -42,9 +43,11 @@ export function useActorSearch({
 export function useActorSearchPaginated({
   query,
   enabled,
+  maintainData,
 }: {
   query: string
   enabled?: boolean
+  maintainData?: boolean
 }) {
   const agent = useAgent()
   return useInfiniteQuery<
@@ -67,6 +70,7 @@ export function useActorSearchPaginated({
     enabled: enabled && !!query,
     initialPageParam: undefined,
     getNextPageParam: lastPage => lastPage.cursor,
+    placeholderData: maintainData ? keepPreviousData : undefined,
   })
 }
 

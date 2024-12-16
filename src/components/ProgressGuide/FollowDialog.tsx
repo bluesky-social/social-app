@@ -1,9 +1,7 @@
-import {useRef, useState} from 'react'
-import {useWindowDimensions, View} from 'react-native'
-import {ScrollView} from 'react-native'
+import {useCallback, useLayoutEffect, useMemo, useRef, useState} from 'react'
+import {ScrollView, TextInput, useWindowDimensions, View} from 'react-native'
 import Animated, {
   LayoutAnimationConfig,
-  LinearTransition,
   ZoomIn,
   ZoomOut,
 } from 'react-native-reanimated'
@@ -11,13 +9,15 @@ import {AppBskyActorDefs, ModerationOpts} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {isNative} from '#/platform/detection'
+import {cleanError} from '#/lib/strings/errors'
+import {logger} from '#/logger'
+import {isWeb} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
+import {useActorSearchPaginated} from '#/state/queries/actor-search'
 import {usePreferencesQuery} from '#/state/queries/preferences'
-import {
-  useSuggestedFollowsByActorQuery,
-  useSuggestedFollowsQuery,
-} from '#/state/queries/suggested-follows'
+import {useSuggestedFollowsByActorQuery} from '#/state/queries/suggested-follows'
+import {useSession} from '#/state/session'
+import {ListMethods} from '#/view/com/util/List'
 import {useInterestsDisplayNames} from '#/screens/Onboarding/state'
 import {
   atoms as a,
@@ -26,15 +26,38 @@ import {
   useBreakpoints,
   useTheme,
   ViewStyleProp,
+  web,
 } from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
+import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {MagnifyingGlass2_Stroke2_Corner0_Rounded as SearchIcon} from '#/components/icons/MagnifyingGlass2'
+import {PersonGroup_Stroke2_Corner2_Rounded as PersonGroupIcon} from '#/components/icons/Person'
+import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
+import {Loader} from '#/components/Loader'
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
-import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as ArrowRotateIcon} from '../icons/ArrowRotateCounterClockwise'
-import {PersonGroup_Stroke2_Corner2_Rounded as PersonGroupIcon} from '../icons/Person'
-import {Loader} from '../Loader'
+import {ListFooter} from '../Lists'
+
+type Item =
+  | {
+      type: 'profile'
+      key: string
+      profile: AppBskyActorDefs.ProfileView
+    }
+  | {
+      type: 'empty'
+      key: string
+      message: string
+    }
+  | {
+      type: 'placeholder'
+      key: string
+    }
+  | {
+      type: 'error'
+      key: string
+    }
 
 export function FollowDialog() {
   const {_} = useLingui()
@@ -65,90 +88,242 @@ export function FollowDialog() {
 
 function DialogInner() {
   const {_} = useLingui()
-
+  const t = useTheme()
   const interestsDisplayNames = useInterestsDisplayNames()
   const {data: preferences} = usePreferencesQuery()
   const moderationOpts = useModerationOpts()
-  const suggestions = useSuggestedFollowsQuery({limit: 6})
-  const ref = useRef<ScrollView>(null)
+  const listRef = useRef<ListMethods>(null)
+  const inputRef = useRef<TextInput>(null)
+  const control = Dialog.useDialogContext()
+  const {currentAccount} = useSession()
+  const [searchText, setSearchText] = useState('')
+
+  const personalizedInterests = preferences?.interests?.tags
+  const interests = Object.keys(interestsDisplayNames).sort((a, b) => {
+    const indexA = personalizedInterests?.indexOf(a) ?? -1
+    const indexB = personalizedInterests?.indexOf(b) ?? -1
+    const rankA = indexA === -1 ? Infinity : indexA
+    const rankB = indexB === -1 ? Infinity : indexB
+    return rankA - rankB
+  })
+  const [selectedInterest, setSelectedInterest] = useState(
+    personalizedInterests && interests.includes(personalizedInterests[0])
+      ? personalizedInterests[0]
+      : interests[0],
+  )
+
+  const {
+    data: searchResults,
+    isFetching,
+    error,
+    isError,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+  } = useActorSearchPaginated({
+    query: searchText || selectedInterest,
+  })
+
+  const items = useMemo(() => {
+    const results = searchResults?.pages.flatMap(r => r.actors)
+    let _items: Item[] = []
+
+    if (isError) {
+      _items.push({
+        type: 'empty',
+        key: 'empty',
+        message: _(msg`We're having network issues, try again`),
+      })
+    } else if (results?.length) {
+      for (const profile of results) {
+        if (profile.did === currentAccount?.did) continue
+        if (profile.viewer?.following) continue
+        _items.push({
+          type: 'profile',
+          key: profile.did,
+          profile,
+        })
+      }
+    } else {
+      const placeholders: Item[] = Array(10)
+        .fill(0)
+        .map((__, i) => ({
+          type: 'placeholder',
+          key: i + '',
+        }))
+
+      _items.push(...placeholders)
+    }
+
+    return _items
+  }, [_, searchResults, isError, currentAccount?.did])
+
+  if (searchText && !isFetching && !items.length && !isError) {
+    items.push({type: 'empty', key: 'empty', message: _(msg`No results`)})
+  }
+
+  const renderItems = useCallback(
+    ({item}: {item: Item}) => {
+      switch (item.type) {
+        case 'profile': {
+          return (
+            <ReplacableProfileCard
+              key={item.key}
+              profile={item.profile}
+              moderationOpts={moderationOpts!}
+            />
+          )
+        }
+        case 'placeholder': {
+          return <ProfileCardSkeleton key={item.key} />
+        }
+        case 'empty': {
+          return <Empty key={item.key} message={item.message} />
+        }
+        default:
+          return null
+      }
+    },
+    [moderationOpts],
+  )
+
+  useLayoutEffect(() => {
+    if (isWeb) {
+      setImmediate(() => {
+        inputRef?.current?.focus()
+      })
+    }
+  }, [])
+
+  const listHeader = useMemo(() => {
+    return (
+      <View
+        style={[
+          a.relative,
+          web(a.pt_lg),
+          native(a.pt_4xl),
+          a.pb_xs,
+          a.px_lg,
+          a.border_b,
+          t.atoms.border_contrast_low,
+          t.atoms.bg,
+        ]}>
+        <View style={[a.relative, native(a.align_center), a.justify_center]}>
+          <Text
+            style={[
+              a.z_10,
+              a.text_lg,
+              a.font_heavy,
+              a.leading_tight,
+              t.atoms.text_contrast_high,
+            ]}>
+            Find people to follow
+          </Text>
+          {isWeb ? (
+            <Button
+              label={_(msg`Close`)}
+              size="small"
+              shape="round"
+              variant={isWeb ? 'ghost' : 'solid'}
+              color="secondary"
+              style={[
+                a.absolute,
+                a.z_20,
+                web({right: -4}),
+                native({right: 0}),
+                native({height: 32, width: 32, borderRadius: 16}),
+              ]}
+              onPress={() => control.close()}>
+              <ButtonIcon icon={X} size="md" />
+            </Button>
+          ) : null}
+        </View>
+
+        <View style={[web(a.pt_xs), a.pb_xs]}>
+          <SearchInput
+            inputRef={inputRef}
+            onChangeText={text => {
+              setSearchText(text)
+              listRef.current?.scrollToOffset({offset: 0, animated: false})
+            }}
+            onEscape={control.close}
+          />
+          <ScrollView
+            horizontal
+            contentContainerStyle={[a.gap_sm, a.px_xl]}
+            style={{marginHorizontal: -tokens.space.xl}}
+            showsHorizontalScrollIndicator={false}>
+            {interests.map(interest => {
+              const active = interest === selectedInterest && !searchText
+              return (
+                <Button
+                  key={interest}
+                  label={interestsDisplayNames[interest]}
+                  variant={active ? 'solid' : 'outline'}
+                  color={active ? 'primary' : 'secondary'}
+                  size="small"
+                  onPress={() => {
+                    setSelectedInterest(interest)
+                    listRef.current?.scrollToOffset({
+                      offset: 0,
+                      animated: false,
+                    })
+                  }}>
+                  <ButtonIcon icon={SearchIcon} />
+                  <ButtonText>{interestsDisplayNames[interest]}</ButtonText>
+                </Button>
+              )
+            })}
+          </ScrollView>
+        </View>
+      </View>
+    )
+  }, [
+    t.atoms.border_contrast_low,
+    t.atoms.bg,
+    t.atoms.text_contrast_high,
+    _,
+    control,
+    searchText,
+    selectedInterest,
+    interests,
+    interestsDisplayNames,
+    setSelectedInterest,
+  ])
+
+  const onEndReached = useCallback(async () => {
+    if (isFetchingNextPage || !hasNextPage || isError) return
+    try {
+      await fetchNextPage()
+    } catch (err) {
+      logger.error('Failed to load more people to follow', {message: err})
+    }
+  }, [isFetchingNextPage, hasNextPage, isError, fetchNextPage])
 
   return (
-    <Dialog.ScrollableInner
-      ref={isNative ? ref : undefined}
-      label={_(msg`Find people to follow`)}
-      contentContainerStyle={[a.gap_md]}>
-      <Text style={[a.font_heavy, a.text_2xl]}>
-        <Trans>Find people to follow</Trans>
-      </Text>
-      <ScrollView
-        horizontal
-        contentContainerStyle={[a.gap_sm, a.px_xl]}
-        style={{marginHorizontal: -tokens.space.xl}}
-        showsHorizontalScrollIndicator={false}>
-        <Button
-          label={_(msg`For you`)}
-          variant="solid"
-          color="primary"
-          size="small">
-          <ButtonText>For you</ButtonText>
-        </Button>
-        {preferences?.interests &&
-          preferences.interests.tags.map(interest => (
-            <Button
-              key={interest}
-              label={interestsDisplayNames[interest]}
-              variant="outline"
-              color="secondary"
-              size="small">
-              <ButtonIcon icon={SearchIcon} />
-              <ButtonText>{interestsDisplayNames[interest]}</ButtonText>
-            </Button>
-          ))}
-      </ScrollView>
-      {suggestions.data && moderationOpts ? (
-        <View style={[a.pb_xl]}>
-          {suggestions.data.pages.at(-1)?.actors.map((profile, i) => (
-            <Animated.View
-              key={profile.did}
-              entering={native(ZoomIn.delay(i * 100))}
-              exiting={native(ZoomOut.delay(i * 100))}
-              layout={native(LinearTransition)}>
-              <ReplacableProfileCard
-                profile={profile}
-                moderationOpts={moderationOpts}
-              />
-            </Animated.View>
-          ))}
-          <Animated.View
-            style={[a.justify_center, a.flex_row]}
-            layout={native(LinearTransition)}>
-            <Button
-              label={_(msg`Reshuffle`)}
-              onPress={() =>
-                suggestions.fetchNextPage().then(() => {
-                  if (isNative) ref.current?.scrollTo({y: 0, animated: true})
-                })
-              }
-              size="small"
-              color="secondary"
-              variant="solid">
-              <ButtonIcon
-                icon={suggestions.isFetchingNextPage ? Loader : ArrowRotateIcon}
-              />
-              <ButtonText>
-                <Trans>Reshuffle</Trans>
-              </ButtonText>
-            </Button>
-          </Animated.View>
-        </View>
-      ) : (
-        <View
-          style={[{height: 300}, a.w_full, a.justify_center, a.align_center]}>
-          <Loader />
-        </View>
-      )}
-      <Dialog.Close />
-    </Dialog.ScrollableInner>
+    <Dialog.InnerFlatList
+      ref={listRef}
+      data={items}
+      renderItem={renderItems}
+      ListHeaderComponent={listHeader}
+      stickyHeaderIndices={[0]}
+      keyExtractor={(item: Item) => item.key}
+      style={[
+        web([a.py_0, {height: '100vh', maxHeight: 600}, a.px_0]),
+        native({height: '100%'}),
+      ]}
+      webInnerContentContainerStyle={a.py_0}
+      webInnerStyle={[a.py_0, {maxWidth: 500, minWidth: 200}]}
+      keyboardDismissMode="on-drag"
+      onEndReached={onEndReached}
+      ListFooterComponent={
+        <ListFooter
+          isFetchingNextPage={isFetchingNextPage}
+          error={cleanError(error)}
+          onRetry={fetchNextPage}
+        />
+      }
+    />
   )
 }
 
@@ -197,7 +372,10 @@ function ReplacableProfileCard({
           )
         )
       ) : (
-        <Animated.View exiting={native(ZoomOut)} key="out" style={[a.pb_md]}>
+        <Animated.View
+          exiting={native(ZoomOut)}
+          key="out"
+          style={[a.pt_md, a.px_lg]}>
           <ReplacableProfileCardInner
             profile={profile}
             moderationOpts={moderationOpts}
@@ -275,6 +453,119 @@ function CardOuter({
         style,
       ]}>
       {children}
+    </View>
+  )
+}
+
+function SearchInput({
+  onChangeText,
+  onEscape,
+  inputRef,
+}: {
+  onChangeText: (text: string) => void
+  onEscape: () => void
+  inputRef: React.RefObject<TextInput>
+}) {
+  const t = useTheme()
+  const {_} = useLingui()
+  const {
+    state: hovered,
+    onIn: onMouseEnter,
+    onOut: onMouseLeave,
+  } = useInteractionState()
+  const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
+  const interacted = hovered || focused
+
+  return (
+    <View
+      {...web({
+        onMouseEnter,
+        onMouseLeave,
+      })}
+      style={[a.flex_row, a.align_center, a.gap_sm]}>
+      <SearchIcon
+        size="md"
+        fill={interacted ? t.palette.primary_500 : t.palette.contrast_300}
+      />
+
+      <TextInput
+        ref={inputRef}
+        placeholder={_(msg`Search`)}
+        onChangeText={onChangeText}
+        onFocus={onFocus}
+        onBlur={onBlur}
+        style={[a.flex_1, a.py_md, a.text_md, t.atoms.text]}
+        placeholderTextColor={t.palette.contrast_500}
+        keyboardAppearance={t.name === 'light' ? 'light' : 'dark'}
+        returnKeyType="search"
+        clearButtonMode="while-editing"
+        maxLength={50}
+        onKeyPress={({nativeEvent}) => {
+          if (nativeEvent.key === 'Escape') {
+            onEscape()
+          }
+        }}
+        autoCorrect={false}
+        autoComplete="off"
+        autoCapitalize="none"
+        autoFocus
+        accessibilityLabel={_(msg`Search profiles`)}
+        accessibilityHint={_(msg`Search profiles`)}
+      />
+    </View>
+  )
+}
+
+function ProfileCardSkeleton() {
+  const t = useTheme()
+
+  return (
+    <View
+      style={[
+        a.flex_1,
+        a.py_md,
+        a.px_lg,
+        a.gap_md,
+        a.align_center,
+        a.flex_row,
+      ]}>
+      <View
+        style={[
+          a.rounded_full,
+          {width: 42, height: 42},
+          t.atoms.bg_contrast_25,
+        ]}
+      />
+
+      <View style={[a.flex_1, a.gap_sm]}>
+        <View
+          style={[
+            a.rounded_xs,
+            {width: 80, height: 14},
+            t.atoms.bg_contrast_25,
+          ]}
+        />
+        <View
+          style={[
+            a.rounded_xs,
+            {width: 120, height: 10},
+            t.atoms.bg_contrast_25,
+          ]}
+        />
+      </View>
+    </View>
+  )
+}
+
+function Empty({message}: {message: string}) {
+  const t = useTheme()
+  return (
+    <View style={[a.p_lg, a.py_xl, a.align_center, a.gap_md]}>
+      <Text style={[a.text_sm, a.italic, t.atoms.text_contrast_high]}>
+        {message}
+      </Text>
+
+      <Text style={[a.text_xs, t.atoms.text_contrast_low]}>(╯°□°)╯︵ ┻━┻</Text>
     </View>
   )
 }
