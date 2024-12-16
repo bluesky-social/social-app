@@ -22,6 +22,7 @@ import {
   ensureGeolocationResolved,
   Provider as GeolocationProvider,
 } from '#/state/geolocation'
+import {Provider as HomeBadgeProvider} from '#/state/home-badge'
 import {Provider as InvitesStateProvider} from '#/state/invites'
 import {Provider as LightboxStateProvider} from '#/state/lightbox'
 import {MessagesProvider} from '#/state/messages'
@@ -120,18 +121,20 @@ function InnerApp() {
                             <LoggedOutViewProvider>
                               <SelectedFeedProvider>
                                 <HiddenRepliesProvider>
-                                  <UnreadNotifsProvider>
-                                    <BackgroundNotificationPreferencesProvider>
-                                      <MutedThreadsProvider>
-                                        <SafeAreaProvider>
-                                          <ProgressGuideProvider>
-                                            <Shell />
-                                            <NuxDialogs />
-                                          </ProgressGuideProvider>
-                                        </SafeAreaProvider>
-                                      </MutedThreadsProvider>
-                                    </BackgroundNotificationPreferencesProvider>
-                                  </UnreadNotifsProvider>
+                                  <HomeBadgeProvider>
+                                    <UnreadNotifsProvider>
+                                      <BackgroundNotificationPreferencesProvider>
+                                        <MutedThreadsProvider>
+                                          <SafeAreaProvider>
+                                            <ProgressGuideProvider>
+                                              <Shell />
+                                              <NuxDialogs />
+                                            </ProgressGuideProvider>
+                                          </SafeAreaProvider>
+                                        </MutedThreadsProvider>
+                                      </BackgroundNotificationPreferencesProvider>
+                                    </UnreadNotifsProvider>
+                                  </HomeBadgeProvider>
                                 </HiddenRepliesProvider>
                               </SelectedFeedProvider>
                             </LoggedOutViewProvider>
