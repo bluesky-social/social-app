@@ -12,6 +12,7 @@ import {useLingui} from '@lingui/react'
 import {DismissableLayer} from '@radix-ui/react-dismissable-layer'
 import {useFocusGuards} from '@radix-ui/react-focus-guards'
 import {FocusScope} from '@radix-ui/react-focus-scope'
+import {RemoveScrollBar} from 'react-remove-scroll-bar'
 
 import {logger} from '#/logger'
 import {useDialogStateControlContext} from '#/state/dialogs'
@@ -103,6 +104,7 @@ export function Outer({
       {isOpen && (
         <Portal>
           <Context.Provider value={context}>
+            <RemoveScrollBar />
             <TouchableWithoutFeedback
               accessibilityHint={undefined}
               accessibilityLabel={_(msg`Close active dialog`)}

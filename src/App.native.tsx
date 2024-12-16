@@ -1,5 +1,6 @@
 import 'react-native-url-polyfill/auto'
 import '#/lib/sentry' // must be near top
+import '#/lib/bitdrift' // must be near top
 import '#/view/icons'
 
 import React, {useEffect, useState} from 'react'
@@ -16,11 +17,7 @@ import {useLingui} from '@lingui/react'
 
 import {KeyboardControllerProvider} from '#/lib/hooks/useEnableKeyboardController'
 import {QueryProvider} from '#/lib/react-query'
-import {
-  initialize,
-  Provider as StatsigProvider,
-  tryFetchGates,
-} from '#/lib/statsig/statsig'
+import {Provider as StatsigProvider, tryFetchGates} from '#/lib/statsig/statsig'
 import {s} from '#/lib/styles'
 import {ThemeProvider} from '#/lib/ThemeContext'
 import I18nProvider from '#/locale/i18nProvider'
@@ -35,6 +32,7 @@ import {
   ensureGeolocationResolved,
   Provider as GeolocationProvider,
 } from '#/state/geolocation'
+import {Provider as HomeBadgeProvider} from '#/state/home-badge'
 import {Provider as InvitesStateProvider} from '#/state/invites'
 import {Provider as LightboxStateProvider} from '#/state/lightbox'
 import {MessagesProvider} from '#/state/messages'
@@ -53,6 +51,7 @@ import {
 import {readLastActiveAccount} from '#/state/session/util'
 import {Provider as ShellStateProvider} from '#/state/shell'
 import {Provider as ComposerProvider} from '#/state/shell/composer'
+import {Provider as LightStatusBarProvider} from '#/state/shell/light-status-bar'
 import {Provider as LoggedOutViewProvider} from '#/state/shell/logged-out'
 import {Provider as ProgressGuideProvider} from '#/state/shell/progress-guide'
 import {Provider as SelectedFeedProvider} from '#/state/shell/selected-feed'
@@ -99,7 +98,6 @@ function InnerApp() {
         if (account) {
           await resumeSession(account)
         } else {
-          await initialize()
           await tryFetchGates(undefined, 'prefer-fresh-gates')
         }
       } catch (e) {
@@ -140,20 +138,22 @@ function InnerApp() {
                             <LoggedOutViewProvider>
                               <SelectedFeedProvider>
                                 <HiddenRepliesProvider>
-                                  <UnreadNotifsProvider>
-                                    <BackgroundNotificationPreferencesProvider>
-                                      <MutedThreadsProvider>
-                                        <ProgressGuideProvider>
-                                          <GestureHandlerRootView
-                                            style={s.h100pct}>
-                                            <TestCtrls />
-                                            <Shell />
-                                            <NuxDialogs />
-                                          </GestureHandlerRootView>
-                                        </ProgressGuideProvider>
-                                      </MutedThreadsProvider>
-                                    </BackgroundNotificationPreferencesProvider>
-                                  </UnreadNotifsProvider>
+                                  <HomeBadgeProvider>
+                                    <UnreadNotifsProvider>
+                                      <BackgroundNotificationPreferencesProvider>
+                                        <MutedThreadsProvider>
+                                          <ProgressGuideProvider>
+                                            <GestureHandlerRootView
+                                              style={s.h100pct}>
+                                              <TestCtrls />
+                                              <Shell />
+                                              <NuxDialogs />
+                                            </GestureHandlerRootView>
+                                          </ProgressGuideProvider>
+                                        </MutedThreadsProvider>
+                                      </BackgroundNotificationPreferencesProvider>
+                                    </UnreadNotifsProvider>
+                                  </HomeBadgeProvider>
                                 </HiddenRepliesProvider>
                               </SelectedFeedProvider>
                             </LoggedOutViewProvider>
@@ -208,7 +208,9 @@ function App() {
                                   <SafeAreaProvider
                                     initialMetrics={initialWindowMetrics}>
                                     <IntentDialogProvider>
-                                      <InnerApp />
+                                      <LightStatusBarProvider>
+                                        <InnerApp />
+                                      </LightStatusBarProvider>
                                     </IntentDialogProvider>
                                   </SafeAreaProvider>
                                 </StarterPackProvider>

@@ -13,7 +13,7 @@ import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
 import {isNative} from '#/platform/detection'
 import {useSession} from '#/state/session'
 import {useSetThemePrefs, useThemePrefs} from '#/state/shell'
-import {Logo} from '#/view/icons/Logo'
+import {SettingsListItem as AppIconSettingsListItem} from '#/screens/Settings/AppIconSettings/SettingsListItem'
 import {atoms as a, native, useAlf, useTheme} from '#/alf'
 import * as ToggleButton from '#/components/forms/ToggleButton'
 import {Props as SVGIconProps} from '#/components/icons/common'
@@ -79,7 +79,15 @@ export function AppearanceSettingsScreen({}: Props) {
   return (
     <LayoutAnimationConfig skipExiting skipEntering>
       <Layout.Screen testID="preferencesThreadsScreen">
-        <Layout.Header title={_(msg`Appearance`)} />
+        <Layout.Header.Outer>
+          <Layout.Header.BackButton />
+          <Layout.Header.Content>
+            <Layout.Header.TitleText>
+              <Trans>Appearance</Trans>
+            </Layout.Header.TitleText>
+          </Layout.Header.Content>
+          <Layout.Header.Slot />
+        </Layout.Header.Outer>
         <Layout.Content>
           <SettingsList.Container>
             <AppearanceToggleButtonGroup
@@ -173,15 +181,7 @@ export function AppearanceSettingsScreen({}: Props) {
               {isNative && DISCOVER_DEBUG_DIDS[currentAccount?.did ?? ''] && (
                 <>
                   <SettingsList.Divider />
-
-                  <SettingsList.LinkItem
-                    to="/settings/app-icon"
-                    label={_(msg`App Icon`)}>
-                    <SettingsList.ItemIcon icon={Logo} />
-                    <SettingsList.ItemText>
-                      <Trans>App Icon</Trans>
-                    </SettingsList.ItemText>
-                  </SettingsList.LinkItem>
+                  <AppIconSettingsListItem />
                 </>
               )}
             </Animated.View>

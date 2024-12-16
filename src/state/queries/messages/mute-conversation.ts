@@ -8,7 +8,7 @@ import {InfiniteData, useMutation, useQueryClient} from '@tanstack/react-query'
 import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
 import {useAgent} from '#/state/session'
 import {RQKEY as CONVO_KEY} from './conversation'
-import {RQKEY as CONVO_LIST_KEY} from './list-converations'
+import {RQKEY as CONVO_LIST_KEY} from './list-conversations'
 
 export function useMuteConvo(
   convoId: string | undefined,

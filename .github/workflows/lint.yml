@@ -54,4 +54,4 @@ jobs:
         run: yarn intl:build
       - name: Run tests
         run: |
-          NODE_ENV=test EXPO_PUBLIC_ENV=test yarn test --forceExit
+          NODE_ENV=test yarn test --forceExit

@@ -7,7 +7,12 @@ import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import {atoms as a, flatten, useTheme, web} from '#/alf'
 import * as Dialog from '#/components/Dialog'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
-import {Context, ItemContext} from '#/components/Menu/context'
+import {
+  Context,
+  ItemContext,
+  useMenuContext,
+  useMenuItemContext,
+} from '#/components/Menu/context'
 import {
   ContextType,
   GroupProps,
@@ -38,10 +43,6 @@ export function useMenuControl(): Dialog.DialogControlProps {
     }),
     [id, isOpen, setIsOpen],
   )
-}
-
-export function useMemoControlContext() {
-  return React.useContext(Context)
 }
 
 export function Root({
@@ -110,7 +111,7 @@ const RadixTriggerPassThrough = React.forwardRef(
 RadixTriggerPassThrough.displayName = 'RadixTriggerPassThrough'
 
 export function Trigger({children, label, role = 'button'}: TriggerProps) {
-  const {control} = React.useContext(Context)
+  const {control} = useMenuContext()
   const {
     state: hovered,
     onIn: onMouseEnter,
@@ -203,7 +204,7 @@ export function Outer({
 
 export function Item({children, label, onPress, ...rest}: ItemProps) {
   const t = useTheme()
-  const {control} = React.useContext(Context)
+  const {control} = useMenuContext()
   const {
     state: hovered,
     onIn: onMouseEnter,
@@ -262,7 +263,7 @@ export function Item({children, label, onPress, ...rest}: ItemProps) {
 
 export function ItemText({children, style}: ItemTextProps) {
   const t = useTheme()
-  const {disabled} = React.useContext(ItemContext)
+  const {disabled} = useMenuItemContext()
   return (
     <Text
       style={[
@@ -279,7 +280,7 @@ export function ItemText({children, style}: ItemTextProps) {
 
 export function ItemIcon({icon: Comp, position = 'left'}: ItemIconProps) {
   const t = useTheme()
-  const {disabled} = React.useContext(ItemContext)
+  const {disabled} = useMenuItemContext()
   return (
     <View
       style={[
