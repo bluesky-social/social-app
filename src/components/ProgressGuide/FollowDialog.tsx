@@ -225,7 +225,7 @@ function DialogInner() {
               a.leading_tight,
               t.atoms.text_contrast_high,
             ]}>
-            Find people to follow
+            <Trans>Find people to follow</Trans>
           </Text>
           {isWeb ? (
             <Button
