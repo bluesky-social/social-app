@@ -268,8 +268,8 @@
     "@react-native/normalize-colors": "0.76.1",
     "@radix-ui/react-focus-scope": "1.1.0",
     "@types/react": "^18",
-    "**/expo-constants": "16.0.1",
-    "**/expo-device": "6.0.2",
+    "**/expo-constants": "17.0.3",
+    "**/expo-device": "7.0.1",
     "**/zod": "3.23.8"
   },
   "jest": {
