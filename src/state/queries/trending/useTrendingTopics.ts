@@ -4,6 +4,7 @@ import {useQuery} from '@tanstack/react-query'
 
 // TEMP
 import {makeSearchLink} from '#/lib/routes/links'
+import {STALE} from '#/state/queries'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 
 export type TrendingTopic = {
@@ -24,6 +25,8 @@ export function useTrendingTopics() {
   }, [preferences?.moderationPrefs])
 
   return useQuery({
+    refetchOnWindowFocus: true,
+    staleTime: STALE.MINUTES.THIRTY,
     queryKey: trendingTopicsQueryKey,
     async queryFn() {
       /*
