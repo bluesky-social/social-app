@@ -14,10 +14,8 @@ import {useAgent} from '#/state/session'
 const RQKEY_ROOT = 'actor-search'
 export const RQKEY = (query: string) => [RQKEY_ROOT, query]
 
-export const RQKEY_PAGINATED = (query: string) => [
-  `${RQKEY_ROOT}_paginated`,
-  query,
-]
+const RQKEY_ROOT_PAGINATED = `${RQKEY_ROOT}_paginated`
+export const RQKEY_PAGINATED = (query: string) => [RQKEY_ROOT_PAGINATED, query]
 
 export function useActorSearch({
   query,
@@ -88,6 +86,22 @@ export function* findAllProfilesInQueryData(
       continue
     }
     for (const actor of queryData) {
+      if (actor.did === did) {
+        yield actor
+      }
+    }
+  }
+
+  const queryDatasPaginated = queryClient.getQueriesData<
+    InfiniteData<AppBskyActorSearchActors.OutputSchema>
+  >({
+    queryKey: [RQKEY_ROOT_PAGINATED],
+  })
+  for (const [_queryKey, queryData] of queryDatasPaginated) {
+    if (!queryData) {
+      continue
+    }
+    for (const actor of queryData.pages.flatMap(page => page.actors)) {
       if (actor.did === did) {
         yield actor
       }
