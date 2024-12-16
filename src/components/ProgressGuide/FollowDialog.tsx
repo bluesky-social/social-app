@@ -267,7 +267,11 @@ function DialogInner() {
                   }}>
                   <Button
                     key={interest}
-                    label={interestsDisplayNames[interest]}
+                    label={_(
+                      msg`Search for ${interestsDisplayNames[interest]}${
+                        active ? _(msg` (active)`) : ''
+                      }`,
+                    )}
                     variant={active ? 'solid' : 'outline'}
                     color={active ? 'primary' : 'secondary'}
                     size="small"
