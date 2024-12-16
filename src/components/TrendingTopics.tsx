@@ -1,7 +1,6 @@
 import React from 'react'
 import {View} from 'react-native'
 import {AtUri} from '@atproto/api'
-import {hasMutedWord} from '@atproto/api/dist/moderation/mutewords'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -10,7 +9,6 @@ import {feedUriToHref} from '#/lib/strings/url-helpers'
 // import {Hashtag_Stroke2_Corner0_Rounded as Hashtag} from '#/components/icons/Hashtag'
 // import {CloseQuote_Filled_Stroke2_Corner0_Rounded as Quote} from '#/components/icons/Quote'
 // import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {usePreferencesQuery} from '#/state/queries/preferences'
 import type {TrendingTopic} from '#/state/queries/trending/useTrendingTopics'
 import {atoms as a, useTheme, ViewStyleProp} from '#/alf'
 import {Link as InternalLink, LinkProps} from '#/components/Link'
@@ -96,7 +94,7 @@ export function TrendingTopic({
           isSmall ? [a.text_sm] : [a.text_md, {paddingBottom: 1}],
         ]}
         numberOfLines={1}>
-        {topic.name}
+        {topic.displayName}
       </Text>
     </View>
   )
@@ -152,56 +150,39 @@ export function TrendingTopicLink({
 
 type ParsedTrendingTopic =
   | {
-      type: 'topic' | 'tag'
+      type: 'topic' | 'tag' | 'unknown'
       label: string
-      name: string
+      displayName: string
       url: string
       uri: undefined
     }
   | {
       type: 'profile' | 'feed'
       label: string
-      name: string
+      displayName: string
       url: string
       uri: AtUri
     }
 
-export function useMutedWords() {
-  const {data: preferences} = usePreferencesQuery()
-  return React.useMemo(() => {
-    return preferences?.moderationPrefs?.mutedWords || []
-  }, [preferences?.moderationPrefs?.mutedWords])
-}
-
-export function useTopic(raw: TrendingTopic): ParsedTrendingTopic | undefined {
+export function useTopic(raw: TrendingTopic): ParsedTrendingTopic {
   const {_} = useLingui()
-  const mutedWords = useMutedWords()
-
   return React.useMemo(() => {
-    const {topic: name, link: uri} = raw
-
-    if (
-      hasMutedWord({
-        mutedWords,
-        text: name,
-      })
-    )
-      return
+    const {topic: displayName, link: uri} = raw
 
     if (!uri.startsWith('at://')) {
       if (uri.startsWith('/search')) {
         return {
           type: 'topic',
-          label: _(msg`Browse posts about ${name}`),
-          name,
+          label: _(msg`Browse posts about ${displayName}`),
+          displayName,
           uri: undefined,
           url: uri,
         }
       } else if (uri.startsWith('/hashtag')) {
         return {
           type: 'tag',
-          label: _(msg`Browse posts tagged with ${name}`),
-          name: name.replace(/^#/, ''),
+          label: _(msg`Browse posts tagged with ${displayName}`),
+          displayName: displayName.replace(/^#/, ''),
           uri: undefined,
           url: uri,
         }
@@ -212,8 +193,8 @@ export function useTopic(raw: TrendingTopic): ParsedTrendingTopic | undefined {
         case 'app.bsky.actor.profile': {
           return {
             type: 'profile',
-            label: _(msg`View ${name}'s profile`),
-            name,
+            label: _(msg`View ${displayName}'s profile`),
+            displayName,
             uri: urip,
             url: makeProfileLink({did: urip.host, handle: urip.host}),
           }
@@ -221,13 +202,21 @@ export function useTopic(raw: TrendingTopic): ParsedTrendingTopic | undefined {
         case 'app.bsky.feed.generator': {
           return {
             type: 'feed',
-            label: _(msg`Browse the ${name} feed`),
-            name,
+            label: _(msg`Browse the ${displayName} feed`),
+            displayName,
             uri: urip,
             url: feedUriToHref(uri),
           }
         }
       }
     }
-  }, [_, raw, mutedWords])
+
+    return {
+      type: 'unknown',
+      label: _(msg`Browse topic ${displayName}`),
+      displayName,
+      uri: undefined,
+      url: uri,
+    }
+  }, [_, raw])
 }

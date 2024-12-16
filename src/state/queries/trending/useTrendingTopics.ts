@@ -1,7 +1,10 @@
+import React from 'react'
+import {hasMutedWord} from '@atproto/api/dist/moderation/mutewords'
 import {useQuery} from '@tanstack/react-query'
 
 // TEMP
 import {makeSearchLink} from '#/lib/routes/links'
+import {usePreferencesQuery} from '#/state/queries/preferences'
 
 export type TrendingTopic = {
   topic: string
@@ -15,6 +18,11 @@ export const DEFAULT_LIMIT = 12
 export const trendingTopicsQueryKey = ['trending-topics']
 
 export function useTrendingTopics() {
+  const {data: preferences} = usePreferencesQuery()
+  const mutedWords = React.useMemo(() => {
+    return preferences?.moderationPrefs?.mutedWords || []
+  }, [preferences?.moderationPrefs])
+
   return useQuery({
     queryKey: trendingTopicsQueryKey,
     async queryFn() {
@@ -75,7 +83,12 @@ export function useTrendingTopics() {
         },
       ]
       return {
-        topics,
+        topics: topics.filter(t => {
+          return !hasMutedWord({
+            mutedWords,
+            text: t.topic + ' ' + t.displayName + ' ' + t.description,
+          })
+        }),
         recommended: [],
       }
     },
