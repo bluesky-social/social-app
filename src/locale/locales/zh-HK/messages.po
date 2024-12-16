@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-12-16 01:39\n"
+"PO-Revision-Date: 2024-12-16 08:30\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional, Hong Kong\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -1046,7 +1046,7 @@ msgstr "Bluesky 係一個開放嘅網絡，你可以喺嗰度揀你嘅託管服�
 
 #: src/components/ProgressGuide/List.tsx:54
 msgid "Bluesky is better with friends!"
-msgstr "Bluesky 同你班 friends 一齊玩先至正！"
+msgstr "Bluesky 係要同多啲天友玩先正！"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:300
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
@@ -2497,7 +2497,7 @@ msgstr "所有人"
 
 #: src/lib/moderation/useReportOptions.ts:73
 msgid "Excessive mentions or replies"
-msgstr "頻繁提及或回覆"
+msgstr "頻繁提及抑或回覆"
 
 #: src/lib/moderation/useReportOptions.ts:86
 msgid "Excessive or unwanted messages"
@@ -6211,7 +6211,7 @@ msgstr "跳過"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:228
 msgid "Skip this flow"
-msgstr "跳過呢個流程"
+msgstr "跳過呢段流程"
 
 #: src/screens/Settings/AppearanceSettings.tsx:165
 msgid "Smaller"
@@ -6252,7 +6252,7 @@ msgstr "出咗問題！"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:506
 msgid "Something wrong? Let us know."
-msgstr "出咗問題？話畀我哋知啦。"
+msgstr "有輘輷？話畀我哋知。"
 
 #: src/App.native.tsx:115
 #: src/App.web.tsx:95
@@ -6282,7 +6282,7 @@ msgstr "垃圾訊息"
 
 #: src/lib/moderation/useReportOptions.ts:55
 msgid "Spam; excessive mentions or replies"
-msgstr "垃圾訊息、過度提及或回覆"
+msgstr "垃圾訊息、頻繁提及抑或回覆"
 
 #: src/screens/Onboarding/index.tsx:27
 #: src/screens/Onboarding/state.ts:100
@@ -6305,16 +6305,16 @@ msgstr "新手包"
 
 #: src/components/StarterPack/StarterPackCard.tsx:81
 msgid "Starter pack by {0}"
-msgstr "{0} 建立嘅新手包"
+msgstr "{0} 整嘅新手包"
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:182
 msgid "Starter pack by <0/>"
-msgstr "<0/> 建立嘅新手包"
+msgstr "<0/> 整嘅新手包"
 
 #: src/components/StarterPack/StarterPackCard.tsx:80
 #: src/view/com/profile/ProfileSubpageHeader.tsx:180
 msgid "Starter pack by you"
-msgstr "你建立嘅新手包"
+msgstr "你整嘅新手包"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:716
 msgid "Starter pack is invalid"
@@ -7597,7 +7597,7 @@ msgstr "我哋而家撈唔到你設定咗嘅標籤者。"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:129
 msgid "We weren't able to connect. Please try again to continue setting up your account. If it continues to fail, you can skip this flow."
-msgstr "我哋無法連線到網絡，唔該試多一次去繼續設定你嘅帳號。仲係唔得嘅話，你可以跳過呢個流程。"
+msgstr "我哋無法連線到網絡，唔該試多一次去繼續設定你嘅帳號。仲係唔得嘅話，你可以跳過呢段流程。"
 
 #: src/screens/SignupQueued.tsx:149
 msgid "We will let you know when your account is ready."
@@ -7819,7 +7819,7 @@ msgstr "你仲未有任何邀請碼！當你用開 Bluesky 一排，我哋就會
 
 #: src/view/screens/SavedFeeds.tsx:137
 msgid "You don't have any pinned feeds."
-msgstr "你未有任何固定嘅動態源。"
+msgstr "你未有任何固定咗嘅動態源。"
 
 #: src/view/screens/SavedFeeds.tsx:177
 msgid "You don't have any saved feeds."

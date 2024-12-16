@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-12-16 01:39\n"
+"PO-Revision-Date: 2024-12-16 08:29\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -1171,7 +1171,7 @@ msgstr "取消"
 #: src/view/com/modals/DeleteAccount.tsx:170
 #: src/view/com/modals/DeleteAccount.tsx:293
 msgid "Cancel account deletion"
-msgstr "取消删除账户流程"
+msgstr "中止删除账户"
 
 #: src/view/com/modals/CropImage.web.tsx:94
 msgid "Cancel image crop"
@@ -2521,7 +2521,7 @@ msgstr "退出删除账户"
 
 #: src/view/com/modals/CropImage.web.tsx:95
 msgid "Exits image cropping process"
-msgstr "退出图片裁剪流程"
+msgstr "退出图片裁剪"
 
 #: src/view/com/lightbox/Lightbox.web.tsx:110
 msgid "Exits image view"
@@ -4425,7 +4425,7 @@ msgstr "于<0><1/><2><3/></2></0>"
 
 #: src/screens/Settings/Settings.tsx:303
 msgid "Onboarding reset"
-msgstr "重新开始入门引导流程"
+msgstr "重新开始入门引导"
 
 #: src/view/com/composer/Composer.tsx:331
 msgid "One or more GIFs is missing alt text."
@@ -5528,7 +5528,7 @@ msgstr "重置码"
 #: src/screens/Settings/Settings.tsx:343
 #: src/screens/Settings/Settings.tsx:345
 msgid "Reset onboarding state"
-msgstr "重置入门引导流程"
+msgstr "重置入门引导状态"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:80
 msgid "Reset password"
