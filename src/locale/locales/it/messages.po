@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Italian localization\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-16 00:50+0000\n"
-"PO-Revision-Date: 2024-12-16 10:14+0000\n"
+"PO-Revision-Date: 2024-12-16 19:36+0000\n"
 "Last-Translator: Michele Locati <michele@locati.it>, 2024\n"
 "Language-Team: Italian (https://app.transifex.com/mlocati/teams/201833/it/)\n"
 "Language: it\n"
@@ -3574,7 +3574,7 @@ msgstr "Metti mi piace a 10 post"
 #: src/state/shell/progress-guide.tsx:157
 #: src/state/shell/progress-guide.tsx:162
 msgid "Like 10 posts to train the Discover feed"
-msgstr "Metti mi piace a 10 post per allenare il feed Scopri"
+msgstr "Metti mi piace a 10 post per allenare il feed Discover"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:496
 msgid "Like feed"
@@ -5288,7 +5288,7 @@ msgstr "Rimuovi post citato"
 #: src/view/com/posts/FeedShutdownMsg.tsx:129
 #: src/view/com/posts/FeedShutdownMsg.tsx:133
 msgid "Replace with Discover"
-msgstr "Sostituisci con Scopri"
+msgstr "Sostituisci con Discover"
 
 #: src/view/screens/Profile.tsx:227
 msgid "Replies"
@@ -6570,12 +6570,12 @@ msgstr "La politica sul copyright è stata spostata a <0/>"
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:102
 msgid "The Discover feed"
-msgstr "Il feed Scopri"
+msgstr "Il feed Discover"
 
 #: src/state/shell/progress-guide.tsx:167
 #: src/state/shell/progress-guide.tsx:172
 msgid "The Discover feed now knows what you like"
-msgstr "Ora il feed Scopri sa cosa ti piace"
+msgstr "Ora il feed Discover sa cosa ti piace"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:320
 msgid "The experience is better in the app. Download Bluesky now and we'll pick back up where you left off."
@@ -6583,7 +6583,7 @@ msgstr "L'esperienza è migliore tramite l'app. Scarica ora Bluesky e ritornerem
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:67
 msgid "The feed has been replaced with Discover."
-msgstr "Questo feed è stato sostituito con Scopri."
+msgstr "Questo feed è stato sostituito con Discover."
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:58
 msgid "The following labels were applied to your account."
@@ -6811,7 +6811,7 @@ msgstr "Questo feed è vuoto."
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:99
 msgid "This feed is no longer online. We are showing <0>Discover</0> instead."
-msgstr "Questo feed non è più online. Stiamo mostrando <0>Scopri</0> al suo posto."
+msgstr "Questo feed non è più online. Stiamo mostrando <0>Discover</0> al suo posto."
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:576
 msgid "This handle is reserved. Please try a different one."
