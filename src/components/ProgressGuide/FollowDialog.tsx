@@ -89,6 +89,7 @@ function DialogInner() {
   const inputRef = useRef<TextInput>(null)
   const control = Dialog.useDialogContext()
   const [tabOffsets, setTabOffsets] = useState<number[]>([])
+  const [headerHeight, setHeaderHeight] = useState(0)
   const {currentAccount} = useSession()
   const [searchText, setSearchText] = useState('')
 
@@ -193,6 +194,7 @@ function DialogInner() {
   const listHeader = useMemo(() => {
     return (
       <View
+        onLayout={evt => setHeaderHeight(evt.nativeEvent.layout.height)}
         style={[
           a.relative,
           web(a.pt_lg),
@@ -331,6 +333,7 @@ function DialogInner() {
       webInnerContentContainerStyle={a.py_0}
       webInnerStyle={[a.py_0, {maxWidth: 500, minWidth: 200}]}
       keyboardDismissMode="on-drag"
+      scrollIndicatorInsets={{top: headerHeight}}
       onEndReached={onEndReached}
       ListFooterComponent={
         <ListFooter
