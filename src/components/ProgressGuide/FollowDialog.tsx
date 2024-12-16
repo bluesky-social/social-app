@@ -1,10 +1,5 @@
 import {useCallback, useLayoutEffect, useMemo, useRef, useState} from 'react'
 import {ScrollView, TextInput, useWindowDimensions, View} from 'react-native'
-import Animated, {
-  LayoutAnimationConfig,
-  ZoomIn,
-  ZoomOut,
-} from 'react-native-reanimated'
 import {AppBskyActorDefs, ModerationOpts} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -15,7 +10,6 @@ import {isWeb} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useActorSearchPaginated} from '#/state/queries/actor-search'
 import {usePreferencesQuery} from '#/state/queries/preferences'
-import {useSuggestedFollowsByActorQuery} from '#/state/queries/suggested-follows'
 import {useSession} from '#/state/session'
 import {ListMethods} from '#/view/com/util/List'
 import {useInterestsDisplayNames} from '#/screens/Onboarding/state'
@@ -94,6 +88,7 @@ function DialogInner() {
   const listRef = useRef<ListMethods>(null)
   const inputRef = useRef<TextInput>(null)
   const control = Dialog.useDialogContext()
+  const [tabOffsets, setTabOffsets] = useState<number[]>([])
   const {currentAccount} = useSession()
   const [searchText, setSearchText] = useState('')
 
@@ -260,26 +255,41 @@ function DialogInner() {
             horizontal
             contentContainerStyle={[a.gap_sm, a.px_xl]}
             style={{marginHorizontal: -tokens.space.xl}}
-            showsHorizontalScrollIndicator={false}>
-            {interests.map(interest => {
+            showsHorizontalScrollIndicator={false}
+            decelerationRate="fast"
+            snapToOffsets={
+              tabOffsets.length === interests.length ? tabOffsets : undefined
+            }>
+            {interests.map((interest, i) => {
               const active = interest === selectedInterest && !searchText
               return (
-                <Button
+                <View
                   key={interest}
-                  label={interestsDisplayNames[interest]}
-                  variant={active ? 'solid' : 'outline'}
-                  color={active ? 'primary' : 'secondary'}
-                  size="small"
-                  onPress={() => {
-                    setSelectedInterest(interest)
-                    listRef.current?.scrollToOffset({
-                      offset: 0,
-                      animated: false,
+                  onLayout={evt => {
+                    const x = evt.nativeEvent.layout.x
+                    setTabOffsets(offsets => {
+                      const [...next] = offsets
+                      next[i] = x - tokens.space.xl
+                      return next
                     })
                   }}>
-                  <ButtonIcon icon={SearchIcon} />
-                  <ButtonText>{interestsDisplayNames[interest]}</ButtonText>
-                </Button>
+                  <Button
+                    key={interest}
+                    label={interestsDisplayNames[interest]}
+                    variant={active ? 'solid' : 'outline'}
+                    color={active ? 'primary' : 'secondary'}
+                    size="small"
+                    onPress={() => {
+                      setSelectedInterest(interest)
+                      listRef.current?.scrollToOffset({
+                        offset: 0,
+                        animated: false,
+                      })
+                    }}>
+                    <ButtonIcon icon={SearchIcon} />
+                    <ButtonText>{interestsDisplayNames[interest]}</ButtonText>
+                  </Button>
+                </View>
               )
             })}
           </ScrollView>
@@ -297,6 +307,7 @@ function DialogInner() {
     interests,
     interestsDisplayNames,
     setSelectedInterest,
+    tabOffsets,
   ])
 
   const onEndReached = useCallback(async () => {
@@ -342,44 +353,55 @@ function ReplacableProfileCard({
   profile: AppBskyActorDefs.ProfileView
   moderationOpts: ModerationOpts
 }) {
-  const [hasFollowed, setHasFollowed] = useState(false)
-  const followupSuggestion = useSuggestedFollowsByActorQuery({
-    did: profile.did,
-    enabled: hasFollowed,
-  })
-  const followupProfile = followupSuggestion.data?.suggestions?.[0]
-
-  if (!followupSuggestion.isPending) {
-    if (followupProfile) {
-      console.log('! followup found for', profile.handle)
-    } else {
-      console.log('  no suggestions for', profile.handle)
-    }
-  }
-
   return (
-    <LayoutAnimationConfig skipEntering skipExiting>
-      {hasFollowed && followupProfile ? (
-        <Animated.View entering={native(ZoomIn)} key="in">
-          <ReplacableProfileCard
-            profile={followupProfile}
-            moderationOpts={moderationOpts}
-          />
-        </Animated.View>
-      ) : (
-        <Animated.View
-          exiting={native(ZoomOut)}
-          key="out"
-          style={[a.pt_md, a.px_lg]}>
-          <ReplacableProfileCardInner
-            profile={profile}
-            moderationOpts={moderationOpts}
-            onFollow={() => setHasFollowed(true)}
-          />
-        </Animated.View>
-      )}
-    </LayoutAnimationConfig>
+    <View style={[a.pt_md, a.px_lg]}>
+      <ReplacableProfileCardInner
+        profile={profile}
+        moderationOpts={moderationOpts}
+      />
+    </View>
   )
+
+  // Replaces the profile card with a similar one after pressing follow. Pending backend fix -sfn
+  //
+  // const [hasFollowed, setHasFollowed] = useState(false)
+  // const followupSuggestion = useSuggestedFollowsByActorQuery({
+  //   did: profile.did,
+  //   enabled: hasFollowed,
+  // })
+  // const followupProfile = followupSuggestion.data?.suggestions?.[0]
+
+  // if (!followupSuggestion.isPending) {
+  //   if (followupProfile) {
+  //     console.log('! followup found for', profile.handle)
+  //   } else {
+  //     console.log('  no suggestions for', profile.handle)
+  //   }
+  // }
+
+  // return (
+  //   <LayoutAnimationConfig skipEntering skipExiting>
+  //     {hasFollowed && followupProfile ? (
+  //       <Animated.View entering={native(ZoomIn)} key="in">
+  //         <ReplacableProfileCard
+  //           profile={followupProfile}
+  //           moderationOpts={moderationOpts}
+  //         />
+  //       </Animated.View>
+  //     ) : (
+  //       <Animated.View
+  //         exiting={native(ZoomOut)}
+  //         key="out"
+  //         style={[a.pt_md, a.px_lg]}>
+  //         <ReplacableProfileCardInner
+  //           profile={profile}
+  //           moderationOpts={moderationOpts}
+  //           onFollow={() => setHasFollowed(true)}
+  //         />
+  //       </Animated.View>
+  //     )}
+  //   </LayoutAnimationConfig>
+  // )
 }
 
 function ReplacableProfileCardInner({
@@ -389,7 +411,7 @@ function ReplacableProfileCardInner({
 }: {
   profile: AppBskyActorDefs.ProfileView
   moderationOpts: ModerationOpts
-  onFollow: () => void
+  onFollow?: () => void
 }) {
   const control = Dialog.useDialogContext()
   const t = useTheme()
