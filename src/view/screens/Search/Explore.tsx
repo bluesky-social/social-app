@@ -38,13 +38,11 @@ import {Text} from '#/components/Typography'
 
 function SuggestedItemsHeader({
   title,
-  titleChild,
   description,
   style,
   icon: Icon,
 }: {
   title: string
-  titleChild?: React.ReactNode
   description: string
   icon: React.ComponentType<SVGIconProps>
 } & ViewStyleProp) {
@@ -68,7 +66,6 @@ function SuggestedItemsHeader({
             style={{marginLeft: -2}}
           />
           <Text style={[a.text_2xl, a.font_heavy, t.atoms.text]}>{title}</Text>
-          {titleChild}
         </View>
         <Text style={[t.atoms.text_contrast_high, a.leading_snug]}>
           {description}
