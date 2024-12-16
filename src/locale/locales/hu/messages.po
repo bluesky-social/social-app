@@ -27,46 +27,32 @@ msgid "{0, plural, one {# day} other {# days}}"
 msgstr "{0} nappal"
 
 #: src/screens/Profile/ProfileFollowers.tsx:40
-#, fuzzy
-#| msgid "{0, plural, one {follower} other {followers}}"
 msgid "{0, plural, one {# follower} other {# followers}}"
-msgstr "követő"
+msgstr "{0} követő"
 
 #: src/screens/Profile/ProfileFollows.tsx:40
-#, fuzzy
-#| msgid "{0, plural, one {following} other {following}}"
 msgid "{0, plural, one {# following} other {# following}}"
-msgstr "követett"
+msgstr "{0} követett"
 
 #: src/lib/hooks/useTimeAgo.ts:146
 msgid "{0, plural, one {# hour} other {# hours}}"
 msgstr "{0} órával"
 
 #: src/components/moderation/LabelsOnMe.tsx:53
-#, fuzzy
-#| msgid ""
-#| "{0, plural, one {# label has been placed on this account} other {# labels "
-#| "have been placed on this account}}"
 msgid ""
 "{0, plural, one {# label has} other {# labels have}} been placed on this "
 "account"
 msgstr "{0} feljegyzést helyeztek erre a fiókra"
 
 #: src/components/moderation/LabelsOnMe.tsx:62
-#, fuzzy
-#| msgid ""
-#| "{0, plural, one {# label has been placed on this content} other {# labels "
-#| "have been placed on this content}}"
 msgid ""
 "{0, plural, one {# label has} other {# labels have}} been placed on this "
 "content"
 msgstr "{0} feljegyzést helyeztek erre a tartalomra"
 
 #: src/screens/Post/PostLikedBy.tsx:41
-#, fuzzy
-#| msgid "{0, plural, one {like} other {likes}}"
 msgid "{0, plural, one {# like} other {# likes}}"
-msgstr "kedvelés"
+msgstr "{0} kedvelés"
 
 #: src/lib/hooks/useTimeAgo.ts:136
 msgid "{0, plural, one {# minute} other {# minutes}}"
@@ -77,10 +63,8 @@ msgid "{0, plural, one {# month} other {# months}}"
 msgstr "{0} hónappal"
 
 #: src/screens/Post/PostQuotes.tsx:41
-#, fuzzy
-#| msgid "{0, plural, one {quote} other {quotes}}"
 msgid "{0, plural, one {# quote} other {# quotes}}"
-msgstr "idézés"
+msgstr "{0} idézés"
 
 #: src/screens/Post/PostRepostedBy.tsx:41
 msgid "{0, plural, one {# repost} other {# reposts}}"
@@ -348,10 +332,8 @@ msgid "{handle} can't be messaged"
 msgstr "{handle} jelenleg nem fogad üzeneteket"
 
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:260
-#, fuzzy
-#| msgid "{numUnreadNotifications} unread items"
 msgid "{notificationCount} unread items"
-msgstr "{numUnreadNotifications} olvasatlan értesítés"
+msgstr "{notificationCount} olvasatlan értesítés"
 
 #: src/view/shell/Drawer.tsx:448
 msgid "{numUnreadNotifications} unread"
@@ -660,7 +642,7 @@ msgstr "Az algoritmus idomítása befejeződött!"
 
 #: src/view/screens/Notifications.tsx:86
 msgid "All"
-msgstr ""
+msgstr "Mind"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:381
 msgid "All accounts have been followed!"
@@ -680,8 +662,6 @@ msgid "Allow new messages from"
 msgstr "Bejövő üzenetek fogadása"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:314
-#, fuzzy
-#| msgid "Show quote posts"
 msgid "Allow quote posts"
 msgstr "Idézetek mutatása"
 
@@ -1193,16 +1173,12 @@ msgstr ""
 "priváttá a profilodat."
 
 #: src/screens/Settings/AppIconSettings/index.tsx:99
-#, fuzzy
-#| msgid "Bluesky"
 msgid "Bluesky+"
-msgstr "Bluesky"
+msgstr "Bluesky+"
 
 #: src/screens/Settings/AppIconSettings/index.tsx:102
-#, fuzzy
-#| msgid "Bluesky"
 msgid "Bluesky+ icons"
-msgstr "Bluesky"
+msgstr "Bluesky+-ikonok"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:53
 msgid "Blur images"
@@ -1250,10 +1226,8 @@ msgid "By {0}"
 msgstr "Szerző: {0}"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:442
-#, fuzzy
-#| msgid "Followed by <0>{0}</0>"
 msgid "By <0>{0}</0>"
-msgstr "<0>{0}</0> követi"
+msgstr "Szerző: <0>{0}</0>"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:81
 msgid "By creating an account you agree to the <0>Privacy Policy</0>."
@@ -1361,15 +1335,13 @@ msgid "Change"
 msgstr "Megváltoztatás"
 
 #: src/screens/Settings/AppIconSettings/index.tsx:39
-#, fuzzy
-#| msgid "Change app icon to \"{0}\""
 msgid "Change app icon"
-msgstr "Alkalmazás ikonjának megváltoztatása erre: {0}"
+msgstr "Alkalmazásikon megváltoztatása"
 
 #: src/screens/Settings/AppIconSettings/index.tsx:38
 #: src/screens/Settings/AppIconSettings/index.tsx:221
 msgid "Change app icon to \"{0}\""
-msgstr "Alkalmazás ikonjának megváltoztatása erre: {0}"
+msgstr "Alkalmazásikon megváltoztatása erre: {0}"
 
 #: src/screens/Settings/AccountSettings.tsx:97
 #: src/screens/Settings/AccountSettings.tsx:101
@@ -1480,16 +1452,12 @@ msgid "Choose this color as your avatar"
 msgstr "Szín használata profilképként"
 
 #: src/view/screens/Feeds.tsx:728 src/view/screens/Search/Explore.tsx:391
-#, fuzzy
-#| msgid ""
-#| "Custom feeds built by the community bring you new experiences and help "
-#| "you find the content you love."
 msgid ""
 "Choose your own timeline! Feeds built by the community help you find content "
 "you love."
 msgstr ""
-"A közösség által épített egyéni hírfolyamok új élményekkel ruháznak fel, és "
-"segítenek megtalálni a Téged érdeklő tartalmakat."
+"Válaszd ki, hogy milyen idővonalakat akarsz böngészni! A közösség által "
+"épített egyéni hírfolyamok segítenek megtalálni a Téged érdeklő tartalmakat."
 
 #: src/screens/Signup/StepInfo/index.tsx:201
 msgid "Choose your password"
@@ -1717,8 +1685,6 @@ msgid "Contact support"
 msgstr "Támogatás"
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:39
-#, fuzzy
-#| msgid "Content and Media"
 msgid "Content & Media"
 msgstr "Tartalom és média"
 
@@ -1995,10 +1961,8 @@ msgid "Default"
 msgstr "Alapértelmezett"
 
 #: src/screens/Settings/AppIconSettings/index.tsx:75
-#, fuzzy
-#| msgid "Default"
 msgid "Default icons"
-msgstr "Alapértelmezett"
+msgstr "Alapértelmezett ikonok"
 
 #: src/components/dms/MessageMenu.tsx:151
 #: src/screens/Settings/AppPasswords.tsx:212
@@ -2863,10 +2827,8 @@ msgid "Feed by {0}"
 msgstr "Hírfolyam – Szerző: {0}"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:348
-#, fuzzy
-#| msgid "Feed"
 msgid "Feed menu"
-msgstr "Hírfolyam"
+msgstr "Hírfolyammenü"
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:54
 msgid "Feed toggle"
@@ -3451,16 +3413,12 @@ msgid "If you delete this list, you won't be able to recover it."
 msgstr "A lista törlése nem vonható vissza."
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:250
-#, fuzzy
-#| msgid ""
-#| "If you have your own domain, you can use that as your handle. This lets "
-#| "you self-verify your identity – <0>learn more</0>."
 msgid ""
 "If you have your own domain, you can use that as your handle. This lets you "
 "self-verify your identity. <0>Learn more here.</0>"
 msgstr ""
 "Ha rendelkezel saját tartománnyal, akkor az is lehet a felhasználóneved. Így "
-"magadtól is hitelesítheted a kiléted – <0>további információ</0>."
+"magadtól is hitelesítheted a kiléted. <0>További információ</0>."
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:658
 msgid "If you remove this post, you won't be able to recover it."
@@ -3774,16 +3732,12 @@ msgid "Light"
 msgstr "Világos"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:509
-#, fuzzy
-#| msgid "Likes"
 msgid "Like"
-msgstr "Kedvelések"
+msgstr "Kedvelés"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:310
-#, fuzzy
-#| msgid "{0, plural, one {like} other {likes}}"
 msgid "Like ({0, plural, one {# like} other {# likes}})"
-msgstr "kedvelés"
+msgstr "Kedvelés ({0} kedvelés)"
 
 #: src/components/ProgressGuide/List.tsx:47
 msgid "Like 10 posts"
@@ -3795,8 +3749,6 @@ msgid "Like 10 posts to train the Discover feed"
 msgstr "Kedvelj 10 megjegyzést a Követett hírfolyam idomításához!"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:496
-#, fuzzy
-#| msgid "Like this feed"
 msgid "Like feed"
 msgstr "Hírfolyam kedvelése"
 
@@ -3816,17 +3768,13 @@ msgid "Liked By"
 msgstr "Kedvelők"
 
 #: src/components/FeedCard.tsx:213 src/view/com/feeds/FeedSourceCard.tsx:303
-#, fuzzy
-#| msgid "{0, plural, one {# hour} other {# hours}}"
 msgid "Liked by {0, plural, one {# user} other {# users}}"
-msgstr "{0} órával"
+msgstr "{0} felhasználó kedveli"
 
 #: src/components/LabelingServiceCard/index.tsx:96
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:484
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:295
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:309
-#, fuzzy
-#| msgid "{likeCount, plural, one {Liked by # user} other {Liked by # users}}"
 msgid "Liked by {likeCount, plural, one {# user} other {# users}}"
 msgstr "{likeCount} felhasználó kedveli"
 
@@ -3852,19 +3800,15 @@ msgstr "Letiltottad a listán szereplő személyeket"
 
 #: src/components/ListCard.tsx:150 src/view/com/feeds/FeedSourceCard.tsx:255
 msgid "List by {0}"
-msgstr "Lisa – Szerző: {0}"
+msgstr "Lista – Szerző: {0}"
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:156
-#, fuzzy
-#| msgid "List by {0}"
 msgid "List by <0/>"
-msgstr "Lisa – Szerző: {0}"
+msgstr "Lista – Szerző: <0/>"
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:154
-#, fuzzy
-#| msgid "User list by you"
 msgid "List by you"
-msgstr "Felhasználólista – Saját"
+msgstr "Lista – Saját"
 
 #: src/view/screens/ProfileList.tsx:451
 msgid "List deleted"
@@ -3952,14 +3896,12 @@ msgid "Login to account that is not listed"
 msgstr "Bejelentkezés egy másik felhasználói fiókba"
 
 #: src/view/shell/desktop/RightNav.tsx:97
-#, fuzzy
-#| msgid "Logo by <0>@sawaratsuki.bsky.social</0>"
 msgid "Logo by @sawaratsuki.bsky.social"
-msgstr "A logót készítette: <0>@sawaratsuki.bsky.social</0>"
+msgstr "A logó szerzője: @sawaratsuki.bsky.social"
 
 #: src/view/shell/desktop/RightNav.tsx:94 src/view/shell/Drawer.tsx:629
 msgid "Logo by <0>@sawaratsuki.bsky.social</0>"
-msgstr "A logót készítette: <0>@sawaratsuki.bsky.social</0>"
+msgstr "A logó szerzője: <0>@sawaratsuki.bsky.social</0>"
 
 #: src/components/RichText.tsx:219
 msgid "Long press to open tag menu for #{tag}"
@@ -4032,10 +3974,8 @@ msgid "Mentioned users"
 msgstr "A megemlített felhasználóktól"
 
 #: src/view/screens/Notifications.tsx:99
-#, fuzzy
-#| msgid "More options"
 msgid "Mentions"
-msgstr "További lehetőségek"
+msgstr "Említések"
 
 #: src/components/Menu/index.tsx:96 src/view/screens/Search/Search.tsx:856
 msgid "Menu"
@@ -4352,10 +4292,8 @@ msgid "New handle"
 msgstr "Új felhasználónév"
 
 #: src/view/screens/Lists.tsx:69 src/view/screens/ModerationModlists.tsx:71
-#, fuzzy
-#| msgid "New post"
 msgid "New list"
-msgstr "Új bejegyzés"
+msgstr "Új lista"
 
 #: src/components/dms/NewMessagesPill.tsx:92
 msgid "New messages"
@@ -4729,10 +4667,8 @@ msgid "Open conversation options"
 msgstr "Beszélgetési beállítások megnyitása"
 
 #: src/components/Layout/Header/index.tsx:148
-#, fuzzy
-#| msgid "Open starter pack menu"
 msgid "Open drawer menu"
-msgstr "Kezdőcsomag-menü megnyitása"
+msgstr "Oldalsó menü megnyitása"
 
 #: src/screens/Messages/components/MessageInput.web.tsx:165
 #: src/view/com/composer/Composer.tsx:1221
@@ -4741,10 +4677,8 @@ msgid "Open emoji picker"
 msgstr "Emojiválasztó megnyitása"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:190
-#, fuzzy
-#| msgid "Open feed options menu"
 msgid "Open feed info screen"
-msgstr "Hírfolyambeállítások megnyitása"
+msgstr "Hírfolyam tulajdonságainak megnyitása"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:285
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:290
@@ -4981,10 +4915,8 @@ msgstr "Felnőtteknek szánt képek."
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:514
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:521
-#, fuzzy
-#| msgid "End of feed"
 msgid "Pin feed"
-msgstr "A hírfolyam véget ért"
+msgstr "Hírfolyam kitűzése"
 
 #: src/view/screens/ProfileList.tsx:681
 msgid "Pin to home"
@@ -5005,10 +4937,8 @@ msgstr "Kitűzve"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:162
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:174
-#, fuzzy
-#| msgid "Pin to Home"
 msgid "Pinned {0} to Home"
-msgstr "Kitűzés a kezdőlapra"
+msgstr "Kitűzted a(z) {0} hírfolyamot"
 
 #: src/view/screens/SavedFeeds.tsx:123
 msgid "Pinned Feeds"
@@ -5570,10 +5500,8 @@ msgid "Reply"
 msgstr "Válasz közzététele"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:262
-#, fuzzy
-#| msgid "{0, plural, one {# repost} other {# reposts}}"
 msgid "Reply ({0, plural, one {# reply} other {# replies}})"
-msgstr "{0} megosztás"
+msgstr "Válasz írása ({0} válasz)"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:114
 #: src/lib/moderation/useModerationCauseDescription.ts:123
@@ -5706,10 +5634,8 @@ msgid "Repost"
 msgstr "Megosztás"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:74
-#, fuzzy
-#| msgid "{0, plural, one {# repost} other {# reposts}}"
 msgid "Repost ({0, plural, one {# repost} other {# reposts}})"
-msgstr "{0} megosztás"
+msgstr "Megosztás ({0} megosztás)"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:548
 #: src/view/com/util/post-ctrls/RepostButton.tsx:148
@@ -5940,18 +5866,16 @@ msgid "Search"
 msgstr "Keresés"
 
 #: src/view/screens/Feeds.tsx:441
-#, fuzzy
-#| msgid "Search profiles"
 msgid "Search feeds"
 msgstr "Profilok keresése"
 
 #: src/view/shell/desktop/Search.tsx:201
 msgid "Search for \"{query}\""
-msgstr "Keresési kifejezés: {query}"
+msgstr "Keresés: {query}"
 
 #: src/view/screens/Search/Search.tsx:980
 msgid "Search for \"{searchText}\""
-msgstr "Keresési kifejezés: {searchText}"
+msgstr "Keresés: {searchText}"
 
 #: src/screens/StarterPack/Wizard/index.tsx:474
 msgid "Search for feeds that you want to suggest to others."
@@ -6179,10 +6103,8 @@ msgid "Server address"
 msgstr "Kiszolgáló címe"
 
 #: src/screens/Settings/AppIconSettings/index.tsx:178
-#, fuzzy
-#| msgid "Change app icon to \"{0}\""
 msgid "Set app icon to {0}"
-msgstr "Alkalmazás ikonjának megváltoztatása erre: {0}"
+msgstr "Alkalmazásikon megváltoztatása erre: {0}"
 
 #: src/screens/Moderation/index.tsx:290
 msgid "Set birthdate"
@@ -6265,8 +6187,6 @@ msgid "Share QR code"
 msgstr "QR-kód továbbítása"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:465
-#, fuzzy
-#| msgid "Share feed"
 msgid "Share this feed"
 msgstr "Hírfolyam továbbítása"
 
@@ -6515,10 +6435,8 @@ msgid "Something went wrong!"
 msgstr "Valami balul sült el!"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:533
-#, fuzzy
-#| msgid "Something went wrong, please try again."
 msgid "Something wrong? Let us know."
-msgstr "Valami balul sült el. Próbáld újra!"
+msgstr "Valami nem stimmel? Vedd fel velünk a kapcsolatot!"
 
 #: src/App.native.tsx:116 src/App.web.tsx:96
 msgid "Sorry! Your session expired. Please log in again."
@@ -6571,10 +6489,8 @@ msgid "Starter pack by {0}"
 msgstr "Kezdőcsomag – Szerző: {0}"
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:182
-#, fuzzy
-#| msgid "Starter pack by {0}"
 msgid "Starter pack by <0/>"
-msgstr "Kezdőcsomag – Szerző: {0}"
+msgstr "Kezdőcsomag – Szerző: <0/>"
 
 #: src/components/StarterPack/StarterPackCard.tsx:80
 #: src/view/com/profile/ProfileSubpageHeader.tsx:180
@@ -7486,10 +7402,8 @@ msgid "Undo repost"
 msgstr "Megosztás visszavonása"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:68
-#, fuzzy
-#| msgid "{0, plural, one {# repost} other {# reposts}}"
 msgid "Undo repost ({0, plural, one {# repost} other {# reposts}})"
-msgstr "{0} megosztás"
+msgstr "Megosztás visszavonása ({0} megosztás)"
 
 #: src/view/com/profile/FollowButton.tsx:60
 msgctxt "action"
@@ -7507,13 +7421,11 @@ msgstr "Fiók követésének megszüntetése"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:509
 msgid "Unlike"
-msgstr ""
+msgstr "Kedvelés visszavonása"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:304
-#, fuzzy
-#| msgid "{0, plural, one {like} other {likes}}"
 msgid "Unlike ({0, plural, one {# like} other {# likes}})"
-msgstr "kedvelés"
+msgstr "Kedvelés visszavonása ({0} kedvelés)"
 
 #: src/components/TagMenu/index.tsx:264 src/view/screens/ProfileList.tsx:697
 msgid "Unmute"
@@ -7558,8 +7470,6 @@ msgstr "Kitűzés feloldása"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:514
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:521
-#, fuzzy
-#| msgid "Unpin"
 msgid "Unpin feed"
 msgstr "Kitűzés feloldása"
 
@@ -7578,10 +7488,8 @@ msgid "Unpin moderation list"
 msgstr "Moderálólista kitűzésének feloldása"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:164
-#, fuzzy
-#| msgid "Unpin from home"
 msgid "Unpinned {0} from Home"
-msgstr "Kitűzés feloldása a kezdőlapról"
+msgstr "Feloldottad a(z) {0} kitűzését"
 
 #: src/view/screens/ProfileList.tsx:348
 msgid "Unpinned from your feeds"
@@ -8556,6 +8464,8 @@ msgid ""
 "Your current handle <0>{0}</0> will automatically remain reserved for you. "
 "You can switch back to it at any time from this account."
 msgstr ""
+"Lefoglaljuk a jelenlegi felhasználónevedet (<0>{0}</0>), így bármikor "
+"visszaválthatsz rá."
 
 #: src/screens/Login/ForgotPasswordForm.tsx:51 src/screens/Signup/state.ts:203
 #: src/screens/Signup/StepInfo/index.tsx:108
