@@ -2,26 +2,44 @@ import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useTrendingSettingsApi} from '#/state/preferences/trending'
+import {
+  useTrendingSettings,
+  useTrendingSettingsApi,
+} from '#/state/preferences/trending'
+import {
+  DEFAULT_LIMIT as TRENDING_TOPICS_COUNT,
+  useTrendingTopics,
+} from '#/state/queries/trending/useTrendingTopics'
+import {useTrendingConfig} from '#/state/trending-config'
 import {atoms as a, tokens, useGutters, useTheme} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import {GradientFill} from '#/components/GradientFill'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import {Trending2_Stroke2_Corner2_Rounded as Graph} from '#/components/icons/Trending2'
 import * as Prompt from '#/components/Prompt'
-import {TrendingTopic, TrendingTopicLink} from '#/components/TrendingTopics'
+import {
+  TrendingTopic,
+  TrendingTopicLink,
+  TrendingTopicSkeleton,
+} from '#/components/TrendingTopics'
 import {Text} from '#/components/Typography'
-import {useTrendingTopics} from '#/state/queries/trending/useTrendingTopics'
 
 export function TrendingInterstitial() {
+  const {enabled} = useTrendingConfig()
+  const {trendingDiscoverHidden} = useTrendingSettings()
+  return !enabled ? null : trendingDiscoverHidden ? null : <Inner />
+}
+
+export function Inner() {
   const t = useTheme()
   const {_} = useLingui()
   const gutters = useGutters(['base'])
   const trendingPrompt = Prompt.usePromptControl()
-  const {data: topics, error, isLoading} = useTrendingTopics()
   const {setTrendingDiscoverHidden} = useTrendingSettingsApi()
+  const {data: trending, error, isLoading} = useTrendingTopics()
+  const noTopics = !isLoading && !error && !trending?.topics
 
-  return (
+  return error || noTopics ? null : (
     <View
       style={[
         gutters,
@@ -33,12 +51,14 @@ export function TrendingInterstitial() {
       <View style={[a.flex_row, a.align_center, a.gap_sm]}>
         <View style={[a.flex_1, a.flex_row, a.align_center, a.gap_sm]}>
           <Graph size="lg" />
-          <Text style={[a.text_lg, a.font_heavy, t.atoms.text_contrast_medium]}>
+          <Text style={[a.text_lg, a.font_heavy]}>
             <Trans>Trending</Trans>
           </Text>
           <View style={[a.py_xs, a.px_sm, a.rounded_sm, a.overflow_hidden]}>
             <GradientFill gradient={tokens.gradients.primary} />
-            <Text style={[a.text_md, a.font_heavy]}>BETA</Text>
+            <Text style={[a.text_sm, a.font_heavy, {color: 'white'}]}>
+              <Trans>BETA</Trans>
+            </Text>
           </View>
         </View>
 
@@ -54,9 +74,13 @@ export function TrendingInterstitial() {
       </View>
 
       <View style={[a.flex_row, a.flex_wrap, a.gap_sm]}>
-        {isLoading ? null : error || !topics ? null : (
+        {isLoading ? (
+          Array(TRENDING_TOPICS_COUNT)
+            .fill(0)
+            .map((_n, i) => <TrendingTopicSkeleton key={i} index={i} />)
+        ) : !trending?.topics ? null : (
           <>
-            {topics.map(topic => (
+            {trending.topics.map(topic => (
               <TrendingTopicLink key={topic.link} topic={topic}>
                 {({hovered}) => (
                   <TrendingTopic
