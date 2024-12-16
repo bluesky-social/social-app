@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-12-14 01:23\n"
+"PO-Revision-Date: 2024-12-16 01:39\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -3577,7 +3577,7 @@ msgstr "喜欢 10 则帖文以训练“Discover”资讯源"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:469
 msgid "Like feed"
-msgstr "喜欢的动态源"
+msgstr "喜欢动态源"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:275
 msgid "Like this feed"
@@ -6252,7 +6252,7 @@ msgstr "出了点问题！"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:506
 msgid "Something wrong? Let us know."
-msgstr "出了点问题？请告诉我们。"
+msgstr "有点问题？请告诉我们。"
 
 #: src/App.native.tsx:115
 #: src/App.web.tsx:95
@@ -8065,7 +8065,7 @@ msgstr "你的选择将会保存，但你可以随时在设置中更改。"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:496
 msgid "Your current handle <0>{0}</0> will automatically remain reserved for you. You can switch back to it at any time from this account."
-msgstr "你当前使用的账户代码 <0>{0}</0> 将自动预留给你，以便你后续可以随时切换回来。"
+msgstr "你当前使用的账户代码 <0>{0}</0> 将自动预留给你，以便你能够在日后随时切换回来。"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:51
 #: src/screens/Signup/state.ts:203

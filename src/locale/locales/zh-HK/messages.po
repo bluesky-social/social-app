@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-12-14 01:23\n"
+"PO-Revision-Date: 2024-12-16 01:39\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional, Hong Kong\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -8065,7 +8065,7 @@ msgstr "你揀嘅嘢會儲存，但係可以遲啲再喺設定入邊改返。"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:496
 msgid "Your current handle <0>{0}</0> will automatically remain reserved for you. You can switch back to it at any time from this account."
-msgstr "你而家嘅帳號頭銜 <0>{0}</0> 會自動保留畀你。你可以隨時喺呢個帳戶切換返去。"
+msgstr "你而家嘅帳號頭銜 <0>{0}</0> 會自動幫你留住。方便你之後轉返去用之前嘅頭銜。"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:51
 #: src/screens/Signup/state.ts:203

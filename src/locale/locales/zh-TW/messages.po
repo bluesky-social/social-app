@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-12-14 01:23\n"
+"PO-Revision-Date: 2024-12-16 01:39\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -2700,7 +2700,7 @@ msgstr "動態源"
 #: src/components/FeedCard.tsx:134
 #: src/view/com/feeds/FeedSourceCard.tsx:253
 msgid "Feed by {0}"
-msgstr "由 {0} 建立的動態源"
+msgstr "來自 {0} 的動態源"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:319
 msgid "Feed menu"
@@ -3630,11 +3630,11 @@ msgstr "成功封鎖列表"
 #: src/components/ListCard.tsx:150
 #: src/view/com/feeds/FeedSourceCard.tsx:255
 msgid "List by {0}"
-msgstr "由 {0} 建立的列表"
+msgstr "來自 {0} 的列表"
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:156
 msgid "List by <0/>"
-msgstr "<0/> 建立的列表"
+msgstr "來自 <0/> 的列表"
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:154
 msgid "List by you"
@@ -3858,11 +3858,11 @@ msgstr "內容管理詳情"
 #: src/components/ListCard.tsx:149
 #: src/view/com/modals/UserAddRemoveLists.tsx:222
 msgid "Moderation list by {0}"
-msgstr "由 {0} 建立的內容管理列表"
+msgstr "來自 {0} 的內容管理列表"
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:169
 msgid "Moderation list by <0/>"
-msgstr "由 <0/> 建立的內容管理列表"
+msgstr "來自 <0/> 的內容管理列表"
 
 #: src/view/com/modals/UserAddRemoveLists.tsx:220
 #: src/view/com/profile/ProfileSubpageHeader.tsx:167
@@ -4128,7 +4128,7 @@ msgstr "新訊息"
 
 #: src/view/com/modals/CreateOrEditList.tsx:232
 msgid "New Moderation List"
-msgstr "新的內容管理列表"
+msgstr "建立內容管理列表"
 
 #: src/view/com/modals/ChangePassword.tsx:213
 msgid "New password"
@@ -4163,7 +4163,7 @@ msgstr "新用戶資訊對話框"
 
 #: src/view/com/modals/CreateOrEditList.tsx:227
 msgid "New User List"
-msgstr "新的用戶列表"
+msgstr "建立用戶列表"
 
 #: src/screens/Settings/ThreadPreferences.tsx:83
 #: src/screens/Settings/ThreadPreferences.tsx:86
@@ -5728,7 +5728,7 @@ msgstr "搜尋 {truncatedTag}"
 
 #: src/components/TagMenu/index.web.tsx:94
 msgid "See {truncatedTag} posts by user"
-msgstr "搜尋此用戶包含 {truncatedTag} 的貼文"
+msgstr "檢視此用戶包含 {truncatedTag} 的貼文"
 
 #: src/components/TagMenu/index.tsx:155
 msgid "See <0>{displayTag}</0> posts"
@@ -6113,7 +6113,7 @@ msgstr "顯示轉發貼文"
 #: src/screens/Settings/FollowingFeedPreferences.tsx:129
 #: src/screens/Settings/FollowingFeedPreferences.tsx:139
 msgid "Show samples of your saved feeds in your Following feed"
-msgstr "在「Following」動態源中顯示您已儲存動態源的精選貼文"
+msgstr "在「Following」動態源中，顯示來自您儲存動態源中的精選貼文"
 
 #: src/components/moderation/ContentHider.tsx:152
 #: src/components/moderation/PostHider.tsx:79
@@ -6305,16 +6305,16 @@ msgstr "新手包"
 
 #: src/components/StarterPack/StarterPackCard.tsx:81
 msgid "Starter pack by {0}"
-msgstr "由 {0} 建立的新手包"
+msgstr "來自 {0} 的新手包"
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:182
 msgid "Starter pack by <0/>"
-msgstr "<0/> 建立的新手包"
+msgstr "來自 <0/> 的新手包"
 
 #: src/components/StarterPack/StarterPackCard.tsx:80
 #: src/view/com/profile/ProfileSubpageHeader.tsx:180
 msgid "Starter pack by you"
-msgstr "由您建立的新手包"
+msgstr "您建立的新手包"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:716
 msgid "Starter pack is invalid"
@@ -7330,11 +7330,11 @@ msgstr "該用戶已把您封鎖"
 
 #: src/view/com/modals/UserAddRemoveLists.tsx:214
 msgid "User list by {0}"
-msgstr "{0} 的用戶列表"
+msgstr "來自 {0} 的用戶列表"
 
 #: src/view/com/modals/UserAddRemoveLists.tsx:212
 msgid "User list by you"
-msgstr "您的用戶列表"
+msgstr "您建立的用戶列表"
 
 #: src/view/com/modals/CreateOrEditList.tsx:176
 msgid "User list created"
@@ -8065,7 +8065,7 @@ msgstr "您的選擇將被儲存，但可以稍後在設定中變更。"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:496
 msgid "Your current handle <0>{0}</0> will automatically remain reserved for you. You can switch back to it at any time from this account."
-msgstr "您現在使用的帳號代碼 <0>{0}</0> 將自動保留給您，以便您日後可以隨時切換回來。"
+msgstr "您現在使用的帳號代碼 <0>{0}</0> 將自動保留給您，以便您能夠在日後隨時切換回來。"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:51
 #: src/screens/Signup/state.ts:203
