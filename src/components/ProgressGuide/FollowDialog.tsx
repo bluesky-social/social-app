@@ -254,6 +254,7 @@ function DialogInner() {
             }>
             {interests.map((interest, i) => {
               const active = interest === selectedInterest && !searchText
+              const activeText = active ? _(msg` (active)`) : ''
               return (
                 <View
                   key={interest}
@@ -268,9 +269,7 @@ function DialogInner() {
                   <Button
                     key={interest}
                     label={_(
-                      msg`Search for ${interestsDisplayNames[interest]}${
-                        active ? _(msg` (active)`) : ''
-                      }`,
+                      msg`Search for "${interestsDisplayNames[interest]}"${activeText}`,
                     )}
                     variant={active ? 'solid' : 'outline'}
                     color={active ? 'primary' : 'secondary'}
