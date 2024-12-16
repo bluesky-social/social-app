@@ -34,7 +34,6 @@ import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {MagnifyingGlass2_Stroke2_Corner0_Rounded as SearchIcon} from '#/components/icons/MagnifyingGlass2'
 import {PersonGroup_Stroke2_Corner2_Rounded as PersonGroupIcon} from '#/components/icons/Person'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
-import {Loader} from '#/components/Loader'
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
 import {ListFooter} from '../Lists'
@@ -343,10 +342,11 @@ function ReplacableProfileCard({
   profile: AppBskyActorDefs.ProfileView
   moderationOpts: ModerationOpts
 }) {
+  const [hasFollowed, setHasFollowed] = useState(false)
   const followupSuggestion = useSuggestedFollowsByActorQuery({
     did: profile.did,
+    enabled: hasFollowed,
   })
-  const [hasFollowed, setHasFollowed] = useState(false)
   const followupProfile = followupSuggestion.data?.suggestions?.[0]
 
   if (!followupSuggestion.isPending) {
@@ -359,27 +359,13 @@ function ReplacableProfileCard({
 
   return (
     <LayoutAnimationConfig skipEntering skipExiting>
-      {hasFollowed ? (
-        followupProfile ? (
-          <Animated.View entering={native(ZoomIn)} key="in">
-            <ReplacableProfileCard
-              profile={followupProfile}
-              moderationOpts={moderationOpts}
-            />
-          </Animated.View>
-        ) : (
-          followupSuggestion.isPending && (
-            <View
-              style={[
-                {height: 50},
-                a.w_full,
-                a.justify_center,
-                a.align_center,
-              ]}>
-              <Loader />
-            </View>
-          )
-        )
+      {hasFollowed && followupProfile ? (
+        <Animated.View entering={native(ZoomIn)} key="in">
+          <ReplacableProfileCard
+            profile={followupProfile}
+            moderationOpts={moderationOpts}
+          />
+        </Animated.View>
       ) : (
         <Animated.View
           exiting={native(ZoomOut)}
