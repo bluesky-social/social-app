@@ -8517,7 +8517,7 @@ msgstr "Desactiváronse les charres"
 
 #: src/view/com/modals/InAppBrowserConsent.tsx:44
 msgid "Your choice will be saved, but can be changed later in settings."
-msgstr "Va guardase la opción qu'escueyas, mas pues camulada dempués na configuración."
+msgstr "Va guardase la opción qu'escueyas, mas pues camudala dempués na configuración."
 
 #: src/screens/Login/ForgotPasswordForm.tsx:51
 #: src/screens/Signup/state.ts:203
