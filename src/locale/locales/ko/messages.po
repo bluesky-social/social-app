@@ -122,7 +122,7 @@ msgstr "{0}/{1}"
 msgid "{0} people have used this starter pack!"
 msgstr "{0}명이 이 스타터 팩을 사용했습니다!"
 
-#: src/view/shell/bottom-bar/BottomBar.tsx:203
+#: src/view/shell/bottom-bar/BottomBar.tsx:208
 msgid "{0} unread items"
 msgstr "읽지 않은 항목 {0}개"
 
@@ -164,10 +164,10 @@ msgid "{0}s"
 msgstr "{0}초"
 
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:252
-msgid "{badge} unread items"
-msgstr "읽지 않은 항목 {badge}개"
+#~ msgid "{badge} unread items"
+#~ msgstr "읽지 않은 항목 {badge}개"
 
-#: src/view/shell/desktop/LeftNav.tsx:186
+#: src/view/shell/desktop/LeftNav.tsx:189
 msgid "{count} unread items"
 msgstr "읽지 않은 항목 {count}개"
 
@@ -281,11 +281,15 @@ msgstr "{following} 팔로우 중"
 msgid "{handle} can't be messaged"
 msgstr "{handle} 님에게 메시지를 보낼 수 없습니다"
 
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:260
+msgid "{notificationCount} unread items"
+msgstr "{notificationCount}개 읽지 않음"
+
 #: src/view/shell/Drawer.tsx:448
 msgid "{numUnreadNotifications} unread"
 msgstr "{numUnreadNotifications}개 읽지 않음"
 
-#: src/view/shell/bottom-bar/BottomBar.tsx:230
+#: src/view/shell/bottom-bar/BottomBar.tsx:235
 msgid "{numUnreadNotifications} unread items"
 msgstr "읽지 않은 항목 {numUnreadNotifications}개"
 
@@ -1105,7 +1109,7 @@ msgstr "비즈니스"
 msgid "By {0}"
 msgstr "{0} 님이 만듦"
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:415
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:442
 msgid "By <0>{0}</0>"
 msgstr "<0>{0}</0> 님이 만듦"
 
@@ -1258,8 +1262,8 @@ msgid "Change your email address"
 msgstr "이메일 주소를 변경하세요"
 
 #: src/Navigation.tsx:382
-#: src/view/shell/bottom-bar/BottomBar.tsx:200
-#: src/view/shell/desktop/LeftNav.tsx:314
+#: src/view/shell/bottom-bar/BottomBar.tsx:205
+#: src/view/shell/desktop/LeftNav.tsx:335
 #: src/view/shell/Drawer.tsx:417
 msgid "Chat"
 msgstr "대화"
@@ -1483,7 +1487,7 @@ msgstr "온보딩 완료 후 계정 사용 시작"
 msgid "Complete the challenge"
 msgstr "챌린지 완료하기"
 
-#: src/view/shell/desktop/LeftNav.tsx:280
+#: src/view/shell/desktop/LeftNav.tsx:301
 msgid "Compose new post"
 msgstr "새 게시물 작성하기"
 
@@ -1728,7 +1732,7 @@ msgstr "저작권 정책"
 msgid "Could not leave chat"
 msgstr "대화에서 나갈 수 없습니다"
 
-#: src/screens/Profile/ProfileFeed/index.tsx:70
+#: src/screens/Profile/ProfileFeed/index.tsx:73
 msgid "Could not load feed"
 msgstr "피드를 불러올 수 없습니다"
 
@@ -2697,7 +2701,7 @@ msgstr "피드"
 msgid "Feed by {0}"
 msgstr "{0} 님의 피드"
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:319
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:348
 msgid "Feed menu"
 msgstr "피드 메뉴"
 
@@ -2722,7 +2726,7 @@ msgstr "피드백을 보냈습니다!"
 #: src/view/screens/Profile.tsx:230
 #: src/view/screens/SavedFeeds.tsx:96
 #: src/view/screens/Search/Search.tsx:518
-#: src/view/shell/desktop/LeftNav.tsx:421
+#: src/view/shell/desktop/LeftNav.tsx:445
 #: src/view/shell/Drawer.tsx:476
 msgid "Feeds"
 msgstr "피드"
@@ -2979,7 +2983,7 @@ msgstr "명백한 법률 또는 서비스 이용약관 위반 행위"
 #: src/components/Layout/Header/index.tsx:121
 #: src/components/moderation/ScreenHider.tsx:154
 #: src/components/moderation/ScreenHider.tsx:163
-#: src/screens/Profile/ProfileFeed/index.tsx:79
+#: src/screens/Profile/ProfileFeed/index.tsx:82
 #: src/view/com/auth/LoggedOut.tsx:72
 #: src/view/screens/NotFound.tsx:57
 #: src/view/screens/ProfileList.tsx:966
@@ -2990,7 +2994,7 @@ msgstr "뒤로"
 #: src/screens/List/ListHiddenScreen.tsx:210
 #: src/screens/Profile/ErrorState.tsx:62
 #: src/screens/Profile/ErrorState.tsx:66
-#: src/screens/Profile/ProfileFeed/index.tsx:84
+#: src/screens/Profile/ProfileFeed/index.tsx:87
 #: src/screens/StarterPack/StarterPackScreen.tsx:758
 #: src/view/screens/NotFound.tsx:56
 #: src/view/screens/ProfileList.tsx:971
@@ -3190,8 +3194,8 @@ msgstr "잠깐! 동영상에 대한 접근 권한이 점차적으로 제공되�
 
 #: src/Navigation.tsx:588
 #: src/Navigation.tsx:608
-#: src/view/shell/bottom-bar/BottomBar.tsx:158
-#: src/view/shell/desktop/LeftNav.tsx:365
+#: src/view/shell/bottom-bar/BottomBar.tsx:163
+#: src/view/shell/desktop/LeftNav.tsx:389
 #: src/view/shell/Drawer.tsx:391
 msgid "Home"
 msgstr "홈"
@@ -3553,7 +3557,7 @@ msgstr "출발!"
 msgid "Light"
 msgstr "밝음"
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:482
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:509
 msgid "Like"
 msgstr "좋아요"
 
@@ -3570,7 +3574,7 @@ msgstr "10개 게시물에 좋아요 누르기"
 msgid "Like 10 posts to train the Discover feed"
 msgstr "10개 게시물에 좋아요를 눌러 Discover 피드를 훈련시키세요"
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:469
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:496
 msgid "Like feed"
 msgstr "피드에 좋아요 표시"
 
@@ -3596,7 +3600,7 @@ msgid "Liked by {0, plural, one {# user} other {# users}}"
 msgstr "{0, plural, other {#}}명의 사용자가 좋아함"
 
 #: src/components/LabelingServiceCard/index.tsx:96
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:457
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:484
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:295
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:309
 msgid "Liked by {likeCount, plural, one {# user} other {# users}}"
@@ -3667,7 +3671,7 @@ msgstr "리스트를 언뮤트했습니다"
 #: src/view/screens/Lists.tsx:62
 #: src/view/screens/Profile.tsx:225
 #: src/view/screens/Profile.tsx:232
-#: src/view/shell/desktop/LeftNav.tsx:439
+#: src/view/shell/desktop/LeftNav.tsx:463
 #: src/view/shell/Drawer.tsx:491
 msgid "Lists"
 msgstr "리스트"
@@ -3692,9 +3696,9 @@ msgstr "추천 팔로우 더 불러오기"
 msgid "Load new notifications"
 msgstr "새 알림 불러오기"
 
-#: src/screens/Profile/ProfileFeed/index.tsx:181
+#: src/screens/Profile/ProfileFeed/index.tsx:192
 #: src/screens/Profile/Sections/Feed.tsx:96
-#: src/view/com/feeds/FeedPage.tsx:135
+#: src/view/com/feeds/FeedPage.tsx:143
 #: src/view/screens/ProfileList.tsx:823
 msgid "Load new posts"
 msgstr "새 게시물 불러오기"
@@ -4040,7 +4044,7 @@ msgstr "내 생년월일"
 msgid "My Feeds"
 msgstr "내 피드"
 
-#: src/view/shell/desktop/LeftNav.tsx:82
+#: src/view/shell/desktop/LeftNav.tsx:84
 msgid "My Profile"
 msgstr "내 프로필"
 
@@ -4133,7 +4137,7 @@ msgstr "새 비밀번호"
 msgid "New Password"
 msgstr "새 비밀번호"
 
-#: src/screens/Profile/ProfileFeed/index.tsx:198
+#: src/screens/Profile/ProfileFeed/index.tsx:209
 #: src/view/screens/Feeds.tsx:549
 #: src/view/screens/Notifications.tsx:165
 #: src/view/screens/Profile.tsx:490
@@ -4142,12 +4146,12 @@ msgstr "새 비밀번호"
 msgid "New post"
 msgstr "새 게시물"
 
-#: src/view/com/feeds/FeedPage.tsx:146
+#: src/view/com/feeds/FeedPage.tsx:154
 msgctxt "action"
 msgid "New post"
 msgstr "새 게시물"
 
-#: src/view/shell/desktop/LeftNav.tsx:288
+#: src/view/shell/desktop/LeftNav.tsx:309
 msgctxt "action"
 msgid "New Post"
 msgstr "새 게시물"
@@ -4362,8 +4366,8 @@ msgstr "알림음"
 
 #: src/Navigation.tsx:598
 #: src/view/screens/Notifications.tsx:128
-#: src/view/shell/bottom-bar/BottomBar.tsx:226
-#: src/view/shell/desktop/LeftNav.tsx:402
+#: src/view/shell/bottom-bar/BottomBar.tsx:231
+#: src/view/shell/desktop/LeftNav.tsx:426
 #: src/view/shell/Drawer.tsx:444
 msgid "Notifications"
 msgstr "알림"
@@ -4499,12 +4503,12 @@ msgstr "서랍 메뉴 열기"
 msgid "Open emoji picker"
 msgstr "이모티콘 선택기 열기"
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:161
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:190
 msgid "Open feed info screen"
 msgstr "피드 정보 화면 열기"
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:256
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:261
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:285
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:290
 msgid "Open feed options menu"
 msgstr "피드 옵션 메뉴 열기"
 
@@ -4728,8 +4732,8 @@ msgstr "사진"
 msgid "Pictures meant for adults."
 msgstr "성인용 사진."
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:487
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:494
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:514
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:521
 msgid "Pin feed"
 msgstr "피드 고정"
 
@@ -4737,7 +4741,7 @@ msgstr "피드 고정"
 msgid "Pin to home"
 msgstr "홈에 고정"
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:302
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:331
 msgid "Pin to Home"
 msgstr "홈에 고정"
 
@@ -4750,8 +4754,8 @@ msgstr "내 프로필에 고정"
 msgid "Pinned"
 msgstr "고정됨"
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:128
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:140
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:162
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:174
 msgid "Pinned {0} to Home"
 msgstr "{0}을(를) 홈에 고정했습니다"
 
@@ -5027,8 +5031,8 @@ msgstr "처리 중…"
 msgid "profile"
 msgstr "프로필"
 
-#: src/view/shell/bottom-bar/BottomBar.tsx:271
-#: src/view/shell/desktop/LeftNav.tsx:457
+#: src/view/shell/bottom-bar/BottomBar.tsx:276
+#: src/view/shell/desktop/LeftNav.tsx:481
 #: src/view/shell/Drawer.tsx:71
 #: src/view/shell/Drawer.tsx:516
 msgid "Profile"
@@ -5192,8 +5196,8 @@ msgstr "피드 제거"
 msgid "Remove feed?"
 msgstr "피드를 제거하시겠습니까?"
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:284
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:290
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:313
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:319
 #: src/view/com/feeds/FeedSourceCard.tsx:190
 #: src/view/com/feeds/FeedSourceCard.tsx:268
 #: src/view/screens/ProfileList.tsx:494
@@ -5269,7 +5273,7 @@ msgstr "내 피드에서 제거했습니다"
 msgid "Removed from saved feeds"
 msgstr "저장한 피드에서 제거했습니다"
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:92
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:126
 #: src/view/com/posts/FeedShutdownMsg.tsx:44
 #: src/view/screens/ProfileList.tsx:378
 msgid "Removed from your feeds"
@@ -5374,8 +5378,8 @@ msgstr "대화 신고"
 msgid "Report dialog"
 msgstr "신고 대화 상자"
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:510
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:516
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:537
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:543
 msgid "Report feed"
 msgstr "피드 신고"
 
@@ -5566,7 +5570,7 @@ msgstr "이전 페이지로 돌아갑니다"
 msgid "Returns to home page"
 msgstr "홈 페이지로 돌아갑니다"
 
-#: src/screens/Profile/ProfileFeed/index.tsx:80
+#: src/screens/Profile/ProfileFeed/index.tsx:83
 #: src/view/screens/NotFound.tsx:60
 msgid "Returns to previous page"
 msgstr "이전 페이지로 돌아갑니다"
@@ -5626,8 +5630,8 @@ msgstr "새 핸들 저장"
 msgid "Save QR code"
 msgstr "QR 코드 저장"
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:285
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:291
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:314
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:320
 msgid "Save to my feeds"
 msgstr "내 피드에 저장"
 
@@ -5639,7 +5643,7 @@ msgstr "저장한 피드"
 msgid "Saved to your camera roll"
 msgstr "사진 보관함에 저장했습니다"
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:101
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:135
 #: src/view/screens/ProfileList.tsx:358
 msgid "Saved to your feeds"
 msgstr "내 피드에 저장했습니다"
@@ -5674,8 +5678,8 @@ msgstr "맨 위로 스크롤"
 #: src/Navigation.tsx:593
 #: src/view/com/modals/ListAddRemoveUsers.tsx:76
 #: src/view/screens/Search/Search.tsx:570
-#: src/view/shell/bottom-bar/BottomBar.tsx:178
-#: src/view/shell/desktop/LeftNav.tsx:383
+#: src/view/shell/bottom-bar/BottomBar.tsx:183
+#: src/view/shell/desktop/LeftNav.tsx:407
 #: src/view/shell/Drawer.tsx:365
 msgid "Search"
 msgstr "검색"
@@ -5927,7 +5931,7 @@ msgstr "비밀번호 재설정을 위한 이메일을 설정합니다"
 
 #: src/Navigation.tsx:159
 #: src/screens/Settings/Settings.tsx:80
-#: src/view/shell/desktop/LeftNav.tsx:475
+#: src/view/shell/desktop/LeftNav.tsx:499
 #: src/view/shell/Drawer.tsx:529
 msgid "Settings"
 msgstr "설정"
@@ -5992,7 +5996,7 @@ msgstr "링크 공유 대화 상자"
 msgid "Share QR code"
 msgstr "QR 코드 공유"
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:438
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:465
 msgid "Share this feed"
 msgstr "이 피드 공유하기"
 
@@ -6132,12 +6136,12 @@ msgstr "경고 표시 및 피드에서 필터링"
 #: src/view/com/auth/SplashScreen.tsx:69
 #: src/view/com/auth/SplashScreen.web.tsx:123
 #: src/view/com/auth/SplashScreen.web.tsx:131
-#: src/view/shell/bottom-bar/BottomBar.tsx:311
-#: src/view/shell/bottom-bar/BottomBar.tsx:312
-#: src/view/shell/bottom-bar/BottomBar.tsx:314
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:205
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:206
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:208
+#: src/view/shell/bottom-bar/BottomBar.tsx:316
+#: src/view/shell/bottom-bar/BottomBar.tsx:317
+#: src/view/shell/bottom-bar/BottomBar.tsx:319
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:212
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:213
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:215
 #: src/view/shell/NavSignupCard.tsx:57
 #: src/view/shell/NavSignupCard.tsx:62
 msgid "Sign in"
@@ -6169,12 +6173,12 @@ msgstr "로그아웃"
 msgid "Sign out?"
 msgstr "로그아웃하시겠습니까?"
 
-#: src/view/shell/bottom-bar/BottomBar.tsx:301
-#: src/view/shell/bottom-bar/BottomBar.tsx:302
-#: src/view/shell/bottom-bar/BottomBar.tsx:304
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:195
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:196
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:198
+#: src/view/shell/bottom-bar/BottomBar.tsx:306
+#: src/view/shell/bottom-bar/BottomBar.tsx:307
+#: src/view/shell/bottom-bar/BottomBar.tsx:309
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:202
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:203
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:205
 #: src/view/shell/NavSignupCard.tsx:47
 #: src/view/shell/NavSignupCard.tsx:52
 msgid "Sign up"
@@ -6245,12 +6249,12 @@ msgstr "알 수 없는 오류가 발생했습니다. 다시 시도해 주세요.
 msgid "Something went wrong!"
 msgstr "문제가 발생했습니다!"
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:506
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:533
 msgid "Something wrong? Let us know."
 msgstr "문제가 발생했나요? 저희에게 알려주세요."
 
-#: src/App.native.tsx:115
-#: src/App.web.tsx:95
+#: src/App.native.tsx:116
+#: src/App.web.tsx:96
 msgid "Sorry! Your session expired. Please log in again."
 msgstr "죄송합니다. 세션이 만료되었습니다. 다시 로그인해 주세요."
 
@@ -6636,14 +6640,14 @@ msgstr "계정 비활성화에는 시간 제한이 없으므로 언제든지 다
 msgid "There was an issue connecting to Tenor."
 msgstr "Tenor에 연결하는 동안 문제가 발생했습니다."
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:143
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:177
 #: src/view/screens/ProfileList.tsx:361
 #: src/view/screens/ProfileList.tsx:380
 #: src/view/screens/SavedFeeds.tsx:85
 msgid "There was an issue contacting the server"
 msgstr "서버에 연결하는 동안 문제가 발생했습니다"
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:381
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:410
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:112
 msgid "There was an issue contacting the server, please check your internet connection and try again."
 msgstr "서버에 연결하는 동안 문제가 발생했습니다. 인터넷 연결을 확인한 후 다시 시도해 주세요."
@@ -6687,7 +6691,7 @@ msgstr "이 피드를 삭제하는 동안 문제가 발생했습니다. 인터�
 msgid "There was an issue sending your report. Please check your internet connection."
 msgstr "신고를 전송하는 동안 문제가 발생했습니다. 인터넷 연결을 확인해 주세요."
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:106
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:140
 #: src/view/com/posts/FeedShutdownMsg.tsx:52
 #: src/view/com/posts/FeedShutdownMsg.tsx:71
 msgid "There was an issue updating your feeds, please check your internet connection and try again."
@@ -6798,7 +6802,7 @@ msgid "This feed is empty! You may need to follow more users or tune your langua
 msgstr "이 피드는 비어 있습니다. 더 많은 사용자를 팔로우하거나 언어 설정을 조정해 보세요."
 
 #: src/components/StarterPack/Main/PostsList.tsx:36
-#: src/screens/Profile/ProfileFeed/index.tsx:159
+#: src/screens/Profile/ProfileFeed/index.tsx:170
 #: src/view/screens/ProfileList.tsx:803
 msgid "This feed is empty."
 msgstr "이 피드는 비어 있습니다."
@@ -7096,7 +7100,7 @@ msgstr "{0} 님을 언팔로우"
 msgid "Unfollow Account"
 msgstr "계정 언팔로우"
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:482
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:509
 msgid "Unlike"
 msgstr "좋아요 취소"
 
@@ -7145,13 +7149,13 @@ msgstr "동영상 음소거 해제"
 msgid "Unpin"
 msgstr "고정 해제"
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:487
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:494
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:514
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:521
 msgid "Unpin feed"
 msgstr "피드 고정 해제"
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:275
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:277
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:304
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:306
 msgid "Unpin from home"
 msgstr "홈에서 고정 해제"
 
@@ -7164,7 +7168,7 @@ msgstr "프로필에서 고정 해제"
 msgid "Unpin moderation list"
 msgstr "검토 리스트 고정 해제"
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:130
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:164
 msgid "Unpinned {0} from Home"
 msgstr "{0}을(를) 홈에서 고정 해제했습니다"
 
@@ -7447,7 +7451,7 @@ msgid "View {0}'s avatar"
 msgstr "{0} 님의 아바타 보기"
 
 #: src/components/ProfileCard.tsx:110
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:418
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:445
 #: src/view/com/notifications/NotificationFeedItem.tsx:409
 msgid "View {0}'s profile"
 msgstr "{0} 님의 프로필 보기"
@@ -7510,7 +7514,7 @@ msgstr "아바타 보기"
 msgid "View the labeling service provided by @{0}"
 msgstr "{0} 님이 제공하는 라벨링 서비스 보기"
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:453
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:480
 msgid "View users who like this feed"
 msgstr "이 피드를 좋아하는 사용자 보기"
 
