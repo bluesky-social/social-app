@@ -91,7 +91,6 @@ export function TrendingTopic({
 
       <Text
         style={[
-          a.flex_1,
           a.font_bold,
           a.leading_tight,
           isSmall ? [a.text_sm] : [a.text_md, {paddingBottom: 1}],
@@ -103,7 +102,13 @@ export function TrendingTopic({
   )
 }
 
-export function TrendingTopicSkeleton({size}: {size: 'large' | 'small'}) {
+export function TrendingTopicSkeleton({
+  size = 'large',
+  index = 0,
+}: {
+  size?: 'large' | 'small'
+  index?: number
+}) {
   const t = useTheme()
   const isSmall = size === 'small'
   return (
@@ -115,11 +120,11 @@ export function TrendingTopicSkeleton({size}: {size: 'large' | 'small'}) {
         t.atoms.bg_contrast_25,
         isSmall
           ? {
-              width: 90,
+              width: index % 2 === 0 ? 75 : 90,
               height: 27,
             }
           : {
-              width: 110,
+              width: index % 2 === 0 ? 90 : 110,
               height: 36,
             },
       ]}
@@ -130,7 +135,6 @@ export function TrendingTopicSkeleton({size}: {size: 'large' | 'small'}) {
 export function TrendingTopicLink({
   topic: raw,
   children,
-  style,
   ...rest
 }: {
   topic: TrendingTopic
@@ -140,11 +144,7 @@ export function TrendingTopicLink({
   if (!topic) return null
 
   return (
-    <InternalLink
-      label={topic.label}
-      to={topic.url}
-      style={[a.flex_col, style]}
-      {...rest}>
+    <InternalLink label={topic.label} to={topic.url} {...rest}>
       {children}
     </InternalLink>
   )

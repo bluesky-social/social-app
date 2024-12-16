@@ -6,7 +6,11 @@ import {
   useTrendingSettings,
   useTrendingSettingsApi,
 } from '#/state/preferences/trending'
-import {useTrendingTopics} from '#/state/queries/trending/useTrendingTopics'
+import {
+  DEFAULT_LIMIT as TRENDING_TOPICS_COUNT,
+  useTrendingTopics,
+} from '#/state/queries/trending/useTrendingTopics'
+import {useTrendingConfig} from '#/state/trending-config'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import {Divider} from '#/components/Divider'
@@ -21,8 +25,9 @@ import {
 import {Text} from '#/components/Typography'
 
 export function SidebarTrendingTopics() {
+  const {enabled} = useTrendingConfig()
   const {trendingSidebarHidden} = useTrendingSettings()
-  return trendingSidebarHidden ? null : <Inner />
+  return !enabled ? null : trendingSidebarHidden ? null : <Inner />
 }
 
 function Inner() {
@@ -30,9 +35,8 @@ function Inner() {
   const {_} = useLingui()
   const trendingPrompt = Prompt.usePromptControl()
   const {setTrendingSidebarHidden} = useTrendingSettingsApi()
-
-  const {data: topics, error, isLoading} = useTrendingTopics()
-  const noTopics = !isLoading && !error && !topics
+  const {data: trending, error, isLoading} = useTrendingTopics()
+  const noTopics = !isLoading && !error && !trending?.topics
 
   return error || noTopics ? null : (
     <>
@@ -61,12 +65,14 @@ function Inner() {
 
         <View style={[a.flex_row, a.flex_wrap, a.gap_xs]}>
           {isLoading ? (
-            Array(8)
+            Array(TRENDING_TOPICS_COUNT)
               .fill(0)
-              .map((_, i) => <TrendingTopicSkeleton key={i} size="small" />)
-          ) : error || !topics ? null : (
+              .map((_n, i) => (
+                <TrendingTopicSkeleton key={i} size="small" index={i} />
+              ))
+          ) : !trending?.topics ? null : (
             <>
-              {topics.map(topic => (
+              {trending.topics.map(topic => (
                 <TrendingTopicLink key={topic.link} topic={topic}>
                   {({hovered}) => (
                     <TrendingTopic
