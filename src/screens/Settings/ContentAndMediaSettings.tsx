@@ -13,6 +13,7 @@ import {
   useTrendingSettings,
   useTrendingSettingsApi,
 } from '#/state/preferences/trending'
+import {useTrendingConfig} from '#/state/trending-config'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
 import * as Toggle from '#/components/forms/Toggle'
 import {Bubbles_Stroke2_Corner2_Rounded as BubblesIcon} from '#/components/icons/Bubble'
@@ -34,6 +35,7 @@ export function ContentAndMediaSettingsScreen({}: Props) {
   const setAutoplayDisabledPref = useSetAutoplayDisabled()
   const inAppBrowserPref = useInAppBrowser()
   const setUseInAppBrowser = useSetInAppBrowser()
+  const {enabled: trendingEnabled} = useTrendingConfig()
   const {trendingSidebarHidden, trendingDiscoverHidden} = useTrendingSettings()
   const {setTrendingSidebarHidden, setTrendingDiscoverHidden} =
     useTrendingSettingsApi()
@@ -112,35 +114,39 @@ export function ContentAndMediaSettingsScreen({}: Props) {
               <Toggle.Platform />
             </SettingsList.Item>
           </Toggle.Item>
-          <SettingsList.Divider />
-          {!isNative && (
-            <Toggle.Item
-              name="show_trending_topics_sidebar"
-              label={_(msg`Show trending topics in your sidebar`)}
-              value={!trendingSidebarHidden}
-              onChange={value => setTrendingSidebarHidden(!value)}>
-              <SettingsList.Item>
-                <SettingsList.ItemIcon icon={Graph} />
-                <SettingsList.ItemText>
-                  <Trans>Show trending topics in your sidebar</Trans>
-                </SettingsList.ItemText>
-                <Toggle.Platform />
-              </SettingsList.Item>
-            </Toggle.Item>
+          {trendingEnabled && (
+            <>
+              <SettingsList.Divider />
+              {!isNative && (
+                <Toggle.Item
+                  name="show_trending_topics_sidebar"
+                  label={_(msg`Show trending topics in your sidebar`)}
+                  value={!trendingSidebarHidden}
+                  onChange={value => setTrendingSidebarHidden(!value)}>
+                  <SettingsList.Item>
+                    <SettingsList.ItemIcon icon={Graph} />
+                    <SettingsList.ItemText>
+                      <Trans>Show trending topics in your sidebar</Trans>
+                    </SettingsList.ItemText>
+                    <Toggle.Platform />
+                  </SettingsList.Item>
+                </Toggle.Item>
+              )}
+              <Toggle.Item
+                name="show_trending_topics_discover"
+                label={_(msg`Show trending topics in your feed`)}
+                value={!trendingDiscoverHidden}
+                onChange={value => setTrendingDiscoverHidden(!value)}>
+                <SettingsList.Item>
+                  <SettingsList.ItemIcon icon={Graph} />
+                  <SettingsList.ItemText>
+                    <Trans>Show trending topics in your feed</Trans>
+                  </SettingsList.ItemText>
+                  <Toggle.Platform />
+                </SettingsList.Item>
+              </Toggle.Item>
+            </>
           )}
-          <Toggle.Item
-            name="show_trending_topics_discover"
-            label={_(msg`Show trending topics in your feed`)}
-            value={!trendingDiscoverHidden}
-            onChange={value => setTrendingDiscoverHidden(!value)}>
-            <SettingsList.Item>
-              <SettingsList.ItemIcon icon={Graph} />
-              <SettingsList.ItemText>
-                <Trans>Show trending topics in your feed</Trans>
-              </SettingsList.ItemText>
-              <Toggle.Platform />
-            </SettingsList.Item>
-          </Toggle.Item>
         </SettingsList.Container>
       </Layout.Content>
     </Layout.Screen>
