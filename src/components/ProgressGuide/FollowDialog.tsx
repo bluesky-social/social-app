@@ -124,6 +124,8 @@ function DialogInner() {
     query: searchText || selectedInterest,
   })
 
+  const hasSearchText = !!searchText
+
   const items = useMemo(() => {
     const results = searchResults?.pages.flatMap(r => r.actors)
     let _items: Item[] = []
@@ -138,6 +140,13 @@ function DialogInner() {
       for (const profile of results) {
         if (profile.did === currentAccount?.did) continue
         if (profile.viewer?.following) continue
+        // my sincere apologies to Jake Gold - your bio is too keyword-filled and
+        // your page-rank too high, so you're at the top of half the categories -sfn
+        if (
+          !hasSearchText &&
+          profile.did === 'did:plc:tpg43qhh4lw4ksiffs4nbda3'
+        )
+          continue
         _items.push({
           type: 'profile',
           key: profile.did,
@@ -156,7 +165,7 @@ function DialogInner() {
     }
 
     return _items
-  }, [_, searchResults, isError, currentAccount?.did])
+  }, [_, searchResults, isError, currentAccount?.did, hasSearchText])
 
   if (searchText && !isFetching && !items.length && !isError) {
     items.push({type: 'empty', key: 'empty', message: _(msg`No results`)})
