@@ -5,11 +5,11 @@ import {useLingui} from '@lingui/react'
 import * as DynamicAppIcon from '@mozzius/expo-dynamic-app-icon'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
-import {DISCOVER_DEBUG_DIDS} from '#/lib/constants'
+import {IS_INTERNAL} from '#/lib/app-info'
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
 import {CommonNavigatorParams} from '#/lib/routes/types'
+import {useGate} from '#/lib/statsig/statsig'
 import {isAndroid} from '#/platform/detection'
-import {useSession} from '#/state/session'
 import {AppIconImage} from '#/screens/Settings/AppIconSettings/AppIconImage'
 import {AppIconSet} from '#/screens/Settings/AppIconSettings/types'
 import {useAppIconSets} from '#/screens/Settings/AppIconSettings/useAppIconSets'
@@ -23,7 +23,7 @@ export function AppIconSettingsScreen({}: Props) {
   const t = useTheme()
   const {_} = useLingui()
   const sets = useAppIconSets()
-  const {currentAccount} = useSession()
+  const gate = useGate()
   const [currentAppIcon, setCurrentAppIcon] = useState(() =>
     getAppIconName(DynamicAppIcon.getAppIcon()),
   )
@@ -86,34 +86,38 @@ export function AppIconSettingsScreen({}: Props) {
           ))}
         </Group>
 
-        {DISCOVER_DEBUG_DIDS[currentAccount?.did ?? ''] && (
-          <>
-            <Text
-              style={[
-                a.text_md,
-                a.mt_xl,
-                a.mb_sm,
-                a.font_bold,
-                t.atoms.text_contrast_medium,
-              ]}>
-              <Trans>Bluesky+</Trans>
-            </Text>
-            <Group
-              label={_(msg`Bluesky+ icons`)}
-              value={currentAppIcon}
-              onChange={onSetAppIcon}>
-              {sets.core.map((icon, i) => (
-                <Row
-                  key={icon.id}
-                  icon={icon}
-                  isEnd={i === sets.core.length - 1}>
-                  <AppIcon icon={icon} key={icon.id} size={40} />
-                  <RowText>{icon.name}</RowText>
-                </Row>
-              ))}
-            </Group>
-          </>
-        )}
+        {IS_INTERNAL &&
+          gate('debug_subscriptions', {
+            // Employee only
+            dangerouslyDisableExposureLogging: true,
+          }) && (
+            <>
+              <Text
+                style={[
+                  a.text_md,
+                  a.mt_xl,
+                  a.mb_sm,
+                  a.font_bold,
+                  t.atoms.text_contrast_medium,
+                ]}>
+                <Trans>Bluesky+</Trans>
+              </Text>
+              <Group
+                label={_(msg`Bluesky+ icons`)}
+                value={currentAppIcon}
+                onChange={onSetAppIcon}>
+                {sets.core.map((icon, i) => (
+                  <Row
+                    key={icon.id}
+                    icon={icon}
+                    isEnd={i === sets.core.length - 1}>
+                    <AppIcon icon={icon} key={icon.id} size={40} />
+                    <RowText>{icon.name}</RowText>
+                  </Row>
+                ))}
+              </Group>
+            </>
+          )}
       </Layout.Content>
     </Layout.Screen>
   )
