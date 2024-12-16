@@ -63,6 +63,7 @@
     "@expo/webpack-config": "^19.0.0",
     "@floating-ui/dom": "^1.6.3",
     "@floating-ui/react-dom": "^2.0.8",
+    "@formatjs/intl-datetimeformat": "^6.17.1",
     "@formatjs/intl-locale": "^4.2.8",
     "@formatjs/intl-numberformat": "^8.15.1",
     "@formatjs/intl-pluralrules": "^5.4.1",

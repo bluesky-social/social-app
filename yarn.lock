@@ -4274,6 +4274,15 @@
   dependencies:
     tslib "2"
 
+"@formatjs/intl-datetimeformat@^6.17.1":
+  version "6.17.1"
+  resolved "https://registry.yarnpkg.com/@formatjs/intl-datetimeformat/-/intl-datetimeformat-6.17.1.tgz#d5e800891f9d79c8f1af1999f51db51f1384eca1"
+  integrity sha512-a18NqRo6R73xpREuMZo8FqjO+LnYFDHoeoviTh5de4ebI46wqLSDgbAIKoceuWblTQt8bvCpJIwvKgLItea88Q==
+  dependencies:
+    "@formatjs/ecma402-abstract" "2.3.1"
+    "@formatjs/intl-localematcher" "0.5.9"
+    tslib "2"
+
 "@formatjs/intl-enumerator@1.8.7":
   version "1.8.7"
   resolved "https://registry.yarnpkg.com/@formatjs/intl-enumerator/-/intl-enumerator-1.8.7.tgz#3f004753333f80cc468ae34046bd8416772a0412"
