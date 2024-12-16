@@ -87,12 +87,7 @@ let PostCtrls = ({
   const {captureAction} = useProgressGuideControls()
   const playHaptic = useHaptics()
   const gate = useGate()
-  const isDiscoverDebugUser =
-    IS_INTERNAL ||
-    gate('debug_show_feedcontext', {
-      // Employee only
-      dangerouslyDisableExposureLogging: true,
-    })
+  const isDiscoverDebugUser = IS_INTERNAL || gate('debug_show_feedcontext')
   const isBlocked = Boolean(
     post.author.viewer?.blocking ||
       post.author.viewer?.blockedBy ||

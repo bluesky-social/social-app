@@ -177,17 +177,12 @@ export function AppearanceSettingsScreen({}: Props) {
                 onChange={onChangeFontScale}
               />
 
-              {isNative &&
-                IS_INTERNAL &&
-                gate('debug_subscriptions', {
-                  // Employee only
-                  dangerouslyDisableExposureLogging: true,
-                }) && (
-                  <>
-                    <SettingsList.Divider />
-                    <AppIconSettingsListItem />
-                  </>
-                )}
+              {isNative && IS_INTERNAL && gate('debug_subscriptions') && (
+                <>
+                  <SettingsList.Divider />
+                  <AppIconSettingsListItem />
+                </>
+              )}
             </Animated.View>
           </SettingsList.Container>
         </Layout.Content>
