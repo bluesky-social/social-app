@@ -1,4 +1,4 @@
-import {useCallback, useLayoutEffect, useMemo, useRef, useState} from 'react'
+import {useCallback, useMemo, useRef, useState} from 'react'
 import {ScrollView, TextInput, useWindowDimensions, View} from 'react-native'
 import {AppBskyActorDefs, ModerationOpts} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
@@ -189,14 +189,6 @@ function DialogInner() {
     },
     [moderationOpts],
   )
-
-  useLayoutEffect(() => {
-    if (isWeb) {
-      setImmediate(() => {
-        inputRef?.current?.focus()
-      })
-    }
-  }, [])
 
   const listHeader = useMemo(() => {
     return (
@@ -525,7 +517,6 @@ function SearchInput({
         autoCorrect={false}
         autoComplete="off"
         autoCapitalize="none"
-        autoFocus
         accessibilityLabel={_(msg`Search profiles`)}
         accessibilityHint={_(msg`Search profiles`)}
       />
