@@ -103,6 +103,30 @@ export function TrendingTopic({
   )
 }
 
+export function TrendingTopicSkeleton({size}: {size: 'large' | 'small'}) {
+  const t = useTheme()
+  const isSmall = size === 'small'
+  return (
+    <View
+      style={[
+        a.rounded_full,
+        a.border,
+        t.atoms.border_contrast_medium,
+        t.atoms.bg_contrast_25,
+        isSmall
+          ? {
+              width: 90,
+              height: 27,
+            }
+          : {
+              width: 110,
+              height: 36,
+            },
+      ]}
+    />
+  )
+}
+
 export function TrendingTopicLink({
   topic: raw,
   children,

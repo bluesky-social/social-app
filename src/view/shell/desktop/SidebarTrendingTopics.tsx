@@ -13,7 +13,11 @@ import {Divider} from '#/components/Divider'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import {Trending2_Stroke2_Corner2_Rounded as Graph} from '#/components/icons/Trending2'
 import * as Prompt from '#/components/Prompt'
-import {TrendingTopic, TrendingTopicLink} from '#/components/TrendingTopics'
+import {
+  TrendingTopic,
+  TrendingTopicLink,
+  TrendingTopicSkeleton,
+} from '#/components/TrendingTopics'
 import {Text} from '#/components/Typography'
 
 export function SidebarTrendingTopics() {
@@ -28,8 +32,9 @@ function Inner() {
   const {setTrendingSidebarHidden} = useTrendingSettingsApi()
 
   const {data: topics, error, isLoading} = useTrendingTopics()
+  const noTopics = !isLoading && !error && !topics
 
-  return (
+  return error || noTopics ? null : (
     <>
       <View style={[a.gap_md]}>
         <View style={[a.flex_row, a.align_center, a.gap_xs]}>
@@ -55,7 +60,11 @@ function Inner() {
         </View>
 
         <View style={[a.flex_row, a.flex_wrap, a.gap_xs]}>
-          {isLoading ? null : error || !topics ? null : (
+          {isLoading ? (
+            Array(8)
+              .fill(0)
+              .map((_, i) => <TrendingTopicSkeleton key={i} size="small" />)
+          ) : error || !topics ? null : (
             <>
               {topics.map(topic => (
                 <TrendingTopicLink key={topic.link} topic={topic}>
