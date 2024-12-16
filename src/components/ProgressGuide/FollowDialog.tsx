@@ -13,19 +13,23 @@ import {useLingui} from '@lingui/react'
 
 import {isNative} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
+import {usePreferencesQuery} from '#/state/queries/preferences'
 import {
   useSuggestedFollowsByActorQuery,
   useSuggestedFollowsQuery,
 } from '#/state/queries/suggested-follows'
+import {useInterestsDisplayNames} from '#/screens/Onboarding/state'
 import {
   atoms as a,
   native,
+  tokens,
   useBreakpoints,
   useTheme,
   ViewStyleProp,
 } from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
+import {MagnifyingGlass2_Stroke2_Corner0_Rounded as SearchIcon} from '#/components/icons/MagnifyingGlass2'
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
 import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as ArrowRotateIcon} from '../icons/ArrowRotateCounterClockwise'
@@ -62,6 +66,8 @@ export function FollowDialog() {
 function DialogInner() {
   const {_} = useLingui()
 
+  const interestsDisplayNames = useInterestsDisplayNames()
+  const {data: preferences} = usePreferencesQuery()
   const moderationOpts = useModerationOpts()
   const suggestions = useSuggestedFollowsQuery({limit: 6})
   const ref = useRef<ScrollView>(null)
@@ -69,12 +75,38 @@ function DialogInner() {
   return (
     <Dialog.ScrollableInner
       ref={isNative ? ref : undefined}
-      label={_(msg`Find people to follow`)}>
+      label={_(msg`Find people to follow`)}
+      contentContainerStyle={[a.gap_md]}>
       <Text style={[a.font_heavy, a.text_2xl]}>
         <Trans>Find people to follow</Trans>
       </Text>
+      <ScrollView
+        horizontal
+        contentContainerStyle={[a.gap_sm, a.px_xl]}
+        style={{marginHorizontal: -tokens.space.xl}}
+        showsHorizontalScrollIndicator={false}>
+        <Button
+          label={_(msg`For you`)}
+          variant="solid"
+          color="primary"
+          size="small">
+          <ButtonText>For you</ButtonText>
+        </Button>
+        {preferences?.interests &&
+          preferences.interests.tags.map(interest => (
+            <Button
+              key={interest}
+              label={interestsDisplayNames[interest]}
+              variant="outline"
+              color="secondary"
+              size="small">
+              <ButtonIcon icon={SearchIcon} />
+              <ButtonText>{interestsDisplayNames[interest]}</ButtonText>
+            </Button>
+          ))}
+      </ScrollView>
       {suggestions.data && moderationOpts ? (
-        <View style={[a.pt_xl]}>
+        <View style={[a.pb_xl]}>
           {suggestions.data.pages.at(-1)?.actors.map((profile, i) => (
             <Animated.View
               key={profile.did}
