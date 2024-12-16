@@ -3,7 +3,6 @@ import {View} from 'react-native'
 import {
   AppBskyActorDefs,
   AppBskyFeedDefs,
-  AppBskyGraphDefs,
   moderateProfile,
   ModerationDecision,
   ModerationOpts,
@@ -35,7 +34,6 @@ import {Props as SVGIconProps} from '#/components/icons/common'
 import {ListSparkle_Stroke2_Corner0_Rounded as ListSparkle} from '#/components/icons/ListSparkle'
 import {UserCircle_Stroke2_Corner0_Rounded as Person} from '#/components/icons/UserCircle'
 import {Loader} from '#/components/Loader'
-import * as StarterPackSuggestions from '#/components/StarterPack/Suggestions'
 import {Text} from '#/components/Typography'
 
 function SuggestedItemsHeader({
@@ -248,11 +246,6 @@ type ExploreScreenItems =
   | {
       type: 'trendingTopics'
       key: string
-    }
-  | {
-      type: 'suggestedStarterPacks'
-      key: string
-      starterPacks: AppBskyGraphDefs.StarterPackViewBasic[]
     }
   | {
       type: 'profile'
@@ -512,15 +505,6 @@ export function Explore() {
         }
         case 'trendingTopics': {
           return <ExploreTrendingTopics />
-        }
-        case 'suggestedStarterPacks': {
-          return (
-            <StarterPackSuggestions.Grid
-              isSuggestionsLoading={false}
-              error={null}
-              starterPacks={item.starterPacks}
-            />
-          )
         }
         case 'profile': {
           return (
