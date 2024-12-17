@@ -57,6 +57,22 @@ export function FollowDialog() {
   const control = Dialog.useDialogControl()
   const {gtMobile} = useBreakpoints()
   const {height: minHeight} = useWindowDimensions()
+  const interestsDisplayNames = useInterestsDisplayNames()
+  const {data: preferences} = usePreferencesQuery()
+  const personalizedInterests = preferences?.interests?.tags
+  const interests = Object.keys(interestsDisplayNames).sort((a, b) => {
+    const indexA = personalizedInterests?.indexOf(a) ?? -1
+    const indexB = personalizedInterests?.indexOf(b) ?? -1
+    const rankA = indexA === -1 ? Infinity : indexA
+    const rankB = indexB === -1 ? Infinity : indexB
+    return rankA - rankB
+  })
+  const [selectedInterest, setSelectedInterest] = useState(() =>
+    personalizedInterests && interests.includes(personalizedInterests[0])
+      ? personalizedInterests[0]
+      : interests[0],
+  )
+  const [searchText, setSearchText] = useState('')
 
   return (
     <>
@@ -73,17 +89,36 @@ export function FollowDialog() {
       </Button>
       <Dialog.Outer control={control} nativeOptions={{minHeight}}>
         <Dialog.Handle />
-        <DialogInner />
+        <DialogInner
+          selectedInterest={selectedInterest}
+          interests={interests}
+          interestsDisplayNames={interestsDisplayNames}
+          searchText={searchText}
+          setSelectedInterest={setSelectedInterest}
+          setSearchText={setSearchText}
+        />
       </Dialog.Outer>
     </>
   )
 }
 
-function DialogInner() {
+function DialogInner({
+  interests,
+  interestsDisplayNames,
+  selectedInterest,
+  searchText,
+  setSearchText,
+  setSelectedInterest,
+}: {
+  interests: string[]
+  interestsDisplayNames: Record<string, string>
+  searchText: string
+  selectedInterest: string
+  setSelectedInterest: (v: string) => void
+  setSearchText: (v: string) => void
+}) {
   const {_} = useLingui()
   const t = useTheme()
-  const interestsDisplayNames = useInterestsDisplayNames()
-  const {data: preferences} = usePreferencesQuery()
   const moderationOpts = useModerationOpts()
   const listRef = useRef<ListMethods>(null)
   const inputRef = useRef<TextInput>(null)
@@ -91,21 +126,6 @@ function DialogInner() {
   const [tabOffsets, setTabOffsets] = useState<number[]>([])
   const [headerHeight, setHeaderHeight] = useState(0)
   const {currentAccount} = useSession()
-  const [searchText, setSearchText] = useState('')
-
-  const personalizedInterests = preferences?.interests?.tags
-  const interests = Object.keys(interestsDisplayNames).sort((a, b) => {
-    const indexA = personalizedInterests?.indexOf(a) ?? -1
-    const indexB = personalizedInterests?.indexOf(b) ?? -1
-    const rankA = indexA === -1 ? Infinity : indexA
-    const rankB = indexB === -1 ? Infinity : indexB
-    return rankA - rankB
-  })
-  const [selectedInterest, setSelectedInterest] = useState(
-    personalizedInterests && interests.includes(personalizedInterests[0])
-      ? personalizedInterests[0]
-      : interests[0],
-  )
 
   const {
     data: searchResults,
@@ -248,6 +268,7 @@ function DialogInner() {
         <View style={[web(a.pt_xs), a.pb_xs]}>
           <SearchInput
             inputRef={inputRef}
+            defaultValue={searchText}
             onChangeText={text => {
               setSearchText(text)
               listRef.current?.scrollToOffset({offset: 0, animated: false})
@@ -316,6 +337,7 @@ function DialogInner() {
     interestsDisplayNames,
     setSelectedInterest,
     tabOffsets,
+    setSearchText,
   ])
 
   const onEndReached = useCallback(async () => {
@@ -487,10 +509,12 @@ function SearchInput({
   onChangeText,
   onEscape,
   inputRef,
+  defaultValue,
 }: {
   onChangeText: (text: string) => void
   onEscape: () => void
   inputRef: React.RefObject<TextInput>
+  defaultValue: string
 }) {
   const t = useTheme()
   const {_} = useLingui()
@@ -517,6 +541,7 @@ function SearchInput({
       <TextInput
         ref={inputRef}
         placeholder={_(msg`Search`)}
+        defaultValue={defaultValue}
         onChangeText={onChangeText}
         onFocus={onFocus}
         onBlur={onBlur}
