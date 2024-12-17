@@ -14,6 +14,7 @@ import {s} from '#/lib/styles'
 import {isNative} from '#/platform/detection'
 import {listenSoftReset} from '#/state/events'
 import {FeedFeedbackProvider, useFeedFeedback} from '#/state/feed-feedback'
+import {useSetHomeBadge} from '#/state/home-badge'
 import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
 import {FeedDescriptor, FeedParams} from '#/state/queries/post-feed'
 import {truncateAndInvalidate} from '#/state/queries/util'
@@ -59,6 +60,13 @@ export function FeedPage({
   const feedFeedback = useFeedFeedback(feed, hasSession)
   const scrollElRef = React.useRef<ListMethods>(null)
   const [hasNew, setHasNew] = React.useState(false)
+  const setHomeBadge = useSetHomeBadge()
+
+  React.useEffect(() => {
+    if (isPageFocused) {
+      setHomeBadge(hasNew)
+    }
+  }, [isPageFocused, hasNew, setHomeBadge])
 
   const scrollToTop = React.useCallback(() => {
     scrollElRef.current?.scrollToOffset({

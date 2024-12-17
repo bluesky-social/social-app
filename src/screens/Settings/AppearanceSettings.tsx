@@ -8,10 +8,10 @@ import Animated, {
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {DISCOVER_DEBUG_DIDS} from '#/lib/constants'
+import {IS_INTERNAL} from '#/lib/app-info'
 import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
+import {useGate} from '#/lib/statsig/statsig'
 import {isNative} from '#/platform/detection'
-import {useSession} from '#/state/session'
 import {useSetThemePrefs, useThemePrefs} from '#/state/shell'
 import {SettingsListItem as AppIconSettingsListItem} from '#/screens/Settings/AppIconSettings/SettingsListItem'
 import {atoms as a, native, useAlf, useTheme} from '#/alf'
@@ -29,6 +29,7 @@ type Props = NativeStackScreenProps<CommonNavigatorParams, 'AppearanceSettings'>
 export function AppearanceSettingsScreen({}: Props) {
   const {_} = useLingui()
   const {fonts} = useAlf()
+  const gate = useGate()
 
   const {colorMode, darkTheme} = useThemePrefs()
   const {setColorMode, setDarkTheme} = useSetThemePrefs()
@@ -73,8 +74,6 @@ export function AppearanceSettingsScreen({}: Props) {
     },
     [fonts],
   )
-
-  const {currentAccount} = useSession()
 
   return (
     <LayoutAnimationConfig skipExiting skipEntering>
@@ -178,7 +177,7 @@ export function AppearanceSettingsScreen({}: Props) {
                 onChange={onChangeFontScale}
               />
 
-              {isNative && DISCOVER_DEBUG_DIDS[currentAccount?.did ?? ''] && (
+              {isNative && IS_INTERNAL && gate('debug_subscriptions') && (
                 <>
                   <SettingsList.Divider />
                   <AppIconSettingsListItem />

@@ -9,6 +9,8 @@ import {useMinimalShellFooterTransform} from '#/lib/hooks/useMinimalShellTransfo
 import {getCurrentRoute, isTab} from '#/lib/routes/helpers'
 import {makeProfileLink} from '#/lib/routes/links'
 import {CommonNavigatorParams} from '#/lib/routes/types'
+import {useGate} from '#/lib/statsig/statsig'
+import {useHomeBadge} from '#/state/home-badge'
 import {useUnreadMessageCount} from '#/state/queries/messages/list-conversations'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {useSession} from '#/state/session'
@@ -51,6 +53,8 @@ export function BottomBarWeb() {
 
   const unreadMessageCount = useUnreadMessageCount()
   const notificationCountStr = useUnreadNotifications()
+  const hasHomeBadge = useHomeBadge()
+  const gate = useGate()
 
   const showSignIn = React.useCallback(() => {
     closeAllActiveElements()
@@ -75,7 +79,10 @@ export function BottomBarWeb() {
       ]}>
       {hasSession ? (
         <>
-          <NavItem routeName="Home" href="/">
+          <NavItem
+            routeName="Home"
+            href="/"
+            hasNew={hasHomeBadge && gate('remove_show_latest_button')}>
             {({isActive}) => {
               const Icon = isActive ? HomeFilled : Home
               return (
@@ -105,7 +112,7 @@ export function BottomBarWeb() {
               <NavItem
                 routeName="Messages"
                 href="/messages"
-                badge={
+                notificationCount={
                   unreadMessageCount.count > 0
                     ? unreadMessageCount.numUnread
                     : undefined
@@ -128,7 +135,7 @@ export function BottomBarWeb() {
               <NavItem
                 routeName="Notifications"
                 href="/notifications"
-                badge={notificationCountStr}>
+                notificationCount={notificationCountStr}>
                 {({isActive}) => {
                   const Icon = isActive ? BellFilled : Bell
                   return (
@@ -220,8 +227,9 @@ const NavItem: React.FC<{
   children: (props: {isActive: boolean}) => React.ReactChild
   href: string
   routeName: string
-  badge?: string
-}> = ({children, href, routeName, badge}) => {
+  hasNew?: boolean
+  notificationCount?: string
+}> = ({children, href, routeName, hasNew, notificationCount}) => {
   const {_} = useLingui()
   const {currentAccount} = useSession()
   const currentRoute = useNavigationState(state => {
@@ -246,13 +254,15 @@ const NavItem: React.FC<{
       aria-label={routeName}
       accessible={true}>
       {children({isActive})}
-      {!!badge && (
+      {notificationCount ? (
         <View
           style={styles.notificationCount}
-          aria-label={_(msg`${badge} unread items`)}>
-          <Text style={styles.notificationCountLabel}>{badge}</Text>
+          aria-label={_(msg`${notificationCount} unread items`)}>
+          <Text style={styles.notificationCountLabel}>{notificationCount}</Text>
         </View>
-      )}
+      ) : hasNew ? (
+        <View style={styles.hasNewBadge} />
+      ) : null}
     </Link>
   )
 }
