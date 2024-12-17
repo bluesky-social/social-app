@@ -20,7 +20,15 @@ type StateContext = {
 
 const stateContext = React.createContext<StateContext>({
   enabled: false,
-  onItemSeen: (_item: any) => {},
+  onItemSeen: (feedItem: any) => {
+    const slice = getFeedPostSlice(feedItem)
+    if (slice === null) {
+      return
+    }
+    for (const postItem of slice.items) {
+      markGloballySeenPost(postItem.uri)
+    }
+  },
   sendInteraction: (_interaction: AppBskyFeedDefs.Interaction) => {},
 })
 
