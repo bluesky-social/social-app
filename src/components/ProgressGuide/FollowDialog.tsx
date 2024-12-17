@@ -92,6 +92,10 @@ export function FollowDialog({guide}: {guide: Follow10ProgressGuide}) {
   )
 }
 
+// Fine to keep this top-level.
+let lastSelectedInterest = ''
+let lastSearchText = ''
+
 function DialogInner({guide}: {guide: Follow10ProgressGuide}) {
   const {_} = useLingui()
   const interestsDisplayNames = useInterestsDisplayNames()
@@ -100,12 +104,14 @@ function DialogInner({guide}: {guide: Follow10ProgressGuide}) {
   const interests = Object.keys(interestsDisplayNames)
     .sort(boostInterests(popularInterests))
     .sort(boostInterests(personalizedInterests))
-  const [selectedInterest, setSelectedInterest] = useState(() =>
-    personalizedInterests && interests.includes(personalizedInterests[0])
-      ? personalizedInterests[0]
-      : interests[0],
+  const [selectedInterest, setSelectedInterest] = useState(
+    () =>
+      lastSelectedInterest ||
+      (personalizedInterests && interests.includes(personalizedInterests[0])
+        ? personalizedInterests[0]
+        : interests[0]),
   )
-  const [searchText, setSearchText] = useState('')
+  const [searchText, setSearchText] = useState(lastSearchText)
   const moderationOpts = useModerationOpts()
   const listRef = useRef<ListMethods>(null)
   const inputRef = useRef<TextInput>(null)
@@ -114,6 +120,11 @@ function DialogInner({guide}: {guide: Follow10ProgressGuide}) {
   const [suggestedAccounts, setSuggestedAccounts] = useState<
     Map<string, AppBskyActorDefs.ProfileView[]>
   >(() => new Map())
+
+  useEffect(() => {
+    lastSearchText = searchText
+    lastSelectedInterest = selectedInterest
+  }, [searchText, selectedInterest])
 
   const query = searchText || selectedInterest
   const {
