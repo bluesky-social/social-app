@@ -3,3 +3,4 @@ export type Gate =
   | 'debug_show_feedcontext' // DISABLED DUE TO EME
   | 'post_feed_lang_window' // DISABLED DUE TO EME
   | 'remove_show_latest_button'
+  | 'trending_topics_beta'
