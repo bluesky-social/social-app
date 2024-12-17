@@ -395,7 +395,7 @@ export function PostThread({uri}: {uri: string | undefined}) {
   useEffect(() => {
     if (skeleton) {
       // We're not tracking linger time here so conservatively mark
-      // just the highlighted post and the parent. Presumably,
+      // just the highlighted post and the parents. Presumably,
       // if you're already midthread, you know what was above.
       const {parents, highlightedPost} = skeleton
       markGloballySeenPost(highlightedPost.uri)
