@@ -37,7 +37,7 @@ export function Inner() {
   const trendingPrompt = Prompt.usePromptControl()
   const {setTrendingDiscoverHidden} = useTrendingSettingsApi()
   const {data: trending, error, isLoading} = useTrendingTopics()
-  const noTopics = !isLoading && !error && !trending?.topics
+  const noTopics = !isLoading && !error && !trending?.topics?.length
 
   return error || noTopics ? null : (
     <View

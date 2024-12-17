@@ -26,7 +26,7 @@ function Inner() {
   const t = useTheme()
   const gutters = useGutters([0, 'compact'])
   const {data: trending, error, isLoading} = useTrendingTopics()
-  const noTopics = !isLoading && !error && !trending?.topics
+  const noTopics = !isLoading && !error && !trending?.topics?.length
 
   return error || noTopics ? null : (
     <>
