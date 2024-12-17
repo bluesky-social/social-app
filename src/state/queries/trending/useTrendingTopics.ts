@@ -2,10 +2,12 @@ import React from 'react'
 import {hasMutedWord} from '@atproto/api/dist/moderation/mutewords'
 import {useQuery} from '@tanstack/react-query'
 
-// TEMP
-import {makeSearchLink} from '#/lib/routes/links'
 import {STALE} from '#/state/queries'
 import {usePreferencesQuery} from '#/state/queries/preferences'
+import {useAgent} from '#/state/session'
+
+const HOST = ``
+const TOKEN = ``
 
 export type TrendingTopic = {
   topic: string
@@ -14,11 +16,12 @@ export type TrendingTopic = {
   link: string
 }
 
-export const DEFAULT_LIMIT = 12
+export const DEFAULT_LIMIT = 14
 
 export const trendingTopicsQueryKey = ['trending-topics']
 
 export function useTrendingTopics() {
+  const agent = useAgent()
   const {data: preferences} = usePreferencesQuery()
   const mutedWords = React.useMemo(() => {
     return preferences?.moderationPrefs?.mutedWords || []
@@ -29,62 +32,23 @@ export function useTrendingTopics() {
     staleTime: STALE.MINUTES.THIRTY,
     queryKey: trendingTopicsQueryKey,
     async queryFn() {
-      /*
-      try {
-        const params = new URLSearchParams()
-        params.set('viewer', agent.session?.did || '')
-        const res = await fetch(
-          ``,
-          {
-            headers: {
-              Authorization:
-                'Bearer ',
-            },
-          },
-        )
+      const params = new URLSearchParams()
+      params.set('viewer', agent.session?.did || '')
+      params.set('limit', String(DEFAULT_LIMIT))
+      const res = await fetch(`${HOST}?${params.toString()}`, {
+        headers: {
+          Authorization: `Bearer ${TOKEN}`,
+        },
+      })
 
-        if (!res.ok) {
-          throw new Error('Failed to fetch trending topics')
-        }
-
-        const data = await res.json()
-        return data.topics
-      } catch (e) {
-        console.error(e)
+      if (!res.ok) {
+        throw new Error('Failed to fetch trending topics')
       }
-      */
-      const topics: TrendingTopic[] = [
-        {
-          topic: '#atproto',
-          displayName: '#atproto',
-          description: '',
-          link: '/hashtag/atproto',
-        },
-        {
-          topic: 'South Korea',
-          displayName: 'South Korea',
-          description: '',
-          link: makeSearchLink({query: 'South Korea'}),
-        },
-        {
-          topic: 'Paul Frazee',
-          displayName: 'Paul Frazee',
-          description: '',
-          link: 'at://did:plc:ragtjsm2j2vknwkz3zp4oxrd/app.bsky.actor.profile/self',
-        },
-        {
-          topic: 'Wired',
-          displayName: 'Wired',
-          description: '',
-          link: makeSearchLink({query: 'Wired'}),
-        },
-        {
-          topic: 'Quiet Posters',
-          displayName: 'Quiet Posters',
-          description: '',
-          link: 'at://did:plc:vpkhqolt662uhesyj6nxm7ys/app.bsky.feed.generator/infreq',
-        },
-      ]
+
+      const {topics, recommended} = (await res.json()) as {
+        topics: TrendingTopic[]
+        recommended: TrendingTopic[]
+      }
       return {
         topics: topics.filter(t => {
           return !hasMutedWord({
@@ -92,7 +56,12 @@ export function useTrendingTopics() {
             text: t.topic + ' ' + t.displayName + ' ' + t.description,
           })
         }),
-        recommended: [],
+        recommended: recommended.filter(t => {
+          return !hasMutedWord({
+            mutedWords,
+            text: t.topic + ' ' + t.displayName + ' ' + t.description,
+          })
+        }),
       }
     },
   })
