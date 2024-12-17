@@ -487,7 +487,6 @@ function Tabs({
 
                 const btnLayout = tabOffsets[i]
                 if (!btnLayout) return
-                console.log(scrollX, btnLayout.x)
                 const viewportLeftEdge = scrollX
                 const viewportRightEdge = scrollX + totalWidth
                 const shouldScrollToLeftEdge = viewportLeftEdge > btnLayout.x
