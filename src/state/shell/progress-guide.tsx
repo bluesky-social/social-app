@@ -228,7 +228,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
             />
             <ProgressGuideToast
               ref={tenthFollowToastRef}
-              title={_(msg`Task complete - follow 10 accounts!`)}
+              title={_(msg`Task complete - 10 follows!`)}
               subtitle={_(msg`You've found some people to follow`)}
             />
           </>
