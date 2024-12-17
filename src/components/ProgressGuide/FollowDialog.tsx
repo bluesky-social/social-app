@@ -1,5 +1,10 @@
 import {useCallback, useMemo, useRef, useState} from 'react'
 import {ScrollView, TextInput, useWindowDimensions, View} from 'react-native'
+import Animated, {
+  LayoutAnimationConfig,
+  ZoomIn,
+  ZoomOut,
+} from 'react-native-reanimated'
 import {AppBskyActorDefs, ModerationOpts} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -10,6 +15,7 @@ import {isWeb} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useActorSearchPaginated} from '#/state/queries/actor-search'
 import {usePreferencesQuery} from '#/state/queries/preferences'
+import {useSuggestedFollowsByActorQuery} from '#/state/queries/suggested-follows'
 import {useSession} from '#/state/session'
 import {Follow10ProgressGuide} from '#/state/shell/progress-guide'
 import {ListMethods} from '#/view/com/util/List'
@@ -399,55 +405,36 @@ function ReplacableProfileCard({
   profile: AppBskyActorDefs.ProfileView
   moderationOpts: ModerationOpts
 }) {
+  const [hasFollowed, setHasFollowed] = useState(false)
+  const followupSuggestion = useSuggestedFollowsByActorQuery({
+    did: profile.did,
+    enabled: hasFollowed,
+  })
+  const followupProfile = followupSuggestion.data?.suggestions?.[0]
+
   return (
-    <View style={[a.pt_md, a.px_lg]}>
-      <ReplacableProfileCardInner
-        profile={profile}
-        moderationOpts={moderationOpts}
-      />
-    </View>
+    <LayoutAnimationConfig skipEntering skipExiting>
+      {hasFollowed && followupProfile ? (
+        <Animated.View entering={native(ZoomIn)} key="in">
+          <ReplacableProfileCard
+            profile={followupProfile}
+            moderationOpts={moderationOpts}
+          />
+        </Animated.View>
+      ) : (
+        <Animated.View
+          exiting={native(ZoomOut)}
+          key="out"
+          style={[a.pt_md, a.px_lg]}>
+          <ReplacableProfileCardInner
+            profile={profile}
+            moderationOpts={moderationOpts}
+            onFollow={() => setHasFollowed(true)}
+          />
+        </Animated.View>
+      )}
+    </LayoutAnimationConfig>
   )
-
-  // Replaces the profile card with a similar one after pressing follow. Pending backend fix -sfn
-  //
-  // const [hasFollowed, setHasFollowed] = useState(false)
-  // const followupSuggestion = useSuggestedFollowsByActorQuery({
-  //   did: profile.did,
-  //   enabled: hasFollowed,
-  // })
-  // const followupProfile = followupSuggestion.data?.suggestions?.[0]
-
-  // if (!followupSuggestion.isPending) {
-  //   if (followupProfile) {
-  //     console.log('! followup found for', profile.handle)
-  //   } else {
-  //     console.log('  no suggestions for', profile.handle)
-  //   }
-  // }
-
-  // return (
-  //   <LayoutAnimationConfig skipEntering skipExiting>
-  //     {hasFollowed && followupProfile ? (
-  //       <Animated.View entering={native(ZoomIn)} key="in">
-  //         <ReplacableProfileCard
-  //           profile={followupProfile}
-  //           moderationOpts={moderationOpts}
-  //         />
-  //       </Animated.View>
-  //     ) : (
-  //       <Animated.View
-  //         exiting={native(ZoomOut)}
-  //         key="out"
-  //         style={[a.pt_md, a.px_lg]}>
-  //         <ReplacableProfileCardInner
-  //           profile={profile}
-  //           moderationOpts={moderationOpts}
-  //           onFollow={() => setHasFollowed(true)}
-  //         />
-  //       </Animated.View>
-  //     )}
-  //   </LayoutAnimationConfig>
-  // )
 }
 
 function ReplacableProfileCardInner({
