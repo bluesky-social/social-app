@@ -16,7 +16,6 @@ const Context = React.createContext<Context>({
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const gate = useGate()
   const langPrefs = useLanguagePrefs()
-  // refetches at most every minute
   const {data: config, isLoading: isInitialLoad} = useServiceConfigQuery()
   const ctx = React.useMemo<Context>(() => {
     if (__DEV__) {
