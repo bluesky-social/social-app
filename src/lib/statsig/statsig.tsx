@@ -104,6 +104,8 @@ export function logEvent<E extends keyof LogEvents>(
     if (Statsig.initializeCalled()) {
       Statsig.logEvent(eventName, null, fullMetadata)
     }
+    logger.info(eventName)
+    logger.debug(JSON.stringify(fullMetadata))
   } catch (e) {
     // A log should never interrupt the calling code, whatever happens.
     logger.error('Failed to log an event', {message: e})
