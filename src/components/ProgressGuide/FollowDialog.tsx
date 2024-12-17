@@ -138,6 +138,7 @@ function DialogInner({
     Map<string, AppBskyActorDefs.ProfileView[]>
   >(() => new Map())
 
+  const query = searchText || selectedInterest
   const {
     data: searchResults,
     isFetching,
@@ -147,7 +148,7 @@ function DialogInner({
     isFetchingNextPage,
     fetchNextPage,
   } = useActorSearchPaginated({
-    query: searchText || selectedInterest,
+    query,
   })
 
   const hasSearchText = !!searchText
@@ -181,7 +182,8 @@ function DialogInner({
         seen.add(profile.did)
         _items.push({
           type: 'profile',
-          key: profile.did,
+          // Don't share identity across tabs or typing attempts
+          key: query + ':' + profile.did,
           profile,
           isSuggestion: false,
         })
@@ -234,6 +236,7 @@ function DialogInner({
     hasSearchText,
     selectedInterest,
     suggestedAccounts,
+    query,
   ])
 
   if (searchText && !isFetching && !items.length && !isError) {
@@ -246,7 +249,6 @@ function DialogInner({
         case 'profile': {
           return (
             <FollowProfileCard
-              key={item.key}
               profile={item.profile}
               isSuggestion={item.isSuggestion}
               moderationOpts={moderationOpts!}
