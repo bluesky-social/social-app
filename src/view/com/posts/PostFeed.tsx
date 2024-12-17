@@ -187,12 +187,16 @@ let PostFeed = ({
     }
     try {
       if (await pollLatest(data.pages[0])) {
-        onHasNew(true)
+        if (isEmpty) {
+          refetch()
+        } else {
+          onHasNew(true)
+        }
       }
     } catch (e) {
       logger.error('Poll latest failed', {feed, message: String(e)})
     }
-  }, [feed, data, isFetching, onHasNew, enabled, disablePoll])
+  }, [feed, data, isFetching, isEmpty, onHasNew, enabled, disablePoll, refetch])
 
   const myDid = currentAccount?.did || ''
   const onPostCreated = React.useCallback(() => {
@@ -220,20 +224,15 @@ let PostFeed = ({
   React.useEffect(() => {
     if (enabled && !disablePoll) {
       const timeSinceFirstLoad = Date.now() - lastFetchRef.current
-      // DISABLED need to check if this is causing random feed refreshes -prf
-      /*if (timeSinceFirstLoad > REFRESH_AFTER) {
-        // do a full refresh
-        scrollElRef?.current?.scrollToOffset({offset: 0, animated: false})
-        queryClient.resetQueries({queryKey: RQKEY(feed)})
-      } else*/ if (
-        timeSinceFirstLoad > CHECK_LATEST_AFTER &&
+      if (
+        (isEmpty || timeSinceFirstLoad > CHECK_LATEST_AFTER) &&
         checkForNewRef.current
       ) {
         // check for new on enable (aka on focus)
         checkForNewRef.current()
       }
     }
-  }, [enabled, disablePoll, feed, queryClient, scrollElRef])
+  }, [enabled, disablePoll, feed, queryClient, scrollElRef, isEmpty])
   React.useEffect(() => {
     let cleanup1: () => void | undefined, cleanup2: () => void | undefined
     const subscription = AppState.addEventListener('change', nextAppState => {
