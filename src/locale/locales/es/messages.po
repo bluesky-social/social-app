@@ -587,7 +587,7 @@ msgstr "Agregar otra cuenta"
 
 #: src/view/com/composer/Composer.tsx:721
 msgid "Add another post"
-msgstr "Aregar otra publicación"
+msgstr "Agregar otra publicación"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:102
 msgid "Add app password"
