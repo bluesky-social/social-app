@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-12-16 09:54+0900\n"
+"PO-Revision-Date: 2024-12-17 10:45+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -1334,6 +1334,10 @@ msgstr "自分自身のタイムラインを選びましょう！コミュニテ
 #: src/screens/Signup/StepInfo/index.tsx:201
 msgid "Choose your password"
 msgstr "パスワードを入力"
+
+#: src/screens/Signup/index.tsx:142
+msgid "Choose your username"
+msgstr "ユーザー名を選んでください"
 
 #: src/screens/Settings/Settings.tsx:342
 msgid "Clear all storage data"
@@ -3321,10 +3325,6 @@ msgstr "サインアップ時に使用したユーザー名またはメールア
 #: src/screens/Login/LoginForm.tsx:225
 msgid "Input your password"
 msgstr "あなたのパスワードを入力"
-
-#: src/screens/Signup/StepHandle.tsx:114
-msgid "Type your desired username"
-msgstr "あなたのユーザーハンドルを入力"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:49
 msgid "Interaction limited"
@@ -7010,6 +7010,10 @@ msgstr "テレビ"
 msgid "Two-factor authentication (2FA)"
 msgstr "２要素認証 (2FA)"
 
+#: src/screens/Signup/StepHandle.tsx:114
+msgid "Type your desired username"
+msgstr "希望するユーザー名をタイプしてください"
+
 #: src/screens/Messages/components/MessageInput.tsx:148
 msgid "Type your message here"
 msgstr "ここにメッセージを入力する"
@@ -8087,13 +8091,13 @@ msgstr "最初のいいね！"
 msgid "Your following feed is empty! Follow more users to see what's happening."
 msgstr "Followingフィードは空です！もっと多くのユーザーをフォローして、近況を確認しましょう。"
 
-#: src/screens/Signup/StepHandle.tsx:125
-msgid "Your full username will be"
-msgstr "フルハンドルは"
-
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:219
 msgid "Your full handle will be <0>@{0}</0>"
 msgstr "フルハンドルは<0>@{0}</0>になります"
+
+#: src/screens/Signup/StepHandle.tsx:125
+msgid "Your full username will be"
+msgstr "あなたのフルのユーザー名："
 
 #: src/components/dialogs/MutedWords.tsx:369
 msgid "Your muted words"
@@ -8127,6 +8131,3 @@ msgstr "返信を公開しました"
 msgid "Your report will be sent to the Bluesky Moderation Service"
 msgstr "あなたの報告はBluesky Moderation Serviceに送られます"
 
-#: src/screens/Signup/index.tsx:142
-msgid "Choose your username"
-msgstr "あなたのユーザーハンドル"
