@@ -202,6 +202,7 @@ export async function dynamicActivate(locale: AppLanguage) {
     case AppLanguage.pt_PT: {
       i18n.loadAndActivate({locale, messages: messagesPt_PT})
       await Promise.all([
+        import('@formatjs/intl-datetimeformat/locale-data/pt-PT'),
         import('@formatjs/intl-pluralrules/locale-data/pt-PT'),
         import('@formatjs/intl-numberformat/locale-data/pt-PT'),
       ])
