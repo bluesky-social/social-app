@@ -4,8 +4,8 @@ import {AtUri} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {makeProfileLink} from '#/lib/routes/links'
-import {feedUriToHref} from '#/lib/strings/url-helpers'
+// import {makeProfileLink} from '#/lib/routes/links'
+// import {feedUriToHref} from '#/lib/strings/url-helpers'
 // import {Hashtag_Stroke2_Corner0_Rounded as Hashtag} from '#/components/icons/Hashtag'
 // import {CloseQuote_Filled_Stroke2_Corner0_Rounded as Quote} from '#/components/icons/Quote'
 // import {UserAvatar} from '#/view/com/util/UserAvatar'
@@ -21,8 +21,6 @@ export function TrendingTopic({
 }: {topic: TrendingTopic; size?: 'large' | 'small'} & ViewStyleProp) {
   const t = useTheme()
   const topic = useTopic(raw)
-
-  if (!topic) return null
 
   const isSmall = size === 'small'
   // const hasAvi = topic.type === 'feed' || topic.type === 'profile'
@@ -139,8 +137,6 @@ export function TrendingTopicLink({
 } & Omit<LinkProps, 'to' | 'label'>) {
   const topic = useTopic(raw)
 
-  if (!topic) return null
-
   return (
     <InternalLink label={topic.label} to={topic.url} {...rest}>
       {children}
@@ -167,28 +163,32 @@ type ParsedTrendingTopic =
 export function useTopic(raw: TrendingTopic): ParsedTrendingTopic {
   const {_} = useLingui()
   return React.useMemo(() => {
-    const {topic: displayName, link: uri} = raw
+    const {topic: displayName, link} = raw
 
-    if (!uri.startsWith('at://')) {
-      if (uri.startsWith('/search')) {
-        return {
-          type: 'topic',
-          label: _(msg`Browse posts about ${displayName}`),
-          displayName,
-          uri: undefined,
-          url: uri,
-        }
-      } else if (uri.startsWith('/hashtag')) {
-        return {
-          type: 'tag',
-          label: _(msg`Browse posts tagged with ${displayName}`),
-          displayName: displayName.replace(/^#/, ''),
-          uri: undefined,
-          url: uri,
-        }
+    if (link.startsWith('/search')) {
+      return {
+        type: 'topic',
+        label: _(msg`Browse posts about ${displayName}`),
+        displayName,
+        uri: undefined,
+        url: link,
       }
+    } else if (link.startsWith('/hashtag')) {
+      return {
+        type: 'tag',
+        label: _(msg`Browse posts tagged with ${displayName}`),
+        displayName,
+        // displayName: displayName.replace(/^#/, ''),
+        uri: undefined,
+        url: link,
+      }
+    }
+
+    /*
+    if (!link.startsWith('at://')) {
+      // above logic
     } else {
-      const urip = new AtUri(uri)
+      const urip = new AtUri(link)
       switch (urip.collection) {
         case 'app.bsky.actor.profile': {
           return {
@@ -205,18 +205,19 @@ export function useTopic(raw: TrendingTopic): ParsedTrendingTopic {
             label: _(msg`Browse the ${displayName} feed`),
             displayName,
             uri: urip,
-            url: feedUriToHref(uri),
+            url: feedUriToHref(link),
           }
         }
       }
     }
+     */
 
     return {
       type: 'unknown',
       label: _(msg`Browse topic ${displayName}`),
       displayName,
       uri: undefined,
-      url: uri,
+      url: link,
     }
   }, [_, raw])
 }
