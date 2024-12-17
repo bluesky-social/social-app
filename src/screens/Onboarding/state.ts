@@ -72,6 +72,19 @@ export type ApiResponseMap = {
   }
 }
 
+// most popular selected interests
+export const popularInterests = [
+  'art',
+  'gaming',
+  'sports',
+  'comics',
+  'music',
+  'politics',
+  'photography',
+  'science',
+  'news',
+]
+
 export function useInterestsDisplayNames() {
   const {_} = useLingui()
 

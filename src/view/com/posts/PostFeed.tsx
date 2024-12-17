@@ -253,9 +253,11 @@ let PostFeed = ({
     }
   }, [pollInterval])
 
-  const progressGuide = useProgressGuide('like-10-and-follow-7')
+  const followProgressGuide = useProgressGuide('follow-10')
+  const followAndLikeProgressGuide = useProgressGuide('like-10-and-follow-7')
   const {isDesktop} = useWebMediaQueries()
-  const showProgressIntersitial = progressGuide && !isDesktop
+  const showProgressIntersitial =
+    (followProgressGuide || followAndLikeProgressGuide) && !isDesktop
 
   const feedItems: FeedRow[] = React.useMemo(() => {
     let feedKind: 'following' | 'discover' | 'profile' | undefined
