@@ -297,51 +297,7 @@ function DialogInner({
           t.atoms.border_contrast_low,
           t.atoms.bg,
         ]}>
-        <View
-          style={[
-            a.px_lg,
-            a.relative,
-            a.flex_row,
-            a.justify_between,
-            a.align_center,
-          ]}>
-          <Text
-            style={[
-              a.z_10,
-              a.text_lg,
-              a.font_heavy,
-              a.leading_tight,
-              t.atoms.text_contrast_high,
-            ]}>
-            <Trans>Find people to follow</Trans>
-          </Text>
-          <View style={isWeb && {paddingRight: 36}}>
-            <ProgressGuideTask
-              current={guide.numFollows + 1}
-              total={10 + 1}
-              title={`${guide.numFollows} / 10`}
-              tabularNumsTitle
-            />
-          </View>
-          {isWeb ? (
-            <Button
-              label={_(msg`Close`)}
-              size="small"
-              shape="round"
-              variant={isWeb ? 'ghost' : 'solid'}
-              color="secondary"
-              style={[
-                a.absolute,
-                a.z_20,
-                web({right: -4}),
-                native({right: 0}),
-                native({height: 32, width: 32, borderRadius: 16}),
-              ]}
-              onPress={() => control.close()}>
-              <ButtonIcon icon={X} size="md" />
-            </Button>
-          ) : null}
-        </View>
+        <HeaderTop guide={guide} />
 
         <View style={[web(a.pt_xs), a.pb_xs]}>
           <SearchInput
@@ -366,8 +322,6 @@ function DialogInner({
   }, [
     t.atoms.border_contrast_low,
     t.atoms.bg,
-    t.atoms.text_contrast_high,
-    _,
     control,
     searchText,
     selectedInterest,
@@ -415,6 +369,59 @@ function DialogInner({
         />
       }
     />
+  )
+}
+
+function HeaderTop({guide}: {guide: Follow10ProgressGuide}) {
+  const {_} = useLingui()
+  const t = useTheme()
+  const control = Dialog.useDialogContext()
+  return (
+    <View
+      style={[
+        a.px_lg,
+        a.relative,
+        a.flex_row,
+        a.justify_between,
+        a.align_center,
+      ]}>
+      <Text
+        style={[
+          a.z_10,
+          a.text_lg,
+          a.font_heavy,
+          a.leading_tight,
+          t.atoms.text_contrast_high,
+        ]}>
+        <Trans>Find people to follow</Trans>
+      </Text>
+      <View style={isWeb && {paddingRight: 36}}>
+        <ProgressGuideTask
+          current={guide.numFollows + 1}
+          total={10 + 1}
+          title={`${guide.numFollows} / 10`}
+          tabularNumsTitle
+        />
+      </View>
+      {isWeb ? (
+        <Button
+          label={_(msg`Close`)}
+          size="small"
+          shape="round"
+          variant={isWeb ? 'ghost' : 'solid'}
+          color="secondary"
+          style={[
+            a.absolute,
+            a.z_20,
+            web({right: -4}),
+            native({right: 0}),
+            native({height: 32, width: 32, borderRadius: 16}),
+          ]}
+          onPress={() => control.close()}>
+          <ButtonIcon icon={X} size="md" />
+        </Button>
+      ) : null}
+    </View>
   )
 }
 
