@@ -17,7 +17,7 @@ import {useQueryClient} from '@tanstack/react-query'
 import {DISCOVER_FEED_URI, KNOWN_SHUTDOWN_FEEDS} from '#/lib/constants'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {logEvent, useGate} from '#/lib/statsig/statsig'
+import {logEvent} from '#/lib/statsig/statsig'
 import {useTheme} from '#/lib/ThemeContext'
 import {logger} from '#/logger'
 import {isIOS, isWeb} from '#/platform/detection'
@@ -254,12 +254,11 @@ let PostFeed = ({
     }
   }, [pollInterval])
 
-  const gate = useGate()
-  const progressGuide = useProgressGuide(
-    gate('new_postonboarding') ? 'follow-10' : 'like-10-and-follow-7',
-  )
+  const followProgressGuide = useProgressGuide('follow-10')
+  const followAndLikeProgressGuide = useProgressGuide('like-10-and-follow-7')
   const {isDesktop} = useWebMediaQueries()
-  const showProgressIntersitial = progressGuide && !isDesktop
+  const showProgressIntersitial =
+    (followProgressGuide || followAndLikeProgressGuide) && !isDesktop
 
   const feedItems: FeedRow[] = React.useMemo(() => {
     let feedKind: 'following' | 'discover' | 'profile' | undefined
