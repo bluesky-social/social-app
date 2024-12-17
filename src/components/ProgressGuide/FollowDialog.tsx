@@ -70,18 +70,6 @@ export function FollowDialog({guide}: {guide: Follow10ProgressGuide}) {
   const control = Dialog.useDialogControl()
   const {gtMobile} = useBreakpoints()
   const {height: minHeight} = useWindowDimensions()
-  const interestsDisplayNames = useInterestsDisplayNames()
-  const {data: preferences} = usePreferencesQuery()
-  const personalizedInterests = preferences?.interests?.tags
-  const interests = Object.keys(interestsDisplayNames)
-    .sort(boostInterests(popularInterests))
-    .sort(boostInterests(personalizedInterests))
-  const [selectedInterest, setSelectedInterest] = useState(() =>
-    personalizedInterests && interests.includes(personalizedInterests[0])
-      ? personalizedInterests[0]
-      : interests[0],
-  )
-  const [searchText, setSearchText] = useState('')
 
   return (
     <>
@@ -98,38 +86,26 @@ export function FollowDialog({guide}: {guide: Follow10ProgressGuide}) {
       </Button>
       <Dialog.Outer control={control} nativeOptions={{minHeight}}>
         <Dialog.Handle />
-        <DialogInner
-          selectedInterest={selectedInterest}
-          interests={interests}
-          interestsDisplayNames={interestsDisplayNames}
-          searchText={searchText}
-          setSelectedInterest={setSelectedInterest}
-          setSearchText={setSearchText}
-          guide={guide}
-        />
+        <DialogInner guide={guide} />
       </Dialog.Outer>
     </>
   )
 }
 
-function DialogInner({
-  interests,
-  interestsDisplayNames,
-  selectedInterest,
-  searchText,
-  setSearchText,
-  setSelectedInterest,
-  guide,
-}: {
-  interests: string[]
-  interestsDisplayNames: Record<string, string>
-  searchText: string
-  selectedInterest: string
-  setSelectedInterest: (v: string) => void
-  setSearchText: (v: string) => void
-  guide: Follow10ProgressGuide
-}) {
+function DialogInner({guide}: {guide: Follow10ProgressGuide}) {
   const {_} = useLingui()
+  const interestsDisplayNames = useInterestsDisplayNames()
+  const {data: preferences} = usePreferencesQuery()
+  const personalizedInterests = preferences?.interests?.tags
+  const interests = Object.keys(interestsDisplayNames)
+    .sort(boostInterests(popularInterests))
+    .sort(boostInterests(personalizedInterests))
+  const [selectedInterest, setSelectedInterest] = useState(() =>
+    personalizedInterests && interests.includes(personalizedInterests[0])
+      ? personalizedInterests[0]
+      : interests[0],
+  )
+  const [searchText, setSearchText] = useState('')
   const moderationOpts = useModerationOpts()
   const listRef = useRef<ListMethods>(null)
   const inputRef = useRef<TextInput>(null)
