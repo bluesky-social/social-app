@@ -470,10 +470,10 @@ function ReplacableProfileCardInner({
               <ProfileCard.FollowButton
                 profile={profile}
                 moderationOpts={moderationOpts}
-                logContext="FeedInterstitial"
-                color="secondary_inverted"
+                logContext="PostOnboardingFindFollows"
                 shape="round"
                 onPress={onFollow}
+                colorInverted
               />
             </ProfileCard.Header>
             <ProfileCard.Description profile={profile} numberOfLines={2} />

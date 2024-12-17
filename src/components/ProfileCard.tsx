@@ -285,6 +285,7 @@ export type FollowButtonProps = {
   moderationOpts: ModerationOpts
   logContext: LogEvents['profile:follow']['logContext'] &
     LogEvents['profile:unfollow']['logContext']
+  colorInverted?: boolean
 } & Partial<ButtonProps>
 
 export function FollowButton(props: FollowButtonProps) {
@@ -298,6 +299,7 @@ export function FollowButtonInner({
   moderationOpts,
   logContext,
   onPress: onPressProp,
+  colorInverted,
   ...rest
 }: FollowButtonProps) {
   const {_} = useLingui()
@@ -390,7 +392,7 @@ export function FollowButtonInner({
           label={followLabel}
           size="small"
           variant="solid"
-          color="primary"
+          color={colorInverted ? 'secondary_inverted' : 'primary'}
           {...rest}
           onPress={onPressFollow}>
           <ButtonIcon icon={Plus} position={isRound ? undefined : 'left'} />
