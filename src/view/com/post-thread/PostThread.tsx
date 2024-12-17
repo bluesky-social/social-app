@@ -1,4 +1,4 @@
-import React, {memo, useRef, useState} from 'react'
+import React, {memo, useEffect, useRef, useState} from 'react'
 import {StyleSheet, useWindowDimensions, View} from 'react-native'
 import {runOnJS} from 'react-native-reanimated'
 import Animated from 'react-native-reanimated'
@@ -18,6 +18,7 @@ import {ScrollProvider} from '#/lib/ScrollContext'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {cleanError} from '#/lib/strings/errors'
 import {isAndroid, isNative, isWeb} from '#/platform/detection'
+import {markGloballySeenPost} from '#/state/feed-feedback'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {
   fillThreadModerationCache,
@@ -390,6 +391,22 @@ export function PostThread({uri}: {uri: string | undefined}) {
     },
     [refetch],
   )
+
+  useEffect(() => {
+    if (skeleton) {
+      // We're not tracking linger time here so conservatively mark
+      // just the highlighted post and the parent. Presumably,
+      // if you're already midthread, you know what was above.
+      const {parents, highlightedPost} = skeleton
+      markGloballySeenPost(highlightedPost.uri)
+      for (let i = 0; i < parents.length; i++) {
+        const parent = parents[i]
+        if (isThreadPost(parent)) {
+          markGloballySeenPost(parent.uri)
+        }
+      }
+    }
+  }, [skeleton])
 
   const {openComposer} = useComposerControls()
   const onPressReply = React.useCallback(() => {

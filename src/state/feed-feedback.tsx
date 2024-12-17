@@ -265,7 +265,7 @@ const m = Math.ceil((n * Math.log(p)) / Math.log(1 / Math.pow(2, Math.log(2))))
 const k = Math.round((m / n) * Math.log(2))
 let globalBloomFilter = new BloomFilter(m, k)
 
-function markGloballySeenPost(uri: string) {
+export function markGloballySeenPost(uri: string) {
   if (globalBloomFilter.size >= n) {
     // If we ever get here, just restart to avoid saturation.
     globalBloomFilter = new BloomFilter(m, k)
