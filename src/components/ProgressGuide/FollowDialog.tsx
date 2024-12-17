@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
+import {memo, useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {ScrollView, TextInput, useWindowDimensions, View} from 'react-native'
 import Animated, {
   LayoutAnimationConfig,
@@ -130,11 +130,9 @@ function DialogInner({
   guide: Follow10ProgressGuide
 }) {
   const {_} = useLingui()
-  const t = useTheme()
   const moderationOpts = useModerationOpts()
   const listRef = useRef<ListMethods>(null)
   const inputRef = useRef<TextInput>(null)
-  const control = Dialog.useDialogContext()
   const [headerHeight, setHeaderHeight] = useState(0)
   const {currentAccount} = useSession()
   const [suggestedAccounts, setSuggestedAccounts] = useState<
@@ -284,54 +282,20 @@ function DialogInner({
     [setSelectedInterest, setSearchText],
   )
 
-  const listHeader = useMemo(() => {
-    return (
-      <View
-        onLayout={evt => setHeaderHeight(evt.nativeEvent.layout.height)}
-        style={[
-          a.relative,
-          web(a.pt_lg),
-          native(a.pt_4xl),
-          a.pb_xs,
-          a.border_b,
-          t.atoms.border_contrast_low,
-          t.atoms.bg,
-        ]}>
-        <HeaderTop guide={guide} />
-
-        <View style={[web(a.pt_xs), a.pb_xs]}>
-          <SearchInput
-            inputRef={inputRef}
-            defaultValue={searchText}
-            onChangeText={text => {
-              setSearchText(text)
-              listRef.current?.scrollToOffset({offset: 0, animated: false})
-            }}
-            onEscape={control.close}
-          />
-          <Tabs
-            onSelectTab={onSelectTab}
-            interests={interests}
-            selectedInterest={selectedInterest}
-            hasSearchText={hasSearchText}
-            interestsDisplayNames={interestsDisplayNames}
-          />
-        </View>
-      </View>
-    )
-  }, [
-    t.atoms.border_contrast_low,
-    t.atoms.bg,
-    control,
-    searchText,
-    selectedInterest,
-    interests,
-    interestsDisplayNames,
-    setSearchText,
-    guide,
-    hasSearchText,
-    onSelectTab,
-  ])
+  const listHeader = (
+    <Header
+      guide={guide}
+      inputRef={inputRef}
+      listRef={listRef}
+      searchText={searchText}
+      onSelectTab={onSelectTab}
+      setHeaderHeight={setHeaderHeight}
+      setSearchText={setSearchText}
+      interests={interests}
+      selectedInterest={selectedInterest}
+      interestsDisplayNames={interestsDisplayNames}
+    />
+  )
 
   const onEndReached = useCallback(async () => {
     if (isFetchingNextPage || !hasNextPage || isError) return
@@ -359,6 +323,8 @@ function DialogInner({
       webInnerStyle={[a.py_0, {maxWidth: 500, minWidth: 200}]}
       keyboardDismissMode="on-drag"
       scrollIndicatorInsets={{top: headerHeight}}
+      initialNumToRender={8}
+      maxToRenderPerBatch={8}
       onEndReached={onEndReached}
       itemLayoutAnimation={LinearTransition}
       ListFooterComponent={
@@ -371,6 +337,68 @@ function DialogInner({
     />
   )
 }
+
+let Header = ({
+  guide,
+  inputRef,
+  listRef,
+  searchText,
+  onSelectTab,
+  setHeaderHeight,
+  setSearchText,
+  interests,
+  selectedInterest,
+  interestsDisplayNames,
+}: {
+  guide: Follow10ProgressGuide
+  inputRef: React.RefObject<TextInput>
+  listRef: React.RefObject<ListMethods>
+  onSelectTab: (v: string) => void
+  searchText: string
+  setHeaderHeight: (v: number) => void
+  setSearchText: (v: string) => void
+  interests: string[]
+  selectedInterest: string
+  interestsDisplayNames: Record<string, string>
+}): React.ReactNode => {
+  const t = useTheme()
+  const control = Dialog.useDialogContext()
+  return (
+    <View
+      onLayout={evt => setHeaderHeight(evt.nativeEvent.layout.height)}
+      style={[
+        a.relative,
+        web(a.pt_lg),
+        native(a.pt_4xl),
+        a.pb_xs,
+        a.border_b,
+        t.atoms.border_contrast_low,
+        t.atoms.bg,
+      ]}>
+      <HeaderTop guide={guide} />
+
+      <View style={[web(a.pt_xs), a.pb_xs]}>
+        <SearchInput
+          inputRef={inputRef}
+          defaultValue={searchText}
+          onChangeText={text => {
+            setSearchText(text)
+            listRef.current?.scrollToOffset({offset: 0, animated: false})
+          }}
+          onEscape={control.close}
+        />
+        <Tabs
+          onSelectTab={onSelectTab}
+          interests={interests}
+          selectedInterest={selectedInterest}
+          hasSearchText={!!searchText}
+          interestsDisplayNames={interestsDisplayNames}
+        />
+      </View>
+    </View>
+  )
+}
+Header = memo(Header)
 
 function HeaderTop({guide}: {guide: Follow10ProgressGuide}) {
   const {_} = useLingui()
@@ -425,7 +453,7 @@ function HeaderTop({guide}: {guide: Follow10ProgressGuide}) {
   )
 }
 
-function Tabs({
+let Tabs = ({
   onSelectTab,
   interests,
   selectedInterest,
@@ -437,10 +465,8 @@ function Tabs({
   selectedInterest: string
   hasSearchText: boolean
   interestsDisplayNames: Record<string, string>
-}) {
-  const {_} = useLingui()
+}): React.ReactNode => {
   const [tabOffsets, setTabOffsets] = useState<number[]>([])
-
   return (
     <ScrollView
       horizontal
@@ -452,38 +478,66 @@ function Tabs({
       }>
       {interests.map((interest, i) => {
         const active = interest === selectedInterest && !hasSearchText
-        const activeText = active ? _(msg` (active)`) : ''
         return (
-          <View
+          <Tab
             key={interest}
-            onLayout={evt => {
-              const x = evt.nativeEvent.layout.x
-              setTabOffsets(offsets => {
-                const [...next] = offsets
-                next[i] = x - tokens.space.xl
-                return next
-              })
-            }}>
-            <Button
-              key={interest}
-              label={_(
-                msg`Search for "${interestsDisplayNames[interest]}"${activeText}`,
-              )}
-              variant={active ? 'solid' : 'outline'}
-              color={active ? 'primary' : 'secondary'}
-              size="small"
-              onPress={() => onSelectTab(interest)}>
-              <ButtonIcon icon={SearchIcon} />
-              <ButtonText>{interestsDisplayNames[interest]}</ButtonText>
-            </Button>
-          </View>
+            onSelectTab={onSelectTab}
+            active={active}
+            index={i}
+            interest={interest}
+            interestsDisplayName={interestsDisplayNames[interest]}
+            setTabOffsets={setTabOffsets}
+          />
         )
       })}
     </ScrollView>
   )
 }
+Tabs = memo(Tabs)
 
-function FollowProfileCard({
+let Tab = ({
+  onSelectTab,
+  interest,
+  active,
+  index,
+  interestsDisplayName,
+  setTabOffsets,
+}: {
+  onSelectTab: (tab: string) => void
+  interest: string
+  active: boolean
+  index: number
+  interestsDisplayName: string
+  setTabOffsets: (updater: (v: number[]) => number[]) => void
+}): React.ReactNode => {
+  const {_} = useLingui()
+  const activeText = active ? _(msg` (active)`) : ''
+  return (
+    <View
+      key={interest}
+      onLayout={evt => {
+        const x = evt.nativeEvent.layout.x
+        setTabOffsets(offsets => {
+          const [...next] = offsets
+          next[index] = x - tokens.space.xl
+          return next
+        })
+      }}>
+      <Button
+        label={_(msg`Search for "${interestsDisplayName}"${activeText}`)}
+        variant={active ? 'solid' : 'outline'}
+        color={active ? 'primary' : 'secondary'}
+        size="small"
+        onPress={() => onSelectTab(interest)}>
+        <ButtonIcon icon={SearchIcon} />
+        <ButtonText>{interestsDisplayName}</ButtonText>
+      </Button>
+    </View>
+  )
+}
+Tab = memo(Tab)
+
+let FollowProfileCard = ({
   profile,
   moderationOpts,
   isSuggestion,
@@ -499,7 +553,7 @@ function FollowProfileCard({
     ) => Map<string, AppBskyActorDefs.ProfileView[]>,
   ) => void
   noBorder?: boolean
-}) {
+}): React.ReactNode => {
   const [hasFollowed, setHasFollowed] = useState(false)
   const followupSuggestion = useSuggestedFollowsByActorQuery({
     did: profile.did,
@@ -531,6 +585,7 @@ function FollowProfileCard({
     </LayoutAnimationConfig>
   )
 }
+FollowProfileCard = memo(FollowProfileCard)
 
 function FollowProfileCardInner({
   profile,
