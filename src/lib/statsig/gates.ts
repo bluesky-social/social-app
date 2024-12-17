@@ -1,5 +1,3 @@
 export type Gate =
   // Keep this alphabetic please.
-  | 'debug_show_feedcontext' // DISABLED DUE TO EME
-  | 'post_feed_lang_window' // DISABLED DUE TO EME
-  | 'remove_show_latest_button'
+  'debug_show_feedcontext' | 'debug_subscriptions' | 'remove_show_latest_button'
