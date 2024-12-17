@@ -4268,7 +4268,7 @@ msgstr "Introdueix la teva contrasenya"
 #~ msgstr "Introdueix el teu proveïdor d'allotjament preferit"
 
 #: src/screens/Signup/StepHandle.tsx:114
-msgid "Input your user handle"
+msgid "Type your desired username"
 msgstr "Introdueix el teu identificador d'usuari"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:49
@@ -10404,7 +10404,7 @@ msgid "Your following feed is empty! Follow more users to see what's happening."
 msgstr "El teu canal de seguint està buit! Segueix a més usuaris per a saber què està passant."
 
 #: src/screens/Signup/StepHandle.tsx:125
-msgid "Your full handle will be"
+msgid "Your full username will be"
 msgstr "El teu identificador complet serà"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:219
@@ -10458,5 +10458,5 @@ msgid "Your report will be sent to the Bluesky Moderation Service"
 msgstr "El teu informe s'enviarà al servei de moderació de Bluesky"
 
 #: src/screens/Signup/index.tsx:142
-msgid "Your user handle"
+msgid "Choose your username"
 msgstr "El teu identificador d'usuari"

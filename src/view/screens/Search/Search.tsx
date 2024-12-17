@@ -1193,6 +1193,7 @@ const styles = StyleSheet.create({
   },
   profilePressable: {
     alignItems: 'center',
+    width: '100%',
   },
   profileAvatar: {
     width: 60,
