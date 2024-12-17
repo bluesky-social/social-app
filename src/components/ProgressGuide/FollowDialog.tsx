@@ -468,9 +468,11 @@ let Tabs = ({
   const listRef = useRef<ScrollView>(null)
   const [scrollX, setScrollX] = useState(0)
   const [totalWidth, setTotalWidth] = useState(0)
+  const pendingTabOffsets = useRef<{x: number; width: number}[]>([])
   const [tabOffsets, setTabOffsets] = useState<{x: number; width: number}[]>([])
 
-  function handleSelectTab(tab: string, index: number) {
+  function handleSelectTab(index: number) {
+    const tab = interests[index]
     onSelectTab(tab)
 
     const btnLayout = tabOffsets[index]
@@ -492,6 +494,15 @@ let Tabs = ({
         x: btnLayout.x - totalWidth + btnLayout.width + tokens.space.lg,
         animated: true,
       })
+    }
+  }
+
+  function handleTabLayout(index: number, x: number, width: number) {
+    if (!tabOffsets.length) {
+      pendingTabOffsets.current[index] = {x, width}
+      if (pendingTabOffsets.current.length === interests.length) {
+        setTabOffsets(pendingTabOffsets.current)
+      }
     }
   }
 
@@ -520,7 +531,7 @@ let Tabs = ({
             index={i}
             interest={interest}
             interestsDisplayName={interestsDisplayNames[interest]}
-            setTabOffsets={setTabOffsets}
+            onLayout={handleTabLayout}
           />
         )
       })}
@@ -535,37 +546,29 @@ let Tab = ({
   active,
   index,
   interestsDisplayName,
-  setTabOffsets,
+  onLayout,
 }: {
-  onSelectTab: (tab: string, index: number) => void
+  onSelectTab: (index: number) => void
   interest: string
   active: boolean
   index: number
   interestsDisplayName: string
-  setTabOffsets: (
-    updater: (v: {x: number; width: number}[]) => {x: number; width: number}[],
-  ) => void
+  onLayout: (index: number, x: number, width: number) => void
 }): React.ReactNode => {
   const {_} = useLingui()
   const activeText = active ? _(msg` (active)`) : ''
   return (
     <View
       key={interest}
-      onLayout={evt => {
-        const x = evt.nativeEvent.layout.x
-        const width = evt.nativeEvent.layout.width
-        setTabOffsets(offsets => {
-          const [...next] = offsets
-          next[index] = {x, width}
-          return next
-        })
-      }}>
+      onLayout={e =>
+        onLayout(index, e.nativeEvent.layout.x, e.nativeEvent.layout.width)
+      }>
       <Button
         label={_(msg`Search for "${interestsDisplayName}"${activeText}`)}
         variant={active ? 'solid' : 'outline'}
         color={active ? 'primary' : 'secondary'}
         size="small"
-        onPress={() => onSelectTab(interest, index)}>
+        onPress={() => onSelectTab(index)}>
         <ButtonIcon icon={SearchIcon} />
         <ButtonText>{interestsDisplayName}</ButtonText>
       </Button>
