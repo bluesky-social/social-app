@@ -466,22 +466,57 @@ let Tabs = ({
   hasSearchText: boolean
   interestsDisplayNames: Record<string, string>
 }): React.ReactNode => {
-  const [tabOffsets, setTabOffsets] = useState<number[]>([])
+  const listRef = useRef<ScrollView>(null)
+  const [scrollX, setScrollX] = useState(0)
+  const [totalWidth, setTotalWidth] = useState(0)
+  const [tabOffsets, setTabOffsets] = useState<{x: number; width: number}[]>([])
+
+  function handleSelectTab(tab: string, index: number) {
+    onSelectTab(tab)
+
+    const btnLayout = tabOffsets[index]
+    if (!btnLayout) return
+
+    const viewportLeftEdge = scrollX
+    const viewportRightEdge = scrollX + totalWidth
+    const shouldScrollToLeftEdge = viewportLeftEdge > btnLayout.x
+    const shouldScrollToRightEdge =
+      viewportRightEdge < btnLayout.x + btnLayout.width
+
+    if (shouldScrollToLeftEdge) {
+      listRef.current?.scrollTo({
+        x: btnLayout.x - tokens.space.lg,
+        animated: true,
+      })
+    } else if (shouldScrollToRightEdge) {
+      listRef.current?.scrollTo({
+        x: btnLayout.x - totalWidth + btnLayout.width + tokens.space.lg,
+        animated: true,
+      })
+    }
+  }
+
   return (
     <ScrollView
+      ref={listRef}
       horizontal
       contentContainerStyle={[a.gap_sm, a.px_lg]}
       showsHorizontalScrollIndicator={false}
       decelerationRate="fast"
       snapToOffsets={
-        tabOffsets.length === interests.length ? tabOffsets : undefined
-      }>
+        tabOffsets.length === interests.length
+          ? tabOffsets.map(o => o.x - tokens.space.xl)
+          : undefined
+      }
+      onLayout={evt => setTotalWidth(evt.nativeEvent.layout.width)}
+      scrollEventThrottle={200} // big throttle
+      onScroll={evt => setScrollX(evt.nativeEvent.contentOffset.x)}>
       {interests.map((interest, i) => {
         const active = interest === selectedInterest && !hasSearchText
         return (
           <Tab
             key={interest}
-            onSelectTab={onSelectTab}
+            onSelectTab={handleSelectTab}
             active={active}
             index={i}
             interest={interest}
@@ -503,12 +538,14 @@ let Tab = ({
   interestsDisplayName,
   setTabOffsets,
 }: {
-  onSelectTab: (tab: string) => void
+  onSelectTab: (tab: string, index: number) => void
   interest: string
   active: boolean
   index: number
   interestsDisplayName: string
-  setTabOffsets: (updater: (v: number[]) => number[]) => void
+  setTabOffsets: (
+    updater: (v: {x: number; width: number}[]) => {x: number; width: number}[],
+  ) => void
 }): React.ReactNode => {
   const {_} = useLingui()
   const activeText = active ? _(msg` (active)`) : ''
@@ -517,9 +554,10 @@ let Tab = ({
       key={interest}
       onLayout={evt => {
         const x = evt.nativeEvent.layout.x
+        const width = evt.nativeEvent.layout.width
         setTabOffsets(offsets => {
           const [...next] = offsets
-          next[index] = x - tokens.space.xl
+          next[index] = {x, width}
           return next
         })
       }}>
@@ -528,7 +566,7 @@ let Tab = ({
         variant={active ? 'solid' : 'outline'}
         color={active ? 'primary' : 'secondary'}
         size="small"
-        onPress={() => onSelectTab(interest)}>
+        onPress={() => onSelectTab(interest, index)}>
         <ButtonIcon icon={SearchIcon} />
         <ButtonText>{interestsDisplayName}</ButtonText>
       </Button>
@@ -626,7 +664,6 @@ function FollowProfileCardInner({
                 profile={profile}
                 moderationOpts={moderationOpts}
                 logContext="PostOnboardingFindFollows"
-                shape="round"
                 onPress={onFollow}
                 colorInverted
               />
