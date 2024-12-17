@@ -103,20 +103,11 @@ export function logEvent<E extends keyof LogEvents>(
     if (Statsig.initializeCalled()) {
       Statsig.logEvent(eventName, null, fullMetadata)
     }
-    // Intentionally call console and bitdrift directly so we can pass rich objects.
-    if (isWeb) {
-      console.groupCollapsed(eventName)
-      console.log(fullMetadata)
-      console.groupEnd()
-    } else {
-      bitdrift.info(eventName, fullMetadata)
-      console.log(
-        eventName,
-        '\x1b[2m', // dim
-        fullMetadata,
-        '\x1b[0m', // undim
-      )
-    }
+    // Intentionally bypass the logger abstraction to log rich objects.
+    console.groupCollapsed(eventName)
+    console.log(fullMetadata)
+    console.groupEnd()
+    bitdrift.info(eventName, fullMetadata)
   } catch (e) {
     // A log should never interrupt the calling code, whatever happens.
     logger.error('Failed to log an event', {message: e})
