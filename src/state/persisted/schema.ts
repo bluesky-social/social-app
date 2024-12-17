@@ -123,6 +123,7 @@ const schema = z.object({
   kawaii: z.boolean().optional(),
   hasCheckedForStarterPack: z.boolean().optional(),
   subtitlesEnabled: z.boolean().optional(),
+  developerModeEnabled: z.boolean().optional(),
   /** @deprecated */
   mutedThreads: z.array(z.string()),
 })
@@ -170,6 +171,7 @@ export const defaults: Schema = {
   kawaii: false,
   hasCheckedForStarterPack: false,
   subtitlesEnabled: true,
+  developerModeEnabled: false,
 }
 
 export function tryParse(rawData: string): Schema | undefined {
