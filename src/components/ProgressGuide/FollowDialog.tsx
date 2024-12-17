@@ -439,17 +439,26 @@ function Tabs({
   interestsDisplayNames: Record<string, string>
 }) {
   const {_} = useLingui()
-  const [tabOffsets, setTabOffsets] = useState<number[]>([])
+  const listRef = useRef<ScrollView>(null)
+  const [scrollX, setScrollX] = useState(0)
+  const [totalWidth, setTotalWidth] = useState(0)
+  const [tabOffsets, setTabOffsets] = useState<{x: number; width: number}[]>([])
 
   return (
     <ScrollView
+      ref={listRef}
       horizontal
       contentContainerStyle={[a.gap_sm, a.px_lg]}
       showsHorizontalScrollIndicator={false}
       decelerationRate="fast"
       snapToOffsets={
-        tabOffsets.length === interests.length ? tabOffsets : undefined
-      }>
+        tabOffsets.length === interests.length
+          ? tabOffsets.map(o => o.x - tokens.space.xl)
+          : undefined
+      }
+      onLayout={evt => setTotalWidth(evt.nativeEvent.layout.width)}
+      scrollEventThrottle={200} // big throttle
+      onScroll={evt => setScrollX(evt.nativeEvent.contentOffset.x)}>
       {interests.map((interest, i) => {
         const active = interest === selectedInterest && !hasSearchText
         const activeText = active ? _(msg` (active)`) : ''
@@ -458,9 +467,10 @@ function Tabs({
             key={interest}
             onLayout={evt => {
               const x = evt.nativeEvent.layout.x
+              const width = evt.nativeEvent.layout.width
               setTabOffsets(offsets => {
                 const [...next] = offsets
-                next[i] = x - tokens.space.xl
+                next[i] = {x, width}
                 return next
               })
             }}>
@@ -472,7 +482,34 @@ function Tabs({
               variant={active ? 'solid' : 'outline'}
               color={active ? 'primary' : 'secondary'}
               size="small"
-              onPress={() => onSelectTab(interest)}>
+              onPress={() => {
+                onSelectTab(interest)
+
+                const btnLayout = tabOffsets[i]
+                if (!btnLayout) return
+                console.log(scrollX, btnLayout.x)
+                const viewportLeftEdge = scrollX
+                const viewportRightEdge = scrollX + totalWidth
+                const shouldScrollToLeftEdge = viewportLeftEdge > btnLayout.x
+                const shouldScrollToRightEdge =
+                  viewportRightEdge < btnLayout.x + btnLayout.width
+
+                if (shouldScrollToLeftEdge) {
+                  listRef.current?.scrollTo({
+                    x: btnLayout.x - tokens.space.lg,
+                    animated: true,
+                  })
+                } else if (shouldScrollToRightEdge) {
+                  listRef.current?.scrollTo({
+                    x:
+                      btnLayout.x -
+                      totalWidth +
+                      btnLayout.width +
+                      tokens.space.lg,
+                    animated: true,
+                  })
+                }
+              }}>
               <ButtonIcon icon={SearchIcon} />
               <ButtonText>{interestsDisplayNames[interest]}</ButtonText>
             </Button>
@@ -571,7 +608,6 @@ function FollowProfileCardInner({
                 profile={profile}
                 moderationOpts={moderationOpts}
                 logContext="PostOnboardingFindFollows"
-                shape="round"
                 onPress={onFollow}
                 colorInverted
               />
