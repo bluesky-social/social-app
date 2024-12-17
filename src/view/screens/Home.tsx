@@ -25,10 +25,8 @@ import {useSelectedFeed, useSetSelectedFeed} from '#/state/shell/selected-feed'
 import {FeedPage} from '#/view/com/feeds/FeedPage'
 import {HomeHeader} from '#/view/com/home/HomeHeader'
 import {Pager, PagerRef, RenderTabBarFnProps} from '#/view/com/pager/Pager'
-import {CustomFeedEmptyState} from '#/view/com/posts/CustomFeedEmptyState'
-import {FollowingEmptyState} from '#/view/com/posts/FollowingEmptyState'
-import {FollowingEndOfFeed} from '#/view/com/posts/FollowingEndOfFeed'
 import {NoFeedsPinned} from '#/screens/Home/NoFeedsPinned'
+import {FeedEnd} from '#/components/FeedEnd'
 import * as Layout from '#/components/Layout'
 
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home' | 'Start'>
@@ -192,14 +190,6 @@ function HomeScreenReady({
     [onPressSelected, pinnedFeedInfos],
   )
 
-  const renderFollowingEmptyState = React.useCallback(() => {
-    return <FollowingEmptyState />
-  }, [])
-
-  const renderCustomFeedEmptyState = React.useCallback(() => {
-    return <CustomFeedEmptyState />
-  }, [])
-
   const homeFeedParams = React.useMemo<FeedParams>(() => {
     return {
       mergeFeedEnabled: Boolean(preferences.feedViewPrefs.lab_mergeFeedEnabled),
@@ -232,8 +222,8 @@ function HomeScreenReady({
                 isPageAdjacent={Math.abs(selectedIndex - index) === 1}
                 feed={feed}
                 feedParams={homeFeedParams}
-                renderEmptyState={renderFollowingEmptyState}
-                renderEndOfFeed={FollowingEndOfFeed}
+                renderEmptyState={FeedEnd}
+                renderEndOfFeed={FeedEnd}
               />
             )
           }
@@ -245,8 +235,9 @@ function HomeScreenReady({
               isPageFocused={selectedFeed === feed}
               isPageAdjacent={Math.abs(selectedIndex - index) === 1}
               feed={feed}
-              renderEmptyState={renderCustomFeedEmptyState}
+              renderEmptyState={FeedEnd}
               savedFeedConfig={savedFeedConfig}
+              renderEndOfFeed={FeedEnd}
             />
           )
         })
@@ -265,7 +256,7 @@ function HomeScreenReady({
         isPageFocused
         isPageAdjacent={false}
         feed={`feedgen|${PROD_DEFAULT_FEED('whats-hot')}`}
-        renderEmptyState={renderCustomFeedEmptyState}
+        renderEmptyState={FeedEnd}
       />
     </Pager>
   )
