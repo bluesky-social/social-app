@@ -1,4 +1,5 @@
 import React from 'react'
+import {AppBskyUnspeccedDefs} from '@atproto/api'
 import {hasMutedWord} from '@atproto/api/dist/moderation/mutewords'
 import {useQuery} from '@tanstack/react-query'
 
@@ -6,15 +7,7 @@ import {STALE} from '#/state/queries'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useAgent} from '#/state/session'
 
-const HOST = ``
-const TOKEN = ``
-
-export type TrendingTopic = {
-  topic: string
-  displayName: string
-  description: string
-  link: string
-}
+export type TrendingTopic = AppBskyUnspeccedDefs.TrendingTopic
 
 export const DEFAULT_LIMIT = 14
 
@@ -32,23 +25,11 @@ export function useTrendingTopics() {
     staleTime: STALE.MINUTES.THIRTY,
     queryKey: trendingTopicsQueryKey,
     async queryFn() {
-      const params = new URLSearchParams()
-      params.set('viewer', agent.session?.did || '')
-      params.set('limit', String(DEFAULT_LIMIT))
-      const res = await fetch(`${HOST}?${params.toString()}`, {
-        headers: {
-          Authorization: `Bearer ${TOKEN}`,
-        },
+      const {data} = await agent.api.app.bsky.unspecced.getTrendingTopics({
+        limit: DEFAULT_LIMIT,
       })
 
-      if (!res.ok) {
-        throw new Error('Failed to fetch trending topics')
-      }
-
-      const {topics, recommended} = (await res.json()) as {
-        topics: TrendingTopic[]
-        recommended: TrendingTopic[]
-      }
+      const {topics, suggested} = data
       return {
         topics: topics.filter(t => {
           return !hasMutedWord({
@@ -56,7 +37,7 @@ export function useTrendingTopics() {
             text: t.topic + ' ' + t.displayName + ' ' + t.description,
           })
         }),
-        recommended: recommended.filter(t => {
+        suggested: suggested.filter(t => {
           return !hasMutedWord({
             mutedWords,
             text: t.topic + ' ' + t.displayName + ' ' + t.description,
