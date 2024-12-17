@@ -1,6 +1,7 @@
 import React from 'react'
 
 import {useGate} from '#/lib/statsig/statsig'
+import {useLanguagePrefs} from '#/state/preferences/languages'
 import {useServiceConfigQuery} from '#/state/queries/service-config'
 import {device} from '#/storage'
 
@@ -14,9 +15,17 @@ const Context = React.createContext<Context>({
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const gate = useGate()
+  const langPrefs = useLanguagePrefs()
   // refetches at most every minute
   const {data: config, isLoading: isInitialLoad} = useServiceConfigQuery()
   const ctx = React.useMemo<Context>(() => {
+    /*
+     * Only English during beta period
+     */
+    if (!langPrefs.contentLanguages.includes('en')) {
+      return {enabled: false}
+    }
+
     /*
      * While loading, use cached value
      */
@@ -46,7 +55,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     device.set(['trendingBetaEnabled'], _enabled)
 
     return {enabled: _enabled}
-  }, [isInitialLoad, config, gate])
+  }, [isInitialLoad, config, gate, langPrefs.contentLanguages])
   return <Context.Provider value={ctx}>{children}</Context.Provider>
 }
 
