@@ -1339,7 +1339,7 @@ msgstr "비밀번호를 입력하세요"
 
 #: src/screens/Signup/index.tsx:142
 msgid "Choose your username"
-msgstr "내 사용자 핸들"
+msgstr "사용자 이름 선택"
 
 #: src/screens/Settings/Settings.tsx:350
 msgid "Clear all storage data"
@@ -7011,7 +7011,7 @@ msgstr "2단계 인증"
 
 #: src/screens/Signup/StepHandle.tsx:114
 msgid "Type your desired username"
-msgstr "사용자 핸들을 입력합니다"
+msgstr "원하는 사용자 이름을 입력하세요"
 
 #: src/screens/Messages/components/MessageInput.tsx:148
 msgid "Type your message here"
@@ -8095,7 +8095,7 @@ msgstr "내 전체 핸들: <0>@{0}</0>"
 
 #: src/screens/Signup/StepHandle.tsx:125
 msgid "Your full username will be"
-msgstr "내 전체 핸들:"
+msgstr "내 전체 사용자 이름:"
 
 #: src/components/dialogs/MutedWords.tsx:369
 msgid "Your muted words"
