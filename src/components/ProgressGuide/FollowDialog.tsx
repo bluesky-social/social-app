@@ -1,7 +1,6 @@
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {ScrollView, TextInput, useWindowDimensions, View} from 'react-native'
 import Animated, {
-  FadeIn,
   LayoutAnimationConfig,
   LinearTransition,
   ZoomInEasyDown,
@@ -46,6 +45,7 @@ type Item =
       type: 'profile'
       key: string
       profile: AppBskyActorDefs.ProfileView
+      isSuggestion: boolean
     }
   | {
       type: 'empty'
@@ -138,6 +138,9 @@ function DialogInner({
   const [tabOffsets, setTabOffsets] = useState<number[]>([])
   const [headerHeight, setHeaderHeight] = useState(0)
   const {currentAccount} = useSession()
+  const [suggestedAccounts, setSuggestedAccounts] = useState<
+    Map<string, AppBskyActorDefs.ProfileView[]>
+  >(() => new Map())
 
   const {
     data: searchResults,
@@ -156,6 +159,7 @@ function DialogInner({
   const items = useMemo(() => {
     const results = searchResults?.pages.flatMap(r => r.actors)
     let _items: Item[] = []
+    const seen = new Set<string>()
 
     if (isError) {
       _items.push({
@@ -164,6 +168,7 @@ function DialogInner({
         message: _(msg`We're having network issues, try again`),
       })
     } else if (results?.length) {
+      // First pass: search results
       for (const profile of results) {
         if (profile.did === currentAccount?.did) continue
         if (profile.viewer?.following) continue
@@ -174,14 +179,47 @@ function DialogInner({
           profile.did === 'did:plc:tpg43qhh4lw4ksiffs4nbda3' &&
           // constrain to 'tech'
           selectedInterest !== 'tech'
-        )
+        ) {
           continue
+        }
+        seen.add(profile.did)
         _items.push({
           type: 'profile',
           key: profile.did,
           profile,
+          isSuggestion: false,
         })
       }
+      // Second pass: suggestions
+      _items = _items.flatMap(item => {
+        if (item.type !== 'profile') {
+          return item
+        }
+        const suggestions = suggestedAccounts.get(item.profile.did)
+        if (!suggestions) {
+          return item
+        }
+        const candidates: {
+          type: 'profile'
+          key: string
+          profile: AppBskyActorDefs.ProfileView
+          isSuggestion: boolean
+        }[] = []
+        for (const suggested of suggestions) {
+          if (seen.has(suggested.did)) {
+            // Skip search results from previous step or already seen suggestions
+            continue
+          }
+          seen.add(suggested.did)
+          candidates.push({
+            type: 'profile',
+            key: suggested.did,
+            profile: suggested,
+            isSuggestion: true,
+          })
+        }
+        return [item].concat(candidates.slice(3))
+      })
     } else {
       const placeholders: Item[] = Array(10)
         .fill(0)
@@ -201,6 +239,7 @@ function DialogInner({
     currentAccount?.did,
     hasSearchText,
     selectedInterest,
+    suggestedAccounts,
   ])
 
   if (searchText && !isFetching && !items.length && !isError) {
@@ -212,10 +251,12 @@ function DialogInner({
       switch (item.type) {
         case 'profile': {
           return (
-            <ReplacableProfileCard
+            <FollowProfileCard
               key={item.key}
               profile={item.profile}
+              isSuggestion={item.isSuggestion}
               moderationOpts={moderationOpts!}
+              setSuggestedAccounts={setSuggestedAccounts}
             />
           )
         }
@@ -372,44 +413,48 @@ function DialogInner({
   }, [isFetchingNextPage, hasNextPage, isError, fetchNextPage])
 
   return (
-    <LayoutAnimationConfig skipEntering skipExiting>
-      <Dialog.InnerFlatList
-        ref={listRef}
-        data={items}
-        renderItem={renderItems}
-        ListHeaderComponent={listHeader}
-        stickyHeaderIndices={[0]}
-        keyExtractor={(item: Item) => item.key}
-        style={[
-          web([a.py_0, {height: '100vh', maxHeight: 600}, a.px_0]),
-          native({height: '100%'}),
-        ]}
-        webInnerContentContainerStyle={a.py_0}
-        webInnerStyle={[a.py_0, {maxWidth: 500, minWidth: 200}]}
-        keyboardDismissMode="on-drag"
-        scrollIndicatorInsets={{top: headerHeight}}
-        onEndReached={onEndReached}
-        itemLayoutAnimation={LinearTransition}
-        ListFooterComponent={
-          <ListFooter
-            isFetchingNextPage={isFetchingNextPage}
-            error={cleanError(error)}
-            onRetry={fetchNextPage}
-          />
-        }
-      />
-    </LayoutAnimationConfig>
+    <Dialog.InnerFlatList
+      ref={listRef}
+      data={items}
+      renderItem={renderItems}
+      ListHeaderComponent={listHeader}
+      stickyHeaderIndices={[0]}
+      keyExtractor={(item: Item) => item.key}
+      style={[
+        web([a.py_0, {height: '100vh', maxHeight: 600}, a.px_0]),
+        native({height: '100%'}),
+      ]}
+      webInnerContentContainerStyle={a.py_0}
+      webInnerStyle={[a.py_0, {maxWidth: 500, minWidth: 200}]}
+      keyboardDismissMode="on-drag"
+      scrollIndicatorInsets={{top: headerHeight}}
+      onEndReached={onEndReached}
+      itemLayoutAnimation={LinearTransition}
+      ListFooterComponent={
+        <ListFooter
+          isFetchingNextPage={isFetchingNextPage}
+          error={cleanError(error)}
+          onRetry={fetchNextPage}
+        />
+      }
+    />
   )
 }
 
-const seenSuggestions = new Set()
-
-function ReplacableProfileCard({
+function FollowProfileCard({
   profile,
   moderationOpts,
+  isSuggestion,
+  setSuggestedAccounts,
 }: {
   profile: AppBskyActorDefs.ProfileView
   moderationOpts: ModerationOpts
+  isSuggestion: boolean
+  setSuggestedAccounts: (
+    updater: (
+      v: Map<string, AppBskyActorDefs.ProfileView[]>,
+    ) => Map<string, AppBskyActorDefs.ProfileView[]>,
+  ) => void
 }) {
   const [hasFollowed, setHasFollowed] = useState(false)
   const followupSuggestion = useSuggestedFollowsByActorQuery({
@@ -417,46 +462,32 @@ function ReplacableProfileCard({
     enabled: hasFollowed,
   })
   const candidates = followupSuggestion.data?.suggestions
-  const followupProfiles = useMemo(
-    () =>
-      (candidates ?? []).filter(c => !seenSuggestions.has(c.did)).slice(3) ??
-      [],
-    [candidates],
-  )
 
   useEffect(() => {
-    for (let seenProfile of followupProfiles) {
-      seenSuggestions.add(seenProfile.did)
+    // TODO: Move out of effect.
+    if (hasFollowed && candidates && candidates.length > 0) {
+      setSuggestedAccounts(suggestions => {
+        const newSuggestions = new Map(suggestions)
+        newSuggestions.set(profile.did, candidates)
+        return newSuggestions
+      })
     }
-  }, [followupProfiles])
+  }, [hasFollowed, profile.did, candidates, setSuggestedAccounts])
 
   return (
-    <>
+    <LayoutAnimationConfig skipEntering={!isSuggestion}>
       <Animated.View entering={native(ZoomInEasyDown)}>
-        <Animated.View entering={native(FadeIn)}>
-          <ReplacableProfileCardInner
-            profile={profile}
-            moderationOpts={moderationOpts}
-            onFollow={() => setHasFollowed(true)}
-          />
-        </Animated.View>
+        <FollowProfileCardInner
+          profile={profile}
+          moderationOpts={moderationOpts}
+          onFollow={() => setHasFollowed(true)}
+        />
       </Animated.View>
-      {hasFollowed && followupProfiles.length > 0 && (
-        <>
-          {followupProfiles.map(followupProfile => (
-            <ReplacableProfileCard
-              key={followupProfile.did}
-              profile={followupProfile}
-              moderationOpts={moderationOpts}
-            />
-          ))}
-        </>
-      )}
-    </>
+    </LayoutAnimationConfig>
   )
 }
 
-function ReplacableProfileCardInner({
+function FollowProfileCardInner({
   profile,
   moderationOpts,
   onFollow,
