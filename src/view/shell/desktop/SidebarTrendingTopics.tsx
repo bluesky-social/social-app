@@ -36,7 +36,7 @@ function Inner() {
   const trendingPrompt = Prompt.usePromptControl()
   const {setTrendingSidebarHidden} = useTrendingSettingsApi()
   const {data: trending, error, isLoading} = useTrendingTopics()
-  const noTopics = !isLoading && !error && !trending?.topics
+  const noTopics = !isLoading && !error && !trending?.topics?.length
 
   return error || noTopics ? null : (
     <>
