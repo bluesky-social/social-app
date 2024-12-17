@@ -2,6 +2,7 @@ import {View} from 'react-native'
 import {Trans} from '@lingui/macro'
 
 import {isWeb} from '#/platform/detection'
+import {useTrendingSettings} from '#/state/preferences/trending'
 import {
   DEFAULT_LIMIT as TRENDING_TOPICS_COUNT,
   useTrendingTopics,
@@ -19,7 +20,8 @@ import {Text} from '#/components/Typography'
 
 export function ExploreTrendingTopics() {
   const {enabled} = useTrendingConfig()
-  return enabled ? <Inner /> : null
+  const {trendingDisabled} = useTrendingSettings()
+  return enabled && !trendingDisabled ? <Inner /> : null
 }
 
 function Inner() {

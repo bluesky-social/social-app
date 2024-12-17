@@ -26,8 +26,8 @@ import {Text} from '#/components/Typography'
 
 export function TrendingInterstitial() {
   const {enabled} = useTrendingConfig()
-  const {trendingDiscoverHidden} = useTrendingSettings()
-  return !enabled ? null : trendingDiscoverHidden ? null : <Inner />
+  const {trendingDisabled} = useTrendingSettings()
+  return enabled && !trendingDisabled ? <Inner /> : null
 }
 
 export function Inner() {
@@ -35,7 +35,7 @@ export function Inner() {
   const {_} = useLingui()
   const gutters = useGutters(['base'])
   const trendingPrompt = Prompt.usePromptControl()
-  const {setTrendingDiscoverHidden} = useTrendingSettingsApi()
+  const {setTrendingDisabled} = useTrendingSettingsApi()
   const {data: trending, error, isLoading} = useTrendingTopics()
   const noTopics = !isLoading && !error && !trending?.topics?.length
 
@@ -101,12 +101,12 @@ export function Inner() {
 
       <Prompt.Basic
         control={trendingPrompt}
-        title={_(msg`Hide trending topics in your feed?`)}
+        title={_(msg`Hide trending topics?`)}
         description={_(
-          msg`This is a device setting, and will apply to all accounts on this device. You can update this later from your settings.`,
+          msg`This will disable trending topics for all accounts on this device. You can update this later from your settings.`,
         )}
         confirmButtonCta={_(msg`Hide`)}
-        onConfirm={() => setTrendingDiscoverHidden(true)}
+        onConfirm={() => setTrendingDisabled(true)}
       />
     </View>
   )

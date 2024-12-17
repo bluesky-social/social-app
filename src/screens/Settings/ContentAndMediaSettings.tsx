@@ -36,9 +36,8 @@ export function ContentAndMediaSettingsScreen({}: Props) {
   const inAppBrowserPref = useInAppBrowser()
   const setUseInAppBrowser = useSetInAppBrowser()
   const {enabled: trendingEnabled} = useTrendingConfig()
-  const {trendingSidebarHidden, trendingDiscoverHidden} = useTrendingSettings()
-  const {setTrendingSidebarHidden, setTrendingDiscoverHidden} =
-    useTrendingSettingsApi()
+  const {trendingDisabled} = useTrendingSettings()
+  const {setTrendingDisabled} = useTrendingSettingsApi()
 
   return (
     <Layout.Screen>
@@ -117,30 +116,15 @@ export function ContentAndMediaSettingsScreen({}: Props) {
           {trendingEnabled && (
             <>
               <SettingsList.Divider />
-              {!isNative && (
-                <Toggle.Item
-                  name="show_trending_topics_sidebar"
-                  label={_(msg`Show trending topics in your sidebar`)}
-                  value={!trendingSidebarHidden}
-                  onChange={value => setTrendingSidebarHidden(!value)}>
-                  <SettingsList.Item>
-                    <SettingsList.ItemIcon icon={Graph} />
-                    <SettingsList.ItemText>
-                      <Trans>Show trending topics in your sidebar</Trans>
-                    </SettingsList.ItemText>
-                    <Toggle.Platform />
-                  </SettingsList.Item>
-                </Toggle.Item>
-              )}
               <Toggle.Item
-                name="show_trending_topics_discover"
-                label={_(msg`Show trending topics in your feed`)}
-                value={!trendingDiscoverHidden}
-                onChange={value => setTrendingDiscoverHidden(!value)}>
+                name="show_trending_topics"
+                label={_(msg`Enable trending topics`)}
+                value={!trendingDisabled}
+                onChange={value => setTrendingDisabled(!value)}>
                 <SettingsList.Item>
                   <SettingsList.ItemIcon icon={Graph} />
                   <SettingsList.ItemText>
-                    <Trans>Show trending topics in your feed</Trans>
+                    <Trans>Enable trending topics</Trans>
                   </SettingsList.ItemText>
                   <Toggle.Platform />
                 </SettingsList.Item>

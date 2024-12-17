@@ -26,15 +26,15 @@ import {Text} from '#/components/Typography'
 
 export function SidebarTrendingTopics() {
   const {enabled} = useTrendingConfig()
-  const {trendingSidebarHidden} = useTrendingSettings()
-  return !enabled ? null : trendingSidebarHidden ? null : <Inner />
+  const {trendingDisabled} = useTrendingSettings()
+  return !enabled ? null : trendingDisabled ? null : <Inner />
 }
 
 function Inner() {
   const t = useTheme()
   const {_} = useLingui()
   const trendingPrompt = Prompt.usePromptControl()
-  const {setTrendingSidebarHidden} = useTrendingSettingsApi()
+  const {setTrendingDisabled} = useTrendingSettingsApi()
   const {data: trending, error, isLoading} = useTrendingTopics()
   const noTopics = !isLoading && !error && !trending?.topics?.length
 
@@ -96,10 +96,10 @@ function Inner() {
         control={trendingPrompt}
         title={_(msg`Hide trending topics?`)}
         description={_(
-          msg`This is a device setting, and will apply to all accounts on this device. You can update this later from your settings.`,
+          msg`This will disable trending topics for all accounts on this device. You can update this later from your settings.`,
         )}
         confirmButtonCta={_(msg`Hide`)}
-        onConfirm={() => setTrendingSidebarHidden(true)}
+        onConfirm={() => setTrendingDisabled(true)}
       />
       <Divider />
     </>

@@ -265,7 +265,7 @@ let PostFeed = ({
   const showProgressIntersitial =
     (followProgressGuide || followAndLikeProgressGuide) && !isDesktop
 
-  const {trendingDiscoverHidden} = useTrendingSettings()
+  const {trendingDisabled} = useTrendingSettings()
 
   const feedItems: FeedRow[] = React.useMemo(() => {
     let feedKind: 'following' | 'discover' | 'profile' | undefined
@@ -312,7 +312,7 @@ let PostFeed = ({
                     type: 'interstitialProgressGuide',
                     key: 'interstitial-' + sliceIndex + '-' + lastFetchedAt,
                   })
-                } else if (sliceIndex === 15 && !trendingDiscoverHidden) {
+                } else if (sliceIndex === 15 && !trendingDisabled) {
                   arr.push({
                     type: 'interstitialTrending',
                     key: 'interstitial-' + sliceIndex + '-' + lastFetchedAt,
@@ -403,7 +403,7 @@ let PostFeed = ({
     feedTab,
     hasSession,
     showProgressIntersitial,
-    trendingDiscoverHidden,
+    trendingDisabled,
   ])
 
   // events
