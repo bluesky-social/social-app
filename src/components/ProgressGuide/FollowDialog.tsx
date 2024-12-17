@@ -135,7 +135,6 @@ function DialogInner({
   const listRef = useRef<ListMethods>(null)
   const inputRef = useRef<TextInput>(null)
   const control = Dialog.useDialogContext()
-  const [tabOffsets, setTabOffsets] = useState<number[]>([])
   const [headerHeight, setHeaderHeight] = useState(0)
   const {currentAccount} = useSession()
   const [suggestedAccounts, setSuggestedAccounts] = useState<
@@ -272,6 +271,19 @@ function DialogInner({
     [moderationOpts],
   )
 
+  const onSelectTab = useCallback(
+    (interest: string) => {
+      setSelectedInterest(interest)
+      inputRef.current?.clear()
+      setSearchText('')
+      listRef.current?.scrollToOffset({
+        offset: 0,
+        animated: false,
+      })
+    },
+    [setSelectedInterest, setSearchText],
+  )
+
   const listHeader = useMemo(() => {
     return (
       <View
@@ -341,52 +353,13 @@ function DialogInner({
             }}
             onEscape={control.close}
           />
-          <ScrollView
-            horizontal
-            contentContainerStyle={[a.gap_sm, a.px_lg]}
-            showsHorizontalScrollIndicator={false}
-            decelerationRate="fast"
-            snapToOffsets={
-              tabOffsets.length === interests.length ? tabOffsets : undefined
-            }>
-            {interests.map((interest, i) => {
-              const active = interest === selectedInterest && !searchText
-              const activeText = active ? _(msg` (active)`) : ''
-              return (
-                <View
-                  key={interest}
-                  onLayout={evt => {
-                    const x = evt.nativeEvent.layout.x
-                    setTabOffsets(offsets => {
-                      const [...next] = offsets
-                      next[i] = x - tokens.space.xl
-                      return next
-                    })
-                  }}>
-                  <Button
-                    key={interest}
-                    label={_(
-                      msg`Search for "${interestsDisplayNames[interest]}"${activeText}`,
-                    )}
-                    variant={active ? 'solid' : 'outline'}
-                    color={active ? 'primary' : 'secondary'}
-                    size="small"
-                    onPress={() => {
-                      setSelectedInterest(interest)
-                      inputRef.current?.clear()
-                      setSearchText('')
-                      listRef.current?.scrollToOffset({
-                        offset: 0,
-                        animated: false,
-                      })
-                    }}>
-                    <ButtonIcon icon={SearchIcon} />
-                    <ButtonText>{interestsDisplayNames[interest]}</ButtonText>
-                  </Button>
-                </View>
-              )
-            })}
-          </ScrollView>
+          <Tabs
+            onSelectTab={onSelectTab}
+            interests={interests}
+            selectedInterest={selectedInterest}
+            hasSearchText={hasSearchText}
+            interestsDisplayNames={interestsDisplayNames}
+          />
         </View>
       </View>
     )
@@ -400,10 +373,10 @@ function DialogInner({
     selectedInterest,
     interests,
     interestsDisplayNames,
-    setSelectedInterest,
-    tabOffsets,
     setSearchText,
     guide,
+    hasSearchText,
+    onSelectTab,
   ])
 
   const onEndReached = useCallback(async () => {
@@ -442,6 +415,64 @@ function DialogInner({
         />
       }
     />
+  )
+}
+
+function Tabs({
+  onSelectTab,
+  interests,
+  selectedInterest,
+  hasSearchText,
+  interestsDisplayNames,
+}: {
+  onSelectTab: (tab: string) => void
+  interests: string[]
+  selectedInterest: string
+  hasSearchText: boolean
+  interestsDisplayNames: Record<string, string>
+}) {
+  const {_} = useLingui()
+  const [tabOffsets, setTabOffsets] = useState<number[]>([])
+
+  return (
+    <ScrollView
+      horizontal
+      contentContainerStyle={[a.gap_sm, a.px_lg]}
+      showsHorizontalScrollIndicator={false}
+      decelerationRate="fast"
+      snapToOffsets={
+        tabOffsets.length === interests.length ? tabOffsets : undefined
+      }>
+      {interests.map((interest, i) => {
+        const active = interest === selectedInterest && !hasSearchText
+        const activeText = active ? _(msg` (active)`) : ''
+        return (
+          <View
+            key={interest}
+            onLayout={evt => {
+              const x = evt.nativeEvent.layout.x
+              setTabOffsets(offsets => {
+                const [...next] = offsets
+                next[i] = x - tokens.space.xl
+                return next
+              })
+            }}>
+            <Button
+              key={interest}
+              label={_(
+                msg`Search for "${interestsDisplayNames[interest]}"${activeText}`,
+              )}
+              variant={active ? 'solid' : 'outline'}
+              color={active ? 'primary' : 'secondary'}
+              size="small"
+              onPress={() => onSelectTab(interest)}>
+              <ButtonIcon icon={SearchIcon} />
+              <ButtonText>{interestsDisplayNames[interest]}</ButtonText>
+            </Button>
+          </View>
+        )
+      })}
+    </ScrollView>
   )
 }
 
