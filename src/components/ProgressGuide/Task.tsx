@@ -35,7 +35,7 @@ export function ProgressGuideTask({
         />
       )}
 
-      <View style={[a.flex_col, a.gap_2xs, !subtitle && {marginTop: -2}]}>
+      <View style={[a.flex_col, a.gap_2xs, subtitle && {marginTop: -2}]}>
         <Text
           style={[
             a.text_sm,
