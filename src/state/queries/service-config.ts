@@ -12,7 +12,7 @@ export function useServiceConfigQuery() {
   const agent = useAgent()
   return useQuery<ServiceConfig>({
     refetchOnWindowFocus: true,
-    staleTime: STALE.MINUTES.ONE,
+    staleTime: STALE.MINUTES.FIVE,
     queryKey: ['service-config'],
     queryFn: async () => {
       try {
