@@ -11,6 +11,7 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useActorSearchPaginated} from '#/state/queries/actor-search'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useSession} from '#/state/session'
+import {Follow10ProgressGuide} from '#/state/shell/progress-guide'
 import {ListMethods} from '#/view/com/util/List'
 import {useInterestsDisplayNames} from '#/screens/Onboarding/state'
 import {
@@ -31,6 +32,7 @@ import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
 import {ListFooter} from '../Lists'
+import {ProgressGuideTask} from './Task'
 
 type Item =
   | {
@@ -52,7 +54,7 @@ type Item =
       key: string
     }
 
-export function FollowDialog() {
+export function FollowDialog({guide}: {guide: Follow10ProgressGuide}) {
   const {_} = useLingui()
   const control = Dialog.useDialogControl()
   const {gtMobile} = useBreakpoints()
@@ -96,6 +98,7 @@ export function FollowDialog() {
           searchText={searchText}
           setSelectedInterest={setSelectedInterest}
           setSearchText={setSearchText}
+          guide={guide}
         />
       </Dialog.Outer>
     </>
@@ -109,6 +112,7 @@ function DialogInner({
   searchText,
   setSearchText,
   setSelectedInterest,
+  guide,
 }: {
   interests: string[]
   interestsDisplayNames: Record<string, string>
@@ -116,6 +120,7 @@ function DialogInner({
   selectedInterest: string
   setSelectedInterest: (v: string) => void
   setSearchText: (v: string) => void
+  guide: Follow10ProgressGuide
 }) {
   const {_} = useLingui()
   const t = useTheme()
@@ -234,7 +239,8 @@ function DialogInner({
           t.atoms.border_contrast_low,
           t.atoms.bg,
         ]}>
-        <View style={[a.relative, native(a.align_center), a.justify_center]}>
+        <View
+          style={[a.relative, a.flex_row, a.justify_between, a.align_center]}>
           <Text
             style={[
               a.z_10,
@@ -245,6 +251,14 @@ function DialogInner({
             ]}>
             <Trans>Find people to follow</Trans>
           </Text>
+          <View style={isWeb && {paddingRight: 36}}>
+            <ProgressGuideTask
+              current={guide.numFollows + 1}
+              total={10 + 1}
+              title={`${guide.numFollows} / 10`}
+              tabularNumsTitle
+            />
+          </View>
           {isWeb ? (
             <Button
               label={_(msg`Close`)}
@@ -338,6 +352,7 @@ function DialogInner({
     setSelectedInterest,
     tabOffsets,
     setSearchText,
+    guide,
   ])
 
   const onEndReached = useCallback(async () => {

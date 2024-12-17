@@ -54,7 +54,7 @@ export function ProgressGuideList({style}: {style?: StyleProp<ViewStyle>}) {
               title={_(msg`Follow 10 accounts`)}
               subtitle={_(msg`Bluesky is better with friends!`)}
             />
-            <FollowDialog />
+            <FollowDialog guide={guide} />
           </>
         )}
         {guide.guide === 'like-10-and-follow-7' && (

@@ -27,20 +27,20 @@ interface BaseProgressGuide {
   [key: string]: any
 }
 
-interface Like10AndFollow7ProgressGuide extends BaseProgressGuide {
+export interface Like10AndFollow7ProgressGuide extends BaseProgressGuide {
   guide: 'like-10-and-follow-7'
   numLikes: number
   numFollows: number
 }
 
-interface Follow7ProgressGuide extends BaseProgressGuide {
+export interface Follow10ProgressGuide extends BaseProgressGuide {
   guide: 'follow-10'
   numFollows: number
 }
 
-type ProgressGuide =
+export type ProgressGuide =
   | Like10AndFollow7ProgressGuide
-  | Follow7ProgressGuide
+  | Follow10ProgressGuide
   | undefined
 
 const ProgressGuideContext = React.createContext<ProgressGuide>(undefined)
@@ -107,7 +107,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const firstLikeToastRef = React.useRef<ProgressGuideToastRef | null>(null)
   const fifthLikeToastRef = React.useRef<ProgressGuideToastRef | null>(null)
   const tenthLikeToastRef = React.useRef<ProgressGuideToastRef | null>(null)
-  const guideCompleteToastRef = React.useRef<ProgressGuideToastRef | null>(null)
+
+  const fifthFollowToastRef = React.useRef<ProgressGuideToastRef | null>(null)
+  const tenthFollowToastRef = React.useRef<ProgressGuideToastRef | null>(null)
 
   const controls = React.useMemo(() => {
     return {
@@ -176,6 +178,13 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
               ...guide,
               numFollows: (Number(guide.numFollows) || 0) + count,
             }
+
+            if (guide.numFollows === 5) {
+              fifthFollowToastRef.current?.open()
+            }
+            if (guide.numFollows === 10) {
+              tenthFollowToastRef.current?.open()
+            }
           }
           if (Number(guide.numFollows) >= 10) {
             guide = {
@@ -213,9 +222,14 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
               subtitle={_(msg`The Discover feed now knows what you like`)}
             />
             <ProgressGuideToast
-              ref={guideCompleteToastRef}
-              title={_(msg`Algorithm training complete!`)}
-              subtitle={_(msg`The Discover feed now knows what you like`)}
+              ref={fifthFollowToastRef}
+              title={_(msg`Half way there!`)}
+              subtitle={_(msg`Follow 10 accounts`)}
+            />
+            <ProgressGuideToast
+              ref={tenthFollowToastRef}
+              title={_(msg`Task complete - follow 10 accounts!`)}
+              subtitle={_(msg`You've found some people to follow`)}
             />
           </>
         )}
