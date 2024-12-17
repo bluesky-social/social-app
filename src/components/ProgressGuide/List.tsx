@@ -2,7 +2,6 @@ import {StyleProp, View, ViewStyle} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useGate} from '#/lib/statsig/statsig'
 import {
   useProgressGuide,
   useProgressGuideControls,
@@ -17,10 +16,9 @@ import {ProgressGuideTask} from './Task'
 export function ProgressGuideList({style}: {style?: StyleProp<ViewStyle>}) {
   const t = useTheme()
   const {_} = useLingui()
-  const gate = useGate()
-  const guide = useProgressGuide(
-    gate('new_postonboarding') ? 'follow-10' : 'like-10-and-follow-7',
-  )
+  const followProgressGuide = useProgressGuide('follow-10')
+  const followAndLikeProgressGuide = useProgressGuide('like-10-and-follow-7')
+  const guide = followProgressGuide || followAndLikeProgressGuide
   const {endProgressGuide} = useProgressGuideControls()
 
   if (guide) {
